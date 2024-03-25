@@ -1,40 +1,41 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0669213C837;
-	Mon, 25 Mar 2024 08:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08D615358D;
+	Mon, 25 Mar 2024 08:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711355406; cv=none; b=e+DKnm42NfCSD1cnAlZfYc+9RRSr/Cjesud8LPAJtmsevfYlEVqw6dXnEHB3FwY/+06CaDjMVN56UZO4R/83qb0lgWxcATr3t53PSzOu8mUxhsKq8VSzo0rs6bjyPU5uT0vjyU1FpVUGLJswdNTeuYiB+CXHI6BnbPDTt7Dpt20=
+	t=1711355565; cv=none; b=CaL9dHMjUd5qadTuQUyMQ9IMRThagU9Zdkc5uJ39fn2z3XSCVtRLqjuQVP4cZ6X5vjVTriQ82s0O5hf7ePDfpT1EePe6ba4YPaw87yIRfp/rxm5nQV0laDA2xjDwopAmr61BgbmeZX4FKf3mtXLGJ/trxNDeg+uQU6ZEgqkolHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711355406; c=relaxed/simple;
-	bh=WcjRvdfQ2EbQum9xWCjkiEU3kMs3JIEIAvUpABV232Q=;
+	s=arc-20240116; t=1711355565; c=relaxed/simple;
+	bh=T+KuV9HtfJVCbl6FShyoCjfSusY83MHIQ6USqsqqlDo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X0TaETEwEWNWbH6IesDIyQ20cIcavnrjDpgRJTAmVkm3bzTzJOnccQIpKC1g/bRMOS8FXmRapIB2xO6ycCPmJ3kRFL8X9nEX8Ke4+/vv9Mg81Bh321O85UH83sln9hYQdgJ8Q1hNcepngpFPAKcsFYH8EMqIsQlentOs5Pa6ooo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=0BBCJUwJ; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 In-Reply-To:Content-Type; b=thx/IQmgbVIvo7vSrc7jBOEGiHo32I+RQGamRxzMjptuvZLyWkmehOrXrJzGizjnqUDUea2txEt5p8hF10u8sbbwVgfQ9+F1dT7aN8HvWTP0UmW2ne9BbB49eqTvWpf/jjauEASZjizYn6AwiDuSVBX86MXxezRtuKm6D1X0eWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=RQbj2c4f; arc=none smtp.client-ip=46.19.9.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="0BBCJUwJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1711355403;
-	bh=WcjRvdfQ2EbQum9xWCjkiEU3kMs3JIEIAvUpABV232Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=0BBCJUwJ7vWjw3HrU5xaFXwV+xSULegmhfamw+lIn+trZZQiFHhl9jk1mZ2Q2cjYo
-	 AiIAWSTeFlM9byqnX0Z2lMbZ/EAnx95k6Ojb3pEmJgkj2mAvV4BPVyWRK9XTCTBX5x
-	 brzFmnzKmSQvTEca4b8Q7/u+cQocbgIGCUfap8KdtQDcWJJxMphuDCVUSYd09SroRa
-	 g2uDARjYNHVfL089PTtXe2DXFayNNbKeOB30fEpDeT4EP6Qc61+wOuFLg+71+PZlLD
-	 z10N5ghqVJsOkm6U9iOtTkG64KpuBSbWqIDaIZZmgzBuXEBx23ht9I6I64fnmD07Ul
-	 pbvLZPF0sk5Lw==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 883D7378209C;
-	Mon, 25 Mar 2024 08:30:01 +0000 (UTC)
-Message-ID: <26c3e4e6-89b2-4411-b55b-8fad80d38c75@collabora.com>
-Date: Mon, 25 Mar 2024 09:30:01 +0100
+	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="RQbj2c4f"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=YrCunCuDAyPCrU96nP770AWQf4NmnthgUBMgNyJAu48=; b=RQbj2c4f2qRXjxr4gX4KrktSa7
+	6pyVjGvANCdMY6rnYJZKgB2zZmHJ3xsm0+Wixre/iPhruVV6Q8Rr5rOQylqcDU4EcbRPViemr4e6c
+	J0VLDwjgtUPZCykZG5tFV6kGJXBIeB1sGDCPaB4tNwMw4sU862lgtI/zeHmQaAvjFUK+EYzG19ZXZ
+	Oi75f0rgsWuFu+iC6Z0ucvxHveT9Rk9Eobz2AOGtM7Y48GjhOEfiwnDCOnH+kIRM3BXlyPhmHqOxL
+	YwJqunzsdxF4bC5Gq2g9OUn4h3B9qP2ONgFqhpyU7B6Sfv55eWTaneVMl4RZx28Ckwe1wBEkatnTK
+	pNPIk68A==;
+Received: from [89.212.21.243] (port=33976 helo=[192.168.69.84])
+	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <andrej.picej@norik.com>)
+	id 1rofky-009ZHa-1T;
+	Mon, 25 Mar 2024 09:32:36 +0100
+Message-ID: <3423ea96-859d-4c4b-a9a7-e0d9c3c00727@norik.com>
+Date: Mon, 25 Mar 2024 09:32:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,37 +43,79 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] media: dt-bindings: i2c: add GalaxyCore GC05A2
- image sensor
-To: Zhi Mao <zhi.mao@mediatek.com>, mchehab@kernel.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, sakari.ailus@linux.intel.com
-Cc: laurent.pinchart@ideasonboard.com, shengnan.wang@mediatek.com,
- yaya.chang@mediatek.com, Project_Global_Chrome_Upstream_Group@mediatek.com,
- yunkec@chromium.org, conor+dt@kernel.org, matthias.bgg@gmail.com,
- jacopo.mondi@ideasonboard.com, 10572168@qq.com, hverkuil-cisco@xs4all.nl,
- heiko@sntech.de, jernej.skrabec@gmail.com, macromorgan@hotmail.com,
- linus.walleij@linaro.org, hdegoede@redhat.com,
- tomi.valkeinen@ideasonboard.com, gerald.loacker@wolfvision.net,
- andy.shevchenko@gmail.com, bingbu.cao@intel.com,
- dan.scally@ideasonboard.com, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20240323014751.4989-1-zhi.mao@mediatek.com>
- <20240323014751.4989-2-zhi.mao@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20240323014751.4989-2-zhi.mao@mediatek.com>
+Subject: Re: [PATCH 0/2] i.MX93 ADC calibration settings
+Content-Language: en-GB
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: haibo.chen@nxp.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, lars@metafoo.de, shawnguo@kernel.org,
+ s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, robh@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ upstream@lists.phytec.de
+References: <20240320100407.1639082-1-andrej.picej@norik.com>
+ <20240324135559.1640551d@jic23-huawei>
+From: Andrej Picej <andrej.picej@norik.com>
+In-Reply-To: <20240324135559.1640551d@jic23-huawei>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel.siel.si
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - norik.com
+X-Get-Message-Sender-Via: cpanel.siel.si: authenticated_id: andrej.picej@norik.com
+X-Authenticated-Sender: cpanel.siel.si: andrej.picej@norik.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-Il 23/03/24 02:47, Zhi Mao ha scritto:
-> Add YAML device tree binding for GC05A2 CMOS image sensor,
-> and the relevant MAINTAINERS entries.
+Hi Jonathan,
+
+On 24. 03. 24 14:55, Jonathan Cameron wrote:
+> On Wed, 20 Mar 2024 11:04:04 +0100
+> Andrej Picej <andrej.picej@norik.com> wrote:
 > 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Zhi Mao <zhi.mao@mediatek.com>
+>> Hi all,
+>>
+>> we had some problems with failing ADC calibration on the i.MX93 boards.
+>> Changing default calibration settings fixed this. The board where this
+>> patches are useful is not yet upstream but will be soon (hopefully).
+> 
+> Tell us more.  My initial instinct is that this shouldn't be board specific.
+> What's the trade off we are making here?  Time vs precision of calibration or
+> something else?  If these are set to a level by default that doesn't work
+> for our board, maybe we should just change them for all devices?
+> 
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+So we have two different boards with the same SoC. On one, the 
+calibration works with the default values, on the second one the 
+calibration fails, which makes the ADC unusable. What the ADC lines
+measure differ between the boards though. But the implementation is 
+nothing out of the ordinary.
 
+We tried different things but the only thing that helped is to use 
+different calibration properties. We tried deferring the probe and 
+calibration until later boot and after boot, but it did not help.
 
+In the Reference Manual [1] (chapter 72.5.1) it is written:
+
+> 4. Configure desired calibration settings (default values kept for highest accuracy maximum time).
+
+So your assumption is correct, longer calibration time (more averaging 
+samples) -> higher precision. The default values go for a high accuracy.
+And since we use a NRSMPL (Number of Averaging Samples) of 32 instead of 
+default 512, we reduce the accuracy so the calibration values pass the 
+internal defined limits.
+
+I'm not sure that changing default values is the right solution here. We 
+saw default values work with one of the boards. And since the NXP kept 
+these values adjustable I think there is a reason behind it.
+
+Note: When I say one of the boards I mean one board form. So same board 
+version, but different HW.
+
+Best regards,
+Andrej
+
+[1] i.MX 93 Applications Processor Reference Manual, Rev. 4, 12/2023
