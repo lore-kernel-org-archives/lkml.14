@@ -1,32 +1,25 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492CB1870CB;
-	Mon, 25 Mar 2024 09:48:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B916F10A3C
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711360090; cv=none; b=PmaUjRxVfQdb6P8NYwCiyI+mvVfScVeFfG2te0vpvaWP4RkKQZuzG6zLRG1woG6CJkUxLrAZjUgqOLJiZKzwCHmZSEaER0WdgT9XvrT5PS3mMwaL6Z1aV4PyH1l3P2HGPyZMjt7U/ifsGMoReYX7Ns+elW3h9CRGyH+iIxEkn7o=
+	t=1711362499; cv=none; b=HQ4ebSqXZIFO9x6TIgPrBfgOamF8xXaqaLLNG8nkVDjBtglS9ovLTOTy1Nb+eV1vN2clZg2XcqQrpgyRWY0kD7b7rjwdXq5i1OF65N0WGZhGRvB8PvEHvdyduoX9aEYJh7hfNwZ+iF5igIGU7xW600eH6dNa8wsnETEAXEir9BI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711360090; c=relaxed/simple;
-	bh=CqL8N3jTBybuBJNQiRBKr+JMOLQvMsgRNLLqDTJ9OJ0=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=DLl+SozkaGbSzGlvMbeZaoMBEQF320Qp7tSPMebuYqvB8K7PkRhqHk2cBBRrZ1gjY2qAhLEg2RyiwyHXvZXt7jOrg1eGR8yFhrfPHFhhE4JVLz2tnL7pFL/7RfLkMj0+xpPWjX9dLApwqjUdizkaWXIXZKxBVk7iYNV95tES31o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=VOh6MWc0; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="VOh6MWc0"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1711360085; h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type;
-	bh=QmV+g4GmhsxbZGKeBGO2QlNGUE+VuS1qiEGgbu8EpKw=;
-	b=VOh6MWc0hBgULdgEa8EUijWA92CqIjYcGrrFAmC88UMqwoHbjLwAhFChIhErqVEtGuVaRdw4ZCNfH+jjQ77m0iQWTrYe1++onhtk0t8wpJ5bTANk2n1HmCVr3DjoAvTTEq0sztso/61DJtatEppxUUkdjNGZX+/al2BI+jFXQ3w=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=yaoma@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0W3EQlKh_1711360081;
-Received: from 30.178.67.255(mailfrom:yaoma@linux.alibaba.com fp:SMTPD_---0W3EQlKh_1711360081)
-          by smtp.aliyun-inc.com;
-          Mon, 25 Mar 2024 17:48:04 +0800
-Message-ID: <6109a3e3-ca88-4a4d-86c5-c4eb0d7f6f9c@linux.alibaba.com>
-Date: Mon, 25 Mar 2024 17:47:58 +0800
+	s=arc-20240116; t=1711362499; c=relaxed/simple;
+	bh=Nsg5DTB9FmEllyTeXNhd2P7XdwJT0Qf+yploy0EirU8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=blmYTIAkqQvNEIFwTkJAFLZQdC4V+dpFGmM8G3l/w26KeX56brZg3VVfobIkNxRtGDrZ7uhmImGzu4E6GGqrJmPwl9vfbVRYEJQNjz7BVmT7KPGnrjjct3KGbZ8HY/tdTFjFUvvplxDJFhGsXHWYthQ1L7AZ+mSW107tjcuwHeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0F20C15;
+	Mon, 25 Mar 2024 03:28:50 -0700 (PDT)
+Received: from [10.57.15.178] (unknown [10.57.15.178])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 085F33F67D;
+	Mon, 25 Mar 2024 03:28:14 -0700 (PDT)
+Message-ID: <bad16bba-5469-4f20-bf23-7f3c2953edc5@arm.com>
+Date: Mon, 25 Mar 2024 10:28:17 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,65 +27,89 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Bitao Hu <yaoma@linux.alibaba.com>
-Subject: Re: [PATCHv12 4/4] watchdog/softlockup: report the most frequent
- interrupts
-To: Thomas Gleixner <tglx@linutronix.de>, dianders@chromium.org,
- liusong@linux.alibaba.com, akpm@linux-foundation.org, pmladek@suse.com,
- kernelfans@gmail.com, deller@gmx.de, npiggin@gmail.com,
- tsbogend@alpha.franken.de, James.Bottomley@HansenPartnership.com,
- jan.kiszka@siemens.com
-Cc: linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- yaoma@linux.alibaba.com
-References: <20240306125208.71803-1-yaoma@linux.alibaba.com>
- <20240306125208.71803-5-yaoma@linux.alibaba.com> <87zfuofzld.ffs@tglx>
-Content-Language: en-US
-In-Reply-To: <87zfuofzld.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH] drm/panfrost: fix power transition timeout warnings
+To: Christian Hewitt <christianshewitt@gmail.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Rob Herring <robh@kernel.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20240322164525.2617508-1-christianshewitt@gmail.com>
+Content-Language: en-GB
+From: Steven Price <steven.price@arm.com>
+In-Reply-To: <20240322164525.2617508-1-christianshewitt@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi, Thomas
-
-On 2024/3/24 04:43, Thomas Gleixner wrote:
-> On Wed, Mar 06 2024 at 20:52, Bitao Hu wrote:
->> +	if (__this_cpu_read(snapshot_taken)) {
->> +		for_each_active_irq(i) {
->> +			count = kstat_get_irq_since_snapshot(i);
->> +			tabulate_irq_count(irq_counts_sorted, i, count, NUM_HARDIRQ_REPORT);
->> +		}
->> +
->> +		/*
->> +		 * We do not want the "watchdog: " prefix on every line,
->> +		 * hence we use "printk" instead of "pr_crit".
->> +		 */
+On 22/03/2024 16:45, Christian Hewitt wrote:
+> Increase the timeout value to prevent system logs on Amlogic boards flooding
+> with power transition warnings:
 > 
-> You are not providing any justification why the prefix is not
-> wanted. Just saying 'We do not want' does not cut it and who is 'We'. I
-> certainly not.
+> [   13.047638] panfrost ffe40000.gpu: shader power transition timeout
+> [   13.048674] panfrost ffe40000.gpu: l2 power transition timeout
+> [   13.937324] panfrost ffe40000.gpu: shader power transition timeout
+> [   13.938351] panfrost ffe40000.gpu: l2 power transition timeout
+> ...
+> [39829.506904] panfrost ffe40000.gpu: shader power transition timeout
+> [39829.507938] panfrost ffe40000.gpu: l2 power transition timeout
+> [39949.508369] panfrost ffe40000.gpu: shader power transition timeout
+> [39949.509405] panfrost ffe40000.gpu: l2 power transition timeout
 > 
-> I really disagree because the prefixes are very useful for searching log
-> files. So not having it makes it harder to filter out for no reason.
+> The 2000 value has been found through trial and error testing with devices
+> using G52 and G31 GPUs.
+
+How close to 2ms did you need in your trial and error testing? I'm
+wondering if we should increase it further in case this might still
+trigger occasionally?
+
+kbase seems to have a 5s (5000ms!) timeout before it will actually
+complain. But equally it doesn't busy wait on the registers in the same
+way as panfrost, so the impact to the rest of the system of a long wait
+is less.
+
+But 2ms doesn't sound an unreasonable timeout so:
+
+Reviewed-by: Steven Price <steven.price@arm.com>
+
+> Fixes: 22aa1a209018 ("drm/panfrost: Really power off GPU cores in panfrost_gpu_power_off()")
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>> ---
+>  drivers/gpu/drm/panfrost/panfrost_gpu.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_gpu.c b/drivers/gpu/drm/panfrost/panfrost_gpu.c
+> index 9063ce254642..fd8e44992184 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_gpu.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_gpu.c
+> @@ -441,19 +441,19 @@ void panfrost_gpu_power_off(struct panfrost_device *pfdev)
+>  
+>  	gpu_write(pfdev, SHADER_PWROFF_LO, pfdev->features.shader_present);
+>  	ret = readl_relaxed_poll_timeout(pfdev->iomem + SHADER_PWRTRANS_LO,
+> -					 val, !val, 1, 1000);
+> +					 val, !val, 1, 2000);
+>  	if (ret)
+>  		dev_err(pfdev->dev, "shader power transition timeout");
+>  
+>  	gpu_write(pfdev, TILER_PWROFF_LO, pfdev->features.tiler_present);
+>  	ret = readl_relaxed_poll_timeout(pfdev->iomem + TILER_PWRTRANS_LO,
+> -					 val, !val, 1, 1000);
+> +					 val, !val, 1, 2000);
+>  	if (ret)
+>  		dev_err(pfdev->dev, "tiler power transition timeout");
 
+As Angelo points out the tiler probably doesn't need such a long
+timeout, but I can't see the harm in consistency so I'm happy with this
+change. If my memory of the hardware is correct then the tiler power off
+actually does very little and so I wouldn't expect it to take very long.
 
-Regarding the use of printk() instead of pr_crit(), I have had a
-discussion with Liu Song and Douglas in PATCHv1:
-https://lore.kernel.org/all/CAD=FV=WEEQeKX=ec3Gr-8CKs2K0MaWN3V0-0yOsuret0qcB_AA@mail.gmail.com/
+Steve
 
-Please allow me to elaborate on my reasoning. The purpose of the
-report_cpu_status() function I implemented is similar to that of
-print_modules(), show_regs(), and dump_stack(). These functions are
-designed to assist in analyzing the causes of a soft lockup, rather
-than to report that a soft lockup has occurred. Therefore, I think
-that adding the "watchdog: " prefix to every line is redundant and
-not concise. Besides, the existing pr_emerg() in the watchdog.c file
-is already sufficient for searching useful information in the logs.
-The information I added, along with the call tree and other data, is
-located near the line with the "watchdog: " prefix.
+>  	gpu_write(pfdev, L2_PWROFF_LO, pfdev->features.l2_present);
+>  	ret = readl_poll_timeout(pfdev->iomem + L2_PWRTRANS_LO,
+> -				 val, !val, 0, 1000);
+> +				 val, !val, 0, 2000);
+>  	if (ret)
+>  		dev_err(pfdev->dev, "l2 power transition timeout");
+>  }
 
-Are the two reasons I've provided reasonable?
-
-Best Regards,
-
-	Bitao Hu
