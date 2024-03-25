@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAE213DDC6;
-	Mon, 25 Mar 2024 07:10:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7605A1802C4;
+	Mon, 25 Mar 2024 07:10:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711350646; cv=none; b=qJhFNsMcVvvZpp7FWvDw0H+q2yPROlRsiHC1WA2pAaFF5x/0Uj8itlXiue3DaM305VaaO9AIVcKQWUQUNBNS+zKSS25h8sSLUDLJKSFtjIEJ/OpH3Ah26Wfpppnc6QAjmTPvSCYxHoXMA66ywth0AVfFWEPeZ8TcJ9+rCsi8TjM=
+	t=1711350600; cv=none; b=Bq+sjz4gPAsR30Lg6OWNo4CP0Fzc3oilurWYQ4L0TOYEn3ascsufDMenxnXD+0ibkzCttktXYtpa2q88K/r6HEiBPxhl6I9wxAzVs8MAUfj2KzpmJlQx5c+SEcvtq9ple2eW/qSwWSEqHdb6MOuZLuOGczBUVzl1/fsBvnVFJuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711350646; c=relaxed/simple;
-	bh=nyF2+f8zI4vWZZf4r2IxJ8C5vv5uk+A5vLMYxEnvgXc=;
+	s=arc-20240116; t=1711350600; c=relaxed/simple;
+	bh=25LpLFDUK7yCKsArH1FwhXbVER4eRwrvFSgeehcEArs=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aASlipr/Al7GYZXdXlg+ve3KkXTE17Z7pfytgzTgcbTOxYYZ7CzGyoWbzXBfAksE407Bqc3Ghcj4eS36YHXQUpbjZ/s4dGgvNdNo6kynjElGmnEoBuSuPMiZMh7WLcYZp4scPfr6kL9v7U0Sz+N46ohQGjuqmJIkYSoUgtjxAOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hfxMiJR0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ULmtWOzo1ksRYt1y2LOMHUaYeWym2te7MKEXIrGtFJhQOlsAv6/oQuGRShKUbL006IO29Uba0/fagE/63vihSzqrYLOoc3NxhnCchNn3rCMZdUTV8IeDFgtUVCAXshd3BnfaeVtXyl0H8SICvW4bXZcIgLN46HnAT9rfbiQmfhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qa/X5yWD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hfxMiJR0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53FBAC433F1;
-	Mon, 25 Mar 2024 07:10:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qa/X5yWD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8644C433C7;
+	Mon, 25 Mar 2024 07:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711350645;
-	bh=nyF2+f8zI4vWZZf4r2IxJ8C5vv5uk+A5vLMYxEnvgXc=;
+	s=k20201202; t=1711350600;
+	bh=25LpLFDUK7yCKsArH1FwhXbVER4eRwrvFSgeehcEArs=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=hfxMiJR0ORogAdo8z44jgN7ImT1K3uzA7Nw2cuUg1EzJtLTSitA05+M68aV0oxeHn
-	 fjVG+F/o1o+iuBT9hhMLfNUs+FCbqWRDmx0vbKuRmkd1hi9uKSE1lBwZW/u3EKKhn3
-	 Ir5PVl2I2TiIi7c7Fax1iCnmhSowKj0rp/0Xprzd0PakkUdhVo5VzxUpbMzjH06w29
-	 u2m9sDcqEvvL9QLkqITXrg5MxN/YZtDEyunGNE6c9qx1ldUmSLozLe1m3MB6Lb15Nc
-	 s7D1BJGySQAxCz1SWn3Mxv6+TFEo+Qyg85AZHzX3Woj0NLVIJdKpi7UeRNPtSgJsht
-	 g00WVirSzmSvg==
+	b=qa/X5yWDz6dwe5dMyQx+NAYSgAguUFLGgjV7qf/kSfDLz28KlIGCuz4ecgRcuRYEh
+	 MhMiBUGzmFjtWmCAW0g9zX1kk2TOIKNVnDVC1T3sPMaChkpUjwVoK66HXkjzQXaxwj
+	 obD0t0C9/R5oKN4/8kDBhoa/ji2zAPXTS5eoEIB2xHuTLdip8GhIUzq4NDe0OHtYxO
+	 /4MgNB27YKEAwlbKfQlIOeH+HtbNt+CqYPkNeLL6SQY8VeocEspxjnKCMtA8Hcxi7g
+	 e0qJ/Vo/kdc3N0oBfTC4d6XUKQkha+tp1pJ6MfAqLplXdY4MJZaC2hvLasDeZ7E+SA
+	 lWK7hbwqZQHCg==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: linux-pci@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -49,9 +49,9 @@ To: linux-pci@vger.kernel.org,
 	Eric Dumazet <edumazet@google.com>,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 15/28] net: aquantia atlantic: Use PCI_IRQ_INTX
-Date: Mon, 25 Mar 2024 16:09:26 +0900
-Message-ID: <20240325070944.3600338-16-dlemoal@kernel.org>
+Subject: [PATCH 03/28] PCI: documentation: Use PCI_IRQ_INTX
+Date: Mon, 25 Mar 2024 16:09:14 +0900
+Message-ID: <20240325070944.3600338-4-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240325070944.3600338-1-dlemoal@kernel.org>
 References: <20240325070944.3600338-1-dlemoal@kernel.org>
@@ -61,129 +61,72 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Use the macro PCI_IRQ_INTX instead of the deprecated PCI_IRQ_LEGACY
-macro. To be consistent with this change, the macros AQ_HW_IRQ_LEGACY
-and AQ_CFG_FORCE_LEGACY_INT are respectively renamed to AQ_HW_IRQ_INTX
-and AQ_CFG_FORCE_INTX.
+Change all references to PCI_IRQ_LEGACY to PCI_IRQ_INTX in the PCI
+documentation to reflect that PCI_IRQ_LEGACY is deprecated.
 
 Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_cfg.h          | 2 +-
- drivers/net/ethernet/aquantia/atlantic/aq_hw.h           | 2 +-
- drivers/net/ethernet/aquantia/atlantic/aq_nic.c          | 2 +-
- drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c     | 9 +++------
- .../net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c    | 2 +-
- .../net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c    | 2 +-
- drivers/net/ethernet/aquantia/atlantic/hw_atl2/hw_atl2.c | 2 +-
- 7 files changed, 9 insertions(+), 12 deletions(-)
+ Documentation/PCI/msi-howto.rst                    | 2 +-
+ Documentation/PCI/pci.rst                          | 2 +-
+ Documentation/translations/zh_CN/PCI/msi-howto.rst | 2 +-
+ Documentation/translations/zh_CN/PCI/pci.rst       | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_cfg.h b/drivers/net/ethernet/aquantia/atlantic/aq_cfg.h
-index 7e9c74b141ef..fc2b325f34e7 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_cfg.h
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_cfg.h
-@@ -17,7 +17,7 @@
+diff --git a/Documentation/PCI/msi-howto.rst b/Documentation/PCI/msi-howto.rst
+index 783d30b7bb42..0692c9aec66f 100644
+--- a/Documentation/PCI/msi-howto.rst
++++ b/Documentation/PCI/msi-howto.rst
+@@ -103,7 +103,7 @@ min_vecs argument set to this limit, and the PCI core will return -ENOSPC
+ if it can't meet the minimum number of vectors.
  
- #define AQ_CFG_IS_POLLING_DEF 0U
+ The flags argument is used to specify which type of interrupt can be used
+-by the device and the driver (PCI_IRQ_LEGACY, PCI_IRQ_MSI, PCI_IRQ_MSIX).
++by the device and the driver (PCI_IRQ_INTX, PCI_IRQ_MSI, PCI_IRQ_MSIX).
+ A convenient short-hand (PCI_IRQ_ALL_TYPES) is also available to ask for
+ any possible kind of interrupt.  If the PCI_IRQ_AFFINITY flag is set,
+ pci_alloc_irq_vectors() will spread the interrupts around the available CPUs.
+diff --git a/Documentation/PCI/pci.rst b/Documentation/PCI/pci.rst
+index cced568d78e9..dd7b1c0c21da 100644
+--- a/Documentation/PCI/pci.rst
++++ b/Documentation/PCI/pci.rst
+@@ -335,7 +335,7 @@ causes the PCI support to program CPU vector data into the PCI device
+ capability registers. Many architectures, chip-sets, or BIOSes do NOT
+ support MSI or MSI-X and a call to pci_alloc_irq_vectors with just
+ the PCI_IRQ_MSI and PCI_IRQ_MSIX flags will fail, so try to always
+-specify PCI_IRQ_LEGACY as well.
++specify PCI_IRQ_INTX as well.
  
--#define AQ_CFG_FORCE_LEGACY_INT 0U
-+#define AQ_CFG_FORCE_INTX	0U
+ Drivers that have different interrupt handlers for MSI/MSI-X and
+ legacy INTx should chose the right one based on the msi_enabled
+diff --git a/Documentation/translations/zh_CN/PCI/msi-howto.rst b/Documentation/translations/zh_CN/PCI/msi-howto.rst
+index 1b9b5ea790d8..95baadf767e4 100644
+--- a/Documentation/translations/zh_CN/PCI/msi-howto.rst
++++ b/Documentation/translations/zh_CN/PCI/msi-howto.rst
+@@ -88,7 +88,7 @@ MSI功能。
+ 如果设备对最小数量的向量有要求，驱动程序可以传递一个min_vecs参数，设置为这个限制，
+ 如果PCI核不能满足最小数量的向量，将返回-ENOSPC。
  
- #define AQ_CFG_INTERRUPT_MODERATION_OFF		0
- #define AQ_CFG_INTERRUPT_MODERATION_ON		1
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_hw.h b/drivers/net/ethernet/aquantia/atlantic/aq_hw.h
-index dbd284660135..f010bda61c96 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_hw.h
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_hw.h
-@@ -104,7 +104,7 @@ struct aq_stats_s {
- };
+-flags参数用来指定设备和驱动程序可以使用哪种类型的中断（PCI_IRQ_LEGACY, PCI_IRQ_MSI,
++flags参数用来指定设备和驱动程序可以使用哪种类型的中断（PCI_IRQ_INTX, PCI_IRQ_MSI,
+ PCI_IRQ_MSIX）。一个方便的短语（PCI_IRQ_ALL_TYPES）也可以用来要求任何可能的中断类型。
+ 如果PCI_IRQ_AFFINITY标志被设置，pci_alloc_irq_vectors()将把中断分散到可用的CPU上。
  
- #define AQ_HW_IRQ_INVALID 0U
--#define AQ_HW_IRQ_LEGACY  1U
-+#define AQ_HW_IRQ_INTX	  1U
- #define AQ_HW_IRQ_MSI     2U
- #define AQ_HW_IRQ_MSIX    3U
+diff --git a/Documentation/translations/zh_CN/PCI/pci.rst b/Documentation/translations/zh_CN/PCI/pci.rst
+index 83c2a41d38d3..347f5c3f5ce9 100644
+--- a/Documentation/translations/zh_CN/PCI/pci.rst
++++ b/Documentation/translations/zh_CN/PCI/pci.rst
+@@ -304,7 +304,7 @@ MSI-X可以分配几个单独的向量。
+ 的PCI_IRQ_MSI和/或PCI_IRQ_MSIX标志来启用MSI功能。这将导致PCI支持将CPU向量数
+ 据编程到PCI设备功能寄存器中。许多架构、芯片组或BIOS不支持MSI或MSI-X，调用
+ ``pci_alloc_irq_vectors`` 时只使用PCI_IRQ_MSI和PCI_IRQ_MSIX标志会失败，
+-所以尽量也要指定 ``PCI_IRQ_LEGACY`` 。
++所以尽量也要指定 ``PCI_IRQ_INTX`` 。
  
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-index d6d6d5d37ff3..fe0e3e2a8117 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-@@ -127,7 +127,7 @@ void aq_nic_cfg_start(struct aq_nic_s *self)
- 
- 	cfg->irq_type = aq_pci_func_get_irq_type(self);
- 
--	if ((cfg->irq_type == AQ_HW_IRQ_LEGACY) ||
-+	if ((cfg->irq_type == AQ_HW_IRQ_INTX) ||
- 	    (cfg->aq_hw_caps->vecs == 1U) ||
- 	    (cfg->vecs == 1U)) {
- 		cfg->is_rss = 0U;
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
-index baa5f8cc31f2..43c71f6b314f 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
-@@ -200,7 +200,7 @@ unsigned int aq_pci_func_get_irq_type(struct aq_nic_s *self)
- 	if (self->pdev->msi_enabled)
- 		return AQ_HW_IRQ_MSI;
- 
--	return AQ_HW_IRQ_LEGACY;
-+	return AQ_HW_IRQ_INTX;
- }
- 
- static void aq_pci_free_irq_vectors(struct aq_nic_s *self)
-@@ -298,11 +298,8 @@ static int aq_pci_probe(struct pci_dev *pdev,
- 
- 	numvecs += AQ_HW_SERVICE_IRQS;
- 	/*enable interrupts */
--#if !AQ_CFG_FORCE_LEGACY_INT
--	err = pci_alloc_irq_vectors(self->pdev, 1, numvecs,
--				    PCI_IRQ_MSIX | PCI_IRQ_MSI |
--				    PCI_IRQ_LEGACY);
--
-+#if !AQ_CFG_FORCE_INTX
-+	err = pci_alloc_irq_vectors(self->pdev, 1, numvecs, PCI_IRQ_ALL_TYPES);
- 	if (err < 0)
- 		goto err_hwinit;
- 	numvecs = err;
-diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c
-index 9dfd68f0fda9..8de2cdd09213 100644
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c
-@@ -352,7 +352,7 @@ static int hw_atl_a0_hw_init(struct aq_hw_s *self, const u8 *mac_addr)
- {
- 	static u32 aq_hw_atl_igcr_table_[4][2] = {
- 		[AQ_HW_IRQ_INVALID] = { 0x20000000U, 0x20000000U },
--		[AQ_HW_IRQ_LEGACY]  = { 0x20000080U, 0x20000080U },
-+		[AQ_HW_IRQ_INTX]    = { 0x20000080U, 0x20000080U },
- 		[AQ_HW_IRQ_MSI]     = { 0x20000021U, 0x20000025U },
- 		[AQ_HW_IRQ_MSIX]    = { 0x20000022U, 0x20000026U },
- 	};
-diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-index 54e70f07b573..56c46266bb0a 100644
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-@@ -562,7 +562,7 @@ static int hw_atl_b0_hw_init(struct aq_hw_s *self, const u8 *mac_addr)
- {
- 	static u32 aq_hw_atl_igcr_table_[4][2] = {
- 		[AQ_HW_IRQ_INVALID] = { 0x20000000U, 0x20000000U },
--		[AQ_HW_IRQ_LEGACY]  = { 0x20000080U, 0x20000080U },
-+		[AQ_HW_IRQ_INTX]    = { 0x20000080U, 0x20000080U },
- 		[AQ_HW_IRQ_MSI]     = { 0x20000021U, 0x20000025U },
- 		[AQ_HW_IRQ_MSIX]    = { 0x20000022U, 0x20000026U },
- 	};
-diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl2/hw_atl2.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl2/hw_atl2.c
-index 220400a633f5..b0ed572e88c6 100644
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl2/hw_atl2.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl2/hw_atl2.c
-@@ -534,7 +534,7 @@ static int hw_atl2_hw_init(struct aq_hw_s *self, const u8 *mac_addr)
- {
- 	static u32 aq_hw_atl2_igcr_table_[4][2] = {
- 		[AQ_HW_IRQ_INVALID] = { 0x20000000U, 0x20000000U },
--		[AQ_HW_IRQ_LEGACY]  = { 0x20000080U, 0x20000080U },
-+		[AQ_HW_IRQ_INTX]    = { 0x20000080U, 0x20000080U },
- 		[AQ_HW_IRQ_MSI]     = { 0x20000021U, 0x20000025U },
- 		[AQ_HW_IRQ_MSIX]    = { 0x20000022U, 0x20000026U },
- 	};
+ 对MSI/MSI-X和传统INTx有不同中断处理程序的驱动程序应该在调用
+ ``pci_alloc_irq_vectors`` 后根据 ``pci_dev``结构体中的 ``msi_enabled``
 -- 
 2.44.0
 
