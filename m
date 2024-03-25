@@ -1,71 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC7E185F0F;
-	Sun, 24 Mar 2024 23:53:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A13E42A96
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 00:01:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711324383; cv=none; b=gzH/HV6I1Sw0tZMHTZEIQJBQW4Mv6qEwDwqoDd7K9aDPyYU2zGc8EJ56BHuG75i9afBEELQZRgzT9urnJOaslayydRixPhYxTJR2bSC3TIof9of/fEUIQVOB9lJJRHNB8g4gEmKNd9A+9l1sg4k/6UEZeTJDxvSzgE0Pn0NCpHg=
+	t=1711324897; cv=none; b=i8Ve/07Lvrsl0cgX1j25uLgUOwUqJd3ihnq9THOvoRKQxpav1U7NCE1VokF1ggzUAEXMFbQ8B0VksxZ6NhVGs3nwRaF5MjIspXfQkOObnrq0az5sKTvRYOST+mR4t24JPl/dexfmBDcZd019Dz/P+tUbmSbJdvV3lZP4BKrp8O0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711324383; c=relaxed/simple;
-	bh=YXHz/LDJi9Lq/bWF7mF1aEuybGMh23jcPOzyOV1E314=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ehiZQPi0QCp/r8FdicLRsTQKSq0Q6ERZVNAwGaTtkT6hjlgq/Ju5q1mC22P21BDPOcOKPppkKfEZqCogVhIZBlIZm7fLoSGTRuZf/jq8bWJMxaX2squ2RpW0MUpqqoL/jWiHNkZWo4VZInfFB+SrbgaU+VZf/Hdwv/YZASy9ynA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C6+T3Pw8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711324897; c=relaxed/simple;
+	bh=NIE/CcYuw5x+AJSlzMUub7IIPjl12ZMADren4K9YdUg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ouv6ygPpg140Zq4fj3fTQeKOoYT2lzVaD+iaYVfy7O31QUqOzXrwC6CwiVhGII+WFFpyyjSveZh501/r88oXUgKbqmlEFinuLXDfrkSN4sh5DXNVN9sWDyRFmkeRFIqL4Z25OFrEteMkXeScIr9L4/A03g8Xpm60d3SHbrWaeQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I3nF+HIv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C6+T3Pw8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 549ECC43390;
-	Sun, 24 Mar 2024 23:53:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I3nF+HIv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 844E7C43390;
+	Mon, 25 Mar 2024 00:01:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711324382;
-	bh=YXHz/LDJi9Lq/bWF7mF1aEuybGMh23jcPOzyOV1E314=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=C6+T3Pw8ggEjit/bgK60qzalMe4l6aIuSppLzCJbQ/nuhR8xB0SDE/sTTI+ortAjn
-	 H644tU32D93w60wVKdvf4gHK/C1+h3v4HF1l/69l/uEcnk+I5uicft5Yn2f/VZOsxJ
-	 ad29iOtZi/oVNuxWjjSo6qqo4sS3lOn6ARjWqVoUpJidgQcol5z1bu/koO6wrlBlOL
-	 W7+Z+tBmnZYCQ5C/mkkRrj8stBteZOvQ/jv0RiEg9wwY9o1+XZIH2Bl76F9x/08Kqo
-	 YTnETHRCA+UMBhPFFx4uvd/dUvAPMbWV/ourQT1tjM8ErWwDmVrlGuRVt47olDGNPY
-	 LBUPHZmLtbpXg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 148/148] Linux 4.19.311-rc1
-Date: Sun, 24 Mar 2024 19:50:12 -0400
-Message-ID: <20240324235012.1356413-149-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240324235012.1356413-1-sashal@kernel.org>
-References: <20240324235012.1356413-1-sashal@kernel.org>
+	s=k20201202; t=1711324896;
+	bh=NIE/CcYuw5x+AJSlzMUub7IIPjl12ZMADren4K9YdUg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=I3nF+HIvaUKDyM3ViD8AVC60aXNFk9dbbn6L9VYmTBtfIisjMawpwBzEw8i/6k5Pg
+	 uLGOi8LpgYDlCUG76tHaFcxWSfDGZ5bgmW4wr31luRd2gCmE5Ad9SqpGNVLI9JGo9x
+	 OdKqFwtRcH2YpMVNeqhtrn7fXwLil2Kay/KDFU9I7POBbjjZviIRU0gzj78yjFHEF6
+	 8X7jjQCMIoFKXL/K+xlbBAeI6tov6GKLs7cx/z1M1Z55fVIBOBbE9KxGU1+UHCN+nx
+	 /8yH8OiIq7OJbJMBDAG/PS6d3fCndgYZF3UEOEqtV50Vbf+656AGKIfVOA02IgDvzF
+	 K92vMMBCWL9pg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 26079CE11CE; Sun, 24 Mar 2024 17:01:36 -0700 (PDT)
+Date: Sun, 24 Mar 2024 17:01:36 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Akira Yokosawa <akiyks@gmail.com>
+Cc: ying.huang@intel.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	ryan.roberts@arm.com, chrisl@kernel.org
+Subject: Re: Can you help us on memory barrier usage? (was Re: [PATCH v4 4/6]
+ mm: swap: Allow storage of all mTHP orders)
+Message-ID: <766cfb68-f82a-4163-9dc1-5f4483fa5a7a@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <87r0g3q9cz.fsf_-_@yhuang6-desk2.ccr.corp.intel.com>
+ <c56eae89-9559-4b1d-8249-d23281e466b4@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c56eae89-9559-4b1d-8249-d23281e466b4@gmail.com>
 
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Sat, Mar 23, 2024 at 11:11:09AM +0900, Akira Yokosawa wrote:
+> [Use Paul's reachable address in CC;
+>  trimmed CC list, keeping only those who have responded so far.]
+> 
+> Hello Huang,
+> Let me chime in.
+> 
+> On Fri, 22 Mar 2024 06:19:52 -0700, Huang, Ying wrote:
+> > Hi, Paul,
+> > 
+> > Can you help us on WRITE_ONCE()/READ_ONCE()/barrier() usage as follows?
+> > For some example kernel code as follows,
+> > 
+> > "
+> > unsigned char x[16];
+> > 
+> > void writer(void)
+> > {
+> >         memset(x, 1, sizeof(x));
+> >         /* To make memset() take effect ASAP */
+> >         barrier();
+> > }
+> > 
+> > unsigned char reader(int n)
+> > {
+> >         return READ_ONCE(x[n]);
+> > }
+> > "
+> > 
+> > where, writer() and reader() may be called on 2 CPUs without any lock.
+> > It's acceptable for reader() to read the written value a little later.
 
-diff --git a/Makefile b/Makefile
-index 96be210bd42b9..ee1f1c3c00e4c 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1,8 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- VERSION = 4
- PATCHLEVEL = 19
--SUBLEVEL = 310
--EXTRAVERSION =
-+SUBLEVEL = 311
-+EXTRAVERSION = -rc1
- NAME = "People's Front"
- 
- # *DOCUMENTATION*
--- 
-2.43.0
+What are your consistency requirements?  For but one example, if reader(3)
+gives the new value, is it OK for a later call to reader(2) to give the
+old value?
 
+Until we know what your requirements are, it is hard to say whether the
+above code meets those requirements.  In the meantime, I can imagine
+requirements that it meets and others that it does not.
+
+Also, Akira's points below are quite important.
+
+							Thanx, Paul
+
+> > Our questions are,
+> > 
+> > 1. because it's impossible for accessing "unsigned char" to cause
+> > tearing.  So, WRITE_ONCE()/READ_ONCE()/barrier() isn't necessary for
+> > correctness, right?
+> > 
+> > 2. we use barrier() and READ_ONCE() in writer() and reader(), because we
+> > want to make writing take effect ASAP.  Is it a good practice?  Or it's
+> > a micro-optimization that should be avoided?
+> 
+> Why don't you consult Documentation/memory-barriers.txt, especially
+> the section titled "COMPILER BARRIER"?
+> 
+> TL;DR:
+> 
+> barrier(), WRITE_ONCE(), and READ_ONCE() are compiler barriers, not
+> memory barriers.  They just restrict compiler optimizations and don't
+> have any effect with regard to "make writing take effect ASAP".
+> 
+> If you have further questions, please don't hesitate to ask.
+> 
+> Regards,
+> Akira (a LKMM Reveiwer).
+> 
+> > 
+> > --
+> > Best Regards,
+> > Huang, Ying
+> 
