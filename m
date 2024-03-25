@@ -1,88 +1,81 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A270512B77
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:45:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0941D46B9B
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711370742; cv=none; b=nrWHCJcSBG3+e2luF2bNvsw8TfoRtLy8ogLqBuWzcZbGw/R+QUdwI9rWJXHQTs2mmJvYrn19EU7SZaLtjeMNErYYVvK5W8ojW/CGFQzbU+GHg9xh0Knc/E7/4ILGWdIS84t8dfrHFRahWT1v+JATt206mowldc7qJ0FznKN8+Zo=
+	t=1711370745; cv=none; b=PWX32rRlDX9qyMp+uJEj0z4Xfxp70XMWPDxlOLQT4DYbIKcPtqDSHKEhynHipL+xuksO/I9Orhw3yT2g4r9d6XzPCzMnJph7cXNgGyo2ycfh8lPCMEu+jtKXXpp+GjjB37mcQiTNRyRfOdnkZIed3xPIxAm9NynDZPZLkRAeioQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711370742; c=relaxed/simple;
-	bh=jFAJJBZ7w2HGxEoQD4IPOO+YemTNHNOU01iTofesezQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oFGrRBXlTrBEZA8QqkLzBNg3wD4jp4xzxGpNzb1T/ucF6QiRBysw/hCQD8cHNzz+1HN8F1UQRNrcP2dLs0kq8uRJmGA37P22jD7iZR+vDABpfcSn2Yw5VHmJzAksVLj0Ma7jQhNnkjBY9BKyubVW+4rIATrY83kx5FKErzqOc7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aHh6WPfN; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711370745; c=relaxed/simple;
+	bh=6S1jpM8cRjal0ma04kQFc9hgNF7SQSqnoGDvQZoxzUA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N5wvCrt30RDjm8ARgGUTx6FIBQ9VzYVn9eKxldhq9atvbcWNn+TDxcGw6QO5f8xVn95cOyrnPbblWwib0kQb+3mACm55etNXKa2G8iJ4O2kKNWosEnjalbkvvZ+01xyMKa8yHiG7gQx6hmwIHD5G9lK0uCjUuqqeD2ZuV1bmQew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c1AJXD1u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aHh6WPfN"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4147e135f4dso18056855e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 05:45:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711370739; x=1711975539; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Mr094tqbb7t0gaddbBeDzNaAJNuOic0uHzVPON5hPTo=;
-        b=aHh6WPfNuxDdhzXgqDBwQyzelK4BBytCAwJqgpIvCYL+lsl2I1In/QMrXUuaKQj+Co
-         y2TCJpWJNuXdv/cfWFD7lTL3NlvoM5l+Le8nc5G4ZCrSf1771RN/QNLixQuDLIpE0rjm
-         VIlaiXaOARzd/0KzVhkBseDsqf3vS+knGUmME1ioxy9ufu7mwns6Nlay4W4xDYvKo255
-         klI8EnqB6gVXCDePDZO/fyb9sUGck4zDAeivTKZFKlRVhHIhLaCFRZ7AS9mHTFSpx7uJ
-         SW4NAu4LTrAyOporDj/sD2m60ZI0p/fcdp26e9nvSW3BNzQGclOKTmpHOD7N7+uy9sMc
-         UTuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711370739; x=1711975539;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mr094tqbb7t0gaddbBeDzNaAJNuOic0uHzVPON5hPTo=;
-        b=swcsCsAsLxmWmkDEEQ6j49QyTs0bb4WP8NTJ60ET6Fi7A0lHtKrR4FH88EWNm5VdEW
-         WVxQR6wDyMx8JxSV9OAEvkusFlzI0vh67+kU0L+WEUtj+la3BPMghlYPvZsyV3L5Qxi9
-         GhYT6Idbnp5n3QeoHs7X87GSbhNZvCHfrUu8WkWy6/ZHgu7S3qrHkIOs3ny1oUlYccj4
-         BUzNkr99cJ9V54XX4t8TsEmXrwO6oAMJpvA4O+mA5Pakb6w+Qn3IFvJNZBJX+Pe7mNcJ
-         cii3MVBNbsqVKTeUVLuH4FBhYmakSS+dZ4aManUuVhvRkNbqIUiSb6hLo4IWROVAw2pj
-         DVew==
-X-Forwarded-Encrypted: i=1; AJvYcCVg9l0Ll1XPF49K4m2xCa20P29TiGCeNKH9reX/IdnL3NFn18M5XtPbrUtBW41HhsKXB3I4HMEA4tmK5hCzYYSW74qjSpTQBOVIufqq
-X-Gm-Message-State: AOJu0YzHsBE0hr6viiL1uD4vR/S1MziuVkwaRKtolemeVySmK7YSV4DE
-	4IRdo6avdqs7SNm/yjm4mK/9M36YGgHlSp5mOEWvNd/W0A7KWl2cnoF3lpFnkO0=
-X-Google-Smtp-Source: AGHT+IEdhASmhpgpMn0JRksM/eo2Hqq1dK9CQwhtcLk2Ko9opS+KAE+Y9nF5MLutxyGPWmJ/PyVnow==
-X-Received: by 2002:a05:600c:1987:b0:414:8865:bf99 with SMTP id t7-20020a05600c198700b004148865bf99mr2767476wmq.27.1711370739088;
-        Mon, 25 Mar 2024 05:45:39 -0700 (PDT)
-Received: from [192.168.2.107] ([79.115.63.252])
-        by smtp.gmail.com with ESMTPSA id u13-20020a056000038d00b00341c934ae4asm4402949wrf.75.2024.03.25.05.45.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 05:45:38 -0700 (PDT)
-Message-ID: <a385246b-bcdf-4fd1-ba28-06a5d2d64e21@linaro.org>
-Date: Mon, 25 Mar 2024 12:45:36 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c1AJXD1u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C154BC43399;
+	Mon, 25 Mar 2024 12:45:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711370744;
+	bh=6S1jpM8cRjal0ma04kQFc9hgNF7SQSqnoGDvQZoxzUA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=c1AJXD1uJxo0/HCChDVUYuM+YaNpjXA5bpAV6DV/h2IDgJpbREmcfv4+oXFnOrFIy
+	 d1We1AV3bqL+RhTjJCiDHTH4YfzHWpxd31KIvvGMbVidqh1obvpEPLymxNPIVomFDs
+	 Y52v/+fm2dy7E1LHyjNEAnAOLSZkLB1Bj9uNUEVczkKWvEPzKrH4IZJ7wCYvK6MQ3H
+	 XeTfFJJk8WKOzOIzaqvFowEJ71Azh6RUdOr7N++V2mYRJGuW4NmvQQ3iRf5M+UwG47
+	 1btU0QcIJjwT0uonQst7dpUcB7I/en2EFPGSIjebAPxJiUtSOc0Yz+vnKEtrGmdwls
+	 UFl04zznNZ6CQ==
+From: alexs@kernel.org
+To: Matthew Wilcox <willy@infradead.org>,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	Izik Eidus <izik.eidus@ravellosystems.com>,
+	david@redhat.com,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	ryncsn@gmail.com
+Cc: "Alex Shi (tencent)" <alexs@kernel.org>
+Subject: [PATCH v2 00/14] transfer page to folio in KSM 
+Date: Mon, 25 Mar 2024 20:48:47 +0800
+Message-ID: <20240325124904.398913-1-alexs@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/7] ARM: dts: samsung: exynos5433: specify the SPI
- FIFO depth
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- krzysztof.kozlowski+dt@linaro.org, robh@kernel.org, conor+dt@kernel.org
-Cc: alim.akhtar@samsung.com, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org, broonie@kernel.org, andi.shyti@kernel.org,
- semen.protsenko@linaro.org, kernel-team@android.com,
- willmcvicker@google.com, andre.draszik@linaro.org, peter.griffin@linaro.org
-References: <20240216140449.2564625-1-tudor.ambarus@linaro.org>
- <20240216140449.2564625-6-tudor.ambarus@linaro.org>
- <1d9f160f-e155-4d2b-b598-d1dc76e49110@linaro.org>
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <1d9f160f-e155-4d2b-b598-d1dc76e49110@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: "Alex Shi (tencent)" <alexs@kernel.org>
 
+This is the first part of page to folio transfer on KSM. Since only
+single page could be stored in KSM, we could safely transfer stable tree
+pages to folios. 
+This patchset could reduce ksm.o 81kbytes from 2570760 bytes on latest
+akpm/mm-stable branch with CONFIG_DEBUG_VM enabled. It pass the KSM testing
+in LTP and kernel selftest.
 
-On 3/25/24 11:13, Krzysztof Kozlowski wrote:
->>  arch/arm64/boot/dts/exynos/exynos5433.dtsi | 5 +++++
-> This and next one has wrong subject prefix. I fixed it.
+Alex Shi (tencent) (14):
+  mm/ksm: add ksm_get_folio
+  mm/ksm: use folio in remove_rmap_item_from_tree
+  mm/ksm: add folio_set_stable_node
+  mm/ksm: use folio in remove_stable_node
+  mm/ksm: use folio in stable_node_dup
+  mm/ksm: use ksm_get_folio in scan_get_next_rmap_item
+  mm/ksm: use folio in write_protect_page
+  mm/ksm: Convert chain series funcs to use folio
+  mm/ksm: Convert stable_tree_insert to use folio
+  mm/ksm: Convert stable_tree_search to use folio
+  mm/ksm: return folio for chain series funcs
+  mm/ksm: remove get_ksm_page and related info
+  mm/ksm: use folio_set_stable_node in try_to_merge_one_page
+  mm/ksm: remove set_page_stable_node
 
-ah, s/arm/arm64. Thank you!
+ mm/ksm.c     | 259 ++++++++++++++++++++++++++-------------------------
+ mm/migrate.c |   2 +-
+ 2 files changed, 131 insertions(+), 130 deletions(-)
+
+-- 
+2.43.0
+
