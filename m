@@ -1,151 +1,142 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D4E13E6C8;
-	Mon, 25 Mar 2024 10:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1A2182EE1
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711361767; cv=none; b=oNtn2J3qRERhGOR5ZAo7BrpxJTqkg2125fABrfFfS5MaM/Ijoik2NSxDGW8VDgOqLjnsnU2lSdPHuzrw8WuVcgYATCYCIjlg8CSZFEKBUuA82Wj3FNkYz6qdcQyVOCHWq4YvdrJsgk/ku0aqInqpTT+dEpMX2IJp1vh6/J60xNU=
+	t=1711361697; cv=none; b=qVZxHXvo5N7ea3vYGO7KIGecnW6JMhgssGBg97nFyhRkpvo/DP7qMeyLEuhccUC06RbpucPgKxrZF2wOO9pXVa7LY+hUEv2q2cEAOzhbJCIi/sC3mKsr0Xof/bpCI4YOR5H7ASfnLDEcFMY7YxUZVZnMZAf3FQENCHcIQfPKnvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711361767; c=relaxed/simple;
-	bh=sKKRdrTurFaHKczVM5dueoW5ihUbWtXhk0VglFkeCWI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Vs6uxQ0PYB9LZJoV5vbGOpsjbGg+0n4xvd6UItnOlwZRzeo9nxGDTYEvkihLxh9Z2FhmYqfWzQpoIkB/xEdtFo67fA/p2leZfxrRs+rCeZi6KSLB9W4fHkFyQeNXQPMusqj4+bmBQ05qQnGQ6BKs1I/P+KioD/oNE9/Wog9SO1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=UUcDbdjZ; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1711361697; c=relaxed/simple;
+	bh=0m4OvaG4TjQncz6CeAce4N9xOv37QnwgrtsxOEC72DY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mWAqwfpvupLrnmKQ4zzvWeJlwmQEC3lEcsHFnvheUkiqbIBolcMqTEovw3Fd51szoRgeCg0ZV+m1zJkFUOFD8uTukyqEx30zNTylpAOyW4bPtwfv2G5ALLdgVO/HjCUY46s2iOLNb2Qkgztec9aTq1hB3sxhUcOsomAm+Mza2/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b9V+hUhS; arc=none smtp.client-ip=209.85.217.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="UUcDbdjZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1711361760;
-	bh=sKKRdrTurFaHKczVM5dueoW5ihUbWtXhk0VglFkeCWI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=UUcDbdjZes5HxI4JaxjU8oNwuRs4pvOz4nITFL0SMNyQV+qc0rFFNv3NlDQDofF/l
-	 PBzKemeloUIJ+UR1KuTuJjOcvVMn/KEHzXjiYgV2ZRTTc102GUuUNcecorHw9InFuX
-	 hjQebatvwiSqyN6j+KHY7SO8D9myXjtNQjUXM4q0=
-Received: from [IPv6:240e:358:11fe:a000:dc73:854d:832e:8] (unknown [IPv6:240e:358:11fe:a000:dc73:854d:832e:8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id C812866D53;
-	Mon, 25 Mar 2024 06:15:55 -0400 (EDT)
-Message-ID: <ba78805af8b39237b22a0ff87c4ba3c614a43910.camel@xry111.site>
-Subject: Re: [PATCHv3 pci-next 1/2] PCI/AER: correctable error message as
- KERN_INFO
-From: Xi Ruoyao <xry111@xry111.site>
-To: Ethan Zhao <haifeng.zhao@linux.intel.com>, Bjorn Helgaas
-	 <helgaas@kernel.org>
-Cc: Grant Grundler <grundler@chromium.org>, bhelgaas@google.com, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, mahesh@linux.ibm.com, oohall@gmail.com, 
-	rajat.khandelwal@linux.intel.com, rajatja@chromium.org
-Date: Mon, 25 Mar 2024 18:15:50 +0800
-In-Reply-To: <38601aef-b082-463f-8e41-f73a4307de21@linux.intel.com>
-References: <20230918193913.GA203601@bhelgaas>
-	 <0a44fd663e93ac5b36865b0080da52d94252791a.camel@xry111.site>
-	 <38601aef-b082-463f-8e41-f73a4307de21@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.0 
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b9V+hUhS"
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-476d13e405fso1045606137.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:14:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711361692; x=1711966492; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=dviW0LXOA189cguARshIw5Rs0U+dfA78oWLA/wEMZ9w=;
+        b=b9V+hUhSTri52MOQV4O9SAS49O7q8vzGOamgrGcMX5UFWxU0oryv40YiGIm2IH8hfc
+         VcYNxn+kxSl0wWQl3LmK1SYEWiqp/WJDIs/sGGpnswwHP0g7g4LyleQ5e/ySdlLcVw0n
+         HDiCjviIyP+rxq6IKpUQ0jBjiOgoqCRO1ck+884Z9yqqlCFBOAkZuvHF6qTsTlzui40w
+         goLbwrqbPUyfol0kfoXfQs7j0IKuIHi+5g0AyOffmV4uVPt8L+p/g0qFvKnd4gGdcxxJ
+         XfPR2EvzWJijbN+bdmM/ZoCexD01tAZn5V0BFe2Qm7isGWa1dqOhPWQSHdBf/OGf/nIP
+         5aPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711361692; x=1711966492;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dviW0LXOA189cguARshIw5Rs0U+dfA78oWLA/wEMZ9w=;
+        b=cXMKm1hMrbflvI9cQzATcN8jotl8vxnUmywUI1lLWyp6nUBqzc2nvfHRTBZVObMvue
+         Hx4Mf/EVc10mnlxo/17irMRzeXDctezNJhOGqjz28YGS+kkqhL7oKWPKtSiGjWQE7IPQ
+         OcyipiOCMJLEgN/8ZrL3OE3aaYzfHDJeKVSBr5ONc0UbGlx9d7ew3lbSPBe0bupaYF1U
+         +x/922i6WXSrw8agzEONWLhH5XrsUND3RuVEhNlySxdJHfQBqSK466hnODbsWzO6KuNr
+         +IUvH0N0EcFo+RfhYDSDonTGE5lEzixrWYpMEqvUzDR4fyvHxjPCbyWTkzOQ+NZFhNE4
+         Uc+g==
+X-Gm-Message-State: AOJu0YxoC//GZd5h58qPcmzSacAlUBQjxoiy4PX840BpDCjf7hBXsINc
+	N6OuYRoK+HumVSDVOdckFl9fl2nNkwm35GraDQ/ixXTVAJKbwptmAXl+IAoVaP2p+/PruSg9s1+
+	K/2kQaK39xkrhv+5q8PkLAK4CYslWpsW8kwqnDA==
+X-Google-Smtp-Source: AGHT+IE7UuJbdo/Q7mpnTl38KiQR38Lr7QPsY1r8hICE+qSu1pk5jF1m+963Bm6mVEV1ywLMunOIjDDA1DcsD4vlKMw=
+X-Received: by 2002:a05:6102:a46:b0:478:619:342f with SMTP id
+ i6-20020a0561020a4600b004780619342fmr748178vss.24.1711361692535; Mon, 25 Mar
+ 2024 03:14:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240324223455.1342824-1-sashal@kernel.org>
+In-Reply-To: <20240324223455.1342824-1-sashal@kernel.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 25 Mar 2024 15:44:41 +0530
+Message-ID: <CA+G9fYu1G1+LKu0mOhppUbVcAJ2DaC-zSh2GBhfShR_No9T=9g@mail.gmail.com>
+Subject: Re: [PATCH 6.8 000/715] 6.8.2-rc1 review
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, 
+	shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, 
+	florian.fainelli@broadcom.com, pavel@denx.de, 
+	Thomas Zimmermann <tzimmermann@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 2024-03-25 at 16:45 +0800, Ethan Zhao wrote:
-> On 3/25/2024 1:19 AM, Xi Ruoyao wrote:
-> > On Mon, 2023-09-18 at 14:39 -0500, Bjorn Helgaas wrote:
-> > > On Mon, Sep 18, 2023 at 07:42:30PM +0800, Xi Ruoyao wrote:
-> > > > ...
-> > > > My workstation suffers from too much correctable AER reporting as w=
-ell
-> > > > (related to Intel's errata "RPL013: Incorrectly Formed PCIe Packets=
- May
-> > > > Generate Correctable Errors" and/or the motherboard design, I guess=
-).
-> > > We should rate-limit correctable error reporting so it's not
-> > > overwhelming.
-> > >=20
-> > > At the same time, I'm *also* interested in the cause of these errors,
-> > > in case there's a Linux defect or a hardware erratum that we can work
-> > > around.=C2=A0 Do you have a bug report with any more details, e.g., a=
- dmesg
-> > > log and "sudo lspci -vv" output?
-> > Hi Bjorn,
-> >=20
-> > Sorry for the *very* late reply (somehow I didn't see the reply at all
-> > before it was removed by my cron job, and now I just savaged it from
-> > lore.kernel.org...)
-> >=20
-> > The dmesg is like:
-> >=20
-> > [=C2=A0 882.456994] pcieport 0000:00:1c.1: AER: Multiple Correctable er=
-ror message received from 0000:00:1c.1
-> > [=C2=A0 882.457002] pcieport 0000:00:1c.1: AER: found no error details =
-for 0000:00:1c.1
-> > [=C2=A0 882.457003] pcieport 0000:00:1c.1: AER: Multiple Correctable er=
-ror message received from 0000:06:00.0
-> > [=C2=A0 883.545763] pcieport 0000:00:1c.1: AER: Multiple Correctable er=
-ror message received from 0000:00:1c.1
-> > [=C2=A0 883.545789] pcieport 0000:00:1c.1: PCIe Bus Error: severity=3DC=
-orrectable, type=3DPhysical Layer, (Receiver ID)
-> > [=C2=A0 883.545790] pcieport 0000:00:1c.1:=C2=A0=C2=A0 device [8086:7a3=
-9] error status/mask=3D00000001/00002000
-> > [=C2=A0 883.545792] pcieport 0000:00:1c.1:=C2=A0=C2=A0=C2=A0 [ 0] RxErr=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 (First)
-> > [=C2=A0 883.545794] pcieport 0000:00:1c.1: AER:=C2=A0=C2=A0 Error of th=
-is Agent is reported first
-> > [=C2=A0 883.545798] r8169 0000:06:00.0: PCIe Bus Error: severity=3DCorr=
-ectable, type=3DPhysical Layer, (Transmitter ID)
-> > [=C2=A0 883.545799] r8169 0000:06:00.0:=C2=A0=C2=A0 device [10ec:8125] =
-error status/mask=3D00001101/0000e000
-> > [=C2=A0 883.545800] r8169 0000:06:00.0:=C2=A0=C2=A0=C2=A0 [ 0] RxErr=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 (First)
-> > [=C2=A0 883.545801] r8169 0000:06:00.0:=C2=A0=C2=A0=C2=A0 [ 8] Rollover
-> > [=C2=A0 883.545802] r8169 0000:06:00.0:=C2=A0=C2=A0=C2=A0 [12] Timeout
-> > [=C2=A0 883.545815] pcieport 0000:00:1c.1: AER: Correctable error messa=
-ge received from 0000:00:1c.1
-> > [=C2=A0 883.545823] pcieport 0000:00:1c.1: AER: found no error details =
-for 0000:00:1c.1
-> > [=C2=A0 883.545824] pcieport 0000:00:1c.1: AER: Multiple Correctable er=
-ror message received from 0000:06:00.0
-> >=20
-> > lspci output attached.
-> >=20
-> > Intel has issued an errata "RPL013" saying:
-> >=20
-> > "Under complex microarchitectural conditions, the PCIe controller may
-> > transmit an incorrectly formed Transaction Layer Packet (TLP), which
-> > will fail CRC checks.=C2=A0When this erratum occurs, the PCIe end point=
- may
-> > record correctable errors resulting in either a NAK or link recovery.
-> > Intel=C2=AE has not observed any functional impact due to this erratum.=
-"
-> >=20
-> > But I'm really unsure if it describes my issue.
-> >=20
-> > Do you think I have some broken hardware and I should replace the CPU
-> > and/or the motherboard (where the r8169 is soldered)?=C2=A0 I've notice=
-d that
-> > my 13900K is almost impossible to overclock (despite it's a K), but I'v=
-e
-> > not encountered any issue other than these AER reporting so far after I
-> > gave up overclocking.
->=20
-> Seems there are two r8169 nics on your board, only 0000:06:00.0 reports
-> aer errors, how about another one the 0000:07:00.0 nic ?
+On Mon, 25 Mar 2024 at 04:05, Sasha Levin <sashal@kernel.org> wrote:
+>
+>
+> This is the start of the stable review cycle for the 6.8.2 release.
+> There are 715 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Tue Mar 26 10:34:31 PM UTC 2024.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-6.8.y&id2=v6.8.1
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.8.y
+> and the diffstat can be found below.
+>
+> Thanks,
+> Sasha
 
-It never happens to 0000:07:00.0, even if I plug the ethernet cable into
-it instead of 0000:06:00.0.
+The Powerpc ppc6xx_defconfig build regressions stable rc branches
 
-Maybe I should just use 0000:07:00.0 and blacklist 0000:06:00.0 as I
-don't need two NICs?
+Build details,
+ - ppc6xx_defconfig - linux-stable-rc-linux-6.8.y - gcc-13 - Failed
+ - ppc6xx_defconfig - linux-stable-rc-linux-6.7.y - gcc-13 - Failed
+ - ppc6xx_defconfig - linux-stable-rc-linux-6.6.y - gcc-13 - Failed
+ - ppc6xx_defconfig - linux-stable-rc-linux-6.1.y - gcc-13 - Failed
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+ - ppc6xx_defconfig - linux-stable-rc-linux-5.15.y - gcc-12 - Failed
+ - ppc6xx_defconfig - linux-stable-rc-linux-5.10.y - gcc-12 - Failed
+
+
+Build error:
+-----------
+drivers/macintosh/via-pmu-backlight.c:21:20: error:
+
+'FB_BACKLIGHT_LEVELS' undeclared here (not in a function)
+   21 | static u8 bl_curve[FB_BACKLIGHT_LEVELS];
+      |                    ^~~~~~~~~~~~~~~~~~~
+In file included from include/linux/init.h:5,
+                 from include/linux/printk.h:6,
+                 from include/asm-generic/bug.h:22,
+                 from arch/powerpc/include/asm/bug.h:116,
+                 from include/linux/bug.h:5,
+                 from include/linux/thread_info.h:13,
+                 from arch/powerpc/include/asm/ptrace.h:342,
+                 from drivers/macintosh/via-pmu-backlight.c:11:
+drivers/macintosh/via-pmu-backlight.c: In function 'pmu_backlight_curve_lookup':
+include/linux/minmax.h:31:9: error: first argument to
+'__builtin_choose_expr' not a constant
+   31 |
+__builtin_choose_expr(__is_constexpr(is_signed_type(typeof(x))),
+ \
+      |         ^~~~~~~~~~~~~~~~~~~~~
+
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+Steps to reproduce:
+------------
+# tuxmake --runtime podman --target-arch powerpc --toolchain gcc-13
+--kconfig ppc6xx_defconfig
+
+
+Links:
+ - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.8.y/build/v6.8.1-715-gb0f6de60d946/testrun/23136379/suite/build/test/gcc-13-ppc6xx_defconfig/details/
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2e9dGALLBbylr7k4kq5DMdvqISo/
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
