@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF311C2576;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2FA1C257B;
 	Mon, 25 Mar 2024 04:42:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711341755; cv=none; b=GcfYOtFPHZuiEN0TjCQMJWN/8wd+TPUOCtJyGCZPDZoYo/Wt/0KMmSaCrq6JT6KiQYXur+YRcZIlhOpJ/4jIXypKWAEKJnVeT0C6ZBeS4MgzWJhlbBLIkcU7cIcCG67iqXqz6ng30/0wxYZQRXY06588GHzIwgK67MczfdJz8Do=
+	t=1711341756; cv=none; b=KJuS01C1FJaTNpsOkk4j3RHeWTjHZliKJHJHK0ukDEoUDzcMZJvUPvyFNnof2R7dhbaOAlZLfIL7K7tIb4WjSUDeq5r3N3MYZE8ZlTD45guzHoV7GrCd/JBYTLSU2UDo0iazdyAViNv3gzUmjn1w9U5RhxvIhCOPADeRfJ2FLIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711341755; c=relaxed/simple;
-	bh=duVRPOkUwtqb9I+6o5VQiYAgtSlpWGf+X+0yQv8TjAs=;
+	s=arc-20240116; t=1711341756; c=relaxed/simple;
+	bh=P55e0YdHr3EBbeSfVcEWlMRwZEnp0BSXvLy/GhsoFmw=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=MWMKsXohZxFE3o8hOmpsPaH6/T+4BT8WFE0HdxtN//tN69grlx1Kwts9UlgyljFJCyAiKvFfWY4c/ho5oS67yhXvaenweWYbeuF80XOX8ELdAvLJrOp+EQfgdfgAzd3otFXyGo+npsE0MoHJWdHOSlm+cRRHLVmsoig5ErdjeMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iZ/b0NE+; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Woykv+P1O966sJDu/RqieTi1ZGhuK5jYqTjx5IOLhkXGN4lRoLUZk0IyeZyVcZS/eYdhS28K53+LJ8IwjOBnC575dwz8FcZ8WDkcEfQQt7T17KDIGeuKx74OYjNxnc2S6s+Im9H7nMyPgW2s3QJm35puUtILLhWsJijtijKgxXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gkhhEapM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iZ/b0NE+"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B5273C43399;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gkhhEapM"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B04EBC433C7;
 	Mon, 25 Mar 2024 04:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1711341754;
-	bh=duVRPOkUwtqb9I+6o5VQiYAgtSlpWGf+X+0yQv8TjAs=;
+	bh=P55e0YdHr3EBbeSfVcEWlMRwZEnp0BSXvLy/GhsoFmw=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=iZ/b0NE+i7+do8pgZkg46x1uBB/MQJfp/c/XhpH71z/wGKatNJQnfFVi4TsSrJUcx
-	 p9B9v3m0m2h+2n352ZneEdcJs25ZuYmCkptcEJJi14CEjUg6fZRWGQjsnzSbTTqpuQ
-	 jBLNyyJKgrClKH6Ar2Sk8/u0rVBaZT96gqSwdlSHBYKiJ8LneSrMklScm8Ww85dTEe
-	 eja5sWn2jN4CV4FDoeaf5TOJPL86Efy9rTKDI0W7hc3GLlwluHdA9GYm7yTBbMYg6F
-	 MrrxjzojsaA/BYbk4OYMb2sE8+b4REldcJ8JhTboSwFB0wiYQTm1AKpQdnuWO2wot9
-	 CNckLCoG3Oykg==
+	b=gkhhEapMgJhfVt+4ngHi5hJfu28kyDyu8exX07UCVkjOZS1ijZGamJNq3cK/0ow0q
+	 aZ119Ybv/Lqh5GgFaBD0nQ0zAFQNc4GS6uupywX3Sp065WVt9qAve+UTRAMWGodDUL
+	 FUrXOkUF2buJtldasEOiHKcXylWilsDPFGxx1ZFtu4o6VXhKJGJMZc4ea4VgWDnRDs
+	 q0AoqAXJV5+s0jba/xzBOi5pslR8k96AhQme1LjUKg7c1TnPATglM1Pl6h5t1hIf7Q
+	 GzXJOVA175jcv3FrGsF5THwZu/6BAWklYPRH5nP882M1GcjKKcB7OfJgDdHJDkr7Ne
+	 C7YvcEVv8dHxw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9F5E8D95071;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 97DCED8BCE3;
 	Mon, 25 Mar 2024 04:42:34 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,46 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 00/11] Bump the minimum supported version of LLVM to 13.0.1
+Subject: Re: [PATCH] cache: ax45mp_cache: Align end size to cache boundary in
+ ax45mp_dma_cache_wback()
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <171134175464.18749.18342004135343709281.git-patchwork-notify@kernel.org>
+ <171134175461.18749.5523574540547752067.git-patchwork-notify@kernel.org>
 Date: Mon, 25 Mar 2024 04:42:34 +0000
-References: <20240125-bump-min-llvm-ver-to-13-0-1-v1-0-f5ff9bda41c5@kernel.org>
-In-Reply-To: <20240125-bump-min-llvm-ver-to-13-0-1-v1-0-f5ff9bda41c5@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: linux-riscv@lists.infradead.org, akpm@linux-foundation.org,
- masahiroy@kernel.org, nicolas@fjasle.eu, linux-kbuild@vger.kernel.org,
- llvm@lists.linux.dev, patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, linux@armlinux.org.uk,
- ardb@kernel.org, linux-arm-kernel@lists.infradead.org,
- catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
- mpe@ellerman.id.au, npiggin@gmail.com, aneesh.kumar@kernel.org,
- naveen.n.rao@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- conor@kernel.org, keescook@chromium.org, linux-hardening@vger.kernel.org
+References: <20240203212640.129797-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240203212640.129797-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: linux-riscv@lists.infradead.org, geert+renesas@glider.be,
+ conor@kernel.org, linux-renesas-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, biju.das.jz@bp.renesas.com,
+ prabhakar.mahadev-lad.rj@bp.renesas.com, pavel@denx.de
 
 Hello:
 
-This series was applied to riscv/linux.git (fixes)
-by Andrew Morton <akpm@linux-foundation.org>:
+This patch was applied to riscv/linux.git (fixes)
+by Conor Dooley <conor.dooley@microchip.com>:
 
-On Thu, 25 Jan 2024 15:55:06 -0700 you wrote:
-> Hi all,
+On Sat,  3 Feb 2024 21:26:40 +0000 you wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > 
-> This series bumps the minimum supported version of LLVM for building the
-> kernel to 13.0.1. The first patch does the bump and all subsequent
-> patches clean up all the various workarounds and checks for earlier
-> versions.
+> Align the end size to cache boundary size in ax45mp_dma_cache_wback()
+> callback likewise done in ax45mp_dma_cache_inv() callback.
+> 
+> Additionally return early in case of start == end.
 > 
 > [...]
 
 Here is the summary with links:
-  - [07/11] riscv: Remove MCOUNT_NAME workaround
-    https://git.kernel.org/riscv/c/de5f3984664e
-  - [08/11] riscv: Kconfig: Remove version dependency from CONFIG_CLANG_SUPPORTS_DYNAMIC_FTRACE
-    https://git.kernel.org/riscv/c/a38d97181271
+  - cache: ax45mp_cache: Align end size to cache boundary in ax45mp_dma_cache_wback()
+    https://git.kernel.org/riscv/c/9bd405c48b0a
 
 You are awesome, thank you!
 -- 
