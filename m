@@ -1,117 +1,97 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08BD45033;
-	Mon, 25 Mar 2024 20:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1F14CB54;
+	Mon, 25 Mar 2024 20:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711397458; cv=none; b=cj05Qs/7s3Eb1iaoMwmFHF4KY85M3ZwtR8tm36Y1b0NEhA/2pEdtxKp+Wj4qSHykQVsmJlAS6OlUCsnG4OIg8Y+0huclQoPLzlxPcSYvBj+Boj/LozM0sXrjUFJx1jSlxjyMUE8xwO3N24LvLTvAxCISlwz1vAuX3TSHS2mhSYE=
+	t=1711397463; cv=none; b=RCZxZEtKljvmLortnzit262z666ZovgTqxIFhSGUt3ZlcPTv9UV6xx4UjcZeAWaUDGPfHVhlXzIVBh6gTAKhjYZaDpW1RSMVOGWDzGQMmfK7gmaj51o4j+zz4lz/UjQF5Fm5xiLS1yGydnKruXCPnRRRML76yHKKbUAagKmtF1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711397458; c=relaxed/simple;
-	bh=1hS5NcLSFnVm2dCXuWF1CcXyaqi1PIrZM8H+m08BW8U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=pxVDIcnDKiK/g0BTOB/p0rk85iYNQMGUqiHgGxdryChjhz9t42oJH0mVoX3fAibmBpUT3F9gj0pxo3Pxunxfej9sQYznXTDkMnvLadtx8Uq2lq7z6vgdtklxEMz/UpeRL/nIIETZOmDAB2GOGbjylMgEEJ2EkauaNunIWK6/0Go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=KDCS/0zr; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1711397463; c=relaxed/simple;
+	bh=PNkdq8pr+5/0BOac7guOZWZ/0739SWPnMQvt5yz3G5k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AOO+nMlIWfMaq4WsHm7PuatKZfmuRH2BxwgwbGKm1NAxrIXSb8em7CGpFg6h1tHIt+sXFlqVmZ5XArltXK/4JcfG10wdEDfR89XaYdXGURsDZD81Qq2WLY773dPjJr+I6/UfArhD+3v792175t9Go+2hX4hgg/wXf9CYTXi00zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=htJqKgRZ; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="KDCS/0zr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1711397427; x=1712002227; i=w_armin@gmx.de;
-	bh=k5GImjZ67YtdbUkAgxVbsS2XJfKlz1HCv891Pa0K9js=;
-	h=X-UI-Sender-Class:Date:Subject:To:References:From:In-Reply-To;
-	b=KDCS/0zrDTxyxdvF/Hy3PacpYWCo72HItPKTv98QWlJz+1cQEWS4RTyxpj2FWDT9
-	 drdwdLQO9c/jsd2fkEnYMBMQwT4Qq4Fhm5Ek2/rZUQxJToOocIp5C+QklPgpUifdN
-	 6JxEpTQWfEDUNdb7rzKYjHxSqVNwOOX6QYAfZiog5h+FJAS0cF5kZaKCFqPDpicrN
-	 Udynh2HboSvaCvRkufE3Ke1QLWK/EOcUAU/DWr7J1FZqAE6RHr9pklp8GqgNgFTpA
-	 2rxGsE0j4Z1lKyrOW2cIk9cdlX4YogkgXblJzWbQoBGc2YifkyqEoK1iN9DmPnQqX
-	 FsXg4jOwFPFv5xu9mA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N4QwW-1spvPx0OQw-011Tra; Mon, 25
- Mar 2024 21:10:27 +0100
-Message-ID: <19661160-76d4-43ed-987f-dbf183e891ba@gmx.de>
-Date: Mon, 25 Mar 2024 21:10:25 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="htJqKgRZ"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6ea9a60f7f5so1760774b3a.3;
+        Mon, 25 Mar 2024 13:11:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711397461; x=1712002261; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OJoOIB0fogtvrTT+C8zAsHm4ytpCrvGQJ9GOYtKix3E=;
+        b=htJqKgRZx3V1DGh5I/fzR1tNWFFdfVqhk/3Gd/ynlpye879RmXXoObSGauZoyVkS4P
+         PmoHrOJgH6AuGyXYYFjNcYKElP+Z0MbyfX5wa0ywA9sVMhhItKxxntiq6j7z0qxcS13w
+         bxpWLvexHuL0MvTTnUpyNBa1itUMSeG9Gxd2EzB8Tactst5CXA/zWZEjOdNy9YVQHtAy
+         JKcgne4Adx3IlLPkwMOtKrGbVFL7fELhqRN1W2wf955O3VikPCJ83KGU/WEef070jVh9
+         Zui1lAWcbK+go3SQE11dLs3HPc76gLtxhtieoLEck83NXnWUemG12yhpY+D+mJ/Zui+x
+         3P9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711397461; x=1712002261;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OJoOIB0fogtvrTT+C8zAsHm4ytpCrvGQJ9GOYtKix3E=;
+        b=D6Gk0Nf9w8cmZNCXCDnavJgTm1zPb/zQaXHukYsjINCkI5jpS2bVHanumf1z3/J1Vl
+         zSzyTcWvMp2xLaC6rZgl4LzEQ7uWKIltdxG9KaO3sZrlrSeclEbsrSoL8eMYaQoCn6vD
+         xGH/G2h6U/Uk9qqHW4CAk1GNm+KqUrQmWwfiHcAm+7AhYKZdZRyGXU/SMO2yT276pEyk
+         qmQpVihpwd1D8SWXcxNsvYY+ogYtXgL/fO3Sv1ArOyKNZgp1v01DIWSBsfLkKXf1p8vH
+         JlVIzxMSqMAU89qO29sbX9AI/wDkSvAlYWZQrpuQ+dDc4kXp66Kz4hsPd9uXVGjXhuum
+         TpFw==
+X-Forwarded-Encrypted: i=1; AJvYcCWa55PeQxgxSaRTH8LgulHVcleNoiZlLqHqJgWNvad5oR+vN8kXaZOVeS8iGt430QM1aBW7+ic8C6Svxh1rGYTC7MuLo0i4DNzYdmHXlpoftBACVy5go6Eo87kL7x6a4vxvk6Gz1xUQqLtmlTR5MOw6EcZ2S4hWtDZQ15o3ik9/DA==
+X-Gm-Message-State: AOJu0YzQrfvZqTVBEk6hppqL1feYPfBmaAA4rUpW/JOJtJ6DQ36EtOj5
+	6yLRjpeBmCBHUzlNa0DiZAmkeNtpetFW5nWeKGVGGgPoehAJvUAy
+X-Google-Smtp-Source: AGHT+IG6+23l+DCHgviNH8KCgnuW/5vBLq+wX6KAos6vs6ZBRaL8uWkZFNVZAIOAqs4YRBdPtwvOWQ==
+X-Received: by 2002:a05:6a20:3ca2:b0:1a3:6dbb:f072 with SMTP id b34-20020a056a203ca200b001a36dbbf072mr7584599pzj.8.1711397460946;
+        Mon, 25 Mar 2024 13:11:00 -0700 (PDT)
+Received: from localhost (dhcp-141-239-158-86.hawaiiantel.net. [141.239.158.86])
+        by smtp.gmail.com with ESMTPSA id o18-20020a639a12000000b005cfc1015befsm6146297pge.89.2024.03.25.13.11.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 13:11:00 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Mon, 25 Mar 2024 10:10:59 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Waiman Long <longman@redhat.com>
+Cc: Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Brent Rowsell <browsell@redhat.com>,
+	Mrunal Patel <mpatel@redhat.com>, Peter Hunt <pehunt@redhat.com>
+Subject: Re: [PATCH] cgroup, docs: Clarify limitation of RT processes with
+ cgroup v2 cpu controller
+Message-ID: <ZgHaUyeIcS0w_udY@slm.duckdns.org>
+References: <20240320142302.1790171-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/1] platform/x86: Add wmi driver for Casper Excalibur
- laptops
-To: mustafa <mustafa.eskieksi@gmail.com>, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, jdelvare@suse.com, linux@roeck-us.net,
- pavel@ucw.cz, lee@kernel.org, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-leds@vger.kernel.org
-References: <20240324181201.87882-1-mustafa.eskieksi@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20240324181201.87882-1-mustafa.eskieksi@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:MzAOenI/8ST5bPq1ExjXTewiulUgJsw+eKvNeLMu9b/QqFXI+HZ
- DDi/1ZBInrf9MDaHj+0zRFBJsC+ua38+dOLRn523wjSiDyxrkQVDsIYh/wieCdbjvFCxy2e
- hQan7SNyErbcAZwEcUF9cudypMEch+wSOJG25OSM8PqSSAT1yBXZqBcZdy+nOJD0meWazAA
- TCWWVyHGmNWCrujxWENyg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:4Q7DKlFfmFE=;1gutw6nxLW14lkJsyKYuM4sLje8
- z/GVi1B240WDw392PqTI8PmIGLBIaP6em5iITJ+UL7Q+rIYiJevgcuBJ2cu0uFjwUrcoYGyXs
- s/zKD4WK7gRXFWfWmvd3t4nGLT8p3bijTGAk3STO5TDxGfjU8vK9x/sEjcVmA5M2AwrAIgVzR
- BNxJmpqbWStWlkBuTuJxjrSZ3PT6Izl42brBi4/z6kNBLrFXzu3E3oXLQc8MIvHFSYWb+spCC
- XZb+yXWnZc2XSTnuRsFdqA/5g8x2vDLMxyBkqrfZ7yn4IZQoL46n/dsdVgEikTB068zmGl0/o
- KQ3PrJ4jb+VvOd4Ohs5fzkMJlA1QpN7T5oLQgj0McqNMMhdfz1GnMWNm63jHiQNkKL5UOMP6h
- WFacbdwoLlJNFcKcFHOHUtp8TutqM/YRAD5v+Nc07bIjelQBV+SMokkst+l7VSqoL7/f36szu
- kvBeL2vw286XGsMWOwv0oMrnyQggLdHdVhse9NaK5PFiHCNMLAUg6ba5XcDs1TR3MbiyO+pXX
- gq3YGulqT4AnsvN9O93y/HZIQshKjEeclZJ8WzCSImYHXBXY6b8DhRWI2hqTlbvskXRjQYbnP
- Nj0J0HFCMyz7xdRwYu+ht/lRbn9WEBr46eWI94dtDidmFu7/YUUQqt7YncO7ZATaax4nC8/nz
- OcU1IYjBo9+XIFba9EdJxqBZOMJWKDv1GdI1CgyVdzEyniUDtTyXyn4O+F7Vw/NegtDr6rAOJ
- TCjfULJos8hMDcNteij1eMjoqN4mccnxAF3Ml6tyyPMnbyXnZsb42ed/Ne0+QYEooslCF+8aw
- d5+zTZpHGYt/N4+6u2FKNQrd1/F3taRwYzruGb54CmmKU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240320142302.1790171-1-longman@redhat.com>
 
-Am 24.03.24 um 19:12 schrieb mustafa:
+On Wed, Mar 20, 2024 at 10:23:02AM -0400, Waiman Long wrote:
+> The limitation that all RT processes have to be in the root cgroup
+> before enabling cpu controller only applies if the CONFIG_RT_GROUP_SCHED
+> option is enabled in the running kernel. If a kernel does not have
+> CONFIG_RT_GROUP_SCHED enabled, RT processes can exist in a non-root
+> cgroup even when cpu controller is enabled. CPU sharing of RT processes
+> will not be under cgroup control, but other resources like memory can be.
+> 
+> Clarify this limitation to avoid confusion to users that are using
+> cgroup v2.
+> 
+> Signed-off-by: Waiman Long <longman@redhat.com>
 
-> From: Mustafa Ek=C5=9Fi <mustafa.eskieksi@gmail.com>
->
-> Hi,
-> I want to note that moving mutex_init to the bottom of the function
-> crashes the driver when mutex_lock is called. I didn't investigate it
-> further but I wanted to say that since Ai Chao also did it like that.
+Applied to cgroup/for-6.10.
 
-You mean like the lenovo-wmi-camera driver? In this case, the driver was
-only using the mutex inside the WMI notify callback, which can only run
-once the driver has finished probing.
+Thanks.
 
-In your case however, the mutex can already be used while the driver is st=
-ill
-probing, because it registers callbacks with other subsystems.
-The subsystem (maybe led?) assumes that the device is already fully operat=
-ional
-and will begin calling the callbacks immediately, causing a crash.
-
-Looking at the code, it seems that you are not calling mutex_destroy() in
-casper_wmi_remove(). I suggest to use devm_add_action_or_reset() for handl=
-ing this.
-
-Thanks,
-Armin Wolf
-
-> Driver sets all leds to white on start. Before that, when a led's
-> brightness is changed, that led's color gets set to white but others
-> keep their old colors which creates a bad user experience (at least for
-> me). Please inform me if this is a bad approach.
-> Also, this driver still lacks support for changing modes and I seek
-> advise for that.
->
-> Mustafa Ek=C5=9Fi (1):
->    platform/x86: Add wmi driver for Casper Excalibur laptops
->
->   MAINTAINERS                       |   6 +
->   drivers/platform/x86/Kconfig      |  14 +
->   drivers/platform/x86/Makefile     |   1 +
->   drivers/platform/x86/casper-wmi.c | 641 ++++++++++++++++++++++++++++++
->   4 files changed, 662 insertions(+)
->   create mode 100644 drivers/platform/x86/casper-wmi.c
->
+-- 
+tejun
