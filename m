@@ -1,49 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9D42F37;
-	Mon, 25 Mar 2024 17:44:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5901B59B61;
+	Mon, 25 Mar 2024 17:44:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711388687; cv=none; b=lkttYXWoL+EYu5uTy9Q/NkrHf6ssQrX/EddInwSXf1Xbzp8YGNiVz+9pE/v1T7KIiusge0pNtyAF2sAFBZ8ocjIaHGx3VVDYPFMfWGnzFrcxpQwGwEswCzzzMZfPut1YWl5aOP7bAJf2LNorMrTL0kk9Fqj+W7I4FSoPjSwvtzo=
+	t=1711388691; cv=none; b=a4jGRqMaXTnkhioKxp5HDgGdp3FFrCp46qumzciebJTKlfDOCnETR1g5bDgAmb795w66H6aSX3zx9A5UlRvawoO+Tq0H0W8GMMbiLAtjRUgDJiyqmJORS8polwnc1E4qKsdZ5tv61moeS3IdhRkL7eVZ6cBV9pi18zaJd1MyVZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711388687; c=relaxed/simple;
-	bh=sGxgdgp8IdZweLfej/ZPALfocbt++oorzgjstiDxN2g=;
+	s=arc-20240116; t=1711388691; c=relaxed/simple;
+	bh=vrzdapfTi0QWEvTbUNO21le5/X7ZUgL1lrdO+CKr7U8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=pnjVkdzfIwECXgDd4Wb2jo83E8JRIg9HDiMkYL3XdPYLRbMdsWpnzpdrBcFk5oYMqtd9swSAGo2c1BQZ09/JkbNF8DJmac7+Qv2kCK9SpcnpI/ZG8EvGKS0O0BEX29LYIEUZ1XI4BgGxRLWXoy0nBlLEyEJaVRCJtp6EK+ysv0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yz8AQU2p; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=etAvID6tX4twNbBLUsRy+tru2To6lEL4E2355gC2VRdEg0tdU/0WVa3xhodLACFExGF63oTT54e2pyFlYimHFmCSN+DbTWQS2UhjpZhPw3O47feGpV7ydx1yZ086TF8oZQycp2i1PbGlN22KJKS6obQW7ZBpU2LaUR867XNTxws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jOR+MgPN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yz8AQU2p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3BF7C43394;
-	Mon, 25 Mar 2024 17:44:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jOR+MgPN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFEC3C433C7;
+	Mon, 25 Mar 2024 17:44:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711388686;
-	bh=sGxgdgp8IdZweLfej/ZPALfocbt++oorzgjstiDxN2g=;
+	s=k20201202; t=1711388691;
+	bh=vrzdapfTi0QWEvTbUNO21le5/X7ZUgL1lrdO+CKr7U8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Yz8AQU2pf0m8iCdqgpUDqgULidA/gav9A6k8kAFVuOmJpP4CsOW98If+/vkoh05yM
-	 fXhNkOkr2v2lY3vyrYiV6e6RjYGmpbWteHnaJNxqO9WKpyXFfEEJnPK7GuHU0OakQM
-	 jG1La1JOKMR/YS5hZkOfPfJMSkchrTwUFY1/nq9YBHy5m5xMWcTJPbzVzeQyutDfDt
-	 /Kuz9bdAXkt70jMbd/JpGOgzaDvtAqo1X5cdNoRRPOg0IKEWdTOccn4PL5OkOOGcWX
-	 OmxUTE6wLwzfnZ+sUtsSqZbhBdEsePVrp5HVzeYQASol3Gpg7yjb6ZReH7Ql7v3i5K
-	 kW7fhrLJxzkFg==
+	b=jOR+MgPNGs+t32Qw6dbHyuiRbL3scRwRFhXCgWzXvZrWsOnhhKFpDM+KVYSvdjzVl
+	 2llPz4kHkozIB7OFyUtpw6hHej67gAECl2+5D94uUuS4RQUP+uhGND3N6qSPZognKB
+	 DIGiDbCZI/s5LL1nQ5EdVFB7REcSDw2N9IqcsZjbsxAAZZbo0dfMkhDOfzrNGubgj6
+	 WOT2HJWJyJ8WeGDTHmzdVG+H653cYkxVKwoJ/iKy2/SF07zgqNQ8jJ9+JxuS2m6TZ9
+	 kO0Jumlo8V7uqf3ZWlPhvNkE5Nj+3ktHu4Zcd5YDneo7heYzNtFvQZJK1cCnh/964Y
+	 1t5eCo3fGKvDQ==
 From: Mark Brown <broonie@kernel.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Wesley Cheng <quic_wcheng@quicinc.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Luca Weiss <luca.weiss@fairphone.com>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-usb@vger.kernel.org
-In-Reply-To: <20240322-fp4-tcpm-v1-0-c5644099d57b@fairphone.com>
-References: <20240322-fp4-tcpm-v1-0-c5644099d57b@fairphone.com>
-Subject: Re: (subset) [PATCH 0/5] Add TCPM support for PM7250B and
- Fairphone 4
-Message-Id: <171138868340.327260.16162463727167389208.b4-ty@kernel.org>
-Date: Mon, 25 Mar 2024 17:44:43 +0000
+To: Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Justin Swartz <justin.swartz@risingedge.co.za>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+In-Reply-To: <20240316010302.20776-1-justin.swartz@risingedge.co.za>
+References: <71533474-eb08-438c-b7ec-5f3277c195fc@sirena.org.uk>
+ <20240316010302.20776-1-justin.swartz@risingedge.co.za>
+Subject: Re: [PATCH v2] spi: mt7621: allow GPIO chip select lines
+Message-Id: <171138868965.327330.16954587667720708033.b4-ty@kernel.org>
+Date: Mon, 25 Mar 2024 17:44:49 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,24 +48,25 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14-dev
 
-On Fri, 22 Mar 2024 09:01:31 +0100, Luca Weiss wrote:
-> This series adds support for Type-C Port Management on the Fairphone 4
-> which enables USB role switching and orientation switching.
+On Sat, 16 Mar 2024 03:03:01 +0200, Justin Swartz wrote:
+> Extract a magic number, from mt7621_spi_probe(), used to
+> declare the number of chip select lines (which co-incides
+> with the native chip select count of 2) to a macro.
 > 
-> This enables a user for example to plug in a USB stick or a USB keyboard
-> to the Type-C port.
-> 
+> Use the newly defined MT7621_NATIVE_CS_COUNT macro to
+> instead populate both the spi_controller's max_native_cs
+> and num_chipselect members.
 > 
 > [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/5] dt-bindings: regulator: qcom,usb-vbus-regulator: Add PM7250B compatible
-      commit: 0c5f77f4eaef8ed9fe752d21f40ac471dd511cfc
+[1/1] spi: mt7621: allow GPIO chip select lines
+      commit: 2a741cd6ec5899cec054ae27120f490ad57bc6bb
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
