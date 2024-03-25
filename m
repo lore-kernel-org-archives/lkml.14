@@ -1,137 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8551B80F;
-	Mon, 25 Mar 2024 19:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62E221C290;
+	Mon, 25 Mar 2024 19:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711393529; cv=none; b=o8z40Gd8bG5byqCckKd2TErCR61ORRpz6SntK//ylS3AqU8tEkeVvWdRe+Xk0V7NavpoBg9Dht+RJFcNaufreEvv6WVO39xNhNr4CypchNFboFrKHB1XbwQiAtbyAtaCq4tGlV6djW763xIGlZrLF+OjxlT9IcS6YQKzQ3aWGbk=
+	t=1711393538; cv=none; b=JNG4+w0vDsHhYeqtLJGM3URRTg9lrI7ks4FwDdcxj0vEeZHMs9KK2JuOw9uq2igw8/wme/AP0s0PA1iVYxkY7GdIkE/fQbkDWAmkX887KeiZdamXhwTWSQeMNZMaRK84/SbN4s1lOpu7HbGgbofSUlsUuxRe+onWaIAWQqV5knw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711393529; c=relaxed/simple;
-	bh=ZgYazPeTafdm9oC34JiziT0P9rS4Rvc4pczqufKqjXQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aVR3x5XrQmnPxbiCL6JpYcVBWMYbk6ASoPWxJ9c1PLW5BL+NOGsHc7sjNzGJSAT77L0+sqzN9Hc53v+M+zXOymSyjIUIXLVjUn1pKN4xEZwLsUxSkZuVyMPVGRQiKKYejz1lqYBv5FujF/xskHGNaBLEt3oDaq6G6jMbGscM5L4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZmWfaYEO; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711393538; c=relaxed/simple;
+	bh=2naQ2zIwUDbAjnJ5fx8ylGGomTwmKBGC8b+4Kf4kgXw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZKKwoXze11LAMBjxdcLVzxmfnYhIqJTKwRHRZTMtMLs5WArJ/m8wBv1TmosY7rRV2q5rQJ70apWVJoBkZFO5G/ZhrSkPJfdNjmMAdB7sA5OaCQnP/4pFCjYkgu1sZnn0cak1RdkTGJLw81Ezo/syNiCbRXO7Kmmc0C+YDy6LjEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=KrsZ3Dg+; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZmWfaYEO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711393527; x=1742929527;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZgYazPeTafdm9oC34JiziT0P9rS4Rvc4pczqufKqjXQ=;
-  b=ZmWfaYEO5p2TfsSf+mCNj2VAbTP3WTgXAqVdudhG4NiiyqGZJTgpyac6
-   VUo5jPAl+r1RkOPgZZQFxn3LH9PU/MCHxuRzkvRTxtgaoPjR89JyAqxVI
-   L/MmxaOTiqqh2fdNnlQ2oeK6TEw7OQEXiiXMg99D/5RoEsfQdn27Hnz0j
-   tZv+0HX8LCE9eVRSll1mMkrh0ta+0PvkuDGSLOvcKsn8S5Iy2Cve36SX5
-   ZFvESitAfICDc+XBuuXhihSDNsBgou/VkJ4f38QTaogoYPMtZM3dCryL/
-   E5gcCLM+Up+08OF5s02+ejHN1Ipi2bhCiI77kcGZgRazr8VUPKR2n3ePF
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="17557571"
-X-IronPort-AV: E=Sophos;i="6.07,154,1708416000"; 
-   d="scan'208";a="17557571"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 12:05:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,154,1708416000"; 
-   d="scan'208";a="20388398"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 12:05:26 -0700
-Date: Mon, 25 Mar 2024 12:05:25 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Cc: "Yamahata, Isaku" <isaku.yamahata@intel.com>,
-	"Zhang, Tina" <tina.zhang@intel.com>,
-	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>, "Chen, Bo2" <chen.bo@intel.com>,
-	"sagis@google.com" <sagis@google.com>,
-	"isaku.yamahata@linux.intel.com" <isaku.yamahata@linux.intel.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Aktas, Erdem" <erdemaktas@google.com>,
-	"sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"Yuan, Hang" <hang.yuan@intel.com>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>
-Subject: Re: [PATCH v19 059/130] KVM: x86/tdp_mmu: Don't zap private pages
- for unsupported cases
-Message-ID: <20240325190525.GG2357401@ls.amr.corp.intel.com>
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <1ed955a44cd81738b498fe52823766622d8ad57f.1708933498.git.isaku.yamahata@intel.com>
- <618614fa6c62a232d95da55546137251e1847f48.camel@intel.com>
- <20240319235654.GC1994522@ls.amr.corp.intel.com>
- <1c2283aab681bd882111d14e8e71b4b35549e345.camel@intel.com>
- <f63d19a8fe6d14186aecc8fcf777284879441ef6.camel@intel.com>
- <20240321225910.GU1994522@ls.amr.corp.intel.com>
- <96fcb59cd53ece2c0d269f39c424d087876b3c73.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="KrsZ3Dg+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=/cOCj+3wz4G6mk7yJiOWKe+zWsog28msEXqYEYYF/PM=; b=KrsZ3Dg+BwR2PxtUZN7tRdXRM/
+	hzD6VT43T4jmCbBOlQa33Sar4qRrk34fr3Gcfdp4NQWyMpNKX4DH6J6albLyamFGb2CGEiZOtE5rW
+	nfLSP5bRkADNvscY10NWmVllXMUJQDKsyuMyDODwaUtYaCGTGsGnQon7XaddORjvYOehlVXeE6sfa
+	n/bIrGl+ZGAr/bWkdry+5ZKkzUgSzgmqpPyWvxvxDDYmJrN43CkrvCrpPuNbz7XsoF5Y7Liw6IIBe
+	NgZRaSze46IWt9cBigdGv5ZmmlmhThf/TXsUVgjI26u4CbbOLSlCdcwSS/EtJiOUe4764vjuRvM+Q
+	SpYZMTlA==;
+Received: from [177.34.169.255] (helo=[192.168.0.139])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1ropdK-00FBOo-Kv; Mon, 25 Mar 2024 20:05:23 +0100
+Message-ID: <0729b218-53f1-4139-b165-a324794a9abd@igalia.com>
+Date: Mon, 25 Mar 2024 16:05:06 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <96fcb59cd53ece2c0d269f39c424d087876b3c73.camel@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 05/14] drm: Suppress intentional warning backtraces in
+ scaling unit tests
+To: Guenter Roeck <linux@roeck-us.net>, linux-kselftest@vger.kernel.org
+Cc: David Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+ Dan Carpenter <dan.carpenter@linaro.org>, Kees Cook <keescook@chromium.org>,
+ Daniel Diaz <daniel.diaz@linaro.org>, David Gow <davidgow@google.com>,
+ Arthur Grillo <arthurgrillo@riseup.net>,
+ Brendan Higgins <brendan.higgins@linux.dev>,
+ Naresh Kamboju <naresh.kamboju@linaro.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Maxime Ripard
+ <mripard@kernel.org>, =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?=
+ <ville.syrjala@linux.intel.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Thomas Zimmermann <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org,
+ kunit-dev@googlegroups.com, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ loongarch@lists.linux.dev, netdev@vger.kernel.org,
+ Linux Kernel Functional Testing <lkft@linaro.org>
+References: <20240325175248.1499046-1-linux@roeck-us.net>
+ <20240325175248.1499046-6-linux@roeck-us.net>
+Content-Language: en-US
+From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
+Autocrypt: addr=mcanal@igalia.com; keydata=
+ xjMEZIsaeRYJKwYBBAHaRw8BAQdAGU6aY8oojw61KS5rGGMrlcilFqR6p6ID45IZ6ovX0h3N
+ H01haXJhIENhbmFsIDxtY2FuYWxAaWdhbGlhLmNvbT7CjwQTFggANxYhBDMCqFtIvFKVRJZQ
+ hDSPnHLaGFVuBQJkixp5BQkFo5qAAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQNI+cctoYVW5u
+ GAEAwpaC5rI3wD8zqETKwGVoXd6+AbmGfZuVD40xepy7z/8BAM5w95/oyPsHUqOsg/xUTlNp
+ rlbhA+WWoaOXA3XgR+wCzjgEZIsaeRIKKwYBBAGXVQEFAQEHQGoOK0jgh0IorMAacx6WUUWb
+ s3RLiJYWUU6iNrk5wWUbAwEIB8J+BBgWCAAmFiEEMwKoW0i8UpVEllCENI+cctoYVW4FAmSL
+ GnkFCQWjmoACGwwACgkQNI+cctoYVW6cqwD/Q9R98msvkhgRvi18fzUPFDwwogn+F+gQJJ6o
+ pwpgFkAA/R2zOfla3IT6G3SBoV5ucdpdCpnIXFpQLbmfHK7dXsAC
+In-Reply-To: <20240325175248.1499046-6-linux@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 22, 2024 at 12:40:12AM +0000,
-"Edgecombe, Rick P" <rick.p.edgecombe@intel.com> wrote:
+Hi Guenter,
 
-> On Thu, 2024-03-21 at 15:59 -0700, Isaku Yamahata wrote:
-> > > 
-> > > Ok, I see now how this works. MTRRs and APIC zapping happen to use
-> > > the
-> > > same function: kvm_zap_gfn_range(). So restricting that function
-> > > from
-> > > zapping private pages has the desired affect. I think it's not
-> > > ideal
-> > > that kvm_zap_gfn_range() silently skips zapping some ranges. I
-> > > wonder
-> > > if we could pass something in, so it's more clear to the caller.
-> > > 
-> > > But can these code paths even get reaches in TDX? It sounded like
-> > > MTRRs
-> > > basically weren't supported.
-> > 
-> > We can make the code paths so with the (new) assumption that guest
-> > MTRR can
-> > be disabled cleanly.
+On 3/25/24 14:52, Guenter Roeck wrote:
+> The drm_test_rect_calc_hscale and drm_test_rect_calc_vscale unit tests
+> intentionally trigger warning backtraces by providing bad parameters to
+> the tested functions. What is tested is the return value, not the existence
+> of a warning backtrace. Suppress the backtraces to avoid clogging the
+> kernel log.
 > 
-> So the situation is (please correct):
-> KVM has a no "making up architectural behavior" rule, which is an
-> important one. But TDX module doesn't support MTRRs. So TD guests can't
-> have architectural behavior for MTRRs. So this patch is trying as best
-> as possible to match what MTRR behavior it can (not crash the guest if
-> someone tries).
->
-> First of all, if the guest unmaps the private memory, doesn't it have
-> to accept it again when gets re-added? So will the guest not crash
-> anyway?
-
-Right, the guest has to accept it on VE.  If the unmap was intentional by guest,
-that's fine.  The unmap is unintentional (with vMTRR), the guest doesn't expect
-VE with the GPA.
-
-
-> But, I guess we should punt to userspace is the guest tries to use
-> MTRRs, not that userspace can handle it happening in a TD...  But it
-> seems cleaner and safer then skipping zapping some pages inside the
-> zapping code.
+> Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Acked-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+> - Rebased to v6.9-rc1
+> - Added Tested-by:, Acked-by:, and Reviewed-by: tags
 > 
-> I'm still not sure if I understand the intention and constraints fully.
-> So please correct. This (the skipping the zapping for some operations)
-> is a theoretical correctness issue right? It doesn't resolve a TD
-> crash?
+>   drivers/gpu/drm/tests/drm_rect_test.c | 6 ++++++
+>   1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/tests/drm_rect_test.c b/drivers/gpu/drm/tests/drm_rect_test.c
+> index 76332cd2ead8..75614cb4deb5 100644
+> --- a/drivers/gpu/drm/tests/drm_rect_test.c
+> +++ b/drivers/gpu/drm/tests/drm_rect_test.c
+> @@ -406,22 +406,28 @@ KUNIT_ARRAY_PARAM(drm_rect_scale, drm_rect_scale_cases, drm_rect_scale_case_desc
+>   
+>   static void drm_test_rect_calc_hscale(struct kunit *test)
+>   {
+> +	DEFINE_SUPPRESSED_WARNING(drm_calc_scale);
+>   	const struct drm_rect_scale_case *params = test->param_value;
+>   	int scaling_factor;
+>   
+> +	START_SUPPRESSED_WARNING(drm_calc_scale);
 
-For lapic, it's safe guard. Because TDX KVM disables APICv with
-APICV_INHIBIT_REASON_TDX, apicv won't call kvm_zap_gfn_range().
+I'm not sure if it is not that obvious only to me, but it would be nice
+to have a comment here, remembering that we provide bad parameters in
+some test cases.
 
-For MTRR, the purpose is to make the guest boot (without the guest kernel
-command line like clearcpuid=mtrr) .
-If we can assume the guest won't touch MTRR registers somehow, KVM can return an
-error to TDG.VP.VMCALL<RDMSR, WRMSR>(MTRR registers). So it doesn't call
-kvm_zap_gfn_range(). Or we can use KVM_EXIT_X86_{RDMSR, WRMSR} as you suggested.
--- 
-isaku Yamahata <isaku.yamahata@intel.com>
+Best Regards,
+- Maíra
+
+>   	scaling_factor = drm_rect_calc_hscale(&params->src, &params->dst,
+>   					      params->min_range, params->max_range);
+> +	END_SUPPRESSED_WARNING(drm_calc_scale);
+>   
+>   	KUNIT_EXPECT_EQ(test, scaling_factor, params->expected_scaling_factor);
+>   }
+>   
+>   static void drm_test_rect_calc_vscale(struct kunit *test)
+>   {
+> +	DEFINE_SUPPRESSED_WARNING(drm_calc_scale);
+>   	const struct drm_rect_scale_case *params = test->param_value;
+>   	int scaling_factor;
+>   
+> +	START_SUPPRESSED_WARNING(drm_calc_scale);
+>   	scaling_factor = drm_rect_calc_vscale(&params->src, &params->dst,
+>   					      params->min_range, params->max_range);
+> +	END_SUPPRESSED_WARNING(drm_calc_scale);
+>   
+>   	KUNIT_EXPECT_EQ(test, scaling_factor, params->expected_scaling_factor);
+>   }
