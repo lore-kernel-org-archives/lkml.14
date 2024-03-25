@@ -1,152 +1,106 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11D618C9EC
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:58:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24EB1190662;
+	Mon, 25 Mar 2024 09:59:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711360696; cv=none; b=oAArLM5KnxQZ2OH7maz+kUIJmNhqR1Ja+vLwWrxBbf83XLFAdqaI3xhBUxPLDm4rXGmYapENStivMoxQxyEALHNFqlchZ0A73Lxatwj6fgkifZ+vFmT3noYIMG/qkBNcuyYuXEB6nqI0voMUXkRD32UQStpnL5blTGE9vYB/2lQ=
+	t=1711360774; cv=none; b=aqejty3mno75wRRfoIFu4q3LAJUBdczId40YJgz9JimecFvIXvFLXopvCN8KV28XGqUipL7jY6KgrBoJodvyRCCWK1KfObdF98UzsbzFYO1xqZl3nVzhOfiiU5P0pvONcgnpJluf43XQruNNJHaaoMVMLwi+1wd5kB93oG51ZxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711360696; c=relaxed/simple;
-	bh=NqK30dWvMkhMRQos+zh5Gvc0n9gWQPd9IHznIn2q9gg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j9rVjnSVfXlKdf0suc6prD3nhNH2Ci3W8vwRolZoOq4CCJDcpBGXCPA4vy0dKPl+MMBdVcumW4sM0ccY9++u9PRPjdXYMhVNLUYRWqN6YRm04lN5afXYvDdEbeogTaSFGJ4B/xh6uyPVJbcS0uYEcstgIn0cukUOkFFs/3Fp8j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fekZIf+e; arc=none smtp.client-ip=209.85.222.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711360774; c=relaxed/simple;
+	bh=V71GOfQZeCnRv0gdv6EbVgKYTEs080nwBndJyVfUGUA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=S322nT/HNdSM977VHsAjKQBhXdTiD3iRRag2RNpi6bdwyNkziygrOCVhYzDlRGJFKpokM0vbtS/1OtldbZstdPDqxLbtNM3JPXoDKxQMUP9cCi+PQ+jmdLOKXy2JGufiH77MPQabw6GjqL1oEnAJDW5IgKPhzwcsH9dSYpxFU0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=n0gWS2ha; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fekZIf+e"
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-7dfacd39b9eso2765525241.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 02:58:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711360693; x=1711965493; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kyd2fUcre4Z3NgmLnaLMJzBCVzXb0Ngoj6fneWetwoo=;
-        b=fekZIf+eTMoIADWtxEEnssf42KVI+8wW08HN+gUZaFMvoYZLt+KGaRUfA8f3CwBKRR
-         /FYl6YnP+2Cn+chYSyiwJz7elP0P6EOU0XpYHVBSVQpWtazWzmyewrdZkFFqPLbFstgC
-         NZJtYr72wxQIdxHMeBhUgE2y4peQphvEfEQa4ry7Is67KknfClDOJ27DM2cfDqQdhto5
-         riuCV42LVF1rud54rqBxn75LyZ/Ib/gYEsmlHp1uXcnsevJne0RS4dopVk/ZJ204tENn
-         BYDM7CxLUjUIJ9o3uPmY0R0cd+yYddPwVMAw91lwJxYN0/0JaeqRNRUtUpCjRnAyzZDr
-         twlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711360693; x=1711965493;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Kyd2fUcre4Z3NgmLnaLMJzBCVzXb0Ngoj6fneWetwoo=;
-        b=DSOPMKSZTEqFy97QrQgfCqQD399h7TA6C0dUPXJ155bDEBvGE1bd6tfUoULjD2368g
-         SUNSwB5VwF1vagGAFZtG1QfxmHR4vxHjzrL38DMW2mD2z2YrpXlQX7WR4bkSZbIahnIG
-         COzNKL4m36dNhxucW2/oKHelGJjX6gS1fqKsulgvZuqc10WEeYzeuwFrxcNhKRpHYE93
-         EC3nI8Eo66gf5sZQ5HLyIDyqEBqHIcQLqkLXj9V7AlYAjEX8jC94eeSmtUAO9ydT/rpD
-         Ca+oPSO4Wc4iadK3RHFld40tvCD3jFIGYacHPcWrGgPDyeOuqNVDYm0ICx19H9sWY7KA
-         NUmw==
-X-Gm-Message-State: AOJu0YxGO+6uoi3v+nm5ysMPufy1byrw2JlQS8SLvIUv9GhhJq8nDgvp
-	piTjBojlvmVwBcohbzL5kpvOANv3TN65dVd/xli9JTsVH1sUGxFmcXnR9Xi73zuJU/ChdcBHFkc
-	d4b/j6+To0lOsjIDwaEYkMCDu1AKmL/x2gwq94A==
-X-Google-Smtp-Source: AGHT+IH/LXe+pZI6T4dYPbrCnIOWYVWHu5aykoWck8P1W1r3msju/rhgAo9E+tewJPXWPjjlSAuDIOssGzyy23FEb/U=
-X-Received: by 2002:a67:fd67:0:b0:476:71f:dc62 with SMTP id
- h7-20020a67fd67000000b00476071fdc62mr2935823vsa.9.1711360692786; Mon, 25 Mar
- 2024 02:58:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="n0gWS2ha"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42P8eGmA028115;
+	Mon, 25 Mar 2024 10:44:07 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=selector1; bh=ffbGzpk
+	ISaeUbR7jR83UhYzV507/spEZuEB2LJi1r+s=; b=n0gWS2ha/eKuYFCL9oX5EIw
+	Bg1NzsCkqiDc38Ee7IZOEEquoBhLx1EaZb9TR8oJrEoGFxG/It5WfZz8u4gIrBIO
+	zCtpuleSZQiiAGVo7tjql9EqoFb7EVWKk8eZG0vQnWWXY50LgRMo1DlPUfCzbV3u
+	FZnJVzhzWgLHwvN92OKahVOhJMGsbxXgcPfLGUiq4HtPDQcdsjtk/3Bb4STstH7f
+	8FNTkLl0qR9CxiphXXpbYDeCP1xRe2d0gifbzRQB9fPaV/xY86jZstEQujuWN8St
+	h/unnqrnwyUHPSOHcs7VixG+EUBQjojj/2ZK1kzGZlCcHEGA5W6LjgWiREkkMqw=
+	=
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3x1n3977fn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 10:44:07 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 6101240045;
+	Mon, 25 Mar 2024 10:43:58 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8A8F3216EF3;
+	Mon, 25 Mar 2024 10:42:43 +0100 (CET)
+Received: from localhost (10.201.21.128) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 25 Mar
+ 2024 10:42:42 +0100
+From: Christophe Roullier <christophe.roullier@foss.st.com>
+To: "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark
+ Brown <broonie@kernel.org>,
+        Christophe Roullier
+	<christophe.roullier@foss.st.com>,
+        Marek Vasut <marex@denx.de>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 0/2] Add properties in dwmac-stm32 documentation
+Date: Mon, 25 Mar 2024 10:42:16 +0100
+Message-ID: <20240325094218.56934-1-christophe.roullier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240324230116.1348576-1-sashal@kernel.org>
-In-Reply-To: <20240324230116.1348576-1-sashal@kernel.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 25 Mar 2024 15:28:01 +0530
-Message-ID: <CA+G9fYueiBdV-uRVbX+JB2_nt831_+8fnyoQ6v62rAsyLQne6g@mail.gmail.com>
-Subject: Re: [PATCH 6.6 000/638] 6.6.23-rc1 review
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, 
-	shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, 
-	florian.fainelli@broadcom.com, pavel@denx.de, 
-	Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>, Nicolin Chen <nicolinc@nvidia.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Will Deacon <will@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Andrii Nakryiko <andrii@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-25_07,2024-03-21_02,2023-05-22_02
 
-On Mon, 25 Mar 2024 at 04:31, Sasha Levin <sashal@kernel.org> wrote:
->
->
-> This is the start of the stable review cycle for the 6.6.23 release.
-> There are 638 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Tue Mar 26 11:01:10 PM UTC 2024.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-6.6.y&id2=v6.6.22
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> Thanks,
-> Sasha
+Introduce 2 new properties in dwmac-stm32 documentation
 
+ - phy-supply: to manage PHY regulator.
+ - st,ext-phyclk: is present since 2020 in driver so need to explain
+   it and avoid dtbs check issue : views/kernel/upstream/net-next/arch/arm/boot/dts/st/stm32mp157c-dk2.dtb: 
+ethernet@5800a000: Unevaluated properties are not allowed 
+('st,ext-phyclk' was unexpected)
+   Furthermore this property will be use in upstream of MP13 dwmac glue. (next step)
 
-The regression detected while building allmodconfig builds with clang-17
-failed on all the architectures.
+V2: - Drop deprecated: property for st,eth-clk-sel and st,eth-ref-clk-sel
+V3: - Rework commit message
 
-> Andrii Nakryiko (3):
->   libbpf: Fix faccessat() usage on Android
->   libbpf: Add missing LIBBPF_API annotation to libbpf_set_memlock_rlim
->     API
->   bpf: don't infer PTR_TO_CTX for programs with unnamed context type
+Christophe Roullier (2):
+  dt-bindings: net: add phy-supply property for stm32
+  dt-bindings: net: dwmac: Document STM32 property st,ext-phyclk
 
-arm64 gcc-13 - FAILED (other architectures passed)
-arm64 clang-17 - FAILED (All other architectures failed))
+ Documentation/devicetree/bindings/net/stm32-dwmac.yaml | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-The 2 errors are only noticed on arm64.
+-- 
+2.25.1
 
-> Jason Gunthorpe (1):
->   iommu/arm-smmu-v3: Check that the RID domain is S1 in SVA
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-Build error:
-------------
-kernel/bpf/btf.c:5660:10: error: expression which evaluates to zero
-treated as a null pointer constant of type 'const struct btf_member *'
-[-Werror,-Wnon-literal-null-conversion]
- 5660 |                 return false;
-      |                        ^~~~~
-1 error generated.
-
-<trim>
-
-drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c:358:10: error:
-incompatible integer to pointer conversion returning 'int' from a
-function with result type 'struct iommu_sva *' [-Wint-conversion]
-  358 |                 return -ENODEV;
-      |                        ^~~~~~~
-drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c:361:10: error:
-incompatible integer to pointer conversion returning 'int' from a
-function with result type 'struct iommu_sva *' [-Wint-conversion]
-  361 |                 return -ENODEV;
-      |                        ^~~~~~~
-2 errors generated.
-
-
-Steps to reproduce:
- # tuxmake --runtime podman --target-arch arm64 --toolchain clang-17
---kconfig allmodconfig LLVM=1 LLVM_IAS=1
-
-Links:
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.22-638-ga02ac18a4590/testrun/23156094/suite/build/test/gcc-13-allmodconfig/log
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.22-638-ga02ac18a4590/testrun/23156063/suite/build/test/gcc-13-allmodconfig/history/
- - https://storage.tuxsuite.com/public/linaro/lkft/builds/2eAPALK4lPo78E8K7ZPm0ayDbfA/
-
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.22-638-ga02ac18a4590/testrun/23156063/suite/build/test/clang-17-allmodconfig/history/
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.22-638-ga02ac18a4590/testrun/23156063/suite/build/test/clang-17-allmodconfig/details/
- - https://storage.tuxsuite.com/public/linaro/lkft/builds/2eAPANvCAoQEpSXaT8nzxKxI0Ft/
-
---
-Linaro LKFT
-https://lkft.linaro.org
