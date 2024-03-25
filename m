@@ -1,248 +1,316 @@
-Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
+Received: from mail-m127225.xmail.ntesmail.com (mail-m127225.xmail.ntesmail.com [115.236.127.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06358153569
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 08:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ADC75D464;
+	Mon, 25 Mar 2024 08:32:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.236.127.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711355505; cv=none; b=RtOhTGhRUjcg4d8bq3duuxza8cnzN4jSuzmOAm5SGpZC1a8Ulr2G/jcQPSX9O8CkXvs/k/HHvIR2yBJOWpHJkejfeZObumpCvV7bPNNnoitlwYjUnegvxhnGpbu0dk+3zHQb9Ip6yq05K85LffTMol8ki4hW5kXWXe9FcwF0aC0=
+	t=1711355528; cv=none; b=bPUwIPFf6ZngoiEDxJNDSFDk36Y3R17dkMNPALi8dzL6DV8C7VVh/+SQffJpY7VwiHxU1TjR7J39XbXEFgd3j0Qkbn4cv9/WDJYIrk1Eyih3zBM+Xl58Djk1roQvwVaNuptZBWm/rreJ7wghvbxJ+0AHgfq6AlyVN+CMEmNCTwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711355505; c=relaxed/simple;
-	bh=EkQxsNvCXCeshoxUED/Toq5N6LaWQfiIkoXL3HFn6ok=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=J6oQDNGQYUDn6iesa5jH4/JZ30h2+rFipzHtTJwS1M5yzjUnarSIEum14IExJ5A/WAl3ssVrmP90UcyWfDwbVO64xBeh0MwfkXyd8LXY13LXCjGT3RGN0q9G/HLmjlwWPH6gBKzkVNaBB8yEX4/lRsUGMmof/onxiSpDmuoDKnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4V35H93l05z9xHMY
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 16:11:17 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id 02A0D14059F
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 16:31:28 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.81.223.214])
-	by APP2 (Coremail) with SMTP id GxC2BwB3sCRPNgFmUPztBA--.12038S3;
-	Mon, 25 Mar 2024 09:31:27 +0100 (CET)
-From: Petr Tesarik <petrtesarik@huaweicloud.com>
-To: Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Petr Tesarik <petr.tesarik1@huawei-partners.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Will Deacon <will@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	iommu@lists.linux.dev (open list:DMA MAPPING HELPERS)
-Cc: Roberto Sassu <roberto.sassu@huaweicloud.com>,
-	Petr Tesarik <petr@tesarici.cz>
-Subject: [PATCH v4 1/2] swiotlb: extend buffer pre-padding to alloc_align_mask if necessary
-Date: Mon, 25 Mar 2024 09:31:04 +0100
-Message-Id: <20240325083105.658-2-petrtesarik@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240325083105.658-1-petrtesarik@huaweicloud.com>
-References: <20240325083105.658-1-petrtesarik@huaweicloud.com>
+	s=arc-20240116; t=1711355528; c=relaxed/simple;
+	bh=KD50ATroLq5wbiqV8KIwzZpaujxagamNMl0akgT1LWU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=UA0AFFwlvOzSFkcMeGZIUI2ApgF5IJMeo+CWIw8Er0BJwXpwD3ikp0szQLhYBgJyDaI+FQI+SO9p+8C2AxpkJiz7u9+hiAHDue/XHQ0HZaeKopw6YLqwwGFXBcALkG0bftsyPJl4iCykHYzFvIhw6Usw1FpIt0/+mOfOV2ZpPxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=S9r0f+9F; arc=none smtp.client-ip=115.236.127.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="S9r0f+9F"
+DKIM-Signature: a=rsa-sha256;
+	b=S9r0f+9FN3LtZ3BxW8+zASeX2mJRD5y9BDprcwER3SnJ+xFG9rwhIRCxSklTmFpxIhFxx3/CToiQVri3c/rLKgrUMobOgAKPhktClxFkhN+0UzbaWTXUcCzQjLK7fv7dw26KEKu8an/FIxniRKoc+pLV46mgUfNRnO5gREEqELY=;
+	c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=RTrYQS6npXaXjhs3epbhBAkTBe1y8Ij/m1SJhYUQASY=;
+	h=date:mime-version:subject:message-id:from;
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 4C7647C044A;
+	Mon, 25 Mar 2024 12:16:50 +0800 (CST)
+From: Sugar Zhang <sugar.zhang@rock-chips.com>
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org,
+	Sugar Zhang <sugar.zhang@rock-chips.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/2] clk: rockchip: Add support for clk input / output switch
+Date: Mon, 25 Mar 2024 12:16:29 +0800
+Message-Id: <20240325121537.v1.1.Ibe8286bb98ea1fc3bc6421c30f6e46fc0b1b0d88@changeid>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1711340191-69588-1-git-send-email-sugar.zhang@rock-chips.com>
+References: <1711340191-69588-1-git-send-email-sugar.zhang@rock-chips.com>
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkIZTFZKGR4aTk1ISB8aTx5VEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk5DTUtIVUpLS1VKQl
+	kG
+X-HM-Tid: 0a8e73d34a1109d2kunm4c7647c044a
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OhA6UTo*HTMSOA0ZFQgKNBI3
+	GBRPCx5VSlVKTEpKSE9LSUpKSE9CVTMWGhIXVQgOHBoJVQETGhUcOwkUGBBWGBMSCwhVGBQWRVlX
+	WRILWUFZTkNVSUlVTFVKSk9ZV1kIAVlBQk9DSjcG
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:GxC2BwB3sCRPNgFmUPztBA--.12038S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3Xw4rZr4xXw1furyDCrW5Awb_yoW3JrW5pF
-	4fJa1rtFWIqF1xCwsF9a95GF1F9w1kCry7Gr4SgryY9ryDXF98XF98A3yYga4FqrWkuF47
-	Zas5ur48CF47Jr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQCb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGw
-	A2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
-	Ij6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_
-	Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I
-	0E8cxan2IY04v7MxkF7I0En4kS14v26r4a6rW5MxkF7I0Ew4C26cxK6c8Ij28IcwCF04k2
-	0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
-	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41l
-	IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMI
-	IF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
-	87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTRsL0oUUUUU
-X-CM-SenderInfo: hshw23xhvd2x3n6k3tpzhluzxrxghudrp/
 
-From: Petr Tesarik <petr.tesarik1@huawei-partners.com>
+This patch add support switch for clk-bidirection which located
+at GRF, such as SAIx_MCLK_{IN OUT} which share the same pin.
+and these config maybe located in many pieces of GRF,
+which hard to addressed in one single clk driver. so, we add
+this simple helper driver to address this situation.
 
-Allow a buffer pre-padding of up to alloc_align_mask, even if it requires
-allocating additional IO TLB slots.
+In order to simplify implement and usage, and also for safety
+clk usage (avoid high freq glitch), we set all clk out as disabled
+(which means Input default for clk-bidrection) in the pre-stage,
+such boot-loader or init by HW default. And then set a safety freq
+before enable clk-out, such as "assign-clock-rates" or clk_set_rate
+in drivers.
 
-If the allocation alignment is bigger than IO_TLB_SIZE and min_align_mask
-covers any non-zero bits in the original address between IO_TLB_SIZE and
-alloc_align_mask, these bits are not preserved in the swiotlb buffer
-address.
+e.g.
 
-To fix this case, increase the allocation size and use a larger offset
-within the allocated buffer. As a result, extra padding slots may be
-allocated before the mapping start address.
+1. mclk{out,in}_sai0 define:
 
-Leave orig_addr in these padding slots initialized to INVALID_PHYS_ADDR.
-These slots do not correspond to any CPU buffer, so attempts to sync the
-data should be ignored.
+  mclkin_sai0: mclkin-sai0 {
+      compatible = "fixed-clock";
+      #clock-cells = <0>;
+      clock-frequency = <12288000>;
+      clock-output-names = "mclk_sai0_from_io";
+  };
 
-The padding slots should be automatically released when the buffer is
-unmapped. However, swiotlb_tbl_unmap_single() takes only the address of the
-DMA buffer slot, not the first padding slot. Save the number of padding
-slots in struct io_tlb_slot and use it to adjust the slot index in
-swiotlb_release_slots(), so all allocated slots are properly freed.
+  mclkout_sai0: mclkout-sai0@ff040070 {
+      compatible = "rockchip,clk-out";
+      reg = <0 0xff040070 0 0x4>;
+      clocks = <&cru MCLK_SAI0_OUT2IO>;
+      #clock-cells = <0>;
+      clock-output-names = "mclk_sai0_to_io";
+      rockchip,bit-shift = <4>;
+      //example with PD if reg access needed
+      power-domains = <&power RK3562_PD_VO>;
+  };
 
-Fixes: 2fd4fa5d3fb5 ("swiotlb: Fix alignment checks when both allocation and DMA masks are present")
-Link: https://lore.kernel.org/linux-iommu/20240311210507.217daf8b@meshulam.tesarici.cz/
-Signed-off-by: Petr Tesarik <petr.tesarik1@huawei-partners.com>
+Note:
+
+clock-output-names of mclkin_sai0 should equal to strings in drivers. such as:
+
+drivers/clk/rockchip/clk-rk3562.c:
+PNAME(clk_sai0_p) = { "clk_sai0_src", "clk_sai0_frac", "xin_osc0_half", "mclk_sai0_from_io" };
+
+2. mclkout_sai0 usage:
+
+  &ext_codec {
+      clocks = <&mclkout_sai0>;
+      clock-names = "mclk";
+      assigned-clocks = <&mclkout_sai0>;
+      assigned-clock-rates = <12288000>;
+      pinctrl-names = "default";
+      pinctrl-0 = <&i2s0m0_mclk>;
+  };
+
+  clk_summary on sai0 work:
+
+  cat /sys/kernel/debug/clk/clk_summary | egrep "pll|sai0"
+
+  clk_sai0_src                1        1        0  1188000000          0     0  50000
+    clk_sai0_frac             1        1        0    12288000          0     0  50000
+      clk_sai0                1        1        0    12288000          0     0  50000
+        mclk_sai0             1        1        0    12288000          0     0  50000
+          mclk_sai0_out2io    1        1        0    12288000          0     0  50000
+            mclk_sai0_to_io   1        1        0    12288000          0     0  50000
+
+  example with PD if reg access needed:
+
+  * PD status when mclk_sai0_to_io on:
+
+  cat /sys/kernel/debug/pm_genpd/pm_genpd_summary
+
+  domain                          status          children
+    /device                                                runtime status
+  ----------------------------------------------------------------------
+  ...
+
+  vo                              on
+    /devices/platform/clocks/ff040070.mclkout-sai0         active
+  ...
+
+  * PD status when mclk_sai0_to_io off:
+
+  cat /sys/kernel/debug/pm_genpd/pm_genpd_summary
+
+  domain                          status          children
+    /device                                                runtime status
+  ----------------------------------------------------------------------
+  ...
+
+  vo                              off-0
+    /devices/platform/clocks/ff040070.mclkout-sai0         suspended
+  ...
+
+3. mclkin_sai0 usage:
+
+  please override freq of mclkin as the real external clkin, such as:
+
+  &mclkin_sai0 {
+      clock-frequency = <24576000>;
+  }
+
+  &ext_codec {
+      clocks = <&mclkin_sai0>;
+      clock-names = "mclk";
+      assigned-clocks = <&cru CLK_SAI0>;
+      assigned-clock-parents = <&mclkin_sai0>;
+      pinctrl-names = "default";
+      pinctrl-0 = <&i2s0m0_mclk>;
+  };
+
+  clk_summary on sai0 work:
+
+  cat /sys/kernel/debug/clk/clk_summary | egrep "pll|sai0"
+
+  mclk_sai0_from_io          1        1        0    12288000          0     0  50000
+    clk_sai0                 1        1        0    12288000          0     0  50000
+      mclk_sai0              1        1        0    12288000          0     0  50000
+        mclk_sai0_out2io     0        0        0    12288000          0     0  50000
+          mclk_sai0_to_io    0        0        0    12288000          0     0  50000
+
+Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
 ---
- kernel/dma/swiotlb.c | 59 ++++++++++++++++++++++++++++++++++----------
- 1 file changed, 46 insertions(+), 13 deletions(-)
 
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index 86fe172b5958..d7a8cb93ef2d 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -69,11 +69,14 @@
-  * @alloc_size:	Size of the allocated buffer.
-  * @list:	The free list describing the number of free entries available
-  *		from each index.
-+ * @pad_slots:	Number of preceding padding slots. Valid only in the first
-+ *		allocated non-padding slot.
-  */
- struct io_tlb_slot {
- 	phys_addr_t orig_addr;
- 	size_t alloc_size;
--	unsigned int list;
-+	unsigned short list;
-+	unsigned short pad_slots;
- };
+ drivers/clk/rockchip/Kconfig   |  6 +++
+ drivers/clk/rockchip/Makefile  |  2 +
+ drivers/clk/rockchip/clk-out.c | 99 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 107 insertions(+)
+ create mode 100644 drivers/clk/rockchip/clk-out.c
+
+diff --git a/drivers/clk/rockchip/Kconfig b/drivers/clk/rockchip/Kconfig
+index 9aad869..0e7eee8 100644
+--- a/drivers/clk/rockchip/Kconfig
++++ b/drivers/clk/rockchip/Kconfig
+@@ -107,4 +107,10 @@ config CLK_RK3588
+ 	help
+ 	  Build the driver for RK3588 Clock Driver.
  
- static bool swiotlb_force_bounce;
-@@ -287,6 +290,7 @@ static void swiotlb_init_io_tlb_pool(struct io_tlb_pool *mem, phys_addr_t start,
- 					 mem->nslabs - i);
- 		mem->slots[i].orig_addr = INVALID_PHYS_ADDR;
- 		mem->slots[i].alloc_size = 0;
-+		mem->slots[i].pad_slots = 0;
- 	}
- 
- 	memset(vaddr, 0, bytes);
-@@ -821,12 +825,30 @@ void swiotlb_dev_init(struct device *dev)
- #endif
- }
- 
--/*
-- * Return the offset into a iotlb slot required to keep the device happy.
-+/**
-+ * swiotlb_align_offset() - Get required offset into an IO TLB allocation.
-+ * @dev:         Owning device.
-+ * @align_mask:  Allocation alignment mask.
-+ * @addr:        DMA address.
-+ *
-+ * Return the minimum offset from the start of an IO TLB allocation which is
-+ * required for a given buffer address and allocation alignment to keep the
-+ * device happy.
-+ *
-+ * First, the address bits covered by min_align_mask must be identical in the
-+ * original address and the bounce buffer address. High bits are preserved by
-+ * choosing a suitable IO TLB slot, but bits below IO_TLB_SHIFT require extra
-+ * padding bytes before the bounce buffer.
-+ *
-+ * Second, @align_mask specifies which bits of the first allocated slot must
-+ * be zero. This may require allocating additional padding slots, and then the
-+ * offset (in bytes) from the first such padding slot is returned.
-  */
--static unsigned int swiotlb_align_offset(struct device *dev, u64 addr)
-+static unsigned int swiotlb_align_offset(struct device *dev,
-+					 unsigned int align_mask, u64 addr)
- {
--	return addr & dma_get_min_align_mask(dev) & (IO_TLB_SIZE - 1);
-+	return addr & dma_get_min_align_mask(dev) &
-+		(align_mask | (IO_TLB_SIZE - 1));
- }
- 
- /*
-@@ -847,7 +869,7 @@ static void swiotlb_bounce(struct device *dev, phys_addr_t tlb_addr, size_t size
- 		return;
- 
- 	tlb_offset = tlb_addr & (IO_TLB_SIZE - 1);
--	orig_addr_offset = swiotlb_align_offset(dev, orig_addr);
-+	orig_addr_offset = swiotlb_align_offset(dev, 0, orig_addr);
- 	if (tlb_offset < orig_addr_offset) {
- 		dev_WARN_ONCE(dev, 1,
- 			"Access before mapping start detected. orig offset %u, requested offset %u.\n",
-@@ -1005,7 +1027,7 @@ static int swiotlb_search_pool_area(struct device *dev, struct io_tlb_pool *pool
- 	unsigned long max_slots = get_max_slots(boundary_mask);
- 	unsigned int iotlb_align_mask = dma_get_min_align_mask(dev);
- 	unsigned int nslots = nr_slots(alloc_size), stride;
--	unsigned int offset = swiotlb_align_offset(dev, orig_addr);
-+	unsigned int offset = swiotlb_align_offset(dev, 0, orig_addr);
- 	unsigned int index, slots_checked, count = 0, i;
- 	unsigned long flags;
- 	unsigned int slot_base;
-@@ -1328,11 +1350,12 @@ phys_addr_t swiotlb_tbl_map_single(struct device *dev, phys_addr_t orig_addr,
- 		unsigned long attrs)
- {
- 	struct io_tlb_mem *mem = dev->dma_io_tlb_mem;
--	unsigned int offset = swiotlb_align_offset(dev, orig_addr);
-+	unsigned int offset;
- 	struct io_tlb_pool *pool;
- 	unsigned int i;
- 	int index;
- 	phys_addr_t tlb_addr;
-+	unsigned short pad_slots;
- 
- 	if (!mem || !mem->nslabs) {
- 		dev_warn_ratelimited(dev,
-@@ -1349,6 +1372,7 @@ phys_addr_t swiotlb_tbl_map_single(struct device *dev, phys_addr_t orig_addr,
- 		return (phys_addr_t)DMA_MAPPING_ERROR;
- 	}
- 
-+	offset = swiotlb_align_offset(dev, alloc_align_mask, orig_addr);
- 	index = swiotlb_find_slots(dev, orig_addr,
- 				   alloc_size + offset, alloc_align_mask, &pool);
- 	if (index == -1) {
-@@ -1364,6 +1388,10 @@ phys_addr_t swiotlb_tbl_map_single(struct device *dev, phys_addr_t orig_addr,
- 	 * This is needed when we sync the memory.  Then we sync the buffer if
- 	 * needed.
- 	 */
-+	pad_slots = offset >> IO_TLB_SHIFT;
-+	offset &= (IO_TLB_SIZE - 1);
-+	index += pad_slots;
-+	pool->slots[index].pad_slots = pad_slots;
- 	for (i = 0; i < nr_slots(alloc_size + offset); i++)
- 		pool->slots[index + i].orig_addr = slot_addr(orig_addr, i);
- 	tlb_addr = slot_addr(pool->start, index) + offset;
-@@ -1384,13 +1412,17 @@ static void swiotlb_release_slots(struct device *dev, phys_addr_t tlb_addr)
- {
- 	struct io_tlb_pool *mem = swiotlb_find_pool(dev, tlb_addr);
- 	unsigned long flags;
--	unsigned int offset = swiotlb_align_offset(dev, tlb_addr);
--	int index = (tlb_addr - offset - mem->start) >> IO_TLB_SHIFT;
--	int nslots = nr_slots(mem->slots[index].alloc_size + offset);
--	int aindex = index / mem->area_nslabs;
--	struct io_tlb_area *area = &mem->areas[aindex];
-+	unsigned int offset = swiotlb_align_offset(dev, 0, tlb_addr);
-+	int index, nslots, aindex;
-+	struct io_tlb_area *area;
- 	int count, i;
- 
-+	index = (tlb_addr - offset - mem->start) >> IO_TLB_SHIFT;
-+	index -= mem->slots[index].pad_slots;
-+	nslots = nr_slots(mem->slots[index].alloc_size + offset);
-+	aindex = index / mem->area_nslabs;
-+	area = &mem->areas[aindex];
++config ROCKCHIP_CLK_OUT
++	tristate "Rockchip Clk Out / Input Switch"
++	default y
++	help
++	  Say y here to enable clk out / input switch.
 +
- 	/*
- 	 * Return the buffer to the free list by setting the corresponding
- 	 * entries to indicate the number of contiguous entries available.
-@@ -1413,6 +1445,7 @@ static void swiotlb_release_slots(struct device *dev, phys_addr_t tlb_addr)
- 		mem->slots[i].list = ++count;
- 		mem->slots[i].orig_addr = INVALID_PHYS_ADDR;
- 		mem->slots[i].alloc_size = 0;
-+		mem->slots[i].pad_slots = 0;
- 	}
- 
- 	/*
+ endif
+diff --git a/drivers/clk/rockchip/Makefile b/drivers/clk/rockchip/Makefile
+index 36894f6..30d6060 100644
+--- a/drivers/clk/rockchip/Makefile
++++ b/drivers/clk/rockchip/Makefile
+@@ -29,3 +29,5 @@ obj-$(CONFIG_CLK_RK3368)        += clk-rk3368.o
+ obj-$(CONFIG_CLK_RK3399)        += clk-rk3399.o
+ obj-$(CONFIG_CLK_RK3568)	+= clk-rk3568.o
+ obj-$(CONFIG_CLK_RK3588)	+= clk-rk3588.o rst-rk3588.o
++
++obj-$(CONFIG_ROCKCHIP_CLK_OUT)  += clk-out.o
+diff --git a/drivers/clk/rockchip/clk-out.c b/drivers/clk/rockchip/clk-out.c
+new file mode 100644
+index 0000000..22dcd98
+--- /dev/null
++++ b/drivers/clk/rockchip/clk-out.c
+@@ -0,0 +1,99 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (c) 2023 Rockchip Electronics Co., Ltd
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
++
++static DEFINE_SPINLOCK(clk_out_lock);
++
++static int rockchip_clk_out_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *node = pdev->dev.of_node;
++	struct clk_hw *hw;
++	struct resource *res;
++	const char *clk_name = node->name;
++	const char *parent_name;
++	void __iomem *reg;
++	u32 shift = 0;
++	u8 clk_gate_flags = CLK_GATE_HIWORD_MASK;
++	int ret;
++
++	ret = device_property_read_string(dev, "clock-output-names", &clk_name);
++	if (ret)
++		return ret;
++
++	ret = device_property_read_u32(dev, "rockchip,bit-shift", &shift);
++	if (ret)
++		return ret;
++
++	if (device_property_read_bool(dev, "rockchip,bit-set-to-disable"))
++		clk_gate_flags |= CLK_GATE_SET_TO_DISABLE;
++
++	ret = of_clk_parent_fill(node, &parent_name, 1);
++	if (ret != 1)
++		return -EINVAL;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res)
++		return -ENOMEM;
++
++	reg = devm_ioremap(dev, res->start, resource_size(res));
++	if (!reg)
++		return -ENOMEM;
++
++	pm_runtime_enable(dev);
++
++	hw = clk_hw_register_gate(dev, clk_name, parent_name, CLK_SET_RATE_PARENT,
++				  reg, shift, clk_gate_flags, &clk_out_lock);
++	if (IS_ERR(hw)) {
++		ret = -EINVAL;
++		goto err_disable_pm_runtime;
++	}
++
++	of_clk_add_hw_provider(node, of_clk_hw_simple_get, hw);
++
++	return 0;
++
++err_disable_pm_runtime:
++	pm_runtime_disable(dev);
++
++	return ret;
++}
++
++static int rockchip_clk_out_remove(struct platform_device *pdev)
++{
++	struct device_node *node = pdev->dev.of_node;
++
++	of_clk_del_provider(node);
++	pm_runtime_disable(&pdev->dev);
++
++	return 0;
++}
++
++static const struct of_device_id rockchip_clk_out_match[] = {
++	{ .compatible = "rockchip,clk-out", },
++	{},
++};
++
++static struct platform_driver rockchip_clk_out_driver = {
++	.driver = {
++		.name = "rockchip-clk-out",
++		.of_match_table = rockchip_clk_out_match,
++	},
++	.probe = rockchip_clk_out_probe,
++	.remove = rockchip_clk_out_remove,
++};
++
++module_platform_driver(rockchip_clk_out_driver);
++
++MODULE_DESCRIPTION("Rockchip Clock Input-Output-Switch");
++MODULE_AUTHOR("Sugar Zhang <sugar.zhang@rock-chips.com>");
++MODULE_LICENSE("GPL");
++MODULE_DEVICE_TABLE(of, rockchip_clk_out_match);
 -- 
-2.34.1
+2.7.4
 
