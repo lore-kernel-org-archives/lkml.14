@@ -1,68 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFCE3C81F6;
-	Mon, 25 Mar 2024 03:37:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C442187655
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:44:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711337839; cv=none; b=HTd63cuIlWc071IgFq7Veydxqjg0Wq21+nGQ6g/05bhZ9QGadsSA/4YOqlJZr1P80Hx8cuTLmMRz+XbHVTjsuhM3HhstyrGqHSPUtxZgKHySR6rkJDvrhU3CNtFhZk3ryL/gpVHcVmqlFVGciZaOOn9wcBXHsrbBGwSvCFIIYGw=
+	t=1711338271; cv=none; b=ShE6vL3z0ev5QpvsYL4gB3i8zAd3NHBXHnyFxyV/OroehoLuECooTbWqAfEGZbN4wYukmMIxnbGVknGgCPdozF4f0BZN+N2Gp6oI5G23A/Shfno1+2zp7iGV1Z8pvl+TGsoDxCy+0iVcCHWVJr30RLEV3XAUav8sr0F+K25rgt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711337839; c=relaxed/simple;
-	bh=YDbgTqnH3ZuZ8lakJVvTchqikQuDSP9tFa66V0AUlmY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s9zz1lYA6iW/Se/nMQbrUBSxfIEzdol8ujReRJqWlfz6S0Hcrr6mcgJMekUQAEKNDkWC81WiBAPKsGkyHI9BQ+Y3Jpmh48KuMIbqPZhaj7JTYeykoO059L6omqK5exrbLjvBCvmqj6DfM9e1we0aFNSl9rDM6gIBnrTVuk1DlfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CgXcy4Wb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CgXcy4Wb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC6D5C433F1;
-	Mon, 25 Mar 2024 03:37:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711337838;
-	bh=YDbgTqnH3ZuZ8lakJVvTchqikQuDSP9tFa66V0AUlmY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CgXcy4Wb9aJjAn0Yru7/j3RpuPqYk/qYIAodfpTNbUkRtlf06kBmkpzTXk6fHZDdv
-	 iMRk3adCHKDFpIEiwK4cxek7gFOl+vpVrAyefEhcw0iGcUMmwcV1AWfKd/UyR2Bz19
-	 TyRN/52zovAhnr4x6/HGrF7eLgt/dP9ZapG5Eu2F3eLQWmEkDPezwrQuW5V1HBhqLS
-	 Z579pSOgOGy04KaQ0bwpCWIOQ68B2K5ysnwWlnZi33KsQ76PujXKgx1VJJBA5VjzVm
-	 zgtvzWXndKw7ps9XOlzw/uJO/IH3MI6Hcr0Pow7qxL5RKoPM1giOYd9h2pi9pVVlv/
-	 WqDJlCNGFTkjQ==
-Date: Sun, 24 Mar 2024 20:37:17 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: Re: [PATCH 5.15 032/317] f2fs: implement iomap operations
-Message-ID: <20240325033717.GA37260@sol.localdomain>
-References: <20240324233458.1352854-1-sashal@kernel.org>
- <20240324233458.1352854-33-sashal@kernel.org>
+	s=arc-20240116; t=1711338271; c=relaxed/simple;
+	bh=sgje5sEOE8XBsmqgTdTVqNM6zkfECGgBmoRAE8rZUYM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gpbiVyQ/fPMfWj/W+0Bt0XT/8Dlp2pvsPNcwaAC+nAFiDEYJ9lW21oXyxn5cZSIdhsKwe6WsTD7kSPIZs3Nr2hb3etqPxmqJRJJUPL1r3Akd0rSkt1gDbMH/F9hDcbY9OAyrbV1bK0qZgJDz0bpyXPpUscr2YZN4dPn0O3a6I90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4V2zJv5Z4QzNmJC;
+	Mon, 25 Mar 2024 11:42:23 +0800 (CST)
+Received: from dggpemm100001.china.huawei.com (unknown [7.185.36.93])
+	by mail.maildlp.com (Postfix) with ESMTPS id 33006140F7B;
+	Mon, 25 Mar 2024 11:44:22 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ dggpemm100001.china.huawei.com (7.185.36.93) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 25 Mar 2024 11:44:21 +0800
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
+To: Jan Kara <jack@suse.com>, Dennis Zhou <dennis@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, Kefeng Wang <wangkefeng.wang@huawei.com>
+Subject: [PATCH] fs: quota: use group allocation of per-cpu counters API
+Date: Mon, 25 Mar 2024 12:12:40 +0800
+Message-ID: <20240325041240.53537-1-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240324233458.1352854-33-sashal@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemm100001.china.huawei.com (7.185.36.93)
 
-On Sun, Mar 24, 2024 at 07:30:12PM -0400, Sasha Levin wrote:
-> From: Eric Biggers <ebiggers@google.com>
-> 
-> [ Upstream commit 1517c1a7a4456f080fabc4ac9853930e4b880d14 ]
-> 
-> Implement 'struct iomap_ops' for f2fs, in preparation for making f2fs
-> use iomap for direct I/O.
-> 
-> Note that this may be used for other things besides direct I/O in the
-> future; however, for now I've only tested it for direct I/O.
-> 
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> Stable-dep-of: ec16b147a55b ("fs: Fix rw_hint validation")
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+Use group allocation of per-cpu counters api to accelerate
+dquot_init() and simplify code.
 
-Nacked-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+---
+ fs/quota/dquot.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-No reason to backport this, and the f2fs mailing list wasn't even Cc'ed...
+diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+index dacbee455c03..808544f74e5e 100644
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -3016,11 +3016,10 @@ static int __init dquot_init(void)
+ 	if (!dquot_hash)
+ 		panic("Cannot create dquot hash table");
+ 
+-	for (i = 0; i < _DQST_DQSTAT_LAST; i++) {
+-		ret = percpu_counter_init(&dqstats.counter[i], 0, GFP_KERNEL);
+-		if (ret)
+-			panic("Cannot create dquot stat counters");
+-	}
++	ret = percpu_counter_init_many(dqstats.counter, 0, GFP_KERNEL,
++				       _DQST_DQSTAT_LAST);
++	if (ret)
++		panic("Cannot create dquot stat counters");
+ 
+ 	/* Find power-of-two hlist_heads which can fit into allocation */
+ 	nr_hash = (1UL << order) * PAGE_SIZE / sizeof(struct hlist_head);
+-- 
+2.41.0
 
-- Eric
