@@ -1,102 +1,152 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2136.outbound.protection.outlook.com [40.107.117.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3571A0AE7
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711364118; cv=none; b=hzQknrkDWluAGSnziO34wKXUSVo1DDiY1+rl5vRxEytO3ukeKn27FHi+yiEtoyaiv6FR+ZjS+XDKiUoAyHa3/mcVY7zGs/yHDoXAQ9XO/2WvyOcBFnrxkejSBWjXFGyrD1fPDZHwm22t2N/geQH94nyrOW4FPN2+CJbSI2zjCVY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711364118; c=relaxed/simple;
-	bh=mgymItK7WgmH1MnYlpzSZntvur4MDFzPilSgMUUUbnk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=pEBqCdslbpRtqHBxPoN6OxBaTkFLMRlGpN/9kJraqU6JPlZH5HrcY64U4vUYjCLua66bcz0SPpET4of0FcNHkAKngDUrBmfNe+okjzg+uU6RugIRrc6/Ve8BPETTPTncYZPRBZBI9ooDeUGI6nVkFKa1QQT9QEQtXBqlAhVzKOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v8DPXiPg; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88DB139561
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:55:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.136
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711364119; cv=fail; b=XstBHSDwI0LTlZ9wvnfeRNMG0XKdNq8EO9JiiA+ryQFljlahJ+n7/99Gu07AzSoGx6Sbs0j8WcMOIyHU8wEHiqganr78XuGxcLtlY6zuR+cnT0nuRgDiTZCziEfoPKwooJ96pjxl0X1/oFG+0cGsTNcyw2MQgXJ2kOkuCN4wAs4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711364119; c=relaxed/simple;
+	bh=uwLAFG3YtlQs8DzdJy7AVwMYReJK/uIC2RWLXRef93s=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=CZx/o15TiAuqf9X3WwZjsExxU6Tz2oaf9wQ+/AKsqVV2hVE98SWKjFy+NdpVNY9a/2ATGa4Y0Ons8AlAQr4wWi5x703jiMmYZV6OSLqDQIpmfMbBN9opnJyInHmGIqnsDpcpY4KpSfTLr/DFJ3fpDpDGJ+0PsLLtwEkci14k4Mw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jaguarmicro.com; spf=pass smtp.mailfrom=jaguarmicro.com; dkim=pass (2048-bit key) header.d=jaguarmicro.com header.i=@jaguarmicro.com header.b=ajmH/3hz; arc=fail smtp.client-ip=40.107.117.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jaguarmicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jaguarmicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v8DPXiPg"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-41489e975d6so3464165e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:55:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711364114; x=1711968914; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZnH613nBUeVax298UlBKbR2krvx0QgfXLhq8xs3I2/Y=;
-        b=v8DPXiPgtXNIIZf4AZXh2j9n7c05MD5Axm4aa+W2PsHDBf5U8YGfnjMpmDWm3uVpWp
-         EhrOEslvDRpS0z0SnJzCLJUm+/nssnHNFuPzJMMGii1BZ316NmSQRptqTcSIuytT2KmA
-         ofsKH968ToPwIrt+hikhXF5DeXg6F3HhJILstECNoQ3tdKNGmonsYEn4Twd8TuYVnUGJ
-         KyOBabU/K9icyBUeXXpBjWc0nWM+YoftHH3LcxQ9+hNELZqyGIKRmu8v2GHLUSvLRm7a
-         pDOawm00Eoob3iPIKBgeM7ausGh4QcQmI71/oyAt6pDiPSHmhUpcc5IlJMjl3sK9pn/X
-         vDQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711364114; x=1711968914;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZnH613nBUeVax298UlBKbR2krvx0QgfXLhq8xs3I2/Y=;
-        b=OUaj1cEKQQCaWMiDwQsXrIpgwALqA2PzWYkpSHpT5bFV/b1pHhJok8r/ldMhQtYTDU
-         600SgqRGsuW1BpTLCzqNohOlO6+GI/LjYMvxSBNpAA9bcjv95iI9NjJEWJTmz2H+Oq7L
-         f8Qv4D5G+J0YC1RKYA/3eOlM27kNCqdxAWqosqEHlhIhiymIPQST3kcQwsl1dbmyH5yd
-         /x0nRDp07iCaHZfQ0VCVPO9pGfG+9mEnuS9FZqUIcTHJAJUbuGcox62lBxqdNOCJ7w0/
-         ZBA0b4pyM3F2laghE/RPZuHZxW3ISS6X6aqMTgYUMEDFkYvJKl4Ujpp19IUWE05CiqKW
-         /csQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX6sCxLVpKEG/REYbJqMNITODLyFGrw0wltoBS4IpYFWbPJsF81Af1ak5rjkCmpE6RJMUg46iw9LNisQHf7IOMIVSsNdZvXO1Hkc4uD
-X-Gm-Message-State: AOJu0YwnswvnU4/Af3u63KvmkRalsrdesV5oz5NxRbM/tsNNE+Nl7qzo
-	+KlAJ1mMfZkjQ0+94Rxr+s8lPlZMMSeW7AkNUxQN0hYz0UBoM9GT4jnAR8myGPM=
-X-Google-Smtp-Source: AGHT+IGwGU7gpQJqeexmqiCDr1Yg2n3xkuKSJhvlV6DEgZ55qS9f7MIRV9jlesIETW2qxwJx8OpcwQ==
-X-Received: by 2002:a05:600c:1986:b0:413:1f65:ec19 with SMTP id t6-20020a05600c198600b004131f65ec19mr5038708wmq.37.1711364114083;
-        Mon, 25 Mar 2024 03:55:14 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id m29-20020a05600c3b1d00b004146750314csm8161410wms.3.2024.03.25.03.55.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 03:55:13 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-To: Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@gmail.com>, 
- Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Jianhua Lu <lujianhua000@gmail.com>, 
- Del Regno <angelogioacchino.delregno@somainline.org>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Rob Herring <robh@kernel.org>
-In-Reply-To: <20240325103611.28240-1-krzysztof.kozlowski@linaro.org>
-References: <20240325103611.28240-1-krzysztof.kozlowski@linaro.org>
-Subject: Re: [RESEND PATCH v4 1/3] dt-bindings: display: panel: add common
- dual-link schema
-Message-Id: <171136411318.2357652.10037957949169924402.b4-ty@linaro.org>
-Date: Mon, 25 Mar 2024 11:55:13 +0100
+	dkim=pass (2048-bit key) header.d=jaguarmicro.com header.i=@jaguarmicro.com header.b="ajmH/3hz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZhQYOAKNOrXK0rc0gMC78ZzIQjzTnh+r++ctJJKlc4Iugx2FAGFxX876yExUUSzc/JFOJ5oDBI18vo/X/xfpRoRdsfEikfNqlAKXKaAcecoUa3cxgJAaduErhLW6uyYpDv9nGZ3T8LCfrBABlPLF80fNX+yhB5GKY1vnyvYaapt5SUTrcfmBQB1QqslnAzdZFywneS6vHuUEeKD7CKT8B3XNFf43sVMSJC835pN/mN2EABgJrLhqUBNbfdkrlMJfONtCcYK+BD0OK8oWTgOSPDeHF1arMdx2sLbndRSgTEnRlkH0uoejT2byScA25okNQLO9CAjFyQh22+2A/Hq3pQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tG7VTbd0cEGa9QCWFI9+pgRa/zqNboFBoSDZAj5VLGQ=;
+ b=MN1NeFjdsZxwBWjrq595FkFYKYe5UA/5jhdiX4xMkoNKGwKDCVGvyQu2YaARbFJO6euHLrcQ2d/0KaJyze4nCYyJxNeOcG/WdT7JJ7iFwwVcgUmTDw6FaUY/f6YcPpmBlrJYbG/jb8Cmfwh+CQL435Py9sG09OKE6lsSaUJPqAWNnq7wAIVuN/e7C6pwR6+yJS16Cs27PlZSj/NGAM1eGGDA+LSJmlqcKWe7u4PH/hZlIDhF84Sxr5b4yVy65J3GMOMTPg7i3xN+Nei+jFst2u04NqmbxC/uE6HDU2RrJ5dlEnZQSL1L9mNc7lCfEaOPPZEMirOwOpeXW0gkfwzOjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=jaguarmicro.com; dmarc=pass action=none
+ header.from=jaguarmicro.com; dkim=pass header.d=jaguarmicro.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jaguarmicro.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tG7VTbd0cEGa9QCWFI9+pgRa/zqNboFBoSDZAj5VLGQ=;
+ b=ajmH/3hzt8gmRvDjwbdbMAI0waOJV7inCkggvML8IMcT6uZ1a9UUHc4A1kQLcEjfKbuSt9JTdnP0MjTELoFGXT8OxffgzYr+iLDQYkLnMav1xGLnAp7n9ldn6hwD0amlmRfMY/HWuNJiCI3MIlIZZNukJhKrLGG2mSJ4bazBjXKWU0ZE98aQF73/3eokaiN45CLybm9rAK2j0RlJ2GtXCFv8CztFXweXP4Eg41wEXSvPBsTJpjyuTpYAm198tMIlAqwGUIEZ3GjCDHI3AdQy4tl0kxGHTrkCmXaWM2Jz4CbXdNS8lM4oJgzf7msaM9q8chlsBkifFHZyD1pXp27C8w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=jaguarmicro.com;
+Received: from SEYPR06MB6756.apcprd06.prod.outlook.com (2603:1096:101:165::11)
+ by PUZPR06MB6224.apcprd06.prod.outlook.com (2603:1096:301:116::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.31; Mon, 25 Mar
+ 2024 10:55:09 +0000
+Received: from SEYPR06MB6756.apcprd06.prod.outlook.com
+ ([fe80::ce49:84ce:23db:8b8]) by SEYPR06MB6756.apcprd06.prod.outlook.com
+ ([fe80::ce49:84ce:23db:8b8%6]) with mapi id 15.20.7409.028; Mon, 25 Mar 2024
+ 10:55:09 +0000
+From: "gavin.liu" <gavin.liu@jaguarmicro.com>
+To: jasowang@redhat.com,
+	mst@redhat.com
+Cc: xuanzhuo@linux.alibaba.com,
+	virtualization@lists.linux.dev,
+	yuxue.liu@jaguarmicro.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] vp_vdpa: Fix return value check vp_vdpa_request_irq
+Date: Mon, 25 Mar 2024 18:54:47 +0800
+Message-Id: <20240325105448.235-1-gavin.liu@jaguarmicro.com>
+X-Mailer: git-send-email 2.33.0.windows.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SGXP274CA0017.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b8::29)
+ To SEYPR06MB6756.apcprd06.prod.outlook.com (2603:1096:101:165::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.4
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEYPR06MB6756:EE_|PUZPR06MB6224:EE_
+X-MS-Office365-Filtering-Correlation-Id: dd3be308-a907-4deb-4c72-08dc4cba09a0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	r/TvFwV47lGwADZYOy1byU5Z/LegKcHX8VIvq3UdH3up5E3pvgItlLJ2L4U5uvBAy+5YXfLLtfRbJZ0Rfc56h0YVERwiW8fFkIdlQPNM9KfV8w8yHOjvVroPwaMXjcsySNGNtNWXQBa7pdQC0FKRTPtHgvV5fjOdanuzp4q0e4zp62S8gAgFZdtfAaGy5uNsAaZQj1d1usQuWEnjZHFtcmR33HEt5sROzMn/8mAUPT8BNZ6SdYP77F+IiVV7Mk4HZWX34/le/LdKFGxz8ZwrP8GcA4RWGo9o6Q6Va8GuEsyOYDXOhiX6NpEdfEDGJ8N2B56BuPH0DdSTB2cM2IBmySzGM02WbVA9mtv/dbcacVrXjefsYqv3pCvjcXtjXTys9smwWvmOPE3N/0wDADt4Tnxlx29zx9G7TpW3nMqevl2jNfe33O/HGCeU884dE6MZtEmv2VJnqGE5ttE7KP7qBheK3mLx1ZGttEfrcS/F2+oojhMXb5UjGRnuBPjr9uLO3wwZ/9m+MGuQP80E2aC6Tu6mwKJSLxhr7iiYeLGBo6kZaUJuvrQyQ+lrlpdW6aO9++UVXV5vy23Wd9GJd43cTYk7Z3pqprZ61+O1+txaDYWn8AdVjFLoLOD6/528C25nNWtWRMua4n492PB4S4j3cjwhIup5TUl8tTSmrIiepMM=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB6756.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(52116005)(1800799015)(366007)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?y6KI6QsVXoVIKaryFxdpuEgpDoN47pP4nZTm/UC140NNJdG2VEy0gXCNLaa9?=
+ =?us-ascii?Q?GXpjSDkFR+bituhEx7IFB5B+TZKI5U9sVqoQzOSYwX4a/UCyJFNPR00cYpQm?=
+ =?us-ascii?Q?3nLluokkLalcUZlG5QEugLLWGH3kVWJywc2HTUUMyqTJ7AYwm7C6BWDZJrNS?=
+ =?us-ascii?Q?rZ3SrEGHjqyXhUAhooP+t5lYJO6qKTPfKjDAkERkAk+Ci6qNwVbQlOC4ok6V?=
+ =?us-ascii?Q?NSvb+7t8sz3TaqaMw4bMf67B+yGCB9AxwYSP0+LETj3dJle4XmfnfH0pbc6+?=
+ =?us-ascii?Q?6p7TrSxYXb5Gqg7dQ+7SeJVA0KWEl7fMfC9cu8LLsr9gYukpRQd6r0XssAfW?=
+ =?us-ascii?Q?HJuB7rlxxCdqK0FczS6q/KOGDBE3oIin+nOVAK1VueM9ooOomw7OZmk4P/4p?=
+ =?us-ascii?Q?g3b+q+le7+ACsSD4p2tksoedkSz7RuZVWkxcd/I1Nxtl1k8ASxazhkqZ4Tqd?=
+ =?us-ascii?Q?S0dSJm6LL5fHk76cfGWTi4hvcOuWX6NNxG/ranA9sB1PDxDvkXKwd7IXh3Ja?=
+ =?us-ascii?Q?l9kKq2/4zbrdy9QSBW2ePjvN4W+4l3uE5ETSdnzJUHuO/VlvBiEOog0gdfIz?=
+ =?us-ascii?Q?GSjGlG+5gXg3XQamRrzeH81m5D6W2MODoINR00YuCK4Xow595z40F0cmKqnp?=
+ =?us-ascii?Q?K+1lNd4gaJQ9+slEUv/57BtY9mMVbyVw0Y3eazjZZimhiZeBeTKxRIrZN6lW?=
+ =?us-ascii?Q?SrijJS6GLJvgGGgdsc3QWRy5VrXVWcRFGSgrPCQOcrtUNo5zxENuFL608BrG?=
+ =?us-ascii?Q?GMwoLY5d38mWatmGt2uA0h0LRJPO/U1rb4DBFgP4TwWEExLPhkmEZtnDFPXk?=
+ =?us-ascii?Q?jlwovPCVXjTlho9JnqKPDo9Abmxi2K7FxFuS+yfQSsM9M7ivuqgTGMW67KeG?=
+ =?us-ascii?Q?rGTc6a8qxcpXbS54dpZLcrNfZVZQPwgjws3BobgJlcE0CNXxxPiisVJWpfDE?=
+ =?us-ascii?Q?wHhtObnhKcu1bTfzD9pjXi7JtiVGogWSUoilkfbSDZ9k3IQhKE3bpM72OpQV?=
+ =?us-ascii?Q?lYmsnwXrveQsmHFMo1X5r4YJMFP9ARdTTmRdaAcyc7HyV0tiQ1voapY0kXEZ?=
+ =?us-ascii?Q?tGb0lmbgl5JiO0rCJajtn1kTgZU/HAeJHv9cFy/IQrRX9XiMtGT/4edlaJPu?=
+ =?us-ascii?Q?rdyd3WzyVgViNrHwm3mPYkjTUgL4qeFfU1hcRG6qR6DxTSL15WHbs+5YVcnp?=
+ =?us-ascii?Q?yM1T4VOr/NBm9BNNiAnOpsmV61QoKng6viiiIcSwF5SKMjyk0amW9la9jHCt?=
+ =?us-ascii?Q?GxsJ9sXGm+hNZwifXbr9D5ihNMTJGJ/c20wrxJYoC9bepJ+fq+BoBcQuaNVD?=
+ =?us-ascii?Q?hN8JsNHxr+t/969cUlxXiRLZ0oqKr5ncUAdsG4MA3MpS6m4+6U9PtmbL6Yl5?=
+ =?us-ascii?Q?N2ujNvtpfCNhGmNOm10BQpHbsvwmyUWKIlW/RVJXksuvy2pk8AWE9dDTugzN?=
+ =?us-ascii?Q?9ji3AVRw2pxVcomyaHbmokiHuTueVXf0kfaoxuIINWvIGHkQWRop/8BF8lXn?=
+ =?us-ascii?Q?21lIjb0H+sU6ZRfJS19a3VERaUV11ClJTV4UUIyxdZJSi+DSZqhF8Z8C+r/c?=
+ =?us-ascii?Q?yKlpO3Ug7paxFU2MBUAzX3x5GfRXyR0zbbA717uN5d5jQQJDm2CcfzJrsxMd?=
+ =?us-ascii?Q?Jw=3D=3D?=
+X-OriginatorOrg: jaguarmicro.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd3be308-a907-4deb-4c72-08dc4cba09a0
+X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB6756.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2024 10:55:09.1516
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 1e45a5c2-d3e1-46b3-a0e6-c5ebf6d8ba7b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: O6x+UGY19wMo6saDZBHNV2ge66NrrtFkTr7LPZ2mVheONcnSKLP3pQx4HJkuYx53pcdj5EavX4jy9yinBNkU0UfBcQ8ed/wRj+YImLX7YsA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR06MB6224
 
-Hi,
+From: Yuxue Liu <yuxue.liu@jaguarmicro.com>
 
-On Mon, 25 Mar 2024 11:36:09 +0100, Krzysztof Kozlowski wrote:
-> Add schema with common properties shared among dual-link panel ICs.
-> 
-> 
+In the vp_vdpa_set_status function, when setting the device status to
+VIRTIO_CONFIG_S_DRIVER_OK, the vp_vdpa_request_irq function may fail.
+In such cases, the device status should not be set to DRIVER_OK. Add
+exception printing to remind the user.
 
-Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-next)
+Signed-off-by: Yuxue Liu <yuxue.liu@jaguarmicro.com>
+---
 
-[1/3] dt-bindings: display: panel: add common dual-link schema
-      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/48a516363e294a4098622dd77a5ecd4ee924121f
-[2/3] dt-bindings: display: novatek, nt35950: define ports
-      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/1f6612e6852ecb053ce1e342d833ed7f395f7186
-[3/3] dt-bindings: display: novatek, nt36523: define ports
-      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/90ed42ceda7667f5596d5e98530dd4119d786234
+V1 -> V2: Remove redundant printouts
+V1: https://lore.kernel.org/all/20240315102857.1803-1-gavin.liu@jaguarmicro.com/
 
+---
+ drivers/vdpa/virtio_pci/vp_vdpa.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/vdpa/virtio_pci/vp_vdpa.c b/drivers/vdpa/virtio_pci/vp_vdpa.c
+index df5f4a3bccb5..4caca0517cad 100644
+--- a/drivers/vdpa/virtio_pci/vp_vdpa.c
++++ b/drivers/vdpa/virtio_pci/vp_vdpa.c
+@@ -216,7 +216,10 @@ static void vp_vdpa_set_status(struct vdpa_device *vdpa, u8 status)
+ 
+ 	if (status & VIRTIO_CONFIG_S_DRIVER_OK &&
+ 	    !(s & VIRTIO_CONFIG_S_DRIVER_OK)) {
+-		vp_vdpa_request_irq(vp_vdpa);
++		if (vp_vdpa_request_irq(vp_vdpa)) {
++			WARN_ON(1);
++			return;
++		}
+ 	}
+ 
+ 	vp_modern_set_status(mdev, status);
 -- 
-Neil
+2.43.0
 
