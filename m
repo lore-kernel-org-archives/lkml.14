@@ -1,151 +1,127 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D365837D66D
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFD726424F
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:02:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711335729; cv=none; b=XOHwtxHCo85wbJ7CmC/QHkHheSShXAqgydj54IO4C2mSVkFnt4QXt+lSar9tXdp4BDHgiyvk7IDIc/Z5lLqaAG01oz46F8ULBCHLtcg1cm8Wlu4shnii+gwjTZErU9l8HKpbTBOqIvSSeJRAtS3IclDw2tgSJ/KZZsCdeML4BHY=
+	t=1711335746; cv=none; b=X6a//RQ6d4yM2/2AbjVJ5GQOQM156gH4hVHsVJ1JSJoR9qHk8jgt9GqTTq8cHlboqaCuj1bCExTkFD1QyuURXyXCtRoIkxk73mJu4fSoWSsIXUyHadRg+RVdyQczkm6DC8MHAZsL3JxtlRi/lDqcoqnFHZmIm/4Kj5/2IP50Qt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711335729; c=relaxed/simple;
-	bh=TwSsbGoAzrMlvSmqLjXTibrvNixlaFbTE5ouixSO704=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AQkTJT8AWt4HbO6aWOv6J7y0cbYwjBapYTRIEm7gyOA8ludVsL4C9XQFEvaW4vclJu2RYGHbRr9jpc6QqM7wuODZU7KDDeQnHYJR4SVm1puAty8BVGIODkkC6mreX3lE+xeoKA3wJmCO5uflp8cMptCQ6y8y6VspYAiHQxEpsdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=QJ8oSI9d; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1711335746; c=relaxed/simple;
+	bh=T9lldniHRtKLEDe/H+EmLhHRUTPjZExPOnV/qvs4Qrw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=uTCFYU9nWJydb0p/EyxTV19IAbwQLaKHr7D4UlJmdderMkI2/S3gT6TUEyDKOeqBknzLDnpU5G2y//xOVzzG+YPxMrrsykkv2zLAl4NXk6QNyFKJqy22IqJ/udue5oh9qH4CyEHpqT/is398Y2Kjzl8qzJ1EODPaOrt5XnnlCF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kHMBeZtu; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="QJ8oSI9d"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d68c6a4630so47646991fa.3
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 20:02:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1711335724; x=1711940524; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vGZHB2WZTfvTK8AUGI8LedlLw/3bzf9ZOZw9kvDSlsM=;
-        b=QJ8oSI9dFk5VyP06hyuzq+6oQV3JDucC0yuoAs9DY8KEVdUbCRMGpBTRCBkqELc/Gj
-         dAuAvwEkYkblXqZcx8G8G1RzBq1iyL/mKNe9pI86nRFiOxcOTDCsBzuZMmiYlBfHmIzP
-         pOFCGGnqkQy7KZPMFGcdRYNg2UWf4/VFUa0k1TltWw+Z/rVTNFvx9Ra4tgrX+fSo+9uE
-         2iVFlrWFc3rITUWyrz694ZsO0+rdGyJ6C765eW9rlk8uXxGaRxY7RpcqGd0KQlJ7oPis
-         XJjhdleA3MdYS9GPDAjU05wN6Bmxg9oIgWYrzgywV5A0iUty6rG2NIsmUl1MxTFn9ZCe
-         Uiww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711335724; x=1711940524;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vGZHB2WZTfvTK8AUGI8LedlLw/3bzf9ZOZw9kvDSlsM=;
-        b=BrfPNpYCOuZ6gPYS10n5AyTKmBcBcalyXMWf0iqxtZNTLLS40dJvSAUEE1V/1B47S8
-         AMF8ixRf4whvQODa3ml+h1AGAufHt9w0DFwIP4QrTjFczRDMjPQwXUOecdWHxe89Amih
-         p3KBVrEgHMVe17CdPv2+wTzGXbq5UDpqllzD+SfoYXAl3vT9KYNTV2HPQOJS1FiCYj8k
-         tBH66f+w9VnwXmZUzw+IO2g5+xJkkSuW4Nfpth+P7fgYMoRhuauITlHe2pRrnoFBiswC
-         gFuCp7cAjZVp1wohoehsPajTRwmwA/Koem9ROSqrZdj9TBm/FXzQCp0/qExNfTdc1bDa
-         BtXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWm2//uMVxRlFEyT0AiAa/SJncXFkzyeEZx85e4p1XtV4cSKwMp5p4oRfek3PR2vyBZAntO+1OtB1WqMBs19RL6GnBuOh+tmr5Q1KBd
-X-Gm-Message-State: AOJu0Yz/FQt4zeuuyVnY+rabY1/OKZJzOLi8AktfkFvc8F3ZxSaBNWrb
-	vZmjQsqKaEHpzi7F9aFAq2t/4LxNSdJGJBLM5OOOLWNF8U54jdQSPyiBmgztpBJK0+ZAv5C4cC4
-	SBQRVZQofPGtg4CCKMBTDz3YYCaORrIhbSWwDhw==
-X-Google-Smtp-Source: AGHT+IHSwGHPA3VAXSaD502fc6IbNOyaE83xzpb1sU/fP30IgGWmj7pWuPu1y6z0fWpl0amuLlGajV0ai0CcIJ/zlkA=
-X-Received: by 2002:a2e:88d0:0:b0:2d2:206a:2f2a with SMTP id
- a16-20020a2e88d0000000b002d2206a2f2amr4041890ljk.17.1711335724075; Sun, 24
- Mar 2024 20:02:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kHMBeZtu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711335744; x=1742871744;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=T9lldniHRtKLEDe/H+EmLhHRUTPjZExPOnV/qvs4Qrw=;
+  b=kHMBeZtuqKbyBzDguQHjo/0OnqiuEJU9XdlhH8GWHZlGYBWXaJoaWonY
+   JYZRJonmf1HFT+qwX1Bpqszet5R6dZYXJ7w7tYr0APwsP33hkJqn7wRtN
+   XRNX+5c7AfyYD0ZULtZ88GKs8q5BjShjv9ER9hoylsIr/ij/JEa0MeKFG
+   /TGJxBVE4i9hGOJVklJO42cyQMN5VS2B38suwXq6tl1vOsClFHuhMPrPx
+   lJirSA0I3BD5UqMyn9+Ulhc/cHcI4AwByWAxAtJSjgruPogDG/7o+8qEO
+   qsIgU5AH5LtXcvlBXpz3ZUIqk2oHPXr1cg8s/jjtdAbaAdEWVW6nNa6/M
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6445250"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="6445250"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 20:02:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="20220682"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 20:02:21 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Akira Yokosawa <akiyks@gmail.com>
+Cc: linux-kernel@vger.kernel.org,  linux-mm@kvack.org,  "Paul E. McKenney"
+ <paulmck@kernel.org>,  ryan.roberts@arm.com,  chrisl@kernel.org
+Subject: Re: Can you help us on memory barrier usage? (was Re: [PATCH v4
+ 4/6] mm: swap: Allow storage of all mTHP orders)
+In-Reply-To: <c56eae89-9559-4b1d-8249-d23281e466b4@gmail.com> (Akira
+	Yokosawa's message of "Sat, 23 Mar 2024 11:11:09 +0900")
+References: <87r0g3q9cz.fsf_-_@yhuang6-desk2.ccr.corp.intel.com>
+	<c56eae89-9559-4b1d-8249-d23281e466b4@gmail.com>
+Date: Mon, 25 Mar 2024 11:00:28 +0800
+Message-ID: <87v85bow1f.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240324210447.956973-1-hannes@cmpxchg.org>
-In-Reply-To: <20240324210447.956973-1-hannes@cmpxchg.org>
-From: Zhongkun He <hezhongkun.hzk@bytedance.com>
-Date: Mon, 25 Mar 2024 11:01:52 +0800
-Message-ID: <CACSyD1OdHqcqsFQNyi52WkBpSec=mhg3UnZqdMcX0t+KJmMXgg@mail.gmail.com>
-Subject: Re: [External] [PATCH] mm: zswap: fix data loss on SWP_SYNCHRONOUS_IO devices
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Chengming Zhou <zhouchengming@bytedance.com>, 
-	Yosry Ahmed <yosryahmed@google.com>, Barry Song <21cnbao@gmail.com>, Chris Li <chrisl@kernel.org>, 
-	Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=ascii
 
-On Mon, Mar 25, 2024 at 5:05=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.org=
-> wrote:
->
-> Zhongkun He reports data corruption when combining zswap with zram.
->
-> The issue is the exclusive loads we're doing in zswap. They assume
-> that all reads are going into the swapcache, which can assume
-> authoritative ownership of the data and so the zswap copy can go.
->
-> However, zram files are marked SWP_SYNCHRONOUS_IO, and faults will try
-> to bypass the swapcache. This results in an optimistic read of the
-> swap data into a page that will be dismissed if the fault fails due to
-> races. In this case, zswap mustn't drop its authoritative copy.
->
-> Link: https://lore.kernel.org/all/CACSyD1N+dUvsu8=3DzV9P691B9bVq33erwOXNT=
-mEaUbi9DrDeJzw@mail.gmail.com/
-> Reported-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
-> Fixes: b9c91c43412f ("mm: zswap: support exclusive loads")
-> Cc: stable@vger.kernel.org      [6.5+]
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> Tested-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
-> ---
->  mm/zswap.c | 23 +++++++++++++++++++----
->  1 file changed, 19 insertions(+), 4 deletions(-)
->
-> diff --git a/mm/zswap.c b/mm/zswap.c
-> index 535c907345e0..41a1170f7cfe 100644
-> --- a/mm/zswap.c
-> +++ b/mm/zswap.c
-> @@ -1622,6 +1622,7 @@ bool zswap_load(struct folio *folio)
->         swp_entry_t swp =3D folio->swap;
->         pgoff_t offset =3D swp_offset(swp);
->         struct page *page =3D &folio->page;
-> +       bool swapcache =3D folio_test_swapcache(folio);
->         struct zswap_tree *tree =3D swap_zswap_tree(swp);
->         struct zswap_entry *entry;
->         u8 *dst;
-> @@ -1634,7 +1635,20 @@ bool zswap_load(struct folio *folio)
->                 spin_unlock(&tree->lock);
->                 return false;
->         }
-> -       zswap_rb_erase(&tree->rbroot, entry);
-> +       /*
-> +        * When reading into the swapcache, invalidate our entry. The
-> +        * swapcache can be the authoritative owner of the page and
-> +        * its mappings, and the pressure that results from having two
-> +        * in-memory copies outweighs any benefits of caching the
-> +        * compression work.
-> +        *
-> +        * (Most swapins go through the swapcache. The notable
-> +        * exception is the singleton fault on SWP_SYNCHRONOUS_IO
-> +        * files, which reads into a private page and may free it if
-> +        * the fault fails. We remain the primary owner of the entry.)
-> +        */
-> +       if (swapcache)
-> +               zswap_rb_erase(&tree->rbroot, entry);
->         spin_unlock(&tree->lock);
->
->         if (entry->length)
-> @@ -1649,9 +1663,10 @@ bool zswap_load(struct folio *folio)
->         if (entry->objcg)
->                 count_objcg_event(entry->objcg, ZSWPIN);
->
-> -       zswap_entry_free(entry);
-> -
-> -       folio_mark_dirty(folio);
-> +       if (swapcache) {
-> +               zswap_entry_free(entry);
-> +               folio_mark_dirty(folio);
-> +       }
->
->         return true;
->  }
-> --
-> 2.44.0
->
+Akira Yokosawa <akiyks@gmail.com> writes:
 
-Good solution and makes great sense to me.
+> [Use Paul's reachable address in CC;
+>  trimmed CC list, keeping only those who have responded so far.]
 
-Thanks.
+Thanks a lot!
+
+> Hello Huang,
+> Let me chime in.
+>
+> On Fri, 22 Mar 2024 06:19:52 -0700, Huang, Ying wrote:
+>> Hi, Paul,
+>> 
+>> Can you help us on WRITE_ONCE()/READ_ONCE()/barrier() usage as follows?
+>> For some example kernel code as follows,
+>> 
+>> "
+>> unsigned char x[16];
+>> 
+>> void writer(void)
+>> {
+>>         memset(x, 1, sizeof(x));
+>>         /* To make memset() take effect ASAP */
+>>         barrier();
+>> }
+>> 
+>> unsigned char reader(int n)
+>> {
+>>         return READ_ONCE(x[n]);
+>> }
+>> "
+>> 
+>> where, writer() and reader() may be called on 2 CPUs without any lock.
+>> It's acceptable for reader() to read the written value a little later.
+>> Our questions are,
+>> 
+>> 1. because it's impossible for accessing "unsigned char" to cause
+>> tearing.  So, WRITE_ONCE()/READ_ONCE()/barrier() isn't necessary for
+>> correctness, right?
+>> 
+>> 2. we use barrier() and READ_ONCE() in writer() and reader(), because we
+>> want to make writing take effect ASAP.  Is it a good practice?  Or it's
+>> a micro-optimization that should be avoided?
+>
+> Why don't you consult Documentation/memory-barriers.txt, especially
+> the section titled "COMPILER BARRIER"?
+>
+> TL;DR:
+>
+> barrier(), WRITE_ONCE(), and READ_ONCE() are compiler barriers, not
+> memory barriers.  They just restrict compiler optimizations and don't
+> have any effect with regard to "make writing take effect ASAP".
+
+Yes.  In theory, this is absolutely correct.
+
+My question is, in practice, will compiler barriers make CPU runs (or
+sees) memory read/write instructions a little earlier via avoiding to
+reorder the operations after read/write (e.g., becomes before
+read/write)?
+
+> If you have further questions, please don't hesitate to ask.
+
+--
+Best Regards,
+Huang, Ying
