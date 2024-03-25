@@ -1,87 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9ED7140E3D
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA79C14659C;
+	Mon, 25 Mar 2024 10:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711362613; cv=none; b=N/idPQLiZdZONOgrC0k8zWcZgWc8VeMNT3H20ZNITSHzWfOgVoxzC6t6XlLEynT+gQPKAc/DDS2eUU0H3nMy3V8gcZJd47dLUqIhpmtxOAUBFPZLCbD6zUEZHF5TA3Hm7odCs5kwpReTEL1lDR6KI3t+h7CeZFEonPl0k0LPEgo=
+	t=1711362675; cv=none; b=iQcP36RnCGrTgouCKfyhiiqGt2BQXnwWy5EqXbAXy1napq0OLTWer5HIVMtZnAh4ub0kS17ncOR/g35QfXlXSzQ/3wW5T+Aa/Z/tcI9H4k/kVE1/5ZyefJEkUxxEhKZTnXO5caY14IDQM++JOgpVDz9CYlTD9tqaBO/vJvaOlQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711362613; c=relaxed/simple;
-	bh=ntCNgzdQGJ3LvOfVZ4wL1NBn0gVZep3S69fBAzBNNrc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y4c2W5mYvjBTE9O90t+dyV7ieFqOxYmDRTkdbFKl65r3Iz3soikMXmrklbpcGErfXIGZdc1/IoE3vVDeMJ9Hmr7DTrtpIeFjXe84lPqtDBFEgOq7zkqfG5PnLDbuvm7XjAv3w3Gg1ULlFe1HmQykOmLW7iFxIgmBR6QxcfZw2Ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EkD5WEvt; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711362675; c=relaxed/simple;
+	bh=qzP073KpR18hqVmhwSFwvYqRIwDMaaj97OZEQGAprsw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AD9XdlRqiIuv33OaruZUOCw349LN6hL2CqLCxO2WDS2lI553wy3h/gO5LG41kOyd98OsV0pt/hI2d3j9Ev4eabrAuuSXb1NaghiNi0mfyolOAdJkZWdS+K5GkXBAcKBrZPavIiuCUIzz6ORT9pZaDX9ZJiRgS95Ho8I+2iRG4Mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KEOwyqP/; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EkD5WEvt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711362612; x=1742898612;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ntCNgzdQGJ3LvOfVZ4wL1NBn0gVZep3S69fBAzBNNrc=;
-  b=EkD5WEvtl6bEE2SoOfHNdbtETqtBO+GgLwUifpQkooi3rr5+nkxP1Ckq
-   ljqAzKFbQ3HANcPwGnEdSzTHv6Iv3b1VWLqP5YDN/idBxMsKwXMBsIZVe
-   EbPA8HhSYNrSX9dhUNFensc79bUhYpJ7cVP1xsf2GYNFBEBFTE71lcs8+
-   MON+EjI/I88yr7I+pQnS9OWnuQtPY9PL8Cv0pfHgsWhFZaKjIsBBwI08Y
-   pFbZsYhaKo3uooz0Js3rO8SyZYMR0B7DjhQkcU0Bj9bSaqANLwwvK4SyZ
-   fVMvcQpC2WC7nUBchFiVRX1XSrB6BLIBaIQQA5dsl7H9oGS4wH5CV84D5
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6470445"
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="6470445"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 03:30:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="914839103"
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="914839103"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 03:30:08 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1rohaf-0000000Fx35-2a2n;
-	Mon, 25 Mar 2024 12:30:05 +0200
-Date: Mon, 25 Mar 2024 12:30:05 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Denis Arefev <arefev@swemel.ru>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KEOwyqP/"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d2509c66daso50353541fa.3;
+        Mon, 25 Mar 2024 03:31:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711362672; x=1711967472; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ITuIJ48ycyvFs85EZCOH/esp3dFgohObI9gAbMbkThw=;
+        b=KEOwyqP/CLeclPk5il8HJOTuLXuqpdTCTFFJrlY/zzdq6NB9Yf7mJIUu4MQO9Pn+oG
+         UQC6vmhB8uTC21rxFNbS1IVUWIY265O2f+tq/aLeAsL5fz4VQu0GX3MkzB5FFj92vJlf
+         8T//7yVb2AAb6pq4p/eE1gsq73dKNGMN3nT4tIVieUwS5Oc45M1XPpX9LlFc7c/nQp4z
+         Y7B2mCmccqsMgX5cD0fV0ak2zoSxlXkFvdh4s0HlDdqTyEArw3YTwcJxxYAoZXG0yzxm
+         +VDrBD+vGOPEKvzvpURJe0WJi8M0ZZCHsTHuIO4u4ZnZ+fKhFTovF3hiJ28ZPcv1cBgc
+         3HNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711362672; x=1711967472;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ITuIJ48ycyvFs85EZCOH/esp3dFgohObI9gAbMbkThw=;
+        b=pLulwUkpqTn3DnRwObHoSOVu9dPrUm+a5s0xdotsBHM4V+NxeEVNh52QpfsuU7Y6UN
+         ISDugDIV1mqv6Kag8fnogIatUIL6ftaIBaVkArprSvB0nkyJZ5FhqxwHHlBccKrzrdq9
+         7tZ08Mn4WuZiNF6niQa6kxemVjp+v44ZrdOmz48JjAXO8qGXJ+tRR0rzrBm+B6ah8+uS
+         RkmrJnmoPe5KNM9/BpOs6yR9UZibuDmiN4/qxbMvq8TUE4l9+US+17WgHXhRSYBGo2ya
+         QbBn+LIjv/tOmaF8c3MDu7UOsSFvBIZQEGaaLxB/g+heWydI87nFtWN+N2EPwLG86HDc
+         m7yA==
+X-Forwarded-Encrypted: i=1; AJvYcCXMCkYKDAasEojT87dUGjyTpezBB9xPDJfScXK98dJHwVEu2CtnMw0XSkanZkq7OrAAXmdwel7wbI/HCgLNXTlAMbEqK7mZShoMHTgUsX1ngpTv1WVntRXwO0x5V1rGKTVA7vIwmE4RKkU/L01EhUw4gQn8AFjzwHIgIeNy/sWQld5Muw==
+X-Gm-Message-State: AOJu0YyQPeS651QMXYq7/5gHHyUlvuJ3rtw2U//RUzMfS+hPCR4wIOZJ
+	vkCiwRw6USSKEwNhm6LXrXkHAgBd3eJQNq++FEof3hj7UMOhGIvF
+X-Google-Smtp-Source: AGHT+IHbEvUfaHQnzm6ZbUyi1TE0Z3wDxGxFHJpDIwcA/5e6DTkA5nfqau/NqIPKGSOLrgKUIQmStA==
+X-Received: by 2002:a2e:994e:0:b0:2d4:2958:6daf with SMTP id r14-20020a2e994e000000b002d429586dafmr4358600ljj.20.1711362671784;
+        Mon, 25 Mar 2024 03:31:11 -0700 (PDT)
+Received: from localhost.localdomain (93-34-89-13.ip49.fastwebnet.it. [93.34.89.13])
+        by smtp.googlemail.com with ESMTPSA id be3-20020a05600c1e8300b004140e701884sm8063878wmb.22.2024.03.25.03.31.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 03:31:11 -0700 (PDT)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
 	Richard Weinberger <richard@nod.at>,
 	Vignesh Raghavendra <vigneshr@ti.com>,
-	linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org, trufanov@swemel.ru, vfh@swemel.ru
-Subject: Re: [PATCH] mtd: partitions: redboot: Added conversion of operands
- to a larger type
-Message-ID: <ZgFSLY_uQkfbyyRG@smile.fi.intel.com>
-References: <20240315093758.20790-1-arefev@swemel.ru>
+	Md Sadre Alam <quic_mdalam@quicinc.com>,
+	Sricharan Ramabadhran <quic_srichara@quicinc.com>,
+	linux-mtd@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Christian Marangi <ansuelsmth@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2 2/2] mtd: rawnand: qcom: Fix broken reset in misc_cmd_type in exec_op
+Date: Mon, 25 Mar 2024 11:30:48 +0100
+Message-ID: <20240325103053.24408-2-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240325103053.24408-1-ansuelsmth@gmail.com>
+References: <20240325103053.24408-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240315093758.20790-1-arefev@swemel.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 15, 2024 at 12:37:58PM +0300, Denis Arefev wrote:
-> The value of an arithmetic expression directory * master->erasesize is
-> subject to overflow due to a failure to cast operands to a larger data
-> type before perfroming arithmetic
+misc_cmd_type in exec_op have multiple problems. With commit a82990c8a409
+("mtd: rawnand: qcom: Add read/read_start ops in exec_op path") it was
+reworked and generalized but actually dropped the handling of the
+RESET_DEVICE command.
 
-...
+The rework itself was correct with supporting case where a single misc
+command is handled, but became problematic by the addition of exiting
+early if we didn't had an ERASE or an OP_PROGRAM_PAGE operation.
 
-> -		offset = directory * master->erasesize;
-> +		offset = (unsigned long) directory * master->erasesize;
+Add additional logic to handle the reset command and return early only
+if we don't have handling for the requested command.
 
-Usage of explicit casting can be avoided by using size_mul() from overflow.h.
-Usually explicit castings are prone to subtle errors.
+Fixes: a82990c8a409 ("mtd: rawnand: qcom: Add read/read_start ops in exec_op path")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+---
+Changes v2:
+- Add this patch
 
+ drivers/mtd/nand/raw/qcom_nandc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/mtd/nand/raw/qcom_nandc.c b/drivers/mtd/nand/raw/qcom_nandc.c
+index 19d76e345a49..b8cff9240b28 100644
+--- a/drivers/mtd/nand/raw/qcom_nandc.c
++++ b/drivers/mtd/nand/raw/qcom_nandc.c
+@@ -2815,7 +2815,7 @@ static int qcom_misc_cmd_type_exec(struct nand_chip *chip, const struct nand_sub
+ 			      host->cfg0_raw & ~(7 << CW_PER_PAGE));
+ 		nandc_set_reg(chip, NAND_DEV0_CFG1, host->cfg1_raw);
+ 		instrs = 3;
+-	} else {
++	} else if (q_op.cmd_reg != OP_RESET_DEVICE) {
+ 		return 0;
+ 	}
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.0
 
