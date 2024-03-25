@@ -1,87 +1,64 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF61158D93;
-	Mon, 25 Mar 2024 02:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2602120F24E;
+	Mon, 25 Mar 2024 02:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711334797; cv=none; b=Gse2TUToqSgCeXJs8cQXnDgoxWqYOx2n+c2SxjtXsebMT5Df0Y3L08SJ18vZEoJNVFMHSh1Tt9RA7BmjgNV1pfMxKfRG7xIXp62wcu/5oGesS9vqiaYIdFuxQqGBsdIhcypVvUw51pbeQwOhfiWLyL4G8kIq466oM6NFaYk5CVU=
+	t=1711335277; cv=none; b=Cx+7lEWG3zEUn24ROYL/C/EQ+UJyQwvJGKyAv15frhWTTCoQUbBVFWeI9hAfETpPW5GVU4AL2IxWZHtuHxe6iB907I7UEEF3w2rOaEBDg3GhThoeYU1CTZK0ZgTMyASARORy+AMyRLZA1P0ENRJMxRVgtFXRoOCCeQGcDWdJXmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711334797; c=relaxed/simple;
-	bh=kvnYbAJYV+BV1WgQH3dwyoDwk6yHIMypMOMBm0WlAlU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jIAK8x3Dmu05oOs8BRFT7GZgSe+IGhjE0evNyedoQVi6DzUwpupFP7AgIpSt8EHv8b6ZyCdwtlkOxVTKFIexSOCXQwm2D4ohLCynxwvbuPUqXyGHCCtVSt6Y1B342aOZ3NOeeaO6odcrxLko7jp/LCsf98EgKhvdXKVJ5e5CYL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=CoxGe+7G; arc=none smtp.client-ip=115.124.30.119
+	s=arc-20240116; t=1711335277; c=relaxed/simple;
+	bh=iaph6dzxbblkt8qoI/AOozNUOs1rsLBMBUXmR/qDgjg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EZoMuz1UKzFQVKn8nSAc2UL6xaGht6AebwXaZAIv/YeH0LPZYHk5IzC52FYd8FWsPUnBZ3M9fs/F7QAkYGjs7AO3TkinfKwelxKF4ihOx5Zk0mbaULMN5p00v4VBmLA6rWHbcLhk5Pxx/NcIPuB3E2SEdZ67GjKwzN9T5nxBNwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Ojac9/me; arc=none smtp.client-ip=115.124.30.98
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="CoxGe+7G"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Ojac9/me"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1711334790; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=hnj6QhXlwaft/coqoLJDZBScFt5gj/F5ruc7EbRseQw=;
-	b=CoxGe+7GO/repfGhTS6yPtCJ2TmcFS7a+LkcQoO96rax2jpdrQj1keUnqi7jBFm/i3vqbRhFaccbHaxOTxJzz1R3XSVx7Qd5Cws77xezpCR/TPErhjBulptpxYdQPjREoSc3upy8dwde8/0F5WBEgMcnaDG91vMG3QGzS13EA5k=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R661e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=yang.lee@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0W38I3D-_1711334789;
-Received: from localhost(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0W38I3D-_1711334789)
+	t=1711335266; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=6hu5khovx8ax4ZNqLjRit7QknnfTLVkDtkeyr/hEzXY=;
+	b=Ojac9/meesKJx6WavVrOyFiO6D8EQli4wTaLkLGWTzNafCwRQ2QjTN/HWteddU5/83QzhGqu/xYa4UUCW9Em6BdDMmpRk9oo4m97jx/00GAZyIBF16k/ZVYCxMMv6y/4UkYeMdn+Txocx84lOcmYw2s+ysH3WlEWkrAgAzrLO00=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0W38Nam5_1711335265;
+Received: from 30.97.48.191(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W38Nam5_1711335265)
           by smtp.aliyun-inc.com;
-          Mon, 25 Mar 2024 10:46:30 +0800
-From: Yang Li <yang.lee@linux.alibaba.com>
-To: konishi.ryusuke@gmail.com
-Cc: linux-nilfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yang Li <yang.lee@linux.alibaba.com>
-Subject: [PATCH -next 2/3 v2] fs: Add kernel-doc comments to nilfs_btree_convert_and_insert()
-Date: Mon, 25 Mar 2024 10:46:28 +0800
-Message-Id: <20240325024628.101296-1-yang.lee@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+          Mon, 25 Mar 2024 10:54:26 +0800
+Message-ID: <7b30add0-0be6-4b79-9791-099bbec1e673@linux.alibaba.com>
+Date: Mon, 25 Mar 2024 10:54:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: Signed-off-by missing for commit in the erofs-fixes
+ tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>, Gao Xiang <xiang@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20240325130007.2ed83dbb@canb.auug.org.au>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20240325130007.2ed83dbb@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This commit adds kernel-doc style comments with complete parameter
-descriptions for the function nilfs_btree_convert_and_insert.
+Hi Stephen,
 
-Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
----
- fs/nilfs2/btree.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+On 2024/3/25 10:00, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Commit
+> 
+>    77720dfe2cf3 ("MAINTAINERS: erofs: add myself as reviewer")
+> 
+> is missing a Signed-off-by from its committer.
 
-diff --git a/fs/nilfs2/btree.c b/fs/nilfs2/btree.c
-index 65659fa0372e..de38012fd87c 100644
---- a/fs/nilfs2/btree.c
-+++ b/fs/nilfs2/btree.c
-@@ -1857,13 +1857,21 @@ nilfs_btree_commit_convert_and_insert(struct nilfs_bmap *btree,
- }
- 
- /**
-- * nilfs_btree_convert_and_insert -
-- * @bmap:
-- * @key:
-- * @ptr:
-- * @keys:
-- * @ptrs:
-- * @n:
-+ * nilfs_btree_convert_and_insert - Convert and insert entries into a B-tree
-+ * @btree: NILFS B-tree structure
-+ * @key: Key of the new entry to be inserted
-+ * @ptr: Pointer (block number) associated with the key to be inserted
-+ * @keys: Array of keys to be inserted in addition to @key
-+ * @ptrs: Array of pointers associated with @keys
-+ * @n: Number of keys and pointers in @keys and @ptrs
-+ *
-+ * This function is used to insert a new entry specified by @key and @ptr, along
-+ * with additional entries specified by @keys and @ptrs arrays, into a NILFS B-tree.
-+ * It prepares the necessary changes by allocating the required blocks and any
-+ * necessary intermediate nodes. It converts configurations from other forms of block
-+ * mapping (the one that currently exists is direct mapping) to a B-tree.
-+ *
-+ * Return: 0 on success or a negative error code on failure.
-  */
- int nilfs_btree_convert_and_insert(struct nilfs_bmap *btree,
- 				   __u64 key, __u64 ptr,
--- 
-2.20.1.7.g153144c
+Thanks for reminder. I will fix this soon.
 
+Thanks,
+Gao Xiang
+
+> 
