@@ -1,55 +1,39 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E0216F831;
-	Mon, 25 Mar 2024 13:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE3517164C;
+	Mon, 25 Mar 2024 13:17:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711372673; cv=none; b=bSl6GSVO2s5UeS7tUPlEL/NeO5xFKCEpMUg1HwUl1LlA3HyUKiTvhNjmp4xA8FXCQ4pWNY/rSHAeQmjPRm3tBvS73/jIuiV5+0KBS4lAEl2rjqDdURTj8wfegsw4UJrIkN208J0daQHMjsfcnx91qoDpq4gb5f8WkGwunKcmeFw=
+	t=1711372680; cv=none; b=KGjrZFZBC31BDRcHKNzxVd3vkA+NGyDwRQrRCvjX6iDUeGfZ2oQfrotACSgFDgDLDSen60n/iEOnVdk8lUl1EmtdWBFl+IILyFacPjhgMTLAHgyVaiG/9QaAJin0m/ltiB4xt/vJjSIeAQGpiVA7Bcr99VF4+gF3ibS2qIJ47og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711372673; c=relaxed/simple;
-	bh=5iWGjHxt8ZWFZhQnPk2ARczEXPRNBEdu+RGl4jbmpo4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KCJrMTNOSmXecfbTdFjN8wVFzSnRyyJLj4wDcVp4QzwRlcLt69L37Jr7aSja43kcCzcJ3/PoQyCyyG6K7DP1IsUv8oBvmucNT3og9LhKiVwYsiQqg1bJyPdYEj7YE4s0uKL8C6xEhexJn2llqxtwrIebJQfOZYVsuFNEx6WMKtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=0RUMwNi8; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="0RUMwNi8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1711372669;
-	bh=5iWGjHxt8ZWFZhQnPk2ARczEXPRNBEdu+RGl4jbmpo4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=0RUMwNi8/BvQNGbk71yOcZ/nVKGyVFTlwGJQBoKkXlHIVktKsQeuH+/xG7kwA4naC
-	 ba+9qKQ5dgnBw512mluBNTSQquTgeVz+Bo6ZoL9f2nwn2PaPyFQNsYOxyKp6c8n2uJ
-	 +V6/Qub+NYRCnR+v7Qx1DnhLiSsYTZ11aTOfjlgXBiJr9eKCKkmUid6qABpm+m21m9
-	 m1UvXn2KbyelBGS84GXFPHBatCSB+z/iGgFQeiRekevZqx4v5+LuMWaLluy19qjvkD
-	 aDO20MABFOuNy/23xKwXyuykku0n+inXTK8Gt2rTWqHsRSoCVGZUd40VORYCI0lnNG
-	 bIaL/e4VwHzlQ==
-Received: from stla-brain-8255-1.home (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: jmassot)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 3D059378209E;
-	Mon, 25 Mar 2024 13:17:49 +0000 (UTC)
-From: Julien Massot <julien.massot@collabora.com>
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org,
-	kernel@collabora.com,
-	linux-kernel@vger.kernel.org,
-	mchehab@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	sakari.ailus@iki.fi,
-	Julien Massot <julien.massot@collabora.com>
-Subject: [PATCH v6 2/4] dt-bindings: media: add Maxim MAX96714 GMSL2 Deserializer
-Date: Mon, 25 Mar 2024 14:16:32 +0100
-Message-ID: <20240325131634.165361-3-julien.massot@collabora.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240325131634.165361-1-julien.massot@collabora.com>
-References: <20240325131634.165361-1-julien.massot@collabora.com>
+	s=arc-20240116; t=1711372680; c=relaxed/simple;
+	bh=YKTmuKf8u74lvEbPO5g1Z9vFdswBOamJg74EextIaFQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aWYVOFv1+RFZHJpX9BGTXlkzqrWfteOBfl1uJHNHRoOczw07FsTcmnyMStC57zkJwoXCLH2UP+IwH57a34U5uBObYnaFH9O6jKC668HBUR7ZbWhgu2dVSORqUFSGufLefrsQwEhe3kkr0oBrcvbQGuehrXW16jFGHl4SOJwE2Kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4V3D1t6KfMz2BhdD;
+	Mon, 25 Mar 2024 21:15:14 +0800 (CST)
+Received: from kwepemi500008.china.huawei.com (unknown [7.221.188.139])
+	by mail.maildlp.com (Postfix) with ESMTPS id BEE471A016C;
+	Mon, 25 Mar 2024 21:17:52 +0800 (CST)
+Received: from localhost.huawei.com (10.50.165.33) by
+ kwepemi500008.china.huawei.com (7.221.188.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 25 Mar 2024 21:17:51 +0800
+From: Yihang Li <liyihang9@huawei.com>
+To: <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+	<john.g.garry@oracle.com>, <yanaijie@huawei.com>, <dlemoal@kernel.org>,
+	<chenxiang66@hisilicon.com>
+CC: <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@huawei.com>, <prime.zeng@huawei.com>, <liyihang9@huawei.com>,
+	<yangxingui@huawei.com>
+Subject: [PATCH] scsi: libsas: Add SMP request allocation handler callback
+Date: Mon, 25 Mar 2024 21:17:51 +0800
+Message-ID: <20240325131751.1840329-1-liyihang9@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,216 +41,183 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemi500008.china.huawei.com (7.221.188.139)
 
-Add DT bindings for Maxim MAX96714 GMSL2 Deserializer.
+This series [1] reducing the kmalloc() minimum alignment on arm64 to 8
+(from 128).
 
-Signed-off-by: Julien Massot <julien.massot@collabora.com>
+The hisi_sas has special requirements on the memory address alignment
+(must be 16-byte-aligned) of the command request frame, so add a SMP
+request allocation callback and fill it in for the hisi_sas driver.
+
+Link: https://lkml.kernel.org/r/20230612153201.554742-1-catalin.marinas@arm.com [1]
+Signed-off-by: Yihang Li <liyihang9@huawei.com>
 ---
-Change since v5:
- - Reverse the fallback MAX96714 can fallback to MAX96714F
- - Use const instead of enum for MAX96714F compatible
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 14 ++++++++++++
+ drivers/scsi/libsas/sas_expander.c    | 31 ++++++++++++++++++---------
+ include/scsi/libsas.h                 |  3 +++
+ 3 files changed, 38 insertions(+), 10 deletions(-)
 
-Change since v4:
- - Add compatible for MAX96714 and use it as a fallback for MAX96714F
- - Remove extra '|' for decriptions
- - Reference 'i2c-gate' instead of 'i2c-controller'
-
-Change since v3:
- - Renamed file to maxim,max96714.yaml dropped the 'f' suffix
- - Removed mention to C-PHY since it's not supported by MAX96714 deserializers
- - Removed bus-type requirement on CSI endpoint since the device only support D-PHY
- - Removed the clock-lanes property in the dt example
-
-Change since v2:
- - remove reg description
- - rename enable gpio to powerdown
- - use generic node name: i2c, serializer, deserializer
----
- .../bindings/media/i2c/maxim,max96714.yaml    | 175 ++++++++++++++++++
- 1 file changed, 175 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml
-new file mode 100644
-index 000000000000..fdcba14fcde9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml
-@@ -0,0 +1,175 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2024 Collabora Ltd.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/i2c/maxim,max96714.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index 097dfe4b620d..40329558d435 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -2031,6 +2031,19 @@ static int hisi_sas_write_gpio(struct sas_ha_struct *sha, u8 reg_type,
+ 				reg_index, reg_count, write_data);
+ }
+ 
++static void *hisi_sas_alloc_smp_req(int size)
++{
++	u8 *p;
 +
-+title: Maxim MAX96714 GMSL2 to CSI-2 Deserializer
++	/* The address must be 16-byte-aligned. */
++	size = ALIGN(size, ARCH_DMA_MINALIGN);
++	p = kzalloc(size, GFP_KERNEL);
++	if (p)
++		p[0] = SMP_REQUEST;
 +
-+maintainers:
-+  - Julien Massot <julien.massot@collabora.com>
++	return p;
++}
 +
-+description:
-+  The MAX96714 deserializer converts GMSL2 serial inputs into MIPI
-+  CSI-2 D-PHY formatted output. The device allows the GMSL2 link to
-+  simultaneously transmit bidirectional control-channel data while forward
-+  video transmissions are in progress. The MAX96714 can connect to one
-+  remotely located serializer using industry-standard coax or STP
-+  interconnects. The device cans operate in pixel or tunnel mode. In pixel mode
-+  the MAX96714 can select individual video stream, while the tunnel mode forward all
-+  the MIPI data received by the serializer.
+ static void hisi_sas_phy_disconnected(struct hisi_sas_phy *phy)
+ {
+ 	struct asd_sas_phy *sas_phy = &phy->sas_phy;
+@@ -2130,6 +2143,7 @@ static struct sas_domain_function_template hisi_sas_transport_ops = {
+ 	.lldd_write_gpio	= hisi_sas_write_gpio,
+ 	.lldd_tmf_aborted	= hisi_sas_tmf_aborted,
+ 	.lldd_abort_timeout	= hisi_sas_internal_abort_timeout,
++	.lldd_alloc_smp_req	= hisi_sas_alloc_smp_req,
+ };
+ 
+ void hisi_sas_init_mem(struct hisi_hba *hisi_hba)
+diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
+index a2204674b680..0fd0507f7fc6 100644
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -141,6 +141,17 @@ static inline void *alloc_smp_req(int size)
+ 	return p;
+ }
+ 
++static void *sas_alloc_smp_req(struct domain_device *dev, int size)
++{
++	struct sas_internal *i =
++		to_sas_internal(dev->port->ha->shost->transportt);
 +
-+  The GMSL2 serial link operates at a fixed rate of 3Gbps or 6Gbps in the
-+  forward direction and 187.5Mbps in the reverse direction.
-+  MAX96714F only supports a fixed rate of 3Gbps in the forward direction.
++	if (i->dft->lldd_alloc_smp_req)
++		return i->dft->lldd_alloc_smp_req(size);
 +
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: maxim,max96714f
-+      - items:
-+          - enum:
-+              - maxim,max96714
-+          - const: maxim,max96714f
++	return alloc_smp_req(size);
++}
 +
-+  reg:
-+    maxItems: 1
+ static inline void *alloc_smp_resp(int size)
+ {
+ 	return kzalloc(size, GFP_KERNEL);
+@@ -377,7 +388,7 @@ int sas_ex_phy_discover(struct domain_device *dev, int single)
+ 	u8   *disc_req;
+ 	struct smp_disc_resp *disc_resp;
+ 
+-	disc_req = alloc_smp_req(DISCOVER_REQ_SIZE);
++	disc_req = sas_alloc_smp_req(dev, DISCOVER_REQ_SIZE);
+ 	if (!disc_req)
+ 		return -ENOMEM;
+ 
+@@ -440,7 +451,7 @@ static int sas_ex_general(struct domain_device *dev)
+ 	int res;
+ 	int i;
+ 
+-	rg_req = alloc_smp_req(RG_REQ_SIZE);
++	rg_req = sas_alloc_smp_req(dev, RG_REQ_SIZE);
+ 	if (!rg_req)
+ 		return -ENOMEM;
+ 
+@@ -519,7 +530,7 @@ static int sas_ex_manuf_info(struct domain_device *dev)
+ 	u8 *mi_resp;
+ 	int res;
+ 
+-	mi_req = alloc_smp_req(MI_REQ_SIZE);
++	mi_req = sas_alloc_smp_req(dev, MI_REQ_SIZE);
+ 	if (!mi_req)
+ 		return -ENOMEM;
+ 
+@@ -560,7 +571,7 @@ int sas_smp_phy_control(struct domain_device *dev, int phy_id,
+ 	u8 *pc_resp;
+ 	int res;
+ 
+-	pc_req = alloc_smp_req(PC_REQ_SIZE);
++	pc_req = sas_alloc_smp_req(dev, PC_REQ_SIZE);
+ 	if (!pc_req)
+ 		return -ENOMEM;
+ 
+@@ -642,7 +653,7 @@ int sas_smp_get_phy_events(struct sas_phy *phy)
+ 	struct sas_rphy *rphy = dev_to_rphy(phy->dev.parent);
+ 	struct domain_device *dev = sas_find_dev_by_rphy(rphy);
+ 
+-	req = alloc_smp_req(RPEL_REQ_SIZE);
++	req = sas_alloc_smp_req(dev, RPEL_REQ_SIZE);
+ 	if (!req)
+ 		return -ENOMEM;
+ 
+@@ -682,7 +693,7 @@ int sas_get_report_phy_sata(struct domain_device *dev, int phy_id,
+ 			    struct smp_rps_resp *rps_resp)
+ {
+ 	int res;
+-	u8 *rps_req = alloc_smp_req(RPS_REQ_SIZE);
++	u8 *rps_req = sas_alloc_smp_req(dev, RPS_REQ_SIZE);
+ 	u8 *resp = (u8 *)rps_resp;
+ 
+ 	if (!rps_req)
+@@ -1344,7 +1355,7 @@ static int sas_configure_present(struct domain_device *dev, int phy_id,
+ 	*present = 0;
+ 	*index = 0;
+ 
+-	rri_req = alloc_smp_req(RRI_REQ_SIZE);
++	rri_req = sas_alloc_smp_req(dev, RRI_REQ_SIZE);
+ 	if (!rri_req)
+ 		return -ENOMEM;
+ 
+@@ -1412,7 +1423,7 @@ static int sas_configure_set(struct domain_device *dev, int phy_id,
+ 	u8 *cri_req;
+ 	u8 *cri_resp;
+ 
+-	cri_req = alloc_smp_req(CRI_REQ_SIZE);
++	cri_req = sas_alloc_smp_req(dev, CRI_REQ_SIZE);
+ 	if (!cri_req)
+ 		return -ENOMEM;
+ 
+@@ -1627,7 +1638,7 @@ static int sas_get_phy_discover(struct domain_device *dev,
+ 	int res;
+ 	u8 *disc_req;
+ 
+-	disc_req = alloc_smp_req(DISCOVER_REQ_SIZE);
++	disc_req = sas_alloc_smp_req(dev, DISCOVER_REQ_SIZE);
+ 	if (!disc_req)
+ 		return -ENOMEM;
+ 
+@@ -1723,7 +1734,7 @@ static int sas_get_ex_change_count(struct domain_device *dev, int *ecc)
+ 	u8  *rg_req;
+ 	struct smp_rg_resp  *rg_resp;
+ 
+-	rg_req = alloc_smp_req(RG_REQ_SIZE);
++	rg_req = sas_alloc_smp_req(dev, RG_REQ_SIZE);
+ 	if (!rg_req)
+ 		return -ENOMEM;
+ 
+diff --git a/include/scsi/libsas.h b/include/scsi/libsas.h
+index f5257103fdb6..2e6e5f6e50db 100644
+--- a/include/scsi/libsas.h
++++ b/include/scsi/libsas.h
+@@ -670,6 +670,9 @@ struct sas_domain_function_template {
+ 	/* GPIO support */
+ 	int (*lldd_write_gpio)(struct sas_ha_struct *, u8 reg_type,
+ 			       u8 reg_index, u8 reg_count, u8 *write_data);
 +
-+  powerdown-gpios:
-+    maxItems: 1
-+    description:
-+      Specifier for the GPIO connected to the PWDNB pin.
-+
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        unevaluatedProperties: false
-+        description: GMSL Input
-+        properties:
-+          endpoint:
-+            $ref: /schemas/media/video-interfaces.yaml#
-+            unevaluatedProperties: false
-+            description:
-+              Endpoint for GMSL2-Link port.
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/$defs/port-base
-+        unevaluatedProperties: false
-+        description: CSI-2 Output port
-+
-+        properties:
-+          endpoint:
-+            $ref: /schemas/media/video-interfaces.yaml#
-+            unevaluatedProperties: false
-+
-+            properties:
-+              data-lanes:
-+                minItems: 1
-+                maxItems: 4
-+
-+              lane-polarities:
-+                minItems: 1
-+                maxItems: 5
-+
-+              link-frequencies:
-+                maxItems: 1
-+
-+            required:
-+              - data-lanes
-+
-+    required:
-+      - port@1
-+
-+  i2c-gate:
-+    $ref: /schemas/i2c/i2c-gate.yaml
-+    unevaluatedProperties: false
-+    description:
-+      The MAX96714 will pass through and forward the I2C requests from the
-+      incoming I2C bus over the GMSL2 link. Therefore it supports an i2c-gate
-+      subnode to configure a serializer.
-+
-+  port0-poc-supply:
-+    description: Regulator providing Power over Coax for the GMSL port
-+
-+required:
-+  - compatible
-+  - reg
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/media/video-interfaces.h>
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        deserializer@28 {
-+            compatible = "maxim,max96714f";
-+            reg = <0x28>;
-+            powerdown-gpios = <&main_gpio0 37 GPIO_ACTIVE_LOW>;
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                port@0 {
-+                    reg = <0>;
-+                    max96714_gmsl_in: endpoint {
-+                        remote-endpoint = <&max96917f_gmsl_out>;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = <1>;
-+                    max96714_csi_out: endpoint {
-+                        data-lanes = <1 2 3 4>;
-+                        link-frequencies = /bits/ 64 <400000000>;
-+                        remote-endpoint = <&csi_in>;
-+                    };
-+                };
-+            };
-+
-+            i2c-gate {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                serializer@40 {
-+                    compatible = "maxim,max96717f";
-+                    reg = <0x40>;
-+                    gpio-controller;
-+                    #gpio-cells = <2>;
-+                    #clock-cells = <0>;
-+
-+                    ports {
-+                        #address-cells = <1>;
-+                        #size-cells = <0>;
-+
-+                        port@0 {
-+                            reg = <0>;
-+                            max96717f_csi_in: endpoint {
-+                                bus-type = <MEDIA_BUS_TYPE_CSI2_DPHY>;
-+                                data-lanes = <1 2>;
-+                                lane-polarities = <1 0 1>;
-+                                remote-endpoint = <&sensor_out>;
-+                            };
-+                        };
-+
-+                        port@1 {
-+                            reg = <1>;
-+                            max96917f_gmsl_out: endpoint {
-+                                remote-endpoint = <&max96714_gmsl_in>;
-+                            };
-+                        };
-+                    };
-+                };
-+            };
-+        };
-+    };
-+...
++	/* Allocation for SMP request */
++	void *(*lldd_alloc_smp_req)(int size);
+ };
+ 
+ extern int sas_register_ha(struct sas_ha_struct *);
 -- 
-2.44.0
+2.33.0
 
