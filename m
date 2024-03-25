@@ -1,161 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9FEA15EFD0;
-	Mon, 25 Mar 2024 06:41:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237BC15EFDF;
+	Mon, 25 Mar 2024 06:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711348873; cv=none; b=RJ4hrVZVlLiCBdz5aOvho0SkmClz7LGrjsGolAgEvB7zRjglGvxgSUpYY9IpcOjNXG/PROBKj7CitAoA5s86PShLVPx0AmVIwKQxEb3eyU4vcDMzq6PeFBOopDvgFRIOX33+8rSR6uD7mHSEiD+6eMfXL58no9nK5e5aso7Gw9g=
+	t=1711348880; cv=none; b=ILtTBJ4g5jf2Yq3383nnvsLvKvO51miidoBc9vopCYQ24j2rpppLwvU3jDUbRKX12xd7KnrzXoIi8GCL9TtgB1jqdjh9u+iN/+ucLjFJQA1SJGU8YO/T58ZiUAMoSCDeKvULomdhmtHZ0n1KCY0URMSM4S9Aa7Fjvz3vRTaMFI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711348873; c=relaxed/simple;
-	bh=LAWkJDgSOoQXttIOaNX5OjXrKNZqw1gNI6g5JMXltWY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hNj+Rb68NzrAlV9rTNqn237ofr1FioGZfDNvaOmREWsf3+eIWx/w5SWe2cNNsB25rsG5eFX6e9O+m2J7nkG0z2o1efLIhs2GOZsW+HXVa2ngJ45snPULloDO7bMxa1rJvFnMc4zjj3MVs/yg+GF7XIDTi0Y93smNJ5wWquQ857k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ItsxdqfW; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711348880; c=relaxed/simple;
+	bh=mELGYMOH7A8TPort+ryvunaY+WZx5lfgIl8yCl37ICA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bpkDyeGj2Jz8wHaID5uUWOAHmR1EkAWgK93jXZc2DcNHZg0TgPcTyfQNRb44yR4/t6sCDYVzaG83g4fCWNqa2TVZfj3XCSY2+sRDJl3tV/0vDCug3pACnCUKNrOMgIjoZmFZ/UI+IpNJbM5E9mkFrCmLRRbAc5UgHA4N2X4jTb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fbRJUv2x; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ItsxdqfW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711348871; x=1742884871;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=LAWkJDgSOoQXttIOaNX5OjXrKNZqw1gNI6g5JMXltWY=;
-  b=ItsxdqfWSLQVXE13YnVyQihi5iSU35UJX3V5+hvuaOTDf7WMkEf7kVtu
-   xvnqn0q7FXOrPZ0gwg0YV/XqbpC5MKHgczrZU/+2XXJJHCVJhlhd1/ply
-   Q184ewDN7lWa+aljtgSKiMVlw/EH8QuzOoGeZXVhWP9R9mrhf2CxeQVvb
-   RpDPaZ0gwdmPBF3MrSaCPQlpSsVEKycJvFoW0oNIIVZ7RRGrSo6rCnD21
-   F/ECVF9O1mY9Jxzet8wqeXKWsz4QQiG9jRF4G4jMokW0Jxj2Oqwi8bszN
-   Ei4r6Be6K+9l6L01JyeomU8Llq6c0uY28ETabUAiWHOGbIhetARlaUYmJ
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="17065158"
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="17065158"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 23:41:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="38629590"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.251.211.155])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 23:41:05 -0700
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	John Stultz <jstultz@google.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org
-Subject: [PATCH V2 05/19] vdso: math64: Provide mul_u64_u32_add_u64_shr()
-Date: Mon, 25 Mar 2024 08:40:09 +0200
-Message-Id: <20240325064023.2997-6-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240325064023.2997-1-adrian.hunter@intel.com>
-References: <20240325064023.2997-1-adrian.hunter@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fbRJUv2x"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-513d4559fb4so5328714e87.3;
+        Sun, 24 Mar 2024 23:41:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711348877; x=1711953677; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RPiEj48KDcJmqB3zbNMJmIq6jw3YQzX8n++ebbQjH5g=;
+        b=fbRJUv2xrJ/esnNBdl2OUFWnCd9f/Ej1kVZ0KHAoUiyyc3WzGOfV/NkdZEu7lug+7Q
+         adS79uGIR2sG323SjEI5bT2Jeg+wKc7NRlN9MBgsCR+0NinZvxOZQ2pB2AJjRBji83Sc
+         3K2lZK3i//cz+5BhbYRwKd4zI61Fqro+yULdXEN1rKBctaeioRtGBdsQWAEP+weKhQRf
+         iaIn+aO6ivVjQaxqnR1EweB//mflt66IrWmQWe0mo8e2ugVxLHhGxMADsm04LWQ88bov
+         estBL/oPkaYIZ78CD7OiKoq6uymM/PABfL2IqtQEBHHXbH1SGLCK1BCUS0H7F4mNnurW
+         /rJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711348877; x=1711953677;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RPiEj48KDcJmqB3zbNMJmIq6jw3YQzX8n++ebbQjH5g=;
+        b=PC5+oyxx37sSlV/ybUcHweaG78IT+pGCCVf2qONNr1KT5BiGYS1ZTrGgIzj9SOEZzs
+         wHXj+jKg5SOzK06MLirkN3wmKZWAuGW2sjNEACxHTWd+zOUOrTXnd4uaY9LElkDU9wEl
+         jmctWIiOh8vEhZtHBomunBADXSikayzCVBtyoSeNi6qL+fkw2ZMdG9kFYoFHDG0B+gHA
+         6XbYTdMNlSbiGe3uuw5ryJSAuRMd040L0x+8YtumykjN1Q3iJ5mMgW3KGEdZGoBp4DOL
+         8yHf9ewCEiGSTL3XbYvYlXIIcOACjywKH1bQOVsvJWK/CX/eQUGW76d6YUvpDJxwTRBh
+         5+xw==
+X-Forwarded-Encrypted: i=1; AJvYcCUMBlXataeKTMj1Ah4Rs95mFMkFkJJmOyguaiHW5wclwhh8WL49EhkhCDxfvjfsdjvtLUlUZydBC+WRsdS0Q0BYBRy40pPJ/Xwg2lBKyzJ8WpPWlBhuq7+nO4kkqAq50Np5iwvDE79eRXY=
+X-Gm-Message-State: AOJu0Yzw1OAhWBWlPZCmt95++mzb5kbouQQW8wOS5oLlIK1quonplS+P
+	IFaO/W2tzQnONWJHjYTHfEHudHKJvFeLtRrAvasOjBW9RRjVuUG6Qw/Y7O1pLBQ=
+X-Google-Smtp-Source: AGHT+IHb35nKqssD+usvMbeAXao5HMvzR0wpz14PnshdPnDWUxwp/51YROxA+X+DGBC+yyVy9cog7Q==
+X-Received: by 2002:a19:e055:0:b0:513:952d:ac62 with SMTP id g21-20020a19e055000000b00513952dac62mr4358838lfj.52.1711348876964;
+        Sun, 24 Mar 2024 23:41:16 -0700 (PDT)
+Received: from localhost.localdomain ([178.70.43.28])
+        by smtp.gmail.com with ESMTPSA id h12-20020a0565123c8c00b00515a411fd20sm828229lfv.105.2024.03.24.23.41.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Mar 2024 23:41:16 -0700 (PDT)
+From: Ivan Bornyakov <brnkv.i1@gmail.com>
+To: Nas Chung <nas.chung@chipsnmedia.com>,
+	Jackson Lee <jackson.lee@chipsnmedia.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Ivan Bornyakov <brnkv.i1@gmail.com>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] Wave515 decoder IP support
+Date: Mon, 25 Mar 2024 09:40:55 +0300
+Message-ID: <20240325064102.9278-1-brnkv.i1@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
 
-Provide mul_u64_u32_add_u64_shr() which is a calculation that will be used
-by timekeeping and VDSO.
+Initial support for Wave515 multi-decoder IP among other refinements.
+This was tested on FPGA prototype, so wave5_dt_ids[] was not expanded.
 
-Place #include <vdso/math64.h> after #include <asm/div64.h> to allow
-architecture-specific overrides, at least for the kernel.
+ChangeLog:
+  v1:
+https://lore.kernel.org/linux-media/20240318144225.30835-1-brnkv.i1@gmail.com/
+  v2:
+    * drop patch "dt-bindings: media: cnm,wave521c: drop resets restriction"
+      The only user of Wave5 in mainline is TI K3 boards, thus there is
+      no real need to alter dt-bindings
+    * in patch "media: chips-media: wave5: support decoding HEVC Main10 profile"
+      add check for flag "support_hevc10bit_dec"
+    * in patch "media: chips-media: wave5: support reset lines" move
+      reset_control_deassert() out of else branch, add
+      reset_control_assert() to probe error path.
+    * rework patch "media: chips-media: wave5: drop "sram-size" DT prop"
+       - don't move alloc/free form device open/close
+       - intead of exact configuration of reserved SRAM memory in DT and
+	 allocating all of it, allocate all available SRAM memory up to
+	 WAVE5_MAX_SRAM_SIZE from whatever pool provided.
+    * adjust patch "media: chips-media: wave5: support Wave515 decoder"
+      according to changes in patches
+      "media: chips-media: wave5: support decoding HEVC Main10 profile" and
+      "media: chips-media: wave5: drop "sram-size" DT prop"
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- include/linux/math64.h |  2 +-
- include/vdso/math64.h  | 38 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 39 insertions(+), 1 deletion(-)
+Ivan Bornyakov (5):
+  media: chips-media: wave5: support decoding HEVC Main10 profile
+  media: chips-media: wave5: support reset lines
+  media: chips-media: wave5: separate irq setup routine
+  media: chips-media: wave5: drop "sram-size" DT prop
+  media: chips-media: wave5: support Wave515 decoder
 
-diff --git a/include/linux/math64.h b/include/linux/math64.h
-index fd13622b2056..d34def7f9a8c 100644
---- a/include/linux/math64.h
-+++ b/include/linux/math64.h
-@@ -4,8 +4,8 @@
- 
- #include <linux/types.h>
- #include <linux/math.h>
--#include <vdso/math64.h>
- #include <asm/div64.h>
-+#include <vdso/math64.h>
- 
- #if BITS_PER_LONG == 64
- 
-diff --git a/include/vdso/math64.h b/include/vdso/math64.h
-index 7da703ee5561..22ae212f8b28 100644
---- a/include/vdso/math64.h
-+++ b/include/vdso/math64.h
-@@ -21,4 +21,42 @@ __iter_div_u64_rem(u64 dividend, u32 divisor, u64 *remainder)
- 	return ret;
- }
- 
-+#if defined(CONFIG_ARCH_SUPPORTS_INT128) && defined(__SIZEOF_INT128__)
-+
-+#ifndef mul_u64_u32_add_u64_shr
-+static __always_inline u64 mul_u64_u32_add_u64_shr(u64 a, u32 mul, u64 b, unsigned int shift)
-+{
-+	return (u64)((((unsigned __int128)a * mul) + b) >> shift);
-+}
-+#endif /* mul_u64_u32_add_u64_shr */
-+
-+#else
-+
-+#ifndef mul_u64_u32_add_u64_shr
-+#ifndef mul_u32_u32
-+static inline u64 mul_u32_u32(u32 a, u32 b)
-+{
-+	return (u64)a * b;
-+}
-+#define mul_u32_u32 mul_u32_u32
-+#endif
-+static __always_inline u64 mul_u64_u32_add_u64_shr(u64 a, u32 mul, u64 b, unsigned int shift)
-+{
-+	u32 ah = a >> 32, al = a;
-+	bool ovf;
-+	u64 ret;
-+
-+	ovf = __builtin_add_overflow(mul_u32_u32(al, mul), b, &ret);
-+	ret >>= shift;
-+	if (ovf && shift)
-+		ret += 1ULL << (64 - shift);
-+	if (ah)
-+		ret += mul_u32_u32(ah, mul) << (32 - shift);
-+
-+	return ret;
-+}
-+#endif /* mul_u64_u32_add_u64_shr */
-+
-+#endif
-+
- #endif /* __VDSO_MATH64_H */
+ .../platform/chips-media/wave5/wave5-helper.c |   3 +-
+ .../platform/chips-media/wave5/wave5-hw.c     | 296 +++++++++++++-----
+ .../chips-media/wave5/wave5-regdefine.h       |   5 +
+ .../platform/chips-media/wave5/wave5-vdi.c    |  27 +-
+ .../chips-media/wave5/wave5-vpu-dec.c         |  44 ++-
+ .../platform/chips-media/wave5/wave5-vpu.c    |  31 +-
+ .../platform/chips-media/wave5/wave5-vpuapi.h |   4 +-
+ .../chips-media/wave5/wave5-vpuconfig.h       |  11 +-
+ .../media/platform/chips-media/wave5/wave5.h  |   1 +
+ 9 files changed, 303 insertions(+), 119 deletions(-)
+
 -- 
-2.34.1
+2.44.0
 
