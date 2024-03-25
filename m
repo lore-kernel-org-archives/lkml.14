@@ -1,176 +1,447 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69529130AC7;
-	Mon, 25 Mar 2024 07:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711353153; cv=none; b=TwFgFPsIaCk3FGOdRHNquyXGvvX5sSgrNIZaTFjVzO6JA9rY6QMg9icLyJu1TIFWiF13SvM8iIag7+wFPJ8CCNnBVYIJQ/T8vAcWf6aAyHJhMB0KIzyreNL0cxUZ1i+JMONP1iC3c9AjD740TTZ2xx9E6EkZJkLL/WWRqRK1EU4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711353153; c=relaxed/simple;
-	bh=MjfyfYcCyYAjuQHZD8oyWbkpOeFBIPh/wGU9UVWSSSU=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=pMtsOGfaV/0IoJa3hxuuV2xGcwSdskNH1FWgRCCjTt97MxZg0+5Hsou7NVfq0QOMBzDwnq01/wVDmbOqGkVPLmAMepKHZ+RZ1hgn2nQUy4u6/hAkFVqMJYAVoFjvsdJg7zsrAEHFvQRyETcIeg6Cg0lJq5znMBjKO65rEwAGNxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bhrMsC80; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF70313958D
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 07:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711353011; cv=fail; b=KS826znzIpajFTHnS2nwG6jm3TOihZli+HuMH2yK0R1aPCniALtIN1v1ZAnyi0Ziz/rsiUMw2O7AYBWbHyWzFK3ZaqGw2CCDbDBs/mkc2c1sQcV8MYW4rsNJRNNsrZY5eKEE6P7Ql3SnvzW6uC+Ce5esdxHtK0MRBsEluKydfXk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711353011; c=relaxed/simple;
+	bh=fr/qXZxPB4gXTDbnY97jtYEHJLi65+XwwBg3a14T5Zc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=HyOuhVDsmGKIaHiQeDEbh2IMuyPU/NuokksEkK374Gf7GvCqn9L5D345xU+CV42K36iSdGzcWpq4ljwzBZ8aS4fhI0e5DD/4k0IDJVKS2scfcKBpTomlnTWPjWPud3lG9RYtLtzeGtsmfwVBUgekUafC/+2dvDAtICLuRhSuZ5E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ExDpmLCH; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bhrMsC80"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6e6c0098328so2618054b3a.3;
-        Mon, 25 Mar 2024 00:52:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711353150; x=1711957950; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x6D18ET4Nwdf+JrfEWu/83Vhj2wPqTp5eZxfyge+5nI=;
-        b=bhrMsC80LZJoQ4cJxUkFiYIVczrhZPPm64c9b8pWJ74J5dgrmiw4yP57WTDUb8fGnM
-         aNJ2CuObJSwqIujUWHopLLU+S8Yt6ND3nR0rS+0kiLohEBOpIt4IUaIiUyUk2QQnUXup
-         Tn8vN4mTCovoRjFdKF1W1m6niLKYdFFnfX5o3TB25naPW8kDZakyeLPGlb/uVFS962rK
-         V4ggbvj6pzhp6ihuxPgyFr5+AlVVUkud2Zddnr13mXIVnLXuqt89vnas2igjgLdZTDp/
-         Z4+JYZ0yrF2G1vXKM6sq8S0C8WpKDGbB3X8thc5CR/UIkLnQn78A+7OLbRgSNn6jhRgb
-         +USw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711353150; x=1711957950;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x6D18ET4Nwdf+JrfEWu/83Vhj2wPqTp5eZxfyge+5nI=;
-        b=Q3AwGBT7Oc0biCcR1YF0ugw/pw1L1ei07ysHCYRetXb3XYRUzXth7enMUuAIFlbyuv
-         Wc1qGsgquuZqNpuJbQkYRYV/Rq3yRXFUIGi6o4pR6dZQh7p4+ghUSNEiletp42WHm8ne
-         7WojlCjlO3EyLaJvxCrS1RX9WEUCb/YRLQkm5cBSpMDcTA5Gpl0njPzAqXj6fTutAWY3
-         bCdtgFg6KOYU5i4ghx+1A5bbu35pkNSljS7yRLMlbpy4H6bswmNYEZjEC7PoR898Pn9u
-         pCu5x/ledqhCkkIOqOTjzB8HT9V890iXb/T0joYm0g1hnx8xZBaP4jWgQGzpEeo10/u5
-         kBUw==
-X-Forwarded-Encrypted: i=1; AJvYcCWPvB18JmXCpCPYhhH6W9yJvxwyzMW5AMfFV4wLDs0D+QPVq2anOby1D43QWrjcqokEHnfMciAdcckvtiTdU04KPd3jp7JK5G8SCecnnJvm+WW+08C+HfCcU4Ce+Oe0URfH
-X-Gm-Message-State: AOJu0Yy+Ag4MnOLJhpWeFS7CgZj5DkQJGA6JbUHuOFGXu5jaHuhB8kwI
-	E/XUVFsy4LBUs4+HImdSYBVBn5sI/T/8GmttySh8qO3jTLt08l9kupVhOy7W
-X-Google-Smtp-Source: AGHT+IF3CJotqbKpv4V45t7yaKnAUbuI7CPEEOrIddzTOvsHsmn6aa6uT1AdE2lxHos93bCSZOie4A==
-X-Received: by 2002:a05:6a20:da85:b0:1a3:b625:7b0f with SMTP id iy5-20020a056a20da8500b001a3b6257b0fmr4621590pzb.57.1711353150456;
-        Mon, 25 Mar 2024 00:52:30 -0700 (PDT)
-Received: from localhost.localdomain ([120.244.140.47])
-        by smtp.gmail.com with ESMTPSA id u2-20020a17090ae00200b0029c693a1e6dsm6032550pjy.17.2024.03.25.00.52.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 00:52:30 -0700 (PDT)
-From: Zqiang <qiang.zhang1211@gmail.com>
-To: paulmck@kernel.org,
-	frederic@kernel.org,
-	neeraj.upadhyay@kernel.org,
-	joel@joelfernandes.org
-Cc: qiang.zhang1211@gmail.com,
-	rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] rcutorture: Fix invalid context warning when enable srcu barrier testing
-Date: Mon, 25 Mar 2024 15:52:19 +0800
-Message-Id: <20240325075219.10367-1-qiang.zhang1211@gmail.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ExDpmLCH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711353010; x=1742889010;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=fr/qXZxPB4gXTDbnY97jtYEHJLi65+XwwBg3a14T5Zc=;
+  b=ExDpmLCHK44t8gJAOpQMzjVWKZoBVn7R16G9X+pM6QIwgrZqKTe/4d2d
+   VhnCCW66PGB1h5AJERT8+cVcAeDsUUNA25tFedwCOdc5WCcNWZFCcu3jR
+   2gB1F0v9KZ+YEfIT65gvUN3TtI7jE3K/z9e4iykTeVefdTunbvP7FWqAJ
+   T1M+81MjO3/pxC+/xLLSLrVmDJwrEL/wT1Zav0ARV5e0IUsJr9yAKIW/R
+   CGJUiV6ND3OscKqhAw+oJZ6DImb4Nxwo7b+dGjC0CJaKX+aICEdWbNwzL
+   RuCOMRLSHCxGWTbgGkUpHvPYMb5c4EyORdvfnzpTOAlpLDOO6pWnXAT9L
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="9297284"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="9297284"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 00:50:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="46528646"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Mar 2024 00:50:09 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 25 Mar 2024 00:50:08 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Mon, 25 Mar 2024 00:50:08 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.41) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 25 Mar 2024 00:50:07 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RianoT9wu8Wlot8hpdL4V51Zwctdgqap7k7OBfUDpd0XWatEyNp/6XeD9pkpPxEj/T50af46+b8aiMkUBcgaJaXfPeFZ5Q0toLzUu317/48Rz12492VCfCgI7rcRGIirnNfm27B4yYS5QYQDOgPxhZ7dGU3TPw0vTLGzHgp6yjz0YXva0lBADs9FyMiOmUDHi4WTM1hTlRUBT5DcNt/IqmTnaOYVgY15XiBcTSM/8vLxuArpUqmZtWkkRU6PY+W+kkx2f9RGQFUCwxcTL0IGtMkgLeX5opxkV6J0WxLAeGpLjspotzHCxDbZ34w6gBNE0t18J0oyj/i1AN1PmH1zFQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AH8Q/Dg6A2c1bW1MUWSO29dSSVqHARNt4wbOfpD65hE=;
+ b=WPUdboVPvOvh3d0p1TWfPeE5vFNH+u/ZIuszMWbjMoJWyUWFl/DrPRJESr3OUsPHZekT44SgJmYzNGYhp5xxdABTIAoNfKF+4RrseN7sVRHO6Azu/kirK5jGyvPI61fjoMt9B5s8X5D4X9QQ51zxfOGYOX5vHNBA3pG0XxtsIoYL4wpyOq4Sc33qB7qC0WDyFV678uIJdvknNTP5OYKLqTbVbRfOW+ZAeUFtHqF9D6OZ6uCMI0ke3fMPbnVpHhmLgRRu04VcM2Mja5r3xILsgv9Bz1oE6yUW54CBBYiUS/kD2LpYwzCtrdD9O2nDanS9HPn5ZWdVG9wYNy/B1bjc4A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MW5PR11MB5907.namprd11.prod.outlook.com (2603:10b6:303:1a1::13)
+ by SA2PR11MB5098.namprd11.prod.outlook.com (2603:10b6:806:11c::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.31; Mon, 25 Mar
+ 2024 07:50:05 +0000
+Received: from MW5PR11MB5907.namprd11.prod.outlook.com
+ ([fe80::bcbf:4501:30f4:843b]) by MW5PR11MB5907.namprd11.prod.outlook.com
+ ([fe80::bcbf:4501:30f4:843b%4]) with mapi id 15.20.7409.028; Mon, 25 Mar 2024
+ 07:50:03 +0000
+From: "Prasad, Aravinda" <aravinda.prasad@intel.com>
+To: SeongJae Park <sj@kernel.org>
+CC: "damon@lists.linux.dev" <damon@lists.linux.dev>, "linux-mm@kvack.org"
+	<linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "s2322819@ed.ac.uk" <s2322819@ed.ac.uk>,
+	"Kumar, Sandeep4" <sandeep4.kumar@intel.com>, "Huang, Ying"
+	<ying.huang@intel.com>, "Hansen, Dave" <dave.hansen@intel.com>, "Williams,
+ Dan J" <dan.j.williams@intel.com>, "Subramoney, Sreenivas"
+	<sreenivas.subramoney@intel.com>, "Kervinen, Antti"
+	<antti.kervinen@intel.com>, "Kanevskiy, Alexander"
+	<alexander.kanevskiy@intel.com>
+Subject: RE: [PATCH v2 0/3] mm/damon: Profiling enhancements for DAMON
+Thread-Topic: [PATCH v2 0/3] mm/damon: Profiling enhancements for DAMON
+Thread-Index: AQHaeTeYeVMaFIFnV0yMrKTBAlKavbE+h/4AgAIFciCAAkoDgIAApzzwgACdgQCAA+/JMA==
+Date: Mon, 25 Mar 2024 07:50:03 +0000
+Message-ID: <MW5PR11MB590713C19D7BFBD861A990E0F2362@MW5PR11MB5907.namprd11.prod.outlook.com>
+References: <MW5PR11MB5907D17C1EBC1869C553256DF2312@MW5PR11MB5907.namprd11.prod.outlook.com>
+ <20240322183236.119419-1-sj@kernel.org>
+In-Reply-To: <20240322183236.119419-1-sj@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW5PR11MB5907:EE_|SA2PR11MB5098:EE_
+x-ms-office365-filtering-correlation-id: 8fbac515-abbe-42e1-2a1c-08dc4ca02e8b
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: F1RoKz2Twqz3+4bfyAjlS0uAMx1/fB186+AuW8ndMNnTL5GGBOwgzJpW/tOoEk4Q4GGexrfNtWBf7PrZbauz5Ww/dHvw6FanSSHWtT6sdaOVda5/utSG9+cB8DVqCJtduwQgOWD2mijfVINmfU+eywnuvYN9mjSYFGW97UJFa/BOtUf1uW3Uts4RCYyeGwIZC1tQ9rTPSRdxXfvMZcvDItbYfj/AAD/kxczYGL792VjsANPBn5K4JXg16Es3X9kvfbHyNnyatyo3Qu168q0HO5cBiwxg24tcMaTS0Xg2PfpseNj9J414p4Kc7E63ZsC3lBn+rJFFrh3HHPLpJp11HDLh1lvKzs959s+WLwBfnLk+TOEWKQoXb4C1Lv9PESYl8kFn+MefpaqXTS5UnZcOD/RVYCZ1M1ohwiT7HJ8WE107HdUELSXT25wZumBuevFL9lQou06DA5YGitN62zvAgSqQLEe7xVRIicGtXlhQKFoQgm4DQGate7fLUNUvVe2BRc1JhoIBjPCeK3m8udq4LVec7kxQkYFEXNCPwiwXh/M2iE7Ug4C/NNVGb3mmO4/kqjIM7iHEGrh93xWHXXLOR9HdvjUngpspOX3gSjkOenNOk+f2YH1vEt59EuIGNw8DWhTX3I3/XiTT+xNId9nyWDMHH1CipgUsj4fkn5R1t/pD23T+bGCf1+nruXC0FSggJG99SObfTsEI3DF/gPnUwPC83efw3gAeIhT0kR2MPSk=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW5PR11MB5907.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?WXe52CZ/Ja7qqfwImhoE1P6Nk8FYW2nk+cA+WWmnBJSjBNj40+x9MNxp5aON?=
+ =?us-ascii?Q?tesLRy/GZD0pJnbf3qIJMzwMSxblK9abzlGkx/lYm6x+CTeDtU1znR7+s5dU?=
+ =?us-ascii?Q?9GBSeaDq0pMcfYRhvZ+EzsJiS0/gHuqhg8Taspv/VwyxB7+LrGxjjaEFlFTh?=
+ =?us-ascii?Q?bXIvt/eqNpoCDDmf4xyLMM05pC+5T4m/Wai83yj6JwbOveAR7PvuIS/kOREk?=
+ =?us-ascii?Q?81N0+OnqoSUAGAmguJMbOzh17tPij9lRG4RQRlk4wJhspymEDHGFrjUZc7b1?=
+ =?us-ascii?Q?8ViDyRjcVm722wv4bxZYJsxmZSfx/pWQ8s1SwJhxuG0NqCFyDNvZVaVQvZAL?=
+ =?us-ascii?Q?MNscgcBMKrUjiayJFzYZ8Lid17QEwQj8sk1se6ISNGPKBDNzQxSfIrUl0Tq5?=
+ =?us-ascii?Q?XwM8xV7bCI5qWK3w4YucRrZSVGdspGQbVLsdL83u5kG3+PzFEfwkbFTFNTQn?=
+ =?us-ascii?Q?O1+Vz9f0vG8+/ZtIj9vMounWhSIXFkO1ICEAoUuCA//BN34pEdj1J/rZg6df?=
+ =?us-ascii?Q?ESYYPvhG/IJallgL8cjeqkb/E7WpHSG67KbAKjNcT9gWqWp82AGP5nd24aJ4?=
+ =?us-ascii?Q?H/jiz+oQpmqSihbFTyvr+/EmstrIwiMESwH3etAtp7Ymj7ZkPESydG3WkYBX?=
+ =?us-ascii?Q?nI5l5uqveBJQL6jTY+DVBKIwUg+VUm+P2nrE04kCfqV5pdBxMTmH2nwheIvs?=
+ =?us-ascii?Q?jQRmqWrJmi5HFI5lGls23ozFnoM6sFI+JSX/ldmwwU+mqFUFozvCAuFOcyr7?=
+ =?us-ascii?Q?aEiBAtTDWsnOq/BNBpYNegazg/gTsnHT2TUU2ANaH7PsVdg4Qdq+hK9YzDxW?=
+ =?us-ascii?Q?NrWPAxShZs1pAOUy7BKZCTG1VAJHrrPMDcoT1yX037l/euuaQNum/EgksF3U?=
+ =?us-ascii?Q?WnPcGtm5sP0JfPod/Vh54pzJ75gs7HL2gNweT1j0ETrtJOTtttesaxQSV2AN?=
+ =?us-ascii?Q?GU0dPdky2nsUa548Y9evAyBD1EmfphBPj1sd6oXp9kc0WmjZj89AIaLZMj58?=
+ =?us-ascii?Q?XJpqZoujwyAyGskUmc6OWbNEAxofLma2D4dJkMJndlnyC6SRoqNSvpxSFAWb?=
+ =?us-ascii?Q?0SqBrwYlFFIC3tkTZOEu4pZzmZRlSr4/i6Zj/hhxp7NJMZ0m5yS3daxvJ7bU?=
+ =?us-ascii?Q?q4FSPX53kYZWBHTHqNV6Tw3gBv9+Lo9DiwPaV0a8bj9jRPiRH+H1G/yPRPqq?=
+ =?us-ascii?Q?Llm/VutjsBh34EMGDes9pnK27yZloinrj+3ge7tPKn+7LCtM9FGQ4xe2+2Br?=
+ =?us-ascii?Q?qPi80rS59YX5pIXMEHtNMN8eXiE06CDV2VuIbR6BIHfW7zuyDX7uVmFsHUF2?=
+ =?us-ascii?Q?xttFkOrEcB+UUN702v5XQYtVJ+pO0rgTXardVo8uK9vC1q6JCeORwfFV7amY?=
+ =?us-ascii?Q?VVn4AE55cuvqHMWflUguIFq+OGKezOx2bmQGgAZ8L6Dx6Z+AaEiur1hNSfEe?=
+ =?us-ascii?Q?wXalhhfG1rvwcvmJOzQIrfABMUsUEd5an/heq9JsZBvD76rGvcc6gBa3V9rO?=
+ =?us-ascii?Q?0LSBkpSe5nOj46OuWgzbZ4IFcPMWZITdjrQutHK4RY6Iw+uyOyhxNQzoccxp?=
+ =?us-ascii?Q?f0+ch0mxitLdJUcxUE3fkwnOOIzGSbp3/f4JbYa6?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW5PR11MB5907.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8fbac515-abbe-42e1-2a1c-08dc4ca02e8b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2024 07:50:03.8846
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: r8lkvxblIz6eQhrPsKoi8GHauWiPqxaJckfUQS5NMC26MJ78lvyxOx8d4FbPBNiJLG/cx/UfTqBuIbUq14kAyOZFBheCGfP3cYcxyqyowok=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB5098
+X-OriginatorOrg: intel.com
 
-When the torture_type is set srcu or srcud and cb_barrier is
-non-zero, running the rcutorture test will trigger the
-following warning:
 
-[  163.910989][    C1] BUG: sleeping function called from invalid context at kernel/locking/spinlock_rt.c:48
-[  163.910994][    C1] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 0, name: swapper/1
-[  163.910999][    C1] preempt_count: 10001, expected: 0
-[  163.911002][    C1] RCU nest depth: 0, expected: 0
-[  163.911005][    C1] INFO: lockdep is turned off.
-[  163.911007][    C1] irq event stamp: 30964
-[  163.911010][    C1] hardirqs last  enabled at (30963): [<ffffffffabc7df52>] do_idle+0x362/0x500
-[  163.911018][    C1] hardirqs last disabled at (30964): [<ffffffffae616eff>] sysvec_call_function_single+0xf/0xd0
-[  163.911025][    C1] softirqs last  enabled at (0): [<ffffffffabb6475f>] copy_process+0x16ff/0x6580
-[  163.911033][    C1] softirqs last disabled at (0): [<0000000000000000>] 0x0
-[  163.911038][    C1] Preemption disabled at:
-[  163.911039][    C1] [<ffffffffacf1964b>] stack_depot_save_flags+0x24b/0x6c0
-[  163.911063][    C1] CPU: 1 PID: 0 Comm: swapper/1 Tainted: G        W          6.8.0-rc4-rt4-yocto-preempt-rt+ #3 1e39aa9a737dd024a3275c4f835a872f673a7d3a
-[  163.911071][    C1] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.2-0-gea1b7a073390-prebuilt.qemu.org 04/01/2014
-[  163.911075][    C1] Call Trace:
-[  163.911078][    C1]  <IRQ>
-[  163.911080][    C1]  dump_stack_lvl+0x88/0xd0
-[  163.911089][    C1]  dump_stack+0x10/0x20
-[  163.911095][    C1]  __might_resched+0x36f/0x530
-[  163.911105][    C1]  rt_spin_lock+0x82/0x1c0
-[  163.911112][    C1]  spin_lock_irqsave_ssp_contention+0xb8/0x100
-[  163.911121][    C1]  srcu_gp_start_if_needed+0x782/0xf00
-[  163.911128][    C1]  ? _raw_spin_unlock_irqrestore+0x46/0x70
-[  163.911136][    C1]  ? debug_object_active_state+0x336/0x470
-[  163.911148][    C1]  ? __pfx_srcu_gp_start_if_needed+0x10/0x10
-[  163.911156][    C1]  ? __pfx_lock_release+0x10/0x10
-[  163.911165][    C1]  ? __pfx_rcu_torture_barrier_cbf+0x10/0x10
-[  163.911188][    C1]  __call_srcu+0x9f/0xe0
-[  163.911196][    C1]  call_srcu+0x13/0x20
-[  163.911201][    C1]  srcu_torture_call+0x1b/0x30
-[  163.911224][    C1]  rcu_torture_barrier1cb+0x4a/0x60
-[  163.911247][    C1]  __flush_smp_call_function_queue+0x267/0xca0
-[  163.911256][    C1]  ? __pfx_rcu_torture_barrier1cb+0x10/0x10
-[  163.911281][    C1]  generic_smp_call_function_single_interrupt+0x13/0x20
-[  163.911288][    C1]  __sysvec_call_function_single+0x7d/0x280
-[  163.911295][    C1]  sysvec_call_function_single+0x93/0xd0
-[  163.911302][    C1]  </IRQ>
-[  163.911304][    C1]  <TASK>
-[  163.911308][    C1]  asm_sysvec_call_function_single+0x1b/0x20
-[  163.911313][    C1] RIP: 0010:default_idle+0x17/0x20
-[  163.911326][    C1] RSP: 0018:ffff888001997dc8 EFLAGS: 00000246
-[  163.911333][    C1] RAX: 0000000000000000 RBX: dffffc0000000000 RCX: ffffffffae618b51
-[  163.911337][    C1] RDX: 0000000000000000 RSI: ffffffffaea80920 RDI: ffffffffaec2de80
-[  163.911342][    C1] RBP: ffff888001997dc8 R08: 0000000000000001 R09: ffffed100d740cad
-[  163.911346][    C1] R10: ffffed100d740cac R11: ffff88806ba06563 R12: 0000000000000001
-[  163.911350][    C1] R13: ffffffffafe460c0 R14: ffffffffafe460c0 R15: 0000000000000000
-[  163.911358][    C1]  ? ct_kernel_exit.constprop.3+0x121/0x160
-[  163.911369][    C1]  ? lockdep_hardirqs_on+0xc4/0x150
-[  163.911376][    C1]  arch_cpu_idle+0x9/0x10
-[  163.911383][    C1]  default_idle_call+0x7a/0xb0
-[  163.911390][    C1]  do_idle+0x362/0x500
-[  163.911398][    C1]  ? __pfx_do_idle+0x10/0x10
-[  163.911404][    C1]  ? complete_with_flags+0x8b/0xb0
-[  163.911416][    C1]  cpu_startup_entry+0x58/0x70
-[  163.911423][    C1]  start_secondary+0x221/0x280
-[  163.911430][    C1]  ? __pfx_start_secondary+0x10/0x10
-[  163.911440][    C1]  secondary_startup_64_no_verify+0x17f/0x18b
-[  163.911455][    C1]  </TASK>
 
-This commit therefore use smp_call_on_cpu() instead of
-smp_call_function_single(), make rcu_torture_barrier1cb() invoked
-happens on task-context.
+> -----Original Message-----
+> From: SeongJae Park <sj@kernel.org>
+> Sent: Saturday, March 23, 2024 12:03 AM
+> To: Prasad, Aravinda <aravinda.prasad@intel.com>
+> Cc: SeongJae Park <sj@kernel.org>; damon@lists.linux.dev; linux-
+> mm@kvack.org; linux-kernel@vger.kernel.org; s2322819@ed.ac.uk; Kumar,
+> Sandeep4 <sandeep4.kumar@intel.com>; Huang, Ying <ying.huang@intel.com>;
+> Hansen, Dave <dave.hansen@intel.com>; Williams, Dan J
+> <dan.j.williams@intel.com>; Subramoney, Sreenivas
+> <sreenivas.subramoney@intel.com>; Kervinen, Antti <antti.kervinen@intel.c=
+om>;
+> Kanevskiy, Alexander <alexander.kanevskiy@intel.com>
+> Subject: RE: [PATCH v2 0/3] mm/damon: Profiling enhancements for DAMON
+>=20
+> On Fri, 22 Mar 2024 12:12:09 +0000 "Prasad, Aravinda"
+> <aravinda.prasad@intel.com> wrote:
+>=20
+> [...]
+> > > > For large regions (say 10GB, that has 2,621,440 4K pages),
+> > > > sampling at PTE level will not cover a good portion of the region.
+> > > > For example, default 5ms sampling and 100ms aggregation samples
+> > > > only 20 4K pages in an aggregation interval.
+> > >
+> > > If the 20 attempts all failed at finding any single accessed 4K
+> > > page, I think it roughly means less than 5% of the region is
+> > > accessed within the user-specified time (aggregation interval).  I
+> > > would translate that as only tiny portion of the
+>=20
+> I now find the above sentence is not correct.  Sorry, my bad.  Let me re-=
+write.
+>=20
+> I think it roughly means the workload is not accessing the region in a fr=
+equency
+> that high enough for DAMON to observe within the user-specified time (sam=
+pling
+> interval).
+>=20
+> > > region is accessed within the user-specified time, and hence DAMON
+> > > is ok to say the region is nearly not accessed.
+> >
+> > I am looking at it from the other way:
+> >
+> > To detect if a region is hot or cold at least 1% of the pages in the
+> > region should be sampled. For a 10GB region (with 2,621,440 4K pages)
+> > this requires sampling at least 26,214 pages. For a 100GB region this
+> > will require sampling at least
+> > 262,144 pages.
+>=20
+> Why do you think 1% of the pages should be sampled?
 
-Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
----
- kernel/rcu/rcutorture.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+1% is just an example.=20
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 48a9d47ec90e..498aae52333e 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -3041,11 +3041,12 @@ static void rcu_torture_barrier_cbf(struct rcu_head *rcu)
- }
- 
- /* IPI handler to get callback posted on desired CPU, if online. */
--static void rcu_torture_barrier1cb(void *rcu_void)
-+static int rcu_torture_barrier1cb(void *rcu_void)
- {
- 	struct rcu_head *rhp = rcu_void;
- 
- 	cur_ops->call(rhp, rcu_torture_barrier_cbf);
-+	return 0;
- }
- 
- /* kthread function to register callbacks used to test RCU barriers. */
-@@ -3071,11 +3072,9 @@ static int rcu_torture_barrier_cbs(void *arg)
- 		 * The above smp_load_acquire() ensures barrier_phase load
- 		 * is ordered before the following ->call().
- 		 */
--		if (smp_call_function_single(myid, rcu_torture_barrier1cb,
--					     &rcu, 1)) {
--			// IPI failed, so use direct call from current CPU.
-+		if (smp_call_on_cpu(myid, rcu_torture_barrier1cb, &rcu, 1))
- 			cur_ops->call(&rcu, rcu_torture_barrier_cbf);
--		}
-+
- 		if (atomic_dec_and_test(&barrier_cbs_count))
- 			wake_up(&barrier_wq);
- 	} while (!torture_must_stop());
--- 
-2.17.1
+>=20
+> DAMON defines the region as an address range that contains pages having s=
+imilar
+> access frequency.  Hence if we see a page was accessed within a given tim=
+e
+> interval, we can assume all pages in the page is also accessed within the=
+ interval,
+> and vice versa.  That's why we sample only single page per region, and ho=
+w
+> DAMON's monitoring overhead can be controlled regardless of the size of t=
+he
+> monitoring target memory.
 
+Initially when DAMON creates "min" regions, it does not consider access fre=
+quency.=20
+They are created by diving the address space. So, at the beginning, these r=
+egions
+need not have pages with similar access frequency. But eventually, as regio=
+ns are
+split and merged then regions are formed that have similar access frequency=
+.
+
+We observe that hot sets are spread across the address space of the applica=
+tion
+and many times, only a portion of the DAMON created regions contain a hot d=
+ata
+as per the application's access pattern. In such cases a single sample per
+region is not enough.=20
+
+For small memory footprint applications with small region size, I agree the=
+re are
+absolutely no issues (also confirmed by our experiments). But for large foo=
+tprint
+applications (1TB+) that can have large regions (50GB+) we see these issues=
+.
+
+>=20
+> To detect if the region is hot or cold, DAMON continues sampling multiple=
+ times
+> and use number of sampling intervals that seen the access to the region
+> (nr_accesses) as the relative hotness of the region.  Hence, how many sam=
+pling is
+> required depends on what precision of the relative hotness the user wants=
+.
+> The size of the region doesn't matter here.
+>=20
+> Am I missing something?
+
+As mentioned before all these are working fine for small footprint applicat=
+ions (<100GB).
+But as we go beyond 1TB footprint we start seeing issues. I can show you a =
+demo
+on 1TB+ footprint applications.
+
+>=20
+> >
+> > If we sample at 5ms, this takes 131.072 seconds to cover 1% of 10GB
+> > and 1310.72 seconds to cover 100GB.
+> >
+> > DAMON shows that the selected page as accessed if that page was
+> > accessed during the 5ms sampling window. Now if we increase the
+> > sampling to 20ms to improve access detection, then covering 1% of the r=
+egion
+> takes even longer.
+> >
+> > >
+> > > > Increasing sampling to 1 ms and aggregation to 1 second can only
+> > > > cover
+> > > > 1000 4K pages, but results in higher CPU overheads due to frequent
+> sampling.
+> > > > Even increasing the aggregation interval to 60 seconds but
+> > > > sampling at 5ms can only cover 12000 samples, but region splitting
+> > > > and merging happens once in 60 seconds.
+> > >
+> > > At the beginning of each sampling interval, DAMON randomly picks one
+> > > page per region, clear their accessed bits, wait until the sampling
+> > > interval is finished, and check the accessed bits again.  In other
+> > > words, DAMON shows only accesses that made in last sampling interval.
+> >
+> > Yes, I see this in the code:
+> >
+> > while(time < aggregation_interval)
+> > {
+> >   clear_access_bit
+> >   sleep(sampling_time)
+> >   check_access_bit
+> > }
+> >
+> > I would suggest this logic instead.
+> >
+> > while(time < aggregation_interval)
+> > {
+> >   Number_of_samples =3D aggregation_interval / sampling_time;
+> >
+> >   for (i =3D 0, I < number_of_samples; i++)
+> >   {
+> >     clear_access_bit
+> >   }
+> >
+> >   sleep(aggregation_time)
+> >
+> >   for (i =3D 0, I < number_of_samples; i++)
+> >   {
+> >     check_access_bit
+> >   }
+> > }
+> >
+> > This can help in better access detection. I am sure you would
+> > have already explored it.
+>=20
+> The way to detect the access in the region is implemented by each monitor=
+ing
+> operations set (vaddr, fvaddr, and paddr).  We could implement yet anothe=
+r
+> monitoring operations set with a new access detection method.  Nonetheles=
+s, I
+> think changing existing monitoring operations sets to use this suggestion=
+ while
+> keeping their concepts would be not easy.
+
+Agree.
+
+>=20
+> >
+> > >
+> > > Increasing number of samples per aggregation interval can help DAMON
+> > > knows the access frequency of regions in finer granularity, but
+> > > doesn't allow DAMON see more accesses.  Rather than that, if the
+> > > aggregation interval is fixed (reducing sampling interval), DAMON can=
+ show
+> even less amount of accesses.
+> > >
+> > > What we need here is giving the workload longer sampling time so
+> > > that the workload can make access to a size of memory regions that
+> > > large enough to be found by DAMON.
+> >
+> > But even with longer sampling time, we may miss the access. For
+> > example, consider all the pages in the region are accessed
+> > sequentially. Now if DAMON samples a different page other than the
+> > page that is being accessed it will miss. Now even if we have longer sa=
+mpling
+> time it is possible that none of the accesses are detected.
+>=20
+> If there was accesses to some pages of the region but unaccessed page has
+> picked as the sampling target, someone could say only a tiny portion of t=
+he region
+> is accessed, so we can treat the region as not accessed at all.  That's a=
+t least what
+> the monitoring operations set you use here ('vaddr') thinks.
+>=20
+> [...]
+> > > Also, if we can allow large enough age, the random region split will
+> > > eventually find the small hot regions even without high level
+> > > accessed bit hint.  Of course the hint could help finding it
+> > > earlier.  I think that was one of my comment on the first version of =
+this patch.
+> >
+> > The problem is that a large region that is split is immediately merged
+> > as the split regions have access count zero.
+> >
+> > We observe that large regions are never getting split at all due to thi=
+s.
+>=20
+> I understand this is a valid concern.  Especially because we currently sp=
+lit each
+> region into two sub-regions, finding small hot memory region in the middl=
+e of a
+> huge region could be challenging.  This concern has raised before DAMON h=
+as
+> merged into the mainline by Jonathan Cameron.  There was also a research =
+from
+> my previous colleague saying incresing the sub-regions for each split imp=
+roves the
+> accuracy.  Nonetheless, it increases overall number of regions and hence
+> increased the overhead.  And we didn't get real issue due to this from th=
+e
+> production so far, so we still keeping the old behavior.  I'm thinking ab=
+out a way to
+> make this better.
+
+These issues are observed only when memory footprint is large enough (1TB+)=
+.
+Production systems may not be using such large footprint applications yet. =
+=20
+
+>=20
+> That said, the real system would have more than the single region, and th=
+e access
+> pattern will be more dynamic.  It will cause the region to be merged and =
+split in
+> more random and chaotic way.  Hence I think there is still a chance to fi=
+nd the
+> small hot portion eventually.  Also, the sampling regions are picked rand=
+omly.  A
+> page of the small hot portion will eventually picked as sampling target, =
+even
+> multiple times, and at least reset the 'age' of the region.
+>=20
+> I sometimes turn on DAMON to monitor entire physical address space (about=
+ 128
+> GiB) of my machine and run no active workload but just a few background
+> deamons.  So the system would have only small amount of accesses.  At the
+> beginning, the monitoring output shows all regions as not accessed (nr_ac=
+cesses
+> 0) and having same 'age'.  But as time goes by, the regions are still sho=
+wing no
+> access (nr_accesses 0), but different ages and sizes.
+
+Have not tired with physical address space monitoring. But for "vaddr", we =
+see DAMON
+working good up to 100GB footprint.=20
+
+>=20
+> Again, I'm not saying existing monitoring mechanism is perfect and optimu=
+m.  We
+> should continue optimizing it.  Nonetheless, the current accuracy is not =
+perfectly
+> proved to be too awful to be used in real world.  I know at least a few u=
+nnamed
+> production usages of DAMON, and they didn't complained about DAMON's
+> accuracy so far.
+
+We see this problem very consistently on large footprint applications, so c=
+ould be
+working fine for small footprint applications in production.
+
+Regards,
+Aravinda
+
+
+>=20
+>=20
+> Thanks,
+> SJ
+>=20
+> >
+> > Regards,
+> > Aravinda
+> [...]
