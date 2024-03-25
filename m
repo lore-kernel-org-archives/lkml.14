@@ -1,135 +1,215 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EA413440C;
-	Mon, 25 Mar 2024 10:29:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C7413CA9B;
+	Mon, 25 Mar 2024 10:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711362564; cv=none; b=WaY1CPo/7TjAfCxFSPLXQRqKmnTyRHCqQxt2C+F0Y1W/8XxMrA4UFyp2+WyoxtbFtJiU0YAZNMsKp3A2tRo0d3QRyOqDAP/0QdZ1rNe0PUh5ulz4nqB0xv4tiLrkULPG6nUYfF11FQ44E17BPzT9CcWvsQ3noAo8HMYBEhgaqnk=
+	t=1711362567; cv=none; b=XsKXv0ESWf0DhUgVxTQQ8RSvoz4TCnKyWPGVAapJc/HVeCwX8Fn81hN6WB2BeveB9pv4OIaWEI0ECwGtzOqFYO7eb+ldLozG8sOlCwFZjQGMA/ZIBHBG5JRtRPApRD3o4+biMnY2OclwpLWo/f2uTHOTphtxjV5KnRIrfW9Rn7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711362564; c=relaxed/simple;
-	bh=gTC5jGrpIUy8wNswYDJ4xgk17WjevtxRNJPN9INO5ao=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=usERvIha1rtLu6bSUdw20dQkRM8piuPnwRWpNeNV3j0EmqoOpT8MOb2ujqHw24g92OX7t0Hi0ZY+GC87gkcPTE2PaBd4vTfJR76r+ImZxVLAocYO5DrnU4krAfMC1VQJq/yfyxXCq61scZvRTjI6N7w23khUlIFZen8h4pclh64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GxgGfHpH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1XajBnTq; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1711362567; c=relaxed/simple;
+	bh=AEkgv8xYLM1Y6P5xl+hZbNb+Us9X3rjZQ/skIPmLP8U=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=C/S5eO4Br0OVirDY3c3D0pVP5pRCLGOPZSQrqc8yV76r6Vd+iKeg6lZMZZz9NiB0dpVqJwl8+oDUubtLaextxk7aG5uBWFfBnUXGy8Pof5pO7u4jdAUtSl2OSiPBIdXTR/gcdybMGAGhMpfxuxkqEOr7mbkrls6nDm5E220XGi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l0/ZyBh7; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GxgGfHpH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1XajBnTq"
-Date: Mon, 25 Mar 2024 10:29:20 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1711362561;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7vZ9Pt18MQOXZEKO7ljPdhQHodQ8rsIEpEa+kYXBOhk=;
-	b=GxgGfHpHRsfc1f0bNi6ddL4b+nT0ha2v1BKmXZ0/X2N7nRGShP3N4CRiHDrcyOyiBopgjw
-	0Cf5CJ5Ri0P04k2Z2wx2S+E7Fx53DyTQNgTe8HcsTW3aYw14rtCdbFaCicmXYCMHYQUoU5
-	ih8xoT0RlcD3o6K6D3w29twSVnKTVBboXgQlBtTfXCXVvZkGduKqFrioO4ZcxnCPUyR+RF
-	/SjF1e0QQaVUR1aJRY579XHPcluAUzM1ymfYF8ExfgaF8As2/n0vxx5ULHLL+x3mFHigts
-	u+8/3kY/s0EjXnhtDb1+UVtL8DY5g+GCW+AWv3ZB0e7lQIknDanHWYHUiTH1UA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1711362561;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7vZ9Pt18MQOXZEKO7ljPdhQHodQ8rsIEpEa+kYXBOhk=;
-	b=1XajBnTq47HxF+FfrCBY5Rntk+Zj1o2kxPbUoOTe49x1WU4JP3zapg1Dm6UP/6BggkSN4u
-	WQhNcvttUAjgzGAQ==
-From: "tip-bot2 for Sandipan Das" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/x86/amd/core: Update and fix stalled-cycles-*
- events for Zen 2 and later
-Cc: Sandipan Das <sandipan.das@amd.com>, Ingo Molnar <mingo@kernel.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3C03d7fc8fa2a28f9be732116009025bdec1b3ec97=2E17113?=
- =?utf-8?q?52180=2Egit=2Esandipan=2Edas=40amd=2Ecom=3E?=
-References: =?utf-8?q?=3C03d7fc8fa2a28f9be732116009025bdec1b3ec97=2E171135?=
- =?utf-8?q?2180=2Egit=2Esandipan=2Edas=40amd=2Ecom=3E?=
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l0/ZyBh7"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-33fd8a2a407so2859851f8f.2;
+        Mon, 25 Mar 2024 03:29:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711362564; x=1711967364; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/EabZCAmYyC9fAriiA6X6yV4dOCGsBHE168qYS8MPOw=;
+        b=l0/ZyBh7p69zKfiQXj5yQB8I3ks5k37fVDejAv2n3p8U3KCtNlcwZV0vsZZIpU9Qii
+         NsCKIqRkhBdoJ8FSdlE57MLvAxj9UAly2XLQ7gAgimjRmoRCfh7g05g1iwlIz1TTkccL
+         rwUIhdyQ5uA1pjEiJ9TwGJHK0Druatk6bqkbRx4Axa3HiXY0YXhRMa/XN2PDS7ZyNUBi
+         +xLEoN5NSKlzA+LP6T16n2bWNuhH5BfBkHv6FSrJ/y8dCaBLeluWI5bYuaoVpkMV6fYO
+         GAac2+po/HF+u56WJlnI5SazQyhoEkeh0d8lRf1726MlY7enZC4kJhaP8Qdu0bokWNCW
+         Xz8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711362564; x=1711967364;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/EabZCAmYyC9fAriiA6X6yV4dOCGsBHE168qYS8MPOw=;
+        b=jbpmtDfUHGNkit735fRqUeVm8ouUUqe4UNppFG/2ppE6Nli5V2DGzdI0R4uq4UKlIg
+         DTLvY90QN7oidoP9E2vQ/fBqvzg9qAt6IItfCqlI8Yzrwm0ifVuvwM2vY6KRT78zeyp5
+         liMAHqXACWJDGmc3sylm2iKWfbuxIhTHIrq0VTvM5+Ge1zn4HhD7Z8UW3IQVCec6+OSu
+         Ega8ZYH4bfDCNSfHIYZzg0aitTpuN7Fm0aQuODVTKvlXygujEGfitLWL0956NBYxD+Ro
+         cuUabEQb1XjL6TBqKQdMC6ehQqBoyQew4bCUwCJPRfgCiBm3i4w27pZ7sQKWr+hd0E7x
+         uqwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUeQSyE4BL3dGFIK4MjBTNUOa1VfQaJM6swXXFQbVlOIoH96hgyRWnhWmUz+QFrVsN29uN2E3zlCJuzX2wviM/h18Gky27IACdBw2cOCDuXy1fUis6+/xWlDre6RtQ8pKvB6VrEcXTVW+UZ3UuVkqtfwSmr+3nOHDc8YL2fmiZGBfLUQkcfKNLp
+X-Gm-Message-State: AOJu0YxqGR0dXJvCJwOpylGYhyAXB2famobQDn5B5HRW++RMH84qnyDF
+	hpIhSjSB+DJID4NGPEYvF7D+Nc4an0mm/w8ckOQ4DGc7qSjHqw35
+X-Google-Smtp-Source: AGHT+IHDRQtDBPVN8brfP95hrTujHwNSjvul/4icsvx7yeQ+rsK+oMsiwfTb58zn6GWAZqknh/CD3A==
+X-Received: by 2002:adf:e94a:0:b0:33e:d470:da8f with SMTP id m10-20020adfe94a000000b0033ed470da8fmr3937861wrn.17.1711362564039;
+        Mon, 25 Mar 2024 03:29:24 -0700 (PDT)
+Received: from localhost.localdomain (91-83-10-45.pool.digikabel.hu. [91.83.10.45])
+        by smtp.gmail.com with ESMTPSA id bq22-20020a5d5a16000000b00341d0458950sm1394958wrb.15.2024.03.25.03.29.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 03:29:23 -0700 (PDT)
+From: Balazs Scheidler <bazsi77@gmail.com>
+X-Google-Original-From: Balazs Scheidler <balazs.scheidler@axoflow.com>
+To: kerneljasonxing@gmail.com,
+	kuniyu@amazon.com,
+	netdev@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Eric Dumazet <edumazet@google.com>
+Cc: Balazs Scheidler <balazs.scheidler@axoflow.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH net-next v3 1/2] net: port TP_STORE_ADDR_PORTS_SKB macro to be tcp/udp independent
+Date: Mon, 25 Mar 2024 11:29:17 +0100
+Message-Id: <394f9d55197681e910d104dbd35e62fb4098712b.1711361723.git.balazs.scheidler@axoflow.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <cover.1711361723.git.balazs.scheidler@axoflow.com>
+References: <cover.1711361723.git.balazs.scheidler@axoflow.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171136256064.10875.16163303893503887112.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the perf/urgent branch of tip:
+This patch moves TP_STORE_ADDR_PORTS_SKB() to a common header and removes
+the TCP specific implementation details.
 
-Commit-ID:     2a3da5fe10731ca6ccb396b29be612faee76fb69
-Gitweb:        https://git.kernel.org/tip/2a3da5fe10731ca6ccb396b29be612faee76fb69
-Author:        Sandipan Das <sandipan.das@amd.com>
-AuthorDate:    Mon, 25 Mar 2024 13:17:53 +05:30
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 25 Mar 2024 11:19:03 +01:00
+Previously the macro assumed the skb passed as an argument is a
+TCP packet, the implementation now uses an argument to the L4 header and
+uses that to extract the source/destination ports, which happen
+to be named the same in "struct tcphdr" and "struct udphdr"
 
-perf/x86/amd/core: Update and fix stalled-cycles-* events for Zen 2 and later
-
-AMD processors based on Zen 2 and later microarchitectures do not
-support PMCx087 (instruction pipe stalls) which is used as the backing
-event for "stalled-cycles-frontend" and "stalled-cycles-backend".
-
-Use PMCx0A9 (cycles where micro-op queue is empty) instead to count
-frontend stalls and remove the entry for backend stalls since there
-is no direct replacement.
-
-Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/03d7fc8fa2a28f9be732116009025bdec1b3ec97.1711352180.git.sandipan.das@amd.com
+Signed-off-by: Balazs Scheidler <balazs.scheidler@axoflow.com>
 ---
- arch/x86/events/amd/core.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ include/trace/events/net_probe_common.h | 41 ++++++++++++++++++++++
+ include/trace/events/tcp.h              | 45 ++-----------------------
+ 2 files changed, 43 insertions(+), 43 deletions(-)
 
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 5692e82..af8add6 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -250,7 +250,7 @@ static const u64 amd_perfmon_event_map[PERF_COUNT_HW_MAX] =
+diff --git a/include/trace/events/net_probe_common.h b/include/trace/events/net_probe_common.h
+index 3930119cab08..50c083b5687d 100644
+--- a/include/trace/events/net_probe_common.h
++++ b/include/trace/events/net_probe_common.h
+@@ -41,4 +41,45 @@
+ 
+ #endif
+ 
++#define TP_STORE_ADDR_PORTS_SKB_V4(__entry, skb, protoh)		\
++	do {								\
++		struct sockaddr_in *v4 = (void *)__entry->saddr;	\
++									\
++		v4->sin_family = AF_INET;				\
++		v4->sin_port = protoh->source;				\
++		v4->sin_addr.s_addr = ip_hdr(skb)->saddr;		\
++		v4 = (void *)__entry->daddr;				\
++		v4->sin_family = AF_INET;				\
++		v4->sin_port = protoh->dest;				\
++		v4->sin_addr.s_addr = ip_hdr(skb)->daddr;		\
++	} while (0)
++
++#if IS_ENABLED(CONFIG_IPV6)
++
++#define TP_STORE_ADDR_PORTS_SKB(__entry, skb, protoh)			\
++	do {								\
++		const struct iphdr *iph = ip_hdr(skb);			\
++									\
++		if (iph->version == 6) {				\
++			struct sockaddr_in6 *v6 = (void *)__entry->saddr; \
++									\
++			v6->sin6_family = AF_INET6;			\
++			v6->sin6_port = protoh->source;			\
++			v6->sin6_addr = ipv6_hdr(skb)->saddr;		\
++			v6 = (void *)__entry->daddr;			\
++			v6->sin6_family = AF_INET6;			\
++			v6->sin6_port = protoh->dest;			\
++			v6->sin6_addr = ipv6_hdr(skb)->daddr;		\
++		} else							\
++			TP_STORE_ADDR_PORTS_SKB_V4(__entry, skb, protoh); \
++	} while (0)
++
++#else
++
++#define TP_STORE_ADDR_PORTS_SKB(__entry, skb, protoh)		\
++	TP_STORE_ADDR_PORTS_SKB_V4(__entry, skb, protoh)
++
++#endif
++
++
+ #endif
+diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+index 699dafd204ea..5f19c5c6cda8 100644
+--- a/include/trace/events/tcp.h
++++ b/include/trace/events/tcp.h
+@@ -302,48 +302,6 @@ TRACE_EVENT(tcp_probe,
+ 		  __entry->skbaddr, __entry->skaddr)
+ );
+ 
+-#define TP_STORE_ADDR_PORTS_SKB_V4(__entry, skb)			\
+-	do {								\
+-		const struct tcphdr *th = (const struct tcphdr *)skb->data; \
+-		struct sockaddr_in *v4 = (void *)__entry->saddr;	\
+-									\
+-		v4->sin_family = AF_INET;				\
+-		v4->sin_port = th->source;				\
+-		v4->sin_addr.s_addr = ip_hdr(skb)->saddr;		\
+-		v4 = (void *)__entry->daddr;				\
+-		v4->sin_family = AF_INET;				\
+-		v4->sin_port = th->dest;				\
+-		v4->sin_addr.s_addr = ip_hdr(skb)->daddr;		\
+-	} while (0)
+-
+-#if IS_ENABLED(CONFIG_IPV6)
+-
+-#define TP_STORE_ADDR_PORTS_SKB(__entry, skb)				\
+-	do {								\
+-		const struct iphdr *iph = ip_hdr(skb);			\
+-									\
+-		if (iph->version == 6) {				\
+-			const struct tcphdr *th = (const struct tcphdr *)skb->data; \
+-			struct sockaddr_in6 *v6 = (void *)__entry->saddr; \
+-									\
+-			v6->sin6_family = AF_INET6;			\
+-			v6->sin6_port = th->source;			\
+-			v6->sin6_addr = ipv6_hdr(skb)->saddr;		\
+-			v6 = (void *)__entry->daddr;			\
+-			v6->sin6_family = AF_INET6;			\
+-			v6->sin6_port = th->dest;			\
+-			v6->sin6_addr = ipv6_hdr(skb)->daddr;		\
+-		} else							\
+-			TP_STORE_ADDR_PORTS_SKB_V4(__entry, skb);	\
+-	} while (0)
+-
+-#else
+-
+-#define TP_STORE_ADDR_PORTS_SKB(__entry, skb)		\
+-	TP_STORE_ADDR_PORTS_SKB_V4(__entry, skb)
+-
+-#endif
+-
  /*
-  * AMD Performance Monitor Family 17h and later:
+  * tcp event with only skb
   */
--static const u64 amd_f17h_perfmon_event_map[PERF_COUNT_HW_MAX] =
-+static const u64 amd_zen1_perfmon_event_map[PERF_COUNT_HW_MAX] =
- {
- 	[PERF_COUNT_HW_CPU_CYCLES]		= 0x0076,
- 	[PERF_COUNT_HW_INSTRUCTIONS]		= 0x00c0,
-@@ -262,10 +262,24 @@ static const u64 amd_f17h_perfmon_event_map[PERF_COUNT_HW_MAX] =
- 	[PERF_COUNT_HW_STALLED_CYCLES_BACKEND]	= 0x0187,
- };
+@@ -360,12 +318,13 @@ DECLARE_EVENT_CLASS(tcp_event_skb,
+ 	),
  
-+static const u64 amd_zen2_perfmon_event_map[PERF_COUNT_HW_MAX] =
-+{
-+	[PERF_COUNT_HW_CPU_CYCLES]		= 0x0076,
-+	[PERF_COUNT_HW_INSTRUCTIONS]		= 0x00c0,
-+	[PERF_COUNT_HW_CACHE_REFERENCES]	= 0xff60,
-+	[PERF_COUNT_HW_CACHE_MISSES]		= 0x0964,
-+	[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= 0x00c2,
-+	[PERF_COUNT_HW_BRANCH_MISSES]		= 0x00c3,
-+	[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= 0x00a9,
-+};
-+
- static u64 amd_pmu_event_map(int hw_event)
- {
--	if (boot_cpu_data.x86 >= 0x17)
--		return amd_f17h_perfmon_event_map[hw_event];
-+	if (cpu_feature_enabled(X86_FEATURE_ZEN2) || boot_cpu_data.x86 >= 0x19)
-+		return amd_zen2_perfmon_event_map[hw_event];
-+
-+	if (cpu_feature_enabled(X86_FEATURE_ZEN1))
-+		return amd_zen1_perfmon_event_map[hw_event];
+ 	TP_fast_assign(
++		const struct tcphdr *th = (const struct tcphdr *)skb->data;
+ 		__entry->skbaddr = skb;
  
- 	return amd_perfmon_event_map[hw_event];
- }
+ 		memset(__entry->saddr, 0, sizeof(struct sockaddr_in6));
+ 		memset(__entry->daddr, 0, sizeof(struct sockaddr_in6));
+ 
+-		TP_STORE_ADDR_PORTS_SKB(__entry, skb);
++		TP_STORE_ADDR_PORTS_SKB(__entry, skb, th);
+ 	),
+ 
+ 	TP_printk("skbaddr=%p src=%pISpc dest=%pISpc",
+-- 
+2.40.1
+
