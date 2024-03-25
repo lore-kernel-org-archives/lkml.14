@@ -1,100 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5107315ECC1
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FC71BDCE
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711339091; cv=none; b=g0mjMZK1ZYCTyhs5Vb3L4rR9SchP7gV3Gy0B6DieBVfrRyY4HLBPS2SicENjuZK9ro+oAOGVVwr1GG1KNq9kHnXSfuoXrNpVig5OJ17JZgbi+1PGB2nJ2S1YvNx0olXrufCH7Y8RGeQOBvwH81xsayqaEdZVqyb1pUZRPcMeebM=
+	t=1711339197; cv=none; b=rujyHcQr9cDqzgu2lDMETKU9gfyLpq1ps64IhV9zVFUpQ///hoPE6Xgzg5buHUqP4lRaIjiG6O6rv0mzGRMv299bOoQVeF1r9GMOy6BwEfjw9qDCcBm3RiiNjgu544wfHT9KHC5d/S6/Zcr72w1BOk25ToBePA5yBVQaa4sp6qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711339091; c=relaxed/simple;
-	bh=qmHtWDM22Y7Pif9OF/b0d7AyT0SLY8IGS1SO0qYxiss=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=O7VloOFY09XTYr/xaAgw0N/7bLxi/7Y0g7O1CrLfRECqxOTgJpHcDAzVmjKNdscrFgf3629ZX0tPmJgXEfLx/Lu+35W9QBMv9azFBaYgaUgs+fFYoDw0Fkv+KtdbPxASaADwuGjqe8RIQsKi2mGcBnjw7b+XEnOc2rsBc1Laefs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W+I63U7l; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1711339197; c=relaxed/simple;
+	bh=mZBZAdxK2BxmYNtPI0ZDmEsamY0wcrZvwum+qSOABcw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JVfuCLItmHGFUuULI7YmFElz5DCIp81w3RBgGwc93EBegd8h+mPScULgDYftIbmtmdnXVPsYEjaX87P4wVAHpr9d8I2Rk5Htl9qpTrI4qsZezxCNDxK+dJWWguMK56Ceb8z4q1hTiLN/oQy9exuhnARFsGpEE+wBliN0A7BJE1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=gAf7kALX; arc=none smtp.client-ip=209.85.160.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W+I63U7l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711339090; x=1742875090;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qmHtWDM22Y7Pif9OF/b0d7AyT0SLY8IGS1SO0qYxiss=;
-  b=W+I63U7l/Xf48kqbhgMmcDLBCpOjAnZkJZldJERZZ+DjH3mRsFoNyA6F
-   G4ScFR1SrBpFv3g4GXNWB76ZjRqHmAJHrvvdJa3Q7x9ZqmdImB8qoHrIn
-   xn92vL7d6x35LVblpNWVt7lj1+sI+2e9DKHHUhgb5kH2CvnoLnXLRRbqB
-   3LQO47ib6O+J/xKHtW3TRa7CFWzEC2De8w0FLeeNh4L54WS4S1eyN5anp
-   j5pnbSS0iqPDVH7+LMrad2VosuhbbJwmNfMNPvQAe/Vp9dUl1HvFj7mwf
-   Ahjud2u0hL75pGZ2ObC19i/i1bDFFvTDdwi1J/qEsR808IHoPD6uRHRMG
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="10094402"
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="10094402"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 20:58:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="16147457"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
-  by orviesa008.jf.intel.com with ESMTP; 24 Mar 2024 20:58:06 -0700
-Message-ID: <2ddd01fb-ec7d-4a7e-984b-31da78211f91@linux.intel.com>
-Date: Mon, 25 Mar 2024 11:57:15 +0800
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="gAf7kALX"
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2220a3b3871so2017428fac.2
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Mar 2024 20:59:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1711339194; x=1711943994; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mZBZAdxK2BxmYNtPI0ZDmEsamY0wcrZvwum+qSOABcw=;
+        b=gAf7kALXYbYezUJ82yd7B1vTXXvWvixkWeOx0ACF5Bp74UXwTalSKVSeU9Df8pUUxc
+         mGgqEhSLSfX6LJnPGsDVTBlPjePzfmqLpJ1paWNPl9v8M1CA6fUO6B0TG3tPbYUP8k3R
+         /CescorFC6Zqmb1LbDypR3l1yXndoLa17W1Ap1wjO/jws6X1OPqggyfb+RoAf+rWqbbm
+         HBHSdcEd2W6SbK7PfbvuLyhvaTso6DbYVXzoqM8ZWakDtfQjoV/2LNmQdGjgi+ZDJGDa
+         qbOre32VVVo7JS+UbF8baU4muBV21AQ3fN35rVoX7TY2p0rwu0uTw15f6Mdhru4MfXay
+         wSFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711339194; x=1711943994;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mZBZAdxK2BxmYNtPI0ZDmEsamY0wcrZvwum+qSOABcw=;
+        b=WTIwzAVH0tpu0mGFZUD6kr1IihA2BFzXFNLYhxlNIoCOFmoJhmfY4f5zKQkPdEZXMC
+         iiWdvjUd99EJ+oxQw6nEtWk6jxdN5KqF9ooAXv+XvsSXylc8yK+uR+ZzGGTuA71AGLho
+         9bDvkV8uEVJOXs9sqgyk8FsEkysimsPBMoWWvHj7dw5bwC85afkakMkn7VGoFxpggPcm
+         oPN3U13J7y9LaKwQc0vkLShdyDn6RWAcvGsddSk3dGDqnOE3LT2qpyCNmN5zcJcF/Jl7
+         gBiPnpaESWj5ZyJrFW44IC5n1dPA8lR7ZMzztyXbETOQO9yyOOEi8Lj0sJR+K3DDtgDU
+         ufCw==
+X-Forwarded-Encrypted: i=1; AJvYcCXrocUeTrGeiw72QjAcGRLBy20SHMBA14FX0b0t4lYk2OrJT4BQpDArb4P4c5QGRSDSpSbWnH7OauJL6GCpjyyoiJWj0xnoHbCXLZiV
+X-Gm-Message-State: AOJu0YxNy8S25Whebp4Kt0lG1GdfYBIzZ+IuKvuPLYlB0WITwLci5h5r
+	gq4QdgmomNJ4rjfG3CEBcHSGAvNpV7St8hMyk5mfGxQMnNrzROl/K6qxDY+HhyvNDWu1LvDgjTa
+	tA9JopGo5yLPtOjyopUy+TatJKJZGtMUVb72iFw==
+X-Google-Smtp-Source: AGHT+IEvSLOPrvBORb15O7t5WcFvLwtHwr21gOwWhl6ba83FG95/dPss8gUWkSUuH/IqNj/BJ12lEoHWHOFQw32Yq0c=
+X-Received: by 2002:a05:6870:c69e:b0:221:9442:4d58 with SMTP id
+ cv30-20020a056870c69e00b0022194424d58mr6705190oab.28.1711339194101; Sun, 24
+ Mar 2024 20:59:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, Kevin Tian <kevin.tian@intel.com>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Nicolin Chen <nicolinc@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
- Jacob Pan <jacob.jun.pan@linux.intel.com>,
- Joel Granados <j.granados@samsung.com>, iommu@lists.linux.dev,
- virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/8] iommufd: Add fault and response message
- definitions
-Content-Language: en-US
-To: Jason Gunthorpe <jgg@ziepe.ca>
-References: <20240122073903.24406-1-baolu.lu@linux.intel.com>
- <20240122073903.24406-4-baolu.lu@linux.intel.com>
- <20240308175007.GW9225@ziepe.ca>
- <43ef5e3f-8a8e-4765-8025-b8207fd05f91@linux.intel.com>
- <20240322170410.GH66976@ziepe.ca>
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20240322170410.GH66976@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240322112629.68170-1-alexghiti@rivosinc.com>
+ <20240323062625.2488-1-dqfext@gmail.com> <CAHVXubisa6HQJDbj_GfjwhP1Y4as0DzrxsU0B7N6DSU6HZNaaw@mail.gmail.com>
+In-Reply-To: <CAHVXubisa6HQJDbj_GfjwhP1Y4as0DzrxsU0B7N6DSU6HZNaaw@mail.gmail.com>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Mon, 25 Mar 2024 11:59:43 +0800
+Message-ID: <CAEEQ3w=mXXTwxph+_ttBLQhvNb66bq9b6Wo-Ka35qpp+3iq2JQ@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] riscv: Improve sbi_ecall() code generation
+ by reordering arguments
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: Qingfang Deng <dqfext@gmail.com>, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, palmer@dabbelt.com, paul.walmsley@sifive.com, 
+	samuel.holland@sifive.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/23/24 1:04 AM, Jason Gunthorpe wrote:
->>>> +struct iommu_hwpt_pgfault {
->>>> +	__u32 size;
->>>> +	__u32 flags;
->>>> +	__u32 dev_id;
->>>> +	__u32 pasid;
->>>> +	__u32 grpid;
->>>> +	__u32 perm;
->>>> +	__u64 addr;
->>>> +};
->>> Do we need an addr + size here? I've seen a few things where I wonder
->>> if that might become an enhancment someday.
->> I am not sure. The page size is not part of ATS/PRI. Can you please
->> elaborate a bit about how the size could be used? Perhaps I
->> misunderstood here?
-> size would be an advice how much data the requestor is expecting to
-> fetch. Eg of the PRI initiator knows it is going to do a 10MB transfer
-> it could fill in 10MB and the OS could pre-fault in 10MB of IOVA.
-> 
-> It is not in the spec, it may never be in the spec, but it seems like
-> it would be good to consider it, at least make sure we have
-> compatability to add it later.
+Hi Alex,
 
-Thanks for the explanation. It sounds reasonable. I will take it and add
-some comments to explain the motivation as you described above.
+On Mon, Mar 25, 2024 at 2:20=E2=80=AFAM Alexandre Ghiti <alexghiti@rivosinc=
+.com> wrote:
+>
+> Hi Qingfang,
+>
+> On Sat, Mar 23, 2024 at 7:26=E2=80=AFAM Qingfang Deng <dqfext@gmail.com> =
+wrote:
+> >
+> > Hi Alexandre,
+> >
+> > You can simply make sbi_ecall `__always_inline`, so the C function call
+> > overhead can be fully avoided.
+>
+> I understand your point, though I don't think we need to mark
+> sbi_ecall() as inline, it's not in any hot path so it's not worth it.
+> This patch simply gets rid of a really useless overhead, but it does
+> not visibly accelerate anything.
+>
+> I hope it makes sense,
+>
+> Thanks,
+>
+> Alex
+>
 
-Best regards,
-baolu
+The compiler will have inline size restrictions, so I agree with the
+modification of this patch instead of inline.
+Please refer to:
+https://github.com/gcc-mirror/gcc/blob/master/gcc/common.opt,
+"finline-limit-"
+
+So=EF=BC=9A
+Reviewed-by: Yunhui Cui <cuiyunhui@bytedance.com>
+
+Thanks,
+Yunhui
