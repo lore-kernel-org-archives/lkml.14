@@ -1,300 +1,98 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 218295337A;
-	Mon, 25 Mar 2024 09:28:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1975F16E887
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:30:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711358923; cv=none; b=SGkqu4o96bHHaENrB7KtijCjhORZrNtRhP9dqrKSlfdrYvBBBV1ZuD6eK7hKHjA60q8eaTvtsaX80hVGAtd1TjFOeXCVT+qaPJsTr2ybzh9jPdM5LBcQCNlS7Gs8j2GozFFt1bq/RMNZCmEFHRYF1Sd61VBbEmHBoZCKrr/Il5M=
+	t=1711359060; cv=none; b=jdnbYfIPmOpcS/3kAnjf3MFnFH07e3cfaqYjSqlpZcqljNkfOkm8Be/avEDUHT1/gFe5zWuRXJYpODmmtUZpZKF0bz/exU6zsRmZ0xEL38nL0/dYkDmBNTYssBvsrOJStVYqlMjFAxiLLCszBtnBY5kTl30mrR0ryPnxJL5pu2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711358923; c=relaxed/simple;
-	bh=OERgWYB/8xrlV5OnnF7RCm35ipr42SeIYL0Y/UOQ8nw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hzKeCyl7MYkCDlD4v4HC70Btzo4bGWrtrmG70vU8nMaRqZ5KVD1P0kD2km7ltynXAPRO3EkT6CkycaGVRRg3jmtzxGVcK95ZAvxOp9spaRGV5c6EJdrjeirNSPCJpG9PwMzVCmxXmEQBZfsx76PC6Idif7A3Ub+zYItQZ3qDYNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 29E94C15;
-	Mon, 25 Mar 2024 02:29:14 -0700 (PDT)
-Received: from e120937-lin.. (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D4DEF3F64C;
-	Mon, 25 Mar 2024 02:28:38 -0700 (PDT)
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org
-Cc: sudeep.holla@arm.com,
-	cristian.marussi@arm.com,
-	jassisinghbrar@gmail.com,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org
-Subject: [PATCH 1/2] dt-bindings: mailbox: arm,mhuv3: Add bindings
-Date: Mon, 25 Mar 2024 09:28:07 +0000
-Message-Id: <20240325092808.117510-2-cristian.marussi@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240325092808.117510-1-cristian.marussi@arm.com>
-References: <20240325092808.117510-1-cristian.marussi@arm.com>
+	s=arc-20240116; t=1711359060; c=relaxed/simple;
+	bh=6MCJQoh3AEDiIGV9Lu8V8DTDxHy6tYRCy/3KwuPvlLw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=qr3CTa7jiOO+RkXp0SHgYitfoF6ZNKNEowGe2tkneRPVIwNUKPVh3lCvszejS/tfajMZh7Qa2a3NJ+etvgtRz4CgOAeLYcVSY2S5LcqWeKpXNLQPzL3tv0iQ2A5R6YOTaLziCMVdCp7wfUAyWWAHJ94g+sLzDr1WHvzcfJh1c5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-198-vdeQgxrwP92fV7WlkXqR2A-1; Mon, 25 Mar 2024 09:30:56 +0000
+X-MC-Unique: vdeQgxrwP92fV7WlkXqR2A-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 25 Mar
+ 2024 09:30:23 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Mon, 25 Mar 2024 09:30:23 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Alexandre Ghiti' <alex@ghiti.fr>, Samuel Holland
+	<samuel.holland@sifive.com>, Alexandre Ghiti <alexghiti@rivosinc.com>
+CC: Palmer Dabbelt <palmer@dabbelt.com>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, Albert Ou <aou@eecs.berkeley.edu>, "Andrew
+ Morton" <akpm@linux-foundation.org>, Charlie Jenkins <charlie@rivosinc.com>,
+	Guo Ren <guoren@kernel.org>, Jisheng Zhang <jszhang@kernel.org>, Kemeng Shi
+	<shikemeng@huaweicloud.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>, Paul Walmsley
+	<paul.walmsley@sifive.com>, Xiao Wang <xiao.w.wang@intel.com>, Yangyu Chen
+	<cyy@cyyself.name>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] riscv: Define TASK_SIZE_MAX for __access_ok()
+Thread-Topic: [PATCH] riscv: Define TASK_SIZE_MAX for __access_ok()
+Thread-Index: AQHaeh3F9DUQSIkEB0u5Xt52XMTyX7FHT0cAgADJJoCAAB400A==
+Date: Mon, 25 Mar 2024 09:30:23 +0000
+Message-ID: <5c027cbf6b8741e4a8147963b07a8ac4@AcuMS.aculab.com>
+References: <20240313180010.295747-1-samuel.holland@sifive.com>
+ <CAHVXubjLWZkjSapnsWJzimWg_2swEy7tQ-DQ6ri8yMk8-Qsc-A@mail.gmail.com>
+ <88de4a1a-047e-4be9-b5b0-3e53434dc022@sifive.com>
+ <b5624bba-9917-421b-8ef0-4515d442f80b@ghiti.fr>
+ <f786e02245424e02b38f55ae6b29d14a@AcuMS.aculab.com>
+ <d323eb10-c79b-49cb-94db-9b135e6fd280@ghiti.fr>
+In-Reply-To: <d323eb10-c79b-49cb-94db-9b135e6fd280@ghiti.fr>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-Add bindings for the ARM MHUv3 Mailbox controller.
-
-Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
----
- .../bindings/mailbox/arm,mhuv3.yaml           | 239 ++++++++++++++++++
- 1 file changed, 239 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/arm,mhuv3.yaml
-
-diff --git a/Documentation/devicetree/bindings/mailbox/arm,mhuv3.yaml b/Documentation/devicetree/bindings/mailbox/arm,mhuv3.yaml
-new file mode 100644
-index 000000000000..bfb8ec341d26
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/arm,mhuv3.yaml
-@@ -0,0 +1,239 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mailbox/arm,mhuv3.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ARM MHUv3 Mailbox Controller
-+
-+maintainers:
-+  - Sudeep Holla <sudeep.holla@arm.com>
-+  - Cristian Marussi <cristian.marussi@arm.com>
-+
-+description: |
-+  The Arm Message Handling Unit (MHU) Version 3 is a mailbox controller that
-+  enables unidirectional communications with remote processors through various
-+  possible transport protocols.
-+  The controller can optionally support a varying number of extensions that, in
-+  turn, enable different kinds of transport to be used for communication.
-+  Number, type and characteristics of each supported extension can be discovered
-+  dynamically at runtime.
-+
-+  Given the unidirectional nature of the controller, an MHUv3 mailbox controller
-+  is composed of a MHU Sender (MHUS) containing a PostBox (PBX) block and a MHU
-+  Receiver (MHUR) containing a MailBox (MBX) block, where
-+
-+   PBX is used to
-+      - Configure the MHU
-+      - Send Transfers to the Receiver
-+      - Optionally receive acknowledgment of a Transfer from the Receiver
-+
-+   MBX is used to
-+      - Configure the MHU
-+      - Receive Transfers from the Sender
-+      - Optionally acknowledge Transfers sent by the Sender
-+
-+  Both PBX and MBX need to be present and defined in the DT description if you
-+  need to establish a bidirectional communication, since you will have to
-+  acquire two distinct unidirectional channels, one for each block.
-+
-+  As a consequence both blocks needs to be represented separately and specified
-+  as distinct DT nodes in order to properly describe their resources.
-+
-+  Note that, though, thanks to the runtime discoverability, there is no need to
-+  identify the type of blocks with distinct compatibles.
-+
-+  Following are the MHUv3 possible extensions.
-+
-+  - Doorbell Extension (DBE): DBE defines a type of channel called a Doorbell
-+    Channel (DBCH). DBCH enables a single bit Transfer to be sent from the
-+    Sender to Receiver. The Transfer indicates that an event has occurred.
-+    When DBE is implemented, the number of DBCHs implemented is between 1 and
-+    128, numbered starting from 0 in ascending order.
-+    Each DBCH contains 32 individual fields, referred to as flags, each of which
-+    can be used independently. It is possible for the Sender to send multiple
-+    Transfers at once using a single DBCH, so long as each Transfer uses
-+    a different flag in the DBCH.
-+    Optionally, data may be transmitted through an out-of-band shared memory
-+    region, wherein the MHU Doorbell is used strictly as an interrupt generation
-+    mechanism, but this is out of the scope of these bindings.
-+
-+  - FastChannel Extension (FCE): FCE defines a type of channel called a Fast
-+    Channel (FCH). FCH is intended for lower overhead communication between
-+    Sender and Receiver at the expense of determinism. An FCH allows the Sender
-+    to update the channel value at any time, regardless of whether the previous
-+    value has been seen by the Receiver. When the Receiver reads the channel's
-+    content it gets the last value written to the channel.
-+    FCH is considered lossy in nature, and means that the Sender has no way of
-+    knowing if, or when, the Receiver will act on the Transfer.
-+    FCHs are expected to behave as RAM which generates interrupts when writes
-+    occur to the locations within the RAM.
-+    When FCE is implemented, the number of FCH that an implementation of the MHU
-+    can support is between 1-1024, if the Fast Channel word-size is 32-bits, or
-+    between 1-512, when the Fast Channel word-size is 64-bits.
-+    FCHs are numbered from 0 in ascending order.
-+    Note that Fast Channel word-size is implementation defined, not configurable
-+    but discoverable at run-time.
-+    Optionally, data may be transmitted through an out-of-band shared memory
-+    region, wherein the MHU FastChannel is used as an interrupt generation
-+    mechanism which carries also a pointer to such out-of-band data, but this
-+    is out of the scope of these bindings.
-+
-+  - FIFO Extension (FE): FE defines a Channel type called a FIFO Channel (FFCH).
-+    FFCH allows a Sender to send
-+       - Multiple Transfer to the Receiver without having to wait for a previous
-+         Transfer to be acknowledged by the Receiver, as long as the FIFO has
-+         room for the Transfer.
-+       - Transfers which require the Receiver to provide acknowledgment.
-+       - Transfers which have in-band payload.
-+    In all cases, the data is guaranteed to be observed by the Receiver in the
-+    same order which the Sender sent it.
-+    When FE is implemented, the number of FFCH an implementation of the MHU can
-+    support is between 1 and 64, numbered starting from the 0 in ascending
-+    order. The FIFO size is implementation defined and not configurable.
-+    Optionally, additional data may be transmitted through an out-of-band shared
-+    memory region, wherein the MHU FIFO is used to transmit, in order, a small
-+    part of the payload (like a header) and a reference to the shared memory
-+    area holding the remaining, bigger, chunk of the payload, but this is out of
-+    the scope of these bindings.
-+
-+properties:
-+  compatible:
-+    const: arm,mhuv3
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 1
-+    maxItems: 38
-+
-+  interrupt-names:
-+    description: |
-+      The MHUv3 controller generates a number of events some of which are used
-+      to generate interrupts; as a consequence it can expose a varying number of
-+      optional PBX/MBX interrupts, representing the events generated during the
-+      operation of the various transport protocols associated with different
-+      extensions. All interrupts of the MHU are level-sensitive.
-+      Some of these optional interrupts are defined per-channel, where the
-+      number of channels effectively available is implementation defined and
-+      run-time discoverable.
-+      In the following, for sake of simplicity, only a limited number of
-+      per-channel interrupt names are enumerated, out of all the possible
-+      channels allowed by the specification for each extension type.
-+
-+      - "combined": PBX/MBX Combined interrupt
-+      - "combined-ffch": PBX/MBX FIFO Combined interrupt
-+      - "ffch-low-tide-<N>": PBX/MBX FIFO Channel <N> Low Tide interrupt
-+      - "ffch-high-tide-<N>": PBX/MBX FIFO Channel <N> High Tide interrupt
-+      - "ffch-flush-<N>": PBX/MBX FIFO Channel <N> Flush interrupt
-+      - "mbx-dbch-xfer-<N>": MBX Doorbell Channel <N> Transfer interrupt
-+      - "mbx-fch-xfer-<N>": MBX Fast Channel <N> Transfer interrupt
-+      - "mbx-fchgrp-xfer-<N>": MBX Fast Channel <N> Group Transfer interrupt
-+      - "mbx-ffch-xfer-<N>": MBX FIFO Channel <N> Transfer interrupt
-+      - "pbx-dbch-xfer-ack-<N>": PBX Doorbell Channel <N> Transfer Ack interrupt
-+      - "pbx-ffch-xfer-ack-<N>": PBX FIFO Channel <N> Transfer Ack interrupt
-+
-+      The only mandatory interrupts on the MHU are:
-+        - combined
-+        - mbx-fch-xfer-<N> but only if mbx-fcgrp-xfer-<N> is not implemented.
-+
-+    minItems: 1
-+    maxItems: 38
-+    items:
-+      enum:
-+        - combined
-+        - combined-ffch
-+        - ffch-low-tide-0
-+        - ffch-low-tide-1
-+        - ffch-low-tide-2
-+        - ffch-low-tide-3
-+        - ffch-high-tide-0
-+        - ffch-high-tide-1
-+        - ffch-high-tide-2
-+        - ffch-high-tide-3
-+        - ffch-flush-0
-+        - ffch-flush-1
-+        - ffch-flush-2
-+        - ffch-flush-3
-+        - mbx-dbch-xfer-0
-+        - mbx-dbch-xfer-1
-+        - mbx-dbch-xfer-2
-+        - mbx-dbch-xfer-3
-+        - mbx-fch-xfer-0
-+        - mbx-fch-xfer-1
-+        - mbx-fch-xfer-2
-+        - mbx-fch-xfer-3
-+        - mbx-fchgrp-xfer-0
-+        - mbx-fchgrp-xfer-1
-+        - mbx-fchgrp-xfer-2
-+        - mbx-fchgrp-xfer-3
-+        - mbx-ffch-xfer-0
-+        - mbx-ffch-xfer-1
-+        - mbx-ffch-xfer-2
-+        - mbx-ffch-xfer-3
-+        - pbx-dbch-xfer-ack-0
-+        - pbx-dbch-xfer-ack-1
-+        - pbx-dbch-xfer-ack-2
-+        - pbx-dbch-xfer-ack-3
-+        - pbx-ffch-xfer-ack-0
-+        - pbx-ffch-xfer-ack-1
-+        - pbx-ffch-xfer-ack-2
-+        - pbx-ffch-xfer-ack-3
-+
-+  '#mbox-cells':
-+    description: |
-+      The first argument in the consumers 'mboxes' property represents the
-+      extension type, the second is for the channel number while the third
-+      depends on extension type.
-+
-+      Extension type for DBE is 0 and the third parameter represents the
-+      doorbell flag number to use.
-+      Extension type for FCE is 1, third parameter unused.
-+      Extension type for FE is 2, third parameter unused.
-+
-+      mboxes = <&mhu 0 0 5>; // DBE, Doorbell Channel Window 0, doorbell flag 5.
-+      mboxes = <&mhu 0 1 7>; // DBE, Doorbell Channel Window 1, doorbell flag 7.
-+      mboxes = <&mhu 1 0 0>; // FCE, Fast Channel Window 0.
-+      mboxes = <&mhu 1 3 0>; // FCE, Fast Channel Window 3.
-+      mboxes = <&mhu 2 1 0>; // FE, FIFO Channel Window 1.
-+      mboxes = <&mhu 2 7 0>; // FE, FIFO Channel Window 7.
-+    const: 3
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-names
-+  - '#mbox-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        mhu_tx: mailbox@2aaa0000 {
-+            compatible = "arm,mhuv3";
-+            #mbox-cells = <3>;
-+            reg = <0 0x2aaa0000 0 0x10000>;
-+            clocks = <&clock 0>;
-+            interrupt-names = "combined", "pbx-dbch-xfer-ack-1",
-+                               "ffch-high-tide-0";
-+            interrupts = <0 36 4>, <0 37 4>;
-+        };
-+
-+        mhu_rx: mailbox@2ab00000 {
-+            compatible = "arm,mhuv3";
-+            #mbox-cells = <3>;
-+            reg = <0 0x2aab0000 0 0x10000>;
-+            clocks = <&clock 0>;
-+            interrupt-names = "combined", "mbx-dbch-xfer-1", "ffch-low-tide-0";
-+            interrupts = <0 35 4>, <0 38 4>, <0 39 4>;
-+        };
-+    };
--- 
-2.34.1
+RnJvbTogQWxleGFuZHJlIEdoaXRpDQo+IFNlbnQ6IDI1IE1hcmNoIDIwMjQgMDc6MzENCj4gDQo+
+IEhpIERhdmlkLA0KPiANCj4gT24gMjQvMDMvMjAyNCAyMDo0MiwgRGF2aWQgTGFpZ2h0IHdyb3Rl
+Og0KPiA+IC4uLg0KPiA+PiBUaGUgdXNlIG9mIGFsdGVybmF0aXZlcyBhbGxvd3MgdG8gcmV0dXJu
+IHJpZ2h0IGF3YXkgaWYgdGhlIGJ1ZmZlciBpcw0KPiA+PiBiZXlvbmQgdGhlIHVzYWJsZSB1c2Vy
+IGFkZHJlc3Mgc3BhY2UsIGFuZCBpdCdzIG5vdCBqdXN0ICJzbGlnaHRseQ0KPiA+PiBmYXN0ZXIi
+IGZvciBzb21lIGNhc2VzIChhIHZlcnkgbGFyZ2UgYnVmZmVyIHdpdGggb25seSBhIGZldyBieXRl
+cyBiZWluZw0KPiA+PiBiZXlvbmQgdGhlIGxpbWl0IG9yIHNvbWVvbmUgY291bGQgZmF1bHQtaW4g
+YWxsIHRoZSB1c2VyIHBhZ2VzIGFuZCBmYWlsDQo+ID4+IHZlcnkgbGF0ZS4uLmV0YykuIGFjY2Vz
+c19vaygpIGlzIGhlcmUgdG8gZ3VhcmFudGVlIHRoYXQgc3VjaCBzaXR1YXRpb25zDQo+ID4+IGRv
+bid0IGhhcHBlbiwgc28gYWN0dWFsbHkgaXQgbWFrZXMgbW9yZSBzZW5zZSB0byB1c2UgYW4gYWx0
+ZXJuYXRpdmUgdG8NCj4gPj4gYXZvaWQgdGhhdC4NCj4gPg0KPiA+IElzIGl0IHJlYWxseSB3b3J0
+aCBkb2luZyBBTlkgb3B0aW1pc2F0aW9ucyBmb3IgdGhlIC1FRkFVTFQgcGF0aD8NCj4gPiBUaGV5
+IHJlYWxseSBkb24ndCBoYXBwZW4uDQo+ID4NCj4gPiBUaGUgb25seSBmYXVsdCBwYXRoIHRoYXQg
+bWF0dGVycyBpcyB0aGUgb25lIHRoYXQgaGFzIHRvIHBhZ2UgaW4NCj4gPiBkYXRhIGZyb20gc29t
+ZXdoZXJlLg0KPiANCj4gDQo+IFdoaWNoIGlzIGNvbXBsZXRlbHkgYXZvaWRlZCB3aXRoIGEgc3Ry
+aWN0IGRlZmluaXRpb24gb2YgYWNjZXNzX29rKCkuIEkNCj4gc2VlIGFjY2Vzc19vaygpIGFzIGFu
+IGFscmVhZHkgZXhpc3Rpbmcgb3B0aW1pemF0aW9uIG9mIGZhdWx0IHBhdGhzIGJ5DQo+IGF2b2lk
+aW5nIHRoZW0gZW50aXJlbHkgd2hlbiB0aGV5IGFyZSBib3VuZCB0byBoYXBwZW4uDQoNCk5vLCBh
+Y2Nlc3Nfb2soKSBleGlzdHMgYmVjYXVzZSBhY2Nlc3NlcyB0byBrZXJuZWwgYWRkcmVzc2VzIGRv
+bid0IGZhdWx0Lg0KUG9zc2libHkgaW4gbGludXggMC4wMSBpdCB0cmllZCB0byBlbnN1cmUgdGhh
+dCB0aGUgYWNjZXNzIHdhcyB2YWxpZA0KKGJ5IGNoZWNraW5nIHRoZSBwcm9jZXNzJ3MgcGFnZSB0
+YWJsZXMgKGV0YykgYnV0IHRoYXQgdGhhdCBoYXNuJ3QgYmVlbg0KdHJ1ZSBmb3IgYSBsb25nIHRp
+bWUuDQoNCllvdSBkb24ndCB3YW50IHRvIGFkZCBhIHNpbmdsZSBpbnN0cnVjdGlvbiAobmV2ZXIg
+bWluZCBhIGNvbmRpdGlvbmFsKQ0KdG8gYWNjZXNzX29rKCkgdG8gYXZvaWQgYSBwYWdlIGZhdWx0
+IG9uIGFuIGFkZHJlc3MgdGhhdCB3aWxsIGZhdWx0Lg0KDQpCYXNpY2FsbHkgcmVhbCBwcm9ncmFt
+cyBkb24ndCBwYXNzIGJhZCBhZGRyZXNzZXMgaW50byB0aGUga2VybmVsDQpvciBhY2Nlc3MgdGhl
+bSBpbiB1c2Vyc3BhY2UuIEVGQVVMVCBhbmQgU0lHU0VHViBhcmUgcHJldHR5IGZhdGFsLg0KKE5v
+dGhpbmcgY2FsbCBzYnJrKCkgZnJvbSBpdHMgU0lHU0VHViBoYW5kbGVyIGFueSBtb3JlISkNCg0K
+CURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBN
+b3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAx
+Mzk3Mzg2IChXYWxlcykNCg==
 
