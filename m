@@ -1,165 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6DBE155756;
-	Mon, 25 Mar 2024 14:36:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D6F16B423;
+	Mon, 25 Mar 2024 14:37:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711377421; cv=none; b=sjV+mPtlYmJ0cSPZ0KmPTcFxE95Xa3bUlz2ccoOsq8UFm4czQShu3Ilzx7jkOZ+xyZOQMV8AFpXxVYmjMqqKj1AYIc+bSU6egR/VL+CnQaIS3qFjzRL5PLCfjgh2gfiX4d7vpWHfrjBK/kqjLxgWDG5g/A1n1XZKmT0piPp494Q=
+	t=1711377460; cv=none; b=sKkYI4skjkOqvZE1eN2nW22fbMGiYsYbI1ujnnU/twklTX5RHNvh98n7TXfJjg1MqtOtL2ex1HyaVQHtpIMBSV6oMA5QiweOaeAgKxRMzhJVkuWOEpNDzuI92OIGmsr6T06Sh7a0f4wFf4BwXQnolyRCsudiEHJ8XKii6vur9+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711377421; c=relaxed/simple;
-	bh=4aIDgEXJp9CJ/1kTSz+yIr/23FqqJgqh4VDseMLsP8o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h0txUEZuhA4AFqxuWlKaRJM/1pP4hOqfYYA5p84dxBYDov2PIqVsI7ooE7w6eJf8XAKmEeLQRx30wyZbiCw8y1Jz8MeLN1D7IJMDDx8/Ko4j+491Z3PnPhYkQUtfSn7OA6mdiBKUKPUzdMIlJYy3uVIRnShlHTJi0cnNix9hAVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fvs2yDWa; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1711377460; c=relaxed/simple;
+	bh=onRjf8TNnnxKbpEukinv+PxWlrvYWsRWXbj+9065TiI=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=uCcHigVWgVGhPl59jcPSaTBXXojm04V71ivqIb1EyNrPHQBEKdAle2YQJWKLWA2iqVsSRQUf8OoQLIrTuls5afuc6H5tjAs1iATgTJQjyFLpo1g0J8NIFoQsoj+qZlA15Na68z8IBiubMYL3VbP4Utw9rHH89Pn8+kNoHClJ1ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OIy8Tezf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fvs2yDWa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711377420; x=1742913420;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=4aIDgEXJp9CJ/1kTSz+yIr/23FqqJgqh4VDseMLsP8o=;
-  b=Fvs2yDWa0rLiaWxENBoyNDIJ7OKge1DpKkUXVeJ0mRheuEXY9+OIvDei
-   z7+l7V6bALLzcqW6GGPoU5NqnfJsqTofNJ7QOYkoxj9aZs+k+PbnCM2PE
-   83tSNaeSv2ZUdvYH30dM+PvBL3m7pEIq6Bz5fQK6fekQBAbPE4uuDLIzH
-   6Bg5mof6QL//fMRWNeVH7zTV3e9DLJxHwmnDg5JuKye+c4PxBKVFKz0vk
-   3OCpRDTpvHzEFODDLS1qi+rqNwRb3z73f/bbsQxY3PETTqKKcClBg3TjC
-   dZOB5h+kTF+A5oxcgI0lbSiv5HrrPax+JSGWc84WNudRCP/2NUkE4Kai4
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6511058"
-X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
-   d="scan'208";a="6511058"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 07:37:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="937070504"
-X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
-   d="scan'208";a="937070504"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 25 Mar 2024 07:36:56 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id E42B0101; Mon, 25 Mar 2024 16:36:55 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Mark Brown <broonie@kernel.org>,
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>
-Subject: [PATCH v2 1/1] ASoC: soc-jack: Get rid of legacy GPIO support
-Date: Mon, 25 Mar 2024 16:33:50 +0200
-Message-ID: <20240325143654.3305498-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OIy8Tezf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD6A9C433F1;
+	Mon, 25 Mar 2024 14:37:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711377460;
+	bh=onRjf8TNnnxKbpEukinv+PxWlrvYWsRWXbj+9065TiI=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=OIy8Tezfr7vjlKApvzlLdl9x/9IAlZTNi8IbuxVJJEIJDM307bxfAiiFX03rew6jx
+	 5Qswry5F75Fkkz1oKNVdx4J2nbKtY4XcShVEcus9lZnicasyTyxnfXw9OI92byUPdZ
+	 kF0v2NCysr612g9LLir9A5zKBt51QEg9oZBDQV3hlMP3viCQA5GXhU75VPpoJujI6S
+	 ESpukxkN8anYl87WTYPp7yTQePkGw88A8zuZA2dhop/fBxEb/tLaLkpIcqgKOPSJ1p
+	 qZFwIUqUMbwmdHYUDAkyEqIu2ia7miGLkZf/y3aVsHiaR1Q5ccUEw5j2up2g+mHEJ3
+	 DRt81EfjvJCzQ==
+From: Kalle Valo <kvalo@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Marcel Holtmann <marcel@holtmann.org>,  Luiz Augusto von Dentz
+ <luiz.dentz@gmail.com>,  "David S . Miller" <davem@davemloft.net>,  Eric
+ Dumazet <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,  Paolo
+ Abeni <pabeni@redhat.com>,  Rob Herring <robh@kernel.org>,  Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,  Conor Dooley
+ <conor+dt@kernel.org>,  Bjorn Andersson <andersson@kernel.org>,  Konrad
+ Dybcio <konrad.dybcio@linaro.org>,  Liam Girdwood <lgirdwood@gmail.com>,
+  Mark Brown <broonie@kernel.org>,  Catalin Marinas
+ <catalin.marinas@arm.com>,  Will Deacon <will@kernel.org>,  Bjorn Helgaas
+ <bhelgaas@google.com>,  Saravana Kannan <saravanak@google.com>,  Geert
+ Uytterhoeven <geert+renesas@glider.be>,  Arnd Bergmann <arnd@arndb.de>,
+  Neil Armstrong <neil.armstrong@linaro.org>,  Marek Szyprowski
+ <m.szyprowski@samsung.com>,  Alex Elder <elder@linaro.org>,  Srini
+ Kandagatla <srinivas.kandagatla@linaro.org>,  Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>,  Abel Vesa <abel.vesa@linaro.org>,
+  Manivannan Sadhasivam <mani@kernel.org>,  Lukas Wunner <lukas@wunner.de>,
+  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+  linux-bluetooth@vger.kernel.org,  netdev@vger.kernel.org,
+  devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-wireless@vger.kernel.org,  linux-arm-msm@vger.kernel.org,
+  linux-arm-kernel@lists.infradead.org,  linux-pci@vger.kernel.org,
+  linux-pm@vger.kernel.org,  Bartosz Golaszewski
+ <bartosz.golaszewski@linaro.org>,
+    ath11k@lists.infradead.org, Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v6 04/16] dt-bindings: net: wireless: qcom,ath11k:
+ describe the ath11k on QCA6390
+References: <20240325131624.26023-1-brgl@bgdev.pl>
+	<20240325131624.26023-5-brgl@bgdev.pl> <87r0fy8lde.fsf@kernel.org>
+	<CAMRc=Mc2Tc8oHr5NVo=aHAADkJtGCDAVvJs+7V-19m2zGi-vbw@mail.gmail.com>
+Date: Mon, 25 Mar 2024 16:37:29 +0200
+In-Reply-To: <CAMRc=Mc2Tc8oHr5NVo=aHAADkJtGCDAVvJs+7V-19m2zGi-vbw@mail.gmail.com>
+	(Bartosz Golaszewski's message of "Mon, 25 Mar 2024 15:09:12 +0100")
+Message-ID: <87frwe8jiu.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-No more users.
+Bartosz Golaszewski <brgl@bgdev.pl> writes:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v2: updated dependent driver as well (Mark)
- include/sound/soc-jack.h              |  2 --
- sound/soc/generic/simple-card-utils.c |  2 --
- sound/soc/soc-jack.c                  | 23 ++++-------------------
- 3 files changed, 4 insertions(+), 23 deletions(-)
+> On Mon, Mar 25, 2024 at 2:57=E2=80=AFPM Kalle Valo <kvalo@kernel.org> wro=
+te:
+>
+>>
+>> Bartosz Golaszewski <brgl@bgdev.pl> writes:
+>>
+>> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>> >
+>> > Add a PCI compatible for the ATH11K module on QCA6390 and describe the
+>> > power inputs from the PMU that it consumes.
+>> >
+>> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>
+>> [...]
+>>
+>> > +allOf:
+>> > +  - if:
+>> > +      properties:
+>> > +        compatible:
+>> > +          contains:
+>> > +            const: pci17cb,1101
+>> > +    then:
+>> > +      required:
+>> > +        - vddrfacmn-supply
+>> > +        - vddaon-supply
+>> > +        - vddwlcx-supply
+>> > +        - vddwlmx-supply
+>> > +        - vddrfa0p8-supply
+>> > +        - vddrfa1p2-supply
+>> > +        - vddrfa1p7-supply
+>> > +        - vddpcie0p9-supply
+>> > +        - vddpcie1p8-supply
+>>
+>> I don't know DT well enough to know what the "required:" above means,
+>> but does this take into account that there are normal "plug&play" type
+>> of QCA6390 boards as well which don't need any DT settings?
+>
+> Do they require a DT node though for some reason?
 
-diff --git a/include/sound/soc-jack.h b/include/sound/soc-jack.h
-index a0abb1ee5110..3a81d4b8ca8a 100644
---- a/include/sound/soc-jack.h
-+++ b/include/sound/soc-jack.h
-@@ -44,7 +44,6 @@ struct snd_soc_jack_zone {
- /**
-  * struct snd_soc_jack_gpio - Describes a gpio pin for jack detection
-  *
-- * @gpio:         legacy gpio number
-  * @idx:          gpio descriptor index within the function of the GPIO
-  *                consumer device
-  * @gpiod_dev:    GPIO consumer device
-@@ -59,7 +58,6 @@ struct snd_soc_jack_zone {
-  *		       ADC).
-  */
- struct snd_soc_jack_gpio {
--	unsigned int gpio;
- 	unsigned int idx;
- 	struct device *gpiod_dev;
- 	const char *name;
-diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
-index 81077d16d22f..b4876b4f259d 100644
---- a/sound/soc/generic/simple-card-utils.c
-+++ b/sound/soc/generic/simple-card-utils.c
-@@ -752,8 +752,6 @@ int simple_util_init_jack(struct snd_soc_card *card,
- 	if (!prefix)
- 		prefix = "";
- 
--	sjack->gpio.gpio = -ENOENT;
--
- 	if (is_hp) {
- 		snprintf(prop, sizeof(prop), "%shp-det", prefix);
- 		pin_name	= pin ? pin : "Headphones";
-diff --git a/sound/soc/soc-jack.c b/sound/soc/soc-jack.c
-index b2cc13b9c77b..63971396b708 100644
---- a/sound/soc/soc-jack.c
-+++ b/sound/soc/soc-jack.c
-@@ -8,7 +8,6 @@
- 
- #include <sound/jack.h>
- #include <sound/soc.h>
--#include <linux/gpio.h>
- #include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/workqueue.h>
-@@ -345,21 +344,9 @@ int snd_soc_jack_add_gpios(struct snd_soc_jack *jack, int count,
- 				goto undo;
- 			}
- 		} else {
--			/* legacy GPIO number */
--			if (!gpio_is_valid(gpios[i].gpio)) {
--				dev_err(jack->card->dev,
--					"ASoC: Invalid gpio %d\n",
--					gpios[i].gpio);
--				ret = -EINVAL;
--				goto undo;
--			}
--
--			ret = gpio_request_one(gpios[i].gpio, GPIOF_IN,
--					       gpios[i].name);
--			if (ret)
--				goto undo;
--
--			gpios[i].desc = gpio_to_desc(gpios[i].gpio);
-+			dev_err(jack->card->dev, "ASoC: Invalid gpio at index %d\n", i);
-+		        ret = -EINVAL;
-+		        goto undo;
- 		}
- got_gpio:
- 		INIT_DELAYED_WORK(&gpios[i].work, gpio_work);
-@@ -373,7 +360,7 @@ int snd_soc_jack_add_gpios(struct snd_soc_jack *jack, int count,
- 					      gpios[i].name,
- 					      &gpios[i]);
- 		if (ret < 0)
--			goto err;
-+			goto undo;
- 
- 		if (gpios[i].wake) {
- 			ret = irq_set_irq_wake(gpiod_to_irq(gpios[i].desc), 1);
-@@ -401,8 +388,6 @@ int snd_soc_jack_add_gpios(struct snd_soc_jack *jack, int count,
- 	devres_add(jack->card->dev, tbl);
- 	return 0;
- 
--err:
--	gpio_free(gpios[i].gpio);
- undo:
- 	jack_free_gpios(jack, i, gpios);
- 	devres_free(tbl);
--- 
-2.43.0.rc1.1.gbec44491f096
+You can attach the device to any PCI slot, connect the WLAN antenna and
+it just works without DT nodes. I'm trying to make sure here that basic
+setup still works.
 
+Adding also Johan and ath11k list. For example, I don't know what's the
+plan with Lenovo X13s, will it use this framework? I guess in theory we
+could have devices which use qcom,ath11k-calibration-variant from DT but
+not any of these supply properties?
+
+--=20
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
