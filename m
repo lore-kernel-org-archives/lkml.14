@@ -1,155 +1,138 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAFDE15F32E;
-	Mon, 25 Mar 2024 06:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F4815F3E2;
+	Mon, 25 Mar 2024 06:41:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711348888; cv=none; b=KBpK2zAMAuqvcaQREXRCCl69dBV2giHEvdhF0sU/thtHjbZg/wisBvjCYb55N5M1iUvEj8H1juiatoH4OYZJAUk++RVIKN5HHW7tnzyrE6KuRNj3TMmVYJUxyozseNt4oz3NzlvFDo77Y/JDMEPbO+94OJ/0z94npKTbh/CAJ2I=
+	t=1711348888; cv=none; b=p0yL1ZHw9sxfAeOSn/hjVJi2IXh5Z9iBOpaqS1j4uL9uECJzpi4Om2/hgHZ/zww/FsvvkUBsR2NobdAfZ26kPcGqY4wUEu56iuY5xMDr5NdDH6KnxaeKWrX0sfI7HIbov7wzwH2dtv0QZo9ChzuOyTCco5bWxnweGgYoesJx/eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711348888; c=relaxed/simple;
-	bh=CNyZv7F7MM6DJREsMjJWxzU9kMvkiJmWI7Qjwel8lhk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Uc6WPZbao5E29GOxAu4rJ0Jwr8bGF5zl1onCZ+k/qlRNUo5f6/3JjCuLLCPcf+3b/qVj0A7/uBZnoHr/Mvt8XwF02A59ZA/G6T8lrF9kXVwURfrzCqMUztlO/BHMM8jLA0Oap9ytq+pbfeDQ1bK5P5y7sn2Z5PgSNMgC2p2Xtbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SYuvxDRJ; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=Zjh6IUndlImHk90vhCoelXOI1d7rMagiowI5tzl77NQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=nI59wntMQwHShCXljF/y9H0PtnTBJo93RYSVIWo3D0vOuGK3lw6CYgLX5ZzfS56dT668gVPb50GxzjmwRtQBPUb6PGbhvBLLKfLi38DvPjj12J0GI1M5jiEg5bNcOnkBP83RbrvxZEl4UOfxQoR7UYY614AR3auXtOcBhyn8Zbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d2HRW4RJ; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SYuvxDRJ"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-512e4f4e463so4185781e87.1;
-        Sun, 24 Mar 2024 23:41:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711348883; x=1711953683; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oushmNgLEoSiFSU+fvxV91NyvXwpQw1n1UeXr157a84=;
-        b=SYuvxDRJG2GMwDVgtxkq2u17Tl5oVvcbnHSoV1Ako0bw1uQr2Hn8qAqisAhZ6etkWw
-         FQBAmcGYGc7ryHqWRqq2kcYzDWut95X8LrpIOcvT9o5G8HR9oTTamgAqgD7tXV62+Ipa
-         HKRVTd0NAf1QOPy8KfjX+zSl3pDPeik1SPNftLaCYuH368sdwhlHGM7eq4XET4lGpQ2f
-         Hf/J++FMeO+VyFXfT5NNfEmccPE4l6a3UzfCJAlmO2AekeTTnEzqLvey537sm9IdH7zX
-         Rg4KMp8ZCqFYrcsVApm9MlWQFVrEl6sjTERPPc1SXbrXvQq/YXO/F8I9XN17zQbSYSS/
-         OY2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711348883; x=1711953683;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oushmNgLEoSiFSU+fvxV91NyvXwpQw1n1UeXr157a84=;
-        b=SmCgiqhIGOplPos9rgtI9qX5DMLepZVupdVY0uiRduLDir442/tK3P+NDfOILkunb6
-         p9GGTSrxZkHY/h2I7LYoJURhFMsppPFmAc8IeKVf1maLbsR4DIqzIOtZESo8VP34z6NN
-         n5bmJvnsVZd4s+NlUI62zADMgzq8V7psc3HlDg9njt7FRq5PL06nirSHFV5UIYAn3zuG
-         B2dgSollYDiv7Wk9fy4zhcgOXvvl01zd02jxUHRM1t7swzgtfH3Cu72Cc4xFSxqadCeF
-         2vtXGLv8WHMcUL7dsd3QIvHtm1BivJoSMiE0S1tEEdMVe8MSjRe18ENu419gPLmkEkF8
-         j+dw==
-X-Forwarded-Encrypted: i=1; AJvYcCVJ3/+GJXygmCFPDnyEsnbgzOLmI036qgg3JAuR08OIz3Na3xy0ZDPNy6n4Vt7MBckPrbUa32J2aWuJmwxcrszNqIZe4jl+tgIqtDPcWvrRRH6METpRTvhwWcdz5xkQ6R7LQ0q4LdB+wT4=
-X-Gm-Message-State: AOJu0YysYhmeSVvkezHUXdivyCSd5L8GEKzZXes4gE7qQzQrEpk3WVBf
-	QluGhoqs4TzQ6sSxyGveVinDthTGEWQdp+cWa8suS9oJ4Zqvh8li
-X-Google-Smtp-Source: AGHT+IEHz8wglR5bVMyA+cP5TCwFZTUL3ntj2kxAM1vtL9dUsR1o9AoXt44qB7zzSAqCBI64BzoyOw==
-X-Received: by 2002:a19:ca05:0:b0:513:ed0f:36c9 with SMTP id a5-20020a19ca05000000b00513ed0f36c9mr3620740lfg.45.1711348882734;
-        Sun, 24 Mar 2024 23:41:22 -0700 (PDT)
-Received: from localhost.localdomain ([178.70.43.28])
-        by smtp.gmail.com with ESMTPSA id h12-20020a0565123c8c00b00515a411fd20sm828229lfv.105.2024.03.24.23.41.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Mar 2024 23:41:22 -0700 (PDT)
-From: Ivan Bornyakov <brnkv.i1@gmail.com>
-To: Nas Chung <nas.chung@chipsnmedia.com>,
-	Jackson Lee <jackson.lee@chipsnmedia.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Ivan Bornyakov <brnkv.i1@gmail.com>,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/5] media: chips-media: wave5: support reset lines
-Date: Mon, 25 Mar 2024 09:40:57 +0300
-Message-ID: <20240325064102.9278-3-brnkv.i1@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240325064102.9278-1-brnkv.i1@gmail.com>
-References: <20240325064102.9278-1-brnkv.i1@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d2HRW4RJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711348886; x=1742884886;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Zjh6IUndlImHk90vhCoelXOI1d7rMagiowI5tzl77NQ=;
+  b=d2HRW4RJ+Whp0NALxuEas08Z+GpG7vgYUH0VRQzlWPQq9HbPC0k4bN6A
+   0kJcy6Jrvhn6cwVCPLaxIXxitFfkdcTSGbuevtu5QcKHIf9vCYufhnOSg
+   +WJfdRqxOvbZM+VQIH1qoPxQzAQYztrotZ6aNvMminNzuemJMlT4ooJRK
+   1SnsQYtfqCzqgK6lKnpi2xVmwcLwthVJCLa/Qrf7YHkcvb5WKKDjJoeKx
+   de9gHSzCdP2tSAs+GTPWMhdfVH35Jx5hJfjPFatMx42I8rWTJ7XqfqRzY
+   tbpRag46J17Gym4ftdr1IpxzraYdehNh664IVNnFiMBwzsHUVgiAMQVi5
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="17065197"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="17065197"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 23:41:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="38629597"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.251.211.155])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 23:41:18 -0700
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	John Stultz <jstultz@google.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org
+Subject: [PATCH V2 07/19] vdso: Make delta calculation overflow safe
+Date: Mon, 25 Mar 2024 08:40:11 +0200
+Message-Id: <20240325064023.2997-8-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240325064023.2997-1-adrian.hunter@intel.com>
+References: <20240325064023.2997-1-adrian.hunter@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
 
-Add initial support for optional reset lines. For now, simply deassert
-resets on driver probe and assert them back on driver remove.
+Kernel timekeeping is designed to keep the change in cycles (since the last
+timer interrupt) below max_cycles, which prevents multiplication overflow
+when converting cycles to nanoseconds. However, if timer interrupts stop,
+the calculation will eventually overflow.
 
-Signed-off-by: Ivan Bornyakov <brnkv.i1@gmail.com>
+Add protection against that, enabled by config option
+CONFIG_GENERIC_VDSO_OVERFLOW_PROTECT. Check against max_cycles, falling
+back to a slower higher precision calculation.
+
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- .../media/platform/chips-media/wave5/wave5-vpu.c | 16 +++++++++++++++-
- .../platform/chips-media/wave5/wave5-vpuapi.h    |  1 +
- 2 files changed, 16 insertions(+), 1 deletion(-)
+ lib/vdso/gettimeofday.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpu.c b/drivers/media/platform/chips-media/wave5/wave5-vpu.c
-index 1b3df5b04249..1e631da58e15 100644
---- a/drivers/media/platform/chips-media/wave5/wave5-vpu.c
-+++ b/drivers/media/platform/chips-media/wave5/wave5-vpu.c
-@@ -10,6 +10,7 @@
- #include <linux/clk.h>
- #include <linux/firmware.h>
- #include <linux/interrupt.h>
-+#include <linux/reset.h>
- #include "wave5-vpu.h"
- #include "wave5-regdefine.h"
- #include "wave5-vpuconfig.h"
-@@ -151,6 +152,16 @@ static int wave5_vpu_probe(struct platform_device *pdev)
- 	dev_set_drvdata(&pdev->dev, dev);
- 	dev->dev = &pdev->dev;
+diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
+index 9fa90e0794c9..9c3a8d2440c9 100644
+--- a/lib/vdso/gettimeofday.c
++++ b/lib/vdso/gettimeofday.c
+@@ -13,6 +13,18 @@
+ # define VDSO_DELTA_MASK(vd)	(vd->mask)
+ #endif
  
-+	dev->resets = devm_reset_control_array_get_optional_exclusive(&pdev->dev);
-+	if (IS_ERR(dev->resets)) {
-+		return dev_err_probe(&pdev->dev, PTR_ERR(dev->resets),
-+				     "Failed to get reset control\n");
-+	}
++#ifdef CONFIG_GENERIC_VDSO_OVERFLOW_PROTECT
++static __always_inline bool vdso_delta_ok(const struct vdso_data *vd, u64 delta)
++{
++	return delta < vd->max_cycles;
++}
++#else
++static __always_inline bool vdso_delta_ok(const struct vdso_data *vd, u64 delta)
++{
++	return true;
++}
++#endif
 +
-+	ret = reset_control_deassert(dev->resets);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret, "Failed to deassert resets\n");
+ #ifndef vdso_shift_ns
+ static __always_inline u64 vdso_shift_ns(u64 ns, u32 shift)
+ {
+@@ -28,7 +40,10 @@ static __always_inline u64 vdso_calc_ns(const struct vdso_data *vd, u64 cycles,
+ {
+ 	u64 delta = (cycles - vd->cycle_last) & VDSO_DELTA_MASK(vd);
+ 
+-	return vdso_shift_ns((delta * vd->mult) + base, vd->shift);
++	if (likely(vdso_delta_ok(vd, delta)))
++		return vdso_shift_ns((delta * vd->mult) + base, vd->shift);
 +
- 	ret = devm_clk_bulk_get_all(&pdev->dev, &dev->clks);
- 
- 	/* continue without clock, assume externally managed */
-@@ -163,7 +174,7 @@ static int wave5_vpu_probe(struct platform_device *pdev)
- 	ret = clk_bulk_prepare_enable(dev->num_clks, dev->clks);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Enabling clocks, fail: %d\n", ret);
--		return ret;
-+		goto err_reset_assert;
- 	}
- 
- 	ret = of_property_read_u32(pdev->dev.of_node, "sram-size",
-@@ -246,6 +257,8 @@ static int wave5_vpu_probe(struct platform_device *pdev)
- 	wave5_vdi_release(&pdev->dev);
- err_clk_dis:
- 	clk_bulk_disable_unprepare(dev->num_clks, dev->clks);
-+err_reset_assert:
-+	reset_control_assert(dev->resets);
- 
- 	return ret;
++	return mul_u64_u32_add_u64_shr(delta, vd->mult, base, vd->shift);
  }
-@@ -256,6 +269,7 @@ static void wave5_vpu_remove(struct platform_device *pdev)
+ #endif /* vdso_calc_ns */
  
- 	mutex_destroy(&dev->dev_lock);
- 	mutex_destroy(&dev->hw_lock);
-+	reset_control_assert(dev->resets);
- 	clk_bulk_disable_unprepare(dev->num_clks, dev->clks);
- 	wave5_vpu_enc_unregister_device(dev);
- 	wave5_vpu_dec_unregister_device(dev);
-diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h b/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
-index 465ff9dfe8b1..da530fd98964 100644
---- a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
-+++ b/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
-@@ -758,6 +758,7 @@ struct vpu_device {
- 	struct ida inst_ida;
- 	struct clk_bulk_data *clks;
- 	int num_clks;
-+	struct reset_control *resets;
- };
- 
- struct vpu_instance;
 -- 
-2.44.0
+2.34.1
 
