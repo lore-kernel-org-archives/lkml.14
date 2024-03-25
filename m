@@ -1,118 +1,130 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09AD1598F6;
-	Mon, 25 Mar 2024 14:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from zju.edu.cn (mail.zju.edu.cn [61.164.42.155])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D19F615DBCC;
+	Mon, 25 Mar 2024 14:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=61.164.42.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711376944; cv=none; b=sv5NWB1KFTpRxzu6xQWJvfRmJNjLztaPkFb4gUEUsKpy5Xy9hxsN6z8wBalt7qI/cFdmr00xETViIFWNlUUf3w16bxNgBM9JCcJ7teVeGU5qc5BGWph5CvcsRsCmlVyTSs3X7j4iSk2Od9QKCUJtdkws9pjLQq/abCcZspTdsaQ=
+	t=1711376961; cv=none; b=CQStE9B889lv6qUAGPB9MJFY2bZYVlFv3MGQ5l7NRGa9oLCq6loNpZlWrzk7PFDbGhKQZvm4Av7PBdjoBz4gGESYnHAX+mo9yFIe2ZUOFnF+1GfDZuDmeDUbBzvyWj64TwzpIttSAIZ6tCCOTHyp5G4AHhuC8Ovp1O43RaSDYMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711376944; c=relaxed/simple;
-	bh=UxKX4UhVrOAnBC4MDQX+O6HB2KiBGEMlXPbZ39WIHiM=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=lBLygNgtHdhhIPNCgODUZgduVvdzuISkSvsoV9FpRhY1DMJJZPpIyNxGQkgtQcDejsG3YkWWTuWCqKjjMCMLKNHasEz5DJFm0+ZnsJyJXhccI5aD3ENlmVjtP9VAgCkmX3tntQGCtFgVRmPOrTmIyTVFWUmu0TGxOPLA0G/uLnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v8O4fvRw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8O8P4Q3P; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v8O4fvRw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8O8P4Q3P"
-Date: Mon, 25 Mar 2024 14:28:59 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1711376940;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yHsuH3Kbcge5Opsyc0uGjuVaFJ98ERBpPpFpXxaQpwU=;
-	b=v8O4fvRwF66mUjH/c1q/Q7RIp4Bv5QR/GnKVEpSGGhQA588uJaXfHfvmS25fW5J21RME3o
-	LiV6nQAvyVZXzghaCGuTspen7pm5WCkTGEegc7ZN+hXExCPrdlP2LY58gpoYkaPE8JmQrT
-	//sBjpe+c5j193/v98LvUO3XkyLpHTE9g7i5IyPLZ/YM27sTdCLXnA9z9E+2KUZ1jVIUZy
-	gfcV/9mDKDYh4+m87WQxUzzJGl8RrgxXOaCauRNLbgl4P25JIm1MTOWm+n7cpAX5xLjXgF
-	uqUi4boCu7SSIG06vqxvILpiOTQrCicp6/1kzJRu0qTngZTirL54Ow7vF9c6rw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1711376940;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yHsuH3Kbcge5Opsyc0uGjuVaFJ98ERBpPpFpXxaQpwU=;
-	b=8O8P4Q3PovKbzM/57OUqj/KRxsk193HxrR8VOm8oH2X7F4a3RAB+k5MVrEDNk2xnthHjpO
-	lI4kHSBpjjzeN2AQ==
-From: "tip-bot2 for Yuntao Wang" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/cleanups] x86/head: Simplify relative include path to xen-head.S
-Cc: Yuntao Wang <ytcoode@gmail.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20231231121904.24622-1-ytcoode@gmail.com>
-References: <20231231121904.24622-1-ytcoode@gmail.com>
+	s=arc-20240116; t=1711376961; c=relaxed/simple;
+	bh=UclVC5TUuacQtw8LteqZT6tP4wbtrOMeCdE5sCs/DJs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=oaCs6gkx3RON3caV3QTo8ITlpfyzTDia8+7rhudEu+tPjof0D4o7OQaHjofxbpFxEgXaJcdIfgTUfAgb8iMHIBPvhRzfF609RlkBsZ2UZl/wQHlVH6/rrwQB5qwFvoRpkJWBaZ4YiIRnl1HsHkAfZ7v43tLJKC9MCaWBd2R5wRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=61.164.42.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from duoming$zju.edu.cn ( [106.117.100.135] ) by
+ ajax-webmail-mail-app2 (Coremail) ; Mon, 25 Mar 2024 22:26:42 +0800
+ (GMT+08:00)
+Date: Mon, 25 Mar 2024 22:26:42 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: duoming@zju.edu.cn
+To: "Takashi Iwai" <tiwai@suse.de>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+	tiwai@suse.com, perex@perex.cz
+Subject: Re: [PATCH] ALSA: sh: aica: reorder cleanup operations to avoid UAF
+ bug
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2023.4-cmXT5 build
+ 20231205(37e20f0e) Copyright (c) 2002-2024 www.mailtech.cn zju.edu.cn
+In-Reply-To: <871q7yybeb.wl-tiwai@suse.de>
+References: <20240325033946.47052-1-duoming@zju.edu.cn>
+ <871q7yybeb.wl-tiwai@suse.de>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171137693961.10875.2329693946022715442.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Message-ID: <43e102f3.61dc.18e7601a2f2.Coremail.duoming@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:by_KCgBnR5yjiQFmetpgAQ--.21222W
+X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwQLAWYBgRkAmQAAsr
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-The following commit has been merged into the x86/cleanups branch of tip:
-
-Commit-ID:     c3262d3d19d2d42705334e40d9c731c2a5df9eb5
-Gitweb:        https://git.kernel.org/tip/c3262d3d19d2d42705334e40d9c731c2a5df9eb5
-Author:        Yuntao Wang <ytcoode@gmail.com>
-AuthorDate:    Sun, 31 Dec 2023 20:19:04 +08:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Mon, 25 Mar 2024 15:24:10 +01:00
-
-x86/head: Simplify relative include path to xen-head.S
-
-Fix the relative path specification in the include directives adding
-xen-head.S to the kernel's head_*.S files since they both have
-"arch/x86/" as prefix.
-
-  [ bp: Rewrite commit message. ]
-
-Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/r/20231231121904.24622-1-ytcoode@gmail.com
----
- arch/x86/kernel/head_32.S | 2 +-
- arch/x86/kernel/head_64.S | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/head_32.S b/arch/x86/kernel/head_32.S
-index b50f364..78a6570 100644
---- a/arch/x86/kernel/head_32.S
-+++ b/arch/x86/kernel/head_32.S
-@@ -500,7 +500,7 @@ __INITRODATA
- int_msg:
- 	.asciz "Unknown interrupt or fault at: %p %p %p\n"
- 
--#include "../../x86/xen/xen-head.S"
-+#include "../xen/xen-head.S"
- 
- /*
-  * The IDT and GDT 'descriptors' are a strange 48-bit object
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index d8198fb..2f8a594 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -720,7 +720,7 @@ SYM_DATA(smpboot_control,		.long 0)
- SYM_DATA(phys_base, .quad 0x0)
- EXPORT_SYMBOL(phys_base)
- 
--#include "../../x86/xen/xen-head.S"
-+#include "../xen/xen-head.S"
- 
- 	__PAGE_ALIGNED_BSS
- SYM_DATA_START_PAGE_ALIGNED(empty_zero_page)
+T24gTW9uLCAyNSBNYXIgMjAyNCAwOToxNjoxMiArMDEwMCBUYWthc2hpIEl3YWkgd3JvdGU6Cj4g
+PiBUaGUgZHJlYW1jYXN0Y2FyZC0+dGltZXIgY291bGQgc2NoZWR1bGUgdGhlIHNwdV9kbWFfd29y
+ayBhbmQgdGhlCj4gPiBzcHVfZG1hX3dvcmsgY291bGQgYWxzbyBhcm0gdGhlIGRyZWFtY2FzdGNh
+cmQtPnRpbWVyLgo+ID4gCj4gPiBXaGVuIHRoZSBZYW1haGEgQUlDQSBjYXJkIGlzIGNsb3Npbmcs
+IHRoZSBkcmVhbWNhc3RjYXJkLT5jaGFubmVsCj4gPiB3aWxsIGJlIGRlYWxsb2NhdGVkLiBCdXQg
+aXQgY291bGQgc3RpbGwgYmUgZGVyZWZlcmVuY2VkIGluIHRoZQo+ID4gd29ya2VyIHRocmVhZC4g
+VGhlIHJlYXNvbiBpcyB0aGF0IGRlbF90aW1lcigpIHdpbGwgcmV0dXJuIGRpcmVjdGx5Cj4gPiBy
+ZWdhcmRsZXNzIG9mIHdoZXRoZXIgdGhlIHRpbWVyIGhhbmRsZXIgaXMgcnVubmluZyBvciBub3Qg
+YW5kIHRoZQo+ID4gd29ya2VyIGNvdWxkIGJlIHJlc2NoZWR1bGVkIGluIHRoZSB0aW1lciBoYW5k
+bGVyLiBBcyBhIHJlc3VsdCwgdGhlCj4gPiBVQUYgYnVnIHdpbGwgaGFwcGVuLiBUaGUgcmFjeSBz
+aXR1YXRpb24gaXMgc2hvd24gYmVsb3c6Cj4gPiAKPiA+ICAgICAgIChUaHJlYWQgMSkgICAgICAg
+ICAgICAgICAgIHwgICAgICAoVGhyZWFkIDIpCj4gPiBzbmRfYWljYXBjbV9wY21fY2xvc2UoKSAg
+ICAgICAgICB8Cj4gPiAgLi4uICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICBydW5fc3B1
+X2RtYSgpIC8vd29ya2VyCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAg
+IG1vZF90aW1lcigpCj4gPiAgIGZsdXNoX3dvcmsoKSAgICAgICAgICAgICAgICAgICB8Cj4gPiAg
+IGRlbF90aW1lcigpICAgICAgICAgICAgICAgICAgICB8ICBhaWNhX3BlcmlvZF9lbGFwc2VkKCkg
+Ly90aW1lcgo+ID4gICBrZnJlZShkcmVhbWNhc3RjYXJkLT5jaGFubmVsKSAgfCAgICBzY2hlZHVs
+ZV93b3JrKCkKPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIHJ1bl9zcHVf
+ZG1hKCkgLy93b3JrZXIKPiA+ICAgLi4uICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAg
+ZHJlYW1jYXN0Y2FyZC0+Y2hhbm5lbC0+IC8vVVNFCj4gPiAKPiA+IEluIG9yZGVyIHRvIG1pdGln
+YXRlIHRoaXMgYnVnLCB1c2UgdGltZXJfc2h1dGRvd25fc3luYygpIHRvIHNodXRkb3duCj4gPiB0
+aGUgdGltZXIgYW5kIHRoZW4gdXNlIGZsdXNoX3dvcmsoKSB0byBjYW5jZWwgdGhlIHdvcmtlci4K
+PiA+IAo+ID4gRml4ZXM6IDE5OGRlNDNkNzU4YyAoIltBTFNBXSBBZGQgQUxTQSBzdXBwb3J0IGZv
+ciB0aGUgU0VHQSBEcmVhbWNhc3QgUENNIGRldmljZSIpCj4gPiBTaWduZWQtb2ZmLWJ5OiBEdW9t
+aW5nIFpob3UgPGR1b21pbmdAemp1LmVkdS5jbj4KPiA+IC0tLQo+ID4gIHNvdW5kL3NoL2FpY2Eu
+YyB8IDIgKy0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24o
+LSkKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL3NvdW5kL3NoL2FpY2EuYyBiL3NvdW5kL3NoL2FpY2Eu
+Ywo+ID4gaW5kZXggMzIwYWM3OTJjN2YuLmJjNjhhMzkwM2YyIDEwMDY0NAo+ID4gLS0tIGEvc291
+bmQvc2gvYWljYS5jCj4gPiArKysgYi9zb3VuZC9zaC9haWNhLmMKPiA+IEBAIC0zNTQsOCArMzU0
+LDggQEAgc3RhdGljIGludCBzbmRfYWljYXBjbV9wY21fY2xvc2Uoc3RydWN0IHNuZF9wY21fc3Vi
+c3RyZWFtCj4gPiAgCQkJCSAqc3Vic3RyZWFtKQo+ID4gIHsKPiA+ICAJc3RydWN0IHNuZF9jYXJk
+X2FpY2EgKmRyZWFtY2FzdGNhcmQgPSBzdWJzdHJlYW0tPnBjbS0+cHJpdmF0ZV9kYXRhOwo+ID4g
+Kwl0aW1lcl9zaHV0ZG93bl9zeW5jKCZkcmVhbWNhc3RjYXJkLT50aW1lcik7Cj4gCj4gSSB0aG91
+Z2h0IHRoaXMgY2FsbCBpbnZhbGlkYXRlcyB0aGUgdGltZXIgb2JqZWN0LCBoZW5jZSBpdCBjYW4n
+dCBiZQo+IHVzZWQgYWdhaW47IGkuZS4gaXQgYnJlYWtzIHdoZW4gdGhlIHN0cmVhbSBpcyByZS1v
+cGVuZWQsIEkgc3VwcG9zZT8KPgo+IEluIGdlbmVyYWwgdGltZXJfc2h1dGRvd24qKCkgaXMgdXNl
+ZCBmb3IgdGhlIGNvZGUgcGF0aCB0byBjbGVhbiB1cCB0aGUKPiBkcml2ZXIgKG9yIHRoZSBvYmpl
+Y3QgdGhlIHRpbWVyIGJlbG9uZ3MgdG8pLiAgVGhlIFBDTSBjbG9zZSBpcyBvbmx5Cj4gYWJvdXQg
+dGhlIFBDTSBzdHJlYW0sIGFuZCBpdCdzIG5vdCB0aGUgcGxhY2UuCj4gCj4gQSBwcm9wZXIgZml4
+IHdvdWxkIGJlIHJhdGhlciB0byBpbXBsZW1lbnQgdHdvIHRoaW5nczoKPiAtIENhbGwgbW9kX3Rp
+bWVyKCkgY29uZGl0aW9uYWxseSBpbiBydW5fc3B1X2RtYSgpCj4gLSBJbXBsZW1lbnQgUENNIHN5
+bmNfc3RvcCBvcCB0byBjYW5jZWwvZmx1c2ggdGhlIHdvcmsKPiAKPiBUaGUgZm9ybWVyIGFsb25l
+IHNob3VsZCBzdWZmaWNlIHRvIGZpeCB0aGUgVUFGIGluIHlvdXIgc2NlbmFyaW8sCj4gdGhvdWdo
+LiAgVGhlIGxhdHRlciB3aWxsIGNvdmVyIG90aGVyIHBvc3NpYmxlIGNvcm5lciBjYXNlcy4KClRo
+YW5rIHlvdSBmb3IgeW91ciB0aW1lIGFuZCByZXBseSEgSSBrbm93IHVzaW5nIHRpbWVyX3NodXRk
+b3duX3N5bmMoKQppcyBub3QgcHJvcGVyLiBJbiBvcmRlciB0byBzb2x2ZSB0aGUgcHJvYmxlbSwg
+SSBhZGQgYSBzaHV0ZG93biBmbGFnIAppbiB0aGUgc3RydWN0IHNuZF9jYXJkX2FpY2EgYW5kIHNl
+dCB0aGUgZmxhZyB0byB0cnVlIHdoZW4gdGhlIFBDTSAKc3RyZWFtIGlzIGNsb3NpbmcuIFRoZW4g
+Y2FsbCBtb2RfdGltZXIoKSBjb25kaXRpb25hbGx5IGluIHJ1bl9zcHVfZG1hKCkuCldoYXQncyBt
+b3JlLCB1c2UgZGVsX3RpbWVyX3N5bmMoKSB0byBzdG9wIHRoZSB0aW1lciBhbmQgcHV0IGl0IGJl
+Zm9yZSAKZmx1c2hfd29yaygpLiBBcyBhIHJlc3VsdCwgYm90aCB0aW1lciBhbmQgd29ya2VyIGNv
+dWxkIGJlIHN0b3BwZWQgc2FmZWx5LiAKVGhlIGRldGFpbCBpcyBzaG93biBiZWxvdzoKCmRpZmYg
+LS1naXQgYS9zb3VuZC9zaC9haWNhLmMgYi9zb3VuZC9zaC9haWNhLmMKaW5kZXggMzIwYWM3OTJj
+N2ZlLi5kYWIwMDVlZGE3ZjAgMTAwNjQ0Ci0tLSBhL3NvdW5kL3NoL2FpY2EuYworKysgYi9zb3Vu
+ZC9zaC9haWNhLmMKQEAgLTI3OCw3ICsyNzgsOCBAQCBzdGF0aWMgdm9pZCBydW5fc3B1X2RtYShz
+dHJ1Y3Qgd29ya19zdHJ1Y3QgKndvcmspCiAgICAgICAgICAgICAgICBkcmVhbWNhc3RjYXJkLT5j
+bGlja3MrKzsKICAgICAgICAgICAgICAgIGlmICh1bmxpa2VseShkcmVhbWNhc3RjYXJkLT5jbGlj
+a3MgPj0gQUlDQV9QRVJJT0RfTlVNQkVSKSkKICAgICAgICAgICAgICAgICAgICAgICAgZHJlYW1j
+YXN0Y2FyZC0+Y2xpY2tzICU9IEFJQ0FfUEVSSU9EX05VTUJFUjsKLSAgICAgICAgICAgICAgIG1v
+ZF90aW1lcigmZHJlYW1jYXN0Y2FyZC0+dGltZXIsIGppZmZpZXMgKyAxKTsKKyAgICAgICAgICAg
+ICAgIGlmICghZHJlYW1jYXN0Y2FyZC0+c2h1dGRvd24pCisgICAgICAgICAgICAgICAgICAgICAg
+IG1vZF90aW1lcigmZHJlYW1jYXN0Y2FyZC0+dGltZXIsIGppZmZpZXMgKyAxKTsKICAgICAgICB9
+CiB9CgpAQCAtMzQ3LDYgKzM0OCw3IEBAIHN0YXRpYyBpbnQgc25kX2FpY2FwY21fcGNtX29wZW4o
+c3RydWN0IHNuZF9wY21fc3Vic3RyZWFtCiAgICAgICAgZHJlYW1jYXN0Y2FyZC0+Y2xpY2tzID0g
+MDsKICAgICAgICBkcmVhbWNhc3RjYXJkLT5jdXJyZW50X3BlcmlvZCA9IDA7CiAgICAgICAgZHJl
+YW1jYXN0Y2FyZC0+ZG1hX2NoZWNrID0gMDsKKyAgICAgICBkcmVhbWNhc3RjYXJkLT5zaHV0ZG93
+biA9IGZhbHNlOwogICAgICAgIHJldHVybiAwOwogfQoKQEAgLTM1NCw4ICszNTYsOSBAQCBzdGF0
+aWMgaW50IHNuZF9haWNhcGNtX3BjbV9jbG9zZShzdHJ1Y3Qgc25kX3BjbV9zdWJzdHJlYW0KICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKnN1YnN0cmVhbSkKIHsKICAgICAgICBzdHJ1
+Y3Qgc25kX2NhcmRfYWljYSAqZHJlYW1jYXN0Y2FyZCA9IHN1YnN0cmVhbS0+cGNtLT5wcml2YXRl
+X2RhdGE7CisgICAgICAgZHJlYW1jYXN0Y2FyZC0+c2h1dGRvd24gPSB0cnVlOworICAgICAgIGRl
+bF90aW1lcl9zeW5jKCZkcmVhbWNhc3RjYXJkLT50aW1lcik7CiAgICAgICAgZmx1c2hfd29yaygm
+KGRyZWFtY2FzdGNhcmQtPnNwdV9kbWFfd29yaykpOwotICAgICAgIGRlbF90aW1lcigmZHJlYW1j
+YXN0Y2FyZC0+dGltZXIpOwogICAgICAgIGRyZWFtY2FzdGNhcmQtPnN1YnN0cmVhbSA9IE5VTEw7
+CiAgICAgICAga2ZyZWUoZHJlYW1jYXN0Y2FyZC0+Y2hhbm5lbCk7CiAgICAgICAgc3B1X2Rpc2Fi
+bGUoKTsKZGlmZiAtLWdpdCBhL3NvdW5kL3NoL2FpY2EuaCBiL3NvdW5kL3NoL2FpY2EuaAppbmRl
+eCAwMjFiMTMyZTA4OGUuLjU5YTlkZWFmM2RkMyAxMDA2NDQKLS0tIGEvc291bmQvc2gvYWljYS5o
+CisrKyBiL3NvdW5kL3NoL2FpY2EuaApAQCAtNjUsNCArNjUsNSBAQCBzdHJ1Y3Qgc25kX2NhcmRf
+YWljYSB7CiAgICAgICAgc3RydWN0IHRpbWVyX2xpc3QgdGltZXI7CiAgICAgICAgaW50IG1hc3Rl
+cl92b2x1bWU7CiAgICAgICAgaW50IGRtYV9jaGVjazsKKyAgICAgICBib29sIHNodXRkb3duOwog
+fTsKCkkgd291bGQgYmUgdmVyeSBhcHByZWNpYXRlLCBpZiB5b3UgY291bGQgZ2l2ZSBtZSBzb21l
+IHN1Z2dlc3Rpb25zCmFib3V0IHRoZSBhYm92ZSBzb2x1dGlvbi4KCkJlc3QgcmVnYXJkcywKRHVv
+bWluZyBaaG91
