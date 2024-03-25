@@ -1,98 +1,137 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9816E1ACB77;
-	Mon, 25 Mar 2024 10:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7CF912FF99;
+	Mon, 25 Mar 2024 10:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711361799; cv=none; b=AudN3ylA29xw8wU/3vDk+sO25Yk/wHbts3AlMLk+vDyKON76vdUaEUinL3glMuyFZBB7x/TF949MKj3G1jtw0a1jOLX5/F02DRwHx04kWSFHFz/djbgwIyXnQxAparMzcianBqGZ+M1tKPqTAlcxXwhFX3RkyNAYr8JSzq+/ewU=
+	t=1711361968; cv=none; b=Gj2eFCYOKzj2UB7k8xAadwBce4sK4A0WfXJARlwjfo+kqckBfCQL/APJt0HnJEpZahoegjXLeaXEt76tARhBqX9hm4ALKrlilQFxviDXC37ljlRcn6IhVU9zu5BEZv2j16FSux7U4Ph10QybCX21XdZqi0xygmbseOep4rRgNm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711361799; c=relaxed/simple;
-	bh=0RpxAlfsTTpZ18SLcYlG63CQKxOj+cDiBmE5wqvl2Q0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OAnZDhIRUD0C4RIgyMurRAwR2ULjGNKSKSljRlkYd58Boz65IRFCN5619kVbvDi4a4nFUMzS/oy8nIL4eQLS1CD56LK9dpMGuFDzAF8p8K0OFiRjq3He37UBp0iWdYg9KjYAWhjOH+pwocEtKELaT/ybRsi89MF3XvZFbfAj8f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=PUbUHezR; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1711361968; c=relaxed/simple;
+	bh=BUGNqjoLfsxQHYk/8rWceZNAXz2Yeg4TAAXA9qHpQmQ=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rNmrqBn7ViUJ3lgx3DFLEyQoX5PWGLplQ2Oo83bxXfryYIeAqP1x/wV7NYJChR3OpV1WVh7cSpPEgQRosBL2mRIsPaW8++3Gwl+w8RYppXMjpW9odUskUawcZdpQ72gHBFgpLCxxb0BGHQOoyiYaAsM2gCBS1P7vBZ96A+t5p7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hEnbhZZG; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="PUbUHezR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
-	Message-ID:Date:Subject:Cc:To:From:Content-Type:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-To:Resent-Cc:
-	Resent-Message-ID:In-Reply-To:References;
-	bh=kU5G/SYQB29JQ7t1aVhtssF0LtE6ImGeMC6/pp/A0i8=; t=1711361797; x=1712571397; 
-	b=PUbUHezRnTsuWBNbzxiG7yc16rceBgxCg2Mg5iOvWOJpzh6HZBwgT0xSxUnRw4cpfURBgTjHLwo
-	IWvbC7x/Zt0hhSHLsDN91B/qwNIp7yBqrGI2txUM0KfcftSo/Ia0187/kHlJXmakXO+nis+d0i1qS
-	TO26ZjfB9Kq0gh/ruk1GgfEcZ+MiJIt6kBynGsyFCz/277VPklo1Fs/OqSdIRdGohMNe0Xl3PAT7i
-	wfItBwdEbm/zyhmcXRKIu9UukDXN0zIIm7DMIUNFV3F+Tkqu+Gxp42a0Wi/k82EHO0nE/enBd0iq1
-	UVdXJP5OXQE5OPwR8MUhpJsX3S64WE6/rttg==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1rohNX-0000000DkVp-2KEN;
-	Mon, 25 Mar 2024 11:16:31 +0100
-From: Johannes Berg <johannes@sipsolutions.net>
-To: rcu@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH] rcu: mollify sparse with RCU guard
-Date: Mon, 25 Mar 2024 11:16:27 +0100
-Message-ID: <20240325101626.41584-2-johannes@sipsolutions.net>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hEnbhZZG"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d46c2e8dd7so52809541fa.1;
+        Mon, 25 Mar 2024 03:19:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711361965; x=1711966765; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=WHRv7g3CiPKX519Ky5IELZFKVKXY3LsLEia5o8nsqvI=;
+        b=hEnbhZZGMKZPX/A+j2pQpkHdK/Jp6wn6Je77NtPIqFCqSNN7dQFDFvMLYifefYfGUx
+         Yb5xxMT8lSrJzhHPidCDDtc8dm7NhLcas2pz+lV8+hsOtkaAKxy2WUVbw6FkTqJFU2CE
+         1yRqLCaRhlvow1IwoU6ObDRYOD74h2y1K4XzLBmW7V18doBAWxsGoZy44HqdDiy8e8zi
+         /4+cQjuoqL7uFK3gXItgI2cycm66zM4ZxRB8a8CjlqvLZ708PG8yDvVkijxBlWmaqK1N
+         1ILEYn3SxUBXFKPnqRviF3yD028uiS9zvf7UUMSwaS/t4aQQoNpGJY0XARFqIQB2fN7+
+         ctDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711361965; x=1711966765;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WHRv7g3CiPKX519Ky5IELZFKVKXY3LsLEia5o8nsqvI=;
+        b=Qomr3OMSYcOLME1biEmzYlRuPp6mo54/QlDaEwSI2CdnMAZr8q5liQSDslndTxED2i
+         zEGONIHMb4EyITc6+RSRg7AVm5nKCNrTi9qG4BzsAYryuMKBJQMc2t+FOoe8ebhcL95M
+         dEzB2VGGpKnhGh1SCfpfsJry8Hym0Wz51vP9vxM04r/kiIwx29RQ2Wbe8ZZx2Vmn+Lt1
+         xTbK9osh+jNkx8lU2X1kJbZd+j4fVsR0TAABQcydYgqpNLLiAiCQLc1h4dfPdR9Pm6Jo
+         358O8lr8NZNEVHPONM1wTT3O6UPoD7jvNGXqNURV+6J76R9BY1eC04/p3Lxp1pFimn7p
+         sT7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXMDreAwXFb8sR0PKaO3joN5qmH+Zyl/rwPV7qvt4vUpjM7KISPijVT+O/YXjVobrY+snCcq8LcmGq5Kwq8v04Wtq16lBGzQYzMYH7dMIXp3FN0JZAhG0YxHGXXM8/1+Uf1s7bB
+X-Gm-Message-State: AOJu0YxxyzHiU836lsPCQO5X8LttqWXyeRozlKdvXEmkbMTMFkdGHY8A
+	YLfLWpr7kxLvpifnfS2PlzDT+v1vVUxDvt5n2VGRwgiOwi+LxP3l
+X-Google-Smtp-Source: AGHT+IGg5wJ2qRptsbAUpuTEIcDJSsOM1PIB+jrxgL/A4nsVGf35/xFZrJb8g4txRn38MH5eXDKUqA==
+X-Received: by 2002:a2e:b794:0:b0:2d4:6814:7c98 with SMTP id n20-20020a2eb794000000b002d468147c98mr4026696ljo.43.1711361964560;
+        Mon, 25 Mar 2024 03:19:24 -0700 (PDT)
+Received: from Ansuel-XPS. (93-34-89-13.ip49.fastwebnet.it. [93.34.89.13])
+        by smtp.gmail.com with ESMTPSA id gw8-20020a05600c850800b004146dd6bfe2sm7935583wmb.47.2024.03.25.03.19.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 03:19:24 -0700 (PDT)
+Message-ID: <66014fac.050a0220.92b6d.5b41@mx.google.com>
+X-Google-Original-Message-ID: <ZgFPqANkonYB2rla@Ansuel-XPS.>
+Date: Mon, 25 Mar 2024 11:19:20 +0100
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] mtd: limit OTP NVMEM Cell parse to non Nand devices
+References: <20240321095522.12755-1-ansuelsmth@gmail.com>
+ <20240321113256.7e66ac0f@xps-13>
+ <65fc0d2b.050a0220.102ac.24f6@mx.google.com>
+ <20240321141935.1b9f6e71@xps-13>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240321141935.1b9f6e71@xps-13>
 
-From: Johannes Berg <johannes.berg@intel.com>
+On Thu, Mar 21, 2024 at 02:19:35PM +0100, Miquel Raynal wrote:
+> Hi,
+> 
+> ansuelsmth@gmail.com wrote on Thu, 21 Mar 2024 11:34:16 +0100:
+> 
+> > On Thu, Mar 21, 2024 at 11:32:56AM +0100, Miquel Raynal wrote:
+> > > Hi Christian,
+> > > 
+> > > ansuelsmth@gmail.com wrote on Thu, 21 Mar 2024 10:55:13 +0100:
+> > >   
+> > > > MTD OTP logic is very fragile and can be problematic with some specific
+> > > > kind of devices.
+> > > > 
+> > > > NVMEM across the years had various iteration on how Cells could be
+> > > > declared in DT and MTD OTP probably was left behind and
+> > > > add_legacy_fixed_of_cells was enabled without thinking of the consequences.
+> > > > 
+> > > > That option enables NVMEM to scan the provided of_node and treat each
+> > > > child as a NVMEM Cell, this was to support legacy NVMEM implementation
+> > > > and don't cause regression.
+> > > > 
+> > > > This is problematic if we have devices like Nand where the OTP is
+> > > > triggered by setting a special mode in the flash. In this context real
+> > > > partitions declared in the Nand node are registered as OTP Cells and
+> > > > this cause probe fail with -EINVAL error.
+> > > > 
+> > > > This was never notice due to the fact that till now, no Nand supported
+> > > > the OTP feature. With commit e87161321a40 ("mtd: rawnand: macronix: OTP
+> > > > access for MX30LFxG18AC") this changed and coincidentally this Nand is
+> > > > used on an FritzBox 7530 supported on OpenWrt.
+> > > > 
+> > > > Alternative and more robust way to declare OTP Cells are already
+> > > > prossible by using the fixed-layout node or by declaring a child node
+> > > > with the compatible set to "otp-user" or "otp-factory".
+> > > > 
+> > > > To fix this and limit any regression with other MTD that makes use of
+> > > > declaring OTP as direct child of the dev node, disable
+> > > > add_legacy_fixed_of_cells if we have a node called nand since it's the
+> > > > standard property name to identify Nand devices attached to a Nand
+> > > > Controller.  
+> > > 
+> > > You forgot to update the commit log :-)
+> > >  
+> > 
+> > Ugh... sorry. Ok to resend or I need to wait 24h similar to the rules on
+> > net-next?
+> > 
+> 
+> You can go ahead, but I'll only queue it after -rc1 is out.
+>
 
-When using "guard(rcu)();" sparse will complain, because even
-though it now understands the cleanup attribute, it doesn't
-evaluate the calls from it at function exit, and thus doesn't
-count the context correctly.
+Doing it right now.
 
-Given that there's a conditional in the resulting code:
-
-  static inline void class_rcu_destructor(class_rcu_t *_T)
-  {
-      if (_T->lock) {
-          rcu_read_unlock();
-      }
-  }
-
-it seems that even trying to teach sparse to evalulate the
-cleanup attribute function it'd still be difficult to really
-make it understand the full context here.
-
-Suppress the sparse warning by just releasing the context in
-the acquisition part of the function, after all we know it's
-safe with the guard, that's the whole point of it.
-
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
----
- include/linux/rcupdate.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index 17d7ed5f3ae6..41081ee9c9a7 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -1090,6 +1090,6 @@ rcu_head_after_call_rcu(struct rcu_head *rhp, rcu_callback_t f)
- extern int rcu_expedited;
- extern int rcu_normal;
- 
--DEFINE_LOCK_GUARD_0(rcu, rcu_read_lock(), rcu_read_unlock())
-+DEFINE_LOCK_GUARD_0(rcu, do { rcu_read_lock(); __release(RCU); } while(0), rcu_read_unlock())
- 
- #endif /* __LINUX_RCUPDATE_H */
 -- 
-2.44.0
-
+	Ansuel
