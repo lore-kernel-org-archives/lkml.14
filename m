@@ -1,115 +1,87 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B916F10A3C
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:28:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9ED7140E3D
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711362499; cv=none; b=HQ4ebSqXZIFO9x6TIgPrBfgOamF8xXaqaLLNG8nkVDjBtglS9ovLTOTy1Nb+eV1vN2clZg2XcqQrpgyRWY0kD7b7rjwdXq5i1OF65N0WGZhGRvB8PvEHvdyduoX9aEYJh7hfNwZ+iF5igIGU7xW600eH6dNa8wsnETEAXEir9BI=
+	t=1711362613; cv=none; b=N/idPQLiZdZONOgrC0k8zWcZgWc8VeMNT3H20ZNITSHzWfOgVoxzC6t6XlLEynT+gQPKAc/DDS2eUU0H3nMy3V8gcZJd47dLUqIhpmtxOAUBFPZLCbD6zUEZHF5TA3Hm7odCs5kwpReTEL1lDR6KI3t+h7CeZFEonPl0k0LPEgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711362499; c=relaxed/simple;
-	bh=Nsg5DTB9FmEllyTeXNhd2P7XdwJT0Qf+yploy0EirU8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=blmYTIAkqQvNEIFwTkJAFLZQdC4V+dpFGmM8G3l/w26KeX56brZg3VVfobIkNxRtGDrZ7uhmImGzu4E6GGqrJmPwl9vfbVRYEJQNjz7BVmT7KPGnrjjct3KGbZ8HY/tdTFjFUvvplxDJFhGsXHWYthQ1L7AZ+mSW107tjcuwHeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0F20C15;
-	Mon, 25 Mar 2024 03:28:50 -0700 (PDT)
-Received: from [10.57.15.178] (unknown [10.57.15.178])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 085F33F67D;
-	Mon, 25 Mar 2024 03:28:14 -0700 (PDT)
-Message-ID: <bad16bba-5469-4f20-bf23-7f3c2953edc5@arm.com>
-Date: Mon, 25 Mar 2024 10:28:17 +0000
+	s=arc-20240116; t=1711362613; c=relaxed/simple;
+	bh=ntCNgzdQGJ3LvOfVZ4wL1NBn0gVZep3S69fBAzBNNrc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y4c2W5mYvjBTE9O90t+dyV7ieFqOxYmDRTkdbFKl65r3Iz3soikMXmrklbpcGErfXIGZdc1/IoE3vVDeMJ9Hmr7DTrtpIeFjXe84lPqtDBFEgOq7zkqfG5PnLDbuvm7XjAv3w3Gg1ULlFe1HmQykOmLW7iFxIgmBR6QxcfZw2Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EkD5WEvt; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EkD5WEvt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711362612; x=1742898612;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ntCNgzdQGJ3LvOfVZ4wL1NBn0gVZep3S69fBAzBNNrc=;
+  b=EkD5WEvtl6bEE2SoOfHNdbtETqtBO+GgLwUifpQkooi3rr5+nkxP1Ckq
+   ljqAzKFbQ3HANcPwGnEdSzTHv6Iv3b1VWLqP5YDN/idBxMsKwXMBsIZVe
+   EbPA8HhSYNrSX9dhUNFensc79bUhYpJ7cVP1xsf2GYNFBEBFTE71lcs8+
+   MON+EjI/I88yr7I+pQnS9OWnuQtPY9PL8Cv0pfHgsWhFZaKjIsBBwI08Y
+   pFbZsYhaKo3uooz0Js3rO8SyZYMR0B7DjhQkcU0Bj9bSaqANLwwvK4SyZ
+   fVMvcQpC2WC7nUBchFiVRX1XSrB6BLIBaIQQA5dsl7H9oGS4wH5CV84D5
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6470445"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="6470445"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 03:30:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="914839103"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="914839103"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 03:30:08 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rohaf-0000000Fx35-2a2n;
+	Mon, 25 Mar 2024 12:30:05 +0200
+Date: Mon, 25 Mar 2024 12:30:05 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Denis Arefev <arefev@swemel.ru>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org, trufanov@swemel.ru, vfh@swemel.ru
+Subject: Re: [PATCH] mtd: partitions: redboot: Added conversion of operands
+ to a larger type
+Message-ID: <ZgFSLY_uQkfbyyRG@smile.fi.intel.com>
+References: <20240315093758.20790-1-arefev@swemel.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/panfrost: fix power transition timeout warnings
-To: Christian Hewitt <christianshewitt@gmail.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Rob Herring <robh@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20240322164525.2617508-1-christianshewitt@gmail.com>
-Content-Language: en-GB
-From: Steven Price <steven.price@arm.com>
-In-Reply-To: <20240322164525.2617508-1-christianshewitt@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240315093758.20790-1-arefev@swemel.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 22/03/2024 16:45, Christian Hewitt wrote:
-> Increase the timeout value to prevent system logs on Amlogic boards flooding
-> with power transition warnings:
-> 
-> [   13.047638] panfrost ffe40000.gpu: shader power transition timeout
-> [   13.048674] panfrost ffe40000.gpu: l2 power transition timeout
-> [   13.937324] panfrost ffe40000.gpu: shader power transition timeout
-> [   13.938351] panfrost ffe40000.gpu: l2 power transition timeout
-> ...
-> [39829.506904] panfrost ffe40000.gpu: shader power transition timeout
-> [39829.507938] panfrost ffe40000.gpu: l2 power transition timeout
-> [39949.508369] panfrost ffe40000.gpu: shader power transition timeout
-> [39949.509405] panfrost ffe40000.gpu: l2 power transition timeout
-> 
-> The 2000 value has been found through trial and error testing with devices
-> using G52 and G31 GPUs.
+On Fri, Mar 15, 2024 at 12:37:58PM +0300, Denis Arefev wrote:
+> The value of an arithmetic expression directory * master->erasesize is
+> subject to overflow due to a failure to cast operands to a larger data
+> type before perfroming arithmetic
 
-How close to 2ms did you need in your trial and error testing? I'm
-wondering if we should increase it further in case this might still
-trigger occasionally?
+...
 
-kbase seems to have a 5s (5000ms!) timeout before it will actually
-complain. But equally it doesn't busy wait on the registers in the same
-way as panfrost, so the impact to the rest of the system of a long wait
-is less.
+> -		offset = directory * master->erasesize;
+> +		offset = (unsigned long) directory * master->erasesize;
 
-But 2ms doesn't sound an unreasonable timeout so:
+Usage of explicit casting can be avoided by using size_mul() from overflow.h.
+Usually explicit castings are prone to subtle errors.
 
-Reviewed-by: Steven Price <steven.price@arm.com>
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> Fixes: 22aa1a209018 ("drm/panfrost: Really power off GPU cores in panfrost_gpu_power_off()")
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>> ---
->  drivers/gpu/drm/panfrost/panfrost_gpu.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_gpu.c b/drivers/gpu/drm/panfrost/panfrost_gpu.c
-> index 9063ce254642..fd8e44992184 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_gpu.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_gpu.c
-> @@ -441,19 +441,19 @@ void panfrost_gpu_power_off(struct panfrost_device *pfdev)
->  
->  	gpu_write(pfdev, SHADER_PWROFF_LO, pfdev->features.shader_present);
->  	ret = readl_relaxed_poll_timeout(pfdev->iomem + SHADER_PWRTRANS_LO,
-> -					 val, !val, 1, 1000);
-> +					 val, !val, 1, 2000);
->  	if (ret)
->  		dev_err(pfdev->dev, "shader power transition timeout");
->  
->  	gpu_write(pfdev, TILER_PWROFF_LO, pfdev->features.tiler_present);
->  	ret = readl_relaxed_poll_timeout(pfdev->iomem + TILER_PWRTRANS_LO,
-> -					 val, !val, 1, 1000);
-> +					 val, !val, 1, 2000);
->  	if (ret)
->  		dev_err(pfdev->dev, "tiler power transition timeout");
-
-As Angelo points out the tiler probably doesn't need such a long
-timeout, but I can't see the harm in consistency so I'm happy with this
-change. If my memory of the hardware is correct then the tiler power off
-actually does very little and so I wouldn't expect it to take very long.
-
-Steve
-
->  	gpu_write(pfdev, L2_PWROFF_LO, pfdev->features.l2_present);
->  	ret = readl_poll_timeout(pfdev->iomem + L2_PWRTRANS_LO,
-> -				 val, !val, 0, 1000);
-> +				 val, !val, 0, 2000);
->  	if (ret)
->  		dev_err(pfdev->dev, "l2 power transition timeout");
->  }
 
