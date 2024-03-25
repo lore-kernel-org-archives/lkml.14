@@ -1,62 +1,66 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B2A5DF0E;
-	Mon, 25 Mar 2024 17:52:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C09E1B5B1
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 17:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711389133; cv=none; b=BJ5ikneBKW8PriFQRfrTYVOr5AuI4v2NPPH673m+5r4yeu5eKbAkoS0qKX7I4y6G7PkGbPKZvP6TfzBs3c7qwB2rsV6jB39IZ1wzZtAtOvzp+u/26xbP8pFijrpt79XNsQBFG9Q5Qvv2itdkc88y4HAVsvvSRHGdKAug2QzHeH4=
+	t=1711389174; cv=none; b=QsDINjneOb/A1mcGfri+H+TkC3Bu0zo9HYrf9PAUB8ajRev2psKJ20mFKV/Y+zWeZi1A9mr4XOUJ6IJX8XuQKfWUiyTpiPnuIyMaGOoZk5VxJV0ZE0lT/SLi+3Q9E7J+oUr3EjzBZ4k0FgUE/w2QLL5CRBnfktoZa72ZLbrTSes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711389133; c=relaxed/simple;
-	bh=td2xF43H2VanMjVI5gkm78ixcmwa+nB0cEceFdwTAZo=;
+	s=arc-20240116; t=1711389174; c=relaxed/simple;
+	bh=+e0it607tIg+b2rZM2w/eJragbno58DdtfRWyRwQ1f8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XNDgHQHVazUrYXGOTl4WEuJMsocemP7uzVWKHOqF6SE23k62CfPvaToMUnXrc7GlrtGjS9xbWNthpy8ai8gsRSeHtwY3q16osnklKD73ndBHK/RxFetCjciR+tLV5QqUYF+BRDJK7eUfunZYq6UIrBsShAVEYIwfgQzAyamiFzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gfwlD+gr; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=hDQ9O21jncp0CQ/RofJwSHPnNAqBTv6GJA4+d74ulvLRrKYA89ZcHXLgM6WNGRqzCGft1BMW6y0jfZl3jFb6zu2YTAdLV1GkUK6hFKwVzD1xZuFrb/xaN+7ooSXYTYEHdn16Il9Xkp6Nc7y18C4p0yuSiNynldnDU6uWKkMBzBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b7hxQi1+; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gfwlD+gr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711389131; x=1742925131;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=td2xF43H2VanMjVI5gkm78ixcmwa+nB0cEceFdwTAZo=;
-  b=gfwlD+grZruvfWWJh/7I1auWCwDiSmEGDHfXo2ayxnmeH2PhNun/cOtO
-   a16W8e3mhYzpJ7CQ5U0HpUokrD6bLrWhHKViNaEgZrWJN6iYu/rDNKC6y
-   Ty2c9bc671InSfwG84oVqAqlKLtg4rMlMlECOwYYjKJAKCHh71oldE+ZM
-   nujbx/bHmEcPLndMAPcyc1MzMyXS3T87Swmkg2Z2ktji1Ef6LAkuLdWe+
-   ri3Iok/pVZ/BT2Tr6XR4qv4X6tNGCdcUyjAGup4vLaJvoK+ULNVX0wiGd
-   dfxOp2yP6J4JO6XogtDAJ+xcwEbBfIHpGaFMPc/AW3KvecCQoQZXFGVsT
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="6345346"
-X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
-   d="scan'208";a="6345346"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 10:52:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
-   d="scan'208";a="20418698"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 10:52:10 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 5336111FB81;
-	Mon, 25 Mar 2024 19:52:06 +0200 (EET)
-Date: Mon, 25 Mar 2024 17:52:06 +0000
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Umang Jain <umang.jain@ideasonboard.com>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: v4l2-subdev: Support enable/disable_streams for
- single-pad subdevs
-Message-ID: <ZgG5xt07XQ7DJ1_W@kekkonen.localdomain>
-References: <20240325-single-pad-enable-streams-v1-1-142e19896a72@ideasonboard.com>
- <20240325125055.GC23988@pendragon.ideasonboard.com>
- <ZgF10EVLrfF7cl57@kekkonen.localdomain>
- <0ad9841d-bb51-4512-9388-f9ce36372677@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b7hxQi1+"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5d8b519e438so2636475a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:52:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711389172; x=1711993972; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gdkP92/Ym8fhO2N2bPQUMgG774O7zzPSnF71mNNVTm0=;
+        b=b7hxQi1+pT3OUZA3vRwEG/g2gYiJhsm218O2adxZLKK1TQr6Vyfo21yrxPwa7tAFWz
+         emlran3GBdtzQyr2VJSfOP7eGyYnD0vOG0OXZuIiNHqR6BF4KnyoAHvw2kmUubFY/6OA
+         i13yMMAygWgbSuwS2QdWZHbPnFTJ4Y3E6G6JeiXRoKcwICYtVYc3L67iP8DmG6xxZzBg
+         WQA9ZRAigbzatRh98c5+zSoNTJ5h24GqrIY+ZVsrZR26iK+wArWNIrglCi0vWuHi9wdi
+         DAEvDEuV7M95irFBmcyGsf6VW+p04Esis+IaDrRMhleeryC3fOMKN0Gb1EA1vnAfC7I7
+         jzYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711389173; x=1711993973;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gdkP92/Ym8fhO2N2bPQUMgG774O7zzPSnF71mNNVTm0=;
+        b=UXhAX8ABxCzKDEDZNLaThpwMQqTYopBdOUROT3tg0TxJIqg6SS4l4RLjVs84zNjlX7
+         xVHXyw7HtC00AY1JvMFYyeWKhSpfVEb6Xef6wMAtHRIzhEPxZ0c2P6lgQq04RQ5P/I9x
+         CbTEEbiCB0WE7aWdvEyIdKuhjMVe1G1+0FjIxpOqQqjGi514KfHZ5ZKkW1bZRXRsqYuP
+         g0kFHSpD4pKndvIQmELMOQdfzqHkq32brhYNfycXVIOM/V4mT6keDox71QSQvd5sC0mn
+         JDaw8Az6pXaa7++Wd9g7xrCQp8xN0sV2lLPzPnHi6rvi977szfXGAN++SmM2h03infOD
+         /YiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXcQuHOfeRlYb/BW2XKg1T6xSHhVs50tBDkxGf3CaEW9cUERzKqWqQtAtCZUGICIUULp/WfeSyBGyJPvpMTkZLEHhDmYRdW/MD0qZwp
+X-Gm-Message-State: AOJu0YwjS82FEPeQTe+QeS6ivx7CHKEf2uFyYe7MsJfls+bv4Lh1Fd5W
+	O5as4zPANFSqkvQF9PuRvoKfTwC7Mdtf0RlYVdExB6LDUZm/9h9/kWZR/ZhajlU=
+X-Google-Smtp-Source: AGHT+IH7l6Nr3jgLuzR+uEEpfWCStVS9T4WpcYVGab+dpXtZY5JWh6SKJ3eaUaCdiYBw58Jmk6rK9A==
+X-Received: by 2002:a17:90a:e542:b0:29f:ce37:50d8 with SMTP id ei2-20020a17090ae54200b0029fce3750d8mr5423211pjb.17.1711389172525;
+        Mon, 25 Mar 2024 10:52:52 -0700 (PDT)
+Received: from ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx ([103.6.158.65])
+        by smtp.gmail.com with ESMTPSA id e1-20020a17090a9a8100b0029e077a9fe6sm10348086pjp.27.2024.03.25.10.52.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 10:52:52 -0700 (PDT)
+Date: Mon, 25 Mar 2024 23:22:47 +0530
+From: Ayush Tiwari <ayushtiw0110@gmail.com>
+To: Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
+	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev
+Cc: outreachy@lists.linux.dev
+Subject: [PATCH v4 3/3] staging: rtl8712: rename backupTKIPCountermeasure to
+ backup_TKIP_countermeasure
+Message-ID: <3fd64e6671d3f86c49fd8c6ba9ef64c4f0e0b75e.1711388443.git.ayushtiw0110@gmail.com>
+References: <cover.1711388443.git.ayushtiw0110@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,74 +69,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0ad9841d-bb51-4512-9388-f9ce36372677@ideasonboard.com>
+In-Reply-To: <cover.1711388443.git.ayushtiw0110@gmail.com>
 
-Moi,
+Rename variable backupTKIPCountermeasure to backup_TKIP_countermeasure
+to address checkpatch warning 'Avoid Camelcase' and to ensure
+adherence to coding style guidelines.
 
-On Mon, Mar 25, 2024 at 03:43:01PM +0200, Tomi Valkeinen wrote:
-> On 25/03/2024 15:02, Sakari Ailus wrote:
-> > Moi,
-> > 
-> > Thanks for the patch.
-> > 
-> > On Mon, Mar 25, 2024 at 02:50:55PM +0200, Laurent Pinchart wrote:
-> > > Hi Tomi,
-> > > 
-> > > On Mon, Mar 25, 2024 at 02:43:23PM +0200, Tomi Valkeinen wrote:
-> > > > Currently a subdevice with a single pad, e.g. a sensor subdevice, must
-> > > > use the v4l2_subdev_video_ops.s_stream op, instead of
-> > > > v4l2_subdev_pad_ops.enable/disable_streams. This is because the
-> > > > enable/disable_streams machinery requires a routing table which a subdev
-> > > > cannot have with a single pad.
-> > > > 
-> > > > Implement enable/disable_streams support for these single-pad subdevices
-> > > > by assuming an implicit stream 0 when the subdevice has only one pad.
-> > > > 
-> > > > Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-> > > > ---
-> > > > Even though I did send this patch, I'm not sure if this is necessary.
-> > > > s_stream works fine for the subdevs with a single pad. With the upcoming
-> > > > internal pads, adding an internal pad to the subdev will create a
-> > > > routing table, and enable/disable_streams would get "fixed" that way.
-> > 
-> > I'd like to get rid of a redundant way to control streaming.
-> 
-> We can't get rid of it anyway, can we? We're not going to convert old
-> drivers to streams.
+Signed-off-by: Ayush Tiwari <ayushtiw0110@gmail.com>
+---
 
-I'd expect to do that but it'd take a long time. That being said, I think
-we need to consider devices without pads (VCMs) so it may well be this
-would remain after all.
+Changes in v4: No change
+Changes in v3: No change
+Changes in v2: No change
 
-> 
-> For new drivers, yes, we shouldn't use s_stream. But is the answer for new
-> sensor drivers this patch, or requiring an internal pad?
+ drivers/staging/rtl8712/mlme_linux.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-For new drivers I'd like to see an internal pad in fact.
-{enable,disable}_streams is still internal to the kernel.
-
-> 
-> > > > So perhaps the question is, do we want to support single-pad subdevs in
-> > > > the future, in which case something like this patch is necessary, or
-> > > > will all modern source subdev drivers have internal pads, in which
-> > > > case this is not needed...
-> > > 
-> > > I think the latter would be best. I however can't guarantee we won't
-> > > have valid use cases for (enable|disable)_streams on single-pad subdevs
-> > > though, so you patch could still be interesting.
-> > 
-> > Instead of the number of pads, could we use instead the
-> > V4L2_SUBDEV_FL_STREAMS flag or whether g_routing op is supported to
-> > determine the need for this?
-> 
-> Maybe, but are they better? Do you see some issue with checking for the
-> number of pads? I considered a few options, but then thought that the most
-> safest test for this case is 1) one pad 2) enable/disable_streams
-> implemented.
-
-I think I'd actually prefer {enable,disable}_streams in fact.
-
+diff --git a/drivers/staging/rtl8712/mlme_linux.c b/drivers/staging/rtl8712/mlme_linux.c
+index ac8196d24ce0..436816d14cdf 100644
+--- a/drivers/staging/rtl8712/mlme_linux.c
++++ b/drivers/staging/rtl8712/mlme_linux.c
+@@ -88,7 +88,7 @@ static struct RT_PMKID_LIST backup_PMKID_list[NUM_PMKID_CACHE];
+ void r8712_os_indicate_disconnect(struct _adapter *adapter)
+ {
+ 	u8 backup_PMKID_index = 0;
+-	u8 backupTKIPCountermeasure = 0x00;
++	u8 backup_TKIP_countermeasure = 0x00;
+ 
+ 	r8712_indicate_wx_disassoc_event(adapter);
+ 	netif_carrier_off(adapter->pnetdev);
+@@ -103,7 +103,7 @@ void r8712_os_indicate_disconnect(struct _adapter *adapter)
+ 		       &adapter->securitypriv.PMKIDList[0],
+ 		       sizeof(struct RT_PMKID_LIST) * NUM_PMKID_CACHE);
+ 		backup_PMKID_index = adapter->securitypriv.PMKIDIndex;
+-		backupTKIPCountermeasure =
++		backup_TKIP_countermeasure =
+ 			adapter->securitypriv.btkip_countermeasure;
+ 		memset((unsigned char *)&adapter->securitypriv, 0,
+ 		       sizeof(struct security_priv));
+@@ -117,7 +117,7 @@ void r8712_os_indicate_disconnect(struct _adapter *adapter)
+ 		       sizeof(struct RT_PMKID_LIST) * NUM_PMKID_CACHE);
+ 		adapter->securitypriv.PMKIDIndex = backup_PMKID_index;
+ 		adapter->securitypriv.btkip_countermeasure =
+-					 backupTKIPCountermeasure;
++					 backup_TKIP_countermeasure;
+ 	} else { /*reset values in securitypriv*/
+ 		struct security_priv *sec_priv = &adapter->securitypriv;
+ 
 -- 
-Terveisin,
+2.40.1
 
-Sakari Ailus
