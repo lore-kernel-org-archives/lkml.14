@@ -1,117 +1,119 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED05144D3C;
-	Mon, 25 Mar 2024 10:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED6116F298
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711362674; cv=none; b=FMjLVngamspqpWvod6bNqxGDMI42zoz6+d64LK7EDw9SWPo11gS50nWEXyQd2S8pHXXJK9u1aevs+bKrFuwTrPNl8q0KV/btldqvwMmNlFpCLrHwXvyVsNrhlno/Mb8+qAK5SMV/F1LEfp2TUybTbIo+YzNylDfLEpRGcqrcc0I=
+	t=1711360210; cv=none; b=hnx/JwmMm9gBYUrMr3TXApwJOJ5rvjtzQNIJue5fg+ijwbi3/cWpfd99xcsbjIcMngmaT6piKyXOL/kXHb+3HvE1xIiKmLgF+nIFdmt4THQg9sgrRLnhdfULy0LDXD+Dtt7uOWd3Jdk8N1hse8Imr6tDEPTU1dD4UbTCxLeu0z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711362674; c=relaxed/simple;
-	bh=wIOMwu8LBbR6d05AA5Ev9i3suo88eYpc1/q507nhQKA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UuQGLYUh8rM5wYw9XUcevJJa5CQSamN7uJ8oGo4sjPVByZNFY3Kxj5Cf81Wq0MsbXmFGpIvcOmX35gHtf857CgsCRGwjfdklrvwEzOMjaGmlpOQkQVdow4mgAzQjyQ10jAIzoxId3Js1v+fRxvBCvxQC6oKluzDqzbcoNVwLI8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZPLnk0eU; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711360210; c=relaxed/simple;
+	bh=RguhNyq8VKCcqdMobDZ5d8KWbokBDnm4sDXkSJhbkaY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=hTGxegXj9/fFEOQPtqgyVBFoIHVkt3pCtkOnOzcbGiUWBw5JGo2QI5ESHqLtW1lfbOJDo9p1cWZG4Wdfal4M/HWWIIFFlidZ3oIzFsNOYj1UXQr8U7vjeuvKulGeau5nh0oJ/uZLLRQBMJBI+A2NY2xsMMTD1d9TO3njskUOB84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pMKOMEoi; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZPLnk0eU"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4141156f245so28856885e9.2;
-        Mon, 25 Mar 2024 03:31:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pMKOMEoi"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a472f8c6a55so328301666b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 02:50:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711362671; x=1711967471; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=R6+pvzCVufm3Mx2KSZCT9a/GYJoxBfWf9J7OYkciu00=;
-        b=ZPLnk0eUUbvBttpo20fnVfdSoqE5vqObJau7qrLicxcwygGw1+ealSbqgPvQQxkuo+
-         U0t9K3Jtb0ZWqNO5SIaYKI9ZS3Ht16Ao+v31eyIXYh+TgJXVUaZGwHIaA8abYjfNGIQ4
-         HBw4BRpaKY1p6nTzpi6evVcqADUSrM4ZZMN82g+qiXgD84UQFCZ1HHCgEbpthMwyOTq9
-         mzaFbPPkKMiKtLIUNKKCVk8dIY/HhOSC7pKk3ootjM9konnu8P4fmNoDvdQSB1+1GvrN
-         IeAUuJD06WGH3t19IwD3a/eRndrE8fChjyohWpSWc03XSUILVUTdKYWRfyoVk3ZEI/JN
-         uTFQ==
+        d=linaro.org; s=google; t=1711360207; x=1711965007; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lAVXzsVvl26kQg1gDZQrqcIA6gVD8tK0rGgKzqQmaOA=;
+        b=pMKOMEoivbp9/FKScjJ72xNj4UuqjyHwykaVRHq5z9tJsXuF4KFqopKf0IdT+XtvNV
+         cppvkxhnVcdHtqGQA3CRkvVyaBY5ZWRWuJ42dU5nQSZputR0q41iDhGlozzSe+1OcRRh
+         wmUeJVGbe35pzVXZ0RqIXCZ+gyUanFO59NACX9siLc9WM3FuDbAsC3FxogbZiW9v8JrN
+         CwN/PwgQDoF3tKNTQWrAYcqx/a/p37nBGh1IGIiwhU65VSS2A1FFWkNxPgWiLDJzBAuV
+         iMElz3NO3eSZ6q9NF7bct3TriHPLVh/nBYu8Hl7kSYG7BE/V6IfbrNty7l8kPf8iYVQ/
+         MqwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711362671; x=1711967471;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=R6+pvzCVufm3Mx2KSZCT9a/GYJoxBfWf9J7OYkciu00=;
-        b=oUoNqksn/8eRO6/5psegkNGYoyXNhtN70KxOv72Htt4sP5hW0KLmFxtRBLMLaL0Cgc
-         O3bKs+9mNuBBiecvjS/IHsAt151SuccO/bBIVjuqeXabgKU2OMzay73JKiXrepiMOpwP
-         5rULt/npUojdRDjL7oKm2NOAIlUxuK84Fb4nGQ2A7xutNuNbDnG4Gd2DOGuweLzB5Etz
-         64psggjbQ8Cf2v1D1kV6mJgpbHYb3qgGk37bbKbN0n5tEYpONRs6BWlU1I6mbM5xsToN
-         iv+viy3VpaovWVGL+pVScnwFFkdJTYv8i8q/WuKCpcVvxB5UltmRK36hseoO3LJqjFz0
-         DjYg==
-X-Forwarded-Encrypted: i=1; AJvYcCXZb0wTpHHLnm898nn51oX2cwpa/yZVUBep892CQUI2rHUXQxhXVpOdsQ6baPQhZe8DX9lHltkSE2vEl2tkdg9CKGXhVPZN/z+TiNgi95Il6AMbfI/m5y6vsYQmPiAdBsh2d83/RBQjY5TQlhYsEvSoN+TY3gLP3dnKE6faiI32KdHXrg==
-X-Gm-Message-State: AOJu0YzFwSrysdaYsEZ970/dCEuJrFHtZ8/CuSRSoN4/ETZMPbij46dM
-	2z6LHI/H/OyIne9yrtOIfCxHX1nJg4rAjNNkQR51KdvuCkwiadz7
-X-Google-Smtp-Source: AGHT+IHy1HIusGGKPe5ZeiznWlk+PCo+gWmMgpHFaNOPq2HgywsUWU0pqUTA/+5Cc977DgMX3TN+Xw==
-X-Received: by 2002:a05:600c:4713:b0:414:8865:bebb with SMTP id v19-20020a05600c471300b004148865bebbmr2474707wmo.7.1711362670527;
-        Mon, 25 Mar 2024 03:31:10 -0700 (PDT)
-Received: from localhost.localdomain (93-34-89-13.ip49.fastwebnet.it. [93.34.89.13])
-        by smtp.googlemail.com with ESMTPSA id be3-20020a05600c1e8300b004140e701884sm8063878wmb.22.2024.03.25.03.31.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 03:31:10 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Md Sadre Alam <quic_mdalam@quicinc.com>,
-	Sricharan Ramabadhran <quic_srichara@quicinc.com>,
-	linux-mtd@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Christian Marangi <ansuelsmth@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2 1/2] mtd: rawnand: qcom: Fix broken erase in misc_cmd_type in exec_op
-Date: Mon, 25 Mar 2024 11:30:47 +0100
-Message-ID: <20240325103053.24408-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1711360207; x=1711965007;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lAVXzsVvl26kQg1gDZQrqcIA6gVD8tK0rGgKzqQmaOA=;
+        b=DI5bNdBWggXlb9ayUgDxBwrTWBLkZxpxx8s8n9xMoG3AC/6dTHqaTsEZnq2DZBQk+o
+         YJ4c47OB5Zq5lU6c7mnOs8R2zUmQHwvSdNRi7Zd4HSSWTY3eKxFnOcZH1DYaRrXAJZQz
+         mfavGbDu1JWteeKbonrepbSPiSKiDi4keRWAe0J1BdGJ1XTc6p0PCP7eGejfaInIF/qZ
+         AT9VvHd0GE+DlaESthkIG+LLZa2zpsnzhttMATr0pcNcFFnZzvZ1rS7RsJk5rwT1SZE0
+         FtoPEngDTWER0tvTcJfmlIU4LLNbO1diM2ZKpI9fQ2IsFkdoRC0p4imyaRiwhir65pCy
+         N1ow==
+X-Forwarded-Encrypted: i=1; AJvYcCVDBpKCNRGBMErvrWvHRYa3h4D6G2AZTpX5wEO+oLFHRtjhIvRMShX615n60QKJ8LJV2FpA6YO71EcHitXw3LZOtPH1Ysmg/dZeBQuy
+X-Gm-Message-State: AOJu0YzsReXVEVF42LF6IFMxDDoYJBY5PS3PEfmuH3n45tqGcthhsF/v
+	PuSb+2skKhg8+tobMre60+vE3NdD+WJwJUso568I152N0Gt9J68t3c3GmdXPR38=
+X-Google-Smtp-Source: AGHT+IFdHnqwTXF7AWbNNmY2g7WJshW/L6qIT7jU5SUKjSfolEmDSj+P9BTccpZWBEOh+YFvHtm2Uw==
+X-Received: by 2002:a17:906:7154:b0:a4a:33e4:bcae with SMTP id z20-20020a170906715400b00a4a33e4bcaemr1509262ejj.30.1711360207053;
+        Mon, 25 Mar 2024 02:50:07 -0700 (PDT)
+Received: from [192.168.2.107] ([79.115.63.252])
+        by smtp.gmail.com with ESMTPSA id qy34-20020a17090768a200b00a4623030893sm2854174ejc.126.2024.03.25.02.50.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Mar 2024 02:50:06 -0700 (PDT)
+Message-ID: <d55f1809-3977-4942-8137-d1fa1895ddf1@linaro.org>
+Date: Mon, 25 Mar 2024 09:50:05 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] docs: dt-bindings: add missing address/size-cells to
+ example
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240325091139.18602-1-krzysztof.kozlowski@linaro.org>
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20240325091139.18602-1-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-misc_cmd_type in exec_op have multiple problems. With commit a82990c8a409
-("mtd: rawnand: qcom: Add read/read_start ops in exec_op path") it was
-reworked and generalized but actually broke the handling of the
-ERASE_BLOCK command.
+Hi, Krzysztof,
 
-Additional logic was added to the erase command cycle without clear
-explaination causing the erase command to be broken on testing it on
-a ipq806x nandc.
 
-Fix the erase command by reverting the additional logic and only adding
-the NAND_DEV0_CFG0 additional call (required for erase command).
+On 3/25/24 09:11, Krzysztof Kozlowski wrote:
+> Complete the example of recommended order of properties by adding
+> missing address/size-cells.  They are not necessary to illustrate the
+> style, but lack of them us bit really correct DTS code which might
 
-Fixes: a82990c8a409 ("mtd: rawnand: qcom: Add read/read_start ops in exec_op path")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
----
-Changes v2:
-- Split this and rework commit description and title
+some typo here
 
- drivers/mtd/nand/raw/qcom_nandc.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+> confuse readers.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> ---
+> 
+> Cc: Tudor Ambarus <tudor.ambarus@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/dts-coding-style.rst | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/dts-coding-style.rst b/Documentation/devicetree/bindings/dts-coding-style.rst
+> index a9bdd2b59dca..8a68331075a0 100644
+> --- a/Documentation/devicetree/bindings/dts-coding-style.rst
+> +++ b/Documentation/devicetree/bindings/dts-coding-style.rst
+> @@ -144,6 +144,8 @@ Example::
+>  		#dma-cells = <1>;
+>  		clocks = <&clock_controller 0>, <&clock_controller 1>;
+>  		clock-names = "bus", "host";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
 
-diff --git a/drivers/mtd/nand/raw/qcom_nandc.c b/drivers/mtd/nand/raw/qcom_nandc.c
-index b079605c84d3..19d76e345a49 100644
---- a/drivers/mtd/nand/raw/qcom_nandc.c
-+++ b/drivers/mtd/nand/raw/qcom_nandc.c
-@@ -2830,9 +2830,8 @@ static int qcom_misc_cmd_type_exec(struct nand_chip *chip, const struct nand_sub
- 	nandc_set_reg(chip, NAND_EXEC_CMD, 1);
- 
- 	write_reg_dma(nandc, NAND_FLASH_CMD, instrs, NAND_BAM_NEXT_SGL);
--	(q_op.cmd_reg == OP_BLOCK_ERASE) ? write_reg_dma(nandc, NAND_DEV0_CFG0,
--	2, NAND_BAM_NEXT_SGL) : read_reg_dma(nandc,
--	NAND_FLASH_STATUS, 1, NAND_BAM_NEXT_SGL);
-+	if (q_op.cmd_reg == OP_BLOCK_ERASE)
-+		write_reg_dma(nandc, NAND_DEV0_CFG0, 2, NAND_BAM_NEXT_SGL);
- 
- 	write_reg_dma(nandc, NAND_EXEC_CMD, 1, NAND_BAM_NEXT_SGL);
- 	read_reg_dma(nandc, NAND_FLASH_STATUS, 1, NAND_BAM_NEXT_SGL);
--- 
-2.43.0
+I propose having #address-cells and #size-cells after ranges, because
+they are related:
+https://devicetree-specification.readthedocs.io/en/stable/devicetree-basics.html#ranges
 
+Looking good:
+Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+
+>  		vendor,custom-property = <2>;
+>  		status = "disabled";
+>  
