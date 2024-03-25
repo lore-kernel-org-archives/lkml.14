@@ -1,141 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C9F26CC0C
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:27:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85FBD13C68B
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711337275; cv=none; b=nwFBtO5bBdJV56j5xrJcN0ha03BVg6VI8Z3QiZ69Accb56dApNeXUhv3wxTuLVtf+TGQdreWtZQUlUOQJ2BZWQpmK/OReTW7P2uXljcvlNMPWMMC/F37Sy0Yb+vuehjJaNh4PmyF+X8+nelRUD2J9+dtrFkN2VThaP5jmSAS3Y4=
+	t=1711336729; cv=none; b=I8zMWpwHPJ5yvlooJBIFJDR/DX7nNEP2AXoE+FQz8F58K7jXvSWtx2GPOTbNNtTOp7yW6f/9A9JT9NPeiGmRqEg1ST7JDtiy+XKpApkaSY46bFZtLX/XyDEriSghooX6CDFHp4JgDEV0Y2hjmsuYhNxOBOcrZPIXl5ewrRjhsoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711337275; c=relaxed/simple;
-	bh=8GEkeuAmsQ5Ut/QQW7+jcdbWaLfMKQm0ScLz9EoS63Q=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=t1iy9gwbzqniU4rfGa9f/kn4WEDoEG1ZMmSEom/J8WGB0B4wwT7CrczPJaQ7PsjadcX6/CrYhxMQmhgQg9+SEN5YrMeIm+MVP5awIFWMm4noRLuDUjtV1BPUKxHa3fPXdaJyd/xJP4QAWl8xBgw5akzRnmHVyoyz29Buk2VMK2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bmAEkXFt; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1711336729; c=relaxed/simple;
+	bh=WvY/llrOOyyGpZRAhKAzslr8m+fAoMpt2YTsv1kupJQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=MK2F4rPdhFqic9ICIZAGj7q/Iv9X7fm1uYcorAMrAxpkCFAkoTB/uLfhppWmG3FlBJE8AF5jY5aO5G3cLII4L00b8TPrC74mpgz2gxb7FEAL7xPFSoCPUjAVD1B/VN+JyoGx7sbYNnj/k43D3npGCkL0EWn42IXuqjFLDGipp4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SvhgNyGU; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bmAEkXFt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SvhgNyGU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711337273; x=1742873273;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=8GEkeuAmsQ5Ut/QQW7+jcdbWaLfMKQm0ScLz9EoS63Q=;
-  b=bmAEkXFtIN58LMOa6p+WPujjm33DyhfQN2IjxEbjeGsrHoAMkwGtLpOo
-   IGvGwgXSshe2ueSq4zzzIxU5iTEsf5LGppcskQ066g1+wTn+N4dxdXQRl
-   oBD3Q+VuPLWvVtrZSo8XDpxloGsow1fr8U1/0I7sN5DwbjumUp4QImbSF
-   UuVTK0qXXXb6AfAhzy7AropnA8+sbrQif0o9vPHV8dsYMXi8ec8Mt3j6u
-   oxgufrPEjaWGoVCzHkGLh98v+GclzpvbUZhSg5vloLV1DVS61ahB5Ulu0
-   dWyL2AaywnAeYr0kln+i9zsp5WgDYhRgf2smucKCXCXGY35GwalSqtB4i
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6177059"
+  t=1711336728; x=1742872728;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=WvY/llrOOyyGpZRAhKAzslr8m+fAoMpt2YTsv1kupJQ=;
+  b=SvhgNyGUE1mrAHQdOXI/FSN99fz6u4y1bIoIZowf4IDsDLmWJBy164ga
+   r2SqLzIEMdNff+Mul73XcZjC1c2jMTpCl5bsoMYrqj0Xj4LfTjg5EQlyL
+   558ww55JO2K6PpW3KoJHSNhGQy8VHhYoIWfrO6hG9ha/IYbMc8TMfA7fE
+   uU0QQZrpzGrbV3rU+EgR+FLT6xSfsPXwJl8EQCbSnv5Nd+PF/YFPTbkqr
+   oj4QNzIbaor5/zWS8YNj+P08Tf6ExucL23Q2eWdBsqAlGfwL3VS+rNABo
+   MbL9+VaVC7V8ndY8w4IsFo+XX2jKooQkrjO3QKoHoa8w+SAdJKarkoEWu
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6427282"
 X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="6177059"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 20:27:51 -0700
+   d="scan'208";a="6427282"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 20:18:47 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="19951825"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
-  by fmviesa005.fm.intel.com with ESMTP; 24 Mar 2024 20:27:48 -0700
-Message-ID: <45fc6507-f077-4626-98cb-96cda1585718@linux.intel.com>
-Date: Mon, 25 Mar 2024 11:26:57 +0800
+   d="scan'208";a="46606514"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 20:18:45 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Akira Yokosawa <akiyks@gmail.com>,  linux-kernel@vger.kernel.org,
+  linux-mm@kvack.org,  ryan.roberts@arm.com,  chrisl@kernel.org
+Subject: Re: Can you help us on memory barrier usage? (was Re: [PATCH v4
+ 4/6] mm: swap: Allow storage of all mTHP orders)
+In-Reply-To: <766cfb68-f82a-4163-9dc1-5f4483fa5a7a@paulmck-laptop> (Paul
+	E. McKenney's message of "Sun, 24 Mar 2024 17:01:36 -0700")
+References: <87r0g3q9cz.fsf_-_@yhuang6-desk2.ccr.corp.intel.com>
+	<c56eae89-9559-4b1d-8249-d23281e466b4@gmail.com>
+	<766cfb68-f82a-4163-9dc1-5f4483fa5a7a@paulmck-laptop>
+Date: Mon, 25 Mar 2024 11:16:51 +0800
+Message-ID: <87r0fzova4.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, Kevin Tian <kevin.tian@intel.com>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Nicolin Chen <nicolinc@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
- Jacob Pan <jacob.jun.pan@linux.intel.com>,
- Joel Granados <j.granados@samsung.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "virtualization@lists.linux-foundation.org"
- <virtualization@lists.linux-foundation.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 4/8] iommufd: Add iommufd fault object
-Content-Language: en-US
-To: Jason Gunthorpe <jgg@ziepe.ca>,
- Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-References: <20240122073903.24406-1-baolu.lu@linux.intel.com>
- <20240122073903.24406-5-baolu.lu@linux.intel.com>
- <ad4575588dd247fa8beae60963f36404@huawei.com>
- <20240322172232.GK66976@ziepe.ca>
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20240322172232.GK66976@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ascii
 
-On 3/23/24 1:22 AM, Jason Gunthorpe wrote:
-> On Wed, Mar 20, 2024 at 04:18:05PM +0000, Shameerali Kolothum Thodi wrote:
->> What I have noticed is that,
->> -read interface works fine and I can receive struct tiommu_hwpt_pgfault data.
->> -But once Guest handles the page faults and returns the page response,
->>   the write to fault fd never reaches the kernel. The sequence is like below,
->>   
->>    sqe = io_uring_get_sqe(ring);
->>    io_uring_prep_write(sqe, hwpt->fault_fd, resp, sizeof(*resp), 0);
->>    io_uring_sqe_set_data(sqe, resp);
->>    io_uring_submit(ring);
->>    ret = io_uring_wait_cqe(ring, &cqe);
->>    ....
->> Please find the function here[2]
->>
->> The above cqe wait never returns and hardware times out without receiving
->> page response. My understanding of io_uring default op is that it tries to
->> issue an sqe as non-blocking first. But it looks like the above write sequence
->> ends up in kernel poll_wait() as well.Not sure how we can avoid that for
->> write.
-> Ah, right, it is because poll can't be choosy about read/write, it has
-> to work equally for both directions. iommufd_fault_fops_poll() never
-> returns EPOLLOUT
-> 
-> It should just always return EPOLLOUT because we don't have any queue
-> to manage.
+"Paul E. McKenney" <paulmck@kernel.org> writes:
 
-Are you suggesting the poll file operation to be like below?
+> On Sat, Mar 23, 2024 at 11:11:09AM +0900, Akira Yokosawa wrote:
+>> [Use Paul's reachable address in CC;
+>>  trimmed CC list, keeping only those who have responded so far.]
+>> 
+>> Hello Huang,
+>> Let me chime in.
+>> 
+>> On Fri, 22 Mar 2024 06:19:52 -0700, Huang, Ying wrote:
+>> > Hi, Paul,
+>> > 
+>> > Can you help us on WRITE_ONCE()/READ_ONCE()/barrier() usage as follows?
+>> > For some example kernel code as follows,
+>> > 
+>> > "
+>> > unsigned char x[16];
+>> > 
+>> > void writer(void)
+>> > {
+>> >         memset(x, 1, sizeof(x));
+>> >         /* To make memset() take effect ASAP */
+>> >         barrier();
+>> > }
+>> > 
+>> > unsigned char reader(int n)
+>> > {
+>> >         return READ_ONCE(x[n]);
+>> > }
+>> > "
+>> > 
+>> > where, writer() and reader() may be called on 2 CPUs without any lock.
+>> > It's acceptable for reader() to read the written value a little later.
+>
+> What are your consistency requirements?  For but one example, if reader(3)
+> gives the new value, is it OK for a later call to reader(2) to give the
+> old value?
 
-static __poll_t iommufd_fault_fops_poll(struct file *filep,
-                                         struct poll_table_struct *wait)
-{
-         struct iommufd_fault *fault = filep->private_data;
-         __poll_t pollflags = EPOLLOUT;
+writer() will be called with a lock held (sorry, my previous words
+aren't correct here).  After the racy checking in reader(), we will
+acquire the lock and check "x[n]" again to confirm.  And, there are no
+dependencies between different "n".  All in all, we can accept almost
+all races between writer() and reader().
 
-         poll_wait(filep, &fault->wait_queue, wait);
-         mutex_lock(&fault->mutex);
-         if (!list_empty(&fault->deliver))
-                 pollflags = EPOLLIN | EPOLLRDNORM;
-         mutex_unlock(&fault->mutex);
+My question is, if there are some operations between writer() and
+unlocking in its caller, whether does barrier() in writer() make any
+sense?  Make write instructions appear a little earlier in compiled
+code?  Mark the memory may be read racy?  Or doesn't make sense at all?
 
-         return pollflags;
-}
+> Until we know what your requirements are, it is hard to say whether the
+> above code meets those requirements.  In the meantime, I can imagine
+> requirements that it meets and others that it does not.
+>
+> Also, Akira's points below are quite important.
 
-The diff is,
+Replied for his email.
 
-diff --git a/drivers/iommu/iommufd/fault.c b/drivers/iommu/iommufd/fault.c
-index ede16702d433..a33f8aa92575 100644
---- a/drivers/iommu/iommufd/fault.c
-+++ b/drivers/iommu/iommufd/fault.c
-@@ -175,7 +175,7 @@ static __poll_t iommufd_fault_fops_poll(struct file 
-*filep,
-                                         struct poll_table_struct *wait)
-  {
-         struct iommufd_fault *fault = filep->private_data;
--       __poll_t pollflags = 0;
-+       __poll_t pollflags = EPOLLOUT;
-
-         poll_wait(filep, &fault->wait_queue, wait);
-         mutex_lock(&fault->mutex);
-
-
-I was originally thinking that poll file operation is specifically
-designed for polling on read events associated with IOMMU faults.
-
-Best regards,
-baolu
+--
+Best Regards,
+Huang, Ying
