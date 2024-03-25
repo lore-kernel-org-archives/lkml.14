@@ -1,184 +1,130 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2116.outbound.protection.outlook.com [40.107.237.116])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3044A168A8;
-	Mon, 25 Mar 2024 19:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.116
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711394100; cv=fail; b=p1s1mRotv56xiFDIghxgvCFCy9eORJOdRZzRmu8RC2hy/H+rUFIl2IFIU34353vBQli4DAeE0LwuD6ueJgWicpuVzLgQinKpNny5CcD01sY/hZgdO+uNtnVHGG+JulvTdVOfprYtfs5kRc09+THtxO7Re39oIPkPTzIhNyjtliw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711394100; c=relaxed/simple;
-	bh=tzjvM1GygbFpaAHowRALbIYh4D51ovUbbCv7hUmQ7v4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=I7RjGyc5yfCux8h6yFOYrlPtl0I2oZQLoJ3lJkHv4R5af8SUUj7BRFF+Ri3/Uu5NfUUJgt5ZLcqb/JmuZ68kHNFtjNove54+4JGT/jb8J8Bf9CJkOeAfc9MAkfmKoE8ENoXtIRhOYlEuwEtt4ai6bP1i15ESt56sAb9bJZr6LV0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=B6ao7hxA; arc=fail smtp.client-ip=40.107.237.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B842D111A2
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 19:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711394135; cv=none; b=UGrq14gi7UN3Cw8mu8wflbMKiFt283q9wPMfWNg/738aLSrL5xVmn1J8CopjQtxFXK4NPj4SwDcYq+wU+C6WRYyRdj4ReTd2wie6fXDqTI5YP/jibZheMUQhL8ihBcVnRgrHp/NQjpZ70A4oQIgVpf56wD+NFZQ09AnnOi2b168=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711394135; c=relaxed/simple;
+	bh=2LcEueyo4zA26fmlVXxYwpG3RmYVcNHHj8IIZYyADhI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hfkfw3zmq5twNmqX5phRLtzJUZOVO+0MR+aOG1dhzGEWo8PgR8ie72nF6HTrVQBrV9R2ExeKkD+uFyuaDxUMmQyu6/ioN4D9C9puEqGDgD26MVq/S2Fo92E2Wmvl35tvmxV+U+L8YM5raWn3UGonDJ7RwlQ+PM7lQh4YTb9MkLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pzUBb6zY; arc=none smtp.client-ip=209.85.210.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="B6ao7hxA"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QtFIm6/j+6n+BI1CIdAKtBIGzNtl9SYHGp/ytm52FEgOSZDypQVhutR2b2mZztz3P5LTQZWaMDczjbA1thK0mVqkIkSQY61TWEmgXr//eWvEf3BJEPrs/HCUU813LSztS1UMK6YUodif1d4Ojma30xv1NziYKA110VqwvAYNG3QKPy4HVhh1dz/6h9/5AGu0ttkzcI32gPwNBxyLIes6mxZZX0tQAZmzlZ5jTfb5POno/wy5MzjRSjmICxfGdenfSPYRqgmmpZAyb3EJ90/hIpPL7o3QZDujuOSAue6QyrotcGZNuRTkX6xW+Q/0Vhx6so9mhnkjVscCy1FNtH5PkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aQc50ntIp+wR3qlbVn8sChxyivknRI46QcXv7CaKnsk=;
- b=EEJL7MOJFElOvTesJD3BQqhXV/5xmh6NBtmimy/TneDdq/dphbhAy0hO6CoQkviiPgA/ixo7tJ3E2dam7ZF7haZLPid6inQe1O6AD6yLa8ymWW+Q4kfTIryxH1ugatk22vT2fpbvjr6otU3/S+SCecOKRREATteOF1WY8ep68dZqyvAubKuCPX4HgbEWzCTedXccgZJVfkKcIA1MaT+/47ybMMEM2CPHmhYD/19zhk0liw3Y5mVzZjDbXeqaEFPsc/IrWK1kWgyfVaZ9R2VAHlETsF6Gj2wErxppUMmk9MYyiom++9jgttqa+8GRVHv5pGmMXnpFwkA2YRv24z2oEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aQc50ntIp+wR3qlbVn8sChxyivknRI46QcXv7CaKnsk=;
- b=B6ao7hxAAirC49m8jBSQBGjYwX29oC4JAZyaHUmBzaQjlKtLPQAr2+8pq53JEdEhpK75vbnTPu/ZypW0VCCiz8c6nnVWDadCCeauNWeWKO8uFz4Fx4r+8mjeK1ecHeAaPhvI+VUwQbzaaZyHpQ0/xIlnrOSZBYnEPs4sV+XR5fc=
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
- DS0PR12MB7995.namprd12.prod.outlook.com (2603:10b6:8:14e::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7409.31; Mon, 25 Mar 2024 19:14:50 +0000
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::815d:4ebf:44b4:6edb]) by DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::815d:4ebf:44b4:6edb%4]) with mapi id 15.20.7409.028; Mon, 25 Mar 2024
- 19:14:50 +0000
-Message-ID: <91d3ed71-025f-4446-837e-89360ad301cf@amd.com>
-Date: Mon, 25 Mar 2024 14:14:46 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 4/6] PCI/AER: Extend RCH RAS error handling to support
- VH topology case
-Content-Language: en-US
-To: Li Ming <ming4.li@intel.com>, dan.j.williams@intel.com, rrichter@amd.com
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240313083602.239201-1-ming4.li@intel.com>
- <20240313083602.239201-5-ming4.li@intel.com>
-From: Terry Bowman <Terry.Bowman@amd.com>
-In-Reply-To: <20240313083602.239201-5-ming4.li@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1PR02CA0016.namprd02.prod.outlook.com
- (2603:10b6:806:2cf::22) To DS0PR12MB6390.namprd12.prod.outlook.com
- (2603:10b6:8:ce::7)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pzUBb6zY"
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6e67b5d6dd8so2713885a34.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:15:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711394133; x=1711998933; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mEBbhuHQkbU+EMQNmZrROufmbPoDerb7a6WhSXk365c=;
+        b=pzUBb6zYR6GFO7jSg9QMkxJ8zJvscS9ug5zumE1YsBLJ1aJytDySkX+Pe56DEv0I3Z
+         MzNgYI1EgX7UcviHJnigRKKe41DH59OmN53PjXuEWTC+H74cxYBBZPN1ga6341I6Cfzp
+         F0jIZqNr5bAqJCGGLrcztbROeCiQHtsRpXDLDU4h6MEtrDiCKfIbWtLaLFiKyKNnafdH
+         s/40urRHyjL6NNk3pdqNssOEebLPtvZ1cd4Y+NjcUBqTJzSdY4z1K52WTfhNXLYvyH+q
+         t8hvebTGk9y+eZypCwcLjlYEJGoYh2ZcL7UH3IJzgbBvsxIEwfKvQMJGRcbE8x+kSpeo
+         UXwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711394133; x=1711998933;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mEBbhuHQkbU+EMQNmZrROufmbPoDerb7a6WhSXk365c=;
+        b=dQLwwzIv/EdOfDkxfnDiOE4eUxdT0DngTfLTfWdud9FxZoUzF7tKQiskjqxSTd9aGv
+         UpuxxFIEC95Gumci79+qU2iYKaDPkbNwxCjCKyOR6+bGdJiq5aap1toKJU48UhlA9jVE
+         OmKCnaQIhm37qZ2WNxmM9WKtm05tk2w+sgwcz7txzEIWWCiBdFwTqA156TxECtGBMirV
+         JjzEf+j+k4qtzbtN3Ir53tlXI5MKndYvYmlzzhlQbwpyklOay4ZZ4KU+a2MMQycTzg51
+         xTeGXc7vNd+9EZjk+gsB60b93AxTc+ex3VYNxI493A1IdRS04RYeIIFRTWeiWvWgpIzh
+         LYvg==
+X-Forwarded-Encrypted: i=1; AJvYcCWgjurlhCgyZlBS0qtD1PRt+OyxA1GPiOfkXPT2Prb8WD1wEjAxhPIjwciS9G0RTxUcfaedmb8zlWLUT09aFzawMigsM4/VF98wL3cc
+X-Gm-Message-State: AOJu0YzU5LLS7rLCJIb77fqNP04zcRtGSV9TE/rrT7guF6pIztcCjEqF
+	K8Q7KAGiw0M3KYxgYKSGqubZQejv3TCbD10JoAMaBgU8x6imEaukx2kWqtNCoef49IML+7nhRa8
+	6sl4=
+X-Google-Smtp-Source: AGHT+IEU0VeMb1Dhv4HYSXBYZW0Ce+GyLpusfcP5u1BmlbKM+F1qrauHDnpF45Egdb0z8vBFEZHiXw==
+X-Received: by 2002:a05:6830:328d:b0:6e6:777d:70e7 with SMTP id m13-20020a056830328d00b006e6777d70e7mr9764633ott.7.1711394132839;
+        Mon, 25 Mar 2024 12:15:32 -0700 (PDT)
+Received: from [192.168.17.16] ([148.222.132.226])
+        by smtp.gmail.com with ESMTPSA id a7-20020a9d4707000000b006e6b203c93csm1220301otf.72.2024.03.25.12.15.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Mar 2024 12:15:32 -0700 (PDT)
+Message-ID: <9b3d2eee-4e42-4af8-9650-7a4b6eff6626@linaro.org>
+Date: Mon, 25 Mar 2024 13:15:30 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|DS0PR12MB7995:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	E9s+ouhvFIBbH0KEo+++KZEgdBKVFBjNf3YNXB1/81nJUpT0pYChYrqmPnPkQ6q6UJ1VJC4DfFc5acU1IlTcobTUzOliC+17Ig/a3FSqewytBXzMXwkbnzwYKMpREky3kl0VDJeE1/sybL31yk2gzzFhd7udEIQWTsbOnbx9ER86BSOWkMtu7d9n24nfH5xZv7TezY5XxeMVwycgrxzrTbc+b7Oklv2dcPe2TWQkkDiCfJ4sRM86SKlFSA5kYjWZNNDjVdyG3keFz8Zw3BLiYG9u3EfBr156F5WqeRzojwEl7wwdN63cLt0SlHCRJkwHPWyRW+oiu3VAdhhnYUfkD3NWDGKhIHj3sj1SzvjrzcGuXFuggxMO+NNzRiPNvCmNrxcgJl6AZuEx27+xb7yUxIJyvvLO6j/kF8Ihyr2REQgYRETDH1TQ/kJ8sefg/Y60WrDgAHMRTCneIjbmXwQk0tlBGa3kNNpB6yaYtX29BVPKX9v/gdLOIhs+qWFVny20Y4HHOMxxkVc4UQYzvjj9VB1OJcYUAcXMzMeOvjQSY1Ibb5Dz186p1iZSQdWx4Yh6hztguB71ifh3oa35DnJx3GbUHxfRaKQXHKmilWNQpWaFQzjXPAmyptxC5ET/YJChSruQWGjcQz0G1F7YXwMXi8nJtlvgzupWKXOTrEDtVM4=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aFhTT0k1M0FtY0JpdUFrZWpMVE9KeUF2UW1QVUZHZU5tZEEyKzdNSU8vU0E4?=
- =?utf-8?B?eHFyamQvSStGMUdGYXVVTHR3T0xGVjVmOFpEUGp2MnF0b1pMN2dWdHZUUDlZ?=
- =?utf-8?B?YVlkbjlzTFYzblh1dXNzQlRBby81R2RKMmlhUDVySmRJMk5OaXlIbWNLbC9m?=
- =?utf-8?B?eUI0eitoWlJXOU9WOVJHT1JKOHFNVlA2OFJhcE8vY1BPUDc5RHFGenpqRXYw?=
- =?utf-8?B?K1lRTUx0ZVdXZHNvNVhtWnBNWi9sU28rWUI3anQ0MHZHSUI5QWJ4azk3QzNG?=
- =?utf-8?B?b0ZDYzhXTnFvUndSekFBT3d3Njh3Umd5ekhvSWlkaEZVMUluRlhuQ0djTTFt?=
- =?utf-8?B?Q3MwMHpMN0J3WE1QY0ZjVTZiaHlBOWFYZGVpTWZDbmdXaFEzQVNqMHZLbFIw?=
- =?utf-8?B?RTJmcU5oaDFwbU1lRiswWk5IT0lOVEFpRExuYXJ3MDdtd3ViM0p5Qm5YQUhx?=
- =?utf-8?B?ejk3M1RHbE9XSXliemExc1Fja2ZGZGNKdnoxckxPdVdNZUU4QitBYzR4c1lx?=
- =?utf-8?B?Umg1ejhRbDB0WWpsQ29ueUhBNDVyWExBRk4zMjQ2ZCsrSVpQcDlZU2FBYnlJ?=
- =?utf-8?B?bHZrM1JQTFZ5Z1BiMmZoT3BpdE5hdWhXRXdXVzM3ZE1UY2I2VEcyb1hIb3Zn?=
- =?utf-8?B?dnRkWWZsODU0VDd4d08wbTRGa2U3dnR3azFIaUZQMjNLNm1vSDQzTkIwdk42?=
- =?utf-8?B?TmZYMWIzMEFiUmM4cXFyQ0J1NDZ1Mml4bjZMbVlKZ1E5eDY4WTZ5bkNOQ3Jm?=
- =?utf-8?B?alBDamlnd3ZnclpTcGtiQWhBK25tM1FHeGtkODk4WmpBS0NhZEduWDl2Yzk3?=
- =?utf-8?B?RjlZQ0lETlhZYXlzZVltQnhIVzBhYmxoRWdBSDFOS1MrckN0UDhCWXJXQ2hX?=
- =?utf-8?B?MEV6WGpwam0xSkFXWmg3NUplOHhQTTdwRUVRMjBDSng1Tkt6djhaVEVBUkRI?=
- =?utf-8?B?WFdNYmFuSmtpZUQzYTBNTHVvTFBhazVrSzNRMjU2U1QvcTdrQmgrOHducUJZ?=
- =?utf-8?B?ZWF1Vk5zSzl6Z2NEbjFKcUdEcEtlTUpQTTI2YmZYeE9kaEgrY3FkZS9MR01m?=
- =?utf-8?B?TVR0QWY4RGx2NnVpS21vM1JDaWQzMWU3K2sxYTBqV1h0V2hSbHRsdmJBTEI4?=
- =?utf-8?B?R3RxTTJnZ29RU3JOVlRjemFOcGVIOGdRcjBRYjZQbXozRHkrYXd6M2ZFeGU0?=
- =?utf-8?B?enRrQ1U1RDRyeTNqSmR3WkZ3Zy9UenBXbGorR1JQaERWdzJaaWo1MXpLWmtD?=
- =?utf-8?B?YXp3cTFGcUtBbWlGa3liM05hNVovY1NBZmNtdmJ1OUkzZVZmSHlGWm1EWnAv?=
- =?utf-8?B?bHJmVDFDRThjcW5RYXc4SUE2OFhqMkkyd1NMNmtRYUhEa2FMTmQxT2FkcUIz?=
- =?utf-8?B?SHdkYVBSK3VIRkhBcjdhR24vdGlZcStkYUZhWkhhUlJZOXR1RnhoY0ZIS0c3?=
- =?utf-8?B?OW5nUmpnM1dXTTd5NUd6WmNkNld4YVA1L0doRE9TMCttYjRsVVRXUVc5eW5W?=
- =?utf-8?B?OEdqRjBUVlZQQ2JhaWVmRncvaUYvWE82OG9pV1hvTnhXYThQekJoV2tOQnVn?=
- =?utf-8?B?OElXV1hvd0ZUY24yZjNONGYyUXVheEcyN1hrbW5acGllVG1mb2c5WmFNYWlz?=
- =?utf-8?B?UjlYRktHcDFWb1dFdW5aNWlvd3VnYTlQSlloaTlyS3cydFFZbEc5NEpoNDFr?=
- =?utf-8?B?TDYybWpVRU9ZTXhmMUV5VFBHOEJHcUV2aDNhRDJ0eElPZ0UxQ0ZCT0c3a2E5?=
- =?utf-8?B?L1VvSzEybVZFVmpBV3hXMlRyUG5ocW1CeElhTlFDV3UzYnNwZWUyK0JFaTFk?=
- =?utf-8?B?TjFJeStmNVBJYjZiRnFHcjlNUTV2Njl1MGQza3ltakJiWkIraFNMUklnNjFn?=
- =?utf-8?B?WDdzUUxJQytEOGhnZ2xZVFhNMHk3aTB4TkFqVzhpYmxCelc5VXEvdHB5bGtY?=
- =?utf-8?B?WnU0RUdCOTl1Mkp3amN0OEtPUWZFNy8rSTlZaTFhaUhRMjR2bU1hNmtNQmpY?=
- =?utf-8?B?d210Y2ZFdnVoOWRKcVNiOTBwQnV0Q1Juc2tWcGlXa2gyQjBtM3JYUE9DMkE4?=
- =?utf-8?B?Ny9pOTVBY09weUx0ZGMyRmV3MXhXcDltYlJ0dS9qSWM4by8wcTdNQW5Za2My?=
- =?utf-8?Q?V0J9TfrwJOs0+jdxGcqtyDMqF?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c13af8dc-3c4d-462b-c743-08dc4cffd7c2
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2024 19:14:50.1423
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: W54vQ2lUvHDhNo1X2FZTMWl/eqeMtjFWdksZSz8uCsr5mVLoBk3syCRi4IlPJanu9xIPLx1xkG4kZAyFGiLOEg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7995
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5.10 000/237] 5.10.214-rc2 review
+To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+Cc: torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, florian.fainelli@broadcom.com, pavel@denx.de,
+ stephen.s.brennan@oracle.com
+References: <20240325115920.1765410-1-sashal@kernel.org>
+Content-Language: en-US
+From: =?UTF-8?Q?Daniel_D=C3=ADaz?= <daniel.diaz@linaro.org>
+In-Reply-To: <20240325115920.1765410-1-sashal@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Li,
+Hello!
 
-I added comments below
-
-On 3/13/24 03:36, Li Ming wrote:
-> When RCEC captures CXL.cachemem protocol errors detected by CXL root
-> port, the recommendation from CXL r3.1 9.18.1.5 is :
+On 25/03/24 5:59 a. m., Sasha Levin wrote:
+> This is the start of the stable review cycle for the 5.10.214 release.
+> There are 237 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> 	"Probe all CXL Downstream Ports and determine whether they have logged an
-> 	error in the CXL.io or CXL.cachemem status registers."
+> Responses should be made by Wed Mar 27 11:59:18 AM UTC 2024.
+> Anything received after that time might be too late.
 > 
-> The flow is similar with RCH RAS error handling, so reuse it to support
-> above case.
+> The whole patch series can be found in one patch at:
+>          https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-5.10.y&id2=v5.10.213
+> or in the git tree and branch at:
+>          git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
+> and the diffstat can be found below.
 > 
-> Signed-off-by: Li Ming <ming4.li@intel.com>
-> ---
->  drivers/pci/pcie/aer.c | 20 ++++++++++++--------
->  1 file changed, 12 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 364c74e47273..79bfa5fb78f4 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -996,11 +996,15 @@ static bool is_internal_error(struct aer_err_info *info)
->  	return info->status & PCI_ERR_UNC_INTN;
->  }
->  
-> -static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
-> +static int cxl_handle_error_iter(struct pci_dev *dev, void *data)
->  {
->  	struct aer_err_info *info = (struct aer_err_info *)data;
->  	const struct pci_error_handlers *err_handler;
->  
-> +	/* Skip the RCiEP devices not associating with RCEC */
-> +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) &&
-> +	    !dev->rcec)
-> +		return 0>  	if (!is_cxl_mem_dev(dev) || !cxl_error_is_native(dev))
->  		return 0;
->  
-> @@ -1025,16 +1029,16 @@ static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
->  	return 0;
->  }
->  
-> -static void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info)
-> +static void cxl_handle_error(struct pci_dev *dev, struct aer_err_info *info)
->  {
->  	/*
->  	 * Internal errors of an RCEC indicate an AER error in an
-> -	 * RCH's downstream port. Check and handle them in the CXL.mem
-> -	 * device driver.
-> +	 * RCH's downstream port or a CXL root port. Check and handle
-> +	 * them in the CXL.mem device driver.
->  	 */
+> Thanks,
+> Sasha
 
-"Internal errors of an RCEC indicate an AER error in an RCH's downstream port or a CXL root port."
+We see new warnings here too, on Ar64, Arm32, x86, i386, MIPS, PowerPC, RISC-V, System/390, SuperH, SPARC, ARC, on multiple combinations of toolchain and kernel configs.
 
-Might be more correct to restate as:
+-----8<-----
+   /builds/linux/kernel/printk/printk.c:261:13: warning: 'panic_in_progress' defined but not used [-Wunused-function]
+     261 | static bool panic_in_progress(void)
+         |             ^~~~~~~~~~~~~~~~~
+----->8-----
 
-"AER internal errors are used by root ports and RCECs to indicate AER in downstream CXL ports (RCH, USP, DSP) or devices"
+Bisection points to:
 
-Regards,
-Terry
+   commit 290ee7858f46d6f007150bcd90cee321cabb8545
+   Author: Stephen Brennan <stephen.s.brennan@oracle.com>
+   Date:   Wed Feb 2 09:18:18 2022 -0800
+
+       printk: Add panic_in_progress helper
+       
+       [ Upstream commit 77498617857f68496b360081dde1a492d40c28b2 ]
+
+Reverting that commit makes the warning disappear.
+
+Reproducer:
+
+   tuxmake --runtime podman --target-arch x86_64 --toolchain gcc-12 --kconfig allnoconfig
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+
+Greetings!
+
+Daniel Díaz
+daniel.diaz@linaro.org
+
