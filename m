@@ -1,355 +1,191 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04olkn2091.outbound.protection.outlook.com [40.92.46.91])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3409271752;
-	Mon, 25 Mar 2024 00:45:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711327521; cv=none; b=e5A2480Mz/9HhOg/2upJcCCugXn5bK3g+JQcWfilbOHHccYpCC5RdWpsIUsvI0ngkxfiDozKjAWFdLyN9Wn3IsARFFudGbBAUSzORBNhFyYFpL2BP7jA7sSbp5cBGliLECcoMdhwYx8m+KGY74UDJB/7Vd6ogWA2aN7CXQrOpSI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711327521; c=relaxed/simple;
-	bh=GQnkI34JwPVeoy/b99Bb5KkKeULjUupOcGCKtffSV2M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=InVeaN137moOYogvp3TwzTkl0sRjGhqgVIkLms13eKOzhE+UFsCntAJ7o7TTOHpUmDYWeP9goDkzY7+rb9nuESyDayolCoAELuAOM+99W80eaw9XGhVEbre5aaQgtVkRdq329wnOJXd7uuuiy6npyiKb3bm5mJWW/tJ7AeRLjg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NmMVSH4m; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127232E358D;
+	Mon, 25 Mar 2024 00:58:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.46.91
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711328292; cv=fail; b=L/8W+I6v3r3Mmck0m9uvOoBNt0ju9V0t5stIdpd9yYj10h4W5E7ltvqVJnQNKvYQbEOJdA7OazGfW/wehYZNPHm8lanhjw8YGg1n7vFGHFgS3k+FUqSazesbyHksCAAwcThf4IUPKWfOoTLPgT4yK4eHuKp/k9SDGe63Ltm9SS4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711328292; c=relaxed/simple;
+	bh=KgaMsnEql/NWkbI8f9glML1qGvZun4KoNxQlf2aKoKo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=nN+41bJqSe+++2FxvA2RzkInoMs5P1rfmWEbBmv3riiCqBmvYZWFn8IzRR1xLC862drAnyQ8EEHnkQULxspp2sxfVLhZffhuTfNQ6luWHa8qt9HQPNRm1+9UGNJlopYcqogbyoy8ZY9WJrxSaAYh4X3iNPCUhUhPv0yluQCfm5c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=QDRzDwQJ; arc=fail smtp.client-ip=40.92.46.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NmMVSH4m"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-33ec7e38b84so2749039f8f.1;
-        Sun, 24 Mar 2024 17:45:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711327517; x=1711932317; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VFHTCkHsp3z4Z58A/RrTwNT63vqGSQmFCkPu+M5aF5c=;
-        b=NmMVSH4mG+bR8RJzRF5hKoVUzeq8QCUmn77ViL8aQXFtFV/CjuI6RHCzMjVBMCHs/n
-         2ESSKdmJQbGrFwtLXUvDKh/mC8g7dWwUJ4NzAqYAHbO42SssBfTYHq0rYgqvB5FcCOnl
-         xNSMvBJD1A3O1mxj6X1Qulp2nkpr9Cc7hh2mGMK9bqq/86wnBhgScQzTeaXsf2bAaLcd
-         c7WIs0NuVN3wW2tlYan6eXMUp+zJBO7ZNEBoQeCU6vuelrgAKWH3W1LFY5dJkmwdK+bH
-         BRKRgJn5bt4ZYpWY/TN+Nkfsbi7U7fJGYc3m3/eu3dEK+uP8EBoGEzJ3grGvwiNKjFf+
-         ODkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711327517; x=1711932317;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VFHTCkHsp3z4Z58A/RrTwNT63vqGSQmFCkPu+M5aF5c=;
-        b=bN9JG5A8A8QUX3metJ63hp1zaB2WzfwDNhCHZJWQ9srtmKtoW/DzickAx1iIt1udJH
-         YxB2UVCluxsP20VGnJ9KuGY5KlUEA9VjwxB/b0SctIIDcI0WvbtCU6+cmeQ1Px9rSrgE
-         EONxBHJb1h9mmHgNGsaGl/GRab5qyDs+Htqy6Jce+K8iyZAYDdiWImMGoqWe9EhdEzMy
-         oq+hKO6z+K4f81gR6fvwNfx5SV+gilK/KVFIxKg8yRsOUtiUq4jpYFREvcsQOoLkqefL
-         c+6OnLa5mTT5D8PmWR9qghQh0JYbWKmoP3b+pSoEPu0+Uv+YofYLEvvSzq4UGXzPV/oF
-         wauw==
-X-Forwarded-Encrypted: i=1; AJvYcCWnzPsDzndtkjcesJzpiZUDOWzb7ZFPwO0cliUoF1ygQNdpdnXfa3tEWe1GSgs6QotvrSdvpBwODvSd3Zrf8ITdi8FYjsaDY50NDdV1eBaVHgx9U/L3gYk+2tNHwzpGg82XB+BEahg90idq2rvJxwsCddhSq4RUPR2OiUadH8Jc4nAq
-X-Gm-Message-State: AOJu0Yx6fh/zDYSanDu8264l8MSQ/M1EUL6BF5CANf4VVxAxMtjclZwM
-	vnDX6YCwWHjUfwTuuF2RPxf9eV8CWLi2Phe+QMkIi4bgK1n60EeXL4cJDCyuIGguAoN4PRuDcS4
-	T8d0X+GP730WV+TLkojvdnarIlzE=
-X-Google-Smtp-Source: AGHT+IHoFwtbbPCEgmLxbNI8dDwg4hVtyd2nysCsbGqUOieqzWjZ9ExVaevFZsa/+n0x6wLZaTYo6vrsF8j2i6DYHxs=
-X-Received: by 2002:adf:e102:0:b0:33d:754c:70fc with SMTP id
- t2-20020adfe102000000b0033d754c70fcmr3468297wrz.14.1711327517329; Sun, 24 Mar
- 2024 17:45:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="QDRzDwQJ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JAJpujggKPcLGNlXqrq8YXzp28t+DWG7EHorT9MOCMqXtPKZA7ocA9YavPgEnxbaeKdjBZjPnHvfYEzk0d6/W9qKT45K1T3o8aNqE67GxDBXduZ3EN08XYh597QdeRs1sJkUVkLnVK3KU5mrsaYJxaUDyk7vz6L2NBrpL7A8QXxXxKH+crml5DifOdadJjcrStfox++GrMUZ7czZD9Lmzj9Rq4iYJSnOwN4KvBRcbaUotATNl4fmUcn78EFDPEe8M4ZEV+6nfxUTGIfIR79OaRS/y/VVrmnRYpxrrOeetBWE7pYYIfE+NsaQXCR1Qp2Gx5Gxap40M0goyugzWqBrPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eXV0pNlTngq5NvbpluV+J0UuGpZtvCSejefgeuSl1fU=;
+ b=FlD+DG1FX+/iYGPncB2c4aAi3UBFJh3CXsSL13TnLNHdquM3c3ON+fDfVg9prxxK5Zn2SeoZs2FG+wJqRpGnFxdH+J7mbeAwATpfbWJM7tShPK01mRQH+TxwmIz8/iV7T3A9UfPnt2nRuUBZU1Of8Qp1OPFMhrFVR+TfxTuxgq5euHAvsbJDih1vIanqSboCCk1vvt55UNzYlHoj9ylm1zXvDz46K8UyS/MQ4nyfYMSS9RtEXw+BDc7QVUvu9tWagDHqJUu4FQUbZNCmaw+KjGZuOD5WyZfAjtUMTBs0c27osItVIpKs6tKQZCUS58RYiW117M19hKy6k/OIUqZrPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eXV0pNlTngq5NvbpluV+J0UuGpZtvCSejefgeuSl1fU=;
+ b=QDRzDwQJwUU6hWV/IPJ1huq18rI8jL0zzRKVMCbZy1rvK6pw19p38FIW+Q1dqrDaQHFGe7lER3MDrboJ75lxu+fkCnMMeyzo6gsLXJM1mI3xTlwXpu5OM0CAPSJuX/9X6R7YYpzagsw8WdXMmUNJYzNxbyqGpSLV6wGZKtw5t2xaEfM+6FgqaHIig5Xs5ZcT9hB78Mk2XQqtxMPOKhmraXp95DXis60oNmpICNYgAiDpakC6kTh45zW989LU2ILEL9BRJAL4B1eGzf5e/E2OPasXxSta2ThQ8Uxcnx9wQ9P8y6oQbJBS4PEYAOduk07ZTNaCVo9op2+8UC2Wdpkf/A==
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
+ by SA1PR20MB6145.namprd20.prod.outlook.com (2603:10b6:806:33d::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.31; Mon, 25 Mar
+ 2024 00:58:08 +0000
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::182f:841b:6e76:b819]) by IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::182f:841b:6e76:b819%2]) with mapi id 15.20.7409.026; Mon, 25 Mar 2024
+ 00:58:08 +0000
+Date: Mon, 25 Mar 2024 08:58:12 +0800
+From: Inochi Amaoto <inochiama@outlook.com>
+To: AnnanLiu <annan.liu.xdu@outlook.com>, chao.wei@sophgo.com, 
+	unicorn_wang@outlook.com, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	conor+dt@kernel.org
+Cc: Inochi Amaoto <inochiama@outlook.com>, paul.walmsley@sifive.com, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] riscv: dts: sophgo: add watchdog dt node for CV1800
+Message-ID:
+ <IA1PR20MB49531613C8AA14C065D1B59EBB362@IA1PR20MB4953.namprd20.prod.outlook.com>
+References: <DM6PR20MB2316366FC9ADCBC7B6E9C289AB7A2@DM6PR20MB2316.namprd20.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM6PR20MB2316366FC9ADCBC7B6E9C289AB7A2@DM6PR20MB2316.namprd20.prod.outlook.com>
+X-TMN: [3/1V6s7gg22xZ7xD6RMsFPpA5fGOHX6mxwkw1Ck2eEw=]
+X-ClientProxiedBy: SG2PR04CA0182.apcprd04.prod.outlook.com
+ (2603:1096:4:14::20) To IA1PR20MB4953.namprd20.prod.outlook.com
+ (2603:10b6:208:3af::19)
+X-Microsoft-Original-Message-ID:
+ <ycht3yucpeuyobtcyhj2375kmxykjr4exx5a73o7i4e65camog@xum3ichoyl2f>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240322-hid-bpf-sleepable-v5-0-179c7b59eaaa@kernel.org> <20240322-hid-bpf-sleepable-v5-1-179c7b59eaaa@kernel.org>
-In-Reply-To: <20240322-hid-bpf-sleepable-v5-1-179c7b59eaaa@kernel.org>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Sun, 24 Mar 2024 17:45:05 -0700
-Message-ID: <CAADnVQJdm7+7tbJC8yhPqDUijE0DTD9UG4LOQmNRCWchQ3uGsg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v5 1/6] bpf/helpers: introduce sleepable bpf_timers
-To: Benjamin Tissoires <bentiss@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|SA1PR20MB6145:EE_
+X-MS-Office365-Filtering-Correlation-Id: a57d7ef3-138e-4080-65a3-08dc4c66a2f9
+X-MS-Exchange-SLBlob-MailProps:
+	iS5pQZgsAQAYkKD5rY1lSepUOrCsSWvTIZhPhq8nS3hYH9I//6EoA67cu7mGt40qkHVeEKknwK03O9LPzDMkcUy6J4asXM16MOAQgV5vUzi9KwOQdCBTb/Yck3rsN1IdebhuJWq5M2jb1nXv80S0P379u0/nl1+0oq+tSFy4I3zV0yl+pPLp1cBrF/f3ulR/auY7Hasi010h3Auq1MJUe55reaqGthiFwh3clMJiTnDtnzVzym8HcA21B5NxlrUjMBeWrQNZE9Dg8/YAfPFbT8qlNq0ZdcV7K1iDqwsJMl5bRbCNAQHHwhpaDweB97Lx9LJkuVfNJ5i6MORp8i6yAxQ1tyXILHj9TqHoMrthaompvLnOGmrdLSBKilzWPtbyMIYzO7xI7knidqHEHXCTuRsOxb1HBmEXNxTC7n2Yx+cfqmp5nFeW6r+A+dh6fFOplP0oGXUOwVdLlT9v6g3SdwY17BQt0D+LdbI0k2CGhyn5dviQjHvVt6Ezwimd7Dv6age33XCdtxsZS+7sCbN1URvstG7n6zs54nGbnagPwLSz2ZMR11pldO2laDe97XmIJ5++w7bIxc7OAqxMITEICIESZJtC1KA+wSnCa5nZ/LMKF+JwoHUS7L1gazGo2L86FeVisRR63sTQ63lyC+2hN3T0m+v8L+m4mFQl8ZmZ+dZD2BI5By+THvlsAtAuThSVW7CBYjnYx2Jv9MZIq8MpsmdjOi/ZoSgjPuZySyz20vKV+yW+KI1bq5i6fugtCRUCDIAcr+ddW6KHB/KMgWS2xRH4JpuDiW5CAIIDbBKPKOBNS4Cxzc4J6BFnt+yDlWks
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	NSD06Vq/x79G0ss0ietzQIt8g6ZU3V02J6foUGW4ORSvcgu5LQb9MOvAITllLthP5dIdtEtRgkfExkKp6c836bp70mYN4iE/4M+69r6CQNzV4m9Y5ozUvvLLS8kUWVRnyGyjFeDSWZjNxsW5LpsWgqMhy8xWw6bnH5e1qKBSVvlbZYygJcxmSRMg9HS8VZj+/buw8wb1n6mjLGX1m8/UXGeVvYYuAAFFckTJ1H6i+0RSZpWD8myGb9czx6p0G6v2ETGiEmKFE76SSX835pg8XpIYdd2IYo7qBlDwW/8bjW6FVYeDMlHJA2jWL0Di7SmFOMHl4/Qjqj7Fjp9FNh+aAkqzxS2tNRQFMJPTzo+89d8Eas8R2cBxZ0Ttv0ZliQx+BgT+sxeB/jhQj3eYWh9AG8yXmnyGwLUm9Gx2l9SFFm/4b7mwlpH2S19+DDou6+EOiIMsRPED2jGjVmShC98eXdlUBRD0q7XtrccomGeVkZW2WllChbBOt4b/IsyKiQjIBTKRUli47Uu7SkTr3ikWQhM1lMLcPIhYXxXcfm5B585WSJFSw5IHidXKRVo5/MmH5tTDsol02Eu0OErjiQPdEiy7StGvjOU6UdkTrl/oIQyRw2Qkbjs1Dxw0V6wCGRBytjtHIAtTTK66hHp2Uow6puVKc6/z0x542IGxg8PWLYzHoI7oFvozq9e8DE1RYbdZYaMeqHLZmPFT8xl9Bllx2Q==
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?CjxR9chanpOgs3H+fwpYI2z3wYy13TCPgMJzMc3XfKCVxg1M7/nXoVzRUS6w?=
+ =?us-ascii?Q?IAET+Dp9hsvktbYEllIK2yRhL63kAD+XBl6tdPuzpaJ3pRPUNZ4ePNDP27zs?=
+ =?us-ascii?Q?oHjRPwCt68h9+lfRUmCfGvaSZ/0wlC56CjfFMAQI6hifZJyVS8vVigfPXSZj?=
+ =?us-ascii?Q?enq4Mu9vbTU9qLan0QHjHNMHg3GE3ZrHtoCnxASz8HKLaFYojEG3KS3r5iv0?=
+ =?us-ascii?Q?QL12i3yIiR2mnzXJs66ajQrD5EcbUawlUCnw3LN8BFAMw4ZUO9+oaEgLoLPu?=
+ =?us-ascii?Q?sDmB4+EEwV+DfCJozOmFAWIXrf74xb6xpWYCZyD3zh1OBzsXgySV29T2GuBc?=
+ =?us-ascii?Q?y5D8WfibK16uS8FxBpr+SvWFLF4x0Lg+/+0tA5LiYklxU67rBkJqq5TJ2vvs?=
+ =?us-ascii?Q?uywIgMCMnQG3HgSBS8aVOsJgFnQC1o+9DZG/RpYMprGanLq5SW8WwamSoYXc?=
+ =?us-ascii?Q?er5XUXZ2gBLhuiWzDc7SRCrrzysxBBur3154YH0OjctS51ZzQ4/+S84KyNTy?=
+ =?us-ascii?Q?ZMkAsglFaLXA0x7+abOo68WekXQ20BYrUNUhcIZSVAJXN/1YB5iPsWPZrOQs?=
+ =?us-ascii?Q?TeAz4tM0eVWnSntFGkvwLAYo+EaosOeFAUpyAE+MHopqimZ49IDAN+zZlKjb?=
+ =?us-ascii?Q?/ErNpRV8BnhWv9Z66yxVCizeU/wK3obGcpOip0sN4MPemo9YbsgUsfFxBL3k?=
+ =?us-ascii?Q?8v0CBN4nsO3DTVRJeSlucI8H1MHg0nxzpKnKZHhUJE1tIBzn04C9xMTbWE98?=
+ =?us-ascii?Q?zAtsFiCmgDXIaHBlUDXpuXdjLY8wSlQvdhDGO/1KUG+D2xtu4DhujsQQMLjK?=
+ =?us-ascii?Q?sgzXwV/H/yZaVrMERzXX7fRE9EMV+jqg8rMsemrJjTNEUjhThuZOec6Fr1nW?=
+ =?us-ascii?Q?WFZMWg46G+Sy6d/sy12bKR/Vb2ppjNFgyrgmnTyKwMvVRpsphzS4DsQYPfOH?=
+ =?us-ascii?Q?Qb0zLe9ExOHWs/S+8zChDGkjIhm4SLKCgTN7Y9+a82amHjbe4hZit3IF92mt?=
+ =?us-ascii?Q?H4OYU6lT2FJpWhYNavoTupl5X/LePwdhxUFNQH+cTGuPO8p2doj8BAhvrD2B?=
+ =?us-ascii?Q?9By5BiEI6H+HnK9OTNrManPhYR9t65HTMYdbJojqLydv/7PQaUKy612rUjIN?=
+ =?us-ascii?Q?smmPwqK9w3DJv3xemf5KKY6Mjo/si+W8IgUP45lCW+zdjVoORw/5RSCEAPTw?=
+ =?us-ascii?Q?PbIzsVijthCmkBOVPRCpJwAFZ9WlMh8k3b/aPjJten6tGKluD5yEVloDsWcB?=
+ =?us-ascii?Q?T2LFi4SKpCcgyY4RP4wL?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a57d7ef3-138e-4080-65a3-08dc4c66a2f9
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2024 00:58:08.7479
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR20MB6145
 
-On Fri, Mar 22, 2024 at 7:56=E2=80=AFAM Benjamin Tissoires <bentiss@kernel.=
-org> wrote:
->
-> They are implemented as a workqueue, which means that there are no
-> guarantees of timing nor ordering.
->
-> Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
->
+On Thu, Jan 25, 2024 at 05:46:40PM +0800, AnnanLiu wrote:
+> Add the watchdog device tree node to cv1800 SoC.
+> 
+> Signed-off-by: AnnanLiu <annan.liu.xdu@outlook.com>
 > ---
->
-> no changes in v5
->
-> changes in v4:
-> - dropped __bpf_timer_compute_key()
-> - use a spin_lock instead of a semaphore
-> - ensure bpf_timer_cancel_and_free is not complaining about
->   non sleepable context and use cancel_work() instead of
->   cancel_work_sync()
-> - return -EINVAL if a delay is given to bpf_timer_start() with
->   BPF_F_TIMER_SLEEPABLE
->
-> changes in v3:
-> - extracted the implementation in bpf_timer only, without
->   bpf_timer_set_sleepable_cb()
-> - rely on schedule_work() only, from bpf_timer_start()
-> - add semaphore to ensure bpf_timer_work_cb() is accessing
->   consistent data
->
-> changes in v2 (compared to the one attaches to v1 0/9):
-> - make use of a kfunc
-> - add a (non-used) BPF_F_TIMER_SLEEPABLE
-> - the callback is *not* called, it makes the kernel crashes
-> ---
->  include/uapi/linux/bpf.h |  4 +++
->  kernel/bpf/helpers.c     | 86 ++++++++++++++++++++++++++++++++++++++++++=
-++++--
->  2 files changed, 88 insertions(+), 2 deletions(-)
->
-> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> index 3c42b9f1bada..b90def29d796 100644
-> --- a/include/uapi/linux/bpf.h
-> +++ b/include/uapi/linux/bpf.h
-> @@ -7461,10 +7461,14 @@ struct bpf_core_relo {
->   *     - BPF_F_TIMER_ABS: Timeout passed is absolute time, by default it=
- is
->   *       relative to current time.
->   *     - BPF_F_TIMER_CPU_PIN: Timer will be pinned to the CPU of the cal=
-ler.
-> + *     - BPF_F_TIMER_SLEEPABLE: Timer will run in a sleepable context, w=
-ith
-> + *       no guarantees of ordering nor timing (consider this as being ju=
-st
-> + *       offloaded immediately).
->   */
->  enum {
->         BPF_F_TIMER_ABS =3D (1ULL << 0),
->         BPF_F_TIMER_CPU_PIN =3D (1ULL << 1),
-> +       BPF_F_TIMER_SLEEPABLE =3D (1ULL << 2),
+> This patch depends on the clk driver and reset driver.
+> Clk driver link:
+> https://lore.kernel.org/all/IA1PR20MB49539CDAD9A268CBF6CA184BBB9FA@IA1PR20MB4953.namprd20.prod.outlook.com/
+> Reset driver link:
+> https://lore.kernel.org/all/20231113005503.2423-1-jszhang@kernel.org/
+> 
+> Changes since v1:
+> - Change the name of the watchdog from watchdog0 to watchdog.
+> - Change the status of watchdog.
+> v1 link:
+> https://lore.kernel.org/all/DM6PR20MB23160B8499CC2BFDAE6FCACDAB9EA@DM6PR20MB2316.namprd20.prod.outlook.com/
+> 
+> 
+>  arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts |  4 ++++
+>  arch/riscv/boot/dts/sophgo/cv1800b.dtsi          | 16 ++++++++++++++++
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts b/arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts
+> index 3af9e34b3bc7..75469161bfff 100644
+> --- a/arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts
+> +++ b/arch/riscv/boot/dts/sophgo/cv1800b-milkv-duo.dts
+> @@ -36,3 +36,7 @@ &osc {
+>  &uart0 {
+>  	status = "okay";
 >  };
->
->  /* BPF numbers iterator state */
-> diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-> index a89587859571..38de73a9df83 100644
-> --- a/kernel/bpf/helpers.c
-> +++ b/kernel/bpf/helpers.c
-> @@ -1094,14 +1094,20 @@ const struct bpf_func_proto bpf_snprintf_proto =
-=3D {
->   * bpf_timer_cancel() cancels the timer and decrements prog's refcnt.
->   * Inner maps can contain bpf timers as well. ops->map_release_uref is
->   * freeing the timers when inner map is replaced or deleted by user spac=
-e.
-> + *
-> + * sleepable_lock protects only the setup of the workqueue, not the call=
-back
-> + * itself. This is done to ensure we don't run concurrently a free of th=
-e
-> + * callback or the associated program.
-
-I recall there was a discussion about this lock earlier,
-but I don't remember what the conclusion was.
-The above comment is not enough to understand what it protects.
-
-In general how sleepable cb is fundamentally different
-from non-sleepable one when it comes to races ?
-
-bpf_timer_set_callback() is racy for both sleepable and non-sleepable
-and the latter handles it fine.
-
-Note that struct bpf_hrtimer is rcu protected.
-See kfree_rcu(t, rcu); in bpf_timer_cancel_and_free().
-
+> +
+> +&watchdog {
+> +	status = "okay";
+> +};
+> diff --git a/arch/riscv/boot/dts/sophgo/cv1800b.dtsi b/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
+> index aec6401a467b..03ca32cd37b6 100644
+> --- a/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
+> +++ b/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: (GPL-2.0 OR MIT)
+>  /*
+>   * Copyright (C) 2023 Jisheng Zhang <jszhang@kernel.org>
+> + * Copyright (C) 2024 Annan Liu <annan.liu.xdu@outlook.com>
 >   */
->  struct bpf_hrtimer {
->         struct hrtimer timer;
-> +       struct work_struct work;
->         struct bpf_map *map;
->         struct bpf_prog *prog;
->         void __rcu *callback_fn;
->         void *value;
->         struct rcu_head rcu;
-> +       spinlock_t sleepable_lock;
->  };
->
->  /* the actual struct hidden inside uapi struct bpf_timer */
-> @@ -1114,6 +1120,49 @@ struct bpf_timer_kern {
->         struct bpf_spin_lock lock;
->  } __attribute__((aligned(8)));
->
-> +static void bpf_timer_work_cb(struct work_struct *work)
-> +{
-> +       struct bpf_hrtimer *t =3D container_of(work, struct bpf_hrtimer, =
-work);
-> +       struct bpf_map *map =3D t->map;
-> +       bpf_callback_t callback_fn;
-> +       void *value =3D t->value;
-> +       unsigned long flags;
-> +       void *key;
-> +       u32 idx;
+>  
+>  #include <dt-bindings/interrupt-controller/irq.h>
+> @@ -103,6 +104,21 @@ uart4: serial@41c0000 {
+>  			status = "disabled";
+>  		};
+>  
+> +		watchdog: watchdog@3010000{
+> +			compatible = "snps,dw-wdt";
+> +			reg = <0x3010000 0x100>;
+> +			interrupts = <58 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&pclk>;
+> +			resets = <&rst RST_WDT>;
+> +			status = "disabled";
+> +		};
 > +
-> +       BTF_TYPE_EMIT(struct bpf_timer);
-> +
-> +       spin_lock_irqsave(&t->sleepable_lock, flags);
-> +
-> +       callback_fn =3D READ_ONCE(t->callback_fn);
-> +       if (!callback_fn) {
-> +               spin_unlock_irqrestore(&t->sleepable_lock, flags);
-> +               return;
-> +       }
-> +
-> +       if (map->map_type =3D=3D BPF_MAP_TYPE_ARRAY) {
-> +               struct bpf_array *array =3D container_of(map, struct bpf_=
-array, map);
-> +
-> +               /* compute the key */
-> +               idx =3D ((char *)value - array->value) / array->elem_size=
-;
-> +               key =3D &idx;
-> +       } else { /* hash or lru */
-> +               key =3D value - round_up(map->key_size, 8);
-> +       }
-> +
-> +       /* prevent the callback to be freed by bpf_timer_cancel() while r=
-unning
-> +        * so we can release the sleepable lock
-> +        */
-> +       bpf_prog_inc(t->prog);
-> +
-> +       spin_unlock_irqrestore(&t->sleepable_lock, flags);
 
-why prog_inc ?
-The sleepable progs need rcu_read_lock_trace() + migrate_disable()
-anyway, which are missing here.
-Probably best to call __bpf_prog_enter_sleepable_recur()
-like kern_sys_bpf() does.
 
-Now with that, the bpf_timer_cancel() can drop prog refcnt to zero
-and it's ok, since rcu_read_lock_trace() will protect it.
-
+> +		pclk: pclk {
+> +			#clock-cells = <0>;
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <25000000>;
+> +		};
 > +
-> +       callback_fn((u64)(long)map, (u64)(long)key, (u64)(long)value, 0, =
-0);
-> +       /* The verifier checked that return value is zero. */
 
-the prog will finish and will be freed after rcu_read_unlock_trace().
-Seems fine to me. No need for inc/dec refcnt.
+Remove this stub clock and use osc instead.
 
-> +
-> +       bpf_prog_put(t->prog);
-> +}
-> +
->  static DEFINE_PER_CPU(struct bpf_hrtimer *, hrtimer_running);
->
->  static enum hrtimer_restart bpf_timer_cb(struct hrtimer *hrtimer)
-> @@ -1192,6 +1241,8 @@ BPF_CALL_3(bpf_timer_init, struct bpf_timer_kern *,=
- timer, struct bpf_map *, map
->         t->prog =3D NULL;
->         rcu_assign_pointer(t->callback_fn, NULL);
->         hrtimer_init(&t->timer, clockid, HRTIMER_MODE_REL_SOFT);
-> +       INIT_WORK(&t->work, bpf_timer_work_cb);
-> +       spin_lock_init(&t->sleepable_lock);
->         t->timer.function =3D bpf_timer_cb;
->         WRITE_ONCE(timer->timer, t);
->         /* Guarantee the order between timer->timer and map->usercnt. So
-> @@ -1237,6 +1288,7 @@ BPF_CALL_3(bpf_timer_set_callback, struct bpf_timer=
-_kern *, timer, void *, callb
->                 ret =3D -EINVAL;
->                 goto out;
->         }
-> +       spin_lock(&t->sleepable_lock);
->         if (!atomic64_read(&t->map->usercnt)) {
->                 /* maps with timers must be either held by user space
->                  * or pinned in bpffs. Otherwise timer might still be
-> @@ -1263,6 +1315,8 @@ BPF_CALL_3(bpf_timer_set_callback, struct bpf_timer=
-_kern *, timer, void *, callb
->         }
->         rcu_assign_pointer(t->callback_fn, callback_fn);
->  out:
-> +       if (t)
-> +               spin_unlock(&t->sleepable_lock);
->         __bpf_spin_unlock_irqrestore(&timer->lock);
+Also, please rebase to v6.9-rc1.
 
-If lock is really needed why timer->lock cannot be reused?
-The pattern of two locks in pretty much the same data structure
-is begging for questions about what is going on here.
-
->         return ret;
->  }
-> @@ -1283,8 +1337,12 @@ BPF_CALL_3(bpf_timer_start, struct bpf_timer_kern =
-*, timer, u64, nsecs, u64, fla
->
->         if (in_nmi())
->                 return -EOPNOTSUPP;
-> -       if (flags & ~(BPF_F_TIMER_ABS | BPF_F_TIMER_CPU_PIN))
-> +       if (flags & ~(BPF_F_TIMER_ABS | BPF_F_TIMER_CPU_PIN | BPF_F_TIMER=
-_SLEEPABLE))
->                 return -EINVAL;
-> +
-> +       if ((flags & BPF_F_TIMER_SLEEPABLE) && nsecs)
-> +               return -EINVAL;
-> +
->         __bpf_spin_lock_irqsave(&timer->lock);
->         t =3D timer->timer;
->         if (!t || !t->prog) {
-> @@ -1300,7 +1358,10 @@ BPF_CALL_3(bpf_timer_start, struct bpf_timer_kern =
-*, timer, u64, nsecs, u64, fla
->         if (flags & BPF_F_TIMER_CPU_PIN)
->                 mode |=3D HRTIMER_MODE_PINNED;
->
-> -       hrtimer_start(&t->timer, ns_to_ktime(nsecs), mode);
-> +       if (flags & BPF_F_TIMER_SLEEPABLE)
-> +               schedule_work(&t->work);
-> +       else
-> +               hrtimer_start(&t->timer, ns_to_ktime(nsecs), mode);
->  out:
->         __bpf_spin_unlock_irqrestore(&timer->lock);
->         return ret;
-> @@ -1348,13 +1409,22 @@ BPF_CALL_1(bpf_timer_cancel, struct bpf_timer_ker=
-n *, timer)
->                 ret =3D -EDEADLK;
->                 goto out;
->         }
-> +       spin_lock(&t->sleepable_lock);
->         drop_prog_refcnt(t);
-> +       spin_unlock(&t->sleepable_lock);
-
-this also looks odd.
-
->  out:
->         __bpf_spin_unlock_irqrestore(&timer->lock);
->         /* Cancel the timer and wait for associated callback to finish
->          * if it was running.
->          */
->         ret =3D ret ?: hrtimer_cancel(&t->timer);
-> +
-> +       /* also cancel the sleepable work, but *do not* wait for
-> +        * it to finish if it was running as we might not be in a
-> +        * sleepable context
-> +        */
-> +       ret =3D ret ?: cancel_work(&t->work);
-> +
->         rcu_read_unlock();
->         return ret;
->  }
-> @@ -1383,11 +1453,13 @@ void bpf_timer_cancel_and_free(void *val)
->         t =3D timer->timer;
->         if (!t)
->                 goto out;
-> +       spin_lock(&t->sleepable_lock);
->         drop_prog_refcnt(t);
->         /* The subsequent bpf_timer_start/cancel() helpers won't be able =
-to use
->          * this timer, since it won't be initialized.
->          */
->         WRITE_ONCE(timer->timer, NULL);
-> +       spin_unlock(&t->sleepable_lock);
-
-This one I don't understand either.
-
-pw-bot: cr
+>  		plic: interrupt-controller@70000000 {
+>  			compatible = "sophgo,cv1800b-plic", "thead,c900-plic";
+>  			reg = <0x70000000 0x4000000>;
+> -- 
+> 2.34.1
+> 
