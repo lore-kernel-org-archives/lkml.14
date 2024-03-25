@@ -1,75 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF2A14A4C6
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84E814A0B4
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711363217; cv=none; b=bnkcjs2PE8xPZTObAnTpc2lMzyV6sNUPeldY4V/00S6fDe4bukuVdgbzvABAht8XICT2OybTURp5hOqg3t8H/r7AyL8Oj8T6Idjk/As09IWlUJeGm0pQZRXO9nMSPWRXLDS1moff/a53HKVShV1enDmDav/Y91z7oDahUhOj29U=
+	t=1711363222; cv=none; b=G3PX2pVx8L8pin8Xk6V/9feqWD3TIhECk/TZZuXTeE3sJtB40kSm9cZYPU/7BjAKiTjUnk4f6/cf/AH2QAeb1PpP99qYBhxolGQu/tg1SbJO+fdy9oFmTGLy0fo0GtUXev2cT9ntJ5vVYfUOtWixGVfdV0vDFP6wT9TGu12Sy58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711363217; c=relaxed/simple;
-	bh=8vFnr3Q3IphY3txxegY5cysnm69dmjkFAnV1L+0G+mg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=szwQNwkQcGHi97pifSA1K+2+sl1Wnl7PylNUduLlN4skXLUuW+9KQKDcowWK/AcZ91Z0BlQDVaC2HYwRLP9nb5344RRRV1fbkIa9s3XhQ/1rvBafMchiS4wbstfpLXG5Eua98fsoasNxPQ0WW7IDnh39Ht9pk8j4qLdxsmGmAVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j09jTwUY; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
+	s=arc-20240116; t=1711363222; c=relaxed/simple;
+	bh=JpQ7CBs4TNzQj81lAcXgPlGQHMAvTZfg1UGMvx358SM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XVyKaCIsWFjQu+nO2tr7qj5B1NAUo/n+W4nTvjpAaP28xOgpnBGwkCkdt0m/1QECYtdeGkrOMR8/JZ/hBkfIC8nkVK4sbWFrftq6QcbF1sGRiqiWPOWTUWdYbOR0n1MZjZOrUA1wnW89Pjfm2atBKvHxTxhR7h01QKxca98t6cI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CehMgnEi; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j09jTwUY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711363216; x=1742899216;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=8vFnr3Q3IphY3txxegY5cysnm69dmjkFAnV1L+0G+mg=;
-  b=j09jTwUY9vzDUvQuGKpRFHzd0q1k9R/BLHqsOFjWOW0dbBAK3Fgq1BMe
-   0/hjsNqpFtvCXQ4IM097NtOS75KcS4JyXeN7L1U5Pyw2gjcxFHOcI2DpS
-   CN5XvE4BmiYDRBSc0xqKS4/oQO6ixVrJyFYKX9/Tz3D9OjJxQ0L3edzTT
-   gWM+qNTH2glFFBbErlcAUbWtWcokJxmEl29v13CoWNAjIfJfECYMF5QY3
-   k+b8vJBQ+4jL+BRDCQolyPYBWvOlILJxuU5Iskx3wdW23Y3S2Jowqe82R
-   NozLJBNDQSMoXh1o5ASeetP2TjbyFKjgc3f40N5+Rh2pC6isXSdmOFTIq
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6561320"
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="6561320"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 03:40:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="937070133"
-X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
-   d="scan'208";a="937070133"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 25 Mar 2024 03:40:05 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id EF22C484; Mon, 25 Mar 2024 12:40:04 +0200 (EET)
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe  <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>,
-	Baoquan He <bhe@redhat.com>,
-	kexec@lists.infradead.org,
-	linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv9 03/17] cpu/hotplug: Add support for declaring CPU offlining not supported
-Date: Mon, 25 Mar 2024 12:38:57 +0200
-Message-ID: <20240325103911.2651793-4-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240325103911.2651793-1-kirill.shutemov@linux.intel.com>
-References: <20240325103911.2651793-1-kirill.shutemov@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CehMgnEi"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a4a387ff7acso74536466b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:40:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711363218; x=1711968018; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bh27uHBDlOwJXD9zu1d03ZYCWsYvKaRsKsqhKIOkSNE=;
+        b=CehMgnEizOZ3bJbr8W4ZwxP5muyAHHXqGPKCXTDZO6XJZqmLrnxz4nf4jfiqCmrtG2
+         S5/Tx5ToqTuFXemM2fycRPmF5Xi3PwK353RRyCGq2+fKw9grIBwbMDLqWttW5hmG2Aq6
+         aLeZAxO0Ot4a7TMfX0SomZvAeSOqWMoG4vthIclkGHX95r6OljKY9Fk6SrcOz7Om0g/1
+         ZdE9Mn/5uQlu4z/1lAUmRMU3NQ+ymaXui1zPzE2UgzzsuD+tJzs05roThnzb9sjFYt7j
+         lhCp6WyJDsvSJveqxNO8O2sVaq+E2bdNobvqjPI3LQZQCtz42YEDLrj32yv0QSrgh3th
+         PS6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711363218; x=1711968018;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Bh27uHBDlOwJXD9zu1d03ZYCWsYvKaRsKsqhKIOkSNE=;
+        b=QYrNHACGO2ARInw1wdPMFVJo75aYB9U91cyWIPW2jRQh3yY4IUt3tAgWF7kCH/b1P6
+         XGKiuWwS2RYOaSKuLsCoLybfV4UnJFqEUTWTmTp1Jde/EhbUI1UVKPl5wQBp/yaMIO2V
+         bEnRQHdQIC1m5sjK+zUoebHGjF8RJGvuyBWACi+vI6IU6GqXDsDeTRIV7R5ZJkVrZXz7
+         044O77pPH1vlefx6L7dd9CmcEBFujpeNOuAPm57I4tcSWy2BXmcIkzLR9NDGGGGQu63S
+         tyxhpPjGqsBGUl5HmH7ZOOVLyDkCiwuEMvAuqbwF7d7SMSa9GMT2o6fyOecpzrtvni0D
+         m6PA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6/ombjERvtYUgNl2nWWG5JG2Dx6zCPOPfby6/YHHJ5dBUYDsPzI1nfC03HgCC9lru4FqJo1VeIyjJtrz7n9pZqWGJ0iBpFAvd1Jwz
+X-Gm-Message-State: AOJu0YxAs6OxX9TiYU07XD/siQ3tCcsmIfD/VUzSJwilg/+r0g9zAXRO
+	DZ/25UYzQvBLlD0MqF8RHVcCi6za/N+KxxTpbXSUVDSXMltTaHvhfLfY29WPmdU=
+X-Google-Smtp-Source: AGHT+IHTfa+BKIpTQB0urlFntgkIyWScFG7sgDJ+xvspP10kWtTwtUdJT3QIhx7lCX5OkkNOym7N0g==
+X-Received: by 2002:a17:906:230d:b0:a46:6ba1:4c8c with SMTP id l13-20020a170906230d00b00a466ba14c8cmr4028033eja.44.1711363218095;
+        Mon, 25 Mar 2024 03:40:18 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.222.44])
+        by smtp.gmail.com with ESMTPSA id q2-20020a1709060e4200b00a4674ad8ab9sm2876653eji.211.2024.03.25.03.40.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 03:40:17 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Mao Jinlong <quic_jinlmao@quicinc.com>,
+	Tao Zhang <quic_taozha@quicinc.com>,
+	linux-arm-msm@vger.kernel.org,
+	coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH RESEND 1/2] dt-bindings: arm: qcom,coresight-tpda: drop redundant type from ports
+Date: Mon, 25 Mar 2024 11:40:06 +0100
+Message-Id: <20240325104007.30723-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,86 +79,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The ACPI MADT mailbox wakeup method doesn't allow to offline CPU after
-it got woke up.
+"in-ports" and "out-ports" are defined by graph schema, so defining its
+type is redundant.
 
-Currently offlining hotplug is prevented based on the confidential
-computing attribute which is set for Intel TDX. But TDX is not
-the only possible user of the wake up method. The MADT wakeup can be
-implemented outside of a confidential computing environment. Offline
-support is a property of the wakeup method, not the CoCo implementation.
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Introduce cpu_hotplug_disable_offlining() that can be called to indicate
-that CPU offlining should be disabled.
-
-This function is going to replace CC_ATTR_HOTPLUG_DISABLED for ACPI
-MADT wakeup method.
-
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/cpu.h |  2 ++
- kernel/cpu.c        | 13 ++++++++++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-index ae5a20cf2f9c..2dd47d203d36 100644
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -141,6 +141,7 @@ extern void cpus_read_lock(void);
- extern void cpus_read_unlock(void);
- extern int  cpus_read_trylock(void);
- extern void lockdep_assert_cpus_held(void);
-+extern void cpu_hotplug_disable_offlining(void);
- extern void cpu_hotplug_disable(void);
- extern void cpu_hotplug_enable(void);
- void clear_tasks_mm_cpumask(int cpu);
-@@ -156,6 +157,7 @@ static inline void cpus_read_lock(void) { }
- static inline void cpus_read_unlock(void) { }
- static inline int  cpus_read_trylock(void) { return true; }
- static inline void lockdep_assert_cpus_held(void) { }
-+static inline void cpu_hotplug_disable_offlining(void) { }
- static inline void cpu_hotplug_disable(void) { }
- static inline void cpu_hotplug_enable(void) { }
- static inline int remove_cpu(unsigned int cpu) { return -EPERM; }
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 8f6affd051f7..08860baa6ce0 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -483,6 +483,8 @@ static int cpu_hotplug_disabled;
+No changes, but patches were split from previous set. First patch in
+previouis series was being discussed, so let's just make these accepted.
+
+v1: https://lore.kernel.org/all/20231206115332.22712-1-krzysztof.kozlowski@linaro.org/
+---
+ Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml b/Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml
+index ea3c5db6b52d..7fbd855a66a0 100644
+--- a/Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml
+@@ -66,13 +66,11 @@ properties:
+       - const: apb_pclk
  
- DEFINE_STATIC_PERCPU_RWSEM(cpu_hotplug_lock);
+   in-ports:
+-    type: object
+     description: |
+       Input connections from TPDM to TPDA
+     $ref: /schemas/graph.yaml#/properties/ports
  
-+static bool cpu_hotplug_offline_disabled __ro_after_init;
-+
- void cpus_read_lock(void)
- {
- 	percpu_down_read(&cpu_hotplug_lock);
-@@ -542,6 +544,14 @@ static void lockdep_release_cpus_lock(void)
- 	rwsem_release(&cpu_hotplug_lock.dep_map, _THIS_IP_);
- }
- 
-+/* Declare CPU offlining not supported */
-+void cpu_hotplug_disable_offlining(void)
-+{
-+	cpu_maps_update_begin();
-+	cpu_hotplug_offline_disabled = true;
-+	cpu_maps_update_done();
-+}
-+
- /*
-  * Wait for currently running CPU hotplug operations to complete (if any) and
-  * disable future CPU hotplug (from sysfs). The 'cpu_add_remove_lock' protects
-@@ -1518,7 +1528,8 @@ static int cpu_down_maps_locked(unsigned int cpu, enum cpuhp_state target)
- 	 * If the platform does not support hotplug, report it explicitly to
- 	 * differentiate it from a transient offlining failure.
- 	 */
--	if (cc_platform_has(CC_ATTR_HOTPLUG_DISABLED))
-+	if (cc_platform_has(CC_ATTR_HOTPLUG_DISABLED) ||
-+	    cpu_hotplug_offline_disabled)
- 		return -EOPNOTSUPP;
- 	if (cpu_hotplug_disabled)
- 		return -EBUSY;
+   out-ports:
+-    type: object
+     description: |
+       Output connections from the TPDA to legacy CoreSight trace bus.
+     $ref: /schemas/graph.yaml#/properties/ports
 -- 
-2.43.0
+2.34.1
 
