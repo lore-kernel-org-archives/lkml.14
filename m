@@ -1,195 +1,120 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F2A13B794;
-	Mon, 25 Mar 2024 17:53:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8041D13C691
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 17:53:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711389197; cv=none; b=sBakY9DxXHCI3NFYSQR6avtH40eAjsj0RrDoD/ujUfjkEJXWgvO8VBGoB3uqMp5/mL4HO4HQUspAiJ0Xl34CxtR5V0dk/io73H5/Paac7I49pMBtiOPJzOdcZEgaZc+FJMkuDMWhsny98CvPyWbIb7KzbBLdxwr/yeagf/F6IKY=
+	t=1711389199; cv=none; b=hvXswS9HPep1yXa6FsV+MkwDzsZrjZ8oOevPhBjJeg9cAXOEggVOiNBfko9m5K9z4Hk0C4qqHC+7R5QLUPMgLU3Bp/MdvgUTbfeNULRpJJ4wJat1MD4PsAAh8Cg6y1TvLwYy2mKif5FlRORAJyj4scgleHOmM1XRaain7EKp9KU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711389197; c=relaxed/simple;
-	bh=qdStSeM+VJCbqbzuADj4lChWMSBHWJ8X0eHOGVaPa9o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=O/tnPmbwikNfKOrV7ZzOZkj0FKmAVE64CIx2GcJ9JhmjYEwWrjXXam8xBdTTnQgmlybJbo9v5At0v/LkwT+v8nD9moiQEQuTZSdgxH/l6iO9NhUHow89gotmCchv3/NVzihEboepKvCtSIRgBfZ3LfG1DI58zUI+9zLBX7YAHXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bn3+zbKh; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711389199; c=relaxed/simple;
+	bh=zTq/MHKLajiF60aduRxCL1na30IDBaIdseS4oSksHMc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vh+uG702wsXah6Zry3yktSvkVVflABYOEvGXDauriPo3/ZFvw1on2tSK05e6Yie10pDC9cA7Xfaru9FbjiVMg0LchRfjF/OzicMPPTvWfeoABI0va6Q/NrvAVaELLit46kbyhdDqDYGSuuhTP5BPJva83d6zEQuba9i86SkEPjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EMI33Tgx; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bn3+zbKh"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1e0189323b4so34638625ad.1;
-        Mon, 25 Mar 2024 10:53:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EMI33Tgx"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6e6d089f603so1059763a34.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:53:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711389194; x=1711993994; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/YzJYq0fkceHof/EPazly4M40tZRXgMzxd6Hp1cFk9M=;
-        b=Bn3+zbKhWji2FwFKDH//yuXeYz8EpRWrhcGQCv/jVRfgAhqUJ3U+k8WOOmjHb0U+nR
-         5m7WTaG1BLp5gqTVZ/OWhOI9ovgbj47j5OGUqvc/aiJoQN28dCOD7xFZRnzHNXUEymh9
-         1jS2SuyasViwcd4a43dCn3we4aLQDELxDTndNc48L1Bkf58hpYoFhKnBb4/yJWkJiGMh
-         zqv+FG2e7kMZb+OE8gU990Wye38bTqXdrHi13HxEtPQh8Pw1vhiM/yasksuw/mKAPOGH
-         YNfTo9m6fc6p+wNHAu9DzcP7zIVEh6sL5y0Wu59+l/Jpz3chgOWnzNgFZQPbMtWtygI6
-         1ojA==
+        d=linaro.org; s=google; t=1711389196; x=1711993996; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wtfY/exxAJ2/pA3+4ErQekLFGx+9Ne0CFNn8mAKnrOc=;
+        b=EMI33TgxnJXZ8e/OsGJpTOjGNXXYfi7tG2u5jc+swsPl+SicJMd0u7EKXhL7UEJIkl
+         sjF8+Y7kkA66mz0LIe/JQ+Mn8lAo8NBnfXvP5IK48j9G312LvpbWdAzW0rb2PF7uCtaV
+         AxcIaKfg6Ng+7X6R0TGKKuJzIYX/2RKq84NVDeYatkz54BmuJYvvr7IwqYXA8Q1RKRdy
+         IJOOF5UkXORWUl7zjMIQGSd2R2ShW5B3HrhHV+jQlCOIWpAedg4ezWEVM/bgX5IAHxlL
+         0SQYu0ZDemZ+OIP4SIdFk8ZzL7b5fpHgYvt1vX+FEmHBYkGqkI0ZLSUwOXkU4vTKsKQX
+         sf5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711389194; x=1711993994;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=/YzJYq0fkceHof/EPazly4M40tZRXgMzxd6Hp1cFk9M=;
-        b=Jj6zXNFP7PemDH9ydWDWpb1EEbaMHnrNJweRqCoznOOmgeY++E/Aohq7QtNd25aCWC
-         2lqdt+5SzLbQxQXSu44/Uku92XM4bccHLuZqiVBo1K0t4QI06YKxx55RoFGL5+aX/Gwi
-         uY3ZEZ7RP7eJQfyPeqzILkjQoM4yedBEDLzkvQMTAuHXJeBhFHmS41Uz2DO9vlnDBzBK
-         9Cnjxcr3GaT4JzxTDBjsBVX6Jwj3l4sG8FrAQTqkvOmEqIQiIlo9tiWz2/j+Iij1c9vJ
-         u5MysLw/UJXwq/us9Xu0ULlvgQGlTJ41HuLD16bZu9mpkxReqbOcVyQgzWCZJqm0bi0M
-         smyg==
-X-Forwarded-Encrypted: i=1; AJvYcCUfKBNUy5k6JkmVoJn7PUdWoafwQ7dyWSBNMhbA5xaXLWON7MKBgboPDjABd35up9urvDzkBcIrCXvv1/cKB7uvg1FH+QT5rzqgT/c9uqkShgu+ZxnSLzw3W0zOvxyebUB/Bc7rMn6zUe1IpT4ZyP6jVjexS8avJAD+hL6o7mBpSASj2vhA6WXgIWXwOqMbaBel8LyPqz9P9fwxeK2vlQMJ5vMS5tn16VKnQEKpsDBDNnCHdPNX0lM+7LNWWjdgdG8CzknACSso/ACElDF0208DsrYyKM+ZVAkjUbuCiVF79YzgXU6ZGjs7L1i2+m20bQ==
-X-Gm-Message-State: AOJu0YxXuhTLIb2+OUWZqYSjyqBWyPZ77JpPCBAJBs2h6IawppJbcXRj
-	cNT5yvADLUkwSi/IL2rl8oNDKmcom8TbSYmkaRqCmRvwJJ7x9+c48dNsz8Vy
-X-Google-Smtp-Source: AGHT+IH4L5pCyOM7/NriCMnotw9B9wTRd/QlGQsY00iVlUfB3rIc/3hcXxQD6OWxPS5Q16CPFVorBg==
-X-Received: by 2002:a17:902:b495:b0:1de:faa5:552 with SMTP id y21-20020a170902b49500b001defaa50552mr8062370plr.56.1711389194428;
-        Mon, 25 Mar 2024 10:53:14 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 1-20020a170902c10100b001db8a5ea0a3sm4986539pli.94.2024.03.25.10.53.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 10:53:14 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-To: linux-kselftest@vger.kernel.org
-Cc: David Airlie <airlied@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mcanal@igalia.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Kees Cook <keescook@chromium.org>,
-	Daniel Diaz <daniel.diaz@linaro.org>,
-	David Gow <davidgow@google.com>,
-	Arthur Grillo <arthurgrillo@riseup.net>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	dri-devel@lists.freedesktop.org,
-	kunit-dev@googlegroups.com,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	netdev@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>,
-	Linux Kernel Functional Testing <lkft@linaro.org>
-Subject: [PATCH v2 12/14] sh: Add support for suppressing warning backtraces
-Date: Mon, 25 Mar 2024 10:52:46 -0700
-Message-Id: <20240325175248.1499046-13-linux@roeck-us.net>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240325175248.1499046-1-linux@roeck-us.net>
-References: <20240325175248.1499046-1-linux@roeck-us.net>
+        d=1e100.net; s=20230601; t=1711389196; x=1711993996;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wtfY/exxAJ2/pA3+4ErQekLFGx+9Ne0CFNn8mAKnrOc=;
+        b=Ux/N7g9F5q2SMbR0TNMN3N+jKAGAhu5i2/5hxKgEEQffkbVGr9UZtYR9gGVMygCKq1
+         Pbs47SdMHt8svRlywxgSnvR76U7d0re/Z6njazx8HcKoNnaNKH+DAJoCrqh4tYiSed4A
+         W9m7VpQvkNR7PTsAHM/bDXsUOKSsNzG4k0V6F+5hRZPDduLwzxdM3qJ2+G5ZzPxczPxk
+         ieXGPOeQ+ziSn7JCoow0p4AYK80XHQnMt+g2N7jJwloZZArtwDpxIouFWzmf0ZsEUsKA
+         uFVzKmS33euXwUD9wNk2gnrwqlSmSlhuveD9zuNLMGoEsENVkiRMdQFhQNxYglxaxCUx
+         8Lzg==
+X-Forwarded-Encrypted: i=1; AJvYcCUzH4NLJ0IFabTWEy05yEHz9iRxQP6g7aOupBxBVRDbTs0qNIah1QVnC6OvjA/Wn22RAuOawwa4cjc31ZP4UrfA0kU4zyf42bcDBs27
+X-Gm-Message-State: AOJu0Yy/ycGY0DmwrS2hFlLCfCmq6YqebOenrcnsm4d0Sy2T6oWb3qXp
+	jUpB5rtLcC7+8Gvt+qFzcGzuYIPgJLdpx7Qv68A0LNpQ9O3HEJRas0/6Bmg5Rb7OQMFCdFb2fUb
+	Jb9s=
+X-Google-Smtp-Source: AGHT+IEciRg0AcFQztGBCMI82mO0JDbPeHvr0yogNBgxkbwaEOvCIlWeBV3OMIljB7KfX22byhSb4Q==
+X-Received: by 2002:a9d:66d3:0:b0:6e5:f65:8775 with SMTP id t19-20020a9d66d3000000b006e50f658775mr364313otm.24.1711389196635;
+        Mon, 25 Mar 2024 10:53:16 -0700 (PDT)
+Received: from [192.168.17.16] ([148.222.132.226])
+        by smtp.gmail.com with ESMTPSA id x9-20020a056830408900b006e6ae032f5bsm1213190ott.7.2024.03.25.10.53.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Mar 2024 10:53:16 -0700 (PDT)
+Message-ID: <1f06b9bc-37b4-4359-8b97-0ed08b196870@linaro.org>
+Date: Mon, 25 Mar 2024 11:53:14 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5.15 000/309] 5.15.153-rc2 review
+To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+Cc: torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, florian.fainelli@broadcom.com, pavel@denx.de
+References: <20240325115928.1765766-1-sashal@kernel.org>
+Content-Language: en-US
+From: =?UTF-8?Q?Daniel_D=C3=ADaz?= <daniel.diaz@linaro.org>
+In-Reply-To: <20240325115928.1765766-1-sashal@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Add name of functions triggering warning backtraces to the __bug_table
-object section to enable support for suppressing WARNING backtraces.
+Hello!
 
-To limit image size impact, the pointer to the function name is only added
-to the __bug_table section if both CONFIG_KUNIT_SUPPRESS_BACKTRACE and
-CONFIG_DEBUG_BUGVERBOSE are enabled. Otherwise, the __func__ assembly
-parameter is replaced with a (dummy) NULL parameter to avoid an image size
-increase due to unused __func__ entries (this is necessary because __func__
-is not a define but a virtual variable).
+On 25/03/24 5:59 a. m., Sasha Levin wrote:
+> This is the start of the stable review cycle for the 5.15.153 release.
+> There are 309 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed Mar 27 11:59:27 AM UTC 2024.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+>          https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-5.15.y&id2=v5.15.152
+> or in the git tree and branch at:
+>          git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+> and the diffstat can be found below.
+> 
+> Thanks,
+> Sasha
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-Acked-by: Dan Carpenter <dan.carpenter@linaro.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
-- Rebased to v6.9-rc1
-- Added Tested-by:, Acked-by:, and Reviewed-by: tags
-- Introduced KUNIT_SUPPRESS_BACKTRACE configuration option
+We see build failures with Arm (64- and 32-bits) with allmodconfig with GCC 8, GCC 12, and Clang 17:
 
- arch/sh/include/asm/bug.h | 26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
+-----8<-----
+   /builds/linux/drivers/cpufreq/brcmstb-avs-cpufreq.c: In function 'brcm_avs_cpufreq_get':
+   /builds/linux/drivers/cpufreq/brcmstb-avs-cpufreq.c:486:9: error: ISO C90 forbids mixed declarations and code [-Werror=declaration-after-statement]
+     486 |         struct private_data *priv = policy->driver_data;
+         |         ^~~~~~
+   cc1: all warnings being treated as errors
+   make[3]: *** [/builds/linux/scripts/Makefile.build:289: drivers/cpufreq/brcmstb-avs-cpufreq.o] Error 1
+----->8-----
 
-diff --git a/arch/sh/include/asm/bug.h b/arch/sh/include/asm/bug.h
-index 05a485c4fabc..470ce6567d20 100644
---- a/arch/sh/include/asm/bug.h
-+++ b/arch/sh/include/asm/bug.h
-@@ -24,21 +24,36 @@
-  * The offending file and line are encoded in the __bug_table section.
-  */
- #ifdef CONFIG_DEBUG_BUGVERBOSE
-+
-+#ifdef CONFIG_KUNIT_SUPPRESS_BACKTRACE
-+# define HAVE_BUG_FUNCTION
-+# define __BUG_FUNC_PTR	"\t.long %O2\n"
-+#else
-+# define __BUG_FUNC_PTR
-+#endif /* CONFIG_KUNIT_SUPPRESS_BACKTRACE */
-+
- #define _EMIT_BUG_ENTRY				\
- 	"\t.pushsection __bug_table,\"aw\"\n"	\
- 	"2:\t.long 1b, %O1\n"			\
--	"\t.short %O2, %O3\n"			\
--	"\t.org 2b+%O4\n"			\
-+	__BUG_FUNC_PTR				\
-+	"\t.short %O3, %O4\n"			\
-+	"\t.org 2b+%O5\n"			\
- 	"\t.popsection\n"
- #else
- #define _EMIT_BUG_ENTRY				\
- 	"\t.pushsection __bug_table,\"aw\"\n"	\
- 	"2:\t.long 1b\n"			\
--	"\t.short %O3\n"			\
--	"\t.org 2b+%O4\n"			\
-+	"\t.short %O4\n"			\
-+	"\t.org 2b+%O5\n"			\
- 	"\t.popsection\n"
- #endif
- 
-+#ifdef HAVE_BUG_FUNCTION
-+# define __BUG_FUNC	__func__
-+#else
-+# define __BUG_FUNC	NULL
-+#endif
-+
- #define BUG()						\
- do {							\
- 	__asm__ __volatile__ (				\
-@@ -47,6 +62,7 @@ do {							\
- 		 :					\
- 		 : "n" (TRAPA_BUG_OPCODE),		\
- 		   "i" (__FILE__),			\
-+		   "i" (__BUG_FUNC),			\
- 		   "i" (__LINE__), "i" (0),		\
- 		   "i" (sizeof(struct bug_entry)));	\
- 	unreachable();					\
-@@ -60,6 +76,7 @@ do {							\
- 		 :					\
- 		 : "n" (TRAPA_BUG_OPCODE),		\
- 		   "i" (__FILE__),			\
-+		   "i" (__BUG_FUNC),			\
- 		   "i" (__LINE__),			\
- 		   "i" (BUGFLAG_WARNING|(flags)),	\
- 		   "i" (sizeof(struct bug_entry)));	\
-@@ -85,6 +102,7 @@ do {							\
- 		 :					\
- 		 : "n" (TRAPA_BUG_OPCODE),		\
- 		   "i" (__FILE__),			\
-+		   "i" (__BUG_FUNC),			\
- 		   "i" (__LINE__),			\
- 		   "i" (BUGFLAG_UNWINDER),		\
- 		   "i" (sizeof(struct bug_entry)));	\
--- 
-2.39.2
+Reproducer:
+
+   tuxmake --runtime podman --target-arch arm64 --toolchain gcc-12 --kconfig allmodconfig
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+
+Greetings!
+
+Daniel Díaz
+daniel.diaz@linaro.org
 
