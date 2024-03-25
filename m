@@ -1,106 +1,187 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B7813C9D2
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 11:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5D21C5AA5;
+	Mon, 25 Mar 2024 11:31:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711366185; cv=none; b=ZKVJkpHzj4x7LQO6pDBdewf0F+WORS2b5BlAxS5sm2zbM5W0UptWLjsd3lzXI7rarU7XoWENbuSd/iX7hNLFJBA/GekRWBwF8IKN2BmAJhYmO4+yitXELbcL0pYsjv5VmRIqvULjdfI5RrZ/jv+V6fWGjeVWDT5mS9EjhGMT6PU=
+	t=1711366281; cv=none; b=gwB6fvH4v2AaewrXuimYCF9vuQyrKtR3CQAMo4VxcGe5gf7BE7hDto4KLdMc5cSOG9Eapzf17aa9gJj32T4Q2kZby2GVIpwp6x9/NXbaxBvuiZElgRDvQJKxULouXb5txJXAmS8A98VRjfQVbXPBiTTDLZA0IHUqgmqkq5VZLI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711366185; c=relaxed/simple;
-	bh=DfPqsjzS7hM0pHS4XcLmOdcjRtfbF39TxfamCWHwy68=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iWMJQACc8tMe8IOs70QuKc9MqNedK1nSXH8VPHdPY5rJMO7+KwMaEM9aXWkQmEFR3D7n7DVH+OyvlbIW/Scbd80K7gFMdi1v8oKoVY8NGTmZWKLPvcLfX5PISVMswuK9+mcT38qLNZCjYeT1KEsqhvAnVyMFHjgJsVgKtqujCXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SECI+TkZ; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1711366281; c=relaxed/simple;
+	bh=EyIlueejT0gK9GuEs5MdPNg8HDGXDVqmLnd5nxFpcZ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Ypqqy0jNaJp+tlKd2kL0uFEjfsxRMJr1+5V/QFvxpnk8qOIDk4liDIuhhjqmuluhH4RBeqRG0hcEx+YJrg6NnTqx9RCjH0bQ+vG2pI2wquJ6Hgf97Btl0Bq9UxmvOUgKiR9SHihKoT1Ln0Jd9Tcd1q3UsMzxDKxLwNaxWUO5Qvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MAcNm/kG; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SECI+TkZ"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4148c09ec6bso14055e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 04:29:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MAcNm/kG"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-515a68d45faso1518007e87.3;
+        Mon, 25 Mar 2024 04:31:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711366182; x=1711970982; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GkNYJvsdSYu5fwK3ocDdS3LzfZ1gl4LLmO/SR89+rGY=;
-        b=SECI+TkZtWa6fxuHDrhV19cnE/nhQr3ucQo/erfztRXKO9lCdYO5pA7AtZ1aTW3umU
-         faD7KYjkhpmqJ/JBeL1eO0dYPAVj0GRAY77vF1dOaubQd0AmqpESX5Xe6i+ODq7NFO/Z
-         cXTY5nZ2+yELeMx8dbvB6olDLkMw4D62McSOzZd9btDd6vAfhYGgotLAU6uyA3tOw0c+
-         DBe1OVy2e6/ro7aRDJOWLqPbubNepMz8pB1r7ZmDRB5QehbSn3w1UKDKAChn9bORwjYl
-         6qK51c/RM/+IyLYR0zjcae0CvJraLXAlRyOHthYVTMnomAic0Hpwv0F2RBi2PplYh+43
-         VKyg==
+        d=gmail.com; s=20230601; t=1711366276; x=1711971076; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WJkBHyUsM1Ra6ur6SOchqQjxQFdX44EdA5Gc6F4wbhw=;
+        b=MAcNm/kGdnd0rZqRC8e7j+J81J0l53eJYL3481mBjVy8IsB4/nm9IhyCWN6oklYO72
+         QEy6V0YEQ8lOEN+QJ6lnximKhQjY1pUTFOcuC6VTr2AyeHsf6WpoPVu15Rdgd8RRE0CN
+         9vhdh3HjhJhp12SJO25bonDUUKQZVIa1KfLVpyvSoMSyEompAGW9GCjQnZZdRRStgvcp
+         cjSJNaMY+9g98Qin+Lg5ZSVFhUelgGMkuQ8mCdo+lQ24qYfeygy5ju80e6YJjTne5p5b
+         RqqCJxy6z3s+yNp12vpDlX2GLhjnPRJ8AH549OFgTo/hWa/vyigPPx+t4d2T8UDh1Zh8
+         Nb4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711366182; x=1711970982;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GkNYJvsdSYu5fwK3ocDdS3LzfZ1gl4LLmO/SR89+rGY=;
-        b=LqXx/183fh6mBXRxGr91UyCeP9inQFlFfSno6nHGZAaUCdv+w0s8h7lxVbXEZdG67X
-         awUlz3SL+uUyHeSqg/lAmi/GC4SCaFE0oVDZogCWkHc+vi6xi1Uu0SqGwzg1+hvATt7+
-         wsqbBodatINZ2Mo3JDiYoKR7i/SXEmdGRO1PGH4BfdywrovxGj/d9gF6kHG287+CR/OG
-         AivdDTZLZSbD2EVH01EviFjIigs93OSh9HHuN3LvtTj6i1jGdC/skdJ5/dWHW8xqU2Ct
-         jiLOEvtxH9p/EbYljASwlV2PWcCnfddHvM3OhOKGpWbr1foRCad9Wc+hfHeXhGJ4b2WR
-         Nssw==
-X-Forwarded-Encrypted: i=1; AJvYcCUGI3KG8DbyB5tG/IrSwiBTA5UvV4GVrA+HMXBeLNY6PPQiE23sYzYDXyvX6R5HKdN+Laj1jpPSLSGInkvBohH1bSml285bSJV5hiPp
-X-Gm-Message-State: AOJu0YxDP9MaVxfFhuDsoidoDvuPddkGuWFfCncIdnVyN6tehvtVNl3e
-	429h2eQCHU7SgpDhMDpUYRhCeJeZSS1GIAthuUiHPbMefQDC5dZ7aJmInRGFIw==
-X-Google-Smtp-Source: AGHT+IEqrqZ/kvgiywLjCv3Lnov4/3EfG9IoekwC7LJMklqp7fgDJFEOrVMhVA0far1ZCvdOK2vGMQ==
-X-Received: by 2002:a05:600c:35d6:b0:414:866e:4437 with SMTP id r22-20020a05600c35d600b00414866e4437mr203074wmq.1.1711366181603;
-        Mon, 25 Mar 2024 04:29:41 -0700 (PDT)
-Received: from google.com (248.199.140.34.bc.googleusercontent.com. [34.140.199.248])
-        by smtp.gmail.com with ESMTPSA id o24-20020a05600c511800b004148090cf86sm2943880wms.0.2024.03.25.04.29.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 04:29:41 -0700 (PDT)
-Date: Mon, 25 Mar 2024 11:29:39 +0000
-From: Sebastian Ene <sebastianene@google.com>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: catalin.marinas@arm.com, james.morse@arm.com, jean-philippe@linaro.org,
-	maz@kernel.org, qperret@google.com, qwandor@google.com,
-	suzuki.poulose@arm.com, tabba@google.com, will@kernel.org,
-	yuzenghui@huawei.com, kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel-team@android.com
-Subject: Re: [PATCH 2/2] KVM: arm64: Allow only the specified FF-A calls to
- be forwarded to TZ
-Message-ID: <ZgFgI0Ky2m4MUbw-@google.com>
-References: <20240322124303.309423-1-sebastianene@google.com>
- <20240322124303.309423-2-sebastianene@google.com>
- <Zf45eDs8Bd1UQ94Z@linux.dev>
+        d=1e100.net; s=20230601; t=1711366276; x=1711971076;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WJkBHyUsM1Ra6ur6SOchqQjxQFdX44EdA5Gc6F4wbhw=;
+        b=BPd6kH+QULDFAMEU6KWslsEpSJT2XdAsx2OLPdr+oBgb4VzpRdt0A9ovEGYYbpbeZH
+         6BNiy+idW8S4Plk03QKPG+d+cfmMFhPQI5+tduFO/00l3tzBoe7/v2yShBq4rVkAtwLa
+         yoeg5CIq7Rs1IO6Ln54pchHjMqIFP9yJ8RHm//3fzw/NjVu5IwQio2AXf/sERWXhENVH
+         R5tEHF6AvihIOhdSps+eaOtGDbyUrGQWkbM0WNoHWrx243YYQI2iMJONSWfOydSiBFz/
+         PMK+e/WaBsPui4MZQ6EJGqPwHr9BabNN2MjoriVC0wkoJIIOVQemG2Zo1Nb4Fk6G056q
+         UZCg==
+X-Forwarded-Encrypted: i=1; AJvYcCWkY5JhNelePlDssYOBobAv3E9CFnd14TYnKQHIdh3CLbpD9ycXLJh7MozytR9jBWJdakrxg8XIFQZLTi55+Fr+3nctVtGq3cegfHgu8JgcOtZBo8NL3Nd/B97cM2YxKyyJlG4sySDAUw==
+X-Gm-Message-State: AOJu0YyBIcprijDQjxrDipq11zV7SE8gG6v6yt07njm+leYR4GpKm/f6
+	SWinmKRaWp7UIj47vqr1xf6+2WnpsAlwFWvW1QNWSZKcf0CTwYzACEraDHR9
+X-Google-Smtp-Source: AGHT+IF2nqxUG0rM7Fo+wTv5ljPmgwCa+w71rkB3zM9tbCRqlpdyPxc1zfzOtVQRkUO55CzC5ywi3Q==
+X-Received: by 2002:a19:ca07:0:b0:512:fabd:8075 with SMTP id a7-20020a19ca07000000b00512fabd8075mr4079760lfg.48.1711366276190;
+        Mon, 25 Mar 2024 04:31:16 -0700 (PDT)
+Received: from ?IPV6:2001:14ba:7426:df00::6? (drtxq0yyyyyyyyyyyyydy-3.rev.dnainternet.fi. [2001:14ba:7426:df00::6])
+        by smtp.gmail.com with ESMTPSA id y5-20020a196405000000b00515a3293478sm955108lfb.104.2024.03.25.04.31.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Mar 2024 04:31:15 -0700 (PDT)
+Message-ID: <472c6eaf-6cbc-484c-bc94-571d115176aa@gmail.com>
+Date: Mon, 25 Mar 2024 13:31:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zf45eDs8Bd1UQ94Z@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 2/2] mfd: rohm-bd71828: Add power off functionality
+Content-Language: en-US, en-GB
+To: Andreas Kemnade <andreas@kemnade.info>, lee@kernel.org,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, imx@lists.linux.dev
+References: <20240324201210.232301-1-andreas@kemnade.info>
+ <20240324201210.232301-3-andreas@kemnade.info>
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20240324201210.232301-3-andreas@kemnade.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 22, 2024 at 07:07:52PM -0700, Oliver Upton wrote:
-> On Fri, Mar 22, 2024 at 12:43:03PM +0000, Sebastian Ene wrote:
-> > The previous logic used a deny list to filter the FF-A calls. Because of
-> > this, some of the calls escaped the check and they were forwarded by
-> > default to Trustzone. (eg. FFA_MSG_SEND_DIRECT_REQ was denied but the 64
-> > bit version of the call was not).
-> > Modify the logic to use an allowlist and allow only the calls specified in
-> > the filter function to be proxied to TZ from the hypervisor.
+On 3/24/24 22:12, Andreas Kemnade wrote:
+> Since the chip can power off the system, add the corresponding
+> functionality.
+> Based on https://github.com/kobolabs/Kobo-Reader/raw/master/hw/imx6sll-clara2e/kernel.tar.bz2
+> No information source about the magic numbers found.
 
-Hi Oliver,
+Oh, interesting repository :) Thanks for linking to it! I didn't know 
+someone had reworked this driver...
 
+I have access to the data-sheets so I also have some pieces of 
+information. I hope I can clarify part of the puzzle. Unfortunately I 
+have no information about the magic delays. I guess I could try asking 
+though.
+
+Oh, it seems to me this handler is only working on BD71828, not on 
+BD71815. So, it should be tied to the ROHM_CHIP_TYPE_BD71828.
+
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+>   drivers/mfd/rohm-bd71828.c | 31 ++++++++++++++++++++++++++++++-
+>   1 file changed, 30 insertions(+), 1 deletion(-)
 > 
-> I had discussed this with Will back when the feature was upstreamed and
-> he said there's a lot of off-label calls that necessitate a denylist
-> implementation. Has anything changed to give us confidence that we can
-> be restrictive, at least on the FF-A range?
-> 
+> diff --git a/drivers/mfd/rohm-bd71828.c b/drivers/mfd/rohm-bd71828.c
+> index 594718f7e8e1..5a55aa3620d0 100644
+> --- a/drivers/mfd/rohm-bd71828.c
+> +++ b/drivers/mfd/rohm-bd71828.c
+> @@ -464,6 +464,24 @@ static int set_clk_mode(struct device *dev, struct regmap *regmap,
+>   				  OUT32K_MODE_CMOS);
+>   }
+>   
+> +static struct i2c_client *bd71828_dev;
 
-I remember your proposal for having an allowlist instead. The current change makes
-sense if we have https://lore.kernel.org/kvmarm/20240322124303.309423-1-sebastianene@google.com/
-which opens the window for more FF-A calls to be forwarded to TZ.
+I'm not sure why to store pointer to the device and not a pointer to the 
+regmap?
 
-Let me know if this clarifies, thanks
-Seb
+> +static void bd71828_power_off(void)
+> +{
+> +	i2c_smbus_write_byte_data(bd71828_dev, 0x03, 0xff);
 
-> -- 
-> Thanks,
-> Oliver
+0x03 is a "reset reason" - register. Spec I have states that the 
+register should clear when a reset occurs - but it also says the bits 
+are "write '1' to clear". So, for some reason(?), this clears the 
+previous reset reason. I am unsure why i2c_smbus_write_byte_data() and 
+not regmap()?
+
+> +	mdelay(500);
+> +	i2c_smbus_write_byte_data(bd71828_dev, BD71828_REG_INT_DCIN2, 0x02);
+
+This clears the DCIN monitoring status bit from the IRQ status register. 
+I don't understand the purpose though.
+
+> +	mdelay(500);
+> +	while (true) {
+> +		i2c_smbus_write_byte_data(bd71828_dev, BD71828_REG_PS_CTRL_1, 0x02);
+
+This write to PS_CTRL_1 initiates a state transition. 0x2 equals to HBNT 
+state. Eg, in usual cases this should be a start of the power-off sequence.
+
+> +		mdelay(500);
+> +	}
+> +}
+
+If you have the hardware to test this on, then it'd be great to see if 
+clearing the reset reason and IRQ status could be dropped. I can't 
+immediately think of a reason for those.
+
+> +static void bd71828_remove_poweroff(void *data)
+> +{
+> +	bd71828_dev = NULL;
+
+This does not smell correct to me. Should we remove the 
+bd71828_power_off() from the pm_power_off instead?
+
+> +}
+> +
+>   static int bd71828_i2c_probe(struct i2c_client *i2c)
+>   {
+>   	struct regmap_irq_chip_data *irq_data;
+> @@ -542,7 +560,18 @@ static int bd71828_i2c_probe(struct i2c_client *i2c)
+>   	ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO, mfd, cells,
+>   				   NULL, 0, regmap_irq_get_domain(irq_data));
+>   	if (ret)
+> -		dev_err_probe(&i2c->dev, ret, "Failed to create subdevices\n");
+> +		return	dev_err_probe(&i2c->dev, ret, "Failed to create subdevices\n");
+> +
+> +	if (of_device_is_system_power_controller(i2c->dev.of_node)) {
+> +		if (!pm_power_off) {
+> +			bd71828_dev = i2c;
+> +			pm_power_off = bd71828_power_off;
+> +			ret = devm_add_action_or_reset(&i2c->dev,
+> +						       bd71828_remove_poweroff,
+> +						       NULL);
+> +		} else
+> +			dev_warn(&i2c->dev, "Poweroff callback already assigned\n");
+> +	}
+>   
+>   	return ret;
+>   }
+
+Thanks for doing the digging Andreas! I think supporting the power-off 
+for devices using this PMIC is nice!
+
+Yours,
+	-- Matti
+
+-- 
+Matti Vaittinen
+Linux kernel developer at ROHM Semiconductors
+Oulu Finland
+
+~~ When things go utterly wrong vim users can always type :help! ~~
+
