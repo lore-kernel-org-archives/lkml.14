@@ -1,150 +1,255 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A47128377
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 14:25:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B86CE84D24
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 14:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711376709; cv=none; b=CVHEpJO1cXHix9pslfoFQG5Sq83WPsEezGu6EbTz+5WU1vcaqtiEmBUTe9UzhFLwEaszdM7MhKjADeWMKAgyWM2aelVPH2MyHupv6u0SrbMVVANVt7v3qmO9WoPdiVjU29r48ry9CmPoBjiPzJ79WHoNcy3BRJMaarYyoctnv3g=
+	t=1711376718; cv=none; b=HcYWfUv6X/WNTjVcK4AfDWLJbn2MKRi5QpDmQBmnAPdI6m3/FubTHjiU86vPaP0Nl1GiHl/MTtYAJC9vdyxK7Kdv8JvKr4X5OyVLsS8MYeXs2jqYQDrFoAnHxPYjrxMRYORcigoQ5y3NnADc9QAZRnkDLR93PTQ5N9v2fs7YzeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711376709; c=relaxed/simple;
-	bh=+MeltPZVNKwDT4s9LWJGLhPwYg6oTgYBzKVCn15VZsc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HYrloQ3+SgYGIgAUcbLSprOj2NWjQ0n2QkguLlbhj5/MLdxXScR/JTSMuBM2IbkqNdDnB4RjDKFsYKzsq6bM+K9rOITrwd/4pMiyQzNfNOheGcA+aAXEA3oQmAEC6GPKoNu6mOoeaNLjS05olcCwawDgVU6VkA1Muuh5blDVMLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hhxvnGY1; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711376718; c=relaxed/simple;
+	bh=NOkC6fuBFDVAMCdenIh+0pTGLiSZTt1fM8G7LmfdZa8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=L5OIwH178x4zdxFwzsYlriyJBmiXgLOX/SnEiUxjPLjoLoBhsaKy6MXVGB1OlOJWCwd4zPOhAgG0aJQSHwmmw0Xd6opqJuBdu/gQGJTsuJhyfp0uF456ypF1vZ5esx6jmrhno+amWkpLBowuWZg9krIr18C09WzxRO8gtKGFiGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ICQD+4QZ; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hhxvnGY1"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-512b3b04995so2288137e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 07:25:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711376706; x=1711981506; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=O3PUtNY4boQ+ipy4wQYd09otPfOvXLpDaCkOQ9UXG84=;
-        b=hhxvnGY1pu+otW6Yd/0JGjmzbva5HqMncBVKvci/73gkV2z6H+efQDQXzGMIV2XISZ
-         jJF8mP3YVIpGKtbpdbfxywzfT79JbH0+hVju3cqQY7KL5cjuWiEDjnW3OzPN0cmSy1cI
-         lsH292aWVY19lCEV03oHbzl07vXKOOI2dCO39ioWj5Cxi7hbEoZZaVMqjUl4T1GI88H2
-         VmsSRjN/fBIGUF2lqdFhyUOLfoAjeI55+9ukbfX7N3OcV7WOFP5Uq/O67ffH8cig9Jxt
-         p2kXx2XX6x8WXKO8er+1/Nw2bs1Ewdg3fT8v0Zu0sAspKSInI36DCTOIPjEB7ahm/bNj
-         tq5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711376706; x=1711981506;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O3PUtNY4boQ+ipy4wQYd09otPfOvXLpDaCkOQ9UXG84=;
-        b=KPY6ypy4+Z1xGtu4YSsNOPiMFP8tKQ5QuthwNBODnNbRsg/iuN/orEwU+v8lFYM1Oz
-         lmbz/w7Lgn60Ru4QHov3ySHgCj+WaNp+7qWsNeSWa7JlUNafZUhRpZCo49tT6gTOV/S9
-         /rjQYDD+V/PZTZByuo+8a0rl6HdxRs1L4Rv/7Z/4XP/IKMa+5eFeVvS0aOk85jFhMZbm
-         polObLqrHzJtlHjPORsIkXcY6tIQd7gJ4GhiVmrwJhstqvBuzkw5ugzR2UxAevJahx0q
-         Dnqnc69QnG++QMl6O5/NjEI2FD233R3SAdAk79M6PQD9SPRPXafnG+moSqqHzzKwI9Hp
-         tcag==
-X-Forwarded-Encrypted: i=1; AJvYcCUdOR1t7ds9o4HwmlpHFcX7myvse+avDWPKT+Ta2OiD10cRlNr8q93AcRFd78+wIP3YmYmFkWc9/Xwbehq0BdokTqSj8p+eOVkFWIgI
-X-Gm-Message-State: AOJu0YyGH6cRhVrERxIn5SwunFMy5GtupwEJl9zzWEXqei9p7PKkvmYT
-	tt8NuVqlwS3pYMAxHz+uacVDWJIWyTkXg4Ek+wVJMFFiBSgb0bVPqp96qn8TUS8=
-X-Google-Smtp-Source: AGHT+IEFidCgty+v00DMTxMPtnXdVdXzQmlAggnT/0h5fv4Uf17UIa5tj3pq//IwqDLEoDELOZO2Xw==
-X-Received: by 2002:a19:ca14:0:b0:513:23be:e924 with SMTP id a20-20020a19ca14000000b0051323bee924mr4375709lfg.59.1711376705571;
-        Mon, 25 Mar 2024 07:25:05 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id l12-20020a1709062a8c00b00a45f39b2d16sm3104885eje.200.2024.03.25.07.25.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 07:25:05 -0700 (PDT)
-Date: Mon, 25 Mar 2024 17:25:00 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Su Hui <suhui@nfschina.com>
-Cc: arnaud.pouliquen@foss.st.com, lgirdwood@gmail.com, broonie@kernel.org,
-	perex@perex.cz, tiwai@suse.com, nathan@kernel.org,
-	ndesaulniers@google.com, morbo@google.com, justinstitt@google.com,
-	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] ASoC: sti: uniperif: fix the undefined bitwise shift
- behavior problem
-Message-ID: <5d850276-a872-45fb-9df2-2b72479787be@moroto.mountain>
-References: <20240325034032.1031885-1-suhui@nfschina.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ICQD+4QZ"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42PE0tST025924;
+	Mon, 25 Mar 2024 14:24:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=GqNwmjjGnKkyJCZ+En/YSrGZg3Tm76YRIoUTja7BmQk=;
+ b=ICQD+4QZLG2QCurmkwHRefcaTdSzHoG3ri2myLhz6svRKsYAMuB2IZGW4j5qiXWWUXts
+ 0RpUJCyNTfe3lkNY14yyUkypQWwvuAoH4qqVjB7BcSb3gGFh1wE5lg9Lt0T6Mcmenzql
+ cOF2lnV+YHHhF2joRjyNBnlZ4faAV1M9WgBc06785Bj88YjlCmZ1iQeVMhUTk2ulHXno
+ lwsqjKzOfF6wbRuuV8SuEdcXgFUpQWJyTfLk73W+QKDLAQN2qZlj+4voEh+ai0TNVcTH
+ yDrMNNz11Wk7nAYvH08+eoFy9h5udsi43N/N6OIKD9ICKUM5P6YMBkKTaKu0q9XOmQoO yg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x2hh6afgv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 14:24:41 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42PEOeu2030098;
+	Mon, 25 Mar 2024 14:24:40 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x2hh6afgs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 14:24:40 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42PDKuBC003747;
+	Mon, 25 Mar 2024 14:24:39 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x2c42h4wc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 14:24:39 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42PEOZgO50725358
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 25 Mar 2024 14:24:37 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9DE6620043;
+	Mon, 25 Mar 2024 14:24:35 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 680DF20040;
+	Mon, 25 Mar 2024 14:24:32 +0000 (GMT)
+Received: from ltczz402-lp1.aus.stglabs.ibm.com (unknown [9.53.171.174])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 25 Mar 2024 14:24:32 +0000 (GMT)
+From: Donet Tom <donettom@linux.ibm.com>
+To: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc: Aneesh Kumar <aneesh.kumar@kernel.org>, Huang Ying <ying.huang@intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Mel Gorman <mgorman@suse.de>, Feng Tang <feng.tang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Rik van Riel <riel@surriel.com>, Johannes Weiner <hannes@cmpxchg.org>,
+        Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Hugh Dickins <hughd@google.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Donet Tom <donettom@linux.ibm.com>
+Subject: [PATCH v4 1/2] mm/mempolicy: Use numa_node_id() instead of cpu_to_node()
+Date: Mon, 25 Mar 2024 09:24:13 -0500
+Message-Id: <6059f034f436734b472d066db69676fb3a459864.1711373653.git.donettom@linux.ibm.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <cover.1711373653.git.donettom@linux.ibm.com>
+References: <cover.1711373653.git.donettom@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240325034032.1031885-1-suhui@nfschina.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: eZ1kfnPOcT21x235Sc4nZQRmPuVRVe-Y
+X-Proofpoint-GUID: E-M-IsOKD4XnmgEQptei3myaR1cTef3R
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-25_09,2024-03-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 lowpriorityscore=0 mlxlogscore=861 spamscore=0
+ phishscore=0 clxscore=1015 impostorscore=0 suspectscore=0 malwarescore=0
+ adultscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403210000 definitions=main-2403250079
 
-On Mon, Mar 25, 2024 at 11:40:33AM +0800, Su Hui wrote:
-> Clang static checker(scan-build):
-> sound/soc/sti/uniperif_player.c:1115:12: warning:
-> The result of the left shift is undefined because the right operand is
-> negative [core.UndefinedBinaryOperatorResult]
-> 
-> When UNIPERIF_CONFIG_BACK_STALL_REQ_SHIFT(ip) equals to -1, the result of
-> SET_UNIPERIF_CONFIG_BACK_STALL_REQ_DISABLE(ip) is undefined.
-> 
-> Here are some results of using different compilers.
-> 		1UL >> -1	1UL << -1
-> gcc 10.2.1	0x2		0
-> gcc 11.4.0	0		0x8000000000000000
-> clang 14.0.0	0x64b8a45d72a0	0x64b8a45d72a0
-> clang 17.0.0	0x556c43b0f2a0	0x556c43b0f2a0
-> 
-> Add some macros to ensure that when right opreand is negative or other
-> invalid values, the results of bitwise shift is zero.
-> 
-> Fixes: e1ecace6a685 ("ASoC: sti: Add uniperipheral header file")
-> Signed-off-by: Su Hui <suhui@nfschina.com>
-> ---
->  sound/soc/sti/uniperif.h | 17 ++++++++++++++---
->  1 file changed, 14 insertions(+), 3 deletions(-)
-> 
-> diff --git a/sound/soc/sti/uniperif.h b/sound/soc/sti/uniperif.h
-> index 2a5de328501c..1cbff01fbff0 100644
-> --- a/sound/soc/sti/uniperif.h
-> +++ b/sound/soc/sti/uniperif.h
-> @@ -12,17 +12,28 @@
->  
->  #include <sound/dmaengine_pcm.h>
->  
-> +#define SR_SHIFT(a, b)		({unsigned long __a = (a); \
-> +				unsigned int __b = (b); \
-> +				__b < BITS_PER_LONG ? \
-> +				__a >> __b : 0; })
+Instead of using 'cpu_to_node()', we use 'numa_node_id()', which
+is quicker. smp_processor_id is guaranteed to be stable in the
+'mpol_misplaced()' function because it is called with ptl held.
+lockdep_assert_held was added to ensure that.
 
-The code definitely looks buggy, but how do you know your solution is
-correct without testing it?
+No functional change in this patch.
 
-I don't like this solution at all.  This is basically a really
-complicated way of writing "if (b != -1)".  Instead of checking for -1,
-the better solution is to just stop passing -1.  If you review that
-file, every time it uses "-1" that's either dead code or a bug...
+Signed-off-by: Aneesh Kumar K.V (IBM) <aneesh.kumar@kernel.org>
+Signed-off-by: Donet Tom <donettom@linux.ibm.com>
+---
+ include/linux/mempolicy.h |  5 +++--
+ mm/huge_memory.c          |  2 +-
+ mm/internal.h             |  2 +-
+ mm/memory.c               |  8 +++++---
+ mm/mempolicy.c            | 14 ++++++++++----
+ 5 files changed, 20 insertions(+), 11 deletions(-)
 
-sound/soc/sti/uniperif.h
-   132  #define UNIPERIF_ITS_UNDERFLOW_REC_DONE_SHIFT(ip) \
-   133          ((ip)->ver < SND_ST_UNIPERIF_VERSION_UNI_PLR_TOP_1_0 ? -1 : 12)
-                                                                      ^^^^
-This is dead code
-
-   134  #define UNIPERIF_ITS_UNDERFLOW_REC_DONE_MASK(ip) \
-   135          ((ip)->ver < SND_ST_UNIPERIF_VERSION_UNI_PLR_TOP_1_0 ? \
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-because the version is checked here.
-
-   136                  0 : (BIT(UNIPERIF_ITS_UNDERFLOW_REC_DONE_SHIFT(ip))))
-
-Just delete UNIPERIF_ITS_UNDERFLOW_REC_DONE_SHIFT() and use 12 directly.
-
-[ snip ]
-
-   988  #define UNIPERIF_BIT_CONTROL_OFFSET(ip)  \
-   989          ((ip)->ver < SND_ST_UNIPERIF_VERSION_UNI_PLR_TOP_1_0 ? -1 : 0x004c)
-                                                                       ^^^
-Negative offsets seem like a bug.
-
-   990  #define GET_UNIPERIF_BIT_CONTROL(ip) \
-   991          readl_relaxed(ip->base + UNIPERIF_BIT_CONTROL_OFFSET(ip))
-
-regards,
-dan carpenter
+diff --git a/include/linux/mempolicy.h b/include/linux/mempolicy.h
+index 931b118336f4..1add16f21612 100644
+--- a/include/linux/mempolicy.h
++++ b/include/linux/mempolicy.h
+@@ -167,7 +167,8 @@ extern void mpol_to_str(char *buffer, int maxlen, struct mempolicy *pol);
+ /* Check if a vma is migratable */
+ extern bool vma_migratable(struct vm_area_struct *vma);
+ 
+-int mpol_misplaced(struct folio *, struct vm_area_struct *, unsigned long);
++int mpol_misplaced(struct folio *folio, struct vm_fault *vmf,
++					unsigned long addr);
+ extern void mpol_put_task_policy(struct task_struct *);
+ 
+ static inline bool mpol_is_preferred_many(struct mempolicy *pol)
+@@ -282,7 +283,7 @@ static inline int mpol_parse_str(char *str, struct mempolicy **mpol)
+ #endif
+ 
+ static inline int mpol_misplaced(struct folio *folio,
+-				 struct vm_area_struct *vma,
++				 struct vm_fault *vmf,
+ 				 unsigned long address)
+ {
+ 	return -1; /* no node preference */
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 9859aa4f7553..b40bd9f3ead5 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -1754,7 +1754,7 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf)
+ 	 */
+ 	if (node_is_toptier(nid))
+ 		last_cpupid = folio_last_cpupid(folio);
+-	target_nid = numa_migrate_prep(folio, vma, haddr, nid, &flags);
++	target_nid = numa_migrate_prep(folio, vmf, haddr, nid, &flags);
+ 	if (target_nid == NUMA_NO_NODE) {
+ 		folio_put(folio);
+ 		goto out_map;
+diff --git a/mm/internal.h b/mm/internal.h
+index 7e486f2c502c..e0001c681c56 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -1088,7 +1088,7 @@ void vunmap_range_noflush(unsigned long start, unsigned long end);
+ 
+ void __vunmap_range_noflush(unsigned long start, unsigned long end);
+ 
+-int numa_migrate_prep(struct folio *folio, struct vm_area_struct *vma,
++int numa_migrate_prep(struct folio *folio, struct vm_fault *vmf,
+ 		      unsigned long addr, int page_nid, int *flags);
+ 
+ void free_zone_device_page(struct page *page);
+diff --git a/mm/memory.c b/mm/memory.c
+index f2bc6dd15eb8..29e240978f45 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -5033,9 +5033,11 @@ static vm_fault_t do_fault(struct vm_fault *vmf)
+ 	return ret;
+ }
+ 
+-int numa_migrate_prep(struct folio *folio, struct vm_area_struct *vma,
++int numa_migrate_prep(struct folio *folio, struct vm_fault *vmf,
+ 		      unsigned long addr, int page_nid, int *flags)
+ {
++	struct vm_area_struct *vma = vmf->vma;
++
+ 	folio_get(folio);
+ 
+ 	/* Record the current PID acceesing VMA */
+@@ -5047,7 +5049,7 @@ int numa_migrate_prep(struct folio *folio, struct vm_area_struct *vma,
+ 		*flags |= TNF_FAULT_LOCAL;
+ 	}
+ 
+-	return mpol_misplaced(folio, vma, addr);
++	return mpol_misplaced(folio, vmf, addr);
+ }
+ 
+ static vm_fault_t do_numa_page(struct vm_fault *vmf)
+@@ -5121,7 +5123,7 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
+ 		last_cpupid = (-1 & LAST_CPUPID_MASK);
+ 	else
+ 		last_cpupid = folio_last_cpupid(folio);
+-	target_nid = numa_migrate_prep(folio, vma, vmf->address, nid, &flags);
++	target_nid = numa_migrate_prep(folio, vmf, vmf->address, nid, &flags);
+ 	if (target_nid == NUMA_NO_NODE) {
+ 		folio_put(folio);
+ 		goto out_map;
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index 0fe77738d971..aa48376e2d34 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -2718,7 +2718,7 @@ static void sp_free(struct sp_node *n)
+  * mpol_misplaced - check whether current folio node is valid in policy
+  *
+  * @folio: folio to be checked
+- * @vma: vm area where folio mapped
++ * @vmf: structure describing the fault
+  * @addr: virtual address in @vma for shared policy lookup and interleave policy
+  *
+  * Lookup current policy node id for vma,addr and "compare to" folio's
+@@ -2728,18 +2728,24 @@ static void sp_free(struct sp_node *n)
+  * Return: NUMA_NO_NODE if the page is in a node that is valid for this
+  * policy, or a suitable node ID to allocate a replacement folio from.
+  */
+-int mpol_misplaced(struct folio *folio, struct vm_area_struct *vma,
++int mpol_misplaced(struct folio *folio, struct vm_fault *vmf,
+ 		   unsigned long addr)
+ {
+ 	struct mempolicy *pol;
+ 	pgoff_t ilx;
+ 	struct zoneref *z;
+ 	int curnid = folio_nid(folio);
++	struct vm_area_struct *vma = vmf->vma;
+ 	int thiscpu = raw_smp_processor_id();
+-	int thisnid = cpu_to_node(thiscpu);
++	int thisnid = numa_node_id();
+ 	int polnid = NUMA_NO_NODE;
+ 	int ret = NUMA_NO_NODE;
+ 
++	/*
++	 * Make sure ptl is held so that we don't preempt and we
++	 * have a stable smp processor id
++	 */
++	lockdep_assert_held(vmf->ptl);
+ 	pol = get_vma_policy(vma, addr, folio_order(folio), &ilx);
+ 	if (!(pol->flags & MPOL_F_MOF))
+ 		goto out;
+@@ -2781,7 +2787,7 @@ int mpol_misplaced(struct folio *folio, struct vm_area_struct *vma,
+ 		if (node_isset(curnid, pol->nodes))
+ 			goto out;
+ 		z = first_zones_zonelist(
+-				node_zonelist(numa_node_id(), GFP_HIGHUSER),
++				node_zonelist(thisnid, GFP_HIGHUSER),
+ 				gfp_zone(GFP_HIGHUSER),
+ 				&pol->nodes);
+ 		polnid = zone_to_nid(z->zone);
+-- 
+2.39.3
 
