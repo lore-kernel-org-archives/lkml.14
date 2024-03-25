@@ -1,131 +1,120 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54587174F;
-	Mon, 25 Mar 2024 15:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E87B5A0F9;
+	Mon, 25 Mar 2024 15:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711381153; cv=none; b=lhHuHyRzJ9d7LZ3iBN1RO5fNH0mCxXil1TLptS/SGulIaWsd4b4hk323FoEFjD2KzpWzGENSIbLQMKenP+VtPCoJ/nLDEYCr7hpUJczrCN+frRSPIBwqy1UXfq3kJE+qSM4ignWjD9DQSKk0Ic8kdDnMo/qDkgsT7B16xRlxv24=
+	t=1711381171; cv=none; b=mWSBIf5o3oJlo1ytvhMiMTWqD4DSbBiWpYj0yxi22DBBsTnzhYzKlcMSDwnib1kooa99iKOJOumqmE3WE24ZVPWFB840PXREXvjtZYdVx2pDJiGmLQujLdvkZ+PzuIwsLL6GY0v+GLneg47Z/EL3ofsSVcTBAh6MEQiOBKWiSDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711381153; c=relaxed/simple;
-	bh=nknJYIONB75PX2/X0Pvf2Ghs0Wtg0AtN05Shf/1SaGE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eBqO8PXjDNvYRvYykTDeP3FCp0Fq9CWMKVxTflo/nCevpOlMKiFJgTWA7zVAdiHSFpzvkLymDlVwHZ43a+1ApPBlGwb8JAePIf4KrlKibESQJ/7N7aRLPnzzL3mRA7c4GsdnUKjPoktfuWM0HYU45hvxnyDEn2dAovPCGoK/1MU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.96.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1romP3-0002bd-2M;
-	Mon, 25 Mar 2024 15:38:25 +0000
-Date: Mon, 25 Mar 2024 15:38:19 +0000
-From: Daniel Golle <daniel@makrotopia.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>, Jens Axboe <axboe@kernel.dk>,
-	Dave Chinner <dchinner@redhat.com>, Jan Kara <jack@suse.cz>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Li Lingfeng <lilingfeng3@huawei.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Christian Heusel <christian@heusel.eu>,
-	Min Li <min15.li@samsung.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Avri Altman <avri.altman@wdc.com>, Hannes Reinecke <hare@suse.de>,
-	Christian Loehle <CLoehle@hyperstone.com>,
-	Bean Huo <beanhuo@micron.com>, Yeqi Fu <asuk4.q@gmail.com>,
-	Victor Shih <victor.shih@genesyslogic.com.tw>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Dominique Martinet <dominique.martinet@atmark-techno.com>,
-	"Ricardo B. Marliere" <ricardo@marliere.net>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mmc@vger.kernel.org, linux-block@vger.kernel.org
-Subject: Re: [PATCH 0/8] block: implement NVMEM provider
-Message-ID: <ZgGaay6bLFAcCo2E@makrotopia.org>
-References: <cover.1711048433.git.daniel@makrotopia.org>
- <20240325151046.GA3591150-robh@kernel.org>
+	s=arc-20240116; t=1711381171; c=relaxed/simple;
+	bh=ccR6vDDFNWpCgtzvRTLYAx6ybATdd5DFFbWg1zrCVk0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UIT3/I6cNuhvtKvyRffXzopI4Sq/bi50qIKbgMvem6XWe2oNpBvyfcNaypL7ebZF9MGKQGz43r7rnJ1Fkuv/56+Qcr9ISicIvVFrhCxiJL7uYhBATrMliUCtjtddaFR4TWJwmynSo4InR8UDQlmE3EmruhfpJKBReydyYgm/IgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=D9eOlXU8; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="D9eOlXU8"
+Received: by mail.gandi.net (Postfix) with ESMTPA id B03DD1BF206;
+	Mon, 25 Mar 2024 15:39:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1711381167;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=BI9/S5YA7YwZs4xbRST77NL81NkPg54oVD1qE1aBJP4=;
+	b=D9eOlXU8wYcaND6FnusPZt6Irok30wuxp54GEdap9mxB6W9LhixAg/X0hVswE48c4OHun+
+	jzQY9TzU707lt5/ZTGTyww3SWdvlUs8R/GfGemg5EoI+Fs7ViocT8d/aQkRjEWUFuU3GCn
+	x8CjCW+JaC1dLw1e7q0pIB1GOW7+kPeKDIdml7uuT7OY7SY7cs+w7AdsH0yU+GmZdT7RL8
+	9/dFqQ/2VdwMNdOLORA4fXiBTf74VIfZAERaFxCk5mIDfhzNJWaEJrykPnvGCfsj67tW7A
+	vcM5lPdYwCCglGR3XKJiHuaYHpCT9z09eJTlLiRzEq/Lz8/A1AUBvd1jukwEqw==
+From: Herve Codina <herve.codina@bootlin.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lizhi Hou <lizhi.hou@amd.com>,
+	Rob Herring <robh@kernel.org>
+Cc: Max Zhen <max.zhen@amd.com>,
+	Sonal Santan <sonal.santan@amd.com>,
+	Stefano Stabellini <stefano.stabellini@xilinx.com>,
+	Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Herve Codina <herve.codina@bootlin.com>
+Subject: [PATCH v3 0/2] Attach DT nodes to existing PCI devices
+Date: Mon, 25 Mar 2024 16:39:13 +0100
+Message-ID: <20240325153919.199337-1-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240325151046.GA3591150-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Mon, Mar 25, 2024 at 10:10:46AM -0500, Rob Herring wrote:
-> On Thu, Mar 21, 2024 at 07:31:48PM +0000, Daniel Golle wrote:
-> > On embedded devices using an eMMC it is common that one or more (hw/sw)
-> > partitions on the eMMC are used to store MAC addresses and Wi-Fi
-> > calibration EEPROM data.
-> > 
-> > Implement an NVMEM provider backed by a block device as typically the
-> > NVMEM framework is used to have kernel drivers read and use binary data
-> > from EEPROMs, efuses, flash memory (MTD), ...
-> > 
-> > In order to be able to reference hardware partitions on an eMMC, add code
-> > to bind each hardware partition to a specific firmware subnode.
-> > 
-> > Overall, this enables uniform handling across practially all flash
-> > storage types used for this purpose (MTD, UBI, and now also MMC).
-> > 
-> > As part of this series it was necessary to define a device tree schema
-> > for block devices and partitions on them, which (similar to how it now
-> > works also for UBI volumes) can be matched by one or more properties.
-> > 
-> > ---
-> > This series has previously been submitted as RFC on July 19th 2023[1]
-> > and most of the basic idea did not change since. Another round of RFC
-> > was submitted on March 5th 2024[2] which has received overall positive
-> > feedback and only minor corrections have been done since (see
-> > changelog below).
-> 
-> I don't recall giving positive feedback.
-> 
-> I still think this should use offsets rather than partition specific 
-> information. Not wanting to have to update the offsets if they change is 
-> not reason enough to not use them.
+Hi,
 
-Using raw offsets on the block device (rather than the partition)
-won't work for most existing devices and boot firmware out there. They
-always reference the partition, usually by the name of a GPT
-partition (but sometimes also PARTUUID or even PARTNO) which is then
-used in the exact same way as an MTD partition or UBI volume would be
-on devices with NOR or NAND flash. Just on eMMC we usually use a GPT
-or MBR partition table rather than defining partitions in DT or cmdline,
-which is rather rare (for historic reasons, I suppose, but it is what it
-is now).
+The commit 407d1a51921e ("PCI: Create device tree node for bridge")
+creates of_node for PCI devices.
 
-Depending on the eMMC chip used, that partition may not even be at the
-same offset for different batches of the same device and hence I'd
-like to just do it in the same way vendor firmware does it as well.
+During the insertion handling of these new DT nodes done by of_platform,
+new devices (struct device) are created. For each PCI devices a struct
+device is already present (created and handled by the PCI core).
 
-Chad of Adtran has previously confirmed that [1], which was the
-positive feedback I was refering to. Other vendors like GL-iNet or
-Netgear are doing the exact same thing.
+Creating a new device from a DT node leads to some kind of wrong struct
+device duplication to represent the exact same PCI device.
 
-As of now, we support this in OpenWrt by adding a lot of
-board-specific knowledge to userland, which is ugly and also prevents
-using things like PXE-initiated nfsroot on those devices.
+This patch series first introduces device_{add,remove}_of_node() in
+order to add or remove a newly created of_node to an already existing
+device. Then it fixes the DT node creation for PCI devices to add or
+remove the created node to the existing PCI device without any new
+device creation.
 
-The purpose of this series is to be able to properly support such devices
-(ie. practially all consumer-grade routers out there using an eMMC for
-storing firmware).
+Compared to the previous iteration:
+  https://lore.kernel.org/all/20231130165700.685764-1-herve.codina@bootlin.com/
+this v3 series rewrap commit log.
 
-Also, those devices have enough resources to run a general purpose
-distribution like Debian instead of OpenWrt, and all the userland
-hacks to set MAC addresses and extract WiFi-EEPROM-data in a
-board-specific ways will most certainly never find their way into
-Debian. It's just not how embedded Linux works, unless you are looking
-only at the RaspberryPi which got that data stored in a textfile
-which is shipped by the distribution -- something very weird and very
-different from literally all of-the-shelf routers, access-points or
-switches I have ever seen (and I've seen many). Maybe Felix who has
-seen even more of them can tell us more about that.
+The potential issue related to the sysfs of_node symlink added after the
+sysfs PCI device is visible from user-space (raised during the v2
+review) is maybe not a problem according to Bjorn:
+  https://lore.kernel.org/all/20240319165430.GA1233494@bhelgaas/
 
+IMHO, the discussions started with Rob around the interrupt-controller
+during the v2 review are out of the issue this specific series tries to
+fix. Some modifications are needed for the interrupt-controller topic
+but should be done in a specific series.
 
-[1]: https://patchwork.kernel.org/project/linux-block/patch/f70bb480aef6f55228a25ce20ff0e88e670e1b70.1709667858.git.daniel@makrotopia.org/#25756072
+Best regards,
+Hervé
+
+Changes v2 -> v3
+  - Patch 1
+    No changes
+
+  - Patch 2
+    Rewrap commit log
+
+Changes v1 -> v2
+  - Patch 1
+    Add 'Cc: stable@vger.kernel.org'
+
+Herve Codina (2):
+  driver core: Introduce device_{add,remove}_of_node()
+  PCI: of: Attach created of_node to existing device
+
+ drivers/base/core.c    | 74 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/pci/of.c       | 15 +++++++--
+ include/linux/device.h |  2 ++
+ 3 files changed, 89 insertions(+), 2 deletions(-)
+
+-- 
+2.44.0
+
