@@ -1,151 +1,247 @@
-Received: from AUS01-ME3-obe.outbound.protection.outlook.com (mail-me3aus01olkn2155.outbound.protection.outlook.com [40.92.63.155])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2A61B6FD1
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 04:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.63.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88E31C1BE5;
+	Mon, 25 Mar 2024 04:39:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711340882; cv=fail; b=bYCqbKVSO+v0yl7U07W8U2oGRAYCX3tC37SGC5hq/ZK+nQawu4ICrabmr2h31aIOBbd99Ux2SfyTaPCOzucUzLk+kYWgQEtUSOOGCnWt4Z1Tn2gV6qM4ziRyeK1CPqzRdTUG5XpvNIoInzKTRMHDHjfZZn7zBVgTii5cheQrQdk=
+	t=1711341584; cv=fail; b=JeSkcICAGs2384AaJW2vX/bTLMLAHbzcU1cSAcsLFwVB7Jv8jLbMKAUPIeKCsqk1lQo/Yv6dtvwDUcQOEs99oR1uQqBY56usiIKv8K8bduQgac3oNLhTGWv0kLGWwVAFS41Z0SHTZcu5hQ53zJXIK07VNxSGghlUACU+vyYAYcY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711340882; c=relaxed/simple;
-	bh=sBdH+zKfVHkHbA+paxIdyTnhAE+cEwLWyc+mpd/9p7Q=;
-	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Qro3DDqKh7coDNy9/mOWvCySDVX+ze9a5hErbutqdXlHid9gMdLXbHcUTQ5VXNAh0fq4L+hXzqfGVeY8akQzPwtg2E4UBU9Dvb0Kz5HBDD83jxH1snvsIzN547pRNeKNQ5VUVd4V1HeBuuWQjlVTX8BOi1BPiRq3wuMudHyKZuk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com.au; spf=pass smtp.mailfrom=outlook.com.au; dkim=pass (2048-bit key) header.d=OUTLOOK.COM.AU header.i=@OUTLOOK.COM.AU header.b=C1JhwFkm; arc=fail smtp.client-ip=40.92.63.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com.au
+	s=arc-20240116; t=1711341584; c=relaxed/simple;
+	bh=JMimwhBtI1CVkjvE58gD6q7KEUU8eD5hfTLSc9ohZbg=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=OOgUcu888KRbmOcE4j32IaKKdTVm+di4MgzZ5/W46ffsr7k6J6V8sFWpxHUcrVNvFqVfLfngKmR9Q4PBq796Z7IPmcBp/HFKHRGIC031Jw5pIzIvg2bcITpZmIJ2SiQZSHdcBCe/zTzw1H5t1xBJnmGYvxag9I3hcKdzggZ6pX4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ijK01UGN; arc=fail smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=OUTLOOK.COM.AU header.i=@OUTLOOK.COM.AU header.b="C1JhwFkm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ijK01UGN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711341583; x=1742877583;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   mime-version;
+  bh=JMimwhBtI1CVkjvE58gD6q7KEUU8eD5hfTLSc9ohZbg=;
+  b=ijK01UGNCIEG13qoSLHU+rsQ3K9rogj9WxQf7INRSIv1gRmwuSbOO2u4
+   NeqGpQNB1NcWt9W4qJZr3NRIdz2yLbG3q7XoN6z9Tpv7w11ohiZ5OSZNj
+   0XxNkXIAmpV77VOj0q3URcn39o+YtvnhoMAx63v41wwWzs7QLj5fewePJ
+   xFNXOqZc/GukR/PqGthhTMJPmhopaiZbdLr5IRBsahaQL1LuHF8me20W6
+   R2AjHIuLssinLzgg8z2BvyszuSj9ulHh8tNaOxE5IXlula2IXnqeLnIL3
+   ptOqd8JJb3Iu3IMADzrd/Db/CxR9sHCFRVcGugIIzVSGdPUQ+ZPsSVixW
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="31762813"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="31762813"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 21:39:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="15930504"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 24 Mar 2024 21:39:42 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 24 Mar 2024 21:39:40 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 24 Mar 2024 21:39:40 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Sun, 24 Mar 2024 21:39:40 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.41) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Sun, 24 Mar 2024 21:39:38 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Hv7snWpClvp0mIoofpxA0JgKFIOPxWTDJ7VkBxxYqVhASO+p6uHD+ynxN/eXyS1ZALNK7V6jzIGUo3h5O8n0ZPaSa2XX9cAm+jmr4WaCDMss+t7oVTOb6pLhJDX08Op8/gowrjrtyIhTaEM0X991bsI5qvELYiS57dXhdkew71PQ3BnGJSTa4sot1q4rVvdxh0KXM109OwCIpUXdnWDR2PBJrMKTb1imud/Lr+Rj9fTdQ0lUCDG1Ns+MiwdJCgHGiD50qUJlizZROxqjzmvqH2Gc4FxpzWQ5rPTC1J1FDb37lRv1/6/QOe66skpn+rMcCgsmj2ROHS1xFA6Bic2FvQ==
+ b=G7CGKB1OGlDg2hDzuK/3aNe6QehjSK7/2CpWKL4kZ/PMBkbssp7cBqhxYL3gGMsFPes3MxaEA+SpuAJx8KXEZDUaJvw2jJj1sKCJwARGqzLGkmLahcfCop26JNjYs2cAK0u2V9InSWPieK682Y205XiPsilz10MshrvQ4/lPQNkK4yNaH9L2ObhMMVCDEiVxdD6cdYPhTNiOKDwW/N8QfPAxCx9oYhhBrOo9SgIehyepPbO1zi24oQ67Qz7GM57di+RjAV4fy8ac2biWtQvrZu5+/R/iWDNybf76nsm6Lj+RaMjUtAso82OYq5XpGly0Hns3TvK2BojJ/Xk8IrtDxA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Lpk/sA8/07SG+Tdl8LzGYjJ9zpc8O3DEhnMUBKqOVPM=;
- b=ZaAPJ2fjgcEGGCwVBqOwVKDJbUWr8p+64LuGKPk075n8thk1CYopynkn+pe11aHIuTaQ6d2OtQxgPZA8ZLeXKY/nPwrBGmSPBYSqB+aoreu+UTIJ6ia4JnlriP9S6vq4wKwG+KimWwIG3mSW2WnHvKUPdWv7nqiZ7sXiStIeFphA9Lh7WDO7Fh57oH4VK3ZXAkEU1jOpynNXenrfR6heehfK0KOBXqFqIcKIauA0m4sgJBKH6DKZzrT4BH7KRRnL1+mD4UKxwyZP75DtD2RR8Lta8Ahe1DGXR9+qwfx1AnOliMx5xpeI0CO5GMMGA2GwxUZdaguddyNcJp3bTjID5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=OUTLOOK.COM.AU;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Lpk/sA8/07SG+Tdl8LzGYjJ9zpc8O3DEhnMUBKqOVPM=;
- b=C1JhwFkmyxCpgvw2ClPpi5+8+KbgbqZHJ4KvomFy+VHJDC9ROanOmd6X9xOZ+1B194crlopq8l5/7+sdzLsa7r8l7E/ptCtHbpdWvtg4Zrv2+rapkgi5C+/t7amK6LNlMb6cS7rYdkIALZpBn5Gf10gY5N16gpYpckmaNP7slCGTl7fydCc76jKZ54c/xyz1/+5jw6ONfpvOa+ydl+7BRc+Qm6dLtQX2JYK/dh58Y/p6jE0rhZqpQD0sNkaS7OnQwDqGohuQJIs5ggAd1jLWkoc1PM5skkv0N3RBBlIWkRcISwUL4iQ9FIHPdKspRkXPd/+qaPUflQHyNwfSqnW57Q==
-Received: from SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:159::9) by
- ME3P282MB1747.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:a1::15) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7409.31; Mon, 25 Mar 2024 04:27:56 +0000
-Received: from SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM
- ([fe80::22c8:76c8:58ad:f00d]) by SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM
- ([fe80::22c8:76c8:58ad:f00d%3]) with mapi id 15.20.7409.028; Mon, 25 Mar 2024
- 04:27:56 +0000
-Message-ID:
- <SY4P282MB30638B59AF7677462C051518C5362@SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM>
-Date: Mon, 25 Mar 2024 14:27:54 +1000
-User-Agent: Mozilla Thunderbird
-From: Stephen Horvath <s.horvath@outlook.com.au>
-Subject: Re: [PATCH 1/2] platform/chrome: cros_kbd_led_backlight:
- Automatically enable keyboard backlight control if feature present in EC
-To: Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Benson Leung <bleung@chromium.org>,
- Guenter Roeck <groeck@chromium.org>, chrome-platform@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20240322102800.1322022-1-s.horvath@outlook.com.au>
- <SY4P282MB306333469B31348E4A25A1A5C5312@SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM>
- <ZgDuiEYcgMTuZAeA@google.com>
-Content-Language: en-AU, en-US, en-GB
-In-Reply-To: <ZgDuiEYcgMTuZAeA@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TMN:
- [amIU3wDL79bUWg7JZcEtbqGJp5H04I+/P2n1+OJ2qSohczgXRYdcC/1MKEpajdWQzt2f4g9FPuI=]
-X-ClientProxiedBy: SY4P282CA0010.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:10:a0::20) To SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:10:159::9)
-X-Microsoft-Original-Message-ID:
- <a12a00a2-5874-494e-9b51-8203cfb9d82a@outlook.com.au>
+ bh=SfPIitLhuALSKW0NIvjNqk3murQ+BbkiwLcuwClEf14=;
+ b=YR/ieKuNkEt5ERKU89YwJNd0DOs9IwPRphdXj61Akf494S2LCTdBVQyMedl1poEG10e3y7fHAjK0EuDSWa4jamFD1lhTtvQQYcNTEau+68ci7z0r809sGPPaOTeUIZIwNHFalhuRGafCxwRWTjaISar+f3pYuhZQA0L95FovsV/80QlmaX4zyPgUzksxo60Pm52SCiiVejQbTm3xiVXuXGP/b8xNHhowZ5PFtk568GmqNBM/wUOEc2Ca7qhFRUPZHpT9kFzlP6yDD5pvrD1GqGkJvkKnU8fZwFmdIMTTtMGEm0DNDf95VqvlR9UL4XdlOF1uvtXJwchHx2BLmdZnLQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by SJ2PR11MB7426.namprd11.prod.outlook.com (2603:10b6:a03:4c4::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.31; Mon, 25 Mar
+ 2024 04:39:36 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::58dd:99ca:74a6:2e3e]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::58dd:99ca:74a6:2e3e%3]) with mapi id 15.20.7409.028; Mon, 25 Mar 2024
+ 04:39:35 +0000
+Date: Mon, 25 Mar 2024 12:39:24 +0800
+From: kernel test robot <oliver.sang@intel.com>
+To: Luis Henriques <lhenriques@suse.de>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, Christian Brauner
+	<brauner@kernel.org>, <linux-ext4@vger.kernel.org>, Theodore Ts'o
+	<tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>, Alexander Viro
+	<viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Miklos Szeredi
+	<miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>,
+	<linux-fsdevel@vger.kernel.org>, <linux-unionfs@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Luis Henriques <lhenriques@suse.de>,
+	<oliver.sang@intel.com>
+Subject: Re: [PATCH v2 2/3] ext4: fix the parsing of empty string mount
+ parameters
+Message-ID: <202403251019.50cab6c8-oliver.sang@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240307160225.23841-3-lhenriques@suse.de>
+X-ClientProxiedBy: SG2PR01CA0138.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:8f::18) To LV3PR11MB8603.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SY4P282MB3063:EE_|ME3P282MB1747:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1347cb5e-d267-4cf9-603c-08dc4c83f1d1
-X-MS-Exchange-SLBlob-MailProps:
-	7qh87CJt6y28mnXrYaz3TbdiDbghv9xw0CB7WsKaKNjE19jLC1uofT5Tcsq7Li+hDHHS09RxIgZhDhlPodWk6r+ENudonLFfukQ7QeF0DDnzTtXCLHxZiO5H435q2tIhg2oUMXmzqs/RY6eYzpXsQgFzGm2CTxe+XLNjRO7W4N+LIEU2R+NUIXOVz/dG1efiIvSfIpoX6XTMVgqcUVUrSmtb6KXpi6Yg5MymgSwi6lJgLB7G7WxZXljZi/+whMM2U6BM3uuZ3ffhsHZt+KvWlvKQ2FayZN3KhOXNspWlUhIOLpAGwzIg/lAP4BDTl1S1onUUYOQ1lTXqVnVCe4bNPG0HfR0HTQyoLLxNqhyhwaIFxlR7IwaL+jS3UN5QhdUmT4ij8aV1Ceia8zmR7bWzB4zE4iCxzLJEwXpAHwyN3I9J8Z+bwc8FD28ZhMA1EkTQ9C2uUtLcv3grQsAxTblBaJEw94FGkF3r1s85LC7POXfNvAgsq57lyVcWCKPom6Z+S3YKPGPItEa3bwdDrG/LfXjs6lyMigQScNM6A9arR97Y7w71p3Q9uhvAsOpweJSXFdHo/nUgAX7x5T0Yt7Cg7CamczFxclj9NkxzEHh17TUn0W1yWyC/Feq/7ojX/nE+t/imjkl1oJY3DqnCMNICTtJkYhCqXb5EkxfVPbv54DA58ptTPmxFoXua7KsoNYPHIqHlSeeDLEbewWNigXmpT5TYmmMPsnAEi7SyqZB1wYVc7vMgXWpOXhj4QnY9LNXE
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|SJ2PR11MB7426:EE_
+X-MS-Office365-Filtering-Correlation-Id: c0248016-8551-4f49-f979-08dc4c85928e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	4aQaXrk2QPjbjpb9CVUTRgY1+vE+ilo9W0Nc1KMND2Eo+69cBe0nJwDYKJEi9EFlxUsXgvrSFSFGC9fx36WvZ10mHTAraIZI/quPlwlfTl3CBAZBY3vVJ3c1iSDPauvsYa8tBb6NUquhWpSJvWCyAmYc2sOA/ty5zHoE4KAfG39RDWQrpnVJeCk1Txz8oPKCglzdwpqxdY7apeQSxY+uz/OMbigjzd6+yjEV3XT1J8ar+CW7i73dyQy7UOuTS0geDyBl+mexmWlVcVbKYzJdvjVhCmB332idErPeFxZy/TzoVX4cqIr8Wq/JF9SfTtyJbwUqOQyK4pKW42BgXEF9M5QwUIi+hj/3KIADx5688laSzif55pPd/mlWehpf19Qb/9ceNGJA1oxBsCJvQfFlI5RVKsG2n1/nvNfrT8Q3y73NXKBCGXNTX7h87G0FVu288YTuHcG1BMoVsJa9E0uP39YBf7BIwLzSWQlpQXqCuXcUoQY4PQ3+BwJlTbqZjpVNb0IF31eMv2B8X5lAwtSXNDjSid9OaHcFVXCbbDIYmNJ1/cMIVA3fx6NiuWSqghmZ
+X-Microsoft-Antispam-Message-Info: jdVEdKvRDP0prX1xgRoObAluNbe5wgZK6hSaCderRxghZRkF0nZ2Iyv9qwPw0c69sOmL3mfSA8KSIsRCrM10Jp6uGuaWyHbd4yzSM33DF0GrizLE8xRW8XxpFY2Cu3965AjhQE9EORmYwC0tvgQ5l11AY6JsRCR4ERIlBP99dckH9pg00MZGGiVpPqa+Jxeu6ckXYdx5r11adIBsi0WimldzRxbbjHJFWe0j85EuwENrA8ZWSvjYT2rFEXWe5GKVswdBveE+cvp7/hNR8tMYxUMWc4PokRTMz2dA1+m7Q7wB2zSGiZb+8n3DB8SrhoaOh7eoAIZpyT7s33dbkVADh7LBwiRFvWqivrZlHnAJFBj05ZlXVdJd9eZzoKd0cC5fODioZ0nE/D6S2xiJNzOIPUcS6kYOzapM4MCs6gOkC5m2rniIuwabnSe31N2s63nGgsYHCfD1FSe0l3jHRqPS7QJ4nYXaHXhsQ0bi9z3+PTWbQUQGuXdGcG6XDbKQxz8RBeQnJT2ghYTuV26yR5j441BTLL3Oys65Xfk67DmhLUIrEGitfbf3GdoLWzIypqIjdRgHbGqM3z7VHI+Q8EaBUO6j3E9ezk2ZfguUhbyjqolNvUUpwK0F8MgyNcshNNFh
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dm9VTjRrR0JjYlhwd3F5TzlWZ1RPNThHZjFuV2hCczZzS3JWdDdBeUh2ZjZL?=
- =?utf-8?B?MGNwTVpGUk5FNEZvZE5Nc0dsanVkUm83VmZpMXJtMXNsVE55K0xnOHovNTlS?=
- =?utf-8?B?Qk5QY3piZzQ0WUg4Qi9ld1E0NXBQcitLRHZUa1J5c0FmSkdId2dhT3kyaXMy?=
- =?utf-8?B?WHh1aS8wc2lGbVlZTWNmSDlES0FKNEVkMys2V2NVbWxCWGdZQjc3elJOeGVI?=
- =?utf-8?B?REpCMEY5ZHNYNUYyR0oycVVaK3Z6R2NuY1FONThCaS9NZ0w4TzlTaEdSTTF3?=
- =?utf-8?B?bTZDdHNLQ0xwbkJYSTdzdjl2aHdmOW84K01VTjBhcENPSU1QWTNmNklrL1BG?=
- =?utf-8?B?Y2J3aFE0OGM0NnBlOUJ6YytaYitBWXQyV1Zpc0F0SjBvRE1mV1pHeTBQa3Iw?=
- =?utf-8?B?RDNyRkVmUmZIUjRWVWpwVDdNNkVDeGdGWnQyZ09EVUcrSXY3dkFDRGYydEs2?=
- =?utf-8?B?RHlwbC9Lck9xRGh6SS9HRVFEZUdzZ2hIOFBLVmZxclcrOE1Md2lBYW9HUUdZ?=
- =?utf-8?B?bkVvN29kTUVsWjd3YVlBTWtkV2RDTG1KRnYwNHluZTc3WXRXZGxhNUxWeWNX?=
- =?utf-8?B?QXlPN3MwNU1pc0tDbVRNcUlaYnlpbHQxTGVkbWo2RWRaNjJQNDRDaDNXRTMy?=
- =?utf-8?B?Y2FNNElybUJJYld2YXM3a2ZIbXFOaWpCWlVuMlRJY0RDVjVQOG9CUnZYTEt6?=
- =?utf-8?B?c2ZXYWE1V3k4N25XWEMxajh1S0lnSkpTNlB3dDhNcVJXRThGcDkrWE1TNTFI?=
- =?utf-8?B?WFh3S0lZOTBDRGRLNXRhUXZMZzNBTml3T2ZmSGtjajUzU29NMWpCUU5LamlP?=
- =?utf-8?B?bnRiNWFsL0d5REdhWU1iRVphSUl3T29LN1RvcDV1UE1RVGgrK3dXU2pYeDVj?=
- =?utf-8?B?OENGT0FKVSsrOCtveE8vWGM4cDExc0xRSXZRK1BmaEtIa0ptTmx0REZzTEUw?=
- =?utf-8?B?R0w1RmF4VzZCaXExa0ZWbVdxb01nR2k1ZmZGbkFnZ3R3V2ZJUGczTkRNam9v?=
- =?utf-8?B?eVl6NjBRa2hEWWlyNWQ2MHc3N0pvelhDYUNHTGJhOWJxbmVmV0l3Snc3T3hr?=
- =?utf-8?B?VFJMUWNURmV5bC92bG1aSHNjNE1kRnBweFcxbk1xb2VDTnZYMEF4ZkJGeExl?=
- =?utf-8?B?STJjanJkQnhQRjhWdmtnTHcrZzA5eUNhdEE1akowMVoxY1hOeHFlQWlXUnBI?=
- =?utf-8?B?K1pHTWRhMkxPY0lxRG5tQTMxSE9JWHlIdVlvWlR1ZHRqMmpTbjNBalp2ZC9z?=
- =?utf-8?B?Z3hMazVjMkRnMmt5R0Z6QnhiRXRsQ1NEYklJZmltdU14bEFnbTRMMDBOaVhZ?=
- =?utf-8?B?VHZRRmhmSkNwUFlvSFlDT0tvcWxDU3htMWxtMjBuUnV6UUl5NTJQb0xxNE1D?=
- =?utf-8?B?bnJYVHk4SzJvUHlvckNENVNzbktNWldJRysvN0cySXgwYWdTL291V3ZHazVr?=
- =?utf-8?B?MFBPMzh4OHM4L0hSUkd5YnhSNEp5NGlLMVN2ZXcwUmdrbVp2L3hsdmJrU0Vi?=
- =?utf-8?B?QzJaRXQySEF5anJoZUlkc3hFdzhUYnE5UFVwZmJJd1NHU0JOVnJJZFFGa2Vv?=
- =?utf-8?B?TFRXd09sUXp3UlpRQ09sM2FuZVBxU21mQy9ZKzd4MmV4VDJsOTlOWkpJRnE3?=
- =?utf-8?B?N2UrT1h3dXZsUS9jYmY1bU5Kcmc2MmZic2Rhd2t3M2crVnpkVWZ1THMvSUUy?=
- =?utf-8?B?Z3BnVm5PbmVFZHhaQTMzY3h5WWw0bkR5SEdwRTdkclNsanVWZ0wxVnNGUita?=
- =?utf-8?Q?jtTBAXk2YIUlGO1SiCeBylRXguRAVHH+ejfyPrw?=
-X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-746f3.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1347cb5e-d267-4cf9-603c-08dc4c83f1d1
-X-MS-Exchange-CrossTenant-AuthSource: SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?lL1vAZto1Jku2mils8JlkNCc+P0EaFYPmcAUGhgBnGgBHUwEC6Mo491lQANt?=
+ =?us-ascii?Q?l9go9k2ErrR7juHWfw8r9oj6Dv8aEEWs977/65RfvwKY89zWeZdHlK5go3I+?=
+ =?us-ascii?Q?0us79jZPwHqg7XkmEK3lN7yJ+58ShmywAkhfqDgav75NtzWnJYLUxlZiiscj?=
+ =?us-ascii?Q?OvU+3koiPKfGsvD4sy8xwJyCXzvRWLThwDfVPHt+9mb6sBA1FyaxXm1Z+uqj?=
+ =?us-ascii?Q?BpSqSJv569XM9QbTdZEsa28tZVgZOt4v9ogSph5j+7xLh67WXUYX9EftmBLD?=
+ =?us-ascii?Q?a5LSQXd8VxeRIUWF8+1kXF0LC3I3CNaKBNOUXb4i8gL8LQoFAuSr/yckAjqv?=
+ =?us-ascii?Q?mMrEpZrPnIjm4OOWG2YAR3UkQMI+nRBzPTwIHZjjHL9IsbmFAVzBr1jMMv3H?=
+ =?us-ascii?Q?k3c5ZFuWW5cYlKzVNPPWmqFTSuT2vr5Nhkcnus9ph6y4z8ufBcaeTMTnVg57?=
+ =?us-ascii?Q?IvnqLbv72Z9jRa/nknU92h3FbjJt3nO+9bOv4sCQk7VndfhXCk22+4goX36y?=
+ =?us-ascii?Q?oOH9o16DN/187bHMw3XfkKm3ZNaNkoHfzM+P+AQU4qC7CBNrh0/+b3Uwuhd3?=
+ =?us-ascii?Q?tPdz1UIh93xUIkbFF7zv7zucSAeEi0TD6h1JlXIqCHjb+rgGSmmdbgTV7Vzq?=
+ =?us-ascii?Q?44p1fKkK70Kckd/wpTLs+J1MXp2aBepOL7ZC2Zt8VTM3txTiBNWTsy2E+zlr?=
+ =?us-ascii?Q?Iv5Q4ePPG1ehp+qz7rVYiirX7nCWxChvDntfe3ZR9PzQjGW9zHtAHWpRUDP0?=
+ =?us-ascii?Q?21DRxe+y4DL/nyCP0ktBZjMEmJuo7WXjK9XV6OsKZTDlOtr1lz8LjbqwZT/m?=
+ =?us-ascii?Q?/XRq/Rm9ARKr0zxSxg440j3I2N2zu9GcnWGGG7QaaB26f76zIbidG9EfYrXd?=
+ =?us-ascii?Q?azKEKAP39b3KsrXGTELpLRA0PG2vPI2q/8xfHpPoW0tg251QfTZfJpzbMrmn?=
+ =?us-ascii?Q?pQNFRx664Q3InAjMxTN/OftccKJ2piXVSsmv4XyghXEVg/OHd6AHd/92LdZ4?=
+ =?us-ascii?Q?tctv1FsTMTnHJl8BQ1EtscEt9/BYh1SiR+HRsAspx6eFav03Mao3PGTlOw//?=
+ =?us-ascii?Q?FVzb9nyOdwMyx8jUUmLREAbQQmPaIQJt3RZHsE3ReBEN+9qt71E9IxM4K8hM?=
+ =?us-ascii?Q?o21RsnAHwnFZTMYCGwQMSWTVohdaiOTV00hp2wFdMF9X1Tgit65jvhAOqSBf?=
+ =?us-ascii?Q?iXtT3ICIYg8Mnqv3l+qyiTy02k+6BseJ6PjIU0qGg5qDVRLBatI5SCJhZM/C?=
+ =?us-ascii?Q?VmSsDZDUHi07HnWjx/8Ok3kcU3dbBad0PDp+WX9U5DKhoQULoUkuyHuqP35q?=
+ =?us-ascii?Q?73qhD7A8kxRzlPDS5VdWyRbKJWDxMISQLV9rcrAGgyjt7vjljX7FRffh20N0?=
+ =?us-ascii?Q?DlpwCaUZf/sdtRtMJT0TMqJ7ZswvWf8cs0UOFG8gHzNJe1qC1CzhwAGkrccT?=
+ =?us-ascii?Q?4I/aa7B7b8lJ7O+LxSwkc2CNd3yRQ7TVYHtzlLPH2eg+VoM2+0uO/8ZPDMor?=
+ =?us-ascii?Q?g+O3nJt03lizO10qrsCw9XQxY2Z2JuABtJivrTiN7cN2CaLszOLJH0Qz6IBU?=
+ =?us-ascii?Q?q1fYxzsDHFFimJv3dTTwZypThBuSRuZnV6t9xJ2Z0Ob4kAdNADcUCqGHiZ7a?=
+ =?us-ascii?Q?bA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0248016-8551-4f49-f979-08dc4c85928e
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2024 04:27:56.2801
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2024 04:39:35.3737
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ME3P282MB1747
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YRoxbRkO4/zbLLLhRH4ohZer2JduXuYdNHwLi4XioIgLmEBxdNYAzOlwrydG6M/KeL6LsMQrV/yUKw8S+JI4gg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB7426
+X-OriginatorOrg: intel.com
 
-On 25/3/24 13:24, Tzung-Bi Shih wrote:
-> If they aren't part of commit message, please put them after "---". Please
-> separate to an independent patch if they fix different things.
 
-Alright thanks, the separation thing did kinda occur to me after I'd 
-send it, but I will do it next time.
+hi, Luis Henriques,
 
-> I'm not sure if it really fixes anything.  See [1] or [2].
+we noticed in
+https://lore.kernel.org/all/20240307160225.23841-1-lhenriques@suse.de/
+it was mentioned this patch is for "ext4/053 fstest failure",
+however, in our tests, 053 can pass on parent but fail on this commit.
 
-Ahh okay, I guess it was probably a side effect of me breaking something 
-else then, since the module only seemed to crash without that change. 
-But I was also mildly confused how it seemed to work fine like that 
-elsewhere though.
 
-> By current design, the `drvdata` should be provided by either ACPI or OF match.
+12dbddcebcb8e fs_parser: add helper to define parameters with string and flag types
+2de45c422fe6a ext4: fix the parsing of empty string mount parameters
 
-Yeah sorry, I didn't really know of a simpler way to do it, since it 
-gets started from `mfd_add_hotplug_devices` in cros_ec_dev.c in this 
-patch. I'll try and find a better way if I decide to make a v2.
+12dbddcebcb8e3e1 2de45c422fe6ae4f64d35df99cd
+---------------- ---------------------------
+       fail:runs  %reproduction    fail:runs
+           |             |             |
+           :6          100%           6:6     xfstests.ext4.053.fail
 
-> The patch is ruining the use cases in OF world (e.g. [3]).
+not sure if there is a xfstests patch works with this patch? Thanks!
 
-I was kinda worried that the module would somehow launch twice, but I 
-have a feeling that wouldn't be possible anyway.
+below report just FYI.
 
-Thanks for your feedback!
-Steve
+
+Hello,
+
+kernel test robot noticed "xfstests.ext4.053.fail" on:
+
+commit: 2de45c422fe6ae4f64d35df99cdaf2c6fee2a5ac ("[PATCH v2 2/3] ext4: fix the parsing of empty string mount parameters")
+url: https://github.com/intel-lab-lkp/linux/commits/Luis-Henriques/fs_parser-add-helper-to-define-parameters-with-string-and-flag-types/20240308-104759
+base: https://git.kernel.org/cgit/linux/kernel/git/tytso/ext4.git dev
+patch link: https://lore.kernel.org/all/20240307160225.23841-3-lhenriques@suse.de/
+patch subject: [PATCH v2 2/3] ext4: fix the parsing of empty string mount parameters
+
+in testcase: xfstests
+version: xfstests-x86_64-9b6df9a0-1_20240318
+with following parameters:
+
+	disk: 4HDD
+	fs: ext4
+	test: ext4-053
+
+
+
+compiler: gcc-12
+test machine: 4 threads Intel(R) Core(TM) i5-6500 CPU @ 3.20GHz (Skylake) with 32G memory
+
+(please refer to attached dmesg/kmsg for entire log/backtrace)
+
+
+
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <oliver.sang@intel.com>
+| Closes: https://lore.kernel.org/oe-lkp/202403251019.50cab6c8-oliver.sang@intel.com
+
+2024-03-22 09:38:10 export TEST_DIR=/fs/sdb1
+2024-03-22 09:38:10 export TEST_DEV=/dev/sdb1
+2024-03-22 09:38:10 export FSTYP=ext4
+2024-03-22 09:38:10 export SCRATCH_MNT=/fs/scratch
+2024-03-22 09:38:10 mkdir /fs/scratch -p
+2024-03-22 09:38:10 export SCRATCH_DEV=/dev/sdb4
+2024-03-22 09:38:10 echo ext4/053
+2024-03-22 09:38:10 ./check -E tests/exclude/ext4 ext4/053
+FSTYP         -- ext4
+PLATFORM      -- Linux/x86_64 lkp-skl-d05 6.8.0-rc3-00019-g2de45c422fe6 #1 SMP PREEMPT_DYNAMIC Sat Mar 16 03:20:13 CST 2024
+MKFS_OPTIONS  -- -F /dev/sdb4
+MOUNT_OPTIONS -- -o acl,user_xattr /dev/sdb4 /fs/scratch
+
+ext4/053       [failed, exit status 1]- output mismatch (see /lkp/benchmarks/xfstests/results//ext4/053.out.bad)
+    --- tests/ext4/053.out	2024-03-18 16:30:59.000000000 +0000
+    +++ /lkp/benchmarks/xfstests/results//ext4/053.out.bad	2024-03-22 09:44:06.379217460 +0000
+    @@ -1,2 +1,3 @@
+     QA output created by 053
+     Silence is golden.
+    +SHOULD FAIL mounting ext4 "test_dummy_encryption=" (mount unexpectedly succeeded) FAILED
+    ...
+    (Run 'diff -u /lkp/benchmarks/xfstests/tests/ext4/053.out /lkp/benchmarks/xfstests/results//ext4/053.out.bad'  to see the entire diff)
+Ran: ext4/053
+Failures: ext4/053
+Failed 1 of 1 tests
+
+
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20240325/202403251019.50cab6c8-oliver.sang@intel.com
+
+
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
