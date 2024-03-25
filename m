@@ -1,68 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33951802CD;
-	Mon, 25 Mar 2024 09:29:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3955181491;
+	Mon, 25 Mar 2024 09:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711358967; cv=none; b=J9vkPFupGrZVA0vMz8IZP5e4FQTo3B/etgTjR6foGzT6cHucRAS7iAOlBL+N6FkQXoA3imlCWmDXsxjJqmiO97j1qqwRBiThYmgNjG6OEaMIr8v929ALsCj08rw/UY8fgzK3lLcaLmNpSAcGL3puUhWKDPyb4YC25r/LGMb/WkM=
+	t=1711359146; cv=none; b=Uy9Vid/DwE+4wp06yWeZT62iSCjF/l0wAjmzqOQ4jiyuc/SVXxheQ2ULvWAurXG71Wgs2R/1yUlXICS0f9JJGddVo/QgkiKYirM6zV6DyLWHOGKBSSZbxJ8GLwZcetrLXj0afwF6558wyjdZlNzNkvjoad2S0f+uSTIaecaBonA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711358967; c=relaxed/simple;
-	bh=L7eRB9UE0AFTLtUcx3jXW/Lcf4eB7MvnxSvfFx8sbKc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fjwStrHAjW/Nh6DuDYRL1t7IPkhOx2kwaG87EfCBOU1NJ3rU2lw9J+Nnc0/J0OofcyZFa6MaJDgGYdU3+aSAglJNiPXXjuUY1y/wEkuYRsFZ9lfvN+PYc1hqld5eppeUiAxTQreDwycFjr+XS1JqR/VX9Foqii08ABYNA570Eds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TWDbW2pi; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TWDbW2pi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E6C0C43390;
-	Mon, 25 Mar 2024 09:29:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711358967;
-	bh=L7eRB9UE0AFTLtUcx3jXW/Lcf4eB7MvnxSvfFx8sbKc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TWDbW2piXNm8EWyiTv6cIJJ696JM3raBRT5+utcMQKVm8Z6M5g/RaMxR0BlnouZsE
-	 cMBGuGUbbBBFr1MsYpQakLxXFl3Zn4rD5af0uYM0eA3njAy1JT4PcttX+13sDyfoDI
-	 V31OdwOR1kM38GF/onFRpViFko6v1fHMMeAQ7GmHSZ5kwR6/ZbsgNCdt5W086XBpKc
-	 lzd6ONim4fzMmtxarTRTs9onIAn/N+yKFCHIPhehj91C+tCUvAs49sOdFAIanOTFVF
-	 DQxF3GHNfVIdMAAnyLmemYBo3DFtF8r95VMu7hmNJAjBo76g3feZiltOT1CLNNfZov
-	 2Nuc2MWdjvMGg==
-Message-ID: <1a7ec34d-b126-4193-9e0c-bbdfe4e7126f@kernel.org>
-Date: Mon, 25 Mar 2024 18:29:24 +0900
+	s=arc-20240116; t=1711359146; c=relaxed/simple;
+	bh=ZDD9oI7+kzl+Iom4aF4liYA+/NSY9xwPsvohVm6SgA8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XgfigdtZ8yuxWbqSPdbZyKk7S7ezrQifyp1aiF46/Ac9C3e7YSuSSZrGtGYBV90+OFdR/kPap7M/Ncnr0Eli8AquEoyky9y+CHZEGr3dQpnGfC1ckxo08TfrMLGRABMTBQuntHv3UPWLY5g4+ldoH3fxAtXzKDprkF4RhKNcnMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i53875aaf.versanet.de ([83.135.90.175] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1roggb-0004XE-8B; Mon, 25 Mar 2024 10:32:09 +0100
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To: vkoul@kernel.org, Sugar Zhang <sugar.zhang@rock-chips.com>
+Cc: linux-rockchip@lists.infradead.org,
+ Sugar Zhang <sugar.zhang@rock-chips.com>, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] dmaengine: Add support for audio interleaved transfer
+Date: Mon, 25 Mar 2024 10:32:08 +0100
+Message-ID: <2115347.bB369e8A3T@diego>
+In-Reply-To:
+ <20240325103731.v1.1.I502ea9c86c8403dc5b1f38abf40be8b6ee13c1dc@changeid>
+References:
+ <20240325103731.v1.1.I502ea9c86c8403dc5b1f38abf40be8b6ee13c1dc@changeid>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8] dt-bindings: ata: imx-pata: Convert to dtschema
-Content-Language: en-US
-To: Animesh Agarwal <animeshagarwal28@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>,
- linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240320090733.96828-1-animeshagarwal28@gmail.com>
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <20240320090733.96828-1-animeshagarwal28@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-On 3/20/24 18:07, Animesh Agarwal wrote:
-> Convert the imx-pata bindings to DT schema.
-> Add missing fsl,imx31-pata and fsl,imx51-pata compatibles during
-> conversion, because they are already being used in existing DTS.
-> 
-> Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
+Hi,
 
-Applied to for-6.10. Thanks !
+Am Montag, 25. M=E4rz 2024, 03:37:49 CET schrieb Sugar Zhang:
+> This patch add support for interleaved transfer which used
+> for interleaved audio or 2d video data transfer.
+>=20
+> for audio situation, we add 'nump' for number of period frames.
+>=20
+> Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+> ---
+>=20
+>  include/linux/dmaengine.h | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index 752dbde..5263cde 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -144,6 +144,7 @@ struct data_chunk {
+>   *		Otherwise, destination is filled contiguously (icg ignored).
+>   *		Ignored if dst_inc is false.
+>   * @numf: Number of frames in this template.
+> + * @nump: Number of period frames in this template.
+>   * @frame_size: Number of chunks in a frame i.e, size of sgl[].
+>   * @sgl: Array of {chunk,icg} pairs that make up a frame.
+>   */
+> @@ -156,6 +157,7 @@ struct dma_interleaved_template {
+>  	bool src_sgl;
+>  	bool dst_sgl;
+>  	size_t numf;
+> +	size_t nump;
+>  	size_t frame_size;
+>  	struct data_chunk sgl[];
+>  };
 
--- 
-Damien Le Moal
-Western Digital Research
+hmm, this only ever adds this nump element. I think for adding things
+to really generic structs, you definitly will need to provide an actual
+user for it in a second patch.
+
+
+Heiko
+
 
