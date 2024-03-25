@@ -1,108 +1,123 @@
-Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA32153512
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 08:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44504153565;
+	Mon, 25 Mar 2024 08:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711355498; cv=none; b=U4h29D/j6LOoBeVRSVFXCCJ4gt0C2yJQtVBxuGboKtIkUvwvnSJj3mWnNu1TrzVj6KIloTk2AdiDdEgKtGGwpKKRiWhYKEwYMFSn4xr2tCVQd3QTn/489XjEbKSniZ7SIjdYvJBrT9GqEDvjXIIgegN9lQFWZ3PqZ1m8YX0I7fs=
+	t=1711355510; cv=none; b=ODFj89dfArOnWQHEMtsz6lD8r5ww1Ja+qwKlf/2T1Bv7GKClK3WiQjxNHXeKo7cRk1IaDIMjqhyllWjxxrDNCVJDND6HzHrEzAvs5sfdVIR3YFXPrzCMFK+PK1K8ytAAbGJWQn5IHaIqCYyqnfONp2GAKBiUORuWSVYDUi3K2KE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711355498; c=relaxed/simple;
-	bh=RQiAwdtoaFczmBg2nAsQJmkj8xlavEoNGQxwoKrZbwc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lEyVfrAC3vq9ONKnjrZ9r55wqq2liK2Z4silpdSdtAjDwHsiYWjLXGhF+wFpUV0P4sJcw04306BFBehWCy7pwxOfkUcxUgOaTDh6xNIChwK6yCr0JTw7ZMkHt/hfBY3oNayDXd4rkOLc+Smlgybmol3Xaf8LI6TvWQcT+ETfeLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4V35Mw42F3z9xGnM
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 16:15:24 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id E7BF2140496
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 16:31:20 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.81.223.214])
-	by APP2 (Coremail) with SMTP id GxC2BwB3sCRPNgFmUPztBA--.12038S2;
-	Mon, 25 Mar 2024 09:31:20 +0100 (CET)
-From: Petr Tesarik <petrtesarik@huaweicloud.com>
-To: Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Petr Tesarik <petr.tesarik1@huawei-partners.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Will Deacon <will@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	iommu@lists.linux.dev (open list:DMA MAPPING HELPERS)
-Cc: Roberto Sassu <roberto.sassu@huaweicloud.com>,
-	Petr Tesarik <petr@tesarici.cz>
-Subject: [PATCH v4 0/2] swiotlb: allocate padding slots if necessary
-Date: Mon, 25 Mar 2024 09:31:03 +0100
-Message-Id: <20240325083105.658-1-petrtesarik@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1711355510; c=relaxed/simple;
+	bh=VO7AN01rHdiWwam/sZMD7D9zeSM3KWBzcy0Oq/ITPjk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=umVOsbxa3nNs2Og/n/NUgzyFrsRizlTzrdn7+LIVa+ifrvhLAC1IQ7rtH+8uPwM4xqMtaVbXipz+9mB1TBYIDVEai+BQOYJW4xxTY0XBXJck8ifXIEdAcYCzB6vcy99ZpS7zYsW+L2bmkQn2fNIDMI5yWE6X0wSKkrCoXBJpRMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uE/qlgkn; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uE/qlgkn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAA13C433F1;
+	Mon, 25 Mar 2024 08:31:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711355509;
+	bh=VO7AN01rHdiWwam/sZMD7D9zeSM3KWBzcy0Oq/ITPjk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uE/qlgkn/5Kq3PRzCzI2HOOdIXEspU7f/S8yEEIOGNRuzPmtOTTsjrjEmyoQ2w7Jn
+	 dQnjwUNXrsKfZkj49+fqlqcmLPhYdOEg+L+D3I/eJEGd4TKABOOvpse3EUtZyCB5a8
+	 uWTp8d5i+Kp0lJ6mTxEaEnlnrk1Wl3RjArSjtQU9fchHt08PfAOKTuUWuiZh4JCvmx
+	 ijy2iiDZblGJ3QVv8zyOmznJCqmEceyeAzgojUQ4BUv1b+GH2yyBhtxHAq4+orXIqj
+	 XNUXuPojfPZCU1kqAQ+HRe+WGcxCW6bln2mZTErY6LIKupqczCqFfgt1Kksa5UMqxg
+	 C6x7KBNcMaSaA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rofkJ-000000002xB-3WZA;
+	Mon, 25 Mar 2024 09:31:55 +0100
+Date: Mon, 25 Mar 2024 09:31:55 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Bjorn Andersson <quic_bjorande@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Taniya Das <quic_tdas@quicinc.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Rob Clark <robdclark@gmail.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH v4 2/8] clk: qcom: gdsc: Enable supply reglator in GPU GX
+ handler
+Message-ID: <ZgE2eyJ3q4gqd2VU@hovoldconsulting.com>
+References: <20240125-sa8295p-gpu-v4-0-7011c2a63037@quicinc.com>
+ <20240125-sa8295p-gpu-v4-2-7011c2a63037@quicinc.com>
+ <Zf25Sv2x9WaCFuIH@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:GxC2BwB3sCRPNgFmUPztBA--.12038S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kw1DWF1Duw1kKr4UZw17GFg_yoW8Xw1DpF
-	1fGrn3JF18tFyxW3ZIk3y0kF1rJw18Ca1UCFsIgryrZr15ZF1kZFyqyr4rGryUJrWIqF42
-	k3W5urWUCF4UJw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBa14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8JV
-	W8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wrylc7CjxVAKzI0EY4vE52x082I5MxAIw28Icx
-	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
-	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
-	IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAI
-	cVCF04k26cxKx2IYs7xG6r4j6FyUMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2js
-	IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRrOzxUUUUU=
-X-CM-SenderInfo: hshw23xhvd2x3n6k3tpzhluzxrxghudrp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zf25Sv2x9WaCFuIH@hovoldconsulting.com>
 
-From: Petr Tesarik <petr.tesarik1@huawei-partners.com>
+On Fri, Mar 22, 2024 at 06:00:58PM +0100, Johan Hovold wrote:
+> On Thu, Jan 25, 2024 at 01:05:08PM -0800, Bjorn Andersson wrote:
+> > The GX GDSC is modelled to aid the GMU in powering down the GPU in the
+> > event that the GPU crashes, so that it can be restarted again. But in
+> > the event that the power-domain is supplied through a dedicated
+> > regulator (in contrast to being a subdomin of another power-domain),
+> > something needs to turn that regulator on, both to make sure things are
+> > powered and to match the operation in gdsc_disable().
+> > 
+> > Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> > Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+> > ---
+> >  drivers/clk/qcom/gdsc.c | 12 ++++++++++--
+> >  1 file changed, 10 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/clk/qcom/gdsc.c b/drivers/clk/qcom/gdsc.c
+> > index 5358e28122ab..e7a4068b9f39 100644
+> > --- a/drivers/clk/qcom/gdsc.c
+> > +++ b/drivers/clk/qcom/gdsc.c
+> > @@ -557,7 +557,15 @@ void gdsc_unregister(struct gdsc_desc *desc)
+> >   */
+> >  int gdsc_gx_do_nothing_enable(struct generic_pm_domain *domain)
+> >  {
+> > -	/* Do nothing but give genpd the impression that we were successful */
+> > -	return 0;
+> > +	struct gdsc *sc = domain_to_gdsc(domain);
+> > +	int ret = 0;
+> > +
+> > +	/* Enable the parent supply, when controlled through the regulator framework. */
+> > +	if (sc->rsupply)
+> > +		ret = regulator_enable(sc->rsupply);
+> > +
+> > +	/* Do nothing with the GDSC itself */
+> > +
+> > +	return ret;
+> >  }
+> >  EXPORT_SYMBOL_GPL(gdsc_gx_do_nothing_enable);
+> 
+> This patch (and series) is now in mainline as commit 9187ebb954ab ("clk:
+> qcom: gdsc: Enable supply reglator in GPU GX handler") and appears to be
+> involved in triggering the below lockdep splat on boot of the Lenovo
+> ThinkPad X13s.
+> 
+> Adding Ulf and the MSM DRM devs as well in case I blamed the wrong
+> change here.
 
-If the allocation alignment is bigger than IO_TLB_SIZE and min_align_mask
-covers some bits in the original address between IO_TLB_SIZE and
-alloc_align_mask, preserve these bits by allocating additional padding
-slots before the actual swiotlb buffer.
+I've now verified that applying this series on top of 6.8 also triggers
+the lockdep splat even if it is possible that it only exposed an
+existing issue.
 
-Changes from v3
----------------
-* Add a parameter to swiotlb_align_offset(), so it is not open-coded in
-  swiotlb_tbl_map_single().
-* Extend the description of swiotlb_align_offset() and convert it to the
-  kernel-doc format.
-* Use bit operations to calculate number of padding slots and the padding
-  inside a slot. This matches all other such calculations in swiotlb.c.
+This is still a regression and also prevents using lockdep on these
+platforms, which can lead to further locking issues being introduced
+until this is fixed:
 
-Changes from v2
----------------
-* Fix assignment of an uninitialized variable to pad_slots.
-* Improve commit message wrt INVALID_PHYS_ADDR.
+#regzbot ^introduced: 9187ebb954ab
 
-Changes from v1
----------------
-* Rename padding to pad_slots.
-* Set pad_slots only for the first allocated non-padding slot.
-* Do not bother initializing orig_addr to INVALID_PHYS_ADDR.
-* Change list and pad_slots to unsigned short to avoid growing
-  struct io_tlb_slot on 32-bit targets.
-* Add build-time check that list and pad_slots can hold the maximum
-  allowed value of IO_TLB_SEGSIZE.
-
-
-Petr Tesarik (2):
-  swiotlb: extend buffer pre-padding to alloc_align_mask if necessary
-  bug: introduce ASSERT_VAR_CAN_HOLD()
-
- include/linux/build_bug.h | 10 +++++++
- kernel/dma/swiotlb.c      | 61 ++++++++++++++++++++++++++++++---------
- 2 files changed, 58 insertions(+), 13 deletions(-)
-
--- 
-2.34.1
-
+Johan
