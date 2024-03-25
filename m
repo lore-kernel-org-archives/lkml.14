@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6930882877;
-	Mon, 25 Mar 2024 22:29:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39EED6E5E1;
+	Mon, 25 Mar 2024 22:30:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711405799; cv=none; b=Q6llhT98vO+r8XxRoN3sNEIxDvFMi+FDqYDW1GPQ6PrcVW+TXZmVKXNEdEfohq2lMFkC0i3T74slejnsZKTI8HFA4cTLABC58QfH3q7UOiSm0Xi8GuvGqUmgq/c3a6TXowpGAlb4vdUXWxR/LStD/muronbK2hd8KjhrT3tkbvM=
+	t=1711405803; cv=none; b=MLjmpJAU4WfBtSSaaR6SCXJ+RvYFXQGP1p2PpkoPSMVBtdCZUNL323GdyaWFlgRgBR1zCXxax8UkXT/bsb7Wk+aL4ucEatvjg3KXWpGrmZuoy4CCIFA0jg1KIjGtVPsEm3vMuJzNrwcF+sxPdXV5+vVoz5w4Iqj/XGojKZZyqAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711405799; c=relaxed/simple;
-	bh=s6f0H6C9JKUP0UFu/98JgZPoNS9zucvQkAEttBGZoDY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Rw+QsM9v4po1ktFuItSv4iCfS1RXafOxOWGjLOheNhwjaWywkc7SmYkm5aYZvY1vFWsThelmW8L/OHHUVnfl+HWO0M9eUy5TDc/Lb8KVdgkKU840etCPfsigKyZTKfSKxs2oLHcxCQhXJYgKB9T6ITHKiG4vIYVF00Y/nPFEr0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=atuGH1dk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711405803; c=relaxed/simple;
+	bh=4KsogMxOnNi4o94Zor1uvaqS/A0cfHOQgy7yenfTfDw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=sE0fAersqYgF8Ypt9ha/HRVgd/EJjkEgL1Bq15IwSb80PNgR8+bROGrbYe7UqKZfnUkF+W+8PuZ1/YE9l8osxeTUzOW7tTdPidjxj3HQhsn1QT9WjUXMFClzi1vPY64BhRvzMEhvTqjGcaKdKSE6JKfxhlmJBLHURFBrcsZqfq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZTrgMTzi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="atuGH1dk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B34CEC433F1;
-	Mon, 25 Mar 2024 22:29:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZTrgMTzi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0FEFC433F1;
+	Mon, 25 Mar 2024 22:30:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711405799;
-	bh=s6f0H6C9JKUP0UFu/98JgZPoNS9zucvQkAEttBGZoDY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=atuGH1dkaJFc6beHU9/dXrtXnZVohJuLwacVykwe7JIcmAVH5e3J1KxmkEAbeugkF
-	 DgKyPy0nETCy+CO7aO3A0AJYTPlWC3KigEur69U9yJeAL+t+vFhmxLHGhpCwj6WVdG
-	 q//063yDQXIo1H1a/2ysO1wueZ5PFmVDV3eRSraUD4ixrraJ21iKzmL5chHT2dOVTB
-	 3v/JzlB5MHuurUelrCGzwIZ/ZkMIqHgwxqyh6Yg0LmZ7bn3p+uTSk92LBsrcCZouDn
-	 mlWOMaM3I0kyyM/qX2Bj68xJQfkAET8j8pwCSUGhVuORqd4t3lBwhksArarmov6ZRx
-	 vY2vpxxClIVqg==
+	s=k20201202; t=1711405803;
+	bh=4KsogMxOnNi4o94Zor1uvaqS/A0cfHOQgy7yenfTfDw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ZTrgMTzi4z13sOnAJDGuwJ5KfrodFzM9Z3f3xfczMrulYxBbWBMsvC8loPtYtubYI
+	 +BDRQ+znulUNxSeI4O0UYI3k1ytrojfpDPB7/Sh0y9WIgDJ9cduRVcAbWzD1NBu/Z+
+	 o1d50aQZHeK7zhaEWagboDxOCgSSFWE/PJmr0k/4vm2w9q02zdTMNj3ZP9ATjvJLSU
+	 hJn8TijL6+4F6virrUKyxX+cySj19kQ0t73uIuk5bLyK7GxI7x5XXeqWh5VmxcCCnJ
+	 AyQo5i8d7M7DfOZLc0c4LMPZBjzVzZ/kxAPp7uR2dr+SdVyE1L2CEN4g7PKyZFsJ6Q
+	 gHK5LWy5/d/jA==
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Jesse Brandeburg <jesse.brandeburg@intel.com>,
 	Tony Nguyen <anthony.l.nguyen@intel.com>,
@@ -41,10 +42,12 @@ Cc: Heiner Kallweit <hkallweit1@gmail.com>,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 0/3] net/e1000e, igb, igc: Remove redundant runtime resume
-Date: Mon, 25 Mar 2024 17:29:48 -0500
-Message-Id: <20240325222951.1460656-1-helgaas@kernel.org>
+Subject: [PATCH 2/3] igb: Remove redundant runtime resume for ethtool_ops
+Date: Mon, 25 Mar 2024 17:29:50 -0500
+Message-Id: <20240325222951.1460656-3-helgaas@kernel.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240325222951.1460656-1-helgaas@kernel.org>
+References: <20240325222951.1460656-1-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,23 +58,57 @@ Content-Transfer-Encoding: 8bit
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-e1000e, igb, and igc all have code to runtime resume the device during
-ethtool operations.
+749ab2cd1270 ("igb: add basic runtime PM support") added
+ethtool_ops.begin() and .complete(), which used pm_runtime_get_sync() to
+resume suspended devices before any ethtool_ops callback and allow suspend
+after it completed.
 
-Since f32a21376573 ("ethtool: runtime-resume netdev parent before ethtool
-ioctl ops"), dev_ethtool() does this for us, so remove it from the
-individual drivers.
+Subsequently, f32a21376573 ("ethtool: runtime-resume netdev parent before
+ethtool ioctl ops") added pm_runtime_get_sync() in the dev_ethtool() path,
+so the device is resumed before any ethtool_ops callback even if the driver
+didn't supply a .begin() callback.
 
-Bjorn Helgaas (3):
-  e1000e: Remove redundant runtime resume for ethtool_ops
-  igb: Remove redundant runtime resume for ethtool_ops
-  igc: Remove redundant runtime resume for ethtool ops
+Remove the .begin() and .complete() callbacks, which are now redundant
+because dev_ethtool() already resumes the device.
 
- drivers/net/ethernet/intel/e1000e/ethtool.c  | 62 ++------------------
- drivers/net/ethernet/intel/igb/igb_ethtool.c | 15 -----
- drivers/net/ethernet/intel/igc/igc_ethtool.c | 17 ------
- 3 files changed, 6 insertions(+), 88 deletions(-)
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/net/ethernet/intel/igb/igb_ethtool.c | 15 ---------------
+ 1 file changed, 15 deletions(-)
 
+diff --git a/drivers/net/ethernet/intel/igb/igb_ethtool.c b/drivers/net/ethernet/intel/igb/igb_ethtool.c
+index 99977a22b843..61d72250c0ed 100644
+--- a/drivers/net/ethernet/intel/igb/igb_ethtool.c
++++ b/drivers/net/ethernet/intel/igb/igb_ethtool.c
+@@ -3272,19 +3272,6 @@ static int igb_get_module_eeprom(struct net_device *netdev,
+ 	return 0;
+ }
+ 
+-static int igb_ethtool_begin(struct net_device *netdev)
+-{
+-	struct igb_adapter *adapter = netdev_priv(netdev);
+-	pm_runtime_get_sync(&adapter->pdev->dev);
+-	return 0;
+-}
+-
+-static void igb_ethtool_complete(struct net_device *netdev)
+-{
+-	struct igb_adapter *adapter = netdev_priv(netdev);
+-	pm_runtime_put(&adapter->pdev->dev);
+-}
+-
+ static u32 igb_get_rxfh_indir_size(struct net_device *netdev)
+ {
+ 	return IGB_RETA_SIZE;
+@@ -3508,8 +3495,6 @@ static const struct ethtool_ops igb_ethtool_ops = {
+ 	.set_channels		= igb_set_channels,
+ 	.get_priv_flags		= igb_get_priv_flags,
+ 	.set_priv_flags		= igb_set_priv_flags,
+-	.begin			= igb_ethtool_begin,
+-	.complete		= igb_ethtool_complete,
+ 	.get_link_ksettings	= igb_get_link_ksettings,
+ 	.set_link_ksettings	= igb_set_link_ksettings,
+ };
 -- 
 2.34.1
 
