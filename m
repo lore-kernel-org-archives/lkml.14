@@ -1,192 +1,131 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD75384D1E
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:26:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17ABB145B0E
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711358770; cv=none; b=k+qRqTIqWxz9ZeeW1tYPSf9+GFum2x+jtMSDPXQ/Y2uNr+ehFs5Wqi4XCqJbtKSLKhy4XgaxPlDOKIcIxUOXe3xDOiTAztDW1pffQj77MyWQOjPSvTeoyi9gKgzGEa627tC4hWxWy/0QlC/C0CyPkmLLMJNH9am1ZB1R+A+Ryag=
+	t=1711358917; cv=none; b=lB4gq3f9MHx0hdfcAjaIJ3qRJK0ImjpSHgaKZN115JDz1WKxdrHpXlgRpJTtz/B8Ql+JMVKS2fvdC/fviaOKSvanoubb52TZ1xP13CpQP3fl/newPcwvsizrlsUxhs51xXUn+LDOFcIYBxRCnovhO5XXX1fKiydZVPSjtBw5GhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711358770; c=relaxed/simple;
-	bh=+UtR0NT011zyBW6pNpHFzKilg63ytC5qO0zyrg10zGA=;
+	s=arc-20240116; t=1711358917; c=relaxed/simple;
+	bh=uGQJQqqOoV40xJP1y95HDFRdz87FEyHED2qs0kLU3bQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L/BgEIaS/0QTx+ZbHk2YztCvxhvBjNduPhFnd8n52fbPlYjQJJN84xUgWSOYSoKV4lg4I4tAtnDjR6mhhmMnAYrwrCd0Me61IlJvC+LAcvzrtwNtjjpieBD80xHZXpyxd1Yw9LFayqE2eMJjmC3YOsK9KRhzAdsNli6wyyLQgHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jtqSLe7T; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 To:Cc:Content-Type; b=lpTbLT2loJY+XFoVndzwkF8EbNcjO/LBW9Z9QZnpkDfZc4EOSKCgCJKDv4NnPSUUyhmUHqxlS5omEVQElEfs0WWOlfQXHCcIAOyierw7horWZlhncNJhLVTaoCmqKjx4iVWQTirG3BzvXbiaGQlBX5SiiUv/igd8jHeIBY1JN/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=S+6ZXBPD; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jtqSLe7T"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-78a4708a557so124487785a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 02:26:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S+6ZXBPD"
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-4d88360fd7bso826175e0c.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 02:28:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711358767; x=1711963567; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+UtR0NT011zyBW6pNpHFzKilg63ytC5qO0zyrg10zGA=;
-        b=jtqSLe7TaoJ/+V95xYpsB2A0CsojuHZsyifgC9A1KziLR5q8QBrJ1FVCnDwjC2nNkt
-         R/tYmPSHVlKm9qfWolfVippLSDsEDgnynRbQiX7cQEwnlbawMOqKKzMYC0R/ubkNkZ1y
-         PldBya+Wu/dXmMZOUMbrgzZSu0ePeU6j3y8i8=
+        d=linaro.org; s=google; t=1711358915; x=1711963715; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=5m0Gh/qeDl7am+4YY8jkZ+PZB+SobIFHIAWFvx2/qhk=;
+        b=S+6ZXBPDlwwzO1ciPHumxH/ZKhaC8u3XW8FOQgQxZsqG48Al1G3YM4sQ73Wh+RzJEt
+         yXC+yytqoPa8IWRDSTUJGpSrpSxN7mlPuRqYZpaGVboBSDFEugTi16kwSPoivdbb8a94
+         PZQ7WvnKBOiobSUUGbAU20copVrIWcGJnsOBs052oFBorhhkIDCWqUliepKbfV56Tkql
+         FdUs3kkjoxXI/UeB4H0njtF5fuWDKB2gcWi3lp8EAzarpAEE1G+cW9656wvgC+8s+OIY
+         kZSOtmKSr9QdbQwC49KWWL6XhfZyT6lXQ/633DD2ZjEY3c0zxVTe3tVLfDvuWray5EVY
+         58aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711358767; x=1711963567;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+UtR0NT011zyBW6pNpHFzKilg63ytC5qO0zyrg10zGA=;
-        b=aP05ec65OVirWQtdOr89IPiNaEgPgVHFNkizCRA+DbBECJ5585+hQxcVdZ8xFCiitz
-         9pU27txNa5QO0vZGlq25xvRUuWEQrwrmsF4kMwoCgzQMXp0zES91QAu7s+pnEW2kYZ+f
-         pgDeBcJaO3VGmTzoGRA6emOiATnkMGe7BL/Xj1871D86n2GPDsWj0xqJmeLzxSmTfpB/
-         VV9eb07Sj/IbZu1OexfHYDPle0Vd3X3atmDkqEoqpltt+8QjbAk0kl8Em+tyO9ypQTSc
-         +BwJJdQMA3iSvG586uQz8aCsWVny81Js6fjR2CJynbGp0ZRXV6WkMoW9UiSL3fYoOR9k
-         zcfw==
-X-Forwarded-Encrypted: i=1; AJvYcCU5yqcg69exT/I2nSuGoLHyp3JfCPNxV4u4mQx6ls1YJlvq/ToSQjrG87oFMzPYge3sVWuh2BEGQcmdtOQvm17G2ZFJBo8kg6wYO5f5
-X-Gm-Message-State: AOJu0YwXOGi1Fenjpfp4APuxK0rczTEM2bZ8q354m14VC1rAtmJqtVsn
-	zmYNiy5VOPZdTqANELrG/3RvygmsJzKpDrrlv9f6YbLQKtAUhjNW9ZKYDOgqSpXEVPrXyIB7u7H
-	qxw==
-X-Google-Smtp-Source: AGHT+IGk819OfMzhnUCGtilf6jGWlK72Dfm4MyeBcL4Fcw/aWH+7PkAiQ/mj1HdR5Ey43ZqwcVOhZg==
-X-Received: by 2002:a05:6214:3002:b0:696:8e81:77bb with SMTP id ke2-20020a056214300200b006968e8177bbmr3277183qvb.32.1711358767211;
-        Mon, 25 Mar 2024 02:26:07 -0700 (PDT)
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com. [209.85.219.53])
-        by smtp.gmail.com with ESMTPSA id eh12-20020a056214186c00b0069183a8de64sm3898362qvb.75.2024.03.25.02.26.06
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 02:26:06 -0700 (PDT)
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-690c1747c3cso31436586d6.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 02:26:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXsVPuLjWukVzc05fAS6LwPtsY7lA1+00QytqYxa77YXBOFGG+IzHy8wnplmcbByGCsjpnIO7UCHx+149sCXmQLr2j3roKReegB5BuU
-X-Received: by 2002:a05:6214:2465:b0:68f:f859:ee06 with SMTP id
- im5-20020a056214246500b0068ff859ee06mr11514858qvb.12.1711358765850; Mon, 25
- Mar 2024 02:26:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711358915; x=1711963715;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5m0Gh/qeDl7am+4YY8jkZ+PZB+SobIFHIAWFvx2/qhk=;
+        b=afvzsocD4eeXQFLh/ouC2EJzbLO0kGeqI3ZbbQkIMMxPsaJDJaybhd2u/B6F+WstVb
+         zzHm4hBv958/Rd+DDBWHHL3rZ492HbrYgFX7qIeAz1LDfR7gan5S0IFw2Govp7g8bOwf
+         AdBA3fEh4aWTTp+iTDrEriyQfrvX/+cMy2ajzis7w9K9xFM/bZEvJqW7miirrrqvJJ7h
+         EKubS9AUSOZtqm+BI0VJOpjxghqUDGwhJ513E7RBGlau7MuczqoN+n3IRpM8aot8zfz4
+         EKe/qAW1Lg2NpgDev9Sr25xLbFy9jZ/NObk9yJX1c3c6Wf46wvWPq2ijj3rUG4tvX/bi
+         N7Fg==
+X-Gm-Message-State: AOJu0Yx0NzkQHfonT/v8GzDV3V0QrOsOXI6/e7Eeb9y2V/+fj8wmANKm
+	L15+JSwuScNoYjps/idORcJCHgJTy1wtccwIkfGOAmbZgmCzf91Rp5PuTKKUO//TYAnKu0XNYqx
+	tJJ3M6otH9ndZJF+L830DMupgIQz+GLXF0m0tDw==
+X-Google-Smtp-Source: AGHT+IGM/UyGpUfBFfVFl91MwB4yzh9yxciE0bsa3uvnOjvb8RmeOSlIGcBZRayBfFukhUTmD2y7dkNO9tJXQIK0PSU=
+X-Received: by 2002:a05:6122:12b7:b0:4d3:3334:f2fe with SMTP id
+ j23-20020a05612212b700b004d33334f2femr2658521vkp.1.1711358913507; Mon, 25 Mar
+ 2024 02:28:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240323-resend-hwtimestamp-v10-0-b08e590d97c7@chromium.org>
- <2722561.mvXUDI8C0e@natalenko.name> <CANiDSCsnOdTaW0Eg68+-niPXwPhYc3Br6cWoGiHytZrFOGmcZA@mail.gmail.com>
- <12403186.O9o76ZdvQC@natalenko.name>
-In-Reply-To: <12403186.O9o76ZdvQC@natalenko.name>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Mon, 25 Mar 2024 10:25:51 +0100
-X-Gmail-Original-Message-ID: <CANiDSCuma7aGxq7T2uYMgn_JEW223LdR4as83UT2Aj3QmVu4ig@mail.gmail.com>
-Message-ID: <CANiDSCuma7aGxq7T2uYMgn_JEW223LdR4as83UT2Aj3QmVu4ig@mail.gmail.com>
-Subject: Re: [PATCH v10 3/6] media: uvcvideo: Quirk for invalid dev_sof in
- Logitech C922
-To: Oleksandr Natalenko <oleksandr@natalenko.name>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, "hn.chen" <hn.chen@sunplusit.com>, 
-	Hans Verkuil <hverkuil@xs4all.nl>, Sergey Senozhatsky <senozhatsky@chromium.org>
+References: <20240324233458.1352854-1-sashal@kernel.org>
+In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 25 Mar 2024 14:58:22 +0530
+Message-ID: <CA+G9fYtU7A1XxOS9BvmoQAjhcuUsaSPQKnOzz-qYV6ORnG9k-g@mail.gmail.com>
+Subject: Re: [PATCH 5.15 000/317] 5.15.153-rc1 review
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, 
+	shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, 
+	florian.fainelli@broadcom.com, pavel@denx.de, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Jani Nikula <jani.nikula@intel.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Oleksandr
-
-On Mon, 25 Mar 2024 at 10:23, Oleksandr Natalenko
-<oleksandr@natalenko.name> wrote:
->
-> Hello.
->
-> On pond=C4=9Bl=C3=AD 25. b=C5=99ezna 2024 8:52:57, CET Ricardo Ribalda wr=
-ote:
-> > Hi Oleksandr
-> >
-> > On Sat, 23 Mar 2024 at 13:16, Oleksandr Natalenko
-> > <oleksandr@natalenko.name> wrote:
-> >
-> > >
-> > > How do I check whether C920 (046d:082d) is affected too? I have got o=
-ne, I can run tests on it as long as those will not blow the webcam up.
-> > >
-> > > Thanks.
-> > >
-> >
-> > First of all you need to enable the hwtimestamps in the driver. You
-> > could do that with
-> >
-> > ```
-> > rmmod uvcvideo; modprobe uvcvideo hwtimestamps=3D1
-> > ```
->
-> ```
-> $ cat /sys/module/uvcvideo/parameters/hwtimestamps
-> 1
-> ```
->
-> > Then capture some frames with yavta
-> > ```
-> > yavta -c /dev/video0
-> > ```
-> >
-> > After around 5 seconds all the frames should have a stable fps, the
-> > fps is not stable then your camera is affected with this bug.
->
-> ```
-> $ ./yavta -c /dev/video1
-> Device /dev/video1 opened.
-> Device `HD Pro Webcam C920' on `usb-0000:0f:00.3-3.4' (driver 'uvcvideo')=
- supports video, capture, without mplanes.
-> Video format: MJPEG (47504a4d) 1920x1080 (stride 0) field none buffer siz=
-e 4147200
-> =E2=80=A6
-> 100 (4) [-] none 100 200717 B 212.919114 213.079004 33.727 fps ts mono/So=
-E
-> 101 (5) [-] none 101 200889 B 213.003703 213.114996 11.822 fps ts mono/So=
-E
-> 102 (6) [-] none 102 200926 B 213.035571 213.146999 31.379 fps ts mono/So=
-E
-> 103 (7) [-] none 103 200839 B 213.067424 213.179003 31.394 fps ts mono/So=
-E
-> 104 (0) [-] none 104 200692 B 213.293180 213.214991 4.430 fps ts mono/SoE
-> 105 (1) [-] none 105 200937 B 213.322374 213.247001 34.254 fps ts mono/So=
-E
-> 106 (2) [-] none 106 201013 B 213.352228 213.279005 33.496 fps ts mono/So=
-E
-> =E2=80=A6
-> 168 (0) [-] none 168 200914 B 215.183707 215.347066 33.676 fps ts mono/So=
-E
-> 169 (1) [-] none 169 201141 B 215.271693 215.379066 11.365 fps ts mono/So=
-E
-> 170 (2) [-] none 170 201005 B 215.303449 215.415057 31.490 fps ts mono/So=
-E
-> 171 (3) [-] none 171 201195 B 215.335295 215.447062 31.401 fps ts mono/So=
-E
-> 172 (4) [-] none 172 200933 B 215.557731 215.479072 4.496 fps ts mono/SoE
-> 173 (5) [-] none 173 200973 B 215.587033 215.515063 34.127 fps ts mono/So=
-E
-> 174 (6) [-] none 174 200698 B 215.616811 215.547063 33.582 fps ts mono/So=
-E
-> 175 (7) [-] none 175 201290 B 215.646196 215.579075 34.031 fps ts mono/So=
-E
-> 176 (0) [-] none 176 200807 B 215.675857 215.615073 33.714 fps ts mono/So=
-E
-> =E2=80=A6
-> ```
->
-> Does the above mean the webcam is affected?
-
-Looks like it.... could you try applying this patch and run with
-
-rmmod uvcvideo; modprobe uvcvideo hwtimestamps=3D1 quirks=3D0x4000
-
-to see if that fixes it for you?
-
-Thanks!
-
->
-> Thank you.
->
-> >
-> >
-> > Thanks!
-> >
+On Mon, 25 Mar 2024 at 05:05, Sasha Levin <sashal@kernel.org> wrote:
 >
 >
-> --
-> Oleksandr Natalenko (post-factum)
+> This is the start of the stable review cycle for the 5.15.153 release.
+> There are 317 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Tue Mar 26 11:34:43 PM UTC 2024.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-5.15.y&id2=v5.15.152
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+> and the diffstat can be found below.
+>
+> Thanks,
+> Sasha
+
+As I have already reported on 5.10 regarding powerpc ppc6xx_defconfig
+build regressions noticed on 5.15.
+
+> Thomas Zimmermann (1):
+>   arch/powerpc: Remove <linux/fb.h> from backlight code
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+Build error:
+------------
+drivers/macintosh/via-pmu-backlight.c:22:20: error:
+'FB_BACKLIGHT_LEVELS' undeclared here (not in a function)
+   22 | static u8 bl_curve[FB_BACKLIGHT_LEVELS];
+      |                    ^~~~~~~~~~~~~~~~~~~
+In file included from include/linux/kernel.h:16,
+                 from arch/powerpc/include/asm/page.h:11,
+                 from arch/powerpc/include/asm/thread_info.h:13,
+                 from include/linux/thread_info.h:60,
+                 from arch/powerpc/include/asm/ptrace.h:323,
+                 from drivers/macintosh/via-pmu-backlight.c:11:
+drivers/macintosh/via-pmu-backlight.c: In function 'pmu_backlight_curve_lookup':
+include/linux/minmax.h:36:9: error: first argument to
+'__builtin_choose_expr' not a constant
+   36 |         __builtin_choose_expr(__safe_cmp(x, y), \
+      |         ^~~~~~~~~~~~~~~~~~~~~
 
 
+Steps to reproduce:
+# tuxmake --runtime podman --target-arch powerpc --toolchain gcc-12
+--kconfig ppc6xx_defconfig
 
---=20
-Ricardo Ribalda
+
+Links:
+ - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.15.y/build/v5.15.152-317-g6f6f22f11928/testrun/23147157/suite/build/test/gcc-12-ppc6xx_defconfig/log
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2e9uOwIbkt3JA6me39nPospWfFL/
+ - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.15.y/build/v5.15.152-317-g6f6f22f11928/testrun/23147157/suite/build/test/gcc-12-ppc6xx_defconfig/details/
+
+--
+Linaro LKFT
+https://lkft.linaro.org
