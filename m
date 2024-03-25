@@ -1,204 +1,131 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC31155746
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 08:39:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 064E3156886;
+	Mon, 25 Mar 2024 08:43:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711355975; cv=none; b=B773CJNLGVzt9IRvur3CJUiz0VqwetttoPzBrKFE9XzX0M0j7eX9VlJM8HWgdcrNofbnrn69JpZv6oCl5Vqw9izqV55ptwhck/Dpt3rt0G3StB4E5r/hOhDZgVDCzfdCjxR9NZQCWFcrSJYizCv9WTR/Ell11uATFuuOLJchrxM=
+	t=1711356228; cv=none; b=WnbAOqZ9aTF73KuwYosTU+4VqOgRpPjcoub0OiTLjVLXAaRdJputEFIZQ4uWAH+0FXRa07vra2ygGaYvR1PThxyffypY4QBb4blhlcYd/IFlGoO2D/I1XedCJCaaGRqXHk3LUcui21ulh1Iugr39AfKKdv0ZC7jWj0YmmM8qzgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711355975; c=relaxed/simple;
-	bh=SGizC3gapS8NfbkM3XOEkDDU5UmnR2/hlqlUWsBHetQ=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=uN7+7q+TCvu8uEBOah9aqC8kjZeMgoKtJgNBOw2VCQGuua6oB54BqhNdC0FdaC3gjpyACHdjNuCW4GERit1NmJXEBK+URhVx0JPB8AQqUff4iaHlbKQlzMEXPgbGaNs3jmA9Yd7Sbo/6V8L4jjXfnRcNLKSTGanG4vt0/YW8Fbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y7iDHcSE; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y7iDHcSE"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dd8e82dd47eso5487724276.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 01:39:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711355972; x=1711960772; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2fLR94SR79bSxw8I7/IlKTkcaE2ICrJ5mcsGwDMWWN0=;
-        b=Y7iDHcSEkSznvqhgIuCM7khE/BWLfQfbPTwlTHJ4Oew0jy5ikl38jxj2WVVJj9NqoO
-         coWA9TewSHTWA77kb1eRj3OiVnig3rg57IGBj3boElrY/GFnOs5hU7dWIM1FZpOsJXLW
-         pJTwwI3/UbeUglkig0k/1PNusybj20HX9g9bRFv6g8rx3jM2Pqm63w0nPr+zf7mOdmFj
-         dUOJAT8cbLa6uAHOTpnXWbG+aBqoZviamvWr0wNUTmZ+MK9UJ7QOWIkMfib8652vtK/T
-         TYX6MVyg2UsDuwJutKwlNw4vialDnkkpaAZetpH/b8P8uRK6CZMB6OMQA8dtWvu/KMUY
-         SGvQ==
+	s=arc-20240116; t=1711356228; c=relaxed/simple;
+	bh=hcxg4In4aK2uslPZ2l3j/imsw9p/42fA3ITh/yE+w40=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Sdt5BLYczjyle8HuMo6wHCGk6vCoElaOWOCslC9b/SlliY0cR8PKCytbhnflFaT3wz7lbKx08Nn8OBhcGc8+VS60v7OyGV8s5Rtkdj86ZbQXpnXDSW0L+vHgsnTso7W9ZIVUM9sjhyWn0Ut/s3lHRmu75idRmyZDE/q77X1AWz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-61149e50602so7363337b3.0;
+        Mon, 25 Mar 2024 01:43:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711355972; x=1711960772;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2fLR94SR79bSxw8I7/IlKTkcaE2ICrJ5mcsGwDMWWN0=;
-        b=VYLC7koyE9cov5+50T0Q5tNQqdVoCHtWvKnjNX8ALlaIUOAgymoo6tlC8uWD+e9bQn
-         CbXRVQ/JtEpKQ4y8iP1u/MDN8Gkmz1gJtA3zN1gy0BwdJ1Otli5PqWYBTLPe1b5D4GEQ
-         pXKexNK3CK2ENtYxXNUBRq7cL3qS3IjDdbQnHnstl6IHIp2wPE4yDN26AP2c10ULZMEX
-         p1sUDJ9nYuCpc11Yjn35lNQeZMD1Sma58HR5UhSgeKyJ23lNMCcPWY+pwdmjz3VlqfAc
-         FICV8fwaFqMLfFFeyGsLloyPENI8rbNSlDiCI9nqfG8QdG9eJQeVWozcNE1CkrFpO21G
-         vxaw==
-X-Gm-Message-State: AOJu0Yw8BRuG8GsM/lpOQih+ZWmHIrmg6WtK9lTj3kk98IQovVmh+U+E
-	DbIj9Komd38dH+kmr5i9uul9/bUwcYa6T3R6fCVWXKN4sq//lcqi9iNc/Rof0SfopPKNkw==
-X-Google-Smtp-Source: AGHT+IFcntcp9truao49sZOMDWg0yE7XtQx1liBUG5f8C29dSBQDwz6Xz3bnst60rixITk9c5cShOf3u
-X-Received: from palermo.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:118a])
- (user=ardb job=sendgmr) by 2002:a05:6902:2488:b0:dc6:ebd4:cca2 with SMTP id
- ds8-20020a056902248800b00dc6ebd4cca2mr251555ybb.11.1711355972614; Mon, 25 Mar
- 2024 01:39:32 -0700 (PDT)
-Date: Mon, 25 Mar 2024 09:39:06 +0100
+        d=1e100.net; s=20230601; t=1711356225; x=1711961025;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ChuSgVYGVBf5BrY9y1MgsrXyLyHWL1icjbpaJ35NYnU=;
+        b=wFQmJTOlQU4L2QJR2RBpAPSBFfLYYcsiSa7yVEGracaneA0SsjEVkjBsAaBYPEt8wy
+         Mb8G/VS1ZDR69ZUWD+7MOivHQoL5ORufkE4PNrcSCmPCs5DB3+AHhybnAJCfWAhVHKCF
+         15Do61pRHSiwpGUYbVZhX4OYcWBW/xE3PDXlgZ9I+mid2NahC1+8a1BY+GJ3uRzI6eT8
+         E82bIiWKmf8YXF5baysXrV3X//CXNdFsxdBNO4GlcdT1ZfV7puqfzb6D2xEPEcWw/1Mh
+         I2xXgI6SS8ozjOcOGetaZfPNIrrXYKDPnabU6WoEi/6N2JZMIrLUQ2I6yVVj4FPGYequ
+         djLw==
+X-Forwarded-Encrypted: i=1; AJvYcCWsJ5eDMmbkJ/wRTigcEtXPtXex8FWLFo9qwIXZZCbIeghGFTO+f0hJZSm0HebT7eHTcLFdyNUdcs5kX1BJ/Xurpgbcg9uD3a00xvw/W5WNhhnNDWxmklRI6VBKEkjDt7W+x2OgiJ9kh6g=
+X-Gm-Message-State: AOJu0YzrSq/eqpLiY1y/gntTY+FhF8zObAB7i/1yGp3yeSQmS6rulRWG
+	NkP5p8D0yeSx+cOjZ2P1NCIfER3SiMjk8C94xq/p+M7VxZjpFPmJpQjGS/TOMOE=
+X-Google-Smtp-Source: AGHT+IHX/d0PCCB3xpz7d90wwLNQ/zZqtXcuLMyLgTpTDJh7/2lbd6aJn80oJYR7CWp3CZsSibfkuA==
+X-Received: by 2002:a05:690c:610f:b0:610:e891:838c with SMTP id hi15-20020a05690c610f00b00610e891838cmr3162495ywb.7.1711356224199;
+        Mon, 25 Mar 2024 01:43:44 -0700 (PDT)
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com. [209.85.219.170])
+        by smtp.gmail.com with ESMTPSA id v141-20020a814893000000b0060a109ae2b2sm959230ywa.26.2024.03.25.01.43.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Mar 2024 01:43:44 -0700 (PDT)
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dc6cbe1ac75so3133376276.1;
+        Mon, 25 Mar 2024 01:43:43 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUY8vlUl8Wd5rFweNWKFzzddpWkA9mrx1LV8i1fHjYOShpS90Giv2G4eLuhnSROuXdrE2eZHGRliY9mH9TZGlokdeuxeDu+J3ASb0Edxxtn3gf4lj2wGHdoI088sVH/7yXmLteC5Gp3JOw=
+X-Received: by 2002:a25:6cc3:0:b0:dcb:b072:82d8 with SMTP id
+ h186-20020a256cc3000000b00dcbb07282d8mr2843159ybc.15.1711356223761; Mon, 25
+ Mar 2024 01:43:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5208; i=ardb@kernel.org;
- h=from:subject; bh=/Ny80e491PWjWXrYVfz7/g+6aluKNyVbKBDz8PcwCLA=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIY3RQktleU+XR21Pb+fJyE/5S1R/z5s03fTrmQWmqTeDt
- oiGFh7oKGVhEONgkBVTZBGY/ffdztMTpWqdZ8nCzGFlAhnCwMUpABOJ72H4zVLEViPwS+TddIHz
- be8+fa76kTqTW7zi05Yp/1sLD2TvvcjwV6wyMDTW4G3YhD3Sv1YufnRwbX9nvsO1aeonncudY+4 c4gQA
-X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
-Message-ID: <20240325083905.13163-2-ardb+git@google.com>
-Subject: [PATCH] x86/efistub: Add missing boot_params for mixed mode compat entry
-From: Ard Biesheuvel <ardb+git@google.com>
-To: linux-efi@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>, 
-	Hans de Goede <hdegoede@redhat.com>, Clayton Craft <clayton@craftyguy.net>
+MIME-Version: 1.0
+References: <20240324233458.1352854-1-sashal@kernel.org> <20240324233458.1352854-111-sashal@kernel.org>
+In-Reply-To: <20240324233458.1352854-111-sashal@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 25 Mar 2024 09:43:31 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUK0YYELTN=JQDtGuYg03Em6c7kskpqUR0Y6NbNuR7hfQ@mail.gmail.com>
+Message-ID: <CAMuHMdUK0YYELTN=JQDtGuYg03Em6c7kskpqUR0Y6NbNuR7hfQ@mail.gmail.com>
+Subject: Re: [PATCH 5.15 110/317] arm64: dts: renesas: r8a779a0: Update to
+ R-Car Gen4 compatible values
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Ard Biesheuvel <ardb@kernel.org>
+Hi Sasha,
 
-The native EFI stub entry point does not take a struct boot_params from
-the boot loader, but creates it from scratch, and populates only the
-fields that still have meaning in this context (command line, initrd
-base and size, etc)
+On Mon, Mar 25, 2024 at 12:36=E2=80=AFAM Sasha Levin <sashal@kernel.org> wr=
+ote:
+> From: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> [ Upstream commit a1721bbbdb5c6687d157f8b8714bba837f6028ac ]
+>
+> Despite the name, R-Car V3U is the first member of the R-Car Gen4
+> family.  Hence update the compatible properties in various device nodes
+> to include family-specific compatible values for R-Car Gen4 instead of
+> R-Car Gen3:
+>   - DMAC,
+>   - (H)SCIF,
+>   - I2C,
+>   - IPMMU,
+>   - WDT.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Link: https://lore.kernel.org/r/73cea9d5e1a6639422c67e4df4285042e31c9fd5.=
+1651497071.git.geert+renesas@glider.be
+> Stable-dep-of: 0c51912331f8 ("arm64: dts: renesas: r8a779a0: Correct avb[=
+01] reg sizes")
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  arch/arm64/boot/dts/renesas/r8a779a0.dtsi | 24 +++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/renesas/r8a779a0.dtsi b/arch/arm64/boot/=
+dts/renesas/r8a779a0.dtsi
+> index 26899fb768a73..c7d1b79692c11 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a779a0.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a779a0.dtsi
+> @@ -583,7 +583,7 @@ hscif3: serial@e66a0000 {
+>
+>                 avb0: ethernet@e6800000 {
+>                         compatible =3D "renesas,etheravb-r8a779a0",
+> -                                    "renesas,etheravb-rcar-gen3";
+> +                                    "renesas,etheravb-rcar-gen4";
 
-The original mixed mode implementation used the EFI handover protocol,
-where the boot loader (i.e., GRUB) populates a struct boot_params and
-passes it to a special EFI entry point that takes the struct boot_params
-pointer as the third argument.
+This change will break Ethernet, as the Renesas EtherAVB driver in
+v5.15.x does not handle "renesas,etheravb-rcar-gen4" yet.
 
-When the new mixed mode implementation was introduced, using a special
-32-bit PE entrypoint in the 64-bit kernel, it adopted the usual
-prototype, and relied on the EFI stub to create the struct boot_params
-as usual. This is preferred because it makes the bootloader side much
-easier to implement, as it does not need any x86-specific knowledge on
-how struct boot_params and struct setup_header are put together.
+That can be fixed by also backporting commit 949f252a8594a860
+("net: ravb: Add R-Car Gen4 support") in v6.1.
 
-However, one thing was missed: EFI mixed mode goes through startup_32()
-*before* entering the 64-bit EFI stub, which is difficult to avoid given
-that 64-bit execution requires page tables, which can only be populated
-using 32-bit code, and this piece is what the mixed mode EFI stub relies
-on. startup_32() accesses a couple of struct boot_params fields to
-decide where to place the page tables.
+>                         reg =3D <0 0xe6800000 0 0x800>;
+>                         interrupts =3D <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
+>                                      <GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>,
 
-startup_32() turns out to be quite tolerant to bogus struct boot_params,
-given that ESI used to contain junk when entering via the new mixed mode
-protocol. Only when commit
+Gr{oetje,eeting}s,
 
-  e2ab9eab324c ("x86/boot/compressed: Move 32-bit entrypoint code into .text section")
+                        Geert
 
-started to zero ESI explicitly when entering via this boot path, boot
-failures started to appear on some systems, presumably ones that unmap
-page 0x0 or map it read-only.
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-The solution is to pass a special, temporary struct boot_params to
-startup_32() via ESI, one that is sufficient for getting it to create
-the page tables correctly and is discarded right after. This means
-setting a minimal alignment of 4k, only to get the statically allocated
-page tables line up correctly, and setting init_size to the executable
-image size (_end - startup_32). This ensures that the page tables are
-covered by the static footprint of the PE image.
-
-Given that EFI boot no longer calls the decompressor and no longer pads
-the image to permit the decompressor to execute in place, the same
-temporary struct boot_params should be used in the EFI handover protocol
-based mixed mode implementation as well, to prevent the page tables from
-being placed outside of allocated memory.
-
-Cc: Hans de Goede <hdegoede@redhat.com>
-Fixes: e2ab9eab324c ("x86/boot/compressed: Move 32-bit entrypoint code into .text section")
-Closes: https://lore.kernel.org/all/20240321150510.GI8211@craftyguy.net/
-Reported-by: Clayton Craft <clayton@craftyguy.net>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- arch/x86/boot/compressed/efi_mixed.S | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/boot/compressed/efi_mixed.S b/arch/x86/boot/compressed/efi_mixed.S
-index 07873f269b7b..c7c108c0bcf0 100644
---- a/arch/x86/boot/compressed/efi_mixed.S
-+++ b/arch/x86/boot/compressed/efi_mixed.S
-@@ -15,10 +15,12 @@
-  */
- 
- #include <linux/linkage.h>
-+#include <asm/asm-offsets.h>
- #include <asm/msr.h>
- #include <asm/page_types.h>
- #include <asm/processor-flags.h>
- #include <asm/segment.h>
-+#include <asm/setup.h>
- 
- 	.code64
- 	.text
-@@ -155,6 +157,7 @@ SYM_FUNC_END(__efi64_thunk)
- SYM_FUNC_START(efi32_stub_entry)
- 	call	1f
- 1:	popl	%ecx
-+	leal	(efi32_boot_args - 1b)(%ecx), %ebx
- 
- 	/* Clear BSS */
- 	xorl	%eax, %eax
-@@ -169,6 +172,7 @@ SYM_FUNC_START(efi32_stub_entry)
- 	popl	%ecx
- 	popl	%edx
- 	popl	%esi
-+	movl	%esi, 8(%ebx)
- 	jmp	efi32_entry
- SYM_FUNC_END(efi32_stub_entry)
- #endif
-@@ -245,8 +249,6 @@ SYM_FUNC_END(efi_enter32)
-  *
-  * Arguments:	%ecx	image handle
-  * 		%edx	EFI system table pointer
-- *		%esi	struct bootparams pointer (or NULL when not using
-- *			the EFI handover protocol)
-  *
-  * Since this is the point of no return for ordinary execution, no registers
-  * are considered live except for the function parameters. [Note that the EFI
-@@ -272,9 +274,18 @@ SYM_FUNC_START_LOCAL(efi32_entry)
- 	leal	(efi32_boot_args - 1b)(%ebx), %ebx
- 	movl	%ecx, 0(%ebx)
- 	movl	%edx, 4(%ebx)
--	movl	%esi, 8(%ebx)
- 	movb	$0x0, 12(%ebx)          // efi_is64
- 
-+	/*
-+	 * Allocate some memory for a temporary struct boot_params, which only
-+	 * needs the minimal pieces that will get us through startup_32().
-+	 */
-+	subl	$PARAM_SIZE, %esp
-+	movl	%esp, %esi
-+	movl	$PAGE_SIZE, BP_kernel_alignment(%esi)
-+	movl	$_end - 1b, BP_init_size(%esi)
-+	subl	$startup_32 - 1b, BP_init_size(%esi)
-+
- 	/* Disable paging */
- 	movl	%cr0, %eax
- 	btrl	$X86_CR0_PG_BIT, %eax
-@@ -300,8 +311,7 @@ SYM_FUNC_START(efi32_pe_entry)
- 
- 	movl	8(%ebp), %ecx			// image_handle
- 	movl	12(%ebp), %edx			// sys_table
--	xorl	%esi, %esi
--	jmp	efi32_entry			// pass %ecx, %edx, %esi
-+	jmp	efi32_entry			// pass %ecx, %edx
- 						// no other registers remain live
- 
- 2:	popl	%edi				// restore callee-save registers
--- 
-2.44.0.396.g6e790dbe36-goog
-
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
