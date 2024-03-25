@@ -1,35 +1,36 @@
 Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3285D724;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9705C612;
 	Mon, 25 Mar 2024 20:54:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711400050; cv=none; b=hfNQ3BNgiNaFyx5huQawg+MvFymUofsYh+80YDCbbpOKZxFsB9q0taX1qW6SaMpAbvSplw9JwLZ2MhBIc1GYezfXHwEYdOOPCr1oXCtiQ1d3ZL7awTp7Js6mWfnusW0tAtGLwwx8cmSVKf9AOcy9A3sTIeSOTHyoJqEoQR4JRDk=
+	t=1711400050; cv=none; b=FRJ5RBTZiBDkwICWVGezEclpLHXOTU72TmenR3oiLW0hpzYwCEoLB0YkVo8S5IrVcdITKQav4YUASWbA07Daq+vX3U6UnRAlqPfqco6xwlTza1/2D+m+qfmykfggBwWn6tIl9rd13NsPFl72Z4lZK73/trfh+e0M8+cM6Vcejd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711400050; c=relaxed/simple;
-	bh=SfX5F5wjnqqIWfjdFxEyw5/3OVHvgRFvzKFulbi0E1g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VYbROnfiVW9QvAMW0z6sEfYJy3+NnexgJFrTD7NTrcE1RILDhvwJcPRnxGlT66zdfmtKVBa+liMb/MzbtYJFjRO5BvNGp5G6o//OtAIMeLG+Iwf8cSdkGH4wBK9Xev7OlJpRt5BWb6kOpCZen21wAbgUsOTouDXBqF1pBSrjeZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=QNJKvQ8u; arc=none smtp.client-ip=193.104.135.124
+	bh=WMyHr/I//z+M/NWcBi3s3WXQw2/fQcwA/ZQ2ZXqHJMQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WcJi0zaqySMlPY6EADBuMVbvy0Jt15JP1i2fMNWQ3h+iodg1Df4VZA5jOSEl+xLG4QaY4+FUK6vOtWs+rEJOwLbRT7SYsw4xkbUemY8oXncGj5bxo+mo6TtryEkE58wGfHIO0DUhZAHVOzbsK3X3AssnRnoT1qVwI/Dwrzl6iLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=FTaqahHM; arc=none smtp.client-ip=193.104.135.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="QNJKvQ8u"
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="FTaqahHM"
 Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 55CD5600D4;
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 59A14600D7;
 	Mon, 25 Mar 2024 20:48:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
 	s=202008; t=1711399726;
-	bh=SfX5F5wjnqqIWfjdFxEyw5/3OVHvgRFvzKFulbi0E1g=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QNJKvQ8uRXDehHTTmYDgt+93IyAhVuRG/V/8t9yNxDfPpsHLRIBCtHfy4heUiKX/3
-	 abUt73vg1jyAnmNnjnbKEhafUuvmESKt8E7PsPqe6hodLXvbLWK8UKygG/hUb4/IXU
-	 Upk8Uwb883Bf8MrKKi1QpeZtAZ63UXErxVJaleuS6cMNpB27N6t1p2w+2/4BIC2WQz
-	 HB1N68/02GEtxonjiGzauBUwt8LIgkV5KjNciM2sQBrlvp58j8npVlqNU/oSSC+4E0
-	 +E4HVNiGHCIpZZ6hQMhxoJrS33ayxuPV+Z3fYmgm9bENjAfyFadimAbHc7UTvmeReh
-	 qKsU5dA5+MzGA==
+	bh=WMyHr/I//z+M/NWcBi3s3WXQw2/fQcwA/ZQ2ZXqHJMQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=FTaqahHMTSG/MyUQ2viKiLFXCx8yaOAyDWNXklBJTFUGNgXRxbPO4kbX97Sqn27Ax
+	 oQ0SH8agpr+LHBZtgD/wgaCG/HvUcV316RAdTRsaKSdNhFnnDWcj77DBA2v+7/+C20
+	 WxT0+cQET03LIVOQM2BvBwxwlxqAubPTbAn+WmDcEcaMEMjdSAM8+KYUN/w5MwNhw7
+	 YtK8Wm2S++cpinwOXP0oq/oDVviyvu8qHkO8J4KEpMopoUGhGoHelE56+zVIfCcF/X
+	 6OjaPsdtBYLgkdwWgo16t9IEOud1Pt8x7Ej+++iLTTPWRpyu7cgCIaTtEkLxQWjDqS
+	 +1tHe7MqQbLMQ==
 Received: by x201s (Postfix, from userid 1000)
-	id 770DC20490F; Mon, 25 Mar 2024 20:47:48 +0000 (UTC)
+	id A26C6204BFA; Mon, 25 Mar 2024 20:47:52 +0000 (UTC)
 From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
 To: Jamal Hadi Salim <jhs@mojatatu.com>,
 	Cong Wang <xiyou.wangcong@gmail.com>,
@@ -45,10 +46,12 @@ Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	llu@fiberby.dk
-Subject: [PATCH net-next v4 0/3] make skip_sw actually skip software
-Date: Mon, 25 Mar 2024 20:47:33 +0000
-Message-ID: <20240325204740.1393349-1-ast@fiberby.net>
+Subject: [PATCH net-next v4 3/3] net: sched: make skip_sw actually skip software
+Date: Mon, 25 Mar 2024 20:47:36 +0000
+Message-ID: <20240325204740.1393349-4-ast@fiberby.net>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240325204740.1393349-1-ast@fiberby.net>
+References: <20240325204740.1393349-1-ast@fiberby.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,66 +61,194 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
+TC filters come in 3 variants:
+- no flag (try to process in hardware, but fallback to software))
+- skip_hw (do not process filter by hardware)
+- skip_sw (do not process filter by software)
 
-During development of flower-route[1], which I
-recently presented at FOSDEM[2], I noticed that
-CPU usage, would increase the more rules I installed
-into the hardware for IP forwarding offloading.
+However skip_sw is implemented so that the skip_sw
+flag can first be checked, after it has been matched.
 
-Since we use TC flower offload for the hottest
-prefixes, and leave the long tail to the normal (non-TC)
-Linux network stack for slow-path IP forwarding.
-We therefore need both the hardware and software
-datapath to perform well.
+IMHO it's common when using skip_sw, to use it on all rules.
 
-I found that skip_sw rules, are quite expensive
-in the kernel datapath, since they must be evaluated
-and matched upon, before the kernel checks the
-skip_sw flag.
+So if all filters in a block is skip_sw filters, then
+we can bail early, we can thus avoid having to match
+the filters, just to check for the skip_sw flag.
 
-This patchset optimizes the case where all rules
-are skip_sw, by implementing a TC bypass for these
-cases, where TC is only used as a control plane
-for the hardware path.
+This patch adds a bypass, for when only TC skip_sw rules
+are used. The bypass is guarded by a static key, to avoid
+harming other workloads.
 
-v4:
-- Rebased onto net-next, now that net-next is open again
+There are 3 ways that a packet from a skip_sw ruleset, can
+end up in the kernel path. Although the send packets to a
+non-existent chain way is only improved a few percents, then
+I believe it's worth optimizing the trap and fall-though
+use-cases.
 
-v3: https://lore.kernel.org/netdev/20240306165813.656931-1-ast@fiberby.net/
-- Patch 3:
-  - Fix source_inline
-  - Fix build failure, when CONFIG_NET_CLS without CONFIG_NET_CLS_ACT.
+ +----------------------------+--------+--------+--------+
+ | Test description           | Pre-   | Post-  | Rel.   |
+ |                            | kpps   | kpps   | chg.   |
+ +----------------------------+--------+--------+--------+
+ | basic forwarding + notrack | 3589.3 | 3587.9 |  1.00x |
+ | switch to eswitch mode     | 3081.8 | 3094.7 |  1.00x |
+ | add ingress qdisc          | 3042.9 | 3063.6 |  1.01x |
+ | tc forward in hw / skip_sw |37024.7 |37028.4 |  1.00x |
+ | tc forward in sw / skip_hw | 3245.0 | 3245.3 |  1.00x |
+ +----------------------------+--------+--------+--------+
+ | tests with only skip_sw rules below:                  |
+ +----------------------------+--------+--------+--------+
+ | 1 non-matching rule        | 2694.7 | 3058.7 |  1.14x |
+ | 1 n-m rule, match trap     | 2611.2 | 3323.1 |  1.27x |
+ | 1 n-m rule, goto non-chain | 2886.8 | 2945.9 |  1.02x |
+ | 5 non-matching rules       | 1958.2 | 3061.3 |  1.56x |
+ | 5 n-m rules, match trap    | 1911.9 | 3327.0 |  1.74x |
+ | 5 n-m rules, goto non-chain| 2883.1 | 2947.5 |  1.02x |
+ | 10 non-matching rules      | 1466.3 | 3062.8 |  2.09x |
+ | 10 n-m rules, match trap   | 1444.3 | 3317.9 |  2.30x |
+ | 10 n-m rules,goto non-chain| 2883.1 | 2939.5 |  1.02x |
+ | 25 non-matching rules      |  838.5 | 3058.9 |  3.65x |
+ | 25 n-m rules, match trap   |  824.5 | 3323.0 |  4.03x |
+ | 25 n-m rules,goto non-chain| 2875.8 | 2944.7 |  1.02x |
+ | 50 non-matching rules      |  488.1 | 3054.7 |  6.26x |
+ | 50 n-m rules, match trap   |  484.9 | 3318.5 |  6.84x |
+ | 50 n-m rules,goto non-chain| 2884.1 | 2939.7 |  1.02x |
+ +----------------------------+--------+--------+--------+
 
-v2: https://lore.kernel.org/netdev/20240305144404.569632-1-ast@fiberby.net/
-- Patch 1:
-  - Add Reviewed-By from Jiri Pirko
-- Patch 2:
-  - Move code, to avoid forward declaration (Jiri).
-- Patch 3
-  - Refactor to use a static key.
-  - Add performance data for trapping, or sending
-    a packet to a non-existent chain (as suggested by Marcelo).
+perf top (25 n-m skip_sw rules - pre patch):
+  20.39%  [kernel]  [k] __skb_flow_dissect
+  16.43%  [kernel]  [k] rhashtable_jhash2
+  10.58%  [kernel]  [k] fl_classify
+  10.23%  [kernel]  [k] fl_mask_lookup
+   4.79%  [kernel]  [k] memset_orig
+   2.58%  [kernel]  [k] tcf_classify
+   1.47%  [kernel]  [k] __x86_indirect_thunk_rax
+   1.42%  [kernel]  [k] __dev_queue_xmit
+   1.36%  [kernel]  [k] nft_do_chain
+   1.21%  [kernel]  [k] __rcu_read_lock
 
-v1: https://lore.kernel.org/netdev/20240215160458.1727237-1-ast@fiberby.net/
+perf top (25 n-m skip_sw rules - post patch):
+   5.12%  [kernel]  [k] __dev_queue_xmit
+   4.77%  [kernel]  [k] nft_do_chain
+   3.65%  [kernel]  [k] dev_gro_receive
+   3.41%  [kernel]  [k] check_preemption_disabled
+   3.14%  [kernel]  [k] mlx5e_skb_from_cqe_mpwrq_nonlinear
+   2.88%  [kernel]  [k] __netif_receive_skb_core.constprop.0
+   2.49%  [kernel]  [k] mlx5e_xmit
+   2.15%  [kernel]  [k] ip_forward
+   1.95%  [kernel]  [k] mlx5e_tc_restore_tunnel
+   1.92%  [kernel]  [k] vlan_gro_receive
 
-[1] flower-route
-    https://github.com/fiberby-dk/flower-route
+Test setup:
+ DUT: Intel Xeon D-1518 (2.20GHz) w/ Nvidia/Mellanox ConnectX-6 Dx 2x100G
+ Data rate measured on switch (Extreme X690), and DUT connected as
+ a router on a stick, with pktgen and pktsink as VLANs.
+ Pktgen-dpdk was in range 36.6-37.7 Mpps 64B packets across all tests.
+ Full test data at https://files.fiberby.net/ast/2024/tc_skip_sw/v2_tests/
 
-[2] FOSDEM talk
-    https://fosdem.org/2024/schedule/event/fosdem-2024-3337-flying-higher-hardware-offloading-with-bird/
-
-Asbjørn Sloth Tønnesen (3):
-  net: sched: cls_api: add skip_sw counter
-  net: sched: cls_api: add filter counter
-  net: sched: make skip_sw actually skip software
-
+Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+---
  include/net/pkt_cls.h     |  9 +++++++++
- include/net/sch_generic.h |  4 ++++
+ include/net/sch_generic.h |  1 +
  net/core/dev.c            | 10 ++++++++++
- net/sched/cls_api.c       | 41 +++++++++++++++++++++++++++++++++++++++
- 4 files changed, 64 insertions(+)
+ net/sched/cls_api.c       | 18 ++++++++++++++++++
+ 4 files changed, 38 insertions(+)
 
+diff --git a/include/net/pkt_cls.h b/include/net/pkt_cls.h
+index a4ee43f493bb..41297bd38dff 100644
+--- a/include/net/pkt_cls.h
++++ b/include/net/pkt_cls.h
+@@ -74,6 +74,15 @@ static inline bool tcf_block_non_null_shared(struct tcf_block *block)
+ 	return block && block->index;
+ }
+ 
++#ifdef CONFIG_NET_CLS_ACT
++DECLARE_STATIC_KEY_FALSE(tcf_bypass_check_needed_key);
++
++static inline bool tcf_block_bypass_sw(struct tcf_block *block)
++{
++	return block && block->bypass_wanted;
++}
++#endif
++
+ static inline struct Qdisc *tcf_block_q(struct tcf_block *block)
+ {
+ 	WARN_ON(tcf_block_shared(block));
+diff --git a/include/net/sch_generic.h b/include/net/sch_generic.h
+index eb3872c22fcd..76db6be16083 100644
+--- a/include/net/sch_generic.h
++++ b/include/net/sch_generic.h
+@@ -472,6 +472,7 @@ struct tcf_block {
+ 	struct flow_block flow_block;
+ 	struct list_head owner_list;
+ 	bool keep_dst;
++	bool bypass_wanted;
+ 	atomic_t filtercnt; /* Number of filters */
+ 	atomic_t skipswcnt; /* Number of skip_sw filters */
+ 	atomic_t offloadcnt; /* Number of oddloaded filters */
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 9a67003e49db..53f36991ea8e 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -2057,6 +2057,11 @@ void net_dec_egress_queue(void)
+ EXPORT_SYMBOL_GPL(net_dec_egress_queue);
+ #endif
+ 
++#ifdef CONFIG_NET_CLS_ACT
++DEFINE_STATIC_KEY_FALSE(tcf_bypass_check_needed_key);
++EXPORT_SYMBOL(tcf_bypass_check_needed_key);
++#endif
++
+ DEFINE_STATIC_KEY_FALSE(netstamp_needed_key);
+ EXPORT_SYMBOL(netstamp_needed_key);
+ #ifdef CONFIG_JUMP_LABEL
+@@ -3911,6 +3916,11 @@ static int tc_run(struct tcx_entry *entry, struct sk_buff *skb,
+ 	if (!miniq)
+ 		return ret;
+ 
++	if (static_branch_unlikely(&tcf_bypass_check_needed_key)) {
++		if (tcf_block_bypass_sw(miniq->block))
++			return ret;
++	}
++
+ 	tc_skb_cb(skb)->mru = 0;
+ 	tc_skb_cb(skb)->post_ct = false;
+ 	tcf_set_drop_reason(skb, *drop_reason);
+diff --git a/net/sched/cls_api.c b/net/sched/cls_api.c
+index 304a46ab0e0b..db0653993632 100644
+--- a/net/sched/cls_api.c
++++ b/net/sched/cls_api.c
+@@ -410,6 +410,23 @@ static void tcf_proto_get(struct tcf_proto *tp)
+ 	refcount_inc(&tp->refcnt);
+ }
+ 
++static void tcf_maintain_bypass(struct tcf_block *block)
++{
++	int filtercnt = atomic_read(&block->filtercnt);
++	int skipswcnt = atomic_read(&block->skipswcnt);
++	bool bypass_wanted = filtercnt > 0 && filtercnt == skipswcnt;
++
++	if (bypass_wanted != block->bypass_wanted) {
++#ifdef CONFIG_NET_CLS_ACT
++		if (bypass_wanted)
++			static_branch_inc(&tcf_bypass_check_needed_key);
++		else
++			static_branch_dec(&tcf_bypass_check_needed_key);
++#endif
++		block->bypass_wanted = bypass_wanted;
++	}
++}
++
+ static void tcf_block_filter_cnt_update(struct tcf_block *block, bool *counted, bool add)
+ {
+ 	lockdep_assert_not_held(&block->cb_lock);
+@@ -424,6 +441,7 @@ static void tcf_block_filter_cnt_update(struct tcf_block *block, bool *counted,
+ 			*counted = false;
+ 		}
+ 	}
++	tcf_maintain_bypass(block);
+ 	up_write(&block->cb_lock);
+ }
+ 
 -- 
 2.43.0
 
