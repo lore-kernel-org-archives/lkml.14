@@ -1,105 +1,127 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895FA18059;
-	Mon, 25 Mar 2024 03:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C4113DDD5;
+	Mon, 25 Mar 2024 07:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711339034; cv=none; b=Unan8oeLmluS1AeLciIyPD6v5zs9OIsDcQYPjX7PEJrg3IYltpb/SR5jm1cFNR4iYnPY1U39bAwVabpybk5kknvs0USu5YF/hHtRwq1EH1LzlCYS2grnH8HzcjmTZeFZ7Rumlc3+WiX4f+Xh5yrns4K6G8ztjAjZINJ3pPDOoiw=
+	t=1711350631; cv=none; b=TNnj+/jAM8Geb5IOV5XUPhil0xGQW8aVu+Ak2c0sSZFkTUfCm1W+R9IPlWWZKNLWOaoZ2+0eZ/Ll2EmjOUV1Lccvy8H7nl/4zEe8D65LrK3SuehSLDGKj8U0BqGaz5HIMDF4uObbsEsvNN8dDt0MieK+t5BrvxS7ZwtzQJbpIJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711339034; c=relaxed/simple;
-	bh=l/1f1MNGF9BfhwGztXj3ec5Igc6dItWl5AjiV9qkAQ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=isEMXOgpuE7UXZFaIFrxRabR6dtwrtKLrUGmpCyj3mbg7EaNOrYBdxZfIVS8mCmfeolwI4/VmiXyKxqLhhahO6puubJPYnVzBeA9FwMaSZ6US+NGAuRxt94XvkI98uIM1rp+9HVlKwEn1diwp2G8NtY1gOizsEHPDtqUwbjoUzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=E2qN+W8S; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1711350631; c=relaxed/simple;
+	bh=yQkEdpK+pQC5xgDqqVQKDe1hrD7TK7KQYXOn9F7ILT4=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sT3XKpghslWqkETgeA53T/DPBCDV8eKuO2z5JfNupQ9URFGCsSq8/vfUdS7ZELXj/HA+/qO+HvaZskq9IL142TmRFlE/Ylnx2aS0NOSR8HZ5BTyjX6YvPnfSRvDeaURQy2PCxUdKb0v56FqVwrQCa8VvKXVTeRmb3Mop04NDCjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rFvvwxM+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="E2qN+W8S"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=IU3Dlzl1rVEiTSxVgVMPzC88N9hT6GmfL1S9I/2JgO0=; b=E2qN+W8S3ZU5YGOKUUO9cBO5zJ
-	B4vbyccJGdv9eLdysd3ijpij1NV9BRohz3uOmTf4NlnOEmU9plOLo3xO0baioyQzSVdsbO4iKAN1J
-	3ctvmi7R3l4FWCQXAUEao1GPS8qQVI2oQOdPAuQNr6hXnl6I6vmm2j+3NoCxKKsDqY4qOWeiCgteg
-	8gZJivN4pdxgLg2bOOZeUKG3WvLwqaEN6B80ItvTZkmoNGUDCORSFQ1vrAakpYtWx11ik/dTS6kqw
-	sgoio6lafIToR7obrEZm5aMJU2MZ+TQZXFKI9Gm8Bv3pifGAjRp1U8Ab4CuAHnnl72Gs0h/IVT5DO
-	wg4LmchQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1robSM-0000000FbhS-0cGD;
-	Mon, 25 Mar 2024 03:57:06 +0000
-Date: Mon, 25 Mar 2024 03:57:06 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Liu Shixin <liushixin2@huawei.com>
-Cc: stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH stable-5.10] mm/memory-failure: fix an incorrect use of
- tail pages
-Message-ID: <ZgD2EvkzS1Uz5wy6@casper.infradead.org>
-References: <20240307124841.2838010-1-liushixin2@huawei.com>
- <026db58d-feea-8191-616a-3e6dca592786@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rFvvwxM+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 249C8C43390;
+	Mon, 25 Mar 2024 07:10:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711350630;
+	bh=yQkEdpK+pQC5xgDqqVQKDe1hrD7TK7KQYXOn9F7ILT4=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=rFvvwxM+nOfC6ZINMkuVQCj79iT/f6YfZu82C8ota8vaEaAzc2AFR0ak8taEZM5dg
+	 B5mM5UJWkiNfsPa2zPhe4sasKskWbl7OfeS/VXzUMd/KNc38aM0nuw71t4DsYBpadJ
+	 gHojJtPOMg78lJcw5I4GDKgvLoRY7/ObWycdLbJJUgUgzhb6mcRcqWk44EzKJqZelh
+	 7MxygxPQBzbK5l+dwzver1Eq69x7R9ZhLf2Eip2pB1KYc1HDx6kYTY4vjixVRZgOMX
+	 4HEGu4gqfllsTwe/1Jib+o6VOSJ1yY4PqpPEDQEL93hs6tyLqWQEmEoeDqEnPWt7ti
+	 4sCCR8FUQRWoA==
+From: Damien Le Moal <dlemoal@kernel.org>
+To: linux-pci@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>,
+	linux-scsi@vger.kernel.org,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	linux-sound@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-usb@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org,
+	ntb@lists.linux.dev,
+	Lee Jones <lee@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	amd-gfx@lists.freedesktop.org,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	linux-rdma@vger.kernel.org,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 11/28] infiniband: qib: Use PCI_IRQ_INTX
+Date: Mon, 25 Mar 2024 16:09:22 +0900
+Message-ID: <20240325070944.3600338-12-dlemoal@kernel.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240325070944.3600338-1-dlemoal@kernel.org>
+References: <20240325070944.3600338-1-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <026db58d-feea-8191-616a-3e6dca592786@huawei.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 25, 2024 at 11:36:49AM +0800, Liu Shixin wrote:
-> Hi,
-> 
-> After backport commit c79c5a0a00a9 ("mm/memory-failure: check the mapcount of the precise page"),
-> 
-> I got an error message as written on the patch. The problem can be fixed by the patch or just revert.
-> 
-> Now I prefer to revert because I think it is related to folio and no impact in stable, or maybe I'm wrong.
+Use the macro PCI_IRQ_INTX instead of the deprecated PCI_IRQ_LEGACY
+macro.
 
-I checked out what is going wrong here, and Liu Shixin is correct.
+Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+---
+ drivers/infiniband/hw/qib/qib_iba7220.c | 2 +-
+ drivers/infiniband/hw/qib/qib_iba7322.c | 5 ++---
+ drivers/infiniband/hw/qib/qib_pcie.c    | 2 +-
+ 3 files changed, 4 insertions(+), 5 deletions(-)
 
-Commit c79c5a0a00a9 was incorrectly backported to v5.10 and
-commit 70168fdc743b changees the page passed to try_to_unmap().
-It now passes the tail page, and should always have passed hpage.
-Please apply the patch below to v5.10 (and any other trees that
-c79c5a0a00a9 got backported to).
+diff --git a/drivers/infiniband/hw/qib/qib_iba7220.c b/drivers/infiniband/hw/qib/qib_iba7220.c
+index 6af57067c32e..78dfe98ebcf7 100644
+--- a/drivers/infiniband/hw/qib/qib_iba7220.c
++++ b/drivers/infiniband/hw/qib/qib_iba7220.c
+@@ -3281,7 +3281,7 @@ static int qib_7220_intr_fallback(struct qib_devdata *dd)
+ 
+ 	qib_free_irq(dd);
+ 	dd->msi_lo = 0;
+-	if (pci_alloc_irq_vectors(dd->pcidev, 1, 1, PCI_IRQ_LEGACY) < 0)
++	if (pci_alloc_irq_vectors(dd->pcidev, 1, 1, PCI_IRQ_INTX) < 0)
+ 		qib_dev_err(dd, "Failed to enable INTx\n");
+ 	qib_setup_7220_interrupt(dd);
+ 	return 1;
+diff --git a/drivers/infiniband/hw/qib/qib_iba7322.c b/drivers/infiniband/hw/qib/qib_iba7322.c
+index f93906d8fc09..9db29916e35a 100644
+--- a/drivers/infiniband/hw/qib/qib_iba7322.c
++++ b/drivers/infiniband/hw/qib/qib_iba7322.c
+@@ -3471,8 +3471,7 @@ static void qib_setup_7322_interrupt(struct qib_devdata *dd, int clearpend)
+ 				    pci_irq_vector(dd->pcidev, msixnum),
+ 				    ret);
+ 			qib_7322_free_irq(dd);
+-			pci_alloc_irq_vectors(dd->pcidev, 1, 1,
+-					      PCI_IRQ_LEGACY);
++			pci_alloc_irq_vectors(dd->pcidev, 1, 1, PCI_IRQ_INTX);
+ 			goto try_intx;
+ 		}
+ 		dd->cspec->msix_entries[msixnum].arg = arg;
+@@ -5143,7 +5142,7 @@ static int qib_7322_intr_fallback(struct qib_devdata *dd)
+ 	qib_devinfo(dd->pcidev,
+ 		"MSIx interrupt not detected, trying INTx interrupts\n");
+ 	qib_7322_free_irq(dd);
+-	if (pci_alloc_irq_vectors(dd->pcidev, 1, 1, PCI_IRQ_LEGACY) < 0)
++	if (pci_alloc_irq_vectors(dd->pcidev, 1, 1, PCI_IRQ_INTX) < 0)
+ 		qib_dev_err(dd, "Failed to enable INTx\n");
+ 	qib_setup_7322_interrupt(dd, 0);
+ 	return 1;
+diff --git a/drivers/infiniband/hw/qib/qib_pcie.c b/drivers/infiniband/hw/qib/qib_pcie.c
+index 47bf64ace05c..58c1d62d341b 100644
+--- a/drivers/infiniband/hw/qib/qib_pcie.c
++++ b/drivers/infiniband/hw/qib/qib_pcie.c
+@@ -210,7 +210,7 @@ int qib_pcie_params(struct qib_devdata *dd, u32 minw, u32 *nent)
+ 	}
+ 
+ 	if (dd->flags & QIB_HAS_INTX)
+-		flags |= PCI_IRQ_LEGACY;
++		flags |= PCI_IRQ_INTX;
+ 	maxvec = (nent && *nent) ? *nent : 1;
+ 	nvec = pci_alloc_irq_vectors(dd->pcidev, 1, maxvec, flags);
+ 	if (nvec < 0)
+-- 
+2.44.0
 
-> 
-> Thanks,
-> 
-> 
-> On 2024/3/7 20:48, Liu Shixin wrote:
-> > When backport commit c79c5a0a00a9 to 5.10-stable, there is a mistake change.
-> > The head page instead of tail page should be passed to try_to_unmap(),
-> > otherwise unmap will failed as follows.
-> >
-> >  Memory failure: 0x121c10: failed to unmap page (mapcount=1)
-> >  Memory failure: 0x121c10: recovery action for unmapping failed page: Ignored
-> >
-> > Fixes: 70168fdc743b ("mm/memory-failure: check the mapcount of the precise page")
-> > Signed-off-by: Liu Shixin <liushixin2@huawei.com>
-> > ---
-> >  mm/memory-failure.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> > index f320ff02cc19..dba2936292cf 100644
-> > --- a/mm/memory-failure.c
-> > +++ b/mm/memory-failure.c
-> > @@ -1075,7 +1075,7 @@ static bool hwpoison_user_mappings(struct page *p, unsigned long pfn,
-> >  				unmap_success = false;
-> >  			}
-> >  		} else {
-> > -			unmap_success = try_to_unmap(p, ttu);
-> > +			unmap_success = try_to_unmap(hpage, ttu);
-> >  		}
-> >  	}
-> >  	if (!unmap_success)
-> 
-> 
