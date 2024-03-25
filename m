@@ -1,76 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33080757FA
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 04:59:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2DD1C6AE2;
+	Mon, 25 Mar 2024 05:01:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711342796; cv=none; b=enMILr53MDDOiug/kzGixUWkZHNReUcUkhAkR+WQ29o1h7QhRfgx+lEu7t5KmYfzq3GkHUK+n6QcyMd9x0ZGnU1SDeQ4V6LgcDREJe505xt5epJTfwo3rm2o0IXGPL452I1YDcODXqW2hljeg960R01J70WBFG1+e/RlIOE4GFI=
+	t=1711342917; cv=none; b=kavPRYOE3mYR8+9Zjha6ZwIkF7hFYOLz2V8kGvjAukTadeUKXRsiXMUqXGj1z2wZ0lXL0gWNudVQEh5MQ2MuzDL6Xyaa001oGxpUBKE1rSVheaCwjo1YJ8J4OTQ8jMzxcYY/dGrjOQopwioMRrrnHpbF9r6zcygmziXR8KrdyJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711342796; c=relaxed/simple;
-	bh=twiWJG016BhE6H2VQrQhrLXAYDefBJMGhfYkdlH/bJE=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Fxuzmu0yr218yMQIDTGirFJ0oUiMECax/lpE83mlmieyYmFY6UYN1J5Xlx2sL6TQh2+kKZ0WF3j4KMHDYiXrtdq8o96psKAeEzylSZkHi7gb7ydiCVAmRME7oL67taZ6ZH1sV4/ReJWSHoT1i5vjSZ2L72TGgTzWbnhjsvCaWus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u6j1C1/e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711342917; c=relaxed/simple;
+	bh=FOoNFEssanoBU0gNpEbbD8hfw+we7FOTsxh0gEzSM0g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BfqAZPe0xwNVvyMP76fT3fsnVVi13hgBeAW5uiNZaJLD0zaXat/OKPfXxVvX93NGiyHxtjQvOQtN2NKBe/FuYdwzuibwQ6wcxgEjmwPRVwUXvFA+XNwpsk8R5G8F24fL5UUogZoRleqvUOrzaiMTYNxe6nP2bw6uaMqzwVg+uj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y6Q4uah3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u6j1C1/e"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B83C3C43394;
-	Mon, 25 Mar 2024 04:59:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y6Q4uah3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 903F5C433F1;
+	Mon, 25 Mar 2024 05:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711342795;
-	bh=twiWJG016BhE6H2VQrQhrLXAYDefBJMGhfYkdlH/bJE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=u6j1C1/eyAxYa4jflK6bjYjmw02F4pPpmS99/FWyD9u91NqHkAsM4/1wtk5UXpb9N
-	 UVzioSos0DdaRyGs9EVyVQfLjXkJuM2qJ1vBX8tBG5olkQCMPj+sNrKE+fjRN6XnGd
-	 13fHXtAG2oESQC7TVBum3msoyDth7WJaYf1lRpXmMPUcUNOEdpJTSFwz4jB13vSVt0
-	 oFXO6jE4l+QkZXYEs0OGwnypESfejVyDW8bfCiQklzRv+Kse6nNWja87fpw/wgRlh0
-	 CHqPA0wHyiP7W8j6Yu2p/pWxwN1p9c0e1W+2aPhIrHWVgxV6odavpMjcVIYTg5tVvH
-	 iHW7r9gV648rg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A9825D8BCE3;
-	Mon, 25 Mar 2024 04:59:55 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1711342916;
+	bh=FOoNFEssanoBU0gNpEbbD8hfw+we7FOTsxh0gEzSM0g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y6Q4uah3FAUzGYAjj0/rcmr9IYF07yUP4Psj9++ZeWGKq/wGH9ADhuw1gHFAjNUSh
+	 BA4raFfj/ogLV9K8NFboHHxsx+vf/J7ax/aehgFBDQijCzDpZxG06Im1ASS6qcTMqT
+	 junSSWJ/8WPCUC/1uLArM4iuqCMXjG9jHUY/uPx3YHaCu7EL9BXcuA4FIdo7+KhC9x
+	 6ABAmbjGQfB7XfMVj9xN5ZwB4tG43sNVMTb2LT577egQLapYE1/r5kn2YYcc7JdeHt
+	 sx6ipU/pu2dee4klk0bOmtl6ogGNa3xTgVR47ReIm33BBYxmGsfoFJQsN4+JqqYUOZ
+	 +F6kQUlIRRyiA==
+Date: Sun, 24 Mar 2024 22:01:55 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: xfs <linux-xfs@vger.kernel.org>
+Cc: kernel test robot <lkp@intel.com>, Dave Chinner <dchinner@redhat.com>,
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Chandan Babu R <chandanbabu@kernel.org>
+Subject: Re: fs/xfs/libxfs/xfs_dir2.c:336:15-22: WARNING opportunity for
+ kmemdup
+Message-ID: <20240325050155.GC6414@frogsfrogsfrogs>
+References: <202403232305.aLpp8AlJ-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [GIT PULL] RISC-V Patches for the 6.9 Merge Window
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <171134279569.18749.2557475397474494419.git-patchwork-notify@kernel.org>
-Date: Mon, 25 Mar 2024 04:59:55 +0000
-References: <mhng-105d6a21-7483-4a20-a9e7-8e72770737d8@palmer-ri-x1c9>
-In-Reply-To: <mhng-105d6a21-7483-4a20-a9e7-8e72770737d8@palmer-ri-x1c9>
-To: Palmer Dabbelt <palmer@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, torvalds@linux-foundation.org,
- linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202403232305.aLpp8AlJ-lkp@intel.com>
 
-Hello:
-
-This pull request was applied to riscv/linux.git (for-next)
-by Linus Torvalds <torvalds@linux-foundation.org>:
-
-On Fri, 22 Mar 2024 07:22:06 -0700 (PDT) you wrote:
-> The following changes since commit e0fe5ab4192c171c111976dbe90bbd37d3976be0:
+On Sat, Mar 23, 2024 at 11:08:59PM +0800, kernel test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   bfa8f18691ed2e978e4dd51190569c434f93e268
+> commit: f078d4ea827607867d42fb3b2ef907caf86ce49d xfs: convert kmem_alloc() to kmalloc()
+> date:   6 weeks ago
+> config: x86_64-randconfig-103-20240323 (https://download.01.org/0day-ci/archive/20240323/202403232305.aLpp8AlJ-lkp@intel.com/config)
+> compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
 > 
->   riscv: Fix pte_leaf_size() for NAPOT (2024-02-29 10:21:23 -0800)
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202403232305.aLpp8AlJ-lkp@intel.com/
 > 
-> are available in the Git repository at:
+> cocci warnings: (new ones prefixed by >>)
+> >> fs/xfs/libxfs/xfs_dir2.c:336:15-22: WARNING opportunity for kmemdup
+
+It occurred to me that this message isn't about a stray kmemdup that
+could cause a WARN() message to get logged or anything like that; it's a
+notice that we could collapse lines 336 and 340 into:
+
+	args->value = kmemdup(name, len, GFP_NOFS | __GFP_RETRY_MAYFAIL);
+
+Anyone want to tackle that?
+
+There's a second one you could tackle too:
+https://lore.kernel.org/oe-kbuild-all/202403210204.LPPBJMhf-lkp@intel.com/T/#u
+
+--D
+
+> vim +336 fs/xfs/libxfs/xfs_dir2.c
 > 
->   git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.9-mw2
+>    319	
+>    320	/*
+>    321	 * If doing a CI lookup and case-insensitive match, dup actual name into
+>    322	 * args.value. Return EEXIST for success (ie. name found) or an error.
+>    323	 */
+>    324	int
+>    325	xfs_dir_cilookup_result(
+>    326		struct xfs_da_args *args,
+>    327		const unsigned char *name,
+>    328		int		len)
+>    329	{
+>    330		if (args->cmpresult == XFS_CMP_DIFFERENT)
+>    331			return -ENOENT;
+>    332		if (args->cmpresult != XFS_CMP_CASE ||
+>    333						!(args->op_flags & XFS_DA_OP_CILOOKUP))
+>    334			return -EEXIST;
+>    335	
+>  > 336		args->value = kmalloc(len, GFP_NOFS | __GFP_RETRY_MAYFAIL);
+>    337		if (!args->value)
+>    338			return -ENOMEM;
+>    339	
+>    340		memcpy(args->value, name, len);
+>    341		args->valuelen = len;
+>    342		return -EEXIST;
+>    343	}
+>    344	
 > 
-> [...]
-
-Here is the summary with links:
-  - [GIT,PULL] RISC-V Patches for the 6.9 Merge Window
-    https://git.kernel.org/riscv/c/c150b809f7de
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+> -- 
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
