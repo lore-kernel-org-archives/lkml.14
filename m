@@ -1,131 +1,102 @@
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17ABB145B0E
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EE3413C3DD;
+	Mon, 25 Mar 2024 09:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711358917; cv=none; b=lB4gq3f9MHx0hdfcAjaIJ3qRJK0ImjpSHgaKZN115JDz1WKxdrHpXlgRpJTtz/B8Ql+JMVKS2fvdC/fviaOKSvanoubb52TZ1xP13CpQP3fl/newPcwvsizrlsUxhs51xXUn+LDOFcIYBxRCnovhO5XXX1fKiydZVPSjtBw5GhI=
+	t=1711358921; cv=none; b=suxOWMR4ArOnB5zJaMLSXdENcu7K6O8wOfdj4LXXN+4i8etSnqT1lgsxbWme9jmkmsxQJfn9K8WKl3xFcR7M00RyiGoSkeP6j+izUWnRoYzTUbPVkNxV0Nbemn4kTizoCImyb/wKLBMytkjuRV4fO2wdOHb7G5uspmwwsvsgvfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711358917; c=relaxed/simple;
-	bh=uGQJQqqOoV40xJP1y95HDFRdz87FEyHED2qs0kLU3bQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lpTbLT2loJY+XFoVndzwkF8EbNcjO/LBW9Z9QZnpkDfZc4EOSKCgCJKDv4NnPSUUyhmUHqxlS5omEVQElEfs0WWOlfQXHCcIAOyierw7horWZlhncNJhLVTaoCmqKjx4iVWQTirG3BzvXbiaGQlBX5SiiUv/igd8jHeIBY1JN/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=S+6ZXBPD; arc=none smtp.client-ip=209.85.221.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S+6ZXBPD"
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-4d88360fd7bso826175e0c.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 02:28:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711358915; x=1711963715; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5m0Gh/qeDl7am+4YY8jkZ+PZB+SobIFHIAWFvx2/qhk=;
-        b=S+6ZXBPDlwwzO1ciPHumxH/ZKhaC8u3XW8FOQgQxZsqG48Al1G3YM4sQ73Wh+RzJEt
-         yXC+yytqoPa8IWRDSTUJGpSrpSxN7mlPuRqYZpaGVboBSDFEugTi16kwSPoivdbb8a94
-         PZQ7WvnKBOiobSUUGbAU20copVrIWcGJnsOBs052oFBorhhkIDCWqUliepKbfV56Tkql
-         FdUs3kkjoxXI/UeB4H0njtF5fuWDKB2gcWi3lp8EAzarpAEE1G+cW9656wvgC+8s+OIY
-         kZSOtmKSr9QdbQwC49KWWL6XhfZyT6lXQ/633DD2ZjEY3c0zxVTe3tVLfDvuWray5EVY
-         58aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711358915; x=1711963715;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5m0Gh/qeDl7am+4YY8jkZ+PZB+SobIFHIAWFvx2/qhk=;
-        b=afvzsocD4eeXQFLh/ouC2EJzbLO0kGeqI3ZbbQkIMMxPsaJDJaybhd2u/B6F+WstVb
-         zzHm4hBv958/Rd+DDBWHHL3rZ492HbrYgFX7qIeAz1LDfR7gan5S0IFw2Govp7g8bOwf
-         AdBA3fEh4aWTTp+iTDrEriyQfrvX/+cMy2ajzis7w9K9xFM/bZEvJqW7miirrrqvJJ7h
-         EKubS9AUSOZtqm+BI0VJOpjxghqUDGwhJ513E7RBGlau7MuczqoN+n3IRpM8aot8zfz4
-         EKe/qAW1Lg2NpgDev9Sr25xLbFy9jZ/NObk9yJX1c3c6Wf46wvWPq2ijj3rUG4tvX/bi
-         N7Fg==
-X-Gm-Message-State: AOJu0Yx0NzkQHfonT/v8GzDV3V0QrOsOXI6/e7Eeb9y2V/+fj8wmANKm
-	L15+JSwuScNoYjps/idORcJCHgJTy1wtccwIkfGOAmbZgmCzf91Rp5PuTKKUO//TYAnKu0XNYqx
-	tJJ3M6otH9ndZJF+L830DMupgIQz+GLXF0m0tDw==
-X-Google-Smtp-Source: AGHT+IGM/UyGpUfBFfVFl91MwB4yzh9yxciE0bsa3uvnOjvb8RmeOSlIGcBZRayBfFukhUTmD2y7dkNO9tJXQIK0PSU=
-X-Received: by 2002:a05:6122:12b7:b0:4d3:3334:f2fe with SMTP id
- j23-20020a05612212b700b004d33334f2femr2658521vkp.1.1711358913507; Mon, 25 Mar
- 2024 02:28:33 -0700 (PDT)
+	s=arc-20240116; t=1711358921; c=relaxed/simple;
+	bh=wx+ZNiYpSOHdOgttIJ+LyxuucfRoYfBTMykVd7YTQMM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tag8lv+owGf88SrMZeX9F9TsSfK3z7Om1i3AyHo7hGeMfYKlGe9LwxlyI4nh481iVMHRCTkLRX5JeIF8GzWwNAkVVlTNAu42hWfuoLbu40adU57+/Wvs5NhwjlQYiC7B7ERnriKhhUeZfCSbOJkOAlPGkx1PG3PTOylLO6NcUxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 58E351FB;
+	Mon, 25 Mar 2024 02:29:12 -0700 (PDT)
+Received: from e120937-lin.. (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 42C483F64C;
+	Mon, 25 Mar 2024 02:28:37 -0700 (PDT)
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org
+Cc: sudeep.holla@arm.com,
+	cristian.marussi@arm.com,
+	jassisinghbrar@gmail.com,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org
+Subject: [PATCH 0/2] Add initial ARM MHUv3 mailbox support
+Date: Mon, 25 Mar 2024 09:28:06 +0000
+Message-Id: <20240325092808.117510-1-cristian.marussi@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240324233458.1352854-1-sashal@kernel.org>
-In-Reply-To: <20240324233458.1352854-1-sashal@kernel.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 25 Mar 2024 14:58:22 +0530
-Message-ID: <CA+G9fYtU7A1XxOS9BvmoQAjhcuUsaSPQKnOzz-qYV6ORnG9k-g@mail.gmail.com>
-Subject: Re: [PATCH 5.15 000/317] 5.15.153-rc1 review
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, 
-	shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, 
-	florian.fainelli@broadcom.com, pavel@denx.de, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Jani Nikula <jani.nikula@intel.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, 25 Mar 2024 at 05:05, Sasha Levin <sashal@kernel.org> wrote:
->
->
-> This is the start of the stable review cycle for the 5.15.153 release.
-> There are 317 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Tue Mar 26 11:34:43 PM UTC 2024.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-5.15.y&id2=v5.15.152
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
-> and the diffstat can be found below.
->
-> Thanks,
-> Sasha
+Hi,
 
-As I have already reported on 5.10 regarding powerpc ppc6xx_defconfig
-build regressions noticed on 5.15.
+This series adds support for the new ARM Message Handling Unit v3 mailbox
+controller [1].
 
-> Thomas Zimmermann (1):
->   arch/powerpc: Remove <linux/fb.h> from backlight code
+The ARM MHUv3 can optionally support various extensions, enabling the
+usage of different transport protocols.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Patch [2/2] adds a platform driver which, as of now, provides support only
+for the Doorbell extension using the combined interrupt.
 
-Build error:
-------------
-drivers/macintosh/via-pmu-backlight.c:22:20: error:
-'FB_BACKLIGHT_LEVELS' undeclared here (not in a function)
-   22 | static u8 bl_curve[FB_BACKLIGHT_LEVELS];
-      |                    ^~~~~~~~~~~~~~~~~~~
-In file included from include/linux/kernel.h:16,
-                 from arch/powerpc/include/asm/page.h:11,
-                 from arch/powerpc/include/asm/thread_info.h:13,
-                 from include/linux/thread_info.h:60,
-                 from arch/powerpc/include/asm/ptrace.h:323,
-                 from drivers/macintosh/via-pmu-backlight.c:11:
-drivers/macintosh/via-pmu-backlight.c: In function 'pmu_backlight_curve_lookup':
-include/linux/minmax.h:36:9: error: first argument to
-'__builtin_choose_expr' not a constant
-   36 |         __builtin_choose_expr(__safe_cmp(x, y), \
-      |         ^~~~~~~~~~~~~~~~~~~~~
+On the other side, bindings in [1/2] are introduced for all the extensions
+described by the specification, as long as they are of interest to an
+entity running from Normal world, like Linux: as such, Doorbell, FIFO and
+FastChannel extensions are documented.
 
+In these regards, note that the ARM MHUv3 controller can optionally
+implement a considerable number of interrupts to express a great deal of
+events and many of such interrupts are defined as being per-channel: with
+the total maximum amount of possibly implemented channels across all
+extensions being 1216 (1024+128+64), it would mean *a lot* of
+interrupt-names to enumerate in the bindings.
 
-Steps to reproduce:
-# tuxmake --runtime podman --target-arch powerpc --toolchain gcc-12
---kconfig ppc6xx_defconfig
+So, since, I could not find a proper yaml/DT way to just define and verify
+interrupt-names as:
 
+	my_interrupt-<N> with <N> in [0, N] range
 
-Links:
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.15.y/build/v5.15.152-317-g6f6f22f11928/testrun/23147157/suite/build/test/gcc-12-ppc6xx_defconfig/log
- - https://storage.tuxsuite.com/public/linaro/lkft/builds/2e9uOwIbkt3JA6me39nPospWfFL/
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.15.y/build/v5.15.152-317-g6f6f22f11928/testrun/23147157/suite/build/test/gcc-12-ppc6xx_defconfig/details/
+the binding as of now only introduces interrupt-names for a mere 4-channels
+in the range (0,3) for each per-channel interrupt type: the idea is to
+leave open the possibility to add more to this list of numbered items only
+when (and if) new real HW appears that effectively needs more than four
+channels. (like AMBA, where the maximum number of IRQ was progressively
+increased when needed, AFAIU); any suggestion on how to better express
+this, is very much welcome.
 
---
-Linaro LKFT
-https://lkft.linaro.org
+Based on v6.9-rc1, tested on ARM TCS23 [2]
+(TCS23 reference SW stack is still to be made fully publicly available)
+
+Thanks,
+Cristian
+
+[1]: https://developer.arm.com/documentation/aes0072/aa/?lang=en
+[2]: https://community.arm.com/arm-community-blogs/b/tools-software-ides-blog/posts/total-compute-solutions-platform-software-stack-and-fvp
+
+Cristian Marussi (2):
+  dt-bindings: mailbox: arm,mhuv3: Add bindings
+  mailbox: arm_mhuv3: Add driver
+
+ .../bindings/mailbox/arm,mhuv3.yaml           |  239 ++++
+ MAINTAINERS                                   |    9 +
+ drivers/mailbox/Kconfig                       |   11 +
+ drivers/mailbox/Makefile                      |    2 +
+ drivers/mailbox/arm_mhuv3.c                   | 1061 +++++++++++++++++
+ 5 files changed, 1322 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/arm,mhuv3.yaml
+ create mode 100644 drivers/mailbox/arm_mhuv3.c
+
+-- 
+2.34.1
+
