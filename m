@@ -1,77 +1,92 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E6113D51C
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 16:39:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC64512B143
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 16:40:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711384780; cv=none; b=MvM+0kENlTyNLyB2k09wEKEV90ds6YKFHn8+9uDiJyn1SHTn8Kfs8dFDX2Kzh/W7rLL7wT+POGh1CmOJEhOVD3E+/D1juiNuDX7rWqkVU11rCsZCWdVqdFdiJgiu7kKJTOznrzp8UIYN+3SexasIzWaoaMd5uDhbUFLEOeg9RSc=
+	t=1711384834; cv=none; b=Mq5THbbQksRVDl7AXhiQhmBx7sBFgyFcrricyIGjjzgjkNaokmumCVUHF1zGP9aS3WhRptdwCh+qqKUlyVoaCGAIoHRIseOYtLGVrHYr6Ea7WinIcs3i8MY89zPTPtjmOjMpZ/a1xRImuJHzKZTxz3uwgINQvNr5o9YOdi4i6vQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711384780; c=relaxed/simple;
-	bh=NBQoREtiEUBmKNw02sG4gclsFgAU8fZ+QRNJuscIipM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P3FtEEbswJWdK+qw0bpnVtuD1R/TdiUhXb29XW2sU+q/jL/oVvNVVDST2jNbWjF0j1A/Xpnkd7ypIpNSDr6gE6Ssk9rXjqyYb9Drsa8ptNccXJ+omIbF+abgCM2ITq0+tz8xdyhOqZFieERlGM9bpS+KDXt4Th3fiudCxsC2+/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4148c607f31so2077435e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:39:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711384777; x=1711989577;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9m0SyyYCsLlNalZH2dIzOESp0Bcn7Q/hayzCxRbDd2Y=;
-        b=DzfzlDxFY+DhIiURyF44efXQbJf0+TrCVyQIPhvsBc+R1nct9wPyGqk0hxRCBxJ1hU
-         kOJoTw8z/ybkkJ+Or2K8HUUNjs5wGw4Zz3HPh2yevTRswgpp/DEbCCM8q5Yw5z504jle
-         oQcqGWVzN+A+afoSO7MNFr7jki/6cBA6kqCVfpq4iPM/SZ75VkUs02e3Oku/DOQhcwjb
-         aMSerirIO0K/NWGNast9EaIRyPdO/TIKulW9y2S/iWu0ODI0EXZjKpeZl+YUJFn9zmU4
-         7RdJczGjajQCY1K1epWMrxWODDfxT3m8qH4J+koLcvSSVrmNeaIXmWnrJ0Y1ogxzObbV
-         QUFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXczU130C3n3H6vibfH5pa+yznYWn4EgeehIJv6zdiHGuclHhffWTVmojb1i2saackb+7qyGIsvxa2sjnKxEpufRrOrgnmlWuI7KwvE
-X-Gm-Message-State: AOJu0YwbSd+PxMZg804VnBYXZ0V1iS5puft/uFhunMCn3gynLquRx+D5
-	6tejtM06c55LC8bpwjRPeu7VbtI4fg4rXl4oCZr8S37i/aTDH64O
-X-Google-Smtp-Source: AGHT+IGTh9czdktHrja2649D11zmTOpdfYc12T/xNGt7U4utapNSuxeRCdCELYyRYFfM6zPIU8S1vA==
-X-Received: by 2002:a05:600c:2201:b0:414:71b2:73c4 with SMTP id z1-20020a05600c220100b0041471b273c4mr6113308wml.12.1711384777272;
-        Mon, 25 Mar 2024 09:39:37 -0700 (PDT)
-Received: from costa-tp.redhat.com ([2a00:a040:199:77f6:a8ab:cda7:7ac6:c85c])
-        by smtp.gmail.com with ESMTPSA id df10-20020a5d5b8a000000b0033e756ed840sm9898238wrb.47.2024.03.25.09.39.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 09:39:36 -0700 (PDT)
-From: Costa Shulyupin <costa.shul@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-kernel@vger.kernel.org
-Cc: Costa Shulyupin <costa.shul@redhat.com>
-Subject: [PATCH] cpu/hotplug: Fix typo in comment
-Date: Mon, 25 Mar 2024 18:38:10 +0200
-Message-ID: <20240325163810.669459-1-costa.shul@redhat.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1711384834; c=relaxed/simple;
+	bh=3JD2cP34z98jlVGvzHKp989vlhvR8mbop7iAsu3vAbM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f9Jj8t+MYEfC5ruUodgIjZlyGfECpJkeYOcUSAcex5O91Pv2V0oDP9cJpZ/KacEOfFHg0rxlIUqONImxYfi8zRUxzR25E/900O6tUtSHEW+n7obA+NBRGYdmtn0OmGCCVxHDkoYL494yPRsYgDN365+NGsgmCurqhWj8aEULnJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CABC2F4;
+	Mon, 25 Mar 2024 09:41:03 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.16.150])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ECE4F3F64C;
+	Mon, 25 Mar 2024 09:40:26 -0700 (PDT)
+Date: Mon, 25 Mar 2024 16:39:12 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Alexandre Ghiti <alex@ghiti.fr>
+Cc: David Laight <David.Laight@aculab.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Charlie Jenkins <charlie@rivosinc.com>, Guo Ren <guoren@kernel.org>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Kemeng Shi <shikemeng@huaweicloud.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Xiao Wang <xiao.w.wang@intel.com>, Yangyu Chen <cyy@cyyself.name>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] riscv: Define TASK_SIZE_MAX for __access_ok()
+Message-ID: <ZgGosOiW6mTeSnTL@FVFF77S0Q05N>
+References: <20240313180010.295747-1-samuel.holland@sifive.com>
+ <CAHVXubjLWZkjSapnsWJzimWg_2swEy7tQ-DQ6ri8yMk8-Qsc-A@mail.gmail.com>
+ <88de4a1a-047e-4be9-b5b0-3e53434dc022@sifive.com>
+ <b5624bba-9917-421b-8ef0-4515d442f80b@ghiti.fr>
+ <f786e02245424e02b38f55ae6b29d14a@AcuMS.aculab.com>
+ <d323eb10-c79b-49cb-94db-9b135e6fd280@ghiti.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d323eb10-c79b-49cb-94db-9b135e6fd280@ghiti.fr>
 
-Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
----
- include/linux/cpuhotplug.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Mon, Mar 25, 2024 at 08:30:37AM +0100, Alexandre Ghiti wrote:
+> Hi David,
+> 
+> On 24/03/2024 20:42, David Laight wrote:
+> > ...
+> > > The use of alternatives allows to return right away if the buffer is
+> > > beyond the usable user address space, and it's not just "slightly
+> > > faster" for some cases (a very large buffer with only a few bytes being
+> > > beyond the limit or someone could fault-in all the user pages and fail
+> > > very late...etc). access_ok() is here to guarantee that such situations
+> > > don't happen, so actually it makes more sense to use an alternative to
+> > > avoid that.
+> > Is it really worth doing ANY optimisations for the -EFAULT path?
+> > They really don't happen.
+> > 
+> > The only fault path that matters is the one that has to page in
+> > data from somewhere.
+> 
+> Which is completely avoided with a strict definition of access_ok(). I see
+> access_ok() as an already existing optimization of fault paths by avoiding
+> them entirely when they are bound to happen.
 
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index 35e78ddb2b37..667adc31d3ad 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -27,7 +27,7 @@
-  * startup callbacks sequentially from CPUHP_OFFLINE + 1 to CPUHP_ONLINE
-  * during a CPU online operation. During a CPU offline operation the
-  * installed teardown callbacks are invoked in the reverse order from
-- * CPU_ONLINE - 1 down to CPUHP_OFFLINE.
-+ * CPUHP_ONLINE - 1 down to CPUHP_OFFLINE.
-  *
-  * The state space has three sections: PREPARE, STARTING and ONLINE.
-  *
--- 
-2.43.0
+I think the point that David is making is that address+size pairs that'd fail
+access_ok() *should* be rare, and hence it's a better trade-off to occasionally
+handle faults for those if it makes the common case of successful access_ok()
+smaller or faster. For any well-behaved userspace applications, access_ok()
+should practically never fail, since userspace should be passing good
+address+size pairs as arguments to syscalls.
 
+Using a compile-time constant TASK_SIZE_MAX allows the compiler to generate
+much better code for access_ok(), and on arm64 we use a compile-time constant
+even when our page table depth can change at runtime (and when native/compat
+task sizes differ). The only abosolute boundary that needs to be maintained is
+that access_ok() fails for kernel addresses.
+
+Mark.
