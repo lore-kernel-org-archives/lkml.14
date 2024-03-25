@@ -1,133 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1805584D1B
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 13:05:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE5840BE7;
+	Mon, 25 Mar 2024 13:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711371958; cv=none; b=qHLyCKGf0ZxOpoqvcIfYoJlNkwKn6dfut1Yw6plE4b/xJDe3VATflDQ8iXPEZzxBiMoBIXxsT4U2sjMMHergioCRohaIKv/4K4T1H3th1ryjEbUzyie6NwE4ndEazaHro1uFQzpgm/kpoYVDTgsHG1HlN3C5aMcsQR3AX+Ua04A=
+	t=1711371995; cv=none; b=YVxISrLXjSptQDs3MZz7zChaDHtFxLy9wWlehLlDklUTf1k5F1i2gRc1s7AwJfUSpz7xK5KRuxtji1iNDT94yWAt4yClzU4AXB2eYPcpNYgiL1lvAIXNayDQOA8GRRK0xxSuQXz7dJrCBisyTd2A0xUJzV9vWOGEW7h+BWCln60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711371958; c=relaxed/simple;
-	bh=0jy18Hu8o5WScUcgqk/t5XiNGY9l+KJGLuQ1Wb2fHz4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t5HAcSGH2rbryREQcmaI+8+J2vbX/cgrrLu3poN2Qxmr+2KIzw0kCraQy9bg1exju6LW9FVXiINcTfa7xdGX3vD5SCYy1FwRkPz+ApoNjGC6oJZ2Lb3SmmhH9QGN4QBK/ncZ3ZUA8SFn2ZBoPCRgo2iJ4YcRy7iiqYvD0F8JU7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MyDb3BtA; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711371995; c=relaxed/simple;
+	bh=y41ZUo//R1PFlTZZBp6OISCB8XZyhdqerzYG0tK4h84=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dSFjzfeM42AAeC3T+2x/ttFaripHdIKOqMN0BqF4eMJZSTU33uZIsHgUj7y+QdSGTe3ZusvgPhOtyWQdfVG7xgAPRMLRVRJJ1/4JSIsOl9pxRGcmZpRUdHG07cdeWPslxKMzimrgFcDsqz/yPMh9oK5LRaQ0i29nlzdAVM1f1lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=AwX6bukZ; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MyDb3BtA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711371957; x=1742907957;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0jy18Hu8o5WScUcgqk/t5XiNGY9l+KJGLuQ1Wb2fHz4=;
-  b=MyDb3BtAY/bPekSsRQuTiSpsRys1v7Vg7CEwWkfx56JE9AVb/y3lJqn/
-   S5dRRi+H/Uct4jjhkyY3/rAD04MPAH6NwbYxN93IXi5K3L8/XEgqUbYte
-   LXXBgekJu6GZWN34vur5zowa13WRhnsBLSCFVr5lv8K9LA7pQwG2yB9rS
-   3uYB3KsYKTCXAAWQGeGmgoNKx2XG9r9Ad+BQWbNAeT01Qe4WEaa3lDwRy
-   7dPZqtVFue/7eAFN2IJrXnCWuckmT/HzOZv5APSJlWIL6G/pONB5t2kU7
-   fkgCm8BUpBuZEW051ELr2tsd7ToTQ7iCSW/USPx+FPXRhXShrBKhxDIm+
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="10164785"
-X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
-   d="scan'208";a="10164785"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 06:05:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="914842940"
-X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
-   d="scan'208";a="914842940"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 06:05:25 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1rok0x-0000000FzB8-1WtD;
-	Mon, 25 Mar 2024 15:05:23 +0200
-Date: Mon, 25 Mar 2024 15:05:22 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Max Kellermann <max.kellermann@ionos.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/35] Fast kernel headers: reduce header dependencies
-Message-ID: <ZgF2khndC_QTu5Bw@smile.fi.intel.com>
-References: <20240209164027.2582906-1-max.kellermann@ionos.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="AwX6bukZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1711371992;
+	bh=y41ZUo//R1PFlTZZBp6OISCB8XZyhdqerzYG0tK4h84=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=AwX6bukZx35XtczvSYUlGvxfUuq/ynvrxShktE9Ug4+6f6WqsKtlBHio6PNittTaT
+	 kJgFP96UNjt/zIufP5ssM0wvAe/8YetuWcgPl38y7W8Ojrr7ACbJM4TRGscxJiyJMH
+	 Dj9S+4+zL5ZPSxEuY0Q4w29SNV9IzMz4LM2bTl87dXpGjZRcumk6dT8t7EmRQpBtFG
+	 dTfWlwuI/cxuKtaFieVRYUm9H0OUAKdFWUTwdZIpaMvEUhSlBV5xqmaOrTWmN6onVM
+	 HkjfDZJDQ8/ZKTdc3SYc+SB0cU8Dm1AlBmKORLdHETtCryt3E8LywypIWElPFbkBMX
+	 HC575lGmdMdnw==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id CF571378209A;
+	Mon, 25 Mar 2024 13:06:31 +0000 (UTC)
+Message-ID: <2625bf93-1501-4e5d-b492-de9bcffa93ec@collabora.com>
+Date: Mon, 25 Mar 2024 14:06:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240209164027.2582906-1-max.kellermann@ionos.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] soc: mediatek: pm-domains: solve power domain glitch
+ issue
+To: "yu-chang.lee" <yu-chang.lee@mediatek.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Project_Global_Chrome_Upstream_Group@mediatek.com, mandyjh.liu@mediatek.com,
+ fan.chen@mediatek.com, xiufeng.li@mediatek.com
+References: <20240325121908.3958-1-yu-chang.lee@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240325121908.3958-1-yu-chang.lee@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 09, 2024 at 05:39:52PM +0100, Max Kellermann wrote:
-> This patch set aims to reduce the dependencies between headers, in
-> order to have cleaner code and speed up the build.  It continues
-> previous efforts by other developers.
+Il 25/03/24 13:19, yu-chang.lee ha scritto:
+> Hi,
 > 
-> As a preparation, the first patch adds "#include" directives to source
-> files that were missing previously, but due to indirect includes, this
-> was never noticed.  After the cleanup, many missing directives would
-> result in a compiler failure.
+> This series aims to solve power-off failures and occasional SMI hang issues that
+> occur during camera stress tests. The issue arises because, when MTCMOS powers on
+> or off, signal glitches are sometimes produced. This is fairly normal, but the
+> software must address it to avoid mistaking the glitch for a transaction signal.
 > 
-> The second patch removes superfluous "#include" directives, some of
-> which may be a leftover from refactoring patches.
+> The solutions in these patches can be summarized as follows:
 > 
-> The third patch replaces existing "#include" directives with narrower
-> ones, e.g. use "spinlock_types.h" instead of "spinlock.h".  This
-> continues the work others have done over the years.
+> 1. Disable the sub-common port after turning off the Larb CG and before turning
+>     off the Larb MTCMOS.
+> 2. Use CLAMP to disable/enable the SMI common port.
+> 3. Implement an AXI reset.
+> For previous discussion on the direction of the code modifications, please refer
+> to: https://lore.kernel.org/linux-arm-kernel/c476cc48-17ec-4e14-98d8-35bdffb5d296@collabora.com/
 > 
-> The remaining patches add new "XXX_types.h" headers with lighter
-> dependencies.  They have only basic struct/enum/const/macro
-> definitions and maybe a few trivial inline functions, but no "extern"
-> functions and no complex header dependencies.
 > 
-> Just like the other attempts to reduce header dependencies in the
-> past, this is just the beginning.  There are still too many
-> dependencies, and the speedup gained by this large patch set is not
-> yet impressive.
-> 
-> Prior to this patch set:
-> 
->  real	0m34.677s
->  user	23m13.045s
->  sys	2m26.007s
-> 
-> With this patch set:
-> 
->  real	0m34.464s
->  user	22m19.073s
->  sys	2m15.246s
-> 
-> (Building the directories kernel,lib,mm on ARM64 "allyesconfig".)
-> 
-> I have tested this patch set with:
-> 
-> - ARCH=arm allyesconfig
-> - ARCH=arm defconfig
-> - ARCH=arm64 allyesconfig
-> - ARCH=arm64 defconfig
-> - ARCH=mips defconfig
-> - ARCH=riscv defconfig
-> - ARCH=x86_64 allyesconfig
-> - ARCH=xtensa defconfig
-> 
-> Pretty sure, other architectures may fail to build, but before I test
-> all of them, I'd like to get some feedback on whether my approach
-> would be accepted.
-> 
-> For more gains, huge headers like "linux/mm.h", "linux/fs.h" and
-> "linux/sched.h" would need to be optimized.  Nearly everybody includes
-> them, and they include nearly everything.
+> yu-chang.lee (2):
+>    soc: mediatek: pm-domains: add smi_larb_reset function when power on
+>    soc: mediatek: pm-domains: support smi clamp protection
 
-Are you going to pursue this (with probably refined kernel.h approach
-as we have Ingo's patches and an additional split that is already in
-the upstream)?
+Can you please change both commit titles to use "pmdomain: mediatek:" instead of
+"soc: mediatek:"?
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks
+Angelo
 
+> 
+>   drivers/pmdomain/mediatek/mt8188-pm-domains.h |  69 +++++-
+>   drivers/pmdomain/mediatek/mtk-pm-domains.c    | 206 +++++++++++++++---
+>   drivers/pmdomain/mediatek/mtk-pm-domains.h    |  13 ++
+>   3 files changed, 255 insertions(+), 33 deletions(-)
+> 
 
