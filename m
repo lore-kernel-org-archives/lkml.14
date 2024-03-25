@@ -1,32 +1,43 @@
-Received: from new-mail.astralinux.ru (new-mail.astralinux.ru [51.250.53.244])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4345686629;
-	Mon, 25 Mar 2024 12:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.250.53.244
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1B51C36
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711369527; cv=none; b=rNPu89y/Rtegi4gQCNI9iDUzV/E0gm1xHPPyhNiOIKKtO90hcvW3yWx/6+eFjdFRnee4o3AuIRncLhAkkueAz5HHK1RH4f3ZvlRM7eFXxabbMEznGnz03iI9tantcP7cNEc7ZJzNfKCtNnqXLWTd4gouqQXzvdl3/FU1r+4aoDk=
+	t=1711369700; cv=none; b=on7OPA2cCGvzUPuotqZ2yF/Yj974UmxoVq8HL9Quo08x48AFwkGU6a17flXJcNA/azu6grxIInsVT4b8xJkYd9oRi8sIiFAy3l4a+yixIZqKfcM5iNh0n9B00JGNjQbylN0iVMV3UGVke+zeoY0ANoJMZLIXahb7zBR5dPuUNwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711369527; c=relaxed/simple;
-	bh=DIV35aPPM2JtoPQYCmeHAZJnh/zGHOjH9qYHQpBaVLA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EtkPpehpjkLEM0vhcD2ZxaQ/GFe6Xmxv7r0/LRwrnr83HD6llIGjt8uTQWSBMjzqoQ7BaGIXo7iu4/qCx7pogvStb7rVDDsTvRicCg0Q53PLaciJF8fUSNrP1ZBbBGgVZml2JmE7LtrwvYzE06gOFWjzG/xUp/HP47oVMCPYd6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=51.250.53.244
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
-Received: from rbta-msk-lt-302690.astralinux.ru (unknown [10.177.236.245])
-	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4V3Bw956nrzySJ;
-	Mon, 25 Mar 2024 15:25:13 +0300 (MSK)
-From: Alexandra Diupina <adiupina@astralinux.ru>
-To: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Cc: Alexandra Diupina <adiupina@astralinux.ru>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org,
+	s=arc-20240116; t=1711369700; c=relaxed/simple;
+	bh=pVQ4C4YTtp5rFp83Ly0FdisDcQMQ7N/FhVjm3Tit5BM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BoHdPIIc9aqDhHhyerGS++0L6GCwvEZ0NIfAfJDmfxoz3pjU5tFx69cjACFpm90z+ox1CAFpkJ5jnVHiKmGzscbC8XxpOo+9M269Hi+d9qov+X0EpOB3WUxTuKARPLUp3Kdp2A8BX2FaO42bLlLph6QhGz6zdOz7kcUSgoX4uHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4V3BzT12sGz4f3jq6
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 20:28:05 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 2669B1A0B61
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 20:28:09 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.67.174.26])
+	by APP1 (Coremail) with SMTP id cCh0CgAX6RHXbQFmlg4nIA--.47806S4;
+	Mon, 25 Mar 2024 20:28:08 +0800 (CST)
+From: Xiu Jianfeng <xiujianfeng@huaweicloud.com>
+To: cl@linux.com,
+	penberg@kernel.org,
+	rientjes@google.com,
+	iamjoonsoo.kim@lge.com,
+	akpm@linux-foundation.org,
+	vbabka@suse.cz,
+	roman.gushchin@linux.dev,
+	42.hyeyoo@gmail.com
+Cc: linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH] scsi: 53c700: call NCR_700_internal_bus_reset() unconditionally
-Date: Mon, 25 Mar 2024 15:24:18 +0300
-Message-Id: <20240325122418.27693-1-adiupina@astralinux.ru>
-X-Mailer: git-send-email 2.30.2
+	xiujianfeng@huawei.com
+Subject: [PATCH -next] mm/slub: correct comment in do_slab_free()
+Date: Mon, 25 Mar 2024 12:22:17 +0000
+Message-Id: <20240325122217.273978-1-xiujianfeng@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,59 +45,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-DrWeb-SpamScore: -100
-X-DrWeb-SpamState: legit
-X-DrWeb-SpamDetail: gggruggvucftvghtrhhoucdtuddrgedvfedrvdehuddgtddvucetufdoteggodetrfcurfhrohhfihhlvgemucfftfghgfeunecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeetlhgvgigrnhgurhgrucffihhuphhinhgruceorgguihhuphhinhgrsegrshhtrhgrlhhinhhugidrrhhuqeenucggtffrrghtthgvrhhnpeduleetfeehffekueeuffektefgudfgffeutdefudfghedvieffheehleeuieehteenucffohhmrghinheplhhinhhugihtvghsthhinhhgrdhorhhgnecukfhppedutddrudejjedrvdefiedrvdegheenucfrrghrrghmpehhvghloheprhgsthgrqdhmshhkqdhlthdqfedtvdeiledtrdgrshhtrhgrlhhinhhugidrrhhupdhinhgvthepuddtrddujeejrddvfeeirddvgeehmeeghedtudegpdhmrghilhhfrhhomheprgguihhuphhinhgrsegrshhtrhgrlhhinhhugidrrhhupdhnsggprhgtphhtthhopeeipdhrtghpthhtoheplfgrmhgvshdruehothhtohhmlhgvhiesjfgrnhhsvghnrfgrrhhtnhgvrhhshhhiphdrtghomhdprhgtphhtthhopegrughiuhhpihhnrgesrghsthhrrghlihhnuhigrdhruhdprhgtphhtthhopehmrghrthhinhdrphgvthgvrhhsvghnsehorhgrtghlvgdrtghomhdprhgtphhtthhopehlihhnuhigqdhstghsihesvhhgvg
- hrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvhgtqdhprhhojhgvtghtsehlihhnuhigthgvshhtihhnghdrohhrgh
-X-DrWeb-SpamVersion: Vade Retro 01.423.251#02 AS+AV+AP Profile: DRWEB; Bailout: 300
-X-AntiVirus: Checked by Dr.Web [MailD: 11.1.19.2307031128, SE: 11.1.12.2210241838, Core engine: 7.00.62.01180, Virus records: 12535435, Updated: 2024-Mar-25 10:47:37 UTC]
+X-CM-TRANSID:cCh0CgAX6RHXbQFmlg4nIA--.47806S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrZF43GrWDtw1fZFyUCF43trb_yoWxCFX_C3
+	W8XFWxZw18AFn7KrZ8AFs7XrnIkw4kWryYkF4fC345Jw17trWkJws7Wr1fArW8ZrW7t3s8
+	CanF9rZI9rsF9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb7AYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x02
+	67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2
+	j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7x
+	kEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY
+	0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I
+	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
+	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcV
+	CF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
+	aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1zuWJUUUUU==
+X-CM-SenderInfo: x0lxyxpdqiv03j6k3tpzhluzxrxghudrp/
 
-It is necessary to include the SCp check inside the branch
-and call NCR_700_internal_bus_reset() unconditionally.
+From: Xiu Jianfeng <xiujianfeng@huawei.com>
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+slab_alloc_node() should be __slab_alloc_node().
 
-Fixes: 87fd912d3ba3 ("Add NULL check for SCp in process_script_interrupt()")
-Signed-off-by: Alexandra Diupina <adiupina@astralinux.ru>
+Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
 ---
-The patch makes a change to commit 87fd912d3ba3, which I 
-created earlier. It became clear that it is necessary to 
-call NCR_700_internal_bus_reset() in this condition branch 
-for any value of SCp. Sorry for the incorrect previous patch.
- drivers/scsi/53c700.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ mm/slub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/53c700.c b/drivers/scsi/53c700.c
-index e4fe7fc8dfcb..1a422264160d 100644
---- a/drivers/scsi/53c700.c
-+++ b/drivers/scsi/53c700.c
-@@ -1067,15 +1067,17 @@ process_script_interrupt(__u32 dsps, __u32 dsp, struct scsi_cmnd *SCp,
- 			//}
- 			NCR_700_scsi_done(hostdata, SCp, hostdata->status[0]);
- 		}
--	} else if ((dsps & 0xfffff0f0) == A_UNEXPECTED_PHASE && SCp) {
--		__u8 i = (dsps & 0xf00) >> 8;
--
--		scmd_printk(KERN_ERR, SCp, "UNEXPECTED PHASE %s (%s)\n",
--		       NCR_700_phase[i],
--		       sbcl_to_string(NCR_700_readb(host, SBCL_REG)));
--		scmd_printk(KERN_ERR, SCp, "         len = %d, cmd =",
--			SCp->cmd_len);
--		scsi_print_command(SCp);
-+	} else if ((dsps & 0xfffff0f0) == A_UNEXPECTED_PHASE) {
-+		if (SCp) {
-+			__u8 i = (dsps & 0xf00) >> 8;
-+
-+			scmd_printk(KERN_ERR, SCp, "UNEXPECTED PHASE %s (%s)\n",
-+				NCR_700_phase[i],
-+				sbcl_to_string(NCR_700_readb(host, SBCL_REG)));
-+			scmd_printk(KERN_ERR, SCp, "         len = %d, cmd =",
-+				SCp->cmd_len);
-+			scsi_print_command(SCp);
-+		}
+diff --git a/mm/slub.c b/mm/slub.c
+index 7b68a3451eb9..33ac769a69b9 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -4446,7 +4446,7 @@ static __always_inline void do_slab_free(struct kmem_cache *s,
+ 	c = raw_cpu_ptr(s->cpu_slab);
+ 	tid = READ_ONCE(c->tid);
  
- 		NCR_700_internal_bus_reset(host);
- 	} else if((dsps & 0xfffff000) == A_FATAL) {
+-	/* Same with comment on barrier() in slab_alloc_node() */
++	/* Same with comment on barrier() in __slab_alloc_node() */
+ 	barrier();
+ 
+ 	if (unlikely(slab != c->slab)) {
 -- 
-2.30.2
+2.34.1
 
