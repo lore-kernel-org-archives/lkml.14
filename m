@@ -1,43 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8981C16A1F6;
-	Mon, 25 Mar 2024 08:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2141C16ABD7;
+	Mon, 25 Mar 2024 09:00:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711357192; cv=none; b=mgTfbMBK2A90PZVXxnRM+4PZIH/wvHDhNCKV81KdcmSVgazlZ897/mYtuSod44TcJrFwqzpP01o20zk1YtknzgwWrF3N4LThLZ9zqtjcAtS+dJC1poXuLiHvqi9H1F8Ad4rRGFbT0voPTe2nHTeIQ6JSha4MCNufPGC1T7NIgrQ=
+	t=1711357224; cv=none; b=VO7qQpDrkWyjdB3bjD9yhIEsK4dmThvk3u1hzbfmRghv7vs2OmY1LC+7t1q/y8BpQxNnawZOgXyM74MqZfzHXS6PzFMdSstbUjId8Xtufcn5GYEBLRzW7AVSnsoN5wSWTJg7phZLzGy7pnb2VJo2janwJNCTunxHAnENZqrq1xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711357192; c=relaxed/simple;
-	bh=gitG5l6H+I0HDmx8Fz/JaxY86nGEGMMjS/ARyj17ayk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Orl6y2HeNmLGm3VF3VGh2rM6CRpouQBu27LXqtClPhanBebkwdduwkcjFB395sMtKkNKFgjT1xao5xuO5EFt3ecvv5fIjEEY/QpqmclkkHL6mA7onKnqMiS0zlNPjEc78FYErfE7mtmqzkX0of5iB5hwAzwypDMrhrulfX4gZng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dKwoGm1e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711357224; c=relaxed/simple;
+	bh=26sBVyPr2mvxrvqKu15s8Y422gv6bcuJX3lZRL2zqII=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FJdx2CKjcXc3AU1ztXbhd9G4REVkTRu9OUP35EKF5BBL+5WoV8Ot80jQNW0TQ1NOY+pv1sEzxScXgLlHcT7q8A2qg9Y8NKzgcHk1s5ydhZ6MJq+QIV81gATDsb2wT9d76XRnX3n/NKccUT36GChLCEiWmBD4KAwBQAIs12gJ1J4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=vWoq9zoU; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dKwoGm1e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECF71C433F1;
-	Mon, 25 Mar 2024 08:59:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711357192;
-	bh=gitG5l6H+I0HDmx8Fz/JaxY86nGEGMMjS/ARyj17ayk=;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="vWoq9zoU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1711357221;
+	bh=26sBVyPr2mvxrvqKu15s8Y422gv6bcuJX3lZRL2zqII=;
 	h=From:To:Cc:Subject:Date:From;
-	b=dKwoGm1e2hYnW3jUqwNfZET6KZKcEkBAWbUfbqWUBc5IWpDawEj/854LRBsbkTWu+
-	 3OhC/Kc+QeXrkFDCn9+rQmyVb1oQB2cgZOFIqXJ7AlUtJSUyokCl3J63MFMugWDvX6
-	 07ZrLpNd0bHay8Vo+4YgQYf1L91GeO366GXhJyg0Xln5xS5W7Kz0tRh8LBS6fKrIff
-	 HaZoJO5TcozsEYDL27pl5UUGLZyKk/e8mIjw/DGAwEo8SIU6Yk/qjkFTGYJVWmuuoT
-	 DInNmOuvoFhhG2f3vqs48mqrZNaTgtpKTUqiC5Z+0oysf7fl8AF9TbiQkNBUkHYAzu
-	 gr8OEJCAe1D6Q==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan+linaro@kernel.org>)
-	id 1rogBS-000000006oo-2rDn;
-	Mon, 25 Mar 2024 09:59:58 +0100
-From: Johan Hovold <johan+linaro@kernel.org>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH] wifi: mac80211: fix mlme_link_id_dbg()
-Date: Mon, 25 Mar 2024 09:59:48 +0100
-Message-ID: <20240325085948.26203-1-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	b=vWoq9zoUw81jAjaaZzchyc/yxBqqYNtvW9aYykHPYHWJyT9OHJHe7kxfWt46RiwOV
+	 wjhHdpH4vqW0Xm0ea2iisr/j1TBZQ2qUMT8DSr9f8CyNHiZ7ML6D5OBZjUnE1huAlW
+	 RXAiRyTI8cFtlwE7CpQ+nZ3LsVpaDUC6ONCSRM6BucJ1y4LU2mDuzVRAjbsh43goS8
+	 D1EwNVGiCHWZwmk813P63uEOu78G6mwmHpX1rlnu3GfqNI5Of4q/jLAptdENSYNBf8
+	 WCivw8s07+j7iOnq5evhntJXUkF/tYV8hBZSXY+hfWOGyW+WKO7R5B+JwAW/JWWBll
+	 OdxjJ0pPpRyMQ==
+Received: from localhost.localdomain (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id DBF4037813B7;
+	Mon, 25 Mar 2024 09:00:18 +0000 (UTC)
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	kernel@collabora.com,
+	iommu@lists.linux.dev,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests: iommu: add config needed for iommufd_fail_nth
+Date: Mon, 25 Mar 2024 14:00:48 +0500
+Message-Id: <20240325090048.1423908-1-usama.anjum@collabora.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,34 +53,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Make sure that the new mlme_link_id_dbg() macro honours
-CONFIG_MAC80211_MLME_DEBUG as intended to avoid spamming the log with
-messages like:
+Add FAULT_INJECTION_DEBUG_FS and FAILSLAB configurations which are
+needed by iommufd_fail_nth test.
 
-	wlan0: no EHT support, limiting to HE
-	wlan0: determined local STA to be HE, BW limited to 160 MHz
-	wlan0: determined AP xx:xx:xx:xx:xx:xx to be VHT
-	wlan0: connecting with VHT mode, max bandwidth 160 MHz
-
-Fixes: 310c8387c638 ("wifi: mac80211: clean up connection process")
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 ---
- net/mac80211/debug.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+While building and running these tests on x86, defconfig had these
+configs enabled. But ARM64's defconfig doesn't enable these configs.
+Hence the config options are being added explicitly in this patch.
+---
+ tools/testing/selftests/iommu/config | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/mac80211/debug.h b/net/mac80211/debug.h
-index 49da401c5340..35a8ba25fa57 100644
---- a/net/mac80211/debug.h
-+++ b/net/mac80211/debug.h
-@@ -158,7 +158,7 @@ do {									\
- 			_sdata_dbg(print, sdata, "[link %d] " fmt,	\
- 				   link_id, ##__VA_ARGS__);		\
- 		else							\
--			_sdata_dbg(1, sdata, fmt, ##__VA_ARGS__);	\
-+			_sdata_dbg(print, sdata, fmt, ##__VA_ARGS__);	\
- 	} while (0)
- #define link_dbg(link, fmt, ...)					\
- 	_link_id_dbg(1, (link)->sdata, (link)->link_id,			\
+diff --git a/tools/testing/selftests/iommu/config b/tools/testing/selftests/iommu/config
+index 110d73917615d..02a2a1b267c1e 100644
+--- a/tools/testing/selftests/iommu/config
++++ b/tools/testing/selftests/iommu/config
+@@ -1,3 +1,5 @@
+ CONFIG_IOMMUFD=y
++CONFIG_FAULT_INJECTION_DEBUG_FS=y
+ CONFIG_FAULT_INJECTION=y
+ CONFIG_IOMMUFD_TEST=y
++CONFIG_FAILSLAB=y
 -- 
-2.43.0
+2.39.2
 
