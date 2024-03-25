@@ -1,96 +1,126 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D361D69B
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 17:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D44D3DBBC
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 17:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711386135; cv=none; b=EeIQJMES4LeS9zNlaSkGSfIWsDGa1+aR1vsBLEL0rsk79JeocMyucnXAvXGdrY3IihW0bgu4gaGRE1mtbx/U8zB6MCQp6AemEy1jiu+cMtis4tVkxLBjJZYATTTJi1mHgX5ybq7Uwmw8Kc/y4y0P/oQqWiJF6TV82CnJK8LGFo8=
+	t=1711386221; cv=none; b=hOguBi/QSenRf+oP1lFsj4QWWErslRwSBzJVIT9Jfzyzpbk6FiGPMoSj5pFLDelTeCOG2PmOZ5ATnzge9NMHIv6uLRTwyIgWGkNRStEwcI3Q1rogXIni95bMBqOF6x7wu4YTH1ofoZjhc02yiiG2sxM1aFPyd98a2kQ2r3Jk0bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711386135; c=relaxed/simple;
-	bh=m7fd1//5IrrtHgWOoWmDIMhE55eFKjHMazQpwfZnFEo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UHRrgtRUj1AS8IyG6cr2rmxM8fTF5C6f/CqrpqlPN5cT1XPfrLslk5+Ngml3B15Iinrfjv7MXkNx4hUDSrsYSZC1faOHR16Ed34YoAhFwa9tds7PuH1yHN7ozX5IriUtpRqxr771E8FT4yCUwmT7QVtBM3ET46ArlheL0l3YWzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j4TDEOJp; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711386221; c=relaxed/simple;
+	bh=z/jh+93zuvKqVIQ98MxaG5F4d3axg0Y13zwiWvCIOg8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HL/xLY/4HXQeodmW8H3Bng+vM3wcmZIbIyVnhnaPfxSBPkZ7kxyG02OX5OGc0jYhOWnN4lXneBpcdUqTRL3T9fkT49azC2mGZx99odYahj7aYX4oSgU7utJIPJBuAWQ6WqERGhJIjHwzd5XWWkbXqm5XZkyWbNhnjL6hM2fhh+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ibllFgBo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j4TDEOJp"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dffa5e3f2dso28390065ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:02:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711386133; x=1711990933; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vah2WWF295ZE3+NJIAmiLCanZHCiZpOAIq/DGlaX/m0=;
-        b=j4TDEOJpgZPlK1iGd3bAtEv718O0qwIIWD4PsFVpNJB5j16SDAU/485RxdV/Xel6LN
-         Yj2+QVTww+LvWAdVDPgwgNWNdAQvROp4BWt062JSFXiubP/mszpAN1sJNmQnYJengAoa
-         qypBq9dfIOajy48eUpaYQn+FIJlnnVIeKRRx1HMMdZ+BUqCY1HiI5kZ9njgi9abEEaT0
-         5Y9jJXLnuff5QbeBIBXLfLu95anTWBcIkdmE7BLatuxwF761nKB92e+OfgYd72jHRjlS
-         ZgiRtNV3TOnZrrSRveA3WQQIKokMknFL8fgdmqUiIZ/ILdgIz50Y4I3b8UfrDDMcxIMd
-         DBdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711386133; x=1711990933;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vah2WWF295ZE3+NJIAmiLCanZHCiZpOAIq/DGlaX/m0=;
-        b=VravE2Pi3O+V7pYGr4aYayvPIFfRxb3ZgV14QL7+NWjCXDJaaapFAF3OqhziyY88Rk
-         FiSbfIgz0/coaD1Kt2ycbWCjyIeylIKhMf2nDUh+u219XQHD+27wD66oZeln/ZpEeLvh
-         exbuLC2jouPdnGBeys0Zn12i9E2agffXz1RIZM41y/gpRiedE69t5lbSXNn6lPHMD7d0
-         YNMVcvNc8ucQYdNRxHWHacLzQDuvquX19EeDj0BIq9Vb4EIVIIMuUzi/qrGvrREE03P1
-         OutliiO47uZIyA+/mr2m341UgbaXZmA9w2mrNMj7dWouuHieQNy/7dJq7UyP2FzEhM4k
-         8aJA==
-X-Forwarded-Encrypted: i=1; AJvYcCXC4BdTNFzAn1wxPdEuZ0vJ/yXzNZtkehQ7Mj978bowUEoU8JoYSYL0MoOgbUDdE85zWiky2CTBubRu+2nzloayBU+EM6nSbhabrwIq
-X-Gm-Message-State: AOJu0Yw34xY16mS70Muq43kU1rX6dJdHcavOUCHmoI6JCK1aa/yAl4k8
-	+CaEsW/Mxnc8PVyolGIy32DrXw0ZLHyLO/+56XwfIECKZtsU5Pnrdbr2LjZUCbs=
-X-Google-Smtp-Source: AGHT+IFJQtr9KLesreEA+rN5I4oDbq/kaNwSDF9SvVqoxxKVyxbnhcLw/w3S4d4CON2KX2+9wkYT0g==
-X-Received: by 2002:a17:902:eb8d:b0:1e0:115c:e03c with SMTP id q13-20020a170902eb8d00b001e0115ce03cmr7194945plg.53.1711386133516;
-        Mon, 25 Mar 2024 10:02:13 -0700 (PDT)
-Received: from [192.168.0.102] ([176.61.106.68])
-        by smtp.gmail.com with ESMTPSA id p2-20020a170902780200b001deeac592absm4983213pll.180.2024.03.25.10.02.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 10:02:13 -0700 (PDT)
-Message-ID: <3bac1efe-ad49-4d13-8a50-0726b568a9d6@linaro.org>
-Date: Mon, 25 Mar 2024 17:02:08 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ibllFgBo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9590AC433F1;
+	Mon, 25 Mar 2024 17:03:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711386221;
+	bh=z/jh+93zuvKqVIQ98MxaG5F4d3axg0Y13zwiWvCIOg8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ibllFgBos5TkeQY0PYTM1ISTnrSacPHTnQzJ956kmpo5PD14ze3eBNhs4ozn9Rx5D
+	 rvzt+0JS0lzQyPPLsL0k/BpjypqND0jxIEr2P/fDBujybNLLGZ4H9yrstHvLwm3tfE
+	 oJaHw47t+yvIzTlg3EPJZ2Q0j2Q8Bx9Hudgm8mcRHIkT3kKn1vWP4zdIRHvnyl9PV7
+	 OMwt7BEl44CdyBkmfs7apSOHJ8WDgNIHPq+QoezOzmO1XsXaAC8LGPkCcLJvSgdK+8
+	 FxFJI+7f2GhK/KW+M+gQAw0Kr9j4a+mfHH0sB/S7A39SoCnypVlaeoAwL6dJ/YDVwd
+	 t7TZay50Xoxog==
+Date: Tue, 26 Mar 2024 00:50:14 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] clocksource/drivers/timer-clint: Add T-Head C9xx
+ clint support
+Message-ID: <ZgGrRrH0mxoKl90n@xhacker>
+References: <20240325164021.3229-1-jszhang@kernel.org>
+ <20240325164021.3229-6-jszhang@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: clock: qcom: Fix x1e80100 camcc
- power-domain declaration
-To: Rob Herring <robh@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
- Abel Vesa <abel.vesa@linaro.org>, Rajendra Nayak <quic_rjendra@quicinc.com>,
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240313-linux-next-camcc-fixes-v2-0-9426da94ae37@linaro.org>
- <20240313-linux-next-camcc-fixes-v2-1-9426da94ae37@linaro.org>
- <20240315151613.GA1256230-robh@kernel.org>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20240315151613.GA1256230-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240325164021.3229-6-jszhang@kernel.org>
 
-On 15/03/2024 15:16, Rob Herring wrote:
-> Add new entries onto the end of existing ones. IOW, MMCX should always
-> be 1st. Then you can move the descriptions to the top level and just put
-> minItems or maxItems as appropriate here.
+On Tue, Mar 26, 2024 at 12:40:21AM +0800, Jisheng Zhang wrote:
+> The mtimecmp in T-Head C9xx clint only supports 32bit read/write,
+> implement such support.
+> 
+> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> ---
+>  drivers/clocksource/timer-clint.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/drivers/clocksource/timer-clint.c b/drivers/clocksource/timer-clint.c
+> index 4537c77e623c..71188732e8a3 100644
+> --- a/drivers/clocksource/timer-clint.c
+> +++ b/drivers/clocksource/timer-clint.c
+> @@ -34,6 +34,7 @@ static unsigned int clint_ipi_irq;
+>  static u64 __iomem *clint_timer_cmp;
+>  static unsigned long clint_timer_freq;
+>  static unsigned int clint_timer_irq;
+> +static bool is_c900_clint;
+>  
+>  #ifdef CONFIG_SMP
+>  static void clint_send_ipi(unsigned int cpu)
+> @@ -88,6 +89,19 @@ static int clint_clock_next_event(unsigned long delta,
+>  	return 0;
+>  }
+>  
+> +static int c900_clint_clock_next_event(unsigned long delta,
+> +				       struct clock_event_device *ce)
+> +{
+> +	void __iomem *r = clint_timer_cmp +
+> +			  cpuid_to_hartid_map(smp_processor_id());
+> +	u64 val = clint_get_cycles64() + delta;
+> +
+> +	csr_set(CSR_IE, IE_TIE);
+> +	writel_relaxed(val, r);
+> +	writel_relaxed(val >> 32, r + 4);
+> +	return 0;
+> +}
+> +
+>  static DEFINE_PER_CPU(struct clock_event_device, clint_clock_event) = {
+>  	.name		= "clint_clockevent",
+>  	.features	= CLOCK_EVT_FEAT_ONESHOT,
+> @@ -99,6 +113,9 @@ static int clint_timer_starting_cpu(unsigned int cpu)
+>  {
+>  	struct clock_event_device *ce = per_cpu_ptr(&clint_clock_event, cpu);
+>  
+> +	if (is_c900_clint)
+> +		ce->set_next_event = c900_clint_clock_next_event;
+> +
+>  	ce->cpumask = cpumask_of(cpu);
+>  	clockevents_config_and_register(ce, clint_timer_freq, 100, ULONG_MAX);
+>  
+> @@ -233,5 +250,12 @@ static int __init clint_timer_init_dt(struct device_node *np)
+>  	return rc;
+>  }
+>  
+> +static int __init c900_clint_timer_init_dt(struct device_node *np)
+> +{
+> +	is_c900_clint = true;
+> +	return clint_timer_init_dt(np);
+> +}
+> +
+>  TIMER_OF_DECLARE(clint_timer, "riscv,clint0", clint_timer_init_dt);
+>  TIMER_OF_DECLARE(clint_timer1, "sifive,clint0", clint_timer_init_dt);
+> +TIMER_OF_DECLARE(clint_timer2, "thead,c900-clint", clint_timer_init_dt);
 
-So for the CAMCC MXC should be switched on first per spec but, TBH I 
-don't think that's a real dependency that matters.
+oops, this should be "c900_clint_timer_init_dt", will update in v2.
 
-I can probably make this change with no functional impact.
-
----
-bod
+> -- 
+> 2.43.0
+> 
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
