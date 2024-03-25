@@ -1,80 +1,77 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E8713173E;
-	Mon, 25 Mar 2024 10:29:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF51D15A487
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711362569; cv=none; b=SYTMfAXRujtQyGuiLqBL3tG6kfPveJ1wgcjtNvsn2zjXhSWIm8/DPMsTFZNpZKSPEU8HgfJJhWXNZqlLl6nkN8IebDV9SurkxZoyeWTTyTlZUPFjf8/G+zxpFpNGHXfrGcFwdS9vnZS9qxA9/tiOxtuCb2/hBUgS4RTaH4ai1L8=
+	t=1711362807; cv=none; b=cJp+KHO70Hmnzrv1HyCoBb5DaE85JhEudsoy/9AG8bKFiY8gpCPnTipoejXElY5yYBDEwyTuYIZ1GUVwKRzzc6YvImtBeDHYhFaE2l8s8moTJLEHQJzxU1vWadr5nYNSpshsy30MfwG/yApNR8dmsXvj8efrR8vhhGqXeETajPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711362569; c=relaxed/simple;
-	bh=9GVBUu/FfME7hJnTGLJoojIPT623ugOT1Rgx4WBw8tA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cIyzz6RpIPbUkANTIr+4hsT6iFJ8eBhxMmkXnOqNJHNF2Kp0Alp8SQ1My3We3Kj0NNbzSk3+XsDCRzOKQMZMvk3N5Xx1VkDcScL9c4qzylPUFu2RqzO+nrinKYhkURNkhCBmbob5njB9Hzhs/xXvTrvVx+kx7Oa4U1lVCu484VQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NOtrIZRQ; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711362807; c=relaxed/simple;
+	bh=veY2UbQB8Op7JAcmMcgKbzf2VaEh1Cc+Wkmsk2z3A1o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YSO4SCkUeh21EIyU118zdkWXiRDgAZAr5fjBPEiZpEl9c05jROmEgT50BuD/UUiKaWBgsYJZvSiyIkvcwplzNaI08moOvuQW55rNa7qrwdfhREklZLUzjXiqpYeVv+TC1h/8q15gV5gb33fqSCbpuFKE4lvy4MIjI1QYhyE0t3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PVr0lNne; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NOtrIZRQ"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-33fd8a2a3e6so2820130f8f.0;
-        Mon, 25 Mar 2024 03:29:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PVr0lNne"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-515a86daf09so1537555e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:33:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711362566; x=1711967366; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vmp26Wyrh5R6YY4RQvUCX7nV7M7UVvO0NSBIsiSwspA=;
-        b=NOtrIZRQbolTWYBWUwpidr4vrC3LjkcAjyZfR/Qj8PWM8LUOHz7PLEEXbSyBS4QmoL
-         4g4p5+OW8OJ75JHfQhOFO5iRAeQzS7bWIOw67XbiVbWyrwTSjqkyuVb505m/QZgcbxpN
-         svO/rWNpbuaYzshcjTVKyeO6VmvrfIzgKYqMbCLdyFHZ7zPEAWdXmfa0a3llvSkqtqjX
-         n7QgbT9P7FWLgrYi9I496+Lia0XboZV58QYjvlfdxfo2wP2WrhxtKwcpMwsS6ubfOD57
-         1/yOIBmGyU5zK6PgA1ozCEVdTUyXsLh0RR0LzopIXq5+RfheN7W9zp9NAEIR/9c29ngE
-         YMGA==
+        d=linaro.org; s=google; t=1711362804; x=1711967604; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IlSF/XzYfABBPkSuT+dcOfufwQU4xv4Qhn96JVhkpvs=;
+        b=PVr0lNneAPzI6Yn6+yI9KLa4fVb+M1Ih7YLzYxhNqnX+zB8fGqWbSBkX7YiL93emQw
+         /MzSqdw5Zmw7L+wq8ywQOiKzdu76qpOrQrLtkdISoQiLyk4/cy5SzbP2JchufYz81rLF
+         q4M68foEgVjQj8wjdv5v+4Pws/oVdn++/zNyytVbHfY/z0mss2MdrQs4nEdSm2mbJ6jg
+         +rlrJSt++qCeF2k/UousaBo0/6J89j3P6C99ttDdNh0zD0+KUDolR1USkCPdujn7yfBY
+         Zp+CWk2zYKv25yU59rLVDUDeKx/0nauKoMSNw7V7pyHZFIvlSYXXM8nw5oYqtDwLh5BA
+         +y9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711362566; x=1711967366;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vmp26Wyrh5R6YY4RQvUCX7nV7M7UVvO0NSBIsiSwspA=;
-        b=JZqRJ50EJ4B6OOnECHq3Wreacs6rC2fUOzxMAMynb84h6DDRJQLHZbgT43KEyMvMPm
-         JQJ3T5bLMmcMLPDt4NzZqtHfgypwwtsiG/4o3nsfXA385WY3uSkZqw/7eOjDD6BEVGNr
-         Bi9YGXrMygXEZxeLD2sZcGKbb7O+PgiueupEt/a5xQ76HBIlqkTNgrqfONKQJKWhn2YW
-         zHmrDEXyjxNT9EOlyKNnrWuY3HCl4i5Wr0OxTWtRs79YYX5wuFHJnMQFteTlmgrLglX+
-         awln48ztoFZ0czUMYnQgTyfwsfx1A6ScLkwitKzV/LP+5AkXrGSIm5ooZ3YViPfm2iv+
-         IHAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX+ztUn/kyxr1VqGwU6CxkoXZ9OjWtaI1vs/tXQF53tlbCQwxIPQFTIFcfV3NtoXJLkXq8jM+x3QrZ0wdJo+0vGtkqP1lTw2DPoB8HUfYzk9YvFsl5GGotYMKq6oFbM4Cwvp3uXwETpKveuSkau8Pr2TcYPQizy6F1UOjpAEIPd/XKYa+SQNUDx
-X-Gm-Message-State: AOJu0YwuNiTe9e/kuMzdS+KCqakJBGq9bcieEVIgeUPTWAF/KyvaR/ga
-	T7VPdlmceGeYOh3GOWOWfWz6loBxaYT12NacZx5Z0UvH2uGuEHbO
-X-Google-Smtp-Source: AGHT+IEVlCOJjAaIAB+mb/cq3ZaQVF2CjGfbd2m+A6Gjn+L/66qfIIAX3D+oMoiIrwo0dRcDtHOY8A==
-X-Received: by 2002:adf:f60f:0:b0:33e:6db4:e89f with SMTP id t15-20020adff60f000000b0033e6db4e89fmr4364206wrp.22.1711362565745;
-        Mon, 25 Mar 2024 03:29:25 -0700 (PDT)
-Received: from localhost.localdomain (91-83-10-45.pool.digikabel.hu. [91.83.10.45])
-        by smtp.gmail.com with ESMTPSA id bq22-20020a5d5a16000000b00341d0458950sm1394958wrb.15.2024.03.25.03.29.24
+        d=1e100.net; s=20230601; t=1711362804; x=1711967604;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IlSF/XzYfABBPkSuT+dcOfufwQU4xv4Qhn96JVhkpvs=;
+        b=GABV8AzJ+RdxoHIonnBvBdOtbeE+JUfVmVyHZyBUSZ2nq0nlD5dMS3XNTe9n45yo7R
+         5Hom2KppJb1n5YCZtGrYtLVj5/lL5JeGJmuCi5aLxVx2Jp0v7uOyfy/z3s8jClNA2zn2
+         9O2m3qck6mudjFI7HAPwW5OycP4FI8ONGK/RPTl6sQ3et/wPHNHtYcf23jUDf86C7fM/
+         uKKW7iLmMO+KPKIpPnd+sd41zGiJXrgcpGftXvQNvKeKGGsaBV8tW5J0MDztShvGJ0nu
+         fAoJ/1ieJoTKcVGSV8gcRGl4XrCpTLbWsf6PAZKIUo91ncWV83/wh6iYuKpS2iLwc9A9
+         iC7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVr4T0QrBYoG1v1iSobNwTNrw/p/Lt9sKwBjtzRFEvYOSuqMaYILNcZeF+iHZ+7x7PMj5bi0UIX9axch1mWe+W7erV+/6q1yNCDtrLl
+X-Gm-Message-State: AOJu0Yw5xdEUmXHRUuZaXp1JdCUVP7IaQIraa6gLm1L8VQymLwngI3CO
+	pxKmBx8xNAK+vY9WqlnJYQ0HwwTFUBC+idXp0hEB0HCGRAXDMskYWJHVeUPnz9I=
+X-Google-Smtp-Source: AGHT+IE5PQzQdX9H1hgeYc8OivCnUMTMVa7putOS9zMdbQ3op2eD2+msOoq0IZkoh8Nh+wl5dBNx7g==
+X-Received: by 2002:a19:f615:0:b0:513:aa0d:d3cc with SMTP id x21-20020a19f615000000b00513aa0dd3ccmr4818948lfe.34.1711362804207;
+        Mon, 25 Mar 2024 03:33:24 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.222.44])
+        by smtp.gmail.com with ESMTPSA id g17-20020a056402091100b0056c0cec810bsm1166030edz.85.2024.03.25.03.33.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 03:29:25 -0700 (PDT)
-From: Balazs Scheidler <bazsi77@gmail.com>
-X-Google-Original-From: Balazs Scheidler <balazs.scheidler@axoflow.com>
-To: kerneljasonxing@gmail.com,
-	kuniyu@amazon.com,
-	netdev@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Balazs Scheidler <balazs.scheidler@axoflow.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH net-next v3 2/2] net: udp: add IP/port data to the tracepoint udp/udp_fail_queue_rcv_skb
-Date: Mon, 25 Mar 2024 11:29:18 +0100
-Message-Id: <34a9c221a6d644f18c826a1beddba58af6b7a64c.1711361723.git.balazs.scheidler@axoflow.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1711361723.git.balazs.scheidler@axoflow.com>
-References: <cover.1711361723.git.balazs.scheidler@axoflow.com>
+        Mon, 25 Mar 2024 03:33:23 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@somainline.org>,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [RESEND PATCH] dt-bindings: display: sony,td4353-jdi: allow width-mm and height-mm
+Date: Mon, 25 Mar 2024 11:32:27 +0100
+Message-Id: <20240325103227.27474-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,106 +80,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The udp_fail_queue_rcv_skb() tracepoint lacks any details on the source
-and destination IP/port whereas this information can be critical in case
-of UDP/syslog.
+Allow width and height properties from panel-common.yaml, already used
+on some boards:
 
-Signed-off-by: Balazs Scheidler <balazs.scheidler@axoflow.com>
+  sdm845-sony-xperia-tama-apollo.dtb: panel@0: 'height-mm', 'width-mm' do not match any of the regexes: 'pinctrl-[0-9]+'
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- include/trace/events/udp.h | 29 ++++++++++++++++++++++++-----
- net/ipv4/udp.c             |  2 +-
- net/ipv6/udp.c             |  3 ++-
- 3 files changed, 27 insertions(+), 7 deletions(-)
 
-diff --git a/include/trace/events/udp.h b/include/trace/events/udp.h
-index 336fe272889f..9c5abe23d0f5 100644
---- a/include/trace/events/udp.h
-+++ b/include/trace/events/udp.h
-@@ -7,24 +7,43 @@
+Rob, could you pick up this one? Was on the list for almost a year.
+
+
+ .../devicetree/bindings/display/panel/sony,td4353-jdi.yaml      | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/display/panel/sony,td4353-jdi.yaml b/Documentation/devicetree/bindings/display/panel/sony,td4353-jdi.yaml
+index b6b885b4c22d..07bce556ad40 100644
+--- a/Documentation/devicetree/bindings/display/panel/sony,td4353-jdi.yaml
++++ b/Documentation/devicetree/bindings/display/panel/sony,td4353-jdi.yaml
+@@ -23,6 +23,8 @@ properties:
+   reg: true
  
- #include <linux/udp.h>
- #include <linux/tracepoint.h>
-+#include <trace/events/net_probe_common.h>
+   backlight: true
++  width-mm: true
++  height-mm: true
  
- TRACE_EVENT(udp_fail_queue_rcv_skb,
- 
--	TP_PROTO(int rc, struct sock *sk),
-+	TP_PROTO(int rc, struct sock *sk, struct sk_buff *skb),
- 
--	TP_ARGS(rc, sk),
-+	TP_ARGS(rc, sk, skb),
- 
- 	TP_STRUCT__entry(
- 		__field(int, rc)
--		__field(__u16, lport)
-+
-+		__field(__u16, sport)
-+		__field(__u16, dport)
-+		__field(__u16, family)
-+		__array(__u8, saddr, sizeof(struct sockaddr_in6))
-+		__array(__u8, daddr, sizeof(struct sockaddr_in6))
- 	),
- 
- 	TP_fast_assign(
-+		const struct udphdr *uh = (const struct udphdr *)udp_hdr(skb);
-+
- 		__entry->rc = rc;
--		__entry->lport = inet_sk(sk)->inet_num;
-+		
-+		/* for filtering use */
-+		__entry->sport = ntohs(uh->source);
-+		__entry->dport = ntohs(uh->dest);
-+		__entry->family = sk->sk_family;
-+
-+                memset(__entry->saddr, 0, sizeof(struct sockaddr_in6));
-+                memset(__entry->daddr, 0, sizeof(struct sockaddr_in6));
-+
-+		TP_STORE_ADDR_PORTS_SKB(__entry, skb, uh);
- 	),
- 
--	TP_printk("rc=%d port=%hu", __entry->rc, __entry->lport)
-+	TP_printk("rc=%d family=%s src=%pISpc dest=%pISpc", __entry->rc,
-+		  show_family_name(__entry->family),
-+		  __entry->saddr, __entry->daddr)
- );
- 
- #endif /* _TRACE_UDP_H */
-diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
-index 661d0e0d273f..531882f321f2 100644
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -2049,8 +2049,8 @@ static int __udp_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
- 			drop_reason = SKB_DROP_REASON_PROTO_MEM;
- 		}
- 		UDP_INC_STATS(sock_net(sk), UDP_MIB_INERRORS, is_udplite);
-+		trace_udp_fail_queue_rcv_skb(rc, sk, skb);
- 		kfree_skb_reason(skb, drop_reason);
--		trace_udp_fail_queue_rcv_skb(rc, sk);
- 		return -1;
- 	}
- 
-diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
-index 7c1e6469d091..2e4dc5e6137b 100644
---- a/net/ipv6/udp.c
-+++ b/net/ipv6/udp.c
-@@ -34,6 +34,7 @@
- #include <linux/slab.h>
- #include <linux/uaccess.h>
- #include <linux/indirect_call_wrapper.h>
-+#include <trace/events/udp.h>
- 
- #include <net/addrconf.h>
- #include <net/ndisc.h>
-@@ -658,8 +659,8 @@ static int __udpv6_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
- 			drop_reason = SKB_DROP_REASON_PROTO_MEM;
- 		}
- 		UDP6_INC_STATS(sock_net(sk), UDP_MIB_INERRORS, is_udplite);
-+		trace_udp_fail_queue_rcv_skb(rc, sk, skb);
- 		kfree_skb_reason(skb, drop_reason);
--		trace_udp_fail_queue_rcv_skb(rc, sk);
- 		return -1;
- 	}
- 
+   vddio-supply:
+     description: VDDIO 1.8V supply
 -- 
-2.40.1
+2.34.1
 
