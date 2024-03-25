@@ -1,250 +1,114 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB07128385
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 23:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6493385293;
+	Mon, 25 Mar 2024 23:50:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711410637; cv=none; b=oepVklFrY9RLZg7hYKU2mMWJlHYq4Dnk7H+QbDVs6VacK1r9SR7NT0i5/+LgdwOsNZ/jWIR9UZSXDqG7/6yEukOIDYdWLaifw7TLLYjyqSty+5eH3MB294Kgv3kWseDfYp3XTsVM7Id+K1FvHp9nE2ssohYD9PnfHUP4FnMpaxk=
+	t=1711410643; cv=none; b=TjzE6V3sfn4uVZ5SMALrA4QNR2buMgQSB4FkZHfbvVNdy0KQo8DrBKqbWqJKs+cSqRDLtXW6Z3IR/MiyxqglXg4xBd0LVmwv9nz6/pEvT0yFPEp0YttUHhZQSgTVZA7OpPtiUJh1Gikor9SxKgm1y0D97sb1HjS1FY3G6RbtqSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711410637; c=relaxed/simple;
-	bh=HaCYxlLo5Ti9rOUslx2RmaiaM++bpDdpyJNIYANfmM8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=iJb9ST65An1/Fe0Q5nlvcIPQNq4/SIeSpx6V3w40sTGtZuufGMuuuDjCOjKFJThR9A+7SOWnC5eBnHbTKDSHC6Y0Mag/HTwhpny72qSZoilSD4Z/MGS5evWUBbwT+/c+4N8OeZ1RB/23F25xipinCblO/sw/942QMFPkzsAGYrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TudUSqTT; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
+	s=arc-20240116; t=1711410643; c=relaxed/simple;
+	bh=EQ0lNcHAsZM9AzkcfyMG2JMpCa+0V7NnfA1QWVnegz0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=T2JF6POUganQ5upLGv7Fn6wwAoiyHSvJcknNwQWwC5OrMMcBh4sku7zJYgYhVg1lBKl4rsyoSgPPNjxP6dlH0+vVVPRYWaWxmemLwUOoEUO9e3ymDNVbj+PBiVS1dcpE47F3hz/X0oSVH9t8nzYwvXa0MKO2LQnuVnvKkCqw7S4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KeRP34BK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TudUSqTT"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dced704f17cso7910231276.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 16:50:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711410635; x=1712015435; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=z6nu3U2cdQmEtB2lnDGjl91RMjz6aut26G90+PFcykM=;
-        b=TudUSqTTCYWiq6Hp4pPry0jpH57iwRaupU7wQ7+OXsX54smOoGhEoRLnVB3gsYmuZZ
-         g9Er7znFYlP8kpMuV3LU9BgsLFTQKpeFrn74y4dVnh3HyGy+5Du+LSZkPtEhvv+yuBgu
-         zuhZT9rg3iWvSLj7448OFTVjwCHV8BnH85qN8TA/XfXizFbQnjW70HgwW/icFJU4mCZn
-         j7fc6pPSCmPT/ZklBm3SHTudfqL7thT+4VqYzeEaX3yDhieXv1DsUUgkaPzGyUYOeG80
-         HRtXtDTu80mkp2jLBUhE0PxByQzBEWQKgqn/lwTSr56mJofP3v/qivjqme0zBS9AC/5Q
-         Gccw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711410635; x=1712015435;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z6nu3U2cdQmEtB2lnDGjl91RMjz6aut26G90+PFcykM=;
-        b=TQj0a/Xj6eRWThA7JSfRDIPFHt9zqHJoR+t6n4RmO5k6+0m4thKYnvqJn9yONmLr1P
-         9LcKBOUOPB5lhrRI9m9zGDpCuf91aZsulcZRnkerr1BN0voZMHYcg1cDM36WlR2jBr2E
-         C3ftUdb84+UE0HzIpIh4idUvoxsUyFcS4RP3rTK81MXJ9qcB0uGaWWwUZGwFQRnrC5fe
-         bgYfNPYkXpWZrbvKLufLxW/5eTyaTbVYgO7d83lH2fEAUAIRO2SRKfzaHFioVHc8+fRR
-         2kHYyAs9BpfcpRGAaX1tTwgCs2MRqBcqJ4S4zdAixEUzHKM7nmqSFDV0cKSAsWu2eRON
-         +WqA==
-X-Forwarded-Encrypted: i=1; AJvYcCWigM1u17HI8Z4jbUFMRQv1jwq4dnDSy0dv18XivrZaLaA55Jk3P2+oYKDBx179dyZPjeEhejWhQBfu3wmHddwlhW/9I9PvBw0kamTl
-X-Gm-Message-State: AOJu0Yw3V9BD1huodnxgAQ+7/DpnbC/o5OGsPBZcCoQF9fwthDUcu+oV
-	B+9hZrFm+GsOqVppuYTUpIvmN3ckiIWP4Osx/WNVg29ftBWfrqCn9IiseCy/NyaR177sX1IERFh
-	0u7tkr60BfInG44VGdA==
-X-Google-Smtp-Source: AGHT+IHhwuSMeZ8KbkpdVbgoG6k+kjBoalv5THVzyluQgGq+kifTjQF/ACTCwAHFlLZp6s7t/niB6q7ZIp/Hk5oK
-X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
- (user=yosryahmed job=sendgmr) by 2002:a05:6902:218d:b0:dda:c565:1025 with
- SMTP id dl13-20020a056902218d00b00ddac5651025mr317614ybb.2.1711410635103;
- Mon, 25 Mar 2024 16:50:35 -0700 (PDT)
-Date: Mon, 25 Mar 2024 23:50:17 +0000
-In-Reply-To: <20240325235018.2028408-1-yosryahmed@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KeRP34BK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3549C433F1;
+	Mon, 25 Mar 2024 23:50:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711410642;
+	bh=EQ0lNcHAsZM9AzkcfyMG2JMpCa+0V7NnfA1QWVnegz0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KeRP34BKGe6jQH6sHSXzv3tQPiBBAiBgxtv6jJ5ahzUFHgORlz9ucYi5FAuAeANb3
+	 fqwLhGm9JrkZE0xg3KsWmBMRyZhX9Lt82aFlMKuTP7DIXmhf64GWD1xFLHA0IZP5ox
+	 DIY/farVYhuaroLBBAv1FHVack2kmO5PTS8CkgT2KvFsdCwh4tEev3QK3ctL15Pkeq
+	 193osBE5rF6/BPy0txNZB+DYnsn0Z9yOfcd8BsAESuQb6Z7wPUQV6cjCYJDf2sTONc
+	 nkZFMbL/Ig711iuw+2GH4A+7muzT36lFsAMoxkuJcVmlzxcjvyNpIXPv0CT7BYs5CP
+	 AcGfmzt+9cwvg==
+Date: Tue, 26 Mar 2024 08:50:37 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Jarkko Sakkinen" <jarkko@kernel.org>
+Cc: <linux-riscv@lists.infradead.org>, "Masami Hiramatsu"
+ <mhiramat@kernel.org>, "Paul Walmsley" <paul.walmsley@sifive.com>,
+ "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
+ <linux-kernel@vger.kernel.org>, "Luis Chamberlain" <mcgrof@kernel.org>,
+ <linux-modules@vger.kernel.org>, "Naveen N . Rao"
+ <naveen.n.rao@linux.ibm.com>, "Anil S Keshavamurthy"
+ <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v5 1/2] kprobes: textmem API
+Message-Id: <20240326085037.0142d7dadc702e3b49a3251e@kernel.org>
+In-Reply-To: <D036AJAEAOUF.34494O217N0RI@kernel.org>
+References: <20240325215502.660-1-jarkko@kernel.org>
+	<D036AJAEAOUF.34494O217N0RI@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240325235018.2028408-1-yosryahmed@google.com>
-X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
-Message-ID: <20240325235018.2028408-10-yosryahmed@google.com>
-Subject: [RFC PATCH 9/9] mm: zswap: use zswap_entry_free() for partially
- initialized entries
-From: Yosry Ahmed <yosryahmed@google.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Yosry Ahmed <yosryahmed@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-zswap_entry_free() performs four types of cleanups before freeing a
-zswap_entry:
-- Deletes the entry from the LRU.
-- Frees compressed memory.
-- Puts the pool reference.
-- Uncharges the compressed memory and puts the objcg.
+On Tue, 26 Mar 2024 00:09:42 +0200
+"Jarkko Sakkinen" <jarkko@kernel.org> wrote:
 
-zswap_entry_free() always expects a fully initialized entry. Allow
-zswap_entry_free() to handle partially initialized entries by making it
-possible to identify what cleanups are needed as follows:
-- Allocate entries with __GFP_ZERO and initialize zswap_entry.lru when
-  the entry is allocated. Points are NULL and length is zero upon
-  initialization.
-- Use zswap_entry.length to identify if there is compressed memory to
-  free. This is possible now that zero-filled pages are handled
-  separately, so a length of zero means we did not successfully compress
-  the page.
-- Only initialize entry->objcg after the memory is charged in
-  zswap_store().
+> On Mon Mar 25, 2024 at 11:55 PM EET, Jarkko Sakkinen wrote:
+> > +#ifdef CONFIG_MODULES
+> >  	if (register_module_notifier(&trace_kprobe_module_nb))
+> >  		return -EINVAL;
+> > +#endif /* CONFIG_MODULES */
+> 
+> register_module_notifier() does have "dummy" version but what
+> would I pass to it. It makes more mess than it cleans to declare
+> also a "dummy" version of trace_kprobe_module_nb.
 
-With this in place, use zswap_entry_free() in the failure path of
-zswap_store() to cleanup partially initialized entries. This simplifies
-the cleanup code in zswap_store(). While we are at it, rename the
-remaining cleanup labels to more meaningful names.
+That is better than having #ifdef in the function.
 
-Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
----
- mm/zswap.c | 62 ++++++++++++++++++++++++++----------------------------
- 1 file changed, 30 insertions(+), 32 deletions(-)
+> 
+> The callback itself has too tight module subsystem bindings so
+> that they could be simply flagged with IS_DEFINED() (or correct
+> if I'm mistaken, this the conclusion I've ended up with).
 
-diff --git a/mm/zswap.c b/mm/zswap.c
-index 9357328d940af..c50f9df230ca3 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -774,12 +774,13 @@ void zswap_memcg_offline_cleanup(struct mem_cgroup *memcg)
- **********************************/
- static struct kmem_cache *zswap_entry_cache;
- 
--static struct zswap_entry *zswap_entry_cache_alloc(gfp_t gfp, int nid)
-+static struct zswap_entry *zswap_entry_cache_alloc(int nid)
- {
- 	struct zswap_entry *entry;
--	entry = kmem_cache_alloc_node(zswap_entry_cache, gfp, nid);
--	if (!entry)
--		return NULL;
-+	entry = kmem_cache_alloc_node(zswap_entry_cache,
-+				      GFP_KERNEL | __GFP_ZERO, nid);
-+	if (entry)
-+		INIT_LIST_HEAD(&entry->lru);
- 	return entry;
+Please try this.
+
+-----
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 70dc6179086e..bc98db14927f 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -2625,6 +2625,7 @@ static void remove_module_kprobe_blacklist(struct module *mod)
+ 	}
  }
  
-@@ -795,9 +796,12 @@ static struct zpool *zswap_find_zpool(struct zswap_entry *entry)
++#ifdef CONFIG_MODULES
+ /* Module notifier call back, checking kprobes on the module */
+ static int kprobes_module_callback(struct notifier_block *nb,
+ 				   unsigned long val, void *data)
+@@ -2675,6 +2676,9 @@ static int kprobes_module_callback(struct notifier_block *nb,
+ 	mutex_unlock(&kprobe_mutex);
+ 	return NOTIFY_DONE;
+ }
++#else
++#define kprobes_module_callback	(NULL)
++#endif
  
- static void zswap_entry_free(struct zswap_entry *entry)
- {
--	zswap_lru_del(&zswap_list_lru, entry);
--	zpool_free(zswap_find_zpool(entry), entry->handle);
--	zswap_pool_put(entry->pool);
-+	if (!list_empty(&entry->lru))
-+		zswap_lru_del(&zswap_list_lru, entry);
-+	if (entry->length)
-+		zpool_free(zswap_find_zpool(entry), entry->handle);
-+	if (entry->pool)
-+		zswap_pool_put(entry->pool);
- 	if (entry->objcg) {
- 		obj_cgroup_uncharge_zswap(entry->objcg, entry->length);
- 		obj_cgroup_put(entry->objcg);
-@@ -1447,7 +1451,7 @@ bool zswap_store(struct folio *folio)
- 		return false;
+ static struct notifier_block kprobe_module_nb = {
+ 	.notifier_call = kprobes_module_callback,
+@@ -2739,7 +2743,7 @@ static int __init init_kprobes(void)
+ 	err = arch_init_kprobes();
+ 	if (!err)
+ 		err = register_die_notifier(&kprobe_exceptions_nb);
+-	if (!err)
++	if (!err && IS_ENABLED(CONFIG_MODULES))
+ 		err = register_module_notifier(&kprobe_module_nb);
  
- 	if (!zswap_enabled)
--		goto check_old;
-+		goto erase_old;
- 
- 	/* Check cgroup limits */
- 	objcg = get_obj_cgroup_from_folio(folio);
-@@ -1455,54 +1459,52 @@ bool zswap_store(struct folio *folio)
- 		memcg = get_mem_cgroup_from_objcg(objcg);
- 		if (shrink_memcg(memcg)) {
- 			mem_cgroup_put(memcg);
--			goto reject;
-+			goto put_objcg;
- 		}
- 		mem_cgroup_put(memcg);
- 	}
- 
- 	if (zswap_is_folio_zero_filled(folio)) {
- 		if (zswap_store_zero_filled(tree, offset, objcg))
--			goto reject;
-+			goto put_objcg;
- 		goto stored;
- 	}
- 
- 	if (!zswap_non_zero_filled_pages_enabled)
--		goto reject;
-+		goto put_objcg;
- 
- 	if (!zswap_check_limit())
--		goto reject;
-+		goto put_objcg;
- 
--	entry = zswap_entry_cache_alloc(GFP_KERNEL, folio_nid(folio));
-+	entry = zswap_entry_cache_alloc(folio_nid(folio));
- 	if (!entry) {
- 		zswap_reject_kmemcache_fail++;
--		goto reject;
-+		goto put_objcg;
- 	}
- 
--	/* if entry is successfully added, it keeps the reference */
- 	entry->pool = zswap_pool_current_get();
- 	if (!entry->pool)
--		goto freepage;
-+		goto free_entry;
- 
- 	if (objcg) {
- 		memcg = get_mem_cgroup_from_objcg(objcg);
- 		if (memcg_list_lru_alloc(memcg, &zswap_list_lru, GFP_KERNEL)) {
- 			mem_cgroup_put(memcg);
--			goto put_pool;
-+			goto free_entry;
- 		}
- 		mem_cgroup_put(memcg);
- 	}
- 
- 	if (!zswap_compress(folio, entry))
--		goto put_pool;
--
--	entry->swpentry = swp;
--	entry->objcg = objcg;
-+		goto free_entry;
- 
- 	if (zswap_tree_store(tree, offset, entry))
--		goto store_failed;
-+		goto free_entry;
- 
--	if (objcg)
-+	if (objcg) {
- 		obj_cgroup_charge_zswap(objcg, entry->length);
-+		entry->objcg = objcg;
-+	}
- 
- 	/*
- 	 * We finish initializing the entry while it's already in xarray.
-@@ -1514,7 +1516,7 @@ bool zswap_store(struct folio *folio)
- 	 *    The publishing order matters to prevent writeback from seeing
- 	 *    an incoherent entry.
- 	 */
--	INIT_LIST_HEAD(&entry->lru);
-+	entry->swpentry = swp;
- 	zswap_lru_add(&zswap_list_lru, entry);
- 
- stored:
-@@ -1525,17 +1527,13 @@ bool zswap_store(struct folio *folio)
- 
- 	return true;
- 
--store_failed:
--	zpool_free(zswap_find_zpool(entry), entry->handle);
--put_pool:
--	zswap_pool_put(entry->pool);
--freepage:
--	zswap_entry_cache_free(entry);
--reject:
-+free_entry:
-+	zswap_entry_free(entry);
-+put_objcg:
- 	obj_cgroup_put(objcg);
- 	if (zswap_pool_reached_full)
- 		queue_work(shrink_wq, &zswap_shrink_work);
--check_old:
-+erase_old:
- 	/*
- 	 * If the zswap store fails or zswap is disabled, we must invalidate the
- 	 * possibly stale entry which was previously stored at this offset.
--- 
-2.44.0.396.g6e790dbe36-goog
+ 	kprobes_initialized = (err == 0);
 
+-----
+
+Thank you,
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
