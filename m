@@ -1,35 +1,38 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4780229D69;
-	Mon, 25 Mar 2024 02:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF61158D93;
+	Mon, 25 Mar 2024 02:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711334429; cv=none; b=VnFs+MrpLAvZgjcsqUQRwsdOhTva/qCaaFRvWIwfaHsVC0nFonreB0ZKt/bdqmeolH/XKn2p84RFOBi2wlx6PnKwppM0v9Ps753DV6uSVAmigEWfM/WPxmr3XLhibKVpFN8FB1OXq3vaUiD+17RRMJXAUh/Xg8OaXUQdPRclwjA=
+	t=1711334797; cv=none; b=Gse2TUToqSgCeXJs8cQXnDgoxWqYOx2n+c2SxjtXsebMT5Df0Y3L08SJ18vZEoJNVFMHSh1Tt9RA7BmjgNV1pfMxKfRG7xIXp62wcu/5oGesS9vqiaYIdFuxQqGBsdIhcypVvUw51pbeQwOhfiWLyL4G8kIq466oM6NFaYk5CVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711334429; c=relaxed/simple;
-	bh=a6o0x0cn8UUWF8IiBFE8IjvcWmSjhyg4QzAPtf+k3zQ=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=MHZRQA9FYfQxyC5fdvT4/Ce9vob51Q6ITLAx+pipcqi40i0R8Arim19tafa7A3GD3vfs6WIuzNEhAUWvhHLYZhorPVJPJ4WskJ6wv6Yr9nYolhb/DP/LIm7Wf9PDdwUmdyx8ZfbJVtaXbPFkDhEwRUE1KpkZ+JbpE3uUpbynDMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oXKzRGUZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711334797; c=relaxed/simple;
+	bh=kvnYbAJYV+BV1WgQH3dwyoDwk6yHIMypMOMBm0WlAlU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jIAK8x3Dmu05oOs8BRFT7GZgSe+IGhjE0evNyedoQVi6DzUwpupFP7AgIpSt8EHv8b6ZyCdwtlkOxVTKFIexSOCXQwm2D4ohLCynxwvbuPUqXyGHCCtVSt6Y1B342aOZ3NOeeaO6odcrxLko7jp/LCsf98EgKhvdXKVJ5e5CYL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=CoxGe+7G; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oXKzRGUZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4FB0AC43394;
-	Mon, 25 Mar 2024 02:40:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711334428;
-	bh=a6o0x0cn8UUWF8IiBFE8IjvcWmSjhyg4QzAPtf+k3zQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=oXKzRGUZrsUezrRY4ojSaktWJPd4nySZTX249T7fZxdNxmseFhGvYQ+NhGylQDtU+
-	 1hIsl7EPRQbo50YQcRZ6BW/Opwij8Rt07l7G0czrcM/FgDW4daUPiBnP/rn06A7rn0
-	 z0sNJqpc4j69ys3BqI1k/CY9RmH+Zz5l8v2xUTviPRloRZB+UaFixm311YKRzDCha4
-	 SBj4Jn3jADBN4DqRqw7uo7Dsl+IjawOFvO9RK/PdC50kG1a364a6I2bW5J8GmY2NxQ
-	 vWLBjFE414DMKZrL4CM4UFGgKNWZyihy/19i7rDgtsMXK+EPzqFgEhPLewDLy5cY+M
-	 ax2Ub3wGxte8A==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 42100D2D0EC;
-	Mon, 25 Mar 2024 02:40:28 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="CoxGe+7G"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1711334790; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=hnj6QhXlwaft/coqoLJDZBScFt5gj/F5ruc7EbRseQw=;
+	b=CoxGe+7GO/repfGhTS6yPtCJ2TmcFS7a+LkcQoO96rax2jpdrQj1keUnqi7jBFm/i3vqbRhFaccbHaxOTxJzz1R3XSVx7Qd5Cws77xezpCR/TPErhjBulptpxYdQPjREoSc3upy8dwde8/0F5WBEgMcnaDG91vMG3QGzS13EA5k=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R661e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=yang.lee@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0W38I3D-_1711334789;
+Received: from localhost(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0W38I3D-_1711334789)
+          by smtp.aliyun-inc.com;
+          Mon, 25 Mar 2024 10:46:30 +0800
+From: Yang Li <yang.lee@linux.alibaba.com>
+To: konishi.ryusuke@gmail.com
+Cc: linux-nilfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yang Li <yang.lee@linux.alibaba.com>
+Subject: [PATCH -next 2/3 v2] fs: Add kernel-doc comments to nilfs_btree_convert_and_insert()
+Date: Mon, 25 Mar 2024 10:46:28 +0800
+Message-Id: <20240325024628.101296-1-yang.lee@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,39 +40,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v1] platform/chrome: use sysfs_emit() instead of sprintf()
-From: patchwork-bot+chrome-platform@kernel.org
-Message-Id: 
- <171133442826.31480.17940865345620526235.git-patchwork-notify@kernel.org>
-Date: Mon, 25 Mar 2024 02:40:28 +0000
-References: <20240314052828.186924-1-aichao@kylinos.cn>
-In-Reply-To: <20240314052828.186924-1-aichao@kylinos.cn>
-To: Ai Chao <aichao@kylinos.cn>
-Cc: bleung@chromium.org, tzungbi@kernel.org, chrome-platform@lists.linux.dev,
- linux-kernel@vger.kernel.org
 
-Hello:
+This commit adds kernel-doc style comments with complete parameter
+descriptions for the function nilfs_btree_convert_and_insert.
 
-This patch was applied to chrome-platform/linux.git (for-next)
-by Tzung-Bi Shih <tzungbi@kernel.org>:
+Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+---
+ fs/nilfs2/btree.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-On Thu, 14 Mar 2024 13:28:28 +0800 you wrote:
-> Follow the advice in Documentation/filesystems/sysfs.rst:
-> show() should only use sysfs_emit() or sysfs_emit_at() when formatting
-> the value to be returned to user space.
-> 
-> Signed-off-by: Ai Chao <aichao@kylinos.cn>
-> ---
->  drivers/platform/chrome/wilco_ec/sysfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-
-Here is the summary with links:
-  - [v1] platform/chrome: use sysfs_emit() instead of sprintf()
-    https://git.kernel.org/chrome-platform/c/f7496450528b
-
-You are awesome, thank you!
+diff --git a/fs/nilfs2/btree.c b/fs/nilfs2/btree.c
+index 65659fa0372e..de38012fd87c 100644
+--- a/fs/nilfs2/btree.c
++++ b/fs/nilfs2/btree.c
+@@ -1857,13 +1857,21 @@ nilfs_btree_commit_convert_and_insert(struct nilfs_bmap *btree,
+ }
+ 
+ /**
+- * nilfs_btree_convert_and_insert -
+- * @bmap:
+- * @key:
+- * @ptr:
+- * @keys:
+- * @ptrs:
+- * @n:
++ * nilfs_btree_convert_and_insert - Convert and insert entries into a B-tree
++ * @btree: NILFS B-tree structure
++ * @key: Key of the new entry to be inserted
++ * @ptr: Pointer (block number) associated with the key to be inserted
++ * @keys: Array of keys to be inserted in addition to @key
++ * @ptrs: Array of pointers associated with @keys
++ * @n: Number of keys and pointers in @keys and @ptrs
++ *
++ * This function is used to insert a new entry specified by @key and @ptr, along
++ * with additional entries specified by @keys and @ptrs arrays, into a NILFS B-tree.
++ * It prepares the necessary changes by allocating the required blocks and any
++ * necessary intermediate nodes. It converts configurations from other forms of block
++ * mapping (the one that currently exists is direct mapping) to a B-tree.
++ *
++ * Return: 0 on success or a negative error code on failure.
+  */
+ int nilfs_btree_convert_and_insert(struct nilfs_bmap *btree,
+ 				   __u64 key, __u64 ptr,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.20.1.7.g153144c
 
