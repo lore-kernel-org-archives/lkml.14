@@ -1,127 +1,116 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D58112FB14
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 14:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03FD17F7C1
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 14:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711376401; cv=none; b=IUF0bHK47lB4MhbqyjcStJZ8cLS69PWToGWbAC91qfRRPEwATZlrdBMEi0UGgrc1fubrfyLTiUyfFpZvtELCnTmseWK8A3g9rZLyYy3H2rJsaNBl0gUgxCMeBPdCLafcPk4k8fkSME6poNMVZMXy8OLdUC07QFLecsqVD23DMZw=
+	t=1711376443; cv=none; b=QSrcQhMJvnbUsXenmRfpbEOgR2zWH6NohpJj+SOCR7Dmf43ZmQRBdxgY2fFyJ9uLWgFq7Mb9iiW7Ixus9hsyOAQvAEQhkD5O1tB3UUaXDu0RwQSjFQhHOHkEcVmcU5QvqX6sLwrx9Z00fpUKEB8fru+Ull9UMP2zsiY0RZwoYn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711376401; c=relaxed/simple;
-	bh=u7jspQ3Aev3XJQiTO8vdl6msbbnJu1QvF4iX1a51EjA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oeTzoupCMasI73fDnzMXypS03ihaca054Wi7OAqD4ERydHd3B3F+kIrGDPKf4CJNTOjzAQ0Qdq23QQvhyDT2QrtYS+/0EiZC+WXE1mWbGbpQOwQTrvMtNnYO2ELuQnPYxWD0U7qEzmntCb/jaGDIQcIE0K24iE1bkzMpWEf78BA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RB5vHCsX; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1711376443; c=relaxed/simple;
+	bh=63TCN/grSYA1rWAH+qH7a+lfvhQsFmLttF5pjeCdXLk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VW3hfbdaIRAjycQlUADPT7YClohD5QJ0WD8W0mtw+/920Ldz/VPGdq3BrHah4HwQik+/1oA/gqHKyZnBKly5sOl/aDQ3yMccDzm8x87B3ql3VzogWbKtRDp/Ohtjz/E893SyQzLsBVX9WAR10MnvuQayXJAFIP+L/EUQh9A+Oc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=niS8Okqv; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RB5vHCsX"
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3c3ca4f939fso1011588b6e.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 07:19:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="niS8Okqv"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-78a3bccc420so209021285a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 07:20:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711376398; x=1711981198; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nxSMnfcXo9eH24y0bZB1VjxXV/n6bBssF/qdkJ/8rO0=;
-        b=RB5vHCsXeJQPDsX+7xtNvbzCW3xKQ555NM6Zy0cGCvBPID21EIiJ4z3pKU220Z+qO2
-         9ioq1PxHXvQYTj9/+pyu2b3l3mI8W3VFRn7UzSkMR1RbdrAP6HzUHeOzfNJSQlQjoF6M
-         s9qy8XEEochHe0t9LCq6Ww0AwjRwRrU8vnM8E=
+        d=ziepe.ca; s=google; t=1711376441; x=1711981241; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=o4khMi8YsL4x6qQRj8U1+7HQEKktCZ8TqyaiPDmkbrE=;
+        b=niS8OkqvREAy5sfkqblXb7DquNydE4CioXOa7hGbfZQF1yxQ4qltJ+ByyKehTHMvPC
+         8efjoZk/dQ3NrIbSJM6+TNMXxQiE2IcgKLuFwckAwk9eoJ/7X1cfVHwbCVcXy4C4RH1k
+         Fd6kETk7w19wS0Mlv+PdT2qSsWyZGfoMUyeS1baiVjVIKgMDf7cgU/Fkgf8MNlhzTPc4
+         Y8CgLv1oxcXBw/olWk0d480abcrQZtVx7XA0TDZMTJx4DZYEkpSX7Bjps46UlaCwRk3Y
+         VXQ6sLZKy9kPdBIEAR/YITwBDpgqTOUUmVOYKfPqjxSuzwvaguOPCaOuKMDzMJZYBjrP
+         YbAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711376398; x=1711981198;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nxSMnfcXo9eH24y0bZB1VjxXV/n6bBssF/qdkJ/8rO0=;
-        b=LrbQwMrYejxvsx0P78b0luXmoi6hZtwvV9ZVNdnHLAo6nuLt2cBlMvW6YNaLQPFNb/
-         tYQowvmuE1z6NWvMma+M94oRKYGESF0IJNrmSYcaxUiBi8pLSk+/ptBANjFz0kqpysrb
-         l3Vxkgy7PuDKnfDVhepuXPukbqBxR1hXBl7hEGo3+nutXX8C8k1tqHNpopXyqU5q5M4w
-         VgSKdWNttD4/Dgk6oR/+FnAjspQSf6sx92DzRbGqRAW4A+nUs3Xw8EwNO9lUzuHRiUT6
-         daL2i9TBDiIIY5Pn8E6afoOL6EwrNEEWTrHitA1ruzIxgPhOfb+SlkKipGauIfFeD09x
-         GT6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXl4glo1YE2NNhonvCksGcuPB9II3CyDwdXL2f3RhOtUIg0OplsganIVuN/Mm0UNqiz43iTDlOQCg0Bl+5ZhiYb1EA0prvNnhtN3Jrp
-X-Gm-Message-State: AOJu0Yze1hJ28LeMz7sdq6UfESKjg9EuSXXDicZPG4yxu7CtMN6XPgrP
-	qg5Pvab4HkfdvNAkEC1NTD9NzPjcDVlS2yC39a+qvCkefoJJc101QFSVytNGKQ==
-X-Google-Smtp-Source: AGHT+IFXDkHwTGNUZBxyMK2jzEutUrDBtNUTzl+YFRneAkQppTPw7jEE9XRF/qu3laG74FPOuty29Q==
-X-Received: by 2002:a05:6808:15a0:b0:3c3:c923:4f03 with SMTP id t32-20020a05680815a000b003c3c9234f03mr6512221oiw.19.1711376398398;
-        Mon, 25 Mar 2024 07:19:58 -0700 (PDT)
-Received: from denia.c.googlers.com (188.173.86.34.bc.googleusercontent.com. [34.86.173.188])
-        by smtp.gmail.com with ESMTPSA id br11-20020a05622a1e0b00b00430a9b20a55sm2618759qtb.69.2024.03.25.07.19.57
+        d=1e100.net; s=20230601; t=1711376441; x=1711981241;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o4khMi8YsL4x6qQRj8U1+7HQEKktCZ8TqyaiPDmkbrE=;
+        b=uZqMwcVLuEJDR2d6f9zbcZLYEUAQxIHmx4LjYP3p50X43cd4gx4JQ+xnqyxYnGoSji
+         tbiK/p2L3TIPSFg0umONu6oieNN+mdW53a/YAGLGdQ88aMMj7X3UJjKHSSKNSMC5wU+P
+         cpJHf+Wx463S5QC7b2oAal3KSqI6adJGl4JNE6tw2NRYcGKQWmX9R1T2fOpy2bZdDdEt
+         XY+IJ7Cc7OObIANbC7+SRgFa5Ljg0rL3HwNmwI8LzvlrCM0nnsht20loCnFva13rojVs
+         cFHXoN2ORacR91D5I784eOkn0H+4tUk75c1TVrE3OhD+YM24NX8gK+Q9WJwnRaNJEkrE
+         xYMA==
+X-Forwarded-Encrypted: i=1; AJvYcCVxzRfwqMRCVyCCDcRlFMtcfjn/U9CWRpdQ67plk/FfX45P6kTmvov9fh0ud/1hzFeyjvkZ9YHaDG2L1XrzQYngQef+Z9otKQYtIsnk
+X-Gm-Message-State: AOJu0YyKy2Udj87gyP6bIg7ZFOIfIK1httAWCzJd1wwZhDLng2r8D0ZU
+	FaId6l2FKw+oBZC8PkABwI+Gt6s4cd8puhK9MTsQKzR3LTN6Z4RcnWu450VQqFY=
+X-Google-Smtp-Source: AGHT+IEIDvH4aJX0QxV4yhRacQicWFP/ioH96fdSaZc4HTl73ipKGoKLrbARimpUoqXo7Z7Mj3Cjjg==
+X-Received: by 2002:ae9:e64a:0:b0:789:e917:ac8d with SMTP id x10-20020ae9e64a000000b00789e917ac8dmr12632qkl.71.1711376440895;
+        Mon, 25 Mar 2024 07:20:40 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id ou8-20020a05620a620800b007882e204d45sm2170804qkn.37.2024.03.25.07.20.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 07:19:57 -0700 (PDT)
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Mon, 25 Mar 2024 14:19:55 +0000
-Subject: [PATCH v2 3/3] media: dvbdev: Initialize sbuf
+        Mon, 25 Mar 2024 07:20:40 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1rokgy-000ME6-0a;
+	Mon, 25 Mar 2024 10:48:48 -0300
+Date: Mon, 25 Mar 2024 10:48:48 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
+	Bixuan Cui <cuibixuan@huawei.com>,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 3/3] iommu/arm-smmu-v3: support suspend/resume
+Message-ID: <20240325134848.GA8419@ziepe.ca>
+References: <20240324-smmu-v3-v1-0-11bc96e156a5@nxp.com>
+ <20240324-smmu-v3-v1-3-11bc96e156a5@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240325-gcc-arm-warnings-v2-3-47523cf5c8ca@chromium.org>
-References: <20240325-gcc-arm-warnings-v2-0-47523cf5c8ca@chromium.org>
-In-Reply-To: <20240325-gcc-arm-warnings-v2-0-47523cf5c8ca@chromium.org>
-To: Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, 
- Sowjanya Komatineni <skomatineni@nvidia.com>, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, linux-tegra@vger.kernel.org, 
- linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Ricardo Ribalda <ribalda@chromium.org>
-X-Mailer: b4 0.12.4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240324-smmu-v3-v1-3-11bc96e156a5@nxp.com>
 
-Because the size passed to copy_from_user() cannot be known beforehand,
-it needs to be checked during runtime with check_object_size. That makes
-gcc believe that the content of sbuf can be used before init.
+On Sun, Mar 24, 2024 at 08:29:00PM +0800, Peng Fan (OSS) wrote:
 
-Fix:
-./include/linux/thread_info.h:215:17: warning: ‘sbuf’ may be used uninitialized [-Wmaybe-uninitialized]
+> +static void arm_smmu_resume_unique_irqs(struct arm_smmu_device *smmu)
+> +{
+> +	struct device *dev = smmu->dev;
+> +	struct msi_desc *desc;
+> +	struct msi_msg msg;
+> +
+> +	if (!dev->msi.domain)
+> +		return;
+> +
+> +	desc = irq_get_msi_desc(smmu->evtq.q.irq);
+> +	if (desc) {
+> +		get_cached_msi_msg(smmu->evtq.q.irq, &msg);
+> +		arm_smmu_write_msi_msg(desc, &msg);
+> +	}
+> +
+> +	desc = irq_get_msi_desc(smmu->gerr_irq);
+> +	if (desc) {
+> +		get_cached_msi_msg(smmu->gerr_irq, &msg);
+> +		arm_smmu_write_msi_msg(desc, &msg);
+> +	}
+> +
+> +	if (smmu->features & ARM_SMMU_FEAT_PRI) {
+> +		desc = irq_get_msi_desc(smmu->priq.q.irq);
+> +		if (desc) {
+> +			get_cached_msi_msg(smmu->priq.q.irq, &msg);
+> +			arm_smmu_write_msi_msg(desc, &msg);
+> +		}
+> +	}
+> +}
 
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
----
- drivers/media/dvb-core/dvbdev.c             | 2 +-
- drivers/staging/media/tegra-video/tegra20.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+I wonder if this should be done instead by converting the driver away
+from platform MSI to the new MSI mechanism?
 
-diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
-index 733d0bc4b4cc3..b43695bc51e75 100644
---- a/drivers/media/dvb-core/dvbdev.c
-+++ b/drivers/media/dvb-core/dvbdev.c
-@@ -956,7 +956,7 @@ int dvb_usercopy(struct file *file,
- 		 int (*func)(struct file *file,
- 			     unsigned int cmd, void *arg))
- {
--	char    sbuf[128];
-+	char    sbuf[128] = {};
- 	void    *mbuf = NULL;
- 	void    *parg = NULL;
- 	int     err  = -EINVAL;
-diff --git a/drivers/staging/media/tegra-video/tegra20.c b/drivers/staging/media/tegra-video/tegra20.c
-index c39b52d0e4447..630e2ff987a37 100644
---- a/drivers/staging/media/tegra-video/tegra20.c
-+++ b/drivers/staging/media/tegra-video/tegra20.c
-@@ -164,6 +164,7 @@ static void tegra20_vi_get_input_formats(struct tegra_vi_channel *chan,
- 	unsigned int input_mbus_code = chan->fmtinfo->code;
- 
- 	(*main_input_format) = VI_INPUT_INPUT_FORMAT_YUV422;
-+	(*yuv_input_format) = VI_INPUT_YUV_INPUT_FORMAT_UYVY;
- 
- 	switch (input_mbus_code) {
- 	case MEDIA_BUS_FMT_UYVY8_2X8:
-@@ -176,7 +177,6 @@ static void tegra20_vi_get_input_formats(struct tegra_vi_channel *chan,
- 		(*yuv_input_format) = VI_INPUT_YUV_INPUT_FORMAT_YUYV;
- 		break;
- 	case MEDIA_BUS_FMT_YVYU8_2X8:
--	default:
- 		(*yuv_input_format) = VI_INPUT_YUV_INPUT_FORMAT_YVYU;
- 		break;
- 	}
-
--- 
-2.44.0.396.g6e790dbe36-goog
-
+Jason
