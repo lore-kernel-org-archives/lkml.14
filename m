@@ -1,757 +1,1461 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2A014C596
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 16:46:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB3714A4D0;
+	Mon, 25 Mar 2024 16:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711385221; cv=none; b=BaUK1xpE8dkBUDranYZR7FqKHQrlXkv0+XIUJObH2vYi52K2E60E4O+j8pBwlk5js7J9PhXrzV8+7p33Lg4h+aiS9g43A7wRDHMTxXwjiN/IIPHoSL0UP/LePlgh5bgMvTjWWsEPpBUSgpgozDqNNqHQgwHdagJNnoWLW+S0kUE=
+	t=1711385217; cv=none; b=L01JUrpJcoByblJlrED/L17YUyrHt4avVnYgjx3qNjtklKRdsnV4Yg7JGH7Cerz17PXRxVvldR6dUhQ9HT0rQdfiOHBXZlG7x7LzrXI0rwABfoIup35/DE0Ri5/U5Y1nU8LVD/2wBarF1xcv+NBYqJDFnwWOMI5MQDg4v+a4Gbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711385221; c=relaxed/simple;
-	bh=FqIY1sprUXS/JaBX1u1qozD0GPZzdZxPKznO3xJ5GfI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FtTFBy6hEL8JmZfW7GCLZWXCqbRnVOhFHdryEIRHrNc39rvYAT9fvOtSVCdQADnri3dI67jX2BnfxvKOPrcaXKhKdVW6kxQAjq6tY9w5xql0J+6kM8qRjR+IdNOtUCPVnCgGRsRb73okEOGwAvCPHvNEjNpM6WMr060lbXGm+2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pzELG34j; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711385217; c=relaxed/simple;
+	bh=5JHy1NXsgqyWVcr1iYWVO8inKt9LaqHRX4NgPmuAOtc=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=gspmFL59wvU9tZaz1R+So1QwwbVwJa6qbH3IUm3DK4RQ0F5OHKQgZRwYWbqtwRqu4jpK8tFbY8ox9gA5LZDc8qF0FKyoxduSnz2WscTo3YCVGlfRTVMYQTKkvRI05Cr09umQTiejnqkfoglie4NQ4Iq+AKftOZTlUq+5cGDM5Lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pC9Wzcdl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3i3141YU; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pzELG34j"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e74aa08d15so3063637b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 09:46:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711385217; x=1711990017; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vQDF2SDTd4V6IlnIOxTmsOjY1nuIqh4FOvtswWJxXlw=;
-        b=pzELG34j3rMjDUf7064K8NH3XaJrVPjx1+Ghx8HfNRGl3ozImAplIUfpVi+Oi9gmwP
-         gMUXqiCHE32HvblSElkiTqpFNo6UHlPOSrz5Oc+Rg2TgqthQSZ3tRnkIdsaHlPwKXABy
-         Lz96KgjeEEWnizuX0KHWZVaz8NHciEQqsUdCZXLFzutnA1MzlzqhRuhaZI8oZ3QWY+lA
-         VGG5TXVOIPhFtwaCHDerVbr2VW1s5BRqKhJRHyuSJMGWjxtIKdOI7umGUvEAYw8tg6NA
-         tcZAUn9HbZa68iLv4E0yRmXDAkPtck0UlEqDz9cUA0gXwSq9WdyHYddiCeVjP+/JsKLT
-         W6Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711385217; x=1711990017;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vQDF2SDTd4V6IlnIOxTmsOjY1nuIqh4FOvtswWJxXlw=;
-        b=HFM2fTL+S7KHwp0T9Cvqv6B3vKoDeYmKzT1qzcNoyuNFTtZHVnwaOyOYRe6bcE3wJS
-         yoYEEX9Y3DUVyBUXvaZTsQVzbnpIBNmiBgUgm26PgFihy5o6lXtLnn/5FY1eFeJ9bYux
-         kPNHuz619gSEgFVcFQYGSaQw+s9Td3KcWrUBQtUtHNI1fnCK0+FpYXdpL3dePn0fwE8t
-         7leMv12Jn5PnPTQgp1qJYknVsFQAcZnvhSuAdGXPpw5dveM8q2PH06uLv2C9GCIUvBxV
-         d2v3Xx2z8R5i0L1B4mk9DwDbSoMKUDhC1kCQpEr6lndpNU9k5bhN8cnCCLK78I3EfOKE
-         z40w==
-X-Forwarded-Encrypted: i=1; AJvYcCXXfSchmSdB8ugQ9H7Enbu8H0yPENXiR5edTvXhFQHlsu+nLthYtvMYCeBq4NEbT+fH37z0kFqCAhPcW49kSx2ToGrG+ecvazrmEMdS
-X-Gm-Message-State: AOJu0Yzp0eCumt3kbf/JaRLwXwqatRqXCYr6c0R/Ex56rtnhA37FKJWQ
-	W2Ur7TIq1b0iy2Ro2+Pgy9LeR93Bv97zqHc4Ti1y+DVdGoZ4SRUtOiRWjiFMah4=
-X-Google-Smtp-Source: AGHT+IE+mKPAKGhu+ZWBpZSWV61ecvvX2aDzJX8uj06QYD+ui9MDsriX6vj6P6gpuiKnm7Kk+7yQSQ==
-X-Received: by 2002:a05:6a00:9393:b0:6e7:3726:ddd2 with SMTP id ka19-20020a056a00939300b006e73726ddd2mr10686921pfb.17.1711385217148;
-        Mon, 25 Mar 2024 09:46:57 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:4a22:28de:eba3:89d1])
-        by smtp.gmail.com with ESMTPSA id k10-20020aa790ca000000b006e6b12d650asm4283467pfk.31.2024.03.25.09.46.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 09:46:56 -0700 (PDT)
-Date: Mon, 25 Mar 2024 10:46:52 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	op-tee@lists.trustedfirmware.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 1/4] remoteproc: Add TEE support
-Message-ID: <ZgGqfItYtkUUvlxf@p14s>
-References: <20240308144708.62362-1-arnaud.pouliquen@foss.st.com>
- <20240308144708.62362-2-arnaud.pouliquen@foss.st.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pC9Wzcdl";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3i3141YU"
+Date: Mon, 25 Mar 2024 16:46:51 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1711385212;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qRZRt8tkdxiqx3TRm5besvOsCMdJIb85OQU0OPYF1TA=;
+	b=pC9WzcdlUp1eP1u/gVQmx72uNbNInGbDJnXoc/2Md+Y9eriaD+lhC3u4vymNqfhAaVyciz
+	p9UKTGva1RJYEiyzkNwmOJ0XDc0SQ4rKlW/hk2rOa3PgmApFDibNuJ/EjR25GQ7ZSU08Oa
+	baUdllEPxWgikwUK03jg0FGN8QTgLGID6IgduZkqEpDrs/yGE2htZF8GNiptl4FnGD4lJs
+	oI9sTu3nWliRqcB1uCH9fCifF1fMHR9Iqzgan6Rt+MlFUMkbc2AwkUGVmp3DDkMsX0VSEQ
+	FsSqAFT8gvAbg3JejLKEikBOMQJyPNVq2IjEycBmBcrDqzf9kv1Lm6cesPgi2Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1711385212;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qRZRt8tkdxiqx3TRm5besvOsCMdJIb85OQU0OPYF1TA=;
+	b=3i3141YUW9LWCJHbqN0CJDI+g5STf/caggCv6SxboCkCvV0wFEf42vyWy2GVDgdZKXk6UK
+	RvgjzqOduzgHCHAw==
+From: "tip-bot2 for Anup Patel" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: irq/core] irqchip: Add RISC-V incoming MSI controller early driver
+Cc: Anup Patel <apatel@ventanamicro.com>, Thomas Gleixner <tglx@linutronix.de>,
+ bjorn@rivosinc.com, x86@kernel.org, linux-kernel@vger.kernel.org,
+ maz@kernel.org
+In-Reply-To: <20240307140307.646078-3-apatel@ventanamicro.com>
+References: <20240307140307.646078-3-apatel@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240308144708.62362-2-arnaud.pouliquen@foss.st.com>
+Message-ID: <171138521125.10875.17215796232935000909.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 08, 2024 at 03:47:05PM +0100, Arnaud Pouliquen wrote:
-> Add a remoteproc TEE (Trusted Execution Environment) driver
-> that will be probed by the TEE bus. If the associated Trusted
-> application is supported on secure part this device offers a client
+The following commit has been merged into the irq/core branch of tip:
 
-Device or driver?  I thought I touched on that before.
+Commit-ID:     21a8f8a0eb35ceb21e2c9ddd87468bc3b5ac87c0
+Gitweb:        https://git.kernel.org/tip/21a8f8a0eb35ceb21e2c9ddd87468bc3b5a=
+c87c0
+Author:        Anup Patel <apatel@ventanamicro.com>
+AuthorDate:    Thu, 07 Mar 2024 19:33:00 +05:30
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Mon, 25 Mar 2024 17:38:28 +01:00
 
-> interface to load a firmware in the secure part.
-> This firmware could be authenticated by the secure trusted application.
-> 
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-> ---
-> Updates from V3:
-> - rework TEE_REMOTEPROC description in Kconfig
-> - fix some namings
-> - add tee_rproc_parse_fw  to support rproc_ops::parse_fw
-> - add proc::tee_interface;
-> - add rproc struct as parameter of the tee_rproc_register() function
-> ---
->  drivers/remoteproc/Kconfig          |  10 +
->  drivers/remoteproc/Makefile         |   1 +
->  drivers/remoteproc/tee_remoteproc.c | 434 ++++++++++++++++++++++++++++
->  include/linux/remoteproc.h          |   4 +
->  include/linux/tee_remoteproc.h      | 112 +++++++
->  5 files changed, 561 insertions(+)
->  create mode 100644 drivers/remoteproc/tee_remoteproc.c
->  create mode 100644 include/linux/tee_remoteproc.h
-> 
-> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> index 48845dc8fa85..2cf1431b2b59 100644
-> --- a/drivers/remoteproc/Kconfig
-> +++ b/drivers/remoteproc/Kconfig
-> @@ -365,6 +365,16 @@ config XLNX_R5_REMOTEPROC
->  
->  	  It's safe to say N if not interested in using RPU r5f cores.
->  
-> +
-> +config TEE_REMOTEPROC
-> +	tristate "remoteproc support by a TEE application"
+irqchip: Add RISC-V incoming MSI controller early driver
 
-s/remoteproc/Remoteproc
+The RISC-V advanced interrupt architecture (AIA) specification
+defines a new MSI controller called incoming message signalled
+interrupt controller (IMSIC) which manages MSI on per-HART (or
+per-CPU) basis. It also supports IPIs as software injected MSIs.
+(For more details refer https://github.com/riscv/riscv-aia)
 
-> +	depends on OPTEE
-> +	help
-> +	  Support a remote processor with a TEE application. The Trusted
-> +	  Execution Context is responsible for loading the trusted firmware
-> +	  image and managing the remote processor's lifecycle.
-> +	  This can be either built-in or a loadable module.
-> +
->  endif # REMOTEPROC
->  
->  endmenu
-> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
-> index 91314a9b43ce..fa8daebce277 100644
-> --- a/drivers/remoteproc/Makefile
-> +++ b/drivers/remoteproc/Makefile
-> @@ -36,6 +36,7 @@ obj-$(CONFIG_RCAR_REMOTEPROC)		+= rcar_rproc.o
->  obj-$(CONFIG_ST_REMOTEPROC)		+= st_remoteproc.o
->  obj-$(CONFIG_ST_SLIM_REMOTEPROC)	+= st_slim_rproc.o
->  obj-$(CONFIG_STM32_RPROC)		+= stm32_rproc.o
-> +obj-$(CONFIG_TEE_REMOTEPROC)		+= tee_remoteproc.o
->  obj-$(CONFIG_TI_K3_DSP_REMOTEPROC)	+= ti_k3_dsp_remoteproc.o
->  obj-$(CONFIG_TI_K3_R5_REMOTEPROC)	+= ti_k3_r5_remoteproc.o
->  obj-$(CONFIG_XLNX_R5_REMOTEPROC)	+= xlnx_r5_remoteproc.o
-> diff --git a/drivers/remoteproc/tee_remoteproc.c b/drivers/remoteproc/tee_remoteproc.c
-> new file mode 100644
-> index 000000000000..c855210e52e3
-> --- /dev/null
-> +++ b/drivers/remoteproc/tee_remoteproc.c
-> @@ -0,0 +1,434 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (C) STMicroelectronics 2024 - All Rights Reserved
-> + * Author: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-> + */
-> +
-> +#include <linux/firmware.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/remoteproc.h>
-> +#include <linux/slab.h>
-> +#include <linux/tee_drv.h>
-> +#include <linux/tee_remoteproc.h>
-> +
-> +#include "remoteproc_internal.h"
-> +
-> +#define MAX_TEE_PARAM_ARRY_MEMBER	4
-> +
-> +/*
-> + * Authentication of the firmware and load in the remote processor memory
-> + *
-> + * [in]  params[0].value.a:	unique 32bit identifier of the remote processor
-> + * [in]	 params[1].memref:	buffer containing the image of the buffer
-> + */
-> +#define TA_RPROC_FW_CMD_LOAD_FW		1
-> +
-> +/*
-> + * Start the remote processor
-> + *
-> + * [in]  params[0].value.a:	unique 32bit identifier of the remote processor
-> + */
-> +#define TA_RPROC_FW_CMD_START_FW	2
-> +
-> +/*
-> + * Stop the remote processor
-> + *
-> + * [in]  params[0].value.a:	unique 32bit identifier of the remote processor
-> + */
-> +#define TA_RPROC_FW_CMD_STOP_FW		3
-> +
-> +/*
-> + * Return the address of the resource table, or 0 if not found
-> + * No check is done to verify that the address returned is accessible by
-> + * the non secure context. If the resource table is loaded in a protected
-> + * memory the access by the non secure context will lead to a data abort.
-> + *
-> + * [in]  params[0].value.a:	unique 32bit identifier of the remote processor
-> + * [out]  params[1].value.a:	32bit LSB resource table memory address
-> + * [out]  params[1].value.b:	32bit MSB resource table memory address
-> + * [out]  params[2].value.a:	32bit LSB resource table memory size
-> + * [out]  params[2].value.b:	32bit MSB resource table memory size
-> + */
-> +#define TA_RPROC_FW_CMD_GET_RSC_TABLE	4
-> +
-> +/*
-> + * Return the address of the core dump
-> + *
-> + * [in]  params[0].value.a:	unique 32bit identifier of the remote processor
-> + * [out] params[1].memref:	address of the core dump image if exist,
-> + *				else return Null
-> + */
-> +#define TA_RPROC_FW_CMD_GET_COREDUMP	5
-> +
-> +struct tee_rproc_context {
-> +	struct list_head sessions;
-> +	struct tee_context *tee_ctx;
-> +	struct device *dev;
-> +};
-> +
-> +static struct tee_rproc_context *tee_rproc_ctx;
-> +
-> +static void tee_rproc_prepare_args(struct tee_rproc *trproc, int cmd,
-> +				   struct tee_ioctl_invoke_arg *arg,
-> +				   struct tee_param *param,
-> +				   unsigned int num_params)
-> +{
-> +	memset(arg, 0, sizeof(*arg));
-> +	memset(param, 0, MAX_TEE_PARAM_ARRY_MEMBER * sizeof(*param));
-> +
-> +	arg->func = cmd;
-> +	arg->session = trproc->session_id;
-> +	arg->num_params = num_params + 1;
-> +
-> +	param[0] = (struct tee_param) {
-> +		.attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT,
-> +		.u.value.a = trproc->rproc_id,
-> +	};
-> +}
-> +
-> +int tee_rproc_load_fw(struct rproc *rproc, const struct firmware *fw)
-> +{
-> +	struct tee_ioctl_invoke_arg arg;
-> +	struct tee_param param[MAX_TEE_PARAM_ARRY_MEMBER];
-> +	struct tee_rproc *trproc = rproc->tee_interface;
-> +	struct tee_shm *fw_shm;
-> +	int ret;
+Add an early irqchip driver for RISC-V IMSIC which sets up the
+IMSIC state and provide IPIs.
 
-Declarations in reverse ascending order here and everywhere in the driver.
-Sometimes it is done properly, sometimes it isn't. 
+Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+Reviewed-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+Link: https://lore.kernel.org/r/20240307140307.646078-3-apatel@ventanamicro.c=
+om
 
-> +
-> +	if (!trproc)
-> +		return -EINVAL;
-> +
-> +	fw_shm = tee_shm_register_kernel_buf(tee_rproc_ctx->tee_ctx, (void *)fw->data, fw->size);
-> +	if (IS_ERR(fw_shm))
-> +		return PTR_ERR(fw_shm);
-> +
-> +	tee_rproc_prepare_args(trproc, TA_RPROC_FW_CMD_LOAD_FW, &arg, param, 1);
-> +
-> +	/* Provide the address of the firmware image */
-> +	param[1] = (struct tee_param) {
-> +		.attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT,
-> +		.u.memref = {
-> +			.shm = fw_shm,
-> +			.size = fw->size,
-> +			.shm_offs = 0,
-> +		},
-> +	};
-> +
-> +	ret = tee_client_invoke_func(tee_rproc_ctx->tee_ctx, &arg, param);
-> +	if (ret < 0 || arg.ret != 0) {
-> +		dev_err(tee_rproc_ctx->dev,
-> +			"TA_RPROC_FW_CMD_LOAD_FW invoke failed TEE err: %x, ret:%x\n",
-> +			arg.ret, ret);
-> +		if (!ret)
-> +			ret = -EIO;
-> +	}
-> +
-> +	tee_shm_free(fw_shm);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(tee_rproc_load_fw);
-> +
-> +struct resource_table *tee_rproc_get_loaded_rsc_table(struct rproc *rproc, size_t *table_sz)
-> +{
-> +	struct tee_ioctl_invoke_arg arg;
-> +	struct tee_param param[MAX_TEE_PARAM_ARRY_MEMBER];
-> +	struct tee_rproc *trproc = rproc->tee_interface;
-> +	struct resource_table *rsc_table;
-> +	int ret;
-> +
-> +	if (!trproc)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	tee_rproc_prepare_args(trproc, TA_RPROC_FW_CMD_GET_RSC_TABLE, &arg, param, 2);
-> +
-> +	param[1].attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT;
-> +	param[2].attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT;
-> +
-> +	ret = tee_client_invoke_func(tee_rproc_ctx->tee_ctx, &arg, param);
-> +	if (ret < 0 || arg.ret != 0) {
-> +		dev_err(tee_rproc_ctx->dev,
-> +			"TA_RPROC_FW_CMD_GET_RSC_TABLE invoke failed TEE err: %x, ret:%x\n",
-> +			arg.ret, ret);
-> +		return ERR_PTR(-EIO);
-> +	}
-> +
-> +	*table_sz = param[2].u.value.a;
-> +
-> +	/* If the size is null no resource table defined in the image */
-> +	if (!*table_sz)
-> +		return NULL;
-> +
-> +	/* Store the resource table address that would be updated by the remote core. */
-> +	rsc_table = ioremap_wc(param[1].u.value.a, *table_sz);
-> +	if (IS_ERR_OR_NULL(rsc_table)) {
-> +		dev_err(tee_rproc_ctx->dev, "Unable to map memory region: %lld+%zx\n",
-> +			param[1].u.value.a, *table_sz);
-> +		return ERR_PTR(-ENOMEM);
-> +	}
-> +
-> +	return rsc_table;
-> +}
-> +EXPORT_SYMBOL_GPL(tee_rproc_get_loaded_rsc_table);
-> +
-> +int tee_rproc_parse_fw(struct rproc *rproc, const struct firmware *fw)
-> +{
-> +	struct tee_rproc *trproc = rproc->tee_interface;
-> +	struct resource_table *rsc_table;
-> +	size_t table_sz;
-> +	int ret;
-> +
-> +	ret = tee_rproc_load_fw(rproc, fw);
-> +	if (ret)
-> +		return ret;
-> +
-> +	rsc_table = tee_rproc_get_loaded_rsc_table(rproc, &table_sz);
-> +	if (IS_ERR(rsc_table))
-> +		return PTR_ERR(rsc_table);
-> +
-> +	/* Create a copy of the resource table to have same behaviour than the elf loader. */
-> +	rproc->cached_table = kmemdup(rsc_table, table_sz, GFP_KERNEL);
-> +	if (!rproc->cached_table)
-> +		return -ENOMEM;
+---
+ drivers/irqchip/Kconfig                 |   7 +-
+ drivers/irqchip/Makefile                |   1 +-
+ drivers/irqchip/irq-riscv-imsic-early.c | 201 +++++-
+ drivers/irqchip/irq-riscv-imsic-state.c | 865 +++++++++++++++++++++++-
+ drivers/irqchip/irq-riscv-imsic-state.h | 107 +++-
+ include/linux/cpuhotplug.h              |   1 +-
+ include/linux/irqchip/riscv-imsic.h     |  87 ++-
+ 7 files changed, 1269 insertions(+)
+ create mode 100644 drivers/irqchip/irq-riscv-imsic-early.c
+ create mode 100644 drivers/irqchip/irq-riscv-imsic-state.c
+ create mode 100644 drivers/irqchip/irq-riscv-imsic-state.h
+ create mode 100644 include/linux/irqchip/riscv-imsic.h
 
-Why not ->table_ptr and setting ->cached_table to NULL?
-
-> +
-> +	rproc->table_ptr = rproc->cached_table;
-> +	rproc->table_sz = table_sz;
-> +	trproc->rsc_table = rsc_table;
-
-I really don't see why this is needed, please remove and use rproc->table_ptr
-instead.
-
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(tee_rproc_parse_fw);
-> +
-> +struct resource_table *tee_rproc_find_loaded_rsc_table(struct rproc *rproc,
-> +						       const struct firmware *fw)
-> +{
-> +	struct tee_rproc *trproc = rproc->tee_interface;
-> +	struct resource_table *rsc_table;
-> +	size_t table_sz;
-> +
-> +	if (!trproc)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	/* Check if the resourse table has already been obtained in tee_rproc_parse_fw() */
-> +	if (trproc->rsc_table)
-> +		return trproc->rsc_table;
-
-Again, why not simply use rproc->rsc_table?  This function should only return
-the resource table that was set in tee_rproc_parse_fw(). 
-
-> +
-> +	rsc_table = tee_rproc_get_loaded_rsc_table(rproc, &table_sz);
-> +	if (IS_ERR(rsc_table))
-> +		return rsc_table;
-> +
-> +	rproc->table_sz = table_sz;
-> +	trproc->rsc_table = rsc_table;
-> +
-> +	return rsc_table;
-> +}
-> +EXPORT_SYMBOL_GPL(tee_rproc_find_loaded_rsc_table);
-> +
-> +int tee_rproc_start(struct rproc *rproc)
-> +{
-> +	struct tee_ioctl_invoke_arg arg;
-> +	struct tee_param param[MAX_TEE_PARAM_ARRY_MEMBER];
-> +	struct tee_rproc *trproc = rproc->tee_interface;
-> +	int ret;
-> +
-> +	if (!trproc)
-> +		return -EINVAL;
-> +
-> +	tee_rproc_prepare_args(trproc, TA_RPROC_FW_CMD_START_FW, &arg, param, 0);
-> +
-> +	ret = tee_client_invoke_func(tee_rproc_ctx->tee_ctx, &arg, param);
-> +	if (ret < 0 || arg.ret != 0) {
-> +		dev_err(tee_rproc_ctx->dev,
-> +			"TA_RPROC_FW_CMD_START_FW invoke failed TEE err: %x, ret:%x\n",
-> +			arg.ret, ret);
-> +		if (!ret)
-> +			ret = -EIO;
-> +	}
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(tee_rproc_start);
-> +
-> +int tee_rproc_stop(struct rproc *rproc)
-> +{
-> +	struct tee_ioctl_invoke_arg arg;
-> +	struct tee_param param[MAX_TEE_PARAM_ARRY_MEMBER];
-> +	struct tee_rproc *trproc = rproc->tee_interface;
-> +	int ret;
-> +
-> +	if (!trproc)
-> +		return -EINVAL;
-> +
-> +	tee_rproc_prepare_args(trproc, TA_RPROC_FW_CMD_STOP_FW, &arg, param, 0);
-> +
-> +	ret = tee_client_invoke_func(tee_rproc_ctx->tee_ctx, &arg, param);
-> +	if (ret < 0 || arg.ret != 0) {
-> +		dev_err(tee_rproc_ctx->dev,
-> +			"TA_RPROC_FW_CMD_STOP_FW invoke failed TEE err: %x, ret:%x\n",
-> +			arg.ret, ret);
-> +		if (!ret)
-> +			ret = -EIO;
-> +	}
-> +
-> +	if (!rproc->table_ptr)
-> +		return ret;
-> +
-> +	iounmap(trproc->rsc_table);
-> +	trproc->rsc_table = NULL;
-> +	rproc->table_ptr = NULL;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(tee_rproc_stop);
-> +
-> +static const struct tee_client_device_id stm32_tee_rproc_id_table[] = {
-> +	{UUID_INIT(0x80a4c275, 0x0a47, 0x4905,
-> +		   0x82, 0x85, 0x14, 0x86, 0xa9, 0x77, 0x1a, 0x08)},
-> +	{}
-> +};
-> +
-> +struct tee_rproc *tee_rproc_register(struct device *dev, struct rproc *rproc, unsigned int rproc_id)
-> +{
-> +	struct tee_client_device *tee_device;
-> +	struct tee_ioctl_open_session_arg sess_arg;
-> +	struct tee_param param[MAX_TEE_PARAM_ARRY_MEMBER];
-> +	struct tee_rproc *trproc;
-> +	int ret;
-> +
-> +	/*
-> +	 * Test if the device has been probed by the TEE bus. In case of failure, we ignore the
-> +	 * reason. The bus could be not yet probed or the service not available in the secure
-> +	 * firmware.The assumption in such a case is that the TEE remoteproc is not probed.
-> +	 */
-> +	if (!tee_rproc_ctx)
-> +		return ERR_PTR(-EPROBE_DEFER);
-> +
-> +	trproc =  devm_kzalloc(dev, sizeof(*trproc), GFP_KERNEL);
-> +	if (!trproc)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	tee_device = to_tee_client_device(tee_rproc_ctx->dev);
-> +	memset(&sess_arg, 0, sizeof(sess_arg));
-> +
-> +	memcpy(sess_arg.uuid, tee_device->id.uuid.b, TEE_IOCTL_UUID_LEN);
-> +
-> +	sess_arg.clnt_login = TEE_IOCTL_LOGIN_REE_KERNEL;
-> +	sess_arg.num_params = 1;
-> +
-> +	param[0] = (struct tee_param) {
-> +		.attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT,
-> +		.u.value.a = rproc_id,
-> +	};
-> +
-> +	ret = tee_client_open_session(tee_rproc_ctx->tee_ctx, &sess_arg, param);
-> +	if (ret < 0 || sess_arg.ret != 0) {
-> +		dev_err(dev, "tee_client_open_session failed, err: %x\n", sess_arg.ret);
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	trproc->parent =  dev;
-> +	trproc->rproc_id = rproc_id;
-> +	trproc->session_id = sess_arg.session;
-> +
-> +	trproc->rproc = rproc;
-> +	rproc->tee_interface = trproc;
-> +
-> +	list_add_tail(&trproc->node, &tee_rproc_ctx->sessions);
-> +
-> +	return trproc;
-
-Once this function was called by a client, what prevents a user from unloading
-the tee_remoteproc module and breaking everything?
-
-> +}
-> +EXPORT_SYMBOL_GPL(tee_rproc_register);
-> +
-> +int tee_rproc_unregister(struct tee_rproc *trproc)
-> +{
-
-If you pass a struct_rproc instead of a struct tee_rproc there is no need for
-tee_rproc::rproc, which is only ever used in this function.
-
-
-> +	struct rproc *rproc = trproc->rproc;
-> +	int ret;
-> +
-> +	ret = tee_client_close_session(tee_rproc_ctx->tee_ctx, trproc->session_id);
-> +	if (ret < 0)
-> +		dev_err(trproc->parent,	"tee_client_close_session failed, err: %x\n", ret);
-> +
-> +	list_del(&trproc->node);
-> +	rproc->tee_interface = NULL;
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(tee_rproc_unregister);
-> +
-> +static int tee_rproc_ctx_match(struct tee_ioctl_version_data *ver, const void *data)
-> +{
-> +	/* Today we support only the OP-TEE, could be extend to other tees */
-> +	return (ver->impl_id == TEE_IMPL_ID_OPTEE);
-> +}
-> +
-> +static int tee_rproc_probe(struct device *dev)
-> +{
-> +	struct tee_context *tee_ctx;
-> +	int ret;
-> +
-> +	/* Open context with TEE driver */
-> +	tee_ctx = tee_client_open_context(NULL, tee_rproc_ctx_match, NULL, NULL);
-> +	if (IS_ERR(tee_ctx))
-> +		return PTR_ERR(tee_ctx);
-> +
-> +	tee_rproc_ctx = devm_kzalloc(dev, sizeof(*tee_ctx), GFP_KERNEL);
-> +	if (!tee_rproc_ctx) {
-> +		ret = -ENOMEM;
-> +		goto err;
-> +	}
-> +
-> +	tee_rproc_ctx->dev = dev;
-> +	tee_rproc_ctx->tee_ctx = tee_ctx;
-> +	INIT_LIST_HEAD(&tee_rproc_ctx->sessions);
-> +
-> +	return 0;
-> +err:
-> +	tee_client_close_context(tee_ctx);
-> +
-> +	return ret;
-> +}
-> +
-> +static int tee_rproc_remove(struct device *dev)
-> +{
-> +	struct tee_rproc *entry, *tmp;
-> +
-> +	list_for_each_entry_safe(entry, tmp, &tee_rproc_ctx->sessions, node) {
-> +		tee_client_close_session(tee_rproc_ctx->tee_ctx, entry->session_id);
-> +		list_del(&entry->node);
-> +		if (entry->rsc_table)
-> +			iounmap(entry->rsc_table);
-> +		kfree(entry);
-> +	}
-> +
-> +	tee_client_close_context(tee_rproc_ctx->tee_ctx);
-> +
-> +	return 0;
-> +}
-> +
-> +MODULE_DEVICE_TABLE(tee, stm32_tee_rproc_id_table);
-> +
-> +static struct tee_client_driver tee_rproc_fw_driver = {
-> +	.id_table	= stm32_tee_rproc_id_table,
-> +	.driver		= {
-> +		.name		= KBUILD_MODNAME,
-> +		.bus		= &tee_bus_type,
-> +		.probe		= tee_rproc_probe,
-> +		.remove		= tee_rproc_remove,
-> +	},
-> +};
-> +
-> +static int __init tee_rproc_fw_mod_init(void)
-> +{
-> +	return driver_register(&tee_rproc_fw_driver.driver);
-> +}
-> +
-> +static void __exit tee_rproc_fw_mod_exit(void)
-> +{
-> +	driver_unregister(&tee_rproc_fw_driver.driver);
-> +}
-> +
-> +module_init(tee_rproc_fw_mod_init);
-> +module_exit(tee_rproc_fw_mod_exit);
-> +
-> +MODULE_DESCRIPTION(" TEE remote processor control driver");
-> +MODULE_LICENSE("GPL");
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index b4795698d8c2..8b678009e481 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -503,6 +503,8 @@ enum rproc_features {
->  	RPROC_MAX_FEATURES,
->  };
->  
-> +struct tee_rproc;
-> +
->  /**
->   * struct rproc - represents a physical remote processor device
->   * @node: list node of this rproc object
-> @@ -545,6 +547,7 @@ enum rproc_features {
->   * @cdev: character device of the rproc
->   * @cdev_put_on_release: flag to indicate if remoteproc should be shutdown on @char_dev release
->   * @features: indicate remoteproc features
-> + * @tee_interface: pointer to the remoteproc tee context
->   */
->  struct rproc {
->  	struct list_head node;
-> @@ -586,6 +589,7 @@ struct rproc {
->  	struct cdev cdev;
->  	bool cdev_put_on_release;
->  	DECLARE_BITMAP(features, RPROC_MAX_FEATURES);
-> +	struct tee_rproc *tee_interface;
->  };
->  
->  /**
-> diff --git a/include/linux/tee_remoteproc.h b/include/linux/tee_remoteproc.h
-> new file mode 100644
-> index 000000000000..571e47190d02
-> --- /dev/null
-> +++ b/include/linux/tee_remoteproc.h
-> @@ -0,0 +1,112 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + * Copyright(c) 2024 STMicroelectronics - All Rights Reserved
-> + */
-> +
-> +#ifndef TEE_REMOTEPROC_H
-> +#define TEE_REMOTEPROC_H
-> +
-> +#include <linux/tee_drv.h>
-> +#include <linux/firmware.h>
-> +#include <linux/remoteproc.h>
-> +
-> +struct rproc;
-> +
-> +/**
-> + * struct tee_rproc - TEE remoteproc structure
-> + * @node:		Reference in list
-> + * @rproc:		Remoteproc reference
-> + * @parent:		Parent device
-> + * @rproc_id:		Identifier of the target firmware
-> + * @session_id:		TEE session identifier
-> + * @rsc_table:		Resource table virtual address.
-> + */
-> +struct tee_rproc {
-> +	struct list_head node;
-> +	struct rproc *rproc;
-> +	struct device *parent;
-> +	u32 rproc_id;
-> +	u32 session_id;
-> +	struct resource_table *rsc_table;
-> +};
-> +
-> +#if IS_REACHABLE(CONFIG_TEE_REMOTEPROC)
-> +
-> +struct tee_rproc *tee_rproc_register(struct device *dev, struct rproc *rproc,
-> +				     unsigned int rproc_id);
-> +int tee_rproc_unregister(struct tee_rproc *trproc);
-> +int tee_rproc_parse_fw(struct rproc *rproc, const struct firmware *fw);
-> +int tee_rproc_load_fw(struct rproc *rproc, const struct firmware *fw);
-> +struct resource_table *tee_rproc_get_loaded_rsc_table(struct rproc *rproc, size_t *table_sz);
-> +struct resource_table *tee_rproc_find_loaded_rsc_table(struct rproc *rproc,
-> +						       const struct firmware *fw);
-> +int tee_rproc_start(struct rproc *rproc);
-> +int tee_rproc_stop(struct rproc *rproc);
-> +
-> +#else
-> +
-> +static inline struct tee_rproc *tee_rproc_register(struct device *dev, struct rproc *rproc,
-> +						   unsigned int rproc_id)
-> +{
-> +	return ERR_PTR(-ENODEV);
-> +}
-> +
-> +static int tee_rproc_parse_fw(struct rproc *rproc, const struct firmware *fw)
-> +{
-> +	/* This shouldn't be possible */
-> +	WARN_ON(1);
-> +
-> +	return 0;
-> +}
-> +
-> +static inline int tee_rproc_unregister(struct tee_rproc *trproc)
-> +{
-> +	/* This shouldn't be possible */
-> +	WARN_ON(1);
-> +
-> +	return 0;
-> +}
-> +
-> +static inline int tee_rproc_load_fw(struct rproc *rproc,  const struct firmware *fw)
-> +{
-> +	/* This shouldn't be possible */
-> +	WARN_ON(1);
-> +
-> +	return 0;
-> +}
-> +
-> +static inline int tee_rproc_start(struct rproc *rproc)
-> +{
-> +	/* This shouldn't be possible */
-> +	WARN_ON(1);
-> +
-> +	return 0;
-> +}
-> +
-> +static inline int tee_rproc_stop(struct rproc *rproc)
-> +{
-> +	/* This shouldn't be possible */
-> +	WARN_ON(1);
-> +
-> +	return 0;
-> +}
-> +
-> +static inline struct resource_table *
-> +tee_rproc_get_loaded_rsc_table(struct rproc *rproc, size_t *table_sz)
-> +{
-> +	/* This shouldn't be possible */
-> +	WARN_ON(1);
-> +
-> +	return NULL;
-> +}
-> +
-> +static inline struct resource_table *
-> +tee_rproc_find_loaded_rsc_table(struct rproc *rproc, const struct firmware *fw)
-> +{
-> +	/* This shouldn't be possible */
-> +	WARN_ON(1);
-> +
-> +	return NULL;
-> +}
-> +#endif /* CONFIG_TEE_REMOTEPROC */
-> +#endif /* TEE_REMOTEPROC_H */
-> -- 
-> 2.25.1
-> 
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 72c07a1..8610810 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -540,6 +540,13 @@ config RISCV_INTC
+ 	depends on RISCV
+ 	select IRQ_DOMAIN_HIERARCHY
+=20
++config RISCV_IMSIC
++	bool
++	depends on RISCV
++	select IRQ_DOMAIN_HIERARCHY
++	select GENERIC_IRQ_MATRIX_ALLOCATOR
++	select GENERIC_MSI_IRQ
++
+ config SIFIVE_PLIC
+ 	bool
+ 	depends on RISCV
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index ec4a183..972aa9f 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -95,6 +95,7 @@ obj-$(CONFIG_QCOM_MPM)			+=3D irq-qcom-mpm.o
+ obj-$(CONFIG_CSKY_MPINTC)		+=3D irq-csky-mpintc.o
+ obj-$(CONFIG_CSKY_APB_INTC)		+=3D irq-csky-apb-intc.o
+ obj-$(CONFIG_RISCV_INTC)		+=3D irq-riscv-intc.o
++obj-$(CONFIG_RISCV_IMSIC)		+=3D irq-riscv-imsic-state.o irq-riscv-imsic-earl=
+y.o
+ obj-$(CONFIG_SIFIVE_PLIC)		+=3D irq-sifive-plic.o
+ obj-$(CONFIG_STARFIVE_JH8100_INTC)	+=3D irq-starfive-jh8100-intc.o
+ obj-$(CONFIG_IMX_IRQSTEER)		+=3D irq-imx-irqsteer.o
+diff --git a/drivers/irqchip/irq-riscv-imsic-early.c b/drivers/irqchip/irq-ri=
+scv-imsic-early.c
+new file mode 100644
+index 0000000..886418e
+--- /dev/null
++++ b/drivers/irqchip/irq-riscv-imsic-early.c
+@@ -0,0 +1,201 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2021 Western Digital Corporation or its affiliates.
++ * Copyright (C) 2022 Ventana Micro Systems Inc.
++ */
++
++#define pr_fmt(fmt) "riscv-imsic: " fmt
++#include <linux/cpu.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/irq.h>
++#include <linux/irqchip.h>
++#include <linux/irqchip/chained_irq.h>
++#include <linux/module.h>
++#include <linux/spinlock.h>
++#include <linux/smp.h>
++
++#include "irq-riscv-imsic-state.h"
++
++static int imsic_parent_irq;
++
++#ifdef CONFIG_SMP
++static void imsic_ipi_send(unsigned int cpu)
++{
++	struct imsic_local_config *local =3D per_cpu_ptr(imsic->global.local, cpu);
++
++	writel_relaxed(IMSIC_IPI_ID, local->msi_va);
++}
++
++static void imsic_ipi_starting_cpu(void)
++{
++	/* Enable IPIs for current CPU. */
++	__imsic_id_set_enable(IMSIC_IPI_ID);
++}
++
++static void imsic_ipi_dying_cpu(void)
++{
++	/* Disable IPIs for current CPU. */
++	__imsic_id_clear_enable(IMSIC_IPI_ID);
++}
++
++static int __init imsic_ipi_domain_init(void)
++{
++	int virq;
++
++	/* Create IMSIC IPI multiplexing */
++	virq =3D ipi_mux_create(IMSIC_NR_IPI, imsic_ipi_send);
++	if (virq <=3D 0)
++		return virq < 0 ? virq : -ENOMEM;
++
++	/* Set vIRQ range */
++	riscv_ipi_set_virq_range(virq, IMSIC_NR_IPI, true);
++
++	/* Announce that IMSIC is providing IPIs */
++	pr_info("%pfwP: providing IPIs using interrupt %d\n", imsic->fwnode, IMSIC_=
+IPI_ID);
++
++	return 0;
++}
++#else
++static void imsic_ipi_starting_cpu(void) { }
++static void imsic_ipi_dying_cpu(void) { }
++static int __init imsic_ipi_domain_init(void) { return 0; }
++#endif
++
++/*
++ * To handle an interrupt, we read the TOPEI CSR and write zero in one
++ * instruction. If TOPEI CSR is non-zero then we translate TOPEI.ID to
++ * Linux interrupt number and let Linux IRQ subsystem handle it.
++ */
++static void imsic_handle_irq(struct irq_desc *desc)
++{
++	struct irq_chip *chip =3D irq_desc_get_chip(desc);
++	int err, cpu =3D smp_processor_id();
++	struct imsic_vector *vec;
++	unsigned long local_id;
++
++	chained_irq_enter(chip, desc);
++
++	while ((local_id =3D csr_swap(CSR_TOPEI, 0))) {
++		local_id >>=3D TOPEI_ID_SHIFT;
++
++		if (local_id =3D=3D IMSIC_IPI_ID) {
++			if (IS_ENABLED(CONFIG_SMP))
++				ipi_mux_process();
++			continue;
++		}
++
++		if (unlikely(!imsic->base_domain))
++			continue;
++
++		vec =3D imsic_vector_from_local_id(cpu, local_id);
++		if (!vec) {
++			pr_warn_ratelimited("vector not found for local ID 0x%lx\n", local_id);
++			continue;
++		}
++
++		err =3D generic_handle_domain_irq(imsic->base_domain, vec->hwirq);
++		if (unlikely(err))
++			pr_warn_ratelimited("hwirq 0x%x mapping not found\n", vec->hwirq);
++	}
++
++	chained_irq_exit(chip, desc);
++}
++
++static int imsic_starting_cpu(unsigned int cpu)
++{
++	/* Mark per-CPU IMSIC state as online */
++	imsic_state_online();
++
++	/* Enable per-CPU parent interrupt */
++	enable_percpu_irq(imsic_parent_irq, irq_get_trigger_type(imsic_parent_irq));
++
++	/* Setup IPIs */
++	imsic_ipi_starting_cpu();
++
++	/*
++	 * Interrupts identities might have been enabled/disabled while
++	 * this CPU was not running so sync-up local enable/disable state.
++	 */
++	imsic_local_sync_all();
++
++	/* Enable local interrupt delivery */
++	imsic_local_delivery(true);
++
++	return 0;
++}
++
++static int imsic_dying_cpu(unsigned int cpu)
++{
++	/* Cleanup IPIs */
++	imsic_ipi_dying_cpu();
++
++	/* Mark per-CPU IMSIC state as offline */
++	imsic_state_offline();
++
++	return 0;
++}
++
++static int __init imsic_early_probe(struct fwnode_handle *fwnode)
++{
++	struct irq_domain *domain;
++	int rc;
++
++	/* Find parent domain and register chained handler */
++	domain =3D irq_find_matching_fwnode(riscv_get_intc_hwnode(), DOMAIN_BUS_ANY=
+);
++	if (!domain) {
++		pr_err("%pfwP: Failed to find INTC domain\n", fwnode);
++		return -ENOENT;
++	}
++	imsic_parent_irq =3D irq_create_mapping(domain, RV_IRQ_EXT);
++	if (!imsic_parent_irq) {
++		pr_err("%pfwP: Failed to create INTC mapping\n", fwnode);
++		return -ENOENT;
++	}
++
++	/* Initialize IPI domain */
++	rc =3D imsic_ipi_domain_init();
++	if (rc) {
++		pr_err("%pfwP: Failed to initialize IPI domain\n", fwnode);
++		return rc;
++	}
++
++	/* Setup chained handler to the parent domain interrupt */
++	irq_set_chained_handler(imsic_parent_irq, imsic_handle_irq);
++
++	/*
++	 * Setup cpuhp state (must be done after setting imsic_parent_irq)
++	 *
++	 * Don't disable per-CPU IMSIC file when CPU goes offline
++	 * because this affects IPI and the masking/unmasking of
++	 * virtual IPIs is done via generic IPI-Mux
++	 */
++	cpuhp_setup_state(CPUHP_AP_IRQ_RISCV_IMSIC_STARTING, "irqchip/riscv/imsic:s=
+tarting",
++			  imsic_starting_cpu, imsic_dying_cpu);
++
++	return 0;
++}
++
++static int __init imsic_early_dt_init(struct device_node *node, struct devic=
+e_node *parent)
++{
++	struct fwnode_handle *fwnode =3D &node->fwnode;
++	int rc;
++
++	/* Setup IMSIC state */
++	rc =3D imsic_setup_state(fwnode);
++	if (rc) {
++		pr_err("%pfwP: failed to setup state (error %d)\n", fwnode, rc);
++		return rc;
++	}
++
++	/* Do early setup of IPIs */
++	rc =3D imsic_early_probe(fwnode);
++	if (rc)
++		return rc;
++
++	/* Ensure that OF platform device gets probed */
++	of_node_clear_flag(node, OF_POPULATED);
++	return 0;
++}
++
++IRQCHIP_DECLARE(riscv_imsic, "riscv,imsics", imsic_early_dt_init);
+diff --git a/drivers/irqchip/irq-riscv-imsic-state.c b/drivers/irqchip/irq-ri=
+scv-imsic-state.c
+new file mode 100644
+index 0000000..5479f87
+--- /dev/null
++++ b/drivers/irqchip/irq-riscv-imsic-state.c
+@@ -0,0 +1,865 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2021 Western Digital Corporation or its affiliates.
++ * Copyright (C) 2022 Ventana Micro Systems Inc.
++ */
++
++#define pr_fmt(fmt) "riscv-imsic: " fmt
++#include <linux/cpu.h>
++#include <linux/bitmap.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/seq_file.h>
++#include <linux/spinlock.h>
++#include <linux/smp.h>
++#include <asm/hwcap.h>
++
++#include "irq-riscv-imsic-state.h"
++
++#define IMSIC_DISABLE_EIDELIVERY		0
++#define IMSIC_ENABLE_EIDELIVERY			1
++#define IMSIC_DISABLE_EITHRESHOLD		1
++#define IMSIC_ENABLE_EITHRESHOLD		0
++
++static inline void imsic_csr_write(unsigned long reg, unsigned long val)
++{
++	csr_write(CSR_ISELECT, reg);
++	csr_write(CSR_IREG, val);
++}
++
++static inline unsigned long imsic_csr_read(unsigned long reg)
++{
++	csr_write(CSR_ISELECT, reg);
++	return csr_read(CSR_IREG);
++}
++
++static inline unsigned long imsic_csr_read_clear(unsigned long reg, unsigned=
+ long val)
++{
++	csr_write(CSR_ISELECT, reg);
++	return csr_read_clear(CSR_IREG, val);
++}
++
++static inline void imsic_csr_set(unsigned long reg, unsigned long val)
++{
++	csr_write(CSR_ISELECT, reg);
++	csr_set(CSR_IREG, val);
++}
++
++static inline void imsic_csr_clear(unsigned long reg, unsigned long val)
++{
++	csr_write(CSR_ISELECT, reg);
++	csr_clear(CSR_IREG, val);
++}
++
++struct imsic_priv *imsic;
++
++const struct imsic_global_config *imsic_get_global_config(void)
++{
++	return imsic ? &imsic->global : NULL;
++}
++EXPORT_SYMBOL_GPL(imsic_get_global_config);
++
++static bool __imsic_eix_read_clear(unsigned long id, bool pend)
++{
++	unsigned long isel, imask;
++
++	isel =3D id / BITS_PER_LONG;
++	isel *=3D BITS_PER_LONG / IMSIC_EIPx_BITS;
++	isel +=3D pend ? IMSIC_EIP0 : IMSIC_EIE0;
++	imask =3D BIT(id & (__riscv_xlen - 1));
++
++	return !!(imsic_csr_read_clear(isel, imask) & imask);
++}
++
++static inline bool __imsic_id_read_clear_enabled(unsigned long id)
++{
++	return __imsic_eix_read_clear(id, false);
++}
++
++static inline bool __imsic_id_read_clear_pending(unsigned long id)
++{
++	return __imsic_eix_read_clear(id, true);
++}
++
++void __imsic_eix_update(unsigned long base_id, unsigned long num_id, bool pe=
+nd, bool val)
++{
++	unsigned long id =3D base_id, last_id =3D base_id + num_id;
++	unsigned long i, isel, ireg;
++
++	while (id < last_id) {
++		isel =3D id / BITS_PER_LONG;
++		isel *=3D BITS_PER_LONG / IMSIC_EIPx_BITS;
++		isel +=3D pend ? IMSIC_EIP0 : IMSIC_EIE0;
++
++		/*
++		 * Prepare the ID mask to be programmed in the
++		 * IMSIC EIEx and EIPx registers. These registers
++		 * are XLEN-wide and we must not touch IDs which
++		 * are < base_id and >=3D (base_id + num_id).
++		 */
++		ireg =3D 0;
++		for (i =3D id & (__riscv_xlen - 1); id < last_id && i < __riscv_xlen; i++)=
+ {
++			ireg |=3D BIT(i);
++			id++;
++		}
++
++		/*
++		 * The IMSIC EIEx and EIPx registers are indirectly
++		 * accessed via using ISELECT and IREG CSRs so we
++		 * need to access these CSRs without getting preempted.
++		 *
++		 * All existing users of this function call this
++		 * function with local IRQs disabled so we don't
++		 * need to do anything special here.
++		 */
++		if (val)
++			imsic_csr_set(isel, ireg);
++		else
++			imsic_csr_clear(isel, ireg);
++	}
++}
++
++static void __imsic_local_sync(struct imsic_local_priv *lpriv)
++{
++	struct imsic_local_config *mlocal;
++	struct imsic_vector *vec, *mvec;
++	int i;
++
++	lockdep_assert_held(&lpriv->lock);
++
++	for_each_set_bit(i, lpriv->dirty_bitmap, imsic->global.nr_ids + 1) {
++		if (!i || i =3D=3D IMSIC_IPI_ID)
++			goto skip;
++		vec =3D &lpriv->vectors[i];
++
++		if (READ_ONCE(vec->enable))
++			__imsic_id_set_enable(i);
++		else
++			__imsic_id_clear_enable(i);
++
++		/*
++		 * If the ID was being moved to a new ID on some other CPU
++		 * then we can get a MSI during the movement so check the
++		 * ID pending bit and re-trigger the new ID on other CPU
++		 * using MMIO write.
++		 */
++		mvec =3D READ_ONCE(vec->move);
++		WRITE_ONCE(vec->move, NULL);
++		if (mvec && mvec !=3D vec) {
++			if (__imsic_id_read_clear_pending(i)) {
++				mlocal =3D per_cpu_ptr(imsic->global.local, mvec->cpu);
++				writel_relaxed(mvec->local_id, mlocal->msi_va);
++			}
++
++			imsic_vector_free(&lpriv->vectors[i]);
++		}
++
++skip:
++		bitmap_clear(lpriv->dirty_bitmap, i, 1);
++	}
++}
++
++void imsic_local_sync_all(void)
++{
++	struct imsic_local_priv *lpriv =3D this_cpu_ptr(imsic->lpriv);
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&lpriv->lock, flags);
++	bitmap_fill(lpriv->dirty_bitmap, imsic->global.nr_ids + 1);
++	__imsic_local_sync(lpriv);
++	raw_spin_unlock_irqrestore(&lpriv->lock, flags);
++}
++
++void imsic_local_delivery(bool enable)
++{
++	if (enable) {
++		imsic_csr_write(IMSIC_EITHRESHOLD, IMSIC_ENABLE_EITHRESHOLD);
++		imsic_csr_write(IMSIC_EIDELIVERY, IMSIC_ENABLE_EIDELIVERY);
++		return;
++	}
++
++	imsic_csr_write(IMSIC_EIDELIVERY, IMSIC_DISABLE_EIDELIVERY);
++	imsic_csr_write(IMSIC_EITHRESHOLD, IMSIC_DISABLE_EITHRESHOLD);
++}
++
++#ifdef CONFIG_SMP
++static void imsic_local_timer_callback(struct timer_list *timer)
++{
++	struct imsic_local_priv *lpriv =3D this_cpu_ptr(imsic->lpriv);
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&lpriv->lock, flags);
++	__imsic_local_sync(lpriv);
++	raw_spin_unlock_irqrestore(&lpriv->lock, flags);
++}
++
++static void __imsic_remote_sync(struct imsic_local_priv *lpriv, unsigned int=
+ cpu)
++{
++	lockdep_assert_held(&lpriv->lock);
++
++	/*
++	 * The spinlock acquire/release semantics ensure that changes
++	 * to vector enable, vector move and dirty bitmap are visible
++	 * to the target CPU.
++	 */
++
++	/*
++	 * We schedule a timer on the target CPU if the target CPU is not
++	 * same as the current CPU. An offline CPU will unconditionally
++	 * synchronize IDs through imsic_starting_cpu() when the
++	 * CPU is brought up.
++	 */
++	if (cpu_online(cpu)) {
++		if (cpu =3D=3D smp_processor_id()) {
++			__imsic_local_sync(lpriv);
++			return;
++		}
++
++		if (!timer_pending(&lpriv->timer)) {
++			lpriv->timer.expires =3D jiffies + 1;
++			add_timer_on(&lpriv->timer, cpu);
++		}
++	}
++}
++#else
++static void __imsic_remote_sync(struct imsic_local_priv *lpriv, unsigned int=
+ cpu)
++{
++	lockdep_assert_held(&lpriv->lock);
++	__imsic_local_sync(lpriv);
++}
++#endif
++
++void imsic_vector_mask(struct imsic_vector *vec)
++{
++	struct imsic_local_priv *lpriv;
++
++	lpriv =3D per_cpu_ptr(imsic->lpriv, vec->cpu);
++	if (WARN_ON_ONCE(&lpriv->vectors[vec->local_id] !=3D vec))
++		return;
++
++	/*
++	 * This function is called through Linux irq subsystem with
++	 * irqs disabled so no need to save/restore irq flags.
++	 */
++
++	raw_spin_lock(&lpriv->lock);
++
++	WRITE_ONCE(vec->enable, false);
++	bitmap_set(lpriv->dirty_bitmap, vec->local_id, 1);
++	__imsic_remote_sync(lpriv, vec->cpu);
++
++	raw_spin_unlock(&lpriv->lock);
++}
++
++void imsic_vector_unmask(struct imsic_vector *vec)
++{
++	struct imsic_local_priv *lpriv;
++
++	lpriv =3D per_cpu_ptr(imsic->lpriv, vec->cpu);
++	if (WARN_ON_ONCE(&lpriv->vectors[vec->local_id] !=3D vec))
++		return;
++
++	/*
++	 * This function is called through Linux irq subsystem with
++	 * irqs disabled so no need to save/restore irq flags.
++	 */
++
++	raw_spin_lock(&lpriv->lock);
++
++	WRITE_ONCE(vec->enable, true);
++	bitmap_set(lpriv->dirty_bitmap, vec->local_id, 1);
++	__imsic_remote_sync(lpriv, vec->cpu);
++
++	raw_spin_unlock(&lpriv->lock);
++}
++
++static bool imsic_vector_move_update(struct imsic_local_priv *lpriv, struct =
+imsic_vector *vec,
++				     bool new_enable, struct imsic_vector *new_move)
++{
++	unsigned long flags;
++	bool enabled;
++
++	raw_spin_lock_irqsave(&lpriv->lock, flags);
++
++	/* Update enable and move details */
++	enabled =3D READ_ONCE(vec->enable);
++	WRITE_ONCE(vec->enable, new_enable);
++	WRITE_ONCE(vec->move, new_move);
++
++	/* Mark the vector as dirty and synchronize */
++	bitmap_set(lpriv->dirty_bitmap, vec->local_id, 1);
++	__imsic_remote_sync(lpriv, vec->cpu);
++
++	raw_spin_unlock_irqrestore(&lpriv->lock, flags);
++
++	return enabled;
++}
++
++void imsic_vector_move(struct imsic_vector *old_vec, struct imsic_vector *ne=
+w_vec)
++{
++	struct imsic_local_priv *old_lpriv, *new_lpriv;
++	bool enabled;
++
++	if (WARN_ON_ONCE(old_vec->cpu =3D=3D new_vec->cpu))
++		return;
++
++	old_lpriv =3D per_cpu_ptr(imsic->lpriv, old_vec->cpu);
++	if (WARN_ON_ONCE(&old_lpriv->vectors[old_vec->local_id] !=3D old_vec))
++		return;
++
++	new_lpriv =3D per_cpu_ptr(imsic->lpriv, new_vec->cpu);
++	if (WARN_ON_ONCE(&new_lpriv->vectors[new_vec->local_id] !=3D new_vec))
++		return;
++
++	/*
++	 * Move and re-trigger the new vector based on the pending
++	 * state of the old vector because we might get a device
++	 * interrupt on the old vector while device was being moved
++	 * to the new vector.
++	 */
++	enabled =3D imsic_vector_move_update(old_lpriv, old_vec, false, new_vec);
++	imsic_vector_move_update(new_lpriv, new_vec, enabled, new_vec);
++}
++
++#ifdef CONFIG_GENERIC_IRQ_DEBUGFS
++void imsic_vector_debug_show(struct seq_file *m, struct imsic_vector *vec, i=
+nt ind)
++{
++	struct imsic_local_priv *lpriv;
++	struct imsic_vector *mvec;
++	bool is_enabled;
++
++	lpriv =3D per_cpu_ptr(imsic->lpriv, vec->cpu);
++	if (WARN_ON_ONCE(&lpriv->vectors[vec->local_id] !=3D vec))
++		return;
++
++	is_enabled =3D imsic_vector_isenabled(vec);
++	mvec =3D imsic_vector_get_move(vec);
++
++	seq_printf(m, "%*starget_cpu      : %5u\n", ind, "", vec->cpu);
++	seq_printf(m, "%*starget_local_id : %5u\n", ind, "", vec->local_id);
++	seq_printf(m, "%*sis_reserved     : %5u\n", ind, "",
++		   (vec->local_id <=3D IMSIC_IPI_ID) ? 1 : 0);
++	seq_printf(m, "%*sis_enabled      : %5u\n", ind, "", is_enabled ? 1 : 0);
++	seq_printf(m, "%*sis_move_pending : %5u\n", ind, "", mvec ? 1 : 0);
++	if (mvec) {
++		seq_printf(m, "%*smove_cpu        : %5u\n", ind, "", mvec->cpu);
++		seq_printf(m, "%*smove_local_id   : %5u\n", ind, "", mvec->local_id);
++	}
++}
++
++void imsic_vector_debug_show_summary(struct seq_file *m, int ind)
++{
++	irq_matrix_debug_show(m, imsic->matrix, ind);
++}
++#endif
++
++struct imsic_vector *imsic_vector_from_local_id(unsigned int cpu, unsigned i=
+nt local_id)
++{
++	struct imsic_local_priv *lpriv =3D per_cpu_ptr(imsic->lpriv, cpu);
++
++	if (!lpriv || imsic->global.nr_ids < local_id)
++		return NULL;
++
++	return &lpriv->vectors[local_id];
++}
++
++struct imsic_vector *imsic_vector_alloc(unsigned int hwirq, const struct cpu=
+mask *mask)
++{
++	struct imsic_vector *vec =3D NULL;
++	struct imsic_local_priv *lpriv;
++	unsigned long flags;
++	unsigned int cpu;
++	int local_id;
++
++	raw_spin_lock_irqsave(&imsic->matrix_lock, flags);
++	local_id =3D irq_matrix_alloc(imsic->matrix, mask, false, &cpu);
++	raw_spin_unlock_irqrestore(&imsic->matrix_lock, flags);
++	if (local_id < 0)
++		return NULL;
++
++	lpriv =3D per_cpu_ptr(imsic->lpriv, cpu);
++	vec =3D &lpriv->vectors[local_id];
++	vec->hwirq =3D hwirq;
++	vec->enable =3D false;
++	vec->move =3D NULL;
++
++	return vec;
++}
++
++void imsic_vector_free(struct imsic_vector *vec)
++{
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&imsic->matrix_lock, flags);
++	vec->hwirq =3D UINT_MAX;
++	irq_matrix_free(imsic->matrix, vec->cpu, vec->local_id, false);
++	raw_spin_unlock_irqrestore(&imsic->matrix_lock, flags);
++}
++
++static void __init imsic_local_cleanup(void)
++{
++	struct imsic_local_priv *lpriv;
++	int cpu;
++
++	for_each_possible_cpu(cpu) {
++		lpriv =3D per_cpu_ptr(imsic->lpriv, cpu);
++
++		bitmap_free(lpriv->dirty_bitmap);
++		kfree(lpriv->vectors);
++	}
++
++	free_percpu(imsic->lpriv);
++}
++
++static int __init imsic_local_init(void)
++{
++	struct imsic_global_config *global =3D &imsic->global;
++	struct imsic_local_priv *lpriv;
++	struct imsic_vector *vec;
++	int cpu, i;
++
++	/* Allocate per-CPU private state */
++	imsic->lpriv =3D alloc_percpu(typeof(*imsic->lpriv));
++	if (!imsic->lpriv)
++		return -ENOMEM;
++
++	/* Setup per-CPU private state */
++	for_each_possible_cpu(cpu) {
++		lpriv =3D per_cpu_ptr(imsic->lpriv, cpu);
++
++		raw_spin_lock_init(&lpriv->lock);
++
++		/* Allocate dirty bitmap */
++		lpriv->dirty_bitmap =3D bitmap_zalloc(global->nr_ids + 1, GFP_KERNEL);
++		if (!lpriv->dirty_bitmap)
++			goto fail_local_cleanup;
++
++#ifdef CONFIG_SMP
++		/* Setup lazy timer for synchronization */
++		timer_setup(&lpriv->timer, imsic_local_timer_callback, TIMER_PINNED);
++#endif
++
++		/* Allocate vector array */
++		lpriv->vectors =3D kcalloc(global->nr_ids + 1, sizeof(*lpriv->vectors),
++					 GFP_KERNEL);
++		if (!lpriv->vectors)
++			goto fail_local_cleanup;
++
++		/* Setup vector array */
++		for (i =3D 0; i <=3D global->nr_ids; i++) {
++			vec =3D &lpriv->vectors[i];
++			vec->cpu =3D cpu;
++			vec->local_id =3D i;
++			vec->hwirq =3D UINT_MAX;
++		}
++	}
++
++	return 0;
++
++fail_local_cleanup:
++	imsic_local_cleanup();
++	return -ENOMEM;
++}
++
++void imsic_state_online(void)
++{
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&imsic->matrix_lock, flags);
++	irq_matrix_online(imsic->matrix);
++	raw_spin_unlock_irqrestore(&imsic->matrix_lock, flags);
++}
++
++void imsic_state_offline(void)
++{
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&imsic->matrix_lock, flags);
++	irq_matrix_offline(imsic->matrix);
++	raw_spin_unlock_irqrestore(&imsic->matrix_lock, flags);
++
++#ifdef CONFIG_SMP
++	struct imsic_local_priv *lpriv =3D this_cpu_ptr(imsic->lpriv);
++
++	raw_spin_lock_irqsave(&lpriv->lock, flags);
++	WARN_ON_ONCE(try_to_del_timer_sync(&lpriv->timer) < 0);
++	raw_spin_unlock_irqrestore(&lpriv->lock, flags);
++#endif
++}
++
++static int __init imsic_matrix_init(void)
++{
++	struct imsic_global_config *global =3D &imsic->global;
++
++	raw_spin_lock_init(&imsic->matrix_lock);
++	imsic->matrix =3D irq_alloc_matrix(global->nr_ids + 1,
++					 0, global->nr_ids + 1);
++	if (!imsic->matrix)
++		return -ENOMEM;
++
++	/* Reserve ID#0 because it is special and never implemented */
++	irq_matrix_assign_system(imsic->matrix, 0, false);
++
++	/* Reserve IPI ID because it is special and used internally */
++	irq_matrix_assign_system(imsic->matrix, IMSIC_IPI_ID, false);
++
++	return 0;
++}
++
++static int __init imsic_get_parent_hartid(struct fwnode_handle *fwnode,
++					  u32 index, unsigned long *hartid)
++{
++	struct of_phandle_args parent;
++	int rc;
++
++	/*
++	 * Currently, only OF fwnode is supported so extend this
++	 * function for ACPI support.
++	 */
++	if (!is_of_node(fwnode))
++		return -EINVAL;
++
++	rc =3D of_irq_parse_one(to_of_node(fwnode), index, &parent);
++	if (rc)
++		return rc;
++
++	/*
++	 * Skip interrupts other than external interrupts for
++	 * current privilege level.
++	 */
++	if (parent.args[0] !=3D RV_IRQ_EXT)
++		return -EINVAL;
++
++	return riscv_of_parent_hartid(parent.np, hartid);
++}
++
++static int __init imsic_get_mmio_resource(struct fwnode_handle *fwnode,
++					  u32 index, struct resource *res)
++{
++	/*
++	 * Currently, only OF fwnode is supported so extend this
++	 * function for ACPI support.
++	 */
++	if (!is_of_node(fwnode))
++		return -EINVAL;
++
++	return of_address_to_resource(to_of_node(fwnode), index, res);
++}
++
++static int __init imsic_parse_fwnode(struct fwnode_handle *fwnode,
++				     struct imsic_global_config *global,
++				     u32 *nr_parent_irqs,
++				     u32 *nr_mmios)
++{
++	unsigned long hartid;
++	struct resource res;
++	int rc;
++	u32 i;
++
++	/*
++	 * Currently, only OF fwnode is supported so extend this
++	 * function for ACPI support.
++	 */
++	if (!is_of_node(fwnode))
++		return -EINVAL;
++
++	*nr_parent_irqs =3D 0;
++	*nr_mmios =3D 0;
++
++	/* Find number of parent interrupts */
++	while (!imsic_get_parent_hartid(fwnode, *nr_parent_irqs, &hartid))
++		(*nr_parent_irqs)++;
++	if (!*nr_parent_irqs) {
++		pr_err("%pfwP: no parent irqs available\n", fwnode);
++		return -EINVAL;
++	}
++
++	/* Find number of guest index bits in MSI address */
++	rc =3D of_property_read_u32(to_of_node(fwnode), "riscv,guest-index-bits",
++				  &global->guest_index_bits);
++	if (rc)
++		global->guest_index_bits =3D 0;
++
++	/* Find number of HART index bits */
++	rc =3D of_property_read_u32(to_of_node(fwnode), "riscv,hart-index-bits",
++				  &global->hart_index_bits);
++	if (rc) {
++		/* Assume default value */
++		global->hart_index_bits =3D __fls(*nr_parent_irqs);
++		if (BIT(global->hart_index_bits) < *nr_parent_irqs)
++			global->hart_index_bits++;
++	}
++
++	/* Find number of group index bits */
++	rc =3D of_property_read_u32(to_of_node(fwnode), "riscv,group-index-bits",
++				  &global->group_index_bits);
++	if (rc)
++		global->group_index_bits =3D 0;
++
++	/*
++	 * Find first bit position of group index.
++	 * If not specified assumed the default APLIC-IMSIC configuration.
++	 */
++	rc =3D of_property_read_u32(to_of_node(fwnode), "riscv,group-index-shift",
++				  &global->group_index_shift);
++	if (rc)
++		global->group_index_shift =3D IMSIC_MMIO_PAGE_SHIFT * 2;
++
++	/* Find number of interrupt identities */
++	rc =3D of_property_read_u32(to_of_node(fwnode), "riscv,num-ids",
++				  &global->nr_ids);
++	if (rc) {
++		pr_err("%pfwP: number of interrupt identities not found\n", fwnode);
++		return rc;
++	}
++
++	/* Find number of guest interrupt identities */
++	rc =3D of_property_read_u32(to_of_node(fwnode), "riscv,num-guest-ids",
++				  &global->nr_guest_ids);
++	if (rc)
++		global->nr_guest_ids =3D global->nr_ids;
++
++	/* Sanity check guest index bits */
++	i =3D BITS_PER_LONG - IMSIC_MMIO_PAGE_SHIFT;
++	if (i < global->guest_index_bits) {
++		pr_err("%pfwP: guest index bits too big\n", fwnode);
++		return -EINVAL;
++	}
++
++	/* Sanity check HART index bits */
++	i =3D BITS_PER_LONG - IMSIC_MMIO_PAGE_SHIFT - global->guest_index_bits;
++	if (i < global->hart_index_bits) {
++		pr_err("%pfwP: HART index bits too big\n", fwnode);
++		return -EINVAL;
++	}
++
++	/* Sanity check group index bits */
++	i =3D BITS_PER_LONG - IMSIC_MMIO_PAGE_SHIFT -
++	    global->guest_index_bits - global->hart_index_bits;
++	if (i < global->group_index_bits) {
++		pr_err("%pfwP: group index bits too big\n", fwnode);
++		return -EINVAL;
++	}
++
++	/* Sanity check group index shift */
++	i =3D global->group_index_bits + global->group_index_shift - 1;
++	if (i >=3D BITS_PER_LONG) {
++		pr_err("%pfwP: group index shift too big\n", fwnode);
++		return -EINVAL;
++	}
++
++	/* Sanity check number of interrupt identities */
++	if (global->nr_ids < IMSIC_MIN_ID ||
++	    global->nr_ids >=3D IMSIC_MAX_ID ||
++	    (global->nr_ids & IMSIC_MIN_ID) !=3D IMSIC_MIN_ID) {
++		pr_err("%pfwP: invalid number of interrupt identities\n", fwnode);
++		return -EINVAL;
++	}
++
++	/* Sanity check number of guest interrupt identities */
++	if (global->nr_guest_ids < IMSIC_MIN_ID ||
++	    global->nr_guest_ids >=3D IMSIC_MAX_ID ||
++	    (global->nr_guest_ids & IMSIC_MIN_ID) !=3D IMSIC_MIN_ID) {
++		pr_err("%pfwP: invalid number of guest interrupt identities\n", fwnode);
++		return -EINVAL;
++	}
++
++	/* Compute base address */
++	rc =3D imsic_get_mmio_resource(fwnode, 0, &res);
++	if (rc) {
++		pr_err("%pfwP: first MMIO resource not found\n", fwnode);
++		return -EINVAL;
++	}
++	global->base_addr =3D res.start;
++	global->base_addr &=3D ~(BIT(global->guest_index_bits +
++				   global->hart_index_bits +
++				   IMSIC_MMIO_PAGE_SHIFT) - 1);
++	global->base_addr &=3D ~((BIT(global->group_index_bits) - 1) <<
++			       global->group_index_shift);
++
++	/* Find number of MMIO register sets */
++	while (!imsic_get_mmio_resource(fwnode, *nr_mmios, &res))
++		(*nr_mmios)++;
++
++	return 0;
++}
++
++int __init imsic_setup_state(struct fwnode_handle *fwnode)
++{
++	u32 i, j, index, nr_parent_irqs, nr_mmios, nr_handlers =3D 0;
++	struct imsic_global_config *global;
++	struct imsic_local_config *local;
++	void __iomem **mmios_va =3D NULL;
++	struct resource *mmios =3D NULL;
++	unsigned long reloff, hartid;
++	phys_addr_t base_addr;
++	int rc, cpu;
++
++	/*
++	 * Only one IMSIC instance allowed in a platform for clean
++	 * implementation of SMP IRQ affinity and per-CPU IPIs.
++	 *
++	 * This means on a multi-socket (or multi-die) platform we
++	 * will have multiple MMIO regions for one IMSIC instance.
++	 */
++	if (imsic) {
++		pr_err("%pfwP: already initialized hence ignoring\n", fwnode);
++		return -EALREADY;
++	}
++
++	if (!riscv_isa_extension_available(NULL, SxAIA)) {
++		pr_err("%pfwP: AIA support not available\n", fwnode);
++		return -ENODEV;
++	}
++
++	imsic =3D kzalloc(sizeof(*imsic), GFP_KERNEL);
++	if (!imsic)
++		return -ENOMEM;
++	imsic->fwnode =3D fwnode;
++	global =3D &imsic->global;
++
++	global->local =3D alloc_percpu(typeof(*global->local));
++	if (!global->local) {
++		rc =3D -ENOMEM;
++		goto out_free_priv;
++	}
++
++	/* Parse IMSIC fwnode */
++	rc =3D imsic_parse_fwnode(fwnode, global, &nr_parent_irqs, &nr_mmios);
++	if (rc)
++		goto out_free_local;
++
++	/* Allocate MMIO resource array */
++	mmios =3D kcalloc(nr_mmios, sizeof(*mmios), GFP_KERNEL);
++	if (!mmios) {
++		rc =3D -ENOMEM;
++		goto out_free_local;
++	}
++
++	/* Allocate MMIO virtual address array */
++	mmios_va =3D kcalloc(nr_mmios, sizeof(*mmios_va), GFP_KERNEL);
++	if (!mmios_va) {
++		rc =3D -ENOMEM;
++		goto out_iounmap;
++	}
++
++	/* Parse and map MMIO register sets */
++	for (i =3D 0; i < nr_mmios; i++) {
++		rc =3D imsic_get_mmio_resource(fwnode, i, &mmios[i]);
++		if (rc) {
++			pr_err("%pfwP: unable to parse MMIO regset %d\n", fwnode, i);
++			goto out_iounmap;
++		}
++
++		base_addr =3D mmios[i].start;
++		base_addr &=3D ~(BIT(global->guest_index_bits +
++				   global->hart_index_bits +
++				   IMSIC_MMIO_PAGE_SHIFT) - 1);
++		base_addr &=3D ~((BIT(global->group_index_bits) - 1) <<
++			       global->group_index_shift);
++		if (base_addr !=3D global->base_addr) {
++			rc =3D -EINVAL;
++			pr_err("%pfwP: address mismatch for regset %d\n", fwnode, i);
++			goto out_iounmap;
++		}
++
++		mmios_va[i] =3D ioremap(mmios[i].start, resource_size(&mmios[i]));
++		if (!mmios_va[i]) {
++			rc =3D -EIO;
++			pr_err("%pfwP: unable to map MMIO regset %d\n", fwnode, i);
++			goto out_iounmap;
++		}
++	}
++
++	/* Initialize local (or per-CPU )state */
++	rc =3D imsic_local_init();
++	if (rc) {
++		pr_err("%pfwP: failed to initialize local state\n",
++		       fwnode);
++		goto out_iounmap;
++	}
++
++	/* Configure handlers for target CPUs */
++	for (i =3D 0; i < nr_parent_irqs; i++) {
++		rc =3D imsic_get_parent_hartid(fwnode, i, &hartid);
++		if (rc) {
++			pr_warn("%pfwP: hart ID for parent irq%d not found\n", fwnode, i);
++			continue;
++		}
++
++		cpu =3D riscv_hartid_to_cpuid(hartid);
++		if (cpu < 0) {
++			pr_warn("%pfwP: invalid cpuid for parent irq%d\n", fwnode, i);
++			continue;
++		}
++
++		/* Find MMIO location of MSI page */
++		index =3D nr_mmios;
++		reloff =3D i * BIT(global->guest_index_bits) *
++			 IMSIC_MMIO_PAGE_SZ;
++		for (j =3D 0; nr_mmios; j++) {
++			if (reloff < resource_size(&mmios[j])) {
++				index =3D j;
++				break;
++			}
++
++			/*
++			 * MMIO region size may not be aligned to
++			 * BIT(global->guest_index_bits) * IMSIC_MMIO_PAGE_SZ
++			 * if holes are present.
++			 */
++			reloff -=3D ALIGN(resource_size(&mmios[j]),
++			BIT(global->guest_index_bits) * IMSIC_MMIO_PAGE_SZ);
++		}
++		if (index >=3D nr_mmios) {
++			pr_warn("%pfwP: MMIO not found for parent irq%d\n", fwnode, i);
++			continue;
++		}
++
++		local =3D per_cpu_ptr(global->local, cpu);
++		local->msi_pa =3D mmios[index].start + reloff;
++		local->msi_va =3D mmios_va[index] + reloff;
++
++		nr_handlers++;
++	}
++
++	/* If no CPU handlers found then can't take interrupts */
++	if (!nr_handlers) {
++		pr_err("%pfwP: No CPU handlers found\n", fwnode);
++		rc =3D -ENODEV;
++		goto out_local_cleanup;
++	}
++
++	/* Initialize matrix allocator */
++	rc =3D imsic_matrix_init();
++	if (rc) {
++		pr_err("%pfwP: failed to create matrix allocator\n", fwnode);
++		goto out_local_cleanup;
++	}
++
++	/* We don't need MMIO arrays anymore so let's free-up */
++	kfree(mmios_va);
++	kfree(mmios);
++
++	return 0;
++
++out_local_cleanup:
++	imsic_local_cleanup();
++out_iounmap:
++	for (i =3D 0; i < nr_mmios; i++) {
++		if (mmios_va[i])
++			iounmap(mmios_va[i]);
++	}
++	kfree(mmios_va);
++	kfree(mmios);
++out_free_local:
++	free_percpu(imsic->global.local);
++out_free_priv:
++	kfree(imsic);
++	imsic =3D NULL;
++	return rc;
++}
+diff --git a/drivers/irqchip/irq-riscv-imsic-state.h b/drivers/irqchip/irq-ri=
+scv-imsic-state.h
+new file mode 100644
+index 0000000..8ec9649
+--- /dev/null
++++ b/drivers/irqchip/irq-riscv-imsic-state.h
+@@ -0,0 +1,107 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2021 Western Digital Corporation or its affiliates.
++ * Copyright (C) 2022 Ventana Micro Systems Inc.
++ */
++
++#ifndef _IRQ_RISCV_IMSIC_STATE_H
++#define _IRQ_RISCV_IMSIC_STATE_H
++
++#include <linux/irqchip/riscv-imsic.h>
++#include <linux/irqdomain.h>
++#include <linux/fwnode.h>
++#include <linux/timer.h>
++
++#define IMSIC_IPI_ID				1
++#define IMSIC_NR_IPI				8
++
++struct imsic_vector {
++	/* Fixed details of the vector */
++	unsigned int				cpu;
++	unsigned int				local_id;
++	/* Details saved by driver in the vector */
++	unsigned int				hwirq;
++	/* Details accessed using local lock held */
++	bool					enable;
++	struct imsic_vector			*move;
++};
++
++struct imsic_local_priv {
++	/* Local lock to protect vector enable/move variables and dirty bitmap */
++	raw_spinlock_t				lock;
++
++	/* Local dirty bitmap for synchronization */
++	unsigned long				*dirty_bitmap;
++
++#ifdef CONFIG_SMP
++	/* Local timer for synchronization */
++	struct timer_list			timer;
++#endif
++
++	/* Local vector table */
++	struct imsic_vector			*vectors;
++};
++
++struct imsic_priv {
++	/* Device details */
++	struct fwnode_handle			*fwnode;
++
++	/* Global configuration common for all HARTs */
++	struct imsic_global_config		global;
++
++	/* Per-CPU state */
++	struct imsic_local_priv __percpu	*lpriv;
++
++	/* State of IRQ matrix allocator */
++	raw_spinlock_t				matrix_lock;
++	struct irq_matrix			*matrix;
++
++	/* IRQ domains (created by platform driver) */
++	struct irq_domain			*base_domain;
++};
++
++extern struct imsic_priv *imsic;
++
++void __imsic_eix_update(unsigned long base_id, unsigned long num_id, bool pe=
+nd, bool val);
++
++static inline void __imsic_id_set_enable(unsigned long id)
++{
++	__imsic_eix_update(id, 1, false, true);
++}
++
++static inline void __imsic_id_clear_enable(unsigned long id)
++{
++	__imsic_eix_update(id, 1, false, false);
++}
++
++void imsic_local_sync_all(void);
++void imsic_local_delivery(bool enable);
++
++void imsic_vector_mask(struct imsic_vector *vec);
++void imsic_vector_unmask(struct imsic_vector *vec);
++
++static inline bool imsic_vector_isenabled(struct imsic_vector *vec)
++{
++	return READ_ONCE(vec->enable);
++}
++
++static inline struct imsic_vector *imsic_vector_get_move(struct imsic_vector=
+ *vec)
++{
++	return READ_ONCE(vec->move);
++}
++
++void imsic_vector_move(struct imsic_vector *old_vec, struct imsic_vector *ne=
+w_vec);
++
++struct imsic_vector *imsic_vector_from_local_id(unsigned int cpu, unsigned i=
+nt local_id);
++
++struct imsic_vector *imsic_vector_alloc(unsigned int hwirq, const struct cpu=
+mask *mask);
++void imsic_vector_free(struct imsic_vector *vector);
++
++void imsic_vector_debug_show(struct seq_file *m, struct imsic_vector *vec, i=
+nt ind);
++void imsic_vector_debug_show_summary(struct seq_file *m, int ind);
++
++void imsic_state_online(void);
++void imsic_state_offline(void);
++int imsic_setup_state(struct fwnode_handle *fwnode);
++
++#endif
+diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+index 35e78dd..7a5785f 100644
+--- a/include/linux/cpuhotplug.h
++++ b/include/linux/cpuhotplug.h
+@@ -146,6 +146,7 @@ enum cpuhp_state {
+ 	CPUHP_AP_IRQ_MIPS_GIC_STARTING,
+ 	CPUHP_AP_IRQ_LOONGARCH_STARTING,
+ 	CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
++	CPUHP_AP_IRQ_RISCV_IMSIC_STARTING,
+ 	CPUHP_AP_ARM_MVEBU_COHERENCY,
+ 	CPUHP_AP_PERF_X86_AMD_UNCORE_STARTING,
+ 	CPUHP_AP_PERF_X86_STARTING,
+diff --git a/include/linux/irqchip/riscv-imsic.h b/include/linux/irqchip/risc=
+v-imsic.h
+new file mode 100644
+index 0000000..faf0b80
+--- /dev/null
++++ b/include/linux/irqchip/riscv-imsic.h
+@@ -0,0 +1,87 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2021 Western Digital Corporation or its affiliates.
++ * Copyright (C) 2022 Ventana Micro Systems Inc.
++ */
++#ifndef __LINUX_IRQCHIP_RISCV_IMSIC_H
++#define __LINUX_IRQCHIP_RISCV_IMSIC_H
++
++#include <linux/types.h>
++#include <linux/bitops.h>
++#include <asm/csr.h>
++
++#define IMSIC_MMIO_PAGE_SHIFT		12
++#define IMSIC_MMIO_PAGE_SZ		BIT(IMSIC_MMIO_PAGE_SHIFT)
++#define IMSIC_MMIO_PAGE_LE		0x00
++#define IMSIC_MMIO_PAGE_BE		0x04
++
++#define IMSIC_MIN_ID			63
++#define IMSIC_MAX_ID			2048
++
++#define IMSIC_EIDELIVERY		0x70
++
++#define IMSIC_EITHRESHOLD		0x72
++
++#define IMSIC_EIP0			0x80
++#define IMSIC_EIP63			0xbf
++#define IMSIC_EIPx_BITS			32
++
++#define IMSIC_EIE0			0xc0
++#define IMSIC_EIE63			0xff
++#define IMSIC_EIEx_BITS			32
++
++#define IMSIC_FIRST			IMSIC_EIDELIVERY
++#define IMSIC_LAST			IMSIC_EIE63
++
++#define IMSIC_MMIO_SETIPNUM_LE		0x00
++#define IMSIC_MMIO_SETIPNUM_BE		0x04
++
++struct imsic_local_config {
++	phys_addr_t				msi_pa;
++	void __iomem				*msi_va;
++};
++
++struct imsic_global_config {
++	/*
++	 * MSI Target Address Scheme
++	 *
++	 * XLEN-1                                                12     0
++	 * |                                                     |     |
++	 * -------------------------------------------------------------
++	 * |xxxxxx|Group Index|xxxxxxxxxxx|HART Index|Guest Index|  0  |
++	 * -------------------------------------------------------------
++	 */
++
++	/* Bits representing Guest index, HART index, and Group index */
++	u32					guest_index_bits;
++	u32					hart_index_bits;
++	u32					group_index_bits;
++	u32					group_index_shift;
++
++	/* Global base address matching all target MSI addresses */
++	phys_addr_t				base_addr;
++
++	/* Number of interrupt identities */
++	u32					nr_ids;
++
++	/* Number of guest interrupt identities */
++	u32					nr_guest_ids;
++
++	/* Per-CPU IMSIC addresses */
++	struct imsic_local_config __percpu	*local;
++};
++
++#ifdef CONFIG_RISCV_IMSIC
++
++const struct imsic_global_config *imsic_get_global_config(void);
++
++#else
++
++static inline const struct imsic_global_config *imsic_get_global_config(void)
++{
++	return NULL;
++}
++
++#endif
++
++#endif
