@@ -1,70 +1,70 @@
 Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB715644B;
-	Mon, 25 Mar 2024 05:50:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652DB148826;
+	Mon, 25 Mar 2024 05:50:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711345816; cv=none; b=m+hhz3bT2oky+u1Px2FBgq1OEXJ76vbrkpA5ocy3X5qHxn5hsA3UOA84vdYaF9u+XQVMFKF/Hkf/ccBx7sysAXsGULLo6g78o9I830yXnTroHYd0ugkohh9e2JciEnjls7+beahtMIlDRE5i+3+oYej6E3kVyI6H6TWVt++87RE=
+	t=1711345823; cv=none; b=aaE7R/HcbEOFVzehCXu4EcXaJfpSQ2iC8P+1nw2EbAjFI9o9jfNoyZq1FbKV1VXSMcMm1PtKfvS3dSe52UN6o16SPVlruzr74YOKgQ7oYv7dy4/c7+S61z1WvVr42XFLsSuIJd3R2VzNs5hCu2ZsdZ+4wXu1QEqUHY1fKDhhHO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711345816; c=relaxed/simple;
-	bh=Rfm4MeqPFpiKKJ1RubZpQs/+VCp5DpCuNUt5KfcdJ30=;
+	s=arc-20240116; t=1711345823; c=relaxed/simple;
+	bh=p6viwjhIPG/4maAHg16dp/v0cv+yZfYIpNrhB6LD84U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U2u7LPgXLUmBh2iPdPIyNEEeCniRCTAbVCEEYSFkwFrnfjqRllNwOMkHT7/o+tNXdDCAjPckTxgj5sL0SeCI2bntGgBmsH9GfACoTa8Hp8dV0Q+HxjsBLy8b4QU1hiA5ZIJLwPsGCkg/xDTivc7S2/E+oHBnEaqOIY/d98qeiCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=hZpX8sq5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VrKCoNt4; arc=none smtp.client-ip=103.168.172.150
+	 MIME-Version; b=TIZFGoXA8xUqdf77ugMcStQD/B0dW/ebVmGEn6QWtakNT86ZmcoLNS8/IhK+2n6yaQEqFb9gui55PDFxD7KKqnTpucRAe3wBZKyktWaT4ZxvzeqBD7YeUvTW19LzGGmEWSIrr/FXTmS/KI3LkduQ4sp2haHll5t2ky+Ohbo2qso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=uf4Ae7xA; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=S39Fo3xH; arc=none smtp.client-ip=103.168.172.150
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="hZpX8sq5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VrKCoNt4"
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailfout.nyi.internal (Postfix) with ESMTP id A47D113800F7;
-	Mon, 25 Mar 2024 01:50:13 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="uf4Ae7xA";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S39Fo3xH"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 6C35A13800F3;
+	Mon, 25 Mar 2024 01:50:20 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Mon, 25 Mar 2024 01:50:13 -0400
+  by compute3.internal (MEProxy); Mon, 25 Mar 2024 01:50:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
 	:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1711345813; x=
-	1711432213; bh=mquhRl8UuQw7ysCxwHkJ/bbRbAxKTiS/ILd7PkDmBG8=; b=h
-	ZpX8sq5bck6q/j4SAQI3OleU8lKCA9upJKrEpzfI7JykKHiyfAjgNxhuXUSpsJOT
-	bZWEkAVwB2p6KulrL9I35D3tKeKvGea4fJV2Ax4e+NRrQCDMbD8go65jNCNASF4U
-	mRa6RAjkDLoAJl5ob0RUx1DQjYFFRSjONIR2uV5OUpTYynD3iNSS+umUgql0mujX
-	fD6J5XXVDi1C/w+2HRv2AUV5zyj7xszj2MbkgVJyT68c/AhpS4svtxOc4PfxpxtA
-	u/D+n08bRLPaS4taxK4FwOcc/fPKq3thLb/LVzVIL3GRBscf0jhLnC2MlQ8Q9AT0
-	H2RwsQk4Xao88dFpPVI6A==
+	:reply-to:subject:subject:to:to; s=fm3; t=1711345820; x=
+	1711432220; bh=IhR5W2G5gfMUMiqo0xIhsNkDZHETXlmyvnRu3odf1MQ=; b=u
+	f4Ae7xAfqLkWWuqCrsy80ddYMp5bbxuSQ2n34CjUhi4Kd9N2wrQ/I7vDHJpk7FIm
+	aGPgc2UvDbZrJltlCyloq4UFYNmD0pPeOjz3tv+1kGh/dMlNpGlSOfymTaNCG0iw
+	/EdK9eslJHpaG3bW7gtGbz5QwhhL1QTwgHkp3uEWL2pSilmkDepjT4xAW6tv8J/I
+	+pQ2HppxlJDn2Ftx1Vor2ClZvwTDqcHSXRV5T4bSQVDP/D4hk8Nt2czRBR8NqOHV
+	/nWesb1vQ6ZlWtLgZrF1wwAxGbgBtn2ItoW+uN5buh52CTPj9AFzHPb6aQkY8HRT
+	vnLqxPp8vUYl8LbB5ap1A==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1711345813; x=
-	1711432213; bh=mquhRl8UuQw7ysCxwHkJ/bbRbAxKTiS/ILd7PkDmBG8=; b=V
-	rKCoNt4rAISDxlyemHwuDMy+LRYlrJkIImRr0/x5tIGA2aGZuQRUIU7xbEySOlzR
-	6ZGyk3HYyRMeZ2oYGrdH/5iEBPpD9jRkULgWKfVeVs4ZlFBB7reofPrS5XKjR/bW
-	0xHioBDrnKyoL8tE7iL2zwmbdaqnQE+O0WzGEaElQqIbCqTez1ic7CbIQCpe51RJ
-	ziwBp+X1RxS7YaUORy8NN/iqzJSB3mpfic7YSFRmlxMFBxfaQnZb/kqJlaMEApyH
-	sCsP1rnXDbnAAooBaAX10jl932CXmBo5IyQhV3ztzEM1JStlG9QrhDtYVlTD4BQ9
-	lXiAD1/FAHXfapbreTZ7g==
-X-ME-Sender: <xms:lRABZrIdmVmKENqZmb1StJJO8ZpRxBy-cdpEdPGpgWyUQ3u-IybP-Q>
-    <xme:lRABZvKs7bqM6tJduEhPwQN7pdGS_JbCtVoHHfbWfZR6vjb9C7sxX26j9Hn-26poS
-    jjwInGAtMyf8wH8b7o>
-X-ME-Received: <xmr:lRABZjtnDGMsGKp-wPC--h8eu6wmIwHi1WaSPjrkkJhUOUn_RFN4rwQmoUr5>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddtkedgkeelucetufdoteggodetrfdotf
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1711345820; x=
+	1711432220; bh=IhR5W2G5gfMUMiqo0xIhsNkDZHETXlmyvnRu3odf1MQ=; b=S
+	39Fo3xHHZpBXMh1U0I9/PEoqqu8BT0ahdR81WasD4fSuFdS07dtHHi0gv3dkI6c3
+	ixXkRwXxtvp8Kw3O9SiwhCzX0hBzI5XkTywEy5do+poTONVWuGap5gwp6sA4Tg0G
+	jwhbbR3TxXGEvYIw5ZJQtLIy/jfRK/JpBjXJzFzsg4NTTjWuruF3gUwMU3bm+oUh
+	gYCac89AEZ3M91X38j1Zr5/eKceO68DGE0EUzhuKvi8WTi5ULm5xVZlFxF7JMdMp
+	sOYN8S02GDEVRC2MQLLsCfLMOOF/IbwyhbComv20k11yycIfShZxlgivdkpi9+dT
+	9UebWucd6Y3aNMIZzTCJQ==
+X-ME-Sender: <xms:nBABZrsAhxdJQrZxjh-_CH4GPb_7WhWBgCJSQi6ETfMymunOHKrQoA>
+    <xme:nBABZsdtfW14ySdIY4q55PYIJqgMJPvo_cYzDs-hgIznTXoQM1hYcDC_ydZCUX7Qq
+    DBmLy76wVzm-1OTwok>
+X-ME-Received: <xmr:nBABZuzf3AtkkhYdPX-tfsCq_Kpk9wkkyaAYL1x8BRD9T1Lyun1i4wxHHAYn>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddtkedgledtucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
     ertdertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehl
     jhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfetfedugfetudeuheetjefhue
     fggfelleetvdevtefhueeujeefvdegleevhefgnecuvehluhhsthgvrhfuihiivgeptden
     ucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:lRABZkZiTurrC1cq0ZjCRJFwATaBP0fRP8eBQ-sXYvaeFCoBp5_dMA>
-    <xmx:lRABZiaAdrhjyU-ozcRFT8qoBsDeCJXtOvAR-T_ocf9py2zwaHmR7A>
-    <xmx:lRABZoBQhZlODHwVVxJxNxc9G2BJvmxQeJF2xMSzkyvwaqGeZvu99A>
-    <xmx:lRABZgbYs8y2ehYxGdaWp0nG6esEQGc_sBh5kptX0VICpxUIaZdHyg>
-    <xmx:lRABZnNTMdIjuX9MfoVye9s6Ve5gdQw7ax4wui-sMGloCUuMwAQt4g>
+X-ME-Proxy: <xmx:nBABZqPLrNgXX-WBvH3LOAUy-iyCee9Ktnkrt4Gw7qMtDP-huiTB_A>
+    <xmx:nBABZr_qDtFkQAGFQk4sD5EvULi8e8Ggaf4vyViKCXasaQaS6k0dPA>
+    <xmx:nBABZqUpPPVgrqiWVY-pMUh_KwzTWdRBRSHA-clxKZIT1Khe1LkPwA>
+    <xmx:nBABZseKwWSoyN6TWn6YOjcHszz5RI_LkRdQj_1wFm7t5va-04GtuA>
+    <xmx:nBABZrwKcidBfqkLFceED49fzO2n1ghdHShdIJF-z7zkod-GAMswBg>
 Feedback-ID: i5ec1447f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 25 Mar 2024 01:50:11 -0400 (EDT)
+ 25 Mar 2024 01:50:17 -0400 (EDT)
 From: "Luke D. Jones" <luke@ljones.dev>
 To: hdegoede@redhat.com
 Cc: corentin.chary@gmail.com,
@@ -72,9 +72,9 @@ Cc: corentin.chary@gmail.com,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	"Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH 2/9] platform/x86: asus-wmi: add support for Vivobook GPU MUX
-Date: Mon, 25 Mar 2024 18:49:31 +1300
-Message-ID: <20240325054938.489732-3-luke@ljones.dev>
+Subject: [PATCH 4/9] platform/x86: asus-wmi: support toggling POST sound
+Date: Mon, 25 Mar 2024 18:49:33 +1300
+Message-ID: <20240325054938.489732-5-luke@ljones.dev>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240325054938.489732-1-luke@ljones.dev>
 References: <20240325054938.489732-1-luke@ljones.dev>
@@ -86,102 +86,123 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for the Vivobook dgpu MUX available on the ASUS Viviobook
-and some of the other ranges (Zen).
-
-This MUX functions exactly the same as the existing ROG MUX support so
-the existing functionality now detects which MUX is available and uses
-that for control.
+Add support for toggling the BIOS POST sound on some ASUS laptops.
 
 Signed-off-by: Luke D. Jones <luke@ljones.dev>
 ---
- drivers/platform/x86/asus-wmi.c            | 18 +++++++++++++-----
- include/linux/platform_data/x86/asus-wmi.h |  1 +
- 2 files changed, 14 insertions(+), 5 deletions(-)
+ .../ABI/testing/sysfs-platform-asus-wmi       |  9 ++++
+ drivers/platform/x86/asus-wmi.c               | 51 +++++++++++++++++++
+ include/linux/platform_data/x86/asus-wmi.h    |  3 ++
+ 3 files changed, 63 insertions(+)
 
+diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+index 61a745d2476f..5645dbac4ce8 100644
+--- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
++++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+@@ -194,3 +194,12 @@ Contact:	"Luke Jones" <luke@ljones.dev>
+ Description:
+ 		Set the target temperature limit of the Nvidia dGPU:
+ 			* min=75, max=87
++
++What:		/sys/devices/platform/<platform>/boot_sound
++Date:		Jun 2023
++KernelVersion:	6.10
++Contact:	"Luke Jones" <luke@ljones.dev>
++Description:
++		Set if the BIOS POST sound is played on boot.
++			* 0 - False,
++			* 1 - True
+\ No newline at end of file
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 54ce0fb26f42..285821ef819b 100644
+index 094a93f24667..6cac9c3eb8b2 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -268,6 +268,7 @@ struct asus_wmi {
- 	bool egpu_connect_available;
- 	bool dgpu_disable_available;
- 	bool gpu_mux_mode_available;
-+	u32 gpu_mux_dev;
+@@ -2106,6 +2106,54 @@ static ssize_t panel_od_store(struct device *dev,
+ }
+ static DEVICE_ATTR_RW(panel_od);
  
- 	/* Tunables provided by ASUS for gaming laptops */
- 	bool ppt_pl2_sppt_available;
-@@ -682,7 +683,7 @@ static ssize_t dgpu_disable_store(struct device *dev,
- 		return -EINVAL;
- 
- 	if (asus->gpu_mux_mode_available) {
--		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_GPU_MUX);
-+		result = asus_wmi_get_devstate_simple(asus, asus->gpu_mux_dev);
- 		if (result < 0)
- 			/* An error here may signal greater failure of GPU handling */
- 			return result;
-@@ -748,7 +749,7 @@ static ssize_t egpu_enable_store(struct device *dev,
- 	}
- 
- 	if (asus->gpu_mux_mode_available) {
--		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_GPU_MUX);
-+		result = asus_wmi_get_devstate_simple(asus, asus->gpu_mux_dev);
- 		if (result < 0) {
- 			/* An error here may signal greater failure of GPU handling */
- 			pr_warn("Failed to get gpu mux status: %d\n", result);
-@@ -801,7 +802,7 @@ static ssize_t gpu_mux_mode_show(struct device *dev,
- 	struct asus_wmi *asus = dev_get_drvdata(dev);
- 	int result;
- 
--	result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_GPU_MUX);
-+	result = asus_wmi_get_devstate_simple(asus, asus->gpu_mux_dev);
- 	if (result < 0)
- 		return result;
- 
-@@ -847,7 +848,7 @@ static ssize_t gpu_mux_mode_store(struct device *dev,
- 		}
- 	}
- 
--	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_GPU_MUX, optimus, &result);
-+	err = asus_wmi_set_devstate(asus->gpu_mux_dev, optimus, &result);
- 	if (err) {
- 		dev_err(dev, "Failed to set GPU MUX mode: %d\n", err);
- 		return err;
-@@ -4538,7 +4539,6 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	asus->egpu_enable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU);
- 	asus->egpu_connect_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU_CONNECTED);
- 	asus->dgpu_disable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_DGPU);
--	asus->gpu_mux_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_GPU_MUX);
- 	asus->kbd_rgb_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE);
- 	asus->kbd_rgb_state_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_STATE);
- 	asus->ppt_pl2_sppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_PL2_SPPT);
-@@ -4560,6 +4560,14 @@ static int asus_wmi_add(struct platform_device *pdev)
- 		asus->mini_led_dev_id = ASUS_WMI_DEVID_MINI_LED_MODE2;
- 	}
- 
-+	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_GPU_MUX)) {
-+		asus->gpu_mux_mode_available = true;
-+		asus->gpu_mux_dev = ASUS_WMI_DEVID_GPU_MUX;
-+	} else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_GPU_MUX_VIVO)) {
-+		asus->gpu_mux_mode_available = true;
-+		asus->gpu_mux_dev = ASUS_WMI_DEVID_GPU_MUX_VIVO;
++/* Bootup sound ***************************************************************/
++
++static ssize_t boot_sound_show(struct device *dev,
++			     struct device_attribute *attr, char *buf)
++{
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++	int result;
++
++	result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_BOOT_SOUND);
++	if (result < 0)
++		return result;
++
++	return sysfs_emit(buf, "%d\n", result);
++}
++
++static ssize_t boot_sound_store(struct device *dev,
++			      struct device_attribute *attr,
++			      const char *buf, size_t count)
++{
++	int result, err;
++	u32 snd;
++
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++
++	result = kstrtou32(buf, 10, &snd);
++	if (result)
++		return result;
++
++	if (snd > 1)
++		return -EINVAL;
++
++	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BOOT_SOUND, snd, &result);
++	if (err) {
++		pr_warn("Failed to set boot sound: %d\n", err);
++		return err;
 +	}
 +
- 	err = fan_boost_mode_check_present(asus);
- 	if (err)
- 		goto fail_fan_boost_mode;
++	if (result > 1) {
++		pr_warn("Failed to set panel boot sound (result): 0x%x\n", result);
++		return -EIO;
++	}
++
++	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "boot_sound");
++
++	return count;
++}
++static DEVICE_ATTR_RW(boot_sound);
++
+ /* Mini-LED mode **************************************************************/
+ static ssize_t mini_led_mode_show(struct device *dev,
+ 				   struct device_attribute *attr, char *buf)
+@@ -4227,6 +4275,7 @@ static struct attribute *platform_attributes[] = {
+ 	&dev_attr_ppt_platform_sppt.attr,
+ 	&dev_attr_nv_dynamic_boost.attr,
+ 	&dev_attr_nv_temp_target.attr,
++	&dev_attr_boot_sound.attr,
+ 	&dev_attr_panel_od.attr,
+ 	&dev_attr_mini_led_mode.attr,
+ 	&dev_attr_available_mini_led_mode.attr,
+@@ -4279,6 +4328,8 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
+ 		ok = asus->nv_dyn_boost_available;
+ 	else if (attr == &dev_attr_nv_temp_target.attr)
+ 		ok = asus->nv_temp_tgt_available;
++	else if (attr == &dev_attr_boot_sound.attr)
++		devid = ASUS_WMI_DEVID_BOOT_SOUND;
+ 	else if (attr == &dev_attr_panel_od.attr)
+ 		ok = asus->panel_overdrive_available;
+ 	else if (attr == &dev_attr_mini_led_mode.attr)
 diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index 9cadce10ad9a..b48b024dd844 100644
+index 3e9a01467c67..3eb5cd6773ad 100644
 --- a/include/linux/platform_data/x86/asus-wmi.h
 +++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -128,6 +128,7 @@
+@@ -137,6 +137,9 @@
+ /* TUF laptop RGB power/state */
+ #define ASUS_WMI_DEVID_TUF_RGB_STATE	0x00100057
  
- /* gpu mux switch, 0 = dGPU, 1 = Optimus */
- #define ASUS_WMI_DEVID_GPU_MUX		0x00090016
-+#define ASUS_WMI_DEVID_GPU_MUX_VIVO	0x00090026
- 
- /* TUF laptop RGB modes/colours */
- #define ASUS_WMI_DEVID_TUF_RGB_MODE	0x00100056
++/* Bootup sound control */
++#define ASUS_WMI_DEVID_BOOT_SOUND	0x00130022
++
+ /* DSTS masks */
+ #define ASUS_WMI_DSTS_STATUS_BIT	0x00000001
+ #define ASUS_WMI_DSTS_UNKNOWN_BIT	0x00000002
 -- 
 2.44.0
 
