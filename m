@@ -1,93 +1,81 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228CA1C692;
-	Mon, 25 Mar 2024 18:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA3C4804;
+	Mon, 25 Mar 2024 18:38:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711391890; cv=none; b=k6w372om/ln5DQFtmRJDIU9m0pjIYzev17VoN+rBv+7DU0x/1UAHumbuy9mdbwUCHY1Tm907DBq06+Qm97QliViC2o5V5zezvlGDOfRV9G/qcaVbrV8CuaboNBzzj3jiidVlo2zgX104D5QG20jicJlWangUpce9g5AN0hzZcnU=
+	t=1711391918; cv=none; b=DH6QtHq7UYtu2yZlHMcOfdqmGHIgTx9bdbYfn0hwlZwfrdUhIgub0Gi2s6SoeijV1UI6dqm2vR/2AD2r05ab1tzmBtEqTcz1LT4qn/M3HZlSETJFKED3WMXt7XhkrA18d2ZoLwxCm5XnhyoRnabG2o1KixN6LfuM3hD5MdzKnsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711391890; c=relaxed/simple;
-	bh=viZRDFgQ679+5CJBF0vP+M/VT7GFWhILcghVo56T7is=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OObr3v4wtomcrMkAlDytsyS/NdnsNiMrycApOb1nBIKqnaI55bHig8na97N+w5J95UFENh653GvzrXBmnlPtezk8AOC7aLTzLfuHFldr2J1qgBBJlZnlSA6YqtW1f2z0hZabmGn7ijq57Kxsrfcz+IGzW4EbVbeC+iuPp9cJ0wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=K2GnprUL reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1711391918; c=relaxed/simple;
+	bh=blLcvYAqaiFz1G8fZPDqiwWnJvL9Uqm3A7A++8T3s4E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K2dgaw+1h9tafnTpQueVIaWPL8fRwkAR7njUqQW089NBxazajSrUTqwtUCqWRYzt/gzMytMAHkCtMctH6UlTAjkYwSEQmBlJySeh4Pnfwm7LQCvqSjb2B3hvKhIQRuRKzqLQyUcfseTE8+nHegh8lfI+bKb8lJu4j5uH0Kj9d7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=HKt979+O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="K2GnprUL"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 35A0C40E024C;
-	Mon, 25 Mar 2024 18:38:06 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
-	reason="fail (body has been altered)" header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id xGuzX56VolEU; Mon, 25 Mar 2024 18:38:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1711391881; bh=ts5OgcwfchSOjPifiRjEKaKY+SL4SiaTuxvODBQ/mWE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=K2GnprULN7boAVQdnPtFdnJKnr3cP0qzAqqzZZsqIQSeqbz3h9bP+fm1ST7xda7Yl
-	 wRWIfeMM/UJ6W6QDG9frpltC5kGDfoUhvfnAlXixGb7kJp2lLfm5g5JNYmUOgEngFt
-	 iFNEL2sLLb/G0QQP6ZzCL1jwiEPItDAVH3DSM9HMs8jw3TjRmNVHlIrbNVEBliNy4z
-	 a6P0fYmKNJf5qWg0kHOIbijRfbpBCNdsW5jsNiMtXsWO/VoFlhuULJ6pmQYN7Leo33
-	 uG9GFRMKomszW81qoralRsBq+I9aLYWZIyXjrJ3/3vfodWVda4ye+Q5mhpAXuuj6gS
-	 +jF0NeqW0BkF8vZzO9XQ8C1n9WEylG7SDpORqbCePIvoJYTa5vMH1O+U2kynBc9T0n
-	 Q8SVgKDgIrMHbWhiPKBxXHHSa+LJg5xm8ULJfkcUcC+N77CweyM7WZbhioPZGAZfHv
-	 Xnf5/DVkijHLQRQ4v0C7ktBeMTZ5JgzGvDd6m0+9pCgDdlNGneRtWCisAk6K9lD27+
-	 bTSgXEV7VT6T25Rii5X8NEqKJPrMGgv2zn25QrhzxTE2kkXaSOWDrOG9OGeVuqOQYF
-	 TvqoAOUoDXl2tbfvwKgNJQ0pH9BP3+EwY9ZedjzGBtZ6155EXxaBfRTord13BiR89U
-	 AnnBr3iqIiBd42TUWi6RcKzM=
-Received: from zn.tnic (p5de8ecf7.dip0.t-ipconnect.de [93.232.236.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 475BE40E016C;
-	Mon, 25 Mar 2024 18:37:57 +0000 (UTC)
-From: Borislav Petkov <bp@alien8.de>
-To: linux-edac <linux-edac@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	"anthony s . k ." <akira.2020@protonmail.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>
-Subject: [PATCH] RAS/AMD/FMPM: Fix build when debugfs is not enabled
-Date: Mon, 25 Mar 2024 19:37:55 +0100
-Message-ID: <20240325183755.776-1-bp@alien8.de>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="HKt979+O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7F9DC433C7;
+	Mon, 25 Mar 2024 18:38:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1711391917;
+	bh=blLcvYAqaiFz1G8fZPDqiwWnJvL9Uqm3A7A++8T3s4E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HKt979+ORk1GhjUQtnxxmtJbwUrwTflAts8wpAM/N32EZjdQOWQv6hEg4o1jT3KHH
+	 TxDtUSOEippLs58N41KVnI1fxTM8cx5ilGEDvgaO6kKL/clCZ29Lo1eiS+BSSwqAZE
+	 BEYre//S80GNmVbAidCHyDdkaWKRij86uLr2LLLA=
+Date: Mon, 25 Mar 2024 19:38:34 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Lizhi Hou <lizhi.hou@amd.com>, Max Zhen <max.zhen@amd.com>,
+	Sonal Santan <sonal.santan@amd.com>,
+	Stefano Stabellini <stefano.stabellini@xilinx.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Nuno Sa <nuno.sa@analog.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v6 1/2] driver core: Introduce device_link_wait_removal()
+Message-ID: <2024032554-tipoff-extrude-a631@gregkh>
+References: <20240325152140.198219-1-herve.codina@bootlin.com>
+ <20240325152140.198219-2-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240325152140.198219-2-herve.codina@bootlin.com>
 
-From: "Borislav Petkov (AMD)" <bp@alien8.de>
+On Mon, Mar 25, 2024 at 04:21:25PM +0100, Herve Codina wrote:
+> The commit 80dd33cf72d1 ("drivers: base: Fix device link removal")
+> introduces a workqueue to release the consumer and supplier devices used
+> in the devlink.
+> In the job queued, devices are release and in turn, when all the
+> references to these devices are dropped, the release function of the
+> device itself is called.
+> 
+> Nothing is present to provide some synchronisation with this workqueue
+> in order to ensure that all ongoing releasing operations are done and
+> so, some other operations can be started safely.
+> 
+> For instance, in the following sequence:
+>   1) of_platform_depopulate()
+>   2) of_overlay_remove()
 
-Have the driver depend on DEBUG_FS as it is useless without it.
+So this is only an issue for overlays?  Why has no one noticed this in
+the years since 80dd33cf72d1 was added?  Why is this an issue now
+suddenly?
 
-Fixes: 6f15e617cc99 ("RAS: Introduce a FRU memory poison manager")
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218640
-Reported-by: anthony s.k. <akira.2020@protonmail.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>
----
- drivers/ras/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+thanks,
 
-diff --git a/drivers/ras/Kconfig b/drivers/ras/Kconfig
-index fc4f4bb94a4c..41697e326fa6 100644
---- a/drivers/ras/Kconfig
-+++ b/drivers/ras/Kconfig
-@@ -37,7 +37,7 @@ source "drivers/ras/amd/atl/Kconfig"
- config RAS_FMPM
- 	tristate "FRU Memory Poison Manager"
- 	default m
--	depends on AMD_ATL && ACPI_APEI
-+	depends on AMD_ATL && ACPI_APEI && DEBUG_FS
- 	help
- 	  Support saving and restoring memory error information across reboot
- 	  using ACPI ERST as persistent storage. Error information is saved wit=
-h
---=20
-2.43.0
-
+greg k-h
