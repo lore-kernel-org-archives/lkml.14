@@ -1,101 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A90E42058;
-	Mon, 25 Mar 2024 16:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2DE5490D;
+	Mon, 25 Mar 2024 16:06:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711382788; cv=none; b=sJFrT+aXUayJxyHWLd/8iTwF0pm3Mvel61zwZN0ea53WY/7NWmCpZNaXmyA8P022fnIXSoLjHfNLtFcWO8ylD/C+jDJN1Ls4166OkzBNv7xbRdUR6a+axXZn10yr4B3zPg4NZAqwXAShbIyfUR5JsI4w3TpxnMwvpU7YP2UENi8=
+	t=1711382796; cv=none; b=gxNdEajpZd3TUk7pTdNHc2Xk0foTbMnc5SeZ53XiJqlPIozX2gYHw2Rj5AanNiDF1cGHQDiiBcA4C4RW0NHqjt9kp2f04TVwI2oBqJuL4mHVzJTMqYnr9LAOyOFcdoHL2JfMiipGW9I37REJC8FgmFb5nWg5wtZPo64TsKekFr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711382788; c=relaxed/simple;
-	bh=1PB12qwX1m7ibvKTM38Q6edyBz/Zn9xgeMYGi1UalZ8=;
+	s=arc-20240116; t=1711382796; c=relaxed/simple;
+	bh=6R/YDODy0mvmEaE7xbmqBZ9G0H9VSOniImpYBdZb5us=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VY3X/tNrP2ktAKfZ2pf9r8szIfTlUGgtVdaRWutr9ANfqwlpFdokT62L+8Aw4ZO+mjikN5BlNAUwQjxKsVepJg1Hjg1s13QO+m0re8RKjUiN78oRuPsPGAYDWIGcVoitVUWJL4EV2Th7PoRsD7okcGA7+qEhy/MitqLuI+ux/Bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eVfZdiPM; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TWhB+vZWirEUrainqp6K8/ywTbQFtBDM3tZ8/oIBxBcD5VPdOPUe9xN+NkOuS5yXuRsut4RK3vN+n4nT9ns5lJwSeTe19+1xlF6uz6LnLYPqbEzbpiIedwobmHg73fxO4izIV84CbbQ0WKiqifWx21yZGF+H21kR4jzS+9jNeWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BhsgGyDX; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eVfZdiPM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2E5BC433F1;
-	Mon, 25 Mar 2024 16:06:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711382788;
-	bh=1PB12qwX1m7ibvKTM38Q6edyBz/Zn9xgeMYGi1UalZ8=;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BhsgGyDX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1711382792;
+	bh=6R/YDODy0mvmEaE7xbmqBZ9G0H9VSOniImpYBdZb5us=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eVfZdiPMmiCdovQqrgQl0y4VTUefn0+efhOIEy23YjeklTAIaxz2QyVeYn3xIvQ8V
-	 crFQl6aO3LIaA1g91QX7ErXLxDeZBoZZcPpb9ZEz4qXLBsH4u5Q0bHOxb2wV0o/gR5
-	 51aTA9O8xY8yr4CwNZrBczwQ79docEW2zvxtN8R4ZWDfbsA0Q2UPJij3mhKVW/ergS
-	 6WNrdfQARy1iiVkPLXtcdvtSep9r5tzHsjPOr35+S0plnyso7q4bQC62FUtR9G1GB3
-	 3mBjfdh5ZqoPeXbKy7zUkrxG0V4B9HtCwluV8jspZKKNYGAOttiItywQTjLvLoCjuf
-	 juf0P4dlpSPKA==
-Date: Mon, 25 Mar 2024 17:06:22 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Roberto Sassu <roberto.sassu@huawei.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, Steve French <smfrench@gmail.com>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
-	CIFS <linux-cifs@vger.kernel.org>, Paulo Alcantara <pc@manguebit.com>, 
-	Christian Brauner <christian@brauner.io>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Paul Moore <paul@paul-moore.com>, 
-	"linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>, 
-	"linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>
-Subject: Re: kernel crash in mknod
-Message-ID: <20240325-beugen-kraftvoll-1390fd52d59c@brauner>
-References: <CAH2r5msAVzxCUHHG8VKrMPUKQHmBpE6K9_vjhgDa1uAvwx4ppw@mail.gmail.com>
- <20240324054636.GT538574@ZenIV>
- <3441a4a1140944f5b418b70f557bca72@huawei.com>
+	b=BhsgGyDX6O6ycfg4PMeg1+RsPU7ckHPQRIpR9JBaqzCP/pmXEMBSgs13FxK5M3kNU
+	 y6zJwVvFX6HaeTUS04E324dpHPhuWJL7QmCyTIKuyNUg2kRZo7Mo4pzWBa8ZQYvf5G
+	 bGyzQgeDlRSgb/YAW0Y+vT2O0oElGuHIGUQrK9Zyuz0TMJi6s5jXV2og/9REZlS9gK
+	 hWr43W7GD4m+KJ5ZyuKUaLNATFbrrjbW2cJJvOnj4TOJZXyhd//ConRtHHJGppqY8q
+	 HylaBPtGx2wPyiKsHUFVGCXsmv5yOSLn5QXM0Hv1v3Yk6GSyi5QvZXK94L0wUNu3Qm
+	 scxifwE4k6I4g==
+Received: from mercury (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: sre)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 8176A37820BB;
+	Mon, 25 Mar 2024 16:06:32 +0000 (UTC)
+Received: by mercury (Postfix, from userid 1000)
+	id 152DF106074E; Mon, 25 Mar 2024 17:06:32 +0100 (CET)
+Date: Mon, 25 Mar 2024 17:06:32 +0100
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Boris Brezillon <boris.brezillon@collabora.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, 
+	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel@collabora.com
+Subject: Re: [PATCH v1 4/4] arm64: dts: rockchip: rk3588-evb1: Enable GPU
+Message-ID: <dskay7po64y7fewkf32yhfolxxwdubihdib54ytvg2senovum7@6v6qf3waija5>
+References: <20240325153850.189128-1-sebastian.reichel@collabora.com>
+ <20240325153850.189128-5-sebastian.reichel@collabora.com>
+ <20240325165308.483b01b3@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="6t2fecdpx4yxkblu"
 Content-Disposition: inline
-In-Reply-To: <3441a4a1140944f5b418b70f557bca72@huawei.com>
+In-Reply-To: <20240325165308.483b01b3@collabora.com>
 
-On Sun, Mar 24, 2024 at 04:50:24PM +0000, Roberto Sassu wrote:
-> > From: Al Viro [mailto:viro@ftp.linux.org.uk] On Behalf Of Al Viro
-> > Sent: Sunday, March 24, 2024 6:47 AM
-> > On Sun, Mar 24, 2024 at 12:00:15AM -0500, Steve French wrote:
-> > > Anyone else seeing this kernel crash in do_mknodat (I see it with a
-> > > simple "mkfifo" on smb3 mount).  I started seeing this in 6.9-rc (did
-> > > not see it in 6.8).   I did not see it with the 3/12/23 mainline
-> > > (early in the 6.9-rc merge Window) but I do see it in the 3/22 build
-> > > so it looks like the regression was introduced by:
-> > 
-> > 	FWIW, successful ->mknod() is allowed to return 0 and unhash
-> > dentry, rather than bothering with lookups.  So commit in question
-> > is bogus - lack of error does *NOT* mean that you have struct inode
-> > existing, let alone attached to dentry.  That kind of behaviour
-> > used to be common for network filesystems more than just for ->mknod(),
-> > the theory being "if somebody wants to look at it, they can bloody
-> > well pay the cost of lookup after dcache miss".
-> > 
-> > Said that, the language in D/f/vfs.rst is vague as hell and is very easy
-> > to misread in direction of "you must instantiate".
-> > 
-> > Thankfully, there's no counterpart with mkdir - *there* it's not just
-> > possible, it's inevitable in some cases for e.g. nfs.
-> > 
-> > What the hell is that hook doing in non-S_IFREG cases, anyway?  Move it
-> > up and be done with it...
-> 
-> Hi Al
-> 
-> thanks for the patch. Indeed, it was like that before, when instead of
-> an LSM hook there was an IMA call.
 
-Could you please start adding lore links into your commit messages for
-all messages that are sent to a mailing list? It really makes tracking
-down the original thread a lot easier.
+--6t2fecdpx4yxkblu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> However, I thought, since we were promoting it as an LSM hook,
-> we should be as generic possible, and support more usages than
-> what was needed for IMA.
+Hi,
 
-I'm a bit confused now why this is taking a dentry. Nothing in IMA or
-EVM cares about the dentry for these hooks so it really should have take
-an inode in the first place?
+On Mon, Mar 25, 2024 at 04:53:08PM +0100, Boris Brezillon wrote:
+> [...]
+> > @@ -484,12 +490,15 @@ rk806_dvs3_null: dvs3-null-pins {
+> > =20
+> >  		regulators {
+> >  			vdd_gpu_s0: dcdc-reg1 {
+> > +				regulator-always-on;
+>=20
+> IIRC, this is only needed because of some bug in the power-domain
+> driver (or elsewhere). Is there any other reason to flag those as
+> always-on? I mean, it's working but probably not ideal from a PM
+> standpoint, as that means the regulators will stay on even when the GPU
+> is idle.
 
-And one minor other question I just realized. Why are some of the new
-hooks called security_path_post_mknod() when they aren't actually taking
-a path in contrast to say
-security_path_{chown,chmod,mknod,chroot,truncate}() that do.
+EVB1 needs it for the generic coupler infrastructure. The Linux
+coupler code cannot handle non always-on regulators at the moment.
+That's something, which could be improved, but I think for now we
+can just make the regulator always-on for the EVB1. The EVB1 is not
+running from a battery anyways.
+
+Greetings
+
+-- Sebastian
+
+--6t2fecdpx4yxkblu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmYBoQcACgkQ2O7X88g7
++pp+rQ/8CbVqn3AIkLQp1cGlyaXbLIeiuWKBDLqqm+uO9zJIPLjt05HgBd2I9ULk
+WYiqvzNlhjoFZG6a6NR7psLECc/PPhy2R+de5q5K7YZT+I4YpMgR2dc8KQkzAJMw
+vDbq+WTPXshiKoNpcg4Snz6IUUFghFJygNbYD2GYD0RF0nBu1HNAVDAFOu/U6u5h
+d8VWeJVJNYK23ak8Gf8cLvk6hpBw0GuijpH4nmundM2ZbWpIMniRj5N80zgBa6Dq
+rPmfM0b29Ki1nYIcDtZH1p/EpOWKx0FE0xtBaQ54cd6i1q4mK5uBDJRFQVHE08bi
+K/66sWZI0Mx5jFZyV8BLBIWArbX/8Lc4g2U4rDNq5bUehAiPfb/VAxR6m83dGR0W
+4qTJIMoVbnq0ifJBHkecN9tYrbNoHcnL367ZwYfvvjk6dtWUKmJm4Wo4LbwaWUXz
+meeH1p8OgOqueyW5x9kWBvGDG75MU6Wdu3cBvhyKlccQJuAocAUNf41GKKTpmUBz
+Hk82Qj6XhsriaxGoiYKXb98sd7LnIzscQsNQpSNy50x0p8xqPIRL43QvW2FakCsv
+ydhlocwajYAk66x12LHbD7TxE8TMreKVTeAuAv2wqbcdzRe7eL3lAjbGGIl+iLd0
+BbANZL9w1VnEe8ck2U6U4WKslKyd5bFQj2kVsdynXau1FsMGirc=
+=3mNC
+-----END PGP SIGNATURE-----
+
+--6t2fecdpx4yxkblu--
