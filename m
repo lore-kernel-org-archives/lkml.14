@@ -1,166 +1,114 @@
-Received: from esa7.fujitsucc.c3s2.iphmx.com (esa7.fujitsucc.c3s2.iphmx.com [68.232.159.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 194A1145B29;
-	Mon, 25 Mar 2024 09:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.159.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711359608; cv=fail; b=TDMXYuHdebQccox2LXCsaGbknwc5TmLpSmtW1PweNbYSHIUibioT7cJIdEvSKboQZ3fucj/DTsRjLDhgllWRXXg+gO/2fLFZ9/Vzj5nhqaau77GbKLUmwQU+pp8IECfeECr1J8wyZndvqzGqR0cq8BrBUJCreesKRX/xPGM5/84=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711359608; c=relaxed/simple;
-	bh=Z/5xlqoM86PbZ6pyYYzGmk7tZBzKI7XiMVMWlvi9/5Y=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=PPXhXne5C7KhB+6EzwZoIoz3eeJY5fURie5cVvRRnIYDP1zTO+QbTCIO9r7vgRVN/lXz/WzLOCYIm2P7ZcEOz0rgRMOpIXUg0hneDn10/2+Xm7Bwr4vNf124rSR9PjxniL9SeV1fF88t5dLO0JTfubho5F1GjS2mlRbiNM71Y78=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=HLN6HlwQ; arc=fail smtp.client-ip=68.232.159.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD76413C3D2;
+	Mon, 25 Mar 2024 09:55:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711360515; cv=none; b=hbjakyH73x2G5SrjnrVC7sWzROXA4Z9jjmPdeqmQVDTglO/74rG87VM0+usz2njTKa3XmHrchp4KT85bJQe4ZhSFBrxOUyxwF9ZmsuRzf486pGv7oSOF2E5AkmpGhCUsgZKNIuTFCPaqsFj6x01zPVwO98lXKLS4d8cCfyoDy70=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711360515; c=relaxed/simple;
+	bh=Sjjpd0e5L6/6IHS3PxHBjSD0ESGeyO/POIt+kwNDIDA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ns7brd0bbsuLI6+7uol537W06QARUnWoLplsTc65OCnJfYYVqn3W3ST1hHBBifk476WEGKLHFyq6RrOCMnG7hWF4kZn3e8MswFV+b00QC1PIYk8KCatDM9uO8iYDopib/pwhmXX1HwkZbFfKZ0Z8ali8oEHxcIjcxORr/WSGNzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KzJNPFYJ; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="HLN6HlwQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
-  t=1711359607; x=1742895607;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=Z/5xlqoM86PbZ6pyYYzGmk7tZBzKI7XiMVMWlvi9/5Y=;
-  b=HLN6HlwQP/vq7g6lPHsp3iFnP7RD/H3xmOnXZaHxUpDHwPapTNVxHxge
-   UEtwN2FS+/YdpXyY8nLQca3zSMaapVkVu8wmJ6MyByvSIK9VQ3UCKOocc
-   Luji8N71Jh+ks8fbzXJ2XZPMWPkezn/1ydR5qOuXHl7uEMjvuEW8IPAiX
-   LNlmIsFDc3S3Ye+e8fu+74+xdUImnhURjMWGBCLWgYnb1BJtXXSJdTRza
-   iJO0NCHr4QHCUSD5+cxS7I0QtTY94R7Z2FgEcZ+oQmyobJZuvVWiGqGwW
-   fNcjf/6Tdvyp2sXfOhw1SMGicVPcYRxXzoe14rKK1EIpRVr30FBtSSt9c
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="114950600"
-X-IronPort-AV: E=Sophos;i="6.07,152,1708354800"; 
-   d="scan'208";a="114950600"
-Received: from mail-japaneastazlp17011004.outbound.protection.outlook.com (HELO TY3P286CU002.outbound.protection.outlook.com) ([40.93.73.4])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 18:39:56 +0900
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fVdF7RFuK/AYuqggDRIcBYnOpaHt+bT6KI1noXJye1mMxtBzM0ZJq530Y5XuXrTo9PnUMDhtumvAIL3IkNEjK430XKHOI97A3JnzMo/0MalReZiBaXcHwtxh8PQJSALR3/iVePsq0MyEtgEsKlRmusih/R3vQ9eG4L8p6Vl/Ex1/g/XDJaeUarhBpa6YeeBaQVrzg0dDfW96UaPoKBVo7It6WGvvHKV9VNoptlBZy+x9G76gobxaBgHOHxi/lw8GWTgka3Cztmf4TwpsLQmtn2bV1hKY3EB2WYy9OUPdqpYFcfnxnKYF/DrikiWk3vqxmY5KNg+V8j5RDrW+J4vVow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Z/5xlqoM86PbZ6pyYYzGmk7tZBzKI7XiMVMWlvi9/5Y=;
- b=SJEtnCgDIc4wCU19uOpS8OskHRDrLVfY0isEnPYPd7xedmEzuDUrOtNVpIS7U7+TJde059tesBAM8uYR34FBbvv1GbBBbbvyP8pzxxzx4WKvZzOIj2Vk1PpZ7uoLUvznKVfrMbrUrQGxa+SrCpam7013s6HlJP9ktMEdgT26GtaduupnmCjEAYKJEfc9eJcxtFkLpmR11TT10lk6GEwlYT0mT6RVFcnUN3GRC4S2ZKHeeA/aYdxeNAEq9zRxJOFpN1uPmKbH8rM0X1bmogfhWvbPdq4tOFCK7Ejn0g4u+pTh+vK930Yf6P/H7g0yC95KnUo8jIhw9F/+SbzutuPgmQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-Received: from TYAPR01MB5818.jpnprd01.prod.outlook.com
- (2603:1096:404:8059::10) by TYYPR01MB10593.jpnprd01.prod.outlook.com
- (2603:1096:400:30d::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.31; Mon, 25 Mar
- 2024 09:39:52 +0000
-Received: from TYAPR01MB5818.jpnprd01.prod.outlook.com
- ([fe80::c52a:473a:a14f:7f0e]) by TYAPR01MB5818.jpnprd01.prod.outlook.com
- ([fe80::c52a:473a:a14f:7f0e%3]) with mapi id 15.20.7409.028; Mon, 25 Mar 2024
- 09:39:52 +0000
-From: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
-To: Wei Liu <wei.liu@kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "K. Y.
- Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>
-Subject: Re: [PATCH] hv: vmbus: Convert sprintf() family to sysfs_emit()
- family
-Thread-Topic: [PATCH] hv: vmbus: Convert sprintf() family to sysfs_emit()
- family
-Thread-Index: AQHaea+sGRGDRSgQ6kqU8QEjVmbOQrFEcIoAgAPM24A=
-Date: Mon, 25 Mar 2024 09:39:52 +0000
-Message-ID: <5c1f6aba-bd3c-438c-8e00-548fe29d8136@fujitsu.com>
-References: <20240319034350.1574454-1-lizhijian@fujitsu.com>
- <Zf4WUMyNq38LyDLW@liuwe-devbox-debian-v2>
-In-Reply-To: <Zf4WUMyNq38LyDLW@liuwe-devbox-debian-v2>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Mozilla Thunderbird
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fujitsu.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYAPR01MB5818:EE_|TYYPR01MB10593:EE_
-x-ms-office365-filtering-correlation-id: 95affd22-0669-410d-57b5-08dc4caf85e1
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- YXnNG+oEBpuLFK4OwBO2G0f71a0JAFhlym1Pz8/c1vZkjHB/DdIHeU2JKhkk/7si6uvyGItzpbNOK2mfw8nSb2tsY9AZK3OyjXzfWIGaIZpfpN60K3cY8nVKSN9EqdozAtMLqA3pf+3KgEd+6lptCxYGWJUt3Blz2GoeXnd9wk5ohdL/rhxzuF8f79yK0JRIRgxgyM/x8taQWHlKSuw1P44ubFtHE98y9KBn/rUrfoSFgzQT1J8MmCJkGg6R9Fqpu4cdlqHE9ypQu4RSm229oXU2awO3kPvk1WM88I7c0nhI3Q5oNswfpOZ8ygkPkWtCsuwiN7NLfZSG62D8vWt/FDUiJUNyFcTpxvYoGdBd4fCIWdx2f3RRK+ppvKci3Kunxe8egoFL6mq7uIdVWU01hkVvuRqRXRrYKQ5zb42oJtBLmypf89fjp4DGWDavgvY/e9wRGVCOWdF+jANIn0Q9R2Yq0z/O7Q9TVa02XXqeQ8A/rx+5zl6zjgqElLqkv9JUdHVjvvWjDrmOjclfISCbZhNJD9hSOBMlOnvLlHzsWOIsXPrj/mJJXgFV/3GLigxvnv+Wnhq5PqN2VSCL6SbJiyU6o7WlpFd52Z/aV+AXo69nrx4jfixmK5boNwuiWX3Wq3MOnd1c9r2/g0Rl5ZQ784aKMTT9T1DXgjTNHqCe2AyWFrMN4WlSaAHJkl8AnmvKxYP6AHZFlFmrZZGqORlJps+J0T9O0FHJgJ/6Emn/Y/SrG+PqH1YTuJPwjgAunLlr
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB5818.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(1580799018)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?cHMwa2s2VnBuUXVkbVF0cklqbWs5K1BhMmZibFVDMzIvSzVoTW1Ddk5FMDZw?=
- =?utf-8?B?cnZMZUpSV1djYTNuNVNGVzZtVG1Tcm5RWW5nNDBQVVpxT3pSSTA5QllpK0FL?=
- =?utf-8?B?dmYrcXYyRXRyYk0xQ3NCaXZnV2sxQlQxTTNHZFBOSTBXSFdlUjZmMEpQZU1w?=
- =?utf-8?B?RlMyd0J0QTZXY2pNY1lCQkdpT25GWlRtQXlXQUhkTVNGTTlPUGtwRi9RL1NM?=
- =?utf-8?B?UjBBOFoxV0JUR2VzSGQvVnlZUEJ4bFNBT3BsaExyc0xCa0xZekZiMExuSFJr?=
- =?utf-8?B?Umo5M2hma1VmR3hnaXJsOHFKZUdrZHVqNmd0bklscUZDejQxUjRHbmM4TWlI?=
- =?utf-8?B?d0FnQXBlQldyQXR3aDF3ZDVzTTdkeFV1K0xaK2g0TjI1ajVaakszdkcvcDIv?=
- =?utf-8?B?dDNINzVrWU12Tzh3MitxRkRBZHRCckdJYkhmVk1tTER0Zm12ZXk3ZGdQeDV4?=
- =?utf-8?B?VlNhTW0xMUxmcW9hbzVXWTBaY3hGSXk3bGZWR1U2cHNOVTRaUzdqSmJDZkdq?=
- =?utf-8?B?K3dvNnl4K0o5WFVvS3NmWDNpanhiTFdzUlZUakZZT3NiVWRCYlZhVmdCUG5W?=
- =?utf-8?B?TmxXM3hKUXdsMWpKY0hkT3BPZmtwRDA5TkRpYXZqbWdjSmY5c29kRjRPSU1q?=
- =?utf-8?B?Nkt3YkJCcUg3bVdJS25RWUowOW5xenRkMjBEcnRhL0NTaFlYK3ZXQTRzK2JO?=
- =?utf-8?B?UWNmMnVUbW9yZStmUjNsaUU2UERNcjR0c0xoWGt3a3pRK0t5VG5NTG1EYk1N?=
- =?utf-8?B?SU5ydWJwNHFQbTRqZ1FENXkybTJaUFBrZVBteEdjQVJIWEdmQWVrS1JGSnoz?=
- =?utf-8?B?UFlkLzFJV3Yva1EyWjNuNkw4QllZbDVlZ2FFK2RPNWZSZWFCNHFvRTdCbHBv?=
- =?utf-8?B?RUMwWERXTHB3ZFhVVVJZekZkejIvRVduZ0ZXTUN0c1hNV2poaWhwTEI1QmRy?=
- =?utf-8?B?QTlJdjhILy83bHVmdklPUTM4SjhrKzZXeHVqYmJHVGVCQVh3VVQ3eGQybmlN?=
- =?utf-8?B?RkZ5U1RxaEhFbFc0d0hwdkFCR2ZlTCtjMERlbUt5TFU0NDZLbjZGaFJlbm5j?=
- =?utf-8?B?ZzNiUFRqYmdxaUovVzRxYkhwQjZaaGozSGx2TC9HVWM0RGI2TWhhcU9BSFAw?=
- =?utf-8?B?Y2M3VFhsb2tBWHF2bmpaQytMTFdUWFdqSlhaenVVTS9XSFVNcDREY1FCZGVZ?=
- =?utf-8?B?b3l5eS9KY2JleFlVR0hMbEV2UWZMTFoyNjdqbTdRa2N0Y09UblJDMVNzdnVj?=
- =?utf-8?B?V1krUDVXdm1Wcy80Nk5ESzRrOWd6QUxid0oxUTIrUy9mcHZlUXRCUkRZQjBQ?=
- =?utf-8?B?cjdRamgxa2FlZDFCOERldlpLZXJrdUgwWlpuZFo1dndKbFlsQWsrS3ZwRzdr?=
- =?utf-8?B?UGlqOWM3Rm5IdC9KMGVCUDlTcTVSOHFDWEl5T3RPQ0Z3bS9qVWZaWW4yTFVm?=
- =?utf-8?B?SHlLT2RReDl4aFIybm1RR21mbzlxSUR0bks4N0tpengrNG1YcWdrMFZqRG1M?=
- =?utf-8?B?Z0ZIbzlWODFWM2s2RzZSUUhBM0U5Zi8xODBZVFNaMkJDcDZhWkR1SFZrRG9V?=
- =?utf-8?B?WFpPd3BNNGQvc2VOVjNkZExPUkxDS3grcldIbk9QVUxZZlZGNThDWmJiSW5o?=
- =?utf-8?B?R0Nra1F1bUpNWGNtb1V3bXhsdlZib3k5Q2c5TWxLTmJ6ZnNvdkNZZzNvaWRp?=
- =?utf-8?B?UEtwL2VLcU4vQzAyWTRwU1pvQTY1VFE3WTNHQytXb25uYWE2US9VZy9rWmJu?=
- =?utf-8?B?Q0RLSStXaE41YkFIWXJDOVpwYVFXYjNtOXVCMytrTVpJcEZiWmd4eit0T29D?=
- =?utf-8?B?anZBMi9XdW5VSVlYL1JVN09wVm8vM29rVXRSS0hIZURIZXVyU1ZtZmZnR1Rm?=
- =?utf-8?B?MGJDZVl3S2xpZnNPQXdvUkZPRGlocm9yMzFPVjkySHE4UEd3eE5JN095ekYy?=
- =?utf-8?B?UTZXWGhGL0QyNlQwUkRpS202UVErMW1HQVBIemJiSlpDZ1RrSGVHTkFyYWNU?=
- =?utf-8?B?K1dQbGR4MTA4ejkyWXJuTURkV25uTGQrYTA4YmJ5bTV2NVRzQzdHQWFkL1I0?=
- =?utf-8?B?QU52ZHc1OFRKdExYcmhNWnhmOHUrTFZJdHFMbjlxcHRUcjE5cTRDSGtTVVRv?=
- =?utf-8?B?RzNOQkRwYWtzUGd1ZFVvZUsxVEVCNWxRWmR0L3UvQ1hOMlBPbU9xL3ZNMlJj?=
- =?utf-8?B?VXc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <643D9C6F1962174A8B82D5CC9597722A@jpnprd01.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KzJNPFYJ"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1dde26f7e1dso29248805ad.1;
+        Mon, 25 Mar 2024 02:55:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711360513; x=1711965313; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/wUCky1hR6lYs2+y+tVEc6I8rhJ8fPBV7+LaM66mMDQ=;
+        b=KzJNPFYJJYp5rkaN7lIi9RSQXwbWCWuC/zkze+8luKnjEiL8LIsbCgjSFYkroL2u46
+         rZo7YS/zCZzdRUEvkJxhqBgDp4dZh/FqgfkpWpiseUsKPOctTGDQFB2xEvb3DNM+b5Ja
+         dSjYXz9GvGq4CbHr5AXl7WbhdZRwVJgvYYvVxwGVa+CqMTIWTj8ywQDimncR5rMxAmRY
+         cFw7yXkX8KPHcnVbrq29cQMOSUcWtB31g29GXQ6gK1B9UUx6OyIOnO2/pC1emXIxWNEJ
+         IRckgKj79J6MlapH5NvehgeWV+6bBdOG/HglTWxMdK5VxAc/vnXWUU8aij2OuBVJWHjr
+         Kvyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711360513; x=1711965313;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/wUCky1hR6lYs2+y+tVEc6I8rhJ8fPBV7+LaM66mMDQ=;
+        b=gQYgQEhRVAkcfCljrOnAFoAGMZSu5NQUE9R4ZEQWhp56nC3VZqQ9jD44DXFv5I/24S
+         crNDv7UsLVj3FxIX/zI55YxgqoKBL9fyiWjWlpB9jZH7+mSgzTWERtUrxpR349iKYT8V
+         rmAdGb6R7fvlG8tm3elD2mR2Hs7QxaY9YQJ7O87jzH06H0jjl5xpWVVq84WOczEXWpb9
+         YTMA3Ovkg6FqGhhhpCC83mVkkpSSlqnmqLqlRjIU5nzrV3LghyuwpNq4n7aXVmWIPuNQ
+         l3Oz2ewTbeK8JMBJXtH9h6ehrMTomVYV2uHZ3jlpMfIXQ7Eiz3CzHZ7PfMT6ef99rXfN
+         F3VA==
+X-Forwarded-Encrypted: i=1; AJvYcCUcYwxTrByvTkc3L1LygGnh6BvsoLDnGxWP9w18sH4bQh13wrtVytXju7Dxl4MsF5D7hKk9q3laUpWZXx4WZxtIqhWYVmwQD5Vs+h5+ESlOyZ/6pkUW0sJENWxSAcOr2Le8GJto
+X-Gm-Message-State: AOJu0YzX9DlGcuQyACzsKbN3o/WeMctPfRMA4SKi+bUvpvHFSPKKSmVd
+	sJhiy1dCLENKg2G7J7NpLSYoHdTycZ6t9TQgdCnaei132IxxvgHhzNKDVHTvS5g=
+X-Google-Smtp-Source: AGHT+IGK0FJmKHRVnk2WArpCghu8kTZcuRCabePkI7qYLmNOFrIBc1MK4b0Vh5g1H/diRuqn/Arq8g==
+X-Received: by 2002:a17:903:22cb:b0:1e0:26ac:8234 with SMTP id y11-20020a17090322cb00b001e026ac8234mr7355496plg.18.1711360512998;
+        Mon, 25 Mar 2024 02:55:12 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id f6-20020a170902684600b001d8f81ecea1sm4430360pln.172.2024.03.25.02.55.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 02:55:12 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 0813818469084; Mon, 25 Mar 2024 16:55:08 +0700 (WIB)
+Date: Mon, 25 Mar 2024 16:55:08 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, florian.fainelli@broadcom.com,
+	pavel@denx.de
+Subject: Re: [PATCH 6.8 000/715] 6.8.2-rc1 review
+Message-ID: <ZgFJ_H2HHwTGFg8Z@archie.me>
+References: <20240324223455.1342824-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	MY/3nN+p9kY+C2xtS/29tGneS9VcrL1ueEJIV65XA1rx+xuDZ3xVamb+Sbr0YvcaiPf74+HHimMu5yOqcAF9p0I06jXO4IRDEemaS4hqYCmx1cjtDdY4z+iFghxpGXgKOX9j4ntDJ9QjwxnGATVktcCrowrhkT5FqFRFcuXptcx0qHHMbukzegymn4WcskrJJrtOoeijzC3S9GXf+mwFuWVb81Wr+Tg34a2H+oh3uDJUJxsMnuvlmOq1vQuw65n0vYJwTUU0vzgc140qvJGq6EbkSm5jg4kS8WUlXKEVGyiXfIXPLO0t7ny7RlkZGNDTrjV8oucDMAidz8FokFS8+wiESC5yEoYL9MwDygO98nT3CQBTXkbKeISfyONTzZYfxn5Qrj7nAZ7+hyhqNx/SVVwkhDTlpSjPMy/AFgiQwjAm7Gl+XyX/Czr+gJoQ0Ux0q31D2rmtSW/8M6kNDeSStde0Ohp3gs3b7Z3ch+7l2Wd8Y1PYswDXGs/SEkxYXYgNkKKEGEYpM7hWwNluuK3p7BwaLgFSn42ST80jSiEC37YuQnJkpAWBC5G7MJ4VY6wF8aLzLVadk9TQkAxJK6haOdza3wGdol0gdoYZUY+8EBXRkZRHyOgqqkgVaQo1dABh
-X-OriginatorOrg: fujitsu.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYAPR01MB5818.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 95affd22-0669-410d-57b5-08dc4caf85e1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2024 09:39:52.8631
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9ZHWFh2J42p/r1RclpvQL0rXWKhPM6hQFFSejz722FqTyBEo1ZLPZ9WZ3s4cHY0tiv+TYongcPDN5kLtCi4e0w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYYPR01MB10593
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="VgRQLFnf84aRFWUP"
+Content-Disposition: inline
+In-Reply-To: <20240324223455.1342824-1-sashal@kernel.org>
 
-DQoNCk9uIDIzLzAzLzIwMjQgMDc6MzcsIFdlaSBMaXUgd3JvdGU6DQo+IEhpIFpoaWppYW4sDQo+
-IA0KPiBPbiBUdWUsIE1hciAxOSwgMjAyNCBhdCAxMTo0Mzo1MEFNICswODAwLCBMaSBaaGlqaWFu
-IHdyb3RlOg0KPj4gUGVyIGZpbGVzeXN0ZW1zL3N5c2ZzLnJzdCwgc2hvdygpIHNob3VsZCBvbmx5
-IHVzZSBzeXNmc19lbWl0KCkNCj4+IG9yIHN5c2ZzX2VtaXRfYXQoKSB3aGVuIGZvcm1hdHRpbmcg
-dGhlIHZhbHVlIHRvIGJlIHJldHVybmVkIHRvIHVzZXIgc3BhY2UuDQo+Pg0KPj4gY29jY2luZWxs
-ZSBjb21wbGFpbnMgdGhhdCB0aGVyZSBhcmUgc3RpbGwgYSBjb3VwbGUgb2YgZnVuY3Rpb25zIHRo
-YXQgdXNlDQo+PiBzbnByaW50ZigpLiBDb252ZXJ0IHRoZW0gdG8gc3lzZnNfZW1pdCgpLg0KPj4N
-Cj4+IHNwcmludGYoKSBhbmQgc2NucHJpbnRmKCkgd2lsbCBiZSBjb252ZXJ0ZWQgYXMgd2VsbCBp
-ZiB0aGV5IGhhdmUuDQo+IA0KPiBUaGlzIHNlbnRlbmNlIHNlZW1zIHRvIGhhdmUgYmVlbiBjdXQg
-b2ZmIGhhbGZ3YXkuIElmIHRoZXkgaGF2ZSB3aGF0Pw0KDQpJcyBpdCBoYXJkIHRvIHVuZGVyc3Rh
-bmQsIHdoYXQgSSB3YW50IHRvIHNheSBpczoNCg0KU3ByaW50ZigpIGFuZCBzY25wcmludGYoKSB3
-aWxsIGJlIGNvbnZlcnRlZCBpZiB0aGVzZSBmaWxlcyBoYXZlIHN1Y2ggYWJ1c2VkIGNhc2VzLg0K
-DQpTaGFsbCBJIHVwZGF0ZSBpdCBhbmQgc2VuZCBhIFYyPw0KDQpUaGFua3MNClpoaWppYW4NCg0K
-DQoNCj4gDQo+IFRoZSBjb2RlIGxvb2tzIGZpbmUuDQo+IA0KPiBUaGFua3MsDQo+IFdlaS4=
+
+--VgRQLFnf84aRFWUP
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Mar 24, 2024 at 06:22:59PM -0400, Sasha Levin wrote:
+>=20
+> This is the start of the stable review cycle for the 6.8.2 release.
+> There are 715 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>=20
+> Responses should be made by Tue Mar 26 10:34:31 PM UTC 2024.
+> Anything received after that time might be too late.
+>=20
+
+Successfully compiled and installed the kernel on my computer (Acer
+Aspire E15, Intel Core i3 Haswell). No noticeable regressions.
+
+Tested-by: Bagas Sanjaya <bagasdotme@gmail.com>
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--VgRQLFnf84aRFWUP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZgFJ9wAKCRD2uYlJVVFO
+o5hLAQDTxIxJU4ZwdJI9EJfYJohft0xL6TnU/2LW1jeq6UpBhQEA/Da8+KyolhU9
+Q1G0vcUfFJBTbT2e/b/zHZ9mrbjBkQo=
+=oyZa
+-----END PGP SIGNATURE-----
+
+--VgRQLFnf84aRFWUP--
