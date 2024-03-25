@@ -1,119 +1,102 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD97219F529
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:54:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3571A0AE7
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 10:55:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711364101; cv=none; b=on4vzZu6k21hN16er2t+QTGKgv+sH44zozixrBg6flBrL6D8RiO5ph+eZBH45fDzInCjtXMcIoXW9TbPvRTlUsiPMwFG3a3jPD0g3OyJQ8751pmP1kW3HZQy82PZCfY3Xl/fc4TLVsnTtq6CvAaG6PYXPmXyjHolkhiArG0FXyk=
+	t=1711364118; cv=none; b=hzQknrkDWluAGSnziO34wKXUSVo1DDiY1+rl5vRxEytO3ukeKn27FHi+yiEtoyaiv6FR+ZjS+XDKiUoAyHa3/mcVY7zGs/yHDoXAQ9XO/2WvyOcBFnrxkejSBWjXFGyrD1fPDZHwm22t2N/geQH94nyrOW4FPN2+CJbSI2zjCVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711364101; c=relaxed/simple;
-	bh=UzyidwSIDUNATQV9Wm0Ut6BdNvIpkTtmBKV1epvsvH4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ivkjpln6v7wpUhDYRVB3Yfb9bc1Sx39Ty4oRaBFh/gcCUt2n1khpWmNOuLI789FR2BX163N5vf9Ndf0PXz/vX2hLxYoVHAtbMdm2cp1oC3mME9aJuvCj3tuyX3LxB1A7wVIHvYeflfzN4T26ekhtEioiEQsUpUPf79LJbOOMbc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=CLzj6vyl; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1711364118; c=relaxed/simple;
+	bh=mgymItK7WgmH1MnYlpzSZntvur4MDFzPilSgMUUUbnk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=pEBqCdslbpRtqHBxPoN6OxBaTkFLMRlGpN/9kJraqU6JPlZH5HrcY64U4vUYjCLua66bcz0SPpET4of0FcNHkAKngDUrBmfNe+okjzg+uU6RugIRrc6/Ve8BPETTPTncYZPRBZBI9ooDeUGI6nVkFKa1QQT9QEQtXBqlAhVzKOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v8DPXiPg; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CLzj6vyl"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-513cf9bacf1so5702712e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:54:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v8DPXiPg"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-41489e975d6so3464165e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:55:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711364097; x=1711968897; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XTAS3N78+eEvzc9y/KOpFGYpe/3uK9ebe/5f/RJ6Ot8=;
-        b=CLzj6vyloG1wzskVblbWnm3ddVKrzzEfekNOkbnHvQ0+wq54cCVysq1glE35VPbjcF
-         Bevhgl/e7ZYRm5avjTkUPoUDF6EnhC7jhOM66xqiNXV6JDMHSSOpcyzIi5a1HerqNkN/
-         OZw6bdwhflAYASQ6McGlT5so2faD4jDG5D79E=
+        d=linaro.org; s=google; t=1711364114; x=1711968914; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZnH613nBUeVax298UlBKbR2krvx0QgfXLhq8xs3I2/Y=;
+        b=v8DPXiPgtXNIIZf4AZXh2j9n7c05MD5Axm4aa+W2PsHDBf5U8YGfnjMpmDWm3uVpWp
+         EhrOEslvDRpS0z0SnJzCLJUm+/nssnHNFuPzJMMGii1BZ316NmSQRptqTcSIuytT2KmA
+         ofsKH968ToPwIrt+hikhXF5DeXg6F3HhJILstECNoQ3tdKNGmonsYEn4Twd8TuYVnUGJ
+         KyOBabU/K9icyBUeXXpBjWc0nWM+YoftHH3LcxQ9+hNELZqyGIKRmu8v2GHLUSvLRm7a
+         pDOawm00Eoob3iPIKBgeM7ausGh4QcQmI71/oyAt6pDiPSHmhUpcc5IlJMjl3sK9pn/X
+         vDQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711364097; x=1711968897;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XTAS3N78+eEvzc9y/KOpFGYpe/3uK9ebe/5f/RJ6Ot8=;
-        b=SRRWyguGvr63oA+n6fC0YmMcW2ycGNrWavHOQEJAjlk3WBYZs5Xos19iMNqL9LLhUr
-         aFJFFntBxHHKaHe0noF6YXe2ge9fyyF48akm1joqxajLjq89Dc6Qde4JQ0BcufQe84UM
-         aGzMphMPpKatJi1jL3PfxJlullBarMEqWqwKFRhHlwmmNQkau4TowW9SHNl5NJyHnb1A
-         bSj3aVPMoSiCEdJYtUa/FV+tEIhIRSVlooaYphRejmejslTOqIisRPqxTwn07JY810QO
-         D474gJpBgvMjFt9kWjDdGjpGDG5nJds4mzGLK+8r18NEoQzOSYHng4G3O3GG1cT9IOOD
-         LdHw==
-X-Forwarded-Encrypted: i=1; AJvYcCU5pfVzHYlLgwPydS7b++xHdzRd4hN5eeM5p7y8hOwJhGoElSFMZD7NhCnvMb88maIyHJuWZVSMWf0Eylo09Eo4DlXu2vLEoKCvHURl
-X-Gm-Message-State: AOJu0YyA8rAd70fizocT0Z09SF+tnr+x1kuwT/Hk6kOPLiFmaVXGGUgA
-	lG0tmXcNV+te89lQlHV1/i76S7UDegLkzYggb+euJ45EFQmiyMrL6Yx7f2O5HQ==
-X-Google-Smtp-Source: AGHT+IHVwSUZiFYY4NBhuItMUBGjJl/jpX/5a9saFTj0ty03NNDiNEz6BwkZcnHA9EP2utUK7LjgQw==
-X-Received: by 2002:a19:4312:0:b0:513:cb74:9ffe with SMTP id q18-20020a194312000000b00513cb749ffemr4230298lfa.50.1711364096852;
-        Mon, 25 Mar 2024 03:54:56 -0700 (PDT)
-Received: from cracow.c.googlers.com.com (38.165.88.34.bc.googleusercontent.com. [34.88.165.38])
-        by smtp.gmail.com with ESMTPSA id f20-20020a05651232d400b00515b08c7397sm93489lfg.67.2024.03.25.03.54.56
+        d=1e100.net; s=20230601; t=1711364114; x=1711968914;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZnH613nBUeVax298UlBKbR2krvx0QgfXLhq8xs3I2/Y=;
+        b=OUaj1cEKQQCaWMiDwQsXrIpgwALqA2PzWYkpSHpT5bFV/b1pHhJok8r/ldMhQtYTDU
+         600SgqRGsuW1BpTLCzqNohOlO6+GI/LjYMvxSBNpAA9bcjv95iI9NjJEWJTmz2H+Oq7L
+         f8Qv4D5G+J0YC1RKYA/3eOlM27kNCqdxAWqosqEHlhIhiymIPQST3kcQwsl1dbmyH5yd
+         /x0nRDp07iCaHZfQ0VCVPO9pGfG+9mEnuS9FZqUIcTHJAJUbuGcox62lBxqdNOCJ7w0/
+         ZBA0b4pyM3F2laghE/RPZuHZxW3ISS6X6aqMTgYUMEDFkYvJKl4Ujpp19IUWE05CiqKW
+         /csQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX6sCxLVpKEG/REYbJqMNITODLyFGrw0wltoBS4IpYFWbPJsF81Af1ak5rjkCmpE6RJMUg46iw9LNisQHf7IOMIVSsNdZvXO1Hkc4uD
+X-Gm-Message-State: AOJu0YwnswvnU4/Af3u63KvmkRalsrdesV5oz5NxRbM/tsNNE+Nl7qzo
+	+KlAJ1mMfZkjQ0+94Rxr+s8lPlZMMSeW7AkNUxQN0hYz0UBoM9GT4jnAR8myGPM=
+X-Google-Smtp-Source: AGHT+IGwGU7gpQJqeexmqiCDr1Yg2n3xkuKSJhvlV6DEgZ55qS9f7MIRV9jlesIETW2qxwJx8OpcwQ==
+X-Received: by 2002:a05:600c:1986:b0:413:1f65:ec19 with SMTP id t6-20020a05600c198600b004131f65ec19mr5038708wmq.37.1711364114083;
+        Mon, 25 Mar 2024 03:55:14 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id m29-20020a05600c3b1d00b004146750314csm8161410wms.3.2024.03.25.03.55.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 03:54:56 -0700 (PDT)
-From: Lukasz Majczak <lma@chromium.org>
-To: Jiri Kosina <jikos@kernel.org>,
-	Dmitry Torokhov <dtor@chromium.org>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Lukasz Majczak <lma@chromium.org>,
-	Radoslaw Biernacki <rad@chromium.org>
-Subject: [PATCH] HID: i2c-hid: wait for i2c touchpad deep-sleep to power-up transition
-Date: Mon, 25 Mar 2024 10:54:52 +0000
-Message-ID: <20240325105452.529921-1-lma@chromium.org>
-X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
+        Mon, 25 Mar 2024 03:55:13 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@gmail.com>, 
+ Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Jianhua Lu <lujianhua000@gmail.com>, 
+ Del Regno <angelogioacchino.delregno@somainline.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Rob Herring <robh@kernel.org>
+In-Reply-To: <20240325103611.28240-1-krzysztof.kozlowski@linaro.org>
+References: <20240325103611.28240-1-krzysztof.kozlowski@linaro.org>
+Subject: Re: [RESEND PATCH v4 1/3] dt-bindings: display: panel: add common
+ dual-link schema
+Message-Id: <171136411318.2357652.10037957949169924402.b4-ty@linaro.org>
+Date: Mon, 25 Mar 2024 11:55:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.4
 
-This patch extends the early bailout for probing procedure introduced in
-commit: b3a81b6c4fc6730ac49e20d789a93c0faabafc98, in order to cover devices
-based on STM microcontrollers. For touchpads based on STM uC,
-the probe sequence needs to take into account the increased response time
-for i2c transaction if the device already entered a deep power state.
-STM specify the wakeup time as 400us between positive strobe of
-the clock line. Deep sleep is controlled by Touchpad FW,
-though some devices enter it pretty early to conserve power
-in case of lack of activity on the i2c bus.
-Failing to follow this requirement will result in touchpad device not being
-detected due initial transaction being dropped by STM i2c slave controller.
-By adding additional try, first transaction will wake up the touchpad
-STM controller, and the second will produce proper detection response.
+Hi,
 
-Signed-off-by: Lukasz Majczak <lma@chromium.org>
-Signed-off-by: Radoslaw Biernacki <rad@chromium.org>
----
- drivers/hid/i2c-hid/i2c-hid-core.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+On Mon, 25 Mar 2024 11:36:09 +0100, Krzysztof Kozlowski wrote:
+> Add schema with common properties shared among dual-link panel ICs.
+> 
+> 
 
-diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-index 2df1ab3c31cc..69af0fad4f41 100644
---- a/drivers/hid/i2c-hid/i2c-hid-core.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-@@ -1013,9 +1013,15 @@ static int __i2c_hid_core_probe(struct i2c_hid *ihid)
- 	struct i2c_client *client = ihid->client;
- 	struct hid_device *hid = ihid->hid;
- 	int ret;
-+	int tries = 2;
-+
-+	do {
-+		/* Make sure there is something at this address */
-+		ret = i2c_smbus_read_byte(client);
-+		if (tries > 0 && ret < 0)
-+			usleep_range(400, 400);
-+	} while (tries-- > 0 && ret < 0);
- 
--	/* Make sure there is something at this address */
--	ret = i2c_smbus_read_byte(client);
- 	if (ret < 0) {
- 		i2c_hid_dbg(ihid, "nothing at this address: %d\n", ret);
- 		return -ENXIO;
+Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-next)
+
+[1/3] dt-bindings: display: panel: add common dual-link schema
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/48a516363e294a4098622dd77a5ecd4ee924121f
+[2/3] dt-bindings: display: novatek, nt35950: define ports
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/1f6612e6852ecb053ce1e342d833ed7f395f7186
+[3/3] dt-bindings: display: novatek, nt36523: define ports
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/90ed42ceda7667f5596d5e98530dd4119d786234
+
 -- 
-2.44.0.396.g6e790dbe36-goog
+Neil
 
