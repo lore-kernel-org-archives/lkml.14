@@ -1,59 +1,46 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF2C184419
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 07:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5107315ECC1
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 03:58:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711350921; cv=none; b=h3EkhkM0k3SSy0BsPpWrHATrz9e6F/fAJHu1bQmezBNmjNJkbSelMmWgQGOlHLLMcuD10ES/FtBkYvUZhSB6W6Qbl8ZxQ4227NzaoP2tjxsfnfTlWSfAi/ER71PPpCGa42KNFUrotD7pOarJa9bPz8oh4snP2Zx1mHKFjF8xDps=
+	t=1711339091; cv=none; b=g0mjMZK1ZYCTyhs5Vb3L4rR9SchP7gV3Gy0B6DieBVfrRyY4HLBPS2SicENjuZK9ro+oAOGVVwr1GG1KNq9kHnXSfuoXrNpVig5OJ17JZgbi+1PGB2nJ2S1YvNx0olXrufCH7Y8RGeQOBvwH81xsayqaEdZVqyb1pUZRPcMeebM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711350921; c=relaxed/simple;
-	bh=+OyKK7IkvwEV/w7UMcTxO7cG4x4rvzI12pOx3LK8JQA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l8qAYSl7m2Edp3etXwrHLXo1oxsdDNlxGFlMa2DTipuSaWvxDbwc57lNvtzYlfxm+vE0yea6FS5AClY9sWeFoPFE7U+Sj350QmG4wU8OKc13anXIoZZeOwlxW283QvZnWs3SgIeytDML+i6ZPRRyPwBUewhiRbWTChtYtk9iG7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ro+EHill; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711339091; c=relaxed/simple;
+	bh=qmHtWDM22Y7Pif9OF/b0d7AyT0SLY8IGS1SO0qYxiss=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=O7VloOFY09XTYr/xaAgw0N/7bLxi/7Y0g7O1CrLfRECqxOTgJpHcDAzVmjKNdscrFgf3629ZX0tPmJgXEfLx/Lu+35W9QBMv9azFBaYgaUgs+fFYoDw0Fkv+KtdbPxASaADwuGjqe8RIQsKi2mGcBnjw7b+XEnOc2rsBc1Laefs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W+I63U7l; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ro+EHill"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a4702457ccbso513679566b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 00:15:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711350918; x=1711955718; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OxdjCTpMFkU2iy+O7js4KexQH/nrED/NHR9zVi08e94=;
-        b=Ro+EHillAS5+CDQHhQK4soZHh7bpfFrTib9LvmTZVs8Ly2G1rUmmcohhmIZlBMvaHK
-         c4Kb/5XrxeJf0TW5VTppJN6JhiEW94jA+Gs9A09YpbmJbCkfGZWLDbP8xFZkDFWoqClN
-         98Aq2zLtar/buAvu92upr0lEPLhuTrptxcgWMn2YuD62uFrXn/+AcwOI68P921sxAJj8
-         1Vlif5PkCVs4x0VxJLtdPzohIorlDlcMCjYAWUzoNlkSI4cl1s7yHyKu6h9Iz8KPhIip
-         Gfw1glFi/5TfOHSUu4wk6uLexNLSif9U/yPvcZXE6x8nU/8SrTaN8u73b+YmBnIcrMkR
-         /TbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711350918; x=1711955718;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OxdjCTpMFkU2iy+O7js4KexQH/nrED/NHR9zVi08e94=;
-        b=miY72I2LK9ZferqPS6IT6MYLn4jO3We1+TRssJlKYOLvd1pfiRkPCppKobaoYimyGR
-         qf4RIr9bTalv3Zxz1Jj91tzB6H8HIYu2STtG8gm16ynFkzMrgLtOzd77/IzDrNjw5X+O
-         +2Cs3aUuL/PT01g8fzbJ+Mb5yH8RTkFi0n4Wx5WCjbZr0ImCGgwhSR4AL9gJYPSqgwPB
-         grrEB+wDtpFqIgRHkrxjZ6QfZlW30rR2/8t6kVjPmK5dy2E+i7l8NODzCOLOJBM1wUBJ
-         eWU2VK4nsB+OCNKOoi1I9NjpC+U4IXrtKUlFRDvCCk5rmw9U23dVD+2ldyCpVxZBnLcv
-         uOPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWtX4Nm2BxETxYFMwzLTlSSHWaum6plcVOiNX8WrO/WMIlfp2Gz9Rsiz+IFytetrNGIsQz+5d2Amah6F/TbENquQjAb5TMRrLbq9Eoh
-X-Gm-Message-State: AOJu0Yxfcsud8j2PvFdLE5dUGFh47+0aECivO/WOd/ksVn6r4xMR24zP
-	A2rOqYvOuBVUrGsXTYQoDPNHbp03i+WR0T7OQa0pHw0FzmIFmGU0UZMaxDfKuXw=
-X-Google-Smtp-Source: AGHT+IEABScS/uWpH8mLPgka5W2OjNZXv8LwGqs+ViqHFZf7wcLBOPPQPWhOE5l5IRTB8EdwF1y6ig==
-X-Received: by 2002:a17:906:1d04:b0:a47:34c8:900b with SMTP id n4-20020a1709061d0400b00a4734c8900bmr3993917ejh.0.1711350917368;
-        Mon, 25 Mar 2024 00:15:17 -0700 (PDT)
-Received: from [192.168.2.107] ([79.115.63.252])
-        by smtp.gmail.com with ESMTPSA id lv16-20020a170906bc9000b00a464f709687sm2723321ejb.59.2024.03.25.00.15.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 00:15:16 -0700 (PDT)
-Message-ID: <20deadca-48e2-4359-ae6e-82e44651a2e6@linaro.org>
-Date: Mon, 25 Mar 2024 07:15:14 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W+I63U7l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711339090; x=1742875090;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qmHtWDM22Y7Pif9OF/b0d7AyT0SLY8IGS1SO0qYxiss=;
+  b=W+I63U7l/Xf48kqbhgMmcDLBCpOjAnZkJZldJERZZ+DjH3mRsFoNyA6F
+   G4ScFR1SrBpFv3g4GXNWB76ZjRqHmAJHrvvdJa3Q7x9ZqmdImB8qoHrIn
+   xn92vL7d6x35LVblpNWVt7lj1+sI+2e9DKHHUhgb5kH2CvnoLnXLRRbqB
+   3LQO47ib6O+J/xKHtW3TRa7CFWzEC2De8w0FLeeNh4L54WS4S1eyN5anp
+   j5pnbSS0iqPDVH7+LMrad2VosuhbbJwmNfMNPvQAe/Vp9dUl1HvFj7mwf
+   Ahjud2u0hL75pGZ2ObC19i/i1bDFFvTDdwi1J/qEsR808IHoPD6uRHRMG
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="10094402"
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="10094402"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 20:58:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,152,1708416000"; 
+   d="scan'208";a="16147457"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
+  by orviesa008.jf.intel.com with ESMTP; 24 Mar 2024 20:58:06 -0700
+Message-ID: <2ddd01fb-ec7d-4a7e-984b-31da78211f91@linux.intel.com>
+Date: Mon, 25 Mar 2024 11:57:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,33 +48,53 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] clk: samsung: exynos850: fix propagation of SPI IPCLK
- rate
-To: Sam Protsenko <semen.protsenko@linaro.org>
-Cc: =?UTF-8?B?6rmA7J6s7JuQL0pBRVdPTiBLSU0=?= <jaewon02.kim@samsung.com>,
- krzysztof.kozlowski@linaro.org, s.nawrocki@samsung.com,
- cw00.choi@samsung.com, alim.akhtar@samsung.com, mturquette@baylibre.com,
- sboyd@kernel.org, peter.griffin@linaro.org, andre.draszik@linaro.org,
- linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- willmcvicker@google.com, kernel-team@android.com
-References: <20240229122021.1901785-1-tudor.ambarus@linaro.org>
- <20240229122021.1901785-5-tudor.ambarus@linaro.org>
- <CAPLW+4=jSr6ZsB7XekXsiUBm0SmVpVFnqpgjViuF3=HpT4gRAg@mail.gmail.com>
- <867158d7-0d98-4058-9c2e-6b573ec68516@linaro.org>
- <CAPLW+4=nRjRPdu80Y3izifxQDNUaJymU3di0hGErm1dHry3EfQ@mail.gmail.com>
+Cc: baolu.lu@linux.intel.com, Kevin Tian <kevin.tian@intel.com>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>,
+ Jean-Philippe Brucker <jean-philippe@linaro.org>,
+ Nicolin Chen <nicolinc@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
+ Jacob Pan <jacob.jun.pan@linux.intel.com>,
+ Joel Granados <j.granados@samsung.com>, iommu@lists.linux.dev,
+ virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/8] iommufd: Add fault and response message
+ definitions
 Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <CAPLW+4=nRjRPdu80Y3izifxQDNUaJymU3di0hGErm1dHry3EfQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+To: Jason Gunthorpe <jgg@ziepe.ca>
+References: <20240122073903.24406-1-baolu.lu@linux.intel.com>
+ <20240122073903.24406-4-baolu.lu@linux.intel.com>
+ <20240308175007.GW9225@ziepe.ca>
+ <43ef5e3f-8a8e-4765-8025-b8207fd05f91@linux.intel.com>
+ <20240322170410.GH66976@ziepe.ca>
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20240322170410.GH66976@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+On 3/23/24 1:04 AM, Jason Gunthorpe wrote:
+>>>> +struct iommu_hwpt_pgfault {
+>>>> +	__u32 size;
+>>>> +	__u32 flags;
+>>>> +	__u32 dev_id;
+>>>> +	__u32 pasid;
+>>>> +	__u32 grpid;
+>>>> +	__u32 perm;
+>>>> +	__u64 addr;
+>>>> +};
+>>> Do we need an addr + size here? I've seen a few things where I wonder
+>>> if that might become an enhancment someday.
+>> I am not sure. The page size is not part of ATS/PRI. Can you please
+>> elaborate a bit about how the size could be used? Perhaps I
+>> misunderstood here?
+> size would be an advice how much data the requestor is expecting to
+> fetch. Eg of the PRI initiator knows it is going to do a 10MB transfer
+> it could fill in 10MB and the OS could pre-fault in 10MB of IOVA.
+> 
+> It is not in the spec, it may never be in the spec, but it seems like
+> it would be good to consider it, at least make sure we have
+> compatability to add it later.
 
+Thanks for the explanation. It sounds reasonable. I will take it and add
+some comments to explain the motivation as you described above.
 
-On 3/22/24 18:09, Sam Protsenko wrote:
-> Yes, please leave Exynos850 out of it, if possible. 
-
-Sure, Sam, thanks for the feedback!
-
-Cheers,
-ta
+Best regards,
+baolu
