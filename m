@@ -1,75 +1,149 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD01F131E5C
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 01:45:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BF01384B6
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 01:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711331155; cv=none; b=P5s4Egdhoz+73YLVU9rQxxdaZeE7ejCAQuADs7RAqRpWUHJ9sgeqXRF1g+JKUefyJjT4hH67w15DVQ/xE55fO8uDupGd0jeRy7jO3TT7QQFBIJAGy4uo4Y6CwBn8CzKnZFaGK49cIRjzsGAKaI2xZEnzEIc+W1ga+bgaqoLGa0E=
+	t=1711331465; cv=none; b=fq9o7l0pP2T1H+6Bu7eWZphX7tPCWY6JG+r44V4X4VvoX7R+8zXlaslz6magJBM6tbz2FF3IV1Hek+9WaFcjpOld6MDcA9IocnWihvhJnCSKN1eiFnTNAmOOomLqQcSdobyiNKfRYSWq5kJmsxyv6DmEs63i3SMG33lHKJ+5yz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711331155; c=relaxed/simple;
-	bh=X4zju90W4aAfBambsMQ3pcHLK9uxkPBmVCvkCo1PWck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V2n8C3y84eikvIp+YdhSjvThWwBodmDCJcThalKDXtJbtDl2BZ4b1dLdkVxssa44FsNHGl1i6A50IoG9goaXMI3GTJ2vmveVdW3G9Y6nOJaHL2DKgB7wrUWP4WmJ81JBUSN0IWFz23f8maUx4Vsu1irq/6aywlaF7Xrrop8xXbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=j82140pl; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1711331465; c=relaxed/simple;
+	bh=GmcfUuZNdVqcGJwtOQS12FjSh6lYxIaUMNt7zwU4Puc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BI6Urpu1RjmYICdLFYaU5HPHTG8KW3JcGd2ghxcweq3CTM8sTORMYlYiTXHIhE17UDGO71p06rgTJeAD7p3yTHzxneCF7id/+HzN52K5jh2jbalqFdJ+t2gmSSpW2R9GxsoqT/VnEqGURX/6R6mn81ttG9sUgd1sapZpJj7s7KM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X3MgSBoG; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="j82140pl"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1711331149; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=leOOK6HGPDBEJ+kEPCPdIg2ftxOl2mg8R0qVMdcL5+c=;
-	b=j82140plo8K1i85ScupO+l212FvJf/jTePdLhKeoQeUPCDjzP0n6RjcyaTqI8+emFfPNAH4lOdb/zVuNftzemcktdkGmtOpPV7P+1kFcO0nTgeJfnaG5TuyNUzZZz19EzFJmm6o052ggqTawBPa3+c0SGYi2ru0zVq2xqyYjZgY=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R791e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0W381Eop_1711331148;
-Received: from 30.221.146.131(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0W381Eop_1711331148)
-          by smtp.aliyun-inc.com;
-          Mon, 25 Mar 2024 09:45:49 +0800
-Message-ID: <ba57f22b-1237-4882-9972-6011c0fb924e@linux.alibaba.com>
-Date: Mon, 25 Mar 2024 09:45:47 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X3MgSBoG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711331462;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=86VbXPThTUyKHsQjCJ3kt+4p36TFqj+xB9/jS6S0RvE=;
+	b=X3MgSBoGB5a3fAtnvOcTNnnofCfy9hONnmoyVpL2XGJio+l8Bgm5vdwrZBH6zdFk9b4I8u
+	XZjqXX35l2TxUI0r7TXOVRgti7JlVk1mF/tlqKIPicMFb+PlW9dODG4zbwZLZlG/KQ9XBB
+	zhns9KZOtMsdHkoRRVgnuIuKpXX7Jlc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-455-BGjv1GpmNs-HwBMKhPUwbQ-1; Sun, 24 Mar 2024 21:50:59 -0400
+X-MC-Unique: BGjv1GpmNs-HwBMKhPUwbQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CB06A101A552;
+	Mon, 25 Mar 2024 01:50:58 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.12])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id DEC251C060A4;
+	Mon, 25 Mar 2024 01:50:57 +0000 (UTC)
+Date: Mon, 25 Mar 2024 09:50:50 +0800
+From: Baoquan He <bhe@redhat.com>
+To: kexec@lists.infradead.org, mingo@kernel.org
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, akpm@linux-foundation.org,
+	chenhuacai@loongson.cn, dyoung@redhat.com, jbohac@suse.cz,
+	lihuafei1@huawei.com, chenhaixiang3@huawei.com
+Subject: [PATCH v2] crash: use macro to add crashk_res into iomem early for
+ specific arch
+Message-ID: <ZgDYemRQ2jxjLkq+@MiWiFi-R3L-srv>
+References: <20240324033513.1027427-1-bhe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: drop experimental warning for FSDAX
-Content-Language: en-US
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240325005116.106351-1-hsiangkao@linux.alibaba.com>
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-In-Reply-To: <20240325005116.106351-1-hsiangkao@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240324033513.1027427-1-bhe@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
+There are regression reports[1][2] that crashkernel region on x86_64 can't
+be added into iomem tree sometime. This causes the later failure of kdump
+loading.
 
+This happened after commit 4a693ce65b18 ("kdump: defer the insertion of
+crashkernel resources") was merged.
 
-On 3/25/24 8:51 AM, Gao Xiang wrote:
-> As EXT4/XFS filesystems, FSDAX functionality is considered to be stable.
-> Let's drop this warning.
-> 
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> ---
->  fs/erofs/super.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index 6fbb1fba2d31..fc60a5a7794f 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -430,7 +430,6 @@ static bool erofs_fc_set_dax_mode(struct fs_context *fc, unsigned int mode)
->  
->  	switch (mode) {
->  	case EROFS_MOUNT_DAX_ALWAYS:
-> -		warnfc(fc, "DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
->  		set_opt(&ctx->opt, DAX_ALWAYS);
->  		clear_opt(&ctx->opt, DAX_NEVER);
->  		return true;
+Even though, these reported issues are proved to be related to other
+component, they are just exposed after above commmit applied, I still
+would like to keep crashk_res and crashk_low_res being added into iomem
+early as before because the early adding has been always there on x86_64
+and working very well. For safety of kdump, Let's change it back.
 
-Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+Here, add a macro HAVE_ARCH_ADD_CRASH_RES_TO_IOMEM_EARLY to limit that
+only ARCH defining the macro can have the early adding
+crashk_res/_low_res into iomem. Then define
+HAVE_ARCH_ADD_CRASH_RES_TO_IOMEM_EARLY on x86 to enable it.
 
+Note: In reserve_crashkernel_low(), there's a remnant of crashk_low_res
+hanlding which was mistakenly added back in commit 85fcde402db1 ("kexec:
+split crashkernel reservation code out from crash_core.c").
+
+[1]
+[PATCH V2] x86/kexec: do not update E820 kexec table for setup_data
+https://lore.kernel.org/all/Zfv8iCL6CT2JqLIC@darkstar.users.ipa.redhat.com/T/#u
+
+[2]
+Question about Address Range Validation in Crash Kernel Allocation
+https://lore.kernel.org/all/4eeac1f733584855965a2ea62fa4da58@huawei.com/T/#u
+
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+v1->v2:
+- Remove the stray space before 'define' when defining
+  HAVE_ARCH_ADD_CRASH_RES_TO_IOMEM_EARLY in asm/crash_reserve.h of x86.
+  This is not suggested for standalone macro defines. Thanks to Ingo.
+
+ arch/x86/include/asm/crash_reserve.h | 2 ++
+ kernel/crash_reserve.c               | 7 +++++++
+ 2 files changed, 9 insertions(+)
+
+diff --git a/arch/x86/include/asm/crash_reserve.h b/arch/x86/include/asm/crash_reserve.h
+index 152239f95541..7835b2cdff04 100644
+--- a/arch/x86/include/asm/crash_reserve.h
++++ b/arch/x86/include/asm/crash_reserve.h
+@@ -39,4 +39,6 @@ static inline unsigned long crash_low_size_default(void)
+ #endif
+ }
+ 
++#define HAVE_ARCH_ADD_CRASH_RES_TO_IOMEM_EARLY
++
+ #endif /* _X86_CRASH_RESERVE_H */
+diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
+index bbb6c3cb00e4..066668799f75 100644
+--- a/kernel/crash_reserve.c
++++ b/kernel/crash_reserve.c
+@@ -366,7 +366,9 @@ static int __init reserve_crashkernel_low(unsigned long long low_size)
+ 
+ 	crashk_low_res.start = low_base;
+ 	crashk_low_res.end   = low_base + low_size - 1;
++#ifdef HAVE_ARCH_ADD_CRASH_RES_TO_IOMEM_EARLY
+ 	insert_resource(&iomem_resource, &crashk_low_res);
++#endif
+ #endif
+ 	return 0;
+ }
+@@ -448,8 +450,12 @@ void __init reserve_crashkernel_generic(char *cmdline,
+ 
+ 	crashk_res.start = crash_base;
+ 	crashk_res.end = crash_base + crash_size - 1;
++#ifdef HAVE_ARCH_ADD_CRASH_RES_TO_IOMEM_EARLY
++	insert_resource(&iomem_resource, &crashk_res);
++#endif
+ }
+ 
++#ifndef HAVE_ARCH_ADD_CRASH_RES_TO_IOMEM_EARLY
+ static __init int insert_crashkernel_resources(void)
+ {
+ 	if (crashk_res.start < crashk_res.end)
+@@ -462,3 +468,4 @@ static __init int insert_crashkernel_resources(void)
+ }
+ early_initcall(insert_crashkernel_resources);
+ #endif
++#endif
 -- 
-Thanks,
-Jingbo
+2.41.0
+
