@@ -1,387 +1,252 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F7A18EA5;
-	Tue, 26 Mar 2024 16:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711471637; cv=none; b=YFx+fQ/MgLXcLPP5AqFLytACUFjLlTQhd74S7LM6A9FHSry7jQpteevYD6w1TZblJdndUzeAj+BOQCHjxIqhD+MaUfqSYbAz7NgBu3ZVfZjJF9RnhY8e7dAa7RkXYaGNqa4ashUhcBXjSORNQ2AYXsQj0gy5EM3vuk4sxG2QtcE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711471637; c=relaxed/simple;
-	bh=uXy9yo1dX1Nkn6qrUUu/K7li4z0iFjj39S3k6VVd5DY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NuUX5kCAjr3/i5ebN35B0pRBfsgvVwg5IeljYbdBJsQajGxEc1cMl/nEJTUvy9D7Rcp5ZxVLEzFWWmQoy2bQNT/GZogstdm+sM3KFLak2XaI+t4T05aeguWX09Tmvvd6fXz8J+uwGCKQ3Wuar9/Wq9nT1qme93py6iT8C6Ggg60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pCifJAke; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5595E84D3D;
+	Tue, 26 Mar 2024 16:47:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711471649; cv=fail; b=PSgtvd+kTbs/sQF3ifv8zDVAdKQWXY1sxBh4BEDlWQ8JH+6ysnRAIv3mzaS9CK56e28Ud1HRlELhLbcoKv8gRXQJLXub2QuL+rKd3Dqc/v8KjlLo55AJcm1lYd/LAki7AueDM2AojNMgWSWX2d6NG7UlQGlbMUrI9UIy7/SnZAQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711471649; c=relaxed/simple;
+	bh=U3EWsbP2gNipdkCQmG/38Q5SSESCM238Ttn7J8enlaQ=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=N45QcEnCpYEBqjdDnapeCYGN0qgAgY6mhJs3cG+Ae0K1y6rxjfcfRNVliWo+AqIFkmmJi6I2XTIoV+aPCIJ41D9/7lIv8KUbh+6Zvfhjq2Xua7Dp70VAnQo5WsmhL+KDoW1s/3kYQFw731gh60qiSvFt+RgUi4Xyeb5daYgIDts=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Dkn/pKsU; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=buHbDgPh; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pCifJAke"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42QFrH6v000534;
-	Tue, 26 Mar 2024 16:47:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=nIHSr9qwoadm9/PRDEx9eoele3BqNFdwKv4mRYnvmXg=;
- b=pCifJAke5OMt0W/3oeYPM3drLIR+yXaRsdrG4CR3juVtYwn3ePu4fXFNA93Gm2uVkhaJ
- paQQd1Se5p7KG9lvdktG5M/9eCoPDllB+OibSDJsboM3K3OcZ5GwG8Xd+MUcSt9BL/QA
- AZSkeASS3P2E/UMoiOhgBOzxfsBUcoubM4jfb+Dh+uKmfgAPh/kmz3dwTSnupNZJWg9y
- VJZHmME8XqIukPXJ9qD5XrEumh9+a73ghbUwVo8onWR42/zgL43JDCUteYho7drHWQ7k
- uDl0U2LOol68D8FBdnVNH7wPK+Go56VXWfotfvGf3g2TJWjNFzYA62KiEdgFULwqCVgU KA== 
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x41d405hg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 16:47:13 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42QGCqr1028790;
-	Tue, 26 Mar 2024 16:47:13 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3x2adp8wat-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 16:47:13 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42QGlAsR22741504
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 26 Mar 2024 16:47:12 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4C69058061;
-	Tue, 26 Mar 2024 16:47:10 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A5E1358057;
-	Tue, 26 Mar 2024 16:47:09 +0000 (GMT)
-Received: from jason-laptop.home.arpa (unknown [9.61.173.44])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 26 Mar 2024 16:47:09 +0000 (GMT)
-From: "Jason J. Herne" <jjherne@linux.ibm.com>
-To: linux-s390@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, pasic@linux.ibm.com, akrowiak@linux.ibm.com,
-        borntraeger@de.ibm.com, agordeev@linux.ibm.com, gor@linux.ibm.com,
-        hca@linux.ibm.com, Matthew Rosato <mjrosato@linux.ibm.com>
-Subject: [PATCH v4 4/5] s390/vfio-ap: Add write support to sysfs attr ap_config
-Date: Tue, 26 Mar 2024 12:47:05 -0400
-Message-ID: <20240326164706.29167-5-jjherne@linux.ibm.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20240326164706.29167-1-jjherne@linux.ibm.com>
-References: <20240326164706.29167-1-jjherne@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Dkn/pKsU";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="buHbDgPh"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42QF4BWG029757;
+	Tue, 26 Mar 2024 16:47:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : from : to : cc : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=NzPJwtDr6TUiGAJv9sgfESEoq2nltWBO/t4DdPvocHQ=;
+ b=Dkn/pKsUSbhCMT6/KA3hmlRl+bj0GGPj6cDQRdLbuWrcib2a7wXBzfFA1otyO0Yl4PfS
+ ujiuuVdQo9QSL59wxmc2C3AZtkCUaHvG6lJ9deZq8dvp11XOaoPjf+QlvciSKKDA8npm
+ Jq8P5byvlyp6dDy2eygUVIuJMv05lvwYyWbvTFHPh12y5oEA3FcpkDqE4pTgZYjDrNuu
+ 1XGZNp2iP9z2lo+UAwuoBK22gpU6x9O5cA2ac1g6EUsnxlkWav+5U3NQFTBSC8L7EDRE
+ rtogAYIJgxLGlLRje+PLhEV98OzUZ3YhG76/Udau8B+SYcBP8MlsorfGObZkHAhx6ZO+ Qw== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3x2f6h4fyj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 26 Mar 2024 16:47:21 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42QGYTW5013152;
+	Tue, 26 Mar 2024 16:47:21 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2169.outbound.protection.outlook.com [104.47.59.169])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3x1nhdhwqu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 26 Mar 2024 16:47:21 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nvdU3nnd9WHNnA0S/BrhD7z0TTE/U1ZZP5ef+MVpAlsZrc8tmm0tmowO5K5zyS3t+suw7/JA0LghJzjHqqQNFZ/Dlls1sHHAbwH+b9q8+QjlAMyYZnyDK0ASg3MWhmOsxrB26PN42oWheNL+NKfUhAXvCG2ElZOqIOHy8K3JiAUeAzYf0HtkS/AjSjDD8SG2UCy0wKKoe/yX6QkFuAwsg1eDXQfNGR3ZZiqHqcl8LgWx3GOOcHKtNPTqxkFWgfdhEoIhvsewgjhwogQPdRignoDcSITxoEEla0oAr3VKRzwh9yjBPec9PjO04DSQpzlbHjYiQ9XBkHlaVlc5O+1Geg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NzPJwtDr6TUiGAJv9sgfESEoq2nltWBO/t4DdPvocHQ=;
+ b=G4ZW7rhpNxzYFR1eIZ0TIgxWeJfVfkPv0djYFib94hIEsRtPXf2aOZ9EL2iF/2KRe3tAcugyYbjjlyYk8L7l602+cCvigfUEXaubmIEEZW5xeCQ9fgQQ3OOb4MOVO/mQ8si8Wn9s53tDvw1TVz9fhNos5fNit11qzuLCYxveBHHNtQoIFg3vFRqNasG2Z/lsvz+zcSw4xHz9aUrLN/UXaYjtqiTyrLIBxHmiCGf0QSlHqkvsqbBJZUTbrqZNPOVWsP70i5Cfj6rDwMLwoD1teAAEjqZTxOiXRmyFZemsKZgozSqzCus/mfH6SZlr3YnarKoDLS55TjT0VkciVvZKjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NzPJwtDr6TUiGAJv9sgfESEoq2nltWBO/t4DdPvocHQ=;
+ b=buHbDgPh3bvpLRFz4B/ZW67w3h5K+QWjliKg4APxMXTRl40OiOxab7BVEy2wZJMTrmbgnBEBzIgvmvSbm37lQcvqKlzgB7qaCYHXzGJVBQnVe5OqZ7Kbsk4whyfgaJtD9FvMRShQzimuvdSXYUwNyGivZ/whiuTFRVgpg+r2zUo=
+Received: from DS7PR10MB5280.namprd10.prod.outlook.com (2603:10b6:5:3a7::5) by
+ MW4PR10MB6461.namprd10.prod.outlook.com (2603:10b6:303:21a::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.31; Tue, 26 Mar
+ 2024 16:47:19 +0000
+Received: from DS7PR10MB5280.namprd10.prod.outlook.com
+ ([fe80::c7cc:f6b7:386e:fd5d]) by DS7PR10MB5280.namprd10.prod.outlook.com
+ ([fe80::c7cc:f6b7:386e:fd5d%6]) with mapi id 15.20.7409.031; Tue, 26 Mar 2024
+ 16:47:19 +0000
+Message-ID: <6555a4d8-7825-4078-b15b-4bd4b1a9d3f8@oracle.com>
+Date: Tue, 26 Mar 2024 12:47:17 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] KVM: x86: Print names of apicv inhibit reasons in
+ traces
+From: Alejandro Jimenez <alejandro.j.jimenez@oracle.com>
+To: kvm@vger.kernel.org
+Cc: seanjc@google.com, pbonzini@redhat.com, linux-kernel@vger.kernel.org,
+        joao.m.martins@oracle.com, boris.ostrovsky@oracle.com,
+        suravee.suthikulpanit@amd.com, mlevitsk@redhat.com
+References: <20240214223554.1033154-1-alejandro.j.jimenez@oracle.com>
+ <44f53dce-1299-4fb0-9c4e-dbf0f5b3a351@oracle.com>
+Content-Language: en-US
+In-Reply-To: <44f53dce-1299-4fb0-9c4e-dbf0f5b3a351@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BL0PR05CA0003.namprd05.prod.outlook.com
+ (2603:10b6:208:91::13) To DS7PR10MB5280.namprd10.prod.outlook.com
+ (2603:10b6:5:3a7::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 5eP82WW3nN8Wk2tdVhzc3nR_p635ki9Z
-X-Proofpoint-ORIG-GUID: 5eP82WW3nN8Wk2tdVhzc3nR_p635ki9Z
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR10MB5280:EE_|MW4PR10MB6461:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	xU6C84metHzX2SbBk8piPGCCQA/Kzce5rfF0LuA9gI9iRzZermRYP+rDdzLWWQ9177f9Djs/Lxr+HvN+JMc0cc64cEl8dMjVlOpsIuXUcK+NmxGES8lGk15I0FJwAVAnSSuTvTFUs7XQh26kcMHhjuCtQjO80UGdO9tEsq7QnsLZrJ8F2JhM+iAJXaNqBGD/rrN4PTD4/JB06rzJB8BABf2CpsOB/Hxow5uutS4lAAAsvUyQFuw2g0xdk451FomHaBdPvIc8JW7Ahv1vLCCsVE5IuugKY8NolFjwNH6EXlT6P+7fpqJnHXhLTdWcnRAqKOBnOxDEnXoNWrlB5OdmP9s2aQ2XfIBrDnniLfWhy1AzpKEsVaOvHLYPxNqoj0thiMcNX4zKQF36mv+8/lNRyiRVm9BAQ7/48lkKTxRpb8X5mJsJoBdo2D1N5ar4zNJytg6oGQoUSgPkdx83LBLxkhANwTJhQwEP1vanCzeoGaqd6QqrRKWFcoOF9N+97a27dKGvYdoRXqmlcJnKggo5UN3ea3C8gSYCQ8Bh3e8QPmPJ2r2ssnuh/DcJOpWkbHyBnKobUEcaPrX/Kt7V/1BvPKIwt5Jafa6Tid1L1Zi1z1CrjS2efe1mqdZhbAvk+Jb4cL/23pcuGiGKXpMuHnR/qWAszXjqgRb515NAOiyPmrU=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5280.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?MnJUdmErK1Zpa2ZqT1ZCSnR6aGVuZzhkeFRwWGFsRW5FWDkyQmpHaHcvWFQ5?=
+ =?utf-8?B?TWVhaTJQLzRPU0tBekIrTnBTZ1ZHTHV4bVd5Z0Rjd0R2amZ2c280MWx6UVJt?=
+ =?utf-8?B?bm5sb0dFcHhzUmcwN1JodjJMd3l4TUVpOWRMKzN0TDZydjhISGxjQ05DeERp?=
+ =?utf-8?B?cHZvM0srL01JTk4yckd2Y041b0pWRDJnR0VoeEtYMTUxc0o3eDVrNXlqMFZD?=
+ =?utf-8?B?ejNTb2ZlNUFXRVNSWDZDNlJXOEtGSnp4b2JsNVQrNnFwaXl5L2dNN29keTFt?=
+ =?utf-8?B?TDk5R0d3ZHNVRmpqMXlnU3lMc0krZ1l3TlZsT1p2STdMc2d6eWx2amptemZK?=
+ =?utf-8?B?SzRDeWZOSWVxb3k5Z09JbDd5WDR2VVN1NVlQaGVWeHJCemxNZGJxM2xBYUNl?=
+ =?utf-8?B?L2lFYjZGYlFiVS90ZHlEclI4a1dsR2JPbUc5WTJQQlNaOEdWR0wwUVg2dU84?=
+ =?utf-8?B?eGtrVDk0ODFBSStJVDhjUGYvcm9jTGhzWHp3bU5mOHlSd0dYRS9OSStKQUtB?=
+ =?utf-8?B?K0VwZ1dsaDBuSU96NnBudVArUXFzUWl2a293NDNLWms3aG52L01pQ3h4OVJq?=
+ =?utf-8?B?TE94YkVyTVNkaGFJMUowTmZKZXhoNjZldHNOeS9KTkNqZStoMEZ0YlVIbStC?=
+ =?utf-8?B?TGVjQWxyM2NvOUJyQmw5cTkzUEVqVUpFdkxxTFZjZkE3RXR6eEk4Y2pROTNl?=
+ =?utf-8?B?YzQraVhVUXNLNDJHRnl3aWZvRGUyZkFVMnpNK3BXZk82S2VaL1h3VXNXNkQ5?=
+ =?utf-8?B?ekhoRG5KSGM1bWtQcGVmdE9CNFFKdTM0TXphS0Y4QzZpRDN0eDRTaUpOOEdr?=
+ =?utf-8?B?V0NLV2k0UW9sU0pYK1AvUkZGN1VqQTI5M09FN1YrQTk0aU5wdUljRXRWM254?=
+ =?utf-8?B?d0pPOHFmMi9RdDhXOElXb21NS3Q5NHFxSDdYT0tyWDliWXYzOW5nVE9Nenor?=
+ =?utf-8?B?Mk0zRFZNanpPK0lNY0t6Zi9iWFZabWhHNnJrY2pZS0xTbjBTbFJjRS9URGhl?=
+ =?utf-8?B?cFU1ZkJvOUdrZmlvZnBQV0w3d2xVYlhpNDV0Y2l1S0lERThUaEVsK2xSZXdF?=
+ =?utf-8?B?QUR6R01lYzROc2dlUStRZHIvQWJvbk9Uc0MvdEFOWDRmQ1d2QjAzcG9BT3JS?=
+ =?utf-8?B?NUZiMGpBZlpuMzhzeVMvWXlpMnhtZGpjUEVSRFFJQ0sxRVBSVkh4UnczSldu?=
+ =?utf-8?B?TnlKelZBeThFaEhWSjVwd0FXaGVCaFZEaWMxdDdGNllqY2ozSklXeEUvc1Vm?=
+ =?utf-8?B?VWtjdmt3cE1XRFEvaktFdGFjd28za2dENXdkR1V0K0pnK2VJYjNoWHhRaitN?=
+ =?utf-8?B?bit6bzcwY1FRd0NxL0tWVk1xbEtDcmVhblhnNlVwbGpLSkhxd0gwZGpIUWhn?=
+ =?utf-8?B?TExPQTcvS24xOTRCVXZLSm8vM2RCRW9RM3lkN240cEhKUnZtbnppRlpWODZ3?=
+ =?utf-8?B?dFdyeUpwTGRqUTROT1J1bEMybXh1Z0NlRVkrTjlEQ0xuSWduVzk4SWFPVGVk?=
+ =?utf-8?B?djZJRjV1NmtOdkJ4VmZCZzMxcVdUMjZGVjJ2dFVSUlJZM3R4VG1lZ1hVN1lM?=
+ =?utf-8?B?cHZpSnM1bEhzVEo1RU1PVmpnUm5ZcXRkTEc0dXVKRVV0QjRNaEw1bkxzQ0RT?=
+ =?utf-8?B?VjZSUkRJdGFwemxFWkJkRGxBUkQxZTNuUWdhbmhrNnJvZFdHcW4wSGJ0aUQy?=
+ =?utf-8?B?Qm43czVWT1VLSFZVM1hXT2dKZ2tra01LMmVkbjIrd3I1S1V5RlVXc1NqREFr?=
+ =?utf-8?B?eFpEK3RyYzZMbnZNVmFpMlJxYnowY1BTbVpFa3Q2RFZmaXBIQkQyS1NTenN2?=
+ =?utf-8?B?dEJhK1BMUFQ5SWxQTDRVQnhWa2NOdnZmUVRCWTVoQW45ZGpwMjMzb1VUdVU2?=
+ =?utf-8?B?eGpsTUtOQ21lUXF4bHd0eEhjTWFoTVZ5UlJocXhFdkI2QmsvUHFLaUJvb09w?=
+ =?utf-8?B?cSsxZVVUQ3AzRkxFeTFGV3NlMVdaSUx6aWV2Z0VGM1ZKMmJ4bU9zbURiU1l1?=
+ =?utf-8?B?SC8raDNwVVFYMVZJYWU5WDZZNVpiL0M3L2J6d0pQNnphWFd5emxGbU9ncUxG?=
+ =?utf-8?B?ZHZ5UEtsQXRqZzJLQWNCa0Qzalp5VE9iN24rTVhsUVJ5cG9yWVphMHl0UkUv?=
+ =?utf-8?B?c05uZS9mQzlYb3RXNHZNeVUxcHpFcGR6TVNIRU85Zkp5ejBsS240UWpXN0JL?=
+ =?utf-8?B?WVE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	kyZ+jybLvT631KWUqQNIOT+LtSgISAAuwEzuM6GWhribbvvo0WXdyGI5TviIJQgt1oabvJWF8bKtTXXHgCiWDFmbJ+LJ8sb47AfxG/KsGFLJPI1qXIWdelrQD9R8Dshb0Ed07rWpSKyCOaqE2CXMKmK5Hfu3FnTz54qD0Ct96BpuO4E3nerbbB8ZGVsb+9UqXPM+1SIU6Z/t2XKnkS+T19+53qYovvN7eq16PGx30B2rj4V2KmcoIeSsitndFUB2newKTpIyNrkWpvHmO11mIdlRjB9ykIrkEZyWy07fqX6L0SbwEIuuxZqGuH7H9r4qU6oWHASvi9V1+EqLjOytXuDioVb4yGhX4+U8UjEnynnRzOZpV0Gc5wIS29g13A6sWXwbOAsspNnY1ezHjW2SlChab6BmRN5uOktjJjO7O87e5Mbcoo7PY41ofh11tbV9xxmgsEOX2lceXL3wvE5mcwpt82Re6v/AvRPrbcAWYI4cmajuVsnae84zcdNtZFuuzRn5Y9BO7YR9vBToO3XkGHiyvA0vDu0weavWYx6eKBWP9bq65tU6tpDO8TEz6A/2DFQ2epKYtDgFNz5ZUNcAtKks1/IVOVcXGSXIF8TPByY=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aab1e986-eeae-421e-d7e6-08dc4db4666d
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5280.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 16:47:18.9979
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: P8l57Fo1zp4O97qUuiC1nu7+jqjmtThry/DuUwOFfjuztQapw6NdEijtz5DgAuOa5ocHAczou2MW/3H5EUWtde+mV1gxSQhkZsKlY3fkeZY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR10MB6461
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-03-26_06,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- lowpriorityscore=0 bulkscore=0 clxscore=1015 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 mlxscore=0 adultscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
+ adultscore=0 mlxscore=0 phishscore=0 malwarescore=0 spamscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2403210000 definitions=main-2403260119
+X-Proofpoint-GUID: xhkr9rHb5bAd6J0idHCEX-UGFEkioGr6
+X-Proofpoint-ORIG-GUID: xhkr9rHb5bAd6J0idHCEX-UGFEkioGr6
 
-Allow writing a complete set of masks to ap_config. Doing so will
-cause the vfio-ap driver to replace the vfio-ap mediated device's
-matrix masks with the given set of masks. If the given state cannot
-be set, then no changes are made to the vfio-ap mediated device.
 
-The format of the data written to ap_config is as follows:
-{amask},{dmask},{cmask}\n
 
-\n is a newline character.
+On 3/8/24 11:06, Alejandro Jimenez wrote:
+> 
+> 
+> On 2/14/24 17:35, Alejandro Jimenez wrote:
+>> Use the tracing infrastructure helper __print_flags() for printing flag
+>> bitfields, to enhance the trace output by displaying a string describing
+>> each of the inhibit reasons set.
+>>
+>> The kvm_apicv_inhibit_changed tracepoint currently shows the raw bitmap
+>> value, requiring the user to consult the source file where the inhbit
+>> reasons are defined to decode the trace output.
+>>
+>> Signed-off-by: Alejandro Jimenez <alejandro.j.jimenez@oracle.com>
+>>
+>> ---
+>> checkpatch reports an error:
+>> ERROR: Macros with complex values should be enclosed in parentheses
+>>
+>> but that seems common for other patches that also use a macro to define an array
+>> of struct trace_print_flags used by __print_flags().
+>>
+>> I did not include an example of the new traces in the commit message since they
+>> are longer than 80 columns, but perhaps that is desirable. e.g.:
+>>
+>> qemu-system-x86-6961    [055] .....  1779.344065: kvm_apicv_inhibit_changed: set reason=2, inhibits=0x4 ABSENT
+>> qemu-system-x86-6961    [055] .....  1779.356710: kvm_apicv_inhibit_changed: cleared reason=2, inhibits=0x0
+>>
+>> qemu-system-x86-9912    [137] ..... 57106.196107: kvm_apicv_inhibit_changed: set reason=8, inhibits=0x300 IRQWIN|PIT_REINJ
+>> qemu-system-x86-9912    [137] ..... 57106.196115: kvm_apicv_inhibit_changed: cleared reason=8, inhibits=0x200 PIT_REINJ
+>> ---
+>>   arch/x86/kvm/trace.h | 28 ++++++++++++++++++++++++++--
+>>   1 file changed, 26 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
+>> index b82e6ed4f024..8469e59dfce2 100644
+>> --- a/arch/x86/kvm/trace.h
+>> +++ b/arch/x86/kvm/trace.h
+>> @@ -1372,6 +1372,27 @@ TRACE_EVENT(kvm_hv_stimer_cleanup,
+>>             __entry->vcpu_id, __entry->timer_index)
+>>   );
+>> +/*
+>> + * The inhibit flags in this flag array must be kept in sync with the
+>> + * kvm_apicv_inhibit enum members in <asm/kvm_host.h>.
+>> + */
+>> +#define APICV_INHIBIT_FLAGS \
+>> +    { BIT(APICV_INHIBIT_REASON_DISABLE),         "DISABLED" }, \
+>> +    { BIT(APICV_INHIBIT_REASON_HYPERV),         "HYPERV" }, \
+>> +    { BIT(APICV_INHIBIT_REASON_ABSENT),         "ABSENT" }, \
+>> +    { BIT(APICV_INHIBIT_REASON_BLOCKIRQ),         "BLOCKIRQ" }, \
+>> +    { BIT(APICV_INHIBIT_REASON_PHYSICAL_ID_ALIASED), "PHYS_ID_ALIASED" }, \
+>> +    { BIT(APICV_INHIBIT_REASON_APIC_ID_MODIFIED),     "APIC_ID_MOD" }, \
+>> +    { BIT(APICV_INHIBIT_REASON_APIC_BASE_MODIFIED),     "APIC_BASE_MOD" }, \
+>> +    { BIT(APICV_INHIBIT_REASON_NESTED),         "NESTED" }, \
+>> +    { BIT(APICV_INHIBIT_REASON_IRQWIN),         "IRQWIN" }, \
+>> +    { BIT(APICV_INHIBIT_REASON_PIT_REINJ),         "PIT_REINJ" }, \
+>> +    { BIT(APICV_INHIBIT_REASON_SEV),         "SEV" }, \
+>> +    { BIT(APICV_INHIBIT_REASON_LOGICAL_ID_ALIASED),     "LOG_ID_ALIASED" } \
+>> +
+>> +#define show_inhibit_reasons(inhibits) \
+>> +    __print_flags(inhibits, "|", APICV_INHIBIT_FLAGS)
+>> +
+>>   TRACE_EVENT(kvm_apicv_inhibit_changed,
+>>           TP_PROTO(int reason, bool set, unsigned long inhibits),
+>>           TP_ARGS(reason, set, inhibits),
+>> @@ -1388,9 +1409,12 @@ TRACE_EVENT(kvm_apicv_inhibit_changed,
+>>           __entry->inhibits = inhibits;
+>>       ),
+>> -    TP_printk("%s reason=%u, inhibits=0x%lx",
+>> +    TP_printk("%s reason=%u, inhibits=0x%lx%s%s",
+>>             __entry->set ? "set" : "cleared",
+>> -          __entry->reason, __entry->inhibits)
+>> +          __entry->reason, __entry->inhibits,
+>> +          __entry->inhibits ? " " : "",
+>> +          __entry->inhibits ?
+>> +          show_inhibit_reasons(__entry->inhibits) : "")
+>>   );
+>>   TRACE_EVENT(kvm_apicv_accept_irq,
+>>
+>> base-commit: 7455665a3521aa7b56245c0a2810f748adc5fdd4
+> ping..
+> 
 
-amask, dmask, and cmask are masks identifying which adapters, domains,
-and control domains should be assigned to the mediated device.
+ping...
 
-The format of a mask is as follows:
-0xNN..NN
+This is a trivial but useful usability improvement, and I don't expect it to be controversial (other than perhaps formatting of the string), but I'd appreciate any comments.
 
-Where NN..NN is 64 hexadecimal characters representing a 256-bit value.
-The leftmost (highest order) bit represents adapter/domain 0.
-
-For an example set of masks that represent your mdev's current
-configuration, simply cat ap_config.
-
-This attribute is intended to be used by an mdevctl callout script
-supporting the mdev type vfio_ap-passthrough to atomically update a
-vfio-ap mediated device's state.
-
-Signed-off-by: Jason J. Herne <jjherne@linux.ibm.com>
-Reviewed-by: Tony Krowiak <akrowiak@linux.ibm.com>
-Tested-by: Matthew Rosato <mjrosato@linux.ibm.com>
----
- drivers/s390/crypto/vfio_ap_ops.c     | 189 ++++++++++++++++++++++++--
- drivers/s390/crypto/vfio_ap_private.h |   6 +-
- 2 files changed, 179 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 1499c2181122..ad01979c41d6 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -1119,20 +1119,29 @@ static void vfio_ap_mdev_unlink_adapter(struct ap_matrix_mdev *matrix_mdev,
- 	}
- }
- 
--static void vfio_ap_mdev_hot_unplug_adapter(struct ap_matrix_mdev *matrix_mdev,
--					    unsigned long apid)
-+static void vfio_ap_mdev_hot_unplug_adapters(struct ap_matrix_mdev *matrix_mdev,
-+					    unsigned long *apids)
- {
- 	struct vfio_ap_queue *q, *tmpq;
- 	struct list_head qlist;
-+	unsigned long apid;
-+	bool apcb_update = false;
- 
- 	INIT_LIST_HEAD(&qlist);
--	vfio_ap_mdev_unlink_adapter(matrix_mdev, apid, &qlist);
- 
--	if (test_bit_inv(apid, matrix_mdev->shadow_apcb.apm)) {
--		clear_bit_inv(apid, matrix_mdev->shadow_apcb.apm);
--		vfio_ap_mdev_update_guest_apcb(matrix_mdev);
-+	for_each_set_bit_inv(apid, apids, AP_DEVICES) {
-+		vfio_ap_mdev_unlink_adapter(matrix_mdev, apid, &qlist);
-+
-+		if (test_bit_inv(apid, matrix_mdev->shadow_apcb.apm)) {
-+			clear_bit_inv(apid, matrix_mdev->shadow_apcb.apm);
-+			apcb_update = true;
-+		}
- 	}
- 
-+	/* Only update apcb if needed to avoid impacting guest */
-+	if (apcb_update)
-+		vfio_ap_mdev_update_guest_apcb(matrix_mdev);
-+
- 	vfio_ap_mdev_reset_qlist(&qlist);
- 
- 	list_for_each_entry_safe(q, tmpq, &qlist, reset_qnode) {
-@@ -1141,6 +1150,16 @@ static void vfio_ap_mdev_hot_unplug_adapter(struct ap_matrix_mdev *matrix_mdev,
- 	}
- }
- 
-+static void vfio_ap_mdev_hot_unplug_adapter(struct ap_matrix_mdev *matrix_mdev,
-+					    unsigned long apid)
-+{
-+	DECLARE_BITMAP(apids, AP_DEVICES);
-+
-+	bitmap_zero(apids, AP_DEVICES);
-+	set_bit_inv(apid, apids);
-+	vfio_ap_mdev_hot_unplug_adapters(matrix_mdev, apids);
-+}
-+
- /**
-  * unassign_adapter_store - parses the APID from @buf and clears the
-  * corresponding bit in the mediated matrix device's APM
-@@ -1301,20 +1320,29 @@ static void vfio_ap_mdev_unlink_domain(struct ap_matrix_mdev *matrix_mdev,
- 	}
- }
- 
--static void vfio_ap_mdev_hot_unplug_domain(struct ap_matrix_mdev *matrix_mdev,
--					   unsigned long apqi)
-+static void vfio_ap_mdev_hot_unplug_domains(struct ap_matrix_mdev *matrix_mdev,
-+					   unsigned long *apqis)
- {
- 	struct vfio_ap_queue *q, *tmpq;
- 	struct list_head qlist;
-+	unsigned long apqi;
-+	bool apcb_update = false;
- 
- 	INIT_LIST_HEAD(&qlist);
--	vfio_ap_mdev_unlink_domain(matrix_mdev, apqi, &qlist);
- 
--	if (test_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm)) {
--		clear_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm);
--		vfio_ap_mdev_update_guest_apcb(matrix_mdev);
-+	for_each_set_bit_inv(apqi, apqis, AP_DOMAINS) {
-+		vfio_ap_mdev_unlink_domain(matrix_mdev, apqi, &qlist);
-+
-+		if (test_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm)) {
-+			clear_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm);
-+			apcb_update = true;
-+		}
- 	}
- 
-+	/* Only update apcb if needed to avoid impacting guest */
-+	if (apcb_update)
-+		vfio_ap_mdev_update_guest_apcb(matrix_mdev);
-+
- 	vfio_ap_mdev_reset_qlist(&qlist);
- 
- 	list_for_each_entry_safe(q, tmpq, &qlist, reset_qnode) {
-@@ -1323,6 +1351,16 @@ static void vfio_ap_mdev_hot_unplug_domain(struct ap_matrix_mdev *matrix_mdev,
- 	}
- }
- 
-+static void vfio_ap_mdev_hot_unplug_domain(struct ap_matrix_mdev *matrix_mdev,
-+					   unsigned long apqi)
-+{
-+	DECLARE_BITMAP(apqis, AP_DOMAINS);
-+
-+	bitmap_zero(apqis, AP_DEVICES);
-+	set_bit_inv(apqi, apqis);
-+	vfio_ap_mdev_hot_unplug_domains(matrix_mdev, apqis);
-+}
-+
- /**
-  * unassign_domain_store - parses the APQI from @buf and clears the
-  * corresponding bit in the mediated matrix device's AQM
-@@ -1590,10 +1628,135 @@ static ssize_t ap_config_show(struct device *dev, struct device_attribute *attr,
- 	return idx;
- }
- 
-+/* Number of characters needed for a complete hex mask representing the bits in ..  */
-+#define AP_DEVICES_STRLEN	(AP_DEVICES/4 + 3)
-+#define AP_DOMAINS_STRLEN	(AP_DOMAINS/4 + 3)
-+#define AP_CONFIG_STRLEN	(AP_DEVICES_STRLEN + 2 * AP_DOMAINS_STRLEN)
-+
-+static int parse_bitmap(char **strbufptr, unsigned long *bitmap, int nbits)
-+{
-+	char *curmask;
-+
-+	curmask = strsep(strbufptr, ",\n");
-+	if (!curmask)
-+		return -EINVAL;
-+
-+	bitmap_clear(bitmap, 0, nbits);
-+	return ap_hex2bitmap(curmask, bitmap, nbits);
-+}
-+
-+static int ap_matrix_overflow_check(struct ap_matrix_mdev *matrix_mdev)
-+{
-+	unsigned long bit;
-+
-+	for_each_set_bit_inv(bit, matrix_mdev->matrix.apm, AP_DEVICES) {
-+		if (bit > matrix_mdev->matrix.apm_max)
-+			return -ENODEV;
-+	}
-+
-+	for_each_set_bit_inv(bit, matrix_mdev->matrix.aqm, AP_DOMAINS) {
-+		if (bit > matrix_mdev->matrix.aqm_max)
-+			return -ENODEV;
-+	}
-+
-+	for_each_set_bit_inv(bit, matrix_mdev->matrix.adm, AP_DOMAINS) {
-+		if (bit > matrix_mdev->matrix.adm_max)
-+			return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+static void ap_matrix_copy(struct ap_matrix *dst, struct ap_matrix *src)
-+{
-+	bitmap_copy(dst->apm, src->apm, AP_DEVICES);
-+	bitmap_copy(dst->aqm, src->aqm, AP_DOMAINS);
-+	bitmap_copy(dst->adm, src->adm, AP_DOMAINS);
-+}
-+
- static ssize_t ap_config_store(struct device *dev, struct device_attribute *attr,
- 			       const char *buf, size_t count)
- {
--	return count;
-+	struct ap_matrix_mdev *matrix_mdev = dev_get_drvdata(dev);
-+	struct ap_matrix m_new, m_old, m_added, m_removed;
-+	DECLARE_BITMAP(apm_filtered, AP_DEVICES);
-+	unsigned long newbit;
-+	char *newbuf, *rest;
-+	int rc = count;
-+	bool do_update;
-+
-+	newbuf = rest = kstrndup(buf, AP_CONFIG_STRLEN, GFP_KERNEL);
-+	if (!newbuf)
-+		return -ENOMEM;
-+
-+	mutex_lock(&ap_perms_mutex);
-+	get_update_locks_for_mdev(matrix_mdev);
-+
-+	/* Save old state */
-+	/* The volatile cast here is to work around a gcc false positive
-+	 * Wstringop-overread-warning.
-+	 */
-+	ap_matrix_copy(&m_old, (*(struct ap_matrix * volatile *)(&matrix_mdev->matrix)));
-+
-+	if (parse_bitmap(&rest, m_new.apm, AP_DEVICES) ||
-+	    parse_bitmap(&rest, m_new.aqm, AP_DOMAINS) ||
-+	    parse_bitmap(&rest, m_new.adm, AP_DOMAINS)) {
-+		rc = -EINVAL;
-+		goto out;
-+	}
-+
-+	bitmap_andnot(m_removed.apm, m_old.apm, m_new.apm, AP_DEVICES);
-+	bitmap_andnot(m_removed.aqm, m_old.aqm, m_new.aqm, AP_DOMAINS);
-+	bitmap_andnot(m_added.apm, m_new.apm, m_old.apm, AP_DEVICES);
-+	bitmap_andnot(m_added.aqm, m_new.aqm, m_old.aqm, AP_DOMAINS);
-+
-+	/* Need new bitmaps in matrix_mdev for validation */
-+	ap_matrix_copy(&matrix_mdev->matrix, &m_new);
-+
-+	/* Ensure new state is valid, else undo new state */
-+	rc = vfio_ap_mdev_validate_masks(matrix_mdev);
-+	if (rc) {
-+		ap_matrix_copy(&matrix_mdev->matrix, &m_old);
-+		goto out;
-+	}
-+	rc = ap_matrix_overflow_check(matrix_mdev);
-+	if (rc) {
-+		ap_matrix_copy(&matrix_mdev->matrix, &m_old);
-+		goto out;
-+	}
-+	rc = count;
-+
-+	/* Need old bitmaps in matrix_mdev for unplug/unlink */
-+	ap_matrix_copy(&matrix_mdev->matrix, &m_old);
-+
-+	/* Unlink removed adapters/domains */
-+	vfio_ap_mdev_hot_unplug_adapters(matrix_mdev, m_removed.apm);
-+	vfio_ap_mdev_hot_unplug_domains(matrix_mdev, m_removed.aqm);
-+
-+	/* Need new bitmaps in matrix_mdev for linking new adapters/domains */
-+	ap_matrix_copy(&matrix_mdev->matrix, &m_new);
-+
-+	/* Link newly added adapters */
-+	for_each_set_bit_inv(newbit, m_added.apm, AP_DEVICES)
-+		vfio_ap_mdev_link_adapter(matrix_mdev, newbit);
-+
-+	for_each_set_bit_inv(newbit, m_added.aqm, AP_DOMAINS)
-+		vfio_ap_mdev_link_domain(matrix_mdev, newbit);
-+
-+	/* filter resources not bound to vfio-ap */
-+	do_update = vfio_ap_mdev_filter_matrix(matrix_mdev, apm_filtered);
-+	do_update |= vfio_ap_mdev_filter_cdoms(matrix_mdev);
-+
-+	/* Apply changes to shadow apbc if things changed */
-+	if (do_update) {
-+		vfio_ap_mdev_update_guest_apcb(matrix_mdev);
-+		reset_queues_for_apids(matrix_mdev, apm_filtered);
-+	}
-+out:
-+	release_update_locks_for_mdev(matrix_mdev);
-+	mutex_unlock(&ap_perms_mutex);
-+	kfree(newbuf);
-+	return rc;
- }
- static DEVICE_ATTR_RW(ap_config);
- 
-diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-index 98d37aa27044..437a161c8659 100644
---- a/drivers/s390/crypto/vfio_ap_private.h
-+++ b/drivers/s390/crypto/vfio_ap_private.h
-@@ -75,11 +75,11 @@ extern struct ap_matrix_dev *matrix_dev;
-  */
- struct ap_matrix {
- 	unsigned long apm_max;
--	DECLARE_BITMAP(apm, 256);
-+	DECLARE_BITMAP(apm, AP_DEVICES);
- 	unsigned long aqm_max;
--	DECLARE_BITMAP(aqm, 256);
-+	DECLARE_BITMAP(aqm, AP_DOMAINS);
- 	unsigned long adm_max;
--	DECLARE_BITMAP(adm, 256);
-+	DECLARE_BITMAP(adm, AP_DOMAINS);
- };
- 
- /**
--- 
-2.41.0
-
+Alejandro
