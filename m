@@ -1,99 +1,122 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A22495E5;
-	Tue, 26 Mar 2024 08:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3972548F1
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 08:56:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711443373; cv=none; b=umDl86JLQMtlGyz1nG8282DVZsL2bcMVTi6VUnHrF/mMhsABCdaL7gTBvnhltZC+G/y1w6NIK1C4cAzk5biPJ4OSYvTdWneXMCPmbh6GqMDZ+Gr58X63HCfNlClLRMmoglBNF/G8MYmARF0xA95XiZBS8BclCNb5jqVkQqY39M4=
+	t=1711443379; cv=none; b=WZ4B8E+UVNX4/eCFfEABsTIQ5azz3NtW9DcJGEZEQGpGliBkj+UT+zgGwscbt2bmU1EmrCBaN23XOQx0lVquy+L4fIUdlHly8wJXxnI/nlSU+9wGSuj8DiNRs/+rXL8gqS3aKJstyHz4q6cPcChk+djZLHnDqOAESolMl9RXmaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711443373; c=relaxed/simple;
-	bh=nagYxxDbJgL0+8mtzKa/n0XbQhGhLQBTIa31bE0Psjs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RUod455J7OLuX7dKOgk7f1xMJOUi+N34/g9iIAFClJlKf5Q98AL4AjQgoVDsk/xtcFjT5kTH9jUTB2PejsKDfVmJ+o8GFC6/j9ekPYd81xFgKbTxMqGPrz2bYMKd4hBmBH8JB5kRvTmi/nge6qmubiWbh5V9cjkzPKyjQfNweWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=S9FEMClW; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="S9FEMClW"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4V3kDR6xxLz9sTd;
-	Tue, 26 Mar 2024 09:56:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1711443368;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XpgxVlBKjKrVn9MhWjJ6FRn4nkr5mAP1dQnGjR12Avg=;
-	b=S9FEMClWMRg7xZPklOmpzcCTtZL6hs5IPFqYBeDYTHgvVoG9iP+ig0BwtYQ24gWWU2WVCS
-	3uSyUcJDu/feCaAGss7hbXuMV1f0RrERROceks+RyRpxyerWfUppHtZrGWbJSjaHHYznXv
-	+eBATqmcyV4lMfTtIDODQTaZIjlygvXZWFQoL8bsOcd0LLkhrPGNgD7LX3Xl/9eiqRYQ2n
-	3iEMMo/TZU4Y34gywx+YT1J1F24P0n3drx4HOzz70jetX96Gde9+CweznN9KLk2ohW5yxu
-	Mmcofwg52MFgM7Ut9N5KR2S766fXlDWgpZnRfbcl+kcz2AORsZYnqAEwDx/b2A==
-Date: Tue, 26 Mar 2024 09:56:03 +0100
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	gost.dev@samsung.com, chandan.babu@oracle.com, hare@suse.de, mcgrof@kernel.org, 
-	djwong@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	david@fromorbit.com, akpm@linux-foundation.org, Pankaj Raghav <p.raghav@samsung.com>
-Subject: Re: [PATCH v3 04/11] readahead: rework loop in
- page_cache_ra_unbounded()
-Message-ID: <s4jn4t4betknd3y4ltfccqxyfktzdljiz7klgbqsrccmv3rwrd@orlwjz77oyxo>
-References: <20240313170253.2324812-1-kernel@pankajraghav.com>
- <20240313170253.2324812-5-kernel@pankajraghav.com>
- <ZgHFPZ9tNLLjKZpz@casper.infradead.org>
+	s=arc-20240116; t=1711443379; c=relaxed/simple;
+	bh=oBipWs+jXHuItcEl/r2AVi229geZIoTDoOYLGnnDWBo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GPTMMhboZGG7Que8LZ/EYcpGp/ojx/jFcH8FTeO/mpTiYeAX0IQvJjh/FtktwXLJAH9S0AJN5IvfPjJH9Br0W5pbrM+QtcH/NlGtJ6kgCwM/wgBLIKnKyPgzN0w1QUBvgiwzi8dNlSPy11dhE4U054o5hdK6vA8Z3ybkFsuZv7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5A8D3C0009;
+	Tue, 26 Mar 2024 08:56:11 +0000 (UTC)
+Message-ID: <be1b8bb6-ae08-4173-9ce5-26f2acee5950@ghiti.fr>
+Date: Tue, 26 Mar 2024 09:56:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZgHFPZ9tNLLjKZpz@casper.infradead.org>
-X-Rspamd-Queue-Id: 4V3kDR6xxLz9sTd
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: hwprobe: do not produce frtace relocation
+Content-Language: en-US
+To: Vladimir Isaev <vladimir.isaev@syntacore.com>, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, catalin.marinas@arm.com,
+ evan@rivosinc.com, nicolas@fjasle.eu, tglx@linutronix.de,
+ samitolvanen@google.com, masahiroy@kernel.org, maskray@google.com,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ guoren@kernel.org
+Cc: Roman Artemev <roman.artemev@syntacore.com>
+References: <20240313085843.17661-1-vladimir.isaev@syntacore.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20240313085843.17661-1-vladimir.isaev@syntacore.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: alex@ghiti.fr
 
-On Mon, Mar 25, 2024 at 06:41:01PM +0000, Matthew Wilcox wrote:
-> On Wed, Mar 13, 2024 at 06:02:46PM +0100, Pankaj Raghav (Samsung) wrote:
-> > @@ -239,8 +239,8 @@ void page_cache_ra_unbounded(struct readahead_control *ractl,
-> >  			 * not worth getting one just for that.
-> >  			 */
-> >  			read_pages(ractl);
-> > -			ractl->_index++;
-> > -			i = ractl->_index + ractl->_nr_pages - index - 1;
-> > +			ractl->_index += folio_nr_pages(folio);
-> > +			i = ractl->_index + ractl->_nr_pages - index;
-> >  			continue;
-> >  		}
-> >  
-> > @@ -252,13 +252,14 @@ void page_cache_ra_unbounded(struct readahead_control *ractl,
-> >  			folio_put(folio);
-> >  			read_pages(ractl);
-> >  			ractl->_index++;
-> > -			i = ractl->_index + ractl->_nr_pages - index - 1;
-> > +			i = ractl->_index + ractl->_nr_pages - index;
-> >  			continue;
-> >  		}
-> 
-> You changed index++ in the first hunk, but not the second hunk.  Is that
-> intentional?
+Hi Vladimir,
 
-The reason I didn't use folio_nr_pages(folio) in the second hunk is
-because we have already `put` the folio and it is not valid anymore to
-use folio_nr_pages right? Because we increase the ref count in
-filemap_alloc() and we put if add fails. 
+s/frtace/ftrace
 
-Plus in the second hunk, adding the 0 order folio failed in that index,
-so we just move on to the next index. Once we have the min order
-support, if adding min order folio failed, we move by min_order.
+On 13/03/2024 08:35, Vladimir Isaev wrote:
+> Such relocation causes crash of android linker similar to one
+> described in commit e05d57dcb8c7
+> ("riscv: Fixup __vdso_gettimeofday broke dynamic ftrace").
+>
+> Looks like this relocation is added by CONFIG_DYNAMIC_FTRACE which is
+> disabled in the default android kernel.
+>
+> Before:
+>
+> readelf -rW arch/riscv/kernel/vdso/vdso.so:
+>
+> Relocation section '.rela.dyn' at offset 0xd00 contains 1 entry:
+>      Offset             Info             Type
+> 0000000000000d20  0000000000000003 R_RISCV_RELATIVE
+>
+> objdump:
+> 0000000000000c86 <__vdso_riscv_hwprobe@@LINUX_4.15>:
+>   c86:   0001                    nop
+>   c88:   0001                    nop
+>   c8a:   0001                    nop
+>   c8c:   0001                    nop
+>   c8e:   e211                    bnez    a2,c92 <__vdso_riscv_hwprobe...
+>
+> After:
+> readelf -rW arch/riscv/kernel/vdso/vdso.so:
+>
+> There are no relocations in this file.
+>
+> objdump:
+> 0000000000000c86 <__vdso_riscv_hwprobe@@LINUX_4.15>:
+>   c86:   e211                    bnez    a2,c8a <__vdso_riscv_hwprobe...
+>   c88:   c6b9                    beqz    a3,cd6 <__vdso_riscv_hwprobe...
+>   c8a:   e739                    bnez    a4,cd8 <__vdso_riscv_hwprobe...
+>   c8c:   ffffd797                auipc   a5,0xffffd
+>
+> Also disable SCS since it also should not be available in vdso.
+>
+> Fixes: aa5af0aa90ba ("RISC-V: Add hwprobe vDSO function and data")
+> Signed-off-by: Roman Artemev <roman.artemev@syntacore.com>
+> Signed-off-by: Vladimir Isaev <vladimir.isaev@syntacore.com>
+> ---
+>   arch/riscv/kernel/vdso/Makefile | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
+> index 9b517fe1b8a8..272c431ac5b9 100644
+> --- a/arch/riscv/kernel/vdso/Makefile
+> +++ b/arch/riscv/kernel/vdso/Makefile
+> @@ -37,6 +37,7 @@ endif
+>   
+>   # Disable -pg to prevent insert call site
+>   CFLAGS_REMOVE_vgettimeofday.o = $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS)
+> +CFLAGS_REMOVE_hwprobe.o = $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS)
 
-And your comment on the next patch:
 
-> Hah, you changed this here.  Please move into previous patch.
+I did not find a way to remove those flags for all C files 
+automatically, too bad. But then I noticed that we were the only 
+architecture which does not check for dynamic relocations in vdso, so at 
+least we'll fail loudly. I'll send a patch for that soon.
 
-We can't do that either because I am introducing the concept of min
-order in the next patch.
+This should go into -fixes.
+
+Anyway, you can add:
+
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+
+Thanks,
+
+Alex
+
+
+>   
+>   # Disable profiling and instrumentation for VDSO code
+>   GCOV_PROFILE := n
