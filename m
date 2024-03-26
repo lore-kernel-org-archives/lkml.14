@@ -1,181 +1,207 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67805B1FB;
-	Tue, 26 Mar 2024 09:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A3373525;
+	Tue, 26 Mar 2024 09:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711444843; cv=none; b=qAg7mm3TJP3WuVA3u1za0BmBouekmuDrUJI6kRO+PqqmzqWK6+V8oWZmMym6VCtvtsfKGIzVMH38hmQjQGTWRwxwqLXhuxtkcaV1xBsIzT3LDtYmLKTZNXPz8AkOquZBFLjcdetJU4EVyyBmGDSqPlbM7/M/otq4AqrWcw1+L7U=
+	t=1711444843; cv=none; b=pn66TMh78Yx1fQLrqS3HeiPwckb8+OioZ9gqqGQBufo7RRZ9x3nHBaB++PUrZ3sB2anriqsDaxvTCy93ABHart6BBTJikb1EoARFNy0yiZTjAfUUjFvZLUzin037tdXKmsztrBWThBGMyh+3lDuHNDqIyqkVMuxo1mVcta/NnGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711444843; c=relaxed/simple;
-	bh=7mgL40AjEE0M+EUMGGkohJuAfYZB2b06SxnfYpnrnD4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aJEl+1MRgCV1WAyA0BT2GxXHe9FvthtmAlSkH90mwCnCTeRkb0MNCK28OqGgUgKO2qQNGLxhRf6YuEX3KZsoUDaLJK+33ehEYBGykZuO8oGjoGpx7x4WpWTtg2IIKvt5f4DkuaRM+TS7BWDDgBsyF5yO4S3kofBPUTBq7LqRbVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MR2UFTBe; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=vFjngrZeEoq8sH0Bscvgq0VlTmRBzBhtIbMiB/Mt7Co=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=rIR3iyNTg99RwPqxjapvy2ILrVjK6tiPJx6Qdc0HYo4mDc2L3sD6OkNMqfOepPWRLQ4Jle24iwykjfGbLq8XJhNrw7fIbPAJmUJOL6A0gm+FW/aNMSC3x/us1y+SlFhygKXxHqnLy/nzezBBez5MoEjRQIEsFKP5RitPVHkGVN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OKsT6ole; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MR2UFTBe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711444842; x=1742980842;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=7mgL40AjEE0M+EUMGGkohJuAfYZB2b06SxnfYpnrnD4=;
-  b=MR2UFTBesaPN8FlkHLJN0VSuY3e4b8OJIPIt+UK3wnOhYvM++95bkfQu
-   56u3Gh7T9TawQi5aQlAzGps2MzkIvpZN47ho+ZiWPszxcgr4l8X/Q8yxd
-   nFaw+XSUuO9d0pw/6ay17evS9+qcDhpLCIFMpFft1cj7d0f+NkyRWNVpU
-   3e7GxuCjdmsbhiVRt3CyKcTGlcxfdF4pymRn4kCryKNEorMKMNgRb3APN
-   bMa6wkjK1Wttp78zOL3TLaFOgchpKavGiaXgXxy52Itr2UJ3O9gb94g3Q
-   s1de6tjXFlwE/txAyIBsz6NRRVJnubp+L8kq960xjBPTRl2n0LMvrld9k
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="6350347"
-X-IronPort-AV: E=Sophos;i="6.07,155,1708416000"; 
-   d="scan'208";a="6350347"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 02:20:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,155,1708416000"; 
-   d="scan'208";a="16293270"
-Received: from yungchua-ws.ostc.intel.com (HELO yungchua-ws.intel.com) ([10.54.69.90])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 02:20:36 -0700
-From: Bard Liao <yung-chuan.liao@linux.intel.com>
-To: linux-sound@vger.kernel.org,
-	vkoul@kernel.org
-Cc: vinod.koul@linaro.org,
-	linux-kernel@vger.kernel.org,
-	pierre-louis.bossart@linux.intel.com,
-	bard.liao@intel.com
-Subject: [PATCH 4/7] soundwire: intel: add support for MeteorLake additional clocks
-Date: Tue, 26 Mar 2024 09:20:27 +0000
-Message-Id: <20240326092030.1062802-5-yung-chuan.liao@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240326092030.1062802-1-yung-chuan.liao@linux.intel.com>
-References: <20240326092030.1062802-1-yung-chuan.liao@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OKsT6ole"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CAF0AC3278E;
+	Tue, 26 Mar 2024 09:20:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711444842;
+	bh=vFjngrZeEoq8sH0Bscvgq0VlTmRBzBhtIbMiB/Mt7Co=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=OKsT6oleeJuigmWrUM+0+DOtsPX7jbu2mzr2rE22fqa2HUqGUCo0yP2jtfnSJRdl1
+	 D6+oatqXo13DeZkQXkUQ+LqO9uLqMqvqhe2SSV28fg3SgPAIYsqLDhZLovk+rikh1y
+	 XVCoBtSlTj8N2dx+UgMBw308czBjTc/WZix3zHmI+wHckdZiYv6KWudC3l2edu++vM
+	 sGdBPKLqbJsB8neKwbGGcKBueQGKMl4Vg7L4O6CTd/VgNhdrUOc5XWIkiR02tc3ovr
+	 9SQ4XJafPqd5WrCRt9QfIivK62Ul6VgO/YxztnAlsJb/+n4pU00D03JsrkRygBy8jG
+	 0wgqsPfZo2bIg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBE3CD11DF;
+	Tue, 26 Mar 2024 09:20:42 +0000 (UTC)
+From: Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
+Date: Tue, 26 Mar 2024 12:19:00 +0300
+Subject: [PATCH v9 33/38] pwm: ep93xx: drop legacy pinctrl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20240326-ep93xx-v9-33-156e2ae5dfc8@maquefel.me>
+References: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
+In-Reply-To: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
+To: Hartley Sweeten <hsweeten@visionengravers.com>, 
+ Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+ Nikita Shubin <nikita.shubin@maquefel.me>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Sergey Shtylyov <s.shtylyov@omp.ru>
+Cc: Thierry Reding <thierry.reding@gmail.com>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+X-Mailer: b4 0.13-dev-e3e53
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711444837; l=4449;
+ i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
+ bh=spARdgbKBuuWnnbjpo1qWIl9UuS2EbkYHg0kmK3FPj4=;
+ b=votECEEU575q5GoWWRzZ2MKIaptIcLnFlZedZPKft4IZzpeTPq5yZjQz5qrrFNhecvdgFt0mN+kY
+ SwcGFLLyA2xQ16jlKU8IlPgpoCiIjEQhwbXHkXKV7ZjiLPeuy12I
+X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
+ pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
+X-Endpoint-Received: by B4 Relay for nikita.shubin@maquefel.me/20230718
+ with auth_id=65
+X-Original-From: Nikita Shubin <nikita.shubin@maquefel.me>
+Reply-To: nikita.shubin@maquefel.me
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Nikita Shubin <nikita.shubin@maquefel.me>
 
-In the MeteorLake hardware, the SoundWire link clock can be selected
-from the Xtal, audio cardinal clock (24.576 MHz) or the 96 MHz audio
-PLL.
+Drop legacy gpio request/free since we are using
+pinctrl for this now.
 
-This patches add the clock selection in a backwards-compatible manner,
-using the ACPI firmware as the source of information and checking its
-compatibility with hardware capabilities.
-
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Rander Wang <rander.wang@intel.com>
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Acked-by: Thierry Reding <thierry.reding@gmail.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
 ---
- drivers/soundwire/intel.c           | 43 +++++++++++++++++++++++++----
- include/linux/soundwire/sdw_intel.h |  5 ++++
- 2 files changed, 42 insertions(+), 6 deletions(-)
+ arch/arm/mach-ep93xx/core.c       | 42 ---------------------------------------
+ drivers/pwm/pwm-ep93xx.c          | 18 -----------------
+ include/linux/soc/cirrus/ep93xx.h |  4 ----
+ 3 files changed, 64 deletions(-)
 
-diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-index 1287a325c435..e15666962fe4 100644
---- a/drivers/soundwire/intel.c
-+++ b/drivers/soundwire/intel.c
-@@ -345,8 +345,10 @@ static int intel_link_power_up(struct sdw_intel *sdw)
- 	u32 spa_mask, cpa_mask;
- 	u32 link_control;
- 	int ret = 0;
-+	u32 clock_source;
- 	u32 syncprd;
- 	u32 sync_reg;
-+	bool lcap_mlcs;
+diff --git a/arch/arm/mach-ep93xx/core.c b/arch/arm/mach-ep93xx/core.c
+index b99c46d22c4d..4ddf1a4cba33 100644
+--- a/arch/arm/mach-ep93xx/core.c
++++ b/arch/arm/mach-ep93xx/core.c
+@@ -577,48 +577,6 @@ void __init ep93xx_register_pwm(int pwm0, int pwm1)
+ 		platform_device_register(&ep93xx_pwm1_device);
+ }
  
- 	mutex_lock(sdw->link_res->shim_lock);
- 
-@@ -358,12 +360,35 @@ static int intel_link_power_up(struct sdw_intel *sdw)
- 	 * is only dependent on the oscillator clock provided to
- 	 * the IP, so adjust based on _DSD properties reported in DSDT
- 	 * tables. The values reported are based on either 24MHz
--	 * (CNL/CML) or 38.4 MHz (ICL/TGL+).
-+	 * (CNL/CML) or 38.4 MHz (ICL/TGL+). On MeteorLake additional
-+	 * frequencies are available with the MLCS clock source selection.
- 	 */
--	if (prop->mclk_freq % 6000000)
--		syncprd = SDW_SHIM_SYNC_SYNCPRD_VAL_38_4;
--	else
--		syncprd = SDW_SHIM_SYNC_SYNCPRD_VAL_24;
-+	lcap_mlcs = intel_readl(shim, SDW_SHIM_LCAP) & SDW_SHIM_LCAP_MLCS_MASK;
-+
-+	if (prop->mclk_freq % 6000000) {
-+		if (prop->mclk_freq % 2400000) {
-+			if (lcap_mlcs) {
-+				syncprd = SDW_SHIM_SYNC_SYNCPRD_VAL_24_576;
-+				clock_source = SDW_SHIM_MLCS_CARDINAL_CLK;
-+			} else {
-+				dev_err(sdw->cdns.dev, "%s: invalid clock configuration, mclk %d lcap_mlcs %d\n",
-+					__func__, prop->mclk_freq, lcap_mlcs);
-+				ret = -EINVAL;
-+				goto out;
-+			}
-+		} else {
-+			syncprd = SDW_SHIM_SYNC_SYNCPRD_VAL_38_4;
-+			clock_source = SDW_SHIM_MLCS_XTAL_CLK;
-+		}
-+	} else {
-+		if (lcap_mlcs) {
-+			syncprd = SDW_SHIM_SYNC_SYNCPRD_VAL_96;
-+			clock_source = SDW_SHIM_MLCS_AUDIO_PLL_CLK;
-+		} else {
-+			syncprd = SDW_SHIM_SYNC_SYNCPRD_VAL_24;
-+			clock_source = SDW_SHIM_MLCS_XTAL_CLK;
-+		}
-+	}
- 
- 	if (!*shim_mask) {
- 		dev_dbg(sdw->cdns.dev, "powering up all links\n");
-@@ -403,6 +428,13 @@ static int intel_link_power_up(struct sdw_intel *sdw)
- 				"Failed to set SHIM_SYNC: %d\n", ret);
- 			goto out;
- 		}
-+
-+		/* update link clock if needed */
-+		if (lcap_mlcs) {
-+			link_control = intel_readl(shim, SDW_SHIM_LCTL);
-+			u32p_replace_bits(&link_control, clock_source, SDW_SHIM_LCTL_MLCS_MASK);
-+			intel_writel(shim, SDW_SHIM_LCTL, link_control);
-+		}
- 	}
- 
- 	*shim_mask |= BIT(link_id);
-@@ -1062,4 +1094,3 @@ const struct sdw_intel_hw_ops sdw_intel_cnl_hw_ops = {
- 	.sync_check_cmdsync_unlocked = intel_check_cmdsync_unlocked,
- };
- EXPORT_SYMBOL_NS(sdw_intel_cnl_hw_ops, SOUNDWIRE_INTEL);
+-int ep93xx_pwm_acquire_gpio(struct platform_device *pdev)
+-{
+-	int err;
 -
-diff --git a/include/linux/soundwire/sdw_intel.h b/include/linux/soundwire/sdw_intel.h
-index fa40b85d5019..8e78417156e3 100644
---- a/include/linux/soundwire/sdw_intel.h
-+++ b/include/linux/soundwire/sdw_intel.h
-@@ -22,6 +22,7 @@
- /* LCAP */
- #define SDW_SHIM_LCAP			0x0
- #define SDW_SHIM_LCAP_LCOUNT_MASK	GENMASK(2, 0)
-+#define SDW_SHIM_LCAP_MLCS_MASK		BIT(8)
+-	if (pdev->id == 0) {
+-		err = 0;
+-	} else if (pdev->id == 1) {
+-		err = gpio_request(EP93XX_GPIO_LINE_EGPIO14,
+-				   dev_name(&pdev->dev));
+-		if (err)
+-			return err;
+-		err = gpio_direction_output(EP93XX_GPIO_LINE_EGPIO14, 0);
+-		if (err)
+-			goto fail;
+-
+-		/* PWM 1 output on EGPIO[14] */
+-		ep93xx_devcfg_set_bits(EP93XX_SYSCON_DEVCFG_PONG);
+-	} else {
+-		err = -ENODEV;
+-	}
+-
+-	return err;
+-
+-fail:
+-	gpio_free(EP93XX_GPIO_LINE_EGPIO14);
+-	return err;
+-}
+-EXPORT_SYMBOL(ep93xx_pwm_acquire_gpio);
+-
+-void ep93xx_pwm_release_gpio(struct platform_device *pdev)
+-{
+-	if (pdev->id == 1) {
+-		gpio_direction_input(EP93XX_GPIO_LINE_EGPIO14);
+-		gpio_free(EP93XX_GPIO_LINE_EGPIO14);
+-
+-		/* EGPIO[14] used for GPIO */
+-		ep93xx_devcfg_clear_bits(EP93XX_SYSCON_DEVCFG_PONG);
+-	}
+-}
+-EXPORT_SYMBOL(ep93xx_pwm_release_gpio);
+-
+-
+ /*************************************************************************
+  * EP93xx video peripheral handling
+  *************************************************************************/
+diff --git a/drivers/pwm/pwm-ep93xx.c b/drivers/pwm/pwm-ep93xx.c
+index 67c3fdbf7ae3..994f89ac43b4 100644
+--- a/drivers/pwm/pwm-ep93xx.c
++++ b/drivers/pwm/pwm-ep93xx.c
+@@ -27,8 +27,6 @@
  
- /* LCTL */
- #define SDW_SHIM_LCTL			0x4
-@@ -30,6 +31,10 @@
- #define SDW_SHIM_LCTL_SPA_MASK		GENMASK(3, 0)
- #define SDW_SHIM_LCTL_CPA		BIT(8)
- #define SDW_SHIM_LCTL_CPA_MASK		GENMASK(11, 8)
-+#define SDW_SHIM_LCTL_MLCS_MASK		GENMASK(29, 27)
-+#define SDW_SHIM_MLCS_XTAL_CLK		0x0
-+#define SDW_SHIM_MLCS_CARDINAL_CLK	0x1
-+#define SDW_SHIM_MLCS_AUDIO_PLL_CLK	0x2
+ #include <asm/div64.h>
  
- /* SYNC */
- #define SDW_SHIM_SYNC			0xC
+-#include <linux/soc/cirrus/ep93xx.h>	/* for ep93xx_pwm_{acquire,release}_gpio() */
+-
+ #define EP93XX_PWMx_TERM_COUNT	0x00
+ #define EP93XX_PWMx_DUTY_CYCLE	0x04
+ #define EP93XX_PWMx_ENABLE	0x08
+@@ -44,20 +42,6 @@ static inline struct ep93xx_pwm *to_ep93xx_pwm(struct pwm_chip *chip)
+ 	return pwmchip_get_drvdata(chip);
+ }
+ 
+-static int ep93xx_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+-{
+-	struct platform_device *pdev = to_platform_device(pwmchip_parent(chip));
+-
+-	return ep93xx_pwm_acquire_gpio(pdev);
+-}
+-
+-static void ep93xx_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+-{
+-	struct platform_device *pdev = to_platform_device(pwmchip_parent(chip));
+-
+-	ep93xx_pwm_release_gpio(pdev);
+-}
+-
+ static int ep93xx_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			    const struct pwm_state *state)
+ {
+@@ -156,8 +140,6 @@ static int ep93xx_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ }
+ 
+ static const struct pwm_ops ep93xx_pwm_ops = {
+-	.request = ep93xx_pwm_request,
+-	.free = ep93xx_pwm_free,
+ 	.apply = ep93xx_pwm_apply,
+ };
+ 
+diff --git a/include/linux/soc/cirrus/ep93xx.h b/include/linux/soc/cirrus/ep93xx.h
+index 8942bfaf1545..f6376edc1b33 100644
+--- a/include/linux/soc/cirrus/ep93xx.h
++++ b/include/linux/soc/cirrus/ep93xx.h
+@@ -37,8 +37,6 @@ struct ep93xx_regmap_adev {
+ 	container_of((_adev), struct ep93xx_regmap_adev, adev)
+ 
+ #ifdef CONFIG_ARCH_EP93XX
+-int ep93xx_pwm_acquire_gpio(struct platform_device *pdev);
+-void ep93xx_pwm_release_gpio(struct platform_device *pdev);
+ int ep93xx_ide_acquire_gpio(struct platform_device *pdev);
+ void ep93xx_ide_release_gpio(struct platform_device *pdev);
+ int ep93xx_i2s_acquire(void);
+@@ -46,8 +44,6 @@ void ep93xx_i2s_release(void);
+ unsigned int ep93xx_chip_revision(void);
+ 
+ #else
+-static inline int ep93xx_pwm_acquire_gpio(struct platform_device *pdev) { return 0; }
+-static inline void ep93xx_pwm_release_gpio(struct platform_device *pdev) {}
+ static inline int ep93xx_ide_acquire_gpio(struct platform_device *pdev) { return 0; }
+ static inline void ep93xx_ide_release_gpio(struct platform_device *pdev) {}
+ static inline int ep93xx_i2s_acquire(void) { return 0; }
+
 -- 
-2.34.1
+2.41.0
+
 
