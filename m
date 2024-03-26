@@ -1,86 +1,68 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A20513C838;
-	Tue, 26 Mar 2024 15:34:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA3413CA98
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:34:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711467248; cv=none; b=EvpphA8ILOdBqSGbD9ObAoHZNVG1hmXfWhcjVUNiXjSAV5r1Brb2nfjlqM5CYH6K56wv1N2FWJZ8CfuosqWiQ3mGuTGP9HXXR0vytAVb6URJFMGuUmCrjEAsz2agWK+KpWTHheOLQ2+r9TdhG5Ji6tiEb6gqP5OjVoJRxg7DQcU=
+	t=1711467252; cv=none; b=uumF03OC0DH5uS3JBaxhH0IDhqUMsgOqRxMMkquTDchimI4pQVkJDXCiarMdNgGoloyyllRq+BKzfAPnc36HjwgTQLNsnKYTjG8zx8DJauCRC65HACTgBSLMNF1XUsSe+L6Ba7H2HUvLttcopUtkc5KNlZCkei35otuMiaztc60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711467248; c=relaxed/simple;
-	bh=voHU8CXUO9rULptOoqbMxaCGiQWg8c8+PXZAh+/GUZg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uT9pOy/tZOp3ljKyS4QER2sZ58YYPYXqkN9Zn/3/gQ6rjkotJFNd7IGVN1JqmffMJmkPf8KhuBpx0ZGmsXEhLDOwEGxeM9+9vPSwbbVv3PRyKh7HOUqPxB8n7sl0F3SDZeF4bmZK3u30kU9NDc3Ns0gC6tKty5CjFZLDdbp0Qtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=EDxrDSuz; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cZAsHj4j; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=EDxrDSuz; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cZAsHj4j; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1711467252; c=relaxed/simple;
+	bh=YCGVUXqjT2VDQHJCmUVjnpWe1+Wa5WfZ7bt5vQxRrH0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=lVVTn4hSe07YiTpEjnzYaZ9vKoTcZPdVHF7q1hOyjuSpAKvTVRzXODxUdHMYUx6m7JXctuKhzsaIjPBmnvcNI58nGk065R/jjCOb4RU14s9IDfGeTlcHzgG6Tsc4/mpCYkStwzNlFg0MAqouKkQUKxuuu2+c3RdZP4uJZvabYbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZxQ6upFq; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="EDxrDSuz";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cZAsHj4j";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="EDxrDSuz";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cZAsHj4j"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 865865D7A2;
-	Tue, 26 Mar 2024 15:34:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1711467244;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t65TdSxXFIxn9BLM0RNbweNcsBs25Tsa2iIZM848EpM=;
-	b=EDxrDSuzGdTIZEvFJXQ/KrhdNkm2lnAFm2OIi6u7+CbwrDFoKhAA/UsX7nzlgnm/WC8YoY
-	LXY3eEDAKDMaJEZYSk42GAo7r9t0kx/Li2DVEHJm1oqf5JZ4UMULbxYD24XAJWqNNshDOj
-	7QJXOAwv5Mftg9AXGKmlq0zd6HOUHQI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1711467244;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t65TdSxXFIxn9BLM0RNbweNcsBs25Tsa2iIZM848EpM=;
-	b=cZAsHj4jo9izmPjkI7dgpCRG9bs2SeweJWTtflaoDNug5DSJT0da4cLMj0CBXGhTvK0qWP
-	bHNapEx6KYA7QlDw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1711467244;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t65TdSxXFIxn9BLM0RNbweNcsBs25Tsa2iIZM848EpM=;
-	b=EDxrDSuzGdTIZEvFJXQ/KrhdNkm2lnAFm2OIi6u7+CbwrDFoKhAA/UsX7nzlgnm/WC8YoY
-	LXY3eEDAKDMaJEZYSk42GAo7r9t0kx/Li2DVEHJm1oqf5JZ4UMULbxYD24XAJWqNNshDOj
-	7QJXOAwv5Mftg9AXGKmlq0zd6HOUHQI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1711467244;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t65TdSxXFIxn9BLM0RNbweNcsBs25Tsa2iIZM848EpM=;
-	b=cZAsHj4jo9izmPjkI7dgpCRG9bs2SeweJWTtflaoDNug5DSJT0da4cLMj0CBXGhTvK0qWP
-	bHNapEx6KYA7QlDw==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 6F63913587;
-	Tue, 26 Mar 2024 15:34:04 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id fry3GuzqAmbmVgAAn2gu4w
-	(envelope-from <dsterba@suse.cz>); Tue, 26 Mar 2024 15:34:04 +0000
-Date: Tue, 26 Mar 2024 16:26:43 +0100
-From: David Sterba <dsterba@suse.cz>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Chris Mason <clm@fb.com>, Qu Wenruo <wqu@suse.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] btrfs: qgroup: delete unnecessary check in
- btrfs_qgroup_check_inherit()
-Message-ID: <20240326152643.GT14596@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <cb21ce67-e9d8-4844-8c70-eb42f6ac4aee@moroto.mountain>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZxQ6upFq"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-56c3689ad2cso224779a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 08:34:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1711467248; x=1712072048; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=55ZfJBrH48piI0JAMfMBwXalNWWcs1zncHAc7+A3Aj8=;
+        b=ZxQ6upFqtggDHAVQtP4wSqwXrCR0kCHeJQuCf8XIZ54TueUQyGLos45QdYWFbqiuq+
+         YVkUtdqkV/176QcHwmOeET2UQUmSxMNdncaZZLbpkWwnJKGNdBJUsAhbfo1xXzcbyicm
+         bnggb/gxgaOWNqH//TJ7Myof2GKzcNlwqRGsztPFn66yTXjjuwiKRDfT2Scvr6lZVatc
+         se4FZSE56yjVcraNpqKjGd8mFcSwWOIWmN+UGcDx/H6WhvhSEJSP59mIqKHhUBMCM1+h
+         F7rmSWyy6BrBuRwwrT2NpJjCXfdqis9vofpF7cKNMzIdREdF2YSfcNeybFMnhCRSOqPB
+         SPGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711467248; x=1712072048;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=55ZfJBrH48piI0JAMfMBwXalNWWcs1zncHAc7+A3Aj8=;
+        b=dvy/FH6An4OfF2K9xXftTBux2CPFqFDlAHHL2Odh+YunaCEgtNgV3ImhKS2y8uc2UG
+         EpviELQVoiuJe1RLqCOktcWhdpBrArEsOMxG2oMIOWoZZjv48YW+apGGSKE0HL96XdD6
+         fPsYCRHVGZHmo6T9CiwEQ0mPisUGBaS29XWnYuydJ0SfjoDC/e3bBRGskGo3jpXNgLfL
+         cLkx9gPD0IKlHQ9i+zTPisTRYi25su+9eXH8pmALsni1iSxNzleAnXzPZgSDnmwKYqPi
+         Zr2VrIV1e1VNGW8+IOgBaG/6245fx+xE1nufqk01+lsUl9u6wW6FqxejvuUtXoaToKl6
+         PUIw==
+X-Forwarded-Encrypted: i=1; AJvYcCX+Z+ZEMk2FRmuMSasAFhu68miavPG9CvANfHDmds6iR6Wb45VGui8HpBGV6qB2i6VaONFZE2LT7rOme70HKqnLPfZBdMSx4FDoY8bN
+X-Gm-Message-State: AOJu0Yw+uxOdrRXmUH8lfx0IuZfh87aZIUtDMvacDtM3WOEZuCa97peL
+	i5MumGd28dkl34G/n03oF8kwyfbPbkU+Dn9rYGvdtyvkameAcicCPEpgvejFkBY=
+X-Google-Smtp-Source: AGHT+IFD72eddjYWygJrpo+ZwRbM4G2apEunAbhdV30JZ5/9l+iXN1FpY93mApNWes/wJ+lV+zL35w==
+X-Received: by 2002:a50:d71e:0:b0:56c:d47:e403 with SMTP id t30-20020a50d71e000000b0056c0d47e403mr2263091edi.28.1711467248382;
+        Tue, 26 Mar 2024 08:34:08 -0700 (PDT)
+Received: from alley ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id j26-20020aa7de9a000000b0056c08268768sm3068196edv.10.2024.03.26.08.34.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 08:34:08 -0700 (PDT)
+Date: Tue, 26 Mar 2024 16:34:06 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Jan Kara <jack@suse.cz>,
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] printk for 6.9-rc2
+Message-ID: <ZgLq7uQzrzY1_C6M@alley>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,64 +71,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cb21ce67-e9d8-4844-8c70-eb42f6ac4aee@moroto.mountain>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Score: -1.21
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-1.21 / 50.00];
-	 ARC_NA(0.00)[];
-	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 REPLYTO_ADDR_EQ_FROM(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[8];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[linaro.org:email,suse.cz:dkim];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.00)[44.04%];
-	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:98:from]
-X-Spam-Level: 
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=EDxrDSuz;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=cZAsHj4j
-X-Rspamd-Queue-Id: 865865D7A2
 
-On Thu, Mar 07, 2024 at 05:53:47PM +0300, Dan Carpenter wrote:
-> This check "if (inherit->num_qgroups > PAGE_SIZE)" is confusing and
-> unnecessary.
-> 
-> The problem with the check is that static checkers flag it as a
-> potential mixup of between units of bytes vs number of elements.
-> Fortunately, the check can safely be deleted because the next check is
-> correct and applies an even stricter limit:
-> 
-> 	if (size != struct_size(inherit, qgroups, inherit->num_qgroups))
-> 		return -EINVAL;
-> 
-> The "inherit" struct ends in a variable array of __u64 and
-> "inherit->num_qgroups" is the number of elements in the array.  At the
-> start of the function we check that:
-> 
-> 	if (size < sizeof(*inherit) || size > PAGE_SIZE)
-> 		return -EINVAL;
-> 
-> Thus, since we verify that the whole struct fits within one page, that
-> means that the number of elements in the inherit->qgroups[] array must
-> be less than PAGE_SIZE.
-> 
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Hi Linus,
 
-Added to for-next, thanks.
+please pull one simple printk fixup from
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git tags/printk-for-6.9-rc2
+
+======================================
+
+- Prevent scheduling in an atomic context when printk() takes over
+  the console flushing duty.
+
+----------------------------------------------------------------
+John Ogness (1):
+      printk: Update @console_may_schedule in console_trylock_spinning()
+
+ kernel/printk/printk.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
