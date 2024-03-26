@@ -1,63 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A5D1272DC;
-	Tue, 26 Mar 2024 02:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7607D79F3
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 02:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711420421; cv=none; b=fAG+oHgScDenvqYC79RGLZ33s3KUp58x4MNnt79vsff/BFGLTYfST/biJKdGLfPnm4xjZHLix/37fesMhdJMxuf8AcdBH9iE1oiZ/eoGu3ZB2Rmk+jdHKdDQhFRBLB2vgNjIolcbJM2iLaNMGH0XLMp48DFN+ZuRke8L9K89HKo=
+	t=1711420533; cv=none; b=qr8TBlyOZNOKS6u5azbu5EBfV/rT2kVO/xf2/fUqJJD9BI/Qcg0TeKw1GiKOaot15hemWKz7/VWYp8xcEDZ/cYiGbPQ9dLMJpePrc8lk2B9ik9uWaGSvB0mHxwAmVEXmpBaQNJheefh9E0swlHQ6oH5dai2EQoyUAhj84BD/3bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711420421; c=relaxed/simple;
-	bh=PWWez+GCtzHxL+Q3cBOsyLC3Pjq/o440jxyRuUA0HBE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=meXvpgOb3C1jIns9U7xkb2xD6XbB6dv0OQae5WEZTMfnqE/riXFyyBrSbwDNupuGz6xbp1JNxJp+o6KpVs0dsgQj21ilypNunBICnRYemJh88+zAvxaktnAThoqaMs3lPn3kp3SrMpd1Qq1/w1Jp0UmiO2N75nIgRNtMwdM9XuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nr4BgcbT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711420533; c=relaxed/simple;
+	bh=KrqgeqQ69ysRMhocLmGqwoihzJ7ZoT9lykNpWpq0ujY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VQ5kLto+e93QeTAvZRmVHw+/m5OycGyFY88JlS1xJILAok7gXhrzuf/aQx9x4ce5b5cG8PSeIUvvdYrUCWK8gj33o/cfa7RYZccRJqIGvitxlGNRv+ftC8wSqrleIwi9b12qxJwg4h4NxQq3U8ypOI9JhQ6Pi+e09bG/j1qVf4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org; spf=none smtp.mailfrom=jookia.org; dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b=nsrRNCa0; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=jookia.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nr4BgcbT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F1C2C433F1;
-	Tue, 26 Mar 2024 02:33:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711420420;
-	bh=PWWez+GCtzHxL+Q3cBOsyLC3Pjq/o440jxyRuUA0HBE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Nr4BgcbTvRaBmyTyiDaqh0FqlHuYfefFC+IXxVFq/ApLTk1sVLb0xjv7r92kJ1iqV
-	 2ZYyhky/tPHOmOjpy7qvb4YoufvMY14ilBjZ+3zTbAzbh7GAIN5cEmXgC+xAfJ8e6E
-	 qD1MN4pmY5qylBsJ3UNrBubrI6A1PPhYyb2wORcke8wmPAyeHrrkq8FfcH/LENJqzn
-	 ZVoC1igpWA10v1Mn7ViEqvNT9d107JB5gFcpeVsNJBX6dnjQRxkYdoZUnqM+1P3zu0
-	 XXLP8GvSOwQS9KyjaLMkf8Smbbqf0jWPUn3YrHsIL9q4u1yAwqGxKBKJ9rspU9iLJX
-	 8+1/BFu4yearg==
-Date: Mon, 25 Mar 2024 19:33:38 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Richard Gobert <richardbgobert@gmail.com>
-Cc: davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
- willemdebruijn.kernel@gmail.com, dsahern@kernel.org, xeb@mail.ru,
- shuah@kernel.org, idosch@nvidia.com, amcohen@nvidia.com, petrm@nvidia.com,
- jbenc@redhat.com, bpoirier@nvidia.com, b.galvani@gmail.com,
- liujian56@huawei.com, horms@kernel.org, linyunsheng@huawei.com,
- therbert@google.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH net-next v4 4/4] net: gro: move L3 flush checks to
- tcp_gro_receive
-Message-ID: <20240325193338.565a4e45@kernel.org>
-In-Reply-To: <20240325182543.87683-5-richardbgobert@gmail.com>
-References: <20240325182543.87683-1-richardbgobert@gmail.com>
-	<20240325182543.87683-5-richardbgobert@gmail.com>
+	dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b="nsrRNCa0"
+Date: Tue, 26 Mar 2024 13:31:43 +1100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jookia.org; s=key1;
+	t=1711420528;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3XTjegj+eaYi+N9Zpt1T+o/loSSarSWNu0tvvxmWch0=;
+	b=nsrRNCa0+ob1yUhW+qGncfO56QlhsyFjVS0edXC62PyX9rplVGRB3RQks6+flW4QthRuhd
+	DJWDW/9AT+8o+Csd7oK5YMte+SKPq/HegUXTsF21Xymazor+zFRS2s8pgNtmF2Mmgj7Wy1
+	arQCjwUKFVhfRofuCczT0geXuNYGfKK9Ztu+AFeMmMGsvckozNO+RWRlaG8xIhqQHCYKnK
+	PSag61zM37z+foKjwIqKzPbaXNH1dheNHG1U1+pf6BUrvXArIauRLmvR1VqSZR/Jitghb0
+	MEHxWSUX3HjyCaDdoirqOhpSrGgazVN0y0M9dtY+2904UXiptM5Gv3TeH1irAQ==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: John Watts <contact@jookia.org>
+To: Saravana Kannan <saravanak@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
+	=?iso-8859-1?Q?Herv=E9?= Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>, kernel-team@android.com,
+	Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] of: property: fw_devlink: Fix stupid bug in
+ remote-endpoint parsing
+Message-ID: <ZgIzjwMEur8g1rsl@titan>
+References: <20240224052436.3552333-1-saravanak@google.com>
+ <ZfvN5jDrftG-YRG4@titan>
+ <CAGETcx8+vw0Vr0NWzjOAvxAZ07M4U7BWPAgO9avCngW0-9e_kA@mail.gmail.com>
+ <Zf7I65PiOR2wX1Uo@titan>
+ <CAGETcx_=MmfgDajM16iJ4Of9Yr2Sy6ZpU=MyhYgnmOJFUTD_oA@mail.gmail.com>
+ <ZgIZ4LmFOqdiDJBH@titan>
+ <CAGETcx-Emvu41nB3UDnb4Gh2aJEKu_hFcHX89uWnBTnaqvpN8g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGETcx-Emvu41nB3UDnb4Gh2aJEKu_hFcHX89uWnBTnaqvpN8g@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 25 Mar 2024 19:25:43 +0100 Richard Gobert wrote:
-> +	const u32 id = ntohl(*(__be32 *)&iph->id);
-> +	const u32 id2 = ntohl(*(__be32 *)&iph2->id);
-> +	const int flush_id = ntohs(id >> 16) - ntohs(id2 >> 16);
+Hello again,
 
-The endian conversions don't match types here. sparse is unhappy.
-If id is in host endian shouldn't it be htons(id >> 16) ?
-Also if you cast to a bitwise type you need __force
--- 
-pw-bot: cr
+On Mon, Mar 25, 2024 at 06:35:45PM -0700, Saravana Kannan wrote:
+> Ok, I have a solution. Have the audio-graph-card2 find the fwnode of
+> "multi" and mark it as "not a device" by doing something like this in
+> the driver. That should help fw_devlink handle this correctly.
+> 
+> fwnode.flags |= FWNODE_FLAG_NOT_DEVICE;
+
+I have done this:
+
+
+	struct device_node *node = dev->of_node;
+	struct device_node *node2;
+	node2 = of_get_child_by_name(node, "multi");
+	printk("node2 %pOF %pfw %x\n", node2, node2->fwnode, node2->fwnode.flags);
+	node2->fwnode.flags |= FWNODE_FLAG_NOT_DEVICE;
+	of_node_put(node2);
+
+This doesn't do anything, but this does:
+
+	struct device_node *node = dev->of_node;
+	struct device_node *node2;
+	node2 = of_get_child_by_name(node, "multi");
+	fw_devlink_purge_absent_suppliers(&node2->fwnode);
+	printk("node2 %pOF %pfw %x\n", node2, node2->fwnode, node2->fwnode.flags);
+	of_node_put(node2);
+
+Should I be using fw_devlink_purge_absent_suppliers?
+
+> -Saravana
+
+John.
