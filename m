@@ -1,46 +1,46 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297C713C67E;
-	Tue, 26 Mar 2024 18:54:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB74C13CF91;
+	Tue, 26 Mar 2024 18:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711479301; cv=none; b=By6cd63zleMW3biEX0G1Xx5tRdYTLZtOcP0BrqwaTAhEcAnPkN/95Z6ZymS4kfAcVj8GLel6KGNIxbQxOKUKclUqNQkJu9B0TGaPrnC38G1PiEZeDsi4yyQ5S6xRNX83EeiVfRFhYb4cY8GjnocSvV10bNK/21C1ysK3QEFFMUM=
+	t=1711479305; cv=none; b=hMq/uy/R38pmGIg3Tq3TWOTrDNaAXs6pCjO/2+YgMEnxkX817YPsqTehcycxQA/qXG1BqxmM6xBkEhtNZ2mB1ZuJzN9ZtmmvZ6oKfKo8fxY/qrOKVFJ4Hb0tL6cUtvmSzqSnC+2KALKYxKroUFWFxsXICE7zPkJmWijuCFmCL3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711479301; c=relaxed/simple;
-	bh=xDl37rorqnxK1Avj9GZ38VGhAI34BQ8XfsyGrh2l1i4=;
+	s=arc-20240116; t=1711479305; c=relaxed/simple;
+	bh=pNYI8YQgstn889cVRcIctmS24PZPkhrJ8sD3rgCZP0c=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IiDq6iGsmdOpLKSj6f26uk+/DLu8kDQf4IQr/ZVHa+fPumrLHDKwqywZvARbKfQiv/YfuumrHIJQtCNKVECXiDLt+pyGrj3GjVbzrT6cHTzA1wFUiJoEIKy83aZ0Owa2VUG5DeB4o7xmCkI4ExxcGMmQ4b6zmA2Wo0aSpIEsznU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Jc5qp60h; arc=none smtp.client-ip=198.47.23.249
+	 MIME-Version:Content-Type; b=f3XF8squ18jTmqWWgKdeqHyaGYyr/gvXtqzTXLXlRzoNGNuVkiRlIiDEqqinrwl3+mARuUbYg3lyUa9b2XiGWEaPQtCt6kOgxwFNytmsRgueGc6V1nWskVHEI3YYvjp02QFnodhXIo98bk0KLOilSIk1t6euS8hPZb74Jf6kzFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dWVsMKnw; arc=none smtp.client-ip=198.47.19.142
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Jc5qp60h"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42QIsitW040742;
-	Tue, 26 Mar 2024 13:54:44 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dWVsMKnw"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42QIshYY064682;
+	Tue, 26 Mar 2024 13:54:43 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1711479284;
-	bh=+uiAjSxp5Jxk/pDxNJLjRgc4hBbmKLRD7p9qia1iAjA=;
+	s=ti-com-17Q1; t=1711479283;
+	bh=6Ub4VurtOilZ4czDv3ZHH4QtqrNNYmdGyZQ4VtFsJqg=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=Jc5qp60hC8SayStWT4bdU2U9O+eVRDVskDfvqpVbKWI9lYTch3zsFPUG3tjdrxBY9
-	 qRi2SLleSNVn4Zm68tGpX947kqN8ey6ddWMgPSyA63RkNNKMm7dGK5g7O1EHQAflzx
-	 U3sazmZx7JRjzIxjJHwBFpNPgCK+pKvDXK2v13vc=
+	b=dWVsMKnwzhlWewHyAT4CtncyuKr3YURWC05JNNxfslWXw8f6beVLQAjAaS6zM4Omh
+	 fQJGYzWqBUOmanCCIFlbqhMmhqXIkyTC86eoDbnareWoeECvV/JOZETL/ZoT97xgkY
+	 nyvBQTrVjFSthPQNy9yLTqiyTMMc7wrFH7WVlehM=
 Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42QIsi9r100420
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42QIshIl051104
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 26 Mar 2024 13:54:44 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE111.ent.ti.com
+	Tue, 26 Mar 2024 13:54:43 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE111.ent.ti.com
  (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 26
- Mar 2024 13:54:44 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2024 13:54:42 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 26 Mar 2024 13:54:43 -0500
+ Frontend Transport; Tue, 26 Mar 2024 13:54:42 -0500
 Received: from lelvsmtp5.itg.ti.com ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42QIsfIn091446;
-	Tue, 26 Mar 2024 13:54:43 -0500
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42QIsfIk091446;
+	Tue, 26 Mar 2024 13:54:42 -0500
 From: Andrew Davis <afd@ti.com>
 To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
         Tero
@@ -51,9 +51,9 @@ To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
 	<conor+dt@kernel.org>
 CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Andrew Davis <afd@ti.com>
-Subject: [PATCH 5/6] arm64: dts: ti: k3-j721s2: Remove UART baud rate selection
-Date: Tue, 26 Mar 2024 13:54:40 -0500
-Message-ID: <20240326185441.29656-5-afd@ti.com>
+Subject: [PATCH 2/6] arm64: dts: ti: k3-am64: Remove UART baud rate selection
+Date: Tue, 26 Mar 2024 13:54:37 -0500
+Message-ID: <20240326185441.29656-2-afd@ti.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240326185441.29656-1-afd@ti.com>
 References: <20240326185441.29656-1-afd@ti.com>
@@ -85,114 +85,55 @@ there are already more standard ways to set serial baud-rates.
 
 Signed-off-by: Andrew Davis <afd@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi       | 10 ----------
- arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi |  2 --
- 2 files changed, 12 deletions(-)
+ arch/arm64/boot/dts/ti/k3-am642-evm.dts                  | 1 -
+ arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts | 2 --
+ arch/arm64/boot/dts/ti/k3-am642-sk.dts                   | 1 -
+ 3 files changed, 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi
-index b70c8615e3c15..3cb06a7e4117f 100644
---- a/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi
-@@ -459,7 +459,6 @@ main_uart0: serial@2800000 {
- 		compatible = "ti,j721e-uart", "ti,am654-uart";
- 		reg = <0x00 0x02800000 0x00 0x200>;
- 		interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
--		current-speed = <115200>;
- 		clocks = <&k3_clks 146 3>;
- 		clock-names = "fclk";
- 		power-domains = <&k3_pds 146 TI_SCI_PD_EXCLUSIVE>;
-@@ -470,7 +469,6 @@ main_uart1: serial@2810000 {
- 		compatible = "ti,j721e-uart", "ti,am654-uart";
- 		reg = <0x00 0x02810000 0x00 0x200>;
- 		interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
--		current-speed = <115200>;
- 		clocks = <&k3_clks 350 3>;
- 		clock-names = "fclk";
- 		power-domains = <&k3_pds 350 TI_SCI_PD_EXCLUSIVE>;
-@@ -481,7 +479,6 @@ main_uart2: serial@2820000 {
- 		compatible = "ti,j721e-uart", "ti,am654-uart";
- 		reg = <0x00 0x02820000 0x00 0x200>;
- 		interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>;
--		current-speed = <115200>;
- 		clocks = <&k3_clks 351 3>;
- 		clock-names = "fclk";
- 		power-domains = <&k3_pds 351 TI_SCI_PD_EXCLUSIVE>;
-@@ -492,7 +489,6 @@ main_uart3: serial@2830000 {
- 		compatible = "ti,j721e-uart", "ti,am654-uart";
- 		reg = <0x00 0x02830000 0x00 0x200>;
- 		interrupts = <GIC_SPI 195 IRQ_TYPE_LEVEL_HIGH>;
--		current-speed = <115200>;
- 		clocks = <&k3_clks 352 3>;
- 		clock-names = "fclk";
- 		power-domains = <&k3_pds 352 TI_SCI_PD_EXCLUSIVE>;
-@@ -503,7 +499,6 @@ main_uart4: serial@2840000 {
- 		compatible = "ti,j721e-uart", "ti,am654-uart";
- 		reg = <0x00 0x02840000 0x00 0x200>;
- 		interrupts = <GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>;
--		current-speed = <115200>;
- 		clocks = <&k3_clks 353 3>;
- 		clock-names = "fclk";
- 		power-domains = <&k3_pds 353 TI_SCI_PD_EXCLUSIVE>;
-@@ -514,7 +509,6 @@ main_uart5: serial@2850000 {
- 		compatible = "ti,j721e-uart", "ti,am654-uart";
- 		reg = <0x00 0x02850000 0x00 0x200>;
- 		interrupts = <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>;
--		current-speed = <115200>;
- 		clocks = <&k3_clks 354 3>;
- 		clock-names = "fclk";
- 		power-domains = <&k3_pds 354 TI_SCI_PD_EXCLUSIVE>;
-@@ -525,7 +519,6 @@ main_uart6: serial@2860000 {
- 		compatible = "ti,j721e-uart", "ti,am654-uart";
- 		reg = <0x00 0x02860000 0x00 0x200>;
- 		interrupts = <GIC_SPI 198 IRQ_TYPE_LEVEL_HIGH>;
--		current-speed = <115200>;
- 		clocks = <&k3_clks 355 3>;
- 		clock-names = "fclk";
- 		power-domains = <&k3_pds 355 TI_SCI_PD_EXCLUSIVE>;
-@@ -536,7 +529,6 @@ main_uart7: serial@2870000 {
- 		compatible = "ti,j721e-uart", "ti,am654-uart";
- 		reg = <0x00 0x02870000 0x00 0x200>;
- 		interrupts = <GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH>;
--		current-speed = <115200>;
- 		clocks = <&k3_clks 356 3>;
- 		clock-names = "fclk";
- 		power-domains = <&k3_pds 356 TI_SCI_PD_EXCLUSIVE>;
-@@ -547,7 +539,6 @@ main_uart8: serial@2880000 {
- 		compatible = "ti,j721e-uart", "ti,am654-uart";
- 		reg = <0x00 0x02880000 0x00 0x200>;
- 		interrupts = <GIC_SPI 248 IRQ_TYPE_LEVEL_HIGH>;
--		current-speed = <115200>;
- 		clocks = <&k3_clks 357 3>;
- 		clock-names = "fclk";
- 		power-domains = <&k3_pds 357 TI_SCI_PD_EXCLUSIVE>;
-@@ -558,7 +549,6 @@ main_uart9: serial@2890000 {
- 		compatible = "ti,j721e-uart", "ti,am654-uart";
- 		reg = <0x00 0x02890000 0x00 0x200>;
- 		interrupts = <GIC_SPI 249 IRQ_TYPE_LEVEL_HIGH>;
--		current-speed = <115200>;
- 		clocks = <&k3_clks 358 3>;
- 		clock-names = "fclk";
- 		power-domains = <&k3_pds 358 TI_SCI_PD_EXCLUSIVE>;
-diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi
-index eaf7f709440e6..5ccb04c7c4624 100644
---- a/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi
-@@ -298,7 +298,6 @@ wkup_uart0: serial@42300000 {
- 		compatible = "ti,j721e-uart", "ti,am654-uart";
- 		reg = <0x00 0x42300000 0x00 0x200>;
- 		interrupts = <GIC_SPI 897 IRQ_TYPE_LEVEL_HIGH>;
--		current-speed = <115200>;
- 		clocks = <&k3_clks 359 3>;
- 		clock-names = "fclk";
- 		power-domains = <&k3_pds 359 TI_SCI_PD_EXCLUSIVE>;
-@@ -309,7 +308,6 @@ mcu_uart0: serial@40a00000 {
- 		compatible = "ti,j721e-uart", "ti,am654-uart";
- 		reg = <0x00 0x40a00000 0x00 0x200>;
- 		interrupts = <GIC_SPI 846 IRQ_TYPE_LEVEL_HIGH>;
--		current-speed = <115200>;
- 		clocks = <&k3_clks 149 3>;
- 		clock-names = "fclk";
- 		power-domains = <&k3_pds 149 TI_SCI_PD_EXCLUSIVE>;
+diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm.dts b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+index 53fe1d065ddbb..e20e4ffd0f1fa 100644
+--- a/arch/arm64/boot/dts/ti/k3-am642-evm.dts
++++ b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+@@ -473,7 +473,6 @@ &main_uart0 {
+ 	status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&main_uart0_pins_default>;
+-	current-speed = <115200>;
+ };
+ 
+ /* main_uart1 is reserved for firmware usage */
+diff --git a/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts b/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts
+index 8237b8c815b84..dc774f9c75417 100644
+--- a/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts
++++ b/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts
+@@ -275,7 +275,6 @@ &main_uart0 {
+ 	status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&main_uart0_pins_default>;
+-	current-speed = <115200>;
+ };
+ 
+ &main_uart1 {
+@@ -283,7 +282,6 @@ &main_uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&main_uart1_pins_default>;
+ 	uart-has-rtscts;
+-	current-speed = <115200>;
+ };
+ 
+ &sdhci1 {
+diff --git a/arch/arm64/boot/dts/ti/k3-am642-sk.dts b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
+index 67cd41bf806ea..5b028b3a3192f 100644
+--- a/arch/arm64/boot/dts/ti/k3-am642-sk.dts
++++ b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
+@@ -381,7 +381,6 @@ &main_uart0 {
+ 	status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&main_uart0_pins_default>;
+-	current-speed = <115200>;
+ };
+ 
+ &main_uart1 {
 -- 
 2.39.2
 
