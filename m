@@ -1,278 +1,176 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0560E13D624
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 21:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD8413E03F
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 21:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711487325; cv=none; b=M1VGNZII9MVh94KzF/yeBv7dFdun6t7qhBzeKHdziXKX2OT+lIHHWLBdRRXpH2BeIkt39e9vN3j2iNEyL0P5R/zI/1W+/lOopMABtuTaH9SKPSrlLRFh6ZsHNi1EraZyh3wFugMOiaPUdOVwGi9UByMUkfgnnA1RnhlFB+F38WE=
+	t=1711487331; cv=none; b=qw519ppAbkj8OSsV2SuVQUbJcEJa96peSEqJic5ZbZJPMblYDGh2cqIz2Dkoh7kEZfo/CPuBNUIKEzoIOrUthdFdWYBebGiMCkLXjmWtYJNV8X2l6eXp5s85UpINb1Z2Q1VQnQxQdlkWA2xFQTAuIjxcb/RGfB349MBQ22E1RdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711487325; c=relaxed/simple;
-	bh=eJZZmFBoxhxVlet/0pBFlU3St7YEEvnSSAuyn+HM1GM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oCuiuIFsG4DvkGlDhkxuUFg2RGgUnVY3ewoKMLQ9aWSUJyX6asyUURFZOH2zocBQKHp/6ZcNxc9R2WrPkYbKmG+LZLv4c7aiDC1JLk2volhJpNwZWGeBqMEsFVsb5DTGjD50fXiFP7i2KkZZyPfwMoAvrfy4SX9P/qERnNlvqco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aV5pTKjS; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711487331; c=relaxed/simple;
+	bh=s08b6lHYI+rosZFlnj8/hdEGxrc4jOrRXDBNq5kldF8=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=oZJWJcN3J0Q+67Boa7qSH7uad19aqz3Yw+DLzB4CiNXH8r2MfeBdoiPH6YkSGLbOsYmYxf710+ew0A6XspadYUcxNhUA9qekZMtiGruTW0KV0zrRgCmdh2SvTRI/pc/QolYpfDlhl53QFbQuPvVLXcG9kVv1TNjqTbu3fto44hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=oTImM2O5; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aV5pTKjS"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a4a393b699fso37496766b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 14:08:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="oTImM2O5"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e0f2798b47so1715785ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 14:08:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711487320; x=1712092120; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1711487329; x=1712092129; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Iz1lawlQGhNU4mln98FQrEkeNw+AVALbW0k/A8mWnj8=;
-        b=aV5pTKjSBSHgYvEGlYOCOUuYmjp172im5ax2e+zTGkYErD53wlqaoi58rhwMLBbqsp
-         g6b5Jsbd3JFg8L9s8rTW850qkDMVFsDHtQ9ZDj4brGEQiEuZVv1xF07WnPML03RbAtDG
-         CodMbYnON4bgumsRexwnaaQQJzWPj7M0EjAQxNV2ss2FzBsVHlF4LvJIaMkuj/k4IZZC
-         FaSKLOOVPk8NKdKtfNyONxR93a7PJVJw7asuQu8hZTi8dx642Ip3xVTgBKt4uCHMzGQk
-         77T3b4xQ0DI8KIjMoIXUYGn91jAX0VFoKYEr+Q9+eVjloR3pKkkVDBsqyYLiZzjOKDvz
-         5vtw==
+        bh=mVy3Hz+QglZLXZjgfs9SD4hjFJzSIhc79fs9r0XUwbg=;
+        b=oTImM2O56e5Ksl/Y4W6NqglhzHPWsTVJI8tLiddc6WBU+Ha01QhJjHFMomqfJUOtCN
+         lB+NpJkexPY7T5kp/r1DjXU4/sbXmL1lSpK+KvJE7DLRTALudvs4d1Hu0w2ggXDOsJWv
+         FyBnOnwto1Fc5EadEs2ubDrAc4p7AFHQo2l3VFd5qsHnfu5mFb0Cxjek1B4xpXi9Z4Px
+         gBDkjoDe48ZSennOJ+aAMVc6kZZfi8SqvBIcF0snK5PGkdXHeC0i6IfU+f5q+FZMA0MT
+         5OVC5fkcvrfubuCf4yb2NNWWENJFn5mMthc51NwUr0dxQz0ni1lN3pOtot/xlyPdFn6J
+         turw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711487320; x=1712092120;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Iz1lawlQGhNU4mln98FQrEkeNw+AVALbW0k/A8mWnj8=;
-        b=ij3KJ4w78XJrJgFT20NcaXlyW8/JmA0WxO8dxyhluIsAqGjiYPmd8aFUc5n0v/u0nb
-         7yDsz67KKLbKdsmEWtuhod7wqHOsVHwB9IIhdoWUgxtcOuZANQbe9R8jjk151TF42d5B
-         2Zp5NKh4HY4qaEciTENJ/goa0uboLdWmK97sMC5LZOsJZj8FsMrC1MxLcQ02WH9Z3gQr
-         gYksPcG6Zgw84aliqP5wG0h0wC9FBjl5YBB3p+bvPHn2hInWk+uONrG94l91SBnN4dwo
-         JZSQSi4CSNLAEfRHWG5PaZTFqhaM4RctjE7sRDupAFELta7aIViMItqT0W1XSUq/9FEr
-         Bw+g==
-X-Forwarded-Encrypted: i=1; AJvYcCXwTaGVMtV1NDRSphQLVR7l3XfbphcG14q/LOXHz1MKHhfkmUEvw+yj2oNb7MjeN18mcohCytBh1JQRdkwEzNutnRUxeASgr59R7Jb+
-X-Gm-Message-State: AOJu0YyDjmEgr4rqdGEF5L1vrY9rVp8u27FSefH2izD0mtyCdUHpHL5E
-	Ff25xe0BfzFE4uYJLYYuFFV1xewGNyDie2Q5wQV+lSmTQMogdo8vDbnKQpUuH24=
-X-Google-Smtp-Source: AGHT+IF9gIMlB6BgJdNrNsE9cP9shpQy1D8/sskwlRLNLTu9jMqWbISItN36UsrcdjpcA/QOZtyMHQ==
-X-Received: by 2002:a17:906:1859:b0:a46:ed72:6bba with SMTP id w25-20020a170906185900b00a46ed726bbamr2342407eje.18.1711487320261;
-        Tue, 26 Mar 2024 14:08:40 -0700 (PDT)
-Received: from [192.168.92.47] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
-        by smtp.gmail.com with ESMTPSA id l19-20020a17090612d300b00a46cffe6d06sm4621697ejb.42.2024.03.26.14.08.38
+        d=1e100.net; s=20230601; t=1711487329; x=1712092129;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mVy3Hz+QglZLXZjgfs9SD4hjFJzSIhc79fs9r0XUwbg=;
+        b=b3QOUPaVujpjziDHptQ0EraWe3q4aJ3lA0JXMDWTMXoCITxrOHEImgoq1gG+Ix2IFU
+         up6Bto/F4pm+yTE1iBgh6j3J3iZ/zP3b6zcEiX+a3qiO19JmyoDCojUFOY+GkzH1c87j
+         sdcW6xMcwifwum8pdeNQRl02p9ddtWM+vV8A8TWcjh4KQpRwkzDt1vbW3djT+nvmatCR
+         0flw0XxER55TpX6uP/4rr6IadRyYbtG9S9n4cr6sMwAEdFLspXigXV3983t7j0VVFEy1
+         KmWYyasb1mw5M1M8YQJeZcXKjpMbp1Z4bxH9kvZq7qx0EEFufmFXiMrIFbE8/EiANH1i
+         YcUA==
+X-Forwarded-Encrypted: i=1; AJvYcCVEXVpTJnOudZE6W9K4FctKgkZSucvZLLL1V+LDsAcVKLNuHYhC8Cu3i+idrqytEO3k+vQSpGKu0gFqF4kxSTVvnpVFJSlqdovqSmSG
+X-Gm-Message-State: AOJu0YzNIC72NA/t62lLkj6pp6f7kN13A45hR7cQp0iUSXCpdCUmFuO7
+	jLuh2CEq8T3OkNksITjqudCUrO1Xmg5NcMHOrDqz44SvrMm1niqop8DsYYHH49k=
+X-Google-Smtp-Source: AGHT+IF2HPw5BzRQJFPhKRUTLLZBWnEaNhZE1YFQ07t8V46j4F5D2XT2+2Uu9b87tXUa1tSe4tum4w==
+X-Received: by 2002:a17:902:da88:b0:1e0:b5f1:aac2 with SMTP id j8-20020a170902da8800b001e0b5f1aac2mr3519934plx.10.1711487328512;
+        Tue, 26 Mar 2024 14:08:48 -0700 (PDT)
+Received: from localhost ([50.213.54.97])
+        by smtp.gmail.com with ESMTPSA id v13-20020a170902f0cd00b001e09c35e058sm7324705pla.195.2024.03.26.14.08.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 14:08:39 -0700 (PDT)
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Date: Tue, 26 Mar 2024 22:08:26 +0100
-Subject: [PATCH v3 4/5] arm64: dts: qcom: qcm2290: Add GPU nodes
+        Tue, 26 Mar 2024 14:08:46 -0700 (PDT)
+Date: Tue, 26 Mar 2024 14:08:46 -0700 (PDT)
+X-Google-Original-Date: Tue, 26 Mar 2024 14:08:39 PDT (-0700)
+Subject:     Re: [PATCH] riscv: compat_vdso: install compat_vdso.so.dbg to /lib/modules/*/vdso/
+In-Reply-To: <1a1bf141-9fbf-4d30-bdd3-fd20f6170c3f@ghiti.fr>
+CC: masahiroy@kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
+  aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: alex@ghiti.fr
+Message-ID: <mhng-db45f75f-4c54-4ade-9c88-cfd6015a9203@palmer-ri-x1c9a>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240219-topic-rb1_gpu-v3-4-86f67786539a@linaro.org>
-References: <20240219-topic-rb1_gpu-v3-0-86f67786539a@linaro.org>
-In-Reply-To: <20240219-topic-rb1_gpu-v3-0-86f67786539a@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org, 
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711487311; l=5480;
- i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
- bh=eJZZmFBoxhxVlet/0pBFlU3St7YEEvnSSAuyn+HM1GM=;
- b=dQUTA7QiV7nxAQQnjtyj5olcw+VCU5PDrriCa9n8AxJM67AO6856TWlvCwEozQux2Bnkb8XhF
- iaLxb2869PLASv3o7C/Cc0yt5XkagmceTSJ1KdfoC4EMJoMsw1hHzK6
-X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Describe the GPU hardware on the QCM2290.
+On Mon, 18 Mar 2024 13:53:42 PDT (-0700), alex@ghiti.fr wrote:
+> Hi Masahiro,
+>
+> On 15/03/2024 05:06, Masahiro Yamada wrote:
+>> On Thu, Mar 7, 2024 at 5:12 AM Alexandre Ghiti <alex@ghiti.fr> wrote:
+>>> Hi Masahiro,
+>>>
+>>> On 24/02/2024 04:37, Masahiro Yamada wrote:
+>>>> Ping x 2 ?
+>>>>
+>>>>
+>>>>
+>>>>
+>>>>
+>>>> On Sun, Jan 21, 2024 at 6:48 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>>>>> On Fri, Nov 17, 2023 at 9:58 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>>>>>> 'make vdso_install' installs debug vdso files to /lib/modules/*/vdso/.
+>>>>>>
+>>>>>> Only for the compat vdso on riscv, the installation destination differs;
+>>>>>> compat_vdso.so.dbg is installed to /lib/module/*/compat_vdso/.
+>>>>>>
+>>>>>> To follow the standard install destination and simplify the vdso_install
+>>>>>> logic, change the install destination to standard /lib/modules/*/vdso/.
+>>>>>>
+>>>>>> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+>>>>>> ---
+>>>>> Ping?
+>>>>> (in case "yet more RISC-V updates" happens)
+>>>>>
+>>>>>
+>>>>>
+>>>>>
+>>>>>>    arch/riscv/Makefile | 2 +-
+>>>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+>>>>>> index a74be78678eb..5cbe596345c1 100644
+>>>>>> --- a/arch/riscv/Makefile
+>>>>>> +++ b/arch/riscv/Makefile
+>>>>>> @@ -146,7 +146,7 @@ endif
+>>>>>>    endif
+>>>>>>
+>>>>>>    vdso-install-y                 += arch/riscv/kernel/vdso/vdso.so.dbg
+>>>>>> -vdso-install-$(CONFIG_COMPAT)  += arch/riscv/kernel/compat_vdso/compat_vdso.so.dbg:../compat_vdso/compat_vdso.so
+>>>>>> +vdso-install-$(CONFIG_COMPAT)  += arch/riscv/kernel/compat_vdso/compat_vdso.so.dbg
+>>>>>>
+>>>>>>    ifneq ($(CONFIG_XIP_KERNEL),y)
+>>>>>>    ifeq ($(CONFIG_RISCV_M_MODE)$(CONFIG_ARCH_CANAAN),yy)
+>>>>>> --
+>>>>>> 2.40.1
+>>>>>>
+>>>>> --
+>>>>> Best Regards
+>>>>> Masahiro Yamada
+>>>>
+>>>> --
+>>>> Best Regards
+>>>> Masahiro Yamada
+>>>>
+>>>> _______________________________________________
+>>>> linux-riscv mailing list
+>>>> linux-riscv@lists.infradead.org
+>>>> http://lists.infradead.org/mailman/listinfo/linux-riscv
+>>>
+>>> Couldn't changing this library install path break some existing
+>>> application? I mean it kind of breaks where the library is expected to
+>>> be right?
+>>
+>> Do you have a particular library in mind?
+>
+>
+> None in particular.
+>
+>
+>>
+>>
+>> RISV-V is the only architecture that installs a debug vdso
+>> to a different location than the
+>> standard lib/modules/*/vdso/.
+>>
+>>
+>> I regard this as a fix.
+>
+>
+> You're probably right, I don't see why the search path would be
+> different on riscv, unless it was fixed in userspace but I think this is
+> the right thing to do, so:
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
----
- arch/arm64/boot/dts/qcom/qcm2290.dtsi | 154 ++++++++++++++++++++++++++++++++++
- 1 file changed, 154 insertions(+)
+We do have some weirdness with multlib paths, but I don't think that's 
+related to the VDSO paths.
 
-diff --git a/arch/arm64/boot/dts/qcom/qcm2290.dtsi b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
-index 8221336a8212..913478be6e9d 100644
---- a/arch/arm64/boot/dts/qcom/qcm2290.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
-@@ -7,6 +7,7 @@
- 
- #include <dt-bindings/clock/qcom,dispcc-qcm2290.h>
- #include <dt-bindings/clock/qcom,gcc-qcm2290.h>
-+#include <dt-bindings/clock/qcom,qcm2290-gpucc.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
- #include <dt-bindings/dma/qcom-gpi.h>
- #include <dt-bindings/firmware/qcom,scm.h>
-@@ -758,6 +759,11 @@ qusb2_hstx_trim: hstx-trim@25b {
- 				reg = <0x25b 0x1>;
- 				bits = <1 4>;
- 			};
-+
-+			gpu_speed_bin: gpu-speed-bin@2006 {
-+				reg = <0x2006 0x2>;
-+				bits = <5 8>;
-+			};
- 		};
- 
- 		pmu@1b8e300 {
-@@ -1425,6 +1431,154 @@ usb_dwc3_ss: endpoint {
- 			};
- 		};
- 
-+		gpu: gpu@5900000 {
-+			compatible = "qcom,adreno-07000200", "qcom,adreno";
-+			reg = <0x0 0x05900000 0x0 0x40000>;
-+			reg-names = "kgsl_3d0_reg_memory";
-+
-+			interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			clocks = <&gpucc GPU_CC_GX_GFX3D_CLK>,
-+				 <&gpucc GPU_CC_AHB_CLK>,
-+				 <&gcc GCC_BIMC_GPU_AXI_CLK>,
-+				 <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
-+				 <&gpucc GPU_CC_CX_GMU_CLK>,
-+				 <&gpucc GPU_CC_CXO_CLK>;
-+			clock-names = "core",
-+				      "iface",
-+				      "mem_iface",
-+				      "alt_mem_iface",
-+				      "gmu",
-+				      "xo";
-+
-+			interconnects = <&bimc MASTER_GFX3D RPM_ALWAYS_TAG
-+					 &bimc SLAVE_EBI1 RPM_ALWAYS_TAG>;
-+			interconnect-names = "gfx-mem";
-+
-+			iommus = <&adreno_smmu 0 1>,
-+				 <&adreno_smmu 2 0>;
-+			operating-points-v2 = <&gpu_opp_table>;
-+			power-domains = <&rpmpd QCM2290_VDDCX>;
-+			qcom,gmu = <&gmu_wrapper>;
-+
-+			nvmem-cells = <&gpu_speed_bin>;
-+			nvmem-cell-names = "speed_bin";
-+			#cooling-cells = <2>;
-+
-+			status = "disabled";
-+
-+			zap-shader {
-+				memory-region = <&pil_gpu_mem>;
-+			};
-+
-+			gpu_opp_table: opp-table {
-+				compatible = "operating-points-v2";
-+
-+				/* TODO: Scale RPM_SMD_BIMC_GPU_CLK w/ turbo freqs */
-+				opp-1123200000 {
-+					opp-hz = /bits/ 64 <1123200000>;
-+					required-opps = <&rpmpd_opp_turbo_plus>;
-+					opp-peak-kBps = <6881000>;
-+					opp-supported-hw = <0x3>;
-+					turbo-mode;
-+				};
-+
-+				opp-1017600000 {
-+					opp-hz = /bits/ 64 <1017600000>;
-+					required-opps = <&rpmpd_opp_turbo>;
-+					opp-peak-kBps = <6881000>;
-+					opp-supported-hw = <0x3>;
-+					turbo-mode;
-+				};
-+
-+				opp-921600000 {
-+					opp-hz = /bits/ 64 <921600000>;
-+					required-opps = <&rpmpd_opp_nom_plus>;
-+					opp-peak-kBps = <6881000>;
-+					opp-supported-hw = <0x3>;
-+				};
-+
-+				opp-844800000 {
-+					opp-hz = /bits/ 64 <844800000>;
-+					required-opps = <&rpmpd_opp_nom>;
-+					opp-peak-kBps = <6881000>;
-+					opp-supported-hw = <0x7>;
-+				};
-+
-+				opp-672000000 {
-+					opp-hz = /bits/ 64 <672000000>;
-+					required-opps = <&rpmpd_opp_svs_plus>;
-+					opp-peak-kBps = <3879000>;
-+					opp-supported-hw = <0xf>;
-+				};
-+
-+				opp-537600000 {
-+					opp-hz = /bits/ 64 <537600000>;
-+					required-opps = <&rpmpd_opp_svs>;
-+					opp-peak-kBps = <2929000>;
-+					opp-supported-hw = <0xf>;
-+				};
-+
-+				opp-355200000 {
-+					opp-hz = /bits/ 64 <355200000>;
-+					required-opps = <&rpmpd_opp_low_svs>;
-+					opp-peak-kBps = <1720000>;
-+					opp-supported-hw = <0xf>;
-+				};
-+			};
-+		};
-+
-+		gmu_wrapper: gmu@596a000 {
-+			compatible = "qcom,adreno-gmu-wrapper";
-+			reg = <0x0 0x0596a000 0x0 0x30000>;
-+			reg-names = "gmu";
-+			power-domains = <&gpucc GPU_CX_GDSC>,
-+					<&gpucc GPU_GX_GDSC>;
-+			power-domain-names = "cx",
-+					     "gx";
-+		};
-+
-+		gpucc: clock-controller@5990000 {
-+			compatible = "qcom,qcm2290-gpucc";
-+			reg = <0x0 0x05990000 0x0 0x9000>;
-+			clocks = <&gcc GCC_GPU_CFG_AHB_CLK>,
-+				 <&rpmcc RPM_SMD_XO_CLK_SRC>,
-+				 <&gcc GCC_GPU_GPLL0_CLK_SRC>,
-+				 <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
-+			power-domains = <&rpmpd QCM2290_VDDCX>;
-+			required-opps = <&rpmpd_opp_low_svs>;
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+		};
-+
-+		adreno_smmu: iommu@59a0000 {
-+			compatible = "qcom,qcm2290-smmu-500", "qcom,adreno-smmu",
-+				     "qcom,smmu-500", "arm,mmu-500";
-+			reg = <0x0 0x059a0000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
-+				 <&gpucc GPU_CC_HLOS1_VOTE_GPU_SMMU_CLK>,
-+				 <&gcc GCC_GPU_SNOC_DVM_GFX_CLK>;
-+			clock-names = "mem",
-+				      "hlos",
-+				      "iface";
-+
-+			power-domains = <&gpucc GPU_CX_GDSC>;
-+
-+			#global-interrupts = <1>;
-+			#iommu-cells = <2>;
-+		};
-+
- 		mdss: display-subsystem@5e00000 {
- 			compatible = "qcom,qcm2290-mdss";
- 			reg = <0x0 0x05e00000 0x0 0x1000>;
-
--- 
-2.44.0
-
+>
+> Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+>
+> Thanks,
+>
+> Alex
+>
+>
+>>
+>>
+>>
+>>
+>>
