@@ -1,152 +1,239 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2100.outbound.protection.outlook.com [40.107.236.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8899112838B
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 02:57:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711421868; cv=none; b=Sgd9R8j9YX26EZbKg/5JAGfFMHdlfvz71LS+MOISizzF1heb7oQGTB08QH3/bW2xMMUUWkjGuRBePT+bgJnUxXOPZWv6VUJDWswK1PVA2xRRlcjGThlTNMMMOvb2yvcgi6U+Lv+5LhO+fuEwRNaGnUlFZXP3LcArZQBe62UD8qQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711421868; c=relaxed/simple;
-	bh=vX3bVL1HMc4EDAaj7B3gjYlT0mkkt+c/itIyWdTv+VI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fG/u0xXUACj5uyVmExMXJimRlymhKc0eAl+BFibDlynFw5jenm5TT9QExv6l54dwGS8OUwUhCzvpgQTyp+kONH81cOJbSZEUB14YZuw29NCvnXghFQxXZDLXUZgu7afIJiOmtwqDrtF8wfC3EzlOYj+1qylu9o72PPziycyGGIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=dlh+DXZ0; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA511C6A8
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 03:06:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.100
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711422398; cv=fail; b=POBjFJUmMbHUjPu7rrClSvzDO/hy8vopQH4mwrjxJMDChM1zhvwNdAbjY/WeuBYmZ24uPyC1RL0VVB36XggP2taqjTeWoNbAM8SYXFrHAJFuTOdp90KylQsPH/FfN2XqmrFrLKO0J2mfuqxXu2Grmw/KLRyiOoRZO9Uo+Lpl520=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711422398; c=relaxed/simple;
+	bh=A+RhczIxy4So156mgp932mswvDB7MNy1wHRuKOZH2Pg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=qyFkflcAercor5KWnh4YNhRzYxzHVTjkU6mbbxSypXxoXhYgYvCatWGfeCKv7rIRZ4GfR9LNKQQ2CyLDAsGShFJCdb37ipiCQ6CaK2xKC5UunIyi4Z3UnG6BRn6ofoqAjCSLtXOt6/cZf7mqCCiLSRj42mk7eEUsUSHuxvuTUz4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=SoWhG0VQ; arc=fail smtp.client-ip=40.107.236.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="dlh+DXZ0"
-Received: from eig-obgw-5003a.ext.cloudfilter.net ([10.0.29.159])
-	by cmsmtp with ESMTPS
-	id omu8rUS5kDI6fox0TrsGGJ; Tue, 26 Mar 2024 02:57:46 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id ox0SrACoTsT9Box0SrGpPg; Tue, 26 Mar 2024 02:57:45 +0000
-X-Authority-Analysis: v=2.4 cv=LIutQ4W9 c=1 sm=1 tr=0 ts=660239a9
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=UtBFqMlDG83dypD0sxEoAQ==:17
- a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=yCkJhreVFDLjqfpo9JAA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=o90u6YTpwASH2e8B6jU5tsJiGz540jLK6rTJxZ74n1E=; b=dlh+DXZ0+HwO8YHOI59tzajiU7
-	qmQUEJvuedN+ivIXiM+FfIAcXWLstqvZG56435B6bnHtPH5bqkuJ30xQCzNyxhe/qIwjSIIJo5gAb
-	74tfMHvhcn5K+NTqhs5jPpm7P3AExBIrcQ+mR6q56+/Win8S2npzBx8uELGUPlCRcpKJsPePQFnAB
-	8uyrn8iUYbR742Q6aWCJNeDen3PvwnqLGKWY111yZWIiwASKIMAwOpUYuDcpNrJLsXrcsi3Lm3669
-	KoJPufJI4vyGkljBC2rV6wZDaFT0nw3KRh+kVgTJnuMGX6zdeWkKySinxXTUkOqJkvfxafStVBPXm
-	FoboauPg==;
-Received: from [201.172.174.229] (port=52604 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rox0R-001mui-1e;
-	Mon, 25 Mar 2024 21:57:44 -0500
-Message-ID: <5c0bb827-e5f3-4178-ad46-8ac9b99d7726@embeddedor.com>
-Date: Mon, 25 Mar 2024 20:57:08 -0600
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SoWhG0VQ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PmWWgCMSpRVgc0pcJzYE73V321p/fIA+6yp54AWUt8sDilDCJeMeuKrgFj7TkoIjh9UCKbybC4Kg/IEgMI5e5UkYvy6wc+4vcuNsTU5PrHCiCWJ1Q6S31Up1g8DMXMVmkWFHcqG8iAKaUqaJvQjYRxxna/4MU1jHbZ32Oqr+JXFwcG0bNBnbv1luY4AjarkqiUEog+OnEgNF1lgqCsePLYXcgmWGXLy9HxEYw3huTt14qf5kGqdzABR5C1WARbeCIqMyFyjlRCXR53AGR9P2KsR4cSox9d8ggvDLXlv7vV1HvBM7Sn6MBB/D0eB2uOi2WUWrL3jj+dhwup95WH6XEw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Qbf4TAhPtY94IuHiDjj3ZI71b3fJwxQ4hF/fvNhqfZQ=;
+ b=XQ1nItOeR6xIaVTrOwyJcqLhJ5nT8lzED3hOsFExPxn5fO57kqg45l6si3Ks/JNJGR8/bM1Ht5+q77D5fOro4mGBcyjhka+piP1vZMhWBpCzFVdkm/41wRDs5b0CjGI9q+vHazEU83FNYFpBkQ3ji9cheETT6k0QHz4Uo3O/uvjE31xKbhk66bDQR0ACc+ecaI2TFcA/sY4d16gd3IFAJrmZ3Z9rKfJvMFQCpgEVRddgIbmJQD6XwBxVUJ6fKBYed8vYvt86swmYxfKKzD5rwKa9nl6yojIn8C9HodlOLWoE5QxhP97ZVazS8zwvLXMyBxhSHKZwF4WT5ijE2u/z1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Qbf4TAhPtY94IuHiDjj3ZI71b3fJwxQ4hF/fvNhqfZQ=;
+ b=SoWhG0VQTbLn1nRJ8H0Ofbo6MFuog0v5SsAeimqwFigMj2Ah9vzfXtKTbJGqusx5mjcDEzqJqsVLJIRYkSrCjXL5VUlAWuxai2yDqiPGgrPqlw7+7JHQTckCNG2sBwZRVMVQ5PNMTeI/ltYkE9joO9gPCTg+q1tzoC21uwxtAxs=
+Received: from MW2PR12MB2379.namprd12.prod.outlook.com (2603:10b6:907:9::24)
+ by SJ2PR12MB8873.namprd12.prod.outlook.com (2603:10b6:a03:53d::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Tue, 26 Mar
+ 2024 03:06:33 +0000
+Received: from MW2PR12MB2379.namprd12.prod.outlook.com
+ ([fe80::494b:99e2:884a:dca1]) by MW2PR12MB2379.namprd12.prod.outlook.com
+ ([fe80::494b:99e2:884a:dca1%3]) with mapi id 15.20.7409.028; Tue, 26 Mar 2024
+ 03:06:32 +0000
+Message-ID: <f59c92ff-259b-5b89-9af5-fcaefccd4b23@amd.com>
+Date: Tue, 26 Mar 2024 08:36:19 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [RFC PATCH 1/1] sched/eevdf: Skip eligibility check for current
+ entity during wakeup preemption
+Content-Language: en-US
+To: Youssef Esmat <youssefesmat@chromium.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira
+ <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>,
+ linux-kernel@vger.kernel.org, Tobias Huschle <huschle@linux.ibm.com>,
+ Luis Machado <luis.machado@arm.com>, Chen Yu <yu.c.chen@intel.com>,
+ Abel Wu <wuyun.abel@bytedance.com>, Tianchen Ding
+ <dtcccc@linux.alibaba.com>, Xuewen Yan <xuewen.yan94@gmail.com>,
+ "Gautham R. Shenoy" <gautham.shenoy@amd.com>
+References: <20240325060226.1540-1-kprateek.nayak@amd.com>
+ <20240325060226.1540-2-kprateek.nayak@amd.com>
+ <CA+q576OCK24VSp+s4OLD2ogO48i95y39_JO=zV=TwHSEg3_b1w@mail.gmail.com>
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <CA+q576OCK24VSp+s4OLD2ogO48i95y39_JO=zV=TwHSEg3_b1w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN2PR01CA0002.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:25::7) To MW2PR12MB2379.namprd12.prod.outlook.com
+ (2603:10b6:907:9::24)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] RDMA/cm: Avoid -Wflex-array-member-not-at-end
- warning
-Content-Language: en-US
-To: Jason Gunthorpe <jgg@ziepe.ca>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZgHdZ15cQ7MIHsGL@neat> <20240325224706.GB8419@ziepe.ca>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240325224706.GB8419@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.174.229
-X-Source-L: No
-X-Exim-ID: 1rox0R-001mui-1e
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.10]) [201.172.174.229]:52604
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfKqU1kXB0nY1oeZY4B2ss7IOXZ3Xq01NZDsPNGVcHFAKoDbHBjXLKSyTBCW9YMuaQyqc4H9UoP3htH39hpBVKlZnWVF+uImUNH4kr6tJLL1Fp89qCcHw
- 8au/2nlz7oBuudabPaJBptD1sMe/hxp5b5T+D7HzGVj6EV032mWHwp/nbDLKu0TQTIgJfgO5gzZ+G1hrl1e6FGJ9THkank639Tl34XdDkdM8YjjlcI9c4jiM
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW2PR12MB2379:EE_|SJ2PR12MB8873:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	DsYstYz29QLhNAKoCC0Kuc/Qjg0DzJM5LoA6vHgiTtSTvL5KpDXBLwWIDj8/frQanFCSiO81tsmztGPafE9lkPRY2vriaVbmoA3W/g1cJgaFEtjT3kc6zxrmgAPrwtQ6VGjVYm1JvPaxq+6yD/c4sZEH6xwTFA1niT9PeaNw68Q9REJLdl+cFGMMj5iwIXxDFsuEJFI2gA9afKqb8AKUAW9GuBUEzwJjJqErP3rrVP0/EBfN9py1P7r7JgmdBcyLiZ+UWS+Xt3o/2u47hUPHvbKegOf5uf/npQ7oX4tTSi2PhJnjtomNrmxT3aI/nvmlGZ/nEwHmDkxkt31A78L+lXatJ8LOTlNu24ZBXIvmFdyvIfn1gycd+E1B2nwQXyHo9R/xMuBCaY0dJfxRar/wRAu/U+V9kcEDrhmTXf+xLpx1G4J6yrIJY+ASNS9SVrsTLvJ1tziyrvSSKa+BPzedlR6KKfet0q6HsjQKy0vGeOpzTpberqk8NltiDmH/1FY3WdBGXFQZvQN7pG4bfqJRZmwzNZklW9EjUCczh0ePIRMFV41b/Dt9AW1GQrktGZtUAfwxSwC221bIdfme1bWqUYMVvEwVNUC6qFrPmn46NLWBEMPJEONujDXWKk5D6kzw
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB2379.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(366007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RThQU29ISjlOdHZtcW1pNHhwdG1Cc3ZuK0tERCtDd1VmVnMrWmZ0QzhOQ1RZ?=
+ =?utf-8?B?OTE1WXpmd2NPNk16VmlBSFc5blRySHFBNnM4dG5LaVRYaEZMeVcyU2l2RVZM?=
+ =?utf-8?B?bjBsYXNHcitVcnJQdVkxL2ZYblZTa2NqSlVqRUpNYStENXl5QmNrOHNjLy8w?=
+ =?utf-8?B?Zi9BSzdaeDNuelo5ci8zZTg2UjZnNGl2b1k2RE1ESUV4NDJPdU5jQkZPSGdQ?=
+ =?utf-8?B?eVlkUVg3K0VjSzVMSGxHOEE4TGpqQkh1OVMvZ1NiUEpCcjhLYUJJZGMxaHZ5?=
+ =?utf-8?B?bGNPSTBKdy91amI4d3N5MWdURWk0aTZPYVN0bCttRjJWbEVZNXNIczZtRUQw?=
+ =?utf-8?B?QzdZYzJLSElaaGdZZW4yRHgzajdLSGZCUXM2cnFhOExHYzV3TTFNTG5ERllH?=
+ =?utf-8?B?UXF5RWUyS1RDQUMzSHFsaG05TFJMK2NqRHpyOWhDQmUxdnJ5SDhhQ2IwSWhH?=
+ =?utf-8?B?SGxTU3pZTWN0VHRPeGpjNlc3U2xzaEptbW0yME52MUNVL1F2VVhJWDBCNW1I?=
+ =?utf-8?B?TG5pa2hhdVlmWi8wUnRqaU9ubDI0c2NVZVZxbS9yNmVtcFdLTkxhN0lqeU1Q?=
+ =?utf-8?B?V0c3eTl4eVphOGY5c1dXWEZCNFlET1RLU28ybElKS3lyZHY0QWtPQThOLzFP?=
+ =?utf-8?B?U21ncTY5Nkxlclh0dzh1OUsyMkt0dHcveGhUbkpXcVkxK0Y5Vld1R1prRjJ6?=
+ =?utf-8?B?YUhnWGYxb2l1TUkzMFZ2Vk1teWVUYlBvbGZjdjlrTVZxT0xGVGxzWFFuZUFF?=
+ =?utf-8?B?RTJtOHU0MEp3UU5OR0xOdFNLTEE2cWptN3c1MncwbmgrSll3RVBjd25aeW9y?=
+ =?utf-8?B?dlBKUHBZME0vdUFrMFgraTlwUzNmRzdSbFNUUGZ0Wi9mVUhDREN0b2I2TzRZ?=
+ =?utf-8?B?UEZxemlOa0FLSzJYWWc4T2FMZjlacGxnMjBqMGwvYnFMUWR4WjFPaWV1aDl2?=
+ =?utf-8?B?LzFCcWRIejJMQ25RME1pV3BFZWpjQ0RmajZOVkdvTG8xdUVtS1cyRjc1SEw0?=
+ =?utf-8?B?K2VoZG5SaHJuR3hpWE9FWEdheEZtN3lBUFR3TzJ5WnRCQWFQNWthaFBkT3I4?=
+ =?utf-8?B?b0h2MUJZVTVVKzFUc1BYRmt6MCtGVWJWWXpyRStFcncwa2dWMk5NemprUlBy?=
+ =?utf-8?B?ZWV2MXRqQTZNczU2bHRBVE1VTDBHV0dDZFM2OWI0ckowZzBCRm1jSGdRN1dY?=
+ =?utf-8?B?Ukd3VHZuUTRsV1ErMk9pMTBTK3ZtOWk4a09DbHFXalh5WGVYT3VkT2piMzda?=
+ =?utf-8?B?aFlSMlBESkswRzB2MmtvZE91c2NDQzJNajZiMUk2WUk3TU9DMlVsdGJMdTRV?=
+ =?utf-8?B?bit2V2tDMW9uWmpyb2Z2MVN1OUt6WGZTeGUybVZKVXpKVkFwUlU5dEJ0aFlz?=
+ =?utf-8?B?OUdUZm10RXdIaWZpV1gxa2NidFRHamtUamJENFdFVnROWExtV2dmMFRTZjhK?=
+ =?utf-8?B?NjFBeE1qQ004MUxCZXJWVzRUOE5jbFAvUmNvSDkvN1pZTkszdWlvd0JxY3lR?=
+ =?utf-8?B?WFdrL3hnQkVrb1VFQzdnMExpQWpMSGt1eVllREpXV3FjT2FvN2RiYUtyOTNW?=
+ =?utf-8?B?WE9sM2dmNVlPc0YyWUV3MUtkNDkvWDhvdlIvM09QaUNDQ2piOG1kbkZzWDZQ?=
+ =?utf-8?B?THZCSEtQSUZhbHZHL0J1YTZrekVVVnBUZDQ3dGpmNDZpdktXbmJYajRvVVBo?=
+ =?utf-8?B?Zi9hNVZEZ1JGTlVxS0tGV1ZtRkFxTGo5UmRZM05yWDNuYmFHZ0xiUEttUVZX?=
+ =?utf-8?B?cHovKzAyVlExVDRnRkFyRjhsK1FzZU9GMWkvUW5zcmp0SkZVem9FVHBTaG52?=
+ =?utf-8?B?MDIwQUVncElHcmZCRUYzUWlOb3BGNWlMSUJ6eFpzNmNKYmZnczZqVFRKRHQ4?=
+ =?utf-8?B?bXFWeDIxcTNDMVpaZ0V2WStjNTRVYWJweDJvcWJSL3ByMm0wL2Vma05EeUc1?=
+ =?utf-8?B?OGZWSHprZVlqVGJwM29McFBrQXhSdkx3dFQzYU0wN3ZoS1E3VDFVTmxMcC9C?=
+ =?utf-8?B?d2Y1QlYwYkorSGpTa1NCdmZQcEtlZUlEMXhNQ21GaFdITVcvUHNTczZaQStJ?=
+ =?utf-8?B?U01xZ3lEcTAwT1NHWHJqeFhRdnZNdEZlb29LTGR2ZVM2ZFR3Y3NFakxGNWxj?=
+ =?utf-8?Q?JNBtsmMor9CCefOA7h1C7SHEG?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a3cd61d-ac79-47d0-3d38-08dc4d41bd03
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB2379.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 03:06:32.0458
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: b0e68Q8s1EIB85wIiFTw775gYvKyMaUfUJ2H6QbWAYXJy6ImkdToMU56aHJT+zkWY0cMBW7pMEFA/DIM3hzLzg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8873
 
+Hello Youssef,
 
+On 3/25/2024 8:43 PM, Youssef Esmat wrote:
+> On Mon, Mar 25, 2024 at 1:03 AM K Prateek Nayak <kprateek.nayak@amd.com> wrote:
+>>
+>> With the curr entity's eligibility check, a wakeup preemption is very
+>> likely when an entity with positive lag joins the runqueue pushing the
+>> avg_vruntime of the runqueue backwards, making the vruntime of the
+>> current entity ineligible. This leads to aggressive wakeup preemption
+>> which was previously guarded by wakeup_granularity_ns in legacy CFS.
+>> Below figure depicts one such aggressive preemption scenario with EEVDF
+>> in DeathStarBench [1]:
+>>
+>>                                 deadline for Nginx
+>>                    |
+>>         +-------+  |                    |
+>>     /-- | Nginx | -|------------------> |
+>>     |   +-------+  |                    |
+>>     |              |
+>>     |   -----------|-------------------------------> vruntime timeline
+>>     |              \--> rq->avg_vruntime
+>>     |
+>>     |   wakes service on the same runqueue since system is busy
+>>     |
+>>     |   +---------+|
+>>     \-->| Service || (service has +ve lag pushes avg_vruntime backwards)
+>>         +---------+|
+>>           |        |
+>>    wakeup |     +--|-----+                       |
+>>  preempts \---->| N|ginx | --------------------> | {deadline for Nginx}
+>>                 +--|-----+                       |
+>>            (Nginx ineligible)
+>>         -----------|-------------------------------> vruntime timeline
+>>                    \--> rq->avg_vruntime
+>>
+>> When NGINX server is involuntarily switched out, it cannot accept any
+>> incoming request, leading to longer turn around time for the clients and
+>> thus loss in DeathStarBench throughput.
+>>
+>>     ==================================================================
+>>     Test          : DeathStarBench
+>>     Units         : Normalized latency
+>>     Interpretation: Lower is better
+>>     Statistic     : Mean
+>>     ==================================================================
+>>     tip         1.00
+>>     eevdf       1.14 (+14.61%)
+>>
+>> For current running task, skip eligibility check in pick_eevdf() if it
+>> has not exhausted the slice promised to it during selection despite the
+>> situation having changed since. The behavior is guarded by
+>> RUN_TO_PARITY_WAKEUP sched_feat to simplify testing. With
+>> RUN_TO_PARITY_WAKEUP enabled, performance loss seen with DeathStarBench
+>> since the merge of EEVDF disappears. Following are the results from
+>> testing on a Dual Socket 3rd Generation EPYC server (2 x 64C/128T):
+>>
+>>     ==================================================================
+>>     Test          : DeathStarBench
+>>     Units         : Normalized throughput
+>>     Interpretation: Higher is better
+>>     Statistic     : Mean
+>>     ==================================================================
+>>     Pinning      scaling     tip            run-to-parity-wakeup(pct imp)
+>>      1CCD           1       1.00            1.16 (%diff: 16%)
+>>      2CCD           2       1.00            1.03 (%diff: 3%)
+>>      4CCD           4       1.00            1.12 (%diff: 12%)
+>>      8CCD           8       1.00            1.05 (%diff: 6%)
+>>
+>> With spec_rstack_overflow=off, the DeathStarBench performance with the
+>> proposed solution is same as the performance on v6.5 release before
+>> EEVDF was merged.
+> 
+> Thanks for sharing this Prateek.
+> We actually noticed we could also gain performance by disabling
+> eligibility checks (but disable it on all paths).
+> The following are a few threads we had on the topic:
+> 
+> Discussion around eligibility:
+> https://lore.kernel.org/lkml/CA+q576MS0-MV1Oy-eecvmYpvNT3tqxD8syzrpxQ-Zk310hvRbw@mail.gmail.com/
+> Some of our results:
+> https://lore.kernel.org/lkml/CA+q576Mov1jpdfZhPBoy_hiVh3xSWuJjXdP3nS4zfpqfOXtq7Q@mail.gmail.com/
+> Sched feature to disable eligibility:
+> https://lore.kernel.org/lkml/20231013030213.2472697-1-youssefesmat@chromium.org/
+> 
 
-On 3/25/24 16:47, Jason Gunthorpe wrote:
-> On Mon, Mar 25, 2024 at 02:24:07PM -0600, Gustavo A. R. Silva wrote:
->> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
->> ready to enable it globally.
+Thank you for pointing me to the discussions. I'll give this a spin on
+my machine and report back what I see. Hope some of it will help during
+the OSPM discussion :)
+
 >>
->> Use the `struct_group_tagged()` helper to separate the flexible array
->> from the rest of the members in flexible `struct cm_work`, and avoid
->> embedding the flexible-array member in `struct cm_timewait_info`.
+>> This may lead to newly waking task waiting longer for its turn on the
+>> CPU, however, testing on the same system did not reveal any consistent
+>> regressions with the standard benchmarks.
 >>
->> Also, use `container_of()` to retrieve a pointer to the flexible
->> structure.
->>
->> So, with these changes, fix the following warning:
->> drivers/infiniband/core/cm.c:196:24: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> Link: https://github.com/delimitrou/DeathStarBench/ [1]
+>> Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
 >> ---
->>   drivers/infiniband/core/cm.c | 21 ++++++++++++---------
->>   1 file changed, 12 insertions(+), 9 deletions(-)
+>>  [..snip..]
 >>
->> diff --git a/drivers/infiniband/core/cm.c b/drivers/infiniband/core/cm.c
->> index bf0df6ee4f78..80c87085499c 100644
->> --- a/drivers/infiniband/core/cm.c
->> +++ b/drivers/infiniband/core/cm.c
->> @@ -182,18 +182,21 @@ struct cm_av {
->>   };
->>   
->>   struct cm_work {
->> -	struct delayed_work work;
->> -	struct list_head list;
->> -	struct cm_port *port;
->> -	struct ib_mad_recv_wc *mad_recv_wc;	/* Received MADs */
->> -	__be32 local_id;			/* Established / timewait */
->> -	__be32 remote_id;
->> -	struct ib_cm_event cm_event;
->> +	/* New members must be added within the struct_group() macro below. */
->> +	struct_group_tagged(cm_work_hdr, hdr,
->> +		struct delayed_work work;
->> +		struct list_head list;
->> +		struct cm_port *port;
->> +		struct ib_mad_recv_wc *mad_recv_wc;	/* Received MADs */
->> +		__be32 local_id;			/* Established / timewait */
->> +		__be32 remote_id;
->> +		struct ib_cm_event cm_event;
->> +	);
->>   	struct sa_path_rec path[];
->>   };
-> 
-> I didn't look, but does it make more sense to break out the path side
-> into its own type and avoid the struct_group_tagged? I seem to
-> remember only one thing used it.
-> 
-
-I thought about that, but I'd have to change the parameter type of
-`static int cm_timewait_handler(struct cm_work *work)`, and that would
-imply also modifying the internals of function `cm_work_handler()` (and
-then I didn't look much into it). So, the `struct_group_tagged()`
-strategy is in general more cleaner and straightforward.
-
+ 
 --
-Gustavo
-
+Thanks and Regards,
+Prateek
