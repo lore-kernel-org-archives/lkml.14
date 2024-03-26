@@ -1,131 +1,141 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2094.outbound.protection.partner.outlook.cn [139.219.146.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EFB1292DD
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 03:24:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711423444; cv=none; b=oob6UQHbIFGcyd74LSY1Yssc9ivCwM2KYXn+6X5JX3UutWUZae+ajik2s7AiY/rewJfS/phZgUFzOFGgwJiHJm0As4Dn9FOrvVQITjvmP88QACmlcsHxgO7H2037XWeU0JvLxW3D05iyq+DZvLJbN7qv685iok9ioFp6bzzwjLs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711423444; c=relaxed/simple;
-	bh=t2hCITEJ6wxpOWXwYTCuSE28aMfvwSP99iXFbW9bDq0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=qypwAiR1sVkJPlw1bHNDbdZP0tDtnWisqiHue2DpbF3VRtEeVJ5KbFSfU2jF3UGuk4u40jOlHpvqM3uMPoS5T4jbG1KcylmzT7O/sDeMpL1yKyQGa6IBILOqUgT0P6znWbvccIOg5OAzeaIXHAIE3LNg6TLKM6UjyLAsJuCLLAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=bW0lpK74; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bW0lpK74"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240326032353epoutp013ab2d41c7199ff8cb88f86ede36b016c~AMoukqna71014810148epoutp01S
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 03:23:53 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240326032353epoutp013ab2d41c7199ff8cb88f86ede36b016c~AMoukqna71014810148epoutp01S
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1711423433;
-	bh=t2hCITEJ6wxpOWXwYTCuSE28aMfvwSP99iXFbW9bDq0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bW0lpK74HfPlw3VSoaSVEz9l2VPBfBZM0gUUgjbZ4CRE3NaGgueiX79igkAa49f9t
-	 f1IA4KMW+JKZFfUseWvwFIWVDceH21m3nRcsGlKE4p8vUMrP+dviO6Zismatb5Nlvv
-	 B59Uf8J6xCvK8Yo15ZLAhpzvHkiAoheDwDdwkSaE=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20240326032352epcas5p2b86b7aea4214f4ebe795b515f00ac272~AMotq4yUf0799607996epcas5p2P;
-	Tue, 26 Mar 2024 03:23:52 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.180]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4V3Zs343nWz4x9Q3; Tue, 26 Mar
-	2024 03:23:51 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	0E.01.09666.7CF32066; Tue, 26 Mar 2024 12:23:51 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240326032337epcas5p4d4725729834e3fdb006293d1aab4053d~AMofbxyNC0935509355epcas5p4U;
-	Tue, 26 Mar 2024 03:23:37 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240326032337epsmtrp2e886086276c45637755e04674d36af91~AMofa9xQz1617016170epsmtrp2J;
-	Tue, 26 Mar 2024 03:23:37 +0000 (GMT)
-X-AuditID: b6c32a49-cefff700000025c2-6c-66023fc7ce78
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	04.30.07541.9BF32066; Tue, 26 Mar 2024 12:23:37 +0900 (KST)
-Received: from testpc118124.samsungds.net (unknown [109.105.118.124]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240326032335epsmtip2a5844b54d3515f434b559cdd286485c0~AMod6dI-R3072530725epsmtip2c;
-	Tue, 26 Mar 2024 03:23:35 +0000 (GMT)
-From: Xue <xue01.he@samsung.com>
-To: axboe@kernel.dk
-Cc: asml.silence@gmail.com, linux-kernel@vger.kernel.org,
-	io-uring@vger.kernel.org, peiwei.li@samsung.com, joshi.k@samsung.com,
-	kundan.kumar@samsung.com, anuj20.g@samsung.com, wenwen.chen@samsung.com,
-	ruyi.zhang@samsung.com, xiaobing.li@samsung.com, cliang01.li@samsung.com,
-	xue01.he@samsung.com
-Subject: Re:io_uring: releasing CPU resources when polling
-Date: Tue, 26 Mar 2024 11:23:31 +0800
-Message-Id: <20240326032331.1003213-1-xue01.he@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240318090017.3959252-1-xue01.he@samsung.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FE11292D9;
+	Tue, 26 Mar 2024 03:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711423629; cv=fail; b=e4LTVCW5nBbRdHvcGkwhXWsrBN38HHU2EPbUOBe4VLNMlRGopVaWIIxidul/NqRRhgSBcn1IQ9YW1K+uaZCcrvCq+5hooKHVzcXX1o9ydwOzCyrrtqJOhxTUYMMIxOFRK3A6WD7soookVWuedr3KLZAhLr0KWTylv6gV1Sj/7mw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711423629; c=relaxed/simple;
+	bh=ZzzORs4N4TpCL/GzR7EeRCVzRTVCpTvMUqWC1YCSFUY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JN3lAyjv6+TEND0L/Y8W1q0xNuGlEbVOZezh/V48n4a6MTys8uyAk7zgiRFcmngTDVF2JTYlHQqO87mjbKROoalXTP2rIpAcU6gYXnvJ3159fx5SqEQTJdVsZtzi5LlnmucCMR65XRaxsJQO9HcJMJ/RhTtz7+dsyg4b+jjQhaU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ChTprVMLY2HcEkbXuip78PCM8q6Yl/0579SW6J0tXYOSjCftfowhg+Qq6E8axmvl3Trmto56qYII8z15D5vDl+p5nqrPsfvjV52RhR4osfE7v3VxNLN93vn3n000R7JyGmVMcS19YjEhXzaDpLBu2fiNsfVHk3Wu4jM3gVlNT/thYNIxdnDmr7C0aCwMNWTzbfy2zD98LSlLZr/vBKtHpgQVQLSl5vLY7oPzI4e5+inPj3ILaIjEm3SKX5mja00yc9iLyiNl8CpwId9Xb5rCDOAodpgpIhdStyisBm37jR2apE68tgtlzKlluCPQnpw1eaiALM9u6Pnv+Fqkb8+EnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ucD0oXFf1SvC7cqQnsM+UhxRRmuGkb3qGoOijnPu3/E=;
+ b=ZCT9WWCbh4e5l4/V0894OEWyO0BvHCrPx3ghRCzXCk2WItd2IKcSnA9R9rHx0dgHIlYtpYTe7q1tA4GZnvK17ufv4R1E9m11NJahzhCl4Zpj/wS5ZniR+m/zjjjR1TheTonfNl6bAnyuVX4wY4rMDPgyFdskHLNXxNi/3XccjiwF8KlUoPuZf/ZsmCYThT6xTXNZKqzYeAsmdNVde8d+cm32UfcKJrviQ+6JLhT0zlfOpTgiHgBif0xwzNmQesosp2WKFeaEuqMia5MrD83Ksosg65ikbopIaeU2SEAqMdgK6XHmAe0p6J16i4Im82UHDV8BiHfzeTMHot7klPDtag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::10) by SHXPR01MB0622.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:1f::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.30; Tue, 26 Mar
+ 2024 03:12:48 +0000
+Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+ ([fe80::b0af:4c9d:2058:a344]) by
+ SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn ([fe80::b0af:4c9d:2058:a344%6])
+ with mapi id 15.20.7249.041; Tue, 26 Mar 2024 03:12:48 +0000
+From: Changhuang Liang <changhuang.liang@starfivetech.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Jack Zhu <jack.zhu@starfivetech.com>,
+	Changhuang Liang <changhuang.liang@starfivetech.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Jayshri Pawar <jpawar@cadence.com>,
+	Jai Luthra <j-luthra@ti.com>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev
+Subject: [PATCH v1 2/4] media: cadence: csi2rx: Add suspend and resume support
+Date: Mon, 25 Mar 2024 20:12:35 -0700
+Message-Id: <20240326031237.25331-3-changhuang.liang@starfivetech.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240326031237.25331-1-changhuang.liang@starfivetech.com>
+References: <20240326031237.25331-1-changhuang.liang@starfivetech.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ZQ0PR01CA0018.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:5::15) To SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIJsWRmVeSWpSXmKPExsWy7bCmhu5xe6Y0g6YlkhZNE/4yW8xZtY3R
-	YvXdfjaL038fs1i8az3HYnH0/1s2i1/ddxkttn75ympxedccNotnezktvhz+zm5xdsIHVoup
-	W3YwWXS0XGa06Lpwis2B32PnrLvsHpfPlnr0bVnF6PF5k1wAS1S2TUZqYkpqkUJqXnJ+SmZe
-	uq2Sd3C8c7ypmYGhrqGlhbmSQl5ibqqtkotPgK5bZg7QnUoKZYk5pUChgMTiYiV9O5ui/NKS
-	VIWM/OISW6XUgpScApMCveLE3OLSvHS9vNQSK0MDAyNToMKE7IznR34wFdxkqvhwnLuBsZ+p
-	i5GTQ0LAROLT3gYgm4tDSGA3o8SD+UdYIZxPjBIfP55nhnC+MUosm9gL5HCAtTRuUYGI72WU
-	uHrsCFT7L0aJC5P/M4PMZRNQkDh/+DPYDhEBYYn9Ha0sIEXMAuuZJJqO3mMDSQgLWEl0TfvH
-	CmKzCKhKTJ25kR3E5hWwlrgx6yg7xIHyEvsPngUbyilgI7Hw12xWiBpBiZMzn7CA2MxANc1b
-	Z4OdKiEwk0Pi6909UN+5SJyYOgtqkLDEq+NboGwpic/v9rJB2PkSk7+vZ4SwayTWbX7HAmFb
-	S/y7socF5GVmAU2J9bv0IcKyElNPrWOC2Msn0fv7CdQqXokd82BsJYklR1ZAjZSQ+D1hESuE
-	7SHxre0ZOyS0+hkl9s5YxzKBUWEWkn9mIflnFsLqBYzMqxglUwuKc9NTi00LDPNSy+GxnJyf
-	u4kRnHa1PHcw3n3wQe8QIxMH4yFGCQ5mJRHeli8MaUK8KYmVValF+fFFpTmpxYcYTYEBPpFZ
-	SjQ5H5j480riDU0sDUzMzMxMLI3NDJXEeV+3zk0REkhPLEnNTk0tSC2C6WPi4JRqYIpbt2TB
-	zePzKi/fYDwlecNs2ycXC58FTl/uaJxPZzzplrQyV0x7dUPc7u9NU7eU59rvtQjNcRNTzH3t
-	z7j23nL3E1qZ336o2DEyHTowUYVnd/SWijnbWATSFh0W1m2SX7G35pzyw4b1HS7x6xbVzdUS
-	D/tySDh45mMfQf+pImrS/5aXxlg0llqldaV+uXvi1F32kqLnXx/f4kiLZPV4cKKs5cf/11YR
-	/H94DsT1JtvKqN2UP7Ja5sDeR70Tol+df7uqQX1xSeVCuZJzRjv+B//mXszEpSv1LFNNwdk6
-	VvD5W741stF/ffbp//vpu1dtFU/e7m+T5v45v7B/znEN1blbTTbMLz/kd2PnF+HJFSuUWIoz
-	Eg21mIuKEwGNXh8zRAQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrOLMWRmVeSWpSXmKPExsWy7bCSvO5Oe6Y0g2uPxSyaJvxltpizahuj
-	xeq7/WwWp/8+ZrF413qOxeLo/7dsFr+67zJabP3yldXi8q45bBbP9nJafDn8nd3i7IQPrBZT
-	t+xgsuhoucxo0XXhFJsDv8fOWXfZPS6fLfXo27KK0ePzJrkAligum5TUnMyy1CJ9uwSujOdH
-	fjAV3GSq+HCcu4Gxn6mLkYNDQsBEonGLShcjF4eQwG5GiTVf2oHinEBxCYkdj/6wQtjCEiv/
-	PWeHKPrBKNH6ZCkjSIJNQEHi/OHPYA0iQEX7O1pZQIqYBfYySdze+oYZJCEsYCXRNe0f2CQW
-	AVWJqTM3soPYvALWEjdmHWWH2CAvsf/gWbB6TgEbiYW/ZoPVCwHVNEz7wQhRLyhxcuYTFhCb
-	Gai+eets5gmMArOQpGYhSS1gZFrFKJlaUJybnptsWGCYl1quV5yYW1yal66XnJ+7iREcF1oa
-	Oxjvzf+nd4iRiYPxEKMEB7OSCG/LF4Y0Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4ryGM2anCAmk
-	J5akZqemFqQWwWSZODilGpjKNAst1R057977u8hM9WRc3s28BXmr09f9/6vjcGfJlzkzNjnb
-	G70oy1t1c7rin4JV1icueZx3WZqUsjM58eveunfLyqr8mUr+MO36rJeqrlRUdk90cpz91jev
-	t3zUWstmfWs5k12LqugkgTNbNjAttGbd0yUrLlthWfO/2tyzTVqyXmmOXkRK5QmHFPEDl7qV
-	eV5elUkLtToZbFIkt2ZGedynwpWTugIqGiy+PPM5yVd+pTT0wW7xwy9MV//3mKkm3HshwuN9
-	T+LBuPIZ/7+zGefxb6qb2Cq9+c2sLWtn/Jv6PGd/p+mlw2Vzre484Di89r2N+237O1HTl/oZ
-	s85uiV/woKg2SqPhpNqtugQlluKMREMt5qLiRACU8MSq+gIAAA==
-X-CMS-MailID: 20240326032337epcas5p4d4725729834e3fdb006293d1aab4053d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240326032337epcas5p4d4725729834e3fdb006293d1aab4053d
-References: <20240318090017.3959252-1-xue01.he@samsung.com>
-	<CGME20240326032337epcas5p4d4725729834e3fdb006293d1aab4053d@epcas5p4.samsung.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SHXPR01MB0671:EE_|SHXPR01MB0622:EE_
+X-MS-Office365-Filtering-Correlation-Id: 49b94b62-5d0f-4486-5675-08dc4d429d51
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	GW9wITTQexcUAjE7sbz86LZF+StuOuAtrH7EZhDT2/g795GKPzG5Fa0mo+o6imSKavlroFHI/MDiU8hE4RCsSInfMNX09EDEhEAznnVzfYwtjLFAp8crIuA5GnyofTM7+kL1zq2mpK1dLefI06ccwXuDENG7o/Q17+2YpppU55tWXCIyuw9zUivx3MQsbM5O3WZzjzD7ahpUWbsEVYJsY/e8S6D8DZhxiDhgQ+yBXRhK0JS88xsq8elgc4LosnmdDFvLMyOWYBXz+N1Ondg3QeZVGLS3sym63C+2ucalCebHnK0nx8xn4TpWGcsrWiTQDPCtXIs6xhyZ8+i9M50C0/S9OsQzNqnCsn16LB+CQuXtpjvUYhT9Mj7NTxSNkqMRWc28vhAydHI0MyXBPjAJ3RozQhoIi9gZ90gorMbOTy87GKonMYyci15fvYZ+CPbzOrbi80fVSxxiHUJ4zNgW7S+1gX3bdYGF0LPujVs5TbRWV6DGP8lQjMmmVFOJapuUH5zSwz+rie5F0eHnD2wdNOGWPsizPM9p0Xc8svS932ZDCZQqnD8NaRwM3TCSNBuW+rXr747lFwSJHkUtUd8Kdu6sFdLV6n43vNE+nR0I/ka4OBWwuzEsPAjG9xp/VwWB
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(366007)(52116005)(1800799015)(41320700004)(7416005)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?sop5JPLTm4Zc1T9v8f5CMczxuowyU3s+aOexZb1vEeFy6U20SfEnKVUdGf8E?=
+ =?us-ascii?Q?SOBTPFVM9jF8CVzwBOdUMI/dzBbARCyBC8QcJnYNyX4YIpl18RLumi2fOv7w?=
+ =?us-ascii?Q?P6QIDzAdYB7lK/zB9qg/9E716myD2xVvRfUcHdhCfKvso7cRLEDmV3HUXN+i?=
+ =?us-ascii?Q?TApJCdfaiUK4D0YhSPr+o2fEC0K/ucEUVhTASLRn7Ing5IdWKG5D0b5HRO31?=
+ =?us-ascii?Q?QD1V1V5KtUOSj3v89DK/jWYe+RDAiYMHDTSg/F1J5eCWjKpfNIW5QNV1rdS5?=
+ =?us-ascii?Q?XgEfBEnoE8ENPgCJuptcUxAOGdHjx79NGFxDJf13GKKzli0inqa5ARp4DGdD?=
+ =?us-ascii?Q?aoO4R9Evm42Ua4repRE5PU8oqvFA48dPm7eM1uwBf/VYtzhBadCr67Ep9sO5?=
+ =?us-ascii?Q?cnf21Vu5ASHyQd0q2KE+QXR0HO2si3V2458GQbVNppL+ys9xh4UiRBIhacLb?=
+ =?us-ascii?Q?y1TAVPovJJ/zQt7gM90vLRmk84u8SKmKxFFlCDrNOYQliDPpZaM06KHLBA9Y?=
+ =?us-ascii?Q?sGLHJ5AWDmk1JSUwDko4fjU0SMlvN++aEpoKsnBUljcs67kS7usCaIs1DLGJ?=
+ =?us-ascii?Q?C4b2UeDiJ6LdDz4JUXALUDvrnlsAgHeNa6ccMpw4mKRsCcn7B2652uJRs5TR?=
+ =?us-ascii?Q?Q9hdPzMJDDo/I061dLVrP5AjV1NeJHy05a67meiIMXtoNQ7wocRozuAqRUvQ?=
+ =?us-ascii?Q?2zPJr4byeh2JUqyzJzAJoLV5zeSsqZmK2Iw+JyU6QYQyASOb1qVCXsPofDP4?=
+ =?us-ascii?Q?39Zc8jBsTOl/GiH2TENFCtNQ+nX/AhzOWLWhbQaHNNiBHqtWSBPsfVHPpqg6?=
+ =?us-ascii?Q?VywxGSN1N2xYD5nOHo9N3kZqcTN7tx69Idlhb415P0utAUVH+S2gi214212M?=
+ =?us-ascii?Q?M3aITL+c5/2Uoz7gPDNyD/91FM//j8ZRQcO0CC4KzSiZiHrxbmlABPyCxTo7?=
+ =?us-ascii?Q?GY22Ewpa1d7IIxOxeBRScx0rCV8EmYgXBXmD9lczT1y2vAj4Z9PM2MUpwW/Y?=
+ =?us-ascii?Q?70u2x9985TxZntu96TKSghiTqozVHZHJgslY8N1zPQ5fDxfzjfjAeOOfBHV/?=
+ =?us-ascii?Q?xGbkBcos79uYK3sdAY10+Arfweh6GYz5TZ3ryrBWCnPEDSF9RWIAGhwuEgCm?=
+ =?us-ascii?Q?idSv6ETlu+GO8jk5t7ZSvAHlO0Ot4YT/JNpsQSU0F+VOAiCnObsS5hUlbHlB?=
+ =?us-ascii?Q?4J5FfntOOuCcapW/fGBCnB5NlPIu8mKZudDqXoXIW5jLJMQ9x5ZMmzHBxAgR?=
+ =?us-ascii?Q?wVPpHyFyDimZobP28Q4XKxJbrnb0Knae6JzloKTy/81jaDYn4H8WOn2vBcw2?=
+ =?us-ascii?Q?fuVj+OCPFti9F7IWKzn4dkTo1DgUZlOZb9qjU07sNmPiVzF2qooGed0nfDkf?=
+ =?us-ascii?Q?iHtsTpmpXe0XUgLg2AFqQZmcODWW1KUo39IoyuP4cBt0id5xFKS/fYWUZQ7U?=
+ =?us-ascii?Q?tip3oo56uvVM5ruY4F3Ukg+huQ2Y/wX54Yfl8DgsGMiDqLFbZvosTGgCVIi+?=
+ =?us-ascii?Q?V5394VdpeEm0zY2rSN0Q2QbAEdXhEk/gI/AcDEmB9ywWr9XLcDc8uQlET512?=
+ =?us-ascii?Q?6cGCI6yCp+mcXl/fFIJ/dSuFvwrCBJFCi7JNWyzZrrPZD4EuCz06u/gfg3Ye?=
+ =?us-ascii?Q?rYKCxiiljT54dz8TeUefoUs=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49b94b62-5d0f-4486-5675-08dc4d429d51
+X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 03:12:48.3860
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MtXlffkcSi+7rHzpI0CShw3b78XMv+CK4187FuaVwb4SnibnHCNMyipBEFAkCwVlKv5jSVHdPC52NaNu1e0Av3Cry2czff7yIJnfStVLoeaCP3jLLYe1FEMDvkC52uRa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0622
 
-Hi,
+This patch implements suspend and resume operation for Cadence MIPI-CSI2
+RX Controller.
 
-I hope this message finds you well.
+Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
+---
+ drivers/media/platform/cadence/cdns-csi2rx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I'm waiting to follow up on the patch I submitted on 3.18,
-titled "io_uring: releasing CPU resources when polling".
+diff --git a/drivers/media/platform/cadence/cdns-csi2rx.c b/drivers/media/platform/cadence/cdns-csi2rx.c
+index a8b86369e34f..1f629be91bf5 100644
+--- a/drivers/media/platform/cadence/cdns-csi2rx.c
++++ b/drivers/media/platform/cadence/cdns-csi2rx.c
+@@ -778,6 +778,7 @@ static void csi2rx_remove(struct platform_device *pdev)
+ 
+ static const struct dev_pm_ops csi2rx_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(csi2rx_suspend, csi2rx_resume, NULL)
++	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
+ };
+ 
+ static const struct of_device_id csi2rx_of_table[] = {
+-- 
+2.25.1
 
-I haven't received feedback yet and wondering if you had
-a chance to look at it. Any guidance or suggestions you could
-provide would be greatly appreciated.
-
-Thanks,
-Xue He
