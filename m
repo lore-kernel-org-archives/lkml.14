@@ -1,151 +1,106 @@
-Received: from fhigh4-smtp.messagingengine.com (fhigh4-smtp.messagingengine.com [103.168.172.155])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F436027D
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 09:43:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE6E10A19;
+	Tue, 26 Mar 2024 09:44:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711446226; cv=none; b=JmTPJM4t/aj9fe2+RQrQOnJcGhJC79kvswbbVcbHsljYtc2po+Wgd7SlNYCoL7AxVspljBtxF25DAhFFw6VbdKzvvRLst2n7LPrMl5JP90qcboYha+I0/j/R/cn1B8brzQgACggxTBRyBMJUEGBvx5PjTSbQFifru5xbs0oUScM=
+	t=1711446254; cv=none; b=iIE7tyvIb1bKRWbip27c28qWlen3sizUj6nhvTQAe8huDa+3LdZPvjIgHl1784gGoTAMwNY81SF/YBugj+3/STmXgkt5mfwa/nAeRxWQzkjIenR6FflcVTqFMPAdldRsVxZy54jn11ENamldOKZxvQWpSOU1icX6MGqNoBLV2Xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711446226; c=relaxed/simple;
-	bh=9QP1nsOz1d1JuzdQZZRMvSHxrlpB/bzI85CEhXi9mAk=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=f0R1I9CYxbihoQMQxMh5eibxvHVD8/yWNaiqAP5tz+CUSq0ptddAG9nFLo/sRc8MyVURDkZeKiSbf+cZ2rlal0uNVWBxphN26vv1w9HhtRuXck6ymxBVqSdQ43ufXEQr472jkkLsEbxMtvv+no2s4nRH5uoR0jwHSfnXbMjNyek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=OuKLU3Qu; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PpyYnb3L; arc=none smtp.client-ip=103.168.172.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1711446254; c=relaxed/simple;
+	bh=otwNxssUTqC8hixZ724zKmTu0LPn+6xgWSR2/3zJtqA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g2SXGePh2lb5xF+JVO3/eRFuloLkeAbTyPe1x5DlBNTj+nhQinA/L5iXXZaHmT0mvcQLlO5MMKm8CFqiRWVJdBvV0K5bCN+7jIPmsNyUsiPrnRVzlo3Sewt8MdtxWdIZbu94M0ZmsmquQIV+DkwiVvp6S/un6SQJdlNt/J6iHGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=WpQ+Ny/V; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="OuKLU3Qu";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PpyYnb3L"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 7747711400F5;
-	Tue, 26 Mar 2024 05:43:43 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 26 Mar 2024 05:43:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1711446223; x=1711532623; bh=3LqOQeorRq
-	VxwortoMJ5JQKfcQyoSTQmX4p96tNt/c8=; b=OuKLU3QuihiiwgBCbZEQK7A45K
-	B3lVzNmYyadgFqMqA2Q4hC8brf2EqPlDL/DGSaK21DCyriVX+bjsYBrtROhZILKq
-	2d95iG2GV5K1D4CJlgLYX7SWq0/RFP9UJKXBK3hALRAZ3f6Hub453qWFS6bFNhkV
-	WoNyr4AdiRyUk5CG2OyTslRnZEHmvY5uUzyRhGWm5oKSkPaGISwfMAPPqNp1+plj
-	FQfqP4+YQZrGquZsB0nrvWqaktHwY7gG4qOurqj53cl6csvSWPyZxyLKUds39Ok9
-	onV6FEKuOzWsy2ynfY33q6/fyGmjyzVcP8J+oJrqGNT3oy6WHYbcP4RtYHZg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1711446223; x=1711532623; bh=3LqOQeorRqVxwortoMJ5JQKfcQyo
-	STQmX4p96tNt/c8=; b=PpyYnb3LrY/7ZTDL4rfJTuXaxMWpw+VlRhYObKM6qF9/
-	Ueux2FolnCugyuwE/t8TsHLSASnOzmzv2h6cc76sE6GMqRNPWFybek8nLU9iAbYE
-	oAQUHRwJpvIzqCZ5NVkW+u//F5bn2PZeytmK+qPVe0eUeSfj1/d4kDda4aSp91jO
-	SOFOppLTffK/PrnUfmuW7kvYHsXVftDnpC1s0ZhEWs+D2NYrPK22WmWQjmf68Upa
-	EvX/b5X/BrGh8ryLD/rDY4GmJceCCVkvPVxwVXhd9a3FDyA/slViMgBGBREA9Yrx
-	pefb5Aiqv/PJjZnA1tdCKBAJPeNeK3jWVEQzoH7cnA==
-X-ME-Sender: <xms:zpgCZo6JxGzhphLUrwvlaiJUIt6cx6n_d4tKEA_qhdCelC0J7JiLxA>
-    <xme:zpgCZp5BIh7cfvFmNZpKhMjHMi2xeE03GihrGzjw9CYi7wrPWga07ZW6EZaPI_BaZ
-    Q6YVf3imjQUxTaQlUw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddufedgtdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:zpgCZnc8khQa_YThgTSrkoHei3u-A9mq-p7XU6TA4QCVRGQAkMwmfQ>
-    <xmx:zpgCZtIULllRD9QKzOCBNTDkHdPy9ou3SdG6JfpiyPloPY1pwISX9A>
-    <xmx:zpgCZsJNL-km_EcGp2AJqMLyqsj4l3b-SIyxVNTBAPXmr1eQ-1iNQA>
-    <xmx:zpgCZuwDvzRJUFec_HltzNtrD04RFEOhOC5pojft76QBjYhJrlfUQQ>
-    <xmx:z5gCZugwjlS8gsJszGD2lFD_Z40D7LRhh3QaQjxYqUHluhIgxBA37w>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 5E83DB6008D; Tue, 26 Mar 2024 05:43:42 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-328-gc998c829b7-fm-20240325.002-gc998c829
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="WpQ+Ny/V"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4V3lHr6bWfz9scb;
+	Tue, 26 Mar 2024 10:44:08 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1711446248;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YrxaH5mDWbAQSraF+LJ/aFHOMZvEWk75cjO9z38h3ds=;
+	b=WpQ+Ny/VkIGZVysTH9mt6ac6RJIyCQebBhbHlxffuvruRXKXPbTkzElPZGzrve3xAMydqz
+	FzwRyBnZHBfacuxH6PnJB8Bf2FbqGz9YWC2THPAs9/Rq5Cnrv2Y3pfWlbhZhv5RO3FrVMF
+	N7rBO3rjyZhniq35YhDDYlFMWpAgwkeMPjPc98/zmWCggjAIJlL/B3sPeJ93UWO8swi9bP
+	VNEOiZ2fS2J3aSpm+Bs1m5GwKCu7yXFOjkPmpp48UafhHQM3lKS85eHfvVH+pGt3rzgs5S
+	vg8Z5qaYNPqqQ6dPRygBDajkpk2y3m9pi0ejAzbH6PPK7VaVGZKbr2T9ZcMIxQ==
+Message-ID: <5e5523b1-0766-43b2-abb1-f18ea63906d6@pankajraghav.com>
+Date: Tue, 26 Mar 2024 10:44:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <b7b0b2fa-b092-45dd-b93e-0d59e8d40442@app.fastmail.com>
-In-Reply-To: <20240326-ep93xx-v9-32-156e2ae5dfc8@maquefel.me>
-References: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
- <20240326-ep93xx-v9-32-156e2ae5dfc8@maquefel.me>
-Date: Tue, 26 Mar 2024 10:43:22 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Nikita Shubin" <nikita.shubin@maquefel.me>,
- "Russell King" <linux@armlinux.org.uk>,
- "Hartley Sweeten" <hsweeten@visionengravers.com>,
- "Alexander Sverdlin" <alexander.sverdlin@gmail.com>,
- "Andrew Davis" <afd@ti.com>, "Nicolas Schier" <nicolas@fjasle.eu>,
- "Daniel Golle" <daniel@makrotopia.org>,
- "Masahiro Yamada" <masahiroy@kernel.org>,
- "Neil Armstrong" <neil.armstrong@linaro.org>,
- "Dmitry Baryshkov" <dmitry.baryshkov@linaro.org>
-Cc: "Bjorn Andersson" <andersson@kernel.org>,
- "Russell King" <rmk+kernel@armlinux.org.uk>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 32/38] ARM: ep93xx: DT for the Cirrus ep93xx SoC platforms
-Content-Type: text/plain
+Subject: Re: [PATCH v3 04/11] readahead: rework loop in
+ page_cache_ra_unbounded()
+Content-Language: en-US
+To: Hannes Reinecke <hare@suse.de>, Matthew Wilcox <willy@infradead.org>
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ gost.dev@samsung.com, chandan.babu@oracle.com, mcgrof@kernel.org,
+ djwong@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ david@fromorbit.com, akpm@linux-foundation.org,
+ Pankaj Raghav <p.raghav@samsung.com>
+References: <20240313170253.2324812-1-kernel@pankajraghav.com>
+ <20240313170253.2324812-5-kernel@pankajraghav.com>
+ <ZgHFPZ9tNLLjKZpz@casper.infradead.org>
+ <7217df4e-470b-46ab-a4fc-1d4681256885@suse.de>
+From: Pankaj Raghav <kernel@pankajraghav.com>
+In-Reply-To: <7217df4e-470b-46ab-a4fc-1d4681256885@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 26, 2024, at 10:18, Nikita Shubin via B4 Relay wrote:
-> From: Nikita Shubin <nikita.shubin@maquefel.me>
->
-> Add compulsory device tree support to the Cirrus ep93xx ARMv4 platform.
->
-> - select PINCTRL_EP93xx
-> - select COMMON_CLK_EP93XX, as clock driver moved out of platform code
-> - select ARCH_HAS_RESET_CONTROLLER
->
-> Select ARM_ATAG_DTB_COMPAT to update device tree with information
-> about memory passed from bootloader.
->
-> We have to leave all MACH options as they are used for board checking
-> before decomp, to turn off watchdog and ethernet DMA.
->
-> Tested-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
-> ---
->  	select ARCH_SPARSEMEM_ENABLE
->  	select ARM_AMBA
->  	select ARM_VIC
-> +	select ARM_APPENDED_DTB # Old Redboot bootloaders deployed
-> +	select ARM_ATAG_DTB_COMPAT # we need this to update dt memory node
+Hi Hannes,
 
-I would drop these two 'select' statements: while it is
-a reasonable assumption that the boot loaders are never going
-to be fixed, this is not something that's up to the kernel.
+On 26/03/2024 10:39, Hannes Reinecke wrote:
+> On 3/25/24 19:41, Matthew Wilcox wrote:
+>> On Wed, Mar 13, 2024 at 06:02:46PM +0100, Pankaj Raghav (Samsung) wrote:
+>>> @@ -239,8 +239,8 @@ void page_cache_ra_unbounded(struct readahead_control *ractl,
+>>>                * not worth getting one just for that.
+>>>                */
+>>>               read_pages(ractl);
+>>> -            ractl->_index++;
+>>> -            i = ractl->_index + ractl->_nr_pages - index - 1;
+>>> +            ractl->_index += folio_nr_pages(folio);
+>>> +            i = ractl->_index + ractl->_nr_pages - index;
+>>>               continue;
+>>>           }
+>>>   @@ -252,13 +252,14 @@ void page_cache_ra_unbounded(struct readahead_control *ractl,
+>>>               folio_put(folio);
+>>>               read_pages(ractl);
+>>>               ractl->_index++;
+>>> -            i = ractl->_index + ractl->_nr_pages - index - 1;
+>>> +            i = ractl->_index + ractl->_nr_pages - index;
+>>>               continue;
+>>>           }
+>>
+>> You changed index++ in the first hunk, but not the second hunk.  Is that
+>> intentional?
+> 
+> Hmm. Looks you are right; it should be modified, too.
+> Will be fixing it up.
+> 
+You initially had also in the second hunk:
+ractl->index += folio_nr_pages(folio);
 
-We have other platforms that are in the same situation, and they
-just enable those options through the defconfig, as they are
-user-visible.
+and I changed it to what it is now.
 
-> +	select COMMON_CLK_EP93XX
-> +	select EP93XX_TIMER
->  	select CLKSRC_MMIO
->  	select CPU_ARM920T
->  	select GPIOLIB
-> +	select PINCTRL
-> +	select PINCTRL_EP93XX
+The reason is in my reply to willy:
+https://lore.kernel.org/linux-xfs/s4jn4t4betknd3y4ltfccqxyfktzdljiz7klgbqsrccmv3rwrd@orlwjz77oyxo/
 
-If these options are user visible, I would prefer to leave
-these up to the defconfig as well, but that's not as important
-and something we do in other platforms as well. In general,
-I'd prefer to keep 'select' statements to a minimum though.
+Let me know if you agree with it.
 
-> -obj-y			:= core.o clock.o timer-ep93xx.o
-> -
-> -obj-$(CONFIG_EP93XX_DMA)	+= dma.o
-> -
-> -obj-$(CONFIG_MACH_EDB93XX)	+= edb93xx.o
-> -obj-$(CONFIG_MACH_TS72XX)	+= ts72xx.o
-> -obj-$(CONFIG_MACH_VISION_EP9307)+= vision_ep9307.o
-
-The Makefile changes should be grouped together with
-whichever patch removes the individual files.
-
-      Arnd
+> Cheers,
+> 
+> Hannes
+> 
