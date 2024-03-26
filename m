@@ -1,57 +1,102 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB15A13C3FE
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 14:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CB113C3FD
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 14:46:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711464387; cv=none; b=XmuZNnNK5NTNm28ZKgTtlO/hxJ3n2JHpziEvRd/D0sQlt0TDSu3ybKk1GBen2hsjUwLdgUDgRxv/tNeRObfbEI57vywR+0tkhLHYlNgMhsZy4cyh8tf5hfzfFoyXksJ/miI5/wAQ5HJM0w/jurnAhkyiROkZnidLEz4raTUp0g8=
+	t=1711464413; cv=none; b=hKhJ+mVjuqrr0wIi4br5wBZvvK3Un66iAjfaTacVNW5eJn84Zugc9JCfK1X3vYQIOXTg36Pj/txrvVzQxJ4cqPK2LPRSsxfshn5Aff+BcHwJQaLCW4+U9hCUdoiQZQuqXzhs7RILUjpFZOKT+s1UDxiAgHf4ccM7jkb4wnU3A84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711464387; c=relaxed/simple;
-	bh=A90yMMr5SCVrA2WUZLrQNkNWu0fE12f5QJK/5Fl/ubY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dLDk56/Y65YraEwo+pWy0VHTyBXFvUUiI3MXkLbkmjkIOkM4yIYjcS5AeycrU7fclk9euCf6H9REA95vEI95m1lL9amqObLZasncwBK6sdt6K+2Njq0J1s5WvAsCbPkncPZOiFMKZ8p8dKG//6r2ABDgxqbHSVQvNCiPdRn1ebw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B883113E;
-	Tue, 26 Mar 2024 07:46:57 -0700 (PDT)
-Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 013263F694;
-	Tue, 26 Mar 2024 07:46:22 -0700 (PDT)
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: linux-kernel@vger.kernel.org,
-	Pierre Gondois <pierre.gondois@arm.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	kernel test robot <lkp@intel.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH -next] firmware: arm_scmi: Fix wrong fastchannel initialization
-Date: Tue, 26 Mar 2024 14:46:09 +0000
-Message-ID: <171146431503.2983016.14413306679246522303.b4-ty@arm.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240311090413.1710725-1-pierre.gondois@arm.com>
-References: <20240311090413.1710725-1-pierre.gondois@arm.com>
+	s=arc-20240116; t=1711464413; c=relaxed/simple;
+	bh=dVw2sCCZsjOclcEyJtFzLmGPKBY9n3k3XeHTRvzsKws=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YANL3EKjnjkvjkW+20NBYr+dgGwwIUFn3qRe8XzqaigvV4ptPhPih+GLIX4UXL8riUXebQVWm2pF0okoI9fsCV84MghxpsRcg7uGGmVaErWrSh4XUiE1BJEVlqD570WojXkfCD1IMDbWzkcv95bdE8Fsh1iycXiUYVWZAIi3YfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SqquaAIH; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SqquaAIH"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-56bde8ea904so14111a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 07:46:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711464410; x=1712069210; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dVw2sCCZsjOclcEyJtFzLmGPKBY9n3k3XeHTRvzsKws=;
+        b=SqquaAIHb4Yw0ver83CxpNmIiJbclD87OH/QF3hJGrsmwxOgo/Y+mbANkxY4BaPodx
+         QC+4pcPW/4yXo8vc2uLyjF3EYuc7nsHRfyW/DESdmnrLy7lLs0ZgEeB/oK/4ycbXXAYb
+         40rahRzYpuT1EtuwIAFr3q2Dl1pmXqO5/8douSnwAR0916Bqk8HxEpreKjHi2/qKj8M7
+         AYBfM0m7CVcoM/FbyjZDXd4AwHo+xdYgFTOQ4M+Q4XYghIA3ZT3zHDHA25UivMeKHWAX
+         UzDc+o1NvQ28V/OPDZexXg1+BSRef2+YIKmeviB4iTMBm/pVM9G+SYSwRQ336aesRCyr
+         agxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711464410; x=1712069210;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dVw2sCCZsjOclcEyJtFzLmGPKBY9n3k3XeHTRvzsKws=;
+        b=jr5zr1QAbhKmQmSyH1W73RyU+8X77R7s0g/f/eNl6fRemAbIEM8ryiGkIkuDkWVZdm
+         O4UwuUblT4juJ3X898ysN8uoA95mTIed8TL337XtCtN/TebG/ADNhqU2HO1yTN7IOrcE
+         TNoo6ojhBHB6mpaaTaEukY9WGxurUn1xGIkvlO5TN0eoSywWcKXfFpljcN1U9iGAu3jt
+         jLajVG6YuLE3lnKB3IsMmBpmCb1XcdcDB2J3J0C2fCpJjOtBavHLfO8x476VF/WpyqVC
+         vHsOVllZO98RoXRkHLxCj+j4oLEMDFsuQgruhEADK7FAGCx5OGXTQRr+qkboP3QaA9Zr
+         7ULQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1kv3utqvUfpdx8aSJ2TCYZ7xi29tKd6VwABDeAopHwswyr4/JXN59Yxma+IKkBOC0f0fIR4A4l1qgdmByJS+8revLKhnqlFLzljMj
+X-Gm-Message-State: AOJu0YweEuBMi02XCv0a/X4d8wXBF+RI1nxSQ3jhQrXBT0qrqIyGuMBE
+	/e+JrozEAzyF3PwLAjxLHiMspBVJA+1GWFf+tYFzFFoEc3V0mR0GAuLfFhIiwOgGoOiWagEj02A
+	jLs10zTynUDrpgmwlJu84+iZlD79BmMAhw6o/
+X-Google-Smtp-Source: AGHT+IG9LbpsClHFRdFkwkVL7pLUpmQRG00kiEIP3HmNZZDos4Tq2PhwBiVFXB28ezLKitT3SO1TZnjwEjpGhUtA9hs=
+X-Received: by 2002:a05:6402:7c2:b0:56c:9ae:274a with SMTP id
+ u2-20020a05640207c200b0056c09ae274amr120016edy.7.1711464409816; Tue, 26 Mar
+ 2024 07:46:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20240325182543.87683-1-richardbgobert@gmail.com>
+ <20240325182543.87683-5-richardbgobert@gmail.com> <CANn89iKzeTKuBA3NL0DQUmUHmmc0QzZ0X62DUarZ2Q7cKRZvSA@mail.gmail.com>
+ <46e0c775-91e7-4bf6-88f3-53ab5e00414f@gmail.com>
+In-Reply-To: <46e0c775-91e7-4bf6-88f3-53ab5e00414f@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Tue, 26 Mar 2024 15:46:35 +0100
+Message-ID: <CANn89iJkDbzLKmUGRHNFpfiaO8z19i44qgqkBA9Updt4QsRkyg@mail.gmail.com>
+Subject: Re: [PATCH net-next v4 4/4] net: gro: move L3 flush checks to tcp_gro_receive
+To: Richard Gobert <richardbgobert@gmail.com>
+Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, 
+	willemdebruijn.kernel@gmail.com, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 11 Mar 2024 10:04:12 +0100, Pierre Gondois wrote:
-> Fastchannels are initialized with a bad index in:
-> commit 2441caa84aac ("firmware: arm_scmi: Populate fast channel rate_limit")
-> Fix this and provide a correct index.
+On Tue, Mar 26, 2024 at 3:43=E2=80=AFPM Richard Gobert <richardbgobert@gmai=
+l.com> wrote:
 >
+> Eric Dumazet wrote:
+> > On Mon, Mar 25, 2024 at 7:27=E2=80=AFPM Richard Gobert <richardbgobert@=
+gmail.com> wrote:
+> >>
+> >> {inet,ipv6}_gro_receive functions perform flush checks (ttl, flags,
+> >> iph->id, ...) against all packets in a loop. These flush checks are us=
+ed
+> >> currently only in tcp flows in GRO.
+> >
+> > I think this is a bug.
+> >
+> > GRO should not aggregate packets if their ttl/tos fields do not match.
 >
-Applied to sudeep.holla/linux (for-next/scmi/fixes), thanks!
+> AFAIU, the only UDP flow where ttl/flush_id need to be checked is when
+> udp_gro_receive_segment calls skb_gro_receive - could you confirm / point
+> out if there are any other flows to which these flush checks may be
+> relevant?
+>
+> As I've discussed with Willem in v3 I prefer to fix this bug in a separat=
+e
+> series.
 
-[1/1] firmware: arm_scmi: Fix wrong fastchannel initialization
-      https://git.kernel.org/sudeep.holla/c/17f243adf165
---
-Regards,
-Sudeep
+I do not understand this patch 4/4 then.
 
+Why bother moving stuff in net/ipv4/tcp_offload.c if we plan to move
+it back to where it belongs ?
