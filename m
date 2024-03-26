@@ -1,82 +1,57 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 350E613D514
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 19:05:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744B2208B4
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 19:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711479904; cv=none; b=LijGsZQFTNnaiINlbA/HV/+8VZGR5l0l4GcH0/0BpVz2X19XLqUXI1749YJN914zUw7o/Le0xxQk86xPuc6niK6lNaMwL0wXbO4Txxu1qYM8YSCF7Riy4PVxdAaumw3FYopDIRbyDD4yVADYMXQJF3LF8k16jjdVhtGHdK1bpj8=
+	t=1711479956; cv=none; b=ClvwbsnMiQuwm4FIE36DEJXqk6z618rgxpucApEBdyqc8jR0KswWH6Di2v5o79Yoi9dLdFt9F3NkL5k5kD+eBFqZbwRx4isLMcd2/n6UdV9qeh6/qLLJeITuAywYRIMt6n850IBXEycDrjH+GmyQyGqPYti33Skr6Mi5pe+B5Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711479904; c=relaxed/simple;
-	bh=zup3Hox8pcGlMo1byKXDE2MR4LTc5jra6TlpSxEJ8Pc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hWIV3/Eyjv1AZRYeu322kfr5zQVWSe+DMT2iZzy5Zeyy8IfLXw3WqkLEf60Mv+lyNXCVUXBCpMkOTTLQcek6SL8nJhA1IJrUiiJe3l+MROTpycxeMInkOzK5EWdYgkjbDAwtjKv6DX2cE/uUfpm5iZwVFU1TC6W9hH/LtVWO+sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Joeb5x+y; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711479956; c=relaxed/simple;
+	bh=ejfUWfLgvuqMI7QLkA0Un4Y0Gm9sN7ilt44Gz8Dq02U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j+MAU9X4SBN27Qq+81GwcZkzh+6y6p1drDh5BrjfLw7FwCp/aT7LXNY6FK9P8jwDtFfROYIYI/CylidCiGtzQJ+Ch05olXztWGyXa8RaaWBbjHb2mSucg/Bfw0r3NZyKbFJ0lYli9uVVYmxpKnmjBIMhNXLbe/eQhxxya9qpb7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hQn4tu4d; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Joeb5x+y"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5cedfc32250so3765153a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 12:05:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711479901; x=1712084701; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=tWXkY/VwUtjvuoCiK/XtYUVIg6+3qA3wRWNZvOL3LW8=;
-        b=Joeb5x+yynIhaelotZsvl1zNvO0MkM6cBhOo3EAN0wcvQa0NGJq5UJ/oXsT3IMKGAU
-         QWtEdjvqrJXIjfw/sQYSD76n7QPi8mGKWHUvw9Nlbd+e2dcTsq+JRA7JezXj0J3D+PhQ
-         S6ZG+ydIUdmimPEqVfOaUlIOe6P3ML3xFrfWAD6OF/5QkmRxnjhqm2klE2NCLVVa6cr1
-         XIa8HpqbhXw+PjU93jorpRiGqoGcdTwIrlX+Rq5owVWSEpu4rxIWmW1xrupDupCKXexo
-         k/rpKBm3InwcsH1Q9ufP6xFzIcxWLVXaqMjTsrwgZvFEULGw6vPcAaIU/CIs2pp5i18D
-         K4fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711479901; x=1712084701;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tWXkY/VwUtjvuoCiK/XtYUVIg6+3qA3wRWNZvOL3LW8=;
-        b=i6cXgWFFq/JojUnTYSdW4/4iYxE6VXNXp4cUKAbx3O3h/NfH7vmyuL//Jym3Ms4fb3
-         acP/E9TAhUYC/U9MuJfNJb0z0uwLczweqSPWsjofRvMLcVkFTEdzEuflZIiHBWoaTQP3
-         o8MX6nJLFWiQAu2tJVNr3C7BnB+jN0CM4J4B8LTqksW2rSRttHXOUXJiEbzbVWyBLG63
-         /eJ6Wb8angnSxkktFK2RtlxvJaQAH4ZcsVZpjW9H/ctv+6Yi9okmcqjHzLKcMWxAcXnW
-         is/XnBe23Z1qFRNqf/Eqy+EazmHJcaTitY3cBrMBZFYDJgLK30PWmoj5c7zZ63oIjKZd
-         TDdg==
-X-Forwarded-Encrypted: i=1; AJvYcCX+AkNTHbkkYUgV2waSVhZw2YJxF2M9XC6Xi1P5f1Cm4qOLyBh1mavjkPOaFvT9a5xvJHEPeWC+C7d+PBwwEz8Kyax6qqqMg13r+wHZ
-X-Gm-Message-State: AOJu0Yy90eJ+IqwU3OplZ8eNXsKtbe9728pK48mZ4lmmJbsrlMQfDWvw
-	diox6zpuJ52haUSFSwHqbZiSxWin3Y0i1ZKl4qxP799K4uVJAl7k
-X-Google-Smtp-Source: AGHT+IH8mmais3geKY69O252RCFhbpsrIur2CeiaE4pHWZEEsNx+hS+y2YV8F+RXgoCHWzKftRyqmg==
-X-Received: by 2002:a05:6a21:3284:b0:1a3:68ff:5805 with SMTP id yt4-20020a056a21328400b001a368ff5805mr599508pzb.44.1711479901200;
-        Tue, 26 Mar 2024 12:05:01 -0700 (PDT)
-Received: from KASONG-MB2.tencent.com ([115.171.40.106])
-        by smtp.gmail.com with ESMTPSA id j14-20020aa783ce000000b006ea790c2232sm6298350pfn.79.2024.03.26.12.04.57
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 26 Mar 2024 12:05:00 -0700 (PDT)
-From: Kairui Song <ryncsn@gmail.com>
-To: linux-mm@kvack.org
-Cc: "Huang, Ying" <ying.huang@intel.com>,
-	Chris Li <chrisl@kernel.org>,
-	Minchan Kim <minchan@kernel.org>,
-	Barry Song <v-songbaohua@oppo.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Yu Zhao <yuzhao@google.com>,
-	SeongJae Park <sj@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Nhat Pham <nphamcs@gmail.com>,
-	Chengming Zhou <zhouchengming@bytedance.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org,
-	Kairui Song <kasong@tencent.com>
-Subject: [RFC PATCH 10/10] mm/swap: optimize synchronous swapin
-Date: Wed, 27 Mar 2024 02:50:32 +0800
-Message-ID: <20240326185032.72159-11-ryncsn@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240326185032.72159-1-ryncsn@gmail.com>
-References: <20240326185032.72159-1-ryncsn@gmail.com>
-Reply-To: Kairui Song <kasong@tencent.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hQn4tu4d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711479954; x=1743015954;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ejfUWfLgvuqMI7QLkA0Un4Y0Gm9sN7ilt44Gz8Dq02U=;
+  b=hQn4tu4dSZc8/NAFEURSxyFXwuMeHF3vZtnxCIojCp5ew5W91tUNuywQ
+   9TlLzot6EpTkDp+mvS1T24d6teoe++wlaC9r/8yNdsnUcmHTPERopsDeC
+   rzyGqNSNVFzYEO8UIaresgRUr6fO6Ss90rBYUzpWVvi4xILdZJLcUoWmD
+   PiV9urCWgYBok3hb0xU7toma6jnwj8qydXyUY9HRPKRkpnqv8iEgYQfpU
+   mXsbS/oABet0ll04yAyzd3TqdeWS+mfrMdE9iTlr1nKb3L2c/UHngPQSI
+   inD1t4TfgX3qYbwhBiC7D2RZXuLBy0kACqOhoRYItzM3+T8c3mC0lcZZS
+   w==;
+X-CSE-ConnectionGUID: lGp7oMEaRwizcJX3vfQJTw==
+X-CSE-MsgGUID: DzN/Bim5Rl2utb0lbg9D0g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="17696074"
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="17696074"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 12:05:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="937072977"
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="937072977"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Mar 2024 12:05:52 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 6B2AE284; Tue, 26 Mar 2024 21:05:51 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andy@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH v2 1/1] auxdisplay: linedisp: Group display drivers together
+Date: Tue, 26 Mar 2024 21:05:28 +0200
+Message-ID: <20240326190550.1421216-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,349 +60,445 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Kairui Song <kasong@tencent.com>
+For better usability group the display drivers together in Kconfig.
+With this we will have the following sections:
+  - Character LCD
+  - Samsung KS0108 LCD controller
+  - Single character line display
+  - Character LCD with non-conforming interface
 
-Interestingly the major performance overhead of synchronous is actually
-from the workingset nodes update, that's because synchronous swap in
-keeps adding single folios into a xa_node, making the node no longer
-a shadow node and have to be removed from shadow_nodes, then remove
-the folio very shortly and making the node a shadow node again,
-so it has to add back to the shadow_nodes.
+Keep Makefile entries sorted alphabetically.
 
-Mark synchronous swapin folio with a special bit in swap entry embedded
-in folio->swap, as we still have some usable bits there. Skip workingset
-node update on insertion of such folio because it will be removed very
-quickly, and will trigger the update ensuring the workingset info is
-eventual consensus.
+While at it, drop redundant 'default n' entries.
 
-Test result of sequential swapin/out of 30G zero page on ZRAM:
-
-               Before (us)        After (us)
-Swapout:       33853883           33886008
-Swapin:        38336519           32465441 (+15.4%)
-Swapout (THP): 6814619            6899938
-Swapin (THP) : 38383367           33193479 (+13.6%)
-
-Signed-off-by: Kairui Song <kasong@tencent.com>
+Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- include/linux/swapops.h |  5 +++-
- mm/filemap.c            | 16 +++++++++---
- mm/memory.c             | 34 ++++++++++++++----------
- mm/swap.h               | 15 +++++++++++
- mm/swap_state.c         | 57 ++++++++++++++++++++++++-----------------
- mm/vmscan.c             |  6 +++++
- mm/workingset.c         |  2 +-
- 7 files changed, 92 insertions(+), 43 deletions(-)
+v2: kept Makefile sorted alphabetically (Geert)
+ drivers/auxdisplay/Kconfig  | 346 +++++++++++++++++++-----------------
+ drivers/auxdisplay/Makefile |  10 +-
+ 2 files changed, 184 insertions(+), 172 deletions(-)
 
-diff --git a/include/linux/swapops.h b/include/linux/swapops.h
-index 48b700ba1d18..ebc0c3e4668d 100644
---- a/include/linux/swapops.h
-+++ b/include/linux/swapops.h
-@@ -25,7 +25,10 @@
-  * swp_entry_t's are *never* stored anywhere in their arch-dependent format.
-  */
- #define SWP_TYPE_SHIFT	(BITS_PER_XA_VALUE - MAX_SWAPFILES_SHIFT)
--#define SWP_OFFSET_MASK	((1UL << SWP_TYPE_SHIFT) - 1)
-+#define SWP_CACHE_FLAG_BITS	1
-+#define SWP_CACHE_SYNCHRONOUS	BIT(SWP_TYPE_SHIFT - 1)
-+#define SWP_OFFSET_BITS	(SWP_TYPE_SHIFT - SWP_CACHE_FLAG_BITS)
-+#define SWP_OFFSET_MASK	(BIT(SWP_OFFSET_BITS) - 1)
+diff --git a/drivers/auxdisplay/Kconfig b/drivers/auxdisplay/Kconfig
+index 151d95f96b11..69d2138d7efb 100644
+--- a/drivers/auxdisplay/Kconfig
++++ b/drivers/auxdisplay/Kconfig
+@@ -16,6 +16,9 @@ menuconfig AUXDISPLAY
  
- /*
-  * Definitions only for PFN swap entries (see is_pfn_swap_entry()).  To
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 5e8e3fd26b8d..ac24cc65d1da 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -923,12 +923,20 @@ int __filemap_add_swapcache(struct address_space *mapping, struct folio *folio,
- 			    pgoff_t index, gfp_t gfp, void **shadowp)
- {
- 	XA_STATE_ORDER(xas, &mapping->i_pages, index, folio_order(folio));
-+	bool synchronous = swap_cache_test_synchronous(folio);
- 	long nr;
- 	int ret;
+ if AUXDISPLAY
  
- 	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
- 	VM_BUG_ON_FOLIO(!folio_test_swapcache(folio), folio);
--	mapping_set_update(&xas, mapping);
-+
-+	/*
-+	 * Skip node update for synchronous folio insertion, it will be
-+	 * updated on folio deletion very soon, avoid repeated LRU locking.
-+	 */
-+	if (!synchronous)
-+		xas_set_update(&xas, workingset_update_node);
-+	xas_set_lru(&xas, &shadow_nodes);
++#
++# Character LCD section
++#
+ config CHARLCD
+ 	tristate "Character LCD core support" if COMPILE_TEST
+ 	help
+@@ -25,12 +28,6 @@ config CHARLCD
+ 	  This is some character LCD core interface that multiple drivers can
+ 	  use.
  
- 	nr = folio_nr_pages(folio);
- 	folio_ref_add(folio, nr);
-@@ -936,8 +944,10 @@ int __filemap_add_swapcache(struct address_space *mapping, struct folio *folio,
- 	ret = __filemap_lock_store(&xas, folio, index, gfp, shadowp);
- 	if (likely(!ret)) {
- 		mapping->nrpages += nr;
--		__node_stat_mod_folio(folio, NR_FILE_PAGES, nr);
--		__lruvec_stat_mod_folio(folio, NR_SWAPCACHE, nr);
-+		if (!synchronous) {
-+			__node_stat_mod_folio(folio, NR_FILE_PAGES, nr);
-+			__lruvec_stat_mod_folio(folio, NR_SWAPCACHE, nr);
-+		}
- 		xas_unlock_irq(&xas);
- 	} else {
- 		folio_put_refs(folio, nr);
-diff --git a/mm/memory.c b/mm/memory.c
-index 774a912eb46d..bb40202b4f29 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3933,6 +3933,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
- 	struct swap_info_struct *si = NULL;
- 	rmap_t rmap_flags = RMAP_NONE;
- 	bool folio_allocated = false;
-+	bool synchronous_io = false;
- 	bool exclusive = false;
- 	swp_entry_t entry;
- 	pte_t pte;
-@@ -4032,18 +4033,19 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
- 	if (ret & VM_FAULT_RETRY)
- 		goto out_release;
- 
--	if (swapcache) {
--		/*
--		 * Make sure folio_free_swap() or swapoff did not release the
--		 * swapcache from under us.  The page pin, and pte_same test
--		 * below, are not enough to exclude that.  Even if it is still
--		 * swapcache, we need to check that the page's swap has not
--		 * changed.
--		 */
--		if (unlikely(!folio_test_swapcache(folio) ||
--			     page_swap_entry(page).val != entry.val))
--			goto out_page;
-+	/*
-+	 * Make sure folio_free_swap() or swapoff did not release the
-+	 * swapcache from under us.  The page pin, and pte_same test
-+	 * below, are not enough to exclude that.  Even if it is still
-+	 * swapcache, we need to check that the page's swap has not
-+	 * changed.
-+	 */
-+	if (unlikely(!folio_test_swapcache(folio) ||
-+		     (page_swap_entry(page).val & ~SWP_CACHE_SYNCHRONOUS) != entry.val))
-+		goto out_page;
- 
-+	synchronous_io = swap_cache_test_synchronous(folio);
-+	if (!synchronous_io) {
- 		/*
- 		 * KSM sometimes has to copy on read faults, for example, if
- 		 * page->index of !PageKSM() pages would be nonlinear inside the
-@@ -4105,9 +4107,9 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
- 	 */
- 	if (!folio_test_ksm(folio)) {
- 		exclusive = pte_swp_exclusive(vmf->orig_pte);
--		if (folio != swapcache) {
-+		if (synchronous_io || folio != swapcache) {
- 			/*
--			 * We have a fresh page that is not exposed to the
-+			 * We have a fresh page that is not sharable through the
- 			 * swapcache -> certainly exclusive.
- 			 */
- 			exclusive = true;
-@@ -4148,7 +4150,9 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
- 	 * yet.
- 	 */
- 	swap_free(entry);
--	if (should_try_to_free_swap(folio, vma, vmf->flags))
-+	if (synchronous_io)
-+		delete_from_swap_cache(folio);
-+	else if (should_try_to_free_swap(folio, vma, vmf->flags))
- 		folio_free_swap(folio);
- 
- 	inc_mm_counter(vma->vm_mm, MM_ANONPAGES);
-@@ -4223,6 +4227,8 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
- out_nomap:
- 	if (vmf->pte)
- 		pte_unmap_unlock(vmf->pte, vmf->ptl);
-+	if (synchronous_io)
-+		delete_from_swap_cache(folio);
- out_page:
- 	folio_unlock(folio);
- out_release:
-diff --git a/mm/swap.h b/mm/swap.h
-index bd872b157950..9d106eebddbd 100644
---- a/mm/swap.h
-+++ b/mm/swap.h
-@@ -31,6 +31,21 @@ extern struct address_space *swapper_spaces[];
- 	(&swapper_spaces[swp_type(entry)][swp_offset(entry) \
- 		>> SWAP_ADDRESS_SPACE_SHIFT])
- 
-+static inline void swap_cache_mark_synchronous(struct folio *folio)
-+{
-+	folio->swap.val |= SWP_CACHE_SYNCHRONOUS;
-+}
-+
-+static inline bool swap_cache_test_synchronous(struct folio *folio)
-+{
-+	return folio->swap.val & SWP_CACHE_SYNCHRONOUS;
-+}
-+
-+static inline void swap_cache_clear_synchronous(struct folio *folio)
-+{
-+	folio->swap.val &= ~SWP_CACHE_SYNCHRONOUS;
-+}
-+
- void show_swap_cache_info(void);
- bool add_to_swap(struct folio *folio);
- void *get_shadow_from_swap_cache(swp_entry_t entry);
-diff --git a/mm/swap_state.c b/mm/swap_state.c
-index cf178dd1131a..b0b1b5391ac1 100644
---- a/mm/swap_state.c
-+++ b/mm/swap_state.c
-@@ -86,7 +86,7 @@ void *get_shadow_from_swap_cache(swp_entry_t entry)
-  * but sets SwapCache flag and private instead of mapping and index.
-  */
- static int add_to_swap_cache(struct folio *folio, swp_entry_t entry,
--			     gfp_t gfp, void **shadowp)
-+			     gfp_t gfp, bool synchronous, void **shadowp)
- {
- 	struct address_space *address_space = swap_address_space(entry);
- 	pgoff_t idx = swp_offset(entry);
-@@ -98,11 +98,12 @@ static int add_to_swap_cache(struct folio *folio, swp_entry_t entry,
- 
- 	folio_set_swapcache(folio);
- 	folio->swap = entry;
+-config LINEDISP
+-	tristate "Character line display core support" if COMPILE_TEST
+-	help
+-	  This is the core support for single-line character displays, to be
+-	  selected by drivers that use it.
 -
-+	if (synchronous)
-+		swap_cache_mark_synchronous(folio);
- 	ret = __filemap_add_swapcache(address_space, folio, idx, gfp, shadowp);
- 	if (ret) {
--		folio_clear_swapcache(folio);
- 		folio->swap.val = 0;
-+		folio_clear_swapcache(folio);
- 	}
+ config HD44780_COMMON
+ 	tristate "Common functions for HD44780 (and compatibles) LCD displays" if COMPILE_TEST
+ 	select CHARLCD
+@@ -52,145 +49,6 @@ config HD44780
+ 	  kernel and started at boot.
+ 	  If you don't understand what all this is about, say N.
  
- 	return ret;
-@@ -129,11 +130,13 @@ void __delete_from_swap_cache(struct folio *folio,
- 	xas_set_order(&xas, idx, folio_order(folio));
- 	xas_store(&xas, shadow);
- 
--	folio->swap.val = 0;
- 	folio_clear_swapcache(folio);
- 	address_space->nrpages -= nr;
--	__node_stat_mod_folio(folio, NR_FILE_PAGES, -nr);
--	__lruvec_stat_mod_folio(folio, NR_SWAPCACHE, -nr);
-+	if (!swap_cache_test_synchronous(folio)) {
-+		__node_stat_mod_folio(folio, NR_FILE_PAGES, -nr);
-+		__lruvec_stat_mod_folio(folio, NR_SWAPCACHE, -nr);
-+	}
-+	folio->swap.val = 0;
- }
- 
- /**
-@@ -393,7 +396,7 @@ struct folio *filemap_get_incore_folio(struct address_space *mapping,
-  * else or hitting OOM.
-  */
- static struct folio *swap_cache_add_or_get(struct folio *folio,
--		swp_entry_t entry, gfp_t gfp_mask)
-+		swp_entry_t entry, gfp_t gfp_mask, bool synchronous)
- {
- 	int ret = 0;
- 	void *shadow = NULL;
-@@ -403,7 +406,7 @@ static struct folio *swap_cache_add_or_get(struct folio *folio,
- 	if (folio) {
- 		__folio_set_locked(folio);
- 		__folio_set_swapbacked(folio);
--		ret = add_to_swap_cache(folio, entry, gfp_mask, &shadow);
-+		ret = add_to_swap_cache(folio, entry, gfp_mask, synchronous, &shadow);
- 		if (ret)
- 			__folio_clear_locked(folio);
- 	}
-@@ -460,7 +463,7 @@ int swap_cache_add_wait(struct folio *folio, swp_entry_t entry, gfp_t gfp)
- 	struct folio *wait_folio;
- 
- 	for (;;) {
--		ret = add_to_swap_cache(folio, entry, gfp, NULL);
-+		ret = add_to_swap_cache(folio, entry, gfp, false, NULL);
- 		if (ret != -EEXIST)
- 			break;
- 		wait_folio = filemap_get_folio(swap_address_space(entry),
-@@ -493,7 +496,7 @@ struct folio *swap_cache_alloc_or_get(swp_entry_t entry, gfp_t gfp_mask,
- 	/* We are very likely the first user, alloc and try add to the swapcache. */
- 	folio = (struct folio *)alloc_pages_mpol(gfp_mask, 0, mpol, ilx,
- 						 numa_node_id());
--	swapcache = swap_cache_add_or_get(folio, entry, gfp_mask);
-+	swapcache = swap_cache_add_or_get(folio, entry, gfp_mask, false);
- 	if (swapcache != folio) {
- 		folio_put(folio);
- 		goto out_no_alloc;
-@@ -875,21 +878,27 @@ static struct folio *swap_vma_readahead(swp_entry_t targ_entry, gfp_t gfp_mask,
- struct folio *swapin_direct(swp_entry_t entry, gfp_t gfp_mask,
- 			    struct vm_fault *vmf, bool *folio_allocated)
- {
--	struct mempolicy *mpol;
--	struct folio *folio;
--	pgoff_t ilx;
+-config KS0108
+-	tristate "KS0108 LCD Controller"
+-	depends on PARPORT_PC
+-	default n
+-	help
+-	  If you have a LCD controlled by one or more KS0108
+-	  controllers, say Y. You will need also another more specific
+-	  driver for your LCD.
 -
--	mpol = get_vma_policy(vmf->vma, vmf->address, 0, &ilx);
--	folio = swap_cache_alloc_or_get(entry, gfp_mask, mpol, ilx,
--					folio_allocated);
--	mpol_cond_put(mpol);
+-	  Depends on Parallel Port support. If you say Y at
+-	  parport, you will be able to compile this as a module (M)
+-	  and built-in as well (Y).
 -
--	if (*folio_allocated)
-+	struct folio *folio = NULL, *swapcache;
-+	/* First do a racy check if cache is already loaded. */
-+	swapcache = swap_cache_try_get(entry);
-+	if (unlikely(swapcache))
-+		goto out;
-+	folio = vma_alloc_folio(gfp_mask, 0, vmf->vma, vmf->address, false);
-+	swapcache = swap_cache_add_or_get(folio, entry, gfp_mask, true);
-+	if (!swapcache)
-+		goto out_nocache;
-+	if (swapcache == folio) {
- 		swap_read_folio(folio, true, NULL);
--	else if (folio)
--		swap_cache_update_ra(folio, vmf->vma, vmf->address);
+-	  To compile this as a module, choose M here:
+-	  the module will be called ks0108.
 -
--	return folio;
-+		*folio_allocated = true;
-+		return folio;
-+	}
-+out:
-+	swap_cache_update_ra(swapcache, vmf->vma, vmf->address);
-+out_nocache:
-+	if (folio)
-+		folio_put(folio);
-+	*folio_allocated = false;
-+	return swapcache;
- }
+-	  If unsure, say N.
+-
+-config KS0108_PORT
+-	hex "Parallel port where the LCD is connected"
+-	depends on KS0108
+-	default 0x378
+-	help
+-	  The address of the parallel port where the LCD is connected.
+-
+-	  The first  standard parallel port address is 0x378.
+-	  The second standard parallel port address is 0x278.
+-	  The third  standard parallel port address is 0x3BC.
+-
+-	  You can specify a different address if you need.
+-
+-	  If you don't know what I'm talking about, load the parport module,
+-	  and execute "dmesg" or "cat /proc/ioports". You can see there how
+-	  many parallel ports are present and which address each one has.
+-
+-	  Usually you only need to use 0x378.
+-
+-	  If you compile this as a module, you can still override this
+-	  using the module parameters.
+-
+-config KS0108_DELAY
+-	int "Delay between each control writing (microseconds)"
+-	depends on KS0108
+-	default "2"
+-	help
+-	  Amount of time the ks0108 should wait between each control write
+-	  to the parallel port.
+-
+-	  If your LCD seems to miss random writings, increment this.
+-
+-	  If you don't know what I'm talking about, ignore it.
+-
+-	  If you compile this as a module, you can still override this
+-	  value using the module parameters.
+-
+-config CFAG12864B
+-	tristate "CFAG12864B LCD"
+-	depends on X86
+-	depends on FB
+-	depends on KS0108
+-	select FB_SYSMEM_HELPERS
+-	default n
+-	help
+-	  If you have a Crystalfontz 128x64 2-color LCD, cfag12864b Series,
+-	  say Y. You also need the ks0108 LCD Controller driver.
+-
+-	  For help about how to wire your LCD to the parallel port,
+-	  check Documentation/admin-guide/auxdisplay/cfag12864b.rst
+-
+-	  Depends on the x86 arch and the framebuffer support.
+-
+-	  The LCD framebuffer driver can be attached to a console.
+-	  It will work fine. However, you can't attach it to the fbdev driver
+-	  of the xorg server.
+-
+-	  To compile this as a module, choose M here:
+-	  the modules will be called cfag12864b and cfag12864bfb.
+-
+-	  If unsure, say N.
+-
+-config CFAG12864B_RATE
+-	int "Refresh rate (hertz)"
+-	depends on CFAG12864B
+-	default "20"
+-	help
+-	  Refresh rate of the LCD.
+-
+-	  As the LCD is not memory mapped, the driver has to make the work by
+-	  software. This means you should be careful setting this value higher.
+-	  If your CPUs are really slow or you feel the system is slowed down,
+-	  decrease the value.
+-
+-	  Be careful modifying this value to a very high value:
+-	  You can freeze the computer, or the LCD maybe can't draw as fast as you
+-	  are requesting.
+-
+-	  If you don't know what I'm talking about, ignore it.
+-
+-	  If you compile this as a module, you can still override this
+-	  value using the module parameters.
+-
+-config IMG_ASCII_LCD
+-	tristate "Imagination Technologies ASCII LCD Display"
+-	depends on HAS_IOMEM
+-	default y if MIPS_MALTA
+-	select MFD_SYSCON
+-	select LINEDISP
+-	help
+-	  Enable this to support the simple ASCII LCD displays found on
+-	  development boards such as the MIPS Boston, MIPS Malta & MIPS SEAD3
+-	  from Imagination Technologies.
+-
+-config HT16K33
+-	tristate "Holtek Ht16K33 LED controller with keyscan"
+-	depends on FB && I2C && INPUT
+-	select FB_SYSMEM_HELPERS
+-	select INPUT_MATRIXKMAP
+-	select FB_BACKLIGHT
+-	select NEW_LEDS
+-	select LEDS_CLASS
+-	select LINEDISP
+-	help
+-	  Say yes here to add support for Holtek HT16K33, RAM mapping 16*8
+-	  LED controller driver with keyscan.
+-
+-config MAX6959
+-	tristate "Maxim MAX6958/6959 7-segment LED controller"
+-	depends on I2C
+-	select REGMAP_I2C
+-	select LINEDISP
+-	help
+-	  If you say yes here you get support for the following Maxim chips
+-	  (I2C 7-segment LED display controller):
+-	  - MAX6958
+-	  - MAX6959 (input support)
+-
+-	  This driver can also be built as a module. If so, the module
+-	  will be called max6959.
+-
+ config LCD2S
+ 	tristate "lcd2s 20x4 character display over I2C console"
+ 	depends on I2C
+@@ -201,27 +59,6 @@ config LCD2S
+ 	  is a simple single color character display. You have to connect it
+ 	  to an I2C bus.
  
- /**
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index c3db39393428..e71b049fee01 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1228,6 +1228,12 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
- 					if (!add_to_swap(folio))
- 						goto activate_locked_split;
- 				}
-+			} else if (swap_cache_test_synchronous(folio)) {
-+				/*
-+				 * We see a folio being swapped in but not activated either
-+				 * due to missing shadow or lived too short, active it.
-+				 */
-+				goto activate_locked;
- 			}
- 		} else if (folio_test_swapbacked(folio) &&
- 			   folio_test_large(folio)) {
-diff --git a/mm/workingset.c b/mm/workingset.c
-index f2a0ecaf708d..83a0b409be0f 100644
---- a/mm/workingset.c
-+++ b/mm/workingset.c
-@@ -753,7 +753,7 @@ static enum lru_status shadow_lru_isolate(struct list_head *item,
- 	 */
- 	if (WARN_ON_ONCE(!node->nr_values))
- 		goto out_invalid;
--	if (WARN_ON_ONCE(node->count != node->nr_values))
-+	if (WARN_ON_ONCE(node->count != node->nr_values && mapping->host != NULL))
- 		goto out_invalid;
- 	xa_delete_node(node, workingset_update_node);
- 	__inc_lruvec_kmem_state(node, WORKINGSET_NODERECLAIM);
+-config ARM_CHARLCD
+-	bool "ARM Ltd. Character LCD Driver"
+-	depends on PLAT_VERSATILE
+-	help
+-	  This is a driver for the character LCD found on the ARM Ltd.
+-	  Versatile and RealView Platform Baseboards. It doesn't do
+-	  very much more than display the text "ARM Linux" on the first
+-	  line and the Linux version on the second line, but that's
+-	  still useful.
+-
+-config SEG_LED_GPIO
+-	tristate "Generic 7-segment LED display"
+-	depends on GPIOLIB || COMPILE_TEST
+-	select LINEDISP
+-	help
+-	  This driver supports a generic 7-segment LED display made up
+-	  of GPIO pins connected to the individual segments.
+-
+-	  This driver can also be built as a module. If so, the module
+-	  will be called seg-led-gpio.
+-
+ menuconfig PARPORT_PANEL
+ 	tristate "Parallel port LCD/Keypad Panel support"
+ 	depends on PARPORT
+@@ -480,7 +317,6 @@ endif # PARPORT_PANEL
+ config PANEL_CHANGE_MESSAGE
+ 	bool "Change LCD initialization message ?"
+ 	depends on CHARLCD
+-	default "n"
+ 	help
+ 	  This allows you to replace the boot message indicating the kernel version
+ 	  and the driver version with a custom message. This is useful on appliances
+@@ -529,8 +365,184 @@ choice
+ 
+ endchoice
+ 
++#
++# Samsung KS0108 LCD controller section
++#
++config KS0108
++	tristate "KS0108 LCD Controller"
++	depends on PARPORT_PC
++	help
++	  If you have a LCD controlled by one or more KS0108
++	  controllers, say Y. You will need also another more specific
++	  driver for your LCD.
++
++	  Depends on Parallel Port support. If you say Y at
++	  parport, you will be able to compile this as a module (M)
++	  and built-in as well (Y).
++
++	  To compile this as a module, choose M here:
++	  the module will be called ks0108.
++
++	  If unsure, say N.
++
++config KS0108_PORT
++	hex "Parallel port where the LCD is connected"
++	depends on KS0108
++	default 0x378
++	help
++	  The address of the parallel port where the LCD is connected.
++
++	  The first  standard parallel port address is 0x378.
++	  The second standard parallel port address is 0x278.
++	  The third  standard parallel port address is 0x3BC.
++
++	  You can specify a different address if you need.
++
++	  If you don't know what I'm talking about, load the parport module,
++	  and execute "dmesg" or "cat /proc/ioports". You can see there how
++	  many parallel ports are present and which address each one has.
++
++	  Usually you only need to use 0x378.
++
++	  If you compile this as a module, you can still override this
++	  using the module parameters.
++
++config KS0108_DELAY
++	int "Delay between each control writing (microseconds)"
++	depends on KS0108
++	default "2"
++	help
++	  Amount of time the ks0108 should wait between each control write
++	  to the parallel port.
++
++	  If your LCD seems to miss random writings, increment this.
++
++	  If you don't know what I'm talking about, ignore it.
++
++	  If you compile this as a module, you can still override this
++	  value using the module parameters.
++
++config CFAG12864B
++	tristate "CFAG12864B LCD"
++	depends on X86
++	depends on FB
++	depends on KS0108
++	select FB_SYSMEM_HELPERS
++	help
++	  If you have a Crystalfontz 128x64 2-color LCD, cfag12864b Series,
++	  say Y. You also need the ks0108 LCD Controller driver.
++
++	  For help about how to wire your LCD to the parallel port,
++	  check Documentation/admin-guide/auxdisplay/cfag12864b.rst
++
++	  Depends on the x86 arch and the framebuffer support.
++
++	  The LCD framebuffer driver can be attached to a console.
++	  It will work fine. However, you can't attach it to the fbdev driver
++	  of the xorg server.
++
++	  To compile this as a module, choose M here:
++	  the modules will be called cfag12864b and cfag12864bfb.
++
++	  If unsure, say N.
++
++config CFAG12864B_RATE
++	int "Refresh rate (hertz)"
++	depends on CFAG12864B
++	default "20"
++	help
++	  Refresh rate of the LCD.
++
++	  As the LCD is not memory mapped, the driver has to make the work by
++	  software. This means you should be careful setting this value higher.
++	  If your CPUs are really slow or you feel the system is slowed down,
++	  decrease the value.
++
++	  Be careful modifying this value to a very high value:
++	  You can freeze the computer, or the LCD maybe can't draw as fast as you
++	  are requesting.
++
++	  If you don't know what I'm talking about, ignore it.
++
++	  If you compile this as a module, you can still override this
++	  value using the module parameters.
++
++#
++# Single character line display section
++#
++config LINEDISP
++	tristate "Character line display core support" if COMPILE_TEST
++	help
++	  This is the core support for single-line character displays, to be
++	  selected by drivers that use it.
++
++config IMG_ASCII_LCD
++	tristate "Imagination Technologies ASCII LCD Display"
++	depends on HAS_IOMEM
++	default y if MIPS_MALTA
++	select MFD_SYSCON
++	select LINEDISP
++	help
++	  Enable this to support the simple ASCII LCD displays found on
++	  development boards such as the MIPS Boston, MIPS Malta & MIPS SEAD3
++	  from Imagination Technologies.
++
++config HT16K33
++	tristate "Holtek Ht16K33 LED controller with keyscan"
++	depends on FB && I2C && INPUT
++	select FB_SYSMEM_HELPERS
++	select INPUT_MATRIXKMAP
++	select FB_BACKLIGHT
++	select NEW_LEDS
++	select LEDS_CLASS
++	select LINEDISP
++	help
++	  Say yes here to add support for Holtek HT16K33, RAM mapping 16*8
++	  LED controller driver with keyscan.
++
++config MAX6959
++	tristate "Maxim MAX6958/6959 7-segment LED controller"
++	depends on I2C
++	select REGMAP_I2C
++	select LINEDISP
++	help
++	  If you say yes here you get support for the following Maxim chips
++	  (I2C 7-segment LED display controller):
++	  - MAX6958
++	  - MAX6959 (input support)
++
++	  This driver can also be built as a module. If so, the module
++	  will be called max6959.
++
++config SEG_LED_GPIO
++	tristate "Generic 7-segment LED display"
++	depends on GPIOLIB || COMPILE_TEST
++	select LINEDISP
++	help
++	  This driver supports a generic 7-segment LED display made up
++	  of GPIO pins connected to the individual segments.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called seg-led-gpio.
++
++#
++# Character LCD with non-conforming interface section
++#
++config ARM_CHARLCD
++	bool "ARM Ltd. Character LCD Driver"
++	depends on PLAT_VERSATILE
++	help
++	  This is a driver for the character LCD found on the ARM Ltd.
++	  Versatile and RealView Platform Baseboards. It doesn't do
++	  very much more than display the text "ARM Linux" on the first
++	  line and the Linux version on the second line, but that's
++	  still useful.
++
+ endif # AUXDISPLAY
+ 
++#
++# Deprecated options
++#
+ config PANEL
+ 	tristate "Parallel port LCD/Keypad Panel support (OLD OPTION)"
+ 	depends on PARPORT
+diff --git a/drivers/auxdisplay/Makefile b/drivers/auxdisplay/Makefile
+index 4a8ea41b0550..f5c13ed1cd4f 100644
+--- a/drivers/auxdisplay/Makefile
++++ b/drivers/auxdisplay/Makefile
+@@ -3,16 +3,16 @@
+ # Makefile for the kernel auxiliary displays device drivers.
+ #
+ 
++obj-$(CONFIG_ARM_CHARLCD)	+= arm-charlcd.o
++obj-$(CONFIG_CFAG12864B)	+= cfag12864b.o cfag12864bfb.o
+ obj-$(CONFIG_CHARLCD)		+= charlcd.o
+ obj-$(CONFIG_HD44780_COMMON)	+= hd44780_common.o
+-obj-$(CONFIG_ARM_CHARLCD)	+= arm-charlcd.o
+-obj-$(CONFIG_KS0108)		+= ks0108.o
+-obj-$(CONFIG_CFAG12864B)	+= cfag12864b.o cfag12864bfb.o
+-obj-$(CONFIG_IMG_ASCII_LCD)	+= img-ascii-lcd.o
+ obj-$(CONFIG_HD44780)		+= hd44780.o
+ obj-$(CONFIG_HT16K33)		+= ht16k33.o
+-obj-$(CONFIG_PARPORT_PANEL)	+= panel.o
++obj-$(CONFIG_IMG_ASCII_LCD)	+= img-ascii-lcd.o
++obj-$(CONFIG_KS0108)		+= ks0108.o
+ obj-$(CONFIG_LCD2S)		+= lcd2s.o
+ obj-$(CONFIG_LINEDISP)		+= line-display.o
+ obj-$(CONFIG_MAX6959)		+= max6959.o
++obj-$(CONFIG_PARPORT_PANEL)	+= panel.o
+ obj-$(CONFIG_SEG_LED_GPIO)	+= seg-led-gpio.o
 -- 
-2.43.0
+2.43.0.rc1.1.gbec44491f096
 
