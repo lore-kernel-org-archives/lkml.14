@@ -1,193 +1,102 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B824E128823
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 03:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B567E1292E6
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 03:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711424973; cv=none; b=I+5fA56xZPn9+CjZeC1ALuup7zkgqSz32rJpbOQaGkdMDeihvY3wH/syZ7PuZhlwMkPxVBoW7NaWa+OjcxKKFI6l9Zkd3C25l2I6uS09f0tOBf0SnCtTgBM1J6ap2ecZRw4I/QGYsSjaXWH9ThZr31j4eeRttPhLNaP9xZnXAgM=
+	t=1711425022; cv=none; b=OqyDTHWsb7j7rkKtqDRAehRlURIkPzMn26Tl2FpkY7SAAzB/kHpPVMcPWzFxdYe5ZdPb7jp06rUq+tqzAW3Ye9UOckOHXJTd4xWnpSf5QnjkWt8ZYLMiNYSFtQ5xHt84uQvtz26VIlV/Lg0Xu/MSZTSgEejBRKYdseqAl/wuWUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711424973; c=relaxed/simple;
-	bh=WOA0jjSHA8PSWAbj27+clOuIsbbUO3Vmsfst/KpUulY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TpZON6Bx3v/AE8GpfycUBpOXGMlGUcEaAlOuyOCpYfDZOOf+7E7KEt/LaKQtI2EaZrZmJvuUNWFSmBluZUB4PJ/AezZhZnDFFSSlAElOU2tUZOdR/UnBaRPs7zz5IDD1Hz/H8Tp03C1FSMrjESXdD2ZKzRgV2xD813aTWhX794s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=FE8d599P; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1711425022; c=relaxed/simple;
+	bh=bctQBJg26saGhxU9s8UlkMFaCikEYQsmHPO5D2q9/BE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=rLvMHGlVaVYwihgvhsLCqHkKiwph5XikeQsoJgXcrWHUi4GyTJEdchIcinx0zs7fAGsh+Lt/QoXa5/QyAwLtaQijyYH6Nrh9kMmgSpZhS2iHOLvrDNeFiaAe9mO8oKKH8YzS7tqaNpRgU3qj2wBn6W8IHP6CMdHJm/Oq4tLJIRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org; spf=none smtp.mailfrom=jookia.org; dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b=pGuva+Ua; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=jookia.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="FE8d599P"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a46cd9e7fcaso596296066b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 20:49:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1711424970; x=1712029770; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=VIHIysdOPquKQ4BdUP2bPIlHtyK3i5gWkh5V6JlSRrw=;
-        b=FE8d599PqO0mz5TCcNqoIgT5rWumW+8LqUSdbgCz3ZRWsd6mohEgWV4g5rauZKVVEW
-         spAMeRFPzXqZl0+WPUIjFzjPqdyMOcKxdu1Kk+mxa2EXHLZwSL9w9mPNneW6pnRPUjEe
-         NH53LL5tBqVf4Tkzp0XFZPqC/jg4fTq0Du7cc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711424970; x=1712029770;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VIHIysdOPquKQ4BdUP2bPIlHtyK3i5gWkh5V6JlSRrw=;
-        b=RJEkqYOZx6d9xTPImxsJ/t5WVnukdpz9azHFrOwh8Z6tZu368i3lmXqIwUQmJfA2/2
-         Fwoc6PUAIwiTvTgjBaMNKd3nOQpKbfpYTfOXE97czT028SZPjvVQRaNVLdeYnK0HrCLh
-         sRaKW9N7+dxjEkrd20yNBx1yojbPu7pZI7kvPJzKbWOIbvFEXpvgVaCWFBzj5m1VeAc4
-         DvxVawXYvnhcfgCWdn9erdqnLOPbZo9Dp66OTWxKScsbOlEnhaKVQm9aox5hGopdPORj
-         2Hd73MRqsLwfDhe0Hz0nOGQs6DJ4iXxktCOOaqzN5Che1TP77MCepiH6qKeD1exYxt0o
-         hvdA==
-X-Forwarded-Encrypted: i=1; AJvYcCV7YNDrEtl+BjQD4FPSXWHQk8MB8O+DWx2C7D426djYxNEmEOu17WM3/bmrjWUYh70iFOo2t3lbvsOMYWAwEe+N4EwvpiXuZNK4QB2M
-X-Gm-Message-State: AOJu0Yz/Wv3k0Rkxn/q2OKpAPilKBo11xQOlaCbaEQhjQC2uajbQ/NWa
-	3l3TUNIbQudaddtVG7PwrjUVFNu8KGwGZD3WTxxIog2nB8/fX+x/FcuCXG7alHWKGnM+G6UDKIv
-	W+kF12Q==
-X-Google-Smtp-Source: AGHT+IHLOJB0MM3rwZ/9Gt6I5zOitf6sfbNZrIm7yZkaF4eSBfywSkk9KLFP8y32NDGOTLpAxhtI7Q==
-X-Received: by 2002:a17:906:4541:b0:a46:cf63:d96b with SMTP id s1-20020a170906454100b00a46cf63d96bmr6381007ejq.51.1711424969644;
-        Mon, 25 Mar 2024 20:49:29 -0700 (PDT)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id bl1-20020a170906c24100b00a46bed423a0sm3720251ejb.23.2024.03.25.20.49.28
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 20:49:28 -0700 (PDT)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a45f257b81fso584715166b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 20:49:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVlMfzUGznYOsf9Snfg5qkGUrAZJEBZUDcybdHJg//H0+MODQBHfotqIfJgheVNfzZDn8vWK1UrKWuuIW/pIBJOc8VYYTUD7BYwrTZ/
-X-Received: by 2002:a17:907:9722:b0:a47:48b0:922e with SMTP id
- jg34-20020a170907972200b00a4748b0922emr6654391ejc.23.1711424968017; Mon, 25
- Mar 2024 20:49:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b="pGuva+Ua"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jookia.org; s=key1;
+	t=1711425015;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=K9DFWcbSfaZCwj5K7OSlhvorCFoj07hKTzCP89IkAuA=;
+	b=pGuva+Uac4faL7cAdCOY51vt/AXVNR2AT7b/EsX4N4yx/vjM89RFH1EEGcZEH3zMLII4uc
+	TjKqbTX5GMWpmnIwbTrYuFNoBJ8SUxqFrqqbVFV0+l8METXSuEqMA6M42TLXNwhdaiWdAY
+	Av5q49y28YcZH/DQjgS3sFS8Gyk8SfXrm6AAV7KVVVTzMwzBxXceC4aOIvf3qaY5138gbf
+	MZa127VUNTNK1SaSmrOgEos5/JqP/knJyjS1MPKY8nKIX7BttNhgCo5V0dTlRIjZb/1MEx
+	TcPZX/JVDZ13nGn2bkb7MCCcvZyz30/vPq+MXSqnnQa+kbbrAwfOCLymn9bX2A==
+From: John Watts <contact@jookia.org>
+Date: Tue, 26 Mar 2024 14:50:03 +1100
+Subject: [PATCH] ASoC: sunxi: sun4i-i2s: Enable 32-bit audio formats
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240322233838.868874-1-boqun.feng@gmail.com> <s2jeqq22n5ef5jknaps37mfdjvuqrns4w7i22qp2r7r4bzjqs2@my3eyxoa3pl3>
- <CAHk-=whY5A=S=bLwCFL=043DoR0TTgSDUmfPDx2rXhkk3KANPQ@mail.gmail.com>
- <u2suttqa4c423q4ojehbucaxsm6wguqtgouj7vudp55jmuivq3@okzfgryarwnv>
- <CAHk-=whkQk=zq5XiMcaU3xj4v69+jyoP-y6Sywhq-TvxSSvfEA@mail.gmail.com>
- <c51227c9a4103ad1de43fc3cda5396b1196c31d7.camel@redhat.com>
- <CAHk-=wjP1i014DGPKTsAC6TpByC3xeNHDjVA4E4gsnzUgJBYBQ@mail.gmail.com>
- <bu3seu56hfozsvgpdqjarbdkqo3lsjfc4lhluk5oj456xmrjc7@lfbbjxuf4rpv>
- <CAHk-=wgLGWBXvNODAkzkVHEj7zrrnTq_hzMft62nKNkaL89ZGQ@mail.gmail.com> <ZgIRXL5YM2AwBD0Y@gallifrey>
-In-Reply-To: <ZgIRXL5YM2AwBD0Y@gallifrey>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 25 Mar 2024 20:49:11 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjwxKD9CxYsf5x+K5fJbJa_JYZh1eKB4PT5cZJq1+foGw@mail.gmail.com>
-Message-ID: <CAHk-=wjwxKD9CxYsf5x+K5fJbJa_JYZh1eKB4PT5cZJq1+foGw@mail.gmail.com>
-Subject: Re: [WIP 0/3] Memory model and atomic API in Rust
-To: "Dr. David Alan Gilbert" <dave@treblig.org>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>, Philipp Stanner <pstanner@redhat.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
-	llvm@lists.linux.dev, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, Alan Stern <stern@rowland.harvard.edu>, 
-	Andrea Parri <parri.andrea@gmail.com>, Will Deacon <will@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Nicholas Piggin <npiggin@gmail.com>, 
-	David Howells <dhowells@redhat.com>, Jade Alglave <j.alglave@ucl.ac.uk>, 
-	Luc Maranget <luc.maranget@inria.fr>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Akira Yokosawa <akiyks@gmail.com>, Daniel Lustig <dlustig@nvidia.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, kent.overstreet@gmail.com, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, elver@google.com, 
-	Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240326-sunxi_s32-v1-1-899f71dcb1e6@jookia.org>
+X-B4-Tracking: v=1; b=H4sIAOpFAmYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDYyMz3eLSvIrM+GJjI900o8QkI9Mki1QzCwsloPqCotS0zAqwWdGxtbU
+ AUQ+OeVsAAAA=
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>
+Cc: linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ John Watts <contact@jookia.org>
+X-Developer-Signature: v=1; a=openssh-sha256; t=1711425003; l=1320;
+ i=contact@jookia.org; h=from:subject:message-id;
+ bh=bctQBJg26saGhxU9s8UlkMFaCikEYQsmHPO5D2q9/BE=;
+ b=U1NIU0lHAAAAAQAAAEoAAAAac2stc3NoLWVkMjU1MTlAb3BlbnNzaC5jb20AAAAgpGuA3uho2
+ 8zVxm554DVLHyl4gq5/nBHglU5WIWN8/zYAAAAEc3NoOgAAAAZwYXRhdHQAAAAAAAAABnNoYTUx
+ MgAAAGcAAAAac2stc3NoLWVkMjU1MTlAb3BlbnNzaC5jb20AAABAWWEuABqUeoiIQmUDevKLBIs
+ 55txNImjUfXyzNdEM4lMfiVhlRL7Fz/dVUvLSegPOrhOchxP+1vRLZ0uIkvZMDQUAAOcU
+X-Developer-Key: i=contact@jookia.org; a=openssh;
+ fpr=SHA256:6LBQmZH5u7i/edmEZXzCTwCrpSevs/ZshZxNmlD1thY
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 25 Mar 2024 at 17:05, Dr. David Alan Gilbert <dave@treblig.org> wrote:
->
-> Isn't one of the aims of the Rust/C++ idea that you can't forget to access
-> a shared piece of data atomically?
+The I2S driver already supports and checks for 32-bit sample sizes,
+so indicate this size is available for use in the DAI driver.
 
-If that is an aim, it's a really *bad* one.
+This change has been tested on the T113-S3, but it should work just
+fine on older hardware as get_sr checks for sample size support
+correctly according to each core's datasheet.
 
-Really.
+Signed-off-by: John Watts <contact@jookia.org>
+---
+This patch enables support for 32-bit audio in the sunxi I2S driver.
 
-It very much should never have been an aim, and I hope it wasn't. I
-think, and hope, that the source of the C++ and Rust bad decisions is
-cluelessness, not active malice.
+I have only tested this on the Allwinner T113 but I'm fairly
+certain it will work on older boards.
+---
+ sound/soc/sunxi/sun4i-i2s.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Take Rust - one big point of Rust is the whole "safe" thing, but it's
-very much not a straightjacket like Pascal was. There's a "safe" part
-to Rust, but equally importantly, there's also the "unsafe" part to
-Rust.
+diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+index a736f632bf0b..aeea852141c1 100644
+--- a/sound/soc/sunxi/sun4i-i2s.c
++++ b/sound/soc/sunxi/sun4i-i2s.c
+@@ -1103,7 +1103,8 @@ static const struct snd_soc_dai_ops sun4i_i2s_dai_ops = {
+ 
+ #define SUN4I_FORMATS	(SNDRV_PCM_FMTBIT_S16_LE | \
+ 			 SNDRV_PCM_FMTBIT_S20_LE | \
+-			 SNDRV_PCM_FMTBIT_S24_LE)
++			 SNDRV_PCM_FMTBIT_S24_LE | \
++			 SNDRV_PCM_FMTBIT_S32_LE)
+ 
+ static struct snd_soc_dai_driver sun4i_i2s_dai = {
+ 	.capture = {
 
-The safe part is the one that most programmers are supposed to use.
-It's the one that allows you to not have to worry too much about
-things. It's the part that makes it much harder to screw up.
+---
+base-commit: 72fb52fb0ac44b6a1edd9bc390e44bce3acccd26
+change-id: 20240326-sunxi_s32-f2ab25b8e688
 
-But the *unsafe* part is what makes Rust powerful. It's the part that
-works behind the curtain. It's the part that may be needed to make the
-safe parts *work*.
+Best regards,
+-- 
+John Watts <contact@jookia.org>
 
-And yes, an application programmer might never actually need to use
-it, and in fact in many projects the rule might be that unsafe Rust is
-simply never even an option - but that doesn't mean that the unsafe
-parts don't exist.
-
-Because those unsafe parts are needed to make it all work in reality.
-
-And you should never EVER base your whole design around the "safe"
-part. Then you get a language that is a straight-jacket.
-
-So I'd very strongly argue that the core atomics should be done the
-"unsafe" way - allow people to specify exactly when they want exactly
-what access. Allow people to mix and match and have overlapping
-partial aliases, because if you implement things like locking, you
-*need* those partially aliasing accesses, and you need to make
-overlapping atomics where sometimes you access only one part of the
-field.
-
-And yes, that will be unsafe, and it might even be unportable, but
-it's exactly the kind of thing you need in order to avoid having to
-use assembly language to do your locking.
-
-And by all means, you should relegate that to the "unsafe corner" of
-the language. And maybe don't talk about the unsafe sharp edges in the
-first chapter of the book about the language.
-
-But you should _start_ the design of your language memory model around
-the unsafe "raw atomic access operations" model.
-
-Then you can use those strictly more powerful operations, and you
-create an object model *around* it.
-
-So you create safe objects like just an atomic counter. In *that*
-corner of the language, you have the "safe atomics" - they aren't the
-fundamental implementation, but they are the safe wrappers *around*
-the more powerful (but unsafe) core.
-
-With that "atomic counter" you cannot forget to do atomic accesses,
-because that safe corner of the world doesn't _have_ anything but the
-safe atomic accesses for every time you use the object.
-
-See? Having the capability to do powerful and maybe unsafe things does
-not force people to expose and use all that power. You can - and
-should - wrap the powerful model with safer and simpler interfaces.
-
-This isn't something specific to atomics. Not even remotely. This is
-quite fundamental. You often literally _cannot_ do interesting things
-using only safe interfaces. You want safe memory allocations - but to
-actually write the allocator itself, you want to have all those unsafe
-escape methods - all those raw pointers with arbitrary arithmetic etc.
-
-And if you don't have unsafe escapes, you end up doing what so many
-languages did: the libraries are written in something more powerful
-like C, because C literally can do things that other languages
-*cannot* do.
-
-Don't let people fool you with talk about Turing machines and similar
-smoke-and-mirror garbage. It's a bedtime story for first-year CS
-students. It's not true.
-
-Not all languages are created equal. Not all languages can do the same
-things. If your language doesn't have those unsafe escapes, your
-language is inherently weaker, and inherently worse for it.
-
-           Linus
