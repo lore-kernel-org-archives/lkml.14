@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCED512AAF6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE9D12AAF3
 	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 21:10:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711487429; cv=none; b=rg+94xAKdJT6wMyMaZn19J5ECGPIVvcSCaow75ijN5+CIemyRYgZaMCMd+/6+M8P2Kah0HdwCFLZDYe8iGYJ/WkXKm4NxJWrl+XnxUOfv4W/4NoGqQpnBKcry/VO4mV3EdhbQSZkAxptatnSbeV9kPLJI/Vh1TJZeYuPkJIiz4w=
+	t=1711487429; cv=none; b=nEAwdT8sPgK15kU63DbH3dhGu2hWTZNipqRpDJQ2KN052LHWML1p7a0xSH90k13fmCXSPI6gmQbjhHW6IUjoFwlGwstOFo6fUoVzj4y0/gZ/Oqtu8snF+6uFnbLs/hn1aoM/VmAZO7P0sSGjMj5vJmGsyTWawz5hmZ/Ipoa34Ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711487429; c=relaxed/simple;
-	bh=8saIACrfy8QISx9H5ksI6D7YCNwsbcZUSnWbjaAtbqM=;
+	bh=SboH/0hyVW3B3ksnsDhHW9j/7t4aFvMtUDl7w8vJNLY=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=lxbs17DB8OBcR5udz5ySfB3b72w89OAbkgPu/IBxtqMnDDBhC6fkyW7f2+CADZC/UEdTE8kSvcLPNdMlirK9iCPu2s40G2jrZmmnsMkyAeszYy8fKi5mMwVhwCBJt2lbx79AYhC6iYTzu9nGW8fR6bpNS4GwcbMO2mgAoNnkMko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M3seXFDp; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=tNVc2ICs4xUv6BS6Iik+uHlndkq8Jlis2lamHks4PGY64pIRaDuqtb350e+roEzXAPCXIav4pTva3loD8BI6yDG7NHNVVsOChmily3wDi+KRAzJyItxPa0M8jx83ofb+mQ4JBysTNYs8g+V/xsFUOjVDcx0/XfXf2rpSMQJIgDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NRScKgcT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M3seXFDp"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7369AC43390;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NRScKgcT"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7CF0BC43399;
 	Tue, 26 Mar 2024 21:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1711487429;
-	bh=8saIACrfy8QISx9H5ksI6D7YCNwsbcZUSnWbjaAtbqM=;
+	bh=SboH/0hyVW3B3ksnsDhHW9j/7t4aFvMtUDl7w8vJNLY=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=M3seXFDpvNLKmEGfVcZqvJDXhGH0EYOKu6uBnUfgsCq8ev+H/YxRQ++NfDtioFlaL
-	 BPOMPhMeOYOCh4joZfb3mKZRVcCM1qIVhskBmd2IQJq2Vuddwn/szMYPz86bSgU75b
-	 c64R9NaTUy/5DVx16cCAaaFRMjo6WVLrvz4xGu4kJpQJCT+muyExdCMLcwTE+o3RxM
-	 frj6Y3OB3Q7PM53mTFU5gesfMfHE9eIk4TRC4BbQIz4t7cSnj4Ij+cgq/Tkge8x0QR
-	 A+B5Asbm2mcJkWEBqzT94yq6XWFh3dObj3+Vp/3oYAMW/T+oekYZ9fYFOJPNzf9H7f
-	 1LYM2C2LYFeVg==
+	b=NRScKgcTknA+A3TXBJHEmBkorPQ7Am9bUTOF0MfmYbKYjUy/j00JAypltFGB1Gf08
+	 9gPMk+PyGlynA19kHDVdvpsDdwTVY4kTdRYpUumezsrkpm+GzK+vYqdL40OH9IoUw5
+	 muxR1DyU6isBhVQM6KM8kI7bquofImO8heLVkixaCOEAV7Tpg4N7nv14MVSx15y4XM
+	 zRx6RrNb5KXbnc+V8WS2Xklzyev2oHQ/MTpcTsgqbP+JdUo+n4JkkLTWRp3ZHCJ4+W
+	 aYJSKmNjWv94HS2kqjbbep6Xi3G7xhRDbT7NVXQZDjMfpl+LyjPLqt6VjYqYACYu6X
+	 mUTlt55qEJn3Q==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 63A58D95063;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6D929D95062;
 	Tue, 26 Mar 2024 21:10:29 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,38 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv: hwprobe: do not produce frtace relocation
+Subject: Re: [PATCH] riscv: mm: Fix prototype to avoid discarding const
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <171148742940.11448.3731153346859499014.git-patchwork-notify@kernel.org>
+ <171148742944.11448.2500869883007069793.git-patchwork-notify@kernel.org>
 Date: Tue, 26 Mar 2024 21:10:29 +0000
-References: <20240313085843.17661-1-vladimir.isaev@syntacore.com>
-In-Reply-To: <20240313085843.17661-1-vladimir.isaev@syntacore.com>
-To: Vladimir Isaev <vladimir.isaev@syntacore.com>
-Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, catalin.marinas@arm.com,
- evan@rivosinc.com, nicolas@fjasle.eu, tglx@linutronix.de,
- samitolvanen@google.com, masahiroy@kernel.org, maskray@google.com,
- linux-kernel@vger.kernel.org, guoren@kernel.org, roman.artemev@syntacore.com
+References: <20240301201837.2826172-1-samuel.holland@sifive.com>
+In-Reply-To: <20240301201837.2826172-1-samuel.holland@sifive.com>
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: linux-riscv@lists.infradead.org, aou@eecs.berkeley.edu,
+ alexghiti@rivosinc.com, ajones@ventanamicro.com, apatel@ventanamicro.com,
+ dylan@andestech.com, jszhang@kernel.org, palmer@dabbelt.com,
+ paul.walmsley@sifive.com, sergey.matyukevich@syntacore.com,
+ linux-kernel@vger.kernel.org
 
 Hello:
 
 This patch was applied to riscv/linux.git (fixes)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Wed, 13 Mar 2024 10:35:46 +0300 you wrote:
-> Such relocation causes crash of android linker similar to one
-> described in commit e05d57dcb8c7
-> ("riscv: Fixup __vdso_gettimeofday broke dynamic ftrace").
+On Fri,  1 Mar 2024 12:18:32 -0800 you wrote:
+> __flush_tlb_range() does not modify the provided cpumask, so its cmask
+> parameter can be pointer-to-const. This avoids the unsafe cast of
+> cpu_online_mask.
 > 
-> Looks like this relocation is added by CONFIG_DYNAMIC_FTRACE which is
-> disabled in the default android kernel.
+> Fixes: 54d7431af73e ("riscv: Add support for BATCHED_UNMAP_TLB_FLUSH")
+> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 > 
 > [...]
 
 Here is the summary with links:
-  - riscv: hwprobe: do not produce frtace relocation
-    https://git.kernel.org/riscv/c/ad14f7ca9f0d
+  - riscv: mm: Fix prototype to avoid discarding const
+    https://git.kernel.org/riscv/c/674bc0168e6b
 
 You are awesome, thank you!
 -- 
