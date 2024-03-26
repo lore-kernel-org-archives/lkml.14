@@ -1,134 +1,149 @@
-Received: from mo-csw-fb.securemx.jp (mo-csw-fb1120.securemx.jp [210.130.202.128])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 350511804F;
-	Tue, 26 Mar 2024 12:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8E56BFD4;
+	Tue, 26 Mar 2024 12:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711455319; cv=none; b=oxF6tWHuoR16cSGlg2JMt6KNxF3C3mnyMBf8lKGZ+4VlFugx8K65NG6PLV44lBjaJD8AfuV6yzpXvBEY7Dmmi18b6M+NLKHlsry2YmQcdFabVt4+Xob1/yN07mW3NdKDn4YN0WYxcYFCOijhv9Z+ghhMHckYrAYGCRAe2zBQjuM=
+	t=1711455367; cv=none; b=adrSxmzd3lCYNnynkYg9Af3kiPKrXD5YoXZZx+9zozs/OdBtWGSbAjXyRYkkwvDvQxMQZ481GfS7RJP8DSdRKn8nxHyJ2NYuCXXTdg2IpRCWbPuoqOfYfCkJS3tQ+LGZY8SlpqtqYI0uSfkaQJmbRfBRgJExKqQIGg7pOZycsRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711455319; c=relaxed/simple;
-	bh=7GKEcD8lRU98zTCcjYmD6skL4kJppLGyorf7w2xZPcQ=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=AeL5/MOBnoAsp1YCNnRHIOCrevWpvSxfsOJBdBNvVN0XYVWIx8kQ/urrMd7K24XuaQj/kE5ho+WHSYO5E1QijZ5+bule3mhA/Bvm7xVQ3PzLVB4G9XQSOEndeQeltBim1+RAfpJyF52SWKlT2XJ0Fw5NeKuE1CtjKm4nSqfhiRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kioxia.com; spf=pass smtp.mailfrom=kioxia.com; arc=none smtp.client-ip=210.130.202.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kioxia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kioxia.com
-Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1120) id 42QATmXK671698; Tue, 26 Mar 2024 19:29:48 +0900
-Received: by mo-csw.securemx.jp (mx-mo-csw1120) id 42QATXKa2209272; Tue, 26 Mar 2024 19:29:33 +0900
-X-Iguazu-Qid: 2rWgQ8FBVvU2Je3XjI
-X-Iguazu-QSIG: v=2; s=0; t=1711448972; q=2rWgQ8FBVvU2Je3XjI; m=CbOMDN9j+hbog7p/aMHarUVt7cTJKkxEtg07Zdph4ek=
-Received: from CNN1EMTA03.test.kioxia.com ([202.248.33.144])
-	by relay.securemx.jp (mx-mr1123) id 42QATWjE2317794
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 26 Mar 2024 19:29:32 +0900
-Received: from Switcher-Post_Send (gateway [10.232.20.1])
-	by CNN1EMTA03.test.kioxia.com (Postfix) with ESMTP id 0C4A232440;
-	Tue, 26 Mar 2024 19:29:32 +0900 (JST)
-Received: from CNN1ESTR03.kioxia.com (localhost [127.0.0.1])
-	by Switcher-Post_Send (Postfix) with ESMTP id 86A391938D7203;
-	Tue, 26 Mar 2024 19:08:05 +0900 (JST)
-Received: from localhost [127.0.0.1] 
-	 by CNN1ESTR03.kioxia.com with ESMTP id 0002VAAAAAA012AM;
-	 Tue, 26 Mar 2024 19:08:05 +0900
-Received: from CNN1EXMB02.r1.kioxia.com (CNN1EXMB02.r1.kioxia.com [10.232.20.151])
-	by Switcher-Pre_Send (Postfix) with ESMTP id 7B8ABA035DC28;
-	Tue, 26 Mar 2024 19:08:05 +0900 (JST)
-Received: from CNN1EXMB03.r1.kioxia.com (10.232.20.152) by
- CNN1EXMB02.r1.kioxia.com (10.232.20.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 26 Mar 2024 19:29:31 +0900
-Received: from CNN1EXMB03.r1.kioxia.com ([10.13.100.22]) by
- CNN1EXMB03.r1.kioxia.com ([10.13.100.22]) with mapi id 15.01.2507.035; Tue,
- 26 Mar 2024 19:29:31 +0900
-From: tada keisuke <keisuke1.tada@kioxia.com>
-To: "song@kernel.org" <song@kernel.org>,
-        "yukuai3@huawei.com"
-	<yukuai3@huawei.com>
-CC: "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH 04/11] md: minimize execution of zero check for nr_pending
-Thread-Topic: [PATCH 04/11] md: minimize execution of zero check for
- nr_pending
-Thread-Index: Adp/ZCwIEaSNdvzYSU+n+frmE556SA==
-Date: Tue, 26 Mar 2024 10:29:31 +0000
-Message-ID: <5319159bd74f4c4c9979c748b216b2f8@kioxia.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tm-as-product-ver: ISME-14.0.0.2080-9.0.1002-28274.000
-x-tm-as-result: No-10--5.659600-8.000000
-x-tmase-matchedrid: 5V0fm+sVFB2magT1k9kBpgrcxrzwsv5uXPK9y3z82GtXGTbsQqHbkmzE
-	TQ7/otyjd+FThkXYawcVNmOCBj98YKZY4PxfRMWETuctSpiuWyUUi4Ehat05499RlPzeVuQQB4x
-	q6g7kDalvF9oQ/B54yGPKQgbIX4yuFdV6KRtQicSkkQPcJHKMT+ovpkXHOUFXv1l2Uvx6idpqHX
-	ONfTwSQsRB0bsfrpPIFT1PBs+MVY3ocuK7+JBlJC5g7R642iP7Sqy+Sk/9UVNHtFfvh1y31yo9L
-	wbibKKfG/fqr4pTSlM=
-x-tm-as-user-approved-sender: No
-x-tm-as-user-blocked-sender: No
-x-tmase-result: 10--5.659600-8.000000
-x-tmase-version: ISME-14.0.0.2080-9.0.1002-28274.000
-x-tm-snts-smtp: 9B2049F3415A909983D745DE68787A79943D7C77A482092E0C8205982E682B572000:8
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1711455367; c=relaxed/simple;
+	bh=XcYTGNUP0d/t/YLHu//d62nSyNh2driN4jDgcinv76U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=PSEnMzAv0MfLWUG18j5TW44K8bWEhGfHnjeMNliqTnTjOrVzgbCkjZkNNZ1b01H2Jpvb7zszZrQIokp5t0EzsA1cTiXOKJD9gmxQ7OE/Pk37qAJDnhhndxQaBTSn2o4rXv9bjUXU/90KosM0usyUBl67fsYbxX+BX4L3Yjkmifg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N590jXAm; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N590jXAm"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-513d599dbabso7106272e87.1;
+        Tue, 26 Mar 2024 05:16:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711455363; x=1712060163; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JDPy0oZRU/yyYmSQH7wJjbHAam1AVRGf91TfaaWf3iM=;
+        b=N590jXAmZUzpHhWCgaawb5SA82m97+4hvJJ8aTQb0eNs1Mj2wP3i9vkDKNw4jQQ5u5
+         mb3G8W77wt9Lu/V5O9sMP1yNMnrEdGOqKcTDW0jj7aaIMFFyy/ILlXYOsud8hOcQemfT
+         5HyLCdAPUBUEyhwbXw3VjD1atWtvsGzbPka9GEWk+ISQ656GUQNXTR2d0nfA964Dl2yG
+         3HM6+FGEONRInOJWoKZtzFPR+ZWupIzXCwtZvNxGjTrChicNuG8bJ6nl/ydhibZTVmI/
+         9dvRy6Bnm+M+AmfzmFCxHOw+XwN31ows3KiQbBTY1GOePHX3TBdRFNHdlsJEjb0NCL8U
+         KyQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711455363; x=1712060163;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JDPy0oZRU/yyYmSQH7wJjbHAam1AVRGf91TfaaWf3iM=;
+        b=QRIjaaBvUjDQRitcUcEBtzS7HUsoWBVmRIjBBw6Vk2mx+zvOO8llwUos5lmSp5Kq7U
+         u4wJJ8koOC9Vh4KyTmqVT29VTFYOlDwzBKvMJX50Ush0hWa2LeaVSMDBCsyHzQkrMtrn
+         MLCNNkoWjbpWNGAmoBQf1IsP24d1VI0cVYiW7V4tzeXSXWXXbg7f/qG2OgTOj2upBahh
+         oIpaGrlwlMHaAKKtndm2ydda70K94BgK+n0BDjzEXwvB53rpKyFVMGC+Wp6zWbzqXHiH
+         US8Wralv+zl6jdPWONL5+H0g6/7twOhRKTwNmAztlpHJ+W41mzb6Kx4EXBSsd/sDpEiN
+         eM6A==
+X-Forwarded-Encrypted: i=1; AJvYcCXwD4juMiwRGwS3iNhnk1c4Hmtv/WepoZrEnLkU7V2r5E/7KXFOIUtKjr7f/WIA05BMXGzqMaYxtSoALJmqkVCRLTul6J+JI75HuagdWtp4oeASWoxW709/BwSXaiaIhqb34pak2wsQesk8F0cl18P/4YjUf5eBKMLYK9ymcfSS
+X-Gm-Message-State: AOJu0YzC7PaTNWQogtbxTguzeDLaZ8vZ0LyoL6o5355WOjCd0OUrJiin
+	2CtENmJ63FC5wdJTIetcxfIPgzn3ciTqaRqjhp04J2+1OErUd5qK
+X-Google-Smtp-Source: AGHT+IGm30vxu7t2G0cwSlNM3BcJUW4wMMIUuxjWdKbyljp5HFXxsVAW9BFsAWEaPWqZKYTzvO2nvQ==
+X-Received: by 2002:a19:430c:0:b0:515:9ee7:ce45 with SMTP id q12-20020a19430c000000b005159ee7ce45mr6522025lfa.49.1711455362846;
+        Tue, 26 Mar 2024 05:16:02 -0700 (PDT)
+Received: from [192.168.1.253] (57657817.catv.pool.telekom.hu. [87.101.120.23])
+        by smtp.googlemail.com with ESMTPSA id x18-20020adfffd2000000b0034181bea3b0sm12096616wrs.3.2024.03.26.05.16.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 05:16:02 -0700 (PDT)
+From: Gabor Juhos <j4g8y7@gmail.com>
+Date: Tue, 26 Mar 2024 13:15:51 +0100
+Subject: [PATCH v2] clk: qcom: clk-alpha-pll: fix rate setting for Stromer
+ PLLs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CrossPremisesHeadersFilteredBySendConnector: CNN1EXMB02.r1.kioxia.com
-X-OrganizationHeadersPreserved: CNN1EXMB02.r1.kioxia.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240326-alpha-pll-fix-stromer-set-rate-v2-1-48ae83af71c8@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAHa8AmYC/42NTQqDMBBGryKz7pT8qbSr3qO4iHbUQDRhEqRFv
+ HtTT9Dl+/h4b4dE7CjBvdqBaXPJhbWAulQwzHadCN2rMCihjNDKoPVxthi9x9G9MWUOCzEmysg
+ 2E5pW6bahRplRQJFEpvI7A8+u8OxSDvw5e5v8rX+rN4kSta570cu6VfL2mBbr/HUIC3THcXwBD
+ JLSg8wAAAA=
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, 
+ Varadarajan Narayanan <quic_varada@quicinc.com>, 
+ Sricharan R <quic_srichara@quicinc.com>, 
+ Kathiravan T <quic_kathirav@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+ Gabor Juhos <j4g8y7@gmail.com>
+X-Mailer: b4 0.13.0
 
-This patch depends on patch 02.
+The clk_alpha_pll_stromer_set_rate() function writes inproper
+values into the ALPHA_VAL{,_U} registers which results in wrong
+clock rates when the alpha value is used.
 
-The Faulty flag is required for the if statement to be true.
-A rdev in Faulty state does not issue I/O commands.
-So, nr_pending is also not increased.
-Therefore, decrement and zero check of nr_pending can be separated and stil=
-l be consistent.
+The broken behaviour can be seen on IPQ5018 for example, when
+dynamic scaling sets the CPU frequency to 800000 KHz. In this
+case the CPU cores are running only at 792031 KHz:
 
-Signed-off-by: Keisuke TADA <keisuke1.tada@kioxia.com>
-Signed-off-by: Toshifumi OHTAKE <toshifumi.ootake@kioxia.com>
+  # cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
+  800000
+  # cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq
+  792031
+
+This happens because the function ignores the fact that the alpha
+value calculated by the alpha_pll_round_rate() function is only
+32 bits wide which must be extended to 40 bits if it is used on
+a hardware which supports 40 bits wide values.
+
+Extend the clk_alpha_pll_stromer_set_rate() function to convert
+the alpha value to 40 bits before wrinting that into the registers
+in order to ensure that the hardware really uses the requested rate.
+
+After the change the CPU frequency is correct:
+
+  # cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
+  800000
+  # cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq
+  800000
+
+Cc: stable@vger.kernel.org
+Fixes: e47a4f55f240 ("clk: qcom: clk-alpha-pll: Add support for Stromer PLLs")
+Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
 ---
- drivers/md/md.h | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+Changes in v2:
+  - fix subject prefix
+  - rebase on v6.9-rc1
+  - Link to v1: https://lore.kernel.org/r/20240324-alpha-pll-fix-stromer-set-rate-v1-1-335b0b157219@gmail.com
 
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index b990be0981bc..ed7e36212d58 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -236,11 +236,6 @@ static inline unsigned int nr_pending_read(struct md_r=
-dev *rdev)
- 	return atomic_read(&rdev->nr_pending);
- }
-=20
--static inline bool nr_pending_dec_and_test(struct md_rdev *rdev)
--{
--	return atomic_dec_and_test(&rdev->nr_pending);
--}
--
- static inline int is_badblock(struct md_rdev *rdev, sector_t s, int sector=
-s,
- 			      sector_t *first_bad, int *bad_sectors)
- {
-@@ -875,9 +870,12 @@ static inline bool is_rdev_broken(struct md_rdev *rdev=
-)
- static inline void rdev_dec_pending(struct md_rdev *rdev, struct mddev *md=
-dev)
- {
- 	int faulty =3D test_bit(Faulty, &rdev->flags);
--	if (nr_pending_dec_and_test(rdev) && faulty) {
--		set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
--		md_wakeup_thread(mddev->thread);
-+	nr_pending_dec(rdev);
-+	if (faulty) {
-+		if (nr_pending_is_zero(rdev)) {
-+			set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
-+			md_wakeup_thread(mddev->thread);
-+		}
- 	}
- }
-=20
---=20
-2.34.1
+Depends on the following patch:
+  https://lore.kernel.org/r/20240315-apss-ipq-pll-ipq5018-hang-v2-1-6fe30ada2009@gmail.com
+---
+ drivers/clk/qcom/clk-alpha-pll.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
+index 8a412ef47e163..8e98198d4b4b6 100644
+--- a/drivers/clk/qcom/clk-alpha-pll.c
++++ b/drivers/clk/qcom/clk-alpha-pll.c
+@@ -2490,6 +2490,10 @@ static int clk_alpha_pll_stromer_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	rate = alpha_pll_round_rate(rate, prate, &l, &a, ALPHA_REG_BITWIDTH);
+ 
+ 	regmap_write(pll->clkr.regmap, PLL_L_VAL(pll), l);
++
++	if (ALPHA_REG_BITWIDTH > ALPHA_BITWIDTH)
++		a <<= ALPHA_REG_BITWIDTH - ALPHA_BITWIDTH;
++
+ 	regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL(pll), a);
+ 	regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL_U(pll),
+ 		     a >> ALPHA_BITWIDTH);
+
+---
+base-commit: 5eab983c5e31e5f0bf2d583731e320e21814d1b7
+change-id: 20240324-alpha-pll-fix-stromer-set-rate-472376e624f0
+
+Best regards,
+-- 
+Gabor Juhos <j4g8y7@gmail.com>
 
