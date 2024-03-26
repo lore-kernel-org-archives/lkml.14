@@ -1,53 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0456412AADB;
-	Tue, 26 Mar 2024 08:16:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5264B21A0D;
+	Tue, 26 Mar 2024 08:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711440979; cv=none; b=CUuOFFRFYi+O5Ria73UWk+e5X8Lli/LNBgiIw/eUydaOfhemN9k1+/vQ9ff11DqNgNJxQX+2ZWMfWYAWNQ7D1nNvChHfpWyJf+jiZ3IHNCwJKQUE07VYK5/h9/2TATVlcBwfgcYPZhqmcFnldgqk6TgXZv7ZySvwb3yNkHd72h8=
+	t=1711441098; cv=none; b=D7YaqpICqmZCzJCN+y1QJcw2oxI+RSGsUD4T/vXL4NsPTkjxMvgxajVdWbka/wkXiZNjfijzqkyT1OUCpSxZk1db/2p7ziRzgughgFoIcIQDY6EmUqyIfVCl38NFxw5oviOM6ZLrtg10drTOF8fedzYeLnhVp93QxrCBi1q7Lrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711440979; c=relaxed/simple;
-	bh=cfHV3so/oLbM3PTbry+d/EPObawsMb4Bf5kpaemSprk=;
+	s=arc-20240116; t=1711441098; c=relaxed/simple;
+	bh=M/XyZ/Z+QBR65BVhuTqcNZ0wsFkc0/b4T3XmpOmoruo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RBGdkkbHr/cFCV+eNtWGzTsdJwwj3VpLc6OPUo9e4AnPUmYgbKmSnVJHRGcfCH/YFQA3XlNEhaXQ5bCoEeiR4hSEebDNRgjyW7ANb1Ye1CDjo3boOSr/ByopJiLQsEYVmUJotQBrvvpRBr2aOBIlMyDJlUOMS/4tjs6AsUZKoQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DVd5tMVx; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=hRXac8ImZtchiBFk4thE9DtZXCGz9nJ+iZ2VjaeYwG9BqGmOL2ZeAWjYPI4BD7s5ROU5co9tCe0he4daCXctpFA914aj7cESYbzymcw3u5mfwLHmH/VOmGRBY8OYnTZxBBUatyzVYY52tPUzNu4UVFQDv5Xb30XHzhx5ASGq0l4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kc8a5xJ7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DVd5tMVx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711440977; x=1742976977;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=cfHV3so/oLbM3PTbry+d/EPObawsMb4Bf5kpaemSprk=;
-  b=DVd5tMVxZ6ZyvZLGyjYshZlSIrnjODBR0j35FKLth35S8zuwLEXICJMH
-   i0y5yyeNGfeM76nSB7+a8I/64e0UCB/ERv+JWokXcvqL1jMImduFDFEjX
-   G4cKHpx+MIC20c/O1aBZH7yxLSNIjSSOiTTgU66VoMAgr7DzVLZ0flFhn
-   wJCKzA3NbwJphzosTDjqWIHc5OGm+jQjVrf0RzT2qbPutbNfs028ocLYs
-   ig+e5+dxylMJnKZ12whF5wJyFAVecSZvZki6xGpdlm4OXM6MBJ+Wft2Ly
-   +ykoQI202+5hyh1SPbdmAPWPrwrS8eL09K9PkX/JRGuCeRe93OFwNtX7T
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="6370621"
-X-IronPort-AV: E=Sophos;i="6.07,155,1708416000"; 
-   d="scan'208";a="6370621"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 01:16:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,155,1708416000"; 
-   d="scan'208";a="20603139"
-Received: from liuzhao-optiplex-7080.sh.intel.com (HELO localhost) ([10.239.160.36])
-  by orviesa005.jf.intel.com with ESMTP; 26 Mar 2024 01:16:14 -0700
-Date: Tue, 26 Mar 2024 16:30:09 +0800
-From: Zhao Liu <zhao1.liu@intel.com>
-To: Thomas Huth <thuth@redhat.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-	Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: selftests: Use TAP in the steal_time test
-Message-ID: <ZgKHkd+qpE4XsiOI@intel.com>
-References: <20231019095900.450467-1-thuth@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kc8a5xJ7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3853C43390;
+	Tue, 26 Mar 2024 08:18:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711441097;
+	bh=M/XyZ/Z+QBR65BVhuTqcNZ0wsFkc0/b4T3XmpOmoruo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kc8a5xJ72UrCiowd/D+/6dcTC177LepbBe5CCJ1VxL9LDPvfQ1uiIDRKrd8vVGHNs
+	 CWrGENPXYaCH3rutS82h99rVzz5tjagR9ly/EH2o3hGrpdD4j81TEW0lmjnEJBvEQm
+	 n8cRshukS5TYFz/OLP3Pvo/u89AHfMKEPSb3Z4U5dc7lxLUJvtgKsfAzy1i2k/3VBj
+	 XM5ceIXvquQ217Vu0Gy9ohXxNrvAvfiuXgVcvPPbwQLLAC5ZN95aggYz3m/S4hHKqR
+	 YS9H1CkQilaVaw2Z7Bjw/t+7m/HVkwLjJ9XsJov0FFz5KHlNDJ2jakKXKccX+OgxMI
+	 ouqx8EWW71opQ==
+Date: Tue, 26 Mar 2024 01:18:16 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-crypto@vger.kernel.org, x86@kernel.org,
+	linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	"Chang S . Bae" <chang.seok.bae@intel.com>
+Subject: Re: [PATCH 1/6] x86: add kconfig symbols for assembler VAES and
+ VPCLMULQDQ support
+Message-ID: <20240326081816.GA431948@sol.localdomain>
+References: <20240326080305.402382-1-ebiggers@kernel.org>
+ <20240326080305.402382-2-ebiggers@kernel.org>
+ <ZgKC5dcqWSEkwuTX@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,25 +47,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231019095900.450467-1-thuth@redhat.com>
+In-Reply-To: <ZgKC5dcqWSEkwuTX@gmail.com>
 
-On Thu, Oct 19, 2023 at 11:59:00AM +0200, Thomas Huth wrote:
-> Date:   Thu, 19 Oct 2023 11:59:00 +0200
-> From: Thomas Huth <thuth@redhat.com>
-> Subject: [PATCH] KVM: selftests: Use TAP in the steal_time test
+On Tue, Mar 26, 2024 at 09:10:13AM +0100, Ingo Molnar wrote:
 > 
-> For easier use of the tests in automation and for having some
-> status information for the user while the test is running, let's
-> provide some TAP output in this test.
+> * Eric Biggers <ebiggers@kernel.org> wrote:
 > 
-> Signed-off-by: Thomas Huth <thuth@redhat.com>
-> ---
->  NB: This patch does not use the interface from kselftest_harness.h
->      since it is not very suitable for the for-loop in this patch.
+> > From: Eric Biggers <ebiggers@google.com>
+> > 
+> > Add config symbols AS_VAES and AS_VPCLMULQDQ that expose whether the
+> > assembler supports the vector AES and carryless multiplication
+> > cryptographic extensions.
+> > 
+> > Signed-off-by: Eric Biggers <ebiggers@google.com>
+> > ---
+> >  arch/x86/Kconfig.assembler | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> > 
+> > diff --git a/arch/x86/Kconfig.assembler b/arch/x86/Kconfig.assembler
+> > index 8ad41da301e5..59aedf32c4ea 100644
+> > --- a/arch/x86/Kconfig.assembler
+> > +++ b/arch/x86/Kconfig.assembler
+> > @@ -23,9 +23,19 @@ config AS_TPAUSE
+> >  config AS_GFNI
+> >  	def_bool $(as-instr,vgf2p8mulb %xmm0$(comma)%xmm1$(comma)%xmm2)
+> >  	help
+> >  	  Supported by binutils >= 2.30 and LLVM integrated assembler
+> >  
+> > +config AS_VAES
+> > +	def_bool $(as-instr,vaesenc %ymm0$(comma)%ymm1$(comma)%ymm2)
+> > +	help
+> > +	  Supported by binutils >= 2.30 and LLVM integrated assembler
 > 
->  tools/testing/selftests/kvm/steal_time.c | 46 ++++++++++++------------
->  1 file changed, 23 insertions(+), 23 deletions(-)
->
+> Nit: any reason it isn't called AS_VAESENC, like the instruction itself?
+> 
+> The other new AS_ Kconfig symbols follow the same nomenclature:
 
-Reviewed-by: Zhao Liu <zhao1.liu@intel.com>
+The CPU feature flag is called VAES.  It guards the vaesenc, vaesenclast,
+vaesdec, and vaesdeclast instructions when used on ymm and zmm registers.
 
+So the name AS_VAES seems fine as-is.
+
+I think you may have been confused by AS_VPCLMULQDQ, because in that case the
+feature happens to provides a single instruction with the same name as the CPU
+feature flag.
+
+- Eric
