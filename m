@@ -1,64 +1,67 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2103.outbound.protection.outlook.com [40.107.93.103])
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2104.outbound.protection.outlook.com [40.107.8.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F1C12B172;
-	Tue, 26 Mar 2024 14:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68CD212C546;
+	Tue, 26 Mar 2024 14:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.104
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711462442; cv=fail; b=MqGJwdDKhUt7/rhnUGEx63lQ2grYvV7p+j3MIIxU3BZhnPJa8YQpU1R0f1HmCEux0JLuqvS7HsmZWDsEdFQQIUlBQO+zllj8gz4i43vISX70h+zSB8z+EK9d4MmsmAK8572wsJPWv6Rbpna53Sp+LWNfODIYv2vA3u6A13+Ftmk=
+	t=1711462473; cv=fail; b=Ssa0ZuBONvHB+itelGAU+By1xrV3nUvOOLEgMHH3JVOsj1/125I1gXfVZgUQo1KU4ml9jOCCurXccLXkMGHClHx042hOGJyYBTYTD0mr0FObXqDBfG4j/8X4cXolefeaFHabP0FcSpdqCeRuwIPasIxWWRawJ7Lqu6pLlu93rIo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711462442; c=relaxed/simple;
-	bh=wL29XLvAmaJYhnJzBXtUhG9hjXvh8JLPJ3pHtVfyJEg=;
-	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=N3fS02Ca0Ta8OVnyNsxzCN1vaLGfQVtkNYx2PukoFWKLDcQCMvdOv5nzUIElV0yWtPVOnrwO/8SgrYVLkitL5GrukUGpIMciFHnRfFwfmhSoy11bygLs/TLceVmFJX7R0ktw6nap5aKMDY0xKiO7BZt4XOIKiNDx4A6ueckdnz4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YY4sNEh7; arc=fail smtp.client-ip=40.107.93.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1711462473; c=relaxed/simple;
+	bh=fi5TjXe/7vNreKSk6/HGt5MHb10MpDbkvNh2BMpp9Io=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=WjwTHaxapKgGMiOK/ed3axQchD7uUlBGAbTmIdU6AGzixljBbMgUES1ehOUlaB50lSjXyecfiQpNMkQw4LHwsRJUrh5m5O9WcDRB6FstYp5TjTzDpYkzvuRYltZVsPxa2UPi/ufJIZl24DiHZYV1rzc8nx+ZzaEgqpH/zPYFQbg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=obHF9FjI; arc=fail smtp.client-ip=40.107.8.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YY4sNEh7"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="obHF9FjI"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XwkMmS2JLLrdyTmZ9iuANcIks4ce29wk37mFgya0E6NdIY9F/zveJGk8ZyBOfFXspi+ef2RB7/timk09dGEmH8AESvr2WAAlneiKPzSIi0J0sy5Kpo3RWB+vAZ+hfbnuW4vaRVtlNqujAdfUCH3YT7/08WQbZS88hS1xIzLDtIHqdiN2EATTxGSJ2QsI1dRAFTzpo+k8beKmHmITHgt1zqr7BdHokJv4NEuQRjC7Em4YQjUIgSCOPxUfk9CssvlXJjbf9Inmqqeh7WP5T/ziPlPHWZS/baKyKZUNG1xMljp9O2+W9fzTLOeRNl0BRebjxVfNP42J4cZgjfWLTaFQnw==
+ b=Z83ZFIWvdUFBTw/cWv7x/x7nfEKp4Tfj0blp33//TdYRNF/pndeHjbQYvy+OVd9e29ZoxK6pIu+XVYgOUFSd4foYrQP1qKcNIj0QApcWdWpbWmZugd/RCFdN8POD3GnOdGdHIu0IeGHj4wXOOo6fh1k3JAGylmq4vaPqctgo5Flc0J8xTaKgbbWBBBkxnzVPpp9woBd2kOMpY7tMFqklFAAhkGYYcZvEgt2TbajM/VKPFcBwJionfgOb1a80iMWK9DV5gt6BFZm8arx3JdX4HVofDQKVl/71X5TzX06t3C8wcMoFGy3K7SXfwf5fgkfMlsMcl1NgnL8+Ls42D2awrw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1Cw+vsD8GWRiyJCHcCW4Dyv2aAdXdMy3ufPAjpwsc6g=;
- b=oajyrGFAZwel0UAdYg6hHoYh+ED1+KsW3LMwC6e7/s3XFG+8J63uKBKYmzMbUua6fMYk0XAAY1IQ9M3VaHeYlt9n4maQjIHDyZKrQwIeF6vFYKNPcqSOHXJhQZK8Jp6UYwZPBA7DrwZMcoyBF41S7wQIwqVkXj/NPlSytrzQFc+sxX+PqAOaHBTp8NuVtyrDlIc9ZGnGGHRWibhxUYvaS/4eW8dIjTj5ZWX/yTVJMimIXE7TLT2x29krMCQ8DRLLc8s1bFk4d+qHnSAKDZa0MqWiweBhVD3zB7HTaSgByKDtZ8IPCdYrorViQmEpDx8mX8n1TMhaZ8v+Tu6VeXkCYA==
+ bh=CHINh3znD6VRNJK0fC0Sn1bdx0//xaggWKbhVnJ+fo4=;
+ b=miMGEg/7aB7kB28tuy3+0QUudUqy/kQPeUVeuevl8zm+yPe8kaMEAELeXlbU+i8luqYPJBK4DkuzoB6j543bnsxmJwNMN92YdqCfujkO1TurmMCeIYDV519Adwav4Bq74tQypVj79OJ3qbbdxUfBRptiS2G8pV+W29E/XDooyNjGmRUWZlU8F4LXoTappTbmErAwyrlw95WpzgutI/KpuLzvLot6AEZcOLPLvMrTfEjtqt9BOxngaaD5RSlpZJTLzR7c2pYcGp1GekoggY0dpWHAIwOLlRGode7qKFYexHvvW+j3QRC1N8A6r84iu8u/YSq6YjZBZ5B+qIoegwjjlg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1Cw+vsD8GWRiyJCHcCW4Dyv2aAdXdMy3ufPAjpwsc6g=;
- b=YY4sNEh7odOvKeFrU0CrFuLjJ/r4l75knu8UU1M4Y3iBwAQndJ3UwdB7pQH6Rnd1Otj+pHG2NO9QeWtUlGNdowm8VXZlEDCygOIgYJP+bi62PNwZYmInMq7n47nFChxMOMt1lkx0dBL1l+3clVG9fyu9y5zXAMiFlOXdksUFhow=
-Received: from BYAPR12MB3109.namprd12.prod.outlook.com (2603:10b6:a03:db::17)
- by LV2PR12MB5991.namprd12.prod.outlook.com (2603:10b6:408:14f::9) with
+ bh=CHINh3znD6VRNJK0fC0Sn1bdx0//xaggWKbhVnJ+fo4=;
+ b=obHF9FjIWy91Mks5HKZyrUfcGNF6sYgpKY/YmjUDLDEtJciiggk9lyCIgtiOaJv7QvzB3coOckKZBT/Zu7AlZGffpFMrZF0swwx8PK+jr2x7hbTQ9ZRzQzDMPGv/F8LmelZTaXeR3mysJ2BXdj98yCYw42nalb5JMoc6Xg4E/QU=
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AS1PR04MB9683.eurprd04.prod.outlook.com (2603:10a6:20b:473::5) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.33; Tue, 26 Mar
- 2024 14:13:24 +0000
-Received: from BYAPR12MB3109.namprd12.prod.outlook.com
- ([fe80::b2b4:a3f1:a86:d6bd]) by BYAPR12MB3109.namprd12.prod.outlook.com
- ([fe80::b2b4:a3f1:a86:d6bd%5]) with mapi id 15.20.7409.028; Tue, 26 Mar 2024
- 14:13:24 +0000
-Message-ID: <010bb8bb-cc48-4b83-b46b-14e5efc753a8@amd.com>
-Date: Tue, 26 Mar 2024 10:13:21 -0400
-User-Agent: Mozilla Thunderbird
-Cc: yazen.ghannam@amd.com, bp@alien8.de, linux-edac@vger.kernel.org,
- tony.luck@intel.com, linux-kernel@vger.kernel.org, avadhut.naik@amd.com,
- muralidhara.mk@amd.com
-Subject: Re: [PATCH 2/4] RAS: ATL: Expand helpers for adding and removing base
- and hole
-Content-Language: en-US
-To: John Allen <john.allen@amd.com>
-References: <20240314163527.63321-1-john.allen@amd.com>
- <20240314163527.63321-3-john.allen@amd.com>
- <ff9e4658-18c4-4a36-962a-373c15c337a2@amd.com>
- <ZgHQB2yasP1DeLcy@AUS-L1-JOHALLEN.amd.com>
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-In-Reply-To: <ZgHQB2yasP1DeLcy@AUS-L1-JOHALLEN.amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN2PR01CA0042.prod.exchangelabs.com (2603:10b6:208:23f::11)
- To BYAPR12MB3109.namprd12.prod.outlook.com (2603:10b6:a03:db::17)
+ 2024 14:14:27 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7409.028; Tue, 26 Mar 2024
+ 14:14:27 +0000
+Date: Tue, 26 Mar 2024 10:14:17 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v7 0/4] arm64: dts: imx8qxp add asrc and sai
+Message-ID: <ZgLYOYFRxVqK30Z1@lizhi-Precision-Tower-5810>
+References: <20240318-asrc_8qxp-v7-0-01ce5264a761@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240318-asrc_8qxp-v7-0-01ce5264a761@nxp.com>
+X-ClientProxiedBy: SJ0PR03CA0147.namprd03.prod.outlook.com
+ (2603:10b6:a03:33c::32) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,181 +69,163 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB3109:EE_|LV2PR12MB5991:EE_
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS1PR04MB9683:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	6IFlxUym6uAa4c8QhsrIGwdZ/0egBOQ3OKhqA0XXInr9KUEZBhjmLJwENRl8j4iKWytHZQQT9tYQCp+4n8lC61qivb5ZODhQ3Mb8+rYX5eZM8aD5mWgLBMCs1ldNaNJRhTJTeeuOMfl2L5yF+g9a8UjYa1tMKBT/416qv7Vs+SziOF5SZH0RPgEIwqBYXc5awOl2SmCIVl3ySrkqM+UsY03Go/BZaPApxvtoEBs/ENW3lpoKLzx4FW05Ipa/DiZ3UMGfgJU1WI9JH4Stpw+NCHOw5IQ4RKRFUCg4W4dj17jnSlc+QcaLkem79SjyF+eTE9AXt/E5ggQ6GeZk8nwOB7sVFSj+vwJvzkXghE3A7jaVCQYAC9EbLKKDdrOakvuGIsoRONrCs+N+C5l5LMGC3zbH3lHLHfDN8pID6+L1cZZwHP5Gx4uxTxeHYyvyJ66r30vVlREjBsM/Jm7DNLoNHEzZ4M9cqEj6on19pIBwcOSx650sdO/hbHTrrIeIkPnDeW1ebAd519ibi7+4MGwdT/eGHcFLMgB/iJ5pa9hkq51IVU85x5p3/AxJ7seleRGzCs4mD5Lm5JmUblN8WaTdWRg5SxseWkkslXgbFGWrD+mXOGCOOd2W/R9IJpnHOWqqrZHxADf7swlq7p4k0KR5X8fCACl6ItjtFnj36e5Oo4w=
+	8QXLHyr7r7o68kTaurmkF1aBQsJIh1bjujgYxfLq4PJ9A5G7E+VNE3UWWPjcX5Wk+5z0Fo2JqxOooHfo33ypyRmwiZ+X7MBbeqZ7QNRWQdLbHWGJBRwQzJl/pvsyZuU2cIgZGHf5OcF7p8PWMXSGxyWAUo0ZF0x4MD/KLp6Vz/kGLjBtlb1CcRSdlLmviR18siyI1vV6JobwKj5dL9ccOtaJGooHEy1JXXTu3M00w+MWCvqbk2XNr88ZUvRh089Q8X7/kamrq4Ra+4oC1Letr9sT/l/l/PbHBJfDIJ/+3zw1wOhwHp+gilyEuwICR3XINpuAAtyHpP/1fVJOhXmoyL6eiN8Y7qJ7xei+t4j5TLK5g5qK37rw1RUclwVsO2DQJavTMvFUJPDpsDyme2W+QBAoUyZOo8QCd7Zldp+tSfN2FmtieEsnPWK4VwW+IGaNY56rQUdzWyDlJ5npr+SRDdSAAT5MgS7d6IJad5JQVL1FVIVIUnLNxakdIHKhLK/aiRAtIU9JeEZUFU8g/CEUZoI6/Ifg3Nfl/j0RNMYXylIbt2Mv5aoppm8wWlbG92nwQN3YBXQ/Z9nTbf+AXZ6P1wrw/qoiIjB/rMvwDDTTHHmbojPCng5i4GUITy9mfepCt9x2b70BfL/cV3q87NOk9oAKJCvQ/moFAkbylQ5Rw6Hu46swObrQV9HHQjLDP6l3
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3109.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(52116005)(376005)(7416005)(921011)(38350700005);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RlZOUWNZWVgyL2V3QzdsUmhXd3JOcmVMN1JDSytwaVpWYUE3djhTUTZRUldw?=
- =?utf-8?B?QXNoeXVxVXdwRTMrVXEyOHJ2SXdWSWJ4bjhYSG5Td1RCVHRKcmtERlRpekV4?=
- =?utf-8?B?ajYxWXlCNG8xL0hrRzl0eUpZbkpCQ2N3L0dFZkFpSEV3QmhCdVZkRUlMRWlY?=
- =?utf-8?B?cW84RjZuOHhCbkd5QlJpc0EwZ2psOVFmUW5FQTlDbGNGWGtSRU4yM2VWZ0NV?=
- =?utf-8?B?bzJudEpCM1RHVVZGR3cyS09admJpdXNGQjJPdUxleHdtb1dXZVF6V1VJaVk4?=
- =?utf-8?B?YzFTMHhTVmdDeEY0ZWpGRXl1TUZaU0FORHUvbUM4aGlDVmkzRkV1M3BSc1dk?=
- =?utf-8?B?UmE0OVJWWEUreG5Cak1PTm1hc0lvTktKQUlGbWlmeUpneHYxMDYyVVlpYlcw?=
- =?utf-8?B?UmMwQ0JpN1gzQjkxelRPTlNYOFBRdEErN1p0VWhvQS8vU0hxMzNDbWk3a281?=
- =?utf-8?B?YzdjRzB3K0tHcVpWUzRJSmpSTHVjNXZvMnpMSXFUZ2RPZXZhdWpCWFdRb21J?=
- =?utf-8?B?WWJqUlRlZnV4NVdCczBFUkVkNnhUVmpYdjNzV3VPbUFodUNTelIrNnBHdDNq?=
- =?utf-8?B?Z2ZzbzVRQXNqd1BRR1lVTmdjaEVmdEJXUnE0aS9qNVJieFE3YmwvczdZaDE4?=
- =?utf-8?B?M2pLZG54Z2VFekx0dHJtTllRYm1aYkRleCs4dUdqSlE3dHo2NTJkRzBJb2Y4?=
- =?utf-8?B?L2M0aVhXZ1NQQXlVclF6STVQekRad1F2Nm15RmhiZlpla3BwcVgxc0ZZcGJL?=
- =?utf-8?B?YU9GTHZ5L2VRbkw1bGNhYWxoeXZVNFVMVFI1TjRwdjZWaXhieTZIVmczb2Zq?=
- =?utf-8?B?YSs3cU82RmpWV0tKd1Qvdk5GZDBhRFVxUjBEUnVPeDFLQWYxODd3ajFmaUdL?=
- =?utf-8?B?RHpMYnJLaW1LendOTTBORDJGczE4eDc0RkJNa0ZNU0VhQmtHSU91eDY5QVA2?=
- =?utf-8?B?ZXhydFY1TTJNS1FpY0g5VEdxSXpSZDhWaFViMlkrSzFPTzBJY240eWQ5bksy?=
- =?utf-8?B?bTVYQ3kydjEwUFZoMit0cHdvbHp1Q0JhUVhVU3lRaTBzYkRVTllYdGtoTk5w?=
- =?utf-8?B?dXBOc0pHc0U4NnlrUDZXN3pZb2RlNWt5dHJmQlp5aFl6S2JWc3UyUXdiMk9H?=
- =?utf-8?B?U2I3a0MwK09BN1UzZXZGa2ZBZFcrYjExQzZPVlE5dXRwZ3hYTzVTVDR2WVNZ?=
- =?utf-8?B?anZmT0thWWZTd1NZYU13YjVFT0VPTi9oanBEV256L2JwVWZLakN3ZjJpY1Jr?=
- =?utf-8?B?WXdBNFF4ZndCZkNhNC83SXJmM0R3Wk5QS1VlRGQvcHhJdUsvSmJxU1ZabmNi?=
- =?utf-8?B?cm05QnI5TW5GZFhGR0h1V3U5WnRrTmZRYndQSFJncVk2WUlhdVhsZEliWkVX?=
- =?utf-8?B?NXVJNG1nelVQOGhRWUJkZjFaNVArdkpvaHF3TnhaaWx5d3lndjNPQjFHdk9V?=
- =?utf-8?B?S3JzRS9aMkJSVXEyZ25ZKzAxQVJ6amZvZ25BbTlkenNWR25jMnZmWkVJckY2?=
- =?utf-8?B?TkgycVJ0YzlQNk4zOVp5WW1VNjMrY3RxSlY3bUVFTm9ZUTlDQUMveDBVT2Jq?=
- =?utf-8?B?RmY0RitWNGdWb0wyQldEYSs1Zy9xcTBnUE1IT0RBTXRZeCtzNk5mc3NVNG42?=
- =?utf-8?B?d0Y0OGZkWWgyMy9obHhCN2I1dlFQUWZ1QW0xT2lHOVA3dHliSGdYOXQxakwz?=
- =?utf-8?B?cDFLeG5GOTc5TnltTEtiOXVVZXBXTFFMZEhLTFBNZEVmMTFmSEZweloycmlr?=
- =?utf-8?B?anlNODlONmIzYXRweGFJdDZPdHVlQWtGSVdzU3M0TFdzWU1xc1ZvbWdrc3Jr?=
- =?utf-8?B?cngvanB1MWh0TEJGYjJsRURuZHlRZDBSMnZ5UjY1c3l1ZDU3alhHYVhYN0tH?=
- =?utf-8?B?MmNQTTdWSjkvZldtNnJBc0gzWFBBTm9NNUo2UFFYRUMyUTV4cXdPUHRmamM0?=
- =?utf-8?B?Q2E1anRsYkpDZmVkSGtObnlYUGpOOHYybm9VbXFBTCs5SjRnYUpra1JIQmQ5?=
- =?utf-8?B?NEVrakVtVTZvRGw0VjhyQ1Nkb2xzbGtKczFNQUEyREplc3ltdDdCckJCV2ZV?=
- =?utf-8?B?akRPMDlGV3h2V3hJT1lPNUxHbDdYR2FUN1NwWE1DdzRWblQ0NE15N3NyNUto?=
- =?utf-8?Q?QRPSpgSBLmwYhMzFmMynTcC/n?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24343e1a-38df-49fa-894f-08dc4d9ee652
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB3109.namprd12.prod.outlook.com
+	=?us-ascii?Q?n7JsXgM7DnSFXYzn0RdkTfXpdj8UJaFFVBdhy2G5352Iwd47qemBI9TNsEj6?=
+ =?us-ascii?Q?LskCYitpg0vVmaQQJ4sbkfwKs0EgsilBYKfnKzmii1lpbiJFjioMyRfJYlGf?=
+ =?us-ascii?Q?J512G5CilYuWHjtNbRHiRqnt+6x0hDXwcAQMnui7LpoAXDok8taYhTFJS2AZ?=
+ =?us-ascii?Q?Nw5LflQ4luSWMTBmScsCuWZOWYaNwW98QZ0vuvIQ9GUxj56larbORUxKxrqy?=
+ =?us-ascii?Q?BEIsvhR4T6rIHlIkC4DGb25JZO7Ghq3rqt1wq3ju2tYcMLBrgPZB4da7o18Q?=
+ =?us-ascii?Q?62GDqv+0ntuzHfTcdaYO3tTV8GhF4fe1WsFWcEJ533fJUU8JCAtDpVrghmJa?=
+ =?us-ascii?Q?dpJKuuGEYpGBAZagRN6cDbN3QZQEtJoLXO4nz0X1ChHt2/S2C8x0BQujJ/ZG?=
+ =?us-ascii?Q?tEF5wBpVF5rS/tT/Nfr4iLjpa9AU0n7HCabRPAGG99ilkEmKpLOx7QnTWafu?=
+ =?us-ascii?Q?idHHqeasGyr33YhgAwfW2Djb7TAfQhX3paAxLR+aF9rGthJKCc/tHuzLIJlo?=
+ =?us-ascii?Q?QpkOBBuwcHPMAReU+kYu/umhYQHYd73Xj+4u5zojP3lucPp5/b3Tf3rVVHpp?=
+ =?us-ascii?Q?brpq/h6ErPudAsmEPYahXOEmjcXpIW4kotnL+gz8e7LPhs3xvpd2qgCcXlJ1?=
+ =?us-ascii?Q?fV6zzv3cAWGPhQtGqGSfukY9E84PxXizdrHGOq8nKAiBQOCSfpkzqZbzSo98?=
+ =?us-ascii?Q?K4ZTIUO/3S5eo/3kkv5/ujeK+Z8SpsZe4Y27QDPoVSmdr2Bu7Tw31jCwgFPM?=
+ =?us-ascii?Q?fjHA7WheXpGqS0zozfjnl3Aa1Duvl4oeFNdl3jDAfUEvRZVbdu3ajFGoX4S2?=
+ =?us-ascii?Q?Uh7p6lh/z7sVU3/+dVCAl8hDthFe9jFxKzJ1NLFnf5ZMG/M/S+ECkkGBSO8q?=
+ =?us-ascii?Q?MvhUz1WUdp5SKEyh8LaSpOEVDwAqD++bzPakNApdp+hrC+IhMi6AR7ieWtNU?=
+ =?us-ascii?Q?xBgFvCMzfZc6PmGK/eDtHjhsHREAPOHzdsOvQAJSn6JfwfvYggmX5xY62WSt?=
+ =?us-ascii?Q?Z/tqtrB+CULvbZBaU+4lqTQb69JXrDbiclxevTVDurXKrCOOyjeL0hjVA7S5?=
+ =?us-ascii?Q?htTODCkH/7Ch0DHtYStdnS2A/0jC5OTj/Qjp0mrn04Kxh+btUDg/939JQ9dW?=
+ =?us-ascii?Q?oN81rfUe7d7kZQ1dhquL0JMrssFSJNX66nl+MdAlleUwYzNkZ7p0iUIWjckj?=
+ =?us-ascii?Q?zuxGu9lYo4hD4YFq7GzY4/8si8muktRO2Q4yERBpsXaopGOoUDAHCbKCz9Nt?=
+ =?us-ascii?Q?73FarytpvQJ16ySejsQvWAhJQyQhdhf2YfnKwTKId0zTPJd4dnzUtbIQX9go?=
+ =?us-ascii?Q?1W+EVOpjfya8wXQe5HiKaTSF4tgbLM5qjGgp6dH5yDay6GODIQx2mmPa2Mzf?=
+ =?us-ascii?Q?yWtK6w3GZt0EKJI49CQItAE2Ya7TdDwxRGVbEia/365J4lHrUhOgzuNoHxev?=
+ =?us-ascii?Q?2p89BFq/72PzfKIaOwdc6xaKwskexeSilO98X60FeKiTRrfExQ/PdkC6Wpac?=
+ =?us-ascii?Q?4vyyr/CvrHXdtH+0j4F9FUp8q69TpFLZ7C3Hm8HGvPUwC69Vg6YFJEU22sYb?=
+ =?us-ascii?Q?+VKq8yjNuY1/sswfAdU=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54c92fe5-1fe5-4d89-c26e-08dc4d9f0bff
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 14:13:24.7774
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 14:14:27.7363
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: I3RrmMG1BzQvBEfQFu4HA/EcC2AA56nPpC/rQT58reOMakxMORs8Uc/znKmvrjtyt1K2762/uTEdQDPV6vY6pg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5991
+X-MS-Exchange-CrossTenant-UserPrincipalName: XnKuJhoAGDPS8Td+BEXJF3fEBj9nfx4pEzNihrzsa1cOK3CM7tq8l3audyr8GC+OYATLTdI7tuKcdbPwT3u5Dg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9683
 
-On 3/25/24 15:27, John Allen wrote:
-> On Mon, Mar 18, 2024 at 11:28:48AM -0400, Yazen Ghannam wrote:
->> On 3/14/24 12:35, John Allen wrote:
->>> Data fabric 4.5 denormalization will need to frequently add and remove
->>
->> More specifically, the non-power-of-2 cases will need this.
->>
->>> the base and the legacy MMIO hole. Modify existing helpers to improve DF
->>> 4.5 denormalization flow and add helper to remove the base and hole.
->>
->> Please write the what/context, why/issue, and how/fix information as
->> separate paragraphs even if they're just a single sentence each. I think
->> this helps to find the details more easily.
->>
->>>
->>> Signed-off-by: John Allen <john.allen@amd.com>
->>> ---
->>>    drivers/ras/amd/atl/core.c     | 43 ++++++++++++++++++++++------------
->>>    drivers/ras/amd/atl/internal.h |  3 +++
->>>    2 files changed, 31 insertions(+), 15 deletions(-)
->>>
->>> diff --git a/drivers/ras/amd/atl/core.c b/drivers/ras/amd/atl/core.c
->>> index c1710d233adb..cafdfc57d929 100644
->>> --- a/drivers/ras/amd/atl/core.c
->>> +++ b/drivers/ras/amd/atl/core.c
->>> @@ -49,15 +49,26 @@ static bool legacy_hole_en(struct addr_ctx *ctx)
->>>    	return FIELD_GET(DF_LEGACY_MMIO_HOLE_EN, reg);
->>>    }
->>> -static int add_legacy_hole(struct addr_ctx *ctx)
->>> +static u64 add_legacy_hole(struct addr_ctx *ctx, u64 addr)
->>>    {
->>>    	if (!legacy_hole_en(ctx))
->>> -		return 0;
->>> +		return addr;
->>> -	if (ctx->addr >= df_cfg.dram_hole_base)
->>> -		ctx->addr += (BIT_ULL(32) - df_cfg.dram_hole_base);
->>> +	if (addr >= df_cfg.dram_hole_base)
->>> +		addr += (BIT_ULL(32) - df_cfg.dram_hole_base);
->>> -	return 0;
->>> +	return addr;
->>> +}
->>> +
->>> +static u64 remove_legacy_hole(struct addr_ctx *ctx, u64 addr)
->>> +{
->>> +	if (!legacy_hole_en(ctx))
->>> +		return addr;
->>> +
->>> +	if (addr >= df_cfg.dram_hole_base)
->>> +		addr -= (BIT_ULL(32) - df_cfg.dram_hole_base);
->>> +
->>> +	return addr;
->>>    }
->>>    static u64 get_base_addr(struct addr_ctx *ctx)
->>> @@ -72,14 +83,16 @@ static u64 get_base_addr(struct addr_ctx *ctx)
->>>    	return base_addr << DF_DRAM_BASE_LIMIT_LSB;
->>>    }
->>> -static int add_base_and_hole(struct addr_ctx *ctx)
->>> +u64 add_base_and_hole(struct addr_ctx *ctx, u64 addr)
->>>    {
->>> -	ctx->ret_addr += get_base_addr(ctx);
->>> -
->>> -	if (add_legacy_hole(ctx))
->>> -		return -EINVAL;
->>> +	addr += get_base_addr(ctx);
->>> +	return add_legacy_hole(ctx, addr);
->>> +}
->>> -	return 0;
->>> +u64 remove_base_and_hole(struct addr_ctx *ctx, u64 addr)
->>> +{
->>> +	addr -= get_base_addr(ctx);
->>> +	return remove_legacy_hole(ctx, addr);
->>
->> This should be the inverse of the "add" operation, I think. So remove
->> the legacy hole first, then remove the base address.
->>
->>>    }
->>>    static bool late_hole_remove(struct addr_ctx *ctx)
->>> @@ -123,14 +136,14 @@ unsigned long norm_to_sys_addr(u8 socket_id, u8 die_id, u8 coh_st_inst_id, unsig
->>>    	if (denormalize_address(&ctx))
->>>    		return -EINVAL;
->>> -	if (!late_hole_remove(&ctx) && add_base_and_hole(&ctx))
->>> -		return -EINVAL;
->>> +	if (!late_hole_remove(&ctx))
->>> +		ctx.ret_addr = add_base_and_hole(&ctx, ctx.ret_addr);
->>>    	if (dehash_address(&ctx))
->>>    		return -EINVAL;
->>> -	if (late_hole_remove(&ctx) && add_base_and_hole(&ctx))
->>> -		return -EINVAL;
->>> +	if (late_hole_remove(&ctx))
->>> +		ctx.ret_addr = add_base_and_hole(&ctx, ctx.ret_addr);
->>>    	if (addr_over_limit(&ctx))
->>>    		return -EINVAL;
->>> diff --git a/drivers/ras/amd/atl/internal.h b/drivers/ras/amd/atl/internal.h
->>> index 1413c8ddc6c5..05b870fcb24e 100644
->>> --- a/drivers/ras/amd/atl/internal.h
->>> +++ b/drivers/ras/amd/atl/internal.h
->>> @@ -236,6 +236,9 @@ int dehash_address(struct addr_ctx *ctx);
->>>    unsigned long norm_to_sys_addr(u8 socket_id, u8 die_id, u8 coh_st_inst_id, unsigned long addr);
->>>    unsigned long convert_umc_mca_addr_to_sys_addr(struct atl_err *err);
->>> +u64 add_base_and_hole(struct addr_ctx *ctx, u64 addr);
->>> +u64 remove_base_and_hole(struct addr_ctx *ctx, u64 addr);
->>
->> remove_base_and_hole() is only used in denormalize.c, correct? So why
->> not define it there as static? Other than trying to keep the code
->> together and symmetrical, I mean.
+On Mon, Mar 18, 2024 at 03:00:06PM -0400, Frank Li wrote:
+> Update binding doc to avoid warning.
+> Change from v1 to v2
+> - Fixed dts DTB_CHECK warning
 > 
-> In addition to keeping the two inverse functions together,
-> remove_base_and_hole depends on other functions in core.c. So if we
-> don't expose remove_base_and_hole in the header, then we would need to
-> expose get_base_addr and remove_legacy_hole in the header.
-> Alternatively, we could move remove_legacy_hole to denormalize.c and
-> expose get_base_addr and legacy_hole_en in the header instead. So
-> exposing one function that's the inverse of the other just looks better
-> to me than exposing two.
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> Changes in v7:
+> - Using rob method for dma-names
+> - Drop conor acked tag form dma-names and interrupt patches
+> - Fixed warning for interrupts
+> - Pass dt_bindng check
 > 
+> make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8  dt_binding_check DT_SCHEMA_FILES=fsl,sai.yaml
+>   LINT    Documentation/devicetree/bindings
+>   DTEX    Documentation/devicetree/bindings/sound/fsl,sai.example.dts
+>   CHKDT   Documentation/devicetree/bindings/processed-schema.json
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+>   DTC_CHK Documentation/devicetree/bindings/sound/fsl,sai.example.dtb
+> 
+>  make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8  dt_binding_check DT_SCHEMA_FILES=fsl,spdif.yaml
+>   LINT    Documentation/devicetree/bindings
+>   DTEX    Documentation/devicetree/bindings/sound/fsl,spdif.example.dts
+>   CHKDT   Documentation/devicetree/bindings/processed-schema.json
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+>   DTC_CHK Documentation/devicetree/bindings/sound/fsl,spdif.example.dtb
+> 
+> make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8  dt_binding_check DT_SCHEMA_FILES=fsl,imx-asrc.yaml
+>   LINT    Documentation/devicetree/bindings
+>   DTEX    Documentation/devicetree/bindings/sound/fsl,imx-asrc.example.dts
+>   CHKDT   Documentation/devicetree/bindings/processed-schema.json
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+>   DTC_CHK Documentation/devicetree/bindings/sound/fsl,imx-asrc.example.dtb
+> 
+> - Pass DTB_CHECK, below warning exist because binding doc still be txt.
+> 
+> from schema $id: http://devicetree.org/schemas/dma/fsl,edma.yaml#
+> arch/arm64/boot/dts/freescale/imx8dxl-evk.dtb: /bus@59000000/amix@59840000: failed to match any schema with compatible: ['fsl,imx8qm-audmix']
+> 
+> - Link to v6: https://lore.kernel.org/r/20240308-asrc_8qxp-v6-0-e08f6d030e09@nxp.com
+> 
+> Changes in v6:
+> - Add interrupt description in binding doc according to rob suggestion
+> - Link to v5: https://lore.kernel.org/r/20240307-asrc_8qxp-v5-0-db363740368d@nxp.com
+> 
+> Changes in v5:
+> - using rob's suggest logic after fix maxItems.
+> - sort dts nodes.
+> - remove spdif1. Add later when do 8qm upstream
+> - Link to v4: https://lore.kernel.org/r/20240305-asrc_8qxp-v4-0-c61b98046591@nxp.com
+> 
+> Changes in v4:
+> Combine comments' from v2 and v3. I hope I address everythings.
+> 
+> - Krzysztof's comments
+>   - add reson about why change
+> 
+> - rob's comments
+>   using rob's suggest logic to restrict interrupt number
+>   but for dma-names, still need use oneOf to cover 3 case
+>   - [rx, tx]
+>   - [rx]
+>   - [tx]
+> 
+>   oneOf
+>     - items:
+>         - tx
+>         - rx
+>     - enums: [rx, tx]
+> 
+> - Conor's comments
+>   - add power-domains required for imx8qxp and imx8qm
+>   - remove dmas descript, not allow use index to get dma-channel. Current
+> no user using this method.
+> 
+> - Link to v3: https://lore.kernel.org/r/20240228-asrc_8qxp-v3-0-d4d5935fd3aa@nxp.com
+> 
+> Changes in v3:
+> - Fixed dtschema/dtc warnings/errors:
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/sound/fsl,spdif.example.dtb: spdif@2004000: interrupts: [[0, 52, 4]] is too short
+> 	from schema $id: http://devicetree.org/schemas/sound/fsl,spdif.yaml#
+> 
+> - Link to v2: https://lore.kernel.org/r/20240227-asrc_8qxp-v2-0-521bcc7eb1c0@nxp.com
+> 
+> ---
+> Frank Li (4):
+>       ASoC: dt-bindings: fsl,imx-asrc/spdif: Add power-domains property
+>       ASoC: dt-bindings: fsl,imx-asrc: update max interrupt numbers
+>       ASoC: dt-bindings: fsl-sai: allow only one dma-names
 
-Right, fair point. So what you have is good then.
+@Mark Brown:
 
-Thanks,
-Yazen
+	Could you please pick dt-bindings part? Reviewed by dt team.
+
+Frank
+
+>       arm64: dts: imx8qxp: add asrc[0,1], esai0, spdif0 and sai[4,5]
+> 
+>  .../devicetree/bindings/sound/fsl,imx-asrc.yaml    |  14 ++
+>  .../devicetree/bindings/sound/fsl,sai.yaml         |   6 +-
+>  .../devicetree/bindings/sound/fsl,spdif.yaml       |  35 ++-
+>  arch/arm64/boot/dts/freescale/imx8-ss-audio.dtsi   | 267 +++++++++++++++++++++
+>  4 files changed, 317 insertions(+), 5 deletions(-)
+> ---
+> base-commit: 8552c902efe7ef670b6961fb8885b67961aeb629
+> change-id: 20240227-asrc_8qxp-25aa6783840f
+> 
+> Best regards,
+> -- 
+> Frank Li <Frank.Li@nxp.com>
+> 
