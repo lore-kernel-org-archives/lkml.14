@@ -1,84 +1,79 @@
-Received: from relay164.nicmail.ru (relay164.nicmail.ru [91.189.117.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 424E113D530;
-	Tue, 26 Mar 2024 20:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.189.117.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753FB13CAA1;
+	Tue, 26 Mar 2024 20:08:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711483712; cv=none; b=SQCpjNCwfbcXyuCikenzu26u5pw9hYb8TA7GAWmso9sL/rYUZ2IqLMTZ0c/PVPxysKUGQ8USMcK212Sc6VCmPjT9g63H1DYvThYO9j+WTAG7HgQUCEBEpwIKsZoYt3F4WHZHjTLmjGCJbuWGAl7p1JckzscwvuPi1FyII7UqQk8=
+	t=1711483732; cv=none; b=MyufjGwKDl/ZI1TorblVZjePdgSeDxiNB0dq51e50uL19WE2xt4LmcCGxcHbhXsgkAOYtlmMlwQ66R9RZScN5WFwb1HGE8y2CRkHAqPCqONIGxas/LH+g0sXWbtIXdelA4VfPO2IUS/OY/ffVq/fFq5al2xHIwNn5SGXmD1zIiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711483712; c=relaxed/simple;
-	bh=lW5hOyGlFN+yd+Ab/TlrPz895EMMK8mpatTkc5voeUk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lV/yDYmcIP/1IanpCXtv1q8MNGlTaG5sIw4Uzi8c0liwolEvpyeBXPWHpWprSCxEI4Fip3+Hc9JGGWm6iemNMmie/Lmw2+9ygKnvzAcI9GDALkRmWMdeJIWSWqb4hTR9YOYPhDv9vd50l0cVIq8Ond8j87nlU4DXKyJZMUqnRIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ancud.ru; spf=pass smtp.mailfrom=ancud.ru; arc=none smtp.client-ip=91.189.117.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ancud.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ancud.ru
-Received: from [10.28.138.148] (port=53888 helo=[192.168.95.111])
-	by relay.hosting.mail.nic.ru with esmtp (Exim 5.55)
-	(envelope-from <kiryushin@ancud.ru>)
-	id 1rpCtP-0005Dt-Fy;
-	Tue, 26 Mar 2024 22:55:32 +0300
-Received: from [87.245.155.195] (account kiryushin@ancud.ru HELO [192.168.95.111])
-	by incarp1101.mail.hosting.nic.ru (Exim 5.55)
-	with id 1rpCtP-00DRyg-2r;
-	Tue, 26 Mar 2024 22:55:31 +0300
-Message-ID: <4b3e239d-ab87-4a37-ac1d-af49e1f8f3ee@ancud.ru>
-Date: Tue, 26 Mar 2024 22:55:29 +0300
+	s=arc-20240116; t=1711483732; c=relaxed/simple;
+	bh=UvvEXa7/u+TvEsP4ULFQtxhfQt+x828rllZrGgBiyAw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qs4rRwQkp38/3KofaSDstxk3vucI4W6moFUIwqwTQZ16kZkXSkDA/HJ0UYV36fsUnfvTe2u6ggz1n8NQBwfCJLoU9kTsLdv9E1mx2BWFKv3MsvN64n2oaagyySUVylKKiazSrAu4wEkC2hR7z4blNWlazLd8V+Mkgp1vNPUj7tE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e9CSzPO9; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e9CSzPO9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E3D9C43390;
+	Tue, 26 Mar 2024 20:08:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711483732;
+	bh=UvvEXa7/u+TvEsP4ULFQtxhfQt+x828rllZrGgBiyAw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=e9CSzPO98RG06lCpIqFTyJDf6WolP5CwzaG/dgyiELf8YlZYhsbYYqt7v0hZy/zDI
+	 LYPzl9TGgUHRpxTZoBJP3t+YshBkRKMsoVdcqgEfMyYPFTxAdU5Mm6ri/ipWUDx1XL
+	 jKF3FeE+Wx7WtMepEPj5vH9nwC1oldmISpGv0yM84regA6B6cpP0KVwzFhKEsNxfND
+	 Px/32TgtGPErlCtjy4687DrZCCJ+Y399niAMh9chreSTezD3NsKNlaqQdCtGSn+Hzw
+	 RIQvP22sPhMP7UisuoFYwjtD/B/QTkGs6K7c87vwz0RBBQ2GtMjNA+zIiw3qH9zG8r
+	 sC4ATgfPNtvDg==
+Date: Tue, 26 Mar 2024 21:08:47 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-i2c@vger.kernel.org, Eddie James <eajames@linux.ibm.com>, 
+	openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 20/64] i2c: fsi: reword according to newest specification
+Message-ID: <hvucbpsgihrbe4tgf4ksg4obz3rxitmyrdpl6zdh25pmok3uab@y6itjppsfbmd>
+References: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
+ <20240322132619.6389-21-wsa+renesas@sang-engineering.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rcu-tasks: Update show_rcu_tasks_trace_gp_kthread buffer
- size
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
- Frederic Weisbecker <frederic@kernel.org>,
- Neeraj Upadhyay <quic_neeraju@quicinc.com>,
- Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>,
- rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
- lvc-project@linuxtesting.org
-References: <20240326174839.487582-1-kiryushin@ancud.ru>
- <20240326152230.3e692d83@gandalf.local.home>
-From: Nikita Kiryushin <kiryushin@ancud.ru>
-In-Reply-To: <20240326152230.3e692d83@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-MS-Exchange-Organization-SCL: -1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240322132619.6389-21-wsa+renesas@sang-engineering.com>
 
+Hi Wolfram,
 
+On Fri, Mar 22, 2024 at 02:25:13PM +0100, Wolfram Sang wrote:
+> Match the wording of this driver wrt. the newest I2C v7, SMBus 3.2, I3C
+> specifications and replace "master/slave" with more appropriate terms.
+> They are also more specific because we distinguish now between a remote
+> entity ("client") and a local one ("target").
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+>  drivers/i2c/busses/i2c-fsi.c | 56 ++++++++++++++++++------------------
+>  1 file changed, 28 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-fsi.c b/drivers/i2c/busses/i2c-fsi.c
+> index 10332693edf0..5eaf2c85a72c 100644
+> --- a/drivers/i2c/busses/i2c-fsi.c
+> +++ b/drivers/i2c/busses/i2c-fsi.c
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0+
+>  /*
+> - * FSI-attached I2C master algorithm
+> + * FSI-attached I2C controller algorithm
 
-On 3/26/24 22:22, Steven Rostedt wrote:
-> Why 87? as it's not even word size, and this is on the stack.
->
-Got 87 as maximal used buffer length (result of
-sprintf(buf, "N%lu h:%lu/%lu/%lu",
-         (unsigned long int) -1,
-         (unsigned long int) -1,
-         (unsigned long int) -1,
-         (unsigned long int) -1);
-+1 for terminator.
+As this change is all about renaming, I think we need to be a bit
+more consistent in using either host or controller, at least
+within the same driver.
 
-Is word-size alignment a thing in this case? I thought that char buffers
-are ok to be aligned by 1?
-> Better yet, why not just use snprintf()?
->
-Seems like a better idea indeed, as if fixes overflows for unpractical cases,
-without added overhead to common cases. The only concern is possible truncation
-of data, that may break some automation (if output is parsed by someone,
-without accounting on it being cut, who knows). But again, it is for pretty unpractical
-values.
+In this driver you are using sometimes host and sometimes
+controller.
 
-Will make a v2 patch with snprintf() with buffer length.
-
-Genuinely look forward to being educated about aspects of aligning array sizes, as
-I do not really understand the limitations.
-
-Thanks!
+Thanks,
+Andi
