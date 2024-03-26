@@ -1,157 +1,213 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mo-csw.securemx.jp (mo-csw1120.securemx.jp [210.130.202.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D3773533;
-	Tue, 26 Mar 2024 10:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5FE6BFBC;
+	Tue, 26 Mar 2024 10:29:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711448986; cv=none; b=oUfto7VmeI6JnPUnsXhf0pv4z31XcYp8IxpAqgvTNItWKYZTh+O7Mkp8+cupcqVMYGeIq8qTfiBN0bhP9QfQQ6kxo4egPEF5+1QjYSb3JJa1u7TAjGJzUbrMFmmQxxOKSzHcjjho4NxkAqeHGkoD8psYnCx+VmMvZFWpNa4nYMo=
+	t=1711448998; cv=none; b=GJDOE0c+stQ5wQDwsy5kUaN2MU9zicprwNwNtyqJmoC8h/LniEILEOJs5LO4Cj243BXsmXW2h3ZAxGZYXVe9Qu6u0OWjDBCgyDzJr21bIk6FTTBjAYfUv7MRWO8F8/G3Hln9tHV2b4YUUIuBxbqqFt/cabe4OR20+l5+No6k/So=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711448986; c=relaxed/simple;
-	bh=CzpPya17rTt1Zek9UJn68nt2er922OD0kuS2fjisXSc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=up2P31KK+wImepA1GwMtnPmjc2dmnYQFj3m0TwI+lwa/A6RNlMSMUyCn4oS1ezjcbtwU14YHNca/O23EjM1Ea1QJrxDi1sJDCD+ktkfUCypAGmYpgzA8ZdMxwoIzaPPMuqyHf8IyfW0V3Voj+wRZdKbJh7Adp+/k+I5t+uHt32M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Jct6hplu; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Jct6hplu"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42Q6Zcxr015198;
-	Tue, 26 Mar 2024 10:29:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=O1jhtF+6LeV7nIcb4IBhtIsdKOL+6JFICh68FWa7Nc4=; b=Jc
-	t6hpluGpH/0IyERK0hDzq2dEn4DLId35Nwtlk9acTzCLgJR3VcsgLDTLUMjp1VX9
-	+YFgYqV6rWe7JA8smY5At7b5u3gpn3DYjDBWLARHlcVuCjtn5ACtqK9Jew1D1o64
-	wu4Aywoxth30L6COSxXVlmkJr/dO8NVEeoELx3Mkb48y5kivw22dlsUBw231epPH
-	tkm1KciYgq1OEMjb7DOOPEGxlni5zpbDN59qVkldxlkbUVyhVDpIMRSip0ZMCcJz
-	CjuTiFW+PZduwFqZ8BRSxdinZDSGc995+7wiT5OTlkOLAU5Ne8GmqcpyXXiSdLOP
-	MR3lO2y1bS8IrQ7UEzeg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x3s7n0mkq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 10:29:24 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42QATNvH019504
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 10:29:23 GMT
-Received: from hu-kriskura-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 26 Mar 2024 03:29:17 -0700
-From: Krishna Kurapati <quic_kriskura@quicinc.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring
-	<robh@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
-        Wesley Cheng
-	<quic_wcheng@quicinc.com>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Felipe Balbi
-	<balbi@kernel.org>, Johan Hovold <johan@kernel.org>
-CC: <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_ppratap@quicinc.com>, <quic_jackp@quicinc.com>,
-        Krishna Kurapati
-	<quic_kriskura@quicinc.com>,
-        Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v17 9/9] usb: dwc3: qcom: Add multiport suspend/resume support for wrapper
-Date: Tue, 26 Mar 2024 15:58:09 +0530
-Message-ID: <20240326102809.2940123-10-quic_kriskura@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240326102809.2940123-1-quic_kriskura@quicinc.com>
-References: <20240326102809.2940123-1-quic_kriskura@quicinc.com>
+	s=arc-20240116; t=1711448998; c=relaxed/simple;
+	bh=EUex2mfZ7Bm7MxE6kDtOUOglovPxx3drI3WWB33h0AQ=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=c2U2LjOSPvuZoOnG3amSGRGPfKR+A8eFeWaHoI3MkoitN5fc/Od+f8KhG9aEIHN+6f2UrvUSlC+gs++U4zv8fgOBOUGV4vZtOqvudgijo0PNHN3hreAiaBms60rYbZo3Ia+d0ozWSoYxnDwzvMZmBqMgC4KMiJ5s6StmBaUQWYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kioxia.com; spf=pass smtp.mailfrom=kioxia.com; arc=none smtp.client-ip=210.130.202.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kioxia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kioxia.com
+Received: by mo-csw.securemx.jp (mx-mo-csw1120) id 42QATkOn2209605; Tue, 26 Mar 2024 19:29:46 +0900
+X-Iguazu-Qid: 2rWgsWh2CpWREdGp19
+X-Iguazu-QSIG: v=2; s=0; t=1711448985; q=2rWgsWh2CpWREdGp19; m=uexFo6Dzx4m6jZkL12YDgItO1rwd2NhgrNEo1Lwarlk=
+Received: from CNN1EMTA03.test.kioxia.com ([202.248.33.144])
+	by relay.securemx.jp (mx-mr1120) id 42QATiOa2928036
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Tue, 26 Mar 2024 19:29:45 +0900
+Received: from Switcher-Post_Send (gateway [10.232.20.1])
+	by CNN1EMTA03.test.kioxia.com (Postfix) with ESMTP id D5AD532440;
+	Tue, 26 Mar 2024 19:29:44 +0900 (JST)
+Received: from CNN1ESTR04.kioxia.com (localhost [127.0.0.1])
+	by Switcher-Post_Send (Postfix) with ESMTP id 9DB131900001E2;
+	Tue, 26 Mar 2024 19:17:18 +0900 (JST)
+Received: from localhost [127.0.0.1] 
+	 by CNN1ESTR04.kioxia.com with ESMTP id 0003VAAAAAA01M8E;
+	 Tue, 26 Mar 2024 19:17:18 +0900
+Received: from CNN1EXMB02.r1.kioxia.com (CNN1EXMB02.r1.kioxia.com [10.232.20.151])
+	by Switcher-Pre_Send (Postfix) with ESMTP id 9277BA29B6838;
+	Tue, 26 Mar 2024 19:17:18 +0900 (JST)
+Received: from CNN1EXMB03.r1.kioxia.com (10.232.20.152) by
+ CNN1EXMB02.r1.kioxia.com (10.232.20.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 26 Mar 2024 19:29:44 +0900
+Received: from CNN1EXMB03.r1.kioxia.com ([10.13.100.22]) by
+ CNN1EXMB03.r1.kioxia.com ([10.13.100.22]) with mapi id 15.01.2507.035; Tue,
+ 26 Mar 2024 19:29:44 +0900
+From: tada keisuke <keisuke1.tada@kioxia.com>
+To: "song@kernel.org" <song@kernel.org>,
+        "yukuai3@huawei.com"
+	<yukuai3@huawei.com>
+CC: "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH 08/11] md: add atomic mode switching in RAID 1/10
+Thread-Topic: [PATCH 08/11] md: add atomic mode switching in RAID 1/10
+Thread-Index: Adp/ZICXwOfGlnukSn+3jpdX/zMiPQ==
+Date: Tue, 26 Mar 2024 10:29:44 +0000
+Message-ID: <9060d1a27d424db099b60f291555cd2c@kioxia.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tm-as-product-ver: ISME-14.0.0.2080-9.0.1002-28274.000
+x-tm-as-result: No-10--6.422500-8.000000
+x-tmase-matchedrid: biL4YBBTMFamagT1k9kBppTQgFTHgkhZKQNhMboqZlrGZbX3v50WrzPn
+	4yDW5yf3V6Ny+iZr9hf2Rn4xkq0qEkDek9Bnh47Tuce7gFxhKa3BOVz0Jwcxl6vCrG0TnfVULPJ
+	tWpbJjY391wFzAlGcPpNywEy6SR9HMX9mM1cyCSMjRwcsjqWGAvA5Umnv0zLsuqWf6Nh7tmEphT
+	mCSWz6qUjuhwwkGBHrOR5CVdmNzBKLb+PIurKEXancG1vVsfbQM+pky3DTsZ2qagqQPeEJjJ4CI
+	KY/Hg3AcmfM3DjaQLHEQdG7H66TyBU9TwbPjFWN6HLiu/iQZSQZOoCi/3UCsIlztRJHyQ1ROA1J
+	CisWh+jAWfSqfUCswndMV9iIuCaQ
+x-tm-as-user-approved-sender: No
+x-tm-as-user-blocked-sender: No
+x-tmase-result: 10--6.422500-8.000000
+x-tmase-version: ISME-14.0.0.2080-9.0.1002-28274.000
+x-tm-snts-smtp: 749F8F7BD728F02F15D30D7A42B633AE9604D3D59524E77EA174EED40124F0DA2000:8
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: KqcLm5xMXE9mP6QZ7WPg-9XLeGkjHZad
-X-Proofpoint-ORIG-GUID: KqcLm5xMXE9mP6QZ7WPg-9XLeGkjHZad
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-26_04,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 adultscore=0 suspectscore=0 mlxscore=0 priorityscore=1501
- impostorscore=0 clxscore=1015 phishscore=0 mlxlogscore=999 bulkscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2403210001 definitions=main-2403260071
+X-CrossPremisesHeadersFilteredBySendConnector: CNN1EXMB02.r1.kioxia.com
+X-OrganizationHeadersPreserved: CNN1EXMB02.r1.kioxia.com
 
-Power event IRQ is used for wakeup in cases:
-a) where the controller is super speed capable and missing an
-ss_phy interrupt.
-b) where the GIC is not capable of detecting DP/DM hs phy irq's.
+This patch depends on patch 07.
 
-Power event IRQ stat register indicates whether high speed phy
-entered and exited L2 successfully during suspend and resume.
-Indicate the same for all ports of multiport.
+All rdevs running in RAID 1/10 switch nr_pending to atomic mode.
+The value of nr_pending is read in a normal operation (read_balance()).
+Therefore, nr_pending must always be consistent.
 
-Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
-Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+Signed-off-by: Keisuke TADA <keisuke1.tada@kioxia.com>
+Signed-off-by: Toshifumi OHTAKE <toshifumi.ootake@kioxia.com>
 ---
- drivers/usb/dwc3/dwc3-qcom.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ drivers/md/md.h     | 14 ++++++++++++++
+ drivers/md/raid1.c  |  7 +++++++
+ drivers/md/raid10.c |  4 ++++
+ 3 files changed, 25 insertions(+)
 
-diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-index f8d3c9ecf461..2d06f83a4f4b 100644
---- a/drivers/usb/dwc3/dwc3-qcom.c
-+++ b/drivers/usb/dwc3/dwc3-qcom.c
-@@ -52,6 +52,13 @@
- #define APPS_USB_AVG_BW 0
- #define APPS_USB_PEAK_BW MBps_to_icc(40)
- 
-+static const u32 pwr_evnt_irq_stat_reg[DWC3_MAX_PORTS] = {
-+	0x58,
-+	0x1dc,
-+	0x228,
-+	0x238,
-+};
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index c69e3a0bc4ca..ee84c4b5ee87 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -236,6 +236,20 @@ static inline unsigned long nr_pending_read(struct md_=
+rdev *rdev)
+ 	return atomic_long_read(&rdev->nr_pending.data->count);
+ }
+=20
++static inline bool nr_pending_is_percpu_mode(struct md_rdev *rdev)
++{
++	unsigned long __percpu *percpu_count;
 +
- struct dwc3_qcom_port {
- 	int			qusb2_phy_irq;
- 	int			dp_hs_phy_irq;
-@@ -421,9 +428,11 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom, bool wakeup)
- 	if (qcom->is_suspended)
- 		return 0;
- 
--	val = readl(qcom->qscratch_base + PWR_EVNT_IRQ_STAT_REG);
--	if (!(val & PWR_EVNT_LPM_IN_L2_MASK))
--		dev_err(qcom->dev, "HS-PHY not in L2\n");
-+	for (i = 0; i < qcom->num_ports; i++) {
-+		val = readl(qcom->qscratch_base + pwr_evnt_irq_stat_reg[i]);
-+		if (!(val & PWR_EVNT_LPM_IN_L2_MASK))
-+			dev_err(qcom->dev, "port-%d HS-PHY not in L2\n", i + 1);
++	return __ref_is_percpu(&rdev->nr_pending, &percpu_count);
++}
++
++static inline bool nr_pending_is_atomic_mode(struct md_rdev *rdev)
++{
++	unsigned long __percpu *percpu_count;
++
++	return !__ref_is_percpu(&rdev->nr_pending, &percpu_count);
++}
++
+ static inline int is_badblock(struct md_rdev *rdev, sector_t s, int sector=
+s,
+ 			      sector_t *first_bad, int *bad_sectors)
+ {
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 43cc36fec7a2..146eda6c4961 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -784,6 +784,7 @@ static int choose_best_rdev(struct r1conf *conf, struct=
+ r1bio *r1_bio)
+ 		if (ctl.readable_disks++ =3D=3D 1)
+ 			set_bit(R1BIO_FailFast, &r1_bio->state);
+=20
++		WARN_ON_ONCE(nr_pending_is_percpu_mode(rdev));
+ 		pending =3D nr_pending_read(rdev);
+ 		dist =3D abs(r1_bio->sector - conf->mirrors[disk].head_position);
+=20
+@@ -1930,6 +1931,7 @@ static int raid1_add_disk(struct mddev *mddev, struct=
+ md_rdev *rdev)
+ 			if (err)
+ 				return err;
+=20
++			percpu_ref_switch_to_atomic_sync(&rdev->nr_pending);
+ 			raid1_add_conf(conf, rdev, mirror, false);
+ 			/* As all devices are equivalent, we don't need a full recovery
+ 			 * if this was recently any drive of the array
+@@ -1949,6 +1951,7 @@ static int raid1_add_disk(struct mddev *mddev, struct=
+ md_rdev *rdev)
+ 		set_bit(Replacement, &rdev->flags);
+ 		raid1_add_conf(conf, rdev, repl_slot, true);
+ 		err =3D 0;
++		percpu_ref_switch_to_atomic_sync(&rdev->nr_pending);
+ 		conf->fullsync =3D 1;
+ 	}
+=20
+@@ -3208,6 +3211,7 @@ static void raid1_free(struct mddev *mddev, void *pri=
+v);
+ static int raid1_run(struct mddev *mddev)
+ {
+ 	struct r1conf *conf;
++	struct md_rdev *rdev;
+ 	int i;
+ 	int ret;
+=20
+@@ -3269,6 +3273,9 @@ static int raid1_run(struct mddev *mddev)
+ 	/*
+ 	 * Ok, everything is just fine now
+ 	 */
++	rdev_for_each(rdev, mddev) {
++		percpu_ref_switch_to_atomic_sync(&rdev->nr_pending);
 +	}
- 
- 	for (i = qcom->num_clocks - 1; i >= 0; i--)
- 		clk_disable_unprepare(qcom->clks[i]);
-@@ -472,8 +481,11 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom, bool wakeup)
- 		dev_warn(qcom->dev, "failed to enable interconnect: %d\n", ret);
- 
- 	/* Clear existing events from PHY related to L2 in/out */
--	dwc3_qcom_setbits(qcom->qscratch_base, PWR_EVNT_IRQ_STAT_REG,
--			  PWR_EVNT_LPM_IN_L2_MASK | PWR_EVNT_LPM_OUT_L2_MASK);
-+	for (i = 0; i < qcom->num_ports; i++) {
-+		dwc3_qcom_setbits(qcom->qscratch_base,
-+				  pwr_evnt_irq_stat_reg[i],
-+				  PWR_EVNT_LPM_IN_L2_MASK | PWR_EVNT_LPM_OUT_L2_MASK);
-+	}
- 
- 	qcom->is_suspended = false;
- 
--- 
+ 	rcu_assign_pointer(mddev->thread, conf->thread);
+ 	rcu_assign_pointer(conf->thread, NULL);
+ 	mddev->private =3D conf;
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index cd5094c4df50..eebbf9185deb 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -808,6 +808,7 @@ static struct md_rdev *read_balance(struct r10conf *con=
+f,
+=20
+ 		nonrot =3D bdev_nonrot(rdev->bdev);
+ 		has_nonrot_disk |=3D nonrot;
++		WARN_ON_ONCE(nr_pending_is_percpu_mode(rdev));
+ 		pending =3D nr_pending_read(rdev);
+ 		if (min_pending > pending && nonrot) {
+ 			min_pending =3D pending;
+@@ -2113,6 +2114,7 @@ static int raid10_add_disk(struct mddev *mddev, struc=
+t md_rdev *rdev)
+ 		p->recovery_disabled =3D mddev->recovery_disabled - 1;
+ 		rdev->raid_disk =3D mirror;
+ 		err =3D 0;
++		percpu_ref_switch_to_atomic_sync(&rdev->nr_pending);
+ 		if (rdev->saved_raid_disk !=3D mirror)
+ 			conf->fullsync =3D 1;
+ 		WRITE_ONCE(p->rdev, rdev);
+@@ -2127,6 +2129,7 @@ static int raid10_add_disk(struct mddev *mddev, struc=
+t md_rdev *rdev)
+ 		err =3D mddev_stack_new_rdev(mddev, rdev);
+ 		if (err)
+ 			return err;
++		percpu_ref_switch_to_atomic_sync(&rdev->nr_pending);
+ 		conf->fullsync =3D 1;
+ 		WRITE_ONCE(p->replacement, rdev);
+ 	}
+@@ -4028,6 +4031,7 @@ static int raid10_run(struct mddev *mddev)
+ 	rdev_for_each(rdev, mddev) {
+ 		long long diff;
+=20
++		percpu_ref_switch_to_atomic_sync(&rdev->nr_pending);
+ 		disk_idx =3D rdev->raid_disk;
+ 		if (disk_idx < 0)
+ 			continue;
+--=20
 2.34.1
 
