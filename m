@@ -1,98 +1,202 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 438C62233A;
-	Tue, 26 Mar 2024 14:57:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3471413C696;
+	Tue, 26 Mar 2024 14:57:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711465052; cv=none; b=oDcEc7KBZ/W9E9w/0KQE/HTuMrenwrUtUSwlt1/kBIh1UPSzxYD4Foo9wug0H7DTQwtYsV73mlVXneVMUDEjzyl1NvM4P4zYxjkvlLuq56J+voSvA6/DKpxiK+TwEle5eMt+fJLt0acl+IaCI2iIx0K3lQVEs39FMdtoiFYI/uQ=
+	t=1711465059; cv=none; b=Z+kgmbLE+L0wnsYKgApQS0gEJ/x4zxNWQPWUjxMhHC6SpFt9dqvpNLOgvPSxiXQdTdZEIarOQz7QZbSnFvyC3dUc11Ol8Lx7zRlfxKXGpSKE8nwl4se2uxeyubup7TfnKSj/xBmtUls5LbRiVsMSPnurHqhB5DBP79T7p420ZiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711465052; c=relaxed/simple;
-	bh=s9XKDoLzIfdzIZPmSDkl+/c6CzgijIpyNlXPpUChh3Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sAFUGpgU6uKLd4xNYb1p42Hx69B9zSuNAkJ/AcjZRGQXRHA5rqBfLm5b9apU/o1N0+LXbY9ukAMG2vXKw82sDJaBnxheRBKnp/RSYrNFM16dpuY2NeAiwOWjtK2AxNbbt1KM009dbV3O7AKKWkI19zsw1Z+DPPrVnps2ifuv74U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eEDTgszZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711465059; c=relaxed/simple;
+	bh=D/D7xFW3Ns/95BX0XjxxVeG1+4Tl3hXAWQiMRnjcwMg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kxLKNba5hdyo9lJ91NEcDalMgU/Nx9z/cHujpkzhUSEYEvAf1A2rg1SYOW07MbV2WXFjSSYamg9vJ7X6c07MZvY+GZ3G2mFU4KG9kCpJ5lWasYY2eoewfXDWWL5/LSvVpayO4OBGvcVfypZRtsPbn2keETiiI1IvG2Kv55dQDIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i+fL4Pd0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eEDTgszZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11992C433F1;
-	Tue, 26 Mar 2024 14:57:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i+fL4Pd0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86D13C433F1;
+	Tue, 26 Mar 2024 14:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711465051;
-	bh=s9XKDoLzIfdzIZPmSDkl+/c6CzgijIpyNlXPpUChh3Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eEDTgszZMXm/jx48aBMxaHQ+11RDtWV+qKBDXof5dvQwi2s6xF2SZ4QDvZNkIqfrm
-	 ot/Ypt72jUs2sLe5XnthJfX/pZ6RxiwU+wcrFl0nbmLotrPQeC5+HzuCGZP5YBnrEg
-	 0W+Cmj9hOuGxaIpTmxeH/4TpDJU9kRhD3gfoi/4ixxukxOwqoiVWYbWT2QDT7HU6zI
-	 CYiLw+U3G8+I/wOpgi6D64ZL9G292gTbct4I3ZVTeMhsXQDdCnPtgvAvjVI0n23F4/
-	 8hUZp4j/Rb/nElraui+g3WDNzRGRU8Jb0Xt9BebsVl58qA/d8VFuBCjbjfVG2X7IdK
-	 LG0mbny1UtSIA==
-Message-ID: <1cd2a70c-17b8-4421-b70b-3c0199a84a6a@kernel.org>
-Date: Tue, 26 Mar 2024 08:57:29 -0600
+	s=k20201202; t=1711465058;
+	bh=D/D7xFW3Ns/95BX0XjxxVeG1+4Tl3hXAWQiMRnjcwMg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=i+fL4Pd0BYS1PoAvRDXvMzGEITB2SiYsXZg4lWjmwbo0YtkEa4WfIE3jkBqA5HeX/
+	 81v81okQB39H/KM74PpvbIQj7ZXTX7xNBZdWyFkYryjd4SlS03xweo5752Zaw1xHKS
+	 lG4b9F+mN56kK8bgt2zpiA0+A6fTijrEZN75MZ+nbyHxNWNYdQzXNzbwv+GreHfqTw
+	 KLFP5EryVqMvUtbuw/cXv0bADcegFtpRWR7HRNIozoKgHaJBgqK1+mcmTdnt3ys4wA
+	 TQJaDH9nMrYrZ9KTFpI3fZU6yaj6qWn1d/CtmFtioM42MDB3tF+IRe1Cn4AeC/YHzg
+	 1PBFQFMncEyiw==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	linux-modules@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	"Ricardo B. Marliere" <ricardo@marliere.net>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] [v3] module: don't ignore sysfs_create_link() failures
+Date: Tue, 26 Mar 2024 15:57:18 +0100
+Message-Id: <20240326145733.3413024-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 0/5] mlx5 ConnectX control misc driver
-Content-Language: en-US
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jason Gunthorpe <jgg@nvidia.com>, Christoph Hellwig <hch@infradead.org>,
- Saeed Mahameed <saeed@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Leon Romanovsky <leonro@nvidia.com>, Jiri Pirko <jiri@nvidia.com>,
- Leonid Bloch <lbloch@nvidia.com>, Itay Avraham <itayavr@nvidia.com>,
- Saeed Mahameed <saeedm@nvidia.com>,
- Aron Silverton <aron.silverton@oracle.com>, linux-kernel@vger.kernel.org,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- Andy Gospodarek <andrew.gospodarek@broadcom.com>
-References: <20240207072435.14182-1-saeed@kernel.org>
- <Zcx53N8lQjkpEu94@infradead.org>
- <ZczntnbWpxUFLxjp@C02YVCJELVCG.dhcp.broadcom.net>
- <20240214175735.GG1088888@nvidia.com> <20240304160237.GA2909161@nvidia.com>
- <9cc7127f-8674-43bc-b4d7-b1c4c2d96fed@kernel.org>
- <2024032248-ardently-ribcage-a495@gregkh>
- <510c1b6b-1738-4baa-bdba-54d478633598@kernel.org>
- <Zf2n02q0GevGdS-Z@C02YVCJELVCG> <20240322135826.1c4655e2@kernel.org>
- <e5c61607-4d66-4cd8-bf45-0aac2b3af126@kernel.org>
- <20240322154027.5555780a@kernel.org>
-From: David Ahern <dsahern@kernel.org>
-In-Reply-To: <20240322154027.5555780a@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 3/22/24 4:40 PM, Jakub Kicinski wrote:
-> On Fri, 22 Mar 2024 15:18:09 -0600 David Ahern wrote:
->> can you respond to Jason's email with the proposal for the new fwctl
->> subsystem and identify places you do not agree? That would provide more
->> concrete discussion points. Thanks,
-> 
-> Respond in what way, David? Comment on technical aspects of whether 
-> a common class device with a discovery mechanism and a sprinkling of
-> semantically meaningless fields can be implemented? Some trivial object
-> hierarchy?
-> 
-> On whether someone can actually enforce any of the 4 "don't"s, and
-> whether this interface is basically encouraging and giving a leg up
-> to those willing to be dishonest?
-> 
-> Or should we go for another loop of me talking about openness and
-> building common abstractions, and vendors saying how their way of
-> doing basic configuration is so very special, and this is just for
-> debug and security and because others.
-> 
-> There's absolutely no willingness to try and build a common interface
-> here.
+From: Arnd Bergmann <arnd@arndb.de>
 
-The proposal is an attempt at a common interface and common tooling to a
-degree but independent of any specific subsystem of which many are
-supported by the device.
+The sysfs_create_link() return code is marked as __must_check, but the
+module_add_driver() function tries hard to not care, by assigning the
+return code to a variable. When building with 'make W=1', gcc still
+warns because this variable is only assigned but not used:
 
-Your responses continue to align with the notion that because the device
-can spit out ethernet frames, all diagnostics, debugging, configuration,
-etc. MUST go through networking APIs.
+drivers/base/module.c: In function 'module_add_driver':
+drivers/base/module.c:36:6: warning: variable 'no_warn' set but not used [-Wunused-but-set-variable]
 
-You seem unwilling to acknowledge that devices can work for various use
-cases without a netdev driver, and thus aspects of managing that device
-should be done outside of a netdev driver.
+Rework the code to properly unwind and return the error code to the
+caller. My reading of the original code was that it tries to
+not fail when the links already exist, so keep ignoring -EEXIST
+errors.
+
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: linux-modules@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Fixes: e17e0f51aeea ("Driver core: show drivers in /sys/module/")
+See-also: 4a7fb6363f2d ("add __must_check to device management code")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+v3: make error handling stricter, add unwinding,
+     fix build fail with CONFIG_MODULES=n
+v2: rework to actually handle the error. I have not tested the
+    error handling beyond build testing, so please review carefully.
+---
+ drivers/base/base.h   |  9 ++++++---
+ drivers/base/bus.c    |  9 ++++++++-
+ drivers/base/module.c | 42 +++++++++++++++++++++++++++++++-----------
+ 3 files changed, 45 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/base/base.h b/drivers/base/base.h
+index 0738ccad08b2..db4f910e8e36 100644
+--- a/drivers/base/base.h
++++ b/drivers/base/base.h
+@@ -192,11 +192,14 @@ extern struct kset *devices_kset;
+ void devices_kset_move_last(struct device *dev);
+ 
+ #if defined(CONFIG_MODULES) && defined(CONFIG_SYSFS)
+-void module_add_driver(struct module *mod, struct device_driver *drv);
++int module_add_driver(struct module *mod, struct device_driver *drv);
+ void module_remove_driver(struct device_driver *drv);
+ #else
+-static inline void module_add_driver(struct module *mod,
+-				     struct device_driver *drv) { }
++static inline int module_add_driver(struct module *mod,
++				    struct device_driver *drv)
++{
++	return 0;
++}
+ static inline void module_remove_driver(struct device_driver *drv) { }
+ #endif
+ 
+diff --git a/drivers/base/bus.c b/drivers/base/bus.c
+index daee55c9b2d9..ffea0728b8b2 100644
+--- a/drivers/base/bus.c
++++ b/drivers/base/bus.c
+@@ -674,7 +674,12 @@ int bus_add_driver(struct device_driver *drv)
+ 		if (error)
+ 			goto out_del_list;
+ 	}
+-	module_add_driver(drv->owner, drv);
++	error = module_add_driver(drv->owner, drv);
++	if (error) {
++		printk(KERN_ERR "%s: failed to create module links for %s\n",
++			__func__, drv->name);
++		goto out_detach;
++	}
+ 
+ 	error = driver_create_file(drv, &driver_attr_uevent);
+ 	if (error) {
+@@ -699,6 +704,8 @@ int bus_add_driver(struct device_driver *drv)
+ 
+ 	return 0;
+ 
++out_detach:
++	driver_detach(drv);
+ out_del_list:
+ 	klist_del(&priv->knode_bus);
+ out_unregister:
+diff --git a/drivers/base/module.c b/drivers/base/module.c
+index 46ad4d636731..d16b5c8e5473 100644
+--- a/drivers/base/module.c
++++ b/drivers/base/module.c
+@@ -30,14 +30,14 @@ static void module_create_drivers_dir(struct module_kobject *mk)
+ 	mutex_unlock(&drivers_dir_mutex);
+ }
+ 
+-void module_add_driver(struct module *mod, struct device_driver *drv)
++int module_add_driver(struct module *mod, struct device_driver *drv)
+ {
+ 	char *driver_name;
+-	int no_warn;
++	int ret;
+ 	struct module_kobject *mk = NULL;
+ 
+ 	if (!drv)
+-		return;
++		return 0;
+ 
+ 	if (mod)
+ 		mk = &mod->mkobj;
+@@ -56,17 +56,37 @@ void module_add_driver(struct module *mod, struct device_driver *drv)
+ 	}
+ 
+ 	if (!mk)
+-		return;
++		return 0;
++
++	ret = sysfs_create_link(&drv->p->kobj, &mk->kobj, "module");
++	if (ret)
++		return ret;
+ 
+-	/* Don't check return codes; these calls are idempotent */
+-	no_warn = sysfs_create_link(&drv->p->kobj, &mk->kobj, "module");
+ 	driver_name = make_driver_name(drv);
+-	if (driver_name) {
+-		module_create_drivers_dir(mk);
+-		no_warn = sysfs_create_link(mk->drivers_dir, &drv->p->kobj,
+-					    driver_name);
+-		kfree(driver_name);
++	if (!driver_name) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	module_create_drivers_dir(mk);
++	if (!mk->drivers_dir) {
++		ret = -EINVAL;
++		goto out;
+ 	}
++
++	ret = sysfs_create_link(mk->drivers_dir, &drv->p->kobj, driver_name);
++	if (ret)
++		goto out;
++
++	kfree(driver_name);
++
++	return 0;
++out:
++	sysfs_remove_link(&drv->p->kobj, "module");
++	sysfs_remove_link(mk->drivers_dir, driver_name);
++	kfree(driver_name);
++
++	return ret;
+ }
+ 
+ void module_remove_driver(struct device_driver *drv)
+-- 
+2.39.2
+
