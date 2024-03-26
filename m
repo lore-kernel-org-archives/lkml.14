@@ -1,107 +1,148 @@
-Received: from out187-3.us.a.mail.aliyun.com (out187-3.us.a.mail.aliyun.com [47.90.187.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7569F13C80C
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 441C458220
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:22:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711466504; cv=none; b=W63h6Omw3ybjnU106+BbSasghG1V5IBfd5QYF6O8ncolGLT1d04uVPfNwGgM50BKSEaRXNGiDPxsHpm6EQaPMmDcr1IaLiYUM/ObXWsU3iOB/6scLAizx/UfmhmLAPvp47Pabb4Obts8NSP46DHjKaFho6t70aVYwlZhquCoc/Y=
+	t=1711466558; cv=none; b=TUIMVaLAofTfsv3n3McK1tZZZYl8DV4fOvthFoWl02Vo9i6gsTdnkH0n7PeswKvC6OStXuYwbWfWuySlD00TMeb4fULyhBMoci+X/7ej+zZlHBR0RriiQTNbmxpGQMIAZrBNd1QuCC/gyuyMwWs3mB3wix+S3cQfnkDSOdT7Ui4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711466504; c=relaxed/simple;
-	bh=RBJWy2SJKU6/GADnLFnZWtTcwgKY+B+hJ0glm2ITsLI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lKG5+4yevQ5GZd6yVjhU5EWOn9OadRqdsS3Y/B2wTVKcj/577gQVIRhjYaOWQZLEKv3jMATxYK+iGXGzW4iVykBZdQHg2wcz4DVWyn3WkpLi21ATND0d17/KAqIN5ED8PMvWVjHOGJDZWgiaSBUeIetftPr8ccS21F7FtyfjZ90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; arc=none smtp.client-ip=47.90.187.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047212;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---.WwaCo0e_1711465550;
-Received: from 30.39.128.129(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.WwaCo0e_1711465550)
-          by smtp.aliyun-inc.com;
-          Tue, 26 Mar 2024 23:05:51 +0800
-Message-ID: <28a3e497-87b7-42ab-8724-2c49594bb4a5@antgroup.com>
-Date: Tue, 26 Mar 2024 23:05:48 +0800
+	s=arc-20240116; t=1711466558; c=relaxed/simple;
+	bh=fBNcQUHOtvyZsysftwY23WAq61KVO16Ox520bWwmTKE=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oG4uCNPmHP8/PE8hPBltfOGQsu3IJ+cHzNOVf2tOWXVoram7vZYbixZKEAVZB2mHY72IxwpyiV+ISehRO7/6au8jo43YHWoQECj10IuJcw/L2v2oQNOLfbTXUC+bV19Z1RZLpQIkdaXzqx2mIb6mf1uos0qP5PTBVe8+qOK1LPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hWjOzW1H; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pNMv7idU; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hWjOzW1H; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pNMv7idU; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hWjOzW1H";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pNMv7idU";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hWjOzW1H";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pNMv7idU"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 73B3221E3D;
+	Tue, 26 Mar 2024 15:22:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1711466554; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KXH5uUDLtBRAB47YTVHB6bZditscTqY6M49f3hWQIm0=;
+	b=hWjOzW1HqNS1ii0R8rstNDFJMG0KONLVKpbkNxwUISXQ3rq84H7y7dbv2TAc/G9D5vxGTU
+	uY7/9kFo2jqr45S8FQXU8mZjC4ur4oIIdBddNeYGV0KekJFMeOoCzUTvYu36tcy1KCLiPG
+	YSH1+bY0pSP7F6HFSgaKsc9lSy1i/LQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1711466554;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KXH5uUDLtBRAB47YTVHB6bZditscTqY6M49f3hWQIm0=;
+	b=pNMv7idUbMhs/IcgPQmJKVhGDE3oaaAPdU69K4zrkrZ8OkyivBHN1W9uDLa8fagjaOvHhx
+	booslhzqaTBZz0Ag==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1711466554; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KXH5uUDLtBRAB47YTVHB6bZditscTqY6M49f3hWQIm0=;
+	b=hWjOzW1HqNS1ii0R8rstNDFJMG0KONLVKpbkNxwUISXQ3rq84H7y7dbv2TAc/G9D5vxGTU
+	uY7/9kFo2jqr45S8FQXU8mZjC4ur4oIIdBddNeYGV0KekJFMeOoCzUTvYu36tcy1KCLiPG
+	YSH1+bY0pSP7F6HFSgaKsc9lSy1i/LQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1711466554;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KXH5uUDLtBRAB47YTVHB6bZditscTqY6M49f3hWQIm0=;
+	b=pNMv7idUbMhs/IcgPQmJKVhGDE3oaaAPdU69K4zrkrZ8OkyivBHN1W9uDLa8fagjaOvHhx
+	booslhzqaTBZz0Ag==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0B83613306;
+	Tue, 26 Mar 2024 15:22:34 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id JwdzATroAmYETQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 26 Mar 2024 15:22:34 +0000
+Date: Tue, 26 Mar 2024 16:22:35 +0100
+Message-ID: <877chpuif8.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Baojun Xu <baojun.xu@ti.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	robh+dt@kernel.org,
+	lgirdwood@gmail.com,
+	perex@perex.cz,
+	pierre-louis.bossart@linux.intel.com,
+	kevin-lu@ti.com,
+	13916275206@139.com,
+	alsa-devel@alsa-project.org,
+	linux-kernel@vger.kernel.org,
+	liam.r.girdwood@intel.com,
+	yung-chuan.liao@linux.intel.com,
+	broonie@kernel.org,
+	soyer@irl.hu
+Subject: Re: [PATCH v1 2/8] ALSA: hda/tas2781: Add tas2781 SPI-based driver
+In-Reply-To: <ZgLjAz99JZQvrx_h@smile.fi.intel.com>
+References: <20240326010905.2147-1-baojun.xu@ti.com>
+	<20240326010905.2147-2-baojun.xu@ti.com>
+	<ZgLjAz99JZQvrx_h@smile.fi.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 8/9] um: Fix -Wmissing-prototypes warnings for
- text_poke*
-Content-Language: en-US
-To: Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: richard@nod.at, anton.ivanov@cambridgegreys.com,
- johannes@sipsolutions.net, jani.nikula@intel.com,
- linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
- intel-xe@lists.freedesktop.org
-References: <20240306101925.1088870-1-tiwei.btw@antgroup.com>
- <20240306101925.1088870-9-tiwei.btw@antgroup.com>
- <tvkjne4liqm3xx64jtkvqhlvvkwmiwlavif7gdh47xlzeltyp5@ymlqsvkdbppr>
-From: "Tiwei Bie" <tiwei.btw@antgroup.com>
-In-Reply-To: <tvkjne4liqm3xx64jtkvqhlvvkwmiwlavif7gdh47xlzeltyp5@ymlqsvkdbppr>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: 0.12
+X-Spamd-Result: default: False [0.12 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 R_RATELIMIT(0.00)[to_ip_from(RL3kqsx7g8wwj8c3joodxqsamu)];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 BAYES_HAM(-1.08)[88.02%];
+	 ARC_NA(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[139.com,gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[dt];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[14];
+	 MID_CONTAINS_FROM(1.00)[];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FREEMAIL_CC(0.00)[linux.intel.com,kernel.org,gmail.com,perex.cz,ti.com,139.com,alsa-project.org,vger.kernel.org,intel.com,irl.hu];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Flag: NO
 
-On 3/26/24 10:13 PM, Lucas De Marchi wrote:
-> On Wed, Mar 06, 2024 at 06:19:24PM +0800, Tiwei Bie wrote:
->> The prototypes for text_poke* are declared in asm/text-patching.h
->> under arch/x86/include/. It's safe to include this header, as it's
->> UML-aware (by checking CONFIG_UML_X86).
+On Tue, 26 Mar 2024 16:00:19 +0100,
+Andy Shevchenko wrote:
 > 
-> but would it work when building on something other than x86? Or is that
-> not a thing?
-
-I think it doesn't matter, because uml is x86 only (i.e. uml only supports
-x86 currently). And that's how uml works currently. I described the specific
-header file to be included in the commit log just to make the changes easier
-to review.
-
-PS. The header is included via below search path set in arch/um/Makefile:
-
-HEADER_ARCH     := $(SUBARCH)
-
-ifneq ($(filter $(SUBARCH),x86 x86_64 i386),)
-        HEADER_ARCH := x86 
-endif
-......
-HOST_DIR := arch/$(HEADER_ARCH)
-......
-KBUILD_CPPFLAGS += -I$(srctree)/$(HOST_DIR)/include \
-                   -I$(srctree)/$(HOST_DIR)/include/uapi \
-                   -I$(objtree)/$(HOST_DIR)/include/generated \
-                   -I$(objtree)/$(HOST_DIR)/include/generated/uapi
-
-Regards,
-Tiwei
-
+> On Tue, Mar 26, 2024 at 09:08:59AM +0800, Baojun Xu wrote:
+> > Add TXNW2781 support in smi.
 > 
-> Lucas De Marchi
-> 
->>
->> This will address below -Wmissing-prototypes warnings:
->>
->> arch/um/kernel/um_arch.c:461:7: warning: no previous prototype for ‘text_poke’ [-Wmissing-prototypes]
->> arch/um/kernel/um_arch.c:473:6: warning: no previous prototype for ‘text_poke_sync’ [-Wmissing-prototypes]
->>
->> Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
->> ---
->> arch/um/kernel/um_arch.c | 1 +
->> 1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/um/kernel/um_arch.c b/arch/um/kernel/um_arch.c
->> index 7a9820797eae..e95f805e5004 100644
->> --- a/arch/um/kernel/um_arch.c
->> +++ b/arch/um/kernel/um_arch.c
->> @@ -23,6 +23,7 @@
->> #include <asm/cpufeature.h>
->> #include <asm/sections.h>
->> #include <asm/setup.h>
->> +#include <asm/text-patching.h>
->> #include <as-layout.h>
->> #include <arch.h>
->> #include <init.h>
->> -- 
->> 2.34.1
->>
+> Same comment WRT the commit message.
 
+Yeah, in general, all patches in this series have too short patch
+descriptions.
+
+Baojun, please give more words to explain what those patches do, and
+more importantly tell why they are needed in that way.  Silence isn't
+golden in the case of patches.  So, please resubmit the patch set with
+the proper descriptions in each patch.
+
+
+thanks,
+
+Takashi
