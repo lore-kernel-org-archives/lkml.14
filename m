@@ -1,166 +1,314 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2139.outbound.protection.outlook.com [40.107.223.139])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A375B5D905;
-	Tue, 26 Mar 2024 05:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.139
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711430490; cv=fail; b=o21je68z9BddVPTbD9bWzMtMqB/mRnTFik6aJ1e1eziAlyyIezV9p2L5hiGYY/eANgd3ywNldyP7tfV8QJ2B1WvktWw3YjeS1+pFEk5e/oLgWl3OPO5nzmubmgEnHDKkbtWKnZLMTiVZT/17c3R4jaKC2IkBlHON9ilxxL1nFQk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711430490; c=relaxed/simple;
-	bh=IlCU9pVgMQhWOnvMJ2ue5OH1S74hYi/PS1tY3nSjHqY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=QFR8ZTcdKmyJJd5vG6kElURw07As8d/Rm1dzErOd0o/uh7yeT/rg9UWTwS9fwGNE+qZhiKPyFlNMbnvVpeNBJXmej85WBEbLYNwUgpC3t8iVsA0qGbFkr46CW1Y45mOMBnsvfg80v+FKAPLLTDp/lCkD1maDFSa1tv1gjvjuviQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=o+9Y8DrI; arc=fail smtp.client-ip=40.107.223.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 217D874BEB;
+	Tue, 26 Mar 2024 05:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711430776; cv=none; b=uDhl1BrVIbMlQxhYyF5Jp6hMGSfS4hAmDj81m+GAxjKtOZNW/hgN4Swldp5hP4YwlumXg5zkp6h7UpKqArHY+rTIL6sY4J5eiX5bFrdqAlTQQe8Hz52DtpCWo/S0bi82LLr+tSuczsamUpVv1aY0+/GxVfE09hUhpb958hU8CvU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711430776; c=relaxed/simple;
+	bh=L+L9VRh5qtEdGp7ZtYuNEvXJUZUZjBEENaQAIJWo2tc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=mxZ7U1D8hrv4PFxbV053+lDWl+wytOvV1CM0Q1teXCF9QAy6zH39zsHMj/bwz8cHMxxMEsdY81TI29crwnae64Jfcn0cVM4yFF3SJWuNgnMKKwxbcQytqxcApGObroBVyUeOmN+j/tvrUoO8XvgaEszffBui0Vs+OO4sJubd0I8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HSp5EfT1; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="o+9Y8DrI"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N9iWIM4PCAaIs2pJHIwApFkUjJ38uOGfHIjfN2YJDXZ1LQNzKsncgep/C1o3zYXteAjOAjxueIPA1eBV1HIOFZsZW6a+f3q8gLA5QePdp6DNpIFL02P25ew/uzX4M1r+P04iN1O67DayZ6FPgHpIvr/4ERgjASptNiS7XPjHq8gu30NM/P3lz6I2d22JMU3os4BqOaZM+8/TobCUffcMjubtEiibeJlpEfST3LHMe+vOAjfqtkXDGRj2RkBdqC38gLjXAyICVE9VHuDHYsBa+7pM5wWF8KwWiqmqpZx99XlM5cFDuIxlKD07tuUptvT47/nnEbWePi95HTery5yi4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=e3LSQPPSzmMl2IQY68Wct1pnShN74R4KseSunRKXby8=;
- b=OsN0jWQXORd7CaNgOg2EdGiZ3Z/rWRge5gebMx7hfafQX8XHr3rMovqRKFf2qOLlcjUO9KIvXpXgK9bpYXSxxfCA5NFBMkZ6WaE35L4PKRWtVZOgT8PyHf7c9YjG/hdF13mF14Sk8Af0N+3/qjZNYZTsCxWx+YXu0qvz86feiFzFA8BfcveCfKBX52jFN/OUsxFPdlDC18+gul2j0I7xgTQDbpuGZSQsymg/Ur9K3/l5CbBQ+ILVmRnhSYX+DIKO3RD8EnMO3XzuqJf4FKEW8S0IIndemn7lcpYqBh4D4q3JYCmV1WOWffJJBU1MFGcOmO1UJ4sjEX9Fta70RkkepA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e3LSQPPSzmMl2IQY68Wct1pnShN74R4KseSunRKXby8=;
- b=o+9Y8DrIHGAW92JQ/sbHevZNMGiyim4Ae1Qyak6TuJou2N+yEhRdgQP/Lvp/JO5zobzAV4YTqC4oGEBtGgOTCZxlUMGoiGnAM3A92H8QFkhw2Z7Uih/KjZSX1jwO5EBu/rcDMRknU/VOzIGwA87jb7RJU4goGjfrj9fcIpdOpsyxHANmvHVt8bJygd/s12DHM/HSuMiFZb8cZMZwQsgz+O9PJxE0eQsXrcR3K7UEO0VGvcRtuQlM5p1hZw9caorgj5LXoBy/RuI+0v4JYam6PJrM2PAcKAOQhBkwLOMqbPEzkAM/bR3OviY9B9Ogbi7HI5XUPqVxbj1BzzYAwLamrg==
-Received: from CY8PR12MB7706.namprd12.prod.outlook.com (2603:10b6:930:85::18)
- by DS7PR12MB8273.namprd12.prod.outlook.com (2603:10b6:8:ed::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Tue, 26 Mar
- 2024 05:21:23 +0000
-Received: from CY8PR12MB7706.namprd12.prod.outlook.com
- ([fe80::f67:eb09:fbce:b5bc]) by CY8PR12MB7706.namprd12.prod.outlook.com
- ([fe80::f67:eb09:fbce:b5bc%5]) with mapi id 15.20.7409.028; Tue, 26 Mar 2024
- 05:21:22 +0000
-Message-ID: <c778674c-577c-4099-ad44-440c82eb0634@nvidia.com>
-Date: Tue, 26 Mar 2024 10:51:18 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ASoC: tegra: Fix DSPK 16-bit playback
-To: Thierry Reding <thierry.reding@gmail.com>, broonie@kernel.org,
- linux-sound@vger.kernel.org
-Cc: linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
- lgirdwood@gmail.com, jonathanh@nvidia.com, mkumard@nvidia.com,
- stable@vger.kernel.org
-References: <20240325104928.2796868-1-spujar@nvidia.com>
- <D02VH5KH4A9R.6IOJPPMBF0K5@gmail.com>
-Content-Language: en-US
-From: Sameer Pujar <spujar@nvidia.com>
-In-Reply-To: <D02VH5KH4A9R.6IOJPPMBF0K5@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA0PR01CA0108.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:af::13) To CY8PR12MB7706.namprd12.prod.outlook.com
- (2603:10b6:930:85::18)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HSp5EfT1"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42PNvJHq026281;
+	Tue, 26 Mar 2024 05:26:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=0yygey1rH/sTgcnafUAiQGFwIArwPDmg51U950nlkgU=; b=HS
+	p5EfT1uar28v/Yryvtqvc+KP7Tc9JvrZnx01axaNekVgRqaIiXwj97y2yhb/8mqX
+	JUW62p4KcCKIDlTpzGb76S1lNe9ohvlewfpxLn3ck3q6hAz5N5XFTIQvYLTJppR3
+	AvCX269QSGyibD5EH0XX2GtRKxyDeK8TsIlEO5t7yFS/qQ3oHDbfyVX2z5D1CmOg
+	lbpHVF2mhrSfBKnwzIDi5avhfxIEXMd7k+Bu0VG3hnDobel5uzm+3BUCB/MreL4v
+	yGssanIPJQVdKnfrkwXejKrvbDLS2PpZ2b5z4tI7ESPfSFYuGAgnfWMICtsD7k4f
+	LVRXz/BD6Q3aNrXzH2aA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x38ama6m7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Mar 2024 05:26:03 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42Q5Q2A9026590
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Mar 2024 05:26:02 GMT
+Received: from [10.131.33.37] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 25 Mar
+ 2024 22:25:58 -0700
+Message-ID: <058ab02e-5d49-8637-f995-b7d7458f8b44@quicinc.com>
+Date: Tue, 26 Mar 2024 10:55:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY8PR12MB7706:EE_|DS7PR12MB8273:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	8AmGlVLD1MLEIHkwPJVwrmOXuO65PNc/9TG9gRiHV2G+R1tZfv5GosKyeNGtuDFS6G1wuDIox8Q90H96IYFbXCsjJtIPLWI6xy4ozJwuc7JPZoJG1RrpY/rf+D6bNgjHE72HyRxMoDkg6f3fw0c+SQxIMpZsfXnDp8NIkMIv2zGXDtl9CJrwAYk+DwLv0w/bl/jX4JhBNUkzo3W59EU31tghqgBUu3SbhaorNx6WF+YvI0hZLN7vLR1uNx/P/TirfFeKMCB/Sq+tsgdC/FxmT6Wg1hAZ/O8VJgrqBanvwFv/0uepOkpsF8ZZ/O3F+fpgiK4mWvpTJYtpmuUO9OeAZ0BmddCGNVKDxwOr7y0DhjOCeEtyWxYxQeuMJqQYyViHzrIe9avnpIkvssxEIsR9VPS1VKs9x+miPbDL1BgicM1e7B/uFHjj/l8nbSHzi6WsIb06Rm2tTLSOf+834C30G2dKjY/uXeKd+sp46Lyhe7KAAepZVk49H6kwt1C7K/lG8+mX5+x5ZI4KsNlbyCNWEs1iUt+b1IE7JkZg93in82Hler0aQOVA/z0IxoL9i5v/jmuD04wxLup23Ug8ETZUWidPIG1ri0S1igf4Ga1XJr7WDXprFOAcGZ4pPvb2c20gIlsxzq75o05/OO+RWY5W9eOYtd9420w8mEfOtJM7rtA=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR12MB7706.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SmliRXVTVm80MURTL1B0MHkvYUtCSno1aTFWT3Uwcnp6NGFTRzFaYVozWHI4?=
- =?utf-8?B?RmV4ckRhclk5aUFRZ1dkUTMybG50V2ZSaFNsRTlScUt6TlZpVmxFclVHeXJr?=
- =?utf-8?B?bm50dFRIWHFvRmQ5K0VBbDYrT28wczBBR1pha1RCM0dVQU9VYjVmS3RMRVIr?=
- =?utf-8?B?YkQ3ZWhublFjNWlkMzJSeDNhVGMyNXJoV2lNS2taRnNRbXVOQzJkVXZZNy9v?=
- =?utf-8?B?RVZPc2hHWW5KZ3BGcWR5ODdRdmVha0syc2JVd3ZyTUNJanNlWDQvcjRHLzM3?=
- =?utf-8?B?N1lucEFObkxqSVJDZmF1S0FoNnBzUW5UZS96MGhpSHN4QjFmejRQVGpSMDRj?=
- =?utf-8?B?R1B2VTVQT3h2alhlcUdrZ1c3M1REMTc2TkZvTWVYVHlidXpyVHZzVXdFcmFT?=
- =?utf-8?B?TDU5V0EyWkEvdks0MWRkc1RkT2U1bWpleGJhcEUxbVF0MWRLbURKUG5zcW9m?=
- =?utf-8?B?NGtLems5OVNtQ1E3OXpscjBVTHBQL3JvRVJMcjlJYStnYWY5WnVzMWU1bzRY?=
- =?utf-8?B?VmdLOXFINDA2SitVS2hVcEFXaThFVjZRbFZqbXRTS3VnQmw5VWViTkhrMkNi?=
- =?utf-8?B?dm1Xd0FERGNISFlSNExhODZVTjF6cGgzdVVUMGxJc0hXc0kvVFNxdEtmemJV?=
- =?utf-8?B?YVpEYlc1S3RkQlNyTnUrME43SkRWeDNDaHFreXYvdVFMN0x3c2U5K2diT0Rh?=
- =?utf-8?B?RlZ2S29ISjQrbkFMRFcwWG83YXVyMHdpaHNEM2pGajNPWW1jN045V3RQQ3Yy?=
- =?utf-8?B?MnJWbnNUYWorRkwrRFFldlgyd0hwRGRNcmREaUowKzVWVHJhS1hVMFY4czNN?=
- =?utf-8?B?ajV4RXpqMGZLRTRlWUJIeEwyMThJSkttcG1UVEVkWSt5d1dNNFQrZWp0ZU10?=
- =?utf-8?B?VFF5VU95bldyU1J5RUpxVGNaVjRBdkEwUnh6Y1k5b1ZYY01WczY1REs2MmRI?=
- =?utf-8?B?Rmw5NnlWU3FOQnAveGJnUk11aGk4dkp0S1VIVkhEcGNvTjVWcHh3V3RPY2xG?=
- =?utf-8?B?MHQxRFZrUnBVUlNBRUhyd200MTVzQ2xhUjRYQ2lMazVPZmR1c1dRV200OXM0?=
- =?utf-8?B?bFQ5S0E1Y1o2WmhPWUR6WlJFWHlnaHFXTlJNbmZEQVZUaDRQbHphNlJlemsr?=
- =?utf-8?B?dWQzTWRpZGVSbWhmV1VKY014VVZnQkNXR3dDNTJFVmNwOE4rYlAyVVczcU9m?=
- =?utf-8?B?V3BRSzZQVDB1elN4MUx6RTV2bElMRm83aWk1SVA4ZW1OSjFiZ05KSUFkYk9u?=
- =?utf-8?B?bENzdE12ZGxtRWN3a2J6UWxlcmZlNDNhTlBQM1MwSUhmeWhQSkU4anZzbkVH?=
- =?utf-8?B?MVlpQ3VJdi9wY2dIN0ZJdFlyMUs0MUx3ckRmSTVmb1hic0RoMmtjTkZGWXlD?=
- =?utf-8?B?TmJZdFI5bWcxUzk0UHFqY3Z0QkJaTTlCTVZ5V1BCUlMyYkc4My9MbGVvWUV1?=
- =?utf-8?B?Z3VYOVZidTZWQmlJZWZLckFyZFdVcmRDczBIb2tQaEJWRjI0bEIzVmJwWUZs?=
- =?utf-8?B?MlZOV2JjN1Bwd1dSK1JZQys0OVRqdkxralEybTAvemJTaHFMNkxveHE5ZzRE?=
- =?utf-8?B?UHBWa2U2cktCRjlsV1dTa01qNUJVek1MWFp1czhsZDZzeGlOMmJJbjd5V0Jw?=
- =?utf-8?B?LzQ1S3hkMGJJR1dIL3Y2N2lnWSt5VTVRYU1yR05lcFUvNm1rb1FFeDArUE5U?=
- =?utf-8?B?clZGdVdFcFVDZUFMaDQ0UHE4Ykc5RmcwTXh6RlpoYzh2WU9GaFFtbWFQV1B4?=
- =?utf-8?B?aFhTUnlwUXJSSEdxb1R6dTRKMU5nSCt1c0RZbXFPVmNreUJJY3c5R3RCS3U5?=
- =?utf-8?B?S084dEx0ZSszcU9nK2VaSUp5NW5odlYyWGxUL0gzWDdQL3QzbmxxZk5SbFU3?=
- =?utf-8?B?d045NzVPOGp3d3NBR0VQckJyQjI2RGdTZFpJWmNaaGdyVTNnUXgrMm45M2Nz?=
- =?utf-8?B?bXdUdlR0ckdsT0xtTHFnVzNVcCs3WGRraXFTME5kYTJGMGNhbmw1MklmSHJs?=
- =?utf-8?B?cFE5ZGQzU2NzczFRK00rRWVEak5JT29rMWdLSFBjYytIM2wrVHNmKzZvUnJj?=
- =?utf-8?B?eWFoYnc3MlMvaFlKREZYZHlTNTdqQ2JiMVNIYXY1TFNLT2JDUDRQQXluamJB?=
- =?utf-8?Q?FTEzta103ZtOQRNtDSPM54ULv?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 978758cb-53d1-4b00-08e1-08dc4d549365
-X-MS-Exchange-CrossTenant-AuthSource: CY8PR12MB7706.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 05:21:22.8644
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aEnynwk1kCCIhotBSGpZauWPeMLnarHDA5B1JqhsIcypqHQ0vZxSoUQeeINxwrsGc8ODND4hxe+Htwku6O044A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8273
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH V3 2/2] cpufreq: scmi: Register for limit change
+ notifications
+To: Lukasz Luba <lukasz.luba@arm.com>
+CC: <sudeep.holla@arm.com>, Cristian Marussi <cristian.marussi@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>, <pierre.gondois@arm.com>,
+        <dietmar.eggemann@arm.com>, <morten.rasmussen@arm.com>,
+        <viresh.kumar@linaro.org>, <rafael@kernel.org>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_mdtipton@quicinc.com>, <linux-arm-msm@vger.kernel.org>
+References: <20240227181632.659133-1-quic_sibis@quicinc.com>
+ <20240227181632.659133-3-quic_sibis@quicinc.com>
+ <f8bfc666-c216-44d5-a63b-99f04ff3b8ef@arm.com>
+ <2608b2d8-f3b0-b4f5-f8e4-1f2242043ded@quicinc.com>
+ <64c6a1bc-92f2-4f44-ab10-cbd2473746f3@arm.com>
+ <18c249b2-ce8c-435b-8d65-a1770a1f294e@arm.com> <ZeBqW04f8V4dHphn@pluto>
+ <7c82b316-89d9-470d-b46d-f86e81e2add3@arm.com> <ZeB0iCr9GpfUiOEg@pluto>
+ <66ca73cc-8bdd-453a-951c-5e0166340edd@arm.com>
+ <08018d07-79cf-cebd-aba5-214afbc5001d@quicinc.com>
+ <a576209f-ffda-4891-82e9-21f153b57a26@arm.com>
+Content-Language: en-US
+From: Sibi Sankar <quic_sibis@quicinc.com>
+In-Reply-To: <a576209f-ffda-4891-82e9-21f153b57a26@arm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: iS3g_phQvBljSVhzQt35gWQNEJsCYSke
+X-Proofpoint-GUID: iS3g_phQvBljSVhzQt35gWQNEJsCYSke
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-26_02,2024-03-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ suspectscore=0 adultscore=0 bulkscore=0 priorityscore=1501 mlxscore=0
+ clxscore=1011 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403210001 definitions=main-2403260033
 
 
 
-On 25-03-2024 19:11, Thierry Reding wrote:
-> On Mon Mar 25, 2024 at 11:49 AM CET, Sameer Pujar wrote:
->> DSPK configuration is wrong for 16-bit playback and this happens because
->> the client config is always fixed at 24-bit in hw_params(). Fix this by
->> updating the client config to 16-bit for the respective playback.
+On 3/22/24 16:15, Lukasz Luba wrote:
+> Hi Sibi,
+> 
+> On 3/1/24 05:31, Sibi Sankar wrote:
 >>
->> Fixes: 327ef6470266 ("ASoC: tegra: Add Tegra186 based DSPK driver")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
->> ---
->>   sound/soc/tegra/tegra186_dspk.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
 >>
->> diff --git a/sound/soc/tegra/tegra186_dspk.c b/sound/soc/tegra/tegra186_dspk.c
->> index aa37c4ab0adb..3a152e76122b 100644
->> --- a/sound/soc/tegra/tegra186_dspk.c
->> +++ b/sound/soc/tegra/tegra186_dspk.c
->> @@ -1,8 +1,7 @@
->>   // SPDX-License-Identifier: GPL-2.0-only
->> +// SPDX-FileCopyrightText: Copyright (c) 2020-2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
->>   //
->>   // tegra186_dspk.c - Tegra186 DSPK driver
->> -//
->> -// Copyright (c) 2020 NVIDIA CORPORATION. All rights reserved.
->>   
->>   #include <linux/clk.h>
->>   #include <linux/device.h>
->> @@ -246,6 +245,7 @@ static int tegra186_dspk_hw_params(struct snd_pcm_substream *substream,
->>   	switch (params_format(params)) {
->>   	case SNDRV_PCM_FORMAT_S16_LE:
->>   		cif_conf.audio_bits = TEGRA_ACIF_BITS_16;
->> +		cif_conf.client_bits = TEGRA_ACIF_BITS_16;
-> Do we perhaps want to move the common cif_conf.client_bits assignment
-> into the S32_LE case now? It doesn't make much sense to have a common
-> assignment that's overridden for the S16_LE case and only kept for the
-> only other alternative (S32_LE).
+>> On 2/29/24 19:45, Lukasz Luba wrote:
+>>>
+>>>
+>>> On 2/29/24 12:11, Cristian Marussi wrote:
+>>>> On Thu, Feb 29, 2024 at 11:45:41AM +0000, Lukasz Luba wrote:
+>>>>>
+>>>>>
+>>>>> On 2/29/24 11:28, Cristian Marussi wrote:
+>>>>>> On Thu, Feb 29, 2024 at 10:22:39AM +0000, Lukasz Luba wrote:
+>>>>>>>
+>>>>>>>
+>>>>>>> On 2/29/24 09:59, Lukasz Luba wrote:
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> On 2/28/24 17:00, Sibi Sankar wrote:
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> On 2/28/24 18:54, Lukasz Luba wrote:
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> On 2/27/24 18:16, Sibi Sankar wrote:
+>>>>>>>>>>> Register for limit change notifications if supported and use
+>>>>>>>>>>> the throttled
+>>>>>>>>>>> frequency from the notification to apply HW pressure.
+>>>>>>>>>
+>>>>>>>>> Lukasz,
+>>>>>>>>>
+>>>>>>>>> Thanks for taking time to review the series!
+>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
+>>>>>>>>>>> ---
+>>>>>>>>>>>
+>>>>>>>>>>> v3:
+>>>>>>>>>>> * Sanitize range_max received from the notifier. [Pierre]
+>>>>>>>>>>> * Update commit message.
+>>>>>>>>>>>
+>>>>>>>>>>> ï¿½ drivers/cpufreq/scmi-cpufreq.c | 29 
+>>>>>>>>>>> ++++++++++++++++++++++++++++-
+>>>>>>>>>>> ï¿½ 1 file changed, 28 insertions(+), 1 deletion(-)
+>>>>>>>>>>>
+>>>>>>>>>>> diff --git a/drivers/cpufreq/scmi-cpufreq.c
+>>>>>>>>>>> b/drivers/cpufreq/scmi-cpufreq.c
+>>>>>>>>>>> index 76a0ddbd9d24..78b87b72962d 100644
+>>>>>>>>>>> --- a/drivers/cpufreq/scmi-cpufreq.c
+>>>>>>>>>>> +++ b/drivers/cpufreq/scmi-cpufreq.c
+>>>>>>>>>>> @@ -25,9 +25,13 @@ struct scmi_data {
+>>>>>>>>>>> ï¿½ï¿½ï¿½ï¿½ï¿½ int domain_id;
+>>>>>>>>>>> ï¿½ï¿½ï¿½ï¿½ï¿½ int nr_opp;
+>>>>>>>>>>> ï¿½ï¿½ï¿½ï¿½ï¿½ struct device *cpu_dev;
+>>>>>>>>>>> +ï¿½ï¿½ï¿½ struct cpufreq_policy *policy;
+>>>>>>>>>>> ï¿½ï¿½ï¿½ï¿½ï¿½ cpumask_var_t opp_shared_cpus;
+>>>>>>>>>>> +ï¿½ï¿½ï¿½ struct notifier_block limit_notify_nb;
+>>>>>>>>>>> ï¿½ };
+>>>>>>>>>>> +const struct scmi_handle *handle;
+>>>>>>>>
+>>>>>>>> I've missed this bit here.
+>>>>>>>
+>>>>>>> So for this change we actually have to ask Cristian or Sudeep
+>>>>>>> because I'm not sure if we have only one 'handle' instance
+>>>>>>> for all cpufreq devices.
+>>>>>>>
+>>>>>>> If we have different 'handle' we cannot move it to the
+>>>>>>> global single pointer.
+>>>>>>>
+>>>>>>> Sudeep, Cristian what do you think?
+>>>>>>
+>>>>>> I was just replying noticing this :D .... since SCMI drivers can be
+>>>>>> probed multiple times IF you defined multiple scmi top nodes in 
+>>>>>> your DT
+>>>>>> containing the same protocol nodes, they receive a distinct 
+>>>>>> sdev/handle/ph
+>>>>>> for each probe...so any attempt to globalize these wont work...BUT...
+>>>>>>
+>>>>>> ...this is a bit of a weird setup BUT it is not against the spec 
+>>>>>> and it can
+>>>>>> be used to parallelize more the SCMI accesses to disjont set of 
+>>>>>> resources
+>>>>>> within the same protocol (a long story here...) AND this type of 
+>>>>>> setup is
+>>>>>> something that it is already used by some other colleagues of Sibi 
+>>>>>> working
+>>>>>> on a different line of products (AFAIK)...
+>>>>>>
+>>>>>> So, for these reasons, usually, all the other SCMI drivers have 
+>>>>>> per-instance
+>>>>>> non-global references to handle/sdev/ph....
+>>>>>>
+>>>>>> ...having said that, thought, looking at the structure of CPUFReq
+>>>>>> drivers, I am not sure that they can stand such a similar setup
+>>>>>> where multiple instances of this same driver are probed
+>>>>>>
+>>>>>> .... indeed the existent *ph refs above is already global....so it 
+>>>>>> wont already
+>>>>>> work anyway in case of multiple instances now...
+>>>>>>
+>>>>>> ...and if I look at how CPUFreq expects the signature of 
+>>>>>> scmi_cpufreq_get_rate()
+>>>>>> to be annd how it is implemented now using the global *ph 
+>>>>>> reference, it is
+>>>>>> clearly already not working cleanly on a multi-instance setup...
+>>>>>>
+>>>>>> ...now...I can imagine how to (maybe) fix the above removing the 
+>>>>>> globals and
+>>>>>> fixing this, BUT the question, more generally, is CPUFreq supposed 
+>>>>>> to work at all in
+>>>>>> this multi-probed mode of operation ?
+>>>>>> Does it even make sense to be able to support this in CPUFREQ ?
+>>>>>>
+>>>>>> (as an example in cpufreq,c there is static global cpufreq_driver
+>>>>>>    pointing to the arch-specific configured driver BUT that also 
+>>>>>> holds
+>>>>>>    some .driver_data AND that cleraly wont be instance specific if 
+>>>>>> you
+>>>>>>    probe multiple times and register with CPUFreq multiple times...)
+>>>>>>
+>>>>>>    More questions than answers here :D
+>>>>>>
+>>>>>
+>>>>> Thanks Cristian for instant response. Yes, indeed now we have more
+>>>>> questions :) (which is good). But that's good description of the
+>>>>> situation.
+>>>>>
+>>>>> So lets consider a few option what we could do now:
+>>>>> 1. Let Sibi add another global state the 'handle' but add
+>>>>>     a BUG_ON() or WARN_ON() in the probe path if the next
+>>>>>     'handle' instance is different than already set in global.
+>>>>>     This would simply mean that we don't support (yet)
+>>>>>     such configuration in a platform. As you said, we
+>>>>>     already have the *ph global, so maybe such platforms
+>>>>>     with multiple instances for this particular cpufreq and
+>>>>>     performance protocol don't exist yet.
+>>>>
+>>>> Yes this is the quickst way (and a WARN_ON() is better I'd say) but 
+>>>> there
+>>>> are similar issues of "unicity" currently already with another 
+>>>> vendor SCMI
+>>>> drivers and custom protocol currently under review, so I was 
+>>>> thinking to
+>>>> add a new common mechanism in SCMI to handle this ... not thought about
+>>>> this really in depth and I want to chat with Sudeep about this...
+>>>>
+>>>>> 2. Ask Sibi to wait with this change, till we refactor the
+>>>>>     exiting driver such that it could support easily those
+>>>>>     multiple instances. Then pick up this patch set.
+>>>>>     Although, we would also like to have those notifications from our
+>>>>>     Juno SCP reference FW, so the feature is useful.
+>>>>> 3. Ask Sibi to refactor his patch to somehow get the 'handle'
+>>>>>     in different way, using exiting code and not introduce this 
+>>>>> global.
+>>>>>
+>>>>
+>>>>> IHMO we could do this in steps: 1. and then 2. When
+>>>>> we create some mock platform to test this refactoring we can
+>>>>> start cleaning it.
+>>
+>> I should be able to volunteer a platform to test against when
+>> we have things ready.
+>>
+>>>>>
+>>>>
+>>>> Both of these options really beg an answer to my original previous q
+>>>> question...if we somehow enable this multi-probe support in the
+>>>> scmi-cpufreq.c driver by avoiding glbals refs, does this work at all in
+>>>> the context of CPUFreq ?
+>>>
+>>> I don't know yet.
+>>>
+>>>>
+>>>> ...or it is just that CPUFreq cannot handle such a configuration (and
+>>>> maybe dont want to) and so the only solution here is just 1. at 
+>>>> first and
+>>>> then a common refined mechanism (as mentioned above) to ensure this 
+>>>> "unicity"
+>>>> of the probes for some drivers ?
+>>>
+>>> This sounds reasonable.
+>>>
+>>>>
+>>>> I'm not familiar enough to grasp if this "multi-probed" mode of 
+>>>> operation is
+>>>> allowed/supported by CPUFreq and, more important, if it makes any sense
+>>>> at all to be a supported mode...
+>>>>
+>>>
+>>> OK, let me check some stuff in the code and think for a while on that.
+>>> Thanks Cristian!
+>>>
+>>> Sibi, please give me a few days. In the meantime you can continue
+>>> on the 'boost' patch set probably.
+>>
+>> sure, thanks. I've plenty things to send out so no hurry ;)
+>>
+>> -Sibi
+>>
+> 
+> I've went through the cpufreq. It's quite complicated how those
+> policies, cpus, drivers are setup. Although, IHMO we should be
+> safe with you current proposal in this patch.
+> 
+> As we discussed with Cristian, we can take that approach further.
+> 
+> Therefore, you can add:
+> 
+> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
 
-Yes, it makes sense to do so. Will send v2. Thanks.
+Thanks, I'll re-spin the series with a WARN_ON() in the
+interim.
+
+-Sibi
+
+> 
+> Regards,
+> Lukasz
