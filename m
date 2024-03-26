@@ -1,121 +1,149 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE3E0126F1E;
-	Tue, 26 Mar 2024 18:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CEE84D0D;
+	Tue, 26 Mar 2024 18:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711477844; cv=none; b=YeWKXdoVCMc8l07WBO2mV03AK0M0SETDNoYEkUAtEBU5imquXnnlBkEuhuAXF/DeFejx8rGrotJ1iMLMM7q6atuHc47bTtgN0YMryDXWV4SQAPBqRuZfojon3YWQd2vCSvueo5I4yCnFVIsDeNtvJneH7SSsiKaE2DUQTXaWBlc=
+	t=1711477911; cv=none; b=T94OrGQlIQx/xNAAeFmVB309z8L7E2nfJoP5UWeiWTE2aiCogTiQrhaTX0GMfFvSO6N2ectTcAq/RWEbrO+i/XLR7DW5ImbKwbvjSnyPSjeO4WG1wDAMz8FG1sbvSY+DxEMJcOhk8oU3ahQC4tlB5SOa/8FL1ivJ41jgdb3K/XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711477844; c=relaxed/simple;
-	bh=sAyOUEKczk4vCaBI7fCgM6yZpeBEglMUpPYimbD3Wuk=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KbCqMNDzkTV3vlv/bpARPKNj/RfxUO+XmQR/dgmVFbjT4yvI4ZYNeUuILT4y2F/yFNJzwdSB/KUV/tnatDUtpYkNQb24rn9P6dfVX5YsmyXgwOkp5Fd8tIbXpRDzuAM85ffy6Ezu0OjIzfHIqrn+Wl2MuSsY+Odi72X5W4y7wxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kdvVyUnw; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711477911; c=relaxed/simple;
+	bh=Hy7edzumEoWeONYYCu1G0+IrMmMDfxYK/QUHU24I/Pk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=RyVS4DiZKjJyZ3KxVaH7cylSpVcEx4QVY+qsTUoTtj11RWFj5rYcihm/SqByEUIMh1KfLocGPZbfABe2DQGI+GCJsENPzAuE8B5pu6PWuw5MORkbD1867xjy//RX4rJspN2+hqcd7t1ksIMJyFnaTYaE7i78b2Q3ALd3SHNRaZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Houtpz5a; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kdvVyUnw"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e0411c0a52so43850265ad.0;
-        Tue, 26 Mar 2024 11:30:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711477842; x=1712082642; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iUdKOd7rx0WMRV6Jyf1lEVlg1MEyH9tPtK2n/H0R3Jk=;
-        b=kdvVyUnwuw/NoXtocv9KZPkO6Q0B00DUWa3qUrgcUIB+nZxDOiGb76T5hk3T/0Fxs1
-         meuoUDt6m1Tj1UYAAzyfzNvWkb6KJU/lqgMpfq/HEke3RIPM2gEtfeoTXdV4QME4ZASL
-         UyFrB6v7Ft5rapQ7Tz6au2wI43/Y+NaTdeBMN8gZjiKe4pLI32ijmsDj6qC7BisvS3+Y
-         yvmAkdVTeSmM6gglnd8rvVhzdvL6quf2RKTty2clFP/yfVT08ziQcCGqHU4pk+JQ6vDt
-         LpdJ2jKqI07wmijtDwBEATzhx7ux/YKm72qGCxMuBpaotz5qy/8SaWMhFDWTpAx0s6Vq
-         jz5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711477842; x=1712082642;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iUdKOd7rx0WMRV6Jyf1lEVlg1MEyH9tPtK2n/H0R3Jk=;
-        b=RsYjdf+kWbt+yMrqQyTDwBp/u+Mbyw5gJPxIN6+3JVwMseo/WO9GydJnhLsFiOVdcj
-         xK1L/kKoklMp8hMty9f/wkfhYFO5Ej9GINSyRTZfWq/RUi+Q9dHzWiOI41RM8WH6J7v8
-         VLGxf6rXI+G+AZKCtSzFXANjzo74ejw2uV1WvshIuQcaWsKPEgkgQCWdDpnli8bRXnhf
-         jchcp+CCwWBODsn7ccDMkrBYfT+hUPcaXJe08CaZlpbzogJ3NMFroBcsHdCY2z+U0ETQ
-         rssSyb9WTSxUV56MQKpeHeBB51+n9eyeZUMT7mEK2tzMTRLonypzdjuUcKo9Lm9vY+hO
-         MXOw==
-X-Forwarded-Encrypted: i=1; AJvYcCW/EIxbmPZg9RY8R5tB1JFn7XQlcgR4HCPdBTXq8O3xsnxTjD+nIp4JEs8CTz04lxFEmRjrP/BM9j9yocNNn4CQhJ+1ZNWM++6/6mnh6DuGS1GlC4t2ML1HFJw7nlVrrJXpci3L7LU81ytxcBFewNKblE7/o1tfYdeV9A7R7M1taz+/PUw=
-X-Gm-Message-State: AOJu0Yza8mOB9A8V4627snxwLKjRalbdEm/owkMgSKlooYnWoO0uUAUH
-	Nd8/REnGVoYHrhvC221Z5JuhiiKNu5rqwum3OgAZXkNZI+5oLjh7
-X-Google-Smtp-Source: AGHT+IHh6JX3lwXrIJoiJWTgBiw0gt3RVc2+M2dHJ2GjDbmxIo2EmZBN6zLFVtqAVrcjEF8ZgUfndA==
-X-Received: by 2002:a17:902:da8c:b0:1e0:b60e:1a1f with SMTP id j12-20020a170902da8c00b001e0b60e1a1fmr7673040plx.8.1711477841957;
-        Tue, 26 Mar 2024 11:30:41 -0700 (PDT)
-Received: from debian ([2601:641:300:14de:69a2:b1ff:1efd:f4a9])
-        by smtp.gmail.com with ESMTPSA id x3-20020a170902ec8300b001e035cecd27sm7185044plg.129.2024.03.26.11.30.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 11:30:41 -0700 (PDT)
-From: fan <nifan.cxl@gmail.com>
-X-Google-Original-From: fan <fan@debian>
-Date: Tue, 26 Mar 2024 11:30:38 -0700
-To: Davidlohr Bueso <dave@stgolabs.net>
-Cc: ira.weiny@intel.com, Dave Jiang <dave.jiang@intel.com>,
-	Fan Ni <fan.ni@samsung.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Navneet Singh <navneet.singh@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	linux-btrfs@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/26] cxl/mem: Expose device dynamic capacity
- capabilities
-Message-ID: <ZgMUTq6HasHOiR15@debian>
-References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
- <20240324-dcd-type2-upstream-v1-8-b7b00d623625@intel.com>
- <w4jkueqpvh7hzbywk42m7gxclg56nbgzhaqcgeb3q2b6dt3w6n@5vwicganqpsu>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Houtpz5a"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42QG6CL1011820;
+	Tue, 26 Mar 2024 18:02:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:to:cc; s=qcppdkim1; bh=CLe
+	32OEPO+KVS6LX1ndJG84GupdaXxVbnPB6jH9BUAI=; b=Houtpz5aPGZkHtUop7J
+	R6Hj+jP3cG9jIdgEt000sjfowcFglPUUt3BHAnRJb82SzIbE1OC7tSJYgqewDLMi
+	wTOJSKY527H41fd3RUtFP8urBgjkS0TrH512mQzESSZrDLu+91iUsqOPUN0aWKbL
+	/zlj4B2kXWBxPXst/33BgWJycZUe7/mIlGEX4YivVgwZvIxLKnVIAVvI/Qb4lliy
+	EM53d6YINyjVXJevOPSXqDv/fpMygkwsXrHq1JX8ErfsoyOPQ4KyPSzCS1LTE3WZ
+	DBcn3TGSnQ8L3S4bapRbM8VW2yQv8NtK8REOsbDW5YVTUDuFLp4Wd9uMHKCcy+lg
+	Prw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x41k68att-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Mar 2024 18:02:31 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42QI2UT3015068
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Mar 2024 18:02:30 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 26 Mar
+ 2024 11:02:30 -0700
+From: Bjorn Andersson <quic_bjorande@quicinc.com>
+Date: Tue, 26 Mar 2024 11:02:30 -0700
+Subject: [PATCH] arm64: dts: qcom: qcs6490-rb3gen2: Enable UFS
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <w4jkueqpvh7hzbywk42m7gxclg56nbgzhaqcgeb3q2b6dt3w6n@5vwicganqpsu>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240326-rb3gen2-ufs-v1-1-8c5c2dae1e64@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIALUNA2YC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDYyMz3aIk4/TUPCPd0rRiXfOUlCQDc0NTc1NTMyWgjoKi1LTMCrBp0bG
+ 1tQBGS2bKXQAAAA==
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <quic_bjorande@quicinc.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711476150; l=1626;
+ i=quic_bjorande@quicinc.com; s=20230915; h=from:subject:message-id;
+ bh=Hy7edzumEoWeONYYCu1G0+IrMmMDfxYK/QUHU24I/Pk=;
+ b=lDO306RXcsUfdGEU/nZkY0RAVYJ6JLaKK3YRNJc/yf9lrJeMOxFZoSkpcRVVKC/lt6NDUd87v
+ jYmbjeny+XeB5bTDXzwLLjXDWpoLaOm24XmUbWCMZF4OZWb/yRNSmzZ
+X-Developer-Key: i=quic_bjorande@quicinc.com; a=ed25519;
+ pk=VkhObtljigy9k0ZUIE1Mvr0Y+E1dgBEH9WoLQnUtbIM=
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: eNto9_vGL8HkPuqiG2lbeY-eOPn7AEpB
+X-Proofpoint-GUID: eNto9_vGL8HkPuqiG2lbeY-eOPn7AEpB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-26_07,2024-03-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ lowpriorityscore=0 clxscore=1011 mlxlogscore=847 priorityscore=1501
+ malwarescore=0 phishscore=0 spamscore=0 adultscore=0 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403210001 definitions=main-2403260129
 
-On Mon, Mar 25, 2024 at 04:40:16PM -0700, Davidlohr Bueso wrote:
-> On Sun, 24 Mar 2024, ira.weiny@intel.com wrote:
-> 
-> > +What:		/sys/bus/cxl/devices/memX/dc/region_count
-> > +Date:		June, 2024
-> > +KernelVersion:	v6.10
-> > +Contact:	linux-cxl@vger.kernel.org
-> > +Description:
-> > +		(RO) Number of Dynamic Capacity (DC) regions supported on the
-> > +		device.  May be 0 if the device does not support Dynamic
-> > +		Capacity.
-> 
-> If dcd is not supported then we should not have the dc/ directory
-> altogether.
-> 
-> Thanks,
-> Davidlohr 
+The rb3gen2 has UFS memory, adjust the necessary supply voltage and add
+the controller and phy nodes to enable this.
 
-I also think so. However, I also noticed one thing (not DCD related).
-Even for a PMEM device, for example, we have a ram directory under the
-device directory.
+Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+---
+ arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
-===================
-root@DT:~# cxl list
-[
-  {
-    "memdev":"mem0",
-    "pmem_size":536870912,
-    "serial":0,
-    "host":"0000:0d:00.0"
-  }
-]
-root@DT:~# ls /sys/bus/cxl/devices/mem0/
-dc  dev  driver  firmware  firmware_version  label_storage_size  numa_node  payload_max  pmem  pmem0  ram  security  serial  subsystem	trigger_poison_list  uevent
-root@DT:~#
-===================
+diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+index 63ebe0774f1d..0177d93ecd1d 100644
+--- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
++++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+@@ -221,8 +221,8 @@ vreg_l6b_1p2: ldo6 {
+ 
+ 		vreg_l7b_2p952: ldo7 {
+ 			regulator-name = "vreg_l7b_2p952";
+-			regulator-min-microvolt = <2400000>;
+-			regulator-max-microvolt = <3544000>;
++			regulator-min-microvolt = <2952000>;
++			regulator-max-microvolt = <2952000>;
+ 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+ 		};
+ 
+@@ -508,6 +508,25 @@ &usb_1_qmpphy {
+ 	status = "okay";
+ };
+ 
++&ufs_mem_hc {
++	reset-gpios = <&tlmm 175 GPIO_ACTIVE_LOW>;
++	vcc-supply = <&vreg_l7b_2p952>;
++	vcc-max-microamp = <800000>;
++	vccq-supply = <&vreg_l9b_1p2>;
++	vccq-max-microamp = <900000>;
++	vccq2-supply = <&vreg_l9b_1p2>;
++	vccq2-max-microamp = <900000>;
++
++	status = "okay";
++};
++
++&ufs_mem_phy {
++	vdda-phy-supply = <&vreg_l10c_0p88>;
++	vdda-pll-supply = <&vreg_l6b_1p2>;
++
++	status = "okay";
++};
++
+ &wifi {
+ 	memory-region = <&wlan_fw_mem>;
+ };
 
-Fan
+---
+base-commit: 084c8e315db34b59d38d06e684b1a0dd07d30287
+change-id: 20240326-rb3gen2-ufs-7ddb07157556
+
+Best regards,
+-- 
+Bjorn Andersson <quic_bjorande@quicinc.com>
 
