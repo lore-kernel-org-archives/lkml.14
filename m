@@ -1,113 +1,131 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D5BF1BC40;
-	Tue, 26 Mar 2024 14:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3D17E586
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 14:32:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711463431; cv=none; b=evhYs3rjFkDRPPaIWl7j3rYHUi2tQO0Yx2ztiYJ1ueT84YSuZvUA/XdVFk+NqPn2emrVYQ1Ce9RpsKObukPEwqL0ewO/it5CVva2DM5/WP5MJIcD3ExJpu5DGNucOvjvl48xQML/bHslwk+AjEaCr3OkRnXmBWYVJ8paMDvbi8I=
+	t=1711463563; cv=none; b=ABW6c2n5zcVx5nemqImZrXP7RKZzWyhJfg3nOl9wxgn1vWdai191uRPyCsFeTcCnLFsL42btWX/4GynjJfmYeTycR9kZOUgrE6L2Pw0LOv53U9LWVl7r7eWyVp75kJ2vkN54Apj7a8WzImfLfgIFrZ4fVZO4JIF4BnK3BWhNUkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711463431; c=relaxed/simple;
-	bh=//rHrUgjEmOLGBfGfKkrjCnOWQAuk+QBok4YREDf2W4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XrrQtbXqHbTFjSlxTnXcEz3/YRBCim1DtmkYsESK4aQe8IX89KdlF7I5XYDIsYFzlxSj14eYzlEaHJv0LFyGDfo7bCg49nOZyjV7834nDjNxLkMxfEOdpCgFg+O32nzi8GUjfVPC0FJfr/xasqg8HiDUEKNrLsjmyuHtbZjmuI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=GHjaYru+; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1711463563; c=relaxed/simple;
+	bh=f7T8MkaAXp1DoF4aQypiINaYqrYwwuPzyFcZXUDYcV0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IuY0qTvVNet8jZi3roOdo3LccgBDR2eW/4ncqXTmoggaY1DURxSDSVqsyxpXD2D16B17v5/KfGyzQvyiL8B9mfFdkA29+N241FCgkwiBVfU8p9DLT3hIXdtiUoMI02EjROl7hqbBl5m3gexEafSlCoqLyGI9bn4DA3ueQF0X7B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hCNGfFh8; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GHjaYru+"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42QEU7GL128913;
-	Tue, 26 Mar 2024 09:30:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1711463407;
-	bh=SNTgUxZVk6wVetOWRKspsG10dACCHvhBQOX0BXi4C+w=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=GHjaYru+bg6VZoMaYMwvG3Jd2Boj/ElWmnu9f1PCcRyRMDJGwEFolkQvRVLahjsz/
-	 6ry1h5LuRjzx9bT/xtowYSqrcs26MBpYCNkp/yalSVOA3BdWcxuBBAcO54jQQep7nq
-	 IDvLD2pq2xlWh92hgmAgJSK/cHGSUtGGt6JTfYdQ=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42QEU6DV081421
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 26 Mar 2024 09:30:06 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 26
- Mar 2024 09:30:06 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 26 Mar 2024 09:30:06 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42QEU5Y7074845;
-	Tue, 26 Mar 2024 09:30:06 -0500
-Date: Tue, 26 Mar 2024 20:00:04 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Niklas Cassel <cassel@kernel.org>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
-        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
-        <manivannan.sadhasivam@linaro.org>, <fancer.lancer@gmail.com>,
-        <u.kleine-koenig@pengutronix.de>, <dlemoal@kernel.org>,
-        <yoshihiro.shimoda.uh@renesas.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>
-Subject: Re: [PATCH v5] PCI: keystone: Fix pci_ops for AM654x SoC
-Message-ID: <2e40b30d-b063-48ac-a566-f66eb2788003@ti.com>
-References: <20240326111905.2369778-1-s-vadapalli@ti.com>
- <ZgLUCqh12RMApzyr@x1-carbon>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hCNGfFh8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711463560;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=k3fG4r4Q8hx+GsgNbmv8fZt36Dp6KwDjh0kqtr+4P8U=;
+	b=hCNGfFh81ZcQ+6W/sSj3bZjEwrs4jcFE+IxI8ea/f2c2zkRs17ogQdieowIDLr+GOGEGPP
+	CaAvbAGzHoxwD64P8jmMNRjyb0IDbuA/6S/Iqbso60EOCbGFBSPLBD7UfUTrPTSzC2/Bqt
+	seqn1kUDQz6+eUvVHerrRUCTh/wD46I=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-155-lCb3fHdnM7OwuK4mX5a9sA-1; Tue, 26 Mar 2024 10:32:34 -0400
+X-MC-Unique: lCb3fHdnM7OwuK4mX5a9sA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1FE6484AED1;
+	Tue, 26 Mar 2024 14:32:34 +0000 (UTC)
+Received: from t14s.fritz.box (unknown [10.39.192.164])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id A118140C6CBF;
+	Tue, 26 Mar 2024 14:32:31 +0000 (UTC)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Miklos Szeredi <mszeredi@redhat.com>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	xingwei lee <xrivendell7@gmail.com>,
+	yue sun <samsun1006219@gmail.com>
+Subject: [PATCH v2 0/3] mm/secretmem: one fix and one refactoring
+Date: Tue, 26 Mar 2024 15:32:07 +0100
+Message-ID: <20240326143210.291116-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ZgLUCqh12RMApzyr@x1-carbon>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-On Tue, Mar 26, 2024 at 02:56:26PM +0100, Niklas Cassel wrote:
-> On Tue, Mar 26, 2024 at 04:49:05PM +0530, Siddharth Vadapalli wrote:
-> > In the process of converting .scan_bus() callbacks to .add_bus(), the
-> > ks_pcie_v3_65_scan_bus() function was changed to ks_pcie_v3_65_add_bus().
-> > The .scan_bus() method belonged to ks_pcie_host_ops which was specific
-> > to controller version 3.65a, while the .add_bus() method had been added
-> > to ks_pcie_ops which is shared between the controller versions 3.65a and
-> > 4.90a. Neither the older ks_pcie_v3_65_scan_bus() method, nor the newer
-> > ks_pcie_v3_65_add_bus() method are applicable to the controller version
-> > 4.90a which is present in AM654x SoCs.
-> > 
+Patch #1 fixes a GUP-fast issue, whereby we might succeed in pinning
+secretmem folios. Patch #2 extends the memfd_secret selftest to cover
+that case. Patch #3 removes folio_is_secretmem() and instead lets
+folio_fast_pin_allowed() cover that case as well.
 
-...
+With this series, the reproducer (+selftests) works as expected. To
+test patch #3, the gup_longterm test does exactly what we need, and
+keeps on working as expected.
 
-> > +	} while (val & DBI_CS2);
-> > +}
-> > +
-> >  static int ks_pcie_msi_host_init(struct dw_pcie_rp *pp)
-> >  {
-> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > +	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
-> > +
-> > +	/* Configure and set up BAR0 */
-> > +	ks_pcie_set_dbi_mode(ks_pcie);
-> > +
-> > +	/* Enable BAR0 */
-> > +	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 1);
-> > +	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, SZ_4K - 1);
-> > +
-> > +	ks_pcie_clear_dbi_mode(ks_pcie);
-> > +
-> > +	 /*
-> > +	  * For BAR0, just setting bus address for inbound writes (MSI) should
-> > +	  * be sufficient.  Use physical address to avoid any conflicts.
-> > +	  */
-> 
-> This comment seems to have wrong indentation.
-> With that fixed:
-> 
-> Reviewed-by: Niklas Cassel <cassel@kernel.org>
+Without the fix:
+	TAP version 13
+	1..6
+	ok 1 mlock limit is respected
+	ok 2 file IO is blocked as expected
+	not ok 3 vmsplice: unexpected memory access with fresh page
+	ok 4 vmsplice is blocked as expected with existing page
+	ok 5 process_vm_read is blocked as expected
+	ok 6 ptrace is blocked as expected
+	# Totals: pass:5 fail:1 xfail:0 xpass:0 skip:0 error:0
 
-I will fix it and post the v6 patch.
+With the fix:
+	TAP version 13
+	1..6
+	ok 1 mlock limit is respected
+	ok 2 file IO is blocked as expected
+	ok 3 vmsplice is blocked as expected with fresh page
+	ok 4 vmsplice is blocked as expected with existing page
+	ok 5 process_vm_read is blocked as expected
+	ok 6 ptrace is blocked as expected
+	# Totals: pass:6 fail:0 xfail:0 xpass:0 skip:0 error:0
 
-Regards,
-Siddharth.
+v1 -> v2:
+* "mm/secretmem: fix GUP-fast succeeding on secretmem folios"
+ -> Drop the LRU check completely
+ -> Rephrase patch description
+ -> (Dropped RB from Mike)
+* "selftests/memfd_secret: add vmsplice() test"
+ -> Add test with fresh+existing page
+ -> Change pass/fail message
+ -> Rephrase patch description
+ -> (Dropped RB from Mike)
+* "mm: merge folio_is_secretmem() and folio_fast_pin_allowed() into
+   gup_fast_folio_allowed()"
+ -> Adjust to dropped LRU check
+ -> Rename folio_fast_pin_allowed() to gup_fast_folio_allowed()
+ -> Rephrase patch description
+ -> Add RB from Mike
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport (IBM) <rppt@kernel.org>
+Cc: Miklos Szeredi <mszeredi@redhat.com>
+Cc: Lorenzo Stoakes <lstoakes@gmail.com>
+Cc: xingwei lee <xrivendell7@gmail.com>
+Cc: yue sun <samsun1006219@gmail.com>
+
+David Hildenbrand (3):
+  mm/secretmem: fix GUP-fast succeeding on secretmem folios
+  selftests/memfd_secret: add vmsplice() test
+  mm: merge folio_is_secretmem() and folio_fast_pin_allowed() into
+    gup_fast_folio_allowed()
+
+ include/linux/secretmem.h                 | 21 +---------
+ mm/gup.c                                  | 48 ++++++++++++---------
+ tools/testing/selftests/mm/memfd_secret.c | 51 ++++++++++++++++++++++-
+ 3 files changed, 79 insertions(+), 41 deletions(-)
+
+-- 
+2.43.2
+
