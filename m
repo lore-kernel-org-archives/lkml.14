@@ -1,278 +1,102 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE0A13C3F8;
-	Tue, 26 Mar 2024 14:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6867E13C3F1
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 14:43:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711464211; cv=none; b=pS/PcPiT7lOV3MctFFHWXDjQYaMpQyGReAr1xGn3oL4Rf2eHZmmiQYLFlF2YP5x35gncigHEffbL7ln0+ISwKxO0IFaY1Zr1B6S5byqLsgXMgyz7zFeS/OJsDRL8wY/57CGT3BHWYNsLE9PudRkrfYQZT3Ef6t4HwrxlnfI7Klg=
+	t=1711464238; cv=none; b=LH27Tcr4vHwE+XGKyhkFiYkJrAVCksDUSEOQ2GXc6YHdLmDU/fyld666gKCZx383lyWe5VgV4Dl24iTIY8/C8ZeHe3V80D5aw49Nir4GWLQn2lEAJXFZkuJCOJ3kbZyqQ9VeYb7moqNMfxF/joahWZebk2g7ifuATKtEpaR5P8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711464211; c=relaxed/simple;
-	bh=dhPNFnXqNz7MyRueA7i8eRJMctZ7L861mSkCd6aiLic=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WStdbNnalX6Mdw+sLmdJWGeyRF3sEaNX+hSD1sFU15mZGbFGAlUJ73b0NJ7/njOpfrLDFcJ7p4C9hYOMEGqFEpoEfIkBcPvfVixlb9clhvemwT9iBVzawDJylbIqC1I7hjNCyTPZS7s47GzhepxrOq8E5ziCVBaqpqMCCNeqLPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=igrJ00EC; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1711464238; c=relaxed/simple;
+	bh=PKvs+Ifa+14hX9p1LNFxIABmBql5tpHj1BT+AEjdf4U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eQhFdGac6uxagty3d8tdy3etEBQiB8zZ7UXIx2ZpuQEhtanMdg6OMwKWxEc7U8/jV4a3CeggXirvICnqusWQIBYnwGx8cXYKclcvO0TO9JTls6YLy5E3NXrBNsdW1+eZeP/g7WGjVJdfSrXrdYNiyLJ8ZOMbbc9yGlzYd4D6Bj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j7eF0AEr; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="igrJ00EC"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42QEh4et120096;
-	Tue, 26 Mar 2024 09:43:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1711464184;
-	bh=BXUiSRzxDxZfaQUcL26qbyVKdqBilV07vRkMOn/zbh8=;
-	h=From:To:CC:Subject:Date;
-	b=igrJ00ECxwQaeze00MPcpOWFZhsvQKjWc18mpT5G0Gx+Kk0Zjywmj7+QYUQnk02Vd
-	 8DaJQOaXRk1tCE1eNIYK2S/vhgMCvTV2GQtTmr1eq2Ny0PBwIJy+x4Dbwze2XvtwtL
-	 YtsdFWQwE4gyYK2IuvaSi0Dnh6kxhyY8jnas8yF4=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42QEh4nc092364
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 26 Mar 2024 09:43:04 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 26
- Mar 2024 09:43:04 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 26 Mar 2024 09:43:04 -0500
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42QEgxxZ014526;
-	Tue, 26 Mar 2024 09:43:00 -0500
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <manivannan.sadhasivam@linaro.org>,
-        <fancer.lancer@gmail.com>, <u.kleine-koenig@pengutronix.de>,
-        <cassel@kernel.org>, <dlemoal@kernel.org>,
-        <yoshihiro.shimoda.uh@renesas.com>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
-        <s-vadapalli@ti.com>
-Subject: [PATCH v6] PCI: keystone: Fix pci_ops for AM654x SoC
-Date: Tue, 26 Mar 2024 20:12:58 +0530
-Message-ID: <20240326144258.2404433-1-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j7eF0AEr"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4146f72e2dfso80105e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 07:43:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711464235; x=1712069035; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QvRPX0srI6Nwl8MPf7Dm2KIiqeWF1NL4djSI9z970zQ=;
+        b=j7eF0AErNCfdNZ2PD1wsOWfXdC5Jh8J7dBnJO33CYFakuVAfmomB1afAjrA2ZQKaf7
+         SMCUShieYJmAq7gWFqeKiuzNsdPlakY567KsZgQtG6gDsvwrQnihtDX9+7U6NnTFaRZx
+         RHdmBYPFetsNb4ILWudJVYpkr4lIVhA7ivbuDLUlArt/M4CW8YovnQw3HaJC3Vve4LJk
+         07Dc1d2Xmbg2GP5NJiN4sJkJFjjOH+WJ4ise/PHJgmz0GVRw0XTJDFpcV+OEaxiIIlbM
+         5ZVB2IfKYG47wlrtEXxWyDwcV5YZW42vBkqVqTdsC59D7fdDc8Bu9Y/dWpeZ/dX6pmg1
+         KlYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711464235; x=1712069035;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QvRPX0srI6Nwl8MPf7Dm2KIiqeWF1NL4djSI9z970zQ=;
+        b=Rr+dItu/6waXs9onNzHEIT6s6+0KBwC/YtzPYjdO/u7aOEbaOr/M3WcaYuVBDduni2
+         6mz6Gi92sqZwIF/+EkvnTkg3UdSShk0mOJ08bZHN81dtIIurOXqkpgLhiQnP8Iy9ZA1m
+         JsKcfQBo3jrjWMl3OruqbjCAzA0jCSq4NtkZaSicCZlEwr7zUj0+BiEHBxufAEIsrMzS
+         IYK8YFuIG4N5rq2z5U7IlDNDQww9o/EN/RcumK6sV8Q3QgeAff9ZFR0EYeryKaSSzntn
+         jrEp4suYmizHSGfKfrVMcEvwZH8PXlFQhJlkOMPD1h9pwsjPWHj8WRaQUguxRyj5DNco
+         5DfA==
+X-Forwarded-Encrypted: i=1; AJvYcCX+l5fRvp+8XJZaWZwQ7G0LKuLH6ELCNhyc1m3w8ZkMISdObHeWwOoBCkmMOcxZvET7jyjpodnSKghy+SAw9ATSCEP4Jf27tg02U8+z
+X-Gm-Message-State: AOJu0YyF9ZQ2Ze/d7DAhIlcirreyjQhRnPQitUfPTjG+u2GYbpMaKMDu
+	EWk8nNbkKvQnvIBvSH2iJwo6uDWzxQZ1BBozw6Y7r72vvG/Aqjl6kCzZUg7XEe10hHpaY909T+U
+	fE1HC7jKNDz6Z2rgh8UdelsXV0aGvLRyMTfJc
+X-Google-Smtp-Source: AGHT+IHyQfy0mSMBb57kAfmIDvkx81N8QcG0TvDbWsHX47nCDYyzaS87QB9tRR8mdSTMbNlTZoEBVpDdNz8bsVEN72U=
+X-Received: by 2002:a05:600c:1c06:b0:414:11:ec14 with SMTP id
+ j6-20020a05600c1c0600b004140011ec14mr185229wms.6.1711464234407; Tue, 26 Mar
+ 2024 07:43:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20240319074337.3307292-1-kyletso@google.com> <2024032624-drizzle-coaster-c97f@gregkh>
+In-Reply-To: <2024032624-drizzle-coaster-c97f@gregkh>
+From: Kyle Tso <kyletso@google.com>
+Date: Tue, 26 Mar 2024 22:43:36 +0800
+Message-ID: <CAGZ6i=1BGzRD7nGnLKcbZJOWT_d88gAS_NWUg9KvZ4=wmT8xsw@mail.gmail.com>
+Subject: Re: [PATCH v1] usb: typec: tcpm: Correct the PDO counting in pd_set
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: linux@roeck-us.net, heikki.krogerus@linux.intel.com, badhri@google.com, 
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In the process of converting .scan_bus() callbacks to .add_bus(), the
-ks_pcie_v3_65_scan_bus() function was changed to ks_pcie_v3_65_add_bus().
-The .scan_bus() method belonged to ks_pcie_host_ops which was specific
-to controller version 3.65a, while the .add_bus() method had been added
-to ks_pcie_ops which is shared between the controller versions 3.65a and
-4.90a. Neither the older ks_pcie_v3_65_scan_bus() method, nor the newer
-ks_pcie_v3_65_add_bus() method is applicable to the controller version
-4.90a which is present in AM654x SoCs.
+On Tue, Mar 26, 2024 at 5:30=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
+> wrote:
+>
+> On Tue, Mar 19, 2024 at 03:43:37PM +0800, Kyle Tso wrote:
+> > The index in the loop has already been added one and is equal to the
+> > number of PDOs to be updated when leaving the loop.
+>
+> That says what is happening but not the issue that is being addressed.
+> What is the problem with the number being off by one?  Is this a "crash
+> the system" or merely "our accounting is wrong"?
+>
+> thank,
+>
+> greg k-h
 
-Thus, as a fix, move the contents of "ks_pcie_v3_65_add_bus()" to the
-.msi_init callback "ks_pcie_msi_host_init()" which is specific to the
-3.65a controller. Also, move the definitions of ks_pcie_set_dbi_mode()
-and ks_pcie_clear_dbi_mode() above ks_pcie_msi_host_init() in order to
-avoid forward declaration.
+When doing the power negotiation, TCPM relies on the "nr_snk_pdo" as
+the size of the local sink PDO array to match the Source capabilities
+of the partner port. If the off-by-one overflow  occurs, a wrong RDO
+might be sent and unexpected power transfer might happen such as over
+voltage or over current (than expected).
 
-Fixes: 6ab15b5e7057 ("PCI: dwc: keystone: Convert .scan_bus() callback to use add_bus")
-Suggested-by: Serge Semin <fancer.lancer@gmail.com>
-Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-Suggested-by: Niklas Cassel <cassel@kernel.org>
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
----
+"nr_src_pdo" is used to set the Rp level when the port is in Source
+role. It is also the array size of the local Source capabilities when
+filling up the buffer which will be sent as the Source PDOs (such as
+in Power Negotiation). If the off-by-one overflow occurs, a wrong Rp
+level might be set and wrong Source PDOs will be sent to the partner
+port. This could potentially cause over current or port resets.
 
-Hello,
+I will update the commit message in the next version of this patch.
 
-This patch is based on linux-next tagged next-20240326.
-
-v5:
-https://lore.kernel.org/r/20240326111905.2369778-1-s-vadapalli@ti.com/
-Changes since v5:
-- Fixed indentation of comment as pointed out by:
-  Niklas Cassel <cassel@kernel.org>
-  at:
-  https://lore.kernel.org/r/ZgLUCqh12RMApzyr@x1-carbon/
-- Collected Reviewed-by tag from:
-  Niklas Cassel <cassel@kernel.org>
-
-Regards,
-Siddharth.
-
- drivers/pci/controller/dwc/pci-keystone.c | 136 ++++++++++------------
- 1 file changed, 60 insertions(+), 76 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index 844de4418724..6cb3a4713009 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -245,8 +245,68 @@ static struct irq_chip ks_pcie_msi_irq_chip = {
- 	.irq_unmask = ks_pcie_msi_unmask,
- };
- 
-+/**
-+ * ks_pcie_set_dbi_mode() - Set DBI mode to access overlaid BAR mask registers
-+ * @ks_pcie: A pointer to the keystone_pcie structure which holds the KeyStone
-+ *	     PCIe host controller driver information.
-+ *
-+ * Since modification of dbi_cs2 involves different clock domain, read the
-+ * status back to ensure the transition is complete.
-+ */
-+static void ks_pcie_set_dbi_mode(struct keystone_pcie *ks_pcie)
-+{
-+	u32 val;
-+
-+	val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
-+	val |= DBI_CS2;
-+	ks_pcie_app_writel(ks_pcie, CMD_STATUS, val);
-+
-+	do {
-+		val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
-+	} while (!(val & DBI_CS2));
-+}
-+
-+/**
-+ * ks_pcie_clear_dbi_mode() - Disable DBI mode
-+ * @ks_pcie: A pointer to the keystone_pcie structure which holds the KeyStone
-+ *	     PCIe host controller driver information.
-+ *
-+ * Since modification of dbi_cs2 involves different clock domain, read the
-+ * status back to ensure the transition is complete.
-+ */
-+static void ks_pcie_clear_dbi_mode(struct keystone_pcie *ks_pcie)
-+{
-+	u32 val;
-+
-+	val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
-+	val &= ~DBI_CS2;
-+	ks_pcie_app_writel(ks_pcie, CMD_STATUS, val);
-+
-+	do {
-+		val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
-+	} while (val & DBI_CS2);
-+}
-+
- static int ks_pcie_msi_host_init(struct dw_pcie_rp *pp)
- {
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
-+
-+	/* Configure and set up BAR0 */
-+	ks_pcie_set_dbi_mode(ks_pcie);
-+
-+	/* Enable BAR0 */
-+	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 1);
-+	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, SZ_4K - 1);
-+
-+	ks_pcie_clear_dbi_mode(ks_pcie);
-+
-+	/*
-+	 * For BAR0, just setting bus address for inbound writes (MSI) should
-+	 * be sufficient.  Use physical address to avoid any conflicts.
-+	 */
-+	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, ks_pcie->app.start);
-+
- 	pp->msi_irq_chip = &ks_pcie_msi_irq_chip;
- 	return dw_pcie_allocate_domains(pp);
- }
-@@ -340,48 +400,6 @@ static const struct irq_domain_ops ks_pcie_intx_irq_domain_ops = {
- 	.xlate = irq_domain_xlate_onetwocell,
- };
- 
--/**
-- * ks_pcie_set_dbi_mode() - Set DBI mode to access overlaid BAR mask registers
-- * @ks_pcie: A pointer to the keystone_pcie structure which holds the KeyStone
-- *	     PCIe host controller driver information.
-- *
-- * Since modification of dbi_cs2 involves different clock domain, read the
-- * status back to ensure the transition is complete.
-- */
--static void ks_pcie_set_dbi_mode(struct keystone_pcie *ks_pcie)
--{
--	u32 val;
--
--	val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
--	val |= DBI_CS2;
--	ks_pcie_app_writel(ks_pcie, CMD_STATUS, val);
--
--	do {
--		val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
--	} while (!(val & DBI_CS2));
--}
--
--/**
-- * ks_pcie_clear_dbi_mode() - Disable DBI mode
-- * @ks_pcie: A pointer to the keystone_pcie structure which holds the KeyStone
-- *	     PCIe host controller driver information.
-- *
-- * Since modification of dbi_cs2 involves different clock domain, read the
-- * status back to ensure the transition is complete.
-- */
--static void ks_pcie_clear_dbi_mode(struct keystone_pcie *ks_pcie)
--{
--	u32 val;
--
--	val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
--	val &= ~DBI_CS2;
--	ks_pcie_app_writel(ks_pcie, CMD_STATUS, val);
--
--	do {
--		val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
--	} while (val & DBI_CS2);
--}
--
- static void ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
- {
- 	u32 val;
-@@ -445,44 +463,10 @@ static struct pci_ops ks_child_pcie_ops = {
- 	.write = pci_generic_config_write,
- };
- 
--/**
-- * ks_pcie_v3_65_add_bus() - keystone add_bus post initialization
-- * @bus: A pointer to the PCI bus structure.
-- *
-- * This sets BAR0 to enable inbound access for MSI_IRQ register
-- */
--static int ks_pcie_v3_65_add_bus(struct pci_bus *bus)
--{
--	struct dw_pcie_rp *pp = bus->sysdata;
--	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
--	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
--
--	if (!pci_is_root_bus(bus))
--		return 0;
--
--	/* Configure and set up BAR0 */
--	ks_pcie_set_dbi_mode(ks_pcie);
--
--	/* Enable BAR0 */
--	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 1);
--	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, SZ_4K - 1);
--
--	ks_pcie_clear_dbi_mode(ks_pcie);
--
--	 /*
--	  * For BAR0, just setting bus address for inbound writes (MSI) should
--	  * be sufficient.  Use physical address to avoid any conflicts.
--	  */
--	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, ks_pcie->app.start);
--
--	return 0;
--}
--
- static struct pci_ops ks_pcie_ops = {
- 	.map_bus = dw_pcie_own_conf_map_bus,
- 	.read = pci_generic_config_read,
- 	.write = pci_generic_config_write,
--	.add_bus = ks_pcie_v3_65_add_bus,
- };
- 
- /**
--- 
-2.40.1
-
+Kyle
