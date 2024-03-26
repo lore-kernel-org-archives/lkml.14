@@ -1,225 +1,113 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D7B1332BC
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 07:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B199F4CB2E;
+	Tue, 26 Mar 2024 07:53:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711439498; cv=none; b=RioXOwDHVX7Ovpmnhdn6xw5EzkSYvnmyqf69o38VStze9maJojEvc/VR6JnZaswPg4CW7ECCVKCNtxJEW0raP+p+kZJfq3jhO8O04PvhfrGjSATOB6gAhutNB3ClU/TImPPw0CagERFG/KeShg3fHOLUPgZz802yekiIMQO4eT0=
+	t=1711439625; cv=none; b=Yz6q7OjcmMjxz78vXELf62o+1wANWcUGOZE9ofUjycKgVuF0YCNorE/J9v9qcK/fIw5b5A35dMtGXSPAq7QGoqIpuYq+CUJ65ToSD3z774Rg5mPB5d5MFMGY56t1lxTvq2J0sIuCyH7BNZNIc1+MYon0kDMYuFjcGUFKccgj5NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711439498; c=relaxed/simple;
-	bh=qQOLO5yzYREaf6V5UZ46t3ExCwuenEVvpk1QDbdYz28=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t2irJ4dpFBDW6yvna4Db/gzMNQzXQSe74o71lAE5DEM2WS8AB3odOZ0jK1KDOwAlRLQVU8142kUsOlmkikymCPqtINSM2HmpwIhHg67VXs8nD1ULUlP1lxNm/2DI8MoOjngus5YA3W49aA3fUpBu1ZgNi+eMJAu3oeU8ErnR5vY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AoR/K3A9; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1711439625; c=relaxed/simple;
+	bh=RSZylZlCpTdbm+Z9o6U3XqmKBS0KpMhd9GAVethT39M=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bX7rkRoOUhREL19yf1krFhojPLqTtT6cLzcSiORsF4q7M6VaUlVNuu0+0xeS/PUmhgMjmCl91b4GEL6Bvj+ThekIqPithbgrOenw4urfaP2nIjF8/4zbM+5BTHNbt/lkT4bgrOtS9q2YCK1/j9zVDk1v+Ja7wuWKOKu3Pcja6GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=tg/RSc4V; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AoR/K3A9"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dcc80d6004bso5109634276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 00:51:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711439495; x=1712044295; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=shklYWkLA2oyBqnlJsmv6lUxL/P85ZOYE2ckd/gba5w=;
-        b=AoR/K3A9wZgTr/H35zji2Ryw+JLZD17t8Szk3uZ0qBgeAWIMB4NN/BJPJl3JEUN120
-         JR/dFikYMYTHog58UqZeWY3abyXSZUyAQhcJeeiKJpnr/q3iy4u2x+ZiWRmiFXTuY4d0
-         +wc6Q4UTQkI1gwn3NZpEbigkgcPaUHuCPwDkFXgLpseEsrvifg9T5Hl2k2OELRZjb6IO
-         7HhpJaXTkfsKZer7xANqdvBDRaIHRAYTWZTqNzDY69XWEL0E6/FXTCmnffr7tHBlV5uz
-         EdplvUVUqmH07En2kwV6V3HDpPDo4hp6r0Czwxmv6qUgkvmaDs7Irw3eU/uoAoJFXx2u
-         w+jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711439495; x=1712044295;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=shklYWkLA2oyBqnlJsmv6lUxL/P85ZOYE2ckd/gba5w=;
-        b=j5NOo4cZi4hWj+LJfh1AY6ZJKXw6PFsy3n0y9q9RdCTWvuBeHdqrverYBnfi7apw8+
-         72bM0EBXPzhCbci5pgPysOK9yXjUmpLcYVhS62+BiB74UhzJlAHs07/+Q9gwPkhIebZe
-         cnOKZomo0uqDsKdnbhge5RQsRJ7rmtd21DlCfB7NZeD9hV4w/1L+tM8pH5guQ4lqbvVR
-         vZyC2rEMrSJqCi8I4P80h9F1+Fing9c2aJDuyJ/4znFDL8ruf+YUXGThZfhQSM2xsVPe
-         FYd55pMNpLQQz1I+I1LEYiFu830VR8Nmh/y+JFEIAjauIvBJwgMSJj9Vc5JQfE0Jyzdr
-         q3Fg==
-X-Forwarded-Encrypted: i=1; AJvYcCUwfxQzNV4OZMMaHhO2Sxq48cUYVpV3Gi0pzpoH9Q5sSNGbffAeZBV2arhp4AJIFs0YcPP9BgDr4H6pnw5QZP65An8H7Us6dEAizWI7
-X-Gm-Message-State: AOJu0YyGim5Ea6wuO/y+04LJHHzWwQ+zGp84gkqvN/SfRexurR2tOViN
-	gVSWF7/i7H8Hhw4eI+Uh5Pp7yyc4pUr5snoEOBcXTrFmY2S1w8KgTgJfWfqCpYgKtQ/2mxXCeGn
-	lER784891zWVfI2X2QMzlR477oxyo+lcp1Rp2
-X-Google-Smtp-Source: AGHT+IEnVh4+gbIjqfTqnNSb1ESniynB5/g+eF5Tlrl382kaRHENtFyyuE83hIP6W791lwHTf2P908O7iGBHbxnvUiU=
-X-Received: by 2002:a5b:181:0:b0:dce:2e9:a637 with SMTP id r1-20020a5b0181000000b00dce02e9a637mr7603025ybl.20.1711439494844;
- Tue, 26 Mar 2024 00:51:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="tg/RSc4V"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=Ot6b39AXYDAVGwlyEemjJVuPK4U4r83NNhgKBebl2bA=;
+	t=1711439623; x=1712649223; b=tg/RSc4VYDSnmfkVKJrEkvfEeqmJfQgxumJcpSsqMuwj11j
+	WzojvYa8DYb+0WCXdkOThtdhjx8mRDaYQTlZrh6y2su34DsZc9g9G0vl2v9XogzQTuXfmIEB9Q7iZ
+	eiavY8AEVRuPrXh0fzAFBnjWYfusBqHWiUvCpaKroGb5pd3GhXylZFVjg29kqX/Te+tH4DkoeOTnA
+	sqDcK7zkbti4bAONOCEZOZyosvCypIL/0nDZ7hUkYp3E1g8xa5UboEASxJS6o5yc0ljwQE4KGstQL
+	JfLKiXbm4qF647EBeO7ZhevNZXh4D6I+uxVyFhlLci3IAwYxdJYoKmc41B5yvmnw==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1rp1cq-0000000FYHx-0UH6;
+	Tue, 26 Mar 2024 08:53:40 +0100
+Message-ID: <0659e47eb33c4159168abe392764a1de44e9bc71.camel@sipsolutions.net>
+Subject: Re: [PATCH] rcu: mollify sparse with RCU guard
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>, rcu@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>, 
+ Frederic Weisbecker <frederic@kernel.org>, Josh Triplett
+ <josh@joshtriplett.org>, Peter Zijlstra <peterz@infradead.org>
+Date: Tue, 26 Mar 2024 08:53:39 +0100
+In-Reply-To: <04081c65-f9bf-404c-8557-7af72f6a72de@moroto.mountain>
+References: <20240325101626.41584-2-johannes@sipsolutions.net>
+	 <ZgGnuFJiTX5laS7c@boqun-archlinux>
+	 <055111792727869a98c1fa693014e0b6f5d256ea.camel@sipsolutions.net>
+	 <35355d02-3eef-4860-847b-b7bbf05f4a31@moroto.mountain>
+	 <48034addaeb6c33ca8b3e636262b6c043ddc5359.camel@sipsolutions.net>
+	 <04081c65-f9bf-404c-8557-7af72f6a72de@moroto.mountain>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJuCfpGiuCnMFtViD0xsoaLVO_gJddBQ1NpL6TpnsfN8z5P6fA@mail.gmail.com>
- <20240325182007.233780-1-sj@kernel.org>
-In-Reply-To: <20240325182007.233780-1-sj@kernel.org>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 26 Mar 2024 00:51:21 -0700
-Message-ID: <CAJuCfpGwLRBWKegYq5XY++fCPWO4mpzrhifw9QGvzJ5Uf9S4jw@mail.gmail.com>
-Subject: Re: [PATCH v6 30/37] mm: vmalloc: Enable memory allocation profiling
-To: SeongJae Park <sj@kernel.org>
-Cc: vbabka@suse.cz, hannes@cmpxchg.org, roman.gushchin@linux.dev, 
-	mgorman@suse.de, dave@stgolabs.net, willy@infradead.org, 
-	liam.howlett@oracle.com, penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, 
-	void@manifault.com, peterz@infradead.org, juri.lelli@redhat.com, 
-	catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, tglx@linutronix.de, 
-	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org, 
-	peterx@redhat.com, david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, 
-	masahiroy@kernel.org, nathan@kernel.org, dennis@kernel.org, 
-	jhubbard@nvidia.com, tj@kernel.org, muchun.song@linux.dev, rppt@kernel.org, 
-	paulmck@kernel.org, pasha.tatashin@soleen.com, yosryahmed@google.com, 
-	yuzhao@google.com, dhowells@redhat.com, hughd@google.com, 
-	andreyknvl@gmail.com, keescook@chromium.org, ndesaulniers@google.com, 
-	vvvvvv@google.com, gregkh@linuxfoundation.org, ebiggers@google.com, 
-	ytcoode@gmail.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com, 
-	rostedt@goodmis.org, bsegall@google.com, bristot@redhat.com, 
-	vschneid@redhat.com, cl@linux.com, penberg@kernel.org, iamjoonsoo.kim@lge.com, 
-	42.hyeyoo@gmail.com, glider@google.com, elver@google.com, dvyukov@google.com, 
-	songmuchun@bytedance.com, jbaron@akamai.com, aliceryhl@google.com, 
-	rientjes@google.com, minchan@google.com, kaleshsingh@google.com, 
-	kernel-team@android.com, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
-	linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
-	cgroups@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-malware-bazaar: not-scanned
 
-On Mon, Mar 25, 2024 at 11:20=E2=80=AFAM SeongJae Park <sj@kernel.org> wrot=
-e:
->
-> On Mon, 25 Mar 2024 10:59:01 -0700 Suren Baghdasaryan <surenb@google.com>=
- wrote:
->
-> > On Mon, Mar 25, 2024 at 10:49=E2=80=AFAM SeongJae Park <sj@kernel.org> =
-wrote:
-> > >
-> > > On Mon, 25 Mar 2024 14:56:01 +0000 Suren Baghdasaryan <surenb@google.=
-com> wrote:
-> > >
-> > > > On Sat, Mar 23, 2024 at 6:05=E2=80=AFPM SeongJae Park <sj@kernel.or=
-g> wrote:
-> > > > >
-> > > > > Hi Suren and Kent,
-> > > > >
-> > > > > On Thu, 21 Mar 2024 09:36:52 -0700 Suren Baghdasaryan <surenb@goo=
-gle.com> wrote:
-> > > > >
-> > > > > > From: Kent Overstreet <kent.overstreet@linux.dev>
-> > > > > >
-> > > > > > This wrapps all external vmalloc allocation functions with the
-> > > > > > alloc_hooks() wrapper, and switches internal allocations to _no=
-prof
-> > > > > > variants where appropriate, for the new memory allocation profi=
-ling
-> > > > > > feature.
-> > > > >
-> > > > > I just noticed latest mm-unstable fails running kunit on my machi=
-ne as below.
-> > > > > 'git-bisect' says this is the first commit of the failure.
-> > > > >
-> > > > >     $ ./tools/testing/kunit/kunit.py run --build_dir ../kunit.out=
-/
-> > > > >     [10:59:53] Configuring KUnit Kernel ...
-> > > > >     [10:59:53] Building KUnit Kernel ...
-> > > > >     Populating config with:
-> > > > >     $ make ARCH=3Dum O=3D../kunit.out/ olddefconfig
-> > > > >     Building with:
-> > > > >     $ make ARCH=3Dum O=3D../kunit.out/ --jobs=3D36
-> > > > >     ERROR:root:/usr/bin/ld: arch/um/os-Linux/main.o: in function =
-`__wrap_malloc':
-> > > > >     main.c:(.text+0x10b): undefined reference to `vmalloc'
-> > > > >     collect2: error: ld returned 1 exit status
-> > > > >
-> > > > > Haven't looked into the code yet, but reporting first.  May I ask=
- your idea?
-> > > >
-> > > > Hi SeongJae,
-> > > > Looks like we missed adding "#include <linux/vmalloc.h>" inside
-> > > > arch/um/os-Linux/main.c in this patch:
-> > > > https://lore.kernel.org/all/20240321163705.3067592-2-surenb@google.=
-com/.
-> > > > I'll be posing fixes for all 0-day issues found over the weekend an=
-d
-> > > > will include a fix for this. In the meantime, to work around it you
-> > > > can add that include yourself. Please let me know if the issue stil=
-l
-> > > > persists after doing that.
-> > >
-> > > Thank you, Suren.  The change made the error message disappears.  How=
-ever, it
-> > > introduced another one.
-> >
-> > Ok, let me investigate and I'll try to get a fix for it today evening.
->
-> Thank you for this kind reply.  Nonetheless, this is not blocking some re=
-al
-> thing from me.  So, no rush.  Plese take your time :)
+On Tue, 2024-03-26 at 10:39 +0300, Dan Carpenter wrote:
+> On Mon, Mar 25, 2024 at 07:43:18PM +0100, Johannes Berg wrote:
+> > On Mon, 2024-03-25 at 21:28 +0300, Dan Carpenter wrote:
+> > > On Mon, Mar 25, 2024 at 05:41:22PM +0100, Johannes Berg wrote:
+> > > > Also __acquire()/__release() are just empty macros without __CHECKE=
+R__.
+> > > > So not sure the indirection really is warranted for this special ca=
+se.
+> > > >=20
+> > > > I can add a comment in there, I guess, something like
+> > > >=20
+> > > >  /* sparse doesn't actually "call" cleanup functions */
+> > > >=20
+> > > > perhaps. That reminds me I forgot to CC Dan ...
+> > > >=20
+> > >=20
+> > > These are Sparse warnings, not Smatch warning... Smatch doesn't use a=
+ny
+> > > of the Sparse locking annotations.
+> >=20
+> > Sure, of course. I just saw that you added cleanup stuff to sparse to
+> > allow using it in smatch.
+> >=20
+> > > Smatch handles cleanup basically correctly at this point.
+> >=20
+> > Do you "run" / "emit" the cleanup function calls there?
+>=20
+> Yes.
 
-I posted a fix here:
-https://lore.kernel.org/all/20240326073750.726636-1-surenb@google.com/
-Please let me know if this resolves the issue.
-Thanks,
-Suren.
+I see. I guess that doesn't work for sparse. You write:
 
->
->
-> Thanks,
-> SJ
->
-> > Thanks,
-> > Suren.
-> >
-> > >
-> > >     $ git diff
-> > >     diff --git a/arch/um/os-Linux/main.c b/arch/um/os-Linux/main.c
-> > >     index c8a42ecbd7a2..8fe274e9f3a4 100644
-> > >     --- a/arch/um/os-Linux/main.c
-> > >     +++ b/arch/um/os-Linux/main.c
-> > >     @@ -16,6 +16,7 @@
-> > >      #include <kern_util.h>
-> > >      #include <os.h>
-> > >      #include <um_malloc.h>
-> > >     +#include <linux/vmalloc.h>
-> > >
-> > >      #define PGD_BOUND (4 * 1024 * 1024)
-> > >      #define STACKSIZE (8 * 1024 * 1024)
-> > >     $
-> > >     $ ./tools/testing/kunit/kunit.py run --build_dir ../kunit.out/
-> > >     [10:43:13] Configuring KUnit Kernel ...
-> > >     [10:43:13] Building KUnit Kernel ...
-> > >     Populating config with:
-> > >     $ make ARCH=3Dum O=3D../kunit.out/ olddefconfig
-> > >     Building with:
-> > >     $ make ARCH=3Dum O=3D../kunit.out/ --jobs=3D36
-> > >     ERROR:root:In file included from .../arch/um/kernel/asm-offsets.c=
-:1:
-> > >     .../arch/x86/um/shared/sysdep/kernel-offsets.h:9:6: warning: no p=
-revious prototype for =E2=80=98foo=E2=80=99 [-Wmissing-prototypes]
-> > >         9 | void foo(void)
-> > >           |      ^~~
-> > >     In file included from .../include/linux/alloc_tag.h:8,
-> > >                      from .../include/linux/vmalloc.h:5,
-> > >                      from .../arch/um/os-Linux/main.c:19:
-> > >     .../include/linux/bug.h:5:10: fatal error: asm/bug.h: No such fil=
-e or directory
-> > >         5 | #include <asm/bug.h>
-> > >           |          ^~~~~~~~~~~
-> > >     compilation terminated.
-> > >
-> > >
-> > > Thanks,
-> > > SJ
-> > >
-> > > [...]
-> >
->
-> --
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to kernel-team+unsubscribe@android.com.
->
+   This shouldn't really have been needed if I had written the parse.c
+   code correctly to create new scopes for every __cleanup__.
+
+Would that maybe be a way to handle it in sparse? Though not sure how to
+return then.
+
+> > I briefly look
+> > at doing that in sparse but it felt ... complicated, and then I saw the
+> > condition in the cleanup function which I thought sparse could probably
+> > not see through anyway.
+>=20
+> The if (_T->lock) statements are a problem.  For those, I have to
+> manually add them to check_locking.c as an unlock function and to
+> check_preempt.c as a decrement the preempt count function.
+
+OK, no fun.
+
+I think overall it's still easier to go with this patch :)
+
+And maybe we should think about replacing what we need sparse for...
+
+johannes
