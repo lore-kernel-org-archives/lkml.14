@@ -1,267 +1,119 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 241F41C6A0
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 17:28:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688C51CF8D
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 17:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711474093; cv=none; b=DRbpVp2kKPw/AIykvwH6mIw8GrbXCE67tmbDutZgo0NlFJktS8ATrRS6BBULfn3PMhlxSpqylj5FrgOqQ22lob/jC/VhGJdYM0XIq5aM2on08XUSvVJC2VP/djZfg04+7Iqnq8NAYtmYE7RkTDj5+aZvKLaLTGxoLptOE2FhEZk=
+	t=1711474103; cv=none; b=F3XF2HDUkd/799XObG0CDONZRZU9rwKagEWT3I4RfNg5aQbz+ithteZZUOoPOO0BqJPfHAGGuMXzekzQgDdkZ9yisYZUDkB5mrXHiXOgVEqv4WfVdmKWVa/5YNjYSE3dWG3TvTkcZwv7+yQyW3WBsZkMjzqCVy9q/UGpIn3DJvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711474093; c=relaxed/simple;
-	bh=auU9osatJgm+5HtO74Vr7VkY2pMs1J2wxfjD9tBSsps=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NOoUo/25YqlwQKIlkGnegRj2odQL2GvxYZJwaNM7PyvHP+5K2LWmiecqTxqwtGFyTnIpj/JXtOZynz3I1hOJz1Oe+Q0QdE15+DVtPbX2/dImXrdNxrYwMRdNeU7q78u98KsTI9g476INeZfkIFKWBPkadN5gqEemUFxxD8KDUUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sksD4wvf; arc=none smtp.client-ip=209.85.128.180
+	s=arc-20240116; t=1711474103; c=relaxed/simple;
+	bh=ejFNoOYsh0RIbZh0gTh5AZFv4tIJYFy5C/80aIdfELc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HFrVT2FQ2w5sTRI5rJuwFzS5cAJJRieBoDvfW886draEeQhnKELuiwfw11D3v7gLA6669IECphG0lJaH1DIhxDR9sVqTBe753NRCXJ341Sgb86/a+Bbffgvv/x0DQ39MBY2iq4amc/+6WayFDh2rqA3D24LqF86GTKAeokZLjTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zNVz7tzq; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sksD4wvf"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-609f3ca61e0so62701737b3.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 10:28:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zNVz7tzq"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4148c5de23fso9800245e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 10:28:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711474091; x=1712078891; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=SXBeZKhcT8cc6xEPK8lT0ioRsYyHLX/6E0d+anBqJaU=;
-        b=sksD4wvfypo+63ffg6hpdTnNx5e3JV5dtNDFzmAI40TI1MLWpk70IRxqiYi4HT2OAd
-         be+TSAyGJn96MjNQjEfQGjviftpQ2B+bAaB7Q42T0EXLdaN2Mxesu51GhzwazsIwdOTh
-         J0aF+GeAvTOEYygl6og8z08sVuc6bRmCQGmwv1jZKhZUyeO0vwfFId6zVV4oUKnYB2IT
-         1KsGlAmHWvs+tTcKrrZBX/9U43uegRT/OcEU63plAwZZrEPBI6t+ciWPH6yR+cSWVdJZ
-         QpALCjTwFfdoXL9C2ZoadjD/G9QVs+COgRL64qOOTD+pDWH1QBqD/qgX5ujbnyhKoCc7
-         cI5Q==
+        d=linaro.org; s=google; t=1711474100; x=1712078900; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=34whjUG6Zl1XJm4VzRMa0tnbaz/35qwlfAZRIoFZ8E4=;
+        b=zNVz7tzqjT6uL9hevDhszkTpJXvJPEmPmQ/fDlul7Z9e6ZIUR/EOdOgaqGeQG191Hu
+         m5w/cSpMWbHY1oiaf7df2m9LRhOluzusnpdNrEN1xSPr+gTeW4RUMKD4RdLMjHIu9DHk
+         Hb25+VjHk2SztvYOwU8n/JI5f+H2Sx2dD+joGPWfkexGo0ooCVEBRSJzRu0sOCSz7rZ4
+         a4QR4egneqWpAgcKjJzafSmZ1wRVJgJX5jxrq3A6GIjMhxz3naZ/GVn8QOb5u1afOKp8
+         JM/cgNyLMBdmC5KCzpux/PcCd54PTIR1so3B8eiBDKXRr3G9913FyUWix617VpwfTQmV
+         /pUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711474091; x=1712078891;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1711474100; x=1712078900;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=SXBeZKhcT8cc6xEPK8lT0ioRsYyHLX/6E0d+anBqJaU=;
-        b=B7CZKf9fPEM4xj7adn0ORAq3eE+uen8zHPGWwZmYK+w0O7SCmXzFTJHa2kjplWlvBQ
-         SYCczjjwAIap0HoeCJXy2JfDNGFnl4XG+7YjRlQ90VWtk0O7d+Ep+9VdUT+RARE0sS+4
-         1bF8cqRn+41Uvgt6D2w7nfr++sQjPGbNNSknnxgdRLdMM5MisHOjyxIismDumrXzuoJR
-         9xqCKJn8OopDhDlVj8atTLJjIjTAPdH+vPwBsQPehbwdNUiMjbQK0BdVyBjMTkKMZTSG
-         7bkyR0PCtW6/5pk513y8S1mA2pN7I3mKzHJapJMK6Du69Hh2gceKyeH5D8ZMqURfE0Na
-         xgZg==
-X-Forwarded-Encrypted: i=1; AJvYcCWFIU54LSyVjCkWUldv5onDzNxGRg2bRNaaNMIp30XsHOOey6xase4rE0yYFMsXBK0gIlmgA8wUPYHyjMvgFYw/urTi48+YBS0DToB6
-X-Gm-Message-State: AOJu0YzWvENCZmkOzBWqH0pyolo+d8TeioFFRj+UNJkmGg7e/6D7BiYn
-	hzIII/ZYKyEfjwRnAib2zmIZgSpHtmktTqdbcZ0aKpyh7EJZnh1xeufewZeY2UkwkKUdcKxKL0T
-	9iS/9n83zCcn5PYN0sSFF4ZQQTicP4WbsWhudXg==
-X-Google-Smtp-Source: AGHT+IF8oCoFpEp71E1giwtUat9k2YbUrYq99NDd4Haoh0o4mELmlRE1suS9PZwgmFksoxYgU2zB/MGudwuTU6Jk6K8=
-X-Received: by 2002:a25:6605:0:b0:dcb:fa70:c09 with SMTP id
- a5-20020a256605000000b00dcbfa700c09mr7919663ybc.28.1711474091018; Tue, 26 Mar
- 2024 10:28:11 -0700 (PDT)
+        bh=34whjUG6Zl1XJm4VzRMa0tnbaz/35qwlfAZRIoFZ8E4=;
+        b=IW305SbdmGshvOFpla8sXO2FQZWE2r/nzKuI8pQeRC1T+o743MfvqLmO1Wp6wY1cns
+         bbjJPirPzMW1XRwOZtwNrtfFfGQHxJdle2QbOTguP6ahvNNQhvqnd3/IXDXRqRD4z3yL
+         seByoUwo2Tvm8Bg4VQBcLS0sb9t2OUiIhJKs0F9JDMtBKIFibZ803eNd5iDVPv47sjKU
+         N2tEKApr5p9j2AT2YJmc/3HOKxKamLCFq46vMX6W7nZSH1kMa3mzUUyJJg9N5XreTtdI
+         5v0eLrMS7y/4op8PkR9urIswlMR8u5MNFXhfRVmJ+ywWfTslbbvkTqrYpgruYmJluNkm
+         Xw0g==
+X-Forwarded-Encrypted: i=1; AJvYcCXJAqhMMNIApKLFfgfje+ckAd2PakSpcTpmXfWSZDur48or/2yO+RkIZV1KVXQH5EhYMZ1JLxSIcXbFEkZXNDTHNVrJbfiUOEJBtc6c
+X-Gm-Message-State: AOJu0YwcId5Pj7C+ySaQ9ZTKL7BjZHnbQOFyyrtuhWV7PNXiZqxVbLKx
+	GrL/ONbZYD06ofc+vXIZHp81sTPLd6EwHpVvmOk1BM5kJevvEZcoRtC4cZgjBCE=
+X-Google-Smtp-Source: AGHT+IGVsI/cgzBwB19eGGlN8u5ea7DLBa4HSFT2VWsIzl7t0W0L/UkrdqHMsvGdc4yOzHzhWAb+lg==
+X-Received: by 2002:a05:600c:3149:b0:413:3160:840f with SMTP id h9-20020a05600c314900b004133160840fmr201412wmo.0.1711474099691;
+        Tue, 26 Mar 2024 10:28:19 -0700 (PDT)
+Received: from ta2.c.googlers.com.com (158.100.79.34.bc.googleusercontent.com. [34.79.100.158])
+        by smtp.gmail.com with ESMTPSA id fl12-20020a05600c0b8c00b004148f9c5822sm2063281wmb.22.2024.03.26.10.28.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 10:28:19 -0700 (PDT)
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+To: peter.griffin@linaro.org,
+	krzysztof.kozlowski@linaro.org
+Cc: alim.akhtar@samsung.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	andre.draszik@linaro.org,
+	willmcvicker@google.com,
+	kernel-team@android.com,
+	s.nawrocki@samsung.com,
+	cw00.choi@samsung.com,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	semen.protsenko@linaro.org,
+	linux-clk@vger.kernel.org,
+	jaewon02.kim@samsung.com,
+	Tudor Ambarus <tudor.ambarus@linaro.org>
+Subject: [PATCH v2 0/3] clk: samsung: introduce nMUX to reparent MUX clocks
+Date: Tue, 26 Mar 2024 17:28:10 +0000
+Message-ID: <20240326172813.801470-1-tudor.ambarus@linaro.org>
+X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326-msm-dp-cleanup-v1-0-e775556ecec0@quicinc.com> <20240326-msm-dp-cleanup-v1-1-e775556ecec0@quicinc.com>
-In-Reply-To: <20240326-msm-dp-cleanup-v1-1-e775556ecec0@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 26 Mar 2024 19:28:00 +0200
-Message-ID: <CAA8EJpqfYTCwubTXF9PROwH-621u32sJ-=_Dr5z77dcHwKtQDA@mail.gmail.com>
-Subject: Re: [PATCH 1/6] drm/msm/dp: Drop unused dp_debug struct
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, Bjorn Andersson <quic_bjorande@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 26 Mar 2024 at 17:06, Bjorn Andersson <andersson@kernel.org> wrote:
->
-> From: Bjorn Andersson <quic_bjorande@quicinc.com>
->
-> The members of struct dp_debug are no longer used, so the only purpose
-> of this struct is as a type of the return value of dp_debug_get(), to
-> signal success/error.
->
-> Drop the struct in favor of signalling the result of initialization
-> using an int.
->
-> Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
-> ---
->  drivers/gpu/drm/msm/dp/dp_debug.c   | 38 ++++++++++---------------------------
->  drivers/gpu/drm/msm/dp/dp_debug.h   | 38 +++++++++++--------------------------
->  drivers/gpu/drm/msm/dp/dp_display.c | 10 ++--------
->  3 files changed, 23 insertions(+), 63 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/dp/dp_debug.c b/drivers/gpu/drm/msm/dp/dp_debug.c
-> index eca5a02f9003..a631cbe0e599 100644
-> --- a/drivers/gpu/drm/msm/dp/dp_debug.c
-> +++ b/drivers/gpu/drm/msm/dp/dp_debug.c
-> @@ -21,8 +21,6 @@ struct dp_debug_private {
->         struct dp_link *link;
->         struct dp_panel *panel;
->         struct drm_connector *connector;
-> -
-> -       struct dp_debug dp_debug;
->  };
->
->  static int dp_debug_show(struct seq_file *seq, void *p)
-> @@ -199,11 +197,8 @@ static const struct file_operations test_active_fops = {
->         .write = dp_test_active_write
->  };
->
-> -static void dp_debug_init(struct dp_debug *dp_debug, struct dentry *root, bool is_edp)
-> +static void dp_debug_init(struct dp_debug_private *debug, struct dentry *root, bool is_edp)
->  {
-> -       struct dp_debug_private *debug = container_of(dp_debug,
-> -                       struct dp_debug_private, dp_debug);
-> -
->         debugfs_create_file("dp_debug", 0444, root,
->                         debug, &dp_debug_fops);
->
-> @@ -222,39 +217,26 @@ static void dp_debug_init(struct dp_debug *dp_debug, struct dentry *root, bool i
->         }
->  }
->
-> -struct dp_debug *dp_debug_get(struct device *dev, struct dp_panel *panel,
-> -               struct dp_link *link,
-> -               struct drm_connector *connector,
-> -               struct dentry *root, bool is_edp)
-> +int dp_debug_get(struct device *dev, struct dp_panel *panel,
-> +                struct dp_link *link,
-> +                struct drm_connector *connector,
-> +                struct dentry *root, bool is_edp)
->  {
->         struct dp_debug_private *debug;
-> -       struct dp_debug *dp_debug;
-> -       int rc;
->
->         if (!dev || !panel || !link) {
->                 DRM_ERROR("invalid input\n");
-> -               rc = -EINVAL;
-> -               goto error;
-> +               return -EINVAL;
->         }
->
->         debug = devm_kzalloc(dev, sizeof(*debug), GFP_KERNEL);
-> -       if (!debug) {
-> -               rc = -ENOMEM;
-> -               goto error;
-> -       }
-> +       if (!debug)
-> +               return -ENOMEM;
->
-> -       debug->dp_debug.debug_en = false;
->         debug->link = link;
->         debug->panel = panel;
->
-> -       dp_debug = &debug->dp_debug;
-> -       dp_debug->vdisplay = 0;
-> -       dp_debug->hdisplay = 0;
-> -       dp_debug->vrefresh = 0;
-> -
-> -       dp_debug_init(dp_debug, root, is_edp);
-> +       dp_debug_init(debug, root, is_edp);
->
-> -       return dp_debug;
-> - error:
-> -       return ERR_PTR(rc);
-> +       return 0;
+All samsung MUX clocks that are defined with MUX() set the
+CLK_SET_RATE_NO_REPARENT flag in __MUX(), which prevents MUXes to be
+reparented during clk_set_rate().
+    
+Introduce nMUX() for MUX clocks that can be reparented. nMUX is used
+in GS101 to reparent the USI MUX to OSCCLK on low SPI clock rates.
 
-Since there is nothing more to get, could you please move the
-devm_kzalloc to dp_debug_init and call it directly from dp_display.c?
+Each instance of the USI IP in GS101 has its own MUX_USI clock, thus
+the reparenting of a MUX_USI clock corresponds to a single instance
+of the USI IP. We allow the reparenting of the MUX_USIx clocks to
+OSCCLK. The datasheet mentions OSCCLK just in the low-power mode
+context, but the downstream driver reparents too the MUX_USI clocks
+to OSCCLK. Follow the downstream driver and do the same.
 
->  }
-> diff --git a/drivers/gpu/drm/msm/dp/dp_debug.h b/drivers/gpu/drm/msm/dp/dp_debug.h
-> index 9b3b2e702f65..c57200751c9f 100644
-> --- a/drivers/gpu/drm/msm/dp/dp_debug.h
-> +++ b/drivers/gpu/drm/msm/dp/dp_debug.h
-> @@ -9,22 +9,6 @@
->  #include "dp_panel.h"
->  #include "dp_link.h"
->
-> -/**
-> - * struct dp_debug
-> - * @debug_en: specifies whether debug mode enabled
-> - * @vdisplay: used to filter out vdisplay value
-> - * @hdisplay: used to filter out hdisplay value
-> - * @vrefresh: used to filter out vrefresh value
-> - * @tpg_state: specifies whether tpg feature is enabled
-> - */
-> -struct dp_debug {
-> -       bool debug_en;
-> -       int aspect_ratio;
-> -       int vdisplay;
-> -       int hdisplay;
-> -       int vrefresh;
-> -};
-> -
->  #if defined(CONFIG_DEBUG_FS)
->
->  /**
-> @@ -41,22 +25,22 @@ struct dp_debug {
->   * This function sets up the debug module and provides a way
->   * for debugfs input to be communicated with existing modules
->   */
-> -struct dp_debug *dp_debug_get(struct device *dev, struct dp_panel *panel,
-> -               struct dp_link *link,
-> -               struct drm_connector *connector,
-> -               struct dentry *root,
-> -               bool is_edp);
-> +int dp_debug_get(struct device *dev, struct dp_panel *panel,
-> +                struct dp_link *link,
-> +                struct drm_connector *connector,
-> +                struct dentry *root,
-> +                bool is_edp);
->
->  #else
->
->  static inline
-> -struct dp_debug *dp_debug_get(struct device *dev, struct dp_panel *panel,
-> -               struct dp_link *link,
-> -               struct drm_connector *connector,
-> -               struct dentry *root,
-> -               bool is_edp)
-> +int dp_debug_get(struct device *dev, struct dp_panel *panel,
-> +                struct dp_link *link,
-> +                struct drm_connector *connector,
-> +                struct dentry *root,
-> +                bool is_edp)
->  {
-> -       return ERR_PTR(-EINVAL);
-> +       return -EINVAL;
->  }
->
->  #endif /* defined(CONFIG_DEBUG_FS) */
-> diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
-> index c4cb82af5c2f..a9187be95166 100644
-> --- a/drivers/gpu/drm/msm/dp/dp_display.c
-> +++ b/drivers/gpu/drm/msm/dp/dp_display.c
-> @@ -93,7 +93,6 @@ struct dp_display_private {
->         struct dp_link    *link;
->         struct dp_panel   *panel;
->         struct dp_ctrl    *ctrl;
-> -       struct dp_debug   *debug;
->
->         struct dp_display_mode dp_mode;
->         struct msm_dp dp_display;
-> @@ -1431,14 +1430,9 @@ void dp_display_debugfs_init(struct msm_dp *dp_display, struct dentry *root, boo
->         dp = container_of(dp_display, struct dp_display_private, dp_display);
->         dev = &dp->dp_display.pdev->dev;
->
-> -       dp->debug = dp_debug_get(dev, dp->panel,
-> -                                       dp->link, dp->dp_display.connector,
-> -                                       root, is_edp);
-> -       if (IS_ERR(dp->debug)) {
-> -               rc = PTR_ERR(dp->debug);
-> +       rc = dp_debug_get(dev, dp->panel, dp->link, dp->dp_display.connector, root, is_edp);
-> +       if (rc)
->                 DRM_ERROR("failed to initialize debug, rc = %d\n", rc);
-> -               dp->debug = NULL;
-> -       }
->  }
->
->  int msm_dp_modeset_init(struct msm_dp *dp_display, struct drm_device *dev,
->
-> --
-> 2.43.0
->
+Tested with USI6 and USI13 SPI.
 
+Find discussion on MUX reparenting to OSCCLK at:
+https://lore.kernel.org/linux-samsung-soc/d508dfc1-bc28-4470-92aa-cf71915966f4@linaro.org/
+
+v2:
+- reword commit messages
+- drop exynos850 patch on Sam's request
+
+v1: https://lore.kernel.org/linux-samsung-soc/20240229122021.1901785-1-tudor.ambarus@linaro.org/
+
+Tudor Ambarus (3):
+  clk: samsung: introduce nMUX for MUX clks that can reparented
+  clk: samsung: gs101: propagate PERIC1 USI SPI clock rate
+  clk: samsung: gs101: propagate PERIC0 USI SPI clock rate
+
+ drivers/clk/samsung/clk-gs101.c | 225 +++++++++++++++++---------------
+ drivers/clk/samsung/clk.h       |  20 +++
+ 2 files changed, 140 insertions(+), 105 deletions(-)
 
 -- 
-With best wishes
-Dmitry
+2.44.0.396.g6e790dbe36-goog
+
