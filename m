@@ -1,112 +1,65 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36547F7E6;
-	Tue, 26 Mar 2024 12:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED47139E;
+	Tue, 26 Mar 2024 12:32:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711456076; cv=none; b=TpO21mBw1kT0ZPLJMb1KavqbtuLPqQ5t89Sg8Q1+mLv1SmQ6R2I43pA5s4HRPU1V/bDg/jjQ5FAbZ2a0QV6jRXX9jJunFT7dup9JPV+w57JSd1/36xrcmQdQtmttP1HW+r2JIb6ZJ7mzCeaBZjHSoPbgwqioyoaNkFgEZaYqB40=
+	t=1711456334; cv=none; b=bjQqqlMaH33ygEG09LVaMrf3GOv3VZixQmLZm2fqo/vCp/X41xZeyr6UgA8mxImelGKSPoBv6G9FOx9JIsy8Liu6NMsFXZCph3oNrpeyvCnirDFh3FTf/FAX/rRNgFHWP7R/ynSRrGj/o8n+HruEqTh/AXf7z/MXVyGwMy6R9Fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711456076; c=relaxed/simple;
-	bh=WipEGw9/6sXRhSUjr25HJ2FZPmEromleQAPMG6tk9sc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e0r2n2AvtG3iSXX3UQ0S28qsqjwVFhHtCoet2cS6a62fvhnbio+9WSlarziAa+73QkM14GvNJ9slwQDQwLsegWAR/rKTrqR/QEY6WAexUHFf3D0FbYlsniwbBj9b2KwJjFwlbSblTMdDcalrpQmtKsBOGp5knBvDsjblrMiimAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Pam9+/Z6; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1711456334; c=relaxed/simple;
+	bh=stZGntb/EkNeA0sqMpP34JEU8CoCxYM+VpStBeNimXs=;
+	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
+	 Cc:Message-ID:Date; b=MnnGdSuPOc9Crts2+bjrRcN7jBWmHoW8/29i7qlAWY92y0NS7n9GIXqyjzQIlfQyfSwTUXBJmYkPvwahBOUNhtKSP2p6P2xD1k6pvznK/r0OV5qxrVjyVSine/iLm9eFxqyoS7ez15gP6NgfBj9yujNxlUZGq2sUWTx1xrxv5To=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MYa4Vslj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Pam9+/Z6"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42QCRYOl081417;
-	Tue, 26 Mar 2024 07:27:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1711456054;
-	bh=SI+HU37Nn6YoT5yQL/rjlCRJM6US/YLloi1oqcft1a8=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=Pam9+/Z6Gqf4bLlHznWx4cCDgfLXyHv658Gdn7XyJ+qgig0rBpWToHrIh9uWT1cnL
-	 sHZbseb+8Fp/3ENcU9LuWM/+cRvMv8vWgUmVREkmTubxkwV5Suz22QVUcVyTjUEj9O
-	 KLuC65NcibUBk6AEBV4qk4zAFSgMWwrC+x1jIKiM=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42QCRYUa035211
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 26 Mar 2024 07:27:34 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 26
- Mar 2024 07:27:34 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 26 Mar 2024 07:27:34 -0500
-Received: from a0497641-HP-Z2-Tower-G9-Workstation-Desktop-PC.dhcp.ti.com (a0497641-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [172.24.227.36])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42QCRN2d129435;
-	Tue, 26 Mar 2024 07:27:31 -0500
-From: Neha Malcom Francis <n-francis@ti.com>
-To: <robh@kernel.org>, <conor+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <vigneshr@ti.com>, <nm@ti.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kristo@kernel.org>, <u-kumar1@ti.com>,
-        <n-francis@ti.com>
-Subject: [PATCH 2/4] arm64: dts: ti: k3-j721e-mcu: Add the MCU domain watchdog instances
-Date: Tue, 26 Mar 2024 17:57:21 +0530
-Message-ID: <20240326122723.2329402-3-n-francis@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240326122723.2329402-1-n-francis@ti.com>
-References: <20240326122723.2329402-1-n-francis@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MYa4Vslj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E862C433F1;
+	Tue, 26 Mar 2024 12:32:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711456334;
+	bh=stZGntb/EkNeA0sqMpP34JEU8CoCxYM+VpStBeNimXs=;
+	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+	b=MYa4VsljBaJVaFlcjYOqG/IB0rQoPFMfI5n9pY+wKkVCQwebMktMr2z9688Q7utHF
+	 AAj1pJYfRMoGKOiz2prC5lrG+Xeq0o9XXYyDoICcM3jAqiH7TG/ZwFazKrK1FXPmI5
+	 3HhCT6oAQgFifs8Zd9CWYs1J8gXpbkwMd4wTigBzE5LQre+r9ES+ESgHZKmL7r0apm
+	 jUj5dfF0rPEgDYjR4vScx8AQ44TxWRbiJnhZSE/MbrdTYwNJwC/XIeRBZFPNYesRye
+	 F6tkg4Y3l+rhcr4Y+LXPz23bVC/FX3imJC7iiMR2a7XBhJG+OUQXA9LFIcSlWW8/c0
+	 F9331sL4rG9TA==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
+Subject: Re: MAINTAINERS: wifi: mwifiex: add Francesco as reviewer
+From: Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <20240321163420.11158-1-francesco@dolcini.it>
+References: <20240321163420.11158-1-francesco@dolcini.it>
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: Brian Norris <briannorris@chromium.org>,
+ Francesco Dolcini <francesco@dolcini.it>, linux-kernel@vger.kernel.org,
+ linux-wireless@vger.kernel.org
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
+Message-ID: <171145633125.3037799.11730170138730953666.kvalo@kernel.org>
+Date: Tue, 26 Mar 2024 12:32:13 +0000 (UTC)
 
-There are 2 watchdog instances in the MCU domain. These instances are
-coupled with the MCU domain R55 instances. Reserve them as they are not
-used by A72.
+Francesco Dolcini <francesco@dolcini.it> wrote:
 
-Signed-off-by: Neha Malcom Francis <n-francis@ti.com>
----
- .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
+> As discussed on the mailing list, add myself as mwifiex driver reviewer.
+> 
+> Link: https://lore.kernel.org/all/20240318112830.GA9565@francesco-nb/
+> Signed-off-by: Francesco Dolcini <francesco@dolcini.it>
+> Acked-by: Brian Norris <briannorris@chromium.org>
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-index b0f41e9829cc..867f307909be 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-@@ -694,4 +694,30 @@ wkup_esm: esm@42080000 {
- 		compatible = "ti,j721e-esm";
- 		reg = <0x00 0x42080000 0x00 0x1000>;
- 	};
-+
-+	/*
-+	 * The 2 RTI instances are couple with MCU R5Fs so keeping them
-+	 * reserved as these will be used by their respective firmware
-+	 */
-+	mcu_watchdog0: watchdog@40600000 {
-+		compatible = "ti,j7-rti-wdt";
-+		reg = <0x00 0x40600000 0x00 0x100>;
-+		clocks = <&k3_clks 262 1>;
-+		power-domains = <&k3_pds 262 TI_SCI_PD_EXCLUSIVE>;
-+		assigned-clocks = <&k3_clks 262 1>;
-+		assigned-clock-parents = <&k3_clks 262 5>;
-+		/* reserved for MCU_R5F0_0 */
-+		status = "reserved";
-+	};
-+
-+	mcu_watchdog1: watchdog@40610000 {
-+		compatible = "ti,j7-rti-wdt";
-+		reg = <0x00 0x40610000 0x00 0x100>;
-+		clocks = <&k3_clks 263 1>;
-+		power-domains = <&k3_pds 263 TI_SCI_PD_EXCLUSIVE>;
-+		assigned-clocks = <&k3_clks 263 1>;
-+		assigned-clock-parents = <&k3_clks 263 5>;
-+		/* reserved for MCU_R5F0_1 */
-+		status = "reserved";
-+	};
- };
+Patch applied to wireless.git, thanks.
+
+8ea3f4f1a1b4 MAINTAINERS: wifi: mwifiex: add Francesco as reviewer
+
 -- 
-2.34.1
+https://patchwork.kernel.org/project/linux-wireless/patch/20240321163420.11158-1-francesco@dolcini.it/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
