@@ -1,158 +1,107 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8510C6F08E;
-	Tue, 26 Mar 2024 12:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC1C6E61B;
+	Tue, 26 Mar 2024 12:08:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711454820; cv=none; b=M8SerXpMLX39YQa+H2vx1AXb641IUJ/meTLPkAFO2WXMZFUHj38ZXm4UZkcgDl+Pcz6/sFonidRZhqTHZ7CJcXIl354cNfMWKfPVDbmJUxd/MdngQCEV8qfVOVdfyvW2zlCI91UDl+DkhmSwm+JQXCpHQw6D24nbcPTvmg3QTHw=
+	t=1711454887; cv=none; b=lGvO87JXZStxjNqYnXydNvWPWo/55Vv69p8Hyr7gZ7QscucUEOse1ucxY5UsZ2XkvVMvYnOlbFBShsuKqMplbVPVsJxVVUBxngVICOOCsvOZKp44YvmqxHDiSFM97S3oEHazjbNK8KSwa5mIDxBVfvWjcQiYztxftxg8NadAAys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711454820; c=relaxed/simple;
-	bh=3FzmbtGZZ7DvyD3OJ+z6tU4V4LGQHD6/1YEh2weunmA=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=OX8nY/gjG+47VhQMg2QoQ/siHExaeRXD2xMXOIk6m4NLU+fVp3IEN3lm2Z7qmcWGbe3NFpRpASctpYbixDJNV84Cp0xs8So4RT+jn7rS9d9Eg2oiS1ZVXGpXQt1Ch7GXPEpAqeCZvMA/r5dKLtJz1N0J2JPY3w0p7Ce7sQMVGkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Z6BGyx/a; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1711454887; c=relaxed/simple;
+	bh=+JYnu5emNgwEhffD7wjz6RfzwF5VDV57vHflFSPkjQk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nw3VAW56+OELMDQ5kgwGQ1DGQicq1051Rgnix2Aokqsen34kZoUErySDHksNh+XqXjjdFpKN80Tww9tlWnFXAXo24KCDmw2n5IeaTaTBV5qHllAIcLAo8oqr2D2jqhfaLx4HnV6beSFu6SKosm35PhllJyZdUwJIs8PgNT5e0mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tDKDmqtN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Z6BGyx/a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1711454772; x=1712059572; i=markus.elfring@web.de;
-	bh=reTJekpRAbVkVaR6Ps74n/JKQGAzpk6naWUcepoHBnc=;
-	h=X-UI-Sender-Class:Date:To:Cc:References:Subject:From:
-	 In-Reply-To;
-	b=Z6BGyx/amhmAtn4HI51cKgC3t5dpc/XA/EsJoLtv7yxJO3njsoXk9lUBiPLMu/jq
-	 r67vRnuvcqFG79dvlW2+7Q2EVdW+wQ/6yoUw9KNL+IgFciz6rP4RI4B7PR42c6ryQ
-	 XTs5A+FtZAaoHgv5Ootx4o/nJ8VK0x4i/x5jJORnkcW3hLZ3PcdLJCRgR5c+fVV+b
-	 eXoeiNphZyj4rzQvGMKvVKpYy1f6rbNRRzKTez+BZ1QVDZVU7flSd3mTchrK8BGlX
-	 zWZiGSsZNxBm5qGOQK2ZX8dJ3OCGmYJNgKvv/Ddxe2Eo3zN/Zgumm/4vUoWrRAODO
-	 t10Nir0Br82/MYW11g==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.90.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MzTPQ-1skCSS2uGW-00vQEB; Tue, 26
- Mar 2024 13:06:12 +0100
-Message-ID: <570afd53-b1ed-4456-b83e-fca29857f000@web.de>
-Date: Tue, 26 Mar 2024 13:06:05 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tDKDmqtN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 324EBC433F1;
+	Tue, 26 Mar 2024 12:08:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711454887;
+	bh=+JYnu5emNgwEhffD7wjz6RfzwF5VDV57vHflFSPkjQk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=tDKDmqtNz6pQZIugZvH6fEiUGmGcfgZc+0HcylzuD03kRmdgjSTMJjtPXgkooZqE4
+	 K75IvqV1VA0a6Fc7W59kkjN24unq0udazgM9ZJM4lsKgEwcg1GWrzJYz4AvIVzdjHG
+	 5+DBKk9tmA8mmxT1tOK6Kk3uMp+fMNI//GMZLEaWtC+6MyOb8cO476/vXiIkUL4XWq
+	 8a8ieQrIog3Jty7r+Zd0bufmrpaEIV4vUk7yrktrXGtpMLIQ6CdMKkr8CGFWkqyQP7
+	 RctvWgpzGN9L1OR0lJqrCY6wPBWYiq2oIQ30F4fo9DVBMn5J8ZR8YFQaPz0qjIxAYI
+	 sze2/6FdUAy9Q==
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5a46ad0d981so1266871eaf.1;
+        Tue, 26 Mar 2024 05:08:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUrx7erH3FOiGVpNwXYUpw9DTCAqF22/vZERynTzqmdIAJSbWpY5pWEvqLJODe/HIEVGNT/wLtjgKDknA9aBc1o0WxVdElPAO0AgHaT6VBjDQYRe9NZ0hilkAE266fYopHeLiI0OyGIEg==
+X-Gm-Message-State: AOJu0YwmLkNLx1Vnyao73eZSL2ZF8zAAKrgp4cN8Om1NTu4RjTByoEi7
+	2mgSlER4jaSP4hdoc9wynOSE9iIBl9EThME4kDXOr9jkcQxh4gyLDd1Z0sLPbiTTEY0acJ5ykMf
+	auYc97bOb0LUhybK3Pr+wbTC9jDM=
+X-Google-Smtp-Source: AGHT+IEX7/3bqP2g4RhkkN03lYfLqGuaIjY5MPN5VZV2xraUgKf1Irx0etz7kkJgjwvEIwCKtzXzqfKw+8ET1f5pR10=
+X-Received: by 2002:a05:6820:820:b0:5a4:7300:b57f with SMTP id
+ bg32-20020a056820082000b005a47300b57fmr9614933oob.1.1711454886495; Tue, 26
+ Mar 2024 05:08:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Dan Williams <dan.j.williams@intel.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Julia Lawall <Julia.Lawall@inria.fr>, Kevin Tian <kevin.tian@intel.com>,
- Lukas Wunner <lukas.wunner@intel.com>, Matthew Wilcox <willy@infradead.org>
-References: <171140738438.1574931.15717256954707430472.stgit@dwillia2-xfh.jf.intel.com>
-Subject: Re: [PATCH v2] cleanup: Add usage and style documentation
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <171140738438.1574931.15717256954707430472.stgit@dwillia2-xfh.jf.intel.com>
-Content-Type: text/plain; charset=UTF-8
+References: <CAJZ5v0i7LYzF13M0qdeYWXZ7uO6HUpAS7pE5RJnOAJtKB8o88A@mail.gmail.com>
+ <20240322180753.5612-1-kiryushin@ancud.ru>
+In-Reply-To: <20240322180753.5612-1-kiryushin@ancud.ru>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 26 Mar 2024 13:07:54 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0gmO8_cosZ5j6iLRFaBEscxTGtfb5JTmnDeRqTOS-6-JQ@mail.gmail.com>
+Message-ID: <CAJZ5v0gmO8_cosZ5j6iLRFaBEscxTGtfb5JTmnDeRqTOS-6-JQ@mail.gmail.com>
+Subject: Re: [PATCH v2] ACPICA: debugger: check status of acpi_evaluate_object
+ in acpi_db_walk_for_fields
+To: Nikita Kiryushin <kiryushin@ancud.ru>
+Cc: Robert Moore <robert.moore@intel.com>, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
+	acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	lvc-project@linuxtesting.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:BgFUPW3xHjwYrRMtgoo20y7vIBXuyr8pzAvnoMtyk1VznSTTOA+
- 2HfzRJYuGFNVvMurFxHzbBoNNRYG+EIg6fREeH5NF5yWUGKiU2Vj7TiGIuBcl0cn4JlVhuU
- 9taiqRiAeuyZQieLLOJMQeaT4cVFeOVHJMJ7moDXsY0Xvcg9phuSTdUcJHwk39SCZ2/Ddzs
- 5geFhBWgiMHSGrK9Ee3oA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:dfm3TQltfcE=;YyoCq04Dxq5vJPAzHeOVEsmsgUJ
- ibbY/IEQoLPNOSviWzWggc96XJUIZgoGt1QKE0Hlf1HjWGR5IEfIdo3Q+N3vmDII6fVcCLJZY
- nzoYlJrchUdt0gEH19pgG7p6WQpAgifS1GN1LvWDE5l6f/P9CGRKc0HpB2F1dMqj8YdNjBZIf
- hS6x+vKNcxc90yHEP8cv1QxtyLTkYsRbclbEtsNEtq+j3rRMDn+2tJ2sSObS45+2E2w2FhH8V
- QBzVKDt89i/4slYMQI0HPK/zxsGpy0IGC/IWUKPj6/OgK3bQzZAEqa4AoOEczrJ+8XMOq80rQ
- STNadkCTBafiH9XAGPJrDq5SkF/xHavXGlF2RzzdSckoXwPSvW+hFfEo4T6A2TSWttoM7RkYJ
- u5CFCkmnRwMDR/pJKABbFnbkk8Xw32G0RiRLMYwUxOJV2q0Vq19VZ0XP+dIFK2yb6FN3ycnIN
- zpqEZe+QKMuiWr/8XF5pgRNcYFCLh3BZ/wmhAX0dvcKbJ824j/VSV6fZcNAPzIp19aLpihA4E
- qfR/gSHODGWGu/Jr+PhonGA6Hgw9wH5KPoheX6okwuLwZIjQNM2lM8MPKak4TP6A3Ii6mARJ3
- LlNMF+4Dg7vIj9K23129gRdhe3M3FtU3GAu/aG7jjzXhpShMv1NNR4EBdEdxkPE8nyT/iHi9L
- wU/eXbcgRSPntqMOzgFe/atxdu+Hbck/U09++JJ5uhcWYmcQv1v6JVQWKMAWLcK98H5jdfXqi
- DwTXP65n7WGkAFKt5xCxY72A5mduJSXcsRz9w+Wyw1ySZ5C+BOoUkQ8X7oNWz4GBfSes5wERl
- bwz/zuTdAccjYHBKaGLbquB6G6fuXD1TcuXoHzE74X6uc=
 
-=E2=80=A6
-> +++ b/include/linux/cleanup.h
-> @@ -4,6 +4,157 @@
+On Fri, Mar 22, 2024 at 7:23=E2=80=AFPM Nikita Kiryushin <kiryushin@ancud.r=
+u> wrote:
 >
->  #include <linux/compiler.h>
+> ACPICA commit 9061cd9aa131205657c811a52a9f8325a040c6c9
 >
-> +/**
-> + * DOC: scope-based cleanup helpers
-> + *
-> + * The "goto error" pattern is notorious for introducing =E2=80=A6
+> Errors in acpi_evaluate_object can lead to incorrect state of buffer.
+> This can lead to access to data in previously ACPI_FREEd buffer and
+> secondary ACPI_FREE to the same buffer later.
+>
+> Handle errors in acpi_evaluate_object the same way it is done earlier
+> with acpi_ns_handle_to_pathname.
+>
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>
+> Link: https://github.com/acpica/acpica/commit/9061cd9a
+> Fixes: 5fd033288a86 ("ACPICA: debugger: add command to dump all fields of=
+ particular subtype")
+> Signed-off-by: Nikita Kiryushin <kiryushin@ancud.ru>
+> ---
+> v2: Add ACPICA project git links for corresponding changes
+>  drivers/acpi/acpica/dbnames.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/acpi/acpica/dbnames.c b/drivers/acpi/acpica/dbnames.=
+c
+> index b91155ea9c34..c9131259f717 100644
+> --- a/drivers/acpi/acpica/dbnames.c
+> +++ b/drivers/acpi/acpica/dbnames.c
+> @@ -550,8 +550,12 @@ acpi_db_walk_for_fields(acpi_handle obj_handle,
+>         ACPI_FREE(buffer.pointer);
+>
+>         buffer.length =3D ACPI_ALLOCATE_LOCAL_BUFFER;
+> -       acpi_evaluate_object(obj_handle, NULL, NULL, &buffer);
+> -
+> +       status =3D acpi_evaluate_object(obj_handle, NULL, NULL, &buffer);
+> +       if (ACPI_FAILURE(status)) {
+> +               acpi_os_printf("Could Not evaluate object %p\n",
+> +                              obj_handle);
+> +               return (AE_OK);
+> +       }
+>         /*
+>          * Since this is a field unit, surround the output in braces
+>          */
+> --
 
-Will any other label become more helpful for this description approach?
-
-> + * this tedium =E2=80=A6
-
-Would an other wording be more appropriate here?
-
-
-> + *                          =E2=80=A6 maintaining FILO (first in last o=
-ut)
-
-How does this text fit to your response from yesterday?
-https://lore.kernel.org/all/6601c7f7369d4_2690d29490@dwillia2-mobl3.amr.co=
-rp.intel.com.notmuch/
-
-
-> + *                                                       =E2=80=A6 If a=
- function
-> + * wants to invoke pci_dev_put() on error, but return @dev (i.e. withou=
-t
-> + * freeing it) on success, it can do:
-> + *
-> + * ::
-> + *
-> + *	return no_free_ptr(dev);
-> + *
-> + * ...or:
-> + *
-> + * ::
-> + *
-> + *	return_ptr(dev);
-=E2=80=A6
-
-Would this macro call be preferred as a succinct specification
-(so that only the shorter one should be mentioned here)?
-https://elixir.bootlin.com/linux/v6.8.1/source/include/linux/cleanup.h#L78
-
-
-> + * Observe the lock is held for the remainder of the "if ()" block not
-> + * the remainder of "func()".
-
-I suggest to add a word in this sentence.
-
-* Observe the lock is held for the remainder of the "if ()" block
-* (and not the remainder of "func()").
-
-
-> + * the top of the function poses this potential interdependency problem
-
-I suggest to add a comma at the end of this line.
-
-
-> + * the recommendation is to always define and assign variables in one
-> + * statement and not group variable definitions at the top of the
-> + * function when __free() is used.
-
-I became curious how code layout guidance will evolve further also
-according to such an advice.
-
-
-Would you like to increase the collaboration with the macros =E2=80=9CDEFI=
-NE_CLASS=E2=80=9D and =E2=80=9CCLASS=E2=80=9D?
-https://elixir.bootlin.com/linux/v6.8.1/source/include/linux/cleanup.h#L82
-
-Regards,
-Markus
+Applied as 6.10 material, thanks!
