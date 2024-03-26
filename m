@@ -1,141 +1,65 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [207.46.229.174])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52DDC57330;
-	Tue, 26 Mar 2024 09:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.46.229.174
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27EE41B960
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 09:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711446188; cv=none; b=gC/LNlzT/8jTqFIER4irWEn9VygVi5FtNCaaNwil9U+N0pUM43RAVa836d8465PRvN1XzmCdp/XQjj4sHohCHHhVNaIh9yib0I24USYRGgEawCbLLWmMbGnGAsWmV9mRpeifIgUQeg/WMdxB0RVBQZof6lKz9K53Ssmm3O1WGFg=
+	t=1711446226; cv=none; b=gpUyhX5EY/bQe6flr7co68qkF4LSFifImKcHniN3JhhmOhmMQKCRSkvjiSPzswE6ndXuCMYd2sPEk2IWDt/pVoZhXHHLNVMQSxsgbMpfJ+N9pP1zLAdYA9Z49vI0OGbkWT+B3XsMD/66TtdKz1lBQLmM/7X9/t1UYuvWmgLd8Qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711446188; c=relaxed/simple;
-	bh=fnFbU4zyFpMX7N2P8SPsyX5StAHUauELU2tMEYZuxz0=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=gnAq/DeeCf0gaZ6KhRk0Y4/ziZ68Grkq+Qs9gEBlHuKZvQVI3GnxHW4guB8fsd0kK8ygq8tsJAhU2NOcMbKmZuDzCcD15lp3x2SzNlh/fGJWMkILVA22gHA3GC/ZXkidjp0w/Sm/yRN2DoGNhtWpotTYKnzqaBp/QAVNymRgklE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=207.46.229.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from ubuntu.localdomain (unknown [218.12.18.200])
-	by mail-app2 (Coremail) with SMTP id by_KCgB35ZiOmAJmN9tuAQ--.5570S2;
-	Tue, 26 Mar 2024 17:42:48 +0800 (CST)
-From: Duoming Zhou <duoming@zju.edu.cn>
-To: linux-sound@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	tiwai@suse.com,
-	perex@perex.cz,
-	Duoming Zhou <duoming@zju.edu.cn>
-Subject: [PATCH v2] ALSA: sh: aica: reorder cleanup operations to avoid UAF bugs
-Date: Tue, 26 Mar 2024 17:42:38 +0800
-Message-Id: <20240326094238.95442-1-duoming@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:by_KCgB35ZiOmAJmN9tuAQ--.5570S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxAw4DKF45Zr4fJF4kCFW3Wrg_yoW5uF4Upr
-	W5Wryrtrn7tFWv9rWUZwna9rn7Gw1fta4Utw4UGw4vvan3ur1YkF1jyw4FvFWakrWkuw47
-	ZF48Ary3CFyYyFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkG14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
-	JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
-	AVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUSNtxUUU
-	UU=
-X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwIMAWYBgRkQowA1s1
+	s=arc-20240116; t=1711446226; c=relaxed/simple;
+	bh=wipVMc+NlSaL82f8xhMlxm/RnK5hF4qw47WslRc5PQw=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=aZXCuFhOFOOeLt06/3G3pdD74YdDLUKI9snL3oi7oXFllrkS5tW3r4hKGIdqafgEfbTcdnORdQ/7NcSxvPsIiZeSpDaN9aAfZqeveEIokeKCOqDFiaYIU9A/VjsCNtHH+h4nAVkq2D/2BfgrEm/ZcBeXHlvgAcNRZEalaUZA7o0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4V3lGK1tszzRjmh;
+	Tue, 26 Mar 2024 17:42:49 +0800 (CST)
+Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
+	by mail.maildlp.com (Postfix) with ESMTPS id 99F091402CB;
+	Tue, 26 Mar 2024 17:43:40 +0800 (CST)
+Received: from [10.174.185.179] (10.174.185.179) by
+ kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 26 Mar 2024 17:43:39 +0800
+Subject: Re: [PATCH] irqchip/gic-v3-its: Fix double free on error
+To: huangguanrui.hgr <huangguanrui.hgr@alibaba-inc.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<maz@kernel.org>, <shannon.zhao@linux.alibaba.com>, <tglx@linutronix.de>
+References: <aac642a4-85a1-6df4-1192-638ce0d5086e@huawei.com>
+ <20240322023810.62914-1-huangguanrui.hgr@alibaba-inc.com>
+From: Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <661a577c-b4bb-e438-6ba5-6ed90b08649f@huawei.com>
+Date: Tue, 26 Mar 2024 17:43:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <20240322023810.62914-1-huangguanrui.hgr@alibaba-inc.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600007.china.huawei.com (7.193.23.208)
 
-The dreamcastcard->timer could schedule the spu_dma_work and the
-spu_dma_work could also arm the dreamcastcard->timer.
+On 2024/3/22 10:38, huangguanrui.hgr wrote:
+> We notice that:
+> In its_vpe_irq_domain_alloc, its_vm is from args, But in its_vpe_irq_domain_free,
+> its_vm is from domain->host_data.
 
-When the snd_pcm_substream is closing, the aica_channel will be
-deallocated. But it could still be dereferenced in the worker
-thread. The reason is that del_timer() will return directly
-regardless of whether the timer handler is running or not and
-the worker could be rescheduled in the timer handler. As a result,
-the UAF bug will happen. The racy situation is shown below:
+They *should* point to the same its_vm structure.
 
-      (Thread 1)                 |      (Thread 2)
-snd_aicapcm_pcm_close()          |
- ...                             |  run_spu_dma() //worker
-                                 |    mod_timer()
-  flush_work()                   |
-  del_timer()                    |  aica_period_elapsed() //timer
-  kfree(dreamcastcard->channel)  |    schedule_work()
-                                 |  run_spu_dma() //worker
-  ...                            |    dreamcastcard->channel-> //USE
+> Will these two values be different? For example, when other bugs occur?
 
-In order to mitigate this bug and other possible corner cases,
-call mod_timer() conditionally in run_spu_dma(), then implement
-PCM sync_stop op to cancel both the timer and worker. The sync_stop
-op will be called from PCM core appropriately when needed.
+Of course they can be different if there are *bugs* but I guess you
+won't get any further (e.g., you hit BUG_ON(vm != vpe->its_vm) in
+its_vpe_irq_domain_free()). The right thing to do is fixing the bug
+rather than papering over it.
 
-Fixes: 198de43d758c ("[ALSA] Add ALSA support for the SEGA Dreamcast PCM device")
-Suggested-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
----
-Changes in v2:
-  - call mod_timer() conditionally and implement PCM sync_stop op.
-
- sound/sh/aica.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
-
-diff --git a/sound/sh/aica.c b/sound/sh/aica.c
-index 320ac792c7f..3182c634464 100644
---- a/sound/sh/aica.c
-+++ b/sound/sh/aica.c
-@@ -278,7 +278,8 @@ static void run_spu_dma(struct work_struct *work)
- 		dreamcastcard->clicks++;
- 		if (unlikely(dreamcastcard->clicks >= AICA_PERIOD_NUMBER))
- 			dreamcastcard->clicks %= AICA_PERIOD_NUMBER;
--		mod_timer(&dreamcastcard->timer, jiffies + 1);
-+		if (snd_pcm_running(dreamcastcard->substream))
-+			mod_timer(&dreamcastcard->timer, jiffies + 1);
- 	}
- }
- 
-@@ -290,6 +291,8 @@ static void aica_period_elapsed(struct timer_list *t)
- 	/*timer function - so cannot sleep */
- 	int play_period;
- 	struct snd_pcm_runtime *runtime;
-+	if (!snd_pcm_running(substream))
-+		return;
- 	runtime = substream->runtime;
- 	dreamcastcard = substream->pcm->private_data;
- 	/* Have we played out an additional period? */
-@@ -350,12 +353,19 @@ static int snd_aicapcm_pcm_open(struct snd_pcm_substream
- 	return 0;
- }
- 
-+static int snd_aicapcm_pcm_sync_stop(struct snd_pcm_substream *substream)
-+{
-+	struct snd_card_aica *dreamcastcard = substream->pcm->private_data;
-+
-+	del_timer_sync(&dreamcastcard->timer);
-+	cancel_work_sync(&dreamcastcard->spu_dma_work);
-+	return 0;
-+}
-+
- static int snd_aicapcm_pcm_close(struct snd_pcm_substream
- 				 *substream)
- {
- 	struct snd_card_aica *dreamcastcard = substream->pcm->private_data;
--	flush_work(&(dreamcastcard->spu_dma_work));
--	del_timer(&dreamcastcard->timer);
- 	dreamcastcard->substream = NULL;
- 	kfree(dreamcastcard->channel);
- 	spu_disable();
-@@ -401,6 +411,7 @@ static const struct snd_pcm_ops snd_aicapcm_playback_ops = {
- 	.prepare = snd_aicapcm_pcm_prepare,
- 	.trigger = snd_aicapcm_pcm_trigger,
- 	.pointer = snd_aicapcm_pcm_pointer,
-+	.sync_stop = snd_aicapcm_pcm_sync_stop,
- };
- 
- /* TO DO: set up to handle more than one pcm instance */
--- 
-2.17.1
-
+Zenghui
