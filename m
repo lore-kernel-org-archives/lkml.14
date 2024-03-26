@@ -1,176 +1,78 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD8413E03F
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 21:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCED512AAF6
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 21:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711487331; cv=none; b=qw519ppAbkj8OSsV2SuVQUbJcEJa96peSEqJic5ZbZJPMblYDGh2cqIz2Dkoh7kEZfo/CPuBNUIKEzoIOrUthdFdWYBebGiMCkLXjmWtYJNV8X2l6eXp5s85UpINb1Z2Q1VQnQxQdlkWA2xFQTAuIjxcb/RGfB349MBQ22E1RdM=
+	t=1711487429; cv=none; b=rg+94xAKdJT6wMyMaZn19J5ECGPIVvcSCaow75ijN5+CIemyRYgZaMCMd+/6+M8P2Kah0HdwCFLZDYe8iGYJ/WkXKm4NxJWrl+XnxUOfv4W/4NoGqQpnBKcry/VO4mV3EdhbQSZkAxptatnSbeV9kPLJI/Vh1TJZeYuPkJIiz4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711487331; c=relaxed/simple;
-	bh=s08b6lHYI+rosZFlnj8/hdEGxrc4jOrRXDBNq5kldF8=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=oZJWJcN3J0Q+67Boa7qSH7uad19aqz3Yw+DLzB4CiNXH8r2MfeBdoiPH6YkSGLbOsYmYxf710+ew0A6XspadYUcxNhUA9qekZMtiGruTW0KV0zrRgCmdh2SvTRI/pc/QolYpfDlhl53QFbQuPvVLXcG9kVv1TNjqTbu3fto44hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=oTImM2O5; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1711487429; c=relaxed/simple;
+	bh=8saIACrfy8QISx9H5ksI6D7YCNwsbcZUSnWbjaAtbqM=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=lxbs17DB8OBcR5udz5ySfB3b72w89OAbkgPu/IBxtqMnDDBhC6fkyW7f2+CADZC/UEdTE8kSvcLPNdMlirK9iCPu2s40G2jrZmmnsMkyAeszYy8fKi5mMwVhwCBJt2lbx79AYhC6iYTzu9nGW8fR6bpNS4GwcbMO2mgAoNnkMko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M3seXFDp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="oTImM2O5"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e0f2798b47so1715785ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 14:08:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1711487329; x=1712092129; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mVy3Hz+QglZLXZjgfs9SD4hjFJzSIhc79fs9r0XUwbg=;
-        b=oTImM2O56e5Ksl/Y4W6NqglhzHPWsTVJI8tLiddc6WBU+Ha01QhJjHFMomqfJUOtCN
-         lB+NpJkexPY7T5kp/r1DjXU4/sbXmL1lSpK+KvJE7DLRTALudvs4d1Hu0w2ggXDOsJWv
-         FyBnOnwto1Fc5EadEs2ubDrAc4p7AFHQo2l3VFd5qsHnfu5mFb0Cxjek1B4xpXi9Z4Px
-         gBDkjoDe48ZSennOJ+aAMVc6kZZfi8SqvBIcF0snK5PGkdXHeC0i6IfU+f5q+FZMA0MT
-         5OVC5fkcvrfubuCf4yb2NNWWENJFn5mMthc51NwUr0dxQz0ni1lN3pOtot/xlyPdFn6J
-         turw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711487329; x=1712092129;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mVy3Hz+QglZLXZjgfs9SD4hjFJzSIhc79fs9r0XUwbg=;
-        b=b3QOUPaVujpjziDHptQ0EraWe3q4aJ3lA0JXMDWTMXoCITxrOHEImgoq1gG+Ix2IFU
-         up6Bto/F4pm+yTE1iBgh6j3J3iZ/zP3b6zcEiX+a3qiO19JmyoDCojUFOY+GkzH1c87j
-         sdcW6xMcwifwum8pdeNQRl02p9ddtWM+vV8A8TWcjh4KQpRwkzDt1vbW3djT+nvmatCR
-         0flw0XxER55TpX6uP/4rr6IadRyYbtG9S9n4cr6sMwAEdFLspXigXV3983t7j0VVFEy1
-         KmWYyasb1mw5M1M8YQJeZcXKjpMbp1Z4bxH9kvZq7qx0EEFufmFXiMrIFbE8/EiANH1i
-         YcUA==
-X-Forwarded-Encrypted: i=1; AJvYcCVEXVpTJnOudZE6W9K4FctKgkZSucvZLLL1V+LDsAcVKLNuHYhC8Cu3i+idrqytEO3k+vQSpGKu0gFqF4kxSTVvnpVFJSlqdovqSmSG
-X-Gm-Message-State: AOJu0YzNIC72NA/t62lLkj6pp6f7kN13A45hR7cQp0iUSXCpdCUmFuO7
-	jLuh2CEq8T3OkNksITjqudCUrO1Xmg5NcMHOrDqz44SvrMm1niqop8DsYYHH49k=
-X-Google-Smtp-Source: AGHT+IF2HPw5BzRQJFPhKRUTLLZBWnEaNhZE1YFQ07t8V46j4F5D2XT2+2Uu9b87tXUa1tSe4tum4w==
-X-Received: by 2002:a17:902:da88:b0:1e0:b5f1:aac2 with SMTP id j8-20020a170902da8800b001e0b5f1aac2mr3519934plx.10.1711487328512;
-        Tue, 26 Mar 2024 14:08:48 -0700 (PDT)
-Received: from localhost ([50.213.54.97])
-        by smtp.gmail.com with ESMTPSA id v13-20020a170902f0cd00b001e09c35e058sm7324705pla.195.2024.03.26.14.08.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 14:08:46 -0700 (PDT)
-Date: Tue, 26 Mar 2024 14:08:46 -0700 (PDT)
-X-Google-Original-Date: Tue, 26 Mar 2024 14:08:39 PDT (-0700)
-Subject:     Re: [PATCH] riscv: compat_vdso: install compat_vdso.so.dbg to /lib/modules/*/vdso/
-In-Reply-To: <1a1bf141-9fbf-4d30-bdd3-fd20f6170c3f@ghiti.fr>
-CC: masahiroy@kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
-  aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: alex@ghiti.fr
-Message-ID: <mhng-db45f75f-4c54-4ade-9c88-cfd6015a9203@palmer-ri-x1c9a>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M3seXFDp"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7369AC43390;
+	Tue, 26 Mar 2024 21:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711487429;
+	bh=8saIACrfy8QISx9H5ksI6D7YCNwsbcZUSnWbjaAtbqM=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=M3seXFDpvNLKmEGfVcZqvJDXhGH0EYOKu6uBnUfgsCq8ev+H/YxRQ++NfDtioFlaL
+	 BPOMPhMeOYOCh4joZfb3mKZRVcCM1qIVhskBmd2IQJq2Vuddwn/szMYPz86bSgU75b
+	 c64R9NaTUy/5DVx16cCAaaFRMjo6WVLrvz4xGu4kJpQJCT+muyExdCMLcwTE+o3RxM
+	 frj6Y3OB3Q7PM53mTFU5gesfMfHE9eIk4TRC4BbQIz4t7cSnj4Ij+cgq/Tkge8x0QR
+	 A+B5Asbm2mcJkWEBqzT94yq6XWFh3dObj3+Vp/3oYAMW/T+oekYZ9fYFOJPNzf9H7f
+	 1LYM2C2LYFeVg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 63A58D95063;
+	Tue, 26 Mar 2024 21:10:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] riscv: hwprobe: do not produce frtace relocation
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <171148742940.11448.3731153346859499014.git-patchwork-notify@kernel.org>
+Date: Tue, 26 Mar 2024 21:10:29 +0000
+References: <20240313085843.17661-1-vladimir.isaev@syntacore.com>
+In-Reply-To: <20240313085843.17661-1-vladimir.isaev@syntacore.com>
+To: Vladimir Isaev <vladimir.isaev@syntacore.com>
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, catalin.marinas@arm.com,
+ evan@rivosinc.com, nicolas@fjasle.eu, tglx@linutronix.de,
+ samitolvanen@google.com, masahiroy@kernel.org, maskray@google.com,
+ linux-kernel@vger.kernel.org, guoren@kernel.org, roman.artemev@syntacore.com
 
-On Mon, 18 Mar 2024 13:53:42 PDT (-0700), alex@ghiti.fr wrote:
-> Hi Masahiro,
->
-> On 15/03/2024 05:06, Masahiro Yamada wrote:
->> On Thu, Mar 7, 2024 at 5:12 AM Alexandre Ghiti <alex@ghiti.fr> wrote:
->>> Hi Masahiro,
->>>
->>> On 24/02/2024 04:37, Masahiro Yamada wrote:
->>>> Ping x 2 ?
->>>>
->>>>
->>>>
->>>>
->>>>
->>>> On Sun, Jan 21, 2024 at 6:48 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->>>>> On Fri, Nov 17, 2023 at 9:58 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->>>>>> 'make vdso_install' installs debug vdso files to /lib/modules/*/vdso/.
->>>>>>
->>>>>> Only for the compat vdso on riscv, the installation destination differs;
->>>>>> compat_vdso.so.dbg is installed to /lib/module/*/compat_vdso/.
->>>>>>
->>>>>> To follow the standard install destination and simplify the vdso_install
->>>>>> logic, change the install destination to standard /lib/modules/*/vdso/.
->>>>>>
->>>>>> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
->>>>>> ---
->>>>> Ping?
->>>>> (in case "yet more RISC-V updates" happens)
->>>>>
->>>>>
->>>>>
->>>>>
->>>>>>    arch/riscv/Makefile | 2 +-
->>>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
->>>>>> index a74be78678eb..5cbe596345c1 100644
->>>>>> --- a/arch/riscv/Makefile
->>>>>> +++ b/arch/riscv/Makefile
->>>>>> @@ -146,7 +146,7 @@ endif
->>>>>>    endif
->>>>>>
->>>>>>    vdso-install-y                 += arch/riscv/kernel/vdso/vdso.so.dbg
->>>>>> -vdso-install-$(CONFIG_COMPAT)  += arch/riscv/kernel/compat_vdso/compat_vdso.so.dbg:../compat_vdso/compat_vdso.so
->>>>>> +vdso-install-$(CONFIG_COMPAT)  += arch/riscv/kernel/compat_vdso/compat_vdso.so.dbg
->>>>>>
->>>>>>    ifneq ($(CONFIG_XIP_KERNEL),y)
->>>>>>    ifeq ($(CONFIG_RISCV_M_MODE)$(CONFIG_ARCH_CANAAN),yy)
->>>>>> --
->>>>>> 2.40.1
->>>>>>
->>>>> --
->>>>> Best Regards
->>>>> Masahiro Yamada
->>>>
->>>> --
->>>> Best Regards
->>>> Masahiro Yamada
->>>>
->>>> _______________________________________________
->>>> linux-riscv mailing list
->>>> linux-riscv@lists.infradead.org
->>>> http://lists.infradead.org/mailman/listinfo/linux-riscv
->>>
->>> Couldn't changing this library install path break some existing
->>> application? I mean it kind of breaks where the library is expected to
->>> be right?
->>
->> Do you have a particular library in mind?
->
->
-> None in particular.
->
->
->>
->>
->> RISV-V is the only architecture that installs a debug vdso
->> to a different location than the
->> standard lib/modules/*/vdso/.
->>
->>
->> I regard this as a fix.
->
->
-> You're probably right, I don't see why the search path would be
-> different on riscv, unless it was fixed in userspace but I think this is
-> the right thing to do, so:
+Hello:
 
-We do have some weirdness with multlib paths, but I don't think that's 
-related to the VDSO paths.
+This patch was applied to riscv/linux.git (fixes)
+by Palmer Dabbelt <palmer@rivosinc.com>:
 
->
-> Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
->
-> Thanks,
->
-> Alex
->
->
->>
->>
->>
->>
->>
+On Wed, 13 Mar 2024 10:35:46 +0300 you wrote:
+> Such relocation causes crash of android linker similar to one
+> described in commit e05d57dcb8c7
+> ("riscv: Fixup __vdso_gettimeofday broke dynamic ftrace").
+> 
+> Looks like this relocation is added by CONFIG_DYNAMIC_FTRACE which is
+> disabled in the default android kernel.
+> 
+> [...]
+
+Here is the summary with links:
+  - riscv: hwprobe: do not produce frtace relocation
+    https://git.kernel.org/riscv/c/ad14f7ca9f0d
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
