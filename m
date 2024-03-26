@@ -1,153 +1,212 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC586AF85;
-	Tue, 26 Mar 2024 15:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB6613C8E1
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:57:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711468602; cv=none; b=Yj7k+fcaQL5xAxWNokjAtwHMJTNDJ2kNOK2MgQfbrodyCjKZ22Lim9zn2qTNBF9nsvWDUswtEX7RFh8SDiumXpn5llKCzpQ1eTsAvn8HrlH5jaFS2MMG5RsGfwqSxwGOpP5GNZJS6CWmwbnL77Slk2LPEXDta2JIMVDtbICu16E=
+	t=1711468625; cv=none; b=eLapJT/K8xyZeBlo23ZfuubFTLlwa5aZQv5APRyFAm2W64FqKWUsMlnFUUE3VZHXPBrTsiuhYYIy45vOC0Zvgjil208/iF/C36UdnHJx/7VozM83zU86LArf+FMV/C/aCuoWRQKdhu8bW6T1mD0DZYpBx/m9YjydYRsuQyzwbUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711468602; c=relaxed/simple;
-	bh=7zSnmZvqIpBKuNdtr4g7033y1zN+MsTfLVhiT3kPAG0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=nfEZ9cBdG6vdAdFh5gVBw5n6wcU4hhPLRaJy0FDLHvlfygCedj5N4H/2kMgeb4O2E/C6xoQwRsziuiOcOP12VU1o7c9wCzYKIf3OjKXILcnm9AqY3Giff2fuOT+utHQe1WOfvOtcEK+wi0ziIKq5Qc71p2VZ7XU6D22XnCxHRg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dM6mSoOO; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1711468625; c=relaxed/simple;
+	bh=BJadlzjF8K7eYLDk/bKPq92BNIsaKdhNyPe7pWPOvJk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oEPFzpbW5dxFdOGmI159Ho6S9V67PgtGuXqThVHXDXQmINIha4wWg51dYrd+C5Tw64L56rU9dz3nhhOr11t3gLcLCdjN+snsq2i2j3BhM732w7K+Z4/tx2iaWxhIBQTVAxmJ9wkGwM480+q3NeWlDQU0PXJ0gnmltuEMgqtqG2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DxHJdXDA; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dM6mSoOO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711468601; x=1743004601;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=7zSnmZvqIpBKuNdtr4g7033y1zN+MsTfLVhiT3kPAG0=;
-  b=dM6mSoOOjGlWaHtC/TpoNVO2zrut/HYR9uc/b65fRfFxPiBR51cNYh4w
-   xT8mSTmkT6Fe7d9hoh2IV9nte3e3t1W02JypNUMfvyPPOoxa1ug/xb5qV
-   WfNRoChWBbtVMFp7Tx5led/fh77fiQkPBDqBjhGDo3XujiF3xQtn4rSRk
-   6RppdIlHXoJ/M9VSJOJF9yWavxuztjiAeV8JUiqsEPEH8z4W0cz9Szr61
-   X2+F3EJriQwIZtWfj0huXZInV+zcGKxYhg4JmrF2mW4wWrtQBfH9fuAOj
-   71jW80ecph+tQ2DNQD2g0m7/BpJLhx96vWqzErCSjzDH+zZ+6cFq320NA
-   g==;
-X-CSE-ConnectionGUID: rphYpOdLSu223Zei2Py9Zg==
-X-CSE-MsgGUID: yAIhvQGCRmmqFCtRnk3jrw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="6634265"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="6634265"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 08:56:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="16039150"
-Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.124.242.47]) ([10.124.242.47])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 08:56:38 -0700
-Message-ID: <4d0d9f64-4cc4-4c1e-ba27-ff70c9827570@linux.intel.com>
-Date: Tue, 26 Mar 2024 23:56:35 +0800
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DxHJdXDA"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5A9191C000F;
+	Tue, 26 Mar 2024 15:57:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1711468621;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Zb7M3SYrtEfqRv0afXj1nbXh0UTQ/09F7/oJjZjlRZc=;
+	b=DxHJdXDAgmpJkz9RjdEIGI4mugIcJhrykvIe4kC+YbVsw0jsOFN6gzDKwc0RvkiKCb/fMn
+	mhLSsuOI3q9isWUDGua7PIh6kytHXPV2oSgXlVSurz5HdFlzM/IaJ8otcov/7R8Y/ft+oF
+	m0Ejfpr4tDpYYfGynAmIyKVX82A4tRu0oLkRU/Sou1XgQiuKF0OIpFgMHk5S6hZ0bXQo2X
+	cAcrYIpx8jqknTEXU4HE9yJtTKs0s/H5CoOLxqpuXAXOgK6B7+X7AkUjAWZv6Z3Ug+UUdT
+	g4A8gq26+5uPnhlGXSNl9o4wodfbHK8ae1ttZ1ozUrsFpY2gaANXoPQs2MZ2JQ==
+Date: Tue, 26 Mar 2024 16:56:59 +0100
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+To: =?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>
+Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
+	Haneen Mohammed <hamohammed.sa@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, arthurgrillo@riseup.net,
+	Jonathan Corbet <corbet@lwn.net>, pekka.paalanen@haloniitty.fi,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com,
+	thomas.petazzoni@bootlin.com, seanpaul@google.com,
+	marcheu@google.com, nicolejadeyee@google.com
+Subject: Re: [PATCH v5 05/16] drm/vkms: Add dummy pixel_read/pixel_write
+ callbacks to avoid NULL pointers
+Message-ID: <ZgLwSz6gosSdNAQH@localhost.localdomain>
+Mail-Followup-To: =?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
+	Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
+	Haneen Mohammed <hamohammed.sa@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, arthurgrillo@riseup.net,
+	Jonathan Corbet <corbet@lwn.net>, pekka.paalanen@haloniitty.fi,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com,
+	thomas.petazzoni@bootlin.com, seanpaul@google.com,
+	marcheu@google.com, nicolejadeyee@google.com
+References: <20240313-yuv-v5-0-e610cbd03f52@bootlin.com>
+ <20240313-yuv-v5-5-e610cbd03f52@bootlin.com>
+ <d281fb73-5491-4764-b582-7790ccf7fa8d@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/21] KVM: Allow page-sized MMU caches to be initialized
- with custom 64-bit values
-From: Binbin Wu <binbin.wu@linux.intel.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, seanjc@google.com,
- michael.roth@amd.com, isaku.yamahata@intel.com, thomas.lendacky@amd.com
-References: <20240227232100.478238-1-pbonzini@redhat.com>
- <20240227232100.478238-3-pbonzini@redhat.com>
- <6bd61607-9491-4517-8fc8-8d61d9416cab@linux.intel.com>
-In-Reply-To: <6bd61607-9491-4517-8fc8-8d61d9416cab@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <d281fb73-5491-4764-b582-7790ccf7fa8d@igalia.com>
+X-GND-Sasl: louis.chauvet@bootlin.com
 
+Le 25/03/24 - 10:59, Ma�ra Canal a �crit :
+> On 3/13/24 14:44, Louis Chauvet wrote:
+> > Introduce two callbacks which does nothing. They are used in replacement
+> > of NULL and it avoid kernel OOPS if this NULL is called.
+> > 
+> > If those callback are used, it means that there is a mismatch between
+> > what formats are announced by atomic_check and what is realy supported by
+> > atomic_update.
+> > 
+> > Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> > ---
+> >   drivers/gpu/drm/vkms/vkms_formats.c | 43 +++++++++++++++++++++++++++++++------
+> >   1 file changed, 37 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
+> > index 55a4365d21a4..b57d85b8b935 100644
+> > --- a/drivers/gpu/drm/vkms/vkms_formats.c
+> > +++ b/drivers/gpu/drm/vkms/vkms_formats.c
+> > @@ -136,6 +136,21 @@ static void RGB565_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
+> >   	out_pixel->b = drm_fixp2int_round(drm_fixp_mul(fp_b, fp_rb_ratio));
+> >   }
+> >   
+> > +/**
+> > + * black_to_argb_u16() - pixel_read callback which always read black
+> > + *
+> > + * This callback is used when an invalid format is requested for plane reading.
+> > + * It is used to avoid null pointer to be used as a function. In theory, this function should
+> > + * never be called, except if you found a bug in the driver/DRM core.
+> > + */
+> > +static void black_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
+> > +{
+> > +	out_pixel->a = (u16)0xFFFF;
+> > +	out_pixel->r = 0;
+> > +	out_pixel->g = 0;
+> > +	out_pixel->b = 0;
+> > +}
+> > +
+> >   /**
+> >    * vkms_compose_row - compose a single row of a plane
+> >    * @stage_buffer: output line with the composed pixels
+> > @@ -238,6 +253,16 @@ static void argb_u16_to_RGB565(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
+> >   	*pixel = cpu_to_le16(r << 11 | g << 5 | b);
+> >   }
+> >   
+> > +/**
+> > + * argb_u16_to_nothing() - pixel_write callback with no effect
+> > + *
+> > + * This callback is used when an invalid format is requested for writeback.
+> > + * It is used to avoid null pointer to be used as a function. In theory, this should never
+> > + * happen, except if there is a bug in the driver
+> > + */
+> > +static void argb_u16_to_nothing(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
+> > +{}
+> > +
+> >   /**
+> >    * Generic loop for all supported writeback format. It is executed just after the blending to
+> >    * write a line in the writeback buffer.
+> > @@ -261,8 +286,8 @@ void vkms_writeback_row(struct vkms_writeback_job *wb,
+> >   
+> >   /**
+> >    * Retrieve the correct read_pixel function for a specific format.
+> > - * The returned pointer is NULL for unsupported pixel formats. The caller must ensure that the
+> > - * pointer is valid before using it in a vkms_plane_state.
+> > + * If the format is not supported by VKMS a warn is emitted and a dummy "always read black"
+> 
+> "If the format is not supported by VKMS, a warning is emitted and a 
+> dummy "always read black"..."
 
+Fixed in v6.
+ 
+> > + * function is returned.
+> >    *
+> >    * @format: DRM_FORMAT_* value for which to obtain a conversion function (see [drm_fourcc.h])
+> >    */
+> > @@ -285,18 +310,21 @@ pixel_read_t get_pixel_read_function(u32 format)
+> >   		 * format must:
+> >   		 * - Be listed in vkms_formats in vkms_plane.c
+> >   		 * - Have a pixel_read callback defined here
+> > +		 *
+> > +		 * To avoid kernel crash, a dummy "always read black" function is used. It means
+> > +		 * that during the composition, this plane will always be black.
+> >   		 */
+> >   		WARN(true,
+> >   		     "Pixel format %p4cc is not supported by VKMS planes. This is a kernel bug, atomic check must forbid this configuration.\n",
+> >   		     &format);
+> > -		return (pixel_read_t)NULL;
+> > +		return &black_to_argb_u16;
+> >   	}
+> >   }
+> >   
+> >   /**
+> >    * Retrieve the correct write_pixel function for a specific format.
+> > - * The returned pointer is NULL for unsupported pixel formats. The caller must ensure that the
+> > - * pointer is valid before using it in a vkms_writeback_job.
+> > + * If the format is not supported by VKMS a warn is emitted and a dummy "don't do anything"
+> 
+> "If the format is not supported by VKMS, a warning is emitted and a 
+> dummy "don't do anything"..."
 
-On 3/5/2024 2:55 PM, Binbin Wu wrote:
->
->
-> On 2/28/2024 7:20 AM, Paolo Bonzini wrote:
->> From: Sean Christopherson <seanjc@google.com>
->>
->> Add support to MMU caches for initializing a page with a custom 64-bit
->> value, e.g. to pre-fill an entire page table with non-zero PTE values.
->> The functionality will be used by x86 to support Intel's TDX, which 
->> needs
->> to set bit 63 in all non-present PTEs in order to prevent !PRESENT page
->> faults from getting reflected into the guest (Intel's EPT Violation #VE
->> architecture made the less than brilliant decision of having the per-PTE
->> behavior be opt-out instead of opt-in).
->>
->> Signed-off-by: Sean Christopherson <seanjc@google.com>
->> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
->> Message-Id: 
->> <5919f685f109a1b0ebc6bd8fc4536ee94bcc172d.1705965635.git.isaku.yamahata@intel.com>
->> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
->> ---
->>   include/linux/kvm_types.h |  1 +
->>   virt/kvm/kvm_main.c       | 16 ++++++++++++++--
->>   2 files changed, 15 insertions(+), 2 deletions(-)
->
-> Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
->
->>
->> diff --git a/include/linux/kvm_types.h b/include/linux/kvm_types.h
->> index d93f6522b2c3..827ecc0b7e10 100644
->> --- a/include/linux/kvm_types.h
->> +++ b/include/linux/kvm_types.h
->> @@ -86,6 +86,7 @@ struct gfn_to_pfn_cache {
->>   struct kvm_mmu_memory_cache {
->>       gfp_t gfp_zero;
->>       gfp_t gfp_custom;
->> +    u64 init_value;
->>       struct kmem_cache *kmem_cache;
->>       int capacity;
->>       int nobjs;
->> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
->> index 9c99c9373a3e..c9828feb7a1c 100644
->> --- a/virt/kvm/kvm_main.c
->> +++ b/virt/kvm/kvm_main.c
->> @@ -401,12 +401,17 @@ static void kvm_flush_shadow_all(struct kvm *kvm)
->>   static inline void *mmu_memory_cache_alloc_obj(struct 
->> kvm_mmu_memory_cache *mc,
->>                              gfp_t gfp_flags)
->>   {
->> +    void *page;
->> +
->>       gfp_flags |= mc->gfp_zero;
->>         if (mc->kmem_cache)
->>           return kmem_cache_alloc(mc->kmem_cache, gfp_flags);
->> -    else
->> -        return (void *)__get_free_page(gfp_flags);
->> +
->> +    page = (void *)__get_free_page(gfp_flags);
->> +    if (page && mc->init_value)
->> +        memset64(page, mc->init_value, PAGE_SIZE / 
->> sizeof(mc->init_value));
+Fixed in v6.
 
-Do we need a static_assert() to make sure mc->init_value is 64bit?
+Thanks,
+Louis Chauvet
 
->> +    return page;
->>   }
->>     int __kvm_mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, 
->> int capacity, int min)
->> @@ -421,6 +426,13 @@ int __kvm_mmu_topup_memory_cache(struct 
->> kvm_mmu_memory_cache *mc, int capacity,
->>           if (WARN_ON_ONCE(!capacity))
->>               return -EIO;
->>   +        /*
->> +         * Custom init values can be used only for page allocations,
->> +         * and obviously conflict with __GFP_ZERO.
->> +         */
->> +        if (WARN_ON_ONCE(mc->init_value && (mc->kmem_cache || 
->> mc->gfp_zero)))
->> +            return -EIO;
->> +
->>           mc->objects = kvmalloc_array(capacity, sizeof(void *), gfp);
->>           if (!mc->objects)
->>               return -ENOMEM;
->
->
+> Best Regards,
+> - Ma�ra
+> 
+> > + * function is returned.
+> >    *
+> >    * @format: DRM_FORMAT_* value for which to obtain a conversion function (see [drm_fourcc.h])
+> >    */
+> > @@ -319,10 +347,13 @@ pixel_write_t get_pixel_write_function(u32 format)
+> >   		 * format must:
+> >   		 * - Be listed in vkms_wb_formats in vkms_writeback.c
+> >   		 * - Have a pixel_write callback defined here
+> > +		 *
+> > +		 * To avoid kernel crash, a dummy "don't do anything" function is used. It means
+> > +		 * that the resulting writeback buffer is not composed and can contains any values.
+> >   		 */
+> >   		WARN(true,
+> >   		     "Pixel format %p4cc is not supported by VKMS writeback. This is a kernel bug, atomic check must forbid this configuration.\n",
+> >   		     &format);
+> > -		return (pixel_write_t)NULL;
+> > +		return &argb_u16_to_nothing;
+> >   	}
+> >   }
+> > 
 
+-- 
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
