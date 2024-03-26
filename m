@@ -1,143 +1,195 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mo-csw-fb.securemx.jp (mo-csw-fb1121.securemx.jp [210.130.202.129])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71CBA3C30
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 11:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBE01B59A;
+	Tue, 26 Mar 2024 11:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711451128; cv=none; b=CDKr+7H1NLx7FvTOfqyxME8mn1EiexVljUcr/qm0Vh+VGmj6gzz1FN4hVHbI3AuCZof+E4IAiiqKk0oYQO1K2+y7bWKWg/WRrqJvS0usM85L2boOe0bOi5B2F4xjp7yS4Dwlgpoh6hxm9QuIm50m72RBvJ5J9jJc7FeF3MyJAkY=
+	t=1711451131; cv=none; b=EicYdT6okheoVHvOMqRXHUbD+F3L50gzHGVibH3lZKIIn6gsGZbtezYrb68xhLMBBN7zZmlOMZ3OfIFzYdcieQNmHjIaQXIkE8JKNRVfP7CaN2y/krJ48CCg2++WIx+gEwc41ynFFgJ9o2hDRLrK7eDbbXAOIxRccnhrS4A3ChI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711451128; c=relaxed/simple;
-	bh=Tu8LJ1+CQi0lJJMWJK5Tv7gRGqoNUunnGIQubTe3NW4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DJZp6n1NVaCyRaQoI0I4Z07YSSBOfP1FK9C853Gri/ijv58t36YxqBS2FpM7O7nstQ9GAbC7fYMy+l2c39O8Rn5Znrfb//Cbrp3ZKqNlSnjOUJIZkrKWjkwyFZeS8wtbNWClhuGS+aLK5dEWSnlO1HVEilqov2vo3JqsMk0jEhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lXONSIlQ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lXONSIlQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0941C433C7
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 11:05:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711451127;
-	bh=Tu8LJ1+CQi0lJJMWJK5Tv7gRGqoNUunnGIQubTe3NW4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lXONSIlQRtjuiiZN/kBSZB7hD0uXPwtjFf0PDxrGx/ADtNUsVYkdgybVxBiLR2UGU
-	 bL5ZiBjz8KHTRYawKYWLcQ2q0YTadL4QG+3jAviSbIG9NQ4Z+B8w2rVKBxaZ1c2yHI
-	 k0vpeMppFoN50PWh2+Rz+qm044gbmq1Mq/lsrzphVezTIdUiZogDjvm51zFUi4cslA
-	 R7H2HX+Q9o3fIW1RWhv/s/UrWH2Cgi8wKJhbyI2SXQGc9NySPTMme9APP+BXdVwKpA
-	 6JERI2dRkx7I8Fjbr1Uy5/KemP93tvsziZ20o1f8Mh1cC4kH11B8hkIGYqLexjmlz3
-	 e+ZcFg1N0RvjQ==
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5a46ad0d981so1255607eaf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 04:05:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXmaYeqSoZuLQxJ10Hnm5EiZx32cNzz1bxh1yh/pr7AdNybUxgJ7S8fHTzYlCN/PXoTY8O9hC7+tZ7PnsTIGmAGQAF2u0Bf6GXXRrJ9
-X-Gm-Message-State: AOJu0Yz5Lk468D8wsQsWO6C5CZLUHG1cgoijc0hs+zjFciJDZq9jIxoB
-	bxjoeeo1mJXMjfSwkj4zh3mmUB8klz9vqYOtETNsFL8/guXJxxaXCXCc4WpKfHpOHyMtHPejiin
-	VPr31Yj08yjHJgtnWgRx8730kMhA=
-X-Google-Smtp-Source: AGHT+IFfsBnh1dnEs5fHJzLKuCcQMoXcD2qU+zZNrwyD9E0zwoKMsFJYX/wg/Qi/qUpIca7wezahHw8MbVu8BVvWb4Y=
-X-Received: by 2002:a05:6820:b91:b0:5a5:5ed9:b246 with SMTP id
- eg17-20020a0568200b9100b005a55ed9b246mr3885758oob.0.1711451127200; Tue, 26
- Mar 2024 04:05:27 -0700 (PDT)
+	s=arc-20240116; t=1711451131; c=relaxed/simple;
+	bh=pWwwp25BjYeP7PCVUAYK9bGOXwcU5GgFSs/6zOVf1kI=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=HKUxp4qmyOKyUcnUHn8J2qiqw65BQifhinxNZ22z6WIs2PG4adfOSFuYumhwnqPtmHnd2jdKeanbZCBeauzkNbIJ0t7Ik1sYJatE3oDREyK+UwVP9lyg7E93jXBxZiTyMqeDbKVv1RKWV07LfsddsaiQG2jM2wse+kqxoRG5BdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kioxia.com; spf=pass smtp.mailfrom=kioxia.com; arc=none smtp.client-ip=210.130.202.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kioxia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kioxia.com
+Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1121) id 42QATtd4846052; Tue, 26 Mar 2024 19:29:55 +0900
+Received: by mo-csw.securemx.jp (mx-mo-csw1122) id 42QAThJH2611311; Tue, 26 Mar 2024 19:29:43 +0900
+X-Iguazu-Qid: 2rWgWcEMw7gzoPQ1DM
+X-Iguazu-QSIG: v=2; s=0; t=1711448982; q=2rWgWcEMw7gzoPQ1DM; m=PaWt10EU8bzrpSXl5RYsZTwdoaLSopBY8IGYGc3YOyI=
+Received: from CNN1EMTA01.test.kioxia.com ([202.248.33.144])
+	by relay.securemx.jp (mx-mr1121) id 42QATf9m2222317
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Tue, 26 Mar 2024 19:29:42 +0900
+Received: from Switcher-Post_Send (gateway [10.232.20.1])
+	by CNN1EMTA01.test.kioxia.com (Postfix) with ESMTP id D19152F015;
+	Tue, 26 Mar 2024 19:29:41 +0900 (JST)
+Received: from CNN1ESTR04.kioxia.com (localhost [127.0.0.1])
+	by Switcher-Post_Send (Postfix) with ESMTP id 996031900001E2;
+	Tue, 26 Mar 2024 19:17:15 +0900 (JST)
+Received: from localhost [127.0.0.1] 
+	 by CNN1ESTR04.kioxia.com with ESMTP id 0003VAAAAAA01M89;
+	 Tue, 26 Mar 2024 19:17:15 +0900
+Received: from CNN1EXMB01.r1.kioxia.com (CNN1EXMB01.r1.kioxia.com [10.232.20.150])
+	by Switcher-Pre_Send (Postfix) with ESMTP id 8DFC6A29B6838;
+	Tue, 26 Mar 2024 19:17:15 +0900 (JST)
+Received: from CNN1EXMB03.r1.kioxia.com (10.232.20.152) by
+ CNN1EXMB01.r1.kioxia.com (10.232.20.150) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 26 Mar 2024 19:29:41 +0900
+Received: from CNN1EXMB03.r1.kioxia.com ([10.13.100.22]) by
+ CNN1EXMB03.r1.kioxia.com ([10.13.100.22]) with mapi id 15.01.2507.035; Tue,
+ 26 Mar 2024 19:29:41 +0900
+From: tada keisuke <keisuke1.tada@kioxia.com>
+To: "song@kernel.org" <song@kernel.org>,
+        "yukuai3@huawei.com"
+	<yukuai3@huawei.com>
+CC: "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH 07/11] md: change the type of nr_pending from atomic_t to
+ percpu_ref
+Thread-Topic: [PATCH 07/11] md: change the type of nr_pending from atomic_t to
+ percpu_ref
+Thread-Index: Adp/ZHDlM7a9GiVuROS72GmNvZS6yA==
+Date: Tue, 26 Mar 2024 10:29:41 +0000
+Message-ID: <c6f68d4b97a84562b9564cf3d5b59ff6@kioxia.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tm-as-product-ver: ISME-14.0.0.2080-9.0.1002-28274.000
+x-tm-as-result: No-10--11.170200-8.000000
+x-tmase-matchedrid: Sx6Z8sZ1/uymagT1k9kBpgrcxrzwsv5uXPK9y3z82GsPdZmyx8xAa4Ul
+	JlxlTIT+uzW0mXOtDblgTs7PNu5YyogrKnsJ1GRgTuctSpiuWyUUi4Ehat05499RlPzeVuQQbo+
+	zo8QXL7dce6BqICgMNO++yHYM+maWCEeKzjvXhRNT3j6uyvUYPHO1oaQ51CuNyPRAwD/3abY9/h
+	S2mXmf7hyQILeil6Pygimqy60vioomCg+Lak4DCfQxpA7auLwMsnK72MaPSqc4UXcfFIawgC4TI
+	zFTm9BjfS0Ip2eEHnzWRN8STJpl3PoLR4+zsDTta4jJ6gfgIy2la73bcvT9XuBggTcklL0jRIHt
+	QC2du/mubi7Hj6ORU1qe1Xx4uHiGxYVzI3UCCaY=
+x-tm-as-user-approved-sender: No
+x-tm-as-user-blocked-sender: No
+x-tmase-result: 10--11.170200-8.000000
+x-tmase-version: ISME-14.0.0.2080-9.0.1002-28274.000
+x-tm-snts-smtp: ED4621EFA559CECE17F037732FB8301002A8F9A433FA24094DEBA62C9E64F8112000:8
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240325221409.1457036-1-helgaas@kernel.org>
-In-Reply-To: <20240325221409.1457036-1-helgaas@kernel.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 26 Mar 2024 12:05:15 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0hEAWQf+SXjsYt92xrF-8M2PUVGod2b97gBBFTKiv+UFg@mail.gmail.com>
-Message-ID: <CAJZ5v0hEAWQf+SXjsYt92xrF-8M2PUVGod2b97gBBFTKiv+UFg@mail.gmail.com>
-Subject: Re: [PATCH] driver core: Remove unused platform_notify, platform_notify_remove
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-CrossPremisesHeadersFilteredBySendConnector: CNN1EXMB01.r1.kioxia.com
+X-OrganizationHeadersPreserved: CNN1EXMB01.r1.kioxia.com
 
-On Mon, Mar 25, 2024 at 11:14=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org>=
- wrote:
->
-> From: Bjorn Helgaas <bhelgaas@google.com>
->
-> The "platform_notify" and "platform_notify_remove" hooks have been unused
-> since 00ba9357d189 ("ARM: ixp4xx: Drop custom DMA coherency and bouncing"=
-).
->
-> Remove "platform_notify" and "platform_notify_remove".  No functional
-> change intended.
->
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
+This patch depends on patch 05.
 
-Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+Change the type of nr_pending from atomic_t to percpu_ref.
+Additionally, temporarily switch from percpu mode to atomic mode.
+This is to reduce the amount of changes from patches 8 to 10.
+Patches 8 to 10 assume that nr_pending is run in percpu mode.
+Finally, switch from atomic mode to percpu mode in patch 11.
 
-> ---
->  drivers/base/core.c    |  8 --------
->  include/linux/device.h | 11 -----------
->  2 files changed, 19 deletions(-)
->
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index b93f3c5716ae..78dfa74ee18b 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -2331,8 +2331,6 @@ static void fw_devlink_link_device(struct device *d=
-ev)
->
->  /* Device links support end. */
->
-> -int (*platform_notify)(struct device *dev) =3D NULL;
-> -int (*platform_notify_remove)(struct device *dev) =3D NULL;
->  static struct kobject *dev_kobj;
->
->  /* /sys/dev/char */
-> @@ -2380,16 +2378,10 @@ static void device_platform_notify(struct device =
-*dev)
->         acpi_device_notify(dev);
->
->         software_node_notify(dev);
-> -
-> -       if (platform_notify)
-> -               platform_notify(dev);
->  }
->
->  static void device_platform_notify_remove(struct device *dev)
->  {
-> -       if (platform_notify_remove)
-> -               platform_notify_remove(dev);
-> -
->         software_node_notify_remove(dev);
->
->         acpi_device_notify_remove(dev);
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 97c4b046c09d..c515ba5756e4 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -1206,17 +1206,6 @@ int __must_check devm_device_add_groups(struct dev=
-ice *dev,
->  int __must_check devm_device_add_group(struct device *dev,
->                                        const struct attribute_group *grp)=
-;
->
-> -/*
-> - * Platform "fixup" functions - allow the platform to have their say
-> - * about devices and actions that the general device layer doesn't
-> - * know about.
-> - */
-> -/* Notify platform of device discovery */
-> -extern int (*platform_notify)(struct device *dev);
-> -
-> -extern int (*platform_notify_remove)(struct device *dev);
-> -
-> -
->  /*
->   * get_device - atomically increment the reference count for the device.
->   *
-> --
-> 2.34.1
->
+Signed-off-by: Keisuke TADA <keisuke1.tada@kioxia.com>
+Signed-off-by: Toshifumi OHTAKE <toshifumi.ootake@kioxia.com>
+---
+ drivers/md/md.c | 13 ++++++++++++-
+ drivers/md/md.h | 18 +++++++++---------
+ 2 files changed, 21 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index df868b315b45..30fbba38ea58 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -998,6 +998,7 @@ void md_rdev_clear(struct md_rdev *rdev)
+ 		put_page(rdev->bb_page);
+ 		rdev->bb_page =3D NULL;
+ 	}
++	percpu_ref_exit(&rdev->nr_pending);
+ 	badblocks_exit(&rdev->badblocks);
+ }
+ EXPORT_SYMBOL_GPL(md_rdev_clear);
+@@ -3720,8 +3721,14 @@ static const struct kobj_type rdev_ktype =3D {
+ 	.default_groups	=3D rdev_default_groups,
+ };
+=20
++static void percpu_wakeup_handle_req_pending(struct percpu_ref *ref)
++{
++}
++
+ int md_rdev_init(struct md_rdev *rdev)
+ {
++	int ret;
++
+ 	rdev->desc_nr =3D -1;
+ 	rdev->saved_raid_disk =3D -1;
+ 	rdev->raid_disk =3D -1;
+@@ -3732,7 +3739,11 @@ int md_rdev_init(struct md_rdev *rdev)
+ 	rdev->last_read_error =3D 0;
+ 	rdev->sb_loaded =3D 0;
+ 	rdev->bb_page =3D NULL;
+-	atomic_set(&rdev->nr_pending, 0);
++	ret =3D percpu_ref_init(&rdev->nr_pending, percpu_wakeup_handle_req_pendi=
+ng,
++		PERCPU_REF_ALLOW_REINIT, GFP_KERNEL);
++	WARN_ON(ret);
++	percpu_ref_switch_to_atomic_sync(&rdev->nr_pending);
++	nr_pending_dec(rdev);
+ 	atomic_set(&rdev->read_errors, 0);
+ 	atomic_set(&rdev->corrected_errors, 0);
+=20
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index 724439400ed1..c69e3a0bc4ca 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -107,10 +107,10 @@ struct md_rdev {
+ 					 */
+ 	};
+=20
+-	atomic_t	nr_pending;	/* number of pending requests.
+-					 * only maintained for arrays that
+-					 * support hot removal
+-					 */
++	struct percpu_ref	nr_pending;	/* number of pending requests.
++						 * only maintained for arrays that
++						 * support hot removal
++						 */
+ 	atomic_t	read_errors;	/* number of consecutive read errors that
+ 					 * we have tried to ignore.
+ 					 */
+@@ -213,27 +213,27 @@ enum flag_bits {
+=20
+ static inline void nr_pending_inc(struct md_rdev *rdev)
+ {
+-	atomic_inc(&rdev->nr_pending);
++	percpu_ref_get(&rdev->nr_pending);
+ }
+=20
+ static inline void nr_pending_dec(struct md_rdev *rdev)
+ {
+-	atomic_dec(&rdev->nr_pending);
++	percpu_ref_put(&rdev->nr_pending);
+ }
+=20
+ static inline bool nr_pending_is_zero(struct md_rdev *rdev)
+ {
+-	return atomic_read(&rdev->nr_pending) =3D=3D 0;
++	return percpu_ref_is_zero(&rdev->nr_pending);
+ }
+=20
+ static inline bool nr_pending_is_not_zero(struct md_rdev *rdev)
+ {
+-	return atomic_read(&rdev->nr_pending) !=3D 0;
++	return !percpu_ref_is_zero(&rdev->nr_pending);
+ }
+=20
+ static inline unsigned long nr_pending_read(struct md_rdev *rdev)
+ {
+-	return (unsigned long)atomic_read(&rdev->nr_pending);
++	return atomic_long_read(&rdev->nr_pending.data->count);
+ }
+=20
+ static inline int is_badblock(struct md_rdev *rdev, sector_t s, int sector=
+s,
+--=20
+2.34.1
+
