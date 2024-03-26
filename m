@@ -1,140 +1,97 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91EE71848;
-	Tue, 26 Mar 2024 08:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D3779D3
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 08:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711443039; cv=none; b=f9vRPtI/QCJxKh6iwcKcG578nFVEHDd64iq6z4hSuhVD8OBi654IXTKRBvj/GijMnWTxl5SBBXkdDstsU0lFEJbUpx3EYLCv2oJwyshm8wxl03KbIiEjJC6GLszG2o5q6AXvPqR5b4YwdEqsO4nLMa+Jq3GEjeePMTqVWYJAmbU=
+	t=1711443103; cv=none; b=QfjDl44sAEXMqmbW3sk/UUsGlW+apy4avz5T2WWFtjdVQqZXjx4tcfc2Ws4NxY5W1G5VEo8ViesKgj8zlumtlt+8Gp79qsmN8HWbESzgXW55nn5On2Wb43Emt6m2nituQ+8k0SUSUuMhR5C3tzF+FWC5CRhtqT84Ur5PmsfxQIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711443039; c=relaxed/simple;
-	bh=lG7B+qUkM9NeNykReSQx3p76pLX9hN3mEUMsi5Fr0GI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dZCDaJzefxjDUilxNpyu6dyCvbPZErpdPW5PLY1SskW1WNvMUg7c0RX3maN6w4UlXVOHiqZ/NCf+Wzs4/XV9nX1Zf6diUyfgM4N6SDQKvvg5z0q8o4gxJLYuuvEduwX+PS78K1oTziomVBHiOovd54TBXxwMIXn2/6NgY70Mz/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=1/CR//ZZ; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1711443103; c=relaxed/simple;
+	bh=TAyIPDmi1GrLGPqsrMnh3L5g+mcIopQcCnigvu0gFv4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qmKxlqqquhgoEdSMhakNHW4HGs6Zy+ecctWeiYAKJIV9gV4JHh2sIukYFnFjHa70eh/uGASpC0EiLQDzqHXtZSQZqjuVH/WOdogX6v8yN3oTInoMmiY/6idWj0+YYHbUT+wmtG/f29ndH8argu0c0MuaBjk2pPV8WM+VTe+KMIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y5/DJVz7; arc=none smtp.client-ip=209.85.167.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="1/CR//ZZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1711443037; x=1742979037;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lG7B+qUkM9NeNykReSQx3p76pLX9hN3mEUMsi5Fr0GI=;
-  b=1/CR//ZZy8hxBue+bXsHiwULsO9yv3UErLL3hwI4DtAwjwIyJR+9NiSF
-   djgGe8UjoR+eT7sDau+2sjGiIh3VXllKcMYjvgZ8ibcKGcAQBq2j+vx2u
-   xG8KbiZNHE20nCjeQvOlKVLA5F8PWeLlcjPAGHJBs1OSVk+EUe4lPHTiu
-   0moYShnS75Go9PsXgaVqV1oN4SnpJo2dxHTtZsnn/92u8oNcEv0TBU47l
-   KCXrfmokJ0Vn/aUBNgVVOg8ShzOWyp7bLsYjZZb15Un+RRovZH7YT61UK
-   Im4WHSw80OJzf/h/sRJRuA0jgwBfmyO0PCswXNQSSwR8K/sk0vllg3TnX
-   Q==;
-X-CSE-ConnectionGUID: UBqr2gvTSQSnKz9w8yaX1g==
-X-CSE-MsgGUID: WNkR9VEaRtu1ChEtau3wJg==
-X-IronPort-AV: E=Sophos;i="6.07,155,1708412400"; 
-   d="asc'?scan'208";a="185499468"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 26 Mar 2024 01:50:30 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 26 Mar 2024 01:49:19 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex03.mchp-main.com (10.10.85.151)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Tue, 26 Mar 2024 01:49:17 -0700
-Date: Tue, 26 Mar 2024 08:48:29 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Allen Lin <allencl_lin@hotmail.com>
-CC: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>,
-	<dmitry.torokhov@gmail.com>, <krzysztof.kozlowski+dt@linaro.org>,
-	<conor+dt@kernel.org>, <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
-	<linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 1/4] dt-bindings: input: Add Himax HX83102J touchscreen
-Message-ID: <20240326-whoever-spotter-1fe7ace35428@wendy>
-References: <20240322085606.993896-1-allencl_lin@hotmail.com>
- <TY0PR06MB56116F0902017225C78EDDDD9E312@TY0PR06MB5611.apcprd06.prod.outlook.com>
- <20240322-mammary-boil-f9a4c347fba1@spud>
- <20240322183009.GA1227164-robh@kernel.org>
- <20240322-rectified-udder-fef9102f58da@spud>
- <TY0PR06MB56110ADEA805B68BE2B887069E352@TY0PR06MB5611.apcprd06.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y5/DJVz7"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3c3d70191c7so449466b6e.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 01:51:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711443100; x=1712047900; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3uFHWqNrwlUXAKVj4cLzNrqDv+IX5Brk/fK4JneaZOM=;
+        b=y5/DJVz7KYXtk/csC3egJkGGt/eYXVuItDs1Qg3vViAID/x/je4ayMbObFARGPwn/4
+         9FDDWgTYCEfwpVV8fqxbgLaijtb3vaE2NeN+FIaiSAiaIDySLy+o4Vs8bbt2RqowjPlV
+         eZyiOhONlgORnAJzZU15fLZUtK24k165ANJKe3ECe8Lm6WTpnCaQs0C9VIfiSCm9pq4o
+         CBIdj753wJIWeeQpYwUG++UMq84hk7D4x6dDRliah2IekBPS3BIBbXS+wVMQHbDVJHH1
+         dNwWlWYrMtf5cqbPkGprIK9Y6w1cs+A/MVcJeL5ZRrguRSzGVP7XoJZkD4Z6M73/kzhg
+         BnLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711443100; x=1712047900;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3uFHWqNrwlUXAKVj4cLzNrqDv+IX5Brk/fK4JneaZOM=;
+        b=cgs4Sa78jH7lsTsTZnxqUcakjmfeZZm5xy5CFbfcujvJZLKVjYPki5v5bJlDt6ojIl
+         QVP2OiWCpz5v2dAjc4GJEOy3oegcVntUcH8ynlpee4hS5BAgywUe8u3ysb0j7IE7VYfi
+         itVaBsu7BvBkr3Bda9skwlcx8rkkpy8ZZu3je01l++WfHg9OVluWoKl3hl5p3FfG8JXE
+         zLaMfOm3dakB7dkMQqTSBQIEUy3JRgR0+YMm/8H8OVLyuydety5KTxzga4NjjZyCPA8K
+         JjOjLVD7Uu6QCbjwO0TEoe3Q7e3V2UoKGJsIV4rWa/Y7QSKDwKQGEnPQA+oZH28bG0iX
+         sshw==
+X-Forwarded-Encrypted: i=1; AJvYcCVE0dK7n4MqVSI4XEzb5PtQ8SKUJM8WTpYpIQpcKnOsdMkIRzvyeRXAm7M/KkkKCQ35NzQssplWJ7AIfxOCnJ387RK04XPlkRgW5Dj2
+X-Gm-Message-State: AOJu0YxWqtevI9is+IDx7TuokUJMafa1zt4EHnwidnEilNcRNHCuj5xV
+	GZto/47A4Au7c6LlXVmSzdPIskgRQoHQAJdw0eQA1bTlPt8Zgsyc6yMypn7XWw==
+X-Google-Smtp-Source: AGHT+IFK6SwO2b3gQYpYOf8ZNDIOIbNJ/5w8Tdag6QREMUYwrwIp+4bbx4vSeMu2hitif60bq6e0VA==
+X-Received: by 2002:a05:6808:19a7:b0:3c3:a000:50e3 with SMTP id bj39-20020a05680819a700b003c3a00050e3mr2576011oib.37.1711443100004;
+        Tue, 26 Mar 2024 01:51:40 -0700 (PDT)
+Received: from localhost.localdomain ([117.207.28.168])
+        by smtp.gmail.com with ESMTPSA id t128-20020a628186000000b006e04ca18c2bsm5679913pfd.196.2024.03.26.01.51.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 01:51:39 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: bhelgaas@google.com
+Cc: kw@linux.com,
+	robh@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH] MAINTAINERS: Drop Gustavo Pimentel as PCI DWC Maintainer
+Date: Tue, 26 Mar 2024 14:21:30 +0530
+Message-Id: <20240326085130.12487-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="MNNZ2t7NSNgD6OgC"
-Content-Disposition: inline
-In-Reply-To: <TY0PR06MB56110ADEA805B68BE2B887069E352@TY0PR06MB5611.apcprd06.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
---MNNZ2t7NSNgD6OgC
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Gustavo Pimentel seems to have left Synopsys, so his email is bouncing.
+And there is no indication from him expressing willingless to
+continue contributing to the driver.
 
-On Tue, Mar 26, 2024 at 01:46:56PM +0800, Allen Lin wrote:
-> Conor Dooley <conor@kernel.org> =E6=96=BC 2024=E5=B9=B43=E6=9C=8823=E6=97=
-=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=882:34=E5=AF=AB=E9=81=93=EF=BC=9A
-> >
-> > On Fri, Mar 22, 2024 at 01:30:09PM -0500, Rob Herring wrote:
-> > > On Fri, Mar 22, 2024 at 05:54:08PM +0000, Conor Dooley wrote:
-> > > > On Fri, Mar 22, 2024 at 04:56:03PM +0800, Allen_Lin wrote:
-> > > > > Add the HX83102j touchscreen device tree bindings documents.
-> > > > > HX83102j is a Himax TDDI touchscreen controller.
-> > > > > It's power sequence should be bound with a lcm driver, thus it
-> > > > > needs to be a panel follower. Others are the same as normal SPI
-> > > > > touchscreen controller.
-> > > > >
-> > > > > Signed-off-by: Allen_Lin <allencl_lin@hotmail.com>
-> > > >
-> > > > note to self/Krzysztof/Rob:
-> > > > There was a previous attempt at this kind of device. This version l=
-ooks
-> > > > better but might be incomplete given there's a bunch more propertie=
-s in
-> > > > that patchset:
-> > > > https://lore.kernel.org/all/20231017091900.801989-1-tylor_yang@hima=
-x.corp-partner.google.com/
-> > >
-> > > Those don't look like properties we want coming back.
-> >
-> > Oh, I don't want most of them coming back either. There are some
-> > supplies in there though that I think we would like to come back, no?
-> > Maybe this particular device doesn't have any supplies, but that doesn't
-> > really seem credible.
->=20
-> We will use Firmware-name in Device Tree.
+So let's drop him from the MAINTAINERS entry.
 
-> For power supply settings, because there may be other device using
-> same regulator.
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
 
-If there are other devices using the same regulator is it more
-important that you document it so that it doesn't get disabled by the
-other users.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9038abd8411e..94cfebf41905 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16965,7 +16965,6 @@ F:	drivers/pci/controller/dwc/pci-exynos.c
+ 
+ PCI DRIVER FOR SYNOPSYS DESIGNWARE
+ M:	Jingoo Han <jingoohan1@gmail.com>
+-M:	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+ M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+ L:	linux-pci@vger.kernel.org
+ S:	Maintained
+-- 
+2.25.1
 
-> We plan to define it as an optional property for user to control in
-> next release.
-
-I don't see how the regulator would not be required, the device doesn't
-function without power.
-
-Thanks,
-Conor.
-
---MNNZ2t7NSNgD6OgC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZgKL2AAKCRB4tDGHoIJi
-0m2yAQCWBWCSYIcP5R7VCgO/0OcvwNyQA3V8xkXyyNTaF56DjAEA9p3hmjmzoWbc
-Y3z2iIHDUeGgBDNtUNF2Uu9ALdlJ5AM=
-=0xei
------END PGP SIGNATURE-----
-
---MNNZ2t7NSNgD6OgC--
