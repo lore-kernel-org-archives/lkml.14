@@ -1,80 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC27213D240;
-	Tue, 26 Mar 2024 20:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F408213D610;
+	Tue, 26 Mar 2024 20:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711484867; cv=none; b=IcuvYxteOiQC5LGSAlzIExgRH2kffOGAWHMEzQhcon1VB1KSwnn/GrSynD26zN6IIAouGlwNgeE8Kl5NsnUDSA1J62vM7VTysPbe44Qtj63uoqtNH2N2rwkFffgzSOVvJbeuI2y/8GRwCJRYiLdpOnlhNSdZecjgFTmrNhNz/fA=
+	t=1711484901; cv=none; b=bTTgHTm+yD0neE2Fv8u7BC8N59Enj+6SxZX1J9ng6N59JsVEf6/Uqcxk8CimuhwPI9ZNCDIJACC8bTLqJJ/prke/WXkYbsQGxcZN0cLiVy7yLD8EI0jB20w8Ff5JDp7ZhB90SOxw/WajjJvAvximq4pAkWhDcZi3JIvG7qn9cOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711484867; c=relaxed/simple;
-	bh=eLoxHyYLX+aidvGPzKNlk6hebaeYMJHgMTIiAXr3Tl8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=flzt2o17RQLawixIwCkGMJjTeg7+x8ugNd2Da9YQLw2k/1Q+ZfB8oyDODLNExxTw22yvZ7vMsv0WsxMNbD4FnkMtrWbnSYJyMrtHqRTCuU5rSiXCgxJNrtiajhLR8kbKCKjUEg6nQnnakSZTG6rcqdP1GSvLY2gfTdY3gqCjqLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YFuEjSNg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711484901; c=relaxed/simple;
+	bh=fEezHZYrjEOkzCb8cPzaGdM5y4H+/KQdLqpJeQTIjVY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HmZ3efvfLPGFrUGdoSr9YxUxcI+Q33M3N+/tulaQx177Ja66TybrFhDpV1WNRs3ZC2SrhipLoCKiK6/n9M8AdrQALZQ66Jku+fYG5d1micet17LSxX6MRSxzssOm2NNUgwvCsLTgzPeNJOxCrK4hfEzX1Y5BvXAZBuY/3UpKdTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N3a2d1bF; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YFuEjSNg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46514C433F1;
-	Tue, 26 Mar 2024 20:27:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711484867;
-	bh=eLoxHyYLX+aidvGPzKNlk6hebaeYMJHgMTIiAXr3Tl8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YFuEjSNg7ri6vMiLa2+e58xgkZpsC86VoPZNSCA/jttK151RaIifSgB5pRap50OfN
-	 V+rrF+Gkutmb7CIEdGDqhag/R2fG/7sSIYNobC3a80p32LP+B0SZX0JoTxqVydtmLJ
-	 2z8ADutnVnfi8HFrwNpymH7u6NE7WHOxLy+3DgsmOALNPK5S03oY3rYCLeewwZOkvw
-	 27xWjubQZQFWzB2yu8EzN7Z+F3r7mDHvqZCmESKj1QyPx+IGFB96qQL66gTF15Mv2W
-	 gcZutmXBCN8cc0Ro1stN1R+Wa9NQp4gnZsVZOo+3tWFwY6vLirT71KSlQZ4hDgoN8+
-	 wD578hQjbrxgg==
-Date: Tue, 26 Mar 2024 20:27:43 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Christian Brauner <brauner@kernel.org>, Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3] kselftest/clone3: Make test names for set_tid test
- stable
-Message-ID: <ce20762a-9ab4-49d4-adc5-e8eb5e5ac848@sirena.org.uk>
-References: <20240325-kselftest-clone3-set-tid-v3-1-6fdd91506e53@kernel.org>
- <0cee99af-f058-47a0-9119-94cc9a37e88b@linuxfoundation.org>
- <91f2e916-2f90-4970-9448-09f821597083@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N3a2d1bF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711484900; x=1743020900;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=fEezHZYrjEOkzCb8cPzaGdM5y4H+/KQdLqpJeQTIjVY=;
+  b=N3a2d1bF6UIhZafRgbAgp19Ix6ciu0q/J8gsBlJTwhmfrhiiGo40T6z/
+   SCUt0WGC4T8Vj08ROCnbyk/mwzICUxWgMWo3hHIyZTLF3hNOzs60yPNKa
+   O4hX/f9AGhUJF+VvdAM0aUrSFJy8wj+O4U6Ls79PRWMNHY+OsznURs+wM
+   YTF2ETDjvfMehYCYgYJillopJ9XSIx89UtdD6URfq94hYMSLM+t/h0trc
+   P1h6YX89ClSOjZ25vEX95N6+90pgaxntmq/22yY71mE1YfUrPiKJ5bqvV
+   h/BseiGZCkdJp9pFKyQf5+eZRY1HTcNyVkBc84lzLwxeY9TlKliupKGZE
+   Q==;
+X-CSE-ConnectionGUID: jw6u2FjLRRu/ZmzJLbKCMg==
+X-CSE-MsgGUID: Xk/pkV5QS6a+TPBMyeTUdA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="6500447"
+X-IronPort-AV: E=Sophos;i="6.07,157,1708416000"; 
+   d="scan'208";a="6500447"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 13:28:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="937073003"
+X-IronPort-AV: E=Sophos;i="6.07,157,1708416000"; 
+   d="scan'208";a="937073003"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Mar 2024 13:28:15 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 21CB4228; Tue, 26 Mar 2024 22:28:14 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Hans de Goede <hdegoede@redhat.com>,
+	linux-media@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 2/2] media: atomisp: Replace open-coded i2c_find_device_by_fwnode()
+Date: Tue, 26 Mar 2024 22:27:03 +0200
+Message-ID: <20240326202813.1425431-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+In-Reply-To: <20240326202813.1425431-1-andriy.shevchenko@linux.intel.com>
+References: <20240326202813.1425431-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4ut39Lk+c8K15v8h"
-Content-Disposition: inline
-In-Reply-To: <91f2e916-2f90-4970-9448-09f821597083@linuxfoundation.org>
-X-Cookie: Equal bytes for women.
+Content-Transfer-Encoding: 8bit
 
+gmin_i2c_dev_exists() is using open-coded variant of
+i2c_find_device_by_fwnode(). Replace it with a corresponding call.
 
---4ut39Lk+c8K15v8h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-On Tue, Mar 26, 2024 at 02:20:08PM -0600, Shuah Khan wrote:
+diff --git a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+index 80aa2211cdc3..b7c477280986 100644
+--- a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
++++ b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+@@ -394,12 +394,10 @@ static struct i2c_client *gmin_i2c_dev_exists(struct device *dev, char *name,
+ 	if (!adev)
+ 		return NULL;
+ 
+-	d = bus_find_device_by_acpi_dev(&i2c_bus_type, adev);
++	d = get_device(acpi_get_first_physical_node(adev));
+ 	acpi_dev_put(adev);
+-	if (!d)
+-		return NULL;
+ 
+-	*client = i2c_verify_client(d);
++	*client = i2c_find_device_by_fwnode(dev_fwnode(d));
+ 	put_device(d);
+ 
+ 	dev_dbg(dev, "found '%s' at address 0x%02x, adapter %d\n",
+-- 
+2.43.0.rc1.1.gbec44491f096
 
-> I am seeing the following compile warnings. Please fix and send patch
-> on top pf linux-kselftest fixes.
-
-Which toolchain and architecture are you using?  These compile cleanly
-for me.
-
---4ut39Lk+c8K15v8h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmYDL74ACgkQJNaLcl1U
-h9D6Mgf+JZZG8Dq3POOJGeXgLDvM2wZNLqNX5v6SV8EXDMI3d8YNrLnqNKQFOE33
-jMYJy4cDZwjoAURPFGG7rneUqaBLFwsWk4ZCo+uqK/ksPSiIHQmKa7+6+eXRylg9
-7wcm5KdVfBfYldUK/0HPoLfSd8JdlIcqgXNHsg03bRCLKaGNuJ/SN4qFhYzCRH/H
-UeK51aZ109d70NAgDif/6HzCPUZznl/tcijqeQHTa3dHtF5NV2whZFm+HitmdANl
-qEyVwvjxEv18rkZOBd90+OZkSBqYR5u8G0IhFj+8kYcDMV0iPP7/qZuyoL4JzTo0
-xmlmsU10PdurmQeuG33HpuiTFkAi2A==
-=LZy2
------END PGP SIGNATURE-----
-
---4ut39Lk+c8K15v8h--
