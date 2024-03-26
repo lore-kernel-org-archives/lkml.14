@@ -1,168 +1,107 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416B11EB56;
-	Tue, 26 Mar 2024 13:00:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A573864A9F;
+	Tue, 26 Mar 2024 13:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711458040; cv=none; b=E8B/Qzqg3zn7xyr91kpkrZ6Z2FoFp/Onvxjqbr+agZ360sxGc5HWkzkS9WGdgai3nlgQd7RC7UrnoU/xVTF4YTz0yiMmmNr5bdaRi48Yf0E6WBDeoOG7eH20YeTXTl4mKioXI0h2rI5W9oo+AqWsxsDJGfx946QVwT0sOecdjhI=
+	t=1711458063; cv=none; b=idDxYYVIrbD9qmnigleKl+A4gnNsPkadhVj4d9f1360BgZPqUm/F6jQ2+/pJiMtiyiB1XZvWRtVaRmIiVwgtiw0OsemvD5etpxoLwego5iC6IBpklpEsOrcqhUJez9JcPZ6ONV3zlgkX+QBNbwp96nIszSUjoW9R/D4IktPPQYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711458040; c=relaxed/simple;
-	bh=xkxdvHTbd8Z8kP9MNS+4DxyaFZLV2iMtZ9unzzpMXdU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MjKtm1IY5/fJ7XfnrI38EB8aGWjS87ZDhejDT/kwaT+oAfnifBIXPdBsCpsOAIvSUMXlJJslZiKqynTsBcB8K1a2aB0BiAzBtuoJayRyjhjbEQ7Rl3HCx4Fgj50ODw81olQI01DYCLOToRo5ov47JH6F4B7KpXvjQ3yAUR3WWtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=0diSzn1L; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1711458063; c=relaxed/simple;
+	bh=xxvJRawpyW3eNtN94M248HISBAJChQIwETjY8F6DX1U=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Bqab7a8C0Qt6BC2u5/dcjiFt/nEgruPQHvFlVgWhphjO2NERnH8EEJJKYA5SAoKoUBv4d1vPWHuQBvbwXo0GQQiCOg0vaiaYLIrIN9djYu7ls/siF8ruDom8lK0NahGYUhKjt9pB3wxO9EYpwdLeQt/Or/7RaKucwz+ay2aaQFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=iLzYSNvJ; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="0diSzn1L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1711458035;
-	bh=xkxdvHTbd8Z8kP9MNS+4DxyaFZLV2iMtZ9unzzpMXdU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=0diSzn1LDvqwQpyAyJVPHUXoFynNcoZHaosB//DJvxMPy54OdzITaEdwWGqAvZaYQ
-	 iUE+XZTGSDQsLSa/20IY31saU3VwsYYGjQcUcz3VQTQHNW55K9+xuSiUDiiLMTagI7
-	 KBMa+EXpA1VvVOlzllJK6XdYsZckgL7xaGqSZCTv6VJ5cP7i3PYMQOuSIhdaAcj7ui
-	 H1pGmCOJgh9dPJqfVk1CBHVKOXLTC5ux2gc07iOBOJ8dqfAYLfFo1pcxmJNpq1U5hu
-	 a/kFGmNQwdiEtvkvpskfTObVbsApj4ddUfOBPKeQ6anzazPtswKAymN1TIP5Gb4/I3
-	 4fgWdTaKz2p4A==
-Received: from mercury (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: sre)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 4CB613780480;
-	Tue, 26 Mar 2024 13:00:35 +0000 (UTC)
-Received: by mercury (Postfix, from userid 1000)
-	id E107F1060700; Tue, 26 Mar 2024 14:00:34 +0100 (CET)
-Date: Tue, 26 Mar 2024 14:00:34 +0100
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: hsi: nokia-modem: convert to YAML
-Message-ID: <6fs52p67hlgvnwfsmbdh3asv4rv3dew5kgbhpcvwbbtkxk4csv@2pbwotxezgs2>
-References: <20240325-hsi-dt-binding-v1-0-88e8e97c3aae@collabora.com>
- <20240325-hsi-dt-binding-v1-2-88e8e97c3aae@collabora.com>
- <58ec79cc-150e-4fef-bb4b-9d29901e9a04@linaro.org>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="iLzYSNvJ"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42QCwvYX028115;
+	Tue, 26 Mar 2024 14:00:16 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=selector1; bh=/db77bR
+	vEP4jYO3usvNHt4toe1IvRseqPMS2T/ZuErE=; b=iLzYSNvJlosukfvG0AizBaJ
+	amhux4Y0xAOTGcwKMIGIldiS2vmsAffVQWAHScZED21qjfYoLBCsKlTmzRoJQN8U
+	bHiCo/e1lHcbEHug0PbnrAp9BLrXLA1cicH2P8iQ7FK2KPgyouynX081Yr25Nhju
+	6WCOzZi2WIAXeEFCeVnSOdmPUJtyM+9SMtp6rN6nr7TLXiCpvKk8Nq31vgL8dm2r
+	1uxhTSbZSsS6W8RuqZlMav9wzdfvUCc8OfLLIVYz3Dn6Gyh7Rz66vP4O9+le1TYK
+	+rMLTIoNCA34RBsgD0xAvBwGN1HUJcLaUa3NmMu0NWikKZANvBj4jiV7CBCbLoQ=
+	=
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3x1n39dgf1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Mar 2024 14:00:16 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1BEBD40048;
+	Tue, 26 Mar 2024 14:00:11 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 04788218631;
+	Tue, 26 Mar 2024 13:58:56 +0100 (CET)
+Received: from localhost (10.201.21.128) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 26 Mar
+ 2024 13:58:55 +0100
+From: Christophe Roullier <christophe.roullier@foss.st.com>
+To: "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark
+ Brown <broonie@kernel.org>,
+        Christophe Roullier
+	<christophe.roullier@foss.st.com>,
+        Marek Vasut <marex@denx.de>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 0/2] Add properties in dwmac-stm32 documentation
+Date: Tue, 26 Mar 2024 13:58:47 +0100
+Message-ID: <20240326125849.226765-1-christophe.roullier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="znisws7tnra4zv4t"
-Content-Disposition: inline
-In-Reply-To: <58ec79cc-150e-4fef-bb4b-9d29901e9a04@linaro.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-26_06,2024-03-21_02,2023-05-22_02
 
+Introduce 2 new properties in dwmac-stm32 documentation
 
---znisws7tnra4zv4t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ - phy-supply: to manage PHY regulator.
+ - st,ext-phyclk: is present since 2020 in driver so need to explain
+   it and avoid dtbs check issue : views/kernel/upstream/net-next/arch/arm/boot/dts/st/stm32mp157c-dk2.dtb: 
+ethernet@5800a000: Unevaluated properties are not allowed 
+('st,ext-phyclk' was unexpected)
+   Furthermore this property will be use in upstream of MP13 dwmac glue. (next step)
 
-Hi,
+V2: - Drop deprecated: property for st,eth-clk-sel and st,eth-ref-clk-sel
+V3: - Rework commit message
+V4: - Fix syntax issue in commit message
 
-On Tue, Mar 26, 2024 at 08:21:05AM +0100, Krzysztof Kozlowski wrote:
-> On 25/03/2024 22:45, Sebastian Reichel wrote:
-> > Convert the legacy txt binding to modern YAML.
-> > No semantic change.
-> >=20
-> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> > ---
-> >  .../devicetree/bindings/hsi/nokia-modem.txt        |  59 ------------
-> >  .../devicetree/bindings/hsi/nokia-modem.yaml       | 101 +++++++++++++=
-++++++++
-> >  2 files changed, 101 insertions(+), 59 deletions(-)
-> >=20
->=20
->=20
-> > -};
-> > diff --git a/Documentation/devicetree/bindings/hsi/nokia-modem.yaml b/D=
-ocumentation/devicetree/bindings/hsi/nokia-modem.yaml
-> > new file mode 100644
-> > index 000000000000..c57cbcc7b722
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/hsi/nokia-modem.yaml
->=20
-> Filename should match compatibles. nokia,n9-modem.yaml or nokia,modem.yaml
+Christophe Roullier (2):
+  dt-bindings: net: add phy-supply property for stm32
+  dt-bindings: net: dwmac: Document STM32 property st,ext-phyclk
 
-Ack, I will switch to nokia,modem.yaml in v2.
+ Documentation/devicetree/bindings/net/stm32-dwmac.yaml | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-> > @@ -0,0 +1,101 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/hsi/nokia-modem.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Nokia modem
-> > +
-> > +maintainers:
-> > +  - Sebastian Reichel <sre@kernel.org>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - nokia,n900-modem
-> > +      - nokia,n950-modem
-> > +      - nokia,n9-modem
-> > +
->=20
-> Aren't hsi-channel-ids related to hsi-channel-names? If so, they
-> should be here with constraints.
+-- 
+2.25.1
 
-Indeed. I forgot them, since they were not in the old binding :)
-I will constraint them to min/max items 4 in v2.
-
-> > +  hsi-channel-names:
-> > +    items:
-> > +      - const: mcsaab-control
-> > +      - const: speech-control
-> > +      - const: speech-data
-> > +      - const: mcsaab-data
-
-[...]
-
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +    hsi-client {
->=20
-> This should be "modem".
-
-Ack.
-
->=20
-> > +        compatible =3D "nokia,n900-modem";
-> > +
-
-Thanks for the review,
-
--- Sebastian
-
---znisws7tnra4zv4t
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmYCxu0ACgkQ2O7X88g7
-+ppX/hAAhXkf0s9bqwd4TCVkEl7HVkqaHaUsDMZz6WmOTXc22K3BeJ/DGO0vfTU0
-Bb4VEqv8BldN/a2nz6u0AsKVgQ+ca3WYiT2H1O+ykBE5kFSxqzZxY0PNJBmJasLM
-u7YDRQpOFWMcNcDXo1ZFuXwMuomsxw93j+kAMzZtQYk2roQdSFBTatG6Roj1AfcE
-m0NEWgpjteNyx+d2r+zExF/sLEr8/GL4L5erDKETk6uKRoorRUvz+ZI9EBi+7hWM
-RQMBGbBW+kUEDz6YYsI9AFElCBQv1qQwh3cxjUh/gR1ScHkpVYovQ4P0Z0rAyDvh
-rswzG21MnPZNfOPWPhTn9CkZ7qkNw6drCiFNLaPzObhvBm9G6fRZX7CByPqnWQaO
-C2KQXJF+53eWDaRfnftURVdiH/NdgE2q2pw7LG1bUF/wKTqfqN0ARfDQ6JYmWeFG
-K9mIGgZQxhI9etRrlR7k+enFRVM8eJnT524b8cTLhyw4Cv2o3B/avIGxU3bnyTsB
-M3DBYU75Xg1OESy6wTv/noc5thyyCiLJS+uSqcvwyi6UYOBGJFe9O3m1Dz3RA0A7
-c4tzgtrIq8ny5UO6UugOKpyGZd3meYhlyKwpgWdpqGMPgY45mkE091NL/Rki0v+1
-HjwqkxgZ3uEJC9ZfU8LuVFg8q78F61zkj2vADJInlaslT3xkS/o=
-=pXTQ
------END PGP SIGNATURE-----
-
---znisws7tnra4zv4t--
