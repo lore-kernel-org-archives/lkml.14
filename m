@@ -1,75 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF3412B151;
-	Tue, 26 Mar 2024 21:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB5D12AAF3;
+	Tue, 26 Mar 2024 21:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711487429; cv=none; b=A5lk2regOJ0eouXaq67KyAYmiiYxET4VR+52054DRT7hSuaRnLhHZvEMApEPGawglaudcHRh1XU7dlfSZJY9Y81Z5xLPpriRZB8zDKN0XGpteZiBJnTn0vZJFlzNKTOG99HcDXQd372l/lkE8QF/VPjTUimD7o6pj5FdHHF54rw=
+	t=1711487477; cv=none; b=SMZ6U7jIenAMHhRnK/567M6QXi/bd1cRgi8EtGg2oU1jdek033We5js5rfcUg+6PciSb6y5UeoD+Dm2vE9mHmTpFkS8sKoBYDCXnXpzBe6MmZheWDqih+foh5XAfyHwKJvk1F9eB0ADYUtTtzs/UPMD5KZj2b9XbjdXSFF10Rng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711487429; c=relaxed/simple;
-	bh=cmg/gfbaHxKApJm02IgCoAJKmmpQOZUMbvz4pjlnRu0=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=K5PgZORPin7FlwvEyqXonhF80d+qEtTjeSLffhFTwRImPYRlAkNbmavYSBb3vs5D7B+9hI7ll8IhZZDK+OeJR/oZvZBsaW9ENpgyoHYj9kpPGYBoqyFoGINb66nDlUQpJxbZKQcV4cKcsQnbVtrLarw0Q7xWYEDZZLfT6++IMeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X8kZ7O8M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711487477; c=relaxed/simple;
+	bh=DhbIwGimzO1Ys/eDgtivAIaXcxFjjx+5Qj98m0RzjXQ=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=OLLWA1+PMfhryQ/iBZnlwQn4BzSuUjzoP9PzVrkpAKbma+vDQOm0AjuwhVSrZwkSAqyKikGptRMZG7dgWBy5Ou3iwBqPbC5c5cfucvpuEW5jkPpBvCKfk/bkOf6xWr7mupemDm7vtewbkX/WwD2T523WTDicDLoXT8s3Zl1v3jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bGlSc53g; arc=none smtp.client-ip=209.85.217.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X8kZ7O8M"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6E392C433C7;
-	Tue, 26 Mar 2024 21:10:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711487429;
-	bh=cmg/gfbaHxKApJm02IgCoAJKmmpQOZUMbvz4pjlnRu0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=X8kZ7O8M4Cz8kl2noXtB0nNd1//akN6Tc3BUOm8lCvjrK5MuOrQBRay7llaio6Wr0
-	 uO2XtXTKTuyMqbTZ6Zn5Nd23OWDBat3a+WIbEPBLb9ze27c2ISnowQyG821w3lAuom
-	 vLyCTZTWYFg808+R6UfwOh+ly2CTqhfhQHpWrCDQMFmYUrHKzsH+B4qepRolI3IUbx
-	 mYoQcrgNkwxaKPcCTEPVd2HB4W6ik8mSQcnNQKQJeNKcsv6ENFXWLHmOfYxl3cD8d9
-	 X3/pah795VETR5lXWimFHkiZCpgg4Erh9lKMX+aABTR755qqyYrZ+4mLoAhcWgHuSQ
-	 GJPsRaxhihPig==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5A157D2D0E9;
-	Tue, 26 Mar 2024 21:10:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bGlSc53g"
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-476757820ceso1831622137.1;
+        Tue, 26 Mar 2024 14:11:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711487475; x=1712092275; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=C4E86kR2DKRyNfP7j7T5NXYDBgBKUpRjZk7CC48kM2A=;
+        b=bGlSc53gJffjewX7VH7dFLnSgwfdMIj2KUiyo32cAQ7qSl4+BaUmfX7esZKgCo+x5Z
+         7lbGRPcQf6+fFUNAhHhR725MNz/0V1v/oKizKaxl4LJiwdgTTfP2qlMYwIVOqLM9iWal
+         KKafF08XPVi6TMIekFYO2Lyp07JKkdOU7//cub+V3wZMuch1ByDZceLOwugxlj9JSMbY
+         1C1Re36iBRw+QZ1rf74GnY7iB5IORhv+FdWYE6pCHTIEUATOs43zbNX4J8E2bYrTCyjh
+         tqQUX0IbncN6UNo1uibSx2rTSLjtt/Y7df0HHFpYo4OaL9pJAk/Vux2AJF0jsfQ26xO3
+         616w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711487475; x=1712092275;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=C4E86kR2DKRyNfP7j7T5NXYDBgBKUpRjZk7CC48kM2A=;
+        b=AGTszqpYA3a0sTkxDntWEURjLc+t4O4Xmo+8IbNZHORi32+k/6+fLGLvBw4QtpNMUu
+         izaeCh/AmBTAyw/YZ3MwrwZmsmdVpchQmlbeCfVU5/EpCFzWA1NTw4OLBeRzLq3gHTU/
+         5chGxjght53YAAObYKdjUs5ZYAy4TIR1nAkZc1JGeU6CslmdWjjXq7t7egblmeIbCzq+
+         SNkw56xtGhtarecuNmBIMgcwcQrfC12AHqjt9EfmIp6g5PgbBNaGZ9dU8ndkdyFj3YCI
+         BBMn3NhuHDI+JfivDbYEytNLcOn2XM5b8VExg+kUc7Iaw55oLT2iC+8pcQMldJFDdoCf
+         axDw==
+X-Forwarded-Encrypted: i=1; AJvYcCUKIAXrZaIm1Ruf6XN+fWJuusebhSvjsv481Y3Ua+tpDEKCbYPbEyq8kCkrhoX6OkJ5UBarifPK7RI2B1b5JGoK8N95RD38ilqhbX/WaJHAfsI0rAljzN1Ntbm7DVqg692onvC+i+mXOp13eOX/NZpyMnyysjXsna6H
+X-Gm-Message-State: AOJu0YzYljIT7o8VE7pc3Cio2u9dav+xUdrhcbnkEyk7rAVNYg+0mXAc
+	3I5mb5NM1Mv87IWseseR/ef29q+lOVjQTNENCLPb70vaEgp+yBHeocN/YhocpZP0jBp7T7NnOn/
+	6xPBPMOmvpXvTgnFM8gRq3gCjtlY=
+X-Google-Smtp-Source: AGHT+IE7IPPA6+eiifPNtX5vhNKID0Vd5arCLCtKWkE363s0aP8X5jekc/off5y2gyHlDp/JMEXXN7dlJEf7zml3Qc4=
+X-Received: by 2002:a05:6102:12d8:b0:478:23c8:1c23 with SMTP id
+ jd24-20020a05610212d800b0047823c81c23mr950756vsb.14.1711487475103; Tue, 26
+ Mar 2024 14:11:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv: Fix spurious errors from __get/put_kernel_nofault
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <171148742936.11448.9647028655336928846.git-patchwork-notify@kernel.org>
-Date: Tue, 26 Mar 2024 21:10:29 +0000
-References: <20240312022030.320789-1-samuel.holland@sifive.com>
-In-Reply-To: <20240312022030.320789-1-samuel.holland@sifive.com>
-To: Samuel Holland <samuel.holland@sifive.com>
-Cc: linux-riscv@lists.infradead.org, palmer@dabbelt.com,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
+From: Kaiming Huang <lightninghkm96@gmail.com>
+Date: Tue, 26 Mar 2024 17:11:04 -0400
+Message-ID: <CAH3=goWGETBPj+-qcKo4E+sXZv1pT+UeVhXnv-q9N4Yagb1m-g@mail.gmail.com>
+Subject: Re: stack access issue. Re: [syzbot] [bpf?] UBSAN:
+ array-index-out-of-bounds in check_stack_range_initialized
+To: Andrei Matei <andreimatei1@gmail.com>
+Cc: alexei.starovoitov@gmail.com, andrii@kernel.org, ast@kernel.org, 
+	bpf@vger.kernel.org, daniel@iogearbox.net, eadavis@qq.com, eddyz87@gmail.com, 
+	haoluo@google.com, john.fastabend@gmail.com, jolsa@kernel.org, 
+	kpsingh@kernel.org, linux-kernel@vger.kernel.org, martin.lau@linux.dev, 
+	netdev@vger.kernel.org, sdf@google.com, song@kernel.org, 
+	syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Hello:
+Hi there,
 
-This patch was applied to riscv/linux.git (fixes)
-by Palmer Dabbelt <palmer@rivosinc.com>:
+I went across this bug using my static analysis tool as well and was
+glad to find this email thread.
 
-On Mon, 11 Mar 2024 19:19:13 -0700 you wrote:
-> These macros did not initialize __kr_err, so they could fail even if
-> the access did not fault.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: d464118cdc41 ("riscv: implement __get_kernel_nofault and __put_user_nofault")
-> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-> 
-> [...]
+My understanding is that the root cause of this bug has not been
+identified yet given the previous discussion in this thread.
 
-Here is the summary with links:
-  - riscv: Fix spurious errors from __get/put_kernel_nofault
-    https://git.kernel.org/riscv/c/d080a08b06b6
+This is the line of code that has the issue.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+stype = &state->stack[spi].slot_type[slot % BPF_REG_SIZE];
 
+Based on my analysis result, it is the part "slot_type[slot %
+BPF_REG_SIZE]" may result in memory access with a negative index,
+which should not be allowed. spi (as well as min_off, max_off, and
+slot) is(are) supposed to be negative based on my understanding of the
+workflow. But the index of slot_type is not supposed to be negative.
 
+The slot_type is defined as below:
+
+u8 slot_type[BPF_REG_SIZE];  //BPF_REG_SIZE is 8
+
+So the type of slot_type is u8[8].
+
+However, given "slot" can be negative, say -1. The result of slot %
+BPF_REG_SIZE is -1. This might sound counter-intuitive as % always
+gives positive results. But in C, % operation keeps the sign of
+dividend (and thus that's why I'm not sure whether the fix will catch
+this).
+
+You can examine this by simply running this short piece of code. The
+result of the modulo operation is -1 on my end, and that is the reason
+that causes the OOB negative index, and this would be an off-by-one on
+the u8[8].
+
+#include <stdio.h>
+#define BPF_REG_SIZE 8
+int main() {
+    int i = -1;
+    unsigned int j = i % BPF_REG_SIZE;
+    printf("%d\n", j);
+    return 0;
+}
+
+A more severe scenario is when interpreting the j in the above example
+as unsigned int, aka integer overflow/wrap-around, in that case, the
+value of j will be 4,294,967,295. If it is the case, then it is a
+classic OOB access on the u8[8].
+
+Hopefully my illustration makes sense, please let me know if you see
+any issues. Thanks.
+
+Best regards,
+Kaiming.
