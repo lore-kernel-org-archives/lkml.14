@@ -1,147 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10olkn2024.outbound.protection.outlook.com [40.92.41.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A0CC20B3E
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 01:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711417465; cv=none; b=s89mCAMyajVFvNfW73DEMoAA0N/TXCrY8j7WKO+Jy/NNhUmgQrRRIagVBvW2ZDyVn1mi1pWwSpXOw2bfe6id+M4cFqaWyukZUIp7jkH9+l8R9asfOyJDwpRHbPd3ze/ZAdXdwqTuckyVDz5UyIZw881WUlLRslx+l5VfGTyveXU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711417465; c=relaxed/simple;
-	bh=dPEnnVYqv0RrH5yWGdYrbNKb+h+8Rswm3AdN2IaAFZA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DnGnWvb1Td4re/ZRArpoalZFaTGc/bmC6iSr+mP+c9mbxHssxV5va/nJfMT2ZbO0uuoEaZJddrnmC7pQJrLmhU/EixmJ8b6+v1nnLCY0zamRttfqFWp4Dr5KwgaKtFS8sKMDSFKdobq6WcbdiQEbPo3/8VrLcNsaGWX3K37ZVUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y9VwvR8R; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 853B4208C3;
+	Tue, 26 Mar 2024 01:46:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.41.24
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711417564; cv=fail; b=pREQJxEvImRsPnqbTnqwsWgSaEgFmw8R5C9MgNIh/DdxXufH96yc5zQm6PwJEQdH2eAG94Ry24zxh+J1m48BrHlNyCk+CXg7i5oAhu4sO8eKQvyd4mvk+5WAEtOq2TUEuiptrdy/txV8sv+NkBWbo5Mo0PjyZT3HL/IJ905MDFg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711417564; c=relaxed/simple;
+	bh=dqWm5zAKq/GSHzD1vB9i+zTbCMCDCmHglJ3e8R4aWVw=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=DhpcLmcInUL5AJRBxTbntAgJbz8S4zYCifkhhxUg28HrFGfQ0wjg2aZs9hSSZL79S7zQ/SNJOtpV8W5hvSWg0SMcvLucJHAfqs2iP0xBVVFnRzbAM0qKI5EVIGS5f9XTN+Mdw3lvGtbCWi15etdv94bvFEl3E1pno2LqoM9dEGU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=rVq79Ow4; arc=fail smtp.client-ip=40.92.41.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y9VwvR8R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8171DC433C7;
-	Tue, 26 Mar 2024 01:44:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711417464;
-	bh=dPEnnVYqv0RrH5yWGdYrbNKb+h+8Rswm3AdN2IaAFZA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y9VwvR8RHVXIlK2fpcmjdGMbNTIqxoxgZM05EXavjm2QRiVqJAIG+vAxSn5WeL9Cm
-	 Rbor2JuNS/Tsnj7cIxxfSubmTRAOHs2sgqL1/c3ROgXkzXehtgk2ZsCYTH6pTPrdj1
-	 I8DKVTVBAob2OI2Ap4CzfOSzroBor3pnCfadYtDndIHpus1VuQFlsGxG5yIn6pdKWY
-	 LDlVCLY3cCjo70qGZmCspxfbUfZL3xOHuOpgu60mdjrpAsu75jdRs+devV6peWUEkt
-	 eCMMPEIacz5MxI7XdTJm8gBN7/B0cwc3BJFJf7QSukNVjva8UoNqUpBk2gnmj5hef5
-	 4G3FFaDQ4xycw==
-Date: Tue, 26 Mar 2024 09:31:09 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Bo Gan <ganboing@gmail.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="rVq79Ow4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Z2M4cBHpDZPbq5QXS5LYR6WmsY+CcmrQTH8tX4QNKAtbQmlJSOo7DHdhlFuVzNrCWkQR/GLVB3PYLYhM3sGrjS+veIQGtjn4N4pg1nW0vjKXIcCJHPCo88S0OM/DT0JKy61rqWRPqC4HBlPU2NMD9d3gao8BsmHo5ugwTCkDnIZItH0+gFeBhG6n/RAU9O9BI86kh3CQ1j4FEaS9We3XMzOw64DLOoxFizhr9HxoES24mDX6FDQ68aiw/jH/rpOuIFmX9sBwEHfC7bXZf/muuQdBB/gmQOfFxkP7fm+SL2mIi4TwKB026Sa5Mgd4GbYAmbvygDM3L1CNbxwq6CK1XQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MdkQt52g9uJtdXtq+jz2W+aZgvDttT9s15+lo7z9waY=;
+ b=LNab+QzXgOer8H8c/22hiomnvCw4vZ1mgXm5wfRWbZ4moOLTAmCEgdPXnzZK1qVipJQmphm2xulIsT9TTAgWfGJZsnKVshrGxfFuV+aoXmtsD0bqoLc/QK+h46wBH0rl/VN/JSmF8+JRyGicvl0LLRBYcaRdY20U9xY/eZtg77O63PJtXEe3vsko1sObOHcFVFRfuI8K57jPt718g2MrWdbFN2gBIWy/dZnaGFjmf39eMEXH3yFlqlU905gd5wh8SX9zHrCsknhIqaMzLT8wDeIvwiSPchVyd60qoBQRN08QuB8mm6S4eWea+6m99dIDYTZBefW4u7+GvvzT+Y8jJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MdkQt52g9uJtdXtq+jz2W+aZgvDttT9s15+lo7z9waY=;
+ b=rVq79Ow4raGli0ZNKtNTvLf/bMFFIyRFvedBbQu+YA66oUN7eDHua7F7SN2cVjzmB6r2VWcruMYCqLeqq0UcSMMGxargJWm/VXIQNVww7lj8E2lfnUHrefVoZV+IF/Y1fhjuELAUdWtHKBA/eDyGMMCcvnalSyoimS2NAAz1hBVk4mii8vCeRxCopxl8hd/EQJS8go5oVvTdSQQPXvN0OmsCgp0N4/yTiwBO/XVEuEpHCXjuxc47Tj3tBJjFB/cWwKNVxdLFJPwk4z6vLbpXXIxsd/DEdWsSEEWJG+m5XmSdtOhhn/Bj3mqcAGhfchgl97fsFyi/UDBzsjF7UqteDw==
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
+ by PH7PR20MB4964.namprd20.prod.outlook.com (2603:10b6:510:1f8::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.30; Tue, 26 Mar
+ 2024 01:45:59 +0000
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::182f:841b:6e76:b819]) by IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::182f:841b:6e76:b819%2]) with mapi id 15.20.7409.026; Tue, 26 Mar 2024
+ 01:45:59 +0000
+From: Inochi Amaoto <inochiama@outlook.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] clocksource/drivers/timer-clint: Add T-Head C9xx
- clint support
-Message-ID: <ZgIlXWLymVd8XwFc@xhacker>
-References: <20240325164021.3229-1-jszhang@kernel.org>
- <20240325164021.3229-6-jszhang@kernel.org>
- <72eac56e-61d4-e42f-cfbd-8bcc35ed7bb6@gmail.com>
- <ZgIj8QQ7zO_eSZcA@xhacker>
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: Jisheng Zhang <jszhang@kernel.org>,
+	Liu Gui <kenneth.liu@sophgo.com>,
+	Jingbao Qiu <qiujingbao.dlmu@gmail.com>,
+	dlan@gentoo.org,
+	dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH v5 0/3] riscv: sophgo: add dmamux support for Sophgo CV1800/SG2000 SoCs
+Date: Tue, 26 Mar 2024 09:44:42 +0800
+Message-ID:
+ <IA1PR20MB4953B500D7451964EE37DA4CBB352@IA1PR20MB4953.namprd20.prod.outlook.com>
+X-Mailer: git-send-email 2.44.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [Ju1t0qvI7T8hiqR8uq1Ul808I7/Wh2jNUdsJZP6iPS8=]
+X-ClientProxiedBy: TYWP286CA0026.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:262::15) To IA1PR20MB4953.namprd20.prod.outlook.com
+ (2603:10b6:208:3af::19)
+X-Microsoft-Original-Message-ID:
+ <20240326014443.323406-1-inochiama@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZgIj8QQ7zO_eSZcA@xhacker>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|PH7PR20MB4964:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4dc25f8a-c435-497c-f99a-08dc4d367c76
+X-MS-Exchange-SLBlob-MailProps:
+	dx7TrgQSB6d4xbak4tYeMB0D40EITU90IEA4cw4u+gAPEBoWQiljB7PDMloCu9jbplGGDPF6WxHyB62/+AbTvv0mCcWRymB43/tOS41c7Oz/XWNhfSPezQiGPWi/vFIuwA0f8so+4CqUZQdCeUDQMqmKmNlNifmI6XKkRme71+WZikvNrwBN+7maLPAVnYOQLaQz+FEh2ysP6nPIRYnE257sZ1BoY4I6LkfzJKSz386xRV8/wRXYGkVOQWZphv78iIjLNLBpxwKweGNxHZrIhRFbg5v0cibfoZQw1u4/Bm+3Y9Yx2ri5gjpVC4DeBAnjSKPVvFf9vLXVwddQxPhROkWv6j0IoqeLaNhnkhuJFn8SitqeVwJ29/+LBZcKD2Jn1zPQkARMKgKKNsYmLLs7Q88E8MOWW3iMNk7VC2jdzu2ZRb5Nd/Dp1JGAnVEsqNNK6leE9huEZQZ6fnMVZl+zo4PTepQaQnhcJDiQrCJjNjRQv7li7d9y5hRWcE/00Rr39jkdICOMwbnOKz+U41G2llQfCv/7mDmG2FspzQo2aeM6I9IgmMkVvZGvD1VSk5FqpJphtT7tx+3QySq4p4bgb7JkZ9RNKmSWytmQX2qG+tjLlqGMqJINA+1RCjZavMbynVmlTVp7mHT9fOb2QUgHvCsFwY9i6epwSZjbAZO3DDbpd/7M0rgEijWLV8OGuwIObIJ1MRncZOW2XC7DVaiQHynbcxQ1vu7g0DLjSfzY/5NaEDQFfBO1JGBKPirX+EjEIoGt/0aEf5I=
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	+GwggRdNCdKG+7RPHyKzpnuTZF315HqLCtrv9Nfc63sLE/E4LPI+hs9DMIgr4OTPYn4z0TIL4lNKGm1kyWUK20vPiVnOiU/Q8mmER4WqMjLrhKhpq/27wWjP4M6MQND+FZ2I3O/iQXmbGN4fNqu5cLCjgoO3TkGB3P7Nl/+1bMiY2o4PaWGsW7BjzM5Idxw5ISmP5/KScSmVKhuZrrUfZJ1+dPejV87eDKN2UPtGjJo71IZmu8+gURQ+C31f4Twq3lGlXckXwtPPLeX2s8XOe9HzNc8bnGjS2CateBRikSw5IFBtI07rhuD6w5NuEVpKwR8u5hmn3ecZswgczVKScf5G5ohtY3iTTREUI9AD+pxpiQ8PMxObJIfEYs2V4Uu2XvPFcBXDvcm0vw5GZKbiYp02uLxEcFwUDW6qXmDWKO/Cm8cWuYXZJ/ATg6eSGsobfwz+hO4qGfpqly3QyGZd3Jsemh3NPS6GFCJzHPt8F9oHtMfumAVYf1bhdirxAUu38g7aEnA2ki2+/Gen6zKTv5fYH7e88feAyaMuG+2zKRpir3TlX6Li0eTqaH89QpZ+dO9AOgLdVjg01aQGmg5ZiHToPHXviTQTL9rquMwjwkDDuXXQAMAs2udi0MPnmAJl
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?CnqfK5UOHwl+g4X2CLzXOXyg38u+BxiFi2DUwyMDQ6k03fcS3VOCNHMKkGej?=
+ =?us-ascii?Q?rIAJYdIxYP3Eb8q5Ys0yHmPQPfOoMD4a55a3nm1qkWRwTgoPF9+6BXETWQ3P?=
+ =?us-ascii?Q?GPQK0RY6prBMqs1H8J/bHyzgi7aZ5azI/OC4lVB2s3S5bqNtU+tjKSoWIN1Y?=
+ =?us-ascii?Q?x0viinpMfmtQKtTuqlI8lwxnaR/erd6vboqi6nPfOGyw0phzysSKuJgLcYVT?=
+ =?us-ascii?Q?mCTHaYdsk3gOC/XlSUEOuBv4mUptEVQwaqksaj/ksMQ7voUXbV84v6F8ShWS?=
+ =?us-ascii?Q?Wy9ptW71lOfGYV428qSMsE2sX0h8ATmn7+lQwt5OWAPW8u+njDkXm+g9AJ3r?=
+ =?us-ascii?Q?qf1ItjIj2sBvXi35HphLi2ii0rI+WoY0jR7Dbt32zjDWfG/wqAYpSbU11Dgm?=
+ =?us-ascii?Q?Kc3d398S+wRjlualQbAJC0JDWMqBfK8UpIwfQlZ+3s6A4HrhJSUaoQEUYXnZ?=
+ =?us-ascii?Q?nAufenaxTSXxTCm01r2J1hghaWJAfoOC5elhTHB4zjOAbUgUCUkysm0kOI1W?=
+ =?us-ascii?Q?ZuZvWWelAzrIJ5614oJ6OoZgvKANt7pWUCdTfM4UYimOBO+XWlaquUpzQ93J?=
+ =?us-ascii?Q?FDvH3DW8Ep5++idVF9dv4lGNu/i/k4c6HoKkjbRfJXQtbyQgwNdhE/teq8HM?=
+ =?us-ascii?Q?0iXcjueWAOdnJAzfuzA2vhgwjvzZq3tPN2KtJ+p3uPzVZpTckkQibm1eesYl?=
+ =?us-ascii?Q?Ru9OrZjWD3bP3esD822WxPxJc6tMSrHwvq/zhcQc0Eb0DF81ED2vvD8CZYFz?=
+ =?us-ascii?Q?+RGPqkUD6mHC4RIpBNF6KRmDGsJUtp82xiul6vGZ29boQ830U2vEdf7ajMKT?=
+ =?us-ascii?Q?Zd30qJnlDie2C6TmM3Ze0HlVGYNwrEWLE9RqtFbTTZMb3Y+lFXPYWCJjfDdS?=
+ =?us-ascii?Q?bWHJdC22W2OmiRtTs2E5CBDnajinM335QyDzmwEwPe+y4sV+v6e6cb6qIf8h?=
+ =?us-ascii?Q?L19pCJI++x0xTYOS4EbKEDDBd5OL6bdb+XDRFfChH1UpJerqUZMuGCBTzzj/?=
+ =?us-ascii?Q?/xYDHrJxq8Q51UM1bs17bDmQcobl42EZB2i/r7X1Q63pWFearMV/hQYtu24C?=
+ =?us-ascii?Q?kAa0Ww7zAsWZ95SGxCxJcjKxtb4psTtWtd1FkhuxVr9OYGmHLtaVxlv/Qtc0?=
+ =?us-ascii?Q?vUOvQbZK0wamNyG3d3HUpmBzgwKHZhd09ABuBAicVtacgsjcrPQeD6sFAC0+?=
+ =?us-ascii?Q?C2k1Fai2uHnIuaiabJ+0ET7n510WNHcSiqmYE9fPvQJW1DG3pS8v+DL53cGO?=
+ =?us-ascii?Q?6nxK/znxAK+wDB5mcvYW?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4dc25f8a-c435-497c-f99a-08dc4d367c76
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 01:45:59.5968
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR20MB4964
 
-On Tue, Mar 26, 2024 at 09:25:09AM +0800, Jisheng Zhang wrote:
-> On Mon, Mar 25, 2024 at 03:22:11PM -0700, Bo Gan wrote:
-> > On 3/25/24 9:40 AM, Jisheng Zhang wrote:
-> > > The mtimecmp in T-Head C9xx clint only supports 32bit read/write,
-> > > implement such support.
-> > > 
-> > > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> > > ---
-> > >   drivers/clocksource/timer-clint.c | 24 ++++++++++++++++++++++++
-> > >   1 file changed, 24 insertions(+)
-> > > 
-> > > diff --git a/drivers/clocksource/timer-clint.c b/drivers/clocksource/timer-clint.c
-> > > index 4537c77e623c..71188732e8a3 100644
-> > > --- a/drivers/clocksource/timer-clint.c
-> > > +++ b/drivers/clocksource/timer-clint.c
-> > > @@ -34,6 +34,7 @@ static unsigned int clint_ipi_irq;
-> > >   static u64 __iomem *clint_timer_cmp;
-> > >   static unsigned long clint_timer_freq;
-> > >   static unsigned int clint_timer_irq;
-> > > +static bool is_c900_clint;
-> > >   #ifdef CONFIG_SMP
-> > >   static void clint_send_ipi(unsigned int cpu)
-> > > @@ -88,6 +89,19 @@ static int clint_clock_next_event(unsigned long delta,
-> > >   	return 0;
-> > >   }
-> > > +static int c900_clint_clock_next_event(unsigned long delta,
-> > > +				       struct clock_event_device *ce)
-> > > +{
-> > > +	void __iomem *r = clint_timer_cmp +
-> > > +			  cpuid_to_hartid_map(smp_processor_id());
-> > > +	u64 val = clint_get_cycles64() + delta;
-> > > +
-> > > +	csr_set(CSR_IE, IE_TIE);
-> > Perhaps you should do a writel_relaxed(-1, r) here. just like openSBI, because the update
-> > to mtimecmp is now split into 2 parts.
-> > https://github.com/riscv-software-src/opensbi/blob/v1.4/lib/utils/timer/aclint_mtimer.c#L54
-> 
-> Thanks, I also noticed the mtimecmp update on 32bit platforms doesn't
-> strictly follow the riscv spec:
-> 
-> # New comparand is in a1:a0.
-> li t0, -1
-> la t1, mtimecmp
-> sw t0, 0(t1) # No smaller than old value.
-> sw a1, 4(t1) # No smaller than new value.
-> sw a0, 0(t1) # New value.
-> 
-> So A new bug fix patch will be added in v2.
-> 
+Add dma multiplexer support for the Sophgo CV1800/SG2000 SoCs.
 
-wait, I found a similar bug in timer-riscv.c, and since these are fixes,
-I'd like to send fixes as a seperate series. I'm cooking the patches
+Changed from v4:
+1. remove the syscon binding since it can not be complete (still
+lack some subdevices)
+2. add reg description for the binding,
+3. remove the fixed channel assign for dmamux binding
+3. driver adopt to the binding change. Now the driver allocates all the
+channel when initing and maps the request chan to the channel dynamicly.
 
-> 
-> > 
-> > > +	writel_relaxed(val, r);
-> > > +	writel_relaxed(val >> 32, r + 4);
-> > > +	return 0;
-> > > +}
-> > > +>   static DEFINE_PER_CPU(struct clock_event_device, clint_clock_event) = {
-> > >   	.name		= "clint_clockevent",
-> > >   	.features	= CLOCK_EVT_FEAT_ONESHOT,
-> > > @@ -99,6 +113,9 @@ static int clint_timer_starting_cpu(unsigned int cpu)
-> > >   {
-> > >   	struct clock_event_device *ce = per_cpu_ptr(&clint_clock_event, cpu);
-> > > +	if (is_c900_clint)
-> > > +		ce->set_next_event = c900_clint_clock_next_event;
-> > > +
-> > >   	ce->cpumask = cpumask_of(cpu);
-> > >   	clockevents_config_and_register(ce, clint_timer_freq, 100, ULONG_MAX);
-> > > @@ -233,5 +250,12 @@ static int __init clint_timer_init_dt(struct device_node *np)
-> > >   	return rc;
-> > >   }
-> > > +static int __init c900_clint_timer_init_dt(struct device_node *np)
-> > > +{
-> > > +	is_c900_clint = true;
-> > > +	return clint_timer_init_dt(np);
-> > > +}
-> > > +
-> > >   TIMER_OF_DECLARE(clint_timer, "riscv,clint0", clint_timer_init_dt);
-> > >   TIMER_OF_DECLARE(clint_timer1, "sifive,clint0", clint_timer_init_dt);
-> > > +TIMER_OF_DECLARE(clint_timer2, "thead,c900-clint", clint_timer_init_dt);
-> > > 
-> > Better use a more generic term to describe the fact that mtimecmp doesn't support
-> > 64-bit mmio, just like what openSBI is currently doing, instead of making it c900 specific:
-> 
-> This has been mentioned in commit msg, but adding a code comment seems fine.
-> > 
-> > https://github.com/riscv-software-src/opensbi/blob/v1.4/lib/utils/timer/fdt_timer_mtimer.c#L152
-> > 
-> > Then your `is_c900_clint` becomes something like `timecmp_64bit_mmio`.
-> > 
-> > Bo
+Changed from v3:
+1. fix dt-binding address issue.
+
+Changed from v2:
+1. add reg property of dmamux node in the binding of patch 2
+
+Changed from v1:
+1. fix wrong title of patch 2.
+
+Inochi Amaoto (3):
+  dt-bindings: dmaengine: Add dmamux for CV18XX/SG200X series SoC
+  soc/sophgo: add top sysctrl layout file for CV18XX/SG200X
+  dmaengine: add driver for Sophgo CV18XX/SG200X dmamux
+
+ .../bindings/dma/sophgo,cv1800-dmamux.yaml    |  48 ++++
+ drivers/dma/Kconfig                           |   9 +
+ drivers/dma/Makefile                          |   1 +
+ drivers/dma/cv1800-dmamux.c                   | 268 ++++++++++++++++++
+ include/dt-bindings/dma/cv1800-dma.h          |  55 ++++
+ include/soc/sophgo/cv1800-sysctl.h            |  30 ++
+ 6 files changed, 411 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/sophgo,cv1800-dmamux.yaml
+ create mode 100644 drivers/dma/cv1800-dmamux.c
+ create mode 100644 include/dt-bindings/dma/cv1800-dma.h
+ create mode 100644 include/soc/sophgo/cv1800-sysctl.h
+
+--
+2.44.0
+
