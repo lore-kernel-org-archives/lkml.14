@@ -1,178 +1,91 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091A270CDA;
-	Tue, 26 Mar 2024 12:27:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57FD271731;
+	Tue, 26 Mar 2024 12:27:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711456027; cv=none; b=dONurWusw9A+RnU2Uzt3r3GEKIrkyyfWz+F2VSBQMHkkcFlvLYxCzH2QMQ+koIzzPndYKNgNySlksQVWc66mMvqMnVvb+h7FZWnpRZIAB+nW10XB4Mqp8mO68rXoB9EcgRVHFpGplrRviJOm91LwDrYt4Ew4SyCSaoCA9d/VvYI=
+	t=1711456060; cv=none; b=bfSMec03sWtazOHETRQqbRN2+88G4p55ub28bO2+3UicLRbhOJLP8k3Nik/1nZDr0WewhT9eNYOCpIzcl3Oa3boQtedUroF6avWZixpDb/QSUu7IUY3E0BcHEtgubhQBr7d3/OggWjkzEZfSK4BhMchSNSyhnCF9LXyhpncZZww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711456027; c=relaxed/simple;
-	bh=P5Og5SVif/TazRx1gfTuoFOFWCG/IMdoSqQLR9EiIgg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jNoMBHlSJ1yvVMvc1xpGS3oFbvRquCrzGqq73ql2/Zr3sqpYgGSCHk+StnWcVTcTnaxVSrVgV6SKe2YGxzISEFeBF4ICOEwLjqf+HmPf1XFoDCRzDDO/AIGbS9w9MS8ulxHXsjaAHjRDVO/ZssPOIu1k/Va0zUmhidK7T0wP1GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=D+o9bill; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZvTfHubG; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=D+o9bill; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZvTfHubG; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1711456060; c=relaxed/simple;
+	bh=z9ytf3yAf9T3nzFrLsq+ilJtFAcJILQyZyZ32llh49E=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Du5t9kz6VfX/VHoRssQ5N5Yq6lJt8WQzhBl6gJK8djjlWzPgLZAqMPbKoU9EuWfoh1vdy0dD5hapopI8nei7JUYlv85hxvBpS1lpKmcGPeHZ0fpstESD22sJsF302Wr5SA/1i4QrmbJKwtRBYjDwq/CeHB34w8HZe4G0Wd1wdok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=uPalsqQP; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="D+o9bill";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZvTfHubG";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="D+o9bill";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZvTfHubG"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 04A8037B8F;
-	Tue, 26 Mar 2024 12:27:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1711456022; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o+FQk8Pfj6cNE8lfvdU6/qaSkPWg47A6HFY6eoUrykg=;
-	b=D+o9billZjoMb/3DAYk8EBB31dPuuDphmyr2L+GWn7WHdwMKOVYPHni2IO1Rw3nWFgc8MP
-	wUrfV6KU4HFYM8p785OVesLYyXLPXC+u5DsZCLnZZMpBEmCFDUkblIyKpu78m+j4yuh/CD
-	x1RgJNHlAgTiXmCAFPnGl81QtTH8Mmg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1711456022;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o+FQk8Pfj6cNE8lfvdU6/qaSkPWg47A6HFY6eoUrykg=;
-	b=ZvTfHubGqrrgvVGEZTBZZycn4bhL8WQ4uuoiaUU2nuB2P7HV4ZZ6qR82ofs9HA9C2ZyelO
-	z4ZrUUzG0RMHNeCw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1711456022; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o+FQk8Pfj6cNE8lfvdU6/qaSkPWg47A6HFY6eoUrykg=;
-	b=D+o9billZjoMb/3DAYk8EBB31dPuuDphmyr2L+GWn7WHdwMKOVYPHni2IO1Rw3nWFgc8MP
-	wUrfV6KU4HFYM8p785OVesLYyXLPXC+u5DsZCLnZZMpBEmCFDUkblIyKpu78m+j4yuh/CD
-	x1RgJNHlAgTiXmCAFPnGl81QtTH8Mmg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1711456022;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o+FQk8Pfj6cNE8lfvdU6/qaSkPWg47A6HFY6eoUrykg=;
-	b=ZvTfHubGqrrgvVGEZTBZZycn4bhL8WQ4uuoiaUU2nuB2P7HV4ZZ6qR82ofs9HA9C2ZyelO
-	z4ZrUUzG0RMHNeCw==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id EF6C113215;
-	Tue, 26 Mar 2024 12:27:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id rT5yOhW/AmbDKgAAn2gu4w
-	(envelope-from <jack@suse.cz>); Tue, 26 Mar 2024 12:27:01 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id B0080A0812; Tue, 26 Mar 2024 13:27:01 +0100 (CET)
-Date: Tue, 26 Mar 2024 13:27:01 +0100
-From: Jan Kara <jack@suse.cz>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: akpm@linux-foundation.org, tj@kernel.org, linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	willy@infradead.org, bfoster@redhat.com, jack@suse.cz,
-	dsterba@suse.com, mjguzik@gmail.com, dhowells@redhat.com,
-	peterz@infradead.org
-Subject: Re: [PATCH 5/6] writeback: rename nr_reclaimable to nr_dirty in
- balance_dirty_pages
-Message-ID: <20240326122701.e32op43zxuowjvgj@quack3>
-References: <20240320110222.6564-1-shikemeng@huaweicloud.com>
- <20240320110222.6564-6-shikemeng@huaweicloud.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uPalsqQP"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42QCRV4w080826;
+	Tue, 26 Mar 2024 07:27:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1711456051;
+	bh=+3pmz0PQmucIleuJBVNX7kROEXn+vQUZWmW93sQBGgg=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=uPalsqQP7k/Y5XOdHKTSTNgPPYuBGxYcq/B+TKk5Em3E/JrY1FtXuFJ5T+b94DDwb
+	 l3OFPBZ8EbKNz9MqUEqnZP5xMvrpC8qgz7pgjql89Jq+dTwKxEcQa940RF7rceF9YC
+	 Qg6tRG2da2AiH42m720GbO723R/JNmZwY77S9FpU=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42QCRV2A035195
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 26 Mar 2024 07:27:31 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 26
+ Mar 2024 07:27:31 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 26 Mar 2024 07:27:31 -0500
+Received: from a0497641-HP-Z2-Tower-G9-Workstation-Desktop-PC.dhcp.ti.com (a0497641-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [172.24.227.36])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42QCRN2c129435;
+	Tue, 26 Mar 2024 07:27:28 -0500
+From: Neha Malcom Francis <n-francis@ti.com>
+To: <robh@kernel.org>, <conor+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <vigneshr@ti.com>, <nm@ti.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kristo@kernel.org>, <u-kumar1@ti.com>,
+        <n-francis@ti.com>
+Subject: [PATCH 1/4] arm64: dts: ti: k3-j721e-mcu: Add the WKUP ESM instance
+Date: Tue, 26 Mar 2024 17:57:20 +0530
+Message-ID: <20240326122723.2329402-2-n-francis@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240326122723.2329402-1-n-francis@ti.com>
+References: <20240326122723.2329402-1-n-francis@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240320110222.6564-6-shikemeng@huaweicloud.com>
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -0.47
-X-Spamd-Result: default: False [-0.47 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 BAYES_SPAM(0.33)[71.13%];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_TWELVE(0.00)[13];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 FREEMAIL_CC(0.00)[linux-foundation.org,kernel.org,kvack.org,vger.kernel.org,infradead.org,redhat.com,suse.cz,suse.com,gmail.com];
-	 RCVD_TLS_ALL(0.00)[]
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Wed 20-03-24 19:02:21, Kemeng Shi wrote:
-> Commit 8d92890bd6b85 ("mm/writeback: discard NR_UNSTABLE_NFS, use
-> NR_WRITEBACK instead") removed NR_UNSTABLE_NFS and nr_reclaimable
-> only contains dirty page now.
-> Rename nr_reclaimable to nr_dirty properly.
-> 
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+Add the WKUP ESM instance for J721E. It has three instances in total,
+one in the MAIN domain (main_esm) and two in the MCU-WKUP domain
+(mcu_esm and wkup_esm).
 
-Looks good. Feel free to add:
+Signed-off-by: Neha Malcom Francis <n-francis@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
->  mm/page-writeback.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-> index ba1b6b5ae5d6..481b6bf34c21 100644
-> --- a/mm/page-writeback.c
-> +++ b/mm/page-writeback.c
-> @@ -1695,7 +1695,7 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
->  	struct dirty_throttle_control * const mdtc = mdtc_valid(&mdtc_stor) ?
->  						     &mdtc_stor : NULL;
->  	struct dirty_throttle_control *sdtc;
-> -	unsigned long nr_reclaimable;	/* = file_dirty */
-> +	unsigned long nr_dirty;
->  	long period;
->  	long pause;
->  	long max_pause;
-> @@ -1716,9 +1716,9 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
->  		unsigned long m_thresh = 0;
->  		unsigned long m_bg_thresh = 0;
->  
-> -		nr_reclaimable = global_node_page_state(NR_FILE_DIRTY);
-> +		nr_dirty = global_node_page_state(NR_FILE_DIRTY);
->  		gdtc->avail = global_dirtyable_memory();
-> -		gdtc->dirty = nr_reclaimable + global_node_page_state(NR_WRITEBACK);
-> +		gdtc->dirty = nr_dirty + global_node_page_state(NR_WRITEBACK);
->  
->  		domain_dirty_limits(gdtc);
->  
-> @@ -1769,7 +1769,7 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
->  		 * In normal mode, we start background writeout at the lower
->  		 * background_thresh, to keep the amount of dirty memory low.
->  		 */
-> -		if (!laptop_mode && nr_reclaimable > gdtc->bg_thresh &&
-> +		if (!laptop_mode && nr_dirty > gdtc->bg_thresh &&
->  		    !writeback_in_progress(wb))
->  			wb_start_background_writeback(wb);
->  
-> -- 
-> 2.30.0
-> 
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
+index 4618b697fbc4..b0f41e9829cc 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
+@@ -689,4 +689,9 @@ mcu_esm: esm@40800000 {
+ 		ti,esm-pins = <95>;
+ 		bootph-pre-ram;
+ 	};
++
++	wkup_esm: esm@42080000 {
++		compatible = "ti,j721e-esm";
++		reg = <0x00 0x42080000 0x00 0x1000>;
++	};
+ };
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.34.1
+
