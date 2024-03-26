@@ -1,228 +1,163 @@
-Received: from smtp-8fab.mail.infomaniak.ch (smtp-8fab.mail.infomaniak.ch [83.166.143.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5326CDCF
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 09:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E78482E2;
+	Tue, 26 Mar 2024 09:53:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711446709; cv=none; b=afaqavUIOfQ+QsJ9xZK4lP0qLFaED3/tOciYPIQRjneyRqQtxmixZ5L+TpRs9Ag3yAFRN8O4rPH0TLBrCVWFwx2x/fAX4JZrpKDqS8y/OO+NT/nBn9yuz5gRH9Tj2vxCkYqKF0MJx6iPmrkNBqbYM2Po5Lissljrj1u6Jc0b8Vc=
+	t=1711446815; cv=none; b=C0nAVbeHiJn9h5OTWHDOlh7V2CwGxga6mWlKYZadppkPedfwIinrH7HZxAWIpi2d8cQsIdfxZhiiDKvA6O74tT8be3DMG2PZCjbOvvYSeFru/7OYMC6dDIuxjfI+tAnRCYRSB6tj48Zu2aBaWWrH+7MV6almbuf7unt7E0w9HGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711446709; c=relaxed/simple;
-	bh=raYOg3FDLnYzxat4KKO/e8ZSHhTV3Va2ltF0PaZ1ar0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UZCv+O27FtyBGojv0yI5tLtZZ+fn4wl+dsOHdecGaHCSjQxg6aRJeoQdE2UEXKg6cKRreeNbOXNrN6IUWgbloH1jUykqqPsK97ZCYVHFcmWjCXNBPbe4I2L/sQXA58wJoZ6wJDS5qr7SjWinJ57VjYtBHGNgGb3fQZAI1lO72gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=iQE1kpa3; arc=none smtp.client-ip=83.166.143.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1711446815; c=relaxed/simple;
+	bh=B0jN2JusynuaJCoStRNyGixQFYWJX7SMfvBbdJeNak8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JSIen6UnxZ/GRaz08TJlR9XOL3qVl0irP4Jffi9gs5iTrz3vrYvvUyT/HP4nhSk99SriLVYXqSC5w+xP6+WVInrNZvNOHL0Wq4EovwIgR7mQ1Iprw+lg7t3JOVQzs8drt6HQFLF+lrEXwOUt50E8mUV8HhZ++soQ13nORqdH1x8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=h9eY2N9b; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yjlwwJYL; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=h9eY2N9b; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yjlwwJYL; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="iQE1kpa3"
-Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4V3lSW5Mc6zcnF;
-	Tue, 26 Mar 2024 10:51:39 +0100 (CET)
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4V3lSV6N5vzr1;
-	Tue, 26 Mar 2024 10:51:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1711446699;
-	bh=raYOg3FDLnYzxat4KKO/e8ZSHhTV3Va2ltF0PaZ1ar0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iQE1kpa3csr5WjCdjfgjU8KHXLpd7PQLFbpI3jqRlK3c4BiB3NmoXBk4Trc2n5SJ+
-	 MUhh7m73G9Gffzc0BAe5eplq4HaMWGrWOQEOXhyXCSPwyEAVQZK8QUcPLMPs0ld8fm
-	 Oie0+3ZzjWBFJuNedg4mFN2yD2GU64ENdhCWvWz0=
-From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To: Brendan Higgins <brendanhiggins@google.com>,
-	David Gow <davidgow@google.com>,
-	Rae Moar <rmoar@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"Eric W . Biederman" <ebiederm@xmission.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	James Morris <jamorris@linux.microsoft.com>,
-	Kees Cook <keescook@chromium.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
-	Marco Pagani <marpagan@redhat.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Thara Gopinath <tgopinath@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Zahra Tarkhani <ztarkhani@microsoft.com>,
-	kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	x86@kernel.org
-Subject: [PATCH v4 4/7] kunit: Handle test faults
-Date: Tue, 26 Mar 2024 10:51:15 +0100
-Message-ID: <20240326095118.126696-5-mic@digikod.net>
-In-Reply-To: <20240326095118.126696-1-mic@digikod.net>
-References: <20240326095118.126696-1-mic@digikod.net>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="h9eY2N9b";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yjlwwJYL";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="h9eY2N9b";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yjlwwJYL"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 92D99353A0;
+	Tue, 26 Mar 2024 09:53:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1711446811; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oNAxwNGd3/8WTGxPOxLGhNKj6vwcQwNDS3EsMUDBFws=;
+	b=h9eY2N9b+LQ9zfrI65bXwFr7TBMomZoBMtzWI8v5ZB8pSAPQFX8vq1nSdXdrb0Jbzq2S+U
+	uFYEw1CNBQGTQKZEAispWo1HDHjVhiqh4S1vZrgT71S0lUTPs4Ff7O25PBWySN/sqa+bQY
+	8/sRPpW2ZEAoPSX8Hr2CQXfb2QMYTMU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1711446811;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oNAxwNGd3/8WTGxPOxLGhNKj6vwcQwNDS3EsMUDBFws=;
+	b=yjlwwJYLQwy++QvTvKs2fDkRkxZuF5xAMGkSBlyDpa/vTRaJeNtkpvBg15UcQWKEFGgSHo
+	3ETMmNSYB/HXp3AA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1711446811; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oNAxwNGd3/8WTGxPOxLGhNKj6vwcQwNDS3EsMUDBFws=;
+	b=h9eY2N9b+LQ9zfrI65bXwFr7TBMomZoBMtzWI8v5ZB8pSAPQFX8vq1nSdXdrb0Jbzq2S+U
+	uFYEw1CNBQGTQKZEAispWo1HDHjVhiqh4S1vZrgT71S0lUTPs4Ff7O25PBWySN/sqa+bQY
+	8/sRPpW2ZEAoPSX8Hr2CQXfb2QMYTMU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1711446811;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oNAxwNGd3/8WTGxPOxLGhNKj6vwcQwNDS3EsMUDBFws=;
+	b=yjlwwJYLQwy++QvTvKs2fDkRkxZuF5xAMGkSBlyDpa/vTRaJeNtkpvBg15UcQWKEFGgSHo
+	3ETMmNSYB/HXp3AA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 54C82138A1;
+	Tue, 26 Mar 2024 09:53:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 8nOmExubAmZddwAAD6G6ig
+	(envelope-from <hare@suse.de>); Tue, 26 Mar 2024 09:53:31 +0000
+Message-ID: <2508c03b-c26c-42ce-872d-3c5107a4d8a0@suse.de>
+Date: Tue, 26 Mar 2024 10:53:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 00/11] enable bs > ps in XFS
+Content-Language: en-US
+To: Matthew Wilcox <willy@infradead.org>,
+ "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ gost.dev@samsung.com, chandan.babu@oracle.com, mcgrof@kernel.org,
+ djwong@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ david@fromorbit.com, akpm@linux-foundation.org,
+ Pankaj Raghav <p.raghav@samsung.com>
+References: <20240313170253.2324812-1-kernel@pankajraghav.com>
+ <ZgHOK9T2K9HKkju1@casper.infradead.org>
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <ZgHOK9T2K9HKkju1@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=h9eY2N9b;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=yjlwwJYL
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-2.40 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BAYES_HAM(-0.90)[86.08%];
+	 MIME_GOOD(-0.10)[text/plain];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_TWELVE(0.00)[13];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Spam-Score: -2.40
+X-Rspamd-Queue-Id: 92D99353A0
+X-Spam-Flag: NO
 
-Previously, when a kernel test thread crashed (e.g. NULL pointer
-dereference, general protection fault), the KUnit test hanged for 30
-seconds and exited with a timeout error.
+On 3/25/24 20:19, Matthew Wilcox wrote:
+> On Wed, Mar 13, 2024 at 06:02:42PM +0100, Pankaj Raghav (Samsung) wrote:
+>> This is the third version of the series that enables block size > page size
+>> (Large Block Size) in XFS. The context and motivation can be seen in cover
+>> letter of the RFC v1[1]. We also recorded a talk about this effort at LPC [3],
+>> if someone would like more context on this effort.
+> 
+> Thank you.  This is a lot better.
+> 
+> I'm still trying to understand your opinion on the contents of the
+> file_ra_state.  Is it supposed to be properly aligned at all times, or
+> do we work with it in the terms of "desired number of pages" and then
+> force it to conform to the minimum-block-size reality right at the end?
+> Because you seem to be doing both at various points.
 
-Fix this issue by waiting on task_struct->vfork_done instead of the
-custom kunit_try_catch.try_completion, and track the execution state by
-initially setting try_result with -EINTR and only setting it to 0 if
-the test passed.
+Guess what, that's what I had been pondering, too.
+Each way has its benefits, I guess.
 
-Fix kunit_generic_run_threadfn_adapter() signature by returning 0
-instead of calling kthread_complete_and_exit().  Because thread's exit
-code is never checked, always set it to 0 to make it clear.  To make
-this explicit, export kthread_exit() for KUnit tests built as module.
+Question really is do we keep the readahead iterator in units of pages,
+and convert the result, or do we modify the readahead iterator to work
+on folios, and convert the inputs.
 
-Fix the -EINTR error message, which couldn't be reached until now.
+Doesn't really matter much, but we need to decide. The former is 
+probably easier on the caller, and the latter is easier on the consumer.
+Take your pick; I really don't mind.
 
-This is tested with a following patch.
+But we should document the result :-)
 
-Cc: Brendan Higgins <brendanhiggins@google.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: David Gow <davidgow@google.com>
-Tested-by: Rae Moar <rmoar@google.com>
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Link: https://lore.kernel.org/r/20240326095118.126696-5-mic@digikod.net
----
+Cheers,
 
-Changes since v3:
-* Export kthread_exit() for KUnit tests built as module, as suggested by
-  David.
-
-Changes since v2:
-* s/-EFAULT/-EINTR/ in commit message as spotted by Rae.
-* Add a comment explaining vfork_done as suggested by David.
-* Add David's Reviewed-by.
-* Add Rae's Tested-by.
-
-Changes since v1:
-* Add Kees's Reviewed-by.
----
- include/kunit/try-catch.h |  3 ---
- kernel/kthread.c          |  1 +
- lib/kunit/try-catch.c     | 19 ++++++++++++-------
- 3 files changed, 13 insertions(+), 10 deletions(-)
-
-diff --git a/include/kunit/try-catch.h b/include/kunit/try-catch.h
-index c507dd43119d..7c966a1adbd3 100644
---- a/include/kunit/try-catch.h
-+++ b/include/kunit/try-catch.h
-@@ -14,13 +14,11 @@
- 
- typedef void (*kunit_try_catch_func_t)(void *);
- 
--struct completion;
- struct kunit;
- 
- /**
-  * struct kunit_try_catch - provides a generic way to run code which might fail.
-  * @test: The test case that is currently being executed.
-- * @try_completion: Completion that the control thread waits on while test runs.
-  * @try_result: Contains any errno obtained while running test case.
-  * @try: The function, the test case, to attempt to run.
-  * @catch: The function called if @try bails out.
-@@ -46,7 +44,6 @@ struct kunit;
- struct kunit_try_catch {
- 	/* private: internal use only. */
- 	struct kunit *test;
--	struct completion *try_completion;
- 	int try_result;
- 	kunit_try_catch_func_t try;
- 	kunit_try_catch_func_t catch;
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index c5e40830c1f2..f7be976ff88a 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -315,6 +315,7 @@ void __noreturn kthread_exit(long result)
- 	kthread->result = result;
- 	do_exit(0);
- }
-+EXPORT_SYMBOL(kthread_exit);
- 
- /**
-  * kthread_complete_and_exit - Exit the current kthread.
-diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-index cab8b24b5d5a..7a3910dd78a6 100644
---- a/lib/kunit/try-catch.c
-+++ b/lib/kunit/try-catch.c
-@@ -18,7 +18,7 @@
- void __noreturn kunit_try_catch_throw(struct kunit_try_catch *try_catch)
- {
- 	try_catch->try_result = -EFAULT;
--	kthread_complete_and_exit(try_catch->try_completion, -EFAULT);
-+	kthread_exit(0);
- }
- EXPORT_SYMBOL_GPL(kunit_try_catch_throw);
- 
-@@ -26,9 +26,12 @@ static int kunit_generic_run_threadfn_adapter(void *data)
- {
- 	struct kunit_try_catch *try_catch = data;
- 
-+	try_catch->try_result = -EINTR;
- 	try_catch->try(try_catch->context);
-+	if (try_catch->try_result == -EINTR)
-+		try_catch->try_result = 0;
- 
--	kthread_complete_and_exit(try_catch->try_completion, 0);
-+	return 0;
- }
- 
- static unsigned long kunit_test_timeout(void)
-@@ -58,13 +61,11 @@ static unsigned long kunit_test_timeout(void)
- 
- void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
- {
--	DECLARE_COMPLETION_ONSTACK(try_completion);
- 	struct kunit *test = try_catch->test;
- 	struct task_struct *task_struct;
- 	int exit_code, time_remaining;
- 
- 	try_catch->context = context;
--	try_catch->try_completion = &try_completion;
- 	try_catch->try_result = 0;
- 	task_struct = kthread_create(kunit_generic_run_threadfn_adapter,
- 				     try_catch, "kunit_try_catch_thread");
-@@ -75,8 +76,12 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
- 	}
- 	get_task_struct(task_struct);
- 	wake_up_process(task_struct);
--
--	time_remaining = wait_for_completion_timeout(&try_completion,
-+	/*
-+	 * As for a vfork(2), task_struct->vfork_done (pointing to the
-+	 * underlying kthread->exited) can be used to wait for the end of a
-+	 * kernel thread.
-+	 */
-+	time_remaining = wait_for_completion_timeout(task_struct->vfork_done,
- 						     kunit_test_timeout());
- 	if (time_remaining == 0) {
- 		try_catch->try_result = -ETIMEDOUT;
-@@ -92,7 +97,7 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
- 	if (exit_code == -EFAULT)
- 		try_catch->try_result = 0;
- 	else if (exit_code == -EINTR)
--		kunit_err(test, "wake_up_process() was never called\n");
-+		kunit_err(test, "try faulted\n");
- 	else if (exit_code == -ETIMEDOUT)
- 		kunit_err(test, "try timed out\n");
- 	else if (exit_code)
--- 
-2.44.0
+Hannes
 
