@@ -1,99 +1,89 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE30D4A0A;
-	Tue, 26 Mar 2024 16:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4BE1798A;
+	Tue, 26 Mar 2024 16:46:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711471527; cv=none; b=E1zO2qCVZ5Ma7JnpmtadBhuW0Xb9e5qDpWOECITCGD9Eu6RHaXEhSDnnZEXYv07OqbqYr9HqlbZt1KaUJwjZOtOcsloB6BPFmENpZLoGH7eaPpJaW4Lvxev65GakBSPEv1V40SMGVkoUBdCptXWK1wgImGJDerJmr6lL5jfJjKg=
+	t=1711471578; cv=none; b=l4PQ5Br96An+kTbKrdz3TzMne6dnL0PBMSxmoOetthaD3XKDPZb44n4gtQbSyTRJlptrd1DYFl8wtLcECC3VmKD56T+NrJUy3jpSkJKLfRUd3uzDgCXmzOKOkaeUqdVDcsotURYwNQonseCps1SSyDDhO4qCi6oIEh8Zlk00Djo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711471527; c=relaxed/simple;
-	bh=e95uhVBTfAzZnFOKr0O1j5p3MLRuxzZEWptMHK7NSpA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H7WfTXi0r/0u6fRQxwC+iyRYBOlvhfytFHiJK69sRd9+W6khzEK7dhB+bLyliRagaAGzOdOEi6sRWBcpsaqLAqhZ6N7KgxJ5afTjMiq4yegHH097pOZNTwVx2gV5ub92nbYEfUxrk+k0A+JApuMRRYdRGQJOyKRBvDOY34Vv7q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8D5F2F4;
-	Tue, 26 Mar 2024 09:45:58 -0700 (PDT)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.35.184])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B7D93F694;
-	Tue, 26 Mar 2024 09:45:23 -0700 (PDT)
-Date: Tue, 26 Mar 2024 16:45:20 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Calvin Owens <jcalvinowens@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	linux-riscv@lists.infradead.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org,
-	"Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] arch/riscv: Enable kprobes when CONFIG_MODULES=n
-Message-ID: <ZgL7oG5EfLGYDGRS@FVFF77S0Q05N.cambridge.arm.com>
-References: <20240323232908.13261-1-jarkko@kernel.org>
- <20240325115632.04e37297491cadfbbf382767@kernel.org>
- <ZgLfsvbCZj2S6fRE@FVFF77S0Q05N.cambridge.arm.com>
- <20240327002403.62649aee45508b7a16caedba@kernel.org>
- <ZgL0ks5gikCG7NBN@debian-BULLSEYE-live-builder-AMD64>
+	s=arc-20240116; t=1711471578; c=relaxed/simple;
+	bh=ZxM4G3wey3BGq0FKQ5QmpygX01UO4gnXT52HSKPAB3Y=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OCSetxYyvjyCE89xo0zlzXjF+zczMcB/S8I3I2IUPQ1upXm4TQ3oJi9iw0Aus4Zq+4L+sPfGIwtDlsYLMxWxVxcw2cLL5sOnTYXM9O0DAx4HAt8o+41chZH5QmZ8kp4jKxAvGTdQP88r3g9p+J6vBweI834Z8G/sqqFQly9XdKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zmm6/IXs; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zmm6/IXs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41D17C43390;
+	Tue, 26 Mar 2024 16:46:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711471577;
+	bh=ZxM4G3wey3BGq0FKQ5QmpygX01UO4gnXT52HSKPAB3Y=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=Zmm6/IXsWQ4h43X/u4GRrPt8zqbOP+AlRxUwu2Q/g0mb48tjXQ9QCHfwul2V7P0rS
+	 7/wFGPQ8yOJAIXxcttUca0zzqwvAryCqx0XKVt3eURvam6lcHvdV9xZS1roYJBwBAc
+	 Ra8Ovwlo+AAejvmTiRjx5HZVUnNziLDnjfuOSzIdpWZezrSpH//hlcXODGgz7u1AGh
+	 18YejGbvAWhAE+rI/iXdFyTCageriym9/Sh8skIi+73n7Y6RJfbR75iFsNTh3kZCYI
+	 NphiuT0mDizHveRxk2jvTGPi4125hTIOFLtqNCEI8iIa+H1TdTiR5MPJ6qjZ4jk2Vl
+	 Jpix1+xrB53rw==
+Date: Tue, 26 Mar 2024 16:46:10 +0000
+From: Mark Brown <broonie@kernel.org>
+To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>,
+	linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+	linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH v3 0/4] Add support for jack detection to codec present
+ in A64 SoC
+Message-ID: <ebcae0f3-b5ac-4c1e-9a37-c7d58a564195@sirena.org.uk>
+References: <20240302140042.1990256-1-megi@xff.cz>
+ <171146686191.132239.8280140430376443574.b4-ty@kernel.org>
+ <2vhd45kylttgonosdcfn7ugwyy2vx56gijwf3ealz4tel65iqr@cs3kxrl6d2hh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="0y5Ly+iol10WH03x"
 Content-Disposition: inline
-In-Reply-To: <ZgL0ks5gikCG7NBN@debian-BULLSEYE-live-builder-AMD64>
+In-Reply-To: <2vhd45kylttgonosdcfn7ugwyy2vx56gijwf3ealz4tel65iqr@cs3kxrl6d2hh>
+X-Cookie: Equal bytes for women.
 
-On Tue, Mar 26, 2024 at 09:15:14AM -0700, Calvin Owens wrote:
-> On Wednesday 03/27 at 00:24 +0900, Masami Hiramatsu wrote:
-> > On Tue, 26 Mar 2024 14:46:10 +0000
-> > Mark Rutland <mark.rutland@arm.com> wrote:
-> > > Different exectuable allocations can have different requirements. For example,
-> > > on arm64 modules need to be within 2G of the kernel image, but the kprobes XOL
-> > > areas can be anywhere in the kernel VA space.
-> > > 
-> > > Forcing those behind the same interface makes things *harder* for architectures
-> > > and/or makes the common code more complicated (if that ends up having to track
-> > > all those different requirements). From my PoV it'd be much better to have
-> > > separate kprobes_alloc_*() functions for kprobes which an architecture can then
-> > > choose to implement using a common library if it wants to.
-> > > 
-> > > I took a look at doing that using the core ifdeffery fixups from Jarkko's v6,
-> > > and it looks pretty clean to me (and works in testing on arm64):
-> > > 
-> > >   https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=kprobes/without-modules
-> > > 
-> > > Could we please start with that approach, with kprobe-specific alloc/free code
-> > > provided by the architecture?
-> 
-> Heh, I also noticed that dead !RWX branch in arm64 patch_map(), I was
-> about to send a patch to remove it.
-> 
-> > OK, as far as I can read the code, this method also works and neat! 
-> > (and minimum intrusion). I actually found that exposing CONFIG_ALLOC_EXECMEM
-> > to user does not help, it should be an internal change. So hiding this change
-> > from user is better choice. Then there is no reason to introduce the new
-> > alloc_execmem, but just expand kprobe_alloc_insn_page() is reasonable.
-> 
-> I'm happy with this, it solves the first half of my problem. But I want
-> eBPF to work in the !MODULES case too.
-> 
-> I think Mark's approach can work for bpf as well, without needing to
-> touch module_alloc() at all? So I might be able to drop that first patch
-> entirely.
 
-I'd be very happy with eBPF following the same approach, with BPF-specific
-alloc/free functions that we can implement in arch code.
+--0y5Ly+iol10WH03x
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-IIUC eBPF code *does* want to be within range of the core kernel image, so for
-arm64 we'd want to factor some common logic out of module_alloc() and into
-something that module_alloc() and "bpf_alloc()" (or whatever it would be
-called) could use. So I don't think we'd necessarily save on touching
-module_alloc(), but I think the resulting split would be better.
+On Tue, Mar 26, 2024 at 05:33:14PM +0100, Ond=C5=99ej Jirman wrote:
 
-Thanks,
-Mark.
+> Coincidentally, Intel kernel test bot found an issue today that this fail=
+s to
+> build with CONFIG_SND_JACK_INPUT_DEV disabled. Should I send a followup f=
+ix or
+> should I send v5 with the fix integrated into the patch that breaks?
+
+Please send a followup.
+
+--0y5Ly+iol10WH03x
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmYC+9EACgkQJNaLcl1U
+h9CNawf/UmpDYDZvQrYV8oU7dWL/FIeOKYSzjpAsrpf4DW68Za0ZdVc0PVK6zRM9
+eiNrQRM5q13TpYKBQXJMIlZxIhk+c4VfjT0cpYv8zX5MYYCg+mlGUkCGcuN2C75v
++4vCAQEEEw6zHX+30YNU27jLK9sEc35GSyBXWY1UVJFpbjm4gV3aHC+l93zsrl3Z
+MIVAnNzuZZ7ils7JRYmdKMF0+s/R4XE3Jtkviy3/wdV8P0sobh4kK4ihIWDdHsvg
+7Ri3nyWP7eM7mwapZA/QzKU5xjfNQyuDcLQWRgoYiyPLlwXuK0HqzIo3Gmog+cPI
+YkEf4sliSd5tDKvr1kXkrna7nAmGaA==
+=Mpn6
+-----END PGP SIGNATURE-----
+
+--0y5Ly+iol10WH03x--
