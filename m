@@ -1,117 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD1828E8
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 12:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5ADC1EB56
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 12:56:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711457657; cv=none; b=liEYawF8A3ZUgBtRq4hb2DHLrI3kyf8EzInOkuSTI1M7yLVa6vIxrvejcfLagW/zyRdrvGBXMRThpqLbVQF0eKTCa3Gh91/GLkAzTcuvBFVgATi7Bh0R+TCPNuBtkkR2V6o8QuIRBjhLezRX8tTp573bOSpO1pnP3MTlC5O/+Vg=
+	t=1711457788; cv=none; b=ZvPtR/QoNitfyyi6lkQNp46+BtWjjaGncP+1r45E0++f1rwhLUePkIMXjsXzcFqWBbdCRVSiMnJTjaRCGIzNYXrX/Gea9gOzbfXrWdmvnt6QTNCvoxjtdusIeKCIfhfoVtHBqKBl7vV6H/G3LYMMZu25b5mbYpZ44DDIlWo2mSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711457657; c=relaxed/simple;
-	bh=HANE9Ck98nA4yLDO1qZtV2vsNr/fyY+1mdplJg0Nl0w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nd+7KAAg5YPPE5WPQVBj38eDfoi6HxlajVgAKE2+9DeY4OojurAXPI6FH16RvepyLFczc2HjDP6SjxhVO6fm8562NsiqrbSWpzr4H9eKUPDY98CBrBgJqYBNxK2q9gMrF2pxDGGTJRyQDekMKG20xE6OnLg/TYpyOm7Uj9QcKnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J9PmjWXA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711457788; c=relaxed/simple;
+	bh=YwtCMJg1Rfup4NT8V7Oo7K4rKen6x1h2pzIusMuhhp0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ienimvpkzQr+lOyxl1yTVydUmZuP4L1Pc5MxqnLc6Yh1KEe2xnJRBFgRflQcwquMUDIFnM56sSibLPpNK3ngNFzbrZEHG6lqh1zo0LrPCriaojAJIPiflb7UwxoVW2L9wITVhbhw4qIDvuvx0lSzH7yMd7AvEXu4Ojt+hkPIO7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o7kq1/no; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J9PmjWXA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEEEBC433C7;
-	Tue, 26 Mar 2024 12:54:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711457656;
-	bh=HANE9Ck98nA4yLDO1qZtV2vsNr/fyY+1mdplJg0Nl0w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J9PmjWXAuvpNf0kNeIJ0S0w4XhOn94evh/3pN3bRrDW2/KVo+R51sJ3qo5GE1elZP
-	 f5Wkxt40uLV+bjhEf0PkwctDFfveSWI+k/otPA46eBO8agrwarzJp8aAWAIhNzOiH1
-	 2qUZyC9O+TrOvy/J4jEajfH8bBlf3sHoq3vit2j/x8qWEI5CFIuBzIarSvh5ptim1d
-	 RZo4rEcaoxRcqSRs4k/PXDSRybpM7rH3VvtkgeHzhdbniaU7FwF5mocez2Foim4YXY
-	 2xuI9jLgUvoLTYVVcO6/IRIwLpAuwQQJYx0FnEhVK9OOMYeMzaqMu5kV/da7HkDX+1
-	 /RPLaXzvje0kA==
-Date: Tue, 26 Mar 2024 12:54:10 +0000
-From: Will Deacon <will@kernel.org>
-To: Nanyong Sun <sunnanyong@huawei.com>
-Cc: David Rientjes <rientjes@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Matthew Wilcox <willy@infradead.org>, muchun.song@linux.dev,
-	Andrew Morton <akpm@linux-foundation.org>,
-	anshuman.khandual@arm.com, wangkefeng.wang@huawei.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, Yu Zhao <yuzhao@google.com>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	Sourav Panda <souravpanda@google.com>
-Subject: Re: [PATCH v3 0/3] A Solution to Re-enable hugetlb vmemmap optimize
-Message-ID: <20240326125409.GA9552@willie-the-truck>
-References: <20240113094436.2506396-1-sunnanyong@huawei.com>
- <ZbKjHHeEdFYY1xR5@arm.com>
- <d1671959-74a4-8ea5-81f0-539df8d9c0f0@huawei.com>
- <20240207111252.GA22167@willie-the-truck>
- <ZcNnrdlb3fe0kGHK@casper.infradead.org>
- <ZcN1hTrAhy-B1P2_@arm.com>
- <44075bc2-ac5f-ffcd-0d2f-4093351a6151@huawei.com>
- <20240208131734.GA23428@willie-the-truck>
- <f8a643a9-4932-9ba4-94f1-4bc88ee27740@google.com>
- <22c14513-af78-0f1d-5647-384ff9cb5993@huawei.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o7kq1/no"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a46f0da1b4fso698405566b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 05:56:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711457785; x=1712062585; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=sT8OjxdUQAjzr/9I2o/yKQ2o8R3+ehvtYWeUDIQGp2Q=;
+        b=o7kq1/noAzjkHEV0L07zOaWm/UR9/+B5i7DSN2hw3ZQFWaRikg4+2f74neOduU0KY/
+         OZ0Sd8su2PBsPRwaxgJy+LuWZzzm2vtwe9vWkjuTC7XMvjCJgODq+usAe7b+OLIKq0av
+         CEf78/2QM1eTdaMvvwecnN709WaZ4Yb11U1BH+kbzk7qhuEnodgPdcMRSvnKu8g7SMLW
+         syfk6B5HVo4Gmd1DGjqwzvuNSN6MHB9UwoyyxIm1KMbcCfwsfFgg8qIWvLTJDkuChbmh
+         8m+rL8SSB4OVh1fwzXEDhaIU+GoqcATqGv6621aev3ecs4JKpajoi2GkqZFOvpt4nmRB
+         9O1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711457785; x=1712062585;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sT8OjxdUQAjzr/9I2o/yKQ2o8R3+ehvtYWeUDIQGp2Q=;
+        b=cxEi3Y1+vg8SOWJTAU/7+17cosWBeVejslpxiP3N425Jwa9hVWjEyg6mdPZ/ys1MkP
+         zu8aB6nIkLmJ4UIZzl4jkvIVZYQbVSZ2Yc/g+JRc/Y+pehuMjCM91tSwJ79Cq4oeZYMD
+         Q5K4OsD14xoInveGP64NVlxt6MibJmBEIg0tx7klr/4XCVUP3VZbq9p6ymmnnEA47Ltq
+         g/nefJW+Q/CPOzWeSKg7zutzxwpZPFDiWlYEmdMfbviEfrEf3AGR9M2aJpS41Bt+dyGD
+         SVZ10bseCY/ppIPxFYAD+p+qLOL3keo/r8utcfUWJ1FOc/P7lFkh6Izupkk5i1f7g83L
+         tTPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWC93r7Znq00EnkLtwUV2TuaW+q7RDDLfzQQ+m4FpPsIBXEps9mUmhcgv5D2y4+HKNHsaUEXsjl66/T1ZcvGvJn/sPqBLlPQzf1nxN8
+X-Gm-Message-State: AOJu0Yxp6O9kHYF0Bui8v/CiWk2e/H/82Kg+XVznBM16pmXKa2ez2kPh
+	7soMKI81HbGhH+4B74VpTzHsY2btcqpN/u9Y4H9H/0pSp3O0HK2WeWNdXBvuQ08=
+X-Google-Smtp-Source: AGHT+IGwEwrTsGbZnoPQM2wsJJefA/6J2PARa12wK1WZlpE62Ba5CCqMUlaxcnNOMgCIBJTpbgXTLQ==
+X-Received: by 2002:a17:906:66c9:b0:a47:20c3:7c51 with SMTP id k9-20020a17090666c900b00a4720c37c51mr5961573ejp.71.1711457785034;
+        Tue, 26 Mar 2024 05:56:25 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.44])
+        by smtp.gmail.com with ESMTPSA id i2-20020a17090639c200b00a471cbc4ddbsm4210480eje.26.2024.03.26.05.56.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Mar 2024 05:56:24 -0700 (PDT)
+Message-ID: <1c6d995a-b1f1-48ca-b85c-f69071e7e3bb@linaro.org>
+Date: Tue, 26 Mar 2024 13:56:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <22c14513-af78-0f1d-5647-384ff9cb5993@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: hsi: hsi-client: convert to YAML
+To: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Tony Lindgren <tony@atomide.com>,
+ devicetree@vger.kernel.org, linux-omap@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240325-hsi-dt-binding-v1-0-88e8e97c3aae@collabora.com>
+ <20240325-hsi-dt-binding-v1-1-88e8e97c3aae@collabora.com>
+ <2905247d-03b0-45c1-add5-d3c2a986d87c@linaro.org>
+ <hz4fbdix5yaz2wtdkjkf23pc3m4kbeavynvjagundqvv3bisor@lc7dev4667i5>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <hz4fbdix5yaz2wtdkjkf23pc3m4kbeavynvjagundqvv3bisor@lc7dev4667i5>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 25, 2024 at 11:24:34PM +0800, Nanyong Sun wrote:
-> On 2024/3/14 7:32, David Rientjes wrote:
-> > On Thu, 8 Feb 2024, Will Deacon wrote:
-> > > > How about take a new lock with irq disabled during BBM, like:
-> > > > 
-> > > > +void vmemmap_update_pte(unsigned long addr, pte_t *ptep, pte_t pte)
-> > > > +{
-> > > > +     (NEW_LOCK);
-> > > > +    pte_clear(&init_mm, addr, ptep);
-> > > > +    flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
-> > > > +    set_pte_at(&init_mm, addr, ptep, pte);
-> > > > +    spin_unlock_irq(NEW_LOCK);
-> > > > +}
-> > > I really think the only maintainable way to achieve this is to avoid the
-> > > possibility of a fault altogether.
-> > > 
-> > Nanyong, are you still actively working on making HVO possible on arm64?
-> > 
-> > This would yield a substantial memory savings on hosts that are largely
-> > configured with hugetlbfs.  In our case, the size of this hugetlbfs pool
-> > is actually never changed after boot, but it sounds from the thread that
-> > there was an idea to make HVO conditional on FEAT_BBM.  Is this being
-> > pursued?
-> > 
-> > If so, any testing help needed?
-> I'm afraid that FEAT_BBM may not solve the problem here, because from Arm
-> ARM,
-> I see that FEAT_BBM is only used for changing block size. Therefore, in this
-> HVO feature,
-> it can work in the split PMD stage, that is, BBM can be avoided in
-> vmemmap_split_pmd,
-> but in the subsequent vmemmap_remap_pte, the Output address of PTE still
-> needs to be
-> changed. I'm afraid FEAT_BBM is not competent for this stage. Perhaps my
-> understanding
-> of ARM FEAT_BBM is wrong, and I hope someone can correct me.
-> Actually, the solution I first considered was to use the stop_machine
-> method, but we have
-> products that rely on /proc/sys/vm/nr_overcommit_hugepages to dynamically
-> use hugepages,
-> so I have to consider performance issues. If your product does not change
-> the amount of huge
-> pages after booting, using stop_machine() may be a feasible way.
-> So far, I still haven't come up with a good solution.
+On 26/03/2024 13:45, Sebastian Reichel wrote:
+> 
+>> but more importantly: some properties are now excluding each
+>> other.
+> 
+> I think that requirement was already there.
 
-Oh, I hadn't appreciated that you needed to remap the memmap live. How
-do you synchronise the two copies in that case? I think we (i.e. the arch
-folks) probably need some more explanation on exactly who can race with
-what here, otherwise I don't grok how this can work.
+Right.
 
-Thanks,
 
-Will
+...
+
+>>> +
+>>> +allOf:
+>>> +  - if:
+>>> +      required:
+>>> +        - hsi-mode
+>>> +    then:
+>>> +      properties:
+>>> +        hsi-rx-mode: false
+>>> +        hsi-tx-mode: false
+>>
+>> I don't understand what you are trying to achieve here and with anyOf.
+>> It looks like just oneOf. OTOH, old binding did not exclude these
+>> properties.
+> 
+> So the anyOf ensures, that either hsi-mode or hsi-rx-mode +
+> hsi-tx-mode are specified. Those properties were previously
+
+Not entirely. anyOf should succeed also when none of them are present,
+which is not what you want in such case.
+
+> listed as required and they are indeed mandatory by the Linux
+> kernel implementation.
+> 
+> The old binding also has this:
+> 
+> hsi-mode:		May be used ***instead*** hsi-rx-mode and hsi-tx-mode
+> 
+> So it's either hsi-rx-mode + hsi-tx-mode OR hsi-mode, but not
+> all properties at the same time. That's what the allOf ensures:
+> if hsi-mode is specified, then hsi-rx-mode and hsi-tx-mode may
+> not be specified.
+
+Then wouldn't this work for you:
+https://elixir.bootlin.com/linux/v5.17-rc2/source/Documentation/devicetree/bindings/reserved-memory/reserved-memory.yaml#L91
+?
+
+But if you really want them to be optional but excluding, then simpler
+syntax is:
+https://lore.kernel.org/all/20230118163208.GA117919-robh@kernel.org/
+
+Best regards,
+Krzysztof
+
