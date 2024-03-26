@@ -1,33 +1,32 @@
 Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E871D13C9C5;
-	Tue, 26 Mar 2024 16:19:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E89C13C9DA;
+	Tue, 26 Mar 2024 16:19:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711469943; cv=none; b=lje3nEXJbtfeoGJt/hysgbSpslgibYzB0ZqaMke+1ydZBT/McX0dtOuMx62Mk36fo7HkHRFiVBGOzsJD13vcaW5YO+1suN7fnddce2gURPByOG6T6A6aV279IhbzhxXZkXYJR9A2V6aWxMB2sN4xmMf+DLdYE1w3o46jAHpmE9g=
+	t=1711469944; cv=none; b=FSU4xR/OHqeEk4aRMq+SPxcRZdO1WQ2N04Qqva1qd9tFuAvB/ewjgnL0dHzRgZCm02MyLPuCm+oM06YbRhL/hVLlZ3riS7PjCX/hHzUen0MSuBuDUqWtAqTL0UCcnD2fy11F7XtoHvIt/F0bkxu4Nkf3IBWxhKmO98bUQ+39zEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711469943; c=relaxed/simple;
-	bh=fdU0/4nAFfsDVSfMuzjWoxODhsFLL7hOMH1mO1m1t+M=;
+	s=arc-20240116; t=1711469944; c=relaxed/simple;
+	bh=5aDrrnIyMvrzhrxVH1Ca2IiEhPa9yUeMCoC85ZSPPPI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=WeXQmvMbb2aZBubLm2ljz8TmS/umMOJ3WxAs1+SFKMUgHuuV872QpUtcFALY+E8Ns0jJa4PtFTdgwt+hQpkZynVu2AV+f4L1A0r/75hIBejZA1lgUxp3yWli/0HluRlbGBmmGBsLy9S4VZdKQNXY4V8pev8irC+OOrsBa2uwzpg=
+	 Mime-Version:Content-Type; b=qjLW+/JP3CoxSyVfeG1p8r8WekpO1Ul5Jo9Jf3iImGggjs7E9WWB9hK+CwW4aVS5q9X2GCbe3tYI+LAjzki2Yd4gmvn6CcR5qZPVU2J45eiw4jVKiN7JUHZEHJW7jYrVQZGZQT+nWb9n9Pfw2zln3cEQUBK7FSuYtrAglE4GV08=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
 Received: from fedori.lan (51b68717.dsl.pool.telekom.hu [::ffff:81.182.135.23])
   (AUTH: CRAM-MD5 soyer@irl.hu, )
   by irl.hu with ESMTPSA
-  id 000000000007733A.000000006602F572.0023D3B2; Tue, 26 Mar 2024 17:18:57 +0100
+  id 0000000000077340.000000006602F575.0023D3CD; Tue, 26 Mar 2024 17:19:00 +0100
 From: Gergo Koteles <soyer@irl.hu>
 To: Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>,
   Baojun Xu <baojun.xu@ti.com>, Jaroslav Kysela <perex@perex.cz>,
   Takashi Iwai <tiwai@suse.com>
 Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
-  linux-kernel@vger.kernel.org, Gergo Koteles <soyer@irl.hu>,
-  stable@vger.kernel.org
-Subject: [PATCH v2 2/4] ALSA: hda/tas2781: add locks to kcontrols
-Date: Tue, 26 Mar 2024 17:18:46 +0100
-Message-ID: <e35b867f6fe5fa1f869dd658a0a1f2118b737f57.1711469583.git.soyer@irl.hu>
+  linux-kernel@vger.kernel.org, Gergo Koteles <soyer@irl.hu>
+Subject: [PATCH v2 4/4] ALSA: hda/tas2781: remove useless dev_dbg from playback_hook
+Date: Tue, 26 Mar 2024 17:18:48 +0100
+Message-ID: <8b9546db6c92dea4476a7247a88d56248c2ba8c2.1711469583.git.soyer@irl.hu>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <cover.1711469583.git.soyer@irl.hu>
 References: <cover.1711469583.git.soyer@irl.hu>
@@ -41,176 +40,30 @@ Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
 
-The rcabin.profile_cfg_id, cur_prog, cur_conf, force_fwload_status
-variables are acccessible from multiple threads and therefore require
-locking.
+The debug message "Playback action not supported: action" is not useful,
+because the action was previously printed, and the list of supported
+actions are intentional.
 
-Fixes: 5be27f1e3ec9 ("ALSA: hda/tas2781: Add tas2781 HDA driver")
-CC: stable@vger.kernel.org
+Remove the debug statement from the default switch case.
+
 Signed-off-by: Gergo Koteles <soyer@irl.hu>
 ---
- sound/pci/hda/tas2781_hda_i2c.c | 50 +++++++++++++++++++++++++++++++--
- 1 file changed, 48 insertions(+), 2 deletions(-)
+ sound/pci/hda/tas2781_hda_i2c.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/sound/pci/hda/tas2781_hda_i2c.c b/sound/pci/hda/tas2781_hda_i2c.c
-index 5acb475c10a7..9a43f563bb9e 100644
+index f495caee38e1..48dae3339305 100644
 --- a/sound/pci/hda/tas2781_hda_i2c.c
 +++ b/sound/pci/hda/tas2781_hda_i2c.c
-@@ -185,8 +185,12 @@ static int tasdevice_get_profile_id(struct snd_kcontrol *kcontrol,
- {
- 	struct tasdevice_priv *tas_priv = snd_kcontrol_chip(kcontrol);
- 
-+	mutex_lock(&tas_priv->codec_lock);
-+
- 	ucontrol->value.integer.value[0] = tas_priv->rcabin.profile_cfg_id;
- 
-+	mutex_unlock(&tas_priv->codec_lock);
-+
- 	return 0;
- }
- 
-@@ -200,11 +204,15 @@ static int tasdevice_set_profile_id(struct snd_kcontrol *kcontrol,
- 
- 	val = clamp(nr_profile, 0, max);
- 
-+	mutex_lock(&tas_priv->codec_lock);
-+
- 	if (tas_priv->rcabin.profile_cfg_id != val) {
- 		tas_priv->rcabin.profile_cfg_id = val;
- 		ret = 1;
+@@ -161,8 +161,6 @@ static void tas2781_hda_playback_hook(struct device *dev, int action)
+ 		pm_runtime_put_autosuspend(dev);
+ 		break;
+ 	default:
+-		dev_dbg(tas_hda->dev, "Playback action not supported: %d\n",
+-			action);
+ 		break;
  	}
- 
-+	mutex_unlock(&tas_priv->codec_lock);
-+
- 	return ret;
  }
- 
-@@ -241,8 +249,12 @@ static int tasdevice_program_get(struct snd_kcontrol *kcontrol,
- {
- 	struct tasdevice_priv *tas_priv = snd_kcontrol_chip(kcontrol);
- 
-+	mutex_lock(&tas_priv->codec_lock);
-+
- 	ucontrol->value.integer.value[0] = tas_priv->cur_prog;
- 
-+	mutex_unlock(&tas_priv->codec_lock);
-+
- 	return 0;
- }
- 
-@@ -257,11 +269,15 @@ static int tasdevice_program_put(struct snd_kcontrol *kcontrol,
- 
- 	val = clamp(nr_program, 0, max);
- 
-+	mutex_lock(&tas_priv->codec_lock);
-+
- 	if (tas_priv->cur_prog != val) {
- 		tas_priv->cur_prog = val;
- 		ret = 1;
- 	}
- 
-+	mutex_unlock(&tas_priv->codec_lock);
-+
- 	return ret;
- }
- 
-@@ -270,8 +286,12 @@ static int tasdevice_config_get(struct snd_kcontrol *kcontrol,
- {
- 	struct tasdevice_priv *tas_priv = snd_kcontrol_chip(kcontrol);
- 
-+	mutex_lock(&tas_priv->codec_lock);
-+
- 	ucontrol->value.integer.value[0] = tas_priv->cur_conf;
- 
-+	mutex_unlock(&tas_priv->codec_lock);
-+
- 	return 0;
- }
- 
-@@ -286,11 +306,15 @@ static int tasdevice_config_put(struct snd_kcontrol *kcontrol,
- 
- 	val = clamp(nr_config, 0, max);
- 
-+	mutex_lock(&tas_priv->codec_lock);
-+
- 	if (tas_priv->cur_conf != val) {
- 		tas_priv->cur_conf = val;
- 		ret = 1;
- 	}
- 
-+	mutex_unlock(&tas_priv->codec_lock);
-+
- 	return ret;
- }
- 
-@@ -300,8 +324,15 @@ static int tas2781_amp_getvol(struct snd_kcontrol *kcontrol,
- 	struct tasdevice_priv *tas_priv = snd_kcontrol_chip(kcontrol);
- 	struct soc_mixer_control *mc =
- 		(struct soc_mixer_control *)kcontrol->private_value;
-+	int ret;
-+
-+	mutex_lock(&tas_priv->codec_lock);
-+
-+	ret = tasdevice_amp_getvol(tas_priv, ucontrol, mc);
-+
-+	mutex_unlock(&tas_priv->codec_lock);
- 
--	return tasdevice_amp_getvol(tas_priv, ucontrol, mc);
-+	return ret;
- }
- 
- static int tas2781_amp_putvol(struct snd_kcontrol *kcontrol,
-@@ -310,9 +341,16 @@ static int tas2781_amp_putvol(struct snd_kcontrol *kcontrol,
- 	struct tasdevice_priv *tas_priv = snd_kcontrol_chip(kcontrol);
- 	struct soc_mixer_control *mc =
- 		(struct soc_mixer_control *)kcontrol->private_value;
-+	int ret;
-+
-+	mutex_lock(&tas_priv->codec_lock);
- 
- 	/* The check of the given value is in tasdevice_amp_putvol. */
--	return tasdevice_amp_putvol(tas_priv, ucontrol, mc);
-+	ret = tasdevice_amp_putvol(tas_priv, ucontrol, mc);
-+
-+	mutex_unlock(&tas_priv->codec_lock);
-+
-+	return ret;
- }
- 
- static int tas2781_force_fwload_get(struct snd_kcontrol *kcontrol,
-@@ -320,10 +358,14 @@ static int tas2781_force_fwload_get(struct snd_kcontrol *kcontrol,
- {
- 	struct tasdevice_priv *tas_priv = snd_kcontrol_chip(kcontrol);
- 
-+	mutex_lock(&tas_priv->codec_lock);
-+
- 	ucontrol->value.integer.value[0] = (int)tas_priv->force_fwload_status;
- 	dev_dbg(tas_priv->dev, "%s : Force FWload %s\n", __func__,
- 			tas_priv->force_fwload_status ? "ON" : "OFF");
- 
-+	mutex_unlock(&tas_priv->codec_lock);
-+
- 	return 0;
- }
- 
-@@ -333,6 +375,8 @@ static int tas2781_force_fwload_put(struct snd_kcontrol *kcontrol,
- 	struct tasdevice_priv *tas_priv = snd_kcontrol_chip(kcontrol);
- 	bool change, val = (bool)ucontrol->value.integer.value[0];
- 
-+	mutex_lock(&tas_priv->codec_lock);
-+
- 	if (tas_priv->force_fwload_status == val)
- 		change = false;
- 	else {
-@@ -342,6 +386,8 @@ static int tas2781_force_fwload_put(struct snd_kcontrol *kcontrol,
- 	dev_dbg(tas_priv->dev, "%s : Force FWload %s\n", __func__,
- 		tas_priv->force_fwload_status ? "ON" : "OFF");
- 
-+	mutex_unlock(&tas_priv->codec_lock);
-+
- 	return change;
- }
- 
 -- 
 2.44.0
 
