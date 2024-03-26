@@ -1,85 +1,80 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA2D13CFB7;
-	Tue, 26 Mar 2024 19:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89AAC380;
+	Tue, 26 Mar 2024 19:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711481392; cv=none; b=Wp8DXIr/ieF8TEv5bMABsJB3LvrG3fFDgW/02Cm/Gd0zvV+8DjNGnbAzyJR9FXHVCPheRD1Os81yG5IZAmCFkTb08ujT/c9HLSNdrEa7WEigAxmW6Fb8nyw00cLoqL9wjAhAo2yxMzCDb5Nfszo22FGqhDpP3n2BdurwLifxbaU=
+	t=1711481526; cv=none; b=SPSXAZX9aJG+woYSSWT0sSmCM6UspmlMFWFgd3m7v2aJKxF1nWFvrYQcHzUcdAXOkXAaGTPp4rC4yFCixWB85yu0bAUabDE47s0ET3igdGbUWogpSapya1lJdzBBCWZHQUksAM9OqW7TGeisxx+RLLjY7eNmrBNd0OElXICoVzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711481392; c=relaxed/simple;
-	bh=YW01FOTBgQuTjpZIEOnxXCe1aGb2AMOheChci7COxn8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bhUN4es0UrRY+9q2cRzCtm+0FKHTckISmpQ90O4idS6SSRoIe14Ju2qV4nPizFWJnieWOolKszLuJMRYavhAQ3LYZzxBjnORqKgnQsVywdYVuUYEyj6nCVFoJgt7KnVcJPIddh7AhC4pYN8y3MwOtQ9EuUHHIM2fZtF2VYA69M0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i53875aaf.versanet.de ([83.135.90.175] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1rpCUM-00073Q-7n; Tue, 26 Mar 2024 20:29:38 +0100
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: hjc@rock-chips.com, andy.yan@rock-chips.com, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH] dt-bindings: display: rockchip: add missing #sound-dai-cells to
- dw-hdmi
-Date: Tue, 26 Mar 2024 20:29:37 +0100
-Message-ID: <1994969.8hb0ThOEGa@diego>
-In-Reply-To: <5fb55234-4afd-4e6a-9763-4d2e344e0ce6@linaro.org>
-References:
- <20240326172801.1163200-1-heiko@sntech.de>
- <edc0bfa2-7984-4d9d-ba25-4805ee0be679@linaro.org>
- <5fb55234-4afd-4e6a-9763-4d2e344e0ce6@linaro.org>
+	s=arc-20240116; t=1711481526; c=relaxed/simple;
+	bh=rFkeoQf8Rkxl60GNNwUB//zK3YjAfCtCSIFZaTIkbzs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bPSIZ9eso8RfJvAxk2LyJDycDsjdvLw1JKNVf+IxyRWa4UgJsgOotsMMUklHGi1KuCspLROu3H09wPVv2i2zAtb4wLjgSeibMUhmqCTDr53Qy/PsNnSn7bcoNu5PT2u7MJBg6Qa57iNUKfwmC1sJs4MsvLb6BWfmzDpZniAKCmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H2/Mi6NT; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H2/Mi6NT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2745C433F1;
+	Tue, 26 Mar 2024 19:32:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711481526;
+	bh=rFkeoQf8Rkxl60GNNwUB//zK3YjAfCtCSIFZaTIkbzs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H2/Mi6NTN0A31Hem/MaSOiAhV7Jl8h6bObjN0WOaowjpJBrN10gJX6vgqumB7BZSG
+	 dXkMKrLBv8etz0tY+fqXciDw+X/3tHZZQdtr1BdVLSsvzfWAtB2PLycj7H4yvhTMPq
+	 V+CypcJEITaPqL6sWyJTMhqkIAHC1KV19chRxBf5O0ahNKWtssVxhUriOp5qvxnngl
+	 NMqgFDiKL2FsjYEC1tS5vF+mfOPhJRb10gxbCMXywK1WaTQuRJfN76OR6qaL0mge/w
+	 QrBwL8bd1IUBsTeWLAQzFuCqCCyln3rQ4+4CmND338o5PzWXasfyrt/74jE0vX7xpx
+	 gM/j21vi+e92g==
+Date: Tue, 26 Mar 2024 14:32:03 -0500
+From: Rob Herring <robh@kernel.org>
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Stephen Boyd <sboyd@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+	Johan Hovold <johan@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH RESEND v6 0/5] spmi: pmic-arb: Add support for multiple
+ buses
+Message-ID: <20240326193203.GA3252922-robh@kernel.org>
+References: <20240326-spmi-multi-master-support-v6-0-1c87d8306c5b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240326-spmi-multi-master-support-v6-0-1c87d8306c5b@linaro.org>
 
-Am Dienstag, 26. M=E4rz 2024, 18:50:37 CET schrieb Krzysztof Kozlowski:
-> On 26/03/2024 18:50, Krzysztof Kozlowski wrote:
-> > On 26/03/2024 18:28, Heiko Stuebner wrote:
-> >> The #sound-dai-cells DT property is required to describe link between
-> >> the HDMI IP block and the SoC's audio subsystem.
-> >>
-> >> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> >> ---
-> >>  .../devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml | 3 +++
-> >>  1 file changed, 3 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/display/rockchip/rockch=
-ip,dw-hdmi.yaml b/Documentation/devicetree/bindings/display/rockchip/rockch=
-ip,dw-hdmi.yaml
-> >> index af638b6c0d21..3768df80ca7a 100644
-> >> --- a/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-h=
-dmi.yaml
-> >> +++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-h=
-dmi.yaml
-> >> @@ -124,6 +124,9 @@ properties:
-> >>      description:
-> >>        phandle to the GRF to mux vopl/vopb.
-> >> =20
-> >> +  "#sound-dai-cells":
-> >> +    const: 0
-> >> +
-> >=20
-> > Then you miss $ref in allOf to /schemas/sound/dai-common.yaml
->=20
-> I meant, except your change you should add also above $ref.
+On Tue, Mar 26, 2024 at 06:28:15PM +0200, Abel Vesa wrote:
+> This RFC prepares for and adds support for 2 buses, which is supported
+> in HW starting with version 7. Until now, none of the currently
+> supported platforms in upstream have used the second bus. The X1E80100
+> platform, on the other hand, needs the second bus for the USB2.0 to work
+> as there are 3 SMB2360 PMICs which provide eUSB2 repeaters and they are
+> all found on the second bus.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> ---
+> Changes in v6:
+> - Changed the compatible to platform specific (X1E80100) along with the
+>   schema. Fixed the spmi buses unit addresses and added the empty ranges
+>   property. Added missing properties to the spmi buses and the
+>   "unevaluatedProperties: false".
+> - Deprecated the "qcom,bus-id" in the legacy schema.
+> - Changed the driver to check for legacy compatible first
+> - Link to v5: https://lore.kernel.org/r/20240221-spmi-multi-master-support-v5-0-3255ca413a0b@linaro.org
 
-sorry about that, will fix that.
+Where are Krzysztof's Reviewed-by tags?
 
-Thanks for the pointer
-Heiko
-
-
-
+Rob
