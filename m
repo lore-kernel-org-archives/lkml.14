@@ -1,150 +1,130 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8964813CFB6
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 20:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5041B2AD2C;
+	Tue, 26 Mar 2024 20:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711484121; cv=none; b=WqMyj3LcHRNTlXoFabGBHywCglgH3EjV9vqte+oXapBablAXY0AVEb3RZc+AcBR3Rs/t/IktI/cDQS9qurTZA4TAXrOEp14GzR/go1F0NAIHiIpXD/z20S68ZST941EQaIGWUY/SfzcklAzJoQG/hhDo5AZ6kMcMHdwntemcLYA=
+	t=1711484269; cv=none; b=Q4L2LAOHTMxkiAARozHyd0Pj5etc+/nLKjl1bszQqK1ysKkYb8UXqyt+o5Z673yUOC2JbGwOZy/y5W15UFsv6yDdS0mgta+HVDOox0tJaPVU0DBDG27gXMGbiYHTSxSTmlBy0s7c2I/ldDXvrKWpjp28PXyk7shWWfioWFEso3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711484121; c=relaxed/simple;
-	bh=4yBYbmDfgEXYEY4/WQHaGZoRI0U4OduvPl3k8j6yg9M=;
+	s=arc-20240116; t=1711484269; c=relaxed/simple;
+	bh=l0PAwS1wlrqxNRSQuJrQPY3+Q45IBLEvftbyUMrb048=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KfovJHvIUWTx925y3ahlMzYfbBlbGmQWJGPqNbMmfBKw+xavcJChVFLJ56H9k6T+X+57B7HAQFwg+8YJPLJ7rPML5HF0Q7+lyRM7M/dRdkYu1F3ER+O27Xbol5I4HdOBQCb4xBJIY7dEkoH8v3k4+FkS7eUXJCU1n/psiokMB6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kdsl8YoM; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=Jb8RQFpZbOtGyoglxPPaJ60Ip3QlSoIZRw9UaaWccK2xDNURLtVj6M/ae+yr375vyp+6LAQ0+Jjq4OSLDD4Wu6CvfxoQX3whM3ZPEJ2skmMIaavmUf/73bxxa/yDkXtbGZ4NjcRT3LAJLiD5bs+wYyGt1eKgF6eN6lKFhFUY3v0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DA2w8bRV; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kdsl8YoM"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e7425a6714so3902318b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 13:15:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DA2w8bRV"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-60a046c5262so56857677b3.2;
+        Tue, 26 Mar 2024 13:17:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711484119; x=1712088919; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KEIj6g5QJwKmZovExsPATLABNnOuOV8p3kw1ynEOBRo=;
-        b=kdsl8YoM/w1i4SRf3SZ2klasmcXB+ySy+ylJyK2R0dPIEfVm1GBOoCk826x4mTmAEC
-         OzEpVbWR6iS+77lduNmE2Gb/3Qgd2Kt2jfBExqs1aA+zYY/QaVpu4i75s0mh86mo1cUy
-         2VXobruuSHqfLTKCydVE2f7+TxyEieaq4ie18uZdVa+mIK4RyuDANOrTgP34a8YDLeht
-         c6hdUHWsLrApsplBhbRUAzzH18filQEVBxBGDcpokUDk4Omn+MVFu8FuW3/XAauSZ8om
-         1D+p82v5m8viyybKdpqZIfiTarU9NANCVvURdfdaBpGTa3RdGt91UFeCyAP7Qy9yJGU4
-         uJxA==
+        d=gmail.com; s=20230601; t=1711484267; x=1712089067; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Rh3YW0AOZPmvBcjKfoYP1w8P/SW8q70+JN9/BHH1CxE=;
+        b=DA2w8bRV5SCFuWH3CARhUfEAofPgnZnmI4mfN13AMAcLPfeMYmYcGys+WPNpg1EEqK
+         fbjDDnrTXyZ+AI23hDjc5sVkIT1nuVlvLFKRMm5eUWsX9vIv2NWKb2IzakDle9mxkuXb
+         fUMq2Z9RylMb9lQaZu03jpMJJqnLxsEouYDK8TxRCwj6tn08cFowyUuWqi/QYdk1xenM
+         rsnNQy15wg20Esoe2RhqPFqYMHfjX+2iqITyU/ICUlfzYpSMAr9gk5j/vFlDCMESW/TP
+         j/+znKWDq0rn4EYOUqJeaSwB1mqcngCLlEPiprJXHutE/eliAHJlW8+C7ELzesD5P5a1
+         UP+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711484119; x=1712088919;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KEIj6g5QJwKmZovExsPATLABNnOuOV8p3kw1ynEOBRo=;
-        b=ZU2Ea9kQHDIKEIne28LQN6e5zcwm90kI89u2/0hiC6WzoLap5TY7UtHiktjJlYAQlm
-         Tk1WhvSJ0w0VV/p5mwxox0tV8NIxBF85f9zi8PPEtqsrHQwjUrwFCIbnlwVXmGe3mCWh
-         6CsygK6BAKd0Mbs9Nhb2L+o/nW3AIOloAqL1anfWeD0tmdqggXpFryKQirPP3+Vn3fmi
-         KJ9NBf1a7qe6S0/QzNZx/W/CksiZccM+0bOHfP1em/xVJbSiG34Gqf3WXmYquJALfNCe
-         XL5YPL9xh1bAkJpNjfNvBMVfEsbJ7arl1R7sH029HK4t/yF4GEKxDq+lG8A1RtIWb1D+
-         BfVg==
-X-Forwarded-Encrypted: i=1; AJvYcCUn6SsEBvodJin7zsPCu5qbuRQfbDdUrWQnHzOK/eef8HqDbJon1OlCnWvY2n2xkeN8sPgLhM9gebKPUeMOknHju4MOxiJ2OtPI9pbG
-X-Gm-Message-State: AOJu0YznGUzBRB5B53Q9s413luWpp54SUa3HLT8cOS5CuAEpA1/BG6jC
-	CSFpT6ZTgiGUxOJP7pO3K7fTqs9T40wJuE3xDfl1LYbs8v1UDmOFhIZAEU5Cn9ejyuC/3vkhYSn
-	3E1q1LwvGN6vj7gxE/kBZptGCSEGbeZkkKeu4YrfMwhijryVF+Xs=
-X-Google-Smtp-Source: AGHT+IHPKYXRgrHAZz7qgpOQRs0ve3LD3Lxt6htHFab48RxUMDw+btmHKJM0H7u27tG+k/+bwrRkP9wyBgFR4gS84yE=
-X-Received: by 2002:a05:6a00:3ccc:b0:6e9:74d7:7092 with SMTP id
- ln12-20020a056a003ccc00b006e974d77092mr12836329pfb.24.1711484118932; Tue, 26
- Mar 2024 13:15:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711484267; x=1712089067;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Rh3YW0AOZPmvBcjKfoYP1w8P/SW8q70+JN9/BHH1CxE=;
+        b=ggQ3oOqhhADKRwhxWNaTC0mJcXFoHUHAxsAMcga/iFjFWBcl8R/UcpOeEdVbUXy0PC
+         7pb5PWuSGMpIyH3PymA8vAB5mC4ImLJse+I+Zp6/7JSFu+kJjlEiGMIXPAXe/yneQXxy
+         l926TFqv56yD8RDTnmjqSeeNgYq1Smy/X7dxXYjBwVB6RxWvnxC+6BYEbjh1yJ5yuYiH
+         H07AxJp8PdmCjcr0fbHn1SODtUKm+I0mDqJFD4D1qDSS/ilELncika/8vAwIsKUSt5/T
+         ZXQhAsvDs6h4MdPdi5QZJIdlVK2H12sdgKtLJ7Fv6kj5+Zw/55KijPmHl8JGIJHJZKMt
+         lScA==
+X-Forwarded-Encrypted: i=1; AJvYcCXU0EQYjzAR5DbmcrGq0levPPyszVErgFh69R0n8u5E6Se8Fy4cSXHK2cJsBLzLfXoVr90CU6ApfGRCliLco10uih/TqaO/F4OT+Yx3HwRCXA2c7fCE3akRzTu9cRqnBjzMBaDTjOwAfx+mikOArbGjp36450Esx28xqN7ONoL6pyiBxw==
+X-Gm-Message-State: AOJu0YzI5B72kYCcyiMoUKk5hqrSq8lEBq3PEcv24KE+TIDODFbNEiUN
+	D8wNVMEX302zqB5nliBahEBs7B+dYc5BVg5jCMMyF2wGiAnCb+ZfmA+rzjROfl8O4kBAvVK1btY
+	09ubmS7uHnw11yqzC1ipAoJ/ppjM=
+X-Google-Smtp-Source: AGHT+IEq2DLXMHVyXMCQwnTcmcIMKlEbMRR9WzaSE8uHUUfLZEFBAzdAE0HEkuyUY9Qwy+5HaX/bY7RP0ttLMl20OKA=
+X-Received: by 2002:a25:a2c5:0:b0:dcc:467c:cecb with SMTP id
+ c5-20020a25a2c5000000b00dcc467ccecbmr8989710ybn.37.1711484267271; Tue, 26 Mar
+ 2024 13:17:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326152616.380999-1-sshegde@linux.ibm.com> <ZgMiwYxF5rnVTpLf@gmail.com>
-In-Reply-To: <ZgMiwYxF5rnVTpLf@gmail.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Tue, 26 Mar 2024 21:15:07 +0100
-Message-ID: <CAKfTPtCk_aD-g-uADdoiWrGVHBbbVMuBKzWjyrKuA609O8vJzA@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: Combine EAS check with overutilized access
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Shrikanth Hegde <sshegde@linux.ibm.com>, peterz@infradead.org, dietmar.eggemann@arm.com, 
-	qyousef@layalina.io, linux-kernel@vger.kernel.org, vschneid@redhat.com
+References: <20240325153356.46112-1-l.rubusch@gmail.com> <20240325153356.46112-5-l.rubusch@gmail.com>
+ <f74a01bd-46a3-46cd-a47a-fcfccd7e4dc6@linaro.org> <CAFXKEHbJ_5unY24aZeutvM-xrjevQ=z7ngDcgwJR=NXzXONx5A@mail.gmail.com>
+ <334970e7-2edd-43c8-9f18-b7b3ec5f4d17@linaro.org> <CAFXKEHaEVwiAW9co0+=kZ5w5a8eWg3QL0dmg38bvrmLdnBEA7w@mail.gmail.com>
+ <b13ca51c-db57-4a09-b689-cf27265d348f@linaro.org>
+In-Reply-To: <b13ca51c-db57-4a09-b689-cf27265d348f@linaro.org>
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Tue, 26 Mar 2024 21:17:11 +0100
+Message-ID: <CAFXKEHYMiARxrN7=jqnJtEVREseZ-zmZmVeY1uNXZV6viwHbmw@mail.gmail.com>
+Subject: Re: [PATCH v4 4/7] dt-bindings: iio: accel: adxl345: Add spi-3wire
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, 
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, eraretuya@gmail.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 26 Mar 2024 at 20:32, Ingo Molnar <mingo@kernel.org> wrote:
+On Tue, Mar 26, 2024 at 7:30=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 >
+> On 25/03/2024 23:09, Lothar Rubusch wrote:
+> >>
+> >>
+> >>>
+> >>>> the tags. The upstream maintainer will do that for tags received on =
+the
+> >>>> version they apply.
+> >>>>
+> >>>
+> >>> I'm pretty sure we will still see further iterations. So, I apply the
+> >>> tags in the next version, already scheduled. Ok?
+> >>>
+> >>>> https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/proce=
+ss/submitting-patches.rst#L577
+> >>>>
+> >>>
+> >>> Going over the books I feel it does not make sense to still mention
+> >>> feedback ("Reveiewed-by") for the v1 or v2 of the patch here in a v5,
+> >>> does it? Your link mentiones "However if the patch has changed
+> >>
+> >> I don't understand. When did you receive the tag? v3, right? So what d=
+o
+> >> you mean by v1 and v2?
+> >>
+> >
+> > V1: The first version of the 3wire patch. I have split the single
+> > patch upon some feedback (yours?!) - V2... So, my current
+> > interpretation is, that every feedback I need to mention as
+> > Reviewed-by tag, no?
 >
-> * Shrikanth Hegde <sshegde@linux.ibm.com> wrote:
+> What? Feedback is not review. It's clearly explained in submitting
+> patches. Please read it.
 >
-> > Access to overutilized is always used with sched_energy_enabled in
-> > the pattern:
-> >
-> > if (sched_energy_enabled && !overutilized)
-> >        do something
-> >
-> > So modify the helper function to return this pattern. This is more
-> > readable code as it would say, do something when root domain is not
-> > overutilized. This function always return true when EAS is disabled.
-> >
-> > No change in functionality intended.
-> >
-> > Suggested-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
-> > ---
-> >  kernel/sched/fair.c | 20 +++++++-------------
-> >  1 file changed, 7 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 24a7530a7d3f..e222e3ad4cfe 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -6686,12 +6686,11 @@ static inline bool cpu_overutilized(int cpu)
-> >  }
-> >
-> >  /*
-> > - * Ensure that caller can do EAS. overutilized value
-> > - * make sense only if EAS is enabled
-> > + * overutilized value make sense only if EAS is enabled
-> >   */
-> >  static inline int is_rd_overutilized(struct root_domain *rd)
-> >  {
-> > -     return READ_ONCE(rd->overutilized);
-> > +     return !sched_energy_enabled() || READ_ONCE(rd->overutilized);
-> >  }
-> >
-> >  static inline void set_rd_overutilized_status(struct root_domain *rd,
-> > @@ -6710,8 +6709,6 @@ static inline void check_update_overutilized_status(struct rq *rq)
-> >        * overutilized field is used for load balancing decisions only
-> >        * if energy aware scheduler is being used
-> >        */
-> > -     if (!sched_energy_enabled())
-> > -             return;
-> >
-> >       if (!is_rd_overutilized(rq->rd) && cpu_overutilized(rq->cpu))
-> >               set_rd_overutilized_status(rq->rd, SG_OVERUTILIZED);
->
-> On a second thought, I'm not sure removing the open-coded
-> sched_energy_enabled() branches is a good idea: the current code makes it
-> really, really clear when we are within EAS code paths.
->
-> Hiding it within is_rd_overutilized() makes it a lot less obvious IMO.
 
-That's probably a matter of pov. I prefer embedding everything to make
-sure to have useless access to rd->overutilized
+Exactly. My missunderstanding here is this:  Why did you send me a
+reminder that I forgot to add "Reviewed-by" tag in your last mail?
+Could you please clarify your last mail? You wrote:
+"(...)
+This is a friendly reminder during the review process.
 
->
-> And this one:
->
-> > @@ -8202,7 +8199,7 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
-> >                   cpumask_test_cpu(cpu, p->cpus_ptr))
-> >                       return cpu;
-> >
-> > -             if (sched_energy_enabled()) {
-> > +             if (!is_rd_overutilized(this_rq()->rd)) {
-> >                       new_cpu = find_energy_efficient_cpu(p, prev_cpu);
-> >                       if (new_cpu >= 0)
-> >                               return new_cpu;
->
-> Didn't have a root_domain::overutilized check before?
+It looks like you received a tag and forgot to add it.
 
-This is the one that was in find_energy_efficient_cpu() before.
+If you do not know the process, here is a short explanation:
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new
+versions, (...)"
 
+AFAIK noone literally had told me: "please add a Reviewed-by me tag",
+or did I miss something? I'm a bit lost here, sorry.
+
+> Best regards,
+> Krzysztof
 >
-> Thanks,
->
->         Ingo
