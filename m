@@ -1,204 +1,270 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C1FEEDB
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 08:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CC68748D;
+	Tue, 26 Mar 2024 08:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711442029; cv=none; b=tCdRoH5m4rBdeBd41Rjqe8s2wGLGnlOutEuc8vpBHHUiCr7va+opsv+wHrc7hX2tRaV1HQsi56TucA2xriiEGyd5t9gwkAmUI4MUOGZyYJxzu0BTnHq8ZKSUquceaQ0sEpNmcm52SV+PAwd7kh8M74PicBz7rmpTjhLRsK8ssYk=
+	t=1711442129; cv=none; b=Ng3aANeEApZcLhr1glTizqOpkeaB9jCxuQ7GtiCnprWaB/z1DHH8XAo1YCoFQVoCM8N054LcJZL/wURycOC/0QuQpzufVrN3f9TF1bELP/UPc9DQtEfBiDfI087lajOeoqVF9X7jAoaXIUmAyl2cObrW/ImbN4JRGCkxsSZQ1Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711442029; c=relaxed/simple;
-	bh=ekSZJD9CdDsC7N70aoX3Mzm0bRUXxt7Zdo8CRQJXlHg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eLV3UOnw8tKXzBWKquBqjP4B8oxp6+YiIF+cq7x1qGb+ogs3ue9dxxi+7nbA3e4SPgQyW49ITuiKBLuqkETsQLdSjCEBgPQ5SFKauLE2Dz1XRrXENFFeQVQ10s31i5BourZ8iDEcK8kvTw8zKWGC/eHr/5bdgBdCUAmtLOoarKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QDlg6BC5; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QDlg6BC5"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1e04ac4209eso46898135ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 01:33:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711442026; x=1712046826; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=nQOtfcbnYc24Mh+gXI1bFDgfC9HlUS+Sxyvob3hinF4=;
-        b=QDlg6BC5TpEpQSiYK/ywqBmTCeMtYFVoAGi71ZSLenNMLZixXzy4HpvxwCIH28UH0o
-         UkYRKCOR3dkjAfHs78TTor3aXXJOQX5eE4dyOFbvcSQDlKIf6n7SmmJi0QD/OGo162ww
-         EhucN79Z4dlppF8Xmb443dHNhx9JMsA+6COFtzg7zBAN2SOxoXtFHsW9IrzdALSMo+Fl
-         N8FJAnJYpG74KiSs/Eeyg8hVsqeYwbsZehsYvdUHDSnxobC01i3WgT6OynfCNXX2VJT9
-         spduE8GqiCfFxWIgovejwa+ANb9AibJCLbbWxlM1JiOkeHXcZoQ8Th/ACZ/yvP5XKFWX
-         VxSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711442026; x=1712046826;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nQOtfcbnYc24Mh+gXI1bFDgfC9HlUS+Sxyvob3hinF4=;
-        b=Jo+NA1t3DzDYEgn562VPC6XiBFBIGgjHYWgzGjqy3ZCasetUrrQKePz9izpmRlpcLC
-         OQuJuDibWWA0RWy5lh3BufiJ+CJg7s01755WLKvkBQTW2m5k+uPqnF+SDTWMOPqQD9C+
-         LvxhUiD3FY40PmcauC17HlhpIj4Fs+D+U62JOzNSOJl6oIQ0rnXNBj6EzQLs0Nhexmy5
-         Vk4TZr1/7DVt9fhuGYtRLBeNZ/PuGcQQIuJC7KOMSVAR12oZ2krPcombvTHmZrBQr19/
-         ngsCImYFeg9QG3miXOijGEQuTubhVc+tHG4mFJuK2DO5YJ06zmvvzhGmqth7st1bXgiK
-         MZZg==
-X-Forwarded-Encrypted: i=1; AJvYcCV317Gh6Xwm6pTpqOvs9p1ey0wJh4elQZpGAC1sBZDk2run9vrKQa5Bewnd7xolimSyJMp2O37idpikSmgWdYutXkGSm7A5axy4/diW
-X-Gm-Message-State: AOJu0YxuTbefGYoWVaoxAst+W+CrXtj6W633tz6asY+5NTTkpC+JHMeg
-	cRH9YpF5c5UXrLy2x2+7vFEQP1lSOu+oD0DlewQ8zynI4AISC7WPpkQ93gxuow==
-X-Google-Smtp-Source: AGHT+IHM8PyfEgYVUSNeb8rAEehN4cswciWPXaugw1p1Nss4iAw4Hcpv2ciDq/JtT+SO2hYFDn/fhA==
-X-Received: by 2002:a17:902:c952:b0:1df:f681:3cd8 with SMTP id i18-20020a170902c95200b001dff6813cd8mr2343690pla.12.1711442025839;
-        Tue, 26 Mar 2024 01:33:45 -0700 (PDT)
-Received: from thinkpad ([117.207.28.168])
-        by smtp.gmail.com with ESMTPSA id w16-20020a170902e89000b001ddb505d50asm535867plg.244.2024.03.26.01.33.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 01:33:45 -0700 (PDT)
-Date: Tue, 26 Mar 2024 14:03:38 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
-	linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 10/11] PCI: qcom-ep: Rework {start/stop}_link() callbacks
- implementation
-Message-ID: <20240326083338.GI9565@thinkpad>
-References: <20240314-pci-epf-rework-v1-0-6134e6c1d491@linaro.org>
- <20240314-pci-epf-rework-v1-10-6134e6c1d491@linaro.org>
- <Zf2tjht4TR7Irewd@ryzen>
+	s=arc-20240116; t=1711442129; c=relaxed/simple;
+	bh=h9EeJQUPGscodmSjnmp0D/vEOTmiEFfN3yvTqvtFhuk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=pOPXy3UxSIJWgIauPNb8krngOrmfzZt3vXjhAceV8fbP8b8dqJIBHmJ8Q0pc0tz1XQ1m9BZ40d+8EIUbBryBuTr1jyL2ir3Z7DLIzMLyUg4IpWAxHKMG7Oadgrc+s+wtmF+a6WE4zOXtwQ+hzWoo0H9973/yQmMiNi4dXdDD4nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8AxuugzhAJm2UoeAA--.51243S3;
+	Tue, 26 Mar 2024 16:15:47 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx7c4yhAJm3aZoAA--.10447S2;
+	Tue, 26 Mar 2024 16:15:46 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Juergen Gross <jgross@suse.com>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	x86@kernel.org
+Subject: [PATCH 2/2] LoongArch: Add steal time support in guest side
+Date: Tue, 26 Mar 2024 16:15:46 +0800
+Message-Id: <20240326081546.973106-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240326080625.898051-1-maobibo@loongson.cn>
+References: <20240326080625.898051-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zf2tjht4TR7Irewd@ryzen>
+X-CM-TRANSID:AQAAf8Bx7c4yhAJm3aZoAA--.10447S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
+X-Gw-Check: e5acd0b5fd9bcff5
 
-On Fri, Mar 22, 2024 at 05:10:54PM +0100, Niklas Cassel wrote:
-> On Thu, Mar 14, 2024 at 08:53:49PM +0530, Manivannan Sadhasivam wrote:
-> > DWC specific start_link() and stop_link() callbacks are supposed to start
-> > and stop the link training of the PCIe bus. But the current implementation
-> > of this driver enables/disables the PERST# IRQ.
-> > 
-> > Even though this is not causing any issues, this creates inconsistency
-> > among the controller drivers. So for the sake of consistency, let's just
-> > start/stop the link training in these callbacks.
-> > 
-> > Also, PERST# IRQ is now enabled from the start itself, thus allowing the
-> > controller driver to initialize the registers when PERST# gets deasserted
-> > without waiting for the user intervention though configfs.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> 
-> Nice change:
-> Reviewed-by: Niklas Cassel <cassel@kernel.org>
-> 
-> If you dump LTSSM after a PERST assert + deassert,
-> using e.g. dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG1);
-> to dump the debug registers (see dw_pcie_link_up())
-> do you see that PCIE_PORT_DEBUG1_LINK_IN_TRAINING is set?
-> 
-> I was thinking that perhaps there was a thought behind
-> this original design, that you had to explicitly set
-> LTSSM_EN after a fundamental core reset, because it
-> would get cleared?
-> 
+Percpu struct kvm_steal_time is added here, its size is 64 bytes and
+also defined as 64 bytes, so that the whole structure is in one physical
+page.
 
-Well, you are right. I was hoping to get an answer from Kishon/Vidya, but you
-throwed the light. I will drop these 2 patches.
+When vcpu is onlined, function pv_register_steal_time() is called. This
+function will pass physical address of struct kvm_steal_time and tells
+hypervisor to enable steal time. When vcpu is offline, physical address
+is set as 0 and tells hypervisor to disable steal time.
 
-Thanks!
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/include/asm/paravirt.h |   5 +
+ arch/loongarch/kernel/paravirt.c      | 130 ++++++++++++++++++++++++++
+ arch/loongarch/kernel/time.c          |   2 +
+ 3 files changed, 137 insertions(+)
 
-- Mani
-
-> (It it is implemented like signals and not registers,
-> then this change should be fine.)
-> 
-> 
-> Kind regards,
-> Niklas
-> 
-> 
-> >  drivers/pci/controller/dwc/pcie-qcom-ep.c | 21 +++++++++++++--------
-> >  1 file changed, 13 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> > index 811f250e967a..653e4ace0a07 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> > @@ -122,6 +122,9 @@
-> >  /* PARF_CFG_BITS register fields */
-> >  #define PARF_CFG_BITS_REQ_EXIT_L1SS_MSI_LTR_EN	BIT(1)
-> >  
-> > +/* PARF_LTSSM register fields */
-> > +#define LTSSM_EN				BIT(8)
-> > +
-> >  /* ELBI registers */
-> >  #define ELBI_SYS_STTS				0x08
-> >  #define ELBI_CS2_ENABLE				0xa4
-> > @@ -250,8 +253,12 @@ static int qcom_pcie_dw_link_up(struct dw_pcie *pci)
-> >  static int qcom_pcie_dw_start_link(struct dw_pcie *pci)
-> >  {
-> >  	struct qcom_pcie_ep *pcie_ep = to_pcie_ep(pci);
-> > +	u32 val;
-> >  
-> > -	enable_irq(pcie_ep->perst_irq);
-> > +	/* Enable LTSSM */
-> > +	val = readl_relaxed(pcie_ep->parf + PARF_LTSSM);
-> > +	val |= LTSSM_EN;
-> > +	writel_relaxed(val, pcie_ep->parf + PARF_LTSSM);
-> >  
-> >  	return 0;
-> >  }
-> > @@ -259,8 +266,12 @@ static int qcom_pcie_dw_start_link(struct dw_pcie *pci)
-> >  static void qcom_pcie_dw_stop_link(struct dw_pcie *pci)
-> >  {
-> >  	struct qcom_pcie_ep *pcie_ep = to_pcie_ep(pci);
-> > +	u32 val;
-> >  
-> > -	disable_irq(pcie_ep->perst_irq);
-> > +	/* Disable LTSSM */
-> > +	val = readl_relaxed(pcie_ep->parf + PARF_LTSSM);
-> > +	val &= ~LTSSM_EN;
-> > +	writel_relaxed(val, pcie_ep->parf + PARF_LTSSM);
-> >  }
-> >  
-> >  static void qcom_pcie_dw_write_dbi2(struct dw_pcie *pci, void __iomem *base,
-> > @@ -484,11 +495,6 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
-> >  
-> >  	dw_pcie_ep_init_notify(&pcie_ep->pci.ep);
-> >  
-> > -	/* Enable LTSSM */
-> > -	val = readl_relaxed(pcie_ep->parf + PARF_LTSSM);
-> > -	val |= BIT(8);
-> > -	writel_relaxed(val, pcie_ep->parf + PARF_LTSSM);
-> > -
-> >  	return 0;
-> >  
-> >  err_disable_resources:
-> > @@ -707,7 +713,6 @@ static int qcom_pcie_ep_enable_irq_resources(struct platform_device *pdev,
-> >  	}
-> >  
-> >  	pcie_ep->perst_irq = gpiod_to_irq(pcie_ep->reset);
-> > -	irq_set_status_flags(pcie_ep->perst_irq, IRQ_NOAUTOEN);
-> >  	ret = devm_request_threaded_irq(&pdev->dev, pcie_ep->perst_irq, NULL,
-> >  					qcom_pcie_ep_perst_irq_thread,
-> >  					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
-> > 
-> > -- 
-> > 2.25.1
-> > 
-> 
-
+diff --git a/arch/loongarch/include/asm/paravirt.h b/arch/loongarch/include/asm/paravirt.h
+index 58f7b7b89f2c..fe27fb5e82b8 100644
+--- a/arch/loongarch/include/asm/paravirt.h
++++ b/arch/loongarch/include/asm/paravirt.h
+@@ -17,11 +17,16 @@ static inline u64 paravirt_steal_clock(int cpu)
+ }
+ 
+ int pv_ipi_init(void);
++int __init pv_time_init(void);
+ #else
+ static inline int pv_ipi_init(void)
+ {
+ 	return 0;
+ }
+ 
++static inline int pv_time_init(void)
++{
++	return 0;
++}
+ #endif // CONFIG_PARAVIRT
+ #endif
+diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
+index 9044ed62045c..56182c64ab38 100644
+--- a/arch/loongarch/kernel/paravirt.c
++++ b/arch/loongarch/kernel/paravirt.c
+@@ -5,10 +5,13 @@
+ #include <linux/jump_label.h>
+ #include <linux/kvm_para.h>
+ #include <asm/paravirt.h>
++#include <linux/reboot.h>
+ #include <linux/static_call.h>
+ 
+ struct static_key paravirt_steal_enabled;
+ struct static_key paravirt_steal_rq_enabled;
++static DEFINE_PER_CPU(struct kvm_steal_time, steal_time) __aligned(64);
++static int has_steal_clock;
+ 
+ static u64 native_steal_clock(int cpu)
+ {
+@@ -17,6 +20,57 @@ static u64 native_steal_clock(int cpu)
+ 
+ DEFINE_STATIC_CALL(pv_steal_clock, native_steal_clock);
+ 
++static bool steal_acc = true;
++static int __init parse_no_stealacc(char *arg)
++{
++	steal_acc = false;
++	return 0;
++}
++early_param("no-steal-acc", parse_no_stealacc);
++
++static u64 para_steal_clock(int cpu)
++{
++	u64 steal;
++	struct kvm_steal_time *src;
++	int version;
++
++	src = &per_cpu(steal_time, cpu);
++	do {
++
++		version = src->version;
++		/* Make sure that the version is read before the steal */
++		virt_rmb();
++		steal = src->steal;
++		/* Make sure that the steal is read before the next version */
++		virt_rmb();
++
++	} while ((version & 1) || (version != src->version));
++	return steal;
++}
++
++static int pv_register_steal_time(void)
++{
++	int cpu = smp_processor_id();
++	struct kvm_steal_time *st;
++	unsigned long addr;
++
++	if (!has_steal_clock)
++		return -EPERM;
++
++	st = &per_cpu(steal_time, cpu);
++	addr = per_cpu_ptr_to_phys(st);
++
++	/* The whole structure kvm_steal_time should be one page */
++	if (PFN_DOWN(addr) != PFN_DOWN(addr + sizeof(*st))) {
++		pr_warn("Illegal PV steal time addr %lx\n", addr);
++		return -EFAULT;
++	}
++
++	addr |= KVM_STEAL_PHYS_VALID;
++	kvm_hypercall2(KVM_HCALL_FUNC_NOTIFY, KVM_FEATURE_STEAL_TIME, addr);
++	return 0;
++}
++
+ #ifdef CONFIG_SMP
+ static void pv_send_ipi_single(int cpu, unsigned int action)
+ {
+@@ -110,6 +164,32 @@ static void pv_init_ipi(void)
+ 	if (r < 0)
+ 		panic("SWI0 IRQ request failed\n");
+ }
++
++static void pv_disable_steal_time(void)
++{
++	if (has_steal_clock)
++		kvm_hypercall2(KVM_HCALL_FUNC_NOTIFY, KVM_FEATURE_STEAL_TIME, 0);
++}
++
++static int pv_cpu_online(unsigned int cpu)
++{
++	unsigned long flags;
++
++	local_irq_save(flags);
++	pv_register_steal_time();
++	local_irq_restore(flags);
++	return 0;
++}
++
++static int pv_cpu_down_prepare(unsigned int cpu)
++{
++	unsigned long flags;
++
++	local_irq_save(flags);
++	pv_disable_steal_time();
++	local_irq_restore(flags);
++	return 0;
++}
+ #endif
+ 
+ static bool kvm_para_available(void)
+@@ -149,3 +229,53 @@ int __init pv_ipi_init(void)
+ 
+ 	return 1;
+ }
++
++static void pv_cpu_reboot(void *unused)
++{
++	pv_disable_steal_time();
++}
++
++static int pv_reboot_notify(struct notifier_block *nb, unsigned long code,
++		void *unused)
++{
++	on_each_cpu(pv_cpu_reboot, NULL, 1);
++	return NOTIFY_DONE;
++}
++
++static struct notifier_block pv_reboot_nb = {
++	.notifier_call  = pv_reboot_notify,
++};
++
++int __init pv_time_init(void)
++{
++	int feature;
++
++	if (!cpu_has_hypervisor)
++		return 0;
++	if (!kvm_para_available())
++		return 0;
++
++	feature = read_cpucfg(CPUCFG_KVM_FEATURE);
++	if (!(feature & KVM_FEATURE_STEAL_TIME))
++		return 0;
++
++	has_steal_clock = 1;
++	if (pv_register_steal_time()) {
++		has_steal_clock = 0;
++		return 0;
++	}
++
++	register_reboot_notifier(&pv_reboot_nb);
++	static_call_update(pv_steal_clock, para_steal_clock);
++	static_key_slow_inc(&paravirt_steal_enabled);
++	if (steal_acc)
++		static_key_slow_inc(&paravirt_steal_rq_enabled);
++
++#ifdef CONFIG_SMP
++	if (cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "loongarch/pv:online",
++				pv_cpu_online, pv_cpu_down_prepare) < 0)
++		pr_err("Failed to install cpu hotplug callbacks\n");
++#endif
++	pr_info("Using stolen time PV\n");
++	return 0;
++}
+diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
+index fd5354f9be7c..46d7d40c87e3 100644
+--- a/arch/loongarch/kernel/time.c
++++ b/arch/loongarch/kernel/time.c
+@@ -15,6 +15,7 @@
+ 
+ #include <asm/cpu-features.h>
+ #include <asm/loongarch.h>
++#include <asm/paravirt.h>
+ #include <asm/time.h>
+ 
+ u64 cpu_clock_freq;
+@@ -214,4 +215,5 @@ void __init time_init(void)
+ 
+ 	constant_clockevent_init();
+ 	constant_clocksource_init();
++	pv_time_init();
+ }
 -- 
-மணிவண்ணன் சதாசிவம்
+2.39.3
+
