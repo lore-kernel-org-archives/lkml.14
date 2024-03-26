@@ -1,123 +1,178 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AC171B2D
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 12:26:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091A270CDA;
+	Tue, 26 Mar 2024 12:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711455990; cv=none; b=QlBoZSmrKrwxCBNNVrcnCvFtua4Ro2Pen7vGI0VBDlYMdnEyMmBAAro774PWRZ5ZYJMfJQVObuuB5rzlXqozcOVLpXu22CnuIbUXMHn65OOFFXWu755jqXkv4NV3v2gCANLhP6yasXCXNT9SKxLacdYkEQe817RKsY+t6LsenrM=
+	t=1711456027; cv=none; b=dONurWusw9A+RnU2Uzt3r3GEKIrkyyfWz+F2VSBQMHkkcFlvLYxCzH2QMQ+koIzzPndYKNgNySlksQVWc66mMvqMnVvb+h7FZWnpRZIAB+nW10XB4Mqp8mO68rXoB9EcgRVHFpGplrRviJOm91LwDrYt4Ew4SyCSaoCA9d/VvYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711455990; c=relaxed/simple;
-	bh=bZCKLk7wdK9avk6HcAwUlXaRw+BiBNiN0TjaPZ/bldM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jQnDXM5fbcpybMbXP4AietIF2QlFQ3i16wLkhdwex/FyFWju+zEZudmKOx5aSt5tpJh5BqZWBsQVi1NUzWT2HscoVn7CodqCzroRoq3NukQyemWpvu60WF3CtAAc4yOivGRADJpYhMzM0nkJ2O3bNS6k0YgYv+pR51qpzRfB8C8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ooe8ZA2N; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711456027; c=relaxed/simple;
+	bh=P5Og5SVif/TazRx1gfTuoFOFWCG/IMdoSqQLR9EiIgg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jNoMBHlSJ1yvVMvc1xpGS3oFbvRquCrzGqq73ql2/Zr3sqpYgGSCHk+StnWcVTcTnaxVSrVgV6SKe2YGxzISEFeBF4ICOEwLjqf+HmPf1XFoDCRzDDO/AIGbS9w9MS8ulxHXsjaAHjRDVO/ZssPOIu1k/Va0zUmhidK7T0wP1GU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=D+o9bill; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZvTfHubG; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=D+o9bill; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZvTfHubG; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ooe8ZA2N"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dcc71031680so4811037276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 05:26:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711455988; x=1712060788; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y+XMJhPWRNDVQV14OGFoCFSqRpZIIrLj/0V6PQtElfQ=;
-        b=Ooe8ZA2NCOG0QUXioHhwaQNgw5Oqw5koEOopYj7dO/kr2xX3y7kt40bvoUTs+2idOB
-         kh/bFva3To2oIsozkejHaCHfztbEFH5L88D770xVLgepE2YzXGXcq80KWdilGH2QNbke
-         AQCMEVqZqEZIxGc2jB2AODiYC443infAqfwvg2NMiVP4t7L9zGQdPXt7OGD9M0I3D5EZ
-         zCw6nzjEcVUm8eHxglJkaXXP9JyK7QZo4ZWS0n6dKbt9BUdbZwG+DDLUCmnWH0+tKD8b
-         dSrpUUoF9/MOd5dRaTuv/apZxf1Nbgiwe7kbwDtI/skzFQomblqFgARvn1wscYwkBJeI
-         VmCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711455988; x=1712060788;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Y+XMJhPWRNDVQV14OGFoCFSqRpZIIrLj/0V6PQtElfQ=;
-        b=UDept1+fp2JJeXDuzTc0aBfPf4eY6KTZXM3eQ9HjTguUSYxTN83pYMhJS/hl9KJ5Zy
-         HMyrcdr745k4jEUf1KNyf/JOJ+r/k9iA3kEMJKLitZ3U5NA/Pf66Q7Rhk5b+0+4XLTvu
-         rEIXy3VPTigMRpRV9VLpQp9YqqtwJ80GayOij5xKvR8NR8ikmo0NvS6k1nMnpRXYTL6Q
-         bNJQVf7oPz/5tcaHbo+N9zXQmLSkRa0Gcl7E+PYe+uIacewIwkTNKr+NXDjJKXoNiFl5
-         zx3ni9mNm7eeeAm7voyctKov2AEMZNiGjDNdCiWlEuFyzwrRbsXRyNunhcoAW4ZUqweW
-         YNZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWVkvp6ja+fvXhKqx13SVa/YEdnTpajqtNoNInpvCVgvGCC/bYOUWMphHZ2wwRMLbi/V9tetWDQW+uA3BCfnyTeo9WZtlDWla9HkOgH
-X-Gm-Message-State: AOJu0Yw/ZGMZf50ZeMy+mHCNULmNBHu1H5vuubCoJdKMa2sY2hKU0yKy
-	4JWu7pP0Bov+OprgKYYa4jmWqDG+eZAvQddUAA2MHN1aBAisj7PxpHe6Nu3Tm5uii1sH62ngEZU
-	H+/gBW4lOMNmwaYEP+U+gJVkawlxCn9Rd4OUPtA==
-X-Google-Smtp-Source: AGHT+IHNWHIwHz8wVqqUW34rwCThepYAFCPxsSkC6FsCCIof+mjyh1FGmUWZ57wJQ+rAEanCUJAnju32fVTj9Bpar9Y=
-X-Received: by 2002:a25:6801:0:b0:dca:59a7:896b with SMTP id
- d1-20020a256801000000b00dca59a7896bmr6934322ybc.50.1711455987810; Tue, 26 Mar
- 2024 05:26:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="D+o9bill";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZvTfHubG";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="D+o9bill";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZvTfHubG"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 04A8037B8F;
+	Tue, 26 Mar 2024 12:27:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711456022; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o+FQk8Pfj6cNE8lfvdU6/qaSkPWg47A6HFY6eoUrykg=;
+	b=D+o9billZjoMb/3DAYk8EBB31dPuuDphmyr2L+GWn7WHdwMKOVYPHni2IO1Rw3nWFgc8MP
+	wUrfV6KU4HFYM8p785OVesLYyXLPXC+u5DsZCLnZZMpBEmCFDUkblIyKpu78m+j4yuh/CD
+	x1RgJNHlAgTiXmCAFPnGl81QtTH8Mmg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711456022;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o+FQk8Pfj6cNE8lfvdU6/qaSkPWg47A6HFY6eoUrykg=;
+	b=ZvTfHubGqrrgvVGEZTBZZycn4bhL8WQ4uuoiaUU2nuB2P7HV4ZZ6qR82ofs9HA9C2ZyelO
+	z4ZrUUzG0RMHNeCw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711456022; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o+FQk8Pfj6cNE8lfvdU6/qaSkPWg47A6HFY6eoUrykg=;
+	b=D+o9billZjoMb/3DAYk8EBB31dPuuDphmyr2L+GWn7WHdwMKOVYPHni2IO1Rw3nWFgc8MP
+	wUrfV6KU4HFYM8p785OVesLYyXLPXC+u5DsZCLnZZMpBEmCFDUkblIyKpu78m+j4yuh/CD
+	x1RgJNHlAgTiXmCAFPnGl81QtTH8Mmg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711456022;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o+FQk8Pfj6cNE8lfvdU6/qaSkPWg47A6HFY6eoUrykg=;
+	b=ZvTfHubGqrrgvVGEZTBZZycn4bhL8WQ4uuoiaUU2nuB2P7HV4ZZ6qR82ofs9HA9C2ZyelO
+	z4ZrUUzG0RMHNeCw==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id EF6C113215;
+	Tue, 26 Mar 2024 12:27:01 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id rT5yOhW/AmbDKgAAn2gu4w
+	(envelope-from <jack@suse.cz>); Tue, 26 Mar 2024 12:27:01 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id B0080A0812; Tue, 26 Mar 2024 13:27:01 +0100 (CET)
+Date: Tue, 26 Mar 2024 13:27:01 +0100
+From: Jan Kara <jack@suse.cz>
+To: Kemeng Shi <shikemeng@huaweicloud.com>
+Cc: akpm@linux-foundation.org, tj@kernel.org, linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	willy@infradead.org, bfoster@redhat.com, jack@suse.cz,
+	dsterba@suse.com, mjguzik@gmail.com, dhowells@redhat.com,
+	peterz@infradead.org
+Subject: Re: [PATCH 5/6] writeback: rename nr_reclaimable to nr_dirty in
+ balance_dirty_pages
+Message-ID: <20240326122701.e32op43zxuowjvgj@quack3>
+References: <20240320110222.6564-1-shikemeng@huaweicloud.com>
+ <20240320110222.6564-6-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326-alpha-pll-fix-stromer-set-rate-v2-1-48ae83af71c8@gmail.com>
-In-Reply-To: <20240326-alpha-pll-fix-stromer-set-rate-v2-1-48ae83af71c8@gmail.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 26 Mar 2024 14:26:16 +0200
-Message-ID: <CAA8EJprE4+PJV6ZRsPoYdp+LHFriDBkTWt-Y5LaTAqjxQfauPw@mail.gmail.com>
-Subject: Re: [PATCH v2] clk: qcom: clk-alpha-pll: fix rate setting for Stromer PLLs
-To: Gabor Juhos <j4g8y7@gmail.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Varadarajan Narayanan <quic_varada@quicinc.com>, Sricharan R <quic_srichara@quicinc.com>, 
-	Kathiravan T <quic_kathirav@quicinc.com>, linux-arm-msm@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240320110222.6564-6-shikemeng@huaweicloud.com>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -0.47
+X-Spamd-Result: default: False [-0.47 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 BAYES_SPAM(0.33)[71.13%];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_TWELVE(0.00)[13];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[linux-foundation.org,kernel.org,kvack.org,vger.kernel.org,infradead.org,redhat.com,suse.cz,suse.com,gmail.com];
+	 RCVD_TLS_ALL(0.00)[]
+X-Spam-Flag: NO
 
-On Tue, 26 Mar 2024 at 14:16, Gabor Juhos <j4g8y7@gmail.com> wrote:
->
-> The clk_alpha_pll_stromer_set_rate() function writes inproper
-> values into the ALPHA_VAL{,_U} registers which results in wrong
-> clock rates when the alpha value is used.
->
-> The broken behaviour can be seen on IPQ5018 for example, when
-> dynamic scaling sets the CPU frequency to 800000 KHz. In this
-> case the CPU cores are running only at 792031 KHz:
->
->   # cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
->   800000
->   # cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq
->   792031
->
-> This happens because the function ignores the fact that the alpha
-> value calculated by the alpha_pll_round_rate() function is only
-> 32 bits wide which must be extended to 40 bits if it is used on
-> a hardware which supports 40 bits wide values.
->
-> Extend the clk_alpha_pll_stromer_set_rate() function to convert
-> the alpha value to 40 bits before wrinting that into the registers
-> in order to ensure that the hardware really uses the requested rate.
->
-> After the change the CPU frequency is correct:
->
->   # cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq
->   800000
->   # cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq
->   800000
->
-> Cc: stable@vger.kernel.org
-> Fixes: e47a4f55f240 ("clk: qcom: clk-alpha-pll: Add support for Stromer PLLs")
-> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+On Wed 20-03-24 19:02:21, Kemeng Shi wrote:
+> Commit 8d92890bd6b85 ("mm/writeback: discard NR_UNSTABLE_NFS, use
+> NR_WRITEBACK instead") removed NR_UNSTABLE_NFS and nr_reclaimable
+> only contains dirty page now.
+> Rename nr_reclaimable to nr_dirty properly.
+> 
+> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+
+Looks good. Feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
 > ---
-> Changes in v2:
->   - fix subject prefix
->   - rebase on v6.9-rc1
->   - Link to v1: https://lore.kernel.org/r/20240324-alpha-pll-fix-stromer-set-rate-v1-1-335b0b157219@gmail.com
->
-> Depends on the following patch:
->   https://lore.kernel.org/r/20240315-apss-ipq-pll-ipq5018-hang-v2-1-6fe30ada2009@gmail.com
-> ---
->  drivers/clk/qcom/clk-alpha-pll.c | 4 ++++
->  1 file changed, 4 insertions(+)
-
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-
+>  mm/page-writeback.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+> index ba1b6b5ae5d6..481b6bf34c21 100644
+> --- a/mm/page-writeback.c
+> +++ b/mm/page-writeback.c
+> @@ -1695,7 +1695,7 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
+>  	struct dirty_throttle_control * const mdtc = mdtc_valid(&mdtc_stor) ?
+>  						     &mdtc_stor : NULL;
+>  	struct dirty_throttle_control *sdtc;
+> -	unsigned long nr_reclaimable;	/* = file_dirty */
+> +	unsigned long nr_dirty;
+>  	long period;
+>  	long pause;
+>  	long max_pause;
+> @@ -1716,9 +1716,9 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
+>  		unsigned long m_thresh = 0;
+>  		unsigned long m_bg_thresh = 0;
+>  
+> -		nr_reclaimable = global_node_page_state(NR_FILE_DIRTY);
+> +		nr_dirty = global_node_page_state(NR_FILE_DIRTY);
+>  		gdtc->avail = global_dirtyable_memory();
+> -		gdtc->dirty = nr_reclaimable + global_node_page_state(NR_WRITEBACK);
+> +		gdtc->dirty = nr_dirty + global_node_page_state(NR_WRITEBACK);
+>  
+>  		domain_dirty_limits(gdtc);
+>  
+> @@ -1769,7 +1769,7 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
+>  		 * In normal mode, we start background writeout at the lower
+>  		 * background_thresh, to keep the amount of dirty memory low.
+>  		 */
+> -		if (!laptop_mode && nr_reclaimable > gdtc->bg_thresh &&
+> +		if (!laptop_mode && nr_dirty > gdtc->bg_thresh &&
+>  		    !writeback_in_progress(wb))
+>  			wb_start_background_writeback(wb);
+>  
+> -- 
+> 2.30.0
+> 
 -- 
-With best wishes
-Dmitry
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
