@@ -1,158 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E126BFA8;
-	Tue, 26 Mar 2024 09:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE2B524BA;
+	Tue, 26 Mar 2024 09:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711444842; cv=none; b=uI/BL9cN7Wgym5k57XI4r2+a8uC0xnH/3FJSBx9GOo3hpIEgLUI76LP+k2RG0l/PPDV5kWTE86gE4lw0GRP7Q4hqWceTG3y862p+ShtwNZmhC8YvouTwva4i8L6hTxT+1Hmgr/vYs5SmzgvXYKtqJtz4qIc4bRPp3SitcciKeLo=
+	t=1711444842; cv=none; b=TqL+/5Ic5yuxbzuHjAOoYyao0CMxWUyVu/trst+RH6m0nyzkZ2mQBVdPqqdyPPsZUrebTftdIzJXPdzNmiOB+z23/9hcWEnBQguT/o1aR8LkaN9clYXJNJKvFrMrjFQKKYVm7D08AuF/Lm3jiKm/4WUGa5OFC/4ylXcW9ITPzZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711444842; c=relaxed/simple;
-	bh=VNwPggiAWASAvwqtJd7Wj3ItapLp0dhIgz2LnHUWvFk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nQVyrzjZqnXtaKHg8tzLKFmujJZ7dVlSilg30QoAXegIQ53pqUciu3zc6gCGtGnEABeDFtEx+zo/CNkMV+nBSnspf/7Mx2E62QmxzJniqeAk7cRtVTSfG8vTjUr4fL9CWMxy3CA8VEbIvWMOFuULYzbKYbIxMIWczIJ536UAv4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BTM6tzL2; arc=none smtp.client-ip=10.30.226.201
+	bh=IMs8UHVx4/A40f0KUrXcDBw0aT02Q0zAJAjjhOWtVWA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Sa9aScXVyWRAp7htJYuJ1XMmIVWjTmq3fQIbWRAB9UzGaCAGXOCIr1g3WBb08VSLinVYolGUNAJRefEIEaDl23YFPzCS61VNPE99gHzBg1j3aNQBZzpXtj3zLBf/P5BoIRWDrdyN24XoakPWVi56kQ/0Henq8m5qEd0omi0HLh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QjVknL2b; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BTM6tzL2"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A3C15C433F1;
-	Tue, 26 Mar 2024 09:20:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711444841;
-	bh=VNwPggiAWASAvwqtJd7Wj3ItapLp0dhIgz2LnHUWvFk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=BTM6tzL2cCvRDxqNxd46xEkrq0kBhBKEYFXVCT1za7DkHvhjxKba2MVEbmzEsArU7
-	 JZJwbuz3+OsOZXUgbAS4qk4x5A740YvKq2qWFcevEIFAeou13QTKIoyMygBjderhSt
-	 yR8wJPW7x6mydJmTbSWYNTq3WPqu4FBf1otOBufjhmunDgLTxoMTPcjtODxPhzsPPe
-	 8rkno8zRNe3Vkr9tWxlbNTzkf/Z8iCj02Jc7noeOPME8v4m7YXlI3cUZvdKRUzxjyi
-	 nRV2FQbYqC8HNcmr05PhvD0Blb2j9OiOXG29hu4t1f/CCDyvlOBZZn7/W3ePbXBAdX
-	 OC5rE7SUZDSsQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A271CD11DB;
-	Tue, 26 Mar 2024 09:20:41 +0000 (UTC)
-From: Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
-Date: Tue, 26 Mar 2024 12:18:41 +0300
-Subject: [PATCH v9 14/38] dt-bindings: spi: Add Cirrus EP93xx
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QjVknL2b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711444841; x=1742980841;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=IMs8UHVx4/A40f0KUrXcDBw0aT02Q0zAJAjjhOWtVWA=;
+  b=QjVknL2bLx4RAwj1+i08/lLqCTeFHCCh9IUQlaArDtJFhxRRb8pjmhfW
+   TyhHCZBJjfr+AN9ZPs0obg10cqqZifhBR07ossGfhDvDxzNXEMMKNGGTj
+   dMncuspSBZlH8ZbjP/3e+8uRjrW/MjvRxvgdz2MnKZXhUOnzGTZ1ACPil
+   DVFUZXXFo1z2WSsDxCrdWMaRCQQW12PAnS5IoyQk7K73x92tSluxfoHtl
+   qdKBnHAJSxFFs74SuWbFMIsw/ExfmFoZrWz8XRG+iEYdSKW2yS/9Vw9dI
+   JuBCrPILoNwmgSOLoxjniNv8D3VLOjtGYsxRTMyqKuoE/JJ7nQFnyM+Yw
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="6350343"
+X-IronPort-AV: E=Sophos;i="6.07,155,1708416000"; 
+   d="scan'208";a="6350343"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 02:20:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,155,1708416000"; 
+   d="scan'208";a="16293266"
+Received: from yungchua-ws.ostc.intel.com (HELO yungchua-ws.intel.com) ([10.54.69.90])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 02:20:36 -0700
+From: Bard Liao <yung-chuan.liao@linux.intel.com>
+To: linux-sound@vger.kernel.org,
+	vkoul@kernel.org
+Cc: vinod.koul@linaro.org,
+	linux-kernel@vger.kernel.org,
+	pierre-louis.bossart@linux.intel.com,
+	bard.liao@intel.com
+Subject: [PATCH 3/7] soundwire: intel: add more values for SYNCPRD
+Date: Tue, 26 Mar 2024 09:20:26 +0000
+Message-Id: <20240326092030.1062802-4-yung-chuan.liao@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240326092030.1062802-1-yung-chuan.liao@linux.intel.com>
+References: <20240326092030.1062802-1-yung-chuan.liao@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240326-ep93xx-v9-14-156e2ae5dfc8@maquefel.me>
-References: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
-In-Reply-To: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
-To: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
- Nikita Shubin <nikita.shubin@maquefel.me>
-Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.13-dev-e3e53
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711444837; l=2297;
- i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
- bh=eohxXtWd+HuVJyaYSL1l5VkylPnLSM7yKMq6Kko41cI=;
- b=kSGsuB+72p8qy7PJ4kcUcV/Qs+4JEmP+RISbXjpEWgvvA5u7VRBXFDJjXe2o+J0YHLpOtbcj/Y0b
- SeavCzdSDy2SwZsjn5WsjosrSC1vqIN0WWZDiYef+9wDNBR9tB0g
-X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
- pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
-X-Endpoint-Received: by B4 Relay for nikita.shubin@maquefel.me/20230718
- with auth_id=65
-X-Original-From: Nikita Shubin <nikita.shubin@maquefel.me>
-Reply-To: nikita.shubin@maquefel.me
+Content-Transfer-Encoding: 8bit
 
-From: Nikita Shubin <nikita.shubin@maquefel.me>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-Add YAML bindings for ep93xx SoC SPI.
+Starting with MeteorLake, the input to the SoundWire IP can be 24.576
+MHz (aka Audio Cardinal Clock) or 96 MHz (Audio PLL).
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Rander Wang <rander.wang@intel.com>
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
 ---
- .../devicetree/bindings/spi/cirrus,ep9301-spi.yaml | 70 ++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
+ include/linux/soundwire/sdw_intel.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/cirrus,ep9301-spi.yaml b/Documentation/devicetree/bindings/spi/cirrus,ep9301-spi.yaml
-new file mode 100644
-index 000000000000..73980a27dc00
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/cirrus,ep9301-spi.yaml
-@@ -0,0 +1,70 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/cirrus,ep9301-spi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: EP93xx SoC SPI controller
-+
-+maintainers:
-+  - Alexander Sverdlin <alexander.sverdlin@gmail.com>
-+  - Nikita Shubin <nikita.shubin@maquefel.me>
-+
-+allOf:
-+  - $ref: spi-controller.yaml#
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: cirrus,ep9301-spi
-+      - items:
-+          - enum:
-+              - cirrus,ep9302-spi
-+              - cirrus,ep9307-spi
-+              - cirrus,ep9312-spi
-+              - cirrus,ep9315-spi
-+          - const: cirrus,ep9301-spi
-+
-+  reg:
-+    items:
-+      - description: SPI registers region
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: SPI Controller reference clock source
-+
-+  dmas:
-+    items:
-+      - description: rx DMA channel
-+      - description: tx DMA channel
-+
-+  dma-names:
-+    items:
-+      - const: rx
-+      - const: tx
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/clock/cirrus,ep9301-syscon.h>
-+    spi@808a0000 {
-+        compatible = "cirrus,ep9301-spi";
-+        reg = <0x808a0000 0x18>;
-+        interrupt-parent = <&vic1>;
-+        interrupts = <21>;
-+        clocks = <&syscon EP93XX_CLK_SPI>;
-+        dmas = <&dma1 10 2>, <&dma1 10 1>;
-+        dma-names = "rx", "tx";
-+        cs-gpios = <&gpio5 2 GPIO_ACTIVE_HIGH>;
-+    };
-
+diff --git a/include/linux/soundwire/sdw_intel.h b/include/linux/soundwire/sdw_intel.h
+index 00bb22d96ae5..fa40b85d5019 100644
+--- a/include/linux/soundwire/sdw_intel.h
++++ b/include/linux/soundwire/sdw_intel.h
+@@ -34,8 +34,10 @@
+ /* SYNC */
+ #define SDW_SHIM_SYNC			0xC
+ 
+-#define SDW_SHIM_SYNC_SYNCPRD_VAL_24	(24000 / SDW_CADENCE_GSYNC_KHZ - 1)
+-#define SDW_SHIM_SYNC_SYNCPRD_VAL_38_4	(38400 / SDW_CADENCE_GSYNC_KHZ - 1)
++#define SDW_SHIM_SYNC_SYNCPRD_VAL_24		(24000 / SDW_CADENCE_GSYNC_KHZ - 1)
++#define SDW_SHIM_SYNC_SYNCPRD_VAL_24_576	(24576 / SDW_CADENCE_GSYNC_KHZ - 1)
++#define SDW_SHIM_SYNC_SYNCPRD_VAL_38_4		(38400 / SDW_CADENCE_GSYNC_KHZ - 1)
++#define SDW_SHIM_SYNC_SYNCPRD_VAL_96		(96000 / SDW_CADENCE_GSYNC_KHZ - 1)
+ #define SDW_SHIM_SYNC_SYNCPRD		GENMASK(14, 0)
+ #define SDW_SHIM_SYNC_SYNCCPU		BIT(15)
+ #define SDW_SHIM_SYNC_CMDSYNC_MASK	GENMASK(19, 16)
 -- 
-2.41.0
-
+2.34.1
 
