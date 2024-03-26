@@ -1,88 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1C51B28D;
-	Tue, 26 Mar 2024 18:03:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014641C2AF;
+	Tue, 26 Mar 2024 18:04:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711476186; cv=none; b=EyBMCxb1h800IHvA7vNcnSEw3gC05ouKvuE6HASKSadhmA3yzwNPFGeaNpgzJYSB260uWwEvtyf1KfVD/W1bMqd2BmtyyVmAkB38NKwT70o8TYhRBDj/wo0zX3RUuwxAvI3rmTqWwxYYxm82d57PdEr34P4qQLKD1ycKwcbydJ4=
+	t=1711476293; cv=none; b=LIuD8tXiz1ctkXP3rOxhlzoZYytlSQOaoiIOBkjbNXPRUB9FXGGwkOBcOq6OW7OLEeVcx8LAJborbdZzxbVqgZO18NjZFq/qrStzQ1uaooB9HI1Uxw7wemDGETARcEQ70enx+2KmeYts3kSoRmJ+xiW2SpyN1m67anbzbwdh5K8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711476186; c=relaxed/simple;
-	bh=ECUAAK2Nxs/H86gKiGl0W7txBlcNCaLixR40Qr44fhw=;
+	s=arc-20240116; t=1711476293; c=relaxed/simple;
+	bh=FpwR17g2PH56G0XDh6Pi3WB67cdLCnSyZjbxboXsr0w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dmJycO8c0psMX4DloXSm20+Q7kdsfKv9Ejf2qE1eN+qVabKPrCP0HMN8j6+zd3zgk4m2Opx9J5puGjwtHIn22dFOYi2zKQQJId5HXkrWEHLW2ouT2f3zf643kGsL+yOk9d6LKDzVptmHZYuJBrvXDsMxl2sumoh9DRkB7aKJQ5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fS3m6FJy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=h1xPafAie7fDsuf+0O8Hs6Ahv6Nefcio/yyFwhZO3O9+gyGBOHh+PiCJND6Q94P/Bban9JziEnRuO4OVMOp3OWbKyhkjzaC8rO4ahKeBDwI6BdoDlAnhE4GClMaPaGDKu8xnv662CuGk1JyP98y69CkJu4GArg/XKFm78V5Gg8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OhqPwuZT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fS3m6FJy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0809AC433F1;
-	Tue, 26 Mar 2024 18:03:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OhqPwuZT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14588C433F1;
+	Tue, 26 Mar 2024 18:04:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711476186;
-	bh=ECUAAK2Nxs/H86gKiGl0W7txBlcNCaLixR40Qr44fhw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=fS3m6FJyJInIyCiPC6QB1VIvgS6KX+/WPWDbPUOcKZXnmBogEmK1ve+rdUv4vSDR+
-	 OB34KGOHPcZHA9ZtwUKytXgL8JueBGM0UCMj9M/LtR2gANZS4kMJyB0x+ejQUVjE2W
-	 lTR18/+tR8TF1YCb0qp8ArWu4rQHgpcFlR6+xoI6z1nqWz955cvJQMG1CaI3Y3we5P
-	 Gx6MX2z1DET9n9ahwbYHZGDb0AQxpqQfgUZv7ObzDlNGUoKjqYs3pMzZWYcWmkxmIB
-	 ebK9jPjLy+kepfmgAmHHq/e8Oa9j1UtySl7x6xtnx9hf2lDek0rZTg0EQ5BbTJNwLA
-	 NJ+hnc3Rx2jWw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 60DF4CE129B; Tue, 26 Mar 2024 11:03:05 -0700 (PDT)
-Date: Tue, 26 Mar 2024 11:03:05 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Zqiang <qiang.zhang1211@gmail.com>
-Cc: frederic@kernel.org, neeraj.upadhyay@kernel.org, joel@joelfernandes.org,
-	rcu@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rcutorture: Make stall-tasks directly exit when
- rcutorture tests end
-Message-ID: <ed5b00dd-77f8-4b51-b24c-d5bf2d335cc6@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240321082850.1756-1-qiang.zhang1211@gmail.com>
+	s=k20201202; t=1711476292;
+	bh=FpwR17g2PH56G0XDh6Pi3WB67cdLCnSyZjbxboXsr0w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OhqPwuZTdQ1s7BpgL1VIfuejwlhhnnaQebCxnJRAG0seH7mpEyQLj8LiyS6MhTs3D
+	 lAsHUNE6c5YMjRyPqRfd1SioWqtf+T74GNlkByMBviw6YJiCSjPGxhY8iRV7s+qwcw
+	 qvxfkjefy4d0o2sX9eBnM6zuVZg4clFyVlPCmIJyIxM8jje4z1vxa1H/D7ZoHNxCAe
+	 guE2pbxtTTqlzpZDIeZhzbw08HFzcIv+Jo5mI8SXPjbXWVcQQZBNyz5cPX9gVYg6VV
+	 t3oNj0XtFGgXIuFircYNgE4t+HXmIX9iZSHEVETnqq+FzRLbUdLtwNm0Oh2a/ILudH
+	 H3VeWif2pNhEA==
+Date: Tue, 26 Mar 2024 18:04:46 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Alexey Romanov <avromanov@salutedevices.com>
+Cc: neil.armstrong@linaro.org, clabbe@baylibre.com,
+	herbert@gondor.apana.org.au, davem@davemloft.net,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, khilman@baylibre.com, jbrunet@baylibre.com,
+	martin.blumenstingl@googlemail.com, vadim.fedorenko@linux.dev,
+	linux-crypto@vger.kernel.org, linux-amlogic@lists.infradead.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kernel@salutedevices.com
+Subject: Re: [PATCH v6 19/23] dt-bindings: crypto: meson: support new SoC's
+Message-ID: <20240326-boneless-patrol-b1156a4be70b@spud>
+References: <20240326153219.2915080-1-avromanov@salutedevices.com>
+ <20240326153219.2915080-20-avromanov@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="TsFS7LpYqhJ6X8MW"
+Content-Disposition: inline
+In-Reply-To: <20240326153219.2915080-20-avromanov@salutedevices.com>
+
+
+--TsFS7LpYqhJ6X8MW
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240321082850.1756-1-qiang.zhang1211@gmail.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 21, 2024 at 04:28:50PM +0800, Zqiang wrote:
-> When the rcutorture tests start to exit, the rcu_torture_cleanup() is
-> invoked to stop kthreads and release resources, if the stall-task
-> kthreads exist, cpu-stall has started and the rcutorture.stall_cpu
-> is set to a larger value, the rcu_torture_cleanup() will be blocked
-> for a long time and the hung-task may occur, this commit therefore
-> add kthread_should_stop() to the loop of cpu-stall operation, when
-> rcutorture tests ends, no need to wait for cpu-stall to end, exit
-> directly.
-> 
-> Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
-
-Good eyes!
-
-Queued for testing and further review, thank you!
-
-							Thanx, Paul
-
+On Tue, Mar 26, 2024 at 06:32:15PM +0300, Alexey Romanov wrote:
+> Now crypto module available at G12A/G12B/S4/A1/SM1/AXG.
+>=20
+> 1. Add new compatibles:
+>   - amlogic,g12a-crypto
+>   - amlogic,axg-crypto
+>   - amlogic,a1-crypto
+>   - amlogic,s4-crypto (uses a1-crypto as fallback)
+>=20
+> 2. Add power-domains in schema.
+>=20
+> Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
 > ---
->  kernel/rcu/rcutorture.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-> index 3f9c3766f52b..6a3cd6ed8b25 100644
-> --- a/kernel/rcu/rcutorture.c
-> +++ b/kernel/rcu/rcutorture.c
-> @@ -2490,7 +2490,7 @@ static int rcu_torture_stall(void *args)
->  		pr_alert("%s start on CPU %d.\n",
->  			  __func__, raw_smp_processor_id());
->  		while (ULONG_CMP_LT((unsigned long)ktime_get_seconds(),
-> -				    stop_at))
-> +				    stop_at) && !kthread_should_stop())
->  			if (stall_cpu_block) {
->  #ifdef CONFIG_PREEMPTION
->  				preempt_schedule();
-> -- 
-> 2.17.1
-> 
+>  .../bindings/crypto/amlogic,gxl-crypto.yaml       | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.=
+yaml b/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
+> index d3af7b4d5f39..c92edde314aa 100644
+> --- a/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
+> +++ b/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
+> @@ -11,8 +11,16 @@ maintainers:
+> =20
+>  properties:
+>    compatible:
+> -    items:
+> -      - const: amlogic,gxl-crypto
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - amlogic,s4-crypto
+> +          - const: amlogic,a1-crypto
+> +      - enum:
+> +          - amlogic,gxl-crypto
+> +          - amlogic,axg-crypto
+> +          - amlogic,g12a-crypto
+> +          - amlogic,a1-crypto
+> =20
+>    reg:
+>      maxItems: 1
+> @@ -21,6 +29,9 @@ properties:
+>      items:
+>        - description: Interrupt for flow 0
+> =20
+> +  power-domains:
+> +    maxItems: 1
+
+Is power-domains valid for the devices that existed prior to your patch?
+
+--TsFS7LpYqhJ6X8MW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZgMOPgAKCRB4tDGHoIJi
+0tshAQCtbEqOHiJFUm5lxRMtAn+5YxU2CDgCh0rFA4v9v07M5QEAtxnoZzj0b3c8
+yH8w5AJrE8FRKbXSqTKMNF83M4Te2Qo=
+=OFV3
+-----END PGP SIGNATURE-----
+
+--TsFS7LpYqhJ6X8MW--
