@@ -1,84 +1,142 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222D312D76F;
-	Tue, 26 Mar 2024 15:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4871E12D76F;
+	Tue, 26 Mar 2024 15:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711465464; cv=none; b=hfqiaZA2DrpZhYUdmA39KNK7QY24TEm3AFvkVEdjCsCA26c7svsup/fDdrNDXeE4a5GVf6eZYu/0NQdmW7h89yobuOuOWVCDu1S11afsSkrroOhWxe4E3TNLvaWbTn13DD4T2IOw387frKjSi3G46pkJrQrAjc1aRAI1jobfQIY=
+	t=1711465526; cv=none; b=OTqYbL11O7KZqkIb6BT3EM5zvqN4L4Co6PSuClIgxljQQwFOn4PUs4G5Z8imNE+dFi93Rgh9xnaxOH82aUQ2gogiejGAzopYRXmHQH1XNoPDrLY275Gi5LbRuD+uhvirFmMHg8+SyVnCzhBhDBc6JM2HNX6xd/igWd/WEx+6DJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711465464; c=relaxed/simple;
-	bh=QwHGxohidfEE89ntqE7k8WK7rV4jGKj9cyEcRAHVK+o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mMTiRTscQoAK+iqwjAXe0mHwKqHPbL1WAa1GSIdLBGxcgMfvKWJtw6ueSHaWLahSc8oyhp9rWQnYyFheaVw5bWxBUwY/AyxYurNf7cjwUgXNTx/8r06oL3fy8h/rBD8SvxXjjPtbA8dXyUhpeQ0Qt0v5L4k8Ubb5ncCo1UKXN+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=EkT1s0A3; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1711465526; c=relaxed/simple;
+	bh=/qmndJDlWupnnpJi65R442kaOqvhHDX628LndcyMGs8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=SjOYj3ENWOo/WBb3Q+bMl41WOTGPB7AToKfhrJEVSrbzZNnRCJghrsTIC4outKzP6be03WRFZP8QanVAOr0IZkiWUa7huzzTkOYNFwc2pS+9zdro6t2ywvjLZCHj491n1MtfoJyMCmW+itDtEwzoj8cgVNELjQYGh3DvvNeUQi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c9yMVpI+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="EkT1s0A3"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4V3t9t6lNtz9sJ6;
-	Tue, 26 Mar 2024 15:54:26 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1711464867;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a9Q/eCZ6v2bw9iLxiFT4xLPFqiE1zWXHKWDB+B3WRm4=;
-	b=EkT1s0A3EaBOYWBwVSwGLfqiEHDG+uZDtGtzy/KDIs8RhV5bdRzJ6KwIxFsimklA3dYay8
-	Fx26NMvyL6DDn/96RqgcluBtZTuDsuRa8L5V4NkAwvogES+w/a2iw6Er9bDSGcDvYqMlje
-	Xzsh0Maj3QqdmaxBE5E04YMK0Gk5ToMq/xkZnjeVSZdWnfkR9+fSs+3tRiy5a8kOJnFWcW
-	wj23r9krEvDL3Jm+zgyUsn1VQ/sAAdLkkBCT8wwUj/le62LJXWnl0Jc6g5xnN1039BO+Fq
-	CpMEW6liJzT26NyWLn2fQPVBhJy7Fu0BwEfDUzYiFlcZD1llT5VvoC4qbL6ePw==
-Date: Tue, 26 Mar 2024 15:54:22 +0100
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	gost.dev@samsung.com, chandan.babu@oracle.com, hare@suse.de, mcgrof@kernel.org, 
-	djwong@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	david@fromorbit.com, akpm@linux-foundation.org, Pankaj Raghav <p.raghav@samsung.com>
-Subject: Re: [PATCH v3 00/11] enable bs > ps in XFS
-Message-ID: <vyw2u4kmij7ddzfj5xfacc5lgmpbvxif3ennxp7oselxt4agfj@kuli2o7nrzin>
-References: <20240313170253.2324812-1-kernel@pankajraghav.com>
- <ZgHOK9T2K9HKkju1@casper.infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c9yMVpI+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0E1CC433F1;
+	Tue, 26 Mar 2024 15:05:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711465525;
+	bh=/qmndJDlWupnnpJi65R442kaOqvhHDX628LndcyMGs8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=c9yMVpI+L1invWuAwwgd4+iMcVeBkKccwiZLj5q45v6lHB4Yo+LFvKNJfp6wGJqGS
+	 T5NU0KIKcXNJTidqaVE1V4KsGz+s8Vk9t4M5UPrDzgFqe2DHM1I2MyiTV4ZTcV4jQ1
+	 qwh8O/bchWcGVDQgex+cdEi25PRJ9YqfgTNoA1EXYqVcilAUKBYxsEmpO2qll0uLhs
+	 au9zOblYVYw0CZAPdfj7/5hR6WyRKTdvUYZgsTWgCQRDTzNt9BeNb6W3tRbiJ8G17M
+	 MaEfUW86u/t1oTYAva+0z3ktZeVheXh5CO68B+Z5/KHwFyH9L1YSB8mrhLMNaE7zl2
+	 UPm9/VvaazOtA==
+Date: Wed, 27 Mar 2024 00:05:20 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Jarkko Sakkinen" <jarkko@kernel.org>
+Cc: <linux-riscv@lists.infradead.org>, "Paul Walmsley"
+ <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>,
+ "Albert Ou" <aou@eecs.berkeley.edu>, <linux-kernel@vger.kernel.org>,
+ "Luis Chamberlain" <mcgrof@kernel.org>, <linux-modules@vger.kernel.org>,
+ "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>, "Anil S Keshavamurthy"
+ <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v5 1/2] kprobes: textmem API
+Message-Id: <20240327000520.ec13b2646ed1cd621e5b1d9d@kernel.org>
+In-Reply-To: <D03PM9A6IS79.3D6BW7KBLH9C3@kernel.org>
+References: <20240325215502.660-1-jarkko@kernel.org>
+	<20240326095836.f43d259b7747269a7c0b9d23@kernel.org>
+	<D03AL7A5G3M2.3UK4ASWILGBJS@kernel.org>
+	<D03B7XJYRFC1.2L3I2TO5HNQD3@kernel.org>
+	<D03PM9A6IS79.3D6BW7KBLH9C3@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZgHOK9T2K9HKkju1@casper.infradead.org>
-X-Rspamd-Queue-Id: 4V3t9t6lNtz9sJ6
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 25, 2024 at 07:19:07PM +0000, Matthew Wilcox wrote:
-> On Wed, Mar 13, 2024 at 06:02:42PM +0100, Pankaj Raghav (Samsung) wrote:
-> > This is the third version of the series that enables block size > page size
-> > (Large Block Size) in XFS. The context and motivation can be seen in cover
-> > letter of the RFC v1[1]. We also recorded a talk about this effort at LPC [3],
-> > if someone would like more context on this effort.
+On Tue, 26 Mar 2024 15:18:21 +0200
+"Jarkko Sakkinen" <jarkko@kernel.org> wrote:
+
+> On Tue Mar 26, 2024 at 4:01 AM EET, Jarkko Sakkinen wrote:
+> > On Tue Mar 26, 2024 at 3:31 AM EET, Jarkko Sakkinen wrote:
+> > > > > +#endif /* _LINUX_EXECMEM_H */
+> > > > > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> > > > > index 9d9095e81792..87fd8c14a938 100644
+> > > > > --- a/kernel/kprobes.c
+> > > > > +++ b/kernel/kprobes.c
+> > > > > @@ -44,6 +44,7 @@
+> > > > >  #include <asm/cacheflush.h>
+> > > > >  #include <asm/errno.h>
+> > > > >  #include <linux/uaccess.h>
+> > > > > +#include <linux/execmem.h>
+> > > > >  
+> > > > >  #define KPROBE_HASH_BITS 6
+> > > > >  #define KPROBE_TABLE_SIZE (1 << KPROBE_HASH_BITS)
+> > > > > @@ -113,17 +114,17 @@ enum kprobe_slot_state {
+> > > > >  void __weak *alloc_insn_page(void)
+> > > > >  {
+> > > > >  	/*
+> > > > > -	 * Use module_alloc() so this page is within +/- 2GB of where the
+> > > > > +	 * Use alloc_execmem() so this page is within +/- 2GB of where the
+> > > > >  	 * kernel image and loaded module images reside. This is required
+> > > > >  	 * for most of the architectures.
+> > > > >  	 * (e.g. x86-64 needs this to handle the %rip-relative fixups.)
+> > > > >  	 */
+> > > > > -	return module_alloc(PAGE_SIZE);
+> > > > > +	return alloc_execmem(PAGE_SIZE, GFP_KERNEL);
+> > > > >  }
+> > > > >  
+> > > > >  static void free_insn_page(void *page)
+> > > > >  {
+> > > > > -	module_memfree(page);
+> > > > > +	free_execmem(page);
+> > > > >  }
+> > > > >  
+> > > > >  struct kprobe_insn_cache kprobe_insn_slots = {
+> > > > > @@ -1580,6 +1581,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
+> > > > >  		goto out;
+> > > > >  	}
+> > > > >  
+> > > > > +#ifdef CONFIG_MODULES
+> > > >
+> > > > You don't need this block, because these APIs have dummy functions.
+> > >
+> > > Hmm... I'll verify this tomorrow.
+> >
+> > It depends on having struct module available given "(*probed_mod)->state".
+
+Ah, indeed. We need module_state() function to avoid it.
+
+> >
+> > It is non-existent unless CONFIG_MODULES is set given how things are
+> > flagged in include/linux/module.h.
 > 
-> Thank you.  This is a lot better.
-
-Thanks.
+> Hey, noticed kconfig issue.
 > 
-> I'm still trying to understand your opinion on the contents of the
-> file_ra_state.  Is it supposed to be properly aligned at all times, or
-> do we work with it in the terms of "desired number of pages" and then
-> force it to conform to the minimum-block-size reality right at the end?
+> According to kconfig-language.txt:
+> 
+> "select should be used with care. select will force a symbol to a value
+> without visiting the dependencies."
+> 
+> So the problem here lies in KPROBES config entry using select statement
+> to pick ALLOC_EXECMEM. It will not take the depends on statement into
+> account and thus will allow to select kprobes without any allocator in
+> place.
 
-The intention of the patches is to do the latter. Apart from the patch
-that rounds up file_ra_state->ra_pages, I don't poke file_ra_state
-anywhere and it is updated only at the end after we enforce
-minimum-block-size constraint (page_cache_ra_order).
+OK, in that case "depend on" is good.
 
-> Because you seem to be doing both at various points.
-Could you elaborate more on where I do both? Maybe I am missing
-something and I could change it in the next series.
+> 
+> So to address this I'd suggest to use depends on statement also for
+> describing relation between KPROBES and ALLOC_EXECMEM. It does not make
+> life worse than before for anyone because even with the current kernel
+> you have to select MODULES before you can move forward with kprobes.
 
-The previous series was trying to do both but I intentially stuck to
-updating the ra_state at the end in this series.
+Yeah, since ALLOC_EXECMEM is enabled by default.
+
+Thank you!
+
+> 
+> BR, Jarkko
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
