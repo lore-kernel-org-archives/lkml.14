@@ -1,126 +1,203 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8295A18E10;
-	Tue, 26 Mar 2024 08:57:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558C418B04;
+	Tue, 26 Mar 2024 08:58:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711443443; cv=none; b=RpdOwg1xlgKpKkErGBlHK102+bAI0ytC3EUvJ1sngEvJ5JUveqr/4VIlkqW0ghePEjoqD+5GDaCYWhScGTlNNtxebgOnbUS2W7jStZp7oRTNI17mCTuR/1HELbQvZG1AQirZseEOsHbUSVyVbeROdxVQKC2m2WXEBx1405Pn7OQ=
+	t=1711443483; cv=none; b=bFo5bMHs4zQ3NzZo2lVcgHkEwdiDuBizbtwIUW0XdMKWlnnq/Uc80GLz2YGWu0XFuJiWT3izlb7/kki0lNiwc34h4ZuwmLHzduWPEZAUVwbv27cIZNm9q2ixBw9fkPRX/QYLBECtkgGva/lQzNeRzZ1rQUOb+ZXIWhW8E4sI+LE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711443443; c=relaxed/simple;
-	bh=BENuy8j7wXC0Qc1uJxgZCCef0znJuM5TRoWGT9cIC4s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Hkv4Cf0kZ7+EyytftZqUtxPh137bJg0njKnfwr5b28J/Yhf4d45reCjACCgA1Vv4zJybH0Wl60fl1kL9tsbrZhOHWLxKsV0I9CIWCRUBk3pKFDcMCcocwN73hsFXMi+ew+Ba1mgfIVzOCZFM704L3mzEQLBdf77HpG29Gyl7v1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=vaGqkT2q; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1711443483; c=relaxed/simple;
+	bh=XFozoUL6QcyIGXvMLCIL84POaBLp8oklHsXjyBmeZK8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bxL/vtJw0s4ePWUzJb2cQ1HoTEeJje65p1imx4/xojo/Gjyn6WluZ/Mbi1HQg23yND2i+E7ScKZ9w4zkFwxioMK3DdN9+DnIi39DqQe+2kGN2vwrn3qALSEBNr44uh8LAklZ1ITAjzp5WAmZJaz6qjviq7VzVOtwYICgrqNkc3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MGNb0moR; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Jg9rN1Go; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=DxHO4eZX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=j1QiegTh; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="vaGqkT2q"
-Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MGNb0moR";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Jg9rN1Go";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="DxHO4eZX";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="j1QiegTh"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: lukma@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id EEA9A87FA9;
-	Tue, 26 Mar 2024 09:57:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1711443434;
-	bh=X8U3EfMwaJPc8Zo1AopiOETqF5i172Fbd+eIvg24Efw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=vaGqkT2qC9l9zLYQUpVR3hZKYj+ndhJk/NGf+S5ZHI9vlQ3fpBrS+9gnfTbZwd4pZ
-	 lIInGO1U6ifxg7u9I154TQ/203fZij2fAE5xDtIvRdGTAzFu34dSGBUVWmR4r1f7hk
-	 UxGENBYXE8TIeZ5k4jz9J3vfiGK98v+ihgohSrqYv23xWwctpmAGlP+F9GaJJjzEha
-	 0pvxpL1bcoqXKwZJdieaGvdD2+9yeZ6CHvsF8VUl4wMgITnhkHB9zAr9bI7Jao3YIf
-	 yYFWKbuQKo+FXGU0XEf+leo/XTYsBZrNZzLNgj9v7akky8S7D236hF9M+MzSSbqwin
-	 JYiuqUCKfy+sg==
-From: Lukasz Majewski <lukma@denx.de>
-To: netdev@vger.kernel.org
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Tristram.Ha@microchip.com,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Ravi Gunasekaran <r-gunasekaran@ti.com>,
-	Simon Horman <horms@kernel.org>,
-	Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	Murali Karicheri <m-karicheri2@ti.com>,
-	"Ricardo B. Marliere" <ricardo@marliere.net>,
-	linux-kernel@vger.kernel.org,
-	Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH v2 RESEND] net: hsr: Use full string description when opening HSR network device
-Date: Tue, 26 Mar 2024 09:56:49 +0100
-Message-Id: <20240326085649.3259424-1-lukma@denx.de>
-X-Mailer: git-send-email 2.39.2
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 00A565D373;
+	Tue, 26 Mar 2024 08:57:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711443479; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HJ4vh1O7+H5UDwAkTuEQsybcFx3tg2uZhEm9JonLz3Y=;
+	b=MGNb0moRA53dW6wUQ2O20+FMhlKGOX7mELBApC3UVSwNaErXcil5mNl/xl32/tj+CaRGpc
+	Xvfer1Kn5C5CXVdM+Fattj5d2hDohzEeav/NyK3NbNd18z2cCMYCh7Ff805uHKj6pXJVhf
+	zfilAsLDhY0t73mc6xERs+7CGCJ1hGA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711443479;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HJ4vh1O7+H5UDwAkTuEQsybcFx3tg2uZhEm9JonLz3Y=;
+	b=Jg9rN1GovWLt8oQk0a6YrNgWJUPm+WBZTHAayYnosZ+EtU8vMJa6kiVtbNPXyXkPU+gzju
+	AaqJ0p3nY4AwQNCQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711443478; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HJ4vh1O7+H5UDwAkTuEQsybcFx3tg2uZhEm9JonLz3Y=;
+	b=DxHO4eZXm8E/qPp37cl0l0IzKSgS7IeKCI105UsLFseKxOF/b80Vs7eDMaZfvEXN6FLRC2
+	0QZJsEsYCJILQi2FZC7J1ILXeWNYyenmyG12+J7MbbuYt6JPgJOAbBdU2GfDl3IILO5LG3
+	xdkaXXTyujLwVkAIDH2u+Q6ABSa+xrE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711443478;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HJ4vh1O7+H5UDwAkTuEQsybcFx3tg2uZhEm9JonLz3Y=;
+	b=j1QiegTh9G0rmPZx3qgi/w9TVuCocHvuAmMl99dKQnhVrzwQAPHTdqhdi3x8JDecAChNq8
+	RYy2S4d0oBwJ/qBw==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id EA83613215;
+	Tue, 26 Mar 2024 08:57:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id SxQ5ORWOAmZCfQAAn2gu4w
+	(envelope-from <jack@suse.cz>); Tue, 26 Mar 2024 08:57:57 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 94944A0812; Tue, 26 Mar 2024 09:57:53 +0100 (CET)
+Date: Tue, 26 Mar 2024 09:57:53 +0100
+From: Jan Kara <jack@suse.cz>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] fs: Annotate struct file_handle with
+ __counted_by() and use struct_size()
+Message-ID: <20240326085753.dh6fj7skdzddkdva@quack3>
+References: <ZgImCXTdGDTeBvSS@neat>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZgImCXTdGDTeBvSS@neat>
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_SEVEN(0.00)[11];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,oracle.com,gmail.com,vger.kernel.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Flag: NO
 
-Up till now only single character ('A' or 'B') was used to provide
-information of HSR slave network device status.
+On Mon 25-03-24 19:34:01, Gustavo A. R. Silva wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+> 
+> While there, use struct_size() helper, instead of the open-coded
+> version.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-As it is also possible and valid, that Interlink network device may
-be supported as well, the description must be more verbose. As a result
-the full string description is now used.
+Looks good. Feel free to add:
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
+Reviewed-by: Jan Kara <jack@suse.cz>
 
----
-Changes for v2:
-- Use const char * instead of char * - to assure that pointed string is
-  immutable (.rodata allocated).
----
- net/hsr/hsr_device.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+								Honza
 
-diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
-index c98b5b71ad7c..e9d45133d641 100644
---- a/net/hsr/hsr_device.c
-+++ b/net/hsr/hsr_device.c
-@@ -132,30 +132,29 @@ static int hsr_dev_open(struct net_device *dev)
- {
- 	struct hsr_priv *hsr;
- 	struct hsr_port *port;
--	char designation;
-+	const char *designation = NULL;
- 
- 	hsr = netdev_priv(dev);
--	designation = '\0';
- 
- 	hsr_for_each_port(hsr, port) {
- 		if (port->type == HSR_PT_MASTER)
- 			continue;
- 		switch (port->type) {
- 		case HSR_PT_SLAVE_A:
--			designation = 'A';
-+			designation = "Slave A";
- 			break;
- 		case HSR_PT_SLAVE_B:
--			designation = 'B';
-+			designation = "Slave B";
- 			break;
- 		default:
--			designation = '?';
-+			designation = "Unknown";
- 		}
- 		if (!is_slave_up(port->dev))
--			netdev_warn(dev, "Slave %c (%s) is not up; please bring it up to get a fully working HSR network\n",
-+			netdev_warn(dev, "%s (%s) is not up; please bring it up to get a fully working HSR network\n",
- 				    designation, port->dev->name);
- 	}
- 
--	if (designation == '\0')
-+	if (!designation)
- 		netdev_warn(dev, "No slave devices configured\n");
- 
- 	return 0;
+> ---
+>  fs/fhandle.c       | 8 ++++----
+>  include/linux/fs.h | 2 +-
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/fhandle.c b/fs/fhandle.c
+> index 57a12614addf..53ed54711cd2 100644
+> --- a/fs/fhandle.c
+> +++ b/fs/fhandle.c
+> @@ -36,7 +36,7 @@ static long do_sys_name_to_handle(const struct path *path,
+>  	if (f_handle.handle_bytes > MAX_HANDLE_SZ)
+>  		return -EINVAL;
+>  
+> -	handle = kzalloc(sizeof(struct file_handle) + f_handle.handle_bytes,
+> +	handle = kzalloc(struct_size(handle, f_handle, f_handle.handle_bytes),
+>  			 GFP_KERNEL);
+>  	if (!handle)
+>  		return -ENOMEM;
+> @@ -71,7 +71,7 @@ static long do_sys_name_to_handle(const struct path *path,
+>  	/* copy the mount id */
+>  	if (put_user(real_mount(path->mnt)->mnt_id, mnt_id) ||
+>  	    copy_to_user(ufh, handle,
+> -			 sizeof(struct file_handle) + handle_bytes))
+> +			 struct_size(handle, f_handle, handle_bytes)))
+>  		retval = -EFAULT;
+>  	kfree(handle);
+>  	return retval;
+> @@ -192,7 +192,7 @@ static int handle_to_path(int mountdirfd, struct file_handle __user *ufh,
+>  		retval = -EINVAL;
+>  		goto out_err;
+>  	}
+> -	handle = kmalloc(sizeof(struct file_handle) + f_handle.handle_bytes,
+> +	handle = kmalloc(struct_size(handle, f_handle, f_handle.handle_bytes),
+>  			 GFP_KERNEL);
+>  	if (!handle) {
+>  		retval = -ENOMEM;
+> @@ -202,7 +202,7 @@ static int handle_to_path(int mountdirfd, struct file_handle __user *ufh,
+>  	*handle = f_handle;
+>  	if (copy_from_user(&handle->f_handle,
+>  			   &ufh->f_handle,
+> -			   f_handle.handle_bytes)) {
+> +			   struct_size(ufh, f_handle, f_handle.handle_bytes))) {
+>  		retval = -EFAULT;
+>  		goto out_handle;
+>  	}
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 034f0c918eea..1540e28d10d7 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -1033,7 +1033,7 @@ struct file_handle {
+>  	__u32 handle_bytes;
+>  	int handle_type;
+>  	/* file identifier */
+> -	unsigned char f_handle[];
+> +	unsigned char f_handle[] __counted_by(handle_bytes);
+>  };
+>  
+>  static inline struct file *get_file(struct file *f)
+> -- 
+> 2.34.1
+> 
 -- 
-2.20.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
