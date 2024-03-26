@@ -1,185 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1CE613CA98;
-	Tue, 26 Mar 2024 15:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C150913D606
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711467600; cv=none; b=LHyID/sSExbpmKVrXMMbveQoakX4DGhoV61/d8o/Uz2DSbdjtJvCEaPfgsZHTOeRBFujZqHmM7jBkt4Zc5j9qsll120Fa1dWLvMA+iryg8r+lya7H4rsEfz7XQqx4iMOjLiVOyk4wHEHB2Zwy5YnhZylfkL80qfX4RFq6FGB5n0=
+	t=1711467628; cv=none; b=jDiE4qFkQ9rjsodtYgDPWqlUM1vfyavITyh01jTXp79l3GRCn0U/86hna/d58Yls5VA0vwzBS83bSuQDjE7cYcQG9SGZxoX/E/F+Y46Borxs8OCl8vH27n9HaICG394VyAoyrl1l4ZHFA/cIdEj8+jTJ+sNwsIzZuk/Bl+/zk0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711467600; c=relaxed/simple;
-	bh=ztmkPAB0U1ULXqxkAJmpV7w+Ysid9k8KKpLkRxinnKg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k4SjJzMzURlofj6p5aT3RHyl2YauItKHy+EjvHDPz2o+ula0vZo0ejVqcN4iU9TagpIPZXOENPWITnjI3op2/Z5gh7HmjV9OxbFvDWAWG+xLQAWZ/7wuCn4UdmUOLGgHfbUuilOpCJQEvDfZ+bPxbO0DuY8xMy8KQTNI32bxXZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qyKA41Y/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711467628; c=relaxed/simple;
+	bh=YLHWn5BJOrKJ+2xir7dWReqRTfipeHVsQyX2Cy7Sxgg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=he14DC/WakX6t/YG6C6K8CtodXOMwcX8+CZ5qFEvlISL05pppMWISsVyXzlOUZxmUS9TuZN+WwE9TxupITZqrhBV1n1Bu/GxrIVXZRYjJU6XwroOoI8U6PI0LGitxHtmx1U85e8nID2Thlg0QbdJfGRWCakq2uz4w3VbCH5W5bU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=QTZEPcMe; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=QEwjy77f; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LpAqAX4M; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=UyeLBPli; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qyKA41Y/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9697C433F1;
-	Tue, 26 Mar 2024 15:39:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711467600;
-	bh=ztmkPAB0U1ULXqxkAJmpV7w+Ysid9k8KKpLkRxinnKg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qyKA41Y/u8Cszywiz7OK3FbbmiKGQ9C4dXlmSowzO0eODtV3XQMYhndL6LqSSCExc
-	 gSr5KriK7AK/eduOXCzUuM9/M/JTph42YYV7yXqy/Ep5e4C8RdOMDwEY3NB+TWhosG
-	 ynhFk3x5fLusreKA62Lb5K8LI+Hrn02SMQKKQERtg/F9T4BStRFCcanXEuZXn7koxg
-	 lsnbct8Q5TAF/wUov8x/pcO/9j1j/+eoZC8z34hhlBPd/+k36MCtc3hIUbdc3qsQoD
-	 O7ZTB0GZ/L4AyBehCj5ri1j5aP5jWLIf/OTq2a320InuObeAqCv/u7gXamunek3p0/
-	 fkdWsgil6eNBQ==
-From: SeongJae Park <sj@kernel.org>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	hannes@cmpxchg.org,
-	roman.gushchin@linux.dev,
-	mgorman@suse.de,
-	dave@stgolabs.net,
-	willy@infradead.org,
-	liam.howlett@oracle.com,
-	penguin-kernel@i-love.sakura.ne.jp,
-	corbet@lwn.net,
-	void@manifault.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	arnd@arndb.de,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	peterx@redhat.com,
-	david@redhat.com,
-	axboe@kernel.dk,
-	mcgrof@kernel.org,
-	masahiroy@kernel.org,
-	nathan@kernel.org,
-	dennis@kernel.org,
-	jhubbard@nvidia.com,
-	tj@kernel.org,
-	muchun.song@linux.dev,
-	rppt@kernel.org,
-	paulmck@kernel.org,
-	pasha.tatashin@soleen.com,
-	yosryahmed@google.com,
-	yuzhao@google.com,
-	dhowells@redhat.com,
-	hughd@google.com,
-	andreyknvl@gmail.com,
-	keescook@chromium.org,
-	ndesaulniers@google.com,
-	vvvvvv@google.com,
-	gregkh@linuxfoundation.org,
-	ebiggers@google.com,
-	ytcoode@gmail.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	bristot@redhat.com,
-	vschneid@redhat.com,
-	cl@linux.com,
-	penberg@kernel.org,
-	iamjoonsoo.kim@lge.com,
-	42.hyeyoo@gmail.com,
-	glider@google.com,
-	elver@google.com,
-	dvyukov@google.com,
-	songmuchun@bytedance.com,
-	jbaron@akamai.com,
-	aliceryhl@google.com,
-	rientjes@google.com,
-	minchan@google.com,
-	kaleshsingh@google.com,
-	kernel-team@android.com,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-modules@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	cgroups@vger.kernel.org
-Subject: Re: [PATCH v6 30/37] mm: vmalloc: Enable memory allocation profiling
-Date: Tue, 26 Mar 2024 08:39:54 -0700
-Message-Id: <20240326153954.89199-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <CAJuCfpGwLRBWKegYq5XY++fCPWO4mpzrhifw9QGvzJ5Uf9S4jw@mail.gmail.com>
-References: 
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="QTZEPcMe";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="QEwjy77f";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LpAqAX4M";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="UyeLBPli"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D0D1A37567;
+	Tue, 26 Mar 2024 15:40:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711467625; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M3LMrPw3hFL/KxR4GxnsJbdTzCydmab5ztQVxw3j4/k=;
+	b=QTZEPcMedNYTiTlIL9cj4EcjvL6MPr6YJNgPj9/W1fgmmEPssWwUBe8t/Spsb8uza2rZHR
+	wJ90jbI7Y3OzERn6lloKdOTbPoi8fii9ankxwSy63e/OTK/xHi4y0wLTPLm3fYrTxhasj/
+	Y4RGtqmyv5vdg3qghQ0+m+fwEndd0oQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711467625;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M3LMrPw3hFL/KxR4GxnsJbdTzCydmab5ztQVxw3j4/k=;
+	b=QEwjy77fRbTGI159P4h4K7fi9A4ZdzRHgxMk3rgMwN2rPggtS9BIfEJFflqOmhDkPgwy2u
+	MZ44a2bEJB3ThiBA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711467624; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M3LMrPw3hFL/KxR4GxnsJbdTzCydmab5ztQVxw3j4/k=;
+	b=LpAqAX4MKqTcZYFKdIMQLjk3/pTrlMc2dNpbYamp1mwAyUBhscrIvaZ4WAF1GUfvm+OTdV
+	qf+MwZjX5Q+AA4KmMC6IVp8aVP8ZPMG8lo7p2lX0GqY96rdtZxcCaCCoaDSveFnKdxCRCJ
+	+q+FUbpURBsT71KhMBuWQkQd3COxlUU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711467624;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M3LMrPw3hFL/KxR4GxnsJbdTzCydmab5ztQVxw3j4/k=;
+	b=UyeLBPlisU5UrUU1ROGntR8vTq4+hpGXd3mGsT8pVNQkGoJnR9b7IA6iPgyor6e7M5POwM
+	f6NFndWD8SaYQjBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BD5AF13306;
+	Tue, 26 Mar 2024 15:40:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 9NzfLWjsAmYjUQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 26 Mar 2024 15:40:24 +0000
+Message-ID: <59998760-491d-408b-a452-852d3250b5db@suse.cz>
+Date: Tue, 26 Mar 2024 16:40:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 08/10] mm: page_alloc: set migratetype inside
+ move_freepages()
+Content-Language: en-US
+To: Johannes Weiner <hannes@cmpxchg.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Mel Gorman <mgorman@techsingularity.net>, Zi Yan <ziy@nvidia.com>,
+ "Huang, Ying" <ying.huang@intel.com>, David Hildenbrand <david@redhat.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240320180429.678181-1-hannes@cmpxchg.org>
+ <20240320180429.678181-9-hannes@cmpxchg.org>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20240320180429.678181-9-hannes@cmpxchg.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=LpAqAX4M;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=UyeLBPli
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-3.64 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BAYES_HAM(-2.14)[95.85%];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Spam-Score: -3.64
+X-Rspamd-Queue-Id: D0D1A37567
+X-Spam-Flag: NO
 
-On Tue, 26 Mar 2024 00:51:21 -0700 Suren Baghdasaryan <surenb@google.com> wrote:
-
-> On Mon, Mar 25, 2024 at 11:20 AM SeongJae Park <sj@kernel.org> wrote:
-> >
-> > On Mon, 25 Mar 2024 10:59:01 -0700 Suren Baghdasaryan <surenb@google.com> wrote:
-> >
-> > > On Mon, Mar 25, 2024 at 10:49 AM SeongJae Park <sj@kernel.org> wrote:
-> > > >
-> > > > On Mon, 25 Mar 2024 14:56:01 +0000 Suren Baghdasaryan <surenb@google.com> wrote:
-> > > >
-> > > > > On Sat, Mar 23, 2024 at 6:05 PM SeongJae Park <sj@kernel.org> wrote:
-> > > > > >
-> > > > > > Hi Suren and Kent,
-> > > > > >
-> > > > > > On Thu, 21 Mar 2024 09:36:52 -0700 Suren Baghdasaryan <surenb@google.com> wrote:
-> > > > > >
-> > > > > > > From: Kent Overstreet <kent.overstreet@linux.dev>
-> > > > > > >
-> > > > > > > This wrapps all external vmalloc allocation functions with the
-> > > > > > > alloc_hooks() wrapper, and switches internal allocations to _noprof
-> > > > > > > variants where appropriate, for the new memory allocation profiling
-> > > > > > > feature.
-> > > > > >
-> > > > > > I just noticed latest mm-unstable fails running kunit on my machine as below.
-> > > > > > 'git-bisect' says this is the first commit of the failure.
-> > > > > >
-> > > > > >     $ ./tools/testing/kunit/kunit.py run --build_dir ../kunit.out/
-> > > > > >     [10:59:53] Configuring KUnit Kernel ...
-> > > > > >     [10:59:53] Building KUnit Kernel ...
-> > > > > >     Populating config with:
-> > > > > >     $ make ARCH=um O=../kunit.out/ olddefconfig
-> > > > > >     Building with:
-> > > > > >     $ make ARCH=um O=../kunit.out/ --jobs=36
-> > > > > >     ERROR:root:/usr/bin/ld: arch/um/os-Linux/main.o: in function `__wrap_malloc':
-> > > > > >     main.c:(.text+0x10b): undefined reference to `vmalloc'
-> > > > > >     collect2: error: ld returned 1 exit status
-> > > > > >
-> > > > > > Haven't looked into the code yet, but reporting first.  May I ask your idea?
-> > > > >
-> > > > > Hi SeongJae,
-> > > > > Looks like we missed adding "#include <linux/vmalloc.h>" inside
-> > > > > arch/um/os-Linux/main.c in this patch:
-> > > > > https://lore.kernel.org/all/20240321163705.3067592-2-surenb@google.com/.
-> > > > > I'll be posing fixes for all 0-day issues found over the weekend and
-> > > > > will include a fix for this. In the meantime, to work around it you
-> > > > > can add that include yourself. Please let me know if the issue still
-> > > > > persists after doing that.
-> > > >
-> > > > Thank you, Suren.  The change made the error message disappears.  However, it
-> > > > introduced another one.
-> > >
-> > > Ok, let me investigate and I'll try to get a fix for it today evening.
-> >
-> > Thank you for this kind reply.  Nonetheless, this is not blocking some real
-> > thing from me.  So, no rush.  Plese take your time :)
+On 3/20/24 7:02 PM, Johannes Weiner wrote:
+> From: Zi Yan <ziy@nvidia.com>
 > 
-> I posted a fix here:
-> https://lore.kernel.org/all/20240326073750.726636-1-surenb@google.com/
-> Please let me know if this resolves the issue.
+> This avoids changing migratetype after move_freepages() or
+> move_freepages_block(), which is error prone. It also prepares for
+> upcoming changes to fix move_freepages() not moving free pages
+> partially in the range.
+> 
+> Signed-off-by: Zi Yan <ziy@nvidia.com>
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
-I confirmed it is fixing the issue, and replied to the patch with my Tested-by:
-tag.  Thank you for this kind fix, Suren.
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
+BTW noticed in -mm this has R-b: Zi Yan which is odd as he's the author. In
+the subthread for patch 9/10 Zi posted a R-b for patch 9/10 and its fixup,
+not this one :)
 
-Thanks,
-SJ
-
-[...]
