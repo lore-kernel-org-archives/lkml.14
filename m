@@ -1,79 +1,68 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2041.outbound.protection.outlook.com [40.107.223.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E916613D89B
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 20:32:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711485161; cv=none; b=fB3H2DpCrdC/UtxGEBSXZqry0L27hJwOYfGw6kKYN3RijiXRVueKTjZpPjro9U0caULOhwKX3JqqLaoTs2jXFbsZ5q+WwOLDfPVu0zIMEhTdIsh5HQfi/7pWKWPlWtXf41Y+Zuk3Jn/JLpQzURsHo6QhxA2nEBFoFCKGjq4w668=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711485161; c=relaxed/simple;
-	bh=o7Ismljs5kdN2ZKFTdylXCiqx/6WCg6NzZXI5LKLDRo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jFCUEAJCRjP4B0KOdvv3jheKX4z8W38tstd/o2drroJ8D9BMeHh2n3oQnvifJpCRhlCZSVtroKtA4I2tOK8Rf2kSVltUB27iohGzePusWJmOVcbXjDJ35tP8C4/m7JgkKJHx0aXbv3kdozf4mkxaj7uNls7F9Kdts1X4ZZcOV5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=JNBev4Xm; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C14313D513;
+	Tue, 26 Mar 2024 20:33:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711485188; cv=fail; b=gDatAh+xRZbNbihTXk1F8ATDGqqaScynNCSYljxF7/IA1lWGpo/vnHSuTFGgXDHZJd8xDQygCQ39r4QmMFjdpzXzPlW5N5jNyx2Ma3ZHAiOCQnrj+5lGgii1Z6n9R5yFkSiMJBY6ovQbrK2CWIuKE+SYs3h6VNT8xVumObzsduY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711485188; c=relaxed/simple;
+	bh=KWbrCl+PZ3tLX5BxiE1dr0dSmkQqfrKfUTmmzX2WA1A=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lI21pDgc2FJWsVjkt+kAd5TDSLm6alRkfnoQiqY6ce7KRIqbXEfpmMxJAXXtJrl04nsoBy0e9D0rZJCuo4ubo/RaFHmmBH5x29BLLVoLS+vReeBJ4xls1RxxZcN/5S5iiCaFCHx/fRCGDuKbo3qynyqVC7USLkCo/GRZvape9eY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Zs4xrFeD; arc=fail smtp.client-ip=40.107.223.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="JNBev4Xm"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56c08d1e900so3613162a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 13:32:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1711485158; x=1712089958; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SwoTWlECTszcl/qxdYVc4t6fpZ8kE/2UkB07bRVsSm8=;
-        b=JNBev4XmZ1jX89eLFA8IH8Qx/7zzIWPRuKXmPiwdvyPBC740K33WRPXxGATQ4cAGmI
-         KvjPIDfVRkxEInMFuyxEAEwKy88H9f0Fz/e3DtfBb93gP9X/7AOT3Qf8rlz4B6v0BSFv
-         xbUwhyIejk6HUuZXCOQ0+yoKU6qf3K26BYhxeoOm8uN9G1ulsbkl0qUEkR3GCRWBW/VA
-         uX1ded1yHJFw9tCU5SPYZSNs40c7+oGyzbpWcV+a8SdNwDEfhZvdRdfO8B1IBQhG8kZm
-         Kundqe0q96nDNa2oMJS9JI1QAcDCzVmgpyfKan0+rJlSSrIIoC7TWj3M2TNNl5Ei/mRj
-         DCjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711485158; x=1712089958;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SwoTWlECTszcl/qxdYVc4t6fpZ8kE/2UkB07bRVsSm8=;
-        b=sQ04GDsuZlyPRkViJhHzus9OhFMXolQR8ZELyAmJxIOqhO7KvCF5TRfmiztM4bt7Lx
-         qdtiqCE8FDn2NxZvVYWLwdLq35q0IHXutmE7zaYj6xhABp5COsTuC8NaxtVRKggBQCc2
-         whogmFPkUe8Mpsx2eJAAbWI9tmj55RaUYdpueHk+ll7ZeQCx+ap8zVNExKynm9HgTqGW
-         bRBgd6OH7Q3C43V6fz6YDkakF10z1s5HWOtloQeWaPAEEk9XQAu0qn2I7QKMM7cpktSa
-         n49XAxbQpM65/CVXn1qYf7yVqoVLUdUbsl7Asxjihv0NFDVCgbKRneMk/5c6FX2IfBHd
-         d+kA==
-X-Forwarded-Encrypted: i=1; AJvYcCUxiw2To2NsLMHmN7Btk3uDEiEzMIXliHDn8Hg2oomh1jrWOYgm9hYAzQWVMuzHlI6mE24Bxv+aan+cYEhqdZ0V7W00v3L5wvniXomp
-X-Gm-Message-State: AOJu0YxiB4TSnn5BmP6iH1olRlscnXAkIrO7is9kK23P8pYWsE5R8EV3
-	96hlKO/2oDDKu7K3JVDnmRXlEBYbdmqJ0Fm0xpqKpCnSZjLMd/KmR7I0e3/iqMY=
-X-Google-Smtp-Source: AGHT+IENt7YBLnNtoUOQOQp272wkaUn+XI5a9KNpsaZCh2RNyyuvnhB+Bx/GceA3IeXjeVnoNmMyRA==
-X-Received: by 2002:a50:8e12:0:b0:565:bb25:bb7a with SMTP id 18-20020a508e12000000b00565bb25bb7amr3175538edw.24.1711485157973;
-        Tue, 26 Mar 2024 13:32:37 -0700 (PDT)
-Received: from alex-rivos.ba.rivosinc.com ([2a02:8440:5240:d2b3:9657:7432:d88d:84a9])
-        by smtp.gmail.com with ESMTPSA id da12-20020a056402176c00b0056b816e253esm4525782edb.13.2024.03.26.13.32.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 13:32:37 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Pu Lehui <pulehui@huawei.com>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Zong Li <zong.li@sifive.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrea Parri <andrea@rivosinc.com>,
-	Andy Chiu <andy.chiu@sifive.com>
-Subject: [PATCH 2/2] riscv: Disable preemption when using patch_map()
-Date: Tue, 26 Mar 2024 21:30:17 +0100
-Message-Id: <20240326203017.310422-3-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240326203017.310422-1-alexghiti@rivosinc.com>
-References: <20240326203017.310422-1-alexghiti@rivosinc.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Zs4xrFeD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OAOz0vFO6Fi/T0Pu60drSpTV1bB0lJ/8LzIFYteFcx93J1hKhh1cRyxEtw59iSLTVlISytiY24tQUIjF8upWQrePxP1BLg0Qi7489yaN64KSzXwYaSbDARMzOe7u/qFXuK9Dksp6V19NQgFsdc7A7g3Cau4BWlu18de5/bDK76kGZlhj1D0YAVdENKi9Li3kDIL5z0uHbJyrTGh0aGjFibp3kY8ieTnID8n8vtsRkrzlYFPP981KGi6/zSFJwiLymYJyOJrZx5fMeqA2sb5+TeE8vXSiZzVMelWEFf2xpVhe+4AFTDMKDa0vY9mM1KwTKE9WDc/mOZyqCvzQvlnDRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TfEkF9NVMBpQlwcgRuR3dV+4dn6yy6SCJE8LBVFU6LA=;
+ b=Vdn3y+sXN8w/glD8SDcy3SHQrpdvQuUT9JpxBQz+V92hOznTdb0PiHnX1LLSMmBwFGj8Se5g2HGq/tNME+NEIytYSIVEYFW2fuM1c+ra9l5l3Ay94pFrFqQc9HBlqlphAQWfEMxw5FzgWkRKWUSG4fJtCzYKoXPb0p+6R0AFWQG0aUAgxSK9BIIl8jA5uIrzQQAhM0BLRRYGOhQMmUDuvieueoXSqwcj6KBJJQH0sem9AUcXZP3J361mgh1j+0pZaS/S1EoYrCsinfQyqQX//W87Ywvw1sgn5iD3WISpsXGhin3/C/zGG1afjTogxAV3QcGQh5Nk6t3C1/buven3FA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=alien8.de smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TfEkF9NVMBpQlwcgRuR3dV+4dn6yy6SCJE8LBVFU6LA=;
+ b=Zs4xrFeDz7xzBwg62PruvrIq/Pa32MLdimEBpa+XD+FhyE+SfHC9VcDzpdEhrQUQMc07XhQVv0q0LuQ9dPm99sBzKm+rbTVtp6ZHvJyevfnc0knshEzyRa/Dvmm36vaTVsb7x17AiU16YAoy5uJjWgc7D7zTv/zd+MtnUiQqJb0=
+Received: from MW2PR2101CA0034.namprd21.prod.outlook.com (2603:10b6:302:1::47)
+ by MN2PR12MB4472.namprd12.prod.outlook.com (2603:10b6:208:267::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.33; Tue, 26 Mar
+ 2024 20:33:04 +0000
+Received: from MWH0EPF000989EA.namprd02.prod.outlook.com
+ (2603:10b6:302:1:cafe::8e) by MW2PR2101CA0034.outlook.office365.com
+ (2603:10b6:302:1::47) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.8 via Frontend
+ Transport; Tue, 26 Mar 2024 20:33:03 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MWH0EPF000989EA.mail.protection.outlook.com (10.167.241.137) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7409.10 via Frontend Transport; Tue, 26 Mar 2024 20:33:02 +0000
+Received: from yaz-ethanolx.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 26 Mar
+ 2024 15:33:01 -0500
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+To: <bp@alien8.de>, <tony.luck@intel.com>, <linux-edac@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <avadhut.naik@amd.com>,
+	<john.allen@amd.com>, Yazen Ghannam <yazen.ghannam@amd.com>, "anthony s .
+ knowles" <akira.2020@protonmail.com>
+Subject: [PATCH] RAS: Avoid build errors when CONFIG_DEBUG_FS=n
+Date: Tue, 26 Mar 2024 20:32:52 +0000
+Message-ID: <20240326203252.2699278-1-yazen.ghannam@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,70 +70,68 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000989EA:EE_|MN2PR12MB4472:EE_
+X-MS-Office365-Filtering-Correlation-Id: ce771791-5b68-4406-421d-08dc4dd3ef35
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	IEl1ETi/zayBRF/fF7dLfRS5U90XPXkBJRiSeF6qMXH7b5OcsjQ2WFxmOPWBSu87WD5Q5wuHQ5QGAKyeCjdmL272U2cboLRpeJDhgJMyp3C9VGi7aCNX4nnMHzG1/duUNgZsxafOTz37F1F7n+jqjcC2/SsFhX+NpobjWEuI4vXLQnykhPg++B9hZN2EFltYx5Ck5VifcGM/RRbE+C5y2M7dl0mcN2T8zqaETYVthQdD5GLBZCDuyj5WKzPQ1lO1lUUsJHX6FLh82KYK5dn8GnqFUyYPcj2dV1eryvsFU1k+kOGJFZf/DzXNHdwHjE3pbOZXMERD6dOvXYYE7LZW9O/UESC6XIfLp/Jiw/HjsC7gLoKfrLPOv4yBxPveRJ6nq0WfG87G9T9dTrCDR5YZoIcBBu+NeY0+FY33BHHJnA5iSetfImh64J5r268PM/47VwHCsRkO1uX0aSytOGlcvIf53m4sPf/ypK1tSGYto6TcBrJj/j1miP00F0f9vXmB8m3LVuGLDT7cmi566Fky7YFlOethHPzhVE2amBeU41OVZm3IPlQR00YYaSgH9o7YsZB6B0ZABqOfysCVlNcv5H8Qe+kGesegxerkwxAGVL2ItQIHb08JqU4BN0uXPoYq7Wr1NaHcWKyVLdqnT9JcM0D0DXk6+E7hT6FNykHx9w7RWF+vB/tEg12F1jCOKCLPH8h5JxsIxp4a7IvnD/Bb3g==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(82310400014)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 20:33:02.5044
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce771791-5b68-4406-421d-08dc4dd3ef35
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000989EA.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4472
 
-patch_map() uses fixmap mappings to circumvent the non-writability of
-the kernel text mapping.
+A new helper was introduced for RAS modules to get be able to get the
+RAS subsystem debugfs root directory. The helper is defined in debugfs.c
+which is only built when CONFIG_DEBUG_FS=y.
 
-The __set_fixmap() function only flushes the current cpu tlb, it does
-not emit an IPI so we must make sure that while we use a fixmap mapping,
-the current task is not migrated on another cpu which could miss the
-newly introduced fixmap mapping.
+However, it's possible that the modules would include debugfs support
+for optional functionality. One current example is the fmpm module. In
+this case, a build error will occur when CONFIG_RAS_FMPM is selected and
+CONFIG_DEBUG_FS=n.
 
-So in order to avoid any task migration, disable the preemption.
+Add an inline helper function stub for the CONFIG_DEBUG_FS=n case.
 
-Reported-by: Andrea Parri <andrea@rivosinc.com>
-Closes: https://lore.kernel.org/all/ZcS+GAaM25LXsBOl@andrea/
-Reported-by: Andy Chiu <andy.chiu@sifive.com>
-Closes: https://lore.kernel.org/linux-riscv/CABgGipUMz3Sffu-CkmeUB1dKVwVQ73+7=sgC45-m0AE9RCjOZg@mail.gmail.com/
-Fixes: cad539baa48f ("riscv: implement a memset like function for text")
-Fixes: 0ff7c3b33127 ("riscv: Use text_mutex instead of patch_lock")
-Co-developed-by: Andy Chiu <andy.chiu@sifive.com>
-Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Fixes: 9d2b6fa09d15 ("RAS: Export helper to get ras_debugfs_dir")
+Reported-by: anthony s. knowles <akira.2020@protonmail.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218640
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Tested-by: anthony s. knowles <akira.2020@protonmail.com>
+Link: https://lore.kernel.org/r/20240325183755.776-1-bp@alien8.de
 ---
- arch/riscv/kernel/patch.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/ras/debugfs.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
-index 37e87fdcf6a0..30e12b310cab 100644
---- a/arch/riscv/kernel/patch.c
-+++ b/arch/riscv/kernel/patch.c
-@@ -80,6 +80,8 @@ static int __patch_insn_set(void *addr, u8 c, size_t len)
- 	 */
- 	lockdep_assert_held(&text_mutex);
+diff --git a/drivers/ras/debugfs.h b/drivers/ras/debugfs.h
+index 4749ccdeeba1..5a2f48439258 100644
+--- a/drivers/ras/debugfs.h
++++ b/drivers/ras/debugfs.h
+@@ -4,6 +4,10 @@
  
-+	preempt_disable();
-+
- 	if (across_pages)
- 		patch_map(addr + PAGE_SIZE, FIX_TEXT_POKE1);
+ #include <linux/debugfs.h>
  
-@@ -92,6 +94,8 @@ static int __patch_insn_set(void *addr, u8 c, size_t len)
- 	if (across_pages)
- 		patch_unmap(FIX_TEXT_POKE1);
++#if IS_ENABLED(CONFIG_DEBUG_FS)
+ struct dentry *ras_get_debugfs_root(void);
++#else
++static inline struct dentry *ras_get_debugfs_root(void) { return NULL; }
++#endif /* DEBUG_FS */
  
-+	preempt_enable();
-+
- 	return 0;
- }
- NOKPROBE_SYMBOL(__patch_insn_set);
-@@ -122,6 +126,8 @@ static int __patch_insn_write(void *addr, const void *insn, size_t len)
- 	if (!riscv_patch_in_stop_machine)
- 		lockdep_assert_held(&text_mutex);
- 
-+	preempt_disable();
-+
- 	if (across_pages)
- 		patch_map(addr + PAGE_SIZE, FIX_TEXT_POKE1);
- 
-@@ -134,6 +140,8 @@ static int __patch_insn_write(void *addr, const void *insn, size_t len)
- 	if (across_pages)
- 		patch_unmap(FIX_TEXT_POKE1);
- 
-+	preempt_enable();
-+
- 	return ret;
- }
- NOKPROBE_SYMBOL(__patch_insn_write);
+ #endif /* __RAS_DEBUGFS_H__ */
 -- 
-2.39.2
+2.34.1
 
