@@ -1,94 +1,61 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 959C213C674
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 14:50:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C693A13C813
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 14:50:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711464605; cv=none; b=XYMOxzyI492c0Vt12/cLA9O+fSsbvxEuy9hE7qNihweNMtWC5XCZtJ1GzrKIL6ID/owtNO+6AIkfhavuJ8sbCy4tgKniWhUF+f+eP1DTN/K3NaBjo/zWa3CAhn2ymx55dbqCdv9MSj/ZYsjGvEngdFPLug/LZ6/WWwIAVhlXNT0=
+	t=1711464640; cv=none; b=nhwg7sIzAzz4V2bexy7qHZfbYN6LJ53SFCsDFh42Q1FeYV2Y1e70FpLlp5RNcdqj7hmrVs45MGor1mFIM4Wge/9yUZ1xxDv1J0HqZjct5h4rrwemFWWHhqf+cVZPz/0/mi/HuCQxccds9MtKswdm5zs80M1j7ELrVuGR7ZHtkhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711464605; c=relaxed/simple;
-	bh=K283dq0rMCMbXlbjFmsIYUEw3mlmXF2plQnChcVoYxw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a41CK21z4Efd0Y++uNoE7x1L3Nf+tQBzxZJ02y82jisHHOI885WwgTG5TsUlvyYRZH2LHDR9EVz8PKsaQAISzNfp8IJHDup4z6JUTSSwd9nCweTHCITX1HDiW+wGuMursOgoiqYa2u190delaX9S/31j2bAiO+o+ORw/OUH6VWI=
+	s=arc-20240116; t=1711464640; c=relaxed/simple;
+	bh=/0pxlMZ1zHArlripP5Z7xHzTAEUYXB04xQcW7CZIOJE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jwcNaV6CaPrIEz32w8OXcYuNm5Yd96kNumNYefrIANOvpaApXRaBnYvwkBWDbqE0ohqo32214j7l6xp9M0zmeS4JDilEgvtYkm5r3PitkVBDbjGnIEE7uacFiEaaJr0T4vgsZLScghEoNqV7aOe5+5F8ghCW9N0ks9wDnOpPx6M=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BBA1339;
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A732F339;
+	Tue, 26 Mar 2024 07:51:11 -0700 (PDT)
+Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E60713F694;
 	Tue, 26 Mar 2024 07:50:36 -0700 (PDT)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.35.184])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C25E3F694;
-	Tue, 26 Mar 2024 07:50:00 -0700 (PDT)
-Date: Tue, 26 Mar 2024 14:49:57 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: David Laight <David.Laight@aculab.com>
-Cc: 'Arnd Bergmann' <arnd@arndb.de>, Alexandre Ghiti <alex@ghiti.fr>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Charlie Jenkins <charlie@rivosinc.com>, guoren <guoren@kernel.org>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Kemeng Shi <shikemeng@huaweicloud.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Xiao W Wang <xiao.w.wang@intel.com>, Yangyu Chen <cyy@cyyself.name>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] riscv: Define TASK_SIZE_MAX for __access_ok()
-Message-ID: <ZgLglSl94dnWIoqX@FVFF77S0Q05N.cambridge.arm.com>
-References: <CAHVXubjLWZkjSapnsWJzimWg_2swEy7tQ-DQ6ri8yMk8-Qsc-A@mail.gmail.com>
- <88de4a1a-047e-4be9-b5b0-3e53434dc022@sifive.com>
- <b5624bba-9917-421b-8ef0-4515d442f80b@ghiti.fr>
- <f786e02245424e02b38f55ae6b29d14a@AcuMS.aculab.com>
- <d323eb10-c79b-49cb-94db-9b135e6fd280@ghiti.fr>
- <ZgGosOiW6mTeSnTL@FVFF77S0Q05N>
- <eeccbc9f-7544-42c9-964f-2b4c924c2b2f@app.fastmail.com>
- <ZgHCpgHh1ypSyrtv@FVFF77S0Q05N>
- <95eb125d-dd54-42f1-b080-938faca6a8a1@app.fastmail.com>
- <882fc86da89f4adb81570cde3a653e6f@AcuMS.aculab.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Jens Wiklander <jens.wiklander@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Marc Bonnici <marc.bonnici@arm.com>,
+	Olivier Deprez <Olivier.Deprez@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>
+Subject: Re: [PATCH v2] firmware: arm_ffa: fix ffa_notification_info_get()
+Date: Tue, 26 Mar 2024 14:50:33 +0000
+Message-ID: <171146460965.2983730.14931789520460861310.b4-ty@arm.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240311110700.2367142-1-jens.wiklander@linaro.org>
+References: <20240311110700.2367142-1-jens.wiklander@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <882fc86da89f4adb81570cde3a653e6f@AcuMS.aculab.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 26, 2024 at 10:19:28AM +0000, David Laight wrote:
-> From: Arnd Bergmann
-> > Sent: 25 March 2024 20:38
-> > 
-> > On Mon, Mar 25, 2024, at 19:30, Mark Rutland wrote:
-> > > On Mon, Mar 25, 2024 at 07:02:13PM +0100, Arnd Bergmann wrote:
-> > >> On Mon, Mar 25, 2024, at 17:39, Mark Rutland wrote:
-> > >
-> > >> If an architecture ignores all the top bits of a virtual address,
-> > >> the largest TASK_SIZE would be higher than the smallest (positive,
-> > >> unsigned) PAGE_OFFSET, so you need TASK_SIZE_MAX to be dynamic.
-> > >
-> > > Agreed, but do we even support such architectures within Linux?
-> > 
-> > Apparently not.
-> > 
-> > On 32-bit architectures, you often have TASK_SIZE==PAGE_OFFSET,
-> > but not on 64-bit -- either the top few bits in PAGE_OFFSET are
-> > always ones, or the user and kernel page tables are completely
-> > separate.
-> 
-> ISTR that arm64 uses (something like) bit 56 to select kernel
-> with the annoying 'feature' that the high bits can be ignored
-> just to complicate things.
+On Mon, 11 Mar 2024 12:07:00 +0100, Jens Wiklander wrote:
+> FFA_NOTIFICATION_INFO_GET retrieves information about pending
+> notifications. Notifications can be either global or per VCPU. Global
+> notifications are reported with the partition ID only in the list of
+> endpoints with pending notifications.  ffa_notification_info_get()
+> incorrectly expect no ID at all for global notifications. Fix this by
+> checking for 1 ID instead of 0.
+>
+> [...]
 
-Yes, bit 55.
+Applied to sudeep.holla/linux (for-next/ffa/fixes), thanks!
 
-We choose our TASK_SIZE_MAX to be below 2^55, so no kernel address will pass
-access_ok(), and we pre-mangle the TBI bits for userspace so they can't affect
-the check and fail unexpectedly.
+[1/1] firmware: arm_ffa: fix ffa_notification_info_get()
+      https://git.kernel.org/sudeep.holla/c/1a4bd2b128fb
+--
+Regards,
+Sudeep
 
-So it doesn't actually matter -- leave that aspect to arch code.
-
-Mark.
