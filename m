@@ -1,194 +1,78 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19333A8D0;
-	Tue, 26 Mar 2024 19:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851C6802;
+	Tue, 26 Mar 2024 19:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711480932; cv=none; b=M0GdFKScaiZu3BENFS+2o/eHJckpwYh7wx/f2Sjea1AUpcSSyHpC8TWxyca+CbBo6tIr/roaESGAqhS72CeYC64XQW+jI9ECS01Ac8Y8y+vy3yqy1PLW3XTPe+0r3Zwr+OBJiqIzRMeg+fj8ddWp6/ciqLlZ3A4fHvbdo87ulvY=
+	t=1711480983; cv=none; b=Hdm2NMBJP8Z1RbUVFRnvRbvSPINarNKyjDPeBp/F2pnXfQLYFp2/KZid0X7Pz4dSVWfMrSl5D4lFSKxSUBOrDxivLyfBnguOhmOPH9JCrFKUMbrygBmJ/+cZ9EvItdRH64/Ega0VEnD9+BHR34l5dQhFaJS9DT/dEZCq6NhQqGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711480932; c=relaxed/simple;
-	bh=9A69lqNVbjewNLP/BP8WnbYpmKhO8CPeO89Rbk7DpmQ=;
+	s=arc-20240116; t=1711480983; c=relaxed/simple;
+	bh=iU53mz5gVhq7abaXjUhQvx4ORrW9DRxK/HIImuuyIds=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I6DqsQKxWlxWI1gmYbUgjojLiU8SbHZ9BTLolDm6+zEnvcWywtsNkZZn83aUigXaLdi/RwMPiMKdTwHB+TnZuLEMgs5upNT5D/v9neB8VrHnFJNBQ19PgyPcYokrCoVf7H1BWSTYLb4pl+QMZVQbIF/IxXWgA+hauw6TV9zykLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZtZiGz1r; arc=none smtp.client-ip=209.85.167.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=kCbsakZqkbtgYbYSS9uXFxrUNGT2/1MfsQp4cHo0jaK2uQG1oZSfa4hUnXqai396DUOB5pUR+nP7DBlB1DuOlffK7Z+3NW5ZA6qk83+fkTZIPtTdYFK8ox+iZH5GH+MISsZvCYjXSo42P00EiwlNEZm7B+5h7UGJ4ExIehOKIFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bOpRYTEj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZtZiGz1r"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3c3bc867eaaso2529542b6e.1;
-        Tue, 26 Mar 2024 12:22:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711480929; x=1712085729; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WV7TbUWdy1KyRCYO59YjywGKYmLdtGd+fKg5ys9yxzU=;
-        b=ZtZiGz1rZB6o/UIFXVJy+0HVVtgkB4oMKjZoQbR7+St+0jEv04Z+YcQ/4VuMMmeOH9
-         MhZ/Q6iqumLq/tW/lY/pIRY3rMpUHcKx+n8uokUM2OxEoO9Zb50wsimPvD8kAR0WtjSz
-         Jok721igWGPz+ba7S5wVbK/GB+yHUMaJxviYtnN8ndRzB1M6uuRCG1QI6zEaaGy2gFHS
-         SwbqPMOfg77KhaTu4/giydoIN1VwBxapTPH9+hscuw5bufpubuG0D0A/4olnm25eef9r
-         i/PEkKOBSCyybzp2eZukL3k0Mur8oTIAIYsoW8qXtU7ldIzbJk48bYEVl2iaW9BmwXj8
-         dg/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711480929; x=1712085729;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WV7TbUWdy1KyRCYO59YjywGKYmLdtGd+fKg5ys9yxzU=;
-        b=gr3gALnooUacB3no8sfA3ZRC0K0zMOzYbe7iPdn+m3cSLppfY4kr0IfJ3yaxUxR+rX
-         aVRQDz/deoqKdDHdTkg44oUHFHGVqnv2Ow/DV+XZfDRUAxl9HNhNLE7BV0MjEda1iXKu
-         ew/0MqxD+PmZpUO/Yj42xFkFr9Fv4ekZeYDQ7KbHvVpdrVMAeYIYNd4wfyqZUJlsZT3m
-         aEO17CRcaC8gMd048AKiWKL7cl9//vNeKJysyLwphw4cGOOWI6DttPzYz9+TSQvMWVc0
-         23RhwnwBSY+OKBj9PYgxjWzFVy/RgysxfZCQPKGHX6XXIrvM6FikkXX/CA8x5O6M7IBu
-         5oMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU6VrRgwO3249dZDg3KE8Cn1bYfnFCCRGDnrLF62tu/36kMQTzz95obd1/MuXFbUwnQ0jFF3tB4mzJ0Xxw9W7Vuynfuftt6kgfGQKFE
-X-Gm-Message-State: AOJu0Yx6ia6uXkE+KLbrhWU9Kjqt3fvcLI5tM/ee97O2FKE872h+LWUt
-	FS1lHg50u4swqS8xyY+eD+foFCCUIqZkY5mMdUx2OflpDHn2ZHdY
-X-Google-Smtp-Source: AGHT+IHC/whWIb5f7tECwf7A0UQMEXrKng+dG3uxqdzchxqqCcRP5dcgebE2tGuTG87EDbS/q34T2w==
-X-Received: by 2002:a05:6808:90a:b0:3c3:af17:fa34 with SMTP id w10-20020a056808090a00b003c3af17fa34mr1890703oih.16.1711480929338;
-        Tue, 26 Mar 2024 12:22:09 -0700 (PDT)
-Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id jm14-20020ad45ece000000b0068fb6fb217csm5513558qvb.122.2024.03.26.12.22.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 12:22:08 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id 730FA1200066;
-	Tue, 26 Mar 2024 15:22:08 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Tue, 26 Mar 2024 15:22:08 -0400
-X-ME-Sender: <xms:YCADZuxfXiOUUajC6pJLwNx7RnLvrtC79zfHq81oKTLK60xE3ZJWOg>
-    <xme:YCADZqT74jaPy27aqsbqmjcMgQQw9aEc8I4OokIOj3_o0xbmlMf2-IQxDdp5rXBbP
-    SuSIGp0jhMOXf96KQ>
-X-ME-Received: <xmr:YCADZgXVSncUsb00sNAmEH99PYOxW0lJAKkeTof22SE7X_saI-TjkECb1F-3fw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddufedguddvgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhq
-    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
-    grthhtvghrnhepfffhkeeuvdejtddukefgteffieffledujeeuudeffedtvdejfeekvdev
-    heeugedvnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdprghnughrohhiugdrtghomh
-    dprhhushhtqdhfohhrqdhlihhnuhigrdgtohhmnecuvehluhhsthgvrhfuihiivgeptden
-    ucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrh
-    hsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgv
-    nhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:YCADZkidvgFN9vD4hxnA0ME45IWja42S25rI1gPJIqjgvP9dvSDx9w>
-    <xmx:YCADZgBsG6p7Ck_9vVvs3uDk3b6ZJk9zGQMNwYJvdaOXZwra-qpUsQ>
-    <xmx:YCADZlKYmyEqbek7wuPOdgpuvWTi5wt9jwzte3O1sTDDYSMvJ0qaZw>
-    <xmx:YCADZnAYTxSCT3ooTM6lKBfCRMyzdznQAKSdY2KmqfTTXtSSTzrGKg>
-    <xmx:YCADZg3SGZzeKIi-qe-diykQmzAZkgNWf3kof8S24N9srX9M2q5Ig2MSZsA>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 26 Mar 2024 15:22:07 -0400 (EDT)
-Date: Tue, 26 Mar 2024 12:21:34 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
-	Valentin Obst <kernel@valentinobst.de>,
-	Heghedus Razvan <heghedus.razvan@protonmail.com>,
-	Asahi Lina <lina@asahilina.net>
-Subject: Re: [PATCH 4/5] rust: time: Support reading CLOCK_MONOTONIC
-Message-ID: <ZgMgPqrtc2FSkYZW@boqun-archlinux>
-References: <20240324223339.971934-1-boqun.feng@gmail.com>
- <20240324223339.971934-5-boqun.feng@gmail.com>
- <4wFCQqSgpLIPmdFau6MTL1XLLB73d9Tuv5y-VFnXTDc1DFuTnmNV-GLtF582V5yz8s9ogWP_4U0NK3ei6sZlD1oLl929f8ADoT5K9bO6uKs=@proton.me>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bOpRYTEj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 010C7C433C7;
+	Tue, 26 Mar 2024 19:23:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711480983;
+	bh=iU53mz5gVhq7abaXjUhQvx4ORrW9DRxK/HIImuuyIds=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bOpRYTEjb87rY0ta/eyqmfeD7t0ZUKI7b89BThwplqDjAbcHsH5o2H2EEi0v8t1ix
+	 vJ+5EbN6G71Rn8bsJHNniEl+hUmQjOF4oQA6hC6gzGVQIyJuguC/XjI6F0wWaC7ERj
+	 KJTsnHNxnbhP90o0MVYLFsKBiL/8KziOvM1Ugoji3RsAaPmcWNCK1Ht7/8aj5XHysC
+	 EfUxee+QoVNj6Skd3MrxXd5XYAT8jsppQxJYkkJ0w5+nGGyvUw+6AfYfdn19Hd4ucP
+	 CHVf/aeAChuo7h/FEKlPTtJI0aUQ0h+aKRfBvyfWublMzzhS8AwqBXcimGIqY5glus
+	 vdsLH0/vkjtmg==
+Date: Tue, 26 Mar 2024 15:23:02 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: David Sterba <dsterba@suse.cz>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Filipe Manana <fdmanana@suse.com>,
+	Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+	Josef Bacik <josef@toxicpanda.com>, Boris Burkov <boris@bur.io>,
+	David Sterba <dsterba@suse.com>
+Subject: Re: [PATCH 5.15 005/317] btrfs: add and use helper to check if block
+ group is used
+Message-ID: <ZgMgljyKh01iWOzt@sashalap>
+References: <20240324233458.1352854-1-sashal@kernel.org>
+ <20240324233458.1352854-6-sashal@kernel.org>
+ <20240325182556.GN14596@twin.jikos.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <4wFCQqSgpLIPmdFau6MTL1XLLB73d9Tuv5y-VFnXTDc1DFuTnmNV-GLtF582V5yz8s9ogWP_4U0NK3ei6sZlD1oLl929f8ADoT5K9bO6uKs=@proton.me>
+In-Reply-To: <20240325182556.GN14596@twin.jikos.cz>
 
-On Tue, Mar 26, 2024 at 05:03:41PM +0000, Benno Lossin wrote:
-> On 24.03.24 23:33, Boqun Feng wrote:
-> > Rust Binder will need to read CLOCK_MONOTONIC to compute how many
-> > milliseconds a transaction has been active for when dumping the current
-> > state of the Binder driver. This replicates the logic in C Binder [1].
-> > 
-> > For a usage example in Rust Binder, see [2].
-> > 
-> > Hence add the support for CLOCK_MONOTONIC read.
-> > 
-> > The `ktime_get` method cannot be safely called in NMI context. This
-> > requirement is not checked by these abstractions, but it is intended
-> > that klint [3] or a similar tool will be used to check it in the future.
-> > 
-> > Link: https://lore.kernel.org/lkml/5ac8c0d09392290be789423f0dd78a520b830fab.1682333709.git.zhangchuang3@xiaomi.com/ [1]
-> > Link: https://r.android.com/3004103 [2]
-> > Link: https://rust-for-linux.com/klint [3]
-> > Co-developed-by: Heghedus Razvan <heghedus.razvan@protonmail.com>
-> > Signed-off-by: Heghedus Razvan <heghedus.razvan@protonmail.com>
-> > Co-developed-by: Asahi Lina <lina@asahilina.net>
-> > Signed-off-by: Asahi Lina <lina@asahilina.net>
-> > Co-developed-by: Alice Ryhl <aliceryhl@google.com>
-> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> 
-> With the nit fixed:
-> 
-> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-> 
+On Mon, Mar 25, 2024 at 07:25:56PM +0100, David Sterba wrote:
+>On Sun, Mar 24, 2024 at 07:29:45PM -0400, Sasha Levin wrote:
+>> From: Filipe Manana <fdmanana@suse.com>
+>>
+>> [ Upstream commit 1693d5442c458ae8d5b0d58463b873cd879569ed ]
+>>
+>> Add a helper function to determine if a block group is being used and make
+>> use of it at btrfs_delete_unused_bgs(). This helper will also be used in
+>> future code changes.
+>>
+>> Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+>> Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+>> Reviewed-by: Boris Burkov <boris@bur.io>
+>> Signed-off-by: Filipe Manana <fdmanana@suse.com>
+>> Reviewed-by: David Sterba <dsterba@suse.com>
+>> Signed-off-by: David Sterba <dsterba@suse.com>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>
+>Please drop this patch from all stable branches unless it's a
+>prerequisite for some other patch. This is clearly a cleanup.
 
-Thanks!
+Ack, thanks!
 
-> > ---
-> > @Alice, I still put the link to the usage of Android binder here, if you
-> > want to remove that, please let me know.
-> > 
-> >  rust/kernel/time.rs | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> > 
-> > diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
-> > index 0f9f5605ed48..5cd669cbea01 100644
-> > --- a/rust/kernel/time.rs
-> > +++ b/rust/kernel/time.rs
-> > @@ -113,3 +113,22 @@ fn sub(self, other: Self) -> Self::Output {
-> >          Duration::new(self.inner.wrapping_sub(other.inner))
-> >      }
-> >  }
-> > +
-> > +/// Contains the various clock source types available to the kernel.
-> > +pub mod clock {
-> > +    use super::*;
-> > +
-> > +    /// A clock representing the default kernel time source (`CLOCK_MONOTONIC`).
-> > +    pub struct KernelTime;
-> > +
-> > +    /// `CLOCK_MONOTONIC` is monotonic.
-> > +    impl Monotonic for KernelTime {}
-> > +
-> > +    impl Clock for KernelTime {
-> > +        #[inline]
-> > +        fn now() -> Instant<Self> {
-> > +            // SAFETY: It is always safe to call `ktime_get` outside of NMI context.
-> > +            Instant::<Self>::new(unsafe { bindings::ktime_get() })
-> 
-> I don't think the turbofish syntax (the `::<Self>` part) is needed here.
-> 
-
-Fixed locally.
-
-Regards,
-Boqun
-
-> -- 
-> Cheers,
-> Benno
-> 
-> > +        }
-> > +    }
-> > +}
-> > --
-> > 2.44.0
-> >
+-- 
+Thanks,
+Sasha
