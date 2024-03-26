@@ -1,357 +1,239 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382CF130A58
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 06:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C47513280F
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 06:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711434570; cv=none; b=fAOmZxowmuFxug7eSetFtxO5p0pjkDfa6IntDX7pgHEjxEUL2fBgUJhcJGTOSoMOqm1snuQPicATAlOlwrtkWfef55b664SZddKvOynRMZ9qt1rv5QjAKf2xkQgBlRqla6OeaqM+AlJzldTGVIFsVnawC9x0DuG56Xox7H0Ct0Q=
+	t=1711434570; cv=none; b=DIz/HO/7678oJo094SwMphnepZ6+kJFgwgORSUBfio/Hr9kJFF5N1O5ssNsyw97zka1ti2b3mmuV9N1nH6b3BGCa4he8h8x1a+IDD6HvAqKETq42pM1PlK10DyDeS7Ar98jobWrziAFjGczH5OHf3jaJLqjw6aouZi7vjtenXJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711434570; c=relaxed/simple;
-	bh=8n3sjFiVCX1R6oI4eVrTQsVqUAorYWqWuKdioQ15Qb0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H7jFuwjDctuABEkw9zjWrBWrg+PMPNnGeetiMVFSMNzAfOW5an/sOYBp6NxjxuFx5VDKtru4pfwRVq51M8DYy5zLYUydkUG63zbsQ7KHTKvbjKoUImHE1k13+5BNykmE8j2u3ULyI8iOZH+GT4tcRkcBTTchUAag4tSZn1PBUNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uys7I63q; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=o4yifOMq; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uys7I63q; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=o4yifOMq; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	bh=SR9YNar3/X3F4Y7T5Iev7JOeoTFsIajhJNRqCU0l+tc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m9449zKLgCg24YrmO7/RB3Mrpkxym2XP/MvvkVAu8PImIShJShcfpQCdzWzsb3TyWs6i5ksW9nh8Tm/ciOJnofohL2c4FMtCYeVjxvd0FAr5ikCaXGix2oFmAPoC6DcrhsauAc3bzOgqh5P/APgdvM4L+4Ew2tuwxvxiOUH+11U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PvJiQP3Y; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uys7I63q";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="o4yifOMq";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uys7I63q";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="o4yifOMq"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B964F37809;
-	Tue, 26 Mar 2024 06:29:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1711434558; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V2s5Z+mBTGRB1b77yA719SIjqvuRSMVvpx566llr28g=;
-	b=uys7I63qEzH54ztueaqvOcRv7kEMi7JKK98QUJwjFcOQCbCvkJzWOsZdmawTS01a4bLghx
-	HbMaGF0J90jgQy5t8lYEdlgfTxl7RAxhvuS9ZV0sIWyulS3s1DojetzdlH384Ch+i6+aXt
-	myvKJra6Z4vadQJopHu1BBeZfZixHdA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1711434558;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V2s5Z+mBTGRB1b77yA719SIjqvuRSMVvpx566llr28g=;
-	b=o4yifOMqEqPGNbaCq9D0Jv4FpBOK2yvang64LxEzR7ta7Hr7knVIVmCKpEA3kgloOHZYVI
-	3jLcWOULZ0oq19CA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1711434558; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V2s5Z+mBTGRB1b77yA719SIjqvuRSMVvpx566llr28g=;
-	b=uys7I63qEzH54ztueaqvOcRv7kEMi7JKK98QUJwjFcOQCbCvkJzWOsZdmawTS01a4bLghx
-	HbMaGF0J90jgQy5t8lYEdlgfTxl7RAxhvuS9ZV0sIWyulS3s1DojetzdlH384Ch+i6+aXt
-	myvKJra6Z4vadQJopHu1BBeZfZixHdA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1711434558;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V2s5Z+mBTGRB1b77yA719SIjqvuRSMVvpx566llr28g=;
-	b=o4yifOMqEqPGNbaCq9D0Jv4FpBOK2yvang64LxEzR7ta7Hr7knVIVmCKpEA3kgloOHZYVI
-	3jLcWOULZ0oq19CA==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 24BB013215;
-	Tue, 26 Mar 2024 06:29:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id 6NRLBj5rAmY2YQAAn2gu4w
-	(envelope-from <osalvador@suse.de>); Tue, 26 Mar 2024 06:29:18 +0000
-From: Oscar Salvador <osalvador@suse.de>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Michal Hocko <mhocko@suse.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	syzbot+41bbfdb8d41003d12c0f@syzkaller.appspotmail.com
-Subject: [PATCH v3 2/3] mm,page_owner: Fix refcount imbalance
-Date: Tue, 26 Mar 2024 07:30:35 +0100
-Message-ID: <20240326063036.6242-3-osalvador@suse.de>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240326063036.6242-1-osalvador@suse.de>
-References: <20240326063036.6242-1-osalvador@suse.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PvJiQP3Y"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-563cb3ba9daso5300435a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 23:29:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711434560; x=1712039360; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=5QDBHaSC5fntPQdx5nI9UDxMCD9F3a8euvISqTDLhTk=;
+        b=PvJiQP3YbGwbuoAej92Vu/nUGx2B7zPW3Pjuid3x9lOyeLvWuK9dxA9N9dfUUrEnL6
+         286cgmGkNNGNmsg76xa/iGbZ+iDMymmZ5xPb8alIhhlrtApYktwXf6iKgT4Mog9oFIov
+         qr+htwfi4X+9Iqi0GYb25eP1i5T6giUK1OltbGxaCZVZGw/FvPBGDfD0ZFy0fg75OAb5
+         uxmPxnXWGvRsgCqB2b6HN0EJjnrOCtwmo/dwJDp/XYk9eoTew7lE0NPyAow1MEauCgeN
+         c41EfBQQDi4d9yeDw9/J0WltaG4/aSuNHSegfS/3OgjDNhmhAJd3EU6Bbv14abe+A0Ee
+         rHtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711434560; x=1712039360;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5QDBHaSC5fntPQdx5nI9UDxMCD9F3a8euvISqTDLhTk=;
+        b=KAiceTEORiis5rkiFptuiJ0gExHTkK18QytV5oXudp7gjCrq/JwYl9wDqxzeY2oT1f
+         vyIh3V3Li/VNeVu+DUPOsGRKHQVZNvrH0HTwdmnVnPe0gsKLIpPLWRUKcOUxUVf0biMb
+         w64aKUvfUf254vo0zwXZcpdey8F6WyB6s8+ZtVSBSvaJYp+cgv+TN7xnL0l6z48absQQ
+         3ns/+YRiYK/OD/pxubNsbAPhKSKiM+9ELbh3ZOVQLE1J+HtOtJKUvuK+MhAo0c+xUxP0
+         iEAlvjtMjR74hoguFO8sEHsWcKoaS7xLC1O7Acp3PEzjtGL4jpwFQOXSF5VscBmQoEka
+         Uc2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWvA1RGrKeMyxKZCrcbggcL85HGR+7PyGLQmQ+QQBOQiV6CXqukuxeby9HB/z8vS6hUXWQA6fJ8saK4AsGATTmfbZIbV6dTnl5y9EP4
+X-Gm-Message-State: AOJu0YwSMbZF10ndz6QR6basN7FnxWisgOP9conK7TyBhPpcJHX+cQTX
+	Pl8oty5u8i2/zDOT+8fqnivY0N2+1e0DVgIbcPuFl4LkCS7UvziS4FhYTNW/ujY=
+X-Google-Smtp-Source: AGHT+IHS+Py7F4eCiITse8lcGWhLrhntEwe1W757/7QYsqErqTxDqZZZwsaVh7yrPgaOIa8FUDlqxg==
+X-Received: by 2002:a50:9b58:0:b0:566:2aff:2d38 with SMTP id a24-20020a509b58000000b005662aff2d38mr5980629edj.26.1711434559971;
+        Mon, 25 Mar 2024 23:29:19 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.44])
+        by smtp.gmail.com with ESMTPSA id fk26-20020a056402399a00b0056c2bd89354sm219887edb.14.2024.03.25.23.29.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Mar 2024 23:29:19 -0700 (PDT)
+Message-ID: <68dbebe0-acaa-40f0-9a5c-fd49d265ae08@linaro.org>
+Date: Tue, 26 Mar 2024 07:29:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] QCM2290 LMH
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Thara Gopinath
+ <thara.gopinath@gmail.com>, Amit Kucheria <amitk@kernel.org>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, stable@vger.kernel.org,
+ Loic Poulain <loic.poulain@linaro.org>
+References: <20240308-topic-rb1_lmh-v2-0-bac3914b0fe3@linaro.org>
+ <d8ed4e6c-549f-4c04-b38a-2d788df8b707@notapiano>
+ <dbe90a1c-bac2-4176-8eba-7ad96a182313@linaro.org>
+ <8e0cc005-0b3a-4475-bfe4-82ec46d918a5@notapiano>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <8e0cc005-0b3a-4475-bfe4-82ec46d918a5@notapiano>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Score: -1.80
-X-Spamd-Result: default: False [-1.80 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 R_MISSING_CHARSET(2.50)[];
-	 TAGGED_RCPT(0.00)[41bbfdb8d41003d12c0f];
-	 MIME_GOOD(-0.10)[text/plain];
-	 REPLY(-4.00)[];
-	 BROKEN_CONTENT_TYPE(1.50)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_SEVEN(0.00)[10];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.cz:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[vger.kernel.org,kvack.org,suse.com,suse.cz,google.com,gmail.com,suse.de,syzkaller.appspotmail.com];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Flag: NO
 
-Current code does not contemplate scenarios were an allocation and
-free operation on the same pages do not handle it in the same amount
-at once.
-To give an example, page_alloc_exact(), where we will allocate a page
-of enough order to stafisfy the size request, but we will free the
-remainings right away.
+On 26/03/2024 00:01, Nícolas F. R. A. Prado wrote:
+> On Mon, Mar 25, 2024 at 08:59:55PM +0100, Krzysztof Kozlowski wrote:
+>> On 20/03/2024 20:08, Nícolas F. R. A. Prado wrote:
+>>>> Loic Poulain (1):
+>>>>       arm64: dts: qcom: qcm2290: Add LMH node
+>>>>
+>>>>  Documentation/devicetree/bindings/thermal/qcom-lmh.yaml | 12 ++++++++----
+>>>>  arch/arm64/boot/dts/qcom/qcm2290.dtsi                   | 14 +++++++++++++-
+>>>>  drivers/thermal/qcom/lmh.c                              |  3 +++
+>>>>  3 files changed, 24 insertions(+), 5 deletions(-)
+>>>
+>>> Hi,
+>>>
+>>> I've started tracking the results of 'make dtbs_check' on linux-next, and I've
+>>> noticed that on today's next, next-20240320, there's a new warning coming from
+>>> this. The reason is that the DT change has landed, but the binding has not,
+>>> since it goes through a separate tree. I thought the binding was supposed to
+>>> always land before the driver and DT that make use of it, but looking through
+>>
+>> There is no such rule. Of course new binding should be documented in
+>> earlier or the same kernel release cycle as users get in, but it's not a
+>> requirement.
+> 
+> So, after giving the documentation a second look, I found this:
+> 
+> "For new platforms, or additions to existing ones, make dtbs_check should not
+> add any new warnings."
+> 
+> Source: https://www.kernel.org/doc/html/latest/process/maintainer-soc.html#validating-devicetree-files
 
-In the above example, we will increment the stack_record refcount
-only once, but we will decrease it the same number of times as number
-of unused pages we have to free.
-This will lead to a warning because of refcount imbalance.
+It's just "should"...
 
-Fix this by recording the number of base pages in the refcount field.
+> 
+> What is not clear there is what the reference point is: is it on linux-next?
+> Mainline release?
 
-Reported-by: syzbot+41bbfdb8d41003d12c0f@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/linux-mm/00000000000090e8ff0613eda0e5@google.com
-Fixes: 217b2119b9e2 ("mm,page_owner: implement the tracking of the stacks count")
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
----
- Documentation/mm/page_owner.rst | 73 +++++++++++++++++----------------
- mm/page_owner.c                 | 34 ++++++++-------
- 2 files changed, 58 insertions(+), 49 deletions(-)
+Does it matter? There was never a new warning introduced by this
+patchset. The patchset itself is correct. No new warnings.
 
-diff --git a/Documentation/mm/page_owner.rst b/Documentation/mm/page_owner.rst
-index 0d0334cd5179..3a45a20fc05a 100644
---- a/Documentation/mm/page_owner.rst
-+++ b/Documentation/mm/page_owner.rst
-@@ -24,10 +24,10 @@ fragmentation statistics can be obtained through gfp flag information of
- each page. It is already implemented and activated if page owner is
- enabled. Other usages are more than welcome.
- 
--It can also be used to show all the stacks and their outstanding
--allocations, which gives us a quick overview of where the memory is going
--without the need to screen through all the pages and match the allocation
--and free operation.
-+It can also be used to show all the stacks and their current number of
-+allocated base pages, which gives us a quick overview of where the memory
-+is going without the need to screen through all the pages and match the
-+allocation and free operation.
- 
- page owner is disabled by default. So, if you'd like to use it, you need
- to add "page_owner=on" to your boot cmdline. If the kernel is built
-@@ -75,42 +75,45 @@ Usage
- 
- 	cat /sys/kernel/debug/page_owner_stacks/show_stacks > stacks.txt
- 	cat stacks.txt
--	 prep_new_page+0xa9/0x120
--	 get_page_from_freelist+0x7e6/0x2140
--	 __alloc_pages+0x18a/0x370
--	 new_slab+0xc8/0x580
--	 ___slab_alloc+0x1f2/0xaf0
--	 __slab_alloc.isra.86+0x22/0x40
--	 kmem_cache_alloc+0x31b/0x350
--	 __khugepaged_enter+0x39/0x100
--	 dup_mmap+0x1c7/0x5ce
--	 copy_process+0x1afe/0x1c90
--	 kernel_clone+0x9a/0x3c0
--	 __do_sys_clone+0x66/0x90
--	 do_syscall_64+0x7f/0x160
--	 entry_SYSCALL_64_after_hwframe+0x6c/0x74
--	stack_count: 234
-+	 post_alloc_hook+0x177/0x1a0
-+	 get_page_from_freelist+0xd01/0xd80
-+	 __alloc_pages+0x39e/0x7e0
-+	 allocate_slab+0xbc/0x3f0
-+	 ___slab_alloc+0x528/0x8a0
-+	 kmem_cache_alloc+0x224/0x3b0
-+	 sk_prot_alloc+0x58/0x1a0
-+	 sk_alloc+0x32/0x4f0
-+	 inet_create+0x427/0xb50
-+	 __sock_create+0x2e4/0x650
-+	 inet_ctl_sock_create+0x30/0x180
-+	 igmp_net_init+0xc1/0x130
-+	 ops_init+0x167/0x410
-+	 setup_net+0x304/0xa60
-+	 copy_net_ns+0x29b/0x4a0
-+	 create_new_namespaces+0x4a1/0x820
-+	nr_base_pages: 16
- 	...
- 	...
- 	echo 7000 > /sys/kernel/debug/page_owner_stacks/count_threshold
- 	cat /sys/kernel/debug/page_owner_stacks/show_stacks> stacks_7000.txt
- 	cat stacks_7000.txt
--	 prep_new_page+0xa9/0x120
--	 get_page_from_freelist+0x7e6/0x2140
--	 __alloc_pages+0x18a/0x370
--	 alloc_pages_mpol+0xdf/0x1e0
--	 folio_alloc+0x14/0x50
--	 filemap_alloc_folio+0xb0/0x100
--	 page_cache_ra_unbounded+0x97/0x180
--	 filemap_fault+0x4b4/0x1200
--	 __do_fault+0x2d/0x110
--	 do_pte_missing+0x4b0/0xa30
--	 __handle_mm_fault+0x7fa/0xb70
--	 handle_mm_fault+0x125/0x300
--	 do_user_addr_fault+0x3c9/0x840
--	 exc_page_fault+0x68/0x150
--	 asm_exc_page_fault+0x22/0x30
--	stack_count: 8248
-+	 post_alloc_hook+0x177/0x1a0
-+	 get_page_from_freelist+0xd01/0xd80
-+	 __alloc_pages+0x39e/0x7e0
-+	 alloc_pages_mpol+0x22e/0x490
-+	 folio_alloc+0xd5/0x110
-+	 filemap_alloc_folio+0x78/0x230
-+	 page_cache_ra_order+0x287/0x6f0
-+	 filemap_get_pages+0x517/0x1160
-+	 filemap_read+0x304/0x9f0
-+	 xfs_file_buffered_read+0xe6/0x1d0 [xfs]
-+	 xfs_file_read_iter+0x1f0/0x380 [xfs]
-+	 __kernel_read+0x3b9/0x730
-+	 kernel_read_file+0x309/0x4d0
-+	 __do_sys_finit_module+0x381/0x730
-+	 do_syscall_64+0x8d/0x150
-+	 entry_SYSCALL_64_after_hwframe+0x62/0x6a
-+	nr_base_pages: 20824
- 	...
- 
- 	cat /sys/kernel/debug/page_owner > page_owner_full.txt
-diff --git a/mm/page_owner.c b/mm/page_owner.c
-index 52d1ced0b57f..5df0d6892bdc 100644
---- a/mm/page_owner.c
-+++ b/mm/page_owner.c
-@@ -196,7 +196,8 @@ static void add_stack_record_to_list(struct stack_record *stack_record,
- 	spin_unlock_irqrestore(&stack_list_lock, flags);
- }
- 
--static void inc_stack_record_count(depot_stack_handle_t handle, gfp_t gfp_mask)
-+static void inc_stack_record_count(depot_stack_handle_t handle, gfp_t gfp_mask,
-+				   int nr_base_pages)
- {
- 	struct stack_record *stack_record = __stack_depot_get_stack_record(handle);
- 
-@@ -217,15 +218,20 @@ static void inc_stack_record_count(depot_stack_handle_t handle, gfp_t gfp_mask)
- 			/* Add the new stack_record to our list */
- 			add_stack_record_to_list(stack_record, gfp_mask);
- 	}
--	refcount_inc(&stack_record->count);
-+	refcount_add(nr_base_pages, &stack_record->count);
- }
- 
--static void dec_stack_record_count(depot_stack_handle_t handle)
-+static void dec_stack_record_count(depot_stack_handle_t handle,
-+				   int nr_base_pages)
- {
- 	struct stack_record *stack_record = __stack_depot_get_stack_record(handle);
- 
--	if (stack_record)
--		refcount_dec(&stack_record->count);
-+	if (!stack_record)
-+		return;
-+
-+	if (refcount_sub_and_test(nr_base_pages, &stack_record->count))
-+		pr_warn("%s: refcount went to 0 for %u handle\n", __func__,
-+			handle);
- }
- 
- static inline void __update_page_owner_handle(struct page_ext *page_ext,
-@@ -306,7 +312,7 @@ void __reset_page_owner(struct page *page, unsigned short order)
- 		 * the machinery is not ready yet, we cannot decrement
- 		 * their refcount either.
- 		 */
--		dec_stack_record_count(alloc_handle);
-+		dec_stack_record_count(alloc_handle, 1 << order);
- }
- 
- noinline void __set_page_owner(struct page *page, unsigned short order,
-@@ -325,7 +331,7 @@ noinline void __set_page_owner(struct page *page, unsigned short order,
- 				   current->pid, current->tgid, ts_nsec,
- 				   current->comm);
- 	page_ext_put(page_ext);
--	inc_stack_record_count(handle, gfp_mask);
-+	inc_stack_record_count(handle, gfp_mask, 1 << order);
- }
- 
- void __set_page_owner_migrate_reason(struct page *page, int reason)
-@@ -872,11 +878,11 @@ static void *stack_next(struct seq_file *m, void *v, loff_t *ppos)
- 	return stack;
- }
- 
--static unsigned long page_owner_stack_threshold;
-+static unsigned long page_owner_pages_threshold;
- 
- static int stack_print(struct seq_file *m, void *v)
- {
--	int i, stack_count;
-+	int i, nr_base_pages;
- 	struct stack *stack = v;
- 	unsigned long *entries;
- 	unsigned long nr_entries;
-@@ -887,14 +893,14 @@ static int stack_print(struct seq_file *m, void *v)
- 
- 	nr_entries = stack_record->size;
- 	entries = stack_record->entries;
--	stack_count = refcount_read(&stack_record->count) - 1;
-+	nr_base_pages = refcount_read(&stack_record->count) - 1;
- 
--	if (stack_count < 1 || stack_count < page_owner_stack_threshold)
-+	if (nr_base_pages < 1 || nr_base_pages < page_owner_pages_threshold)
- 		return 0;
- 
- 	for (i = 0; i < nr_entries; i++)
- 		seq_printf(m, " %pS\n", (void *)entries[i]);
--	seq_printf(m, "stack_count: %d\n\n", stack_count);
-+	seq_printf(m, "nr_base_pages: %d\n\n", nr_base_pages);
- 
- 	return 0;
- }
-@@ -924,13 +930,13 @@ static const struct file_operations page_owner_stack_operations = {
- 
- static int page_owner_threshold_get(void *data, u64 *val)
- {
--	*val = READ_ONCE(page_owner_stack_threshold);
-+	*val = READ_ONCE(page_owner_pages_threshold);
- 	return 0;
- }
- 
- static int page_owner_threshold_set(void *data, u64 val)
- {
--	WRITE_ONCE(page_owner_stack_threshold, val);
-+	WRITE_ONCE(page_owner_pages_threshold, val);
- 	return 0;
- }
- 
--- 
-2.44.0
+> 
+> As Konrad pointed out it's tricky (and maybe not worth it) to guarantee this for
+> linux-next. But for mainline release it seems feasible (and IMO the target, as
+> after that stability guarantees should apply).
+
+I don't believe in such guarantees. Different maintainers apply patches
+differently, especially bindings, so this is beyond our control. Often
+also beyond SoC maintainer control.
+
+> 
+>>
+>>
+>>> the dt-binding documentation pages I couldn't find anything confirming or
+>>> denying that.
+>>>
+>>> I expect this to happen again in the future, which is why I'm reaching out to
+>>> understand better how to deal with this kind of situation.
+>>
+>> Deal as what to do? Are you asking in terms of maintenance of some
+>> subsystem or sending some patches? In this particular case here, I don't
+>> think there is anything on your side to deal with.
+> 
+> I'm asking what's the most helpful way to you the maintainers for me to report
+> these failures in the future.
+
+The most effective way is LKP-like or Rob's-bot-like automated replies
+to original email threads, by testing the original patchset on
+linux-next. But Rob's bot is actually doing it, just on different base.
+
+Other reports, like for cases when only parts of patch is applied, could
+be also useful but I am afraid you will generate way too much of them.
+Binding is supposed to go via subsystem, DTS via SoC, so basically 90%
+of patchsets might have some sort of delays resulting in dtbs_check
+false positive warnings.
+
+For my SoC I check my trees, mainline and next, and keep adding list of
+exceptions for expected issues. What's useful for Qualcomm? Konrad,
+Bjorn, any thoughts?
+
+Have in mind that expected warnings can be for entire cycle when dealing
+with technical debt, because DTS goes N+1.
+
+> 
+> Rob has already automated running dtbs_check for patches coming into the mailing
+> list. And I have set up KernelCI to run dtbs_check on linux-next in order to
+> catch any issues that might slip through, or happen during integration of the
+> trees, etc.
+> 
+> Now, if we agree that dtbs_check regressions on linux-next are acceptable, at
+> least ones like this, where the issue is just synchronization between
+
+Yes and no. True regressions are not acceptable. Expected intermediate
+regressions as a result of patchset being applying, but not yet fully
+applied, are OK. Expected regressions for intra-cycle-work are also OK.
+
+> maintainers, then I can simply not report them in the future. But we should
+> have some point where dtbs_check should not regress, and mainline release seems
+> the reasonable choice, because if we don't then dtbs_check warnings would just
+> keep growing forever.
+
+I invite therefore to my session:
+https://eoss24.sched.com/event/1aBEf?iframe=no
+We'll see if they keep growing :)
+
+Best regards,
+Krzysztof
 
