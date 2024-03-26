@@ -1,155 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4368512D765;
-	Tue, 26 Mar 2024 14:27:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51BD612E1C4;
+	Tue, 26 Mar 2024 14:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711463254; cv=none; b=I4wmqB6O1yz1HsIgEC1LiUQjdCHwW1pTyfLJHXmrZz/+pQHiOfZJh8ks5sLNqhceU5oGvN0YA1V+QC5Hs56s5SOGai31TyioDvNnCfZiesUK7o8X5cQGkHlgYKl34WNC+tdszLzOA3ElAaiNUr3nbnRrQEuFDXEp5+1pGcGdS+k=
+	t=1711463260; cv=none; b=o6OmPWRvUS8OThKu7FMIRRYJjaws7HMaoyY2mcxQP1tDZdoeMMF3QvtRqzHwHSCUBxq+j/ydWsQ3w/wHa95SqIFHrZCjmlGr/nlh915P6JgqzhvRuI93Bab0xWqAtYqzkQp/4kIzm5+jsnljb5lWlCsZNjPpSX8OpAwOjUg0Kzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711463254; c=relaxed/simple;
-	bh=LW9RMlhjXMwwswaA4XM355elpcokxVWRyHjYs7X4Luo=;
+	s=arc-20240116; t=1711463260; c=relaxed/simple;
+	bh=12uk9JBPJkgP4oZUtaa23Orcrd3+FrjVkoU50EYP62c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G5Du8EGS4LTeb1ja9LkKUu3ODkXyyr9eVcPVPa8tdcLq3wbNWd84Pak4tq5OdiNnxZbZJ0J/jfBoigC1SRSP1M9l/IDRMHJ2itRpRy0+zvqaDMWLNulbbvgBi1FTALTYGZSZ6l1KlvtUYAmBD8Ehx3DlVRWEVk697CLwh6j04IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8zwX8+D; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dpSEw2Dyi/KAzq+qq17e+9XnyW3BZedTxuG1jl7a1WkW58LzvfC/hQcxCCGdIFtrK6j6CNkhMx4Ajbn2WItYrqYpjjqKwz8/PWA5UMxhDeuqRjirFlQXzKpjgdT8sYriRu1O9ZpIc0fVdy/UlHTn2tzpEK0zM40vuTQZcNwkQMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=biB0ADQN; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8zwX8+D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8EC5C433F1;
-	Tue, 26 Mar 2024 14:27:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711463253;
-	bh=LW9RMlhjXMwwswaA4XM355elpcokxVWRyHjYs7X4Luo=;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="biB0ADQN"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3CC6240E02A6;
+	Tue, 26 Mar 2024 14:27:36 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id UoaUWSbagnmz; Tue, 26 Mar 2024 14:27:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1711463253; bh=yqEXdRp/uICuZOB9rxpV+/FX3m8aNIeHX6lg94eGg2w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W8zwX8+Dj6EWx5MT6Wn47Cd7patuQ8QPQ4ioHlq11Aze2rf+BuJMTHdGm9OiF5avM
-	 yQrZJiPxfUICNRrm7yGJHiTaZnuTzQIDMoVfJzUFFxibsv+r+Cng2BRyAmUglci+H0
-	 Z+UOjIsmsH5t3wVD/MuyCAWshEzsjF6P8lWwEkVHkwTwRkavQ2o5nnLRFv2Rla6BVG
-	 sA+sb6pVYcXfOP4ya08e6gLkcYx+O16EZFOXef+vzMYNLQjmrjAxLn1cbmKGNJEC91
-	 jXQn8o6fsxYKLMkBwy9zVGfZYfs2jrtEwuGEmPG8aeaMl032t5Op5OB/+mHirSrQSD
-	 TH6+rmekRv6DQ==
-Date: Tue, 26 Mar 2024 15:27:27 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
-	linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 05/11] PCI: epf-{mhi/test}: Move DMA initialization to
- EPC init callback
-Message-ID: <ZgLbT1JLn7r_TCwd@ryzen>
-References: <20240314-pci-epf-rework-v1-0-6134e6c1d491@linaro.org>
- <20240314-pci-epf-rework-v1-5-6134e6c1d491@linaro.org>
- <Zf2tXgKo-gc3qy1D@ryzen>
- <20240326082636.GG9565@thinkpad>
- <ZgKsBoTvPWWhPO9e@ryzen>
+	b=biB0ADQN4TtFmm7CvgoU7ct1BwCMkFKlAURDjjPUUs25Zc5GG7L1UlI52oT/iTaC3
+	 A9N8pdOJPu+V7yP7Pe4f8/nTXbXoLbaNiRGBD+QefkDbXr5eLh9QZ9xsvlo3K0TKzd
+	 snR4RTHOpB92PlYNoE8YUGY/KMEzIxJLcVD1z6K+Vb8NhJhidSU+CO0+6X1CXKcjC1
+	 2Hn0cNj3rLQHDzsNK2lm0tUeqiL/JCnZBrYZOe0XXgllTaYD1kNwOM71/yu7wtFc7e
+	 EdyIbd/To5HyRnkQzuMsQFtOsEIPRPHpcn1Gz055AiIOnKZzBGV8z2VW5TYK1JEHXZ
+	 HpGVoLciUGEpbg5F0RWmKzGomUIR1fa2s1ucZRIOYKxgOP2WOgxKTHeOdYqLM+b3CB
+	 wIAoTMe/gm39sZe8xB4jaIG3nrfoapwZOeSAhxM/9mfE3ejpVBkHPXC3Ue82YdgmzV
+	 o8rEONxQOhOUqpV6rWahbfREvvAbSX8eEDSVsIBpKQmcAO7xSZu0hJyHvAzhvf8yzJ
+	 UqPH7QEjSkkawjtGnlX91wczBxzQgJ+pc4Cuu+PSdxqsDj+VzgraG1Mub8c88nZCqZ
+	 CO2ONTneuIk/OEQ3v2cnW62igN/UmhX4KF0LiaH9I5JQLgt0jpxqLoDmRRgpmk69DS
+	 +64FbPK2CbXvR5+8pbH2hjyQ=
+Received: from zn.tnic (p5de8ecf7.dip0.t-ipconnect.de [93.232.236.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 066CF40E024C;
+	Tue, 26 Mar 2024 14:27:28 +0000 (UTC)
+Date: Tue, 26 Mar 2024 15:27:23 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"anthony s . k ." <akira.2020@protonmail.com>
+Subject: Re: [PATCH] RAS/AMD/FMPM: Fix build when debugfs is not enabled
+Message-ID: <20240326142723.GHZgLbS_Es_1kfqK5t@fat_crate.local>
+References: <20240325183755.776-1-bp@alien8.de>
+ <eede2586-f143-4107-a065-2860ed413d0a@amd.com>
+ <20240326140759.GGZgLWv3UZVpHZ5c98@fat_crate.local>
+ <adacb412-a043-4512-a8d3-1a0f6f40e9f4@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZgKsBoTvPWWhPO9e@ryzen>
+In-Reply-To: <adacb412-a043-4512-a8d3-1a0f6f40e9f4@amd.com>
 
-On Tue, Mar 26, 2024 at 12:05:42PM +0100, Niklas Cassel wrote:
-> On Tue, Mar 26, 2024 at 01:56:36PM +0530, Manivannan Sadhasivam wrote:
-> > On Fri, Mar 22, 2024 at 05:10:06PM +0100, Niklas Cassel wrote:
-> > > On Thu, Mar 14, 2024 at 08:53:44PM +0530, Manivannan Sadhasivam wrote:
-> > > > To maintain uniformity across EPF drivers, let's move the DMA
-> > > > initialization to EPC init callback. This will also allow us to deinit DMA
-> > > > during PERST# assert in the further commits.
-> > > > 
-> > > > For EPC drivers without PERST#, DMA deinit will only happen during driver
-> > > > unbind.
-> > > > 
-> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > ---
-> > > 
-> > > Reviewed-by: Niklas Cassel <cassel@kernel.org>
-> > > 
-> > > 
-> > > For the record, I was debugging a problem related to EPF DMA recently
-> > > and was dumping the DMA mask for the struct device of the epf driver.
-> > > I was a bit confused to see it as 32-bits, even though the EPC driver
-> > > has it set to 64-bits.
-> > > 
-> > > The current code works, because e.g., pci_epf_test_write(), etc,
-> > > does:
-> > > struct device *dma_dev = epf->epc->dev.parent;
-> > > dma_map_single(dma_dev, ...);
-> > > 
-> > > but it also means that all EPF drivers will do this uglyness.
-> > > 
-> > 
-> > This ugliness is required as long as the dmaengine is associated only with the
-> > EPC.
-> > 
-> > > 
-> > > 
-> > > However, if a EPF driver does e.g.
-> > > dma_alloc_coherent(), and sends in the struct *device for the EPF,
-> > > which is the most logical thing to do IMO, it will use the wrong DMA
-> > > mask.
-> > > 
-> > > Perhaps EPF or EPC code should make sure that the struct *device
-> > > for the EPF will get the same DMA mask as epf->epc->dev.parent,
-> > > so that EPF driver developer can use the struct *epf when calling
-> > > e.g. dma_alloc_coherent().
-> > > 
-> > 
-> > Makes sense. I think it can be done during bind() in the EPC core. Feel free to
-> > submit a patch if you like, otherwise I'll keep it in my todo list.
-> 
-> So we still want to test:
-> -DMA API using the eDMA
-> -DMA API using the "dummy" memcpy dma-channel.
-> 
-> However, it seems like both pci-epf-mhi.c and pci-epf-test.c
-> do either:
-> -Use DMA API
-> or
-> -Use memcpy_fromio()/memcpy_toio() instead of DMA API
-> 
-> 
-> To me, it seems like we should always be able to use
-> DMA API (using either a eDMA or "dummy" memcpy).
-> 
-> I don't really see the need to have the path that does:
-> memcpy_fromio()/memcpy_toio().
-> 
-> I know that for DWC, when using memcpy (and this also
-> memcpy via DMA API), we need to map the address using
-> iATU first.
-> 
-> But that could probably be done using another flag,
-> perhaps rename that flag FLAG_USE_DMA to NEEDS_MAP or
-> something.
-> (Such that we can change these drivers to only have a
-> code path that uses DMA API.)
+On Tue, Mar 26, 2024 at 10:22:05AM -0400, Yazen Ghannam wrote:
+> The goal of the module is to save and restore records across reboots.
 
-Looking at pci-epf-mhi.c, it seems to use names like:
-pci_epf_mhi_iatu_read() and pci_epf_mhi_edma_read().
+I guess... although when you think about it, you'd want to dump records
+and see what got restored. But ok, strictly speaking, I guess debugfs is
+optional...
 
-This seems to be a very DWC focused naming.
+> Sorry, I mean that if there's another user of ras_get_debugfs_root()
+> that doesn't depend on CONFIG_DEBUG_FS.
 
-AFAICT, EPF drivers should work on any PCIe EP controller that implements
-the EPC API.
+That is true.
 
-Yes, I understand that it is only Qualcomm that uses this MHI interface/bus,
-but what is stopping Qualcomm from using a non-DWC based PCIe EP controller
-in an upcoming SoC?
+> Okay, will do.
 
-Surely that Qualcomm SoC could still implement the MHI interface/bus,
-so perhaps the naming in this EPF driver should use somewhat less
-"EPC vendor specific" function names?
+Thx.
 
+-- 
+Regards/Gruss,
+    Boris.
 
-Kind regards,
-Niklas
+https://people.kernel.org/tglx/notes-about-netiquette
