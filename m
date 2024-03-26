@@ -1,75 +1,75 @@
 Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D731813E04F;
-	Tue, 26 Mar 2024 20:35:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124F913E40C;
+	Tue, 26 Mar 2024 20:35:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711485345; cv=none; b=rG1xflvxGvnCQWmTBgbBM/kGMUuMJ2ZjZh8g0IcvqDi6YEesT/lvq+RKFNuu3d1OYI0JVQY1j2s6C5ClDEUMpFikZrCvNSfk52eiLA2sYsVlZU4gux0E3shXQqzUZAQn4ZGtFhfUSzVRXbm/LkLUk+HKlM8V/XbvUNaMySlLpwI=
+	t=1711485347; cv=none; b=dfI4xmFziNoy2523NMPgCt1A1jqvLZ+REhYpLiSy4225Lk02Pq0t5N5qOlcJ3iPNW4OabFwt0xXai1caT/10rafE5bU5m5xgqUe1KZ2sgFGoviTHfG0HKJtu/92jnuX3E9aR4t5DVL3RUExRV7+NQXTPLNi+05LAxdf7xozXhE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711485345; c=relaxed/simple;
-	bh=7F+0NOYc+OjzTTyACC9ErsZ3xLNN6M7QVx5gFrlMcZg=;
+	s=arc-20240116; t=1711485347; c=relaxed/simple;
+	bh=irGpCozp/lilyVLox4eGShQhiRvynFL3bvQwuDsrmFw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gVAsxo3GSWMuujUc4+fgzvftPo4ZYcvoHHyy7JQOHYfA7nWQfBWzOPrS9SsNz43jdjcKF/i/iFnAPNkl+bk1xjoMFjMIlKCSUW3jVykUtGYZMD/5OZ7U2tV9v55BqN63So6/QsgpzjCSidJNY26lnXPDGkIK0MRqu1iiWCNhYZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=lADohVC7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LtEC46Vq; arc=none smtp.client-ip=103.168.172.150
+	 In-Reply-To:To:Cc; b=mlfYsNSE6f7LT8suRTLWhqmeQq5gRaeTw17OozV9Xs5dOkvIHkfdthytAp8mNvIcLhOoZiFWgBoEUiW8QPwE1DFqw6HP2zTR7o3othGrYXUMmpcgUMpbWSVlky/y+nFygpPtmUv5qiYylMfgrr4a7GCgrCHz4I6oYqJT9KH1m5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=YgWq3xjz; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eAhZVZKe; arc=none smtp.client-ip=103.168.172.150
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="lADohVC7";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LtEC46Vq"
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 175FA13800CD;
-	Tue, 26 Mar 2024 16:35:43 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="YgWq3xjz";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eAhZVZKe"
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 374C9138014C;
+	Tue, 26 Mar 2024 16:35:45 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Tue, 26 Mar 2024 16:35:43 -0400
+  by compute2.internal (MEProxy); Tue, 26 Mar 2024 16:35:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1711485343;
-	 x=1711571743; bh=XPw34Iav2T+hzoHR6mAbmW6CU2TVaqRpR57TvU3su/0=; b=
-	lADohVC74ISkyV8Hkx2ptCxrmeR6ijdii2NUUhk4LeFCJV0iXMfIAy1m9LubbFmf
-	IWSu+niMwyR89b/v6L/UFM0kEhsPihNFjZxCsXGT58A4q/2IU9n67c5M8tJRYqTG
-	ZTfLyuzNq8ORQxGUvkTnPCk6fnhySaFk4B31gjll6u7VEfL6DKfSG1k/dOuex+qp
-	7dfyXvswk9/PCcE8ukXo4TR/fwXrsiWK0TK0m+qH+ATa56LBuYVbDeQaXSRL5N/W
-	KXNQTl4hzvxc7X94zh3QGFWDQinDEQJjBjibsZNICk4L+Ho2IjP7grTpSWOjTyoZ
-	HG+J8svrOTGBNW/uoj84rA==
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1711485345;
+	 x=1711571745; bh=HPssrUZACwtn3Nesp/zJ+D5cfkKN5v46jJVqYJYHcvc=; b=
+	YgWq3xjzf1kpINprYpZpZx2FmXic0tivLPB+Ty+1yqL5ZMOlL41nA/sYIRn/45kM
+	9CavWjtEUu8cQE7D8uht/tcgT8fuMd7+oyZAP2NceA5XJxdex2nGRXgNgZ2QUoIQ
+	GSvOeYyYzT5oZTiDBR178abgHBqIYcKxDqHEBbFd7mGwSSsDbmsqXdG/yUHnxPRF
+	TUdMPHPBh4uKepvdMdIxBgCK9HHJnOGUqkVH4XRGywedURAJuBuy5kf1moWugZA6
+	x5fo64ZBXk8/uBVoT4ozE8CV6iAozbhYFkK2vzGrnZmL/JtlES2nDF1Iol+rWg7c
+	HZjz+tzgFIthYY+PJK5D/g==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1711485343; x=
-	1711571743; bh=XPw34Iav2T+hzoHR6mAbmW6CU2TVaqRpR57TvU3su/0=; b=L
-	tEC46VqCB46cELB2UyUzaSHRvPljiZhxPRaXkllmsq3iDJbW7NQ85Au5p+NPJpIk
-	mVww0y6Pkww93qa2hrpPh25GELwBWUysjpQRF0P+bz/KDTpnt9ADwW/NblDr1b+l
-	21NuVAoIwYr/nxt6NqBPU3lpsnTI2NyeJYV8FV7V4NUVD601mvQtfFGeEPUMcn5E
-	TfqYpi34K8gKbGW8dzRS/DUhwN/wwEUCJJSQ540q3q+4yTenXuWd+uEztba8OM38
-	ME2TypaEJV0xGctodYSP3qxQuwArGBV2a1aQSlYwQzXOMB8SKI/zPf47/PwKQgFv
-	25y5sNGnpN35HXw+xPo6g==
-X-ME-Sender: <xms:njEDZlYmJtLxRIVx1FKJN-2oEJCmi_GPe9ZTjp4ryPsMNv4cjrQZhg>
-    <xme:njEDZsay7fOD24RVOXsQfaW43FrKesJ29jE9EOz4pSXFw_mE1toqiMK5yYcJ7sISK
-    6DKPqWXyg9zVIIkZ-I>
-X-ME-Received: <xmr:njEDZn9au-S1JGzzfLpbREPn54Amiks3R4rChw6Du3gsdA4jA6dq7UY>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1711485345; x=
+	1711571745; bh=HPssrUZACwtn3Nesp/zJ+D5cfkKN5v46jJVqYJYHcvc=; b=e
+	AhZVZKeBCOb7OTl5sigfrh0UU8Cfu4RlGdAlZA0+1bVcPFR6DdQ+H1fiF5xyOiYE
+	hQePqi4ywOLyAael/EZxxRA4wb9KXoSidgCrocOLMDf6qq1fIst+lkAOhx/8Igjw
+	vtiTF5jeYnk8wH4TxFoF402WTxfNEbKd/qTKnlD2bknfuVTI+qVGA8nNjYDbYdC5
+	CyRIUMWy377lMxSUxWMXSgp0furhuukgOfxRlxs7LwAu7ia9r7CBTCqczPNkh5Jn
+	c5q3+2MTmgZ4OFpHWXqhr5FQANk34x0ssMjZDZE21QM4fXOqwEGZP2f+6i9pMZyp
+	Snpw7YfZ9/ukz1vXoSMOA==
+X-ME-Sender: <xms:oTEDZtkCqUlBkrMKh2ekI_viU__8iIo_CMPTp7TlFw7JcP1AKxlWIA>
+    <xme:oTEDZo1Ih0vtol0rjSDbkG5dVF_qtw7w4w6FL1yc_kEHy_Dx69-KNqTAtDufVDLSN
+    6rr5Bp0L00Idx0IUTs>
+X-ME-Received: <xmr:oTEDZjrqJNPUks6KZ1Tp-34JX3DrK6-xpndnRRE6yYufkhwLarsIiFc>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddufedgudeflecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
     enucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomheplfhi
     rgiguhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqe
-    enucggtffrrghtthgvrhhnpeevvdfggffgtdeuudekfeetleffkedvveeljeffjeeigeek
-    feffvdffleetieejgfenucffohhmrghinheprghrleeffeigrdhssgenucevlhhushhtvg
-    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhg
-    sehflhihghhorghtrdgtohhm
-X-ME-Proxy: <xmx:njEDZjoOC4up3xfvEoGiXD5XJNEj_hJrzoPYmmpCaUu2ci7lEorLlw>
-    <xmx:njEDZgrvOMit658X0YSTT8xH0em77Sjf5ZBvzjpKVQzzp5bSg4saCA>
-    <xmx:njEDZpRfH_GSAU_fm-XpW_EbIjcnrOHOX6rOIoNxVn9h33dnzjMYWQ>
-    <xmx:njEDZoo7SMEB3tOnx6V5r2tyx9W-hvoUIxAERon1OLYQCQSk9Tpc3w>
-    <xmx:nzEDZlBK9F7kWtO_grNPdSeK630pNyI5SDgwoDjAsQ5DLfxKa__K3Q>
+    enucggtffrrghtthgvrhhnpedtvefhheeggfelieekudekhfegjeevledtudeltedtiefg
+    leeggeduleelkeejvdenucffohhmrghinheptghpshdqvhgvtgdrshgsnecuvehluhhsth
+    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdihrghn
+    ghesfhhlhihgohgrthdrtghomh
+X-ME-Proxy: <xmx:oTEDZtlCg486Mmka1AvCwT1Usgn7fIzpWbMCjAqiI61bFIlt-0-zFw>
+    <xmx:oTEDZr0wQhMF4AH7NP3sJ7eqcNEpTDx_HiQtaWQiuZfCuA7eqIAvEA>
+    <xmx:oTEDZssqGwBOfOBCO6zTiAikVubIXkc-YY5rIsA4Bg1EZjiZ9zRcmg>
+    <xmx:oTEDZvUrxWNYv8FlBtqKD8VIWUfEh8mxu2NUc02qtlO6MCrygpb4lw>
+    <xmx:oTEDZr-Mfy8Uj5nn5rhndqSPHbJzDy2lY2Dbf-gWndUbGYCY2onw8w>
 Feedback-ID: ifd894703:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 26 Mar 2024 16:35:42 -0400 (EDT)
+ 26 Mar 2024 16:35:44 -0400 (EDT)
 From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Date: Tue, 26 Mar 2024 20:35:39 +0000
-Subject: [PATCH v2 7/9] MIPS: debug_ll: Implement support for AR933X uarts
+Date: Tue, 26 Mar 2024 20:35:41 +0000
+Subject: [PATCH v2 9/9] MIPS: CPS: Convert to use debug_ll facilities
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,106 +78,178 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240326-mips_debug_ll-v2-7-b64abc76f2a1@flygoat.com>
+Message-Id: <20240326-mips_debug_ll-v2-9-b64abc76f2a1@flygoat.com>
 References: <20240326-mips_debug_ll-v2-0-b64abc76f2a1@flygoat.com>
 In-Reply-To: <20240326-mips_debug_ll-v2-0-b64abc76f2a1@flygoat.com>
 To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jiaxun Yang <jiaxun.yang@flygoat.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2449;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4534;
  i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
- bh=7F+0NOYc+OjzTTyACC9ErsZ3xLNN6M7QVx5gFrlMcZg=;
- b=owGbwMvMwCHmXMhTe71c8zDjabUkhjRmw5mX1K5ckbjhVFv7+6jfsQWBmRsv7VQVz8qY8y1aU
- CEuLHZJRykLgxgHg6yYIkuIgFLfhsaLC64/yPoDM4eVCWQIAxenAExEYwrDP12Jjzy/ux9sKv0f
- XRaxvNW9fNL8z6f+Ja7pCn3izDB7xXeGv6KzxBU3n9gp8GjD+cmPep/ZXr/x+SrDxj8CX99H90a
- 4KzIBAA==
+ bh=irGpCozp/lilyVLox4eGShQhiRvynFL3bvQwuDsrmFw=;
+ b=owGbwMvMwCHmXMhTe71c8zDjabUkhjRmw5kn5J/fTmPT7TnP7Rw5aeOKt6n6Rte98hnmW7wyf
+ rBh17zvHaUsDGIcDLJiiiwhAkp9GxovLrj+IOsPzBxWJpAhDFycAjARZ12G//meXGfsJz2duKT6
+ 6mvvoMYJmXc1i8yNIgxL1k34/6DEhYuR4WKmsfnsI18CGPc+zP/IlhH5fkOS394k3ovJczgFU28
+ mcAEA
 X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
  fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
 
-Implement support for AR933X uarts which has it's own register
-definition.
+debug_ll replaced CPS's custom NS16550 printing functions
+for dump early SMP bring-up exceptions.
+
+This will enable CPS debugging on more platforms and also
+reduce code duplication.
+
+All exception name strings are prefixed with CPS to help
+identification with regular low-level interrupts.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
- arch/mips/Kconfig.debug          |  9 +++++++++
- arch/mips/include/debug/ar933x.S | 41 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 50 insertions(+)
+ arch/mips/Kconfig.debug    | 52 +++++++++-------------------------------------
+ arch/mips/kernel/Makefile  |  1 -
+ arch/mips/kernel/cps-vec.S | 16 +++++++-------
+ 3 files changed, 18 insertions(+), 51 deletions(-)
 
 diff --git a/arch/mips/Kconfig.debug b/arch/mips/Kconfig.debug
-index aef116058654..a6687c503c34 100644
+index 0ce6d24d05b3..caba00cd8a33 100644
 --- a/arch/mips/Kconfig.debug
 +++ b/arch/mips/Kconfig.debug
-@@ -265,6 +265,14 @@ choice
- 		  Say Y here if you want kernel low-level debugging support
- 		  on uart of alchemy SoCs.
+@@ -96,48 +96,6 @@ config SCACHE_DEBUGFS
  
-+	config DEBUG_AR933X_UART
-+		bool "Kernel low-level debugging messages via Alchemy UART"
-+		depends on MIPS_ALCHEMY
-+		select DEBUG_LL_UART
-+		help
-+		  Say Y here if you want kernel low-level debugging support
-+		  on uart of AR933X SoCs.
-+
- endchoice
+ 	  If unsure, say N.
  
- config DEBUG_LL_INCLUDE
-@@ -303,6 +311,7 @@ config DEBUG_UART_PHYS
- 	default 0x1fe00000 if DEBUG_LOONGSON2K_UART
- 	default 0x10030000 if DEBUG_INGENIC_UART
- 	default 0x11100000 if DEBUG_ALCHEMY_UART
-+	default 0x18020000 if DEBUG_AR933X_UART
- 	help
- 	  This is the physical base address of the debug UART. It must be
- 	  accessible from unmapped kernel space (i.e. KSEG1 for 32bit kernels
-diff --git a/arch/mips/include/debug/ar933x.S b/arch/mips/include/debug/ar933x.S
-new file mode 100644
-index 000000000000..1a0449082080
---- /dev/null
-+++ b/arch/mips/include/debug/ar933x.S
-@@ -0,0 +1,41 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2023, Jiaxun Yang <jiaxun.yang@flygoat.com>
-+ * MIPS Low level debug include file for ar933x UART
-+ */
+-menuconfig MIPS_CPS_NS16550_BOOL
+-	bool "CPS SMP NS16550 UART output"
+-	depends on MIPS_CPS
+-	help
+-	  Output debug information via an ns16550 compatible UART if exceptions
+-	  occur early in the boot process of a secondary core.
+-
+-if MIPS_CPS_NS16550_BOOL
+-
+-config MIPS_CPS_NS16550
+-	def_bool MIPS_CPS_NS16550_BASE != 0
+-
+-config MIPS_CPS_NS16550_BASE
+-	hex "UART Base Address"
+-	default 0x1b0003f8 if MIPS_MALTA
+-	default 0
+-	help
+-	  The base address of the ns16550 compatible UART on which to output
+-	  debug information from the early stages of core startup.
+-
+-	  This is only used if non-zero.
+-
+-config MIPS_CPS_NS16550_SHIFT
+-	int "UART Register Shift"
+-	default 0
+-	help
+-	  The number of bits to shift ns16550 register indices by in order to
+-	  form their addresses. That is, log base 2 of the span between
+-	  adjacent ns16550 registers in the system.
+-
+-config MIPS_CPS_NS16550_WIDTH
+-	int "UART Register Width"
+-	default 1
+-	help
+-	  ns16550 registers width. UART registers IO access methods will be
+-	  selected in accordance with this parameter. By setting it to 1, 2 or
+-	  4 UART registers will be accessed by means of lb/sb, lh/sh or lw/sw
+-	  instructions respectively. Any value not from that set activates
+-	  lb/sb instructions.
+-
+-endif # MIPS_CPS_NS16550_BOOL
+-
+ # These options are only for real kernel hackers who want to get their hands dirty.
+ config DEBUG_LL
+ 	bool "Kernel low-level debugging functions (read help!)"
+@@ -320,3 +278,13 @@ config DEBUG_ZBOOT_EXCEPT
+ 	  during decompression of a compressed kernel via the DEBUG_LL output.
+ 
+ 	  If unsure, say N.
 +
-+#include <asm/addrspace.h>
-+#include <asm/asm.h>
-+#include <asm/mach-ath79/ar933x_uart.h>
++config DEBUG_CPS_EXCEPT
++	bool "Enable kernel debugging of Coherent Processing System exceptions"
++	depends on MIPS_CPS && DEBUG_LL_EXCEPT
++	help
++	  Say Y here if you want to enable debugging of exceptions happen
++	  during SMP bring-up stages on processors witn MIPS Coherent Processing
++	  System support.
 +
-+#define DEBUG_LL_UART
-+
-+#define UART_BASE	CKSEG1ADDR(CONFIG_DEBUG_UART_PHYS)
-+
-+# define UART_L		lw
-+# define UART_S		sw
-+
-+		.macro	addruart,rd,rx
-+		PTR_LA	\rd, UART_BASE
-+		.endm
-+
-+		.macro	senduart,rd,rx
-+		UART_S   \rd, AR933X_UART_DATA_REG(\rx)
-+		.endm
-+
-+        /* CTS and RDY are handled by AR933X_UART_DATA_TX_CSR as well */
-+		.macro	busyuart,rd,rx
-+1002:
-+		UART_L	\rd, AR933X_UART_DATA_REG(\rx)
-+		andi	\rd, \rd, (AR933X_UART_DATA_TX_CSR)
-+		xori	\rd, (AR933X_UART_DATA_TX_CSR)
-+		bnez	\rd, 1002b
-+		.endm
-+
-+		.macro	waituarttxrdy,rd,rx
-+        busyuart \rd, \rx
-+		.endm
-+
-+		.macro	waituartcts,rd,rx
-+        busyuart \rd, \rx
-+		.endm
++	  If unsure, say N.
+diff --git a/arch/mips/kernel/Makefile b/arch/mips/kernel/Makefile
+index 6641c3370e68..94325c02cae2 100644
+--- a/arch/mips/kernel/Makefile
++++ b/arch/mips/kernel/Makefile
+@@ -59,7 +59,6 @@ obj-$(CONFIG_MIPS_MT)		+= mips-mt.o
+ obj-$(CONFIG_MIPS_MT_FPAFF)	+= mips-mt-fpaff.o
+ obj-$(CONFIG_MIPS_MT_SMP)	+= smp-mt.o
+ obj-$(CONFIG_MIPS_CPS)		+= smp-cps.o cps-vec.o
+-obj-$(CONFIG_MIPS_CPS_NS16550)	+= cps-vec-ns16550.o
+ obj-$(CONFIG_MIPS_SPRAM)	+= spram.o
+ 
+ obj-$(CONFIG_MIPS_VPE_LOADER)	+= vpe.o
+diff --git a/arch/mips/kernel/cps-vec.S b/arch/mips/kernel/cps-vec.S
+index f876309130ad..49d682b3b49a 100644
+--- a/arch/mips/kernel/cps-vec.S
++++ b/arch/mips/kernel/cps-vec.S
+@@ -33,15 +33,15 @@
+ # define STATUS_BITDEPS		0
+ #endif
+ 
+-#ifdef CONFIG_MIPS_CPS_NS16550
++#ifdef CONFIG_DEBUG_CPS_EXCEPT
+ 
+ #define DUMP_EXCEP(name)		\
+ 	PTR_LA	a0, 8f;			\
+-	jal	mips_cps_bev_dump;	\
++	jal	debug_ll_exception;	\
+ 	 nop;				\
+ 	TEXT(name)
+ 
+-#else /* !CONFIG_MIPS_CPS_NS16550 */
++#else /* !CONFIG_DEBUG_CPS_EXCEPT */
+ 
+ #define DUMP_EXCEP(name)
+ 
+@@ -154,31 +154,31 @@ LEAF(mips_cps_core_boot)
+ 
+ 	__INIT
+ LEAF(excep_tlbfill)
+-	DUMP_EXCEP("TLB Fill")
++	DUMP_EXCEP("CPS - TLB Fill")
+ 	b	.
+ 	 nop
+ 	END(excep_tlbfill)
+ 
+ LEAF(excep_xtlbfill)
+-	DUMP_EXCEP("XTLB Fill")
++	DUMP_EXCEP("CPS - XTLB Fill")
+ 	b	.
+ 	 nop
+ 	END(excep_xtlbfill)
+ 
+ LEAF(excep_cache)
+-	DUMP_EXCEP("Cache")
++	DUMP_EXCEP("CPS - Cache")
+ 	b	.
+ 	 nop
+ 	END(excep_cache)
+ 
+ LEAF(excep_genex)
+-	DUMP_EXCEP("General")
++	DUMP_EXCEP("CPS - General")
+ 	b	.
+ 	 nop
+ 	END(excep_genex)
+ 
+ LEAF(excep_intex)
+-	DUMP_EXCEP("Interrupt")
++	DUMP_EXCEP("CPS - Interrupt")
+ 	b	.
+ 	 nop
+ 	END(excep_intex)
 
 -- 
 2.34.1
