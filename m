@@ -1,111 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F24F14265;
-	Tue, 26 Mar 2024 18:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8076B14265;
+	Tue, 26 Mar 2024 18:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711479011; cv=none; b=L1ISZeHGJei9RMkX+qPUc4g++3i5omCJOKxNVBY0hjAhXgrI2C7X2HIPkUfFs+f8QxLktWFj4Pit/yACAEDvCPLNj/Z74pw7yU4IgK1CqxyF9TjdAD6+WoqtHnk+FhxUBhQzrVt7yHOgoWFOZ6Uj8S1RC9tz/kJ3obnW2bs4CeI=
+	t=1711479142; cv=none; b=Qxku6QAe93fOKl8o0stv2hTS8o0PmTDv43QwJna4ZXdObRVrx4TK78oCbk6f8wxqAvUMDud9ghEC6pLQAEnGHZEBBAclH4g5UoqjFYeAMsFqd6c19SsZxtndyqsdq5paaXcRAKeIraxUBvFemMfD6UonimHIT7CgSYruPfl821c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711479011; c=relaxed/simple;
-	bh=a1y1froYsk3QklXtDSfjEieKaCKHwIw1eSHeC1vU9wM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bwo4URG6GTqOaWx88kNzrWtx7avsn7ON2PuC6DSyqq5TjvOmhPw3PK+kbOGyMwIFn3lRJlxNa1973IvTXdn4scATHcXtLpeFqTSZqXw5QV0h6KxPGP6Y0VN4LlxRLftbZjRNdpIMlpEuO1nZvGN6rDm81udkJBg4vU1QVY+tK5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ava8appS; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1711479142; c=relaxed/simple;
+	bh=EKi3PqIi15RdQXeNOHo7DSkD8CZDxBeq6ht4t/Ii+RY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WpkynBu1dtGInaIz7+/UHN+fjszkhSGDKIfSne2lGbiZa95a2S88OrK/iJn50PTmEPmhUAuASjI4hxsA++fPXFYIAUfHjAt1h4oYkhul5fvESEFs3AVifopfFpI+CTRn+CTLDLOG9cJa9DYFMpAjBazZth7R6y/1A9Akmdqskh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DQBo8QYF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ava8appS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711479010; x=1743015010;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=a1y1froYsk3QklXtDSfjEieKaCKHwIw1eSHeC1vU9wM=;
-  b=ava8appSS8EwarT3hemjXraQnHiHQrsiw3kTwyj7fr/jND3dTPg+GYY2
-   BmOTZb1ahe/1Ve9NJJijpv00P5D7cyBHvS8G4DGvfHE0VgAwiK6N8E66+
-   xka88Wks11FP/aHrBkQdnRX/OjLZSdxMkmKkHvM3S0619WL9ufSb4HJkO
-   goJO8G7iVdWcnj0HeD0/+YtWuo6yovHkmMTusVTvPRLVd+brPHikM7OJL
-   sZl6Sz717kM//TrCtfDlxjRHFeHoYWkPo4SHg+wYSVvegEKDUrYjomIbM
-   Qau+Z12Djo5TUMUb2NdBCShPIOWAwhzkbXPjwWpu5wm+BGzz/N3EsHVt/
-   A==;
-X-CSE-ConnectionGUID: 1uxnIGgoSoui0EI18pF2zw==
-X-CSE-MsgGUID: ljxv+9nBSwSwwH0uSb6Uhg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="23993149"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="23993149"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 11:50:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="914887860"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="914887860"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 11:50:07 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rpBs4-0000000GQSL-3HAk;
-	Tue, 26 Mar 2024 20:50:04 +0200
-Date: Tue, 26 Mar 2024 20:50:04 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH v1 07/10] spi: pxa2xx: Provide num-cs for Sharp PDAs via
- device properties
-Message-ID: <ZgMY3AeC1Jnh1Oru@smile.fi.intel.com>
-References: <20240326181027.1418989-1-andriy.shevchenko@linux.intel.com>
- <20240326181027.1418989-8-andriy.shevchenko@linux.intel.com>
- <dcdf8c46-acdc-466d-afc6-caf0e0fa39e8@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DQBo8QYF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6959AC433C7;
+	Tue, 26 Mar 2024 18:52:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711479142;
+	bh=EKi3PqIi15RdQXeNOHo7DSkD8CZDxBeq6ht4t/Ii+RY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=DQBo8QYFi4Rt8e6btUJodmB3OMAYYYpr6ZANkf0U+LEpuTwmAnuiC1QC9Klzg7VJG
+	 ffBekdWUtGv+v6h5lTc9e9yzKnN25YjeWBREuJsS0bGpMpu8ITSr5QgoI1WdSa6582
+	 aF/0QIoW1qJff1+iWEtLeW9n015arPeBqczMFm+/87JwxgtUNC61E+dQEOjUFNAG9f
+	 fuPPYjskqnxCKEPEdDWFESNrpBq13+qawP6+6OO0sjIbMb/ie0ncgtSNXaP/B+uya7
+	 lUkvxHWGBYYkUPP09BJswMBwsO51y9sP3PECT4ozl3IBqfPwvaH48B2uU5Soj3Zo0s
+	 bPbHO5VyeIcUA==
+Date: Tue, 26 Mar 2024 18:52:07 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Anshul Dalal <anshulusr@gmail.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ciprian.hegbeli@analog.com, marcelo.schmitt@analog.com,
+ dragos.bogdan@analog.com
+Subject: Re: iio: GSoC 2024: RFC on AD7294-2 driver proposal
+Message-ID: <20240326185207.20f8987e@jic23-huawei>
+In-Reply-To: <20240319060528.1238089-1-anshulusr@gmail.com>
+References: <20240319060528.1238089-1-anshulusr@gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dcdf8c46-acdc-466d-afc6-caf0e0fa39e8@sirena.org.uk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 26, 2024 at 06:21:48PM +0000, Mark Brown wrote:
-> On Tue, Mar 26, 2024 at 08:07:57PM +0200, Andy Shevchenko wrote:
+On Tue, 19 Mar 2024 11:35:27 +0530
+Anshul Dalal <anshulusr@gmail.com> wrote:
+
+> Hello everyone,
 > 
-> > Since driver can parse num-cs device property, replace platform data
-> > with this new approach.
+> I am Anshul Dalal, a pre-final year student at SRMIST (India). I am
+> pursuing my Bachelor's in Computer Science and Engineering and wish to
+> participate in GSoC 2024 as part of The Linux Foundation under the IIO
+> worksgroup.
 > 
-> But why?
-
-To be able to hide the header's contents from public.
-Should I update the commit message?
-
-...
-
-> > +static const struct property_entry spitz_spi_properties[] = {
-> > +	PROPERTY_ENTRY_U32("num-cs", 3),
-> > +	{ }
-> > +};
+> Following the suggestion from the IIO GSoC page[1], I would like to work
+> on a driver for AD7294-2. I am interested in the device since it offers
+> a wide array of functionality that is different from my past IIO
+> drivers[2]. I have prepared a draft proposal and would like to get early
+> feedback:
+> https://docs.google.com/document/d/1zf9yDq2-Ba8Vqh10w1cYI3buHzh0qIYwzf7xBkaEzDM
 > 
-> This is just platform data with less validation AFAICT.
+> I'm aware of interest in the same device from other contributors[3]. If
+> required, I'm ready to work on any other part suggested by the company
+> or the IIO community.
+> 
+> Best regards,
+> Anshul
 
-I'm not sure what validation you are expecting here. It should be done via
-DT schema ideally when the platform gets converted to DT. This change is
-an interim to that (at least it makes kernel side better). After the platform
-code may be gone completely or converted. If the latter happens, we got
-the validation back.
+Hi Anshul,
 
-In any case it's not worse than plain DT property handling in the kernel.
-The validation in that case is done elsewhere. Since the property is defined
-in board files the assumed validation is done during development/review
-stages. But OTOH for the legacy code we need not to touch the property
-provider more than once. We are _not_ expecting this to be spread.
+As you note, there are threads elsewhere discussing the suitability of this part.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Given the potentially competitive nature of proposals, I'm only going to give
+general comments based on a quick look at your proposal.
+I'll stick to the sort of thing that might help everyone proposing such a project.
 
+1) Maintainer / reviewer bandwidth is often the biggest unknown in a project
+   targeting upstream - so get that underway in plenty of time.
+   Treat it as a risk and plan mitigation where you can.
+
+2) Allow time for revisions - this is a fairly complex device, so there may well
+   be more complex changes requested such as ABI redesigns and they may take
+   a non trivial amount of time. For reference one GSOC intern some years ago
+   did 3 major rewrites; the code was excellent (until after the GSOC had
+   nearly finished I'd been assuming he was an experienced consultant - not
+   an intern!) Our understanding of what was the best path was driven by seeing and
+   discussing each revision.  Whilst that was much earlier in the evolution of IIO
+   event now a moderate amount of time makes sense.
+
+3) Don't wait until the end to send stuff for review - you will probably be
+   crossing kernel development cycles (with a merge window to cause everything
+   to grind to a halt) and reviewer / maintainer vacations etc.
+   As such, structure a driver development plan to be suitable for partial
+   upstreaming mid way.  If you like play guess the kernel release dates
+   feel free to put that alongside your plan.  Guessing my holidays is
+   a harder target :)
+   Trying to upstream a driver alongside further development, parallel's
+   up the time for reviewers to respond with developing more advanced features.
+   Note that full time kernel developers do this sort of thing all the time
+   as a complex feature often takes multiple cycles (and sometimes multiple
+   years) to get fully upstream.
+
+So I'd revisit your plan with these points in mind. It is a complex trade
+off of keeping the plan simple and easy to understand, and incorporating
+an idea of what else is going on in parallel.
+
+Also think about other risks and how they might be rectified or work
+might continue whilst they are being (a classic being failure to
+establish reliable comms with the chip).
+
+Jonathan
+
+> 
+> ---
+> 
+> [1]: https://wiki.linuxfoundation.org/gsoc/2024-gsoc-iio-driver
+> [2]: Microchip MCP4821 DAC:
+>      https://lore.kernel.org/lkml/20231220151954.154595-1-anshulusr@gmail.com/
+>      LiteOn LTR390 light sensor:
+>      https://lore.kernel.org/lkml/20231208102211.413019-1-anshulusr@gmail.com/
+>      Aosong AGS02MA air quality sensor:
+>      https://lore.kernel.org/lkml/20231215162312.143568-1-anshulusr@gmail.com/
+> [3]: https://lore.kernel.org/linux-iio/20240229184636.13368-1-danascape@gmail.com/
+>      https://lore.kernel.org/linux-iio/YlXR0d7waKW9xncd@fedora/
 
