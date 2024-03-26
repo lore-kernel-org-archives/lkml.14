@@ -1,148 +1,246 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 441C458220
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:22:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F88F13C82C
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711466558; cv=none; b=TUIMVaLAofTfsv3n3McK1tZZZYl8DV4fOvthFoWl02Vo9i6gsTdnkH0n7PeswKvC6OStXuYwbWfWuySlD00TMeb4fULyhBMoci+X/7ej+zZlHBR0RriiQTNbmxpGQMIAZrBNd1QuCC/gyuyMwWs3mB3wix+S3cQfnkDSOdT7Ui4=
+	t=1711466625; cv=none; b=JpZ9+4yqSxVMzRc2/eNpJZI/QanZ+qAFFLqCrefK36ALta6XiS4N9JPAma5Vk8uXLmoEdfV7sx1/2C5zg4AdwRvvS+06K5UsxKlHsl4XjMTDelmK6V5ukOSC07b5bKT80LV1oAgL4wY6Lb0Xmt1R9at+SQ+4waAYWS3cC8ghSXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711466558; c=relaxed/simple;
-	bh=fBNcQUHOtvyZsysftwY23WAq61KVO16Ox520bWwmTKE=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oG4uCNPmHP8/PE8hPBltfOGQsu3IJ+cHzNOVf2tOWXVoram7vZYbixZKEAVZB2mHY72IxwpyiV+ISehRO7/6au8jo43YHWoQECj10IuJcw/L2v2oQNOLfbTXUC+bV19Z1RZLpQIkdaXzqx2mIb6mf1uos0qP5PTBVe8+qOK1LPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hWjOzW1H; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pNMv7idU; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hWjOzW1H; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pNMv7idU; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1711466625; c=relaxed/simple;
+	bh=+K8e/fYuyVDvRpEXJ6MEqprpqClNLUw96QDT9d7KkGw=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=oiMYBH7bUNUdtnNRQUAqywgAq2XLtUjcD2LzQm3nhRmf658IEQ9SlljUTg5R8XZNFytjsFsVy2XEhPCHTQaIGIeO+CRe7+0rtyRiXQn2Fu1RU2ACJugnDwlu+unQzOIpc01zbVQHoOKTq780gcVUijOnms4g8KLM9g3CUbpvbws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=CeaUhL8d; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hWjOzW1H";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pNMv7idU";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hWjOzW1H";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pNMv7idU"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 73B3221E3D;
-	Tue, 26 Mar 2024 15:22:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1711466554; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KXH5uUDLtBRAB47YTVHB6bZditscTqY6M49f3hWQIm0=;
-	b=hWjOzW1HqNS1ii0R8rstNDFJMG0KONLVKpbkNxwUISXQ3rq84H7y7dbv2TAc/G9D5vxGTU
-	uY7/9kFo2jqr45S8FQXU8mZjC4ur4oIIdBddNeYGV0KekJFMeOoCzUTvYu36tcy1KCLiPG
-	YSH1+bY0pSP7F6HFSgaKsc9lSy1i/LQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1711466554;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KXH5uUDLtBRAB47YTVHB6bZditscTqY6M49f3hWQIm0=;
-	b=pNMv7idUbMhs/IcgPQmJKVhGDE3oaaAPdU69K4zrkrZ8OkyivBHN1W9uDLa8fagjaOvHhx
-	booslhzqaTBZz0Ag==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1711466554; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KXH5uUDLtBRAB47YTVHB6bZditscTqY6M49f3hWQIm0=;
-	b=hWjOzW1HqNS1ii0R8rstNDFJMG0KONLVKpbkNxwUISXQ3rq84H7y7dbv2TAc/G9D5vxGTU
-	uY7/9kFo2jqr45S8FQXU8mZjC4ur4oIIdBddNeYGV0KekJFMeOoCzUTvYu36tcy1KCLiPG
-	YSH1+bY0pSP7F6HFSgaKsc9lSy1i/LQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1711466554;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KXH5uUDLtBRAB47YTVHB6bZditscTqY6M49f3hWQIm0=;
-	b=pNMv7idUbMhs/IcgPQmJKVhGDE3oaaAPdU69K4zrkrZ8OkyivBHN1W9uDLa8fagjaOvHhx
-	booslhzqaTBZz0Ag==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0B83613306;
-	Tue, 26 Mar 2024 15:22:34 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id JwdzATroAmYETQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 26 Mar 2024 15:22:34 +0000
-Date: Tue, 26 Mar 2024 16:22:35 +0100
-Message-ID: <877chpuif8.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Baojun Xu <baojun.xu@ti.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	robh+dt@kernel.org,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	pierre-louis.bossart@linux.intel.com,
-	kevin-lu@ti.com,
-	13916275206@139.com,
-	alsa-devel@alsa-project.org,
-	linux-kernel@vger.kernel.org,
-	liam.r.girdwood@intel.com,
-	yung-chuan.liao@linux.intel.com,
-	broonie@kernel.org,
-	soyer@irl.hu
-Subject: Re: [PATCH v1 2/8] ALSA: hda/tas2781: Add tas2781 SPI-based driver
-In-Reply-To: <ZgLjAz99JZQvrx_h@smile.fi.intel.com>
-References: <20240326010905.2147-1-baojun.xu@ti.com>
-	<20240326010905.2147-2-baojun.xu@ti.com>
-	<ZgLjAz99JZQvrx_h@smile.fi.intel.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="CeaUhL8d"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-33e285a33bdso3347893f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 08:23:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711466622; x=1712071422; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=aM+9RXmEYQB5vl1fffTAMXMZVqZ/ACCmOiJ2FPQkdAA=;
+        b=CeaUhL8dULWKn7x4N3Brdb14cmc5wNlgH7WYelsfTC0XbHLF+uCfk26etYJwNrFiGy
+         g9Geh/KHyhQNzfurQh9oi1YmDUq4zHRi5fpTYPN7k+c/FTkL2iPQEEMtQjpCbFpf2d2K
+         TbmT3oodXoa+hJefNQAb6o5fdQA7YQFBtPiDNW9fTFRKgjdJOXN87l3bH6W3DYbfCbXG
+         Z7ZzhICrNgiGg/9NoDavx9QSrFSDDUeONGNHjhhGNaL5dy0Ezxq4xte+FJN7Ye8bX7Oa
+         6FR1TqP9nKzVkLQXB+J+w2KzXV1QOVMK/PqsL0MA7J1W2ijLSmXijorMF7eziEtVtRvr
+         MFww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711466622; x=1712071422;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aM+9RXmEYQB5vl1fffTAMXMZVqZ/ACCmOiJ2FPQkdAA=;
+        b=dNWclD1pp2GMBIv1Swpl5dC3m6zvjDz043RoSZph9Ze7tu5EUB+CTKRdn4/TFz2/Mk
+         0/2naJtWF7xsLYVVQc85SETMFWyCXeHlswHygcpvWJhTf1rf59IXpaj7Z/6JQTQxG89P
+         goRjJCRQVTWGfED5M4sT8D+cePyiWWUUXWDn9dkk5cvSiHT10UxYmM1KJDhmjiN8h46D
+         1hAcVTVKXUe62UQSqvDwtjyCXCfHNPpRvT/r/1+w8FTwk4guGwOQHC3QNY+iO7QevYIt
+         woTJWsA9D9X4mFOMHFdPQokBULQ7kX+hPJDibVF+50XruoWGYuMPTWqEjiJVxdbxQQ0V
+         CQ7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUQbaqYVFtgAdWSsgXxKfCPouiKCXEmbHishHJ814NZf875+jDtGE9HNFEt85Hf438UHIig3R57oYnkfJHVh1jXhxnjzGKxWtpWwhuX
+X-Gm-Message-State: AOJu0YzU4neQodvnp6SOw9S+Dy4puDICv9PYJ2r4hZx1t7EKEXiR/Sqb
+	SsSXi0iQT7UY/KYsajjkzKISP6pqBx1XuLFgLSiZqeq6koEo6lgxfi9wSW7rpa8=
+X-Google-Smtp-Source: AGHT+IHsYZJ/uOqZnp1TmWFGMlVgZ+AivccEHh8xx3hUmGEHsDKWJ4EN0Xf/+CitijnbkfltJZVucg==
+X-Received: by 2002:a5d:69ca:0:b0:33e:7adc:516c with SMTP id s10-20020a5d69ca000000b0033e7adc516cmr1290781wrw.57.1711466621739;
+        Tue, 26 Mar 2024 08:23:41 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:97a2:bb9f:463a:6468])
+        by smtp.gmail.com with ESMTPSA id ch9-20020a5d5d09000000b00341c6778171sm8083186wrb.83.2024.03.26.08.23.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 08:23:41 -0700 (PDT)
+References: <20240325235311.411920-1-jan.dakinevich@salutedevices.com>
+User-agent: mu4e 1.10.8; emacs 29.2
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Liam Girdwood
+ <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela
+ <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Martin
+ Blumenstingl <martin.blumenstingl@googlemail.com>,
+ alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2] ASoC: meson: g12a-toacodec: rework the
+ definition of bits
+Date: Tue, 26 Mar 2024 16:15:51 +0100
+In-reply-to: <20240325235311.411920-1-jan.dakinevich@salutedevices.com>
+Message-ID: <1j34sd9fur.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: 0.12
-X-Spamd-Result: default: False [0.12 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 R_RATELIMIT(0.00)[to_ip_from(RL3kqsx7g8wwj8c3joodxqsamu)];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 BAYES_HAM(-1.08)[88.02%];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[139.com,gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 TAGGED_RCPT(0.00)[dt];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_TWELVE(0.00)[14];
-	 MID_CONTAINS_FROM(1.00)[];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FREEMAIL_CC(0.00)[linux.intel.com,kernel.org,gmail.com,perex.cz,ti.com,139.com,alsa-project.org,vger.kernel.org,intel.com,irl.hu];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Spam-Flag: NO
-
-On Tue, 26 Mar 2024 16:00:19 +0100,
-Andy Shevchenko wrote:
-> 
-> On Tue, Mar 26, 2024 at 09:08:59AM +0800, Baojun Xu wrote:
-> > Add TXNW2781 support in smi.
-> 
-> Same comment WRT the commit message.
-
-Yeah, in general, all patches in this series have too short patch
-descriptions.
-
-Baojun, please give more words to explain what those patches do, and
-more importantly tell why they are needed in that way.  Silence isn't
-golden in the case of patches.  So, please resubmit the patch set with
-the proper descriptions in each patch.
+MIME-Version: 1.0
+Content-Type: text/plain
 
 
-thanks,
+On Tue 26 Mar 2024 at 02:53, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
 
-Takashi
+> There is a lot of defines, but almost all of them are not used. Lets
+> rework them:
+
+Thanks for noticing. Please start by removing what's unused.
+
+>
+>  - keep separate the definition for different platforms to make easier
+>    checking that they match documentation.
+>
+>  - use LSB/MSB sufixes for uniformity.
+
+I'd be in favor of dropping these suffixes completely.
+
+>
+>  - don't use hard-coded values for already declared defines.
+>
+> Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+> ---
+> Links:
+>
+>  [1] https://lore.kernel.org/lkml/20240314232201.2102178-1-jan.dakinevich@salutedevices.com/
+>
+> Changes v1 -> v2:
+>  - Detached from v1's series (patch 7).
+>  - Fixed my wrong understanding of SOC_SINGLE's input parameters.
+>
+>  sound/soc/meson/g12a-toacodec.c | 79 ++++++++++++++++++++-------------
+>  1 file changed, 49 insertions(+), 30 deletions(-)
+>
+> diff --git a/sound/soc/meson/g12a-toacodec.c b/sound/soc/meson/g12a-toacodec.c
+> index 531bb8707a3e..22181f4bab72 100644
+> --- a/sound/soc/meson/g12a-toacodec.c
+> +++ b/sound/soc/meson/g12a-toacodec.c
+> @@ -20,26 +20,37 @@
+>  #define G12A_TOACODEC_DRV_NAME "g12a-toacodec"
+>  
+>  #define TOACODEC_CTRL0			0x0
+> -#define  CTRL0_ENABLE_SHIFT		31
+> -#define  CTRL0_DAT_SEL_SM1_MSB		19
+> -#define  CTRL0_DAT_SEL_SM1_LSB		18
+> -#define  CTRL0_DAT_SEL_MSB		15
+> -#define  CTRL0_DAT_SEL_LSB		14
+> -#define  CTRL0_LANE_SEL_SM1		16
+> -#define  CTRL0_LANE_SEL			12
+> -#define  CTRL0_LRCLK_SEL_SM1_MSB	14
+> -#define  CTRL0_LRCLK_SEL_SM1_LSB	12
+> -#define  CTRL0_LRCLK_SEL_MSB		9
+> -#define  CTRL0_LRCLK_SEL_LSB		8
+> -#define  CTRL0_LRCLK_INV_SM1		BIT(10)
+> -#define  CTRL0_BLK_CAP_INV_SM1		BIT(9)
+> -#define  CTRL0_BLK_CAP_INV		BIT(7)
+> -#define  CTRL0_BCLK_O_INV_SM1		BIT(8)
+> -#define  CTRL0_BCLK_O_INV		BIT(6)
+> -#define  CTRL0_BCLK_SEL_SM1_MSB		6
+> -#define  CTRL0_BCLK_SEL_MSB		5
+> -#define  CTRL0_BCLK_SEL_LSB		4
+> -#define  CTRL0_MCLK_SEL			GENMASK(2, 0)
+> +
+> +/* Common bits */
+> +#define CTRL0_ENABLE_SHIFT		31
+> +#define CTRL0_MCLK_SEL			GENMASK(2, 0)
+> +
+> +/* G12A bits */
+> +#define CTRL0_DAT_SEL_G12A_MSB		15
+> +#define CTRL0_DAT_SEL_G12A_LSB		14
+> +#define CTRL0_LANE_SEL_G12A_MSB		13
+> +#define CTRL0_LANE_SEL_G12A_LSB		12
+> +#define CTRL0_LANE_SEL_G12A_MAX		3
+> +#define CTRL0_LRCLK_SEL_G12A_MSB	9
+> +#define CTRL0_LRCLK_SEL_G12A_LSB	8
+> +#define CTRL0_BLK_CAP_INV_G12A		BIT(7)
+> +#define CTRL0_BCLK_O_INV_G12A		BIT(6)
+> +#define CTRL0_BCLK_SEL_G12A_MSB		5
+> +#define CTRL0_BCLK_SEL_G12A_LSB		4
+> +
+> +/* SM1 bits */
+> +#define CTRL0_DAT_SEL_SM1_MSB		19
+> +#define CTRL0_DAT_SEL_SM1_LSB		18
+> +#define CTRL0_LANE_SEL_SM1_MSB		17
+> +#define CTRL0_LANE_SEL_SM1_LSB		16
+> +#define CTRL0_LANE_SEL_SM1_MAX		3
+> +#define CTRL0_LRCLK_SEL_SM1_MSB		14
+> +#define CTRL0_LRCLK_SEL_SM1_LSB		12
+> +#define CTRL0_LRCLK_INV_SM1		BIT(10)
+> +#define CTRL0_BLK_CAP_INV_SM1		BIT(9)
+> +#define CTRL0_BCLK_O_INV_SM1		BIT(8)
+> +#define CTRL0_BCLK_SEL_SM1_MSB		6
+> +#define CTRL0_BCLK_SEL_SM1_LSB		4
+>  
+>  #define TOACODEC_OUT_CHMAX		2
+>  
+> @@ -108,7 +119,7 @@ static int g12a_toacodec_mux_put_enum(struct snd_kcontrol *kcontrol,
+>  }
+>  
+>  static SOC_ENUM_SINGLE_DECL(g12a_toacodec_mux_enum, TOACODEC_CTRL0,
+> -			    CTRL0_DAT_SEL_LSB,
+> +			    CTRL0_DAT_SEL_G12A_LSB,
+>  			    g12a_toacodec_mux_texts);
+>  
+>  static SOC_ENUM_SINGLE_DECL(sm1_toacodec_mux_enum, TOACODEC_CTRL0,
+> @@ -210,7 +221,7 @@ static int g12a_toacodec_component_probe(struct snd_soc_component *c)
+>  {
+>  	/* Initialize the static clock parameters */
+>  	return snd_soc_component_write(c, TOACODEC_CTRL0,
+> -				       CTRL0_BLK_CAP_INV);
+> +				       CTRL0_BLK_CAP_INV_G12A);
+>  }
+>  
+>  static int sm1_toacodec_component_probe(struct snd_soc_component *c)
+> @@ -229,11 +240,13 @@ static const struct snd_soc_dapm_route g12a_toacodec_routes[] = {
+>  };
+>  
+>  static const struct snd_kcontrol_new g12a_toacodec_controls[] = {
+> -	SOC_SINGLE("Lane Select", TOACODEC_CTRL0, CTRL0_LANE_SEL, 3, 0),
+> +	SOC_SINGLE("Lane Select", TOACODEC_CTRL0, CTRL0_LANE_SEL_G12A_LSB,
+> +		   CTRL0_LANE_SEL_G12A_MAX, 0),
+>  };
+>  
+>  static const struct snd_kcontrol_new sm1_toacodec_controls[] = {
+> -	SOC_SINGLE("Lane Select", TOACODEC_CTRL0, CTRL0_LANE_SEL_SM1, 3, 0),
+> +	SOC_SINGLE("Lane Select", TOACODEC_CTRL0, CTRL0_LANE_SEL_SM1_LSB,
+> +		   CTRL0_LANE_SEL_SM1_MAX, 0),
+>  };
+>  
+>  static const struct snd_soc_component_driver g12a_toacodec_component_drv = {
+> @@ -266,16 +279,22 @@ static const struct regmap_config g12a_toacodec_regmap_cfg = {
+>  
+>  static const struct g12a_toacodec_match_data g12a_toacodec_match_data = {
+>  	.component_drv	= &g12a_toacodec_component_drv,
+> -	.field_dat_sel	= REG_FIELD(TOACODEC_CTRL0, 14, 15),
+> -	.field_lrclk_sel = REG_FIELD(TOACODEC_CTRL0, 8, 9),
+> -	.field_bclk_sel	= REG_FIELD(TOACODEC_CTRL0, 4, 5),
+> +	.field_dat_sel	= REG_FIELD(TOACODEC_CTRL0, CTRL0_DAT_SEL_G12A_LSB,
+> +				    CTRL0_DAT_SEL_G12A_MSB),
+> +	.field_lrclk_sel = REG_FIELD(TOACODEC_CTRL0, CTRL0_LRCLK_SEL_G12A_LSB,
+> +				     CTRL0_LRCLK_SEL_G12A_MSB),
+> +	.field_bclk_sel	= REG_FIELD(TOACODEC_CTRL0, CTRL0_BCLK_SEL_G12A_LSB,
+> +				    CTRL0_BCLK_SEL_G12A_MSB),
+>  };
+>  
+>  static const struct g12a_toacodec_match_data sm1_toacodec_match_data = {
+>  	.component_drv	= &sm1_toacodec_component_drv,
+> -	.field_dat_sel	= REG_FIELD(TOACODEC_CTRL0, 18, 19),
+> -	.field_lrclk_sel = REG_FIELD(TOACODEC_CTRL0, 12, 14),
+> -	.field_bclk_sel	= REG_FIELD(TOACODEC_CTRL0, 4, 6),
+> +	.field_dat_sel	= REG_FIELD(TOACODEC_CTRL0, CTRL0_DAT_SEL_SM1_LSB,
+> +				    CTRL0_DAT_SEL_SM1_MSB),
+> +	.field_lrclk_sel = REG_FIELD(TOACODEC_CTRL0, CTRL0_LRCLK_SEL_SM1_LSB,
+> +				     CTRL0_LRCLK_SEL_SM1_MSB),
+> +	.field_bclk_sel	= REG_FIELD(TOACODEC_CTRL0, CTRL0_BCLK_SEL_SM1_LSB,
+> +				    CTRL0_BCLK_SEL_SM1_MSB),
+
+Those defines are already platform specific by the structure holding
+them and the defines you have added are not helping readability.
+
+I don't see the point to see.
+I'd prefer to keep the field defined as they are.
+
+>  };
+>  
+>  static const struct of_device_id g12a_toacodec_of_match[] = {
+
+
+-- 
+Jerome
