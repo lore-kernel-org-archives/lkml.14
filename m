@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67FE13C811
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:13:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067EC13C813
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:13:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711466013; cv=none; b=kS2lT6/VSS21HcLPy7VPl91iumadgxsvWCmDu+2NS96Dgr+BKEcDtJ1KLttQdW8lOmMXqMU9wqDEldkqmm65DR2FlVVbk6kSI+IgfuZsXF1wWzwf/TKHlKUv2vEJqOzhVdwebH3ziYV1cDDmnb6xgYcMfBefY+KFhSKYdS2GjkI=
+	t=1711466014; cv=none; b=r08ZS+gAOPQmvSFPlkjdlhdaqI+xmK9jhk6582GmnxPByet5ffgKbvBD6VOWmaqEETawZQwyxD8KVgzP2/y1wu6ZuiHUZNWfAv/ILN/gnADcNCPsDrCVPGGGaRnlVDHBW9N9eE0dfsVQajM2Yw/WPqxtGHawr+63o+D4ieh6EYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711466013; c=relaxed/simple;
-	bh=N5vpAX5ok4BXjms0T9fuLUBgLvF4hsCxME6vnFJ3oyc=;
+	s=arc-20240116; t=1711466014; c=relaxed/simple;
+	bh=14LLqfHRDImCwD3vmt3ns5M9+uGf0q9+6XiG8CQ/IWQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k6XzwQfHiSDIwMcZiuuU2vkix6rkBOUt5NW0pRslN+dwHIPxHqYST2sGENgf9ctujk6+iXdSsVpg9ka0hQN7/gVQ/UblrWQFwx4CTA5jMQljmF0FWhKHiaICZeD+2dRONcYgopMEkVMXGSXgDxeIoyjaTF7TtGxl+xSDWLmBsPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NW0xCTa9; arc=none smtp.client-ip=192.198.163.13
+	 In-Reply-To:Content-Type; b=Bl9w2Ppv8zCwiq0MVKFHVB0Y1JOPWaPhcDjuPPs+/ryP77OOc8JxwxpDbTkZsk0vSuqMMQOtavKqdW6ubKcoSXahr4S7b5fwJJLpLXxY1oREPawiFGw8BVfAvhUCPzQZMcRHF6YQ5bUpPOPgqT4vVkXT2J19U/KFxA+iguXUuDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fW6P99nA; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NW0xCTa9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fW6P99nA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711466012; x=1743002012;
+  t=1711466013; x=1743002013;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=N5vpAX5ok4BXjms0T9fuLUBgLvF4hsCxME6vnFJ3oyc=;
-  b=NW0xCTa90WLQffrqb5Hy/0aHU8PCUWayor3idBn+TYym/8S1DsyciqHp
-   Ur/VKalRRvacL/1xVoIlfFebd5Cm64GRTLKhyYeztLM5QGCAKCK69yXwe
-   G/8zpclcIug091stbKScYx/Z8ezzTjj1UlTzy2dRAbEZKRe2yVFTk/zcw
-   6GOHt328tUSMD2xO12YYISNcS17JnXSW9D43PPtnxrQHs6XGrGnPFZyTw
-   qi0CIFBJ6jDemregvFX+7ofQWYe39j8U5bixLdzb/VDpz/Wh2Bf3ECNno
-   d09gIoUeYIrTAfcKAGOGxtbGMe6n3w68oQ9TLjHw2JrMLF6eKKOS+hiFv
+  bh=14LLqfHRDImCwD3vmt3ns5M9+uGf0q9+6XiG8CQ/IWQ=;
+  b=fW6P99nAWg6XXZFu9gPCurbu1C5kOySWqcoqMjk5eacvXrpTIfWwsboJ
+   x1OFOV746OUppWEhNAPWox7yn0DIlSdGjM/Z7engrKof30JVIPWEAEPNG
+   6oH3ORvYh7dvKoQFlTeeVQoG4OS5RC74PwTzuQu3DgnZbxAyf25TZ6a5M
+   WXkFHw7wq8QDTq7D6qmV/Zqbemhmra7psHJ/8VzyuTuWCreNdUF6L5MqR
+   Hn2RMDWGR39SvM5t3tuhUbIc2eJoNiL0NrAjbmTRTkSJQTw1t075Q8MMN
+   Fz6yses6iXOTVltCsln1xq6pmrEUk0mbuP2XQxbySoMzS6ydekpTOOFK/
    Q==;
-X-CSE-ConnectionGUID: h5r9l6YbQnW5wv1TPfUt6A==
-X-CSE-MsgGUID: YTNmLPqAT+C3KW47nbJKHw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="9489024"
+X-CSE-ConnectionGUID: tk5rF5R3Sc6sjII9s+RmCg==
+X-CSE-MsgGUID: GjpRcpKhQ0SBH5dzNZ/N4A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="9489037"
 X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="9489024"
+   d="scan'208";a="9489037"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 08:13:31 -0700
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 08:13:32 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="15862590"
+   d="scan'208";a="15862594"
 Received: from bhubbert-mobl.amr.corp.intel.com (HELO [10.212.65.108]) ([10.212.65.108])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 08:13:28 -0700
-Message-ID: <bc8d97e2-6742-4ca3-bd6a-143fe88f617b@linux.intel.com>
-Date: Tue, 26 Mar 2024 10:00:19 -0500
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 08:13:30 -0700
+Message-ID: <b4c5fb89-a43c-4c40-b729-a49a537f6179@linux.intel.com>
+Date: Tue, 26 Mar 2024 10:05:20 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,61 +50,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [EXTERNAL] Re: [PATCH v11] ASoc: tas2783: Add tas2783 codec
- driver
+Subject: Re: [PATCH v1 6/8] ALSA: hda/tas2781: Add tas2781 SPI-based driver
 Content-Language: en-US
-To: "Ding, Shenghao" <shenghao-ding@ti.com>,
- "broonie@kernel.org" <broonie@kernel.org>
-Cc: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
- "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "perex@perex.cz"
- <perex@perex.cz>, "13916275206@139.com" <13916275206@139.com>,
- "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "liam.r.girdwood@intel.com" <liam.r.girdwood@intel.com>,
- "bard.liao@intel.com" <bard.liao@intel.com>,
- "mengdong.lin@intel.com" <mengdong.lin@intel.com>,
- "yung-chuan.liao@linux.intel.com" <yung-chuan.liao@linux.intel.com>,
- "Lu, Kevin" <kevin-lu@ti.com>, "tiwai@suse.de" <tiwai@suse.de>,
- "Xu, Baojun" <baojun.xu@ti.com>, "soyer@irl.hu" <soyer@irl.hu>,
- "Baojun.Xu@fpt.com" <Baojun.Xu@fpt.com>,
- "Navada Kanyana, Mukund" <navada@ti.com>
-References: <20240319135811.186-1-shenghao-ding@ti.com>
- <34f404cd-a12d-4ffa-9398-72de3be244b3@linux.intel.com>
- <51a81ac8aace456aae7d07634912367c@ti.com>
+To: Baojun Xu <baojun.xu@ti.com>, tiwai@suse.de
+Cc: robh+dt@kernel.org, andriy.shevchenko@linux.intel.com,
+ lgirdwood@gmail.com, perex@perex.cz, kevin-lu@ti.com, 13916275206@139.com,
+ alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+ liam.r.girdwood@intel.com, yung-chuan.liao@linux.intel.com,
+ broonie@kernel.org, soyer@irl.hu
+References: <20240326010905.2147-1-baojun.xu@ti.com>
+ <20240326010905.2147-6-baojun.xu@ti.com>
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-In-Reply-To: <51a81ac8aace456aae7d07634912367c@ti.com>
+In-Reply-To: <20240326010905.2147-6-baojun.xu@ti.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
->>> +
->>> +	/* Check Calibrated Data V2 */
->>> +	if (tmp_val[0] == 2783) {
->>> +		const struct calibdatav2_info calib_info = {
->>> +			.number_of_devices = tmp_val[1],
->>> +			.crc32_indx = 3 + tmp_val[1] * 6,
->>> +			.byt_sz = 12 + tmp_val[1] * 24,
->>> +			.cali_data = &tmp_val[3]
->>> +		};
->>> +
->>> +		if (calib_info.number_of_devices >
->> TAS2783_MAX_DEV_NUM ||
->>> +			calib_info.number_of_devices == 0) {
->>> +			dev_dbg(tas_dev->dev, "No dev in calibrated data
->> V2.");
->>
->> the log is not aligned with the first condition where you have too many
->> devices.
->>
->> It's not clear why it's not an error.
-> playback still work without calibrated data stored in UEFI, for example bypass mode.
-> Even if in case of bypass mode, algo can still work with default calibrated data.
-> So, not an error.
+> +enum device_catlog_id {
 
-I would use a dev_info with a clearer message that defaults are used,
-e.g. along the lines of
+catalog?
 
-dev_info(tas_dev->dev, "using default calibration data, no device found
-in EFI data v2").
+> +	HP = 0,
+> +	OTHERS
+> +};
 
-dev_warn would work as well if this is really not expected.
+Is there not a better way to identify solutions?
+You have ACPI IDs, no?
+
