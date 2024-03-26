@@ -1,304 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38EC25D478;
-	Tue, 26 Mar 2024 09:01:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F9441740;
+	Tue, 26 Mar 2024 09:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711443697; cv=none; b=pks+exN1K1khIC/JG7ivBA4/ovak87z7aaBjjHf5daBv49wdu/IznBQj5luAfvDTTeySJ3C8NZVZbaoydggIKCiYQfQz2JywazoBP/FUJ8qrWFSq4K1042t4WoBI7eG+t7NWD6Ay96oMnYcZ9c4v2d3EzdOh2i9SScLjJd7wBSo=
+	t=1711443758; cv=none; b=BTNkq7gLhkQJe4DVy8u96S9YRuZHUoYFCSRCk1Y0k8GdCDwpMDXzqz0X1OVvvDWAne5NcsqKSl12m/o/3E5n4fT3N/CejXzudWE/nP5T/vuNLVVNNmIm/lxyjiAv9ApfnEyInqair+WAps+wMEr821sIk/qmOTxGEMjZuOZ7PCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711443697; c=relaxed/simple;
-	bh=YpGyFKWRZ8sW4yOOzeIlv+ObrG8dhHVBUJkwxWnaI3U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OOlTqeEMvZnuvQHBc39S3YTqoqON0qEw3RGLHaMvbHJ+DHIWUMbcK6ppbLTjH1wcYjG8bD1tKhpFhZsFcoZsFMlEmx06Aa66jyBWTc885g4BqUp1116yygtOxbV7B9BhsuCAc7+ySemfWyuVHLsMO10X5by8OucSHIVbMvDyX6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CKRv3eIo; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1711443758; c=relaxed/simple;
+	bh=j31hZnf3HSLY75FSzBYdn9Bwf2m2ebswAGH7XLqTlOU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=DffV8ndY/AlybF4Q5KbjhZcH5yURr4H2k954Fe79CG5vJ1t+kGOGQBEN2j+xsKfniJdvFYZrskaXl/0E31fmHLhmSkLDlRVr7rTxLLh6hfeLzUFknqwtFK3z8ObMzsJ9i4joOlqQ7w8/PTGFgZQ23MQaOEK92D/CrPHWzTIwc2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oUhnNeYi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CKRv3eIo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711443695; x=1742979695;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=YpGyFKWRZ8sW4yOOzeIlv+ObrG8dhHVBUJkwxWnaI3U=;
-  b=CKRv3eIoMbYgO6Bu3Pf6JVm4E5XkL2XIK49LeYJjqKBc/PZWudsi0AiA
-   xCHIGU5chiw6Bs9SpVyeCVjj2jr4wuOR7n6MRMlJa2UK7wVBFU2Ax23d8
-   KvZM6eYexP5rnbCTAnquL+gA1xFSmjxdSWA06Hb+RA09AZCMvMqqK3Zcq
-   r2YHokjPJhP1AItZ7u3SBk15OZZHjc/WkDWhMmziZ3wRnP3DOGXMvF9z0
-   F7w1QthVB3nxLClSiTpoIDfz3yYoTD3e9ua6Kau2cJia1vf+eMnxSsQL0
-   ewYA+kXeD3JQleeFSOeMdtwEY7UVN08wATiJ/W9RBZ3oLWcUmhu3Buq9u
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="6343362"
-X-IronPort-AV: E=Sophos;i="6.07,155,1708416000"; 
-   d="scan'208";a="6343362"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 02:01:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,155,1708416000"; 
-   d="scan'208";a="20614522"
-Received: from yungchua-ws.ostc.intel.com (HELO yungchua-ws.intel.com) ([10.54.69.90])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 02:01:28 -0700
-From: Bard Liao <yung-chuan.liao@linux.intel.com>
-To: linux-sound@vger.kernel.org,
-	vkoul@kernel.org
-Cc: vinod.koul@linaro.org,
-	linux-kernel@vger.kernel.org,
-	pierre-louis.bossart@linux.intel.com,
-	bard.liao@intel.com
-Subject: [PATCH 6/7] soundwire: debugfs: add interface to read/write commands
-Date: Tue, 26 Mar 2024 09:01:21 +0000
-Message-Id: <20240326090122.1051806-7-yung-chuan.liao@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240326090122.1051806-1-yung-chuan.liao@linux.intel.com>
-References: <20240326090122.1051806-1-yung-chuan.liao@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oUhnNeYi"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DD8F6C43390;
+	Tue, 26 Mar 2024 09:02:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711443757;
+	bh=j31hZnf3HSLY75FSzBYdn9Bwf2m2ebswAGH7XLqTlOU=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=oUhnNeYixVTEXLpJD+lAfTLE7O7E6p0tevhXPcd+Qa2Be9FVGpMz+i0Q7XXh3Rrqm
+	 ZqUrgV0pH1EFESZEVsLz0wWZLBrmIyZYjud85Ewc/xtb/Fa2cvc2rjrhFvjhGOjjp+
+	 bDcCwVwlFoKIlJwaonpygDjo328BwSiNpoaIuIy2JBEhfmMjFG7cDNkktjM0p3tlNI
+	 80JC/58oAfJAumZq7F3Dy2dStN22B70/NP7Jp8ot5m32TnSqmKDU3jFJDs8uvYawal
+	 QdkOpTaFwryZAjGCe97JAl1rOpFhOURkQjxwb3DSZO20+HGfMfJslXOKCDbjefdgkB
+	 vXJhXaLRSROEQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD001CD11DB;
+	Tue, 26 Mar 2024 09:02:37 +0000 (UTC)
+From: John Bauer via B4 Relay <devnull+johnebgood.securitylive.com@kernel.org>
+Date: Tue, 26 Mar 2024 04:02:35 -0500
+Subject: [PATCH] media: uvcvideo: UVC minimum relative pan/tilt/zoom speed
+ fix.
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240326-uvc-relative-ptz-speed-fix-v1-1-453fd5ccfd37@securitylive.com>
+X-B4-Tracking: v=1; b=H4sIACqPAmYC/x3MQQqDMBBG4auEWTuQpFqkVyku0vjbDhQNSQyie
+ HeDy+8t3kEJUZDopQ6KKJJkmStMo8j/3PwFy1hNVttWP2zHa/Ec8XdZCjjknVMARp5kY6uNcXD
+ P/tNNVAchouZ7/h7O8wIzonqgbAAAAA==
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Gergo Koteles <soyer@irl.hu>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, linh.tp.vu@gmail.com, 
+ ribalda@chromium.org, John Bauer <johnebgood@securitylive.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711443757; l=3347;
+ i=johnebgood@securitylive.com; s=20240325; h=from:subject:message-id;
+ bh=J5cUwDm8JSMrStvNfFZtZHjj3H7C9GUHhWu66GtOqLc=;
+ b=BhUk8Rlx7w70KHg9iaN556luombmQ9OTlYd4HYzcPcA2k9Qy41j2jFBBrVlg4FHJGX2/tC8Hc
+ 7E1dxaiwbGrBMlF1+/NgafN1YdVz6ZHfyQNDf9MwBRpy7Q62W7qt8Os
+X-Developer-Key: i=johnebgood@securitylive.com; a=ed25519;
+ pk=RN31Fmrxbidp1TwtZGNmQwTDjUWMPnewQJfA/ug2P9E=
+X-Endpoint-Received: by B4 Relay for johnebgood@securitylive.com/20240325
+ with auth_id=143
+X-Original-From: John Bauer <johnebgood@securitylive.com>
+Reply-To: johnebgood@securitylive.com
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: John Bauer <johnebgood@securitylive.com>
 
-We have an existing debugfs files to read standard registers
-(DP0/SCP/DPn).
+The minimum UVC control value for the relative pan/tilt/zoom speeds
+cannot be probed as the implementation condenses the pan and tilt
+direction and speed into two 16 bit values. The minimum cannot be
+set at probe time because it is probed first and the maximum is not
+yet known. With this fix if a relative speed control is queried
+or set the minimum is set and checked based on the additive inverse of
+the maximum at that time.
 
-This patch provides a more generic interface to ANY set of read/write
-contiguous registers in a peripheral device. In follow-up patches,
-this interface will be extended to use BRA transfers.
-
-The sequence is to use the following files added under the existing
-debugsfs directory for each peripheral device:
-
-command (write 0, read 1)
-num_bytes
-start_address
-firmware_file (only for writes)
-read_buffer (only for reads)
-
-Example for a read command - this checks the 6 bytes used for
-enumeration.
-
-cd /sys/kernel/debug/soundwire/master-0-0/sdw\:0\:025d\:0711\:01/
-echo 1 > command
-echo 6 > num_bytes
-echo 0x50 > start_address
-echo 1 > go
-cat read_buffer
-address 0x50 val 0x30
-address 0x51 val 0x02
-address 0x52 val 0x5d
-address 0x53 val 0x07
-address 0x54 val 0x11
-address 0x55 val 0x01
-
-Example with a 2-byte firmware file written in DP0 address 0x22
-
-od -x /lib/firmware/test_firmware
-0000000 0a37
-0000002
-
-cd /sys/kernel/debug/soundwire/master-0-0/sdw\:0\:025d\:0711\:01/
-echo 0 > command
-echo 2 > num_bytes
-echo 0x22 > start_address
-echo "test_firmware" > firmware_file
-echo 1 > go
-
-cd /sys/kernel/debug/soundwire/master-0-0/sdw\:0\:025d\:0711\:01/
-echo 1 > command
-echo 2 > num_bytes
-echo 0x22 > start_address
-echo 1 > go
-cat read_buffer
-
-address 0x22 val 0x37
-address 0x23 val 0x0a
-
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Rander Wang <rander.wang@intel.com>
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Signed-off-by: John Bauer <johnebgood@securitylive.com>
 ---
- drivers/soundwire/debugfs.c | 150 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 150 insertions(+)
+Gergo noticed that a quirk fix would not be needed and the just 
+the minimum value needed to be set. Thanks Ricardo, Linh and Gergo 
+for helping me along here. The reason the problem presented is that 
+the minimum probe is done before the maximum however the way the 
+driver has condensed direction and speed controls 
+(with great simplification benefit to the user) the minimum
+value must be derived from the maximum and negated. This
+fix gets/checks/sets the correct relative minimum value when 
+needed instead of of at probe time. This minimum value does not 
+reflect the UVC 1.5 spec but the simplified condensed 
+implementation of the driver; it's beautiful.
+---
+ drivers/media/usb/uvc/uvc_ctrl.c | 37 ++++++++++++++++++++++++++++++++++---
+ 1 file changed, 34 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/soundwire/debugfs.c b/drivers/soundwire/debugfs.c
-index 67abd7e52f09..6d253d69871d 100644
---- a/drivers/soundwire/debugfs.c
-+++ b/drivers/soundwire/debugfs.c
-@@ -3,6 +3,7 @@
+diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+index e59a463c2761..b389ab3ee05d 100644
+--- a/drivers/media/usb/uvc/uvc_ctrl.c
++++ b/drivers/media/usb/uvc/uvc_ctrl.c
+@@ -1322,9 +1322,25 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
+ 		break;
+ 	}
  
- #include <linux/device.h>
- #include <linux/debugfs.h>
-+#include <linux/firmware.h>
- #include <linux/mod_devicetable.h>
- #include <linux/pm_runtime.h>
- #include <linux/slab.h>
-@@ -137,6 +138,145 @@ static int sdw_slave_reg_show(struct seq_file *s_file, void *data)
- }
- DEFINE_SHOW_ATTRIBUTE(sdw_slave_reg);
- 
-+#define MAX_CMD_BYTES 256
-+
-+static int cmd;
-+static u32 start_addr;
-+static size_t num_bytes;
-+static u8 read_buffer[MAX_CMD_BYTES];
-+static char *firmware_file;
-+
-+static int set_command(void *data, u64 value)
-+{
-+	struct sdw_slave *slave = data;
-+
-+	if (value > 1)
-+		return -EINVAL;
-+
-+	/* Userspace changed the hardware state behind the kernel's back */
-+	add_taint(TAINT_USER, LOCKDEP_STILL_OK);
-+
-+	dev_dbg(&slave->dev, "command: %s\n", value ? "read" : "write");
-+	cmd = value;
-+
-+	return 0;
-+}
-+DEFINE_DEBUGFS_ATTRIBUTE(set_command_fops, NULL,
-+			 set_command, "%llu\n");
-+
-+static int set_start_address(void *data, u64 value)
-+{
-+	struct sdw_slave *slave = data;
-+
-+	/* Userspace changed the hardware state behind the kernel's back */
-+	add_taint(TAINT_USER, LOCKDEP_STILL_OK);
-+
-+	dev_dbg(&slave->dev, "start address %#llx\n", value);
-+
-+	start_addr = value;
-+
-+	return 0;
-+}
-+DEFINE_DEBUGFS_ATTRIBUTE(set_start_address_fops, NULL,
-+			 set_start_address, "%llu\n");
-+
-+static int set_num_bytes(void *data, u64 value)
-+{
-+	struct sdw_slave *slave = data;
-+
-+	if (value == 0 || value > MAX_CMD_BYTES)
-+		return -EINVAL;
-+
-+	/* Userspace changed the hardware state behind the kernel's back */
-+	add_taint(TAINT_USER, LOCKDEP_STILL_OK);
-+
-+	dev_dbg(&slave->dev, "number of bytes %lld\n", value);
-+
-+	num_bytes = value;
-+
-+	return 0;
-+}
-+DEFINE_DEBUGFS_ATTRIBUTE(set_num_bytes_fops, NULL,
-+			 set_num_bytes, "%llu\n");
-+
-+static int cmd_go(void *data, u64 value)
-+{
-+	struct sdw_slave *slave = data;
-+	int ret;
-+
-+	if (value != 1)
-+		return -EINVAL;
-+
-+	/* one last check */
-+	if (start_addr > SDW_REG_MAX ||
-+	    num_bytes == 0 || num_bytes > MAX_CMD_BYTES)
-+		return -EINVAL;
-+
-+	ret = pm_runtime_get_sync(&slave->dev);
-+	if (ret < 0 && ret != -EACCES) {
-+		pm_runtime_put_noidle(&slave->dev);
-+		return ret;
+-	if (ctrl->info.flags & UVC_CTRL_FLAG_GET_MIN)
+-		v4l2_ctrl->minimum = mapping->get(mapping, UVC_GET_MIN,
+-				     uvc_ctrl_data(ctrl, UVC_CTRL_DATA_MIN));
++	if (ctrl->info.flags & UVC_CTRL_FLAG_GET_MIN) {
++		switch (v4l2_ctrl->id) {
++		case V4L2_CID_ZOOM_CONTINUOUS:
++		case V4L2_CID_PAN_SPEED:
++		case V4L2_CID_TILT_SPEED:
++			/*
++			 * For the relative speed implementation the minimum
++			 * value cannot be probed so it becomes the additive
++			 * inverse of maximum.
++			 */
++			v4l2_ctrl->minimum = -1 * mapping->get(mapping, UVC_GET_MAX,
++						uvc_ctrl_data(ctrl, UVC_CTRL_DATA_MAX));
++			break;
++		default:
++			v4l2_ctrl->minimum = mapping->get(mapping, UVC_GET_MIN,
++						uvc_ctrl_data(ctrl, UVC_CTRL_DATA_MIN));
++			break;
++		}
 +	}
+ 
+ 	if (ctrl->info.flags & UVC_CTRL_FLAG_GET_MAX)
+ 		v4l2_ctrl->maximum = mapping->get(mapping, UVC_GET_MAX,
+@@ -1914,6 +1930,21 @@ int uvc_ctrl_set(struct uvc_fh *handle,
+ 				   uvc_ctrl_data(ctrl, UVC_CTRL_DATA_MIN));
+ 		max = mapping->get(mapping, UVC_GET_MAX,
+ 				   uvc_ctrl_data(ctrl, UVC_CTRL_DATA_MAX));
 +
-+	/* Userspace changed the hardware state behind the kernel's back */
-+	add_taint(TAINT_USER, LOCKDEP_STILL_OK);
-+
-+	dev_dbg(&slave->dev, "starting command\n");
-+
-+	if (cmd == 0) {
-+		const struct firmware *fw;
-+
-+		ret = request_firmware(&fw, firmware_file, &slave->dev);
-+		if (ret < 0) {
-+			dev_err(&slave->dev, "firmware %s not found\n", firmware_file);
-+			goto out;
++		/*
++		 * For the relative speed implementation the minimum
++		 * value cannot be probed so it becomes the additive
++		 * inverse of maximum.
++		 */
++		switch (xctrl->id) {
++		case V4L2_CID_ZOOM_CONTINUOUS:
++		case V4L2_CID_PAN_SPEED:
++		case V4L2_CID_TILT_SPEED:
++			min = max * -1;
++		default:
++			break;
 +		}
 +
-+		if (fw->size != num_bytes) {
-+			dev_err(&slave->dev,
-+				"firmware %s: unexpected size %zd, desired %zd\n",
-+				firmware_file, fw->size, num_bytes);
-+			release_firmware(fw);
-+			goto out;
-+		}
-+
-+		ret = sdw_nwrite_no_pm(slave, start_addr, num_bytes, fw->data);
-+		release_firmware(fw);
-+	} else {
-+		ret = sdw_nread_no_pm(slave, start_addr, num_bytes, read_buffer);
-+	}
-+
-+	dev_dbg(&slave->dev, "command completed %d\n", ret);
-+
-+out:
-+	pm_runtime_mark_last_busy(&slave->dev);
-+	pm_runtime_put(&slave->dev);
-+
-+	return ret;
-+}
-+DEFINE_DEBUGFS_ATTRIBUTE(cmd_go_fops, NULL,
-+			 cmd_go, "%llu\n");
-+
-+#define MAX_LINE_LEN 128
-+
-+static int read_buffer_show(struct seq_file *s_file, void *data)
-+{
-+	char buf[MAX_LINE_LEN];
-+	int i;
-+
-+	if (num_bytes == 0 || num_bytes > MAX_CMD_BYTES)
-+		return -EINVAL;
-+
-+	for (i = 0; i < num_bytes; i++) {
-+		scnprintf(buf, MAX_LINE_LEN, "address %#x val 0x%02x\n",
-+			  start_addr + i, read_buffer[i]);
-+		seq_printf(s_file, "%s", buf);
-+	}
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(read_buffer);
-+
- void sdw_slave_debugfs_init(struct sdw_slave *slave)
- {
- 	struct dentry *master;
-@@ -151,6 +291,16 @@ void sdw_slave_debugfs_init(struct sdw_slave *slave)
- 
- 	debugfs_create_file("registers", 0400, d, slave, &sdw_slave_reg_fops);
- 
-+	/* interface to send arbitrary commands */
-+	debugfs_create_file("command", 0200, d, slave, &set_command_fops);
-+	debugfs_create_file("start_address", 0200, d, slave, &set_start_address_fops);
-+	debugfs_create_file("num_bytes", 0200, d, slave, &set_num_bytes_fops);
-+	debugfs_create_file("go", 0200, d, slave, &cmd_go_fops);
-+
-+	debugfs_create_file("read_buffer", 0400, d, slave, &read_buffer_fops);
-+	firmware_file = NULL;
-+	debugfs_create_str("firmware_file", 0200, d, &firmware_file);
-+
- 	slave->debugfs = d;
- }
- 
+ 		step = mapping->get(mapping, UVC_GET_RES,
+ 				    uvc_ctrl_data(ctrl, UVC_CTRL_DATA_RES));
+ 		if (step == 0)
+
+---
+base-commit: e8f897f4afef0031fe618a8e94127a0934896aba
+change-id: 20240325-uvc-relative-ptz-speed-fix-2011aea68b5f
+
+Best regards,
 -- 
-2.34.1
+John Bauer <johnebgood@securitylive.com>
+
 
