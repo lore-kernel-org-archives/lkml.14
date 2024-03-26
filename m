@@ -1,68 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94B213E8BE;
-	Tue, 26 Mar 2024 20:29:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4981E5D465
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 20:30:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711484978; cv=none; b=UznJ4XgHZU1rozfIuACSj9oYzNsP/hIvEEOUfcX/JxKey3+pnq6nCzd/7BnfRT52+TEHQWquhRXeb/3iNdXoSx3F46TW4R2Wqp+cpQPSrpW+bLdDkNvi28fs79vhxzea3qIcvotjiaOGy45KPxahXdv0beZf02jd1gxkz3VEkvc=
+	t=1711485025; cv=none; b=cdKLDQ+cj022OR8d3rfzDON4rJ1nsf86abzQKI23VZE01NnhruTWNn9nDubfGeZy1RCWC8q3djkTT1juu57OhjIE8qnFO7yg98GP6bxwIiyz0Kxpkl3nPesmwFJjjCjQs2Qb0FkBABNyoPxgtV+WLtl7b0nsrWtPY91yuU4nTpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711484978; c=relaxed/simple;
-	bh=J9fUAQZWkixjtehQmnGr1yigtsctKtXiiA3rek8znyk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ny+9etq4KPa2+cEl5vefAj03aeK/in3X2Emjntxp3zdPrR+PUIC9xhfpXvW69mF8vPsZ5+lyRPiJenbyB+HJPeDvuR9VtNY097kp1z56cpp5RWDvgHFVV3lzrRyfKOe4/lxn8CZhoW5kpM+XRRrI/Mlkdyk46Pli+r++a5nhmh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ONRqMkeO; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711485025; c=relaxed/simple;
+	bh=1MIaNHF3ZPeWhpxgDesdwjpOmbC5x5fvawY27Hi/YKs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Za/Af1nxH9Kj4M+UVXQWmQbQrpyz0TiNC8YKr2jBqbZO1Q0bYMQe4RWUtiQjW4T4IZEoBEegjDxd5p6juwYXOHzvvZwdMYuMXMwW4WBJj5BnCtgoqN+uW5blfSxMXQIZLkzQB+H650XMlRMzulKOJLhBgKJsvjQNBCtcXQnm4tE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=pTMXWuGX; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ONRqMkeO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711484976; x=1743020976;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=J9fUAQZWkixjtehQmnGr1yigtsctKtXiiA3rek8znyk=;
-  b=ONRqMkeOphZmtRu0cxH9CBw3PBNUs+H56a+fmn+t9gZ+r7PnIlb9wr9r
-   xTlWqCQ9gE+3GmjUvB8zavjom42sVnV7IbRmWxiiWMU8kfgeMgq7NzbPH
-   AUsLX1hzxKFWdVtT7EIhKrRAgm2aDHWpuuAFVnMBDzrgIj1xESb8IjNxy
-   yzrVQzG8MyI7Zi2s3tcm9i5/x+36A1rJUSK57edhh8A1FOwieP7LOR90T
-   2RtMk4ZnJ7Efh+ixkAx+bwKcbAKe1LR9qgBmKZ3myCAECRj9v7UEv6ZiZ
-   hOS7uxcbBVar/u9JpTNSojMPt4NZf5UqHfcVHXNU8GiTWSR8VF/MAnJOs
-   w==;
-X-CSE-ConnectionGUID: cDa5Tc1QTLy7AbBnpnLXCA==
-X-CSE-MsgGUID: Nfw6t1/nTAKpuF67pAVdpQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="24049100"
-X-IronPort-AV: E=Sophos;i="6.07,157,1708416000"; 
-   d="scan'208";a="24049100"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 13:29:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,157,1708416000"; 
-   d="scan'208";a="16163025"
-Received: from fl31ca102ks0602.deacluster.intel.com (HELO gnr-bkc.deacluster.intel.com) ([10.75.133.163])
-  by fmviesa008.fm.intel.com with ESMTP; 26 Mar 2024 13:29:33 -0700
-From: weilin.wang@intel.com
-To: weilin.wang@intel.com,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Perry Taylor <perry.taylor@intel.com>,
-	Samantha Alt <samantha.alt@intel.com>,
-	Caleb Biggers <caleb.biggers@intel.com>
-Subject: [RFC PATCH v5 5/6] perf stat: Add retire latency print functions to print out at the very end of print out
-Date: Tue, 26 Mar 2024 16:28:58 -0400
-Message-ID: <20240326202859.960577-6-weilin.wang@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240326202859.960577-1-weilin.wang@intel.com>
-References: <20240326202859.960577-1-weilin.wang@intel.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="pTMXWuGX"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-55a179f5fa1so7705610a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 13:30:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1711485021; x=1712089821; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nOTCu2adkZyU4SASR+8mux3MN1uFKsv8RRVIr1/qVQg=;
+        b=pTMXWuGXT8XIqWUy2nNVMoK3jALZ9b5sn/NoqDMzZAp6W8gnNbm9amcjFLEWJ56JuN
+         cRtCvCtBlAr94K3sa75dFBqbP7GEYysKp+3CDIzEOi0AE5uP+RbnV1cm0P2Nmr54tJgs
+         m4oi7iPaWqIBFeSG06y2vTcr8RhpsvcjduNCeJef4as5za+0bzzcs/xQ5VBD4vIp7JwN
+         /4KnGBJWFCoLs90HvF3waJ0EtnVzuZraphi2B0nN+W0Cc4sZBE4dxUF4lfAxJyaRTSlG
+         H/+dTHty2k7EBK9ESIlmW4MKgSWXqc2BDJghxDlyOiaBvGeJp00nZzNK6mubkjYdBD+2
+         4SWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711485021; x=1712089821;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nOTCu2adkZyU4SASR+8mux3MN1uFKsv8RRVIr1/qVQg=;
+        b=WWL7bnnnWK6fF14wltJ86Xhz3KQcFVzrlnztfquQ0YBfdqkS8CqbuopLs/iiAAIY/1
+         f7mhvxyIlSKthyrY8W2BV6Gi3rAcHUcM9RwnQpC9R0Ja3lIDpZ+AFDip2FSuw0PseZZD
+         2FWYTc5tEiRCqFCgvZ6vyiIRSqQWFJfDUPrtuBC2i7dqLclyvDTX6/XjZEXtQO8g3yYK
+         bivu4wjFsiAs+xlPg0kbl9wJMXziRIRlP6nr9DNkfharmnTcP8bhH7IZIHj9INautlW6
+         vSxZV96c/Sf9Es4ywKK8yMwsjUBfdOIxbNK7XsaN3aB1MExbBiBfu4QBjtnHBHTcYn7K
+         iEyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU462TVDkPmJiZVDsU4CXRjo2ubTbf7qmL6dKd7WP+Zyml9I9XWFSYIj8izz1qQ/fsCuxGgFxip1yQ2vPGolO4eVLyuMQx/3IUgUG00
+X-Gm-Message-State: AOJu0YyK4kQzlpuZBUWLevdJfxHcrcvhSjDJnWhSK/BZvu7MBOT88y8P
+	rgCksvxaEA6P9lGfNNr71P76Kom1hG0Na97Hg9KPajBe2Xm8o7Qad1oBFu+2AwA=
+X-Google-Smtp-Source: AGHT+IGDCCJfg1K3FXIiSSOOGO99uhfcCCRDK5S7YUKDQOK6yXvBo4CUydKRMP0dyp1U6ZRkE8pBPg==
+X-Received: by 2002:aa7:c48a:0:b0:56c:6cb:e7ad with SMTP id m10-20020aa7c48a000000b0056c06cbe7admr7158412edq.9.1711485021311;
+        Tue, 26 Mar 2024 13:30:21 -0700 (PDT)
+Received: from alex-rivos.ba.rivosinc.com ([2a02:8440:5240:d2b3:9657:7432:d88d:84a9])
+        by smtp.gmail.com with ESMTPSA id ij5-20020a056402158500b0056c09fda4e6sm3097694edb.54.2024.03.26.13.30.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 13:30:20 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
+	Pu Lehui <pulehui@huawei.com>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Zong Li <zong.li@sifive.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH 0/2] ftrace fixes
+Date: Tue, 26 Mar 2024 21:30:15 +0100
+Message-Id: <20240326203017.310422-1-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,135 +76,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Weilin Wang <weilin.wang@intel.com>
+Both were reported recently as there are efforts ongoing to
+reimplement ftrace on riscv and both are independent of this rework,
+so here they are.
 
-Add print out functions so that users could read retire latency values.
+Alexandre Ghiti (2):
+  riscv: Fix warning by declaring arch_cpu_idle() as noinstr
+  riscv: Disable preemption when using patch_map()
 
-Example output:
-In this simple example, there is no MEM_INST_RETIRED.STLB_HIT_STORES sample.
-Therefore, the MEM_INST_RETIRED.STLB_HIT_STORES:p retire_latency value, count
-and sum are all 0.
+ arch/riscv/kernel/patch.c   | 8 ++++++++
+ arch/riscv/kernel/process.c | 2 +-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
- Performance counter stats for 'system wide':
-
-       181,047,168      cpu_core/TOPDOWN.SLOTS/          #      0.6 %  tma_dtlb_store
-         3,195,608      cpu_core/topdown-retiring/
-        40,156,649      cpu_core/topdown-mem-bound/
-         3,550,925      cpu_core/topdown-bad-spec/
-       117,571,818      cpu_core/topdown-fe-bound/
-        57,118,087      cpu_core/topdown-be-bound/
-            69,179      cpu_core/EXE_ACTIVITY.BOUND_ON_STORES/
-             4,582      cpu_core/MEM_INST_RETIRED.STLB_HIT_STORES/
-        30,183,104      cpu_core/CPU_CLK_UNHALTED.DISTRIBUTED/
-        30,556,790      cpu_core/CPU_CLK_UNHALTED.THREAD/
-           168,486      cpu_core/DTLB_STORE_MISSES.WALK_ACTIVE/
-              0.00 MEM_INST_RETIRED.STLB_HIT_STORES:p       0        0
-
-       1.003105924 seconds time elapsed
-
-Signed-off-by: Weilin Wang <weilin.wang@intel.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/stat-display.c | 65 ++++++++++++++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
-
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index bfc1d705f437..6c043d9c9f81 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -21,6 +21,7 @@
- #include "iostat.h"
- #include "pmu.h"
- #include "pmus.h"
-+#include "metricgroup.h"
- 
- #define CNTR_NOT_SUPPORTED	"<not supported>"
- #define CNTR_NOT_COUNTED	"<not counted>"
-@@ -34,6 +35,7 @@
- #define COMM_LEN     16
- #define PID_LEN       7
- #define CPUS_LEN      4
-+#define RETIRE_LEN    8
- 
- static int aggr_header_lens[] = {
- 	[AGGR_CORE] 	= 18,
-@@ -426,6 +428,67 @@ static void print_metric_std(struct perf_stat_config *config,
- 	fprintf(out, " %-*s", METRIC_LEN - n - 1, unit);
- }
- 
-+static void print_retire_lat_std(struct perf_stat_config *config,
-+				 struct outstate *os)
-+{
-+	FILE *out = os->fh;
-+	bool newline = os->newline;
-+	struct tpebs_retire_lat *t;
-+	struct list_head *retire_lats = &config->tpebs_results;
-+
-+	list_for_each_entry(t, retire_lats, event.nd) {
-+		if (newline)
-+			do_new_line_std(config, os);
-+		fprintf(out, "%'*.2f %-*s", COUNTS_LEN, t->val, EVNAME_LEN, t->event.name);
-+		fprintf(out, "%*ld %*d\n", RETIRE_LEN, t->count,
-+			 RETIRE_LEN, t->sum);
-+	}
-+}
-+
-+static void print_retire_lat_csv(struct perf_stat_config *config,
-+				 struct outstate *os)
-+{
-+	FILE *out = os->fh;
-+	struct tpebs_retire_lat *t;
-+	struct list_head *retire_lats = &config->tpebs_results;
-+	const char *sep = config->csv_sep;
-+
-+	list_for_each_entry(t, retire_lats, event.nd) {
-+		fprintf(out, "%f%s%s%s%s%ld%s%d\n", t->val, sep, sep, t->event.name, sep,
-+			t->count, sep, t->sum);
-+	}
-+}
-+
-+static void print_retire_lat_json(struct perf_stat_config *config,
-+				  struct outstate *os)
-+{
-+	FILE *out = os->fh;
-+	struct tpebs_retire_lat *t;
-+	struct list_head *retire_lats = &config->tpebs_results;
-+
-+	fprintf(out, "{");
-+	list_for_each_entry(t, retire_lats, event.nd) {
-+		fprintf(out, "\"retire_latency-value\" : \"%f\", ", t->val);
-+		fprintf(out, "\"event-name\" : \"%s\"", t->event.name);
-+		fprintf(out, "\"sample-counts\" : \"%ld\"", t->count);
-+		fprintf(out, "\"retire_latency-sum\" : \"%d\"", t->sum);
-+	}
-+	fprintf(out, "}");
-+}
-+
-+static void print_retire_lat(struct perf_stat_config *config,
-+			     struct outstate *os)
-+{
-+	if (!&config->tpebs_results)
-+		return;
-+	if (config->json_output)
-+		print_retire_lat_json(config, os);
-+	else if (config->csv_output)
-+		print_retire_lat_csv(config, os);
-+	else
-+		print_retire_lat_std(config, os);
-+}
-+
- static void new_line_csv(struct perf_stat_config *config, void *ctx)
- {
- 	struct outstate *os = ctx;
-@@ -1609,6 +1672,8 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
- 		break;
- 	}
- 
-+	print_retire_lat(config, &os);
-+
- 	print_footer(config);
- 
- 	fflush(config->output);
 -- 
-2.43.0
+2.39.2
 
