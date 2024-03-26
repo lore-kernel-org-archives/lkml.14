@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B84129A71
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 06:58:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4140823BF
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 06:58:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711436291; cv=none; b=P25U7KSgL4DO8R+BMrQXypjxcgAPjc/3+CHfTIZVe3K6mLTXg2UW79Qe2D4Pwt2fiAS0pkqVe31AVdIRzNQVhKB9ILWG+hfOrWMvzHoiPY5+w3XrhcVJrwXI1SAceGYiA6hN+ZMOZ5lRfRi2MCELn+/4KX1OU8ywho13SI4rW4Q=
+	t=1711436316; cv=none; b=PrpJ+eYK7PqFI7+VPfUBQLLQrroOprDpW9OYrYyve694UHo77tGLvJ+7bBcXh9fz4GrTH1Hh166HHtQZOFJ9tOB0fVvKaijrZKkIx+FJGLolWnLHRIQ3dsS4MBin2aSB62CeZD+cl8OxKqany+t7scgyeqypMkBfvRkqE6Kqoss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711436291; c=relaxed/simple;
-	bh=Oto1Bgx2nEcBajuiq3zg5pa2/Kdk7vuiCcvbsEb1ox4=;
+	s=arc-20240116; t=1711436316; c=relaxed/simple;
+	bh=2h+xwPao4UQjY5pzAeqIZuJmOnkTkwIZDSMWkOI2/m4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WvAMOLitua8tfq89yoTSYXhRPchydrU3vsSrK5RSE8gCy/g2dJlHBbBrEMukt3uZewp+7duXvAGTHbWwWNDLhlbsyFLZoPAYSrnabyd4wSNKFYLtlHsKywc2lvEyU/wxIWYPAiaCbuNBBQbRAmJuCVOBLEfwEwRZmyrYVmiYHHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ay3TqeCm; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ULOn6hyfT2wT8i6tCcUyEgnJiiwxuslSLTxdNAeTnjpGMmm5ghG00K5SxxdhvjDukLy7rjaj8pADYieJPeAT3jcnLPX+TPNnvDqEXvaGAUBa/90DN5qSi/VRlpAoQo59Wlyw5nxX7oIjw0h5TzCWuiGVSamuWFaTdeZen7uy/BQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fnZXP2hr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ay3TqeCm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D0DFC433F1;
-	Tue, 26 Mar 2024 06:58:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fnZXP2hr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D9A1C433C7;
+	Tue, 26 Mar 2024 06:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711436290;
-	bh=Oto1Bgx2nEcBajuiq3zg5pa2/Kdk7vuiCcvbsEb1ox4=;
+	s=k20201202; t=1711436316;
+	bh=2h+xwPao4UQjY5pzAeqIZuJmOnkTkwIZDSMWkOI2/m4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ay3TqeCmVtCa4qF1OL7AxLUF84qxvhegocKTuLWHsbSzS0UgBlX6f7JYNGb8GsCCe
-	 qFmQRDbOM1FkEdIcqkVwhm64D+hPxIJNp6dbf8c0W/FuEw56ogMEjRCM/FOdLWKAbZ
-	 0yHansf3kxUb5Lg4jDxjCOL5HNwe/eO/kiY4JrnAhwSZ5dG1adz9keSrXWgyqnlyI1
-	 WcvlKvRNMtOCP7F40tIJ1Dvam3LfxDgwCOx6j8B7kc4BEl++YLMZJu715mR4qd56gl
-	 FDAxb7ulwHdEUegXRfRWU/qnUO20UzXt3ALdHLqKNdWqmYi24QG6HIL2SjP2TydLZT
-	 zKa93/C8jXs1g==
-Date: Tue, 26 Mar 2024 08:57:29 +0200
+	b=fnZXP2hrOZj2Z8QDTITPOCDYzWo/RpPKcF0v6NAm2SpxZh0PsXWZuJwc3oEBhKUWv
+	 Mi68YOrSG5ih18gIT2PvjY4DobC3VNnhLdVZ4TKV5pulyRNF+tgTqiupcSx4gKxdDF
+	 jeh31wT4loBcfFORRnpiYexhmfYOeJ0YRYAbUKlUvrW4KnatdYDaSPrIx66kjajELw
+	 ZmEbAEgh75QcmMm4slvb4gY5lIJxBCtvKm1zkNq5n1lycKvAdGz+YzlUO+7hqlJNOw
+	 OOI24Tspe9k4/8k5zOe4Nf3ymGckG543nJ0Hn4azqvR6YbgKjAskBkT5tdXk4ZBfMA
+	 uifqEFW4HXdvQ==
+Date: Tue, 26 Mar 2024 08:57:55 +0200
 From: Mike Rapoport <rppt@kernel.org>
 To: Baoquan He <bhe@redhat.com>
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, x86@kernel.org,
 	linuxppc-dev@lists.ozlabs.org, akpm@linux-foundation.org
-Subject: Re: [PATCH v2 3/6] mm/mm_init.c: add new function calc_nr_all_pages()
-Message-ID: <ZgJx2RLPAdom1EbE@kernel.org>
+Subject: Re: [PATCH v2 6/6] mm/mm_init.c: remove arch_reserved_kernel_pages()
+Message-ID: <ZgJx8wXHkbY4FsuT@kernel.org>
 References: <20240325145646.1044760-1-bhe@redhat.com>
- <20240325145646.1044760-4-bhe@redhat.com>
+ <20240325145646.1044760-7-bhe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,67 +43,95 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240325145646.1044760-4-bhe@redhat.com>
+In-Reply-To: <20240325145646.1044760-7-bhe@redhat.com>
 
-Hi Baoquan,
-
-On Mon, Mar 25, 2024 at 10:56:43PM +0800, Baoquan He wrote:
-> This is a preparation to calculate nr_kernel_pages and nr_all_pages,
-> both of which will be used later in alloc_large_system_hash().
+On Mon, Mar 25, 2024 at 10:56:46PM +0800, Baoquan He wrote:
+> Since the current calculation of calc_nr_kernel_pages() has taken into
+> consideration of kernel reserved memory, no need to have
+> arch_reserved_kernel_pages() any more.
 > 
-> nr_all_pages counts up all free but not reserved memory in memblock
-> allocator, including HIGHMEM memory. While nr_kernel_pages counts up
-> all free but not reserved low memory in memblock allocator, excluding
-> HIGHMEM memory.
-
-Sorry I've missed this in the previous review, but I think this patch and
-the patch "remove unneeded calc_memmap_size()" can be merged into "remove
-meaningless calculation of zone->managed_pages in free_area_init_core()"
-with an appropriate update of the commit message.
-
-With the current patch splitting there will be compilation warning about unused
-function for this and the next patch.
- 
 > Signed-off-by: Baoquan He <bhe@redhat.com>
+
+Reviewed-by: Mike Rapoport (IBM) <rppt@kernel.org>
+
 > ---
->  mm/mm_init.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+>  arch/powerpc/include/asm/mmu.h |  4 ----
+>  arch/powerpc/kernel/fadump.c   |  5 -----
+>  include/linux/mm.h             |  3 ---
+>  mm/mm_init.c                   | 12 ------------
+>  4 files changed, 24 deletions(-)
 > 
+> diff --git a/arch/powerpc/include/asm/mmu.h b/arch/powerpc/include/asm/mmu.h
+> index 3b72c7ed24cf..aa5c0fd5edb1 100644
+> --- a/arch/powerpc/include/asm/mmu.h
+> +++ b/arch/powerpc/include/asm/mmu.h
+> @@ -406,9 +406,5 @@ extern void *abatron_pteptrs[2];
+>  #include <asm/nohash/mmu.h>
+>  #endif
+>  
+> -#if defined(CONFIG_FA_DUMP) || defined(CONFIG_PRESERVE_FA_DUMP)
+> -#define __HAVE_ARCH_RESERVED_KERNEL_PAGES
+> -#endif
+> -
+>  #endif /* __KERNEL__ */
+>  #endif /* _ASM_POWERPC_MMU_H_ */
+> diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
+> index d14eda1e8589..ae8c7619e597 100644
+> --- a/arch/powerpc/kernel/fadump.c
+> +++ b/arch/powerpc/kernel/fadump.c
+> @@ -1735,8 +1735,3 @@ static void __init fadump_reserve_crash_area(u64 base)
+>  		memblock_reserve(mstart, msize);
+>  	}
+>  }
+> -
+> -unsigned long __init arch_reserved_kernel_pages(void)
+> -{
+> -	return memblock_reserved_size() / PAGE_SIZE;
+> -}
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index ad19350e1538..ab1ba0a31429 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -3221,9 +3221,6 @@ static inline void show_mem(void)
+>  extern long si_mem_available(void);
+>  extern void si_meminfo(struct sysinfo * val);
+>  extern void si_meminfo_node(struct sysinfo *val, int nid);
+> -#ifdef __HAVE_ARCH_RESERVED_KERNEL_PAGES
+> -extern unsigned long arch_reserved_kernel_pages(void);
+> -#endif
+>  
+>  extern __printf(3, 4)
+>  void warn_alloc(gfp_t gfp_mask, nodemask_t *nodemask, const char *fmt, ...);
 > diff --git a/mm/mm_init.c b/mm/mm_init.c
-> index 153fb2dc666f..c57a7fc97a16 100644
+> index e269a724f70e..089dc60159e9 100644
 > --- a/mm/mm_init.c
 > +++ b/mm/mm_init.c
-> @@ -1264,6 +1264,30 @@ static void __init reset_memoryless_node_totalpages(struct pglist_data *pgdat)
->  	pr_debug("On node %d totalpages: 0\n", pgdat->node_id);
+> @@ -2373,17 +2373,6 @@ void __init page_alloc_init_late(void)
+>  	page_alloc_sysctl_init();
 >  }
 >  
-> +static void __init calc_nr_kernel_pages(void)
-> +{
-> +	unsigned long start_pfn, end_pfn;
-> +	phys_addr_t start_addr, end_addr;
-> +	u64 u;
-> +#ifdef CONFIG_HIGHMEM
-> +	unsigned long high_zone_low = arch_zone_lowest_possible_pfn[ZONE_HIGHMEM];
-> +#endif
-> +
-> +	for_each_free_mem_range(u, NUMA_NO_NODE, MEMBLOCK_NONE, &start_addr, &end_addr, NULL) {
-> +		start_pfn = PFN_UP(start_addr);
-> +		end_pfn   = PFN_DOWN(end_addr);
-> +
-> +		if (start_pfn < end_pfn) {
-> +			nr_all_pages += end_pfn - start_pfn;
-> +#ifdef CONFIG_HIGHMEM
-> +			start_pfn = clamp(start_pfn, 0, high_zone_low);
-> +			end_pfn = clamp(end_pfn, 0, high_zone_low);
-> +#endif
-> +			nr_kernel_pages += end_pfn - start_pfn;
-> +		}
-> +	}
-> +}
-> +
->  static void __init calculate_node_totalpages(struct pglist_data *pgdat,
->  						unsigned long node_start_pfn,
->  						unsigned long node_end_pfn)
+> -#ifndef __HAVE_ARCH_RESERVED_KERNEL_PAGES
+> -/*
+> - * Returns the number of pages that arch has reserved but
+> - * is not known to alloc_large_system_hash().
+> - */
+> -static unsigned long __init arch_reserved_kernel_pages(void)
+> -{
+> -	return 0;
+> -}
+> -#endif
+> -
+>  /*
+>   * Adaptive scale is meant to reduce sizes of hash tables on large memory
+>   * machines. As memory size is increased the scale is also increased but at
+> @@ -2426,7 +2415,6 @@ void *__init alloc_large_system_hash(const char *tablename,
+>  	if (!numentries) {
+>  		/* round applicable memory size up to nearest megabyte */
+>  		numentries = nr_kernel_pages;
+> -		numentries -= arch_reserved_kernel_pages();
+>  
+>  		/* It isn't necessary when PAGE_SIZE >= 1MB */
+>  		if (PAGE_SIZE < SZ_1M)
 > -- 
 > 2.41.0
 > 
