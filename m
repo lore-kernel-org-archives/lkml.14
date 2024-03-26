@@ -1,130 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC631CD31;
-	Tue, 26 Mar 2024 17:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2554A1B28D
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 17:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711475343; cv=none; b=IZBTNh2gPEX8ybu1nihldfw20Ju6Pkpgac6QJGBfKneX3OPp3myjtRnCkIi6vdWUTimvcDwzIoDi19p4OCDZKgQTSkiG4ustsQBd3D7B44pPXmwA1ME1j31VqLvcX7SL/J7+eWCVgrs1GAe6C929J28MhF/gzvn0NJMkpaoEnz4=
+	t=1711475401; cv=none; b=LNczjH0NuHkF/7aTQicd3OOLASMMmF5WIhX1m9xck7BFgbrdsGrYNsIh04lPbAKzBbl6i159I3In+X6+tA5zweKNVCIDQpLAm8mQwdQf0RqMjxNSELK7Hn+SugnP9tJmnxP/R8NOyYJw27x7VjSfXcWRAp9ajJWl8MXM+CLm+ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711475343; c=relaxed/simple;
-	bh=x0X3KIjo28KMgDBY7G4N3EMgX+0BDWgru26mZ2+VhDo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ixq5cOqFMgQvS18dn5eJ7r67A0FjwuyP7gSFKBAz3p+Kyk29c2Poteky6jv0M7TX347Zu7s/6ugbfHLhk35rvfict1IILo6TnrmEoNDl16q8Vt2/tVBd0SIky/e/yeddV93nqnUoDE2V0WOLozKxYFVF7nqcm/ydLIO/UPPBIrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fsDoUcEu; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711475401; c=relaxed/simple;
+	bh=ZZ4JGbZMnbMz3Qe3+LhesVzd/Xs2LOOplkm4GhjpEIk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jgS7gcRs+ENAbVNM7CKs0dQd5XAmrwAg1sPg4oXoTkRDv6AyLEuFor1iXLnNv+SJZuepydq4kgL6aojApPcvozDN0pfFEJgRrajj5lP5Vq04/zhtNejHm05+FLc8EAFaJmh6h9bt6G5cC+wGVXA65T/eZ45SGlt/AF7BcTRZpT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RObLNjfE; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fsDoUcEu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711475342; x=1743011342;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=x0X3KIjo28KMgDBY7G4N3EMgX+0BDWgru26mZ2+VhDo=;
-  b=fsDoUcEuyeAYt94FCd7K2Cb4hkRIhdBRnQnasbGyOEU1kEfVvozZkqCB
-   Q9nFg4Ze3DGnVJFEyoNr7aWPKg9gDMnWDnn429kptwZ4fIrR/aw4YxPQA
-   nb1j38hSKnv6kbnIo5/AXZ10K8EiW4BJUvhekJZVBEpX8qEJ5sNn4VLfi
-   wFRmZCchnThQff83gORbs/98TPgTLhhRQlVrpOIcOhbjdXSv2zV105X3n
-   Y0T+gRo06wR1oF0fAiLcHlrY/uWfkWS5RnB5yTR5c4u3zAd4x152KO7Av
-   bhKl26ZYPM8Tv4/CNcFtf7LBZeslsgx4bC9Gwk635F9GeDojOeW6wWc8c
-   Q==;
-X-CSE-ConnectionGUID: fL5uzmBxSfahbE/0TFvSrg==
-X-CSE-MsgGUID: zrRDr491SHOqt5KaU5elOQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="6650937"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="6650937"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 10:49:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="53498965"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 10:49:01 -0700
-Date: Tue, 26 Mar 2024 10:48:59 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: Chao Gao <chao.gao@intel.com>
-Cc: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	"Yamahata, Isaku" <isaku.yamahata@intel.com>,
-	"Zhang, Tina" <tina.zhang@intel.com>,
-	"isaku.yamahata@linux.intel.com" <isaku.yamahata@linux.intel.com>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>, "Chen, Bo2" <chen.bo@intel.com>,
-	"sagis@google.com" <sagis@google.com>,
-	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Aktas, Erdem" <erdemaktas@google.com>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"Yuan, Hang" <hang.yuan@intel.com>,
-	"sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH v19 059/130] KVM: x86/tdp_mmu: Don't zap private pages
- for unsupported cases
-Message-ID: <20240326174859.GB2444378@ls.amr.corp.intel.com>
-References: <96fcb59cd53ece2c0d269f39c424d087876b3c73.camel@intel.com>
- <20240325190525.GG2357401@ls.amr.corp.intel.com>
- <5917c0ee26cf2bb82a4ff14d35e46c219b40a13f.camel@intel.com>
- <20240325221836.GO2357401@ls.amr.corp.intel.com>
- <20240325231058.GP2357401@ls.amr.corp.intel.com>
- <edcfc04cf358e6f885f65d881ef2f2165e059d7e.camel@intel.com>
- <20240325233528.GQ2357401@ls.amr.corp.intel.com>
- <ZgIzvHKobT2K8LZb@chao-email>
- <20db87741e356e22a72fadeda8ab982260f26705.camel@intel.com>
- <ZgKt6ljcmnfSbqG/@chao-email>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RObLNjfE"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-341d381d056so1009645f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 10:49:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711475398; x=1712080198; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QLrCBIdk4WOKYgFZ4chKh/YnWYEeWF54LzBE4o5yT7o=;
+        b=RObLNjfE5BK5Th8blUuSm3XX80C5xLFPcQWUfh9PIXdA1o0Hz62IZiF48vfOldONYF
+         6Wza7ivM4F6EREvGLmjm/l5P6ITkE+trKOHjQqQUXVXUgz3i8DcNxQKNZwWS1/KKS0gK
+         lQxMTdirHCXI2+gAuXi1TUOpqb8ElcFBOSSCxkIe5++q9PhhIqoNusLMcM7eI7YF831Z
+         koMzGpkc1mbQwCCFoDLB/bAPLBLgpw1BlAc0gehxT4P2hx02bR0Cp9DKG3OkxfOi0Owh
+         KpHSKlpazPEWNXS99UrCoFy5DGRJFZzacHNE8+uizhrXGPGEeyAmYvTjGCcE0ZrRwwhN
+         JJEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711475398; x=1712080198;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QLrCBIdk4WOKYgFZ4chKh/YnWYEeWF54LzBE4o5yT7o=;
+        b=XVeQMVRYKuE+cWpYRX2I0akrTxMzzOmNVm1hqXfFRyJmjyPHUB6oq9PUCdzml63uiy
+         QgEJmmRzooOyd5ZQOzK1ElQXtw3i6Ec8urOC64xImhpZf3O8huyMqmxa/NEJM2eam9Me
+         1d5ewq/ToGSLayP0P0y7cKGnAEIgKxNcBMoUHkO4F47pNhlfHiqE0QXBQMA15aAQkNY9
+         VI0lZ2E5QTLJSoxiOFyfunUX2ieLjIqMbG0RicNCd88vZblwdOKDFT/XZe3fgtOcX8gN
+         VaLA+/jvBzCJkCZ4Cjhh36uieHKVEH5Lq4sqZP5DzaOZcsbj9uE6MySkgKjaPRycTiUs
+         MY3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV2uXSRty3cG6tXEdQf6Y4+W8Y2p0A5FD/k6ZvRVkZHg58frfn6WVvP2Taj5ZqANUTKwaO1ea5mfmEj3YghqAAT58Fa5iS8+MAF1bp8
+X-Gm-Message-State: AOJu0YxPXz1AJHmSqAXapmoOY9a2ZfCYmyxeq+LTQ+CVfP39UVZFxlxN
+	dvEV+rgNi+o7wXbBUDYxNi8NKc4QRl8Iyui2m37T0/l5IEeUIDdYIl/P6aG/iI0a3pFM8CsageI
+	lDsg2RI1sSaxdlPgyG0uGfllb7CzNkvdQmTaKHJboZpG9kFjmrQ==
+X-Google-Smtp-Source: AGHT+IEOUmyVJTuAFSy4qsdKVI8IgXkJJYjFTicu6eeLjxlDHJXRBcZ1vljdIHHqcV+h0VhgDbMHoXRJPG/rqlYOPnE=
+X-Received: by 2002:a05:6000:d85:b0:33b:62c0:6181 with SMTP id
+ dv5-20020a0560000d8500b0033b62c06181mr7093858wrb.42.1711475398145; Tue, 26
+ Mar 2024 10:49:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZgKt6ljcmnfSbqG/@chao-email>
+References: <20240226211237.48415-1-ppbuk5246@gmail.com> <Ze_x3kovSFe4z9SO@Levi-MacBook-Pro.local>
+In-Reply-To: <Ze_x3kovSFe4z9SO@Levi-MacBook-Pro.local>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 26 Mar 2024 17:49:45 +0000
+Message-ID: <CAJuCfpFdbh37qWFS8eCXk0CCQD9bA2wtpOj5BMYPNTcz-0Oxnw@mail.gmail.com>
+Subject: Re: [PATCH v2] psi: Fix avg trigger being fired unexpectedly.
+To: "levi.yun" <ppbuk5246@gmail.com>
+Cc: hannes@cmpxchg.org, peterz@infradead.org, mingo@redhat.com, 
+	juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com, 
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, bristot@redhat.com, 
+	vschneid@redhat.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 26, 2024 at 07:13:46PM +0800,
-Chao Gao <chao.gao@intel.com> wrote:
-
-> On Tue, Mar 26, 2024 at 10:42:36AM +0800, Edgecombe, Rick P wrote:
-> >On Tue, 2024-03-26 at 10:32 +0800, Chao Gao wrote:
-> >> > > > Something like this for "112/130 KVM: TDX: Handle TDX PV rdmsr/wrmsr hypercall"
-> >> > > > Compile only tested at this point.
-> >> > > 
-> >> > > Seems reasonable to me. Does QEMU configure a special set of MSRs to filter for TDX currently?
-> >> > 
-> >> > No for TDX at the moment.  We need to add such logic.
-> >> 
-> >> What if QEMU doesn't configure the set of MSRs to filter? In this case, KVM
-> >> still needs to handle the MSR accesses.
+On Tue, Mar 12, 2024 at 6:10=E2=80=AFAM levi.yun <ppbuk5246@gmail.com> wrot=
+e:
+>
+> Gentle ping..
+>
+> On Mon, Feb 26, 2024 at 09:12:37PM +0000, Levi Yun wrote:
+> > commit 915a087e4c473("psi: Fix trigger being fired unexpectedly at init=
+ial")
+> > fixes unexpected event fired when group->total accumulated for PSI_POLL=
+.
+> > But, for PSI_AVGS, win->value should be initialized with group->total[P=
+SI_AVGS].
+> > Moreover, to get exact initial value for win->value, it should be set
+> > under each trigger lock to avoid concurrent changes to group->total[].
 > >
-> >Do you see a problem for the kernel? I think if any issues are limited to only the guest, then we
-> >should count on userspace to configure the msr list.
-> 
-> How can QEMU handle MTRR MSR accesses if KVM exits to QEMU? I am not sure if
-> QEMU needs to do a lot of work to virtualize MTRR.
+> > Signed-off-by: Levi Yun <ppbuk5246@gmail.com>
+> > Acked-by: Suren Baghdasaryan <surenb@google.com>
 
-The default kernel logic will to return error for
-TDG.VP.VMCALL<RDMSR or WRMSR MTRR registers>.
-Qemu can have mostly same in the current kernel logic.
+Hi Peter,
+Could you please pull this patch into your tree? I don't see it in any
+tree, so I think you missed it.
+Thanks,
+Suren.
 
-rdmsr:
-MTRRCAP: 0
-MTRRDEFTYPE: MTRR_TYPE_WRBACK
-
-wrmsr:
-MTRRDEFTYPE: If write back, nop. Otherwise error.
-
-
-> If QEMU doesn't configure the msr filter list correctly, KVM has to handle
-> guest's MTRR MSR accesses. In my understanding, the suggestion is KVM zap
-> private memory mappings. But guests won't accept memory again because no one
-> currently requests guests to do this after writes to MTRR MSRs. In this case,
-> guests may access unaccepted memory, causing infinite EPT violation loop
-> (assume SEPT_VE_DISABLE is set). This won't impact other guests/workloads on
-> the host. But I think it would be better if we can avoid wasting CPU resource
-> on the useless EPT violation loop.
-
-Qemu is expected to do it correctly.  There are manyways for userspace to go
-wrong.  This isn't specific to MTRR MSR.
--- 
-Isaku Yamahata <isaku.yamahata@intel.com>
+> > ---
+> > v2: Fix commit message.
+> > ---
+> >  kernel/sched/psi.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+> > index 7b4aa5809c0f..e7f66ab2ad3e 100644
+> > --- a/kernel/sched/psi.c
+> > +++ b/kernel/sched/psi.c
+> > @@ -1323,9 +1323,6 @@ struct psi_trigger *psi_trigger_create(struct psi=
+_group *group, char *buf,
+> >       t->state =3D state;
+> >       t->threshold =3D threshold_us * NSEC_PER_USEC;
+> >       t->win.size =3D window_us * NSEC_PER_USEC;
+> > -     window_reset(&t->win, sched_clock(),
+> > -                     group->total[PSI_POLL][t->state], 0);
+> > -
+> >       t->event =3D 0;
+> >       t->last_event_time =3D 0;
+> >       t->of =3D of;
+> > @@ -1336,6 +1333,8 @@ struct psi_trigger *psi_trigger_create(struct psi=
+_group *group, char *buf,
+> >
+> >       if (privileged) {
+> >               mutex_lock(&group->rtpoll_trigger_lock);
+> > +             window_reset(&t->win, sched_clock(),
+> > +                             group->total[PSI_POLL][t->state], 0);
+> >
+> >               if (!rcu_access_pointer(group->rtpoll_task)) {
+> >                       struct task_struct *task;
+> > @@ -1361,6 +1360,9 @@ struct psi_trigger *psi_trigger_create(struct psi=
+_group *group, char *buf,
+> >       } else {
+> >               mutex_lock(&group->avgs_lock);
+> >
+> > +             window_reset(&t->win, sched_clock(),
+> > +                             group->total[PSI_AVGS][t->state], 0);
+> > +
+> >               list_add(&t->node, &group->avg_triggers);
+> >               group->avg_nr_triggers[t->state]++;
+> >
+> > --
+> > 2.39.2
