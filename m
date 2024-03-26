@@ -1,81 +1,167 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 559C273189;
-	Tue, 26 Mar 2024 22:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3677E13DDCB
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 22:50:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711493456; cv=none; b=RDcr9+sIf8KthCGhGYFf94NJvjeIj0HEuSOj/467z7Z8UGVu5ZKYAdulXrLYoiyjkcUMgIUp+YEmnXrYRmZGDBX9RhRxpD6dKows7P8ho2Hba0SeVG0fEEh9h4/BahI8Ca41vAmvPL/8cvPv/veSJdF/BOP77z+8glagipjJMSA=
+	t=1711493461; cv=none; b=Rnke7bxyOPkknwA3JL8jxgm0uVDLB9b88E0sODs8KPSR9yxW/E4+yZIKG4XmqLmQi7r2WQa2Q89cmXsfDmDmGp6oYkzj73zdW8mlMZjQOrbzfKyx3OvETHrB97kGFeihxkERc3LD0KZmRPMCIBzfbazhsagRoRX1xdQ8g+6N4L4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711493456; c=relaxed/simple;
-	bh=2NpW39e1yc+jqyCmqsSEeRIUVXVG2Imo9WLoAIyvRs8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l6wb+GUnunjfuPQNXefuQEGSfozbk39c8ALTiYl8bISe2NPyOahtmLlRBRyuvGUjCU+wXOXobbjEL22j2d7U7d78Rs2RbfEmdsiC5Xd/TpwteffqKE1SQjXReVlxkrsp+zdNOUyTYviHL02WSACkxkPNb2A27YGqEZALmZHcgEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=C+6j3WRo; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1711493461; c=relaxed/simple;
+	bh=HwXV7niH/WxHc7jazaZuD951dDYxvnrXLKJ5aOXzXpw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ko5J0+043R1ZfR0JV3jWP4hJPsI2yyGdg1XAbNf/1H0NCIhOL8oYvoiyKTCl92QgNfl7EQL2h2F615X423nEGxt6TpxzBV4yOX8GGU++Jisr4pOpqt+HJBnH8kthyT3MORZrScAx8fZPJ/59oskVKOo0xsMcT3AyiHHhLzRYdMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x6D+IDhp; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C+6j3WRo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=1BmDLCjcFU+KK+3miiP8pR8s3wJrwUpZyPZ3mSRVfH8=; b=C+6j3WRotzsiFGicvbn5F7y7/r
-	Pn1CSBfv83JhvbhVpJ2yQQJH38fVLklm1Mx3yhOjNVNYYBoJUh/32kdOIoxMIXdRlOGoWNBx4C0oP
-	eOWFJW3sm70s0Bmnp3Zvp1nacEl97t8akUM+nJAQQX0jGDzzksa6xRYSwPq8rA2DuJCzxSm51uoFr
-	jqMeEmaEnTp+kPvdC+4Sc/uk6lCGvOB2AGOVFSkiv6367PYZI6JaRbKgPDKez0mIRMFgb38D6kvjF
-	CFabzsBTz3CtvM0zPSC7VvOw6ep0Lljng5lmT7SnHhuHqrwz+uwsoEMzA/8865GDpCxw2OoWVhc/I
-	66l7tF8g==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rpFd5-00000002STT-0Ja0;
-	Tue, 26 Mar 2024 22:50:51 +0000
-Date: Tue, 26 Mar 2024 22:50:50 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Soma Nakata <soma.nakata01@gmail.com>, linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/filemap: set folio->mapping to NULL before xas_store()
-Message-ID: <ZgNRSvcohDoLj3G2@casper.infradead.org>
-References: <20240322210455.3738-1-soma.nakata01@gmail.com>
- <20240326140533.a0d0041371e21540dd934722@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x6D+IDhp"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6dbdcfd39so12087173276.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:50:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711493457; x=1712098257; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=g7wPvg5SzHg3djrLO0jF0y6HKK/VaWsWbJGTmJoXohw=;
+        b=x6D+IDhpGqjgzwRWj5fpWKi+7i3QZkp1IEDjB1Qht3yOOKH/VaiTKAYKk0R5I603OM
+         t8L7+P2cVN7YCO2ENWLslUaz3Wt5Ub8UGxiK1CnEQt7A+qRozSX3M31IgguKAY6jZJw+
+         LSzyZ74AWYo8T8vPppF0g51kCPRajl4ZAM2YZ0CcWsFmFjHpGZ1UK+1/djvdkW4KvwJe
+         97+MTstmMPVNj/zWYAY902/7tbetoYKV2/LacWPHJzEkDO33w0Jf8bzOrAjAP2nrbNOx
+         LiQz1FQl1cprHZuOKN0V5HnKIDSqzQfN556rGH7/lhFMvzDRbqvzJSzc7y5HA0+T+wSy
+         8vig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711493457; x=1712098257;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g7wPvg5SzHg3djrLO0jF0y6HKK/VaWsWbJGTmJoXohw=;
+        b=jYUsH5/UN2A9PZDbnM4o7lovj/6J5+5JHHufx6s/bUEZ5e/9EJyTvIHLXgy3I7+7c/
+         E4G5E7WmUjIsb2MHINMywlzgcayuCknss9n4BrXzQOMtF2/Z9nwK73eMwA19olHNVrmq
+         ooNuT3gbF6JuCaWZuVhBfhC1jtGei7J36aNhjms+k7h/cyqmH1Wa6CzgayLvVZpdeN1C
+         pf9gtkJ6GeBvvOOtAe75qCj2g3bOtihDRMCnFSR5TwKsG8CIXg2GnswhqQXCvaCKNe9l
+         EYpdNJEKqTLD/m6bpgc+R390qiGte4TmVANdb378dGeHaFzIq67+QczpzhoYjnUi0Qdb
+         qbFA==
+X-Forwarded-Encrypted: i=1; AJvYcCXKVIKhnTUOeEPOs0ylyE+brLfRGQwUzJkqG5hoZOCzTLa7t18FfcniSgbYfwymhfpyoXxVbBY373IomQ7fuh/8C3IG0An+obkht6z0
+X-Gm-Message-State: AOJu0YxWv+efSTorSxC0npFuG8V+nIF9nwPa7IABhToXG4WaN+XoNDzp
+	FL0Qp79QKBI9Ri4/+3YY+DZH1DMkGWyxWs4i1CSQyHuJvuyPqGUGzU8Y4Vhxq8nZGuyv1jIL0TL
+	/BO2hhvBDRbh8sz9xqZGobQ==
+X-Google-Smtp-Source: AGHT+IGoJ91B2ro4NgPyk1e74NGmWSPhPzZUW0Q71qZOWUIfAfkK/24SBynuxXqxxickdOKVfZBEkC7HXTaNllUdCA==
+X-Received: from almasrymina.svl.corp.google.com ([2620:15c:2c4:200:c51e:bdd0:7cc8:695c])
+ (user=almasrymina job=sendgmr) by 2002:a05:6902:220a:b0:dcc:f01f:65e1 with
+ SMTP id dm10-20020a056902220a00b00dccf01f65e1mr3555213ybb.8.1711493457318;
+ Tue, 26 Mar 2024 15:50:57 -0700 (PDT)
+Date: Tue, 26 Mar 2024 15:50:32 -0700
+In-Reply-To: <20240326225048.785801-1-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240326140533.a0d0041371e21540dd934722@linux-foundation.org>
+Mime-Version: 1.0
+References: <20240326225048.785801-1-almasrymina@google.com>
+X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
+Message-ID: <20240326225048.785801-2-almasrymina@google.com>
+Subject: [RFC PATCH net-next v7 01/14] queue_api: define queue api
+From: Mina Almasry <almasrymina@google.com>
+To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org
+Cc: Mina Almasry <almasrymina@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, 
+	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, Pavel Begunkov <asml.silence@gmail.com>, 
+	David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
+	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
+	Praveen Kaligineedi <pkaligineedi@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Mar 26, 2024 at 02:05:33PM -0700, Andrew Morton wrote:
-> On Sat, 23 Mar 2024 06:04:54 +0900 Soma Nakata <soma.nakata01@gmail.com> wrote:
-> > Functions such as __filemap_get_folio() check the truncation of
-> > folios based on the mapping field. Therefore setting this field to NULL
-> > earlier prevents unnecessary operations on already removed folios.
-> > 
-> > ...
-> >
-> > --- a/mm/filemap.c
-> > +++ b/mm/filemap.c
-> > @@ -139,11 +139,12 @@ static void page_cache_delete(struct address_space *mapping,
-> >  
-> >  	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
-> >  
-> > +	folio->mapping = NULL;
-> > +	/* Leave page->index set: truncation lookup relies upon it */
-> > +
-> >  	xas_store(&xas, shadow);
-> >  	xas_init_marks(&xas);
-> >  
-> > -	folio->mapping = NULL;
-> > -	/* Leave page->index set: truncation lookup relies upon it */
-> >  	mapping->nrpages -= nr;
-> >  }
-> 
-> Seems at least harmless, but I wonder if it can really make any
-> difference.  Don't readers of folio->mapping lock the folio first?
+This API enables the net stack to reset the queues used for devmem TCP.
 
-I can't think of anywhere that doesn't ... most of the places that check
-folio->mapping have "goto unlock" as the very next line.  I don't think
-this patch accomplishes anything.
+Signed-off-by: Mina Almasry <almasrymina@google.com>
+
+---
+ include/linux/netdevice.h   |  3 +++
+ include/net/netdev_queues.h | 27 +++++++++++++++++++++++++++
+ 2 files changed, 30 insertions(+)
+
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index e41d30ebaca6..3d3af8f7f9c9 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -1956,6 +1956,7 @@ enum netdev_reg_state {
+  *	@sysfs_rx_queue_group:	Space for optional per-rx queue attributes
+  *	@rtnl_link_ops:	Rtnl_link_ops
+  *	@stat_ops:	Optional ops for queue-aware statistics
++ *	@queue_mgmt_ops:	Optional ops for queue management
+  *
+  *	@gso_max_size:	Maximum size of generic segmentation offload
+  *	@tso_max_size:	Device (as in HW) limit on the max TSO request size
+@@ -2338,6 +2339,8 @@ struct net_device {
+ 
+ 	const struct netdev_stat_ops *stat_ops;
+ 
++	const struct netdev_queue_mgmt_ops *queue_mgmt_ops;
++
+ 	/* for setting kernel sock attribute on TCP connection setup */
+ #define GSO_MAX_SEGS		65535u
+ #define GSO_LEGACY_MAX_SIZE	65536u
+diff --git a/include/net/netdev_queues.h b/include/net/netdev_queues.h
+index 1ec408585373..337df0860ae6 100644
+--- a/include/net/netdev_queues.h
++++ b/include/net/netdev_queues.h
+@@ -60,6 +60,33 @@ struct netdev_stat_ops {
+ 			       struct netdev_queue_stats_tx *tx);
+ };
+ 
++/**
++ * struct netdev_queue_mgmt_ops - netdev ops for queue management
++ *
++ * @ndo_queue_mem_alloc: Allocate memory for an RX queue. The memory returned
++ *			 in the form of a void* can be passed to
++ *			 ndo_queue_mem_free() for freeing or to ndo_queue_start
++ *			 to create an RX queue with this memory.
++ *
++ * @ndo_queue_mem_free:	Free memory from an RX queue.
++ *
++ * @ndo_queue_start:	Start an RX queue at the specified index.
++ *
++ * @ndo_queue_stop:	Stop the RX queue at the specified index.
++ */
++struct netdev_queue_mgmt_ops {
++	void *			(*ndo_queue_mem_alloc)(struct net_device *dev,
++						       int idx);
++	void			(*ndo_queue_mem_free)(struct net_device *dev,
++						      void *queue_mem);
++	int			(*ndo_queue_start)(struct net_device *dev,
++						   int idx,
++						   void *queue_mem);
++	int			(*ndo_queue_stop)(struct net_device *dev,
++						  int idx,
++						  void **out_queue_mem);
++};
++
+ /**
+  * DOC: Lockless queue stopping / waking helpers.
+  *
+-- 
+2.44.0.396.g6e790dbe36-goog
+
