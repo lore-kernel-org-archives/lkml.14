@@ -1,155 +1,166 @@
-Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.140])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C2013D265
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 19:54:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.222.135.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A56F13D272;
+	Tue, 26 Mar 2024 19:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711482858; cv=none; b=tt3K7xwB9vSKGq5CRobdcMifrSxSquLAdLPOUS6NklLucjlTXGFK1NFNGRZgAromZ3P8gjGV2CEJfkTG2rOnjWZwQcXh/nGTKvBQRNcnkFTXIr5D8pmfvVk4QZYx1LApJzhx4aoRWxFv3aPMaXN7i9bgF1ZQxZ73NIukn4F7h1Q=
+	t=1711482883; cv=none; b=pPYapWxvq3E11o5Eyfpv8Kb4HOQ6Rq6LrPesyEkpBBq+UnFXpjqgjo8K/53yx4KYyUHJSvxeqfuprnuVPEh3qp6+Y3elZiYQji6kiut8/f+neakX9IqkZlj0d+cDpBRnqpkDPh8APvcJ6sTY9VBrQtnwiMN9T89xWoQlw886dcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711482858; c=relaxed/simple;
-	bh=TVQh7He8pCNuQhQFnvn+Z1vWx3JX3W8dztAvzVfDPJ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Dl4gkRLMMwS7brjwYl0QS/Z7WA2dNTwOguWhl1WJ1FXKj0Oo5y/p4yS7PLxmbtpJxmE3aWvoyms8J4UX7F3qYzOUcJUhY47pa1umEDGsd/OihAKJu+MVqNWj7xoc7e22lfPbzLQtiQKXFsiAgprnbN+/GyKZDEvuBRxYE8x+RTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl; spf=pass smtp.mailfrom=o2.pl; dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b=GEj2oICR; arc=none smtp.client-ip=193.222.135.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=o2.pl
+	s=arc-20240116; t=1711482883; c=relaxed/simple;
+	bh=l2Uqx7wrA6NoUxQ4rJTc5pIIxLEtsRzqWRIYJT+Ma08=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AMGJjAN3yrzAeqUdjsupzQ6X1OqY0Ji8p+w0ZFrvlul15EAzzcmusYN00/43FgCtCNdmsXLPz2t2lzabZ6uapPCWGbW7l/VX2W10tvTCRTxmHeCa1hlmM/DgRBVLUq8p/+XGRTk3DTGp4RaP1GyCGCZAf3x11PdstBiO1Wo6spk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=fFVw0o79; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b="GEj2oICR"
-Received: (wp-smtpd smtp.tlen.pl 25507 invoked from network); 26 Mar 2024 20:47:30 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=1024a;
-          t=1711482450; bh=IIhoIWpRJSiDJH2NqAEhNqlU5eNagQrEs7VzWuVJG3c=;
-          h=Subject:To:From;
-          b=GEj2oICR/tiC1RhMgpXfAS9rSCh7DhVHAREXphEekjYoFbosrPdJAlKilygj371ki
-           pgx50zgg5o57Q+/gmbIXY+zfeKXlDvHJL0+6xt7Js/eTGvJGhgqvl1nCP82c1JB+VL
-           MSC3lUgZoxZWKBsEeBWZci9y1p4Bq2BKErOUIA94=
-Received: from aaer216.neoplus.adsl.tpnet.pl (HELO [192.168.1.22]) (mat.jonczyk@o2.pl@[83.4.121.216])
-          (envelope-sender <mat.jonczyk@o2.pl>)
-          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <sashal@kernel.org>; 26 Mar 2024 20:47:30 +0100
-Message-ID: <49e3ce4a-e77e-47a6-819f-eba74c05f5f5@o2.pl>
-Date: Tue, 26 Mar 2024 20:47:25 +0100
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fFVw0o79"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1711482872;
+	bh=l2Uqx7wrA6NoUxQ4rJTc5pIIxLEtsRzqWRIYJT+Ma08=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fFVw0o79eIaWlD03wcbtDVuqaM2fT86wyggWSzLP5JOc8LeMOSRHlFogkIEfG/LP/
+	 9O5pb7PYt4dBcQ+rh6r8CphFrXSlMRzIzHmz8gAjFzvxNnzWQlaNaf2UVdhsfMxd8L
+	 WWl+9LT/RtHsUSmDowy3BDw2HuJH/4btYykTnPi4dbLd3TrkkFg8ZQvD3Q9I9lG4pp
+	 VNcU+OLBcZHUcoNl7KkHHQ7JzjYzBIodazSwr6u5Pai/tDaIfyskbfhmZv+MUwnBti
+	 UM8Hc9/Hgyg/MjYPKg0WaiwAEfiPphHojG3ByKXW1Tp4uJO+7mk20FKcpaKATTaigf
+	 PyQX4EntyNBTw==
+Received: from mercury (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sre)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6205D37802F2;
+	Tue, 26 Mar 2024 19:54:32 +0000 (UTC)
+Received: by mercury (Postfix, from userid 1000)
+	id C7FED10608D9; Tue, 26 Mar 2024 20:54:31 +0100 (CET)
+Date: Tue, 26 Mar 2024 20:54:31 +0100
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Dragan Simic <dsimic@manjaro.org>
+Cc: linux-rockchip@lists.infradead.org, heiko@sntech.de, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, boris.brezillon@collabora.com, 
+	linux-kernel@vger.kernel.org, kernel@collabora.com
+Subject: Re: [PATCH] arm64: dts: rockchip: quartzpro64: Enable the GPU
+Message-ID: <jbyqey5y5ngr7mkrrmdxrwyw5ogd7rq56af6mrmhsckboanvyp@tcaav2tridos>
+References: <0f3759ee390f245dac447bbee038445ddfecbec0.1711383286.git.dsimic@manjaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 000/444] 6.1.83-rc2 review
-To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20240325115939.1766258-1-sashal@kernel.org>
-Content-Language: en-GB
-From: =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
-Autocrypt: addr=mat.jonczyk@o2.pl; keydata=
- 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
- TANkZ3QqXNX2
-In-Reply-To: <20240325115939.1766258-1-sashal@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-WP-MailID: 1bbdf9110afad6aeac496f367f500c2f
-X-WP-AV: skaner antywirusowy Poczty o2
-X-WP-SPAM: NO 0000000 [QVM0]                               
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="vy7v7ft7rt4enblx"
+Content-Disposition: inline
+In-Reply-To: <0f3759ee390f245dac447bbee038445ddfecbec0.1711383286.git.dsimic@manjaro.org>
 
-W dniu 25.03.2024 o 12:59, Sasha Levin pisze:
-> This is the start of the stable review cycle for the 6.1.83 release.
-> There are 444 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed Mar 27 11:59:37 AM UTC 2024.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-6.1.y&id2=v6.1.82
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
->
-> Thanks,
-> Sasha
 
-Hello,
+--vy7v7ft7rt4enblx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Tested-by: Mateusz Jończyk <mat.jonczyk@o2.pl>
+Hi,
 
-Tested on a HP 17-by0001nw laptop with an Intel Kaby Lake CPU and Ubuntu 20.04.
+On Mon, Mar 25, 2024 at 05:19:04PM +0100, Dragan Simic wrote:
+> Following the approach used to enable the Mali GPU on the rk3588-evb1, [1]
+> do the same for the Pine64 QuartzPro64, which uses nearly identical hardw=
+are
+> design as the RK3588 EVB1.
+>=20
+> The slight disadvantage is that the regulator coupling logic requires the
+> regulators to be always on, which is also noted in the comments.  This is
+> obviously something to be improved at some point in the future, but should
+> be fine for now, especially because the QuartzPro64 isn't a battery-power=
+ed
+> board, so low power consumption isn't paramount.
+>=20
+> [1] https://lore.kernel.org/linux-rockchip/20240325153850.189128-5-sebast=
+ian.reichel@collabora.com/
+>=20
+> Signed-off-by: Dragan Simic <dsimic@manjaro.org>
+> ---
 
-Stack:
-- amd64,
-- ext4 on top of LVM on top of LUKS on top of mdraid on top of
-  NVMe and SATA drives (the SATA drive in write-mostly mode).
+FWIW
 
-Tested (lightly):
-- suspend to RAM,
-- suspend to disk,
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-- GPU (Intel HD Graphics 620, with a Duke Nukem 3D game on Proton (Wine fork) and a Unigine benchmark)
-- WiFi (Realtek RTL8822BE),
-- Bluetooth (Realtek RTL8822BE),
-- webcam,
+-- Sebastian
 
-- USB soundcard (Logitech Pro X),
-- PCI soundcard (Intel HD Audio),
+>  .../arm64/boot/dts/rockchip/rk3588-quartzpro64.dts | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-quartzpro64.dts b/arch/a=
+rm64/boot/dts/rockchip/rk3588-quartzpro64.dts
+> index 67414d72e2b6..68d432c61ea5 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3588-quartzpro64.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3588-quartzpro64.dts
+> @@ -285,6 +285,12 @@ &gmac0_rgmii_clk
+>  	status =3D "okay";
+>  };
+> =20
+> +&gpu {
+> +	mali-supply =3D <&vdd_gpu_s0>;
+> +	sram-supply =3D <&vdd_gpu_mem_s0>;
+> +	status =3D "okay";
+> +};
+> +
+>  &i2c2 {
+>  	status =3D "okay";
+> =20
+> @@ -491,11 +497,15 @@ rk806_dvs3_null: dvs3-null-pins {
+>  		regulators {
+>  			vdd_gpu_s0: dcdc-reg1 {
+>  				regulator-name =3D "vdd_gpu_s0";
+> +				/* regulator coupling requires always-on */
+> +				regulator-always-on;
+>  				regulator-boot-on;
+>  				regulator-enable-ramp-delay =3D <400>;
+>  				regulator-min-microvolt =3D <550000>;
+>  				regulator-max-microvolt =3D <950000>;
+>  				regulator-ramp-delay =3D <12500>;
+> +				regulator-coupled-with =3D <&vdd_gpu_mem_s0>;
+> +				regulator-coupled-max-spread =3D <10000>;
+> =20
+>  				regulator-state-mem {
+>  					regulator-off-in-suspend;
+> @@ -545,11 +555,15 @@ regulator-state-mem {
+> =20
+>  			vdd_gpu_mem_s0: dcdc-reg5 {
+>  				regulator-name =3D "vdd_gpu_mem_s0";
+> +				/* regulator coupling requires always-on */
+> +				regulator-always-on;
+>  				regulator-boot-on;
+>  				regulator-enable-ramp-delay =3D <400>;
+>  				regulator-min-microvolt =3D <675000>;
+>  				regulator-max-microvolt =3D <950000>;
+>  				regulator-ramp-delay =3D <12500>;
+> +				regulator-coupled-with =3D <&vdd_gpu_s0>;
+> +				regulator-coupled-max-spread =3D <10000>;
+> =20
+>  				regulator-state-mem {
+>  					regulator-off-in-suspend;
 
-Filesystems tested very lightly:
-- NFS,
-- NTFS via FUSE
-- exFAT
-- vfat.
+--vy7v7ft7rt4enblx
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Nitpicks:
-- Mozilla Thunderbird displays the main panel with a long delay,
-    - likely not connected with the kernel upgrade,
-- intermittent problems with suspend in GNOME (suspend hangs until I log back in),
-    - likely not connected with the kernel upgrade,
-- when I have GNOME Bluetooth settings open, the computer cannot receive any files from the phone,
-    - same as on some older kernels,
-- several errors in dmesg: "Bluetooth: hci0: SCO packet for unknown connection handle 2"
-    - same as on some older kernels,
+-----BEGIN PGP SIGNATURE-----
 
-Greetings,
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmYDJ/MACgkQ2O7X88g7
++prAXw//VFNyf9UpzEvJ2gmtgoAy+Uuxc8F9f3S6P58m/22P+THFPE3nNh1KnLZ4
+1uhZc3Gj2sf0nvXTr2Zl6fdV0Sr0xEKUlQGnXAcxH33nZ/TGWhjFu3ivzF59L98T
+RwXbIIQWKQyBjcyrwF1ssq9zdt9ywbTAGUcjnt7NzuJ+S8+W3eoyvJzEXT7ij+fa
+rShpniZV50t8DeqNLKgbSyOybguQRRo7cgKwrgQGeoNxb1IXkmkOzhmZ07fd84i0
+cusDkWNh2sk0wIL0xw9HRKuay2lY8PiPnS+th+hNf6SC5oF/CQfXjtXE//fNHhkI
+0L9xLtdPKt3zeKSSe9kB2xZMC4UO1Q1bxPAOT2hzoF/vHb5Tp8mO4usGTrGNHspc
+OiAtZt+V+4JblDIiVGSc2KLuERFxEvsQMkKilCOQbNDoWwsC/E9aGbcgt0lkaRKi
+AE4i79EE3uHiIR1q8dg28P4JZpt1LjjZIq7QjUWSIqOwXWGOY8d6yflJn9z1bQZm
+YfukUZ3IyYfJxHHt2zL7qIAXTj3oMzr69XYnAvVuZbZkzYOQ1wcduuSC7tr+AN0Q
+ZuJ152h5AtoviSvADObkhjzYoH5NTd2ep2/MMy2qdtkPt4i5kTmtt7VMpl2szzhk
+AS0FfOoWCSS5Uj6y7k0SyE1B72dYHej+raY8jySawgt+kQV4cyU=
+=tY+0
+-----END PGP SIGNATURE-----
 
-Mateusz
-
+--vy7v7ft7rt4enblx--
