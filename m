@@ -1,524 +1,163 @@
-Received: from mx0a-00823401.pphosted.com (mx0a-00823401.pphosted.com [148.163.148.104])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421F913CC68;
-	Tue, 26 Mar 2024 15:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.148.104
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711467344; cv=fail; b=TEu0rRKiUEFF6UIbRkB0Shgpj7qPlFybD8wg9IZOdA9pZU8yidDst5IqS8XDZ/8QMpbYx2mLMBvYwGTcaWAz2WO3ZO2KymyvOfjKOzejFf7T0h0ex0qhrt3Jv16pYJuIQ+JLIc+5sPFHsHEnVoWybEoKW/AR9r8ZTRPN2qjNlSY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711467344; c=relaxed/simple;
-	bh=obLbECKuKYx51Td43NPT0bVNLJOv5B9VH3ePmobZZI4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Mozz+35oo+Fpb5/0PB7/VI6GOUDR90MP7RXlksXSJA7whFP7sMAp3vK+pJa4wPyk6h1xB412B32yU1EVeRkTjTRV2IzB6Ywl4axT2825/i12TvGb3CWId41jzGL7457QUTtdQmQgYRPvPJqt8zXcOdTL1bv56evZhJ2RyjdbzHg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lenovo.com; spf=pass smtp.mailfrom=lenovo.com; dkim=pass (2048-bit key) header.d=lenovo.com header.i=@lenovo.com header.b=vN+LTLzs; arc=fail smtp.client-ip=148.163.148.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lenovo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lenovo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08ECF13C8ED
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711467386; cv=none; b=vFbfLYMcSlijnHW/PfYgDP8KHsIctmtge9kjHCsIx4H4P9VNkLWC8h58NrEh8alh5i/4UyKxuhNDbdMFaxm/H0WS23PNhnWOYhoCOw7DdYi6Lp6kWHvBAhenVZZt4QfHY46NyeS//FkHGtnbFHpvmrRch75SjQcAnf+T8mhu2tg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711467386; c=relaxed/simple;
+	bh=WjduyezMyJgXE+CV4glcOFAh/2FSU2yWbLJarIfwxXk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=twtidYVKMTE5nu+F0F6K9mYslC5S1J4ajGLqwEFWYOB6j7DmU20T/HAFogvxy5DX+vYED2kOmz3lnC/4Qj3p12Js/j0ygHf0X5k1Dgm689IOI/aTDz1zkUXIt2oNnBx+rURGbbfWCzBu+1Au78k8vxpaHmQ9MbMOoqRVgcHyLss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U322PJeN; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lenovo.com header.i=@lenovo.com header.b="vN+LTLzs"
-Received: from pps.filterd (m0355087.ppops.net [127.0.0.1])
-	by mx0a-00823401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42QCsXKT012773;
-	Tue, 26 Mar 2024 14:27:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lenovo.com; h=
-	from:to:cc:subject:date:message-id:references:in-reply-to
-	:content-type:content-transfer-encoding:mime-version; s=
-	DKIM202306; bh=o8HLQd/4kiBd/x627Cj8bLPO8RIOWxWw0tHgNF/mI3I=; b=v
-	N+LTLzsXfGi8N7cqlSw4WPK27UPapKiwRTR41ZDXrxYAyusIrtm7ACWibPjxUBb6
-	3uC/PuDmj6gw3wb4jXRwG/vAKS/ZWNgkyD7B+/CLHD6B/c5/R5eSZ2IwdvuoZoRo
-	+7zFqU2mgcgytfC1cnvRt1iGd9OQcV1IXhCjPOc5mJLW2lz0zakuJEJYJ5n+UxFl
-	jRsl4DlJBixo1yEea766PW5whCzfoN7n4NjeX2muRwexrCfjmvgsZJiEhGiBPoma
-	6Q7zOAfRjr6o3UYFmrZ8qCIwB0W+9ff+m4eyUrEav9KQX98Aeu5kwwtXMy+CiR3u
-	At5Ptkx7HsC7cCrLQBSnA==
-Received: from apc01-psa-obe.outbound.protection.outlook.com (mail-psaapc01lp2040.outbound.protection.outlook.com [104.47.26.40])
-	by mx0a-00823401.pphosted.com (PPS) with ESMTPS id 3x3nf39hug-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 14:27:29 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BLohjlEFdF7s5rP+tAgy2SFPDUKhVtUSgeLev6xiIKzL0yghIorLZ1twz1Lrp8/QYcgwkYcPTfln8aD1bgd5zLoNERboHFwQShqroBf6XO9HBoSm3ScVea3Iyt2X2yJHUWyCJMTPv7jjM1wylyroUs2DcYZKOE2QeJW3aA041eu5ZDn4S1SHwRbFgqQ+fLJs9SL2kaqGaUE6p2plTiFcivMQf+KM+WHycYQIrGnXlOGvdR2yl6Oie6a1DYtPFJ6LzC4SZ9vhSg4YNwBjrwA6KgDUQarupsyJV59pbN2yQ1U1J9RyYzeYvl+Mnn48+5BDISPsl/Wk183DqUPHqOrOWA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=o8HLQd/4kiBd/x627Cj8bLPO8RIOWxWw0tHgNF/mI3I=;
- b=ImjpZcTfweH0I9LCojTKjKShLJtseb3FqV9gWLmzOXMUSfHQAFBu3zH1WF+MZY6ZLEcrOGYlWesjMVF2YG2qS0xg2fEjsKI+ysTqyQ6Rq6P+XJoYAEk1OlFlYJ36CW0o/PEb2lbyf7ipnFADZz2+a1LoCeBqvIdaoAruMe8ZrEmzqrx5MuRLbJHveulhQWyQTNqWaBZki0wRhACr90tmWQFLuXX3gn8LAwJsCfRNywCoF7eLaBAK6MOVYPzn04dUFsqxq6bWqzNqywurBvZlATv5iNk8Sdanb6FpSN5Ay/ZOtXo5qrAQ3Qsq6tqr5a7HD2d0yfDw4WaYLpJYHOAhbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=lenovo.com; dmarc=pass action=none header.from=lenovo.com;
- dkim=pass header.d=lenovo.com; arc=none
-Received: from SEYPR03MB7192.apcprd03.prod.outlook.com (2603:1096:101:d5::9)
- by KL1PR03MB7767.apcprd03.prod.outlook.com (2603:1096:820:e7::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Tue, 26 Mar
- 2024 14:27:25 +0000
-Received: from SEYPR03MB7192.apcprd03.prod.outlook.com
- ([fe80::1498:a87b:1715:b6a7]) by SEYPR03MB7192.apcprd03.prod.outlook.com
- ([fe80::1498:a87b:1715:b6a7%5]) with mapi id 15.20.7409.028; Tue, 26 Mar 2024
- 14:27:25 +0000
-From: David Ober <dober@lenovo.com>
-To: Andy Shevchenko <andy@black.fi.intel.com>,
-        David Ober
-	<dober6023@gmail.com>
-CC: "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jdelvare@suse.com" <jdelvare@suse.com>,
-        "linux@roeck-us.net"
-	<linux@roeck-us.net>,
-        "corbet@lwn.net" <corbet@lwn.net>, Mark Pearson
-	<mpearson@lenovo.com>
-Subject: RE: [External] Re: [PATCH v4] hwmon:Add EC Chip driver for Lenovo
- ThinkStation motherboards
-Thread-Topic: [External] Re: [PATCH v4] hwmon:Add EC Chip driver for Lenovo
- ThinkStation motherboards
-Thread-Index: AQHafrAdxMzRGX9SSk+tSlgoSxw247FKFUfg
-Date: Tue, 26 Mar 2024 14:27:25 +0000
-Message-ID: 
- <SEYPR03MB719281B54C0FA4E36E0DA2EDDA352@SEYPR03MB7192.apcprd03.prod.outlook.com>
-References: <20240315115810.15816-1-dober6023@gmail.com>
- <ZgFuLbBe4y1OiRqY@black.fi.intel.com>
-In-Reply-To: <ZgFuLbBe4y1OiRqY@black.fi.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SEYPR03MB7192:EE_|KL1PR03MB7767:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- VHXnM6q8ef567dnSkGBvOMVWcbcQ2WL0nzRfH1tqyPfKcjOrcum8VRh7rcrlJUj6TVEWBzPicm+LU2H+T7D7Pc3pxb+uVnb/LhCIYnU9KRv9Qpc8D38oeRJsTDzhPRghpT3zrdvYX4qthxciDO894VBpPwbwkWbLomFuNxD7jiTKyv2ciR6E8Kz6OOgo5lfjyOgqAWGpT3AxTJicZQ/VLm5QOh4XoyZOKQv8+EA61J1RpS4GQBB2Wq8N2vLo5mfr3dSsG8AKk9RHoYxJCdDppfq03zU7OqiP1qUVCmL2Vdf6ec0sFeHNVpmvQGnsoVXRDmdFjgBcscJQeWYBtDLQQCd/csBTJnn0KeRS+7cICxDjht5jsloxI56G9UBiOdIkcOSebiSO2b2NAmsoUJ5UA09T71tmniHLJWltviVInaV+Mhf26bfQEwjdwy9eAihVHc5wiykuJJM/T+UypWg6sV/e6hVDbFAzGexLS20iNlgmrWO2NmtansOmBT5Vb0jrquiuy8eQqshzmua3E1NfLhyHSglZGrRnkgWToZHT2+OsT07UqHZWc2b8wScJ2PndHFOxWxZR4OcOnyt36xYbVyJUD7VU59ZRMsajcg6YccT0g1Rg2OtsFpari44FsmKOyBegOZ4qNKC1Yq9ZOEiXksNbaUv78y8I1xTd9GKA9WQ=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR03MB7192.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?a/N/9ofJvNkNCcVKGURoD4FVJDX16gXIYUVM4rUv+e9aG3UZVOHwpKbNhVmf?=
- =?us-ascii?Q?zJXduBWjgSWj0AcEOlCW4RsoFSjdYs6ivS4V0drAkA5/WOAInpIbB9Zz3F56?=
- =?us-ascii?Q?CU4nqy73I98XxktPk7anHetSufZKBjbH9wt2N5tZAX8NqYJx9gegpduVx9y/?=
- =?us-ascii?Q?lC4acO3m165+/VHBZIEsC9n/n2RRnjH2OwWMxaYKTzEAygOXh+2dWa/EWOCd?=
- =?us-ascii?Q?ya6Ai/eNsNsYQzyO0bWwW1aWRvV/gT8tSSEh74mWMtLFIwB51Ge7ir/eFyuS?=
- =?us-ascii?Q?Bfh3zsdreY4DMCwC5djh9IpQ3wdZ0YNvILGbA1XHA7huQ3MTXz6jzoPxG3P2?=
- =?us-ascii?Q?i3sUWenk6esg2A4CO6AzAQRyYo8Cafxd7XRnrJEOj7LCELVxX263bR60dIYS?=
- =?us-ascii?Q?kOZgcXEzBKbPFZIpIU51oVLDffokPAlzggi8bTLWaPosNzu3b8wA630BgdCB?=
- =?us-ascii?Q?Fx2dzl05EpqVaH8oxU9Qd/mCxzQcOw/8+32CPB3iVS6WRiQsEzsSVVRUEav3?=
- =?us-ascii?Q?NAnwjxhgGceAzs1hBp0pxNjQypryJ28fcGFUZr272ikSY6T8YYB/gRDKccWX?=
- =?us-ascii?Q?IBoAaKFEvnzrirp8aifWy5QqoFP1KmfNmfzwUZqnjkGTtwEkqIdFlNHth6JH?=
- =?us-ascii?Q?BJa9Io1ELPo2Od+OXnMUZkKeKY31X5u8XCg7CElOpxa9W96AJAbAoKMDU8CO?=
- =?us-ascii?Q?nC4KssODfuXNjGc5QdtJBsXDuz5lQFqJlyX7Rugl5Cewh9iUgrAROHCZG/iV?=
- =?us-ascii?Q?YT92rvCbRchnf4BRYlbQplDEUzR0D8GnXCHGI01oWkzylL/oLHHwXHTSH5ZE?=
- =?us-ascii?Q?p8e0w82A3glWAu9CKm01MsphMwWEVPdjPAWWpHY2DuefhchBUr/Hb2Kg5/Yb?=
- =?us-ascii?Q?y0X+T1+eDnQWUC1W77rsLZJNjJWDF6+LzxjGWYnFeqrcHEY8XEfPgybrMJRq?=
- =?us-ascii?Q?ftEZFO4P5bPO2teNck0Lg4YrYjFDgI79JJsnSY6SsC/E1sTK+2sDLbFfZqvY?=
- =?us-ascii?Q?IcAequojKnv2alZuoCEvss+/xltMfSSYUQaLSatFGcDSxCNfpodplN4ba4aP?=
- =?us-ascii?Q?eXRVEt5OvzRa5LP6pxsFlqgAueRwVW9nbd2NqfX7U/BhV3iPVKP03x9B+GB6?=
- =?us-ascii?Q?vbqzHdLM8kc37NpILujuttWqtF6cc3U5SWgiZHS24QX3tYjrk8XAm7aSkShI?=
- =?us-ascii?Q?9KaSggqsqIgvskWsg2xBbs4KUQsA8tKCU9a7I2vqXVMRKcYgnGsd1+1CwKlj?=
- =?us-ascii?Q?zMFlxes6tquBIvjY40tX0VY60MF3MY6Gb2kzTh8FCk2EF1+WDP1IClmFGmoX?=
- =?us-ascii?Q?XIIvGePIpe9d4ZTCrS/UdmxS0QjtUBC0RkoQa6eplPQeg03Vh9Ma96lgAhxW?=
- =?us-ascii?Q?W97o01QdytAq0H1i6bsqZHod4NdHs1qT80Leq9hyTSrvY6bF0plO33vaUzxR?=
- =?us-ascii?Q?24KnfIR7YoJOnjq5eM2sXRiUfB0wRkaMnO8Mj0gdfev70WaXfdxEmOzXp5Zn?=
- =?us-ascii?Q?PzKneLTpYCGySoALkGSOrsUxHjNq4UZa/jUlwV5EjzljV0kplynyb+pMADzj?=
- =?us-ascii?Q?PIc897+NZGayHn2fFyNVGjZTNrqhBSIDzuSHOSLtDdjrtlWGN44jj7K2833o?=
- =?us-ascii?Q?zqpomkGmiIoUlIRmaDBpnHc=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U322PJeN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711467382;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=3IoP/uIjCVx3xjBmhXcu+ibQvDzjCyC7N9xRWM9JDXA=;
+	b=U322PJeNOq96axtTUEQOAlEqCjy1vTxLpFqCH+imH4nHImeirlnmlbyxIlrgWFrdqeh7r7
+	pG1GqwR5OjJX65rtu3pnA9myx0Md7GbThQ6GtWDIImKXMpGsM4tyJClIIgMDSElMW4jSAX
+	x4bsN+HwR8HkWtatsP9r7sEJ3QOZ+MU=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-49-kckh0Hd9Ng-Xtf2PqOXYSQ-1; Tue, 26 Mar 2024 11:36:19 -0400
+X-MC-Unique: kckh0Hd9Ng-Xtf2PqOXYSQ-1
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2d49fa5dfadso47746461fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 08:36:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711467378; x=1712072178;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3IoP/uIjCVx3xjBmhXcu+ibQvDzjCyC7N9xRWM9JDXA=;
+        b=tFp0k++G5sswVOqZJxO9X4BXyD9Dqt5igHEYgd5bo2ZfYqR1UFRCja5mdzE3NcO/5Q
+         9OT2WASxbUtbOXxoSeMlUHK4hsw2L3DY9h2Vcs53dk1BNlRBxiRXimUCXCq5wHGa6yTK
+         BbAvSi1EzpgzMkcZJZ8mEDHGevbsm/H/SmoekEzuCQmQgNZ39Ssv/417g7y9RN3bFkPt
+         IWXsLLztHbVIt1W9qDrQCHS8h+RltZTLm8vou4GMaccdRK8FyF5lou/g2uBsli5suEI/
+         nCXxues00rHCKXTPcH26mSnAUqlFUi/xvrC4WGt7/Hz2Wy0Rkw5MmlND5RNAFSiuWJZq
+         VahA==
+X-Gm-Message-State: AOJu0Yx8HcBB+0PcgL6W4Cia10B2+xWMcaz+tSrAPsxXvdGT8vU2AwHG
+	ONEDCP4Xk5ORIJWfCvmgDYBthqDRC4aLWF5n+OUFpoqIRic3Kvu433D0F4xWsZiU3/aD4dtjflH
+	Wiqpgxv2eBU4n1MCy7rYfifzFdwiEzLwhkOdGnZGaysBbYTiE9rXW9IJbJgqoyA==
+X-Received: by 2002:a2e:9e17:0:b0:2d3:3305:c373 with SMTP id e23-20020a2e9e17000000b002d33305c373mr4435ljk.3.1711467377979;
+        Tue, 26 Mar 2024 08:36:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH2h4q41+sxDzjlavGKRpW//ZC/MnJzwFbRClX0GSm1CQrH9mLaodYkZHwfcA8JxvlzSDq1iw==
+X-Received: by 2002:a2e:9e17:0:b0:2d3:3305:c373 with SMTP id e23-20020a2e9e17000000b002d33305c373mr4421ljk.3.1711467377601;
+        Tue, 26 Mar 2024 08:36:17 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c741:c700:3db9:94c9:28b0:34f2? (p200300cbc741c7003db994c928b034f2.dip0.t-ipconnect.de. [2003:cb:c741:c700:3db9:94c9:28b0:34f2])
+        by smtp.gmail.com with ESMTPSA id t21-20020a05600c451500b004146e58cc35sm11991594wmo.46.2024.03.26.08.36.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Mar 2024 08:36:17 -0700 (PDT)
+Message-ID: <1365c52b-2883-4b1a-aa9f-f587e38df695@redhat.com>
+Date: Tue, 26 Mar 2024 16:36:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: lenovo.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SEYPR03MB7192.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d00f1f72-a224-47a1-3702-08dc4da0dbd3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2024 14:27:25.7309
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5c7d0b28-bdf8-410c-aa93-4df372b16203
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: g5mle4SgeG8mymL2eM9tTcCIQkZlcTIBZfiP6xElkdbxPxK9KVImvfnkDxmrQCdoZi8tTHbHeUu5KXyglHVyMw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR03MB7767
-X-Proofpoint-ORIG-GUID: FasVBCVzTIcnvXf0FgN07LMY4c7fcu40
-X-Proofpoint-GUID: FasVBCVzTIcnvXf0FgN07LMY4c7fcu40
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-26_06,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=801
- clxscore=1011 malwarescore=0 lowpriorityscore=0 adultscore=0 phishscore=0
- impostorscore=0 spamscore=0 bulkscore=0 suspectscore=0 priorityscore=1501
- classifier=spam adjust=-20 reason=mlx scancount=1 engine=8.19.0-2403210001
- definitions=main-2403260100
-
-Andy
-
-  Sorry about the compile break comma got changed to period when I was addi=
-ng in the spaces checkpatch forced me to put in between the values and sinc=
-e I was only adding spaces did not think to check compile
- Thanks for the comments I will fix these and resubmit soon.
-
-David
-
------Original Message-----
-From: Andy Shevchenko <andy@black.fi.intel.com>=20
-Sent: Monday, March 25, 2024 8:30 AM
-To: David Ober <dober6023@gmail.com>
-Cc: linux-hwmon@vger.kernel.org; linux-doc@vger.kernel.org; linux-kernel@vg=
-er.kernel.org; jdelvare@suse.com; linux@roeck-us.net; corbet@lwn.net; David=
- Ober <dober@lenovo.com>; Mark Pearson <mpearson@lenovo.com>
-Subject: [External] Re: [PATCH v4] hwmon:Add EC Chip driver for Lenovo Thin=
-kStation motherboards
-
-On Fri, Mar 15, 2024 at 07:58:10AM -0400, David Ober wrote:
-> This addition adds in the ability for the system to scan the EC chip=20
-> in the Lenovo ThinkStation systems to get the current fan RPM speeds=20
-> the Maximum speed value for each fan also provides the CPU, DIMM other=20
-> thermal statuses
-
-Besides the compilation error, see other remarks below.
-
-...
-
-> Signed-off-by: David Ober <dober@lenovo.com>
-> Signed-off-by: David Ober <dober6023@gmail.com>
-
-Can you leave only one of these?
-
-> +config SENSORS_LENOVO_EC
-> +        tristate "Sensor reader for Lenovo ThinkStations"
-> +        depends on X86
-> +        help
-> +          If you say yes here you get support for LENOVO
-> +          EC Sensor data on newer ThinkStation systems
-> +
-> +          This driver can also be built as a module. If so, the module
-> +          will be called lenovo_ec_sensors.
-
-...
-
-> + * Copyright (C) 2023 David Ober (Lenovo) <dober@lenovo.com>
-
-2024?
-
-...
-
-
-Use IWYU principle (include what you use). See below what I have noticed (m=
-ay not be the full list of missing inclusions).
-
-> +#include <linux/acpi.h>
-> +#include <linux/delay.h>
-
-+ device.h
-
-> +#include <linux/dmi.h>
-
-+ err.h
-
-> +#include <linux/hwmon.h>
-> +#include <linux/io.h>
-> +#include <linux/ioport.h>
-
-> +#include <linux/kernel.h>
-
-How is this one being used, please?
-
-> +#include <linux/module.h>
-
-+ mutex.h
-
-> +#include <linux/platform_device.h>
-
-+ types.h
-
-> +#include <linux/units.h>
-
-...
-
-> +#define io_write8(a, b)	outb_p(b, a)
-> +#define io_read8(a)	inb_p(a)
-
-First of all, these are too generic, second, what's the point? If you wish =
-to make useful macros, put a pointer to the private data, for example, from=
- which you can get the address.
-
-...
-
-> +static inline uint8_t
-
-uint8_t...
-
-> +get_ec_reg(unsigned char page, unsigned char index) {
-> +	u8 onebyte;
-
-u8... Just in a few closer lines :-(
-
-Can you be consistent with a kernel types?
-
-> +	unsigned short m_index;
-> +	unsigned short phy_index =3D page * 256 + index;
-> +
-> +	io_write8(MCHP_EMI0_APPLICATION_ID, 0x01);
-> +
-> +	m_index =3D phy_index & 0x7FFC;
-
-GENMASK() (you will need bits.h for this)
-
-> +	io_write8(MCHP_EMI0_EC_ADDRESS_LSB, m_index);
-> +	io_write8(MCHP_EMI0_EC_ADDRESS_MSB, m_index >> 8);
-
-Can the 16-bit write suffice?
-
-> +	onebyte =3D io_read8(MCHP_EMI0_EC_DATA_BYTE0 + (phy_index & 3));
-
-GENMASK()
-
-> +	io_write8(MCHP_EMI0_APPLICATION_ID, 0x01);  /* write 0x01 again to clea=
-n */
-> +	return onebyte;
-> +}
-
-...
-
-> +struct ec_sensors_data {
-> +	struct mutex mec_mutex; /* lock for sensor data access */
-> +	/*int platform_id;*/
-
-Huh?! Please remove, if no use for it.
-
-> +	const char *const *fan_labels;
-> +	const char *const *temp_labels;
-> +	const int *fan_map;
-> +	const int *temp_map;
-> +};
-
-...
-
-> +static int
-> +lenovo_ec_do_read_fan(struct ec_sensors_data *data, u32 attr, int=20
-> +channel, long *val) {
-> +	u8 lsb, msb;
-> +
-> +	channel *=3D 2;
-> +	switch (attr) {
-> +	case hwmon_fan_input:
-> +		mutex_lock(&data->mec_mutex);
-> +		lsb =3D get_ec_reg(4, 0x20 + channel);
-> +		msb =3D get_ec_reg(4, 0x21 + channel);
-> +		mutex_unlock(&data->mec_mutex);
-> +		*val =3D (msb << 8) + lsb;
-> +		return 0;
-> +	case hwmon_fan_max:
-> +		mutex_lock(&data->mec_mutex);
-> +		lsb =3D get_ec_reg(4, 0x40 + channel);
-> +		msb =3D get_ec_reg(4, 0x41 + channel);
-> +		mutex_unlock(&data->mec_mutex);
-> +		*val =3D (msb << 8) + lsb;
-> +		return 0;
-> +	case hwmon_fan_min:
-> +	case hwmon_fan_div:
-> +	case hwmon_fan_alarm:
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +	return -EOPNOTSUPP;
-
-Combine with the above and return only once this from the default case.
-
-> +}
-
-...
-
-> +static int
-> +lenovo_ec_hwmon_read_string(struct device *dev, enum hwmon_sensor_types =
-type,
-> +			    u32 attr, int channel, const char **str) {
-> +	struct ec_sensors_data *state =3D dev_get_drvdata(dev);
-> +
-> +	switch (type) {
-> +	case hwmon_temp:
-> +		*str =3D state->temp_labels[channel];
-> +		break;
-
-In the other function you returned directly. Keep the style consistent, ple=
-ase.
-
-> +	case hwmon_fan:
-> +		*str =3D state->fan_labels[channel];
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +	return 0;
-> +}
-
-...
-
-> +static int
-> +lenovo_ec_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-> +		     u32 attr, int channel, long *val) {
-> +	struct ec_sensors_data *data =3D dev_get_drvdata(dev);
-> +
-> +	switch (type) {
-> +	case hwmon_temp:
-> +		return lenovo_ec_do_read_temp(data, attr, data->temp_map[channel], val=
-);
-> +	case hwmon_fan:
-> +		return lenovo_ec_do_read_fan(data, attr, data->fan_map[channel], val);
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-
-> +	return 0;
-
-Dead code.
-
-> +}
-
-...
-
-> +static umode_t
-> +lenovo_ec_hwmon_is_visible(const void *data, enum hwmon_sensor_types typ=
-e,
-> +			   u32 attr, int channel)
-> +{
-> +	switch (type) {
-> +	case hwmon_temp:
-> +		if (attr =3D=3D hwmon_temp_input || attr =3D=3D hwmon_temp_label)
-> +			return 0444;
-> +		break;
-> +	case hwmon_fan:
-> +		if (attr =3D=3D hwmon_fan_input || attr =3D=3D hwmon_fan_max || attr =
-=3D=3D hwmon_fan_label)
-> +			return 0444;
-> +		break;
-> +	default:
-> +		return 0;
-> +	}
-> +	return 0;
-
-Same comment about the style.
-
-> +}
-
-...
-
-> +static int lenovo_ec_probe(struct platform_device *pdev) {
-> +	struct device *hwdev;
-> +	struct ec_sensors_data *ec_data;
-> +	const struct hwmon_chip_info *chip_info;
-> +	struct device *dev =3D &pdev->dev;
-> +	const struct dmi_system_id *dmi_id;
-> +	int app_id;
-> +
-> +	ec_data =3D devm_kzalloc(dev, sizeof(struct ec_sensors_data), GFP_KERNE=
-L);
-> +	if (!ec_data) {
-
-> +		release_region(IO_REGION_START, IO_REGION_LENGTH);
-
-This is weird. Please, either move request region to the probe, or drop the=
-se calls here. Obviously you haven't checked the bind-unbind-bind cycle wit=
-h error injection.
-
-> +		return -ENOMEM;
-> +	}
-> +
-> +	dev_set_drvdata(dev, ec_data);
-> +
-> +	chip_info =3D &lenovo_ec_chip_info;
-> +
-> +	mutex_init(&ec_data->mec_mutex);
-> +
-> +	mutex_lock(&ec_data->mec_mutex);
-> +	app_id =3D io_read8(MCHP_EMI0_APPLICATION_ID);
-> +	if (app_id) /* check EMI Application ID Value */
-> +		io_write8(MCHP_EMI0_APPLICATION_ID, app_id); /* set EMI Application ID=
- to 0 */
-> +	io_write8(MCHP_EMI0_EC_ADDRESS_LSB, MCHP_SING_IDX);
-> +	io_write8(MCHP_EMI0_EC_ADDRESS_MSB, MCHP_SING_IDX >> 8);
-> +	mutex_unlock(&ec_data->mec_mutex);
-> +
-> +	if ((io_read8(MCHP_EMI0_EC_DATA_BYTE0) !=3D 'M') &&
-> +	    (io_read8(MCHP_EMI0_EC_DATA_BYTE1) !=3D 'C') &&
-> +	    (io_read8(MCHP_EMI0_EC_DATA_BYTE2) !=3D 'H') &&
-> +	    (io_read8(MCHP_EMI0_EC_DATA_BYTE3) !=3D 'P')) {
-> +		release_region(IO_REGION_START, IO_REGION_LENGTH);
-> +		return -ENODEV;
-> +	}
-> +
-> +	dmi_id =3D dmi_first_match(thinkstation_dmi_table);
-> +
-> +	switch ((long)dmi_id->driver_data) {
-> +	case 0:
-> +		ec_data->fan_labels =3D px_ec_fan_label;
-> +		ec_data->temp_labels =3D lenovo_px_ec_temp_label;
-> +		ec_data->fan_map =3D px_fan_map;
-> +		ec_data->temp_map =3D px_temp_map;
-> +		lenovo_ec_chip_info.info =3D lenovo_ec_hwmon_info_px;
-> +		break;
-> +	case 1:
-> +		ec_data->fan_labels =3D p7_ec_fan_label;
-> +		ec_data->temp_labels =3D lenovo_gen_ec_temp_label;
-> +		ec_data->fan_map =3D p7_fan_map;
-> +		ec_data->temp_map =3D gen_temp_map;
-> +		lenovo_ec_chip_info.info =3D lenovo_ec_hwmon_info_p7;
-> +		break;
-> +	case 2:
-> +		ec_data->fan_labels =3D p5_ec_fan_label;
-> +		ec_data->temp_labels =3D lenovo_gen_ec_temp_label;
-> +		ec_data->fan_map =3D p5_fan_map;
-> +		ec_data->temp_map =3D gen_temp_map;
-> +		lenovo_ec_chip_info.info =3D lenovo_ec_hwmon_info_p5;
-> +		break;
-> +	case 3:
-> +		ec_data->fan_labels =3D p8_ec_fan_label;
-> +		ec_data->temp_labels =3D lenovo_gen_ec_temp_label;
-> +		ec_data->fan_map =3D p8_fan_map;
-> +		ec_data->temp_map =3D gen_temp_map;
-> +		lenovo_ec_chip_info.info =3D lenovo_ec_hwmon_info_p8;
-> +		break;
-> +	default:
-> +		release_region(IO_REGION_START, IO_REGION_LENGTH);
-> +		return -ENODEV;
-> +	}
-> +
-> +	hwdev =3D devm_hwmon_device_register_with_info(dev, "lenovo_ec",
-> +						     ec_data,
-> +						     chip_info, NULL);
-> +
-> +	return PTR_ERR_OR_ZERO(hwdev);
-> +}
-
-...
-
-> +	if (!request_region(IO_REGION_START, IO_REGION_LENGTH, "LNV-WKS")) {
-> +		pr_err(":request fail\n");
-
-I haven't noticed pr_fmt(). How can the user distinguish this from somethin=
-g similar from another place?
-
-> +		return -EIO;
-> +	}
-
-...
-
-> +static void __exit lenovo_ec_exit(void) {
-> +	release_region(IO_REGION_START, IO_REGION_LENGTH);
-> +	platform_device_unregister(lenovo_ec_sensors_platform_device);
-> +	platform_driver_unregister(&lenovo_ec_sensors_platform_driver);
-> +}
-
-> +
-
-Unneeded blank line (see also below).
-
-> +module_init(lenovo_ec_init);
-> +module_exit(lenovo_ec_exit);
-
-Move each of them closer to the respective callback implementation.
-
---
-With Best Regards,
-Andy Shevchenko
-
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] selftests/memfd_secret: add vmsplice() test
+Content-Language: en-US
+To: Miklos Szeredi <mszeredi@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>,
+ Lorenzo Stoakes <lstoakes@gmail.com>, xingwei lee <xrivendell7@gmail.com>,
+ yue sun <samsun1006219@gmail.com>
+References: <20240326143210.291116-1-david@redhat.com>
+ <20240326143210.291116-3-david@redhat.com>
+ <CAOssrKdKaYua48K5F2xD68cFCoiGZSxcYdqgVXrdYTocey2pTg@mail.gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <CAOssrKdKaYua48K5F2xD68cFCoiGZSxcYdqgVXrdYTocey2pTg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+>> +static void test_vmsplice(int fd, const char *desc)
+>> +{
+>> +       ssize_t transferred;
+>> +       struct iovec iov;
+>> +       int pipefd[2];
+>> +       char *mem;
+>> +
+>> +       if (pipe(pipefd)) {
+>> +               fail("pipe failed: %s\n", strerror(errno));
+>> +               return;
+>> +       }
+>> +
+>> +       mem = mmap(NULL, page_size, prot, mode, fd, 0);
+>> +       if (mem == MAP_FAILED) {
+>> +               fail("Unable to mmap secret memory\n");
+>> +               goto close_pipe;
+>> +       }
+>> +
+>> +       /*
+>> +        * vmsplice() may use GUP-fast, which must also fail. Prefault the
+>> +        * page table, so GUP-fast could find it.
+>> +        */
+>> +       memset(mem, PATTERN, page_size);
+> 
+> Shouldn't the non-prefault case be tested as well?
+
+That's the "easy" case where GUP-fast is never involved, and it should 
+mostly be covered by the ptrace/process_vm_read() tests already.
+
+-- 
+Cheers,
+
+David / dhildenb
 
