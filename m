@@ -1,162 +1,50 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F74AA95B;
-	Tue, 26 Mar 2024 17:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D7945C06
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 17:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711474463; cv=none; b=lWpCSe7OSh2RPPTbaG/eTOpRVqNEk9ozQbB4nu9vy3RBoPCKbMCL0sGKm+S8aaU6jjR69pEHG/SwFswPpsahvBs6Yt1mgqW+AmBY/dGHPAj0/AyKMDlVj0BiwcvFFjRXxIov06lsP1hk5j2CU+lvftwCJo2L2lJdrbN9f51pqlM=
+	t=1711474498; cv=none; b=YkCfpp6PtetrmFeOPEhyexZ6vfNuNQ1Pwc5hnVBy1G0vXfegzXxfjMTWEbkEq4cncLtAwcaLLX83hsGcTlfjBA2xj4lbcBSRqJQO5uGOHibJ9EdSrbD+j3vy3EMTXU+fqhv67V98oahRtQCaFpeysRpJRAiejTaOoXd2obOBpxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711474463; c=relaxed/simple;
-	bh=UXsCAMGzzqmMpp+L9Y666l1qQYPfIhBVeL6t3mMnmlU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=nOm2US6NOp8SdmU9zhPajjuFRavLlsOSkP2ChjO4HIFUXGvUZlkOBv4Ianhs7mQ7Prf4i/U4ib+ruF3j/MjMdevvgoNJHzWDC8QhBcgk9Eg8VosfZOgpROZQ3LxZZfSvGinEXcMoQ4OiR9jpwN+fBR5nsvJWofsnnpkdL+cW06k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=as1CqDb6; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="as1CqDb6"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42QHYAJn018910;
-	Tue, 26 Mar 2024 12:34:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1711474450;
-	bh=3MphZr6wwO8mEMosfjMGG0/PCepj2Gm6s51vuwEuvw4=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=as1CqDb68Nhz/Q2s1sCcgJ+mMtQu0uJmhbPxwnhlm6hPWZXWdsqP8iPq8JUXx3NwA
-	 qsK69qA5qxzJjXzMppRgF06Pyf2o2ikyXmtHN6FudrzTWQKZTgNQrAbyl4sSk2m9OC
-	 MUi8+WOgiESFfTaYY1AjXJeVV+G43JtNHIM877bU=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42QHYAEs022524
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 26 Mar 2024 12:34:10 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 26
- Mar 2024 12:34:10 -0500
-Received: from fllvsmtp7.itg.ti.com (10.64.40.31) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 26 Mar 2024 12:34:10 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by fllvsmtp7.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42QHY95E011505;
-	Tue, 26 Mar 2024 12:34:09 -0500
-Message-ID: <f3fab698-fb1c-4ba0-ab5e-0c616830e22c@ti.com>
-Date: Tue, 26 Mar 2024 12:34:09 -0500
+	s=arc-20240116; t=1711474498; c=relaxed/simple;
+	bh=lbl6QaHxe02Juccz6/C5e5ITu/8bnnT80pBEiwtkFv4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h77u60DQEM+Xuwv/BLxMVz0GgoxD2ImvcdXmXXC85ZvCCMJvcetLoYc7HzUacZRUSo0VuxbcJEBPwdypP9Dkelz06z4sWVA7Gyu4qX0rjouEjztn7Uv/TSmLBi53aoq0XMabfaAAIcMCxkjZ2nb38rAW9Uu3stHKd7J6sqlg5qY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91814C433C7;
+	Tue, 26 Mar 2024 17:34:57 +0000 (UTC)
+Date: Tue, 26 Mar 2024 17:34:55 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Waiman Long <longman@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mm/kmemleak: Disable KASAN instrumentation in
+ kmemleak
+Message-ID: <ZgMHP5oVpNRvImq-@arm.com>
+References: <20240307190548.963626-1-longman@redhat.com>
+ <20240307190548.963626-3-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] uio: pruss: Deprecate use of this driver
-Content-Language: en-US
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Robert Nelson <robertcnelson@gmail.com>,
-        Jason Kridner
-	<jkridner@beagleboard.org>,
-        Matthijs van Duin <matthijsvanduin@gmail.com>,
-        Drew Fustini <drew@beagleboard.org>, Tony Lindgren <tony@atomide.com>,
-        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240325210045.153827-1-afd@ti.com>
- <2024032631-excursion-opposing-be36@gregkh>
- <CAOCHtYjauA+BAxZJBMTaxxaMGcvipP9=ZPeWe4FiNFs_jpq6dg@mail.gmail.com>
- <c2125144-659e-42f2-af1f-ffef7ec3d157@ti.com>
- <2024032658-chosen-salaried-4702@gregkh>
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <2024032658-chosen-salaried-4702@gregkh>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240307190548.963626-3-longman@redhat.com>
 
-On 3/26/24 12:12 PM, Greg Kroah-Hartman wrote:
-> On Tue, Mar 26, 2024 at 12:02:09PM -0500, Andrew Davis wrote:
->> On 3/26/24 11:19 AM, Robert Nelson wrote:
->>> On Tue, Mar 26, 2024 at 12:41 AM Greg Kroah-Hartman
->>> <gregkh@linuxfoundation.org> wrote:
->>>>
->>>> On Mon, Mar 25, 2024 at 04:00:45PM -0500, Andrew Davis wrote:
->>>>> This UIO driver was used to control the PRU processors found on various
->>>>> TI SoCs. It was created before the Remoteproc framework, but now with
->>>>> that we have a standard way to program and manage the PRU processors.
->>>>> The proper PRU Remoteproc driver should be used instead of this driver.
->>>>> Mark this driver deprecated.
->>>>>
->>>>> The userspace tools to use this are no longer available, so also remove
->>>>> those dead links from the Kconfig description.
->>>>>
->>>>> Signed-off-by: Andrew Davis <afd@ti.com>
->>>>> ---
->>>>>    drivers/uio/Kconfig | 10 ++--------
->>>>>    1 file changed, 2 insertions(+), 8 deletions(-)
->>>>>
->>>>> diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
->>>>> index 2e16c5338e5b1..358dc2d19b885 100644
->>>>> --- a/drivers/uio/Kconfig
->>>>> +++ b/drivers/uio/Kconfig
->>>>> @@ -126,19 +126,13 @@ config UIO_FSL_ELBC_GPCM_NETX5152
->>>>>           http://www.hilscher.com/netx
->>>>>
->>>>>    config UIO_PRUSS
->>>>> -     tristate "Texas Instruments PRUSS driver"
->>>>> +     tristate "Texas Instruments PRUSS driver (DEPRECATED)"
->>>>
->>>> This isn't going to do much, why not just delete the driver entirely if
->>>> no one uses it?
->>>
->>> CC'ing Matthijs one of our BeagleBoard community members who utilizes
->>> and supports UIO on a number of community projects.
->>>
->>> We know TI and Mainline in general do not like this UIO driver as it's
->>> very open-ended.
->>>
->>> While the remoteproc_pruss driver is now mainline (it has taken a long
->>> time, since 3.14.x i I think TI first started this..)
->>>
->>> There is a large user base of UIO examples that have been running
->>> since 3.8.x and as a community we have made sure ( mostly Matthijs )
->>> that these continue to operate on this driver in
->>> v5.x/v6.x/lts/mainline branches.
->>>
->>
->> These users rely on out-of-tree patches to make this driver usable[0].
->> In its current state upstream, this driver is not used/usable. Since you
->> have to make update patches anyway, why not simply carry the whole driver
->> as an out-of-tree patch?
->>
->> That is why I was thinking of just marking it deprecated for a cycle
->> or two, just to give one last hint that it will be going away soon
->> (or you cancarry the driver out-of-tree for however long you want).
+On Thu, Mar 07, 2024 at 02:05:48PM -0500, Waiman Long wrote:
+> Kmemleak ia a memory leak checker. KASAN is also a memory checker but
+> it focuses more on finding out-of-bounds and use-after-free bugs. Since
+> kmemleak is inherently slow especially on systems with large number of
+> CPUs, adding KASAN instrumentation will make it slower even more. As
+> kmemleak is not for production use, the utility of enabling KASAN there
+> is questionable.
 > 
-> No one notices "deprecated" stuff, they only notice if the code is
-> removed.  So removing it is the only way to pay attention.
+> This patch disables KASAN instrumentation for configurations that
+> enable both of them to slightly reduce performance overhead.
 > 
+> Signed-off-by: Waiman Long <longman@redhat.com>
 
-Easy enough, will remove completely for v2.
-
-> But why are out-of-tree changes needed?  If they are needed, why are
-> they not submitted for us to take so that it is usable by everyone?  Or
-> is the out-of-tree patches also not supposed to be used?
-> 
-
-The out-of-tree patches should not be used and are only for backwards
-compatibility with folks who have not updated to using the proper
-remoteproc/rpmsg driver for PRU. Removing this driver would normally
-be a userspace break (which we should obviously avoid), but since
-the ability to actually use this driver never made it fully upstream
-I see no issue.
-
-And we shouldn't try to now upstream the full usable support for this
-UIO driver at this point as we have a proper kernel driver for this hardware
-upstream now.
-
-(I'd argue most of UIO should not be used as it ends up just being a
-hacky way to avoid writing proper kernel drivers for hardware, but that
-is a different topic :))
-
-Andrew
-
-> thanks,
-> 
-> greg k-h
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
