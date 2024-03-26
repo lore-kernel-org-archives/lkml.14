@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE9D12AAF3
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 21:10:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF3412B151;
+	Tue, 26 Mar 2024 21:10:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711487429; cv=none; b=nEAwdT8sPgK15kU63DbH3dhGu2hWTZNipqRpDJQ2KN052LHWML1p7a0xSH90k13fmCXSPI6gmQbjhHW6IUjoFwlGwstOFo6fUoVzj4y0/gZ/Oqtu8snF+6uFnbLs/hn1aoM/VmAZO7P0sSGjMj5vJmGsyTWawz5hmZ/Ipoa34Ps=
+	t=1711487429; cv=none; b=A5lk2regOJ0eouXaq67KyAYmiiYxET4VR+52054DRT7hSuaRnLhHZvEMApEPGawglaudcHRh1XU7dlfSZJY9Y81Z5xLPpriRZB8zDKN0XGpteZiBJnTn0vZJFlzNKTOG99HcDXQd372l/lkE8QF/VPjTUimD7o6pj5FdHHF54rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711487429; c=relaxed/simple;
-	bh=SboH/0hyVW3B3ksnsDhHW9j/7t4aFvMtUDl7w8vJNLY=;
+	bh=cmg/gfbaHxKApJm02IgCoAJKmmpQOZUMbvz4pjlnRu0=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=tNVc2ICs4xUv6BS6Iik+uHlndkq8Jlis2lamHks4PGY64pIRaDuqtb350e+roEzXAPCXIav4pTva3loD8BI6yDG7NHNVVsOChmily3wDi+KRAzJyItxPa0M8jx83ofb+mQ4JBysTNYs8g+V/xsFUOjVDcx0/XfXf2rpSMQJIgDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NRScKgcT; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=K5PgZORPin7FlwvEyqXonhF80d+qEtTjeSLffhFTwRImPYRlAkNbmavYSBb3vs5D7B+9hI7ll8IhZZDK+OeJR/oZvZBsaW9ENpgyoHYj9kpPGYBoqyFoGINb66nDlUQpJxbZKQcV4cKcsQnbVtrLarw0Q7xWYEDZZLfT6++IMeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X8kZ7O8M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NRScKgcT"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7CF0BC43399;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X8kZ7O8M"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6E392C433C7;
 	Tue, 26 Mar 2024 21:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1711487429;
-	bh=SboH/0hyVW3B3ksnsDhHW9j/7t4aFvMtUDl7w8vJNLY=;
+	bh=cmg/gfbaHxKApJm02IgCoAJKmmpQOZUMbvz4pjlnRu0=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=NRScKgcTknA+A3TXBJHEmBkorPQ7Am9bUTOF0MfmYbKYjUy/j00JAypltFGB1Gf08
-	 9gPMk+PyGlynA19kHDVdvpsDdwTVY4kTdRYpUumezsrkpm+GzK+vYqdL40OH9IoUw5
-	 muxR1DyU6isBhVQM6KM8kI7bquofImO8heLVkixaCOEAV7Tpg4N7nv14MVSx15y4XM
-	 zRx6RrNb5KXbnc+V8WS2Xklzyev2oHQ/MTpcTsgqbP+JdUo+n4JkkLTWRp3ZHCJ4+W
-	 aYJSKmNjWv94HS2kqjbbep6Xi3G7xhRDbT7NVXQZDjMfpl+LyjPLqt6VjYqYACYu6X
-	 mUTlt55qEJn3Q==
+	b=X8kZ7O8M4Cz8kl2noXtB0nNd1//akN6Tc3BUOm8lCvjrK5MuOrQBRay7llaio6Wr0
+	 uO2XtXTKTuyMqbTZ6Zn5Nd23OWDBat3a+WIbEPBLb9ze27c2ISnowQyG821w3lAuom
+	 vLyCTZTWYFg808+R6UfwOh+ly2CTqhfhQHpWrCDQMFmYUrHKzsH+B4qepRolI3IUbx
+	 mYoQcrgNkwxaKPcCTEPVd2HB4W6ik8mSQcnNQKQJeNKcsv6ENFXWLHmOfYxl3cD8d9
+	 X3/pah795VETR5lXWimFHkiZCpgg4Erh9lKMX+aABTR755qqyYrZ+4mLoAhcWgHuSQ
+	 GJPsRaxhihPig==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6D929D95062;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5A157D2D0E9;
 	Tue, 26 Mar 2024 21:10:29 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,38 +37,35 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv: mm: Fix prototype to avoid discarding const
+Subject: Re: [PATCH] riscv: Fix spurious errors from __get/put_kernel_nofault
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <171148742944.11448.2500869883007069793.git-patchwork-notify@kernel.org>
+ <171148742936.11448.9647028655336928846.git-patchwork-notify@kernel.org>
 Date: Tue, 26 Mar 2024 21:10:29 +0000
-References: <20240301201837.2826172-1-samuel.holland@sifive.com>
-In-Reply-To: <20240301201837.2826172-1-samuel.holland@sifive.com>
+References: <20240312022030.320789-1-samuel.holland@sifive.com>
+In-Reply-To: <20240312022030.320789-1-samuel.holland@sifive.com>
 To: Samuel Holland <samuel.holland@sifive.com>
-Cc: linux-riscv@lists.infradead.org, aou@eecs.berkeley.edu,
- alexghiti@rivosinc.com, ajones@ventanamicro.com, apatel@ventanamicro.com,
- dylan@andestech.com, jszhang@kernel.org, palmer@dabbelt.com,
- paul.walmsley@sifive.com, sergey.matyukevich@syntacore.com,
- linux-kernel@vger.kernel.org
+Cc: linux-riscv@lists.infradead.org, palmer@dabbelt.com,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
 
 Hello:
 
 This patch was applied to riscv/linux.git (fixes)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Fri,  1 Mar 2024 12:18:32 -0800 you wrote:
-> __flush_tlb_range() does not modify the provided cpumask, so its cmask
-> parameter can be pointer-to-const. This avoids the unsafe cast of
-> cpu_online_mask.
+On Mon, 11 Mar 2024 19:19:13 -0700 you wrote:
+> These macros did not initialize __kr_err, so they could fail even if
+> the access did not fault.
 > 
-> Fixes: 54d7431af73e ("riscv: Add support for BATCHED_UNMAP_TLB_FLUSH")
+> Cc: stable@vger.kernel.org
+> Fixes: d464118cdc41 ("riscv: implement __get_kernel_nofault and __put_user_nofault")
 > Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 > 
 > [...]
 
 Here is the summary with links:
-  - riscv: mm: Fix prototype to avoid discarding const
-    https://git.kernel.org/riscv/c/674bc0168e6b
+  - riscv: Fix spurious errors from __get/put_kernel_nofault
+    https://git.kernel.org/riscv/c/d080a08b06b6
 
 You are awesome, thank you!
 -- 
