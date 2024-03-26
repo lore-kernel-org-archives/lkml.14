@@ -1,46 +1,46 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D2C55C33;
-	Tue, 26 Mar 2024 11:34:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA387641A;
+	Tue, 26 Mar 2024 11:34:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711452846; cv=none; b=pScEOvdR6+7OGy+ltZKaWIkeFh9tttBh595W5TW5BH2XesBct/u1831SyrD87SI+qSGsMpguwahkjWJQ6qoI1GZYaAXJqeNrsVAy7pWQf3T1CVUyyHkCg1qEHHkKBynLmfl9DkF7pJipReI35AINuJz/SBO+AIa9aKetS5OpVns=
+	t=1711452855; cv=none; b=nwkzSwUTC80WtVW7n77CsRLHerVsjrxf7/pCzMbdy0i2jJhK5DxsTgFfnepWuWmbyh/Ln4dkQGWZ2r4neH047gOd3gUgSMxtzQc6stP/AV3kqRTuA/myWkOMJF2aDnvfSybys7YrZGD23JsL64YbX5rmXGVX/fTwy7Jy4QK/XzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711452846; c=relaxed/simple;
-	bh=ukeaZj+EJjB94scvGyBQtfYtRiuShb1IbJClhnMZurY=;
+	s=arc-20240116; t=1711452855; c=relaxed/simple;
+	bh=NNdTGMeI3BKJSbRWKcY6O6EwK/hyTYU9C4WsrkgvkGY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dxJr3HeDl5OG4DiKV6vkkEMkq1q+4xlSy75ZNrvsMDBZcXrCMcdg0sXUCQwqyFMOquwrrbPE8o1Mmzpd3GaE9esfQq+/sXp6XYcpc97HafqCPAeNmg5z8B7IAnrWFc5G6k20GjYSCNpL2YcIsuyU6djENN55iOOAaKClGqsH4PY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=p4T5peB3; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=lMAbcM70H4whI4V+nfn6lKmhHvX/9TO4oeTujBaJuqEUKfvkulz5Sy78lwPEW8zZmpenGw2ecaU41RoEJJTPZyJLpr6DnV3bjVk3jGEBy9w7m7sYu5zUKu7KTtaHTYlHHvvSS8qTm+tzDJzxdVJcwpiD4e0sS1or/bJNez6pI3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hi6hUhiY; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="p4T5peB3"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42QAQs2x005268;
-	Tue, 26 Mar 2024 11:33:17 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hi6hUhiY"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42Q1sm9G004230;
+	Tue, 26 Mar 2024 11:34:08 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=LFRg6Eiw/Nwzjx+zDP1JorEUwmL0hSvPD3//lEJp0co=; b=p4
-	T5peB3Q/pB9XAPjWKSxQkT8BZtb5sbRwu1h0Bo0VqfHvdgKX3F+POcf1DEJJSv6Z
-	fzVxtFDI/SGoaKXBcrjHKYE81xJXLH4N6mW3vVBZcWriIw5AGv4V5A4/qOySCvyy
-	RI9ASGEZVzBy89+IaAcEE1krVAPbRHmaW4/XXmhZMjwT8vglJImO7/GAW9s/JA/k
-	ywNnV8fqKgE8RuavPk++c/DEJfM7v9LSi307E4XaULF17xWWgJFz4bib6wD6VEl7
-	C1Hy3I/H6CJSlw86+XuBWFoFF5vD6cqEIHz0Xk4gYeZq8i/tnWQxT/Dg31VkLDpL
-	OrGRHqA4q7tAfNR5dREg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x3s7n0t21-1
+	qcppdkim1; bh=PTV5+DQ7ryKEZGv3mJS+ywNkymvYkqTD/TtVct3tAaE=; b=hi
+	6hUhiY63nSSAqn9nX+4iVjBVX78+t/JjWYht0TioHPDiytuukiqtjrS5uKNanbsS
+	iQRXPcJAwAPBXhZWo7koLSFc51tV4IDrzNlFghK1Shy6LdzPBNK3JcLrXk1YSp7f
+	5zDMRwbjDs5qMYyrpcYbeuyPAoqkZ5v7WxCJ4MXs5hg2yPbFuq00I87kHqKPLzOz
+	dCDNscX+AZ5v6ORp1LSr5F3a4P3I8f+Hv4bJk+MIQCKM/QhVqFDjkNQcgYcuoSlE
+	DR3N2kbhBa0mVMmywqygjeJN1+SVNaTO36ShDUiEz3DP5Ee6QuZbV4aXbQywQ8mA
+	zE+AnN20/+ft+eh2cu6g==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x3memsfyw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 11:33:16 +0000 (GMT)
+	Tue, 26 Mar 2024 11:34:08 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42QBXFxW028503
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42QBY7Gm018362
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 11:33:15 GMT
+	Tue, 26 Mar 2024 11:34:07 GMT
 Received: from hu-kriskura-hyd.qualcomm.com (10.80.80.8) by
  nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 26 Mar 2024 04:33:10 -0700
+ 15.2.1118.40; Tue, 26 Mar 2024 04:34:01 -0700
 From: Krishna Kurapati <quic_kriskura@quicinc.com>
 To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Rob Herring
@@ -61,9 +61,9 @@ CC: <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
         Krishna Kurapati
 	<quic_kriskura@quicinc.com>,
         Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v18 1/9] dt-bindings: usb: Add bindings for multiport properties on DWC3 controller
-Date: Tue, 26 Mar 2024 17:02:45 +0530
-Message-ID: <20240326113253.3010447-2-quic_kriskura@quicinc.com>
+Subject: [PATCH v18 9/9] usb: dwc3: qcom: Add multiport suspend/resume support for wrapper
+Date: Tue, 26 Mar 2024 17:02:53 +0530
+Message-ID: <20240326113253.3010447-10-quic_kriskura@quicinc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240326113253.3010447-1-quic_kriskura@quicinc.com>
 References: <20240326113253.3010447-1-quic_kriskura@quicinc.com>
@@ -79,55 +79,79 @@ X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: l_A06Z18pfOr7G4m72ITv2gffy2oaD2L
-X-Proofpoint-ORIG-GUID: l_A06Z18pfOr7G4m72ITv2gffy2oaD2L
+X-Proofpoint-GUID: Fl6hUoqf-_Q8FuE5o-xDpMGxvchdj8Zq
+X-Proofpoint-ORIG-GUID: Fl6hUoqf-_Q8FuE5o-xDpMGxvchdj8Zq
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-03-26_05,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 adultscore=0 suspectscore=0 mlxscore=0 priorityscore=1501
- impostorscore=0 clxscore=1015 phishscore=0 mlxlogscore=999 bulkscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 priorityscore=1501 impostorscore=0 lowpriorityscore=0
+ spamscore=0 bulkscore=0 suspectscore=0 clxscore=1015 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2403210001 definitions=main-2403260079
 
-Add bindings to indicate properties required to support multiport
-on Synopsys DWC3 controller.
+Power event IRQ is used for wakeup in cases:
+a) where the controller is super speed capable and missing an
+ss_phy interrupt.
+b) where the GIC is not capable of detecting DP/DM hs phy irq's.
+
+Power event IRQ stat register indicates whether high speed phy
+entered and exited L2 successfully during suspend and resume.
+Indicate the same for all ports of multiport.
 
 Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
-Reviewed-by: Bjorn Andersson <andersson@kernel.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- .../devicetree/bindings/usb/snps,dwc3.yaml          | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/usb/dwc3/dwc3-qcom.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/snps,dwc3.yaml b/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
-index 203a1eb66691..bfac0a37d0e4 100644
---- a/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
-+++ b/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
-@@ -85,15 +85,16 @@ properties:
+diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+index 12182e0f8f45..d3e6d5d5e8bf 100644
+--- a/drivers/usb/dwc3/dwc3-qcom.c
++++ b/drivers/usb/dwc3/dwc3-qcom.c
+@@ -52,6 +52,13 @@
+ #define APPS_USB_AVG_BW 0
+ #define APPS_USB_PEAK_BW MBps_to_icc(40)
  
-   phys:
-     minItems: 1
--    maxItems: 2
-+    maxItems: 8
++static const u32 pwr_evnt_irq_stat_reg[DWC3_MAX_PORTS] = {
++	0x58,
++	0x1dc,
++	0x228,
++	0x238,
++};
++
+ struct dwc3_qcom_port {
+ 	int			qusb2_phy_irq;
+ 	int			dp_hs_phy_irq;
+@@ -421,9 +428,11 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom, bool wakeup)
+ 	if (qcom->is_suspended)
+ 		return 0;
  
-   phy-names:
-     minItems: 1
--    maxItems: 2
--    items:
--      enum:
--        - usb2-phy
--        - usb3-phy
-+    maxItems: 8
-+    oneOf:
-+      - items:
-+          enum: [ usb2-phy, usb3-phy ]
-+      - items:
-+          pattern: "^usb[23]-[0-3]$"
+-	val = readl(qcom->qscratch_base + PWR_EVNT_IRQ_STAT_REG);
+-	if (!(val & PWR_EVNT_LPM_IN_L2_MASK))
+-		dev_err(qcom->dev, "HS-PHY not in L2\n");
++	for (i = 0; i < qcom->num_ports; i++) {
++		val = readl(qcom->qscratch_base + pwr_evnt_irq_stat_reg[i]);
++		if (!(val & PWR_EVNT_LPM_IN_L2_MASK))
++			dev_err(qcom->dev, "port-%d HS-PHY not in L2\n", i + 1);
++	}
  
-   power-domains:
-     description:
+ 	for (i = qcom->num_clocks - 1; i >= 0; i--)
+ 		clk_disable_unprepare(qcom->clks[i]);
+@@ -472,8 +481,11 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom, bool wakeup)
+ 		dev_warn(qcom->dev, "failed to enable interconnect: %d\n", ret);
+ 
+ 	/* Clear existing events from PHY related to L2 in/out */
+-	dwc3_qcom_setbits(qcom->qscratch_base, PWR_EVNT_IRQ_STAT_REG,
+-			  PWR_EVNT_LPM_IN_L2_MASK | PWR_EVNT_LPM_OUT_L2_MASK);
++	for (i = 0; i < qcom->num_ports; i++) {
++		dwc3_qcom_setbits(qcom->qscratch_base,
++				  pwr_evnt_irq_stat_reg[i],
++				  PWR_EVNT_LPM_IN_L2_MASK | PWR_EVNT_LPM_OUT_L2_MASK);
++	}
+ 
+ 	qcom->is_suspended = false;
+ 
 -- 
 2.34.1
 
