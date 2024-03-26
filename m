@@ -1,302 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A8713C9C9;
-	Tue, 26 Mar 2024 15:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A01413C69A
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711465608; cv=none; b=Fv+eGdYC6rRAMJrGcr1WdILVJCpinQoMheGBJqx03dsMcM0QlSmmCO41vBNeeW0zyh8UcDBxzJRJcMz4e9SBMpFg6Ym+xHXZqhLIK/hmrEqpB4qi1V1lp2aa1mLlcFXpCtPVljHt5dOiLzRTZu0hZtynpTw4sG8jUVqL4fgJshs=
+	t=1711465828; cv=none; b=ccet4T7L3pkl+/neZy2FV6N5aNCqRAW/klSKxx9I6EQrSzq09q6ROF+CpJa/f1HphB3p2U8q3vtIexa9CImqSp/I2/1vWp9AbnL5WjZe2l9A6WHwwCHgTVshSG6ggamoXBn5tp9H5EzB5DHjA5bIarh8mi7lCe74CEyKzaI3pqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711465608; c=relaxed/simple;
-	bh=VZkbxJstwSPISSjebtghTsFMzbcGY1Gg49TU66g37Zo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=APA2VaYEK3PaovSsU5ije9kuAmbBTbblQfXbt0qZntN4QdYELopvWOKYn7n8bnI+czTbFDpUsdmCWI1tOIB+RYZ5rwB/UPj1EF23kpEZfJxxEWuic1gyZhC6JXJDnD6ni/dW7vEZ5Z8RiW5hSHrjjGvT1BZZD0oc7O+dZlyNFio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xicm2wkG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711465828; c=relaxed/simple;
+	bh=e5EeTl3wYXOA8HWoN02Gkhrn5/pml2nfdGqSgR5aucs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k0SfyrQMNjxTs1206Acbak9ZRL4jRSi5iOgrD8pyycx1LZxQrQh0iGuRWGT0r3MpHm2O7NS+Z0Z51QzGZIMFob+2gturdC6z2MU8oQpwYKKOG4bqUggnbTyb88H4fgvLZX4cZa6FSv9jYpC+zO4S8Aw8h2bOz1ALir6Yb3ReF3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NqzpyW/O; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xicm2wkG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CC6EC4166B;
-	Tue, 26 Mar 2024 15:06:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711465608;
-	bh=VZkbxJstwSPISSjebtghTsFMzbcGY1Gg49TU66g37Zo=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Xicm2wkGcgKxv40fIqLn5ecM0mu273FOSfH+JEzZk54ips0Slq3E1+wHk1LeqGman
-	 i94Pe+1fHoaPB8937WLJMsCwl6oACoMSXaJEAFqqdwQTwVnNBZz4bM8LRl05Z3NWxv
-	 QTbxCTtDpCtkz36ZraLHNE56X6r1koaB+PQKLL3J+JSR+XcOkgoufrUs8BL9eJcsfk
-	 Y7ut7mu9cJ++VyKWbEJtt048cRfPpMfR7Lvq/lcY5lgKSEnsVO7zJxJ0GIDOTSgzWY
-	 YT7GK44loq95Non81dEoHboBK2FDuaM5Pv2iXUGXGwlaLhGijjdyRqDjQvDA5OQ86W
-	 bAnkE0g+9JsAg==
-From: Bjorn Andersson <andersson@kernel.org>
-Date: Tue, 26 Mar 2024 08:11:34 -0700
-Subject: [PATCH 6/6] drm/msm/dp: Use function arguments for audio
- operations
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NqzpyW/O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711465826;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rHBAVem4f68aO9p9lIl2iAeX/K7t0SIt6WI+yo8kk5A=;
+	b=NqzpyW/OD2WbI/zFOjk1khDSwyLXh9N0/U9opTbQZ1OXYo455Fs4oL/BNINs2C6QPtzCCH
+	YBD6eAzfFNhxNFN0yH5Q39Gfh/GOO9tAB35j7lbanECChYvEs/iDCXXL877SOShTBAQVDF
+	rdsWqakcCrK1/asc671RXtBNL79ncno=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-193-z8SDUwxSONu8QpaHxGLhzA-1; Tue, 26 Mar 2024 11:10:25 -0400
+X-MC-Unique: z8SDUwxSONu8QpaHxGLhzA-1
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-29df4ec4304so4635955a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 08:10:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711465823; x=1712070623;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rHBAVem4f68aO9p9lIl2iAeX/K7t0SIt6WI+yo8kk5A=;
+        b=g9hK9/E6InecVJSXb5dQ2JJDwtZc+E0LfIyXqxDEzMv0g2H7ZToukLlybL05nKsavG
+         g/VW+egVlRyl5Nj3ZkxI6BnAvjuJUraJ5vcz2OhejQfmRCpIJkM5CITtvgv/KCnGvUkn
+         lWQwNjmc/UXSSv3x8Xb5f7tbrZsaVJV0AxXZ0x//U061+0v8jSGZT82z5AUPeKlp61+y
+         fPjFdgK02uHltGi2OtGra/RGqJApaUmHzfbn5FOKtCVpsf5pwvFEatkkZKmCNOKzHQvT
+         a6dSrmTilksUnoL6JUmvIuMy6gkWia/u4gpLImLeCLT0Dt58+uvOvfiUkxxI/aEZWLuu
+         lhpA==
+X-Gm-Message-State: AOJu0Ywv6a2TpSok2R4VsYigkzpd/JBiSxDNh0pnLEtvefb7EEozYwY5
+	Zf0BUeqFm69fZL724DaNp/4acUfeq064ZVcmB8G+NccBHk4lrUEPbCg91idIpPZQtaPXncRhE/o
+	pllc7Oy7KcMRb1282tztp/CwAM6twBvdE7jBa1eu1mSje1+YWDo+kEYZifMIqrGbi2bPX6T+xtn
+	pD7hkW1zcwonpa92YwYOz/z/ztshzunD/keAkS
+X-Received: by 2002:a17:90a:fe85:b0:2a0:33c2:997e with SMTP id co5-20020a17090afe8500b002a033c2997emr8413639pjb.41.1711465822877;
+        Tue, 26 Mar 2024 08:10:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGAJWrGzQomM3G/TFjykkA3Nu+aRm+SLIK3wmvcd0KA8T1wqDiVw9EewPPyP3FnLGu1d7WEN7AavJuwcxUDtgs=
+X-Received: by 2002:a17:90a:fe85:b0:2a0:33c2:997e with SMTP id
+ co5-20020a17090afe8500b002a033c2997emr8413608pjb.41.1711465822503; Tue, 26
+ Mar 2024 08:10:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240326-msm-dp-cleanup-v1-6-e775556ecec0@quicinc.com>
-References: <20240326-msm-dp-cleanup-v1-0-e775556ecec0@quicinc.com>
-In-Reply-To: <20240326-msm-dp-cleanup-v1-0-e775556ecec0@quicinc.com>
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Bjorn Andersson <quic_bjorande@quicinc.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8282;
- i=quic_bjorande@quicinc.com; h=from:subject:message-id;
- bh=BcOYwhP7HynBIuV3UQKuBFCsaFgtfuW2v5qo9WikuOU=;
- b=owEBgwJ8/ZANAwAIAQsfOT8Nma3FAcsmYgBmAuWigAT7Voi3Pa6Z9JYLj6PQspagIJviNa3KL
- zO5hD5FK42JAkkEAAEIADMWIQQF3gPMXzXqTwlm1SULHzk/DZmtxQUCZgLlohUcYW5kZXJzc29u
- QGtlcm5lbC5vcmcACgkQCx85Pw2ZrcUmCg/+OBS1X4s/HW/NVbz79/qB0NxNG4p43zMPeDwd/L6
- nv7j6zBJ4JDsaW5MEunohTC2WCHrNkFlAk3gjf4eUVEJMBtwNkL7CHMjSutFXc5wJ11oWV6lxso
- 6QN9A93EjoJMrEvWEW2ldlHjaCOGqq67aFZ/qwK6yA/bda0L1ZeuwGQkAlAMpQfOQfqj+iLmlZs
- XDmQMgyQ9cN/38/iSYn9oBwi2L9GlowtdorLvN/VPqlwYfvPiYPQpaXJSGZ283BizMqMLYuoqSN
- l+Mhm1hVkSEAI2rC0N7JYK3x/tTg79KKVwqbp8Z3Z2kTakyrht2DumATzjgKpIX8gMtYTthvHvO
- ZceDSUbIsYZ07MbpAfMkHCWoj4oUzpnISg32FgdUhlW0Xcz6kAzaFc2ji0vCNcV9FKMV6iEEMMz
- fz7/QFJmxcEnHSRPsI9osststIcjBwrpvSosX1bbuEePkLJEvywB0OlQXJG8ex+l+t0pQBTrmi9
- HfcaOfsZte4D0tcVV+mfXXX1wXc/+GzPxlwog0Gr6G2zTXuQQeiDLlqwICOqX5fmgMkqMP2iqr1
- H7qK9bENb7soJ1120f8UImjlIRu6wXFMzzkzYfDnwpTXoYHuyoco7sVHbe7PNAcBBRADjWNnSyD
- iGQS0FifTT6cD8/y/vVAEopPZitDOmW+1lYV8a2tBVDI=
-X-Developer-Key: i=quic_bjorande@quicinc.com; a=openpgp;
- fpr=05DE03CC5F35EA4F0966D5250B1F393F0D99ADC5
+References: <20240326143210.291116-1-david@redhat.com> <20240326143210.291116-3-david@redhat.com>
+In-Reply-To: <20240326143210.291116-3-david@redhat.com>
+From: Miklos Szeredi <mszeredi@redhat.com>
+Date: Tue, 26 Mar 2024 16:10:11 +0100
+Message-ID: <CAOssrKdKaYua48K5F2xD68cFCoiGZSxcYdqgVXrdYTocey2pTg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] selftests/memfd_secret: add vmsplice() test
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, 
+	Lorenzo Stoakes <lstoakes@gmail.com>, xingwei lee <xrivendell7@gmail.com>, 
+	yue sun <samsun1006219@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bjorn Andersson <quic_bjorande@quicinc.com>
+On Tue, Mar 26, 2024 at 3:32=E2=80=AFPM David Hildenbrand <david@redhat.com=
+> wrote:
+>
+> Let's add a simple reproducer for a scenario where GUP-fast could succeed
+> on secretmem folios, making vmsplice() succeed instead of failing. The
+> reproducer is based on a reproducer [1] by Miklos Szeredi.
+>
+> We want to perform two tests: vmsplice() when a fresh page was just
+> faulted in, and vmsplice() on an existing page after munmap() that
+> would drain certain LRU caches/batches in the kernel.
+>
+> In an ideal world, we could use fallocate(FALLOC_FL_PUNCH_HOLE) /
+> MADV_REMOVE to remove any existing page. As that is currently not
+> possible, run the test before any other tests that would allocate memory
+> in the secretmem fd.
+>
+> Perform the ftruncate() only once, and check the return value.
+>
+> [1] https://lkml.kernel.org/r/CAJfpegt3UCsMmxd0taOY11Uaw5U=3DeS1fE5dn0wZX=
+3HF0oy8-oQ@mail.gmail.com
+>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  tools/testing/selftests/mm/memfd_secret.c | 51 ++++++++++++++++++++++-
+>  1 file changed, 49 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/testing/selftests/mm/memfd_secret.c b/tools/testing/se=
+lftests/mm/memfd_secret.c
+> index 9b298f6a04b3..9a0597310a76 100644
+> --- a/tools/testing/selftests/mm/memfd_secret.c
+> +++ b/tools/testing/selftests/mm/memfd_secret.c
+> @@ -20,6 +20,7 @@
+>  #include <unistd.h>
+>  #include <errno.h>
+>  #include <stdio.h>
+> +#include <fcntl.h>
+>
+>  #include "../kselftest.h"
+>
+> @@ -83,6 +84,45 @@ static void test_mlock_limit(int fd)
+>         pass("mlock limit is respected\n");
+>  }
+>
+> +static void test_vmsplice(int fd, const char *desc)
+> +{
+> +       ssize_t transferred;
+> +       struct iovec iov;
+> +       int pipefd[2];
+> +       char *mem;
+> +
+> +       if (pipe(pipefd)) {
+> +               fail("pipe failed: %s\n", strerror(errno));
+> +               return;
+> +       }
+> +
+> +       mem =3D mmap(NULL, page_size, prot, mode, fd, 0);
+> +       if (mem =3D=3D MAP_FAILED) {
+> +               fail("Unable to mmap secret memory\n");
+> +               goto close_pipe;
+> +       }
+> +
+> +       /*
+> +        * vmsplice() may use GUP-fast, which must also fail. Prefault th=
+e
+> +        * page table, so GUP-fast could find it.
+> +        */
+> +       memset(mem, PATTERN, page_size);
 
-The dp_audio read and write operations uses members in struct dp_catalog
-for passing arguments and return values. This adds unnecessary
-complexity to the implementation, as it turns out after detangling the
-logic that no state is actually held in these variables.
+Shouldn't the non-prefault case be tested as well?
 
-Clean this up by using function arguments and return values for passing
-the data.
-
-Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
----
- drivers/gpu/drm/msm/dp/dp_audio.c   | 20 +++++--------------
- drivers/gpu/drm/msm/dp/dp_catalog.c | 39 +++++++++++++------------------------
- drivers/gpu/drm/msm/dp/dp_catalog.h | 18 +++++++++--------
- 3 files changed, 28 insertions(+), 49 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/dp/dp_audio.c b/drivers/gpu/drm/msm/dp/dp_audio.c
-index 7fd0c1793ba3..a599fc5d63c5 100644
---- a/drivers/gpu/drm/msm/dp/dp_audio.c
-+++ b/drivers/gpu/drm/msm/dp/dp_audio.c
-@@ -32,11 +32,7 @@ static u32 dp_audio_get_header(struct dp_catalog *catalog,
- 		enum dp_catalog_audio_sdp_type sdp,
- 		enum dp_catalog_audio_header_type header)
- {
--	catalog->sdp_type = sdp;
--	catalog->sdp_header = header;
--	dp_catalog_audio_get_header(catalog);
--
--	return catalog->audio_data;
-+	return dp_catalog_audio_get_header(catalog, sdp, header);
- }
- 
- static void dp_audio_set_header(struct dp_catalog *catalog,
-@@ -44,10 +40,7 @@ static void dp_audio_set_header(struct dp_catalog *catalog,
- 		enum dp_catalog_audio_sdp_type sdp,
- 		enum dp_catalog_audio_header_type header)
- {
--	catalog->sdp_type = sdp;
--	catalog->sdp_header = header;
--	catalog->audio_data = data;
--	dp_catalog_audio_set_header(catalog);
-+	dp_catalog_audio_set_header(catalog, sdp, header, data);
- }
- 
- static void dp_audio_stream_sdp(struct dp_audio_private *audio)
-@@ -317,8 +310,7 @@ static void dp_audio_setup_acr(struct dp_audio_private *audio)
- 		break;
- 	}
- 
--	catalog->audio_data = select;
--	dp_catalog_audio_config_acr(catalog);
-+	dp_catalog_audio_config_acr(catalog, select);
- }
- 
- static void dp_audio_safe_to_exit_level(struct dp_audio_private *audio)
-@@ -344,16 +336,14 @@ static void dp_audio_safe_to_exit_level(struct dp_audio_private *audio)
- 		break;
- 	}
- 
--	catalog->audio_data = safe_to_exit_level;
--	dp_catalog_audio_sfe_level(catalog);
-+	dp_catalog_audio_sfe_level(catalog, safe_to_exit_level);
- }
- 
- static void dp_audio_enable(struct dp_audio_private *audio, bool enable)
- {
- 	struct dp_catalog *catalog = audio->catalog;
- 
--	catalog->audio_data = enable;
--	dp_catalog_audio_enable(catalog);
-+	dp_catalog_audio_enable(catalog, enable);
- }
- 
- static struct dp_audio_private *dp_audio_get_data(struct platform_device *pdev)
-diff --git a/drivers/gpu/drm/msm/dp/dp_catalog.c b/drivers/gpu/drm/msm/dp/dp_catalog.c
-index 00ad3ebaa5a1..970d62e1610c 100644
---- a/drivers/gpu/drm/msm/dp/dp_catalog.c
-+++ b/drivers/gpu/drm/msm/dp/dp_catalog.c
-@@ -1159,34 +1159,28 @@ struct dp_catalog *dp_catalog_get(struct device *dev)
- 	return &catalog->dp_catalog;
- }
- 
--void dp_catalog_audio_get_header(struct dp_catalog *dp_catalog)
-+u32 dp_catalog_audio_get_header(struct dp_catalog *dp_catalog,
-+				enum dp_catalog_audio_sdp_type sdp,
-+				enum dp_catalog_audio_header_type header)
- {
- 	struct dp_catalog_private *catalog;
- 	u32 (*sdp_map)[DP_AUDIO_SDP_HEADER_MAX];
--	enum dp_catalog_audio_sdp_type sdp;
--	enum dp_catalog_audio_header_type header;
--
--	if (!dp_catalog)
--		return;
- 
- 	catalog = container_of(dp_catalog,
- 		struct dp_catalog_private, dp_catalog);
- 
- 	sdp_map = catalog->audio_map;
--	sdp     = dp_catalog->sdp_type;
--	header  = dp_catalog->sdp_header;
- 
--	dp_catalog->audio_data = dp_read_link(catalog,
--			sdp_map[sdp][header]);
-+	return dp_read_link(catalog, sdp_map[sdp][header]);
- }
- 
--void dp_catalog_audio_set_header(struct dp_catalog *dp_catalog)
-+void dp_catalog_audio_set_header(struct dp_catalog *dp_catalog,
-+				 enum dp_catalog_audio_sdp_type sdp,
-+				 enum dp_catalog_audio_header_type header,
-+				 u32 data)
- {
- 	struct dp_catalog_private *catalog;
- 	u32 (*sdp_map)[DP_AUDIO_SDP_HEADER_MAX];
--	enum dp_catalog_audio_sdp_type sdp;
--	enum dp_catalog_audio_header_type header;
--	u32 data;
- 
- 	if (!dp_catalog)
- 		return;
-@@ -1195,17 +1189,14 @@ void dp_catalog_audio_set_header(struct dp_catalog *dp_catalog)
- 		struct dp_catalog_private, dp_catalog);
- 
- 	sdp_map = catalog->audio_map;
--	sdp     = dp_catalog->sdp_type;
--	header  = dp_catalog->sdp_header;
--	data    = dp_catalog->audio_data;
- 
- 	dp_write_link(catalog, sdp_map[sdp][header], data);
- }
- 
--void dp_catalog_audio_config_acr(struct dp_catalog *dp_catalog)
-+void dp_catalog_audio_config_acr(struct dp_catalog *dp_catalog, u32 select)
- {
- 	struct dp_catalog_private *catalog;
--	u32 acr_ctrl, select;
-+	u32 acr_ctrl;
- 
- 	if (!dp_catalog)
- 		return;
-@@ -1213,7 +1204,6 @@ void dp_catalog_audio_config_acr(struct dp_catalog *dp_catalog)
- 	catalog = container_of(dp_catalog,
- 		struct dp_catalog_private, dp_catalog);
- 
--	select = dp_catalog->audio_data;
- 	acr_ctrl = select << 4 | BIT(31) | BIT(8) | BIT(14);
- 
- 	drm_dbg_dp(catalog->drm_dev, "select: %#x, acr_ctrl: %#x\n",
-@@ -1222,10 +1212,9 @@ void dp_catalog_audio_config_acr(struct dp_catalog *dp_catalog)
- 	dp_write_link(catalog, MMSS_DP_AUDIO_ACR_CTRL, acr_ctrl);
- }
- 
--void dp_catalog_audio_enable(struct dp_catalog *dp_catalog)
-+void dp_catalog_audio_enable(struct dp_catalog *dp_catalog, bool enable)
- {
- 	struct dp_catalog_private *catalog;
--	bool enable;
- 	u32 audio_ctrl;
- 
- 	if (!dp_catalog)
-@@ -1234,7 +1223,6 @@ void dp_catalog_audio_enable(struct dp_catalog *dp_catalog)
- 	catalog = container_of(dp_catalog,
- 		struct dp_catalog_private, dp_catalog);
- 
--	enable = !!dp_catalog->audio_data;
- 	audio_ctrl = dp_read_link(catalog, MMSS_DP_AUDIO_CFG);
- 
- 	if (enable)
-@@ -1329,10 +1317,10 @@ void dp_catalog_audio_init(struct dp_catalog *dp_catalog)
- 	catalog->audio_map = sdp_map;
- }
- 
--void dp_catalog_audio_sfe_level(struct dp_catalog *dp_catalog)
-+void dp_catalog_audio_sfe_level(struct dp_catalog *dp_catalog, u32 safe_to_exit_level)
- {
- 	struct dp_catalog_private *catalog;
--	u32 mainlink_levels, safe_to_exit_level;
-+	u32 mainlink_levels;
- 
- 	if (!dp_catalog)
- 		return;
-@@ -1340,7 +1328,6 @@ void dp_catalog_audio_sfe_level(struct dp_catalog *dp_catalog)
- 	catalog = container_of(dp_catalog,
- 		struct dp_catalog_private, dp_catalog);
- 
--	safe_to_exit_level = dp_catalog->audio_data;
- 	mainlink_levels = dp_read_link(catalog, REG_DP_MAINLINK_LEVELS);
- 	mainlink_levels &= 0xFE0;
- 	mainlink_levels |= safe_to_exit_level;
-diff --git a/drivers/gpu/drm/msm/dp/dp_catalog.h b/drivers/gpu/drm/msm/dp/dp_catalog.h
-index a82ab4856b50..cd1ad046a953 100644
---- a/drivers/gpu/drm/msm/dp/dp_catalog.h
-+++ b/drivers/gpu/drm/msm/dp/dp_catalog.h
-@@ -48,9 +48,6 @@ enum dp_catalog_audio_header_type {
- };
- 
- struct dp_catalog {
--	enum dp_catalog_audio_sdp_type sdp_type;
--	enum dp_catalog_audio_header_type sdp_header;
--	u32 audio_data;
- 	bool wide_bus_en;
- };
- 
-@@ -114,12 +111,17 @@ void dp_catalog_panel_tpg_disable(struct dp_catalog *dp_catalog);
- struct dp_catalog *dp_catalog_get(struct device *dev);
- 
- /* DP Audio APIs */
--void dp_catalog_audio_get_header(struct dp_catalog *catalog);
--void dp_catalog_audio_set_header(struct dp_catalog *catalog);
--void dp_catalog_audio_config_acr(struct dp_catalog *catalog);
--void dp_catalog_audio_enable(struct dp_catalog *catalog);
-+u32 dp_catalog_audio_get_header(struct dp_catalog *dp_catalog,
-+				enum dp_catalog_audio_sdp_type sdp,
-+				enum dp_catalog_audio_header_type header);
-+void dp_catalog_audio_set_header(struct dp_catalog *dp_catalog,
-+				 enum dp_catalog_audio_sdp_type sdp,
-+				 enum dp_catalog_audio_header_type header,
-+				 u32 data);
-+void dp_catalog_audio_config_acr(struct dp_catalog *catalog, u32 select);
-+void dp_catalog_audio_enable(struct dp_catalog *catalog, bool enable);
- void dp_catalog_audio_config_sdp(struct dp_catalog *catalog);
- void dp_catalog_audio_init(struct dp_catalog *catalog);
--void dp_catalog_audio_sfe_level(struct dp_catalog *catalog);
-+void dp_catalog_audio_sfe_level(struct dp_catalog *catalog, u32 safe_to_exit_level);
- 
- #endif /* _DP_CATALOG_H_ */
-
--- 
-2.43.0
+Thanks,
+Miklos
 
