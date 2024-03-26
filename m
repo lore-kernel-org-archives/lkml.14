@@ -1,135 +1,103 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9526450A98
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 12:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9FE50A98
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 12:37:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711456639; cv=none; b=TQlB33k77+f5gBd0NhtZWS8eAv+ip3srjCTkNx57MUyd8DsZzV0pp9T/CSXPuBb8OrJPDFNVwYKFRx8xFm/TrvzjRvwXmYgj5xZ1qT7c5IvHVdFZJ7N3AsWIjXI+mHGPrJTtjel6ih4hBIHu4r+22xYWi+R5VeQubrjX3D7Nwoc=
+	t=1711456648; cv=none; b=SspVrtmq71oZAvZ2C+9QMAyokWeOFbFvB/ssdeesFhUVl+XznM+6S4YtQbBXeESnw/9L2fzDsmBdS/fOq3fVYsqRJdMC+SV3ArN+u6atmFyda6YgtYGrNQInl0lmSovI3JPbRUgSw3/BndXoPxGKEMkVlu/dZgVFBmspGPiuH0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711456639; c=relaxed/simple;
-	bh=IXgQxKxy2wli3FGqfkXaiCnSw/3wyDfEiGy9PlgXW88=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Y4QRiH2Mv5boYfqR7rUZc2OwmNK3biOOUPfYbkl/qhOLLtaZGDSu+uPI71h9AIWgaBrTfRhrfYuVH7uCeBVwciTQnmUWpzjA/M/J9Aa5vuSodM3v1eluVdqzSx/ybFyCcVmCE9WXfNZOGA3vAb0meAB5i0ngN4sTE0JRa2U0yLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=morgrQ/1; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1711456648; c=relaxed/simple;
+	bh=qOgEt04Cktj3ZOzRSsKojbUHmC+nS7AdLE93qncD5hk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ckhaqGbYsi9WzBoXEXqOgF8Vb3kEoBnCtdL5MABrO5tAwN6ejGB1ly7hjz0cS90bdXZfAQF+ZSfGddcPibt57HR9MPwLm0VjVfrYPweDIEgJwsqV1Gl1bOlplrmGvtgl9SdFtUWUfqxOhdgwoMJLXYJZ9zT8jS3np9kaGhj+dZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YgxS9mQo; arc=none smtp.client-ip=209.85.221.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="morgrQ/1"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42QCa5NH083623;
-	Tue, 26 Mar 2024 07:36:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1711456565;
-	bh=IXgQxKxy2wli3FGqfkXaiCnSw/3wyDfEiGy9PlgXW88=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To;
-	b=morgrQ/1zpu55F0TZr8ONfTK83NWrQ5rRhixUqVpLWLCm31Oad9ZobUKOTxt8ZQaM
-	 gk8JLbNPH0fqIOPomRFG1kS9L2ElmxrhNxiwJ4ymrlUGYoxUWvQo6GBwqrbOL27vMj
-	 T1ernR2Z3mBoZ2sZXMRBCNZnlsAP0xHRvm4pCt2U=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42QCa5DB024519
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 26 Mar 2024 07:36:05 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 26
- Mar 2024 07:36:05 -0500
-Received: from DLEE101.ent.ti.com ([fe80::91ee:60bc:bfb7:851c]) by
- DLEE101.ent.ti.com ([fe80::91ee:60bc:bfb7:851c%18]) with mapi id
- 15.01.2507.023; Tue, 26 Mar 2024 07:36:05 -0500
-From: "Ding, Shenghao" <shenghao-ding@ti.com>
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        "broonie@kernel.org" <broonie@kernel.org>
-CC: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "perex@perex.cz"
-	<perex@perex.cz>,
-        "13916275206@139.com" <13916275206@139.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "liam.r.girdwood@intel.com" <liam.r.girdwood@intel.com>,
-        "bard.liao@intel.com" <bard.liao@intel.com>,
-        "mengdong.lin@intel.com"
-	<mengdong.lin@intel.com>,
-        "yung-chuan.liao@linux.intel.com"
-	<yung-chuan.liao@linux.intel.com>,
-        "Lu, Kevin" <kevin-lu@ti.com>, "tiwai@suse.de" <tiwai@suse.de>,
-        "Xu, Baojun" <baojun.xu@ti.com>, "soyer@irl.hu" <soyer@irl.hu>,
-        "Baojun.Xu@fpt.com" <Baojun.Xu@fpt.com>,
-        "Navada Kanyana, Mukund" <navada@ti.com>
-Subject: RE: [EXTERNAL] Re: [PATCH v11] ASoc: tas2783: Add tas2783 codec
- driver
-Thread-Topic: [EXTERNAL] Re: [PATCH v11] ASoc: tas2783: Add tas2783 codec
- driver
-Thread-Index: AQHaegWBu01+gHvWf0ynPwZkCTlz1LE/heaAgAp3R8A=
-Date: Tue, 26 Mar 2024 12:36:05 +0000
-Message-ID: <51a81ac8aace456aae7d07634912367c@ti.com>
-References: <20240319135811.186-1-shenghao-ding@ti.com>
- <34f404cd-a12d-4ffa-9398-72de3be244b3@linux.intel.com>
-In-Reply-To: <34f404cd-a12d-4ffa-9398-72de3be244b3@linux.intel.com>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-exclaimer-md-config: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YgxS9mQo"
+Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-4d44e2e9f13so1580711e0c.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 05:37:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711456646; x=1712061446; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=qckAaAQvDawa2rOtERY8cmOyLEyi0qkEFSxxXb4vMwg=;
+        b=YgxS9mQoa6ZQoQd++4TwJUBOHuR5SuUeWE7bouimw+fui7HdZhkFwU4cpW8R2r7iP9
+         4x2uncp7dwAIpBK2n7MjATmEEE1ONqK6Y7a4TuAdBiUNEYvymCxEwW9H8MdK0100TjKO
+         fzc7811pRUQpq3Tp7SxMa2BBMKRQ2j3vlCrOoA1fK/a9dSSEFe9w+XnJIQ27hda106mX
+         tE7+puW5b0RdRSkooQmd2CWlBIJP1AmklI66GVoOqIM0x/GKo+0YDjh6QdHKsvC6Pr4E
+         E44RkCQRcDUlyoAIV3GtDyBq0FuTOQ0/2g1JuBHLKOwxdSunjDegFPy8FpKKUclWVb1G
+         Le1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711456646; x=1712061446;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qckAaAQvDawa2rOtERY8cmOyLEyi0qkEFSxxXb4vMwg=;
+        b=pC9PRv/G5mWusYMtuzBlv6WK6dwHQjTSs9f63PwBVpW6LljPA9UxQRTQhilFhJJ9SY
+         hhZHaIBgss3g8mNoAZ1MPG48Z/x4urgvu0n41SJ5V3iEXejZRRbP/kVVdXA+MFh7TpdZ
+         KgrMCGU0k0D1ouM/eJRpoNaMD4yWARnSD9pCBGOMlHHNCrRrDb7oHA5TedvSW0l7Iif3
+         wV3bDN7brC2ci4P9y5ux3GVUt9ZtpvRv8Kqgf7LbCCm2NUh8FsQtKUFM+0RHFLRJB2qs
+         ywdQx8DPEAyUbun9m1WZze5hFCzvDfNLwLIKzf73aC7XaojiiBXtYBs8y/AKdVhb1pZ+
+         qdnw==
+X-Gm-Message-State: AOJu0YxbifKtnPrX/YqQXZyeBbpJLZCZsYbt8Hce5EFZ7x3pqWRsDFsK
+	rqQVlbqmP4usWIbufBMK1uXY1UQr7y0sluHudBdS8wEy76IuUdmC+szJDR3laoaKRJqK9mlZZhp
+	Nk5ewqBfizJ01o0NfqZo2MYXpGh0GO0DJEroRog==
+X-Google-Smtp-Source: AGHT+IEm2t0vuIygi1Dm4Yr7MU2IhJVp8dkz6GzE7gg/+xkeSUaT1bDZQ97tXChOMdP4g0wsuvJ8Sb+rHHAMC8LYm4I=
+X-Received: by 2002:a05:6102:a54:b0:478:224b:5aae with SMTP id
+ i20-20020a0561020a5400b00478224b5aaemr4344749vss.11.1711456645714; Tue, 26
+ Mar 2024 05:37:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240325115854.1764898-1-sashal@kernel.org>
+In-Reply-To: <20240325115854.1764898-1-sashal@kernel.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 26 Mar 2024 18:07:14 +0530
+Message-ID: <CA+G9fYttAJcRBq2F-TfOvfsWJQuCKW9SAo_3C1nv5ok43j4Aeg@mail.gmail.com>
+Subject: Re: [PATCH 4.19 000/147] 4.19.311-rc2 review
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, 
+	shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, 
+	florian.fainelli@broadcom.com, pavel@denx.de
+Content-Type: text/plain; charset="UTF-8"
 
-SGkgR3V5DQpUaGFua3MgZm9yIHlvdXIgY29tbWVudHMuIEZlZWRiYWNrIGlubGluZQ0KDQo+IC0t
-LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFBpZXJyZS1Mb3VpcyBCb3NzYXJ0IDxw
-aWVycmUtbG91aXMuYm9zc2FydEBsaW51eC5pbnRlbC5jb20+DQo+IFNlbnQ6IFR1ZXNkYXksIE1h
-cmNoIDE5LCAyMDI0IDExOjM1IFBNDQo+IFRvOiBEaW5nLCBTaGVuZ2hhbyA8c2hlbmdoYW8tZGlu
-Z0B0aS5jb20+OyBicm9vbmllQGtlcm5lbC5vcmcNCj4gQ2M6IGFuZHJpeS5zaGV2Y2hlbmtvQGxp
-bnV4LmludGVsLmNvbTsgbGdpcmR3b29kQGdtYWlsLmNvbTsNCj4gcGVyZXhAcGVyZXguY3o7IDEz
-OTE2Mjc1MjA2QDEzOS5jb207IGFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZzsNCj4gbGludXgt
-a2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGlhbS5yLmdpcmR3b29kQGludGVsLmNvbTsNCj4gYmFy
-ZC5saWFvQGludGVsLmNvbTsgbWVuZ2RvbmcubGluQGludGVsLmNvbTsgeXVuZy0NCj4gY2h1YW4u
-bGlhb0BsaW51eC5pbnRlbC5jb207IEx1LCBLZXZpbiA8a2V2aW4tbHVAdGkuY29tPjsgdGl3YWlA
-c3VzZS5kZTsgWHUsDQo+IEJhb2p1biA8YmFvanVuLnh1QHRpLmNvbT47IHNveWVyQGlybC5odTsg
-QmFvanVuLlh1QGZwdC5jb207IE5hdmFkYQ0KPiBLYW55YW5hLCBNdWt1bmQgPG5hdmFkYUB0aS5j
-b20+DQo+IFN1YmplY3Q6IFtFWFRFUk5BTF0gUmU6IFtQQVRDSCB2MTFdIEFTb2M6IHRhczI3ODM6
-IEFkZCB0YXMyNzgzIGNvZGVjDQo+IGRyaXZlcg0KPiANCj4gPiArc3RhdGljIGJvb2wgdGFzMjc4
-M19yZWFkYWJsZV9yZWdpc3RlcihzdHJ1Y3QgZGV2aWNlICpkZXYsID4gKw0KPiA+ICt1bnNpZ25l
-ZCBpbnQgcmVnKSA+ICt7ID4gKyBzd2l0Y2ggKHJlZykgeyA+ICsgLyogUGFnZSAwICovID4gKyBj
-YXNlDQo+ID4gKzB4ODAwMCAuLuKAii4gMHg4MDdGOiA+ICsgcmV0dXJuIHRydWU7ID4gKyBkZWZh
-dWx0OiA+ICsgcmV0dXJuIGZhbHNlOw0KPiA+ICtzbyBvbmx5IHRoZSByZWdpc3RlcnMNCj4gWmpR
-Y21RUllGcGZwdEJhbm5lclN0YXJ0DQo+IFRoaXMgbWVzc2FnZSB3YXMgc2VudCBmcm9tIG91dHNp
-ZGUgb2YgVGV4YXMgSW5zdHJ1bWVudHMuDQo+IERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0
-dGFjaG1lbnRzIHVubGVzcyB5b3UgcmVjb2duaXplIHRoZSBzb3VyY2Ugb2YNCj4gdGhpcyBlbWFp
-bCBhbmQga25vdyB0aGUgY29udGVudCBpcyBzYWZlLg0KPiANCj4gWmpRY21RUllGcGZwdEJhbm5l
-ckVuZA0KPiANCj4gPiArc3RhdGljIGJvb2wgdGFzMjc4M19yZWFkYWJsZV9yZWdpc3RlcihzdHJ1
-Y3QgZGV2aWNlICpkZXYsDQouLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4NCj4gPiArDQo+ID4gKwkvKiBDaGVjayBDYWxpYnJhdGVkIERhdGEgVjIgKi8NCj4g
-PiArCWlmICh0bXBfdmFsWzBdID09IDI3ODMpIHsNCj4gPiArCQljb25zdCBzdHJ1Y3QgY2FsaWJk
-YXRhdjJfaW5mbyBjYWxpYl9pbmZvID0gew0KPiA+ICsJCQkubnVtYmVyX29mX2RldmljZXMgPSB0
-bXBfdmFsWzFdLA0KPiA+ICsJCQkuY3JjMzJfaW5keCA9IDMgKyB0bXBfdmFsWzFdICogNiwNCj4g
-PiArCQkJLmJ5dF9zeiA9IDEyICsgdG1wX3ZhbFsxXSAqIDI0LA0KPiA+ICsJCQkuY2FsaV9kYXRh
-ID0gJnRtcF92YWxbM10NCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQlpZiAoY2FsaWJfaW5mby5u
-dW1iZXJfb2ZfZGV2aWNlcyA+DQo+IFRBUzI3ODNfTUFYX0RFVl9OVU0gfHwNCj4gPiArCQkJY2Fs
-aWJfaW5mby5udW1iZXJfb2ZfZGV2aWNlcyA9PSAwKSB7DQo+ID4gKwkJCWRldl9kYmcodGFzX2Rl
-di0+ZGV2LCAiTm8gZGV2IGluIGNhbGlicmF0ZWQgZGF0YQ0KPiBWMi4iKTsNCj4gDQo+IHRoZSBs
-b2cgaXMgbm90IGFsaWduZWQgd2l0aCB0aGUgZmlyc3QgY29uZGl0aW9uIHdoZXJlIHlvdSBoYXZl
-IHRvbyBtYW55DQo+IGRldmljZXMuDQo+IA0KPiBJdCdzIG5vdCBjbGVhciB3aHkgaXQncyBub3Qg
-YW4gZXJyb3IuDQpwbGF5YmFjayBzdGlsbCB3b3JrIHdpdGhvdXQgY2FsaWJyYXRlZCBkYXRhIHN0
-b3JlZCBpbiBVRUZJLCBmb3IgZXhhbXBsZSBieXBhc3MgbW9kZS4NCkV2ZW4gaWYgaW4gY2FzZSBv
-ZiBieXBhc3MgbW9kZSwgYWxnbyBjYW4gc3RpbGwgd29yayB3aXRoIGRlZmF1bHQgY2FsaWJyYXRl
-ZCBkYXRhLg0KU28sIG5vdCBhbiBlcnJvci4NCj4gDQo+ID4gKwkJCXJldHVybjsNCj4gPiArCQl9
-DQo+ID4gKwkJY3JjID0gY3JjMzIofjAsIGNhbGlfZGF0YS5kYXRhLCBjYWxpYl9pbmZvLmJ5dF9z
-eikNCj4gPiArCQkJXiB+MDsNCj4gPiArCQlpZiAoY3JjID09IHRtcF92YWxbY2FsaWJfaW5mby5j
-cmMzMl9pbmR4XSkgew0KPiA+ICsJCQl0YXMyNzgzX2FwcGx5X2NhbGlidjIodGFzX2RldiwgJmNh
-bGliX2luZm8pOw0KPiA+ICsJCQlkZXZfZGJnKHRhc19kZXYtPmRldiwgIlYyOiAlcHRUcyIsDQo+
-IA0KPiBzYW1lLCBpcyB0aGlzIG5lZWRlZD8NCkFjY2VwdGVkLg0KPiA+ICsNCj4gCSZ0bXBfdmFs
-W1RBUzI3ODNfQ0FMSURBVEFWMl9USU1FU1RBTVBfSU5EWF0pOw0KPiA+ICsJCX0gZWxzZSB7DQo+
-ID4gKwkJCWRldl9kYmcodGFzX2Rldi0+ZGV2LA0KPiA+ICsJCQkJIlYyOiBDUkMgMHglMDh4IG5v
-dCBtYXRjaCAweCUwOHhcbiIsDQo+ID4gKwkJCQljcmMsIHRtcF92YWxbY2FsaWJfaW5mby5jcmMz
-Ml9pbmR4XSk7DQo+IA0KPiBpcyB0aGlzIG5vdCBhbiBlcnJvcj8NCj4gDQo+ID4gKwkJfQ0KPiA+
-ICsJfSBlbHNlIHsNCj4gPiArCQlkZXZfZXJyKHRhc19kZXYtPmRldiwgIk5vbi0yNzgzIGNoaXBc
-biIpOw0KPiA+ICsJfQ0KPiA+ICt9DQo+IA0KPiB0aGUgZXJyb3IgbGV2ZWwgc2VlbSBpbmNvbnNp
-c3RlbnQgYW5kIGl0J3Mgbm90IGNsZWFyIHdoeSBlcnJvcnMgYXJlIGlnbm9yZWQ/DQpNYXliZSBz
-ZXQgdGhlbSBhcyBkZXZfd2Fybj8NCg0K
+On Mon, 25 Mar 2024 at 17:29, Sasha Levin <sashal@kernel.org> wrote:
+>
+>
+> This is the start of the stable review cycle for the 4.19.311 release.
+> There are 147 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed Mar 27 11:58:33 AM UTC 2024.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-4.19.y&id2=v4.19.310
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> Thanks,
+> Sasha
+
+One more important update from Linaro LKFT testing,
+
+LTP syscalls fallocate06 fails on qemu-arm64 and juno-r2 devices.
+
+fallocate06.c:155: TFAIL: fallocate(FALLOC_FL_PUNCH_HOLE |
+FALLOC_FL_KEEP_SIZE) failed unexpectedly: ENOSPC (28)
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+We are running bisections on this issue and get back to you.
+
+--
+Linaro LKFT
+https://lkft.linaro.org
