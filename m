@@ -1,205 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mta-65-225.siemens.flowmailer.net (mta-65-225.siemens.flowmailer.net [185.136.65.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5202118E1F
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 08:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1742E18AEA
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 08:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711443483; cv=none; b=hhnMR+wp1VBx+pu9aAPKMAXt76JoAI5kmKHOVmS/G+7vklhn9zB9buDpyP/Yl2ndmua6uPzqay11gBpnSISDyJD9FcK5M86qGnCYJw5v6Xo3l1pzPy4zRg2O3h0R2idzKpUh8Pi+glGcryNd+uN5QRWpy7/6211T0gGeTVcQXgs=
+	t=1711443487; cv=none; b=Z9C4GOaOPRrWg1tTxPhvipP9FFz/f7xP/y/eiCF0S+bD069YUH5vgsFQaxxOdDAJiv0o8EVFT4KBqNzV1nlsWsarQX/etqmhqtkUGfPqc6aoSLi+dq7W66LBeKFN5xlA/zr3mqYxEiPgPvHPyTdFHm9B6Ug5OhlrvLx5pqvMjiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711443483; c=relaxed/simple;
-	bh=Ix+UPcle/E/fMYgV+13iDftdD9mjhca2WVoZ4HkE0WQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fTdVgY5n8dCxKRZT8CtAnLKrU1LlPbkAD8STapvJjh8r9qkrte2c1jEFBLRifz2pHbJNCh8Tpmz1vIQnmWFAHtB3VBcdwNKewH0FslvPrgHVRaZSRQ0h9MQvg6l2ZEgnRT7nEtQrB3HtAbjF5SCcjSsn5JCriSzJ0jEs7bj48Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N3YzFoqC; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711443487; c=relaxed/simple;
+	bh=2NnN3yr0wpdVoxDzh4ChyQUmMIKdzLGg6sxkzDgAI3o=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=XBuBcvCUf/fdro6uOGYd8YkGP624E04DO8mJFFNDv0wdER0cshlFDog7ep73UvvzwzD90lN6NDK9cXQ/uBldHSEhZB+yU3dU/qqbeqDph1rkkNZ1yHwrgeWWGWswAzx6V+t68r3jKWrXxEUC3MjApvjyX6ZxpGfGdIPmOrImpKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (1024-bit key) header.d=siemens.com header.i=florian.bezdeka@siemens.com header.b=ZnoEPez1; arc=none smtp.client-ip=185.136.65.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N3YzFoqC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711443481;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=p+12NdtXjNmDCwUHcMM8w074mdhtnNuNl46WZXArv94=;
-	b=N3YzFoqCt7xj1t6CrincDMPVJnC6uVRvq1PdL/aTn4ZvePbIpBCEsZE14XmMgk8oaxwpGw
-	cdx30tfC+OYI0Xn8koFIGEdnXBeOp230bFylejYkZwJClojarNkg+a3XZJZYNS7IbJwkMh
-	td6Si5IMxiphfdtr/SvzCG5Eze6gRDQ=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-463-Qf3wGip6M56RJQSlj0uZmw-1; Tue, 26 Mar 2024 04:57:58 -0400
-X-MC-Unique: Qf3wGip6M56RJQSlj0uZmw-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-33ed44854ddso2831961f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 01:57:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711443477; x=1712048277;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :references:cc:to:content-language:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p+12NdtXjNmDCwUHcMM8w074mdhtnNuNl46WZXArv94=;
-        b=ndNByRuIOheeIf3g1XL2TZ3wIZq6SasUY97ePZAW09pU/MMkygTR/rneaNeNSd0Z5W
-         S3L9HjN3RLxPW9QtVCC0UHvPO9lIBe3nNRs6dh+sucVqjVWOdhj1WcfQHojmJXJCa2Zn
-         NhGvYDNoqsXvhVnRSLgdBZZd+OtsholRmVCKrOyJcw2bYJK9eOVf+FWmdJNZidCXK7AJ
-         cYnx1B/NkAD1is2tC6V1KtGFR0Zsp2NvQyjngSaOU+itxzamtZCtfctMfccxZGXl/zcK
-         +hl+wp91d9W98m57SdPPdhDwK01FX3ZWSk6ZfG+haIYw1TDcCQq2v5nRmJOZho30Uc8v
-         IOYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNYQWh1qLxXk6cehyOu8cAg89u9KiPUus0LtcZiMr2LQTYEkLb7JAKwpJ/RfIeqqGUQf5BL/ex8EvdfMO+/OTU90kXGfAu7kHaod6d
-X-Gm-Message-State: AOJu0Yyq7W00l1ffIwhwaMMzj+lOCht7yZGpQZZBpN8WeaSnkZQX75vt
-	lQtCNBGZT9hDcyRnycrOPOQY3M7wKEarYTM77fcCzTdOsLMT7obXNP115N6n/tCn/mRIrLeFF2j
-	PfkAalCfAZewLfl3sy1poupQfKjc0/6l1QKQdpAfBEyvkRM/6x/CiyB1MhfTVRA==
-X-Received: by 2002:adf:ce01:0:b0:33e:7865:cf67 with SMTP id p1-20020adfce01000000b0033e7865cf67mr6285797wrn.55.1711443477406;
-        Tue, 26 Mar 2024 01:57:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGMyGSbClJ8MlXSnpVLJew0lUNg8xPVUJ//sXPvxKa6xCcUWcZyXTsmxXRds3wruL5JEf5Z/A==
-X-Received: by 2002:adf:ce01:0:b0:33e:7865:cf67 with SMTP id p1-20020adfce01000000b0033e7865cf67mr6285789wrn.55.1711443476983;
-        Tue, 26 Mar 2024 01:57:56 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c741:c700:3db9:94c9:28b0:34f2? (p200300cbc741c7003db994c928b034f2.dip0.t-ipconnect.de. [2003:cb:c741:c700:3db9:94c9:28b0:34f2])
-        by smtp.gmail.com with ESMTPSA id q2-20020adfcd82000000b0033e7603987dsm11635262wrj.12.2024.03.26.01.57.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Mar 2024 01:57:56 -0700 (PDT)
-Message-ID: <2420ca24-b475-45ba-bab9-66c11b8cf484@redhat.com>
-Date: Tue, 26 Mar 2024 09:57:55 +0100
+	dkim=pass (1024-bit key) header.d=siemens.com header.i=florian.bezdeka@siemens.com header.b="ZnoEPez1"
+Received: by mta-65-225.siemens.flowmailer.net with ESMTPSA id 2024032608565660d22323bb46d4a510
+        for <linux-kernel@vger.kernel.org>;
+        Tue, 26 Mar 2024 09:57:45 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
+ d=siemens.com; i=florian.bezdeka@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=2NnN3yr0wpdVoxDzh4ChyQUmMIKdzLGg6sxkzDgAI3o=;
+ b=ZnoEPez1s9mkret+84aiVoBbI7kPnBo2K4g9LdoGjJ6Vk+54YX25G3Z0y+4eJYiwYj9198
+ nShsv9+TKBXTbNRidg9c/ePK/1HTATRNvXrX5F8nP9DbiWexkWFe2E3jYfd0oSnZt4QonXdX
+ PS7EotffJHiFxuv+AOwqR675HZ0WQ=;
+Message-ID: <d2623ac0f1cb07a23976416cdcf9eee1986747b0.camel@siemens.com>
+Subject: Re: [PATCH iwl-next,v4 1/1] igc: Add Tx hardware timestamp request
+ for AF_XDP zero-copy packet
+From: Florian Bezdeka <florian.bezdeka@siemens.com>
+To: Song Yoong Siang <yoong.siang.song@intel.com>, Jesse Brandeburg
+ <jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Richard Cochran <richardcochran@gmail.com>, Alexei
+ Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend
+ <john.fastabend@gmail.com>, Stanislav Fomichev <sdf@google.com>, Vinicius
+ Costa Gomes <vinicius.gomes@intel.com>, Kurt Kanzenbach
+ <kurt@linutronix.de>, Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org, xdp-hints@xdp-project.net
+Date: Tue, 26 Mar 2024 09:56:54 +0100
+In-Reply-To: <20240325020928.1987947-1-yoong.siang.song@intel.com>
+References: <20240325020928.1987947-1-yoong.siang.song@intel.com>
+Autocrypt: =?US-ASCII?Q?addr=3Dflorian.bezdeka@siemen?=
+ =?US-ASCII?Q?s.com;_prefer-encrypt=3Dmutual?=
+ =?US-ASCII?Q?;_keydata=3DmQENBFwsf8QBCAC2f4AQWu92LZC4bKyUYRxWIpWqGz790s?=
+ =?US-ASCII?Q?pcYkXO7M8kfea4iC8qMxv2hT4HT0LTncRP6WiovVN2PeoOBfN5BSa5z?=
+ =?US-ASCII?Q?LIrZGVXh7KmbdKhwhVU+ynoTq9G5uaO2Kos7Vv7nNCuatIq8tSNILuoB?=
+ =?US-ASCII?Q?DFTAZnJW3y1V7YOwhDCPl5gbLSYqUY3OE0yksbtCcVI5istT4ED6mjQ?=
+ =?US-ASCII?Q?9W+3uH1LrgFeEF0oxTjrEPxO5ZYATz0f/TYC8WiM0sMrV+n0eMDntlzA?=
+ =?US-ASCII?Q?63D6lcRi5mNp2jPsJkq3tbWqyCrAe1sKPVJB44ekFwCk0kDIuhR13Q3R?=
+ =?US-ASCII?Q?HE4Or/9sznhMUQjYueWXvTZfzH/VsQJHABEBAAG0LUZsb3JpYW4gQmV6?=
+ =?US-ASCII?Q?ZGVrYSA8Zmxvcmlhbi5iZXpkZWthQHNpZW1lbnMuY29tPokBVAQTAQg?=
+ =?US-ASCII?Q?APhYhBAzL4P3jiTHdthsq4cj0O1fnOEBVBQJcLH/FAhsDBQkB4TOABQs?=
+ =?US-ASCII?Q?JCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEMj0O1fnOEBVc6YIAJ8oO4x?=
+ =?US-ASCII?Q?TjOCpjxaS8XQE6VW50HE9I6ShbQVWUEGhF4qzJaACTQDjdg/aio7qNRa?=
+ =?US-ASCII?Q?mnAy83Hy9sAxKVhXs+1R1fstN+JO8zgD3tJspucUkCiXlYu+Qcv2d6C?=
+ =?US-ASCII?Q?ostv+h4nv8fkSoeLfsQu3GJt6W0RN7t+8H/9fUMXyuB8GWo4bhaZcti6?=
+ =?US-ASCII?Q?78CotGLs6UGZpYEGiAMto8+9zVO/tdY1BkREM6bCVeQ9FnnpTRQy/tU5?=
+ =?US-ASCII?Q?xemMWJI64UUP92TUIbQ3TZKAz4iG/Mle+YjiHBGrJM7TxjE3sDg5J2Fa?=
+ =?US-ASCII?Q?HX4wmZPKGdB6wANKupf6HMMt2y7gduVmMKzgb8PDMLPZwWBSvjELQqz?=
+ =?US-ASCII?Q?hiZAQ0EYLSqZwEIAIR4HMTQC4F4YxatIl6MIDY03zD4M3ZQpgyQ6QFL9?=
+ =?US-ASCII?Q?Dq0I+PGc7A6z5rsGl76+D8pDFSN2BBJiLLlQadxKc3ZyTTlRp4bc=09bf?=
+ =?US-ASCII?Q?FZRmsAXwVfLtBauXxGo9pkyhk8Vcjb2EJm6XR8PH99buGOXlFfTLsmeA?=
+ =?US-ASCII?Q?ji/F4jU3qlUnwZMBvHZwRSFqOGdwKPMvW3FppfmREQ0o4xJ4b/bxGXx?=
+ =?US-ASCII?Q?ko21uyR/S5rEJx6X8Ukw95h3JinXHx/g2cjbKHrWBDKoqtX9IZCamDny?=
+ =?US-ASCII?Q?R+sfLWQbOKOrLNYLwLAQwOTVlZWTgue10G1q6Zi0r8RQ2T1Uy+ZLYagv?=
+ =?US-ASCII?Q?Cbzp/lT7p3mv3ba68llX896c0AEQEAAbQ/QmV6ZGVrYSwgRmxvcmlhbj?=
+ =?US-ASCII?Q?sgQmV6ZGVrYSBGbG9yaWFuIDxmbG9yaWFuLmJlemRla2FAc2llbWVuc?=
+ =?US-ASCII?Q?y5jb20+iQEcBBABCAAGBQJgtKpnAAoJEEoHyE9rG1dPpJYH+gPnqpu7h?=
+ =?US-ASCII?Q?4fsWOxco38e74MsazoUdfndTYP5tgaYTVE51ZhOZBl+4jYaywsmmFm9g?=
+ =?US-ASCII?Q?6N4Tw3GiMEDB4YU1X7gQZ60fDKpYL5SnCu5qZirJ4RCV4LDA0789ir+6?=
+ =?US-ASCII?Q?8/zfwXBTV5QoMH0+MkXB4BL+Km3f7X/GdN5oRoItAyKDBcEfGJo6afT?=
+ =?US-ASCII?Q?PtcUdI9n7ExCSfJwb0SBvvkvUsdNppFDGOOHSioINbEHBs2VUvE43toM?=
+ =?US-ASCII?Q?4mPLfhFIAtDcn5Byt80/kotU8v3Iyf86NYCa+0h77xTsKHcCUqe8Rvow?=
+ =?US-ASCII?Q?bCIbig9GGbbd54TasfqQQOiAkn/WeGl33+UIVX1Q8zo7eyMJHzLJQ3I=3D?=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] x86/mm/pat: fix VM_PAT handling in COW mappings
-Content-Language: en-US
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, x86@kernel.org, Wupeng Ma <mawupeng1@huawei.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
- Andrew Morton <akpm@linux-foundation.org>
-References: <20240312181118.318701-1-david@redhat.com>
- <ZfCrkL-Aieer2EAg@casper.infradead.org>
- <5bc9de2f-c3ba-46e7-a234-3d3a46e53ba1@redhat.com>
- <ZgKIVogEUEnUMgpF@gmail.com>
- <922c5f99-1194-4118-9fe2-09b4f4a8cf04@redhat.com>
- <ZgKNIezvm7tPVuYj@gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <ZgKNIezvm7tPVuYj@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-68982:519-21489:flowmailer
 
->>> try the trivial restriction approach first, and only go with your original
->>> patch if that fails?
->>
->> Which version would you prefer, I had two alternatives (excluding comment
->> changes, white-space expected to be broken).
->>
->>
->> 1) Disallow when we would have set VM_PAT on is_cow_mapping()
->>
->> diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
->> index 0d72183b5dd0..6979912b1a5d 100644
->> --- a/arch/x86/mm/pat/memtype.c
->> +++ b/arch/x86/mm/pat/memtype.c
->> @@ -994,6 +994,9 @@ int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
->>                                  && size == (vma->vm_end - vma->vm_start))) {
->>                  int ret;
->> +               if (is_cow_mapping(vma->vm_flags))
->> +                       return -EINVAL;
->> +
->>                  ret = reserve_pfn_range(paddr, size, prot, 0);
->>                  if (ret == 0 && vma)
->>                          vm_flags_set(vma, VM_PAT);
->>
->>
->> 2) Fallback to !VM_PAT
->>
->> diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
->> index 0d72183b5dd0..8e97156c9be8 100644
->> --- a/arch/x86/mm/pat/memtype.c
->> +++ b/arch/x86/mm/pat/memtype.c
->> @@ -990,8 +990,8 @@ int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
->>          enum page_cache_mode pcm;
->>          /* reserve the whole chunk starting from paddr */
->> -       if (!vma || (addr == vma->vm_start
->> -                               && size == (vma->vm_end - vma->vm_start))) {
->> +       if (!vma || (!is_cow_mapping(vma->vm_flags) && addr == vma->vm_start &&
->> +                    size == (vma->vm_end - vma->vm_start))) {
->>                  int ret;
->>                  ret = reserve_pfn_range(paddr, size, prot, 0);
->>
->>
->>
->> Personally, I'd go for 2).
-> 
-> So what's the advantage of #2? This is clearly something the user didn't
-> really intend or think about much. Isn't explicitly failing that mapping a
-> better option than silently downgrading it to !VM_PAT?
-> 
-> (If I'm reading it right ...)
+On Mon, 2024-03-25 at 10:09 +0800, Song Yoong Siang wrote:
+> This patch adds support to per-packet Tx hardware timestamp request to
+> AF_XDP zero-copy packet via XDP Tx metadata framework. Please note that
+> user needs to enable Tx HW timestamp capability via igc_ioctl() with
+> SIOCSHWTSTAMP cmd before sending xsk Tx hardware timestamp request.
+>=20
+> Same as implementation in RX timestamp XDP hints kfunc metadata, Timer 0
+> (adjustable clock) is used in xsk Tx hardware timestamp. i225/i226 have
+> four sets of timestamping registers. *skb and *xsk_tx_buffer pointers
+> are used to indicate whether the timestamping register is already occupie=
+d.
 
-I think a simple mmap(MAP_PRIVATE) of /dev/mem will unconditionally fail 
-with 1), while it keeps on working for 2).
+Let me make sure that I fully understand that: In my own words:
 
-Note that I think we currently set VM_PAT on each and every system if 
-remap_pfn_range() will cover the whole VMA, even if pat is not actually 
-enabled.
+With that applied I'm able to get the point in time from the device
+when a specific frame made it to the wire. I have to enable that
+functionality using the mentioned ioctl() call first, and then check
+the meta area (located in the umem right before the frame payload)
+while consuming the completion queue/ring. Correct?
 
-It's all a bit of a mess TBH, but I got my hands dirty enough on that.
-
-So 1) can be rather destructive ... 2) at least somehow keeps it working.
-
-For that reason I went with the current patch, because it's hard to tell 
-which use case you will end up breaking ... :/
-
--- 
-Cheers,
-
-David / dhildenb
+If so, we now have a feedback channel for meta information for/from TX.
+Are there any plans - or would it be possible - to support Earliest
+TxTime First (NET_SCHED_ETF) QDisc based on that channel? In the past
+we had the problem that we we're missing a feedback channel to
+communicate back invalid lunch times.
+=20
+>=20
+> Furthermore, a boolean variable named xsk_pending_ts is used to hold the
+> transmit completion until the tx hardware timestamp is ready. This is
+> because, for i225/i226, the timestamp notification event comes some time
+> after the transmit completion event. The driver will retrigger hardware i=
+rq
+> to clean the packet after retrieve the tx hardware timestamp.
+>=20
+> Besides, xsk_meta is added into struct igc_tx_timestamp_request as a hook
+> to the metadata location of the transmit packet. When the Tx timestamp
+> interrupt is fired, the interrupt handler will copy the value of Tx hwts
+> into metadata location via xsk_tx_metadata_complete().
+>=20
+> This patch is tested with tools/testing/selftests/bpf/xdp_hw_metadata
+> on Intel ADL-S platform. Below are the test steps and results.
 
