@@ -1,114 +1,97 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [195.130.132.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351951327ED
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 07:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0604A13175C
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 07:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711439363; cv=none; b=KbMHNzmInRNgwxzpVz+0Vh1WiQ5lHDVppLRhP+UPL1POU+tbcgVkS8GZOD4/f4Y8b82smtxnDiPNmZnKtqOghSqL1Pi97BAXSks3C3E3lT6STZ6wJCdgcPJq8weaCdTNXQddx5cCh+Ji9NeGYKnQpJ+Py5dUA9gsqmTop45NfBc=
+	t=1711439467; cv=none; b=bcGqfcjPW/XUAB4XO6Osxk1/Mvl8n6NJDX88IZxA6qmXhJIjEoiLraH/RleywO46Shkz9Kl59b1fBn9D+oW0QiJY7NaLLqxbMcExkIqxo/jWvZO0DdUjon1iUiuP3YGoylJZluW9LhuafpamcoF+UocGmM+Bl7mYe9hPq6BJZPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711439363; c=relaxed/simple;
-	bh=dqAd7OjWgTnqEHukNHnke5LzQbaeMMnCo0sdA+IjRgo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n4xczu/Z/vJB7mdLasaW1XLjUl4IuQTXnS8bJ93BfrPka4VgWU+RSUcFp8WP/SVewWCS8qtGn8A/lt3CWZeZnA/JcXoMT2k8imbkf+u4l+jJQhkVTQhD+wSZAPyMsdJgRxxyE/3N43FemPyu5rmXC7pFRH99liuorB7gyRQUJ88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VUwNUj/N; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VUwNUj/N"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42Q6tssI023504;
-	Tue, 26 Mar 2024 07:48:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=gEPa7TSHFvR3AVvnHhrhHVYWL2THauofyr9s2yjVDOM=;
- b=VUwNUj/N5mbbkhipigbjGgBOJhfgThMtm3ITv1mwe8Ht8ljQ+PwCF+tW3pZR23oZjH1/
- er/ZlFE3Ik7jEf/fn6BVuAYerDeJJSSKXLw30inF4SX0d0iiEKjy2FeYnHQu8F10LnkZ
- cnGqAiYX9s8wvC+fRSHZFBZjs25ovQDkaA/o3fTxPT4DBPp+IfvkH33HAy8pySgSJz8L
- lrXSGThL1xVtZzJbIn0Oo5a1bDIc8yRf+e5Jtxf63WbR2sMooVGgZ8qVyrpBtu4N6FjW
- ZylyD2sKSmd82wRpQ+BUuULwYwsrTd+GJOmscuJDEXNkgJK41zQ1CBHuqxZmskv2Os3w QA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x3kytrspm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 07:48:54 +0000
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42Q7msRU010276;
-	Tue, 26 Mar 2024 07:48:54 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x3kytrspg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 07:48:54 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42Q5Odxj013343;
-	Tue, 26 Mar 2024 07:48:53 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3x29t0ek5e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 07:48:52 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42Q7mm6k41288032
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 26 Mar 2024 07:48:51 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D6C0720063;
-	Tue, 26 Mar 2024 07:48:48 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 910AA20040;
-	Tue, 26 Mar 2024 07:48:48 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.60])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 26 Mar 2024 07:48:48 +0000 (GMT)
-Date: Tue, 26 Mar 2024 08:48:46 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>,
-        Lorenzo Stoakes <lstoakes@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dave Chinner <david@fromorbit.com>, Guenter Roeck <linux@roeck-us.net>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
-Subject: Re: [PATCH 1/1] mm: vmalloc: Bail out early in find_vmap_area() if
- vmap is not init
-Message-ID: <20240326074846.6078-D-hca@linux.ibm.com>
-References: <20240323141544.4150-1-urezki@gmail.com>
+	s=arc-20240116; t=1711439467; c=relaxed/simple;
+	bh=gr9JgkrESZ4jhKkfEzPbJwRvivaU77MYSxc+lDGeHU4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=nBKMOnc3BcaQEksVPae3/FVCYH96rOR9jJwg23rmJ6++FfIIKvbb5gDJAYjwO6eLnlzJOKpt+NJMh6dhBcCJUlIyDY6Ryj2ShLQXauKaSi7FijMjcT/KqMRwDZtgUUL7VAq0IzbQQUgrvAOjHEFgVtwboyw/aCo7X4lUEJaSceo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:76d0:2bff:fec8:549])
+	by xavier.telenet-ops.be with bizsmtp
+	id 3Kqp2C00C0SSLxL01KqpkN; Tue, 26 Mar 2024 08:50:56 +0100
+Received: from geert (helo=localhost)
+	by ramsan.of.borg with local-esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rp1a5-004zii-Gc;
+	Tue, 26 Mar 2024 08:50:49 +0100
+Date: Tue, 26 Mar 2024 08:50:49 +0100 (CET)
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+To: linux-kernel@vger.kernel.org
+cc: linux-crypto@vger.kernel.org, Chris Zankel <chris@zankel.net>, 
+    Max Filippov <jcmvbkbc@gmail.com>, Rob Clark <robdclark@gmail.com>, 
+    Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+    Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+    linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+    freedreno@lists.freedesktop.org, 
+    Lucas De Marchi <lucas.demarchi@intel.com>, 
+    Oded Gabbay <ogabbay@kernel.org>, 
+    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
+    intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+    linux-mips@vger.kernel.org, sparclinux@vger.kernel.org
+Subject: Re: Build regressions/improvements in v6.9-rc1
+In-Reply-To: <20240325200315.3896021-1-geert@linux-m68k.org>
+Message-ID: <8d78894-dd89-9f4d-52bb-1b873c50be9c@linux-m68k.org>
+References: <CAHk-=wgOw_13JuuX4khpn4K+n09cRG3EBQWufAPBWoa0GLLQ0A@mail.gmail.com> <20240325200315.3896021-1-geert@linux-m68k.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240323141544.4150-1-urezki@gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: l-95GC7tIB-ygz7mEZ1DT2Lo93O7U3I3
-X-Proofpoint-ORIG-GUID: HwrjB5_E5SYPjSoAcbidYfviQtVuDYhn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-26_04,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 clxscore=1015 phishscore=0 impostorscore=0 mlxscore=0
- malwarescore=0 bulkscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0
- mlxlogscore=638 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2403260052
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Sat, Mar 23, 2024 at 03:15:44PM +0100, Uladzislau Rezki (Sony) wrote:
-> During the boot the s390 system triggers "spinlock bad magic" messages
-> if the spinlock debugging is enabled:
-...
-> Some background. It worked before because the lock that is in question
-> was statically defined and initialized. As of now, the locks and data
-> structures are initialized in the vmalloc_init() function.
-> 
-> To address that issue add the check whether the "vmap_initialized"
-> variable is set, if not find_vmap_area() bails out on entry returning NULL.
-> 
-> Fixes: 72210662c5a2 ("mm: vmalloc: offload free_vmap_area_lock lock")
-> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> ---
->  mm/vmalloc.c | 3 +++
->  1 file changed, 3 insertions(+)
+On Mon, 25 Mar 2024, Geert Uytterhoeven wrote:
+> Below is the list of build error/warning regressions/improvements in
+> v6.9-rc1[1] compared to v6.8[2].
+>
+> Summarized:
+>  - build errors: +8/-8
 
-Thanks for fixing this, and FWIW:
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
+   + /kisskb/src/crypto/scompress.c: error: unused variable 'dst_page' [-Werror=unused-variable]:  => 174:38
+
+xtensa-gcc13/xtensa-allmodconfig
+
+   + /kisskb/src/drivers/gpu/drm/msm/adreno/adreno_gen7_0_0_snapshot.h: error: 'gen7_0_0_external_core_regs' defined but not used [-Werror=unused-variable]:  => 924:19
+   + /kisskb/src/drivers/gpu/drm/msm/adreno/adreno_gen7_2_0_snapshot.h: error: 'gen7_2_0_external_core_regs' defined but not used [-Werror=unused-variable]:  => 748:19
+
+arm64-gcc5/arm64-allmodconfig
+powerpc-gcc5/powerpc-allmodconfig
+powerpc-gcc5/powerpc-allyesconfig
+powerpc-gcc5/ppc32_allmodconfig
+powerpc-gcc5/ppc64_book3e_allmodconfig
+powerpc-gcc5/ppc64le_allmodconfig
+sparc64-gcc5/sparc64-allmodconfig
+
+   + /kisskb/src/drivers/gpu/drm/xe/xe_lrc.c: error: "END" redefined [-Werror]:  => 100
+
+mips-gcc8/mips-allmodconfig
+mips-gcc13/mips-allmodconfig
+
+   + error: arch/sparc/kernel/process_32.o: relocation truncated to fit: R_SPARC_WDISP22 against `.text':  => (.fixup+0xc), (.fixup+0x4)
+   + error: arch/sparc/kernel/signal_32.o: relocation truncated to fit: R_SPARC_WDISP22 against `.text':  => (.fixup+0x18), (.fixup+0x8), (.fixup+0x0), (.fixup+0x20), (.fixup+0x10)
+   + error: relocation truncated to fit: R_SPARC_WDISP22 against `.init.text':  => (.head.text+0x5100), (.head.text+0x5040)
+   + error: relocation truncated to fit: R_SPARC_WDISP22 against symbol `leon_smp_cpu_startup' defined in .text section in arch/sparc/kernel/trampoline_32.o:  => (.init.text+0xa4)
+
+sparc64-gcc13/sparc-allmodconfig
+
+> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/4cece764965020c22cff7665b18a012006359095/ (all 138 configs)
+> [2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/e8f897f4afef0031fe618a8e94127a0934896aba/ (all 138 configs)
+
+Gr{oetje,eeting}s,
+
+ 						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+ 							    -- Linus Torvalds
