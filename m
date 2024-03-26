@@ -1,116 +1,164 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30F76EB5D;
-	Tue, 26 Mar 2024 09:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C671573537
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 09:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711444844; cv=none; b=cYvLYXUeA/IeuFQcCahnhleGzoI2Tfz3g5SYKHF6y0rXjd1v9ib+6Gnz+CWdOt1mQBWj7l7PJdBlvwSX9i5MhfEGWKG37i1tWXA3+taTYd0nF3hzO9MMp6+Qa43sP5TYEPcrv0ajMgHJFOD8EG+4s2SWCbIvwQyehUEM4IW+C9A=
+	t=1711444843; cv=none; b=JZkQDdME2r8vnY2pTjBZkl45FhcMaj3YDZFB/+z68Ly8npZWbWR8MCzzv5PRtWgVBTEMWUo4XZATsupE1f6sGFIv06gRiE3iUnNTnwMzC4ZUbtgSfz5nU2lOMPahbDqGZ3op/IeKSouKLyBxNl9KI5OlXT87SiauZlHUVvViVkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711444844; c=relaxed/simple;
-	bh=mdY+qN4GAR+ss2nS6CPajyAVe6IOMmz4Ot6WdWDjdGs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TY+ZVcqAeixeloZZEUprlFfAZqmY6bGy8PKS9chfup39WMTTkAVeOCNkZz/+SCeiQh17fInDenyjpm5Dv/Od8BIKy/G1qXj0gHTzzGgre2IM2YbRA9CF30agjjx6NcxGceLldnilVvt/uM3zyYUkiUGPQ1qlTG1ewmTXTLLvyYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DalBRawg; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1711444843; c=relaxed/simple;
+	bh=uZkJGnv5IDuO8+ZvDjL7x5PwIEPpvDDhlojaAu1G7Ks=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=oGo0sl+TaZF4cjLmPXC7AwvXeVJFwq6JYJMT7mO7czDZ7P+n2jH4Xuwpx1erPl9fAOI5lxz+NKgK/hzg+vwNWwqMZrXQ7N/26Yk1R+yhNKUab+9V4DF18Rx7YlZYwfGFRuiYguOhlE0OKeewPyEH/gG0NVzyyu1v+XdEyemGlQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MDceUqkm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DalBRawg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711444843; x=1742980843;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=mdY+qN4GAR+ss2nS6CPajyAVe6IOMmz4Ot6WdWDjdGs=;
-  b=DalBRawg+6tDiRN1HG+efHFB5bbJRcQ0PAZyDnTSmLE1xM7EZi4QUj9l
-   X+GpNMeGK52F97ynonwN9yWZLsJIT62lcF+JzW7ocCbBFYYFZVCHBYXAM
-   qMq1Hz8ald6/VQmEfcvfdCxhO09XcvkAokMIwIRsjFM0IYnbFxWvollbS
-   UfHdq4x06xz9ULBkEKEGm/GvPmMPSje5XVLMDvO+I7OSPizMBoVQ1tLPF
-   AjM/Kl6jeDlnbt1g5RCyZv8mQDcvJtilgWqHUVHREjLJBohWmsO0t6k2p
-   XsG5NPKedKGfEEPwTWG4XpO46L8VbfhMDAGFw1+WJpn56KGIviDTodtYB
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="6350353"
-X-IronPort-AV: E=Sophos;i="6.07,155,1708416000"; 
-   d="scan'208";a="6350353"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 02:20:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,155,1708416000"; 
-   d="scan'208";a="16293276"
-Received: from yungchua-ws.ostc.intel.com (HELO yungchua-ws.intel.com) ([10.54.69.90])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 02:20:36 -0700
-From: Bard Liao <yung-chuan.liao@linux.intel.com>
-To: linux-sound@vger.kernel.org,
-	vkoul@kernel.org
-Cc: vinod.koul@linaro.org,
-	linux-kernel@vger.kernel.org,
-	pierre-louis.bossart@linux.intel.com,
-	bard.liao@intel.com
-Subject: [PATCH 6/7] soundwire: intel_ace2.x: power-up first before setting SYNCPRD
-Date: Tue, 26 Mar 2024 09:20:29 +0000
-Message-Id: <20240326092030.1062802-7-yung-chuan.liao@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240326092030.1062802-1-yung-chuan.liao@linux.intel.com>
-References: <20240326092030.1062802-1-yung-chuan.liao@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MDceUqkm"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F1529C43330;
+	Tue, 26 Mar 2024 09:20:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711444843;
+	bh=uZkJGnv5IDuO8+ZvDjL7x5PwIEPpvDDhlojaAu1G7Ks=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=MDceUqkm8alGxBRgirmqjOemBSqjzGmsHWUDpTQcTZKEhgWr9WpC3VwMmlYRPAbaB
+	 7mWyFwAypMUJnCSWTN1cbXLAlFiqM4OJKgI+0hRrZAUF/4FQNSGAHTGCpS48Yf114I
+	 1sTk7RZWw0SVu6WsbN6SlPluDSsz5CoTccGyEAfLdkB2XfmiVeA4Ra1BK6MBEFxukj
+	 SLzCmERYkJAZRuXnGA5XeYY0uq3pVMkSTs6zUjdT+a/B2t4/l4aMZVRH7UW1AWNt+k
+	 RLg3KycTMqizDQTAk3/55M8wdAwVP+BPM+mb98W7cQkt49cfyWa2+ajz9WtOwqZSpa
+	 HfNjAxMR60/vA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBCA8CD1283;
+	Tue, 26 Mar 2024 09:20:42 +0000 (UTC)
+From: Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
+Date: Tue, 26 Mar 2024 12:19:03 +0300
+Subject: [PATCH v9 36/38] ARM: ep93xx: soc: drop defines
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240326-ep93xx-v9-36-156e2ae5dfc8@maquefel.me>
+References: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
+In-Reply-To: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
+To: Nikita Shubin <nikita.shubin@maquefel.me>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Sergey Shtylyov <s.shtylyov@omp.ru>, Damien Le Moal <dlemoal@kernel.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, 
+ Arnd Bergmann <arnd@arndb.de>
+X-Mailer: b4 0.13-dev-e3e53
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711444837; l=3028;
+ i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
+ bh=r88ZSksaS28Z3JM0eLBOGcjCM+5d/zZG8n9oNgV84Dc=;
+ b=z195lQq78/W/f4FhdTD1L9flrw9p2ftO4hdWpnxtJFYK/jd2efXlxolAZJRqbwd8mwcO0LFSVaER
+ cEkLFxjnBcDpw9F+fZ1pdCI4yZbNe4wkEKYUHhd8pMiOGysDwcs4
+X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
+ pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
+X-Endpoint-Received: by B4 Relay for nikita.shubin@maquefel.me/20230718
+ with auth_id=65
+X-Original-From: Nikita Shubin <nikita.shubin@maquefel.me>
+Reply-To: nikita.shubin@maquefel.me
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Nikita Shubin <nikita.shubin@maquefel.me>
 
-The existing sequence is fine if we want to only use the xtal
-clock. However if we want to select the clock, we first need to
-power-up, then select the clock and last set the SYNCPRD.
+Remove unnecessary defines, as we dropped board files.
 
-This patch first modifies the order, we will add the clock selection
-as a follow-up.
-
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Rander Wang <rander.wang@intel.com>
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
 ---
- drivers/soundwire/intel_ace2x.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ include/linux/platform_data/eth-ep93xx.h    | 10 ---------
+ include/linux/platform_data/keypad-ep93xx.h | 32 -----------------------------
+ include/linux/soc/cirrus/ep93xx.h           | 13 ------------
+ 3 files changed, 55 deletions(-)
 
-diff --git a/drivers/soundwire/intel_ace2x.c b/drivers/soundwire/intel_ace2x.c
-index abdd651a185c..d8ae05cf3d57 100644
---- a/drivers/soundwire/intel_ace2x.c
-+++ b/drivers/soundwire/intel_ace2x.c
-@@ -93,6 +93,13 @@ static int intel_link_power_up(struct sdw_intel *sdw)
- 
- 	mutex_lock(sdw->link_res->shim_lock);
- 
-+	ret = hdac_bus_eml_sdw_power_up_unlocked(sdw->link_res->hbus, link_id);
-+	if (ret < 0) {
-+		dev_err(sdw->cdns.dev, "%s: hdac_bus_eml_sdw_power_up failed: %d\n",
-+			__func__, ret);
-+		goto out;
-+	}
-+
- 	if (!*shim_mask) {
- 		/* we first need to program the SyncPRD/CPU registers */
- 		dev_dbg(sdw->cdns.dev, "first link up, programming SYNCPRD\n");
-@@ -103,16 +110,7 @@ static int intel_link_power_up(struct sdw_intel *sdw)
- 				__func__, ret);
- 			goto out;
- 		}
--	}
- 
--	ret = hdac_bus_eml_sdw_power_up_unlocked(sdw->link_res->hbus, link_id);
--	if (ret < 0) {
--		dev_err(sdw->cdns.dev, "%s: hdac_bus_eml_sdw_power_up failed: %d\n",
--			__func__, ret);
--		goto out;
--	}
+diff --git a/include/linux/platform_data/eth-ep93xx.h b/include/linux/platform_data/eth-ep93xx.h
+deleted file mode 100644
+index 8eef637a804d..000000000000
+--- a/include/linux/platform_data/eth-ep93xx.h
++++ /dev/null
+@@ -1,10 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef _LINUX_PLATFORM_DATA_ETH_EP93XX
+-#define _LINUX_PLATFORM_DATA_ETH_EP93XX
 -
--	if (!*shim_mask) {
- 		/* SYNCPU will change once link is active */
- 		ret =  hdac_bus_eml_sdw_wait_syncpu_unlocked(sdw->link_res->hbus);
- 		if (ret < 0) {
+-struct ep93xx_eth_data {
+-	unsigned char	dev_addr[6];
+-	unsigned char	phy_id;
+-};
+-
+-#endif
+diff --git a/include/linux/platform_data/keypad-ep93xx.h b/include/linux/platform_data/keypad-ep93xx.h
+deleted file mode 100644
+index 3054fced8509..000000000000
+--- a/include/linux/platform_data/keypad-ep93xx.h
++++ /dev/null
+@@ -1,32 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __KEYPAD_EP93XX_H
+-#define __KEYPAD_EP93XX_H
+-
+-struct matrix_keymap_data;
+-
+-/* flags for the ep93xx_keypad driver */
+-#define EP93XX_KEYPAD_DISABLE_3_KEY	(1<<0)	/* disable 3-key reset */
+-#define EP93XX_KEYPAD_DIAG_MODE		(1<<1)	/* diagnostic mode */
+-#define EP93XX_KEYPAD_BACK_DRIVE	(1<<2)	/* back driving mode */
+-#define EP93XX_KEYPAD_TEST_MODE		(1<<3)	/* scan only column 0 */
+-#define EP93XX_KEYPAD_AUTOREPEAT	(1<<4)	/* enable key autorepeat */
+-
+-/**
+- * struct ep93xx_keypad_platform_data - platform specific device structure
+- * @keymap_data:	pointer to &matrix_keymap_data
+- * @debounce:		debounce start count; terminal count is 0xff
+- * @prescale:		row/column counter pre-scaler load value
+- * @flags:		see above
+- */
+-struct ep93xx_keypad_platform_data {
+-	struct matrix_keymap_data *keymap_data;
+-	unsigned int	debounce;
+-	unsigned int	prescale;
+-	unsigned int	flags;
+-	unsigned int	clk_rate;
+-};
+-
+-#define EP93XX_MATRIX_ROWS		(8)
+-#define EP93XX_MATRIX_COLS		(8)
+-
+-#endif	/* __KEYPAD_EP93XX_H */
+diff --git a/include/linux/soc/cirrus/ep93xx.h b/include/linux/soc/cirrus/ep93xx.h
+index 142c33a2d7db..3e6cf2b25a97 100644
+--- a/include/linux/soc/cirrus/ep93xx.h
++++ b/include/linux/soc/cirrus/ep93xx.h
+@@ -2,7 +2,6 @@
+ #ifndef _SOC_EP93XX_H
+ #define _SOC_EP93XX_H
+ 
+-struct platform_device;
+ struct regmap;
+ struct spinlock_t;
+ 
+@@ -36,16 +35,4 @@ struct ep93xx_regmap_adev {
+ #define to_ep93xx_regmap_adev(_adev) \
+ 	container_of((_adev), struct ep93xx_regmap_adev, adev)
+ 
+-#ifdef CONFIG_ARCH_EP93XX
+-int ep93xx_i2s_acquire(void);
+-void ep93xx_i2s_release(void);
+-unsigned int ep93xx_chip_revision(void);
+-
+-#else
+-static inline int ep93xx_i2s_acquire(void) { return 0; }
+-static inline void ep93xx_i2s_release(void) {}
+-static inline unsigned int ep93xx_chip_revision(void) { return 0; }
+-
+-#endif
+-
+ #endif
+
 -- 
-2.34.1
+2.41.0
+
 
