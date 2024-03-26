@@ -1,131 +1,120 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404D913D510
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 20:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B376313D510;
+	Tue, 26 Mar 2024 20:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711485329; cv=none; b=Jd2cuTjzJDpenRcht+lrCuHBGDInEga563ZnYrL9Z5wMRd+1H21VZd4GWlbzPbrdtSNQfhrGkKFiu4MgUXDtc/80bE4Ryf73xSN2Sz7z87AU1dcBo2vETLoysXgzAqk/hHAlbDehUMbPbubKgASzQDiHxG9/ewdwwgbeBmhsHXI=
+	t=1711485339; cv=none; b=WI6DgMR5gdvUORMq8ulrdk+Sq/HXPZveVA6MngTJpUoPGzIjk7UX7m9cl1cOghvvB8eSjEkG/yC8JFIEEiWccvj5+LiKkjHQze1emR3DtylDY3ADwKwkhwSbWa5YCaD1KviFmfAjV4ldGVXP4d6qcRNzPxiFuSqowiuqmt2Rzxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711485329; c=relaxed/simple;
-	bh=L4Yjxktg5ee7e7Jw2ym1cjdFiJihoUjwRndE5qe54Xk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q0gvFXX1dDvFfsU8uBVKrH61d8UJ0avtMMyop5stUZk7Hpwv2qDnzRBZHgrlF8aVwTjLpfvTOX6U6rof/wbojbZQo/qrrd3PnF+3DGJetdW3s+FvsQfVvwUhI4pEr9T8VqkWiR/eZg8E4v4a3mDpOBD/v1aoP0xpgM1naFIe3Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LQRpqzci; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1711485339; c=relaxed/simple;
+	bh=xixHuBB9noffhm2jhv1K9lQwTkWz2vp8Sl+Mguvz/cg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=lo5v7dTZsiAOJODyP+JU5316ZngZ73e8Btt9L39ozIJO+zb43t+jgAaYG+aWWaK2shUW4XNZORwvZ9mEIPTeblWg/Gb+2TRjNmrQe0Wr5/tcMcBmpnJ5OHbqhCbMClOQkV7w2ea20R54qO47mmV3WZty7H5cXBP8fpRukDF2Vz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=XGYlAMiO; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=aI0fj5Cl; arc=none smtp.client-ip=103.168.172.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LQRpqzci"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-609fc742044so63910697b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 13:35:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711485325; x=1712090125; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kTo1MVAwsbyzZK5RKI7ZU0XWLvCPhNeDoFCQQGolD7Q=;
-        b=LQRpqzciBhoRLM4RwBcdDo/qdjo4B8KWfZHOVcAuMOp90uw7r8sNMZwsUMF6Tc+1BC
-         UFpsd8U1sdCE4mbJ5p3qUrGs4dHn8Gj0ECU1gOQvXFASnCgilKW3VW3r1mQI8Z7a0vaJ
-         AMMDvWHsVVqe9K1XfypZvbezr9WEXZnjsY6L7/bQr+4R3e0agiZkDh0B6ZIXfR0WXNgK
-         s4MGEHGcP9Ra0bvtsIvU3S9agk7mZhVACGMvQaNWIB/bY8hY6hE9qkG6f2/Zfd+JTBBr
-         C7A91vdqZKKG6MEbCMbQRJvaN8JQb1bfCr3tbQQWrq7mMU5k916V88WXF21RCSbSZLoA
-         JRZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711485325; x=1712090125;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kTo1MVAwsbyzZK5RKI7ZU0XWLvCPhNeDoFCQQGolD7Q=;
-        b=QrRXqdqNNaUnOuj9oOvk+9Qv1rdpvASpaB+7gnqiZ4dcv69+3mnPXXJfBPbVUykFEf
-         qLJNi28Rxezimi784K/6IGu3poVSdZiCWCKuyDZ2ss8frfH6Jos0YoV+CZ3tVSpmTK3s
-         /wE4W4SJfRuxMszGmsTbP0bcay05z8GoeWil1oBliY/iR4NzKipvE441ObxkmnukU+cF
-         cf1d4nuZiuTLHxBuXxVFs1RMaM7QsbVT2kjSQG1VjtcDH/kDYEf7UB38xvm/+bmpTJA1
-         weSdYyZxVUCM8OcZBp5VPz005z/YffbnMysSmreLGw51HA1IhYLQ/7sJ7iN9fkGFqi0e
-         W7UA==
-X-Gm-Message-State: AOJu0YwiAIN9PMFtouJCx2Kq2WpQe9XZ7sUeAZR0ZH7o9Fk6GUrv6JLl
-	hUMOPJgOa9lurN1mEsqOR2WmQULTr6CBFKoViWWPSclk6QBkLn2cHN8EUsyt0imchxf4wDDXPFo
-	L6OzK7MMrDPFt2gU/8M53IgArI2x/eQs3nwfY
-X-Google-Smtp-Source: AGHT+IHuXSjZJq/vBEoTRcBaU3DyX/+DVjAJbwZFzLC+xyjqFe7flX1N7xc1WIf7tM1psn8eSjN1jeDPmdM1BiXxNEE=
-X-Received: by 2002:a25:830b:0:b0:dcf:6122:ccec with SMTP id
- s11-20020a25830b000000b00dcf6122ccecmr852249ybk.36.1711485324846; Tue, 26 Mar
- 2024 13:35:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="XGYlAMiO";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aI0fj5Cl"
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailfout.nyi.internal (Postfix) with ESMTP id D672B13800CD;
+	Tue, 26 Mar 2024 16:35:36 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Tue, 26 Mar 2024 16:35:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1711485336;
+	 x=1711571736; bh=8/uARb4oxN4Gs++g1JILLRSCVWyAzodSrqwWbaXbY8s=; b=
+	XGYlAMiORBchQc3+ZyyAXjzfRZ48onkJpng6SIzRIE9kU/kZ+qk0uZM2jkZE+Jwf
+	mkseYz68PuAHEbHHMSKHIt8VhCnCwYC0W6IEIHOBcd2vIAMwO9bzMlSiXhW9LqLL
+	gWY1uuWypKJdlaTnXR7fiASYcTkxTde/sm+tNMUCG91dC+1ACEtznlKBEJX+nrL4
+	HWLY43vlM6r15L2K3+fUBiCiW6EWIX83Ds1CzgI1/uzrkmt/ZfQqrW4uSALvMvD8
+	WuktG5+9jdaByIspT11iNZo9+toUFUzFN/VSRlYK82OggNXbqhIKnXB2E/24hrDb
+	o4B+SahKr5IHGDlupJfsfA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1711485336; x=
+	1711571736; bh=8/uARb4oxN4Gs++g1JILLRSCVWyAzodSrqwWbaXbY8s=; b=a
+	I0fj5ClbdG6yixPfdnzlvxqlH+1/+dyIZ9z1NU4BHDipkG+OInTAxYZaPDrXpT8u
+	lNOq0mLlhOzk9ZHd16mX9jccovpKdCS0sU3Rqvo7YBrjrGc4e3ZmWMYhnIAceYOw
+	XPD3aa3ylGYdTHRpI8eFPY8PRH+EnffyOTR4HZ0rfRfffdCoH8JEdh5oA9JJSbRY
+	Lfhg0PRNcxr+4tzN2EBwZ/Wkpkrg952twNJNJPWKKxoxEKAZy7W00GkZLxqsiIZc
+	4hmcaza9jJy78/rXV1rZhSGDQi31+hRAeMYi/rwG7XO2WRf5Dg52SfRaXzgQxLpq
+	n4wJCWZhXHcQwalA5a9zQ==
+X-ME-Sender: <xms:mDEDZgnPibh-dCXmsMBxLC7Jdt2vLeB8_9KCp5BHpeJY_elr7h-k1g>
+    <xme:mDEDZv1Y8VRgZGrtzKRf_vNHvbAdlnLduBPztfKd5Txd7NS_-NKWi5DCsNK9cdJ0i
+    ncj9mbouEpSNfhPE-Q>
+X-ME-Received: <xmr:mDEDZuqJUmfKt5J4aIBbg73sa0mceqOdqC-CvL2vpZcM17-DYd4wdZM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddufedgudeflecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomheplfhi
+    rgiguhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqe
+    enucggtffrrghtthgvrhhnpedvkeeihfefveekueevteefleffkeegudeghfdtuddugefh
+    ueevgeffgedukeejleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:mDEDZslgqHporsSwprE5xIWk1AFfD3CZWRCDL3SslFOoj5qrQ0Wc-Q>
+    <xmx:mDEDZu2PNUTIxKaPJ1d1fePxM33NkIBT2JUU0wt2XcVMiEScZ6dP8Q>
+    <xmx:mDEDZjvSf98J8xZZs7vRdJuVxpH2Kxwi5KrCgA8dFKd7nq_1iJ4K7Q>
+    <xmx:mDEDZqUWT2s1kF3MIlnazTdvacCWVmMrcFGyC_YxPFBIp5mxu-rdYw>
+    <xmx:mDEDZq9HbWYddTTe1f8CrCmCFljTvdBRitQhqnPDoMErcn6uljG1Vw>
+Feedback-ID: ifd894703:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 26 Mar 2024 16:35:35 -0400 (EDT)
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Date: Tue, 26 Mar 2024 20:35:33 +0000
+Subject: [PATCH v2 1/9] MIPS: asm: Move strings to .rodata.str section
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326054149.2121-1-rdunlap@infradead.org>
-In-Reply-To: <20240326054149.2121-1-rdunlap@infradead.org>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 26 Mar 2024 13:35:11 -0700
-Message-ID: <CAJuCfpH+sXfyx3U4dBR0644vLD3hGas2=Vzb5nAsi7nBzrPTvQ@mail.gmail.com>
-Subject: Re: [PATCH] scripts/kernel-doc: drop "_noprof" on function prototypes
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>, 
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Kent Overstreet <kent.overstreet@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240326-mips_debug_ll-v2-1-b64abc76f2a1@flygoat.com>
+References: <20240326-mips_debug_ll-v2-0-b64abc76f2a1@flygoat.com>
+In-Reply-To: <20240326-mips_debug_ll-v2-0-b64abc76f2a1@flygoat.com>
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=560;
+ i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
+ bh=xixHuBB9noffhm2jhv1K9lQwTkWz2vp8Sl+Mguvz/cg=;
+ b=owGbwMvMwCHmXMhTe71c8zDjabUkhjRmw5mTvzVPYF5eYsSec1XgjlXrRL5Ak33SJyS93Dt+W
+ wst5bTqKGVhEONgkBVTZAkRUOrb0HhxwfUHWX9g5rAygQxh4OIUgIlYJjL8T2Y65Cw1d4Jzidfd
+ pN2ezR5NuSsW//5W/KKM89DDKXu7ehkZdpyU6C1pnDiZ/Yzji1+LtYzPl2iLSc/4Puvywz7ZfdM
+ OMQMA
+X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
+ fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
 
-On Mon, Mar 25, 2024 at 10:41=E2=80=AFPM Randy Dunlap <rdunlap@infradead.or=
-g> wrote:
->
-> Memory profiling introduces macros as hooks for function-level
-> allocation profiling[1]. Memory allocation functions that are profiled
-> are named like xyz_alloc() for API access to the function. xyz_alloc()
-> then calls xyz_alloc_noprof() to do the allocation work.
->
-> The kernel-doc comments for the memory allocation functions are
-> introduced with the xyz_alloc() function names but the function
-> implementations are the xyz_alloc_noprof() names.
-> This causes kernel-doc warnings for mismatched documentation and
-> function prototype names.
-> By dropping the "_noprof" part of the function name, the kernel-doc
-> function name matches the function prototype name, so the warnings
-> are resolved.
->
-> [1] https://lore.kernel.org/all/20240321163705.3067592-1-surenb@google.co=
-m/
->
-> Fixes: c64e38ed88d1 ("mm/slab: enable slab allocation tagging for kmalloc=
- and friends")
-> Fixes: ea7b8933f21b ("mempool: hook up to memory allocation profiling")
-> Fixes: 576477564ede ("mm: vmalloc: enable memory allocation profiling")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Closes: https://lore.kernel.org/all/20240325123603.1bdd6588@canb.auug.org=
-.au/
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Kent Overstreet <kent.overstreet@linux.dev>
-> Cc: Suren Baghdasaryan <surenb@google.com>
+Well, they are read only.
 
-Tried it out and didn't see the warnings anymore. Thanks Randy!
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ arch/mips/include/asm/asm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Tested-by: Suren Baghdasaryan <surenb@google.com>
+diff --git a/arch/mips/include/asm/asm.h b/arch/mips/include/asm/asm.h
+index 2e99450f4228..05a158a8920c 100644
+--- a/arch/mips/include/asm/asm.h
++++ b/arch/mips/include/asm/asm.h
+@@ -94,7 +94,7 @@ symbol:		.insn
+ symbol		=	value
+ 
+ #define TEXT(msg)					\
+-		.pushsection .data;			\
++		.pushsection .rodata.str;			\
+ 8:		.asciiz msg;				\
+ 		.popsection;
+ 
 
-> ---
-> a. Suren, Kent, feel free to correct my comments on memory profiling.
-> I haven't read the documentation in a few weeks.
->
-> b. There are some instances of the kernel-doc function name including
-> "_noprof". Suren is correcting those cases so that all _noprof warnings
-> will be resolved.
->
->  scripts/kernel-doc |    1 +
->  1 file changed, 1 insertion(+)
->
-> diff -- a/scripts/kernel-doc b/scripts/kernel-doc
-> --- a/scripts/kernel-doc
-> +++ b/scripts/kernel-doc
-> @@ -1723,6 +1723,7 @@ sub dump_function($$) {
->      $prototype =3D~ s/__must_check +//;
->      $prototype =3D~ s/__weak +//;
->      $prototype =3D~ s/__sched +//;
-> +    $prototype =3D~ s/_noprof//;
->      $prototype =3D~ s/__printf\s*\(\s*\d*\s*,\s*\d*\s*\) +//;
->      $prototype =3D~ s/__(?:re)?alloc_size\s*\(\s*\d+\s*(?:,\s*\d+\s*)?\)=
- +//;
->      $prototype =3D~ s/__diagnose_as\s*\(\s*\S+\s*(?:,\s*\d+\s*)*\) +//;
+-- 
+2.34.1
+
