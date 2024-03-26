@@ -1,100 +1,51 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922A7EAF6;
-	Tue, 26 Mar 2024 10:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D18D6E614
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 10:17:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711448240; cv=none; b=qzmMfqKVaFObqiR7eXXMUgBDUKggpeJDlpS7OWrJaiFlpAFbtej27uOLDShkks7abhcm7KRfU06JfzBwUjmadhXNUvTj+vN/xgaUjMdBTPK5CFAQZ7kvMh2mt60C9GUrt4UV9AGImRnLDoAIrnpzSffprTqCXmOEj2nckzH9fuM=
+	t=1711448250; cv=none; b=f59PEz3pX9ImLZ/k6SeQ4FhAQNmZYkvSquXpzkcFtAMwMvWxWP9DBUmtbuZYEEzwEsCM9Fk7T+cBhUoM9ohdWb24vMeg4xQ1uOGlOOTSPTbNDoeanBPQR+stJ0WikOzahNSuM4fbgwwAJw19n1mF2GgMPRsFywjHhl1r1qr4GEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711448240; c=relaxed/simple;
-	bh=f8P+HvRNSxwumEsUKb4t+yPV/HhejyzHEDnEZXjEd1E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RzFiULKDRhWFzecEbSf47lmwZ4wNfVr7TVWWofP5SkGu779sCSsljctvqjS0j46CugNwJAvnkrUcj4EkPfzQkmdJV58SmjhxyJw3C31SNtWBWaiNJEW5m/0m+wbU888oNS6P2UslXJpFMsaPBGMewhzzOd877ZhIrs3ue1WdIDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ItdxkdOe; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ItdxkdOe"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9A44840E024C;
-	Tue, 26 Mar 2024 10:17:13 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id NfdiRrir3uHM; Tue, 26 Mar 2024 10:17:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1711448229; bh=CDmK/0QYSIOIpZwH6go7HxA/MlzIItJgpVzSJbzTjCY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ItdxkdOebiOZcO2glgj9DRQyiSPYumneMfig51XeVVNYwEHdJgq9ar+rwNG1WgnGr
-	 w307OggfvCRulmidXKSHutFuUykq5gPqFTVJWf5Vg3OSUhy/uymWxTw4LzEyLt5TkQ
-	 mEnFlJ0Lp9bjiqR6i8AWQqyYnGA3SY3c2jyueID7NT0iIjvKMDKFJbVUV1NVq4b1zC
-	 0Q8ZsaPxdUfUnmq9IR7XD2JPwKm5AYuUv93QTm8+5ZhlOjlCjvepT3M3Ll5YhsIhF1
-	 JiPClqwXr5nqNf3kyKHQqemMauaoxwYmZSYxs3GYIgxRZ40IQDhx2csWRSDPMQdGUf
-	 NPosDN6vj/m3ubr4vATQpNbhjl3xbRnE+dhQqZpgYFKnlO4vd7VwdioWxF4w5g4j+y
-	 lfyM/U9SNWXHJABlWu55+Xht1+K2DKOMV7oIa8oBTLdQkjTRUiey4R04RiqagjFioS
-	 tg41yPJ2K2nSliMprEbOydXf3n0UHL9smJnaK3XaJHZAp9wWZFnDVmq1OrFR+YmycR
-	 kgAJpS7PC6o4XlbiOzMuhyFAoK0cpSJHOWsFGvmyXIiDm1ammvUOzCDloTzvKKwElG
-	 lI9AX8ynroWDaBPYNjQSPFAZoWr0XSYBLFIcZ/6cZSb93ktFRTYftnRb7SpDzPTPmr
-	 kPlsWj2T3kBiLm3GV19+Ip5w=
-Received: from zn.tnic (p5de8ecf7.dip0.t-ipconnect.de [93.232.236.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8D69840E02A2;
-	Tue, 26 Mar 2024 10:16:51 +0000 (UTC)
-Date: Tue, 26 Mar 2024 11:16:42 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
-Cc: x86@kernel.org, Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-	Fuad Tabba <tabba@google.com>, Marc Zyngier <maz@kernel.org>,
-	Shaoqin Huang <shahuang@redhat.com>,
-	David Matlack <dmatlack@google.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Breno Leitao <leitao@debian.org>, kvm@vger.kernel.org
-Subject: Re: [BUG net-next] arch/x86/kernel/cpu/bugs.c:2935: "Unpatched
- return thunk in use. This should not happen!" [STACKTRACE]
-Message-ID: <20240326101642.GAZgKgisKXLvggu8Cz@fat_crate.local>
-References: <1d10cd73-2ae7-42d5-a318-2f9facc42bbe@alu.unizg.hr>
- <20240318202124.GCZfiiRGVV0angYI9j@fat_crate.local>
- <12619bd4-9e9e-4883-8706-55d050a4d11a@alu.unizg.hr>
+	s=arc-20240116; t=1711448250; c=relaxed/simple;
+	bh=fYqDdIXapUBE0MxV0rIK+zXf297Qb+0D5VWup0Hvs9E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=hPE/5xdhL5SoPMmwB5/4jkcOKv+1LqSJ7jARXWVlK1cuTs1xcnaEzixE+fKeUEnZMuoAV8F5DX8FpEY0JoYq2ko59oCPKfZsktYnmJ/6AGnFSPzFYUT4K0/UMl/Vhzw4+j19ho3N6CABJsfgjwR5Iz4C4STry7TrghKV0COU0N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from fsav314.sakura.ne.jp (fsav314.sakura.ne.jp [153.120.85.145])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 42QAHIBd086764;
+	Tue, 26 Mar 2024 19:17:18 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav314.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav314.sakura.ne.jp);
+ Tue, 26 Mar 2024 19:17:18 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav314.sakura.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 42QAHIFa086756
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Tue, 26 Mar 2024 19:17:18 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <3491cd0a-369c-4827-95b0-eef04bad64e9@I-love.SAKURA.ne.jp>
+Date: Tue, 26 Mar 2024 19:17:18 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <12619bd4-9e9e-4883-8706-55d050a4d11a@alu.unizg.hr>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [mm?] WARNING: refcount bug in __reset_page_owner
+Content-Language: en-US
+To: syzbot <syzbot+98c1a1753a0731df2dd4@syzkaller.appspotmail.com>,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <000000000000015b940614004701@google.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <000000000000015b940614004701@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 20, 2024 at 02:28:57AM +0100, Mirsad Todorovac wrote:
-> Please find the kernel .config attached.
+#syz fix: mm,page_owner: Fix refcount imbalance
 
-Thanks, that's one huuuge kernel you're building. :)
-
-> I got another one of these "Unpatched thunk" and it seems connected
-> with selftest/kvm.
->
-> But running selftests/kvm one by one did not trigger the bug.
-
-Which commands are you exactly running?
-
-I'll try to reproduce here.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
