@@ -1,148 +1,98 @@
-Received: from refb01.tmes.trendmicro.eu (refb01.tmes.trendmicro.eu [18.185.115.54])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C26481A5;
-	Tue, 26 Mar 2024 11:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=18.185.115.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711453531; cv=fail; b=XTsLdlqU+4pa25RMiMVWjm9Z7U+luMDvg/nCoLNk5wnl4MgAv85+GQhLoZ7rmQEZGVknRKhWhfzeAAZQpcNkef+7o8jxfkEmJV59cK1oGv3G6ZMsSeJJkGoE3e3tiCbU9QVSzNmIPTc3i1jkUiObWomSIhzjUhXNZxCDI2dFy2M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711453531; c=relaxed/simple;
-	bh=RzBeFF4PAbqaPB3+f7Q3ttAQEj1SAkBOW8h8In1anFk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YVxC6jOZ1ZIR/LmmOHKcArI6S7QXUuwSsUVtC5FrR3eNFxic70mZhreNvtzYTnGuuWYPoRXXWA5hkhrY5JJpEaHuw9ZJ7n7SCbcFEqW/VxDv3CPVfzFnCmMd6x6rextIxZH91+1I/h/M+x0uZDFyCU/rDHQ/EuAE8pxkTXHX0+U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensynergy.com; spf=pass smtp.mailfrom=opensynergy.com; dkim=pass (2048-bit key) header.d=opensynergy.com header.i=@opensynergy.com header.b=WoF4tzNU; arc=fail smtp.client-ip=18.185.115.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensynergy.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensynergy.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1956BB39;
+	Tue, 26 Mar 2024 11:45:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711453536; cv=none; b=EivnGhLowGfWdWE1MdBQ0hj3io9wf3wjHLDr8vPboaCo4+uXJy5Lby4koE9hhEsW8uHVtvwuQhT9G/i2+OtQU9diDmLreb8l850wmmyvVcKsffadyR90uy0fDBqyeoMfWJAhnohyrmxxtLc57XSIQoKSLr4ytVevmu7O6KwQsbY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711453536; c=relaxed/simple;
+	bh=HlNlH0D6rEhsgNqoAFKCIqa0DgA4RkOgomD4hxEXSF0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Li+VoPzkAaRifJlqytZEGzsFUUE+z2e0nzNokncGfTiV6suiL3F/oEtOhQg2jHOBuM1a2dAWzM+Nwrys0ik1vOycIeNrmTLEz9TFb0gv8ttgG4Si+YQQ+Ml+q1jyNMPODTAXZbJ8M63ev3qkiPDHWvPQGbDJdCz1hCy6Y4H93t0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Xtmal4w9; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=opensynergy.com header.i=@opensynergy.com header.b="WoF4tzNU"
-Received: from 104.47.11.168_.trendmicro.com (unknown [172.21.10.233])
-	by refb01.tmes.trendmicro.eu (Postfix) with ESMTPS id 08FFF1005551C;
-	Tue, 26 Mar 2024 11:28:31 +0000 (UTC)
-Received: from 104.47.11.168_.trendmicro.com (unknown [172.21.199.142])
-	by repost01.tmes.trendmicro.eu (Postfix) with SMTP id A345010000D9C;
-	Tue, 26 Mar 2024 11:28:23 +0000 (UTC)
-X-TM-MAIL-RECEIVED-TIME: 1711452503.194000
-X-TM-MAIL-UUID: 821e7b7e-8ff8-4021-8dcc-cbbcee05ab72
-Received: from DEU01-FR2-obe.outbound.protection.outlook.com (unknown [104.47.11.168])
-	by repre01.tmes.trendmicro.eu (Trend Micro Email Security) with ESMTPS id 2FA2E100003AE;
-	Tue, 26 Mar 2024 11:28:23 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GDhCb3Gx1iVCh1ZdcyqHkB1RL0m62TcY8oa5hQkeJh0d+VDDjnAfQRyjRp0OATdJh6oFZj2bYYBsKfEnjMKHDvKG2ktMYs7YV0rZrBQjACjW9iFp3wy4/Ndb0NZFUQ6iTGh4Ja8C/X5389EiGe7bVf34CME0XeH98s6IqAML2+4z4wZdb0M7T2lz3QvKcDlPfQZQyck+Y3s3usnWjhz3xWwhr8hEqbgI9AFXEoyrw8KBylISS1h5cww6OGpv5bTmRrhTUo6yjb1ifKqOkpFEOCbPt7cYDXcTuUutpiGC6eJxZncWbJknLDoKLa86T5LdcglVwWFf8X3cks8cwrXfNg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Kntnz4nXsN0pD+4/cLE3h+AknKtw7qGYV/69s2MXXRA=;
- b=E6KFteeQ3ZanebDeFI4Qf3j0vYQ0W6hkGesth5vJG8jQh5tQ74YUk97JszJ00KoMfaLUJtOOA2GBCigyB8oEjEKdAnxtQwHhwiOis+IKp6I3pIkSAqgw2UtmkffXnnLbX/D2XTh1Ne6KnZ4JY0cbxBBmBO9kdbopdZYYen9KucEERVGePlj6NJEsn0ClcJ99DaJhqpZwRD2V4xLx+Lutf+Jt9ISVBCBtMx697o5KusPvX1FNHQZb8DT0aaP8gd5RFylN4mPfqnJV+Tlc9NpsIANDjXbSdBSclx4LzaPTDzIJiBWupg1mVVvLibp1pzc1146aVo+rMKymma9N6pIDGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 217.66.60.4) smtp.rcpttodomain=kernel.org smtp.mailfrom=opensynergy.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=opensynergy.com; dkim=none (message not signed); arc=none (0)
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 217.66.60.4)
- smtp.mailfrom=opensynergy.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=opensynergy.com;
-Received-SPF: Pass (protection.outlook.com: domain of opensynergy.com
- designates 217.66.60.4 as permitted sender) receiver=protection.outlook.com;
- client-ip=217.66.60.4; helo=SR-MAIL-03.open-synergy.com; pr=C
-From: Harald Mommer <Harald.Mommer@opensynergy.com>
-To: virtio-dev@lists.oasis-open.org,
-	Haixu Cui <quic_haixcui@quicinc.com>,
-	Mark Brown <broonie@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: quic_ztu@quicinc.com,
-	Matti Moell <Matti.Moell@opensynergy.com>,
-	Mikhail Golubev <Mikhail.Golubev@opensynergy.com>,
-	Harald Mommer <harald.mommer@opensynergy.com>
-Subject: [PATCH v3 1/3] virtio: Add ID for virtio SPI.
-Date: Tue, 26 Mar 2024 12:28:10 +0100
-Message-Id: <20240326112812.31739-2-Harald.Mommer@opensynergy.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240326112812.31739-1-Harald.Mommer@opensynergy.com>
-References: <20240326112812.31739-1-Harald.Mommer@opensynergy.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Xtmal4w9"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42QBj0PP084354;
+	Tue, 26 Mar 2024 06:45:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1711453500;
+	bh=8ZZ+yXIpR+DpKAp94YWkD4hzM6wEtAwz6qiljaPQzLk=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=Xtmal4w9ngjiPLDraY0Ol5a9OjksXRTI4jUeVpLnXIJWtQzp5MUEOnaFPyP9JMsuH
+	 KIPbH48Alj4mFYtw1/Bhg1AMlkDXC8T2pH83HYFTtJhw3Yfc/WWrgbP2AraSh10vug
+	 aGGynT8kau7iyOXGB7WcwifzRZW2qjm5vry341fA=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42QBj08Y001858
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 26 Mar 2024 06:45:00 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 26
+ Mar 2024 06:45:00 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 26 Mar 2024 06:45:00 -0500
+Received: from localhost (dhruva.dhcp.ti.com [172.24.227.68])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42QBixZd053809;
+	Tue, 26 Mar 2024 06:44:59 -0500
+Date: Tue, 26 Mar 2024 17:14:58 +0530
+From: Dhruva Gole <d-gole@ti.com>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+CC: <linux@armlinux.org.uk>, <catalin.marinas@arm.com>, <will@kernel.org>,
+        <sudeep.holla@arm.com>, <rafael@kernel.org>, <viresh.kumar@linaro.org>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <mingo@redhat.com>, <peterz@infradead.org>,
+        <juri.lelli@redhat.com>, <dietmar.eggemann@arm.com>,
+        <rostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
+        <bristot@redhat.com>, <vschneid@redhat.com>, <lukasz.luba@arm.com>,
+        <rui.zhang@intel.com>, <mhiramat@kernel.org>,
+        <daniel.lezcano@linaro.org>, <amit.kachhap@gmail.com>,
+        <corbet@lwn.net>, <gregkh@linuxfoundation.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        Qais Yousef <qyousef@layalina.io>
+Subject: Re: [PATCH v6 1/5] cpufreq: Add a cpufreq pressure feedback for the
+ scheduler
+Message-ID: <20240326114458.dfcvpodoihk5tlmz@dhruva>
+References: <20240326091616.3696851-1-vincent.guittot@linaro.org>
+ <20240326091616.3696851-2-vincent.guittot@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM2PEPF0001C708:EE_|BE1P281MB2648:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 18d72067-24c1-43fa-86b3-08dc4d87d720
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	HDSQPVNtF/xOl0n8DVbMbEDe2ECYQ0OQerItHXgbiK72HLLu4x46Y2Kpxjn46Uoebu71nWbGfXwKW7L49hE49m2eTqmw4jE1kPCqeMq3dYck2s0qxMTQIgICU7yg5Lr0Xi2jL3bCfCyReycJocZUVId3kEAh+qcDJs81SzEuDBLuAO1aniLOL0ENH5/2+yMZ+5rzI1Qx10O0Rui4ZUYmytS4dCm2R+rPRNSvP4bl81oUKKYqns9a04sKbLgyVqn9oAnNvbdszfzjmrootzDgQPjnn3X7KnhUGPw2EGQCixe27r1qzPqZRYYCp5KULz5QRuw/LOV1Xf1SKM26aM8fokT0gPu21UFCDYMFLE9s17j+AGKAJSL2115vjyzJHFecbEsSIb1XlPt5ErdYI4bhXeIrfK1opg9rpsfK5ygg/uQ61yn45UmCt9+WHyq4BKDgkLuXshVFwaQB50a09vqwbgHAMy+arjQ6VqXtCM9G2iqrp4wWEoIeXjCBYvXIpQZUgkwns2NOESQSn8f4LFnAF/v8ngBRa20RGvChiRVv45xQUDi3UIY87It0qOTGEiV6XvktA9Q6eFv2j1g48NO8tlK8lYcOS3Kpdok2QelhZOQUTuaCZ6TCP9Yz37vdyBJrtyoPlBD7f7sHXT62emTo4fnFV6Ssw3fJ/rdLc6wRXI+XaKUf7O7akqhPi8+B5jjVYgJuWddJP+uhaY2UQIQ7bLtqBxAIkP/p4pn9NQgKGesZmnSkak0Oo+kH3wrM9wDx
-X-Forefront-Antispam-Report:
-	CIP:217.66.60.4;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SR-MAIL-03.open-synergy.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(36860700004)(82310400014)(1800799015);DIR:OUT;SFP:1102;
-X-OriginatorOrg: opensynergy.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 11:28:20.4143
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18d72067-24c1-43fa-86b3-08dc4d87d720
-X-MS-Exchange-CrossTenant-Id: 800fae25-9b1b-4edc-993d-c939c4e84a64
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=800fae25-9b1b-4edc-993d-c939c4e84a64;Ip=[217.66.60.4];Helo=[SR-MAIL-03.open-synergy.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AM2PEPF0001C708.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BE1P281MB2648
-X-TM-AS-ERS: 104.47.11.168-0.0.0.0
-X-TMASE-Version: StarCloud-1.3-9.1.1015-28274.007
-X-TMASE-Result: 10-0.491300-4.000000
-X-TMASE-MatchedRID: Dkfyeyxtv0bJ+P2VFrJmrBkPtuOr7qUwbNjTSFpLxCgW+iZuJylrLkj6
-	Xrm9PG3iupoogdfVK+Jd4x1IUlKnFM8TyCfmBrmqW8gh3wzbqBNwRUdni9UCWPdzaXqYo8IqVxH
-	vEGsKrsW/2tJ3foSBQiPzRlrdFGDwfH2QXwfwYBCUHCQ9y5SdWZ7ayFyYRC038/sI6NCSAcVCG+
-	H1Pc3TBA==
-X-TMASE-XGENCLOUD: 71954c90-8286-4cac-8128-cc0efeecd5c7-0-0-200-0
-X-TM-Deliver-Signature: 3CCAEA605E708B390FA492E00F8BCDE2
-X-TM-Addin-Auth: XXRe8DPUvH42gCBrsW/kOTuRc3bOJWthWc8c+dbQwTB36+xDKaa1MYMM11M
-	sC4NkPEQXq9U4wYNkRbQ/rZWY3O/VDEmw4G+ovnQNcMHVuOULYpWlFQPQdZnctLSzJLLnjHQyOA
-	uA+VAL05RpB6+K0y/KAC3AWJmXPwhgBLRBbEVJ4MfJ4WMjq7DGM3k/DB9JWmiDAZ63VvOSkc5mf
-	M9NMDfjSThc1VnCpjvFropYtE2VRdQYyT/bMslkjCChz+85gDrYbst23so1xezx7gDa7TtEEBQo
-	2T00Va9E4N9fxdQ=.y8iwB6t7sI2CbHf+8T+xlkOkhJhPmawkF8afPQw1hKDEzbqkfeNrryg2yF
-	mI5bpezTc/J0bid1CC+6iYqkoMB8/aqOePa7FmrvsvUFjzXcjkHATWUxFMRExrNzPcYLR5Dff/y
-	luyXHvoetLm5Xefl7+pYpHmg4t2szx/Yaw3xQTfaxXCKZ+42i9NDbHMaERKNPF0rJH0JEwvFy/k
-	lGYajv1Y7hNGbLnsF1KzHwW9m6Mi24sSnlTHzLF0ceBiGWYSwPZ7+lOes4E/LDs9JFmOwxU2dH/
-	ceooGCZdPKEAqUO8gnEgFWHbSds2dNQKMRandNm2HxCaGWODccF2FV1jYAw==
-X-TM-Addin-ProductCode: EMS
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=opensynergy.com;
-	s=TM-DKIM-20210503141657; t=1711452503;
-	bh=RzBeFF4PAbqaPB3+f7Q3ttAQEj1SAkBOW8h8In1anFk=; l=777;
-	h=From:To:Date;
-	b=WoF4tzNU9HcFNncSzg9BSVp/Crdf8Po35kEMaM5l/rpdXqielo/TcxdQSSL/zx2ES
-	 G4JsREI7R/LK4VSGBsj7//3FDUaOzki/DUJtUKvRtaSZCfBCfsTQA5ds0a2NKIsjOB
-	 AHhxuiDu5kovgl3Dwim696VqUG8tJ/w/cq5SgJ+2TIUCnaKT5nPErMCVO8izWK6wI6
-	 YYgYvBUXsIz74j83Ss0VWFRBH70BigWUMHw+QyImmt6JCWR24BXm6e1z9d2Z2zV6ar
-	 GHuPNTWu9oVYgemLa69o2aq92oqzqkPVSZ9SIdb66CR92u2Iflka+eKVP14uLCp/4m
-	 sgYD+1CxcS2gA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240326091616.3696851-2-vincent.guittot@linaro.org>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-From: Harald Mommer <harald.mommer@opensynergy.com>
+Hi,
 
-Add #define ID VIRTIO_ID_SPI 45 for virtio SPI.
+On Mar 26, 2024 at 10:16:12 +0100, Vincent Guittot wrote:
+> Provide to the scheduler a feedback about the temporary max available
+> capacity. Unlike arch_update_thermal_pressure, this doesn't need to be
+> filtered as the pressure will happen for dozens ms or more.
+> 
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Reviewed-by: Qais Yousef <qyousef@layalina.io>
+> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+> Tested-by: Lukasz Luba <lukasz.luba@arm.com>
+> ---
 
-Signed-off-by: Harald Mommer <harald.mommer@opensynergy.com>
-Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- include/uapi/linux/virtio_ids.h | 1 +
- 1 file changed, 1 insertion(+)
+LGTM,
 
-diff --git a/include/uapi/linux/virtio_ids.h b/include/uapi/linux/virtio_ids.h
-index 7aa2eb766205..6c12db16faa3 100644
---- a/include/uapi/linux/virtio_ids.h
-+++ b/include/uapi/linux/virtio_ids.h
-@@ -68,6 +68,7 @@
- #define VIRTIO_ID_AUDIO_POLICY		39 /* virtio audio policy */
- #define VIRTIO_ID_BT			40 /* virtio bluetooth */
- #define VIRTIO_ID_GPIO			41 /* virtio gpio */
-+#define VIRTIO_ID_SPI			45 /* virtio spi */
- 
- /*
-  * Virtio Transitional IDs
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
+
 -- 
-2.43.2
-
+Best regards,
+Dhruva
