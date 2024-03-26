@@ -1,60 +1,61 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAFA8062E
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 06:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897FF823D1
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 06:50:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711435747; cv=none; b=ZTSS/2k5+Z9Q/nbEfjghNvdA0pRtkPoeIdNKZSBli6XYmecexIvdRixw0JMtCNm0DDuAoWYb7weQHJh88cqum9P5IHLzFIEC3munp4xB4xmfCEVrjlO6lMJBby/no+y/kQ9LP+mYgsI8kydtabE0Q7q7j8EYhBXUnJtuamAHbbE=
+	t=1711435851; cv=none; b=NYSEkDysyG92UfeUTYlAj7S25a0FznipyFr2/x4Wrajy6QOvk67bVssOOvZli9ld78Cy0hszM1nimNaapJ6FhSc/SRPv6K6bYpgY6YH8DXKW43Qera6NqJpfmeJexy0NO1ddBNF+7hstw+IKAd28hJhkaIVXFOT/lvwgaaoe0Ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711435747; c=relaxed/simple;
-	bh=4z8CNuxZF+EbhibvsjobQPSaP23qIU/OMbJa5lhTJxY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=a2IalCVYzI7tQfe+nk4EJEHDsSXSFOd9ASIeneE6Z26sVnqkZ0Hw6px134RFWsoEFuTvKPaLlY2/Q5D3yQH5iUU6bKQlZUtluZQ6tP670FGjfAMF2BQfI5liptsYmiRPon6L+SpTmF2yajByqyo68ae2rkdUXe9M6dxhW05wMT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eA9Gv87i; arc=none smtp.client-ip=209.85.218.51
+	s=arc-20240116; t=1711435851; c=relaxed/simple;
+	bh=+UeqcSIa8j3tiyfU3G25KJScLdmp2Wmms8GGl1R6LGI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ofz1Kz1Q++Uc1PHBsjy0V9I6ZC2vTP7q1Iue59yxK1L/Y3bDCfP2B4/J46owmczW6qdLmBOrJJJUqk1rcevBJY06zJSHbw22tt1f+JKYo/0e2X3YkmL6F+YRY7RInHVjc6S7wWirOSF4sYNvEVA42J7Sp08IPDJVj5e27ity96c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JiFZVdOc; arc=none smtp.client-ip=209.85.218.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eA9Gv87i"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a466a27d30aso632107966b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 23:49:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JiFZVdOc"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a4751063318so262534966b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 23:50:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711435743; x=1712040543; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1711435848; x=1712040648; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=SjZZMbwclW2RM4llsuZ/F96yEzw71Y4QNde8YV+Mfhg=;
-        b=eA9Gv87iTP7z5IaFO1E5Naj1hR2D1+/lREcQ/8dCCfJdr6tZDccvOBMOgyuDB9Woo4
-         Qn8LjlEwXCq12tNnsgq/nKw8OIWUzw8iH3s+mr9gMLJCxzAbPOux0FAQKMzurnRGA1HI
-         T/6G+A+Sj4OnMNUVDPfTyD+7Hs8uysbm8oe114jq63GDJ9itBhPRFUew4hnz+wauteoJ
-         ASq+tF84JfNB1ZJi6M7lYQY4jR3PIbdMRnRAldDxFLXtnvzAiDQ1MkqUnYhdIEfOcY8y
-         PbpoGsll68evkK1deXCnwisvRrsouy6LpgolclANlxtQNyfjaDxbsaPk2zBHwsS+HYjJ
-         XJ/w==
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=CcYszJVzk4g1YlTjCZo19PYSJoJO6aoTmeXZSldpIoM=;
+        b=JiFZVdOc6IyE8zmeQEwxmaV12EkHEy1EXpNf5hcZQ7lnHK19Ztc4TmmI53ZcF0XkaF
+         EYgtv7vbb/bdUQoRZFpokaX/GYcSKoe45uFC/NdB0HxYm4FUbVzR9lwMbfU6AuBcbg3T
+         6Q3eEOSUATQXCRRW8v5uErJ/n3pbXggK4iHfOQo0Pg5bBb93aEsX8A9q/BGL2vyiP2t8
+         urkYe+m6HXwPPbYO0pQivl7CyIrkHsk36JVmxhkMN4oDmPJvnc+sc53RlLgsfwOai41q
+         BOXl4XlUtM/uLodBwhT3CnXfj78MVmYrUKoJjfiX69gUgE77f+Y+T3nQcY/H1F/+McL7
+         cz/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711435743; x=1712040543;
+        d=1e100.net; s=20230601; t=1711435848; x=1712040648;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SjZZMbwclW2RM4llsuZ/F96yEzw71Y4QNde8YV+Mfhg=;
-        b=LlMdAttsmArzGT+slQArtM3Tlfc/mtaZ2YNLr2C6bo44aACedQ6R/mp1x2xyDHRlRQ
-         PFxm3Xx/dr7gjmClEEkdzNVpf5ypVUb6wbP/BKbzLZMqMMv29NEbIOSGK3v9bYtMtwdr
-         KuIFwlcSxAD2ZX8ST4q4JLiAJKNbACjtwZSWzNkjCRVk4OVRWY4uYs6Wj9Kk86OIChrb
-         RZpD8KA4HVqHISd7Q9HkK39pYLdTZwFVIOUwS81HCDvM1ocv3rO6is26TzYou/GflJB3
-         1AJCjaB/PUwkvWnZwSYOFaufB06NukaCJdotfClUHNz6wrKBLpTKhdcSnndYedDD0Vjr
-         BN2A==
-X-Forwarded-Encrypted: i=1; AJvYcCWNXJgSSz5QNcJpiuor1xLWqKVegu+Rm8mJGoQCc02x8tfX0pDNX2mJHvMOniiEbRWdXvbDwaq88R4RKMxXaBIyift05nwolQ2kNxw+
-X-Gm-Message-State: AOJu0Yw/CKhQSjjAw+gY1nAhud9uc41EwlkoINKR6k8dPPRhLqW0N6Hw
-	N8JQQkuNPIKCqQD9p/PIqyzv+hIl0dlCMOJHVM2U63L0cgTwe9ta8V22rpzhEcE=
-X-Google-Smtp-Source: AGHT+IGO5Z+38RnkSulDrn3IgvQJsJjVKutciWZnr+gkd1ZrfCmDK6bp+JwRqg9vkIfXktNxfNs98g==
-X-Received: by 2002:a17:907:8694:b0:a47:4d61:de44 with SMTP id qa20-20020a170907869400b00a474d61de44mr5429055ejc.55.1711435743062;
-        Mon, 25 Mar 2024 23:49:03 -0700 (PDT)
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CcYszJVzk4g1YlTjCZo19PYSJoJO6aoTmeXZSldpIoM=;
+        b=MEeFteb9a6BeFld3tHRMByhRX/DXoMrFo+JcpmWK+tCzyloYNVNNpFY8+DHa1MZ3Ae
+         FhkEsAC9Dzsu19k4V1SCtnEiVwdemdQ8hjkN2alSrnMGLTwWqQg7/60g4yEXBUr1yknz
+         f3L/cr1VCXPTmeuEme20NnwEDbMYkYJmlUB+aFasj5uFzngsB+IwVj2vUFJ1jcrNBRET
+         pmDJiRXEmMH5MjsrUA+QQ+Ye9Kdg6Tzn/7ndO33dfbp2OJ1q5BldcOOa8Ci5wSo/0J9G
+         dQi/Y/Fvy/4SebVbUafWx2K7t6Z/RgCZDkY0fC6hZTnPdmpw1PJ/zFIeVwrTvAXrzHvY
+         tnmA==
+X-Forwarded-Encrypted: i=1; AJvYcCX1vRn9d7dnbi7Rqt+waTw/4lCNwH9t9QDbjOjjFB2Lmo4qq60EuQaLmJFwqWn2zrb2pBrdHWWqwyIJ0O5nxp1oevYcDfoPKrfYaOFC
+X-Gm-Message-State: AOJu0YwERJ2eTt1qJHFOs6W7oKSy6KDToK1SOTC8c6tAfRBMQrbpEL2c
+	6YUz3JeSmLr/9T8sLUQPo10OFu0S7RsEg5P1E2sEDcXzgLpfitqrivx5hTjWwQ1Nr9KAstt3UWC
+	N
+X-Google-Smtp-Source: AGHT+IE4HfWUGwxqmUfayIT22jk+nqjwUsI8ApUyR9/HchWuudDay05zuCJfHGFE1BreKgJVEwWcTg==
+X-Received: by 2002:a17:906:b257:b0:a47:39c6:8970 with SMTP id ce23-20020a170906b25700b00a4739c68970mr205641ejb.39.1711435847894;
+        Mon, 25 Mar 2024 23:50:47 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.222.44])
-        by smtp.gmail.com with ESMTPSA id b17-20020a170906709100b00a46a9c38b16sm3843189ejk.138.2024.03.25.23.49.01
+        by smtp.gmail.com with ESMTPSA id h22-20020a1709060f5600b00a473a1fe089sm3867467ejj.1.2024.03.25.23.50.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 23:49:02 -0700 (PDT)
-Message-ID: <4e7ff99f-f362-4d58-b2f0-ca2dc1fe4b55@linaro.org>
-Date: Tue, 26 Mar 2024 07:49:00 +0100
+        Mon, 25 Mar 2024 23:50:47 -0700 (PDT)
+Message-ID: <4a30ce5d-c308-4983-8c7b-d83ced6a9ef1@linaro.org>
+Date: Tue, 26 Mar 2024 07:50:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,16 +63,21 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] dt-bindings: interconnect: Add Qualcomm IPQ9574
- support
-To: Varadarajan Narayanan <quic_varada@quicinc.com>, andersson@kernel.org,
- konrad.dybcio@linaro.org, mturquette@baylibre.com, sboyd@kernel.org,
- robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- djakov@kernel.org, quic_anusha@quicinc.com, linux-arm-msm@vger.kernel.org,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20240325102036.95484-1-quic_varada@quicinc.com>
- <20240325102036.95484-3-quic_varada@quicinc.com>
+Subject: Re: [PATCH v5 1/3] dt-bindings: dmaengine: Add dmamux for
+ CV18XX/SG200X series SoC
+To: Frank Li <Frank.li@nxp.com>, Inochi Amaoto <inochiama@outlook.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Jisheng Zhang <jszhang@kernel.org>, Liu Gui <kenneth.liu@sophgo.com>,
+ Jingbao Qiu <qiujingbao.dlmu@gmail.com>, dlan@gentoo.org,
+ dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+References: <IA1PR20MB4953B500D7451964EE37DA4CBB352@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <IA1PR20MB4953E2937788D9D92C91ABBBBB352@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <ZgJDCL+aq3ZTE6/1@lizhi-Precision-Tower-5810>
 Content-Language: en-US
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
@@ -118,49 +124,27 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240325102036.95484-3-quic_varada@quicinc.com>
+In-Reply-To: <ZgJDCL+aq3ZTE6/1@lizhi-Precision-Tower-5810>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 25/03/2024 11:20, Varadarajan Narayanan wrote:
-> Add master/slave ids for Qualcomm IPQ9574 Network-On-Chip
-> interfaces. This will be used by the gcc-ipq9574 driver
-> that will for providing interconnect services using the
-> icc-clk framework.
+On 26/03/2024 04:37, Frank Li wrote:
+> On Tue, Mar 26, 2024 at 09:47:03AM +0800, Inochi Amaoto wrote:
+>> The DMA IP of Sophgo CV18XX/SG200X is based on a DW AXI CORE, with
+>> an additional channel remap register located in the top system control
+>> area. The DMA channel is exclusive to each core.
+>>
+>> Add the dmamux binding for CV18XX/SG200X series SoC
+>>
+>> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
+>> ---
+>>  .../bindings/dma/sophgo,cv1800-dmamux.yaml    | 48 ++++++++++++++++
+>>  include/dt-bindings/dma/cv1800-dma.h          | 55 +++++++++++++++++++
 > 
-> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> ---
-> v2: Rename master slave macros
->     Fix license identifier
+> I remember checkpatch.pl require .h have seperate patch.
 
-Both patches should be squashed. Header is parts of bindings and your
-previous patch adds the interconnects, doesn't it?
-
-
-> ---
->  .../dt-bindings/interconnect/qcom,ipq9574.h   | 62 +++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 include/dt-bindings/interconnect/qcom,ipq9574.h
-> 
-> diff --git a/include/dt-bindings/interconnect/qcom,ipq9574.h b/include/dt-bindings/interconnect/qcom,ipq9574.h
-> new file mode 100644
-> index 000000000000..b7b32aa6bbb1
-> --- /dev/null
-> +++ b/include/dt-bindings/interconnect/qcom,ipq9574.h
-> @@ -0,0 +1,62 @@
-> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-> +#ifndef INTERCONNECT_QCOM_IPQ9574_H
-> +#define INTERCONNECT_QCOM_IPQ9574_H
-> +
-> +#define IPQ_APPS_ID			9574	/* some unique value */
-
-Why random unique values are bindings? Why this cannot be 0? Please
-explain how this is used by DTS and driver.
-
-> +#define IPQ_NSS_ID			(IPQ_APPS_ID * 2)
-
-This does not seem right.
-
+Why do you insist on that? Bindings header should be with binding.
+That's incorrect advice.
 
 Best regards,
 Krzysztof
