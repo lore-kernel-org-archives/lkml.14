@@ -1,70 +1,71 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A40E13C91F
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:57:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9205013C8EC
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:57:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711468632; cv=none; b=lm6s4CIItdRupwyE0gRb3jU+i6/hQsPRMehF/QrTOzyXdVraJVuEMPhD+BE5Jg9C8Gxv1E50r8wDTHVIOru/siu0q/0PPJ8F5xz0tlk5Q1CtPLGQV20mb/LDnZA7awaVrBzCsl6auw+dMXU1Kz9cd8SUSz5xSp08T+2kRtdlYS8=
+	t=1711468634; cv=none; b=TVcLkWoJxMS+x9b4x+InP2ZOPI1zW3wt6tDWOs62Cw4t4/aeVFW+Kl7IQNcDRr9nLRWutDcc7X6gcvaxdJI6p4yeNe6eiTsNl6/N3TPA6Y8QFvX71TZLk/fq3rpfmTgjQglwSCs8YLGoBnm91k7vsCVJfjrE1+EHMIS7mw8zXPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711468632; c=relaxed/simple;
-	bh=pmnt6tAHD6xRsoOmVgzhbGqnAVWkOvQLKuHpF8EIJzI=;
+	s=arc-20240116; t=1711468634; c=relaxed/simple;
+	bh=/86P2xRlq6dzqzFLUaNHlwgY9i+1+hEvS45HNU8ds/4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M8kVXmiMDlwdbV1l+NpnyKpjoTtBmxYvgPaBhGzs9rZOjIus09jVW2LybzfnBez7e4IjHdx4pcpThgoLku0J0DfuCWoguvmnMgt9IKVODri4npqUWw1kDQFQzNDJU32AeXFE1hrc4fgYI86tj6MaZdB88c18A9QFjbz50GqZhEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MGeFeauL; arc=none smtp.client-ip=217.70.183.198
+	 Content-Type:Content-Disposition:In-Reply-To; b=qbFRfmqARZbkkxw4jdvEg//asww9RVz0oo+Ko0GNrx3PaAglSG3/m8inA/ODpKG60HbNBEB7O9EIOpGmZmc7qUSvaUHtT3IooUGgfVCncEwkTJA13V8ieaKCBR2B14l8OZ8gXVWKLQsg8/yKmrk45UCXXbiudFGzEXhFcZUBThQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Q85Qfhmn; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MGeFeauL"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1B74EC0002;
-	Tue, 26 Mar 2024 15:57:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Q85Qfhmn"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 52F291BF209;
+	Tue, 26 Mar 2024 15:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1711468627;
+	t=1711468624;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=k5k6zlsPQGeew0PrMggR4KbUmKnw3U9EYAk0N55BMMM=;
-	b=MGeFeauLOFKPa/AdbJw+QoRbOsm8jWa8Fphert3dII+l1+D/bMbdDYB9X4EFT7yqLOL6g2
-	CrML8eWMg7Xx3Dw0dQQJq1gV6ZPh7ZB98OipmWMbTOSbXihsXk8eWHrVkA3ctyUz+p67ch
-	mcH01/YY7oYOBMAv1tmAgWEitX5GGrwV3VB8Yv03ALePFodryowJEHDaqctcS4rg423Jx0
-	qPrDYheuu2HPuYxh2Zxhx6cLHOvG0mp38ndAKMPYpBlL4ifWG4WNwm1ABkqEjPgtx++iHl
-	Tqoy53/w0Skq3Bs9RFX1wieUNd576kPXVHCusSVqPo5ij8XdNI3q5YJJ/ZUgsg==
-Date: Tue, 26 Mar 2024 16:57:03 +0100
+	bh=q1uJ/RBI+EkkLIUGkhABf9Eh5HJHwMfNRGz85xDYfxU=;
+	b=Q85Qfhmn63Gr9VJy1jvFJFWp7zCfZf7FFYjAio0Zx9nFnDWqTJvE7hebKmLJX9NRoGlDe4
+	X9KhqxgHqTAffeh8H2wRTfYg0F4zETt/PJQBEHqkNcnRgCuzrdlIpT5aIPfcdTJVj6EyiF
+	mkJLSXxrDRb3ifYnwgF6rKewqm9odzf6Jk6gdRj3H5nrFqhzB6f39pQgI04uxhCoVrVebY
+	yRfkKxjlgbARfrqbslPoFNgdAn4+LdzAm60xT2M9aEOLEm+wHOQ2X/Ncx7dDSGB8YsssMO
+	hPCCtPsFSyJhADVFBGPrQ7QhrxlhzT4zD/YclPq8g5drsemMxlmQE2fVHopFeA==
+Date: Tue, 26 Mar 2024 16:57:00 +0100
 From: Louis Chauvet <louis.chauvet@bootlin.com>
-To: =?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>
+To: Pekka Paalanen <pekka.paalanen@collabora.com>
 Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
 	Melissa Wen <melissa.srw@gmail.com>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
 	Haneen Mohammed <hamohammed.sa@gmail.com>,
 	Daniel Vetter <daniel@ffwll.ch>,
 	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Maxime Ripard <mripard@kernel.org>,
 	Thomas Zimmermann <tzimmermann@suse.de>,
 	David Airlie <airlied@gmail.com>, arthurgrillo@riseup.net,
-	Jonathan Corbet <corbet@lwn.net>, pekka.paalanen@haloniitty.fi,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com,
-	thomas.petazzoni@bootlin.com, seanpaul@google.com,
-	marcheu@google.com, nicolejadeyee@google.com
-Subject: Re: [PATCH v5 14/16] drm/vkms: Create KUnit tests for YUV conversions
-Message-ID: <ZgLwT2Pm1DbO2vh2@localhost.localdomain>
-Mail-Followup-To: =?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
+	Jonathan Corbet <corbet@lwn.net>, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
+	seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com
+Subject: Re: [PATCH v5 08/16] drm/vkms: Avoid computing blending limits
+ inside pre_mul_alpha_blend
+Message-ID: <ZgLwTNsehDG4z6Bo@localhost.localdomain>
+Mail-Followup-To: Pekka Paalanen <pekka.paalanen@collabora.com>,
 	Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
 	Melissa Wen <melissa.srw@gmail.com>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
 	Haneen Mohammed <hamohammed.sa@gmail.com>,
 	Daniel Vetter <daniel@ffwll.ch>,
 	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Maxime Ripard <mripard@kernel.org>,
 	Thomas Zimmermann <tzimmermann@suse.de>,
 	David Airlie <airlied@gmail.com>, arthurgrillo@riseup.net,
-	Jonathan Corbet <corbet@lwn.net>, pekka.paalanen@haloniitty.fi,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com,
-	thomas.petazzoni@bootlin.com, seanpaul@google.com,
-	marcheu@google.com, nicolejadeyee@google.com
+	Jonathan Corbet <corbet@lwn.net>, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
+	seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com
 References: <20240313-yuv-v5-0-e610cbd03f52@bootlin.com>
- <20240313-yuv-v5-14-e610cbd03f52@bootlin.com>
- <89748cd9-286b-4b07-b96b-5167e4b22cd2@igalia.com>
+ <20240313-yuv-v5-8-e610cbd03f52@bootlin.com>
+ <20240325144101.6d9fcf7e.pekka.paalanen@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,229 +75,155 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <89748cd9-286b-4b07-b96b-5167e4b22cd2@igalia.com>
+In-Reply-To: <20240325144101.6d9fcf7e.pekka.paalanen@collabora.com>
 X-GND-Sasl: louis.chauvet@bootlin.com
 
-Le 25/03/24 - 11:34, Maíra Canal a écrit :
-> On 3/13/24 14:45, Louis Chauvet wrote:
-> > From: Arthur Grillo <arthurgrillo@riseup.net>
-> > 
-> > Create KUnit tests to test the conversion between YUV and RGB. Test each
-> > conversion and range combination with some common colors.
-> > 
-> > The code used to compute the expected result can be found in comment.
-> > 
-> > Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
-> > [Louis Chauvet:
-> > - fix minor formating issues (whitespace, double line)
-> > - change expected alpha from 0x0000 to 0xffff
-> > - adapt to the new get_conversion_matrix usage
-> > - apply the changes from Arthur
-> > - move struct pixel_yuv_u8 to the test itself]
+Le 25/03/24 - 14:41, Pekka Paalanen a écrit :
+> On Wed, 13 Mar 2024 18:45:02 +0100
+> Louis Chauvet <louis.chauvet@bootlin.com> wrote:
 > 
-> Again, a Co-developed-by tag might be more proper.
-
-For this patch, my contribution was very minimal (I only add a call to 
-get_conversion_matrix_to_argb_u16), so I will not add the Co-developed-by.
-
+> > The pre_mul_alpha_blend is dedicated to blending, so to avoid mixing
+> > different concepts (coordinate calculation and color management), extract
+> > the x_limit and x_dst computation outside of this helper.
+> > It also increases the maintainability by grouping the computation related
+> > to coordinates in the same place: the loop in `blend`.
+> > 
 > > Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 > > ---
-> >   drivers/gpu/drm/vkms/Kconfig                  |  15 ++
-> >   drivers/gpu/drm/vkms/Makefile                 |   1 +
-> >   drivers/gpu/drm/vkms/tests/.kunitconfig       |   4 +
-> >   drivers/gpu/drm/vkms/tests/Makefile           |   3 +
-> >   drivers/gpu/drm/vkms/tests/vkms_format_test.c | 230 ++++++++++++++++++++++++++
-> >   drivers/gpu/drm/vkms/vkms_formats.c           |   7 +-
-> >   drivers/gpu/drm/vkms/vkms_formats.h           |   4 +
-> >   7 files changed, 262 insertions(+), 2 deletions(-)
+> >  drivers/gpu/drm/vkms/vkms_composer.c | 40 +++++++++++++++++-------------------
+> >  1 file changed, 19 insertions(+), 21 deletions(-)
 > > 
-> > diff --git a/drivers/gpu/drm/vkms/Kconfig b/drivers/gpu/drm/vkms/Kconfig
-> > index b9ecdebecb0b..9b0e1940c14f 100644
-> > --- a/drivers/gpu/drm/vkms/Kconfig
-> > +++ b/drivers/gpu/drm/vkms/Kconfig
-> > @@ -13,3 +13,18 @@ config DRM_VKMS
-> >   	  a VKMS.
-> >   
-> >   	  If M is selected the module will be called vkms.
-> > +
-> > +config DRM_VKMS_KUNIT_TESTS
-> > +	tristate "Tests for VKMS" if !KUNIT_ALL_TESTS
+> > diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
+> > index da0651a94c9b..9254086f23ff 100644
+> > --- a/drivers/gpu/drm/vkms/vkms_composer.c
+> > +++ b/drivers/gpu/drm/vkms/vkms_composer.c
+> > @@ -24,34 +24,30 @@ static u16 pre_mul_blend_channel(u16 src, u16 dst, u16 alpha)
+> >  
+> >  /**
+> >   * pre_mul_alpha_blend - alpha blending equation
+> > - * @frame_info: Source framebuffer's metadata
+> >   * @stage_buffer: The line with the pixels from src_plane
+> >   * @output_buffer: A line buffer that receives all the blends output
+> > + * @x_start: The start offset to avoid useless copy
 > 
-> "KUnit tests for VKMS"
-
-Fixed in v6.
-
-> > +	depends on DRM_VKMS && KUNIT
-> > +	default KUNIT_ALL_TESTS
-> > +	help
-> > +	  This builds unit tests for VKMS. This option is not useful for
-> > +	  distributions or general kernels, but only for kernel
-> > +	  developers working on VKMS.
-> > +
-> > +	  For more information on KUnit and unit tests in general,
-> > +	  please refer to the KUnit documentation in
-> > +	  Documentation/dev-tools/kunit/.
-> > +
-> > +	  If in doubt, say "N".
-> > \ No newline at end of file
-> > diff --git a/drivers/gpu/drm/vkms/Makefile b/drivers/gpu/drm/vkms/Makefile
-> > index 1b28a6a32948..8d3e46dde635 100644
-> > --- a/drivers/gpu/drm/vkms/Makefile
-> > +++ b/drivers/gpu/drm/vkms/Makefile
-> > @@ -9,3 +9,4 @@ vkms-y := \
-> >   	vkms_writeback.o
-> >   
-> >   obj-$(CONFIG_DRM_VKMS) += vkms.o
-> > +obj-$(CONFIG_DRM_VKMS_KUNIT_TESTS) += tests/
-> > diff --git a/drivers/gpu/drm/vkms/tests/.kunitconfig b/drivers/gpu/drm/vkms/tests/.kunitconfig
-> > new file mode 100644
-> > index 000000000000..70e378228cbd
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/vkms/tests/.kunitconfig
-> > @@ -0,0 +1,4 @@
-> > +CONFIG_KUNIT=y
-> > +CONFIG_DRM=y
-> > +CONFIG_DRM_VKMS=y
-> > +CONFIG_DRM_VKMS_KUNIT_TESTS=y
-> > diff --git a/drivers/gpu/drm/vkms/tests/Makefile b/drivers/gpu/drm/vkms/tests/Makefile
-> > new file mode 100644
-> > index 000000000000..2d1df668569e
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/vkms/tests/Makefile
-> > @@ -0,0 +1,3 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +
-> > +obj-$(CONFIG_DRM_VKMS_KUNIT_TESTS) += vkms_format_test.o
-> > diff --git a/drivers/gpu/drm/vkms/tests/vkms_format_test.c b/drivers/gpu/drm/vkms/tests/vkms_format_test.c
-> > new file mode 100644
-> > index 000000000000..0954d606e44a
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/vkms/tests/vkms_format_test.c
-
-[...]
-
-> > +/*
-> > + * The YUV color representation were acquired via the colour python framework.
-> > + * Below are the function calls used for generating each case.
-> > + *
-> > + * for more information got to the docs:
+> I'd say just:
 > 
-> s/for/For
-
-Fixed in v6.
-
-> > + * https://colour.readthedocs.io/en/master/generated/colour.RGB_to_YCbCr.html
-> > + */
-> > +static struct yuv_u8_to_argb_u16_case yuv_u8_to_argb_u16_cases[] = {
-> > +	/*
-> > +	 * colour.RGB_to_YCbCr(<rgb color in 16 bit form>,
-> > +	 *                     K=colour.WEIGHTS_YCBCR["ITU-R BT.601"],
-> > +	 *                     in_bits = 16,
-> > +	 *                     in_legal = False,
-> > +	 *                     in_int = True,
-> > +	 *                     out_bits = 8,
-> > +	 *                     out_legal = False,
-> > +	 *                     out_int = True)
-> > +	 */
+> + * @x_start: The start offset
 > 
-> I feel that this Python code is kind of poluting the test cases.
-
-This python code is needed to understand where the values come from. I 
-think we should keep it for future reference (add more cases, test yuv 16 
-bits...)
-
-Maybe we can change the array comment to
-
- /*
-  * The yuv color representation were acquired via the colour python framework:
-  *
-  * colour.RGB_to_YCbCr(<rgb color in 16 bits form>,
-  *			K=color.WEIGHTS_YCBCR["<format>"],
-  *			[...],
-  *			out_legal = <limited or full range>)
-  *
-  * The exact function call arguments are given for each element of this list.
-  *
-  * [...]
-  */
-
-And above each test case:
-
- /*
-  * format = "ITU-R BT.601"
-  * out_legal = False
-  */
-
-@Arthur, do you agree with those modifications?
-
-> > +	{
-> > +		.encoding = DRM_COLOR_YCBCR_BT601,
-> > +		.range = DRM_COLOR_YCBCR_FULL_RANGE,
-> > +		.n_colors = 6,
-> > +		.colors = {
-> > +			{ "white", { 0xff, 0x80, 0x80 }, { 0xffff, 0xffff, 0xffff, 0xffff }},
-> > +			{ "gray",  { 0x80, 0x80, 0x80 }, { 0xffff, 0x8080, 0x8080, 0x8080 }},
-> > +			{ "black", { 0x00, 0x80, 0x80 }, { 0xffff, 0x0000, 0x0000, 0x0000 }},
-> > +			{ "red",   { 0x4c, 0x55, 0xff }, { 0xffff, 0xffff, 0x0000, 0x0000 }},
-> > +			{ "green", { 0x96, 0x2c, 0x15 }, { 0xffff, 0x0000, 0xffff, 0x0000 }},
-> > +			{ "blue",  { 0x1d, 0xff, 0x6b }, { 0xffff, 0x0000, 0x0000, 0xffff }},
-> > +		},
-> > +	},
-
-[...]
-
-> > diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
-> > index edbf4b321b91..863fc91d6d48 100644
-> > --- a/drivers/gpu/drm/vkms/vkms_formats.c
-> > +++ b/drivers/gpu/drm/vkms/vkms_formats.c
-> > @@ -7,6 +7,8 @@
-> >   #include <drm/drm_rect.h>
-> >   #include <drm/drm_fixed.h>
-> >   
-> > +#include <kunit/visibility.h>
-> > +
-> >   #include "vkms_formats.h"
-> >   
-> >   /**
-> > @@ -199,8 +201,8 @@ static struct pixel_argb_u16 argb_u16_from_RGB565(const u16 *pixel)
-> >   	return out_pixel;
-> >   }
-> >   
-> > -static struct pixel_argb_u16 argb_u16_from_yuv888(u8 y, u8 cb, u8 cr,
-> > -						  struct conversion_matrix *matrix)
-> > +VISIBLE_IF_KUNIT struct pixel_argb_u16 argb_u16_from_yuv888(u8 y, u8 cb, u8 cr,
-> > +							    struct conversion_matrix *matrix)
-> >   {
-> >   	u8 r, g, b;
-> >   	s64 fp_y, fp_cb, fp_cr;
-> > @@ -234,6 +236,7 @@ static struct pixel_argb_u16 argb_u16_from_yuv888(u8 y, u8 cb, u8 cr,
-> >   
-> >   	return argb_u16_from_u8888(255, r, g, b);
-> >   }
-> > +EXPORT_SYMBOL_IF_KUNIT(argb_u16_from_yuv888);
-> >   
-> >   /*
-> >    * The following functions are read_line function for each pixel format supported by VKMS.
-> > diff --git a/drivers/gpu/drm/vkms/vkms_formats.h b/drivers/gpu/drm/vkms/vkms_formats.h
-> > index e1d324764b17..21e66a0cac16 100644
-> > --- a/drivers/gpu/drm/vkms/vkms_formats.h
-> > +++ b/drivers/gpu/drm/vkms/vkms_formats.h
-> > @@ -13,4 +13,8 @@ struct conversion_matrix *
-> >   get_conversion_matrix_to_argb_u16(u32 format, enum drm_color_encoding encoding,
-> >   				  enum drm_color_range range);
-> >   
-> > +#if IS_ENABLED(CONFIG_KUNIT)
+> It describes the parameter, and the paragraph below explains the why.
 > 
-> What about the CONFIG_DRM_EXPORT_FOR_TESTS?
+> It would be explaining, that x_start applies to output_buffer, but
+> input_buffer is always read starting from 0.
 
-As the documentation for CONFIG_DRM_EXPORT_FOR_TESTS don't exists, I don't 
-know what to use. Maybe Arthur knows what to do here? If needed I can 
-apply the modifications for the next iteration.
+I will change it to:
 
-Thanks for all your reviews,
-Louis Chauvet
+ * Using @x_start and @count information, only few pixel can be blended instead of the whole line
+ * each time. @x_start is only used for the output buffer. The staging buffer is always read from
+ * the start (0..@count in stage_buffer is blended at @x_start..@x_start+@count in output_buffer).
+
+> > + * @count: The number of byte to copy
+> 
+> You named it pixel_count, and it counts pixels, not bytes. It's not a
+> copy but a blend into output_buffer.
+
+Oops, fixed in v6.
  
-[...]
+> >   *
+> > - * Using the information from the `frame_info`, this blends only the
+> > - * necessary pixels from the `stage_buffer` to the `output_buffer`
+> > - * using premultiplied blend formula.
+> > + * Using @x_start and @count information, only few pixel can be blended instead of the whole line
+> > + * each time.
+> >   *
+> >   * The current DRM assumption is that pixel color values have been already
+> >   * pre-multiplied with the alpha channel values. See more
+> >   * drm_plane_create_blend_mode_property(). Also, this formula assumes a
+> >   * completely opaque background.
+> >   */
+> > -static void pre_mul_alpha_blend(struct vkms_frame_info *frame_info,
+> > -				struct line_buffer *stage_buffer,
+> > -				struct line_buffer *output_buffer)
+> > +static void pre_mul_alpha_blend(const struct line_buffer *stage_buffer,
+> > +				struct line_buffer *output_buffer, int x_start, int pixel_count)
+> >  {
+> > -	int x_dst = frame_info->dst.x1;
+> > -	struct pixel_argb_u16 *out = output_buffer->pixels + x_dst;
+> > -	struct pixel_argb_u16 *in = stage_buffer->pixels;
+> > -	int x_limit = min_t(size_t, drm_rect_width(&frame_info->dst),
+> > -			    stage_buffer->n_pixels);
+> > -
+> > -	for (int x = 0; x < x_limit; x++) {
+> > -		out[x].a = (u16)0xffff;
+> > -		out[x].r = pre_mul_blend_channel(in[x].r, out[x].r, in[x].a);
+> > -		out[x].g = pre_mul_blend_channel(in[x].g, out[x].g, in[x].a);
+> > -		out[x].b = pre_mul_blend_channel(in[x].b, out[x].b, in[x].a);
+> > +	struct pixel_argb_u16 *out = &output_buffer->pixels[x_start];
+> > +	const struct pixel_argb_u16 *in = stage_buffer->pixels;
+> > +
+> > +	for (int i = 0; i < pixel_count; i++) {
+> > +		out[i].a = (u16)0xffff;
+> > +		out[i].r = pre_mul_blend_channel(in[i].r, out[i].r, in[i].a);
+> > +		out[i].g = pre_mul_blend_channel(in[i].g, out[i].g, in[i].a);
+> > +		out[i].b = pre_mul_blend_channel(in[i].b, out[i].b, in[i].a);
+> >  	}
+> >  }
+> >  
+> > @@ -183,7 +179,7 @@ static void blend(struct vkms_writeback_job *wb,
+> >  {
+> >  	struct vkms_plane_state **plane = crtc_state->active_planes;
+> >  	u32 n_active_planes = crtc_state->num_active_planes;
+> > -	int y_pos;
+> > +	int y_pos, x_dst, x_limit;
+> >  
+> >  	const struct pixel_argb_u16 background_color = { .a = 0xffff };
+> >  
+> > @@ -201,14 +197,16 @@ static void blend(struct vkms_writeback_job *wb,
+> >  
+> >  		/* The active planes are composed associatively in z-order. */
+> >  		for (size_t i = 0; i < n_active_planes; i++) {
+> > +			x_dst = plane[i]->frame_info->dst.x1;
+> > +			x_limit = min_t(size_t, drm_rect_width(&plane[i]->frame_info->dst),
+> > +					stage_buffer->n_pixels);
+> 
+> Are those input values to min_t() really of type size_t? Or why is
+> size_t here?
+
+n_pixel is size_t, drm_rect_width is int. I will change everything to int. 
+Is there a way to ask the compiler "please don't do implicit conversion 
+and report them as warn/errors"?
+
+> >  			y_pos = get_y_pos(plane[i]->frame_info, y);
+> >  
+> >  			if (!check_limit(plane[i]->frame_info, y_pos))
+> >  				continue;
+> >  
+> >  			vkms_compose_row(stage_buffer, plane[i], y_pos);
+> > -			pre_mul_alpha_blend(plane[i]->frame_info, stage_buffer,
+> > -					    output_buffer);
+> > +			pre_mul_alpha_blend(stage_buffer, output_buffer, x_dst, x_limit);
+> 
+> I thought it was a count, not a limit?
+> 
+> "Limit" sounds to me like "end", and end - start = count.
+
+It is effectively a pixel count. I just took those naming from the 
+original pre_mul_alpha_blend. I will change it to pixel_count.
+
+Thanks,
+Louis Chauvet
+
+> >  		}
+> >  
+> >  		apply_lut(crtc_state, output_buffer);
+> > 
+> 
+> The details aside, this is a good move.
+> 
+> 
+> Thanks,
+> pq
+
+
 
 -- 
 Louis Chauvet, Bootlin
