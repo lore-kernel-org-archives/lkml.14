@@ -1,38 +1,39 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4A186AC5;
-	Tue, 26 Mar 2024 14:05:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E9B512CD84;
+	Tue, 26 Mar 2024 14:05:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711461905; cv=none; b=elF1tlNtb3muComkGh80LpjfMsghoIb0gpCjys6fBX2ClWOLy673/QGl2xUkUoZ83hE7Lr3NumI7EfU5ym6xElzWkBqg7/4dSv3QX4mtvBFQ/EOgmvXeeNk9J5aeJVkNoAKcJLz4t47VX43hwNg8tB0ssmcAmbJodRpG8NqJYT4=
+	t=1711461913; cv=none; b=lRqYMYQ9pC0XPemG+aeWjpoVuvIZP4XOnfsqO9tKmlnpNXQMj7MhwBC7q/mQmrzSgvsdDruQEoNc+32V/iS66VzU3RxvLAPYdxEHYPzBBtzxndpFx7YytdSbrgxUbvhiPMp8kiSktiFh1nnzvTHNR3JYY0EVjkGqfKKo+QRv0Z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711461905; c=relaxed/simple;
-	bh=foN+2jePculHf1w/V1bpvjPyWaydnkFpPb9s0CN2wEQ=;
+	s=arc-20240116; t=1711461913; c=relaxed/simple;
+	bh=QRpXv6qUG6BpCRPYiPcVOgPMAdT9WHMU2zN/chDja6M=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YFVXk5T0L9cQeH5LXGFh6GmJglR/PHZSyDA7JsqfaAkCWZ2KU8KdP6r7rIi2Wt0L7ta8X0Q/ISEk93D5MFmI7zA2ORuH1a8orIqSvP6nLQubAZyJGxIzRDLT8lebvfz2s7C80mM0p9bZS+7wkFsWvZ0Vcp7MzHcMDJgb05AgyyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Ysri/V3D; arc=none smtp.client-ip=217.70.183.197
+	 In-Reply-To:To:Cc; b=KsMj4Y5Nj9tT0LSoPFLpmM2l2urFmSWfdx2g1B0V7R59CIsBtmE0+jjNgIQjJwi9XZwewrHFn9n2Pt8YN4yi4zVO5IXoxwBVwnh/PX1mYmh4vuDbdIQhsC9f+oQPfh7sJROnAyFzkTRgU6Yh38UtweGxbY5BmgT0PhkOUhVsjic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=X4PkJ1IM; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Ysri/V3D"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DEE811C0017;
-	Tue, 26 Mar 2024 14:04:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="X4PkJ1IM"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B24161C0010;
+	Tue, 26 Mar 2024 14:05:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1711461900;
+	t=1711461908;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=l3kgQeN15eZhAMi+jF9tmB1bBfVXtTp9Cu0kThvZSqE=;
-	b=Ysri/V3D4PcDxACQ0WsDDgyAaLKziQfdqx8n2tDtQ9qWZZtKcZyD3shX08gRBFPxudlg38
-	EvJf4k20W61+XgiTRj2Th5IDF2p88W+6bVKVjfukwHE3rnK2dg+RQ5Ezf8VmWNFuX3VS7e
-	vC/Af9L0HeyAUqTox4xx+uPiUqxY0Fe53SsUopHg/e+kkh3K3N7zdUzkaQaIsnqnqmk6mA
-	woS26Yu40dXhCsYd0p5uB/UV342QFV0avLznp7K4bP3TcOYF/TIBtfQ9h+vMNBOkdJ2cYP
-	DAUTpVOSHwdA49jD5tHTiWWFBog10hmcGH0407uYYOlP9gEh9RqUqWDWxzjqHw==
+	bh=5GW+g3SVbdsrr04G/EjtMDJpGcsz1fKMb6nJa1fAUVM=;
+	b=X4PkJ1IMtjssk/E2ZcSFgl6zzBx+oQXmVORK+jnh/RGOPmmZ6TPGMczlFWWYGS4DZiPdIK
+	NJiUKwZB0ar0R0/9uEGUINZp98KwWMPZfN5kACXYO5gO9H3yXpXpePAulproqSkLa+chG2
+	lteNQNWOQaO/bEmG/qYPLhqoIZ7PyyuTlFZ83rGTGIu2+xup+Hn0RlFKLwu0I5Ec4pfkY3
+	UiEp+yG+rllkQNzU57y8NmAVWNM1Worfoex90LU633lc1kpujbQqwuLoTY4icOeJOR3qFt
+	ysQFfbUWiQ+S4DA2EDVAI9bZ0fVEEQc/uk1H/kPmxx9ZuZqTVzJB9SQmqh2+7A==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Tue, 26 Mar 2024 15:04:47 +0100
-Subject: [PATCH net-next v6 10/17] net: pse-pd: Add support for PSE PIs
+Date: Tue, 26 Mar 2024 15:04:54 +0100
+Subject: [PATCH net-next v6 17/17] net: pse-pd: Add TI TPS23881 PSE
+ controller driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,8 +41,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240326-feature_poe-v6-10-c1011b6ea1cb@bootlin.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240326-feature_poe-v6-17-c1011b6ea1cb@bootlin.com>
 References: <20240326-feature_poe-v6-0-c1011b6ea1cb@bootlin.com>
 In-Reply-To: <20240326-feature_poe-v6-0-c1011b6ea1cb@bootlin.com>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -65,746 +66,874 @@ X-GND-Sasl: kory.maincent@bootlin.com
 
 From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-The Power Sourcing Equipment Power Interface (PSE PI) plays a pivotal role
-in the architecture of Power over Ethernet (PoE) systems. It is essentially
-a blueprint that outlines how one or multiple power sources are connected
-to the eight-pin modular jack, commonly known as the Ethernet RJ45 port.
-This connection scheme is crucial for enabling the delivery of power
-alongside data over Ethernet cables.
-
-This patch adds support for getting the PSE controller node through PSE PI
-device subnode.
-
-This supports adds a way to get the PSE PI id from the pse_pi devicetree
-subnode of a PSE controller node simply by reading the reg property.
+Add a new driver for the TI TPS23881 I2C Power Sourcing Equipment
+controller.
 
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
----
 
-Changes in v3:
+---
+Change in v3:
 - New patch.
 
-Changes in v4:
-- Add PSE PI documentation.
-
-Changes in v5:
-- Update PSE PI documentation.
-
-Changes in v6:
-- Add error messages.
-- Add kdoc.
-- Rename of_legacy to no_of_pse_pi.
-- Create new function for readibility.
-- Fix few nit.
+Change in v6:
+- Fix firmware management, release_firmware was missing.
 ---
- Documentation/networking/pse-pd/index.rst  |   1 +
- Documentation/networking/pse-pd/pse-pi.rst | 302 +++++++++++++++++++++++++++++
- drivers/net/pse-pd/pse_core.c              | 256 ++++++++++++++++++++----
- include/linux/pse-pd/pse.h                 |  38 +++-
- 4 files changed, 558 insertions(+), 39 deletions(-)
+ drivers/net/pse-pd/Kconfig    |   9 +
+ drivers/net/pse-pd/Makefile   |   1 +
+ drivers/net/pse-pd/tps23881.c | 818 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 828 insertions(+)
 
-diff --git a/Documentation/networking/pse-pd/index.rst b/Documentation/networking/pse-pd/index.rst
-index 18197bc7303d..de28a5aee316 100644
---- a/Documentation/networking/pse-pd/index.rst
-+++ b/Documentation/networking/pse-pd/index.rst
-@@ -7,3 +7,4 @@ Power Sourcing Equipment (PSE) Documentation
-    :maxdepth: 2
+diff --git a/drivers/net/pse-pd/Kconfig b/drivers/net/pse-pd/Kconfig
+index e3a6ba669f20..80cf373a5a0e 100644
+--- a/drivers/net/pse-pd/Kconfig
++++ b/drivers/net/pse-pd/Kconfig
+@@ -31,4 +31,13 @@ config PSE_PD692X0
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called pd692x0.
  
-    introduction
-+   pse-pi
-diff --git a/Documentation/networking/pse-pd/pse-pi.rst b/Documentation/networking/pse-pd/pse-pi.rst
++config PSE_TPS23881
++	tristate "TPS23881 PSE controller"
++	depends on I2C
++	help
++	  This module provides support for TPS23881 regulator based Ethernet
++	  Power Sourcing Equipment.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called tps23881.
+ endif
+diff --git a/drivers/net/pse-pd/Makefile b/drivers/net/pse-pd/Makefile
+index 9c12c4a65730..9d2898b36737 100644
+--- a/drivers/net/pse-pd/Makefile
++++ b/drivers/net/pse-pd/Makefile
+@@ -5,3 +5,4 @@ obj-$(CONFIG_PSE_CONTROLLER) += pse_core.o
+ 
+ obj-$(CONFIG_PSE_REGULATOR) += pse_regulator.o
+ obj-$(CONFIG_PSE_PD692X0) += pd692x0.o
++obj-$(CONFIG_PSE_TPS23881) += tps23881.o
+diff --git a/drivers/net/pse-pd/tps23881.c b/drivers/net/pse-pd/tps23881.c
 new file mode 100644
-index 000000000000..c4a50c670d9c
+index 000000000000..c338d9eae363
 --- /dev/null
-+++ b/Documentation/networking/pse-pd/pse-pi.rst
-@@ -0,0 +1,302 @@
-+.. SPDX-License-Identifier: GPL-2.0
++++ b/drivers/net/pse-pd/tps23881.c
+@@ -0,0 +1,818 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Driver for the TI TPS23881 PoE PSE Controller driver (I2C bus)
++ *
++ * Copyright (c) 2023 Bootlin, Kory Maincent <kory.maincent@bootlin.com>
++ */
 +
-+PSE Power Interface (PSE PI) Documentation
-+==========================================
++#include <linux/delay.h>
++#include <linux/firmware.h>
++#include <linux/i2c.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/pse-pd/pse.h>
 +
-+The Power Sourcing Equipment Power Interface (PSE PI) plays a pivotal role in
-+the architecture of Power over Ethernet (PoE) systems. It is essentially a
-+blueprint that outlines how one or multiple power sources are connected to the
-+eight-pin modular jack, commonly known as the Ethernet RJ45 port. This
-+connection scheme is crucial for enabling the delivery of power alongside data
-+over Ethernet cables.
++#define TPS23881_MAX_CHANS 8
 +
-+Documentation and Standards
-+---------------------------
++#define TPS23881_REG_PW_STATUS	0x10
++#define TPS23881_REG_OP_MODE	0x12
++#define TPS23881_REG_DIS_EN	0x13
++#define TPS23881_REG_DET_CLA_EN	0x14
++#define TPS23881_REG_GEN_MASK	0x17
++#define TPS23881_REG_NBITACC	BIT(5)
++#define TPS23881_REG_PW_EN	0x19
++#define TPS23881_REG_PORT_MAP	0x26
++#define TPS23881_REG_PORT_POWER	0x29
++#define TPS23881_REG_POEPLUS	0x40
++#define TPS23881_REG_TPON	BIT(0)
++#define TPS23881_REG_FWREV	0x41
++#define TPS23881_REG_DEVID	0x43
++#define TPS23881_REG_SRAM_CTRL	0x60
++#define TPS23881_REG_SRAM_DATA	0x61
 +
-+The IEEE 802.3 standard provides detailed documentation on the PSE PI.
-+Specifically:
++struct tps23881_port_desc {
++	u8 chan[2];
++	bool is_4p;
++};
 +
-+- Section "33.2.3 PI pin assignments" covers the pin assignments for PoE
-+  systems that utilize two pairs for power delivery.
-+- Section "145.2.4 PSE PI" addresses the configuration for PoE systems that
-+  deliver power over all four pairs of an Ethernet cable.
++struct tps23881_priv {
++	struct i2c_client *client;
++	struct pse_controller_dev pcdev;
++	struct device_node *np;
++	struct tps23881_port_desc port[TPS23881_MAX_CHANS];
++};
 +
-+PSE PI and Single Pair Ethernet
-+-------------------------------
-+
-+Single Pair Ethernet (SPE) represents a different approach to Ethernet
-+connectivity, utilizing just one pair of conductors for both data and power
-+transmission. Unlike the configurations detailed in the PSE PI for standard
-+Ethernet, which can involve multiple power sourcing arrangements across four or
-+two pairs of wires, SPE operates on a simpler model due to its single-pair
-+design. As a result, the complexities of choosing between alternative pin
-+assignments for power delivery, as described in the PSE PI for multi-pair
-+Ethernet, are not applicable to SPE.
-+
-+Understanding PSE PI
-+--------------------
-+
-+The Power Sourcing Equipment Power Interface (PSE PI) is a framework defining
-+how Power Sourcing Equipment (PSE) delivers power to Powered Devices (PDs) over
-+Ethernet cables. It details two main configurations for power delivery, known
-+as Alternative A and Alternative B, which are distinguished not only by their
-+method of power transmission but also by the implications for polarity and data
-+transmission direction.
-+
-+Alternative A and B Overview
-+----------------------------
-+
-+- **Alternative A:** Utilizes RJ45 conductors 1, 2, 3 and 6. In either case of
-+  networks 10/100BaseT or 1G/2G/5G/10GBaseT, the pairs used are carrying data.
-+  The power delivery's polarity in this alternative can vary based on the MDI
-+  (Medium Dependent Interface) or MDI-X (Medium Dependent Interface Crossover)
-+  configuration.
-+
-+- **Alternative B:** Utilizes RJ45 conductors 4, 5, 7 and 8. In case of
-+  10/100BaseT network the pairs used are spare pairs without data and are less
-+  influenced by data transmission direction. This is not the case for
-+  1G/2G/5G/10GBaseT network. Alternative B includes two configurations with
-+  different polarities, known as variant X and variant S, to accommodate
-+  different network requirements and device specifications.
-+
-+Table 145\u20133\u2014PSE Pinout Alternatives
-+-----------------------------------
-+
-+The following table outlines the pin configurations for both Alternative A and
-+Alternative B.
-+
-++------------+-------------------+-----------------+-----------------+-----------------+
-+| Conductor  | Alternative A     | Alternative A   | Alternative B   | Alternative B   |
-+|            |    (MDI-X)        |      (MDI)      |        (X)      |        (S)      |
-++============+===================+=================+=================+=================+
-+| 1          | Negative V        | Positive V      | -               | -               |
-++------------+-------------------+-----------------+-----------------+-----------------+
-+| 2          | Negative V        | Positive V      | -               | -               |
-++------------+-------------------+-----------------+-----------------+-----------------+
-+| 3          | Positive V        | Negative V      | -               | -               |
-++------------+-------------------+-----------------+-----------------+-----------------+
-+| 4          | -                 | -               | Negative V      | Positive V      |
-++------------+-------------------+-----------------+-----------------+-----------------+
-+| 5          | -                 | -               | Negative V      | Positive V      |
-++------------+-------------------+-----------------+-----------------+-----------------+
-+| 6          | Positive V        | Negative V      | -               | -               |
-++------------+-------------------+-----------------+-----------------+-----------------+
-+| 7          | -                 | -               | Positive V      | Negative V      |
-++------------+-------------------+-----------------+-----------------+-----------------+
-+| 8          | -                 | -               | Positive V      | Negative V      |
-++------------+-------------------+-----------------+-----------------+-----------------+
-+
-+.. note::
-+    - "Positive V" and "Negative V" indicate the voltage polarity for each pin.
-+    - "-" indicates that the pin is not used for power delivery in that
-+      specific configuration.
-+
-+PSE PI compatibilities
-+----------------------
-+
-+The following table outlines the compatibility between the pinout alternative
-+and the 1000/2.5G/5G/10GBaseT in the PSE 2 pairs connection.
-+
-++---------+---------------+---------------------+-----------------------+
-+| Variant | Alternative   | Power Feeding Type  | Compatibility with    |
-+|         | (A/B)         | (Direct/Phantom)    | 1000/2.5G/5G/10GBaseT |
-++=========+===============+=====================+=======================+
-+| 1       | A             | Phantom             | Yes                   |
-++---------+---------------+---------------------+-----------------------+
-+| 2       | B             | Phantom             | Yes                   |
-++---------+---------------+---------------------+-----------------------+
-+| 3       | B             | Direct              | No                    |
-++---------+---------------+---------------------+-----------------------+
-+
-+.. note::
-+    - "Direct" indicate a variant where the power is injected directly to pairs
-+       without using magnetics in case of spare pairs.
-+    - "Phantom" indicate power path over coils/magnetics as it is done for
-+       Alternative A variant.
-+
-+In case of PSE 4 pairs, a PSE supporting only 10/100BaseT (which mean Direct
-+Power on pinout Alternative B) is not compatible with a 4 pairs
-+1000/2.5G/5G/10GBaseT.
-+
-+PSE Power Interface (PSE PI) Connection Diagram
-+-----------------------------------------------
-+
-+The diagram below illustrates the connection architecture between the RJ45
-+port, the Ethernet PHY (Physical Layer), and the PSE PI (Power Sourcing
-+Equipment Power Interface), demonstrating how power and data are delivered
-+simultaneously through an Ethernet cable. The RJ45 port serves as the physical
-+interface for these connections, with each of its eight pins connected to both
-+the Ethernet PHY for data transmission and the PSE PI for power delivery.
-+
-+.. code-block::
-+
-+    +--------------------------+
-+    |                          |
-+    |          RJ45 Port       |
-+    |                          |
-+    +--+--+--+--+--+--+--+--+--+                +-------------+
-+      1| 2| 3| 4| 5| 6| 7| 8|                   |             |
-+       |  |  |  |  |  |  |  o-------------------+             |
-+       |  |  |  |  |  |  o--|-------------------+             +<--- PSE 1
-+       |  |  |  |  |  o--|--|-------------------+             |
-+       |  |  |  |  o--|--|--|-------------------+             |
-+       |  |  |  o--|--|--|--|-------------------+  PSE PI     |
-+       |  |  o--|--|--|--|--|-------------------+             |
-+       |  o--|--|--|--|--|--|-------------------+             +<--- PSE 2 (optional)
-+       o--|--|--|--|--|--|--|-------------------+             |
-+       |  |  |  |  |  |  |  |                   |             |
-+    +--+--+--+--+--+--+--+--+--+                +-------------+
-+    |                          |
-+    |       Ethernet PHY       |
-+    |                          |
-+    +--------------------------+
-+
-+Simple PSE PI Configuration for Alternative A
-+---------------------------------------------
-+
-+The diagram below illustrates a straightforward PSE PI (Power Sourcing
-+Equipment Power Interface) configuration designed to support the Alternative A
-+setup for Power over Ethernet (PoE). This implementation is tailored to provide
-+power delivery through the data-carrying pairs of an Ethernet cable, suitable
-+for either MDI or MDI-X configurations, albeit supporting one variation at a
-+time.
-+
-+.. code-block::
-+
-+         +-------------+
-+         |    PSE PI   |
-+ 8  -----+                             +-------------+
-+ 7  -----+                    Rail 1   |
-+ 6  -----+------+----------------------+
-+ 5  -----+      |                      |
-+ 4  -----+     /              Rail 2   |  PSE 1
-+ 3  -----+----´          +-------------+
-+ 2  -----+----+---------´              |
-+ 1  -----+---´                         +-------------+
-+         |
-+         +-------------+
-+
-+In this configuration:
-+
-+- Pins 1 and 2, as well as pins 3 and 6, are utilized for power delivery in
-+  addition to data transmission. This aligns with the standard wiring for
-+  10/100BaseT Ethernet networks where these pairs are used for data.
-+- Rail 1 and Rail 2 represent the positive and negative voltage rails, with
-+  Rail 1 connected to pins 1 and 2, and Rail 2 connected to pins 3 and 6.
-+  More advanced PSE PI configurations may include integrated or external
-+  switches to change the polarity of the voltage rails, allowing for
-+  compatibility with both MDI and MDI-X configurations.
-+
-+More complex PSE PI configurations may include additional components, to support
-+Alternative B, or to provide additional features such as power management, or
-+additional power delivery capabilities such as 2-pair or 4-pair power delivery.
-+
-+.. code-block::
-+
-+         +-------------+
-+         |    PSE PI   |
-+         |        +---+
-+ 8  -----+--------+   |                 +-------------+
-+ 7  -----+--------+   |       Rail 1   |
-+ 6  -----+--------+   +-----------------+
-+ 5  -----+--------+   |                |
-+ 4  -----+--------+   |       Rail 2   |  PSE 1
-+ 3  -----+--------+   +----------------+
-+ 2  -----+--------+   |                |
-+ 1  -----+--------+   |                 +-------------+
-+         |        +---+
-+         +-------------+
-+
-+Device Tree Configuration: Describing PSE PI Configurations
-+-----------------------------------------------------------
-+
-+The necessity for a separate PSE PI node in the device tree is influenced by
-+the intricacy of the Power over Ethernet (PoE) system's setup. Here are
-+descriptions of both simple and complex PSE PI configurations to illustrate
-+this decision-making process:
-+
-+**Simple PSE PI Configuration:**
-+In a straightforward scenario, the PSE PI setup involves a direct, one-to-one
-+connection between a single PSE controller and an Ethernet port. This setup
-+typically supports basic PoE functionality without the need for dynamic
-+configuration or management of multiple power delivery modes. For such simple
-+configurations, detailing the PSE PI within the existing PSE controller's node
-+may suffice, as the system does not encompass additional complexity that
-+warrants a separate node. The primary focus here is on the clear and direct
-+association of power delivery to a specific Ethernet port.
-+
-+**Complex PSE PI Configuration:**
-+Contrastingly, a complex PSE PI setup may encompass multiple PSE controllers or
-+auxiliary circuits that collectively manage power delivery to one Ethernet
-+port. Such configurations might support a range of PoE standards and require
-+the capability to dynamically configure power delivery based on the operational
-+mode (e.g., PoE2 versus PoE4) or specific requirements of connected devices. In
-+these instances, a dedicated PSE PI node becomes essential for accurately
-+documenting the system architecture. This node would serve to detail the
-+interactions between different PSE controllers, the support for various PoE
-+modes, and any additional logic required to coordinate power delivery across
-+the network infrastructure.
-+
-+**Guidance:**
-+
-+For simple PSE setups, including PSE PI information in the PSE controller node
-+might suffice due to the straightforward nature of these systems. However,
-+complex configurations, involving multiple components or advanced PoE features,
-+benefit from a dedicated PSE PI node. This method adheres to IEEE 802.3
-+specifications, improving documentation clarity and ensuring accurate
-+representation of the PoE system's complexity.
-+
-+PSE PI Node: Essential Information
-+----------------------------------
-+
-+The PSE PI (Power Sourcing Equipment Power Interface) node in a device tree can
-+include several key pieces of information critical for defining the power
-+delivery capabilities and configurations of a PoE (Power over Ethernet) system.
-+Below is a list of such information, along with explanations for their
-+necessity and reasons why they might not be found within a PSE controller node:
-+
-+1. **Powered Pairs Configuration**
-+
-+   - *Description:* Identifies the pairs used for power delivery in the
-+     Ethernet cable.
-+   - *Necessity:* Essential to ensure the correct pairs are powered according
-+     to the board's design.
-+   - *PSE Controller Node:* Typically lacks details on physical pair usage,
-+     focusing on power regulation.
-+
-+2. **Polarity of Powered Pairs**
-+
-+   - *Description:* Specifies the polarity (positive or negative) for each
-+     powered pair.
-+   - *Necessity:* Critical for safe and effective power transmission to PDs.
-+   - *PSE Controller Node:* Polarity management may exceed the standard
-+     functionalities of PSE controllers.
-+
-+3. **PSE Cells Association**
-+
-+   - *Description:* Details the association of PSE cells with Ethernet ports or
-+     pairs in multi-cell configurations.
-+   - *Necessity:* Allows for optimized power resource allocation in complex
-+     systems.
-+   - *PSE Controller Node:* Controllers may not manage cell associations
-+     directly, focusing instead on power flow regulation.
-+
-+4. **Support for PoE Standards**
-+
-+   - *Description:* Lists the PoE standards and configurations supported by the
-+     system.
-+   - *Necessity:* Ensures system compatibility with various PDs and adherence
-+     to industry standards.
-+   - *PSE Controller Node:* Specific capabilities may depend on the overall PSE
-+     PI design rather than the controller alone. Multiple PSE cells per PI
-+     do not necessarily imply support for multiple PoE standards.
-+
-+5. **Protection Mechanisms**
-+
-+   - *Description:* Outlines additional protection mechanisms, such as
-+     overcurrent protection and thermal management.
-+   - *Necessity:* Provides extra safety and stability, complementing PSE
-+     controller protections.
-+   - *PSE Controller Node:* Some protections may be implemented via
-+     board-specific hardware or algorithms external to the controller.
-+
-diff --git a/drivers/net/pse-pd/pse_core.c b/drivers/net/pse-pd/pse_core.c
-index fed006cbc185..5d1bf197c067 100644
---- a/drivers/net/pse-pd/pse_core.c
-+++ b/drivers/net/pse-pd/pse_core.c
-@@ -27,38 +27,174 @@ struct pse_control {
- 	struct kref refcnt;
- };
- 
-+static int of_load_single_pse_pi_pairset(struct device_node *node,
-+					 struct pse_pi *pi,
-+					 int pairset_num)
++static struct tps23881_priv *to_tps23881_priv(struct pse_controller_dev *pcdev)
 +{
-+	struct device_node *pairset_np;
-+	const char *name;
++	return container_of(pcdev, struct tps23881_priv, pcdev);
++}
++
++static int tps23881_pi_enable(struct pse_controller_dev *pcdev, int id)
++{
++	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
++	struct i2c_client *client = priv->client;
++	u8 chan;
++	u16 val;
 +	int ret;
 +
-+	ret = of_property_read_string_index(node, "pairset-names",
-+					    pairset_num, &name);
-+	if (ret)
++	if (id >= TPS23881_MAX_CHANS)
++		return -ERANGE;
++
++	ret = i2c_smbus_read_word_data(client, TPS23881_REG_PW_STATUS);
++	if (ret < 0)
 +		return ret;
 +
-+	if (!strcmp(name, "alternative-a")) {
-+		pi->pairset[pairset_num].pinout = ALTERNATIVE_A;
-+	} else if (!strcmp(name, "alternative-b")) {
-+		pi->pairset[pairset_num].pinout = ALTERNATIVE_B;
-+	} else {
-+		pr_err("pse: wrong pairset-names value %s\n", name);
-+		return -EINVAL;
++	chan = priv->port[id].chan[0];
++	if (chan < 4)
++		val = (u16)(ret | BIT(chan));
++	else
++		val = (u16)(ret | BIT(chan + 4));
++
++	if (priv->port[id].is_4p) {
++		chan = priv->port[id].chan[1];
++		if (chan < 4)
++			val |= BIT(chan);
++		else
++			val |= BIT(chan + 4);
 +	}
 +
-+	pairset_np = of_parse_phandle(node, "pairsets", pairset_num);
-+	if (!pairset_np)
-+		return -ENODEV;
-+
-+	pi->pairset[pairset_num].np = pairset_np;
++	ret = i2c_smbus_write_word_data(client, TPS23881_REG_PW_EN, val);
++	if (ret)
++		return ret;
 +
 +	return 0;
 +}
 +
- /**
-- * of_pse_zero_xlate - dummy function for controllers with one only control
-- * @pcdev: a pointer to the PSE controller device
-- * @pse_spec: PSE line specifier as found in the device tree
-- *
-- * This static translation function is used by default if of_xlate in
-- * :c:type:`pse_controller_dev` is not set. It is useful for all PSE
-- * controllers with #pse-cells = <0>.
-+ * of_load_pse_pi_pairset - load PSE PI pairsets pinout and polarity
-+ * @node: a pointer of the device node
-+ * @pi: a pointer of the PSE PI to fill
-+ * @npairsets: the number of pairsets (1 or 2) used by the PI
-  */
--static int of_pse_zero_xlate(struct pse_controller_dev *pcdev,
--			     const struct of_phandle_args *pse_spec)
-+static int of_load_pse_pi_pairsets(struct device_node *node,
-+				   struct pse_pi *pi,
-+				   int npairsets)
- {
--	return 0;
-+	int i, ret;
++static int tps23881_pi_disable(struct pse_controller_dev *pcdev, int id)
++{
++	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
++	struct i2c_client *client = priv->client;
++	u8 chan;
++	u16 val;
++	int ret;
 +
-+	ret = of_property_count_strings(node, "pairset-names");
-+	if (ret != npairsets) {
-+		pr_err("pse: amount of pairsets and pairset-names is not equal %d != %d\n",
-+		       npairsets, ret);
-+		return -EINVAL;
++	if (id >= TPS23881_MAX_CHANS)
++		return -ERANGE;
++
++	ret = i2c_smbus_read_word_data(client, TPS23881_REG_PW_STATUS);
++	if (ret < 0)
++		return ret;
++
++	chan = priv->port[id].chan[0];
++	if (chan < 4)
++		val = (u16)(ret | BIT(chan + 4));
++	else
++		val = (u16)(ret | BIT(chan + 8));
++
++	if (priv->port[id].is_4p) {
++		chan = priv->port[id].chan[1];
++		if (chan < 4)
++			val |= BIT(chan + 4);
++		else
++			val |= BIT(chan + 8);
 +	}
 +
-+	for (i = 0; i < npairsets; i++) {
-+		ret = of_load_single_pse_pi_pairset(node, pi, i);
-+		if (ret)
-+			goto out;
-+	}
++	ret = i2c_smbus_write_word_data(client, TPS23881_REG_PW_EN, val);
++	if (ret)
++		return ret;
 +
-+	if (npairsets == 2 &&
-+	    pi->pairset[0].pinout == pi->pairset[1].pinout) {
-+		pr_err("pse: two PI pairsets can not have identical pinout");
-+		ret = -EINVAL;
-+	}
-+
-+out:
-+	/* If an error appears, release all the pairset device node kref */
-+	if (ret) {
-+		of_node_put(pi->pairset[0].np);
-+		pi->pairset[0].np = NULL;
-+		of_node_put(pi->pairset[1].np);
-+		pi->pairset[1].np = NULL;
-+	}
-+
-+	return ret;
++	return 0;
 +}
 +
-+static void pse_release_pis(struct pse_controller_dev *pcdev)
++static int tps23881_pi_is_enabled(struct pse_controller_dev *pcdev, int id)
 +{
-+	int i;
-+
-+	for (i = 0; i <= pcdev->nr_lines; i++) {
-+		of_node_put(pcdev->pi[i].pairset[0].np);
-+		of_node_put(pcdev->pi[i].pairset[1].np);
-+		of_node_put(pcdev->pi[i].np);
-+	}
-+	kfree(pcdev->pi);
- }
- 
- /**
-- * of_pse_simple_xlate - translate pse_spec to the PSE line number
-+ * of_load_pse_pis - load all the PSE PIs
-  * @pcdev: a pointer to the PSE controller device
-- * @pse_spec: PSE line specifier as found in the device tree
-- *
-- * This static translation function is used by default if of_xlate in
-- * :c:type:`pse_controller_dev` is not set. It is useful for all PSE
-- * controllers with 1:1 mapping, where PSE lines can be indexed by number
-- * without gaps.
-  */
--static int of_pse_simple_xlate(struct pse_controller_dev *pcdev,
--			       const struct of_phandle_args *pse_spec)
-+static int of_load_pse_pis(struct pse_controller_dev *pcdev)
- {
--	if (pse_spec->args[0] >= pcdev->nr_lines)
--		return -EINVAL;
-+	struct device_node *np = pcdev->dev->of_node;
-+	struct device_node *node, *pis;
++	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
++	struct i2c_client *client = priv->client;
++	bool enabled;
++	u8 chan;
 +	int ret;
- 
--	return pse_spec->args[0];
-+	if (!np)
-+		return -ENODEV;
 +
-+	pis = of_get_child_by_name(np, "pse-pis");
-+	if (!pis) {
-+		/* no description of PSE PIs */
-+		pcdev->no_of_pse_pi = true;
-+		return 0;
++	ret = i2c_smbus_read_word_data(client, TPS23881_REG_PW_STATUS);
++	if (ret < 0)
++		return ret;
++
++	chan = priv->port[id].chan[0];
++	if (chan < 4)
++		enabled = ret & BIT(chan);
++	else
++		enabled = ret & BIT(chan + 4);
++
++	if (priv->port[id].is_4p) {
++		chan = priv->port[id].chan[1];
++		if (chan < 4)
++			enabled &= !!(ret & BIT(chan));
++		else
++			enabled &= !!(ret & BIT(chan + 4));
 +	}
 +
-+	pcdev->pi = kcalloc(pcdev->nr_lines, sizeof(*pcdev->pi), GFP_KERNEL);
-+	if (!pcdev->pi)
-+		return -ENOMEM;
++	/* Return enabled status only if both channel are on this state */
++	return enabled;
++}
 +
-+	for_each_child_of_node(pis, node) {
-+		struct pse_pi pi = {0};
-+		u32 id;
++static int tps23881_ethtool_get_status(struct pse_controller_dev *pcdev,
++				       unsigned long id,
++				       struct netlink_ext_ack *extack,
++				       struct pse_control_status *status)
++{
++	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
++	struct i2c_client *client = priv->client;
++	bool enabled, delivering;
++	u8 chan;
++	int ret;
 +
-+		if (!of_node_name_eq(node, "pse-pi"))
++	ret = i2c_smbus_read_word_data(client, TPS23881_REG_PW_STATUS);
++	if (ret < 0)
++		return ret;
++
++	chan = priv->port[id].chan[0];
++	if (chan < 4) {
++		enabled = ret & BIT(chan);
++		delivering = ret & BIT(chan + 4);
++	} else {
++		enabled = ret & BIT(chan + 4);
++		delivering = ret & BIT(chan + 8);
++	}
++
++	if (priv->port[id].is_4p) {
++		chan = priv->port[id].chan[1];
++		if (chan < 4) {
++			enabled &= !!(ret & BIT(chan));
++			delivering &= !!(ret & BIT(chan + 4));
++		} else {
++			enabled &= !!(ret & BIT(chan + 4));
++			delivering &= !!(ret & BIT(chan + 8));
++		}
++	}
++
++	/* Return delivering status only if both channel are on this state */
++	if (delivering)
++		status->c33_pw_status = ETHTOOL_C33_PSE_PW_D_STATUS_DELIVERING;
++	else
++		status->c33_pw_status = ETHTOOL_C33_PSE_PW_D_STATUS_DISABLED;
++
++	/* Return enabled status only if both channel are on this state */
++	if (enabled)
++		status->c33_admin_state = ETHTOOL_C33_PSE_ADMIN_STATE_ENABLED;
++	else
++		status->c33_admin_state = ETHTOOL_C33_PSE_ADMIN_STATE_DISABLED;
++
++	return 0;
++}
++
++/* Parse managers subnode into a array of device node */
++static int
++tps23881_get_of_channels(struct tps23881_priv *priv,
++			 struct device_node *chan_node[TPS23881_MAX_CHANS])
++{
++	struct device_node *channels_node, *node;
++	int i, ret;
++
++	if (!priv->np)
++		return -EINVAL;
++
++	channels_node = of_find_node_by_name(priv->np, "channels");
++	if (!channels_node)
++		return -EINVAL;
++
++	for_each_child_of_node(channels_node, node) {
++		u32 chan_id;
++
++		if (!of_node_name_eq(node, "channel"))
 +			continue;
 +
-+		ret = of_property_read_u32(node, "reg", &id);
++		ret = of_property_read_u32(node, "reg", &chan_id);
 +		if (ret) {
-+			dev_err(pcdev->dev,
-+				"can't get reg property for node '%pOF'",
-+				node);
-+			goto out;
-+		}
-+
-+		if (id >= pcdev->nr_lines) {
-+			dev_err(pcdev->dev,
-+				"reg value (%u) is out of range (%u).\n",
-+				id, pcdev->nr_lines);
 +			ret = -EINVAL;
 +			goto out;
 +		}
 +
-+		if (pcdev->pi[id].np) {
-+			dev_err(pcdev->dev,
-+				"other node with same reg value was already registered. %pOF : %pOF\n",
-+				pcdev->pi[id].np, node);
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+
-+		ret = of_count_phandle_with_args(node, "pairsets", NULL);
-+		/* npairsets is limited to value one or two */
-+		if (ret == 1 || ret == 2) {
-+			ret = of_load_pse_pi_pairsets(node, &pi, ret);
-+			if (ret)
-+				goto out;
-+		} else if (ret != ENOENT) {
-+			dev_err(pcdev->dev,
-+				"error: wrong number of pairsets. Should be 1 or 2, got %d\n",
-+				ret);
++		if (chan_id >= TPS23881_MAX_CHANS || chan_node[chan_id]) {
++			dev_err(&priv->client->dev,
++				"wrong number of port (%d)\n", chan_id);
 +			ret = -EINVAL;
 +			goto out;
 +		}
 +
 +		of_node_get(node);
-+		pi.np = node;
-+		memcpy(&pcdev->pi[id], &pi, sizeof(pi));
++		chan_node[chan_id] = node;
 +	}
 +
-+	of_node_put(pis);
++	of_node_put(channels_node);
 +	return 0;
 +
 +out:
-+	pse_release_pis(pcdev);
++	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++		of_node_put(chan_node[i]);
++		chan_node[i] = NULL;
++	}
++
 +	of_node_put(node);
-+	of_node_put(pis);
++	of_node_put(channels_node);
 +	return ret;
- }
- 
- /**
-@@ -67,16 +203,18 @@ static int of_pse_simple_xlate(struct pse_controller_dev *pcdev,
-  */
- int pse_controller_register(struct pse_controller_dev *pcdev)
- {
--	if (!pcdev->of_xlate) {
--		if (pcdev->of_pse_n_cells == 0)
--			pcdev->of_xlate = of_pse_zero_xlate;
--		else if (pcdev->of_pse_n_cells == 1)
--			pcdev->of_xlate = of_pse_simple_xlate;
--	}
-+	int ret;
- 
- 	mutex_init(&pcdev->lock);
- 	INIT_LIST_HEAD(&pcdev->pse_control_head);
- 
-+	if (!pcdev->nr_lines)
-+		pcdev->nr_lines = 1;
++}
 +
-+	ret = of_load_pse_pis(pcdev);
-+	if (ret)
-+		return ret;
++struct tps23881_port_matrix {
++	u8 pi_id;
++	u8 lgcl_chan[2];
++	u8 hw_chan[2];
++	bool is_4p;
++	bool exist;
++};
 +
- 	mutex_lock(&pse_list_mutex);
- 	list_add(&pcdev->list, &pse_controller_list);
- 	mutex_unlock(&pse_list_mutex);
-@@ -91,6 +229,7 @@ EXPORT_SYMBOL_GPL(pse_controller_register);
-  */
- void pse_controller_unregister(struct pse_controller_dev *pcdev)
- {
-+	pse_release_pis(pcdev);
- 	mutex_lock(&pse_list_mutex);
- 	list_del(&pcdev->list);
- 	mutex_unlock(&pse_list_mutex);
-@@ -203,8 +342,46 @@ pse_control_get_internal(struct pse_controller_dev *pcdev, unsigned int index)
- 	return psec;
- }
- 
--struct pse_control *
--of_pse_control_get(struct device_node *node)
-+/**
-+ * of_pse_match_pi - Return the PSE PI id of the device node phandle
-+ * @pcdev: a pointer to the PSE controller device
-+ * @np: a pointer to the device node
-+ */
-+static int of_pse_match_pi(struct pse_controller_dev *pcdev,
-+			   struct device_node *np)
++static int
++tps23881_match_channel(const struct pse_pi_pairset *pairset,
++		       struct device_node *chan_node[TPS23881_MAX_CHANS])
 +{
 +	int i;
 +
-+	for (i = 0; i <= pcdev->nr_lines; i++) {
-+		if (pcdev->pi[i].np == np)
++	/* Look on every channels */
++	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++		if (pairset->np == chan_node[i])
 +			return i;
 +	}
 +
-+	return -EINVAL;
++	return -ENODEV;
 +}
 +
-+/**
-+ * psec_id_xlate - translate pse_spec to the PSE line number according
-+ *		   to the number of pse-cells in case of no pse_pi node
-+ * @pcdev: a pointer to the PSE controller device
-+ * @pse_spec: PSE line specifier as found in the device tree
-+ *
-+ * Return 0 if #pse-cells = <0>. Return PSE line number otherwise.
-+ */
-+static int psec_id_xlate(struct pse_controller_dev *pcdev,
-+			 const struct of_phandle_args *pse_spec)
++static bool
++tps23881_is_chan_free(struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS],
++		      int chan)
 +{
-+	if (!pcdev->of_pse_n_cells)
++	int i;
++
++	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++		if (port_matrix[i].exist &&
++		    (port_matrix[i].hw_chan[0] == chan ||
++		    port_matrix[i].hw_chan[1] == chan))
++			return false;
++	}
++
++	return true;
++}
++
++/* Fill port matrix with the matching channels */
++static int
++tps23881_match_port_matrix(struct pse_pi *pi, int pi_id,
++			   struct device_node *chan_node[TPS23881_MAX_CHANS],
++			   struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS])
++{
++	int ret;
++
++	if (!pi->pairset[0].np)
 +		return 0;
 +
-+	if (pcdev->of_pse_n_cells > 1 ||
-+	    pse_spec->args[0] >= pcdev->nr_lines)
-+		return -EINVAL;
++	ret = tps23881_match_channel(&pi->pairset[0], chan_node);
++	if (ret < 0)
++		return ret;
 +
-+	return pse_spec->args[0];
++	if (!tps23881_is_chan_free(port_matrix, ret)) {
++		pr_err("tps23881: channel %d already used\n", ret);
++		return -ENODEV;
++	}
++
++	port_matrix[pi_id].hw_chan[0] = ret;
++	port_matrix[pi_id].exist = true;
++
++	if (!pi->pairset[1].np)
++		return 0;
++
++	ret = tps23881_match_channel(&pi->pairset[1], chan_node);
++	if (ret < 0)
++		return ret;
++
++	if (!tps23881_is_chan_free(port_matrix, ret)) {
++		pr_err("tps23881: channel %d already used\n", ret);
++		return -ENODEV;
++	}
++
++	if (port_matrix[pi_id].hw_chan[0] / 4 != ret / 4) {
++		pr_err("tps23881: 4-pair PSE can only be set within the same 4 ports group");
++		return -ENODEV;
++	}
++
++	port_matrix[pi_id].hw_chan[1] = ret;
++	port_matrix[pi_id].is_4p = true;
++
++	return 0;
 +}
 +
-+struct pse_control *of_pse_control_get(struct device_node *node)
- {
- 	struct pse_controller_dev *r, *pcdev;
- 	struct of_phandle_args args;
-@@ -222,7 +399,14 @@ of_pse_control_get(struct device_node *node)
- 	mutex_lock(&pse_list_mutex);
- 	pcdev = NULL;
- 	list_for_each_entry(r, &pse_controller_list, list) {
--		if (args.np == r->dev->of_node) {
-+		if (!r->no_of_pse_pi) {
-+			ret = of_pse_match_pi(r, args.np);
-+			if (ret >= 0) {
-+				pcdev = r;
-+				psec_id = ret;
++static int
++tps23881_get_unused_chan(struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS],
++			 int port_cnt)
++{
++	bool used;
++	int i, j;
++
++	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++		used = false;
++
++		for (j = 0; j < port_cnt; j++) {
++			if (port_matrix[j].hw_chan[0] == i) {
++				used = true;
 +				break;
 +			}
-+		} else if (args.np == r->dev->of_node) {
- 			pcdev = r;
- 			break;
- 		}
-@@ -238,10 +422,12 @@ of_pse_control_get(struct device_node *node)
- 		goto out;
- 	}
- 
--	psec_id = pcdev->of_xlate(pcdev, &args);
--	if (psec_id < 0) {
--		psec = ERR_PTR(psec_id);
--		goto out;
-+	if (pcdev->no_of_pse_pi) {
-+		psec_id = psec_id_xlate(pcdev, &args);
-+		if (psec_id < 0) {
-+			psec = ERR_PTR(psec_id);
-+			goto out;
++
++			if (port_matrix[j].is_4p &&
++			    port_matrix[j].hw_chan[1] == i) {
++				used = true;
++				break;
++			}
 +		}
- 	}
- 
- 	/* pse_list_mutex also protects the pcdev's pse_control list */
-diff --git a/include/linux/pse-pd/pse.h b/include/linux/pse-pd/pse.h
-index 19589571157f..e7ac48ef9f95 100644
---- a/include/linux/pse-pd/pse.h
-+++ b/include/linux/pse-pd/pse.h
-@@ -64,6 +64,36 @@ struct device_node;
- struct of_phandle_args;
- struct pse_control;
- 
-+/* PSE PI pairset pinout can either be Alternative A or Alternative B */
-+enum pse_pi_pairset_pinout {
-+	ALTERNATIVE_A,
-+	ALTERNATIVE_B,
-+};
 +
-+/**
-+ * struct pse_pi_pairset - PSE PI pairset entity describing the pinout
-+ *			   alternative ant its phandle
-+ *
-+ * @pinout: description of the pinout alternative
-+ * @np: device node pointer describing the pairset phandle
++		if (!used)
++			return i;
++	}
++
++	return -1;
++}
++
++/* Sort the port matrix to following particular hardware ports matrix
++ * specification of the tps23881. The device has two 4-ports groups and
++ * each 4-pair powered device has to be configured to use two consecutive
++ * logical channel in each 4 ports group (1 and 2 or 3 and 4). Also the
++ * hardware matrix has to be fully configured even with unused chan to be
++ * valid.
 + */
-+struct pse_pi_pairset {
-+	enum pse_pi_pairset_pinout pinout;
-+	struct device_node *np;
-+};
++static int
++tps23881_sort_port_matrix(struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS])
++{
++	struct tps23881_port_matrix tmp_port_matrix[TPS23881_MAX_CHANS] = {0};
++	int i, ret, port_cnt = 0, cnt_4ch_grp1 = 0, cnt_4ch_grp2 = 4;
 +
-+/**
-+ * struct pse_pi - PSE PI (Power Interface) entity as described in
-+ *		   IEEE 802.3-2022 145.2.4
-+ *
-+ * @pairset: table of the PSE PI pinout alternative for the two pairset
-+ * @np: device node pointer of the PSE PI node
++	/* Configure 4p port matrix */
++	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++		int *cnt;
++
++		if (!port_matrix[i].exist || !port_matrix[i].is_4p)
++			continue;
++
++		if (port_matrix[i].hw_chan[0] < 4)
++			cnt = &cnt_4ch_grp1;
++		else
++			cnt = &cnt_4ch_grp2;
++
++		tmp_port_matrix[port_cnt].exist = true;
++		tmp_port_matrix[port_cnt].is_4p = true;
++		tmp_port_matrix[port_cnt].pi_id = i;
++		tmp_port_matrix[port_cnt].hw_chan[0] = port_matrix[i].hw_chan[0];
++		tmp_port_matrix[port_cnt].hw_chan[1] = port_matrix[i].hw_chan[1];
++
++		/* 4-pair ports have to be configured with consecutive
++		 * logical channels 0 and 1, 2 and 3.
++		 */
++		tmp_port_matrix[port_cnt].lgcl_chan[0] = (*cnt)++;
++		tmp_port_matrix[port_cnt].lgcl_chan[1] = (*cnt)++;
++
++		port_cnt++;
++	}
++
++	/* Configure 2p port matrix */
++	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++		int *cnt;
++
++		if (!port_matrix[i].exist || port_matrix[i].is_4p)
++			continue;
++
++		if (port_matrix[i].hw_chan[0] < 4)
++			cnt = &cnt_4ch_grp1;
++		else
++			cnt = &cnt_4ch_grp2;
++
++		tmp_port_matrix[port_cnt].exist = true;
++		tmp_port_matrix[port_cnt].pi_id = i;
++		tmp_port_matrix[port_cnt].lgcl_chan[0] = (*cnt)++;
++		tmp_port_matrix[port_cnt].hw_chan[0] = port_matrix[i].hw_chan[0];
++
++		port_cnt++;
++	}
++
++	/* Complete the rest of the first 4 port group matrix even if
++	 * channels are unused
++	 */
++	while (cnt_4ch_grp1 < 4) {
++		ret = tps23881_get_unused_chan(tmp_port_matrix, port_cnt);
++		if (ret < 0) {
++			pr_err("tps23881: port matrix issue, no chan available\n");
++			return -ENODEV;
++		}
++
++		if (port_cnt >= TPS23881_MAX_CHANS) {
++			pr_err("tps23881: wrong number of channels\n");
++			return -ENODEV;
++		}
++		tmp_port_matrix[port_cnt].lgcl_chan[0] = cnt_4ch_grp1;
++		tmp_port_matrix[port_cnt].hw_chan[0] = ret;
++		cnt_4ch_grp1++;
++		port_cnt++;
++	}
++
++	/* Complete the rest of the second 4 port group matrix even if
++	 * channels are unused
++	 */
++	while (cnt_4ch_grp2 < 8) {
++		ret = tps23881_get_unused_chan(tmp_port_matrix, port_cnt);
++		if (ret < 0) {
++			pr_err("tps23881: port matrix issue, no chan available\n");
++			return -ENODEV;
++		}
++
++		if (port_cnt >= TPS23881_MAX_CHANS) {
++			pr_err("tps23881: wrong number of channels\n");
++			return -ENODEV;
++		}
++		tmp_port_matrix[port_cnt].lgcl_chan[0] = cnt_4ch_grp2;
++		tmp_port_matrix[port_cnt].hw_chan[0] = ret;
++		cnt_4ch_grp2++;
++		port_cnt++;
++	}
++
++	memcpy(port_matrix, tmp_port_matrix, sizeof(tmp_port_matrix));
++
++	return port_cnt;
++}
++
++/* Write port matrix to the hardware port matrix and the software port
++ * matrix.
 + */
-+struct pse_pi {
-+	struct pse_pi_pairset pairset[2];
-+	struct device_node *np;
++static int
++tps23881_write_port_matrix(struct tps23881_priv *priv,
++			   struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS],
++			   int port_cnt)
++{
++	struct i2c_client *client = priv->client;
++	u8 pi_id, lgcl_chan, hw_chan;
++	u16 val = 0;
++	int i, ret;
++
++	for (i = 0; i < port_cnt; i++) {
++		pi_id = port_matrix[i].pi_id;
++		lgcl_chan = port_matrix[i].lgcl_chan[0];
++		hw_chan = port_matrix[i].hw_chan[0] % 4;
++
++		/* Set software port matrix for existing ports */
++		if (port_matrix[i].exist)
++			priv->port[pi_id].chan[0] = lgcl_chan;
++
++		/* Set hardware port matrix for all ports */
++		val |= hw_chan << (lgcl_chan * 2);
++
++		if (!port_matrix[i].is_4p)
++			continue;
++
++		lgcl_chan = port_matrix[i].lgcl_chan[1];
++		hw_chan = port_matrix[i].hw_chan[1] % 4;
++
++		/* Set software port matrix for existing ports */
++		if (port_matrix[i].exist) {
++			priv->port[pi_id].is_4p = true;
++			priv->port[pi_id].chan[1] = lgcl_chan;
++		}
++
++		/* Set hardware port matrix for all ports */
++		val |= hw_chan << (lgcl_chan * 2);
++	}
++
++	/* Write hardware ports matrix */
++	ret = i2c_smbus_write_word_data(client, TPS23881_REG_PORT_MAP, val);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int
++tps23881_set_ports_conf(struct tps23881_priv *priv,
++			struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS])
++{
++	struct i2c_client *client = priv->client;
++	int i, ret;
++	u16 val;
++
++	/* Set operating mode */
++	ret = i2c_smbus_write_word_data(client, TPS23881_REG_OP_MODE, 0xaaaa);
++	if (ret)
++		return ret;
++
++	/* Disable DC disconnect */
++	ret = i2c_smbus_write_word_data(client, TPS23881_REG_DIS_EN, 0x0);
++	if (ret)
++		return ret;
++
++	/* Set port power allocation */
++	val = 0;
++	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++		if (!port_matrix[i].exist)
++			continue;
++
++		if (port_matrix[i].is_4p)
++			val |= 0xf << ((port_matrix[i].lgcl_chan[0] / 2) * 4);
++		else
++			val |= 0x3 << ((port_matrix[i].lgcl_chan[0] / 2) * 4);
++	}
++	ret = i2c_smbus_write_word_data(client, TPS23881_REG_PORT_POWER, val);
++	if (ret)
++		return ret;
++
++	/* Enable detection and classification */
++	val = 0;
++	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++		if (!port_matrix[i].exist)
++			continue;
++
++		val |= BIT(port_matrix[i].lgcl_chan[0]) |
++		       BIT(port_matrix[i].lgcl_chan[0] + 4);
++		if (port_matrix[i].is_4p)
++			val |= BIT(port_matrix[i].lgcl_chan[1]) |
++			       BIT(port_matrix[i].lgcl_chan[1] + 4);
++	}
++	ret = i2c_smbus_write_word_data(client, TPS23881_REG_DET_CLA_EN, 0xffff);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int
++tps23881_set_ports_matrix(struct tps23881_priv *priv,
++			  struct device_node *chan_node[TPS23881_MAX_CHANS])
++{
++	struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS] = {0};
++	int i, ret;
++
++	/* Update with values for every PSE PIs */
++	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++		ret = tps23881_match_port_matrix(&priv->pcdev.pi[i], i,
++						 chan_node, port_matrix);
++		if (ret)
++			return ret;
++	}
++
++	ret = tps23881_sort_port_matrix(port_matrix);
++	if (ret < 0)
++		return ret;
++
++	ret = tps23881_write_port_matrix(priv, port_matrix, ret);
++	if (ret)
++		return ret;
++
++	ret = tps23881_set_ports_conf(priv, port_matrix);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int tps23881_setup_pi_matrix(struct pse_controller_dev *pcdev)
++{
++	struct device_node *chan_node[TPS23881_MAX_CHANS] = {NULL};
++	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
++	int ret, i;
++
++	ret = tps23881_get_of_channels(priv, chan_node);
++	if (ret < 0) {
++		dev_warn(&priv->client->dev,
++			 "Unable to parse port-matrix, default matrix will be used\n");
++		return 0;
++	}
++
++	ret = tps23881_set_ports_matrix(priv, chan_node);
++
++	for (i = 0; i < TPS23881_MAX_CHANS; i++)
++		of_node_put(chan_node[i]);
++
++	return ret;
++}
++
++static const struct pse_controller_ops tps23881_ops = {
++	.setup_pi_matrix = tps23881_setup_pi_matrix,
++	.pi_enable = tps23881_pi_enable,
++	.pi_disable = tps23881_pi_disable,
++	.pi_is_enabled = tps23881_pi_is_enabled,
++	.ethtool_get_status = tps23881_ethtool_get_status,
 +};
 +
- /**
-  * struct pse_controller_dev - PSE controller entity that might
-  *                             provide multiple PSE controls
-@@ -73,11 +103,11 @@ struct pse_control;
-  * @pse_control_head: head of internal list of requested PSE controls
-  * @dev: corresponding driver model device struct
-  * @of_pse_n_cells: number of cells in PSE line specifiers
-- * @of_xlate: translation function to translate from specifier as found in the
-- *            device tree to id as given to the PSE control ops
-  * @nr_lines: number of PSE controls in this controller device
-  * @lock: Mutex for serialization access to the PSE controller
-  * @types: types of the PSE controller
-+ * @pi: table of PSE PIs described in this controller device
-+ * @of_legacy: flag set if the pse_pis devicetree node is not used
-  */
- struct pse_controller_dev {
- 	const struct pse_controller_ops *ops;
-@@ -86,11 +116,11 @@ struct pse_controller_dev {
- 	struct list_head pse_control_head;
- 	struct device *dev;
- 	int of_pse_n_cells;
--	int (*of_xlate)(struct pse_controller_dev *pcdev,
--			const struct of_phandle_args *pse_spec);
- 	unsigned int nr_lines;
- 	struct mutex lock;
- 	enum ethtool_pse_types types;
-+	struct pse_pi *pi;
-+	bool no_of_pse_pi;
- };
- 
- #if IS_ENABLED(CONFIG_PSE_CONTROLLER)
++static const char fw_parity_name[] = "ti/tps23881/tps23881-parity-14.bin";
++static const char fw_sram_name[] = "ti/tps23881/tps23881-sram-14.bin";
++
++struct tps23881_fw_conf {
++	u8 reg;
++	u8 val;
++};
++
++static const struct tps23881_fw_conf tps23881_parity_flash_conf[] = {
++	{.reg = 0x60, .val = 0x01},
++	{.reg = 0x62, .val = 0x00},
++	{.reg = 0x63, .val = 0x80},
++	{.reg = 0x60, .val = 0xC4},
++	{.reg = 0x1D, .val = 0xBC},
++	{.reg = 0xD7, .val = 0x02},
++	{.reg = 0x91, .val = 0x00},
++	{.reg = 0x90, .val = 0x00},
++	{.reg = 0xD7, .val = 0x00},
++	{.reg = 0x1D, .val = 0x00},
++	{ /* sentinel */ }
++};
++
++static const struct tps23881_fw_conf tps23881_sram_flash_conf[] = {
++	{.reg = 0x60, .val = 0xC5},
++	{.reg = 0x62, .val = 0x00},
++	{.reg = 0x63, .val = 0x80},
++	{.reg = 0x60, .val = 0xC0},
++	{.reg = 0x1D, .val = 0xBC},
++	{.reg = 0xD7, .val = 0x02},
++	{.reg = 0x91, .val = 0x00},
++	{.reg = 0x90, .val = 0x00},
++	{.reg = 0xD7, .val = 0x00},
++	{.reg = 0x1D, .val = 0x00},
++	{ /* sentinel */ }
++};
++
++static int tps23881_flash_fw_part(struct i2c_client *client,
++				  const char *fw_name,
++				  const struct tps23881_fw_conf *fw_conf)
++{
++	const struct firmware *fw = NULL;
++	int i, ret;
++
++	ret = request_firmware(&fw, fw_name, &client->dev);
++	if (ret)
++		return ret;
++
++	dev_info(&client->dev, "Flashing %s\n", fw_name);
++
++	/* Prepare device for RAM download */
++	while (fw_conf->reg) {
++		ret = i2c_smbus_write_byte_data(client, fw_conf->reg,
++						fw_conf->val);
++		if (ret)
++			goto out;
++
++		fw_conf++;
++	}
++
++	/* Flash the firmware file */
++	for (i = 0; i < fw->size; i++) {
++		ret = i2c_smbus_write_byte_data(client,
++						TPS23881_REG_SRAM_DATA,
++						fw->data[i]);
++		if (ret)
++			goto out;
++	}
++
++out:
++	release_firmware(fw);
++	return ret;
++}
++
++static int tps23881_flash_fw(struct i2c_client *client)
++{
++	int ret;
++
++	ret = tps23881_flash_fw_part(client, fw_parity_name,
++				     tps23881_parity_flash_conf);
++	if (ret)
++		return ret;
++
++	ret = tps23881_flash_fw_part(client, fw_sram_name,
++				     tps23881_sram_flash_conf);
++	if (ret)
++		return ret;
++
++	ret = i2c_smbus_write_byte_data(client, TPS23881_REG_SRAM_CTRL, 0x18);
++	if (ret)
++		return ret;
++
++	mdelay(12);
++
++	return 0;
++}
++
++static int tps23881_i2c_probe(struct i2c_client *client)
++{
++	struct device *dev = &client->dev;
++	struct tps23881_priv *priv;
++	int ret;
++	u8 val;
++
++	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
++		dev_err(dev, "i2c check functionality failed\n");
++		return -ENXIO;
++	}
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	ret = i2c_smbus_read_byte_data(client, TPS23881_REG_DEVID);
++	if (ret < 0)
++		return ret;
++
++	if (ret != 0x22) {
++		dev_err(dev, "Wrong device ID\n");
++		return -ENXIO;
++	}
++
++	ret = tps23881_flash_fw(client);
++	if (ret < 0)
++		return ret;
++
++	ret = i2c_smbus_read_byte_data(client, TPS23881_REG_FWREV);
++	if (ret < 0)
++		return ret;
++
++	dev_info(&client->dev, "Firmware revision 0x%x\n", ret);
++
++	/* Set configuration B, 16 bit access on a single device address */
++	ret = i2c_smbus_read_byte_data(client, TPS23881_REG_GEN_MASK);
++	if (ret < 0)
++		return ret;
++
++	val = ret | TPS23881_REG_NBITACC;
++	ret = i2c_smbus_write_byte_data(client, TPS23881_REG_GEN_MASK, val);
++	if (ret)
++		return ret;
++
++	priv->client = client;
++	i2c_set_clientdata(client, priv);
++	priv->np = dev->of_node;
++
++	priv->pcdev.owner = THIS_MODULE;
++	priv->pcdev.ops = &tps23881_ops;
++	priv->pcdev.dev = dev;
++	priv->pcdev.types = ETHTOOL_PSE_C33;
++	priv->pcdev.nr_lines = TPS23881_MAX_CHANS;
++	ret = devm_pse_controller_register(dev, &priv->pcdev);
++	if (ret) {
++		return dev_err_probe(dev, ret,
++				     "failed to register PSE controller\n");
++	}
++
++	return ret;
++}
++
++static const struct i2c_device_id tps23881_id[] = {
++	{ "tps23881", 0 },
++	{ },
++};
++MODULE_DEVICE_TABLE(i2c, tps23881_id);
++
++static const struct of_device_id tps23881_of_match[] = {
++	{ .compatible = "ti,tps23881", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, tps23881_of_match);
++
++static struct i2c_driver tps23881_driver = {
++	.probe		= tps23881_i2c_probe,
++	.id_table	= tps23881_id,
++	.driver		= {
++		.name		= "tps23881",
++		.of_match_table = tps23881_of_match,
++	},
++};
++module_i2c_driver(tps23881_driver);
++
++MODULE_AUTHOR("Kory Maincent <kory.maincent@bootlin.com>");
++MODULE_DESCRIPTION("TI TPS23881 PoE PSE Controller driver");
++MODULE_LICENSE("GPL");
 
 -- 
 2.25.1
