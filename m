@@ -1,65 +1,60 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3EB129E6F
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 07:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF34A4CB2E;
+	Tue, 26 Mar 2024 07:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711439626; cv=none; b=Qdv8QlBuMm7MIUsrRy7tCgQkQqDuIkU8o3bF1d+rZc5/sEUD9jhC2stWc5P3HcDz4E+9SzExkHnI3AL0hjVCokBNB8aGQw0JY2yonYxziAuiK2wCF3q+UZ/gtaQi9TisGXImxguP2fQP1ts5IqsGjR3oILcPU0ZCrMG0f9ZK8IE=
+	t=1711439767; cv=none; b=VpGif0xIPXnj1b+NlRUWzQn2yH4yovlKW/hjGha0cKFpELT2wVmHSpkU9MtgyJzAebhKKPq4hEcMlFVKN2rFDViksunVJTOF+LKQhu7aPCd7z3MDgKRMMN5AHYa2O58Nmf6sJp7wAheoSfuoN/F2KCTkejanKqcaI/nAkWhYwMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711439626; c=relaxed/simple;
-	bh=PG+YoBzPj5jfZIegUA9uti2/BxJ/n75EgFGMHvLJVZQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GuEsokstq/br3jhs/gBIz+TBjhzpjDXfmxC/T1t8MeNTVqE+KWDpP+tR6mxyo+N3x5iK/LXDk4/xKHU3CZ1BNVAl6LDu+nEvJdEJ3ds86EBT6bsGu7lW6Ka8ZhIukqckGXOu0Ew+0IzkhNlYQhq2iq2CTNxvO6va3ZZu6fRJY7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZsPZ7K6N; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711439767; c=relaxed/simple;
+	bh=77n1NlsLgQOtQf7Esgl8bEJ1rWyy2eHY3D2N40RUx18=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LzU5kx9Mp8KWO9IaaS3dkHGn3ygC3bjv4U9+CaJICbmRtB1Z9N9YfG9tJTyVUaBX2nFr8Tr0jnCamXSttAHDtDv3kF8Iwj0oOHkhE27y/X/t3DZZAGJrSNTytzgCGPN9RETb56S7fggiCs7940YYqrdNOzdjLtjfMt8+ga7HcE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=S4YxDNco; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZsPZ7K6N"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d4a901e284so101117341fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 00:53:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711439623; x=1712044423; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gjxwVBnuQ/K20A64Qc+EoBsJsbyKZh+2nwPwG7SD+KY=;
-        b=ZsPZ7K6NHbuZO5B/Ym+ns8Gmci1sSdTR/ZC4Fn0cCAWPTZ+HpcBrPRvgpTsySw1fo+
-         uDL1ky7TO8ZhYLppBhWDA6eerNtWh7cDV4HWOTI+PC6UM0n4SPedRqbhxzSCKqEWf7ho
-         J2AH3eOv1sVA7nK3srekvOe23JeAbtU7R18/lb9dPlaMfYqLV/0ELiLlRjyWrjjy5EUk
-         hPunBnaNfQ4hT3tWWCZU+iZxMfXJe668Nx4ThYr/tj4hguWv3pY16xDQjpOAltdmBVbi
-         lffINbHoFsii9TsavzbAobW2japg9PKgevSSrudqTQ32md142mexzba5sF42d3Di5tCk
-         9bBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711439623; x=1712044423;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gjxwVBnuQ/K20A64Qc+EoBsJsbyKZh+2nwPwG7SD+KY=;
-        b=lmcZzI2sg1Yr32GmY1muIU2E54SeSeCnus5CskOiJp4NEeniTnFOdgEl+FggVqySBM
-         a0128yKoeVRIjEIrv6XsJjEsd2fmZ0vbXTkI/obF3MrMOXPTRf4FFbbuvoCwas8WWjgY
-         Pfw+eqOvHcfhzaut7eSeWQAZcFf4W3SPSpqqHOAoGEJl1Epeoj+bMH4gt6aM1mgi+YQB
-         SEL0yEvebv924EMH0qj0vCDHdmU1zREJzIwCq571CjHOEnCHC3iG88MrYOO4LZsLnA95
-         e79wasaTJQ4fZWB3/TdhyY3iSIf6FOHY4mnznniAEGsPKD+HGj9Z502fgmCWPWyBDqi2
-         4xyw==
-X-Forwarded-Encrypted: i=1; AJvYcCUAe7ynFhZKQQYhpvwrKYoQekaA661su9Tv9NXVMpgXmLQoCYn+Edyv2FgqMrB5dNk93A7VRDbzZROLZyMhwzSTmGgyBAUOtZHUSONn
-X-Gm-Message-State: AOJu0YwZpI2r2Gy63VcZ61DI4uszlTEaai8SyYKwIwjFf2bNBFomwFUT
-	JgsfFSzaCVZmWAVTG+7YXULPXol67x3wPQcolndOzXNReeAUUqpIveJjal5XXyRv+B+x80vIT5H
-	y
-X-Google-Smtp-Source: AGHT+IG9y5ndJ6oRkEe7UN5reyJscNBQXXw3eD7MyAaFc6udt4nkQT5PJ+koYh/yowbN8nKlKNoutA==
-X-Received: by 2002:a2e:b74e:0:b0:2d4:6a34:97bf with SMTP id k14-20020a2eb74e000000b002d46a3497bfmr6608596ljo.49.1711439623083;
-        Tue, 26 Mar 2024 00:53:43 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.222.44])
-        by smtp.gmail.com with ESMTPSA id g17-20020a170906539100b00a4b27cd1c8esm1349034ejo.120.2024.03.26.00.53.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 00:53:42 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: "Theodore Ts'o" <tytso@mit.edu>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] virt: vmgenid: drop redundant .owner
-Date: Tue, 26 Mar 2024 08:53:37 +0100
-Message-Id: <20240326075337.55377-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="S4YxDNco"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42Q7rht5020463;
+	Tue, 26 Mar 2024 08:55:41 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=selector1; bh=Na0dP/m
+	dBs4BLxpEYdqbjgbAo3j03TJxGOWuR82MAOQ=; b=S4YxDNcoUGspfJQBA6y8fa1
+	+MNSYdj2PJGI/bQ++DY9JwS3MLd8eUlasogLBsYuZcZrP1+i5P7AY4MulzM47ExC
+	yQNSHCVuLikaRR13vrKMX1uDTwxARNkWcbUH0zNpt2gnWB/63m3hzItYgqpeJ1OF
+	ANqWQX7LHnrbWOuho3Z+Xx6Nh5XD4dyMcddr8I6j2hLJAlNAsjJ86mPEgFHrsOwu
+	7kIUmrq64Z25vCTUvY3iXUq9ZCocdqkc9RZ0OTdDtEcyg8H8va+C17mPNzMWBBpm
+	v7q4ECKQOxU8MTBNYWM0qW/8dlHZiTZlcS0E1+759Ht12cPnG4VEUtA0WB5U/Qg=
+	=
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3x1qa342v7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Mar 2024 08:55:41 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 368DD40046;
+	Tue, 26 Mar 2024 08:55:05 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 85EBB2105BE;
+	Tue, 26 Mar 2024 08:54:41 +0100 (CET)
+Received: from localhost (10.201.20.71) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 26 Mar
+ 2024 08:54:41 +0100
+From: <patrice.chotard@foss.st.com>
+To: <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        <alexandre.torgue@foss.st.com>
+CC: <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Patrice Chotard <patrice.chotard@foss.st.com>
+Subject: [PATCH v2] ARM: dts: stm32: add heartbeat led for stm32mp157c-ed1
+Date: Tue, 26 Mar 2024 08:54:38 +0100
+Message-ID: <20240326075438.2891335-1-patrice.chotard@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,26 +62,56 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SAFCAS1NODE2.st.com (10.75.90.13) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-26_04,2024-03-21_02,2023-05-22_02
 
-Core already sets .owner in acpi_bus_register_driver().
+From: Patrice Chotard <patrice.chotard@foss.st.com>
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Add heartbeat led for stm32mp157c-ed1.
+
+Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
 ---
- drivers/virt/vmgenid.c | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/virt/vmgenid.c b/drivers/virt/vmgenid.c
-index b67a28da4702..8f6880c3a87f 100644
---- a/drivers/virt/vmgenid.c
-+++ b/drivers/virt/vmgenid.c
-@@ -88,7 +88,6 @@ static const struct acpi_device_id vmgenid_ids[] = {
- static struct acpi_driver vmgenid_driver = {
- 	.name = "vmgenid",
- 	.ids = vmgenid_ids,
--	.owner = THIS_MODULE,
- 	.ops = {
- 		.add = vmgenid_add,
- 		.notify = vmgenid_notify
+V2 changes :
+  _ add color and function properties.
+
+ arch/arm/boot/dts/st/stm32mp157c-ed1.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/arch/arm/boot/dts/st/stm32mp157c-ed1.dts b/arch/arm/boot/dts/st/stm32mp157c-ed1.dts
+index 66ed5f9921ba..525d9ca7d576 100644
+--- a/arch/arm/boot/dts/st/stm32mp157c-ed1.dts
++++ b/arch/arm/boot/dts/st/stm32mp157c-ed1.dts
+@@ -10,6 +10,7 @@
+ #include "stm32mp15-pinctrl.dtsi"
+ #include "stm32mp15xxaa-pinctrl.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/leds/common.h>
+ #include <dt-bindings/mfd/st,stpmic1.h>
+ 
+ / {
+@@ -24,6 +25,17 @@ chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	led {
++		compatible = "gpio-leds";
++		led-blue {
++			gpios = <&gpiod 9 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++			default-state = "off";
++			function = LED_FUNCTION_HEARTBEAT;
++			color = <LED_COLOR_ID_BLUE>;
++		};
++	};
++
+ 	memory@c0000000 {
+ 		device_type = "memory";
+ 		reg = <0xC0000000 0x40000000>;
 -- 
-2.34.1
+2.25.1
 
