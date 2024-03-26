@@ -1,119 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FDA8134422;
-	Tue, 26 Mar 2024 08:28:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38B8134420
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 08:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711441712; cv=none; b=apgpVcIwBOAzF844+6yhSBortkIurwKa7OmMXkpRUJEFUI+b8NjQ764gQcel7kJ4OlYG2rP0To5+CXYSZ6o5zx4AHee8UMUpjE7mu/4FKEqpxoquSCDKSu5XiRACCSiyfOaGvfnICnT47GIS1Xs4R+Fe4iXTs1TQ7kwb3m/yTHk=
+	t=1711441713; cv=none; b=NhB1A1gLtRDh2DX2tHyTaUyfxjNITbV6ZhDqObgLBuQRcrzgdhCp3WQNJWJ2Xy4a4etuqa9KmpAvLlbN/Yow7Gkg2tzqN7DSOvSQpWRB8G3jxv2k08Hpq3+SQs2B0gdMUG7T2FEZsiPPQNPZMbM80NfdtN1CTaQpG88MGQ/3AEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711441712; c=relaxed/simple;
-	bh=rAq3xkAVaETYPSPHUg5emdE8mb8m91SeBHFnjLnSNn8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SloYujdLCU+fF3FxFixPxdUOMrLqhMGBudM1MO/ZpMoCjGl2GJGdaPabkB66HHKqX+jdtXJZTWxNaGEPQiBIsBMA/v1QyZxmfNNsDHRgPNxq1mEfOkVm0sobCT0qSbIo7wq/iQsI5Fw5CLZMxwc9SK7yHzUf0YgRf3HJnzTAZhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QPX+K2s6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711441713; c=relaxed/simple;
+	bh=Znj+atbMFctim9XGRSLE0mYfaMQuqrWG3FBTk1G3Y74=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oRIdf4xcTnYCXV+NiQlEV/GoMzveyOcYgVT1zcSK/XnVbXZdX6bC14H6Fg8O2nhEp2EJBOHvvYUzQow9rB3tOqP2TCk0qc3YY0xogpLyokLhuDGrr9EtujZ3h9nL3n0KNsyB+HkQCoDcYJHZ7rpTOh2I+jotCBj6mBA/pL24VDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HW9lbgsR; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QPX+K2s6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AC61C43390;
-	Tue, 26 Mar 2024 08:28:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711441712;
-	bh=rAq3xkAVaETYPSPHUg5emdE8mb8m91SeBHFnjLnSNn8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QPX+K2s6Vr6NTDLfB3RrMOcdU+ZZLsM3yi6/UuG1rCLWGYX+tW6sSPLzry0FeTlqg
-	 P/ZWca+hJGB2i/WX4iK9602OM20iNmLSN2gdhbKNT9wIn2yp/uUJy++OrzzRuhRDqs
-	 ggx07RkbJigaK8eTh8Asbbpd29MpB7P34PzZMBU0NzxjJXhXbgvg7/7FZHo/3UTnhK
-	 JcKUrZ8WIA5I0UbhzsY9cEY3gg5rT0w1Stga4RJUAySOJ8nhfubewH1k6a6H283WWC
-	 pyoqRKPvhhYj2tsqznMU3vZqc9g4oP2xVCKmufFZ4UdB+fM6ttcXopv0p6gbxMNZMw
-	 O1nkLix+uYzWA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rp2Ag-0000000060q-3Qe3;
-	Tue, 26 Mar 2024 09:28:39 +0100
-Date: Tue, 26 Mar 2024 09:28:38 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Wesley Cheng <quic_wcheng@quicinc.com>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-	Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, quic_ppratap@quicinc.com,
-	quic_jackp@quicinc.com
-Subject: Re: [PATCH v16 7/9] usb: dwc3: qcom: Refactor IRQ handling in glue
- driver
-Message-ID: <ZgKHNuziNtBhGO9V@hovoldconsulting.com>
-References: <20240307062052.2319851-1-quic_kriskura@quicinc.com>
- <20240307062052.2319851-8-quic_kriskura@quicinc.com>
- <ZgFyukBXIIwZo7v-@hovoldconsulting.com>
- <50926b91-3c61-4dbf-85c9-7558ab96e628@quicinc.com>
- <ZgF6zvaT2OkrbkHK@hovoldconsulting.com>
- <807015d4-c5ed-4e04-9948-fd1ff894a04e@quicinc.com>
- <ZgHUR-Rk-YzqiTtt@hovoldconsulting.com>
- <7b4a6d7f-76ad-471f-a178-dc598fbc0e22@quicinc.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HW9lbgsR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711441711;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=CcCPk+ey5j30y7Fauv13OO5bDxCH8me7JwA7XVw5QRk=;
+	b=HW9lbgsRBB3s2mlw6OhaCjJ4IhqOROooZrB1cAwOakQmVgQP2Vn2PFpknoZFUbERYduRne
+	PrNVCqfb5fBLtGRB4yPc6ZmMOlhGHQ9PvIBqT2DMgM3LWj4kuWdgn4adzFwSNcpt01CoPt
+	FesgO0R7nPDGBKjl9s7YyGZGOPHXVg8=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-108-DgQPD1smMJWLBmtDnbjqAQ-1; Tue, 26 Mar 2024 04:28:28 -0400
+X-MC-Unique: DgQPD1smMJWLBmtDnbjqAQ-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4147f17da12so16709415e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 01:28:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711441707; x=1712046507;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CcCPk+ey5j30y7Fauv13OO5bDxCH8me7JwA7XVw5QRk=;
+        b=GXaNTpJyI9hOTfLWy7rvHTsxadceslnyDqlXEAvbIRlC7M4WSVFTGXwCYKDQtlkqSd
+         OOMNGKbgzSjUoQ3FpGgjiGM46NnwVfqftb6F0U371XcJpEXbk9YE6d9szspSggY95a1X
+         DWieUeGSa6o52DsgEO/25ohJk0He4EJV9A81t1YpY6oBmkw2zHJnwoQ/uxIxaNeA0E+A
+         NaxHbvbWZbOJ4q9FWzHP0o9eKMB6Xzv9CwcJcOY5/51MCav1uyvIVjoBd88uGr7QDJC5
+         7wNYWyvi6RZqiWEj0cCVq5IB2gsPdwvzWEgEYN0SWudaiGTin+4VxuU+gr2NEOSdgyrv
+         iDYQ==
+X-Gm-Message-State: AOJu0YwntidEH9K13KTMd6j7kD/XocJdRQ86KDRD6iRhdmKWykdh3IUf
+	SQjjdxVN0E0ZwQha1CQEADl3FjyFK7axKpbG4YbUHpZh4030MhS/lMJPkfqaw7pk+Wa776+B/EQ
+	M+RJ1ebTDs8Rv9r4yaVYsYh88PxKys9SD1P3Ks76Z09qkJUfxv5MG6lOgXIj8NA==
+X-Received: by 2002:a05:600c:6b0d:b0:413:ef97:45e5 with SMTP id jn13-20020a05600c6b0d00b00413ef9745e5mr366673wmb.21.1711441707195;
+        Tue, 26 Mar 2024 01:28:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGSu02o6wPGnR3954Rn0BOGe25aFV0kXMv1Z8ftJ/Mn9LseEXTqY1z9Anqz92meTbAagCBuyg==
+X-Received: by 2002:a05:600c:6b0d:b0:413:ef97:45e5 with SMTP id jn13-20020a05600c6b0d00b00413ef9745e5mr366658wmb.21.1711441706744;
+        Tue, 26 Mar 2024 01:28:26 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c741:c700:3db9:94c9:28b0:34f2? (p200300cbc741c7003db994c928b034f2.dip0.t-ipconnect.de. [2003:cb:c741:c700:3db9:94c9:28b0:34f2])
+        by smtp.gmail.com with ESMTPSA id f20-20020a05600c155400b0041477f3f99fsm10800948wmg.30.2024.03.26.01.28.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Mar 2024 01:28:26 -0700 (PDT)
+Message-ID: <a6c54afa-b6f7-416a-b70c-072c6f9ea317@redhat.com>
+Date: Tue, 26 Mar 2024 09:28:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7b4a6d7f-76ad-471f-a178-dc598fbc0e22@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 0/2] s390/mm: shared zeropage + KVM fix and
+ optimization
+To: Heiko Carstens <hca@linux.ibm.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>, Peter Xu <peterx@redhat.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Andrea Arcangeli <aarcange@redhat.com>, kvm@vger.kernel.org,
+ linux-s390@vger.kernel.org
+References: <20240321215954.177730-1-david@redhat.com>
+ <20240321151353.68f9a3c9c0b261887e4e5411@linux-foundation.org>
+ <20240326073833.6078-A-hca@linux.ibm.com>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240326073833.6078-A-hca@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 26, 2024 at 01:41:52PM +0530, Krishna Kurapati PSSNV wrote:
-> On 3/26/2024 1:15 AM, Johan Hovold wrote:
+On 26.03.24 08:38, Heiko Carstens wrote:
+> On Thu, Mar 21, 2024 at 03:13:53PM -0700, Andrew Morton wrote:
+>> On Thu, 21 Mar 2024 22:59:52 +0100 David Hildenbrand <david@redhat.com> wrote:
+>>
+>>> Based on current mm-unstable. Maybe at least the second patch should
+>>> go via the s390x tree, I think patch #1 could go that route as well.
+>>
+>> Taking both via the s390 tree is OK by me.  I'll drop the mm.git copies
+>> if/when these turn up in the linux-next feed.
 > 
-> > Just change the logic in dwc3_qcom_find_num_ports() so that it returns 1
-> > if "dp_hs_phy_1" is missing, and otherwise you determine the number of
-> > ports by iterating from 2 to DWC3_MAX_PORTS - 1.
+> Considering the comments I would expect a v2 of this series at some
+> time in the future.
 
-> I made this change and it works. Removed any return value check for the 
-> find_num_ports call as it can return only 1/2/3/4 now.
-> 
-> ---
->      irq = platform_get_irq_byname_optional(pdev, "qusb2_phy");
->          if (irq > 0)
->                  return 1;
-> 
->          irq = platform_get_irq_byname_optional(pdev, "dp_hs_phy_irq");
->          if (irq > 0)
->                  return 1;
+Yes, I'm still waiting for more feedback. I'll likely resend tomorrow.
 
-As I mentioned above, these two lookups are no longer needed and should
-be removed.
- 
->          irq = platform_get_irq_byname_optional(pdev, "dp_hs_phy_1");
->          if (irq <= 0)
->                  return 1;
+-- 
+Cheers,
 
-Just assume it's a single port controller unless "dp_hs_phy_1" is
-present.
- 
->          for (port_index = 1; port_index < DWC3_MAX_PORTS - 1; 
-> port_index++) {
+David / dhildenb
 
-I think this would be more readable if you use port (num) as iterator
-(2..DWC3_MAX_PORTS) as you're returning a number of ports.
-
->                  sprintf(irq_name, "dp_hs_phy_%d", port_index + 1);
-
-Then this would use just "port";
-
-> 
->                  irq = platform_get_irq_byname_optional(pdev, irq_name);
->                  if (irq <= 0)
->                          return port_index;
-
-And return "port - 1" here.
-
->          }
-> 
->          return DWC3_MAX_PORTS;
-
-Johan
