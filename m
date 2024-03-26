@@ -1,25 +1,56 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD4A71BF50
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 16:31:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA071CD21
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 16:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711470673; cv=none; b=C3jqsQYDiiWt3fiNyMnH5/dYVqRewpOT+BAa+sYKjX4GYQmZPjH87mPPPbhFtJtHw3z7G6EAV09x2FA87sRPgcNlxE9QqYRyr5TPeglVv1pwOa0gyxjxhzJi7ktMYr8L5ZZhYObAQPfmvM9DyUEuDq71ZZLPVzkvqOi/n7dmdxg=
+	t=1711470698; cv=none; b=UNaClpbe79BrZGKJurcKZVObZozW9obyeIpRS/uwl9GF0yOcid45OsfDrI2Lq6+wTZOgT1NDVtX7ycBqXcthknKo4BYXb174QslzzlCAwlgsxJgBw6xFK5gKwU0vpbGKExs9lHou2cd/7aRDBKMAEaItvUgpPhQwbooM1XQjomg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711470673; c=relaxed/simple;
-	bh=2f5C4tkfzTlJ21a42KuXQI/22TYKmp8GXHmBCycaH2o=;
+	s=arc-20240116; t=1711470698; c=relaxed/simple;
+	bh=L8F1Vday+FWTauVFASCsmeZfL566744ShzHCrvEoawo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tQr/ddU8yfQ5ea5GLMHkgwZo64FcisHMx0GusYUT+lhKOBmHMI90hfTJnrsQZCi/AY8Zvo0Cdp5Zp/QrDKYSk8xJuDk2uD80JTlTIaFlwxt64tPnX36kgXEUV2SXxYgTBPM1XDUuOiFtdr0tR4+qVW8Lop6P5b9q1ARBm1Ydplo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DFD242F4;
-	Tue, 26 Mar 2024 09:31:44 -0700 (PDT)
-Received: from [10.1.29.179] (XHFQ2J9959.cambridge.arm.com [10.1.29.179])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 683FA3F694;
-	Tue, 26 Mar 2024 09:31:09 -0700 (PDT)
-Message-ID: <d8b3bcf2-495f-42bd-b114-6e3a010644d8@arm.com>
-Date: Tue, 26 Mar 2024 16:31:07 +0000
+	 In-Reply-To:Content-Type; b=uCR114Y6ZN4pGNF3wc0PIreyLnWV45cGJCQO91kCa3pzdl5alwPaS50Y+b9CwtJPhIlIjuYE/w1rHKLTYx13LA/AMePJoendcTmUBy70gghBqEbxYEpmYufW7T3CXJgKwRmQA7P1I1yVFJ0rBz0RUcoPg1wUqa+rZCzrGcu5d34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=GQCpPJWM; arc=none smtp.client-ip=209.85.166.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="GQCpPJWM"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7cc0e831e11so82618339f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 09:31:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1711470696; x=1712075496; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yfNkAoiSfqoBMHCXTVNDVvy9Q+IeLxX3GnUaU3hi0d4=;
+        b=GQCpPJWMQXyquPBuat2ee2x/QdutadD05F6NNONbsn16MB6fqsh/zeWjc5Y7Wrt+FV
+         eoAWi96dUTUDltJGy7XlsQpvhjZygAlCd3fligBw1E7jKni5MpD872YO8EnIYpcWBE5Y
+         QjDOTI0ggq742mbFClcrS6vemgu+KdFgCr+i4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711470696; x=1712075496;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yfNkAoiSfqoBMHCXTVNDVvy9Q+IeLxX3GnUaU3hi0d4=;
+        b=gEbHL769kuO3Bq8QkMnHsI+2CfodDz7wZN4rYycxj5nqZOCOJtDZ+gaMRfHsZ62prI
+         KNXtzSeRqux4A9+3sKSVXBW5ykInJshEROsS4u4vFQlfJdSFl10XftjH+yZ37rbFJslW
+         XVbAIz5YRPVEU4g7fxunNM8osoLepZcretKCvzeca6XpV/xTLtob8j1GekwWyYHU5tkM
+         ce5VuBb4T3JxwY3Y35/SjgNYnWQSsKJg5XwhfxtwwZBvQPTxX5vZKZHMtuhGG56YD5Nm
+         GbAnlKqAH7+rOTZAAXw9bYXAIX7gABFi5LeVhkoNmHXzy3llC+2SWvPKe1UjLIg/ikcz
+         glQw==
+X-Forwarded-Encrypted: i=1; AJvYcCUonPr+3yuXyKddnEJF2SeFZ3m3weuqS6ijjK8OMUxJBm4X+tB9M9kY/yPmq5NcXTklyAxKAxswLEGU60YNQgq4KIr3Y1f/G3qxBxqV
+X-Gm-Message-State: AOJu0Yw+zSKU6qZtlCdwJZ/faUCbEY55oZcfCFffMasamqw4BInbMuMG
+	Dytl5U/bHz9BaoOhtKqfrtoQmZfgU4yzDIjoCxQvuY33A26+Qk9fdAzkLFQkDhY=
+X-Google-Smtp-Source: AGHT+IFIOB1uF4sWL7izkguhAPjySDqnZ6uh5l39VZAdtGVMXGjChQ80uyufCBBSqdun6dbA6+2skQ==
+X-Received: by 2002:a05:6602:335a:b0:7d0:32b0:5764 with SMTP id c26-20020a056602335a00b007d032b05764mr10760573ioz.0.1711470695931;
+        Tue, 26 Mar 2024 09:31:35 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id dx11-20020a0566381d0b00b0047bf1cc6b42sm2782232jab.138.2024.03.26.09.31.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Mar 2024 09:31:35 -0700 (PDT)
+Message-ID: <bede7f50-1355-4a1f-8996-04a5c3eff8ea@linuxfoundation.org>
+Date: Tue, 26 Mar 2024 10:31:34 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,73 +58,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 0/4] Reduce cost of ptep_get_lockless on arm64
-Content-Language: en-GB
-To: David Hildenbrand <david@redhat.com>, Mark Rutland
- <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Muchun Song <muchun.song@linux.dev>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20240215121756.2734131-1-ryan.roberts@arm.com>
- <0ae22147-e1a1-4bcb-8a4c-f900f3f8c39e@redhat.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <0ae22147-e1a1-4bcb-8a4c-f900f3f8c39e@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH 6.8 000/710] 6.8.2-rc2 review
+Content-Language: en-US
+To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+Cc: torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, florian.fainelli@broadcom.com, pavel@denx.de,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240325120018.1768449-1-sashal@kernel.org>
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240325120018.1768449-1-sashal@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 26/03/2024 16:17, David Hildenbrand wrote:
-> On 15.02.24 13:17, Ryan Roberts wrote:
->> This is an RFC for a series that aims to reduce the cost and complexity of
->> ptep_get_lockless() for arm64 when supporting transparent contpte mappings [1].
->> The approach came from discussion with Mark and David [2].
->>
->> It introduces a new helper, ptep_get_lockless_norecency(), which allows the
->> access and dirty bits in the returned pte to be incorrect. This relaxation
->> permits arm64's implementation to just read the single target pte, and avoids
->> having to iterate over the full contpte block to gather the access and dirty
->> bits, for the contpte case.
->>
->> It turns out that none of the call sites using ptep_get_lockless() require
->> accurate access and dirty bit information, so we can also convert those sites.
->> Although a couple of places need care (see patches 2 and 3).
->>
->> Arguably patch 3 is a bit fragile, given the wide accessibility of
->> vmf->orig_pte. So it might make sense to drop this patch and stick to using
->> ptep_get_lockless() in the page fault path. I'm keen to hear opinions.
+On 3/25/24 06:00, Sasha Levin wrote:
 > 
-> Yes. Especially as we have these pte_same() checks that might just fail now
-> because of wrong accessed/dirty bits?
-
-Which pte_same() checks are you referring to? I've changed them all to
-pte_same_norecency() which ignores the access/dirty bits when doing the comparison.
-
+> This is the start of the stable review cycle for the 6.8.2 release.
+> There are 710 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Likely, we just want to read "the real deal" on both sides of the pte_same()
-> handling.
-
-Sorry I'm not sure I understand? You mean read the full pte including
-access/dirty? That's the same as dropping the patch, right? Of course if we do
-that, we still have to keep pte_get_lockless() around for this case. In an ideal
-world we would convert everything over to ptep_get_lockless_norecency() and
-delete ptep_get_lockless() to remove the ugliness from arm64.
-
+> Responses should be made by Wed Mar 27 12:00:13 PM UTC 2024.
+> Anything received after that time might be too late.
 > 
->>
->> I've chosen the name "recency" because it's shortish and somewhat descriptive,
->> and is alredy used in a couple of places to mean similar things (see mglru and
->> damon). I'm open to other names if anyone has better ideas.
+> The whole patch series can be found in one patch at:
+>          https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-6.8.y&id2=v6.8.1
+> or in the git tree and branch at:
+>          git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.8.y
+> and the diffstat can be found below.
 > 
-> Not a native speaker; works for me.
-> 
->>
->> If concensus is that this approach is generally acceptable, I intend to create a
->> series in future to do a similar thing with ptep_get() -> ptep_get_norecency().
-> 
-> Yes, sounds good to me.
+> Thanks,
+> Sasha
 > 
 
+Compiled and booted on my test system. No dmesg regressions.
+
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+
+thanks,
+-- Shuah
