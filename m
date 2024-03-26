@@ -1,189 +1,110 @@
-Received: from h3cspam02-ex.h3c.com (smtp.h3c.com [60.191.123.50])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0861012E71;
-	Tue, 26 Mar 2024 08:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.191.123.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79B43FB9B;
+	Tue, 26 Mar 2024 08:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711443319; cv=none; b=GmqBIzSEPirbF72ie9yFY6lj4VkQMC+ll8UlNA3N2iARKVYCYoDetFMpgEyr2p1I5IrHo58d2haaDZSw1EDsWUdmPkX04XN2oWRn8ixSvS3QQy6M9y6g5bBB67+2nzs7uy99yKLd26ffXIwdj463EOTosk2GeZEkUwrF7S6iKyk=
+	t=1711443368; cv=none; b=aooom3RSjNfSB6VP0hTQRbOppHz4/GQeF3tkaWRF3tOCJjJa+h04iu4JEsUZlQbpDSJ8ZOb7M5vfjlgt61WDV6yASm8yeHAsTk0KIOHZjkLKIVA/d9+4WOuF/U2Ft1zhkZGnwhbN50uVL+BbzuOMztgv/d4CqTmC7JkHpp8Yx74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711443319; c=relaxed/simple;
-	bh=0pMbrfokLkxhCtieTNnDNErMxWAa6xMwMJoC15lnqrM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=birwm9Bqvp2E/yiaxLgltFgjUzmHES+CmmMHb4bXd9xIdvd8Idi374vzNuslQqAsCi3WjDoT6SHtU5zEAtXfAS70hr5oKS8sAsA1PyFpA6Obd+l3IouZIpdtQioRNl/tsVsyzMH1bhwx0jVLwVZ63Ep97yu1OtGbciX9o0GSpRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com; spf=pass smtp.mailfrom=h3c.com; arc=none smtp.client-ip=60.191.123.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h3c.com
-Received: from mail.maildlp.com ([172.25.15.154])
-	by h3cspam02-ex.h3c.com with ESMTP id 42Q8sCf9085219;
-	Tue, 26 Mar 2024 16:54:13 +0800 (GMT-8)
-	(envelope-from liu.yeC@h3c.com)
-Received: from DAG6EX02-IMDC.srv.huawei-3com.com (unknown [10.62.14.11])
-	by mail.maildlp.com (Postfix) with ESMTP id A074722B369C;
-	Tue, 26 Mar 2024 16:56:02 +0800 (CST)
-Received: from localhost.localdomain (10.114.186.34) by
- DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.27; Tue, 26 Mar 2024 16:54:14 +0800
-From: <liu.yec@h3c.com>
-To: <gregkh@linuxfoundation.org>, <jirislaby@kernel.org>
-CC: <dianders@chromium.org>, <jason.wessel@windriver.com>,
-        <kgdb-bugreport@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <liu.yec@h3c.com>,
-        LiuYe <liu.yeC@h3c.com>, Daniel Thompson <daniel.thompson@linaro.org>
-Subject: [PATCH V7] kdb: Fix the deadlock issue in KDB debugging.
-Date: Tue, 26 Mar 2024 16:54:07 +0800
-Message-ID: <20240326085407.1970686-1-liu.yec@h3c.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <2024032630-croon-consuming-6ef9@gregkh>
-References: <2024032630-croon-consuming-6ef9@gregkh>
+	s=arc-20240116; t=1711443368; c=relaxed/simple;
+	bh=OOuwkb/GnfWXmUreRzzoRubqTHVJY1oBNP8Lkd5iLO4=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=c3CmSP2Ot4n71VN7sWWJ5HevHs/Hu3YZF0tnd3hTybu6N4pDEXZrFlOIoX6hW9pAOY/WG1IKHxqb2Ixiyvcy5MhQG8hWAI1xOXwbFNwnvnNlmabPRj1OStJC9oX8vh8BXFqGrmlSMoYE1Mo6hZTHfdBLYbFQ8yaplzXsDzUr8zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=T+8foGwJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eycbu2vf; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T+8foGwJ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eycbu2vf"
+Date: Tue, 26 Mar 2024 08:56:04 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1711443365;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=d/9oO4IBpErftDrrfF8M+qoYDPeSaTc65GGVjFBmBts=;
+	b=T+8foGwJV//5eu55WHpnCQpyudW13T/NP9RS+6uSWAgpmFvxwmPAtlKPuQpwo7R4gs8JI8
+	6FTj2se8ZRgfO+H1BU9xuO+sZNXHc/uY2tjqYfEtQ5+uh6jmhrm0+paddaC+5nXwtv2oiQ
+	23F9Oq+qBhyskwra6QEaoto5ruCsTNUz/mZk6EF1dw8Yde3hbHSMcrz9C9Ol1X4TPfp2uO
+	T6YdO5rIJKigjVMVWQHAIij6fQMVF7dO0D/narzP3C2KWIHRUfY0VwT2Dt+f6yRP+X8Vui
+	fEIrPk7j/IdaN+CiiqZNRwTaW07IQH42EBd2/zoC7HVYA1UzU4WT24sfd/vDrQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1711443365;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=d/9oO4IBpErftDrrfF8M+qoYDPeSaTc65GGVjFBmBts=;
+	b=eycbu2vfekssjfL43wdz6n6Ehq41m1zyW7Ad4lp1eYzkCc8eeLPSnCtgK8X1GjIvK7KO60
+	uTeMWXp+VIZXbgCQ==
+From: "tip-bot2 for Bingsong Si" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/cpu] x86/cpu: Clear TME feature flag if TME is not enabled by BIOS
+Cc: Bingsong Si <sibs@chinatelecom.cn>, Ingo Molnar <mingo@kernel.org>,
+ "Huang, Kai" <kai.huang@intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240311071938.13247-1-sibs@chinatelecom.cn>
+References: <20240311071938.13247-1-sibs@chinatelecom.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BJSMTP01-EX.srv.huawei-3com.com (10.63.20.132) To
- DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11)
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:h3cspam02-ex.h3c.com 42Q8sCf9085219
+Message-ID: <171144336418.10875.2002917635921003194.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-From: LiuYe <liu.yeC@h3c.com>
+The following commit has been merged into the x86/cpu branch of tip:
 
-Currently, if CONFIG_KDB_KEYBOARD is enabled, then kgdboc will
-attempt to use schedule_work() to provoke a keyboard reset when
-transitioning out of the debugger and back to normal operation.
-This can cause deadlock because schedule_work() is not NMI-safe.
+Commit-ID:     cd2236c2f49eb46443fd7573d0ddad5373577b11
+Gitweb:        https://git.kernel.org/tip/cd2236c2f49eb46443fd7573d0ddad5373577b11
+Author:        Bingsong Si <sibs@chinatelecom.cn>
+AuthorDate:    Mon, 11 Mar 2024 15:19:37 +08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 26 Mar 2024 09:49:32 +01:00
 
-The stack trace below shows an example of the problem. In this
-case the master cpu is not running from NMI but it has parked
-the slave CPUs using an NMI and the parked CPUs is holding
-spinlocks needed by schedule_work().
+x86/cpu: Clear TME feature flag if TME is not enabled by BIOS
 
-example:
- BUG: spinlock lockup suspected on CPU#0, namex/10450
- lock: 0xffff881ffe823980, .magic: dead4ead, .owner: namexx/21888, .owner_cpu: 1
- ffff881741d00000 ffff881741c01000 0000000000000000 0000000000000000
- ffff881740f58e78 ffff881741cffdd0 ffffffff8147a7fc ffff881740f58f20
-Call Trace:
- [<ffffffff81479e6d>] ? __schedule+0x16d/0xac0
- [<ffffffff8147a7fc>] ? schedule+0x3c/0x90
- [<ffffffff8147e71a>] ? schedule_hrtimeout_range_clock+0x10a/0x120
- [<ffffffff8147d22e>] ? mutex_unlock+0xe/0x10
- [<ffffffff811c839b>] ? ep_scan_ready_list+0x1db/0x1e0
- [<ffffffff8147e743>] ? schedule_hrtimeout_range+0x13/0x20
- [<ffffffff811c864a>] ? ep_poll+0x27a/0x3b0
- [<ffffffff8108c540>] ? wake_up_q+0x70/0x70
- [<ffffffff811c99a8>] ? SyS_epoll_wait+0xb8/0xd0
- [<ffffffff8147f296>] ? entry_SYSCALL_64_fastpath+0x12/0x75
- CPU: 0 PID: 10450 Comm: namex Tainted: G           O    4.4.65 #1
- Hardware name: Insyde Purley/Type2 - Board Product Name1, BIOS 05.21.51.0036 07/19/2019
-  0000000000000000 ffff881ffe813c10 ffffffff8124e883 ffff881741c01000
-  ffff881ffe823980 ffff881ffe813c38 ffffffff810a7f7f ffff881ffe823980
-  000000007d2b7cd0 0000000000000001 ffff881ffe813c68 ffffffff810a80e0
-  Call Trace:
-  <#DB>  [<ffffffff8124e883>] dump_stack+0x85/0xc2
-  [<ffffffff810a7f7f>] spin_dump+0x7f/0x100
-  [<ffffffff810a80e0>] do_raw_spin_lock+0xa0/0x150
-  [<ffffffff8147eb55>] _raw_spin_lock+0x15/0x20
-  [<ffffffff8108c256>] try_to_wake_up+0x176/0x3d0
-  [<ffffffff8108c4c5>] wake_up_process+0x15/0x20
-  [<ffffffff8107b371>] insert_work+0x81/0xc0
-  [<ffffffff8107b4e5>] __queue_work+0x135/0x390
-  [<ffffffff8107b786>] queue_work_on+0x46/0x90
-  [<ffffffff81313d28>] kgdboc_post_exp_handler+0x48/0x70
-  [<ffffffff810ed488>] kgdb_cpu_enter+0x598/0x610
-  [<ffffffff810ed6e2>] kgdb_handle_exception+0xf2/0x1f0
-  [<ffffffff81054e21>] __kgdb_notify+0x71/0xd0
-  [<ffffffff81054eb5>] kgdb_notify+0x35/0x70
-  [<ffffffff81082e6a>] notifier_call_chain+0x4a/0x70
-  [<ffffffff8108304d>] notify_die+0x3d/0x50
-  [<ffffffff81017219>] do_int3+0x89/0x120
-  [<ffffffff81480fb4>] int3+0x44/0x80
+When TME is disabled by BIOS, the dmesg output is:
 
-We fix the problem by using irq_work to call schedule_work()
-instead of calling it directly. irq_work is an NMI-safe deferred work
-framework that performs the requested work from a hardirq context
-(usually an IPI but it can be timer interrupt on some
-architectures).
+  x86/tme: not enabled by BIOS
 
-Note that we still need to a workqueue since we cannot resync
-the keyboard state from the hardirq context provided by irq_work.
-That must be done from task context for the calls into the input
-subystem. Hence we must defer the work twice. First to safely
-switch from the debug trap (NMI-like context) to hardirq and
-then, secondly, to get from hardirq to the system workqueue.
+... and TME functionality is not enabled by the kernel, but the TME feature
+is still shown in /proc/cpuinfo.
 
-Signed-off-by: LiuYe <liu.yeC@h3c.com>
-Co-authored-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Clear it.
 
+[ mingo: Clarified changelog ]
+
+Signed-off-by: Bingsong Si <sibs@chinatelecom.cn>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: "Huang, Kai" <kai.huang@intel.com>
+Link: https://lore.kernel.org/r/20240311071938.13247-1-sibs@chinatelecom.cn
 ---
-V6 -> V7: Add comments in the code.
-V5 -> V6: Replace with a more professional and accurate answer.
-V4 -> V5: Answer why schedule another work in the irq_work and not do the job directly.
-V3 -> V4: Add changelogs
-V2 -> V3: Add description information
-V1 -> V2: using irq_work to solve this properly.
----
----
- drivers/tty/serial/kgdboc.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ arch/x86/kernel/cpu/intel.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-index 7ce7bb164..750ed66d2 100644
---- a/drivers/tty/serial/kgdboc.c
-+++ b/drivers/tty/serial/kgdboc.c
-@@ -22,6 +22,7 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/serial_core.h>
-+#include <linux/irq_work.h>
- 
- #define MAX_CONFIG_LEN		40
- 
-@@ -98,11 +99,29 @@ static void kgdboc_restore_input_helper(struct work_struct *dummy)
- }
- 
- static DECLARE_WORK(kgdboc_restore_input_work, kgdboc_restore_input_helper);
-+/*
-+ * We fix the problem by using irq_work to call schedule_work()
-+ * instead of calling it directly. irq_work is an NMI-safe deferred work
-+ * framework that performs the requested work from a hardirq context
-+ * (usually an IPI but it can be timer interrupt on some
-+ * architectures). Note that we still need to a workqueue since we cannot resync
-+ * the keyboard state from the hardirq context provided by irq_work.
-+ * That must be done from task context for the calls into the input
-+ * subystem. Hence we must defer the work twice. First to safely
-+ * switch from the debug trap (NMI-like context) to hardirq and
-+ * then, secondly, to get from hardirq to the system workqueue.
-+ */
-+static void kgdboc_queue_restore_input_helper(struct irq_work *unused)
-+{
-+	schedule_work(&kgdboc_restore_input_work);
-+}
-+
-+static DEFINE_IRQ_WORK(kgdboc_restore_input_irq_work, kgdboc_queue_restore_input_helper);
- 
- static void kgdboc_restore_input(void)
- {
- 	if (likely(system_state == SYSTEM_RUNNING))
--		schedule_work(&kgdboc_restore_input_work);
-+		irq_work_queue(&kgdboc_restore_input_irq_work);
- }
- 
- static int kgdboc_register_kbd(char **cptr)
-@@ -133,6 +152,7 @@ static void kgdboc_unregister_kbd(void)
- 			i--;
- 		}
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index be30d7f..3c3e7e5 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -228,6 +228,7 @@ static void detect_tme_early(struct cpuinfo_x86 *c)
+ 	if (!TME_ACTIVATE_LOCKED(tme_activate) || !TME_ACTIVATE_ENABLED(tme_activate)) {
+ 		pr_info_once("x86/tme: not enabled by BIOS\n");
+ 		mktme_status = MKTME_DISABLED;
++		clear_cpu_cap(c, X86_FEATURE_TME);
+ 		return;
  	}
-+	irq_work_sync(&kgdboc_restore_input_irq_work);
- 	flush_work(&kgdboc_restore_input_work);
- }
- #else /* ! CONFIG_KDB_KEYBOARD */
--- 
-2.25.1
-
+ 
