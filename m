@@ -1,158 +1,138 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5D76FE26;
-	Tue, 26 Mar 2024 13:02:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2F128E8;
+	Tue, 26 Mar 2024 13:03:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711458149; cv=none; b=ReuJbXRDqdlyKCL5wY7nrVCCjqgzHeaJPcONi/kKM0wN3+4hweK2sUYw29pxvr5x98FH9Rw4P9kNfsRNkhi8Di+bAgYdIPQ77gogn7t6FW82OVT4Q80+qGH/KTleI7goHS569mLpi4TmedaZjDvZvgsfKtEUOFflkSCiOp4DGoA=
+	t=1711458209; cv=none; b=ujtJ/S/67kEtNWJq5PpJ3Jhet+/C3OpY9XFW16UoJBi7Ki5fqlIHQD2Rr3OvRvnCCXv6V5nQAC0/CsCFJ00Y923Me2nAWDnTGpfh5ys+zN5Z5au8uEKpxsug9cuD9ZZUz9u/eNqbZOmT41JwZczIxskalmZpfLa+7iMCYv61EIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711458149; c=relaxed/simple;
-	bh=eNyG2SQ69HyaYFsda24myvfLARA/R7XISr9MP1yNOjs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PO0a0J7dZXFjmaJl8kPx4YzZT3V1RDSMnSJywoyVKbiMevT5EoaApHPvQUbnHWc9d7V8UgPshPIqrE5/FL6jS4kGVx4LkqQfChW9dPMOERd30Un41VmYQ2rs1VqbihPd5ax298QrqVN7BhHCb0iZFFQsOP1XMCGGWAFNgKw3PjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=H86dfRXp; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1711458209; c=relaxed/simple;
+	bh=+FhhRxT7C84hEImrOqevSzjSw39HhBXEwv19zjNQaIA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=KeIsrTlCd1Hu83O0vhF1ksVsnV9Wwph45iD77w+qRIz94iX/LTCvJgv8ki0E41Sdfdbtm5XlQZtoFjpQQywHirxEm08nwmBcoJl8Q0oEAXQn+KWsxCb0+ZyTHVnuN3kzd/5OUQPdXAHMydS7eMFTMqVEIcLXyjjdYhJBw448I90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fvX+7qv3; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="H86dfRXp"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42Q9FH4S009970;
-	Tue, 26 Mar 2024 14:01:59 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=selector1; bh=QloCXwv
-	iKDQy08mLenO0tS2XCKRzTagg1MEsZ0Mf8XA=; b=H86dfRXpBT8MM9lxQbwMshD
-	XLhWXJq2AGMR8Dz1uSEJAJbKvxy5nUClfKUDL57PePil2AckF37ufhmrRkmTyLe6
-	XVu8xjaY+BVyZzmEMPA4aUxw0BCAo3Vo0pB1h/EvzOROiVkq9MBI84bCUm/643uC
-	e9SHQJrCzqNAoVjKrBuJMyOFVMTaP+DlOMMN3gMcMTIk3fJTyXKeZirEThPjIe9p
-	KH4WlTpjU9Vr3JLfVxPy8IV0v7zeETXsr9eo2A7I8ezTuTnKykEU8h3q5x7+f+2N
-	Kpsi3ar4ifVe8IVzuaooC2UwJDYj20IYkRgWzRfZSgqi4f5Diy98/v3dkiHBojQ=
-	=
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3x2awpasx1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 14:01:58 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id AA6D14002D;
-	Tue, 26 Mar 2024 14:01:55 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 057C221863B;
-	Tue, 26 Mar 2024 14:00:42 +0100 (CET)
-Received: from localhost (10.201.21.128) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 26 Mar
- 2024 14:00:39 +0100
-From: Christophe Roullier <christophe.roullier@foss.st.com>
-To: "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni
-	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark
- Brown <broonie@kernel.org>,
-        Christophe Roullier
-	<christophe.roullier@foss.st.com>,
-        Marek Vasut <marex@denx.de>
-CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 2/2] dt-bindings: net: dwmac: Document STM32 property st,ext-phyclk
-Date: Tue, 26 Mar 2024 14:00:17 +0100
-Message-ID: <20240326130017.226875-3-christophe.roullier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvX+7qv3"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-513ccc70a6dso9495079e87.1;
+        Tue, 26 Mar 2024 06:03:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711458206; x=1712063006; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QYmh51LEOzN+NihFa+3AsPFO3SRwSe2SPndTbPe4Vt0=;
+        b=fvX+7qv3tFVlnUZYzS4WMFTfVxwhP6N0EAQeE1kN4bES4koe58+ZwsPSZzS0U0edVo
+         W+3/qPQulpgfYjmkyIA8uC7knXUUdAe4f9ytOL5O1PCHzhheE5QzXeZa4ymjygGbiIsh
+         J/UH++gQGrkR9Sk95fyusbnJzy5EEXdlLq2bWUi2lqz6OIUy4ObbLAdmQcppb048sAAb
+         6u9eMhePJfgGWRDxy30PLCVPikk7BeqUBCJGuMAyix9AQ2b4kDOWrahiE7Xfw8Dc5ZtV
+         J6CJqGVsOTnzsUFQnHMTPbt9fdKurtOOicfwzwF+CSSXa6HPZsnItFG469xWhD2sBj0Z
+         B+Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711458206; x=1712063006;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QYmh51LEOzN+NihFa+3AsPFO3SRwSe2SPndTbPe4Vt0=;
+        b=vLMISqlAP9SB/txQPOjhB9SRH20TDsV7TcQJyZOG2kW9Z8Ld34s0+n774Jh9H73Fa/
+         kXkoLr6B4YRdlQQskfw9D3lD8jDH6AEo/aL/4nNrGctUBkTdKvfNPEVyQZqrVnFq1HU7
+         2v1kVKOcTEoSweDK/D8emzpuI3ymI8Dh9PuI7Petq6bf5qMQLcnP2Sc/hMRN0xdp1ctm
+         ZKYJYNVwpZBzCnLazKyrORo9jZfAkF00ZtLYogSZvryibPcVDEyM2vwhE50LK0S3quw3
+         g5ri/eFcuGJnuzf0cHVZ6KWEforawPZ5OWjFIrJwdquW0WYpA0uG3f/7LUd4e5xKgwIj
+         3HKA==
+X-Forwarded-Encrypted: i=1; AJvYcCV3pfn/7oBcfeSxvUl2Uy9RIspVCw2eeCwODAUS2nZBN0+jVxals9XoCCJTREYTQ9pgzLcoWCf0BcB8SlPrQTZTIQdzMYOHMhLQhS8YIB1bO2e93iB3rq/b3twqzaDaOPTrQ86+1jlmxQ==
+X-Gm-Message-State: AOJu0YxbYH9l195v1BUHla7/YZrVH2v4EfaIIY8XGWPDHq07EWxQKfsv
+	kYrnsm+PKMGeo6jFjilk4CyGyz37f+QukWSW0pQn9LJgMHZq8mC3
+X-Google-Smtp-Source: AGHT+IFODD4Gl0HxVCiF/9V0SOihSYufgOxSUugBuMnHEz6PzbgVoV2LniUHJBJoEck1ggSsemVoxg==
+X-Received: by 2002:a05:6512:21c:b0:513:e031:739a with SMTP id a28-20020a056512021c00b00513e031739amr8039317lfo.22.1711458205516;
+        Tue, 26 Mar 2024 06:03:25 -0700 (PDT)
+Received: from [127.0.1.1] (2a02-8389-41cf-e200-b4b2-cd0d-1ebc-3c05.cable.dynamic.v6.surfer.at. [2a02:8389:41cf:e200:b4b2:cd0d:1ebc:3c05])
+        by smtp.gmail.com with ESMTPSA id wg6-20020a17090705c600b00a4a3580b215sm2206279ejb.80.2024.03.26.06.03.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 06:03:24 -0700 (PDT)
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Subject: [PATCH v3 0/4] dt-bindings: rtc: convert multiple devices to
+ dtschema
+Date: Tue, 26 Mar 2024 14:03:22 +0100
+Message-Id: <20240326-rtc-yaml-v3-0-caa430ecace7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-26_06,2024-03-21_02,2023-05-22_02
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJrHAmYC/02MywqDMBBFf0Vm3ZRkRlvtqv9RujAvDfgikVAR/
+ 71RKHV5LvecFYLxzgR4ZCt4E11w45CALhmoth4aw5xODMgx54TI/KzYUvcdy+9EVChpKyEg3Sd
+ vrPscqdc7cevCPPrlKEexr78I/SNRMM64KrRAKWRZ6WfT1667qrGHPRLxLBYnEZNobWVvpc1JS
+ 3UWt237ApI2SqzZAAAA
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Baruch Siach <baruch@tkos.co.il>
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711458204; l=2161;
+ i=javier.carrasco.cruz@gmail.com; s=20240312; h=from:subject:message-id;
+ bh=+FhhRxT7C84hEImrOqevSzjSw39HhBXEwv19zjNQaIA=;
+ b=j1MYt5XVObkjpiuxvq5hxLJ9FT6qXILg0SA09+5z4sWxdIc5Y6Jt2Gv/By4Xlc6msaAULUHbv
+ wpvSjLteRGFDXHv0/1y4KIaMuZV8qR2VlY6jLVhpr4kSEWm5AE7XezB
+X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
+ pk=lzSIvIzMz0JhJrzLXI0HAdPwsNPSSmEn6RbS+PTS9aQ=
 
-The Linux kernel dwmac-stm32 driver currently supports three DT
-properties used to configure whether PHY clock are generated by
-the MAC or supplied to the MAC from the PHY.
+This series converts the following existing bindings to dtschema:
 
-Originally there were two properties, st,eth-clk-sel and
-st,eth-ref-clk-sel, each used to configure MAC clocking in
-different bus mode and for different MAC clock frequency.
-Since it is possible to determine the MAC 'eth-ck' clock
-frequency from the clock subsystem and PHY bus mode from
-the 'phy-mode' property, two disparate DT properties are
-no longer required to configure MAC clocking.
+- armada-380-rtc
+- alphascale,asm9260-rtc
+- digicolor-rtc (moved to trivial-rtc)
+- nxp,lpc1788-rtc
 
-Linux kernel commit 1bb694e20839 ("net: ethernet: stmmac: simplify phy modes management for stm32")
-introduced a third, unified, property st,ext-phyclk. This property
-covers both use cases of st,eth-clk-sel and st,eth-ref-clk-sel DT
-properties, as well as a new use case for 25 MHz clock generated
-by the MAC.
+All bindings include at least one compatible that is referenced in the
+existing dts (arch/arm). Those dts could be tested against the new
+bindings.
 
-The third property st,ext-phyclk is so far undocumented,
-document it.
+It might be worth mentioning that the reference to nxp,lpc1788-rtc in
+arch/arm/boot/dts/nxp/lpc/lpc18xx.dtsi also includes another compatible
+called nxp,lpc1850-rtc, which is not documented or supported by existing
+drivers. That generates a warning when testing against nxp,lpc1788-rtc.
 
-Below table summarizes the clock requirement and clock sources for
-supported PHY interface modes.
- __________________________________________________________________________
-|PHY_MODE | Normal | PHY wo crystal|   PHY wo crystal   |No 125Mhz from PHY|
-|         |        |      25MHz    |        50MHz       |                  |
-
----------------------------------------------------------------------------
-|  MII    |    -   |     eth-ck    |        n/a         |       n/a        |
-|         |        | st,ext-phyclk |                    |                  |
-
----------------------------------------------------------------------------
-|  GMII   |    -   |     eth-ck    |        n/a         |       n/a        |
-|         |        | st,ext-phyclk |                    |                  |
-
----------------------------------------------------------------------------
-| RGMII   |    -   |     eth-ck    |        n/a         |      eth-ck      |
-|         |        | st,ext-phyclk |                    | st,eth-clk-sel or|
-|         |        |               |                    | st,ext-phyclk    |
-
----------------------------------------------------------------------------
-| RMII    |    -   |     eth-ck    |      eth-ck        |       n/a        |
-|         |        | st,ext-phyclk | st,eth-ref-clk-sel |                  |
-|         |        |               | or st,ext-phyclk   |                  |
-
----------------------------------------------------------------------------
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
+Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
 ---
- Documentation/devicetree/bindings/net/stm32-dwmac.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
+Changes in v3:
+- alphascale-asm9260-rtc: drop unnecessary reg description.
+- nxp,lpc1788-rtc: drop unnecessary reg description.
+- Link to v2: https://lore.kernel.org/r/20240325-rtc-yaml-v2-0-ff9f68f43dbc@gmail.com
 
-diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-index 80937b28fa046..529665d4fc911 100644
---- a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-+++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-@@ -85,6 +85,13 @@ properties:
-   phy-supply:
-     description: PHY regulator
- 
-+  st,ext-phyclk:
-+    description:
-+      set this property in RMII mode when you have PHY without crystal 50MHz and want to
-+      select RCC clock instead of ETH_REF_CLK. OR in RGMII mode when you want to select
-+      RCC clock instead of ETH_CLK125.
-+    type: boolean
-+
-   st,eth-clk-sel:
-     description:
-       set this property in RGMII PHY when you want to select RCC clock instead of ETH_CLK125.
+Changes in v2:
+- General: reference to rtc.yaml
+- digicolor-rtc: move to trivial-rtc
+- Link to v1: https://lore.kernel.org/r/20240323-rtc-yaml-v1-0-0c5d12b1b89d@gmail.com
+
+---
+Javier Carrasco (4):
+      dt-bindings: rtc: armada-380-rtc: convert to dtschema
+      dt-bindings: rtc: alphascale,asm9260-rtc: convert to dtschema
+      dt-bindings: rtc: digicolor-rtc: move to trivial-rtc
+      dt-bindings: rtc: nxp,lpc1788-rtc: convert to dtschema
+
+ .../bindings/rtc/alphascale,asm9260-rtc.txt        | 19 -------
+ .../bindings/rtc/alphascale,asm9260-rtc.yaml       | 50 +++++++++++++++++++
+ .../devicetree/bindings/rtc/armada-380-rtc.txt     | 24 ---------
+ .../devicetree/bindings/rtc/digicolor-rtc.txt      | 17 -------
+ .../bindings/rtc/marvell,armada-380-rtc.yaml       | 51 +++++++++++++++++++
+ .../devicetree/bindings/rtc/nxp,lpc1788-rtc.txt    | 21 --------
+ .../devicetree/bindings/rtc/nxp,lpc1788-rtc.yaml   | 58 ++++++++++++++++++++++
+ .../devicetree/bindings/rtc/trivial-rtc.yaml       |  2 +
+ 8 files changed, 161 insertions(+), 81 deletions(-)
+---
+base-commit: 4cece764965020c22cff7665b18a012006359095
+change-id: 20240322-rtc-yaml-473335cbf911
+
+Best regards,
 -- 
-2.25.1
+Javier Carrasco <javier.carrasco.cruz@gmail.com>
 
