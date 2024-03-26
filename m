@@ -1,136 +1,165 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F811D543;
-	Tue, 26 Mar 2024 17:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA671C6B0;
+	Tue, 26 Mar 2024 17:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711473715; cv=none; b=JWNLpe6miG4lA3D9fBb9+hMj92ScG3eL5TBQiXyO1fVtwO86gwepFktBo2by+jKQM90DsIYFfalRY7+jBy3+gugnT9ssUxgJXXlVotjXVm27AVbDHLwuSuuryJ1cxCkvvz1+92/0NNIRKCzx16JlNycHEc34iFNVCyQoPpTwF6Q=
+	t=1711473721; cv=none; b=pZWhtrWJS6mNechfSM7/672boc9CAdKClMxU61Z6DiqFDFwZwQ3DmiZRER8RqHl2slzZ+ANusPtjZ+T3XdkJa3ZWOXkO25v+UmBKeuy1ZCRnFf4o3QGcrCuXUyTm8ywwb1tPaABQN2vpGtklb/bwAo9jTLpWQg45BwzYirepzd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711473715; c=relaxed/simple;
-	bh=wHPXTdCN/SeU9t8rC4jveK0ET7TysbQBSYGX7I9XLKc=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Yj8ZTjQcZeKLPRoD5KFphlIpqolDWiZIVzDsf1aDOb9hYKUQQZEoCHhQriQpba0BdbO/WUwrHO7lofMYmXtRWLm56Yn5bAW3RJSgNRCTiu0qAy9ShNzmVCvRJzHHlK5bCaiOCgOEdD4NjM8cmwoioFocIh9qn7cELkUggIJ+mRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V3xQt1sGzz6JB9Z;
-	Wed, 27 Mar 2024 01:20:54 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 32087140A90;
-	Wed, 27 Mar 2024 01:21:51 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 26 Mar
- 2024 17:21:50 +0000
-Date: Tue, 26 Mar 2024 17:21:49 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: David Lechner <dlechner@baylibre.com>
-CC: Jonathan Cameron <jic23@kernel.org>, Michael Hennerich
-	<Michael.Hennerich@analog.com>, Nuno =?ISO-8859-1?Q?S=E1?=
-	<nuno.sa@analog.com>, <linux-iio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: adc: ad7944: use spi_optimize_message()
-Message-ID: <20240326172149.00004247@Huawei.com>
-In-Reply-To: <20240325-ad7944-spi-optimize-message-v1-1-cded69b9e27f@baylibre.com>
-References: <20240325-ad7944-spi-optimize-message-v1-1-cded69b9e27f@baylibre.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1711473721; c=relaxed/simple;
+	bh=jZd3DMYTrkPjgcF+GXb0XDthojSFtmH0ibUcyxTWHgU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=snF8vsuxekFQR7TjUodmvzzJMWrhiNYJVzJI+SW6NUEktP5g8cn8Fjiyl+cdZDxe9i41H9EFzSE3MtAx8F1pr3V1Ic94xb2LvgYUZ70IyoaSkPW1sitzThJLdWlSbFt4qQHWH3LRPpVc3rZ4IMl78uGmjuVrVkn34VhEhZu0z3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BhtthlM9; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BhtthlM9"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-789db917876so351186285a.1;
+        Tue, 26 Mar 2024 10:22:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711473719; x=1712078519; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7T5hEhkUDazJ47kggL6Q/TiVuUfZy8/rH8kDSRQfdQM=;
+        b=BhtthlM9bFY0vBOiLrF4eyxTrmb8l8V0AnhjaCENBIkCfmjQ1lxZvhkc8yaZXPauHA
+         JhIzfG48RqvECKlNPG94CXXU8BAi0IqhGTlWd8n9LlrW6f+cDmX4jq4f4z+WTy5tJ8DW
+         TYkBlfKMGdkvDLTFr2Eq/coBguHA+Ojez0VJuthMz8IgU1RuJgMdQtETQD0amaA4+Hd0
+         jhXFLLh/ymKCUGLKc7vsawOLLAzQ/E4lGWl6UOx3rccqN48aNfag2t3anSm6FZed2A9o
+         ZFigZ+Im+/BrG20iO8Ug47vgj770XEFRs+cUEFzsL4m8zF8y/hJ9R5jzg2WtkSgJPmwp
+         Qo3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711473719; x=1712078519;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7T5hEhkUDazJ47kggL6Q/TiVuUfZy8/rH8kDSRQfdQM=;
+        b=U5avNB5vmvQLsccnF6ZJ+F6dR5nT8cbj/a6MKlNo7mO7FUu1/oYIBWXK6/pXEWbP8s
+         cc6DUYkAnwWcMM9aUXofe7xCysI1brSxD2e2DpRZ6GZH7IH+W9Aut+55OB46aRZHxeuf
+         MBVRFp2+9iMu5OXWOpw9kAMWEkIIaD1SjcN62ABpv6R0omeKu2NL6rVIsIsBUeF/A3GG
+         7U8iR8yyzXVwMAsXtQbUlqSoVHuZ8n6RfBZYFGuWhy3ZBQrpSQgiwJHisXpl05P8HUNo
+         tAX5x7fhMNTG6K9yGsI6lMOrkXsXOH+pyaefedpc9E5VeCMvGssbTnnynzJChhEl00cs
+         Nchw==
+X-Forwarded-Encrypted: i=1; AJvYcCX+KpG1HlkdsYPmGeJit/5WsM+e9Jnq1OFC2xxtsLE/XEYp4e4Zy0UUuZ/cYs6Eu1CGQsvnpxOlMhlcKDZikj6fIzWgfhItdgUxQdwr
+X-Gm-Message-State: AOJu0YzFeq4J/bu3vbp6OX5vP1mLzl+SFZdC5kRd2xweuOh410BbFQsG
+	L0vpDBScOYIxj2VCd62QhRt8Mpw0dXT9h43/AKKh9cnJ5prP2aRc
+X-Google-Smtp-Source: AGHT+IHCXG3xzMmTxa1DKywKi/TlD+cjAa+sCSpdtV87oMnu6QfzR/ctvgMOWc4Gnxx9Tm2lFypRmQ==
+X-Received: by 2002:ae9:f714:0:b0:78a:2900:418e with SMTP id s20-20020ae9f714000000b0078a2900418emr1875997qkg.60.1711473718776;
+        Tue, 26 Mar 2024 10:21:58 -0700 (PDT)
+Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id z22-20020ae9c116000000b0078a68410731sm415879qki.25.2024.03.26.10.21.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 10:21:58 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id 82FE71200074;
+	Tue, 26 Mar 2024 13:17:47 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Tue, 26 Mar 2024 13:17:47 -0400
+X-ME-Sender: <xms:OwMDZhf4NHW2bPRgdqYgkYnpi9VUXwdo3aonn5pXf16BIqGgiLkWew>
+    <xme:OwMDZvNnnG3QsB03Z1_5315VZz2dXn4xqrKy81PCULIbMnr20BmIvczZQUOYHXhaa
+    4dZMFlCHMditpspDQ>
+X-ME-Received: <xmr:OwMDZqjsYLYXwNwBAglwBsyW-y4ZYALaEvbOYlQvvJbNNAMg1uvEY3hycTqv9Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddufedgleelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhu
+    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
+    htthgvrhhnpeehudfgudffffetuedtvdehueevledvhfelleeivedtgeeuhfegueeviedu
+    ffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    gsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdei
+    gedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfih
+    igmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:OwMDZq8fp9u8t8n2pUdXNVvl0DFquFdAT7-UtY7LtZyPZPKyWDCl3w>
+    <xmx:OwMDZtt7N-D2WskEQ2GtlkJO80VYP_f5W_QHK1hPFNciwsnnucjS2g>
+    <xmx:OwMDZpEasenjjFejRwZKKT3HsNk8f146m-6Ks22DCYvZ1Tqzoec0bQ>
+    <xmx:OwMDZkMnkEzL7nLxu322eP9bmJpOi9FdUGVtpyZaJag6x4NRBiBQxw>
+    <xmx:OwMDZtPvLxTyr19lAIPRkHuMbDMCFNe3XXl_t0DDSfeMRTcWXq1gbDvSpRc>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 26 Mar 2024 13:17:46 -0400 (EDT)
+Date: Tue, 26 Mar 2024 10:17:13 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
+	Valentin Obst <kernel@valentinobst.de>
+Subject: Re: [PATCH 2/5] rust: time: Introduce Duration type
+Message-ID: <ZgMDGYMj7V50PZbP@boqun-archlinux>
+References: <20240324223339.971934-1-boqun.feng@gmail.com>
+ <20240324223339.971934-3-boqun.feng@gmail.com>
+ <4hYJbftgOk1JOPbJ6CfKZell6ngp8GljwIUIB1vOQvIf-7jiogG5xDtCvcMlF7cIJAdy9fO5HLQh_8ohnWNB3MAaj0xjAGeyyDowemgunOU=@proton.me>
+ <ZgMBqzv0r98_EGGR@boqun-archlinux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZgMBqzv0r98_EGGR@boqun-archlinux>
 
-On Mon, 25 Mar 2024 17:03:13 -0500
-David Lechner <dlechner@baylibre.com> wrote:
-
-> This modifies the ad7944 driver to use spi_optimize_message() to reduce
-> CPU usage and increase the max sample rate by avoiding repeating
-> validation of the spi message on each transfer.
+On Tue, Mar 26, 2024 at 10:11:07AM -0700, Boqun Feng wrote:
+[...]
+> > > +impl Duration {
+> > > +    /// Creates a new duration of `ns` nanoseconds.
+> > > +    pub const fn new(ns: i64) -> Self {
+> > > +        Self { inner: ns }
+> > > +    }
+> > > +
+> > > +    /// Divides the number of nanoseconds by a compile-time constant.
+> > > +    #[inline]
+> > > +    fn divns_constant<const DIV: i64>(self) -> i64 {
+> > > +        self.to_ns() / DIV
+> > > +    }
+> > 
+> > I am a bit confused, why is this better than writing
+> > `self.to_ns() / DIV` at the callsite?
+> > 
 > 
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-One buglet inline. Otherwise looks fine to me.
-
-
-Jonathan
-
-> ---
->  drivers/iio/adc/ad7944.c | 177 +++++++++++++++++++++++++++--------------------
->  1 file changed, 103 insertions(+), 74 deletions(-)
+> Hmm.. you're right, there should be no difference I think. If there is
+> nothing I'm missing from Alice, I will drop this function in the next
+> version.
 > 
-> diff --git a/drivers/iio/adc/ad7944.c b/drivers/iio/adc/ad7944.c
-> index 261a3f645fd8..c767401712af 100644
-> --- a/drivers/iio/adc/ad7944.c
-> +++ b/drivers/iio/adc/ad7944.c
-> @@ -51,6 +51,8 @@ static const char * const ad7944_spi_modes[] = {
->  struct ad7944_adc {
->  	struct spi_device *spi;
->  	enum ad7944_spi_mode spi_mode;
-> +	struct spi_transfer xfers[3];
-> +	struct spi_message msg;
->  	/* Chip-specific timing specifications. */
->  	const struct ad7944_timing_spec *timing_spec;
->  	/* GPIO connected to CNV pin. */
-> @@ -130,6 +132,88 @@ AD7944_DEFINE_CHIP_INFO(ad7985, ad7944, 16, 0);
->  /* fully differential */
->  AD7944_DEFINE_CHIP_INFO(ad7986, ad7986, 18, 1);
->  
-> +static void ad7944_unoptimize_msg(void *msg)
-> +{
-> +	spi_unoptimize_message(msg);
-> +}
-> +
-> +static int ad7944_3wire_cs_mode_init_msg(struct device *dev, struct ad7944_adc *adc,
-> +					 const struct iio_chan_spec *chan)
-> +{
-> +	unsigned int t_conv_ns = adc->always_turbo ? adc->timing_spec->turbo_conv_ns
-> +						   : adc->timing_spec->conv_ns;
-> +	struct spi_transfer *xfers = adc->xfers;
-> +	int ret;
-> +
-> +	/*
-> +	 * NB: can get better performance from some SPI controllers if we use
-> +	 * the same bits_per_word in every transfer.
-> +	 */
-> +	xfers[0].bits_per_word = chan->scan_type.realbits;
-> +	/*
-> +	 * CS is tied to CNV and we need a low to high transition to start the
-> +	 * conversion, so place CNV low for t_QUIET to prepare for this.
-> +	 */
-> +	xfers[0].delay.value = T_QUIET_NS;
-> +	xfers[0].delay.unit = SPI_DELAY_UNIT_NSECS;
-> +
-> +	/*
-> +	 * CS has to be high for full conversion time to avoid triggering the
-> +	 * busy indication.
-> +	 */
-> +	xfers[1].cs_off = 1;
-> +	xfers[1].delay.value = t_conv_ns;
-> +	xfers[1].delay.unit = SPI_DELAY_UNIT_NSECS;
-> +	xfers[0].bits_per_word = chan->scan_type.realbits;
 
-0 ?
+On a second thought, I think this prevents accidentally divide a
+non-const value, in other words, if you use this function, you're
+guaranteed the divisor is a constant, and you have the compiler checking
+that for you. So in that sense, I think it makes sense to remain it
+here. Thoughts?
 
-> +
-> +	/* Then we can read the data during the acquisition phase */
-> +	xfers[2].rx_buf = &adc->sample.raw;
-> +	xfers[2].len = BITS_TO_BYTES(chan->scan_type.storagebits);
-> +	xfers[2].bits_per_word = chan->scan_type.realbits;
-> +
-> +	spi_message_init_with_transfers(&adc->msg, xfers, 3);
-> +
-> +	ret = spi_optimize_message(adc->spi, &adc->msg);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_add_action_or_reset(dev, ad7944_unoptimize_msg, &adc->msg);
-> +}
+Regards,
+Boqun
 
-
+> Regards,
+> Boqun
+> 
+> > -- 
+> > Cheers,
+> > Benno
+> > 
+> > > +
+> > > +    /// Returns the number of milliseconds.
+> > > +    #[inline]
+> > > +    pub fn to_ms(self) -> i64 {
+> > > +        self.divns_constant::<NSEC_PER_MSEC>()
+> > > +    }
+> > > +
+> > > +    /// Returns the number of nanoseconds.
+> > > +    #[inline]
+> > > +    pub fn to_ns(self) -> i64 {
+> > > +        self.inner
+> > > +    }
+> > > +}
+> > > --
+> > > 2.44.0
+> > >
