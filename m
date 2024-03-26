@@ -1,66 +1,64 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF1D17BA0;
-	Tue, 26 Mar 2024 17:06:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AEEF12E75;
+	Tue, 26 Mar 2024 17:07:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711472814; cv=none; b=N4LvMJmawVNlMMiVxwGB+G2fOr7TXkdNcv2lxVkqYzuljCjKy4TJAUVj25qZSqSNfRNAW1iOntxnVj/pgj2MvT2VhUD33meEYFU8SE5GOyZbIuPilhq9iC0n3q5mX48FY19Agj0RQ6PYbPVfbTqYIS9IAqJ/UUu/tagZLeAQYwM=
+	t=1711472845; cv=none; b=pe5MOYKRnmX9KFgic1isgK/ohElLOOhSRgB0CiFJy+oCIRNxnfrGv+0dx6AFECHg7IWDIaPeF4h/8u6YdH3Iq1USuc2Ba4qkrV/IFYV0eM21XQ7cfY1FKnvsj+tiFGtIPXCr5if8e1IN8WGmi6xlVzd1nvGl7Abb6Oj7/4QbUf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711472814; c=relaxed/simple;
-	bh=tEGEBe98n5yV7Nin67LqiSt90t6EYdkW6aOGPf8PFJQ=;
+	s=arc-20240116; t=1711472845; c=relaxed/simple;
+	bh=ORw11zggvPK3vCivrl1I+TdOEO2ouRBSNRl8iFMjGKU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JLPgGqJ6kHrSROGksaI3B+rCYnalh2Mc0N9t9A/yh7AevsDQAmweMSnZHUycd+z6XafdXa9SspmLDI5NrIAFDAejI+s+v8+1FBgqKAA7b91YC7qLd9y/vhdLOu3rrtBZpuM7Uck6e5XIUTXtjwknfhmeOhAJV/dBwGhpo9SD+k0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nZIaAvtO; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=os+sPrUBfI+kyLWpzIx/YoFJT3N67E4c+5AsXhQsAi8gSyRgmiJ3slsh9OqD1hR0zVom8FoYMda0cmo+/nDP30x5tr6xX/TSEW0hLzi6HP2vrulGWORorn3yPvL7g7QIP6G9HnCsIMqyme2MfbwmYZ2W1AUjMXjlKTbKbRlgdK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R+sTbZwO; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nZIaAvtO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R+sTbZwO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711472813; x=1743008813;
+  t=1711472844; x=1743008844;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=tEGEBe98n5yV7Nin67LqiSt90t6EYdkW6aOGPf8PFJQ=;
-  b=nZIaAvtOP52f5VsDnQxIwftJylLniK/cEZj2XjBOt7bctkfPhJ2Ik5Wn
-   LvAHEz6P7YFLMOT0nU2KsyNKYui1mEWXah3bzckVqAw3cBnevY+ePBq7J
-   9N0O7aDfpfiGFPS6WljI1L8sK73D5tBIZLwWG64+qf/vV4Mu0OuU0VSxA
-   gRLK0T1njRhMqOArbcVjQq2Udq/PdYwzI9w2Y6wd7pvRnC8oLhqMFVxmb
-   15SFjHZtS2AuPukWKcW7XW1HIeic1z7JfJ8/v6aCKcVPtusf51mcEtuwC
-   94UgFuycXGzQ4yXvmx7LKZuqh0ggo7PqIu+/5/0h6hTuBh9I07cRojMtM
-   w==;
-X-CSE-ConnectionGUID: 4SRYtynuQx6uP0dV9+0glw==
-X-CSE-MsgGUID: LSH6xxiDTKaTWF5/IWnQoA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="24026924"
+  bh=ORw11zggvPK3vCivrl1I+TdOEO2ouRBSNRl8iFMjGKU=;
+  b=R+sTbZwObdNMy3zwe3v94XtttbornPlnINKIizSQINfIOdp+QLd772Mp
+   K4ZyNoZGut+LoA0+aG9WVfGVnGkKi7htfeQT2vjKED/E347FBLT0wJmI5
+   6XliK+JMTNQGoEmoqdv8WkCftXFmB7kXapepmsjRUfLghRzexYDhIx9nv
+   H24jnbVjCJAAAMmOFxHmhcHNxHylKIGWl7RAYbqN3NdG7+jbuxoAkFLDh
+   3p66B4TG2NLVb7P2aizJTJ02MQxoeITmceSLgro90IdeZE4teEEXzVoLb
+   n1iDOkYUmPF4M/rRl2Pa4KUvhZfp2WeV/GQHjIqCLJATaa9BRy7DrgFSB
+   g==;
+X-CSE-ConnectionGUID: kk/lkYmSQ3+leceaLXlVqA==
+X-CSE-MsgGUID: k8pEtSI/TQ21738NARFfuw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="24026961"
 X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="24026924"
+   d="scan'208";a="24026961"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 10:06:52 -0700
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 10:07:24 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="914885445"
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="914885454"
 X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="914885445"
+   d="scan'208";a="914885454"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 10:06:49 -0700
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 10:07:21 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1rpAG6-0000000GOc7-0Hn7;
-	Tue, 26 Mar 2024 19:06:46 +0200
-Date: Tue, 26 Mar 2024 19:06:45 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Mark Brown <broonie@kernel.org>,
-	Ryan Wanner <ryan.wanner@microchip.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] spi: remove struct spi_message::is_dma_mapped
-Message-ID: <ZgMApTO6nuDNzNs_@smile.fi.intel.com>
-References: <20240325-spi-remove-is_dma_mapped-v2-1-d08d62b61f1c@baylibre.com>
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rpAGd-0000000GOcv-0gSV;
+	Tue, 26 Mar 2024 19:07:19 +0200
+Date: Tue, 26 Mar 2024 19:07:18 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Subject: Re: [PATCH v2 1/1] ASoC: soc-jack: Get rid of legacy GPIO support
+Message-ID: <ZgMAxuNXQDHjUKrr@smile.fi.intel.com>
+References: <20240325143654.3305498-1-andriy.shevchenko@linux.intel.com>
+ <ZgGvev-Wh7SkYnI7@smile.fi.intel.com>
+ <ZgL_N1aMQiju3yaI@smile.fi.intel.com>
+ <986726af-ce6b-45a5-b173-f5fb041e9849@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,20 +67,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240325-spi-remove-is_dma_mapped-v2-1-d08d62b61f1c@baylibre.com>
+In-Reply-To: <986726af-ce6b-45a5-b173-f5fb041e9849@sirena.org.uk>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Mar 25, 2024 at 02:22:53PM -0500, David Lechner wrote:
-> There are no more users of the deprecated is_dma_mapped in struct
-> spi_message so it can be removed.
+On Tue, Mar 26, 2024 at 05:02:39PM +0000, Mark Brown wrote:
+> On Tue, Mar 26, 2024 at 07:00:39PM +0200, Andy Shevchenko wrote:
 > 
-> References in documentation and comments are also removed.
+> > Okay, since the fix-patch had been applied, this one now is clean to go.
+> > Do I need to resend or any other work needs to be done?
 > 
-> A few similar checks if xfer->tx_dma or xfer->rx_dma are not NULL are
-> also removed since these are now guaranteed to be NULL because they
-> were previously set only if is_dma_mapped was true.
+> Please resend.  If I've told you a patch failed to build it's gone from
+> my queue, I don't keep track of anything like that.
 
-Nice cleanup, thank you!
+Noted, will resend soon.
 
 -- 
 With Best Regards,
