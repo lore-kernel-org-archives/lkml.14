@@ -1,142 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4871E12D76F;
-	Tue, 26 Mar 2024 15:05:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79E9762F7;
+	Tue, 26 Mar 2024 15:06:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711465526; cv=none; b=OTqYbL11O7KZqkIb6BT3EM5zvqN4L4Co6PSuClIgxljQQwFOn4PUs4G5Z8imNE+dFi93Rgh9xnaxOH82aUQ2gogiejGAzopYRXmHQH1XNoPDrLY275Gi5LbRuD+uhvirFmMHg8+SyVnCzhBhDBc6JM2HNX6xd/igWd/WEx+6DJI=
+	t=1711465602; cv=none; b=B+QI5kmLZHfmME6fIzS61wB/WgIFQ2chK0Pbo565H5evuIdca+Dw3E4bCRsRshP4sdoPa0pimxObZRUw4qizw0p2XimgyLM2+JA5g4LDF+QbO7TVZKxBg0zM7M7olNy3cWYGAJnRkglGUJLIbVOnSR74G1/ULhV9sgVmNx3H4ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711465526; c=relaxed/simple;
-	bh=/qmndJDlWupnnpJi65R442kaOqvhHDX628LndcyMGs8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=SjOYj3ENWOo/WBb3Q+bMl41WOTGPB7AToKfhrJEVSrbzZNnRCJghrsTIC4outKzP6be03WRFZP8QanVAOr0IZkiWUa7huzzTkOYNFwc2pS+9zdro6t2ywvjLZCHj491n1MtfoJyMCmW+itDtEwzoj8cgVNELjQYGh3DvvNeUQi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c9yMVpI+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711465602; c=relaxed/simple;
+	bh=WmNiMtGDvNIqOuw0hY+smIdzoUtjfSFeYRQC6xh4Hz8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=d6C/Da/XMot3CXEjn9DmXMP3s/uClsg80VHfdZGsRCpjvzMpUQVd3fRPn+TL+Ja3ZIl0uH8vUWw3BZGKZZyx3vfSHeBIBPtInd+ypoGQTRNjinL9K7J7QXeSR+P4//zkX+dER1rPlDbHfjvK3aGoFMzj63OhYRZJ/fmtX0DuECM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YdAyhnSI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c9yMVpI+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0E1CC433F1;
-	Tue, 26 Mar 2024 15:05:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YdAyhnSI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93676C433F1;
+	Tue, 26 Mar 2024 15:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711465525;
-	bh=/qmndJDlWupnnpJi65R442kaOqvhHDX628LndcyMGs8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=c9yMVpI+L1invWuAwwgd4+iMcVeBkKccwiZLj5q45v6lHB4Yo+LFvKNJfp6wGJqGS
-	 T5NU0KIKcXNJTidqaVE1V4KsGz+s8Vk9t4M5UPrDzgFqe2DHM1I2MyiTV4ZTcV4jQ1
-	 qwh8O/bchWcGVDQgex+cdEi25PRJ9YqfgTNoA1EXYqVcilAUKBYxsEmpO2qll0uLhs
-	 au9zOblYVYw0CZAPdfj7/5hR6WyRKTdvUYZgsTWgCQRDTzNt9BeNb6W3tRbiJ8G17M
-	 MaEfUW86u/t1oTYAva+0z3ktZeVheXh5CO68B+Z5/KHwFyH9L1YSB8mrhLMNaE7zl2
-	 UPm9/VvaazOtA==
-Date: Wed, 27 Mar 2024 00:05:20 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Jarkko Sakkinen" <jarkko@kernel.org>
-Cc: <linux-riscv@lists.infradead.org>, "Paul Walmsley"
- <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Albert Ou" <aou@eecs.berkeley.edu>, <linux-kernel@vger.kernel.org>,
- "Luis Chamberlain" <mcgrof@kernel.org>, <linux-modules@vger.kernel.org>,
- "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>, "Anil S Keshavamurthy"
- <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v5 1/2] kprobes: textmem API
-Message-Id: <20240327000520.ec13b2646ed1cd621e5b1d9d@kernel.org>
-In-Reply-To: <D03PM9A6IS79.3D6BW7KBLH9C3@kernel.org>
-References: <20240325215502.660-1-jarkko@kernel.org>
-	<20240326095836.f43d259b7747269a7c0b9d23@kernel.org>
-	<D03AL7A5G3M2.3UK4ASWILGBJS@kernel.org>
-	<D03B7XJYRFC1.2L3I2TO5HNQD3@kernel.org>
-	<D03PM9A6IS79.3D6BW7KBLH9C3@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1711465602;
+	bh=WmNiMtGDvNIqOuw0hY+smIdzoUtjfSFeYRQC6xh4Hz8=;
+	h=From:Subject:Date:To:Cc:From;
+	b=YdAyhnSI2E95pDDtosE2XKa4KlrVw6uB9EdAlNc5LweIuC4wkSVPFig1ZELG4Omjj
+	 SZ7qNrQs9LK1I9jwWbwdqGicy+zZzeXFAZ5Ys9A2iwxfIgEMzMGEkJhhez34mBaeo1
+	 2YVuRy8FMO46v3VzYvS77tpchP+lTeTl5vnEe43AaukHkfzSclYMKldyTQ9ie05+Ni
+	 gdtZgDJZdurPPDbc+WdfNYKduJ9xr38xtWjYiPdxywxiYeic49/6k/gOQ1TAT17BBi
+	 G1SNfIw6Mr/e3+7ibl7wCd37v2uUyKufF3YWxOe3VL5/4n/3UmWwn/OZZm/0mQ8gyn
+	 bCr4daqBwTdsQ==
+From: Bjorn Andersson <andersson@kernel.org>
+Subject: [PATCH 0/6] drm/msm/dp: Spring cleaning
+Date: Tue, 26 Mar 2024 08:11:28 -0700
+Message-Id: <20240326-msm-dp-cleanup-v1-0-e775556ecec0@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKDlAmYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDYyNj3dziXN2UAt3knNTEvNIC3TSLpERjozQzo7QkSyWgpoKi1LTMCrC
+ B0bG1tQCcAFK9YAAAAA==
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Bjorn Andersson <quic_bjorande@quicinc.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1577;
+ i=quic_bjorande@quicinc.com; h=from:subject:message-id;
+ bh=WmNiMtGDvNIqOuw0hY+smIdzoUtjfSFeYRQC6xh4Hz8=;
+ b=owEBgwJ8/ZANAwAIAQsfOT8Nma3FAcsmYgBmAuWiYj3RLwGpOhxIEW7T2SOQ84wLGP58ADzl7
+ pJz4nX1ygyJAkkEAAEIADMWIQQF3gPMXzXqTwlm1SULHzk/DZmtxQUCZgLlohUcYW5kZXJzc29u
+ QGtlcm5lbC5vcmcACgkQCx85Pw2ZrcVd9g/8C0cZzaUvCibCedahgHhwt1L8hzPUs0r/axyvoML
+ z+JT4IKVfaXPJrsiUDa1/zKu8kVC7Z5nYWMGUaLRFXVNuP3Fciug8/8f7ClWtpgSxuNunDuJdjj
+ XtAe63xUiCNji1Ag9XIwat2u8i/RJbVex3XviTuF8QmJzWqBOTAR+Rf1Su/tN9xDdbZENmMF0QU
+ i8fcQ3Y07pirEkiDIOU5NFAthxTfvEKFXhJf82DNDCfb4CNe80hytj8HpyRxwXsQ2p2g+fhpBBO
+ R8HLZhQCrnH9VrYhRYGTfHtDsyPbpi6Nl4OkzhPYYdSgbktU78GpwQpg8WHOGfws/fGpNT3I8rz
+ 23zDBocNGgEN/oWqlnuIRA3HD2ctoxIO2uaRcjA3cRSv9eRwKK5vfWgCZGEotaDRYjFdUozlK3V
+ G3VUbFHbdDbVS1yg2UpRlU+8nBFHU6DNA3lTXuuCmal89f/E7BKc6CMR1afomVYn+Ze7OElxC7b
+ Dmx3VMciv8gFK8YjWYeUjGwkUKWvgcTC1V9zA6Bh9AxP1dPP/SKLJhQk6Qvesrr1RL5GByx0xGo
+ ovPVkLHPbKpFXjWyDtoZd+SAt9mByJOr6G0DQXaMMi9TUV6Fe44V+P9rx1q0QUjmTXxarO6R3+n
+ O4K+UQmsV/PRSIreRQgPso3Woec8RpKkpTNKeQXvC9ks=
+X-Developer-Key: i=quic_bjorande@quicinc.com; a=openpgp;
+ fpr=05DE03CC5F35EA4F0966D5250B1F393F0D99ADC5
 
-On Tue, 26 Mar 2024 15:18:21 +0200
-"Jarkko Sakkinen" <jarkko@kernel.org> wrote:
+Spring is in the air, clean out some dust that has accumulated in the
+Qualcomm DP driver.
 
-> On Tue Mar 26, 2024 at 4:01 AM EET, Jarkko Sakkinen wrote:
-> > On Tue Mar 26, 2024 at 3:31 AM EET, Jarkko Sakkinen wrote:
-> > > > > +#endif /* _LINUX_EXECMEM_H */
-> > > > > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> > > > > index 9d9095e81792..87fd8c14a938 100644
-> > > > > --- a/kernel/kprobes.c
-> > > > > +++ b/kernel/kprobes.c
-> > > > > @@ -44,6 +44,7 @@
-> > > > >  #include <asm/cacheflush.h>
-> > > > >  #include <asm/errno.h>
-> > > > >  #include <linux/uaccess.h>
-> > > > > +#include <linux/execmem.h>
-> > > > >  
-> > > > >  #define KPROBE_HASH_BITS 6
-> > > > >  #define KPROBE_TABLE_SIZE (1 << KPROBE_HASH_BITS)
-> > > > > @@ -113,17 +114,17 @@ enum kprobe_slot_state {
-> > > > >  void __weak *alloc_insn_page(void)
-> > > > >  {
-> > > > >  	/*
-> > > > > -	 * Use module_alloc() so this page is within +/- 2GB of where the
-> > > > > +	 * Use alloc_execmem() so this page is within +/- 2GB of where the
-> > > > >  	 * kernel image and loaded module images reside. This is required
-> > > > >  	 * for most of the architectures.
-> > > > >  	 * (e.g. x86-64 needs this to handle the %rip-relative fixups.)
-> > > > >  	 */
-> > > > > -	return module_alloc(PAGE_SIZE);
-> > > > > +	return alloc_execmem(PAGE_SIZE, GFP_KERNEL);
-> > > > >  }
-> > > > >  
-> > > > >  static void free_insn_page(void *page)
-> > > > >  {
-> > > > > -	module_memfree(page);
-> > > > > +	free_execmem(page);
-> > > > >  }
-> > > > >  
-> > > > >  struct kprobe_insn_cache kprobe_insn_slots = {
-> > > > > @@ -1580,6 +1581,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
-> > > > >  		goto out;
-> > > > >  	}
-> > > > >  
-> > > > > +#ifdef CONFIG_MODULES
-> > > >
-> > > > You don't need this block, because these APIs have dummy functions.
-> > >
-> > > Hmm... I'll verify this tomorrow.
-> >
-> > It depends on having struct module available given "(*probed_mod)->state".
+Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+---
+Bjorn Andersson (6):
+      drm/msm/dp: Drop unused dp_debug struct
+      drm/msm/dp: Removed fixed nvid "support"
+      drm/msm/dp: Remove unused defines and members
+      drm/msm/dp: Use function arguments for aux writes
+      drm/msm/dp: Use function arguments for timing configuration
+      drm/msm/dp: Use function arguments for audio operations
 
-Ah, indeed. We need module_state() function to avoid it.
+ drivers/gpu/drm/msm/dp/dp_audio.c   | 25 +++------------
+ drivers/gpu/drm/msm/dp/dp_aux.c     |  9 ++----
+ drivers/gpu/drm/msm/dp/dp_catalog.c | 64 ++++++++++++++-----------------------
+ drivers/gpu/drm/msm/dp/dp_catalog.h | 49 +++++++++-------------------
+ drivers/gpu/drm/msm/dp/dp_ctrl.c    | 17 +---------
+ drivers/gpu/drm/msm/dp/dp_ctrl.h    |  1 -
+ drivers/gpu/drm/msm/dp/dp_debug.c   | 38 ++++++----------------
+ drivers/gpu/drm/msm/dp/dp_debug.h   | 38 +++++++---------------
+ drivers/gpu/drm/msm/dp/dp_display.c | 15 ++-------
+ drivers/gpu/drm/msm/dp/dp_display.h |  3 --
+ drivers/gpu/drm/msm/dp/dp_drm.c     |  2 --
+ drivers/gpu/drm/msm/dp/dp_link.c    |  4 ---
+ drivers/gpu/drm/msm/dp/dp_link.h    |  1 -
+ drivers/gpu/drm/msm/dp/dp_panel.c   | 14 +++++---
+ drivers/gpu/drm/msm/dp/dp_panel.h   |  3 --
+ 15 files changed, 80 insertions(+), 203 deletions(-)
+---
+base-commit: 084c8e315db34b59d38d06e684b1a0dd07d30287
+change-id: 20240323-msm-dp-cleanup-f8ba32f62fb9
 
-> >
-> > It is non-existent unless CONFIG_MODULES is set given how things are
-> > flagged in include/linux/module.h.
-> 
-> Hey, noticed kconfig issue.
-> 
-> According to kconfig-language.txt:
-> 
-> "select should be used with care. select will force a symbol to a value
-> without visiting the dependencies."
-> 
-> So the problem here lies in KPROBES config entry using select statement
-> to pick ALLOC_EXECMEM. It will not take the depends on statement into
-> account and thus will allow to select kprobes without any allocator in
-> place.
-
-OK, in that case "depend on" is good.
-
-> 
-> So to address this I'd suggest to use depends on statement also for
-> describing relation between KPROBES and ALLOC_EXECMEM. It does not make
-> life worse than before for anyone because even with the current kernel
-> you have to select MODULES before you can move forward with kprobes.
-
-Yeah, since ALLOC_EXECMEM is enabled by default.
-
-Thank you!
-
-> 
-> BR, Jarkko
-
-
+Best regards,
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Bjorn Andersson <quic_bjorande@quicinc.com>
+
