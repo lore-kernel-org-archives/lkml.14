@@ -1,181 +1,160 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2102.outbound.protection.outlook.com [40.107.93.102])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C5E13C811
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.102
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711466721; cv=fail; b=m0s+zNOVu+y62w1tC4Gs9A42xnrlj7ZSI8ue+fX5KDD2xRcv4AkAXPos6WreMHlRFVSaV5SYbTXt8BWf67iwqH/WzpkFvYUa9uZEr/4/Sh6GjlzdCRFDgDL/+USzkNQ14oQXdqA3FeZ/q2MRQ5Haa9Vn8tYVtNz8VcL73ckGy34=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711466721; c=relaxed/simple;
-	bh=lfbiY41LoFcB3M+Nnnzck2CmhoQWerf69OcKfmzl59E=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=DhrMv5R0H3tzz2qYW3Eh2awyawCqDUPZMi7QcYibS+rSlrq6A6mSBg68tG3kMlYdWv8OMcNt0y3RDu6BRV4TPBdcBjWNciuZoZi9T3VZ/OI7oSsXEDOiPXpHvD/WvUHh8x7P8q8OaVUGpIBDBLN2MiAclcmth77D75F7ZwHUyAc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rYeFn2Qd; arc=fail smtp.client-ip=40.107.93.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8D813C80C
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711466735; cv=none; b=Jptp5jYIarVBn+V9JgyAuaOIzk2FKEW3YkU2SRz01asaJeXYCnK3BMG+dpM6sf9yyG6AcGTxVAphcgfuM+GkRrGqVy5A7dfv7mKyiT3KQsQGuB+d5o5+nVsOHU88uB73AEqwGctwIBH94emHHHDFHoebhcpM1AwTLXtz2quumEc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711466735; c=relaxed/simple;
+	bh=Lu5Bs7IrPqjAWtq1NQVli/B/ubR2OmxKpyJX7noirjc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fmJbttFTnL4Vlqgb9pr+snEge4wenx3KpWjaLLZRRIdUseLGX0NJzeFbblZUU7yzpQqKhjelgw5VNCk/mXvMmBOPK/IBuq2aNfYaI9WcgDNl0wh5VA/dEwKQH1/BDAjMqpD63IznYVO2nRmTbulV/fv1KLi4lOxQrsbNIwVLF40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=pHFbGQhF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=B6J2Jm8e; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=pHFbGQhF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=B6J2Jm8e; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rYeFn2Qd"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZPIPHB0e9WUR0r3jxEKnbQZPm6wmOq9pUIrzZRiSJNTz2H+s+sGJgkOT3F7dB2mx3UWYZ992FILDvFcv3O1oRyhAjIKPpGgvsnLOdXXk/U54rvidXDGPnBEer0aqwrqAQkKE9zBR/gZPAoOil5+veEV8JpxhsXHrLS9TVTB+GmkDDFOhts6+UidIgjWTjIJZD2jdPAcn7JJUBsx8h5/lt0+HIbW+rb+Y50cOTKrZnSe/0Czwr/6VRy1GMwjamPc8F4+868D5coV6cDy/nVo4h20ydZ3hC11Nj+Yg7LFLEja4OKkO7+BIj7LcphIShPjHAQXdjuxzKTGwCMBzH7XY5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GRsPxOmtBLzXGpzZvrIdd6XnMKYeT3heM1hi+TjER68=;
- b=WwU+OvMsQDYkumS2p8OEiwkR39wcuOQvYGxyRVSr+1A2s6nZWgvGur+HvStiJwmtUZ7GmLhh6zXsx0+0cuoCeuerugq7IJpLZhu3U/no/x6Yy4MIfoiNmevvaQKe9a7DT4DknZHVFGUfXxPFuHShLCX/mxxN4bPOGLldtu5yRsxrmJ/IHcaoF9FY2w75UpriGASiVM37sXHTQ8UVFatq60iY2SbHs9zFXpS5nSUQBSTH5vaZIk6Webf5Wk01JrAZpAfDD/htO9GMbJ/tONrHdIo1JMom4yFS1IBJXCalwCDiDmhx5HOerCNfPl9c75+f3LPV2BydY8ufWktvfgFafw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GRsPxOmtBLzXGpzZvrIdd6XnMKYeT3heM1hi+TjER68=;
- b=rYeFn2QdBvlc2DZzf7yK3LaE3N/7lCDsVd66BYrCo0ftF0oRCdGtk0fralQdGeB72H2NZmy5Wzg60yVvFlwHEwUo7zoD/+OrObr8gzkECmRZN7RZCVl7S6n2RifvAc2BTiU5xUV47I8FQ3R6mqJJpAiIxesyfIiuEDg5+V835eE=
-Received: from MW4PR12MB5667.namprd12.prod.outlook.com (2603:10b6:303:18a::10)
- by IA0PR12MB7625.namprd12.prod.outlook.com (2603:10b6:208:439::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Tue, 26 Mar
- 2024 15:25:16 +0000
-Received: from MW4PR12MB5667.namprd12.prod.outlook.com
- ([fe80::966b:7f50:4f07:3c8b]) by MW4PR12MB5667.namprd12.prod.outlook.com
- ([fe80::966b:7f50:4f07:3c8b%5]) with mapi id 15.20.7409.028; Tue, 26 Mar 2024
- 15:25:16 +0000
-Message-ID: <19a39ab2-ef75-cf2c-939b-7dd09dcc5b13@amd.com>
-Date: Tue, 26 Mar 2024 16:25:10 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH] drm/amdgpu: fix deadlock while reading mqd from debugfs
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
- amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20240307221609.7651-1-hannes@cmpxchg.org>
- <c411dce6-faaf-46c3-8bb6-8c4db871e598@gmail.com>
- <20240314170948.GA581298@cmpxchg.org> <20240323145247.GC448621@cmpxchg.org>
- <c8efae98-3cf8-c21c-bfa4-d5998ab92a0e@amd.com>
- <CADnq5_OGSLpLLEJqh86_SAZcqv-Cv6AmZJRZyaFtSmTHJ8ybxg@mail.gmail.com>
-Content-Language: en-US
-From: "Sharma, Shashank" <shashank.sharma@amd.com>
-In-Reply-To: <CADnq5_OGSLpLLEJqh86_SAZcqv-Cv6AmZJRZyaFtSmTHJ8ybxg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR3P281CA0158.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a2::8) To MW4PR12MB5667.namprd12.prod.outlook.com
- (2603:10b6:303:18a::10)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="pHFbGQhF";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="B6J2Jm8e";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="pHFbGQhF";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="B6J2Jm8e"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 27C185D789;
+	Tue, 26 Mar 2024 15:25:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711466730; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VPat731j6NfJAR1b0jUfvamnGYfQh4EZPTmICYWRNyg=;
+	b=pHFbGQhFHA+FqBK9md8kt5lvks88yvdhyJXyEatmANMrwggwRBqImHAMT18+7iarRBs6/W
+	l/FcQ0wPpyPp5wtiIOHFYqyHFMH20a2G417/RBaDJo+oyzfWEezsQlzzeaVrMZJdFidJTc
+	tcUtuPauMwjtlpNK+XCPmHb+71V2E9c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711466730;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VPat731j6NfJAR1b0jUfvamnGYfQh4EZPTmICYWRNyg=;
+	b=B6J2Jm8enlEkEoqIQ5KMJ7S81iRWN8cyqPXkQf3KIah9hwuig1FqsavHbcQdKAruDIgdmi
+	MaedXTQdY1qlfgAw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711466730; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VPat731j6NfJAR1b0jUfvamnGYfQh4EZPTmICYWRNyg=;
+	b=pHFbGQhFHA+FqBK9md8kt5lvks88yvdhyJXyEatmANMrwggwRBqImHAMT18+7iarRBs6/W
+	l/FcQ0wPpyPp5wtiIOHFYqyHFMH20a2G417/RBaDJo+oyzfWEezsQlzzeaVrMZJdFidJTc
+	tcUtuPauMwjtlpNK+XCPmHb+71V2E9c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711466730;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VPat731j6NfJAR1b0jUfvamnGYfQh4EZPTmICYWRNyg=;
+	b=B6J2Jm8enlEkEoqIQ5KMJ7S81iRWN8cyqPXkQf3KIah9hwuig1FqsavHbcQdKAruDIgdmi
+	MaedXTQdY1qlfgAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 12CD613306;
+	Tue, 26 Mar 2024 15:25:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 0LsrBOroAmabTQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 26 Mar 2024 15:25:30 +0000
+Message-ID: <8444ca4b-f59e-43fd-b458-186ead4cffa9@suse.cz>
+Date: Tue, 26 Mar 2024 16:25:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW4PR12MB5667:EE_|IA0PR12MB7625:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	aYonrzXUX263prEqYGmDSs78PSsypt6OIoADy7q2oCiqkX/FALQI0w7/1W4hmVhEWgIIMvW/r31L7K7jQXGuTinsql2G/+tZTYb1htZO7jgoYNw82Wq2q/JylE5FjZBCIY1zcss3qW+ru3TmWaUPzRs8g1IFFEgfen5YPnBUsnThXXw/II9oxFJfE9AzCm4GYUYWJYelR8PiDju9WdEbbJ9MFB+xFAJL5ccmsNeGuKM6NTjBxR7D+JREuV2kyCyzssttaqKrk4Aesvf5if+Oc5S1ZqZDsyKPjefvu+Mzfj2dlzZQ9mj7PI4A6VtkjUCMRGxRrW4UUtl3sDPEIBmi4U1EnwH0jXcUAYphuzDL+fye27wMehzZOmuCrvEl9MZk5OScUW71uKPK1ClNM49khVcwNOcF60nmOg+eY1QudPq9JUvXexkp8Pv4BRpiDp3+KnQWodDR3eD40zpeiKa8oq0PWLaZVRZAkwlVxFUBlP0jseHAtkxiFg5Dl4NJ0m3/y5BH3IMtv5I34jzIBf9uYhjs39j5GG2KY2Nw8/NY82g6sG5z1ieIrMKpevH87F8lkxiLZNvyK0nZAonRmekUXmUW9Vq+BS4tH30c58Ot+HS64TNi6yckV1xrZ12nmcJEgrKL7JqqKTRUQxkQiQLqcIwwhZGUhY68XQ5hVQA4Hwk=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR12MB5667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NURaL3E2TlpuRlcyQU1mWmhwNkt5K25SY0xuRzAveG9nbytTSmhXYmZxb0lz?=
- =?utf-8?B?NjdhOTRIQmRBM2lENFNxZHplazE4b1FvUktOcy9ERFE1THRXMEJMUFc1WlBF?=
- =?utf-8?B?NkF1L0RES00vODhlTVh1T1VVVFBvWnA1bkl1eHpXRDIvT2k2MS92T3A0MFgx?=
- =?utf-8?B?YnJTM0QwVDBodytabnBFV3Nmdkl5NGtSQVJxQ0tOUlBvTit6S0ltMjhnajVz?=
- =?utf-8?B?bjQ3ZnVORUpQVkdpQjJ0cFh5SHl1M3crUnFaWlZ6RXF6TzNXOExKcWNBa0xi?=
- =?utf-8?B?aytSNjRhQ25RV2ZtcWw4SWZQc3BubWJ4eGRSQUtwTldyRW5YZlhPRUp6RHdN?=
- =?utf-8?B?MXFOTHI5NUt0ZkVyWVFZTnF0U2lSL2FsUk8xRUxNdzNsSUkrV0N6TVJRdnBZ?=
- =?utf-8?B?WUJlOXQwMTIwdG8wNzJTVUwyNjloRzl2QStBajJwU3VrNmJleUZmckFOTVRk?=
- =?utf-8?B?V1JiT1VsZTFLMVZMOE0zU0sxR0tzdDhLVEhscnlnUktQa3QrWEJCbGNYSmUr?=
- =?utf-8?B?ZjVmQ0ZoRHRKRU5MZzdoeU96YmF6Smx0TGQ0VGRIakxjajVoQUIyL3piY2Nn?=
- =?utf-8?B?NzBRWDVueUlnTkg2c00wY1dycTJqZ3ZkeTdQek5sZmQ3MzZqYUdxdDUyMmtE?=
- =?utf-8?B?Q2xyOEJNWW91OXZrSEZmODdBWmMwaEZDaXRCZEpuWU1EcW9PVFNBMEFvVW94?=
- =?utf-8?B?ZGNUZXBtdmIvaXhiMklGNytDRDhtZ2ErWWs5Nm9aQzlJU1NBS1ZlbEJrNWtM?=
- =?utf-8?B?aHpOamVqOGErUVNqRXZTUU5CTDVWR2UzSDRTU2I4MDFBZ0JIdnlQVkplUXhi?=
- =?utf-8?B?ejg4MFdwekUzNS9Pd0E1ZkNkbGR5TTB2M0E0Z0htZHFxdXR2dEtvTjBYamh5?=
- =?utf-8?B?cDBTV1JJRk56NU55UjdDVUkwa1VZVHR6WmV3WUtsMEdkWlRyWHZLYWVyOHBX?=
- =?utf-8?B?Sk4yRVdkM2k5eVpsL0NnZmtzaGh4TXRLK3RXSzNXNUNJSHp3TitOMmovQlQ5?=
- =?utf-8?B?cFZ4bC85UVZETlQ2cDhleXBnSmlwMThqVTZ4YkhkaHBtbStBNWhFdDVyRGVT?=
- =?utf-8?B?cXBQck11ZzhsZTJmYzhDcEZpdlhzWkpMNWxmbk5PZExVUFBWcm9LSEszdVFQ?=
- =?utf-8?B?QmpuWGY3ZnRSSXBRTEZSRUNyYU10bU5WTXFNTkNYVTBSdDlqMUw0R1FhaTVo?=
- =?utf-8?B?M0F1eTRaQmJDR05XK0xGc1d4dVVQamJ4WFl5VWVJTjlncDV1Z2t2ZUhlQmx4?=
- =?utf-8?B?YjNvcjRCRE5rbWdZSWdTTDA0U2FKekpZMWNXVkcxZ2ppYVVJWHVmMVZkVEd5?=
- =?utf-8?B?SjhpQzluRGVCNFU2ZUVSTmZqR3pMRVRpY2dMbTQwU0lQTUhUTXQ1NndMa09i?=
- =?utf-8?B?cmZLbFhqdWYwV3NoaXQyWjVPd09YSndvNzkwMWhWNVdmYjNCOXhnREZLYjVI?=
- =?utf-8?B?MTRnLzJudjV1d3ZCWkZCV3owNlhLOVZBSVJubjNadVAvQ3ZiVVpzREQzT3VU?=
- =?utf-8?B?bUhpNWRzUk5Ea2hsZVdZZVpnVWxmdW4yRXo2ell3ZFJZbzk5c1h3enBSQXhH?=
- =?utf-8?B?alVmdWtXeXFiRWxLMWlYR2p5MS9zd2czNVBYL2tnKzRTMHZ5dFdFcGtKNktW?=
- =?utf-8?B?cFNHdFlaMG43VXFOcFNBS3hRYjgydEY3UmNXMkZpNGRER1B4TVI0cEw0Mi96?=
- =?utf-8?B?UHV1SG1LSFZLamx3QlJmT3JjTm0rWnZmYnpDV1k2YSsvalFxYjdPR3dPNnUy?=
- =?utf-8?B?Z045MlI4Sk1HSFVhR2tiL3A0d1JHcG1tbWk3OFhLdDdEdEdKcnVDMjhKMS9O?=
- =?utf-8?B?elhYVU9xTWZVN2FUaTB0dStzUit5OGlTWElnK3lNNVRXV1oxeXNVNkpIMWxv?=
- =?utf-8?B?UWxzbGVtWnVnTDRBSjVjTkk2aUovbVFlWnducnJpa1dCVE5OYnlrUTV6aXc0?=
- =?utf-8?B?VnozUHRDR1p4WXVoRGZ6Slh4aUpnV1A0TEptdDFjT1I4RThuY2k4dWpPYnlv?=
- =?utf-8?B?c3d2aFlQM2R0eWo2czc2NWVZbXZkYjVRQkw4NmZGOWEyMk5aTzdpTlQxUnM3?=
- =?utf-8?B?R1hJS2c3QW1sVEc3amJBY2N0MFk3bVlWOXhFU2gxUmhaMFQ0b2pEUExHSVht?=
- =?utf-8?Q?zRPQ8uF2LsXHI3hh0drkofWPU?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99f8d09b-9663-4dc5-7be7-08dc4da8f02c
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR12MB5667.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 15:25:16.2362
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: y2XCi38XaTpj7IxBa86zrlFzAgbTIea0XMWjW+OgfixspWv9qhC+EzCPGQXcbvR2HOBIBVGoEmp8sA7WwggMvQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7625
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 07/10] mm: page_alloc: close migratetype race between
+ freeing and stealing
+Content-Language: en-US
+To: Johannes Weiner <hannes@cmpxchg.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Mel Gorman <mgorman@techsingularity.net>, Zi Yan <ziy@nvidia.com>,
+ "Huang, Ying" <ying.huang@intel.com>, David Hildenbrand <david@redhat.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240320180429.678181-1-hannes@cmpxchg.org>
+ <20240320180429.678181-8-hannes@cmpxchg.org>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20240320180429.678181-8-hannes@cmpxchg.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -1.50
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-1.50 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 BAYES_HAM(-0.00)[18.22%];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=pHFbGQhF;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=B6J2Jm8e
+X-Rspamd-Queue-Id: 27C185D789
 
-Thanks for the patch,
+On 3/20/24 7:02 PM, Johannes Weiner wrote:
+> There are three freeing paths that read the page's migratetype
+> optimistically before grabbing the zone lock. When this races with
+> block stealing, those pages go on the wrong freelist.
+> 
+> The paths in question are:
+> - when freeing >costly orders that aren't THP
+> - when freeing pages to the buddy upon pcp lock contention
+> - when freeing pages that are isolated
+> - when freeing pages initially during boot
+> - when freeing the remainder in alloc_pages_exact()
+> - when "accepting" unaccepted VM host memory before first use
+> - when freeing pages during unpoisoning
+> 
+> None of these are so hot that they would need this optimization at the
+> cost of hampering defrag efforts. Especially when contrasted with the
+> fact that the most common buddy freeing path - free_pcppages_bulk - is
+> checking the migratetype under the zone->lock just fine.
+> 
+> In addition, isolated pages need to look up the migratetype under the
+> lock anyway, which adds branches to the locked section, and results in
+> a double lookup when the pages are in fact isolated.
+> 
+> Move the lookups into the lock.
+> 
+> Reported-by: Vlastimil Babka <vbabka@suse.cz>
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
-Patch pushed for staging.
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-
-Regards
-
-Shashank
-
-On 25/03/2024 00:23, Alex Deucher wrote:
-> On Sat, Mar 23, 2024 at 4:47 PM Sharma, Shashank
-> <shashank.sharma@amd.com> wrote:
->>
->> On 23/03/2024 15:52, Johannes Weiner wrote:
->>> On Thu, Mar 14, 2024 at 01:09:57PM -0400, Johannes Weiner wrote:
->>>> Hello,
->>>>
->>>> On Fri, Mar 08, 2024 at 12:32:33PM +0100, Christian König wrote:
->>>>> Am 07.03.24 um 23:07 schrieb Johannes Weiner:
->>>>>> Lastly I went with an open loop instead of a memcpy() as I wasn't
->>>>>> sure if that memory is safe to address a byte at at time.
->>>> Shashank pointed out to me in private that byte access would indeed be
->>>> safe. However, after actually trying it it won't work because memcpy()
->>>> doesn't play nice with mqd being volatile:
->>>>
->>>> /home/hannes/src/linux/linux/drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c: In function 'amdgpu_debugfs_mqd_read':
->>>> /home/hannes/src/linux/linux/drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c:550:22: warning: passing argument 1 of '__builtin_dynamic_object_size' discards 'volatil' qualifier from pointer target type [-Wdiscarded-qualifiers]
->>>>     550 |         memcpy(kbuf, mqd, ring->mqd_size);
->>>>
->>>> So I would propose leaving the patch as-is. Shashank, does that sound
->>>> good to you?
->>> Friendly ping :)
->>>
->>> Shashank, is your Reviewed-by still good for this patch, given the
->>> above?
->> Ah, sorry I missed this due to some parallel work, and just realized the
->> memcpy/volatile limitation.
->>
->> I also feel the need of protecting MQD read under a lock to avoid
->> parallel change in MQD while we do byte-by-byte copy, but I will add
->> that in my to-do list.
->>
->> Please feel free to use my R-b.
-> Shashank, if the patch looks good, can you pick it up and apply it?
->
-> Alex
->
->
->> - Shashank
->>
->>> Thanks
