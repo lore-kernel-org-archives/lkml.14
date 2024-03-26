@@ -1,97 +1,112 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7049B18B04
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 09:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FA6182AE
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 09:01:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711443624; cv=none; b=E/yg7jbUA5zOxjX7vYY6VmnNlITjxQIpa2JHWaJMvUBLyT75NWlhqTYTB8XRpQylD5jZujqQgiap5eRYAxqN5JoA5Rll8yJv9HDADWxVz2RIdP++ISQKng0Mg+dqV9beqkV9shYCfSeOrLbDzA2TlY9FYWn4ZOkF6ZJtcnjB4iI=
+	t=1711443669; cv=none; b=WyI07T21zxI641glhl5dkDKX2nwRwB2DAbaRK7iLtASpsbB64W+qOHPZxZlII/3qZFYpif4cBEPAMRJToA62sZQ/fxtH5lat4zvKOzMNKbb/jhLYF81tz3JmVqi5cE0vM08klXNECd/YVDU4hFOJHtQn44IsZvzL1zlxv+l3X5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711443624; c=relaxed/simple;
-	bh=pNzfa0tdg/eWAuQZW6ONxAInY6gp1HmiXSutOixrMY4=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=AW/gIFrbayboXuxHxD95aoP2w/iHptH95wmOzfjHVMRp5BMzGdLFCAmVPB/IWQoVNHbqeAINyummQubrDCGUiQvNWv/YjO1X307foL+P+BLjq8po0Hxq1Tz38pGVPKggA96EX3q3bhNbOrn2pMpaneEvp1VaROL+ZZXAodhhtOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b4+gF7y6; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711443669; c=relaxed/simple;
+	bh=KKF/etnlAV4Vo3CaEiBAQT7vC0jCBkZ2PL192e0ugq8=;
+	h=Subject:To:Cc:References:In-Reply-To:From:Message-ID:Date:
+	 MIME-Version:Content-Type; b=dm4iMp46nwR+MBl1gr8zqt6YO1eLfQ4HFTVPuZM7O70SJ57HrMm6PC4mWG/AyqJcHglugTUt2SRIZwxXKGQgTAFgjLjjRxRqvUZMve1XLGItf1zWXytryPWFhVV460J8hZvfh6Ae5IldWtR2UJxNgnQcFRARCOLV0tmSZCYVpP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=Aak6/QcC; arc=none smtp.client-ip=35.89.44.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b4+gF7y6"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a4702457ccbso672839666b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 02:00:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711443621; x=1712048421; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=N4iPDWY1+f0T1Q2vEEbvMtradJ/i1iR854HyXNPduhM=;
-        b=b4+gF7y6P3rpW28puep8VGUIolak4Z4zZ/lajVUvG8+HVxMUFYJSJU5IcHwtVxuLKN
-         uYZf+7iCb6nBBdysbt630Lcr03c7E5ukk7yd0aUgd6srAgToWkgmxty5xZfnHAQhKJql
-         pSg05LEbFG5rDfJMhLj6L3ZTJ+bu/Fu4Q5IaxPMQ4DjLMc8K/bJlR6GSIGfs0CSqexdl
-         YVbXIgOxAUzqzRUMq0NqYWs4PVWHEsFo+Druye6k6aeGQ/p/4kO0wM8PEpF/DonNMRv9
-         vuiC7QVL4C305hngY/ab1JHVR0eE/DRq1pp4lvKzVFqKUJhC/SK9Iel81HHNkaqOu9AA
-         cWZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711443621; x=1712048421;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N4iPDWY1+f0T1Q2vEEbvMtradJ/i1iR854HyXNPduhM=;
-        b=LczpPQvA4un35Gin5Rcq2ccdcpQLM872s9KvuLDx3dkAomKIDOwZOcOViwHsgRODxx
-         JLf5A54fy52dyy2+qpqXSc28oiKP171+5wa1EPsFdUBP/n4qMWdCD4DYQ10Eg22Th+yn
-         BDd72e48vMg9DYLy1ijgE8g7pWyvRxsPDlEvaKi1KBwNjZQ7SWzJHt6RFcCZgoXhhWYC
-         BsYkgFp6gAp6YC2iiXN97lJonoGS/Mz90k6w0tfEsKZyrifQrns7ZVaUWhGsk15nBNJ1
-         4jpbtXL4WcSPAx5g/0Au8+/y61SgYxFOjJk7cNKhTnag+OMR0LKHXzqZBXAn9CuQBqgb
-         5eRw==
-X-Forwarded-Encrypted: i=1; AJvYcCXLlyGzPWyrUfI0pGLUGTZSr6Q5AkgEbmQOpD+ADyBrDH+M8CyfhnmctTkBPckWBlLEBU9RDP5eYfQw1I8Ng/XphwsDbQA5ObrQhVxr
-X-Gm-Message-State: AOJu0YzfQ2IQLxka0RP9lgm6HobS+yFk5c9OQ9Nc6tfGVUmzWjrwq+CF
-	rHR/jnGgs14OgDBPgcmRPMA0La5sMvJa7OOfi6GjemP6Z7lvqC8bv1a24V0eDcUI27L2HdpJ+hD
-	j
-X-Google-Smtp-Source: AGHT+IEyA1ZISAYO+CTSMcYnd+8P39nO4D6VhkYb5rVIQFSdgNbddobawaW1CRoklpLfMEqGbBHpSw==
-X-Received: by 2002:a17:906:260a:b0:a46:de64:c479 with SMTP id h10-20020a170906260a00b00a46de64c479mr5987710ejc.69.1711443620676;
-        Tue, 26 Mar 2024 02:00:20 -0700 (PDT)
-Received: from [127.0.1.1] ([178.197.222.44])
-        by smtp.gmail.com with ESMTPSA id a8-20020a170906670800b00a4710e7817esm4000973ejp.135.2024.03.26.02.00.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 02:00:20 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-samsung-soc@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20240312190348.724361-1-krzysztof.kozlowski@linaro.org>
-References: <20240312190348.724361-1-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH] dt-bindings: memory-controllers: add Samsung S5Pv210
- SoC DMC
-Message-Id: <171144361934.95197.9760843620606063956.b4-ty@linaro.org>
-Date: Tue, 26 Mar 2024 10:00:19 +0100
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="Aak6/QcC"
+Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
+	by cmsmtp with ESMTPS
+	id ocSVrR6voDI6fp2g0ruOGt; Tue, 26 Mar 2024 09:01:00 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id p2fzrYOmwkyhrp2fzrWz6z; Tue, 26 Mar 2024 09:01:00 +0000
+X-Authority-Analysis: v=2.4 cv=Z9TqHmRA c=1 sm=1 tr=0 ts=66028ecc
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=-Ou01B_BuAIA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=nmWuMzfKamIsx3l42hEX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
+	Message-ID:From:In-Reply-To:References:Cc:To:Subject:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=8TK6sc/s+cs5hpXijczBVPYRK+UzTbR5M4d+vTT+vRI=; b=Aak6/QcCwmzWh09DWXAuMCYp3X
+	4PQKxhPkHrm2EyprFKM/bgKb4o5th2V1I7JoVM3RNJFkJUhtMUcGFlTT3oUlyzI2/bhKvevYRzwRB
+	J4bFjFGeBMmgGyzSNVSt3GQhk2uiQGPllxpkrHEON0ILPkEzFiSHFi4jd7iHDAk/zTTPNKw+qiCaB
+	qc99L75lW3UWMft0Gv2iorZgJYyAt0Krb9MxxnaeF6fjztkvnjz0bEgmAOXmGWRMW/C/ILTSiDXhq
+	E1GcxYl37GNegNx9PUNRbAFO3+UUgm7CqEZ8L2p94vJteTSTbkTbzWcbVnoAf+woL58dgrATJRI2V
+	ZnctS+4w==;
+Received: from c-98-207-139-8.hsd1.ca.comcast.net ([98.207.139.8]:53476 helo=[10.0.1.47])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <re@w6rz.net>)
+	id 1rp2fy-001LV7-2z;
+	Tue, 26 Mar 2024 03:00:58 -0600
+Subject: Re: [PATCH 6.8 000/710] 6.8.2-rc2 review
+To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+Cc: torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, florian.fainelli@broadcom.com, pavel@denx.de
+References: <20240325120018.1768449-1-sashal@kernel.org>
+In-Reply-To: <20240325120018.1768449-1-sashal@kernel.org>
+From: Ron Economos <re@w6rz.net>
+Message-ID: <ca0c2ac9-2328-5db3-feab-77dc3c4da733@w6rz.net>
+Date: Tue, 26 Mar 2024 02:00:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Language: en-US
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 98.207.139.8
+X-Source-L: No
+X-Exim-ID: 1rp2fy-001LV7-2z
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-98-207-139-8.hsd1.ca.comcast.net ([10.0.1.47]) [98.207.139.8]:53476
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 2
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfE15OViGVlugLxFQOiZW0F5MW0eUQq+rINGgMbjPE8+CT74NZdohGs2sTOAjxo0vkDw3nC1YkSfod0CDI9bxZ8YZnC6rRP7NVQz/Z3xxQ1msu5iw3sMC
+ n9AfCmd9lbJFvN4NkTOnuTYByAju2d4/rGnU02bm6vhVFl2hFlH89YtqHO6nmBP5zRSOxPvOf0tJ90e4bqG0XWdz5VS06KdjDgE=
 
+On 3/25/24 5:00 AM, Sasha Levin wrote:
+> This is the start of the stable review cycle for the 6.8.2 release.
+> There are 710 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed Mar 27 12:00:13 PM UTC 2024.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>          https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-6.8.y&id2=v6.8.1
+> or in the git tree and branch at:
+>          git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.8.y
+> and the diffstat can be found below.
+>
+> Thanks,
+> Sasha
 
-On Tue, 12 Mar 2024 20:03:48 +0100, Krzysztof Kozlowski wrote:
-> Document bindings for the S5Pv210 SoC DMC memory controller, already
-> used in DTS and Linux CPU frequency scaling driver.  The binding looks
-> quite empty and is most likely incomplete, but the platform is so old
-> that no one expects any effort on this, except documenting what is in
-> DTS.
-> 
-> 
-> [...]
+Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
-Applied, thanks!
-
-[1/1] dt-bindings: memory-controllers: add Samsung S5Pv210 SoC DMC
-      https://git.kernel.org/krzk/linux-mem-ctrl/c/e23359d88a81679e7c55d221e7cb4c39abf5d760
-
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Tested-by: Ron Economos <re@w6rz.net>
 
