@@ -1,178 +1,134 @@
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC27413D246
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 19:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F73380;
+	Tue, 26 Mar 2024 19:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711481651; cv=none; b=bET6mmvTAr3D/63vMyIBPaMRUpZ54ChekTuLICj9PpmpqzP+dVprx7XaZOazu/GeUotQQtmunfdxzHNvccqjVKb8chjwhrih0F5mq+K5J6HMfTGfWWQyokm9pFb4G8nDWqFOj/bB9HWgbtWzjnaa6KJXrSQxZqYutP3T4Aj1IBA=
+	t=1711481700; cv=none; b=WMXeFEIqqEAi+FTyZtMnQ0Tr638yub8R6NGYBP6jRmbK09ki2duHwNFinPkWAscJ5G/oTv/94FvLnA2Thc3r+GHn2TjkoF7jFrEudkftd3mwomz9syt3S/wOgWCPl8C6YhXwdd8YGYN7qaJ1TgBTMxZHxLXgMtxnymAzWmOqDMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711481651; c=relaxed/simple;
-	bh=GsEfyjlUIOsWChcZqvf9jiniIaj+B4woBPAO/WPWeps=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qR4PdTW3d4LsQWKf5JTekhickjNgBSX/2zPpq1c9pP3QEPSVsN2ow//sltY3PJKvF/cQYYGql1bfLTydeRO9Po+zSAsAoLrYqRsm10xjOgHBULjGbU9d4zC7NfMM9kxSqh62/PF1Yz//6MA8H2mzuCHMQoayyBE1sog7aurDeJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ImziY/Od; arc=none smtp.client-ip=209.85.217.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1711481700; c=relaxed/simple;
+	bh=dd88q1ZEU6vWFMFdtX0JYBknro/QldP57SoW9UmINfU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BJZKu/26J/6NGhCOWy06bQ2um4NQ+lIOM/4v5VPPA0E0oGsrAAKtj7N6Q+raEMV2g5xKa1y7FA2pDm1iDS19DdT/gF/NcMVTQwsn+qze3hsItOMor9jtnIHHbfuJXc+kVjVm8qexc9MWEj8ZTdOMi9zDwhpGsaT8S0kigea4AHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d4yxmGjC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ImziY/Od"
-Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-476d0f0bba4so668993137.2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 12:34:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711481648; x=1712086448; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=B6sTqJ0aPnz4xq/ZZGbsUBdM/hjOugrKakCuozLiqI4=;
-        b=ImziY/Odl5b1J8Fwr0CHaxHTZJgW/q6Dv88JWQZXWLRLYKyLm7zpNR8jmjWEwWxr8v
-         tXu14jgotGfZbiIaDupleR93Ak0iZUYqWsYlg8knm5wBfbj0PFgxM3rlUKDisB/9dkwX
-         SrbO3+OYUscGVC3ukX2cWmmx1qvI9456yYUzmqeDYX4nGTsG96btm4HwH0rfpkpEHCGW
-         FpDGxS622t6yXIssAe4DZcuRnRQUHv+DeMqb4/bC+e+iuHbHALqwao/zNGMjIhCIk7MK
-         r6iMjDwnFQPfk8UvB0O+tx0aU//xOZOVOIQb97kvXvVAVsLPpolLWBBkyER59NKCqpZH
-         J1bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711481648; x=1712086448;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B6sTqJ0aPnz4xq/ZZGbsUBdM/hjOugrKakCuozLiqI4=;
-        b=AmowTC14fEqX87MWvfta4bNa5EZwA4dFKObqKfziTUdLx3jHhPYnBbJGu7gQUivAK6
-         Z0nRAs75T9dNToC7VN0IZ8mq/kQxjCn17VZLVkrVK344omL2RVAXRzUGMSG/ypyT7i52
-         tFfJRX+z/Cr9MRzUqQrZDRc6pG2uW4fqFldhht/amPen/UliTQPM4XX6nO9jG7WOPXxX
-         ZE/NMh3KUO7p4hHl8aLaWdKydWQOoGXuG23CfX3isj0ZIMpXttPgJ3SZTASMByosA3Wc
-         80UAsAqpNeOT7Kj1s8OUrDAg9m/HzjnsBGe3j37uC0ljJhAv+tPI93qH8BWbBoJlVOKH
-         vB2w==
-X-Forwarded-Encrypted: i=1; AJvYcCX9OfHj53Smcwj3Xtl7GNfJmpBOoaxNZZtMNYE81mMxxtzRVg+cU/xNLWsFA8huT4RjGu4uWjPe6JX3/Rv5HFsWX6YxX8AzKxaoeYN2
-X-Gm-Message-State: AOJu0YyiqqJvPKuD8tqrVd5uG/GABgk83IAStb/QzIwCEdpJwSao7tuJ
-	pP3YpQCz/iPLxzLnjojR1037AJw6VYUl5Y9m8a9Ofy9x3L0z91cnqfqTxJUZ3d0jny8xwGjEvF0
-	Fe67Ol5/Cdqe/LiYdC643DbB2bOsCKsN8coXcRudH4YuvE8BVoA==
-X-Google-Smtp-Source: AGHT+IE+slGZTbzdJa0pOx36MteAJ+21c3Rra2OYd4lvu0zA09PGaPCjAvF88xdcev7eD0SBuEKd+nv8R7bfeEhNtKc=
-X-Received: by 2002:a05:6102:24b8:b0:476:9ac0:e8c4 with SMTP id
- s24-20020a05610224b800b004769ac0e8c4mr10157730vse.34.1711481648508; Tue, 26
- Mar 2024 12:34:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d4yxmGjC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C90AC433F1;
+	Tue, 26 Mar 2024 19:34:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711481699;
+	bh=dd88q1ZEU6vWFMFdtX0JYBknro/QldP57SoW9UmINfU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=d4yxmGjC0N+zEn19fH/1bM+s9IgFIlwD+J2ali8Up/WQDOgW2t8N6shOD8Dr2B2W0
+	 JoDYxTsIEhUlST2ScUZ1Gn7FDik/5JaR+YLrAwSIkmGDb4sfL6xXf6nj7NkAm/igc6
+	 TtxtqWpfUeiJsgTTGid0GDvzTxNBqWsjcRUW1to55B0RNTMzCM+4v18rR2BWivsiOX
+	 x1WcmLakDJOZiLSrqQPUG2QQBv8/+wLw5OvKfl1QjzzPBO5rg2vW8leX4b/77EwWQa
+	 IA1XOQ+7kIkeMy1hOpKn5lU9Fx07ky5ntFqTwYVfPdJyGGFFzlC3Prnimvhl4nAGrf
+	 MVaYQjC2SHQzQ==
+Date: Tue, 26 Mar 2024 19:34:54 +0000
+From: Conor Dooley <conor@kernel.org>
+To: dev@folker-schwesinger.de
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Chris Ruehl <chris.ruehl@gtsys.com.hk>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Christopher Obbard <chris.obbard@collabora.com>,
+	Alban Browaeys <alban.browaeys@gmail.com>,
+	Doug Anderson <dianders@chromium.org>,
+	Brian Norris <briannorris@chromium.org>,
+	Jensen Huang <jensenhuang@friendlyarm.com>,
+	linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/3] devicetree: phy: rockchip-emmc: Document changed
+ strobe-pulldown property
+Message-ID: <20240326-shortage-portly-a3ae475b2f78@spud>
+References: <20240326-rk-default-enable-strobe-pulldown-v1-0-f410c71605c0@folker-schwesinger.de>
+ <20240326-rk-default-enable-strobe-pulldown-v1-2-f410c71605c0@folker-schwesinger.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <0851a207-7143-417e-be31-8bf2b3afb57d@molgen.mpg.de>
- <47e032a0-c9a0-4639-867b-cb3d67076eaf@suse.com> <20240326155247.GJZgLvT_AZi3XPPpBM@fat_crate.local>
- <80582244-8c1c-4eb4-8881-db68a1428817@suse.com> <20240326191211.GKZgMeC21uxi7H16o_@fat_crate.local>
-In-Reply-To: <20240326191211.GKZgMeC21uxi7H16o_@fat_crate.local>
-From: Marco Elver <elver@google.com>
-Date: Tue, 26 Mar 2024 20:33:31 +0100
-Message-ID: <CANpmjNOcKzEvLHoGGeL-boWDHJobwfwyVxUqMq2kWeka3N4tXA@mail.gmail.com>
-Subject: Re: Unpatched return thunk in use. This should not happen!
-To: Borislav Petkov <bp@alien8.de>
-Cc: Nikolay Borisov <nik.borisov@suse.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Paul Menzel <pmenzel@molgen.mpg.de>, Thomas Gleixner <tglx@linutronix.de>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, kasan-dev@googlegroups.com, 
-	David Kaplan <David.Kaplan@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="rZWP/rtpsRtp/vzL"
+Content-Disposition: inline
+In-Reply-To: <20240326-rk-default-enable-strobe-pulldown-v1-2-f410c71605c0@folker-schwesinger.de>
 
-On Tue, 26 Mar 2024 at 20:12, Borislav Petkov <bp@alien8.de> wrote:
->
-> On Tue, Mar 26, 2024 at 06:04:26PM +0200, Nikolay Borisov wrote:
-> > So this       _sub_I_00099_0 is the compiler generated ctors that is likely
-> > not patched. What's strange is that when adding debugging code I see that 2
-> > ctors are being executed and only the 2nd one fires:
-> >
-> > [    7.635418] in do_mod_ctors
-> > [    7.635425] calling 0 ctor 00000000aa7a443a
-> > [    7.635430] called 0 ctor
-> > [    7.635433] calling 1 ctor 00000000fe9d0d54
-> > [    7.635437] ------------[ cut here ]------------
-> > [    7.635441] Unpatched return thunk in use. This should not happen!
->
-> ... and this is just the beginning of the rabbit hole. David and I went
-> all the way down.
->
-> Turns out that objtool runs on the .o files and creates the
-> .return_sites just fine but then the module building dance creates an
-> intermediary *.mod.c file and when that thing is built, KCSAN would
-> cause the addition of *another* constructor to .text.startup in the
-> module.
->
-> The .o file has one:
->
-> -------------------
-> Disassembly of section .text.startup:
->
-> ...
->
-> 0000000000000010 <_sub_I_00099_0>:
->   10:   f3 0f 1e fa             endbr64
->   14:   e8 00 00 00 00          call   19 <_sub_I_00099_0+0x9>
->                         15: R_X86_64_PLT32      __tsan_init-0x4
->   19:   e9 00 00 00 00          jmp    1e <__UNIQUE_ID___addressable_cryptd_alloc_aead349+0x6>
->                         1a: R_X86_64_PLT32      __x86_return_thunk-0x4
-> -------------------
->
->
-> while the .ko file has two:
->
-> -------------------
-> Disassembly of section .text.startup:
->
-> 0000000000000010 <_sub_I_00099_0>:
->   10:   f3 0f 1e fa             endbr64
->   14:   e8 00 00 00 00          call   19 <_sub_I_00099_0+0x9>
->                         15: R_X86_64_PLT32      __tsan_init-0x4
->   19:   e9 00 00 00 00          jmp    1e <_sub_I_00099_0+0xe>
->                         1a: R_X86_64_PLT32      __x86_return_thunk-0x4
->
-> ...
->
-> 0000000000000030 <_sub_I_00099_0>:
->   30:   f3 0f 1e fa             endbr64
->   34:   e8 00 00 00 00          call   39 <_sub_I_00099_0+0x9>
->                         35: R_X86_64_PLT32      __tsan_init-0x4
->   39:   e9 00 00 00 00          jmp    3e <__ksymtab_cryptd_alloc_ahash+0x2>
->                         3a: R_X86_64_PLT32      __x86_return_thunk-0x4
-> -------------------
->
-> Once we've figured that out, finding a fix is easy:
 
-Thanks for figuring this one out!
+--rZWP/rtpsRtp/vzL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
-> index 8568d256d6fb..79fcf2731686 100644
-> --- a/scripts/Makefile.modfinal
-> +++ b/scripts/Makefile.modfinal
-> @@ -23,7 +23,7 @@ modname = $(notdir $(@:.mod.o=))
->  part-of-module = y
->
->  quiet_cmd_cc_o_c = CC [M]  $@
-> -      cmd_cc_o_c = $(CC) $(filter-out $(CC_FLAGS_CFI) $(CFLAGS_GCOV), $(c_flags)) -c -o $@ $<
-> +      cmd_cc_o_c = $(CC) $(filter-out $(CC_FLAGS_CFI) $(CFLAGS_GCOV) $(CFLAGS_KCSAN), $(c_flags)) -c -o $@ $<
+On Tue, Mar 26, 2024 at 07:54:36PM +0100, Folker Schwesinger via B4 Relay w=
+rote:
+> From: Folker Schwesinger <dev@folker-schwesinger.de>
 
-This looks reasonable.
+The prefix is "dt-bindings" not "devicetree" FYI.
 
->  %.mod.o: %.mod.c FORCE
->         $(call if_changed_dep,cc_o_c)
->
-> However, I'm not sure.
->
-> I wanna say that since those are constructors then we don't care about
-> dynamic races there so we could exclude them from KCSAN.
+>=20
+> Document the changes regarding the optional strobe-pulldown property.
+> These changes are necessary as the default behavior of the driver was
+> restored to the Rockchip kernel behavior of enabling the internal
+> pulldown by default.
 
-Yeah, we can just exclude all the code from the auto-generated mod.c
-files from KCSAN instrumentation. It looks like they just contain
-global metadata for the module, and no other code. The auto-generated
-constructors don't contain much interesting code (unlikely they'd
-contain data races we'd ever care about).
-
-> If not, I could disable the warning on KCSAN. I'm thinking no one would
-> run KCSAN in production...
->
-> A third option would be to make objtool run on .ko files. Yeah, that
-> would be fun for Josh. :-P
->
-> I'd look into the direction of melver for suggestions here.
-
-I think just removing instrumentation from the mod.c files is very reasonable.
+I don't think this is a valid justification, but it'll be easier for me
+to explain this on the driver patch.
 
 Thanks,
--- Marco
+Conor.
+
+>=20
+> Fixes: f34e43f12382 ("devicetree: phy: rockchip-emmc: pulldown property")
+> Signed-off-by: Folker Schwesinger <dev@folker-schwesinger.de>
+> ---
+>  Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt =
+b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+> index 57d28c0d5696..10c05437f7ab 100644
+> --- a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+> @@ -16,8 +16,8 @@ Optional properties:
+>   - drive-impedance-ohm: Specifies the drive impedance in Ohm.
+>                          Possible values are 33, 40, 50, 66 and 100.
+>                          If not set, the default value of 50 will be appl=
+ied.
+> - - rockchip,enable-strobe-pulldown: Enable internal pull-down for the st=
+robe
+> -                                    line.  If not set, pull-down is not =
+used.
+> + - rockchip,disable-strobe-pulldown: Disable internal pull-down for the =
+strobe
+> +                                     line.  If not set, pull-down is use=
+d.
+>   - rockchip,output-tapdelay-select: Specifies the phyctrl_otapdlysec reg=
+ister.
+>                                      If not set, the register defaults to=
+ 0x4.
+>                                      Maximum value 0xf.
+>=20
+> --=20
+> 2.44.0
+>=20
+>=20
+
+--rZWP/rtpsRtp/vzL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZgMjXgAKCRB4tDGHoIJi
+0gDXAQDsnJ2l1e9/GqPRLAJofwCMnAL+WPP/kMag/2lxXFb3sgD8DaHfe8Mk5FsS
+FcEt/njhjF1n6zYpqFuyWccUhJQdUwc=
+=f9q9
+-----END PGP SIGNATURE-----
+
+--rZWP/rtpsRtp/vzL--
