@@ -1,99 +1,134 @@
-Received: from h3cspam02-ex.h3c.com (smtp.h3c.com [60.191.123.50])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA601BC43;
-	Tue, 26 Mar 2024 00:48:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.191.123.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5622F5E;
+	Tue, 26 Mar 2024 00:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711414088; cv=none; b=N1qwebkUft3hYKPrEilhHCMRfgpxn3pbrPs/oNsHjFiKF0lanTvFROiKcZ9xRvIc5LuqEq93RvArnARRrgMQKrajwHV3ttPF0fDCz3dl/QHcD/ex/GH4Wiovyj7HhnDtg+VZLSpjyoS4dRxx3RoUwMMMUtO5Z8/lF85TYHwtQ+g=
+	t=1711414187; cv=none; b=PiSFtbcINPRJfrXdLD/AzGezBZjseZNFekB1RGzrVOXSK789cmPtWFFK1fTt4ppLP9I9GeFEB8vdwILewckMunRRyp0bO+fqwM0Os5NXXhzLkczPH3aVjzlwhpg9ooNeFYM0ejD61QToM9pXyV7YHAaIQIRE5KexphO3xBS+xDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711414088; c=relaxed/simple;
-	bh=QkZ6aHYMcf61HU6Zd5zYZ/ekW8uMmtly18b1BNH24nc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=nJRh855DdmidbFGkX3xKgBVzUghje1OGbxd0EuOcnZqw0sERCyxgc5AUBLRFTIbVnKAQICS6P3X4hr1XmDPYYWbffNJErAa+nbH4FmRFSHd5luV4tF7TgTlLoMMKpg44JoC63KvEKY3ooWD+SWE2TeEfrJBjgaOgS8YdoICBMVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com; spf=pass smtp.mailfrom=h3c.com; arc=none smtp.client-ip=60.191.123.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h3c.com
-Received: from mail.maildlp.com ([172.25.15.154])
-	by h3cspam02-ex.h3c.com with ESMTP id 42Q0l5q3009474;
-	Tue, 26 Mar 2024 08:47:05 +0800 (GMT-8)
-	(envelope-from liu.yeC@h3c.com)
-Received: from DAG6EX07-IMDC.srv.huawei-3com.com (unknown [10.62.14.16])
-	by mail.maildlp.com (Postfix) with ESMTP id 974262004BBF;
-	Tue, 26 Mar 2024 08:48:52 +0800 (CST)
-Received: from DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11) by
- DAG6EX07-IMDC.srv.huawei-3com.com (10.62.14.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.27; Tue, 26 Mar 2024 08:47:05 +0800
-Received: from DAG6EX02-IMDC.srv.huawei-3com.com ([fe80::4c21:7c89:4f9d:e4c4])
- by DAG6EX02-IMDC.srv.huawei-3com.com ([fe80::4c21:7c89:4f9d:e4c4%16]) with
- mapi id 15.02.1258.027; Tue, 26 Mar 2024 08:47:05 +0800
-From: Liuye <liu.yeC@h3c.com>
-To: Daniel Thompson <daniel.thompson@linaro.org>
-CC: "jirislaby@kernel.org" <jirislaby@kernel.org>,
-        "dianders@chromium.org"
-	<dianders@chromium.org>,
-        "gregkh@linuxfoundation.org"
-	<gregkh@linuxfoundation.org>,
-        "jason.wessel@windriver.com"
-	<jason.wessel@windriver.com>,
-        "kgdb-bugreport@lists.sourceforge.net"
-	<kgdb-bugreport@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "linux-serial@vger.kernel.org"
-	<linux-serial@vger.kernel.org>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIIFY1XSBrZGI6IEZpeCB0aGUgZGVhZGxvY2sgaXNzdWUg?=
- =?gb2312?Q?in_KDB_debugging.?=
-Thread-Topic: [PATCH V5] kdb: Fix the deadlock issue in KDB debugging.
-Thread-Index: AQHafMNGp110DpezqUCtEXSIKJEqHbFIKpkAgAEGDzA=
-Date: Tue, 26 Mar 2024 00:47:05 +0000
-Message-ID: <284dbaad75574bbaaab803b471e8ca6c@h3c.com>
-References: <20240322155818.GD7342@aspen.lan>
- <20240323014141.3621738-1-liu.yec@h3c.com>
- <20240325165436.GA485978@aspen.lan>
-In-Reply-To: <20240325165436.GA485978@aspen.lan>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-sender-location: DAG2
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1711414187; c=relaxed/simple;
+	bh=J28s9rQt90wDxj1wBF0s5KRA+1w6ylx+IcrcZNAD8Os=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IPC5up8+fmrsT1a3WzqHKn8ga06sW6xr0bHZen7pK6nBnRFzBqtDh/vmj0T0GmXhS21warX5GsCcA2htnYBnhz0o0bAZGgaSlCr+uW/pwyOmaAn0JtzPsrohD3QuVCvPQDhYJtN+mxZLWPSS8znOrbw2KNxQA/R0fiYCNgQMWDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=UEqU8gaE; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="UEqU8gaE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID
+	:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID
+	:Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
+	Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
+	:List-Post:List-Owner:List-Archive;
+	bh=LuYyrQMyWGMOwe8OrvTO4BN9gtnvAnON7zt9Ixqpfy0=; b=UEqU8gaEALfh/lsLw+pY5zIQ1T
+	u896m8WTJTPLEHXWOSyX1qPnueTSgnIxfehy+byLJsQLrgGHw4d8JQ6EblAPMq7jGVTLOt0K1alZx
+	oQecvQaVl2mxSAHuF7TedHkyzZ9hiS2/a09IQMVLdCjwD4GcjxCns7UnSmMkeH4fNUn7ATq+fa2yC
+	9CAkKcPP0Pn98exNRcHhoehv9QokTjjh3mbKywqZnUIWQE0O1OZYRREakW+ND9T45s3qO47Tn8oLA
+	eyTnVae4NYSI9MpNo6R8dA+MnUegCBPqlvlr///B9QukS35jW7/ASDytmPo37OtHriDk5fGzW7Fnr
+	ox6qMM2Q==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1rouK4-00EnsC-1H;
+	Tue, 26 Mar 2024 00:05:48 +0000
+Date: Tue, 26 Mar 2024 00:05:48 +0000
+From: "Dr. David Alan Gilbert" <dave@treblig.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	llvm@lists.linux.dev, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Andrea Parri <parri.andrea@gmail.com>,
+	Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	David Howells <dhowells@redhat.com>,
+	Jade Alglave <j.alglave@ucl.ac.uk>,
+	Luc Maranget <luc.maranget@inria.fr>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Akira Yokosawa <akiyks@gmail.com>,
+	Daniel Lustig <dlustig@nvidia.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	kent.overstreet@gmail.com,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, elver@google.com,
+	Mark Rutland <mark.rutland@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [WIP 0/3] Memory model and atomic API in Rust
+Message-ID: <ZgIRXL5YM2AwBD0Y@gallifrey>
+References: <20240322233838.868874-1-boqun.feng@gmail.com>
+ <s2jeqq22n5ef5jknaps37mfdjvuqrns4w7i22qp2r7r4bzjqs2@my3eyxoa3pl3>
+ <CAHk-=whY5A=S=bLwCFL=043DoR0TTgSDUmfPDx2rXhkk3KANPQ@mail.gmail.com>
+ <u2suttqa4c423q4ojehbucaxsm6wguqtgouj7vudp55jmuivq3@okzfgryarwnv>
+ <CAHk-=whkQk=zq5XiMcaU3xj4v69+jyoP-y6Sywhq-TvxSSvfEA@mail.gmail.com>
+ <c51227c9a4103ad1de43fc3cda5396b1196c31d7.camel@redhat.com>
+ <CAHk-=wjP1i014DGPKTsAC6TpByC3xeNHDjVA4E4gsnzUgJBYBQ@mail.gmail.com>
+ <bu3seu56hfozsvgpdqjarbdkqo3lsjfc4lhluk5oj456xmrjc7@lfbbjxuf4rpv>
+ <CAHk-=wgLGWBXvNODAkzkVHEj7zrrnTq_hzMft62nKNkaL89ZGQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:h3cspam02-ex.h3c.com 42Q0l5q3009474
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgLGWBXvNODAkzkVHEj7zrrnTq_hzMft62nKNkaL89ZGQ@mail.gmail.com>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-17-amd64 (x86_64)
+X-Uptime: 00:03:19 up 83 days,  2:53,  1 user,  load average: 0.06, 0.02, 0.00
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-Pj4gSnVzdCBuZWVkIHRvIHBvc3Rwb25lIHNjaGVkdWxlX3dvcmsgdG8gdGhlIHNsYXZlIENQVSBl
-eGl0aW5nIHRoZSBOTUkgY29udGV4dC4NCj4+DQo+PiBpcnFfd29yayB3aWxsIG9ubHkgcmVzcG9u
-ZCB0byBoYW5kbGUgc2NoZWR1bGVfd29yayBhZnRlciBleGl0aW5nIHRoZSBjdXJyZW50IGludGVy
-cnVwdCBjb250ZXh0Lg0KPj4NCj4+IFdoZW4gdGhlIG1hc3RlciBDUFUgZXhpdHMgdGhlIGludGVy
-cnVwdCBjb250ZXh0LCBvdGhlciBDUFVzIHdpbGwgbmF0dXJhbGx5IGV4aXQgdGhlIE5NSSBjb250
-ZXh0LCBzbyB0aGVyZSB3aWxsIGJlIG5vIGRlYWRsb2NrLg0KPj4NCj4+IEl0IGlzIHRoZSBjYWxs
-IHRvIGlucHV0X3JlZ2lzdGVyX2hhbmRsZXIoKSB0aGF0IGZvcmNlcyB1cyBub3QgdG8gZG8gdGhl
-IHdvcmsgZnJvbSBpcnFfd29yaydzIGhhcmRpcnEgY2FsbGJhY2suDQo+Pg0KPj4gVGhlcmVmb3Jl
-IHNjaGVkdWxlIGFub3RoZXIgd29yayBpbiB0aGUgaXJxX3dvcmsgYW5kIG5vdCBkbyB0aGUgam9i
-IGRpcmVjdGx5Lg0KPg0KPlRoaXMgbG9va3MgbGlrZSBpdCB3YXMgY29weSBhbmQgcGFzdGVkIGZy
-b20gdGhlIGUtbWFpbCB0aHJlYWQgd2l0aG91dCBhbnkgZWRpdGluZyB0byBtYWtlIGl0IG1ha2Ug
-YW55IHNlbnNlLiBJdCBub3QgZXZlbiBmb3JtYXR0ZWQgY29ycmVjdGx5ICh3aGVyZSBhcmUgdGhl
-IGxpbmUgYnJlYWtzPykuDQo+DQo+SG93IGFib3V0Og0KPg0KPldlIGZpeCB0aGUgcHJvYmxlbSBi
-eSB1c2luZyBpcnFfd29yayB0byBjYWxsIHNjaGVkdWxlX3dvcmsoKSBpbnN0ZWFkIG9mIGNhbGxp
-bmcgaXQgZGlyZWN0bHkuIGlycV93b3JrIGlzIGFuIE5NSS1zYWZlIGRlZmVycmVkIHdvcmsgZnJh
-bWV3b3JrIHRoYXQgcGVyZm9ybXMgdGhlIHJlcXVlc3RlZCB3b3JrIGZyb20gYSBoYXJkaXJxIGNv
-bnRleHQgKHVzdWFsbHkgYW4gSVBJIGJ1dCBpdCBjYW4gYmUgdGltZXIgaW50ZXJydXB0IG9uIHNv
-bWUgYXJjaGl0ZWN0dXJlcykuDQo+DQo+Tm90ZSB0aGF0IHdlIHN0aWxsIG5lZWQgdG8gIGEgd29y
-a3F1ZXVlIHNpbmNlIHdlIGNhbm5vdCByZXN5bmMgdGhlIGtleWJvYXJkIHN0YXRlIGZyb20gdGhl
-IGhhcmRpcnEgY29udGV4dCBwcm92aWRlZCBieSBpcnFfd29yay4NCj5UaGF0IG11c3QgYmUgZG9u
-ZSBmcm9tIHRhc2sgY29udGV4dCBmb3IgdGhlIGNhbGxzIGludG8gdGhlIGlucHV0IHN1YnlzdGVt
-LiBIZW5jZSB3ZSBtdXN0IGRlZmVyIHRoZSB3b3JrIHR3aWNlLiBGaXJzdCB0byBzYWZlbHkgc3dp
-dGNoIGZyb20gdGhlIGRlYnVnIHRyYXAgKE5NSS1saWtlIGNvbnRleHQpIHRvIGhhcmRpcnEgYW5k
-IHRoZW4sIHNlY29uZGx5LCB0byBnZXQgZnJvbSBoYXJkaXJxIHRvIHRoZSBzeXN0ZW0gd29ya3F1
-ZXVlLg0KDQpJIGFwb2xvZ2l6ZSBmb3IgbXkgcG9vciB3cml0aW5nIHNraWxscywgeW91ciBhbnN3
-ZXIgaXMgbW9yZSBwcm9mZXNzaW9uYWwgYW5kIGFjY3VyYXRlLiBJIHdpbGwgcmVwbGFjZSB0aGlz
-IHBhcnQgd2l0aCB5b3VyIGRlc2NyaXB0aW9uIGluIHRoZSBWNi4NCg0KDQo=
+* Linus Torvalds (torvalds@linux-foundation.org) wrote:
+
+<snip>
+
+> IOW, the whole access size problem that Boqun described is
+> *inherently* tied to the fact that the C++ and Rust memory model is
+> badly designed from the wrong principles.
+> 
+> Instead of designing it as a "this is an atomic object that you can do
+> these operations on", it should have been "this is an atomic access,
+> and you can use this simple object model to have the compiler generate
+> the accesses for you".
+
+Isn't one of the aims of the Rust/C++ idea that you can't forget to access
+a shared piece of data atomically?
+
+If you want to have 'atomic accesses' explicitly, how do you tell the compiler
+what you can use them on, and when it should stop you mixing them with
+normal accesses on the same object?
+
+Dave
+
+> This is why I claim that LKMM is fundamentally better. It didn't start
+> out from a bass-ackwards starting point of marking objects "atomic".
+> 
+> And yes, the LKMM is a bit awkward, because we don't have the
+> shorthands, so you have to write out "atomic_read()" and friends.
+> 
+> Tough. It's better to be correct than to be simple.
+> 
+>              Linus
+> 
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
