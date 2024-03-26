@@ -1,178 +1,198 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7470D5D734;
-	Tue, 26 Mar 2024 09:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3667A56757;
+	Tue, 26 Mar 2024 09:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711446828; cv=none; b=FjOJXXm+wY962Om0cFxxgbKUCNL73Q4wmAAgGszNlZabGAID+SEPNGCrg/2LG89QkqGAhRvSPfPRChI+JL9DcbVwhWk+HrEqy8o5w6tXT58UVsTJNZ4lSwGWjrmZOrmZaDP1teYK36zh5/m1gLgjiRJ+ODX0SzR5Cxt8wWAGFc8=
+	t=1711446846; cv=none; b=g5oQDRf6GdJqUIAjaQLx3X72AwFEV3N8UcWs8tVX+kJHbm3CWngD5xPxqdtvXelkezFIv+D3HDtFZwVAqhIpAmmPCaDAhsBr1xRwnwBByxdnTPX+WVvNnpQdSqwRQDxDvE/89mj4/wOsuVJP/d7HiPfmV3rdrN7CudStPCFX5JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711446828; c=relaxed/simple;
-	bh=SPMt9sPXUWG+6brPuvlSRI7/wEP/OhYVJDICeA+oquE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=feu5yccASxWlatjrBBMP91KtWV4zWQUEqm4ggpiL79PA89/8AykRvCzd87ryi71nAfDURNznqGEUJxC9BiJO84fsvq4/YdIXZvImIfcdT9kz5UgBAlZb7O7aq4ZNLVhmmNYokNfcQGypTUG4hsp8v3b/lEgpqJp1k6UV+eP2unw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-60a0579a931so57290647b3.0;
-        Tue, 26 Mar 2024 02:53:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711446824; x=1712051624;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RYG112uU2LU/aG30QDJAbplxe7xFJ5VktIX6iywVcNY=;
-        b=OaJ9i5d4+/yhpKJxiUI+1CVIe8EVysvZlX4si8HivJ/22Cn3iEAukB+FanfclgxdUy
-         65wlaEiuqImZsettx3SG5ZLcF83cgPesgfzZKj6TxuWfD4ribzU/W/MExq2kDsgDrJWu
-         96xmYMATU168mC8mr4ElVF9WZEKdfvNd0a6iKJextJFeG3CoK4VP2XwXQtLhkINx7/TL
-         oBPQ7YP0wsp96mTN05wGxGrU1sXMtlmUvMdkZDm6g/A3CsqLh9A6ccTKkxoDZm2DV+GJ
-         D8tUq3o3PtTd660bQbJwrHf2jgGDbKb2wWxrMm83tTe0nQA/QP4hr6A8IF9ZI+3v+y/z
-         8dPg==
-X-Forwarded-Encrypted: i=1; AJvYcCWA/VPXzv0lvE4uzKjzB4ahynq5fUQKjpUJbjtLnMKQsUgeYZrp3R/pW/shp34a+1SMah17SlAiCXIwAyyjjhmsjwm18JWk39CUB44AqhZqm4DQZRfOdA7lgxZBUE1l6fiXP1RCntKWCViWu8+IyCgRgSN2EVzTKC8VYzuw2da/Ia1/Rw==
-X-Gm-Message-State: AOJu0Yz285jHuqiF0/UqtHVCZrUZHpXG2KcsHV+gTwrOT01vgHErGIyj
-	af6FuvekgnvP2RjAtMtPoBYyReOPO7QDbndgGUTzzOwgx0uIzp46RLwDCUMBYbw=
-X-Google-Smtp-Source: AGHT+IEgarFDIiVFFBTPp/+8EOjmJfMZ6VCYGpbs0Go20VbeJYn5rKF+ceXxXuvWF5eppaaGfW60zw==
-X-Received: by 2002:a0d:d48a:0:b0:60a:16b8:1042 with SMTP id w132-20020a0dd48a000000b0060a16b81042mr7799749ywd.16.1711446824182;
-        Tue, 26 Mar 2024 02:53:44 -0700 (PDT)
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com. [209.85.219.178])
-        by smtp.gmail.com with ESMTPSA id gw8-20020a05690c460800b006111be0eaefsm1373172ywb.50.2024.03.26.02.53.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Mar 2024 02:53:43 -0700 (PDT)
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dcc71031680so4666294276.2;
-        Tue, 26 Mar 2024 02:53:43 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWdWtW7UiRuQmAjofQ2dvRCDB1zudD21aZ96hG0sThIuCq9L3LrTku/LUsPx+xvi8IOBRU1Fa/AYk+Bi1blucA6Td4+TC9U2EOnbGpMKfUiL0Y74kmW+1KV1nAUifg3z5+blm3T+vR40WpiwI35JXFdjoUH1BHPWNxTrmz//DQs9V80iQ==
-X-Received: by 2002:a25:db08:0:b0:dcd:5c7:8466 with SMTP id
- g8-20020a25db08000000b00dcd05c78466mr7990390ybf.44.1711446823406; Tue, 26 Mar
- 2024 02:53:43 -0700 (PDT)
+	s=arc-20240116; t=1711446846; c=relaxed/simple;
+	bh=EDdDtVa8zpFKLiXUwYaid9C7CijL8vV8TJ2knmO560Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uB3wguhlz+KbqGMSeOp3o8jQClnF0ciTeO7tyYxV5RnCpuzUrXkfAttybXNen5UQvYBDGmv6ilVJ+j7AOfCx0VCopklk8VKZizjs1k0izyoPiBT42+hAKmQnZExMARjgjRXntwf70dynsdSfq0Bke0VOWiqulhhaPbLdYvuRaho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=X67Rp39H; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=8NstOqXY; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=X67Rp39H; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=8NstOqXY; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="X67Rp39H";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="8NstOqXY";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="X67Rp39H";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="8NstOqXY"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 81FB2353A0;
+	Tue, 26 Mar 2024 09:54:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711446841; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AZdWoTycjyxZmxKXrCj0zVJl37+mzb3tmzUWtRx1AM4=;
+	b=X67Rp39HWkdE1rUHyo2nSoYTwvk8SWeBDHuk8pong4sblUYNOf4rZMVdlZ6mBeOKXiQ93x
+	5zelL5paqnwErw9EvB6WsAysYV2j4MKxEaCSJ19GoMNAI0D8m7NodSEOGhM3+19NQIRUFu
+	TqW6+xixmQHfRRxL3uXPoTGVSyf9tFk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711446841;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AZdWoTycjyxZmxKXrCj0zVJl37+mzb3tmzUWtRx1AM4=;
+	b=8NstOqXYmLMekpDisOnB4Fhz3AS5Pmd9kbJ4y418Qh7Ns2ZBn+bxPhZvacIhgxwfIFe6ct
+	c619yQg8+g1kV7CQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711446841; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AZdWoTycjyxZmxKXrCj0zVJl37+mzb3tmzUWtRx1AM4=;
+	b=X67Rp39HWkdE1rUHyo2nSoYTwvk8SWeBDHuk8pong4sblUYNOf4rZMVdlZ6mBeOKXiQ93x
+	5zelL5paqnwErw9EvB6WsAysYV2j4MKxEaCSJ19GoMNAI0D8m7NodSEOGhM3+19NQIRUFu
+	TqW6+xixmQHfRRxL3uXPoTGVSyf9tFk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711446841;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AZdWoTycjyxZmxKXrCj0zVJl37+mzb3tmzUWtRx1AM4=;
+	b=8NstOqXYmLMekpDisOnB4Fhz3AS5Pmd9kbJ4y418Qh7Ns2ZBn+bxPhZvacIhgxwfIFe6ct
+	c619yQg8+g1kV7CQ==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 6F3B213587;
+	Tue, 26 Mar 2024 09:54:01 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id vMnMGjmbAmbzCgAAn2gu4w
+	(envelope-from <jack@suse.cz>); Tue, 26 Mar 2024 09:54:01 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 051DCA0812; Tue, 26 Mar 2024 10:53:56 +0100 (CET)
+Date: Tue, 26 Mar 2024 10:53:56 +0100
+From: Jan Kara <jack@suse.cz>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] fsnotify: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <20240326095356.sntn4xtroguimfow@quack3>
+References: <ZgImguNzJBiis9Mj@neat>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240307214418.3812290-1-ipylypiv@google.com> <20240307214418.3812290-3-ipylypiv@google.com>
-In-Reply-To: <20240307214418.3812290-3-ipylypiv@google.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 26 Mar 2024 10:53:30 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWxVbT=f+kZ58urwGhYD9RfBnu7u8oLAyrx_riU8OGt0w@mail.gmail.com>
-Message-ID: <CAMuHMdWxVbT=f+kZ58urwGhYD9RfBnu7u8oLAyrx_riU8OGt0w@mail.gmail.com>
-Subject: Re: [PATCH v8 2/7] scsi: libsas: Define NCQ Priority sysfs attributes
- for SATA devices
-To: Igor Pylypiv <ipylypiv@google.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
-	John Garry <john.g.garry@oracle.com>, Jason Yan <yanaijie@huawei.com>, 
-	"James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
-	Jack Wang <jinpu.wang@cloud.ionos.com>, Hannes Reinecke <hare@suse.de>, 
-	Xiang Chen <chenxiang66@hisilicon.com>, Artur Paszkiewicz <artur.paszkiewicz@intel.com>, 
-	Bart Van Assche <bvanassche@acm.org>, TJ Adams <tadamsjr@google.com>, linux-ide@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZgImguNzJBiis9Mj@neat>
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=X67Rp39H;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=8NstOqXY
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 ARC_NA(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCPT_COUNT_FIVE(0.00)[6];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 MX_GOOD(-0.01)[];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[suse.cz,gmail.com,vger.kernel.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Score: -4.01
+X-Rspamd-Queue-Id: 81FB2353A0
+X-Spam-Flag: NO
 
-Hi Igor,
+On Mon 25-03-24 19:36:02, Gustavo A. R. Silva wrote:
+> Use the `DEFINE_FLEX()` helper for an on-stack definition of a
+> flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
+> 
+> So, with these changes, fix the following warning:
+> fs/notify/fdinfo.c:45:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Link: https://github.com/KSPP/linux/issues/202
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-On Thu, Mar 7, 2024 at 10:55=E2=80=AFPM Igor Pylypiv <ipylypiv@google.com> =
-wrote:
-> Libata sysfs attributes cannot be used for libsas managed SATA devices
-> because the ata_port location is different for libsas.
->
-> Defined sysfs attributes (visible for SATA devices only):
-> - /sys/block/sda/device/ncq_prio_enable
-> - /sys/block/sda/device/ncq_prio_supported
->
-> The newly defined attributes will pass the correct ata_port to libata
-> helper functions.
->
-> Reviewed-by: John Garry <john.g.garry@oracle.com>
-> Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
-> Reviewed-by: Jason Yan <yanaijie@huawei.com>
-> Signed-off-by: Igor Pylypiv <ipylypiv@google.com>
+Nice! I've added the patch to my tree.
 
-Thanks for your patch, which is now commit b4d3ddd2df7531e3 ("scsi:
-libsas: Define NCQ Priority sysfs attributes for SATA devices")
-in scsi-mkp/for-next
+								Honza
 
-> --- a/drivers/scsi/libsas/sas_ata.c
-> +++ b/drivers/scsi/libsas/sas_ata.c
-
-> +
-> +DEVICE_ATTR(ncq_prio_supported, S_IRUGO, sas_ncq_prio_supported_show, NU=
-LL);
-> +
-
-[...]
-
-> +
-> +DEVICE_ATTR(ncq_prio_enable, S_IRUGO | S_IWUSR,
-> +           sas_ncq_prio_enable_show, sas_ncq_prio_enable_store);
-> +
-
-When both CONFIG_SCSI_SAS_ATA and CONFIG_SATA_HOST are enabled:
-
-aarch64-linux-gnu-ld: drivers/ata/libata-sata.o:(.data+0x110):
-multiple definition of `dev_attr_ncq_prio_supported';
-drivers/scsi/libsas/sas_ata.o:(.data+0x260): first defined here
-aarch64-linux-gnu-ld: drivers/ata/libata-sata.o:(.data+0xd8): multiple
-definition of `dev_attr_ncq_prio_enable';
-drivers/scsi/libsas/sas_ata.o:(.data+0x228): first defined here
-
-Making both new DEVICE_ATTR() declarations static doesn't work,
-as <linux/libata.h> contains a forward declaration for the existing global
-dev_attr_ncq_prio_supported in libata:
-
-In file included from include/linux/async.h:14,
-                 from drivers/scsi/libsas/sas_ata.c:12:
-include/linux/device.h:156:33: error: static declaration of
-=E2=80=98dev_attr_ncq_prio_supported=E2=80=99 follows non-static declaratio=
-n
-  156 |         struct device_attribute dev_attr_##_name =3D
-__ATTR(_name, _mode, _show, _store)
-      |                                 ^~~~~~~~~
-drivers/scsi/libsas/sas_ata.c:984:8: note: in expansion of macro =E2=80=98D=
-EVICE_ATTR=E2=80=99
-  984 | static DEVICE_ATTR(ncq_prio_supported, S_IRUGO,
-sas_ncq_prio_supported_show,
-      |        ^~~~~~~~~~~
-In file included from include/scsi/sas_ata.h:13,
-                 from drivers/scsi/libsas/sas_ata.c:15:
-include/linux/libata.h:508:32: note: previous declaration of
-=E2=80=98dev_attr_ncq_prio_supported=E2=80=99 with type =E2=80=98struct dev=
-ice_attribute=E2=80=99
-  508 | extern struct device_attribute dev_attr_ncq_prio_supported;
-      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from include/linux/async.h:14,
-                 from drivers/scsi/libsas/sas_ata.c:12:
-include/linux/device.h:156:33: error: static declaration of
-=E2=80=98dev_attr_ncq_prio_enable=E2=80=99 follows non-static declaration
-  156 |         struct device_attribute dev_attr_##_name =3D
-__ATTR(_name, _mode, _show, _store)
-      |                                 ^~~~~~~~~
-drivers/scsi/libsas/sas_ata.c:1023:8: note: in expansion of macro =E2=80=98=
-DEVICE_ATTR=E2=80=99
- 1023 | static DEVICE_ATTR(ncq_prio_enable, S_IRUGO | S_IWUSR,
-      |        ^~~~~~~~~~~
-In file included from include/scsi/sas_ata.h:13,
-                 from drivers/scsi/libsas/sas_ata.c:15:
-include/linux/libata.h:509:32: note: previous declaration of
-=E2=80=98dev_attr_ncq_prio_enable=E2=80=99 with type =E2=80=98struct device=
-_attribute=E2=80=99
-  509 | extern struct device_attribute dev_attr_ncq_prio_enable;
-      |                                ^~~~~~~~~~~~~~~~~~~~~~~~
-
-Perhaps the new attributes can be renamed?
-Alternatively, the DEVICE_ATTR() can be open-coded, so the actual
-device_attribute structures are named differently.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+> ---
+> Changes in v2:
+>  - Use DEFINE_FLEX() instead of struct_group_tagged().
+> 
+> v1:
+>  - Link: https://lore.kernel.org/linux-hardening/ZeeaRuTpuxInH6ZB@neat/
+> 
+>  fs/notify/fdinfo.c | 20 ++++++++------------
+>  1 file changed, 8 insertions(+), 12 deletions(-)
+> 
+> diff --git a/fs/notify/fdinfo.c b/fs/notify/fdinfo.c
+> index 5c430736ec12..dec553034027 100644
+> --- a/fs/notify/fdinfo.c
+> +++ b/fs/notify/fdinfo.c
+> @@ -41,29 +41,25 @@ static void show_fdinfo(struct seq_file *m, struct file *f,
+>  #if defined(CONFIG_EXPORTFS)
+>  static void show_mark_fhandle(struct seq_file *m, struct inode *inode)
+>  {
+> -	struct {
+> -		struct file_handle handle;
+> -		u8 pad[MAX_HANDLE_SZ];
+> -	} f;
+> +	DEFINE_FLEX(struct file_handle, f, f_handle, handle_bytes, MAX_HANDLE_SZ);
+>  	int size, ret, i;
+>  
+> -	f.handle.handle_bytes = sizeof(f.pad);
+> -	size = f.handle.handle_bytes >> 2;
+> +	size = f->handle_bytes >> 2;
+>  
+> -	ret = exportfs_encode_fid(inode, (struct fid *)f.handle.f_handle, &size);
+> +	ret = exportfs_encode_fid(inode, (struct fid *)f->f_handle, &size);
+>  	if ((ret == FILEID_INVALID) || (ret < 0)) {
+>  		WARN_ONCE(1, "Can't encode file handler for inotify: %d\n", ret);
+>  		return;
+>  	}
+>  
+> -	f.handle.handle_type = ret;
+> -	f.handle.handle_bytes = size * sizeof(u32);
+> +	f->handle_type = ret;
+> +	f->handle_bytes = size * sizeof(u32);
+>  
+>  	seq_printf(m, "fhandle-bytes:%x fhandle-type:%x f_handle:",
+> -		   f.handle.handle_bytes, f.handle.handle_type);
+> +		   f->handle_bytes, f->handle_type);
+>  
+> -	for (i = 0; i < f.handle.handle_bytes; i++)
+> -		seq_printf(m, "%02x", (int)f.handle.f_handle[i]);
+> +	for (i = 0; i < f->handle_bytes; i++)
+> +		seq_printf(m, "%02x", (int)f->f_handle[i]);
+>  }
+>  #else
+>  static void show_mark_fhandle(struct seq_file *m, struct inode *inode)
+> -- 
+> 2.34.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
