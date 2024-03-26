@@ -1,109 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FAF81CF8B;
-	Tue, 26 Mar 2024 16:48:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4871F95A
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 16:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711471707; cv=none; b=UzT1aASCCd8ngyab4y9HgOTbhkrdJWJFfeP8Vae3CvwapcjuHQN3GJgRiUC7OV0g4s2dfPdcUR5/UQcE3VC+VpFq2r2JyOeroQY9BNQgdexkfcr4d7rqVvxm3eWBkEFPlFObdWmwbinpvwgUynZplwAfOWUJzJ5HIip+/JNMGaU=
+	t=1711471715; cv=none; b=AuB/yLGPrMD9UPd+THk4De/MwlbzInlLYBUkAJbnYJytceE3qt2TylpOt++hJjfMy9fhqVYp/vV5F5erH7vTIEv90b2Fk+ALtk/Ultr2wJWD6ESnP6VxK3utxiCUbr+u5rywaveIqXdcbb66nLlrkOjBd+SUzRvMiT81bBSHbT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711471707; c=relaxed/simple;
-	bh=AipqUP+M7Jnwp/SDpZmvtbFJFIMal7zQuQnaopnS11Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bYBou/lNnm9bpK3tHvBEeqQVwqFUiEsF4/7cdhmuu+Et9Lnwq+SKegeknecPLWoD/cJlPGACirBDxcZq/sJQBL3hj6TD8WhfowaG2hj+W0enGyGZFzwu/DlaVLcqQ51peXW3ipGhOu9sIRoOkyceJuUM9nFDQ5MxANOu7ML0ZFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sjbBzDRz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711471715; c=relaxed/simple;
+	bh=UCmlrZz5wIpqDNxx5pcqKcqwMTpJe2YHlubTTGszCI4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u3Nl70Ri9UQOwoH7isyXVL5RusZg9GuGtTZemJrm1WQlVluMF1bb9cwKXRKNX4fuGtADyF/tpmbJo8k4/bPQLIleAb0zGjeCMjU+SEAfFyjy8+m7jilDy+QLTNte83HbjCePZtjVqeFLpdXIujqxwolcAlUyHZonvgJMxt43oB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=NgAbQoFx; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sjbBzDRz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 930D6C43399;
-	Tue, 26 Mar 2024 16:48:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711471705;
-	bh=AipqUP+M7Jnwp/SDpZmvtbFJFIMal7zQuQnaopnS11Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sjbBzDRzMkrc7jIyMo6ZXxhi0Pwi0Yzei7P3Ps+hJ8/LEK0nxJJ9qDfkKfsD95/U7
-	 JPfhqGzZxNk74NoC+nefc9MsXe2Pwhh2MXbOStO9ZSCxCWFFOwEsVWAVbeYE3h4lvt
-	 6TqvFn8yNaPv0oVy7mVO48vMyVbcjCjbH9fAjXXZOU1I/TLm362cCZmkDc9iu4v+GR
-	 pzFjGjg++fc8G25DBOmreUpSDlsMEDYq0kDUB7PMLNhaHElz5Rz/E68pYcuBzcBuBl
-	 HTiB3zHw7d/D9Hpd1EUEe0lwtZivw4gFON2LjlR58Iu2Szlq5R8uVmV1LFwwnkznJ1
-	 UWLCQ5N9MrjmQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rp9yU-000000006ed-0dnM;
-	Tue, 26 Mar 2024 17:48:34 +0100
-Date: Tue, 26 Mar 2024 17:48:34 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] arm64: dts: qcom: sa8540p: use sa8540p gpucc
- compatible
-Message-ID: <ZgL8YnTEKjf83WdO@hovoldconsulting.com>
-References: <20240326140108.21307-1-johan+linaro@kernel.org>
- <20240326140108.21307-3-johan+linaro@kernel.org>
- <af7ef0d4-031d-42ac-aad5-c8ce86deff96@kernel.org>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="NgAbQoFx"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-41490e42c74so2883515e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 09:48:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711471710; x=1712076510; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UUX0Fe8KaQL1u5v0D+HurQZKsoXBEzxwHFFOyTDa+54=;
+        b=NgAbQoFxb03SX/9WndFalmq1spl8kPkm8Co80Kl/iEiAXQgu9eyXYsR16IuF79Mu2l
+         vVsKzvybRhPPI1UU3TRcCt0OL9LCb88a2HBI7MVAorKO1CwM4V+su/svPPPPBYeQOJU1
+         3W49J3Yw29mAlnwrgIf8CZIfSFnecK/wEuIgg4mrfpUIVJfx9+tfqHKwCU6pgGHkgCIP
+         MExXknojh+gorKZBes63BoF+eVHoc46fecgxFU2kzpkXWFVQlC0XggMLXOwcq3lJGbyo
+         xt81qwfWHd0xPsAztrUHj9mWSHgrfrPe3s52kF+7pKtPGmodTEYiH4UwzBP49SutumUI
+         U/Ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711471710; x=1712076510;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UUX0Fe8KaQL1u5v0D+HurQZKsoXBEzxwHFFOyTDa+54=;
+        b=V7gendyxspZewJr7j4XgRauAPYuE7I9jKC9DnBvyOKhJXBHJuyeyRJ+2ZOQWK1NIBD
+         /jNWHzavdwF8Bu1Ir0ac9vMcDSp8v/LxNmF0I9lM1I2iiy4PXjqU+7hdXdKSUES0Gsgt
+         giaXDv0ejgOvyAE6VmZAYGuD/ojlQvoc09LMc1KnL6oGkOEv8cIv8qHw5JmbWU/KJb77
+         BKq5geKyfHwpnBc89E4sU8rQu/b+a9DKNW2CJyelaI8YP9Pdj2AHXe23hyMQDvn5wGYP
+         Lx5V9uvzmWDbzD6o702Y5I/mzGA2pt7cbwuMqK2Xz/TL9N8uFTlAnhX4LF898N6LYTLE
+         MoEQ==
+X-Gm-Message-State: AOJu0YyQuM+7w+y3CnZHB7b5p/VbmVkauC2Z6g+V/6nCWllfwQQJVOUv
+	72p1R4jGI1sN8JeXbBXUYhXL/1P2XpRddZRSJ7OwWFlsnI/kVV2q7bQtkw2fukO6gV59T5frOnO
+	jPKhiwuWd
+X-Google-Smtp-Source: AGHT+IGSD6SX1h+XJYSDCQWy+wNksm/8PaF5+BJG0gN4k4HXxpQXN5S50Qe4XQBW+X7oG57o0CzNiQ==
+X-Received: by 2002:a05:600c:4e14:b0:414:925c:a860 with SMTP id b20-20020a05600c4e1400b00414925ca860mr353338wmq.11.1711471709882;
+        Tue, 26 Mar 2024 09:48:29 -0700 (PDT)
+Received: from yamato.baylibre (alyon-651-1-22-137.w82-122.abo.wanadoo.fr. [82.122.123.137])
+        by smtp.gmail.com with ESMTPSA id f10-20020a05600c4e8a00b00412e5f32591sm12135535wmq.28.2024.03.26.09.48.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 09:48:29 -0700 (PDT)
+From: Angelo Dureghello <adureghello@baylibre.com>
+To: linux-kernel@vger.kernel.org,
+	linux-mmc@vger.kernel.org
+Cc: Angelo Dureghello <adureghello@baylibre.com>
+Subject: [PATCH] MAINTAINERS: update Angelo Dureghello e-mail address
+Date: Tue, 26 Mar 2024 17:47:33 +0100
+Message-ID: <20240326164733.15271-1-adureghello@baylibre.com>
+X-Mailer: git-send-email 2.43.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <af7ef0d4-031d-42ac-aad5-c8ce86deff96@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 26, 2024 at 05:02:43PM +0100, Krzysztof Kozlowski wrote:
-> On 26/03/2024 15:01, Johan Hovold wrote:
-> > The SA8540P platform is closely related to SC8280XP but differs in that
-> > it uses an external supply for the GX power domain.
-> > 
-> > Use the new SA8540P compatible string for the GPU clock controller so
-> > that the OS can determine which resources to look for.
-> > 
-> > Note that a fallback SC8280XP compatible is added temporarily to avoid
-> > any temporary regressions for sa8295p-adp.
-> > 
-> > Fixes: fd5821a1a83c ("arm64: dts: qcom: sa8540p: Drop gfx.lvl as power-domain for gpucc")
-> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/sa8540p.dtsi | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/sa8540p.dtsi b/arch/arm64/boot/dts/qcom/sa8540p.dtsi
-> > index 23888029cc11..3b31a9ea3492 100644
-> > --- a/arch/arm64/boot/dts/qcom/sa8540p.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/sa8540p.dtsi
-> > @@ -168,6 +168,8 @@ opp-2592000000 {
-> >  };
-> >  
-> >  &gpucc {
-> > +	compatible = "qcom,sa8540p-gpucc", "qcom,sc8280xp-gpucc";
-> 
-> This introduces new dtbs_check failures. Please fix the binding and drop
-> the last patch in the series.
+Update my e-mail address to adureghello@baylibre.com.
 
-I know, and this is done on purpose.
+Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I doubt anyone cares if the sa8295p GPU breaks for one commit in case
-this series goes in through the same tree or even for a couple of RCs in
-case they go in through separate trees.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index aa3b947fb080..c3e365b9d759 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8512,7 +8512,7 @@ F:	Documentation/devicetree/bindings/crypto/fsl,sec-v4.0*
+ F:	drivers/crypto/caam/
+ 
+ FREESCALE COLDFIRE M5441X MMC DRIVER
+-M:	Angelo Dureghello <angelo.dureghello@timesys.com>
++M:	Angelo Dureghello <adureghello@baylibre.com>
+ L:	linux-mmc@vger.kernel.org
+ S:	Maintained
+ F:	drivers/mmc/host/sdhci-esdhc-mcf.c
+-- 
+2.43.1
 
-But we recently had a similar discussion about a bluetooth fix and
-whatever course of action I would have chosen here, someone is bound to
-whine.
-
-In this case I figured it was worth doing the extra work. But this is
-just a temporary workaround as "qcom,sa8540p-gpucc" is not truly
-compatible with "qcom,sc8280xp-gpucc" as only the former depends on the
-external supply.
-
-Heck, I even spelled it out in the commit message...
-
-Johan
