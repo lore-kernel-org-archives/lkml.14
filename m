@@ -1,57 +1,57 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0576413D8BA;
-	Tue, 26 Mar 2024 22:19:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E0013D8B8;
+	Tue, 26 Mar 2024 22:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711491546; cv=none; b=WZITjVx2wRNDlGU9W+AAKmOSqZMi5EdhKlhJtGl5pIwq4JmDfeaBnUVzNwhVVBPcjgxaNXOV38qsRm6Y5QsUen6AUwQUSaa/xrzHHeiVA8fIy1ge/WBf8GL/DrjFUy9AkxL1AB0fbvnRKcxaVyPS7/RQe+HLeQP/ynbiiQ4+hRo=
+	t=1711491703; cv=none; b=mEKmD6m8Qmy4Y3Sw9ROOSsDxawG9acvvM53+sdoAQ556SA1DqaBRMa1OZZbQuQUgO5RcQCWdzr/l3Y3or6rvnFYLWGz5GaTTkxnJOC4j9RMcDMCR8fEBZoy1z1sDUUUIBwJ0zSYTb6DNyWSoekViw+dXkmajk1BDsvTyr5E35QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711491546; c=relaxed/simple;
-	bh=9zMGqulRLmq3vqj01LsBRA0A8CYYbMWKFHP8jPtDCik=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GAMmikcZFPlMOyeRL21/vlviV/HhYn3dRtf1AevCJFvlJiWHKT5mJJy+bJN8pZfNeUZmYXcU8o6oEAJm3DlMgpBzV6lWn4ilv5ThBrPa2OvNtUEo5Ps7YAHnHyY0AKxlc9Th6GqgWFnrQV89L4utLz1fNDYYJYLxZ4wapoX/+s8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h5eU8Rbv; arc=none smtp.client-ip=209.85.218.45
+	s=arc-20240116; t=1711491703; c=relaxed/simple;
+	bh=mg5CHL67zV3tQUE3yPMMGIP9AiC9A0NRiTrNYg3lphU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IMES3jaJrlRgITCNQ0P8jXJZjmnS7QW1eIoFq07nYGTF8p+jpB1xETIt35DGuzaiu1+Xe90NOzuGoEvQmpjvbQsrQouJDWwdcuE3UwUIIX1vnWD8ZyjEEBlvYJHrpTZ3XMrffNndsnBuH7U8Mg26OmGfvAMs7Zr+cBEBVoGYM8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WyDg57Uh; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h5eU8Rbv"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a474c4faf5eso362237366b.2;
-        Tue, 26 Mar 2024 15:19:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WyDg57Uh"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a44665605f3so715117666b.2;
+        Tue, 26 Mar 2024 15:21:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711491543; x=1712096343; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1711491700; x=1712096500; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qyCLj1OUpWkQyfhuJXsbD10TSivodqh5GvYGLmhlJI4=;
-        b=h5eU8RbvBvwu77UW2CQ/2UzBwKAnW1xeb361vCkhUv43GwtC4rNlLieFivqHaDP584
-         CTGZvYA1AWG7ienEQ6UHEfxyzvxJ0T37iIviMv5ntwy3vTRQxuVlHVYKa0aN74tiaTMX
-         HKFeNJAaTM5Iq47pJkH1JuQ3shGEIe3ANONDId5tSEnX0qBU30b0xaf7Zt4uf7RNZuve
-         DVTkhGIYsW9sWUuUz5iiVOSy9T7rHT7OZBOPWOiigE6lIDYYavMiHWFgsgSD7geHo2PS
-         tmVo2H5at8qaf/HwUEjSy4QkQP1FqmQRseZPEy2vlyhnn1sU+ZpjHi+dA9fRqZb6NZGu
-         j8pg==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EVLloZQohcM2K6KQJQyVlxzxH6NCVFHwUxv2R8Egdf4=;
+        b=WyDg57UhA/iUzbcr/XQ0EwybNap2MO3JGObfhYCwvOZrzE9J3TEx5L4MPpvuVq+Bbd
+         lPb0nts6scmVlyH41g97F7g4HrJcYdsKPpyg+XR7O+mkEEnlhUlB1jKpKY40765S7G5q
+         0NQbM0zFw4qzdBOwBTZHFW5pSYWAVW2+b50U6bGQhaR3VE30vi8QB12Eq4FnEmRRdE/4
+         Cft7KPXwMwEeqyBSZUUWZqqO+OEthMxtlle6zRnYhGMWK+RvF5vc0ZskTnLCxqWuFDX6
+         fJtSeaMtcJGzlLJGyoQljQ4RjEasvzavbfJ5KUf5Z8OnA6Cz/jgQ1pqdZczY/qttbNtf
+         v63A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711491543; x=1712096343;
+        d=1e100.net; s=20230601; t=1711491700; x=1712096500;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qyCLj1OUpWkQyfhuJXsbD10TSivodqh5GvYGLmhlJI4=;
-        b=JTCyLFh3G05KRe+Ahr+GHUxl/kTIYTXT0DpKTh/Sy/WDdI7/10VCr3DJZ1u/R6JPv2
-         G8BOHc15DXw3LvHIPCF+urIJ3U5paXWe83RKAPW9DB9RxkYDmgBxGlqtt+kQgMua8pTp
-         R9JrrJyEVfKo4WJ3+jgErNzKSTxcW4q8YWuUt22iO36dHvYah7l7PW2X4gn9ewUfk/V6
-         4jKL1N7kzLwAJPR0EM5vpN3Vv7KNxL9ajiwPvPujyAM/NYO5G30dqIRRSWuDDaN/9erO
-         +JqfYVq9WRyiaRniXi705RXYcWo8ShfE4EcvNsgW8ekzwDtdK0Ywb3ZG2CzJ3OdWzyEM
-         8Qeg==
-X-Forwarded-Encrypted: i=1; AJvYcCVW9OBjUqeMGZSAy5N1Mzp2Gvlt9WcNPmNWe68xfAmj7LKzdCmvsSldg/uJjpd2BUV5Ced2ZV29aowmXvDj43SkqS6Bq45vUc3CXKOHEaytgO3xcsMgxeS5zZYV+z1pnsQ7DC0tQJSdJw==
-X-Gm-Message-State: AOJu0YydPLF0pGRdgEguLMvtZtxQKMYb+1re9n8rzsUBwrWVm+4OiSh4
-	0wimOeHtxTyBYBq79Px5kamk4vK2HCNnI2Os/GMVBjSnKD4RfFNa
-X-Google-Smtp-Source: AGHT+IGXf7T1vMLhzW/KEzN/Dqw4wUjeLLwxv4WedhqYn6D3+5Ku5/xi/MqHxQy4P57dEpI+PhWewQ==
-X-Received: by 2002:a17:907:78c5:b0:a46:a7d8:3f7e with SMTP id kv5-20020a17090778c500b00a46a7d83f7emr6492795ejc.2.1711491543176;
-        Tue, 26 Mar 2024 15:19:03 -0700 (PDT)
+        bh=EVLloZQohcM2K6KQJQyVlxzxH6NCVFHwUxv2R8Egdf4=;
+        b=AklKPNUQ/U/+dNBRc4GsOc+LmDV8Fx73z8JSOD7LGgOWcQGdcCFSsZQzMZYzOOakai
+         nFFQHEwX723Txpi3Fyfxq9p2162NygkKt8Wod7L4hFFFqbhOdWgrFXH4o3A+zFUKZxXW
+         wT9asQhZY50WdEv95VeIxfT/GCzPvQeBdMyIgOg5a7tX7oin4ycm0TIpDMjTbfR9bY+L
+         njwLorUfIrutXm101Krmi5+HcmdyL3iW3gFqtqt4+wvQ3+M/XZ15AhXgprLcDfq37htP
+         +K4lHDDh6arkiWh2xNpamcZoIeU4i5JXPxB0a2/swhFYZE8UaxFj39j2BwPNuJFqYhPP
+         a6dA==
+X-Forwarded-Encrypted: i=1; AJvYcCWHCo0+MpOy4/eY7sdRT6VqO/LP6szzghhRle7XVzVmIEgTghB92r6h8G01OCNVGVli4eFgcCaknmpB85EnBFF/JDtzOEXVbp1SFtSYITeIkvb+f4eRXX0gG9LeJZl62Gy9mFBVupdQUQ==
+X-Gm-Message-State: AOJu0YwW7D9kbYOR1qwIZwyfL5BiSoTf58vE8k8CKZiqXWA/7liO473J
+	b9aQKkjjXAqSrker0OF8WcvxDREpvU5aZK7d6/flMYXroX+nULCS
+X-Google-Smtp-Source: AGHT+IFbfOTWjdmcyMkuurrgXcsz3zLRqlN2HZmiCb9ThEJsejRWtXx04BXPLsIev7aMaw9frXjdaw==
+X-Received: by 2002:a17:906:53c9:b0:a47:20e0:d618 with SMTP id p9-20020a17090653c900b00a4720e0d618mr763288ejo.60.1711491699853;
+        Tue, 26 Mar 2024 15:21:39 -0700 (PDT)
 Received: from jernej-laptop.localnet (86-58-6-171.dynamic.telemach.net. [86.58.6.171])
-        by smtp.gmail.com with ESMTPSA id fw10-20020a170906c94a00b00a4dba9b98c7sm1465435ejb.66.2024.03.26.15.19.02
+        by smtp.gmail.com with ESMTPSA id y4-20020a1709060a8400b00a46bec6da9fsm4640433ejf.203.2024.03.26.15.21.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 15:19:02 -0700 (PDT)
+        Tue, 26 Mar 2024 15:21:39 -0700 (PDT)
 From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
 To: Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -61,15 +61,14 @@ To: Rob Herring <robh@kernel.org>,
  linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
  linux-kernel@vger.kernel.org,
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject:
- Re: [PATCH 3/4] arm64: dts: allwinner: Orange Pi: delete node by phandle
-Date: Tue, 26 Mar 2024 23:19:01 +0100
-Message-ID: <4905229.31r3eYUQgx@jernej-laptop>
-In-Reply-To: <41dcd736-5e58-4b71-ba82-961cd2863a62@linaro.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH 4/4] arm: dts: allwinner: drop underscore in node names
+Date: Tue, 26 Mar 2024 23:21:38 +0100
+Message-ID: <2317198.ElGaqSPkdT@jernej-laptop>
+In-Reply-To: <20240317184130.157695-4-krzysztof.kozlowski@linaro.org>
 References:
  <20240317184130.157695-1-krzysztof.kozlowski@linaro.org>
- <20240317184130.157695-3-krzysztof.kozlowski@linaro.org>
- <41dcd736-5e58-4b71-ba82-961cd2863a62@linaro.org>
+ <20240317184130.157695-4-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,33 +78,19 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="utf-8"
 
-Dne nedelja, 17. marec 2024 ob 19:42:51 CET je Krzysztof Kozlowski napisal(a):
-> On 17/03/2024 19:41, Krzysztof Kozlowski wrote:
-> > Delete node via phandle, not via full node path, to avoid easy mistakes
-> > - if original node name changes, such deletion would be ineffective and
-> > not reported by the dtc as error.
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> > ---
-> >  arch/arm/boot/dts/allwinner/sun8i-h2-plus-orangepi-r1.dts | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
+Dne nedelja, 17. marec 2024 ob 19:41:30 CET je Krzysztof Kozlowski napisal(a):
+> Underscores should not be used in node names (dtc with W=2 warns about
+> them), so replace them with hyphens.  Use also generic name for pwrseq
+> node, because generic naming is favored by Devicetree spec.  All the
+> clocks affected by this change use clock-output-names, so resulting
+> clock name should not change.  Functional impact checked with comparing
+> before/after DTBs with dtx_diff and fdtdump.
 > 
-> Eh, copy-paste, the subject prefix should be "ARM:".
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 
-I can fix it when applying.
-
 Best regards,
 Jernej
-
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
-
-
 
 
