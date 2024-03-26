@@ -1,688 +1,153 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797A113CC78
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A2713C837
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711468636; cv=none; b=fmkxcw74wr9raaarZ63S/wTWUPKY5Yi1e3ROBJ8Y/TiCx0CZ8xNyJFxphjTMcIkZP7XAxzsdzJzbEkwzc6nxScJxEfAV6o9Dfxu+z23HwzjHOAnf4OIvlkrwc8OOyPHghJP0Qq/X3pPIaINxaO9zrYknWA8Ciq45p4pATs6VH+I=
+	t=1711468777; cv=none; b=SZU0gaQ76ILEx+UTc2qbwYhCUXuB/ZqfWZP+EaCr+mFX4HSYE+X+ImXW3/DiI9V2KpQOZuHHFv569j6/XvoyKzRhumHxblGLUCdWa1gSOH7DgfbvE2CcO0JMBVGH0cVtWtPOcwYZWvjk5V4idzDG8p/61a199htBX/rMaWozv8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711468636; c=relaxed/simple;
-	bh=ADoNCImHZymfWPm/VM5c2M/GhCfNC0fT0oWhnnqwguo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z37QxijDPYeOODuLYFJ60xWbBaRtIWd6xqm+5r4ONyaUMQbT33UbmF0DodTbO7Jf0427PSp6b2/rymM4AA+v20U6vekcTm9TD/QgAAj9TgWAnv5uU0qKtBVVY5kVM4UFPGmVvJfrFWvirdeSY5FWScHvuapVQLLD/ts3rdJ2ibQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FYEpoGs/; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1711468777; c=relaxed/simple;
+	bh=Ynl1v8gS98gAwGFyFLKby7KV+b8y8whJ/pPgiYiDqbY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=BwktalFjOWI41VfrM+wt8wgrYI/akONM0SUhD+V3A3jG4m6Kcizb4BQkPz4T6foHcemQmn2Oe1k01kv3A7WkwZvAVh2R+snvFfkuhKDSvGdsdk1U12a6L59Uqe5BIaZuzK6HXSQYviMr66bDm68J+UT64NE9QfWSIX2iK13Z8iI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZEjR9Arw; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FYEpoGs/"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6ABD61BF206;
-	Tue, 26 Mar 2024 15:57:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1711468625;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZEjR9Arw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711468775;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OXRntzj7Es+y9ihqCPzTjxtBTga+ABDsV5nKLe/E130=;
-	b=FYEpoGs/XgK+B6dY1O4BH5OIrvBvFOb5OxJaDHvYHIRp2cp9/tE/H55N5JgjgRBvfdJ119
-	PT7tnxlmaONYxL7b4/3t4SdAShIRHnUK+11OkATqqnXxkJI5gV7sU8/NC7ICTcDsaoLEaB
-	8s6lnq45+8OcmgNprBwcOUahv92iAFs34bJJYIrWlG1PRy+I0JV6NpuSXKURakuiY6Q/+S
-	HEu+rsFjSEGfryXH+EDbb9w0ZQ+xUWNmS2XxRQMvzp1b9pqvUV7jywyhEsz4O7XXzvXHgU
-	TbSv9ksbtSmaSBKqEl3r+MTcBq2+agMq/K+IrwWwZrASdQ132qvHr5DxtgZ0hw==
-Date: Tue, 26 Mar 2024 16:57:02 +0100
-From: Louis Chauvet <louis.chauvet@bootlin.com>
-To: Pekka Paalanen <pekka.paalanen@collabora.com>
-Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-	Melissa Wen <melissa.srw@gmail.com>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	Haneen Mohammed <hamohammed.sa@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, arthurgrillo@riseup.net,
-	Jonathan Corbet <corbet@lwn.net>, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
-	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
-	seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com
-Subject: Re: [PATCH v5 10/16] drm/vkms: Re-introduce line-per-line
- composition algorithm
-Message-ID: <ZgLwTvjdzf8KTZsY@localhost.localdomain>
-Mail-Followup-To: Pekka Paalanen <pekka.paalanen@collabora.com>,
-	Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-	Melissa Wen <melissa.srw@gmail.com>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	Haneen Mohammed <hamohammed.sa@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, arthurgrillo@riseup.net,
-	Jonathan Corbet <corbet@lwn.net>, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
-	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
-	seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com
-References: <20240313-yuv-v5-0-e610cbd03f52@bootlin.com>
- <20240313-yuv-v5-10-e610cbd03f52@bootlin.com>
- <20240325174309.28f91bec.pekka.paalanen@collabora.com>
+	bh=jQ8clIjXc4soz7eWewvwlvASClEQyBetLO4fGly13aQ=;
+	b=ZEjR9Arw10ZyhaO84/a60ZB29IAa+Nex1uYjVuNGO4RZ7cHzzZwW6ISRpOMSawzR0jjxib
+	u23CGEctPVC0HvSPPwiTLzTg2BG7QKUixJDqYYTui5eJThCv50klhJa+TydGrPEcvZo4Qv
+	dQaqe6QoZWV8ND4iH7mH//RIpikoK9I=
+Received: from mail-oa1-f69.google.com (mail-oa1-f69.google.com
+ [209.85.160.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-505-UnfUaIXYOTCtJXWWWERgJA-1; Tue, 26 Mar 2024 11:59:33 -0400
+X-MC-Unique: UnfUaIXYOTCtJXWWWERgJA-1
+Received: by mail-oa1-f69.google.com with SMTP id 586e51a60fabf-229f4995573so2766251fac.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 08:59:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711468773; x=1712073573;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jQ8clIjXc4soz7eWewvwlvASClEQyBetLO4fGly13aQ=;
+        b=M413Qh4yX9mC6GfVnzl93hVA351h7un0VmcZEnI4/Aah7PQfitnEAd6VLQ6+KmumSf
+         7GybntURddPMe54+++wj+yNtymajb+SWCBjNT5QyI3EMjyhS6UeYvWxyQVXm6ajHqmMM
+         5bG5QBKkiwB/t7R0sxg0vCatYyAANBgG4e9U9rcutrs1+3wymvx7XAkN7keXrZUuwWnM
+         xIjJUrKKYNHeqx9IIRecGCoY8s7aIO0LAQWi+1byU5N54WWmfpRLLaSTwwy5u3SH0IrB
+         enqs8iXhWMozdt/zvqhOj6xqzD0cHDGtX64ozAWPRPldXLrJFk0fEjtLlvDxBAvnaexo
+         AF8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVMPCVoqyUOIG5P9Y+QD3+ZkJpymS4bAHf4tuLhLTP+InIPaqmyaiC9bfvX3V+rTv6mO08q8WZfR/tIzMADoWKZf9zKnNB3ne/EWq6e
+X-Gm-Message-State: AOJu0Yy62erKHjfJfPdeKDFwfk/WcgeDVms7uGTwhPqtqru/n3mvIzmz
+	U39N75vOazkHgW2Vin4JMMlDZNmA1DId8oz+bvJgdMi6MwSvduk8fR3Sg0mCR4GIII+oBHj7rKh
+	MZBKk5WSSFL9r69Qo21ZW3UCXpLFllH3qgAP2/lP5IAQnqyMMEVrpZWB4AS8lvw==
+X-Received: by 2002:a05:6871:2b0e:b0:222:5ff6:43f1 with SMTP id dr14-20020a0568712b0e00b002225ff643f1mr1841623oac.16.1711468772780;
+        Tue, 26 Mar 2024 08:59:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHgzBoNk7aHkGsNEwNVhcEMsbOfldxjSZnKhmacfHPBzgsBueev9oXHbaC3XghCk7h6QPy9yA==
+X-Received: by 2002:a05:6871:2b0e:b0:222:5ff6:43f1 with SMTP id dr14-20020a0568712b0e00b002225ff643f1mr1841604oac.16.1711468772497;
+        Tue, 26 Mar 2024 08:59:32 -0700 (PDT)
+Received: from [192.168.8.125] ([173.34.154.202])
+        by smtp.gmail.com with ESMTPSA id fv24-20020a05622a4a1800b00430dbd6edf9sm3788120qtb.68.2024.03.26.08.59.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 08:59:32 -0700 (PDT)
+Message-ID: <22be7d6156e38dfba1a055cc3e9cc3d10de75dbb.camel@redhat.com>
+Subject: Re: [PATCH 0/5] AVIC bugfixes and workarounds
+From: mlevitsk@redhat.com
+To: Jim Mattson <jmattson@google.com>
+Cc: kvm@vger.kernel.org, Will Deacon <will@kernel.org>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Suravee
+ Suthikulpanit <suravee.suthikulpanit@amd.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
+ Robin Murphy <robin.murphy@arm.com>,  iommu@lists.linux.dev, Ingo Molnar
+ <mingo@redhat.com>, Joerg Roedel <joro@8bytes.org>, Sean Christopherson
+ <seanjc@google.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-kernel@vger.kernel.org, David Rientjes <rientjes@google.com>
+Date: Tue, 26 Mar 2024 11:59:30 -0400
+In-Reply-To: <CALMp9eSSCUSOpP64Ho16sU6iV1urbjfTafJ0nThAWGHE6oOkLw@mail.gmail.com>
+References: <20230928150428.199929-1-mlevitsk@redhat.com>
+	 <CALMp9eSSCUSOpP64Ho16sU6iV1urbjfTafJ0nThAWGHE6oOkLw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-3.fc36) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240325174309.28f91bec.pekka.paalanen@collabora.com>
-X-GND-Sasl: louis.chauvet@bootlin.com
 
-[...]
+On Mon, 2024-03-25 at 20:15 -0700, Jim Mattson wrote:
+> > On Thu, Sep 28, 2023 at 8:05=E2=80=AFAM Maxim Levitsky <mlevitsk@redhat=
+.com> wrote:
+> > > >=20
+> > > > Hi!
+> > > >=20
+> > > > This patch series includes several fixes to AVIC I found while work=
+ing
+> > > > on a new version of nested AVIC code.
+> > > >=20
+> > > > Also while developing it I realized that a very simple workaround f=
+or
+> > > > AVIC's errata #1235 exists and included it in this patch series as =
+well.
+> > > >=20
+> > > > Best regards,
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Maxim Levitsky
+> >=20
+> > Can someone explain why we're still unwilling to enable AVIC by
+> > default? Have the performance issues that plagued the Rome
+> > implementation been fixed? What is AMD's guidance?
+> >=20
+Hi
 
-> > @@ -215,34 +188,146 @@ static void blend(struct vkms_writeback_job *wb,
-> >  {
-> >  	struct vkms_plane_state **plane = crtc_state->active_planes;
-> >  	u32 n_active_planes = crtc_state->num_active_planes;
-> > -	int y_pos, x_dst, x_limit;
-> >  
-> >  	const struct pixel_argb_u16 background_color = { .a = 0xffff };
-> >  
-> > -	size_t crtc_y_limit = crtc_state->base.crtc->mode.vdisplay;
-> > +	int crtc_y_limit = crtc_state->base.crtc->mode.vdisplay;
-> > +	int crtc_x_limit = crtc_state->base.crtc->mode.hdisplay;
-> >  
-> >  	/*
-> >  	 * The planes are composed line-by-line to avoid heavy memory usage. It is a necessary
-> >  	 * complexity to avoid poor blending performance.
-> >  	 *
-> > -	 * The function vkms_compose_row is used to read a line, pixel-by-pixel, into the staging
-> > -	 * buffer.
-> > +	 * The function pixel_read_line callback is used to read a line, using an efficient
-> > +	 * algorithm for a specific format, into the staging buffer.
-> >  	 */
-> >  	for (size_t y = 0; y < crtc_y_limit; y++) {
-> >  		fill_background(&background_color, output_buffer);
-> >  
-> >  		/* The active planes are composed associatively in z-order. */
-> >  		for (size_t i = 0; i < n_active_planes; i++) {
-> > -			x_dst = plane[i]->frame_info->dst.x1;
-> > -			x_limit = min_t(size_t, drm_rect_width(&plane[i]->frame_info->dst),
-> > -					stage_buffer->n_pixels);
-> > -			y_pos = get_y_pos(plane[i]->frame_info, y);
-> > +			struct vkms_plane_state *current_plane = plane[i];
-> >  
-> > -			if (!check_limit(plane[i]->frame_info, y_pos))
-> > +			/* Avoid rendering useless lines */
-> > +			if (y < current_plane->frame_info->dst.y1 ||
-> > +			    y >= current_plane->frame_info->dst.y2)
-> >  				continue;
-> >  
-> > -			vkms_compose_row(stage_buffer, plane[i], y_pos);
-> > -			pre_mul_alpha_blend(stage_buffer, output_buffer, x_dst, x_limit);
-> > +			/*
-> > +			 * dst_line is the line to copy. The initial coordinates are inside the
+This is what I know:
 
-[...]
+Zen1:
+	I never tested it, so I don't know how well AVIC works there and if it has=
+ any erratas.
 
-> > +				 */
-> > +				pixel_count = drm_rect_width(&src_line);
-> > +				if (x_start < 0) {
-> > +					pixel_count += x_start;
-> > +					x_start = 0;
-> > +				}
-> > +				if (x_start + pixel_count > current_plane->frame_info->fb->width) {
-> > +					pixel_count =
-> > +						(int)current_plane->frame_info->fb->width - x_start;
-> > +				}
-> > +			} else {
-> > +				/*
-> > +				 * In vertical reading, the src_line height is the number of pixel
-> > +				 * to read
-> > +				 */
-> > +				pixel_count = drm_rect_height(&src_line);
-> > +				if (y_start < 0) {
-> > +					pixel_count += y_start;
-> > +					y_start = 0;
-> > +				}
-> > +				if (y_start + pixel_count > current_plane->frame_info->fb->height) {
-> > +					pixel_count =
-> > +						(int)current_plane->frame_info->fb->width - y_start;
-> > +				}
-> 
-> When you are clamping x_start or y_start or pixel_count to be inside
-> the source FB, should you not equally adjust the destination
-> coordinates as well?
+Zen2:
+	Has CPU errata in regard to IPI virtualization that makes it unusable in p=
+roduction,
+ 	but if AVIC's IPI virtualization (borrowing the Intel term here) is disab=
+led,
+	then it works just fine and 1:1 equivalent to APICv without IPI.
 
-I did not think about it. Currently it is not an issue and it will not 
-read or write outside a buffer because the pixel count is properly 
-limited. But indeed, there is an issue here. I will fix it in the v6.
- 
-> If we take a step back and look at the UAPI, I believe the answer is
-> "no", but it's in no way obvious. It results from the combination of
-> several facts:
-> 
-> - UAPI checks reject any source rectangle that extends outside of the
->   source FB.
-> 
-> - The source rectangle stretches to fill the destination rectangle
->   exactly.
-> 
-> - VKMS does not support stretching (scaling), so its UAPI checks reject
->   any commit with source and destination rectangles of different sizes
->   after accounting for rotation. (Right?)
+	I posted patches for this several times, latest version is here, it still =
+applies I think:
+	https://lkml.iu.edu/hypermail/linux/kernel/2310.0/00790.html
 
-I don't know what are exactly the UAPI contract but as the dst can be 
-outside the CRTC, I assumed that the src can be outside the source plane. 
-After thinking it doesn't really make sense.
+Zen3:
+	For some reason AVIC got disabled by AMD in CPUID. It is still there thoug=
+h and force_avic=3D1 kvm_amd option
+	can make KVM use it and AFAIK it works just fine.
 
-> I think this results in the clamping code being actually dead code.
-> However, I would not delete the clamping code, because it is a cheap
-> safety net in case something goes wrong.
+	It is possible that it got disabled due to Zen2 errata that is fixed on Ze=
+n3,
+	but maybe AMD wasn't sure back then that it will be fixed or it might be d=
+ue to performance issues with broadcast
+	IPIs which I think ended up being a software issue and was fixed a long ti=
+me ago.
 
-If UAPI check that the source rectangle is inside the plane, yes it is 
-just a safety net. Otherwise, it is required to manage properly the 
-userspace requests. In the v6, the outside of a source buffer is 
-transparent.
+Zen4+
+	I haven't tested it much, but AFAIK it should work out of the box. It also=
+ got x2avic mode which allows
+	to use AVIC with VMs that have more that 254 vCPUs.
 
-> If you agree that it's just a safety net, then maybe explain that in a
-> comment? If the safety net catches anything, the composition result
-> will be wrong anyway, so it doesn't matter to adjust the destination
-> rectangle to match.
+IMHO if we merge the workaround I have for IPI virtualization and make IPI =
+virtualization off for Zen2
+(and maybe Zen1 as well), then I don't see why we can't make AVIC be the de=
+fault on.
 
-I will extract this whole clamping stuff in a function, is this comment 
-enough?
-
- * This function is mainly a safety net to avoid reading outside the source buffer. As the
- * userspace should never ask to read outside the source plane, all the cases covered here should
- * be dead code.
-
-> When the last point is relaxed and VKMS gains scaling support, I think
-> it won't change the fact that the clamping remains as a safety net. It
-> just increases the risk of bugs that would be caught by the net.
-> 
-> Going outside of FB boundaries is a serious bug and deserves to be
-> checked. Going outside of the source rectangle would be a bug too,
-> assuming that partially included pixels are considered fully included,
-> but it's not serious enough to warrant explicit checks. Ideally IGT
-> would catch it.
-
-That was exactly the idea behind all those check and clamping: avoid 
-access outside the buffers.
-
-> > +			}
-> > +
-> > +			if (pixel_count <= 0) {
-> > +				/* Nothing to read, so avoid multiple function calls for nothing */
-> > +				continue;
-> > +			}
-> > +
-> > +			/*
-> > +			 * Modify the starting point to take in account the rotation
-> > +			 *
-> > +			 * src_line is the top-left corner, so when reading READ_RIGHT_TO_LEFT or
-> > +			 * READ_BOTTOM_TO_TOP, it must be changed to the top-right/bottom-left
-> > +			 * corner.
-> > +			 */
-> > +			if (direction == READ_RIGHT_TO_LEFT) {
-> > +				// x_start is now the right point
-> > +				x_start += pixel_count - 1;
-> > +			} else if (direction == READ_BOTTOM_TO_TOP) {
-> > +				// y_start is now the bottom point
-> > +				y_start += pixel_count - 1;
-> > +			}
-> > +
-> > +			/*
-> > +			 * Perform the conversion and the blending
-> > +			 *
-> > +			 * Here we know that the read line (x_start, y_start, pixel_count) is
-> > +			 * inside the source buffer [2] and we don't write outside the stage
-> > +			 * buffer [1]
-> > +			 */
-> > +			current_plane->pixel_read_line(
-> > +				current_plane, x_start, y_start, direction, pixel_count,
-> > +				&stage_buffer->pixels[current_plane->frame_info->dst.x1]);
-> > +
-> > +			pre_mul_alpha_blend(stage_buffer, output_buffer,
-> > +					    current_plane->frame_info->dst.x1,
-> > +					    pixel_count);
-> >  		}
-> >  
-> >  		apply_lut(crtc_state, output_buffer);
-> > @@ -250,7 +335,7 @@ static void blend(struct vkms_writeback_job *wb,
-> >  		*crc32 = crc32_le(*crc32, (void *)output_buffer->pixels, row_size);
-> >  
-> >  		if (wb)
-> > -			vkms_writeback_row(wb, output_buffer, y_pos);
-> > +			vkms_writeback_row(wb, output_buffer, y);
-> >  	}
-> >  }
-> >  
-> > @@ -261,7 +346,7 @@ static int check_format_funcs(struct vkms_crtc_state *crtc_state,
-> >  	u32 n_active_planes = crtc_state->num_active_planes;
-> >  
-> >  	for (size_t i = 0; i < n_active_planes; i++)
-> > -		if (!planes[i]->pixel_read)
-> > +		if (!planes[i]->pixel_read_line)
-> >  			return -1;
-> >  
-> >  	if (active_wb && !active_wb->pixel_write)
-> > diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-> > index 985e7a92b7bc..23e1d247468d 100644
-> > --- a/drivers/gpu/drm/vkms/vkms_drv.h
-> > +++ b/drivers/gpu/drm/vkms/vkms_drv.h
-> > @@ -39,7 +39,6 @@
-> >  struct vkms_frame_info {
-> >  	struct drm_framebuffer *fb;
-> >  	struct drm_rect src, dst;
-> > -	struct drm_rect rotated;
-> >  	struct iosys_map map[DRM_FORMAT_MAX_PLANES];
-> >  	unsigned int rotation;
-> >  };
-> > @@ -80,26 +79,37 @@ enum pixel_read_direction {
-> >  	READ_LEFT_TO_RIGHT
-> >  };
-> >  
-> > +struct vkms_plane_state;
-> > +
-> >  /**
-> > - * typedef pixel_read_t - These functions are used to read a pixel in the source frame,
-> > + * typedef pixel_read_line_t - These functions are used to read a pixel line in the source frame,
-> >   * convert it to `struct pixel_argb_u16` and write it to @out_pixel.
-> >   *
-> > - * @in_pixel: Pointer to the pixel to read
-> > - * @out_pixel: Pointer to write the converted pixel
-> > + * @plane: Plane used as source for the pixel value
-> > + * @x_start: X (width) coordinate of the first pixel to copy. The caller must ensure that x_start
-> > + * is positive and smaller than @plane->frame_info->fb->width.
-> > + * @y_start: Y (width) coordinate of the first pixel to copy. The caller must ensure that y_start
-> > + * is positive and smaller than @plane->frame_info->fb->height.
-> 
-> s/positive/non-negative/ because zero is valid too. At least, there is
-> debate whether zero is positive or not, but non-negative is clear.
-
-Edited in the v6.
-
-> > + * @direction: Direction to use for the copy, starting at @x_start/@y_start
-> > + * @count: Number of pixels to copy
-> > + * @out_pixel: Pointer where to write the pixel values. They will be written from @out_pixel[0]
-> > + * to @out_pixel[@count]. The caller must ensure that out_pixel have a length of at least @count.
-> >   */
-> > -typedef void (*pixel_read_t)(const u8 *in_pixel, struct pixel_argb_u16 *out_pixel);
-> > +typedef void (*pixel_read_line_t)(const struct vkms_plane_state *plane, int x_start,
-> > +				  int y_start, enum pixel_read_direction direction, int count,
-> > +				  struct pixel_argb_u16 out_pixel[]);
-> >  
-> >  /**
-> >   * vkms_plane_state - Driver specific plane state
-> >   * @base: base plane state
-> >   * @frame_info: data required for composing computation
-> > - * @pixel_read: function to read a pixel in this plane. The creator of a vkms_plane_state must
-> > - * ensure that this pointer is valid
-> > + * @pixel_read_line: function to read a pixel line in this plane. The creator of a vkms_plane_state
-> > + * must ensure that this pointer is valid
-> >   */
-> >  struct vkms_plane_state {
-> >  	struct drm_shadow_plane_state base;
-> >  	struct vkms_frame_info *frame_info;
-> > -	pixel_read_t pixel_read;
-> > +	pixel_read_line_t pixel_read_line;
-> >  };
-> >  
-> >  struct vkms_plane {
-> > @@ -204,7 +214,6 @@ int vkms_verify_crc_source(struct drm_crtc *crtc, const char *source_name,
-> >  /* Composer Support */
-> >  void vkms_composer_worker(struct work_struct *work);
-> >  void vkms_set_composer(struct vkms_output *out, bool enabled);
-> > -void vkms_compose_row(struct line_buffer *stage_buffer, struct vkms_plane_state *plane, int y);
-> >  void vkms_writeback_row(struct vkms_writeback_job *wb, const struct line_buffer *src_buffer, int y);
-> >  
-> >  /* Writeback */
-> > diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
-> > index 743b6fd06db5..1449a0e6c706 100644
-> > --- a/drivers/gpu/drm/vkms/vkms_formats.c
-> > +++ b/drivers/gpu/drm/vkms/vkms_formats.c
-> > @@ -105,77 +105,45 @@ static int get_step_next_block(struct drm_framebuffer *fb, enum pixel_read_direc
-> >  	return 0;
-> >  }
-> >  
-> > -static void *get_packed_src_addr(const struct vkms_frame_info *frame_info, int y,
-> > -				 int plane_index)
-> > -{
-> > -	int x_src = frame_info->src.x1 >> 16;
-> > -	int y_src = y - frame_info->rotated.y1 + (frame_info->src.y1 >> 16);
-> > -	u8 *addr;
-> > -	int rem_x, rem_y;
-> > -
-> > -	packed_pixels_addr(frame_info, x_src, y_src, plane_index, &addr, &rem_x, &rem_y);
-> > -	return addr;
-> > -}
-> > -
-> > -static int get_x_position(const struct vkms_frame_info *frame_info, int limit, int x)
-> > -{
-> > -	if (frame_info->rotation & (DRM_MODE_REFLECT_X | DRM_MODE_ROTATE_270))
-> > -		return limit - x - 1;
-> > -	return x;
-> > -}
-> > -
-> >  /*
-> > - * The following  functions take pixel data from the buffer and convert them to the format
-> > + * The following  functions take pixel data (a, r, g, b, pixel, ...), convert them to the format
-> >   * ARGB16161616 in out_pixel.
-> >   *
-> > - * They are used in the `vkms_compose_row` function to handle multiple formats.
-> > + * They are used in the `read_line`s functions to avoid duplicate work for some pixel formats.
-> >   */
-> >  
-> > -static void ARGB8888_to_argb_u16(const u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
-> > +static struct pixel_argb_u16 argb_u16_from_u8888(int a, int r, int g, int b)
-> >  {
-> > +	struct pixel_argb_u16 out_pixel;
-> >  	/*
-> >  	 * The 257 is the "conversion ratio". This number is obtained by the
-> >  	 * (2^16 - 1) / (2^8 - 1) division. Which, in this case, tries to get
-> >  	 * the best color value in a pixel format with more possibilities.
-> >  	 * A similar idea applies to others RGB color conversions.
-> >  	 */
-> > -	out_pixel->a = (u16)in_pixel[3] * 257;
-> > -	out_pixel->r = (u16)in_pixel[2] * 257;
-> > -	out_pixel->g = (u16)in_pixel[1] * 257;
-> > -	out_pixel->b = (u16)in_pixel[0] * 257;
-> > -}
-> > +	out_pixel.a = (u16)a * 257;
-> > +	out_pixel.r = (u16)r * 257;
-> > +	out_pixel.g = (u16)g * 257;
-> > +	out_pixel.b = (u16)b * 257;
-> >  
-> > -static void XRGB8888_to_argb_u16(const u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
-> > -{
-> > -	out_pixel->a = (u16)0xffff;
-> > -	out_pixel->r = (u16)in_pixel[2] * 257;
-> > -	out_pixel->g = (u16)in_pixel[1] * 257;
-> > -	out_pixel->b = (u16)in_pixel[0] * 257;
-> > +	return out_pixel;
-> >  }
-> >  
-> > -static void ARGB16161616_to_argb_u16(const u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
-> > +static struct pixel_argb_u16 argb_u16_from_u16161616(int a, int r, int g, int b)
-> >  {
-> > -	u16 *pixel = (u16 *)in_pixel;
-> > +	struct pixel_argb_u16 out_pixel;
-> >  
-> > -	out_pixel->a = le16_to_cpu(pixel[3]);
-> > -	out_pixel->r = le16_to_cpu(pixel[2]);
-> > -	out_pixel->g = le16_to_cpu(pixel[1]);
-> > -	out_pixel->b = le16_to_cpu(pixel[0]);
-> > -}
-> > +	out_pixel.a = le16_to_cpu(a);
-> > +	out_pixel.r = le16_to_cpu(r);
-> > +	out_pixel.g = le16_to_cpu(g);
-> > +	out_pixel.b = le16_to_cpu(b);
-> >  
-> > -static void XRGB16161616_to_argb_u16(const u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
-> > -{
-> > -	u16 *pixel = (u16 *)in_pixel;
-> > -
-> > -	out_pixel->a = (u16)0xffff;
-> > -	out_pixel->r = le16_to_cpu(pixel[2]);
-> > -	out_pixel->g = le16_to_cpu(pixel[1]);
-> > -	out_pixel->b = le16_to_cpu(pixel[0]);
-> > +	return out_pixel;
-> >  }
-> >  
-> > -static void RGB565_to_argb_u16(const u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
-> > +static struct pixel_argb_u16 argb_u16_from_RGB565(const u16 *pixel)
-> >  {
-> > -	u16 *pixel = (u16 *)in_pixel;
-> > +	struct pixel_argb_u16 out_pixel;
-> >  
-> >  	s64 fp_rb_ratio = drm_fixp_div(drm_int2fixp(65535), drm_int2fixp(31));
-> >  	s64 fp_g_ratio = drm_fixp_div(drm_int2fixp(65535), drm_int2fixp(63));
-> > @@ -185,12 +153,26 @@ static void RGB565_to_argb_u16(const u8 *in_pixel, struct pixel_argb_u16 *out_pi
-> >  	s64 fp_g = drm_int2fixp((rgb_565 >> 5) & 0x3f);
-> >  	s64 fp_b = drm_int2fixp(rgb_565 & 0x1f);
-> >  
-> > -	out_pixel->a = (u16)0xffff;
-> > -	out_pixel->r = drm_fixp2int_round(drm_fixp_mul(fp_r, fp_rb_ratio));
-> > -	out_pixel->g = drm_fixp2int_round(drm_fixp_mul(fp_g, fp_g_ratio));
-> > -	out_pixel->b = drm_fixp2int_round(drm_fixp_mul(fp_b, fp_rb_ratio));
-> > +	out_pixel.a = (u16)0xffff;
-> > +	out_pixel.r = drm_fixp2int_round(drm_fixp_mul(fp_r, fp_rb_ratio));
-> > +	out_pixel.g = drm_fixp2int_round(drm_fixp_mul(fp_g, fp_g_ratio));
-> > +	out_pixel.b = drm_fixp2int_round(drm_fixp_mul(fp_b, fp_rb_ratio));
-> > +
-> > +	return out_pixel;
-> >  }
-> >  
-> > +/*
-> > + * The following functions are read_line function for each pixel format supported by VKMS.
-> > + *
-> > + * They read a line starting at the point @x_start,@y_start following the @direction. The result
-> > + * is stored in @out_pixel and in the format ARGB16161616.
-> > + *
-> > + * Those function are very similar, but it is required for performance reason. In the past, some
-> > + * experiment were done, and with a generic loop the performance are very reduced [1].
-> 
-> The English here feels a bit awkward. How about:
-> 
-> These functions are very repetitive, but the innermost pixel loops must
-> be kept inside these functions for performance reasons. Some
-> benchmarking was done in [1] where having the innermost loop factored
-> out of these functions showed a slowdown by a factor of three.
-
-It is better, thanks.
-
-> > + *
-> > + * [1]: https://lore.kernel.org/dri-devel/d258c8dc-78e9-4509-9037-a98f7f33b3a3@riseup.net/
-> > + */
-> > +
-> >  /**
-> >   * black_to_argb_u16() - pixel_read callback which always read black
-> >   *
-> > @@ -198,42 +180,116 @@ static void RGB565_to_argb_u16(const u8 *in_pixel, struct pixel_argb_u16 *out_pi
-> >   * It is used to avoid null pointer to be used as a function. In theory, this function should
-> >   * never be called, except if you found a bug in the driver/DRM core.
-> >   */
-> > +static void black_to_argb_u16(const struct vkms_plane_state *plane, int x_start,
-> > +			      int y_start, enum pixel_read_direction direction, int count,
-> > +			      struct pixel_argb_u16 out_pixel[])
-> >  {
-> > +	struct pixel_argb_u16 *end = out_pixel + count;
-> > +
-> > +	while (out_pixel < end) {
-> > +		*out_pixel = argb_u16_from_u8888(255, 0, 0, 0);
-> > +		out_pixel += 1;
-> > +	}
-> >  }
-> >  
-> > +static void ARGB8888_read_line(const struct vkms_plane_state *plane, int x_start, int y_start,
-> > +			       enum pixel_read_direction direction, int count,
-> > +			       struct pixel_argb_u16 out_pixel[])
-> >  {
-> > +	struct pixel_argb_u16 *end = out_pixel + count;
-> > +	u8 *src_pixels;
-> > +	int rem_x, rem_y;
-> > +
-> > +	packed_pixels_addr(plane->frame_info, x_start, y_start, 0, &src_pixels, &rem_x, &rem_y);
-> > +
-> > +	int step = get_step_next_block(plane->frame_info->fb, direction, 0);
-> > +
-> > +	while (out_pixel < end) {
-> > +		u8 *px = (u8 *)src_pixels;
-> > +		*out_pixel = argb_u16_from_u8888(px[3], px[2], px[1], px[0]);
-> > +		out_pixel += 1;
-> > +		src_pixels += step;
-> > +	}
-> > +}
-> > +
-> > +static void XRGB8888_read_line(const struct vkms_plane_state *plane, int x_start, int y_start,
-> > +			       enum pixel_read_direction direction, int count,
-> > +			       struct pixel_argb_u16 out_pixel[])
-> > +{
-> > +	struct pixel_argb_u16 *end = out_pixel + count;
-> > +	u8 *src_pixels;
-> > +	int rem_x, rem_y;
-> > +
-> > +	packed_pixels_addr(plane->frame_info, x_start, y_start, 0, &src_pixels, &rem_x, &rem_y);
-> > +
-> > +	int step = get_step_next_block(plane->frame_info->fb, direction, 0);
-> > +
-> > +	while (out_pixel < end) {
-> > +		u8 *px = (u8 *)src_pixels;
-> > +		*out_pixel = argb_u16_from_u8888(255, px[2], px[1], px[0]);
-> > +		out_pixel += 1;
-> > +		src_pixels += step;
-> > +	}
-> > +}
-> > +
-> > +static void ARGB16161616_read_line(const struct vkms_plane_state *plane, int x_start,
-> > +				   int y_start, enum pixel_read_direction direction, int count,
-> > +				   struct pixel_argb_u16 out_pixel[])
-> > +{
-> > +	struct pixel_argb_u16 *end = out_pixel + count;
-> > +	u8 *src_pixels;
-> > +	int rem_x, rem_y;
-> > +
-> > +	packed_pixels_addr(plane->frame_info, x_start, y_start, 0, &src_pixels, &rem_x, &rem_y);
-> > +
-> > +	int step = get_step_next_block(plane->frame_info->fb, direction, 0);
-> > +
-> > +	while (out_pixel < end) {
-> > +		u16 *px = (u16 *)src_pixels;
-> > +		*out_pixel = argb_u16_from_u16161616(px[3], px[2], px[1], px[0]);
-> > +		out_pixel += 1;
-> > +		src_pixels += step;
-> > +	}
-> > +}
-> > +
-> > +static void XRGB16161616_read_line(const struct vkms_plane_state *plane, int x_start,
-> > +				   int y_start, enum pixel_read_direction direction, int count,
-> > +				   struct pixel_argb_u16 out_pixel[])
-> > +{
-> > +	struct pixel_argb_u16 *end = out_pixel + count;
-> > +	u8 *src_pixels;
-> > +	int rem_x, rem_y;
-> > +
-> > +	packed_pixels_addr(plane->frame_info, x_start, y_start, 0, &src_pixels, &rem_x, &rem_y);
-> > +
-> > +	int step = get_step_next_block(plane->frame_info->fb, direction, 0);
-> > +
-> > +	while (out_pixel < end) {
-> > +		u16 *px = (u16 *)src_pixels;
-> > +		*out_pixel = argb_u16_from_u16161616(0xFFFF, px[2], px[1], px[0]);
-> > +		out_pixel += 1;
-> > +		src_pixels += step;
-> > +	}
-> > +}
-> > +
-> > +static void RGB565_read_line(const struct vkms_plane_state *plane, int x_start,
-> > +			     int y_start, enum pixel_read_direction direction, int count,
-> > +			     struct pixel_argb_u16 out_pixel[])
-> > +{
-> > +	struct pixel_argb_u16 *end = out_pixel + count;
-> > +	u8 *src_pixels;
-> > +	int rem_x, rem_y;
-> > +
-> > +	packed_pixels_addr(plane->frame_info, x_start, y_start, 0, &src_pixels, &rem_x, &rem_y);
-> >  
-> > +	int step = get_step_next_block(plane->frame_info->fb, direction, 0);
-> >  
-> > +	while (out_pixel < end) {
-> > +		u16 *px = (u16 *)src_pixels;
-> >  
-> > +		*out_pixel = argb_u16_from_RGB565(px);
-> > +		out_pixel += 1;
-> > +		src_pixels += step;
-> >  	}
-> >  }
-> >  
-> > @@ -343,25 +399,25 @@ void vkms_writeback_row(struct vkms_writeback_job *wb,
-> >  }
-> >  
-> >  /**
-> > - * Retrieve the correct read_pixel function for a specific format.
-> > + * Retrieve the correct read_line function for a specific format.
-> >   * If the format is not supported by VKMS a warn is emitted and a dummy "always read black"
-> >   * function is returned.
-> >   *
-> >   * @format: DRM_FORMAT_* value for which to obtain a conversion function (see [drm_fourcc.h])
-> >   */
-> > -pixel_read_t get_pixel_read_function(u32 format)
-> > +pixel_read_line_t get_pixel_read_line_function(u32 format)
-> >  {
-> >  	switch (format) {
-> >  	case DRM_FORMAT_ARGB8888:
-> > -		return &ARGB8888_to_argb_u16;
-> > +		return &ARGB8888_read_line;
-> >  	case DRM_FORMAT_XRGB8888:
-> > -		return &XRGB8888_to_argb_u16;
-> > +		return &XRGB8888_read_line;
-> >  	case DRM_FORMAT_ARGB16161616:
-> > -		return &ARGB16161616_to_argb_u16;
-> > +		return &ARGB16161616_read_line;
-> >  	case DRM_FORMAT_XRGB16161616:
-> > -		return &XRGB16161616_to_argb_u16;
-> > +		return &XRGB16161616_read_line;
-> >  	case DRM_FORMAT_RGB565:
-> > -		return &RGB565_to_argb_u16;
-> > +		return &RGB565_read_line;
-> >  	default:
-> >  		/*
-> >  		 * This is a bug in vkms_plane_atomic_check. All the supported
-> > diff --git a/drivers/gpu/drm/vkms/vkms_formats.h b/drivers/gpu/drm/vkms/vkms_formats.h
-> > index 3ecea4563254..8d2bef95ff79 100644
-> > --- a/drivers/gpu/drm/vkms/vkms_formats.h
-> > +++ b/drivers/gpu/drm/vkms/vkms_formats.h
-> > @@ -5,7 +5,7 @@
-> >  
-> >  #include "vkms_drv.h"
-> >  
-> > -pixel_read_t get_pixel_read_function(u32 format);
-> > +pixel_read_line_t get_pixel_read_line_function(u32 format);
-> >  
-> >  pixel_write_t get_pixel_write_function(u32 format);
-> >  
-> > diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
-> > index 10e9b23dab28..8875bed76410 100644
-> > --- a/drivers/gpu/drm/vkms/vkms_plane.c
-> > +++ b/drivers/gpu/drm/vkms/vkms_plane.c
-> > @@ -112,7 +112,6 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
-> >  	frame_info = vkms_plane_state->frame_info;
-> >  	memcpy(&frame_info->src, &new_state->src, sizeof(struct drm_rect));
-> >  	memcpy(&frame_info->dst, &new_state->dst, sizeof(struct drm_rect));
-> > -	memcpy(&frame_info->rotated, &new_state->dst, sizeof(struct drm_rect));
-> >  	frame_info->fb = fb;
-> >  	memcpy(&frame_info->map, &shadow_plane_state->data, sizeof(frame_info->map));
-> >  	drm_framebuffer_get(frame_info->fb);
-> > @@ -122,10 +121,8 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
-> >  									  DRM_MODE_REFLECT_X |
-> >  									  DRM_MODE_REFLECT_Y);
-> >  
-> > -	drm_rect_rotate(&frame_info->rotated, drm_rect_width(&frame_info->rotated),
-> > -			drm_rect_height(&frame_info->rotated), frame_info->rotation);
-> >  
-> > -	vkms_plane_state->pixel_read = get_pixel_read_function(fmt);
-> > +	vkms_plane_state->pixel_read_line = get_pixel_read_line_function(fmt);
-> >  }
-> >  
-> >  static int vkms_plane_atomic_check(struct drm_plane *plane,
-> > 
-> 
-> This is looking good enough that I can give an
-
-Thanks for all your feedback !
-
-> Acked-by: Pekka Paalanen <pekka.paalanen@collabora.com>
-
-As I changed the code, I will not keep it in the commit.
-
-Thanks,
-Louis Chauvet
-
-> Thanks,
-> pq
+Best regards,
+	Maxim Levitsky
 
 
-
--- 
-Louis Chauvet, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
