@@ -1,167 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49CC84D0D;
-	Tue, 26 Mar 2024 18:12:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3104184D0D;
+	Tue, 26 Mar 2024 18:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711476740; cv=none; b=qUYmhuKw3bbiAIm4+NrC1SXSJnQhsCUMi2hOYoLAkgcVDxH8cHDWQ1Vayv0UtFCloQUUQ/qYfct49233kz7SkyRaItSbnbOho+/HdabGpxOkvBVI5/tKlyqNTlC6yIiqoqMoVoB1gHMNeS+X1jBYBTSGQKvvKLTO0dn7J49wQzY=
+	t=1711476774; cv=none; b=jvKxp+oEZ8YO2GZgRgXDPdAXd4+qknC5s7wbvJ+HLcLaz/eb/6epG9iWXFKrLNwXfMSnfbxuu41cosrYN7huRn0MDvems1xEJFuZw0Qw2U9Z+W7C1Dwg91ktKAh5/FItCo3BX2K4yauAZwDAGtCEW4RCER0CnUahuPBkSBXTPk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711476740; c=relaxed/simple;
-	bh=ZcohJvmfRg15SwcF1OZOo/kVQIEEfjHr6XbmDLUndHM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iIUKRnf4ZrvJpDoN7e8hzrnReOhHF4j0iZNBv5D3AxfRUbr48Ug5gYOMXWeS7bA/Wt9O2CdVRbjnq9AF/LD0MfmGI1eMQMtFAuwuqOsSD9rF9JyciRSnasKck6n+p2T1QogbUv6+Al1HqlH81FiCX3ZJnrq3Z3QWBdn8JRa2C6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UnYlXgyn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711476774; c=relaxed/simple;
+	bh=ev8rYzqaCDj4b9qlzn5q+6SJHRO94m+OOkOuEDYlsFw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tStX3aRq/8QI1CfWCNsrR2/ImXLqFmdnFA7ZVJt5I7a3jpMBnAps1skX0bCnK1ghS/vRcpc0AFCaHzCsEjXneKAJqUVL7g/PndzUSHYd4jvYZ+crhPFJei0fKBG2xKgJOHFqJB8IFGamvKbys624Yd/UzYwwHzeiaHwu17lCj1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kG2UkDKJ; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UnYlXgyn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B33BC433C7;
-	Tue, 26 Mar 2024 18:12:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711476740;
-	bh=ZcohJvmfRg15SwcF1OZOo/kVQIEEfjHr6XbmDLUndHM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=UnYlXgynHB/OdGQ3SlzWtZXKNc4VnzI/sxDokA1pKHvYRuUJf1AXogGtbY0shgsy9
-	 rXf1pz/j683VzLwQXpv58yJltQfcuo8XNQq/LueWaI9GbfX1Jrf5ML1p8FokgOM8cW
-	 h0ISa2ILiQVph8YZ9A2mLdMyGJ5ANUEs3iG+5Zmfj1Ire8uTQtY6r8ip2JgXr/ZMFa
-	 FGF/62OkuNNnFa/sLRR7Xs+iwEdtliSPNT8CcGUgQa+nm77qpnXWUIx6nbkt+Fp+LS
-	 prLN24V+oxXQYO67hmZndviRpOHFyhs0bDaX+10onul3JBROz1/UlnXGY/QfOlgwzV
-	 l8ZGwntlfuuYA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 956B3CE129B; Tue, 26 Mar 2024 11:12:19 -0700 (PDT)
-Date: Tue, 26 Mar 2024 11:12:19 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Zqiang <qiang.zhang1211@gmail.com>
-Cc: frederic@kernel.org, neeraj.upadhyay@kernel.org, joel@joelfernandes.org,
-	rcu@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rcutorture: Fix invalid context warning when enable srcu
- barrier testing
-Message-ID: <ea12722c-772b-47de-ae3a-022fe1f8da3e@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240325075219.10367-1-qiang.zhang1211@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kG2UkDKJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711476773; x=1743012773;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ev8rYzqaCDj4b9qlzn5q+6SJHRO94m+OOkOuEDYlsFw=;
+  b=kG2UkDKJi2kWXBpqnCXD17zkro12JAZL6VJtcZk6RWnjxDHl0Zwm0U37
+   wy+7NsnP9NbX61kEhnS4PEGO1Tn+LVOfvPgti33X4MVgfwOSWn4rNOdWN
+   HDmVuQMdoJ6UzSdR9osrvK+w6e6eN7v9/6J6eh9XaGpd+oPGKxq+1Q/bU
+   +Eylm8vZfbKBlrM2+cW+Z3M6s61Ko/LvLqFsetmX2zRlOPXClhFTJQoSD
+   y5xLGKJVD86WuLfAOww1u4VfHJ6YOOQ6BJJRGDr7uuF8I/rLNnIZzIBaR
+   AkKFS7frgejMqCQp6FdJLPY57D/NGJjGgYWH+jnpFJE04Gfe1sl2k7NFr
+   w==;
+X-CSE-ConnectionGUID: 4hSgYS+5TRG+5XzK/03yhA==
+X-CSE-MsgGUID: ohGs1RozQv2SPRaXtQDB7Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="10325985"
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="10325985"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 11:12:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="937072946"
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="937072946"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Mar 2024 11:12:50 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 59022284; Tue, 26 Mar 2024 20:12:49 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>,
+	linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v1 0/2] gpiolib: in-kernel documentation updates
+Date: Tue, 26 Mar 2024 20:11:19 +0200
+Message-ID: <20240326181247.1419138-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240325075219.10367-1-qiang.zhang1211@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 25, 2024 at 03:52:19PM +0800, Zqiang wrote:
-> When the torture_type is set srcu or srcud and cb_barrier is
-> non-zero, running the rcutorture test will trigger the
-> following warning:
-> 
-> [  163.910989][    C1] BUG: sleeping function called from invalid context at kernel/locking/spinlock_rt.c:48
-> [  163.910994][    C1] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 0, name: swapper/1
-> [  163.910999][    C1] preempt_count: 10001, expected: 0
-> [  163.911002][    C1] RCU nest depth: 0, expected: 0
-> [  163.911005][    C1] INFO: lockdep is turned off.
-> [  163.911007][    C1] irq event stamp: 30964
-> [  163.911010][    C1] hardirqs last  enabled at (30963): [<ffffffffabc7df52>] do_idle+0x362/0x500
-> [  163.911018][    C1] hardirqs last disabled at (30964): [<ffffffffae616eff>] sysvec_call_function_single+0xf/0xd0
-> [  163.911025][    C1] softirqs last  enabled at (0): [<ffffffffabb6475f>] copy_process+0x16ff/0x6580
-> [  163.911033][    C1] softirqs last disabled at (0): [<0000000000000000>] 0x0
-> [  163.911038][    C1] Preemption disabled at:
-> [  163.911039][    C1] [<ffffffffacf1964b>] stack_depot_save_flags+0x24b/0x6c0
-> [  163.911063][    C1] CPU: 1 PID: 0 Comm: swapper/1 Tainted: G        W          6.8.0-rc4-rt4-yocto-preempt-rt+ #3 1e39aa9a737dd024a3275c4f835a872f673a7d3a
-> [  163.911071][    C1] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.2-0-gea1b7a073390-prebuilt.qemu.org 04/01/2014
-> [  163.911075][    C1] Call Trace:
-> [  163.911078][    C1]  <IRQ>
-> [  163.911080][    C1]  dump_stack_lvl+0x88/0xd0
-> [  163.911089][    C1]  dump_stack+0x10/0x20
-> [  163.911095][    C1]  __might_resched+0x36f/0x530
-> [  163.911105][    C1]  rt_spin_lock+0x82/0x1c0
-> [  163.911112][    C1]  spin_lock_irqsave_ssp_contention+0xb8/0x100
-> [  163.911121][    C1]  srcu_gp_start_if_needed+0x782/0xf00
-> [  163.911128][    C1]  ? _raw_spin_unlock_irqrestore+0x46/0x70
-> [  163.911136][    C1]  ? debug_object_active_state+0x336/0x470
-> [  163.911148][    C1]  ? __pfx_srcu_gp_start_if_needed+0x10/0x10
-> [  163.911156][    C1]  ? __pfx_lock_release+0x10/0x10
-> [  163.911165][    C1]  ? __pfx_rcu_torture_barrier_cbf+0x10/0x10
-> [  163.911188][    C1]  __call_srcu+0x9f/0xe0
-> [  163.911196][    C1]  call_srcu+0x13/0x20
-> [  163.911201][    C1]  srcu_torture_call+0x1b/0x30
-> [  163.911224][    C1]  rcu_torture_barrier1cb+0x4a/0x60
-> [  163.911247][    C1]  __flush_smp_call_function_queue+0x267/0xca0
-> [  163.911256][    C1]  ? __pfx_rcu_torture_barrier1cb+0x10/0x10
-> [  163.911281][    C1]  generic_smp_call_function_single_interrupt+0x13/0x20
-> [  163.911288][    C1]  __sysvec_call_function_single+0x7d/0x280
-> [  163.911295][    C1]  sysvec_call_function_single+0x93/0xd0
-> [  163.911302][    C1]  </IRQ>
-> [  163.911304][    C1]  <TASK>
-> [  163.911308][    C1]  asm_sysvec_call_function_single+0x1b/0x20
-> [  163.911313][    C1] RIP: 0010:default_idle+0x17/0x20
-> [  163.911326][    C1] RSP: 0018:ffff888001997dc8 EFLAGS: 00000246
-> [  163.911333][    C1] RAX: 0000000000000000 RBX: dffffc0000000000 RCX: ffffffffae618b51
-> [  163.911337][    C1] RDX: 0000000000000000 RSI: ffffffffaea80920 RDI: ffffffffaec2de80
-> [  163.911342][    C1] RBP: ffff888001997dc8 R08: 0000000000000001 R09: ffffed100d740cad
-> [  163.911346][    C1] R10: ffffed100d740cac R11: ffff88806ba06563 R12: 0000000000000001
-> [  163.911350][    C1] R13: ffffffffafe460c0 R14: ffffffffafe460c0 R15: 0000000000000000
-> [  163.911358][    C1]  ? ct_kernel_exit.constprop.3+0x121/0x160
-> [  163.911369][    C1]  ? lockdep_hardirqs_on+0xc4/0x150
-> [  163.911376][    C1]  arch_cpu_idle+0x9/0x10
-> [  163.911383][    C1]  default_idle_call+0x7a/0xb0
-> [  163.911390][    C1]  do_idle+0x362/0x500
-> [  163.911398][    C1]  ? __pfx_do_idle+0x10/0x10
-> [  163.911404][    C1]  ? complete_with_flags+0x8b/0xb0
-> [  163.911416][    C1]  cpu_startup_entry+0x58/0x70
-> [  163.911423][    C1]  start_secondary+0x221/0x280
-> [  163.911430][    C1]  ? __pfx_start_secondary+0x10/0x10
-> [  163.911440][    C1]  secondary_startup_64_no_verify+0x17f/0x18b
-> [  163.911455][    C1]  </TASK>
-> 
-> This commit therefore use smp_call_on_cpu() instead of
-> smp_call_function_single(), make rcu_torture_barrier1cb() invoked
-> happens on task-context.
-> 
-> Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
+While looking for something I have noticed that in-kernel documentation
+for gpiolib implementation may be updated to reflect the current state
+of affairs. Hence these two patches.
 
-Huh.  The use of non-raw spinlocks does constrain call_rcu() use, doesn't
-it?  Good catch!
+Andy Shevchenko (2):
+  gpiolib: Do not mention legacy GPIOF_* in the code
+  gpiolib: Up to date the kernel documentation
 
-Queued for testing and further review.  Are there any uses of call_srcu()
-out there that are unsafe on -rt?
+ drivers/gpio/gpiolib-acpi.c   |  45 ++--
+ drivers/gpio/gpiolib-cdev.c   |  15 +-
+ drivers/gpio/gpiolib-devres.c |  85 ++++++--
+ drivers/gpio/gpiolib-legacy.c |   3 +
+ drivers/gpio/gpiolib-of.c     | 102 +++++----
+ drivers/gpio/gpiolib-swnode.c |   8 +-
+ drivers/gpio/gpiolib-sysfs.c  |  41 ++--
+ drivers/gpio/gpiolib.c        | 388 +++++++++++++++++++++-------------
+ drivers/gpio/gpiolib.h        |   8 +-
+ 9 files changed, 438 insertions(+), 257 deletions(-)
 
-							Thanx, Paul
+-- 
+2.43.0.rc1.1.gbec44491f096
 
-> ---
->  kernel/rcu/rcutorture.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-> index 48a9d47ec90e..498aae52333e 100644
-> --- a/kernel/rcu/rcutorture.c
-> +++ b/kernel/rcu/rcutorture.c
-> @@ -3041,11 +3041,12 @@ static void rcu_torture_barrier_cbf(struct rcu_head *rcu)
->  }
->  
->  /* IPI handler to get callback posted on desired CPU, if online. */
-> -static void rcu_torture_barrier1cb(void *rcu_void)
-> +static int rcu_torture_barrier1cb(void *rcu_void)
->  {
->  	struct rcu_head *rhp = rcu_void;
->  
->  	cur_ops->call(rhp, rcu_torture_barrier_cbf);
-> +	return 0;
->  }
->  
->  /* kthread function to register callbacks used to test RCU barriers. */
-> @@ -3071,11 +3072,9 @@ static int rcu_torture_barrier_cbs(void *arg)
->  		 * The above smp_load_acquire() ensures barrier_phase load
->  		 * is ordered before the following ->call().
->  		 */
-> -		if (smp_call_function_single(myid, rcu_torture_barrier1cb,
-> -					     &rcu, 1)) {
-> -			// IPI failed, so use direct call from current CPU.
-> +		if (smp_call_on_cpu(myid, rcu_torture_barrier1cb, &rcu, 1))
->  			cur_ops->call(&rcu, rcu_torture_barrier_cbf);
-> -		}
-> +
->  		if (atomic_dec_and_test(&barrier_cbs_count))
->  			wake_up(&barrier_wq);
->  	} while (!torture_must_stop());
-> -- 
-> 2.17.1
-> 
