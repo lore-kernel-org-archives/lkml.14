@@ -1,149 +1,137 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CEE84D0D;
-	Tue, 26 Mar 2024 18:31:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161CC129A6B;
+	Tue, 26 Mar 2024 18:31:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711477911; cv=none; b=T94OrGQlIQx/xNAAeFmVB309z8L7E2nfJoP5UWeiWTE2aiCogTiQrhaTX0GMfFvSO6N2ectTcAq/RWEbrO+i/XLR7DW5ImbKwbvjSnyPSjeO4WG1wDAMz8FG1sbvSY+DxEMJcOhk8oU3ahQC4tlB5SOa/8FL1ivJ41jgdb3K/XE=
+	t=1711477913; cv=none; b=QXUK0/d/rW2fov4COfLAoB5ilmjiY/o00faWPK2X2LdP/jqoh9I8jpyAyd13RV/zioBhDJUqcaVH82qU46n+x0q5ivz+jSwyuuB7A0G4huL0tExjBmhY0TZ5kfKEmTvUEnLazTFoez1SziXhWpa9xrS1WYTDrcyyxtbFK0CdiuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711477911; c=relaxed/simple;
-	bh=Hy7edzumEoWeONYYCu1G0+IrMmMDfxYK/QUHU24I/Pk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=RyVS4DiZKjJyZ3KxVaH7cylSpVcEx4QVY+qsTUoTtj11RWFj5rYcihm/SqByEUIMh1KfLocGPZbfABe2DQGI+GCJsENPzAuE8B5pu6PWuw5MORkbD1867xjy//RX4rJspN2+hqcd7t1ksIMJyFnaTYaE7i78b2Q3ALd3SHNRaZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Houtpz5a; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1711477913; c=relaxed/simple;
+	bh=VVjLnoHtX11k4peMT3Slbcl09nUBcsgl29+K07jw/UQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=m1e/Nay6EwzQewmKTQcKUmRwaqBoTLcpnx+uB73VZ33ljld9qxSTxnSM8+hwGMMJGK3TIlrD8qRKE5FtuIAJVXIcv9ic/lFc3M9ImS1PI4tCAm8152aSsV/tRK+SQPLI9COk/M+U+e6gvKIFWFCdprvRG1qMfhDlxNLt/L1gTQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MaHdzFbT; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Houtpz5a"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MaHdzFbT"
 Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42QG6CL1011820;
-	Tue, 26 Mar 2024 18:02:31 GMT
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42QIOYRB029149;
+	Tue, 26 Mar 2024 18:31:43 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:to:cc; s=qcppdkim1; bh=CLe
-	32OEPO+KVS6LX1ndJG84GupdaXxVbnPB6jH9BUAI=; b=Houtpz5aPGZkHtUop7J
-	R6Hj+jP3cG9jIdgEt000sjfowcFglPUUt3BHAnRJb82SzIbE1OC7tSJYgqewDLMi
-	wTOJSKY527H41fd3RUtFP8urBgjkS0TrH512mQzESSZrDLu+91iUsqOPUN0aWKbL
-	/zlj4B2kXWBxPXst/33BgWJycZUe7/mIlGEX4YivVgwZvIxLKnVIAVvI/Qb4lliy
-	EM53d6YINyjVXJevOPSXqDv/fpMygkwsXrHq1JX8ErfsoyOPQ4KyPSzCS1LTE3WZ
-	DBcn3TGSnQ8L3S4bapRbM8VW2yQv8NtK8REOsbDW5YVTUDuFLp4Wd9uMHKCcy+lg
-	Prw==
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=GiHiaL1bOe/EXbSYTdniLPpYaBRiQap8rwEvH/06QSs=; b=Ma
+	HdzFbTlivB4jJEP8Yaxuhh63DFVObMMzYKWyOOUkUI6zyYt9U1TEnSnEaFNC6/K7
+	kroit2tPzZz5b6ZERQ4HiD+UZhw+3cfvSsqo7rLKfspAGt0E4LUDTucpziQMX+A8
+	FqfQzNNmohRLZW4zJ6sLnS4TgsXpVgeolNmSxRWhswUKVfnoL0o/CubiMUsuMWfS
+	eE+w2swZRDxSvg8qrexnkrLONY0iJUKudknNSVkchXjJlI6kX9XhlzxG/5wg30gw
+	de/wFB7rMDy8+H8/sPTAiEmQXFq16EPBwriWGTBlIrm5RUntPNZ+RKGkE+PAVrJS
+	gE9wkpeDjzXP0JgxuLcQ==
 Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x41k68att-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x41k68d5h-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 18:02:31 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42QI2UT3015068
+	Tue, 26 Mar 2024 18:31:43 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42QIVgov023006
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 18:02:30 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+	Tue, 26 Mar 2024 18:31:42 GMT
+Received: from [10.71.109.81] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 26 Mar
- 2024 11:02:30 -0700
-From: Bjorn Andersson <quic_bjorande@quicinc.com>
-Date: Tue, 26 Mar 2024 11:02:30 -0700
-Subject: [PATCH] arm64: dts: qcom: qcs6490-rb3gen2: Enable UFS
+ 2024 11:31:40 -0700
+Message-ID: <85204b78-7b24-61cd-4bae-3e7abc6e4fd3@quicinc.com>
+Date: Tue, 26 Mar 2024 11:31:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c:843:6: error:
+ variable 'out' set but not used
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Miguel Ojeda
+	<miguel.ojeda.sandonis@gmail.com>
+CC: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Marijn
+ Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        linux-arm-msm
+	<linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>,
+        linux-kernel
+	<linux-kernel@vger.kernel.org>
+References: <CANiq72mjc5t4n25SQvYSrOEhxxpXYPZ4pPzneSJHEnc3qApu2Q@mail.gmail.com>
+ <CAA8EJprTNFgKJ_3cdZz4f_LCkYFghi-cfaj3bZmYh3oA63my6A@mail.gmail.com>
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <CAA8EJprTNFgKJ_3cdZz4f_LCkYFghi-cfaj3bZmYh3oA63my6A@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240326-rb3gen2-ufs-v1-1-8c5c2dae1e64@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIALUNA2YC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDYyMz3aIk4/TUPCPd0rRiXfOUlCQDc0NTc1NTMyWgjoKi1LTMCrBp0bG
- 1tQBGS2bKXQAAAA==
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <quic_bjorande@quicinc.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711476150; l=1626;
- i=quic_bjorande@quicinc.com; s=20230915; h=from:subject:message-id;
- bh=Hy7edzumEoWeONYYCu1G0+IrMmMDfxYK/QUHU24I/Pk=;
- b=lDO306RXcsUfdGEU/nZkY0RAVYJ6JLaKK3YRNJc/yf9lrJeMOxFZoSkpcRVVKC/lt6NDUd87v
- jYmbjeny+XeB5bTDXzwLLjXDWpoLaOm24XmUbWCMZF4OZWb/yRNSmzZ
-X-Developer-Key: i=quic_bjorande@quicinc.com; a=ed25519;
- pk=VkhObtljigy9k0ZUIE1Mvr0Y+E1dgBEH9WoLQnUtbIM=
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: eNto9_vGL8HkPuqiG2lbeY-eOPn7AEpB
-X-Proofpoint-GUID: eNto9_vGL8HkPuqiG2lbeY-eOPn7AEpB
+X-Proofpoint-ORIG-GUID: 8ye9dJjpHj1CMyW79gz2c4cjYopMDVqy
+X-Proofpoint-GUID: 8ye9dJjpHj1CMyW79gz2c4cjYopMDVqy
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-26_07,2024-03-21_02,2023-05-22_02
+ definitions=2024-03-26_08,2024-03-21_02,2023-05-22_02
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- lowpriorityscore=0 clxscore=1011 mlxlogscore=847 priorityscore=1501
+ lowpriorityscore=0 clxscore=1011 mlxlogscore=999 priorityscore=1501
  malwarescore=0 phishscore=0 spamscore=0 adultscore=0 suspectscore=0
  impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2403210001 definitions=main-2403260129
+ engine=8.19.0-2403210001 definitions=main-2403260133
 
-The rb3gen2 has UFS memory, adjust the necessary supply voltage and add
-the controller and phy nodes to enable this.
 
-Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
----
- arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-index 63ebe0774f1d..0177d93ecd1d 100644
---- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-@@ -221,8 +221,8 @@ vreg_l6b_1p2: ldo6 {
- 
- 		vreg_l7b_2p952: ldo7 {
- 			regulator-name = "vreg_l7b_2p952";
--			regulator-min-microvolt = <2400000>;
--			regulator-max-microvolt = <3544000>;
-+			regulator-min-microvolt = <2952000>;
-+			regulator-max-microvolt = <2952000>;
- 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
- 		};
- 
-@@ -508,6 +508,25 @@ &usb_1_qmpphy {
- 	status = "okay";
- };
- 
-+&ufs_mem_hc {
-+	reset-gpios = <&tlmm 175 GPIO_ACTIVE_LOW>;
-+	vcc-supply = <&vreg_l7b_2p952>;
-+	vcc-max-microamp = <800000>;
-+	vccq-supply = <&vreg_l9b_1p2>;
-+	vccq-max-microamp = <900000>;
-+	vccq2-supply = <&vreg_l9b_1p2>;
-+	vccq2-max-microamp = <900000>;
-+
-+	status = "okay";
-+};
-+
-+&ufs_mem_phy {
-+	vdda-phy-supply = <&vreg_l10c_0p88>;
-+	vdda-pll-supply = <&vreg_l6b_1p2>;
-+
-+	status = "okay";
-+};
-+
- &wifi {
- 	memory-region = <&wlan_fw_mem>;
- };
+On 3/26/2024 11:19 AM, Dmitry Baryshkov wrote:
+> On Tue, 26 Mar 2024 at 20:05, Miguel Ojeda
+> <miguel.ojeda.sandonis@gmail.com> wrote:
+>>
+>> Hi,
+>>
+>> In today's next, I got:
+>>
+>>      drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c:843:6: error: variable
+>> 'out' set but not used [-Werror,-Wunused-but-set-variable]
+>>
+>> `out` seems to be there since commit 64d6255650d4 ("drm/msm: More
+>> fully implement devcoredump for a7xx").
+>>
+>> Untested diff below assuming `dumper->iova` is constant -- if you want
+>> a formal patch, please let me know.
+> 
+> Please send a proper patch that we can pick up.
+> 
 
----
-base-commit: 084c8e315db34b59d38d06e684b1a0dd07d30287
-change-id: 20240326-rb3gen2-ufs-7ddb07157556
+This should be fixed with https://patchwork.freedesktop.org/patch/581853/.
 
-Best regards,
--- 
-Bjorn Andersson <quic_bjorande@quicinc.com>
+We can pickup that one with a Fixes tag applied.
 
+>>
+>> Cheers,
+>> Miguel
+>>
+>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c
+>> b/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c
+>> index 1f5245fc2cdc..a847a0f7a73c 100644
+>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c
+>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c
+>> @@ -852,7 +852,7 @@ static void a6xx_get_shader_block(struct msm_gpu *gpu,
+>>               (block->type << 8) | i);
+>>
+>>           in += CRASHDUMP_READ(in, REG_A6XX_HLSQ_DBG_AHB_READ_APERTURE,
+>> -            block->size, dumper->iova + A6XX_CD_DATA_OFFSET);
+>> +            block->size, out);
+>>
+>>           out += block->size * sizeof(u32);
+>>       }
+> 
+> 
+> 
