@@ -1,182 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2EFED9;
-	Tue, 26 Mar 2024 14:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C8E13C3F1;
+	Tue, 26 Mar 2024 14:48:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711464475; cv=none; b=PAfCurn4xudZRybbuD85+d1vw6LsFdeT7zqCxPDo39QLV7XhXMOJGm1k1yxRKqyi/JSfoG5+YLF4ugZ6nQjqqvREPql0L07GKtHxjbtZpDu9b+lkaM+lIs+RJpyd7A7k6CQ1yWwUuidiIwpPiYFOs/JkpbbCUNCgv3waKKlOwc8=
+	t=1711464503; cv=none; b=Nf44+P3s27+uJ7nOeEdfct0TWvPrYu+UVZoQtq1zXq3im74TFvDzjTOzyP/fnrPGKDzJad4KsgioWwV/Y2YNNoqxuisas4EQTbsfvo4Fr+tNd9siugZ/GdFYffKgLWpvYKxcmrqF3KuCcGrco2Z95SoEccm9KKDk3V1ytT6PVDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711464475; c=relaxed/simple;
-	bh=2VRodtLYji0E2iO14KF37hDwen2VjVMAvwAcrcgPpT4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RP8DQWyViGOgZmbG2QgzfPgzfywKA/8kNopgnvNdc4T6EGj7lUY4r7gXw1Opte+0uc+fUuisIXtCDlUPqjnQW03IOAW28kHepgtmA8eSrcorHK9W+3xOlMOLutz9UQHP5vIMjzlkvWulGnlVHp5NSC5gpQjGL6gYvjuJAQ743BE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E4BQDDTk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711464503; c=relaxed/simple;
+	bh=WSB5F1WSZax7rQrE9wzTv65xq0IhCJ8+VtjWj4me3m8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aUUV+0DwNrmeEfe38L8aTF5X13i6NvGxV5RqOzAVA1T3iK5uE8Nsc+HdlcnunvC3WRq9uL6tL1q7mFXoadB7Vrx8Cva7T+5Y+0ALtmmx9c4zgzvFJbwcpzoX7AMd2AnbIdzy8381xgqDlhQmmT0FZSekPhE3xRx2/NoA4tQl6PI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=aX8o8gh7; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E4BQDDTk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C54DC433F1;
-	Tue, 26 Mar 2024 14:47:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711464475;
-	bh=2VRodtLYji0E2iO14KF37hDwen2VjVMAvwAcrcgPpT4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=E4BQDDTkgrdwdIkmMvielkRpTAsqHIEG3dNSrY21fnxwoLYvLOoCje+XGKi0Q6+lb
-	 vXFNIViLU9NTXcLVTR3XwdRIIouf6xWYpzwnmHI2t5ZxiCoyK5CtJGLAMaMQhP4GqM
-	 LFJItP61E8WSzWQOgV3iidHNLT5C63yxLkS/wCtha2CzziKBhSzJgJ8mdUJnDc4MsM
-	 mHMWnrCmz0M9BMr26mXQL/Ot8TdiiiLpbc7Z6ykNI9wEj4r4WuyvPMGjqE0R7U0B4a
-	 JYlh8463XR1dZ+1yi/iNsx2NnACkLOIgc70LBf5p2SbJ28JbOOieq3jHp29R//i1VX
-	 XyBZZot1G0W0w==
-From: Arnd Bergmann <arnd@kernel.org>
-To: linux-kbuild@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>
-Cc: Nicolas Schier <nicolas@fjasle.eu>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Bill Metzenthen <billm@melbpc.org.au>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	x86@kernel.org,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Harry Wentland <harry.wentland@amd.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	"Manoj N. Kumar" <manoj@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Greg Kroah-Hartman <gregkh@suse.de>,
-	linux-kernel@vger.kernel.org,
-	linux-ide@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	netdev@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-scsi@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-modules@vger.kernel.org,
-	linux-mm@kvack.org,
-	llvm@lists.linux.dev
-Subject: [PATCH 00/12] kbuild: enable some -Wextra warnings by default
-Date: Tue, 26 Mar 2024 15:47:15 +0100
-Message-Id: <20240326144741.3094687-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aX8o8gh7"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42QEm1EK121149;
+	Tue, 26 Mar 2024 09:48:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1711464481;
+	bh=r5kO6gHMdss7KBmKCinOi5uDLA/3tf7mzyqUper/ros=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=aX8o8gh7KKSVG4M7zvZf6QdRV0MxzOhc7xOYlTaQ09TlWUVrmBPwsevCzu0CVAtlS
+	 AC+bAqo8Px8MIFR6Mn8IrXfNVy+BndDAQ//MSqChtLf8djsMse1NL205ti9ThBmGco
+	 uxQ+49u6vtwOcpq66Fo7x5M4wrs0FM1snZK1xZm4=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42QEm1qk022383
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 26 Mar 2024 09:48:01 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 26
+ Mar 2024 09:48:01 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 26 Mar 2024 09:48:01 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42QEm0PX024629;
+	Tue, 26 Mar 2024 09:48:00 -0500
+Date: Tue, 26 Mar 2024 20:17:59 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Niklas Cassel <cassel@kernel.org>
+CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
+        <manivannan.sadhasivam@linaro.org>, <fancer.lancer@gmail.com>,
+        <u.kleine-koenig@pengutronix.de>, <dlemoal@kernel.org>,
+        <yoshihiro.shimoda.uh@renesas.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>
+Subject: Re: [PATCH v5] PCI: keystone: Fix pci_ops for AM654x SoC
+Message-ID: <c01170ab-b16b-45c7-9067-07cc9004e2c9@ti.com>
+References: <20240326111905.2369778-1-s-vadapalli@ti.com>
+ <ZgLUCqh12RMApzyr@x1-carbon>
+ <2e40b30d-b063-48ac-a566-f66eb2788003@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <2e40b30d-b063-48ac-a566-f66eb2788003@ti.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Tue, Mar 26, 2024 at 08:00:04PM +0530, Siddharth Vadapalli wrote:
+> On Tue, Mar 26, 2024 at 02:56:26PM +0100, Niklas Cassel wrote:
+> > On Tue, Mar 26, 2024 at 04:49:05PM +0530, Siddharth Vadapalli wrote:
+> > > In the process of converting .scan_bus() callbacks to .add_bus(), the
+> > > ks_pcie_v3_65_scan_bus() function was changed to ks_pcie_v3_65_add_bus().
+> > > The .scan_bus() method belonged to ks_pcie_host_ops which was specific
+> > > to controller version 3.65a, while the .add_bus() method had been added
+> > > to ks_pcie_ops which is shared between the controller versions 3.65a and
+> > > 4.90a. Neither the older ks_pcie_v3_65_scan_bus() method, nor the newer
+> > > ks_pcie_v3_65_add_bus() method are applicable to the controller version
+> > > 4.90a which is present in AM654x SoCs.
+> > > 
+> 
+> ...
+> 
+> > > +	} while (val & DBI_CS2);
+> > > +}
+> > > +
+> > >  static int ks_pcie_msi_host_init(struct dw_pcie_rp *pp)
+> > >  {
+> > > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > > +	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
+> > > +
+> > > +	/* Configure and set up BAR0 */
+> > > +	ks_pcie_set_dbi_mode(ks_pcie);
+> > > +
+> > > +	/* Enable BAR0 */
+> > > +	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 1);
+> > > +	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, SZ_4K - 1);
+> > > +
+> > > +	ks_pcie_clear_dbi_mode(ks_pcie);
+> > > +
+> > > +	 /*
+> > > +	  * For BAR0, just setting bus address for inbound writes (MSI) should
+> > > +	  * be sufficient.  Use physical address to avoid any conflicts.
+> > > +	  */
+> > 
+> > This comment seems to have wrong indentation.
+> > With that fixed:
+> > 
+> > Reviewed-by: Niklas Cassel <cassel@kernel.org>
+> 
+> I will fix it and post the v6 patch.
 
-This is a follow-up on a couple of patch series I sent in the past,
-enabling -Wextra (aside from stuff that is explicitly disabled),
--Wcast-function-pointer-strict and -Wrestrict.
+I have posted the v6 patch at:
+https://lore.kernel.org/r/20240326144258.2404433-1-s-vadapalli@ti.com/
 
-I have tested these on 'defconfig' and 'allmodconfig' builds across
-all architectures, as well as many 'randconfig' builds on x86, arm and
-arm64. It would be nice to have all the Makefile.extrawarn changes in
-v6.10, hopefully with the driver fixes going in before that through
-the respective subsystem trees.
-
-     Arnd
-
-Arnd Bergmann (12):
-  kbuild: make -Woverride-init warnings more consistent
-  [v3] parport: mfc3: avoid empty-body warning
-  kbuild: turn on -Wextra by default
-  kbuild: remove redundant extra warning flags
-  firmware: dmi-id: add a release callback function
-  nouveau: fix function cast warning
-  cxlflash: fix function pointer cast warnings
-  x86: math-emu: fix function cast warnings
-  kbuild: enable -Wcast-function-type-strict unconditionally
-  sata: sx4: fix pdc20621_get_from_dimm() on 64-bit
-  [v4] kallsyms: rework symbol lookup return codes
-  kbuild: turn on -Wrestrict by default
-
- arch/x86/math-emu/fpu_etc.c                   |  9 +++--
- arch/x86/math-emu/fpu_trig.c                  |  6 ++--
- arch/x86/math-emu/reg_constant.c              |  7 +++-
- drivers/ata/sata_sx4.c                        |  6 ++--
- drivers/firmware/dmi-id.c                     |  7 +++-
- .../gpu/drm/amd/display/dc/dce110/Makefile    |  2 +-
- .../gpu/drm/amd/display/dc/dce112/Makefile    |  2 +-
- .../gpu/drm/amd/display/dc/dce120/Makefile    |  2 +-
- drivers/gpu/drm/amd/display/dc/dce60/Makefile |  2 +-
- drivers/gpu/drm/amd/display/dc/dce80/Makefile |  2 +-
- drivers/gpu/drm/i915/Makefile                 |  6 ++--
- .../drm/nouveau/nvkm/subdev/bios/shadowof.c   |  7 +++-
- drivers/gpu/drm/xe/Makefile                   |  4 +--
- drivers/net/ethernet/renesas/sh_eth.c         |  2 +-
- drivers/parport/parport_mfc3.c                |  3 +-
- drivers/pinctrl/aspeed/Makefile               |  2 +-
- drivers/scsi/cxlflash/lunmgt.c                |  4 +--
- drivers/scsi/cxlflash/main.c                  | 14 ++++----
- drivers/scsi/cxlflash/superpipe.c             | 34 +++++++++----------
- drivers/scsi/cxlflash/superpipe.h             | 11 +++---
- drivers/scsi/cxlflash/vlun.c                  |  7 ++--
- fs/proc/Makefile                              |  2 +-
- include/linux/filter.h                        | 14 ++++----
- include/linux/ftrace.h                        |  6 ++--
- include/linux/module.h                        | 14 ++++----
- kernel/bpf/Makefile                           |  2 +-
- kernel/bpf/core.c                             |  7 ++--
- kernel/kallsyms.c                             | 23 +++++++------
- kernel/module/kallsyms.c                      | 26 +++++++-------
- kernel/trace/ftrace.c                         | 13 +++----
- mm/Makefile                                   |  3 +-
- scripts/Makefile.extrawarn                    | 33 ++++--------------
- 32 files changed, 134 insertions(+), 148 deletions(-)
-
--- 
-2.39.2
-
-Cc: Bill Metzenthen <billm@melbpc.org.au>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86@kernel.org
-Cc: Damien Le Moal <dlemoal@kernel.org>
-Cc: Jean Delvare <jdelvare@suse.com>
-Cc: Harry Wentland <harry.wentland@amd.com>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Sergey Shtylyov <s.shtylyov@omp.ru>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: "Manoj N. Kumar" <manoj@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nicolas Schier <nicolas@fjasle.eu>
-Cc: Greg Kroah-Hartman <gregkh@suse.de>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-ide@vger.kernel.org
-Cc: amd-gfx@lists.freedesktop.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: intel-gfx@lists.freedesktop.org
-Cc: nouveau@lists.freedesktop.org
-Cc: intel-xe@lists.freedesktop.org
-Cc: netdev@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-scsi@vger.kernel.org
-Cc: bpf@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org
-Cc: linux-modules@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-kbuild@vger.kernel.org
-Cc: llvm@lists.linux.dev
+Regards,
+Siddharth.
