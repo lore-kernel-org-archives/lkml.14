@@ -1,104 +1,89 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F24213CFAC
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 19:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E464813CF8C;
+	Tue, 26 Mar 2024 19:18:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711480695; cv=none; b=bVYkiHJAFQd0YSuzNYzBDSBAYdU0iafY4qqbQwBenrg5xKGf03FEBY6dx7JTlvxX+WitQj8qq7O0yvvcUFQVkt8kIOjwvsENp84NqowfP5ev+ufLjweKAF2KdbwQNDbQA9Ns3CWZQbIB0Zpx7wpO11RLIvzV9iDuZl6cf0wkh24=
+	t=1711480700; cv=none; b=K60Ab5HMUpLPXfKjeabcNCNpIiPOAsxAuNujuJotYMok0vI0I3wmwgbhtk07YVvBOBW1+rwqfxBZm5fVNXDiNHfCRQGrql+KVxz17wmDYMeU7H/sVm8F5DXI3KE3jSm/HNzzkzbvoe+Yazbv0CAcoZsN0PVVHIAPmfTYKAaz7wE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711480695; c=relaxed/simple;
-	bh=c2enpOGs0X4T4rjqA7ge5hA+2N1P5nMY1p+BtQwpvCk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oHUFjooTdtxx/MPagyWr7DD7ODEcs1Ld33di9TI+YiYQlDC1IuipGYabKfXHdHLeFnRXHzF+KRVzjw5J9bIPp0lJyf7e31k63MQEdCOkjuszitJFRxerd9MsoV1CsQh7KkZvr6Cupf6oDuABlO1dKBuAxqv1eTcv10DHxe9gqd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=EsFc3yX2; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1711480700; c=relaxed/simple;
+	bh=nzPz1r4uhvpU/bB8HWtMns4axd/UbBU3+LcwC3N2YbE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JX0/NyHK0DATkhOeAxMNBiApWQK4Pa9yg7rfPfCGH8ZbInUlDCnd7Pv473X66JAmETQbZT9YL7Qs1ZC3hyXx9CrOoZd/ifS1vlBw50ZwPARJoMC82Yi9uA/D7CK3zbu/MM7zl1PYlTTuD+Pxon1/tVw/6ZJfgm2ORYBm0N1x9O8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WjkalfX6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="EsFc3yX2"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-db4364ecd6aso5593992276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 12:18:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1711480691; x=1712085491; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yaxPwfF6pcSWzIoXPt3G+TXmBRyW+5V+y3uoFizWf9Y=;
-        b=EsFc3yX2r7LXKbaBWPyMnOKWwGmNXgiF8lUhJDrsdtAHd5+ZBWiouzr2A7jkRmkKNQ
-         9ClNxKBDdC/fPj33Qnlpd1eDYYs371Ie61f/TuEx3H9IZlAbr0jtD8FSAXrB4w/ppFJa
-         Vq86UYpi7/bHFeaZZMJ4AHSS1mF0EcPeqk8taxaT/uyc9g//TJAMnFPD0mGc8IO5TSC7
-         sLRlKR7QhxD3kqhV1zFZTECgdtukh0zOlCuVxWJGcZFkOqEBYC6X90SikoCn6wUDoXB5
-         slUPTqcvaKDGa9WgteMAx4JqaOY/Pq6KthxnAQq5BAjodshJZzX5hC/FP7CHn0Z9jjWa
-         hJtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711480691; x=1712085491;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yaxPwfF6pcSWzIoXPt3G+TXmBRyW+5V+y3uoFizWf9Y=;
-        b=Ji5aVLioNLmn8kaLmIowl61eG5NAzPruyBao3EpJ+ds+1OOJZ/81w84bc8xJ31f6Kj
-         2cFFiIOFM3wlSlouSMxbcWEnAeuLeyxFPe9NW1CLP7B8KbTe8Ibp81f+9a6TQ5wFCd5o
-         zacUNz0ZgIQrr9NZVXb9dC9sjUZoM7bOb75onrA7UvZSNFqC7HidP5/FfD3QsgTQbjaD
-         g4vPDfwPzVr0+AnzFF4AlvqMjqBJLCFwhAH2IwY9n5HR/8zK/Y7uYDqxCOuRmK34ZVrQ
-         uyRbkAleufYl66FuZS5O9VBRZYpyG839h5BAXgRnrrcDDnhjMKX7MFwRBo60G7+vG1sK
-         oWVw==
-X-Forwarded-Encrypted: i=1; AJvYcCVTNCRLpRNZvs5va6DOhG9qWLFaiMqewgx3Ty1JUet+G59fBn2ibpa7r7W7A+OLXmcrJ0v28EH0/Y+N9XsoNXVnYCf2Aq05ptHxYWsY
-X-Gm-Message-State: AOJu0YxirojyKbbSBxBM15c4z2++SvJ/3JWB91L/r1+YQsEzY0zZZfpn
-	JHI59/Rafe/993iZ2lOuULxsDGFyQJsO1Enm/gE2xN4335vXlDtZIHn7oXem3IZ3+xVCPmw3z4D
-	BPtVePv4vnDIixrBK2Byj1gThjH+UgtW7v0Pj
-X-Google-Smtp-Source: AGHT+IEcNPIscIUrckKDg5If7x3ZclJg0Hn8ehLPXdqFB6Huk7CPYW+4wqalcC+NaGkyWtv8nYTfzs1Tr9JJsquzDkI=
-X-Received: by 2002:a25:bc87:0:b0:dd1:3cc1:5352 with SMTP id
- e7-20020a25bc87000000b00dd13cc15352mr1736980ybk.15.1711480691209; Tue, 26 Mar
- 2024 12:18:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WjkalfX6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9732C43394;
+	Tue, 26 Mar 2024 19:18:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711480699;
+	bh=nzPz1r4uhvpU/bB8HWtMns4axd/UbBU3+LcwC3N2YbE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WjkalfX6hxl+ebXRe++5YDNFXtbUr5b3DMbbJ8sRm9xYXQz9T9s3F7NcC1fqNGXC3
+	 1APBNZCk9XtfNFXcv7PgyOr6H+wpWWM7U1JWXIPWHxttvAx7PykN6BmOOG18a2d7lu
+	 dB/qQmmQAP+gtbk0ZZsAF2jXBG2gjsfaKO1mmcbLCS3Q13fkdA94FoMjp76wrovD1l
+	 QAi6kKlMPUwzNtV1+mjT2D2+lJuoo32BjzUBn047CQ7smPqlzegy9yv3VbUZ9YoyTX
+	 aQT7zcxodhMgMf3FS8sLUgsbnHkWQqJyeAY3h2CJDhamMTDSH2FQwQR1uwNjVv3BQs
+	 0Yh9YZ7bedGAg==
+Date: Tue, 26 Mar 2024 20:18:15 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 18/64] i2c: eg20t: reword according to newest
+ specification
+Message-ID: <nvidlggoxqy5u5rzned3irryncmnnodkkcgcsknjvct72qjy7d@fsezkdxxokq4>
+References: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
+ <20240322132619.6389-19-wsa+renesas@sang-engineering.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240315125418.273104-1-cgzones@googlemail.com> <20240315125418.273104-2-cgzones@googlemail.com>
-In-Reply-To: <20240315125418.273104-2-cgzones@googlemail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Tue, 26 Mar 2024 15:18:00 -0400
-Message-ID: <CAHC9VhTOmkpZu-zUEcvWJxLVHwoUnTcPxhBexs1ZKjr_LRKx_w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] yama: document function parameter
-To: =?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>
-Cc: linux-security-module@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240322132619.6389-19-wsa+renesas@sang-engineering.com>
 
-On Fri, Mar 15, 2024 at 8:54=E2=80=AFAM Christian G=C3=B6ttsche
-<cgzones@googlemail.com> wrote:
->
-> Document the unused function parameter of yama_relation_cleanup() to
-> please kernel doc warnings.
->
-> Signed-off-by: Christian G=C3=B6ttsche <cgzones@googlemail.com>
+Hi Wolfram,
+
+On Fri, Mar 22, 2024 at 02:25:11PM +0100, Wolfram Sang wrote:
+> Match the wording of this driver wrt. the newest I2C v7, SMBus 3.2, I3C
+> specifications and replace "master/slave" with more appropriate terms.
+> They are also more specific because we distinguish now between a remote
+> entity ("client") and a local one ("target").
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 > ---
->  security/yama/yama_lsm.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/i2c/busses/i2c-eg20t.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-eg20t.c b/drivers/i2c/busses/i2c-eg20t.c
+> index 4914bfbee2a9..e95793036f5d 100644
+> --- a/drivers/i2c/busses/i2c-eg20t.c
+> +++ b/drivers/i2c/busses/i2c-eg20t.c
+> @@ -337,7 +337,7 @@ static int pch_i2c_wait_for_check_xfer(struct i2c_algo_pch_data *adap)
+>  	adap->pch_event_flag = 0;
+>  
+>  	if (ioread32(p + PCH_I2CSR) & PCH_GETACK) {
+> -		pch_dbg(adap, "Receive NACK for slave address setting\n");
+> +		pch_dbg(adap, "Receive NACK for client address setting\n");
+>  		return -ENXIO;
+>  	}
+>  
+> @@ -382,7 +382,7 @@ static s32 pch_i2c_writebytes(struct i2c_adapter *i2c_adap,
+>  	buf = msgs->buf;
+>  	addr = msgs->addr;
+>  
+> -	/* enable master tx */
+> +	/* enable host tx */
 
-One small comment below, but otherwise looks okay to me.
+maybe we should also specify that we are using both host and
+client for master in the commit message.
 
-Reviewed-by:
+In any case,
 
-> diff --git a/security/yama/yama_lsm.c b/security/yama/yama_lsm.c
-> index 49dc52b454ef..f8e4acd41b72 100644
-> --- a/security/yama/yama_lsm.c
-> +++ b/security/yama/yama_lsm.c
-> @@ -111,6 +111,7 @@ static void report_access(const char *access, struct =
-task_struct *target,
->
->  /**
->   * yama_relation_cleanup - remove invalid entries from the relation list
-> + * @work: unused
->   *
->   */
->  static void yama_relation_cleanup(struct work_struct *work)
+Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
 
-Should we also take this opportunity to mark the parameter as '__always_unu=
-sed'?
-
---=20
-paul-moore.com
+Thanks,
+Andi
