@@ -1,39 +1,60 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D3413CA97;
-	Tue, 26 Mar 2024 16:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8302413CABC
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 16:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711470520; cv=none; b=dpKEWJ+qL8Id+Aqws31aJ0EUiRQ4buKwW4e7RaC5dhmBqe5N69GotSpHJN1NthSc0oGnM7Rl6SiADRInmJVH4N0TuhCPtXFI3VF03Q3vp8batZ7AHz8iAJITvrpqk95AgfYawrAzr1RDwZk1JwyokC2nBGWWqx3wZNMSKFZ2XSw=
+	t=1711470521; cv=none; b=YlrZT9QJ0aD6vw5R/4y7kpq6NdZ/IK5rqVydbD+023+I4gYetV4w39oPky1FNviNyYfNII+xxgIrpBpLXrL0MPdjjsLcal0NfgWNRjRBNB2jpNcuAicVuhQytZSDwBY12buECvNCTmWZZr8yjrKK3koGH5/2Maof1GYpKAGsTM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711470520; c=relaxed/simple;
-	bh=nR5TuLci3iFlAYcZ6pedtZwXIkYrkHTO/+6OUO3NIHI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PmB8pSUfCcGtlwIgnBBojk6giayLnrlGL5lZCICOwNtL9r8V/ahPNlQniZp4oCtdm7g/p1LNvTiWb2zYdyiqD4qKuV+TuiMeOS6uflynRbyXhxEjAoxxnVoQnYNQRblT8wdkPkTf2qz0q5O9SBZ3AK8yBPgLCl399UdDevlcXB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HVtj1YeZ; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1711470521; c=relaxed/simple;
+	bh=9rVzNTAAYXnMs7MfpROp5deA4r6Lb7fRQnEpmwvz2mE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YPUkP2bP3T9YdndnWXTcbgolZFhcO3bxLH3fs1nF0xknRHUHndTu4FMWHgcfRFv68dZnXg3DKvYp/hxSMyUtPeG7ZIaoP2E0++GVgAFdqi7VV0ij9wtz8519RqgQMEPoeTn+Sh3r2mHUv4mG1xj/t9JeWTsmDWJJrvmVOOewlTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yHNK6uxZ; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HVtj1YeZ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A2D5820003;
-	Tue, 26 Mar 2024 16:28:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1711470516;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sI8WmkUUHY9Zro8RyMVYK+yqLrqdOum7SUJ1HQ/OZVw=;
-	b=HVtj1YeZm6CRmYhskLomAR0SwckgFSmqlvAg460JM8EsoW+eCTsVP1edT8mjLLL9i8R3zV
-	/+WLl3nwInPBxbfj50BizLlh6CdPyRBcFiLZ1hQUm3m3JzBnTVLsDFlkktpnhmpMEGH3Tm
-	zrOD4Tz+zOouLrlxA0nHbgbwVRqouCAjuxos6NvwYnlGzOXH31hjXfb2bITDynpRXp1zmM
-	8C/Y0rCiZvR6tpt98ppSgZbJa4+onTqRXvnSyxHptSaasWEUTscgIMn7P2mXURB4y4fWzU
-	a4n0Gdp/chmSOVnte1nm0Y2Jnjo2YJhD9EShu97dsMYov5aGzYbs1v27EOgKGA==
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Tue, 26 Mar 2024 17:28:12 +0100
-Subject: [PATCH 2/4] drm/bridge: add bridge notifier to be notified of
- bridge addition and removal
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yHNK6uxZ"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a4dfe6564b6so7893266b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 09:28:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711470518; x=1712075318; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KkwALuuS9M9PSFBFc5tMoPkB9c/kjBr1oSlzVPQUlEY=;
+        b=yHNK6uxZMVZMVyumFQwrzpryJjAN3jhnMBjveBoXvBAAerfFf+AXeT8F64BdlO/mG0
+         /0rI5U3E6DGfRCp33c0OtJp99YloPIm0s0zTlRbRYyhggqvO2SGB8bQheTqZ5/XwbMzr
+         yRdJQqCn7YW0lm4nLBazcHMDWzoOXRkM8xtUDjvSFA1sZ5Q//291NYiIJdE3U0yFpLnj
+         0B1O7XtIwxW3Jhm7SAUBxaRJpOOMoaLHUReRoZUvrrYYrS1RrSo1vW3ol/fG4iiQq/uo
+         fcFlNe9QWEFO/H8Mm7FKZ/Nn020RrSzjNvDIMN7/VlYU8Tb0LtMhCXUJnKdCFLJCtgwc
+         g0tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711470518; x=1712075318;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KkwALuuS9M9PSFBFc5tMoPkB9c/kjBr1oSlzVPQUlEY=;
+        b=rLFLJ8PYxtRwHPuvngoR8j8ZoxxNbKoih0DSxZDnFidZk2fj1JfJR4ch96U4JNFssA
+         U0846dOpSSW67I3x6VoS5h1bXPy5VQFrA/Ct3F5kBevz7soPLCsoDdbX/kENqinGN4SY
+         CkTD0SdHQqvYbYCGWiQyquGhXeBaBn/9fwFlDU9rki3vp2dsBg+eEazHTsRw3DHJCUx9
+         xcDAe4yegBr33tmuLRGEeDYFoxLhotot2FNpx1KreFtvZfJR9pPq8UNWb/NUzy72WGQC
+         QgrQtNQNn1QnYl5Hj9ntVNtUpqJA/tuuHjT1ZusBr5RAQpOQczMe3DK9tYTQ+9ztQfC0
+         6jfw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3B+GyZBvP8E57IO2As1wXU0WL9gBC0PKSBp3t9zdDhLSqc2P6ILFTqPgJ4hu4cXT4AqgxuA1JuJ6PuKL41gf/OFGPW1Ynu6ZV/2SV
+X-Gm-Message-State: AOJu0YwlwxuAhVDFWv1XFgDTJNsZHXuBFZhcjZl1p2+PZUjgLJcR4E7J
+	UukBsavXWO8zOsIswK1DfmBu2Fyu5IJ7bF3cAfpyEwnK1/xk/gsXGcan7eeBnI8=
+X-Google-Smtp-Source: AGHT+IEcH7pTTbGeIspwegoS3I/u7NOPY+bwy0qZb8nOgdyqit1sI00HJEdOMspKPg9tuxOOnF6kNQ==
+X-Received: by 2002:a17:906:6b8e:b0:a46:e595:f357 with SMTP id l14-20020a1709066b8e00b00a46e595f357mr1356863ejr.9.1711470517578;
+        Tue, 26 Mar 2024 09:28:37 -0700 (PDT)
+Received: from [127.0.1.1] ([79.114.172.194])
+        by smtp.gmail.com with ESMTPSA id x20-20020a170906b09400b00a469e55767dsm4375051ejy.214.2024.03.26.09.28.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 09:28:37 -0700 (PDT)
+From: Abel Vesa <abel.vesa@linaro.org>
+Subject: [PATCH RESEND v6 0/5] spmi: pmic-arb: Add support for multiple
+ buses
+Date: Tue, 26 Mar 2024 18:28:15 +0200
+Message-Id: <20240326-spmi-multi-master-support-v6-0-1c87d8306c5b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,148 +63,101 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240326-hotplug-drm-bridge-v1-2-4b51b5eb75d5@bootlin.com>
-References: <20240326-hotplug-drm-bridge-v1-0-4b51b5eb75d5@bootlin.com>
-In-Reply-To: <20240326-hotplug-drm-bridge-v1-0-4b51b5eb75d5@bootlin.com>
-To: Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Rob Herring <robh+dt@kernel.org>, 
+To: Stephen Boyd <sboyd@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
  Conor Dooley <conor+dt@kernel.org>
-Cc: Paul Kocialkowski <contact@paulk.fr>, 
- =?utf-8?q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Paul Kocialkowski <paul.kocialkowski@bootlin.com>, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Johan Hovold <johan@kernel.org>, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
+ linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, 
+ Abel Vesa <abel.vesa@linaro.org>
 X-Mailer: b4 0.13.0
-X-GND-Sasl: luca.ceresoli@bootlin.com
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3091; i=abel.vesa@linaro.org;
+ h=from:subject:message-id; bh=9rVzNTAAYXnMs7MfpROp5deA4r6Lb7fRQnEpmwvz2mE=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBmAvepPDyVUfUUZtm4dfjOycr6Z/f5hn2kGVvuL
+ 4y6blOW/s2JAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZgL3qQAKCRAbX0TJAJUV
+ VlGWD/4zH6HSPOmzf6bU+wWagDRlb7hDTO9LEmNfOrC300XKD3q+opYulhKcAOf6rtJwYEmQLps
+ CJXZZY7zAYqqx6QqCKnr4pc+j3fJS8nqWrREhFRUSfbHIKUx+kBK0ByvSFmDahe3pu17mB8pD3o
+ wxf6DzWELEAmYbyWy2RJUsCOLdgGeT3KL57UN8QW5YR1xkyofcd5VmRzjyTj5cvw3W3wQ/LS7nb
+ D3VHmMrDOvK3gPqb6fUseLHNZg4obl5Qo0ycIaCIOKv4ociq+r0QIdc9wl9Upl/D0ak7AIR9DOr
+ zlIQN/nSBfwDVO76kwUug8bbjdwPjLJwNimPjj276DFq6vNFD1tTYAkd/Vk/okWeAI1zAzVOcXB
+ iCuGFyoDDol8lziqz78FTnA8oCQLbbwovo7218g1ZcWnfpvnZ6pBmNWeL1pwMuHlrQBLATFfuM5
+ KjlQ2NqptcBjxaoT0c4oVeoxFQppIsIpy3YN54mfA/1G6ALJPJIUZMaA/Oilj9KFqummEA0Day5
+ sFZt1DZoiGsm7D5q+4EIQ553xKvrsr+YFBhDpealgdVodYtQtq32nCAtkKFTNv/5lptT0+H8GbH
+ 1O5iWE1MUgyul1a4dK8oKy+s5QPbbyrf+M9KqyqvR/C3PYTKCFrGLDRDSMG6Fxvy4sQJ7z5AX3d
+ loxohzcnadyQh+Q==
+X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
+ fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+This RFC prepares for and adds support for 2 buses, which is supported
+in HW starting with version 7. Until now, none of the currently
+supported platforms in upstream have used the second bus. The X1E80100
+platform, on the other hand, needs the second bus for the USB2.0 to work
+as there are 3 SMB2360 PMICs which provide eUSB2 repeaters and they are
+all found on the second bus.
 
-In preparation for allowing bridges to be added to and removed from a DRM
-card without destroying the whole card, add a DRM bridge notifier. Notified
-events are addition and removal to/from the global bridge list.
-
-Co-developed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 ---
- drivers/gpu/drm/drm_bridge.c | 35 +++++++++++++++++++++++++++++++++++
- include/drm/drm_bridge.h     | 19 +++++++++++++++++++
- 2 files changed, 54 insertions(+)
+Changes in v6:
+- Changed the compatible to platform specific (X1E80100) along with the
+  schema. Fixed the spmi buses unit addresses and added the empty ranges
+  property. Added missing properties to the spmi buses and the
+  "unevaluatedProperties: false".
+- Deprecated the "qcom,bus-id" in the legacy schema.
+- Changed the driver to check for legacy compatible first
+- Link to v5: https://lore.kernel.org/r/20240221-spmi-multi-master-support-v5-0-3255ca413a0b@linaro.org
 
-diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-index 521a71c61b16..245f7fa4ea22 100644
---- a/drivers/gpu/drm/drm_bridge.c
-+++ b/drivers/gpu/drm/drm_bridge.c
-@@ -25,6 +25,7 @@
- #include <linux/media-bus-format.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-+#include <linux/notifier.h>
- 
- #include <drm/drm_atomic_state_helper.h>
- #include <drm/drm_bridge.h>
-@@ -197,6 +198,36 @@
- 
- static DEFINE_MUTEX(bridge_lock);
- static LIST_HEAD(bridge_list);
-+static BLOCKING_NOTIFIER_HEAD(bridge_notifier);
-+
-+/**
-+ * drm_bridge_notifier_register - add a DRM bridge notifier
-+ * @nb: the notifier block to be registered
-+ *
-+ * The notifier block will be notified of events defined in
-+ * &drm_bridge_notifier_event
-+ */
-+int drm_bridge_notifier_register(struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_register(&bridge_notifier, nb);
-+}
-+EXPORT_SYMBOL(drm_bridge_notifier_register);
-+
-+/**
-+ * drm_bridge_notifier_unregister - remove a DRM bridge notifier
-+ * @nb: the notifier block to be unregistered
-+ */
-+int drm_bridge_notifier_unregister(struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_unregister(&bridge_notifier, nb);
-+}
-+EXPORT_SYMBOL(drm_bridge_notifier_unregister);
-+
-+static void drm_bridge_notifier_notify(unsigned long event,
-+				       struct drm_bridge *bridge)
-+{
-+	blocking_notifier_call_chain(&bridge_notifier, event, bridge);
-+}
- 
- /**
-  * drm_bridge_add - add the given bridge to the global bridge list
-@@ -210,6 +241,8 @@ void drm_bridge_add(struct drm_bridge *bridge)
- 	mutex_lock(&bridge_lock);
- 	list_add_tail(&bridge->list, &bridge_list);
- 	mutex_unlock(&bridge_lock);
-+
-+	drm_bridge_notifier_notify(DRM_BRIDGE_NOTIFY_ADD, bridge);
- }
- EXPORT_SYMBOL(drm_bridge_add);
- 
-@@ -243,6 +276,8 @@ EXPORT_SYMBOL(devm_drm_bridge_add);
-  */
- void drm_bridge_remove(struct drm_bridge *bridge)
- {
-+	drm_bridge_notifier_notify(DRM_BRIDGE_NOTIFY_REMOVE, bridge);
-+
- 	mutex_lock(&bridge_lock);
- 	list_del_init(&bridge->list);
- 	mutex_unlock(&bridge_lock);
-diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-index 4baca0d9107b..ee48c1eb76ae 100644
---- a/include/drm/drm_bridge.h
-+++ b/include/drm/drm_bridge.h
-@@ -43,6 +43,22 @@ struct drm_panel;
- struct edid;
- struct i2c_adapter;
- 
-+/**
-+ * enum drm_bridge_notifier_event - DRM bridge events
-+ */
-+enum drm_bridge_notifier_event {
-+	/**
-+	 * @DRM_BRIDGE_NOTIFY_ADD: A bridge has just been added to the
-+	 * global bridge list. See drm_bridge_add().
-+	 */
-+	DRM_BRIDGE_NOTIFY_ADD,
-+	/**
-+	 * @DRM_BRIDGE_NOTIFY_REMOVE: A bridge is about to be removed from
-+	 * the global bridge list. See drm_bridge_remove().
-+	 */
-+	DRM_BRIDGE_NOTIFY_REMOVE,
-+};
-+
- /**
-  * enum drm_bridge_attach_flags - Flags for &drm_bridge_funcs.attach
-  */
-@@ -781,6 +797,9 @@ drm_priv_to_bridge(struct drm_private_obj *priv)
- 	return container_of(priv, struct drm_bridge, base);
- }
- 
-+int drm_bridge_notifier_register(struct notifier_block *nb);
-+int drm_bridge_notifier_unregister(struct notifier_block *nb);
-+
- void drm_bridge_add(struct drm_bridge *bridge);
- int devm_drm_bridge_add(struct device *dev, struct drm_bridge *bridge);
- void drm_bridge_remove(struct drm_bridge *bridge);
+Changes in v5:
+- Dropped the RFC as there aren't any concerns about the approach anymore
+- Dropped the unused dev and res variables from pmic_arb_get_obsrvr_chnls_v2
+- Link to v4: https://lore.kernel.org/r/20240220-spmi-multi-master-support-v4-0-dc813c878ba8@linaro.org
 
+Changes in v4:
+- Fixed comment above pmic_arb_init_apid_v7 by dropping the extra "bus" word
+- Swicthed to devm_platform_ioremap_resource_byname for obsrvr and chnls.
+  The core remains with platform_get_resource_byname as we need the core size.
+- Dropped comment from probe related to the need of platform_get_resource_byname
+  as it not true anymore.
+- Dropped the qcom,bus-id optional property.
+- Link to v3: https://lore.kernel.org/r/20240214-spmi-multi-master-support-v3-0-0bae0ef04faf@linaro.org
+
+Changes in v3:
+- Split the change into 3 separate patches. First 2 patches are moving
+  apid init and core resources into version specific ops. Third one is
+  adding the support for 2 buses and dedicated compatible.
+- Added separate bindings patch
+- Link to v2: https://lore.kernel.org/r/20240213-spmi-multi-master-support-v2-1-b3b102326906@linaro.org
+
+Changes in v2:
+- Reworked it so that it registers a spmi controller for each bus
+  rather than relying on the generic framework to pass on the bus
+  (master) id.
+- Link to v1: https://lore.kernel.org/r/20240207-spmi-multi-master-support-v1-0-ce57f301c7fd@linaro.org
+
+---
+Abel Vesa (5):
+      dt-bindings: spmi: Add X1E80100 SPMI PMIC ARB schema
+      dt-bindings: spmi: Deprecate qcom,bus-id
+      spmi: pmic-arb: Make the APID init a version operation
+      spmi: pmic-arb: Make core resources acquiring a version operation
+      spmi: pmic-arb: Add multi bus support
+
+ .../bindings/spmi/qcom,spmi-pmic-arb.yaml          |   1 +
+ .../bindings/spmi/qcom,x1e80100-spmi-pmic-arb.yaml | 136 +++
+ drivers/spmi/spmi-pmic-arb.c                       | 948 +++++++++++++--------
+ 3 files changed, 715 insertions(+), 370 deletions(-)
+---
+base-commit: 4893c639cc3659cefaa675bf1e59f4e7571afb5c
+change-id: 20240207-spmi-multi-master-support-832a704b779b
+
+Best regards,
 -- 
-2.34.1
+Abel Vesa <abel.vesa@linaro.org>
 
