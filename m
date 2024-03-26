@@ -1,82 +1,253 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E163D4DA19
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 11:26:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BDA3548F7
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 11:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711452376; cv=none; b=i+HIYmhmTmCJkkutnPHZRuTjOj4SK/WTYRQ2wO02ZzixZO4YJzF/ZN5U8HNtWxiIwibMqHlnjyytTeI6Ht+VE68kMt69nG/rL8F2qQHTmRTpeFx8HubDT8H5MSes+/DJXSwOYfBQMJ1XNFjbNpeW9JMyznIZU79Vt2I58UOKz5s=
+	t=1711452522; cv=none; b=rDqJrR/EGwlr1gQufCY4eE6MXctWTpSnKEkWmAnhugPh+lhFqyL5AHpxHsWWHDCCqEiyUFJ7sEXRW95cUGHx3lKPQm5gFt43MSkP0gNv+8fGXTsro0fclzI03nXWDouCw05a8FXYeIRbF91Pgx7SsZ8P4S+AEdoDfYIftLxO95Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711452376; c=relaxed/simple;
-	bh=vHT1E2FQUx2RBKSmNbkSonlOe8xqA4x1fG34fJHk3fw=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=mYpbzKeLbtSsVu0+6jTT+9huHRCcW8UWY3s+04nNQfMJfB5fTU5/+73HJIP8GRCokK7189JwISSovTJSTEfGLKiw1NuEyJhdzBc5aHD3J2PwQ0SISRirJvdfvTZ/Ty2N3Jll9lPM0rd7BwuhJOBVj1tsKl///0LCvjdhOr8Nc3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Axz+vTsAJmRloeAA--.5622S3;
-	Tue, 26 Mar 2024 19:26:11 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx8OTOsAJmttpoAA--.10708S3;
-	Tue, 26 Mar 2024 19:26:06 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: Give chance to build under !CONFIG_SMP
-To: Thomas Gleixner <tglx@linutronix.de>, Huacai Chen
- <chenhuacai@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Marc Zyngier <maz@kernel.org>
-References: <20240326062101.9822-1-yangtiezhu@loongson.cn>
- <87v859e2g7.ffs@tglx>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- loongson-kernel@lists.loongnix.cn
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <45a74a88-83da-95db-2cfb-3cd3a3e6d68f@loongson.cn>
-Date: Tue, 26 Mar 2024 19:26:06 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	s=arc-20240116; t=1711452522; c=relaxed/simple;
+	bh=sm7Ni5tyWxq4jVayuiiGFWZvLyYM7gkm0laKJpW00PA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z2CcwUwtu0wrrZDYiGcq5AhAQv6lOJKUMvj9XAsYrFyAC8DGS57CgPzc+JWHIOZMYHKqv/6gkZXPtpFPmLb9Lg/AtPCVezNvozr/SUrgc81b2CZte1pY6JMpxlgn0FhPsD6KndpM61lrOMKcRm5N9P6nhSnXy5KtGSkaZjHQWFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bRYKe74h; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=MK4jiCYk; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bRYKe74h; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=MK4jiCYk; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bRYKe74h";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="MK4jiCYk";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bRYKe74h";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="MK4jiCYk"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6001C37AF8;
+	Tue, 26 Mar 2024 11:28:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711452518; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4QrNWpOnpOslw16TWElkWPNU/kcnbluG5mElIbDpht4=;
+	b=bRYKe74h1k7yBGWP6uuOjzpmQRbD+tUIijyvLVAb7FHH0JUEUiFrx6LkQwB/O3UBIKiZV4
+	F3P+KHS5ZStWrw20E4z0NLnxzhMyG4bXwCjmZmwWEnq9JdjsNLcHMD1AQ6UT5OYzHA2a4p
+	VgblDNAWJDPdB6WGt5kJ53O4TXDcpFE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711452518;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4QrNWpOnpOslw16TWElkWPNU/kcnbluG5mElIbDpht4=;
+	b=MK4jiCYkXMHOOlxelFraK6uTlINx638FiDqifeuQxh7gs4GMFaMs2mx9iRkqvaTNgL1yLi
+	1dRkN/a+MrMmbsCw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1711452518; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4QrNWpOnpOslw16TWElkWPNU/kcnbluG5mElIbDpht4=;
+	b=bRYKe74h1k7yBGWP6uuOjzpmQRbD+tUIijyvLVAb7FHH0JUEUiFrx6LkQwB/O3UBIKiZV4
+	F3P+KHS5ZStWrw20E4z0NLnxzhMyG4bXwCjmZmwWEnq9JdjsNLcHMD1AQ6UT5OYzHA2a4p
+	VgblDNAWJDPdB6WGt5kJ53O4TXDcpFE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1711452518;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4QrNWpOnpOslw16TWElkWPNU/kcnbluG5mElIbDpht4=;
+	b=MK4jiCYkXMHOOlxelFraK6uTlINx638FiDqifeuQxh7gs4GMFaMs2mx9iRkqvaTNgL1yLi
+	1dRkN/a+MrMmbsCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 44B5613306;
+	Tue, 26 Mar 2024 11:28:38 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id UjRpD2axAmbUEAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 26 Mar 2024 11:28:38 +0000
+Message-ID: <a0879316-31de-4fec-ad1f-caabbfff2e48@suse.cz>
+Date: Tue, 26 Mar 2024 12:28:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <87v859e2g7.ffs@tglx>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 06/10] mm: page_alloc: fix freelist movement during block
+ conversion
+To: Johannes Weiner <hannes@cmpxchg.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Mel Gorman <mgorman@techsingularity.net>, Zi Yan <ziy@nvidia.com>,
+ "Huang, Ying" <ying.huang@intel.com>, David Hildenbrand <david@redhat.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240320180429.678181-1-hannes@cmpxchg.org>
+ <20240320180429.678181-7-hannes@cmpxchg.org>
+Content-Language: en-US
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20240320180429.678181-7-hannes@cmpxchg.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8Bx8OTOsAJmttpoAA--.10708S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrWr4fGFWxJw17GrW7tr4xuFX_yoWxWFX_WF
-	12kFZrK398ZrZ2ya1UKFsIqFs8tF4Du3ZYqr1UXr1DXFyrCF4kXF43Kryfua10qF95uFnr
-	Ka95X392yr1SqosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbqxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
-	Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
-	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48J
-	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1l
-	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0b6pPUUUU
-	U==
+X-Spam-Score: -4.50
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.50 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=bRYKe74h;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=MK4jiCYk
+X-Rspamd-Queue-Id: 6001C37AF8
 
-On 03/26/2024 06:02 PM, Thomas Gleixner wrote:
-> On Tue, Mar 26 2024 at 14:21, Tiezhu Yang wrote:
->>
->> This patch is based on 6.9-rc1. Please let me know if it is better to
->> split it into two patches, the first one is for arch/loongarch and the
->> second one is for drivers/irqchip.
->
-> Why are you asking? It's documented that patches should be split, no?
+On 3/20/24 7:02 PM, Johannes Weiner wrote:
+> Currently, page block type conversion during fallbacks, atomic
+> reservations and isolation can strand various amounts of free pages on
+> incorrect freelists.
+> 
+> For example, fallback stealing moves free pages in the block to the
+> new type's freelists, but then may not actually claim the block for
+> that type if there aren't enough compatible pages already allocated.
+> 
+> In all cases, free page moving might fail if the block straddles more
+> than one zone, in which case no free pages are moved at all, but the
+> block type is changed anyway.
+> 
+> This is detrimental to type hygiene on the freelists. It encourages
+> incompatible page mixing down the line (ask for one type, get another)
+> and thus contributes to long-term fragmentation.
+> 
+> Split the process into a proper transaction: check first if conversion
+> will happen, then try to move the free pages, and only if that was
+> successful convert the block to the new type.
+> 
+> Tested-by: "Huang, Ying" <ying.huang@intel.com>
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
-OK, thanks for your reply, I read the document [1],
-but I am not sure whether it is a single logical change.
-I will split it into two patches and send them ASAP.
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-[1] 
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#separate-your-changes
+Nit below:
 
-Thanks,
-Tiezhu
+> @@ -1743,33 +1770,37 @@ static inline bool boost_watermark(struct zone *zone)
+>  }
+>  
+>  /*
+> - * This function implements actual steal behaviour. If order is large enough,
+> - * we can steal whole pageblock. If not, we first move freepages in this
+> - * pageblock to our migratetype and determine how many already-allocated pages
+> - * are there in the pageblock with a compatible migratetype. If at least half
+> - * of pages are free or compatible, we can change migratetype of the pageblock
+> - * itself, so pages freed in the future will be put on the correct free list.
+> + * This function implements actual steal behaviour. If order is large enough, we
+> + * can claim the whole pageblock for the requested migratetype. If not, we check
+> + * the pageblock for constituent pages; if at least half of the pages are free
+> + * or compatible, we can still claim the whole block, so pages freed in the
+> + * future will be put on the correct free list. Otherwise, we isolate exactly
+> + * the order we need from the fallback block and leave its migratetype alone.
+>   */
+> -static void steal_suitable_fallback(struct zone *zone, struct page *page,
+> -		unsigned int alloc_flags, int start_type, bool whole_block)
+> +static struct page *
+> +steal_suitable_fallback(struct zone *zone, struct page *page,
+> +			int current_order, int order, int start_type,
+> +			unsigned int alloc_flags, bool whole_block)
+>  {
+> -	unsigned int current_order = buddy_order(page);
+>  	int free_pages, movable_pages, alike_pages;
+> -	int old_block_type;
+> +	unsigned long start_pfn, end_pfn;
+> +	int block_type;
+>  
+> -	old_block_type = get_pageblock_migratetype(page);
+> +	block_type = get_pageblock_migratetype(page);
+>  
+>  	/*
+>  	 * This can happen due to races and we want to prevent broken
+>  	 * highatomic accounting.
+>  	 */
+> -	if (is_migrate_highatomic(old_block_type))
+> +	if (is_migrate_highatomic(block_type))
+>  		goto single_page;
+>  
+>  	/* Take ownership for orders >= pageblock_order */
+>  	if (current_order >= pageblock_order) {
+> +		del_page_from_free_list(page, zone, current_order);
+>  		change_pageblock_range(page, current_order, start_type);
+> -		goto single_page;
+> +		expand(zone, page, order, current_order, start_type);
+> +		return page;
+
+Is the exact order here important (AFAIK shouldn't be?) or we could just
+change_pageblock_range(); block_type = start_type; goto single_page?
+
+>  	}
+>  
+>  	/*
+> @@ -1784,10 +1815,9 @@ static void steal_suitable_fallback(struct zone *zone, struct page *page,
+>  	if (!whole_block)
+>  		goto single_page;
+>  
+> -	free_pages = move_freepages_block(zone, page, start_type,
+> -						&movable_pages);
+>  	/* moving whole block can fail due to zone boundary conditions */
+> -	if (!free_pages)
+> +	if (!prep_move_freepages_block(zone, page, &start_pfn, &end_pfn,
+> +				       &free_pages, &movable_pages))
+>  		goto single_page;
+>  
+>  	/*
+> @@ -1805,7 +1835,7 @@ static void steal_suitable_fallback(struct zone *zone, struct page *page,
+>  		 * vice versa, be conservative since we can't distinguish the
+>  		 * exact migratetype of non-movable pages.
+>  		 */
+> -		if (old_block_type == MIGRATE_MOVABLE)
+> +		if (block_type == MIGRATE_MOVABLE)
+>  			alike_pages = pageblock_nr_pages
+>  						- (free_pages + movable_pages);
+>  		else
+> @@ -1816,13 +1846,16 @@ static void steal_suitable_fallback(struct zone *zone, struct page *page,
+>  	 * compatible migratability as our allocation, claim the whole block.
+>  	 */
+>  	if (free_pages + alike_pages >= (1 << (pageblock_order-1)) ||
+> -			page_group_by_mobility_disabled)
+> +			page_group_by_mobility_disabled) {
+> +		move_freepages(zone, start_pfn, end_pfn, start_type);
+>  		set_pageblock_migratetype(page, start_type);
+> -
+> -	return;
+> +		return __rmqueue_smallest(zone, order, start_type);
+> +	}
+>  
+>  single_page:
+> -	move_to_free_list(page, zone, current_order, start_type);
+> +	del_page_from_free_list(page, zone, current_order);
+> +	expand(zone, page, order, current_order, block_type);
+> +	return page;
+>  }
 
