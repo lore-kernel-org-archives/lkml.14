@@ -1,133 +1,126 @@
-Received: from mta-65-225.siemens.flowmailer.net (mta-65-225.siemens.flowmailer.net [185.136.65.225])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1742E18AEA
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 08:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4221B948
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 08:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711443487; cv=none; b=Z9C4GOaOPRrWg1tTxPhvipP9FFz/f7xP/y/eiCF0S+bD069YUH5vgsFQaxxOdDAJiv0o8EVFT4KBqNzV1nlsWsarQX/etqmhqtkUGfPqc6aoSLi+dq7W66LBeKFN5xlA/zr3mqYxEiPgPvHPyTdFHm9B6Ug5OhlrvLx5pqvMjiU=
+	t=1711443508; cv=none; b=usWLCNkTjLxAIXdJ0ZAuJL4UX97aLiOVi1vjfqnHMSiVJ/rHifsAtj2yeoyvsGRTeevTN/pRqXnEl7JdsdXCFvsiAJZKoTHrPhb1lMRkOV9nAISIV/aHqbxyOn1AH+MaL5xPAhDiqwWOMk2OmLuK2lCGWtQvhUw6HEeqY9CH1rE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711443487; c=relaxed/simple;
-	bh=2NnN3yr0wpdVoxDzh4ChyQUmMIKdzLGg6sxkzDgAI3o=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XBuBcvCUf/fdro6uOGYd8YkGP624E04DO8mJFFNDv0wdER0cshlFDog7ep73UvvzwzD90lN6NDK9cXQ/uBldHSEhZB+yU3dU/qqbeqDph1rkkNZ1yHwrgeWWGWswAzx6V+t68r3jKWrXxEUC3MjApvjyX6ZxpGfGdIPmOrImpKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (1024-bit key) header.d=siemens.com header.i=florian.bezdeka@siemens.com header.b=ZnoEPez1; arc=none smtp.client-ip=185.136.65.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+	s=arc-20240116; t=1711443508; c=relaxed/simple;
+	bh=n4G3Pxgl7Q9i82J6sK8SAiR5VfV6Vmb7zW7/xd8y8hk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rWzeZwMLQ60HC0UxitY5hZhvt/Ih20yCviL4q3ip34KY2NbJtnMjuvdnivTdZ7rKPsK+illIruZ3+1hpU/DiOg/MIM/reXsffe1qzE+SpuUC1Hdfxio9p7zP2dsZS+iqpFPhl41veoBV6ESbNrye3q9tLQNHXg/7hU4/gQxnc1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=L2s3b6qV; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=siemens.com header.i=florian.bezdeka@siemens.com header.b="ZnoEPez1"
-Received: by mta-65-225.siemens.flowmailer.net with ESMTPSA id 2024032608565660d22323bb46d4a510
-        for <linux-kernel@vger.kernel.org>;
-        Tue, 26 Mar 2024 09:57:45 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
- d=siemens.com; i=florian.bezdeka@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=2NnN3yr0wpdVoxDzh4ChyQUmMIKdzLGg6sxkzDgAI3o=;
- b=ZnoEPez1s9mkret+84aiVoBbI7kPnBo2K4g9LdoGjJ6Vk+54YX25G3Z0y+4eJYiwYj9198
- nShsv9+TKBXTbNRidg9c/ePK/1HTATRNvXrX5F8nP9DbiWexkWFe2E3jYfd0oSnZt4QonXdX
- PS7EotffJHiFxuv+AOwqR675HZ0WQ=;
-Message-ID: <d2623ac0f1cb07a23976416cdcf9eee1986747b0.camel@siemens.com>
-Subject: Re: [PATCH iwl-next,v4 1/1] igc: Add Tx hardware timestamp request
- for AF_XDP zero-copy packet
-From: Florian Bezdeka <florian.bezdeka@siemens.com>
-To: Song Yoong Siang <yoong.siang.song@intel.com>, Jesse Brandeburg
- <jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Richard Cochran <richardcochran@gmail.com>, Alexei
- Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend
- <john.fastabend@gmail.com>, Stanislav Fomichev <sdf@google.com>, Vinicius
- Costa Gomes <vinicius.gomes@intel.com>, Kurt Kanzenbach
- <kurt@linutronix.de>, Maciej Fijalkowski <maciej.fijalkowski@intel.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org, xdp-hints@xdp-project.net
-Date: Tue, 26 Mar 2024 09:56:54 +0100
-In-Reply-To: <20240325020928.1987947-1-yoong.siang.song@intel.com>
-References: <20240325020928.1987947-1-yoong.siang.song@intel.com>
-Autocrypt: =?US-ASCII?Q?addr=3Dflorian.bezdeka@siemen?=
- =?US-ASCII?Q?s.com;_prefer-encrypt=3Dmutual?=
- =?US-ASCII?Q?;_keydata=3DmQENBFwsf8QBCAC2f4AQWu92LZC4bKyUYRxWIpWqGz790s?=
- =?US-ASCII?Q?pcYkXO7M8kfea4iC8qMxv2hT4HT0LTncRP6WiovVN2PeoOBfN5BSa5z?=
- =?US-ASCII?Q?LIrZGVXh7KmbdKhwhVU+ynoTq9G5uaO2Kos7Vv7nNCuatIq8tSNILuoB?=
- =?US-ASCII?Q?DFTAZnJW3y1V7YOwhDCPl5gbLSYqUY3OE0yksbtCcVI5istT4ED6mjQ?=
- =?US-ASCII?Q?9W+3uH1LrgFeEF0oxTjrEPxO5ZYATz0f/TYC8WiM0sMrV+n0eMDntlzA?=
- =?US-ASCII?Q?63D6lcRi5mNp2jPsJkq3tbWqyCrAe1sKPVJB44ekFwCk0kDIuhR13Q3R?=
- =?US-ASCII?Q?HE4Or/9sznhMUQjYueWXvTZfzH/VsQJHABEBAAG0LUZsb3JpYW4gQmV6?=
- =?US-ASCII?Q?ZGVrYSA8Zmxvcmlhbi5iZXpkZWthQHNpZW1lbnMuY29tPokBVAQTAQg?=
- =?US-ASCII?Q?APhYhBAzL4P3jiTHdthsq4cj0O1fnOEBVBQJcLH/FAhsDBQkB4TOABQs?=
- =?US-ASCII?Q?JCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEMj0O1fnOEBVc6YIAJ8oO4x?=
- =?US-ASCII?Q?TjOCpjxaS8XQE6VW50HE9I6ShbQVWUEGhF4qzJaACTQDjdg/aio7qNRa?=
- =?US-ASCII?Q?mnAy83Hy9sAxKVhXs+1R1fstN+JO8zgD3tJspucUkCiXlYu+Qcv2d6C?=
- =?US-ASCII?Q?ostv+h4nv8fkSoeLfsQu3GJt6W0RN7t+8H/9fUMXyuB8GWo4bhaZcti6?=
- =?US-ASCII?Q?78CotGLs6UGZpYEGiAMto8+9zVO/tdY1BkREM6bCVeQ9FnnpTRQy/tU5?=
- =?US-ASCII?Q?xemMWJI64UUP92TUIbQ3TZKAz4iG/Mle+YjiHBGrJM7TxjE3sDg5J2Fa?=
- =?US-ASCII?Q?HX4wmZPKGdB6wANKupf6HMMt2y7gduVmMKzgb8PDMLPZwWBSvjELQqz?=
- =?US-ASCII?Q?hiZAQ0EYLSqZwEIAIR4HMTQC4F4YxatIl6MIDY03zD4M3ZQpgyQ6QFL9?=
- =?US-ASCII?Q?Dq0I+PGc7A6z5rsGl76+D8pDFSN2BBJiLLlQadxKc3ZyTTlRp4bc=09bf?=
- =?US-ASCII?Q?FZRmsAXwVfLtBauXxGo9pkyhk8Vcjb2EJm6XR8PH99buGOXlFfTLsmeA?=
- =?US-ASCII?Q?ji/F4jU3qlUnwZMBvHZwRSFqOGdwKPMvW3FppfmREQ0o4xJ4b/bxGXx?=
- =?US-ASCII?Q?ko21uyR/S5rEJx6X8Ukw95h3JinXHx/g2cjbKHrWBDKoqtX9IZCamDny?=
- =?US-ASCII?Q?R+sfLWQbOKOrLNYLwLAQwOTVlZWTgue10G1q6Zi0r8RQ2T1Uy+ZLYagv?=
- =?US-ASCII?Q?Cbzp/lT7p3mv3ba68llX896c0AEQEAAbQ/QmV6ZGVrYSwgRmxvcmlhbj?=
- =?US-ASCII?Q?sgQmV6ZGVrYSBGbG9yaWFuIDxmbG9yaWFuLmJlemRla2FAc2llbWVuc?=
- =?US-ASCII?Q?y5jb20+iQEcBBABCAAGBQJgtKpnAAoJEEoHyE9rG1dPpJYH+gPnqpu7h?=
- =?US-ASCII?Q?4fsWOxco38e74MsazoUdfndTYP5tgaYTVE51ZhOZBl+4jYaywsmmFm9g?=
- =?US-ASCII?Q?6N4Tw3GiMEDB4YU1X7gQZ60fDKpYL5SnCu5qZirJ4RCV4LDA0789ir+6?=
- =?US-ASCII?Q?8/zfwXBTV5QoMH0+MkXB4BL+Km3f7X/GdN5oRoItAyKDBcEfGJo6afT?=
- =?US-ASCII?Q?PtcUdI9n7ExCSfJwb0SBvvkvUsdNppFDGOOHSioINbEHBs2VUvE43toM?=
- =?US-ASCII?Q?4mPLfhFIAtDcn5Byt80/kotU8v3Iyf86NYCa+0h77xTsKHcCUqe8Rvow?=
- =?US-ASCII?Q?bCIbig9GGbbd54TasfqQQOiAkn/WeGl33+UIVX1Q8zo7eyMJHzLJQ3I=3D?=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L2s3b6qV"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d4541bf57eso73098961fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 01:58:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711443505; x=1712048305; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=2pPV8N1R6vzmSjl6Uwoo/hXMqUFTVOsFF3LrLWnsiMo=;
+        b=L2s3b6qVLx74juqMfvpYQSLrUPMczmGo2C9MvY5HTcVFAGq0CIOvmdOYEOw0K2p6kS
+         D/MI5GE9DOvMUdBtiH8Ku4PZVrmxQ7Ql3il5/F3zf3oF5zduinUBiUhrp8gtgqnmpvE/
+         fgzDiX3Qu0xkauPYrZCR7SKvcaospsYSnuLgM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711443505; x=1712048305;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2pPV8N1R6vzmSjl6Uwoo/hXMqUFTVOsFF3LrLWnsiMo=;
+        b=dxMySa0f0jWbXyePt3vdiiK/pCKc5v3cng7/lCC9JMKdll5dC/0nxDPiRbahaax5Xg
+         OM3c+jYAM3OZA9EtP+4Xt5O5gV7EfYLfn2g0ucABAdT8CPBxDKVqx29zPCPtgEdMg3Fd
+         cblkeajYpPjWOMS543YYlhKp/SDHngIuwL/uRrV7LIzMUifKu0T4y6vvHtpomhQzJjfF
+         +LJhVDdkVgTSY+Kws36+U2RuFn7udEoQGhlp3j4Pqt08nIzUd8uYfYvUvSP7hB/gFB2l
+         mlTGi8wRePUWKmJWVHGbuWezZnk0zkhjwEpfaAH6F875fZFLgbRUBGAFhK8ByHkrryaY
+         tHUA==
+X-Forwarded-Encrypted: i=1; AJvYcCXTiQrjOUev98tMzKTTLe+tehq/VjlM0tXtFS3q+ZfypMaz/MQfSQSTx/qHkwJxjccAXc26fueOYXwis9X34SUAM5oXtyr5YX18q7rd
+X-Gm-Message-State: AOJu0YwlmwNNYfOE5DDfcq7VIg/cdepKd+6uzb+aEilMffeleXGiJzkZ
+	44TVZYBy90oq3jj0eQKMQ/jeV5l5CnQdBe/Pv/ddEutgLyS0Vnkzc/54H4XzNg8cU33yufLXIZJ
+	7J9T3m4PCw7c9qAV32LSJhQbDAW+Ax7VeHAw/DNIpzAUPLU7abyMV
+X-Google-Smtp-Source: AGHT+IGgjEHB//9LYudrHBhU92JAua1xIsExhovLAxvA8FaCVPRVpU+2JP2IIRNltDvxh0MCJ7PmoJyqfaNH5qmEIYw=
+X-Received: by 2002:a2e:834e:0:b0:2d4:3c32:814d with SMTP id
+ l14-20020a2e834e000000b002d43c32814dmr461489ljh.26.1711443504690; Tue, 26 Mar
+ 2024 01:58:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-68982:519-21489:flowmailer
+References: <20240325105452.529921-1-lma@chromium.org> <CAD=FV=VHps2d4dqLXCqE=hNMbk4pxeN607nFA0nEkd7chNAr3A@mail.gmail.com>
+In-Reply-To: <CAD=FV=VHps2d4dqLXCqE=hNMbk4pxeN607nFA0nEkd7chNAr3A@mail.gmail.com>
+From: =?UTF-8?Q?=C5=81ukasz_Majczak?= <lma@chromium.org>
+Date: Tue, 26 Mar 2024 09:58:12 +0100
+Message-ID: <CAE5UKNpob9dT4YXSYKsrKGQ3cZP7o3OF7y-eb925Xd-gH3BEXA@mail.gmail.com>
+Subject: Re: [PATCH] HID: i2c-hid: wait for i2c touchpad deep-sleep to
+ power-up transition
+To: Doug Anderson <dianders@chromium.org>
+Cc: Jiri Kosina <jikos@kernel.org>, Dmitry Torokhov <dtor@chromium.org>, 
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>, Hans de Goede <hdegoede@redhat.com>, 
+	Maxime Ripard <mripard@kernel.org>, Kai-Heng Feng <kai.heng.feng@canonical.com>, 
+	Johan Hovold <johan+linaro@kernel.org>, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Radoslaw Biernacki <rad@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 2024-03-25 at 10:09 +0800, Song Yoong Siang wrote:
-> This patch adds support to per-packet Tx hardware timestamp request to
-> AF_XDP zero-copy packet via XDP Tx metadata framework. Please note that
-> user needs to enable Tx HW timestamp capability via igc_ioctl() with
-> SIOCSHWTSTAMP cmd before sending xsk Tx hardware timestamp request.
->=20
-> Same as implementation in RX timestamp XDP hints kfunc metadata, Timer 0
-> (adjustable clock) is used in xsk Tx hardware timestamp. i225/i226 have
-> four sets of timestamping registers. *skb and *xsk_tx_buffer pointers
-> are used to indicate whether the timestamping register is already occupie=
-d.
+> nit: checkpatch should have yelled at you saying that you should
+> specify a commit in the format:
+>
+> commit b3a81b6c4fc6 ("HID: i2c-hid: check if device is there before
+> really probing")
+>
+I will do it, but I did run the checkpatch (with --strict option) and
+it didn't complain about anything.
 
-Let me make sure that I fully understand that: In my own words:
+>
+> nit: I believe your sign off should be last. It's also unclear why two
+> signoffs. Did Radoslaw author it and you changed it? ...or was it
+> Co-Developed-by, or ...? You'll probably need to adjust your tags a
+> bit depending on the answers.
+>
+Yes, we've discussed this patch together and the original
+investigation was done by Rad.
 
-With that applied I'm able to get the point in time from the device
-when a specific frame made it to the wire. I have to enable that
-functionality using the mentioned ioctl() call first, and then check
-the meta area (located in the umem right before the frame payload)
-while consuming the completion queue/ring. Correct?
+> Having both ends of the usleep be 400 is iffy. In this case it's at
+> probe time so I wonder if udelay() is better? If not, maybe give at
+> least _some_ margin?
+>
+>
+> > +       } while (tries-- > 0 && ret < 0);
+>
+According to Documentation/timers/timers-howto.rst:
+" SLEEPING FOR ~USECS OR SMALL MSECS ( 10us - 20ms):
+                * Use usleep_range"
+It was also pointed out by checkpath (when I initially used msleep).
+I think giving some margin (eg. 400,500) would be ok.
 
-If so, we now have a feedback channel for meta information for/from TX.
-Are there any plans - or would it be possible - to support Earliest
-TxTime First (NET_SCHED_ETF) QDisc based on that channel? In the past
-we had the problem that we we're missing a feedback channel to
-communicate back invalid lunch times.
-=20
->=20
-> Furthermore, a boolean variable named xsk_pending_ts is used to hold the
-> transmit completion until the tx hardware timestamp is ready. This is
-> because, for i225/i226, the timestamp notification event comes some time
-> after the transmit completion event. The driver will retrigger hardware i=
-rq
-> to clean the packet after retrieve the tx hardware timestamp.
->=20
-> Besides, xsk_meta is added into struct igc_tx_timestamp_request as a hook
-> to the metadata location of the transmit packet. When the Tx timestamp
-> interrupt is fired, the interrupt handler will copy the value of Tx hwts
-> into metadata location via xsk_tx_metadata_complete().
->=20
-> This patch is tested with tools/testing/selftests/bpf/xdp_hw_metadata
-> on Intel ADL-S platform. Below are the test steps and results.
+> I'm not a huge fan of having to check "tries" and "ret" twice.
+> Personally I'd rather see a "while (true)" loop and test the condition
+> once to break out. AKA:
+>
+> while (true) {
+>   ret = i2c_...
+>   tries--;
+>   if (tries == 0 || ret >= 0)
+>     break;
+>   udelay(400);
+> }
+>
+> ...if you feel very strongly about the way you have coded it, though,
+> I won't stand in your way.
+I don't have emotional bond to this code ;), thanks.
+>
+> Pretty much all my comments are just nits and, since I'm not the
+> maintainer here, my opinion is just an opinion. I'd wait at least a
+> little while for the maintainers to comment before posting v2. I'm
+> happy to give a Reviewed-by tag when some of the nits are fixed.
+>
+> -Doug
+Thank you Doug for all your input.
 
+Best regards,
+Lukasz
