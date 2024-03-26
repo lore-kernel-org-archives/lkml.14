@@ -1,141 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDE013CC45;
-	Tue, 26 Mar 2024 17:00:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A8813D51F;
+	Tue, 26 Mar 2024 17:01:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711472458; cv=none; b=elwRuX9B8aQfMvixOy7WmAd+rTBU9Hc23+GCAkkvwDiCRXvPuh4h7R9djTZROyuAVITATJ7Z+mbCyr70+DEtcyA443DEHIeB8O12Fy0PnzC1wVSHzSe6i9fcsSc7A4+qgwakngt2BPjf+/bIiJhRqI7Ooyhxf4bOm0xfp5+KtvQ=
+	t=1711472465; cv=none; b=QzS6Pj/LmdGVebFcTYC58oRUrYej1ukYF3upsZBh+70Qw/hAfRjXyPmlQYQJ6rZIHELMX7TU7bNtD1U0uXdux+EG0YLcqlj2X5SfgUyO0o2/q8+AdJDd/z5XKOfN7svKV9A8sTRcbzRWhSC0GjHUi6dfoHC0iOrlln05PLzxGyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711472458; c=relaxed/simple;
-	bh=AFcWHQ4HktAL4RBbzmRQAOlWsOrVDpkRrN1OI6wGpMY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=S+ZdqsSxtkBYL/rglde9+VtuVkdpONszOmVfBi3ykpC8QjXEZYmcTB+SseWVvfhmNuTJ3XGO3T6Zzg+xHTMYbAZpEQ4eSftOUidDWK2DHTRyWVWxeVoZP7jdR1thePSla6N8k1oMFj0kOLuEwftWQsdxukhZdoggmH5wMCbawDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SXVvxtgc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711472465; c=relaxed/simple;
+	bh=uZMNYEaSYzRLyOQcLYp01OkMILTIpdBUfnshhKAM9tA=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
+	 MIME-Version:Content-Type; b=ov+xOQYXNHgZaoh4fO+cfZlv9tOosncJKOKRpiF3ANt96R8mY+YqpDulzUm7aNqc0ERb8J0CaWfv+6zqRomL9KUYecC9kruVzdbwT5CtYSNl+ZFjMiRv33u9RLYijP6c/+67E/TpcZWJUMTJ9YI/mbIzmU3Nye3+imAXVGvcJU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XvuxaomW; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SXVvxtgc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 287ACC433A6;
-	Tue, 26 Mar 2024 17:00:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711472457;
-	bh=AFcWHQ4HktAL4RBbzmRQAOlWsOrVDpkRrN1OI6wGpMY=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=SXVvxtgcGny55EK6PwY+sTqI4mMVPakmbrnjmbnfC8DSpUewAWuQGnrUmYa0/N3QC
-	 cVeZ6QnHl0CQNeGXT6XP1c9qvvK2CviXQVg69KpPhYwqve3U+xAYMoFOAiOGO2k8F/
-	 2esMcfHk+ZWFPY4/hck+suYFzT7sGxxrUnoUWo2VmB4lTrTLXAPaLPGiijoopfNx70
-	 Y7aXKZesmhZaOf9tRrtlNBliUUtICUT7oDZ9cT4VPcWi76luukotK+Y3b+YHtlrvkQ
-	 2wRzMaNd0fJNjMUmZwTvTkWoSS9xLXa/ueuZg/0W0AhnGejPk8lz1zbGfVR3v6QzUP
-	 4+NObRzlLzC4w==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XvuxaomW"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d48d75ab70so82938511fa.0;
+        Tue, 26 Mar 2024 10:01:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711472462; x=1712077262; darn=vger.kernel.org;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gzfexKZPZkf85+a0gllV0ajlzNUH9m6yIuTzuBccjB8=;
+        b=XvuxaomW8SPhNyOAA4FaRDcKPHDGCJQ5+0uAuxJg6A+jsKFJf2uVuq3X/JwALggGMP
+         +XR47bNhNeq5izEM2c5Tqr7J5Gzg4nVfOUTXuaILEYOUS/4snqWnhlaanaOwpA49StVN
+         aODxJdZwAIxgtZ4bz9njmBI3yv2irnNK+b7m8yEidwD5QJ0IC5rDvrgJ+XmSXv2ypywk
+         b5rR+Tu/mROykUVgQ1bhGjSkfUSTkAXNDGywpEuj3ujvamyMqKs+Ut54jJwCI3up4dGS
+         /Y3kELlXmmwrTtMUCsagndMKSM8SkB/fo3rPi0VlXEGhxQTuRolnMNbSUgxxh0DZQXUj
+         JiNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711472462; x=1712077262;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gzfexKZPZkf85+a0gllV0ajlzNUH9m6yIuTzuBccjB8=;
+        b=Z49TLX+Bkur8hUPRCfkXMnKWiiGwJt5071J7K0FIjysE/Wtt2jbjfMGK4//ykFNnka
+         q3WhcWzzDao4fel7Gq0O2g+2BjSB5gOKkoUXOkDZGPcLQoPmoZb9xlbG2Nk/ylb1BZRe
+         Eg07oXyD/v1Gal0MylH9mkPFAUXWDzzwIXiHA+72MeZDS5Ht5iH8M5EQYGGtpYg0dnpg
+         8nr+8PEPBSuq5gcWQMmKr88ckBXa6ZNl0gFuhwefokntxVnUnB4FUz1cVuzuVrS3Z9Nl
+         ZeqdH7+1l60n/8Is2x+Aurw35ayVZSIrHUju6/O1Y4spJTQm3IBPGEHwVYw2Kcv7P0T0
+         gxSg==
+X-Forwarded-Encrypted: i=1; AJvYcCVECPJ7e3jZ19M9vv7Rd4gszyJKKTxlLcuKH8YIGxzQRJ3DOkcml/3jYSTOlNjSOob4EeEZN2rGKjvq8SZl4FNiqJkNk96wHj9LUuxMm21QDlQYS4I68aeYg+k9P1A/fuh1vr/Q0aua
+X-Gm-Message-State: AOJu0YwoDBD7U5QwiEsqEIIBvTzDiqBgCTBo/oKNjBqMK3G/asobOAfA
+	POOh1tlwp5l6c9NUBKCpT8emjGPGqHyR/9anpsiqSRSgDQuORWa+
+X-Google-Smtp-Source: AGHT+IH8ru9poxTyHOPjWkzoiAaXgaGlMH2HCJf8Y/pvDqqw8XN1YAg1gTzHA8UnbhEqJC3qSt7zJw==
+X-Received: by 2002:a2e:9b01:0:b0:2d6:c535:bf3e with SMTP id u1-20020a2e9b01000000b002d6c535bf3emr1250510lji.14.1711472461652;
+        Tue, 26 Mar 2024 10:01:01 -0700 (PDT)
+Received: from imac ([2a02:8010:60a0:0:e486:aac9:8397:25ce])
+        by smtp.gmail.com with ESMTPSA id o33-20020a05600c512100b004131310a29fsm12116647wms.15.2024.03.26.10.01.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 10:01:01 -0700 (PDT)
+From: Donald Hunter <donald.hunter@gmail.com>
+To: Akira Yokosawa <akiyks@gmail.com>
+Cc: amogh.linux.kernel.dev@gmail.com,  airlied@gmail.com,  corbet@lwn.net,
+  daniel@ffwll.ch,  dri-devel@lists.freedesktop.org,
+  javier.carrasco.cruz@gmail.com,  linux-doc@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  maarten.lankhorst@linux.intel.com,
+  mripard@kernel.org,  skhan@linuxfoundation.org,  tzimmermann@suse.de,
+  willy@infradead.org,  Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH v2] Fix duplicate C declaration warnings
+In-Reply-To: <f735ce0b-db1e-49bc-86ac-b5ab8e4aec31@gmail.com> (Akira
+	Yokosawa's message of "Tue, 26 Mar 2024 13:05:39 +0900")
+Date: Tue, 26 Mar 2024 16:01:50 +0000
+Message-ID: <m2bk710yoh.fsf@gmail.com>
+References: <287eb3f74e4c31adb065668ff49c8e1577388227.camel@gmail.com>
+	<f735ce0b-db1e-49bc-86ac-b5ab8e4aec31@gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 26 Mar 2024 19:00:53 +0200
-Message-Id: <D03UCMS8261H.3AFBTINZ4ZN4Y@kernel.org>
-Cc: <linux-riscv@lists.infradead.org>, "Paul Walmsley"
- <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert
- Ou" <aou@eecs.berkeley.edu>, <linux-kernel@vger.kernel.org>, "Naveen N .
- Rao" <naveen.n.rao@linux.ibm.com>, "Anil S Keshavamurthy"
- <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>,
- <linux-trace-kernel@vger.kernel.org>, "Calvin Owens"
- <jcalvinowens@gmail.com>
-Subject: Re: [PATCH v2] arch/riscv: Enable kprobes when CONFIG_MODULES=n
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Mark Rutland" <mark.rutland@arm.com>, "Masami Hiramatsu"
- <mhiramat@kernel.org>
-X-Mailer: aerc 0.17.0
-References: <20240323232908.13261-1-jarkko@kernel.org>
- <20240325115632.04e37297491cadfbbf382767@kernel.org>
- <ZgLfsvbCZj2S6fRE@FVFF77S0Q05N.cambridge.arm.com>
-In-Reply-To: <ZgLfsvbCZj2S6fRE@FVFF77S0Q05N.cambridge.arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Tue Mar 26, 2024 at 4:46 PM EET, Mark Rutland wrote:
-> Hi Masami,
+Akira Yokosawa <akiyks@gmail.com> writes:
 >
-> On Mon, Mar 25, 2024 at 11:56:32AM +0900, Masami Hiramatsu wrote:
-> > Hi Jarkko,
-> >=20
-> > On Sun, 24 Mar 2024 01:29:08 +0200
-> > Jarkko Sakkinen <jarkko@kernel.org> wrote:
-> >=20
-> > > Tracing with kprobes while running a monolithic kernel is currently
-> > > impossible due the kernel module allocator dependency.
-> > >=20
-> > > Address the issue by allowing architectures to implement module_alloc=
-()
-> > > and module_memfree() independent of the module subsystem. An arch tre=
-e
-> > > can signal this by setting HAVE_KPROBES_ALLOC in its Kconfig file.
-> > >=20
-> > > Realize the feature on RISC-V by separating allocator to module_alloc=
-.c
-> > > and implementing module_memfree().
-> >=20
-> > Even though, this involves changes in arch-independent part. So it shou=
-ld
-> > be solved by generic way. Did you checked Calvin's thread?
-> >=20
-> > https://lore.kernel.org/all/cover.1709676663.git.jcalvinowens@gmail.com=
-/
-> >=20
-> > I think, we'd better to introduce `alloc_execmem()`,
-> > CONFIG_HAVE_ALLOC_EXECMEM and CONFIG_ALLOC_EXECMEM at first
-> >=20
-> >   config HAVE_ALLOC_EXECMEM
-> > 	bool
-> >=20
-> >   config ALLOC_EXECMEM
-> > 	bool "Executable trampline memory allocation"
-> > 	depends on MODULES || HAVE_ALLOC_EXECMEM
-> >=20
-> > And define fallback macro to module_alloc() like this.
-> >=20
-> > #ifndef CONFIG_HAVE_ALLOC_EXECMEM
-> > #define alloc_execmem(size, gfp)	module_alloc(size)
-> > #endif
+> That message of mine just pointed out that the Sphinx bug of false
+> duplicate C declaration warning first reported by Mauro (+CC'd) at:
+> https://github.com/sphinx-doc/sphinx/issues/8241 --
+> "C domain issues when building the Linux Kernel documentation".
+> It had not been resolved despite Mauro's recognition of the issue at the
+> time.
 >
-> Please can we *not* do this? I think this is abstracting at the wrong lev=
-el (as
-> I mentioned on the prior execmem proposals).
+> It was closed without fixing the bug but delegate the issue to an earlier
+> one of the same nature at: https://github.com/sphinx-doc/sphinx/issues/7819 --
+> "C, distinguish between ordinary identifiers and tag names", which was
+> opened on Jun 12, 2020 and has not been resolved.  (almost 4 years ago!)
 >
-> Different exectuable allocations can have different requirements. For exa=
-mple,
-> on arm64 modules need to be within 2G of the kernel image, but the kprobe=
-s XOL
-> areas can be anywhere in the kernel VA space.
+> There is two pull requests attempting to resolve the issue at:
+> https://github.com/sphinx-doc/sphinx/pull/8313 --
+> "C, distinguish between tag names and ordinary names" and
+> https://github.com/sphinx-doc/sphinx/pull/8929 --
+> "Intersphinx delegation to domains".
+> PR #8313 needs #8929 as its prerequisite.
 >
-> Forcing those behind the same interface makes things *harder* for archite=
-ctures
-> and/or makes the common code more complicated (if that ends up having to =
-track
-> all those different requirements). From my PoV it'd be much better to hav=
-e
-> separate kprobes_alloc_*() functions for kprobes which an architecture ca=
-n then
-> choose to implement using a common library if it wants to.
+> Unfortunately, both PRs are still open as well as the issue #7819.
+> Honestly speaking, I don't have any idea what prevents those pulls,
+> give or take the need of rebasing with conflict resolution.
 >
-> I took a look at doing that using the core ifdeffery fixups from Jarkko's=
- v6,
-> and it looks pretty clean to me (and works in testing on arm64):
+>>                                                  So by changing the
+>> function name to something like "query_drm_format_info(u32 format)" is
+>> a possible fix. Question is what should I rename this function to, that
+>> aligns with the coding standards? Also suggest a new function name for
+>> "drm_modeset_lock" that causes the second warning.
 >
->   https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=
-=3Dkprobes/without-modules
+> So, I would rather not rename valid identifiers for the sake of working
+> around a bug of Sphinx.  Rather, I'd appreciate if you'd send a message
+> encouraging Sphinx devs to resolve the issue sooner rather than later.
 >
-> Could we please start with that approach, with kprobe-specific alloc/free=
- code
-> provided by the architecture?
+>         Thanks, Akira
 
-How should we move forward?
+Agreed, we should try and get the bug resolved in Sphinx. This same
+issue came up in relation to this PR that I am working on so hopefully
+we can work together to get fixes merged upstream:
 
-I'm fine with someone picking the pieces of my work as long as also the
-riscv side is included. Can also continue rotating this, whatever works.
+https://github.com/sphinx-doc/sphinx/pull/12162
 
->
-> Thanks,
-> Mark.
-
-BR, Jarkko
+Thanks,
+Donald.
