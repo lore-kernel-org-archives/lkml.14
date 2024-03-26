@@ -1,168 +1,208 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661DE2110B;
-	Tue, 26 Mar 2024 17:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302391CAAD;
+	Tue, 26 Mar 2024 17:11:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711473102; cv=none; b=pPrgetmpyOCyJbnQFziBNCID79IlzuH0EDcvc64YI5H9J4N4D97q+VR7buFVSOfV0r+bFdxI8ANG+2qTXCB5P0kMoe9hNSNbHnyc42qmFPMAnamnjJWvCAiC6snAsGiCy/SaRVDmHCDGm0FZcYX2jYZNaO1QiP1ZAeU72N49GLc=
+	t=1711473105; cv=none; b=CsIadOWxdQ6CKBV464l3Rji7sECErCIQQkxQKNk3T/6136GNwhLg1RrSb19lBlrFcFaBPmvVU9Spc8zFZ2+06kfvN051dj1rGYlPPjg7czupKuQuQVE7uQ5E4JWZVq2DaUCrnvDAvp/UKBkOWWfrFXAGlN+rsBg1G5funLx//kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711473102; c=relaxed/simple;
-	bh=54+WKa1ydkrk+oiWK74oAKFRtaRxLI8Zl8NhBv6zJZ4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GeZFco4O3nVRWUEkkfKI8r6xxghWItoJm3gR4VQ8jJ52XzHRJ53xAFoIU6LI5YLXRLJtvh50xzmJyJvjGREbj98m3aEY492BfEwMq1x4+Jbi68+toEPv7ndlIeIl3aqsXXQhDINTTmqariHSBLHSa1RjSgCYaKHvJbI0mARuMlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FfiEDf8U; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1711473105; c=relaxed/simple;
+	bh=2H4seo235TtcNfGay7H2sbkZqoRkvg1ndzz5RqCoHR0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AZM4Waw/K0t4KwYHRUcRnVnm6LFlMJ9I03+CkyxT0YJsvr+nheKkx+XxbTIzPYJU/g/TH57exmPO+1uMnXtCBcxHZ3ncoE5/fewSqice3Y6IQi2TGOeWxm5Mtvkwj/Ra4/Jlz9Ucam1aOlss0xaZcQKN30rRx83HjTj7zKVi5hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fX6A0oE3; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FfiEDf8U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711473100; x=1743009100;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=54+WKa1ydkrk+oiWK74oAKFRtaRxLI8Zl8NhBv6zJZ4=;
-  b=FfiEDf8UdnDLPXfdU2lHHsdpeS+AZoKL9R8WZC8vMtL9SJ66c+vgG+KZ
-   +LFCrT43jF965Z0sYKQ8V1VKcKbt2xB4khYXnj9lG0s67tIWGmWatGcjf
-   PsyIQin6dYIIUAF5hKchQS4/m+L6kiGUPCOb16C8R+ExEVE81DtK3PZcb
-   P0TtZhAdTCtkj5n/Nj6YDaCm/3Qa3sB/iX/RYy4vAk0IOMEFZ+Ob8TWDI
-   n+cGs6gj12Z/mc4a+GpwTYMZZ/gwKktkasvzpjSdoTerKOIzkcQl6wmmA
-   1uXYtQhuCh9eZyihuXgidDhIEuwS8RBUJNllpv80BH9Gk9eBXGMX9YpDE
-   Q==;
-X-CSE-ConnectionGUID: PHygj2LoQeyQEZHtXLWfBA==
-X-CSE-MsgGUID: K0Sz7JLGQEqM+wpQdSGrGQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="6732184"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="6732184"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 10:11:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="937072885"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="937072885"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Mar 2024 10:11:37 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 6BBDBE7; Tue, 26 Mar 2024 19:11:36 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Mark Brown <broonie@kernel.org>,
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>
-Subject: [PATCH v3 1/1] ASoC: soc-jack: Get rid of legacy GPIO support
-Date: Tue, 26 Mar 2024 19:09:48 +0200
-Message-ID: <20240326171134.1414462-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fX6A0oE3"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-430c45ab240so33688611cf.0;
+        Tue, 26 Mar 2024 10:11:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711473103; x=1712077903; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qgy6KTgPoHVTqXlGJ95HB7f9RHaWGhN9Lg4BvWlkQqs=;
+        b=fX6A0oE3G6pUfmEBQs3ydtyTudGP6CF9ZkYk011fNUFnLttWW0Mm57yeAUVg0tS5Df
+         tr5M43ghc4NijvgKtb7H5fG/dBaPd/Krjt7ZAmyPNdiHgOotWIJU9WtejKE4aeiA1wWv
+         CEPea9DbXUz3pUYtmFtdqrKs9+lhL9i0MYNa5FsK4VQDpKP69eLi4qzaS6lqBBpkR+CB
+         qICeb0MKQKq8U7348dMZjMjvBml+2kzy5icFK8tt/fLRDnlLmplr3sQU0GLSt+0KsLbN
+         3V6/XYU5akCzZ4s/ZNfBVqSBbdcZrqdxbIGfqSj3KzkXslnK/NMgZAZ78TNat/s6tDar
+         K4wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711473103; x=1712077903;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qgy6KTgPoHVTqXlGJ95HB7f9RHaWGhN9Lg4BvWlkQqs=;
+        b=auxj3Cx/kwPcL9wfhW2wuqUNQ9nDgaulYZ0essgnIHEcmHPf3nr47qi1xX6+BQLQeq
+         0ZZPUuWsjdyBCKYSGUEmxG8NZeCFgWEQdXVzWU02MgbMizf/qNEMzEjHK5v7thJOc57C
+         yaWOo8WuCxHEkXM+wfUKgI30Spw+ON1uOUkH+MVdletVhLEoyxKiKcWZ4nPoZjZdiRnB
+         KWNnhvTpU5mViYAHx41p4D3n7862Uq5cm6UA4L4gL9JB0Lxu+4f23+UhvjYij5WA+g5m
+         yLgttdkXETa44WdUcggelwUvh5v7RRCcFCGjE8UYGBkS1wSxaaqYBSVzMkbt/Sa4775Z
+         kaZw==
+X-Forwarded-Encrypted: i=1; AJvYcCWmQXTr+Tfw1aOvU903nuCpZoEWQ4MUe0kEvbB+15eeECR/Wczc2QogGjd9k+sbhuRFzpgaIWfbwxmyrgtfba2u/FR3RtD30P45JkuX
+X-Gm-Message-State: AOJu0Yzg9L5E5YkTQZira5D+wUPrn1tugkIB+Gz2J4akgz/YbZR24e+5
+	yWskNdPTLAwKjYV20aUZyMM2Gca9q7zLWTTXhwAFxhARuwrSfr43
+X-Google-Smtp-Source: AGHT+IGNCJc1VsvWRQt2uXwV8nb0GH2RiXeF6dhSm7DBEJOxTsa0SxTL0nvauUxmSt8At/uKBZZZqg==
+X-Received: by 2002:a05:6214:262f:b0:696:987d:7922 with SMTP id gv15-20020a056214262f00b00696987d7922mr1412880qvb.9.1711473102734;
+        Tue, 26 Mar 2024 10:11:42 -0700 (PDT)
+Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id x11-20020ad4458b000000b00696a47179a1sm418788qvu.14.2024.03.26.10.11.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 10:11:42 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id 7A67F1200069;
+	Tue, 26 Mar 2024 13:11:41 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Tue, 26 Mar 2024 13:11:41 -0400
+X-ME-Sender: <xms:zAEDZkXh08TLa6Zo1jOZaFQ4Xzuq_k3ReeB3WswtOOhKvzBwvpk1XQ>
+    <xme:zAEDZokELfQmxxvmQlcsiHBn8wP4WD3IwWNu8-sQRAbPa5yishXRgvwmFJxQwRr2t
+    Mzwj7_ZYgI5B_BIPQ>
+X-ME-Received: <xmr:zAEDZoZc6lxmw2RComFkPR3pFXU3EbBAe2nRsZSaQ-Azql3fXiySo11EPFA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddufedgleekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhu
+    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
+    htthgvrhhnpeehudfgudffffetuedtvdehueevledvhfelleeivedtgeeuhfegueeviedu
+    ffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    gsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdei
+    gedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfih
+    igmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:zAEDZjU1VeOXje7QWr0O_miWwEmwkKKFtamdiLDA0lEomiiCBnz43A>
+    <xmx:zAEDZukJNZiYdpoMMb4qVNG5fxxWDFL8C3fkx2ro3T3W8FlUz8oXEw>
+    <xmx:zAEDZocqLyfJ2WqBgxVNEvHyDp_QKOihMH3saCXHUOLuZdR3P0oQFg>
+    <xmx:zAEDZgH3W8gSXsPtih95XHA5EeU9XEHQmDvgk6m4Qm-aszJZ8cRqQA>
+    <xmx:zQEDZqlKRFBrQVsZY0r9z1uu9GRr6gItZj1UKo56NBeo-mH3DKE4mDx0AlE>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 26 Mar 2024 13:11:40 -0400 (EDT)
+Date: Tue, 26 Mar 2024 10:11:07 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
+	Valentin Obst <kernel@valentinobst.de>
+Subject: Re: [PATCH 2/5] rust: time: Introduce Duration type
+Message-ID: <ZgMBqzv0r98_EGGR@boqun-archlinux>
+References: <20240324223339.971934-1-boqun.feng@gmail.com>
+ <20240324223339.971934-3-boqun.feng@gmail.com>
+ <4hYJbftgOk1JOPbJ6CfKZell6ngp8GljwIUIB1vOQvIf-7jiogG5xDtCvcMlF7cIJAdy9fO5HLQh_8ohnWNB3MAaj0xjAGeyyDowemgunOU=@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4hYJbftgOk1JOPbJ6CfKZell6ngp8GljwIUIB1vOQvIf-7jiogG5xDtCvcMlF7cIJAdy9fO5HLQh_8ohnWNB3MAaj0xjAGeyyDowemgunOU=@proton.me>
 
-No more users.
+On Tue, Mar 26, 2024 at 04:50:02PM +0000, Benno Lossin wrote:
+> On 24.03.24 23:33, Boqun Feng wrote:> From: Alice Ryhl <aliceryhl@google.com>
+> > 
+> > Introduce a type representing time duration. Define our own type instead
+> > of using `core::time::Duration` because in kernel C code, an i64
+> > (ktime_t) is used for representing time durations, an i64 backed
+> > duration type is more efficient when interacting with time APIs in C.
+> > 
+> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> > [boqun: Rename `Ktime` to `Duration`, and make it a type of durations]
+> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> > ---
+> >  rust/kernel/time.rs | 44 ++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 44 insertions(+)
+> > 
+> > diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
+> > index bbb666e64dd7..b238b3a4e899 100644
+> > --- a/rust/kernel/time.rs
+> > +++ b/rust/kernel/time.rs
+> > @@ -7,6 +7,9 @@
+> >  //!
+> >  //! C header: [`include/linux/jiffies.h`](srctree/include/linux/jiffies.h).
+> > 
+> > +/// The number of nanoseconds per millisecond.
+> > +pub const NSEC_PER_MSEC: i64 = bindings::NSEC_PER_MSEC as i64;
+> > +
+> >  /// The time unit of Linux kernel. One jiffy equals (1/HZ) second.
+> >  pub type Jiffies = core::ffi::c_ulong;
+> > 
+> > @@ -20,3 +23,44 @@ pub fn msecs_to_jiffies(msecs: Msecs) -> Jiffies {
+> >      // matter what the argument is.
+> >      unsafe { bindings::__msecs_to_jiffies(msecs) }
+> >  }
+> > +
+> > +/// A time duration.
+> > +///
+> > +/// # Examples
+> > +///
+> > +/// ```
+> > +/// let one_second = kernel::time::Duration::new(1000_000_000);
+> > +///
+> > +/// // 1 second is 1000 milliseconds.
+> > +/// assert_eq!(one_second.to_ms(), 1000);
+> > +/// ```
+> > +#[repr(transparent)]
+> > +#[derive(Copy, Clone, Debug)]
+> > +pub struct Duration {
+> > +    inner: i64,
+> 
+> Why not use the name `ns` or `nanos`?
+> 
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v3: resent after imx-es8328 got fixed (Mark)
+Good point, I will rename it in next version.
 
- include/sound/soc-jack.h              |  2 --
- sound/soc/generic/simple-card-utils.c |  2 --
- sound/soc/soc-jack.c                  | 23 ++++-------------------
- 3 files changed, 4 insertions(+), 23 deletions(-)
+> > +}
+> > +
+> > +impl Duration {
+> > +    /// Creates a new duration of `ns` nanoseconds.
+> > +    pub const fn new(ns: i64) -> Self {
+> > +        Self { inner: ns }
+> > +    }
+> > +
+> > +    /// Divides the number of nanoseconds by a compile-time constant.
+> > +    #[inline]
+> > +    fn divns_constant<const DIV: i64>(self) -> i64 {
+> > +        self.to_ns() / DIV
+> > +    }
+> 
+> I am a bit confused, why is this better than writing
+> `self.to_ns() / DIV` at the callsite?
+> 
 
-diff --git a/include/sound/soc-jack.h b/include/sound/soc-jack.h
-index a0abb1ee5110..3a81d4b8ca8a 100644
---- a/include/sound/soc-jack.h
-+++ b/include/sound/soc-jack.h
-@@ -44,7 +44,6 @@ struct snd_soc_jack_zone {
- /**
-  * struct snd_soc_jack_gpio - Describes a gpio pin for jack detection
-  *
-- * @gpio:         legacy gpio number
-  * @idx:          gpio descriptor index within the function of the GPIO
-  *                consumer device
-  * @gpiod_dev:    GPIO consumer device
-@@ -59,7 +58,6 @@ struct snd_soc_jack_zone {
-  *		       ADC).
-  */
- struct snd_soc_jack_gpio {
--	unsigned int gpio;
- 	unsigned int idx;
- 	struct device *gpiod_dev;
- 	const char *name;
-diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
-index 81077d16d22f..b4876b4f259d 100644
---- a/sound/soc/generic/simple-card-utils.c
-+++ b/sound/soc/generic/simple-card-utils.c
-@@ -752,8 +752,6 @@ int simple_util_init_jack(struct snd_soc_card *card,
- 	if (!prefix)
- 		prefix = "";
- 
--	sjack->gpio.gpio = -ENOENT;
--
- 	if (is_hp) {
- 		snprintf(prop, sizeof(prop), "%shp-det", prefix);
- 		pin_name	= pin ? pin : "Headphones";
-diff --git a/sound/soc/soc-jack.c b/sound/soc/soc-jack.c
-index b2cc13b9c77b..63971396b708 100644
---- a/sound/soc/soc-jack.c
-+++ b/sound/soc/soc-jack.c
-@@ -8,7 +8,6 @@
- 
- #include <sound/jack.h>
- #include <sound/soc.h>
--#include <linux/gpio.h>
- #include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/workqueue.h>
-@@ -345,21 +344,9 @@ int snd_soc_jack_add_gpios(struct snd_soc_jack *jack, int count,
- 				goto undo;
- 			}
- 		} else {
--			/* legacy GPIO number */
--			if (!gpio_is_valid(gpios[i].gpio)) {
--				dev_err(jack->card->dev,
--					"ASoC: Invalid gpio %d\n",
--					gpios[i].gpio);
--				ret = -EINVAL;
--				goto undo;
--			}
--
--			ret = gpio_request_one(gpios[i].gpio, GPIOF_IN,
--					       gpios[i].name);
--			if (ret)
--				goto undo;
--
--			gpios[i].desc = gpio_to_desc(gpios[i].gpio);
-+			dev_err(jack->card->dev, "ASoC: Invalid gpio at index %d\n", i);
-+		        ret = -EINVAL;
-+		        goto undo;
- 		}
- got_gpio:
- 		INIT_DELAYED_WORK(&gpios[i].work, gpio_work);
-@@ -373,7 +360,7 @@ int snd_soc_jack_add_gpios(struct snd_soc_jack *jack, int count,
- 					      gpios[i].name,
- 					      &gpios[i]);
- 		if (ret < 0)
--			goto err;
-+			goto undo;
- 
- 		if (gpios[i].wake) {
- 			ret = irq_set_irq_wake(gpiod_to_irq(gpios[i].desc), 1);
-@@ -401,8 +388,6 @@ int snd_soc_jack_add_gpios(struct snd_soc_jack *jack, int count,
- 	devres_add(jack->card->dev, tbl);
- 	return 0;
- 
--err:
--	gpio_free(gpios[i].gpio);
- undo:
- 	jack_free_gpios(jack, i, gpios);
- 	devres_free(tbl);
--- 
-2.43.0.rc1.1.gbec44491f096
+Hmm.. you're right, there should be no difference I think. If there is
+nothing I'm missing from Alice, I will drop this function in the next
+version.
 
+Regards,
+Boqun
+
+> -- 
+> Cheers,
+> Benno
+> 
+> > +
+> > +    /// Returns the number of milliseconds.
+> > +    #[inline]
+> > +    pub fn to_ms(self) -> i64 {
+> > +        self.divns_constant::<NSEC_PER_MSEC>()
+> > +    }
+> > +
+> > +    /// Returns the number of nanoseconds.
+> > +    #[inline]
+> > +    pub fn to_ns(self) -> i64 {
+> > +        self.inner
+> > +    }
+> > +}
+> > --
+> > 2.44.0
+> >
