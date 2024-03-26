@@ -1,129 +1,112 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8B11F168
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 14:56:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF3FF2233A;
+	Tue, 26 Mar 2024 14:57:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711465017; cv=none; b=PcQjGZlk+vOp3JRmhF7Iggmqr8gzitWiiqtTgA/IYhy5dyGkosMXY0E00e2lnM62b7JRrOzLHLemwg9LrlyuhaP4WDGgln61hf5fYyRY6nYDEX1iJWKCPbnXK/LM2Ksd8VVX64C02eOq29QzngeiGygM9QNNmMJVEyu2JfrsSos=
+	t=1711465046; cv=none; b=rRR3ZRl/GnNqrM+AD47h+bvtbtnAub/EqRauLuvs4a5xc+NxRm0IXq5+qCwlc+qOwn97+c6k0cTL9zWX7sGInDV90KoDIsdKGM6EwB0IlofIlCv8jziafzBKcKl7dCDh0vReXCJlpLSh5ulSMiaYLOH3aLJ9XuPViGBTkL4WGm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711465017; c=relaxed/simple;
-	bh=2y9ctp56HMkbvyZgKo5fx6Q9dshxX5+8r2XntdNWGeE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l0ZWyKw3uNCY9ybFphLBZJn6zDtjh8mzDdvEKXJmuX0uuc5Ka5Vm4ZbhtN544Gn//BxqxOOL4b7r2YCaqWvKWmFwd3/X1f4ZxTNM0xolVrEoW4gEunqZnFeUu744UW7q7DjRQuIn9oHjWI0A4GDj85oksXxVMVK1oj28XIceuZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=f15vaomC; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1711465046; c=relaxed/simple;
+	bh=sq1B4yPNkZWKh6th8vPtdVzhFb7i5RMJZN/k6yxDj2Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=clnFYXA433xNvuE01p7342+uJhxnVVVfcdzYKxACYBexhHNocC6zI+c2J3LkJNkcDPHVURx0G6pUOs0tvW+JHpSENCG+4tekQT4Mi7pCjms4ZTKhXbRW/vfpsyL1EHJn7vv3S3de1sOTuzMRMdeHNj6PZtbgsJYBM4bUwvv8zbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mkGbXX4/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="f15vaomC"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-41490cc034aso2192015e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 07:56:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711465013; x=1712069813; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z/G1vU/i34n4Yf6dbVXXOkUIfKhQJFotsjQ1E/HHO2A=;
-        b=f15vaomC0cvHnHoFzNXXTfWCoXvbuMy8w/RoqQBw0ku9hs/3EX5LWswwSWV4D/Q5Zv
-         qo+fZhzXcSNhBdt+kpbU40MdUxUVydKwL6nujj5g1XUs+ZbpOC7CsQRsWR/1D6460Ekb
-         pqSMHwZWnCQxOKtxA66IFEoXoR/rSHYvj4Kk6BLykWHE2cIgiEVldCLa5NFt6jiJKtcc
-         FTN0NjKdOXQfCXkmxGaSvasSKuDmQFcKmnEGeEAc5XESzB9lMusV7bVAwv8A/86OS6V2
-         YY6IrAWWhvOk8MrnszbSjeHsPg95zgbnXkZWaIlhxOnD9gnzJuF5DjZd4QJjPQ5ytO10
-         Iu8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711465013; x=1712069813;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z/G1vU/i34n4Yf6dbVXXOkUIfKhQJFotsjQ1E/HHO2A=;
-        b=O4bw+Xnd/asVHKY8d4+Znqy/+9F0Fbf93rBpgWjcg93OnR8UJWI1ET4q4Hnovt0imU
-         Jvh2KE+yLEoteCss1YHSGpRcn2OpE5VWAJWopfwJWqGg96XGpJsbHkw5VlU82cXqENB1
-         9065GbHi15jUkuOUxcxTBNdeq/MjV8uaXZUZ7s5P3zzm2Z2hDxOGCTnctZ5HN+am3g+y
-         u/vH0PUhp2PcRahAxHy5AIE8vJTiW9H2nh0qlJF6dFTgC928TtVsE+B2PPlcGxoTjMPF
-         Tb2LnNCC/AIy/Dh3USW3qUkUSD3BqxG37ue+bUJk3Vg+dgvw7cirgwXIeEssHxtSSnaw
-         8hnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWqymt3djnJRJYzbnNqUiRyDf3xj6jJMER1Sb+TO352lm5aAxGeQ0DuzTCPLfVxtHjYJ0H02hGrb2ik6QnRabxCV/WOaaiSTuwUoTxU
-X-Gm-Message-State: AOJu0Yy7nEobSKA8B+eU/pf47vZ5tFq9nOIAcvkSD9eva7NTuRXQkQhV
-	AEgEd+MpQ9J7oAoYn1JCTypxRL8nRijio4fAG4468HoYZEP9DwBwvzBGFrFNCx8=
-X-Google-Smtp-Source: AGHT+IHgX0UjDpUS3pvvXSWQ89lGsdbFRcjbil8q0TiSG1zwcrctb+NcH3iuLaIhpS4dSbwwuyx9yA==
-X-Received: by 2002:a05:600c:4510:b0:414:1351:8662 with SMTP id t16-20020a05600c451000b0041413518662mr1176708wmo.12.1711465013025;
-        Tue, 26 Mar 2024 07:56:53 -0700 (PDT)
-Received: from blmsp.fritz.box ([2001:4091:a246:821e:6f3b:6b50:4762:8343])
-        by smtp.gmail.com with ESMTPSA id f12-20020a05600c4e8c00b00414850d567fsm9838120wmq.1.2024.03.26.07.55.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 07:56:00 -0700 (PDT)
-From: Markus Schneider-Pargmann <msp@baylibre.com>
-To: Grygorii Strashko <grygorii.strashko@ti.com>,
-	Santosh Shilimkar <ssantosh@kernel.org>,
-	Kevin Hilman <khilman@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-omap@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Markus Schneider-Pargmann <msp@baylibre.com>,
-	Markus Mirevik <markus.mirevik@dpsolutions.se>
-Subject: [PATCH] gpio: omap: Fix double trigger for level interrupts
-Date: Tue, 26 Mar 2024 15:50:14 +0100
-Message-ID: <20240326145439.1293412-1-msp@baylibre.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mkGbXX4/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03F0CC433C7;
+	Tue, 26 Mar 2024 14:57:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711465046;
+	bh=sq1B4yPNkZWKh6th8vPtdVzhFb7i5RMJZN/k6yxDj2Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mkGbXX4/6d2pvS4gRiFkrP1zX6w2uIWEkJXcnLCgDB+QMZLLOth07HQf1k23UuxSK
+	 rKKgmefLXwFeqhX5uZVKYcTOq9908DNjPHTDDh93PD9urSfCDgf41GDQRzyA1xHBXI
+	 6UzBC0H/zpeY0hXouZmJ63J1DkqU0eyIQB9Da2H7A8ghyBuDVUywavIK3htwwJk1ac
+	 ORIg24R2gqHTwfrzXF4Gz6p3nfgDY+Rw/bxyQ+gXPkrDVJzHjEJ+bAiG8DgMqiM9vc
+	 e6QONn1q9Vvh+L72URJnrKYQHzKnnz9gHOGO1QvF0FpCgGsQgjp/iUPaC3UePFgL+q
+	 xlh0j2gmDG9Gw==
+Date: Tue, 26 Mar 2024 16:56:44 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Miklos Szeredi <mszeredi@redhat.com>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	xingwei lee <xrivendell7@gmail.com>,
+	yue sun <samsun1006219@gmail.com>,
+	Miklos Szeredi <miklos@szeredi.hu>, stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] mm/secretmem: fix GUP-fast succeeding on
+ secretmem folios
+Message-ID: <ZgLiLB2Fl1lFhEYc@kernel.org>
+References: <20240326143210.291116-1-david@redhat.com>
+ <20240326143210.291116-2-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240326143210.291116-2-david@redhat.com>
 
-Set gpio trigger before clearing the irq status.
+On Tue, Mar 26, 2024 at 03:32:08PM +0100, David Hildenbrand wrote:
+> folio_is_secretmem() currently relies on secretmem folios being LRU folios,
+> to save some cycles.
+> 
+> However, folios might reside in a folio batch without the LRU flag set, or
+> temporarily have their LRU flag cleared. Consequently, the LRU flag is
+> unreliable for this purpose.
+> 
+> In particular, this is the case when secretmem_fault() allocates a
+> fresh page and calls filemap_add_folio()->folio_add_lru(). The folio might
+> be added to the per-cpu folio batch and won't get the LRU flag set until
+> the batch was drained using e.g., lru_add_drain().
+> 
+> Consequently, folio_is_secretmem() might not detect secretmem folios
+> and GUP-fast can succeed in grabbing a secretmem folio, crashing the
+> kernel when we would later try reading/writing to the folio, because
+> the folio has been unmapped from the directmap.
+> 
+> Fix it by removing that unreliable check.
+> 
+> Reported-by: xingwei lee <xrivendell7@gmail.com>
+> Reported-by: yue sun <samsun1006219@gmail.com>
+> Closes: https://lore.kernel.org/lkml/CABOYnLyevJeravW=QrH0JUPYEcDN160aZFb7kwndm-J2rmz0HQ@mail.gmail.com/
+> Debugged-by: Miklos Szeredi <miklos@szeredi.hu>
+> Tested-by: Miklos Szeredi <mszeredi@redhat.com>
+> Fixes: 1507f51255c9 ("mm: introduce memfd_secret system call to create "secret" memory areas")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-This patch was originally proposed by Grygorii Strashko.
+Reviewed-by: Mike Rapoport (IBM) <rppt@kernel.org>
 
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-Reported-by: Markus Mirevik <markus.mirevik@dpsolutions.se>
-Closes: https://lore.kernel.org/all/20220122235959.GA10737@sol/T/
-Signed-off-by: Markus Schneider-Pargmann <msp@baylibre.com>
----
-Hi everyone,
+> ---
+>  include/linux/secretmem.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/secretmem.h b/include/linux/secretmem.h
+> index 35f3a4a8ceb1..acf7e1a3f3de 100644
+> --- a/include/linux/secretmem.h
+> +++ b/include/linux/secretmem.h
+> @@ -13,10 +13,10 @@ static inline bool folio_is_secretmem(struct folio *folio)
+>  	/*
+>  	 * Using folio_mapping() is quite slow because of the actual call
+>  	 * instruction.
+> -	 * We know that secretmem pages are not compound and LRU so we can
+> +	 * We know that secretmem pages are not compound, so we can
+>  	 * save a couple of cycles here.
+>  	 */
+> -	if (folio_test_large(folio) || !folio_test_lru(folio))
+> +	if (folio_test_large(folio))
+>  		return false;
+>  
+>  	mapping = (struct address_space *)
+> -- 
+> 2.43.2
+> 
 
-this patch helped me on the beagleboneblack to remove the mentioned
-double trigger of level interrupts. This diff was proposed by Grygorii
-in the thread linked in the commit message. I am not sure why this never
-made it into the kernel, that's why I sending this patch. I did not
-create the diff just made a patch out of it, I don't care about being
-the author but I would be happy if this would get merged or some other
-solution to the problem.
-
-Thanks!
-
-Best
-Markus
-
- drivers/gpio/gpio-omap.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index 76d5d87e9681..74b8fe2995e1 100644
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -696,6 +696,9 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
- 	raw_spin_lock_irqsave(&bank->lock, flags);
- 	omap_set_gpio_irqenable(bank, offset, 1);
- 
-+	if (trigger)
-+		omap_set_gpio_triggering(bank, offset, trigger);
-+
- 	/*
- 	 * For level-triggered GPIOs, clearing must be done after the source
- 	 * is cleared, thus after the handler has run. OMAP4 needs this done
-@@ -705,9 +708,6 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
- 	    trigger & (IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW))
- 		omap_clear_gpio_irqstatus(bank, offset);
- 
--	if (trigger)
--		omap_set_gpio_triggering(bank, offset, trigger);
--
- 	raw_spin_unlock_irqrestore(&bank->lock, flags);
- }
- 
 -- 
-2.43.0
-
+Sincerely yours,
+Mike.
