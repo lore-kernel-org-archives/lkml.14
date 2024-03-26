@@ -1,39 +1,60 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A252213CF83;
-	Tue, 26 Mar 2024 16:28:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B1B13D512
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 16:28:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711470524; cv=none; b=ddXwSyoIErEIhzKaf6uO8DXCS1xSoVfcsY3D99cIDXCvHvIZTNaMtgSg0qixzwAWucdwMnfzAJjF44CzkayMYPasfUw3++vuCOK9dcz11FXxoNS+zIOxWemqm6REr/Y3WsoTZqBq53wDPVMmAm4OD/SGYab31FhgmqSF6LEWml4=
+	t=1711470532; cv=none; b=eGOELpBDIvgQhBS9PK7KLBPOCpb3UK/mn8R5KE3MqL3leA2Gq9N2qwRGP48xLFBr7EU2/IfpMeBOn09mfBRK0vwypsv6UEnbUB2rOnlTUVyuoSklZRfF/6lCuOLDl6FR0eZ8ifraOyGdcxAIEWjek4e5mFgAqgFdgfxVk6PVCoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711470524; c=relaxed/simple;
-	bh=GMCjxx4Ts4g1Cuc2I14JN/zY58jMv+u7ZtBEPDHpzh8=;
+	s=arc-20240116; t=1711470532; c=relaxed/simple;
+	bh=5KTtyKeMf2CTdIXZK7TJyYftiIG8VhD5Gr+5aHPon5A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eMHfG6Euj/z+UTBtV5Bk54+1buBqHDSYd81YR4xYtoa4AtCukWCDNvdHTXCjyYlJfxlLapqnp1qVhyeWQyhS1Hd/Hz05Jt2KOrs02TFFRhreluLNDCRij0MzMJnmsQSxFktysXrrFDMHeTkxPlomRmVUcddEsy3VtRqJB+vCzBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CRL4N3eW; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	 In-Reply-To:To:Cc; b=nNoUaGY99Qr1h429yvAs8RVWy8td9FnsMZHL4auqfh2BZmpcTOvWTdyija4j1h/OQtQUSAbYaUPWvMvX910Lpm2rRHV0lW0ix2TmHirXx9mqXa4wH8iTHfAmktkZIhuQ+LhEhDWyhLYk2gtfRY8loJWMabdYPuNOUkKy5//Q2Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=emkVXQtl; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CRL4N3eW"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7100F20009;
-	Tue, 26 Mar 2024 16:28:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1711470520;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FeS8d4XmBSSF2aeeEjzAkcwtGT7LFY/aeeFQLN7fpuk=;
-	b=CRL4N3eW2vc9zWgva4OLGdq3TXhOKGZKXnxkyUS8jxS+8lD94Ct33mA61vs9dEQP889MJN
-	iIYS7msjX+migXkXy/cJyyEA88+9Y2DqBbUlDTlmpG1JFm13YLxBMyPELJ9SvZcjBIOL6u
-	y1dJM8PFdIvX5v44itq3jdtFlTfzB/O6VupaOwNT5klQf3+Bs4Q76qr6ZnHrOFN0ftZ+L4
-	xIMSwXNhSIcoQAAuPoBcZZgQvTIydOSEcozI5AGVUL95UP/htO02yhNAQYGqnVQW2aKoAN
-	qWrxAjO1VDDb0WdTIEl8rOv2BYwhiAsbGAEbKkYaCqMnQ5k+1ScjYT5JPRy9yQ==
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Tue, 26 Mar 2024 17:28:14 +0100
-Subject: [PATCH 4/4] drm/bridge: hotplug-bridge: add driver to support
- hot-pluggable DSI bridges
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="emkVXQtl"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56845954ffeso8181304a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 09:28:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711470526; x=1712075326; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=O/i6xAGUUUcSiPD/37M7Z1gqofhiT1P68o/5++l74L0=;
+        b=emkVXQtlu4zVhiouwhR/3Y14PXLj12qSFPUu6PzF+hqlHXoauI1YYkFmKEv+etZJck
+         pMUhTpcT1MRjV/KrxJg8alCAHOMhJItpWa45tdWSsr9oXgtKGy8McMx46mLUea0m3/PF
+         prq7BXNfUoYPYqsPBndg9ciYI8ZWBoJtk96llrVQw97hszoRZB+uKtEiucx7pMqJErcH
+         JFktiydgQ7G5zUUMO82NgyvS+SLRn3G4/cUW8ZhhgPpLpuG3qznsbuaxviEzJaGG9NAx
+         upk+djx4mCvv+loFGZ6Bg7VrQb8VxYRUq2m5t5ruRkL12w5dNcRN4u2dcR/BNaqTEk2I
+         gSNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711470526; x=1712075326;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O/i6xAGUUUcSiPD/37M7Z1gqofhiT1P68o/5++l74L0=;
+        b=wVsJNM+iAZDw9UsJQ+qOBW0eNN9hiE/AXpqLZRW3uE2nr/B0Z/oFlR0QpKF2/bYXgW
+         TcWeX/2bg7hGIwDePtxsvV1rOQFWvD7uUyO1AqbwYJ0at/PtPws17rToAfoqJ7yZPFzk
+         h8AX6wioXws52a9k6JGW9RGfGxOqSbKlirTkUlw8mQIdgsi4tx2SAk6pgUg24rCxNcqm
+         ZaSe7sf+MCp214tECZqCWC3pnnSiWBlibXM5qy2Rb5uzYSxUMmRRrX6IgcHHS/45VDaM
+         g/zr64XAP4KGh3OI3BYvSstoL+iDRnrkqqX9opyUUywx5m5q0B5Tg8WjjEPOKbjrUh2W
+         WdiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJILeY7PvXfbKzgFMd/tKHccTWlQvRXttaNwfKz2cxWf7jCVy5hyKAEfyXtYQmcOQOFW3h+ftSdfGeGokS0M60DLLEWKpgomEa69zo
+X-Gm-Message-State: AOJu0YyKqSZP0jaRjMJLCqZhQTEWTBDMZpPJstPAGdq4uF/FkZpZmu+W
+	1ihf6VPFDCXUsnNRRPqAMJVeZ+lUzz7nGIwFo/AHDcyquYAPrWFX1s/on7dtzuw=
+X-Google-Smtp-Source: AGHT+IFSzmMJbfUwk/62hTWcQsKL/LAcu4aajFTjRD1sDAKoiSLnXfYqv1O1dW8+r5PLZKj9XBIHJA==
+X-Received: by 2002:a17:906:a008:b0:a46:ba8f:bcd4 with SMTP id p8-20020a170906a00800b00a46ba8fbcd4mr6726744ejy.46.1711470525970;
+        Tue, 26 Mar 2024 09:28:45 -0700 (PDT)
+Received: from [127.0.1.1] ([79.114.172.194])
+        by smtp.gmail.com with ESMTPSA id x20-20020a170906b09400b00a469e55767dsm4375051ejy.214.2024.03.26.09.28.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 09:28:45 -0700 (PDT)
+From: Abel Vesa <abel.vesa@linaro.org>
+Date: Tue, 26 Mar 2024 18:28:20 +0200
+Subject: [PATCH RESEND v6 5/5] spmi: pmic-arb: Add multi bus support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,727 +63,1567 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240326-hotplug-drm-bridge-v1-4-4b51b5eb75d5@bootlin.com>
-References: <20240326-hotplug-drm-bridge-v1-0-4b51b5eb75d5@bootlin.com>
-In-Reply-To: <20240326-hotplug-drm-bridge-v1-0-4b51b5eb75d5@bootlin.com>
-To: Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Rob Herring <robh+dt@kernel.org>, 
+Message-Id: <20240326-spmi-multi-master-support-v6-5-1c87d8306c5b@linaro.org>
+References: <20240326-spmi-multi-master-support-v6-0-1c87d8306c5b@linaro.org>
+In-Reply-To: <20240326-spmi-multi-master-support-v6-0-1c87d8306c5b@linaro.org>
+To: Stephen Boyd <sboyd@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
  Conor Dooley <conor+dt@kernel.org>
-Cc: Paul Kocialkowski <contact@paulk.fr>, 
- =?utf-8?q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Paul Kocialkowski <paul.kocialkowski@bootlin.com>, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Johan Hovold <johan@kernel.org>, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
+ linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, 
+ Abel Vesa <abel.vesa@linaro.org>
 X-Mailer: b4 0.13.0
-X-GND-Sasl: luca.ceresoli@bootlin.com
+X-Developer-Signature: v=1; a=openpgp-sha256; l=54932; i=abel.vesa@linaro.org;
+ h=from:subject:message-id; bh=5KTtyKeMf2CTdIXZK7TJyYftiIG8VhD5Gr+5aHPon5A=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBmAvezWre6pZD29yzFjXHeG4EgMC4AGYdn+mNv6
+ zj+RyW5nlCJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZgL3swAKCRAbX0TJAJUV
+ VsZbEACmj0LCMO84hbK/6eUPE4QY4D3tWESr0PFDJwdZH1WvlbBvGQfDwX57/6lkFjzilSJvEj8
+ EUjmlxZIx3Y7Zl9B+Qwfs/2MPBIBifkXPN03ft416WTnaR7/htuil1weNj1qyBNIx6tDL/v54k1
+ Lj081MVoQ3wepHfLrJxQwdPexcty5ym43fdbD7GFsTcuPrmqgTEGgfUksTWGQev+2pCQvZdoExi
+ HJpGeE6xFGxshafpUT3AlkigAcohQu7jxRhGD8Xq2qnFt/WRmzkn/W4ZgmkewS8Bobd9MokmtXX
+ udmujEEQc7V/8/gudjTCij6xVlvk7QP6nU9Ng+NVbSRFKl1I5nBO88Q2BNEnKkcgfJMMmY8LfYQ
+ 1yBAOH0fkwwAwFDFkHRAY8bXurX9IGCLp583AwGjZF/WJYPy4ocAMrhyiMSdUi/B9AL10/W9k0V
+ Wl39KpAymVh15nSLVK21zwBXhcjpws9E+dqB7gCwVe8wzyjGNOFTAN4LVmd+ZPDMdXZq5x023cH
+ BBUk0Yl+14LbwKx+A6cv1UODliu5Q54cIkT+Wy+hNyCouyKDZsfqCfCAKW2oC9ezadQ5FotCnNS
+ SYrXw31ZKrgrIarn9ozZ22SiGHY/2V3eeK3U7Lv4UdOrqqF0LISPnfTmJ3iDS6vKHc+4qa2HdSo
+ N9qG2vY6oxigrBQ==
+X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
+ fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
-This driver implements the point of a DRM pipeline where a connector allows
-removal of all the following bridges up to the panel.
+Starting with HW version 7, there are actually two separate buses
+(with two separate sets of wires). So in order to support both
+buses, we need to register a separate spmi controller for each one.
+Add a separate compatible for v7 only, but allow the legacy platforms
+that have v7 to still work with the old one, for DT backwards
+compatibility.
 
-The DRM subsystem currently allows hotplug of the monitor but not preceding
-components. However there are embedded devices where the "tail" of the DRM
-pipeline, including one or more bridges, can be physically removed:
-
- .------------------------.
- |   DISPLAY CONTROLLER   |
- | .---------.   .------. |
- | | ENCODER |<--| CRTC | |
- | '---------'   '------' |
- '------|-----------------'
-        |
-        |               HOTPLUG
-        V              CONNECTOR
-   .---------.        .--.    .-.        .---------.         .-------.
-   | 0 to N  |        | _|   _| |        | 1 to N  |         |       |
-   | BRIDGES |--DSI-->||_   |_  |--DSI-->| BRIDGES |--LVDS-->| PANEL |
-   |         |        |  |    | |        |         |         |       |
-   '---------'        '--'    '-'        '---------'         '-------'
-
- [--- fixed components --]  [----------- removable add-on -----------]
-
-This driver supports such devices, where the final segment of a MIPI DSI
-bus, including one or more bridges, can be physically disconnected and
-reconnected at runtime, possibly with a different model.
-
-This implementation supports a MIPI DSI bus only, but it is designed to be
-as far as possible generic and extendable to other busses that have no
-native hotplug and model ID discovery.
-
-This driver does not provide facilities to add and remove the hot-pluggable
-components from the kernel: this needs to be done by other means
-(e.g. device tree overlay runtime insertion and removal). The
-hotplug-bridge gets notified of hot-plugging by the DRM bridge notifier
-callbacks after they get added or before they get removed.
-
-The hotplug-bridge role is to implement the "hot-pluggable connector" in
-the bridge chain. In this position, what the hotplug-bridge should ideally
-do is:
-
- * communicate with the previous component (bridge or encoder) so that it
-   believes it always has a connected bridge following it and the DRM card
-   is always present
- * be notified of the addition and removal of the following bridge and
-   attach/detach to/from it
- * communicate with the following bridge so that it will attach and detach
-   using the normal procedure (as if the entire pipeline were being created
-   or destroyed, not only the tail)
- * expose the "add-on connected/disconnected" status via the DRM connector
-   connected/disconnected status, so that users of the DRM pipeline know
-   when they can render output on the display
-
-However some aspects make it a bit more complex than that. Most notably:
-
- * the next bridge can be probed and removed at any moment and all probing
-   sequences need to be handled
- * the DSI host/device registration process, which adds to the DRM bridge
-   attach process, makes the initial card registration tricky
- * the need to register and deregister the following bridges at runtime
-   without tearing down the whole DRM card prevents using the functions
-   that are normally recommended
- * the automatic mechanism to call the appropriate .get_modes operation
-   (typically provided by the panel bridge) cannot work as the panel can
-   disappear and reappear as a different model, so an ad-hoc lookup is
-   needed
-
-The code handling these and other tricky aspects is accurately documented
-by comments in the code.
-
-Co-developed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 ---
- MAINTAINERS                             |   1 +
- drivers/gpu/drm/bridge/Kconfig          |  15 +
- drivers/gpu/drm/bridge/Makefile         |   1 +
- drivers/gpu/drm/bridge/hotplug-bridge.c | 561 ++++++++++++++++++++++++++++++++
- 4 files changed, 578 insertions(+)
+ drivers/spmi/spmi-pmic-arb.c | 726 +++++++++++++++++++++++++------------------
+ 1 file changed, 429 insertions(+), 297 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e1affd13e30b..b3fe36ed35a0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6720,6 +6720,7 @@ DRM DRIVER FOR HOTPLUG VIDEO CONNECTOR BRIDGE
- M:	Luca Ceresoli <luca.ceresoli@bootlin.com>
- S:	Maintained
- F:	Documentation/devicetree/bindings/display/bridge/hotplug-video-connector-dsi.yaml
-+F:	drivers/gpu/drm/bridge/hotplug-bridge.c
+diff --git a/drivers/spmi/spmi-pmic-arb.c b/drivers/spmi/spmi-pmic-arb.c
+index 188252bfb95f..ca0f42952445 100644
+--- a/drivers/spmi/spmi-pmic-arb.c
++++ b/drivers/spmi/spmi-pmic-arb.c
+@@ -13,6 +13,8 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/spmi.h>
+@@ -94,6 +96,8 @@ enum pmic_arb_channel {
+ 	PMIC_ARB_CHANNEL_OBS,
+ };
  
- DRM DRIVER FOR HX8357D PANELS
- S:	Orphan
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index efd996f6c138..409d090ee94d 100644
---- a/drivers/gpu/drm/bridge/Kconfig
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -90,6 +90,21 @@ config DRM_FSL_LDB
- 	help
- 	  Support for i.MX8MP DPI-to-LVDS on-SoC encoder.
- 
-+config DRM_HOTPLUG_BRIDGE
-+	tristate "Hotplug DRM bridge support"
-+	depends on OF
-+	select DRM_PANEL_BRIDGE
-+	select DRM_MIPI_DSI
-+	select DRM_KMS_HELPER
-+	help
-+	  Driver for a DRM bridge representing a physical connector that
-+	  splits a DRM pipeline into a fixed part and a physically
-+	  removable part. The fixed part includes up to the encoder and
-+	  zero or more bridges. The removable part includes any following
-+	  bridges up to the connector and panel and can be physically
-+	  removed and connected at runtime, possibly with different
-+	  components.
++#define PMIC_ARB_MAX_BUSES		2
 +
- config DRM_ITE_IT6505
- 	tristate "ITE IT6505 DisplayPort bridge"
- 	depends on OF
-diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-index 017b5832733b..278f20729c6c 100644
---- a/drivers/gpu/drm/bridge/Makefile
-+++ b/drivers/gpu/drm/bridge/Makefile
-@@ -6,6 +6,7 @@ obj-$(CONFIG_DRM_CHRONTEL_CH7033) += chrontel-ch7033.o
- obj-$(CONFIG_DRM_CROS_EC_ANX7688) += cros-ec-anx7688.o
- obj-$(CONFIG_DRM_DISPLAY_CONNECTOR) += display-connector.o
- obj-$(CONFIG_DRM_FSL_LDB) += fsl-ldb.o
-+obj-$(CONFIG_DRM_HOTPLUG_BRIDGE) += hotplug-bridge.o
- obj-$(CONFIG_DRM_ITE_IT6505) += ite-it6505.o
- obj-$(CONFIG_DRM_LONTIUM_LT8912B) += lontium-lt8912b.o
- obj-$(CONFIG_DRM_LONTIUM_LT9211) += lontium-lt9211.o
-diff --git a/drivers/gpu/drm/bridge/hotplug-bridge.c b/drivers/gpu/drm/bridge/hotplug-bridge.c
-new file mode 100644
-index 000000000000..8af01be80191
---- /dev/null
-+++ b/drivers/gpu/drm/bridge/hotplug-bridge.c
-@@ -0,0 +1,561 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * A DRM bridge representing the split point between a fixed part of the
-+ * DRM pipeline and a physically removable part. The fixed part includes up
-+ * to the encoder and zero or more bridges. Insertion and removal of the
-+ * "downstream" components happens via device driver probe/removal.
-+ *
-+ * Copyright (C) 2024, GE HealthCare
-+ *
-+ * Authors:
-+ * Luca Ceresoli <luca.ceresoli@bootlin.com>
-+ * Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+ /* Maximum number of support PMIC peripherals */
+ #define PMIC_ARB_MAX_PERIPHS		512
+ #define PMIC_ARB_MAX_PERIPHS_V7		1024
+@@ -125,58 +129,68 @@ struct apid_data {
+ 	u8		irq_ee;
+ };
+ 
++struct spmi_pmic_arb;
++
+ /**
+- * struct spmi_pmic_arb - SPMI PMIC Arbiter object
++ * struct spmi_pmic_arb_bus - SPMI PMIC Arbiter Bus object
+  *
+- * @rd_base:		on v1 "core", on v2 "observer" register base off DT.
+- * @wr_base:		on v1 "core", on v2 "chnls"    register base off DT.
+  * @intr:		address of the SPMI interrupt control registers.
+  * @cnfg:		address of the PMIC Arbiter configuration registers.
+- * @lock:		lock to synchronize accesses.
+- * @channel:		execution environment channel to use for accesses.
+- * @irq:		PMIC ARB interrupt.
+- * @ee:			the current Execution Environment
+- * @bus_instance:	on v7: 0 = primary SPMI bus, 1 = secondary SPMI bus
+- * @min_apid:		minimum APID (used for bounding IRQ search)
+- * @max_apid:		maximum APID
++ * @domain:		irq domain object for PMIC IRQ domain
+  * @base_apid:		on v7: minimum APID associated with the particular SPMI
+  *			bus instance
+  * @apid_count:		on v5 and v7: number of APIDs associated with the
+  *			particular SPMI bus instance
+  * @mapping_table:	in-memory copy of PPID -> APID mapping table.
+- * @domain:		irq domain object for PMIC IRQ domain
+- * @spmic:		SPMI controller object
+- * @ver_ops:		version dependent operations.
+  * @ppid_to_apid:	in-memory copy of PPID -> APID mapping table.
+- * @last_apid:		Highest value APID in use
+  * @apid_data:		Table of data for all APIDs
++ * @last_apid:		Highest value APID in use
++ * @irq:		PMIC ARB interrupt.
 + */
-+
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/of_graph.h>
-+#include <linux/platform_device.h>
-+
-+#include <drm/drm_atomic_helper.h>
-+#include <drm/drm_bridge.h>
-+#include <drm/drm_bridge_connector.h>
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_of.h>
-+#include <drm/drm_probe_helper.h>
-+
-+struct hotplug_bridge {
-+	struct device *dev;
-+
-+	/* Local bridge */
-+	struct drm_bridge bridge;
-+	/* Local connector for the bridge chain */
-+	struct drm_connector *connector;
-+	/* Downstream bridge (next in the chain) */
-+	struct drm_bridge *next_bridge;
-+	struct mutex next_bridge_mutex;
-+
-+	struct work_struct hpd_work;
-+	struct notifier_block notifier_block;
-+
-+	/* Local DSI host, for the downstream DSI device to attach to */
-+	struct mipi_dsi_host dsi_host;
-+	/* Local DSI device, attached to the upstream DSI host */
-+	struct mipi_dsi_device *dsi_dev;
-+	/* Upstream DSI host (the actual DSI controller) */
-+	struct mipi_dsi_host *prev_dsi_host;
++struct spmi_pmic_arb_bus {
++	struct spmi_pmic_arb	*pmic_arb;
++	struct irq_domain	*domain;
++	void __iomem		*intr;
++	void __iomem		*cnfg;
++	struct spmi_controller	*spmic;
++	u16			base_apid;
++	int			apid_count;
++	u32			*mapping_table;
++	DECLARE_BITMAP(mapping_table_valid, PMIC_ARB_MAX_PERIPHS);
++	u16			*ppid_to_apid;
++	u16			last_apid;
++	struct apid_data	*apid_data;
++	u16			min_apid;
++	u16			max_apid;
++	int			irq;
++	u8			id;
 +};
 +
-+static struct hotplug_bridge *hotplug_bridge_from_drm_bridge(struct drm_bridge *bridge)
++/**
++ * struct spmi_pmic_arb - SPMI PMIC Arbiter object
++ *
++ * @rd_base:		on v1 "core", on v2 "observer" register base off DT.
++ * @wr_base:		on v1 "core", on v2 "chnls"    register base off DT.
++ * @lock:		lock to synchronize accesses.
++ * @channel:		execution environment channel to use for accesses.
++ * @ee:			the current Execution Environment
++ * @min_apid:		minimum APID (used for bounding IRQ search)
++ * @max_apid:		maximum APID
++ * @ver_ops:		version dependent operations.
+  * @max_periphs:	Number of elements in apid_data[]
+  */
+ struct spmi_pmic_arb {
+ 	void __iomem		*rd_base;
+ 	void __iomem		*wr_base;
+-	void __iomem		*intr;
+-	void __iomem		*cnfg;
+ 	void __iomem		*core;
+ 	resource_size_t		core_size;
+ 	raw_spinlock_t		lock;
+ 	u8			channel;
+-	int			irq;
+ 	u8			ee;
+-	u32			bus_instance;
+-	u16			min_apid;
+-	u16			max_apid;
+-	u16			base_apid;
+-	int			apid_count;
+-	u32			*mapping_table;
+-	DECLARE_BITMAP(mapping_table_valid, PMIC_ARB_MAX_PERIPHS);
+-	struct irq_domain	*domain;
+-	struct spmi_controller	*spmic;
+ 	const struct pmic_arb_ver_ops *ver_ops;
+-	u16			*ppid_to_apid;
+-	u16			last_apid;
+-	struct apid_data	*apid_data;
+ 	int			max_periphs;
++	struct spmi_pmic_arb_bus buses[PMIC_ARB_MAX_BUSES];
++	int			buses_available;
+ };
+ 
+ /**
+@@ -204,21 +218,21 @@ struct spmi_pmic_arb {
+ struct pmic_arb_ver_ops {
+ 	const char *ver_str;
+ 	int (*get_core_resources)(struct platform_device *pdev, void __iomem *core);
+-	int (*init_apid)(struct spmi_pmic_arb *pmic_arb, int index);
+-	int (*ppid_to_apid)(struct spmi_pmic_arb *pmic_arb, u16 ppid);
++	int (*init_apid)(struct spmi_pmic_arb_bus *bus, int index);
++	int (*ppid_to_apid)(struct spmi_pmic_arb_bus *bus, u16 ppid);
+ 	/* spmi commands (read_cmd, write_cmd, cmd) functionality */
+-	int (*offset)(struct spmi_pmic_arb *pmic_arb, u8 sid, u16 addr,
+-			enum pmic_arb_channel ch_type);
++	int (*offset)(struct spmi_pmic_arb_bus *bus, u8 sid, u16 addr,
++		      enum pmic_arb_channel ch_type);
+ 	u32 (*fmt_cmd)(u8 opc, u8 sid, u16 addr, u8 bc);
+ 	int (*non_data_cmd)(struct spmi_controller *ctrl, u8 opc, u8 sid);
+ 	/* Interrupts controller functionality (offset of PIC registers) */
+-	void __iomem *(*owner_acc_status)(struct spmi_pmic_arb *pmic_arb, u8 m,
++	void __iomem *(*owner_acc_status)(struct spmi_pmic_arb_bus *bus, u8 m,
+ 					  u16 n);
+-	void __iomem *(*acc_enable)(struct spmi_pmic_arb *pmic_arb, u16 n);
+-	void __iomem *(*irq_status)(struct spmi_pmic_arb *pmic_arb, u16 n);
+-	void __iomem *(*irq_clear)(struct spmi_pmic_arb *pmic_arb, u16 n);
++	void __iomem *(*acc_enable)(struct spmi_pmic_arb_bus *bus, u16 n);
++	void __iomem *(*irq_status)(struct spmi_pmic_arb_bus *bus, u16 n);
++	void __iomem *(*irq_clear)(struct spmi_pmic_arb_bus *bus, u16 n);
+ 	u32 (*apid_map_offset)(u16 n);
+-	void __iomem *(*apid_owner)(struct spmi_pmic_arb *pmic_arb, u16 n);
++	void __iomem *(*apid_owner)(struct spmi_pmic_arb_bus *bus, u16 n);
+ };
+ 
+ static inline void pmic_arb_base_write(struct spmi_pmic_arb *pmic_arb,
+@@ -266,13 +280,14 @@ static int pmic_arb_wait_for_done(struct spmi_controller *ctrl,
+ 				  void __iomem *base, u8 sid, u16 addr,
+ 				  enum pmic_arb_channel ch_type)
+ {
+-	struct spmi_pmic_arb *pmic_arb = spmi_controller_get_drvdata(ctrl);
++	struct spmi_pmic_arb_bus *bus = spmi_controller_get_drvdata(ctrl);
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	u32 status = 0;
+ 	u32 timeout = PMIC_ARB_TIMEOUT_US;
+ 	u32 offset;
+ 	int rc;
+ 
+-	rc = pmic_arb->ver_ops->offset(pmic_arb, sid, addr, ch_type);
++	rc = pmic_arb->ver_ops->offset(bus, sid, addr, ch_type);
+ 	if (rc < 0)
+ 		return rc;
+ 
+@@ -284,21 +299,21 @@ static int pmic_arb_wait_for_done(struct spmi_controller *ctrl,
+ 
+ 		if (status & PMIC_ARB_STATUS_DONE) {
+ 			if (status & PMIC_ARB_STATUS_DENIED) {
+-				dev_err(&ctrl->dev, "%s: %#x %#x: transaction denied (%#x)\n",
+-					__func__, sid, addr, status);
++				dev_err(&ctrl->dev, "%s: %#x %#x %#x: transaction denied (%#x)\n",
++					__func__, bus->id, sid, addr, status);
+ 				return -EPERM;
+ 			}
+ 
+ 			if (status & PMIC_ARB_STATUS_FAILURE) {
+-				dev_err(&ctrl->dev, "%s: %#x %#x: transaction failed (%#x)\n",
+-					__func__, sid, addr, status);
++				dev_err(&ctrl->dev, "%s: %#x %#x %#x: transaction failed (%#x) reg: 0x%x\n",
++					__func__, bus->id, sid, addr, status, offset);
+ 				WARN_ON(1);
+ 				return -EIO;
+ 			}
+ 
+ 			if (status & PMIC_ARB_STATUS_DROPPED) {
+-				dev_err(&ctrl->dev, "%s: %#x %#x: transaction dropped (%#x)\n",
+-					__func__, sid, addr, status);
++				dev_err(&ctrl->dev, "%s: %#x %#x %#x: transaction dropped (%#x)\n",
++					__func__, bus->id, sid, addr, status);
+ 				return -EIO;
+ 			}
+ 
+@@ -307,8 +322,8 @@ static int pmic_arb_wait_for_done(struct spmi_controller *ctrl,
+ 		udelay(1);
+ 	}
+ 
+-	dev_err(&ctrl->dev, "%s: %#x %#x: timeout, status %#x\n",
+-		__func__, sid, addr, status);
++	dev_err(&ctrl->dev, "%s: %#x %#x %#x: timeout, status %#x\n",
++		__func__, bus->id, sid, addr, status);
+ 	return -ETIMEDOUT;
+ }
+ 
+@@ -316,12 +331,13 @@ static int
+ pmic_arb_non_data_cmd_v1(struct spmi_controller *ctrl, u8 opc, u8 sid)
+ {
+ 	struct spmi_pmic_arb *pmic_arb = spmi_controller_get_drvdata(ctrl);
++	struct spmi_pmic_arb_bus *bus = &pmic_arb->buses[0];
+ 	unsigned long flags;
+ 	u32 cmd;
+ 	int rc;
+ 	u32 offset;
+ 
+-	rc = pmic_arb->ver_ops->offset(pmic_arb, sid, 0, PMIC_ARB_CHANNEL_RW);
++	rc = pmic_arb->ver_ops->offset(bus, sid, 0, PMIC_ARB_CHANNEL_RW);
+ 	if (rc < 0)
+ 		return rc;
+ 
+@@ -357,20 +373,21 @@ static int pmic_arb_cmd(struct spmi_controller *ctrl, u8 opc, u8 sid)
+ 	return pmic_arb->ver_ops->non_data_cmd(ctrl, opc, sid);
+ }
+ 
+-static int pmic_arb_fmt_read_cmd(struct spmi_pmic_arb *pmic_arb, u8 opc, u8 sid,
++static int pmic_arb_fmt_read_cmd(struct spmi_pmic_arb_bus *bus, u8 opc, u8 sid,
+ 				 u16 addr, size_t len, u32 *cmd, u32 *offset)
+ {
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	u8 bc = len - 1;
+ 	int rc;
+ 
+-	rc = pmic_arb->ver_ops->offset(pmic_arb, sid, addr,
++	rc = pmic_arb->ver_ops->offset(bus, sid, addr,
+ 				       PMIC_ARB_CHANNEL_OBS);
+ 	if (rc < 0)
+ 		return rc;
+ 
+ 	*offset = rc;
+ 	if (bc >= PMIC_ARB_MAX_TRANS_BYTES) {
+-		dev_err(&pmic_arb->spmic->dev, "pmic-arb supports 1..%d bytes per trans, but:%zu requested",
++		dev_err(&bus->spmic->dev, "pmic-arb supports 1..%d bytes per trans, but:%zu requested",
+ 			PMIC_ARB_MAX_TRANS_BYTES, len);
+ 		return  -EINVAL;
+ 	}
+@@ -394,7 +411,8 @@ static int pmic_arb_read_cmd_unlocked(struct spmi_controller *ctrl, u32 cmd,
+ 				      u32 offset, u8 sid, u16 addr, u8 *buf,
+ 				      size_t len)
+ {
+-	struct spmi_pmic_arb *pmic_arb = spmi_controller_get_drvdata(ctrl);
++	struct spmi_pmic_arb_bus *bus = spmi_controller_get_drvdata(ctrl);
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	u8 bc = len - 1;
+ 	int rc;
+ 
+@@ -416,12 +434,13 @@ static int pmic_arb_read_cmd_unlocked(struct spmi_controller *ctrl, u32 cmd,
+ static int pmic_arb_read_cmd(struct spmi_controller *ctrl, u8 opc, u8 sid,
+ 			     u16 addr, u8 *buf, size_t len)
+ {
+-	struct spmi_pmic_arb *pmic_arb = spmi_controller_get_drvdata(ctrl);
++	struct spmi_pmic_arb_bus *bus = spmi_controller_get_drvdata(ctrl);
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	unsigned long flags;
+ 	u32 cmd, offset;
+ 	int rc;
+ 
+-	rc = pmic_arb_fmt_read_cmd(pmic_arb, opc, sid, addr, len, &cmd,
++	rc = pmic_arb_fmt_read_cmd(bus, opc, sid, addr, len, &cmd,
+ 				   &offset);
+ 	if (rc)
+ 		return rc;
+@@ -433,21 +452,22 @@ static int pmic_arb_read_cmd(struct spmi_controller *ctrl, u8 opc, u8 sid,
+ 	return rc;
+ }
+ 
+-static int pmic_arb_fmt_write_cmd(struct spmi_pmic_arb *pmic_arb, u8 opc,
++static int pmic_arb_fmt_write_cmd(struct spmi_pmic_arb_bus *bus, u8 opc,
+ 				  u8 sid, u16 addr, size_t len, u32 *cmd,
+ 				  u32 *offset)
+ {
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	u8 bc = len - 1;
+ 	int rc;
+ 
+-	rc = pmic_arb->ver_ops->offset(pmic_arb, sid, addr,
++	rc = pmic_arb->ver_ops->offset(bus, sid, addr,
+ 					PMIC_ARB_CHANNEL_RW);
+ 	if (rc < 0)
+ 		return rc;
+ 
+ 	*offset = rc;
+ 	if (bc >= PMIC_ARB_MAX_TRANS_BYTES) {
+-		dev_err(&pmic_arb->spmic->dev, "pmic-arb supports 1..%d bytes per trans, but:%zu requested",
++		dev_err(&bus->spmic->dev, "pmic-arb supports 1..%d bytes per trans, but:%zu requested",
+ 			PMIC_ARB_MAX_TRANS_BYTES, len);
+ 		return  -EINVAL;
+ 	}
+@@ -473,7 +493,8 @@ static int pmic_arb_write_cmd_unlocked(struct spmi_controller *ctrl, u32 cmd,
+ 				      u32 offset, u8 sid, u16 addr,
+ 				      const u8 *buf, size_t len)
+ {
+-	struct spmi_pmic_arb *pmic_arb = spmi_controller_get_drvdata(ctrl);
++	struct spmi_pmic_arb_bus *bus = spmi_controller_get_drvdata(ctrl);
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	u8 bc = len - 1;
+ 
+ 	/* Write data to FIFOs */
+@@ -492,12 +513,13 @@ static int pmic_arb_write_cmd_unlocked(struct spmi_controller *ctrl, u32 cmd,
+ static int pmic_arb_write_cmd(struct spmi_controller *ctrl, u8 opc, u8 sid,
+ 			      u16 addr, const u8 *buf, size_t len)
+ {
+-	struct spmi_pmic_arb *pmic_arb = spmi_controller_get_drvdata(ctrl);
++	struct spmi_pmic_arb_bus *bus = spmi_controller_get_drvdata(ctrl);
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	unsigned long flags;
+ 	u32 cmd, offset;
+ 	int rc;
+ 
+-	rc = pmic_arb_fmt_write_cmd(pmic_arb, opc, sid, addr, len, &cmd,
++	rc = pmic_arb_fmt_write_cmd(bus, opc, sid, addr, len, &cmd,
+ 				    &offset);
+ 	if (rc)
+ 		return rc;
+@@ -513,18 +535,19 @@ static int pmic_arb_write_cmd(struct spmi_controller *ctrl, u8 opc, u8 sid,
+ static int pmic_arb_masked_write(struct spmi_controller *ctrl, u8 sid, u16 addr,
+ 				 const u8 *buf, const u8 *mask, size_t len)
+ {
+-	struct spmi_pmic_arb *pmic_arb = spmi_controller_get_drvdata(ctrl);
++	struct spmi_pmic_arb_bus *bus = spmi_controller_get_drvdata(ctrl);
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	u32 read_cmd, read_offset, write_cmd, write_offset;
+ 	u8 temp[PMIC_ARB_MAX_TRANS_BYTES];
+ 	unsigned long flags;
+ 	int rc, i;
+ 
+-	rc = pmic_arb_fmt_read_cmd(pmic_arb, SPMI_CMD_EXT_READL, sid, addr, len,
++	rc = pmic_arb_fmt_read_cmd(bus, SPMI_CMD_EXT_READL, sid, addr, len,
+ 				   &read_cmd, &read_offset);
+ 	if (rc)
+ 		return rc;
+ 
+-	rc = pmic_arb_fmt_write_cmd(pmic_arb, SPMI_CMD_EXT_WRITEL, sid, addr,
++	rc = pmic_arb_fmt_write_cmd(bus, SPMI_CMD_EXT_WRITEL, sid, addr,
+ 				    len, &write_cmd, &write_offset);
+ 	if (rc)
+ 		return rc;
+@@ -567,25 +590,25 @@ struct spmi_pmic_arb_qpnpint_type {
+ static void qpnpint_spmi_write(struct irq_data *d, u8 reg, void *buf,
+ 			       size_t len)
+ {
+-	struct spmi_pmic_arb *pmic_arb = irq_data_get_irq_chip_data(d);
++	struct spmi_pmic_arb_bus *bus = irq_data_get_irq_chip_data(d);
+ 	u8 sid = hwirq_to_sid(d->hwirq);
+ 	u8 per = hwirq_to_per(d->hwirq);
+ 
+-	if (pmic_arb_write_cmd(pmic_arb->spmic, SPMI_CMD_EXT_WRITEL, sid,
++	if (pmic_arb_write_cmd(bus->spmic, SPMI_CMD_EXT_WRITEL, sid,
+ 			       (per << 8) + reg, buf, len))
+-		dev_err_ratelimited(&pmic_arb->spmic->dev, "failed irqchip transaction on %x\n",
++		dev_err_ratelimited(&bus->spmic->dev, "failed irqchip transaction on %x\n",
+ 				    d->irq);
+ }
+ 
+ static void qpnpint_spmi_read(struct irq_data *d, u8 reg, void *buf, size_t len)
+ {
+-	struct spmi_pmic_arb *pmic_arb = irq_data_get_irq_chip_data(d);
++	struct spmi_pmic_arb_bus *bus = irq_data_get_irq_chip_data(d);
+ 	u8 sid = hwirq_to_sid(d->hwirq);
+ 	u8 per = hwirq_to_per(d->hwirq);
+ 
+-	if (pmic_arb_read_cmd(pmic_arb->spmic, SPMI_CMD_EXT_READL, sid,
++	if (pmic_arb_read_cmd(bus->spmic, SPMI_CMD_EXT_READL, sid,
+ 			      (per << 8) + reg, buf, len))
+-		dev_err_ratelimited(&pmic_arb->spmic->dev, "failed irqchip transaction on %x\n",
++		dev_err_ratelimited(&bus->spmic->dev, "failed irqchip transaction on %x\n",
+ 				    d->irq);
+ }
+ 
+@@ -593,47 +616,49 @@ static int qpnpint_spmi_masked_write(struct irq_data *d, u8 reg,
+ 				     const void *buf, const void *mask,
+ 				     size_t len)
+ {
+-	struct spmi_pmic_arb *pmic_arb = irq_data_get_irq_chip_data(d);
++	struct spmi_pmic_arb_bus *bus = irq_data_get_irq_chip_data(d);
+ 	u8 sid = hwirq_to_sid(d->hwirq);
+ 	u8 per = hwirq_to_per(d->hwirq);
+ 	int rc;
+ 
+-	rc = pmic_arb_masked_write(pmic_arb->spmic, sid, (per << 8) + reg, buf,
++	rc = pmic_arb_masked_write(bus->spmic, sid, (per << 8) + reg, buf,
+ 				   mask, len);
+ 	if (rc)
+-		dev_err_ratelimited(&pmic_arb->spmic->dev, "failed irqchip transaction on %x rc=%d\n",
++		dev_err_ratelimited(&bus->spmic->dev, "failed irqchip transaction on %x rc=%d\n",
+ 				    d->irq, rc);
+ 	return rc;
+ }
+ 
+-static void cleanup_irq(struct spmi_pmic_arb *pmic_arb, u16 apid, int id)
++static void cleanup_irq(struct spmi_pmic_arb_bus *bus, u16 apid, int id)
+ {
+-	u16 ppid = pmic_arb->apid_data[apid].ppid;
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
++	u16 ppid = bus->apid_data[apid].ppid;
+ 	u8 sid = ppid >> 8;
+ 	u8 per = ppid & 0xFF;
+ 	u8 irq_mask = BIT(id);
+ 
+-	dev_err_ratelimited(&pmic_arb->spmic->dev, "%s apid=%d sid=0x%x per=0x%x irq=%d\n",
+-			__func__, apid, sid, per, id);
+-	writel_relaxed(irq_mask, pmic_arb->ver_ops->irq_clear(pmic_arb, apid));
++	dev_err_ratelimited(&bus->spmic->dev, "%s apid=%d sid=0x%x per=0x%x irq=%d\n",
++			    __func__, apid, sid, per, id);
++	writel_relaxed(irq_mask, pmic_arb->ver_ops->irq_clear(bus, apid));
+ }
+ 
+-static int periph_interrupt(struct spmi_pmic_arb *pmic_arb, u16 apid)
++static int periph_interrupt(struct spmi_pmic_arb_bus *bus, u16 apid)
+ {
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	unsigned int irq;
+ 	u32 status, id;
+ 	int handled = 0;
+-	u8 sid = (pmic_arb->apid_data[apid].ppid >> 8) & 0xF;
+-	u8 per = pmic_arb->apid_data[apid].ppid & 0xFF;
++	u8 sid = (bus->apid_data[apid].ppid >> 8) & 0xF;
++	u8 per = bus->apid_data[apid].ppid & 0xFF;
+ 
+-	status = readl_relaxed(pmic_arb->ver_ops->irq_status(pmic_arb, apid));
++	status = readl_relaxed(pmic_arb->ver_ops->irq_status(bus, apid));
+ 	while (status) {
+ 		id = ffs(status) - 1;
+ 		status &= ~BIT(id);
+-		irq = irq_find_mapping(pmic_arb->domain,
+-					spec_to_hwirq(sid, per, id, apid));
++		irq = irq_find_mapping(bus->domain,
++				       spec_to_hwirq(sid, per, id, apid));
+ 		if (irq == 0) {
+-			cleanup_irq(pmic_arb, apid, id);
++			cleanup_irq(bus, apid, id);
+ 			continue;
+ 		}
+ 		generic_handle_irq(irq);
+@@ -645,16 +670,17 @@ static int periph_interrupt(struct spmi_pmic_arb *pmic_arb, u16 apid)
+ 
+ static void pmic_arb_chained_irq(struct irq_desc *desc)
+ {
+-	struct spmi_pmic_arb *pmic_arb = irq_desc_get_handler_data(desc);
++	struct spmi_pmic_arb_bus *bus = irq_desc_get_handler_data(desc);
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	const struct pmic_arb_ver_ops *ver_ops = pmic_arb->ver_ops;
+ 	struct irq_chip *chip = irq_desc_get_chip(desc);
+-	int first = pmic_arb->min_apid;
+-	int last = pmic_arb->max_apid;
++	int first = bus->min_apid;
++	int last = bus->max_apid;
+ 	/*
+ 	 * acc_offset will be non-zero for the secondary SPMI bus instance on
+ 	 * v7 controllers.
+ 	 */
+-	int acc_offset = pmic_arb->base_apid >> 5;
++	int acc_offset = bus->base_apid >> 5;
+ 	u8 ee = pmic_arb->ee;
+ 	u32 status, enable, handled = 0;
+ 	int i, id, apid;
+@@ -665,7 +691,7 @@ static void pmic_arb_chained_irq(struct irq_desc *desc)
+ 	chained_irq_enter(chip, desc);
+ 
+ 	for (i = first >> 5; i <= last >> 5; ++i) {
+-		status = readl_relaxed(ver_ops->owner_acc_status(pmic_arb, ee, i - acc_offset));
++		status = readl_relaxed(ver_ops->owner_acc_status(bus, ee, i - acc_offset));
+ 		if (status)
+ 			acc_valid = true;
+ 
+@@ -679,9 +705,9 @@ static void pmic_arb_chained_irq(struct irq_desc *desc)
+ 				continue;
+ 			}
+ 			enable = readl_relaxed(
+-					ver_ops->acc_enable(pmic_arb, apid));
++					ver_ops->acc_enable(bus, apid));
+ 			if (enable & SPMI_PIC_ACC_ENABLE_BIT)
+-				if (periph_interrupt(pmic_arb, apid) != 0)
++				if (periph_interrupt(bus, apid) != 0)
+ 					handled++;
+ 		}
+ 	}
+@@ -690,19 +716,19 @@ static void pmic_arb_chained_irq(struct irq_desc *desc)
+ 	if (!acc_valid) {
+ 		for (i = first; i <= last; i++) {
+ 			/* skip if APPS is not irq owner */
+-			if (pmic_arb->apid_data[i].irq_ee != pmic_arb->ee)
++			if (bus->apid_data[i].irq_ee != pmic_arb->ee)
+ 				continue;
+ 
+ 			irq_status = readl_relaxed(
+-					     ver_ops->irq_status(pmic_arb, i));
++					     ver_ops->irq_status(bus, i));
+ 			if (irq_status) {
+ 				enable = readl_relaxed(
+-					     ver_ops->acc_enable(pmic_arb, i));
++					     ver_ops->acc_enable(bus, i));
+ 				if (enable & SPMI_PIC_ACC_ENABLE_BIT) {
+-					dev_dbg(&pmic_arb->spmic->dev,
++					dev_dbg(&bus->spmic->dev,
+ 						"Dispatching IRQ for apid=%d status=%x\n",
+ 						i, irq_status);
+-					if (periph_interrupt(pmic_arb, i) != 0)
++					if (periph_interrupt(bus, i) != 0)
+ 						handled++;
+ 				}
+ 			}
+@@ -717,12 +743,13 @@ static void pmic_arb_chained_irq(struct irq_desc *desc)
+ 
+ static void qpnpint_irq_ack(struct irq_data *d)
+ {
+-	struct spmi_pmic_arb *pmic_arb = irq_data_get_irq_chip_data(d);
++	struct spmi_pmic_arb_bus *bus = irq_data_get_irq_chip_data(d);
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	u8 irq = hwirq_to_irq(d->hwirq);
+ 	u16 apid = hwirq_to_apid(d->hwirq);
+ 	u8 data;
+ 
+-	writel_relaxed(BIT(irq), pmic_arb->ver_ops->irq_clear(pmic_arb, apid));
++	writel_relaxed(BIT(irq), pmic_arb->ver_ops->irq_clear(bus, apid));
+ 
+ 	data = BIT(irq);
+ 	qpnpint_spmi_write(d, QPNPINT_REG_LATCHED_CLR, &data, 1);
+@@ -738,14 +765,15 @@ static void qpnpint_irq_mask(struct irq_data *d)
+ 
+ static void qpnpint_irq_unmask(struct irq_data *d)
+ {
+-	struct spmi_pmic_arb *pmic_arb = irq_data_get_irq_chip_data(d);
++	struct spmi_pmic_arb_bus *bus = irq_data_get_irq_chip_data(d);
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	const struct pmic_arb_ver_ops *ver_ops = pmic_arb->ver_ops;
+ 	u8 irq = hwirq_to_irq(d->hwirq);
+ 	u16 apid = hwirq_to_apid(d->hwirq);
+ 	u8 buf[2];
+ 
+ 	writel_relaxed(SPMI_PIC_ACC_ENABLE_BIT,
+-			ver_ops->acc_enable(pmic_arb, apid));
++			ver_ops->acc_enable(bus, apid));
+ 
+ 	qpnpint_spmi_read(d, QPNPINT_REG_EN_SET, &buf[0], 1);
+ 	if (!(buf[0] & BIT(irq))) {
+@@ -802,9 +830,9 @@ static int qpnpint_irq_set_type(struct irq_data *d, unsigned int flow_type)
+ 
+ static int qpnpint_irq_set_wake(struct irq_data *d, unsigned int on)
+ {
+-	struct spmi_pmic_arb *pmic_arb = irq_data_get_irq_chip_data(d);
++	struct spmi_pmic_arb_bus *bus = irq_data_get_irq_chip_data(d);
+ 
+-	return irq_set_irq_wake(pmic_arb->irq, on);
++	return irq_set_irq_wake(bus->irq, on);
+ }
+ 
+ static int qpnpint_get_irqchip_state(struct irq_data *d,
+@@ -826,17 +854,18 @@ static int qpnpint_get_irqchip_state(struct irq_data *d,
+ static int qpnpint_irq_domain_activate(struct irq_domain *domain,
+ 				       struct irq_data *d, bool reserve)
+ {
+-	struct spmi_pmic_arb *pmic_arb = irq_data_get_irq_chip_data(d);
++	struct spmi_pmic_arb_bus *bus = irq_data_get_irq_chip_data(d);
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	u16 periph = hwirq_to_per(d->hwirq);
+ 	u16 apid = hwirq_to_apid(d->hwirq);
+ 	u16 sid = hwirq_to_sid(d->hwirq);
+ 	u16 irq = hwirq_to_irq(d->hwirq);
+ 	u8 buf;
+ 
+-	if (pmic_arb->apid_data[apid].irq_ee != pmic_arb->ee) {
+-		dev_err(&pmic_arb->spmic->dev, "failed to xlate sid = %#x, periph = %#x, irq = %u: ee=%u but owner=%u\n",
++	if (bus->apid_data[apid].irq_ee != pmic_arb->ee) {
++		dev_err(&bus->spmic->dev, "failed to xlate sid = %#x, periph = %#x, irq = %u: ee=%u but owner=%u\n",
+ 			sid, periph, irq, pmic_arb->ee,
+-			pmic_arb->apid_data[apid].irq_ee);
++			bus->apid_data[apid].irq_ee);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -863,15 +892,16 @@ static int qpnpint_irq_domain_translate(struct irq_domain *d,
+ 					unsigned long *out_hwirq,
+ 					unsigned int *out_type)
+ {
+-	struct spmi_pmic_arb *pmic_arb = d->host_data;
++	struct spmi_pmic_arb_bus *bus = d->host_data;
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	u32 *intspec = fwspec->param;
+ 	u16 apid, ppid;
+ 	int rc;
+ 
+-	dev_dbg(&pmic_arb->spmic->dev, "intspec[0] 0x%1x intspec[1] 0x%02x intspec[2] 0x%02x\n",
++	dev_dbg(&bus->spmic->dev, "intspec[0] 0x%1x intspec[1] 0x%02x intspec[2] 0x%02x\n",
+ 		intspec[0], intspec[1], intspec[2]);
+ 
+-	if (irq_domain_get_of_node(d) != pmic_arb->spmic->dev.of_node)
++	if (irq_domain_get_of_node(d) != bus->spmic->dev.of_node)
+ 		return -EINVAL;
+ 	if (fwspec->param_count != 4)
+ 		return -EINVAL;
+@@ -879,37 +909,38 @@ static int qpnpint_irq_domain_translate(struct irq_domain *d,
+ 		return -EINVAL;
+ 
+ 	ppid = intspec[0] << 8 | intspec[1];
+-	rc = pmic_arb->ver_ops->ppid_to_apid(pmic_arb, ppid);
++	rc = pmic_arb->ver_ops->ppid_to_apid(bus, ppid);
+ 	if (rc < 0) {
+-		dev_err(&pmic_arb->spmic->dev, "failed to xlate sid = %#x, periph = %#x, irq = %u rc = %d\n",
+-		intspec[0], intspec[1], intspec[2], rc);
++		dev_err(&bus->spmic->dev, "failed to xlate sid = %#x, periph = %#x, irq = %u rc = %d\n",
++			intspec[0], intspec[1], intspec[2], rc);
+ 		return rc;
+ 	}
+ 
+ 	apid = rc;
+ 	/* Keep track of {max,min}_apid for bounding search during interrupt */
+-	if (apid > pmic_arb->max_apid)
+-		pmic_arb->max_apid = apid;
+-	if (apid < pmic_arb->min_apid)
+-		pmic_arb->min_apid = apid;
++	if (apid > bus->max_apid)
++		bus->max_apid = apid;
++	if (apid < bus->min_apid)
++		bus->min_apid = apid;
+ 
+ 	*out_hwirq = spec_to_hwirq(intspec[0], intspec[1], intspec[2], apid);
+ 	*out_type  = intspec[3] & IRQ_TYPE_SENSE_MASK;
+ 
+-	dev_dbg(&pmic_arb->spmic->dev, "out_hwirq = %lu\n", *out_hwirq);
++	dev_dbg(&bus->spmic->dev, "out_hwirq = %lu\n", *out_hwirq);
+ 
+ 	return 0;
+ }
+ 
+ static struct lock_class_key qpnpint_irq_lock_class, qpnpint_irq_request_class;
+ 
+-static void qpnpint_irq_domain_map(struct spmi_pmic_arb *pmic_arb,
++static void qpnpint_irq_domain_map(struct spmi_pmic_arb_bus *bus,
+ 				   struct irq_domain *domain, unsigned int virq,
+ 				   irq_hw_number_t hwirq, unsigned int type)
+ {
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	irq_flow_handler_t handler;
+ 
+-	dev_dbg(&pmic_arb->spmic->dev, "virq = %u, hwirq = %lu, type = %u\n",
++	dev_dbg(&bus->spmic->dev, "virq = %u, hwirq = %lu, type = %u\n",
+ 		virq, hwirq, type);
+ 
+ 	if (type & IRQ_TYPE_EDGE_BOTH)
+@@ -928,7 +959,7 @@ static int qpnpint_irq_domain_alloc(struct irq_domain *domain,
+ 				    unsigned int virq, unsigned int nr_irqs,
+ 				    void *data)
+ {
+-	struct spmi_pmic_arb *pmic_arb = domain->host_data;
++	struct spmi_pmic_arb_bus *bus = domain->host_data;
+ 	struct irq_fwspec *fwspec = data;
+ 	irq_hw_number_t hwirq;
+ 	unsigned int type;
+@@ -939,20 +970,22 @@ static int qpnpint_irq_domain_alloc(struct irq_domain *domain,
+ 		return ret;
+ 
+ 	for (i = 0; i < nr_irqs; i++)
+-		qpnpint_irq_domain_map(pmic_arb, domain, virq + i, hwirq + i,
++		qpnpint_irq_domain_map(bus, domain, virq + i, hwirq + i,
+ 				       type);
+ 
+ 	return 0;
+ }
+ 
+-static int pmic_arb_init_apid_min_max(struct spmi_pmic_arb *pmic_arb)
++static int pmic_arb_init_apid_min_max(struct spmi_pmic_arb_bus *bus)
+ {
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
++
+ 	/*
+ 	 * Initialize max_apid/min_apid to the opposite bounds, during
+ 	 * the irq domain translation, we are sure to update these
+ 	 */
+-	pmic_arb->max_apid = 0;
+-	pmic_arb->min_apid = pmic_arb->max_periphs - 1;
++	bus->max_apid = 0;
++	bus->min_apid = pmic_arb->max_periphs - 1;
+ 
+ 	return 0;
+ }
+@@ -970,43 +1003,44 @@ static int pmic_arb_get_core_resources_v1(struct platform_device *pdev,
+ 	return 0;
+ }
+ 
+-static int pmic_arb_init_apid_v1(struct spmi_pmic_arb *pmic_arb, int index)
++static int pmic_arb_init_apid_v1(struct spmi_pmic_arb_bus *bus, int index)
+ {
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	u32 *mapping_table;
+ 
+ 	if (index) {
+-		dev_err(&pmic_arb->spmic->dev, "Unsupported buses count %d detected\n",
++		dev_err(&bus->spmic->dev, "Unsupported buses count %d detected\n",
+ 			index);
+ 		return -EINVAL;
+ 	}
+ 
+-	mapping_table = devm_kcalloc(&pmic_arb->spmic->dev, pmic_arb->max_periphs,
++	mapping_table = devm_kcalloc(&bus->spmic->dev, pmic_arb->max_periphs,
+ 				     sizeof(*mapping_table), GFP_KERNEL);
+ 	if (!mapping_table)
+ 		return -ENOMEM;
+ 
+-	pmic_arb->mapping_table = mapping_table;
++	bus->mapping_table = mapping_table;
+ 
+-	return pmic_arb_init_apid_min_max(pmic_arb);
++	return pmic_arb_init_apid_min_max(bus);
+ }
+ 
+-static int pmic_arb_ppid_to_apid_v1(struct spmi_pmic_arb *pmic_arb, u16 ppid)
++static int pmic_arb_ppid_to_apid_v1(struct spmi_pmic_arb_bus *bus, u16 ppid)
+ {
+-	u32 *mapping_table = pmic_arb->mapping_table;
++	u32 *mapping_table = bus->mapping_table;
+ 	int index = 0, i;
+ 	u16 apid_valid;
+ 	u16 apid;
+ 	u32 data;
+ 
+-	apid_valid = pmic_arb->ppid_to_apid[ppid];
++	apid_valid = bus->ppid_to_apid[ppid];
+ 	if (apid_valid & PMIC_ARB_APID_VALID) {
+ 		apid = apid_valid & ~PMIC_ARB_APID_VALID;
+ 		return apid;
+ 	}
+ 
+ 	for (i = 0; i < SPMI_MAPPING_TABLE_TREE_DEPTH; ++i) {
+-		if (!test_and_set_bit(index, pmic_arb->mapping_table_valid))
+-			mapping_table[index] = readl_relaxed(pmic_arb->cnfg +
++		if (!test_and_set_bit(index, bus->mapping_table_valid))
++			mapping_table[index] = readl_relaxed(bus->cnfg +
+ 						SPMI_MAPPING_TABLE_REG(index));
+ 
+ 		data = mapping_table[index];
+@@ -1016,9 +1050,9 @@ static int pmic_arb_ppid_to_apid_v1(struct spmi_pmic_arb *pmic_arb, u16 ppid)
+ 				index = SPMI_MAPPING_BIT_IS_1_RESULT(data);
+ 			} else {
+ 				apid = SPMI_MAPPING_BIT_IS_1_RESULT(data);
+-				pmic_arb->ppid_to_apid[ppid]
++				bus->ppid_to_apid[ppid]
+ 					= apid | PMIC_ARB_APID_VALID;
+-				pmic_arb->apid_data[apid].ppid = ppid;
++				bus->apid_data[apid].ppid = ppid;
+ 				return apid;
+ 			}
+ 		} else {
+@@ -1026,9 +1060,9 @@ static int pmic_arb_ppid_to_apid_v1(struct spmi_pmic_arb *pmic_arb, u16 ppid)
+ 				index = SPMI_MAPPING_BIT_IS_0_RESULT(data);
+ 			} else {
+ 				apid = SPMI_MAPPING_BIT_IS_0_RESULT(data);
+-				pmic_arb->ppid_to_apid[ppid]
++				bus->ppid_to_apid[ppid]
+ 					= apid | PMIC_ARB_APID_VALID;
+-				pmic_arb->apid_data[apid].ppid = ppid;
++				bus->apid_data[apid].ppid = ppid;
+ 				return apid;
+ 			}
+ 		}
+@@ -1038,24 +1072,26 @@ static int pmic_arb_ppid_to_apid_v1(struct spmi_pmic_arb *pmic_arb, u16 ppid)
+ }
+ 
+ /* v1 offset per ee */
+-static int pmic_arb_offset_v1(struct spmi_pmic_arb *pmic_arb, u8 sid, u16 addr,
+-			enum pmic_arb_channel ch_type)
++static int pmic_arb_offset_v1(struct spmi_pmic_arb_bus *bus, u8 sid, u16 addr,
++			      enum pmic_arb_channel ch_type)
+ {
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	return 0x800 + 0x80 * pmic_arb->channel;
+ }
+ 
+-static u16 pmic_arb_find_apid(struct spmi_pmic_arb *pmic_arb, u16 ppid)
++static u16 pmic_arb_find_apid(struct spmi_pmic_arb_bus *bus, u16 ppid)
+ {
+-	struct apid_data *apidd = &pmic_arb->apid_data[pmic_arb->last_apid];
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
++	struct apid_data *apidd = &bus->apid_data[bus->last_apid];
+ 	u32 regval, offset;
+ 	u16 id, apid;
+ 
+-	for (apid = pmic_arb->last_apid; ; apid++, apidd++) {
++	for (apid = bus->last_apid; ; apid++, apidd++) {
+ 		offset = pmic_arb->ver_ops->apid_map_offset(apid);
+ 		if (offset >= pmic_arb->core_size)
+ 			break;
+ 
+-		regval = readl_relaxed(pmic_arb->ver_ops->apid_owner(pmic_arb,
++		regval = readl_relaxed(pmic_arb->ver_ops->apid_owner(bus,
+ 								     apid));
+ 		apidd->irq_ee = SPMI_OWNERSHIP_PERIPH2OWNER(regval);
+ 		apidd->write_ee = apidd->irq_ee;
+@@ -1065,14 +1101,14 @@ static u16 pmic_arb_find_apid(struct spmi_pmic_arb *pmic_arb, u16 ppid)
+ 			continue;
+ 
+ 		id = (regval >> 8) & PMIC_ARB_PPID_MASK;
+-		pmic_arb->ppid_to_apid[id] = apid | PMIC_ARB_APID_VALID;
++		bus->ppid_to_apid[id] = apid | PMIC_ARB_APID_VALID;
+ 		apidd->ppid = id;
+ 		if (id == ppid) {
+ 			apid |= PMIC_ARB_APID_VALID;
+ 			break;
+ 		}
+ 	}
+-	pmic_arb->last_apid = apid & ~PMIC_ARB_APID_VALID;
++	bus->last_apid = apid & ~PMIC_ARB_APID_VALID;
+ 
+ 	return apid;
+ }
+@@ -1104,21 +1140,22 @@ static int pmic_arb_get_core_resources_v2(struct platform_device *pdev,
+ 	return pmic_arb_get_obsrvr_chnls_v2(pdev);
+ }
+ 
+-static int pmic_arb_ppid_to_apid_v2(struct spmi_pmic_arb *pmic_arb, u16 ppid)
++static int pmic_arb_ppid_to_apid_v2(struct spmi_pmic_arb_bus *bus, u16 ppid)
+ {
+ 	u16 apid_valid;
+ 
+-	apid_valid = pmic_arb->ppid_to_apid[ppid];
++	apid_valid = bus->ppid_to_apid[ppid];
+ 	if (!(apid_valid & PMIC_ARB_APID_VALID))
+-		apid_valid = pmic_arb_find_apid(pmic_arb, ppid);
++		apid_valid = pmic_arb_find_apid(bus, ppid);
+ 	if (!(apid_valid & PMIC_ARB_APID_VALID))
+ 		return -ENODEV;
+ 
+ 	return apid_valid & ~PMIC_ARB_APID_VALID;
+ }
+ 
+-static int pmic_arb_read_apid_map_v5(struct spmi_pmic_arb *pmic_arb)
++static int pmic_arb_read_apid_map_v5(struct spmi_pmic_arb_bus *bus)
+ {
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	struct apid_data *apidd;
+ 	struct apid_data *prev_apidd;
+ 	u16 i, apid, ppid, apid_max;
+@@ -1140,9 +1177,9 @@ static int pmic_arb_read_apid_map_v5(struct spmi_pmic_arb *pmic_arb)
+ 	 * where N = number of APIDs supported by the primary bus and
+ 	 *       M = number of APIDs supported by the secondary bus
+ 	 */
+-	apidd = &pmic_arb->apid_data[pmic_arb->base_apid];
+-	apid_max = pmic_arb->base_apid + pmic_arb->apid_count;
+-	for (i = pmic_arb->base_apid; i < apid_max; i++, apidd++) {
++	apidd = &bus->apid_data[bus->base_apid];
++	apid_max = bus->base_apid + bus->apid_count;
++	for (i = bus->base_apid; i < apid_max; i++, apidd++) {
+ 		offset = pmic_arb->ver_ops->apid_map_offset(i);
+ 		if (offset >= pmic_arb->core_size)
+ 			break;
+@@ -1153,19 +1190,18 @@ static int pmic_arb_read_apid_map_v5(struct spmi_pmic_arb *pmic_arb)
+ 		ppid = (regval >> 8) & PMIC_ARB_PPID_MASK;
+ 		is_irq_ee = PMIC_ARB_CHAN_IS_IRQ_OWNER(regval);
+ 
+-		regval = readl_relaxed(pmic_arb->ver_ops->apid_owner(pmic_arb,
+-								     i));
++		regval = readl_relaxed(pmic_arb->ver_ops->apid_owner(bus, i));
+ 		apidd->write_ee = SPMI_OWNERSHIP_PERIPH2OWNER(regval);
+ 
+ 		apidd->irq_ee = is_irq_ee ? apidd->write_ee : INVALID_EE;
+ 
+-		valid = pmic_arb->ppid_to_apid[ppid] & PMIC_ARB_APID_VALID;
+-		apid = pmic_arb->ppid_to_apid[ppid] & ~PMIC_ARB_APID_VALID;
+-		prev_apidd = &pmic_arb->apid_data[apid];
++		valid = bus->ppid_to_apid[ppid] & PMIC_ARB_APID_VALID;
++		apid = bus->ppid_to_apid[ppid] & ~PMIC_ARB_APID_VALID;
++		prev_apidd = &bus->apid_data[apid];
+ 
+ 		if (!valid || apidd->write_ee == pmic_arb->ee) {
+ 			/* First PPID mapping or one for this EE */
+-			pmic_arb->ppid_to_apid[ppid] = i | PMIC_ARB_APID_VALID;
++			bus->ppid_to_apid[ppid] = i | PMIC_ARB_APID_VALID;
+ 		} else if (valid && is_irq_ee &&
+ 			   prev_apidd->write_ee == pmic_arb->ee) {
+ 			/*
+@@ -1176,42 +1212,43 @@ static int pmic_arb_read_apid_map_v5(struct spmi_pmic_arb *pmic_arb)
+ 		}
+ 
+ 		apidd->ppid = ppid;
+-		pmic_arb->last_apid = i;
++		bus->last_apid = i;
+ 	}
+ 
+ 	/* Dump the mapping table for debug purposes. */
+-	dev_dbg(&pmic_arb->spmic->dev, "PPID APID Write-EE IRQ-EE\n");
++	dev_dbg(&bus->spmic->dev, "PPID APID Write-EE IRQ-EE\n");
+ 	for (ppid = 0; ppid < PMIC_ARB_MAX_PPID; ppid++) {
+-		apid = pmic_arb->ppid_to_apid[ppid];
++		apid = bus->ppid_to_apid[ppid];
+ 		if (apid & PMIC_ARB_APID_VALID) {
+ 			apid &= ~PMIC_ARB_APID_VALID;
+-			apidd = &pmic_arb->apid_data[apid];
+-			dev_dbg(&pmic_arb->spmic->dev, "%#03X %3u %2u %2u\n",
+-			      ppid, apid, apidd->write_ee, apidd->irq_ee);
++			apidd = &bus->apid_data[apid];
++			dev_dbg(&bus->spmic->dev, "%#03X %3u %2u %2u\n",
++				ppid, apid, apidd->write_ee, apidd->irq_ee);
+ 		}
+ 	}
+ 
+ 	return 0;
+ }
+ 
+-static int pmic_arb_ppid_to_apid_v5(struct spmi_pmic_arb *pmic_arb, u16 ppid)
++static int pmic_arb_ppid_to_apid_v5(struct spmi_pmic_arb_bus *bus, u16 ppid)
+ {
+-	if (!(pmic_arb->ppid_to_apid[ppid] & PMIC_ARB_APID_VALID))
++	if (!(bus->ppid_to_apid[ppid] & PMIC_ARB_APID_VALID))
+ 		return -ENODEV;
+ 
+-	return pmic_arb->ppid_to_apid[ppid] & ~PMIC_ARB_APID_VALID;
++	return bus->ppid_to_apid[ppid] & ~PMIC_ARB_APID_VALID;
+ }
+ 
+ /* v2 offset per ppid and per ee */
+-static int pmic_arb_offset_v2(struct spmi_pmic_arb *pmic_arb, u8 sid, u16 addr,
+-			   enum pmic_arb_channel ch_type)
++static int pmic_arb_offset_v2(struct spmi_pmic_arb_bus *bus, u8 sid, u16 addr,
++			      enum pmic_arb_channel ch_type)
+ {
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	u16 apid;
+ 	u16 ppid;
+ 	int rc;
+ 
+ 	ppid = sid << 8 | ((addr >> 8) & 0xFF);
+-	rc = pmic_arb_ppid_to_apid_v2(pmic_arb, ppid);
++	rc = pmic_arb_ppid_to_apid_v2(bus, ppid);
+ 	if (rc < 0)
+ 		return rc;
+ 
+@@ -1219,33 +1256,34 @@ static int pmic_arb_offset_v2(struct spmi_pmic_arb *pmic_arb, u8 sid, u16 addr,
+ 	return 0x1000 * pmic_arb->ee + 0x8000 * apid;
+ }
+ 
+-static int pmic_arb_init_apid_v5(struct spmi_pmic_arb *pmic_arb, int index)
++static int pmic_arb_init_apid_v5(struct spmi_pmic_arb_bus *bus, int index)
+ {
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	int ret;
+ 
+ 	if (index) {
+-		dev_err(&pmic_arb->spmic->dev, "Unsupported buses count %d detected\n",
++		dev_err(&bus->spmic->dev, "Unsupported buses count %d detected\n",
+ 			index);
+ 		return -EINVAL;
+ 	}
+ 
+-	pmic_arb->base_apid = 0;
+-	pmic_arb->apid_count = readl_relaxed(pmic_arb->core + PMIC_ARB_FEATURES) &
++	bus->base_apid = 0;
++	bus->apid_count = readl_relaxed(pmic_arb->core + PMIC_ARB_FEATURES) &
+ 					   PMIC_ARB_FEATURES_PERIPH_MASK;
+ 
+-	if (pmic_arb->base_apid + pmic_arb->apid_count > pmic_arb->max_periphs) {
+-		dev_err(&pmic_arb->spmic->dev, "Unsupported APID count %d detected\n",
+-			pmic_arb->base_apid + pmic_arb->apid_count);
++	if (bus->base_apid + bus->apid_count > pmic_arb->max_periphs) {
++		dev_err(&bus->spmic->dev, "Unsupported APID count %d detected\n",
++			bus->base_apid + bus->apid_count);
+ 		return -EINVAL;
+ 	}
+ 
+-	ret = pmic_arb_init_apid_min_max(pmic_arb);
++	ret = pmic_arb_init_apid_min_max(bus);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = pmic_arb_read_apid_map_v5(pmic_arb);
++	ret = pmic_arb_read_apid_map_v5(bus);
+ 	if (ret) {
+-		dev_err(&pmic_arb->spmic->dev, "could not read APID->PPID mapping table, rc= %d\n",
++		dev_err(&bus->spmic->dev, "could not read APID->PPID mapping table, rc= %d\n",
+ 			ret);
+ 		return ret;
+ 	}
+@@ -1257,15 +1295,16 @@ static int pmic_arb_init_apid_v5(struct spmi_pmic_arb *pmic_arb, int index)
+  * v5 offset per ee and per apid for observer channels and per apid for
+  * read/write channels.
+  */
+-static int pmic_arb_offset_v5(struct spmi_pmic_arb *pmic_arb, u8 sid, u16 addr,
+-			   enum pmic_arb_channel ch_type)
++static int pmic_arb_offset_v5(struct spmi_pmic_arb_bus *bus, u8 sid, u16 addr,
++			      enum pmic_arb_channel ch_type)
+ {
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	u16 apid;
+ 	int rc;
+ 	u32 offset = 0;
+ 	u16 ppid = (sid << 8) | (addr >> 8);
+ 
+-	rc = pmic_arb_ppid_to_apid_v5(pmic_arb, ppid);
++	rc = pmic_arb_ppid_to_apid_v5(bus, ppid);
+ 	if (rc < 0)
+ 		return rc;
+ 
+@@ -1275,8 +1314,8 @@ static int pmic_arb_offset_v5(struct spmi_pmic_arb *pmic_arb, u8 sid, u16 addr,
+ 		offset = 0x10000 * pmic_arb->ee + 0x80 * apid;
+ 		break;
+ 	case PMIC_ARB_CHANNEL_RW:
+-		if (pmic_arb->apid_data[apid].write_ee != pmic_arb->ee) {
+-			dev_err(&pmic_arb->spmic->dev, "disallowed SPMI write to sid=%u, addr=0x%04X\n",
++		if (bus->apid_data[apid].write_ee != pmic_arb->ee) {
++			dev_err(&bus->spmic->dev, "disallowed SPMI write to sid=%u, addr=0x%04X\n",
+ 				sid, addr);
+ 			return -EPERM;
+ 		}
+@@ -1303,38 +1342,39 @@ static int pmic_arb_get_core_resources_v7(struct platform_device *pdev,
+  * Only v7 supports 2 buses. Each bus will get a different apid count, read
+  * from different registers.
+  */
+-static int pmic_arb_init_apid_v7(struct spmi_pmic_arb *pmic_arb, int index)
++static int pmic_arb_init_apid_v7(struct spmi_pmic_arb_bus *bus, int index)
+ {
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	int ret;
+ 
+ 	if (index == 0) {
+-		pmic_arb->base_apid = 0;
+-		pmic_arb->apid_count = readl_relaxed(pmic_arb->core + PMIC_ARB_FEATURES) &
++		bus->base_apid = 0;
++		bus->apid_count = readl_relaxed(pmic_arb->core + PMIC_ARB_FEATURES) &
+ 						   PMIC_ARB_FEATURES_PERIPH_MASK;
+ 	} else if (index == 1) {
+-		pmic_arb->base_apid = readl_relaxed(pmic_arb->core + PMIC_ARB_FEATURES) &
++		bus->base_apid = readl_relaxed(pmic_arb->core + PMIC_ARB_FEATURES) &
+ 						  PMIC_ARB_FEATURES_PERIPH_MASK;
+-		pmic_arb->apid_count = readl_relaxed(pmic_arb->core + PMIC_ARB_FEATURES1) &
++		bus->apid_count = readl_relaxed(pmic_arb->core + PMIC_ARB_FEATURES1) &
+ 						   PMIC_ARB_FEATURES_PERIPH_MASK;
+ 	} else {
+-		dev_err(&pmic_arb->spmic->dev, "Unsupported buses count %d detected\n",
+-			index);
++		dev_err(&bus->spmic->dev, "Unsupported buses count %d detected\n",
++			bus->id);
+ 		return -EINVAL;
+ 	}
+ 
+-	if (pmic_arb->base_apid + pmic_arb->apid_count > pmic_arb->max_periphs) {
+-		dev_err(&pmic_arb->spmic->dev, "Unsupported APID count %d detected\n",
+-			pmic_arb->base_apid + pmic_arb->apid_count);
++	if (bus->base_apid + bus->apid_count > pmic_arb->max_periphs) {
++		dev_err(&bus->spmic->dev, "Unsupported APID count %d detected\n",
++			bus->base_apid + bus->apid_count);
+ 		return -EINVAL;
+ 	}
+ 
+-	ret = pmic_arb_init_apid_min_max(pmic_arb);
++	ret = pmic_arb_init_apid_min_max(bus);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = pmic_arb_read_apid_map_v5(pmic_arb);
++	ret = pmic_arb_read_apid_map_v5(bus);
+ 	if (ret) {
+-		dev_err(&pmic_arb->spmic->dev, "could not read APID->PPID mapping table, rc= %d\n",
++		dev_err(&bus->spmic->dev, "could not read APID->PPID mapping table, rc= %d\n",
+ 			ret);
+ 		return ret;
+ 	}
+@@ -1346,15 +1386,16 @@ static int pmic_arb_init_apid_v7(struct spmi_pmic_arb *pmic_arb, int index)
+  * v7 offset per ee and per apid for observer channels and per apid for
+  * read/write channels.
+  */
+-static int pmic_arb_offset_v7(struct spmi_pmic_arb *pmic_arb, u8 sid, u16 addr,
+-			   enum pmic_arb_channel ch_type)
++static int pmic_arb_offset_v7(struct spmi_pmic_arb_bus *bus, u8 sid, u16 addr,
++			      enum pmic_arb_channel ch_type)
+ {
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	u16 apid;
+ 	int rc;
+ 	u32 offset = 0;
+ 	u16 ppid = (sid << 8) | (addr >> 8);
+ 
+-	rc = pmic_arb->ver_ops->ppid_to_apid(pmic_arb, ppid);
++	rc = pmic_arb->ver_ops->ppid_to_apid(bus, ppid);
+ 	if (rc < 0)
+ 		return rc;
+ 
+@@ -1364,8 +1405,8 @@ static int pmic_arb_offset_v7(struct spmi_pmic_arb *pmic_arb, u8 sid, u16 addr,
+ 		offset = 0x8000 * pmic_arb->ee + 0x20 * apid;
+ 		break;
+ 	case PMIC_ARB_CHANNEL_RW:
+-		if (pmic_arb->apid_data[apid].write_ee != pmic_arb->ee) {
+-			dev_err(&pmic_arb->spmic->dev, "disallowed SPMI write to sid=%u, addr=0x%04X\n",
++		if (bus->apid_data[apid].write_ee != pmic_arb->ee) {
++			dev_err(&bus->spmic->dev, "disallowed SPMI write to sid=%u, addr=0x%04X\n",
+ 				sid, addr);
+ 			return -EPERM;
+ 		}
+@@ -1387,104 +1428,110 @@ static u32 pmic_arb_fmt_cmd_v2(u8 opc, u8 sid, u16 addr, u8 bc)
+ }
+ 
+ static void __iomem *
+-pmic_arb_owner_acc_status_v1(struct spmi_pmic_arb *pmic_arb, u8 m, u16 n)
++pmic_arb_owner_acc_status_v1(struct spmi_pmic_arb_bus *bus, u8 m, u16 n)
+ {
+-	return pmic_arb->intr + 0x20 * m + 0x4 * n;
++	return bus->intr + 0x20 * m + 0x4 * n;
+ }
+ 
+ static void __iomem *
+-pmic_arb_owner_acc_status_v2(struct spmi_pmic_arb *pmic_arb, u8 m, u16 n)
++pmic_arb_owner_acc_status_v2(struct spmi_pmic_arb_bus *bus, u8 m, u16 n)
+ {
+-	return pmic_arb->intr + 0x100000 + 0x1000 * m + 0x4 * n;
++	return bus->intr + 0x100000 + 0x1000 * m + 0x4 * n;
+ }
+ 
+ static void __iomem *
+-pmic_arb_owner_acc_status_v3(struct spmi_pmic_arb *pmic_arb, u8 m, u16 n)
++pmic_arb_owner_acc_status_v3(struct spmi_pmic_arb_bus *bus, u8 m, u16 n)
+ {
+-	return pmic_arb->intr + 0x200000 + 0x1000 * m + 0x4 * n;
++	return bus->intr + 0x200000 + 0x1000 * m + 0x4 * n;
+ }
+ 
+ static void __iomem *
+-pmic_arb_owner_acc_status_v5(struct spmi_pmic_arb *pmic_arb, u8 m, u16 n)
++pmic_arb_owner_acc_status_v5(struct spmi_pmic_arb_bus *bus, u8 m, u16 n)
+ {
+-	return pmic_arb->intr + 0x10000 * m + 0x4 * n;
++	return bus->intr + 0x10000 * m + 0x4 * n;
+ }
+ 
+ static void __iomem *
+-pmic_arb_owner_acc_status_v7(struct spmi_pmic_arb *pmic_arb, u8 m, u16 n)
++pmic_arb_owner_acc_status_v7(struct spmi_pmic_arb_bus *bus, u8 m, u16 n)
+ {
+-	return pmic_arb->intr + 0x1000 * m + 0x4 * n;
++	return bus->intr + 0x1000 * m + 0x4 * n;
+ }
+ 
+ static void __iomem *
+-pmic_arb_acc_enable_v1(struct spmi_pmic_arb *pmic_arb, u16 n)
++pmic_arb_acc_enable_v1(struct spmi_pmic_arb_bus *bus, u16 n)
+ {
+-	return pmic_arb->intr + 0x200 + 0x4 * n;
++	return bus->intr + 0x200 + 0x4 * n;
+ }
+ 
+ static void __iomem *
+-pmic_arb_acc_enable_v2(struct spmi_pmic_arb *pmic_arb, u16 n)
++pmic_arb_acc_enable_v2(struct spmi_pmic_arb_bus *bus, u16 n)
+ {
+-	return pmic_arb->intr + 0x1000 * n;
++	return bus->intr + 0x1000 * n;
+ }
+ 
+ static void __iomem *
+-pmic_arb_acc_enable_v5(struct spmi_pmic_arb *pmic_arb, u16 n)
++pmic_arb_acc_enable_v5(struct spmi_pmic_arb_bus *bus, u16 n)
+ {
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	return pmic_arb->wr_base + 0x100 + 0x10000 * n;
+ }
+ 
+ static void __iomem *
+-pmic_arb_acc_enable_v7(struct spmi_pmic_arb *pmic_arb, u16 n)
++pmic_arb_acc_enable_v7(struct spmi_pmic_arb_bus *bus, u16 n)
+ {
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	return pmic_arb->wr_base + 0x100 + 0x1000 * n;
+ }
+ 
+ static void __iomem *
+-pmic_arb_irq_status_v1(struct spmi_pmic_arb *pmic_arb, u16 n)
++pmic_arb_irq_status_v1(struct spmi_pmic_arb_bus *bus, u16 n)
+ {
+-	return pmic_arb->intr + 0x600 + 0x4 * n;
++	return bus->intr + 0x600 + 0x4 * n;
+ }
+ 
+ static void __iomem *
+-pmic_arb_irq_status_v2(struct spmi_pmic_arb *pmic_arb, u16 n)
++pmic_arb_irq_status_v2(struct spmi_pmic_arb_bus *bus, u16 n)
+ {
+-	return pmic_arb->intr + 0x4 + 0x1000 * n;
++	return bus->intr + 0x4 + 0x1000 * n;
+ }
+ 
+ static void __iomem *
+-pmic_arb_irq_status_v5(struct spmi_pmic_arb *pmic_arb, u16 n)
++pmic_arb_irq_status_v5(struct spmi_pmic_arb_bus *bus, u16 n)
+ {
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	return pmic_arb->wr_base + 0x104 + 0x10000 * n;
+ }
+ 
+ static void __iomem *
+-pmic_arb_irq_status_v7(struct spmi_pmic_arb *pmic_arb, u16 n)
++pmic_arb_irq_status_v7(struct spmi_pmic_arb_bus *bus, u16 n)
+ {
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	return pmic_arb->wr_base + 0x104 + 0x1000 * n;
+ }
+ 
+ static void __iomem *
+-pmic_arb_irq_clear_v1(struct spmi_pmic_arb *pmic_arb, u16 n)
++pmic_arb_irq_clear_v1(struct spmi_pmic_arb_bus *bus, u16 n)
+ {
+-	return pmic_arb->intr + 0xA00 + 0x4 * n;
++	return bus->intr + 0xA00 + 0x4 * n;
+ }
+ 
+ static void __iomem *
+-pmic_arb_irq_clear_v2(struct spmi_pmic_arb *pmic_arb, u16 n)
++pmic_arb_irq_clear_v2(struct spmi_pmic_arb_bus *bus, u16 n)
+ {
+-	return pmic_arb->intr + 0x8 + 0x1000 * n;
++	return bus->intr + 0x8 + 0x1000 * n;
+ }
+ 
+ static void __iomem *
+-pmic_arb_irq_clear_v5(struct spmi_pmic_arb *pmic_arb, u16 n)
++pmic_arb_irq_clear_v5(struct spmi_pmic_arb_bus *bus, u16 n)
+ {
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	return pmic_arb->wr_base + 0x108 + 0x10000 * n;
+ }
+ 
+ static void __iomem *
+-pmic_arb_irq_clear_v7(struct spmi_pmic_arb *pmic_arb, u16 n)
++pmic_arb_irq_clear_v7(struct spmi_pmic_arb_bus *bus, u16 n)
+ {
++	struct spmi_pmic_arb *pmic_arb = bus->pmic_arb;
+ 	return pmic_arb->wr_base + 0x108 + 0x1000 * n;
+ }
+ 
+@@ -1504,9 +1551,9 @@ static u32 pmic_arb_apid_map_offset_v7(u16 n)
+ }
+ 
+ static void __iomem *
+-pmic_arb_apid_owner_v2(struct spmi_pmic_arb *pmic_arb, u16 n)
++pmic_arb_apid_owner_v2(struct spmi_pmic_arb_bus *bus, u16 n)
+ {
+-	return pmic_arb->cnfg + 0x700 + 0x4 * n;
++	return bus->cnfg + 0x700 + 0x4 * n;
+ }
+ 
+ /*
+@@ -1515,9 +1562,9 @@ pmic_arb_apid_owner_v2(struct spmi_pmic_arb *pmic_arb, u16 n)
+  * 0.
+  */
+ static void __iomem *
+-pmic_arb_apid_owner_v7(struct spmi_pmic_arb *pmic_arb, u16 n)
++pmic_arb_apid_owner_v7(struct spmi_pmic_arb_bus *bus, u16 n)
+ {
+-	return pmic_arb->cnfg + 0x4 * (n - pmic_arb->base_apid);
++	return  bus->cnfg + 0x4 * (n - bus->base_apid);
+ }
+ 
+ static const struct pmic_arb_ver_ops pmic_arb_v1 = {
+@@ -1607,29 +1654,159 @@ static const struct irq_domain_ops pmic_arb_irq_domain_ops = {
+ 	.translate = qpnpint_irq_domain_translate,
+ };
+ 
++static int spmi_pmic_arb_bus_init(struct platform_device *pdev,
++				  struct device_node *node,
++				  struct spmi_pmic_arb *pmic_arb)
 +{
-+	return container_of(bridge, struct hotplug_bridge, bridge);
-+}
++	int bus_index = pmic_arb->buses_available;
++	struct spmi_pmic_arb_bus *bus = &pmic_arb->buses[bus_index];
++	struct device *dev = &pdev->dev;
++	struct spmi_controller *ctrl;
++	void __iomem *intr;
++	void __iomem *cnfg;
++	int index, ret;
++	u32 irq;
 +
-+/*
-+ * Attach the remote bridge to the encoder and to the next bridge in the
-+ * chain, if possible. For this to succeed, we need to know:
-+ *
-+ * - the encoder, which is set at the first drm_bridge_attach() time
-+ * - the next bridge, which is obtained via a notifier whenever the next
-+ *   bridge is (re)probed, or at probe time in case it was probed before us
-+ *
-+ * In order to handle different execution sequences, this function can be
-+ * called from multiple places and needs to check all the prerequisites
-+ * every time, and it will act only if both are met.
-+ *
-+ * Must be called with hpb->next_bridge_mutex held.
-+ *
-+ * Returns 0 if the encoder was attached successfully, -ENODEV if any of
-+ * the two prerequisites above is not met (no encoder or no next bridge),
-+ * the error returned by drm_bridge_attach() otherwise.
-+ */
-+static int hotplug_bridge_attach_to_encoder_chain(struct hotplug_bridge *hpb)
-+{
-+	int ret;
++	ctrl = devm_spmi_controller_alloc(dev, sizeof(*ctrl));
++	if (IS_ERR(ctrl))
++		return PTR_ERR(ctrl);
 +
-+	if (!hpb->next_bridge || !hpb->bridge.encoder)
-+		return -ENODEV;
++	ctrl->cmd = pmic_arb_cmd;
++	ctrl->read_cmd = pmic_arb_read_cmd;
++	ctrl->write_cmd = pmic_arb_write_cmd;
 +
-+	ret = drm_bridge_attach(hpb->bridge.encoder, hpb->next_bridge, &hpb->bridge,
-+				DRM_BRIDGE_ATTACH_NO_CONNECTOR);
++	bus = spmi_controller_get_drvdata(ctrl);
++	bus->spmic = ctrl;
++
++	bus->ppid_to_apid = devm_kcalloc(dev, PMIC_ARB_MAX_PPID,
++					 sizeof(*bus->ppid_to_apid),
++					 GFP_KERNEL);
++	if (!bus->ppid_to_apid)
++		return -ENOMEM;
++
++	bus->apid_data = devm_kcalloc(dev, pmic_arb->max_periphs,
++				      sizeof(*bus->apid_data),
++				      GFP_KERNEL);
++	if (!bus->apid_data)
++		return -ENOMEM;
++
++	index = of_property_match_string(node, "reg-names", "cnfg");
++	if (index < 0) {
++		dev_err(dev, "cnfg reg region missing");
++		return -EINVAL;
++	}
++
++	cnfg = devm_of_iomap(dev, node, index, NULL);
++	if (IS_ERR(cnfg))
++		return PTR_ERR(cnfg);
++
++	index = of_property_match_string(node, "reg-names", "intr");
++	if (index < 0) {
++		dev_err(dev, "intr reg region missing");
++		return -EINVAL;
++	}
++
++	intr = devm_of_iomap(dev, node, index, NULL);
++	if (IS_ERR(intr))
++		return PTR_ERR(intr);
++
++	irq = of_irq_get_byname(node, "periph_irq");
++	if (irq < 0)
++		return irq;
++
++	bus->pmic_arb = pmic_arb;
++	bus->intr = intr;
++	bus->cnfg = cnfg;
++	bus->irq = irq;
++	bus->id = bus_index;
++
++	ret = pmic_arb->ver_ops->init_apid(bus, bus_index);
 +	if (ret)
-+		return dev_err_probe(hpb->dev, ret, "drm_bridge_attach failed\n");
++		return ret;
 +
-+	dev_dbg(hpb->dev, "attached to encoder chain\n");
++	dev_dbg(&pdev->dev, "adding irq domain for bus %d\n", bus_index);
++
++	bus->domain = irq_domain_add_tree(dev->of_node,
++					  &pmic_arb_irq_domain_ops, bus);
++	if (!bus->domain) {
++		dev_err(&pdev->dev, "unable to create irq_domain\n");
++		return -ENOMEM;
++	}
++
++	irq_set_chained_handler_and_data(bus->irq,
++					 pmic_arb_chained_irq, bus);
++
++	bus->spmic->dev.of_node = node;
++	dev_set_name(&bus->spmic->dev, "spmi-%d", bus_index);
++
++	ret = devm_spmi_controller_add(dev, bus->spmic);
++	if (ret)
++		return ret;
++
++	pmic_arb->buses_available++;
 +
 +	return 0;
 +}
 +
-+/*
-+ * Stop the video pipeline and detach next_bridge.
-+ *
-+ * Must be called with hpb->next_bridge_mutex held.
-+ */
-+static void hotplug_bridge_detach_from_encoder_chain(struct hotplug_bridge *hpb)
++static int spmi_pmic_arb_register_buses(struct spmi_pmic_arb *pmic_arb,
++					struct platform_device *pdev)
 +{
-+	WARN_ON_ONCE(!hpb->next_bridge);
++	struct device *dev = &pdev->dev;
++	struct device_node *node = dev->of_node;
++	struct device_node *child;
++	int ret;
 +
-+	dev_dbg(hpb->dev, "detaching from encoder chain\n");
++	/* legacy mode doesn't provide child node for the bus */
++	if (of_device_is_compatible(node, "qcom,spmi-pmic-arb"))
++		return spmi_pmic_arb_bus_init(pdev, node, pmic_arb);
 +
-+	drm_atomic_helper_shutdown(hpb->bridge.dev);
-+
-+	drm_encoder_cleanup_from(hpb->bridge.encoder, hpb->next_bridge);
-+}
-+
-+static void hotplug_bridge_grab(struct hotplug_bridge *hpb)
-+{
-+	struct device *dev = hpb->dev;
-+	struct drm_bridge *bridge;
-+	struct drm_panel *panel;
-+	int err;
-+
-+	mutex_lock(&hpb->next_bridge_mutex);
-+
-+	if (hpb->next_bridge)
-+		goto out;
-+
-+	/*
-+	 * This is supposed to be replaced by devm_drm_of_get_bridge(), but
-+	 * that is a devm_, and we need to remove the panel bridge also on
-+	 * next_bridge disconnect.
-+	 */
-+	err = drm_of_find_panel_or_bridge(dev->of_node, 1, 0, &panel, &bridge);
-+	if (err)
-+		goto out;
-+
-+	/* Convert the remote panel to a bridge */
-+	if (panel)
-+		bridge = drm_panel_bridge_add(panel);
-+
-+	hpb->next_bridge = bridge;
-+
-+	dev_dbg(dev, "grabbed next bridge (%pOFn)\n", hpb->next_bridge->of_node);
-+
-+	hpb->bridge.pre_enable_prev_first = hpb->next_bridge->pre_enable_prev_first;
-+
-+	hotplug_bridge_attach_to_encoder_chain(hpb);
-+
-+	queue_work(system_wq, &hpb->hpd_work);
-+
-+out:
-+	mutex_unlock(&hpb->next_bridge_mutex);
-+}
-+
-+/*
-+ * Detach from the next bridge and remove the panel bridge, either on
-+ * release or when the downstream bridge is being removed.
-+ *
-+ * Can be called in these ways:
-+ *
-+ * - bridge_being_removed is NULL: detach unconditionally
-+ *   (this is useful on .remove() to teardown everything)
-+ * - bridge_being_removed == hpb->next_bridge: detach
-+ *   (the downstream bridge is being removed)
-+ * - bridge_being_removed != hpb->next_bridge: do nothing
-+ *   (the bridge being removed is not the downstream bridge)
-+ *
-+ * In all cases, does nothing when there is no downstream bridge.
-+ */
-+static void hotplug_bridge_release(struct hotplug_bridge *hpb,
-+				   struct drm_bridge *bridge_being_removed)
-+{
-+	mutex_lock(&hpb->next_bridge_mutex);
-+
-+	if (!hpb->next_bridge)
-+		goto out;
-+
-+	if (bridge_being_removed && bridge_being_removed != hpb->next_bridge)
-+		goto out;
-+
-+	dev_dbg(hpb->dev, "releasing next bridge (%pOFn)\n", hpb->next_bridge->of_node);
-+
-+	hotplug_bridge_detach_from_encoder_chain(hpb);
-+
-+	/*
-+	 * This will check that the bridge actually belongs to panel-bridge
-+	 * before doing anything with it, so we can safely always call it.
-+	 */
-+	drm_panel_bridge_remove(hpb->next_bridge);
-+	hpb->next_bridge = NULL;
-+
-+	queue_work(system_wq, &hpb->hpd_work);
-+
-+out:
-+	mutex_unlock(&hpb->next_bridge_mutex);
-+}
-+
-+static int hotplug_bridge_notifier_call(struct notifier_block *block,
-+					unsigned long event, void *private)
-+{
-+	struct hotplug_bridge *hpb = container_of(block, struct hotplug_bridge, notifier_block);
-+	struct drm_bridge *bridge = private;
-+
-+	switch (event) {
-+	case DRM_BRIDGE_NOTIFY_ADD:
-+		hotplug_bridge_grab(hpb);
-+		break;
-+	case DRM_BRIDGE_NOTIFY_REMOVE:
-+		hotplug_bridge_release(hpb, bridge);
-+		break;
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int hotplug_bridge_attach(struct drm_bridge *bridge,
-+				 enum drm_bridge_attach_flags flags)
-+{
-+	struct hotplug_bridge *hpb = hotplug_bridge_from_drm_bridge(bridge);
-+	struct device *dev = hpb->dev;
-+	struct drm_connector *connector;
-+	struct drm_encoder *encoder = hpb->bridge.encoder;
-+	int err;
-+
-+	/* Encoder was not yet provided to our bridge */
-+	if (!encoder)
-+		return -ENODEV;
-+
-+	/* Connector was already created */
-+	if (hpb->connector)
-+		return dev_err_probe(dev, -EBUSY, "connector already created\n");
-+
-+	connector = drm_bridge_connector_init(bridge->dev, encoder);
-+	if (IS_ERR(connector))
-+		return dev_err_probe(dev, PTR_ERR(connector), "failed to initialize connector\n");
-+
-+	drm_connector_attach_encoder(connector, encoder);
-+
-+	hpb->connector = connector;
-+
-+	drm_connector_register(connector);
-+
-+	mutex_lock(&hpb->next_bridge_mutex);
-+	err = hotplug_bridge_attach_to_encoder_chain(hpb);
-+	mutex_unlock(&hpb->next_bridge_mutex);
-+
-+	/* -ENODEV is acceptable, in case next_bridge is not yet known */
-+	if (err == -ENODEV)
-+		err = 0;
-+
-+	return err;
-+}
-+
-+static void hotplug_bridge_detach(struct drm_bridge *bridge)
-+{
-+	struct hotplug_bridge *hpb = hotplug_bridge_from_drm_bridge(bridge);
-+
-+	mutex_lock(&hpb->next_bridge_mutex);
-+	hotplug_bridge_detach_from_encoder_chain(hpb);
-+	mutex_unlock(&hpb->next_bridge_mutex);
-+
-+	if (hpb->connector) {
-+		drm_connector_unregister(hpb->connector);
-+		drm_connector_cleanup(hpb->connector);
-+		hpb->connector = NULL;
-+	}
-+}
-+
-+static enum drm_connector_status hotplug_bridge_detect(struct drm_bridge *bridge)
-+{
-+	struct hotplug_bridge *hpb = hotplug_bridge_from_drm_bridge(bridge);
-+
-+	return hpb->next_bridge ? connector_status_connected : connector_status_disconnected;
-+}
-+
-+static void hotplug_bridge_hpd_work_func(struct work_struct *work)
-+{
-+	struct hotplug_bridge *hpd = container_of(work, struct hotplug_bridge, hpd_work);
-+
-+	if (hpd->bridge.dev)
-+		drm_helper_hpd_irq_event(hpd->bridge.dev);
-+}
-+
-+static int hotplug_bridge_get_modes(struct drm_bridge *bridge, struct drm_connector *connector)
-+{
-+	struct hotplug_bridge *hpb = hotplug_bridge_from_drm_bridge(bridge);
-+	struct drm_bridge *br;
-+	int nmodes = 0;
-+
-+	mutex_lock(&hpb->next_bridge_mutex);
-+
-+	if (!hpb->next_bridge || !hpb->bridge.encoder)
-+		goto out;
-+
-+	/*
-+	 * In non-removable pipelines, drm_bridge_connector_init() stores
-+	 * in the bridge_connector a pointer to the first bridge having
-+	 * OP_MODES (typically the panel bridge), so the .get_modes op will
-+	 * be automatically be called on that bridge. In our case the
-+	 * connector is created once when attaching to the encoder, but the
-+	 * panel bridge will appear later and can disappear and change at
-+	 * runtime, so we need to look for it every time dynamically.
-+	 */
-+	br = hpb->next_bridge;
-+	list_for_each_entry_from(br, &hpb->bridge.encoder->bridge_chain, chain_node) {
-+		if (br->ops & DRM_BRIDGE_OP_MODES) {
-+			nmodes = br->funcs->get_modes(br, connector);
-+			break;
++	for_each_available_child_of_node(node, child) {
++		if (of_node_name_eq(child, "spmi")) {
++			ret = spmi_pmic_arb_bus_init(pdev, child, pmic_arb);
++			if (ret)
++				return ret;
 +		}
 +	}
 +
-+out:
-+	mutex_unlock(&hpb->next_bridge_mutex);
-+
-+	return nmodes;
++	return ret;
 +}
 +
-+static const struct drm_bridge_funcs hotplug_bridge_funcs = {
-+	.attach		= hotplug_bridge_attach,
-+	.detach		= hotplug_bridge_detach,
-+	.detect		= hotplug_bridge_detect,
-+	.get_modes	= hotplug_bridge_get_modes,
-+};
-+
-+static int hotplug_bridge_dsi_detach(struct mipi_dsi_host *host,
-+				     struct mipi_dsi_device *device_remote)
++static void spmi_pmic_arb_deregister_buses(struct spmi_pmic_arb *pmic_arb)
 +{
-+	struct hotplug_bridge *hpb = dev_get_drvdata(host->dev);
++	int i;
 +
-+	if (!hpb->dsi_dev)
-+		return -ENODEV;
++	for (i = 0; i < PMIC_ARB_MAX_BUSES; i++) {
++		struct spmi_pmic_arb_bus *bus = &pmic_arb->buses[i];
 +
-+	mipi_dsi_detach(hpb->dsi_dev);
-+	mipi_dsi_device_unregister(hpb->dsi_dev);
-+	hpb->dsi_dev = NULL;
-+
-+	return 0;
-+}
-+
-+/*
-+ * Attach the local DSI device to the upstream DSI host, possibly with a
-+ * "null" format.
-+ *
-+ * In "normal" bridges this function should be _only_ used as the .attach
-+ * callback of hotplug_bridge_dsi_ops. But "normal" bridges have their
-+ * downstream DSI device always connected, which we don't. When booting
-+ * without anything connected downstream, our upstream bridge could be not
-+ * even calling drm_bridge_add() until we do attach ourselves as a DSI
-+ * device, preventing the whole DRM card from being instantiated.
-+ *
-+ * In order to always have a DRM card after boot, we do call this same
-+ * function while probing in order to attach as a DSI device to the DSI
-+ * master. However during probe we don't know the bus format yet. It would
-+ * be nice to be able to update the format afterwards when a downstream DSI
-+ * device is attaching to our local host, but there is no callback for
-+ * that. To overcome this limitation, this function can be called in two
-+ * ways:
-+ *
-+ * - during probe, to make the upstream bridge happy, when there is no
-+ *   next_dsi_dev yet and thus the lanes/format/etc are unknown
-+ * - as the mipi_dsi_host_ops.attach callback proper, as soon as the
-+ *   next_dsi_dev is known
-+ *
-+ * The resulting call sequence is:
-+ *
-+ * 1. hotplug_bridge_dsi_attach() called by hotplug_bridge_probe() with
-+ *    next_dsi_dev == NULL: we attach to the host but with a fake format
-+ *    so the DRM card can be populated. hpb->dsi_dev becomes non-NULL.
-+ * 2. hotplug_bridge_dsi_attach() called as .attach callback from a
-+ *    downstream device when it becomes available: we need to detach in
-+ *    order to re-attach with the format of the device. hpb->dsi_dev
-+ *    is found non-NULL, then reused so it will be non-NULL again.
-+ * 3. hotplug_bridge_dsi_detach() called as the .detach callback by a
-+ *    downstream device: cleans up everything normally. hpb->dsi_dev goes
-+ *    from non-NULL to NULL.
-+ * 4. hotplug_bridge_dsi_attach() called by a downstream device: attaches
-+ *    normally to the upstream DSI host. hpb->dsi_dev goes from NULL to
-+ *    non-NULL.
-+ *
-+ * Steps 3 and 4 are the "normal" attach/detach steps as on "normal"
-+ * bridges.
-+ *
-+ * Steps 1 and 2 happen only the first time, steps 3 and 4 will happen
-+ * every time the downstream bridge disconnects and reconnects.
-+ */
-+static int hotplug_bridge_dsi_attach(struct mipi_dsi_host *host,
-+				     struct mipi_dsi_device *next_dsi_dev)
-+{
-+	struct device *dev = host->dev;
-+	struct hotplug_bridge *hpb = dev_get_drvdata(dev);
-+	struct mipi_dsi_device *dsi_dev;
-+	const struct mipi_dsi_device_info dsi_info = {
-+		.type = "hotplug-bridge",
-+		.channel = 0,
-+		.node = NULL,
-+	};
-+	int err;
-+
-+	/*
-+	 * Step 2 only (first time we are called for an actual device
-+	 * attaching): clean up the fake attach done at step 1
-+	 */
-+	if (hpb->dsi_dev)
-+		hotplug_bridge_dsi_detach(&hpb->dsi_host, NULL);
-+
-+	/* Register a local DSI device with the remote DSI host */
-+	dsi_dev = mipi_dsi_device_register_full(hpb->prev_dsi_host,
-+						&dsi_info);
-+	if (IS_ERR(dsi_dev))
-+		return PTR_ERR(dsi_dev);
-+
-+	/* At step 1 we have no downstream device to get the format from */
-+	if (next_dsi_dev) {
-+		dsi_dev->channel    = next_dsi_dev->channel;
-+		dsi_dev->lanes      = next_dsi_dev->lanes;
-+		dsi_dev->format     = next_dsi_dev->format;
-+		dsi_dev->mode_flags = next_dsi_dev->mode_flags;
++		irq_set_chained_handler_and_data(bus->irq,
++						 NULL, NULL);
++		irq_domain_remove(bus->domain);
 +	}
-+
-+	/* Attach our local DSI device to the remote DSI host */
-+	err = mipi_dsi_attach(dsi_dev);
-+	if (err) {
-+		mipi_dsi_device_unregister(dsi_dev);
-+		return dev_err_probe(dev, err, "failed to attach hotplug dsi device to host\n");
-+	}
-+
-+	hpb->dsi_dev = dsi_dev;
-+
-+	return 0;
 +}
 +
-+/*
-+ * Propagate mipi_dsi_device_transfer() to the upstream DSI host.
-+ *
-+ * Reimplements identically the minimal needed part of
-+ * mipi_dsi_device_transfer(), including the -ENOSYS return value.
-+ */
-+static ssize_t hotplug_bridge_dsi_transfer(struct mipi_dsi_host *host,
-+					   const struct mipi_dsi_msg *msg)
-+{
-+	struct hotplug_bridge *hpb = dev_get_drvdata(host->dev);
-+	const struct mipi_dsi_host_ops *ops;
-+
-+	if (!hpb->dsi_dev)
-+		return -ENODEV;
-+
-+	ops = hpb->dsi_dev->host->ops;
-+
-+	if (!ops || !ops->transfer)
-+		return -ENOSYS;
-+
-+	return ops->transfer(hpb->dsi_dev->host, msg);
-+}
-+
-+static const struct mipi_dsi_host_ops hotplug_bridge_dsi_ops = {
-+	.attach		= hotplug_bridge_dsi_attach,
-+	.detach		= hotplug_bridge_dsi_detach,
-+	.transfer	= hotplug_bridge_dsi_transfer,
-+};
-+
-+/*
-+ * Find the upstream DSI host and register our downstream-facing DSI host.
-+ */
-+static int hotplug_bridge_dsi_setup(struct hotplug_bridge *hpb)
-+{
-+	struct device *dev = hpb->dev;
-+	struct device_node *endpoint;
-+	struct device_node *node;
-+
-+	endpoint = of_graph_get_endpoint_by_regs(dev->of_node, 0, -1);
-+	node = of_graph_get_remote_port_parent(endpoint);
-+
-+	hpb->prev_dsi_host = of_find_mipi_dsi_host_by_node(node);
-+
-+	of_node_put(node);
-+	of_node_put(endpoint);
-+
-+	if (!hpb->prev_dsi_host)
-+		return -EPROBE_DEFER;
-+
-+	hpb->dsi_host.dev = dev;
-+	hpb->dsi_host.ops = &hotplug_bridge_dsi_ops;
-+
-+	return mipi_dsi_host_register(&hpb->dsi_host);
-+}
-+
-+static void hotplug_bridge_dsi_cleanup(struct hotplug_bridge *hpb)
-+{
-+	mipi_dsi_host_unregister(&hpb->dsi_host);
-+}
-+
-+static int hotplug_bridge_probe(struct platform_device *platform_dev)
-+{
-+	struct device *dev = &platform_dev->dev;
-+	struct notifier_block *notifier_block;
-+	struct hotplug_bridge *hpb;
-+	struct drm_bridge *bridge;
-+	int ret;
-+
-+	hpb = devm_kzalloc(dev, sizeof(*hpb), GFP_KERNEL);
-+	if (!hpb)
+ static int spmi_pmic_arb_probe(struct platform_device *pdev)
+ {
+ 	struct spmi_pmic_arb *pmic_arb;
+-	struct spmi_controller *ctrl;
++	struct device *dev = &pdev->dev;
+ 	struct resource *res;
+ 	void __iomem *core;
+ 	u32 channel, ee, hw_ver;
+ 	int err;
+ 
+-	ctrl = devm_spmi_controller_alloc(&pdev->dev, sizeof(*pmic_arb));
+-	if (IS_ERR(ctrl))
+-		return PTR_ERR(ctrl);
+-
+-	pmic_arb = spmi_controller_get_drvdata(ctrl);
+-	pmic_arb->spmic = ctrl;
++	pmic_arb = devm_kzalloc(dev, sizeof(*pmic_arb), GFP_KERNEL);
++	if (!pmic_arb)
 +		return -ENOMEM;
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "core");
+-	core = devm_ioremap(&ctrl->dev, res->start, resource_size(res));
++	core = devm_ioremap(dev, res->start, resource_size(res));
+ 	if (IS_ERR(core))
+ 		return PTR_ERR(core);
+ 
+ 	pmic_arb->core_size = resource_size(res);
+ 
++	platform_set_drvdata(pdev, pmic_arb);
++	raw_spin_lock_init(&pmic_arb->lock);
 +
-+	hpb->dev = dev;
+ 	hw_ver = readl_relaxed(core + PMIC_ARB_VERSION);
+ 
+ 	if (hw_ver < PMIC_ARB_VERSION_V2_MIN)
+@@ -1643,30 +1820,12 @@ static int spmi_pmic_arb_probe(struct platform_device *pdev)
+ 	else
+ 		pmic_arb->ver_ops = &pmic_arb_v7;
+ 
+-	dev_info(&ctrl->dev, "PMIC arbiter version %s (0x%x)\n",
+-		 pmic_arb->ver_ops->ver_str, hw_ver);
+-
+ 	err = pmic_arb->ver_ops->get_core_resources(pdev, core);
+ 	if (err)
+ 		return err;
+ 
+-	err = pmic_arb->ver_ops->init_apid(pmic_arb, 0);
+-	if (err)
+-		return err;
+-
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "intr");
+-	pmic_arb->intr = devm_ioremap_resource(&ctrl->dev, res);
+-	if (IS_ERR(pmic_arb->intr))
+-		return PTR_ERR(pmic_arb->intr);
+-
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cnfg");
+-	pmic_arb->cnfg = devm_ioremap_resource(&ctrl->dev, res);
+-	if (IS_ERR(pmic_arb->cnfg))
+-		return PTR_ERR(pmic_arb->cnfg);
+-
+-	pmic_arb->irq = platform_get_irq_byname(pdev, "periph_irq");
+-	if (pmic_arb->irq < 0)
+-		return pmic_arb->irq;
++	dev_info(dev, "PMIC arbiter version %s (0x%x)\n",
++		 pmic_arb->ver_ops->ver_str, hw_ver);
+ 
+ 	err = of_property_read_u32(pdev->dev.of_node, "qcom,channel", &channel);
+ 	if (err) {
+@@ -1695,46 +1854,19 @@ static int spmi_pmic_arb_probe(struct platform_device *pdev)
+ 
+ 	pmic_arb->ee = ee;
+ 
+-	platform_set_drvdata(pdev, ctrl);
+-	raw_spin_lock_init(&pmic_arb->lock);
+-
+-	ctrl->cmd = pmic_arb_cmd;
+-	ctrl->read_cmd = pmic_arb_read_cmd;
+-	ctrl->write_cmd = pmic_arb_write_cmd;
+-
+-	dev_dbg(&pdev->dev, "adding irq domain\n");
+-	pmic_arb->domain = irq_domain_add_tree(pdev->dev.of_node,
+-					 &pmic_arb_irq_domain_ops, pmic_arb);
+-	if (!pmic_arb->domain) {
+-		dev_err(&pdev->dev, "unable to create irq_domain\n");
+-		return -ENOMEM;
+-	}
+-
+-	irq_set_chained_handler_and_data(pmic_arb->irq, pmic_arb_chained_irq,
+-					pmic_arb);
+-	err = spmi_controller_add(ctrl);
+-	if (err)
+-		goto err_domain_remove;
+-
+-	return 0;
+-
+-err_domain_remove:
+-	irq_set_chained_handler_and_data(pmic_arb->irq, NULL, NULL);
+-	irq_domain_remove(pmic_arb->domain);
+-	return err;
++	return spmi_pmic_arb_register_buses(pmic_arb, pdev);
+ }
+ 
+ static void spmi_pmic_arb_remove(struct platform_device *pdev)
+ {
+-	struct spmi_controller *ctrl = platform_get_drvdata(pdev);
+-	struct spmi_pmic_arb *pmic_arb = spmi_controller_get_drvdata(ctrl);
+-	spmi_controller_remove(ctrl);
+-	irq_set_chained_handler_and_data(pmic_arb->irq, NULL, NULL);
+-	irq_domain_remove(pmic_arb->domain);
++	struct spmi_pmic_arb *pmic_arb = platform_get_drvdata(pdev);
 +
-+	mutex_init(&hpb->next_bridge_mutex);
-+	INIT_WORK(&hpb->hpd_work, hotplug_bridge_hpd_work_func);
-+
-+	notifier_block = &hpb->notifier_block;
-+	notifier_block->notifier_call = hotplug_bridge_notifier_call;
-+
-+	ret = hotplug_bridge_dsi_setup(hpb);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to setup DSI\n");
-+
-+	bridge = &hpb->bridge;
-+	bridge->of_node = dev->of_node;
-+	bridge->funcs = &hotplug_bridge_funcs;
-+	bridge->type = DRM_MODE_CONNECTOR_DSI;
-+	bridge->ops |= DRM_BRIDGE_OP_DETECT | DRM_BRIDGE_OP_HPD | DRM_BRIDGE_OP_MODES;
-+
-+	platform_set_drvdata(platform_dev, hpb);
-+
-+	devm_drm_bridge_add(dev, bridge);
-+
-+	ret = hotplug_bridge_dsi_attach(&hpb->dsi_host, NULL);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed first attach to upstream DSI host\n");
-+
-+	/* To be notified when the next bridge appears... */
-+	drm_bridge_notifier_register(notifier_block);
-+
-+	/* ...but also check now, in case the next bridge was probed earlier */
-+	hotplug_bridge_grab(hpb);
-+
-+	return 0;
-+}
-+
-+static void hotplug_bridge_remove(struct platform_device *platform_dev)
-+{
-+	struct hotplug_bridge *hpb = platform_get_drvdata(platform_dev);
-+
-+	cancel_work_sync(&hpb->hpd_work);
-+
-+	drm_bridge_notifier_unregister(&hpb->notifier_block);
-+
-+	hotplug_bridge_release(hpb, NULL);
-+
-+	hotplug_bridge_dsi_cleanup(hpb);
-+}
-+
-+static const struct of_device_id hotplug_bridge_of_match[] = {
-+	{ .compatible	= "hotplug-video-connector-dsi" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, hotplug_bridge_of_match);
-+
-+static struct platform_driver hotplug_bridge_driver = {
-+	.probe		= hotplug_bridge_probe,
-+	.remove_new	= hotplug_bridge_remove,
-+	.driver		= {
-+		.name		= "hotplug-drm-bridge",
-+		.of_match_table	= hotplug_bridge_of_match,
-+	},
-+};
-+
-+module_platform_driver(hotplug_bridge_driver);
-+
-+MODULE_AUTHOR("Luca Ceresoli <luca.ceresoli@bootlin.com>");
-+MODULE_AUTHOR("Paul Kocialkowski <paul.kocialkowski@bootlin.com>");
-+MODULE_DESCRIPTION("Hotplug DRM Bridge");
-+MODULE_LICENSE("GPL");
++	spmi_pmic_arb_deregister_buses(pmic_arb);
+ }
+ 
+ static const struct of_device_id spmi_pmic_arb_match_table[] = {
+ 	{ .compatible = "qcom,spmi-pmic-arb", },
++	{ .compatible = "qcom,x1e80100-spmi-pmic-arb", },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, spmi_pmic_arb_match_table);
 
 -- 
 2.34.1
