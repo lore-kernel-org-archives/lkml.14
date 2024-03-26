@@ -1,152 +1,138 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87AB4763F1;
-	Tue, 26 Mar 2024 13:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6AFE70CC2
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 13:43:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711460545; cv=none; b=fvWqDdo2YaB69ZlWYGktmWnp7wb+WQ9JDjZmJmNfTms0RPtja+MiBnjwdoFRLWs2Fb+hlYiYQZGWt7zg7cmqEvmXIwEg6XKt5gZs6wjKtKL5sKklzpU/5QCAF101pAGQUi246r03OgA95OYbP9iCFSVaDqQMbaf4fpzlyorFYl4=
+	t=1711460625; cv=none; b=AIFSmmlaiCDUp/CUp3inImMCEj4pdOQKXKZqUbkOrsEtc/8laiqOZmNQNLuSyXXhknx8QLm+3Cawgsihw3xhOXmpV4RsI6x37B9WVyLrF8St9rLTehkHMCljiD8nb/leTcGGSyXBofqvX+vcl88WCy+/Vzi71sfJaYxWygqIlS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711460545; c=relaxed/simple;
-	bh=9cvyClmLimCu7FtlKLhwseURsexrxNIs8oFN5K4ObEU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=V/mLDv2dtfOUrrDdvI+Gk3Y6mgqmANJxr4xipNyIZa+O7a7lT8XWu4OfePI1glE7p07pmuMQWJjRBKWVkLd3B8Al31jLZSdhIMzazjBImX7MeoeM+IrnFnoB5Ei/jkRr8VD/nzp5nNxRVwB/q/0dKWCII4aAthCzB9n/en5J2yQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4V3rZW1JH6z4f3mJ2;
-	Tue, 26 Mar 2024 21:42:11 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 4B26C1A01A7;
-	Tue, 26 Mar 2024 21:42:19 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.124.27])
-	by APP1 (Coremail) with SMTP id cCh0CgCHowy00AJmmQiSIA--.63567S6;
-	Tue, 26 Mar 2024 21:42:19 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: jack@suse.cz,
-	ojaswin@linux.ibm.com,
-	ritesh.list@gmail.com
-Subject: [PATCH 4/5] ext4: use correct criteria name instead stale integer number in comment
-Date: Wed, 27 Mar 2024 05:38:22 +0800
-Message-Id: <20240326213823.528302-5-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20240326213823.528302-1-shikemeng@huaweicloud.com>
-References: <20240326213823.528302-1-shikemeng@huaweicloud.com>
+	s=arc-20240116; t=1711460625; c=relaxed/simple;
+	bh=ljMe5J3C6/sjNT1yUQPJWicsFLE8AOz/s4ig62CFcoA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WGO1a9D5TeCl6bUDtvbKGLJVMrbQVuXVFff7kcBnFwHM8VjiGA93uRRG2qaH+WIViKYTGVrpV0J0XyN2JNP/b1/ulODaAU0wfP0VJ3nBDwZUC0rBBaSbmSJAZ3Y9Lg0UhjN3MhpTmHIBlh44EAbZMIAhwpTDlkWQYHG8f/7ws/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LZmL/4d/; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LZmL/4d/"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-696719f8dfcso24638686d6.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 06:43:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711460620; x=1712065420; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ruCfZHq43zIiPZrKz5ByYkrM7Dnhqu1J3mZX9CrPvSQ=;
+        b=LZmL/4d/skmyJLELh6oIodn308sOvBbo35hv7F4qbyCgp9kE8hbUvwNc4W4LtGCLV9
+         5Pl3eSsOxbezpOlTcDr2X6Rdc83EHvbjFYqBbmEYHRKUdxg+eTgtHrCLBop50KYW0ZZK
+         OZCPF7VgNvWIQ30p7ErPVL65QdJZL/uXjMwJo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711460620; x=1712065420;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ruCfZHq43zIiPZrKz5ByYkrM7Dnhqu1J3mZX9CrPvSQ=;
+        b=QgUEcYgp1VUsOO/ikZ6VgbvORQRGAoOMqeQeFTe5w3/URVauVpLr23E8X/siM2kbTO
+         bNKuVfsnlbQ1c9Y6bU4xK14Vo0PIk3fUPsUeIvH6BKRGYx9t0pxykcVKuNW7BM1KN0uw
+         rG3KiKkHcA/ejoSCjEl0+DZcB5R+jYC3lXNy6xUEsz7yqjk2Y/0AdU9nx5yF9mnKTrcw
+         bEr2Q/vxRI7H5fnlIBAE0NYN37xsRNLAf18lJwpWThCeSVGKGYk/n50WIjl86wYBzk5M
+         bSWLDGFsFLZ3W3jvquauYHfgynSt04/wimNDZpCy+O+luENQHx9QWcvnerNopz8MzRhf
+         2lCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUOC7bTJq+U4omeGLb7DjXnagOFDJjECUhffofN2TnCXLY+x5eJLsVviCIBfwtrzdQMNjpW95eQdAQQv8jVimyb4Gy3rvI0hD7cgWht
+X-Gm-Message-State: AOJu0Yzf1P9IIldj0HTBs7bitLmIoFw7mweWeWcfj+durku27rEKH/vO
+	Gl3oVr5ZTeBOYl3ATS93XZHvpDHqchpqRq/wsEIlUF8uatumlI0Fe729F4ZDZGT1TsepC1o27Pw
+	=
+X-Google-Smtp-Source: AGHT+IESz4IrqxPVqq0rJ6k0fjo/Vn0bvTvkXExHN2KweuvCKp94dvKBI98E1gic1c2bBZC8LK7pKA==
+X-Received: by 2002:a05:6214:20a6:b0:696:3a48:1278 with SMTP id 6-20020a05621420a600b006963a481278mr11948528qvd.52.1711460620178;
+        Tue, 26 Mar 2024 06:43:40 -0700 (PDT)
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com. [209.85.160.174])
+        by smtp.gmail.com with ESMTPSA id pt9-20020a056214048900b0068ff0778895sm5195823qvb.81.2024.03.26.06.43.39
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Mar 2024 06:43:39 -0700 (PDT)
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-428405a0205so304771cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 06:43:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUQHScTtuxZErGQhCrFNwUnCbp2VEE9dCVxX7gp6Bfe2IuawbD3Hhh99A097CdGdkwbig5ZlS+2K/JACDZpxUFJFCh05fxOOO7PmULV
+X-Received: by 2002:a05:622a:248c:b0:431:5ac0:a1e0 with SMTP id
+ cn12-20020a05622a248c00b004315ac0a1e0mr246953qtb.12.1711460618700; Tue, 26
+ Mar 2024 06:43:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgCHowy00AJmmQiSIA--.63567S6
-X-Coremail-Antispam: 1UD129KBjvJXoWxGryxJw1Dury3Xw13KF4DJwb_yoW5uF4rp3
-	9ayF18Kw4SgF13u393Ga1jg3W8Gw4I9F1UWryF9w17uFyaqr93tFWDKFW0yFy0vr4rZ3Wr
-	XFy7Xw48CF1S93DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
-	8IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAv
-	FVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJw
-	A2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE
-	3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr2
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUxD7aUUUUU
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+References: <20240325105452.529921-1-lma@chromium.org> <CAD=FV=VHps2d4dqLXCqE=hNMbk4pxeN607nFA0nEkd7chNAr3A@mail.gmail.com>
+ <CAE5UKNpob9dT4YXSYKsrKGQ3cZP7o3OF7y-eb925Xd-gH3BEXA@mail.gmail.com>
+In-Reply-To: <CAE5UKNpob9dT4YXSYKsrKGQ3cZP7o3OF7y-eb925Xd-gH3BEXA@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Tue, 26 Mar 2024 06:43:21 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XdOOfHK-regXRzRkky0=iV2JMDPrKid2T_JS1=eu9H3w@mail.gmail.com>
+Message-ID: <CAD=FV=XdOOfHK-regXRzRkky0=iV2JMDPrKid2T_JS1=eu9H3w@mail.gmail.com>
+Subject: Re: [PATCH] HID: i2c-hid: wait for i2c touchpad deep-sleep to
+ power-up transition
+To: =?UTF-8?Q?=C5=81ukasz_Majczak?= <lma@chromium.org>
+Cc: Jiri Kosina <jikos@kernel.org>, Dmitry Torokhov <dtor@chromium.org>, 
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>, Hans de Goede <hdegoede@redhat.com>, 
+	Maxime Ripard <mripard@kernel.org>, Kai-Heng Feng <kai.heng.feng@canonical.com>, 
+	Johan Hovold <johan+linaro@kernel.org>, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Radoslaw Biernacki <rad@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use correct criteria name instead stale integer number in comment
+Hi,
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
----
- fs/ext4/ext4.h    | 15 ++++++++++++---
- fs/ext4/mballoc.c | 14 ++++++++------
- fs/ext4/mballoc.h |  4 ++--
- 3 files changed, 22 insertions(+), 11 deletions(-)
+On Tue, Mar 26, 2024 at 1:58=E2=80=AFAM =C5=81ukasz Majczak <lma@chromium.o=
+rg> wrote:
+>
+> > nit: checkpatch should have yelled at you saying that you should
+> > specify a commit in the format:
+> >
+> > commit b3a81b6c4fc6 ("HID: i2c-hid: check if device is there before
+> > really probing")
+> >
+> I will do it, but I did run the checkpatch (with --strict option) and
+> it didn't complain about anything.
 
-diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-index 023571f8dd1b..9b90013c59a3 100644
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -213,11 +213,20 @@ enum criteria {
- #define EXT4_MB_USE_RESERVED		0x2000
- /* Do strict check for free blocks while retrying block allocation */
- #define EXT4_MB_STRICT_CHECK		0x4000
--/* Large fragment size list lookup succeeded at least once for cr = 0 */
-+/*
-+ * Large fragment size list lookup succeeded at least once for cr =
-+ * CR_POWER2_ALIGNED
-+ */
- #define EXT4_MB_CR_POWER2_ALIGNED_OPTIMIZED		0x8000
--/* Avg fragment size rb tree lookup succeeded at least once for cr = 1 */
-+/*
-+ * Avg fragment size rb tree lookup succeeded at least once for cr =
-+ * CR_GOAL_LEN_FAST
-+ */
- #define EXT4_MB_CR_GOAL_LEN_FAST_OPTIMIZED		0x00010000
--/* Avg fragment size rb tree lookup succeeded at least once for cr = 1.5 */
-+/*
-+ * Avg fragment size rb tree lookup succeeded at least once for cr =
-+ * CR_BEST_AVAIL_LEN
-+ */
- #define EXT4_MB_CR_BEST_AVAIL_LEN_OPTIMIZED		0x00020000
- 
- struct ext4_allocation_request {
-diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-index 62d468379722..0f8a34513bf6 100644
---- a/fs/ext4/mballoc.c
-+++ b/fs/ext4/mballoc.c
-@@ -1131,8 +1131,9 @@ static void ext4_mb_choose_next_group(struct ext4_allocation_context *ac,
- 		ext4_mb_choose_next_group_best_avail(ac, new_cr, group);
- 	} else {
- 		/*
--		 * TODO: For CR=2, we can arrange groups in an rb tree sorted by
--		 * bb_free. But until that happens, we should never come here.
-+		 * TODO: For CR=CR_GOAL_LEN_SLOW, we can arrange groups in an
-+		 * rb tree sorted by bb_free. But until that happens, we should
-+		 * never come here.
- 		 */
- 		WARN_ON(1);
- 	}
-@@ -3444,10 +3445,11 @@ static int ext4_mb_init_backend(struct super_block *sb)
- 	}
- 	if (sbi->s_mb_prefetch > ext4_get_groups_count(sb))
- 		sbi->s_mb_prefetch = ext4_get_groups_count(sb);
--	/* now many real IOs to prefetch within a single allocation at cr=0
--	 * given cr=0 is an CPU-related optimization we shouldn't try to
--	 * load too many groups, at some point we should start to use what
--	 * we've got in memory.
-+	/*
-+	 * now many real IOs to prefetch within a single allocation at
-+	 * cr=CR_POWER2_ALIGNED. Given cr=CR_POWER2_ALIGNED is an CPU-related
-+	 * optimization we shouldn't try to load too many groups, at some point
-+	 * we should start to use what we've got in memory.
- 	 * with an average random access time 5ms, it'd take a second to get
- 	 * 200 groups (* N with flex_bg), so let's make this limit 4
- 	 */
-diff --git a/fs/ext4/mballoc.h b/fs/ext4/mballoc.h
-index 56938532b4ce..042437d8860f 100644
---- a/fs/ext4/mballoc.h
-+++ b/fs/ext4/mballoc.h
-@@ -187,8 +187,8 @@ struct ext4_allocation_context {
- 	struct ext4_free_extent ac_f_ex;
- 
- 	/*
--	 * goal len can change in CR1.5, so save the original len. This is
--	 * used while adjusting the PA window and for accounting.
-+	 * goal len can change in CR_BEST_AVAIL_LEN, so save the original len.
-+	 * This is used while adjusting the PA window and for accounting.
- 	 */
- 	ext4_grpblk_t	ac_orig_goal_len;
- 
--- 
-2.30.0
+Weird that checkpatch didn't yell, but perhaps somehow your commit
+message didn't trigger its regex. ;-)
 
+
+
+> > nit: I believe your sign off should be last. It's also unclear why two
+> > signoffs. Did Radoslaw author it and you changed it? ...or was it
+> > Co-Developed-by, or ...? You'll probably need to adjust your tags a
+> > bit depending on the answers.
+> >
+> Yes, we've discussed this patch together and the original
+> investigation was done by Rad.
+
+Sounds good. Probably the best way to tag is these tags in this order:
+
+Co-developed-by: Radoslaw Biernacki <rad@chromium.org>
+Signed-off-by: Radoslaw Biernacki <rad@chromium.org>
+Signed-off-by: Lukasz Majczak <lma@chromium.org>
+
+
+> > Having both ends of the usleep be 400 is iffy. In this case it's at
+> > probe time so I wonder if udelay() is better? If not, maybe give at
+> > least _some_ margin?
+> >
+> >
+> > > +       } while (tries-- > 0 && ret < 0);
+> >
+> According to Documentation/timers/timers-howto.rst:
+> " SLEEPING FOR ~USECS OR SMALL MSECS ( 10us - 20ms):
+>                 * Use usleep_range"
+> It was also pointed out by checkpath (when I initially used msleep).
+> I think giving some margin (eg. 400,500) would be ok.
+
+Yeah, usleep_range(400, 500) would be fine. udelay(400) would also be
+OK. The later would be more "accurate" but also more wasteful of CPU
+cycles. Given that this is at probe time and only run a small handful
+of times, it probably doesn't matter lots though perhaps the sleeping
+function would allow more parallelism of other running probes.
+
+
+-Doug
