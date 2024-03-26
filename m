@@ -1,410 +1,266 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2125.outbound.protection.outlook.com [40.107.8.125])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E61A1292FD
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 03:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711424244; cv=none; b=m/81ddtjVGqc0g3gE+1HCDwOzX7oYwybwOEgz7co8FetG8YymXuP7UHW2PJXSYDlaLxF90wtpeCOloum60z/rEmoKiKL/711KAAstZxbpwuGQ5OGOsJHB9pc3oEVLnkzXrAsuJE75bW5frO2Bv1GYpc6CX8CRZZke5UpRnolCg4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711424244; c=relaxed/simple;
-	bh=bLtYXSKUI9vliqexNPoiIyp5XgNoTTK87CN7LvGz5W8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RtHNZatfc0wW3Gp9y9Ki0Cmkp53YEYeDmAEW5VZqrtN1Qs3Q8wzfUXPmi5TXYhGEIMTRcuj4zQO++ZtdvLZz5igNJgBXuTDBRM7SZhSFONiqBSnhFaZvr6dGInrJStYGKAl2hsyTrtDjuyVaOX6iQOid8KTUe4nubEQI5w0nbmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EAmzov/K; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1C0128823;
+	Tue, 26 Mar 2024 03:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.125
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711424279; cv=fail; b=ESNOnDk6bx8L8S2vAEw9+I7vUL4aDI4fVOWgHsnBXtVRM6H2gVS9XmEICWUzddWlLlfWhls9HW0m4f5aOziZfM0anBEE3QTntKZUBS59Cgl6OMn9ir7wClvmlO2jyu6kr7GmBhOWC8kx6KUbO/xfZVQMb5fUK3N2+BY+n8oWf3g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711424279; c=relaxed/simple;
+	bh=KxlxPWucOVmmUICZcKj4rXOhDhFeUPCFa8vUz3rdluY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ceDu1+AgO7BkSv5RlHoqPlz176zYvGLcztKTzWBlXu2jL65sCZP0OBkCidprhqDNt8NB0HV+5IYymPuHobCMp0OvYJvAupz7Yp5QQ0Xm2gTxSdjrAX8XwV1iT4tRGIMRHbGOPImKYxJPLebnLL0dZxOmQVV5dbiq3HQYAfpYAsM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=V9aQyima; arc=fail smtp.client-ip=40.107.8.125
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EAmzov/K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711424241;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/413vgCIo4tY4AG/EofneQ8k0lFab0llDRaNoZ8V/xw=;
-	b=EAmzov/KFmqSJTpekbm6pSohkoC8gOMRtg4cebCclUn4VxAzJfzpnfg1E7vMgOEn22n5NM
-	nL+m7VLM4+4w8Ego3vHHwZ+tN5szGkX2ZliWLvawU3OAeNZKArrz/j/N2w8tIF/V1XbWwl
-	T9c8W9Y6ifuzPQ0GgeZQUKLg9UZvRSg=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-426-jZf4tpj1MhWjtdHyk7ToYg-1; Mon, 25 Mar 2024 23:37:15 -0400
-X-MC-Unique: jZf4tpj1MhWjtdHyk7ToYg-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3146B85A58B;
-	Tue, 26 Mar 2024 03:37:15 +0000 (UTC)
-Received: from virt-mtcollins-01.lab.eng.rdu2.redhat.com (virt-mtcollins-01.lab.eng.rdu2.redhat.com [10.8.1.196])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 236EC492BC4;
-	Tue, 26 Mar 2024 03:37:15 +0000 (UTC)
-From: Shaoqin Huang <shahuang@redhat.com>
-To: Oliver Upton <oliver.upton@linux.dev>,
-	Marc Zyngier <maz@kernel.org>,
-	kvmarm@lists.linux.dev
-Cc: Shaoqin Huang <shahuang@redhat.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v6 2/3] KVM: selftests: aarch64: Introduce pmu_event_filter_test
-Date: Mon, 25 Mar 2024 23:37:01 -0400
-Message-Id: <20240326033706.117189-3-shahuang@redhat.com>
-In-Reply-To: <20240326033706.117189-1-shahuang@redhat.com>
-References: <20240326033706.117189-1-shahuang@redhat.com>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="V9aQyima"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R79J9+NpmKKVSS4mfxAUKBzzDQvng04aftOMOEYnjIDauZ64L4z6SAf0fpXxcEBgmoRYMRsmKYb5Y5DNpl2vzXwbNLPdiTDkXYy91PPqRBlDA9diwa/5hpYFNwZJVjFEkPPqmP74g1EyLof+/fqYMYDjmJ2kdDHfL+x0b2CfCvMgsY1RVggYLXJLol4F+Othy1cZf6dj7F3nKa8wvSKE7k+6lNQsYaiPztokwNgPs4Ti+2qANhR1aoFTwYGPudODCGzOVREB2OHU1OHn9oWFKh2XmFIGi8qCuXDA4ZeBjgcnrhdA7QMsUa/KSVMOzUjSkapTkAR+Kr/T4fXBHamsmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DSXyzkWd2h16R0Amw2ippcDC4inAxrpPqtkzmju3Q2o=;
+ b=XhBS15mTR+LmD66t956f/9aiFeKkvSv0pirmz2SWx5iWdrxFyFaGr5fGWmdnCe0mxj05xTa/Ng8Xkm5LEc1deSBT7SBQdXtkFVgvfKkL7QMOkhcTzk0CshSZFDdGB4SELBWP1tqKAmpd3zMhqAAYEjrVF/58omqkYnY2HoCUlfqTID/F5eVeOGJwAl0OiRno6DcOf7NjFG8Oj0DUzWehQoeUXuLjNKGEtBO9XLNtbPnFqlMdukLDnLhq76OwaMWIAhnXrS0CyIrQbcaLBHYVmiq1g9KGaiq542wDVhBrZOZa+pR3Qj47d/uY+JKGO1JGLkl8rKoZJ2Ve7hqG1LeMwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DSXyzkWd2h16R0Amw2ippcDC4inAxrpPqtkzmju3Q2o=;
+ b=V9aQyimag515W1Fqe14o97kxP57HfnulPZteFejghfq1xawXeZtVV/jif2rAH8SGA6whoEtb8GSKgnLd123AP3knCcj4xJEjNitZBCl+BfDImaUYx6EcMspqi+85E2oX9PEOnbQsiduj4ySwLwXdp1cXtTZEWHyUSnJwWud8dn4=
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by PR3PR04MB7322.eurprd04.prod.outlook.com (2603:10a6:102:8e::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.24; Tue, 26 Mar
+ 2024 03:37:54 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7409.028; Tue, 26 Mar 2024
+ 03:37:52 +0000
+Date: Mon, 25 Mar 2024 23:37:44 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Inochi Amaoto <inochiama@outlook.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Liu Gui <kenneth.liu@sophgo.com>,
+	Jingbao Qiu <qiujingbao.dlmu@gmail.com>, dlan@gentoo.org,
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v5 1/3] dt-bindings: dmaengine: Add dmamux for
+ CV18XX/SG200X series SoC
+Message-ID: <ZgJDCL+aq3ZTE6/1@lizhi-Precision-Tower-5810>
+References: <IA1PR20MB4953B500D7451964EE37DA4CBB352@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <IA1PR20MB4953E2937788D9D92C91ABBBBB352@IA1PR20MB4953.namprd20.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <IA1PR20MB4953E2937788D9D92C91ABBBBB352@IA1PR20MB4953.namprd20.prod.outlook.com>
+X-ClientProxiedBy: BYAPR07CA0009.namprd07.prod.outlook.com
+ (2603:10b6:a02:bc::22) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PR3PR04MB7322:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	N3X+QX5a3Nw4fJYEO5uibxc96CnW+VC0vaWecACVO0nQcONJNgU/kGlnSJ/lYsfSheq41SGDGAOQUCTejYDEQygIIc2IxIfPL3ySalbnxVUjxmT6UF9QVbs+P5L8V5NkrDi8bt1r3jrw6ADzCPoQVQOaxHPsR28wdncRaOykUBm8pdv6X/qTh5KnKH+/LBfhRTJ4tMrFBPdM1hwjx2rKooKbybdaJs7cvJPQjNpPRU61J4Afwzs1rl7dEmPM078zX8mQnvHcD1Qwfmw0oAWsfV85UDaTGZPPI/oBBQ7tkNip3Jm0uWabktkJ1JeV6tVCIUnhmxIMOKBQzwKodNYfTtMV55pwhjJX24UD3PAfTniGO0XtjJk/WRYr8bKiThCbVM15RJls9DA5EuElUzCyoUsedZJqQUCkrF86qN90nvEt5MsK6/f3U0jfdCCF+k3RatOjp9eubZFmFeCDAjkXiqXX0hsb/hwFy4dZGeLJoLyRXMCDuO8xd46GhvKFsTP3VMYgvFhzVFgGtBvJXaBWZuWJaLTMX9eHFPdCuXhVIz8VSc5FuwmbQxO3fkp3oT8dUJrZKTVD6iEqyeVp98Moo40dlRPUf63NYrO3zaFV6xN4Zi6BRo0pbey9GkdHGQksmpEY9NX3eE+aiw8TX/CjuIi/BFkX0BrLBOlrMR4WKU8=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(52116005)(1800799015)(376005)(366007)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?LBEk+TNwtYPuKPCqITSpH2JYsfj814rSSVbylRkdnO29dPNeEPw249iRiEfm?=
+ =?us-ascii?Q?MmcgeZBWjAsSOOmoO0NMPdk2m4Jk8Y4JORcIUfjBolbN2rVr2cnoz1Pz+AcK?=
+ =?us-ascii?Q?V7loFvP5aKKU9hBZelTzwdMeoiSJ58dutIpkjDLLlkb5dYCxQHWGiUPWWCKf?=
+ =?us-ascii?Q?dT4+ll096i2E2xb6O8oD8R2BiDFHgskw0t53H0C6waULVM03qPqgcZXxhKDi?=
+ =?us-ascii?Q?StBlZ7lnuhPwt5XCl+hp3lufdQGDyvgHcB1Ok7g+YdxgFXzi/pyOKoMwvqVv?=
+ =?us-ascii?Q?6AbPTR6h83Tn+cIkMBl4ITrBkQPHNAwKydwyA5pH+x48bQIq3XMoD5OVozri?=
+ =?us-ascii?Q?gX74dHxtQ3O42o1unfgiz6QtB6kGDJEzvFIoOoJARyvfkneSzDhhu1tSV4F6?=
+ =?us-ascii?Q?r8f57NI4Q4nH0Mues5Nvr2YqIpKVYj6tRyo6SNL/vPEc/zCMVg3WhgeMCWZ8?=
+ =?us-ascii?Q?1+dId0nWzyJ9sS2fZFW61wyUWJxeEcmUvehkmr7PDmlhQwfa4VlsN6soQ5ow?=
+ =?us-ascii?Q?zYRIOz2OpOemiD+lU362F7a9UpqDYQsGVFWjmVDZ+5p7Vu/caJBCDui7D1sz?=
+ =?us-ascii?Q?m4VLhxYNkFfmttzsp9Ut6UIZnYpX+DwXAnKDgvCmtJrrjqqpWQynw273dmEc?=
+ =?us-ascii?Q?tZ+UhfsZuRQ9RR+E3RnkZmvqkcnL6a3PW7hggjzL+0ZjSn6P4kS6OiqQDkBO?=
+ =?us-ascii?Q?mIEO01M1Vz/ZWZ/pyWnJrxzM60eY5DAP37I9V1fkpre4XgJou5TeLtgVNMW8?=
+ =?us-ascii?Q?tvwQwf0YYpmdMSmtsA6bUdc7ZaUtxrNm2MYLgatYGQa6pIPSbxwbW3CxRDL3?=
+ =?us-ascii?Q?2S5CWlwWpTGcWoOdB/FESzRoc+PjmEctMevGaPPt/5HU9f88gDOV4we4hXRg?=
+ =?us-ascii?Q?OsCdCQcxyO2LlD/AJZXDeGoNrx3QoPfx6pEIPfBnq9xyg5jirUv1Vo8MTVAA?=
+ =?us-ascii?Q?Vjn6cXWSSvGU8sZ0rxDKCYP9zlAfDm/sEu3vplUeq7I4BDTfwgihPhvvn6Tl?=
+ =?us-ascii?Q?cODYZTa3rW4R7g0rJZzOnMoj41VD78bVWU9iAUjHIRDn3sG8w9yKPmS0Ik3D?=
+ =?us-ascii?Q?iO98omVpI5i+XctIBZV+/Wcq4VfDYv8oK4je3q1kU9C+xVsCC5+JSAUacf3Z?=
+ =?us-ascii?Q?BDNkmU0Dz/K6eUvCkQ6Z7IDQMG9mcerOFEavPX+EoUNgJuML5zhUP8KIJLzR?=
+ =?us-ascii?Q?YhL1WS40ZVAhR7Sdn3zS9nTpjgjB4LKlXw54W6Ftij/3foxVJF1+vQVdEL6/?=
+ =?us-ascii?Q?/yH4plgVSyQkroHpHJ4JoTVOOvKXB2/be9GinO0zBSpK5fNrsgy3T4BYwmfY?=
+ =?us-ascii?Q?FMu0YGhV4jlgA7kOmiLy9Uq1+RDAE2TxjWIiaIAYL5h2hJzplIooDuE4HIL+?=
+ =?us-ascii?Q?AmXkj1DHg4ZnOo3DCLqfY7p+ICcQ2iJNZtRKb5O6IOUu3k5ivtO/plQ10qyW?=
+ =?us-ascii?Q?gBk6AgkoYdqjr28rA2O7H9IpVjrLMxBqMOLCL3J/iHpL5BZ9zWlQKgyKjXkl?=
+ =?us-ascii?Q?harpq/+gkGODucvx5IPb4fNikXnc6cVYeNeK+baeA4SeML2j2UFL7a0qnwsH?=
+ =?us-ascii?Q?DW7FvCvouUv86XHeE5Pu9jJd+305929Y082nnCWS?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47ef9c7a-54b2-442f-d408-08dc4d461e16
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 03:37:52.8624
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5Z7HEkjLKScpvLdTkm/hg6pYJiAgXrft/IIttKdBoHTjskm4GfrCCEbRfsmNPllKHq8y8hV58h4vujA8yVxRBg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR04MB7322
 
-Introduce pmu_event_filter_test for arm64 platforms. The test configures
-PMUv3 for a vCPU, and sets different pmu event filters for the vCPU, and
-check if the guest can see those events which user allow and can't use
-those events which use deny.
+On Tue, Mar 26, 2024 at 09:47:03AM +0800, Inochi Amaoto wrote:
+> The DMA IP of Sophgo CV18XX/SG200X is based on a DW AXI CORE, with
+> an additional channel remap register located in the top system control
+> area. The DMA channel is exclusive to each core.
+> 
+> Add the dmamux binding for CV18XX/SG200X series SoC
+> 
+> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
+> ---
+>  .../bindings/dma/sophgo,cv1800-dmamux.yaml    | 48 ++++++++++++++++
+>  include/dt-bindings/dma/cv1800-dma.h          | 55 +++++++++++++++++++
 
-This test refactor the create_vpmu_vm() and make it a wrapper for
-__create_vpmu_vm(), which allows some extra init code before
-KVM_ARM_VCPU_PMU_V3_INIT.
+I remember checkpatch.pl require .h have seperate patch.
 
-And this test use the KVM_ARM_VCPU_PMU_V3_FILTER attribute to set the
-pmu event filter in KVM. And choose to filter two common event
-branches_retired and instructions_retired, and let the guest to check if
-it see the right pmceid register.
+Frank
 
-Signed-off-by: Shaoqin Huang <shahuang@redhat.com>
----
- tools/testing/selftests/kvm/Makefile          |   1 +
- .../kvm/aarch64/pmu_event_filter_test.c       | 298 ++++++++++++++++++
- 2 files changed, 299 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/aarch64/pmu_event_filter_test.c
+>  2 files changed, 103 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/sophgo,cv1800-dmamux.yaml
+>  create mode 100644 include/dt-bindings/dma/cv1800-dma.h
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/sophgo,cv1800-dmamux.yaml b/Documentation/devicetree/bindings/dma/sophgo,cv1800-dmamux.yaml
+> new file mode 100644
+> index 000000000000..d7256646ea26
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/sophgo,cv1800-dmamux.yaml
+> @@ -0,0 +1,48 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/sophgo,cv1800-dmamux.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Sophgo CV1800/SG200 Series DMA mux
+> +
+> +maintainers:
+> +  - Inochi Amaoto <inochiama@outlook.com>
+> +
+> +allOf:
+> +  - $ref: dma-router.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: sophgo,cv1800-dmamux
+> +
+> +  reg:
+> +    items:
+> +      - description: DMA channal remapping register
+> +      - description: DMA channel interrupt mapping register
+> +
 
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index 741c7dc16afc..9745be534df3 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -151,6 +151,7 @@ TEST_GEN_PROGS_aarch64 += aarch64/aarch32_id_regs
- TEST_GEN_PROGS_aarch64 += aarch64/debug-exceptions
- TEST_GEN_PROGS_aarch64 += aarch64/hypercalls
- TEST_GEN_PROGS_aarch64 += aarch64/page_fault_test
-+TEST_GEN_PROGS_aarch64 += aarch64/pmu_event_filter_test
- TEST_GEN_PROGS_aarch64 += aarch64/psci_test
- TEST_GEN_PROGS_aarch64 += aarch64/set_id_regs
- TEST_GEN_PROGS_aarch64 += aarch64/smccc_filter
-diff --git a/tools/testing/selftests/kvm/aarch64/pmu_event_filter_test.c b/tools/testing/selftests/kvm/aarch64/pmu_event_filter_test.c
-new file mode 100644
-index 000000000000..972384e81067
---- /dev/null
-+++ b/tools/testing/selftests/kvm/aarch64/pmu_event_filter_test.c
-@@ -0,0 +1,298 @@
-+
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * pmu_event_filter_test - Test user limit pmu event for guest.
-+ *
-+ * Copyright (c) 2023 Red Hat, Inc.
-+ *
-+ * This test checks if the guest only see the limited pmu event that userspace
-+ * sets, if the guest can use those events which user allow, and if the guest
-+ * can't use those events which user deny.
-+ * This test runs only when KVM_CAP_ARM_PMU_V3, KVM_ARM_VCPU_PMU_V3_FILTER
-+ * is supported on the host.
-+ */
-+#include <kvm_util.h>
-+#include <processor.h>
-+#include <vgic.h>
-+#include <vpmu.h>
-+#include <test_util.h>
-+#include <perf/arm_pmuv3.h>
-+
-+struct pmu_common_event_ids {
-+	uint64_t pmceid0;
-+	uint64_t pmceid1;
-+} max_pmce, expected_pmce;
-+
-+struct vpmu_vm {
-+	struct kvm_vm *vm;
-+	struct kvm_vcpu *vcpu;
-+	int gic_fd;
-+};
-+
-+static struct vpmu_vm vpmu_vm;
-+
-+#define FILTER_NR 10
-+
-+struct test_desc {
-+	const char *name;
-+	struct kvm_pmu_event_filter filter[FILTER_NR];
-+};
-+
-+#define __DEFINE_FILTER(base, num, act)		\
-+	((struct kvm_pmu_event_filter) {	\
-+		.base_event	= base,		\
-+		.nevents	= num,		\
-+		.action		= act,		\
-+	})
-+
-+#define DEFINE_FILTER(base, act) __DEFINE_FILTER(base, 1, act)
-+
-+static void guest_code(void)
-+{
-+	uint64_t pmceid0 = read_sysreg(pmceid0_el0);
-+	uint64_t pmceid1 = read_sysreg(pmceid1_el0);
-+
-+	GUEST_ASSERT_EQ(expected_pmce.pmceid0, pmceid0);
-+	GUEST_ASSERT_EQ(expected_pmce.pmceid1, pmceid1);
-+
-+	GUEST_DONE();
-+}
-+
-+static void guest_get_pmceid(void)
-+{
-+	max_pmce.pmceid0 = read_sysreg(pmceid0_el0);
-+	max_pmce.pmceid1 = read_sysreg(pmceid1_el0);
-+
-+	GUEST_DONE();
-+}
-+
-+static void run_vcpu(struct kvm_vcpu *vcpu)
-+{
-+	struct ucall uc;
-+
-+	while (1) {
-+		vcpu_run(vcpu);
-+		switch (get_ucall(vcpu, &uc)) {
-+		case UCALL_DONE:
-+			return;
-+		case UCALL_ABORT:
-+			REPORT_GUEST_ASSERT(uc);
-+			break;
-+		default:
-+			TEST_FAIL("Unknown ucall %lu", uc.cmd);
-+		}
-+	}
-+}
-+
-+static void set_pmce(struct pmu_common_event_ids *pmce, int action, int event)
-+{
-+	int base = 0;
-+	uint64_t *pmceid = NULL;
-+
-+	if (event >= 0x4000) {
-+		event -= 0x4000;
-+		base = 32;
-+	}
-+
-+	if (event >= 0 && event <= 0x1F) {
-+		pmceid = &pmce->pmceid0;
-+	} else if (event >= 0x20 && event <= 0x3F) {
-+		event -= 0x20;
-+		pmceid = &pmce->pmceid1;
-+	} else {
-+		return;
-+	}
-+
-+	event += base;
-+	if (action == KVM_PMU_EVENT_ALLOW)
-+		*pmceid |= BIT(event);
-+	else
-+		*pmceid &= ~BIT(event);
-+}
-+
-+static void prepare_expected_pmce(struct kvm_pmu_event_filter *filter)
-+{
-+	struct pmu_common_event_ids pmce_mask = { ~0, ~0 };
-+	bool first_filter = true;
-+	int i;
-+
-+	while (filter && filter->nevents != 0) {
-+		if (first_filter) {
-+			if (filter->action == KVM_PMU_EVENT_ALLOW)
-+				memset(&pmce_mask, 0, sizeof(pmce_mask));
-+			first_filter = false;
-+		}
-+
-+		for (i = 0; i < filter->nevents; i++)
-+			set_pmce(&pmce_mask, filter->action,
-+				 filter->base_event + i);
-+
-+		filter++;
-+	}
-+
-+	expected_pmce.pmceid0 = max_pmce.pmceid0 & pmce_mask.pmceid0;
-+	expected_pmce.pmceid1 = max_pmce.pmceid1 & pmce_mask.pmceid1;
-+}
-+
-+static void pmu_event_filter_init(struct kvm_pmu_event_filter *filter)
-+{
-+	while (filter && filter->nevents != 0) {
-+		kvm_device_attr_set(vpmu_vm.vcpu->fd,
-+				    KVM_ARM_VCPU_PMU_V3_CTRL,
-+				    KVM_ARM_VCPU_PMU_V3_FILTER,
-+				    filter);
-+		filter++;
-+	}
-+}
-+
-+#define GICD_BASE_GPA	0x8000000ULL
-+#define GICR_BASE_GPA	0x80A0000ULL
-+
-+/* Create a VM that has one vCPU with PMUv3 configured. */
-+static void create_vpmu_vm_with_filter(void *guest_code,
-+				       struct kvm_pmu_event_filter *filter)
-+{
-+	uint64_t irq = 23;
-+
-+	/* The test creates the vpmu_vm multiple times. Ensure a clean state */
-+	memset(&vpmu_vm, 0, sizeof(vpmu_vm));
-+
-+	vpmu_vm.vm = vm_create(1);
-+	vpmu_vm.vcpu = vm_vcpu_add_with_vpmu(vpmu_vm.vm, 0, guest_code);
-+	vpmu_vm.gic_fd = vgic_v3_setup(vpmu_vm.vm, 1, 64,
-+					GICD_BASE_GPA, GICR_BASE_GPA);
-+	__TEST_REQUIRE(vpmu_vm.gic_fd >= 0,
-+		       "Failed to create vgic-v3, skipping");
-+
-+	pmu_event_filter_init(filter);
-+
-+	/* Initialize vPMU */
-+	vpmu_set_irq(vpmu_vm.vcpu, irq);
-+	vpmu_init(vpmu_vm.vcpu);
-+}
-+
-+static void create_vpmu_vm(void *guest_code)
-+{
-+	create_vpmu_vm_with_filter(guest_code, NULL);
-+}
-+
-+static void destroy_vpmu_vm(void)
-+{
-+	close(vpmu_vm.gic_fd);
-+	kvm_vm_free(vpmu_vm.vm);
-+}
-+
-+static void run_test(struct test_desc *t)
-+{
-+	pr_info("Test: %s\n", t->name);
-+
-+	create_vpmu_vm_with_filter(guest_code, t->filter);
-+	prepare_expected_pmce(t->filter);
-+	sync_global_to_guest(vpmu_vm.vm, expected_pmce);
-+
-+	run_vcpu(vpmu_vm.vcpu);
-+
-+	destroy_vpmu_vm();
-+}
-+
-+static struct test_desc tests[] = {
-+	{
-+		.name = "without_filter",
-+		.filter = {
-+			{ 0 }
-+		},
-+	},
-+	{
-+		.name = "member_allow_filter",
-+		.filter = {
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_SW_INCR, 0),
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_INST_RETIRED, 0),
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_BR_RETIRED, 0),
-+			{ 0 },
-+		},
-+	},
-+	{
-+		.name = "member_deny_filter",
-+		.filter = {
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_SW_INCR, 1),
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_INST_RETIRED, 1),
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_BR_RETIRED, 1),
-+			{ 0 },
-+		},
-+	},
-+	{
-+		.name = "not_member_deny_filter",
-+		.filter = {
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_SW_INCR, 1),
-+			{ 0 },
-+		},
-+	},
-+	{
-+		.name = "not_member_allow_filter",
-+		.filter = {
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_SW_INCR, 0),
-+			{ 0 },
-+		},
-+	},
-+	{
-+		.name = "deny_chain_filter",
-+		.filter = {
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_CHAIN, 1),
-+			{ 0 },
-+		},
-+	},
-+	{
-+		.name = "deny_cpu_cycles_filter",
-+		.filter = {
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_CPU_CYCLES, 1),
-+			{ 0 },
-+		},
-+	},
-+	{
-+		.name = "cancel_filter",
-+		.filter = {
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_CPU_CYCLES, 0),
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_CPU_CYCLES, 1),
-+		},
-+	},
-+	{
-+		.name = "multiple_filter",
-+		.filter = {
-+			__DEFINE_FILTER(0x0, 0x10, 0),
-+			__DEFINE_FILTER(0x6, 0x3, 1),
-+		},
-+	},
-+	{ 0 }
-+};
-+
-+static void run_tests(void)
-+{
-+	struct test_desc *t;
-+
-+	for (t = &tests[0]; t->name; t++)
-+		run_test(t);
-+}
-+
-+static bool kvm_pmu_support_events(void)
-+{
-+	create_vpmu_vm(guest_get_pmceid);
-+
-+	memset(&max_pmce, 0, sizeof(max_pmce));
-+	sync_global_to_guest(vpmu_vm.vm, max_pmce);
-+	run_vcpu(vpmu_vm.vcpu);
-+	sync_global_from_guest(vpmu_vm.vm, max_pmce);
-+	destroy_vpmu_vm();
-+
-+	return max_pmce.pmceid0 &
-+	       (ARMV8_PMUV3_PERFCTR_BR_RETIRED |
-+	       ARMV8_PMUV3_PERFCTR_INST_RETIRED |
-+	       ARMV8_PMUV3_PERFCTR_CHAIN);
-+}
-+
-+int main(void)
-+{
-+	TEST_REQUIRE(kvm_has_cap(KVM_CAP_ARM_PMU_V3));
-+	TEST_REQUIRE(kvm_pmu_support_events());
-+
-+	run_tests();
-+}
--- 
-2.40.1
+Look like driver have not use it.
 
+Frank
+
+> +  '#dma-cells':
+> +    const: 2
+> +    description:
+> +      The first cells is device id. The second one is the cpu id.
+> +
+> +  dma-masters:
+> +    maxItems: 1
+> +
+> +  dma-requests:
+> +    const: 8
+> +
+> +required:
+> +  - '#dma-cells'
+> +  - dma-masters
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    dma-router {
+> +      compatible = "sophgo,cv1800-dmamux";
+> +      #dma-cells = <2>;
+> +      dma-masters = <&dmac>;
+> +      dma-requests = <8>;
+> +    };
+> diff --git a/include/dt-bindings/dma/cv1800-dma.h b/include/dt-bindings/dma/cv1800-dma.h
+> new file mode 100644
+> index 000000000000..3ce9dac25259
+> --- /dev/null
+> +++ b/include/dt-bindings/dma/cv1800-dma.h
+> @@ -0,0 +1,55 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
+> +
+> +#ifndef __DT_BINDINGS_DMA_CV1800_H__
+> +#define __DT_BINDINGS_DMA_CV1800_H__
+> +
+> +#define DMA_I2S0_RX		0
+> +#define DMA_I2S0_TX		1
+> +#define DMA_I2S1_RX		2
+> +#define DMA_I2S1_TX		3
+> +#define DMA_I2S2_RX		4
+> +#define DMA_I2S2_TX		5
+> +#define DMA_I2S3_RX		6
+> +#define DMA_I2S3_TX		7
+> +#define DMA_UART0_RX		8
+> +#define DMA_UART0_TX		9
+> +#define DMA_UART1_RX		10
+> +#define DMA_UART1_TX		11
+> +#define DMA_UART2_RX		12
+> +#define DMA_UART2_TX		13
+> +#define DMA_UART3_RX		14
+> +#define DMA_UART3_TX		15
+> +#define DMA_SPI0_RX		16
+> +#define DMA_SPI0_TX		17
+> +#define DMA_SPI1_RX		18
+> +#define DMA_SPI1_TX		19
+> +#define DMA_SPI2_RX		20
+> +#define DMA_SPI2_TX		21
+> +#define DMA_SPI3_RX		22
+> +#define DMA_SPI3_TX		23
+> +#define DMA_I2C0_RX		24
+> +#define DMA_I2C0_TX		25
+> +#define DMA_I2C1_RX		26
+> +#define DMA_I2C1_TX		27
+> +#define DMA_I2C2_RX		28
+> +#define DMA_I2C2_TX		29
+> +#define DMA_I2C3_RX		30
+> +#define DMA_I2C3_TX		31
+> +#define DMA_I2C4_RX		32
+> +#define DMA_I2C4_TX		33
+> +#define DMA_TDM0_RX		34
+> +#define DMA_TDM0_TX		35
+> +#define DMA_TDM1_RX		36
+> +#define DMA_AUDSRC		37
+> +#define DMA_SPI_NAND		38
+> +#define DMA_SPI_NOR		39
+> +#define DMA_UART4_RX		40
+> +#define DMA_UART4_TX		41
+> +#define DMA_SPI_NOR1		42
+> +
+> +#define DMA_CPU_A53		0
+> +#define DMA_CPU_C906_0		1
+> +#define DMA_CPU_C906_1		2
+> +
+> +
+> +#endif // __DT_BINDINGS_DMA_CV1800_H__
+> --
+> 2.44.0
+> 
