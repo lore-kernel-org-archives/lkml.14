@@ -1,94 +1,140 @@
-Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AFE613D299;
-	Tue, 26 Mar 2024 19:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E465802;
+	Tue, 26 Mar 2024 19:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711480994; cv=none; b=D/F+VwN5O1E11MnZnstBVo+DVRiaAmTRkY8fybpuVvNho5jQcIbLgzOBmeBgNt9zASs0IMHl6tAyx0BHOeP+bl69bYKKuOMaUYEaKgW8mFqWta0Onm+wAbX5+fdfVq2G/efL8BGc+bYMhqQqUebsVm5uj4Y1VGE9NV2SJfYw+S4=
+	t=1711481053; cv=none; b=aN+13xKWHwN3panO1qXjymU1DC8JKm40heM8Q8Vsg7ZufeluyGgAG73Rx9HVyuh03H3+eN2rHFCNW7ajBcXmK5rzNL/R/F6PzJMzW+SFKPir3xbOCOgPK2VfhiV/7jVKgXljaziXh/JKsHpVSzbSSR4otE20E1O7r48t5vrs7Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711480994; c=relaxed/simple;
-	bh=WDvr8oUzIY615IYKFFDaDoBBU9YupDLybvVcIxw84Wc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=neh1cA7R9lfjWRro2kQq0qov7ErtnqRtrlcn5zLbqz8GywdXh9UQOn2rKsw937bcROcvKFys9ukDlcr+q1Gcn4Pum/bsoZARBG2o6ahQACr+8vYDYq+q5HNZwQzGwr4IW6+AOb9G6RwFPAiwV7uYrru2poHmI1kZgJ/+8GAVOeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=GSS34oC6; arc=none smtp.client-ip=161.97.139.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	s=arc-20240116; t=1711481053; c=relaxed/simple;
+	bh=JCXdozmnkFPX1WkDRioLRzOTLAtfQiY/F1KQJhvEJvY=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=f33h1S9FMQBECaybYjvhS7lSSbTtT98bUGZBMniamgLtvPpOPc79pmIc0RXn+Z08C53h7NIdAILc/9ezgNzGeCZ32ELTENqvmmK2U9NsVfgqiGKA5CYq8If7Ks929m5oWXCXhm7y/gNXzA+pMw/5FSKhI0Rf3jAZ2kY3/tkU8BE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q7jcxuwX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=K8FRbeLy; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="GSS34oC6"
-Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
-	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1rpCO0-003QYR-2U;
-	Tue, 26 Mar 2024 20:23:04 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=vv126PhSztFkrcdCy/6OCfsPMqKAQOQ3JJmexhOQoA8=; b=GSS34oC6UlNqXI29og8Y9Qzy6b
-	5MJd77uvKrUxrfUKqjQkHFfnUZztkRcCSqq+SaC98mKITiohSTwfRCdxr+c/EvKv3QLavJLdXmVct
-	joy+4Y3I1UkVXwGDwW8zsXxbuznvT3DBccaZQixyPxFBsj2ArjQHe5q/dfeuTplzEac3CzBaNdHdo
-	NtTvLrVdo5SrJoyel4HbZ4oJG4KnGiFg/734iDoole6mE/kYg39pu6d96zZAHVAVrSCxU9cp0r9k0
-	rAGDd2/ioJf2nhSuaAA/aLFvyXDBRjfTLFXnfePbBQV2DqxKaLxiTeVl0bEy5B8tvvHaJUA9ycGrw
-	7vHCBr8A==;
-Received: from p2003010777026a001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:107:7702:6a00:1a3d:a2ff:febf:d33a] helo=aktux)
-	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1rpCNy-0002bX-0b;
-	Tue, 26 Mar 2024 20:23:02 +0100
-Received: from andi by aktux with local (Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1rpCNy-001FZ6-0T;
-	Tue, 26 Mar 2024 20:23:02 +0100
-From: Andreas Kemnade <andreas@kemnade.info>
-To: lee@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	mazziesaccount@gmail.com,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Andreas Kemnade <andreas@kemnade.info>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v2 1/2] dt-bindings: mfd: Add ROHM BD71828 system-power-controller property
-Date: Tue, 26 Mar 2024 20:22:57 +0100
-Message-Id: <20240326192258.298143-2-andreas@kemnade.info>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240326192258.298143-1-andreas@kemnade.info>
-References: <20240326192258.298143-1-andreas@kemnade.info>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q7jcxuwX";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K8FRbeLy"
+Date: Tue, 26 Mar 2024 19:24:07 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1711481048;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n0bPrOBaybgV0zMx9zb0a7yAk6f3pE1zicCfdO6qy9U=;
+	b=Q7jcxuwXkPZWSSkZroA2Z/0ftNbGpVonkqN+0Y94C2EFuSbuPplow2V4QHU7ZwCrSQ4UKj
+	Lb47bBc5UNI+jnBIxnngDkKMUr9Ti7FBs54l9ZrkmPrOxlABXZPq5+X/0+FUxd4dLjPNJP
+	akFOEUPdRj8J6GMyuaK6QbBC5IaujYpq4lU5ePGyK8bGvHrhUWSWoLC0amKkQM06fS09za
+	YuAwgA0mLzZT4pncltz4Z/jHpRyS56c9DWPtbcUw4zbrv0kJ7c6cUzg/yVP4ECkyobrJpe
+	cXgUFKhaSZROj5EnE/kfh+X97s7dQ+QcaBUpxoyc0WeAkMxP78pGoBgeYDSmdg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1711481048;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n0bPrOBaybgV0zMx9zb0a7yAk6f3pE1zicCfdO6qy9U=;
+	b=K8FRbeLys8ng03ART++ksn/EqD981zwAXjoLO81KvyJNm8d3JV7DUDpJWuo4ICQt/m1h95
+	2KS4g5wr0noYffBA==
+From: "tip-bot2 for Shrikanth Hegde" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] sched/fair: Simplify the continue_balancing logic
+ in sched_balance_newidle()
+Cc: Shrikanth Hegde <sshegde@linux.ibm.com>, Ingo Molnar <mingo@kernel.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240325153926.274284-1-sshegde@linux.ibm.com>
+References: <20240325153926.274284-1-sshegde@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <171148104719.10875.2014914765830035022.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-As the PMIC can power off the system, add the corresponding property.
+The following commit has been merged into the sched/core branch of tip:
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Commit-ID:     c829d6818b60c591f70c060b2bb75d76cf0cec6d
+Gitweb:        https://git.kernel.org/tip/c829d6818b60c591f70c060b2bb75d76cf0cec6d
+Author:        Shrikanth Hegde <sshegde@linux.ibm.com>
+AuthorDate:    Mon, 25 Mar 2024 21:09:26 +05:30
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 26 Mar 2024 20:16:20 +01:00
+
+sched/fair: Simplify the continue_balancing logic in sched_balance_newidle()
+
+newidle(CPU_NEWLY_IDLE) balancing doesn't stop the load-balancing if the
+continue_balancing flag is reset, but the other two balancing (IDLE, BUSY)
+cases do that.
+
+newidle balance stops the load balancing if rq has a task or there
+is wakeup pending. The same checks are present in should_we_balance for
+newidle. Hence use the return value and simplify continue_balancing
+mechanism for newidle. Update the comment surrounding it as well.
+
+No change in functionality intended.
+
+Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Link: https://lore.kernel.org/r/20240325153926.274284-1-sshegde@linux.ibm.com
 ---
- Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/sched/fair.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
-index 11089aa89ec6..0b62f854bf6b 100644
---- a/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
-+++ b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
-@@ -73,6 +73,8 @@ properties:
-       used to mark the pins which should not be configured for GPIO. Please see
-       the ../gpio/gpio.txt for more information.
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 24a7530..1856e58 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -12358,6 +12358,7 @@ static int sched_balance_newidle(struct rq *this_rq, struct rq_flags *rf)
+ {
+ 	unsigned long next_balance = jiffies + HZ;
+ 	int this_cpu = this_rq->cpu;
++	int continue_balancing = 1;
+ 	u64 t0, t1, curr_cost = 0;
+ 	struct sched_domain *sd;
+ 	int pulled_task = 0;
+@@ -12372,8 +12373,9 @@ static int sched_balance_newidle(struct rq *this_rq, struct rq_flags *rf)
+ 		return 0;
  
-+  system-power-controller: true
-+
- required:
-   - compatible
-   - reg
--- 
-2.39.2
-
+ 	/*
+-	 * We must set idle_stamp _before_ calling idle_balance(), such that we
+-	 * measure the duration of idle_balance() as idle time.
++	 * We must set idle_stamp _before_ calling sched_balance_rq()
++	 * for CPU_NEWLY_IDLE, such that we measure the this duration
++	 * as idle time.
+ 	 */
+ 	this_rq->idle_stamp = rq_clock(this_rq);
+ 
+@@ -12412,7 +12414,6 @@ static int sched_balance_newidle(struct rq *this_rq, struct rq_flags *rf)
+ 
+ 	rcu_read_lock();
+ 	for_each_domain(this_cpu, sd) {
+-		int continue_balancing = 1;
+ 		u64 domain_cost;
+ 
+ 		update_next_balance(sd, &next_balance);
+@@ -12438,8 +12439,7 @@ static int sched_balance_newidle(struct rq *this_rq, struct rq_flags *rf)
+ 		 * Stop searching for tasks to pull if there are
+ 		 * now runnable tasks on this rq.
+ 		 */
+-		if (pulled_task || this_rq->nr_running > 0 ||
+-		    this_rq->ttwu_pending)
++		if (pulled_task || !continue_balancing)
+ 			break;
+ 	}
+ 	rcu_read_unlock();
