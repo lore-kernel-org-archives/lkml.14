@@ -1,298 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECCEC13CA94;
-	Tue, 26 Mar 2024 18:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49CC84D0D;
+	Tue, 26 Mar 2024 18:12:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711476647; cv=none; b=MQf//dsXlXVm5XbuAnCh9V+dRxHLHVz5IvFqofxFZgmn/qJjYEVV0i3lQfyeyJhOt/aYpBtBBbAjBmvRvB6V5UcKOWbyKwa+p3y+Otypmf9aaITX532fChwUZojYdGIi1zU9srg0zeM6xBtir5mgW9TkjYvUr2Pxz/saNTbxyts=
+	t=1711476740; cv=none; b=qUYmhuKw3bbiAIm4+NrC1SXSJnQhsCUMi2hOYoLAkgcVDxH8cHDWQ1Vayv0UtFCloQUUQ/qYfct49233kz7SkyRaItSbnbOho+/HdabGpxOkvBVI5/tKlyqNTlC6yIiqoqMoVoB1gHMNeS+X1jBYBTSGQKvvKLTO0dn7J49wQzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711476647; c=relaxed/simple;
-	bh=/ASqtHuuxDXQIQnXsBHIw9PMUpUHvkzD6fY9hVpWJwA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ck+4R1gZLHqZkx8DjX09U1R+gY2dLdVftws8kOZcdZW2BROorVaLzj8mA7R5TT7QzqJdYkgVL/II/zDtKml2t8TMn8D0RtcIMAoEa0wbak3GdjeLT9nTLm42Nl8hXjUHL8bOCETO59dVsn/wFd35R9vo7AWSoWR1bsMl96PqoEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ir7eOxn4; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1711476740; c=relaxed/simple;
+	bh=ZcohJvmfRg15SwcF1OZOo/kVQIEEfjHr6XbmDLUndHM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iIUKRnf4ZrvJpDoN7e8hzrnReOhHF4j0iZNBv5D3AxfRUbr48Ug5gYOMXWeS7bA/Wt9O2CdVRbjnq9AF/LD0MfmGI1eMQMtFAuwuqOsSD9rF9JyciRSnasKck6n+p2T1QogbUv6+Al1HqlH81FiCX3ZJnrq3Z3QWBdn8JRa2C6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UnYlXgyn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ir7eOxn4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711476646; x=1743012646;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/ASqtHuuxDXQIQnXsBHIw9PMUpUHvkzD6fY9hVpWJwA=;
-  b=Ir7eOxn4V74baUujYJp0QujgRJRIYuSA5bSBR+HK55+Nlqa7zAxA8Idh
-   Xr04VEhDAa2AOnhp5bckl5atxtC9clLskA7fnhrEAcBqR4ft+u89aDzaT
-   sUmae6EOfHm9oaQ7F72KjD7CiUUf/oUaNsNj1XN1XVHO5mUctlrktVycq
-   aOe/0cBVjktUXJUHVbGMcbd7nOYAPgfp8GvGfjTQ26MixwJK1qliERv2N
-   IH4deMPuY3ysQhMdsQEzNfGFtORC2D/GYDaZ1sbxZv3I3CUAPD1nGHfzD
-   159dpDFuqaMNNGhgBfVIkm89SV9HkNIfldzCAStPdlTmMC1E5tJEX4c/x
-   A==;
-X-CSE-ConnectionGUID: atNfeAI4Q7WT1xlbuNUb+Q==
-X-CSE-MsgGUID: cynR5i00RGucrLT8ZK0pMQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="10325727"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="10325727"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 11:10:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="937072945"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="937072945"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Mar 2024 11:10:39 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 44935815; Tue, 26 Mar 2024 20:10:35 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Mark Brown <broonie@kernel.org>,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Russell King <linux@armlinux.org.uk>
-Subject: [PATCH v1 09/10] spi: pxa2xx: Remove outdated documentation
-Date: Tue, 26 Mar 2024 20:07:59 +0200
-Message-ID: <20240326181027.1418989-10-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240326181027.1418989-1-andriy.shevchenko@linux.intel.com>
-References: <20240326181027.1418989-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UnYlXgyn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B33BC433C7;
+	Tue, 26 Mar 2024 18:12:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711476740;
+	bh=ZcohJvmfRg15SwcF1OZOo/kVQIEEfjHr6XbmDLUndHM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=UnYlXgynHB/OdGQ3SlzWtZXKNc4VnzI/sxDokA1pKHvYRuUJf1AXogGtbY0shgsy9
+	 rXf1pz/j683VzLwQXpv58yJltQfcuo8XNQq/LueWaI9GbfX1Jrf5ML1p8FokgOM8cW
+	 h0ISa2ILiQVph8YZ9A2mLdMyGJ5ANUEs3iG+5Zmfj1Ire8uTQtY6r8ip2JgXr/ZMFa
+	 FGF/62OkuNNnFa/sLRR7Xs+iwEdtliSPNT8CcGUgQa+nm77qpnXWUIx6nbkt+Fp+LS
+	 prLN24V+oxXQYO67hmZndviRpOHFyhs0bDaX+10onul3JBROz1/UlnXGY/QfOlgwzV
+	 l8ZGwntlfuuYA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 956B3CE129B; Tue, 26 Mar 2024 11:12:19 -0700 (PDT)
+Date: Tue, 26 Mar 2024 11:12:19 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Zqiang <qiang.zhang1211@gmail.com>
+Cc: frederic@kernel.org, neeraj.upadhyay@kernel.org, joel@joelfernandes.org,
+	rcu@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rcutorture: Fix invalid context warning when enable srcu
+ barrier testing
+Message-ID: <ea12722c-772b-47de-ae3a-022fe1f8da3e@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240325075219.10367-1-qiang.zhang1211@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240325075219.10367-1-qiang.zhang1211@gmail.com>
 
-The documentation is referring to the legacy enumeration of the SPI
-host controllers and target devices. It has nothing to do with the
-modern way, which is the only supported in kernel right now. Hence,
-remove outdated documentation file.
+On Mon, Mar 25, 2024 at 03:52:19PM +0800, Zqiang wrote:
+> When the torture_type is set srcu or srcud and cb_barrier is
+> non-zero, running the rcutorture test will trigger the
+> following warning:
+> 
+> [  163.910989][    C1] BUG: sleeping function called from invalid context at kernel/locking/spinlock_rt.c:48
+> [  163.910994][    C1] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 0, name: swapper/1
+> [  163.910999][    C1] preempt_count: 10001, expected: 0
+> [  163.911002][    C1] RCU nest depth: 0, expected: 0
+> [  163.911005][    C1] INFO: lockdep is turned off.
+> [  163.911007][    C1] irq event stamp: 30964
+> [  163.911010][    C1] hardirqs last  enabled at (30963): [<ffffffffabc7df52>] do_idle+0x362/0x500
+> [  163.911018][    C1] hardirqs last disabled at (30964): [<ffffffffae616eff>] sysvec_call_function_single+0xf/0xd0
+> [  163.911025][    C1] softirqs last  enabled at (0): [<ffffffffabb6475f>] copy_process+0x16ff/0x6580
+> [  163.911033][    C1] softirqs last disabled at (0): [<0000000000000000>] 0x0
+> [  163.911038][    C1] Preemption disabled at:
+> [  163.911039][    C1] [<ffffffffacf1964b>] stack_depot_save_flags+0x24b/0x6c0
+> [  163.911063][    C1] CPU: 1 PID: 0 Comm: swapper/1 Tainted: G        W          6.8.0-rc4-rt4-yocto-preempt-rt+ #3 1e39aa9a737dd024a3275c4f835a872f673a7d3a
+> [  163.911071][    C1] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.2-0-gea1b7a073390-prebuilt.qemu.org 04/01/2014
+> [  163.911075][    C1] Call Trace:
+> [  163.911078][    C1]  <IRQ>
+> [  163.911080][    C1]  dump_stack_lvl+0x88/0xd0
+> [  163.911089][    C1]  dump_stack+0x10/0x20
+> [  163.911095][    C1]  __might_resched+0x36f/0x530
+> [  163.911105][    C1]  rt_spin_lock+0x82/0x1c0
+> [  163.911112][    C1]  spin_lock_irqsave_ssp_contention+0xb8/0x100
+> [  163.911121][    C1]  srcu_gp_start_if_needed+0x782/0xf00
+> [  163.911128][    C1]  ? _raw_spin_unlock_irqrestore+0x46/0x70
+> [  163.911136][    C1]  ? debug_object_active_state+0x336/0x470
+> [  163.911148][    C1]  ? __pfx_srcu_gp_start_if_needed+0x10/0x10
+> [  163.911156][    C1]  ? __pfx_lock_release+0x10/0x10
+> [  163.911165][    C1]  ? __pfx_rcu_torture_barrier_cbf+0x10/0x10
+> [  163.911188][    C1]  __call_srcu+0x9f/0xe0
+> [  163.911196][    C1]  call_srcu+0x13/0x20
+> [  163.911201][    C1]  srcu_torture_call+0x1b/0x30
+> [  163.911224][    C1]  rcu_torture_barrier1cb+0x4a/0x60
+> [  163.911247][    C1]  __flush_smp_call_function_queue+0x267/0xca0
+> [  163.911256][    C1]  ? __pfx_rcu_torture_barrier1cb+0x10/0x10
+> [  163.911281][    C1]  generic_smp_call_function_single_interrupt+0x13/0x20
+> [  163.911288][    C1]  __sysvec_call_function_single+0x7d/0x280
+> [  163.911295][    C1]  sysvec_call_function_single+0x93/0xd0
+> [  163.911302][    C1]  </IRQ>
+> [  163.911304][    C1]  <TASK>
+> [  163.911308][    C1]  asm_sysvec_call_function_single+0x1b/0x20
+> [  163.911313][    C1] RIP: 0010:default_idle+0x17/0x20
+> [  163.911326][    C1] RSP: 0018:ffff888001997dc8 EFLAGS: 00000246
+> [  163.911333][    C1] RAX: 0000000000000000 RBX: dffffc0000000000 RCX: ffffffffae618b51
+> [  163.911337][    C1] RDX: 0000000000000000 RSI: ffffffffaea80920 RDI: ffffffffaec2de80
+> [  163.911342][    C1] RBP: ffff888001997dc8 R08: 0000000000000001 R09: ffffed100d740cad
+> [  163.911346][    C1] R10: ffffed100d740cac R11: ffff88806ba06563 R12: 0000000000000001
+> [  163.911350][    C1] R13: ffffffffafe460c0 R14: ffffffffafe460c0 R15: 0000000000000000
+> [  163.911358][    C1]  ? ct_kernel_exit.constprop.3+0x121/0x160
+> [  163.911369][    C1]  ? lockdep_hardirqs_on+0xc4/0x150
+> [  163.911376][    C1]  arch_cpu_idle+0x9/0x10
+> [  163.911383][    C1]  default_idle_call+0x7a/0xb0
+> [  163.911390][    C1]  do_idle+0x362/0x500
+> [  163.911398][    C1]  ? __pfx_do_idle+0x10/0x10
+> [  163.911404][    C1]  ? complete_with_flags+0x8b/0xb0
+> [  163.911416][    C1]  cpu_startup_entry+0x58/0x70
+> [  163.911423][    C1]  start_secondary+0x221/0x280
+> [  163.911430][    C1]  ? __pfx_start_secondary+0x10/0x10
+> [  163.911440][    C1]  secondary_startup_64_no_verify+0x17f/0x18b
+> [  163.911455][    C1]  </TASK>
+> 
+> This commit therefore use smp_call_on_cpu() instead of
+> smp_call_function_single(), make rcu_torture_barrier1cb() invoked
+> happens on task-context.
+> 
+> Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- Documentation/spi/pxa2xx.rst | 208 -----------------------------------
- 1 file changed, 208 deletions(-)
- delete mode 100644 Documentation/spi/pxa2xx.rst
+Huh.  The use of non-raw spinlocks does constrain call_rcu() use, doesn't
+it?  Good catch!
 
-diff --git a/Documentation/spi/pxa2xx.rst b/Documentation/spi/pxa2xx.rst
-deleted file mode 100644
-index 33d2ad95901e..000000000000
---- a/Documentation/spi/pxa2xx.rst
-+++ /dev/null
-@@ -1,208 +0,0 @@
--==============================
--PXA2xx SPI on SSP driver HOWTO
--==============================
--
--This a mini HOWTO on the pxa2xx_spi driver. The driver turns a PXA2xx
--synchronous serial port into an SPI host controller
--(see Documentation/spi/spi-summary.rst). The driver has the following features
--
--- Support for any PXA2xx and compatible SSP.
--- SSP PIO and SSP DMA data transfers.
--- External and Internal (SSPFRM) chip selects.
--- Per peripheral device (chip) configuration.
--- Full suspend, freeze, resume support.
--
--The driver is built around a &struct spi_message FIFO serviced by kernel
--thread. The kernel thread, spi_pump_messages(), drives message FIFO and
--is responsible for queuing SPI transactions and setting up and launching
--the DMA or interrupt driven transfers.
--
--Declaring PXA2xx host controllers
-----------------------------------
--Typically, for a legacy platform, an SPI host controller is defined in the
--arch/.../mach-*/board-*.c as a "platform device". The host controller configuration
--is passed to the driver via a table found in include/linux/spi/pxa2xx_spi.h::
--
--  struct pxa2xx_spi_controller {
--	u8 num_chipselect;
--	u8 enable_dma;
--	...
--  };
--
--The "pxa2xx_spi_controller.num_chipselect" field is used to determine the number of
--peripheral devices (chips) attached to this SPI host controller.
--
--The "pxa2xx_spi_controller.enable_dma" field informs the driver that SSP DMA should
--be used. This caused the driver to acquire two DMA channels: Rx channel and
--Tx channel. The Rx channel has a higher DMA service priority than the Tx channel.
--See the "PXA2xx Developer Manual" section "DMA Controller".
--
--For the new platforms the description of the controller and peripheral devices
--comes from Device Tree or ACPI.
--
--NSSP HOST SAMPLE
------------------
--Below is a sample configuration using the PXA255 NSSP for a legacy platform::
--
--  static struct resource pxa_spi_nssp_resources[] = {
--	[0] = {
--		.start	= __PREG(SSCR0_P(2)), /* Start address of NSSP */
--		.end	= __PREG(SSCR0_P(2)) + 0x2c, /* Range of registers */
--		.flags	= IORESOURCE_MEM,
--	},
--	[1] = {
--		.start	= IRQ_NSSP, /* NSSP IRQ */
--		.end	= IRQ_NSSP,
--		.flags	= IORESOURCE_IRQ,
--	},
--  };
--
--  static struct pxa2xx_spi_controller pxa_nssp_controller_info = {
--	.num_chipselect = 1, /* Matches the number of chips attached to NSSP */
--	.enable_dma = 1, /* Enables NSSP DMA */
--  };
--
--  static struct platform_device pxa_spi_nssp = {
--	.name = "pxa2xx-spi", /* MUST BE THIS VALUE, so device match driver */
--	.id = 2, /* Bus number, MUST MATCH SSP number 1..n */
--	.resource = pxa_spi_nssp_resources,
--	.num_resources = ARRAY_SIZE(pxa_spi_nssp_resources),
--	.dev = {
--		.platform_data = &pxa_nssp_controller_info, /* Passed to driver */
--	},
--  };
--
--  static struct platform_device *devices[] __initdata = {
--	&pxa_spi_nssp,
--  };
--
--  static void __init board_init(void)
--  {
--	(void)platform_add_device(devices, ARRAY_SIZE(devices));
--  }
--
--Declaring peripheral devices
------------------------------
--Typically, for a legacy platform, each SPI peripheral device (chip) is defined in the
--arch/.../mach-*/board-*.c using the "spi_board_info" structure found in
--"linux/spi/spi.h". See "Documentation/spi/spi-summary.rst" for additional
--information.
--
--Each peripheral device (chip) attached to the PXA2xx must provide specific chip configuration
--information via the structure "pxa2xx_spi_chip" found in
--"include/linux/spi/pxa2xx_spi.h". The PXA2xx host controller driver will use
--the configuration whenever the driver communicates with the peripheral
--device. All fields are optional.
--
--::
--
--  struct pxa2xx_spi_chip {
--	u8 tx_threshold;
--	u8 rx_threshold;
--	u8 dma_burst_size;
--	u32 timeout;
--  };
--
--The "pxa2xx_spi_chip.tx_threshold" and "pxa2xx_spi_chip.rx_threshold" fields are
--used to configure the SSP hardware FIFO. These fields are critical to the
--performance of pxa2xx_spi driver and misconfiguration will result in rx
--FIFO overruns (especially in PIO mode transfers). Good default values are::
--
--	.tx_threshold = 8,
--	.rx_threshold = 8,
--
--The range is 1 to 16 where zero indicates "use default".
--
--The "pxa2xx_spi_chip.dma_burst_size" field is used to configure PXA2xx DMA
--engine and is related the "spi_device.bits_per_word" field.  Read and understand
--the PXA2xx "Developer Manual" sections on the DMA controller and SSP Controllers
--to determine the correct value. An SSP configured for byte-wide transfers would
--use a value of 8. The driver will determine a reasonable default if
--dma_burst_size == 0.
--
--The "pxa2xx_spi_chip.timeout" fields is used to efficiently handle
--trailing bytes in the SSP receiver FIFO. The correct value for this field is
--dependent on the SPI bus speed ("spi_board_info.max_speed_hz") and the specific
--peripheral device. Please note that the PXA2xx SSP 1 does not support trailing byte
--timeouts and must busy-wait any trailing bytes.
--
--NOTE: the SPI driver cannot control the chip select if SSPFRM is used, so the
--chipselect is dropped after each spi_transfer.  Most devices need chip select
--asserted around the complete message. Use SSPFRM as a GPIO (through a descriptor)
--to accommodate these chips.
--
--
--NSSP PERIPHERAL SAMPLE
------------------------
--For a legacy platform or in some other cases, the pxa2xx_spi_chip structure
--is passed to the pxa2xx_spi driver in the "spi_board_info.controller_data"
--field. Below is a sample configuration using the PXA255 NSSP.
--
--::
--
--  static struct pxa2xx_spi_chip cs8415a_chip_info = {
--	.tx_threshold = 8, /* SSP hardware FIFO threshold */
--	.rx_threshold = 8, /* SSP hardware FIFO threshold */
--	.dma_burst_size = 8, /* Byte wide transfers used so 8 byte bursts */
--	.timeout = 235, /* See Intel documentation */
--  };
--
--  static struct pxa2xx_spi_chip cs8405a_chip_info = {
--	.tx_threshold = 8, /* SSP hardware FIFO threshold */
--	.rx_threshold = 8, /* SSP hardware FIFO threshold */
--	.dma_burst_size = 8, /* Byte wide transfers used so 8 byte bursts */
--	.timeout = 235, /* See Intel documentation */
--  };
--
--  static struct spi_board_info streetracer_spi_board_info[] __initdata = {
--	{
--		.modalias = "cs8415a", /* Name of spi_driver for this device */
--		.max_speed_hz = 3686400, /* Run SSP as fast a possible */
--		.bus_num = 2, /* Framework bus number */
--		.chip_select = 0, /* Framework chip select */
--		.platform_data = NULL; /* No spi_driver specific config */
--		.controller_data = &cs8415a_chip_info, /* Host controller config */
--		.irq = STREETRACER_APCI_IRQ, /* Peripheral device interrupt */
--	},
--	{
--		.modalias = "cs8405a", /* Name of spi_driver for this device */
--		.max_speed_hz = 3686400, /* Run SSP as fast a possible */
--		.bus_num = 2, /* Framework bus number */
--		.chip_select = 1, /* Framework chip select */
--		.controller_data = &cs8405a_chip_info, /* Host controller config */
--		.irq = STREETRACER_APCI_IRQ, /* Peripheral device interrupt */
--	},
--  };
--
--  static void __init streetracer_init(void)
--  {
--	spi_register_board_info(streetracer_spi_board_info,
--				ARRAY_SIZE(streetracer_spi_board_info));
--  }
--
--
--DMA and PIO I/O Support
-------------------------
--The pxa2xx_spi driver supports both DMA and interrupt driven PIO message
--transfers.  The driver defaults to PIO mode and DMA transfers must be enabled
--by setting the "enable_dma" flag in the "pxa2xx_spi_controller" structure.
--For the newer platforms, that are known to support DMA, the driver will enable
--it automatically and try it first with a possible fallback to PIO. The DMA
--mode supports both coherent and stream based DMA mappings.
--
--The following logic is used to determine the type of I/O to be used on
--a per "spi_transfer" basis::
--
--  if spi_message.len > 65536 then
--	print "rate limited" warning
--	use PIO transfers
--
--  if enable_dma and the size is in the range [DMA burst size..65536] then
--	use streaming DMA mode
--
--  otherwise
--	use PIO transfer
--
--THANKS TO
-----------
--David Brownell and others for mentoring the development of this driver.
--- 
-2.43.0.rc1.1.gbec44491f096
+Queued for testing and further review.  Are there any uses of call_srcu()
+out there that are unsafe on -rt?
 
+							Thanx, Paul
+
+> ---
+>  kernel/rcu/rcutorture.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+> index 48a9d47ec90e..498aae52333e 100644
+> --- a/kernel/rcu/rcutorture.c
+> +++ b/kernel/rcu/rcutorture.c
+> @@ -3041,11 +3041,12 @@ static void rcu_torture_barrier_cbf(struct rcu_head *rcu)
+>  }
+>  
+>  /* IPI handler to get callback posted on desired CPU, if online. */
+> -static void rcu_torture_barrier1cb(void *rcu_void)
+> +static int rcu_torture_barrier1cb(void *rcu_void)
+>  {
+>  	struct rcu_head *rhp = rcu_void;
+>  
+>  	cur_ops->call(rhp, rcu_torture_barrier_cbf);
+> +	return 0;
+>  }
+>  
+>  /* kthread function to register callbacks used to test RCU barriers. */
+> @@ -3071,11 +3072,9 @@ static int rcu_torture_barrier_cbs(void *arg)
+>  		 * The above smp_load_acquire() ensures barrier_phase load
+>  		 * is ordered before the following ->call().
+>  		 */
+> -		if (smp_call_function_single(myid, rcu_torture_barrier1cb,
+> -					     &rcu, 1)) {
+> -			// IPI failed, so use direct call from current CPU.
+> +		if (smp_call_on_cpu(myid, rcu_torture_barrier1cb, &rcu, 1))
+>  			cur_ops->call(&rcu, rcu_torture_barrier_cbf);
+> -		}
+> +
+>  		if (atomic_dec_and_test(&barrier_cbs_count))
+>  			wake_up(&barrier_wq);
+>  	} while (!torture_must_stop());
+> -- 
+> 2.17.1
+> 
