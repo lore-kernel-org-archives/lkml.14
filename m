@@ -1,138 +1,213 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6AFE70CC2
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 13:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2082768FE
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 13:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711460625; cv=none; b=AIFSmmlaiCDUp/CUp3inImMCEj4pdOQKXKZqUbkOrsEtc/8laiqOZmNQNLuSyXXhknx8QLm+3Cawgsihw3xhOXmpV4RsI6x37B9WVyLrF8St9rLTehkHMCljiD8nb/leTcGGSyXBofqvX+vcl88WCy+/Vzi71sfJaYxWygqIlS4=
+	t=1711460632; cv=none; b=O6maIq+uR0PjJGyvGwGD8S3zebcJPU8qIdN3I8/0kLfNuBBO823M+i8ma2F0BAd+l4JZZpL7GIXU755rmap6LdeFBJBQOEBUHn7QpkD/PbPrhSnXpB4Ty5O/gjP/sdEBcwjm6JmBCBHJ0O1JC728YMTiAbc6bTVZEm91WTm0bAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711460625; c=relaxed/simple;
-	bh=ljMe5J3C6/sjNT1yUQPJWicsFLE8AOz/s4ig62CFcoA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WGO1a9D5TeCl6bUDtvbKGLJVMrbQVuXVFff7kcBnFwHM8VjiGA93uRRG2qaH+WIViKYTGVrpV0J0XyN2JNP/b1/ulODaAU0wfP0VJ3nBDwZUC0rBBaSbmSJAZ3Y9Lg0UhjN3MhpTmHIBlh44EAbZMIAhwpTDlkWQYHG8f/7ws/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LZmL/4d/; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1711460632; c=relaxed/simple;
+	bh=MpdHKo/pfARWrNEUHGDFnEqINIOljO1DHUfimSXa2V4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Yo9cKE3MbJUUUXE3e/SvX4NQ0FQioROZFBaLTs5/Oths+N+ZXiyXA70P0Ew8ZCyEe3zuaK2fLVnE0qGUKa6V6ScVISjAxpmvRBdDHj/De1AC6lEfEI7C0oKukrs1WUSpz8jEe+Oa1Tim1lVDEFUhvK9OGgOCH3NmwBQESD94yH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=teLviXGM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LZmL/4d/"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-696719f8dfcso24638686d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 06:43:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711460620; x=1712065420; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ruCfZHq43zIiPZrKz5ByYkrM7Dnhqu1J3mZX9CrPvSQ=;
-        b=LZmL/4d/skmyJLELh6oIodn308sOvBbo35hv7F4qbyCgp9kE8hbUvwNc4W4LtGCLV9
-         5Pl3eSsOxbezpOlTcDr2X6Rdc83EHvbjFYqBbmEYHRKUdxg+eTgtHrCLBop50KYW0ZZK
-         OZCPF7VgNvWIQ30p7ErPVL65QdJZL/uXjMwJo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711460620; x=1712065420;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ruCfZHq43zIiPZrKz5ByYkrM7Dnhqu1J3mZX9CrPvSQ=;
-        b=QgUEcYgp1VUsOO/ikZ6VgbvORQRGAoOMqeQeFTe5w3/URVauVpLr23E8X/siM2kbTO
-         bNKuVfsnlbQ1c9Y6bU4xK14Vo0PIk3fUPsUeIvH6BKRGYx9t0pxykcVKuNW7BM1KN0uw
-         rG3KiKkHcA/ejoSCjEl0+DZcB5R+jYC3lXNy6xUEsz7yqjk2Y/0AdU9nx5yF9mnKTrcw
-         bEr2Q/vxRI7H5fnlIBAE0NYN37xsRNLAf18lJwpWThCeSVGKGYk/n50WIjl86wYBzk5M
-         bSWLDGFsFLZ3W3jvquauYHfgynSt04/wimNDZpCy+O+luENQHx9QWcvnerNopz8MzRhf
-         2lCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUOC7bTJq+U4omeGLb7DjXnagOFDJjECUhffofN2TnCXLY+x5eJLsVviCIBfwtrzdQMNjpW95eQdAQQv8jVimyb4Gy3rvI0hD7cgWht
-X-Gm-Message-State: AOJu0Yzf1P9IIldj0HTBs7bitLmIoFw7mweWeWcfj+durku27rEKH/vO
-	Gl3oVr5ZTeBOYl3ATS93XZHvpDHqchpqRq/wsEIlUF8uatumlI0Fe729F4ZDZGT1TsepC1o27Pw
-	=
-X-Google-Smtp-Source: AGHT+IESz4IrqxPVqq0rJ6k0fjo/Vn0bvTvkXExHN2KweuvCKp94dvKBI98E1gic1c2bBZC8LK7pKA==
-X-Received: by 2002:a05:6214:20a6:b0:696:3a48:1278 with SMTP id 6-20020a05621420a600b006963a481278mr11948528qvd.52.1711460620178;
-        Tue, 26 Mar 2024 06:43:40 -0700 (PDT)
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com. [209.85.160.174])
-        by smtp.gmail.com with ESMTPSA id pt9-20020a056214048900b0068ff0778895sm5195823qvb.81.2024.03.26.06.43.39
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Mar 2024 06:43:39 -0700 (PDT)
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-428405a0205so304771cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 06:43:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUQHScTtuxZErGQhCrFNwUnCbp2VEE9dCVxX7gp6Bfe2IuawbD3Hhh99A097CdGdkwbig5ZlS+2K/JACDZpxUFJFCh05fxOOO7PmULV
-X-Received: by 2002:a05:622a:248c:b0:431:5ac0:a1e0 with SMTP id
- cn12-20020a05622a248c00b004315ac0a1e0mr246953qtb.12.1711460618700; Tue, 26
- Mar 2024 06:43:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="teLviXGM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B7C8C433C7;
+	Tue, 26 Mar 2024 13:43:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711460631;
+	bh=MpdHKo/pfARWrNEUHGDFnEqINIOljO1DHUfimSXa2V4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=teLviXGM1CEIFpViliftf4YncsY+PMH3k7xzGBav3T1W5z1hdGtU7zxnZtaQ1Ypa8
+	 n1pXW7caq/cMSiB7VF8lUNt+mhDRbOenFCHrtfQKwH1OrZkpDpgXHHxYtRjMmeiOkM
+	 SA3hC/q16H8r0t3LLWjncpGfCUbbfaNGgmGemEqD+t8aFluGUPFA2r0PNTQ/7fhRDj
+	 wTeYk2C4jXUVy5vs05/huSDJ/NYQjU2koYHuIYcKWuSU+VFI0S1V/daQ/DnbcKqVkA
+	 b/c9XB2268syaXbQENT38Du2IBG7nsW+bGNFjQNnpaB00flEBuYmGRJumvRzDutKD7
+	 2X7zvRAVDBQlg==
+Message-ID: <a0f95756-aaeb-43d7-93cc-a8befee2ec78@kernel.org>
+Date: Tue, 26 Mar 2024 21:43:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240325105452.529921-1-lma@chromium.org> <CAD=FV=VHps2d4dqLXCqE=hNMbk4pxeN607nFA0nEkd7chNAr3A@mail.gmail.com>
- <CAE5UKNpob9dT4YXSYKsrKGQ3cZP7o3OF7y-eb925Xd-gH3BEXA@mail.gmail.com>
-In-Reply-To: <CAE5UKNpob9dT4YXSYKsrKGQ3cZP7o3OF7y-eb925Xd-gH3BEXA@mail.gmail.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Tue, 26 Mar 2024 06:43:21 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XdOOfHK-regXRzRkky0=iV2JMDPrKid2T_JS1=eu9H3w@mail.gmail.com>
-Message-ID: <CAD=FV=XdOOfHK-regXRzRkky0=iV2JMDPrKid2T_JS1=eu9H3w@mail.gmail.com>
-Subject: Re: [PATCH] HID: i2c-hid: wait for i2c touchpad deep-sleep to
- power-up transition
-To: =?UTF-8?Q?=C5=81ukasz_Majczak?= <lma@chromium.org>
-Cc: Jiri Kosina <jikos@kernel.org>, Dmitry Torokhov <dtor@chromium.org>, 
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>, Hans de Goede <hdegoede@redhat.com>, 
-	Maxime Ripard <mripard@kernel.org>, Kai-Heng Feng <kai.heng.feng@canonical.com>, 
-	Johan Hovold <johan+linaro@kernel.org>, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Radoslaw Biernacki <rad@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] f2fs: multidev: fix to recognize valid zero block address
+To: Yi Zhang <yi.zhang@redhat.com>
+Cc: jaegeuk@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org,
+ Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+References: <20240325152623.797099-1-chao@kernel.org>
+ <CAHj4cs8vWQ2YRTKKETWX5sJduYO1BJ8NPSwo8mw3LqqRfsns1g@mail.gmail.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+Autocrypt: addr=chao@kernel.org; keydata=
+ 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
+In-Reply-To: <CAHj4cs8vWQ2YRTKKETWX5sJduYO1BJ8NPSwo8mw3LqqRfsns1g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi,
+On 2024/3/26 21:26, Yi Zhang wrote:
+> I confirmed the issue was fixed now, thanks.
+> 
+> Tested-by: Yi Zhang <yi.zhang@redhat.com>
 
-On Tue, Mar 26, 2024 at 1:58=E2=80=AFAM =C5=81ukasz Majczak <lma@chromium.o=
-rg> wrote:
->
-> > nit: checkpatch should have yelled at you saying that you should
-> > specify a commit in the format:
-> >
-> > commit b3a81b6c4fc6 ("HID: i2c-hid: check if device is there before
-> > really probing")
-> >
-> I will do it, but I did run the checkpatch (with --strict option) and
-> it didn't complain about anything.
+Yi, thanks for the test.
 
-Weird that checkpatch didn't yell, but perhaps somehow your commit
-message didn't trigger its regex. ;-)
+Thanks,
 
-
-
-> > nit: I believe your sign off should be last. It's also unclear why two
-> > signoffs. Did Radoslaw author it and you changed it? ...or was it
-> > Co-Developed-by, or ...? You'll probably need to adjust your tags a
-> > bit depending on the answers.
-> >
-> Yes, we've discussed this patch together and the original
-> investigation was done by Rad.
-
-Sounds good. Probably the best way to tag is these tags in this order:
-
-Co-developed-by: Radoslaw Biernacki <rad@chromium.org>
-Signed-off-by: Radoslaw Biernacki <rad@chromium.org>
-Signed-off-by: Lukasz Majczak <lma@chromium.org>
-
-
-> > Having both ends of the usleep be 400 is iffy. In this case it's at
-> > probe time so I wonder if udelay() is better? If not, maybe give at
-> > least _some_ margin?
-> >
-> >
-> > > +       } while (tries-- > 0 && ret < 0);
-> >
-> According to Documentation/timers/timers-howto.rst:
-> " SLEEPING FOR ~USECS OR SMALL MSECS ( 10us - 20ms):
->                 * Use usleep_range"
-> It was also pointed out by checkpath (when I initially used msleep).
-> I think giving some margin (eg. 400,500) would be ok.
-
-Yeah, usleep_range(400, 500) would be fine. udelay(400) would also be
-OK. The later would be more "accurate" but also more wasteful of CPU
-cycles. Given that this is at probe time and only run a small handful
-of times, it probably doesn't matter lots though perhaps the sleeping
-function would allow more parallelism of other running probes.
-
-
--Doug
+> 
+> On Mon, Mar 25, 2024 at 11:26 PM Chao Yu <chao@kernel.org> wrote:
+>>
+>> As reported by Yi Zhang in mailing list [1], kernel warning was catched
+>> during zbd/010 test as below:
+>>
+>> ./check zbd/010
+>> zbd/010 (test gap zone support with F2FS)                    [failed]
+>>      runtime    ...  3.752s
+>>      something found in dmesg:
+>>      [ 4378.146781] run blktests zbd/010 at 2024-02-18 11:31:13
+>>      [ 4378.192349] null_blk: module loaded
+>>      [ 4378.209860] null_blk: disk nullb0 created
+>>      [ 4378.413285] scsi_debug:sdebug_driver_probe: scsi_debug: trim
+>> poll_queues to 0. poll_q/nr_hw = (0/1)
+>>      [ 4378.422334] scsi host15: scsi_debug: version 0191 [20210520]
+>>                       dev_size_mb=1024, opts=0x0, submit_queues=1, statistics=0
+>>      [ 4378.434922] scsi 15:0:0:0: Direct-Access-ZBC Linux
+>> scsi_debug       0191 PQ: 0 ANSI: 7
+>>      [ 4378.443343] scsi 15:0:0:0: Power-on or device reset occurred
+>>      [ 4378.449371] sd 15:0:0:0: Attached scsi generic sg5 type 20
+>>      [ 4378.449418] sd 15:0:0:0: [sdf] Host-managed zoned block device
+>>      ...
+>>      (See '/mnt/tests/gitlab.com/api/v4/projects/19168116/repository/archive.zip/storage/blktests/blk/blktests/results/nodev/zbd/010.dmesg'
+>>
+>> WARNING: CPU: 22 PID: 44011 at fs/iomap/iter.c:51
+>> CPU: 22 PID: 44011 Comm: fio Not tainted 6.8.0-rc3+ #1
+>> RIP: 0010:iomap_iter+0x32b/0x350
+>> Call Trace:
+>>   <TASK>
+>>   __iomap_dio_rw+0x1df/0x830
+>>   f2fs_file_read_iter+0x156/0x3d0 [f2fs]
+>>   aio_read+0x138/0x210
+>>   io_submit_one+0x188/0x8c0
+>>   __x64_sys_io_submit+0x8c/0x1a0
+>>   do_syscall_64+0x86/0x170
+>>   entry_SYSCALL_64_after_hwframe+0x6e/0x76
+>>
+>> Shinichiro Kawasaki helps to analyse this issue and proposes a potential
+>> fixing patch in [2].
+>>
+>> Quoted from reply of Shinichiro Kawasaki:
+>>
+>> "I confirmed that the trigger commit is dbf8e63f48af as Yi reported. I took a
+>> look in the commit, but it looks fine to me. So I thought the cause is not
+>> in the commit diff.
+>>
+>> I found the WARN is printed when the f2fs is set up with multiple devices,
+>> and read requests are mapped to the very first block of the second device in the
+>> direct read path. In this case, f2fs_map_blocks() and f2fs_map_blocks_cached()
+>> modify map->m_pblk as the physical block address from each block device. It
+>> becomes zero when it is mapped to the first block of the device. However,
+>> f2fs_iomap_begin() assumes that map->m_pblk is the physical block address of the
+>> whole f2fs, across the all block devices. It compares map->m_pblk against
+>> NULL_ADDR == 0, then go into the unexpected branch and sets the invalid
+>> iomap->length. The WARN catches the invalid iomap->length.
+>>
+>> This WARN is printed even for non-zoned block devices, by following steps.
+>>
+>>   - Create two (non-zoned) null_blk devices memory backed with 128MB size each:
+>>     nullb0 and nullb1.
+>>   # mkfs.f2fs /dev/nullb0 -c /dev/nullb1
+>>   # mount -t f2fs /dev/nullb0 "${mount_dir}"
+>>   # dd if=/dev/zero of="${mount_dir}/test.dat" bs=1M count=192
+>>   # dd if="${mount_dir}/test.dat" of=/dev/null bs=1M count=192 iflag=direct
+>>
+>> ..."
+>>
+>> So, the root cause of this issue is: when multi-devices feature is on,
+>> f2fs_map_blocks() may return zero blkaddr in non-primary device, which is
+>> a verified valid block address, however, f2fs_iomap_begin() treats it as
+>> an invalid block address, and then it triggers the warning in iomap
+>> framework code.
+>>
+>> Finally, as discussed, we decide to use a more simple and direct way that
+>> checking (map.m_flags & F2FS_MAP_MAPPED) condition instead of
+>> (map.m_pblk != NULL_ADDR) to fix this issue.
+>>
+>> Thanks a lot for the effort of Yi Zhang and Shinichiro Kawasaki on this
+>> issue.
+>>
+>> [1] https://lore.kernel.org/linux-f2fs-devel/CAHj4cs-kfojYC9i0G73PRkYzcxCTex=-vugRFeP40g_URGvnfQ@mail.gmail.com/
+>> [2] https://lore.kernel.org/linux-f2fs-devel/gngdj77k4picagsfdtiaa7gpgnup6fsgwzsltx6milmhegmjff@iax2n4wvrqye/
+>>
+>> Reported-by: Yi Zhang <yi.zhang@redhat.com>
+>> Closes: https://lore.kernel.org/linux-f2fs-devel/CAHj4cs-kfojYC9i0G73PRkYzcxCTex=-vugRFeP40g_URGvnfQ@mail.gmail.com/
+>> Tested-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+>> Fixes: 1517c1a7a445 ("f2fs: implement iomap operations")
+>> Fixes: 8d3c1fa3fa5e ("f2fs: don't rely on F2FS_MAP_* in f2fs_iomap_begin")
+>> Signed-off-by: Chao Yu <chao@kernel.org>
+>> ---
+>>   fs/f2fs/data.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+>> index d9494b5fc7c1..5ef1874b572a 100644
+>> --- a/fs/f2fs/data.c
+>> +++ b/fs/f2fs/data.c
+>> @@ -4185,7 +4185,7 @@ static int f2fs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+>>          if (WARN_ON_ONCE(map.m_pblk == COMPRESS_ADDR))
+>>                  return -EINVAL;
+>>
+>> -       if (map.m_pblk != NULL_ADDR) {
+>> +       if (map.m_flags & F2FS_MAP_MAPPED) {
+>>                  iomap->length = blks_to_bytes(inode, map.m_len);
+>>                  iomap->type = IOMAP_MAPPED;
+>>                  iomap->flags |= IOMAP_F_MERGED;
+>> --
+>> 2.40.1
+>>
+> 
+> 
