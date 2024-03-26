@@ -1,43 +1,31 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B915613280F;
-	Tue, 26 Mar 2024 07:39:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E8B2130AC7;
+	Tue, 26 Mar 2024 07:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711438798; cv=none; b=ZV1611txFaHmvHxJQt6IfJ4oNaJPaqSrnDv9rsC9+7umgWboMtok+D1G/n27P8xNKe3GOdWhz8trpAxeLjHcTvKWx5hXsLS74onVitUtUNpejhuwxSub8VPbj7d73DwAYiB+42VxxTZezHLL7oaMEODVoBSprYDbxg+wBfpEkyY=
+	t=1711438835; cv=none; b=kWVZNeQklGz229/NmY8Il5XcuHn5AZCftXjvW3FyHCEFb+sRKhnHFdociwOwwiAY0kFBQGj8fmWcJJuTtiml4LweyzQ6vWrvakMuzIXdRKdVZB+d7cvNfpjdHP+8JOgzTZKM4L3fzbQVaKMy1IziwMA3BRHxU5LttLpoirWLd4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711438798; c=relaxed/simple;
-	bh=pgwFamyFeHFUIj+JYpvS+mKDX2A3H6iz8GDwro8OhT0=;
+	s=arc-20240116; t=1711438835; c=relaxed/simple;
+	bh=E5yuhkWmq8erSJRAyHrn+s0w4HGcT3MSHJtu41phF5o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H6b/4a5P965KoaJv9YomqyQvU0JDpAtVA+FcQRo1zYZK4WuNTdV4T6XQ4h0S0d9+SbdnTBmFAtBC1RCRJ49CFVdVX7mnCjk56ldEt1pecFwEuB1FW5zXjLgKDJfXux1AaL6MzrsENUsMrt2OKqrGdQrPgq8ivnbKbKPLAIJRa3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nujfpUs0; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nujfpUs0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDAECC43390;
-	Tue, 26 Mar 2024 07:39:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711438798;
-	bh=pgwFamyFeHFUIj+JYpvS+mKDX2A3H6iz8GDwro8OhT0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nujfpUs0QdwbIorjqf+cCedd5W7lmZ/hQZzUJa2SFw9xPqIOXlc9t0TW3gG/dUtnt
-	 CqeXb2suHfdT6wsi1i/0IYzLiNg9eZnXqBQGcuXpeEF9uYOa7Qgifl1yiIj9a15Mw9
-	 4ID3OEuNSljt9CJr26Sq2W/ZfGX0rseuq4Y9fUgFE9xmxgSdY21PKgfSg6mJNhDlRN
-	 VzdiJMaYetA81WW6+ZsuNWmE6i4dH9ChfpIjlJPhxJDsSShUx45g0nLSq/7DDLNE2p
-	 5kBcjkyIfoQuQoUU5hpEy6a7iFUBbkzDtgZ9nP5LkW4WdZUQ2i3T4mrkmey0/xT9XA
-	 PqFox/+Aja9Tg==
-Date: Tue, 26 Mar 2024 08:39:53 +0100
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-i2c@vger.kernel.org, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
-	Scott Branden <sbranden@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/64] i2c: bcm-kona: reword according to newest
- specification
-Message-ID: <n6oj3xiwuhx7uanrawm5v5s5odtgc323jpsflr7v6gjjltrd45@tav356e5ikk3>
-References: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
- <20240322132619.6389-9-wsa+renesas@sang-engineering.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=P8FwyHpfyHot+XFK823hxE4smsyx1ZcnVZbAQeYUV2lZKym9/8Jwj9IHuD1kO5xH8qYiCsCyppCIGbi/lk0OBGK8WVcuSwzrwemcWf9EjIWKtMvhyMfahhKloNbbEm1uc3KLrhPpceo+xymoMFr0nyja10oPccIo6/rIVjXgexQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 94C7E68D37; Tue, 26 Mar 2024 08:40:29 +0100 (CET)
+Date: Tue, 26 Mar 2024 08:40:29 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Sasha Levin <sashal@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, Song Liu <song@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH 5.10 033/238] md: implement ->set_read_only to hook
+ into BLKROSET processing
+Message-ID: <20240326074029.GB9773@lst.de>
+References: <20240324234027.1354210-1-sashal@kernel.org> <20240324234027.1354210-34-sashal@kernel.org> <20240325010435.GA23652@lst.de> <ZgFfc2b6VsX_QSu4@sashalap>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,19 +34,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240322132619.6389-9-wsa+renesas@sang-engineering.com>
+In-Reply-To: <ZgFfc2b6VsX_QSu4@sashalap>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Hi Wolfram,
+On Mon, Mar 25, 2024 at 07:26:43AM -0400, Sasha Levin wrote:
+> On Mon, Mar 25, 2024 at 02:04:35AM +0100, Christoph Hellwig wrote:
+>> How did we end up backporting all these block layer API changes?
+>
+> They were brought in as a dependency for 9674f54e41ff ("md: Don't clear
+> MD_CLOSING when the raid is about to stop").
+>
+> It's possible to work around bringing them during backport, but I
+> preferred to bring the dependencies instead.
 
-On Fri, Mar 22, 2024 at 02:25:01PM +0100, Wolfram Sang wrote:
-> Match the wording of this driver wrt. the newest I2C v7, SMBus 3.2, I3C
-> specifications and replace "master/slave" with more appropriate terms.
-> They are also more specific because we distinguish now between a remote
-> entity ("client") and a local one ("target").
-> 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+I really don't see what these giant backports bring us.  If people
+want all the changes they'd just be better off on a modern kernel
+rather than these frankenkernels.  The automatic backporting is
+gettind way out of hand.  If the MD maintainers want
+9674f54e41ff, maybe they can send a tailor made backport?
 
-Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
-
-Thanks,
-Andi
