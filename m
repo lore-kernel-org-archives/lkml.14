@@ -1,127 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2BA71739;
-	Tue, 26 Mar 2024 13:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711459106; cv=none; b=VAg2rcgYuAHp3H8tgcDT5L5qXqyXvauzDsgOFsE9vrvrEFBYGyYr3wDLBQNHXRz0mGYsGYv+vs2dX/UgqNc+DnHSZfpOh6JRfUt6xCvW16sq9DPXL93gX/0JL3shHcXNNXJeK619bCLxqu9Lx6F+ZqxXRVmctBkwBi9O+8FwvlQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711459106; c=relaxed/simple;
-	bh=G+Hn6cNlyKUyvTsdLqpYQU3MpaSHBX/VmoCrwmgKiuA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=dX/OToSOveVNJuuphO95+VJ8Igxa6WqeGb90MpOx6uqa2HMj7MjiW7EpzI93G/H1yJr7F8mQWllNXv0RbJs77qSSEf0+khLadUMwhg1OeGgMsuQGC3g7EZ2AVoBQphqh+06xJjTBbXrJE3znHcqr2EbQiWRPE5Jr0NtHiq0PQ/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mnj8t6Ox; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mnj8t6Ox"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1E86C43390;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E62067A00;
 	Tue, 26 Mar 2024 13:18:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711459106;
-	bh=G+Hn6cNlyKUyvTsdLqpYQU3MpaSHBX/VmoCrwmgKiuA=;
-	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
-	b=Mnj8t6OxtLu5AG5u89v26bd8wmZLcN0UmHvjkWAbtmKZtYzeFLucbhoW0h/+cR4WH
-	 Uem+3ticvY2WBlCuBTbWDPMtTqaDWzCzkJd7UwMRGPpsp5Tqr+vLCY4s3Nn5iObh/9
-	 6ndmKyH5POpbP/BbyaqBqloIgAPrVvE6f13T5Z8W1iVXCh+ZHMrCyie5kOMtxgMNrM
-	 lu/a3BKf0wzlsW8ZU1Z5WyZgaAy2GdqWFUET2XEk6/N2YQKIITonFFq1KwPmNgY7E2
-	 TGHWE7+bkMHXID92ze6dpg2dpwb2xbLo3VyUP5jG55oSeCsByjb3u7AHXy1JnQ5FFS
-	 lVxeLvshqqILQ==
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711459109; cv=none; b=QtdTJTkRpMbs1Xl+T+sISdUqLa6TMEf2C0ap7XM2Pj9Dv4ZjNpLs2ykbb4cZfxBvFUfzVXJ/jAPCRaY0qfG47HtyFwj1UQ29dPOLbcO/OsPhLgx0+eik/Li8ilb1oDSEpb35FRs2e1gPriRZAUBdJ/7SVfbrOizafj4ASihux1Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711459109; c=relaxed/simple;
+	bh=cA2n/4MwPui6Y5OPDLkQphyzkjGT48J32nYE9CzA/dQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VLS1NB4u2GplQKzjZfLIwICAWfJfGABM22bsiQ4etN7goATo9JL8uqQN/sZP72CsqvI8eHcqoBlgNhPozVU5KzcSWNMlK2IxcPhAlFm6erku4+QnZBNnpDgF2lskyGc0MdBFUfdm+OsLl/RVneB8jCppOEXaTR1dq0VgiAM86jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=54.206.16.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+X-QQ-mid: bizesmtp65t1711459041tzi6x6bq
+X-QQ-Originating-IP: acgQfBts7Ri8OsILJnCeWeEv+z+f4+tsbDVsBeBQ8ns=
+Received: from localhost.localdomain ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 26 Mar 2024 21:17:19 +0800 (CST)
+X-QQ-SSF: 01400000000000C0B000000A0000000
+X-QQ-FEAT: j86OQQvu8eT7MzXz62hGqvvve66w8l0TlZpW33Rvt5TN1M/cVf4Jm4Mu55Yo3
+	XjNj2uVpHGrHWdH+uqxRo5oNJLMFjY83HKReFabpjKNaJLyCtD1XqGsM78z/LTdqEtTTJnd
+	RstgIFoXYackNGGDM9J23s4usPvF/OZxHHP95N6dXSZZArTPAL3v9ZAD7N9L8U7L01zjU9Y
+	KpMH46nS/LBeicmeA3YTBJydG0dIAZ9argLRNYrdzAgFbc8w3kzQlg5fsrGL2R0JDE4i7NI
+	jK+ZfJdvLGdYjMBLx3YSA7muxMZt523490v32VBRodfqu+Kxh/JLJGUu+DPpPJXfmyMPJZX
+	/cnE9Cm0Z9NbM9dbQl3zV18/5PJ9VspZZpgC+xkpTZYB08yiR1W3FB1Oc5EUg==
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 13992481150274053400
+From: WangYuli <wangyuli@uniontech.com>
+To: wangyuli@uniontech.com,
+	dmitry.torokhov@gmail.com,
+	rrangel@chromium.org,
+	shaoyang@uniontech.com,
+	helugang@uniontech.com
+Cc: linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	huangbibo <huangbibo@uniontech.com>
+Subject: [PATCH] Input: PS/2 - add support for Lenovo Xiaoxin keyboard
+Date: Tue, 26 Mar 2024 21:17:18 +0800
+Message-ID: <593C1A73FB93BACE+20240326131718.20497-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 26 Mar 2024 15:18:21 +0200
-Message-Id: <D03PM9A6IS79.3D6BW7KBLH9C3@kernel.org>
-To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Masami Hiramatsu"
- <mhiramat@kernel.org>
-Cc: <linux-riscv@lists.infradead.org>, "Paul Walmsley"
- <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert
- Ou" <aou@eecs.berkeley.edu>, <linux-kernel@vger.kernel.org>, "Luis
- Chamberlain" <mcgrof@kernel.org>, <linux-modules@vger.kernel.org>, "Naveen
- N . Rao" <naveen.n.rao@linux.ibm.com>, "Anil S Keshavamurthy"
- <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v5 1/2] kprobes: textmem API
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-X-Mailer: aerc 0.17.0
-References: <20240325215502.660-1-jarkko@kernel.org>
- <20240326095836.f43d259b7747269a7c0b9d23@kernel.org>
- <D03AL7A5G3M2.3UK4ASWILGBJS@kernel.org>
- <D03B7XJYRFC1.2L3I2TO5HNQD3@kernel.org>
-In-Reply-To: <D03B7XJYRFC1.2L3I2TO5HNQD3@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
 
-On Tue Mar 26, 2024 at 4:01 AM EET, Jarkko Sakkinen wrote:
-> On Tue Mar 26, 2024 at 3:31 AM EET, Jarkko Sakkinen wrote:
-> > > > +#endif /* _LINUX_EXECMEM_H */
-> > > > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> > > > index 9d9095e81792..87fd8c14a938 100644
-> > > > --- a/kernel/kprobes.c
-> > > > +++ b/kernel/kprobes.c
-> > > > @@ -44,6 +44,7 @@
-> > > >  #include <asm/cacheflush.h>
-> > > >  #include <asm/errno.h>
-> > > >  #include <linux/uaccess.h>
-> > > > +#include <linux/execmem.h>
-> > > > =20
-> > > >  #define KPROBE_HASH_BITS 6
-> > > >  #define KPROBE_TABLE_SIZE (1 << KPROBE_HASH_BITS)
-> > > > @@ -113,17 +114,17 @@ enum kprobe_slot_state {
-> > > >  void __weak *alloc_insn_page(void)
-> > > >  {
-> > > >  	/*
-> > > > -	 * Use module_alloc() so this page is within +/- 2GB of where the
-> > > > +	 * Use alloc_execmem() so this page is within +/- 2GB of where th=
-e
-> > > >  	 * kernel image and loaded module images reside. This is required
-> > > >  	 * for most of the architectures.
-> > > >  	 * (e.g. x86-64 needs this to handle the %rip-relative fixups.)
-> > > >  	 */
-> > > > -	return module_alloc(PAGE_SIZE);
-> > > > +	return alloc_execmem(PAGE_SIZE, GFP_KERNEL);
-> > > >  }
-> > > > =20
-> > > >  static void free_insn_page(void *page)
-> > > >  {
-> > > > -	module_memfree(page);
-> > > > +	free_execmem(page);
-> > > >  }
-> > > > =20
-> > > >  struct kprobe_insn_cache kprobe_insn_slots =3D {
-> > > > @@ -1580,6 +1581,7 @@ static int check_kprobe_address_safe(struct k=
-probe *p,
-> > > >  		goto out;
-> > > >  	}
-> > > > =20
-> > > > +#ifdef CONFIG_MODULES
-> > >
-> > > You don't need this block, because these APIs have dummy functions.
-> >
-> > Hmm... I'll verify this tomorrow.
->
-> It depends on having struct module available given "(*probed_mod)->state"=
-.
->
-> It is non-existent unless CONFIG_MODULES is set given how things are
-> flagged in include/linux/module.h.
+Modified keyboard_ids in function ps2_is_keyboard_id
+for Lenovo Xiaoxin keyboard.
 
-Hey, noticed kconfig issue.
+Signed-off-by: yuanjianye <yuanjianye@uniontech.com>
+Signed-off-by: shaoyang <shaoyang@uniontech.com>
+Reviewed-by: huangbibo <huangbibo@uniontech.com>
+Signed-off-by: helugang <helugang@uniontech.com>
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ drivers/input/serio/libps2.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-According to kconfig-language.txt:
+diff --git a/drivers/input/serio/libps2.c b/drivers/input/serio/libps2.c
+index 6d78a1fe00c1..39d46526c56a 100644
+--- a/drivers/input/serio/libps2.c
++++ b/drivers/input/serio/libps2.c
+@@ -189,6 +189,7 @@ bool ps2_is_keyboard_id(u8 id_byte)
+ 		0x5d,	/* Trust keyboard		*/
+ 		0x60,	/* NMB SGI keyboard, translated */
+ 		0x47,	/* NMB SGI keyboard		*/
++		0x83,	/* Lenovo Xiaoxin keyboard	*/
+ 	};
+ 
+ 	return memchr(keyboard_ids, id_byte, sizeof(keyboard_ids)) != NULL;
+-- 
+2.43.0
 
-"select should be used with care. select will force a symbol to a value
-without visiting the dependencies."
-
-So the problem here lies in KPROBES config entry using select statement
-to pick ALLOC_EXECMEM. It will not take the depends on statement into
-account and thus will allow to select kprobes without any allocator in
-place.
-
-So to address this I'd suggest to use depends on statement also for
-describing relation between KPROBES and ALLOC_EXECMEM. It does not make
-life worse than before for anyone because even with the current kernel
-you have to select MODULES before you can move forward with kprobes.
-
-BR, Jarkko
