@@ -1,48 +1,45 @@
 Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [195.130.132.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D6D1C69C
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 17:31:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84CF1CF8B
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 17:31:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711474289; cv=none; b=ZKqHdSLbqv7a0BT7gtJ7SIm+aoM7PizsQeu+tECjtREzW/pGaXP6ZQUGqf1CVyFN1ceFbcnJrqrCiBRUTiZHRsP4l2KQ+fsqpz5mHBsg4tmjtg5s0as8gdasdkbMPayVo4NmutObEuFaqEECgjzMX0MJTriLWuxpLOa0uqpOkmI=
+	t=1711474307; cv=none; b=iL2u6oJu9O3ywXukazxSg6oTZNzZHrmCwZSt181iXH6jbG9yJ4Bay5VKypgYmnHITf5P9Voj0MJUGXV090WTmXFzRmjL/9RjeT+39fpSDEVi/0NYYGTH4xzqjPZcHpVcAe2P5Wbh5vAvoqTJ/89CCL7VcVn2fBwQ2/uJNQOqxZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711474289; c=relaxed/simple;
+	s=arc-20240116; t=1711474307; c=relaxed/simple;
 	bh=bq4YNkziyQcZmvz2N637u5vOHPJJEnrP824rDyNrXGE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=l28p/Fvs/cswbIfSFqNNnFXWM8He9i2JXLl62aEc6KFkrd/ITZQ7OgbqJOe40I2QffviBsZdvxcdFUo2ty1zzlpHnfPm+4g2pIw/e3PDX1+J+tYF0Z+ktvHKbNgTMKKLjhMW5mwumH+X3KBqQ9SEm78Wg6aRU5r5eQFKNj09uxE=
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UTu4HRoRMqthkx4MSmgIHDMekJjjQTEGStS7OZTK2XWGRjQlzmqfUDdtq+K0mcTKO5cItD2fqLe4m39a4GKJ+0RMd4JU7SY/ofbo73/oaQzukp0yAFvUIPgcJxp6OAiKstaXemAWXf9t1V/SYl8mdmpfxuz2orm78uVXTpfRWX0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
 Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:76d0:2bff:fec8:549])
 	by baptiste.telenet-ops.be with bizsmtp
-	id 3VXD2C00R0SSLxL01VXDi8; Tue, 26 Mar 2024 18:31:18 +0100
+	id 3VXj2C00C0SSLxL01VXjoL; Tue, 26 Mar 2024 18:31:45 +0100
 Received: from rox.of.borg ([192.168.97.57])
 	by ramsan.of.borg with esmtp (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1rpAdO-0053lJ-Rf;
-	Tue, 26 Mar 2024 18:31:13 +0100
+	id 1rpAds-0053lR-Fw;
+	Tue, 26 Mar 2024 18:31:43 +0100
 Received: from geert by rox.of.borg with local (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1rpAdl-001ZMO-Kd;
-	Tue, 26 Mar 2024 18:31:13 +0100
+	id 1rpAeF-001ZND-9j;
+	Tue, 26 Mar 2024 18:31:43 +0100
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Emil Renner Berthing <kernel@esmil.dk>,
-	Hal Feng <hal.feng@starfivetech.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: linux-clk@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Hamza Mahfooz <hamza.mahfooz@amd.com>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Javier Martinez Canillas <javierm@redhat.com>
+Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	Geert Uytterhoeven <geert+renesas@glider.be>
 Subject: [PATCH] drm: DRM_WERROR should depend on DRM
-Date: Tue, 26 Mar 2024 18:31:11 +0100
-Message-Id: <631a1f4c066181b54617bfe2f38b0bd0ac865b68.1711474200.git.geert+renesas@glider.be>
+Date: Tue, 26 Mar 2024 18:31:41 +0100
+Message-ID: <631a1f4c066181b54617bfe2f38b0bd0ac865b68.1711474200.git.geert+renesas@glider.be>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -51,6 +48,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Message-ID: <20240326173141.RgxjnNW4hKq_fTiQ3UrHbbliEG5gjLojHMwdB3kRM3c@z>
 
 There is no point in asking the user about enforcing the DRM compiler
 warning policy when configuring a kernel without DRM support.
