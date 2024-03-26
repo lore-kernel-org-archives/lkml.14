@@ -1,141 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD2411C6BE
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 01:38:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81FD208A0
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 01:39:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711417100; cv=none; b=BtvcgiUVajOg29qS0cYlPUk2Xav3M5ejfZudkDMj7PzOX5i+F0wC2D/CWjGdQnNv02averJ0evO7b6KSuyRjewYccIqv7wRD3MIs96Tq8gsmHJ91mxx8ljYs+9hrR9zY5NuX4liPvpjAMkq6+zSixxtv3i0Vl66ZQ76Fo4Q7mjE=
+	t=1711417156; cv=none; b=R2Xf+mJ6JDxupsVcUsTyzdvHuXKYsbm6gT/Xzz8LzLiRHxo4tJRMifu8dAloxzyjrwudPt2mqwEuUakk4RJVspUXKzDxFDQW82DIH9QobASN+vKTO2pyFvh/yaNsC5G4wqHNkbo/6j9CLHCvgDkhjypyBKvKLuQfqBQh1p3SDNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711417100; c=relaxed/simple;
-	bh=2QmSDgizxHwgM0JsXY7MomEdeWiJFYIJPQyEwfyZHMg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fMkufOHkbSt1OMHahuNW+C7jZdoshuhWK/kUcjdjwn/9sl4vrd34g7IyMCnzNKlhVnUJfsOqhyjTiouOD9K5Au8sgZPYC57/pwaS8Lk2TQpjfgtJfSUyrELPYLzHMsVLzFyeIhteKzIf/9xgNhTV/oga5wsDMEsjUr6gCuxYVmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OnFneb4z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711417156; c=relaxed/simple;
+	bh=ozN5T78X/8LPjCWi2AnyTnIYDZmkjh80Ju6ZW4H2//U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HoiIUPiz28WeOO1eZQH39wU0zD7HX9CDodETvKEGrXoC4aM3zKcUho/zM4g462SjXLvjZD3fU1uOJRQIKw3Rh/aXldKl9hMo6ASFKB3Nvfmhke9Af1Z/BcvloTsI6vxnEJhQa4ZnHQJIyepdXDSHpkYY16F0nXEJiQOXVL/v4/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eeLR3mjN; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OnFneb4z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C26BC433C7;
-	Tue, 26 Mar 2024 01:38:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711417100;
-	bh=2QmSDgizxHwgM0JsXY7MomEdeWiJFYIJPQyEwfyZHMg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OnFneb4zrbWGl6dWZjfuzujftcLqyYgdagHWflTF9W5RnERRc9X27JwdIMjGurzfR
-	 sB2MEeNGztEwXwlTJlkTF+GsUz2SuOhBJly06KrcghliwNstJoNGJ2lB6DWpwCyrFs
-	 q4goIGmiuYW62nunftRrNlRNHmo21Ib7q4Swl/3qoa5D2ZTc95r63VL0ALGkeBqrhB
-	 Dp/3E6aL+PkW3dB1AddGbEW/Xye5txlSiXtT/6q7TTqB1hVEDYiDMapV4rUAAOWWnX
-	 B3EppRNoleZS92qgSz7oEN/KLKsGWb6AaghgOwoTv/yF/ilBT71pgLsJeSnWEohQ+m
-	 P6lBGF26u0xmA==
-Date: Tue, 26 Mar 2024 09:25:05 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Bo Gan <ganboing@gmail.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] clocksource/drivers/timer-clint: Add T-Head C9xx
- clint support
-Message-ID: <ZgIj8QQ7zO_eSZcA@xhacker>
-References: <20240325164021.3229-1-jszhang@kernel.org>
- <20240325164021.3229-6-jszhang@kernel.org>
- <72eac56e-61d4-e42f-cfbd-8bcc35ed7bb6@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eeLR3mjN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711417153;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WTaD6mudg7VhN+d5uv+mspRcpmC/ctCIgx4dGqOcYps=;
+	b=eeLR3mjNt/8vZD/op0V2xrWfeyHNBoAdyc19DhJvqEMY9+YKNkGhYaWNwNTop33JzO/4zl
+	JO5kr8w7yPr6lkSx8g2c83bBdUCdfsDNA8iyJ0zKUHyq6prQmy1oZ1cnVLBrnzP+SYO3sM
+	4wO27W2lgdk3FRKTEPdxaORubQ8aJdE=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-527-erYXpHexOpy9D2Rr6uPQoA-1; Mon, 25 Mar 2024 21:39:12 -0400
+X-MC-Unique: erYXpHexOpy9D2Rr6uPQoA-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-33ec6c43a9cso4198825f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 18:39:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711417150; x=1712021950;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WTaD6mudg7VhN+d5uv+mspRcpmC/ctCIgx4dGqOcYps=;
+        b=ndkXu95dhqjWMHNH9GR8+UwvmaZ2NRkXqz1XRtFhhMFoHXoDFsdnjj+r3XmhdGw3iS
+         CAmdsp1S7eSs0YsDrL/WIyNccTlLpWCev8NR4V/NmpPMcH2cIMlcwkibj5Dka3sZc9Ew
+         5cuxqqkHA4/r64oO15aR6UwdjzQa0NEXRuGqgkACuaHip8d8nv5hsS1LYLMel4UAnCGA
+         V+pgTgJWpgMLbHnkCa08GncwUUXE7QqflTxJxWfUtwQ5yFzk4WgAcpD+zT4H/dLLYjoB
+         oUUcQKTFejYbwcs+7JTPn314HNJRNSOr5IQ+ZO4FFX/Cel+dXM9fWBwbi4UpqWxzL4iJ
+         VGag==
+X-Forwarded-Encrypted: i=1; AJvYcCV+FytBppm2YAzvTtaC31qKZiucMj8NxnWNIoN/eqwvI0a9H0mg8yxuHmmWrD+N/xxgmTfvvqFhO8AwXelMVbclEFfsJOdrBB4pNA1R
+X-Gm-Message-State: AOJu0YywTbVnGCAiDwgo+iFGDZb9UeiLE8d9wPd2MoqlhRGYmDTJcDDA
+	RBbFwIcQZaveeD1qJd8W99W18RM220ohbNVTUiw5Uk4gWu7bfQmjgmdXVgoX5bxyqLxRR818IVk
+	AJS03hhg1goxfoHkld2WV+ykaNfLk5oH/a7sh6xt2JtMb0ZLGJ6QbObIfIgqwkY78TujdKwysvc
+	q99+L2EFLlVmEHv1N80trXj2C1dKz0e3iGwC0JihddEWZxMQY=
+X-Received: by 2002:a5d:60c9:0:b0:341:865b:65c9 with SMTP id x9-20020a5d60c9000000b00341865b65c9mr7571759wrt.22.1711417150412;
+        Mon, 25 Mar 2024 18:39:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHGAVRQvSolwKhN9lxaw7HUOTpaQxkO72OCZv+7YVENFG33vSWYVqDPTA5Pq/1JgP4Gbiom3nqQHbE/DxEgqA8=
+X-Received: by 2002:a5d:60c9:0:b0:341:865b:65c9 with SMTP id
+ x9-20020a5d60c9000000b00341865b65c9mr7571746wrt.22.1711417150064; Mon, 25 Mar
+ 2024 18:39:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <72eac56e-61d4-e42f-cfbd-8bcc35ed7bb6@gmail.com>
+References: <CAO7dBbVNv5NWRN6hXeo5rNEixn-ctmTLLn2KAKhEBYvvR+Du2w@mail.gmail.com>
+ <5d81d6d0-5afc-4d0e-8d2b-445d48921511@linux.dev>
+In-Reply-To: <5d81d6d0-5afc-4d0e-8d2b-445d48921511@linux.dev>
+From: Tao Liu <ltao@redhat.com>
+Date: Tue, 26 Mar 2024 09:38:33 +0800
+Message-ID: <CAO7dBbXLU5teiYm8VvES7e7m7dUzJQYV9HHLOFKperjwq-NJeA@mail.gmail.com>
+Subject: Re: Implementing .shutdown method for efa module
+To: Gal Pressman <gal.pressman@linux.dev>
+Cc: mrgolin@amazon.com, sleybo@amazon.com, jgg@ziepe.ca, leon@kernel.org, 
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-rdma@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 25, 2024 at 03:22:11PM -0700, Bo Gan wrote:
-> On 3/25/24 9:40 AM, Jisheng Zhang wrote:
-> > The mtimecmp in T-Head C9xx clint only supports 32bit read/write,
-> > implement such support.
-> > 
-> > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> > ---
-> >   drivers/clocksource/timer-clint.c | 24 ++++++++++++++++++++++++
-> >   1 file changed, 24 insertions(+)
-> > 
-> > diff --git a/drivers/clocksource/timer-clint.c b/drivers/clocksource/timer-clint.c
-> > index 4537c77e623c..71188732e8a3 100644
-> > --- a/drivers/clocksource/timer-clint.c
-> > +++ b/drivers/clocksource/timer-clint.c
-> > @@ -34,6 +34,7 @@ static unsigned int clint_ipi_irq;
-> >   static u64 __iomem *clint_timer_cmp;
-> >   static unsigned long clint_timer_freq;
-> >   static unsigned int clint_timer_irq;
-> > +static bool is_c900_clint;
-> >   #ifdef CONFIG_SMP
-> >   static void clint_send_ipi(unsigned int cpu)
-> > @@ -88,6 +89,19 @@ static int clint_clock_next_event(unsigned long delta,
-> >   	return 0;
-> >   }
-> > +static int c900_clint_clock_next_event(unsigned long delta,
-> > +				       struct clock_event_device *ce)
-> > +{
-> > +	void __iomem *r = clint_timer_cmp +
-> > +			  cpuid_to_hartid_map(smp_processor_id());
-> > +	u64 val = clint_get_cycles64() + delta;
-> > +
-> > +	csr_set(CSR_IE, IE_TIE);
-> Perhaps you should do a writel_relaxed(-1, r) here. just like openSBI, because the update
-> to mtimecmp is now split into 2 parts.
-> https://github.com/riscv-software-src/opensbi/blob/v1.4/lib/utils/timer/aclint_mtimer.c#L54
+Hi Gal,
 
-Thanks, I also noticed the mtimecmp update on 32bit platforms doesn't
-strictly follow the riscv spec:
+On Mon, Mar 25, 2024 at 4:06=E2=80=AFPM Gal Pressman <gal.pressman@linux.de=
+v> wrote:
+>
+> On 25/03/2024 4:10, Tao Liu wrote:
+> > Hi,
+> >
+> > Recently I experienced a kernel panic which is related to efa module
+> > when testing kexec -l && kexec -e to switch to a new kernel on AWS
+> > i4g.16xlarge instance.
+> >
+> > Here is the dmesg log:
+> >
+> > [    6.379918] systemd[1]: Mounting FUSE Control File System...
+> > [    6.381984] systemd[1]: Mounting Kernel Configuration File System...
+> > [    6.383918] systemd[1]: Starting Apply Kernel Variables...
+> > [    6.385430] systemd[1]: Started Journal Service.
+> > [    6.394221] ACPI: bus type drm_connector registered
+> > [    6.421408] systemd-journald[1263]: Received client request to
+> > flush runtime journal.
+> > [    7.262543] efa 0000:00:1b.0: enabling device (0010 -> 0012)
+> > [    7.432420] efa 0000:00:1b.0: Setup irq:191 name:efa-mgmnt@pci:0000:=
+00:1b.0
+> > [    7.435581] efa 0000:00:1b.0 efa_0: IB device registered
+> > [    7.885564] random: crng init done
+> > [    8.139857] XFS (nvme0n1p2): Mounting V5 Filesystem
+> > d7003ecc-db6f-4bfb-bf92-60376b6a6563
+> > [    8.265233] XFS (nvme0n1p2): Ending clean mount
+> > [   10.555612] IPv6: ADDRCONF(NETDEV_CHANGE): eth0: link becomes ready
+> >
+> > Red Hat Enterprise Linux 9.4 Beta (Plow)
+> > Kernel 5.14.0-425.el9.aarch64 on an aarch64
+> >
+> > ip-10-0-27-226 login: [   29.940381] kexec_core: Starting new kernel
+> > [   30.079279] psci: CPU1 killed (polled 0 ms)
+> > [   30.119222] psci: CPU2 killed (polled 0 ms)
+> > [   30.199293] psci: CPU3 killed (polled 0 ms)
+> > [   30.309214] psci: CPU4 killed (polled 0 ms)
+> > [   30.379221] psci: CPU5 killed (polled 0 ms)
+> > [   30.419210] psci: CPU6 killed (polled 0 ms)
+> > [   30.489207] IRQ 191: no longer affine to CPU7
+> > [   30.489667] psci: CPU7 killed (polled 0 ms)
+> > ..snip...
+> > [   33.849123] psci: CPU63 killed (polled 0 ms)
+> > [   33.849943] Bye!
+> > [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x413fd0c1]
+> > [    0.000000] Linux version 5.14.0-417.el9.aarch64
+> > (mockbuild@arm64-025.build.eng.bos.redhat.com) (gcc (GCC) 11.4.1
+> > 20231218 (Red Hat 11.4.1-3), GNU ld version 2.35.2-42.el9) #1 SMP
+> > PREEMPT_DYNAMIC Thu Feb 1 21:23:03 EST 2024
+> > ...snip...
+> > [    1.012692] Freeing unused kernel memory: 6016K
+> > [    2.370947] Checked W+X mappings: passed, no W+X pages found
+> > [    2.370980] Run /init as init process
+> > [    2.370982]   with arguments:
+> > [    2.370983]     /init
+> > [    2.370984]   with environment:
+> > [    2.370984]     HOME=3D/
+> > [    2.370985]     TERM=3Dlinux
+> > [    2.373257] Kernel panic - not syncing: Attempted to kill init!
+> > exitcode=3D0x0000000b
+> > [    2.373259] CPU: 1 PID: 1 Comm: init Not tainted 5.14.0-417.el9.aarc=
+h64 #1
+> > [    2.382240] Hardware name: Amazon EC2 i4g.16xlarge/, BIOS 1.0 11/1/2=
+018
+> > [    2.383814] Call trace:
+> > [    2.384410]  dump_backtrace+0xa8/0x120
+> > [    2.385318]  show_stack+0x1c/0x30
+> > [    2.386124]  dump_stack_lvl+0x74/0x8c
+> > [    2.387011]  dump_stack+0x14/0x24
+> > [    2.387810]  panic+0x158/0x368
+> > [    2.388553]  do_exit+0x3a8/0x3b0
+> > [    2.389333]  do_group_exit+0x38/0xa4
+> > [    2.390195]  get_signal+0x7a4/0x810
+> > [    2.391044]  do_signal+0x1bc/0x260
+> > [    2.391870]  do_notify_resume+0x108/0x210
+> > [    2.392839]  el0_da+0x154/0x160
+> > [    2.393603]  el0t_64_sync_handler+0xdc/0x150
+> > [    2.394628]  el0t_64_sync+0x17c/0x180
+> > [    2.395513] SMP: stopping secondary CPUs
+> > [    2.396483] Kernel Offset: 0x586f04e00000 from 0xffff800008000000
+> > [    2.397934] PHYS_OFFSET: 0x40000000
+> > [    2.398774] CPU features: 0x0,00000101,70020143,10417a0b
+> > [    2.400042] Memory Limit: none
+> > [    2.400783] ---[ end Kernel panic - not syncing: Attempted to kill
+> > init! exitcode=3D0x0000000b ]---
+> >
+> > In the dmesg log, I found "[   30.489207] IRQ 191: no longer affine to
+> > CPU7" is suspicious, which is related to efa module. After blacklist
+> > efa module from automatic loading when bootup, the kernel panic issue
+> > doesn't appear again.
+> >
+> > It looks to me it is due to the efa being not properly shutdown during
+> > kexec, so the ongoing DMA/interrupts etc overwrite the memory range.
+> >
+> > Though the issue is reproduced on rhel's kernel, the upstream kernel
+> > [1] doesn't have the .shutdown method implemented either. Since I'm
+> > not very familiar with the efa driver, could you please implement the
+> > .shutdown method in drivers/infiniband/hw/efa/efa_main.c? Thanks in
+> > advance!
+>
+> Did you try to reproduce it on upstream kernel?
+>
+Thanks for your comments! No I haven't, I will give it a try.
+> >
+> > [1]: https://github.com/torvalds/linux/blob/master/drivers/infiniband/h=
+w/efa/efa_main.c#L674
+> >
+> > Thanks,
+> > Tao Liu
+> >
+>
+> Try assigning efa_remove as the shutdown callback:
+>     .shutdown =3D efa_remove,
+>
+> Does it fix it?
 
-# New comparand is in a1:a0.
-li t0, -1
-la t1, mtimecmp
-sw t0, 0(t1) # No smaller than old value.
-sw a1, 4(t1) # No smaller than new value.
-sw a0, 0(t1) # New value.
+Thanks, I will also try the code, and I will post the testing results.
 
-So A new bug fix patch will be added in v2.
+Thanks,
+Tao Liu
 
+>
 
-> 
-> > +	writel_relaxed(val, r);
-> > +	writel_relaxed(val >> 32, r + 4);
-> > +	return 0;
-> > +}
-> > +>   static DEFINE_PER_CPU(struct clock_event_device, clint_clock_event) = {
-> >   	.name		= "clint_clockevent",
-> >   	.features	= CLOCK_EVT_FEAT_ONESHOT,
-> > @@ -99,6 +113,9 @@ static int clint_timer_starting_cpu(unsigned int cpu)
-> >   {
-> >   	struct clock_event_device *ce = per_cpu_ptr(&clint_clock_event, cpu);
-> > +	if (is_c900_clint)
-> > +		ce->set_next_event = c900_clint_clock_next_event;
-> > +
-> >   	ce->cpumask = cpumask_of(cpu);
-> >   	clockevents_config_and_register(ce, clint_timer_freq, 100, ULONG_MAX);
-> > @@ -233,5 +250,12 @@ static int __init clint_timer_init_dt(struct device_node *np)
-> >   	return rc;
-> >   }
-> > +static int __init c900_clint_timer_init_dt(struct device_node *np)
-> > +{
-> > +	is_c900_clint = true;
-> > +	return clint_timer_init_dt(np);
-> > +}
-> > +
-> >   TIMER_OF_DECLARE(clint_timer, "riscv,clint0", clint_timer_init_dt);
-> >   TIMER_OF_DECLARE(clint_timer1, "sifive,clint0", clint_timer_init_dt);
-> > +TIMER_OF_DECLARE(clint_timer2, "thead,c900-clint", clint_timer_init_dt);
-> > 
-> Better use a more generic term to describe the fact that mtimecmp doesn't support
-> 64-bit mmio, just like what openSBI is currently doing, instead of making it c900 specific:
-
-This has been mentioned in commit msg, but adding a code comment seems fine.
-> 
-> https://github.com/riscv-software-src/opensbi/blob/v1.4/lib/utils/timer/fdt_timer_mtimer.c#L152
-> 
-> Then your `is_c900_clint` becomes something like `timecmp_64bit_mmio`.
-> 
-> Bo
