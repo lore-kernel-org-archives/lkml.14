@@ -1,74 +1,133 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0EC4C3DE;
-	Tue, 26 Mar 2024 10:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE411EAF6;
+	Tue, 26 Mar 2024 10:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711448802; cv=none; b=aLi28GBpLVMwUgM1klA9Yru0Y9SfeR6lVZ2iHppqRlCHiSKldObQ6XA3EgCk3WDcSb5lujVc9Qv+fe8hWWMlPyCXxESxald6AUsNq8IR6c4T3tdZrh8EGkISm2iyo9u+SwSyx7z1GyzBaRsp5hp4CsmLsANdA25xqUhM+Jn9uoE=
+	t=1711448923; cv=none; b=XKBXFFhNx7wDGn0W3FbcVpwp9yc0QCUnrCGmMUu2Zyra7qKVsd19fGi++VdC2AxT1wRP0FaNoMvs1Tdxp45Y3wMrpfNb/Tre2dBgq0xLC0MauA1aTHcn0aOJoulxIgoNHwF+8UB/2lY2+Acp/yXPT+l/C6VxgfR5nIuRgmfUVmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711448802; c=relaxed/simple;
-	bh=Ufkhyldei9lgWlSrdN5/bzS4q1PlmwydeMttBxm5jDA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W0ML7Z8c3r6fj0a03LYo4oENfFkOkz2nVWImAp83KXg14leS7LcE5lrfTC2gsnu91yj6cNKfxx17WKuffKMuUsKRdl3SaangmLQe5IFxR9+SNUMpUrDYeIdueCHOfnhbSv3ljIvNMbImHPlQdwoVFzI/1CtJ0RX7FRN6aL8HH7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=XrWLZ/p0; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1711448923; c=relaxed/simple;
+	bh=ukeaZj+EJjB94scvGyBQtfYtRiuShb1IbJClhnMZurY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BxLowmON3HSJAgiUkj3tmfHWXjP1BAwz5llUUrLyeevApdlWDmLjoaQzB5uershCSfR5RjNYHjLLeHKXj8+Z64Bu+wWjNBGrk46InJa7BIBkbVQOKlucHsTuhBLItOKmhW6H4Q7mHOArNhNwLPWv3mCY/tIdofyiPFl1lV9twz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Yw5LrYTy; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="XrWLZ/p0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1711448798;
-	bh=Ufkhyldei9lgWlSrdN5/bzS4q1PlmwydeMttBxm5jDA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XrWLZ/p0SL1vC9suePIteW3t0c+F0fS6QxscxFZySrI0BCE2wkRtVZb00LoK8NTKV
-	 x/IjwdcCvLuphTjU17aQD/x5srAduK2fSfXXZl9rGSGcqU/X5vBGCOLwOGVZss/bMc
-	 6r6zHqjb2CHlP5RSoKSOGll+vKlEd9v2LJfvGAYTyR8Rsuwwo5JOvOeBtutIqXD6DF
-	 O4sYKmF40T78E0KwAE+GkbBK6oI0ADXsaVMFCbWtf8aNX6oCS5LfeWj/k4Ru1mUc4D
-	 qqr/xN7C1LjNnIGX8psTRnL9pI/dKim4K5tgu0LypI81mVkaEgT4l/7s1rEmSC2mMf
-	 VOoA1bjlLu+Dw==
-Received: from localhost (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 271D437813D7;
-	Tue, 26 Mar 2024 10:26:38 +0000 (UTC)
-Date: Tue, 26 Mar 2024 11:26:35 +0100
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Liviu Dudau <liviu.dudau@arm.com>
-Cc: Colin Ian King <colin.i.king@gmail.com>, Steven Price
- <steven.price@arm.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
- kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] drm/panthor: Fix spelling mistake "readyness" ->
- "readiness"
-Message-ID: <20240326112635.110302e1@collabora.com>
-In-Reply-To: <ZgKgDZrUakS_pwBS@e110455-lin.cambridge.arm.com>
-References: <20240326100219.43989-1-colin.i.king@gmail.com>
-	<ZgKgDZrUakS_pwBS@e110455-lin.cambridge.arm.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Yw5LrYTy"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42Q8TZgj012515;
+	Tue, 26 Mar 2024 10:28:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	qcppdkim1; bh=LFRg6Eiw/Nwzjx+zDP1JorEUwmL0hSvPD3//lEJp0co=; b=Yw
+	5LrYTyM8CT2XXujfPwzNkYE8Q8NkHd4+11ZYkJE0B/IQ2eRPFgCbww1EMS9KWuy9
+	nDKg55J8ZdSKRcicoSNropoBEqceEtTxhvH4aMo96VtVZ/TQIyx4Gto9UX4rvYEX
+	YRzKbPioJj7WVo2CUnEDLwr6ghjSJP+QB/7Fh+WNGZDjP4uVfdWg6aaGPBOFw9h3
+	PFJNppN8CTWDZlXw9BVw1yh2P5ZhjaWNnvPEn5NMiUzHlkNKG9BxDdknPBKrq4dm
+	3kT20pakF2Hm1G3gCIIc+eNTFffjo2ylOxASjX+5L+auZtosvqW4urD2dBivxWSK
+	CRRFMp+/8jZF3aAuy8Sw==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x3tvy8a8v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Mar 2024 10:28:34 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42QASX1K018434
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Mar 2024 10:28:33 GMT
+Received: from hu-kriskura-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 26 Mar 2024 03:28:28 -0700
+From: Krishna Kurapati <quic_kriskura@quicinc.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring
+	<robh@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+        Wesley Cheng
+	<quic_wcheng@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Felipe Balbi
+	<balbi@kernel.org>, Johan Hovold <johan@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_ppratap@quicinc.com>, <quic_jackp@quicinc.com>,
+        Krishna Kurapati
+	<quic_kriskura@quicinc.com>,
+        Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH v17 1/9] dt-bindings: usb: Add bindings for multiport properties on DWC3 controller
+Date: Tue, 26 Mar 2024 15:58:01 +0530
+Message-ID: <20240326102809.2940123-2-quic_kriskura@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240326102809.2940123-1-quic_kriskura@quicinc.com>
+References: <20240326102809.2940123-1-quic_kriskura@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: PB9YVNsKVX5raoCTVIGlVh1LkoSXDXk9
+X-Proofpoint-ORIG-GUID: PB9YVNsKVX5raoCTVIGlVh1LkoSXDXk9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-26_04,2024-03-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ clxscore=1015 priorityscore=1501 adultscore=0 suspectscore=0
+ lowpriorityscore=0 phishscore=0 bulkscore=0 malwarescore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403210001 definitions=main-2403260071
 
-On Tue, 26 Mar 2024 10:14:37 +0000
-Liviu Dudau <liviu.dudau@arm.com> wrote:
+Add bindings to indicate properties required to support multiport
+on Synopsys DWC3 controller.
 
-> On Tue, Mar 26, 2024 at 10:02:19AM +0000, Colin Ian King wrote:
-> > There is a spelling mistake in a drm_err message. Fix it.
-> > 
-> > Signed-off-by: Colin Ian King <colin.i.king@gmail.com>  
-> 
-> Acked-by: Liviu Dudau <liviu.dudau@arm.com>
-> 
-> Boris, can you also pick this one up when you're pushing your kernel doc fix?
+Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+---
+ .../devicetree/bindings/usb/snps,dwc3.yaml          | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-Sure, I will.
+diff --git a/Documentation/devicetree/bindings/usb/snps,dwc3.yaml b/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
+index 203a1eb66691..bfac0a37d0e4 100644
+--- a/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
++++ b/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
+@@ -85,15 +85,16 @@ properties:
+ 
+   phys:
+     minItems: 1
+-    maxItems: 2
++    maxItems: 8
+ 
+   phy-names:
+     minItems: 1
+-    maxItems: 2
+-    items:
+-      enum:
+-        - usb2-phy
+-        - usb3-phy
++    maxItems: 8
++    oneOf:
++      - items:
++          enum: [ usb2-phy, usb3-phy ]
++      - items:
++          pattern: "^usb[23]-[0-3]$"
+ 
+   power-domains:
+     description:
+-- 
+2.34.1
+
