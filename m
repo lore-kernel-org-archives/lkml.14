@@ -1,79 +1,106 @@
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E62067A00;
-	Tue, 26 Mar 2024 13:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5C867A00;
+	Tue, 26 Mar 2024 13:18:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711459109; cv=none; b=QtdTJTkRpMbs1Xl+T+sISdUqLa6TMEf2C0ap7XM2Pj9Dv4ZjNpLs2ykbb4cZfxBvFUfzVXJ/jAPCRaY0qfG47HtyFwj1UQ29dPOLbcO/OsPhLgx0+eik/Li8ilb1oDSEpb35FRs2e1gPriRZAUBdJ/7SVfbrOizafj4ASihux1Y=
+	t=1711459121; cv=none; b=hAK8kJQrspuI6S9WP1kSoO5H4XyrrN3zxYqhzeFdntXvJ4SF4189+pjIQleGFv74TBF66oqpxp/gXXg8UV81mltUXOlFe0zls6k0UEo9aCvqa/aHibnwQXFzRiC4wyCM4MSC7MtxseZGKHuf+QsmxEXoYg/EjuWLcZWBvdM4VE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711459109; c=relaxed/simple;
-	bh=cA2n/4MwPui6Y5OPDLkQphyzkjGT48J32nYE9CzA/dQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VLS1NB4u2GplQKzjZfLIwICAWfJfGABM22bsiQ4etN7goATo9JL8uqQN/sZP72CsqvI8eHcqoBlgNhPozVU5KzcSWNMlK2IxcPhAlFm6erku4+QnZBNnpDgF2lskyGc0MdBFUfdm+OsLl/RVneB8jCppOEXaTR1dq0VgiAM86jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=54.206.16.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-X-QQ-mid: bizesmtp65t1711459041tzi6x6bq
-X-QQ-Originating-IP: acgQfBts7Ri8OsILJnCeWeEv+z+f4+tsbDVsBeBQ8ns=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 26 Mar 2024 21:17:19 +0800 (CST)
-X-QQ-SSF: 01400000000000C0B000000A0000000
-X-QQ-FEAT: j86OQQvu8eT7MzXz62hGqvvve66w8l0TlZpW33Rvt5TN1M/cVf4Jm4Mu55Yo3
-	XjNj2uVpHGrHWdH+uqxRo5oNJLMFjY83HKReFabpjKNaJLyCtD1XqGsM78z/LTdqEtTTJnd
-	RstgIFoXYackNGGDM9J23s4usPvF/OZxHHP95N6dXSZZArTPAL3v9ZAD7N9L8U7L01zjU9Y
-	KpMH46nS/LBeicmeA3YTBJydG0dIAZ9argLRNYrdzAgFbc8w3kzQlg5fsrGL2R0JDE4i7NI
-	jK+ZfJdvLGdYjMBLx3YSA7muxMZt523490v32VBRodfqu+Kxh/JLJGUu+DPpPJXfmyMPJZX
-	/cnE9Cm0Z9NbM9dbQl3zV18/5PJ9VspZZpgC+xkpTZYB08yiR1W3FB1Oc5EUg==
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 13992481150274053400
-From: WangYuli <wangyuli@uniontech.com>
-To: wangyuli@uniontech.com,
-	dmitry.torokhov@gmail.com,
-	rrangel@chromium.org,
-	shaoyang@uniontech.com,
-	helugang@uniontech.com
-Cc: linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	huangbibo <huangbibo@uniontech.com>
-Subject: [PATCH] Input: PS/2 - add support for Lenovo Xiaoxin keyboard
-Date: Tue, 26 Mar 2024 21:17:18 +0800
-Message-ID: <593C1A73FB93BACE+20240326131718.20497-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1711459121; c=relaxed/simple;
+	bh=kwbtxjvyoboouuP30XD7UmJ9Tak2JX2+1XT+llOTBfU=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=QVmHGcJ/2CLE/0jFhB4SMli7S8cgy2C8vv7nReIO1sArDXPGnx0E4HW3CVWRP8X2vtA5GZZgH3x7m2bVxzPc33DGomuri3dw+9rUezHKC13E8Awf6nms3BNQKc9KoTOD0Pm469mBjlvVGFStB3YK05nk8mfQlSGDTqs4gdHVBu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=YBYljSo1; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="YBYljSo1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	Reply-To:Subject:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To
+	:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=lKr8vjI/MKPiGxt3h9ZRIfJRuD3apPKLQIAIGxuGMwY=; t=1711459119;
+	x=1711891119; b=YBYljSo1n6H8XdcfSJPHGDeh0/bBwb7Cwdtg4HST5YWsGyxgXgNz5Omgyz5IX
+	X8E/OQ6VqUggXEbl0UMTb0hAr2IZHe1mY8e9X2PlpHFws7PVaZ5Qss8/c19Vl2tSc+5/flRms7UHP
+	3Uwv4Cp4XPPyxb/1qOkr/HrI6IX/VeiIj25+exwzcoyCAZzM1SSmfxTE1dULHG3g5AeZt/9i53Eku
+	XhqZxQdn8MOlpWSuQRQRLAqbx/nZq8Kr0APR6UEqPQeetQD9DAuZMzS6ZIp4Wlbz9Pgcp6A7cM5U1
+	edLgOX6nTIPuXvmEqEDtI7tXaNyxYQfctzBQk74voWToGZcz4A==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rp6hI-0005Mm-No; Tue, 26 Mar 2024 14:18:36 +0100
+Message-ID: <5b778e74-1278-42b1-84e1-a2c04a8211f0@leemhuis.info>
+Date: Tue, 26 Mar 2024 14:18:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+User-Agent: Mozilla Thunderbird
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Mario Limonciello <mario.limonciello@amd.com>
+Subject: [regression] Bug 218641 - Framework Laptop 13 AMD suspend/wakeup
+ regression with 6.9rc1
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711459119;1ec67ad1;
+X-HE-SMSGID: 1rp6hI-0005Mm-No
 
-Modified keyboard_ids in function ps2_is_keyboard_id
-for Lenovo Xiaoxin keyboard.
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-Signed-off-by: yuanjianye <yuanjianye@uniontech.com>
-Signed-off-by: shaoyang <shaoyang@uniontech.com>
-Reviewed-by: huangbibo <huangbibo@uniontech.com>
-Signed-off-by: helugang <helugang@uniontech.com>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- drivers/input/serio/libps2.c | 1 +
- 1 file changed, 1 insertion(+)
+Anna-Maria, I noticed a regression report in bugzilla.kernel.org that
+apparently is caused by a change of yours. As many (most?) kernel
+developers don't keep an eye on it, I decided to forward it by mail.
 
-diff --git a/drivers/input/serio/libps2.c b/drivers/input/serio/libps2.c
-index 6d78a1fe00c1..39d46526c56a 100644
---- a/drivers/input/serio/libps2.c
-+++ b/drivers/input/serio/libps2.c
-@@ -189,6 +189,7 @@ bool ps2_is_keyboard_id(u8 id_byte)
- 		0x5d,	/* Trust keyboard		*/
- 		0x60,	/* NMB SGI keyboard, translated */
- 		0x47,	/* NMB SGI keyboard		*/
-+		0x83,	/* Lenovo Xiaoxin keyboard	*/
- 	};
- 
- 	return memchr(keyboard_ids, id_byte, sizeof(keyboard_ids)) != NULL;
--- 
-2.43.0
+Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
+not CC them in mails like this.
 
+Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218641 :
+
+>  David Markey 2024-03-25 22:08:29 UTC
+> 
+> Was trying out 6.9rc1 to give prefcore a whirl but I've noticed that
+> when I go to s2idle I cannot wake up, the power button does not wake
+> the laptop up again and stays flashing and requires a full reboot to
+> become responsive again.
+Later:
+
+>  Mario Limonciello (AMD) 2024-03-26 02:38:06 UTC
+> 
+> I finished up bisecting and it comes down to this commit:
+> 
+> ```
+> commit 7ee988770326fca440472200c3eb58935fe712f6
+> Author: Anna-Maria Behnsen <anna-maria@linutronix.de>                          
+> Date:   Thu Feb 22 11:37:10 2024 +0100                                                   
+>                                                                                          
+>     timers: Implement the hierarchical pull model
+> ```
+See the ticket for more details and additional comments.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+[1] because bugzilla.kernel.org tells users upon registration their
+"email address will never be displayed to logged out users"
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+P.S.: let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: 7ee988770326fca440472200c3eb58935fe712f6
+#regzbot title: timers: suspend/wakeup problems on Framework Laptop 13 AMD
+#regzbot from: David Markey
+#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218641
+#regzbot ignore-activity
