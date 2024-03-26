@@ -1,104 +1,117 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7FD71B5D
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 12:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD1828E8
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 12:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711457601; cv=none; b=JSuDYDM+keng5sPdEtSD2epKayUr+h8cAPtAlsL5lEKPPicWmDdIFhs6ku27TTAedkoqzVCihwi/gbZvFADdNsz9loeNS6JnpZEzEWwTGT5aOj5QPav/VPL9yut+JO60/Hx2UCTn295Qz/6oJHwRUjzAEWP8BClsRVXXSGQYL+Q=
+	t=1711457657; cv=none; b=liEYawF8A3ZUgBtRq4hb2DHLrI3kyf8EzInOkuSTI1M7yLVa6vIxrvejcfLagW/zyRdrvGBXMRThpqLbVQF0eKTCa3Gh91/GLkAzTcuvBFVgATi7Bh0R+TCPNuBtkkR2V6o8QuIRBjhLezRX8tTp573bOSpO1pnP3MTlC5O/+Vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711457601; c=relaxed/simple;
-	bh=5XbquQmJKaNfWBjyEtOOSnqsLcETpU6DZOyNLjemzmQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z5SRK+SFZ2XEabgIy4+4VjIjTGKXEQ5GGLyXJegcnj+6wikHD047Z3L+zFFIVAQQL5Ww0THQVdLB6v8UP1st7t4fJo5UvDXxXm3UL3xmI/wROub5dcj1K1eaaIcUTJQvasWyHasb+F5AL+z6HMohe9We7fM/1UL28TYhvzIactw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=TrSNZXgn; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1711457657; c=relaxed/simple;
+	bh=HANE9Ck98nA4yLDO1qZtV2vsNr/fyY+1mdplJg0Nl0w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nd+7KAAg5YPPE5WPQVBj38eDfoi6HxlajVgAKE2+9DeY4OojurAXPI6FH16RvepyLFczc2HjDP6SjxhVO6fm8562NsiqrbSWpzr4H9eKUPDY98CBrBgJqYBNxK2q9gMrF2pxDGGTJRyQDekMKG20xE6OnLg/TYpyOm7Uj9QcKnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J9PmjWXA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="TrSNZXgn"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-61149e50602so17858307b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 05:53:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1711457599; x=1712062399; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z0BhUuq6w2jcMHo0vnHZWTdWQ7YEJBXZjKotn4i2wHk=;
-        b=TrSNZXgnFF7GvLHr6M+Rgew7GU+Wc6sqwMeSm/E9VbSWkoZE9GMg+Wl71y2gSnuWJI
-         3NFtVETJjLs4IyW9BQR77EzSomQBRFS2IFOkfTYKRG0jNgDUhWWnV30AqBJCNeVmESEq
-         czISs7cXGwoum4ATewhUj9UuAIU1vG32bY7qF+Ww7LB1txAIgVURulRKip8MlfZX0TBj
-         rr7gdsJJ8M/ykHGK+KI164xZ8h3pgemvlntiQy05Zde07NWI178pm1wh5Gu8/PBx/WDq
-         jLvMnhZBmsbSbgOLZpAx3CKkrMaCSZQhW413hzmV/TUd5/ssdMA6/tbShzvdszPIiykJ
-         K0iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711457599; x=1712062399;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z0BhUuq6w2jcMHo0vnHZWTdWQ7YEJBXZjKotn4i2wHk=;
-        b=GOyQN79716c1DAcRScO4G8NcH8Xp88fOOUmHx3IowNFaAvgzqewUlS0L2Lz409sGVb
-         SHipv4pysAW0WCpXM20w6yzwIpgnPNkqjIv/lAZh0cty72D21jh8FinXleJWxmHfRJDm
-         TPLNS+n6QuSm3kU6EzUhZ9J/tRoxzt3OFQ7329MA/1hjk0jbCMV9CiraTand3JDER5ZI
-         wVfAF7yarV911bdVocNXnPEEt5KxgL3noW5ozy8G7BsAf44lUDf5ILEckYcKl5ykeYD/
-         GAlx0DTLLPlv1HJZSIxkV+Z+JReWHqny0T544YMrPO9Wwlu3WnsaQoCtkU8AUWxoaR8m
-         ocwA==
-X-Forwarded-Encrypted: i=1; AJvYcCVJhdn15vXrmvRKd5ITh/h9MrLu7BLLKoy88lgqFfVjXscka7riALUPbq/Vi7kmIQmFzCvI+vAYoeMxc860e/feJhJnyh6cMQ9GXaIx
-X-Gm-Message-State: AOJu0Yz0QUDD5Kie4tlVA4LKSrk8tS0QzWsIE6r2BGZSzQISVy2TwgrN
-	b3uMp/QlsB8a4pY/gvyTDSNL50sVbamFloB9k4GZO+zu6yq4oDLF4ye4gyOgIhbC1RDE0njaDK4
-	D5Dy/Eo5cMalJIYCtx/KQxu+2SNZ++wndP0pc
-X-Google-Smtp-Source: AGHT+IH2Oz9Ij0xMEiUnRD6ybquNqgql6Kb2ocAG6nS4ykuQkyqgIotaRGNW/ASQAvSIwgHE/TxrVUinkjCFUqhPnQ8=
-X-Received: by 2002:a05:690c:700f:b0:611:336d:c8f3 with SMTP id
- jf15-20020a05690c700f00b00611336dc8f3mr801016ywb.24.1711457598719; Tue, 26
- Mar 2024 05:53:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J9PmjWXA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEEEBC433C7;
+	Tue, 26 Mar 2024 12:54:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711457656;
+	bh=HANE9Ck98nA4yLDO1qZtV2vsNr/fyY+1mdplJg0Nl0w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J9PmjWXAuvpNf0kNeIJ0S0w4XhOn94evh/3pN3bRrDW2/KVo+R51sJ3qo5GE1elZP
+	 f5Wkxt40uLV+bjhEf0PkwctDFfveSWI+k/otPA46eBO8agrwarzJp8aAWAIhNzOiH1
+	 2qUZyC9O+TrOvy/J4jEajfH8bBlf3sHoq3vit2j/x8qWEI5CFIuBzIarSvh5ptim1d
+	 RZo4rEcaoxRcqSRs4k/PXDSRybpM7rH3VvtkgeHzhdbniaU7FwF5mocez2Foim4YXY
+	 2xuI9jLgUvoLTYVVcO6/IRIwLpAuwQQJYx0FnEhVK9OOMYeMzaqMu5kV/da7HkDX+1
+	 /RPLaXzvje0kA==
+Date: Tue, 26 Mar 2024 12:54:10 +0000
+From: Will Deacon <will@kernel.org>
+To: Nanyong Sun <sunnanyong@huawei.com>
+Cc: David Rientjes <rientjes@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Matthew Wilcox <willy@infradead.org>, muchun.song@linux.dev,
+	Andrew Morton <akpm@linux-foundation.org>,
+	anshuman.khandual@arm.com, wangkefeng.wang@huawei.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, Yu Zhao <yuzhao@google.com>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	Sourav Panda <souravpanda@google.com>
+Subject: Re: [PATCH v3 0/3] A Solution to Re-enable hugetlb vmemmap optimize
+Message-ID: <20240326125409.GA9552@willie-the-truck>
+References: <20240113094436.2506396-1-sunnanyong@huawei.com>
+ <ZbKjHHeEdFYY1xR5@arm.com>
+ <d1671959-74a4-8ea5-81f0-539df8d9c0f0@huawei.com>
+ <20240207111252.GA22167@willie-the-truck>
+ <ZcNnrdlb3fe0kGHK@casper.infradead.org>
+ <ZcN1hTrAhy-B1P2_@arm.com>
+ <44075bc2-ac5f-ffcd-0d2f-4093351a6151@huawei.com>
+ <20240208131734.GA23428@willie-the-truck>
+ <f8a643a9-4932-9ba4-94f1-4bc88ee27740@google.com>
+ <22c14513-af78-0f1d-5647-384ff9cb5993@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAH2r5msAVzxCUHHG8VKrMPUKQHmBpE6K9_vjhgDa1uAvwx4ppw@mail.gmail.com>
- <20240324054636.GT538574@ZenIV> <3441a4a1140944f5b418b70f557bca72@huawei.com>
- <20240325-beugen-kraftvoll-1390fd52d59c@brauner> <cb267d1c7988460094dbe19d1e7bcece@huawei.com>
- <20240326-halbkreis-wegstecken-8d5886e54d28@brauner>
-In-Reply-To: <20240326-halbkreis-wegstecken-8d5886e54d28@brauner>
-From: Paul Moore <paul@paul-moore.com>
-Date: Tue, 26 Mar 2024 08:53:07 -0400
-Message-ID: <CAHC9VhQg6Qhqjs7J+X6wZa+dP4cujcWPJMZONB0SB9aaaGvFDg@mail.gmail.com>
-Subject: Re: kernel crash in mknod
-To: Christian Brauner <brauner@kernel.org>
-Cc: Roberto Sassu <roberto.sassu@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Steve French <smfrench@gmail.com>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>, 
-	Paulo Alcantara <pc@manguebit.com>, Christian Brauner <christian@brauner.io>, 
-	Mimi Zohar <zohar@linux.ibm.com>, 
-	"linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>, 
-	"linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <22c14513-af78-0f1d-5647-384ff9cb5993@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Tue, Mar 26, 2024 at 7:40=E2=80=AFAM Christian Brauner <brauner@kernel.o=
-rg> wrote:
->
-> For bigger changes it's also worthwhile if the object that's passed down
-> into the hook-based LSM layer is as specific as possible. If someone
-> does a change that affects lifetime rules of mounts then any hook that
-> takes a struct path argument that's unused means going through each LSM
-> that implements the hook only to find out it's not actually used.
-> Similar for dentry vs inode imho.
+On Mon, Mar 25, 2024 at 11:24:34PM +0800, Nanyong Sun wrote:
+> On 2024/3/14 7:32, David Rientjes wrote:
+> > On Thu, 8 Feb 2024, Will Deacon wrote:
+> > > > How about take a new lock with irq disabled during BBM, like:
+> > > > 
+> > > > +void vmemmap_update_pte(unsigned long addr, pte_t *ptep, pte_t pte)
+> > > > +{
+> > > > +     (NEW_LOCK);
+> > > > +    pte_clear(&init_mm, addr, ptep);
+> > > > +    flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
+> > > > +    set_pte_at(&init_mm, addr, ptep, pte);
+> > > > +    spin_unlock_irq(NEW_LOCK);
+> > > > +}
+> > > I really think the only maintainable way to achieve this is to avoid the
+> > > possibility of a fault altogether.
+> > > 
+> > Nanyong, are you still actively working on making HVO possible on arm64?
+> > 
+> > This would yield a substantial memory savings on hosts that are largely
+> > configured with hugetlbfs.  In our case, the size of this hugetlbfs pool
+> > is actually never changed after boot, but it sounds from the thread that
+> > there was an idea to make HVO conditional on FEAT_BBM.  Is this being
+> > pursued?
+> > 
+> > If so, any testing help needed?
+> I'm afraid that FEAT_BBM may not solve the problem here, because from Arm
+> ARM,
+> I see that FEAT_BBM is only used for changing block size. Therefore, in this
+> HVO feature,
+> it can work in the split PMD stage, that is, BBM can be avoided in
+> vmemmap_split_pmd,
+> but in the subsequent vmemmap_remap_pte, the Output address of PTE still
+> needs to be
+> changed. I'm afraid FEAT_BBM is not competent for this stage. Perhaps my
+> understanding
+> of ARM FEAT_BBM is wrong, and I hope someone can correct me.
+> Actually, the solution I first considered was to use the stop_machine
+> method, but we have
+> products that rely on /proc/sys/vm/nr_overcommit_hugepages to dynamically
+> use hugepages,
+> so I have to consider performance issues. If your product does not change
+> the amount of huge
+> pages after booting, using stop_machine() may be a feasible way.
+> So far, I still haven't come up with a good solution.
 
-For bigger changes please always ensure that the LSM list, and any
-related LSM implementation lists, are on the To/CC line.  While we
-appreciate Christian's input (and Al's, and all the other VFS devs) on
-VFS matters, there are often other considerations that need to be
-taken into account when discussing LSM related issues.  Generally,
-"specific as possible" is good input, but it isn't the only thing we
-need to worry about, and sometimes other requirements mean that it
-isn't the best choice.  Just as we want the VFS devs involved in
-discussions about VFS related LSM hooks (these new IMA/EVM-related LSM
-hooks were sent to, and reviewed by the VFS folks), I would hope the
-VFS devs would want to include the LSM devs on any LSM related issues
-and would try to avoid speaking on behalf of the LSM devs and
-maintainers.
+Oh, I hadn't appreciated that you needed to remap the memmap live. How
+do you synchronise the two copies in that case? I think we (i.e. the arch
+folks) probably need some more explanation on exactly who can race with
+what here, otherwise I don't grok how this can work.
 
---=20
-paul-moore.com
+Thanks,
+
+Will
