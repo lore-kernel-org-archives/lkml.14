@@ -1,133 +1,169 @@
-Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A44A612C7FF;
-	Tue, 26 Mar 2024 20:56:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711486581; cv=none; b=n0H4jbt+v3h9VHuac52zXXKvPD4riyIZCrdL97sW7XuEi2Q1h0FCOvwnjJNBfm8qLFvR4GmRlyjy500Yg5XPjGoXpZwSeTneO6Gq9eY3DDAi4/fcFm9VKIkFko1bhu034cgtZpEkaRBXjg0+46ME8BP9bsmTliM7rdwHhT2tXR0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711486581; c=relaxed/simple;
-	bh=Olz4AkNkzYVK19w+Jh6klcHV6fbs+XGQtH12Ue6EbtA=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=Gejj+PHDoJ261zFF/+liw9o/R62sP6a4rd175No5dgw8qi7NrqYVi+wbxNFA2BNXr7THYuelVsCIx0T66TcS0fYu9mancmrvgukgBOyCyn0ev/ch45Az3yFqKLKW9AvtZRqOjyiC5LTlqkyN4M7QWxkTbZg2Z6T/MMINC3J9S4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=WlOtjyaZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=oTYV8adQ; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8234D1E51D;
+	Tue, 26 Mar 2024 20:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711486632; cv=pass; b=bjrWVrw9UuwfyCNHIJerOhtRmuD83X313Hwd9q+d+G2XHl0cVvmSqVc9YabK9+f/vFXR3qbTSLOBZSXkiTaxF7iG4kJUc4Lgw8j4JvZ8TpnDpY3Ihj5xVzElmNfho7W8zzskhotggdYuZ6llZpruNNOlhOmDkmB05TZJIi0Ulq8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711486632; c=relaxed/simple;
+	bh=ZtadjjEnLI0Oyh5yZHN/h9uEzlNcXQprvGYtgzryMws=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y4BQO6x1n/bxwb9x9i1GjRU5nAvzNJAQjgyLFUcufEf2DerF/gx86WWSmws6UOSz3ebcX1mh6Q9Ld2Cao2WVVOakzaDFdoa3zIULfs+Us/wGPN7TC7UCGiC0J+PErkluzpgi1C7UPqtcugoPjtVx/wbDOtk3q+wBn9O9yXfV9MI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gerhold.net; spf=none smtp.mailfrom=gerhold.net; dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b=ngmyCWld; dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b=/Uvl4QaV; arc=pass smtp.client-ip=85.215.255.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gerhold.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=gerhold.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="WlOtjyaZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oTYV8adQ"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id C0777138014E;
-	Tue, 26 Mar 2024 16:56:17 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 26 Mar 2024 16:56:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1711486577; x=1711572977; bh=bTK7qxB/Dz
-	ZvcacQ3ARgA6AoDzT5XFaivWWd8YVHcDs=; b=WlOtjyaZiklsRi4cCh1jYIRpIM
-	pLVHILPIPgQ/oogUIpqoqYnwK1W+6v8z0OA+zU38ovpQrKeC5G+uoNavTn26eOcw
-	Rx9zFSqTneqsXKVF54y5rwO2vHU/viQNr11OsBlahezKkGRdxR1vhDu/HNpjHWZH
-	Hw8/5n6K5X+u1wgp5XcZivytgK6eq1An+lKKX426vYBoEHRjKtJ2g5tzqxxS1pN5
-	GnkBq5GRV0kmxf1/iX6DMkND5yOLsrsoGUtnkkew0BYhBhDf12kqBMhkcdMKdzRv
-	1ZZvx0c+58bG33DpLg54XvIvoERfC3DtCU/rHLAyGy1/fVXzvUpuuDc60MwA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1711486577; x=1711572977; bh=bTK7qxB/DzZvcacQ3ARgA6AoDzT5
-	XFaivWWd8YVHcDs=; b=oTYV8adQxdjRh9Snl2cz1eHQHqctI5puzvhK2J/F+mJ8
-	7tl0gvwKM0afyXZkz8C6MXAAifZckQygqw5ORc7w0qpS1TPlbO+w9G7jd3heTiCC
-	r8I6RrrlNvFIk91tWPjbL747c8kuc3cUPm9wPnAItnHcvIkE5C+9ExKz8Ajn6gg4
-	XtFClsZhAv7KlA2mcHHBjgSBHAdbPX7syjzicTpPVslBt7hIXn/nym+aa8280ApW
-	IeFHW75gBBPdbNdhp32G4czj+aGTUaSrQiNUAlmapyxtBNnRSxScoAW/oimlmTKi
-	uS/mrXXVeAnS/EwrWwW0shCoI/5h1CnBk3kKJ1UCxw==
-X-ME-Sender: <xms:cDYDZnJ8rnTBWm06xK346QIC-QafLXL2gNmwIgqfmVnvDbkBSqHQWQ>
-    <xme:cDYDZrKEJ0-53M2cA3w9Y_dAEKcjYEVn8bzx34Tifka9Xow_kVoe0xGHM4NN3qkKF
-    gRRP3ldGGLjW5vpIVI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddufedgudegfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
-    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:cDYDZvvDg9wFUZ4OAUyKEggLe0cNB4rFNN936cbq-sR_6OTqjVXIrw>
-    <xmx:cDYDZgZgdeDjBNgszo_zOpuYNlLc03uqLjysmZTeLwTAqDSTOmltzw>
-    <xmx:cDYDZuYKC_wI7ro2wW0eBCrJnbpxAudYAU5P82Iecn1qctEWiMRPFw>
-    <xmx:cDYDZkDkbD19cuKpTJQbi0S_atQZTcbT2a9iBKqGsY57IhQu9VXbdA>
-    <xmx:cTYDZgYxthdidcJydzecKKASkiaYUTKEbJFDurjUEzrMsGAkjExe_w>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 658BDB6008D; Tue, 26 Mar 2024 16:56:16 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-328-gc998c829b7-fm-20240325.002-gc998c829
+	dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="ngmyCWld";
+	dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="/Uvl4QaV"
+ARC-Seal: i=1; a=rsa-sha256; t=1711486627; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=M2lhtyVfu1Km00AyKzgBlhk+q9Gi6ZZb6QtyACdW8NCdG7ubG1xrKkZ6Begdw0SozD
+    qxtTPh6qR96TygrvYc3I1JF+iMcvRf09Wg8SaW4NYn7vP+aPH3wtcifj1ysZVhNMWf4a
+    1QxlfP72a2q3iE4mmY6yS+JKyuw1aeuaraU6Cl+Mv2pDUXxVCEuAB27QYKAfm5j2tumn
+    rCGA5W1WhAHotg7XCH6/fgEggyeT4O6Pv8AnuitNn5RlMpdMrpw4UqdhGOh2xUSWDU+G
+    QnpiSUsQMHQDpla5te3GIhl/KTOFuwe+LNRaYTmqv387nQH9V7ENYLRDMPdD/IU3sfXn
+    W+fQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1711486627;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=3WyCESPFX/jeAoBv0SUgbR0KTj4t/YtTwCDbEx3hi44=;
+    b=MKFZCfaFWfCSHmQ4EDdsO3f1mOCWRTv2NNuchAFmmmEL+V2hX+8KaV9pPUGSAzTfrW
+    aJCCE4QcE4cheGTEHNEDV3V1vDFyF+ABfRkUy3CA9uTmH4Mo/HI2v7JAM+X1D4Il31Ax
+    7+MmMB0jAIWbJLHo88o7avl9PnBvQubxGQ29ipF9455JMMO41kPBKSFhYGeRWKQRKmIB
+    7QmWhgt7CPJziRYujLEEftDgRLuOOP3eEoMGCbOvW88Fpgz72DKiZC2LvmUWa8HKEzd0
+    /TaQ2GwU5SGRvx2YBvyHDN+Pm4LZcuSDyHSh+DGtW8ZnpJqHZlgpNJJxTphAJZSv+p77
+    FtJw==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1711486627;
+    s=strato-dkim-0002; d=gerhold.net;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=3WyCESPFX/jeAoBv0SUgbR0KTj4t/YtTwCDbEx3hi44=;
+    b=ngmyCWldqGNscBEejeCUmk+5R4FO+kvbyoI76wk9VXX9Q94mfkDsT1giq3GNsi82dS
+    PlgW3bne0PC8qO2lPc0eac0IsELUwTgyZaWTyng88ddtf0qnQgQQUg86Kp60abXYhmR+
+    mhwBMUcn2Z2bHHxENOAPnv36YT7awRoH5TFxj5jaPier9krKq3gAj4Kl3Ec5CXL72evu
+    QA8snovtqF1qLlFLrEMx3AT6K+cYsXt5sOsDqPRExwwqR20+JgxlqYnmFG011L3xJZrd
+    1OZf78qQXQgtBoznyelgPAMj8QiZ0CEcii/SqdBUx3GAS7noDGJqYqbSsBr+k9pIgK49
+    /E/w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1711486627;
+    s=strato-dkim-0003; d=gerhold.net;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=3WyCESPFX/jeAoBv0SUgbR0KTj4t/YtTwCDbEx3hi44=;
+    b=/Uvl4QaVHvco9HIf32MTqks+nSvLQHU/v4e021dPtfRHghhGfuUhuSBkE5XjoBs7Rw
+    jxbhuibFfNEC+mK6C0AQ==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u261EJF5OxJD4paA8piJ1A=="
+Received: from gerhold.net
+    by smtp.strato.de (RZmta 50.3.2 SBL|AUTH)
+    with ESMTPSA id Raf12502QKv7LD8
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Tue, 26 Mar 2024 21:57:07 +0100 (CET)
+Date: Tue, 26 Mar 2024 21:57:01 +0100
+From: Stephan Gerhold <stephan@gerhold.net>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Georgi Djakov <djakov@kernel.org>, Shawn Guo <shawn.guo@linaro.org>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] interconnect: qcom: icc-rpm: Remodel how QoS
+ settings are stored
+Message-ID: <ZgM2naP4mGLKwbCV@gerhold.net>
+References: <20240326-topic-rpm_icc_qos_cleanup-v1-0-357e736792be@linaro.org>
+ <20240326-topic-rpm_icc_qos_cleanup-v1-4-357e736792be@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <cb853762-06d4-401c-a1c8-07a0c031b499@app.fastmail.com>
-In-Reply-To: <87jzlohhbc.fsf@intel.com>
-References: <20240326144741.3094687-1-arnd@kernel.org>
- <20240326144741.3094687-2-arnd@kernel.org> <87jzlohhbc.fsf@intel.com>
-Date: Tue, 26 Mar 2024 21:55:46 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Jani Nikula" <jani.nikula@linux.intel.com>,
- "Arnd Bergmann" <arnd@kernel.org>, linux-kbuild@vger.kernel.org,
- "Masahiro Yamada" <masahiroy@kernel.org>,
- "Harry Wentland" <harry.wentland@amd.com>,
- "Alex Deucher" <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "Lucas De Marchi" <lucas.demarchi@intel.com>,
- "Oded Gabbay" <ogabbay@kernel.org>,
- "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
- "Maxime Ripard" <mripard@kernel.org>,
- "Thomas Zimmermann" <tzimmermann@suse.de>,
- "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
- "Andrew Jeffery" <andrew@codeconstruct.com.au>,
- "Linus Walleij" <linus.walleij@linaro.org>, "Joel Stanley" <joel@jms.id.au>,
- "Alexei Starovoitov" <ast@kernel.org>,
- "Daniel Borkmann" <daniel@iogearbox.net>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Nathan Chancellor" <nathan@kernel.org>
-Cc: "Nicolas Schier" <nicolas@fjasle.eu>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
- linux-mm@kvack.org, llvm@lists.linux.dev
-Subject: Re: [PATCH 01/12] kbuild: make -Woverride-init warnings more consistent
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240326-topic-rpm_icc_qos_cleanup-v1-4-357e736792be@linaro.org>
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 26, 2024, at 21:24, Jani Nikula wrote:
-> On Tue, 26 Mar 2024, Arnd Bergmann <arnd@kernel.org> wrote:
->> From: Arnd Bergmann <arnd@arndb.de>
->> index 475e1e8c1d35..0786eb0da391 100644
->> --- a/drivers/net/ethernet/renesas/sh_eth.c
->> +++ b/drivers/net/ethernet/renesas/sh_eth.c
->> @@ -50,7 +50,7 @@
->>   * the macros available to do this only define GCC 8.
->>   */
->>  __diag_push();
->> -__diag_ignore(GCC, 8, "-Woverride-init",
->> +__diag_ignore_all("-Woverride-init",
->>  	      "logic to initialize all and then override some is OK");
->
-> This is nice because it's more localized than the per-file
-> disable. However, we tried to do this in i915, but this doesn't work for
-> GCC versions < 8, and some defconfigs enabling -Werror forced us to
-> revert. See commit 290d16104575 ("Revert "drm/i915: use localized
-> __diag_ignore_all() instead of per file"").
+On Tue, Mar 26, 2024 at 08:42:35PM +0100, Konrad Dybcio wrote:
+> Currently, the QoS settings are stored in the node data, even though
+> they're a property of the bus/provider instead. Moreover, they are only
+> needed during the probe step, so they can be easily moved into struct
+> qcom_icc_desc.
+> 
+> Reshuffle things around to make it anywhere near readable & comparable
+> with a reference. As a nice bonus, a lot of bytes are shaved off and
+> a few miliseconds are shaved off here and there.
+> 
+> As an example, bloat-o-meter reports this on sm6115.o:
+> Total: Before=14799, After=13263, chg -10.38%
+> 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> ---
+>  drivers/interconnect/qcom/icc-rpm.c | 123 +++++----
+>  drivers/interconnect/qcom/icc-rpm.h |  13 +-
+>  drivers/interconnect/qcom/msm8909.c | 268 ++++++++++---------
+>  drivers/interconnect/qcom/msm8916.c | 153 ++++++-----
+>  drivers/interconnect/qcom/msm8939.c | 157 ++++++-----
+>  drivers/interconnect/qcom/msm8996.c | 517 +++++++++++++++++-------------------
+>  drivers/interconnect/qcom/qcm2290.c | 416 +++++++++++++++++------------
+>  drivers/interconnect/qcom/sdm660.c  | 393 +++++++++++++--------------
+>  drivers/interconnect/qcom/sm6115.c  | 239 ++++++++++++-----
+>  9 files changed, 1224 insertions(+), 1055 deletions(-)
+> 
+> [...]
+> @@ -70,20 +68,18 @@ struct qcom_icc_provider {
+>  };
+>  
+>  /**
+> - * struct qcom_icc_qos - Qualcomm specific interconnect QoS parameters
+> + * struct qcom_icc_qos_data - Qualcomm specific interconnect QoS parameters
+>   * @areq_prio: node requests priority
+>   * @prio_level: priority level for bus communication
+>   * @limit_commands: activate/deactivate limiter mode during runtime
+> - * @ap_owned: indicates if the node is owned by the AP or by the RPM
+>   * @qos_mode: default qos mode for this node
+>   * @qos_port: qos port number for finding qos registers of this node
+>   * @urg_fwd_en: enable urgent forwarding
+>   */
+> -struct qcom_icc_qos {
+> +struct qcom_icc_qos_data {
+>  	u32 areq_prio;
+>  	u32 prio_level;
+>  	bool limit_commands;
+> -	bool ap_owned;
+>  	int qos_mode;
+>  	int qos_port;
+>  	bool urg_fwd_en;
 
-It works now.
+Side note: There is a potential for more micro-optimization here: You
+could save 4 bytes of padding if you move all bools together at the end
+of the struct. :D
 
-The original __diag_ignore_all() only did it for gcc-8 and above
-because that was initially needed to suppress warnings that
-got added in that version, but this was always a mistake.
+> [...]
+> @@ -134,6 +131,8 @@ struct qcom_icc_desc {
+>  	bool keep_alive;
+>  	enum qcom_icc_type type;
+>  	const struct regmap_config *regmap_cfg;
+> +	const struct qcom_icc_qos_data * const qos_data;
+> +	const u16 qos_data_num;
+>  	unsigned int qos_offset;
 
-689b097a06ba ("compiler-gcc: Suppress -Wmissing-prototypes
-warning for all supported GCC") made it work correctly.
+Nitpick: Why is the u16 const when the other (non-pointer) members are
+not? The u16 also feels a bit like overkill here. The struct would have
+exactly the same size with a full unsigned int because of padding.
 
-     Arnd
+Alternatively, you could consider using an empty last entry as sentinel
+instead of adding the count (i.e. with NOC_QOS_MODE_INVALID = 0). Not
+sure what is cleaner here.
+
+I haven't looked closely at the actual conversion of the definitions in
+the drivers. What is the chance that you made an accidental mistake in
+there? Or was it scripted? :D
+
+Thanks,
+Stephan
