@@ -1,162 +1,93 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E68413DDAA;
-	Tue, 26 Mar 2024 22:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A8613DDAC
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 22:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711492213; cv=none; b=Zkv8oqm3kA/DMJhma3LuJzLZPQCTaet08y4enWQG97cWSbu5DJmQo8mUe/s4N0r3Yl7zDFkvu5klNPWrvDdfzIU38uXSAffEqVhB1KpY4OIHdhyoMe6x//vasd6mTmWGEdVTyPkVgJnUgo5n22ZIFxLxfxRm4KMNedvRYxWk9lQ=
+	t=1711492213; cv=none; b=sY+74aRKcoldQkqmmpxSY3JQjcYDvOksn+a5d87TPrHFUxJs8vKvY6VEB922dIHUKAldX6qSpMVkUc9NJm+IphEyaO5f12VPblwIISHqpH6mjBxtG1ekGt1rDhLcq546RYZj6rz2do0SOv0sr5hbqInPp0gRTpZuBt5Xu27SR3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711492213; c=relaxed/simple;
-	bh=fJZONua1k722F9DXtUVDTt7l/NoLflwhpFArfpFPmMc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mVL9eOTjooXYnu1dACkQ18NgDiALFSxEAvCW8dmP+xn1aTxBjMO53QDK4JEHF/Wl4HbRuc6ruS/f8xV6HmMp4uJGW323XDWHNBP0FaU/WDWDh1ChZ8VN6IO/uZmwlQm6GHxj+Ne2i7/Jl/k0soswBrE6DoHXWnX0HA88lspkgYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VAu4Ayjy; arc=none smtp.client-ip=209.85.221.54
+	bh=w8Czqi2K8AT/tstKpsl1KE3WkzNI7atVD4WaXXsX2aU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ptFvEgaNdRy6swWy+UpvNDOKVelQ43XhNie0hRVBDix+YUxq/qxE42mCAkHHnx7eWMh/ApCO2ql7EAtF/nh3jymax4UNKlGbhF5TjorMNpC7hYC7pDqWEu818ejK6eRsJYm1EUKlc9qc/8t+TwDKihWj/TfHaAWuub+EKLH/Cek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JTmHKClI; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VAu4Ayjy"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-33ed4d8e9edso4466493f8f.2;
-        Tue, 26 Mar 2024 15:30:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JTmHKClI"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-33ecb04e018so4278907f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:30:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1711492210; x=1712097010; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Wa48IttRtjWW//hX/ph7skdP07JnPzQIrLm9sytmiaY=;
-        b=VAu4AyjyvdhyGcQIfxQRawVrY6KxWKD9HpKI5S/0/XuNLK+xnAdMV+GZw33SLBiRWw
-         NGGPigMbP1IhPaYhytdzD5AhsHhGPMO3ao0cAuQO4zua+mFo3XgxSPqVGqI4Y/wVmQNS
-         7l31c2NHpaKLR8km1r+MnNLqVaRwFV+dW0RcGauoY1dFyo2YNQi1T2uDeTMShV3sK7KM
-         m1hLnApMKCCRzteaJtcF/M7frwSF2rvV6vXya6t8vQ+eOe/SdrV/cT1QSwSMSLNW7ZwT
-         jOfO/7HdaISpeE4rmWtfbAjYEJtuTgLSQBadK/pETJtNvLVeh+xnfQ+CwRfxQ5L+2tpw
-         hKSA==
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=79Q4JSiG520z9H9GgKa1sOqwXXSclwi98WKQxVVkT0M=;
+        b=JTmHKClIKmTH/Gc0YI5B0VZfPin3ttzbdShwh+e9/pS1AZdf3cQPJrCBRypDEHiAip
+         wiPNqrMae9B3D+TxmaYrov0FjRPujWA1K1j3CwzPJseiDp8+nPrepguUCfcymxsQJtP9
+         w1IP2YFkcx9OVEV+iJBkU94OQUyAjCwnGqFl2ssCW1+YmylwRNJ6Io+3xxzw2ZElFonO
+         rHykHMktb3MY/aQne0BsKQ6QgqvmNe2APHsmm2Jr7esuSig6+bJJtuFyLnzAxka6gYvw
+         lnWQFhXRDa3Eeqn84IMwe7HlDrE/FtIRwqKqBByZHHv21KE1ssqzbKbeQg1Yk+rHSKlM
+         jZGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1711492210; x=1712097010;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Wa48IttRtjWW//hX/ph7skdP07JnPzQIrLm9sytmiaY=;
-        b=bJGoFp4DffcFqQucoU+G+t/dgPEYl51lRhgBm7tqrRQ3J1mAgZFzxch3Mul8S/8Aa7
-         mJsBUhnz5HflsjJS/HO+UxjEtsGoYii+RnVOp7XXez/Eqf7fXQvuD12Y9Xo0TC/RtjIu
-         uSeFykBHKZzBXI1wzG9eLJWxGy6wUWCha+EOs9A9p0PS6qrHQsBdLLxCyWYEF86jyOLU
-         Gh4aVDrjtrWqaQVjdce3LSHwEOla807FfMgc0zQKEOsgWpO3zVHdZ8QqrE9BzUZxm9Gg
-         RD4BOzgzP4SzupkK82N6u5KCaK4GRFKrYeI3muVSBnfAkpiI/+60GpZekxb9yTxHftDH
-         qn4w==
-X-Forwarded-Encrypted: i=1; AJvYcCV52Y16zkUxvvR4kFZGJoAniNW7BQfBeaeob5f2IAdS87AxSUdetVCAzmSgVJrbSCBJZr0f2Tx/11I5NuRFd5JTbWAk02TcDIlQp9C3OP6iiQ2p+3ansNvrLZYEi9GzPkDoOBqPOPV40zvDDXO5pD4C/iZAmrT+QsxzDb9peezI3yj1Ew8=
-X-Gm-Message-State: AOJu0YyGb4ataGUtivsbCGNDzapcoRrPb+225EuB1RR+SxYUIlHmVLP3
-	Kof72MtEPLaaOb10U6C1eCbgUkUjrnq/o8up0gru+laOFnmCmwWu
-X-Google-Smtp-Source: AGHT+IHNJXnk4Rb+kaIaJJ+gRnAXbAhv2vuLHJntLquc7vC7kHATLeErtiNu0Kn1h5Z4T7ckZVFdGQ==
-X-Received: by 2002:adf:f412:0:b0:33d:64c7:5619 with SMTP id g18-20020adff412000000b0033d64c75619mr2673028wro.70.1711492209711;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=79Q4JSiG520z9H9GgKa1sOqwXXSclwi98WKQxVVkT0M=;
+        b=Queis9UbtHEqibe6hnMVHVCd4tJQdOfXzxXSuVSgmAZxbKPzP1NWWiSRsd3KK1TlYW
+         E55y9r1FRF232HJU2lpkymG63MKQtFM/u1+0YzD2kvs/Qv9ZbNG7e214KvcxkihYsfYT
+         f96GysuqzqPbHHbOufj/9cT3mikB4PmCLhIhx2LzxagLqCKsgrmWaNQ/+4hEKMGSrdX3
+         0wqN/dQJmzWAKLHV6Y9/J2CoHLa3qoAZ15jqljsYGbgqBOLz+Jurm+FUyg5CdkuhrfLy
+         U5y6xg1NLLije881fZk5ZFSHa9C0zUMcX865gjywKVQ3e5TDnrtc8HI0Io0CgRCTOhdZ
+         5Kzw==
+X-Forwarded-Encrypted: i=1; AJvYcCXk2C///uAQFe23Fg+Q04AM1rZIIfPkKVRxUhKnrTsK1gDiUPs0FMo9OgiizMWSQG9iWJLqUggoZUDYFaSyrgsHPctCFh1lxSTsQldh
+X-Gm-Message-State: AOJu0YzUYnKGnpt9zNZ3CzMYdMx6p7ItatUMabB3oHpTjRqGpYtNHK29
+	GMX+vv2AUy+325qaF99qM4JDIByCvaNioYQpAqjPLx3uMnBV1oWSkH6xW7u6g0RAxpLC
+X-Google-Smtp-Source: AGHT+IH0zSgzCJUjVH92vO/QU4aWl7q+QMkDuJzT8hNDUaeajUA4XPo0MJSogLhPYHSfb6174eXpOg==
+X-Received: by 2002:a05:6000:5:b0:33e:c389:69ff with SMTP id h5-20020a056000000500b0033ec38969ffmr502235wrx.68.1711492209958;
         Tue, 26 Mar 2024 15:30:09 -0700 (PDT)
-Received: from prasmi.home ([2a00:23c8:2500:a01:90ec:252a:cdf5:54e9])
-        by smtp.gmail.com with ESMTPSA id bs20-20020a056000071400b00341de138a2esm600647wrb.94.2024.03.26.15.30.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+Received: from localhost (54-240-197-231.amazon.com. [54.240.197.231])
+        by smtp.gmail.com with ESMTPSA id h18-20020a5d4312000000b00341bdd87fcasm11049415wrq.103.2024.03.26.15.30.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
         Tue, 26 Mar 2024 15:30:09 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [RFC PATCH 09/13] pinctrl: renesas: pinctrl-rzg2l: Add function pointer for writing to PMC register
-Date: Tue, 26 Mar 2024 22:28:40 +0000
-Message-Id: <20240326222844.1422948-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240326222844.1422948-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20240326222844.1422948-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Puranjay Mohan <puranjay12@gmail.com>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Jisheng Zhang <jszhang@kernel.org>,
+ =?utf-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@kernel.org>, Pu Lehui <pulehui@huawei.com>, Daniel Borkmann
+ <daniel@iogearbox.net>, Zong Li <zong.li@sifive.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: Re: [PATCH 0/2] ftrace fixes
+In-Reply-To: <20240326203017.310422-1-alexghiti@rivosinc.com>
+References: <20240326203017.310422-1-alexghiti@rivosinc.com>
+Date: Tue, 26 Mar 2024 22:30:07 +0000
+Message-ID: <mb61psf0cvd74.fsf@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Alexandre Ghiti <alexghiti@rivosinc.com> writes:
 
-This patch introduces a function pointer, pmc_writeb(), in the
-struct rzg2l_pinctrl_data to facilitate writing to the PMC register. On
-the RZ/V2H(P) SoC, unlocking the PWPR.REGWE_A bit before writing to PMC
-registers is required, whereas this is not the case for the existing
-RZ/G2L family. This addition enables the reuse of existing code for
-RZ/V2H(P). Additionally, this patch populates this function pointer with
-appropriate data for existing SoCs.
+> Both were reported recently as there are efforts ongoing to
+> reimplement ftrace on riscv and both are independent of this rework,
+> so here they are.
+>
+> Alexandre Ghiti (2):
+>   riscv: Fix warning by declaring arch_cpu_idle() as noinstr
+>   riscv: Disable preemption when using patch_map()
+>
 
-Note that this functionality is only handled in rzg2l_gpio_request(), as
-PMC unlock/lock during PFC setup will be taken care of in the
-set_pfc_mode/pm_set_pfc callbacks.
+Thanks for this.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+Acked-by: Puranjay Mohan <puranjay12@gmail.com>
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 4cdebdbd8a04..3de97d5e198a 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -260,6 +260,7 @@ struct rzg2l_pinctrl_data {
- 	unsigned int n_variable_pin_cfg;
- 	void (*set_pfc_mode)(struct rzg2l_pinctrl *pctrl, u8 pin, u8 off, u8 func);
- 	void (*pm_set_pfc)(struct rzg2l_pinctrl *pctrl);
-+	void (*pmc_writeb)(struct rzg2l_pinctrl *pctrl, u8 val, void __iomem *addr);
- };
- 
- /**
-@@ -463,6 +464,11 @@ static const struct rzg2l_variable_pin_cfg r9a07g043f_variable_pin_cfg[] = {
- };
- #endif
- 
-+static void rzg2l_pmc_writeb(struct rzg2l_pinctrl *pctrl, u8 val, void __iomem *addr)
-+{
-+	writeb(val, addr);
-+}
-+
- static void rzg2l_pinctrl_set_pfc_mode(struct rzg2l_pinctrl *pctrl,
- 				       u8 pin, u8 off, u8 func)
- {
-@@ -1413,7 +1419,7 @@ static int rzg2l_gpio_request(struct gpio_chip *chip, unsigned int offset)
- 	/* Select GPIO mode in PMC Register */
- 	reg8 = readb(pctrl->base + PMC(off));
- 	reg8 &= ~BIT(bit);
--	writeb(reg8, pctrl->base + PMC(off));
-+	pctrl->data->pmc_writeb(pctrl, reg8, pctrl->base + PMC(off));
- 
- 	spin_unlock_irqrestore(&pctrl->lock, flags);
- 
-@@ -2678,6 +2684,7 @@ static struct rzg2l_pinctrl_data r9a07g043_data = {
- #endif
- 	.set_pfc_mode = &rzg2l_pinctrl_set_pfc_mode,
- 	.pm_set_pfc = &rzg2l_pinctrl_pm_setup_pfc,
-+	.pmc_writeb = &rzg2l_pmc_writeb,
- };
- 
- static struct rzg2l_pinctrl_data r9a07g044_data = {
-@@ -2691,6 +2698,7 @@ static struct rzg2l_pinctrl_data r9a07g044_data = {
- 	.hwcfg = &rzg2l_hwcfg,
- 	.set_pfc_mode = &rzg2l_pinctrl_set_pfc_mode,
- 	.pm_set_pfc = &rzg2l_pinctrl_pm_setup_pfc,
-+	.pmc_writeb = &rzg2l_pmc_writeb,
- };
- 
- static struct rzg2l_pinctrl_data r9a08g045_data = {
-@@ -2703,6 +2711,7 @@ static struct rzg2l_pinctrl_data r9a08g045_data = {
- 	.hwcfg = &rzg3s_hwcfg,
- 	.set_pfc_mode = &rzg2l_pinctrl_set_pfc_mode,
- 	.pm_set_pfc = &rzg2l_pinctrl_pm_setup_pfc,
-+	.pmc_writeb = &rzg2l_pmc_writeb,
- };
- 
- static const struct of_device_id rzg2l_pinctrl_of_table[] = {
--- 
-2.34.1
+for both patches.
 
+Puranjay
