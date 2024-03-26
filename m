@@ -1,283 +1,197 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC0E1327E0;
-	Tue, 26 Mar 2024 14:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711462421; cv=none; b=sMzFE33hiSqoYJafl2QZagIvIAFwsM0r0P7jS92kVLnwOlQsQRMDHuHilJewKyTDklCwDoJVOE3yjWXz34OY3B6J5H44ZhKUS2ymi9x22tfXhFfbEXOQhm1bm1fUXHJGaH0wu7l8MgFldswu4HtzxOyEv/oIDYBCay+qCn/Kd3M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711462421; c=relaxed/simple;
-	bh=Re1PH2hCu1e07IWF+1MrHP4Y/fqaSYonRixS5qqGasI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=llaxJYBMwXrVJIfML1+oqvUK35t9Sfn51LxEK2VNrNa8tq83Gi8R4JsemmfMysoXcO342vr3eosYGyBFS0TufQ12XD2M3r7t+ZIWNiBbMdPOz9oyiD78uilLXeWQhneoefvy3kc4q+ODLiSChe/IxqBC95Vcm9NLQ/f3pfHzdNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UJX0sduR; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD0B12A171
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 14:13:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711462430; cv=fail; b=OOdMoK4HqqWufhlWyQh+H8B2/UmMOUVJ2nL71U02HeF42YtRE0P8CDFH2aQFNCahZxYCyf8zsWjNYLUV3AxEM/uWHTbQxA+kDZZLgHQciS+Hwda2bonqp5WCzFpbGcSj7oAF3fMYIr6NJ7CuoUSax6pG4v8iqyFHrR539LktoLw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711462430; c=relaxed/simple;
+	bh=P3hue3XhAswrmTXsOBs5tbujZWYrc1KBtfTFv+gS0BE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=oKSy7GqvM4rsM5IZHng3SfVkG9knSNaGztPMEnEZuPSm1rFgm44IGuU9qfnDItKHwbomF6GETVmEL3uen/wCnGRQvWTUJ0jhkajNdmcx5W1FPAt1l59XPo+mF3wUCugDBqlq8jGoKQSmk/KFXnEONPlWyir2uS9/NJ0dMfikco8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a9aDDZD5; arc=fail smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UJX0sduR"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42QDEBtp013826;
-	Tue, 26 Mar 2024 14:13:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=83+4yrRZKKSRLAx7hjbP
-	3gzxe9Itr1K1moV9W4DXC3A=; b=UJX0sduRpA29fP2y4HK3VkCVfRYq6p98TU8A
-	WWEB9G+Sc69LV6K4Y51UXw1eezTeMxSIw2sMNR+CAlikulaMRTGyUJvDHxGUokb8
-	9cI+40LnsY55mCLsRCI2MAkwkc/p1piI+761mYkNVKspsdbAC8bOLA8xF4wt7NFz
-	5iaqL0G42sNgcAwEtRviO5U8WGaTJsG5IQomT74k6CcObLJUdBVcP0Oxs4N3CDdI
-	QiL4Nhd2pygmtmUtpB77Hy6QtW/vHvk1T5YmrtT5hcGYwd8hbhpZQtpVc5Gr+2yj
-	AxHPOk/uusi5KB4oKIPFGD8nywe8reLCoqt8h9Fa3O3Llql1zQ==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x3q0n1phh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 14:13:35 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42QEDYPm027930
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 14:13:34 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a9aDDZD5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711462428; x=1742998428;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=P3hue3XhAswrmTXsOBs5tbujZWYrc1KBtfTFv+gS0BE=;
+  b=a9aDDZD5IEPqvWbYjN0yM3GPF2U2lDzhPa3+Z6zbNz1Imj8WkTig+fKH
+   jsPa3dpIigrZOo6V5hqT9M2fOOOhf/tzFC5J2z3ufS2kU+1aV7stWhcpG
+   eK2mQf6Lleu7vgLpcPWfzfo45s7aIO4ZmxWtWYcnardi0uUZtqcTvX8ys
+   PIHZvjfJEGW69cahsZuEhnGwD3PvfOT1MacZgKoq7ZrjBx6emP7qNXATp
+   DabKcA/k+moja2poi3+ngu6346+SRVyE+gFjba/e4nbWz4QhL99Iw63Ev
+   Tm2WNaViTpDL4Nm5gI5PeND3pZLudlht331zpM5chgcbVQbg14/FJTRZw
+   g==;
+X-CSE-ConnectionGUID: yGYMHk1GTfSSLbdUApKybA==
+X-CSE-MsgGUID: WUvDU15VRpSmcXZ00LZhWA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="6725741"
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="6725741"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 07:13:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="20442108"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Mar 2024 07:13:47 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 26 Mar 2024 07:13:46 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 26 Mar 2024 07:13:46 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 26 Mar 2024 07:13:46 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.168)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 26 Mar 2024 07:13:32 -0700
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <mathieu.poirier@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        Mukesh Ojha <quic_mojha@quicinc.com>
-Subject: [PATCH v9 3/3] remoteproc: qcom: Remove minidump related data from qcom_common.c
-Date: Tue, 26 Mar 2024 19:43:14 +0530
-Message-ID: <1711462394-21540-3-git-send-email-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1711462394-21540-1-git-send-email-quic_mojha@quicinc.com>
-References: <1711462394-21540-1-git-send-email-quic_mojha@quicinc.com>
+ 15.1.2507.35; Tue, 26 Mar 2024 07:13:45 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Jb4ggFwtciositY+kyebsFmQ8wfU3JTRHRkATFeaimw5jB/Hj5MU89BkDjUZNPvjq2onfqZMgHKuqEM75Tsk6EN3rP12Tocy4SA6EOGODMwf144nbrJzsygYziuH3MH5fRII+HQVTm1gh8s0HVYy+DVggoaGA3oJm85qIkhYymxAGuzMwQMVdnTorvt52yi6uVqset7lVfGM1Xew2UipjCJlGYpXYuuCG+4n06z0YV5KGXw/vgBcD5e9kecXtlOk91+62ftf4lnN2VhFMsZ9tEfyxU86mCcuFDKZ7Y169oF468v2BS5SXlYUIFeK9XBx23gvtAWtQDsWGGChsKIGMQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=i7mQJ7dzB5NCeACYnl75jOb5PUAmLN2qnZcXvAAMc8Q=;
+ b=LAS9z4Tm+v7rteEUOUp8PMy9c7HjAN0y4/KIlSHTF/E9Ldm8LNy1F6A00B0sNN8CI5wL75Ko7lSDWu9hFkaQ9lrTwuCysr4PGZ1dblmbaAAKlKaHUZ66r8M6ieM/GTr99VqjyNSwr4Trw/02qnL0uyG4PAiktHAyAt2K4WbnLf5mRb52vJHy8NucOMMsGxf6AaWeWkhuPFm8TWgBYp4Bg60QX3NFJWmrQbqk0JeJt/rKvhiE0CU3cTD/cBEAk5SQc5mC2xxSuHigX2s1gfNSC2pdlMslWiWYFRuUkR2WBPeTOmC/7l8bDwAsltZU39mJ7HqRnsbSDxDgKeJs86yAZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
+ by CYXPR11MB8710.namprd11.prod.outlook.com (2603:10b6:930:da::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.31; Tue, 26 Mar
+ 2024 14:13:42 +0000
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::e9dd:320:976f:e257]) by CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::e9dd:320:976f:e257%4]) with mapi id 15.20.7409.031; Tue, 26 Mar 2024
+ 14:13:42 +0000
+Date: Tue, 26 Mar 2024 09:13:37 -0500
+From: Lucas De Marchi <lucas.demarchi@intel.com>
+To: Tiwei Bie <tiwei.btw@antgroup.com>
+CC: <richard@nod.at>, <anton.ivanov@cambridgegreys.com>,
+	<johannes@sipsolutions.net>, <jani.nikula@intel.com>,
+	<linux-um@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<intel-xe@lists.freedesktop.org>
+Subject: Re: [PATCH v3 8/9] um: Fix -Wmissing-prototypes warnings for
+ text_poke*
+Message-ID: <tvkjne4liqm3xx64jtkvqhlvvkwmiwlavif7gdh47xlzeltyp5@ymlqsvkdbppr>
+References: <20240306101925.1088870-1-tiwei.btw@antgroup.com>
+ <20240306101925.1088870-9-tiwei.btw@antgroup.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240306101925.1088870-9-tiwei.btw@antgroup.com>
+X-ClientProxiedBy: BYAPR02CA0065.namprd02.prod.outlook.com
+ (2603:10b6:a03:54::42) To CY5PR11MB6139.namprd11.prod.outlook.com
+ (2603:10b6:930:29::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: SmugVgATPULnEJy2gWCt7LJX01_ezQRk
-X-Proofpoint-ORIG-GUID: SmugVgATPULnEJy2gWCt7LJX01_ezQRk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-26_06,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- malwarescore=0 phishscore=0 bulkscore=0 spamscore=0 impostorscore=0
- priorityscore=1501 clxscore=1015 mlxscore=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2403210001 definitions=main-2403260099
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR11MB6139:EE_|CYXPR11MB8710:EE_
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vYiSDQYjt4hVLmLcGF/KdKieVMjWtuGUSzWC/bTvHSXBUI8rpGhJ0siKgZkQ1UXAD+Nrcy07jtE+MPfhqQ4xi35jxQQSkopOhjBl3GFRN5j1SL5NiRszo0WDItf+nm0KLUSI2C3t7gIkbO5gn5GyTCzDvaae7u+kBc5wEm9aXFPAg1huLPnHjJMkMP6haXAOV3O5uqvwvIiqUwBYsak9LUdaH9LI3ta7Bjom9GVBlSYyYMHvDtu7YigDIGXD/wVid98hQAmxxVyQrKtDb+yI13c2zri4CkvY9Nx5Qy/CVkCfrMZokIPIAkOYwsOdwTwjNtgC1Lx9L9hZFW0LIuKQgdkonjHTjav37pAh6XtLWApl9ty9+eIp8wMFffiBAHWPIrFF95Ev4q5Bk3+Xv0YfXYDCkTotw5/8ma7AH3/4CXD5gHgQTePv+Wt0Fq9krz6JjTpHTRheTSb+X8x+CQcht11RY667kwDO7b7J0HBCn/ac6ICBshmdYs0wdN850vZLkWzp1SPVR3B9lzgK6otLMXwnxKe/ZMJNGnhbEY/ANyTHLT9GNZKzpvxzxpU1If0LiHfsSgv3QjR5j3meRkWnmdzY/F80J4bjx+OBDZztD9eF6B0/xLK37JcTgzieZuFQ791TYkzmgTlTRwBMDmXUfIw4jMclwf7pdgE0QkOyINo/VDla8XIlou00pdsQLhnZmmMSXJWGK3dab7b2KaJ7qQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(27256008);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VVRrNC8wbWxIZjdYSi9LZnhSSzUvdkpNYSt6RnQ0NkFCaEJBTUtoWEZQQjMw?=
+ =?utf-8?B?K3MyRW5EQjZyNWxZYmpnRjdHbDBJaWJQb0dRbE10WWdQZXNkNTdnZ0ZaR3ZN?=
+ =?utf-8?B?cXMzb2YybTVkcDZjdHhpbmtRMEtQNlRNQXovdVV2WTlOMjJDYm5ta21TUy9D?=
+ =?utf-8?B?WStkOXYzZXhENklYOFRBblFqNUc3NU9mN1R4NUJmWjdkZjhFUFR4am1mUGw2?=
+ =?utf-8?B?alM0Vm1qK3MxakdyWUNhQzZ5RWwxTWNvVmxQM1ppaFlSQmhnNzJLaXBuY1pS?=
+ =?utf-8?B?V2ZXd0o2bzd5QWJvNWhUeXB6Y3hyMkpkNGlEaHZRTFpDOGFITzRBSjkvT0tL?=
+ =?utf-8?B?YjNDSmlmOXcyTzFnTXhBS1ZDc0xBcWh2aGhXSGUwRmhsWlhIb1A5TUlaZnFG?=
+ =?utf-8?B?UEZWVHkzU0REVUc4VitkQWJCS3NvTzV3S0tBRUhyVnhPckllWEtUVEo4dVVZ?=
+ =?utf-8?B?WWxURjRvU0ZnQ1ZCcS9wSFJad1h0LzJTTjFzdlZROGl6WitGUjFMb0xwK3NJ?=
+ =?utf-8?B?RTFSSkQ4dW0xUUx6ZGFXOXRMbE9nQ2g3Z3B6bFFzWi9LR2g4RzB2N3E5VjNn?=
+ =?utf-8?B?TDZaMCt5cDJkSWNBMTNvdXF4cStQQWFsSGhZdURXR0RTUlhuREFmTnRRNE9I?=
+ =?utf-8?B?KzNPLzQvRkpjM096TktYRGtZRFh4ODcvL25kWGxKSDNxUHJpNW9MSVcySGJL?=
+ =?utf-8?B?SGdyRTlPMTdUQmc3REVmUXlmRURwZDlSSWs3VEFaRGEwRzVYMWFsNHZQRzBh?=
+ =?utf-8?B?bEhUTkJNQnZmaVh1OVpVNFB2aUxNWGlHUjZRRWY2YTg1QVVWOHZjb2s1MVlV?=
+ =?utf-8?B?bnpsVTBWNE85ak5ZRmp6ZHpLTGZJcFNNdnY3d1hOOHd2VmpvbERFMEJycW5p?=
+ =?utf-8?B?V1dPZG1WakRlREd2R2IzRVEwVjM0VTBFMGJMZlA2VXhTQVYyT0dFb242di9i?=
+ =?utf-8?B?VCtrN3FQaDU5c3pYeTlNV1dpTkhnaDZKQzluL0hINHVvY3FrZjVVRzJMRkdK?=
+ =?utf-8?B?QVdscUVJOU5qYnArcXI1cFBBYzRaS1piRDB6MSsrRmJlaWFmSFJZYUMzVld2?=
+ =?utf-8?B?V1hFOUNuOXNHWTlxRmlkZ0c0djNDR1ozaGhSQ0NEcWdJcm5HN0syVUZSOGM1?=
+ =?utf-8?B?NVpQNitLdTNsR0ZsYjB3NDFDdjZqQ0xvLzZ3UEJxUHUxZ0JPSURYMWVwRnFR?=
+ =?utf-8?B?N2xTVVJZeHgwVHlYS09YWXAwaDBlYUsySjIrdW91MFd1ZnMydlVvWUlsSk1G?=
+ =?utf-8?B?YkZyRmNtYVdVWXFIRTcrTzNLNHhNVEl4d3JHWHZtMGdlUk9pTWFlZE51ZUwv?=
+ =?utf-8?B?bVdmSld0ZWVoRjJNMXV2b0pWZFpBVklWK3Q0QWVQV2I0bzlFMDNNZjQ3THZZ?=
+ =?utf-8?B?RGc0WUE1bUEyNkFldDFnaVV1bFRXclBwZVlxRFprUFExWVdrUS9NbVNLMkRs?=
+ =?utf-8?B?Ym9LT1hYcEpvanRRdGlEQmlvQjN0Q3N4cmNjeVp1Y0dSUHNKZU1hOUoyeThP?=
+ =?utf-8?B?akhlbnEyekFQaWZPZmlEdVdYbjIvZllEclc2c2lhMHBVRlBSUTBYeUdyVVll?=
+ =?utf-8?B?VzJkZHBPZThSMWtqS1JYS0s4Y2ZBS2NQNGY4M1RWZ3Y3eG43SFZqdG5Vak01?=
+ =?utf-8?B?ZGNjRVU3K1dKazRTQytWZTlJSVNoc0cyRnZLUmsycXRCZE80NmVUNkhWWStC?=
+ =?utf-8?B?U0R5U3NVOG51ems3MGhhZVNUSkN0QytRUDBSbWFQZElsdnFDMEhYR0FIZTky?=
+ =?utf-8?B?Qm5CT013ck5zWEpQVG1rOVVoME1JY2dReVNTUnBPOHZCS05rS1E5NXkwU0dw?=
+ =?utf-8?B?dTd0cXJWaE15TlFndnFMWDJkSzQwTUZDeXdUeWlRY2NGOGFZaDBpY3owd3ho?=
+ =?utf-8?B?UWZjdllRejFsdmg3R2xVWEtjelQvVHBhajBpRGhTckJzYk9ic1I4QzVvRTk3?=
+ =?utf-8?B?MUFyYThyWk9KeVFpN3A2L0Fsd1RKWVVkYVpmOU5aU3NNSjQvUHlYOG9zbmdv?=
+ =?utf-8?B?QWkwUm9Peit1V1ZhYk1TbUkvRnB4N3JRQUwwRnUxYmRxUUxqMlVRZG5jUUI2?=
+ =?utf-8?B?VU9KbVBESFpLYk05ZUdKekpoNXJHVXlyZDdUbzhlc3VRTXNVbmFNeVZqL3dh?=
+ =?utf-8?B?YkoxOUFvcmhKOEJpRURuNmJ5cEs0NGVXcVVMK0FSR0ZVOHdKQ3UvMERjWks0?=
+ =?utf-8?B?Y1E9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed9043ce-926c-42b1-3bee-08dc4d9ef0a6
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 14:13:41.9826
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 40k3qGN5eTLWLoFZcF8q7QLx9MyvvudU8OnBOZnfvUCog7O8K6C/kU+jD4Rzk05AO2Bo7w3ysQbzsbEiqMZjttpHTccSEiVPEQNC+dINlWI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR11MB8710
+X-OriginatorOrg: intel.com
 
-As minidump specific data structure and functions move under
-config QCOM_RPROC_MINIDUMP, so remove minidump specific data
-from driver/remoteproc/qcom_common.c .
+On Wed, Mar 06, 2024 at 06:19:24PM +0800, Tiwei Bie wrote:
+>The prototypes for text_poke* are declared in asm/text-patching.h
+>under arch/x86/include/. It's safe to include this header, as it's
+>UML-aware (by checking CONFIG_UML_X86).
 
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
----
-Changes in v9:
- - Change in patch order.
- - rebased it.
+but would it work when building on something other than x86? Or is that
+not a thing?
 
-v8: https://lore.kernel.org/lkml/20240131105734.13090-1-quic_mojha@quicinc.com/
-v7: https://lore.kernel.org/lkml/20240109153200.12848-1-quic_mojha@quicinc.com/
-v6: https://lore.kernel.org/lkml/1700864395-1479-1-git-send-email-quic_mojha@quicinc.com/
-v5: https://lore.kernel.org/lkml/1694429639-21484-1-git-send-email-quic_mojha@quicinc.com/
-v4: https://lore.kernel.org/lkml/1687955688-20809-1-git-send-email-quic_mojha@quicinc.com/
+Lucas De Marchi
 
- drivers/remoteproc/qcom_common.c | 160 ---------------------------------------
- 1 file changed, 160 deletions(-)
-
-diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
-index 03e5f5d533eb..085fd73fa23a 100644
---- a/drivers/remoteproc/qcom_common.c
-+++ b/drivers/remoteproc/qcom_common.c
-@@ -17,7 +17,6 @@
- #include <linux/rpmsg/qcom_smd.h>
- #include <linux/slab.h>
- #include <linux/soc/qcom/mdt_loader.h>
--#include <linux/soc/qcom/smem.h>
- 
- #include "remoteproc_internal.h"
- #include "qcom_common.h"
-@@ -26,61 +25,6 @@
- #define to_smd_subdev(d) container_of(d, struct qcom_rproc_subdev, subdev)
- #define to_ssr_subdev(d) container_of(d, struct qcom_rproc_ssr, subdev)
- 
--#define MAX_NUM_OF_SS           10
--#define MAX_REGION_NAME_LENGTH  16
--#define SBL_MINIDUMP_SMEM_ID	602
--#define MINIDUMP_REGION_VALID		('V' << 24 | 'A' << 16 | 'L' << 8 | 'I' << 0)
--#define MINIDUMP_SS_ENCR_DONE		('D' << 24 | 'O' << 16 | 'N' << 8 | 'E' << 0)
--#define MINIDUMP_SS_ENABLED		('E' << 24 | 'N' << 16 | 'B' << 8 | 'L' << 0)
--
--/**
-- * struct minidump_region - Minidump region
-- * @name		: Name of the region to be dumped
-- * @seq_num:		: Use to differentiate regions with same name.
-- * @valid		: This entry to be dumped (if set to 1)
-- * @address		: Physical address of region to be dumped
-- * @size		: Size of the region
-- */
--struct minidump_region {
--	char	name[MAX_REGION_NAME_LENGTH];
--	__le32	seq_num;
--	__le32	valid;
--	__le64	address;
--	__le64	size;
--};
--
--/**
-- * struct minidump_subsystem - Subsystem's SMEM Table of content
-- * @status : Subsystem toc init status
-- * @enabled : if set to 1, this region would be copied during coredump
-- * @encryption_status: Encryption status for this subsystem
-- * @encryption_required : Decides to encrypt the subsystem regions or not
-- * @region_count : Number of regions added in this subsystem toc
-- * @regions_baseptr : regions base pointer of the subsystem
-- */
--struct minidump_subsystem {
--	__le32	status;
--	__le32	enabled;
--	__le32	encryption_status;
--	__le32	encryption_required;
--	__le32	region_count;
--	__le64	regions_baseptr;
--};
--
--/**
-- * struct minidump_global_toc - Global Table of Content
-- * @status : Global Minidump init status
-- * @md_revision : Minidump revision
-- * @enabled : Minidump enable status
-- * @subsystems : Array of subsystems toc
-- */
--struct minidump_global_toc {
--	__le32				status;
--	__le32				md_revision;
--	__le32				enabled;
--	struct minidump_subsystem	subsystems[MAX_NUM_OF_SS];
--};
--
- struct qcom_ssr_subsystem {
- 	const char *name;
- 	struct srcu_notifier_head notifier_list;
-@@ -90,110 +34,6 @@ struct qcom_ssr_subsystem {
- static LIST_HEAD(qcom_ssr_subsystem_list);
- static DEFINE_MUTEX(qcom_ssr_subsys_lock);
- 
--static void qcom_minidump_cleanup(struct rproc *rproc)
--{
--	struct rproc_dump_segment *entry, *tmp;
--
--	list_for_each_entry_safe(entry, tmp, &rproc->dump_segments, node) {
--		list_del(&entry->node);
--		kfree(entry->priv);
--		kfree(entry);
--	}
--}
--
--static int qcom_add_minidump_segments(struct rproc *rproc, struct minidump_subsystem *subsystem,
--			void (*rproc_dumpfn_t)(struct rproc *rproc, struct rproc_dump_segment *segment,
--				void *dest, size_t offset, size_t size))
--{
--	struct minidump_region __iomem *ptr;
--	struct minidump_region region;
--	int seg_cnt, i;
--	dma_addr_t da;
--	size_t size;
--	char *name;
--
--	if (WARN_ON(!list_empty(&rproc->dump_segments))) {
--		dev_err(&rproc->dev, "dump segment list already populated\n");
--		return -EUCLEAN;
--	}
--
--	seg_cnt = le32_to_cpu(subsystem->region_count);
--	ptr = ioremap((unsigned long)le64_to_cpu(subsystem->regions_baseptr),
--		      seg_cnt * sizeof(struct minidump_region));
--	if (!ptr)
--		return -EFAULT;
--
--	for (i = 0; i < seg_cnt; i++) {
--		memcpy_fromio(&region, ptr + i, sizeof(region));
--		if (le32_to_cpu(region.valid) == MINIDUMP_REGION_VALID) {
--			name = kstrndup(region.name, MAX_REGION_NAME_LENGTH - 1, GFP_KERNEL);
--			if (!name) {
--				iounmap(ptr);
--				return -ENOMEM;
--			}
--			da = le64_to_cpu(region.address);
--			size = le64_to_cpu(region.size);
--			rproc_coredump_add_custom_segment(rproc, da, size, rproc_dumpfn_t, name);
--		}
--	}
--
--	iounmap(ptr);
--	return 0;
--}
--
--void qcom_minidump(struct rproc *rproc, unsigned int minidump_id,
--		void (*rproc_dumpfn_t)(struct rproc *rproc,
--		struct rproc_dump_segment *segment, void *dest, size_t offset,
--		size_t size))
--{
--	int ret;
--	struct minidump_subsystem *subsystem;
--	struct minidump_global_toc *toc;
--
--	/* Get Global minidump ToC*/
--	toc = qcom_smem_get(QCOM_SMEM_HOST_ANY, SBL_MINIDUMP_SMEM_ID, NULL);
--
--	/* check if global table pointer exists and init is set */
--	if (IS_ERR(toc) || !toc->status) {
--		dev_err(&rproc->dev, "Minidump TOC not found in SMEM\n");
--		return;
--	}
--
--	/* Get subsystem table of contents using the minidump id */
--	subsystem = &toc->subsystems[minidump_id];
--
--	/**
--	 * Collect minidump if SS ToC is valid and segment table
--	 * is initialized in memory and encryption status is set.
--	 */
--	if (subsystem->regions_baseptr == 0 ||
--	    le32_to_cpu(subsystem->status) != 1 ||
--	    le32_to_cpu(subsystem->enabled) != MINIDUMP_SS_ENABLED) {
--		return rproc_coredump(rproc);
--	}
--
--	if (le32_to_cpu(subsystem->encryption_status) != MINIDUMP_SS_ENCR_DONE) {
--		dev_err(&rproc->dev, "Minidump not ready, skipping\n");
--		return;
--	}
--
--	/**
--	 * Clear out the dump segments populated by parse_fw before
--	 * re-populating them with minidump segments.
--	 */
--	rproc_coredump_cleanup(rproc);
--
--	ret = qcom_add_minidump_segments(rproc, subsystem, rproc_dumpfn_t);
--	if (ret) {
--		dev_err(&rproc->dev, "Failed with error: %d while adding minidump entries\n", ret);
--		goto clean_minidump;
--	}
--	rproc_coredump_using_sections(rproc);
--clean_minidump:
--	qcom_minidump_cleanup(rproc);
--}
--EXPORT_SYMBOL_GPL(qcom_minidump);
--
- static int glink_subdev_start(struct rproc_subdev *subdev)
- {
- 	struct qcom_rproc_glink *glink = to_glink_subdev(subdev);
--- 
-2.7.4
-
+>
+>This will address below -Wmissing-prototypes warnings:
+>
+>arch/um/kernel/um_arch.c:461:7: warning: no previous prototype for ‘text_poke’ [-Wmissing-prototypes]
+>arch/um/kernel/um_arch.c:473:6: warning: no previous prototype for ‘text_poke_sync’ [-Wmissing-prototypes]
+>
+>Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
+>---
+> arch/um/kernel/um_arch.c | 1 +
+> 1 file changed, 1 insertion(+)
+>
+>diff --git a/arch/um/kernel/um_arch.c b/arch/um/kernel/um_arch.c
+>index 7a9820797eae..e95f805e5004 100644
+>--- a/arch/um/kernel/um_arch.c
+>+++ b/arch/um/kernel/um_arch.c
+>@@ -23,6 +23,7 @@
+> #include <asm/cpufeature.h>
+> #include <asm/sections.h>
+> #include <asm/setup.h>
+>+#include <asm/text-patching.h>
+> #include <as-layout.h>
+> #include <arch.h>
+> #include <init.h>
+>-- 
+>2.34.1
+>
