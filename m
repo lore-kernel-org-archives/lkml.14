@@ -1,140 +1,88 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BC06F060
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 10:11:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9EF53809;
+	Tue, 26 Mar 2024 10:14:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711447863; cv=none; b=emKKj6nVQ7Q+Om4Kjd/z4P6Ty4DOiCBtdMaVfPNwTxYoDRp+8n4KIHsUOGkNQB96X2Goi18iZa5XUE9ufeqEfAGQsCrW+msGxorB+NEOlnuq66Cx5Xu/whHidLtPuJcongzcTIBM5+bNPFgyf8XceV8g9lVWKfZkhHctJzqBsdg=
+	t=1711448048; cv=none; b=YIrDWgtUnjqXSIELUHX3mSIhwHSFZU/b6Jm+A/0SE7/kELGiVSIEf7fH/E+vCIFW/sN/I79Uc+fN+04PaPR/D3QAONliWe37w8+NFqKnJc8IRAX7pvw3Xs10nw84pfYJeWcdX5xfrOhEvrlEt1UNr1bRMGZALUFz0wEktrSU2RY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711447863; c=relaxed/simple;
-	bh=luF0DePhOxP9hOcT/xfXxKnxXQoPebGiYwffl+rfHkI=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=Mmj7SJztZhx1SOIGsMbr1KXnGz2W66ckI8iBaZIww4uOAXEkwyvXyZCTse0Z3JIGKYjIHe+k1yJNIW5UG3BlIM3X1s5rHGb8P6ZBe8v6Bd5u22Yjwt300D7VI0LhZKuA6Ye/8DERDYJQep4xDfFYv+SApZuAEH7CVjNOIC3MXYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=napLaSpR; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1711448048; c=relaxed/simple;
+	bh=CXRVBJsyRhRTDPgc71oICHaEoURlLv0EZ/hQT0uJ0l0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qFv/WxLNYv/I6KYe6CFBktbn9lmmM+lRN6aOgnU/Z+LpbtEccWSpizjuTW3xIzFz5G1GTIILi0ix9meiFgouKB9c1HFm82+rrinhUeSRxeQdS37AsEVSXTEF63xaj+rzpxpw/FvRAYnWXyyuRismOp0LZmQdXPpNkoGfRrEfRj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJToKba1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="napLaSpR"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e6b22af648so4153173b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 03:11:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1711447860; x=1712052660; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IiNYGBSxUvNgdPnHEJE/xU3metbwCHzJuKT0A3W7MYI=;
-        b=napLaSpR4hUxSSrL5css7LToxJ7dJ9Ld/wYk1saMy7j2g2mJ+1JPH/+8oY+YHHhFO1
-         rCepsIh3Cpbw9Ar8cDlhbo8Dgkj8Cb24t6lLgcLGQ6QszFELu4s2lHeRy7RtK0iFx5eQ
-         NzBVHbH8skQlYyV749zEdIwznvdarL0yMDSzflBGlr4yfgMdjf+D+MFU2O1sgpHGKcOu
-         5h+gm6MsMm/VZQ5VxoE7beJGRSv2VqgUaV7JOEPeDbJQQ9LTKk8xmZka3VVqE6SGg63p
-         x5KzlK0aaumwAoBaSsCr+vaInki7q9hOD3Q75mJXGyuOtrdidTMfiR+ywDzC0tW5o5s7
-         03Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711447860; x=1712052660;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IiNYGBSxUvNgdPnHEJE/xU3metbwCHzJuKT0A3W7MYI=;
-        b=nb8GZSqg3Nkzl/BS80oCEcKePJN6Tu3anhCnu8Tywe0TFQgye7PE5sn1UW9HEgj+TS
-         GTsA0nctQGCQdRrlzlZ4alkbrXVPQxl60BMUDQVEWy8yvijC8MQK+bo5GAo7VudGjaDi
-         7idqfkhsyckygEWwF8YM+Ow4/5kRKG5bFgd4ylLzZeXysapOuT4D5TfC6RW5qnTaW2Gr
-         /UeLEjyyudTTI6hchij/6hNRlMVezSDVBxSvo3iDb0tYkpgsOZ94UHx99oP/kEz87UN1
-         On4x9c8PyM0svv5Q4zMY3Gkt62VQW8gC4BaMaM4LJ8AKqGtdBmK8UFczUvfA8hk5w5kg
-         Ny1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUlfuTGzScKX8+MgUpXt68BS+9JxTdnEMAXMeYIqsPIj8nqqm9YUIddUh5qTpDVp3av6IcjhfhvRujwyUTbqhMBUT5f40n3VG1XG6GD
-X-Gm-Message-State: AOJu0Yz1VWty3rQOR+6IBf6A+0ljDGMRlKmeqCn8t3+TBsqo303EbflP
-	OprtULqRxXdxOxOSDs2SElZ0viY/nj42rDa6F3mTrLwjHSYrDq6btec3+TnFUYM=
-X-Google-Smtp-Source: AGHT+IEqMrxzRfAQyyX5BWY+o9kj4fYO6R0c9EdEEs+a7j40uL9Tbsf27ODXSAN5Mbodl3JqSYvUug==
-X-Received: by 2002:a17:902:e842:b0:1e0:188c:ad4f with SMTP id t2-20020a170902e84200b001e0188cad4fmr1519731plg.26.1711447859767;
-        Tue, 26 Mar 2024 03:10:59 -0700 (PDT)
-Received: from hsinchu26.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
-        by smtp.gmail.com with ESMTPSA id c7-20020a170903234700b001e0e2b848dbsm1633240plh.83.2024.03.26.03.10.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 03:10:59 -0700 (PDT)
-From: Yong-Xuan Wang <yongxuan.wang@sifive.com>
-To: linux-riscv@lists.infradead.org,
-	kvm-riscv@lists.infradead.org
-Cc: greentime.hu@sifive.com,
-	vincent.chen@sifive.com,
-	Yong-Xuan Wang <yongxuan.wang@sifive.com>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] RISC-V: KVM: Avoid lock inversion in SBI_EXT_HSM_HART_START
-Date: Tue, 26 Mar 2024 18:10:52 +0800
-Message-Id: <20240326101054.13088-1-yongxuan.wang@sifive.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VJToKba1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBD4AC433C7;
+	Tue, 26 Mar 2024 10:14:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711448047;
+	bh=CXRVBJsyRhRTDPgc71oICHaEoURlLv0EZ/hQT0uJ0l0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VJToKba1wrDYVyVbMHpJJJg5u+Vr6rFDvsc3BPJAYX78QNGBGvcvo/yH3bO4e2J5A
+	 ghogY/09MVHc0YE7MDLk35xLz1e1e8Vgo+u6o+21V2qiD9MUKj/wl31X3ClsnhvIUN
+	 P48EaBsFTbD71blJW0UM/svNd627HOvcQYiA/wWnP9wrWiNvXPckZ0G2rnQfKk3V44
+	 ryxL+XcZyEbZRJcGghmHHi15zrz6JZV/iPOFBeMT9S0ju+g/j0qhocHj8BCNzgOtwP
+	 pFqeueF6LmmAA4UN40Q/6/dUS+3DRyxE6BNlJfyXz2JbJ+sujcPj72Cay3GEVh4Boq
+	 bJF/xvC2jUvUg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rp3ot-000000007YM-1dnr;
+	Tue, 26 Mar 2024 11:14:15 +0100
+Date: Tue, 26 Mar 2024 11:14:15 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Wesley Cheng <quic_wcheng@quicinc.com>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, quic_ppratap@quicinc.com,
+	quic_jackp@quicinc.com
+Subject: Re: [PATCH v16 7/9] usb: dwc3: qcom: Refactor IRQ handling in glue
+ driver
+Message-ID: <ZgKf985WGJ2gpffF@hovoldconsulting.com>
+References: <20240307062052.2319851-1-quic_kriskura@quicinc.com>
+ <20240307062052.2319851-8-quic_kriskura@quicinc.com>
+ <ZgFyukBXIIwZo7v-@hovoldconsulting.com>
+ <50926b91-3c61-4dbf-85c9-7558ab96e628@quicinc.com>
+ <ZgF6zvaT2OkrbkHK@hovoldconsulting.com>
+ <807015d4-c5ed-4e04-9948-fd1ff894a04e@quicinc.com>
+ <ZgHUR-Rk-YzqiTtt@hovoldconsulting.com>
+ <7b4a6d7f-76ad-471f-a178-dc598fbc0e22@quicinc.com>
+ <ZgKHNuziNtBhGO9V@hovoldconsulting.com>
+ <ec3bf11a-0dc2-4313-ba93-c81494c4cc38@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ec3bf11a-0dc2-4313-ba93-c81494c4cc38@quicinc.com>
 
-Documentation/virt/kvm/locking.rst advises that kvm->lock should be
-acquired outside vcpu->mutex and kvm->srcu. However, when KVM/RISC-V
-handling SBI_EXT_HSM_HART_START, the lock ordering is vcpu->mutex,
-kvm->srcu then kvm->lock.
+On Tue, Mar 26, 2024 at 03:36:27PM +0530, Krishna Kurapati PSSNV wrote:
+> On 3/26/2024 1:58 PM, Johan Hovold wrote:
+> > On Tue, Mar 26, 2024 at 01:41:52PM +0530, Krishna Kurapati PSSNV wrote:
+> >> On 3/26/2024 1:15 AM, Johan Hovold wrote:
+> >>
+> >>> Just change the logic in dwc3_qcom_find_num_ports() so that it returns 1
+> >>> if "dp_hs_phy_1" is missing, and otherwise you determine the number of
+> >>> ports by iterating from 2 to DWC3_MAX_PORTS - 1.
 
-Although the lockdep checking no longer complains about this after commit
-f0f44752f5f6 ("rcu: Annotate SRCU's update-side lockdep dependencies"),
-it's necessary to replace kvm->lock with a new dedicated lock to ensure
-only one hart can execute the SBI_EXT_HSM_HART_START call for the target
-hart simultaneously.
+> With the above fixed, can I put your RB tag given on [1] or will you be 
+> providing another one. Asking because when you gave that RB, this 
+> malformed DT thing wasn't there. So wanted to check with you before 
+> pushing the code.
 
-Signed-off-by: Yong-Xuan Wang <yongxuan.wang@sifive.com>
----
- arch/riscv/include/asm/kvm_host.h | 1 +
- arch/riscv/kvm/vcpu.c             | 1 +
- arch/riscv/kvm/vcpu_sbi_hsm.c     | 5 ++---
- 3 files changed, 4 insertions(+), 3 deletions(-)
+Thanks for checking. I'm fine with you adding the tag after fixing the
+above now that we've discussed it.
 
-diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-index 484d04a92fa6..537099413344 100644
---- a/arch/riscv/include/asm/kvm_host.h
-+++ b/arch/riscv/include/asm/kvm_host.h
-@@ -254,6 +254,7 @@ struct kvm_vcpu_arch {
- 
- 	/* VCPU power-off state */
- 	bool power_off;
-+	struct mutex hsm_start_lock;
- 
- 	/* Don't run the VCPU (blocked) */
- 	bool pause;
-diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-index b5ca9f2e98ac..4d89b5b5afbf 100644
---- a/arch/riscv/kvm/vcpu.c
-+++ b/arch/riscv/kvm/vcpu.c
-@@ -119,6 +119,7 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- 	spin_lock_init(&vcpu->arch.hfence_lock);
- 
- 	/* Setup reset state of shadow SSTATUS and HSTATUS CSRs */
-+	mutex_init(&vcpu->arch.hsm_start_lock);
- 	cntx = &vcpu->arch.guest_reset_context;
- 	cntx->sstatus = SR_SPP | SR_SPIE;
- 	cntx->hstatus = 0;
-diff --git a/arch/riscv/kvm/vcpu_sbi_hsm.c b/arch/riscv/kvm/vcpu_sbi_hsm.c
-index 7dca0e9381d9..b528f6e880ae 100644
---- a/arch/riscv/kvm/vcpu_sbi_hsm.c
-+++ b/arch/riscv/kvm/vcpu_sbi_hsm.c
-@@ -71,14 +71,13 @@ static int kvm_sbi_ext_hsm_handler(struct kvm_vcpu *vcpu, struct kvm_run *run,
- {
- 	int ret = 0;
- 	struct kvm_cpu_context *cp = &vcpu->arch.guest_context;
--	struct kvm *kvm = vcpu->kvm;
- 	unsigned long funcid = cp->a6;
- 
- 	switch (funcid) {
- 	case SBI_EXT_HSM_HART_START:
--		mutex_lock(&kvm->lock);
-+		mutex_lock(&vcpu->arch.hsm_start_lock);
- 		ret = kvm_sbi_hsm_vcpu_start(vcpu);
--		mutex_unlock(&kvm->lock);
-+		mutex_unlock(&vcpu->arch.hsm_start_lock);
- 		break;
- 	case SBI_EXT_HSM_HART_STOP:
- 		ret = kvm_sbi_hsm_vcpu_stop(vcpu);
--- 
-2.17.1
-
+Johan
