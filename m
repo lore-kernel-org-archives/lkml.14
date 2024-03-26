@@ -1,64 +1,55 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754287441F
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 12:21:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD22971B5E
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 12:21:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711455691; cv=none; b=P8sAXUvBxLhxpnG+feGzP6ZDmNG1zIN9k+7LMeigdFkuwJSS+8cuJhu4AfA9S1ajk8ldycadpDlEMQh6fEDVkP25dkBMddlPODEj+WdGQW5lQD0inRlwwhj3ys89XMMNgeUavAuoOVh/IemMQxmwPD2yPepfc4vHTPXxAgIL0SQ=
+	t=1711455710; cv=none; b=b5IbVHOEZ8ANY1HqAiqqBzLETDccI5WMWgj8Zyr3mrfoRPyMsh1AELoZDwosSWyOpmhWPQtArPSsq6c8erMJLT21IYGqgqFGtLmIKI3GMuoQm5ZOiVOWb8W83EIPSDPRMXqfxfvcHsPaQIMQORhnkqYJA8qQpe3RoEorUioCMVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711455691; c=relaxed/simple;
-	bh=fB1NRi5e23WxYWmcslguhVN6x/28OSeS/uzIQxRcQ3I=;
+	s=arc-20240116; t=1711455710; c=relaxed/simple;
+	bh=+HULUAtlNQ3MvWiH8WLL0jBlfjkDhhBdZ5vAO5ZkBLY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NdbaHPR0iRdlrEwZNnrBZmkFG2bdmj2wF2p3PdPjhjKdg6vLJe70FVY86CBFmCRr82MRNQF3A30yZ04gw33op9iBFAhBDUjJ0ACKZPpYVlgyowA6qI6dYstS2HowKtPLMP0hKIU+YsOeR33CpTenC0KG6/QRB5Rj5+hRFWH46lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mtpuVFXI; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=iaLjo15EdUiU/gOk8q05nNBzV+vkAlA07tLicA/ixSZoqobUHhgRmReER31jATPijrDEHWSZoM/k+EAlJ/IH86oBB0AGGE8L2BoUMHVAcy8WnKlYWAi6q9RvWfVxSKMFJtFCWZtawIKQpncCV/MBTnjj0QjV8E5dyFHltBE6990=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Md/x4yH8; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mtpuVFXI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711455689; x=1742991689;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fB1NRi5e23WxYWmcslguhVN6x/28OSeS/uzIQxRcQ3I=;
-  b=mtpuVFXI5HCHGJeLc4aFeRurXIpoxjGmwxdav+L7FcvJ1HBgslWUU6T7
-   b28GCLZbXySN0arGmCh+/zm2DayfTjWIyCpSvGpayJYu/98k6ruIU3yrx
-   k2jgJtjEEKTamCAC68oAW/0if+qdqdhcHT/BAt/sQXgTTT3wdehOXJpVo
-   FW7w38dI5b6Moyi27PfzaDRgtOfM3OBAMb/ZJGoQZg2Tp8FrmCZl8IsFR
-   YEXVSTTmxBbGJmqyCq7YfK9oz5WfIPc7GpaXAD7ZoElvPi/4XiS4KuyoA
-   AQ9FKmXHkbTFEoAdcjA7F3D7ZSPRKSEo+eWIK2nKjAQZOyvaRvnWBBShp
-   g==;
-X-CSE-ConnectionGUID: 8KJvAbCLQzmMEmsypb5Hlw==
-X-CSE-MsgGUID: bVBazYFYTLyYBCkJx1cRNQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="6333945"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="6333945"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 05:21:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="937072476"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="937072476"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Mar 2024 05:21:25 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 942D3E7; Tue, 26 Mar 2024 14:21:24 +0200 (EET)
-Date: Tue, 26 Mar 2024 14:21:24 +0200
-From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
-To: "Huang, Kai" <kai.huang@intel.com>
-Cc: "tglx@linutronix.de" <tglx@linutronix.de>, 
-	"mingo@redhat.com" <mingo@redhat.com>, "Hansen, Dave" <dave.hansen@intel.com>, 
-	"bp@alien8.de" <bp@alien8.de>, 
-	"sathyanarayanan.kuppuswamy@linux.intel.com" <sathyanarayanan.kuppuswamy@linux.intel.com>, "hpa@zytor.com" <hpa@zytor.com>, 
-	"Reshetova, Elena" <elena.reshetova@intel.com>, "seanjc@google.com" <seanjc@google.com>, 
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "x86@kernel.org" <x86@kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv2 4/4] x86/tdx: Enable ENUM_TOPOLOGY
-Message-ID: <mh5bwjdwzg5kg6b4mqnxpu2ri5765ilgoskefdnbkgyhzqymqg@elweoth2mh6j>
-References: <20240325104607.2653307-1-kirill.shutemov@linux.intel.com>
- <20240325104607.2653307-5-kirill.shutemov@linux.intel.com>
- <ea00b63e4e7f27dfb35b8b5947bd0951039db9bd.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Md/x4yH8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=FZXEPvoG9Rls8PIO0odIAJYGvb7rtlOkN7UCiLUWwBk=; b=Md/x4yH8d9E5HoKw0wvTvsk+wZ
+	FJOVgTvLxA35NtYaTkHPJM2R941CMY/A8v/mwdaj/fObKchdnHAfY7IntSz9j2um8iKECpAcumTDl
+	HaA0ESdg3j0QFb3gtJDnnaGCsYNZ5GRylQavSE5uUQ+1t+W6B4GnaJmUZAuSORsEk3C1OA5zCQsPr
+	2B8x8/dhmDdMqGPArmN7PCawWhksFelmn8lq+yr2hJayEfOJcF12krpr9YKfzACqx6ojX36RT4g6M
+	hQzzM7xCt+b8u92+rv9c/pQY9LUV1UIN46M30Ohmd6CpurctTmLZ2ytLcKpecm9xbvUhmUf3L8hRA
+	k5eILGxQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rp5oC-00000001FQ5-46kw;
+	Tue, 26 Mar 2024 12:21:41 +0000
+Date: Tue, 26 Mar 2024 12:21:40 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Zhaoyang Huang <huangzhaoyang@gmail.com>
+Cc: =?utf-8?B?6buE5pyd6ZizIChaaGFveWFuZyBIdWFuZyk=?= <zhaoyang.huang@unisoc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	=?utf-8?B?5bq357qq5ruoIChTdGV2ZSBLYW5nKQ==?= <Steve.Kang@unisoc.com>
+Subject: Re: summarize all information again at bottom//reply: reply: [PATCH]
+ mm: fix a race scenario in folio_isolate_lru
+Message-ID: <ZgK91II_eSYY6D2F@casper.infradead.org>
+References: <Zfg0WLrcOmCtdn_M@casper.infradead.org>
+ <CAGWkznGhiuzkqfeewNq-ykKehvFTBjH2v_==xAS2_7iFqsFk5A@mail.gmail.com>
+ <Zfj_-LbiIsAVWcPX@casper.infradead.org>
+ <CAGWkznHOWVPpKHOuvvDF2zppkTT0_x4WyJ5S75j+EghhZmEDdg@mail.gmail.com>
+ <ZfwpuRjAZV07_lc3@casper.infradead.org>
+ <CAGWkznFtez1fj2L2CtFnA5k-Tn4WtxmDOw=fjOWPg-ZGJX=VWw@mail.gmail.com>
+ <Zfz4_GJAHRInB8ul@casper.infradead.org>
+ <CAGWkznEzpcWi4oXVn_WFahnQj3dHcwc_4VW6m1Ss-KJ8mD3F3Q@mail.gmail.com>
+ <ZgDt9mwN-Py5Y-xr@casper.infradead.org>
+ <CAGWkznHO27EpVVpFyKnv-SX-JTYCXQxb0MG+EW07gaupocR4RQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,82 +58,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ea00b63e4e7f27dfb35b8b5947bd0951039db9bd.camel@intel.com>
+In-Reply-To: <CAGWkznHO27EpVVpFyKnv-SX-JTYCXQxb0MG+EW07gaupocR4RQ@mail.gmail.com>
 
-On Tue, Mar 26, 2024 at 10:59:38AM +0000, Huang, Kai wrote:
-> On Mon, 2024-03-25 at 12:46 +0200, Kirill A. Shutemov wrote:
-> > TDX 1.0 defines baseline behaviour of TDX guest platform. In TDX 1.0
-> 
+On Tue, Mar 26, 2024 at 05:06:55PM +0800, Zhaoyang Huang wrote:
+> 1. Thread_readahead remove the folio from page cache and drop 2 refcnt
+> by readahead_folio & filemap_remove_folio(get rid of the folios which
+> failed to launch IO during readahead)
+>     refcnt == 0, PG_lru == true, PG_lock == true
+>     read_pages
+> ...
+>         folio = readahead_folio
+>         <one refcnt dropped here>
+> ********For the folio which can not launch IO, we should NOT drop
+> refcnt here??? replaced by __readahead_folio???**********
+>         folio_get
+>         filemap_remove_folio(folio)
+>         folio_unlock
+>         <one refcnt dropped here>
+>         folio_put
 
-Okay.
-
-> > generates a #VE when accessing topology-related CPUID leafs (0xB and
-> > 0x1F) and the X2APIC_APICID MSR. The kernel returns all zeros on CPUID
-> > topology. Any complications will cause problems.
-> > 
-> > The ENUM_TOPOLOGY feature allows the VMM to provide topology
-> > information to the guest. Enabling the feature eliminates
-> > topology-related #VEs: the TDX module virtualizes accesses to
-> > the CPUID leafs and the MSR.
-> > 
-> > Enable ENUM_TOPOLOGY if it is available.
-> > 
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > ---
-> >  arch/x86/coco/tdx/tdx.c           | 19 +++++++++++++++++++
-> >  arch/x86/include/asm/shared/tdx.h |  3 +++
-> >  2 files changed, 22 insertions(+)
-> > 
-> > diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-> > index 860bfdd5a11d..b2d969432a22 100644
-> > --- a/arch/x86/coco/tdx/tdx.c
-> > +++ b/arch/x86/coco/tdx/tdx.c
-> > @@ -289,6 +289,25 @@ static void tdx_setup(u64 *cc_mask)
-> >  		else
-> >  			tdx_panic(msg);
-> >  	}
-> > +
-> > +	/*
-> > +	 * TDX 1.0 generates a #VE when accessing topology-related CPUID leafs
-> > +	 * (0xB and 0x1F) and the X2APIC_APICID MSR. The kernel returns all
-> > +	 * zeros on CPUID #VEs. In practice, this means that the kernel can only
-> > +	 * boot with a plain topology. Any complications will cause problems.
-> > +	 *
-> > +	 * The ENUM_TOPOLOGY feature allows the VMM to provide topology
-> > +	 * information to the guest in a safe manner. Enabling the feature
-> > +	 * eliminates topology-related #VEs: the TDX module virtualizes
-> > +	 * accesses to the CPUID leafs and the MSR.
-> > +	 *
-> > +	 * Enable ENUM_TOPOLOGY if it is available.
-> > +	 */
-> > +	if ((features & TDX_FEATURES0_ENUM_TOPOLOGY) &&
-> > +	    tdg_vm_rd(TDCS_TOPOLOGY_ENUM_CONFIGURED)) {
-> > +		if (!tdcs_ctls_set(TD_CTLS_ENUM_TOPOLOGY))
-> > +			pr_warn("Failed to enable ENUM_TOPOLOGY\n");
-> > +	}
-> >  }
-> >  
-> >  /*
-> > diff --git a/arch/x86/include/asm/shared/tdx.h b/arch/x86/include/asm/shared/tdx.h
-> > index 29a61c72e4dd..2964c506b241 100644
-> > --- a/arch/x86/include/asm/shared/tdx.h
-> > +++ b/arch/x86/include/asm/shared/tdx.h
-> > @@ -27,15 +27,18 @@
-> >  #define TDCS_CONFIG_FLAGS		0x1110000300000016
-> >  #define TDCS_TD_CTLS			0x1110000300000017
-> >  #define TDCS_NOTIFY_ENABLES		0x9100000000000010
-> > +#define TDCS_TOPOLOGY_ENUM_CONFIGURED	0x9100000000000019
-> 
-> Do you know where can I find the metadata field ID definition?
-> 
-> It seems I couldn't find all metadata field ID definitions in the latest TDX 1.5
-> ABI spec anymore.
-
-See "Intel TDX Module v1.5 ABI Definitions":
-
-https://cdrdv2.intel.com/v1/dl/getContent/795381
-
-It has all fields described in JSON.
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Ignoring any other thread, you're basically saying that there's a
+refcount imbalance here.  Which means we'd hit an assert (that folio
+refcount went below zero) in the normal case where another thread wasn't
+simultaneously trying to do anything.
