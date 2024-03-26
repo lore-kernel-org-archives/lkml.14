@@ -1,204 +1,323 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9212F13CC53;
-	Tue, 26 Mar 2024 19:09:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C743366;
+	Tue, 26 Mar 2024 19:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711480150; cv=none; b=d9cLiJq6e1OpiTN/nzRifC9RrL5jbzrPLE+9A1YJNlTHQKdxLPrm+EfHxl78D8ftAXQbVNAN3tA/RN1aDbzCF4Q9bsjE74ofHHiLxzTel/QBFS7YPDK6yyffGzTPoBGdP7JKHN8rBDg9k8KIEXNwtBzc9rQ7GHmIQEIf2Akidv0=
+	t=1711480183; cv=none; b=ns8bb0Bza+dB1cSxYSS+oNtWChdvf4ZeKiNBnvDtUM8BfhxC4bAmiiq/H6jODwyJ/8wu8c8/zDgRB/UGoc1DYE0GbzDYmAm+WdIaJ6ndU7egukuw8+sttqq1JyywC5bcfqtDs9Gr84ipAFV2p1GU8g4m86p1wPhTiAXOcGZJgRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711480150; c=relaxed/simple;
-	bh=jPEKg4OZMPv+x29ywEYqCTSjJN+6hfNiWvLdCC14G+Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TGmRnOeuoNEpH9zJ8HWXUOJ7MpUmoMjT0StQolSxI8ibsQPgrDV4+etpq5+Ori20bsz9x39DxSNh3/AEoA7aIQTVBNXR7eu1wU2edvhw3fdU9CjR8927IFARoENRCZ3LPptGPDphf5ih1V3CkcoC83jKuNj0kMgueup2KVWibIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PdukS71c; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1711480183; c=relaxed/simple;
+	bh=FdJC7YspfBOLHkhVsu57qLrSG0id2LBh2qeggMHfgnc=;
+	h=Message-ID:Date:MIME-Version:Subject:References:From:To:
+	 In-Reply-To:Content-Type; b=hq3cl35xmJNZzuPE/7JyYP2CNWvgbjhYcDMcHCcmiGAIv1NFPEFQsKsIZyrwla/HCBd8mIaYmk9Imsier/qqEUsAh8LMzbIzUAACcRQWsk4v387w97KHlnAxOmg3nb2EF1nb06P5ZsaHqOnXE6kzIbUBFVwBIgg/N+fVeiMhVoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=jijyd92X; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PdukS71c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711480148; x=1743016148;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=jPEKg4OZMPv+x29ywEYqCTSjJN+6hfNiWvLdCC14G+Q=;
-  b=PdukS71cJYOfkDK2bq/Tqkjn4Dik6br72JyZG1okOIC3XobpZfQ9n366
-   Ae+ro3yQr6RwT7FR2no3wYRUUmwlmgAY6OhvaiiRkr+UIRKhSK0VvvRLo
-   9D+KkF41QbonW10rA5+daQ5MLqdjpVFgSKytukOsrYk2A9JzLWotI0E+p
-   on/RRzM3fI8IhK/Uj4owlo45rZcZEyv4AIlnTT51U/YEphbkdel9AnGZr
-   XxgFNkNcWmdajXJryLY+2cr0dfxMGxcSxNyyhZUFwkPA/S9+i971lfoTb
-   swXEHFDScguBcvmKvsYOcaa75bhulsPkFhOpaI7jZMIAEyzwLa0NnR3wG
-   Q==;
-X-CSE-ConnectionGUID: 4ilfdbIURwqevsOu2+q/PQ==
-X-CSE-MsgGUID: 1ilaa9qgTL2UZkAXClFELQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="17696514"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="17696514"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 12:09:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="937072978"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="937072978"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Mar 2024 12:09:05 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id C0637284; Tue, 26 Mar 2024 21:09:04 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-staging@lists.linux.dev
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v1 1/1] media: atomisp: Remove unsused macros
-Date: Tue, 26 Mar 2024 21:09:03 +0200
-Message-ID: <20240326190903.1422069-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="jijyd92X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1711480172;
+	bh=FdJC7YspfBOLHkhVsu57qLrSG0id2LBh2qeggMHfgnc=;
+	h=Date:Subject:References:From:To:In-Reply-To:From;
+	b=jijyd92XzfuMeh3rFQ5xWbHtO4bWMEYafM4dcuJtgfd6Tyzm1eCBvN/1VSgSdjaL6
+	 t/wwKX2u+AKHsuY/uPXSev4p2Y54wUrxmZMexlqDG2X4762kDIIgpp03FMT8jVCs1z
+	 y9fdvhrBPfBOen3nXOIYm8AF4tAORZG/E+wMJdyCyJBFjhEw+0oGIr6eByRNYuRRiQ
+	 oYKgRoHhKcFuLT6wV462ZiEsPeI5vnvR4rPIZsfXyap8dSnEYyBU5N2kR2AuM7n5yX
+	 BDjfiXtlf+7Df8cng6vqXs/fNXm606DTWIme1N36df3kWWxAd0uSAMBYX5IZI1Pmx9
+	 PYS9VVize5upA==
+Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4V3zrD4yX6zmyL;
+	Tue, 26 Mar 2024 15:09:32 -0400 (EDT)
+Message-ID: <bfc08896-dbc2-4b20-9aa2-4b173300a5fc@efficios.com>
+Date: Tue, 26 Mar 2024 15:09:58 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Fwd: [lttng-dev] [CTF2-SPEC-2.0] Announcing CTF 2, the next
+ generation of the Common Trace Format
+Content-Language: en-US
+References: <YT3PR01MB9723DF471DF04203FC8FF2DFD3352@YT3PR01MB9723.CANPRD01.PROD.OUTLOOK.COM>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: lwn@lwn.net, linux-trace-users <linux-trace-users@vger.kernel.org>,
+ linux-kernel <linux-kernel@vger.kernel.org>
+In-Reply-To: <YT3PR01MB9723DF471DF04203FC8FF2DFD3352@YT3PR01MB9723.CANPRD01.PROD.OUTLOOK.COM>
+X-Forwarded-Message-Id: <YT3PR01MB9723DF471DF04203FC8FF2DFD3352@YT3PR01MB9723.CANPRD01.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Entire defs.h can be killed, so do that.
-Also kill same macro definitions in hive_types.h
+Hi,
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/staging/media/atomisp/pci/bits.h      |  4 +-
- drivers/staging/media/atomisp/pci/defs.h      | 37 -------------------
- .../pci/hive_isp_css_common/host/dma_local.h  |  1 -
- .../staging/media/atomisp/pci/hive_types.h    | 19 ----------
- .../pci/runtime/debug/src/ia_css_debug.c      |  3 +-
- 5 files changed, 4 insertions(+), 60 deletions(-)
- delete mode 100644 drivers/staging/media/atomisp/pci/defs.h
+After 8 years of proposals and RC iterations, here is the final version
+of the Common Trace Format specification version 2.
 
-diff --git a/drivers/staging/media/atomisp/pci/bits.h b/drivers/staging/media/atomisp/pci/bits.h
-index 9fab02ebddc5..f7a66287d763 100644
---- a/drivers/staging/media/atomisp/pci/bits.h
-+++ b/drivers/staging/media/atomisp/pci/bits.h
-@@ -16,9 +16,9 @@
- #ifndef _HRT_BITS_H
- #define _HRT_BITS_H
- 
--#include "defs.h"
-+#include <linux/args.h>
- 
--#define _hrt_ones(n) HRTCAT(_hrt_ones_, n)
-+#define _hrt_ones(n)	CONCATENATE(_hrt_ones_, n)
- #define _hrt_ones_0x0  0x00000000U
- #define _hrt_ones_0x1  0x00000001U
- #define _hrt_ones_0x2  0x00000003U
-diff --git a/drivers/staging/media/atomisp/pci/defs.h b/drivers/staging/media/atomisp/pci/defs.h
-deleted file mode 100644
-index 785e7a670a00..000000000000
---- a/drivers/staging/media/atomisp/pci/defs.h
-+++ /dev/null
-@@ -1,37 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * Support for Intel Camera Imaging ISP subsystem.
-- * Copyright (c) 2015, Intel Corporation.
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms and conditions of the GNU General Public License,
-- * version 2, as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- */
--
--#ifndef _HRT_DEFS_H_
--#define _HRT_DEFS_H_
--
--#ifndef HRTCAT
--#define _HRTCAT(m, n)     m##n
--#define HRTCAT(m, n)      _HRTCAT(m, n)
--#endif
--
--#ifndef HRTSTR
--#define _HRTSTR(x)   #x
--#define HRTSTR(x)    _HRTSTR(x)
--#endif
--
--#ifndef HRTMIN
--#define HRTMIN(a, b) (((a) < (b)) ? (a) : (b))
--#endif
--
--#ifndef HRTMAX
--#define HRTMAX(a, b) (((a) > (b)) ? (a) : (b))
--#endif
--
--#endif /* _HRT_DEFS_H_ */
-diff --git a/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/dma_local.h b/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/dma_local.h
-index 48a1ace79897..1a71dbebbbe2 100644
---- a/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/dma_local.h
-+++ b/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/dma_local.h
-@@ -19,7 +19,6 @@
- #include <type_support.h>
- #include "dma_global.h"
- 
--#include <defs.h>				/* HRTCAT() */
- #include <bits.h>				/* _hrt_get_bits() */
- #include <hive_isp_css_defs.h>		/* HIVE_DMA_NUM_CHANNELS */
- #include <dma_v2_defs.h>
-diff --git a/drivers/staging/media/atomisp/pci/hive_types.h b/drivers/staging/media/atomisp/pci/hive_types.h
-index 55d36931f079..34f462c0c9f9 100644
---- a/drivers/staging/media/atomisp/pci/hive_types.h
-+++ b/drivers/staging/media/atomisp/pci/hive_types.h
-@@ -17,25 +17,6 @@
- #define _HRT_HIVE_TYPES_H
- 
- #include "version.h"
--#include "defs.h"
--
--#ifndef HRTCAT3
--#define _HRTCAT3(m, n, o)     m##n##o
--#define HRTCAT3(m, n, o)      _HRTCAT3(m, n, o)
--#endif
--
--#ifndef HRTCAT4
--#define _HRTCAT4(m, n, o, p)     m##n##o##p
--#define HRTCAT4(m, n, o, p)      _HRTCAT4(m, n, o, p)
--#endif
--
--#ifndef HRTMIN
--#define HRTMIN(a, b) (((a) < (b)) ? (a) : (b))
--#endif
--
--#ifndef HRTMAX
--#define HRTMAX(a, b) (((a) > (b)) ? (a) : (b))
--#endif
- 
- /* boolean data type */
- typedef unsigned int hive_bool;
-diff --git a/drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c b/drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c
-index 3e92794555ec..3807b31bb98f 100644
---- a/drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c
-+++ b/drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c
-@@ -31,6 +31,7 @@
- #define __INLINE_STREAM2MMIO__
- #endif
- 
-+#include <linux/args.h>
- #include <linux/string.h> /* for strscpy() */
- 
- #include "ia_css_debug.h"
-@@ -861,7 +862,7 @@ void ia_css_debug_wake_up_sp(void)
- }
- 
- #define FIND_DMEM_PARAMS_TYPE(stream, kernel, type) \
--	(struct HRTCAT(HRTCAT(sh_css_isp_, type), _params) *) \
-+	(struct CONCATENATE(CONCATENATE(sh_css_isp_, type), _params) *) \
- 	findf_dmem_params(stream, offsetof(struct ia_css_memory_offsets, dmem.kernel))
- 
- #define FIND_DMEM_PARAMS(stream, kernel) FIND_DMEM_PARAMS_TYPE(stream, kernel, kernel)
--- 
-2.43.0.rc1.1.gbec44491f096
+Feedback is welcome!
 
+Mathieu
+
+-------- Forwarded Message --------
+Subject: [lttng-dev] [CTF2-SPEC-2.0] Announcing CTF 2, the next 
+generation of the Common Trace Format
+Date: Tue, 26 Mar 2024 19:00:37 +0000
+From: Philippe Proulx via lttng-dev <lttng-dev@lists.lttng.org>
+Reply-To: Philippe Proulx <pproulx@efficios.com>
+To: diamon-discuss@lists.linuxfoundation.org 
+<diamon-discuss@lists.linuxfoundation.org>
+CC: lttng-dev@lists.lttng.org <lttng-dev@lists.lttng.org>, 
+tracecompass-dev@eclipse.org <tracecompass-dev@eclipse.org>
+
+To all tracing enthusiasts,
+
+The Diagnostic and Monitoring Workgroup (DiaMon) is thrilled to announce
+the launch of version 2 of the Common Trace Format (CTF), a binary trace
+format designed to be fast to write without compromising great
+flexibility.
+
+The first version of CTF [1] has been widely used and tested in the
+industry for almost fifteen years now, by different producers and
+consumers.
+
+CTF 2 is a major revision of CTF 1, bringing many improvements, such as:
+
+‣ Using JSON text sequences [2] for the metadata stream.
+
+‣ Simplifying the metadata stream.
+
+‣ Adding new field classes (bit array, bit map, boolean, LEB128, BLOB,
+   and optional) and improving existing ones.
+
+‣ Supporting UTF-16 and UTF-32 string fields.
+
+‣ Using roles instead of reserved structure member names to identify
+   meaningful fields.
+
+‣ Adding the attribute and extension features to extend and customize
+   the format.
+
+SPECIFICATION LINKS
+━━━━━━━━━━━━━━━━━━━
+The initial revision of CTF2-SPEC-2.0 is available here:
+
+     <https://diamon.org/ctf/CTF2-SPEC-2.0.html>
+
+Its AsciiDoc source is <https://diamon.org/ctf/CTF2-SPEC-2.0.adoc>.
+
+The latest revision of CTF 2 is always <https://diamon.org/ctf/>.
+
+The latest revision of CTF 1 is <https://diamon.org/ctf/v1.8.3/>.
+
+FROM LEGACY TO FUTURE
+━━━━━━━━━━━━━━━━━━━━━
+The initial version of CTF [1] has been in widespread use and undergone
+rigorous testing across various sectors by a range of users for close to
+fifteen years.
+
+Today, CTF 2 comes to existence to address significant limitations of
+CTF 1 that make it challenging to implement a consumer and nearly
+impossible to extend.
+
+Developed over the course of eight years, CTF 2 is the culmination of
+two initial proposals and nine release candidates, each one adding what
+we now consider precious features that have incrementally shaped it into
+the robust and versatile tracing format it is today.
+
+We're confident that CTF 2 meets our important original design goals,
+namely:
+
+‣ CTF 2 data streams must be backward compatible with CTF 1 [1] data
+   streams.
+
+   CTF 2 only specifies metadata stream changes.
+
+‣ The CTF 2 data streams must be highly efficient for a tracer to
+   produce.
+
+   The addition of features such as the configurable bit order of a
+   fixed-length bit array field, variable-length integer fields, UTF-16
+   and UTF-32 string field encodings, and BLOB fields makes this truer
+   than ever.
+
+‣ A CTF 2 metadata stream must be extensible by users of the
+   specification.
+
+   The namespaced attribute and extension mechanisms of CTF 2 metadata
+   streams enable limitless extensibility.
+
+‣ A CTF 2 trace should be easy to consume.
+
+   A CTF 2 metadata stream is a JSON text sequence [2], removing all the
+   complexity of parsing the custom DSL brought by CTF 1.
+
+FEATURE HIGHLIGHTS
+━━━━━━━━━━━━━━━━━━
+CTF 2 brings many improvements over CTF 1, the most notable ones being:
+
+JSON text sequence metadata stream:
+     Whereas a CTF 1 [1] metadata stream is written in TSDL, a somewhat
+     complex DSL inspired by the C language, a CTF 2 metadata stream is a
+     JSON text sequence [2].
+
+     A JSON text sequence simply is a sequence of JSON values, each one
+     beginning with the "record separator (RS)" (U+001E) codepoint and
+     ending with a "new line (NL)" (U+000A) codepoint.
+
+     Using a JSON text sequence instead of a JSON array, for example,
+     makes it easier to stream the objects of a CTF 2 metadata stream and
+     allows the tracer to add metadata information while tracing occurs.
+
+Attributes:
+     Any trace producer may use attributes to add information to specific
+     metadata stream objects, for example:
+
+         {
+           "type": "null-terminated-string",
+           "encoding": "utf-16le",
+           "attributes": {
+             "meow-tracer": {
+               "confidentiality-level": 4
+             }
+           }
+         }
+
+     A tracer may add namespaced attributes to trace class, data stream
+     class, clock class, event record class, and field class objects.
+
+     A general trace consumer may safely ignore attributes: you don't
+     need them to decode a data stream.
+
+Extensions:
+     The purpose of an extension is to add core features to CTF 2 or to
+     modify existing core features. In other words, an extension may
+     alter the format itself. For example:
+
+         {
+           "type": "preamble",
+           "version": 2,
+           "extensions": {
+             "meow-tracer": {
+               "variable-clock-frequency": true
+             }
+           }
+         }
+
+     While a general trace consumer may safely ignore attributes, it must
+     not ignore extensions.
+
+Field roles:
+     The name of a structure field member is now decoupled from any
+     special meaning of said field.
+
+     For example, you may name a packet header integer field `myosotis`
+     and make it contain the current data stream ID:
+
+         {
+           "name": "myosotis",
+           "field-class": {
+             "type": "fixed-length-unsigned-integer",
+             "byte-order: "little-endian",
+             "length": 16,
+             "roles": ["data-stream-id"]
+           }
+         }
+
+New field classes:
+     CTF 2 brings new field classes to fill some important gaps of CTF 1:
+
+     Fixed-length bit array field:
+         A compact sequence of bits without integral semantics.
+
+         Any fixed-length scalar field conceptually is a fixed-length bit
+         array field.
+
+     Fixed-length bit map field:
+         A fixed-length bit array field with flags associating bit index
+         ranges to names.
+
+     Fixed-length boolean field:
+         A fixed-length bit array field of which the decoded value is
+         either true or false.
+
+     Variable-length integer field:
+         An integral value encoded with the LEB128 [3] format.
+
+     BLOB field:
+         A compact, byte-aligned sequence of bytes with an associated
+         media type:
+
+             {
+               "type": "static-length-blob",
+               "length": 511267,
+               "media-type": "image/tiff"
+             }
+
+         The length (number of bytes) of a BLOB field may be static or
+         dynamic (provided by an anterior integer field).
+
+     Optional field:
+         A field which is either another field or nothing (zero bits):
+
+             {
+               "type": "optional",
+               "selector-field-location": {
+                 "path": ["config", "has-debug-info"]
+               },
+               "selector-field-ranges": [[1, 255]],
+               "field-class": {
+                 "type": "null-terminated-string"
+               }
+             }
+
+         This is similar to what you could achieve with a variant field
+         having an empty option in CTF 1.
+
+All UTF string field encodings:
+     A null-terminated, static-length, or dynamic-length string field may
+     have the UTF-8, UTF-16BE, UTF-16LE, UTF-32BE, or UTF-32LE encoding:
+
+         {
+           "type": "static-length-string",
+           "length": 32,
+           "encoding": "utf32-be"
+         }
+
+JOIN THE MOVEMENT
+━━━━━━━━━━━━━━━━━
+We invite you to explore the CTF 2 specification and see firsthand the
+impact it can have on your tracing projects.
+
+Even though the CTF 2 specification is now published, your feedback
+remains incredibly important to us so that we can be confident that the
+document is flawless and as easy to understand as possible.
+
+As far as DiaMon projects are concerned, what we know today about CTF 2
+adoption is:
+
+Babeltrace 2 [4]:
+     Planned in the next minor release, Babeltrace 2.1.
+
+LTTng [5]:
+     Planned in LTTng 2.15.
+
+Trace Compass [6]:
+     Partial support currently; awaiting more CTF 2 trace samples to
+     complete the development.
+
+If you're considering adopting CTF 2 for your own project, please share
+the news with us!
+
+REFERENCES
+━━━━━━━━━━
+[1]: https://diamon.org/ctf/v1.8.3/
+[2]: https://datatracker.ietf.org/doc/html/rfc7464
+[3]: https://en.wikipedia.org/wiki/LEB128
+[4]: https://babeltrace.org/
+[5]: https://lttng.org/
+[6]: https://eclipse.dev/tracecompass/
+_______________________________________________
+lttng-dev mailing list
+lttng-dev@lists.lttng.org
+https://lists.lttng.org/cgi-bin/mailman/listinfo/lttng-dev
