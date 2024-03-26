@@ -1,120 +1,189 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from wfout2-smtp.messagingengine.com (wfout2-smtp.messagingengine.com [64.147.123.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B332656B6D;
-	Tue, 26 Mar 2024 12:38:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05EFF5C8FF
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 12:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711456711; cv=none; b=M+24DIbGI7FOMPkEPFWWg+VTkqVSOAmqdvgzWrgx/zTjenr4pANM4VMvb4M14WoxeEsfSh6OrCek6YEgTgVuV3N7tSgGvY8VYRi5jyWsKrsl4+nwclKrhh7lVdgfCShcIwjDWnNZGowunlTMlIk2109FvQZPCU+rGnWqJ/ki/io=
+	t=1711456740; cv=none; b=R6yTtkOdqL41UzlJ7NSGPVLtht2KQ1gX5Cy6VBHET7ihvNIWAOlgBd00LLXl/QZ4NvFu/v2bqf0UjUs/C3ebyOW+97DPRT2OuqydD4Z8mS4FWn20Lbt0UsPyfk7Of4Ydw9PpOrWqHGi8LfcSyPlMJkd/4sQXiihHekWNR948asI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711456711; c=relaxed/simple;
-	bh=jFKUb40DZC4SPayHqkoEEjo/AYuxKlE3F6/vEvGczt8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZhRyU0iCYZFX7aqeVsVwGPiFZQqKsbk28Q0FqTzs+/bARmXK9/+45KKC2HPWIrKGnooZglCIq0+FKMvlsklUHehpOs9WzO7M8ZDQFxWo+eBSVwjPfcXdXsyF7S4NeN/nH3kXqmiUhi2RET613Vp2wZ35EGl3mLxoCDsOamj8lvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=dY81StrC; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=HgTQ8uDg reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1711456740; c=relaxed/simple;
+	bh=5vpBVi8l5SdPJOEq8VnBU5XwcDzOC3AOa50PlgKFA/4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T54SlwRWHC4cfuwCTMAhywc4XJYFjCBTqDdy63G6+uINrnOobNcesKXXWhULEDYUy7i0q9VbPMDVuj3SpHdUxXRspc68zTpJ739VvwCT9HlGXyvFyzsSxQ+mZouf2UNj9czwF/ZbtrSCJyLmYx8hZnvuWackZle8sxE/47Juv+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=E1hUty5a; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RkZ3pIBz; arc=none smtp.client-ip=64.147.123.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="dY81StrC";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="HgTQ8uDg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1711456707; x=1742992707;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=cIgfPJMO3kcEzxeMu7u2y81h8x78l/MyhCWjISx7zGw=;
-  b=dY81StrCE0xfQL9+ls/4admVqW74OXI36xf0X3Ip1gmR1ef6X6G1RQrM
-   RcuY6L3WXILt5eaQo6A6z4tHvUequ6MmkrmW2CZKrbRf2kqzB1oBFRr7t
-   qqi8IMkeYizmSWiUh3aJLIRLGCPbd0HnF70D+X88dfeuf9N73tYgj2AXf
-   qVzBA1bFDhvinCiFOFH0ILcaUuoNR0agpEVA1Fj69JK7F1iUI0j7EaIJ/
-   IkWwdxlTW4wg1Li3FrZntM515hXvcDUu03TyH99C29XbfLj6GsqelaZ60
-   VKBYZAh3vrRHdrcOpPj5Byjk72SclXB70vzO8HDuk0GHXfL41Cy4PTUCp
-   A==;
-X-IronPort-AV: E=Sophos;i="6.07,156,1708383600"; 
-   d="scan'208";a="36105106"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 26 Mar 2024 13:38:23 +0100
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 98A67171151;
-	Tue, 26 Mar 2024 13:38:17 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1711456699;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding; bh=cIgfPJMO3kcEzxeMu7u2y81h8x78l/MyhCWjISx7zGw=;
-	b=HgTQ8uDgi3Z5nlRuwWttnUIPGKz6QOcUDy0hOVm4OfCYDRPYCnQwE3TXqpiQNnghLmz+Ms
-	Hov4GG8MInLm/0kmrdS97TAmwuycSyTQMpD7hD8vrYWYjEZdY1uBDMi81NMttuQkKPD3Nk
-	GHp8YoxgpTZiCLcNob2M1UTvG41FbDOMeUn8NgYhqDd8WZyNDxCVhWI4Ed3ZJoh4cl5glE
-	6OrX7UReElz0TBHG3Qa0nXJFqUYWu/sA0pQvo/zMnXkMgQNVvmsYqV6qkgt0ymxz3TrxzW
-	DcIYMTUjXjcjC+8LufmmImZfLF9aoojbeitfk6TnC+6XlS5+vOvb/2p0eKsmug==
-From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Lukasz Majewski <lukma@denx.de>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux@ew.tq-group.com,
-	Michael Krummsdorf <michael.krummsdorf@tq-group.com>,
-	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH] net: dsa: mv88e6xxx: fix usable ports on 88e6020
-Date: Tue, 26 Mar 2024 13:36:54 +0100
-Message-ID: <20240326123655.40666-1-matthias.schiffer@ew.tq-group.com>
-X-Mailer: git-send-email 2.43.2
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="E1hUty5a";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RkZ3pIBz"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailfout.west.internal (Postfix) with ESMTP id B8A3E1C000B8;
+	Tue, 26 Mar 2024 08:38:56 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Tue, 26 Mar 2024 08:38:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1711456736; x=
+	1711543136; bh=SpN1i+9IU2YyhmBo6ufdJzLACq9EamCprJ4iEIQKtrI=; b=E
+	1hUty5az9b1XwLJYZVo+vl6MYqo/f3dzKyBovCvm1QOa0ZvTJ40tvcyfvT2QYzMW
+	2pGxLrX6vxNlg2zNPf5ZRy6WTVE0XChQgYKdbRj6MklSKvA1HRZiceVAGAaiTnCJ
+	GIYeiw1rnuOx8XIDjsQcEQ0yoFy0gCeQuCER+dY6Kr6ImPIsMIu+OYSeVUcpt2so
+	KIyDwjoufIy10Yu+Uev70OMi4A/hRjMNnk7svOmB2zje60YlrjSLQxpkGsEyMLCG
+	04L/X9m8HT3RhyNgTKASbI5rDY+nv9s9P3Dy3hJ9ol2gnAs6n9MgEkssA3cIrYhV
+	tTNfJgB1NKKw34bOYEKNQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1711456736; x=1711543136; bh=SpN1i+9IU2YyhmBo6ufdJzLACq9E
+	amCprJ4iEIQKtrI=; b=RkZ3pIBzdXiu38ljJxqXCxCpmCscnBZO5XWEXaN8XIuo
+	ODBnOmql2DchhALur7xClxP/UnJcbMwimrKblUMyrdutVlPO4AgRfPvpDiW0yqC9
+	gPwXNuQAFn0hIW7JFymDp2b7DJO9q5Rg8KwuwZMxN9EffLsXjdk5TrsAxI+NexcB
+	vxsBVbyGCmYb4O3JtEqYG3wIkTjc9W8w8y7N/NkanxHloqpnkn6lNfJWHW8lWr2A
+	5qv43O7il8Srbslub7CVmQ1bKUvlGAaievO0Zojt0jLfX2XfwwEf9quyyKzEfv/L
+	zkhHq/0WGKA3GdftQYkyXRJC2ARfvovxULZzFT9HLg==
+X-ME-Sender: <xms:4MECZpDpw8cJwRBmV-ZdBNqrix5JQdTrBWx52QEttnTifhLF6m3qdw>
+    <xme:4MECZnju94q9RTr_IRKCBGFKz1xTrP7u8pxDbQtk9_qDPTqfVc1VzZqQ9SKjL65WT
+    XwumpV2FCrqKDl14rk>
+X-ME-Received: <xmr:4MECZkmx0MlMTpkeUiKsYCsvasUfIz7Z-8kJVuX3Qiac3p1woVhrtHZIFz-SPe-mmkraiXQkDC9CPWiMWqOprp2jgKaeA7NQj9I>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddufedggedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfgrkhgr
+    shhhihcuufgrkhgrmhhothhouceoohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhird
+    hjpheqnecuggftrfgrthhtvghrnhepudehgeeuveetuedvkeekvdfgffelieeivdelhfet
+    tedtveettefgffegjeefleeknecuffhomhgrihhnpehgihhthhhusgdrtghomhenucevlh
+    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghs
+    hhhisehsrghkrghmohgttghhihdrjhhp
+X-ME-Proxy: <xmx:4MECZjx-Um8aHTaZk_W-1HGPLcXlrUZwBq46T7_a9aIogXhKzB49hg>
+    <xmx:4MECZuRrHSfmpLukLH5bnlDx6nK4L0gA8jyg6w3R3wwbOC-vBOWeJQ>
+    <xmx:4MECZmZkjMXgYSBf6Grm3TfU8dBUn844mgHJvGosvXt1alqu8RGdDg>
+    <xmx:4MECZvT0n7PFJDAjTkKV0xwI-JdzAvMn0DOZZo0Ju9WxIL9czxqs0w>
+    <xmx:4MECZkOu98iuUFVAY3E6R9hvIdbakumiq7G7UVHHyd0OrQctcX1slWwByUM>
+Feedback-ID: ie8e14432:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 26 Mar 2024 08:38:54 -0400 (EDT)
+Date: Tue, 26 Mar 2024 21:38:52 +0900
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To: Adam Goldman <adamg@pobox.com>
+Cc: linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] firewire: core: option to log bus reset initiation
+Message-ID: <20240326123852.GA140364@workstation.local>
+Mail-Followup-To: Adam Goldman <adamg@pobox.com>,
+	linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+References: <Zfqo43xhFluOgO01@iguana.24-8.net>
+ <20240325004134.GA21329@workstation.local>
+ <ZgK9GNLURNg63zRU@iguana.24-8.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZgK9GNLURNg63zRU@iguana.24-8.net>
 
-From: Michael Krummsdorf <michael.krummsdorf@tq-group.com>
+Hi,
 
-The switch has 4 ports with 2 internal PHYs, but ports are numbered up
-to 6, with ports 0, 1, 5 and 6 being usable.
+On Tue, Mar 26, 2024 at 05:18:32AM -0700, Adam Goldman wrote:
+> Hi Takashi,
+> 
+> On Mon, Mar 25, 2024 at 09:41:34AM +0900, Takashi Sakamoto wrote:
+> > Now we have two debug parameters per module for the slightly-similar
+> > purpose. In my opinion, it is a pretty cumbersome to enable them when
+> > checking bus-reset behaviour. I think it is time to investigate the other
+> > way.
+> > 
+> > Linux Kernel Tracepoints[2] is one of options. Roughly describing, the
+> > tracepoints mechanism allows users to deliver structured data from kernel
+> > space to user space via ring-buffer when enabling it by either sysfs or
+> > kernel command-line parameters. Linux kernel also has a command-line
+> > parameter to redirect the human-readable formatted data to kernel log[3].
+> > I think it is suitable in the case.
+> > 
+> > It requires many work to replace the existent debug parameter of
+> > firewire-ohci, while it is a good start to work just for bus-reset debug.
+> > The data structure layout should be pre-defined in each subsystem, thus we
+> > need to decide it. In my opinion, it would be like:
+> > 
+> > ```
+> > struct bus_reset_event {
+> >     enum reason {
+> >         Initiate,
+> > 	Schedule,
+> > 	Postpone,
+> > 	Detect,
+> >     },
+> >     // We can put any other data if prefering.
+> > }
+> > ```
+> 
+> Maybe these should be four separate trace events?
+> 
+> > Would I ask your opinion about my idea?
+> 
+> It seems that tracepoints are the modern way to make debugging logs, so 
+> if we want to modernize the FireWire driver, we should replace the 
+> existent logging with tracepoints.
 
-Fixes: 71d94a432a15 ("net: dsa: mv88e6xxx: add support for MV88E6020 switch")
-Signed-off-by: Michael Krummsdorf <michael.krummsdorf@tq-group.com>
-Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
----
+Thanks for your positive comment.
 
-I was unfortunately too busy to notice the issue when the patch this
-Fixes was resubmitted in my name. It would have been better to change
-my From into a Based-on-patch-by or similar when modifying it - and the
-final version obviously wasn't even tested on an 88E6020...
+I pushed my work-in-progress patches to the following specific topic
+branch::
+https://github.com/takaswie/linux-firewire-dkms/tree/topic/backport-to-v6.8/tracepoints
 
-Best regards,
-Matthias
+You can see some patches onto your commits:
+
+* 145da78e firewire: ohci: obsolete OHCI_PARAM_DEBUG_BUSRESETS from debug parameter with tracepoints event
+* 3bdad35d firewire: core: obsolete debug parameter with tracepoints event
+* 30f489af firewire: ohci: support bus_reset tracepoints event
+* 4937d9c8 firewire: core: support bus_reset tracepoints event
+* 0da26087 firewire: core: add support for Linux kernel tracepoints
+* 961cba18 firewire: core: option to log bus reset initiation
+* b3124560 firewire: ohci: mask bus reset interrupts between ISR and bottom half
+
+In the above, I added 'bus_reset' events in 'firewire' tracepoints
+subsystem. The structure is something like:
+
+```
+struct bus_reset {
+    enum fw_trace_bus_reset_issue issue;
+    bool short_reset;
+};
+```
+
+The issue enumerations are in 'drivers/firewire/core.h':
+
+```
+enum fw_trace_bus_reset_issue {
+	FW_TRACE_BUS_RESET_ISSUE_INITIATE = 0,
+	FW_TRACE_BUS_RESET_ISSUE_SCHEDULE,
+	FW_TRACE_BUS_RESET_ISSUE_POSTPONE,
+	FW_TRACE_BUS_RESET_ISSUE_DETECT,
+};
+```
+
+You can see the above event is trigerred by two kernel modules:
+
+* firewire-core
+* firewire-ohci
+
+When merging the above changes and build/load the kernel modules, we can
+see 'firewire:bus_reset' event in Linux Kernel tracepoints system, like:
+
+```
+$ ls /sys/kernel/debug/tracing/events/firewire/bus_reset
+```
+
+I currently consider about a pair of events for OHCI interrupts and PHY
+operation, instead of the above event. I'm happy if receiving your
+opinion about it or the other ideas.
 
 
- drivers/net/dsa/mv88e6xxx/chip.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Regards
 
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-index 9ed1821184ece..c95787cb90867 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -5503,8 +5503,12 @@ static const struct mv88e6xxx_info mv88e6xxx_table[] = {
- 		.family = MV88E6XXX_FAMILY_6250,
- 		.name = "Marvell 88E6020",
- 		.num_databases = 64,
--		.num_ports = 4,
-+		/* Ports 2-4 are not routed to pins
-+		 * => usable ports 0, 1, 5, 6
-+		 */
-+		.num_ports = 7,
- 		.num_internal_phys = 2,
-+		.invalid_port_mask = BIT(2) | BIT(3) | BIT(4),
- 		.max_vid = 4095,
- 		.port_base_addr = 0x8,
- 		.phy_base_addr = 0x0,
--- 
-TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht München, HRB 105018
-Geschäftsführer: Detlef Schneider, Rüdiger Stahl, Stefan Schneider
-https://www.tq-group.com/
-
+Takashi Sakamoto
