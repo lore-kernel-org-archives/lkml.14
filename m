@@ -1,291 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2089A13C680;
-	Tue, 26 Mar 2024 14:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE3213C809;
+	Tue, 26 Mar 2024 14:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711464790; cv=none; b=i9LbPl3uIQdCHEXpFHAbq/oL0aLyik3K/EerenOYPU3zw7ycqzpTRTbSWq6Qh5eKWyMIhK6jhd15KU7Qiq65f/Nh5pH2Wdc8nn9EMKH+lf8QU7426G9WFB4LXyzWRzfuhoUikc3CHBjUnkWAh0pCfthlorThlv62HYSVGNEBVsI=
+	t=1711464804; cv=none; b=reyXTS3nmeE30abO6/XdFbNk9TTtAE5WzLimOLuzl9BhwIMH8sNNiX1arTgcUgBLPJXnRTM7xMecnIX2VKXRyEke2cI0iTvSsJRkFgbVzHl8ndJK+0raqZUtUOH/KRQPhkiC1xhvQ6EDuoV1gRH0tEODp8CJVp0AFoK6Gve4XZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711464790; c=relaxed/simple;
-	bh=zmcaILoG9edopCsb9BkgtZjkbl241qwQmZqzbDR5n9k=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DoO9c7cp1dSD7W+hgGsBkFQjEisz2xolUapyXQ5LMMPFmstnsaXFS5GP6AA06NHzXuTgK/DOQ19rQKGLEmXGFoQzePEOtWIxBeennIuXynsdwlr1sVb4rg9JANmvXtGEn+Z2ou6USJliUIENqTPEuM+dtJdKeIV8FwxvAhiFEdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UW34W87t; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UW34W87t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3576CC433C7;
-	Tue, 26 Mar 2024 14:53:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711464789;
-	bh=zmcaILoG9edopCsb9BkgtZjkbl241qwQmZqzbDR5n9k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UW34W87tWJeckzZMXemY9Kl/ntVhl83WMu+Tx1NmAgER6ol3ySvShlWSHxhXAeqj3
-	 cTBaywd0BMmspyxP/OKi41cYS5hpuoUYdmRlgYtUxdGlr0wEgcr3h4RkOYdloXAoGg
-	 1wJtn+4nhTbkwA5ZrVd+KGR7TSIupKeljESYeSdcvAhrm0a0GTQVqwWse0iP9+N0gi
-	 FR1Vg3K/Nh3sIbIsW0mmNaG7TwvsxzWXWiTGv/LLpZLgSUdcLyFhpdthPtughKQjpz
-	 K/N/pF0/4euGrcLHqjfsjpzZMqW7Jsu8cpCAcuDH5XE1zioQJWBlTSKQkRwTtxQbfI
-	 wbNS1aF84pdlQ==
-From: Arnd Bergmann <arnd@kernel.org>
-To: linux-kbuild@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	"Manoj N. Kumar" <manoj@linux.ibm.com>,
-	"Matthew R. Ochs" <mrochs@linux.ibm.com>,
-	Uma Krishnan <ukrishn@linux.ibm.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Nathan Chancellor <nathan@kernel.org>
-Cc: Nicolas Schier <nicolas@fjasle.eu>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH 07/12] cxlflash: fix function pointer cast warnings
-Date: Tue, 26 Mar 2024 15:51:32 +0100
-Message-Id: <20240326145140.3257163-6-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240326144741.3094687-1-arnd@kernel.org>
-References: <20240326144741.3094687-1-arnd@kernel.org>
+	s=arc-20240116; t=1711464804; c=relaxed/simple;
+	bh=Sxpuzis818g33XaA/nNCRA+K2FZNjUkOrkHHjScAvXA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rt0noE9t5agmdJvHBwLZq2qySjSmpRk2XAt+tc8s6rYNb6xO5YEgbdv6x0RkkDF18FmcNiM3TocFXBKJo2leEgoQOzx8l0Dl1V6XJ3DuPMqhqQ79YTgiTFUDU24je0qqHZHfRrUTUED+Llyy9eMd7blJAYzka2AQnpCcK9H1AY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: Wj7kzTgcRAmabAGb5ciqwA==
+X-CSE-MsgGUID: xgHfqc95TwSLwHQmJgalNQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="28999629"
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="28999629"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 07:53:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="914882499"
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="914882499"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 07:53:20 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy@kernel.org>)
+	id 1rp8Av-0000000GKce-2zLk;
+	Tue, 26 Mar 2024 16:53:17 +0200
+Date: Tue, 26 Mar 2024 16:53:17 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: nikita.shubin@maquefel.me
+Cc: Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+	dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v9 00/38] ep93xx device tree conversion
+Message-ID: <ZgLhXanNnQ147rUP@smile.fi.intel.com>
+References: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Tue, Mar 26, 2024 at 12:18:27PM +0300, Nikita Shubin via B4 Relay wrote:
+> The goal is to recieve ACKs for all patches in series to merge it via Arnd branch.
+> 
+> Some changes since last version (v8):
+> 
+> - Most important, fixed bug in Device Tree resulting in CS4271 not working by Alexander Sverdlin.
+> - added #interrupt-cells to gpio nodes with interrupts-controller
+> - fixed some EOF in dtsi files
+> - fixed identation and type in ep93xx-keypad thanks to Andy Shevchenko
+> 
+> Stephen Boyd, Vinod Koul PLEASE! give some comments on following, couse i
+> hadn't one for a couple of iterations already:
 
-Calling a function through an incompatible pointer type causes breaks
-kcfi, so clang warns about the assignments:
 
-drivers/scsi/cxlflash/main.c:3498:3: error: cast from 'int (*)(struct cxlflash_cfg *, struct ht_cxlflash_lun_provision *)' to 'hioctl' (aka 'int (*)(struct cxlflash_cfg *, void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
- 3498 |                 (hioctl)cxlflash_lun_provision },
-      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/cxlflash/main.c:3500:3: error: cast from 'int (*)(struct cxlflash_cfg *, struct ht_cxlflash_afu_debug *)' to 'hioctl' (aka 'int (*)(struct cxlflash_cfg *, void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
- 3500 |                 (hioctl)cxlflash_afu_debug },
-      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~
+>       clk: ep93xx: add DT support for Cirrus EP93xx
 
-Address these by changing the functions to have the correct type
-and replace the function pointer cast with a cast of its argument.
+>       dma: cirrus: Convert to DT for Cirrus EP93xx
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/scsi/cxlflash/lunmgt.c    |  4 ++--
- drivers/scsi/cxlflash/main.c      | 14 ++++++-------
- drivers/scsi/cxlflash/superpipe.c | 34 +++++++++++++++----------------
- drivers/scsi/cxlflash/superpipe.h | 11 ++++------
- drivers/scsi/cxlflash/vlun.c      |  7 +++----
- 5 files changed, 31 insertions(+), 39 deletions(-)
+Thanks for pursuing this!
 
-diff --git a/drivers/scsi/cxlflash/lunmgt.c b/drivers/scsi/cxlflash/lunmgt.c
-index e0e15b44a2e6..7d5e9b49eb90 100644
---- a/drivers/scsi/cxlflash/lunmgt.c
-+++ b/drivers/scsi/cxlflash/lunmgt.c
-@@ -224,9 +224,9 @@ void cxlflash_term_global_luns(void)
-  *
-  * Return: 0 on success, -errno on failure
-  */
--int cxlflash_manage_lun(struct scsi_device *sdev,
--			struct dk_cxlflash_manage_lun *manage)
-+int cxlflash_manage_lun(struct scsi_device *sdev, void *arg)
- {
-+	struct dk_cxlflash_manage_lun *manage = arg;
- 	struct cxlflash_cfg *cfg = shost_priv(sdev->host);
- 	struct device *dev = &cfg->dev->dev;
- 	struct llun_info *lli = NULL;
-diff --git a/drivers/scsi/cxlflash/main.c b/drivers/scsi/cxlflash/main.c
-index debd36974119..2ad157e8b1c2 100644
---- a/drivers/scsi/cxlflash/main.c
-+++ b/drivers/scsi/cxlflash/main.c
-@@ -3279,9 +3279,9 @@ static char *decode_hioctl(unsigned int cmd)
-  *
-  * Return: 0 on success, -errno on failure
-  */
--static int cxlflash_lun_provision(struct cxlflash_cfg *cfg,
--				  struct ht_cxlflash_lun_provision *lunprov)
-+static int cxlflash_lun_provision(struct cxlflash_cfg *cfg, void *arg)
- {
-+	struct ht_cxlflash_lun_provision *lunprov = arg;
- 	struct afu *afu = cfg->afu;
- 	struct device *dev = &cfg->dev->dev;
- 	struct sisl_ioarcb rcb;
-@@ -3373,9 +3373,9 @@ static int cxlflash_lun_provision(struct cxlflash_cfg *cfg,
-  *
-  * Return: 0 on success, -errno on failure
-  */
--static int cxlflash_afu_debug(struct cxlflash_cfg *cfg,
--			      struct ht_cxlflash_afu_debug *afu_dbg)
-+static int cxlflash_afu_debug(struct cxlflash_cfg *cfg, void *arg)
- {
-+	struct ht_cxlflash_afu_debug *afu_dbg = arg;
- 	struct afu *afu = cfg->afu;
- 	struct device *dev = &cfg->dev->dev;
- 	struct sisl_ioarcb rcb;
-@@ -3489,10 +3489,8 @@ static long cxlflash_chr_ioctl(struct file *file, unsigned int cmd,
- 		size_t size;
- 		hioctl ioctl;
- 	} ioctl_tbl[] = {	/* NOTE: order matters here */
--	{ sizeof(struct ht_cxlflash_lun_provision),
--		(hioctl)cxlflash_lun_provision },
--	{ sizeof(struct ht_cxlflash_afu_debug),
--		(hioctl)cxlflash_afu_debug },
-+	{ sizeof(struct ht_cxlflash_lun_provision), cxlflash_lun_provision },
-+	{ sizeof(struct ht_cxlflash_afu_debug), cxlflash_afu_debug },
- 	};
- 
- 	/* Hold read semaphore so we can drain if needed */
-diff --git a/drivers/scsi/cxlflash/superpipe.c b/drivers/scsi/cxlflash/superpipe.c
-index e1b55b03e812..afbc8619573d 100644
---- a/drivers/scsi/cxlflash/superpipe.c
-+++ b/drivers/scsi/cxlflash/superpipe.c
-@@ -729,8 +729,7 @@ int _cxlflash_disk_release(struct scsi_device *sdev,
- 	return rc;
- }
- 
--int cxlflash_disk_release(struct scsi_device *sdev,
--			  struct dk_cxlflash_release *release)
-+int cxlflash_disk_release(struct scsi_device *sdev, void *release)
- {
- 	return _cxlflash_disk_release(sdev, NULL, release);
- }
-@@ -955,8 +954,7 @@ static int _cxlflash_disk_detach(struct scsi_device *sdev,
- 	return rc;
- }
- 
--static int cxlflash_disk_detach(struct scsi_device *sdev,
--				struct dk_cxlflash_detach *detach)
-+static int cxlflash_disk_detach(struct scsi_device *sdev, void *detach)
- {
- 	return _cxlflash_disk_detach(sdev, NULL, detach);
- }
-@@ -1314,9 +1312,9 @@ int check_state(struct cxlflash_cfg *cfg)
-  *
-  * Return: 0 on success, -errno on failure
-  */
--static int cxlflash_disk_attach(struct scsi_device *sdev,
--				struct dk_cxlflash_attach *attach)
-+static int cxlflash_disk_attach(struct scsi_device *sdev, void *arg)
- {
-+	struct dk_cxlflash_attach *attach = arg;
- 	struct cxlflash_cfg *cfg = shost_priv(sdev->host);
- 	struct device *dev = &cfg->dev->dev;
- 	struct afu *afu = cfg->afu;
-@@ -1648,9 +1646,9 @@ static int recover_context(struct cxlflash_cfg *cfg,
-  *
-  * Return: 0 on success, -errno on failure
-  */
--static int cxlflash_afu_recover(struct scsi_device *sdev,
--				struct dk_cxlflash_recover_afu *recover)
-+static int cxlflash_afu_recover(struct scsi_device *sdev, void *arg)
- {
-+	struct dk_cxlflash_recover_afu *recover = arg;
- 	struct cxlflash_cfg *cfg = shost_priv(sdev->host);
- 	struct device *dev = &cfg->dev->dev;
- 	struct llun_info *lli = sdev->hostdata;
-@@ -1833,9 +1831,9 @@ static int process_sense(struct scsi_device *sdev,
-  *
-  * Return: 0 on success, -errno on failure
-  */
--static int cxlflash_disk_verify(struct scsi_device *sdev,
--				struct dk_cxlflash_verify *verify)
-+static int cxlflash_disk_verify(struct scsi_device *sdev, void *arg)
- {
-+	struct dk_cxlflash_verify *verify = arg;
- 	int rc = 0;
- 	struct ctx_info *ctxi = NULL;
- 	struct cxlflash_cfg *cfg = shost_priv(sdev->host);
-@@ -2111,16 +2109,16 @@ int cxlflash_ioctl(struct scsi_device *sdev, unsigned int cmd, void __user *arg)
- 		size_t size;
- 		sioctl ioctl;
- 	} ioctl_tbl[] = {	/* NOTE: order matters here */
--	{sizeof(struct dk_cxlflash_attach), (sioctl)cxlflash_disk_attach},
-+	{sizeof(struct dk_cxlflash_attach), cxlflash_disk_attach},
- 	{sizeof(struct dk_cxlflash_udirect), cxlflash_disk_direct_open},
--	{sizeof(struct dk_cxlflash_release), (sioctl)cxlflash_disk_release},
--	{sizeof(struct dk_cxlflash_detach), (sioctl)cxlflash_disk_detach},
--	{sizeof(struct dk_cxlflash_verify), (sioctl)cxlflash_disk_verify},
--	{sizeof(struct dk_cxlflash_recover_afu), (sioctl)cxlflash_afu_recover},
--	{sizeof(struct dk_cxlflash_manage_lun), (sioctl)cxlflash_manage_lun},
-+	{sizeof(struct dk_cxlflash_release), cxlflash_disk_release},
-+	{sizeof(struct dk_cxlflash_detach), cxlflash_disk_detach},
-+	{sizeof(struct dk_cxlflash_verify), cxlflash_disk_verify},
-+	{sizeof(struct dk_cxlflash_recover_afu), cxlflash_afu_recover},
-+	{sizeof(struct dk_cxlflash_manage_lun), cxlflash_manage_lun},
- 	{sizeof(struct dk_cxlflash_uvirtual), cxlflash_disk_virtual_open},
--	{sizeof(struct dk_cxlflash_resize), (sioctl)cxlflash_vlun_resize},
--	{sizeof(struct dk_cxlflash_clone), (sioctl)cxlflash_disk_clone},
-+	{sizeof(struct dk_cxlflash_resize), cxlflash_vlun_resize},
-+	{sizeof(struct dk_cxlflash_clone), cxlflash_disk_clone},
- 	};
- 
- 	/* Hold read semaphore so we can drain if needed */
-diff --git a/drivers/scsi/cxlflash/superpipe.h b/drivers/scsi/cxlflash/superpipe.h
-index 0e3b45964066..fe8c975d13d7 100644
---- a/drivers/scsi/cxlflash/superpipe.h
-+++ b/drivers/scsi/cxlflash/superpipe.h
-@@ -114,18 +114,16 @@ struct cxlflash_global {
- 	struct page *err_page; /* One page of all 0xF for error notification */
- };
- 
--int cxlflash_vlun_resize(struct scsi_device *sdev,
--			 struct dk_cxlflash_resize *resize);
-+int cxlflash_vlun_resize(struct scsi_device *sdev, void *resize);
- int _cxlflash_vlun_resize(struct scsi_device *sdev, struct ctx_info *ctxi,
- 			  struct dk_cxlflash_resize *resize);
- 
- int cxlflash_disk_release(struct scsi_device *sdev,
--			  struct dk_cxlflash_release *release);
-+			  void *release);
- int _cxlflash_disk_release(struct scsi_device *sdev, struct ctx_info *ctxi,
- 			   struct dk_cxlflash_release *release);
- 
--int cxlflash_disk_clone(struct scsi_device *sdev,
--			struct dk_cxlflash_clone *clone);
-+int cxlflash_disk_clone(struct scsi_device *sdev, void *arg);
- 
- int cxlflash_disk_virtual_open(struct scsi_device *sdev, void *arg);
- 
-@@ -145,8 +143,7 @@ void rhte_checkin(struct ctx_info *ctxi, struct sisl_rht_entry *rhte);
- 
- void cxlflash_ba_terminate(struct ba_lun *ba_lun);
- 
--int cxlflash_manage_lun(struct scsi_device *sdev,
--			struct dk_cxlflash_manage_lun *manage);
-+int cxlflash_manage_lun(struct scsi_device *sdev, void *manage);
- 
- int check_state(struct cxlflash_cfg *cfg);
- 
-diff --git a/drivers/scsi/cxlflash/vlun.c b/drivers/scsi/cxlflash/vlun.c
-index cbd5a648a131..d9a89fd27645 100644
---- a/drivers/scsi/cxlflash/vlun.c
-+++ b/drivers/scsi/cxlflash/vlun.c
-@@ -819,8 +819,7 @@ int _cxlflash_vlun_resize(struct scsi_device *sdev,
- 	return rc;
- }
- 
--int cxlflash_vlun_resize(struct scsi_device *sdev,
--			 struct dk_cxlflash_resize *resize)
-+int cxlflash_vlun_resize(struct scsi_device *sdev, void *resize)
- {
- 	return _cxlflash_vlun_resize(sdev, NULL, resize);
- }
-@@ -1187,9 +1186,9 @@ static int clone_lxt(struct afu *afu,
-  *
-  * Return: 0 on success, -errno on failure
-  */
--int cxlflash_disk_clone(struct scsi_device *sdev,
--			struct dk_cxlflash_clone *clone)
-+int cxlflash_disk_clone(struct scsi_device *sdev, void *arg)
- {
-+	struct dk_cxlflash_clone *clone = arg;
- 	struct cxlflash_cfg *cfg = shost_priv(sdev->host);
- 	struct device *dev = &cfg->dev->dev;
- 	struct llun_info *lli = sdev->hostdata;
+I just left the respective patches (I hope I haven't missed anything) that you
+are waiting for the review.
+
 -- 
-2.39.2
+With Best Regards,
+Andy Shevchenko
+
 
