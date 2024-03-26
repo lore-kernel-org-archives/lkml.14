@@ -1,152 +1,141 @@
-Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3834F13C91F
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 17:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDE013CC45;
+	Tue, 26 Mar 2024 17:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711472453; cv=none; b=RpqIDl7NVPM39En5IKJ1zcaSYr9madK8/aOpPJwJ7lreFvgFUD5Eb6ZdFdtKTKMox9OUezwM7yvmfV+4Wgu4sTCCHvRmIp10m2kcTeuD/yzYuCBfA75llAltPu+8Hh5R83A/zNgi3wF0dz1gCMxOlBlQE//zqTEtMlX4SN+W64Q=
+	t=1711472458; cv=none; b=elwRuX9B8aQfMvixOy7WmAd+rTBU9Hc23+GCAkkvwDiCRXvPuh4h7R9djTZROyuAVITATJ7Z+mbCyr70+DEtcyA443DEHIeB8O12Fy0PnzC1wVSHzSe6i9fcsSc7A4+qgwakngt2BPjf+/bIiJhRqI7Ooyhxf4bOm0xfp5+KtvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711472453; c=relaxed/simple;
-	bh=CtLOcxudgrp9+pmo6QzQf8rk8HsbaSoWbUzcGjkYPpg=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cp7leSTq6+XGnB9eV8vFpz/lOaQHPU52QGyV7Ph4m59JNPMVmQWZb017lepR1WK1nfaz+qyhCePlLWE2YDBRLrC77PGcBuV9uDAR3Nn6pdIAHFAdGNtQH7d7mdX69V1pgiW2vb2HaFkYAIpar7+81Jb0S8k0A/YvK2obKibavpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=Bq8BxIi3; arc=none smtp.client-ip=185.70.40.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1711472458; c=relaxed/simple;
+	bh=AFcWHQ4HktAL4RBbzmRQAOlWsOrVDpkRrN1OI6wGpMY=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=S+ZdqsSxtkBYL/rglde9+VtuVkdpONszOmVfBi3ykpC8QjXEZYmcTB+SseWVvfhmNuTJ3XGO3T6Zzg+xHTMYbAZpEQ4eSftOUidDWK2DHTRyWVWxeVoZP7jdR1thePSla6N8k1oMFj0kOLuEwftWQsdxukhZdoggmH5wMCbawDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SXVvxtgc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="Bq8BxIi3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1711472449; x=1711731649;
-	bh=JbKvJkvXu2iWSuwGdU1AIzET2bU96rDLVAc7bBO6aLw=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=Bq8BxIi3qd+9EkR1NWQWDt5q8Prr2Fm1Ac2IhTEUUxaOW6KBU6GWhluOBpMaSl6y7
-	 01zCTsOYMhDrhWApuTstxbepjc5uWNulk81Ew5AXYb0OR21s87HSZ+i5Fd30Qmc1DM
-	 rORVqAYnEwmGmZ0y7aU9/KmybTyYTwb4lHJMCVb3zo3Ol4yMcB+pL1jQzAEEVpOejO
-	 zkxvrhp5SWXKIIZ/sk1tKtBmuWVHbJmtpsMppUAK32D1Y9Xu/HDJTZ+CiPWZICWYHM
-	 nzmr0IzmCKKcUn4/LLV36U7MZn5hqbGGxNdnpCufxVte8Gv5kJommIzKvKy5+NHeJy
-	 GebvbgHJdWLcw==
-Date: Tue, 26 Mar 2024 17:00:39 +0000
-To: Boqun Feng <boqun.feng@gmail.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, Valentin Obst <kernel@valentinobst.de>, Heghedus Razvan <heghedus.razvan@protonmail.com>, Asahi Lina <lina@asahilina.net>
-Subject: Re: [PATCH 3/5] rust: time: Introduce clock reading framework
-Message-ID: <c2XJe4xCqT5WrHu9XZKQ03ggEZLwd2KBuSBb9Onivny9v7fqKBkm1aywmztjiDyuLKqr2Igt_6XUJiuArLl9JVwq0xa4gKfocP2H5YZDrFk=@proton.me>
-In-Reply-To: <20240324223339.971934-4-boqun.feng@gmail.com>
-References: <20240324223339.971934-1-boqun.feng@gmail.com> <20240324223339.971934-4-boqun.feng@gmail.com>
-Feedback-ID: 71780778:user:proton
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SXVvxtgc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 287ACC433A6;
+	Tue, 26 Mar 2024 17:00:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711472457;
+	bh=AFcWHQ4HktAL4RBbzmRQAOlWsOrVDpkRrN1OI6wGpMY=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=SXVvxtgcGny55EK6PwY+sTqI4mMVPakmbrnjmbnfC8DSpUewAWuQGnrUmYa0/N3QC
+	 cVeZ6QnHl0CQNeGXT6XP1c9qvvK2CviXQVg69KpPhYwqve3U+xAYMoFOAiOGO2k8F/
+	 2esMcfHk+ZWFPY4/hck+suYFzT7sGxxrUnoUWo2VmB4lTrTLXAPaLPGiijoopfNx70
+	 Y7aXKZesmhZaOf9tRrtlNBliUUtICUT7oDZ9cT4VPcWi76luukotK+Y3b+YHtlrvkQ
+	 2wRzMaNd0fJNjMUmZwTvTkWoSS9xLXa/ueuZg/0W0AhnGejPk8lz1zbGfVR3v6QzUP
+	 4+NObRzlLzC4w==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 26 Mar 2024 19:00:53 +0200
+Message-Id: <D03UCMS8261H.3AFBTINZ4ZN4Y@kernel.org>
+Cc: <linux-riscv@lists.infradead.org>, "Paul Walmsley"
+ <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert
+ Ou" <aou@eecs.berkeley.edu>, <linux-kernel@vger.kernel.org>, "Naveen N .
+ Rao" <naveen.n.rao@linux.ibm.com>, "Anil S Keshavamurthy"
+ <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>,
+ <linux-trace-kernel@vger.kernel.org>, "Calvin Owens"
+ <jcalvinowens@gmail.com>
+Subject: Re: [PATCH v2] arch/riscv: Enable kprobes when CONFIG_MODULES=n
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Mark Rutland" <mark.rutland@arm.com>, "Masami Hiramatsu"
+ <mhiramat@kernel.org>
+X-Mailer: aerc 0.17.0
+References: <20240323232908.13261-1-jarkko@kernel.org>
+ <20240325115632.04e37297491cadfbbf382767@kernel.org>
+ <ZgLfsvbCZj2S6fRE@FVFF77S0Q05N.cambridge.arm.com>
+In-Reply-To: <ZgLfsvbCZj2S6fRE@FVFF77S0Q05N.cambridge.arm.com>
 
-On 24.03.24 23:33, Boqun Feng wrote:
-> To make sure Rust code doesn't mix timestamps from different clocks, a
-> type safe clock reading framework is introduced. It includes:
->=20
-> * A `Clock` trait that represents different clocks, to read a particular
->   clock, one needs implement the `Clock::now()` function.
->=20
-> * A `Instant<Clock>` type that represents timestamps of different
->   clocks, whose implementation is just a `ktime_t`, so all the
->   calculation on `ktime_t` should apply to it as well.
->=20
-> Co-developed-by: Heghedus Razvan <heghedus.razvan@protonmail.com>
-> Signed-off-by: Heghedus Razvan <heghedus.razvan@protonmail.com>
-> Co-developed-by: Asahi Lina <lina@asahilina.net>
-> Signed-off-by: Asahi Lina <lina@asahilina.net>
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> ---
->  rust/kernel/time.rs | 49 +++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
->=20
-> diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
-> index b238b3a4e899..0f9f5605ed48 100644
-> --- a/rust/kernel/time.rs
-> +++ b/rust/kernel/time.rs
-> @@ -6,6 +6,9 @@
->  //! have been ported or wrapped for usage by Rust code in the kernel.
->  //!
->  //! C header: [`include/linux/jiffies.h`](srctree/include/linux/jiffies.=
-h).
-> +//! C header: [`include/linux/ktime.h`](srctree/include/linux/ktime.h).
-> +
-> +use core::marker::PhantomData;
->=20
->  /// The number of nanoseconds per millisecond.
->  pub const NSEC_PER_MSEC: i64 =3D bindings::NSEC_PER_MSEC as i64;
-> @@ -64,3 +67,49 @@ pub fn to_ns(self) -> i64 {
->          self.inner
->      }
->  }
-> +
-> +/// Represents a clock, that is, a unique time source and it can be quer=
-ied for the current time.
-> +pub trait Clock: Sized {
-> +    /// Returns the current time for this clock.
-> +    fn now() -> Instant<Self>;
-> +}
-> +
-> +/// Marker trait for clock sources that are guaranteed to be monotonic.
-> +pub trait Monotonic {}
+On Tue Mar 26, 2024 at 4:46 PM EET, Mark Rutland wrote:
+> Hi Masami,
+>
+> On Mon, Mar 25, 2024 at 11:56:32AM +0900, Masami Hiramatsu wrote:
+> > Hi Jarkko,
+> >=20
+> > On Sun, 24 Mar 2024 01:29:08 +0200
+> > Jarkko Sakkinen <jarkko@kernel.org> wrote:
+> >=20
+> > > Tracing with kprobes while running a monolithic kernel is currently
+> > > impossible due the kernel module allocator dependency.
+> > >=20
+> > > Address the issue by allowing architectures to implement module_alloc=
+()
+> > > and module_memfree() independent of the module subsystem. An arch tre=
+e
+> > > can signal this by setting HAVE_KPROBES_ALLOC in its Kconfig file.
+> > >=20
+> > > Realize the feature on RISC-V by separating allocator to module_alloc=
+.c
+> > > and implementing module_memfree().
+> >=20
+> > Even though, this involves changes in arch-independent part. So it shou=
+ld
+> > be solved by generic way. Did you checked Calvin's thread?
+> >=20
+> > https://lore.kernel.org/all/cover.1709676663.git.jcalvinowens@gmail.com=
+/
+> >=20
+> > I think, we'd better to introduce `alloc_execmem()`,
+> > CONFIG_HAVE_ALLOC_EXECMEM and CONFIG_ALLOC_EXECMEM at first
+> >=20
+> >   config HAVE_ALLOC_EXECMEM
+> > 	bool
+> >=20
+> >   config ALLOC_EXECMEM
+> > 	bool "Executable trampline memory allocation"
+> > 	depends on MODULES || HAVE_ALLOC_EXECMEM
+> >=20
+> > And define fallback macro to module_alloc() like this.
+> >=20
+> > #ifndef CONFIG_HAVE_ALLOC_EXECMEM
+> > #define alloc_execmem(size, gfp)	module_alloc(size)
+> > #endif
+>
+> Please can we *not* do this? I think this is abstracting at the wrong lev=
+el (as
+> I mentioned on the prior execmem proposals).
+>
+> Different exectuable allocations can have different requirements. For exa=
+mple,
+> on arm64 modules need to be within 2G of the kernel image, but the kprobe=
+s XOL
+> areas can be anywhere in the kernel VA space.
+>
+> Forcing those behind the same interface makes things *harder* for archite=
+ctures
+> and/or makes the common code more complicated (if that ends up having to =
+track
+> all those different requirements). From my PoV it'd be much better to hav=
+e
+> separate kprobes_alloc_*() functions for kprobes which an architecture ca=
+n then
+> choose to implement using a common library if it wants to.
+>
+> I took a look at doing that using the core ifdeffery fixups from Jarkko's=
+ v6,
+> and it looks pretty clean to me (and works in testing on arm64):
+>
+>   https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=
+=3Dkprobes/without-modules
+>
+> Could we please start with that approach, with kprobe-specific alloc/free=
+ code
+> provided by the architecture?
 
-Why is this trait not an extension of `Clock`?
+How should we move forward?
 
-> +
-> +/// A timestamp of a given [`Clock`]
+I'm fine with someone picking the pieces of my work as long as also the
+riscv side is included. Can also continue rotating this, whatever works.
 
-Missing '.'.
+>
+> Thanks,
+> Mark.
 
-> +#[repr(transparent)]
-> +#[derive(Debug)]
-> +pub struct Instant<T: Clock> {
-> +    inner: bindings::ktime_t,
-> +    clock: PhantomData<T>,
-> +}
-> +
-> +impl<T: Clock> Clone for Instant<T> {
-> +    fn clone(&self) -> Self {
-> +        *self
-> +    }
-> +}
-> +
-> +impl<T: Clock> Copy for Instant<T> {}
-> +
-> +impl<T: Clock> Instant<T> {
-> +    fn new(ktime: bindings::ktime_t) -> Self {
-
-When compiling, this function is marked as dead-code in this patch.
-
---=20
-Cheers,
-Benno
-
-> +        Self {
-> +            inner: ktime,
-> +            clock: PhantomData,
-> +        }
-> +    }
-> +}
-> +
-> +impl<T: Clock> core::ops::Sub for Instant<T> {
-> +    type Output =3D Duration;
-> +
-> +    /// Returns the difference of two timestamps.
-> +    #[inline]
-> +    fn sub(self, other: Self) -> Self::Output {
-> +        // `ktime_t` is an `i64` value of nanoseconds, and kernel define=
-s signed overflow to behave
-> +        // like 2s-complement, hence `wrapping_sub()` is used here to mi=
-rror `ktime_sub()`.
-> +        Duration::new(self.inner.wrapping_sub(other.inner))
-> +    }
-> +}
-> --
-> 2.44.0
-> 
+BR, Jarkko
