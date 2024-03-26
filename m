@@ -1,162 +1,130 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF37E13C90A
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 16:11:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4353612D75D
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 16:13:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711469463; cv=none; b=D//F64z6ZpFKGaTR+RxpgxXI9KI5KtGgTch1eFRmxwu5FBEKXezNcMIHwby4nn9l5id+C9QLniFJBAZ0lhV3P3UL94iQTIMmLuD46jVQDHwJwNWpEA/RolbDzx4as56IxA6jpzKx9lqLVfkPmhTc5KwZicI4moAq3DhbNM9uowI=
+	t=1711469620; cv=none; b=G3a7KN15V+fd//+CcM7p1dIWp4ob6Jce4FhDS2l3+jbOtVb262eh1HGB4D94yweBPD2GnxwtevU4DpKKL6wLKLPru+YbdV3qBbZnQOe3aUVTWHVl8rU2LFkDx5lUu0G1BCulfHYpusXtz1vaoK38c1wK9aJDA786CxM81o5z6KE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711469463; c=relaxed/simple;
-	bh=KwMXp5AYs6WOVQjryYiZ7EdeG0cvYrV+oZuxAXVaIsg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AiuASvTGLkN1V1N1Bpg8OksrHV02vjgYNcWyfz63VGGMXweeVxb59t/zAAPj4UP5yOHoC3K9pameA/WXDm5e0K5O+w5H4PGl/WYnlU0ubnzsZ6UEfQRvk68pkkC9o2Si30wJUbx+fVQyDywMAdJoPMX7JLub12vmr0ETsfQWP8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oRUmGKiv; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711469620; c=relaxed/simple;
+	bh=eK+R0ABmPGj+plzVUUZwmM346UOQh8NwmmAsoudMd8w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UczHT6OVu/K/TZmNnP+eQzO/58r89t1wGr0pV64xi4saQt5sFRfhM4ZExM3OgRnJPtIMvq3bkPeUjkRTbfDKEVlD6S1Ao7m4Fzu9kjtYPI1kLf7z+v9tmLAGov1NtzgdAf7A0A2SAncLrNRdbNmnk8CY6J4HVph8vDO67l9nhgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=tA8AzJEU; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oRUmGKiv"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a4a3a5e47baso279416766b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 09:11:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="tA8AzJEU"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-41490e42c74so2624465e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 09:13:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711469460; x=1712074260; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=CJEINb2e91P4WW8EGz190gc8mkLNheJ7gLR8cYMnru4=;
-        b=oRUmGKivNLUoj6m/eOzQb91DeiVGGgfa+jK2/bWFyh0etETC0Mh1BDuL6UrIQI9/aT
-         s2rr828QE//GI7BwvKsB3ypFcFg5Wpunq4xKXwEsz1LthLCjkqu4G5A9zjFA7PGEKyD7
-         ru+FDDLujuSFGhidMSKLwL+yDyRgXmQWZJbPo4mpUALUL/cL9cFZdJB1VIcG89aEtOQi
-         xDe+AzmG6QQYDpo3RuC33ZbbwxsgCfd6rnfGlj2OybH9JSleoxBBzjgenlLstMLhoUpV
-         S+yqfiFiu+FpnEzrjtEUR4FqWE5HVb75vo7OtNnQKs7cQkvCfjHivz8I6syV6JUCasGP
-         exfQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711469617; x=1712074417; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=F4LiCt10IxAVvpC47LPV/rkaTjlk1NiUuFvMFGxx+OU=;
+        b=tA8AzJEUBfZfbOxmEXQLa4fU1EZiyEAyhhe96be+6LVgsWj6PKS4xwmD+xF6ZQJbz0
+         DoyEOhEtLyspx/FBLtCJ+w1N7gyKVSuaGsBhb5alk9/ZGPRL1EO4oENG2R9nmCjrZs3Y
+         PyCf5t0lYgmImYgaNtduZbRTCiE6xGMORuqirC+Kyz1E1Jv5GGZlq/hex/4MY463ksDj
+         Gsdli7inrFc9n7jlFTdS6ui5Z/WoR959XQG+nE+cXpNc09/lzh4O2ka+kbjzWkf+Duyc
+         Qg9sKG3WOo2oWCZRDiwoXWbVa9ADXCFCcni72ykzdxllEQnAjINvV0SU5WcuznLIgQ/F
+         LbLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711469460; x=1712074260;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1711469617; x=1712074417;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CJEINb2e91P4WW8EGz190gc8mkLNheJ7gLR8cYMnru4=;
-        b=ESM9Zvy0Z49f1Zc71ZM6u01TAMfzxIR/jQ7L2ZpSd6qJ7T8vj2uj+HWtIoWj8WLXru
-         /0LyUQlZgpAi4IgPbgR+wtADMJhKQHSIAQiAYspNUPkk+sXdmeQTbhxIfzRCsTcM1uF4
-         g+2lQoSk+8aqdGS/LmiqAu3WMu6x4rpL+RPtt01PzdtLAVVcODS6n2rElhKso0BL0S5F
-         FifgD3+hDYttwtsr+zLczzLMp1aM7inYlbm4h3FzqsJMXOFLBONBKwe/z/GYYySqyVQ5
-         2TzirXc0aOUG+Sfix8ewiBHZw0P4FVDGD9d9zKqDRZpiJqxM0bAQEL6vlKzs65YoRVLX
-         S8Pg==
-X-Forwarded-Encrypted: i=1; AJvYcCWdOkZB/MEc+OFqn2f6P5TDsepB8VIpjCFcLxNAC+iH7pad6HizTDmluz1vcoM28KSMIlL+zHFr3SmZtbseUU2Xipv5OvlVKr4QAJzT
-X-Gm-Message-State: AOJu0Yyt2LUMqHJwDDloIqkL13r1V3xoUjtTS4W1G0R0jGzJB4j7Kpon
-	aPBL/hRZh8jb0CgMN8mHtFqrGXkxHy1bDIiTixhNM/2afED/J7tGr3p8b4eyCZI=
-X-Google-Smtp-Source: AGHT+IEnfovCI/8gs5MyW507wofKNOAGHRO601c++5j8l3aXUe7AMIkTh7rSqBNUzYwqWbwHKTogNw==
-X-Received: by 2002:a17:907:8687:b0:a4d:f900:fada with SMTP id qa7-20020a170907868700b00a4df900fadamr1554040ejc.56.1711469459875;
-        Tue, 26 Mar 2024 09:10:59 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.222.44])
-        by smtp.gmail.com with ESMTPSA id le13-20020a170906ae0d00b00a47464a6ee4sm4006323ejb.173.2024.03.26.09.10.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Mar 2024 09:10:59 -0700 (PDT)
-Message-ID: <e91bed22-31d0-45b0-8d2a-69bfd361b125@linaro.org>
-Date: Tue, 26 Mar 2024 17:10:58 +0100
+        bh=F4LiCt10IxAVvpC47LPV/rkaTjlk1NiUuFvMFGxx+OU=;
+        b=YP9TQ5/sPxspPaan4iS050wsoYlZGCiRo5A8lYuw1A64/b4Y24Cw4zWtGvYcjTfGOc
+         vgzBnTH0eZArhFD+52V1F1S00z+ZjY4IMKtbmEGkQJ6YjmpOFHlxJZt6IrM7+s4FOVHs
+         RSilyDFqyhB22lT+WXDMCrvYZuZUJJbS809ShRChZrz37W1wX4ggVZeS+p8IiLhpG0yI
+         7C0aRqSOBjZeBr7Qalw02ERNnOwemKKF9xUCEu6frFKWTpo1QJeC0LNIDNsi5ImMUtc7
+         t8/UAnfidzECIKMdzqxftTdReZwjpqmRFELFgo+ahawqXbyY5l+Y/+ExbbTzqB+NEWyY
+         ud+w==
+X-Forwarded-Encrypted: i=1; AJvYcCX9jFNzLzgpy802nSRm1UhiaYUf7kjlsU2VDBvA+n6J+YlstM2V/q0UdXTcmjoXXg9rmUbYKw1N+p8pIHO7OX56QjEE0KttM4xEopd8
+X-Gm-Message-State: AOJu0YxZzusMmiy+LPOvgiccO6107k6jPJi4RlBkBq/aX12u6kCi9Odo
+	PYMGsN0DO23J0VVnWHEvspVHTjyIUW54nxtRe7tlRXyof+pihdW7F3aqb1LQcpM=
+X-Google-Smtp-Source: AGHT+IFae3IpvTMwhmsZ1ahvm5eyBHH+iWrgwf59wOFSRYY+Mv6/7CtoeKIPxy/CsrVObCbGtWXjLQ==
+X-Received: by 2002:a05:600c:3553:b0:414:8fa5:b9a1 with SMTP id i19-20020a05600c355300b004148fa5b9a1mr1703262wmq.5.1711469616510;
+        Tue, 26 Mar 2024 09:13:36 -0700 (PDT)
+Received: from blmsp ([2001:4091:a246:821e:6f3b:6b50:4762:8343])
+        by smtp.gmail.com with ESMTPSA id q13-20020adfcd8d000000b0033eab3520a9sm12484571wrj.43.2024.03.26.09.13.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 09:13:35 -0700 (PDT)
+Date: Tue, 26 Mar 2024 17:13:33 +0100
+From: Markus Schneider-Pargmann <msp@baylibre.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>, 
+	Santosh Shilimkar <ssantosh@kernel.org>, Kevin Hilman <khilman@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-omap@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Markus Mirevik <markus.mirevik@dpsolutions.se>
+Subject: Re: [PATCH] gpio: omap: Fix double trigger for level interrupts
+Message-ID: <niruat6lxth4j7cmb7flo6pyipmnfym5evt6amszogkhtt5kkc@njhz7h7uciz2>
+References: <20240326145439.1293412-1-msp@baylibre.com>
+ <6ecd284a-e3f5-4b69-b6d7-129da6b385c1@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] virt: vmgenid: drop redundant .owner
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Theodore Ts'o <tytso@mit.edu>, linux-kernel@vger.kernel.org
-References: <20240326075337.55377-1-krzysztof.kozlowski@linaro.org>
- <461a8c3d-460b-4ca4-aa90-b70685958f6f@linaro.org>
- <ZgLY6i7zZDh5uDb0@zx2c4.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <ZgLY6i7zZDh5uDb0@zx2c4.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <6ecd284a-e3f5-4b69-b6d7-129da6b385c1@moroto.mountain>
 
-On 26/03/2024 15:17, Jason A. Donenfeld wrote:
-> On Tue, Mar 26, 2024 at 09:07:52AM +0100, Krzysztof Kozlowski wrote:
->> On 26/03/2024 08:53, Krzysztof Kozlowski wrote:
->>> Core already sets .owner in acpi_bus_register_driver().
->>>
->>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>> ---
->>>  drivers/virt/vmgenid.c | 1 -
->>>  1 file changed, 1 deletion(-)
->>>
->>> diff --git a/drivers/virt/vmgenid.c b/drivers/virt/vmgenid.c
->>> index b67a28da4702..8f6880c3a87f 100644
->>> --- a/drivers/virt/vmgenid.c
->>> +++ b/drivers/virt/vmgenid.c
->>> @@ -88,7 +88,6 @@ static const struct acpi_device_id vmgenid_ids[] = {
->>>  static struct acpi_driver vmgenid_driver = {
->>>  	.name = "vmgenid",
->>>  	.ids = vmgenid_ids,
->>> -	.owner = THIS_MODULE,
->>
->> This does not make sense and is not correct.  I need to fix
->> acpi_bus_register_driver first(). Please ignore.
-> 
-> Oh, okay. Does that mean this will resurface as part of a series that is
-> core fix + individual driver cleanups subsequently?
+Hi Dan,
 
-Yes.
+On Tue, Mar 26, 2024 at 06:29:45PM +0300, Dan Carpenter wrote:
+> In the bug report email thread Markus Mirevik said "The interrupt
+> associated with the GPIO module still fires twice" so while this patch
+> is an improvement, it might not be a complete solution?
+
+Yes, that is possible. I actually only had the level interrupt
+double trigger bug which is fixed by this change.
 
 > 
-> You made some comment on the other thread indicating that this
-> meant the driver is "clearly abandoned" because of "all this owner
-> crap". Wondering if this driver here hits some weird edge case that
-> isn't covered by changes made "many years ago" or if something else is
-> up.
+> > This patch was originally proposed by Grygorii Strashko.
+> 
+> The way to give authorship credit is you make the first line of your
+> patch:
+> 
+> From: Grygorii Strashko <grygorii.strashko@ti.com>
+> 
+> When the patch is applied then git will assign authorship credit but
+> remove that line from the git log.
 
-No, it was just my mistake. Driver is fine, sorry for too fast judging.
-It turns out only some xxx_driver set .owner field. Which I think leads
-to actual problems, but that's a bit bigger patchset I need to prepare.
+Thanks, yes I am aware, though I didn't want to add that author tag
+without someone agreeing with that. As it wasn't a formal patch, there
+was no From: already present or a SoB by Grygorii. Also there was no
+reaction on a ping from me on the original thread. That's why I opted
+for the comment in the commit, the explanation and as I said in the
+letter part I don't care about author, just that it gets upstream.
 
-Best regards,
-Krzysztof
+> 
+> On Tue, Mar 26, 2024 at 03:50:14PM +0100, Markus Schneider-Pargmann wrote:
+> > Set gpio trigger before clearing the irq status.
+> > 
+> 
+> This commit message needs some work.  When you're reviewing on email,
+> it's kind of common to read the commit message without reading the
+> subject.  See how the patch looks like on lore:
+> 
+> https://lore.kernel.org/linux-gpio/20240326145439.1293412-1-msp@baylibre.com/T/#u
+> 
+> The subject is up on the first line, but it's mixed in with the headers
+> so it's easy to skip.  Go ahead a restate the subject but in different
+> words.
+> 
+> But also copy and paste more of the problem from the bug report.  To me
+> if I were a user the important bit is that the bug ends up hogging the
+> CPU.
+> 
+> "The problem is that the interrupt handler was is run twice for each
+> frame.  It hogs a lot of CPU time.  Fix this by setting the GPIO trigger
+> before clearing the IRQ status."
 
+Yes, thanks, I will work on that commit message.
+
+Best
+Markus
