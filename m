@@ -1,63 +1,66 @@
 Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B9C129E88
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 23:14:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019D013DDAC
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 23:14:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711494898; cv=none; b=bdijtRDNPwrbQU3qWLQ2Q/jFiVJE3C+E/wA9tENrzlmFnuoYxaQtRslBXvbNEwN+2VRZUwx7LvWmxBr0XGKSPmeOPxLWeB+h/bSQOelPP1XstSmqAws4F2gqLs4dpLBqvbgQOD7bCNinpDaesD3cndL3jexgdU89AFCYQGYqv4o=
+	t=1711494900; cv=none; b=apDx8kgen8eBV6vK/Cv9qHc8Jkm1ljiWi5kgSPwaIL8b0IP8XOBaP3QeI13zooqlvGckXYCL4eCtTgx5TADj8QuE6PcoVDga+LZChsF7s/P1kK+4kwCGRZhsh83kBM2k7jOSehVidKR24nfp9mCju8t3/WLak0uWbuXkSADmJmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711494898; c=relaxed/simple;
-	bh=c7GiS2lL1M6QFhZBCgKPDkYwl2twMziOMb01Dd53dkk=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=WsmptBha/C7ZiTYRMy0eZ4Bqu+I733oaf9RPjmtgffZ3pKLwtljmbCxHs42WN1yljvNJ8uty31vXbPrBM/TYtuuR/53jrICmwfZ1rYFMI7rJNqIXBDVd93NzzGs08MRxfDO1grVxppdBZuErwVvWS945Ug/GBKFvADJ3PKjasvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eBx4wSrt; arc=none smtp.client-ip=209.85.219.201
+	s=arc-20240116; t=1711494900; c=relaxed/simple;
+	bh=NzgIE1Rh/KOBzAQ73H3jelY8pZu994zjvj10N12XaqU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=sk+eCMulz4HXwp3ANjW8uA5PpzBYckMZ19kgcJ0EG6Q1NktuXARnskv1gmQSaOdweeQRbySkJT/zzNrSyfzGRcQu/Aq/nUmcspcfIwJCu/GoCY+z3gGOPflwrYn0rubaqYBzWTiFg+EZMM24zXI89E3QhhzO6EMGgIFRoWGKxzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UY2wN5Jq; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eBx4wSrt"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dccc49ef73eso9039152276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 16:14:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UY2wN5Jq"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dd8e82dd47eso8403533276.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 16:14:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711494896; x=1712099696; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=O6H8BXdvAo3aUwOcUfRSL8bD/l3C7xPsH52O9f2s29Y=;
-        b=eBx4wSrtmZq68VqgK8HyyJINFZALDy69C80/CJATLFHUNY2nS9thte8N/CIHm8PRa5
-         LmFiSlacbny/sYOmKOswRouqbjQGA0/w1EY1nBFku2EF8tx02mlq7+jZGjVinz+jqoP/
-         5qkPVzWcwyyqyc5+kK/B48HXYXmGiAISgDoU8/uK/JcjD/1cqzXg29ktKgkg8I2Pp1Li
-         7xqLWrCsT2vphOlhwTveMSkShziEixj4nSkt8EgQUkESkBTcoZUl0+dVW7k1N01te6sJ
-         bmAClPCBBpRr2ZTJ9ddTWhWc647oL6pB2Yk7LkRwl8jHRFrm8GBu9kFXtX1wlKGcvn/q
-         t/iA==
+        d=google.com; s=20230601; t=1711494898; x=1712099698; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=c2odR+gvA8sNOrt3e0IxQU+kOy08wVxcx+crcuSd5WY=;
+        b=UY2wN5JqrC2yw8HwpS80Y4xVE6Il1n9pAhSFKhWuTIwkA340KTr6+kIs7vTKNAKvr/
+         ZvfblRcqFmzGsTkjdxHc22p7Vcbpvf/ubbPYYLtlQQVyoGeoPFi5WjCCR42vImekVjnp
+         rEM3QI174Zzqt3IYLZhqRH9OPeXzKxBZfwJL5HfuXslopQJInrDdJZiH4eLp4Piib1Ne
+         TcbTRZJdpVur081KoaV43X/f0K8jN9F1Jm/jBjeKmHsUtIZronM+bAd1XXg5WbaSNBP9
+         D2y4+tL3Be2MUUWdP8SGYHa41PgaDcLgowoVMXTL5rLRfuTEaxPj0ArVT5I9dinVyVJj
+         tWlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711494896; x=1712099696;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=O6H8BXdvAo3aUwOcUfRSL8bD/l3C7xPsH52O9f2s29Y=;
-        b=IDzjHYn4r6DlYMQEZwHkgwvDG0eHYgas0OE2n6b/O56MSgEydHsjbr/ji0b9lzBhTA
-         el1gVeGZIYdeTOD//ju5TVE0GRZJzKibHpD+FMH+nuwHooIgH8DX6Nw8tCuxPZzLgOu5
-         bqJP9uBRI5FqbbiYvn7vo+Q66siGw/XOWwO9A9lUaKFtv6DO7lcL6W4i+5R+UQ7X+3sC
-         cJhMm8V9IOcuNe5wFglgHLpi/ABltM+LPmwAUPSiHPZXw5C+YnmdpJM6B1JtOXlDhl1X
-         v+/0zghUcZCJWYzbjA4StApPVcHmFQpVgnNKOr+L/dYfHC8gWWTT4Xp1OBGgP2gBAbyA
-         QiiA==
-X-Forwarded-Encrypted: i=1; AJvYcCVJYdKkI/LnR0hCpX+g34kvlzw5+rlbptba0ODabkubDruMLS7Y60iFQmzZ+NguM3p3Rw8XNB6zrpuTQo9LFWTtFGQghfzcUq0Qt8sf
-X-Gm-Message-State: AOJu0Yz7z+7jRPM1QCKOXJIKtrUKvKGMUGrGiE2xbhaarVVkkESSxyOU
-	BsxTV6MnaVLp8qIpFnHstM62QJqiCQ2EXJNTQRZogai7hix2QplYhIfONNDZsyqUoZrZLH7ACNE
-	HMQ==
-X-Google-Smtp-Source: AGHT+IFNY6tAa+1ToJYyIL+cjp3MvXkNdG2j3VGFzAX5ixmO94loHzofu+cawroQnC+Pi4dXgwNBVtjCIDI=
+        d=1e100.net; s=20230601; t=1711494898; x=1712099698;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=c2odR+gvA8sNOrt3e0IxQU+kOy08wVxcx+crcuSd5WY=;
+        b=VDND2+RBdkpChlIjtxb2Rn9iQaRccq18Nlpf/NW5rXvOdArnslx2F/Jw27lFh6WXVJ
+         mYSrjJKpyXyYgQnnXt90UgHfi6xStpwYpGA12JoQGLWOnhal+WQpTc+tASZGM8EySqIX
+         Jz8HAnhy1Bu6DoJ2eWpfmfznWDAV6w9gMbZs4OPpbGbKW0Q6FdNkPdafAzjZeb+lsDD/
+         9hQ13M+xdLPKjOXM2OSKsTUZjfrbEmYLl3+gvV5uejqup+4NS9vBpGqgYszadshWBgJM
+         9gDXAccCL5AEhMiFJklT2wjqAnINqqxnVuXqGAuidwg2NfDxMUprHFnyq9BsqQE64a96
+         jV9g==
+X-Forwarded-Encrypted: i=1; AJvYcCXiCyQbox83BGgD2kqDPu8mgMdmdhQk6HkLNASmy7sqvcyJy4wcHHnRQCzqyNGFZt5VIltXO4rYfkcBhFQH681IXK2jvS8NR+EF9KOq
+X-Gm-Message-State: AOJu0YzxwOo56L6+48Nfd6su1aiq7LKlUiqEbyRcuMR+PYxePWKhjU15
+	4zrwdoH/ciSir4gX10fMMNo9SWUMLQrrYSD+Y1hjWct59epq7b918tXWNNhQRel6w81v4PYyupM
+	o2g==
+X-Google-Smtp-Source: AGHT+IFHYkY4cIWeIG5C7L3cVtTLvopmfj6ciQBc+eUr6sGVUl9PkI+oKLP5GmybkNhRmxFsc0JGuY8yjgo=
 X-Received: from surenb-desktop.mtv.corp.google.com ([2620:15c:211:201:cef2:761:ad8:ed9a])
- (user=surenb job=sendgmr) by 2002:a05:6902:2587:b0:dc6:44d4:bee0 with SMTP id
- du7-20020a056902258700b00dc644d4bee0mr752686ybb.7.1711494895995; Tue, 26 Mar
- 2024 16:14:55 -0700 (PDT)
-Date: Tue, 26 Mar 2024 16:14:46 -0700
+ (user=surenb job=sendgmr) by 2002:a05:6902:150a:b0:dc7:82ba:ba6e with SMTP id
+ q10-20020a056902150a00b00dc782baba6emr629440ybu.7.1711494898139; Tue, 26 Mar
+ 2024 16:14:58 -0700 (PDT)
+Date: Tue, 26 Mar 2024 16:14:47 -0700
+In-Reply-To: <20240326231453.1206227-1-surenb@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240326231453.1206227-1-surenb@google.com>
 X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
-Message-ID: <20240326231453.1206227-1-surenb@google.com>
-Subject: [PATCH 0/6] Documentation fixes for memory allocation profiling
+Message-ID: <20240326231453.1206227-2-surenb@google.com>
+Subject: [PATCH 1/6] Documentation: rhashtable: undo _noprof additions in the documentation
 From: Suren Baghdasaryan <surenb@google.com>
 To: akpm@linux-foundation.org
 Cc: rdunlap@infradead.org, sfr@canb.auug.org.au, kent.overstreet@linux.dev, 
@@ -65,43 +68,47 @@ Cc: rdunlap@infradead.org, sfr@canb.auug.org.au, kent.overstreet@linux.dev,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-With the introduction of [1] kernel-doc can handle _noprof function names. 
-This patchset changes back _noprof documentation changes introduced in
-memory allocation profiling patchset [2].
-Changes are split into several patches, each undoing changes in a specific
-patch from the original patchset so that it's easy to squash the fix into
-the initial patch if Andrew wants to do that.
-Changes apply cleanly over mm-unstable and are tested with [1] applied.
+With kernel-doc script change to handle xyz_noprof() names, the previous
+documentation changes and not needed anymore.
 
-[1] https://lore.kernel.org/all/20240326054149.2121-1-rdunlap@infradead.org/
-[2] https://lore.kernel.org/all/20240321163705.3067592-1-surenb@google.com/
+Fixes: 11c91be0e244 ("rhashtable: plumb through alloc tag")
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+Cc: linux-doc@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>
+---
+ lib/rhashtable.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Suren Baghdasaryan (6):
-  Documentation: rhashtable: undo _noprof additions in the documentation
-  Documentation: mm: undo _noprof additions in the documentation
-  Documentation: mempool: undo _noprof additions in the documentation
-  Documentation: mm: vmalloc: undo _noprof additions in the
-    documentation
-  Documentation: mm: percpu: undo _noprof additions in the documentation
-  Documentation: mm/slab: undo _noprof additions in the documentation
-
- lib/rhashtable.c |  6 +++---
- mm/mempolicy.c   |  6 +++---
- mm/mempool.c     |  2 +-
- mm/nommu.c       |  8 ++++----
- mm/page_alloc.c  |  8 ++++----
- mm/percpu.c      |  2 +-
- mm/slub.c        |  2 +-
- mm/util.c        | 10 +++++-----
- mm/vmalloc.c     | 14 +++++++-------
- 9 files changed, 29 insertions(+), 29 deletions(-)
-
-
-base-commit: 4aaccadb5c04dd4d4519c8762a38010a32d904a3
-prerequisite-patch-id: 1c2be401fcd818b167ef7d506a2fb87fea230835
-prerequisite-patch-id: d3c1b90bc5ee32295962c5d30bd79dfb6eb774c3
-prerequisite-patch-id: 25e37766c40250d564a0c198e2af01a9aae33c92
-prerequisite-patch-id: ed3859d70637371a854c212aa08db8f28edbede4
+diff --git a/lib/rhashtable.c b/lib/rhashtable.c
+index 35d841cf2b43..dbbed19f8fff 100644
+--- a/lib/rhashtable.c
++++ b/lib/rhashtable.c
+@@ -979,7 +979,7 @@ static u32 rhashtable_jhash2(const void *key, u32 length, u32 seed)
+ }
+ 
+ /**
+- * rhashtable_init_noprof - initialize a new hash table
++ * rhashtable_init - initialize a new hash table
+  * @ht:		hash table to be initialized
+  * @params:	configuration parameters
+  *
+@@ -1085,13 +1085,13 @@ int rhashtable_init_noprof(struct rhashtable *ht,
+ EXPORT_SYMBOL_GPL(rhashtable_init_noprof);
+ 
+ /**
+- * rhltable_init_noprof - initialize a new hash list table
++ * rhltable_init - initialize a new hash list table
+  * @hlt:	hash list table to be initialized
+  * @params:	configuration parameters
+  *
+  * Initializes a new hash list table.
+  *
+- * See documentation for rhashtable_init_noprof.
++ * See documentation for rhashtable_init.
+  */
+ int rhltable_init_noprof(struct rhltable *hlt, const struct rhashtable_params *params)
+ {
 -- 
 2.44.0.396.g6e790dbe36-goog
 
