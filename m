@@ -1,78 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05AE13C9B4;
-	Tue, 26 Mar 2024 16:05:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C1C13C9A8;
+	Tue, 26 Mar 2024 16:05:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711469133; cv=none; b=BD+ZMbKEdcb8lmfhK29Dm/ogDx7onXoN9VxgKrRlVSgtCnzDIRTWJslHgH0U3TNBf8jmMdksRXCAiUxfxTD6rVDOm23MLzcOreC4tvepIKmcpDz4sKz3t8/BmBlOI4gg1XJpC7Brx9C+kmpkZi/huym0aIzjZJZ4SDP6P6u3pbQ=
+	t=1711469133; cv=none; b=qKps+/X1gglCZDroEVoNjGcrBw9/9zOBjWLka9zXD0xuNyEAH56hogbWSHPoswLJz1uJVS9ThxM4IASGgPWy0pKpSeZazVgFHtSsSBwvB/vnJONEocAlCHlMejlfFKY5app9f6mTBJkmMUMGIXHb2ABXSCIUPQAkUSgV4OXcdMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711469133; c=relaxed/simple;
-	bh=g0s1dB0LXhq1sZH2VQQ0wVJ2jxGJiYzVo4rcMUpmffI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GFcvFs+ANAptkJWRmAECnugks4kv3ZQCv6A91JULAodoJP86ErhLCFwokBxeR+dCRNUn32FVAwHuYc7oikghiOVliHpnjWQnh5kFpUVUAmvE/bIOBOCc1HhyY9VUMSrB6jN5yv6SWwp1J2tT/AAWocXB5HKHzpO7NDrQFyXAD2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10791C433F1;
-	Tue, 26 Mar 2024 16:05:31 +0000 (UTC)
-Date: Tue, 26 Mar 2024 12:08:09 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Shuah Khan <shuah@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Aishwarya TCV <aishwarya.tcv@arm.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH 0/2] tracing/selftests: Verbosity improvements to KTAP
- output
-Message-ID: <20240326120809.09574951@gandalf.local.home>
-In-Reply-To: <20240325-kselftest-ftrace-ktap-verbose-v1-0-3785199809da@kernel.org>
-References: <20240325-kselftest-ftrace-ktap-verbose-v1-0-3785199809da@kernel.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	bh=xW73iKiHOHXhv+5X21cNPWJHx/XrMn1+Wb25gCynJ0A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EPl3tNcyDd2Y8keZQUv/d1tEqA6/RCRLCJUNmko8ZFmiC0J8b3wCmMVLChqvmvc/d/K/Uu9WJtKAa5tW7WqOkV7M77StYPr5GXHz7jUEb5i5//sogxviuSh5xpWDgYPnTUhJ5reGE31OLyQsxLr5TCRYOcV1ft0ujoofqTNFXQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pOSCaBFg; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pOSCaBFg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53AB1C433A6;
+	Tue, 26 Mar 2024 16:05:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1711469132;
+	bh=xW73iKiHOHXhv+5X21cNPWJHx/XrMn1+Wb25gCynJ0A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pOSCaBFgxlzYRC1QHj+M0Xcwy1p0tdXhfP8ICOp18R3591t9EG++ZiLluaOaabmII
+	 9WzJQgasDq4DGjawm01W9hwmIHB2QztOyW8SXvpDBw5vyA/ujZ+1n5qE32JAHvIwG7
+	 tDttpucnG8wYeLoS5mv5Ejdr5kGfn6xFR3cvKhys=
+Date: Tue, 26 Mar 2024 17:05:30 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Philipp Hortmann <philipp.g.hortmann@gmail.com>
+Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: [PATCH v2] staging: wlan-ng: Remove broken driver prism2_usb
+Message-ID: <2024032616-hangnail-petunia-4b07@gregkh>
+References: <20240326084742.GA16228@matrix-ESPRIMO-P710>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240326084742.GA16228@matrix-ESPRIMO-P710>
 
-
-Shuah,
-
-If Masami is OK with this, can you take this through your tree?
-
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
--- Steve
-
-
-On Mon, 25 Mar 2024 16:15:49 +0000
-Mark Brown <broonie@kernel.org> wrote:
-
-> This series aims to improve the usability of the ftrace selftests when
-> running as part of the kselftest runner, mainly for use with automated
-> systems.  It fixes the output of verbose mode when run in KTAP output
-> mode and then enables verbose mode by default when invoked from the
-> kselftest runner so that the diagnostic information is there by default
-> when run in automated systems.
+On Tue, Mar 26, 2024 at 09:47:42AM +0100, Philipp Hortmann wrote:
+> Driver has a throughput of 200 to 800kByte/s in non encrypted
+> transmission. All encrypted modes are not working. WLAN without WPA2 is
+> useless these days. Driver is unused since April 2021 as a bug broke the
+> function. Find fix for bug in link below. Remove driver because of its
+> low performance and unusability.
 > 
-> I've split this into two patches in case there is a concern with one
-> part but not the other, especially given the verbosity of the verbose
-> output when it triggers.
-> 
-> Signed-off-by: Mark Brown <broonie@kernel.org>
+> Link: https://lore.kernel.org/linux-staging/5fa18cb8-3c51-4ac6-811e-63ae74f82f17@gmail.com/
+> Signed-off-by: Philipp Hortmann <philipp.g.hortmann@gmail.com>
 > ---
-> Mark Brown (2):
->       tracing/selftests: Support log output when generating KTAP output
->       tracing/selftests: Default to verbose mode when running in kselftest
+> v2: rebase and improved description
 > 
->  tools/testing/selftests/ftrace/ftracetest      | 8 +++++++-
->  tools/testing/selftests/ftrace/ftracetest-ktap | 2 +-
->  2 files changed, 8 insertions(+), 2 deletions(-)
-> ---
-> base-commit: 4cece764965020c22cff7665b18a012006359095
-> change-id: 20240319-kselftest-ftrace-ktap-verbose-72e37957e213
-> 
-> Best regards,
+> Checked for artifacts of wlan-ng and prism2_usb in MAINTAINERS.
+> Removed artifacts in Makefile.
+> Used the following hardware for tests: D-Link DWL-122 and Sinus 111
+> Tested with build and make clean to ensure that all is OK.
 
+Nice, always glad to remove code, now queued up!
+
+greg k-h
