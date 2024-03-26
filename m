@@ -1,192 +1,159 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C082CA8
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 20:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C4017591;
+	Tue, 26 Mar 2024 20:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711485751; cv=none; b=ORqXkRZqb6ZfWnQyPtj2prZ78K/o9XWyV/E2IdXPN52MDZhQGu+2HQiv+OuCx6wWYqh5sfaXbnoJSGu81IeLEgX8C26jXj2P1k8a7UAMkoydgMtSQxTLkX+OdJSx5FO1ZIo+A88WGiZqmeMd4cjIYVsx/LXBO26MiUdtBTSMiho=
+	t=1711485805; cv=none; b=ulhF3ztb5dt0Bb5DCq/UqanOAoR9V8oljCp8X7RYbnHNXFxEdlIM5QbeW3wsvTNpTphYpQdWJoWp5Qs7SyK71dqEcNWgeMQ/mTu3tcbOQrCSfhUsbvFDAXPMaeZNqKf9ueBVnJK02KwR9otFj5QgLkGdn5T6uZMAeCSraMu+jwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711485751; c=relaxed/simple;
-	bh=pLHWzs987kbANZLhWn+OVDYNz1mbnSNZ0ZnNwiv7Qs4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A2pSRc1Gp6oDoBBXw4LSFTws5fb3wFFmBbR8hvXsaYp5jn8xGKs10OoxhyQ3sA1kgiaYfMiXnE4igLpXkXo4wcGQQ+KyeWN1brFPNk+o3vM8bWa7M2y3nZ1CYSa39jXoCxyGdFlYwwpn6kYWfkdNHk+dIzg1ftfJ4n61KOWjp9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AQ9F7CAy; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1711485805; c=relaxed/simple;
+	bh=SK4kbVI23QJSidrvvQmGhUSWkTsnFTBDfUyJyLO8ZLc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BMNORMxc9IzGRia0e55OX8HEP5JehY5UpAx/VOTLg70jkrFsOKqP796CFYRQzch7Zag8II2ZZiKztSd3J22yjliH6DK8QOAxUVwUXQrw4+VEfZK+7XQ6U/555hFs4xx754zl6vSBgaDfAIYLw9U+51egYQbaer3pUukHiyk/iak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T1zG7X3F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AQ9F7CAy"
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4d438e141d5so111917e0c.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 13:42:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711485749; x=1712090549; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WXbMV//iCVDcmmeY0RArWtkZ2QeUzFh9TWNfWy7C9Pk=;
-        b=AQ9F7CAyYu031wbKs1aGnu9bXs392xQBUMzvA2w60O7IGoAQyjJ0PUzN6j8QKyNi8L
-         3mE2HQSCx7+icQ/359I52RxjMKy4cgxedF+WZeyTpD1ZaUjM3gJQ1On75CNUl5xJ8Nnl
-         EeCFTfFICgcPD3tngZicsaJZLhYfOEnygZeWJFQZkl8u3h53ZKvWdi12Kzs7AuKY1w66
-         OCOJHsIUaBZZod3TCCEoFrnuZ8po0nZaW9NjiRzdrXWWvj6EZaSU/e9HzKzsnjGdWTf5
-         f2hwY6UZz8zwzBFhGHSyRpcM/YuDfGNCfiABAz4idshPyq+z4zN/dkoBXjImak3o3Ws3
-         2lpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711485749; x=1712090549;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WXbMV//iCVDcmmeY0RArWtkZ2QeUzFh9TWNfWy7C9Pk=;
-        b=O8buDPMycYbYceD45bqnHhX9d4mUN5XVNFzlJC2L8mTpf/F6MjNJjXYTpwCfWzmEzZ
-         IHZHv4uoRFUWyJNWSSJMy+h2ICqH15p10Jj4A99xBVSGLC6icWVABarOarda5vtIZWzI
-         q/8BogYFGGZoAAy31XpIDs9zxdbF/nm/k146BOsDa/wrR4lxx5KXMmUyn9U5N57UpJPS
-         mJ1sMIVE+QeFqHgNNLaCTz7eQzM6YbQAYQlQKqn1shYsLONBkpdTOreNO56oaq1dyEm5
-         /3ICRnQw2RzAYPF/CHh8XdLOs4UBl0fIaBsNtTbGdNvhOtm2Zu3YQACx1Y6fyG/yWM/i
-         VnqA==
-X-Forwarded-Encrypted: i=1; AJvYcCWaIwtYC5GZqpGW/PvsAmoXLARna9QbZ8uN5GXkbIl7gQ1rI7KfT8P+0bhbgVnk4up6xSnetfLQDxLoWIvMfFK1ppWJ2UlzfiJN75ag
-X-Gm-Message-State: AOJu0Yxm4sO2vgGZj6EI6Tmre+5pExmtMVf7lUQx1B4IS1wDQb8q9r/c
-	ACS6sH1c/TXq/uS/KZa4hXIyytjVmUWED67KQIFxvUPloTyoCWVOnWPuKfd8j1ZMj7+wbBHYArz
-	xgM43O3O7ws2Rl6/oRCsopu7+tnw8xHiwa+mv
-X-Google-Smtp-Source: AGHT+IEEPd7cbBYNSs6jDBcU4yy5IaPB7/HfMZQ44tBZJVln+87cjP8JeA/iYHT88HbKfAHsVw8BjLKn2q9CrpQ8eQg=
-X-Received: by 2002:a05:6122:181c:b0:4d4:4ff8:c367 with SMTP id
- ay28-20020a056122181c00b004d44ff8c367mr2307752vkb.6.1711485748894; Tue, 26
- Mar 2024 13:42:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T1zG7X3F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0DF8C433C7;
+	Tue, 26 Mar 2024 20:43:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711485805;
+	bh=SK4kbVI23QJSidrvvQmGhUSWkTsnFTBDfUyJyLO8ZLc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T1zG7X3FsdrUOA8RBROUWxAURta4X2xmEopM/2AQfsExg9+HdxvwMh31OsWBsdWld
+	 5A5yKq0cQF+S52QLaLfqg2I5cgx9pYlR44mKoQQ+IjXxZQj3GNvr826zovyj00zViF
+	 a3udcNZ5hfbUnZ5xnD7qd6NEvyFD0g57E1D1wdwlV6e5+xVAJicTSPbWbM6Ri/FaLB
+	 Pcf1YNWYAdqeA57trJw+P6zDKP6oju6s7JCHwsrWwEp+gGIVelQ7coeOBzeF3STI+R
+	 KQbZ4pGV+5BOeV9TQJg2USJHmpuDsnT2sv8oS9uHz+g0B6ktsHtpJooTsD+5CcCiTg
+	 kR6BbrYGaRkgA==
+Date: Tue, 26 Mar 2024 15:43:22 -0500
+From: Rob Herring <robh@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Lizhi Hou <lizhi.hou@amd.com>, Max Zhen <max.zhen@amd.com>,
+	Sonal Santan <sonal.santan@amd.com>,
+	Stefano Stabellini <stefano.stabellini@xilinx.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Nuno Sa <nuno.sa@analog.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v6 0/2] Synchronize DT overlay removal with devlink
+ removals
+Message-ID: <20240326204322.GA3376856-robh@kernel.org>
+References: <20240325152140.198219-1-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <0851a207-7143-417e-be31-8bf2b3afb57d@molgen.mpg.de>
- <47e032a0-c9a0-4639-867b-cb3d67076eaf@suse.com> <20240326155247.GJZgLvT_AZi3XPPpBM@fat_crate.local>
- <80582244-8c1c-4eb4-8881-db68a1428817@suse.com> <20240326191211.GKZgMeC21uxi7H16o_@fat_crate.local>
- <CANpmjNOcKzEvLHoGGeL-boWDHJobwfwyVxUqMq2kWeka3N4tXA@mail.gmail.com> <20240326202548.GLZgMvTGpPfQcs2cQ_@fat_crate.local>
-In-Reply-To: <20240326202548.GLZgMvTGpPfQcs2cQ_@fat_crate.local>
-From: Marco Elver <elver@google.com>
-Date: Tue, 26 Mar 2024 21:41:50 +0100
-Message-ID: <CANpmjNM0fnqDJHZYxvy6dfTHE3jeCv-rXmaJiD5XXx+bodF1-A@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Disable KCSAN for autogenerated *.mod.c intermediaries
-To: Borislav Petkov <bp@alien8.de>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org, 
-	Nikolay Borisov <nik.borisov@suse.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Paul Menzel <pmenzel@molgen.mpg.de>, Thomas Gleixner <tglx@linutronix.de>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, kasan-dev@googlegroups.com, 
-	David Kaplan <David.Kaplan@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240325152140.198219-1-herve.codina@bootlin.com>
 
-On Tue, 26 Mar 2024 at 21:26, Borislav Petkov <bp@alien8.de> wrote:
->
-> On Tue, Mar 26, 2024 at 08:33:31PM +0100, Marco Elver wrote:
-> > I think just removing instrumentation from the mod.c files is very reasonable.
->
-> Thanks!
->
-> @Masahiro: pls send this to Linus now as the commit which adds the
-> warning is in 6.9 so we should make sure we release it with all issues
-> fixed.
->
-> Thx.
->
-> ---
-> From: "Borislav Petkov (AMD)" <bp@alien8.de>
-> Date: Tue, 26 Mar 2024 21:11:01 +0100
->
-> When KCSAN and CONSTRUCTORS are enabled, one can trigger the
->
->   "Unpatched return thunk in use. This should not happen!"
->
-> catch-all warning.
->
-> Usually, when objtool runs on the .o objects, it does generate a section
-> .return_sites which contains all offsets in the objects to the return
-> thunks of the functions present there. Those return thunks then get
-> patched at runtime by the alternatives.
->
-> KCSAN and CONSTRUCTORS add this to the the object file's .text.startup
-> section:
->
->   -------------------
->   Disassembly of section .text.startup:
->
->   ...
->
->   0000000000000010 <_sub_I_00099_0>:
->     10:   f3 0f 1e fa             endbr64
->     14:   e8 00 00 00 00          call   19 <_sub_I_00099_0+0x9>
->                           15: R_X86_64_PLT32      __tsan_init-0x4
->     19:   e9 00 00 00 00          jmp    1e <__UNIQUE_ID___addressable_cryptd_alloc_aead349+0x6>
->                           1a: R_X86_64_PLT32      __x86_return_thunk-0x4
->   -------------------
->
-> which, if it is built as a module goes through the intermediary stage of
-> creating a <module>.mod.c file which, when translated, receives a second
-> constructor:
->
->   -------------------
->   Disassembly of section .text.startup:
->
->   0000000000000010 <_sub_I_00099_0>:
->     10:   f3 0f 1e fa             endbr64
->     14:   e8 00 00 00 00          call   19 <_sub_I_00099_0+0x9>
->                           15: R_X86_64_PLT32      __tsan_init-0x4
->     19:   e9 00 00 00 00          jmp    1e <_sub_I_00099_0+0xe>
->                           1a: R_X86_64_PLT32      __x86_return_thunk-0x4
->
->   ...
->
->   0000000000000030 <_sub_I_00099_0>:
->     30:   f3 0f 1e fa             endbr64
->     34:   e8 00 00 00 00          call   39 <_sub_I_00099_0+0x9>
->                           35: R_X86_64_PLT32      __tsan_init-0x4
->     39:   e9 00 00 00 00          jmp    3e <__ksymtab_cryptd_alloc_ahash+0x2>
->                           3a: R_X86_64_PLT32      __x86_return_thunk-0x4
->   -------------------
->
-> in the .ko file.
->
-> Objtool has run already so that second constructor's return thunk cannot
-> be added to the .return_sites section and thus the return thunk remains
-> unpatched and the warning rightfully fires.
->
-> Drop KCSAN flags from the mod.c generation stage as those constructors
-> do not contain data races one would be interested about.
->
-> Debugged together with David Kaplan <David.Kaplan@amd.com> and Nikolay
-> Borisov <nik.borisov@suse.com>.
->
-> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-> Link: https://lore.kernel.org/r/0851a207-7143-417e-be31-8bf2b3afb57d@molgen.mpg.de
+On Mon, Mar 25, 2024 at 04:21:24PM +0100, Herve Codina wrote:
+> Hi,
+> 
+> In the following sequence:
+>   of_platform_depopulate(); /* Remove devices from a DT overlay node */
+>   of_overlay_remove(); /* Remove the DT overlay node itself */
+> 
+> Some warnings are raised by __of_changeset_entry_destroy() which  was
+> called from of_overlay_remove():
+>   ERROR: memory leak, expected refcount 1 instead of 2 ...
+> 
+> The issue is that, during the device devlink removals triggered from the
+> of_platform_depopulate(), jobs are put in a workqueue.
+> These jobs drop the reference to the devices. When a device is no more
+> referenced (refcount == 0), it is released and the reference to its
+> of_node is dropped by a call to of_node_put().
+> These operations are fully correct except that, because of the
+> workqueue, they are done asynchronously with respect to function calls.
+> 
+> In the sequence provided, the jobs are run too late, after the call to
+> __of_changeset_entry_destroy() and so a missing of_node_put() call is
+> detected by __of_changeset_entry_destroy().
+> 
+> This series fixes this issue introducing device_link_wait_removal() in
+> order to wait for the end of jobs execution (patch 1) and using this
+> function to synchronize the overlay removal with the end of jobs
+> execution (patch 2).
+> 
+> Compared to the previous iteration:
+>   https://lore.kernel.org/linux-kernel/20240307111036.225007-1-herve.codina@bootlin.com/
+> this v6 series:
+> - Add Saravana's 'Reviewed-by' tag
+> 
+> This series handles cases reported by Luca [1] and Nuno [2].
+>   [1]: https://lore.kernel.org/all/20231220181627.341e8789@booty/
+>   [2]: https://lore.kernel.org/all/20240205-fix-device-links-overlays-v2-2-5344f8c79d57@analog.com/
+> 
+> Best regards,
+> Hervé
+> 
+> Changes v5 -> v6
+>   - Patch 1
+>     Add 'Reviewed-by: Saravana Kannan <saravanak@google.com>'
+> 
+>   - Patch 2
+>     No changes
+> 
+> Changes v4 -> v5
+>   - Patch 1
+>     Remove the 'Fixes' tag
+>     Add 'Tested-by: Luca Ceresoli <luca.ceresoli@bootlin.com>'
+>     Add 'Reviewed-by: Nuno Sa <nuno.sa@analog.com>'
+> 
+>   - Patch 2
+>     Update comment as suggested
+>     Add 'Reviewed-by: Saravana Kannan <saravanak@google.com>'
+>     Add 'Tested-by: Luca Ceresoli <luca.ceresoli@bootlin.com>'
+>     Add 'Reviewed-by: Nuno Sa <nuno.sa@analog.com>'
+> 
+> Changes v3 -> v4
+>   - Patch 1
+>     Uses flush_workqueue() instead of drain_workqueue().
+> 
+>   - Patch 2
+>     Remove unlock/re-lock when calling device_link_wait_removal()
+>     Move device_link_wait_removal() call to of_changeset_destroy()
+>     Update commit log
+> 
+> Changes v2 -> v3
+>   - Patch 1
+>     No changes
+> 
+>   - Patch 2
+>     Add missing device.h
+> 
+> Changes v1 -> v2
+>   - Patch 1
+>     Rename the workqueue to 'device_link_wq'
+>     Add 'Fixes' tag and Cc stable
+> 
+>   - Patch 2
+>     Add device.h inclusion.
+>     Call device_link_wait_removal() later in the overlay removal
+>     sequence (i.e. in free_overlay_changeset() function).
+>     Drop of_mutex lock while calling device_link_wait_removal().
+>     Add	'Fixes'	tag and Cc stable
+> 
+> Herve Codina (2):
+>   driver core: Introduce device_link_wait_removal()
+>   of: dynamic: Synchronize of_changeset_destroy() with the devlink
+>     removals
+> 
+>  drivers/base/core.c    | 26 +++++++++++++++++++++++---
+>  drivers/of/dynamic.c   | 12 ++++++++++++
+>  include/linux/device.h |  1 +
+>  3 files changed, 36 insertions(+), 3 deletions(-)
 
-Reviewed-by: Marco Elver <elver@google.com>
-
-Thanks!
-
-> ---
->  scripts/Makefile.modfinal | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
-> index 8568d256d6fb..79fcf2731686 100644
-> --- a/scripts/Makefile.modfinal
-> +++ b/scripts/Makefile.modfinal
-> @@ -23,7 +23,7 @@ modname = $(notdir $(@:.mod.o=))
->  part-of-module = y
->
->  quiet_cmd_cc_o_c = CC [M]  $@
-> -      cmd_cc_o_c = $(CC) $(filter-out $(CC_FLAGS_CFI) $(CFLAGS_GCOV), $(c_flags)) -c -o $@ $<
-> +      cmd_cc_o_c = $(CC) $(filter-out $(CC_FLAGS_CFI) $(CFLAGS_GCOV) $(CFLAGS_KCSAN), $(c_flags)) -c -o $@ $<
->
->  %.mod.o: %.mod.c FORCE
->         $(call if_changed_dep,cc_o_c)
-> --
-> 2.43.0
->
->
->
-> --
-> Regards/Gruss,
->     Boris.
->
-> https://people.kernel.org/tglx/notes-about-netiquette
+Applied, thanks!
