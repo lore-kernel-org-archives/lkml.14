@@ -1,194 +1,161 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2096.outbound.protection.outlook.com [40.107.94.96])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51BC813C82D;
-	Tue, 26 Mar 2024 15:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711465250; cv=none; b=PiJ5wc2NCX8KtLiiRS+1RHCPxIS7ejQkMhRgaTvxB6cOsTz53ScXuJqY91XQbnM8vGqwnvchKi7OjBBgs+gSWTb75cdqaZBqeUvte/ubRzJE0BoMZOx2DrAfi+CS5JlUomgXrzT/j7QnUoit2eImevqnmphmrplJBSyStBYG7Zs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711465250; c=relaxed/simple;
-	bh=pdFwi5vtNrKZeNALNYwLixoxGMXi0UyYvxxlVlUCD0M=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dpkOqHZ9d25a80Qcp4KpCCNU+6FpTWXMV4mTJUod38jEhqAPI+u6J+ORZEAHJ9hp/9D6tURBqiHhH5Gh7EGiURdzOXM9A8p17+k4zgVFeCroeAPaYL9Sk0Hw0s+DJBVywfz+6o/UqxzCFuWQX8qHNudJg9BLQNeNlg/c1PVh0hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gcyKEEem; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A5713C683
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:01:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.96
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711465287; cv=fail; b=J+BaSGARbuyyKzGtGnTg4MHBvl5img1LZJzzUyU2G6ea4c/ok3sPLRH5S9wnFNfSP20RTnsvBONLukE2gQp8SZzwdkq0b1wlPY39wKZped4CFLuWlIMvSBV0A8Bf9OEQF41J5WJfwoR9Ka3903c2vDNiDhnGai+Y70dsh6IGoG0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711465287; c=relaxed/simple;
+	bh=eI7ijINAmGV5QpMXXHfpeTEGXYWX0G5pF/NeOjeim40=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ghn2ZwAewWsM9IKHUSkDLzDmJDGouDfnbSzDBw2fKqWMQJj4w80qt9gn/4CNLGu7pThN4t5n3PdmO4WCUScsfLyglS0HcMtoRP6JE/cDHOtf0m7fLab5z1HKR4pbN1iVhbR+2UntecXNOMmW8EzKzxSodnEn0p/AEaVAEH6yt+k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=AzIwzKYo; arc=fail smtp.client-ip=40.107.94.96
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gcyKEEem"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6ea9a60f7f5so2481670b3a.3;
-        Tue, 26 Mar 2024 08:00:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711465248; x=1712070048; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fxIIBTP4rXppfPhTT/4q0S1EVkuGtE5Ah2bvfj9/Kl4=;
-        b=gcyKEEem0DFob2sI1L0xA6gdTtrEeKTXRMNOy6AmIdu+axpXnt1illAHPVH5ZBEwtR
-         i+Y5vrIgRrk/G56yehIdoMsLOgbMxYYCicMW7UKHaVuwdPRZBoInjcwIzNwSGdn5ZWuc
-         0A6AQiC6A11UoiQPhXflaZiNpYpc1sHwPXbY60SUnR8R26E0DLhT3Bq7xR0F8/lAV/ut
-         O56TGbe/q6sX+R1MGKCVNqj9nKkLJLMYxVg2Wcvs3vERxDtZOjDNBxk5yf1Ngo97Hv2W
-         uJoz6YjOUmOG74nS2mKcjMxaFhoKiVbxuEDrIIoCGkiiNshYE/2dSowJhCPIwYodsBg0
-         XQ5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711465248; x=1712070048;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fxIIBTP4rXppfPhTT/4q0S1EVkuGtE5Ah2bvfj9/Kl4=;
-        b=xMo/1SmA026zyNvsUZQ6h+FnCYxvj0dPp+krzvLQ0eoM9OodF3+5WuaRO2ygwt9A9l
-         vB0Y9Bz64xLaGSqmMSLaLXwAN0BdHLnvegxYV3cc9LA/W0Sop38k1AFuPggOThiQ2COK
-         YBrIIfDzxuCWA9I2BHtncuMs/aBXH7JlXQ7GnRz8QoilJHBymjvsCEe6F7Psh6m8gOft
-         Pin3DMnkDD2JNqRlwSgJKDP67CZDcAIFr8yWC6Rt50DxEPbpI9DXvrKuxCe2n42ldL82
-         VKzWunA1dHWVyDE7iyA6Ohl4ZcU89EzyRPrsfsVrRwkHKw1Qp9gIRgM+7XXZWWF27E9/
-         H9EA==
-X-Forwarded-Encrypted: i=1; AJvYcCU2eFaWS7wHXOEGdR52axpCbAk7ahZDGKJVEIUaECDvwBWNZFKNDZHkXr6+f488pfCK2qBVpY82ToGkdCQ5yC2QqieIuxRf9Kj3QFznVy2j+CCImXrtqjGgTL/ZIzTcDyEKUEnPTc4LocEJ0/qwJicxNqJOSIyduBo8va191qcf5xhutmaDwW2F
-X-Gm-Message-State: AOJu0YwMGGeGHAW7dcfY0/RUscoTdSVuiaa0Oyfgaw2y35FkYsVLXq68
-	RpssDsTPB9Ch6M1z0F5UNawjImAk/iDHDesRjy744iBZimGzR0kL
-X-Google-Smtp-Source: AGHT+IH1cX47UcVDJeEEPc3BtsiLHnch3pmt/eT/zXRUGHXwiIA0NbF5hbSlAoW8eYDLcPteprOuGw==
-X-Received: by 2002:a05:6a20:6a22:b0:1a3:c3e6:aef7 with SMTP id p34-20020a056a206a2200b001a3c3e6aef7mr7554771pzk.54.1711465248497;
-        Tue, 26 Mar 2024 08:00:48 -0700 (PDT)
-Received: from peter-bmc.dhcpserver.bu9bmc.local (1-34-21-66.hinet-ip.hinet.net. [1.34.21.66])
-        by smtp.gmail.com with ESMTPSA id l27-20020a635b5b000000b005dcbb855530sm7658404pgm.76.2024.03.26.08.00.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 08:00:48 -0700 (PDT)
-From: Peter Yin <peteryin.openbmc@gmail.com>
-To: patrick@stwcx.xyz,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	linux-watchdog@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/4] drivers: watchdog: ast2500 and ast2600 support bootstatus
-Date: Tue, 26 Mar 2024 23:00:27 +0800
-Message-Id: <20240326150027.3015958-5-peteryin.openbmc@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240326150027.3015958-1-peteryin.openbmc@gmail.com>
-References: <20240326150027.3015958-1-peteryin.openbmc@gmail.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="AzIwzKYo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QY1Nmg5bdAPpix/Cv+74S2PJMf1f9XvwoyEbHTOvMG37mrd94Be/4dwAFxAKUCoNGlwzinr94DBblVX5sDcmJJsQjQy104PtUT7vYU+f53tZmpVxzcNkhyFdgv5g+X0siGnbo5svHbYuDueX5gRN+04vFcH3AEzSM5h/Oq8LW8K707Ck32ULSY6otAecqGsChxd3e+xAI3+3Sag3MQdahprEv94Ay2Os5UZ0REk7GbcCuWDpy33kTyHqgKiOdECgMtcRJHavJetpXR8qvG9QgCYxZEp83L4Apc+G6hmLvpd+IFiKQP8vsV6knLU7dzN9HJNjorjxVsIyTRJmruuq3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zIBoei//BfDnZeMNg9YABkJNGg8n7I+ShdQoEZxmHFQ=;
+ b=ZWgyFvxYzz0+eRToDo6mLRFUnbuG5Nx/LC3K0LQqUggtwmMqvufVj4pCh8BSXb7ksAHZ4Eedyf+cYUTbrs4vLiw3IiE5ItyvxaxHBGt+ODlSIoEgc8iflKjSsuJIh0TlLyPxBSymSNfjkhWzfq/q5x1P/Gq2MCdVJIn7It+RBiDBa0xPZKsPDRLQV7Nw5iGi1BgOotYx2rDN9AOC4rVBVdPN7Hdegt/xE7Q2nuRYRC5TsSNM1RtFBqUTYf1B5T2fbAeGikll2TMWuWbjsaySU42F2z1QwRwonqsHNc0UH4DQZzqbQSKwcoSIBs1vf9R8JfUqmZVWRpsDVmdZu1HiHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zIBoei//BfDnZeMNg9YABkJNGg8n7I+ShdQoEZxmHFQ=;
+ b=AzIwzKYoleKG8MetlOmQibKZRhyN47nY8Pj/gYhdLNn5JkX3nl+Yk/LJP2bqbYUFMdYX7I3EuUXqIzof3zSzKuTH9tM4J31fnrBd47bQpu48pDlIhyuiUMqmMfDafgBpKJcRRf5PCw0Ynoq8yeVjpwKfs4PXJCyKFijp1pQWSHsTlSUqJzHYKDiWqndWAtHR5bOyR0XTXweIpTlrgNYWm1pAdGhHlM6ddsDHjjCXkHZyqOjhCPmDwQK1TqXfB807TkRqFvw3o5X0M4c9Aq/sJEVH3SozazJZMEhO6IXLWfi9rUhEmGAVAeFOGT9neXxpCmA9lQ1tbdx+nZopmsj8YA==
+Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
+ by SA1PR12MB8986.namprd12.prod.outlook.com (2603:10b6:806:375::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Tue, 26 Mar
+ 2024 15:01:21 +0000
+Received: from DM6PR12MB3849.namprd12.prod.outlook.com
+ ([fe80::6aec:dbca:a593:a222]) by DM6PR12MB3849.namprd12.prod.outlook.com
+ ([fe80::6aec:dbca:a593:a222%5]) with mapi id 15.20.7409.031; Tue, 26 Mar 2024
+ 15:01:19 +0000
+Date: Tue, 26 Mar 2024 12:01:18 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Peter Xu <peterx@redhat.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [RFC PATCH 1/8] mm: Provide pagesize to pmd_populate()
+Message-ID: <20240326150118.GI6245@nvidia.com>
+References: <cover.1711377230.git.christophe.leroy@csgroup.eu>
+ <54d78f1b7e7f1c671e40b7c0c637380bcb834326.1711377230.git.christophe.leroy@csgroup.eu>
+ <20240325161919.GD6245@nvidia.com>
+ <6e16e042-0143-4a52-b4b7-09cf0022bc3e@csgroup.eu>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6e16e042-0143-4a52-b4b7-09cf0022bc3e@csgroup.eu>
+X-ClientProxiedBy: BL1P221CA0001.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:208:2c5::12) To DM6PR12MB3849.namprd12.prod.outlook.com
+ (2603:10b6:5:1c7::26)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|SA1PR12MB8986:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	lBGMVJ1i782Kj62nCHvTDoSeSRlfHHPLmDVlP7J7vsJxRkRMCGq5xxLf1euUWbNd52IzPH6UR7AI4nMdA8P68KyiqpPmcuBF/4eQJjK8XnYaJ0bhNO9NUz5y3y8GNn1tFSV5fVlSSoomf7lkDM+yjxb/AbV+6IySNnvCg68iNeg024JoPLGR1y9x0sIr6H44XbNecvAA/Id+2/NRB6Ehow5IQVxIBEaPTBvpg+pC3pByIND76Xh+Fg4qadhmFGncYVBIriZb+CFYLqS/NYu5U8tR4FEez6FKUX8covmxoAXNCiYHRD3r6K6yuKUGFTb8MM2gNuoFBARpKlbsXhhlaXnWGqhSwRMC8WiTPHKTTXqR4yPV/zPUvdK0yCyR9pciBb0qJhXytt/16+zX1/J6ofOlMreIWSl70S70e4JAIf3QdAScvguUrINZmDnEQ1V/1+2yoL7crblRRqN7b0orlkkrAcBvJMVgzJ1xQlWBxi+3rm5NEIS7oDdImoZAWMfaSHXEQ8bQGfKmOBFZeCA+sNPsPETvAICx8wIQiY2jb9lo7VnP/Etii0IJiX0CBBPn+LWzy9dL6OsXRseeo+Egiu8sFKH5POHkB6DJVG9pa68XSZ8wHNikqZSQxg2JnNDpIYaEH9SzTFmAeCpGlf9WRqtybFy8mDgoW10Jkcsg4vg=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ZoQo4pmnp7qsaVBP32roq37B79KrTyA11vdkKeV3tlwB6gwQFBiZe7LstTcX?=
+ =?us-ascii?Q?SxtSH+I2xCMjI6tQlldOFaVcHD7jk4PGInH6+xQWiYhqlhHfaJm8kXRC+8s/?=
+ =?us-ascii?Q?yabiseWpdlZ48ZjKri+OlTknjkGThJh6nATVugCnzym1APVcZSEmcSEZstgp?=
+ =?us-ascii?Q?Pkg2spMvjh/qpZOF31DouXm1PQjEYoPNSeDCCgyqqWpYe5dJxOUAE3SWoddh?=
+ =?us-ascii?Q?tQR2g25QMLBCnPjIQn0OKGcQ8e+WR9hlYJHROcaSUpJPCa5J2bYRlOOfOiCU?=
+ =?us-ascii?Q?6n6LzLRB5JtsU0jzgtOTfuK1XxDtqQYBwQ/4fZSp7jEH4tB3xMvWBIiPlDKT?=
+ =?us-ascii?Q?EHhOzBUA9PBwODpUcgxmgR6JYMRdtaND2dIwHrsW8N23SWoZ2JM9So3qRbD5?=
+ =?us-ascii?Q?LeSZDGNrsecbyBWlScmbPOlxAiHvHWyNb0ghRVXWltmOgftUZGCIMntC93FG?=
+ =?us-ascii?Q?0AG7Yc01cOUauvLkYd5ab5LdxnlRNr805S9WgLPc7qQUvtWbWutOzJQO/w1q?=
+ =?us-ascii?Q?FASEh8FvH150HV9uUirt6+hjv2gWR5intP2xk5pPR0NNLWiHaOFzrXV1YqKL?=
+ =?us-ascii?Q?tNLqMHTDA2RSG6htkeLNrgqjPHquEwta8IEjW1WECxEz9qOp0QjCyrrtN8ZP?=
+ =?us-ascii?Q?Ia8vNM1kU0kK9VL0WUN8zcttV/ym0jAstUV0Wte9LEyzgUpyy54hQ4s6Wl5a?=
+ =?us-ascii?Q?/NShY2mVQX84+NxoGK54n00NbYipjrh8bQvwmQumIkUaZPlns4KcGYWymYlQ?=
+ =?us-ascii?Q?LDJmyrlZkFLFKkrZEGr/LKHfsRnLzy35V5yLWxfRrhudUfle0bx68O9N1cLd?=
+ =?us-ascii?Q?a2iBencaouVSgFjkKP2f0Uku4wrxPKcKXrbpTy0X118XnlJUU4WBeSdLZ+gw?=
+ =?us-ascii?Q?50DUWH+Fmw0JjtBeZ+G04yKpNUDVMuxXcT/QFR3geU4BRhxsuzJE8oOpPPln?=
+ =?us-ascii?Q?VCpl8r4AmQTlHbfcuitU/QX2YYwXy/zYWLO26PSElf4h7HL1ZRwReLmq7E/4?=
+ =?us-ascii?Q?L+8VpS6q3cE+eVi8ObxJteDpKaI6WniQpH3fXnw5DE6/QS0Kdr6lNwzjr3oN?=
+ =?us-ascii?Q?B5h8T60KUQ6DSpGju/6Jy0VEvuKAWipz4cAL9urOhY/yK2amzEmkQtrUTPZB?=
+ =?us-ascii?Q?6Ds6gMLCiFLHn//6MOGqyP7Z2PZUp0PPVVW+HGhRZZKjjCJUHiicXzKoy9pu?=
+ =?us-ascii?Q?s87hxC8wZASI8nlg1aMDIiqyc1C9rjIbAc+r0+MbvauvfWp6KFr5IkRMjW5y?=
+ =?us-ascii?Q?a6atebeZQJW9vRRfHgAZJ4mqRNgg4daZZEIucY6ViCVRnRzkOBFatG3PgaGu?=
+ =?us-ascii?Q?sEpuAZjEe9nitBXkDHyXsq2/KEGb3/v2ZbuPrJOvdoGrBcpxLd/9ZH4rbVWw?=
+ =?us-ascii?Q?cxFB/MrdsJV4us6CoDRouv+A39So72aIb8kVN8rQrAj525a+bkAViqXI2Io4?=
+ =?us-ascii?Q?6fsDSs5neOZvfTjuFYDnrAZ32O7pBBdx1a3grZOeegkK+RBxPo1m3TgoDzbb?=
+ =?us-ascii?Q?okEfwpfSoO1Ba2chJF5plXNpX+YfR43wn3YN8dMEYlDIf+F2yHgQrhv2S7Va?=
+ =?us-ascii?Q?+Ji0pXqZHAjY4Pf4ROSMVklWvzyZT3BJUH3SLSFb?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e08161f-dca7-446c-0c46-08dc4da59790
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 15:01:18.8821
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NFoWD8HximVzLgKaSeveenFyXnq/nHIglRgkU7JnrDz5VPvuBFtoy6atNcpKkpYk
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8986
 
-Add WDIOF_EXTERN1 and WDIOF_CARDRESET bootstatus in ast2600
+On Mon, Mar 25, 2024 at 07:05:01PM +0000, Christophe Leroy wrote:
 
-Regarding the AST2600 specification, the WDTn Timeout Status Register
-(WDT10) has bit 1 reserved. Bit 1 of the status register indicates
-on ast2500 if the boot was from the second boot source.
-It does not indicate that the most recent reset was triggered by
-the watchdog. The code should just be changed to set WDIOF_CARDRESET
-if bit 0 of the status register is set.
+> Not looked into details yet, but I guess so.
+> 
+> By the way there is a wiki dedicated to huge pages on powerpc, you can 
+> have a look at it here : 
+> https://github.com/linuxppc/wiki/wiki/Huge-pages , maybe you'll find 
+> good ideas there to help me.
 
-Include SCU register to veriy WDIOF_EXTERN1 in ast2600 SCU74 or
-ast2500 SCU3C when bit1 is set.
+There sure are alot of page tables types here
 
-Signed-off-by: Peter Yin <peteryin.openbmc@gmail.com>
----
- drivers/watchdog/aspeed_wdt.c | 53 ++++++++++++++++++++++++-----------
- 1 file changed, 37 insertions(+), 16 deletions(-)
+I'm a bit wondering about terminology, eg on the first diagram "huge
+pte entry" means a PUD entry that is a leaf? Which ones are contiguous
+replications?
 
-diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
-index b4773a6aaf8c..52afc5240b1c 100644
---- a/drivers/watchdog/aspeed_wdt.c
-+++ b/drivers/watchdog/aspeed_wdt.c
-@@ -11,10 +11,12 @@
- #include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/kstrtox.h>
-+#include <linux/mfd/syscon.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_irq.h>
- #include <linux/platform_device.h>
-+#include <linux/regmap.h>
- #include <linux/watchdog.h>
- 
- static bool nowayout = WATCHDOG_NOWAYOUT;
-@@ -65,23 +67,32 @@ MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
- #define WDT_RELOAD_VALUE	0x04
- #define WDT_RESTART		0x08
- #define WDT_CTRL		0x0C
--#define   WDT_CTRL_BOOT_SECONDARY	BIT(7)
--#define   WDT_CTRL_RESET_MODE_SOC	(0x00 << 5)
--#define   WDT_CTRL_RESET_MODE_FULL_CHIP	(0x01 << 5)
--#define   WDT_CTRL_RESET_MODE_ARM_CPU	(0x10 << 5)
--#define   WDT_CTRL_1MHZ_CLK		BIT(4)
--#define   WDT_CTRL_WDT_EXT		BIT(3)
--#define   WDT_CTRL_WDT_INTR		BIT(2)
--#define   WDT_CTRL_RESET_SYSTEM		BIT(1)
--#define   WDT_CTRL_ENABLE		BIT(0)
-+#define WDT_CTRL_BOOT_SECONDARY	BIT(7)
-+#define WDT_CTRL_RESET_MODE_SOC	(0x00 << 5)
-+#define WDT_CTRL_RESET_MODE_FULL_CHIP	(0x01 << 5)
-+#define WDT_CTRL_RESET_MODE_ARM_CPU	(0x10 << 5)
-+#define WDT_CTRL_1MHZ_CLK		BIT(4)
-+#define WDT_CTRL_WDT_EXT		BIT(3)
-+#define WDT_CTRL_WDT_INTR		BIT(2)
-+#define WDT_CTRL_RESET_SYSTEM		BIT(1)
-+#define WDT_CTRL_ENABLE		BIT(0)
- #define WDT_TIMEOUT_STATUS	0x10
--#define   WDT_TIMEOUT_STATUS_IRQ		BIT(2)
--#define   WDT_TIMEOUT_STATUS_BOOT_SECONDARY	BIT(1)
-+#define WDT_TIMEOUT_STATUS_IRQ		BIT(2)
-+#define WDT_TIMEOUT_STATUS_BOOT_SECONDARY	BIT(1)
-+#define WDT_TIMEOUT_STATUS_EVENT		BIT(0)
- #define WDT_CLEAR_TIMEOUT_STATUS	0x14
--#define   WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION	BIT(0)
-+#define WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION	BIT(0)
- #define WDT_RESET_MASK1		0x1c
- #define WDT_RESET_MASK2		0x20
- 
-+/*
-+ * Ast2600 SCU74 bit1 is External reset flag
-+ * Ast2500 SCU3C bit1 is External reset flag
-+ */
-+#define   EXTERN_RESET_FLAG		BIT(1)
-+#define   AST2500_SYSTEM_RESET_EVENT	(0x3C)
-+#define   AST2600_SYSTEM_RESET_EVENT	(0x74)
-+
- /*
-  * WDT_RESET_WIDTH controls the characteristics of the external pulse (if
-  * enabled), specifically:
-@@ -458,15 +469,25 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- 		writel(duration - 1, wdt->base + WDT_RESET_WIDTH);
- 	}
- 
-+	struct regmap *scu_base = syscon_regmap_lookup_by_phandle(dev->of_node,
-+							     "aspeed,scu");
- 	status = readl(wdt->base + WDT_TIMEOUT_STATUS);
--	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY) {
-+	if (status & WDT_TIMEOUT_STATUS_EVENT)
- 		wdt->wdd.bootstatus = WDIOF_CARDRESET;
- 
--		if (of_device_is_compatible(np, "aspeed,ast2400-wdt") ||
--		    of_device_is_compatible(np, "aspeed,ast2500-wdt"))
--			wdt->wdd.groups = bswitch_groups;
-+	if (of_device_is_compatible(np, "aspeed,ast2600-wdt")) {
-+		regmap_read(scu_base, AST2600_SYSTEM_RESET_EVENT, &status);
-+	} else {
-+		regmap_read(scu_base, AST2500_SYSTEM_RESET_EVENT, &status);
-+		wdt->wdd.groups = bswitch_groups;
- 	}
- 
-+	/*
-+	 * Reset cause by Extern Reset
-+	 */
-+	if (status & EXTERN_RESET_FLAG)
-+		wdt->wdd.bootstatus |= WDIOF_EXTERN1;
-+
- 	dev_set_drvdata(dev, wdt);
- 
- 	return devm_watchdog_register_device(dev, &wdt->wdd);
--- 
-2.25.1
+Just general remarks on the ones with huge pages:
 
+ hash 64k and hugepage 16M/16G
+ radix 64k/radix hugepage 2M/1G
+ radix 4k/radix hugepage 2M/1G
+ nohash 32
+  - I think this is just a normal x86 like scheme? PMD/PUD can be a
+    leaf with the same size as a next level table. 
+
+    Do any of these cases need to know the higher level to parse the
+    lower? eg is there a 2M bit in the PUD indicating that the PMD 
+    is a table of 2M leafs or does each PMD entry have a bit
+    indicating it is a leaf?
+
+ hash 4k and hugepage 16M/16G
+ nohash 64
+  - How does this work? I guess since 8xx explicitly calls out
+    consecutive this is actually the pgd can point to 512 256M
+    entries or 8 16G entries? Ie the table size at each level is
+    varable? Or is it the same and the table size is still 512 and
+    each 16G entry is replicated 64 times?
+
+    Do the offset accessors already abstract this enough?
+
+ 8xx 4K
+ 8xx 16K
+   - As this series does?
+
+Jason
