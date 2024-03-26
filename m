@@ -1,198 +1,213 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C205413D246;
-	Tue, 26 Mar 2024 18:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723D513C3CD;
+	Tue, 26 Mar 2024 18:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711479307; cv=none; b=JKZr611G0x+7Wjs0bR+Qybrs1W2al27lWlklK4a9nHUd3XY3V8t/zDYjt7jKgSsMGUIQDSyx67gtjkZxSbu1zA8t7n8lMnv1JP8uRJNj8aa9yTHY4qwqN1QGLl7hiDz8EgSwJz96qU4qJGaFDyBSKJ/ojTbUewZ/ibwM2/hBD4Y=
+	t=1711479314; cv=none; b=s0YBKZkxLw1EBjbk3mtlUVUl4vaK6WvpHrrNNRWnZknRHx5yE2Gpvi4syK50OQO5/yOGX3joqeHI5Vh5eEJUyYlB/qdhYDiEYYu/KzRNQnR3SSb005717YupbHlwM+WV+2NgdHKOFC8/yOBUYASPffbmssczgS9ZiA/GF2AV2RY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711479307; c=relaxed/simple;
-	bh=vifJid4QP5qu+Ze145AQyrCHImE3LdpNdcm4JKsVFQw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S47WMYFk4JSBCll338UA1iCZnh+WLh/rnDPON0rtiNkoqSY7skZq8bkAHtVdKyLMOcZnk2VZTIJuFv6L6Og9ghwkGrNi3h6Pk2p44fowFphAGg9L/D+kATiOpFsZzdZCaP0SjKQ0kNWb3M0ywoaUW9DENQUfd72aOPaQIq6Nztw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Y6ckrf1Z; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1711479314; c=relaxed/simple;
+	bh=eLWdTmkX6BBbodK2iLPdweL1DI0T40cTBvjP1ZxdWVg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=dENtc095nYgr1Vj/hka5Nt6yY+xf3Op8w7YWJgiDbbkPSkBqoZdo0nOOoQ22olhAXDQMjQhyBwhs8IdQ0gOrr2XMX5g1DTtRmfYcbtpy5G+gqzrIPPEdRh8eTQmnfum8b96JLKraM2n0khI9eyUY8bQ8LBNriAb4JNiVzNQzKdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJpjPqdN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y6ckrf1Z"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42QIshQg064686;
-	Tue, 26 Mar 2024 13:54:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1711479283;
-	bh=XhGMipz2RJEepgM1inPEbiVZpQtvwi2BB5eqncZug+k=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=Y6ckrf1Z33cJ6oNeE2PFFaxivkl50uMsXhJK20Sq8XaL2lVqW2lYsZKMvy/sqlzgO
-	 KUbJyiX+oQ1d1B6TSgOXa7UPl1GEjK9BeC0VrJVULUtzG0g0lVoAWMEecxuYhuTV+/
-	 FS6nRoERHTo0Uru8UP/kHrTWD+WHC55B6QMme5U8=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42QIsh53100412
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 26 Mar 2024 13:54:43 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 26
- Mar 2024 13:54:43 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 26 Mar 2024 13:54:43 -0500
-Received: from lelvsmtp5.itg.ti.com ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42QIsfIl091446;
-	Tue, 26 Mar 2024 13:54:42 -0500
-From: Andrew Davis <afd@ti.com>
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero
- Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Andrew Davis <afd@ti.com>
-Subject: [PATCH 3/6] arm64: dts: ti: k3-j7200: Remove UART baud rate selection
-Date: Tue, 26 Mar 2024 13:54:38 -0500
-Message-ID: <20240326185441.29656-3-afd@ti.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240326185441.29656-1-afd@ti.com>
-References: <20240326185441.29656-1-afd@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJpjPqdN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53F7DC433F1;
+	Tue, 26 Mar 2024 18:55:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711479314;
+	bh=eLWdTmkX6BBbodK2iLPdweL1DI0T40cTBvjP1ZxdWVg=;
+	h=Date:From:To:Cc:Subject:From;
+	b=gJpjPqdNq3WnXv3+hUhWUVvUEF2NVYR0ZLnvkhMZ6KJ7JwzrdDRRjJkf841deUGnE
+	 tw2eZq/tSx9X2gsKS6VrjhTRfVwwuWYaQmxHIRMhpfOL3+O5i98IQtIDBxORllWLlq
+	 2kAJLNNHuUjftF90xiWDKuDzkuY/OB+KpbAyGd02iXXULptedGgYZZ5XHd2hMaaTx7
+	 eXyx/DYxp+2avG+l1fSqnrpn/hH3DtwinSf+XiYiU6wjdEWJcD61POOcG+4oEyYbC7
+	 rSapuobRYB8ansUL5Eqf/Xkq0FMgxxUk+X103J25tGliAgww+MEofAK0EPy6VOs5aw
+	 Xk362C9Qp0vqA==
+Date: Tue, 26 Mar 2024 12:55:10 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
+	Guenter Roeck <groeck@chromium.org>
+Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] platform/chrome: cros_ec_proto: avoid
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <ZgMaDl/of8YC445S@neat>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-As described in the binding document for the "current-speed" property:
+Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
 
-"This should only be present in case a driver has no chance to know the
-baud rate of the slave device."
+So, with these changes, fix the following warning:
+drivers/platform/chrome/cros_ec_proto_test.c:1547:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/platform/chrome/cros_ec_proto_test.c:1607:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/platform/chrome/cros_ec_proto_test.c:1645:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/platform/chrome/cros_ec_proto_test.c:1668:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-This is not the case for the UART used in K3 devices, the current
-baud-rate can be calculated from the registers. Having this property
-has the effect of actually skipping the baud-rate setup in some drivers
-as it assumes it will already be set to this rate, which may not always
-be the case.
-
-It seems this property's purpose was mistaken as selecting the desired
-baud-rate, which it does not. It would have been wrong to select that
-here anyway as DT is not the place for configuration, especially when
-there are already more standard ways to set serial baud-rates.
-
-Signed-off-by: Andrew Davis <afd@ti.com>
+Link: https://github.com/KSPP/linux/issues/202
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- arch/arm64/boot/dts/ti/k3-j7200-main.dtsi       | 10 ----------
- arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi |  2 --
- 2 files changed, 12 deletions(-)
+ drivers/platform/chrome/cros_ec_proto_test.c | 72 ++++++++------------
+ 1 file changed, 30 insertions(+), 42 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-index 657f9cc9f4ea0..9386bf3ef9f68 100644
---- a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-@@ -440,7 +440,6 @@ main_uart0: serial@2800000 {
- 		reg = <0x00 0x02800000 0x00 0x100>;
- 		interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
--		current-speed = <115200>;
- 		power-domains = <&k3_pds 146 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 146 2>;
- 		clock-names = "fclk";
-@@ -452,7 +451,6 @@ main_uart1: serial@2810000 {
- 		reg = <0x00 0x02810000 0x00 0x100>;
- 		interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
--		current-speed = <115200>;
- 		power-domains = <&k3_pds 278 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 278 2>;
- 		clock-names = "fclk";
-@@ -464,7 +462,6 @@ main_uart2: serial@2820000 {
- 		reg = <0x00 0x02820000 0x00 0x100>;
- 		interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
--		current-speed = <115200>;
- 		power-domains = <&k3_pds 279 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 279 2>;
- 		clock-names = "fclk";
-@@ -476,7 +473,6 @@ main_uart3: serial@2830000 {
- 		reg = <0x00 0x02830000 0x00 0x100>;
- 		interrupts = <GIC_SPI 195 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
--		current-speed = <115200>;
- 		power-domains = <&k3_pds 280 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 280 2>;
- 		clock-names = "fclk";
-@@ -488,7 +484,6 @@ main_uart4: serial@2840000 {
- 		reg = <0x00 0x02840000 0x00 0x100>;
- 		interrupts = <GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
--		current-speed = <115200>;
- 		power-domains = <&k3_pds 281 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 281 2>;
- 		clock-names = "fclk";
-@@ -500,7 +495,6 @@ main_uart5: serial@2850000 {
- 		reg = <0x00 0x02850000 0x00 0x100>;
- 		interrupts = <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
--		current-speed = <115200>;
- 		power-domains = <&k3_pds 282 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 282 2>;
- 		clock-names = "fclk";
-@@ -512,7 +506,6 @@ main_uart6: serial@2860000 {
- 		reg = <0x00 0x02860000 0x00 0x100>;
- 		interrupts = <GIC_SPI 198 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
--		current-speed = <115200>;
- 		power-domains = <&k3_pds 283 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 283 2>;
- 		clock-names = "fclk";
-@@ -524,7 +517,6 @@ main_uart7: serial@2870000 {
- 		reg = <0x00 0x02870000 0x00 0x100>;
- 		interrupts = <GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
--		current-speed = <115200>;
- 		power-domains = <&k3_pds 284 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 284 2>;
- 		clock-names = "fclk";
-@@ -536,7 +528,6 @@ main_uart8: serial@2880000 {
- 		reg = <0x00 0x02880000 0x00 0x100>;
- 		interrupts = <GIC_SPI 248 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
--		current-speed = <115200>;
- 		power-domains = <&k3_pds 285 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 285 2>;
- 		clock-names = "fclk";
-@@ -548,7 +539,6 @@ main_uart9: serial@2890000 {
- 		reg = <0x00 0x02890000 0x00 0x100>;
- 		interrupts = <GIC_SPI 249 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
--		current-speed = <115200>;
- 		power-domains = <&k3_pds 286 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 286 2>;
- 		clock-names = "fclk";
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
-index 7cf21c99956e0..c547bc8fb6082 100644
---- a/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
-@@ -259,7 +259,6 @@ wkup_uart0: serial@42300000 {
- 		reg = <0x00 0x42300000 0x00 0x100>;
- 		interrupts = <GIC_SPI 897 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
--		current-speed = <115200>;
- 		power-domains = <&k3_pds 287 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 287 2>;
- 		clock-names = "fclk";
-@@ -271,7 +270,6 @@ mcu_uart0: serial@40a00000 {
- 		reg = <0x00 0x40a00000 0x00 0x100>;
- 		interrupts = <GIC_SPI 846 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <96000000>;
--		current-speed = <115200>;
- 		power-domains = <&k3_pds 149 TI_SCI_PD_EXCLUSIVE>;
- 		clocks = <&k3_clks 149 2>;
- 		clock-names = "fclk";
+diff --git a/drivers/platform/chrome/cros_ec_proto_test.c b/drivers/platform/chrome/cros_ec_proto_test.c
+index b6169d6f2467..41378c2ee6a0 100644
+--- a/drivers/platform/chrome/cros_ec_proto_test.c
++++ b/drivers/platform/chrome/cros_ec_proto_test.c
+@@ -1543,21 +1543,18 @@ static void cros_ec_proto_test_cmd_xfer_normal(struct kunit *test)
+ 	struct cros_ec_device *ec_dev = &priv->ec_dev;
+ 	struct ec_xfer_mock *mock;
+ 	int ret;
+-	struct {
+-		struct cros_ec_command msg;
+-		u8 data[0x100];
+-	} __packed buf;
++	DEFINE_RAW_FLEX(struct cros_ec_command, buf, data, 0x100);
+ 
+ 	ec_dev->max_request = 0xff;
+ 	ec_dev->max_response = 0xee;
+ 	ec_dev->max_passthru = 0xdd;
+ 
+-	buf.msg.version = 0;
+-	buf.msg.command = EC_CMD_HELLO;
+-	buf.msg.insize = 4;
+-	buf.msg.outsize = 2;
+-	buf.data[0] = 0x55;
+-	buf.data[1] = 0xaa;
++	buf->version = 0;
++	buf->command = EC_CMD_HELLO;
++	buf->insize = 4;
++	buf->outsize = 2;
++	buf->data[0] = 0x55;
++	buf->data[1] = 0xaa;
+ 
+ 	{
+ 		u8 *data;
+@@ -1572,7 +1569,7 @@ static void cros_ec_proto_test_cmd_xfer_normal(struct kunit *test)
+ 		data[3] = 0x33;
+ 	}
+ 
+-	ret = cros_ec_cmd_xfer(ec_dev, &buf.msg);
++	ret = cros_ec_cmd_xfer(ec_dev, buf);
+ 	KUNIT_EXPECT_EQ(test, ret, 4);
+ 
+ 	{
+@@ -1590,10 +1587,10 @@ static void cros_ec_proto_test_cmd_xfer_normal(struct kunit *test)
+ 		KUNIT_EXPECT_EQ(test, data[0], 0x55);
+ 		KUNIT_EXPECT_EQ(test, data[1], 0xaa);
+ 
+-		KUNIT_EXPECT_EQ(test, buf.data[0], 0xaa);
+-		KUNIT_EXPECT_EQ(test, buf.data[1], 0x55);
+-		KUNIT_EXPECT_EQ(test, buf.data[2], 0xcc);
+-		KUNIT_EXPECT_EQ(test, buf.data[3], 0x33);
++		KUNIT_EXPECT_EQ(test, buf->data[0], 0xaa);
++		KUNIT_EXPECT_EQ(test, buf->data[1], 0x55);
++		KUNIT_EXPECT_EQ(test, buf->data[2], 0xcc);
++		KUNIT_EXPECT_EQ(test, buf->data[3], 0x33);
+ 	}
+ }
+ 
+@@ -1603,26 +1600,23 @@ static void cros_ec_proto_test_cmd_xfer_excess_msg_insize(struct kunit *test)
+ 	struct cros_ec_device *ec_dev = &priv->ec_dev;
+ 	struct ec_xfer_mock *mock;
+ 	int ret;
+-	struct {
+-		struct cros_ec_command msg;
+-		u8 data[0x100];
+-	} __packed buf;
++	DEFINE_RAW_FLEX(struct cros_ec_command, buf, data, 0x100);
+ 
+ 	ec_dev->max_request = 0xff;
+ 	ec_dev->max_response = 0xee;
+ 	ec_dev->max_passthru = 0xdd;
+ 
+-	buf.msg.version = 0;
+-	buf.msg.command = EC_CMD_HELLO;
+-	buf.msg.insize = 0xee + 1;
+-	buf.msg.outsize = 2;
++	buf->version = 0;
++	buf->command = EC_CMD_HELLO;
++	buf->insize = 0xee + 1;
++	buf->outsize = 2;
+ 
+ 	{
+ 		mock = cros_kunit_ec_xfer_mock_add(test, 0xcc);
+ 		KUNIT_ASSERT_PTR_NE(test, mock, NULL);
+ 	}
+ 
+-	ret = cros_ec_cmd_xfer(ec_dev, &buf.msg);
++	ret = cros_ec_cmd_xfer(ec_dev, buf);
+ 	KUNIT_EXPECT_EQ(test, ret, 0xcc);
+ 
+ 	{
+@@ -1641,21 +1635,18 @@ static void cros_ec_proto_test_cmd_xfer_excess_msg_outsize_without_passthru(stru
+ 	struct cros_ec_proto_test_priv *priv = test->priv;
+ 	struct cros_ec_device *ec_dev = &priv->ec_dev;
+ 	int ret;
+-	struct {
+-		struct cros_ec_command msg;
+-		u8 data[0x100];
+-	} __packed buf;
++	DEFINE_RAW_FLEX(struct cros_ec_command, buf, data, 0x100);
+ 
+ 	ec_dev->max_request = 0xff;
+ 	ec_dev->max_response = 0xee;
+ 	ec_dev->max_passthru = 0xdd;
+ 
+-	buf.msg.version = 0;
+-	buf.msg.command = EC_CMD_HELLO;
+-	buf.msg.insize = 4;
+-	buf.msg.outsize = 0xff + 1;
++	buf->version = 0;
++	buf->command = EC_CMD_HELLO;
++	buf->insize = 4;
++	buf->outsize = 0xff + 1;
+ 
+-	ret = cros_ec_cmd_xfer(ec_dev, &buf.msg);
++	ret = cros_ec_cmd_xfer(ec_dev, buf);
+ 	KUNIT_EXPECT_EQ(test, ret, -EMSGSIZE);
+ }
+ 
+@@ -1664,21 +1655,18 @@ static void cros_ec_proto_test_cmd_xfer_excess_msg_outsize_with_passthru(struct
+ 	struct cros_ec_proto_test_priv *priv = test->priv;
+ 	struct cros_ec_device *ec_dev = &priv->ec_dev;
+ 	int ret;
+-	struct {
+-		struct cros_ec_command msg;
+-		u8 data[0x100];
+-	} __packed buf;
++	DEFINE_RAW_FLEX(struct cros_ec_command, buf, data, 0x100);
+ 
+ 	ec_dev->max_request = 0xff;
+ 	ec_dev->max_response = 0xee;
+ 	ec_dev->max_passthru = 0xdd;
+ 
+-	buf.msg.version = 0;
+-	buf.msg.command = EC_CMD_PASSTHRU_OFFSET(CROS_EC_DEV_PD_INDEX) + EC_CMD_HELLO;
+-	buf.msg.insize = 4;
+-	buf.msg.outsize = 0xdd + 1;
++	buf->version = 0;
++	buf->command = EC_CMD_PASSTHRU_OFFSET(CROS_EC_DEV_PD_INDEX) + EC_CMD_HELLO;
++	buf->insize = 4;
++	buf->outsize = 0xdd + 1;
+ 
+-	ret = cros_ec_cmd_xfer(ec_dev, &buf.msg);
++	ret = cros_ec_cmd_xfer(ec_dev, buf);
+ 	KUNIT_EXPECT_EQ(test, ret, -EMSGSIZE);
+ }
+ 
 -- 
-2.39.2
+2.34.1
 
