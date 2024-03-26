@@ -1,124 +1,135 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8143B13048E;
-	Tue, 26 Mar 2024 06:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A3074BEB
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 06:29:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711434434; cv=none; b=FL+5Ej5chquQccrrqp0A7wlGzqMbPWhaz5DjFYTAQaX66I8ebzSgJ/DzMr2kyEVVzEUT9PHqzSsF7ysBDEOXXbccdKmLoSjoBxLTt0kEp2lRYKMF4hYC0dpfhbnVRArevB9DBlLloirLWRYqiPFwmhwCGc93UOq3rplZMuehig8=
+	t=1711434555; cv=none; b=ZC/0jP0BBYULzChNOCjCUw/7f1G4FjBQQ1HIGXTdonNY6nqiP1DgO9CQhWjJbGXE9PEDxVKFSv6lFFeySIfRXCXqPevlGYOxyEEo+duJ/fIP5HN5tJf7u2guffCOSr12P8x+qpSvCky4U8JrjFN33GoB1He0DHlrWKjODmfBqHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711434434; c=relaxed/simple;
-	bh=gqTc1TcEZDsgyLEq9NyQaAN7olqozXIjOqy7rgx7Mvg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CnrHSlRVa3JMaTYDvDeG3U+BWbEYfba024h7I7Arag83/DE4LkyyphZDDHEY6n7Fd3r2oH4hlR86V7+yr//3En9rilR7x+mHvyPH7tKfi7AnPKm0Ea4Zd4jSR4yOLDLCypMZIz5n66XeqzEiODRdDFIVZ3+rnzDUeAsh2XJ000k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-56c147205b9so2557501a12.0;
-        Mon, 25 Mar 2024 23:27:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711434431; x=1712039231;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6cxQG68etv5MbBhhloMXgQXbYnL3jwf0lQAty2n+CQU=;
-        b=gSlV9MZ637XALJKRFC8pWx5/yhfm1XXRMofli3TSbiEMNZu87e9YPtMronfwA4iW1z
-         4JwKEL0qAD3dyO0FeHzzLD4QQ67yYyZKPrN0NnAMBRyhUEstbL8nr+PSi1fr3mVwrrVu
-         AQIBCV5kxCHbAvx9mF8HEG6TWaIFVMBDtTEoOBgp3wtryMzIDaYKYfYxYoN/i9YGeMhl
-         p/5gI0qGk/t7Tx7t/yOLnGeyRdFBt1H2wSIpqDPhOf8xqrMza9If5AVXANm84IzrqNil
-         7XL14LEbLr5noX0WlwYV+TtyimzCLCuKiecwjGdgBrZuml+VEkhyt2Y4k2eiLA8fCMnl
-         ln+g==
-X-Forwarded-Encrypted: i=1; AJvYcCW7tlDCb78+tez3qvI/nUKwWoq89ZFR2PzjSA4qQxNpdKa37f+g0BD4jUN837Vi5eDl9r2nv43B/Vr840UdoZy9z5MeFw0B
-X-Gm-Message-State: AOJu0YzrX2KvNqld3y/91jUd3Np0kFLJVKyk1XJXjl5V/IyziJ4jj5vU
-	aDZf8LSH/CX5k80GNYyuaDDKk8reRYYs3EK89fbhT1eaAdeea48RDhGB6VtO650=
-X-Google-Smtp-Source: AGHT+IHa9GKVbJTLl+4qqcwGFpSPKh+nfRTPxwffyWZ3lqBp7TpvvygZY7y6GZ4VRB6K8yoLYxJXjQ==
-X-Received: by 2002:a50:d78e:0:b0:567:800c:f6c6 with SMTP id w14-20020a50d78e000000b00567800cf6c6mr429014edi.15.1711434430386;
-        Mon, 25 Mar 2024 23:27:10 -0700 (PDT)
-Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:69? ([2a0b:e7c0:0:107::aaaa:69])
-        by smtp.gmail.com with ESMTPSA id fi24-20020a056402551800b0056bfa6ad5eesm3427772edb.91.2024.03.25.23.27.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 23:27:09 -0700 (PDT)
-Message-ID: <ab25194d-2b4d-4cd2-8dd6-6acc53891d69@kernel.org>
-Date: Tue, 26 Mar 2024 07:27:08 +0100
+	s=arc-20240116; t=1711434555; c=relaxed/simple;
+	bh=X3DtID22MHLiOSEgufzjJEVz5dkjcxPNV3/gFfp+uKU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Tl4US4xNDd+D3T7WXSUjA1Uqqk6jqnmLt46GZ/gAbhe0tvjLcKYdQ84JRf0TL1yglFJ8FjlM0hsKVWrg6VcDX6fIFQwmd/OOhznrPP6GUR33d3DNuG5RaHjfTU1ORkBDHhpYEkkHF3ts06sMdXMazlzq+/xKqzDTWwsmHxbLFLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fqJ8EWqW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=A5M3s/dW; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fqJ8EWqW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=A5M3s/dW; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fqJ8EWqW";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="A5M3s/dW";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fqJ8EWqW";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="A5M3s/dW"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A30205D1CE;
+	Tue, 26 Mar 2024 06:29:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1711434551; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=7DbD7neTBtkVj5P37sm9WRAjkZnH4d5JwCZylV5kafQ=;
+	b=fqJ8EWqWij0dR5Wai3crdsBjXjDkUlSvf/c679i04CZp/QAwqlVh5r8tFNvHKBdPeVwfwx
+	GlO7sC5UybTaclhIfQPvQS7qWngZ63tBGM+VgeYikPi5H4B46b2tx45QlcJih/gm6Us8EX
+	hj+8HS2enVIrOcCDJI0B1yTp7au/aD8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1711434551;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=7DbD7neTBtkVj5P37sm9WRAjkZnH4d5JwCZylV5kafQ=;
+	b=A5M3s/dWcBp4glOZoqnQnmLFq5EbYBMBUYOc/vbRsyzfdx0guUDHVdAC1tPSPiZP2AroAu
+	sRw0KxghenkiDNCA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1711434551; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=7DbD7neTBtkVj5P37sm9WRAjkZnH4d5JwCZylV5kafQ=;
+	b=fqJ8EWqWij0dR5Wai3crdsBjXjDkUlSvf/c679i04CZp/QAwqlVh5r8tFNvHKBdPeVwfwx
+	GlO7sC5UybTaclhIfQPvQS7qWngZ63tBGM+VgeYikPi5H4B46b2tx45QlcJih/gm6Us8EX
+	hj+8HS2enVIrOcCDJI0B1yTp7au/aD8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1711434551;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=7DbD7neTBtkVj5P37sm9WRAjkZnH4d5JwCZylV5kafQ=;
+	b=A5M3s/dWcBp4glOZoqnQnmLFq5EbYBMBUYOc/vbRsyzfdx0guUDHVdAC1tPSPiZP2AroAu
+	sRw0KxghenkiDNCA==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 19C7113215;
+	Tue, 26 Mar 2024 06:29:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id CiV8AzdrAmY2YQAAn2gu4w
+	(envelope-from <osalvador@suse.de>); Tue, 26 Mar 2024 06:29:11 +0000
+From: Oscar Salvador <osalvador@suse.de>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	Michal Hocko <mhocko@suse.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH v3 0/3] page_owner: Fix refcount imbalance
+Date: Tue, 26 Mar 2024 07:30:33 +0100
+Message-ID: <20240326063036.6242-1-osalvador@suse.de>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.8 000/715] 6.8.2-rc1 review
-Content-Language: en-US
-To: Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, florian.fainelli@broadcom.com, pavel@denx.de
-References: <20240324223455.1342824-1-sashal@kernel.org>
- <ZgHNASvv5iZV1kKc@duo.ucw.cz>
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <ZgHNASvv5iZV1kKc@duo.ucw.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spam-Score: 3.61
+X-Spamd-Result: default: False [3.61 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 R_MISSING_CHARSET(2.50)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BROKEN_CONTENT_TYPE(1.50)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-0.999];
+	 RCPT_COUNT_SEVEN(0.00)[9];
+	 MID_CONTAINS_FROM(1.00)[];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[vger.kernel.org,kvack.org,suse.com,suse.cz,google.com,gmail.com,suse.de];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.09)[64.13%]
+X-Spam-Level: ***
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Flag: NO
 
-Hi,
+This series consists of a refactoring/correctness of updating the metadata
+of tail pages and a couple of fixups for the refcounting part.
 
-On 25. 03. 24, 20:14, Pavel Machek wrote:
->> This is the start of the stable review cycle for the 6.8.2 release.
->> There are 715 patches in this series, all will be posted as a response
->> to this one.  If anyone has any issues with these being applied, please
->> let me know.
-> 
-> You submitted ~1500 emails to linux-kernel in few minutes. That's
-> quite serious load.
+From this series on, instead of counting the stacks, we count the outstanding
+nr_base_pages each stack has, which gives us a much better memory overview.
+The other fixup is for the migration part.
 
-(And it was ~ 3300 to stable@. So it took whole Monday for the servers 
-to keep up :(.)
+A more detailed explanation can be found in the changelog of the respective
+patches.
 
-regards,
+Oscar Salvador (3):
+  mm,page_owner: Update metada for tail pages
+  mm,page_owner: Fix refcount imbalance
+  mm,page_owner: Fix accounting of pages when migrating
+
+ Documentation/mm/page_owner.rst |  73 +++++++------
+ mm/page_owner.c                 | 184 +++++++++++++++++++-------------
+ 2 files changed, 146 insertions(+), 111 deletions(-)
+
 -- 
-js
-suse labs
+2.44.0
 
