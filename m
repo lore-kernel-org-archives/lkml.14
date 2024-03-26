@@ -1,44 +1,47 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A30C74433;
-	Tue, 26 Mar 2024 12:21:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304A87442B;
+	Tue, 26 Mar 2024 12:21:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711455714; cv=none; b=D8dsy0B6YeJ68RbPsv1LtpjhybJuzak9MrqhMdKkKotzdyLHwugHvXDnvsHsq+Phsv9BuJgcnJdZzHAZqU6Z12rxjUYzTfioLbgXf2S3SUhIUPJuPeu6GZeXLdaXvXtqWKCVplho+wzsg1huJQrnjDTES1SVnUkt1uioY+iihWk=
+	t=1711455713; cv=none; b=hVzRVSxHSZrj8DBqmDojTM/OYOeIG61SLfPnO2WFYFQ0uuBMdqDvLlw1P1aZobhpB1PDkH8kE++Bh63BaFIh4OfglDmPnENouWD/0hGdjvCcIg3qoE/R8L4iXyY5YGa9UTIvQ4D5140I7YkYQRxZNEeqCQErApYzIczh23S5rqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711455714; c=relaxed/simple;
-	bh=qyTuZJJBB6SRCYQaUw+XLTTc5thHeDk4mK9OvDwIPpA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fjs30J1zhZixm/kUYNCRSZHv1l6n57rPh3BnCa5HMfW1WNJ2+Bm6NrDEyLfZg3Wg193BoVD8Trr9JAIKrULt2FV5AaIfBJsAoBk9mByL9F7Tt3B01mFO0L9x+5q2T7h5cz5IAHn84lnjADjVlsRyLTHRFotJgx1ai+84YdZJySg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=uYSHkLWv; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1711455713; c=relaxed/simple;
+	bh=qFy509Zv20pYYf9NMDSDTc0uBl7/uVC4F1+1tRJ4fKs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PzaouPrH/jExLFkrHiCcfv8H58/v5TLkv2qrkigGZvN5lJ+1EgREw6cNsdyVWz0njni+D+Q4bGraWBdA+3RDBB481RqqDGqjuoxhTlNNMR1nB3VQcUVoCi1g8tiTcrNlRasbQFpRs1BQ+SQnRyOg1GIU2Cd0Ui79UWNLm2c6uk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=m8KYAOl7; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="uYSHkLWv"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="m8KYAOl7"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
-	Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:Subject:Date:
-	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=T7Rg75OUQXr/P0BzSaCpqEAwDPUMWNB+wRhXebgxorI=; t=1711455711; x=1711887711;
-	 b=uYSHkLWv64FkbGkKSuwa305CY9DsjE43kyGFs3OJy03ac9AWv/a51WtI5MZUqovUVbuboGKXZe
-	0ecJ1d7m/dTM8FFfWeiM3MZs8mB3h7VGTFrBHJBr4yLfApnR39Kzv4ESnwAmtK2Sp5uZcxoNq0mXZ
-	u5El0Jh91NPAGzhN03nQCqywXNfD9fyoDFfeXFMUT8THUTMlnyiozF9suwX8VVngg6BaFM3NFK9ov
-	Y5wWsozCAxREv3heTwTi0ezQmJM75P+w3HB7GmGv7Jh4qdpIL1tWTg/aI9l5Gk/W5PrxiN81gdVHE
-	wugyVvLQLhUE3Mnxw8nTDVu8uSzotuAiilQpA==;
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Sender:
+	Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=3NZ/P2d8n2GwW8r6YNLOfK4S660LNZHNaKmSYKCW+RE=; t=1711455711;
+	x=1711887711; b=m8KYAOl7beLbX08GVMNHLllA1jrdTlV9cjO/c20l36V0+DJ/u2b+qoV8xe1b/
+	xB9+jqBJsqENBsZb/NdtA/s3ClRLiPniAwlE37VyvM50Mo9SHpey9cMA+67mSWwtwDBcKltQ9TG5W
+	K3N7XHuxRWgANi03Lj+loJ7nAnjYwzw3K545NR/jrF1bBSt36lgfJp7mYUqGBq6HbHk5bXF41V0Rn
+	4Yars49PjDzqn2iJIV7Q/1DMTC6vos1ze99uxuRIUnsuy/gQ0GeJzpxFdYq9sLClbeI4OMmbyoNh8
+	5DlSisaG4ql07lqIVbksexL+A8976zVfoKzGTK7bMMjA53cgUg==;
 Received: from [77.20.141.166] (helo=truhe.fritz.box); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1rp5oH-0000kc-8I; Tue, 26 Mar 2024 13:21:45 +0100
+	id 1rp5oH-0000kc-O6; Tue, 26 Mar 2024 13:21:45 +0100
 From: Thorsten Leemhuis <linux@leemhuis.info>
 To: Jonathan Corbet <corbet@lwn.net>
 Cc: regressions@lists.linux.dev,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	workflows@vger.kernel.org
-Subject: [RFC PATCH v1 0/2] docs: reporting-issues: rework while involving the 'verify bugs' text
-Date: Tue, 26 Mar 2024 13:21:27 +0100
-Message-ID: <cover.1711455295.git.linux@leemhuis.info>
+Subject: [RFC PATCH v1 2/2] docs: reporting-issue: rework the TLDR
+Date: Tue, 26 Mar 2024 13:21:29 +0100
+Message-ID: <2f5a78745cbe0a99a4592612d6ffd57a17619fb4.1711455295.git.linux@leemhuis.info>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <cover.1711455295.git.linux@leemhuis.info>
+References: <cover.1711455295.git.linux@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,72 +50,152 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1711455711;c092b3a9;
-X-HE-SMSGID: 1rp5oH-0000kc-8I
+X-HE-SMSGID: 1rp5oH-0000kc-O6
 
-This is a RFC with two WIP patches that basically rewrite the detailed
-step-by-step guide and the TLDR of
-Documentation/admin-guide/reporting-issues.rst. Those two patches cover
-all main changes I currently plan to do in those areas of the text, but
-the explanations in the reference section are not yet updated to match
-the changed step-by-step guide.
+Rework the TLDR (aka the short guide) for various reasons:
 
-I'm nevertheless posting this now as RFC so people get a chance to
-express things like "Thorsten, you are crazy, go away and find a hobby"
-or "you are on the wrong path, this makes things worse, and would also
-create a lot of trouble for translators for a questionable gain".
-Getting such feedback now would be good: I'd prefer to not waste time on
-updating the reference section if something like the two patches posted
-here have no chance to be merged.
+* People had to read it entirely and then act upon what they learned,
+  which from feedback I got was apparently somewhat hard and confusing
+  given everything we expect from bug reporters; this partly was because
+  the first paragraph covered a special case (regression in
+  stable/longterm kernel) and not the main aspect most people cared
+  about when they came to the document.
 
-That being said: I (obviously) think these changes are worth it, as they
-make both the TLDR and the guide easier to follow and fix a few things
-that didn't work too well. It also offers users a new fast track to
-inquire if a regression is known already. The step-by-step guide
-furthermore is now a bit more verbose, so users have to consult the
-reference section less -- this felt appropriate, now that the TLDR uses
-a step-by-step approach as well that is quite similar.
+  Use a step-by-step approach to avoid this.
 
-In the end it looks like a rewrite, even if many things remained
-similar. And all in all those changes sadly makes both sections larger:
+* Make use of
+  Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
 
-TLDR:
-- before: 374 words, 2332 characters;
-- after: 491 words, 3085 characters
+* The 'quickly report a stable regression to the stable team' approach
+  hardly worked out: most of the time the regression was not known yet.
+  Try a different approach using the regressions list.
 
-Step-by-step guide:
-- before: 1058 words, 6279 characters (excluding a section that becomes
-  obsolete)
-- before: 1332 words, 8048 characters (including a section that becomes
-  obsolete)
-- after: 1491 words, 9015 characters;
+* Reports about stable/longterm regressions most of the time were
+  greeted with a brief reply along the lines of 'Is mainline affected as
+  well?'; this is needed to determine who is responsible, so it might as
+  well make the reporter check that before sending the report (which
+  verify-bugs-and-bisect-regressions.rst already tells them to do, too).
 
-Note, the changes to the reference section should not turn out to be as
-extensive as these two patches, as many of the steps in the new detailed
-step-by-step guide had equivalents in the older one; many sections in
-the reference section will thus only need small changes or maybe none at
-all; a few things are also unnecessary now, so the reference section
-should get shorter.
+Not-signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
+---
+ .../admin-guide/reporting-issues.rst          | 104 +++++++++++-------
+ 1 file changed, 62 insertions(+), 42 deletions(-)
 
-To alleviate reviewing and translations, I plan to submit the changes to
-the reference section in two steps. The first patch will perform all
-changes, but will add newlines before significant changes, which will
-wrap at 120 characters or so: both things should make it easier to see
-the actual changes with ordinary diff. A second patch then will just
-rewrap the text to the usual 80 characters boundary.
-
-Side note: the two patches submitted now could and maybe should be
-merged into one, but I decided to keep them separate for now to have
-section-specific diffstats.
-
-Thorsten Leemhuis (2):
-  docs: reporting-issue: rework the detailed guide
-  docs: reporting-issue: rework the TLDR
-
- .../admin-guide/reporting-issues.rst          | 497 ++++++++++--------
- 1 file changed, 273 insertions(+), 224 deletions(-)
-
-
-base-commit: b8cfda5c9065cd619a97c17da081cbfab3b1e756
+diff --git a/Documentation/admin-guide/reporting-issues.rst b/Documentation/admin-guide/reporting-issues.rst
+index e6083946c146e8..5f3c840ab94524 100644
+--- a/Documentation/admin-guide/reporting-issues.rst
++++ b/Documentation/admin-guide/reporting-issues.rst
+@@ -5,48 +5,68 @@ Reporting issues
+ ++++++++++++++++
+ 
+ 
+-The short guide (aka TL;DR)
+-===========================
+-
+-Are you facing a regression with vanilla kernels from the same stable or
+-longterm series? One still supported? Then search the `LKML
+-<https://lore.kernel.org/lkml/>`_ and the `Linux stable mailing list
+-<https://lore.kernel.org/stable/>`_ archives for matching reports to join. If
+-you don't find any, install `the latest release from that series
+-<https://kernel.org/>`_. If it still shows the issue, report it to the stable
+-mailing list (stable@vger.kernel.org) and CC the regressions list
+-(regressions@lists.linux.dev); ideally also CC the maintainer and the mailing
+-list for the subsystem in question.
+-
+-In all other cases try your best guess which kernel part might be causing the
+-issue. Check the :ref:`MAINTAINERS <maintainers>` file for how its developers
+-expect to be told about problems, which most of the time will be by email with a
+-mailing list in CC. Check the destination's archives for matching reports;
+-search the `LKML <https://lore.kernel.org/lkml/>`_ and the web, too. If you
+-don't find any to join, install `the latest mainline kernel
+-<https://kernel.org/>`_. If the issue is present there, send a report.
+-
+-The issue was fixed there, but you would like to see it resolved in a still
+-supported stable or longterm series as well? Then install its latest release.
+-If it shows the problem, search for the change that fixed it in mainline and
+-check if backporting is in the works or was discarded; if it's neither, ask
+-those who handled the change for it.
+-
+-**General remarks**: When installing and testing a kernel as outlined above,
+-ensure it's vanilla (IOW: not patched and not using add-on modules). Also make
+-sure it's built and running in a healthy environment and not already tainted
+-before the issue occurs.
+-
+-If you are facing multiple issues with the Linux kernel at once, report each
+-separately. While writing your report, include all information relevant to the
+-issue, like the kernel and the distro used. In case of a regression, CC the
+-regressions mailing list (regressions@lists.linux.dev) to your report. Also try
+-to pin-point the culprit with a bisection; if you succeed, include its
+-commit-id and CC everyone in the sign-off-by chain.
+-
+-Once the report is out, answer any questions that come up and help where you
+-can. That includes keeping the ball rolling by occasionally retesting with newer
+-releases and sending a status update afterwards.
++Reporting issues
++++++++++++++++++
++
++The short guide on reporting Linux kernel issues (aka "the TL;DR")
++==================================================================
++
++Rule out something external causes your kernel to misbehave: skim the output of
++``journalctl -k``; make sure the kernel is not tainted; consider a glitch in the
++environment (hardware, firmware, initramfs, distribution, file system, ...).
++
++If you deal with multiple issues, process each separately.
++
++Search `lore <https://lore.kernel.org/all/>`_ for earlier reports and fixes.
++Then the wider internet. Consult :ref:`MAINTAINERS <maintainers>` to determine
++how bugs for the affected driver or subsystem must be submitted. This is usually
++by mail and rarely bugzilla.kernel.org; if the driver or subsystem uses an
++externally archived list or one of various bug trackers, search those as well.
++
++In case you deal with a regression still occurring in a less than two (ideally:
++one) weeks old kernel that is vanilla or close to it: send a brief email to
++regressions@lists.linux.dev asking if the regression is known; consider
++continuing this guide right afterwards, but definitely do so if you do not
++receive a positive reply within three days.
++
++Verify the bug and in case of a regression potentially bisect it as described in
++Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst; alternatively
++perform these tasks through different measures as outlined in more detailed
++step-by-step guide below.
++
++Were you unable to reproduce a bug with a mainline kernel you want to see fixed
++in a stable or longterm series? A bug that is not a regression? Then move over
++to 'Resolving non-regressions only occurring in stable or longterm kernels'.
++
++Compile a report with all important details. This always includes the
++distribution and kernel version used. Most of the time you also want to describe
++relevant aspects of your system and make the kernel's log messages available; do
++the same for everything else most likely relevant. In case of a regression, make
++that aspect obvious in the title; also specify the last working and first broken
++early in the body.
++
++Submit your report in the appropriate way, which depends on the outcome of the
++verification:
++
++* Are you facing a regression within a stable or longterm kernel series you were
++  unable to reproduce in a mainline kernel? Then report it by email to the
++  stable team while CCing the regressions list (e.g. To: Greg Kroah-Hartman
++  <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>;
++  CC: stable@vger.kernel.org, regressions@lists.linux.dev) and everyone in the
++  culprit's 'Signed-off-by' chain.
++
++* In all other cases, submit the report as specified in MAINTAINERS. In case of
++  a regression you have to report by mail, CC the regressions list
++  (regressions@lists.linux.dev); when you know the culprit, also CC everyone in
++  its 'Signed-off-by' chain. In case of a regression you have to file in a bug
++  tracker, write a short heads-up email with a link to the report to the list
++  once you have done so -- if the culprit is known, CC everyone that signed the
++  culprit off, too.
++
++Answer any questions in a timely manner and help where you can to resolve the
++issue. Retest with at least every first release candidate (-rc1) of a new
++mainline version and report your findings.
++
+ 
+ The detailed step-by-step guide on reporting Linux kernel issues
+ ================================================================
 -- 
 2.44.0
 
