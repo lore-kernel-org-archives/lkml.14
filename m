@@ -1,116 +1,196 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92183763E6
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 14:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA65763E6
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 14:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711464067; cv=none; b=JW+gtgwFNedf/55EPScj5bdh0wZMVmLGejLEB0dz4UCLRf7jOh5j1uKU7oi4ObPOU5cPwAclr2RW2EQx9XGb8Lfd8rePz5EInMdN6SsP10jog5PlORh+HG8V7t4xjZYQQGmSXBH5W2moHJEcORKVnYhg9ird1MokTM2aWzBoH5k=
+	t=1711464150; cv=none; b=m7020haf0oSj8BFMlobo26x9Own5q0pNXGN9NB3eCfyXCGimAUcADhntC3vChx/rfkALZq9b88zNej4LAEWzsVDFlOY+GJnsKTS6iy0B6sCn8gU4geBRVd2fWFJewrls3XCbvTTnnv+SeoZezvQ8bqV60YKEOQ7QucBGTVQiOOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711464067; c=relaxed/simple;
-	bh=Xppa6CV0HLfckPVMV8bTEk6yGO0xhJtUZzkAo69EJjs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QF8vPlXQzlyoBfInA5udGSBrgfh/lnUj9rQsSeteEElYGvQUaZTUe9VSI1gaDsSEqLOXVfiAEywNNuPg5rcTR3rOETJFp6IWTfWrDfRfdMHNaLD2x+o81rbdmZnz4L0cvAnft9bMjUq9ltIT5+hWUk35G7JVclgcNoKaLhofyRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fGyhhm8U; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1711464150; c=relaxed/simple;
+	bh=Z9x5S4PkGOdl4yO3ClpiUCR763MSTtKyxzVbTgvHKMM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ncc7sigQNTSunmIDI6pa+L4avmBRBWj6ERSCOgrIiNso8KDAgwY6i3ykGxw4ad0NqHZuGLKqKZ4UYpla/0Z8VGMaB2Iu2fyrSJPg8vI0m+PcWoralVe1QjOgHqD3054NeIUmPgpQRa3wg1V3iQTq9OscRW+UodyBu3Ntb46c5tE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=D6AyFlaB; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fGyhhm8U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711464065; x=1743000065;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Xppa6CV0HLfckPVMV8bTEk6yGO0xhJtUZzkAo69EJjs=;
-  b=fGyhhm8UAQ2Wd3Za4W1bg1q6DCikL94IXroCI+NFg2FHF29doGr6ZhMP
-   2/CJFR6gZZsrJQ6ogyfm7vzANb0vIeNUutUPQuPnAflq8nq8wSgvYk8BE
-   i2q6Z8A9+9HUluxLMnYlyY7Yd1ErAqLL0NMp1n0un8iv1zKDMZPWfJSwR
-   zjpJeDmVyQNWLh4dhklJSwat4I0naEBYp4slaVSAURM5dXfQeefzibqE5
-   3hAl9VgIAmt/c3zaOhO7P7jequC/KZXYlwzVmBfU1v77/a+wa9uuBfxC4
-   xxNZtbq/BQOr3m1SZznZp2tmaMsWPzB93OoEER1N7FKLcFeWFcyj9bATu
-   g==;
-X-CSE-ConnectionGUID: 7PnIYszMRKmIFt4Jjms30g==
-X-CSE-MsgGUID: LWSDPzLFSdeoh/0pLz67uA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="28997581"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="28997581"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 07:41:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="914882242"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="914882242"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 07:41:03 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rp7z3-0000000GKQw-0bLz;
-	Tue, 26 Mar 2024 16:41:01 +0200
-Date: Tue, 26 Mar 2024 16:41:00 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mateusz K <mateusz.kaduk@gmail.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Lee Jones <lee@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] mfd: intel-lpss: Switch over to MSI interrupts
-Message-ID: <ZgLefFQanbq-ozKM@smile.fi.intel.com>
-References: <20240312165905.1764507-1-andriy.shevchenko@linux.intel.com>
- <20240325211915.GA1449994@bhelgaas>
- <CAPf=4Rc2vQrWqcs=-ND3iOZFJyKE7FdPoqU9w6DKjoSaJo6KaQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="D6AyFlaB"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1711464145; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=iiM3NASvxs+xLqV7JDEjrBkpd9lxiS97pLbAzXvZAhk=;
+	b=D6AyFlaB71eRFOdwRu3z9J5GzOX3mKCcA7UHG40MfGxEVdefCVh80guSrs/E+eV7aFT1AZchrOFBX3CGB/8VxVRyfBnyj034tJf5ChDC6ytmfgblf6KpHab6PvztmFcymUAIPTyx0rIiTgDhmL5wkferNp1YEAppPNWulHidldw=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R821e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0W3Lk3Wa_1711464143;
+Received: from 192.168.0.106(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W3Lk3Wa_1711464143)
+          by smtp.aliyun-inc.com;
+          Tue, 26 Mar 2024 22:42:24 +0800
+Message-ID: <df9a644c-a007-46ac-98e3-61d4014fcfff@linux.alibaba.com>
+Date: Tue, 26 Mar 2024 22:42:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPf=4Rc2vQrWqcs=-ND3iOZFJyKE7FdPoqU9w6DKjoSaJo6KaQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] mm/migrate: split source folio if it is on deferred
+ split list
+To: Zi Yan <ziy@nvidia.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, Yang Shi <shy828301@gmail.com>,
+ Huang Ying <ying.huang@intel.com>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, "Yin, Fengwei" <fengwei.yin@intel.com>,
+ SeongJae Park <sj@kernel.org>, linux-kernel@vger.kernel.org
+References: <20240322193304.522496-1-zi.yan@sent.com>
+ <1ecde325-097b-49e9-9f1f-d93edbc8e1f1@linux.alibaba.com>
+ <8DAC0D9E-9B0D-4035-9211-2190C6F8284A@nvidia.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <8DAC0D9E-9B0D-4035-9211-2190C6F8284A@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 26, 2024 at 11:06:38AM +0100, Mateusz K wrote:
-> I tried the patch that changes PCI_IRQ_LEGACY into PCI_IRQ_ALL_TYPES
-> and it seems I get some other error now
+
+
+On 2024/3/26 21:26, Zi Yan wrote:
+> On 26 Mar 2024, at 2:19, Baolin Wang wrote:
 > 
-> [    1.477341] intel-lpss 0000:00:15.0: enabling device (0004 -> 0006)
-> [    1.477466] intel-lpss 0000:00:15.0: can't derive routing for PCI INT A
-> [    1.477468] intel-lpss 0000:00:15.0: PCI INT A: not connected
-> [    1.477488] intel-lpss 0000:00:15.0: probe with driver intel-lpss
-> failed with error -2147483648
-> [    1.489572] intel-lpss 0000:00:15.2: enabling device (0004 -> 0006)
-> [    1.489688] intel-lpss 0000:00:15.2: can't derive routing for PCI INT C
-> [    1.489689] intel-lpss 0000:00:15.2: PCI INT C: not connected
-> [    1.489715] intel-lpss 0000:00:15.2: probe with driver intel-lpss
-> failed with error -2147483648
-> [    1.501886] intel-lpss 0000:00:19.0: enabling device (0004 -> 0006)
-> [    1.502034] intel-lpss 0000:00:19.0: can't derive routing for PCI INT A
-> [    1.502036] intel-lpss 0000:00:19.0: PCI INT A: not connected
-> [    1.502067] intel-lpss 0000:00:19.0: probe with driver intel-lpss
-> failed with error -2147483648
-> [    1.514288] intel-lpss 0000:00:19.1: enabling device (0004 -> 0006)
-> [    1.514535] intel-lpss 0000:00:19.1: can't derive routing for PCI INT B
-> [    1.514538] intel-lpss 0000:00:19.1: PCI INT B: not connected
-> [    1.514570] intel-lpss 0000:00:19.1: probe with driver intel-lpss
-> failed with error -2147483648
-> [    1.526291] intel-lpss 0000:00:1e.0: enabling device (0004 -> 0006)
-> [    1.526555] intel-lpss 0000:00:1e.0: can't derive routing for PCI INT A
-> [    1.526557] intel-lpss 0000:00:1e.0: PCI INT A: not connected
-> [    1.526604] intel-lpss 0000:00:1e.0: probe with driver intel-lpss
-> failed with error -2147483648
-> [    1.538130] intel-lpss 0000:00:1e.3: enabling device (0004 -> 0006)
-> [    1.538233] intel-lpss 0000:00:1e.3: can't derive routing for PCI INT D
-> [    1.538235] intel-lpss 0000:00:1e.3: PCI INT D: not connected
-> [    1.538253] intel-lpss 0000:00:1e.3: probe with driver intel-lpss
-> failed with error -2147483648
+>> On 2024/3/23 03:33, Zi Yan wrote:
+>>> From: Zi Yan <ziy@nvidia.com>
+>>>
+>>> If the source folio is on deferred split list, it is likely some subpages
+>>> are not used. Split it before migration to avoid migrating unused subpages.
+>>>
+>>> Commit 616b8371539a6 ("mm: thp: enable thp migration in generic path")
+>>> did not check if a THP is on deferred split list before migration, thus,
+>>> the destination THP is never put on deferred split list even if the source
+>>> THP might be. The opportunity of reclaiming free pages in a partially
+>>> mapped THP during deferred list scanning is lost, but no other harmful
+>>> consequence is present[1].
+>>>
+>>>   From v4:
+>>> 1. Simplify _deferred_list check without locking and do not count as
+>>>      migration failures. (per Matthew Wilcox)
+>>>
+>>>   From v3:
+>>> 1. Guarded deferred list code behind CONFIG_TRANSPARENT_HUGEPAGE to avoid
+>>>      compilation error (per SeongJae Park).
+>>>
+>>>   From v2:
+>>> 1. Split the source folio instead of migrating it (per Matthew Wilcox)[2].
+>>>
+>>>   From v1:
+>>> 1. Used dst to get correct deferred split list after migration
+>>>      (per Ryan Roberts).
+>>>
+>>> [1]: https://lore.kernel.org/linux-mm/03CE3A00-917C-48CC-8E1C-6A98713C817C@nvidia.com/
+>>> [2]: https://lore.kernel.org/linux-mm/Ze_P6xagdTbcu1Kz@casper.infradead.org/
+>>>
+>>> Fixes: 616b8371539a ("mm: thp: enable thp migration in generic path")
+>>> Signed-off-by: Zi Yan <ziy@nvidia.com>
+>>> ---
+>>>    mm/migrate.c | 23 +++++++++++++++++++++++
+>>>    1 file changed, 23 insertions(+)
+>>>
+>>> diff --git a/mm/migrate.c b/mm/migrate.c
+>>> index ab9856f5931b..6bd9319624a3 100644
+>>> --- a/mm/migrate.c
+>>> +++ b/mm/migrate.c
+>>> @@ -1652,6 +1652,29 @@ static int migrate_pages_batch(struct list_head *from,
+>>>     			cond_resched();
+>>>   +			/*
+>>> +			 * The rare folio on the deferred split list should
+>>> +			 * be split now. It should not count as a failure.
+>>> +			 * Only check it without removing it from the list.
+>>> +			 * Since the folio can be on deferred_split_scan()
+>>> +			 * local list and removing it can cause the local list
+>>> +			 * corruption. Folio split process below can handle it
+>>> +			 * with the help of folio_ref_freeze().
+>>> +			 *
+>>> +			 * nr_pages > 2 is needed to avoid checking order-1
+>>> +			 * page cache folios. They exist, in contrast to
+>>> +			 * non-existent order-1 anonymous folios, and do not
+>>> +			 * use _deferred_list.
+>>> +			 */
+>>> +			if (nr_pages > 2 &&
+>>> +			   !list_empty(&folio->_deferred_list)) {
+>>> +				if (try_split_folio(folio, from) == 0) {
+>>
+>> IMO, we should move the split folios into the 'split_folios' list instead of the 'from' list, otherwise there might be unhandled folios remaining in the from list.
+> 
+> Can you elaborate on the actual situation you are thinking about? Thanks.
 
-Hmm... I have a unique board to test :-)
-Let's revert it then.
+Sure.
 
-Bjorn, in such case your tree should keep conversion one.
+Suppose there is only one large folio in the from list that needs to be 
+migrated, and this large folio is in the _deferred_list, which means it 
+needs to be split. Your patch will re-add the split base pages back into 
+the 'from' list. However, please see the list_for_each_entry_safe macro:
 
-Lee, do you prefer a revert or can you simply drop this from the queue?
+#define list_for_each_entry_safe(pos, n, head, member)			\
+	for (pos = list_first_entry(head, typeof(*pos), member),	\
+		n = list_next_entry(pos, member);			\
+	     !list_entry_is_head(pos, head, member); 			\
+	     pos = n, n = list_next_entry(n, member))
 
--- 
-With Best Regards,
-Andy Shevchenko
+It will terminate the iteration early because the next entry 'n' taken 
+out in advance is already the head, leading to the remaining split base 
+pages still in the from list. This can cause the following crash when I 
+did some migration testing:
 
+[  412.576943] ------------[ cut here ]------------
+[  412.576947] kernel BUG at mm/migrate.c:2634!
+[  412.577132] invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+[  412.577201] CPU: 59 PID: 9581 Comm: numa01 Kdump: loaded Tainted: G 
+          E      6.9.0-rc1+ #69
+........
+[  412.578651] Call Trace:
+[  412.578692]  <TASK>
+[  412.578730]  ? die+0x33/0x90
+[  412.578770]  ? do_trap+0xdf/0x110
+[  412.578815]  ? migrate_misplaced_folio+0x1f2/0x2b0
+[  412.578875]  ? do_error_trap+0x65/0x80
+[  412.578922]  ? migrate_misplaced_folio+0x1f2/0x2b0
+[  412.578977]  ? exc_invalid_op+0x4e/0x70
+[  412.579048]  ? migrate_misplaced_folio+0x1f2/0x2b0
+[  412.579131]  ? asm_exc_invalid_op+0x16/0x20
+[  412.579182]  ? migrate_misplaced_folio+0x1f2/0x2b0
+[  412.579255]  do_numa_page+0x205/0x5b0
+[  412.579305]  __handle_mm_fault+0x2b0/0x6c0
+[  412.579354]  handle_mm_fault+0x105/0x270
+[  412.579404]  do_user_addr_fault+0x214/0x6b0
+[  412.579453]  exc_page_fault+0x64/0x140
+[  412.579509]  asm_exc_page_fault+0x22/0x30
 
+2583 int migrate_misplaced_folio(struct folio *folio, struct 
+vm_area_struct *vma,
+2584                             int node)
+2585 {
+		......
+
+2628         if (nr_succeeded) {
+2629                 count_vm_numa_events(NUMA_PAGE_MIGRATE, nr_succeeded);
+2630                 if (!node_is_toptier(folio_nid(folio)) && 
+node_is_toptier(node))
+2631                         mod_node_page_state(pgdat, PGPROMOTE_SUCCESS,
+2632                                             nr_succeeded);
+2633         }
+2634         BUG_ON(!list_empty(&migratepages));
+2635         return isolated;
+2636
+2637 out:
+
+After changing as below, the system crash issue is gone.
+
++++ b/mm/migrate.c
+@@ -1668,7 +1668,7 @@ static int migrate_pages_batch(struct list_head *from,
+                          */
+                         if (nr_pages > 2 &&
+                            !list_empty(&folio->_deferred_list)) {
+-                               if (try_split_folio(folio, from) == 0) {
++                               if (try_split_folio(folio, split_folios) 
+== 0) {
+                                         stats->nr_thp_split += is_thp;
+                                         stats->nr_split++;
+                                         continue;
