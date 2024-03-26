@@ -1,160 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E381481A3;
-	Tue, 26 Mar 2024 19:46:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F1C3DABE1
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 19:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711482369; cv=none; b=d6ScHGeQtmc+Gr2y0+W2fVyCsMjFCaOU0Q9A0AEgDlXHTbfSHyMZB8Q7psySx8V3Ozbl9avtSoYlw4ZLQnJIP05R9oU9/i1H9L/AM519Vnw6L8Llep0/zGfsIVF/dLVjKA9YOSxNhjqUrFAuuC1pf/EMurMWjizlDlqTCnjJiFE=
+	t=1711482464; cv=none; b=TaAFp3nPhaViS1jMdiNZaB0sDMlv3mIsuzJMJgjC9hVJ+XvDHZrYHvZBzAraRA5QzDvtn3A2J4wt6baNRQ+lQ9LusrWx8ntMckOjT+P5H3HEy3UY9w/Om9iIzUsdfT8hqAye4Z4rw3eVAhy3zvbMKlwEDykxXZKZCvezy/8flb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711482369; c=relaxed/simple;
-	bh=06TMEEjhODfbSDjv9gFoX7ubkfnnvLL8Xxq82XPPGcI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UiwtlCmkKKrx1pbxSDQwCXb+S1q1+DWW7QEvbIsIg6Vr4YXZO6KaWefVsRSrTpIrSNkCuCeKbY0ASnXQyvbWSjmPhnXRSUfRq9roH8zv2z3bviJMfEIVtCHc1OY16GByZa8J4NcCsCH4ET9QMgHiA1Bi/1q58drCER4sevxgrk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g6x15P3T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711482464; c=relaxed/simple;
+	bh=9Hrv+yQ6ggCFqu5Jm8HZOWdy9wYvi7d9h22Bf0YsEa4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Qnzc0YIH8ulVATvGkKVgKqCaxAqIAbuLP8LMSKfNsCBAAagmOP717WcWTWFwhi+jJmMKIMqXWdR8n+o/ctLsbvM/rY77W5yOa0p1QLgiMqD6RT72jkcYoTnbUFFc499MySQ2iB0rcPrv61wOYsIOqv5EZSDTQi1eu/jMXaWZdJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lIXfB8H3; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g6x15P3T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A1A2C43390;
-	Tue, 26 Mar 2024 19:46:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711482369;
-	bh=06TMEEjhODfbSDjv9gFoX7ubkfnnvLL8Xxq82XPPGcI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g6x15P3T/1D5cok+wB8MT33wgFRF7mj3MaVE+NxPaxiptp+GDXhe0NySVkbdXvMuj
-	 Nnetdt5zPMSGu27jzoTrcmqjvHcFMyam0f6IWtDW06MbdtPtxOU3T6syrf/EXAqtRb
-	 wgnXiTgDv05AORB+BUBYkg4gkySnDZh9CTseRoQATOXjcYOi8ACqd2/WcCG2JgT3Sj
-	 BcaY8o2uSLOxS/q9AEBUbDzJNd1ZStJzr+pr3TFo9oLuaqwwWIn1H1uQ9L+N4CxfP0
-	 v5JOTyC2yW+rB6tzapYc3JdRwQwwxYT09dX2AR3l5G7eoaXoee2lzzu+4h390IcePs
-	 07qP2iF5zKEpQ==
-Date: Tue, 26 Mar 2024 19:46:03 +0000
-From: Conor Dooley <conor@kernel.org>
-To: dev@folker-schwesinger.de
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Chris Ruehl <chris.ruehl@gtsys.com.hk>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Christopher Obbard <chris.obbard@collabora.com>,
-	Alban Browaeys <alban.browaeys@gmail.com>,
-	Doug Anderson <dianders@chromium.org>,
-	Brian Norris <briannorris@chromium.org>,
-	Jensen Huang <jensenhuang@friendlyarm.com>,
-	linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/3] phy: rockchip: emmc: Enable pulldown for strobe line
-Message-ID: <20240326-tactical-onlooker-3df8d2352dc2@spud>
-References: <20240326-rk-default-enable-strobe-pulldown-v1-0-f410c71605c0@folker-schwesinger.de>
- <20240326-rk-default-enable-strobe-pulldown-v1-1-f410c71605c0@folker-schwesinger.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lIXfB8H3"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-609fb0450d8so63324657b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 12:47:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711482461; x=1712087261; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+qyPM89Y10g6lsVDwvjAhw3OysernPxYLdybxWGA1Ik=;
+        b=lIXfB8H3N2R03ZaF8Xmsh9SO6/3MB43g8Co3QazXF85TAOHLbofwzSp7ah+0ef5cOj
+         lGTTXItGvplb6qwu8Cgn5A79TjPtz+NbQqS+CAEEYSkP+XrP5RKNHoEuRgT5sw0UQAM5
+         7usZgfqj70bxQePonjtLUici5YAx+g1kpEDCcDeJYQuaBEoIex5D9wTyEPMRo6jwWCj2
+         9R48zuvIh6PEisXU4+jbsHX9wxcL+4Jtx2FMM7Y8QHSriRWpuA5QtaDNw0Ml9kucMN/T
+         wIXMy7WyPl6GspxnUZQU8LnGFyl1jb7Kj/RybAlb2RsRX1QzQA8hBpN6vXRNviicj8PJ
+         WydA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711482461; x=1712087261;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+qyPM89Y10g6lsVDwvjAhw3OysernPxYLdybxWGA1Ik=;
+        b=t+XP1lCjMAVOdaLRgoRxbFIa4FmtUf+gGYcoSvlH4e+AGeHX6+U5f0M5nQAoM3fwg9
+         X2RMvqTq+/UTDCo2iXYPpTfeQL58L/NbFiLPYFuqzc8Rw5DsNrExyLjWvoKxnPq1L21K
+         JOXV8pHinlNKSkvTKusuNGmJxB4xrHdRrUAvenDlS/zleANt4q5oRLhNkoH9FwPQVHyI
+         ePEUeVJIyU38UzODyis1nucghAOphtsgtXkwPmGb3Veflt6ZNJWYVceZfQ/DOk2CIp6d
+         k0/vyPsvB0BJfg2DowcUWLHFV4CDg5VhNEdBmZph8wGhMT39ddEcuPbu6gZFQktAKHv9
+         XliA==
+X-Forwarded-Encrypted: i=1; AJvYcCXAfRsMYeI8uy9pTu0bZqN5ER6l+BLhxwHOCRmVF8AVb0+m/rqcrJFi/cC/P4ch52+0kWRoJ1xTsMwvu4Ewx+NTfb0Oa3urQeZD5ght
+X-Gm-Message-State: AOJu0YwFeH1o23iSxzjDfRWdN5cdlmNv8rC/dItZAr+JLAvOUKol/ZOo
+	v2nqJ6YbUJZs+oJExi5ki6hZaOb0GG8d8zEszQ30zF/pCYRkH4JFjI0whA55ZFDty8Mb1bXXK3A
+	WnDOgzAcAwh9aB1D8tzX+hgxVPYlqDfAE72JtoQ==
+X-Google-Smtp-Source: AGHT+IEDgs+miE1gX6ZQTUPVvtQ4tAfLoH8Z/nDmvJIeTUqUSoM57Xw13la+OqnoQDXlV9aokZwVCnZHBuAHWvDS4Lc=
+X-Received: by 2002:a25:aa4d:0:b0:dc7:8c3a:4e42 with SMTP id
+ s71-20020a25aa4d000000b00dc78c3a4e42mr8948827ybi.30.1711482461135; Tue, 26
+ Mar 2024 12:47:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zYLJU3bUGFnj+RDa"
-Content-Disposition: inline
-In-Reply-To: <20240326-rk-default-enable-strobe-pulldown-v1-1-f410c71605c0@folker-schwesinger.de>
+References: <CANiq72mjc5t4n25SQvYSrOEhxxpXYPZ4pPzneSJHEnc3qApu2Q@mail.gmail.com>
+ <CAA8EJprTNFgKJ_3cdZz4f_LCkYFghi-cfaj3bZmYh3oA63my6A@mail.gmail.com>
+ <85204b78-7b24-61cd-4bae-3e7abc6e4fd3@quicinc.com> <CAA8EJppqrF10J1qExM=gopiF4GPDt7v4TB6LrQxx5OGyAL9hSg@mail.gmail.com>
+ <671d2662-df4e-4350-0084-476eb1671cc1@quicinc.com>
+In-Reply-To: <671d2662-df4e-4350-0084-476eb1671cc1@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Tue, 26 Mar 2024 21:47:30 +0200
+Message-ID: <CAA8EJpppre8ibYqN7gZObyvzR08yVbTevC6hDEDCKQVf8gRVRg@mail.gmail.com>
+Subject: Re: drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c:843:6: error:
+ variable 'out' set but not used
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Rob Clark <robdclark@gmail.com>, 
+	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, 
+	freedreno@lists.freedesktop.org, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+
+On Tue, 26 Mar 2024 at 21:32, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
+>
+>
+>
+> On 3/26/2024 12:10 PM, Dmitry Baryshkov wrote:
+> > On Tue, 26 Mar 2024 at 20:31, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
+> >>
+> >>
+> >>
+> >> On 3/26/2024 11:19 AM, Dmitry Baryshkov wrote:
+> >>> On Tue, 26 Mar 2024 at 20:05, Miguel Ojeda
+> >>> <miguel.ojeda.sandonis@gmail.com> wrote:
+> >>>>
+> >>>> Hi,
+> >>>>
+> >>>> In today's next, I got:
+> >>>>
+> >>>>       drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c:843:6: error: variable
+> >>>> 'out' set but not used [-Werror,-Wunused-but-set-variable]
+> >>>>
+> >>>> `out` seems to be there since commit 64d6255650d4 ("drm/msm: More
+> >>>> fully implement devcoredump for a7xx").
+> >>>>
+> >>>> Untested diff below assuming `dumper->iova` is constant -- if you want
+> >>>> a formal patch, please let me know.
+> >>>
+> >>> Please send a proper patch that we can pick up.
+> >>>
+> >>
+> >> This should be fixed with https://patchwork.freedesktop.org/patch/581853/.
+> >
+> > Is that a correct fix? If you check other usage locations for
+> > CRASHDUMP_READ, you'll see that `out` is the last parameter and it is
+> > being incremented.
+> >
+>
+> Right but in this function out is not the last parameter of CRASHDUMP_READ.
+
+Yes. I think in this case the patch from this email is more correct.
+
+>
+> Maybe you or Rob can correct me but I thought the fix looked sane
+> although noone commented on that patch.
+
+>
+> >>
+> >> We can pickup that one with a Fixes tag applied.
+> >>
+> >>>>
+> >>>> Cheers,
+> >>>> Miguel
+> >>>>
+> >>>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c
+> >>>> b/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c
+> >>>> index 1f5245fc2cdc..a847a0f7a73c 100644
+> >>>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c
+> >>>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c
+> >>>> @@ -852,7 +852,7 @@ static void a6xx_get_shader_block(struct msm_gpu *gpu,
+> >>>>                (block->type << 8) | i);
+> >>>>
+> >>>>            in += CRASHDUMP_READ(in, REG_A6XX_HLSQ_DBG_AHB_READ_APERTURE,
+> >>>> -            block->size, dumper->iova + A6XX_CD_DATA_OFFSET);
+> >>>> +            block->size, out);
+> >>>>
+> >>>>            out += block->size * sizeof(u32);
+> >>>>        }
+> >>>
+> >>>
+> >>>
+> >
+> >
+> >
 
 
---zYLJU3bUGFnj+RDa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 26, 2024 at 07:54:35PM +0100, Folker Schwesinger via B4 Relay w=
-rote:
-> From: Folker Schwesinger <dev@folker-schwesinger.de>
->=20
-> Restore the behavior of the Rockchip kernel that undconditionally
-> enables the internal strobe pulldown.
-
-What do you mean "restore the behaviour of the rockchip kernel"? Did
-mainline behave the same as the rockchip kernel previously? If not,
-using "restore" here is misleading. "Unconditionally" is also incorrect,
-because you have a property that disables it.
-
-> As the DT property rockchip,enable-strobe-pulldown is obsolete now,
-> replace it with a property to disable the internal pulldown.
->=20
-> This fixes I/O errors observed on various Rock Pi 4 and NanoPi4 series
-> boards with some eMMC modules. Other boards may also be affected.
->=20
-> An example of these errors is as follows:
->=20
-> [  290.060817] mmc1: running CQE recovery
-> [  290.061337] blk_update_request: I/O error, dev mmcblk1, sector 1411072=
- op 0x1:(WRITE) flags 0x800 phys_seg 36 prio class 0
-> [  290.061370] EXT4-fs warning (device mmcblk1p1): ext4_end_bio:348: I/O =
-error 10 writing to inode 29547 starting block 176466)
-> [  290.061484] Buffer I/O error on device mmcblk1p1, logical block 172288
->=20
-> Fixes: 8b5c2b45b8f0 ("phy: rockchip: set pulldown for strobe line in dts")
-> Signed-off-by: Folker Schwesinger <dev@folker-schwesinger.de>
-> ---
->  drivers/phy/rockchip/phy-rockchip-emmc.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/phy/rockchip/phy-rockchip-emmc.c b/drivers/phy/rockc=
-hip/phy-rockchip-emmc.c
-> index 20023f6eb994..6e637f3e1b19 100644
-> --- a/drivers/phy/rockchip/phy-rockchip-emmc.c
-> +++ b/drivers/phy/rockchip/phy-rockchip-emmc.c
-> @@ -376,14 +376,14 @@ static int rockchip_emmc_phy_probe(struct platform_=
-device *pdev)
->  	rk_phy->reg_offset =3D reg_offset;
->  	rk_phy->reg_base =3D grf;
->  	rk_phy->drive_impedance =3D PHYCTRL_DR_50OHM;
-> -	rk_phy->enable_strobe_pulldown =3D PHYCTRL_REN_STRB_DISABLE;
-> +	rk_phy->enable_strobe_pulldown =3D PHYCTRL_REN_STRB_ENABLE;
->  	rk_phy->output_tapdelay_select =3D PHYCTRL_OTAPDLYSEL_DEFAULT;
-> =20
->  	if (!of_property_read_u32(dev->of_node, "drive-impedance-ohm", &val))
->  		rk_phy->drive_impedance =3D convert_drive_impedance_ohm(pdev, val);
-> =20
-> -	if (of_property_read_bool(dev->of_node, "rockchip,enable-strobe-pulldow=
-n"))
-> -		rk_phy->enable_strobe_pulldown =3D PHYCTRL_REN_STRB_ENABLE;
-> +	if (of_property_read_bool(dev->of_node, "rockchip,disable-strobe-pulldo=
-wn"))
-> +		rk_phy->enable_strobe_pulldown =3D PHYCTRL_REN_STRB_DISABLE;
-
-Unfortunately you cannot do this.
-Previously no property at all meant disabled and a property was required
-to enable it. With this change the absence of a property means that it
-will be enabled.
-An old devicetree is that wanted this to be disabled would have no
-property and will now end up with it enabled. This is an ABI break and is
-clearly not backwards compatible, that's a NAK unless it is demonstrable
-that noone actually wants to disable it at all.
-
-If this patch fixes a problem on a board that you have, I would suggest
-that you add the property to enable it, as the binding tells you to.
-
-Thanks,
-Conor.
-
->  	if (!of_property_read_u32(dev->of_node, "rockchip,output-tapdelay-selec=
-t", &val)) {
->  		if (val <=3D PHYCTRL_OTAPDLYSEL_MAXVALUE)
->=20
-> --=20
-> 2.44.0
->=20
->=20
-
---zYLJU3bUGFnj+RDa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZgMl+wAKCRB4tDGHoIJi
-0hvVAP45y61fo87t2o+BbHPCKNKWjbNdW5YeWmPG1yoleN6xBAEA68Hda2BEZnjb
-dTtJLh0pxzAEeDUfwrA4rNAjq5p49g8=
-=CH3R
------END PGP SIGNATURE-----
-
---zYLJU3bUGFnj+RDa--
+-- 
+With best wishes
+Dmitry
