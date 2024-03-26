@@ -1,47 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C8513E036;
-	Tue, 26 Mar 2024 22:38:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D91F13DDD1;
+	Tue, 26 Mar 2024 22:39:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711492732; cv=none; b=oG+JQAi0bhdPJ2GP3XBJtliQsksNKRuAvXP9xdErTvbPZ3LgXmyrtI4CrBydmwRVhLLx/+lQ6E79CzTzkNRKL70XBHFqtzupAfYEpLFYivbzM45uMIwNqChA2n2C42R9L3oCZ05YdTtIqAanOUw7+LvlgLvVE/1Chm+7P4qJcgE=
+	t=1711492762; cv=none; b=FHYj4h6/i7WOKhArQy1D46faoc1vXg3BxSAx5GvAM31JKBbJ1SACpnt0aS8Wwt1y+HzHPkW56tP+jd46u4jAuK92twUGC05p8UwCdZW2mRIn8CtLeJf8x0U+SV+d0tB7Gw/TSvgq9iFWza2KJ6vdsX+9k87o2SpP3X24Wi1GTZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711492732; c=relaxed/simple;
-	bh=4nCC9JNEj51O9TISVBwQcV6lR14jShr/2PiFrxb4DMw=;
+	s=arc-20240116; t=1711492762; c=relaxed/simple;
+	bh=KeyNCZskP6/b1M7OoexAF78T4p7x0+NMkepYQTejfAs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Swv6qZiHkC65EjdYJJuma0hmDwwM2bnW/qKjvpsHWU8i9/tkc4a/E3hPTXW15c+7Qv3d7x0yAkfw3XSXGTaIvTIwnonG6uz41vyfOaWk2RLlCoA3uaiycf9TO95EmwU3zaMBjRpKE7hjyHYz/Z5BTQgjNmm49Xg8DTJIyFb2QIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/LUR/oq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=R+DwFPLz8/N/YbHpK7GsSotFK8aBeH+dVlGB+obaKAnxo0BsCwM/gtcRrHgtaT55Sx9YI6BCjoQ9m8HAvbBg/aFDCwAg6nz/Nq4aqhkOrEgqdnDGSDLrzwt0Q1gDQEoucaT6rET96eVnCmOMsgLvVjiYxVyP+Mn2aLogv8FfmSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nUkPCOXw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/LUR/oq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47888C43141;
-	Tue, 26 Mar 2024 22:38:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nUkPCOXw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71FCCC433F1;
+	Tue, 26 Mar 2024 22:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711492731;
-	bh=4nCC9JNEj51O9TISVBwQcV6lR14jShr/2PiFrxb4DMw=;
+	s=k20201202; t=1711492762;
+	bh=KeyNCZskP6/b1M7OoexAF78T4p7x0+NMkepYQTejfAs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=k/LUR/oqbtEkuUoncQuFcPdUw5/uxbCSh0bFFQnRKFjigKDiszTEbBDb+qjLiZXXp
-	 2SwD3bE1AvuzrVMBo2KWNyixEB9LpC/El3pI5AU0Gni7TaYhbmbkpPK3ilagc692dK
-	 i6EI0Zs+1acBigkxU+CS/RAg+An/og+Hcl5bpq8Z01Qzy8xFI3c/tLRuUcwSICwWK/
-	 +6Rkfp8kFmUSJSQjg6xnx123kva6GTdzpJnGOrpu7mC3Ub9DKIO9YOnVFz6ElxnQJb
-	 a6DOD91Va4VJijxQ/SBALRYhysYeYYZ7X5QeDgscMrS/Exg1a4vXEVYXtpscmsm4+X
-	 d5mED56x4rujw==
+	b=nUkPCOXw+m5dqLk95Et2hTWpRql228gXeu8f+g16q/hj+saAwDtlMyNW4nQsKg0uX
+	 uETZmJRUz04kFjXnWd6W6R71BSc8mkPb2IheQs1CmSdeBBbbe/n4vD2rj0QdFMLbat
+	 8nrxaQORCAEzyEdi/qJkvRTjb+nalTS/yJYn0BT+m23og1RLtxP67iJ/eq8Jmk3drz
+	 hpl+H88S0+HhCx/NRHckYmvJ5ja+NMBvGik3LgZ30BQlsrYIjOym+Ve1NWmGxISm6H
+	 kyZfezpARfHQ7tCCQuFrkZIT0abEeJqADaFJswMq3U8ES5bVtnnp4K4tH2fYoGBMI2
+	 oUYIkuTMnNyMw==
 From: Arnd Bergmann <arnd@kernel.org>
 To: llvm@lists.linux.dev,
-	Helge Deller <deller@gmx.de>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/9] fbdev: shmobile: fix snprintf truncation
-Date: Tue, 26 Mar 2024 23:38:00 +0100
-Message-Id: <20240326223825.4084412-2-arnd@kernel.org>
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Simon Horman <horms@kernel.org>,
+	Ferenc Fejes <fejes@inf.elte.hu>,
+	Wei Fang <wei.fang@nxp.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH 2/9] enetc: avoid truncating error message
+Date: Tue, 26 Mar 2024 23:38:01 +0100
+Message-Id: <20240326223825.4084412-3-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240326223825.4084412-1-arnd@kernel.org>
 References: <20240326223825.4084412-1-arnd@kernel.org>
@@ -55,31 +61,32 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-The name of the overlay does not fit into the fixed-length field:
+As clang points out, the error message in enetc_setup_xdp_prog()
+still does not fit in the buffer and will be truncated:
 
-drivers/video/fbdev/sh_mobile_lcdcfb.c:1577:2: error: 'snprintf' will always be truncated; specified size is 16, but format string expands to at least 25
+drivers/net/ethernet/freescale/enetc/enetc.c:2771:3: error: 'snprintf' will always be truncated; specified size is 80, but format string expands to at least 87 [-Werror,-Wformat-truncation]
 
-Make it short enough by changing the string.
+Replace it with an even shorter message that should fit.
 
-Fixes: c5deac3c9b22 ("fbdev: sh_mobile_lcdc: Implement overlays support")
+Fixes: f968c56417f0 ("net: enetc: shorten enetc_setup_xdp_prog() error message to fit NETLINK_MAX_FMTMSG_LEN")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/video/fbdev/sh_mobile_lcdcfb.c | 2 +-
+ drivers/net/ethernet/freescale/enetc/enetc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/video/fbdev/sh_mobile_lcdcfb.c b/drivers/video/fbdev/sh_mobile_lcdcfb.c
-index eb2297b37504..d35d2cf99998 100644
---- a/drivers/video/fbdev/sh_mobile_lcdcfb.c
-+++ b/drivers/video/fbdev/sh_mobile_lcdcfb.c
-@@ -1575,7 +1575,7 @@ sh_mobile_lcdc_overlay_fb_init(struct sh_mobile_lcdc_overlay *ovl)
- 	 */
- 	info->fix = sh_mobile_lcdc_overlay_fix;
- 	snprintf(info->fix.id, sizeof(info->fix.id),
--		 "SH Mobile LCDC Overlay %u", ovl->index);
-+		 "SHMobile ovl %u", ovl->index);
- 	info->fix.smem_start = ovl->dma_handle;
- 	info->fix.smem_len = ovl->fb_size;
- 	info->fix.line_length = ovl->pitch;
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c b/drivers/net/ethernet/freescale/enetc/enetc.c
+index 9f07f4947b63..5c45f42232d3 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc.c
+@@ -2769,7 +2769,7 @@ static int enetc_setup_xdp_prog(struct net_device *ndev, struct bpf_prog *prog,
+ 	if (priv->min_num_stack_tx_queues + num_xdp_tx_queues >
+ 	    priv->num_tx_rings) {
+ 		NL_SET_ERR_MSG_FMT_MOD(extack,
+-				       "Reserving %d XDP TXQs does not leave a minimum of %d for stack (total %d)",
++				       "Reserving %d XDP TXQs leaves under %d for stack (total %d)",
+ 				       num_xdp_tx_queues,
+ 				       priv->min_num_stack_tx_queues,
+ 				       priv->num_tx_rings);
 -- 
 2.39.2
 
