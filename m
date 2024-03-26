@@ -1,38 +1,39 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EBA74C0B;
-	Tue, 26 Mar 2024 14:04:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94BC675812;
+	Tue, 26 Mar 2024 14:04:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711461899; cv=none; b=ZFdUbRIqLL3aAiVgPc/wXOBcEDYFOMwN3vLY7dUrFou8c/CFqRkAAD4ytSJo+mbbmDYZ2xwW8420UlbSmLN7yhtIHvflo0J0SDG4mX8tvWokRO6VTK5t05J/FhaVJTLgDsYaOM9HKi3qvOP2FtSeXa12mcGA7ORwqxN8g+axpzU=
+	t=1711461899; cv=none; b=uXFhJAgq4zALzzgX6iaMCQO5KAGsVwNsH66sxRvkU1hriQ9p98JDEbw8oCF6vobkLttCS/uC4iw4YnaeQiRCvfsMs5pwxDWuIB9uCm0MvSqxT0FZfyDH558GfYm9h4pPhQBpPca7IJFVErL0tIhW4OLmpc0dQ3RaSFiAqQ9hQhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711461899; c=relaxed/simple;
-	bh=Bht56GKwfxqVLHT3PK85DitT4MWOhPng5tzAATBDR8s=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=qwJzeMA9QB6bS8ahFrZZXkVOK076EsfxCU7onl64mFJsrfM4SaOW7hW2DpnQSpZyf8xv/PNvYemY4aq/qQ4E3BpfGdEbJY6EDhF9bDd8C7cRZDsNc3hSNR6FKAAZfqgo/FY89olvekA64fEisMEGvOch4lQZHiYu7yHwOXeCRzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DiEiYc2m; arc=none smtp.client-ip=217.70.183.197
+	bh=00dSMsw8RxJRq6/RNoHKk2LNRlsOI9Z2wBBYDHd94zE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Lip9cw0uYte2CM+7cGvLFVPAPjwYl1DyTlcXg6/mlH2IX1WwO3yo7PST3Y0TJPRh72/sDeRt3hLsQ0a2tDBHqrKN2qPV5R5XON2iyHK3g141p7OXjWxA5uGZw69uOTh+2W+X3q7CaHcLWtuEDrDwidX85kfzz2eT11x5W1hTfxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FnG2PbRn; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DiEiYc2m"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 43BF91C000A;
-	Tue, 26 Mar 2024 14:04:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FnG2PbRn"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B21371C0015;
+	Tue, 26 Mar 2024 14:04:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1711461887;
+	t=1711461894;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=mDQJ6BqK7hwq+aJhog7TsYkjrfTNYhsBctyPN0Rrc+s=;
-	b=DiEiYc2mkkpVcrbkbZWV4Gd4rOxwCqep4QznxAcskGy7ztIIciskxLpTbiVt8+9VqXvtGF
-	iu9WlHAOTmsjsEXSDy+Z+zawJWDmpiKTYvz5eJYp++8TyJGLbGRst5skcrCOxfPvMmAYa9
-	ovKQ75wGqPM3FYfLyJlwnJmc3nx1fA47S5mjtf2m2zP9SqHluts4ajAB+TEFY4ec89YC+S
-	PQxDXGDCw3uKWJR4lspppfV04p1uKTX3j0aRHzqIuyX35SnFVj7kedgKODotvNgcJj9E3G
-	lpwLvAtlxVvjiw3U8kCuT6naF6M96Sa5iCofmFBjRzEfXUC+qZCbmwvanIBB3A==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sQBNykXEL5ng5/UkjNm6ei8sQWv4AelZ5ZQO1cOW9pk=;
+	b=FnG2PbRnYhFggSwvKNZGWKMUwjghjrpsdykQocFIGYm+DykJ+b/Hvof8Itq9FzxhO3lbcd
+	20fJjt0ftMQpoORLd2b8b3Xgy+Czs0EKBMG3UDEI7ldz6jwnueXpw7HQ3QlM5sGhNVmk4w
+	hT7uz7Jgu8kEyu3Xj/zGknS0AoPM2cbMRF1KaDtmelGW9ry6rk9LMvcXNmFANNfpWpnvbg
+	QqAMwX824yYeMaIuQYMvd7532CeBsmlR4XHfo+++dwkBGNDXhOBEHGKl+JMDiyt9iCW9iD
+	AOc4cQgDfzzdBFAgdbPJu3bR6nshf9pp0JAye6vw4KFYx2wlyzkLKGCGLvivoA==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Subject: [PATCH net-next v6 00/17] net: Add support for Power over Ethernet
- (PoE)
-Date: Tue, 26 Mar 2024 15:04:37 +0100
-Message-Id: <20240326-feature_poe-v6-0-c1011b6ea1cb@bootlin.com>
+Date: Tue, 26 Mar 2024 15:04:43 +0100
+Subject: [PATCH net-next v6 06/17] net: ethtool: pse-pd: Expand pse
+ commands with the PSE PoE interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,12 +41,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAPXVAmYC/2XN0UrEMBCF4VdZcm1kMpmmrVe+h4ik6cQNaLKks
- awsfXdjQdzQy8Pw/XMTC+fAi3g63UTmNSwhxTrMw0m4s43vLMNct0BArQBJerblK/PbJbFUeqQ
- RuNcEWlRxyezDda+9iMhFRr4W8Vov57CUlL/3N6va73tRKdMUVyVBTkwDEE0eaXyeUiofIT669
- LmXVvzXCKrVWHVn5sFZZ6D39qj1nyZAGFqtf7VWM5qeyIx81HSnVddqqlp300QONRrjjrq709i
- 3uqsaBw/W0oBk5lZv2/YD4r6aUaoBAAA=
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240326-feature_poe-v6-6-c1011b6ea1cb@bootlin.com>
+References: <20240326-feature_poe-v6-0-c1011b6ea1cb@bootlin.com>
+In-Reply-To: <20240326-feature_poe-v6-0-c1011b6ea1cb@bootlin.com>
 To: "David S. Miller" <davem@davemloft.net>, 
  Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
  Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
@@ -67,109 +66,185 @@ X-GND-Sasl: kory.maincent@bootlin.com
 
 From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-This patch series aims at adding support for PoE (Power over Ethernet),
-based on the already existing support for PoDL (Power over Data Line)
-implementation. In addition, it adds support for two specific PoE
-controller, the Microchip PD692x0 and the TI TPS23881.
+Add PSE PoE interface support in the ethtool pse command.
 
-In detail:
-- Patch 1 to 13 prepare net to support PoE devices.
-- Patch 14 and 15 add PD692x0 PoE PSE controller driver and its binding.
-- Patch 16 and 17 add TI TPS23881 PSE controller driver and its binding.
-
-Changes in v6:
-- TPS23881 fix firmware management release missing.
-- Use pcdev device pointer as regulator consumer and provider.
-- Rename of_legacy to no_of_pse_pi.
-- Add kdoc, and separate functions for better readability.
-- Add vpwr-supply regulator parent.
-- Link to v5: https://lore.kernel.org/r/20240227-feature_poe-v5-0-28f0aa48246d@bootlin.com
-
-Changes in v5:
-- Fix bindings nit.
-- Add supported-polarity parameter to bindings.
-- Fix yamllint binding errors.
-- Remove the nested lock brought by the use of regulator framework.
-- Link to v4: https://lore.kernel.org/r/20240215-feature_poe-v4-0-35bb4c23266c@bootlin.com
-
-Changes in v4:
-- Replaced sponsored-by tag by a simple sentence.
-- Fix pse_pi node bindings.
-- Add pse pi documentation written by Oleksij.
-- Link to v3: https://lore.kernel.org/r/20240208-feature_poe-v3-0-531d2674469e@bootlin.com
-
-Changes in v3:
-- Add patches to add Oleksij and myself to PSE MAINTAINERS.
-- Add patches to add pse devlink.
-- Add TI TPS23881 PSE controller driver with its binding.
-- Replace pse_get_types helper by pse_has_podl and pse_has_c33
-- Changed the PSE core bindings.
-- Add a setup_pi_matrix callback.
-- Register regulator for each PSE PI (Power Interface).
-- Changed the PD692x0 bindings.
-- Updated PD692x0 drivers to new bindings and PSE PI description.
-- Updated PD692x0 drivers according to the reviews and made fixes.
-- Link to v2: https://lore.kernel.org/r/20231201-feature_poe-v2-0-56d8cac607fa@bootlin.com
-
-Changes in v2:
-- Extract "firmware_loader: Expand Firmware upload error codes patches" to
-  send it alone and get it merge in an immutable branch.
-- Add "c33" prefix for PoE variables and enums.
-- Enhance few comments.
-- Add PSE Documentation.
-- Make several changes in pd692x0 driver, mainly for readibility.
-- Link to v1: https://lore.kernel.org/r/20231116-feature_poe-v1-0-be48044bf249@bootlin.com
-
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
-Kory Maincent (17):
-      MAINTAINERS: net: Add Oleksij to pse-pd maintainers
-      of: property: Add fw_devlink support for pse parent
-      net: pse-pd: Rectify and adapt the naming of admin_cotrol member of struct pse_control_config
-      ethtool: Expand Ethernet Power Equipment with c33 (PoE) alongside PoDL
-      net: pse-pd: Introduce PSE types enumeration
-      net: ethtool: pse-pd: Expand pse commands with the PSE PoE interface
-      netlink: specs: Modify pse attribute prefix
-      netlink: specs: Expand the pse netlink command with PoE interface
-      MAINTAINERS: Add myself to pse networking maintainer
-      net: pse-pd: Add support for PSE PIs
-      dt-bindings: net: pse-pd: Add another way of describing several PSE PIs
-      net: pse-pd: Add support for setup_pi_matrix callback
-      net: pse-pd: Use regulator framework within PSE framework
-      dt-bindings: net: pse-pd: Add bindings for PD692x0 PSE controller
-      net: pse-pd: Add PD692x0 PSE controller driver
-      dt-bindings: net: pse-pd: Add bindings for TPS23881 PSE controller
-      net: pse-pd: Add TI TPS23881 PSE controller driver
 
- .../bindings/net/pse-pd/microchip,pd692x0.yaml     |  158 +++
- .../bindings/net/pse-pd/pse-controller.yaml        |  102 +-
- .../bindings/net/pse-pd/ti,tps23881.yaml           |   93 ++
- Documentation/netlink/specs/ethtool.yaml           |   33 +-
- Documentation/networking/ethtool-netlink.rst       |   20 +
- Documentation/networking/index.rst                 |    1 +
- Documentation/networking/pse-pd/index.rst          |   10 +
- Documentation/networking/pse-pd/introduction.rst   |   73 ++
- Documentation/networking/pse-pd/pse-pi.rst         |  302 +++++
- MAINTAINERS                                        |    8 +
- drivers/net/pse-pd/Kconfig                         |   20 +
- drivers/net/pse-pd/Makefile                        |    2 +
- drivers/net/pse-pd/pd692x0.c                       | 1223 ++++++++++++++++++++
- drivers/net/pse-pd/pse_core.c                      |  511 +++++++-
- drivers/net/pse-pd/pse_regulator.c                 |   49 +-
- drivers/net/pse-pd/tps23881.c                      |  818 +++++++++++++
- drivers/of/property.c                              |    2 +
- include/linux/pse-pd/pse.h                         |   86 +-
- include/uapi/linux/ethtool.h                       |   55 +
- include/uapi/linux/ethtool_netlink.h               |    3 +
- net/ethtool/pse-pd.c                               |   60 +-
- 21 files changed, 3527 insertions(+), 102 deletions(-)
+Changes in v2:
+- Follow the "c33" PoE prefix naming change.
+
+Changes in v3:
+- Replace the pse_get_types() helper by pse_has_podl() and pse_has_c33().
+- Replace PoE to c33 in the netlink error log.
+- Fix documentation build warning.
 ---
-base-commit: f81d6cec4a4ed1b6580340a43ec68f3132423964
-change-id: 20231024-feature_poe-139490e73403
+ Documentation/networking/ethtool-netlink.rst | 20 ++++++++++
+ net/ethtool/pse-pd.c                         | 60 +++++++++++++++++++++++-----
+ 2 files changed, 70 insertions(+), 10 deletions(-)
 
-Best regards,
+diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
+index d583d9abf2f8..294187c3a3b0 100644
+--- a/Documentation/networking/ethtool-netlink.rst
++++ b/Documentation/networking/ethtool-netlink.rst
+@@ -1717,6 +1717,10 @@ Kernel response contents:
+                                                   PSE functions
+   ``ETHTOOL_A_PODL_PSE_PW_D_STATUS``         u32  power detection status of the
+                                                   PoDL PSE.
++  ``ETHTOOL_A_C33_PSE_ADMIN_STATE``          u32  Operational state of the PoE
++                                                  PSE functions.
++  ``ETHTOOL_A_C33_PSE_PW_D_STATUS``          u32  power detection status of the
++                                                  PoE PSE.
+   ======================================  ======  =============================
+ 
+ When set, the optional ``ETHTOOL_A_PODL_PSE_ADMIN_STATE`` attribute identifies
+@@ -1728,6 +1732,12 @@ aPoDLPSEAdminState. Possible values are:
+ .. kernel-doc:: include/uapi/linux/ethtool.h
+     :identifiers: ethtool_podl_pse_admin_state
+ 
++The same goes for ``ETHTOOL_A_C33_PSE_ADMIN_STATE`` implementing
++``IEEE 802.3-2022`` 30.9.1.1.2 aPSEAdminState.
++
++.. kernel-doc:: include/uapi/linux/ethtool.h
++    :identifiers: ethtool_c33_pse_admin_state
++
+ When set, the optional ``ETHTOOL_A_PODL_PSE_PW_D_STATUS`` attribute identifies
+ the power detection status of the PoDL PSE.  The status depend on internal PSE
+ state machine and automatic PD classification support. This option is
+@@ -1737,6 +1747,12 @@ Possible values are:
+ .. kernel-doc:: include/uapi/linux/ethtool.h
+     :identifiers: ethtool_podl_pse_pw_d_status
+ 
++The same goes for ``ETHTOOL_A_C33_PSE_ADMIN_PW_D_STATUS`` implementing
++``IEEE 802.3-2022`` 30.9.1.1.5 aPSEPowerDetectionStatus.
++
++.. kernel-doc:: include/uapi/linux/ethtool.h
++    :identifiers: ethtool_c33_pse_pw_d_status
++
+ PSE_SET
+ =======
+ 
+@@ -1747,6 +1763,7 @@ Request contents:
+   ======================================  ======  =============================
+   ``ETHTOOL_A_PSE_HEADER``                nested  request header
+   ``ETHTOOL_A_PODL_PSE_ADMIN_CONTROL``       u32  Control PoDL PSE Admin state
++  ``ETHTOOL_A_C33_PSE_ADMIN_CONTROL``        u32  Control PSE Admin state
+   ======================================  ======  =============================
+ 
+ When set, the optional ``ETHTOOL_A_PODL_PSE_ADMIN_CONTROL`` attribute is used
+@@ -1754,6 +1771,9 @@ to control PoDL PSE Admin functions. This option is implementing
+ ``IEEE 802.3-2018`` 30.15.1.2.1 acPoDLPSEAdminControl. See
+ ``ETHTOOL_A_PODL_PSE_ADMIN_STATE`` for supported values.
+ 
++The same goes for ``ETHTOOL_A_C33_PSE_ADMIN_CONTROL`` implementing
++``IEEE 802.3-2022`` 30.9.1.2.1 acPSEAdminControl.
++
+ RSS_GET
+ =======
+ 
+diff --git a/net/ethtool/pse-pd.c b/net/ethtool/pse-pd.c
+index aef57a058f0d..a3bfc3d9644e 100644
+--- a/net/ethtool/pse-pd.c
++++ b/net/ethtool/pse-pd.c
+@@ -82,6 +82,10 @@ static int pse_reply_size(const struct ethnl_req_info *req_base,
+ 		len += nla_total_size(sizeof(u32)); /* _PODL_PSE_ADMIN_STATE */
+ 	if (st->podl_pw_status > 0)
+ 		len += nla_total_size(sizeof(u32)); /* _PODL_PSE_PW_D_STATUS */
++	if (st->c33_admin_state > 0)
++		len += nla_total_size(sizeof(u32)); /* _C33_PSE_ADMIN_STATE */
++	if (st->c33_pw_status > 0)
++		len += nla_total_size(sizeof(u32)); /* _C33_PSE_PW_D_STATUS */
+ 
+ 	return len;
+ }
+@@ -103,6 +107,16 @@ static int pse_fill_reply(struct sk_buff *skb,
+ 			st->podl_pw_status))
+ 		return -EMSGSIZE;
+ 
++	if (st->c33_admin_state > 0 &&
++	    nla_put_u32(skb, ETHTOOL_A_C33_PSE_ADMIN_STATE,
++			st->c33_admin_state))
++		return -EMSGSIZE;
++
++	if (st->c33_pw_status > 0 &&
++	    nla_put_u32(skb, ETHTOOL_A_C33_PSE_PW_D_STATUS,
++			st->c33_pw_status))
++		return -EMSGSIZE;
++
+ 	return 0;
+ }
+ 
+@@ -113,25 +127,18 @@ const struct nla_policy ethnl_pse_set_policy[ETHTOOL_A_PSE_MAX + 1] = {
+ 	[ETHTOOL_A_PODL_PSE_ADMIN_CONTROL] =
+ 		NLA_POLICY_RANGE(NLA_U32, ETHTOOL_PODL_PSE_ADMIN_STATE_DISABLED,
+ 				 ETHTOOL_PODL_PSE_ADMIN_STATE_ENABLED),
++	[ETHTOOL_A_C33_PSE_ADMIN_CONTROL] =
++		NLA_POLICY_RANGE(NLA_U32, ETHTOOL_C33_PSE_ADMIN_STATE_DISABLED,
++				 ETHTOOL_C33_PSE_ADMIN_STATE_ENABLED),
+ };
+ 
+ static int
+ ethnl_set_pse_validate(struct ethnl_req_info *req_info, struct genl_info *info)
+-{
+-	return !!info->attrs[ETHTOOL_A_PODL_PSE_ADMIN_CONTROL];
+-}
+-
+-static int
+-ethnl_set_pse(struct ethnl_req_info *req_info, struct genl_info *info)
+ {
+ 	struct net_device *dev = req_info->dev;
+-	struct pse_control_config config = {};
+ 	struct nlattr **tb = info->attrs;
+ 	struct phy_device *phydev;
+ 
+-	/* this values are already validated by the ethnl_pse_set_policy */
+-	config.podl_admin_control = nla_get_u32(tb[ETHTOOL_A_PODL_PSE_ADMIN_CONTROL]);
+-
+ 	phydev = dev->phydev;
+ 	if (!phydev) {
+ 		NL_SET_ERR_MSG(info->extack, "No PHY is attached");
+@@ -143,6 +150,39 @@ ethnl_set_pse(struct ethnl_req_info *req_info, struct genl_info *info)
+ 		return -EOPNOTSUPP;
+ 	}
+ 
++	if (tb[ETHTOOL_A_PODL_PSE_ADMIN_CONTROL] &&
++	    !(pse_has_podl(phydev->psec))) {
++		NL_SET_ERR_MSG_ATTR(info->extack,
++				    tb[ETHTOOL_A_PODL_PSE_ADMIN_CONTROL],
++				    "setting PoDL PSE admin control not supported");
++		return -EOPNOTSUPP;
++	}
++	if (tb[ETHTOOL_A_C33_PSE_ADMIN_CONTROL] &&
++	    !(pse_has_c33(phydev->psec))) {
++		NL_SET_ERR_MSG_ATTR(info->extack,
++				    tb[ETHTOOL_A_C33_PSE_ADMIN_CONTROL],
++				    "setting C33 PSE admin control not supported");
++		return -EOPNOTSUPP;
++	}
++
++	return 1;
++}
++
++static int
++ethnl_set_pse(struct ethnl_req_info *req_info, struct genl_info *info)
++{
++	struct net_device *dev = req_info->dev;
++	struct pse_control_config config = {};
++	struct nlattr **tb = info->attrs;
++	struct phy_device *phydev;
++
++	phydev = dev->phydev;
++	/* These values are already validated by the ethnl_pse_set_policy */
++	if (pse_has_podl(phydev->psec))
++		config.podl_admin_control = nla_get_u32(tb[ETHTOOL_A_PODL_PSE_ADMIN_CONTROL]);
++	if (pse_has_c33(phydev->psec))
++		config.c33_admin_control = nla_get_u32(tb[ETHTOOL_A_C33_PSE_ADMIN_CONTROL]);
++
+ 	/* Return errno directly - PSE has no notification */
+ 	return pse_ethtool_set_config(phydev->psec, info->extack, &config);
+ }
+
 -- 
-Köry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+2.25.1
 
