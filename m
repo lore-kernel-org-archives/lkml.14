@@ -1,221 +1,126 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh8-smtp.messagingengine.com (fhigh8-smtp.messagingengine.com [103.168.172.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784D22574B;
-	Tue, 26 Mar 2024 16:02:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9EC13C83A;
+	Tue, 26 Mar 2024 16:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711468923; cv=none; b=kcpIp+7zWp/Mv55on3hZsV9BTNCOgMvCjpuNoUUGWZYmGTCKWvU9VMXUuhnOXGBLnMyK/T6zWFiRXZxcR6aQj0a1DOjBI1CF4ZSZfKPJTsET6FR5IbYvQ2qrXlLVHntK5cPCuMhdmgN6JVQVXCSeZ+UH/y2afyd1wcLdyHIYjgI=
+	t=1711468955; cv=none; b=jN8usJTrs5fHo9xrnrODADltz3eJ3Qko2i5ELqwDBnoihZjtqNXkcme/MgDJ4xP5LUgWmYrNeOWanJjaAYaKbDMp2hw5i5d3zoiAjdUGlI3Pc30DrWafD5VriafPYPxhQIsViHbREl8vZLLlZx0QYJ+2GuMmj1vB2L2ZikHxQ/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711468923; c=relaxed/simple;
-	bh=IjbfE8tFOdfjNx4MkilscMXL9i5JKvzYqCkq93qx1DI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zf5WFUFs7oZtBkbymupksJMDJybJRaTyr9w2hwOcqYhdjSwITBs52Kb3mRkThvz07TDrWen+eerCvo6NG5Glqx4BEIyyiwEtN/lmt+4RLCQudPzKUp5akd5lb+XRGCC+1kgga6bAubw5LBpvRTuKlw/DU8TU9TZoK0tJZrKBdyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I+AVg4pM; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711468955; c=relaxed/simple;
+	bh=WEETTdtmXnNUUxdJnrKz4FTNJRHDYO+nDraQbw59R0o=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=Ayu50rvq4WbvWG7QiytbZiE6SjmFlwK3ni9nJGhatI4WILECUUbksLhke6S+hcp0jcio1JWe6KXCUTi8bEA9A9wjb4oUQZGHpfUZE8ZIyxPEu+r/vZa0VxWL50V4iLJVQO/8OY4IBAv3dOfwn70yvYTOq/S2YndVWlMbEQzcUPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=mjCT9fo6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=R8Az+nHD; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I+AVg4pM"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1e0f2798b47so5211775ad.1;
-        Tue, 26 Mar 2024 09:02:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711468920; x=1712073720; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aQJPy88vBYo4nQyyX6JO+jPm5JtOURILAq3nriLwYbQ=;
-        b=I+AVg4pMGd1gzfEoz6Uq8v/9YC+YvYSeTaAiyRhtTnNeYvxqaxCXtahDtSH0Yzxl0b
-         dPokTHz6GZQWZ6JqdpOrNc8I7LabJejcpMu8vuxFYRiZLuXgtt8bU6ZIKP3hmgB02A20
-         8QrbargXJ2GlhYvGsxEespqzME3YB4IorZq46woaCh5JVeRiZTqcQ0JbTwU1w+VFi//2
-         Max75S5+Ya+pdOpTe67owOLHLSlM6IMdvG7CG2+1ONmjT8BpM0Wttev6gV8GnFC0KbSB
-         64ztF3PZTfkkJ3LzW6ieamFi1X+wHyVdPlA+VXzR3nK+tglXrmzZsj2UEVVB2BFdzTwu
-         ZJHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711468920; x=1712073720;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aQJPy88vBYo4nQyyX6JO+jPm5JtOURILAq3nriLwYbQ=;
-        b=wTWmj+E0pMc+2kBqXP/5Sh6+hjiM0ob1QgOaOEujSgKmgt/5iwRTpesSGUOY4kg/kU
-         2/nfjGdq0wMqqxF8p88iayWs1IijDFrdtVM2IReM61NvUkCJceMdH7F/gze1HiVcetWg
-         K+zdF2cWIgpJaDXCAxi5TvGG4OivweCiHV7c13KO/mCvbGryQbXeH7ekRo9sGrnjOTVd
-         S/83Gl33d9VbnUqgelQS3R8Wzg3tqBYeqVtj3xP92XBEN17Q69gTOuxbo6oJunck9lCE
-         jWr1KVyFlFDAs0fHIy3F7h8jZ52jcOuBJYcU6jn/iEn95l8VXnxt23C8M3UaHDm/yXoU
-         JM2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVuGvkc4rfpLe5NHyZtl36fj8QLiRmT0XBcj9YV3vBf6iW5YG7XOUoMu+VpTLMLZ+qlaCRC/eDY8pmQDMpm0U6/Hl5XFAG0rNDjpx8K6BUFf/phLszpVpK7E5KVZd6yQfTmGdvRVhZ7PVwQURSPhx6NJak5xElLK/E7W8zRfJZzb32B7IB8UZLgnI2uTcKmn2RUpTik/tju2qYjT6aLs1toZNzIs+B2mA==
-X-Gm-Message-State: AOJu0YxI2Ua17tn5tN/pxuvLnoKanWJFlgh70WAFA18jE6OjwksuHhwX
-	NJIEvI5zHk7dx4kdB+uAS5W24qDC/hg7cEE8y9ByFEmQx7F1JiOuum2Kpt2Bkx+TtuzfwUW9lqZ
-	+Ho+VwnvMcbxATsqZ3C8tsWwpk+w=
-X-Google-Smtp-Source: AGHT+IHtfConeE4djnAj96ZFcg6gNNv5l9VculGG8dY053dAspbyKZxpxh/zkIuAVWRiJAqk6iJIDniUnCwGli8dbQg=
-X-Received: by 2002:a17:902:e748:b0:1e0:e011:e3cb with SMTP id
- p8-20020a170902e74800b001e0e011e3cbmr3326261plf.15.1711468919504; Tue, 26 Mar
- 2024 09:01:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="mjCT9fo6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="R8Az+nHD"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id E88BB114008C;
+	Tue, 26 Mar 2024 12:02:32 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Tue, 26 Mar 2024 12:02:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1711468952;
+	 x=1711555352; bh=uZQNPynhKPF46EB/VI6vYwBBa1dqaara1pLLBIisxc8=; b=
+	mjCT9fo6BpB7CSjlxicGaG/bS9hBLKCK3w6UShjKUvJktIIjba0cHRBKQAimrc5Q
+	Emv6TmTcP0KOyBxUFeKu7CE83/rb1jMarfYe0oIwxsWa65ehQ8LTpZFtTFQDVOuo
+	wDBcHV1cN4ZnimtBxcgqh0RhCjGYsF9Sg7tKIvkfjgc7IZqiG3+oiX4kjl3YqZt9
+	ORsRs+LHyp48c1UEPbHS/AnyUCJHWBWmNbxtsAZU3yrh917L6a7wt6A2JfqnKE5w
+	MnJ3d9DHRmb2vQE3TEOK9phybyGejur466HXU1Ve6Tylxan1k7JO4XG+f+63cVut
+	Zsmng4dpx0203Bo+/PR1Kw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1711468952; x=
+	1711555352; bh=uZQNPynhKPF46EB/VI6vYwBBa1dqaara1pLLBIisxc8=; b=R
+	8Az+nHDQmgC0yNbisHXJ3de+Z7rjacbhC5d6IM8Pa/bXUI0Sd3iTpgvvmFOrS0XU
+	4gp2B6BhmcXpSUScqla22drDVDBJr5u4AMhja1b/rJqrH8uSG13hPOlwPt734Oaq
+	1XWClBMuivbPZ3QXR0XzJJOoTtjwk9co108Jbaw8+MmyDuhT27H5bCmwCTCvz3BI
+	zGV8mMLxna7ZeEakS/YOIZlGq8uaP9w7g4X/+kc+WLgzXsz7Az25CW8GngrZ6roY
+	tC4sy+dQ2y4+Zy3CqE0dr/pgKcc5/+UFr424G3twWiW+OTXI10K0dYngGx3w5Rlg
+	6RzWNHNFxT8Ms9gzRhQLw==
+X-ME-Sender: <xms:mPECZmlxNndyoYvxX8n8aZ8p-SODnrkhPolr7FnGtnOaDXgFEmFSsA>
+    <xme:mPECZt271I6AHIkNXTxfSLwq6bbyzElUmhfR_acKZVgknUhqzx8HjaNoVUFTfyUrM
+    Os5coHg9CEiyXGBIxU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddufedgkeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
+    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:mPECZkrjeL7nPoJNmijVdb-ahSvhcg_bE8hgRozi4GcjyMeD6uj5KQ>
+    <xmx:mPECZqmuyK4ZJG0f6NfE0gTIEWVqFYcNmZ6yW5uATjejt6Zt_qvF-Q>
+    <xmx:mPECZk34bYanMNteHxGz8LdvyuGNWD--R_2OSUu9BfTL_8dTOR_-gQ>
+    <xmx:mPECZhuDyjdOTdo5KtUM54qOIaombyJlL0JbTmzdK79dXiL-pAqLCg>
+    <xmx:mPECZl78g8uWX-GHxDXztR0_nDoF-pERrigkFb2Ez_-UbX0ZndJ7MQ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id E4F75B6008D; Tue, 26 Mar 2024 12:02:31 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-328-gc998c829b7-fm-20240325.002-gc998c829
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240321145736.2373846-1-jonathan.haslam@gmail.com> <20240325120323.ec3248d330b2755e73a6571e@kernel.org>
-In-Reply-To: <20240325120323.ec3248d330b2755e73a6571e@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 26 Mar 2024 09:01:47 -0700
-Message-ID: <CAEf4BzZS_QCsSY0oGY_3pGveGfXKK_TkVURyNq=UQXVXSqi2Fw@mail.gmail.com>
-Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jonathan Haslam <jonathan.haslam@gmail.com>, linux-trace-kernel@vger.kernel.org, 
-	andrii@kernel.org, bpf@vger.kernel.org, rostedt@goodmis.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Message-Id: <e1ec2f8c-c1e9-4459-a6d4-c14ca57404fe@app.fastmail.com>
+In-Reply-To: <ddd9519fa51f95eb14a6dd3f2a4b7d67ae7e47a9.camel@nvidia.com>
+References: <20240326144741.3094687-1-arnd@kernel.org>
+ <20240326145140.3257163-5-arnd@kernel.org>
+ <ddd9519fa51f95eb14a6dd3f2a4b7d67ae7e47a9.camel@nvidia.com>
+Date: Tue, 26 Mar 2024 17:02:11 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Timur Tabi" <ttabi@nvidia.com>, "Masahiro Yamada" <masahiroy@kernel.org>,
+ "kherbst@redhat.com" <kherbst@redhat.com>,
+ "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+ "Arnd Bergmann" <arnd@kernel.org>, "Lyude Paul" <lyude@redhat.com>,
+ "bskeggs@redhat.com" <bskeggs@redhat.com>, "Dave Airlie" <airlied@gmail.com>,
+ "Danilo Krummrich" <dakr@redhat.com>,
+ "Nathan Chancellor" <nathan@kernel.org>, "Daniel Vetter" <daniel@ffwll.ch>
+Cc: "Justin Stitt" <justinstitt@google.com>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "Bill Wendling" <morbo@google.com>,
+ "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+ "Nicolas Schier" <nicolas@fjasle.eu>,
+ "Nick Desaulniers" <ndesaulniers@google.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "llvm@lists.linux.dev" <llvm@lists.linux.dev>
+Subject: Re: [PATCH 06/12] nouveau: fix function cast warning
+Content-Type: text/plain;charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 24, 2024 at 8:03=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
-rg> wrote:
+On Tue, Mar 26, 2024, at 16:20, Timur Tabi wrote:
+> On Tue, 2024-03-26 at 15:51 +0100, Arnd Bergmann wrote:
+>> Calling a function through an incompatible pointer type causes breaks
+>> kcfi, so clang warns about the assignment:
+>>=20
 >
-> On Thu, 21 Mar 2024 07:57:35 -0700
-> Jonathan Haslam <jonathan.haslam@gmail.com> wrote:
+> ...
 >
-> > Active uprobes are stored in an RB tree and accesses to this tree are
-> > dominated by read operations. Currently these accesses are serialized b=
-y
-> > a spinlock but this leads to enormous contention when large numbers of
-> > threads are executing active probes.
-> >
-> > This patch converts the spinlock used to serialize access to the
-> > uprobes_tree RB tree into a reader-writer spinlock. This lock type
-> > aligns naturally with the overwhelmingly read-only nature of the tree
-> > usage here. Although the addition of reader-writer spinlocks are
-> > discouraged [0], this fix is proposed as an interim solution while an
-> > RCU based approach is implemented (that work is in a nascent form). Thi=
-s
-> > fix also has the benefit of being trivial, self contained and therefore
-> > simple to backport.
-> >
-> > This change has been tested against production workloads that exhibit
-> > significant contention on the spinlock and an almost order of magnitude
-> > reduction for mean uprobe execution time is observed (28 -> 3.5 microse=
-cs).
+>> +static void of_fini(void *p)
+>> +{
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return kfree(p);
+>> +}
+>> +
 >
-> Looks good to me.
->
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> I don't know anything about kfci, but shouldn't this just be "kfree(p)=
+",
+> without the "return"?
 
-Masami,
+You are right, fixed this up locally now, waiting for more
+comments before I resend patches from my series.
 
-Given the discussion around per-cpu rw semaphore and need for
-(internal) batched attachment API for uprobes, do you think you can
-apply this patch as is for now? We can then gain initial improvements
-in scalability that are also easy to backport, and Jonathan will work
-on a more complete solution based on per-cpu RW semaphore, as
-suggested by Ingo.
+I think it works because of a gcc extension, but isn't
+valid C otherwise, and I did not mean to rely on this.
 
->
-> BTW, how did you measure the overhead? I think spinlock overhead
-> will depend on how much lock contention happens.
->
-> Thank you,
->
-> >
-> > [0] https://docs.kernel.org/locking/spinlocks.html
-> >
-> > Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
-> > ---
-> >  kernel/events/uprobes.c | 22 +++++++++++-----------
-> >  1 file changed, 11 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > index 929e98c62965..42bf9b6e8bc0 100644
-> > --- a/kernel/events/uprobes.c
-> > +++ b/kernel/events/uprobes.c
-> > @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree =3D RB_ROOT;
-> >   */
-> >  #define no_uprobe_events()   RB_EMPTY_ROOT(&uprobes_tree)
-> >
-> > -static DEFINE_SPINLOCK(uprobes_treelock);    /* serialize rbtree acces=
-s */
-> > +static DEFINE_RWLOCK(uprobes_treelock);      /* serialize rbtree acces=
-s */
-> >
-> >  #define UPROBES_HASH_SZ      13
-> >  /* serialize uprobe->pending_list */
-> > @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *ino=
-de, loff_t offset)
-> >  {
-> >       struct uprobe *uprobe;
-> >
-> > -     spin_lock(&uprobes_treelock);
-> > +     read_lock(&uprobes_treelock);
-> >       uprobe =3D __find_uprobe(inode, offset);
-> > -     spin_unlock(&uprobes_treelock);
-> > +     read_unlock(&uprobes_treelock);
-> >
-> >       return uprobe;
-> >  }
-> > @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *=
-uprobe)
-> >  {
-> >       struct uprobe *u;
-> >
-> > -     spin_lock(&uprobes_treelock);
-> > +     write_lock(&uprobes_treelock);
-> >       u =3D __insert_uprobe(uprobe);
-> > -     spin_unlock(&uprobes_treelock);
-> > +     write_unlock(&uprobes_treelock);
-> >
-> >       return u;
-> >  }
-> > @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
-> >       if (WARN_ON(!uprobe_is_active(uprobe)))
-> >               return;
-> >
-> > -     spin_lock(&uprobes_treelock);
-> > +     write_lock(&uprobes_treelock);
-> >       rb_erase(&uprobe->rb_node, &uprobes_tree);
-> > -     spin_unlock(&uprobes_treelock);
-> > +     write_unlock(&uprobes_treelock);
-> >       RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
-> >       put_uprobe(uprobe);
-> >  }
-> > @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
-> >       min =3D vaddr_to_offset(vma, start);
-> >       max =3D min + (end - start) - 1;
-> >
-> > -     spin_lock(&uprobes_treelock);
-> > +     read_lock(&uprobes_treelock);
-> >       n =3D find_node_in_range(inode, min, max);
-> >       if (n) {
-> >               for (t =3D n; t; t =3D rb_prev(t)) {
-> > @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
-> >                       get_uprobe(u);
-> >               }
-> >       }
-> > -     spin_unlock(&uprobes_treelock);
-> > +     read_unlock(&uprobes_treelock);
-> >  }
-> >
-> >  /* @vma contains reference counter, not the probed instruction. */
-> > @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsig=
-ned long start, unsigned long e
-> >       min =3D vaddr_to_offset(vma, start);
-> >       max =3D min + (end - start) - 1;
-> >
-> > -     spin_lock(&uprobes_treelock);
-> > +     read_lock(&uprobes_treelock);
-> >       n =3D find_node_in_range(inode, min, max);
-> > -     spin_unlock(&uprobes_treelock);
-> > +     read_unlock(&uprobes_treelock);
-> >
-> >       return !!n;
-> >  }
-> > --
-> > 2.43.0
-> >
->
->
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+     Arnd
