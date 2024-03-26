@@ -1,141 +1,250 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2108.outbound.protection.partner.outlook.cn [139.219.17.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4140823BF
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 06:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711436316; cv=none; b=PrpJ+eYK7PqFI7+VPfUBQLLQrroOprDpW9OYrYyve694UHo77tGLvJ+7bBcXh9fz4GrTH1Hh166HHtQZOFJ9tOB0fVvKaijrZKkIx+FJGLolWnLHRIQ3dsS4MBin2aSB62CeZD+cl8OxKqany+t7scgyeqypMkBfvRkqE6Kqoss=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711436316; c=relaxed/simple;
-	bh=2h+xwPao4UQjY5pzAeqIZuJmOnkTkwIZDSMWkOI2/m4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ULOn6hyfT2wT8i6tCcUyEgnJiiwxuslSLTxdNAeTnjpGMmm5ghG00K5SxxdhvjDukLy7rjaj8pADYieJPeAT3jcnLPX+TPNnvDqEXvaGAUBa/90DN5qSi/VRlpAoQo59Wlyw5nxX7oIjw0h5TzCWuiGVSamuWFaTdeZen7uy/BQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fnZXP2hr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fnZXP2hr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D9A1C433C7;
-	Tue, 26 Mar 2024 06:58:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711436316;
-	bh=2h+xwPao4UQjY5pzAeqIZuJmOnkTkwIZDSMWkOI2/m4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fnZXP2hrOZj2Z8QDTITPOCDYzWo/RpPKcF0v6NAm2SpxZh0PsXWZuJwc3oEBhKUWv
-	 Mi68YOrSG5ih18gIT2PvjY4DobC3VNnhLdVZ4TKV5pulyRNF+tgTqiupcSx4gKxdDF
-	 jeh31wT4loBcfFORRnpiYexhmfYOeJ0YRYAbUKlUvrW4KnatdYDaSPrIx66kjajELw
-	 ZmEbAEgh75QcmMm4slvb4gY5lIJxBCtvKm1zkNq5n1lycKvAdGz+YzlUO+7hqlJNOw
-	 OOI24Tspe9k4/8k5zOe4Nf3ymGckG543nJ0Hn4azqvR6YbgKjAskBkT5tdXk4ZBfMA
-	 uifqEFW4HXdvQ==
-Date: Tue, 26 Mar 2024 08:57:55 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-	linuxppc-dev@lists.ozlabs.org, akpm@linux-foundation.org
-Subject: Re: [PATCH v2 6/6] mm/mm_init.c: remove arch_reserved_kernel_pages()
-Message-ID: <ZgJx8wXHkbY4FsuT@kernel.org>
-References: <20240325145646.1044760-1-bhe@redhat.com>
- <20240325145646.1044760-7-bhe@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74041862F;
+	Tue, 26 Mar 2024 06:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.108
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711436365; cv=fail; b=HJ2iV2KLYg9kddHsbn2eB5yYRSVr9AG8SKcjF2Qt4LP2OvUu9ykBvlx/jzjo5aWXTc63nKakUzb0oD8v6R8b6FyRutywJfIGsyrgTd8U/i+WJrJZyggYb2sl0kD2lM++kVGxLwICggyTe/yPS3wSwsfXOP36qmUBfxo6O69VLbk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711436365; c=relaxed/simple;
+	bh=mqC2mpW70pffSGuor3ZdEj2Z66AItOQoBrHOrmtcYSE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=YUYAsJnL1B/0Dw5gg3ClNWQ2kok7AYnsLPRcwJOP6R58j5mMVmh+jRF4APNL2zhefm4x3ISGu/qc7UWpvSaLz/0KMQFp+sZ3pf3kI2EGZVTbHRaz39Sv/VNbBQmmjGPeCxjkwmhxEAdJgsA135DWChPhJ6Y9awjxzflCDGD2zd4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jwRzjKSYOaALOS3IkNMyNHK7HA/Bhho2C4Dkyqz3YPu8vm8Yxuu1KUXycEbBLHLMUUwmNNAqbNgfjYh4j8qeKsPZVnaCr3A3QCCHLDRE5E6DMyU/QIh+lqBF/TAU7NMbZ3++4vrEQQgVoOMusATqJEZaROSjQXp2zcplDrSXVZV5b0cgO9EZ2pjw/JcfTiOeOcd7+wPqTLM3s630uWK2yoFNf4yUL9wFHYVvvwEURsEQ2cx2i+zu4/3Q1Za6NL1/zUQnkQLbHq0UZkJXwCuvR1uNnm0clY39ymPGvxY+lvNBSzCcZJTtAsXnHmYSKTtkrnCUkvYN50pYF8s9fOOiFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=P6mZgOjnFzZVrdG0UtJT/K3Amj51WZRg/lhQXzjrVI8=;
+ b=FQfosByYNeXkeFekeK6z4XGN2gj/gFc2Bz+HObVoKHKl8zr0SPg7DB/9kfNKrVLEkZk6soff9SuC/nv3lX4mRpyVFgl4JRWJzxx1oOxkl3ByA6SV4Qb5xDW5RNwAbo8ytOHWoAa4RV5TrOJQiRR7VbaTTlBjaWvQI18i+KCsAWSG1TmQWpVoVBSZ1UvMJlUBuYuu/zuYc1sDcfU+6WX4LQQCT4QqmougAivGkg9ORTAOA35BH0dq1aqF18tLmvyr97xkxK+jtZPU1BKI14XYzrsOuMCG1i/4mWBp8kQmhfYKCPRnvdj+zqz4Zwe5z+mPbcOQYssG7KLaFyHPq7sWhQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:e::20) by BJSPR01MB0883.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:e::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Tue, 26 Mar
+ 2024 05:25:24 +0000
+Received: from BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn
+ ([fe80::d0cf:5e2e:fd40:4aef]) by
+ BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn ([fe80::d0cf:5e2e:fd40:4aef%4])
+ with mapi id 15.20.7409.031; Tue, 26 Mar 2024 05:25:24 +0000
+From: Tan Chun Hau <chunhau.tan@starfivetech.com>
+To: "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Simon Horman <horms@kernel.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Andrew Halaney <ahalaney@redhat.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Russell King <rmk+kernel@armlinux.org.uk>
+Cc: Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+	Jee Heng Sia <jeeheng.sia@starfivetech.com>,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH v4 1/1] dt-bindings: net: starfive,jh7110-dwmac: Add StarFive JH8100 support
+Date: Mon, 25 Mar 2024 22:25:05 -0700
+Message-Id: <20240326052505.197408-2-chunhau.tan@starfivetech.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240326052505.197408-1-chunhau.tan@starfivetech.com>
+References: <20240326052505.197408-1-chunhau.tan@starfivetech.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ZQ0PR01CA0019.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:2::7) To BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:e::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240325145646.1044760-7-bhe@redhat.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BJSPR01MB0595:EE_|BJSPR01MB0883:EE_
+X-MS-Office365-Filtering-Correlation-Id: c6dacbda-229e-4087-830d-08dc4d552391
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	/BlYOt+2GCyEB8SU3pG0ZtSOFOuhCajAoa+ij2qqpU9IQqm0V9FK3BsVvlIae2D57JxqsnE5bORKM49joI0psvE7xDxjgE6kSyTwK0CcAqnMu/8U44e58AIDdCn4Ph83a0znre6jGB3VWFMq2KAHLsTG9zRuU2evpW4r7yTUCJ9Lmp9XSJWDiZKfjwoK+WWf7diGujTmBXblHHbExrlRBxbDW4k8VN1+9UdQayJzq1IqfQtRJZVxJFY927dTTJzuSGI+6UEZ7f5cbVU2M5uJiaDgxQl35XVRUZe1TOtZWJQwPxFj2OCS6dHiFs2V8N6BT6BY6F+uVZOvXSyM7AP+FBqdAareFEcYkv8jYhMX+ioTrVIkAyHS3eTVDyzUInt+QTV9YyIH0TvCDdrJvR+AwybzCrY0QI5k4M/fsQN85ew4ZFVlu3SsS/hoS804DnVyUXlOc61sZZVkFlXE9/m8hJGvTbMIekjhYKoO/9dczsJiZ22izrL8ej2EU1g+OfiZv/Kn9ufeCHGTbqKVvlMH/DGE0MNozTnBEmPJqQMQANPpikJ7MgehiVG6gIQk23rBqPw32Ijn50e3PDAxdYH/7iTnVtVFQzJZrxH6zQ62fW6A0S8VOjPjlGl4adUWAc46PwI5efBuDq1sbIHt5/2Now==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(41320700004)(7416005)(1800799015)(52116005)(366007)(38350700005)(921011);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?f+iR05w0GIludgpUEz1GsH1+/HncBFXNpLGyJm8t0fWS1UwjNb19K7KyuDRa?=
+ =?us-ascii?Q?uIMTp1CMl4onzkN1yu7faDzSseAqbfInaBKYiL8nZ0wMEgfz01347AAizRi6?=
+ =?us-ascii?Q?qZdlsMISbOcrDGjq/W221MBWTRAormuUNs3D5efXqijcqIWNkVZ702glruS4?=
+ =?us-ascii?Q?CiRbYrIaVs1f2361x7XnNOHkwHbHrp3XnAXDP5/F2faY9eHkvpzeFwZAgCYc?=
+ =?us-ascii?Q?B49fPZlYNWbKfgToiTcCOan1XqIqKE15rmvQUZhCziXBUxBc8SyZq/cxlobp?=
+ =?us-ascii?Q?hHA+5PJ4Gmwpszi+nLBM3LjHcXgikrHlr826CE6w99dz8EGGdgk11ho7bqS9?=
+ =?us-ascii?Q?oFw9q8A1GffNS0jEDHeIv/mMDULCcsFC/NtPkEWKuAdf9b2fAfK+vd3D+dGD?=
+ =?us-ascii?Q?8NlzQvdleHS7WXNyh9nVmoLaLwjSvytXOWHnl5ICc6xD66edsZA/0ClLbL+1?=
+ =?us-ascii?Q?YxNlIIkaxvmpb03Pj/uB68s3P/W0yDBZrHmuqqewzLrkUt7dzLmfkjqExTgY?=
+ =?us-ascii?Q?7P5iU2tqJUNSM3/ArqfazIv0gtM2veCFchs0hixUA5sr56pTmOYK9/gQ+VMp?=
+ =?us-ascii?Q?py+//bRQQPB1H//OiUzU8WygMFwdgPfW2GeI4gxegJ+8fV6L7jFXE/k/f3wq?=
+ =?us-ascii?Q?PC7kxRcx+puS8XTbgqLKiDPEAMN/6sCY1xBM+yRR0nwxkmPW1FkA5r8f8HG9?=
+ =?us-ascii?Q?GBEeVa1mv3uVodABplnLjFVvbOZpWTz3oDas1ZgnCFeHHVrQx4U6tVeakGyi?=
+ =?us-ascii?Q?IpI+U09jojaj260szqACjRbc+4FwGJCN+0BMHRn+242fQeIl6CtJaSwqMucU?=
+ =?us-ascii?Q?Y0iVArcaVdODWZ82X6J7aXeiNdhlJmAiTL7mfz45XKtJ7XnFB7AWWMrv3BwY?=
+ =?us-ascii?Q?nCCuLjg6mGURab52rTbB2/I0SvV2Dh0yWH5Jmg6ia8bVYdEa1mRXgLe+LTDj?=
+ =?us-ascii?Q?t8zATxZzadRHWi3Nlho5AJqKoG30EtvsN7MpHKMtad8ejtuu5N593y/oK8uF?=
+ =?us-ascii?Q?a3K32kB5votMdp7nC7dBQxnrkefDDKk3KnA2erj/jLNn0KhSVGR3h4nghGi9?=
+ =?us-ascii?Q?4c1qWL7/KQEJGkMczhpRf8bx+qbgKW5wZzA7KF+cmClsSD0r1oOmsM0CPHtM?=
+ =?us-ascii?Q?FgjoMoB5+7InOyP5AbdJ4Ptr/56tp8C4DIlnIK+kqUD0UIfLOv3+cOF98PPS?=
+ =?us-ascii?Q?zPHKZICVMlRajgfssM+OgdAz1/DtsCYDkkqufH8C2DdpoUjONoqGuj6xIapG?=
+ =?us-ascii?Q?b088LrMTkRaLSogtTrQQfhSCrKxSzL869oB1wRZX5WrOdbIKSf/sD7oS+zk3?=
+ =?us-ascii?Q?tIzdzI4bA4CyOwbZxghOU5uhrminsOHjbJ3EcIrhRBTvJUi1owFZEOKEv6KC?=
+ =?us-ascii?Q?HlYrOHX+vjA2hTb1uEClEuNkdYDgtO/BypNi1a9qHeJgD3wLdem4j0S8liPx?=
+ =?us-ascii?Q?4YNz2Ql27WNkFmsJeMfoEDyoWT11xyCK+Cn6vZ6Fkh7uHT3g7yBzRP9ynAJ5?=
+ =?us-ascii?Q?0b88XTQCHtlGOtgAOIeWz0txeG5w69ZRLWPNmOkNCmgQi0wzTIEMmWEbrxaK?=
+ =?us-ascii?Q?2oibgZbN7p4ZFiNT9ibcxT+jyO+JmPcT1GJmpFP0xGTrgAVj/2RL6kmS8cFJ?=
+ =?us-ascii?Q?4g=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6dacbda-229e-4087-830d-08dc4d552391
+X-MS-Exchange-CrossTenant-AuthSource: BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 05:25:24.6275
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: e1iUsN5DgbggrYtBqbZ3nj7wgalL8FXKkQ/+Jo/kMGdQyGjXWrmmD7M+7ZLjZ0OQ4luBDsQNIgGyB5y2DTE8OA+bxztpbfad3kc8Gf4B0F4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BJSPR01MB0883
 
-On Mon, Mar 25, 2024 at 10:56:46PM +0800, Baoquan He wrote:
-> Since the current calculation of calc_nr_kernel_pages() has taken into
-> consideration of kernel reserved memory, no need to have
-> arch_reserved_kernel_pages() any more.
-> 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
+Add StarFive JH8100 dwmac support.
+The JH8100 dwmac shares the same driver code as the JH7110 dwmac
+and has only one reset signal.
 
-Reviewed-by: Mike Rapoport (IBM) <rppt@kernel.org>
+Please refer to below:
 
-> ---
->  arch/powerpc/include/asm/mmu.h |  4 ----
->  arch/powerpc/kernel/fadump.c   |  5 -----
->  include/linux/mm.h             |  3 ---
->  mm/mm_init.c                   | 12 ------------
->  4 files changed, 24 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/mmu.h b/arch/powerpc/include/asm/mmu.h
-> index 3b72c7ed24cf..aa5c0fd5edb1 100644
-> --- a/arch/powerpc/include/asm/mmu.h
-> +++ b/arch/powerpc/include/asm/mmu.h
-> @@ -406,9 +406,5 @@ extern void *abatron_pteptrs[2];
->  #include <asm/nohash/mmu.h>
->  #endif
->  
-> -#if defined(CONFIG_FA_DUMP) || defined(CONFIG_PRESERVE_FA_DUMP)
-> -#define __HAVE_ARCH_RESERVED_KERNEL_PAGES
-> -#endif
-> -
->  #endif /* __KERNEL__ */
->  #endif /* _ASM_POWERPC_MMU_H_ */
-> diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-> index d14eda1e8589..ae8c7619e597 100644
-> --- a/arch/powerpc/kernel/fadump.c
-> +++ b/arch/powerpc/kernel/fadump.c
-> @@ -1735,8 +1735,3 @@ static void __init fadump_reserve_crash_area(u64 base)
->  		memblock_reserve(mstart, msize);
->  	}
->  }
-> -
-> -unsigned long __init arch_reserved_kernel_pages(void)
-> -{
-> -	return memblock_reserved_size() / PAGE_SIZE;
-> -}
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index ad19350e1538..ab1ba0a31429 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -3221,9 +3221,6 @@ static inline void show_mem(void)
->  extern long si_mem_available(void);
->  extern void si_meminfo(struct sysinfo * val);
->  extern void si_meminfo_node(struct sysinfo *val, int nid);
-> -#ifdef __HAVE_ARCH_RESERVED_KERNEL_PAGES
-> -extern unsigned long arch_reserved_kernel_pages(void);
-> -#endif
->  
->  extern __printf(3, 4)
->  void warn_alloc(gfp_t gfp_mask, nodemask_t *nodemask, const char *fmt, ...);
-> diff --git a/mm/mm_init.c b/mm/mm_init.c
-> index e269a724f70e..089dc60159e9 100644
-> --- a/mm/mm_init.c
-> +++ b/mm/mm_init.c
-> @@ -2373,17 +2373,6 @@ void __init page_alloc_init_late(void)
->  	page_alloc_sysctl_init();
->  }
->  
-> -#ifndef __HAVE_ARCH_RESERVED_KERNEL_PAGES
-> -/*
-> - * Returns the number of pages that arch has reserved but
-> - * is not known to alloc_large_system_hash().
-> - */
-> -static unsigned long __init arch_reserved_kernel_pages(void)
-> -{
-> -	return 0;
-> -}
-> -#endif
-> -
->  /*
->   * Adaptive scale is meant to reduce sizes of hash tables on large memory
->   * machines. As memory size is increased the scale is also increased but at
-> @@ -2426,7 +2415,6 @@ void *__init alloc_large_system_hash(const char *tablename,
->  	if (!numentries) {
->  		/* round applicable memory size up to nearest megabyte */
->  		numentries = nr_kernel_pages;
-> -		numentries -= arch_reserved_kernel_pages();
->  
->  		/* It isn't necessary when PAGE_SIZE >= 1MB */
->  		if (PAGE_SIZE < SZ_1M)
-> -- 
-> 2.41.0
-> 
+  JH8100: reset-names = "stmmaceth";
+  JH7110: reset-names = "stmmaceth", "ahb";
+  JH7100: reset-names = "ahb";
 
+Example usage of JH8100 in the device tree:
+
+gmac0: ethernet@16030000 {
+        compatible = "starfive,jh8100-dwmac",
+                     "starfive,jh7110-dwmac",
+                     "snps,dwmac-5.20";
+        ...
+};
+
+Signed-off-by: Tan Chun Hau <chunhau.tan@starfivetech.com>
+---
+ .../devicetree/bindings/net/snps,dwmac.yaml   |  1 +
+ .../bindings/net/starfive,jh7110-dwmac.yaml   | 54 ++++++++++++++-----
+ 2 files changed, 41 insertions(+), 14 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+index 6b0341a8e0ea..a6d596b7dcf4 100644
+--- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
++++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+@@ -97,6 +97,7 @@ properties:
+         - snps,dwxgmac-2.10
+         - starfive,jh7100-dwmac
+         - starfive,jh7110-dwmac
++        - starfive,jh8100-dwmac
+ 
+   reg:
+     minItems: 1
+diff --git a/Documentation/devicetree/bindings/net/starfive,jh7110-dwmac.yaml b/Documentation/devicetree/bindings/net/starfive,jh7110-dwmac.yaml
+index 0d1962980f57..ce018e9768d2 100644
+--- a/Documentation/devicetree/bindings/net/starfive,jh7110-dwmac.yaml
++++ b/Documentation/devicetree/bindings/net/starfive,jh7110-dwmac.yaml
+@@ -18,6 +18,7 @@ select:
+         enum:
+           - starfive,jh7100-dwmac
+           - starfive,jh7110-dwmac
++          - starfive,jh8100-dwmac
+   required:
+     - compatible
+ 
+@@ -30,6 +31,10 @@ properties:
+       - items:
+           - const: starfive,jh7110-dwmac
+           - const: snps,dwmac-5.20
++      - items:
++          - const: starfive,jh8100-dwmac
++          - const: starfive,jh7110-dwmac
++          - const: snps,dwmac-5.20
+ 
+   reg:
+     maxItems: 1
+@@ -107,20 +112,41 @@ allOf:
+           contains:
+             const: starfive,jh7110-dwmac
+     then:
+-      properties:
+-        interrupts:
+-          minItems: 3
+-          maxItems: 3
+-
+-        interrupt-names:
+-          minItems: 3
+-          maxItems: 3
+-
+-        resets:
+-          minItems: 2
+-
+-        reset-names:
+-          minItems: 2
++      if:
++        properties:
++          compatible:
++            contains:
++              const: starfive,jh8100-dwmac
++      then:
++        properties:
++          interrupts:
++            minItems: 3
++            maxItems: 3
++
++          interrupt-names:
++            minItems: 3
++            maxItems: 3
++
++          resets:
++            maxItems: 1
++
++          reset-names:
++            const: stmmaceth
++      else:
++        properties:
++          interrupts:
++            minItems: 3
++            maxItems: 3
++
++          interrupt-names:
++            minItems: 3
++            maxItems: 3
++
++          resets:
++            minItems: 2
++
++          reset-names:
++            minItems: 2
+ 
+ unevaluatedProperties: false
+ 
 -- 
-Sincerely yours,
-Mike.
+2.25.1
+
