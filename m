@@ -1,102 +1,72 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D81E1CAB3
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 17:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D7A1CD31;
+	Tue, 26 Mar 2024 17:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711473943; cv=none; b=oZon0Cpv5kLFjTacpsqSvsU9ERmLl1nyjIIzAZsTNeU7oh/INvOnEmGb6DB0KxsuUtrCWIcoRefBRwAV4OpwgK/9Ms2UYAeURqkO/wmcxXwvPxih8OiZZFSvYOHWEtOk+IJoo3VXLMo8K+MOVUqfo+ORWD4aUaAsBrgojxskgeg=
+	t=1711473963; cv=none; b=SnV9Y/hudVGI0rmigLLJSlItwoUhA+erwmkKrFtlPpgiqmhrEq3rZxMJ73zpDV1QckhGim1tIz6r/vmDJo3NByX5KAv7RGX0Otg/96HKd/dSYcd9knUWyqbW3JkdbZOLKrttvSLP3Cvig7FTJzBXHIeNCJNUoHYjHiwJ8CnXOtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711473943; c=relaxed/simple;
-	bh=yyQwpK/tvNeVmAcL6V3vNVLP7qfT3WoMXUkxWnz/n9g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y6qWYZbuGFywe7QN4ppgWxbGb5z3fy6XFJ1KQ1JsB2fVIU7rBR5z/GlS55BVzLO3/CtnmeCggeRD0ZOgDxoI0Q71bebpCtcUQ92YnOJ4ReCnzRqkrRcajg0InHMIDGnWdldX1eg//c1vT8OLXZkNWuqybR2bTJQVLqJj1baQqeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Tflyxy7o; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Tflyxy7o"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-611248b4805so41815317b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 10:25:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711473941; x=1712078741; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=TEdNW8/uGdjjd6EX6eCNJ+oK6HuOhO4oxjWYMugQ7qE=;
-        b=Tflyxy7oNp9t0pU1CyrGyusUO4RAs4dtRi6Vr/VNFfYX84cS/UgkTlHxFFgSHcw1jT
-         4Q9pMnshnr7o0O8cbgHIqhiXDHCfMCC71zMpsB/pucunGktQ9F6JSy0DYW+HAJ7lRBF7
-         xngC+ptCYxLvTEa8JSO3VeWYYdUBIrEwVzpFm7pccV0iwufVpimC2nQUy5qRSgFjvI7T
-         qpZ/+96MIDs72oIUhOL02yefixAINQBzWkE4ynzaSHQLnS5kWOUur98pj0PfevxvJzeY
-         rdhY+5xoC2zDCghGztRolBcgY0Y3cWYPnnCzCBhTVAVnL2E0ynx1lPKySv7CWdNPFCUO
-         nmyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711473941; x=1712078741;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TEdNW8/uGdjjd6EX6eCNJ+oK6HuOhO4oxjWYMugQ7qE=;
-        b=sLqXcoaM76l1ml7fUgijeyegBCZr/olXlrleqjwHNnLENq4KfzkTlzInrqDLuauwzx
-         cvYSOFXUUqMX3WNIkEydjA5EXfgAiA3i5GOQQEgyCRVR5Gsk74K8JRVa1owbYK2u24TQ
-         z9oCkLa2qiVOQfQRP11Aqll2Qtxbclpiqbr7TciI9WqnXKckwGK75uvTPB+8ou7O7ikE
-         RXERStLdW66sU3cbK6KgsaDo7av/qKNZh08tAFOzt/40tkIYOEo3V3KHqD4+Hwcp+iU8
-         aWO/+oGIvbK3TxCN/H+gvBVrj5qp6OxruFdle5QZhEqtDlwv9Pd2ocjTfrk7uaWEA6lx
-         +1Wg==
-X-Forwarded-Encrypted: i=1; AJvYcCUYmW8ZOFh4EXTnsQSxdZV5B9qxcgsIod29yZtu4IxDZwOW6GYXh/6zfB5TuIScS5nBLDl1VV92/pWYu4T1gvvcXKJxp1zuf4TIdghG
-X-Gm-Message-State: AOJu0YxotfY/JGmA6RMe9GAYJ4KCZYTqTCGrioMKh0NZIV3lJIqJ4zfR
-	mPdhkvgzQKbH7sSlOSLyadmDtwrqSz8huwdQYQHhK5IfGgINIMIBym1LUWt8kJSQ3AwczoneDNO
-	qHDkhS1GkNn+0MShIQaPZuMT0+M3fHZORqwR2gg==
-X-Google-Smtp-Source: AGHT+IElgsfXK1k0/1DM7zOc8OoCYkRnDISpRbo+Bkm3BattXbANP61MPSEV6vui3iEtoCHBc2Kn/kL4l17pBRyy4Qs=
-X-Received: by 2002:a25:db85:0:b0:dd9:2a67:f470 with SMTP id
- g127-20020a25db85000000b00dd92a67f470mr1553098ybf.25.1711473940945; Tue, 26
- Mar 2024 10:25:40 -0700 (PDT)
+	s=arc-20240116; t=1711473963; c=relaxed/simple;
+	bh=bQOtfnvUNAhvnWjm4rdyKLtn+HaabaUAG9lOjm3y6/A=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O0XIJdGS8d6HcqqJN0xEJPae+a4HVDZu/4jHYCl6hpAsN5b2c7O8Ouj4JAtAMeR/wXQ5aVOLOo/COMdykZuhrvsk+DcIUWISNFcebVUt47j0PQ1TB2bMFaSyXLujP6O6HrcoIG1hp06XQnbkCeNZbHV8l5vlTYKK5CmDFlbO29U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from [194.95.143.137] (helo=phil.dip.tu-dresden.de)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1rpAYb-000658-AE; Tue, 26 Mar 2024 18:25:53 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Michael Riesch <michael.riesch@wolfvision.net>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 0/4] arm64: dts: rockchip: add wolfvision pf5 mainboard
+Date: Tue, 26 Mar 2024 18:25:51 +0100
+Message-Id: <171147393347.1162935.10169333694073762099.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240325-feature-wolfvision-pf5-v1-0-5725445f792a@wolfvision.net>
+References: <20240325-feature-wolfvision-pf5-v1-0-5725445f792a@wolfvision.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326-msm-dp-cleanup-v1-0-e775556ecec0@quicinc.com> <20240326-msm-dp-cleanup-v1-3-e775556ecec0@quicinc.com>
-In-Reply-To: <20240326-msm-dp-cleanup-v1-3-e775556ecec0@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 26 Mar 2024 19:25:30 +0200
-Message-ID: <CAA8EJprVYSSXj5y2TDLiUVTR4r1qaYjgbBDswaHAFeapQ0wPcw@mail.gmail.com>
-Subject: Re: [PATCH 3/6] drm/msm/dp: Remove unused defines and members
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, Bjorn Andersson <quic_bjorande@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 26 Mar 2024 at 17:06, Bjorn Andersson <andersson@kernel.org> wrote:
->
-> From: Bjorn Andersson <quic_bjorande@quicinc.com>
->
-> Throughout the Qualcomm Displayport driver a number of defines and
-> struct members has become unused, but lingers in the code. Remove these.
->
-> Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
-> ---
->  drivers/gpu/drm/msm/dp/dp_audio.c   |  5 -----
->  drivers/gpu/drm/msm/dp/dp_catalog.c |  1 -
->  drivers/gpu/drm/msm/dp/dp_catalog.h | 17 -----------------
->  drivers/gpu/drm/msm/dp/dp_ctrl.h    |  1 -
->  drivers/gpu/drm/msm/dp/dp_display.c |  5 -----
->  drivers/gpu/drm/msm/dp/dp_display.h |  3 ---
->  drivers/gpu/drm/msm/dp/dp_drm.c     |  2 --
->  drivers/gpu/drm/msm/dp/dp_link.c    |  4 ----
->  drivers/gpu/drm/msm/dp/dp_link.h    |  1 -
->  drivers/gpu/drm/msm/dp/dp_panel.h   |  2 --
->  10 files changed, 41 deletions(-)
->
+On Mon, 25 Mar 2024 15:22:30 +0100, Michael Riesch wrote:
+> Habidere,
+> 
+> This series adds the device tree for the WolfVision PF5 mainboard, which
+> serves as base for recent WolfVision products. It features the Rockchip
+> RK3568 and can be extended with several different extension boards.
+> 
+> The WolfVision PF5 IO Expander is one example of such an extension board.
+> The corresponding device tree overlay is also included in this series.
+> 
+> [...]
 
-I'd have preferred to have this split into somewhat logical chunks,
-but I think it doesn't make sense for such cleanup.
+Applied, thanks!
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+[1/4] dt-bindings: add wolfvision vendor prefix
+      commit: 37a6d5864fb8226c97eefa59a79de57571e1fee8
+[2/4] dt-bindings: arm: rockchip: add wolfvision pf5 mainboard
+      commit: 6be2ad17acb76c47e544864467680a7b738d7eb8
+[3/4] arm64: dts: rockchip: add wolfvision pf5 mainboard
+      commit: 0be29f76633a447e15fc58066ea47688974e68d9
+[4/4] arm64: dts: rockchip: add wolfvision pf5 io expander board
+      commit: 28799a7734a0e1a38d01b511ca08d33d8cf91b6c
 
-
+Best regards,
 -- 
-With best wishes
-Dmitry
+Heiko Stuebner <heiko@sntech.de>
