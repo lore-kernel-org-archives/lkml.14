@@ -1,109 +1,102 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1D613C803;
-	Tue, 26 Mar 2024 14:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DAF213C833;
+	Tue, 26 Mar 2024 14:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711464768; cv=none; b=Mvo3t0hjmh5gg/qRbMLmSQMMnB7N50aU5VdXapCWwtzqAnkyhy1DjdKN2q3Nawqk3NXLTtueHNEclsTtysjf6Sv7w6fB1bpQcj/DajUnrd0pvhMhksg8vh4MxtIPFGSQYBlTVw6rj54IsYpwNuUZxkFy4LTfDgiB38ohi93dsH4=
+	t=1711464769; cv=none; b=gG4w0WwVzHc6oscZgtIBocCgkg/qlO6SvwBzaGM/IvYW8JOUuBxFTQTmpeqe10Sutd3I44P0tPUyscLGnFZMJPoKlWI7G0wm8b6/0RFV1e4oAe+gn3ep+WkmxgbSG8Z9bm0dOyr6mMbXBP5lxE/7XEtNPUE07GRy84rWWxDsJTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711464768; c=relaxed/simple;
-	bh=HILMYs4h1rG96WDgtx+Icxzw5/JMxRKEsNJrNbbnvBo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=l6vX12/9pkI9qqZH1mQMd0U//7b2LVjt5BpLx/HjUQCK010YkR3spU2hSGYZktdaObgJMJy5ZC0Nuz6djewKo6CIioqlKpyWqnLBw59D2W3ob38h1K2kOLgS0N87ZjmkyZ4si1LwOsOEZhQXG30X8mejdEsGtBCXfdsZ6xGnZNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NcLp/MQJ; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711464769; c=relaxed/simple;
+	bh=+QNmHJ+DrxUP3Ae2C2ybzUy3wAJstrkccZk3eUunkcQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=NPA7Ldlyx4KNbmmyRoo2Hcfh7Fj+3Gcvh17DIDGqx5z451j5xmV64XaRG/sNHYBR2hsy84YCY9BVb9bOjx6xaEsNHB9M8JGgZ873nR3gKbngmM0ehRqJyY2PoA4WJZwrf1Z+kJzvX+3Tspxn5/qxeHoRzcdKTF2ojuJqwke7Fbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O7s4j7g+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NcLp/MQJ"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-341cf28dff6so1403329f8f.1;
-        Tue, 26 Mar 2024 07:52:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711464765; x=1712069565; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uc+1G2bhD6w4OGXAuo+s/Og1oRCDF2l5PcGTFXXgzA0=;
-        b=NcLp/MQJbihIXo4OgUHcpJA8UeIZYv1SAP7baz6hPK9D4o+a9umBsgcLXA2CKgQmGy
-         ZT/a848eiXLN0ceXXCwZSyfuAP//6wJ7xG7KFbVJwL4paOe48yaonTNAAXRM/FeSX3HC
-         UkxV4atTC/6OREFkqDZZ6LMRe7rAJ52sUOF4qZ6OJW+FFrnHEoMfmipbAzMMjUEYPifw
-         YAv8PgKCDsT6Xli39sWeM1GXh/e/Zf5DJvXViAUD9pZ3JLVnt1X190dAecu0L4L/OpVL
-         uuqHEwylq2ROV5cl+TquKK3nNxCZc60oKmSGcTYbvAYl3xwVH5Y4mis1vmIietpdpuLs
-         xf2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711464765; x=1712069565;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uc+1G2bhD6w4OGXAuo+s/Og1oRCDF2l5PcGTFXXgzA0=;
-        b=U3LU0fW+UHz4DqV7kaz/TeDGiBBNPZ8xFxv3DF6Xf8tLhmR/ss+J2U2fXUoR435AAk
-         vxnhjphHXk7E15YeHnWN8n5swfg6fv75jliuQDOCkHRG1vUCOjpwrf+4njShbjoYxKYI
-         GmX2GlF5ucmxiMcoQrSuIHaxWxAbBikLxGFzlwxjFH5CzW4XFmvoXiryPoHTKMcvP6Ak
-         x0GPnINn6ggiUnzSDRTLT0wM1AfTp4JUy5/a2KDUyqeg2TMs12PM+xsqSMGYsaa6xBT2
-         juaEm/uaLXxAOPs9NcWUKSbu6SDeps5rwTNiU3ROUyGj17Lj33+lbKsdGAUV8YntS2eS
-         PYQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVG4U/U/jtOKKyENfRAB20C0F+TfwbiqLO87CiW70PsgJmkMsWDRGfKYINUYGdVYj/NwtBLgUWQGRAjzvXMsHtWgoPDbVVCzS+FFqo9EwCcepb0xiDd55nsYgQ1mICmH/IEBMEp4Qvzvw==
-X-Gm-Message-State: AOJu0YyoWs7GItWpyj8VnyYUQCIXxQS1ST6UQnV4E3fxJEs1du8dJc4W
-	zxRlTx8ea8Ixv/U22p9bDlZLqw7H/v680Kr5HkqK9DdMsXQTWacpMaZb9lb81e8=
-X-Google-Smtp-Source: AGHT+IFAbb3toug+LlHxILdSemZdXmh/tEpE8tbtxIGaYlfIoXByRtWq6tGDYoxjMNFGQP8uq9qxlA==
-X-Received: by 2002:a5d:47c1:0:b0:33e:c522:e3b9 with SMTP id o1-20020a5d47c1000000b0033ec522e3b9mr2361880wrc.36.1711464764497;
-        Tue, 26 Mar 2024 07:52:44 -0700 (PDT)
-Received: from [192.168.1.253] (57657817.catv.pool.telekom.hu. [87.101.120.23])
-        by smtp.googlemail.com with ESMTPSA id h8-20020a05600004c800b0033b66c2d61esm12281738wri.48.2024.03.26.07.52.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 07:52:44 -0700 (PDT)
-From: Gabor Juhos <j4g8y7@gmail.com>
-Date: Tue, 26 Mar 2024 15:52:27 +0100
-Subject: [PATCH v4 1/2] dt-bindings: arm: qcom: add TP-Link Archer AX55 v1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O7s4j7g+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CD7DC433F1;
+	Tue, 26 Mar 2024 14:52:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711464768;
+	bh=+QNmHJ+DrxUP3Ae2C2ybzUy3wAJstrkccZk3eUunkcQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=O7s4j7g+hf00jrCuUCPg5dUwHZQdGcu1Fy2VlNvtZPLtQx55NwqBTGciplojuqlTP
+	 Vz7fAq8BYbpKi3Rx1Wt39zbMeeHint8AlIov3mYJnPQaBsbRLCg5oyzT93knxGzDUs
+	 b62vy4vxsJRLIJx777mKK/sqiNoT+oIfTeRqIwoG4wv0//tmMCc6IKBH6UlXNGIL1r
+	 kIr/jrPIPHVGUm/PP/WEH3CPp7DKTONJ5qWl8+nvgnBUCfmIjEGsaMtGpV8g7CE9GC
+	 kh46CJzp83yX/NiabyiQ3Uuj8hHGMKhrtsMiJjp+pqmteinvFcpkZOuyGi8lMRbTTo
+	 lD3pcAoEUjMcA==
+From: Arnd Bergmann <arnd@kernel.org>
+To: linux-kbuild@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Karol Herbst <kherbst@redhat.com>,
+	Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@redhat.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Ben Skeggs <bskeggs@redhat.com>
+Cc: Nicolas Schier <nicolas@fjasle.eu>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	dri-devel@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH 06/12] nouveau: fix function cast warning
+Date: Tue, 26 Mar 2024 15:51:31 +0100
+Message-Id: <20240326145140.3257163-5-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240326144741.3094687-1-arnd@kernel.org>
+References: <20240326144741.3094687-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240326-archer-ax55-v1-v4-1-dc5b54a4bb00@gmail.com>
-References: <20240326-archer-ax55-v1-v4-0-dc5b54a4bb00@gmail.com>
-In-Reply-To: <20240326-archer-ax55-v1-v4-0-dc5b54a4bb00@gmail.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Gabor Juhos <j4g8y7@gmail.com>, 
- Conor Dooley <conor.dooley@microchip.com>
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
 
-Document the TP-Link Archer AX55 v1 which is a dual-band
-WiFi router based on the IPQ5018 SoC.
+From: Arnd Bergmann <arnd@arndb.de>
 
-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Calling a function through an incompatible pointer type causes breaks
+kcfi, so clang warns about the assignment:
+
+drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowof.c:73:10: error: cast from 'void (*)(const void *)' to 'void (*)(void *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+   73 |         .fini = (void(*)(void *))kfree,
+
+Avoid this with a trivial wrapper.
+
+Fixes: c39f472e9f14 ("drm/nouveau: remove symlinks, move core/ to nvkm/ (no code changes)")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-Changes in v3:
-  - rebase on top of v6.8
-  - Link to v2: https://lore.kernel.org/r/20240226-archer-ax55-v1-v2-1-3776eb61f432@gmail.com
-Changes in v2:
-  - add 'Acked-by' tag from Conor
-  - Link to v1: https://lore.kernel.org/all/20240223-archer-ax55-v1-v1-1-99f8fa2c3858@gmail.com
----
- Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowof.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
-index 66beaac60e1dc..c05b4183b7781 100644
---- a/Documentation/devicetree/bindings/arm/qcom.yaml
-+++ b/Documentation/devicetree/bindings/arm/qcom.yaml
-@@ -315,6 +315,7 @@ properties:
-       - items:
-           - enum:
-               - qcom,ipq5018-rdp432-c2
-+              - tplink,archer-ax55-v1
-           - const: qcom,ipq5018
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowof.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowof.c
+index 4bf486b57101..0dbcc23305f3 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowof.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowof.c
+@@ -66,11 +66,16 @@ of_init(struct nvkm_bios *bios, const char *name)
+ 	return ERR_PTR(-EINVAL);
+ }
  
-       - items:
-
++static void of_fini(void *p)
++{
++	return kfree(p);
++}
++
+ const struct nvbios_source
+ nvbios_of = {
+ 	.name = "OpenFirmware",
+ 	.init = of_init,
+-	.fini = (void(*)(void *))kfree,
++	.fini = of_fini,
+ 	.read = of_read,
+ 	.size = of_size,
+ 	.rw = false,
 -- 
-2.44.0
+2.39.2
 
