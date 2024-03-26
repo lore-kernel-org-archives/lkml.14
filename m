@@ -1,128 +1,390 @@
-Received: from fout3-smtp.messagingengine.com (fout3-smtp.messagingengine.com [103.168.172.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1CC012D1E9;
-	Tue, 26 Mar 2024 14:13:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACB712DDA0;
+	Tue, 26 Mar 2024 14:13:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711462391; cv=none; b=AgnOgmrrDUqGScoOja6GPsRrfss2NketQXl8Uw6KBsFhUavl2zwI6mZq3Q0XkWvb3KUylRjYQ+cM0Fo9bilHRkk8wOsgT3XdmDBdTlfmkfddmRHi+w5gwMGdCIO7eVvqKGrN/6F60T5x44AWunMhTuAnQZk61Vr4h0G9YaAsv4w=
+	t=1711462395; cv=none; b=urlkuIUIuN82JYqR6GH59DEz7G2bHP/Yc3hy0ITNEtFAMezgI6PvdqCZLF5OFH3rF0GfYc/6rYj5g6pIG64VSiARMvZucEivHqKO5FNPRnFAxrJLSWH7gx7PNf0OkuTm2SRTpG1r7lrBdWBPLDyWjSsCeVBY4qU/Nkj/PL7+sY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711462391; c=relaxed/simple;
-	bh=C07QoGZwFIqiiGLDYtIT/bDm7g2eW60WzjZK/2lcL1o=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=ByZvyNI5SOS03lp+RedS25cWWM26I8JBomJwzzWEx46+5eXJkXZ4cBaU/TJDDDbvqhZRHZ42tllryR2dEnH/rVw+l6rHyePdoDChre1VRRxkoUKwKzJUF+MNaorMFskD0nN60z7d22H71JYTcsJDxonRzAjMBFCRiXfpVZh87hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=IfAd/QhD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JfDwFEmQ; arc=none smtp.client-ip=103.168.172.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1711462395; c=relaxed/simple;
+	bh=rd+GujPVaOvUJwVylR9IElXqqM9cFOri2AQWjsbGONw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=SUmTrZd57THE0gMWt8+4kXAa8DO0hAlduiVG5aNO0GPJAErGdNgxUUrpYi/h6tcBETmC3mIauDlKIZm7T+p//lhm3AzU6L/Ze1mt0IdFrChLAS+ur4ZEZNK452Akasl0j2ODIK59hY8MUmAdwVjLyUqLjhh1sOkGWKzo2kMtCCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AaUcad1r; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="IfAd/QhD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JfDwFEmQ"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 0A94A13800C7;
-	Tue, 26 Mar 2024 10:13:08 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 26 Mar 2024 10:13:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1711462388; x=1711548788; bh=qwEl2RbjTY
-	FZ3+lGDXzFX22ORlHVarQEQDkkqeWQ6+M=; b=IfAd/QhDJkneIhSG1PMAHOgbo/
-	mcVTxuJiD/yHg9YhAnYnZUftiTZkSefCnZODbx157mbtsl6c9KOoEEJw5GVPRs1t
-	4pKyrlXc3PE5L1IOIP/0QKVBGs2yNstleCl35baKMMtsQLa/DCZ9omCnFOXrxM+y
-	YaYt9yA5nphdbfUHbwQZtnDC0awtsvnxQpY+mpuYRV5vowZLKiTpjW2SxhNU64J9
-	QEujTdGbAPcin+SRXLf4b3DAFEoCsr1einZXn7xfTAyugJwP1Y7DB1BCHA4QcLNU
-	W3mYGxECmUf0jcgzAIchIFVXoDxcpt1cuObldDCcZ8Gj/2s0oXUvqlT/B0Gw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1711462388; x=1711548788; bh=qwEl2RbjTYFZ3+lGDXzFX22ORlHV
-	arQEQDkkqeWQ6+M=; b=JfDwFEmQ8TcsCAzZifaUtTGemxt/kA2wS6Wxfey7Yrya
-	l1oV15QGJN9tspkG4Jvphm8fXiHE1lt5cDzZ25+/63XjMn6rFfQU+eeRl4nU24hB
-	X0tKZ5Nu46ni4fT5FqyWmxwJ3xI6uaVtB2N4O7Lbw1bTI5p8da/L6Yodjz8J+R8q
-	ogHIG+CeJOu0FnKMAf/qjCuXVgtbbVxzKWXtsf7heSNO1o4a/4ikWT1IunJsfH9V
-	/7xEQoh7k5cXmeRO0CP4Xce0r/kEMyXQC98+AlkvWtY9rdipL2M8JQ1zJ4NdW4Ww
-	ffU0Tz3dJ0CCmJUX5g/Vs/d8eJJzaG4+1xVcg4Z3jg==
-X-ME-Sender: <xms:89cCZpuStysZle_lcQ6e_39Ge5HGVApzWhrBgJRpBZ7vqbresYYPXA>
-    <xme:89cCZifKumP_QBFxyJCgRHqsmRNzZ787fJzS-XrEjRDlnMRPIRio5ynT7nwaMU-A9
-    jK-uuXPoZOIDizT5RE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddufedgieduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:89cCZsx0e212wvfgtlWiXcYU5tqkhNAczCkNZP9wfA0EO_X-u8xnVQ>
-    <xmx:89cCZgNvc2GXUQRxPl1yyEz95GvFxNjCeFcRcPNikptFpkl7RNlJhQ>
-    <xmx:89cCZp-66mD18GWucmFFBGYq9XMM7lTwSeMdRgUXwKURHsg9kvBKUw>
-    <xmx:89cCZgXsFpVb_mBNe5-9MAf1AXATaTe_lx4ptHKhkMWsgMY3wgHsLQ>
-    <xmx:9NcCZpzUasImbbYFeND7Zcn2AAUpgwINPS0QeIIbxpl3ss3JyIsxjw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 96BB1B6008F; Tue, 26 Mar 2024 10:13:07 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-328-gc998c829b7-fm-20240325.002-gc998c829
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AaUcad1r"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a46ea03c2a5so963740166b.1;
+        Tue, 26 Mar 2024 07:13:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711462392; x=1712067192; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KFsmieGNc1bxhgiMa27ija0tbeAhS5xqyMs1Xxv+l1U=;
+        b=AaUcad1rYQMBc9IvxTfJqUIoIx4B6an9eRIxAxlYuCuNgjdRYu879YUJCoO88yRSP8
+         /7p01pxsALuRpTgqMEr38VsrcHnx1I6ioipeTp0gbCov+58uxiXJl+pYm7cnaNOJyh6c
+         xF6eFXgEMynXYEtcszpTAGIfrN5DmVrRLDBJxJC1phgoT/Yje/zAQqnezSCHfAifH5JW
+         FZkZ6Z0Iswee03co/PDP9YkG0KChp95E+d7LCZBTnH/qTVhmhcFIE6hFPfTjtvwMdd9A
+         63RqeG1ILA9JqVVCw4Z91RsGOfHvaO/TgVb+uw/BkHHP0Uksj+ymqngqEDE8W5eiReAY
+         wQUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711462392; x=1712067192;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KFsmieGNc1bxhgiMa27ija0tbeAhS5xqyMs1Xxv+l1U=;
+        b=oQ/2emhnwaZMiSF2FkJ/i8ZcdugiV/llY2Ks+SKLIy4MdhRPsd5BnjUwk8aML/PD+P
+         tCBoFhx9NuVH6NvnmX3PiFZQyFUYos8bkpFyG2jhXmY43/8ce97eF0OxKByueLXk8A0A
+         +vzSNJkVj2QO5XmbE46TWEGN76EGU/KvBmWefY+K9px4OfajQBssI6oqTHJNaKi2+vNY
+         nnnqG7QriMi2raCScshwYDtggx7nGOKc8j34stp8U9OT0u3AtB+NhO5oj32oPtrVaaiY
+         Gldwd8xkLkP8t6lCIY2NHGdFXKF25NugSlQw5DdWHN2DKQsMJVeRXhv3SBzJazIZduvx
+         0N3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUmNA7ceNL06EtqHR5Ad5fV67vB4kUaRLl4ZuRwQIM0jPs0Nb4tqDnss/5ND9OJPWHKquIocZ7THSlKbiwC2UHWx73YvdJq19sMUnjI
+X-Gm-Message-State: AOJu0YwRHgixYsVBoSWgz0FvTmTi9HIHj2GzIBubqlOlxLeOtCra7n8F
+	8NQe8E1WM3Cf93DbqFIOqOpJICMyvpGOxpqmfQvkXWVGFkml7blpgmCNXL7r9q4=
+X-Google-Smtp-Source: AGHT+IHfrfujSOFtGoOI11tvJv/NxuhsnlchHAmi90dsftBI3Cy4Qw+45xXPIwfUh7W0aLbMrHs+Bw==
+X-Received: by 2002:a17:906:5ad7:b0:a46:ab93:9848 with SMTP id x23-20020a1709065ad700b00a46ab939848mr1452245ejs.26.1711462391616;
+        Tue, 26 Mar 2024 07:13:11 -0700 (PDT)
+Received: from WBEC325.dom.lan ([185.188.71.122])
+        by smtp.gmail.com with ESMTPSA id t21-20020a170906179500b00a468bf8586bsm4324094eje.174.2024.03.26.07.13.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 07:13:11 -0700 (PDT)
+From: Pawel Dembicki <paweldembicki@gmail.com>
+To: netdev@vger.kernel.org
+Cc: Pawel Dembicki <paweldembicki@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Stefan Eichenberger <eichest@gmail.com>,
+	Dimitri Fedrau <dima.fedrau@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 2/2] net: phy: marvell: implement cable-test for 88E308X/88E609X family
+Date: Tue, 26 Mar 2024 15:12:36 +0100
+Message-Id: <20240326141238.2315974-2-paweldembicki@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240326141238.2315974-1-paweldembicki@gmail.com>
+References: <20240326141238.2315974-1-paweldembicki@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <5fb74d31-a5f7-4fc0-96f0-f69158829df3@app.fastmail.com>
-In-Reply-To: <2024032349-corporate-detached-0dc9@gregkh>
-References: <20240322173930.947963-1-arnd@kernel.org>
- <2024032349-corporate-detached-0dc9@gregkh>
-Date: Tue, 26 Mar 2024 15:12:46 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Luis Chamberlain" <mcgrof@kernel.org>, linux-modules@vger.kernel.org,
- "Rafael J . Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [v2] module: don't ignore sysfs_create_link() failures
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Sat, Mar 23, 2024, at 17:50, Greg Kroah-Hartman wrote:
-> On Fri, Mar 22, 2024 at 06:39:11PM +0100, Arnd Bergmann wrote:
->> diff --git a/drivers/base/bus.c b/drivers/base/bus.c
->> index daee55c9b2d9..7ef75b60d331 100644
->> --- a/drivers/base/bus.c
->> +++ b/drivers/base/bus.c
->> @@ -674,7 +674,12 @@ int bus_add_driver(struct device_driver *drv)
->>  		if (error)
->>  			goto out_del_list;
->>  	}
->> -	module_add_driver(drv->owner, drv);
->> +	error = module_add_driver(drv->owner, drv);
->> +	if (error) {
->> +		printk(KERN_ERR "%s: failed to create module links for %s\n",
->> +			__func__, drv->name);
->> +		goto out_del_list;
->
-> Don't we need to walk back the driver_attach() call here if this fails?
+This commit implements VCT in 88E308X/88E609X Family.
 
-Yes, fixed now. There are still some other calls right after
-it that print an error but don't cause bus_add_driver() to fail
-though. We may want to add similar unwinding there, but that
-feels like it should be a separate patch.
+It require two workarounds with some magic configuration.
+Regular use require only one register configuration. But Open Circuit
+require second workaround.
+It cause implementation two phases for fault length measuring.
 
->>  
->>  	if (!mk)
->> -		return;
->> +		return 0;
->> +
->> +	ret = sysfs_create_link(&drv->p->kobj, &mk->kobj, "module");
->> +	if (ret && ret != -EEXIST)
->
-> Why would EEXIST happen here?  How can this be called twice?
->
+Fast Ethernet PHY have implemented very simple version of VCT. It's
+complitley different than vct5 or vct7.
 
-My impression was that the lack of error handling and the
-comment was ab out a case where that might happen
-intentionally. I've removed it now as I couldn't find any
-evidence that this is really needed. I suppose we would
-find out in testing if we do.
+Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+---
+ drivers/net/phy/marvell.c | 252 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 252 insertions(+)
 
-     Arnd
+diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
+index fae7eb57ee2c..38316d641d31 100644
+--- a/drivers/net/phy/marvell.c
++++ b/drivers/net/phy/marvell.c
+@@ -279,6 +279,23 @@
+ #define MII_VCT7_CTRL_METERS			BIT(10)
+ #define MII_VCT7_CTRL_CENTIMETERS		0
+ 
++#define MII_VCT_TXPINS			0x1A
++#define MII_VCT_RXPINS			0x1B
++#define MII_VCT_TXPINS_ENVCT		BIT(15)
++#define MII_VCT_TXRXPINS_VCTTST		GENMASK(14, 13)
++#define MII_VCT_TXRXPINS_VCTTST_SHIFT	13
++#define MII_VCT_TXRXPINS_VCTTST_OK	0
++#define MII_VCT_TXRXPINS_VCTTST_SHORT	1
++#define MII_VCT_TXRXPINS_VCTTST_OPEN	2
++#define MII_VCT_TXRXPINS_VCTTST_FAIL	3
++#define MII_VCT_TXRXPINS_AMPRFLN	GENMASK(12, 8)
++#define MII_VCT_TXRXPINS_AMPRFLN_SHIFT	8
++#define MII_VCT_TXRXPINS_DISTRFLN	GENMASK(7, 0)
++#define MII_VCT_TXRXPINS_DISTRFLN_MAX	0xff
++
++#define M88E3082_PAIR_A		BIT(0)
++#define M88E3082_PAIR_B		BIT(1)
++
+ #define LPA_PAUSE_FIBER		0x180
+ #define LPA_PAUSE_ASYM_FIBER	0x100
+ 
+@@ -301,6 +318,12 @@ static struct marvell_hw_stat marvell_hw_stats[] = {
+ 	{ "phy_receive_errors_fiber", 1, 21, 16},
+ };
+ 
++enum {
++	M88E3082_VCT_OFF,
++	M88E3082_VCT_PHASE1,
++	M88E3082_VCT_PHASE2,
++};
++
+ struct marvell_priv {
+ 	u64 stats[ARRAY_SIZE(marvell_hw_stats)];
+ 	char *hwmon_name;
+@@ -310,6 +333,8 @@ struct marvell_priv {
+ 	u32 last;
+ 	u32 step;
+ 	s8 pair;
++	u8 vct_phase;
++	u16 m88e3082_vct_reg_backup;
+ };
+ 
+ static int marvell_read_page(struct phy_device *phydev)
+@@ -2417,6 +2442,231 @@ static int marvell_vct7_cable_test_get_status(struct phy_device *phydev,
+ 	return 0;
+ }
+ 
++static int m88e3082_vct_cable_test_start(struct phy_device *phydev)
++{
++	struct marvell_priv *priv = phydev->priv;
++	int ret;
++
++	/* It needs some magic workaround described in VCT manual for this PHY.
++	 */
++
++	switch (priv->vct_phase) {
++	case M88E3082_VCT_OFF:
++		ret = phy_write(phydev, 29, 0x0003);
++		if (ret < 0)
++			return ret;
++
++		ret = phy_write(phydev, 30, 0x6440);
++		if (ret < 0)
++			return ret;
++
++		ret = phy_read(phydev, MII_BMCR);
++		if (ret < 0)
++			return ret;
++		priv->m88e3082_vct_reg_backup = ret;
++
++		ret = phy_write(phydev, MII_BMCR, 0xa100);
++		if (ret < 0)
++			return ret;
++
++		ret = phy_write(phydev, MII_VCT_TXPINS, MII_VCT_TXPINS_ENVCT);
++		if (ret < 0)
++			return ret;
++
++		ret = phy_write(phydev, 29, 0x0003);
++		if (ret < 0)
++			return ret;
++
++		ret = phy_write(phydev, 30, 0x0);
++		if (ret < 0)
++			return ret;
++
++		priv->vct_phase = M88E3082_VCT_PHASE1;
++		priv->pair = 0;
++
++		break;
++
++	case M88E3082_VCT_PHASE1:
++		ret = phy_write(phydev, 29, 0x0003);
++		if (ret < 0)
++			return ret;
++
++		ret = phy_write(phydev, 30, 0x6440);
++		if (ret < 0)
++			return ret;
++
++		ret = phy_write(phydev, 29, 0x000a);
++		if (ret < 0)
++			return ret;
++
++		ret = phy_write(phydev, 30, 0x0002);
++		if (ret < 0)
++			return ret;
++
++		ret = phy_read(phydev, MII_BMCR);
++		if (ret < 0)
++			return ret;
++		priv->m88e3082_vct_reg_backup = ret;
++
++		ret = phy_write(phydev, MII_BMCR, 0xa100);
++		if (ret < 0)
++			return ret;
++
++		ret = phy_write(phydev, MII_VCT_TXPINS, MII_VCT_TXPINS_ENVCT);
++		if (ret < 0)
++			return ret;
++
++		ret = phy_write(phydev, 29, 0x0003);
++		if (ret < 0)
++			return ret;
++
++		ret = phy_write(phydev, 30, 0x0);
++		if (ret < 0)
++			return ret;
++
++		ret = phy_write(phydev, 29, 0x000a);
++		if (ret < 0)
++			return ret;
++
++		ret = phy_write(phydev, 30, 0x0);
++		if (ret < 0)
++			return ret;
++
++		priv->vct_phase = M88E3082_VCT_PHASE2;
++		break;
++
++	default:
++		break;
++	}
++
++	return 0;
++}
++
++static int m88e3082_vct_cable_test_report_trans(int result, u8 distance)
++{
++	switch (result) {
++	case MII_VCT_TXRXPINS_VCTTST_OK:
++		if (distance == MII_VCT_TXRXPINS_DISTRFLN_MAX)
++			return ETHTOOL_A_CABLE_RESULT_CODE_OK;
++		/* Impedance mismatch */
++		return ETHTOOL_A_CABLE_RESULT_CODE_UNSPEC;
++	case MII_VCT_TXRXPINS_VCTTST_SHORT:
++		return ETHTOOL_A_CABLE_RESULT_CODE_SAME_SHORT;
++	case MII_VCT_TXRXPINS_VCTTST_OPEN:
++		return ETHTOOL_A_CABLE_RESULT_CODE_OPEN;
++	default:
++		return ETHTOOL_A_CABLE_RESULT_CODE_UNSPEC;
++	}
++}
++
++u32 m88e3082_vct_distrfln_2_cm(u8 distrfln)
++{
++	if (distrfln < 24)
++		return 0;
++
++	/* Original function for meters: y = 0.7861x - 18.862 */
++	return (7861 * distrfln - 188620) / 100;
++}
++
++static int m88e3082_vct_cable_test_get_status(struct phy_device *phydev,
++					      bool *finished)
++{
++	u8 tx_vcttst_res, rx_vcttst_res, tx_distrfln, rx_distrfln;
++	struct marvell_priv *priv = phydev->priv;
++	int ret, tx_result, rx_result;
++	bool done_phase = true;
++
++	*finished = false;
++
++	ret = phy_read(phydev, MII_VCT_TXPINS);
++	if (ret < 0)
++		return ret;
++	else if (ret & MII_VCT_TXPINS_ENVCT)
++		return 0;
++
++	tx_distrfln = ret & MII_VCT_TXRXPINS_DISTRFLN;
++	tx_vcttst_res = (ret & MII_VCT_TXRXPINS_VCTTST) >>
++			MII_VCT_TXRXPINS_VCTTST_SHIFT;
++
++	ret = phy_read(phydev, MII_VCT_RXPINS);
++	if (ret < 0)
++		return ret;
++
++	rx_distrfln = ret & MII_VCT_TXRXPINS_DISTRFLN;
++	rx_vcttst_res = (ret & MII_VCT_TXRXPINS_VCTTST) >>
++			MII_VCT_TXRXPINS_VCTTST_SHIFT;
++
++	*finished = true;
++
++	switch (priv->vct_phase) {
++	case M88E3082_VCT_PHASE1:
++		tx_result = m88e3082_vct_cable_test_report_trans(tx_vcttst_res,
++								 tx_distrfln);
++		rx_result = m88e3082_vct_cable_test_report_trans(rx_vcttst_res,
++								 rx_distrfln);
++
++		ethnl_cable_test_result(phydev, ETHTOOL_A_CABLE_PAIR_A,
++					tx_result);
++		ethnl_cable_test_result(phydev, ETHTOOL_A_CABLE_PAIR_B,
++					rx_result);
++
++		if (tx_vcttst_res == MII_VCT_TXRXPINS_VCTTST_OPEN) {
++			done_phase = false;
++			priv->pair |= M88E3082_PAIR_A;
++		} else if (tx_distrfln < MII_VCT_TXRXPINS_DISTRFLN_MAX) {
++			u8 pair = ETHTOOL_A_CABLE_PAIR_A;
++			u32 cm = m88e3082_vct_distrfln_2_cm(tx_distrfln);
++
++			ethnl_cable_test_fault_length(phydev, pair, cm);
++		}
++
++		if (rx_vcttst_res == MII_VCT_TXRXPINS_VCTTST_OPEN) {
++			done_phase = false;
++			priv->pair |= M88E3082_PAIR_B;
++		} else if (rx_distrfln < MII_VCT_TXRXPINS_DISTRFLN_MAX) {
++			u8 pair = ETHTOOL_A_CABLE_PAIR_B;
++			u32 cm = m88e3082_vct_distrfln_2_cm(rx_distrfln);
++
++			ethnl_cable_test_fault_length(phydev, pair, cm);
++		}
++
++		break;
++	case M88E3082_VCT_PHASE2:
++		if (priv->pair & M88E3082_PAIR_A &&
++		    tx_vcttst_res == MII_VCT_TXRXPINS_VCTTST_OPEN &&
++		    tx_distrfln < MII_VCT_TXRXPINS_DISTRFLN_MAX) {
++			u8 pair = ETHTOOL_A_CABLE_PAIR_A;
++			u32 cm = m88e3082_vct_distrfln_2_cm(tx_distrfln);
++
++			ethnl_cable_test_fault_length(phydev, pair, cm);
++		}
++		if (priv->pair & M88E3082_PAIR_B &&
++		    rx_vcttst_res == MII_VCT_TXRXPINS_VCTTST_OPEN &&
++		    rx_distrfln < MII_VCT_TXRXPINS_DISTRFLN_MAX) {
++			u8 pair = ETHTOOL_A_CABLE_PAIR_B;
++			u32 cm = m88e3082_vct_distrfln_2_cm(rx_distrfln);
++
++			ethnl_cable_test_fault_length(phydev, pair, cm);
++		}
++
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	ret = phy_write(phydev, MII_BMCR, priv->m88e3082_vct_reg_backup);
++	if (ret < 0)
++		return ret;
++
++	if (!done_phase) {
++		*finished = false;
++		return m88e3082_vct_cable_test_start(phydev);
++	}
++	if (*finished)
++		priv->vct_phase = M88E3082_VCT_OFF;
++	return 0;
++}
++
+ #ifdef CONFIG_HWMON
+ struct marvell_hwmon_ops {
+ 	int (*config)(struct phy_device *phydev);
+@@ -3300,6 +3550,8 @@ static struct phy_driver marvell_drivers[] = {
+ 		.read_status = marvell_read_status,
+ 		.resume = genphy_resume,
+ 		.suspend = genphy_suspend,
++		.cable_test_start = m88e3082_vct_cable_test_start,
++		.cable_test_get_status = m88e3082_vct_cable_test_get_status,
+ 	},
+ 	{
+ 		.phy_id = MARVELL_PHY_ID_88E1112,
+-- 
+2.25.1
+
