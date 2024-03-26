@@ -1,164 +1,150 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DFB613D89B;
-	Tue, 26 Mar 2024 20:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E916613D89B
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 20:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711485147; cv=none; b=V+stiiMZcPKrDvPoL0ypnkfbhqcB4f1AHOaU0Qtcw7Ml1onfH/QLxuLRZ+ixUaYM8Dxyt1MCkX6QY40pplC71qAIvMWyijiAB+jFSB36DjmOoQyspnoIEnh4hYgtrtXB3qASDLMjzJyHVk/OTRu9vVzI8DO5yPksU/8aLB32NNI=
+	t=1711485161; cv=none; b=fB3H2DpCrdC/UtxGEBSXZqry0L27hJwOYfGw6kKYN3RijiXRVueKTjZpPjro9U0caULOhwKX3JqqLaoTs2jXFbsZ5q+WwOLDfPVu0zIMEhTdIsh5HQfi/7pWKWPlWtXf41Y+Zuk3Jn/JLpQzURsHo6QhxA2nEBFoFCKGjq4w668=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711485147; c=relaxed/simple;
-	bh=YDiYTZbDlKFpyomUQc0JumjopdGUmZbWPOUs4wMJU6s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oYrW8cq4WNsA4pKLRVd1h4B9WVZ8NRtfuqeMXViC3Z1cSCdtlr2ECrKF3dWXuFzA+42cU6klNYsSb9UkcmXNkHOXjjm1d9Gsh3EIqmTjK1mwvZuhL5xhHf596xHdZyVKTG5wNhLgbTjRURsz/nb5uFV8psUsuMUaPmhnNChPEpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5EB912F4;
-	Tue, 26 Mar 2024 13:32:58 -0700 (PDT)
-Received: from [10.57.71.219] (unknown [10.57.71.219])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A7AF3F64C;
-	Tue, 26 Mar 2024 13:32:22 -0700 (PDT)
-Message-ID: <30ee98e9-3d9a-4be8-8127-043f68a7dcb1@arm.com>
-Date: Tue, 26 Mar 2024 20:32:21 +0000
+	s=arc-20240116; t=1711485161; c=relaxed/simple;
+	bh=o7Ismljs5kdN2ZKFTdylXCiqx/6WCg6NzZXI5LKLDRo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=jFCUEAJCRjP4B0KOdvv3jheKX4z8W38tstd/o2drroJ8D9BMeHh2n3oQnvifJpCRhlCZSVtroKtA4I2tOK8Rf2kSVltUB27iohGzePusWJmOVcbXjDJ35tP8C4/m7JgkKJHx0aXbv3kdozf4mkxaj7uNls7F9Kdts1X4ZZcOV5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=JNBev4Xm; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="JNBev4Xm"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56c08d1e900so3613162a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 13:32:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1711485158; x=1712089958; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SwoTWlECTszcl/qxdYVc4t6fpZ8kE/2UkB07bRVsSm8=;
+        b=JNBev4XmZ1jX89eLFA8IH8Qx/7zzIWPRuKXmPiwdvyPBC740K33WRPXxGATQ4cAGmI
+         KvjPIDfVRkxEInMFuyxEAEwKy88H9f0Fz/e3DtfBb93gP9X/7AOT3Qf8rlz4B6v0BSFv
+         xbUwhyIejk6HUuZXCOQ0+yoKU6qf3K26BYhxeoOm8uN9G1ulsbkl0qUEkR3GCRWBW/VA
+         uX1ded1yHJFw9tCU5SPYZSNs40c7+oGyzbpWcV+a8SdNwDEfhZvdRdfO8B1IBQhG8kZm
+         Kundqe0q96nDNa2oMJS9JI1QAcDCzVmgpyfKan0+rJlSSrIIoC7TWj3M2TNNl5Ei/mRj
+         DCjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711485158; x=1712089958;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SwoTWlECTszcl/qxdYVc4t6fpZ8kE/2UkB07bRVsSm8=;
+        b=sQ04GDsuZlyPRkViJhHzus9OhFMXolQR8ZELyAmJxIOqhO7KvCF5TRfmiztM4bt7Lx
+         qdtiqCE8FDn2NxZvVYWLwdLq35q0IHXutmE7zaYj6xhABp5COsTuC8NaxtVRKggBQCc2
+         whogmFPkUe8Mpsx2eJAAbWI9tmj55RaUYdpueHk+ll7ZeQCx+ap8zVNExKynm9HgTqGW
+         bRBgd6OH7Q3C43V6fz6YDkakF10z1s5HWOtloQeWaPAEEk9XQAu0qn2I7QKMM7cpktSa
+         n49XAxbQpM65/CVXn1qYf7yVqoVLUdUbsl7Asxjihv0NFDVCgbKRneMk/5c6FX2IfBHd
+         d+kA==
+X-Forwarded-Encrypted: i=1; AJvYcCUxiw2To2NsLMHmN7Btk3uDEiEzMIXliHDn8Hg2oomh1jrWOYgm9hYAzQWVMuzHlI6mE24Bxv+aan+cYEhqdZ0V7W00v3L5wvniXomp
+X-Gm-Message-State: AOJu0YxiB4TSnn5BmP6iH1olRlscnXAkIrO7is9kK23P8pYWsE5R8EV3
+	96hlKO/2oDDKu7K3JVDnmRXlEBYbdmqJ0Fm0xpqKpCnSZjLMd/KmR7I0e3/iqMY=
+X-Google-Smtp-Source: AGHT+IENt7YBLnNtoUOQOQp272wkaUn+XI5a9KNpsaZCh2RNyyuvnhB+Bx/GceA3IeXjeVnoNmMyRA==
+X-Received: by 2002:a50:8e12:0:b0:565:bb25:bb7a with SMTP id 18-20020a508e12000000b00565bb25bb7amr3175538edw.24.1711485157973;
+        Tue, 26 Mar 2024 13:32:37 -0700 (PDT)
+Received: from alex-rivos.ba.rivosinc.com ([2a02:8440:5240:d2b3:9657:7432:d88d:84a9])
+        by smtp.gmail.com with ESMTPSA id da12-20020a056402176c00b0056b816e253esm4525782edb.13.2024.03.26.13.32.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 13:32:37 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
+	Pu Lehui <pulehui@huawei.com>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Zong Li <zong.li@sifive.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrea Parri <andrea@rivosinc.com>,
+	Andy Chiu <andy.chiu@sifive.com>
+Subject: [PATCH 2/2] riscv: Disable preemption when using patch_map()
+Date: Tue, 26 Mar 2024 21:30:17 +0100
+Message-Id: <20240326203017.310422-3-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240326203017.310422-1-alexghiti@rivosinc.com>
+References: <20240326203017.310422-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND][PATCH v2 3/4] PM: EM: Add em_dev_update_chip_binning()
-Content-Language: en-US
-To: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, sboyd@kernel.org, nm@ti.com,
- linux-samsung-soc@vger.kernel.org, daniel.lezcano@linaro.org,
- rafael@kernel.org, viresh.kumar@linaro.org, krzysztof.kozlowski@linaro.org,
- alim.akhtar@samsung.com, m.szyprowski@samsung.com, mhiramat@kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20240322110850.77086-1-lukasz.luba@arm.com>
- <20240322110850.77086-4-lukasz.luba@arm.com>
- <eb9f48f6-cca8-405b-82a2-352893a79f14@arm.com>
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <eb9f48f6-cca8-405b-82a2-352893a79f14@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+patch_map() uses fixmap mappings to circumvent the non-writability of
+the kernel text mapping.
 
+The __set_fixmap() function only flushes the current cpu tlb, it does
+not emit an IPI so we must make sure that while we use a fixmap mapping,
+the current task is not migrated on another cpu which could miss the
+newly introduced fixmap mapping.
 
-On 3/26/24 10:09, Dietmar Eggemann wrote:
-> On 22/03/2024 12:08, Lukasz Luba wrote:
-> 
->> diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
->> index 6960dd7393b2d..f7f7ae34ec552 100644
->> --- a/kernel/power/energy_model.c
->> +++ b/kernel/power/energy_model.c
->> @@ -808,3 +808,54 @@ static void em_update_workfn(struct work_struct *work)
->>   {
->>   	em_check_capacity_update();
->>   }
->> +
->> +/**
->> + * em_dev_update_chip_binning() - Update Energy Model with new values after
-> 
-> s/with new values// ... IMHO this should be obvious ?
+So in order to avoid any task migration, disable the preemption.
 
-Make sense
+Reported-by: Andrea Parri <andrea@rivosinc.com>
+Closes: https://lore.kernel.org/all/ZcS+GAaM25LXsBOl@andrea/
+Reported-by: Andy Chiu <andy.chiu@sifive.com>
+Closes: https://lore.kernel.org/linux-riscv/CABgGipUMz3Sffu-CkmeUB1dKVwVQ73+7=sgC45-m0AE9RCjOZg@mail.gmail.com/
+Fixes: cad539baa48f ("riscv: implement a memset like function for text")
+Fixes: 0ff7c3b33127 ("riscv: Use text_mutex instead of patch_lock")
+Co-developed-by: Andy Chiu <andy.chiu@sifive.com>
+Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ arch/riscv/kernel/patch.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> 
->> + *			the new voltage information is present in the OPPs.
->> + * @dev		: Device for which the Energy Model has to be updated.
->> + *
->> + * This function allows to update easily the EM with new values available in
->> + * the OPP framework and DT. It can be used after the chip has been properly
->> + * verified by device drivers and the voltages adjusted for the 'chip binning'.
->> + * It uses the "dynamic-power-coefficient" DT property to calculate the power
->> + * values for EM. For power calculation it uses the new adjusted voltage
->> + * values known for OPPs, which might be changed after boot.
-> 
-> The last two sentences describe what dev_pm_opp_calc_power() is doing.
-> Maybe this can be made clearer here?
+diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
+index 37e87fdcf6a0..30e12b310cab 100644
+--- a/arch/riscv/kernel/patch.c
++++ b/arch/riscv/kernel/patch.c
+@@ -80,6 +80,8 @@ static int __patch_insn_set(void *addr, u8 c, size_t len)
+ 	 */
+ 	lockdep_assert_held(&text_mutex);
+ 
++	preempt_disable();
++
+ 	if (across_pages)
+ 		patch_map(addr + PAGE_SIZE, FIX_TEXT_POKE1);
+ 
+@@ -92,6 +94,8 @@ static int __patch_insn_set(void *addr, u8 c, size_t len)
+ 	if (across_pages)
+ 		patch_unmap(FIX_TEXT_POKE1);
+ 
++	preempt_enable();
++
+ 	return 0;
+ }
+ NOKPROBE_SYMBOL(__patch_insn_set);
+@@ -122,6 +126,8 @@ static int __patch_insn_write(void *addr, const void *insn, size_t len)
+ 	if (!riscv_patch_in_stop_machine)
+ 		lockdep_assert_held(&text_mutex);
+ 
++	preempt_disable();
++
+ 	if (across_pages)
+ 		patch_map(addr + PAGE_SIZE, FIX_TEXT_POKE1);
+ 
+@@ -134,6 +140,8 @@ static int __patch_insn_write(void *addr, const void *insn, size_t len)
+ 	if (across_pages)
+ 		patch_unmap(FIX_TEXT_POKE1);
+ 
++	preempt_enable();
++
+ 	return ret;
+ }
+ NOKPROBE_SYMBOL(__patch_insn_write);
+-- 
+2.39.2
 
-Or I can just remove this, since it's too detailed description.
-
-> 
->> + */
->> +int em_dev_update_chip_binning(struct device *dev)
-> 
-> This is the old dev_pm_opp_of_update_em() right?
-
-Yes, it is similar.
-
-> 
->> +{
->> +	struct em_perf_table __rcu *em_table;
->> +	struct em_perf_domain *pd;
->> +	int i, ret;
->> +
->> +	if (IS_ERR_OR_NULL(dev))
->> +		return -EINVAL;
-> 
-> When do you use if '(IS_ERR_OR_NULL(dev))' and when 'if(!dev)' for EM
-> interface functions?
-
-Sometimes IS_ERR_OR_NULL is used, especially for API function other
-that register function.
-
-> 
->> +	pd = em_pd_get(dev);
->> +	if (!pd) {
->> +		dev_warn(dev, "Couldn't find Energy Model\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	em_table = em_table_dup(pd);
->> +	if (!em_table) {
->> +		dev_warn(dev, "EM: allocation failed\n");
->> +		return -ENOMEM;
->> +	}
->> +
->> +	/* Update power values which might change due to new voltage in OPPs */
->> +	for (i = 0; i < pd->nr_perf_states; i++) {
->> +		unsigned long freq = em_table->state[i].frequency;
->> +		unsigned long power;
->> +
->> +		ret = dev_pm_opp_calc_power(dev, &power, &freq);
->> +		if (ret) {
->> +			em_table_free(em_table);
->> +			return ret;
->> +		}
->> +
->> +		em_table->state[i].power = power;
->> +	}
->> +
->> +	return em_recalc_and_update(dev, pd, em_table);
->> +}
->> +EXPORT_SYMBOL_GPL(em_dev_update_chip_binning);
-> 
-> In the previous version of 'chip-binning' you were using the new EM
-> interface em_dev_compute_costs() (1) which is now replaced by
-> em_recalc_and_update() -> em_compute_costs().
-> 
-> https://lkml.kernel.org/r/20231220110339.1065505-2-lukasz.luba@arm.com
-> 
-> Which leaves (1) still unused.
-> 
-> That was why my concern back then that we shouldn't introduce EM
-> interfaces without a user:
-> 
-> https://lkml.kernel.org/r/8fc499cf-fca1-4465-bff7-a93dfd36f3c8@arm.com
-> 
-> What happens now with em_dev_compute_costs()?
-> 
-
-For now it's not used, but modules which will create new EMs
-with custom power values will use it. When such a module have
-e.g. 5 EMs for one PD and only switches on one of them, then
-this em_dev_compute_costs() will be used at setup for those
-5 EMs. Later it won't be used.
-I don't wanted to combine the registration of new EM with
-the compute cost, because that will create overhead in the
-switching to new EM code path. Now we have only ~3us, which
-was the main goal.
-
-When our scmi-cpufreq get the support for EM update this
-compute cost will be used there.
