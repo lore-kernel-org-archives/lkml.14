@@ -1,136 +1,157 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2114.outbound.protection.partner.outlook.cn [139.219.146.114])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C34A1292D8;
-	Tue, 26 Mar 2024 03:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.114
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711423641; cv=fail; b=I00UF2qmg4T8BpyADGCb31SGytKREhmhO1epTJW6WzWQGogXrznMVGA3d4dS4Fx+ATYpzNmWO2vs8VuPCfYWdM5+zMRm9llOsqW2xBcIAEUIkvqtA+Exq0fq8mByHZC58smDEuz95o1N2TdKfrzy7fNyvwxtsigRN+oJJZZmves=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711423641; c=relaxed/simple;
-	bh=plclBZiUnSE34FIAHHTyhM3MmPMnraCmuItvkdbBcs0=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=EnpT48zeTo2wZs/fuUdBA5SeIvvp5mVJdVSeZ8mrxPPgKEjfPm3QwYJrD+d77LXLNG8xBwolrPxjFE+hOP7t+pwtHa4dI6eEbRKNzor+KH0U6SiZWKR4uhZDZib+0bJHWoc1E1X8N9+bdHQ619HhOGsMjURLs6pOKKXffIvOfJM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JbucBwXKKz6gy/eWACJ3r3+vja4rfzo9Qw8nVbKaeXV//kDgEIqrq1WtSJuTGfqGgG/LQvRvxWsWvJ3MksYxHPy7y1KyR0C0Mj3fw20CZGLWYQxpwsE5SX9RokKj/TzHFFyJe0ufeTtWInWOdDQiT7F3vaZy35WG5W+czpty9cRYX1/gU+hCGgG1uAKiJEGTZXVnoYMB9x6AYutqPZwsAUoelrPsqpNKGyaoHADhdYY5POOecrnW8Vix7YCgqDK2j7BwMrJ1tfwr6Z63w5s7u4UdbGn9qAMdlOrQMyNwMHi7cBXHMICMd+iTNuU/BEwAn8++C5dI2ZIx974cQTUI5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YuJsjkWrTKju/XUVj6QAUG+XJG5o1keZTFgQLp2G34g=;
- b=Am9BkrF6J26eV9JzqmjQ+QqLiFWDO3MAed4NvyAx+MX3CSHkdM1FC5etw+88UCTku01ubHwwzPk8P0BLjBiwl+eR+So2AIt+WB4uI2p6mznpRzwFzly/VHncq6tcaraYujgJNTKDqu5q7DM+ODhKA5YjReODzVO9htA/6zglSrSrnhz0TbKPM453HnBCtNUXXEynEzFmfelfBe1LgbVJeK2kSCtwoDbF655AwWMRyEEommS8VkLik/Q42xa7Nu5xYEs51aDcJPkUEsjR3exm1XQglSIILvge/e/tke1mo6tCgjMfIcPLYn5A/Z0nnoRIIhYGCt/ycLz3dA9Dz4jH8g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::10) by SHXPR01MB0622.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:1f::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.30; Tue, 26 Mar
- 2024 03:12:45 +0000
-Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- ([fe80::b0af:4c9d:2058:a344]) by
- SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn ([fe80::b0af:4c9d:2058:a344%6])
- with mapi id 15.20.7249.041; Tue, 26 Mar 2024 03:12:45 +0000
-From: Changhuang Liang <changhuang.liang@starfivetech.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Jack Zhu <jack.zhu@starfivetech.com>,
-	Changhuang Liang <changhuang.liang@starfivetech.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Jayshri Pawar <jpawar@cadence.com>,
-	Jai Luthra <j-luthra@ti.com>,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev
-Subject: [PATCH v1 0/4] Add StarFive Camera Subsystem hibernation support
-Date: Mon, 25 Mar 2024 20:12:33 -0700
-Message-Id: <20240326031237.25331-1-changhuang.liang@starfivetech.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ZQ0PR01CA0018.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:5::15) To SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517461292D0
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 03:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711423730; cv=none; b=oBeQZ7ai7gnIzDsBdFqgVkHK4iDWbtNuz2CDUvH2zmf37+E0Ftl7sz1YzyzjvBCZAwR7MsD37XVRdTDBW1ZrRX8FE+gQhbIRtWXZIELfXOkHytoNGaXie05DjbKrP0mqRTnDrzmGD2UBVuouZ+hiQOch9FQAfdzCYm4cW4GeFJg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711423730; c=relaxed/simple;
+	bh=zbz8JSdX4HImrXyDSvkZNWHjmt/U+lnpC2qNDFF4hDk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d22Necv/EMbCiC2O78+/kDp2kos5IQJpAAnVe9JrkCDlb7wRm2fP3RWkruaObTB/pETgCuvDGsQ/5cmHuvVqSzfGw6LPubQe0tYcc7XGF+xcBRlry0p4pQ5moonuN7C+H93juMnyPsjKfUGUMndYdnJr5dhl4Tw3/N+c//Aq3gE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iPRgLzgy; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iPRgLzgy"
+Date: Mon, 25 Mar 2024 23:28:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1711423726;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zbz8JSdX4HImrXyDSvkZNWHjmt/U+lnpC2qNDFF4hDk=;
+	b=iPRgLzgyqe8KY1dSoWPYlt/aLh26NUBnBpny3uA+K8hQM6biRkS8YxVymU+AB0tgmAfTHH
+	VbEu5miz1s3JErGsWakBsX2Unnpvso/q0bxFyUZTzY70FSuse4dOSVWy2xyabsWKBeP95k
+	xdeHD23g82UYYfGhnWk/GMILpw/WhTE=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: "Dr. David Alan Gilbert" <dave@treblig.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+	Philipp Stanner <pstanner@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
+	llvm@lists.linux.dev, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Alice Ryhl <aliceryhl@google.com>, Alan Stern <stern@rowland.harvard.edu>, 
+	Andrea Parri <parri.andrea@gmail.com>, Will Deacon <will@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Nicholas Piggin <npiggin@gmail.com>, 
+	David Howells <dhowells@redhat.com>, Jade Alglave <j.alglave@ucl.ac.uk>, 
+	Luc Maranget <luc.maranget@inria.fr>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Akira Yokosawa <akiyks@gmail.com>, Daniel Lustig <dlustig@nvidia.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, kent.overstreet@gmail.com, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, elver@google.com, Mark Rutland <mark.rutland@arm.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [WIP 0/3] Memory model and atomic API in Rust
+Message-ID: <iobxouxkp3yf5vna7fy2bfvwknhghmzevty645xpbdjwefxxrj@3ac4ewjezv3l>
+References: <CAHk-=whY5A=S=bLwCFL=043DoR0TTgSDUmfPDx2rXhkk3KANPQ@mail.gmail.com>
+ <u2suttqa4c423q4ojehbucaxsm6wguqtgouj7vudp55jmuivq3@okzfgryarwnv>
+ <CAHk-=whkQk=zq5XiMcaU3xj4v69+jyoP-y6Sywhq-TvxSSvfEA@mail.gmail.com>
+ <c51227c9a4103ad1de43fc3cda5396b1196c31d7.camel@redhat.com>
+ <CAHk-=wjP1i014DGPKTsAC6TpByC3xeNHDjVA4E4gsnzUgJBYBQ@mail.gmail.com>
+ <bu3seu56hfozsvgpdqjarbdkqo3lsjfc4lhluk5oj456xmrjc7@lfbbjxuf4rpv>
+ <CAHk-=wgLGWBXvNODAkzkVHEj7zrrnTq_hzMft62nKNkaL89ZGQ@mail.gmail.com>
+ <ZgIRXL5YM2AwBD0Y@gallifrey>
+ <vevxfv67ureybf7sjwfxzdvl4tt62khyn2gfzn7o74ke2m554s@xxddzz6nurbn>
+ <ZgImcq2vRcDZtF6z@gallifrey>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SHXPR01MB0671:EE_|SHXPR01MB0622:EE_
-X-MS-Office365-Filtering-Correlation-Id: cc1da64e-c60d-4c5b-ade6-08dc4d429b9a
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Un1KIB8ViEt6Or64iwhd+dn8wL6WydVAoXrrgqY6fDChQ6rAfNd+3/AV7QRkahUB/hlOO+P1vZuRe0g9irYdyDQ9c1Q3mcWRDKjBsvz0xS02pDSKNcasSZiPnkOTZl3gDg5Ly702EGCclXnoPnVdl8xGV5KWgnbSIMR2GDzjCDoSHZEHJqpfPwyGDXarWvxzbMDpJK+BLEULf3ltwpcrlba+lM0LsuMvnPHQDcLv14TiTxR0WEpopVBYxWknbU5+APJhXH9+kDVP42M1PA5pDU9KBDPOuQ+USKlZl4DNT/vbb5Xi7WxNi/FZp9pnC9EJpcIVRG2XcE2yOeeIJYKwRmQ1wkGLamuIoG5tgJtPXNQYz3OO5kkmI5sZjcrd3EKRLpMEowzxjEzkWtpxvCTt508OsCAMoOfoe7zHI5iBjFPLknTicYw0U3iVVrV5bFcSvNgVLmqVLeqWS3ANTszN4+vv43wGB+71S3jO8atAyiAy4hW7Fs+ODOimr9ZdiuS/pgLcvh6KTr+U5G6GsUMFceEdzWfXLw6SFGFHPLMdsXHWsEmCvoRxvlLrQAHc4gCPImx7AzPxFjUiP3j31nhuo1/z21oJK4v5QWXGTPnp7DFzyXaL4u6gUNhMgctFNV4X
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(366007)(52116005)(1800799015)(41320700004)(7416005)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?AH2nICRHFzyhCRS/Wh5Y/iWo95CdbdirZ99F/WIiqL6SpbJ/Y7Pf0c8uRntc?=
- =?us-ascii?Q?9C16zRBJ/ZZFPdaUt2myLxiYhG/ma0Ax/FaYQ29kjUFJukNycfUuhUS0yE8a?=
- =?us-ascii?Q?jzu1bYhE3UhKiyrE4zbA4wo/j8IwBZoNMoivt8e16pEs2V5qNwJblEmpPoHV?=
- =?us-ascii?Q?tUrLRgpKjJG9Pg/yfyxU7eZWag6thphw2pI5dP5q3cweeL9SACfqR0S+wKcm?=
- =?us-ascii?Q?f+7McsyrzSzpAbwGK/OeboMghh+Pz7DbA2UWjxTpuYMREvw1CFLKdWhZuOOd?=
- =?us-ascii?Q?QJWfjUJFE65XOTkTXst5i2fhvX9yqHgi0NGEESTfImSHOHPKI9/JuXmja6UJ?=
- =?us-ascii?Q?Btaw8P7hBGrUP9ykt9nSgRUtu6ALu6DFls6WFhCqjDrfnrwhGodyrobolA0j?=
- =?us-ascii?Q?hISm2n5Fb3BhqLTDWDJ1Xbtq4xV9dymyux0oONWu9rUQBWcjojt0erVH22qr?=
- =?us-ascii?Q?cwuXYGuedkW4TUo88q7x6ouDgmcxcdJ4x8BYXo6gFf7PAnD7x0kPJj8+lMf7?=
- =?us-ascii?Q?2h4SX78exZOcFoAtlG82KCzM3Kthz8NCP7woDZ4/ONR0GwsDNYjT6OnZ8rii?=
- =?us-ascii?Q?BKhAEyJpWS5y/FkuuxhpPD6++9RiTwhuyzVUBEfH1GEwjYlQeh0CqY3WEmBB?=
- =?us-ascii?Q?MSUqSJZYauIKlz/SYiPPlBB/9Q4wLCLFb2mE3hA9enKkCf4NDsndzWYaFYNB?=
- =?us-ascii?Q?U3gGy7Och+9aZ04kYvD7C7PLWVxbDGvhCj4fuDdQjl51BrjgnRl/zbZ8DVo1?=
- =?us-ascii?Q?cq9uriPAJ7Yz2181VN5Ko57pPqJHeVaff/0jpNa4CN5nNBnAhp/MQbN0Zd2B?=
- =?us-ascii?Q?sp1GCGyuMaaWC9E8P8LxEj0UTsuWMy6UiRIbuf0lnQ6KxD64bJLclMswvEXo?=
- =?us-ascii?Q?DSNr4aX1yLRGofvSQHIu5unPdgyLZHPGuNifXToa2R/j0RVu+KrGoOnWg+o9?=
- =?us-ascii?Q?MLcPLoYXucnG6Lgdt8nzB75PCyeNx3xfCblFmccpl1Y3RTDeYfr3qhE0bn5g?=
- =?us-ascii?Q?e7kxetQTpZnWnQmZXgNu/B53kD+K5QJMyYqfEr0hUoEfwcCUhGtk8QhsdVYb?=
- =?us-ascii?Q?dMqVY4/OBWmzse610g4QI+AdUSVOwETjVChkYao1tZykpmLwnGu0mhBFVsie?=
- =?us-ascii?Q?SKTIEyZbKl1GXFKXJcU/KKS+mrhCfwcD7SB6bHvX3soGqZBsLddHjOr9Vhsb?=
- =?us-ascii?Q?ByQ8fwZERwUp04qDDgeer4QdF95AURsFg+Kg5Lla79nsRtKsulhni5KFHBAg?=
- =?us-ascii?Q?Dq1BD2fgWwe+AhwdhKrdCyUUmLIuFOXm/wnBiIE4aF1sjI+NVCTVxq04iJ8N?=
- =?us-ascii?Q?yMinUx94KSjL8mEbsNjLu+kfXPpjd7JS/aL8TDxkTLmZeTYc6FEzlDbcK8TW?=
- =?us-ascii?Q?vcLPPVKwfq616NM/pE4IBaQ+PAdpzjPmH336pU8ULiICMcVZvfnkXjaPwYNq?=
- =?us-ascii?Q?hi7K7Zg+VTZt6SU/JgA4Tfc8SRsW5HR0Y9yykHT2KYHW+H0eHq23mKAboJ/o?=
- =?us-ascii?Q?57Ixxxyy68s/LgAfDQAQV/gCOariPZIylaFJRs/ZYTTpuEhIKGipjoB/b3be?=
- =?us-ascii?Q?B2sqOLFu9sQjqhr9aCrsaq9oyf2H/b0c0ZiF6WTGVHvhinHcmkRBRlME5mTo?=
- =?us-ascii?Q?K4YohmQkKURFuwcZ9axD2ho=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc1da64e-c60d-4c5b-ade6-08dc4d429b9a
-X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 03:12:45.5420
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gKXs9axkdl0svE+6K1ZHBALBmH12zXNO/WfkKI64VccL9uxx5rrWziqsH5W6vTZcbnusRZXYUGIiuevdGtB7CzYxrcOro+IEz+WCYlutwvHM87ZiztRF6h0us92nU73q
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0622
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZgImcq2vRcDZtF6z@gallifrey>
+X-Migadu-Flow: FLOW_OUT
 
-This series implements suspend and resume operation for StarFive Camera
-Subsystem on JH7110 SoC. It supports hibernation during streaming and
-resume streaming when the system wake-up stage.
+On Tue, Mar 26, 2024 at 01:35:46AM +0000, Dr. David Alan Gilbert wrote:
+> OK, so that's essentially the opposite worry of what I was saying; I was
+> worrying about people forgetting to use an atomic access to a shared
+> variable; I think you're worrying about people forgetting to mark
+> a variable shared and since the accesses are the same nothing shouts?
 
-Changhuang Liang (3):
-  media: cadence: csi2rx: Add suspend and resume support
-  staging: media: starfive: Extract the ISP stream on as a helper
-    function
-  staging: media: starfive: Add suspend and resume support
+In biological evolution, novel useful traits are generally not
+accessible via a single mutation; many neutral mutations are required
+first.
 
-Jayshri Pawar (1):
-  media: cadence: csi2rx: Support runtime PM
+Evolution is able to proceed quickly because there are a great many
+neutral mutations (that is, evolution quickly searches all possible
+paths to find accessible positive mutations), and because negative
+mutations are culled quickly - often before the first cell division.
 
- drivers/media/platform/cadence/cdns-csi2rx.c  | 44 ++++++++++++++++-
- .../staging/media/starfive/camss/stf-camss.c  | 49 +++++++++++++++++++
- .../staging/media/starfive/camss/stf-isp.c    | 27 ++++++----
- .../staging/media/starfive/camss/stf-isp.h    |  2 +
- 4 files changed, 111 insertions(+), 11 deletions(-)
+(The most common mutation being the addition or deletion of a base pair;
+but amino acids are coded for by groups of three base pairs, so that
+shifts everything on the chromosone after the mutation so that it codes
+for completely different amino acids. That cell won't live to divide
+again).
 
---
-2.25.1
+Actual genetic diseases that significantly impair fitness are quite
+rare, and if they weren't we'd have a major problem.
+
+Programming at scale is million monkeys stuff - we're all hammering on
+our keyboards at random, the good programs survive and the bad programs
+are forgotten.
+
+Similarly to biological evolution, we want most edits to a program to
+result in a program that either still works, or fails immediately -
+fails to compile, or is caught immediately by basic testing.
+
+If edits can result in latent undefined behaviour or programs that
+_mostly_ work, and then explode in unpredictable ways weeks/months/years
+later - that's a huge problem. In the worst case, those bugs/negative
+mutations accumulate faster than they can be culled.
+
+Thank god we have source control.
+
+Places where we're working with extremely loose synchronization - no
+locking, raw memory barriers - are the worst kind of hand grenade, they
+result in bugs that are impossible to cull quickly.
+
+In kernel programming, we're always walking around with live hand
+grenades.
+
+So what do we do?
+
+We slow down, we take every step slowly and intentionally while telling
+everyone not to bump us because we're holding a live hand grenade - raw
+atomics, raw unlocked variables, memory barriers, they all get special
+care and extra comments.
+
+And we all have fuck-tons of code we need to be able to understand,
+review, debug and maintain, so we always try to write our code in a
+style where the if it's wrong, we'll see that _locally_, without having
+to go through and remember how _everything_ out of the possibly
+thousands of relevant lines work.
+
+I'm personally responsible for over 100k LOC of highly intricate code
+with high consequences for failure, and regularly have to debug issues
+arising somewhere in north of a million LOC - and when something goes
+wrong I have to be able to fully debug it _quickly_.
+
+What C++ does is like taking those hand grenades, with the pin already
+out - and leaving one under the couch cushions, another in the
+silverware drawer, another in the laundry basket - and expecting you to
+remember where you put them.
+
+Going back to the C++ example, the really fatal thing with how they do
+it is how a change in one line of code can completely change the
+semantics of a bunch of different code, and no human reviewer can be
+expected to catch bugs that might introduce and the compiler certainly
+won't.
+
+Now imagine multiple people working on the same code, at different
+times.
+
+Now imagine patches getting mixed up, reordered, one of them getting
+lost, merge conflicts - i.e. shit that happens all the time, and what
+happens if you're using C++ style atomics.
+
+Terrifying stuff.
