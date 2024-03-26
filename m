@@ -1,95 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381B713DDAA;
-	Tue, 26 Mar 2024 22:40:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B9713DBBF
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 22:40:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711492838; cv=none; b=h00sRcB+x1aOEqwFhPyEqnKnjZG8Ygs6JFGUkyrSs5JiQlb65KyXQWZ/e8jiGmZHLl+rBw1xMpkZBGqM9d8nm434ZMcseA1aWKtDrg4qHFAfbMnDtBt3e3vsWBjZjRKLWfc6m0J64c5XGzcS6bKG4RyYNh15FCYJYOo9S6tFbUs=
+	t=1711492838; cv=none; b=qYXU7Dm5R4dE/Grum/fBPM9FzoASHg4pjK0J1MXu5lYNy6suPtqdNjZnu2PtMuU+im8IRMR3ohsA0DQISRLwtr0VLE9rUnQkweJZOwSNG5KlWPWQKtbNxGTmJQC1MX7xWXW3JB+1IO49U5rJeDPN9NIaeD5UjcSWnD+Wkcv9Qyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711492838; c=relaxed/simple;
-	bh=DvdOaxXySSb88hE1tdZLq/K7+rtZJ/+uDHjNaQDuU0M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Jvr5W81AGEkxwkYEVdxJOP8MbhmPr2qJLTcrDNn9BXwKlrPGEcxQEuDtTw73c1Z+6eEtQMng1kU7Dn55gyhN2PAX/XQQMTP8pRofRr3jl5/z6tWtYCa4o1mH5EVuGcGKTuk+BqcfTATlsKhRkMMdLu15JwI0mitO2vxEZJNLbhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p5j6UdWx; arc=none smtp.client-ip=10.30.226.201
+	bh=yx8FqHoYQC1PWSggMb1zsMpypq8jpF4oFVsUHceinSc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H361I//4Lt3beBN7w0IbGXaEAA3TysV4miSVFz+t1Jo0x1Bfh8oDa7q8lumO23usJFcXpHRSOhQhVUR0N3xAFNb3JaFiOU43Tif9SStckKiu3Q6foeD71/rWPyOsvCbt2jFO33/m4ERnnlxFGr9lZKOPWJ+Pgu7lyN7YQv290hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JyuJz1sn; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p5j6UdWx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F56C433C7;
-	Tue, 26 Mar 2024 22:40:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711492837;
-	bh=DvdOaxXySSb88hE1tdZLq/K7+rtZJ/+uDHjNaQDuU0M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=p5j6UdWxGLPCw8MD1MG7G52pz4jf9eUDs/fFAPZ0nSxoBq4yXx+Or5Lgn1xXUeElp
-	 +cj8i69kiAsbFcByaE6X3MwtRtceTT9Edu4WzpCWxVfQyKIQliXEXJ9jaPuhdPt1EO
-	 hPTTraFVvOo4PuszlnUsVbUVQUggXvzt/b36cPf3IquLaD83kojbUDODfNp+wT8Qnk
-	 rI2SfYkMFrUIaTNggJBf3zCEFOjGEO3szpfqF7F/VaaNyAUHWaDczx4OxbnERjzweR
-	 DJEEn+vReYcCj0bTRNiF21fVJnOstGn5xp5kbalE8IMqei4+oKEuSso3nQa0xJ0jNL
-	 NVn1p1MByEg6w==
-From: Arnd Bergmann <arnd@kernel.org>
-To: llvm@lists.linux.dev,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/9] surface3_power: avoid format string truncation warning
-Date: Tue, 26 Mar 2024 23:38:04 +0100
-Message-Id: <20240326223825.4084412-6-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240326223825.4084412-1-arnd@kernel.org>
-References: <20240326223825.4084412-1-arnd@kernel.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JyuJz1sn"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-29de4e12d12so4304278a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:40:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711492836; x=1712097636; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MvOJt/m6EX1Fwx/utuRWvS5dkTN8eAFwRhRBD4PxWcU=;
+        b=JyuJz1snuaNpYTlA+i/4xYc+mVvynUDy9D5DDc7Eac3f7xnI0TjujQCBHvw5wOPQxO
+         ML5NJ6PRBuP3Og8FPFyyMS64OkuI/UqO05nT7P/xcBvUThiP8RHYZq+rBj72JCc5JqjG
+         VO8L+mzrTEhdt17mbJhsIHv97WsB3EHzUNcgI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711492836; x=1712097636;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MvOJt/m6EX1Fwx/utuRWvS5dkTN8eAFwRhRBD4PxWcU=;
+        b=TLwdZDTh6Togtv3qHyris5SSQhWtASFFcnEpnDibr7g0uKJXv+AZ6pu05jUbXmGj6h
+         stawDJ4DKNlxaMKKT1eTFyVySeL7xOidiDncD6zcI1OVx8iSIEvIW5pOXqJTQzdGLMJQ
+         JWRZvHvc8ycmrAm+TQ9tACf9aM8lwZF37d2bbQpbyxom9SEZRfyssZqVhLVZgoISSnSl
+         9ZeWi/CVSVk3L+/Dg+OolLhHJQn2H5JQ2g2ulk2p3zVEdIpQeYP8W+F4KBzIFDhMuKHw
+         U7j1HlPEmdz/ItiB+GCdxcA6rnyJvzPeEC4HCB0KvCKuwJGngLaiVr3xzlDRwyBreD+H
+         xfbg==
+X-Forwarded-Encrypted: i=1; AJvYcCXWxFwAri1Ghj6aKVZTSqoefurj/PB0Qe7lMlyrzVKRgTyVOGaXf2zEub7dDfhLvYc1wuO9SE0fJDTNXiBGGFcoq7Xk/kWLv/SWgxSF
+X-Gm-Message-State: AOJu0Yz++7vd3kyMb4K4ckTp5pKthjrXAoLzYGMW75Tq7AAhapV6iLCp
+	HXUcvaYKRy7u7fZ8NKwvjYwC4OwAT555EZzpiyPYj3HVt1idNaQNazwsC7pf9A==
+X-Google-Smtp-Source: AGHT+IF5G3KrocdACcX+f3m+HzePkIM6XGT4hipE9Q1qTgD2Rdqr0vhVlYeGHO3NcuiylpnYgzVGcQ==
+X-Received: by 2002:a17:90a:53e4:b0:2a0:3724:6c70 with SMTP id y91-20020a17090a53e400b002a037246c70mr1191157pjh.39.1711492836017;
+        Tue, 26 Mar 2024 15:40:36 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id sg17-20020a17090b521100b002a08ddb5bb3sm130502pjb.12.2024.03.26.15.40.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 15:40:35 -0700 (PDT)
+Date: Tue, 26 Mar 2024 15:40:34 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Shuah Khan <shuah@kernel.org>, Mark Brown <broonie@kernel.org>,
+	linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] selftests/exec: execveat: Improve debug reporting
+Message-ID: <202403261540.8F0D7A0@keescook>
+References: <20240313185606.work.073-kees@kernel.org>
+ <1dd87e89-2306-4669-844f-ffe9e56523b6@collabora.com>
+ <fa109cff-5326-4f94-aa3b-d83827d5f968@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fa109cff-5326-4f94-aa3b-d83827d5f968@linuxfoundation.org>
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Tue, Mar 26, 2024 at 02:46:02PM -0600, Shuah Khan wrote:
+> On 3/14/24 02:54, Muhammad Usama Anjum wrote:
+> > On 3/13/24 11:56 PM, Kees Cook wrote:
+> > > Children processes were reporting their status, duplicating the
+> > > parent's. Remove that, and add some additional details about the test
+> > > execution.
+> > > 
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > > Cc: Eric Biederman <ebiederm@xmission.com>
+> > > Cc: Shuah Khan <shuah@kernel.org>
+> > > Cc: Mark Brown <broonie@kernel.org>
+> > > Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>
+> > > Cc: linux-mm@kvack.org
+> > > Cc: linux-kselftest@vger.kernel.org
+> > Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+> > 
+> 
+> Applied to linux-kselftest fixes for the next rc.
 
-clang warns about printing a pair of escaped strings into a buffer that is
-too short:
+This is already part of the execve tree...
 
-drivers/platform/surface/surface3_power.c:248:3: error: 'snprintf' will always be truncated; specified size is 10, but format string expands to at least 12 [-Werror,-Wformat-truncation-non-kprintf]
-  248 |                 snprintf(bix->serial, ARRAY_SIZE(bix->serial), "%3pE%6pE", buf + 7, buf);
-      |                 ^
-
-Change the format string two print two less bytes so it always fits. The string
-is still truncated, so there is no change in behavior, but the compiler no
-longer warns about it.
-
-Fixes: 85f7582cd484 ("platform/surface: Move Surface 3 Power OpRegion driver to platform/surface")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-Not entirely sure about this one, as I've never used escaped strings, and
-don't know if gcc is correct to warn here, or if the kernel defines it
-differently from the standard.
----
- drivers/platform/surface/surface3_power.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/surface/surface3_power.c b/drivers/platform/surface/surface3_power.c
-index 4c0f92562a79..72f904761fde 100644
---- a/drivers/platform/surface/surface3_power.c
-+++ b/drivers/platform/surface/surface3_power.c
-@@ -245,7 +245,7 @@ static int mshw0011_bix(struct mshw0011_data *cdata, struct bix *bix)
- 		dev_err(&client->dev, "Error reading serial no: %d\n", ret);
- 		return ret;
- 	} else {
--		snprintf(bix->serial, ARRAY_SIZE(bix->serial), "%3pE%6pE", buf + 7, buf);
-+		snprintf(bix->serial, ARRAY_SIZE(bix->serial), "%3pE%4pE", buf + 7, buf);
- 	}
- 
- 	/* get cycle count */
 -- 
-2.39.2
-
+Kees Cook
