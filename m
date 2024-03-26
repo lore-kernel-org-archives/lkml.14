@@ -1,33 +1,32 @@
 Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A82413C8E8;
-	Tue, 26 Mar 2024 16:19:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB9B13C9A2;
+	Tue, 26 Mar 2024 16:19:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711469943; cv=none; b=QfqC7Js2k11rhOeTz+BjtFqTQ7FW2giG0eSzDsM5ZfgqoZmhKYrutd6zF7xOZ+EanLHD4vfEijO7EF8oX1qxCRptFL+YCNTa3NIFKTTtzIM/ZMJbXnx0ZSnobUSAVqV1wYmNK2T9bBALJdvekkDhRPfm4DBAWQTZgMzziktCaz8=
+	t=1711469943; cv=none; b=YGtSFdtLq33zQcgDvf0WvXaq8l/Abp/QsmWcWFkBpWiekDQxPH70e4x9ou/2LkWivbKoBqn0vfky6/7hukwpSJMm4DFrwpJ92Qi28oOoLe84PLnJAThdV9NL5ZSJVQq3B1BB08VklLkImNPw+1LiiO4ymahiPA/5f3dW/48XdLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711469943; c=relaxed/simple;
-	bh=9sS/jISAgyu61lXomWChV7j5u4qUbSmNT3mVkkIqqbg=;
+	bh=L+q8Bz8ds3vFmEIewe+gxAJPjDaqpzMYghNPAeRyPt4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Q8OXC3XO4fMRylOy3odu0fu8GzGDtILrMXjj5L7Av714JkrBNjh8nQI0jbugucQcmpu51QbdynJvSSzjB+s402nb7fIKYhnUTP5DU6UXfXrq2Dn+EtD6l5zl21jvziJYmFdnIQIN+45GekyvuFsUNl3ksRH6ezG51hW380tDJl4=
+	 Mime-Version:Content-Type; b=NIEpQf/Rv/ZuKDvFjEEx8RjAlp5QT7bf8lNyqzuWIytIZijm+umR8NwRR59qIUGhjNcuWAAKnzniURzRrxO00wUMgTVflTCcUH1N+6uisCjp9JawWyCl+txU/oKOiP3LklmNobAteKRJrD6cX46CDWh3wThXJrrbx1InAe3Tub4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
 Received: from fedori.lan (51b68717.dsl.pool.telekom.hu [::ffff:81.182.135.23])
   (AUTH: CRAM-MD5 soyer@irl.hu, )
   by irl.hu with ESMTPSA
-  id 0000000000077336.000000006602F571.0023D3A2; Tue, 26 Mar 2024 17:18:54 +0100
+  id 000000000007733D.000000006602F573.0023D3BC; Tue, 26 Mar 2024 17:18:59 +0100
 From: Gergo Koteles <soyer@irl.hu>
 To: Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>,
   Baojun Xu <baojun.xu@ti.com>, Jaroslav Kysela <perex@perex.cz>,
   Takashi Iwai <tiwai@suse.com>
 Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
-  linux-kernel@vger.kernel.org, Gergo Koteles <soyer@irl.hu>,
-  stable@vger.kernel.org
-Subject: [PATCH v2 1/4] ALSA: hda/tas2781: remove digital gain kcontrol
-Date: Tue, 26 Mar 2024 17:18:45 +0100
-Message-ID: <741fc21db994efd58f83e7aef38931204961e5b2.1711469583.git.soyer@irl.hu>
+  linux-kernel@vger.kernel.org, Gergo Koteles <soyer@irl.hu>
+Subject: [PATCH v2 3/4] ALSA: hda/tas2781: add debug statements to kcontrols
+Date: Tue, 26 Mar 2024 17:18:47 +0100
+Message-ID: <18ff4b0caab90a2dacf907e62346fd5079a9eb1a.1711469583.git.soyer@irl.hu>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <cover.1711469583.git.soyer@irl.hu>
 References: <cover.1711469583.git.soyer@irl.hu>
@@ -41,92 +40,130 @@ Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
 
-The "Speaker Digital Gain" kcontrol controls the TAS2781_DVC_LVL (0x1A)
-register. Unfortunately the tas2563 does not have DVC_LVL, but has
-INT_MASK0 in 0x1A, which has been misused so far.
+Sometimes it is useful to examine the timing of kcontrol events.
 
-Since commit c1947ce61ff4 ("ALSA: hda/realtek: tas2781: enable subwoofer
-volume control") the volume of the tas2781 amplifiers can be controlled
-by the master volume, so this digital gain kcontrol is not needed.
+Add debug statements to each kcontrol.
 
-Remove it.
-
-Fixes: 5be27f1e3ec9 ("ALSA: hda/tas2781: Add tas2781 HDA driver")
-CC: stable@vger.kernel.org
 Signed-off-by: Gergo Koteles <soyer@irl.hu>
 ---
- sound/pci/hda/tas2781_hda_i2c.c | 37 +--------------------------------
- 1 file changed, 1 insertion(+), 36 deletions(-)
+ sound/pci/hda/tas2781_hda_i2c.c | 35 +++++++++++++++++++++++++++++----
+ 1 file changed, 31 insertions(+), 4 deletions(-)
 
 diff --git a/sound/pci/hda/tas2781_hda_i2c.c b/sound/pci/hda/tas2781_hda_i2c.c
-index 4475cea8e9f7..5acb475c10a7 100644
+index 9a43f563bb9e..f495caee38e1 100644
 --- a/sound/pci/hda/tas2781_hda_i2c.c
 +++ b/sound/pci/hda/tas2781_hda_i2c.c
-@@ -89,7 +89,7 @@ struct tas2781_hda {
- 	struct snd_kcontrol *dsp_prog_ctl;
- 	struct snd_kcontrol *dsp_conf_ctl;
- 	struct snd_kcontrol *prof_ctl;
--	struct snd_kcontrol *snd_ctls[3];
-+	struct snd_kcontrol *snd_ctls[2];
- };
+@@ -189,6 +189,9 @@ static int tasdevice_get_profile_id(struct snd_kcontrol *kcontrol,
  
- static int tas2781_get_i2c_res(struct acpi_resource *ares, void *data)
-@@ -294,27 +294,6 @@ static int tasdevice_config_put(struct snd_kcontrol *kcontrol,
+ 	ucontrol->value.integer.value[0] = tas_priv->rcabin.profile_cfg_id;
+ 
++	dev_dbg(tas_priv->dev, "%s: kcontrol %s: %d\n",
++		__func__, kcontrol->id.name, tas_priv->rcabin.profile_cfg_id);
++
+ 	mutex_unlock(&tas_priv->codec_lock);
+ 
+ 	return 0;
+@@ -206,6 +209,10 @@ static int tasdevice_set_profile_id(struct snd_kcontrol *kcontrol,
+ 
+ 	mutex_lock(&tas_priv->codec_lock);
+ 
++	dev_dbg(tas_priv->dev, "%s: kcontrol %s: %d -> %d\n",
++		__func__, kcontrol->id.name,
++		tas_priv->rcabin.profile_cfg_id, val);
++
+ 	if (tas_priv->rcabin.profile_cfg_id != val) {
+ 		tas_priv->rcabin.profile_cfg_id = val;
+ 		ret = 1;
+@@ -253,6 +260,9 @@ static int tasdevice_program_get(struct snd_kcontrol *kcontrol,
+ 
+ 	ucontrol->value.integer.value[0] = tas_priv->cur_prog;
+ 
++	dev_dbg(tas_priv->dev, "%s: kcontrol %s: %d\n",
++		__func__, kcontrol->id.name, tas_priv->cur_prog);
++
+ 	mutex_unlock(&tas_priv->codec_lock);
+ 
+ 	return 0;
+@@ -271,6 +281,9 @@ static int tasdevice_program_put(struct snd_kcontrol *kcontrol,
+ 
+ 	mutex_lock(&tas_priv->codec_lock);
+ 
++	dev_dbg(tas_priv->dev, "%s: kcontrol %s: %d -> %d\n",
++		__func__, kcontrol->id.name, tas_priv->cur_prog, val);
++
+ 	if (tas_priv->cur_prog != val) {
+ 		tas_priv->cur_prog = val;
+ 		ret = 1;
+@@ -290,6 +303,9 @@ static int tasdevice_config_get(struct snd_kcontrol *kcontrol,
+ 
+ 	ucontrol->value.integer.value[0] = tas_priv->cur_conf;
+ 
++	dev_dbg(tas_priv->dev, "%s: kcontrol %s: %d\n",
++		__func__, kcontrol->id.name, tas_priv->cur_conf);
++
+ 	mutex_unlock(&tas_priv->codec_lock);
+ 
+ 	return 0;
+@@ -308,6 +324,9 @@ static int tasdevice_config_put(struct snd_kcontrol *kcontrol,
+ 
+ 	mutex_lock(&tas_priv->codec_lock);
+ 
++	dev_dbg(tas_priv->dev, "%s: kcontrol %s: %d -> %d\n",
++		__func__, kcontrol->id.name, tas_priv->cur_conf, val);
++
+ 	if (tas_priv->cur_conf != val) {
+ 		tas_priv->cur_conf = val;
+ 		ret = 1;
+@@ -330,6 +349,9 @@ static int tas2781_amp_getvol(struct snd_kcontrol *kcontrol,
+ 
+ 	ret = tasdevice_amp_getvol(tas_priv, ucontrol, mc);
+ 
++	dev_dbg(tas_priv->dev, "%s: kcontrol %s: %ld\n",
++		__func__, kcontrol->id.name, ucontrol->value.integer.value[0]);
++
+ 	mutex_unlock(&tas_priv->codec_lock);
+ 
  	return ret;
- }
+@@ -345,6 +367,9 @@ static int tas2781_amp_putvol(struct snd_kcontrol *kcontrol,
  
--/*
-- * tas2781_digital_getvol - get the volum control
-- * @kcontrol: control pointer
-- * @ucontrol: User data
-- * Customer Kcontrol for tas2781 is primarily for regmap booking, paging
-- * depends on internal regmap mechanism.
-- * tas2781 contains book and page two-level register map, especially
-- * book switching will set the register BXXP00R7F, after switching to the
-- * correct book, then leverage the mechanism for paging to access the
-- * register.
-- */
--static int tas2781_digital_getvol(struct snd_kcontrol *kcontrol,
--	struct snd_ctl_elem_value *ucontrol)
--{
--	struct tasdevice_priv *tas_priv = snd_kcontrol_chip(kcontrol);
--	struct soc_mixer_control *mc =
--		(struct soc_mixer_control *)kcontrol->private_value;
--
--	return tasdevice_digital_getvol(tas_priv, ucontrol, mc);
--}
--
- static int tas2781_amp_getvol(struct snd_kcontrol *kcontrol,
- 	struct snd_ctl_elem_value *ucontrol)
- {
-@@ -325,17 +304,6 @@ static int tas2781_amp_getvol(struct snd_kcontrol *kcontrol,
- 	return tasdevice_amp_getvol(tas_priv, ucontrol, mc);
- }
+ 	mutex_lock(&tas_priv->codec_lock);
  
--static int tas2781_digital_putvol(struct snd_kcontrol *kcontrol,
--	struct snd_ctl_elem_value *ucontrol)
--{
--	struct tasdevice_priv *tas_priv = snd_kcontrol_chip(kcontrol);
--	struct soc_mixer_control *mc =
--		(struct soc_mixer_control *)kcontrol->private_value;
--
--	/* The check of the given value is in tasdevice_digital_putvol. */
--	return tasdevice_digital_putvol(tas_priv, ucontrol, mc);
--}
--
- static int tas2781_amp_putvol(struct snd_kcontrol *kcontrol,
- 	struct snd_ctl_elem_value *ucontrol)
- {
-@@ -381,9 +349,6 @@ static const struct snd_kcontrol_new tas2781_snd_controls[] = {
- 	ACARD_SINGLE_RANGE_EXT_TLV("Speaker Analog Gain", TAS2781_AMP_LEVEL,
- 		1, 0, 20, 0, tas2781_amp_getvol,
- 		tas2781_amp_putvol, amp_vol_tlv),
--	ACARD_SINGLE_RANGE_EXT_TLV("Speaker Digital Gain", TAS2781_DVC_LVL,
--		0, 0, 200, 1, tas2781_digital_getvol,
--		tas2781_digital_putvol, dvc_tlv),
- 	ACARD_SINGLE_BOOL_EXT("Speaker Force Firmware Load", 0,
- 		tas2781_force_fwload_get, tas2781_force_fwload_put),
- };
++	dev_dbg(tas_priv->dev, "%s: kcontrol %s: -> %ld\n",
++		__func__, kcontrol->id.name, ucontrol->value.integer.value[0]);
++
+ 	/* The check of the given value is in tasdevice_amp_putvol. */
+ 	ret = tasdevice_amp_putvol(tas_priv, ucontrol, mc);
+ 
+@@ -361,8 +386,8 @@ static int tas2781_force_fwload_get(struct snd_kcontrol *kcontrol,
+ 	mutex_lock(&tas_priv->codec_lock);
+ 
+ 	ucontrol->value.integer.value[0] = (int)tas_priv->force_fwload_status;
+-	dev_dbg(tas_priv->dev, "%s : Force FWload %s\n", __func__,
+-			tas_priv->force_fwload_status ? "ON" : "OFF");
++	dev_dbg(tas_priv->dev, "%s: kcontrol %s: %d\n",
++		__func__, kcontrol->id.name, tas_priv->force_fwload_status);
+ 
+ 	mutex_unlock(&tas_priv->codec_lock);
+ 
+@@ -377,14 +402,16 @@ static int tas2781_force_fwload_put(struct snd_kcontrol *kcontrol,
+ 
+ 	mutex_lock(&tas_priv->codec_lock);
+ 
++	dev_dbg(tas_priv->dev, "%s: kcontrol %s: %d -> %d\n",
++		__func__, kcontrol->id.name,
++		tas_priv->force_fwload_status, val);
++
+ 	if (tas_priv->force_fwload_status == val)
+ 		change = false;
+ 	else {
+ 		change = true;
+ 		tas_priv->force_fwload_status = val;
+ 	}
+-	dev_dbg(tas_priv->dev, "%s : Force FWload %s\n", __func__,
+-		tas_priv->force_fwload_status ? "ON" : "OFF");
+ 
+ 	mutex_unlock(&tas_priv->codec_lock);
+ 
 -- 
 2.44.0
 
