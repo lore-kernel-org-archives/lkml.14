@@ -1,74 +1,104 @@
-Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [195.130.137.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0CB11CD32
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 17:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.89
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 530651CD2D
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 17:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711474338; cv=none; b=m+qoBqAH17MJeQb/GmxBeh40UlbFcu0g6rM2L+l4Rp/ybMZIHtS7I8ho2b40e2a1yYDY5sepIhqGlyalExEx/k3E20/DZbXaZRVc9LCjFs9crFTeqMZHV9IV0ncaWaIrhpiBIqk1+ynKCkQMRAqr1rhNTchL+s+PF1N5FgzziNE=
+	t=1711474361; cv=none; b=qU4NjwkC8MZr78IFOjfrewXvMPNDK0EIncu5z5Iiv/vu7ouG5evkWCNMcSVRGnTpzD/bXumBdvjjJb8184RuqsWraoMwQz4kJFpTmfkgDGHr8ElPBQQZL2USKjarDm324+Kk64bwQyBby8MzZGsguMqLeIjaxMa+60bcY/b6U88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711474338; c=relaxed/simple;
-	bh=yscuF0G/tph/Y4itTI6/5johZGaGHrI4d1K74HT7Skg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FPWpD9WhwYnXgiPFEC9b099wjZBnBxAS6j906IxJxJo+pxna3rSsxgo5efHITnjo0FIEAvdsLUDEe5kG68D4qSUcRz3Pm0YdkLaFNmZ8zRHCwPDT55XpQ2KUvvqaxDhoCWxLzy98Ow4sqb0n8/YWG98fyhyeCGonuG8I8u4qunM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:76d0:2bff:fec8:549])
-	by laurent.telenet-ops.be with bizsmtp
-	id 3VYD2C00H0SSLxL01VYDYl; Tue, 26 Mar 2024 18:32:14 +0100
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rpAeM-0053li-UA;
-	Tue, 26 Mar 2024 18:32:13 +0100
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rpAej-001ZOf-Nq;
-	Tue, 26 Mar 2024 18:32:13 +0100
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] drm: DRM_DEBUG_MODESET_LOCK should depend on DRM
-Date: Tue, 26 Mar 2024 18:32:12 +0100
-Message-Id: <80bb56a361c3a4f7567f1d8a8adb050fdff62462.1711474310.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1711474361; c=relaxed/simple;
+	bh=vOF9mPa+/P1UOv/ObCzlRrx/mZT31F+P8zDSgXc7/IY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Pry2jBsW1ZLodjf4mRN4yFf/CGMCwe9SH2alXdHSi7dClNsjnincqam6PaT4FWDr660mO2H0Yd34udTmZlinEWy4t3NR9jLwwjj7MrFFyxbAuR7MQudJL8+5ohMIG4hQ/7Wj4wPU5Ul/kvmfCaDyyXhEqZGLCTtIjpzVz9FfhBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 622C22F4;
+	Tue, 26 Mar 2024 10:33:12 -0700 (PDT)
+Received: from [10.1.29.179] (XHFQ2J9959.cambridge.arm.com [10.1.29.179])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B53323F64C;
+	Tue, 26 Mar 2024 10:32:36 -0700 (PDT)
+Message-ID: <a41b0534-b841-42c2-8c06-41337c35347d@arm.com>
+Date: Tue, 26 Mar 2024 17:32:35 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 0/4] Reduce cost of ptep_get_lockless on arm64
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>, Mark Rutland
+ <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Muchun Song <muchun.song@linux.dev>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240215121756.2734131-1-ryan.roberts@arm.com>
+ <0ae22147-e1a1-4bcb-8a4c-f900f3f8c39e@redhat.com>
+ <d8b3bcf2-495f-42bd-b114-6e3a010644d8@arm.com>
+ <de143212-49ce-4c30-8bfa-4c0ff613f107@redhat.com>
+ <374d8500-4625-4bff-a934-77b5f34cf2ec@arm.com>
+ <c1218cdb-905b-4896-8e17-109700577cec@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <c1218cdb-905b-4896-8e17-109700577cec@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-There is no point in asking the user about enabling DRM debug tracing
-when configuring a kernel without DRM support.
+On 26/03/2024 17:04, David Hildenbrand wrote:
+>>>>>
+>>>>> Likely, we just want to read "the real deal" on both sides of the pte_same()
+>>>>> handling.
+>>>>
+>>>> Sorry I'm not sure I understand? You mean read the full pte including
+>>>> access/dirty? That's the same as dropping the patch, right? Of course if we do
+>>>> that, we still have to keep pte_get_lockless() around for this case. In an
+>>>> ideal
+>>>> world we would convert everything over to ptep_get_lockless_norecency() and
+>>>> delete ptep_get_lockless() to remove the ugliness from arm64.
+>>>
+>>> Yes, agreed. Patch #3 does not look too crazy and it wouldn't really affect any
+>>> architecture.
+>>>
+>>> I do wonder if pte_same_norecency() should be defined per architecture and the
+>>> default would be pte_same(). So we could avoid the mkold etc on all other
+>>> architectures.
+>>
+>> Wouldn't that break it's semantics? The "norecency" of
+>> ptep_get_lockless_norecency() means "recency information in the returned pte may
+>> be incorrect". But the "norecency" of pte_same_norecency() means "ignore the
+>> access and dirty bits when you do the comparison".
+> 
+> My idea was that ptep_get_lockless_norecency() would return the actual result on
+> these architectures. So e.g., on x86, there would be no actual change in
+> generated code.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/gpu/drm/Kconfig | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+I think this is a bad plan... You'll end up with subtle differences between
+architectures.
 
-diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-index 2e1b23ccf30423a9..a24c48acf235449a 100644
---- a/drivers/gpu/drm/Kconfig
-+++ b/drivers/gpu/drm/Kconfig
-@@ -119,9 +119,7 @@ config DRM_DEBUG_DP_MST_TOPOLOGY_REFS
- 
- config DRM_DEBUG_MODESET_LOCK
- 	bool "Enable backtrace history for lock contention"
--	depends on STACKTRACE_SUPPORT
--	depends on DEBUG_KERNEL
--	depends on EXPERT
-+	depends on DRM && STACKTRACE_SUPPORT && DEBUG_KERNEL && EXPERT
- 	select STACKDEPOT
- 	default y if DEBUG_WW_MUTEX_SLOWPATH
- 	help
--- 
-2.34.1
+> 
+> But yes, the documentation of these functions would have to be improved.
+> 
+> Now I wonder if ptep_get_lockless_norecency() should actively clear
+> dirty/accessed bits to more easily find any actual issues where the bits still
+> matter ...
+
+I did a version that took that approach. Decided it was not as good as this way
+though. Now for the life of me, I can't remember my reasoning.
+
+> 
+>>
+>> I think you could only do the optimization you describe if you required that
+>> pte_same_norecency() would only be given values returned by
+>> ptep_get_lockless_norecency() (or ptep_get_norecency()). Even then, its not
+>> quite the same; if a page is accessed between gets one will return true and the
+>> other false.
+> 
+> Right.
+> 
 
