@@ -1,164 +1,249 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DA6128368
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 02:39:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 180161D53C
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 02:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711420770; cv=none; b=XU04B0drp7Ymj1N5awdr5nKT73ldwyFxVu2XUL755f2CUgvk1mPmaL2a1m7nvkoIsqLwallBVVcqPFGHZ7XTe5OZMjwULmCt9b4IsZawN0yf2IEwtH3c9dDpJ86398kLxW+0a2bxgdLDMgTzwWGbHiq7U+LkBbb/3T73wpJxzXs=
+	t=1711420801; cv=none; b=DykioSnZxKKHL1uXBrwGSadzw8Dc5Mff6D8bDy8gHfD2o8ZEyWsbUn/yQiue+yMiBxgRlgbhtSpPAHJhU5Mb2dIk+jhLvoZAjP4ub/Irj00OZIu976fn8KnMnDDDt0fuAZuCT3fpr//MuCBuXj2WT0CfUE4yliHRdWklMnG92hY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711420770; c=relaxed/simple;
-	bh=zUMMYSTKNGKXkA4klgoSYnxSaopM3FNL66QpHVmfNgE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d4niKqVd1uY1mS7LI1eTOCLWWUOyJKx0u73ZAOvpMdmNy+CiLHMJC/g123rIztj/k/UkNADisLBERK16j8Nlw6jzuqQLYk/0ZhvH/CDn/XSbbOj4TGq4Plj4v7VksFEFMJ2146OtYI+f36DhuDc13UXAcchCYFohL2FfI+oR7pY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=iSfXUcQ0; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1711420801; c=relaxed/simple;
+	bh=a+rFEOl+Jv1er7xV3rfzd9s10Ay9aPwSRWomvQxiApg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=MQKSCbl4veDQZcKUqankIHt546vIIjwfNk8chJEKnHLndOr4rQZ/HLfVSNgcHaaDXyPDYnzabUDMzRHmHcHswC/i4Ud/BkOq72B8IdE9fBH6nyRlG+8YBH0QcIerhkN+nLTj8mMU1oTjPL18fOHDTIegkJrXWo4HQTzYCsQes6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XRML10vk; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="iSfXUcQ0"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-60a0579a968so53786647b3.3
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 19:39:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1711420768; x=1712025568; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4AgrCK3LU8fuZoVf5zgRFHwqwQjRIG9mTqB1m/TopnI=;
-        b=iSfXUcQ0sfhhdScDzfGmkMPl6Qn11l26Math5ZKPz5RfF0izu9Yo+8MdgtMix0eHCV
-         UXdhjFw9w8WTILude9R96aveS2qqKxtccuD8eawxjXB8k/Upt2skb+TLx76Jz5atBFOS
-         ffPgR/+4krfUUvfdfsR9R/bOTHFDLi8E6/A1s5OcT8gsBfAy3RukHehu8oZeOO0MjGu1
-         E35yEH0YkLY6sKas02TqBxQTBJct0POGIiXysrDPnhPJ+72QJddWFYUpDPUufX8F60z8
-         zw9kM1azKxXtxQWLXjvu+qCM1im+k4jgFgvE/v1mhS51dXJPr+PjB7xySb+jC32fu3AY
-         2enA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711420768; x=1712025568;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4AgrCK3LU8fuZoVf5zgRFHwqwQjRIG9mTqB1m/TopnI=;
-        b=RNIr2PG/jyiicgP8O05pcv0ki9HjV4ZDovxSxdU4FkHv+zxI8ZOG0uQViIahNtE178
-         x2iIBQ+aW2NY64Zx3p4/du0gbg//Ncd14WJZenOvzONsuieBo6t1Ima3Zxvz9qWUo6UD
-         CkwRxkcRMYjT66mh7WMygTKyT9okQJZvhkj6vvXcj9+EnLEIobEyNEJ60cUPmXh8f2i/
-         KXJPpXffgOk/aNMve4LM8ut2bNoYp2CN1kBFk4erJzf0spQHCsGz06GeXZ9R1/e2485i
-         wyABxG0u8FW6uNMpQdfiMrNbJneFJaINJ1olOyOdQY/w7l+x1Sm3+kFTZQ/EzgVCIdq/
-         j1xA==
-X-Forwarded-Encrypted: i=1; AJvYcCVAEsHxPNvzkKsJw4Zn9VOihM0FE1o2FC1g3XufulGxqJSFMYifSxZeiCu28rU4JYVwnGRJAVFqPqNAJU0Ys8D+roqS6HpKcNxA1e7u
-X-Gm-Message-State: AOJu0YzYK7CUw0mZ7se6YiaiKXACQ8wLFBqJ1SfmsUSAOv7n7i7serhk
-	jDcXV4JyW3omK3U47WYrQKGZjD3wlRCYezAJRrt56IGxIzNWq5bFP4PmV8SIEfo=
-X-Google-Smtp-Source: AGHT+IGhOODqIBgHDvsLlXa8CZ2AvqOoTdQC6r7LnHvkeyb4qLLlvDI6hphbf8OzjNSc06qsQlPQTQ==
-X-Received: by 2002:a0d:e446:0:b0:610:f43d:6f9a with SMTP id n67-20020a0de446000000b00610f43d6f9amr6625429ywe.50.1711420768139;
-        Mon, 25 Mar 2024 19:39:28 -0700 (PDT)
-Received: from [100.64.0.1] ([136.226.86.189])
-        by smtp.gmail.com with ESMTPSA id r19-20020a028813000000b00474a1ac6434sm2497058jai.162.2024.03.25.19.39.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 19:39:27 -0700 (PDT)
-Message-ID: <b063df9b-90b6-4f06-8be5-5a8c267e6c8d@sifive.com>
-Date: Mon, 25 Mar 2024 21:39:26 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XRML10vk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711420799; x=1742956799;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=a+rFEOl+Jv1er7xV3rfzd9s10Ay9aPwSRWomvQxiApg=;
+  b=XRML10vk93HTLGUKLxFkihN7/cbNzWOw/hisAzwbGJjLjqqde2eEAOeB
+   1PJvz1BPqO0pgzLTqLjh9k6PQwgTZEqbfo1RtswTVaaGM9Lp689Fd+8Sg
+   stl2ulzBwzGZL9jDKZ2Ikg/pfnZmU6xhG7+PUo6oC2tcVWm6rqMGXdUJ/
+   RPEIs3UwERjhlbeCfi8IEdfLnX/IO82UW2hS0fcquIjmpRXhE209nPKSj
+   NRRs0H+Iq35cSCyFvxSxhDK9zuMIMZwfgdZFlRiP6gnvaQ51jZ7mMIEia
+   O/lLJmtGEG5yi2YvYkIc0SYf9p085jkIDWgxsavcB8onnH8ypXMHWw0a5
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="10248324"
+X-IronPort-AV: E=Sophos;i="6.07,155,1708416000"; 
+   d="scan'208";a="10248324"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 19:39:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,155,1708416000"; 
+   d="scan'208";a="15879132"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 19:39:53 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Donet Tom <donettom@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,  linux-mm@kvack.org,
+  linux-kernel@vger.kernel.org,  Aneesh Kumar <aneesh.kumar@kernel.org>,
+  Michal Hocko <mhocko@kernel.org>,  Dave Hansen
+ <dave.hansen@linux.intel.com>,  Mel Gorman <mgorman@suse.de>,  Feng Tang
+ <feng.tang@intel.com>,  Andrea Arcangeli <aarcange@redhat.com>,  Peter
+ Zijlstra <peterz@infradead.org>,  Ingo Molnar <mingo@redhat.com>,  Rik van
+ Riel <riel@surriel.com>,  Johannes Weiner <hannes@cmpxchg.org>,  Matthew
+ Wilcox <willy@infradead.org>,  Vlastimil Babka <vbabka@suse.cz>,  Dan
+ Williams <dan.j.williams@intel.com>,  Hugh Dickins <hughd@google.com>,
+  Kefeng Wang <wangkefeng.wang@huawei.com>,  Suren Baghdasaryan
+ <surenb@google.com>
+Subject: Re: [PATCH v4 0/2] Allow migrate on protnone reference with
+ MPOL_PREFERRED_MANY policy
+In-Reply-To: <cover.1711373653.git.donettom@linux.ibm.com> (Donet Tom's
+	message of "Mon, 25 Mar 2024 09:24:12 -0500")
+References: <cover.1711373653.git.donettom@linux.ibm.com>
+Date: Tue, 26 Mar 2024 10:38:00 +0800
+Message-ID: <875xx9pvjr.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] riscv: nommu: use CSR_TIME* for get_cycles*
- implementation
-To: Jisheng Zhang <jszhang@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240325164021.3229-1-jszhang@kernel.org>
- <20240325164021.3229-3-jszhang@kernel.org>
-Content-Language: en-US
-From: Samuel Holland <samuel.holland@sifive.com>
-In-Reply-To: <20240325164021.3229-3-jszhang@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ascii
 
-Hi Jisheng,
+Donet Tom <donettom@linux.ibm.com> writes:
 
-On 2024-03-25 11:40 AM, Jisheng Zhang wrote:
-> Per riscv privileged spec, "The time CSR is a read-only shadow of the
-> memory-mapped mtime register", "On RV32I the timeh CSR is a read-only
-> shadow of the upper 32 bits of the memory-mapped mtime register, while
-> time shadows only the lower 32 bits of mtime." Since get_cycles() only
-> reads the timer, it's fine to use CSR_TIME to implement get_cycles().
+> This patchset is to optimize the cross-socket memory access with
+> MPOL_PREFERRED_MANY policy.
+>
+> To test this patch we ran the following test on a 3 node system.
+>  Node 0 - 2GB   - Tier 1
+>  Node 1 - 11GB  - Tier 1
+>  Node 6 - 10GB  - Tier 2
+>
+> Below changes are made to memcached to set the memory policy,
+> It select Node0 and Node1 as preferred nodes.
+>
+>    #include <numaif.h>
+>    #include <numa.h>
+>
+>     unsigned long nodemask;
+>     int ret;
+>
+>     nodemask = 0x03;
+>     ret = set_mempolicy(MPOL_PREFERRED_MANY | MPOL_F_NUMA_BALANCING,
+>                                                &nodemask, 10);
+>     /* If MPOL_F_NUMA_BALANCING isn't supported,
+>      * fall back to MPOL_PREFERRED_MANY */
+>     if (ret < 0 && errno == EINVAL){
+>        printf("set mem policy normal\n");
+>         ret = set_mempolicy(MPOL_PREFERRED_MANY, &nodemask, 10);
+>     }
+>     if (ret < 0) {
+>        perror("Failed to call set_mempolicy");
+>        exit(-1);
+>     }
+>
+> Test Procedure:
+> ===============
+> 1. Make sure memory tiering and demotion are enabled.
+> 2. Start memcached.
+>
+>    # ./memcached -b 100000 -m 204800 -u root -c 1000000 -t 7
+>        -d -s "/tmp/memcached.sock"
+>
+> 3. Run memtier_benchmark to store 3200000 keys.
+>
+>   #./memtier_benchmark -S "/tmp/memcached.sock" --protocol=memcache_binary
+>     --threads=1 --pipeline=1 --ratio=1:0 --key-pattern=S:S --key-minimum=1
+>     --key-maximum=3200000 -n allkeys -c 1 -R -x 1 -d 1024
+>
+> 4. Start a memory eater on node 0 and 1. This will demote all memcached
+>    pages to node 6.
+> 5. Make sure all the memcached pages got demoted to lower tier by reading
+>    /proc/<memcaced PID>/numa_maps.
+>
+>     # cat /proc/2771/numa_maps
+>      ---
+>     default anon=1009 dirty=1009 active=0 N6=1009 kernelpagesize_kB=64
+>     default anon=1009 dirty=1009 active=0 N6=1009 kernelpagesize_kB=64
+>      ---
+>
+> 6. Kill memory eater.
+> 7. Read the pgpromote_success counter.
+> 8. Start reading the keys by running memtier_benchmark.
+>
+>   #./memtier_benchmark -S "/tmp/memcached.sock" --protocol=memcache_binary
+>    --pipeline=1 --distinct-client-seed --ratio=0:3 --key-pattern=R:R
+>    --key-minimum=1 --key-maximum=3200000 -n allkeys
+>    --threads=64 -c 1 -R -x 6
+>
+> 9. Read the pgpromote_success counter.
+>
+> Test Results:
+> =============
+> Without Patch
+> ------------------
+> 1. pgpromote_success  before test
+> Node 0:  pgpromote_success 11
+> Node 1:  pgpromote_success 140974
+>
+> pgpromote_success  after test
+> Node 0:  pgpromote_success 11
+> Node 1:  pgpromote_success 140974
+>
+> 2. Memtier-benchmark result.
+> AGGREGATED AVERAGE RESULTS (6 runs)
+> ==================================================================
+> Type    Ops/sec   Hits/sec   Misses/sec  Avg. Latency  p50 Latency
+> ------------------------------------------------------------------
+> Sets     0.00       ---         ---        ---          ---
+> Gets    305792.03  305791.93   0.10       0.18949       0.16700
+> Waits    0.00       ---         ---        ---          ---
+> Totals  305792.03  305791.93   0.10       0.18949       0.16700
+>
+> ======================================
+> p99 Latency  p99.9 Latency  KB/sec
+> -------------------------------------
+> ---          ---            0.00
+> 0.44700     1.71100        11542.69
+> ---           ---            ---
+> 0.44700     1.71100        11542.69
+>
+> With Patch
+> ---------------
+> 1. pgpromote_success  before test
+> Node 0:  pgpromote_success 5
+> Node 1:  pgpromote_success 89386
+>
+> pgpromote_success  after test
+> Node 0:  pgpromote_success 57895
+> Node 1:  pgpromote_success 141463
+>
+> 2. Memtier-benchmark result.
+> AGGREGATED AVERAGE RESULTS (6 runs)
+> ====================================================================
+> Type    Ops/sec    Hits/sec  Misses/sec  Avg. Latency  p50 Latency
+> --------------------------------------------------------------------
+> Sets     0.00        ---       ---        ---           ---
+> Gets    521942.24  521942.07  0.17       0.11459        0.10300
+> Waits    0.00        ---       ---         ---          ---
+> Totals  521942.24  521942.07  0.17       0.11459        0.10300
+>
+> =======================================
+> p99 Latency  p99.9 Latency  KB/sec
+> ---------------------------------------
+>  ---          ---            0.00
+> 0.23100      0.31900        19701.68
+> ---          ---             ---
+> 0.23100      0.31900        19701.68
+>
+>
+> Test Result Analysis:
+> =====================
+> 1. With patch we could observe pages are getting promoted.
+> 2. Memtier-benchmark results shows that, with the patch,
+>    performance has increased more than 50%.
+>
+>  Ops/sec without fix -  305792.03
+>  Ops/sec with fix    -  521942.24
+>
+> Changes:
+> V4
+> - Added an example in the "PATCH 2/2" commit message as per the discussion
+>   from V3.
+> V3:
+> - Added "* @vmf: structure describing the fault" comment for
+>   mpol_misplaced() to fix the warning.
+> https://lore.kernel.org/oe-kbuild-all/202403202229.WZeAnUuO-lkp@intel.com/
+> -https://lore.kernel.org/lkml/cover.1711002865.git.donettom@linux.ibm.com/
+> v2:
+> - Rebased on latest upstream (v6.8-rc7)
+> - Used 'numa_node_id()' to get the current execution node ID, Added
+>   'lockdep_assert_held' to make sure that the 'mpol_misplaced()' is
+>   called with ptl held.
+> - The migration condition has been updated; now, migration will only
+>   occur if the execution node is present in the policy nodemask.
+> -https://lore.kernel.org/lkml/cover.1709909210.git.donettom@linux.ibm.com/
+>
+> -v1: https://lore.kernel.org/linux-mm/9c3f7b743477560d1c5b12b8c111a584a2cc92ee.1708097962.git.donettom@linux.ibm.com/#t
+>
+>
+> Donet Tom (2):
+>   mm/mempolicy: Use numa_node_id() instead of cpu_to_node()
+>   mm/numa_balancing:Allow migrate on protnone reference with
+>     MPOL_PREFERRED_MANY policy
+>
+>  include/linux/mempolicy.h |  5 +++--
+>  mm/huge_memory.c          |  2 +-
+>  mm/internal.h             |  2 +-
+>  mm/memory.c               |  8 +++++---
+>  mm/mempolicy.c            | 36 +++++++++++++++++++++++++++---------
+>  5 files changed, 37 insertions(+), 16 deletions(-)
 
-Unfortunately there are various implementations (e.g. FU740/Unmatched, probably
-K210 which this code was originally used for) which do not implement the time
-CSR, relying on M-mode software to emulate the CSR so S-mode software doesn't
-notice. So this code is needed to support those platforms when running Linux in
-M-mode.
+LGTM, Thanks!  Feel free to add
 
-Maybe there should be an option to assume the time CSR is/is not implemented,
-like there is for misaligned access?
+Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
 
-Regards,
-Samuel
+in the future version.
 
-> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> ---
->  arch/riscv/include/asm/timex.h | 40 ----------------------------------
->  1 file changed, 40 deletions(-)
-> 
-> diff --git a/arch/riscv/include/asm/timex.h b/arch/riscv/include/asm/timex.h
-> index a06697846e69..a3fb85d505d4 100644
-> --- a/arch/riscv/include/asm/timex.h
-> +++ b/arch/riscv/include/asm/timex.h
-> @@ -10,44 +10,6 @@
->  
->  typedef unsigned long cycles_t;
->  
-> -#ifdef CONFIG_RISCV_M_MODE
-> -
-> -#include <asm/clint.h>
-> -
-> -#ifdef CONFIG_64BIT
-> -static inline cycles_t get_cycles(void)
-> -{
-> -	return readq_relaxed(clint_time_val);
-> -}
-> -#else /* !CONFIG_64BIT */
-> -static inline u32 get_cycles(void)
-> -{
-> -	return readl_relaxed(((u32 *)clint_time_val));
-> -}
-> -#define get_cycles get_cycles
-> -
-> -static inline u32 get_cycles_hi(void)
-> -{
-> -	return readl_relaxed(((u32 *)clint_time_val) + 1);
-> -}
-> -#define get_cycles_hi get_cycles_hi
-> -#endif /* CONFIG_64BIT */
-> -
-> -/*
-> - * Much like MIPS, we may not have a viable counter to use at an early point
-> - * in the boot process. Unfortunately we don't have a fallback, so instead
-> - * we just return 0.
-> - */
-> -static inline unsigned long random_get_entropy(void)
-> -{
-> -	if (unlikely(clint_time_val == NULL))
-> -		return random_get_entropy_fallback();
-> -	return get_cycles();
-> -}
-> -#define random_get_entropy()	random_get_entropy()
-> -
-> -#else /* CONFIG_RISCV_M_MODE */
-> -
->  static inline cycles_t get_cycles(void)
->  {
->  	return csr_read(CSR_TIME);
-> @@ -60,8 +22,6 @@ static inline u32 get_cycles_hi(void)
->  }
->  #define get_cycles_hi get_cycles_hi
->  
-> -#endif /* !CONFIG_RISCV_M_MODE */
-> -
->  #ifdef CONFIG_64BIT
->  static inline u64 get_cycles64(void)
->  {
-
+--
+Best Regards,
+Huang, Ying
