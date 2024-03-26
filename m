@@ -1,208 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBA51E481
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 06:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8735571B5C
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 06:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711434680; cv=none; b=S67RZFrFOiTbZpGweP318d6MWmu+r86bkwta4fVSpEok1a5QbYdXaMFOuaTSjMes3ayat9ckqj4ifJo9WQ+5HHeFOGxBqFPyrHqhZYKmc725B6910g6GlLy5jIM1RMMslL58xlSFg/YF9/RCcLVFILmJcMG9qeEsGbdErY8D+MM=
+	t=1711434708; cv=none; b=eV+YlhhEtKLjPdThXnzU0zCXyEaEjfQX53+vEzMgjPp3c5uunrcFFF5kPGYQsF2aYnlDKxVHPXUboPlqhsyuBetbNbzyrhVUOYST/KYI8kHIz00/FRATjYK9/MzGUjTCqkAIGXYwfcL9AfOU+zbVjmrDZmpjrhEOiB+Z172jQpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711434680; c=relaxed/simple;
-	bh=Z0yWsONmAAgRCY638TgVLjVUTE7Gba29bNLs77UQsLQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sysz/riHcn4lyu1ADwt2V0KseQYjwH5OkT/vDf71x4JD9LHyJMEMMPjeEhc5r5nDh35vJJbkzJ2r1PQbCvh57hsCusK8wxbZ1AKdUxnobTOT/O32KjI7JtR0ilfGn9foJEU4v66/LlOvr3Yb9hL4kKIQ1kgyIKzRKEU+4ryMUtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FSqitmzF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711434708; c=relaxed/simple;
+	bh=woda4IhRSYdLKE4CGfVddcLjIWN7cR9ISpX9NT31M9A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UaJMfKFmfDQHI5vSccZ0KAK3ct6PRbEjfE65IEzy/yVYawnZVFBSNoNecRhfRtcn3Ghx2V3q29KIk5cQrPnqHrIlfW/1AjKQryjbZEYe1V6+KOm7CciQ/PPZmt/P8L6Z5NS8XiTv6kQZr9drSa7mJQ7QV3OMqpH74beVlDTXL0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wU+FD787; arc=none smtp.client-ip=209.85.222.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FSqitmzF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AEEFC433F1;
-	Tue, 26 Mar 2024 06:31:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711434680;
-	bh=Z0yWsONmAAgRCY638TgVLjVUTE7Gba29bNLs77UQsLQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FSqitmzFslaeDwwoWIC4/MrvGLjqnpsa4F/DVJ5MT8KX1CBnP3vAz0rMTuPh4J/Ec
-	 puqyiC/IudgRECfqNV97wT/8io829HobIHVG4IBKqTHop2+WkyDa2PKDeSKoPZy0cM
-	 sZbb4fVc7Yiy/TeZ1JHD062pxa6YQsLVFZky7MNUF6hrl02QOLqEFJNN4+nxIDitza
-	 HVHiDxJh1/1A9i+R0cX3j2tXscvxJSoFLoXHCv1R/vqN5m452ko2JMznd1sVEp1n2I
-	 qZxYJsD8KIOm1xDqMXTP9WOhEld4Dd43589r8sfUh0ZZ4zWTDTl7UgLDp9fv7zX1ES
-	 chtsrSOeMA+ag==
-Date: Tue, 26 Mar 2024 08:30:37 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Miklos Szeredi <mszeredi@redhat.com>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	xingwei lee <xrivendell7@gmail.com>,
-	yue sun <samsun1006219@gmail.com>
-Subject: Re: [PATCH v1 3/3] mm: merge folio_is_secretmem() into
- folio_fast_pin_allowed()
-Message-ID: <ZgJrjVvwWnWEZC-7@kernel.org>
-References: <20240325134114.257544-1-david@redhat.com>
- <20240325134114.257544-4-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wU+FD787"
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-7e1026a1c3cso307916241.3
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2024 23:31:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711434705; x=1712039505; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=YctYs7kdin6cPDpRchLG2jgUpLaFzkmZhAQ7snqIC/Q=;
+        b=wU+FD787YFIPigIHlsEDlBTG+nDEqV9iqRo258/Oxy1HSrJ+nGVDPwoIKRRYpSgrtz
+         c/96LCORH4cRCMcLvBunVc6vMbHM9pi08sD5xm0wCt4jiSFCwh+N22zMT9tRq5zwpezX
+         qadq8iFMm/cLGWpzc0hinHHj3c/vJr2rxI73vHlAvAl1zJ4HEy3KfkjGwGYzttXqSG1B
+         HEb5eh9kMuFsFbP32wZUE1oAQGQpeTZ3Xa9ObYRC06nXPlqnbmip+hQLQmOfNmXmaHM6
+         h8IR+bXraYdxMTdN6HrbS/9S1LaYQLuHAB9BE2uaxBIdyAQqcEXIlZpMc2VYaTsWpaqb
+         jRyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711434705; x=1712039505;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YctYs7kdin6cPDpRchLG2jgUpLaFzkmZhAQ7snqIC/Q=;
+        b=wVpYpvFrwnqEBRuRmNt0epKpve5IB2CqQPyfWG7E4+c9d6IFDHEjSFYfuQV6737D15
+         gjfFd6UiwNcFhIoWr7jypubmiD34mx56UdsoYh0hhNKFrtc6v0eXoCyR6lSgWp52LV0A
+         OQPVLuBK3php7y40lje+V8WUUN89paNOjRl8q4yBIXem1WPQNw3jVm6i3OSVLzu2heol
+         5UuJdtthw5rD89ohcPuDPREHso8tFIxW2yyrEFrl6pMdmcEI6j84Gf1w7a4fBuCrw7Cp
+         b4GeLaH57u0DusXsud/hgc+y9TB08jSGwWhQkhFHZUqLSxDLi2wldatCOg6NFo0gs31J
+         M0sA==
+X-Forwarded-Encrypted: i=1; AJvYcCUzwyVBAWmBWllrZXHtNVDzU64IHs/Fic4wLcf+CP/Sj/koj+FVpJIMMeJbeKzPQ9f/yZkRsYkDLpxMDRi1oU9f7Hfv22ae6kfKJoZW
+X-Gm-Message-State: AOJu0YzJmjP/Qa/6JrlyokrdWGUjs08A7wGtNGP4mwk/aC8hfZxboUea
+	jaWouw3FxIusjwRZR7y7skuKSVgCg5FkYFHBO+/3LDA0oaopi0uwCdPX3tHL8/Ee4n9dVRux1mj
+	ZgXOKWAkZ+AE+cKTFfl5LVs5YWqoMzFmXnXGeog==
+X-Google-Smtp-Source: AGHT+IEkqDIV1vYx54TwRHeqtyGyUvzEln98uuXYKNulu1dgHGTaEnLD9+8LwLIu4ccMpPwNYU2HKFigQiVlEzK8jg8=
+X-Received: by 2002:a67:ee8e:0:b0:476:df35:630d with SMTP id
+ n14-20020a67ee8e000000b00476df35630dmr7185909vsp.26.1711434705311; Mon, 25
+ Mar 2024 23:31:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240325134114.257544-4-david@redhat.com>
+References: <20240325151105.135667-1-balint.dobszay@arm.com> <20240325151105.135667-6-balint.dobszay@arm.com>
+In-Reply-To: <20240325151105.135667-6-balint.dobszay@arm.com>
+From: Sumit Garg <sumit.garg@linaro.org>
+Date: Tue, 26 Mar 2024 12:01:34 +0530
+Message-ID: <CAFA6WYPghVHUG_4WkT7b00CxP=jWXfK=twPEn5DrbZabQon9Qg@mail.gmail.com>
+Subject: Re: [PATCH v4 5/5] MAINTAINERS: tee: tstee: Add entry
+To: Balint Dobszay <balint.dobszay@arm.com>
+Cc: op-tee@lists.trustedfirmware.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	jens.wiklander@linaro.org, corbet@lwn.net, sudeep.holla@arm.com, 
+	rdunlap@infradead.org, krzk@kernel.org, gyorgy.szing@arm.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 25, 2024 at 02:41:14PM +0100, David Hildenbrand wrote:
-> folio_is_secretmem() is currently only used during GUP-fast, and using
-> it in wrong context where concurrent truncation might happen, could be
-> problematic.
-> 
-> Nowadays, folio_fast_pin_allowed() performs similar checks during
-> GUP-fast and contains a lot of careful handling -- READ_ONCE( -- ), sanity
-> checks -- lockdep_assert_irqs_disabled() --  and helpful comments on how
-> this handling is safe and correct.
-> 
-> So let's merge folio_is_secretmem() into folio_fast_pin_allowed(), still
-> avoiding checking the actual mapping only if really required.
-> 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-
-Reviewed-by: Mike Rapoport (IBM) <rppt@kernel.org>
-
-A few comments below, no strong feelings about them.
-
+On Mon, 25 Mar 2024 at 20:42, Balint Dobszay <balint.dobszay@arm.com> wrote:
+>
+> Create an entry for the newly added Trusted Services TEE driver, with
+> Sudeep and myself as maintainers.
+>
+> Signed-off-by: Balint Dobszay <balint.dobszay@arm.com>
 > ---
->  include/linux/secretmem.h | 21 ++-------------------
->  mm/gup.c                  | 33 +++++++++++++++++++++------------
->  2 files changed, 23 insertions(+), 31 deletions(-)
-> 
-> diff --git a/include/linux/secretmem.h b/include/linux/secretmem.h
-> index 6996f1f53f14..e918f96881f5 100644
-> --- a/include/linux/secretmem.h
-> +++ b/include/linux/secretmem.h
-> @@ -6,25 +6,8 @@
->  
->  extern const struct address_space_operations secretmem_aops;
->  
-> -static inline bool folio_is_secretmem(struct folio *folio)
-> +static inline bool secretmem_mapping(struct address_space *mapping)
->  {
-> -	struct address_space *mapping;
-> -
-> -	/*
-> -	 * Using folio_mapping() is quite slow because of the actual call
-> -	 * instruction.
-> -	 * We know that secretmem pages are not compound and LRU so we can
-> -	 * save a couple of cycles here.
-> -	 */
-> -	if (folio_test_large(folio) || folio_test_lru(folio))
-> -		return false;
-> -
-> -	mapping = (struct address_space *)
-> -		((unsigned long)folio->mapping & ~PAGE_MAPPING_FLAGS);
-> -
-> -	if (!mapping || mapping != folio->mapping)
-> -		return false;
-> -
->  	return mapping->a_ops == &secretmem_aops;
->  }
->  
-> @@ -38,7 +21,7 @@ static inline bool vma_is_secretmem(struct vm_area_struct *vma)
->  	return false;
->  }
->  
-> -static inline bool folio_is_secretmem(struct folio *folio)
-> +static inline bool secretmem_mapping(struct address_space *mapping)
->  {
->  	return false;
->  }
-> diff --git a/mm/gup.c b/mm/gup.c
-> index e7510b6ce765..69d8bc8e4451 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -2472,6 +2472,8 @@ EXPORT_SYMBOL(get_user_pages_unlocked);
->   * This call assumes the caller has pinned the folio, that the lowest page table
->   * level still points to this folio, and that interrupts have been disabled.
->   *
-> + * GUP-fast must reject all secretmem folios.
-> + *
->   * Writing to pinned file-backed dirty tracked folios is inherently problematic
->   * (see comment describing the writable_file_mapping_allowed() function). We
->   * therefore try to avoid the most egregious case of a long-term mapping doing
-> @@ -2484,22 +2486,32 @@ EXPORT_SYMBOL(get_user_pages_unlocked);
->  static bool folio_fast_pin_allowed(struct folio *folio, unsigned int flags)
+>  MAINTAINERS | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
 
-Now when this function checks for gup in general, maybe it's worth to
-rename it to, say, folio_fast_gup_allowed.
+Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
 
->  {
->  	struct address_space *mapping;
-> +	bool check_secretmem = false;
-> +	bool reject_file_backed = false;
->  	unsigned long mapping_flags;
->  
->  	/*
->  	 * If we aren't pinning then no problematic write can occur. A long term
->  	 * pin is the most egregious case so this is the one we disallow.
->  	 */
-> -	if ((flags & (FOLL_PIN | FOLL_LONGTERM | FOLL_WRITE)) !=
-> +	if ((flags & (FOLL_PIN | FOLL_LONGTERM | FOLL_WRITE)) ==
->  	    (FOLL_PIN | FOLL_LONGTERM | FOLL_WRITE))
-> -		return true;
-> +		reject_file_backed = true;
+-Sumit
+
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index fd221a7d4d1c..eaa89feabd25 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -22470,6 +22470,15 @@ F:     Documentation/ABI/testing/configfs-tsm
+>  F:     drivers/virt/coco/tsm.c
+>  F:     include/linux/tsm.h
+>
+> +TRUSTED SERVICES TEE DRIVER
+> +M:     Balint Dobszay <balint.dobszay@arm.com>
+> +M:     Sudeep Holla <sudeep.holla@arm.com>
+> +L:     linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> +L:     trusted-services@lists.trustedfirmware.org
+> +S:     Maintained
+> +F:     Documentation/tee/ts-tee.rst
+> +F:     drivers/tee/tstee/
 > +
-> +	/* We hold a folio reference, so we can safely access folio fields. */
->  
-> -	/* The folio is pinned, so we can safely access folio fields. */
-> +	/* secretmem folios are only order-0 folios and never LRU folios. */
-
-Nit:                           ^ always
-
-> +	if (IS_ENABLED(CONFIG_SECRETMEM) && !folio_test_large(folio) &&
-> +	    !folio_test_lru(folio))
-> +		check_secretmem = true;
-> +
-> +	if (!reject_file_backed && !check_secretmem)
-> +		return true;
->  
->  	if (WARN_ON_ONCE(folio_test_slab(folio)))
->  		return false;
->  
-> -	/* hugetlb mappings do not require dirty-tracking. */
-> +	/* hugetlb neither requires dirty-tracking nor can be secretmem. */
->  	if (folio_test_hugetlb(folio))
->  		return true;
->  
-> @@ -2535,10 +2547,12 @@ static bool folio_fast_pin_allowed(struct folio *folio, unsigned int flags)
->  
->  	/*
->  	 * At this point, we know the mapping is non-null and points to an
-> -	 * address_space object. The only remaining whitelisted file system is
-> -	 * shmem.
-> +	 * address_space object.
->  	 */
-> -	return shmem_mapping(mapping);
-> +	if (check_secretmem && secretmem_mapping(mapping))
-> +		return false;
-> +	/* The only remaining allowed file system is shmem. */
-> +	return !reject_file_backed || shmem_mapping(mapping);
->  }
->  
->  static void __maybe_unused undo_dev_pagemap(int *nr, int nr_start,
-> @@ -2624,11 +2638,6 @@ static int gup_pte_range(pmd_t pmd, pmd_t *pmdp, unsigned long addr,
->  		if (!folio)
->  			goto pte_unmap;
->  
-> -		if (unlikely(folio_is_secretmem(folio))) {
-> -			gup_put_folio(folio, 1, flags);
-> -			goto pte_unmap;
-> -		}
-> -
->  		if (unlikely(pmd_val(pmd) != pmd_val(*pmdp)) ||
->  		    unlikely(pte_val(pte) != pte_val(ptep_get(ptep)))) {
->  			gup_put_folio(folio, 1, flags);
-> -- 
-> 2.43.2
-> 
-
--- 
-Sincerely yours,
-Mike.
+>  TTY LAYER AND SERIAL DRIVERS
+>  M:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>  M:     Jiri Slaby <jirislaby@kernel.org>
+> --
+> 2.34.1
+>
