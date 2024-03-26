@@ -1,70 +1,75 @@
-Received: from mail.nfschina.com (unknown [42.101.60.195])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 0B9C7446BA;
-	Tue, 26 Mar 2024 05:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.195
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD58E129A7A;
+	Tue, 26 Mar 2024 05:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711431692; cv=none; b=Hv/o6UYFgeaoAYV6ddf6kxGBaBZWhW2t5FSJtNwVwix4NYPvln4URUKjxeSkAQu/YMmJQfLSmqMB8/SHMZ9XA+OcU+gP2Q8lziH2uoAC02m7nYbn0n56kjEqOskz3QaNSOWV3xfPubsCjsdmWocv5FRZc0eEaiQZ7q921TxCXK4=
+	t=1711431715; cv=none; b=qkKTtYsqbOS44UtOrUpLv/Mez0jV9AXJUzhsvbBPPcoJ/HznWUJw7sbkAZl7t8MUVSRAGscH3p+bgEzLdfJjobq1hozPVgwso7g5nJAVe32p+vr/D007iFC/pmpKVv7d5CNcG1VIU62x0N07ckY4CCxd9T6BsgLZJPcY2qDUI6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711431692; c=relaxed/simple;
-	bh=zdIoSYl0H+cZnP925/Fbsw4JQQ8i2NFXq9a2yvqMDBE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type; b=sipIIV8M83PKCXc2cmMTzXiVUMbb8nBOqt7OcLOfK4Wa47dZU/vZfclku+WQ2I12dXNtDSA966d+pAczAC7lpKMYVzxuWFHhTDGjLZjKVJDCQyc9VvHYcJZD0lsmCxC+AdFKgi9sTDTBLzsYgOJmVcLBuwS8NUcR3h73lqJonaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
-Received: from [172.30.11.106] (unknown [180.167.10.98])
-	by mail.nfschina.com (Maildata Gateway V2.8.8) with ESMTPSA id B8C3C6075D669;
-	Tue, 26 Mar 2024 13:41:25 +0800 (CST)
-Message-ID: <0e719692-a166-1f56-4226-e71f7503aa94@nfschina.com>
-Date: Tue, 26 Mar 2024 13:41:24 +0800
+	s=arc-20240116; t=1711431715; c=relaxed/simple;
+	bh=iiMo2n+uaaAGl5wm2iwHCxN6PJ6Jdv4z76DpPeNrixk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k7lV+B+iMaQbwogcCxKrbvtbZGOsEcRLxUXM/MBnrdGic1IC1sf3GgCmG1YqE3hDZ02K8dlhkaliUnB1hasv9KeulIMepf4X/04TcyBpemTpGRwgDsRsrSZd5gP1jPPCaTforpJAAmcnmF8iSIKYoV3FMElkeCHYDPURpmpaLAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=tc3m4wmD; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="tc3m4wmD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0A2DC433C7;
+	Tue, 26 Mar 2024 05:41:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1711431715;
+	bh=iiMo2n+uaaAGl5wm2iwHCxN6PJ6Jdv4z76DpPeNrixk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tc3m4wmDGc8hc/rm2flEsw7sCWhhHCOEvgfOr5Mz2mDL3J7GRihVukiza3b5oj7ek
+	 +joGSipLS/W4Ym7okQzThkvDnoV06HNNNUzpGwaftpBLZjY4ydz+aTk4fSwOfBl0Ci
+	 w03QBZWawFtbC47sQqFD+dUG+UAtnEUnJ0Tf/EOA=
+Date: Tue, 26 Mar 2024 06:41:51 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Andrew Davis <afd@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] uio: pruss: Deprecate use of this driver
+Message-ID: <2024032631-excursion-opposing-be36@gregkh>
+References: <20240325210045.153827-1-afd@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH] drm/amdkfd: return negative error code in svm_ioctl()
-Content-Language: en-US
-To: Philip Yang <yangp@amd.com>, Felix.Kuehling@amd.com,
- alexander.deucher@amd.com, christian.koenig@amd.com, Xinhui.Pan@amd.com,
- airlied@gmail.com, daniel@ffwll.ch
-Cc: Philip.Yang@amd.com, alex.sierra@amd.com, amd-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-X-MD-Sfrom: suhui@nfschina.com
-X-MD-SrcIP: 180.167.10.98
-From: Su Hui <suhui@nfschina.com>
-In-Reply-To: <b4af9fda-8685-d486-95aa-ca46c11a2cc5@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240325210045.153827-1-afd@ti.com>
 
-On 2024/3/25 22:09, Philip Yang wrote:
->
->
-> On 2024-03-25 02:31, Su Hui wrote:
->
-> Good catch, ioctl should return -errno. I will apply it to drm-next.
->
-> Reviewed-by: Philip Yang<philip.yang@amd.com>
->
->> ---
->> Ps: When I try to compile this file, there is a error :
->> drivers/gpu/drm/amd/amdkfd/kfd_migrate.c:28:10: fatal error: amdgpu_sync.h:
->> No such file or directory.
->>
->> Maybe there are some steps I missed or this place need to be corrected?
->
-> Don't know how you compile the driver, amdgpu_sync.h is located under 
-> amdgpu folder, amdkfd/Makefile is included from amdgpu/Makefile, which 
-> set ccflag-y -I correctly.
->
-Got it,  I should using 'make 
-drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_migrate.o'
-rather than 'make drivers/gpu/drm/amd/amdkfd/kfd_migrate.o'.
+On Mon, Mar 25, 2024 at 04:00:45PM -0500, Andrew Davis wrote:
+> This UIO driver was used to control the PRU processors found on various
+> TI SoCs. It was created before the Remoteproc framework, but now with
+> that we have a standard way to program and manage the PRU processors.
+> The proper PRU Remoteproc driver should be used instead of this driver.
+> Mark this driver deprecated.
+> 
+> The userspace tools to use this are no longer available, so also remove
+> those dead links from the Kconfig description.
+> 
+> Signed-off-by: Andrew Davis <afd@ti.com>
+> ---
+>  drivers/uio/Kconfig | 10 ++--------
+>  1 file changed, 2 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
+> index 2e16c5338e5b1..358dc2d19b885 100644
+> --- a/drivers/uio/Kconfig
+> +++ b/drivers/uio/Kconfig
+> @@ -126,19 +126,13 @@ config UIO_FSL_ELBC_GPCM_NETX5152
+>  	  http://www.hilscher.com/netx
+>  
+>  config UIO_PRUSS
+> -	tristate "Texas Instruments PRUSS driver"
+> +	tristate "Texas Instruments PRUSS driver (DEPRECATED)"
 
-Thanks a lot!
+This isn't going to do much, why not just delete the driver entirely if
+no one uses it?
 
-Regards,
-Su Hui
+thanks,
+
+greg k-h
