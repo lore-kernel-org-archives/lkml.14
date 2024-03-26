@@ -1,108 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CEDE127B62;
-	Tue, 26 Mar 2024 18:52:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699E93DABF5;
+	Tue, 26 Mar 2024 18:54:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711479181; cv=none; b=BR36kfrQq1A2IkJpwhJWjCkjIGwt3kiP9k+0/z4rSE/Hc88talGxc1hUXtoDc/t4MMzO+3xfJ1VNiBUranQR//ZLTnl9fsnkLQ1MgnwdEqMM7n8ICT2rPUKhIUZJrUM3xmQFODK8OoNMYHCs5tWHQSCpAxniJ+SGc2Mu3MMbUZ4=
+	t=1711479300; cv=none; b=Uehzc01l8XdsJbobYsbnCcp+WFYdmiF61yffxLu+GE91r/MCuGYOYa1B+MQUj3lmiKStjulWD5rut65Kvt7NZrmtcU6rlW6h9/MsEFA6Jb9pTETme+2qQDK9k4j3jpyndlG2VVUW6wMHJ4rsCAb7pA83R5m4nLvnHffmMou8ikA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711479181; c=relaxed/simple;
-	bh=WkO1S1jkVN0c59mKkx+iQ2KhnnFXr9F4gvElge+NkOc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KC8BePv2g3Qsv8giha6NXR46QxruV62zAFnkgR8e2mhmDbVPQzJ1ePKrUe7u9pBEQsKEEyxWokRVtlDNUhuIrZXM1UrtOJjdvo399J8Gdacpe9KZZzlSLpDO97AWg08Roz12PgjeX/UoTXHLXAA1rXjyi5i3bLYQQtJjw5uKzq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=loG0NN9J; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1711479300; c=relaxed/simple;
+	bh=9djSkKnmuC7i4pPzsNPWHP/5d7XeUO60ZfAE7+auKsQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SqqH5TlatTt7r1YAI6jP9HWOXXSrBaWcItQ16vbBI3k5qtkqXJQ3AfefU/7nf9WcrR8hBbIa5Pn4/yO5url/qRzP/ZHzY41vxbeHbVJpgAQFKsMO2frdD0C/4EG2jar/S4TT+wvkY+02cdCEDB6evs/cD77Puy0jvJpjC+Q+2Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=L2KsZyKR; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="loG0NN9J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711479179; x=1743015179;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WkO1S1jkVN0c59mKkx+iQ2KhnnFXr9F4gvElge+NkOc=;
-  b=loG0NN9JMsnLx+bwo2Ee+v2Fnb5RNp267GMG6uif8f4CAW44xo/VcRSY
-   gZeO3GgYlZlrCyQm7sLo63RUfZMz2LhhLupNGPWDzq3WHJsN1//KpvfQd
-   eeSvstgC/B+BMn0WysNc/Cv6AjjP7U+qkj6LxNcOgU7o2t2O95LNFSipM
-   +CxlapdAqNvKXdxhsctH9Ycz52XXG4Z5aw362en298SPXoOlB9CElHS4z
-   RfC6qp3HaIib1Cu+RaCqQn3rNWQzjWpkce6zwGYzVfxccfzu1cw+jtWCv
-   OErhJzBTDnyfWGEw2qeb0rP49ld0QidM0qQTh99cHtWPJBky5GkaaS3tL
-   A==;
-X-CSE-ConnectionGUID: nQ0lq877SJGU5L0wSrrtyg==
-X-CSE-MsgGUID: mN/t9eM6QvWzN0TvynwmlQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="23993372"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="23993372"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 11:52:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="914887918"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="914887918"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 11:52:56 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rpBun-0000000GQWD-2zuz;
-	Tue, 26 Mar 2024 20:52:53 +0200
-Date: Tue, 26 Mar 2024 20:52:53 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH v1 01/10] spi: pxa2xx: Drop ACPI_PTR() and of_match_ptr()
-Message-ID: <ZgMZhdsDc-bzWa6P@smile.fi.intel.com>
-References: <20240326181027.1418989-1-andriy.shevchenko@linux.intel.com>
- <20240326181027.1418989-2-andriy.shevchenko@linux.intel.com>
- <14f08a50-edef-4b36-891e-2b4b2283f40c@sirena.org.uk>
- <ZgMSg5Tr97mWgPW4@smile.fi.intel.com>
- <424de3ed-f0ea-4fc1-80f5-3ab1d23cf1e1@sirena.org.uk>
- <ZgMXe4EMbJ44W1tr@smile.fi.intel.com>
- <c3066481-bac6-48fd-8b38-6797975d83c2@sirena.org.uk>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="L2KsZyKR"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42QIsgiY066709;
+	Tue, 26 Mar 2024 13:54:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1711479282;
+	bh=8cJ9129Ob8CCElav7kn38Mvyr3xFZdbL8GeEi/r+r6A=;
+	h=From:To:CC:Subject:Date;
+	b=L2KsZyKR6HktEPNjnKnI3zodcPAnSBAUnxww+Imw80H+bLIC8vO3hKdwjFwy7LC/a
+	 drAah5RszVEhYnfPgzvTuZwv3uJ21mfMG6IBc9PUm1IQ928UZCV1azXFA7qqknhMat
+	 EbaMiQ6OtY8vBAXyKpNUJUtuq5Z9Cboy9+Z3T8wI=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42QIsgdx027796
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 26 Mar 2024 13:54:42 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 26
+ Mar 2024 13:54:42 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 26 Mar 2024 13:54:42 -0500
+Received: from lelvsmtp5.itg.ti.com ([10.249.42.149])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42QIsfIj091446;
+	Tue, 26 Mar 2024 13:54:41 -0500
+From: Andrew Davis <afd@ti.com>
+To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero
+ Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Andrew Davis <afd@ti.com>
+Subject: [PATCH 1/6] arm64: dts: ti: k3-am65: Remove UART baud rate selection
+Date: Tue, 26 Mar 2024 13:54:36 -0500
+Message-ID: <20240326185441.29656-1-afd@ti.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c3066481-bac6-48fd-8b38-6797975d83c2@sirena.org.uk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Tue, Mar 26, 2024 at 06:49:58PM +0000, Mark Brown wrote:
-> On Tue, Mar 26, 2024 at 08:44:11PM +0200, Andy Shevchenko wrote:
-> > On Tue, Mar 26, 2024 at 06:25:16PM +0000, Mark Brown wrote:
-> > > On Tue, Mar 26, 2024 at 08:22:59PM +0200, Andy Shevchenko wrote:
-> > > > On Tue, Mar 26, 2024 at 06:16:28PM +0000, Mark Brown wrote:
-> 
-> > > > > I think the ACPI dependency there is as much about hiding the device on
-> > > > > irrelevant platforms as anything else, might be better replaced with an
-> > > > > x86 dependency though.
+As described in the binding document for the "current-speed" property:
 
-...
+"This should only be present in case a driver has no chance to know the
+baud rate of the slave device."
 
-> > > That's nice but I'm not sure what that has to do with the dependency on
-> > > ACPI?
-> 
-> > ACPI_PTR() makes ID no-op only if ACPI is defined. That also satisfies
-> > the ugly ifdeffery that is removed by this patch as well. If there is
-> > no dependency we will have compiler warning for defined but not used
-> > variable.
-> 
-> Again I don't think that's the main purpose of the dependency here.
+This is not the case for the UART used in K3 devices, the current
+baud-rate can be calculated from the registers. Having this property
+has the effect of actually skipping the baud-rate setup in some drivers
+as it assumes it will already be set to this rate, which may not always
+be the case.
 
-Oh, oh, my bad I missed acpi_dev_uid_to_integer() call.
-Okay, with that in mind it's functional dependency for the ACPI-based
-platforms. Do you want to keep it untouched?
+It seems this property's purpose was mistaken as selecting the desired
+baud-rate, which it does not. It would have been wrong to select that
+here anyway as DT is not the place for configuration, especially when
+there are already more standard ways to set serial baud-rates.
 
+Signed-off-by: Andrew Davis <afd@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi   | 1 -
+ arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi    | 1 -
+ arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi | 1 -
+ 3 files changed, 3 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index ff857117d7193..670557c89f756 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -89,7 +89,6 @@ main_uart0: serial@2800000 {
+ 		reg = <0x00 0x02800000 0x00 0x100>;
+ 		interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
+ 		clock-frequency = <48000000>;
+-		current-speed = <115200>;
+ 		power-domains = <&k3_pds 146 TI_SCI_PD_EXCLUSIVE>;
+ 		status = "disabled";
+ 	};
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+index 6ff3ccc39fb44..4f808e5089755 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+@@ -43,7 +43,6 @@ mcu_uart0: serial@40a00000 {
+ 		reg = <0x00 0x40a00000 0x00 0x100>;
+ 		interrupts = <GIC_SPI 565 IRQ_TYPE_LEVEL_HIGH>;
+ 		clock-frequency = <96000000>;
+-		current-speed = <115200>;
+ 		power-domains = <&k3_pds 149 TI_SCI_PD_EXCLUSIVE>;
+ 		status = "disabled";
+ 	};
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
+index 37527890ddeaf..eee072e44a42f 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
+@@ -59,7 +59,6 @@ wkup_uart0: serial@42300000 {
+ 		reg = <0x42300000 0x100>;
+ 		interrupts = <GIC_SPI 697 IRQ_TYPE_LEVEL_HIGH>;
+ 		clock-frequency = <48000000>;
+-		current-speed = <115200>;
+ 		power-domains = <&k3_pds 150 TI_SCI_PD_EXCLUSIVE>;
+ 		status = "disabled";
+ 	};
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.2
 
