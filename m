@@ -1,176 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E755254735
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 11:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B51345022
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 11:15:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711451731; cv=none; b=GiGMZPLFe/bU+LT2HwJIWXw8pD1EgSmptDkKKE4dtOrHiT0wvpb0rhiqLilzl1E/HIM8/EChR95wsUuWeruzA+2l7TYTIr69yormuCW/Asn3JHV+/a8crazLas0Oap2/jpKrfjXgVrKSiUBM0mS6mSBYADnEzUZ/2iQ5pnybT/g=
+	t=1711451742; cv=none; b=PvwWWlbaL0kxk25AH93a3vdeO2dMR5SUcGPPFTFRdqNMucqizT9jJbhE0aR3ylQJJbw5XjA/DPsc0elL4MYTUDzmEMjKfnERAYOkqAVu7VIAVIj0VTZ7bH93al3PzTezhMxeytIixTxEsA3Etl3L2J3tK8C9qCL9wIQACw4ry2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711451731; c=relaxed/simple;
-	bh=Uofz0RF1ZsT7pk+lsM50pNT0a5TEzjL9ouSKPcKLoBo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QjHRxn3GuCevvx3gNNVNU1njc57yZDukUHKVGTet0OfZKweC9XQ79p7nkSdOR7otMT4566IOlhBjHvCeWgk9BLrowXBpKIF4zZluxD2vxeYUd4+vZrOFq10yzbGzkT7c+qLfyvCwAydnIyMWUiYwn4sv96vuU45Yqz4Y0kaFgrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Biz92rJO; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711451742; c=relaxed/simple;
+	bh=p0SP+3hWz6lk8cCE7sf3j9Xgizc96y3imCYOUoZL1O0=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=dWwiDXORL+VFsqx8ritNGuZEHgcbMESqokqh72TjXVLzyXLWtrkKtGWwLsMJsx6oBW1pOCJpaIpc2VKk4B8Nwp7PiHReitpu9tKEIsMhDeUzV1JDLnEthOoXlm/ksbsy5PhnyC2g1uUzDUV50h+/iaeayQ3b4rG7slNC6uDEpT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=bO29NbXc; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Biz92rJO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711451727;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sRPt++S5xK11+wYGewJQ9YRwtXrDqUlhG/4nmVdt/BI=;
-	b=Biz92rJOTdO67hn3HqaxiDl32XUNpkoRdFRRLIDC8CcgOWdTYMZSxDYdJtpmSwUOCisEEc
-	IYKd6BKOoGD1MOPKVZ+jJAhXMLIwZweKjmiwZ/y+zd0dBgs8tAtI1agCxjZEGd7mN5fIGb
-	braphe31TZ3QGyOP6qgT81rpQuwpGVk=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-502-WtZC27OANr2MHfYJhQFQnQ-1; Tue,
- 26 Mar 2024 07:15:23 -0400
-X-MC-Unique: WtZC27OANr2MHfYJhQFQnQ-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 652F23C0008C;
-	Tue, 26 Mar 2024 11:15:23 +0000 (UTC)
-Received: from [100.115.132.116] (unknown [10.22.50.19])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id B677C492BD3;
-	Tue, 26 Mar 2024 11:15:21 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Jan Schunk <scpcom@gmx.de>, Jeff Layton <jlayton@kernel.org>,
- Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>,
- Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
- Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Subject: Re: [External] : nfsd: memory leak when client does many file
- operations
-Date: Tue, 26 Mar 2024 07:15:16 -0400
-Message-ID: <F594EBB2-5F92-40A9-86FB-CFD58E9CE516@redhat.com>
-In-Reply-To: <088D9CC3-C5B0-4646-A85D-B3B9ACE8C532@oracle.com>
-References: <trinity-068f55c9-6088-418d-bf3a-c2778a871e98-1711310237802@msvc-mesg-gmx120>
- <E3109CAA-8261-4F66-9D1B-3546E8B797DF@oracle.com>
- <trinity-bfafb9db-d64f-4cad-8cb1-40dac0a2c600-1711313314331@msvc-mesg-gmx105>
- <567BBF54-D104-432C-99C0-1A7EE7939090@oracle.com>
- <trinity-66047013-4d84-4eef-b5d3-d710fe6be805-1711316386382@msvc-mesg-gmx005>
- <6F16BCCE-3000-4BCB-A3B4-95B4767E3577@oracle.com>
- <trinity-ad0037c0-1060-4541-a8ca-15f826a5b5a2-1711396545958@msvc-mesg-gmx024>
- <088D9CC3-C5B0-4646-A85D-B3B9ACE8C532@oracle.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bO29NbXc"
+Received: from pendragon.ideasonboard.com (aztw-30-b2-v4wan-166917-cust845.vm26.cable.virginm.net [82.37.23.78])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id E3C91497;
+	Tue, 26 Mar 2024 12:15:06 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1711451707;
+	bh=p0SP+3hWz6lk8cCE7sf3j9Xgizc96y3imCYOUoZL1O0=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=bO29NbXcyi6c8nEimTRS6uwmhTD+Pn8RY9rGvw3/jL9OXOJY9AO+/JWxo+ntB6A5R
+	 0NNy/2pCtYUUVGbzNcHpls4ZfalMSTvwl4pgMoP0F8VEUdgBWtXYQIuBasjKCgqr00
+	 yKHvnheJkotIct/IfxfqcWY2ZIpmcO7AsLgzX2Ts=
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+In-Reply-To: <20240319072712.133449-6-umang.jain@ideasonboard.com>
+References: <20240319072712.133449-1-umang.jain@ideasonboard.com> <20240319072712.133449-6-umang.jain@ideasonboard.com>
+Subject: Re: [PATCH v3 5/6] media: imx335: Fix active area height discrepency
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc: Umang Jain <umang.jain@ideasonboard.com>
+To: Alexander Shiyan <eagle.alexander923@gmail.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Umang Jain <umang.jain@ideasonboard.com>, open list <linux-kernel@vger.kernel.org>
+Date: Tue, 26 Mar 2024 11:15:34 +0000
+Message-ID: <171145173466.1011926.14195824080886002217@ping.linuxembedded.co.uk>
+User-Agent: alot/0.10
 
-On 25 Mar 2024, at 16:11, Chuck Lever III wrote:
+Quoting Umang Jain (2024-03-19 07:27:11)
+> The imx335 reports a recommended pixel area of - 2592x1944.
+> The driver supported mode however limits it to height=3D1940.
+>=20
+> Fix the height discrepency by correctly the value of height
+> (with updates to vblank and mode registers).
 
->> On Mar 25, 2024, at 3:55=E2=80=AFPM, Jan Schunk <scpcom@gmx.de> wrote:=
+"Fix the height discrepency by correcting the Y_OUT_SIZE,
+HTRIMMING_START, and changing the WINMODE, followed by the corresponding
+updates to reflect the new minimum vblanking periods."
 
->>
->> The VM is now running 20 hours with 512MB RAM, no desktop, without the=
- "noatime" mount option and without the "async" export option.
->>
->> Currently there is no issue, but the memory usage is still contantly g=
-rowing. It may just take longer before something happens.
->>
->> top - 00:49:49 up 3 min,  1 user,  load average: 0,21, 0,19, 0,09
->> Tasks: 111 total,   1 running, 110 sleeping,   0 stopped,   0 zombie
->> %CPU(s):  0,2 us,  0,3 sy,  0,0 ni, 99,5 id,  0,0 wa,  0,0 hi,  0,0 si=
-,  0,0 st
->> MiB Spch:    467,0 total,    302,3 free,     89,3 used,     88,1 buff/=
-cache
->> MiB Swap:    975,0 total,    975,0 free,      0,0 used.    377,7 avail=
- Spch
->>
->> top - 15:05:39 up 14:19,  1 user,  load average: 1,87, 1,72, 1,65
->> Tasks: 104 total,   1 running, 103 sleeping,   0 stopped,   0 zombie
->> %CPU(s):  0,2 us,  4,9 sy,  0,0 ni, 53,3 id, 39,0 wa,  0,0 hi,  2,6 si=
-,  0,0 st
->> MiB Spch:    467,0 total,     21,2 free,    147,1 used,    310,9 buff/=
-cache
->> MiB Swap:    975,0 total,    952,9 free,     22,1 used.    319,9 avail=
- Spch
->>
->> top - 20:48:16 up 20:01,  1 user,  load average: 5,02, 2,72, 2,08
->> Tasks: 104 total,   5 running,  99 sleeping,   0 stopped,   0 zombie
->> %CPU(s):  0,2 us, 46,4 sy,  0,0 ni, 11,9 id,  2,3 wa,  0,0 hi, 39,2 si=
-,  0,0 st
->> MiB Spch:    467,0 total,     16,9 free,    190,8 used,    271,6 buff/=
-cache
->> MiB Swap:    975,0 total,    952,9 free,     22,1 used.    276,2 avail=
- Spch
+I'm curious though - why does IMX335_REG_HTRIMMING_START jump /so/ much
+here? Something to do with the WINMODE change?
+
+
+Because I've seen this works and with the optional update to the commit
+message:
+
+Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+
+>=20
+> Signed-off-by: Umang Jain <umang.jain@ideasonboard.com>
+> ---
+>  drivers/media/i2c/imx335.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/drivers/media/i2c/imx335.c b/drivers/media/i2c/imx335.c
+> index 7609dbc537b1..10a09830dbd6 100644
+> --- a/drivers/media/i2c/imx335.c
+> +++ b/drivers/media/i2c/imx335.c
+> @@ -247,13 +247,13 @@ static const int imx335_tpg_val[] =3D {
+>  };
+> =20
+>  /* Sensor mode registers */
+> -static const struct cci_reg_sequence mode_2592x1940_regs[] =3D {
+> +static const struct cci_reg_sequence mode_2592x1944_regs[] =3D {
+>         {IMX335_REG_MODE_SELECT, 0x01},
+>         {IMX335_REG_MASTER_MODE, 0x00},
+> -       {IMX335_REG_WINMODE, 0x04},
+> -       {IMX335_REG_HTRIMMING_START, 384},
+> +       {IMX335_REG_WINMODE, 0x00},
+> +       {IMX335_REG_HTRIMMING_START, 48},
+>         {IMX335_REG_HNUM, 2592},
+> -       {IMX335_REG_Y_OUT_SIZE, 1940},
+> +       {IMX335_REG_Y_OUT_SIZE, 1944},
+>         {IMX335_REG_AREA3_ST_ADR_1, 176},
+>         {IMX335_REG_AREA3_WIDTH_1, 3928},
+>         {IMX335_REG_OPB_SIZE_V, 0},
+> @@ -404,15 +404,15 @@ static const u32 imx335_mbus_codes[] =3D {
+>  /* Supported sensor mode configurations */
+>  static const struct imx335_mode supported_mode =3D {
+>         .width =3D 2592,
+> -       .height =3D 1940,
+> +       .height =3D 1944,
+>         .hblank =3D 342,
+> -       .vblank =3D 2560,
+> -       .vblank_min =3D 2560,
+> +       .vblank =3D 2556,
+> +       .vblank_min =3D 2556,
+>         .vblank_max =3D 133060,
+>         .pclk =3D 396000000,
+>         .reg_list =3D {
+> -               .num_of_regs =3D ARRAY_SIZE(mode_2592x1940_regs),
+> -               .regs =3D mode_2592x1940_regs,
+> +               .num_of_regs =3D ARRAY_SIZE(mode_2592x1944_regs),
+> +               .regs =3D mode_2592x1944_regs,
+>         },
+>  };
+> =20
+> --=20
+> 2.43.0
 >
-> I don't see anything in your original memory dump that
-> might account for this. But I'm at a loss because I'm
-> a kernel developer, not a support guy -- I don't have
-> any tools or expertise that can troubleshoot a system
-> without rebuilding a kernel with instrumentation. My
-> first instinct is to tell you to bisect between v6.3
-> and v6.4, or at least enable kmemleak, but I'm guessing
-> you don't build your own kernels.
->
-> My only recourse at this point would be to try to
-> reproduce it myself, but unfortunately I've just
-> upgraded my whole lab to Fedora 39, and there's a grub
-> bug that prevents booting any custom-built kernel
-> on my hardware.
->
-> So I'm stuck until I can nail that down. Anyone else
-> care to help out?
-
-Sure - I can throw some stuff..
-
-Can we dig into which memory slabs might be growing?  Something like:
-
-watch -d "cat /proc/slabinfo | grep nfsd"
-
-=2E. for a bit might show what is growing.
-
-Then use a systemtap script like the one below to trace the allocations -=
- use:
-
-stap -v --all-modules kmem_alloc.stp <slab_name>
-
-Ben
-
-
-8<---------------------------- save as kmem_alloc.stp -------------------=
----------
-
-# This script displays the number of given slab allocations and the backt=
-races leading up to it.
-
-global slab =3D @1
-global stats, stacks
-probe kernel.function("kmem_cache_alloc") {
-        if (kernel_string($s->name) =3D=3D slab) {
-                stats[execname()] <<< 1
-                stacks[execname(),kernel_string($s->name),backtrace()] <<=
-< 1
-        }
-}
-# Exit after 10 seconds
-# probe timer.ms(10000) { exit () }
-probe end {
-        printf("Number of %s slab allocations by process\n", slab)
-        foreach ([exec] in stats) {
-                printf("%s:\t%d\n",exec,@count(stats[exec]))
-        }
-        printf("\nBacktrace of processes when allocating\n")
-        foreach ([proc,cache,bt] in stacks) {
-                printf("Exec: %s Name: %s  Count: %d\n",proc,cache,@count=
-(stacks[proc,cache,bt]))
-                print_stack(bt)
-                printf("\n-----------------------------------------------=
---------\n\n")
-        }
-}
-
