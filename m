@@ -1,279 +1,185 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EF6FC0E;
-	Tue, 26 Mar 2024 15:39:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1CE613CA98;
+	Tue, 26 Mar 2024 15:40:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711467597; cv=none; b=MfbOC/YioSuKfRc2aNBQUo24+yevm8HQvvaIKwUfjR3yuSi6LXENNyLKMkOTl85tPbBRk5LZcs/BN7lxAcydhmT29fpRwKIgdnUQUD2Kj68q+txwNZDZw6WNzQALaZm5NxingsWwwMd2GHO2jxZUQLVH4jEmuPsFyDqC/yN760U=
+	t=1711467600; cv=none; b=LHyID/sSExbpmKVrXMMbveQoakX4DGhoV61/d8o/Uz2DSbdjtJvCEaPfgsZHTOeRBFujZqHmM7jBkt4Zc5j9qsll120Fa1dWLvMA+iryg8r+lya7H4rsEfz7XQqx4iMOjLiVOyk4wHEHB2Zwy5YnhZylfkL80qfX4RFq6FGB5n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711467597; c=relaxed/simple;
-	bh=X1kX69Jlpw+6CmX8mQiJm4O+sWo7JoMK2tt6HDIjWZE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=F/DKJYlTSmgbroEuBCA3DNXpjc0Q2+0txoRi7LZ8bbKVkKJPbinChGSgYsvOi72Eq66d3c9Dm/ol8L4/ztOgJ5kk4t7wX28F6QtXN7t26rh4jNCmlO5C0vW+hJaLxwrtGWpu5pJvbKXuEIgtJ64LlbqTYGiUyxK8RvZHShxDES4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=ePA7RZGi; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
+	s=arc-20240116; t=1711467600; c=relaxed/simple;
+	bh=ztmkPAB0U1ULXqxkAJmpV7w+Ysid9k8KKpLkRxinnKg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=k4SjJzMzURlofj6p5aT3RHyl2YauItKHy+EjvHDPz2o+ula0vZo0ejVqcN4iU9TagpIPZXOENPWITnjI3op2/Z5gh7HmjV9OxbFvDWAWG+xLQAWZ/7wuCn4UdmUOLGgHfbUuilOpCJQEvDfZ+bPxbO0DuY8xMy8KQTNI32bxXZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qyKA41Y/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="ePA7RZGi"
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id B15B9120004;
-	Tue, 26 Mar 2024 18:39:50 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru B15B9120004
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1711467590;
-	bh=BspCg4rrPJ0Kpig9Yf6f5Zh/R+hA73hjDZvRIpKseLo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=ePA7RZGi1LFC23l7KSsw/4S8dcZ2KX7MSOkB/o4z7Kk2vlwHcGfjZwFTTSddxMF+f
-	 URyiU38kBwTwoJt/UMLBrUizr1BgaYdV4ur+KuUm83f1EozvmNDZ9cpdkeUnpSqQuw
-	 1drQJP1WX826/tyNAVRms1daZhOuqIEHvqQLsIC+JCu+9ywl2hDy5YQDDnBdKRfQvD
-	 pj8lzOMMbooGkBUAhXtSGhBv0LHmcIPKS1BFyB+YOywk42LakpkX/wKKFjbJBw+WEo
-	 z3xSGvHF6QNA37l/vjQL+zyxidP40CmEf+/uQkGuApvFmVpnxMJwDPazWs1VmAbs9x
-	 B2Fcv3mMDFswA==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue, 26 Mar 2024 18:39:50 +0300 (MSK)
-Received: from [192.168.20.2] (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 26 Mar 2024 18:39:50 +0300
-Message-ID: <13bfb247-9210-48ae-902b-629d850cbae7@salutedevices.com>
-Date: Tue, 26 Mar 2024 18:38:44 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qyKA41Y/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9697C433F1;
+	Tue, 26 Mar 2024 15:39:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711467600;
+	bh=ztmkPAB0U1ULXqxkAJmpV7w+Ysid9k8KKpLkRxinnKg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qyKA41Y/u8Cszywiz7OK3FbbmiKGQ9C4dXlmSowzO0eODtV3XQMYhndL6LqSSCExc
+	 gSr5KriK7AK/eduOXCzUuM9/M/JTph42YYV7yXqy/Ep5e4C8RdOMDwEY3NB+TWhosG
+	 ynhFk3x5fLusreKA62Lb5K8LI+Hrn02SMQKKQERtg/F9T4BStRFCcanXEuZXn7koxg
+	 lsnbct8Q5TAF/wUov8x/pcO/9j1j/+eoZC8z34hhlBPd/+k36MCtc3hIUbdc3qsQoD
+	 O7ZTB0GZ/L4AyBehCj5ri1j5aP5jWLIf/OTq2a320InuObeAqCv/u7gXamunek3p0/
+	 fkdWsgil6eNBQ==
+From: SeongJae Park <sj@kernel.org>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	hannes@cmpxchg.org,
+	roman.gushchin@linux.dev,
+	mgorman@suse.de,
+	dave@stgolabs.net,
+	willy@infradead.org,
+	liam.howlett@oracle.com,
+	penguin-kernel@i-love.sakura.ne.jp,
+	corbet@lwn.net,
+	void@manifault.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	arnd@arndb.de,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	peterx@redhat.com,
+	david@redhat.com,
+	axboe@kernel.dk,
+	mcgrof@kernel.org,
+	masahiroy@kernel.org,
+	nathan@kernel.org,
+	dennis@kernel.org,
+	jhubbard@nvidia.com,
+	tj@kernel.org,
+	muchun.song@linux.dev,
+	rppt@kernel.org,
+	paulmck@kernel.org,
+	pasha.tatashin@soleen.com,
+	yosryahmed@google.com,
+	yuzhao@google.com,
+	dhowells@redhat.com,
+	hughd@google.com,
+	andreyknvl@gmail.com,
+	keescook@chromium.org,
+	ndesaulniers@google.com,
+	vvvvvv@google.com,
+	gregkh@linuxfoundation.org,
+	ebiggers@google.com,
+	ytcoode@gmail.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	bristot@redhat.com,
+	vschneid@redhat.com,
+	cl@linux.com,
+	penberg@kernel.org,
+	iamjoonsoo.kim@lge.com,
+	42.hyeyoo@gmail.com,
+	glider@google.com,
+	elver@google.com,
+	dvyukov@google.com,
+	songmuchun@bytedance.com,
+	jbaron@akamai.com,
+	aliceryhl@google.com,
+	rientjes@google.com,
+	minchan@google.com,
+	kaleshsingh@google.com,
+	kernel-team@android.com,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-modules@vger.kernel.org,
+	kasan-dev@googlegroups.com,
+	cgroups@vger.kernel.org
+Subject: Re: [PATCH v6 30/37] mm: vmalloc: Enable memory allocation profiling
+Date: Tue, 26 Mar 2024 08:39:54 -0700
+Message-Id: <20240326153954.89199-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <CAJuCfpGwLRBWKegYq5XY++fCPWO4mpzrhifw9QGvzJ5Uf9S4jw@mail.gmail.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2] ASoC: meson: g12a-toacodec: rework the definition
- of bits
-Content-Language: en-US
-To: Jerome Brunet <jbrunet@baylibre.com>
-CC: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Neil
- Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	<alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-amlogic@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20240325235311.411920-1-jan.dakinevich@salutedevices.com>
- <1j34sd9fur.fsf@starbuckisacylon.baylibre.com>
-From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-In-Reply-To: <1j34sd9fur.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184425 [Mar 26 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: YVDakinevich@sberdevices.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 12 0.3.12 d1a01b14eb3fc102c904d35fe6c2622ed2d1c16e, {Tracking_smtp_not_equal_from}, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;lore.kernel.org:7.1.1;127.0.0.199:7.1.2;smtp.sberdevices.ru:5.0.1,7.1.1;sberdevices.ru:5.0.1,7.1.1;100.64.160.123:7.1.2;salutedevices.com:7.1.1, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_white_helo}, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/03/26 11:48:00
-X-KSMG-LinksScanning: Clean, bases: 2024/03/26 11:48:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/03/26 13:11:00 #24452135
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On Tue, 26 Mar 2024 00:51:21 -0700 Suren Baghdasaryan <surenb@google.com> wrote:
 
-
-On 3/26/24 18:15, Jerome Brunet wrote:
+> On Mon, Mar 25, 2024 at 11:20 AM SeongJae Park <sj@kernel.org> wrote:
+> >
+> > On Mon, 25 Mar 2024 10:59:01 -0700 Suren Baghdasaryan <surenb@google.com> wrote:
+> >
+> > > On Mon, Mar 25, 2024 at 10:49 AM SeongJae Park <sj@kernel.org> wrote:
+> > > >
+> > > > On Mon, 25 Mar 2024 14:56:01 +0000 Suren Baghdasaryan <surenb@google.com> wrote:
+> > > >
+> > > > > On Sat, Mar 23, 2024 at 6:05 PM SeongJae Park <sj@kernel.org> wrote:
+> > > > > >
+> > > > > > Hi Suren and Kent,
+> > > > > >
+> > > > > > On Thu, 21 Mar 2024 09:36:52 -0700 Suren Baghdasaryan <surenb@google.com> wrote:
+> > > > > >
+> > > > > > > From: Kent Overstreet <kent.overstreet@linux.dev>
+> > > > > > >
+> > > > > > > This wrapps all external vmalloc allocation functions with the
+> > > > > > > alloc_hooks() wrapper, and switches internal allocations to _noprof
+> > > > > > > variants where appropriate, for the new memory allocation profiling
+> > > > > > > feature.
+> > > > > >
+> > > > > > I just noticed latest mm-unstable fails running kunit on my machine as below.
+> > > > > > 'git-bisect' says this is the first commit of the failure.
+> > > > > >
+> > > > > >     $ ./tools/testing/kunit/kunit.py run --build_dir ../kunit.out/
+> > > > > >     [10:59:53] Configuring KUnit Kernel ...
+> > > > > >     [10:59:53] Building KUnit Kernel ...
+> > > > > >     Populating config with:
+> > > > > >     $ make ARCH=um O=../kunit.out/ olddefconfig
+> > > > > >     Building with:
+> > > > > >     $ make ARCH=um O=../kunit.out/ --jobs=36
+> > > > > >     ERROR:root:/usr/bin/ld: arch/um/os-Linux/main.o: in function `__wrap_malloc':
+> > > > > >     main.c:(.text+0x10b): undefined reference to `vmalloc'
+> > > > > >     collect2: error: ld returned 1 exit status
+> > > > > >
+> > > > > > Haven't looked into the code yet, but reporting first.  May I ask your idea?
+> > > > >
+> > > > > Hi SeongJae,
+> > > > > Looks like we missed adding "#include <linux/vmalloc.h>" inside
+> > > > > arch/um/os-Linux/main.c in this patch:
+> > > > > https://lore.kernel.org/all/20240321163705.3067592-2-surenb@google.com/.
+> > > > > I'll be posing fixes for all 0-day issues found over the weekend and
+> > > > > will include a fix for this. In the meantime, to work around it you
+> > > > > can add that include yourself. Please let me know if the issue still
+> > > > > persists after doing that.
+> > > >
+> > > > Thank you, Suren.  The change made the error message disappears.  However, it
+> > > > introduced another one.
+> > >
+> > > Ok, let me investigate and I'll try to get a fix for it today evening.
+> >
+> > Thank you for this kind reply.  Nonetheless, this is not blocking some real
+> > thing from me.  So, no rush.  Plese take your time :)
 > 
-> On Tue 26 Mar 2024 at 02:53, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
-> 
->> There is a lot of defines, but almost all of them are not used. Lets
->> rework them:
-> 
-> Thanks for noticing. Please start by removing what's unused.
-> 
+> I posted a fix here:
+> https://lore.kernel.org/all/20240326073750.726636-1-surenb@google.com/
+> Please let me know if this resolves the issue.
 
-I mean, that some values are named. But then numbers are used instead names.
+I confirmed it is fixing the issue, and replied to the patch with my Tested-by:
+tag.  Thank you for this kind fix, Suren.
 
->>
->>  - keep separate the definition for different platforms to make easier
->>    checking that they match documentation.
->>
->>  - use LSB/MSB sufixes for uniformity.
-> 
-> I'd be in favor of dropping these suffixes completely.
-> 
->>
->>  - don't use hard-coded values for already declared defines.
->>
->> Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
->> ---
->> Links:
->>
->>  [1] https://lore.kernel.org/lkml/20240314232201.2102178-1-jan.dakinevich@salutedevices.com/
->>
->> Changes v1 -> v2:
->>  - Detached from v1's series (patch 7).
->>  - Fixed my wrong understanding of SOC_SINGLE's input parameters.
->>
->>  sound/soc/meson/g12a-toacodec.c | 79 ++++++++++++++++++++-------------
->>  1 file changed, 49 insertions(+), 30 deletions(-)
->>
->> diff --git a/sound/soc/meson/g12a-toacodec.c b/sound/soc/meson/g12a-toacodec.c
->> index 531bb8707a3e..22181f4bab72 100644
->> --- a/sound/soc/meson/g12a-toacodec.c
->> +++ b/sound/soc/meson/g12a-toacodec.c
->> @@ -20,26 +20,37 @@
->>  #define G12A_TOACODEC_DRV_NAME "g12a-toacodec"
->>  
->>  #define TOACODEC_CTRL0			0x0
->> -#define  CTRL0_ENABLE_SHIFT		31
->> -#define  CTRL0_DAT_SEL_SM1_MSB		19
->> -#define  CTRL0_DAT_SEL_SM1_LSB		18
->> -#define  CTRL0_DAT_SEL_MSB		15
->> -#define  CTRL0_DAT_SEL_LSB		14
->> -#define  CTRL0_LANE_SEL_SM1		16
->> -#define  CTRL0_LANE_SEL			12
->> -#define  CTRL0_LRCLK_SEL_SM1_MSB	14
->> -#define  CTRL0_LRCLK_SEL_SM1_LSB	12
->> -#define  CTRL0_LRCLK_SEL_MSB		9
->> -#define  CTRL0_LRCLK_SEL_LSB		8
->> -#define  CTRL0_LRCLK_INV_SM1		BIT(10)
->> -#define  CTRL0_BLK_CAP_INV_SM1		BIT(9)
->> -#define  CTRL0_BLK_CAP_INV		BIT(7)
->> -#define  CTRL0_BCLK_O_INV_SM1		BIT(8)
->> -#define  CTRL0_BCLK_O_INV		BIT(6)
->> -#define  CTRL0_BCLK_SEL_SM1_MSB		6
->> -#define  CTRL0_BCLK_SEL_MSB		5
->> -#define  CTRL0_BCLK_SEL_LSB		4
->> -#define  CTRL0_MCLK_SEL			GENMASK(2, 0)
->> +
->> +/* Common bits */
->> +#define CTRL0_ENABLE_SHIFT		31
->> +#define CTRL0_MCLK_SEL			GENMASK(2, 0)
->> +
->> +/* G12A bits */
->> +#define CTRL0_DAT_SEL_G12A_MSB		15
->> +#define CTRL0_DAT_SEL_G12A_LSB		14
->> +#define CTRL0_LANE_SEL_G12A_MSB		13
->> +#define CTRL0_LANE_SEL_G12A_LSB		12
->> +#define CTRL0_LANE_SEL_G12A_MAX		3
->> +#define CTRL0_LRCLK_SEL_G12A_MSB	9
->> +#define CTRL0_LRCLK_SEL_G12A_LSB	8
->> +#define CTRL0_BLK_CAP_INV_G12A		BIT(7)
->> +#define CTRL0_BCLK_O_INV_G12A		BIT(6)
->> +#define CTRL0_BCLK_SEL_G12A_MSB		5
->> +#define CTRL0_BCLK_SEL_G12A_LSB		4
->> +
->> +/* SM1 bits */
->> +#define CTRL0_DAT_SEL_SM1_MSB		19
->> +#define CTRL0_DAT_SEL_SM1_LSB		18
->> +#define CTRL0_LANE_SEL_SM1_MSB		17
->> +#define CTRL0_LANE_SEL_SM1_LSB		16
->> +#define CTRL0_LANE_SEL_SM1_MAX		3
->> +#define CTRL0_LRCLK_SEL_SM1_MSB		14
->> +#define CTRL0_LRCLK_SEL_SM1_LSB		12
->> +#define CTRL0_LRCLK_INV_SM1		BIT(10)
->> +#define CTRL0_BLK_CAP_INV_SM1		BIT(9)
->> +#define CTRL0_BCLK_O_INV_SM1		BIT(8)
->> +#define CTRL0_BCLK_SEL_SM1_MSB		6
->> +#define CTRL0_BCLK_SEL_SM1_LSB		4
->>  
->>  #define TOACODEC_OUT_CHMAX		2
->>  
->> @@ -108,7 +119,7 @@ static int g12a_toacodec_mux_put_enum(struct snd_kcontrol *kcontrol,
->>  }
->>  
->>  static SOC_ENUM_SINGLE_DECL(g12a_toacodec_mux_enum, TOACODEC_CTRL0,
->> -			    CTRL0_DAT_SEL_LSB,
->> +			    CTRL0_DAT_SEL_G12A_LSB,
->>  			    g12a_toacodec_mux_texts);
->>  
->>  static SOC_ENUM_SINGLE_DECL(sm1_toacodec_mux_enum, TOACODEC_CTRL0,
->> @@ -210,7 +221,7 @@ static int g12a_toacodec_component_probe(struct snd_soc_component *c)
->>  {
->>  	/* Initialize the static clock parameters */
->>  	return snd_soc_component_write(c, TOACODEC_CTRL0,
->> -				       CTRL0_BLK_CAP_INV);
->> +				       CTRL0_BLK_CAP_INV_G12A);
->>  }
->>  
->>  static int sm1_toacodec_component_probe(struct snd_soc_component *c)
->> @@ -229,11 +240,13 @@ static const struct snd_soc_dapm_route g12a_toacodec_routes[] = {
->>  };
->>  
->>  static const struct snd_kcontrol_new g12a_toacodec_controls[] = {
->> -	SOC_SINGLE("Lane Select", TOACODEC_CTRL0, CTRL0_LANE_SEL, 3, 0),
->> +	SOC_SINGLE("Lane Select", TOACODEC_CTRL0, CTRL0_LANE_SEL_G12A_LSB,
->> +		   CTRL0_LANE_SEL_G12A_MAX, 0),
->>  };
->>  
->>  static const struct snd_kcontrol_new sm1_toacodec_controls[] = {
->> -	SOC_SINGLE("Lane Select", TOACODEC_CTRL0, CTRL0_LANE_SEL_SM1, 3, 0),
->> +	SOC_SINGLE("Lane Select", TOACODEC_CTRL0, CTRL0_LANE_SEL_SM1_LSB,
->> +		   CTRL0_LANE_SEL_SM1_MAX, 0),
->>  };
->>  
->>  static const struct snd_soc_component_driver g12a_toacodec_component_drv = {
->> @@ -266,16 +279,22 @@ static const struct regmap_config g12a_toacodec_regmap_cfg = {
->>  
->>  static const struct g12a_toacodec_match_data g12a_toacodec_match_data = {
->>  	.component_drv	= &g12a_toacodec_component_drv,
->> -	.field_dat_sel	= REG_FIELD(TOACODEC_CTRL0, 14, 15),
->> -	.field_lrclk_sel = REG_FIELD(TOACODEC_CTRL0, 8, 9),
->> -	.field_bclk_sel	= REG_FIELD(TOACODEC_CTRL0, 4, 5),
->> +	.field_dat_sel	= REG_FIELD(TOACODEC_CTRL0, CTRL0_DAT_SEL_G12A_LSB,
->> +				    CTRL0_DAT_SEL_G12A_MSB),
->> +	.field_lrclk_sel = REG_FIELD(TOACODEC_CTRL0, CTRL0_LRCLK_SEL_G12A_LSB,
->> +				     CTRL0_LRCLK_SEL_G12A_MSB),
->> +	.field_bclk_sel	= REG_FIELD(TOACODEC_CTRL0, CTRL0_BCLK_SEL_G12A_LSB,
->> +				    CTRL0_BCLK_SEL_G12A_MSB),
->>  };
->>  
->>  static const struct g12a_toacodec_match_data sm1_toacodec_match_data = {
->>  	.component_drv	= &sm1_toacodec_component_drv,
->> -	.field_dat_sel	= REG_FIELD(TOACODEC_CTRL0, 18, 19),
->> -	.field_lrclk_sel = REG_FIELD(TOACODEC_CTRL0, 12, 14),
->> -	.field_bclk_sel	= REG_FIELD(TOACODEC_CTRL0, 4, 6),
->> +	.field_dat_sel	= REG_FIELD(TOACODEC_CTRL0, CTRL0_DAT_SEL_SM1_LSB,
->> +				    CTRL0_DAT_SEL_SM1_MSB),
->> +	.field_lrclk_sel = REG_FIELD(TOACODEC_CTRL0, CTRL0_LRCLK_SEL_SM1_LSB,
->> +				     CTRL0_LRCLK_SEL_SM1_MSB),
->> +	.field_bclk_sel	= REG_FIELD(TOACODEC_CTRL0, CTRL0_BCLK_SEL_SM1_LSB,
->> +				    CTRL0_BCLK_SEL_SM1_MSB),
-> 
-> Those defines are already platform specific by the structure holding
-> them and the defines you have added are not helping readability.
-> 
 
-These values are duplicated. Would it be reasonable to remove them from
-defines?
+Thanks,
+SJ
 
-> I don't see the point to see.
-> I'd prefer to keep the field defined as they are.
-> 
-
-Main goal of this patch is to rearrange definitions by platforms. From
-my point it is quite difficult to read things like this:
-
-#define  CTRL0_LANE_SEL_SM1		16
-#define  CTRL0_LANE_SEL			12
-#define  CTRL0_LRCLK_SEL_SM1_MSB	14
-#define  CTRL0_LRCLK_SEL_SM1_LSB	12
-#define  CTRL0_LRCLK_SEL_MSB		9
-#define  CTRL0_LRCLK_SEL_LSB		8
-
-I am going to add one more platforms, and this will get worse.
-
->>  };
->>  
->>  static const struct of_device_id g12a_toacodec_of_match[] = {
-> 
-> 
-
--- 
-Best regards
-Jan Dakinevich
+[...]
