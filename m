@@ -1,325 +1,411 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2118.outbound.protection.outlook.com [40.107.93.118])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370C813C687
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 14:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.118
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711464846; cv=fail; b=jN2dvmWHutDjL6MGE/SfRfFtB6tXQxBFfCSfBinQOwR4ZyAnzLL5amkakm9tMhkTRfo80UM/J+6wxZJctnxU64PQu3Pm05lkmKm2JpZ1CqpUzvFBHOCkA9QSszB7AYs/RP36ttgCMDkM7PXUoFYyRGdYl+9VFwb+3qbBSWbEk14=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711464846; c=relaxed/simple;
-	bh=P/V6pmqufVWfS9uzoVw4aRDkwW7Kwl078IHwSAyxmSs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XEfzrZlSvaAUR12oe2r1PQnfjWnQ+rhS6gpVHgzyys9V/nvsU24x17EGURT1VZUWnln6eqEoBUmS3Qrz5QzoMs4uu31tY58Os3tn86rsBDevdJnCvIBqRkEarOfYn0muMtb4kdtw2E6Jp+pvVkke78A7LxJYoAhBL3qDnhRwT74=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=jCYGY4cl; arc=fail smtp.client-ip=40.107.93.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CEF313C680;
+	Tue, 26 Mar 2024 14:55:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711464907; cv=none; b=X6t34KzFPiIXsLfq3+g8NIdYDN2+1eLinexjuqjiWVf7uUenMZWs2epfeOZfVNTc0kdIXMjfPyHM/J2PEJnFiObuaxMDKy6JFMEszEwF78+dALIYke5BT+ih6+KdRSPYSUPd2MGIzg7UWl2YmcfmcN2RDrP7Yu0+Zb1gL3drFIg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711464907; c=relaxed/simple;
+	bh=OkKUUc2EsY1HkFkCZesI8s/5V6S6mbVPGD3caXQZEEM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Flh/Yx5l9cePtLa8I+LLtuZdYGjP0OVbclXAjzf0tRobw8sOA9Qm8BKVCNSMmINy7HIB33HOvM18QIZi0t7I6TYOljuEvVAsPxyXLQoBgy1UQvKMPzt+i7uE/10rV9UTbVHCJLWA2GJCG8L4YoFCQoNHMcZ3ksqgaSWRmmrJHIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t4c4OA9v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="jCYGY4cl"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MQuG8B+pvaudQbPr50Led838XuxR0qWdyiHq1QJ0HYYuMDF0D8+Lel3ug55aB1R99eTmFtrgW/xbsUSoxmAtnAsy+TmlNnTnNSnfYuqKno1d3FZ1FNoISLAWesOSy3tTppGpdehOy9u/FG8cE8Y3p5wR0s2i0MZfwp9Rl2Fkcxijff/bs+4FZICBOHI/IDXIehAtCnGiuG+wNvKnwhRF0Z1nx6PLvkJXRB7nJtsNFjAH/sDCE9EYP5KOJTWtCO2brNUPMm7nM7GKl3H+ly+dLcPnKxbn3QsMcv38fZ7/5lo3txqvkE/MsiSiUUTfKesA9cIeT3QKs3Ux9MZXkq10rA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CnXJx5PDnAQ/gL5KGZE1VZU13+bSrW0ymClAdwVklkY=;
- b=fG7s/iow1aeE7hFIhaHZFm0UipO9kvbqVK/3Te+VXsLzpWYPv8tK7a0YNa958vqNpT2yBOnYixiGXx8dYVc5/BxYzjBy1AWbkYR5n4w0nMjZsePFinzneQRgNzlaFUV110FahBOCEoigJ38SJCTAoopZKf/onsl2nWRyMDHm7or96DEdHMOz/xf8qqSY+jq7ri1J6hkurz7zjy3J+YqnglTRGajDWQvn6pL2i0D0mGKaijlnWXQ3rk46RoPwfkg774mhx1e3epSabFnNRheIX0xedr1HcboiHGeC5Um2CTUE/9ilsGx9nEFYz65jabPdv/BSnkPd9eEKqrju92H6eA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CnXJx5PDnAQ/gL5KGZE1VZU13+bSrW0ymClAdwVklkY=;
- b=jCYGY4clIzHO1FyzomHU6uSI+94s8AXDvE2wAzE88AVyxGHhmeR/pmL72elluz3w7zs3jRgCOpQSLeTn/XxsKjgmvOk1DQat6h2vEy48/CbJ/iw07GDWvwJUZ5qXUBeTadQAe/JNNLXXd6KwMj0ibg1CC3kQDWxH2rxYt/LJMfa5drRB4rZFBC5hrNp9GbwWdKI3EOX70/Es/ldUlgGQ/VHsa9pVG/K9YhZqiBjB8X09CjbrMxxiRMkyikk3eXr9rxNfeYAVTscORLgAtIJQQleLAJjtCWdp7W7gGghr5YaI5QA5JGHnguAguvqB4ahaMRFPYI2VkutDaRu9JiyBLQ==
-Received: from DS7PR12MB5744.namprd12.prod.outlook.com (2603:10b6:8:73::18) by
- PH7PR12MB8124.namprd12.prod.outlook.com (2603:10b6:510:2ba::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Tue, 26 Mar
- 2024 14:53:59 +0000
-Received: from DS7PR12MB5744.namprd12.prod.outlook.com
- ([fe80::dc5c:2cf1:d5f5:9753]) by DS7PR12MB5744.namprd12.prod.outlook.com
- ([fe80::dc5c:2cf1:d5f5:9753%6]) with mapi id 15.20.7409.031; Tue, 26 Mar 2024
- 14:53:59 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>,
- Yang Shi <shy828301@gmail.com>, Huang Ying <ying.huang@intel.com>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- Ryan Roberts <ryan.roberts@arm.com>, "Yin, Fengwei" <fengwei.yin@intel.com>,
- SeongJae Park <sj@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] mm/migrate: split source folio if it is on deferred
- split list
-Date: Tue, 26 Mar 2024 10:53:56 -0400
-X-Mailer: MailMate (1.14r6028)
-Message-ID: <6A1CCFDF-CC38-4B29-A514-3D500EA04B16@nvidia.com>
-In-Reply-To: <df9a644c-a007-46ac-98e3-61d4014fcfff@linux.alibaba.com>
-References: <20240322193304.522496-1-zi.yan@sent.com>
- <1ecde325-097b-49e9-9f1f-d93edbc8e1f1@linux.alibaba.com>
- <8DAC0D9E-9B0D-4035-9211-2190C6F8284A@nvidia.com>
- <df9a644c-a007-46ac-98e3-61d4014fcfff@linux.alibaba.com>
-Content-Type: multipart/signed;
- boundary="=_MailMate_A52ACB3A-425E-491A-AD70-D4B583EC8054_=";
- micalg=pgp-sha512; protocol="application/pgp-signature"
-X-ClientProxiedBy: BL1PR13CA0230.namprd13.prod.outlook.com
- (2603:10b6:208:2bf::25) To DS7PR12MB5744.namprd12.prod.outlook.com
- (2603:10b6:8:73::18)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t4c4OA9v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1554C433F1;
+	Tue, 26 Mar 2024 14:55:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711464906;
+	bh=OkKUUc2EsY1HkFkCZesI8s/5V6S6mbVPGD3caXQZEEM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=t4c4OA9vcR5PmSMiLBFdXrYdA07QJFREj+2/8VH5bEIZuPBIYQ/RrTMz7phZMW+an
+	 7HgH0OmQiw/L5py4Ye4IE14uqG7Thd9Efn5b/4dYol4ZZ0ll8JToJLghrRXGdTzeux
+	 8OUPLvpTVgQbdJzdLHshP+lygO5KQ6aXCcfFlp7Kj0H9H0mZbzsEC32ORYF15mqEWk
+	 uFrPB9f/TQVC6Mj2op5oh6IYtwy28Cz1WWtU+ACH/GnAShoI6NwD1c9hUi0qsE/kF1
+	 /bhuglj3TsXSVO8iWKXL3n+cI0uy8YRzljUbT2aJqXmIEqJotCY/iBEe8+gS/EQkcC
+	 3wREc95DfGWiw==
+From: Arnd Bergmann <arnd@kernel.org>
+To: linux-kbuild@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>
+Cc: Nicolas Schier <nicolas@fjasle.eu>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Kees Cook <keescook@chromium.org>,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-modules@vger.kernel.org
+Subject: [PATCH 11/12] [v4] kallsyms: rework symbol lookup return codes
+Date: Tue, 26 Mar 2024 15:53:38 +0100
+Message-Id: <20240326145348.3318887-2-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240326144741.3094687-1-arnd@kernel.org>
+References: <20240326144741.3094687-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB5744:EE_|PH7PR12MB8124:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	QPwPL26uDZtFEkNeS/l3hau73DQiuvHcM4fH7G9N4paYh7B7ZP41I/I7X0oN+yiD2hVo0UyJqI77zFvH5z4qMHLhpXYbnh648q2MFA+08swoZDy2OswpY5ngbT7uIrajuVArqOZajT0s4OZ8Jv3t8nRMSEB+PoQ8jfN0fncjSrU3or0z5Xa7VSQbiEZbxWnwmhca83r+nFDFGlBq0gdEI9k1IB1VGCT0isug5Yn/rJg9ZKT8ajBLCpSx+Y+Lpeuoc0wr+WCRQamnYSBzSrxNWQrtHxf9uquwvEjTlwAKr5RMK+MV3sgcJMSJBhcgzrCk4iZvH8FeICyDa+ErAATjC5MByHnKzAwxxuQq2yUinJpCeYV92aTCe4mDL5ts9JrMwX9Ez4uVpCYyFKzEuI+d1rVMsCpZZ8kLdIZB/u9Wle53/UFYG3YSN8fxAvc4PeqpUHYlyMZ40LTF87bVmU8qCUQ/FNDS0WVyic5m52xGDaBWCei4Sdumxm/5MBrUARq2dANZHx4q5B0dGKmX1PSJz6O4Dwu6lerVzT8G+bT8e7Ng+DIwDApeDdMR+jBwW6oy9evJXACJniRD1Waa19iREVxg9DV7MSFEI6QUuPI9SF3GQTnm6Ac8sQGrqmzrxIBRx13rCKXM2a8KlFsdSXk1gOhkRecp9G3B+GejPsF6LbM=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB5744.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(1800799015)(366007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?p2JioGjuZesKy/q6g/P09kj26x/Xt0EOUN4OqdGl92MsUhN0BJeGtdUbasc0?=
- =?us-ascii?Q?Jr+Hg43MeodGWh8A+P+d0JEsy6hH8O2BAbf5E03YWNEeXTRz21gG1ZQSWGPT?=
- =?us-ascii?Q?TszGiN+FE+0FiAA2vkhVgbczjs1G7nmDGGTW/m/0Ke4jtAvAfz+H/p15OEDL?=
- =?us-ascii?Q?Mpt7DN1dFUW5eHrazDT886SObP9tZMLv8qe0VDG+H8XaaWYMOFXsJWvkLxxd?=
- =?us-ascii?Q?WdNuZezeDVPtq2m3plzAMCjm/EmcnwZjvU0EEdKOJ+fLrlVdXDTflHZJKxRd?=
- =?us-ascii?Q?YJWxtG2hxLLnt4WH2pmx5JGKQV8zbsqSkdZXTQIDQmvs6H/FhPk+r2XWndWP?=
- =?us-ascii?Q?c2wYxoJnhiWtseyVGy3dPAUCINSQx27+S/QkX8ekL0QhaKUrpYbniQT5HUzt?=
- =?us-ascii?Q?6uULTuPp8sEa9hDzj5mPx3svNUdPmyYcHkajoKSyG1LkpH9zPv5c7KLxRLPM?=
- =?us-ascii?Q?uVLQscOaIRDbIKUc+PHPtIpizS1CRqQDYboIM2GVSGbv9+jtgJ8GzER1gvjN?=
- =?us-ascii?Q?HvPrrHlMCTNkEe0ca7uPL56Gul+GoFAXPevQHCtPpS41ImCrNt+8sXZwGTWf?=
- =?us-ascii?Q?UXniruCX0xDMEiVemI3jvSv7H3PhSEhPmTljWCF6OA+oUrVdfPO0v8kc6Uam?=
- =?us-ascii?Q?5tXPMU1JLouo99HBgHYKpPZwlmFPCLzx64jHeEYTw/DHWSnl4J1PgjktOVft?=
- =?us-ascii?Q?6SavJg3HXsTdgKv3bQ6TUKK9rMOIm3AReEjPkL2yZZfMbym7NPhC8Ig8NIaV?=
- =?us-ascii?Q?gba62nT7Uxd2RkaAMzxpD50IbPBPQDWOEJjzHRXsB+UWvtLhTrPXYihZO11+?=
- =?us-ascii?Q?QIs2DiThCatPt0YRR5laLl94spKKIdS31606yyeo6K2m9VjCGTEdF1U3Noa0?=
- =?us-ascii?Q?eCJOujcdGfjTYN0lMZffjG+F3To9aswFRsLPpwDFtp4hW4NJ+uqphCvMEjWT?=
- =?us-ascii?Q?7D7h36f4oMycH9sFuJLfpcyPQMKDfGTtPnK0RGoxCIofLyKC5BkeJQm9h/Zo?=
- =?us-ascii?Q?A9UR20j1AHQkFPkfpTt3mjZ+JXh4BSzCaeN/2Sio2tURVh8jOiaf2U4TnlhU?=
- =?us-ascii?Q?SKnQePxzWPCeA93OvkOTomTtnyQKtdeXxT2c0RlAlwBB3XH4JEtIU4KxtR5T?=
- =?us-ascii?Q?ADrnueAIgwbk6z0AGbPWG5xAHuOZJ7Vlo/NBgDvWCLhedqpubb+Yp0+86RM3?=
- =?us-ascii?Q?PgNA70LEEde9hdaxPhu1nL3Vgs7ZnxbHes8NouCaKU74qKIfZsZ1MQt6XfLY?=
- =?us-ascii?Q?Aqdsua/1hy/ctmtvARIHn5vmS7Ji74JRDKjwwhDputozz40cETdmzx4eVbW/?=
- =?us-ascii?Q?hU6mo9DNcRMfddA8prFhABGe4kiFDhsSnq21SgsBG1g7PdM+6wyjQYtoWi3d?=
- =?us-ascii?Q?b20RMKZ3R9DOlxHY3DPqJf2pZlE1u1grfYoDKLHnIysA42+w6ghcZ7lLstop?=
- =?us-ascii?Q?80XeRg5MLf+g2IWvnQZLQe6euniqSbYRLEZR6OYEueNUx0XXdomU662J2Gpp?=
- =?us-ascii?Q?cQQKxRx+nCUccQRQPK2pUNMiwVaJlTqtcX1gD7HvqDEwr68pXxehbc7NN2h6?=
- =?us-ascii?Q?+gDjvspRl8yvFf44UJ0=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 157f8477-24f1-4788-21e2-08dc4da49168
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB5744.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 14:53:59.0636
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Eus8FgN6rz/dlwUAxxmgGk2tYun/m6lLziCU//Wnkf4zGcL8wVn8HJthBQkKX/8V
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8124
+Content-Transfer-Encoding: 8bit
 
---=_MailMate_A52ACB3A-425E-491A-AD70-D4B583EC8054_=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+From: Arnd Bergmann <arnd@arndb.de>
 
-On 26 Mar 2024, at 10:42, Baolin Wang wrote:
+Building with W=1 in some configurations produces a false positive
+warning for kallsyms:
 
-> On 2024/3/26 21:26, Zi Yan wrote:
->> On 26 Mar 2024, at 2:19, Baolin Wang wrote:
->>
->>> On 2024/3/23 03:33, Zi Yan wrote:
->>>> From: Zi Yan <ziy@nvidia.com>
->>>>
->>>> If the source folio is on deferred split list, it is likely some sub=
-pages
->>>> are not used. Split it before migration to avoid migrating unused su=
-bpages.
->>>>
->>>> Commit 616b8371539a6 ("mm: thp: enable thp migration in generic path=
-")
->>>> did not check if a THP is on deferred split list before migration, t=
-hus,
->>>> the destination THP is never put on deferred split list even if the =
-source
->>>> THP might be. The opportunity of reclaiming free pages in a partiall=
-y
->>>> mapped THP during deferred list scanning is lost, but no other harmf=
-ul
->>>> consequence is present[1].
->>>>
->>>>   From v4:
->>>> 1. Simplify _deferred_list check without locking and do not count as=
+kernel/kallsyms.c: In function '__sprint_symbol.isra':
+kernel/kallsyms.c:503:17: error: 'strcpy' source argument is the same as destination [-Werror=restrict]
+  503 |                 strcpy(buffer, name);
+      |                 ^~~~~~~~~~~~~~~~~~~~
 
->>>>      migration failures. (per Matthew Wilcox)
->>>>
->>>>   From v3:
->>>> 1. Guarded deferred list code behind CONFIG_TRANSPARENT_HUGEPAGE to =
-avoid
->>>>      compilation error (per SeongJae Park).
->>>>
->>>>   From v2:
->>>> 1. Split the source folio instead of migrating it (per Matthew Wilco=
-x)[2].
->>>>
->>>>   From v1:
->>>> 1. Used dst to get correct deferred split list after migration
->>>>      (per Ryan Roberts).
->>>>
->>>> [1]: https://lore.kernel.org/linux-mm/03CE3A00-917C-48CC-8E1C-6A9871=
-3C817C@nvidia.com/
->>>> [2]: https://lore.kernel.org/linux-mm/Ze_P6xagdTbcu1Kz@casper.infrad=
-ead.org/
->>>>
->>>> Fixes: 616b8371539a ("mm: thp: enable thp migration in generic path"=
-)
->>>> Signed-off-by: Zi Yan <ziy@nvidia.com>
->>>> ---
->>>>    mm/migrate.c | 23 +++++++++++++++++++++++
->>>>    1 file changed, 23 insertions(+)
->>>>
->>>> diff --git a/mm/migrate.c b/mm/migrate.c
->>>> index ab9856f5931b..6bd9319624a3 100644
->>>> --- a/mm/migrate.c
->>>> +++ b/mm/migrate.c
->>>> @@ -1652,6 +1652,29 @@ static int migrate_pages_batch(struct list_he=
-ad *from,
->>>>     			cond_resched();
->>>>   +			/*
->>>> +			 * The rare folio on the deferred split list should
->>>> +			 * be split now. It should not count as a failure.
->>>> +			 * Only check it without removing it from the list.
->>>> +			 * Since the folio can be on deferred_split_scan()
->>>> +			 * local list and removing it can cause the local list
->>>> +			 * corruption. Folio split process below can handle it
->>>> +			 * with the help of folio_ref_freeze().
->>>> +			 *
->>>> +			 * nr_pages > 2 is needed to avoid checking order-1
->>>> +			 * page cache folios. They exist, in contrast to
->>>> +			 * non-existent order-1 anonymous folios, and do not
->>>> +			 * use _deferred_list.
->>>> +			 */
->>>> +			if (nr_pages > 2 &&
->>>> +			   !list_empty(&folio->_deferred_list)) {
->>>> +				if (try_split_folio(folio, from) =3D=3D 0) {
->>>
->>> IMO, we should move the split folios into the 'split_folios' list ins=
-tead of the 'from' list, otherwise there might be unhandled folios remain=
-ing in the from list.
->>
->> Can you elaborate on the actual situation you are thinking about? Than=
-ks.
->
-> Sure.
->
-> Suppose there is only one large folio in the from list that needs to be=
- migrated, and this large folio is in the _deferred_list, which means it =
-needs to be split. Your patch will re-add the split base pages back into =
-the 'from' list. However, please see the list_for_each_entry_safe macro:
->
-> #define list_for_each_entry_safe(pos, n, head, member)			\
-> 	for (pos =3D list_first_entry(head, typeof(*pos), member),	\
-> 		n =3D list_next_entry(pos, member);			\
-> 	     !list_entry_is_head(pos, head, member); 			\
-> 	     pos =3D n, n =3D list_next_entry(n, member))
->
-> It will terminate the iteration early because the next entry 'n' taken =
-out in advance is already the head, leading to the remaining split base p=
-ages still in the from list. This can cause the following crash when I di=
-d some migration testing:
->
-> [  412.576943] ------------[ cut here ]------------
-> [  412.576947] kernel BUG at mm/migrate.c:2634!
-> [  412.577132] invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
-> [  412.577201] CPU: 59 PID: 9581 Comm: numa01 Kdump: loaded Tainted: G =
-         E      6.9.0-rc1+ #69
-> ........
-> [  412.578651] Call Trace:
-> [  412.578692]  <TASK>
-> [  412.578730]  ? die+0x33/0x90
-> [  412.578770]  ? do_trap+0xdf/0x110
-> [  412.578815]  ? migrate_misplaced_folio+0x1f2/0x2b0
-> [  412.578875]  ? do_error_trap+0x65/0x80
-> [  412.578922]  ? migrate_misplaced_folio+0x1f2/0x2b0
-> [  412.578977]  ? exc_invalid_op+0x4e/0x70
-> [  412.579048]  ? migrate_misplaced_folio+0x1f2/0x2b0
-> [  412.579131]  ? asm_exc_invalid_op+0x16/0x20
-> [  412.579182]  ? migrate_misplaced_folio+0x1f2/0x2b0
-> [  412.579255]  do_numa_page+0x205/0x5b0
-> [  412.579305]  __handle_mm_fault+0x2b0/0x6c0
-> [  412.579354]  handle_mm_fault+0x105/0x270
-> [  412.579404]  do_user_addr_fault+0x214/0x6b0
-> [  412.579453]  exc_page_fault+0x64/0x140
-> [  412.579509]  asm_exc_page_fault+0x22/0x30
->
-> 2583 int migrate_misplaced_folio(struct folio *folio, struct vm_area_st=
-ruct *vma,
-> 2584                             int node)
-> 2585 {
-> 		......
->
-> 2628         if (nr_succeeded) {
-> 2629                 count_vm_numa_events(NUMA_PAGE_MIGRATE, nr_succeed=
-ed);
-> 2630                 if (!node_is_toptier(folio_nid(folio)) && node_is_=
-toptier(node))
-> 2631                         mod_node_page_state(pgdat, PGPROMOTE_SUCCE=
-SS,
-> 2632                                             nr_succeeded);
-> 2633         }
-> 2634         BUG_ON(!list_empty(&migratepages));
-> 2635         return isolated;
-> 2636
-> 2637 out:
+This originally showed up while building with -O3, but later started
+happening in other configurations as well, depending on inlining
+decisions. The underlying issue is that the local 'name' variable is
+always initialized to the be the same as 'buffer' in the called functions
+that fill the buffer, which gcc notices while inlining, though it could
+see that the address check always skips the copy.
 
-Got it. Thanks.
+The calling conventions here are rather unusual, as all of the internal
+lookup functions (bpf_address_lookup, ftrace_mod_address_lookup,
+ftrace_func_address_lookup, module_address_lookup and
+kallsyms_lookup_buildid) already use the provided buffer and either return
+the address of that buffer to indicate success, or NULL for failure,
+but the callers are written to also expect an arbitrary other buffer
+to be returned.
 
->
-> After changing as below, the system crash issue is gone.
->
-> +++ b/mm/migrate.c
-> @@ -1668,7 +1668,7 @@ static int migrate_pages_batch(struct list_head *=
-from,
->                          */
->                         if (nr_pages > 2 &&
->                            !list_empty(&folio->_deferred_list)) {
-> -                               if (try_split_folio(folio, from) =3D=3D=
- 0) {
-> +                               if (try_split_folio(folio, split_folios=
-) =3D=3D 0) {
->                                         stats->nr_thp_split +=3D is_thp=
-;
->                                         stats->nr_split++;
->                                         continue;
+Rework the calling conventions to return the length of the filled buffer
+instead of its address, which is simpler and easier to follow as well
+as avoiding the warning. Leave only the kallsyms_lookup() calling conventions
+unchanged, since that is called from 16 different functions and
+adapting this would be a much bigger change.
 
-Let me resend with this fix.
+Link: https://lore.kernel.org/all/20200107214042.855757-1-arnd@arndb.de/
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+v4: fix string length
+v3: use strscpy() instead of strlcpy()
+v2: complete rewrite after the first patch was rejected (in 2020). This
+    is now one of only two warnings that are in the way of enabling
+    -Wextra/-Wrestrict by default.
+---
+ include/linux/filter.h   | 14 +++++++-------
+ include/linux/ftrace.h   |  6 +++---
+ include/linux/module.h   | 14 +++++++-------
+ kernel/bpf/core.c        |  7 +++----
+ kernel/kallsyms.c        | 23 ++++++++++++-----------
+ kernel/module/kallsyms.c | 26 +++++++++++++-------------
+ kernel/trace/ftrace.c    | 13 +++++--------
+ 7 files changed, 50 insertions(+), 53 deletions(-)
 
---
-Best Regards,
-Yan, Zi
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index c99bc3df2d28..9d4a7c6f023e 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -1168,18 +1168,18 @@ static inline bool bpf_jit_kallsyms_enabled(void)
+ 	return false;
+ }
+ 
+-const char *__bpf_address_lookup(unsigned long addr, unsigned long *size,
++int __bpf_address_lookup(unsigned long addr, unsigned long *size,
+ 				 unsigned long *off, char *sym);
+ bool is_bpf_text_address(unsigned long addr);
+ int bpf_get_kallsym(unsigned int symnum, unsigned long *value, char *type,
+ 		    char *sym);
+ struct bpf_prog *bpf_prog_ksym_find(unsigned long addr);
+ 
+-static inline const char *
++static inline int
+ bpf_address_lookup(unsigned long addr, unsigned long *size,
+ 		   unsigned long *off, char **modname, char *sym)
+ {
+-	const char *ret = __bpf_address_lookup(addr, size, off, sym);
++	int ret = __bpf_address_lookup(addr, size, off, sym);
+ 
+ 	if (ret && modname)
+ 		*modname = NULL;
+@@ -1223,11 +1223,11 @@ static inline bool bpf_jit_kallsyms_enabled(void)
+ 	return false;
+ }
+ 
+-static inline const char *
++static inline int
+ __bpf_address_lookup(unsigned long addr, unsigned long *size,
+ 		     unsigned long *off, char *sym)
+ {
+-	return NULL;
++	return 0;
+ }
+ 
+ static inline bool is_bpf_text_address(unsigned long addr)
+@@ -1246,11 +1246,11 @@ static inline struct bpf_prog *bpf_prog_ksym_find(unsigned long addr)
+ 	return NULL;
+ }
+ 
+-static inline const char *
++static inline int
+ bpf_address_lookup(unsigned long addr, unsigned long *size,
+ 		   unsigned long *off, char **modname, char *sym)
+ {
+-	return NULL;
++	return 0;
+ }
+ 
+ static inline void bpf_prog_kallsyms_add(struct bpf_prog *fp)
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 54d53f345d14..56834a3fa9be 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -87,15 +87,15 @@ struct ftrace_direct_func;
+ 
+ #if defined(CONFIG_FUNCTION_TRACER) && defined(CONFIG_MODULES) && \
+ 	defined(CONFIG_DYNAMIC_FTRACE)
+-const char *
++int
+ ftrace_mod_address_lookup(unsigned long addr, unsigned long *size,
+ 		   unsigned long *off, char **modname, char *sym);
+ #else
+-static inline const char *
++static inline int
+ ftrace_mod_address_lookup(unsigned long addr, unsigned long *size,
+ 		   unsigned long *off, char **modname, char *sym)
+ {
+-	return NULL;
++	return 0;
+ }
+ #endif
+ 
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 1153b0d99a80..118c36366b35 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -922,11 +922,11 @@ int module_kallsyms_on_each_symbol(const char *modname,
+  * least KSYM_NAME_LEN long: a pointer to namebuf is returned if
+  * found, otherwise NULL.
+  */
+-const char *module_address_lookup(unsigned long addr,
+-				  unsigned long *symbolsize,
+-				  unsigned long *offset,
+-				  char **modname, const unsigned char **modbuildid,
+-				  char *namebuf);
++int module_address_lookup(unsigned long addr,
++			  unsigned long *symbolsize,
++			  unsigned long *offset,
++			  char **modname, const unsigned char **modbuildid,
++			  char *namebuf);
+ int lookup_module_symbol_name(unsigned long addr, char *symname);
+ int lookup_module_symbol_attrs(unsigned long addr,
+ 			       unsigned long *size,
+@@ -955,14 +955,14 @@ static inline int module_kallsyms_on_each_symbol(const char *modname,
+ }
+ 
+ /* For kallsyms to ask for address resolution.  NULL means not found. */
+-static inline const char *module_address_lookup(unsigned long addr,
++static inline int module_address_lookup(unsigned long addr,
+ 						unsigned long *symbolsize,
+ 						unsigned long *offset,
+ 						char **modname,
+ 						const unsigned char **modbuildid,
+ 						char *namebuf)
+ {
+-	return NULL;
++	return 0;
+ }
+ 
+ static inline int lookup_module_symbol_name(unsigned long addr, char *symname)
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index 696bc55de8e8..ffc232333643 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -735,11 +735,11 @@ static struct bpf_ksym *bpf_ksym_find(unsigned long addr)
+ 	return n ? container_of(n, struct bpf_ksym, tnode) : NULL;
+ }
+ 
+-const char *__bpf_address_lookup(unsigned long addr, unsigned long *size,
++int __bpf_address_lookup(unsigned long addr, unsigned long *size,
+ 				 unsigned long *off, char *sym)
+ {
+ 	struct bpf_ksym *ksym;
+-	char *ret = NULL;
++	int ret = 0;
+ 
+ 	rcu_read_lock();
+ 	ksym = bpf_ksym_find(addr);
+@@ -747,9 +747,8 @@ const char *__bpf_address_lookup(unsigned long addr, unsigned long *size,
+ 		unsigned long symbol_start = ksym->start;
+ 		unsigned long symbol_end = ksym->end;
+ 
+-		strncpy(sym, ksym->name, KSYM_NAME_LEN);
++		ret = strscpy(sym, ksym->name, KSYM_NAME_LEN);
+ 
+-		ret = sym;
+ 		if (size)
+ 			*size = symbol_end - symbol_start;
+ 		if (off)
+diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
+index 18edd57b5fe8..eeb0e249e0e2 100644
+--- a/kernel/kallsyms.c
++++ b/kernel/kallsyms.c
+@@ -394,12 +394,12 @@ int kallsyms_lookup_size_offset(unsigned long addr, unsigned long *symbolsize,
+ 	       !!__bpf_address_lookup(addr, symbolsize, offset, namebuf);
+ }
+ 
+-static const char *kallsyms_lookup_buildid(unsigned long addr,
++static int kallsyms_lookup_buildid(unsigned long addr,
+ 			unsigned long *symbolsize,
+ 			unsigned long *offset, char **modname,
+ 			const unsigned char **modbuildid, char *namebuf)
+ {
+-	const char *ret;
++	int ret;
+ 
+ 	namebuf[KSYM_NAME_LEN - 1] = 0;
+ 	namebuf[0] = 0;
+@@ -416,7 +416,7 @@ static const char *kallsyms_lookup_buildid(unsigned long addr,
+ 		if (modbuildid)
+ 			*modbuildid = NULL;
+ 
+-		ret = namebuf;
++		ret = strlen(namebuf);
+ 		goto found;
+ 	}
+ 
+@@ -448,8 +448,13 @@ const char *kallsyms_lookup(unsigned long addr,
+ 			    unsigned long *offset,
+ 			    char **modname, char *namebuf)
+ {
+-	return kallsyms_lookup_buildid(addr, symbolsize, offset, modname,
+-				       NULL, namebuf);
++	int ret = kallsyms_lookup_buildid(addr, symbolsize, offset, modname,
++					  NULL, namebuf);
++
++	if (!ret)
++		return NULL;
++
++	return namebuf;
+ }
+ 
+ int lookup_symbol_name(unsigned long addr, char *symname)
+@@ -484,19 +489,15 @@ static int __sprint_symbol(char *buffer, unsigned long address,
+ {
+ 	char *modname;
+ 	const unsigned char *buildid;
+-	const char *name;
+ 	unsigned long offset, size;
+ 	int len;
+ 
+ 	address += symbol_offset;
+-	name = kallsyms_lookup_buildid(address, &size, &offset, &modname, &buildid,
++	len = kallsyms_lookup_buildid(address, &size, &offset, &modname, &buildid,
+ 				       buffer);
+-	if (!name)
++	if (!len)
+ 		return sprintf(buffer, "0x%lx", address - symbol_offset);
+ 
+-	if (name != buffer)
+-		strcpy(buffer, name);
+-	len = strlen(buffer);
+ 	offset -= symbol_offset;
+ 
+ 	if (add_offset)
+diff --git a/kernel/module/kallsyms.c b/kernel/module/kallsyms.c
+index ef73ae7c8909..6e6619a5b2f1 100644
+--- a/kernel/module/kallsyms.c
++++ b/kernel/module/kallsyms.c
+@@ -321,14 +321,15 @@ void * __weak dereference_module_function_descriptor(struct module *mod,
+  * For kallsyms to ask for address resolution.  NULL means not found.  Careful
+  * not to lock to avoid deadlock on oopses, simply disable preemption.
+  */
+-const char *module_address_lookup(unsigned long addr,
+-				  unsigned long *size,
+-			    unsigned long *offset,
+-			    char **modname,
+-			    const unsigned char **modbuildid,
+-			    char *namebuf)
++int module_address_lookup(unsigned long addr,
++			  unsigned long *size,
++			  unsigned long *offset,
++			  char **modname,
++			  const unsigned char **modbuildid,
++			  char *namebuf)
+ {
+-	const char *ret = NULL;
++	const char *sym;
++	int ret = 0;
+ 	struct module *mod;
+ 
+ 	preempt_disable();
+@@ -344,13 +345,12 @@ const char *module_address_lookup(unsigned long addr,
+ #endif
+ 		}
+ 
+-		ret = find_kallsyms_symbol(mod, addr, size, offset);
+-	}
+-	/* Make a copy in here where it's safe */
+-	if (ret) {
+-		strncpy(namebuf, ret, KSYM_NAME_LEN - 1);
+-		ret = namebuf;
++		sym = find_kallsyms_symbol(mod, addr, size, offset);
++
++		if (sym)
++			ret = strscpy(namebuf, sym, KSYM_NAME_LEN);
+ 	}
++
+ 	preempt_enable();
+ 
+ 	return ret;
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index da1710499698..b40f9bd29080 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -6970,7 +6970,7 @@ allocate_ftrace_mod_map(struct module *mod,
+ 	return mod_map;
+ }
+ 
+-static const char *
++static int
+ ftrace_func_address_lookup(struct ftrace_mod_map *mod_map,
+ 			   unsigned long addr, unsigned long *size,
+ 			   unsigned long *off, char *sym)
+@@ -6991,21 +6991,18 @@ ftrace_func_address_lookup(struct ftrace_mod_map *mod_map,
+ 			*size = found_func->size;
+ 		if (off)
+ 			*off = addr - found_func->ip;
+-		if (sym)
+-			strscpy(sym, found_func->name, KSYM_NAME_LEN);
+-
+-		return found_func->name;
++		return strscpy(sym, found_func->name, KSYM_NAME_LEN);
+ 	}
+ 
+-	return NULL;
++	return 0;
+ }
+ 
+-const char *
++int
+ ftrace_mod_address_lookup(unsigned long addr, unsigned long *size,
+ 		   unsigned long *off, char **modname, char *sym)
+ {
+ 	struct ftrace_mod_map *mod_map;
+-	const char *ret = NULL;
++	int ret;
+ 
+ 	/* mod_map is freed via call_rcu() */
+ 	preempt_disable();
+-- 
+2.39.2
 
---=_MailMate_A52ACB3A-425E-491A-AD70-D4B583EC8054_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename=signature.asc
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQJDBAEBCgAtFiEE6rR4j8RuQ2XmaZol4n+egRQHKFQFAmYC4YUPHHppeUBudmlk
-aWEuY29tAAoJEOJ/noEUByhUVyEP/R3cXGdRZ2F/P+DInKj6ZeIsi22HdBt52fBM
-D99R0g4DTKt/7zvZFl/gaqX0IUOBu3eoLH5MsLDfjKgxTdfSrPy4dkZg+lsVpKMg
-EyZGBGchgOLlWetrauPGypFwHTBizjvMt6q4tXWW71NQGtOhCl32g10ZOCQWARyC
-5ZA7kmYoEYCMGFOlL6gL7o7A3qpDyGzg6O3E+BI9Kgq21LEPZjejgk1nNzF5Jef5
-5Uh7DMDVMnW0ql6xYz2h2u/bFj7NwMJARostktl9v1/2AC84Z/z6UlfSAfSxvLX+
-dIwNRROMcs3a7EKQUMZ8ncJbC6MBPqK10uXnv20QDLq+9OrR0t2FoSI/M2uM/pPj
-c25bqwbIzqbzbTs0ChJEK0CL+ycD5gDXwSKTkItNUrNd1571EBK4+tmZ2AJ31Y6w
-pWyanFfFj5WPyT++M51rxYqIqHQSo1Zcv09hBqCyppPxzgKcieX/u5JQEDJDVhMU
-h89ApHpwix5ebWc/jQxUS85D2FeEAG+2y+FFXs9kINaSFhtHsmzbG7zv6nib3sjE
-ROz9TWPWif/0NH4k1PoIVkaRfxtf399jCEBExpxYNX0mTimV7wMnMs4K3xuK1Gy1
-3LNbqBpIwtKa1DizMiMIskq4zZkBoMd/VYY6CnCXt9ARNHYtPZOqpbn1J9NhOsDQ
-DIqWH0Df
-=Vo/E
------END PGP SIGNATURE-----
-
---=_MailMate_A52ACB3A-425E-491A-AD70-D4B583EC8054_=--
