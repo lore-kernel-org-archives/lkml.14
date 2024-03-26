@@ -1,46 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7964F20DF7;
-	Tue, 26 Mar 2024 14:27:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4368512D765;
+	Tue, 26 Mar 2024 14:27:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711463226; cv=none; b=RPjMtCw6ea0xHgxYYqiZld7GB3i3nQPHrlq/t9QRAUPLh68UEq7NNvDS8lJ5dqo0eMUs+yem54ISk/tpwZxsQ1eHuJo46GpKH7Ah2Z8XW+BA/pTorV142/UrHF2PzloPhToUc+hVR4lLm8+qayGeBhGkEjIfXmFydTnNZA6ZhlU=
+	t=1711463254; cv=none; b=I4wmqB6O1yz1HsIgEC1LiUQjdCHwW1pTyfLJHXmrZz/+pQHiOfZJh8ks5sLNqhceU5oGvN0YA1V+QC5Hs56s5SOGai31TyioDvNnCfZiesUK7o8X5cQGkHlgYKl34WNC+tdszLzOA3ElAaiNUr3nbnRrQEuFDXEp5+1pGcGdS+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711463226; c=relaxed/simple;
-	bh=qoEJASPCUxmcyaJydCy2VV6pZZWWMfCad+tM+6zcuU8=;
+	s=arc-20240116; t=1711463254; c=relaxed/simple;
+	bh=LW9RMlhjXMwwswaA4XM355elpcokxVWRyHjYs7X4Luo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qGLavpmWKlFCUMIx3VuZNXmceC81faEZdUPcnaLrhm2eLVmYAMjs/TwKprLMZhAelc0jByAqb7RFVqiCCCD45J3d8dw7S8uo/nYjbCRHDf7x3MubqGR9wdPtzzPzucHQd/HAyR/rumhrUGveYvm61kmwf8c6ubJPpA7qf71sgps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qS4zhIih; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=G5Du8EGS4LTeb1ja9LkKUu3ODkXyyr9eVcPVPa8tdcLq3wbNWd84Pak4tq5OdiNnxZbZJ0J/jfBoigC1SRSP1M9l/IDRMHJ2itRpRy0+zvqaDMWLNulbbvgBi1FTALTYGZSZ6l1KlvtUYAmBD8Ehx3DlVRWEVk697CLwh6j04IE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8zwX8+D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qS4zhIih"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0A48C433C7;
-	Tue, 26 Mar 2024 14:27:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8zwX8+D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8EC5C433F1;
+	Tue, 26 Mar 2024 14:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711463226;
-	bh=qoEJASPCUxmcyaJydCy2VV6pZZWWMfCad+tM+6zcuU8=;
+	s=k20201202; t=1711463253;
+	bh=LW9RMlhjXMwwswaA4XM355elpcokxVWRyHjYs7X4Luo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qS4zhIih2hC+so417yzJNvaab4L7Oie30dt1x5IbaGQQ5ivzJIMiragYqFDaziYdl
-	 V1SXGkh0w0txXIID6rDnT+oHviOLxvy2ES03x3Re1TldyhA2AUZl4DY1p11OiO+BvB
-	 3H9UHTAvd4AB2y3gwJwUCIThH2dDUGxyY4VbzCCv9zYw1fsHxcOSawEhKzQccsTFae
-	 P3CmJ4NfnmaNNexMwOrcJapL9yoTi/KTS+c9d7Jb/wfdgln34YADG86H+eV2Xk7KPV
-	 TPPczJfDQ39U0SvXP+0o9wLjnGE42PTK1qxA3d26lcrhjCWfzFnhyRdEmUavG3+dE+
-	 99qucStc/c9zg==
-Date: Tue, 26 Mar 2024 14:27:00 +0000
-From: Simon Horman <horms@kernel.org>
-To: Su Hui <suhui@nfschina.com>
-Cc: sgoutham@marvell.com, gakula@marvell.com, sbhatta@marvell.com,
-	hkelam@marvell.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, nathan@kernel.org,
-	ndesaulniers@google.com, morbo@google.com, justinstitt@google.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, kernel-janitors@vger.kernel.org,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Subject: Re: [PATCH net v2 2/2] octeontx2-pf: remove unused variables req_hdr
- and rsp_hdr
-Message-ID: <20240326142700.GX403975@kernel.org>
-References: <20240326061233.4133148-1-suhui@nfschina.com>
- <20240326061233.4133148-2-suhui@nfschina.com>
+	b=W8zwX8+Dj6EWx5MT6Wn47Cd7patuQ8QPQ4ioHlq11Aze2rf+BuJMTHdGm9OiF5avM
+	 yQrZJiPxfUICNRrm7yGJHiTaZnuTzQIDMoVfJzUFFxibsv+r+Cng2BRyAmUglci+H0
+	 Z+UOjIsmsH5t3wVD/MuyCAWshEzsjF6P8lWwEkVHkwTwRkavQ2o5nnLRFv2Rla6BVG
+	 sA+sb6pVYcXfOP4ya08e6gLkcYx+O16EZFOXef+vzMYNLQjmrjAxLn1cbmKGNJEC91
+	 jXQn8o6fsxYKLMkBwy9zVGfZYfs2jrtEwuGEmPG8aeaMl032t5Op5OB/+mHirSrQSD
+	 TH6+rmekRv6DQ==
+Date: Tue, 26 Mar 2024 15:27:27 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
+	linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 05/11] PCI: epf-{mhi/test}: Move DMA initialization to
+ EPC init callback
+Message-ID: <ZgLbT1JLn7r_TCwd@ryzen>
+References: <20240314-pci-epf-rework-v1-0-6134e6c1d491@linaro.org>
+ <20240314-pci-epf-rework-v1-5-6134e6c1d491@linaro.org>
+ <Zf2tXgKo-gc3qy1D@ryzen>
+ <20240326082636.GG9565@thinkpad>
+ <ZgKsBoTvPWWhPO9e@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,42 +56,100 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240326061233.4133148-2-suhui@nfschina.com>
+In-Reply-To: <ZgKsBoTvPWWhPO9e@ryzen>
 
-+ Dan Carpenter
-
-On Tue, Mar 26, 2024 at 02:12:36PM +0800, Su Hui wrote:
-> Clang static checker(scan-buid):
-> drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c:503:2: warning:
-> Value stored to 'rsp_hdr' is never read [deadcode.DeadStores]
+On Tue, Mar 26, 2024 at 12:05:42PM +0100, Niklas Cassel wrote:
+> On Tue, Mar 26, 2024 at 01:56:36PM +0530, Manivannan Sadhasivam wrote:
+> > On Fri, Mar 22, 2024 at 05:10:06PM +0100, Niklas Cassel wrote:
+> > > On Thu, Mar 14, 2024 at 08:53:44PM +0530, Manivannan Sadhasivam wrote:
+> > > > To maintain uniformity across EPF drivers, let's move the DMA
+> > > > initialization to EPC init callback. This will also allow us to deinit DMA
+> > > > during PERST# assert in the further commits.
+> > > > 
+> > > > For EPC drivers without PERST#, DMA deinit will only happen during driver
+> > > > unbind.
+> > > > 
+> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > ---
+> > > 
+> > > Reviewed-by: Niklas Cassel <cassel@kernel.org>
+> > > 
+> > > 
+> > > For the record, I was debugging a problem related to EPF DMA recently
+> > > and was dumping the DMA mask for the struct device of the epf driver.
+> > > I was a bit confused to see it as 32-bits, even though the EPC driver
+> > > has it set to 64-bits.
+> > > 
+> > > The current code works, because e.g., pci_epf_test_write(), etc,
+> > > does:
+> > > struct device *dma_dev = epf->epc->dev.parent;
+> > > dma_map_single(dma_dev, ...);
+> > > 
+> > > but it also means that all EPF drivers will do this uglyness.
+> > > 
+> > 
+> > This ugliness is required as long as the dmaengine is associated only with the
+> > EPC.
+> > 
+> > > 
+> > > 
+> > > However, if a EPF driver does e.g.
+> > > dma_alloc_coherent(), and sends in the struct *device for the EPF,
+> > > which is the most logical thing to do IMO, it will use the wrong DMA
+> > > mask.
+> > > 
+> > > Perhaps EPF or EPC code should make sure that the struct *device
+> > > for the EPF will get the same DMA mask as epf->epc->dev.parent,
+> > > so that EPF driver developer can use the struct *epf when calling
+> > > e.g. dma_alloc_coherent().
+> > > 
+> > 
+> > Makes sense. I think it can be done during bind() in the EPC core. Feel free to
+> > submit a patch if you like, otherwise I'll keep it in my todo list.
 > 
-> Remove these unused variables to save some space.
+> So we still want to test:
+> -DMA API using the eDMA
+> -DMA API using the "dummy" memcpy dma-channel.
 > 
-> Signed-off-by: Su Hui <suhui@nfschina.com>
+> However, it seems like both pci-epf-mhi.c and pci-epf-test.c
+> do either:
+> -Use DMA API
+> or
+> -Use memcpy_fromio()/memcpy_toio() instead of DMA API
+> 
+> 
+> To me, it seems like we should always be able to use
+> DMA API (using either a eDMA or "dummy" memcpy).
+> 
+> I don't really see the need to have the path that does:
+> memcpy_fromio()/memcpy_toio().
+> 
+> I know that for DWC, when using memcpy (and this also
+> memcpy via DMA API), we need to map the address using
+> iATU first.
+> 
+> But that could probably be done using another flag,
+> perhaps rename that flag FLAG_USE_DMA to NEEDS_MAP or
+> something.
+> (Such that we can change these drivers to only have a
+> code path that uses DMA API.)
 
-Hi Su Hui,
+Looking at pci-epf-mhi.c, it seems to use names like:
+pci_epf_mhi_iatu_read() and pci_epf_mhi_edma_read().
 
-as pointed out by Dan in his review of v1 of this patch, it is not a fix.
-This means that it should be targeted at the net-next rather than the net
-branch. As the granularity of patch handling on netdev is generally at the
-patchset level I believe that this means that you need to separately,
-in different email threads, repost:
+This seems to be a very DWC focused naming.
 
-1. Patch 1/2 of this series, targeted at net
+AFAICT, EPF drivers should work on any PCIe EP controller that implements
+the EPC API.
 
-   [PATCH net v3] octeontx2-pf: check negative error code in otx2_open()
+Yes, I understand that it is only Qualcomm that uses this MHI interface/bus,
+but what is stopping Qualcomm from using a non-DWC based PCIe EP controller
+in an upcoming SoC?
 
-2. Patch 2/2 of this series, targeted at net-next
+Surely that Qualcomm SoC could still implement the MHI interface/bus,
+so perhaps the naming in this EPF driver should use somewhat less
+"EPC vendor specific" function names?
 
-   [PATCH net-next v3] octeontx2-pf: remove unused variables req_hdr
 
-Also, please be sure to wait 24 hours since the posting of this patch-set
-before reposting.
-
-Some more information can be found here:
-https://docs.kernel.org/process/maintainer-netdev.html
-
-...
-
--- 
-pw-bot: changes-requested
+Kind regards,
+Niklas
