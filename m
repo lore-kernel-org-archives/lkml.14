@@ -1,144 +1,113 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894FD13CC65;
-	Tue, 26 Mar 2024 19:18:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0840F13CFA5
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 19:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711480713; cv=none; b=ci+UXS2a05xV1atOuYGIaa1MExssXUiOmTq1HaMeT8m7TPPBI7fi3mLhZU0+00c257FnZYPg/64i6jqw14DGPjAhFGJekt4N4mC45gzI6/hOPmHpxpJChfFt36MH3yfKHp0YPWZA62f2Iu2pbGNHcbAwNsYb8XTRXedA4avmxB4=
+	t=1711480731; cv=none; b=YXPebKfQ1W3Ou1CvVYvdbIXvlyxJhgLAVyzmm50xN3SMRfxwFjSWgk6cQv8cslS5g5R/XsIXpIWNV+X37PqTgLseuQDJEynFY5wtdgHkOS1xRc5X3Q8pBBm3QH2qGq4FTmUEutQyJ/ESDwkWfJwYeOrbi2O8QLaz289jui9RjsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711480713; c=relaxed/simple;
-	bh=+sBLYzTluNhm6gJqWTu/z5k829ZQK3Xn6kZ5DT2mqGM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kZcEJat4IDH15KuBnZsw//NcklBDVVjHaPwRqD7wxrAQIRFr0LbLBYLdI+rv1a8dni6IR2bni7GrmQWBnY3G2kQHqjr5//bvmRG9GtYjCVGKrVViiDIWxAHbaKzlXmFb6Z0X/54hRP9oOKEiy4QQf2VqoUvf+6OiqNDa2D0kZCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=K5tlgs8b; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1711480731; c=relaxed/simple;
+	bh=rIylzLX9J4lI4zws2LlXbhQ7UBlTM78dlQkpCoGuNZA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P9jkIWvV+4XhZOTmf1WSWV4z3HcXVtexpLHAIlpvLpLgKfRotZ/Nss9TaYn2Z/huxi5sWL0e83krQhLjdpsR5NDAkgknNgLHN7QYRT5LNA8RgmZdy5pIBrlfq2LBqDFHZ/TQlgYFUvteO2tS4I9oDkVzDiKvlfqgkrXgrdoWrN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=Dd+KwLFj; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="K5tlgs8b"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42QJFhBc020845;
-	Tue, 26 Mar 2024 19:18:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=qcppdkim1; bh=RQmei4fRvb0jxu194Vw8P
-	x+Zt2qro2JtiuP5ogzg8+8=; b=K5tlgs8bJSOGuVvOPSAdk7C97sugxF7sQ3KWt
-	0s0NRUC2KnISQP1w7PzZ/7173OT6KTIUYJCM8EFf5XxqW7wYuh91VwYpoq71TNu2
-	Z2Qhxq66m0bVUdzuBPKmHW56UZsbjKetPjFPwH85v/dOesS3bX8YcWB47HMM0vIz
-	q0vlddHZmtyj0RmcePOY/SNEpT2Zao2wpA3oy0j59fHuZr5fY3QAMS91ksGThDWo
-	g09rpeJZJ0qLnPcXigfrGnnTSz0XK88ivrmud6UAR5TMbChmHtw9KVzoVUg3OVC/
-	Sw944VgR909B2JbPKOKhrpRvbTc6Y30wlarnZCsEFY1l8qClA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x41k68ga4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 19:18:19 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42QJIILH014916
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 19:18:18 GMT
-Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 26 Mar 2024 12:18:17 -0700
-Date: Tue, 26 Mar 2024 12:18:16 -0700
-From: Bjorn Andersson <quic_bjorande@quicinc.com>
-To: Abel Vesa <abel.vesa@linaro.org>
-CC: Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        "Maarten
- Lankhorst" <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard
-	<mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Kuogee Hsieh <quic_khsieh@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Johan Hovold <johan@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/2] drm/msm/dp: Add support for the X1E80100
-Message-ID: <20240326191816.GB1637694@hu-bjorande-lv.qualcomm.com>
-References: <20240324-x1e80100-display-refactor-connector-v4-0-e0ebaea66a78@linaro.org>
- <20240324-x1e80100-display-refactor-connector-v4-2-e0ebaea66a78@linaro.org>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="Dd+KwLFj"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dcc84ae94c1so5665135276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 12:18:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1711480729; x=1712085529; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vYgOqn25gz9ie7H+12IzY1nGkmV5SX8eunsh05XgwQg=;
+        b=Dd+KwLFjuRZAD+4bISi9lY88kQwFwPRI9NXNiCTV6coGU5moFOYV9PfHPv5ndBM4Nt
+         pbsS7dN7DezMKf1xFptgtr+DUggi6aJhAk3nZIg+blx6wgw/RFFd773CH0KSQtKqquQG
+         e0GpWHrUrugJG4o4aOKQBEMp9FxAf9m9D4mhPB3c/rOHN2f4XsWHmPI8AP8ltEGgbocW
+         twGQZuoU6SWNp2gg//d5PoNZaTIITQTkcZuBsq3p+V/oqp3h6ZhuJw7/Y6toUvKRsd6j
+         6GnoIpCyr9Ywgo28HTb9rnUuYWeZXZGF2bZczifK6jxYeoq3l2gFAL/hYnv5MLLEuCuN
+         fmUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711480729; x=1712085529;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vYgOqn25gz9ie7H+12IzY1nGkmV5SX8eunsh05XgwQg=;
+        b=jyQ0MXQ7+maCnyZxC/4ah4NpPGketRYGQsggrPdG477wKIxWV271atFqSilBBTi1yC
+         JN+IW4h86tDKSJFXunRqh1tnPuG9uqV5ICE4wFidE9y22O2vktGMvMsqDVdQLM832MK0
+         cqqkzPugHpqj5VR9m8SLy1YXF3V2HvZSHkfTG1ouCJwpXtMJsuGB2nL83ID3kCaTiv13
+         nRs0Qe6w3X15aMtv2t0NxB5IW/mtD+ZOiBMYV0nA7ufjJU5Qo7PctWHm9ejne3oM/Qbx
+         JGRwg7fKHX8IAZdgKKHo6j5MKUxo6SuMnHJvzVjwHd6I/D31r2EOhXBnUhxnnDYIUL2t
+         PQFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXedmzvusUbZa54fvD637osgJIOBwYYmN9OK+QGljfXlZmHlRUewEkDOtbCoXJNBu00HAiftPTE5Z4DFj1oY91cnoSrNLtU/a8gov2A
+X-Gm-Message-State: AOJu0YzMxQZ5JnA8VLaphhhoZWmsrj6333+LzXMX984WwZAY909NpdMy
+	eqILyYRwzT9Lzhk8FIWSMpPTbYvfTyIRnhYtleE+UWoJHCdnKbnJN/uCMCB716/ITLmr8SzqmAp
+	Gkxr8c95S8kTs9FrPGdReO0GtrFE4H5rYm2oY
+X-Google-Smtp-Source: AGHT+IFc2eIKJ7d4YLg5xPwKn3eSXqib+pnZt/naj67Aoraqg2lZyHWdIy8LStTjQAxLscv6AnlkiFaJa8XuhVWngDg=
+X-Received: by 2002:a25:ac48:0:b0:dd0:2076:4706 with SMTP id
+ r8-20020a25ac48000000b00dd020764706mr3510341ybd.31.1711480728958; Tue, 26 Mar
+ 2024 12:18:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240324-x1e80100-display-refactor-connector-v4-2-e0ebaea66a78@linaro.org>
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: lUBTvznAneMj9Aeuu7lI1gY-BZyph5Io
-X-Proofpoint-GUID: lUBTvznAneMj9Aeuu7lI1gY-BZyph5Io
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-26_08,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- lowpriorityscore=0 clxscore=1015 mlxlogscore=999 priorityscore=1501
- malwarescore=0 phishscore=0 spamscore=0 adultscore=0 suspectscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2403210001 definitions=main-2403260138
+References: <20240315125418.273104-1-cgzones@googlemail.com>
+ <20240315125418.273104-2-cgzones@googlemail.com> <CAHC9VhTOmkpZu-zUEcvWJxLVHwoUnTcPxhBexs1ZKjr_LRKx_w@mail.gmail.com>
+In-Reply-To: <CAHC9VhTOmkpZu-zUEcvWJxLVHwoUnTcPxhBexs1ZKjr_LRKx_w@mail.gmail.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Tue, 26 Mar 2024 15:18:38 -0400
+Message-ID: <CAHC9VhQZNpz3m-YBrKtuoX1Ve4cPQ3rr3Y1ONjXA0hcsu7RqXQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] yama: document function parameter
+To: =?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>
+Cc: linux-security-module@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 24, 2024 at 08:56:52PM +0200, Abel Vesa wrote:
-> Add the X1E80100 DP descs and compatible. This platform will be using
-> a single compatible for both eDP and DP mode. The actual mode will
-> be set based on the presence of the panel node in DT.
-> 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+On Tue, Mar 26, 2024 at 3:18=E2=80=AFPM Paul Moore <paul@paul-moore.com> wr=
+ote:
+>
+> On Fri, Mar 15, 2024 at 8:54=E2=80=AFAM Christian G=C3=B6ttsche
+> <cgzones@googlemail.com> wrote:
+> >
+> > Document the unused function parameter of yama_relation_cleanup() to
+> > please kernel doc warnings.
+> >
+> > Signed-off-by: Christian G=C3=B6ttsche <cgzones@googlemail.com>
+> > ---
+> >  security/yama/yama_lsm.c | 1 +
+> >  1 file changed, 1 insertion(+)
+>
+> One small comment below, but otherwise looks okay to me.
+>
+> Reviewed-by:
 
-Reviewed-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+Bah, let's try that again ...
 
-Regards,
-Bjorn
+Reviewed-by: Paul Moore <paul@paul-moore.com>
 
-> ---
->  drivers/gpu/drm/msm/dp/dp_display.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
-> index 9169a739cc54..521cba76d2a0 100644
-> --- a/drivers/gpu/drm/msm/dp/dp_display.c
-> +++ b/drivers/gpu/drm/msm/dp/dp_display.c
-> @@ -171,6 +171,14 @@ static const struct msm_dp_desc sm8650_dp_descs[] = {
->  	{}
->  };
->  
-> +static const struct msm_dp_desc x1e80100_dp_descs[] = {
-> +	{ .io_start = 0x0ae90000, .id = MSM_DP_CONTROLLER_0, .wide_bus_supported = true },
-> +	{ .io_start = 0x0ae98000, .id = MSM_DP_CONTROLLER_1, .wide_bus_supported = true },
-> +	{ .io_start = 0x0ae9a000, .id = MSM_DP_CONTROLLER_2, .wide_bus_supported = true },
-> +	{ .io_start = 0x0aea0000, .id = MSM_DP_CONTROLLER_3, .wide_bus_supported = true },
-> +	{}
-> +};
-> +
->  static const struct of_device_id dp_dt_match[] = {
->  	{ .compatible = "qcom,sc7180-dp", .data = &sc7180_dp_descs },
->  	{ .compatible = "qcom,sc7280-dp", .data = &sc7280_dp_descs },
-> @@ -182,6 +190,7 @@ static const struct of_device_id dp_dt_match[] = {
->  	{ .compatible = "qcom,sdm845-dp", .data = &sc7180_dp_descs },
->  	{ .compatible = "qcom,sm8350-dp", .data = &sm8350_dp_descs },
->  	{ .compatible = "qcom,sm8650-dp", .data = &sm8650_dp_descs },
-> +	{ .compatible = "qcom,x1e80100-dp", .data = &x1e80100_dp_descs },
->  	{}
->  };
->  
-> 
-> -- 
-> 2.34.1
-> 
+> > diff --git a/security/yama/yama_lsm.c b/security/yama/yama_lsm.c
+> > index 49dc52b454ef..f8e4acd41b72 100644
+> > --- a/security/yama/yama_lsm.c
+> > +++ b/security/yama/yama_lsm.c
+> > @@ -111,6 +111,7 @@ static void report_access(const char *access, struc=
+t task_struct *target,
+> >
+> >  /**
+> >   * yama_relation_cleanup - remove invalid entries from the relation li=
+st
+> > + * @work: unused
+> >   *
+> >   */
+> >  static void yama_relation_cleanup(struct work_struct *work)
+>
+> Should we also take this opportunity to mark the parameter as '__always_u=
+nused'?
+
+--=20
+paul-moore.com
