@@ -1,108 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087281C6BE
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 01:42:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85640210E7
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 01:43:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711417334; cv=none; b=gIdvXH/E7TnuSV3DaGtwh1vdPnRVejZaricCqsuwpVtUcWWJs+/lG4k0UHCaRWD6ioIIm+rc0JhdKxJGUEOGOJD5RC5Q/ulOm/xamM1sMrUMJOSOuzyXq00KzfVFaUn9+pipS0UBb9fIkiNOXUS1Kq5JjWHz2+LLykcWLNW9pOY=
+	t=1711417391; cv=none; b=J9BBtEhM9jgh0mQqIkiQ0IcLQkOD0dY+PfwiCpZe0Dq9DBNN4OIC+bAIWGuO5+eNnBLcYJQ+4qwo1xwt86E1lH5Aipgdx9O2e3IJj6845ozwSqDmkx2FPtFJm6UP6nsjkl7KwBZUqs0Ntyh5hRYGfgGHl8W66GWr8iyqBnuLl7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711417334; c=relaxed/simple;
-	bh=OWRGZAoTwlD15MOqhJjmQoMizKHAtbh8DHOT9VrE1lQ=;
+	s=arc-20240116; t=1711417391; c=relaxed/simple;
+	bh=hvfXc3cBI2wusfotRhzl3KQZfpvrvW9p1GwV5HH0rEE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z/R43foSjSLJzunZiSEYWW4oiSLPu3y563QPpx0CCqu/G/gCllwoYc8ly4x3bkTMFkJMQFImM8+AwuxXvOT8C2rSppvId16seuTN6gKrtTM55ViBvGjm5Wlp9pn0LBjLqpiV4Avfy2607IrX2JDs77bymLLG9Ax47ce7QC5zTec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ge0K347m; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bH7ajaf/5repo8POu//HTaX0XOS6OWrjQkNnEXrfqS131VK0TE1XwZnnWLz8prhikfPEmO0VlVv3vOo/1lbjHQswfrLIQRcTGV0eZiivvfhDjJi2HkdyJURmycyjQtXT4PB672MDExeaqhhrNEwdfHL78IvZhgcV1krJ8O+knu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org; spf=none smtp.mailfrom=jookia.org; dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b=YvFOhEbf; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=jookia.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ge0K347m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1FD2C433C7;
-	Tue, 26 Mar 2024 01:42:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711417333;
-	bh=OWRGZAoTwlD15MOqhJjmQoMizKHAtbh8DHOT9VrE1lQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ge0K347meeUSw5Cf4GUHdgcKEF+N9hl6GJfOzMa4jy+1DnbHNS+nFmpJlDxQV9Z4F
-	 e9azU+DSqzdGM4VcSCl9hwAU2NbL7fVL82sAVhASLKTGFah5GSfx6BpLHCFvz7b53V
-	 1VIjaQV/3QZfwWXInM8YE5q/UNf1azpCW/E1M7ljohoX/Rbk/ghiEdJ+bn7h7pU6Am
-	 uGzBFD3TOCUPzjEI/6XA6h+JsV5PQNMOLOCLQH4Nn6RFYwEXVF2H2MhhYSCCAX14Xs
-	 SXCHYkUyyBzWiBVPx1kuXgEl6YZG591UGkJ/u/ZYzY4fo9mt7inhSI/C56d4JrsyY/
-	 mpgAV2lI4B0Jg==
-Date: Tue, 26 Mar 2024 09:28:58 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Bo Gan <ganboing@gmail.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Samuel Holland <samuel.holland@sifive.com>
-Subject: Re: [PATCH 1/5] riscv: nommu: remove PAGE_OFFSET hardcoding
-Message-ID: <ZgIk2hmprnyGr_ce@xhacker>
-References: <20240325164021.3229-1-jszhang@kernel.org>
- <20240325164021.3229-2-jszhang@kernel.org>
- <37d456c1-f0bd-1a78-2d0c-350ca25c6b8d@gmail.com>
+	dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b="YvFOhEbf"
+Date: Tue, 26 Mar 2024 12:42:41 +1100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jookia.org; s=key1;
+	t=1711417386;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=u0g13RwPF3xDDXAEsdJoSVK6LMzTBFUkpC7KC8LRlI8=;
+	b=YvFOhEbfrzGrlB9bK5ye/0l7uUBWSQR56tpoM8zLihmr4jjWBrvrqQll7TfC5vYSQj1qbV
+	Rm5qztpTlIC8nSRVVCUuvFIjgTGTU9zj36PSdfje8AAwStrgRvB0msO9dcjhsilnHugnRQ
+	0DEB5ZpBX6bpBJUJx+l6iO+ZfAed+EAWJfd/69PKesq0a3u2bWWJ19Ej4sUzvxHieUrkdQ
+	ls8JOo6uXjLKKwpCbJnjcx+ADcjca44mHxLNoXyeWXpOcwOi641jX2MjDz9Z54IRa3alYR
+	nIloX0CPS+NYc/50EtO0YBQKmOhpwuxz4sPh5CMWr6wpiY3YTEfYTy05v0p2Zw==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: John Watts <contact@jookia.org>
+To: Saravana Kannan <saravanak@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
+	=?iso-8859-1?Q?Herv=E9?= Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>, kernel-team@android.com,
+	Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] of: property: fw_devlink: Fix stupid bug in
+ remote-endpoint parsing
+Message-ID: <ZgIoEYQrX1x2Fzu6@titan>
+References: <20240224052436.3552333-1-saravanak@google.com>
+ <ZfvN5jDrftG-YRG4@titan>
+ <CAGETcx8+vw0Vr0NWzjOAvxAZ07M4U7BWPAgO9avCngW0-9e_kA@mail.gmail.com>
+ <Zf7I65PiOR2wX1Uo@titan>
+ <CAGETcx_=MmfgDajM16iJ4Of9Yr2Sy6ZpU=MyhYgnmOJFUTD_oA@mail.gmail.com>
+ <ZgIZ4LmFOqdiDJBH@titan>
+ <CAGETcx-Emvu41nB3UDnb4Gh2aJEKu_hFcHX89uWnBTnaqvpN8g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <37d456c1-f0bd-1a78-2d0c-350ca25c6b8d@gmail.com>
+In-Reply-To: <CAGETcx-Emvu41nB3UDnb4Gh2aJEKu_hFcHX89uWnBTnaqvpN8g@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Mar 25, 2024 at 03:46:01PM -0700, Bo Gan wrote:
-> On 3/25/24 9:40 AM, Jisheng Zhang wrote:
-> > Currently, PAGE_OFFSET is hardcoded as 0x8000_0000, it works fine since
-> > there's only one nommu platform in the mainline. However, there are
-> > many cases where the (S)DRAM base address isn't 0x8000_0000, so remove
-> > the hardcoding value, and introduce DRAM_BASE which will be set by
-> > users during configuring. DRAM_BASE is 0x8000_0000 by default.
-> > 
-> > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> > ---
-> >   arch/riscv/Kconfig | 8 +++++++-
-> >   1 file changed, 7 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> > index 7895c77545f1..afd51dbdc253 100644
-> > --- a/arch/riscv/Kconfig
-> > +++ b/arch/riscv/Kconfig
-> > @@ -247,10 +247,16 @@ config MMU
-> >   	  Select if you want MMU-based virtualised addressing space
-> >   	  support by paged memory management. If unsure, say 'Y'.
-> > +if !MMU
-> > +config DRAM_BASE
-> > +	hex '(S)DRAM Base Address'
-> > +	default 0x80000000
-> > +endif
-> > +
-> >   config PAGE_OFFSET
-> >   	hex
-> >   	default 0xC0000000 if 32BIT && MMU
-> > -	default 0x80000000 if !MMU
-> > +	default DRAM_BASE if !MMU
-> >   	default 0xff60000000000000 if 64BIT
-> >   config KASAN_SHADOW_OFFSET
-> > 
+On Mon, Mar 25, 2024 at 06:35:45PM -0700, Saravana Kannan wrote:
+> Ok, I have a solution. Have the audio-graph-card2 find the fwnode of
+> "multi" and mark it as "not a device" by doing something like this in
+> the driver. That should help fw_devlink handle this correctly.
 > 
-> Thanks for this patch. I did something similar in my local nommu
-> linux-6.8 tree in order to run it on the S7 hart of JH7110. I have
-> another suggestion for you. Perhaps we should also make TASK_SIZE
-> configurable, and let it default to `0xffffffff if 32BIT && !MMU`
-> and `DRAM_BASE + DRAM_SIZE if 64BIT && !MMU`. Currently TASK_SIZE
-> is effectively `0xffffffff if !MMU`, which doesn't work if I run
-> rv64 linux-nommu with DDR that spans across 4G boundary.
+> fwnode.flags |= FWNODE_FLAG_NOT_DEVICE;
 
-I must admit that there's such nommu linux with 4GB DDR case in
-theory, but it doesn't exist in real world: who will make such
-strange platform ;) But anyway this improvement can be made when
-the patchset talking about TASK_SIZE_MAX is settled down.
+I'll test this out, thanks.
 
-> 
-> I see there's another patchset that tries to define TASK_SIZE_MAX
-> for __access_ok(). Looks like that only affects the MMU case, and
-> NOMMU is not touched. My aforementioned change won't conflict with
-> it should it get merged.
-> 
-> Bo
+> Definitely do this though as a forward looking improvement. It'll help
+> make the suspend/resume more deterministic and will eventually let
+> things happen in an async manner.
+
+Is there a way to also do this in the driver?
+
+> -Saravana
+
+John.
