@@ -1,63 +1,152 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CDEB7353B
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 21:36:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FC073FD4;
+	Tue, 26 Mar 2024 21:41:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711488967; cv=none; b=n4RXXNu2qa2S3KzFqs0lCH1kmqVQ/ZGKNlvtR4l6uR4kJi+NCkfLeTyKY8mbWE655uf9rb7QTKn7u6wLNTb8iLvq1M1XUb31ulHD9F+1+Rzbs2ZWp/0w2/tRqVQkxoj6rg7ZWGuPdYiiI8ZFB8aR/X4eXWZvhflSi9PCzB+ucnc=
+	t=1711489311; cv=none; b=HSlPd/ssiBAa9dmK3vRLAJhnyHyXiY4yzL4cfU5j6CF75bguPOHFWxvUJcLV/RGfWgfTVsR4ezM5qgd1nt7PQV4NZ8lURsTpv+loptYml5NtlYhNPTsAMR5LCaV/NrGA81G0L1RzEUmGy5oT7lHKbIJTlnStNeKHqhcDMoa6VKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711488967; c=relaxed/simple;
-	bh=wUi5WLiYeDP/idZVEsH8AO76Sz41Wi+jnQBsY4CesPA=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=LwO2td9UtPV+953+unDmQ/aUYgakITw1EHM1wR5RjmXiTTEBvqoTAfnWf4L9NQxHp+7EmSYjK0brQFT4Rmv0A5Fd08PeJIcTL4qZHiiRhuT/59/SZJ3wto1OO/5Pyv2qqZq4K3aGm4pr2qiGgTELCNZ4NIO0r63kulHn2btOlm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KUEtjmOV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711489311; c=relaxed/simple;
+	bh=BzpgpbWcoTc7ijZRETE4B+xMagDt/ZzZpxxIA4FcHFA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dCqOpAr5QqpBZnzlEBsKpUS6wDzNSDSfxGTXHPQi+Hdj7rnsE41sK03/xqEFVuYbD99k0m2UCcv2tn0LDRJDCNB7+sqpkHVPIxXM0FGNbp6n85/p25M/V6ffWDYdR6MaTnj+bxFTRhQEvFjDxbIYmMfAUJ6JyRDSon9xB2FxyLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NAPOQrsf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KUEtjmOV"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 17AF4C433C7;
-	Tue, 26 Mar 2024 21:36:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NAPOQrsf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9564FC43390;
+	Tue, 26 Mar 2024 21:41:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711488967;
-	bh=wUi5WLiYeDP/idZVEsH8AO76Sz41Wi+jnQBsY4CesPA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=KUEtjmOV+HMckpj+GK06GJuVa540e7GvUMDV3VQxCdqWRQ0Qb7/5qchlPjzy8nEcp
-	 GAimZCYox2WerI4RVGUaH3UfDfIPrVlW0zCClyz+A1VLjxMZnugSgO7Gt6bTxJdzTA
-	 a+xUAlWnrgstXjqMTDSz2W70dUIooXHTe9/R2UKlvMyFaSTJU2gtObQMhCNF/Hyt10
-	 te58G7pa+Mf20WIFk2Ar1Og626L71gvH65BFDmsMAIf1Qf2AKxcYYEbf/IpULfbkRk
-	 ei92H6kl488t92qOaGVC7hJLdLlMXqR2YCzd766lJQFU/NGv7SbWcb7vabobhg82z3
-	 Rbl1b534QsN+g==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0B741D2D0EC;
-	Tue, 26 Mar 2024 21:36:07 +0000 (UTC)
-Subject: Re: [GIT PULL] printk for 6.9-rc2
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZgLq7uQzrzY1_C6M@alley>
-References: <ZgLq7uQzrzY1_C6M@alley>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZgLq7uQzrzY1_C6M@alley>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git tags/printk-for-6.9-rc2
-X-PR-Tracked-Commit-Id: 8076972468584d4a21dab9aa50e388b3ea9ad8c7
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7033999ecd7b8cf9ea59265035a0150961e023ee
-Message-Id: <171148896703.26753.14083507997428722355.pr-tracker-bot@kernel.org>
-Date: Tue, 26 Mar 2024 21:36:07 +0000
-To: Petr Mladek <pmladek@suse.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, Steven Rostedt <rostedt@goodmis.org>, John Ogness <john.ogness@linutronix.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>, Jan Kara <jack@suse.cz>, Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
+	s=k20201202; t=1711489310;
+	bh=BzpgpbWcoTc7ijZRETE4B+xMagDt/ZzZpxxIA4FcHFA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NAPOQrsf9xO+R4J++979fPR1mikCnDwT2YSA3eK5h6kFH5ZvtO+EH4mROmh3jCTkb
+	 NdGVwPhQ9N7LaJlSmZJLUD00Wg1nn7pSzRprRip0XlPX3BVGf/+WIJ8gbGBsXJTjOk
+	 ThYy/tIUsivm9/O47z73Y2hFxdek6ao2HiQIEzaTo5RxUJVx5+6KeKKedtsnb/15rT
+	 rU9ZczreTQJq/5f+QievxNgsRhIn4jrmxJ0fYCh9yP+Qi8VSE2J/kzUc/IlqxqVIGi
+	 HM+bdbs2HbhqJcZHe7PuQraZmQrI2a+rJBHMhI5NFCcDHUcHVpVWGiM2CgcMFDYzKP
+	 1XknHlt85fr/w==
+Date: Tue, 26 Mar 2024 16:41:48 -0500
+From: Rob Herring <robh@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Animesh Agarwal <animeshagarwal28@gmail.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-crypto@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: crypto: ti,omap-sham: Convert to dtschema
+Message-ID: <20240326214148.GA3709211-robh@kernel.org>
+References: <20240326120107.13442-1-animeshagarwal28@gmail.com>
+ <20240326-spectrum-talon-0fc977c32c5c@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240326-spectrum-talon-0fc977c32c5c@spud>
 
-The pull request you sent on Tue, 26 Mar 2024 16:34:06 +0100:
+On Tue, Mar 26, 2024 at 06:20:05PM +0000, Conor Dooley wrote:
+> On Tue, Mar 26, 2024 at 05:31:00PM +0530, Animesh Agarwal wrote:
+> > Convert the OMAP SoC SHA crypto Module bindings to DT Schema.
+> > 
+> > Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
+> > ---
+> >  .../devicetree/bindings/crypto/omap-sham.txt  | 28 ----------
+> >  .../bindings/crypto/ti,omap-sham.yaml         | 56 +++++++++++++++++++
+> >  2 files changed, 56 insertions(+), 28 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/crypto/omap-sham.txt
+> >  create mode 100644 Documentation/devicetree/bindings/crypto/ti,omap-sham.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/crypto/omap-sham.txt b/Documentation/devicetree/bindings/crypto/omap-sham.txt
+> > deleted file mode 100644
+> > index ad9115569611..000000000000
+> > --- a/Documentation/devicetree/bindings/crypto/omap-sham.txt
+> > +++ /dev/null
+> > @@ -1,28 +0,0 @@
+> > -OMAP SoC SHA crypto Module
+> > -
+> > -Required properties:
+> > -
+> > -- compatible : Should contain entries for this and backward compatible
+> > -  SHAM versions:
+> > -  - "ti,omap2-sham" for OMAP2 & OMAP3.
+> > -  - "ti,omap4-sham" for OMAP4 and AM33XX.
+> > -  - "ti,omap5-sham" for OMAP5, DRA7 and AM43XX.
+> > -- ti,hwmods: Name of the hwmod associated with the SHAM module
+> > -- reg : Offset and length of the register set for the module
+> > -- interrupts : the interrupt-specifier for the SHAM module.
+> > -
+> > -Optional properties:
+> > -- dmas: DMA specifiers for the rx dma. See the DMA client binding,
+> > -	Documentation/devicetree/bindings/dma/dma.txt
+> > -- dma-names: DMA request name. Should be "rx" if a dma is present.
+> > -
+> > -Example:
+> > -	/* AM335x */
+> > -	sham: sham@53100000 {
+> > -		compatible = "ti,omap4-sham";
+> > -		ti,hwmods = "sham";
+> > -		reg = <0x53100000 0x200>;
+> > -		interrupts = <109>;
+> > -		dmas = <&edma 36>;
+> > -		dma-names = "rx";
+> > -	};
+> > diff --git a/Documentation/devicetree/bindings/crypto/ti,omap-sham.yaml b/Documentation/devicetree/bindings/crypto/ti,omap-sham.yaml
+> > new file mode 100644
+> > index 000000000000..7a2529cc4cae
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/crypto/ti,omap-sham.yaml
+> > @@ -0,0 +1,56 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/crypto/ti,omap-sham.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: OMAP SoC SHA crypto Module
+> > +
+> > +maintainers:
+> > +  - Animesh Agarwal <animeshagarwal28@gmail.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - ti,omap2-sham
+> > +      - ti,omap4-sham
+> > +      - ti,omap5-sham
+> > +
+> > +  ti,hwmods:
+> > +    description: Name of the hwmod associated with the SHAM module
+> > +    $ref: /schemas/types.yaml#/definitions/string
+> > +    enum: [sham]
+> 
+> Is there really only one value possible here?
+> Also, the convention is to put vendor properties like this after more
+> common properties like reg, interrupts etc.
+> 
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  dmas:
+> > +    maxItems: 1
+> > +
+> > +  dma-names:
+> > +    const: rx
+> > +
+> > +dependencies:
+> > +  dmas: [dma-names]
+> 
+> Is this needed? Unless I'm sorely mistaken dt-schema enforces this itself
+> (and same for any $foo-names).
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git tags/printk-for-6.9-rc2
+dtschema does not. It does do the other way around. This seems fine.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7033999ecd7b8cf9ea59265035a0150961e023ee
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Rob
