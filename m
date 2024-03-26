@@ -1,91 +1,125 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4871F95A
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 16:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE43A1C69C
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 16:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711471715; cv=none; b=AuB/yLGPrMD9UPd+THk4De/MwlbzInlLYBUkAJbnYJytceE3qt2TylpOt++hJjfMy9fhqVYp/vV5F5erH7vTIEv90b2Fk+ALtk/Ultr2wJWD6ESnP6VxK3utxiCUbr+u5rywaveIqXdcbb66nLlrkOjBd+SUzRvMiT81bBSHbT0=
+	t=1711471731; cv=none; b=DQyqMj7CcgTqRhilmSxzX+NkpiVuTAGvxeltiDNP71wluLWh/cl47VHB8xZSFhO5UUAc6RuQ1VYpkTRz13P+nxK02WGOp9ac3ygaLUQyEEAo1EuVZyuQCh2DsSOBRxilKIYSKUZRMRSOnSbYcDuY1blcIft2ucGbHFR5esN7UNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711471715; c=relaxed/simple;
-	bh=UCmlrZz5wIpqDNxx5pcqKcqwMTpJe2YHlubTTGszCI4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u3Nl70Ri9UQOwoH7isyXVL5RusZg9GuGtTZemJrm1WQlVluMF1bb9cwKXRKNX4fuGtADyF/tpmbJo8k4/bPQLIleAb0zGjeCMjU+SEAfFyjy8+m7jilDy+QLTNte83HbjCePZtjVqeFLpdXIujqxwolcAlUyHZonvgJMxt43oB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=NgAbQoFx; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="NgAbQoFx"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-41490e42c74so2883515e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 09:48:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711471710; x=1712076510; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UUX0Fe8KaQL1u5v0D+HurQZKsoXBEzxwHFFOyTDa+54=;
-        b=NgAbQoFxb03SX/9WndFalmq1spl8kPkm8Co80Kl/iEiAXQgu9eyXYsR16IuF79Mu2l
-         vVsKzvybRhPPI1UU3TRcCt0OL9LCb88a2HBI7MVAorKO1CwM4V+su/svPPPPBYeQOJU1
-         3W49J3Yw29mAlnwrgIf8CZIfSFnecK/wEuIgg4mrfpUIVJfx9+tfqHKwCU6pgGHkgCIP
-         MExXknojh+gorKZBes63BoF+eVHoc46fecgxFU2kzpkXWFVQlC0XggMLXOwcq3lJGbyo
-         xt81qwfWHd0xPsAztrUHj9mWSHgrfrPe3s52kF+7pKtPGmodTEYiH4UwzBP49SutumUI
-         U/Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711471710; x=1712076510;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UUX0Fe8KaQL1u5v0D+HurQZKsoXBEzxwHFFOyTDa+54=;
-        b=V7gendyxspZewJr7j4XgRauAPYuE7I9jKC9DnBvyOKhJXBHJuyeyRJ+2ZOQWK1NIBD
-         /jNWHzavdwF8Bu1Ir0ac9vMcDSp8v/LxNmF0I9lM1I2iiy4PXjqU+7hdXdKSUES0Gsgt
-         giaXDv0ejgOvyAE6VmZAYGuD/ojlQvoc09LMc1KnL6oGkOEv8cIv8qHw5JmbWU/KJb77
-         BKq5geKyfHwpnBc89E4sU8rQu/b+a9DKNW2CJyelaI8YP9Pdj2AHXe23hyMQDvn5wGYP
-         Lx5V9uvzmWDbzD6o702Y5I/mzGA2pt7cbwuMqK2Xz/TL9N8uFTlAnhX4LF898N6LYTLE
-         MoEQ==
-X-Gm-Message-State: AOJu0YyQuM+7w+y3CnZHB7b5p/VbmVkauC2Z6g+V/6nCWllfwQQJVOUv
-	72p1R4jGI1sN8JeXbBXUYhXL/1P2XpRddZRSJ7OwWFlsnI/kVV2q7bQtkw2fukO6gV59T5frOnO
-	jPKhiwuWd
-X-Google-Smtp-Source: AGHT+IGSD6SX1h+XJYSDCQWy+wNksm/8PaF5+BJG0gN4k4HXxpQXN5S50Qe4XQBW+X7oG57o0CzNiQ==
-X-Received: by 2002:a05:600c:4e14:b0:414:925c:a860 with SMTP id b20-20020a05600c4e1400b00414925ca860mr353338wmq.11.1711471709882;
-        Tue, 26 Mar 2024 09:48:29 -0700 (PDT)
-Received: from yamato.baylibre (alyon-651-1-22-137.w82-122.abo.wanadoo.fr. [82.122.123.137])
-        by smtp.gmail.com with ESMTPSA id f10-20020a05600c4e8a00b00412e5f32591sm12135535wmq.28.2024.03.26.09.48.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 09:48:29 -0700 (PDT)
-From: Angelo Dureghello <adureghello@baylibre.com>
-To: linux-kernel@vger.kernel.org,
-	linux-mmc@vger.kernel.org
-Cc: Angelo Dureghello <adureghello@baylibre.com>
-Subject: [PATCH] MAINTAINERS: update Angelo Dureghello e-mail address
-Date: Tue, 26 Mar 2024 17:47:33 +0100
-Message-ID: <20240326164733.15271-1-adureghello@baylibre.com>
-X-Mailer: git-send-email 2.43.1
+	s=arc-20240116; t=1711471731; c=relaxed/simple;
+	bh=dOBYFG2CFVG88RBbN6IiQLjRxxljLiWi7mMX9/e5kiM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SzO5nGFvKRylEKNaJeIK0kdWflY7FEE1QmG79HSc1T1WT4dDB1nldvupVmd4qA8FtMZfG1JVQXS1ROI/YPYX4lE6r6Y3OrVcfrEZixy5rgmbzeDko4kX4xuJqT+DLHPMlm81DLZZYQn8ghdsUkyLa3T9olytLLVh7Y4SFGWIfFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5E172F4;
+	Tue, 26 Mar 2024 09:49:22 -0700 (PDT)
+Received: from [10.1.29.179] (XHFQ2J9959.cambridge.arm.com [10.1.29.179])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 69D4D3F694;
+	Tue, 26 Mar 2024 09:48:47 -0700 (PDT)
+Message-ID: <79ade347-419a-4c9e-84db-def06ec5f36a@arm.com>
+Date: Tue, 26 Mar 2024 16:48:45 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 2/4] mm/gup: Use ptep_get_lockless_norecency()
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>, Mark Rutland
+ <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Muchun Song <muchun.song@linux.dev>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240215121756.2734131-1-ryan.roberts@arm.com>
+ <20240215121756.2734131-3-ryan.roberts@arm.com>
+ <5d80c368-7ce7-4a44-9cd7-aee3e1c9182b@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <5d80c368-7ce7-4a44-9cd7-aee3e1c9182b@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Update my e-mail address to adureghello@baylibre.com.
+On 26/03/2024 16:30, David Hildenbrand wrote:
+> On 15.02.24 13:17, Ryan Roberts wrote:
+>> Gup needs to read ptes locklessly, so it uses ptep_get_lockless().
+>> However, the returned access and dirty bits are unimportant so let's
+>> switch over to ptep_get_lockless_norecency().
+>>
+>> The wrinkle is that gup needs to check that the pte hasn't changed once
+>> it has pinned the folio following this model:
+>>
+>>      pte = ptep_get_lockless_norecency(ptep)
+>>      ...
+>>      if (!pte_same(pte, ptep_get_lockless(ptep)))
+>>              // RACE!
+>>      ...
+>>
+>> And now that pte may not contain correct access and dirty information,
+>> the pte_same() comparison could spuriously fail. So let's introduce a
+>> new pte_same_norecency() helper which will ignore the access and dirty
+>> bits when doing the comparison.
+>>
+>> Note that previously, ptep_get() was being used for the comparison; this
+>> is technically incorrect because the PTL is not held. I've also
+>> converted the comparison to use the preferred pmd_same() helper instead
+>> of doing a raw value comparison.
+>>
+>> As a side-effect, this new approach removes the possibility of
+>> concurrent read/write to the page causing a spurious fast gup failure,
+>> because the access and dirty bits are no longer used in the comparison.
+>>
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>> ---
+> 
+> [...]
+> 
+>>   #ifndef __HAVE_ARCH_PTE_UNUSED
+>>   /*
+>>    * Some architectures provide facilities to virtualization guests
+>> diff --git a/mm/gup.c b/mm/gup.c
+>> index df83182ec72d..0f96d0a5ec09 100644
+>> --- a/mm/gup.c
+>> +++ b/mm/gup.c
+>> @@ -2576,7 +2576,7 @@ static int gup_pte_range(pmd_t pmd, pmd_t *pmdp,
+>> unsigned long addr,
+>>       if (!ptep)
+>>           return 0;
+>>       do {
+>> -        pte_t pte = ptep_get_lockless(ptep);
+>> +        pte_t pte = ptep_get_lockless_norecency(ptep);
+>>           struct page *page;
+>>           struct folio *folio;
+>>
+>> @@ -2617,8 +2617,9 @@ static int gup_pte_range(pmd_t pmd, pmd_t *pmdp,
+>> unsigned long addr,
+>>               goto pte_unmap;
+>>           }
+>>
+>> -        if (unlikely(pmd_val(pmd) != pmd_val(*pmdp)) ||
+>> -            unlikely(pte_val(pte) != pte_val(ptep_get(ptep)))) {
+>> +        if (unlikely(!pmd_same(pmd, *pmdp)) ||
+>> +            unlikely(!pte_same_norecency(pte,
+>> +                    ptep_get_lockless_norecency(ptep)))) {
+>>               gup_put_folio(folio, 1, flags);
+>>               goto pte_unmap;
+> 
+> We pass the pte into pte_access_permitted(). It would be good to mention that
+> you checked all implementations.
 
-Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+TBH, I hadn't; I decided that since the "inaccurate access/dirty bits" was only
+possible on arm64, then only arm64's implementation needed checking. But given
+your comment, I just had a quick look at all impls. I didn't spot any problems
+where any impl needs the access/dirty bits. I'll add this to the commit log.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index aa3b947fb080..c3e365b9d759 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8512,7 +8512,7 @@ F:	Documentation/devicetree/bindings/crypto/fsl,sec-v4.0*
- F:	drivers/crypto/caam/
- 
- FREESCALE COLDFIRE M5441X MMC DRIVER
--M:	Angelo Dureghello <angelo.dureghello@timesys.com>
-+M:	Angelo Dureghello <adureghello@baylibre.com>
- L:	linux-mmc@vger.kernel.org
- S:	Maintained
- F:	drivers/mmc/host/sdhci-esdhc-mcf.c
--- 
-2.43.1
+> 
+> Acked-by: David Hildenbrand <david@redhat.com>
+> 
 
