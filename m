@@ -1,281 +1,291 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AEFA13C813;
-	Tue, 26 Mar 2024 14:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2089A13C680;
+	Tue, 26 Mar 2024 14:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711464769; cv=none; b=ijTBFOnp1JMBObj32EniNv2HvVprxPreHMVdl6921j/h1E3zIE16hqb8XkdSq0LbvDnHDaHcyq/2L21WXdeBKvpjRBfCHuPALPVeE5hUdZzIbyNDaPFr+5cAWzzIVSuAJ5bt8MUyuz/v79oAlDZc9LqBweJXNKa5g73Td06BzD0=
+	t=1711464790; cv=none; b=i9LbPl3uIQdCHEXpFHAbq/oL0aLyik3K/EerenOYPU3zw7ycqzpTRTbSWq6Qh5eKWyMIhK6jhd15KU7Qiq65f/Nh5pH2Wdc8nn9EMKH+lf8QU7426G9WFB4LXyzWRzfuhoUikc3CHBjUnkWAh0pCfthlorThlv62HYSVGNEBVsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711464769; c=relaxed/simple;
-	bh=JWJWSSqZAv4OBBTEj+CvzbsUGOlw2pfJrmvfZ4iJETc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BAfBxBnENw+j4fIiUuT1pHXTBbpNmnOf7Cx2blvtflJAPdBzRNAL72hAY6qvQJbTc1rmv8OIcSTYLsBq+zHYCR8XySxiKV4reU/F8S0wIPipUuW6z9guXnaJBDWLHeMUSk/t7aOriGDGkgyUA3qlqJj7+anaT1f5QYyYEAssKc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bVA3JNh0; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711464790; c=relaxed/simple;
+	bh=zmcaILoG9edopCsb9BkgtZjkbl241qwQmZqzbDR5n9k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=DoO9c7cp1dSD7W+hgGsBkFQjEisz2xolUapyXQ5LMMPFmstnsaXFS5GP6AA06NHzXuTgK/DOQ19rQKGLEmXGFoQzePEOtWIxBeennIuXynsdwlr1sVb4rg9JANmvXtGEn+Z2ou6USJliUIENqTPEuM+dtJdKeIV8FwxvAhiFEdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UW34W87t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVA3JNh0"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3416df43cabso3918177f8f.3;
-        Tue, 26 Mar 2024 07:52:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711464765; x=1712069565; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Vm+pXqQpZ6t0qViILPSWL7APStnvBHw6i2ClH09kCck=;
-        b=bVA3JNh0E/eqlTfuC3Tf/SmriZL8UcrbxtqxvNopRrH9YdGenKBMyxNMquhaxM6ZQE
-         eawEMwkleOxRClLS+KhSF0yBy+Th6IR7fhyTShxuYbwEuDbcpip63fveL9y/kre+WsTZ
-         MniaWMb20P6XUTLiYQoYpJcMVAd8t/VUMrTpmck7JWwTxtDA/+/QyN4l/dZNezTWakAi
-         eTHHIS+smmyi9gd/DvNisWHE111Jg+patPHmJ3eMzvZQPQkG5ZtOaqNOxZ1u0AmeaDrV
-         JuhseiZ8As1L5Rvczn9Wc23QZrfWrybMPNOBlKUURKB2un25HaKuLThe1u4OqKwD5cD5
-         4TmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711464765; x=1712069565;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Vm+pXqQpZ6t0qViILPSWL7APStnvBHw6i2ClH09kCck=;
-        b=SQfV+IZRDHQ7CV3mKULgoJjCrhMsWwOCF2+Lchh9iQgLol86VkSNeH6bseRUIMNhR9
-         Rfn/Njr7oGVTVq4N+1QarZU5I27pI74ig4CiYw1yrUS7Ci1lR9fgzB6L75p7dTg40rRl
-         6dT94n+E+UgXkFxhn4fukHhYQLDFeJ+tuFYoPDw8fS+wmF6vWxcad/IuEK33hZAChzoU
-         eB8OzYjXO1HlC43RhcO3jKFrvlBZGDPuJFOFPVs3azp4MoCjWi3Y61ijIoo39aGrfzTt
-         OQDhNLwGRBe8JNpWjP73tGz7/6Spl3N0EbBGgbV/h4sYGpJ8hT5Fnk8tQCtp8eYvAiz8
-         9bng==
-X-Forwarded-Encrypted: i=1; AJvYcCUnJGnFdUdN639612O2h1CMIW78IQOlyMKmaSOeHlIrYqn03E9yAsEOdrgjzIQMAzrIL2I9W6zyXcE+awZsb6mPKxGZjPgY5dxm8b33+7/qJV16EO9tO29XLMDAGHeF+hAZlWkBBE3TOQ==
-X-Gm-Message-State: AOJu0Ywxlxd119w49fDZCZ+yOac6hCo3e/KcWiGPqlA3YmlRhgxwl/80
-	Qmd+0Gf+dRR0GUs69u0cIePRnadvpXvKPoc2f5kZCR+a0Pm4k0WHxuvnDackM8o=
-X-Google-Smtp-Source: AGHT+IFLN6dL48JkFezyVN548uxxZa0m+6M5lB95g05ji6AO98ljI7l5sAwddvHRuNbbfaEZAovuFg==
-X-Received: by 2002:a5d:5601:0:b0:33e:818e:d076 with SMTP id l1-20020a5d5601000000b0033e818ed076mr1102752wrv.47.1711464765586;
-        Tue, 26 Mar 2024 07:52:45 -0700 (PDT)
-Received: from [192.168.1.253] (57657817.catv.pool.telekom.hu. [87.101.120.23])
-        by smtp.googlemail.com with ESMTPSA id h8-20020a05600004c800b0033b66c2d61esm12281738wri.48.2024.03.26.07.52.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 07:52:45 -0700 (PDT)
-From: Gabor Juhos <j4g8y7@gmail.com>
-Date: Tue, 26 Mar 2024 15:52:28 +0100
-Subject: [PATCH v4 2/2] arm64: dts: qcom: add TP-Link Archer AX55 v1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UW34W87t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3576CC433C7;
+	Tue, 26 Mar 2024 14:53:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711464789;
+	bh=zmcaILoG9edopCsb9BkgtZjkbl241qwQmZqzbDR5n9k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=UW34W87tWJeckzZMXemY9Kl/ntVhl83WMu+Tx1NmAgER6ol3ySvShlWSHxhXAeqj3
+	 cTBaywd0BMmspyxP/OKi41cYS5hpuoUYdmRlgYtUxdGlr0wEgcr3h4RkOYdloXAoGg
+	 1wJtn+4nhTbkwA5ZrVd+KGR7TSIupKeljESYeSdcvAhrm0a0GTQVqwWse0iP9+N0gi
+	 FR1Vg3K/Nh3sIbIsW0mmNaG7TwvsxzWXWiTGv/LLpZLgSUdcLyFhpdthPtughKQjpz
+	 K/N/pF0/4euGrcLHqjfsjpzZMqW7Jsu8cpCAcuDH5XE1zioQJWBlTSKQkRwTtxQbfI
+	 wbNS1aF84pdlQ==
+From: Arnd Bergmann <arnd@kernel.org>
+To: linux-kbuild@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	"Manoj N. Kumar" <manoj@linux.ibm.com>,
+	"Matthew R. Ochs" <mrochs@linux.ibm.com>,
+	Uma Krishnan <ukrishn@linux.ibm.com>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Nathan Chancellor <nathan@kernel.org>
+Cc: Nicolas Schier <nicolas@fjasle.eu>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH 07/12] cxlflash: fix function pointer cast warnings
+Date: Tue, 26 Mar 2024 15:51:32 +0100
+Message-Id: <20240326145140.3257163-6-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240326144741.3094687-1-arnd@kernel.org>
+References: <20240326144741.3094687-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240326-archer-ax55-v1-v4-2-dc5b54a4bb00@gmail.com>
-References: <20240326-archer-ax55-v1-v4-0-dc5b54a4bb00@gmail.com>
-In-Reply-To: <20240326-archer-ax55-v1-v4-0-dc5b54a4bb00@gmail.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Gabor Juhos <j4g8y7@gmail.com>
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
 
-Add device tree source for the TP-Link Archer AX55 v1 [1]
-which is a dual-band WiFi router based on the IPQ5018 SoC.
+From: Arnd Bergmann <arnd@arndb.de>
 
-At the moment, only the UART, the GPIO LEDs and buttons
-are usable, but it makes it possible to boot an initramfs
-image on the device.
+Calling a function through an incompatible pointer type causes breaks
+kcfi, so clang warns about the assignments:
 
-The device tree can be extended in the future, once support
-for other periherals will be available for the platform.
+drivers/scsi/cxlflash/main.c:3498:3: error: cast from 'int (*)(struct cxlflash_cfg *, struct ht_cxlflash_lun_provision *)' to 'hioctl' (aka 'int (*)(struct cxlflash_cfg *, void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+ 3498 |                 (hioctl)cxlflash_lun_provision },
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/scsi/cxlflash/main.c:3500:3: error: cast from 'int (*)(struct cxlflash_cfg *, struct ht_cxlflash_afu_debug *)' to 'hioctl' (aka 'int (*)(struct cxlflash_cfg *, void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+ 3500 |                 (hioctl)cxlflash_afu_debug },
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. https://www.tp-link.com/en/home-networking/wifi-router/archer-ax55/v1/
+Address these by changing the functions to have the correct type
+and replace the function pointer cast with a cast of its argument.
 
-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-Changes in v4:
-  - change the orange WAN LED's function to use LED_FUNCTION_WAN_ONLINE
-    definition introduced in v6.9-rc1
-  - remove function-enumerator properties from the WLAN LEDs and change
-    its' functions to use LED_FUNCTION_WLAN_[25]GHZ definitions introduced
-    in v6.9-rc1
-  - rebase on top of v6.9-rc1
+ drivers/scsi/cxlflash/lunmgt.c    |  4 ++--
+ drivers/scsi/cxlflash/main.c      | 14 ++++++-------
+ drivers/scsi/cxlflash/superpipe.c | 34 +++++++++++++++----------------
+ drivers/scsi/cxlflash/superpipe.h | 11 ++++------
+ drivers/scsi/cxlflash/vlun.c      |  7 +++----
+ 5 files changed, 31 insertions(+), 39 deletions(-)
 
-Changes in v3:
-  - change pin configuration to use "gpio20" and "gpio21" for UART pins
-  - rebase on top of v6.8.
-  - Link to v2: https://lore.kernel.org/r/20240226-archer-ax55-v1-v2-2-3776eb61f432@gmail.com
-
-Changes in v2:
-  - reorder the properties in TLMM pin configuration nodes to follow the
-    usual order pointed out by Krzysztof
-  - Link to v1: https://lore.kernel.org/all/20240223-archer-ax55-v1-v1-2-99f8fa2c3858@gmail.com
-
-Note: running 'make CHECK_DTBS=y qcom/ipq5018-tplink-archer-ax55-v1.dtb'
-shows the following:
-
-    DTC_CHK arch/arm64/boot/dts/qcom/ipq5018-tplink-archer-ax55-v1.dtb
-  <...>/arch/arm64/boot/dts/qcom/ipq5018-tplink-archer-ax55-v1.dtb: usb@8af8800: interrupts: [[0, 62, 4]] is too short
-  	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-  <...>/arch/arm64/boot/dts/qcom/ipq5018-tplink-archer-ax55-v1.dtb: usb@8af8800: interrupt-names: ['hs_phy_irq'] is too short
-  	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-  <...>/arch/arm64/boot/dts/qcom/ipq5018-tplink-archer-ax55-v1.dtb: usb@8af8800: interrupts: [[0, 62, 4]] is too short
-  	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-  <...>/arch/arm64/boot/dts/qcom/ipq5018-tplink-archer-ax55-v1.dtb: usb@8af8800: interrupt-names:0: 'pwr_event' was expected
-  	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-  <...>/arch/arm64/boot/dts/qcom/ipq5018-tplink-archer-ax55-v1.dtb: usb@8af8800: interrupt-names: ['hs_phy_irq'] is too short
-  	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-
-This is not caused by the new device tree per se but comes from
-the usb@8af8800 node defined in ipq5018.dtsi. Running the check
-on 'qcom/ipq5018-rdp432-c2.dtb' shows the same.
----
- arch/arm64/boot/dts/qcom/Makefile                  |   1 +
- .../dts/qcom/ipq5018-tplink-archer-ax55-v1.dts     | 128 +++++++++++++++++++++
- 2 files changed, 129 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 7d40ec5e7d214..c934e3aab2f44 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -10,6 +10,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= apq8094-sony-xperia-kitakami-karin_windy.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-ifc6640.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= ipq5018-rdp432-c2.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= ipq5018-tplink-archer-ax55-v1.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= ipq5332-rdp441.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= ipq5332-rdp442.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= ipq5332-rdp468.dtb
-diff --git a/arch/arm64/boot/dts/qcom/ipq5018-tplink-archer-ax55-v1.dts b/arch/arm64/boot/dts/qcom/ipq5018-tplink-archer-ax55-v1.dts
-new file mode 100644
-index 0000000000000..5bb021cb29cd3
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/ipq5018-tplink-archer-ax55-v1.dts
-@@ -0,0 +1,128 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR BSD-3-Clause
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/leds/common.h>
-+
-+#include "ipq5018.dtsi"
-+
-+/ {
-+	model = "TP-Link Archer AX55 v1";
-+	compatible = "tplink,archer-ax55-v1", "qcom,ipq5018";
-+
-+	aliases {
-+		serial0 = &blsp1_uart1;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-0 = <&led_pins>;
-+		pinctrl-names = "default";
-+
-+		led-0 {
-+			color = <LED_COLOR_ID_GREEN>;
-+			function = LED_FUNCTION_LAN;
-+			gpios = <&tlmm 10 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led-1 {
-+			color = <LED_COLOR_ID_GREEN>;
-+			function = LED_FUNCTION_WAN_ONLINE;
-+			gpios = <&tlmm 11 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led-2 {
-+			color = <LED_COLOR_ID_GREEN>;
-+			function = LED_FUNCTION_WLAN_2GHZ;
-+			gpios = <&tlmm 13 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led-3 {
-+			color = <LED_COLOR_ID_GREEN>;
-+			function = LED_FUNCTION_POWER;
-+			gpios = <&tlmm 18 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led-4 {
-+			color = <LED_COLOR_ID_ORANGE>;
-+			function = LED_FUNCTION_WAN;
-+			gpios = <&tlmm 22 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led-5 {
-+			color = <LED_COLOR_ID_GREEN>;
-+			function = LED_FUNCTION_USB;
-+			gpios = <&tlmm 38 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led-6 {
-+			color = <LED_COLOR_ID_GREEN>;
-+			function = LED_FUNCTION_WLAN_5GHZ;
-+			gpios = <&tlmm 39 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	buttons {
-+		compatible = "gpio-keys";
-+		pinctrl-0 = <&button_pins>;
-+		pinctrl-names = "default";
-+
-+		button-reset {
-+			debounce-interval = <60>;
-+			gpios = <&tlmm 25 GPIO_ACTIVE_LOW>;
-+			label = "reset";
-+			linux,code = <KEY_RESTART>;
-+		};
-+
-+		button-wps {
-+			debounce-interval = <60>;
-+			gpios = <&tlmm 31 GPIO_ACTIVE_LOW>;
-+			label = "wps";
-+			linux,code = <KEY_WPS_BUTTON>;
-+		};
-+	};
-+};
-+
-+&blsp1_uart1 {
-+	pinctrl-0 = <&uart_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&sleep_clk {
-+	clock-frequency = <32000>;
-+};
-+
-+&tlmm {
-+	button_pins: button-pins-state {
-+		pins = "gpio25", "gpio31";
-+		function = "gpio";
-+		drive-strength = <8>;
-+		bias-pull-up;
-+	};
-+
-+	led_pins: led-pins-state {
-+		pins = "gpio10", "gpio11", "gpio13", "gpio18", "gpio22",
-+		       "gpio38", "gpio39";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
-+	uart_pins: uart-pins-state {
-+		pins = "gpio20", "gpio21";
-+		function = "blsp0_uart0";
-+		drive-strength = <8>;
-+		bias-disable;
-+	};
-+};
-+
-+&xo_board_clk {
-+	clock-frequency = <24000000>;
-+};
-
+diff --git a/drivers/scsi/cxlflash/lunmgt.c b/drivers/scsi/cxlflash/lunmgt.c
+index e0e15b44a2e6..7d5e9b49eb90 100644
+--- a/drivers/scsi/cxlflash/lunmgt.c
++++ b/drivers/scsi/cxlflash/lunmgt.c
+@@ -224,9 +224,9 @@ void cxlflash_term_global_luns(void)
+  *
+  * Return: 0 on success, -errno on failure
+  */
+-int cxlflash_manage_lun(struct scsi_device *sdev,
+-			struct dk_cxlflash_manage_lun *manage)
++int cxlflash_manage_lun(struct scsi_device *sdev, void *arg)
+ {
++	struct dk_cxlflash_manage_lun *manage = arg;
+ 	struct cxlflash_cfg *cfg = shost_priv(sdev->host);
+ 	struct device *dev = &cfg->dev->dev;
+ 	struct llun_info *lli = NULL;
+diff --git a/drivers/scsi/cxlflash/main.c b/drivers/scsi/cxlflash/main.c
+index debd36974119..2ad157e8b1c2 100644
+--- a/drivers/scsi/cxlflash/main.c
++++ b/drivers/scsi/cxlflash/main.c
+@@ -3279,9 +3279,9 @@ static char *decode_hioctl(unsigned int cmd)
+  *
+  * Return: 0 on success, -errno on failure
+  */
+-static int cxlflash_lun_provision(struct cxlflash_cfg *cfg,
+-				  struct ht_cxlflash_lun_provision *lunprov)
++static int cxlflash_lun_provision(struct cxlflash_cfg *cfg, void *arg)
+ {
++	struct ht_cxlflash_lun_provision *lunprov = arg;
+ 	struct afu *afu = cfg->afu;
+ 	struct device *dev = &cfg->dev->dev;
+ 	struct sisl_ioarcb rcb;
+@@ -3373,9 +3373,9 @@ static int cxlflash_lun_provision(struct cxlflash_cfg *cfg,
+  *
+  * Return: 0 on success, -errno on failure
+  */
+-static int cxlflash_afu_debug(struct cxlflash_cfg *cfg,
+-			      struct ht_cxlflash_afu_debug *afu_dbg)
++static int cxlflash_afu_debug(struct cxlflash_cfg *cfg, void *arg)
+ {
++	struct ht_cxlflash_afu_debug *afu_dbg = arg;
+ 	struct afu *afu = cfg->afu;
+ 	struct device *dev = &cfg->dev->dev;
+ 	struct sisl_ioarcb rcb;
+@@ -3489,10 +3489,8 @@ static long cxlflash_chr_ioctl(struct file *file, unsigned int cmd,
+ 		size_t size;
+ 		hioctl ioctl;
+ 	} ioctl_tbl[] = {	/* NOTE: order matters here */
+-	{ sizeof(struct ht_cxlflash_lun_provision),
+-		(hioctl)cxlflash_lun_provision },
+-	{ sizeof(struct ht_cxlflash_afu_debug),
+-		(hioctl)cxlflash_afu_debug },
++	{ sizeof(struct ht_cxlflash_lun_provision), cxlflash_lun_provision },
++	{ sizeof(struct ht_cxlflash_afu_debug), cxlflash_afu_debug },
+ 	};
+ 
+ 	/* Hold read semaphore so we can drain if needed */
+diff --git a/drivers/scsi/cxlflash/superpipe.c b/drivers/scsi/cxlflash/superpipe.c
+index e1b55b03e812..afbc8619573d 100644
+--- a/drivers/scsi/cxlflash/superpipe.c
++++ b/drivers/scsi/cxlflash/superpipe.c
+@@ -729,8 +729,7 @@ int _cxlflash_disk_release(struct scsi_device *sdev,
+ 	return rc;
+ }
+ 
+-int cxlflash_disk_release(struct scsi_device *sdev,
+-			  struct dk_cxlflash_release *release)
++int cxlflash_disk_release(struct scsi_device *sdev, void *release)
+ {
+ 	return _cxlflash_disk_release(sdev, NULL, release);
+ }
+@@ -955,8 +954,7 @@ static int _cxlflash_disk_detach(struct scsi_device *sdev,
+ 	return rc;
+ }
+ 
+-static int cxlflash_disk_detach(struct scsi_device *sdev,
+-				struct dk_cxlflash_detach *detach)
++static int cxlflash_disk_detach(struct scsi_device *sdev, void *detach)
+ {
+ 	return _cxlflash_disk_detach(sdev, NULL, detach);
+ }
+@@ -1314,9 +1312,9 @@ int check_state(struct cxlflash_cfg *cfg)
+  *
+  * Return: 0 on success, -errno on failure
+  */
+-static int cxlflash_disk_attach(struct scsi_device *sdev,
+-				struct dk_cxlflash_attach *attach)
++static int cxlflash_disk_attach(struct scsi_device *sdev, void *arg)
+ {
++	struct dk_cxlflash_attach *attach = arg;
+ 	struct cxlflash_cfg *cfg = shost_priv(sdev->host);
+ 	struct device *dev = &cfg->dev->dev;
+ 	struct afu *afu = cfg->afu;
+@@ -1648,9 +1646,9 @@ static int recover_context(struct cxlflash_cfg *cfg,
+  *
+  * Return: 0 on success, -errno on failure
+  */
+-static int cxlflash_afu_recover(struct scsi_device *sdev,
+-				struct dk_cxlflash_recover_afu *recover)
++static int cxlflash_afu_recover(struct scsi_device *sdev, void *arg)
+ {
++	struct dk_cxlflash_recover_afu *recover = arg;
+ 	struct cxlflash_cfg *cfg = shost_priv(sdev->host);
+ 	struct device *dev = &cfg->dev->dev;
+ 	struct llun_info *lli = sdev->hostdata;
+@@ -1833,9 +1831,9 @@ static int process_sense(struct scsi_device *sdev,
+  *
+  * Return: 0 on success, -errno on failure
+  */
+-static int cxlflash_disk_verify(struct scsi_device *sdev,
+-				struct dk_cxlflash_verify *verify)
++static int cxlflash_disk_verify(struct scsi_device *sdev, void *arg)
+ {
++	struct dk_cxlflash_verify *verify = arg;
+ 	int rc = 0;
+ 	struct ctx_info *ctxi = NULL;
+ 	struct cxlflash_cfg *cfg = shost_priv(sdev->host);
+@@ -2111,16 +2109,16 @@ int cxlflash_ioctl(struct scsi_device *sdev, unsigned int cmd, void __user *arg)
+ 		size_t size;
+ 		sioctl ioctl;
+ 	} ioctl_tbl[] = {	/* NOTE: order matters here */
+-	{sizeof(struct dk_cxlflash_attach), (sioctl)cxlflash_disk_attach},
++	{sizeof(struct dk_cxlflash_attach), cxlflash_disk_attach},
+ 	{sizeof(struct dk_cxlflash_udirect), cxlflash_disk_direct_open},
+-	{sizeof(struct dk_cxlflash_release), (sioctl)cxlflash_disk_release},
+-	{sizeof(struct dk_cxlflash_detach), (sioctl)cxlflash_disk_detach},
+-	{sizeof(struct dk_cxlflash_verify), (sioctl)cxlflash_disk_verify},
+-	{sizeof(struct dk_cxlflash_recover_afu), (sioctl)cxlflash_afu_recover},
+-	{sizeof(struct dk_cxlflash_manage_lun), (sioctl)cxlflash_manage_lun},
++	{sizeof(struct dk_cxlflash_release), cxlflash_disk_release},
++	{sizeof(struct dk_cxlflash_detach), cxlflash_disk_detach},
++	{sizeof(struct dk_cxlflash_verify), cxlflash_disk_verify},
++	{sizeof(struct dk_cxlflash_recover_afu), cxlflash_afu_recover},
++	{sizeof(struct dk_cxlflash_manage_lun), cxlflash_manage_lun},
+ 	{sizeof(struct dk_cxlflash_uvirtual), cxlflash_disk_virtual_open},
+-	{sizeof(struct dk_cxlflash_resize), (sioctl)cxlflash_vlun_resize},
+-	{sizeof(struct dk_cxlflash_clone), (sioctl)cxlflash_disk_clone},
++	{sizeof(struct dk_cxlflash_resize), cxlflash_vlun_resize},
++	{sizeof(struct dk_cxlflash_clone), cxlflash_disk_clone},
+ 	};
+ 
+ 	/* Hold read semaphore so we can drain if needed */
+diff --git a/drivers/scsi/cxlflash/superpipe.h b/drivers/scsi/cxlflash/superpipe.h
+index 0e3b45964066..fe8c975d13d7 100644
+--- a/drivers/scsi/cxlflash/superpipe.h
++++ b/drivers/scsi/cxlflash/superpipe.h
+@@ -114,18 +114,16 @@ struct cxlflash_global {
+ 	struct page *err_page; /* One page of all 0xF for error notification */
+ };
+ 
+-int cxlflash_vlun_resize(struct scsi_device *sdev,
+-			 struct dk_cxlflash_resize *resize);
++int cxlflash_vlun_resize(struct scsi_device *sdev, void *resize);
+ int _cxlflash_vlun_resize(struct scsi_device *sdev, struct ctx_info *ctxi,
+ 			  struct dk_cxlflash_resize *resize);
+ 
+ int cxlflash_disk_release(struct scsi_device *sdev,
+-			  struct dk_cxlflash_release *release);
++			  void *release);
+ int _cxlflash_disk_release(struct scsi_device *sdev, struct ctx_info *ctxi,
+ 			   struct dk_cxlflash_release *release);
+ 
+-int cxlflash_disk_clone(struct scsi_device *sdev,
+-			struct dk_cxlflash_clone *clone);
++int cxlflash_disk_clone(struct scsi_device *sdev, void *arg);
+ 
+ int cxlflash_disk_virtual_open(struct scsi_device *sdev, void *arg);
+ 
+@@ -145,8 +143,7 @@ void rhte_checkin(struct ctx_info *ctxi, struct sisl_rht_entry *rhte);
+ 
+ void cxlflash_ba_terminate(struct ba_lun *ba_lun);
+ 
+-int cxlflash_manage_lun(struct scsi_device *sdev,
+-			struct dk_cxlflash_manage_lun *manage);
++int cxlflash_manage_lun(struct scsi_device *sdev, void *manage);
+ 
+ int check_state(struct cxlflash_cfg *cfg);
+ 
+diff --git a/drivers/scsi/cxlflash/vlun.c b/drivers/scsi/cxlflash/vlun.c
+index cbd5a648a131..d9a89fd27645 100644
+--- a/drivers/scsi/cxlflash/vlun.c
++++ b/drivers/scsi/cxlflash/vlun.c
+@@ -819,8 +819,7 @@ int _cxlflash_vlun_resize(struct scsi_device *sdev,
+ 	return rc;
+ }
+ 
+-int cxlflash_vlun_resize(struct scsi_device *sdev,
+-			 struct dk_cxlflash_resize *resize)
++int cxlflash_vlun_resize(struct scsi_device *sdev, void *resize)
+ {
+ 	return _cxlflash_vlun_resize(sdev, NULL, resize);
+ }
+@@ -1187,9 +1186,9 @@ static int clone_lxt(struct afu *afu,
+  *
+  * Return: 0 on success, -errno on failure
+  */
+-int cxlflash_disk_clone(struct scsi_device *sdev,
+-			struct dk_cxlflash_clone *clone)
++int cxlflash_disk_clone(struct scsi_device *sdev, void *arg)
+ {
++	struct dk_cxlflash_clone *clone = arg;
+ 	struct cxlflash_cfg *cfg = shost_priv(sdev->host);
+ 	struct device *dev = &cfg->dev->dev;
+ 	struct llun_info *lli = sdev->hostdata;
 -- 
-2.44.0
+2.39.2
 
