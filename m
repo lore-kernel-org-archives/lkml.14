@@ -1,265 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D73E07441F;
-	Tue, 26 Mar 2024 09:20:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A764CE09;
+	Tue, 26 Mar 2024 09:21:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711444843; cv=none; b=b95mWnw9/kIpjxfiGB1iQnlftnzXJScgxvvYS8hGoxDg8r9tMBiPSq7HIaInRFGVC9fWJxdfksOrNKM4VDpsXeMK5j4lGQvy/wNpkKnmcOW7rLudeTkepn4w5vRNU+sF8RS1YIggTofhkjQxe6AUVuJr6tgksSuicAPxRe/bT4c=
+	t=1711444871; cv=none; b=olfzJ3F3qVVBO1kwMGsNx+bWLGEQHG/SRuJyGrjXG51ZvJLViWxv/sVKkCt7SmWCtys7eboEdTfqvzfk/F/UCA2pEsg3XCxcK5b8yAG7ZOFh3JWlW9uww/ZbAojVrKgeJxL/M5jGHx1J62KIYq2v2uXs84D6WpRbCeDMbMiqX4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711444843; c=relaxed/simple;
-	bh=+7ucvPTkWBTMtzrrF9C3CNTgvipLkaIOG0J5oK9Kxpg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Vb0Z83Z0N/0cELD2LF9lUuGc6g/CZwHT7XAORrIQMcp4qXD99CQvPFXCdETVqcoFt5CblnJNXxeMUq3oUCOO9V7agYJcgLnzZ/4/y2qPusxhjx7bOzBaErbbKN+MQJvOKEc3xIO/FuQDazFNrzcQ8unjYu2KGJtktNyQgzP3g10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R2Pn6GZJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711444871; c=relaxed/simple;
+	bh=L1aGiArlPsZ+bQny3tvbhbXelHlaXT2szGwtPU5OQGw=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=CJWuUcGlFKj4UXEJGmTmfNfzjMnZS3QRRgoHrqj73E41wyjCAQfe2KOxe2cieUxQBNZpoFgw4iu3WPiHNzgDqm+9gnQIWUAqEaHicVBbtVGrggQA3CI4uYQ8K8IDwSnziTxCilC+avQAtaffQAYkWxLSVh96UBNt0bkmY8x8PDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dD6JKrhM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MBeym/TH; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R2Pn6GZJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 14AF4C4163C;
-	Tue, 26 Mar 2024 09:20:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711444843;
-	bh=+7ucvPTkWBTMtzrrF9C3CNTgvipLkaIOG0J5oK9Kxpg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=R2Pn6GZJ1aKalILTteaA2ep1KXYwt8Bhz6yTCdtc6ZVqC+2bqK+a4uFzPPKLen2jK
-	 848/97+5eCMOZRhpM7se1SJQO0N6QfA1vBhZZA3duD14m9ajg3IFyhR91KxGs6b37K
-	 rd0kaXEv2qr0ot01FWkRz8dDj8h+HZVpaJFwhZoOiS1cB/gbACF/viosavPkNtjsiG
-	 MEC37z3PMR4X8/frcugnbOz6tk6h1a5fGBo8hb63Zf/WXsnIyJf7xkjy4Z+yP+Hsau
-	 veAtjEwkOgx6qnjB6OgA3qU0WiIIQUhhGMX0Eb4BP+slpl7o1yLdTz2uXO1b4sv0fO
-	 QHQJQtFt7EF2Q==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB64C6FD1F;
-	Tue, 26 Mar 2024 09:20:43 +0000 (UTC)
-From: Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
-Date: Tue, 26 Mar 2024 12:19:05 +0300
-Subject: [PATCH v9 38/38] dma: cirrus: remove platform code
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dD6JKrhM";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MBeym/TH"
+Date: Tue, 26 Mar 2024 09:21:06 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1711444867;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2A00E/c8uqCaQHkVCU/Oq9rDbHV2kx2Rs5KES71fn6M=;
+	b=dD6JKrhM0zqXW3Lj06bAHUVyZ2AEztZI0Sk+OGTO2FkU3hzg0D0mucLMIIh3u31gNTN4Au
+	SRDmrem2P9HyUqrsIx9TnIMQgzH6ysAi9a18NfHTxqkdA0oG5GAgXqGtPOb+tTQK7OcUE8
+	bnLBTmr1z8eKC6zoCrzhEjZ3z+A1gaXEmtiTzgrdvyrRROmpTqZ3JSeX0ZWCQXeS+FTax0
+	RQN89f5jQz3BcwJQdhBSOfWBWIceTZ5fNmSk+bSQviJ7hQ3j3A7+kkqhDj4xuzSkvfvJDe
+	OckA+oo/F2/XWtkR4+K0SjckDQ1OUmK87+a2UljfTCsHe7GMqOaTA1vWRK63dQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1711444867;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2A00E/c8uqCaQHkVCU/Oq9rDbHV2kx2Rs5KES71fn6M=;
+	b=MBeym/THDeLwvWMPZ9s6Mc0J8IRF6UhqjjlxIr6ZdbxyHPNCDyP31o1V6uWpnXG/kd82XY
+	JEIRgm3zFgY0S/Cg==
+From: "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/urgent] x86/nmi: Upgrade NMI backtrace stall checks & messages
+Cc: Breno Leitao <leitao@debian.org>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Ingo Molnar <mingo@kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <ab4d70c8-c874-42dc-b206-643018922393@paulmck-laptop>
+References: <ab4d70c8-c874-42dc-b206-643018922393@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Message-ID: <171144486643.10875.13891742949847997035.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240326-ep93xx-v9-38-156e2ae5dfc8@maquefel.me>
-References: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
-In-Reply-To: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
-To: Vinod Koul <vkoul@kernel.org>, 
- Nikita Shubin <nikita.shubin@maquefel.me>, 
- Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc: linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, 
- Arnd Bergmann <arnd@arndb.de>
-X-Mailer: b4 0.13-dev-e3e53
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711444837; l=6035;
- i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
- bh=LpDpPnQaMVc75NrbIxm1GYnB+EUmm7A6TigIqr6iCtI=;
- b=546mvn5m7ddd1NnrKWRqRKP0GSuk9+lLTC4mZp3+R5owyRjRrloS3gjre0ICf1Ag6S+ZPmIf/xPz
- /EJbUmDJAdBDYepemiy+4iNQT0gRvcZjsMhFTP2d74yevjsHh4eU
-X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
- pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
-X-Endpoint-Received: by B4 Relay for nikita.shubin@maquefel.me/20230718
- with auth_id=65
-X-Original-From: Nikita Shubin <nikita.shubin@maquefel.me>
-Reply-To: nikita.shubin@maquefel.me
 
-From: Nikita Shubin <nikita.shubin@maquefel.me>
+The following commit has been merged into the x86/urgent branch of tip:
 
-Remove DMA platform header, from now on we use device tree for DMA
-clients.
+Commit-ID:     3186b61812c007179f1852d8e63a0f0f7dd7c783
+Gitweb:        https://git.kernel.org/tip/3186b61812c007179f1852d8e63a0f0f7dd7c783
+Author:        Paul E. McKenney <paulmck@kernel.org>
+AuthorDate:    Thu, 07 Mar 2024 17:32:15 -08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 26 Mar 2024 10:07:59 +01:00
 
-Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
+x86/nmi: Upgrade NMI backtrace stall checks & messages
+
+The commit to improve NMI stall debuggability:
+
+  344da544f177 ("x86/nmi: Print reasons why backtrace NMIs are ignored")
+
+... has shown value, but widespread use has also identified a few
+opportunities for improvement.
+
+The systems have (as usual) shown far more creativity than that commit's
+author, demonstrating yet again that failing CPUs can do whatever they want.
+
+In addition, the current message format is less friendly than one might
+like to those attempting to use these messages to identify failing CPUs.
+
+Therefore, separately flag CPUs that, during the full time that the
+stack-backtrace request was waiting, were always in an NMI handler,
+were never in an NMI handler, or exited one NMI handler.
+
+Also, split the message identifying the CPU and the time since that CPU's
+last NMI-related activity so that a single line identifies the CPU without
+any other variable information, greatly reducing the processing overhead
+required to identify repeat-offender CPUs.
+
+Co-developed-by: Breno Leitao <leitao@debian.org>
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/ab4d70c8-c874-42dc-b206-643018922393@paulmck-laptop
 ---
- drivers/dma/ep93xx_dma.c                 |  48 ++++++++++++++-
- include/linux/platform_data/dma-ep93xx.h | 100 -------------------------------
- 2 files changed, 46 insertions(+), 102 deletions(-)
+ arch/x86/kernel/nmi.c | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/dma/ep93xx_dma.c b/drivers/dma/ep93xx_dma.c
-index 17c8e2badee2..43c4241af7f5 100644
---- a/drivers/dma/ep93xx_dma.c
-+++ b/drivers/dma/ep93xx_dma.c
-@@ -17,6 +17,7 @@
- #include <linux/clk.h>
- #include <linux/init.h>
- #include <linux/interrupt.h>
-+#include <linux/dma-mapping.h>
- #include <linux/dmaengine.h>
- #include <linux/module.h>
- #include <linux/mod_devicetable.h>
-@@ -25,8 +26,6 @@
- #include <linux/platform_device.h>
- #include <linux/slab.h>
+diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+index 9a5b372..ed163c8 100644
+--- a/arch/x86/kernel/nmi.c
++++ b/arch/x86/kernel/nmi.c
+@@ -580,7 +580,7 @@ EXPORT_SYMBOL_GPL(asm_exc_nmi_kvm_vmx);
  
--#include <linux/platform_data/dma-ep93xx.h>
--
- #include "dmaengine.h"
- 
- /* M2P registers */
-@@ -106,6 +105,26 @@
- #define DMA_MAX_CHAN_BYTES		0xffff
- #define DMA_MAX_CHAN_DESCRIPTORS	32
- 
-+/*
-+ * M2P channels.
-+ *
-+ * Note that these values are also directly used for setting the PPALLOC
-+ * register.
-+ */
-+#define EP93XX_DMA_I2S1			0
-+#define EP93XX_DMA_I2S2			1
-+#define EP93XX_DMA_AAC1			2
-+#define EP93XX_DMA_AAC2			3
-+#define EP93XX_DMA_AAC3			4
-+#define EP93XX_DMA_I2S3			5
-+#define EP93XX_DMA_UART1		6
-+#define EP93XX_DMA_UART2		7
-+#define EP93XX_DMA_UART3		8
-+#define EP93XX_DMA_IRDA			9
-+/* M2M channels */
-+#define EP93XX_DMA_SSP			10
-+#define EP93XX_DMA_IDE			11
-+
- enum ep93xx_dma_type {
- 	M2P_DMA,
- 	M2M_DMA,
-@@ -242,6 +261,31 @@ static struct ep93xx_dma_chan *to_ep93xx_dma_chan(struct dma_chan *chan)
- 	return container_of(chan, struct ep93xx_dma_chan, chan);
+ static char *nmi_check_stall_msg[] = {
+ /*									*/
+-/* +--------- nsp->idt_seq_snap & 0x1: CPU is in NMI handler.		*/
++/* +--------- nmi_seq & 0x1: CPU is currently in NMI handler.		*/
+ /* | +------ cpu_is_offline(cpu)					*/
+ /* | | +--- nsp->idt_calls_snap != atomic_long_read(&nsp->idt_calls):	*/
+ /* | | |	NMI handler has been invoked.				*/
+@@ -628,22 +628,26 @@ void nmi_backtrace_stall_check(const struct cpumask *btp)
+ 		nmi_seq = READ_ONCE(nsp->idt_nmi_seq);
+ 		if (nsp->idt_nmi_seq_snap + 1 == nmi_seq && (nmi_seq & 0x1)) {
+ 			msgp = "CPU entered NMI handler function, but has not exited";
+-		} else if ((nsp->idt_nmi_seq_snap & 0x1) != (nmi_seq & 0x1)) {
+-			msgp = "CPU is handling NMIs";
+-		} else {
+-			idx = ((nsp->idt_seq_snap & 0x1) << 2) |
++		} else if (nsp->idt_nmi_seq_snap == nmi_seq ||
++			   nsp->idt_nmi_seq_snap + 1 == nmi_seq) {
++			idx = ((nmi_seq & 0x1) << 2) |
+ 			      (cpu_is_offline(cpu) << 1) |
+ 			      (nsp->idt_calls_snap != atomic_long_read(&nsp->idt_calls));
+ 			msgp = nmi_check_stall_msg[idx];
+ 			if (nsp->idt_ignored_snap != READ_ONCE(nsp->idt_ignored) && (idx & 0x1))
+ 				modp = ", but OK because ignore_nmis was set";
+-			if (nmi_seq & 0x1)
+-				msghp = " (CPU currently in NMI handler function)";
+-			else if (nsp->idt_nmi_seq_snap + 1 == nmi_seq)
++			if (nsp->idt_nmi_seq_snap + 1 == nmi_seq)
+ 				msghp = " (CPU exited one NMI handler function)";
++			else if (nmi_seq & 0x1)
++				msghp = " (CPU currently in NMI handler function)";
++			else
++				msghp = " (CPU was never in an NMI handler function)";
++		} else {
++			msgp = "CPU is handling NMIs";
+ 		}
+-		pr_alert("%s: CPU %d: %s%s%s, last activity: %lu jiffies ago.\n",
+-			 __func__, cpu, msgp, modp, msghp, j - READ_ONCE(nsp->recv_jiffies));
++		pr_alert("%s: CPU %d: %s%s%s\n", __func__, cpu, msgp, modp, msghp);
++		pr_alert("%s: last activity: %lu jiffies ago.\n",
++			 __func__, j - READ_ONCE(nsp->recv_jiffies));
+ 	}
  }
  
-+static inline bool ep93xx_dma_chan_is_m2p(struct dma_chan *chan)
-+{
-+	if (device_is_compatible(chan->device->dev, "cirrus,ep9301-dma-m2p"))
-+		return true;
-+
-+	return !strcmp(dev_name(chan->device->dev), "ep93xx-dma-m2p");
-+}
-+
-+/*
-+ * ep93xx_dma_chan_direction - returns direction the channel can be used
-+ *
-+ * This function can be used in filter functions to find out whether the
-+ * channel supports given DMA direction. Only M2P channels have such
-+ * limitation, for M2M channels the direction is configurable.
-+ */
-+static inline enum dma_transfer_direction
-+ep93xx_dma_chan_direction(struct dma_chan *chan)
-+{
-+	if (!ep93xx_dma_chan_is_m2p(chan))
-+		return DMA_TRANS_NONE;
-+
-+	/* even channels are for TX, odd for RX */
-+	return (chan->chan_id % 2 == 0) ? DMA_MEM_TO_DEV : DMA_DEV_TO_MEM;
-+}
-+
- /**
-  * ep93xx_dma_set_active - set new active descriptor chain
-  * @edmac: channel
-diff --git a/include/linux/platform_data/dma-ep93xx.h b/include/linux/platform_data/dma-ep93xx.h
-deleted file mode 100644
-index 9ec5cdd5a1eb..000000000000
---- a/include/linux/platform_data/dma-ep93xx.h
-+++ /dev/null
-@@ -1,100 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __ASM_ARCH_DMA_H
--#define __ASM_ARCH_DMA_H
--
--#include <linux/types.h>
--#include <linux/device.h>
--#include <linux/dmaengine.h>
--#include <linux/dma-mapping.h>
--#include <linux/property.h>
--#include <linux/string.h>
--
--/*
-- * M2P channels.
-- *
-- * Note that these values are also directly used for setting the PPALLOC
-- * register.
-- */
--#define EP93XX_DMA_I2S1		0
--#define EP93XX_DMA_I2S2		1
--#define EP93XX_DMA_AAC1		2
--#define EP93XX_DMA_AAC2		3
--#define EP93XX_DMA_AAC3		4
--#define EP93XX_DMA_I2S3		5
--#define EP93XX_DMA_UART1	6
--#define EP93XX_DMA_UART2	7
--#define EP93XX_DMA_UART3	8
--#define EP93XX_DMA_IRDA		9
--/* M2M channels */
--#define EP93XX_DMA_SSP		10
--#define EP93XX_DMA_IDE		11
--
--/**
-- * struct ep93xx_dma_data - configuration data for the EP93xx dmaengine
-- * @port: peripheral which is requesting the channel
-- * @direction: TX/RX channel
-- * @name: optional name for the channel, this is displayed in /proc/interrupts
-- *
-- * This information is passed as private channel parameter in a filter
-- * function. Note that this is only needed for slave/cyclic channels.  For
-- * memcpy channels %NULL data should be passed.
-- */
--struct ep93xx_dma_data {
--	int				port;
--	enum dma_transfer_direction	direction;
--	const char			*name;
--};
--
--/**
-- * struct ep93xx_dma_chan_data - platform specific data for a DMA channel
-- * @name: name of the channel, used for getting the right clock for the channel
-- * @base: mapped registers
-- * @irq: interrupt number used by this channel
-- */
--struct ep93xx_dma_chan_data {
--	const char			*name;
--	void __iomem			*base;
--	int				irq;
--};
--
--/**
-- * struct ep93xx_dma_platform_data - platform data for the dmaengine driver
-- * @channels: array of channels which are passed to the driver
-- * @num_channels: number of channels in the array
-- *
-- * This structure is passed to the DMA engine driver via platform data. For
-- * M2P channels, contract is that even channels are for TX and odd for RX.
-- * There is no requirement for the M2M channels.
-- */
--struct ep93xx_dma_platform_data {
--	struct ep93xx_dma_chan_data	*channels;
--	size_t				num_channels;
--};
--
--static inline bool ep93xx_dma_chan_is_m2p(struct dma_chan *chan)
--{
--	if (device_is_compatible(chan->device->dev, "cirrus,ep9301-dma-m2p"))
--		return true;
--
--	return !strcmp(dev_name(chan->device->dev), "ep93xx-dma-m2p");
--}
--
--/**
-- * ep93xx_dma_chan_direction - returns direction the channel can be used
-- * @chan: channel
-- *
-- * This function can be used in filter functions to find out whether the
-- * channel supports given DMA direction. Only M2P channels have such
-- * limitation, for M2M channels the direction is configurable.
-- */
--static inline enum dma_transfer_direction
--ep93xx_dma_chan_direction(struct dma_chan *chan)
--{
--	if (!ep93xx_dma_chan_is_m2p(chan))
--		return DMA_TRANS_NONE;
--
--	/* even channels are for TX, odd for RX */
--	return (chan->chan_id % 2 == 0) ? DMA_MEM_TO_DEV : DMA_DEV_TO_MEM;
--}
--
--#endif /* __ASM_ARCH_DMA_H */
-
--- 
-2.41.0
-
-
