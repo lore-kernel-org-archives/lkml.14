@@ -1,44 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4003E1E484
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F10513C803
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711465224; cv=none; b=C+TVWwUk/DjOrgOap936twiZImbybamCHqZUv3flSIe6YLU4LIxrF/YqeZYfOaojQ2SB9uc9KsMItNK2r3cL2kdmcY1kEybFROISuP/cuQ4b9gV3oze1O5I07Gdli2D+pwr74OuJJvkwaGt/Pa9pxaplc+M3KD41Qk0sDfwVUcA=
+	t=1711465227; cv=none; b=tP8YisaUL/3eDI/o3VWumDWeAn8+hczmdHuRLSIi+1b4K+58tMf0OefKLRAM0GcIuHdw0vPntDxXd8rUy11CYnFe6tTOFme8pFTN2fKIkc7Jrp9WW7c43mYRbRr30+gYYTQ8KSgBmJ0gboplyLnQTu6kUUmrtZqItaZm3h2a4+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711465224; c=relaxed/simple;
-	bh=NWbxOEw32c7m5KBW5C04/sGYmqDjmEadCfWD+rXLsWU=;
+	s=arc-20240116; t=1711465227; c=relaxed/simple;
+	bh=qUUvhGe91HR/wsvtB7K0cyzfk4u4vLEk2tLsleCKi1Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=svsfI8XzHYOYRA2CqZq6xV7bk0T+kWGug921DzzVIVFNuRkEue2AVFAjYXD7cfW3QWw04sH6vNaKsD0Ial8DmWt1+9Vz5O6p1Z360YvRbGDOLUx0CuVCZxkkGuW/nBVcmxARYS7s+R9BeVYKaqEVj5CZmxb68PLjuxndBHSeuOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CSwP/DAX; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XpT/o0j58FjB03M5wjgE9KyzbjDjllP55RjxArEw8bCoJ0swgO6Bv1C0voWoDYn8QS4nAEYgugrhdJ3Jccz2mdTzpZMPyS2pCmF7c77Kwgvx0EG9zU452scl9Ug2zQIvzWYLAa/XSb7o8pMxbvPF9SP7XaFCZKN+x4aPMOYpbXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R8skvvph; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CSwP/DAX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 026E4C433F1;
-	Tue, 26 Mar 2024 15:00:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711465223;
-	bh=NWbxOEw32c7m5KBW5C04/sGYmqDjmEadCfWD+rXLsWU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CSwP/DAXV65DXTPyu4DbSIjzfFmKFpOQ0ooVrMNJi02COJmchgWbkoRqO1hQJ803e
-	 QrnnsdUpuSkja32LkDerY8/sLzLZ493JVtC0tBeQu6zQAnVNlf8Hx9ykRk0yIR5qAJ
-	 WIdRAsB1/Qy663eah3ER78mIx5trYRcqPku/s3bMM6DnlDrP6FuTJzu2mrlUWByVrp
-	 fMGk/+EsXqyS/GoIVZzkrRk+9LI2bhhp5YF/vjwmIw2WRPgGGUMzIc1FDdxJ52NJbT
-	 C9NVQpnpQ8cdjnc0B6kh2mKR8pQUtUaagv2sfM+FZh0KH6LRGGGug36xtvMUWA8L+M
-	 KZeXT9xvKSBSw==
-Date: Tue, 26 Mar 2024 16:59:41 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Miklos Szeredi <mszeredi@redhat.com>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	xingwei lee <xrivendell7@gmail.com>,
-	yue sun <samsun1006219@gmail.com>
-Subject: Re: [PATCH v2 2/3] selftests/memfd_secret: add vmsplice() test
-Message-ID: <ZgLi3aFcpH8Q-ZPr@kernel.org>
-References: <20240326143210.291116-1-david@redhat.com>
- <20240326143210.291116-3-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R8skvvph"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711465227; x=1743001227;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=qUUvhGe91HR/wsvtB7K0cyzfk4u4vLEk2tLsleCKi1Q=;
+  b=R8skvvphTzaoMR+Y9DFHEYRMULlEyR5hgBmQ3zHMAFz/FyLnh6odak0H
+   vHrSG4qnlptIgL7lXEDope2POW8fi/s2ie+QOsa0JsV63dGyC+ZHPXJGI
+   SR8LsFZQ3AIlPP/ADyphjW8NB2IiCnPhHk/kmJYVhp1UC7aDYT4ADJrTZ
+   odO4LP2J7+4wkX8TN/vwWQsnr0oU032yknJ9cCgZ59nsZEoX8Ht1AUcYt
+   D6ytmExB1DP6bF0oFD39aUh9T0UukhncVZm2srSfWn4HDDXZkV9QLEKKI
+   nFMek2gUYfV0ByUrT7U+J4NnwbpUoDccylbyfwDrbYX/nOf5U19hfBIG8
+   A==;
+X-CSE-ConnectionGUID: PlSfnVXfRxKuxRiw2JPeLw==
+X-CSE-MsgGUID: 2/WQUYCKQSK29nxzgrOiSA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="6414839"
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="6414839"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 08:00:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="914882655"
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="914882655"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 08:00:22 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rp8Hj-0000000GKif-1YRd;
+	Tue, 26 Mar 2024 17:00:19 +0200
+Date: Tue, 26 Mar 2024 17:00:19 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Baojun Xu <baojun.xu@ti.com>
+Cc: tiwai@suse.de, robh+dt@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
+	pierre-louis.bossart@linux.intel.com, kevin-lu@ti.com,
+	13916275206@139.com, alsa-devel@alsa-project.org,
+	linux-kernel@vger.kernel.org, liam.r.girdwood@intel.com,
+	yung-chuan.liao@linux.intel.com, broonie@kernel.org, soyer@irl.hu
+Subject: Re: [PATCH v1 2/8] ALSA: hda/tas2781: Add tas2781 SPI-based driver
+Message-ID: <ZgLjAz99JZQvrx_h@smile.fi.intel.com>
+References: <20240326010905.2147-1-baojun.xu@ti.com>
+ <20240326010905.2147-2-baojun.xu@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,131 +66,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240326143210.291116-3-david@redhat.com>
+In-Reply-To: <20240326010905.2147-2-baojun.xu@ti.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Mar 26, 2024 at 03:32:09PM +0100, David Hildenbrand wrote:
-> Let's add a simple reproducer for a scenario where GUP-fast could succeed
-> on secretmem folios, making vmsplice() succeed instead of failing. The
-> reproducer is based on a reproducer [1] by Miklos Szeredi.
-> 
-> We want to perform two tests: vmsplice() when a fresh page was just
-> faulted in, and vmsplice() on an existing page after munmap() that
-> would drain certain LRU caches/batches in the kernel.
-> 
-> In an ideal world, we could use fallocate(FALLOC_FL_PUNCH_HOLE) /
-> MADV_REMOVE to remove any existing page. As that is currently not
-> possible, run the test before any other tests that would allocate memory
-> in the secretmem fd.
-> 
-> Perform the ftruncate() only once, and check the return value.
-> 
-> [1] https://lkml.kernel.org/r/CAJfpegt3UCsMmxd0taOY11Uaw5U=eS1fE5dn0wZX3HF0oy8-oQ@mail.gmail.com
-> 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+On Tue, Mar 26, 2024 at 09:08:59AM +0800, Baojun Xu wrote:
+> Add TXNW2781 support in smi.
 
-Reviewed-by: Mike Rapoport (IBM) <rppt@kernel.org>
+Same comment WRT the commit message.
 
-> ---
->  tools/testing/selftests/mm/memfd_secret.c | 51 ++++++++++++++++++++++-
->  1 file changed, 49 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/mm/memfd_secret.c b/tools/testing/selftests/mm/memfd_secret.c
-> index 9b298f6a04b3..9a0597310a76 100644
-> --- a/tools/testing/selftests/mm/memfd_secret.c
-> +++ b/tools/testing/selftests/mm/memfd_secret.c
-> @@ -20,6 +20,7 @@
->  #include <unistd.h>
->  #include <errno.h>
->  #include <stdio.h>
-> +#include <fcntl.h>
->  
->  #include "../kselftest.h"
->  
-> @@ -83,6 +84,45 @@ static void test_mlock_limit(int fd)
->  	pass("mlock limit is respected\n");
->  }
->  
-> +static void test_vmsplice(int fd, const char *desc)
-> +{
-> +	ssize_t transferred;
-> +	struct iovec iov;
-> +	int pipefd[2];
-> +	char *mem;
-> +
-> +	if (pipe(pipefd)) {
-> +		fail("pipe failed: %s\n", strerror(errno));
-> +		return;
-> +	}
-> +
-> +	mem = mmap(NULL, page_size, prot, mode, fd, 0);
-> +	if (mem == MAP_FAILED) {
-> +		fail("Unable to mmap secret memory\n");
-> +		goto close_pipe;
-> +	}
-> +
-> +	/*
-> +	 * vmsplice() may use GUP-fast, which must also fail. Prefault the
-> +	 * page table, so GUP-fast could find it.
-> +	 */
-> +	memset(mem, PATTERN, page_size);
-> +
-> +	iov.iov_base = mem;
-> +	iov.iov_len = page_size;
-> +	transferred = vmsplice(pipefd[1], &iov, 1, 0);
-> +
-> +	if (transferred < 0 && errno == EFAULT)
-> +		pass("vmsplice is blocked as expected with %s\n", desc);
-> +	else
-> +		fail("vmsplice: unexpected memory access with %s\n", desc);
-> +
-> +	munmap(mem, page_size);
-> +close_pipe:
-> +	close(pipefd[0]);
-> +	close(pipefd[1]);
-> +}
-> +
->  static void try_process_vm_read(int fd, int pipefd[2])
->  {
->  	struct iovec liov, riov;
-> @@ -187,7 +227,6 @@ static void test_remote_access(int fd, const char *name,
->  		return;
->  	}
->  
-> -	ftruncate(fd, page_size);
->  	memset(mem, PATTERN, page_size);
->  
->  	if (write(pipefd[1], &mem, sizeof(mem)) < 0) {
-> @@ -258,7 +297,7 @@ static void prepare(void)
->  				   strerror(errno));
->  }
->  
-> -#define NUM_TESTS 4
-> +#define NUM_TESTS 6
->  
->  int main(int argc, char *argv[])
->  {
-> @@ -277,9 +316,17 @@ int main(int argc, char *argv[])
->  			ksft_exit_fail_msg("memfd_secret failed: %s\n",
->  					   strerror(errno));
->  	}
-> +	if (ftruncate(fd, page_size))
-> +		ksft_exit_fail_msg("ftruncate failed: %s\n", strerror(errno));
->  
->  	test_mlock_limit(fd);
->  	test_file_apis(fd);
-> +	/*
-> +	 * We have to run the first vmsplice test before any secretmem page was
-> +	 * allocated for this fd.
-> +	 */
-> +	test_vmsplice(fd, "fresh page");
-> +	test_vmsplice(fd, "existing page");
->  	test_process_vm_read(fd);
->  	test_ptrace(fd);
->  
-> -- 
-> 2.43.2
-> 
+I'm wondering why the patch 1&2 can't be folded...
+If this should go separate, with the commit message fixed,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 -- 
-Sincerely yours,
-Mike.
+With Best Regards,
+Andy Shevchenko
+
+
