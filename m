@@ -1,208 +1,225 @@
-Received: from refb01.tmes.trendmicro.eu (refb01.tmes.trendmicro.eu [18.185.115.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BDC954905
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 11:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=18.185.115.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711452649; cv=fail; b=hf0PYH/5vS/dCHk1U8+GLDf9A1DXdov0uOtWxWD9WUXGHqVqNkBJQoYoya8QN1lpaNEScaONY/syu+2PAnE+GnA32aQN5t4dKlGhMmmY5FzQbBFrYO4FtEPF0qDWeOBTeqwGI/ZFFJl0g77dLRDClWhYE3f1qikReOjfkHb699w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711452649; c=relaxed/simple;
-	bh=wKyMQAA+Uxoy+QGvQRqJWzaaAFFlsL78bfMPLvmTuHY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=mydn99sdcgy9fyhxOEbBGv/TVb3JVgc1Yg6Ci6dL5o0iRQqgx4nYlA0AaqXNIg1T2SYxOKdEbotfgs37oBP3EslxmHeOqe3+yM6HZvaw4RVwOUaZidM8xrSH7ia85k6Pc7Xsc5e6lkgOLb7zCmSAwlunK9cmKGVO3nrGoKEcQ40=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensynergy.com; spf=pass smtp.mailfrom=opensynergy.com; dkim=pass (2048-bit key) header.d=opensynergy.com header.i=@opensynergy.com header.b=W4J+An0N; arc=fail smtp.client-ip=18.185.115.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensynergy.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensynergy.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45F154905
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 11:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711452684; cv=none; b=AjS3/4IQGnQ/NGAEUSDt9Nori7gxk4UiAt2BpVA+7K5j/CcAJoz5seGsLfWtVUvp/ciQDJ8uI+fjV1hYk0+onfQRbUkARHF869vVUj0sziB6HnQZjbp2GXXuJkrqj1At+4kfATUpDbD6j2Z2jqVJ1C6qKxpJNwQVG9UsCiYCBSU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711452684; c=relaxed/simple;
+	bh=gdiFA8JUXDACIb1ZE3whn4Tbk48UFrMO3Kz+rHzfM04=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SbqHtj3pOEiOBMBT6mk+e93PdfwVdMqABUQbgR4e8s0SpdCsXaelLufbIiKpdvT1nVQmlZDXT+tBlonqKdWLLQE+5b2pfqep9vo6qaY2eFtCLa6q7o16E4+4d5OdkrhSRaggv/cvhkf7fBTp028dDtRyMZwkSjHrpTi3JzlaZWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WtPu2Jfo; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=opensynergy.com header.i=@opensynergy.com header.b="W4J+An0N"
-Received: from 104.47.7.168_.trendmicro.com (unknown [172.21.10.52])
-	by refb01.tmes.trendmicro.eu (Postfix) with ESMTPS id 5447010055520
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 11:28:32 +0000 (UTC)
-Received: from 104.47.7.168_.trendmicro.com (unknown [172.21.171.124])
-	by repost01.tmes.trendmicro.eu (Postfix) with SMTP id 6C41C10001FBE;
-	Tue, 26 Mar 2024 11:28:25 +0000 (UTC)
-X-TM-MAIL-RECEIVED-TIME: 1711452502.150000
-X-TM-MAIL-UUID: c02b2e57-3589-4ba7-839a-151a26aa8fdc
-Received: from DEU01-BE0-obe.outbound.protection.outlook.com (unknown [104.47.7.168])
-	by repre01.tmes.trendmicro.eu (Trend Micro Email Security) with ESMTPS id 24C1B10001283;
-	Tue, 26 Mar 2024 11:28:22 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=l4+2ARngFvZVnx80VmT2c6tRxl28zGUapvV0EloQ6WQeg8dih6uy3mgfNbUguLtEOVT4sfoqhLitNBXxFedZA8Zs4hc+2/FE4ajprnD/lMsMW7mwWRlLm7rv7xLgoCrBXJshf2tK4Q9Q9O50cCqiRN3VMgvG/At3tjZAID8SagJ+X75IDfG0pmDR4MdJtGxAvviCLWDBkPULD+B87980xOUg1Wxpa2042Kupyi677jJNlpTgKUbd9z/hCB2XVqGRDvKPAUlB6Z7WF0wUtrL3EUgqJRgix9my8cnY55lMm7X1cwyUv6jurKqgaljMb+Ing0khL1YBNJKXu2xfP8ImVg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=COEapnuWnypt+yFh6MuBhwus5pCMpDL6gLIXqXFAxkw=;
- b=I1qM5NuNIGEDJ3ou8gAvEGMI72HECkonh4zjZh+WauD6tVsfBEL6l/o3oyn/bEHBW7iORwqTFU5UGl71robBdblWtIU0MP6O+l+d8TCfunVE2Ar/XzMPRsQC3v3V7vG93T9kgkwVGayBnu72dicrOmhwzYr2KC8NzVpnyhXQOI+Q+/nXlqvqi22o2c3EzsMLIZNizxlWVfYzt3EGKNMN/xZcZvWtwBLMQi/Pk5YOaIi2y8rj205XmaM7UU+SFY7QY1YMp0Z87nrI5+ktt+ITJaa5KIXVYce9sSEwfiT+Hi/kAyYHt20yoAk+aMYbeyHO3vAsDC6Xox5vmHNvc3I7lw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 217.66.60.4) smtp.rcpttodomain=kernel.org smtp.mailfrom=opensynergy.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=opensynergy.com; dkim=none (message not signed); arc=none (0)
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 217.66.60.4)
- smtp.mailfrom=opensynergy.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=opensynergy.com;
-Received-SPF: Pass (protection.outlook.com: domain of opensynergy.com
- designates 217.66.60.4 as permitted sender) receiver=protection.outlook.com;
- client-ip=217.66.60.4; helo=SR-MAIL-03.open-synergy.com; pr=C
-From: Harald Mommer <Harald.Mommer@opensynergy.com>
-To: virtio-dev@lists.oasis-open.org,
-	Haixu Cui <quic_haixcui@quicinc.com>,
-	Mark Brown <broonie@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: quic_ztu@quicinc.com,
-	Matti Moell <Matti.Moell@opensynergy.com>,
-	Mikhail Golubev <Mikhail.Golubev@opensynergy.com>
-Subject: [PATCH v3 0/3] Virtio SPI Linux driver
-Date: Tue, 26 Mar 2024 12:28:09 +0100
-Message-Id: <20240326112812.31739-1-Harald.Mommer@opensynergy.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WtPu2Jfo"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a46cd9e7fcaso642398466b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 04:31:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711452681; x=1712057481; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=6TiHBhLMtrxG4Kj/hIOTgJQ1RkjuHVilX+bsy0WXGMU=;
+        b=WtPu2JfoLtWYrppfRJPogdnun6AomuL9GzumzLYxG7vh5JvYtHPKr462LriQDfl43n
+         geWS09akTEH+UeKCJYm1SLoUcoYc1igITPw4VMD7A+qyhyvZJodEIyqxJWv37e6qZxqe
+         IqiTIZDYCnZ4i/Jf/8mzPFqDGdwIrkkCt42h/V0Y2YxE29VsxIV1nuv/WjBv0KqKX/qz
+         cYCJ3fWR81j1NTNADiv5t1pAZq++4IAT4xiR6bMyGuJecgfGJPfNbSeD6KTTqo4/bZEB
+         d/ZC4Lp40bQ3iMPsm2EKlXTuDj1CovswR0XzOpovzNhDoNbmtsWKlT/uY+jQw/DmAfVW
+         6LBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711452681; x=1712057481;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6TiHBhLMtrxG4Kj/hIOTgJQ1RkjuHVilX+bsy0WXGMU=;
+        b=XF81QQQiO7wZ2CqrhYQD8jI5QtNzqL9Rc3GZC9v0VXCbDkP8Dbn45tYHLFBYJ199G1
+         XiMOTGB66EQLhIWya527f4JluZN0EbRy1AxopKQtPPh9D0yT3fLLRtigpKnBIwhQjRUg
+         j01UVyIDK3VqULvGady39+cfm70DeP3eQ+P6Il/z3LOOhgU8esLHVj4A7GNnY6+Blxz3
+         MnI9dbdMaASQmqGp09mZxBKOiRg3Zxg0qQZ+d+by6dMJpXcl/MCMmb5A8I87vXyUwYhT
+         DjxHhSOcvtBCafg0LJdTKJWvWTlrWY3SEhQmSv7VmIbVgLLtbA38wVwmOMVQLW1Go7eY
+         aGEA==
+X-Forwarded-Encrypted: i=1; AJvYcCXRTCmWIauQX894DmGIinNtGfwMOiUNHD+lHRbLJ2li8j1lHytBBkdfsvDjfSpjfBwd9WUPVTcZcRoa7m0EmhEGN9t3eiGW8mfnSWCV
+X-Gm-Message-State: AOJu0YyKaTf9Lc7LDlOPLOX05fqut5MGiPllOpzUkeJDgG1eHZlCGZ2j
+	Ws+2XQWCkJPQmnC7LRnNyaSQcInmTZCUPsmH5tH1lN2Vw2idGkLcVX4eRrxfLFo=
+X-Google-Smtp-Source: AGHT+IFuPeRhJNmuBK0vDtgUjM9MnvsrbbO41q3BvDAYXHZuDMXzDqNTRU6iszlhwig3CMcQfVxteg==
+X-Received: by 2002:a17:906:5810:b0:a47:1b77:7c4 with SMTP id m16-20020a170906581000b00a471b7707c4mr7089215ejq.48.1711452680880;
+        Tue, 26 Mar 2024 04:31:20 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.44])
+        by smtp.gmail.com with ESMTPSA id e21-20020a170906081500b00a4df251a601sm725639ejd.77.2024.03.26.04.31.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Mar 2024 04:31:20 -0700 (PDT)
+Message-ID: <cf42e020-9a5b-48bb-bc14-c0cc9498627b@linaro.org>
+Date: Tue, 26 Mar 2024 12:31:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM2PEPF0001C708:EE_|BE1P281MB2963:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 4698240b-e073-4dd3-e94c-08dc4d87d722
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	GupSAbxjm0h+/KusWHNjHEq8uHrAMkaoZWjShdxAzyFQnW7ACIkjJ/YGraEotXKz6xT4V3UFPQypSBVcuZMF/aPdiz2gjusgx19l/SN5k/cntoRZY0dejJMdQCJ9A5Q77xroTO9tXr3eMF2rVH0t+SUL8ed68P27MA6ya3YdMCLxrALgdf74ZZC1QEoDtYPqvAUlORsTR1e7Ur4zKOjoL/LSwK42aEDU9jCBTi+zl4VMuxBag9GBo8vk2XXGH4mMDyTP+I880DIOQYaC2FXWsx5EZz1AjFU8V6NYh6Ptiz/Iwegoq0AQGxNP3ko+YZy+ZI01tG56pIy5OaHoM9CRDfw0dUPpxHGhd17cyQzOzpOjTAdkWcz1Wt3hJU6GCeIDBS5tqRyn1lmBAutMmYiJlOLcVzV3w7nQSkfE17+X5CEg0vwHMBqVGI3leR3Jcuqy54J5Y81Ej0H1+DZpOpe6Aa1S/kAFnCUFGW1d+BdiNcPv8a3YyUsQYr/Z3l6/fbTFKdyzS0SxpUqLQoSxCZwyhVpdBjU1YGyBbg1ghHXweNLSLt+5D5paiCklvV+5azUcmvK9EsR0qd/CTROHKy+uFOpEgfsl1WO6yNkl6NTlOM2eKYxKflOyZeRBi3v6yS+KtMc7GyZ24z/K1EHAoB19/RIBxM22TSRdG2BexZuwR7a5RM92UegceTif+jy+Tna/bceZLqvJayNIazQYzhsLBw==
-X-Forefront-Antispam-Report:
-	CIP:217.66.60.4;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SR-MAIL-03.open-synergy.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(36860700004)(82310400014)(376005);DIR:OUT;SFP:1102;
-X-OriginatorOrg: opensynergy.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 11:28:20.4300
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4698240b-e073-4dd3-e94c-08dc4d87d722
-X-MS-Exchange-CrossTenant-Id: 800fae25-9b1b-4edc-993d-c939c4e84a64
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=800fae25-9b1b-4edc-993d-c939c4e84a64;Ip=[217.66.60.4];Helo=[SR-MAIL-03.open-synergy.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AM2PEPF0001C708.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BE1P281MB2963
-X-TM-AS-ERS: 104.47.7.168-0.0.0.0
-X-TMASE-Version: StarCloud-1.3-9.1.1015-28274.007
-X-TMASE-Result: 10--19.343400-4.000000
-X-TMASE-MatchedRID: zPTG0b+aJkB+P9X2YpqgJg0vIxjiU4qa+bMNqByZrThgGncd4UL3wjFs
-	YwY0RDZrL6i+4hIrtWis0HnzywbzyUKoEC/clj5U1tM63VFvEPmVmuhG06IIbShHN604Ejh+byZ
-	DI9hJ3AVcAf2s/XIiJ6nKVwCUkQCkbf/bpbzNEDFzoxCmHXb7+uyK4FdEsFZChlhgYTkUArK06I
-	QNqLPXs7Jo2G7RknMtGVpXbIDItBGHXEtxeZW06OsfkPrj7CaqUuqb3o0OIosFX1JqaNriOBRL5
-	4g5lkI+kAafHqa/bYwlToeHyJK8Sx9SZHV0Ej3HkeeqD5STBM9NMNY2L2K/D/2OliWH2p1srf8w
-	z4ESzw83et//UjNpWfnvV4wGvJWytF4vznTVu9/4MTnOvlqF3BAHEUDztk84oQxni7GotoBswfm
-	utPEm1/V5R3sVrNxuoDY0aYvvcctl4A8862sgDcFwCSR9lLGI2j7jyCKpnCf6eDrkstFBca+eCS
-	MeOiOkfZ9uentPYeaJcb4M4L3rfqQ02atb0iKZO/mB2+12nNVaOxpgjiWHdQKmARN5PTKc
-X-TMASE-XGENCLOUD: 63416605-403f-408d-a4dc-aa42dffd4f3c-0-0-200-0
-X-TM-Deliver-Signature: 306D567026554B15A869E35E9A8E86A1
-X-TM-Addin-Auth: ah4P3v0G8L4Jn4ztEz5lj3qxNgPH67/yiEU1jt7T3rzAjR0RWoPbHJmOe86
-	0jhFBrx5VtkT0QYjKnAZRVwb+x95QmtjKxDH2sL72JxXMTz/8nhDiuM1tQTQuA3RI+EltxN4VIs
-	vEee1dLi0KVybXSz97JgimSjviEyHRjvyaDdw9GDewIoDlLcwbv6wbqg5IVL7erizDG4odF9Dyu
-	VjEdOj9VnbEFdU26hNolbOpppMmn97n7XHJyIvTwok6//BwpsEom+7IT2/FNuJ0Sapiu/zC2SaD
-	cY6a5lf7+ocebgU=.K0kOAYZtGIuusIhNH0moucN8wR1l4W78nlPYC4ow39o9yar/U0T8uAHdGa
-	Kvnw8uD9HMdcjA7wDc9kJYOcVQ58rC1yydWu4rI4u1iXDHAKiYp93D68ccyM1+C6qzemDBId+bL
-	GagxgEYNtRX/Pk7sEPFx7l0b6qrOKlS3Q2vrfLqJrWN09YP4lnqrmX3MnWcfrYUdFj6tiud4ft5
-	+i5P/T0Wmh34uQnvMH86zWNiAhhdg0yQW7kxF3wcuq8pGPtkSMKhFwVWKZDv89+W6IFkGjkP2sP
-	qo0FZA2EPn76ppzTWmCnfSW/WUDbLLYwnSUdgBEOCbZVkNWK47D+VD+Y6qg==
-X-TM-Addin-ProductCode: EMS
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=opensynergy.com;
-	s=TM-DKIM-20210503141657; t=1711452505;
-	bh=wKyMQAA+Uxoy+QGvQRqJWzaaAFFlsL78bfMPLvmTuHY=; l=3795;
-	h=From:To:Date;
-	b=W4J+An0N19xD59q1tu3AIy25U4dH5wk8Ws5BaYK+RHIT/mnSDGo3UcO6hVlN95+tP
-	 ftrhyACDTwLjHOBBQywgTt9JBSxLb2ZI0kSe0bw4s+5FcKZKEuqVQICQGf8vmUuz1x
-	 j5M9qs94ewNFvGg5x98XQ/tVYUbtYNGgpI+SKP/o1YtNGBI/OmuUNEo8yHWaImAYpg
-	 oXD5f+gDVe27svbu5bhZt5v+ynPbWQJPsfwmdRDDa6QB89/Wul997J88lo79bc3XFZ
-	 sRV0OidpjzS3DQ6xIyX1axmZXlGCUnD8IRDSaKn1w7jWMDanLOqWtHKlMTw4p7XWIB
-	 J3wiioom5VxnA==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/3] dt-bindings: dmaengine: Add dmamux for
+ CV18XX/SG200X series SoC
+To: Inochi Amaoto <inochiama@outlook.com>, Vinod Koul <vkoul@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: Jisheng Zhang <jszhang@kernel.org>, Liu Gui <kenneth.liu@sophgo.com>,
+ Jingbao Qiu <qiujingbao.dlmu@gmail.com>, dlan@gentoo.org,
+ dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+References: <IA1PR20MB4953B500D7451964EE37DA4CBB352@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <IA1PR20MB4953E2937788D9D92C91ABBBBB352@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <57398ee0-212c-4c82-bfed-bf38f4faa111@linaro.org>
+ <IA1PR20MB4953EDEEFC3128741F8E152EBB352@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <473528ac-dce2-41e3-a6d7-28f8c53a89ef@linaro.org>
+ <IA1PR20MB4953517450F0E622A66E9A7DBB352@IA1PR20MB4953.namprd20.prod.outlook.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <IA1PR20MB4953517450F0E622A66E9A7DBB352@IA1PR20MB4953.namprd20.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This is the 3rd non-RFC version of a virtio SPI Linux driver which is
-intended to be compliant with the the upcoming virtio specification
-version 1.4. The specification can be found in repository
-https://github.com/oasis-tcs/virtio-spec.git branch virtio-1.4.
+On 26/03/2024 12:15, Inochi Amaoto wrote:
+> On Tue, Mar 26, 2024 at 09:53:09AM +0100, Krzysztof Kozlowski wrote:
+>> On 26/03/2024 08:35, Inochi Amaoto wrote:
+>>>>> +
+>>>>> +required:
+>>>>> +  - '#dma-cells'
+>>>>> +  - dma-masters
+>>>>> +
+>>>>
+>>>>
+>>>> I don't understand what happened here. Previously you had a child and I
+>>>> proposed to properly describe it with $ref.
+>>>>
+>>>> Now, all children are gone. Binding is supposed to be complete. Based on
+>>>> your cover letter, this is not complete, but why? What is missing and
+>>>> why it cannot be added?
+>>>>
+>>>
+>>> The binding of syscon is removed due to a usb phy subdevices, which needs 
+>>> sometime to figure out the actual property. This is why the syscon binding 
+>>> is removed.
+>>>
+>>> I think it is better to use the origianl syscon series to evolve after
+>>> the usb phy binding is submitted. The subdevices of syscon may need
+>>> much reverse engineering to know its parameters. So at least for now,
+>>> the syscon binding is hard to be complete.
+>>
+>> Some explanation why dma-router is gone would be useful, but fine.
+>>
+> 
+> OK, I will add some comments on the why it is gone.
+> 
+>>>
+>>>>
+>>>>> +additionalProperties: false
+>>>>> +
+>>>>> +examples:
+>>>>> +  - |
+>>>>> +    dma-router {
+>>>>> +      compatible = "sophgo,cv1800-dmamux";
+>>>>> +      #dma-cells = <2>;
+>>>>> +      dma-masters = <&dmac>;
+>>>>> +      dma-requests = <8>;
+>>>>> +    };
+>>>>> diff --git a/include/dt-bindings/dma/cv1800-dma.h b/include/dt-bindings/dma/cv1800-dma.h
+>>>>> new file mode 100644
+>>>>> index 000000000000..3ce9dac25259
+>>>>> --- /dev/null
+>>>>> +++ b/include/dt-bindings/dma/cv1800-dma.h
+>>>>
+>>>> Filename should match bindings filename.
+>>>>
+>>>
+>>> Thanks.
+>>>
+>>>>
+>>>> Anyway, the problem is that it is a dead header. I don't see it being
+>>>> used, so it is not a binding.
+>>>>
+>>>
+>>> This header is not used because the dmamux node is not defined at now.
+>>
+>> In the driver? The binding header is supposed to be used in the driver,
+>> otherwise it is not a binding.
+>>
+> 
+> The driver does use this file.
 
-This driver is the successor of the 2nd non-RFC virtio driver.
+I checked and could not find. Please point me to specific parts of the code.
 
-Changes between 1st and 2nd virtio SPI driver RFC:
+> 
+>>> And considering the limitation of this dmamux, maybe only devices that 
+>>> require dma as a must can have the dma assigned. 
+>>> Due to the fact, I think it may be a long time to wait for this header
+>>> to be used as the binding header.
+>>
+>> I don't understand. You did not provide a single reason why this is a
+>> binding. Reason is: mapping IDs between DTS and driver. Where is this
+>> reason?
+>>
+> 
+> It seems like that I misunderstood something. This file provides one-one
+> mapping between the dma device id and cpuid, which is both used in the
+> dts and driver. For dts, it provides device id and cpu id mapping. And
+> for driver, it is used as the directive to tell how to write the mapping
+> register.
 
-- Update from virtio SPI draft specification V4 to V10.
+So where is it? I looked for DMA_TDM0_RX - nothing. Then DMA_I2C1_RX -
+nothing. Then any "DMA_" - also looks nothing.
 
-- Incorporate review comments gotten from the community.
-
-A proposal for a performance enhancement having more than only one SPI
-message in flight had to be kept out. The more complicated code would
-have caused an unacceptable project risk now.
-
-Changes between 2nd and 3rd virtio SPI driver RFC:
-
-- Order header inclusion alphabetically
-
-- Add Viresh Kumar's "signed-off" to the header files
-
-- Rework virtio_spi_one_transfer()
-  - Rework the delays according to Haixu Cui's advise. Delays are now
-    handled in a new sub-function virtio_spi_set_delays()
-  - Minor change: Re-formulate arguments of sg_init_one()
-
-- Rework virtio_spi_probe()
-  - Replace some goto in error paths by return
-  - Add spi_unregister_controller() to an error path. Abstained from
-    using devm_spi_register_controller() to keep order of
-    de-initialization in virtio_spi_remove().
-  - Add deletion of vqueue to all error paths taken after the virtqueues
-    have been initialized
-
-Changes between 3rd virtio SPI driver RFC and non-RFC driver V1
-
-- Address kernel test robot comment which revealed an actual bug
-- Rework some comments in the code addressing review comments
-- Remove a TODO comment which has served it's purpose
-- Allocate struct virtio_spi_req spi_req only once at startup
-- Use callback transfer_one instead of transfer_one_message to simplify
-  and shorten code. Due to this rework in the affected function(s) some
-  additional changes:
-  - Do init_completion() only once at startup, for re-initialization
-    now reinit_completion() is used
-  - Translate result codes VIRTIO_SPI_PARAM_ERR and VIRTIO_SPI_TRANS_ERR
-    to appropriate Linux error codes -EINVAL and -EIO
-  
-Changes between 1st non-RFC virtio SPI driver and non-RFC driver V2
-
-- Remove some comments stating the obvious
-- Remove error trace when devm_spi_alloc_host() failed as this is habit
-- Add some blank lines to improve readabilty
-- Last TODO comment removed which was used to trigger some discussion.
-  Discussion did not take place, most probably the code below is correct
-  as it is
-
-- Abstained from replacing "Cannot " by "Failed to " in error messages
-  as the wording "Cannot " is frequently used even when "Failed to " has
-  the majority. Announced this, heard nothing about this, so added the
-  "Reviewed-by" from Viresh Kumar <viresh.kumar@linaro.org> as
-  everything else was done.
-
-Changes between non-RFC virtio SPI driver V2 and V3
-
-- Child spi device tree nodes are supported now.
-
-  If a child spi device tree node exists the setup of the user mode SPI
-  device is done by spi_register_controller() and the driver itself does
-  not call spi_new_device() any more to setup the chip selects.
-
-  If there is no device tree child node the SPI device sets up the user
-  mode SPI devices autonomously as it was before.
-
-The virtio SPI driver was smoke tested on qemu using OpenSynergy's
-proprietary virtio SPI device doing a SPI backend simulation on top of
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-branch next/stable at the time of testing (tagged v6.8). An almost
-identical driver version was tested on hardware using kernel v6.5.7.
-
-Removed "Reviewed-by" from Viresh Kumar <viresh.kumar@linaro.org> again
-as the changes while small may be considered as substantial.
+Best regards,
+Krzysztof
 
