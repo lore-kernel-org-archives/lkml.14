@@ -1,238 +1,141 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25C613CABC;
-	Tue, 26 Mar 2024 15:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A13313C91E;
+	Tue, 26 Mar 2024 15:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711468345; cv=none; b=nTqAh0/sOmffJVs1nJFXmDmoyZfKohHUYW+07GtozamHCm55cqqNoP3Mdxzw3vwcYOrGGa9zwnkwAg8waMKUw09YtmA1yvxlvGi2Cf/ENlKWBMqAvYcGZMkMlXzCDzn6vwmlQZiuFYedDdAIGsPNrONPJ0h1wMsRcdLEIbWHlbQ=
+	t=1711468392; cv=none; b=Tvx0wAIGHfmZD7TXnCatazMdTccxha4F5Gnht8aHx4dkJrZ5eFq+RbhmxqpV9VcWWNjkvlFRmQ4nxU30U+HhG57G7OSBhQTtG6tX4XP1QJA77vT6jy1ozs0ljbiuhoq1WFkv2XBkmtz24zzyooeV7WDG8a+STYPXU6opwQIPCPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711468345; c=relaxed/simple;
-	bh=Zyzm4+ik2ZIZ+RRLqBpLsZ49PhPd8h/lVV8304aAQE8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j9aFQORdTip0P26d/hvHUswPr61oSD41BEFQ8xa56NZ3VaL3+v5YXMvoGVoQEdMVNjY5SfeSH+5Io+J32n3wh8BqojbGwY1gl7Sy/ySJxWtFG4ADhHmzpgDh1PfAcL+WFA56F5TfGHlH/BVWQur40QzTa564VDzTGn4zwq5NIp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=bILQm8jB; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1711468392; c=relaxed/simple;
+	bh=/gHfZMctaIYX4V94WcIHgaQofiZzTIaxO8oKJc3Nfv8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nDVVMuYrxGA5d9G4dEZWTfGYZD8Hi18dCFPqsCD/niNpJekybdVJhPK1H9oaWX70+9RZ4vSk34QQMSfmAX2sbqy8wqiBYmvRVlw0p1iQvnDEfulmCkLvB37yG3TOjb19n1DUfYXnHVHlPT9MbhaEhaUqbT0Jb+ZR25msW4j0G7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hvbgC5iM; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="bILQm8jB"
-Received: from wsk (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: lukma@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 21CB987DF8;
-	Tue, 26 Mar 2024 16:52:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1711468341;
-	bh=y8VR58RDxB8LgNvt513KCxtG12NFq+KcsRROU7mxUDU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bILQm8jBIqXCOtNkIc++4xt6UtZpiX9xbZdGYKtC5x3h7u8z7AcBBqXFXH1OdU1vC
-	 wwfozrT5oJPiQG4rkAmTr2HPhx28ROtxoxpVOQjYhaaHuJT0glkcXQSqGGW0izsZ/g
-	 7XacuXjJgcoovKSa3bEkjTfTx8Gc6PTNVeXbBgu6ylwiL+QbXbZHsXkbONYgduRSPI
-	 f5i+2THFojft3tpUR5Cq6CXvMbWBWlkFtx6DFP1Jka67ArCFER7Q65LOv1LzAMS3LK
-	 OJJDFuhwaBwICaK0Bqs69ywFDnsFyfG15g7HX1XwqWWbTTBHd3pU4X+9CA8aD0s67Z
-	 ijNR7zyT7NWFQ==
-Date: Tue, 26 Mar 2024 16:52:15 +0100
-From: Lukasz Majewski <lukma@denx.de>
-To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
- Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux@ew.tq-group.com, Michael Krummsdorf
- <michael.krummsdorf@tq-group.com>
-Subject: Re: [PATCH] net: dsa: mv88e6xxx: fix usable ports on 88e6020
-Message-ID: <20240326165215.5fb4326c@wsk>
-In-Reply-To: <35cc888230a0146a7687d8b859e5a6ceffec581a.camel@ew.tq-group.com>
-References: <20240326123655.40666-1-matthias.schiffer@ew.tq-group.com>
-	<20240326143424.3368d9b1@wsk>
-	<35cc888230a0146a7687d8b859e5a6ceffec581a.camel@ew.tq-group.com>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hvbgC5iM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711468391; x=1743004391;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/gHfZMctaIYX4V94WcIHgaQofiZzTIaxO8oKJc3Nfv8=;
+  b=hvbgC5iMw0/OTope6ZCnlkxoid74pBIhjxKr8aPaTCbYHhAAFVjYPcFg
+   F1UqlZ0sklVMkQw55ey/ql03xrNrWtgBZLBBa8N+aZteX40cKAPC+fNlS
+   7KOCiHifMMYdgBq5RHzNnf3ANPl8Q0uHrvmtr9DWeM6W6toSw/VGM6kGs
+   WIpk3kTgk7g9fcK1W/EqlFPMq7NGRjwX5bVxAoQEFYYWiJc1ey8+v2u58
+   u3KaEjuJp4/o5Rbl+rzRxGeCY/pVM69jGA0YSO9sslJbuMUQlf4FJZmxI
+   tMNKJk6Kh/gpOjnLrsGbgZ+btGG96vqAPDttS7T4BCJ430kpt27y6WDZH
+   Q==;
+X-CSE-ConnectionGUID: MGLy92hDTJCqRGG2HDxrXQ==
+X-CSE-MsgGUID: LB6wy9JLSSWI5vMD4JXQAA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="6357973"
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="6357973"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 08:53:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="47013173"
+Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.124.242.47]) ([10.124.242.47])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 08:53:06 -0700
+Message-ID: <d2ea2f8e-80b1-4dda-bf47-2145859e7463@linux.intel.com>
+Date: Tue, 26 Mar 2024 23:53:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ybwj9Ab0+CEoQ20xl1ri6JC";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
-
---Sig_/ybwj9Ab0+CEoQ20xl1ri6JC
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-Hi Matthias,
-
-> On Tue, 2024-03-26 at 14:34 +0100, Lukasz Majewski wrote:
-> > Hi Matthias,
-> >  =20
-> > > From: Michael Krummsdorf <michael.krummsdorf@tq-group.com>
-> > >=20
-> > > The switch has 4 ports with 2 internal PHYs, but ports are
-> > > numbered up to 6, with ports 0, 1, 5 and 6 being usable.
-> > >=20
-> > > Fixes: 71d94a432a15 ("net: dsa: mv88e6xxx: add support for
-> > > MV88E6020 switch") Signed-off-by: Michael Krummsdorf
-> > > <michael.krummsdorf@tq-group.com> Signed-off-by: Matthias Schiffer
-> > > <matthias.schiffer@ew.tq-group.com> ---
-> > >=20
-> > > I was unfortunately too busy to notice the issue when the patch
-> > > this Fixes was resubmitted in my name. It would have been better
-> > > to change my From into a Based-on-patch-by or similar when
-> > > modifying it =20
-> >=20
-> > The "discussion" about this work was lasting at least a few months
-> > with several iterations and changing the design decisions ...
-> >  =20
-> > > - and
-> > > the final version obviously wasn't even tested on an 88E6020... =20
-> >=20
-> >=20
-> > Can you share on which kernel version have you tested the patch that
-> > you claim that testing was omitted? =20
->=20
-> Hi Lukasz,
->=20
-> we are currently testing with commit 71d94a432a15 backported onto a
-> recent Linux 6.1.y. At least on this kernel version, the driver will
-> reject a Device Tree configuration that uses the=C2=A0ports 5 and 6
-> (rightfully so, as num_ports is set to 4), leaving only the
-> internal-PHY ports 0 and 1, and none of the *MII ports that are
-> likely to be used as CPU ports.
->=20
-> So if the accepted version worked fine for you, your configuration
-> possibly only used the first two ports,
-
-And then the penny has dropped....
-
-
-	switch@10 {
-			compatible =3D "marvell,mv88e6250";
-			reg =3D <0x10>;
-
-			ports {
-				#address-cells =3D <1>;
-				#size-cells =3D <0>;
-
-				port@0 {
-					reg =3D <0>;
-					label =3D "lan1";
-				};
-
-				port@1 {
-					reg =3D <1>;
-					label =3D "lan2";
-				};
-
-				port@6 {
-					reg =3D <6>;
-					label =3D "cpu";
-					phy-mode =3D "rmii";
-					ethernet =3D <&fec2>;
-
-					fixed-link {
-						   speed =3D <100>;
-						   full-duplex;
-					};
-				};
-			};
-		};
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 048/130] KVM: Allow page-sized MMU caches to be
+ initialized with custom 64-bit values
+To: isaku.yamahata@intel.com
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
+ erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
+ Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
+ chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <9c392612eac4f3c489ad12dd4a4d505cf10d36dc.1708933498.git.isaku.yamahata@intel.com>
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <9c392612eac4f3c489ad12dd4a4d505cf10d36dc.1708933498.git.isaku.yamahata@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
-> or newer kernels somehow
-> ignore num_ports when determining if a port number is valid.
->=20
-> We should be able to repeat our test on a newer kernel next week if
-> needed.
+On 2/26/2024 4:25 PM, isaku.yamahata@intel.com wrote:
+> From: Sean Christopherson <seanjc@google.com>
+>
+> Add support to MMU caches for initializing a page with a custom 64-bit
+> value, e.g. to pre-fill an entire page table with non-zero PTE values.
+> The functionality will be used by x86 to support Intel's TDX, which needs
+> to set bit 63 in all non-present PTEs in order to prevent !PRESENT page
+> faults from getting reflected into the guest (Intel's EPT Violation #VE
+> architecture made the less than brilliant decision of having the per-PTE
+> behavior be opt-out instead of opt-in).
+>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+> ---
+>   include/linux/kvm_types.h |  1 +
+>   virt/kvm/kvm_main.c       | 16 ++++++++++++++--
+>   2 files changed, 15 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/linux/kvm_types.h b/include/linux/kvm_types.h
+> index 9d1f7835d8c1..60c8d5c9eab9 100644
+> --- a/include/linux/kvm_types.h
+> +++ b/include/linux/kvm_types.h
+> @@ -94,6 +94,7 @@ struct gfn_to_pfn_cache {
+>   struct kvm_mmu_memory_cache {
+>   	gfp_t gfp_zero;
+>   	gfp_t gfp_custom;
+> +	u64 init_value;
+>   	struct kmem_cache *kmem_cache;
+>   	int capacity;
+>   	int nobjs;
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index de38f308738e..d399009ef1d7 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -401,12 +401,17 @@ static void kvm_flush_shadow_all(struct kvm *kvm)
+>   static inline void *mmu_memory_cache_alloc_obj(struct kvm_mmu_memory_cache *mc,
+>   					       gfp_t gfp_flags)
+>   {
+> +	void *page;
+> +
+>   	gfp_flags |= mc->gfp_zero;
+>   
+>   	if (mc->kmem_cache)
+>   		return kmem_cache_alloc(mc->kmem_cache, gfp_flags);
+> -	else
+> -		return (void *)__get_free_page(gfp_flags);
+> +
+> +	page = (void *)__get_free_page(gfp_flags);
+> +	if (page && mc->init_value)
+> +		memset64(page, mc->init_value, PAGE_SIZE / sizeof(mc->init_value));
 
-I think that considering the above snippet - customer was using only
-port 0 and 1.
+Do we need a static_assert() to make sure mc->init_value is 64bit?
 
->=20
-> Best regards,
-> Matthias
->=20
->=20
-> >  =20
-> > >=20
-> > >=20
-> > >  drivers/net/dsa/mv88e6xxx/chip.c | 6 +++++-
-> > >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/drivers/net/dsa/mv88e6xxx/chip.c
-> > > b/drivers/net/dsa/mv88e6xxx/chip.c index
-> > > 9ed1821184ece..c95787cb90867 100644 ---
-> > > a/drivers/net/dsa/mv88e6xxx/chip.c +++
-> > > b/drivers/net/dsa/mv88e6xxx/chip.c @@ -5503,8 +5503,12 @@ static
-> > > const struct mv88e6xxx_info mv88e6xxx_table[] =3D { .family =3D
-> > > MV88E6XXX_FAMILY_6250, .name =3D "Marvell 88E6020",
-> > >  		.num_databases =3D 64,
-> > > -		.num_ports =3D 4,
-> > > +		/* Ports 2-4 are not routed to pins
-> > > +		 * =3D> usable ports 0, 1, 5, 6
-> > > +		 */
-> > > +		.num_ports =3D 7,
-> > >  		.num_internal_phys =3D 2,
-> > > +		.invalid_port_mask =3D BIT(2) | BIT(3) | BIT(4),
-> > >  		.max_vid =3D 4095,
-> > >  		.port_base_addr =3D 0x8,
-> > >  		.phy_base_addr =3D 0x0, =20
-> >=20
-> >=20
-> >=20
-> >=20
-> > Best regards,
-> >=20
-> > Lukasz Majewski
-> >=20
-> > --
-> >=20
-> > DENX Software Engineering GmbH,      Managing Director: Erika Unter
-> > HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell,
-> > Germany Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email:
-> > lukma@denx.de Achtung externe E-Mail:=C2=A0=C3=96ffnen Sie Anh=C3=A4nge=
- und Links
-> > nur, wenn Sie wissen, dass diese aus einer sicheren Quelle stammen
-> > und sicher sind. Leiten Sie die E-Mail im Zweifelsfall zur Pr=C3=BCfung
-> > an den IT-Helpdesk weiter. Attention external email:=C2=A0Open
-> > attachments and links only if you know that they are from a secure
-> > source and are safe. In doubt forward the email to the IT-Helpdesk
-> > to check it.
-> >=20
-> > =C2=A0 =20
->=20
+> +	return page;
+>   }
+>   
+>   int __kvm_mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int capacity, int min)
+> @@ -421,6 +426,13 @@ int __kvm_mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int capacity,
+>   		if (WARN_ON_ONCE(!capacity))
+>   			return -EIO;
+>   
+> +		/*
+> +		 * Custom init values can be used only for page allocations,
+> +		 * and obviously conflict with __GFP_ZERO.
+> +		 */
+> +		if (WARN_ON_ONCE(mc->init_value && (mc->kmem_cache || mc->gfp_zero)))
+> +			return -EIO;
+> +
+>   		mc->objects = kvmalloc_array(sizeof(void *), capacity, gfp);
+>   		if (!mc->objects)
+>   			return -ENOMEM;
 
-
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/ybwj9Ab0+CEoQ20xl1ri6JC
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmYC7y8ACgkQAR8vZIA0
-zr3e8AgAoVf5u1Y+WC5X9uopKhu4PoN+fE0Eawss66SZxSteYQFku1uK7xotUkbh
-hsgNxyg5MO0mUprk04Hlj2FwKJ/b/r0osSIuhl3IQnBURksKIWpzFHQB0waodb5v
-kL/IGL78VC+XjlwbuiVqL49kUsAJfnIrL1hk+bE0RsFvuFp0NtUpKNpkCKIA6lRR
-Q+eakUtSATBhsMpnn+PL3J2P1ysCau85htvM2iRROxJTAOhRtqyzjC6eZjNvqgsp
-XiixKjxwlCrOtzqxwSJoFhai4WFML99uGhti0SAsDDnAPQCe5M+PRzoukPds6jff
-lzwDmzIe/X24XWv+oOn/Ml/wTzSbkw==
-=ZWew
------END PGP SIGNATURE-----
-
---Sig_/ybwj9Ab0+CEoQ20xl1ri6JC--
