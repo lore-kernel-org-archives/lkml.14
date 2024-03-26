@@ -1,94 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870E25C61F;
-	Tue, 26 Mar 2024 12:37:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B332656B6D;
+	Tue, 26 Mar 2024 12:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711456672; cv=none; b=DCqEyysTMvp+9CVRiU3L2wZzT3NI05050RJoNM8E8jiXAdx5jtgGAttW85f/f3a8V/BxTY2a5jrYXf1YeEyz779DdaW22ZYF1BWaTl+YSCJxiIzqItvChOp7qu1a6/8Ht9sREUamAjYnBS/tUHNGyqTFFH/gD6o58leZmYm9fc4=
+	t=1711456711; cv=none; b=M+24DIbGI7FOMPkEPFWWg+VTkqVSOAmqdvgzWrgx/zTjenr4pANM4VMvb4M14WoxeEsfSh6OrCek6YEgTgVuV3N7tSgGvY8VYRi5jyWsKrsl4+nwclKrhh7lVdgfCShcIwjDWnNZGowunlTMlIk2109FvQZPCU+rGnWqJ/ki/io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711456672; c=relaxed/simple;
-	bh=jd2gqZGgGgy6kOe5uqkgenkEPD/a17w2vZt2MhmvK+U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B0O9m/RHwsYsptaOSqn2WUACO8MB3nm+IF01EfgsqEe5GMmM49gbxB6vh5uxoXhBBGHN4VwwBc/tywqFYGWtQAzNbFQBxPh6Ia+D4GNlllXujVmE/gQN04xxdFXtcPTVUnTUT54l8G/n7D6okfbjruOvClZA3H7XBKHzr40h+1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mdvHh9QT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711456711; c=relaxed/simple;
+	bh=jFKUb40DZC4SPayHqkoEEjo/AYuxKlE3F6/vEvGczt8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZhRyU0iCYZFX7aqeVsVwGPiFZQqKsbk28Q0FqTzs+/bARmXK9/+45KKC2HPWIrKGnooZglCIq0+FKMvlsklUHehpOs9WzO7M8ZDQFxWo+eBSVwjPfcXdXsyF7S4NeN/nH3kXqmiUhi2RET613Vp2wZ35EGl3mLxoCDsOamj8lvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=dY81StrC; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=HgTQ8uDg reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mdvHh9QT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B0C4C433F1;
-	Tue, 26 Mar 2024 12:37:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711456672;
-	bh=jd2gqZGgGgy6kOe5uqkgenkEPD/a17w2vZt2MhmvK+U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mdvHh9QTlaDYmFnILuuqqfgs/z3qoFKLwluyypCFC4a1ApnMMwFfMJFcAd9Xx14u7
-	 VRPyOWG6TTEi9JxJLKw2ALE7Hr7OkBLsepwMrAzAEkNspqnac6BO99v2kNkfp1Oo54
-	 PwqfoP26728U3My5ZZOOCI/4ayH+fjPwiuoyharpgY9NS5pZozqRQeJzEZNSHrNGeb
-	 vFoS90SEjvtZWvb4wYj2Bog4qPQFVlUMUsmTOJjiJhqitrv06F6oZC660oCJedDKNH
-	 2Oq/n8ScI5vErrRn+8siNJeQlSlX8FIsoTnCllaFwZrlZXRJbCz3KBCxCV8CAReQjp
-	 6q+xbiPgMnqPA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rp63y-000000005DZ-3apl;
-	Tue, 26 Mar 2024 13:37:59 +0100
-Date: Tue, 26 Mar 2024 13:37:58 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Krishna Kurapati <quic_kriskura@quicinc.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Wesley Cheng <quic_wcheng@quicinc.com>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-	Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, quic_ppratap@quicinc.com,
-	quic_jackp@quicinc.com
-Subject: Re: [PATCH v18 0/9] Add multiport support for DWC3 controllers
-Message-ID: <ZgLBpp4Dn7_Imxp8@hovoldconsulting.com>
-References: <20240326113253.3010447-1-quic_kriskura@quicinc.com>
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="dY81StrC";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="HgTQ8uDg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1711456707; x=1742992707;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=cIgfPJMO3kcEzxeMu7u2y81h8x78l/MyhCWjISx7zGw=;
+  b=dY81StrCE0xfQL9+ls/4admVqW74OXI36xf0X3Ip1gmR1ef6X6G1RQrM
+   RcuY6L3WXILt5eaQo6A6z4tHvUequ6MmkrmW2CZKrbRf2kqzB1oBFRr7t
+   qqi8IMkeYizmSWiUh3aJLIRLGCPbd0HnF70D+X88dfeuf9N73tYgj2AXf
+   qVzBA1bFDhvinCiFOFH0ILcaUuoNR0agpEVA1Fj69JK7F1iUI0j7EaIJ/
+   IkWwdxlTW4wg1Li3FrZntM515hXvcDUu03TyH99C29XbfLj6GsqelaZ60
+   VKBYZAh3vrRHdrcOpPj5Byjk72SclXB70vzO8HDuk0GHXfL41Cy4PTUCp
+   A==;
+X-IronPort-AV: E=Sophos;i="6.07,156,1708383600"; 
+   d="scan'208";a="36105106"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 26 Mar 2024 13:38:23 +0100
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 98A67171151;
+	Tue, 26 Mar 2024 13:38:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1711456699;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=cIgfPJMO3kcEzxeMu7u2y81h8x78l/MyhCWjISx7zGw=;
+	b=HgTQ8uDgi3Z5nlRuwWttnUIPGKz6QOcUDy0hOVm4OfCYDRPYCnQwE3TXqpiQNnghLmz+Ms
+	Hov4GG8MInLm/0kmrdS97TAmwuycSyTQMpD7hD8vrYWYjEZdY1uBDMi81NMttuQkKPD3Nk
+	GHp8YoxgpTZiCLcNob2M1UTvG41FbDOMeUn8NgYhqDd8WZyNDxCVhWI4Ed3ZJoh4cl5glE
+	6OrX7UReElz0TBHG3Qa0nXJFqUYWu/sA0pQvo/zMnXkMgQNVvmsYqV6qkgt0ymxz3TrxzW
+	DcIYMTUjXjcjC+8LufmmImZfLF9aoojbeitfk6TnC+6XlS5+vOvb/2p0eKsmug==
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Lukasz Majewski <lukma@denx.de>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux@ew.tq-group.com,
+	Michael Krummsdorf <michael.krummsdorf@tq-group.com>,
+	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH] net: dsa: mv88e6xxx: fix usable ports on 88e6020
+Date: Tue, 26 Mar 2024 13:36:54 +0100
+Message-ID: <20240326123655.40666-1-matthias.schiffer@ew.tq-group.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240326113253.3010447-1-quic_kriskura@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Tue, Mar 26, 2024 at 05:02:44PM +0530, Krishna Kurapati wrote:
-> Currently the DWC3 driver supports only single port controller which
-> requires at most two PHYs ie HS and SS PHYs. There are SoCs that has
-> DWC3 controller with multiple ports that can operate in host mode.
-> Some of the port supports both SS+HS and other port supports only HS
-> mode.
-> 
-> This change primarily refactors the Phy logic in core driver to allow
-> multiport support with Generic Phy's.
-> 
-> Changes have been tested on  QCOM SoC SA8295P which has 4 ports (2
-> are HS+SS capable and 2 are HS only capable).
-> 
-> This series depends on removal of ACPI from DWC3 QCOM wrapper [1].
+From: Michael Krummsdorf <michael.krummsdorf@tq-group.com>
 
-> [1]: https://lore.kernel.org/all/20240305093216.3814787-1-quic_kriskura@quicinc.com/
+The switch has 4 ports with 2 internal PHYs, but ports are numbered up
+to 6, with ports 0, 1, 5 and 6 being usable.
 
-Just to be clear, this dependency is already in 6.9-rc1 and this series
-is ready to be merged.
+Fixes: 71d94a432a15 ("net: dsa: mv88e6xxx: add support for MV88E6020 switch")
+Signed-off-by: Michael Krummsdorf <michael.krummsdorf@tq-group.com>
+Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+---
 
-> Krishna Kurapati (9):
->   dt-bindings: usb: Add bindings for multiport properties on DWC3
->     controller
->   usb: dwc3: core: Access XHCI address space temporarily to read port
->     info
->   usb: dwc3: core: Skip setting event buffers for host only controllers
->   usb: dwc3: core: Refactor PHY logic to support Multiport Controller
->   dt-bindings: usb: qcom,dwc3: Add bindings for SC8280 Multiport
->   usb: dwc3: qcom: Add helper function to request wakeup interrupts
->   usb: dwc3: qcom: Refactor IRQ handling in glue driver
->   usb: dwc3: qcom: Enable wakeup for applicable ports of multiport
->   usb: dwc3: qcom: Add multiport suspend/resume support for wrapper
+I was unfortunately too busy to notice the issue when the patch this
+Fixes was resubmitted in my name. It would have been better to change
+my From into a Based-on-patch-by or similar when modifying it - and the
+final version obviously wasn't even tested on an 88E6020...
 
-Johan
+Best regards,
+Matthias
+
+
+ drivers/net/dsa/mv88e6xxx/chip.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+index 9ed1821184ece..c95787cb90867 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -5503,8 +5503,12 @@ static const struct mv88e6xxx_info mv88e6xxx_table[] = {
+ 		.family = MV88E6XXX_FAMILY_6250,
+ 		.name = "Marvell 88E6020",
+ 		.num_databases = 64,
+-		.num_ports = 4,
++		/* Ports 2-4 are not routed to pins
++		 * => usable ports 0, 1, 5, 6
++		 */
++		.num_ports = 7,
+ 		.num_internal_phys = 2,
++		.invalid_port_mask = BIT(2) | BIT(3) | BIT(4),
+ 		.max_vid = 4095,
+ 		.port_base_addr = 0x8,
+ 		.phy_base_addr = 0x0,
+-- 
+TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht München, HRB 105018
+Geschäftsführer: Detlef Schneider, Rüdiger Stahl, Stefan Schneider
+https://www.tq-group.com/
+
