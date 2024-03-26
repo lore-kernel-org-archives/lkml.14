@@ -1,138 +1,130 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD7012B15D
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 20:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DEF13D883
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 20:32:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711485099; cv=none; b=G7OoMTBrVoWpg/jPYFjm4BZlK/sHiUOsYE9KueH4HfOJCqV8TpdCJ+1qHw10wUSuSoBW6T7472BV3xltIk7nVaJ61iV7JRTtilXd+g4CB43JvZ5a75TtnR8l06MVBSVB5nYoGjM+MTKTg0pCPzTzIH17Va7cqCWTArLpFUVoPmA=
+	t=1711485141; cv=none; b=EID6Nq9Jiz/T4DWLvZal4Bf9A512W3NIk1eatbbGQZL4v51JSL+duomLuMAeG5gQfTCPjXVIfvbt8uQx797KWqydahDlbERjRWacXCIiLapaZTH2/xR4cZ27wX4EmBUlV7R6V1azpME2Z27YyqnzN4X9ldO4hPJ4In3WnpWlTiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711485099; c=relaxed/simple;
-	bh=8/EpHjzfJ1MVMJ4+tmHiCSex+TF4T3+5RAEcQnunBp8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eYgOQTzx3dPmkh0xsQ/wQ90cgCZ5u+ggNhMk1eNmicGfjEz8Wh1U/+DsJykAK9jsK8IIu9ugSAUSO/MOk2MzFI1/WM8bc6q+4IrKEO4DIzSP4H7lFD5APvc5aBxgYSevHNw/Ulf2vL47ypjXYjiazgLV6wT6uGCv97rAug6dQ0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=JMT8zpp1; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1711485141; c=relaxed/simple;
+	bh=VgCPJU44QLSg2GKIOQSZ5MrtRTt0B2rcrRTt5IW/eKo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=igCCIblogOTStl02tUZh9U6ZntTlnUDSnpfE4psAQ4TpoSIQ3NqX/dluiyKddZnMwuiG+NLCcZMqVyWpXHvluj6IhV+uNcq2UmnpSjd+T5ZnMG9fHboNb6ALqdwEuiS5Ifu3aAhc2sMFW1etrvM/bYkcuq1V6Cu+BSBZouMgJhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BmqphAjS; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="JMT8zpp1"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a46d0a8399aso31589866b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 13:31:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BmqphAjS"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56c1922096cso2867928a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 13:32:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1711485095; x=1712089895; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/lh9U/vyewLtbDFJmjDS8r3hvigj8QyKr7Iw+wfw7H8=;
-        b=JMT8zpp1n0ZHDEyEvs2Opkdkf4TP+PKF8Yvicx9qpC4dCandjwKVr5RdmaHMg5HZOm
-         +7S44AVM2sL9Itik4EYu9EwxV+Vi5pncBpcl02l4Yls78CqR46LeT2GHIteUMo31bfp/
-         Tmh7xER7AjYeZ2xnCOO2mW57/979WKdoXv1i4r6kxjRb7SMPp3osdAC3WBW+0wJWwfee
-         XnBSjw4FrRvp0SL3ya/7oeJpQ0s8jJdrNGsnCZsOwQ+5od2uWfEX23Zii30JcI0S1KAg
-         X+1ZTkvkYtO+Pf1e6zTDlyJ8z9MJ6vULfK3AO4ybmG8JWyQWXXr5Qxm2rPtb0AZc75Nv
-         ypnQ==
+        d=linaro.org; s=google; t=1711485137; x=1712089937; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=6VDCXcE5QdWHR9kG4pOhacMN9bewYQsjsFRjYTaqxso=;
+        b=BmqphAjSruJsmV55Jv1x5BFQzBs5AFEGs8aHf9dkyqCDtIjDBl3L1yqu8kz5bDjQvk
+         U6C7YS8Ml1r9tGSKAPSM6aQy05CwAXkSyX8THki0j8pAhqYFA1VO2tNbxsahjSnAmIhJ
+         NAG24yJ3/Ci7vUlpWIVkQrXzJ2W3j8lMTf6kQCDf/JvwfYKP3hYkeVurQNTFnKY9x6FK
+         MLfAYwccPk3QUw5MsQ7L9PydTVBUn0MWuYHLLuZ7pSrDMj612gHmY9lqY9lmqWioG0nm
+         IZu2ujkSQ4fuhCz97/jK+XvCz4c8pAAJ0PI6aAVZ8d+DZFOuyR92cn7HlEbjougbIHiU
+         xfRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711485095; x=1712089895;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/lh9U/vyewLtbDFJmjDS8r3hvigj8QyKr7Iw+wfw7H8=;
-        b=FOqd/mmqeJBBEi6c17Ev4VVORDqyXiUOxa3fXQFDYGZo4PJEm42Hwo3VGjm3oW5GAP
-         1YH4gGcUJskCHk6+xlybG4yb2oM5Q1yJrj4PEZw3ho6DY7tKYJ04cClFJbzSA10TFbaC
-         NkckccdJXKpfwA99h3sxSNh2zOuBRHpgpWv5KjZBVe3m0QRsrdt9TY+8mKlJmy4IzWic
-         hrzjXTblpF7BSSStGoiBNt9FrPYIJI+n/SPqy272UWXwUXwU8XjxDL4U+sO9Ditfzaip
-         G94wAnraaR5YAqPG8XyrH9mJJRIOz5KoSz7JKPvTgkUGvO7QdweWWa3Dls05G0tLj4mQ
-         cQSA==
-X-Forwarded-Encrypted: i=1; AJvYcCWfAMU0th5BtZLIKQrfi11ZP/4PffF3LgYS+gaZZvsLLq133H52Rv1reweVIwtNRI/UlpeyhQFSucLtO+5FNlxpJtLGyn654wy2xN4i
-X-Gm-Message-State: AOJu0YzmnnGIWHBfoHTsIMETMuQDzmLdPD8ZN6XzI/38BJH0RKX3XbRH
-	YgfVdZCo09GIQHIhIlN8yjrMqFIumS3dUW9fDaaFdMlil6FeHs3ru6SLc5HK1Q4=
-X-Google-Smtp-Source: AGHT+IHn5ukEbrOXa/xSQN4+acm8vFx4OO0mc31kNe5p13cGaOnb1+adQLu+u+OBPHzLUDOI3daDvw==
-X-Received: by 2002:a17:907:7213:b0:a4d:fb90:4a4e with SMTP id dr19-20020a170907721300b00a4dfb904a4emr1302204ejc.2.1711485095264;
-        Tue, 26 Mar 2024 13:31:35 -0700 (PDT)
-Received: from alex-rivos.ba.rivosinc.com ([2a02:8440:5240:d2b3:9657:7432:d88d:84a9])
-        by smtp.gmail.com with ESMTPSA id ae12-20020a17090725cc00b00a47522c193asm3273954ejc.196.2024.03.26.13.31.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 13:31:34 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Pu Lehui <pulehui@huawei.com>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Zong Li <zong.li@sifive.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Evgenii Shatokhin <e.shatokhin@yadro.com>
-Subject: [PATCH 1/2] riscv: Fix warning by declaring arch_cpu_idle() as noinstr
-Date: Tue, 26 Mar 2024 21:30:16 +0100
-Message-Id: <20240326203017.310422-2-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240326203017.310422-1-alexghiti@rivosinc.com>
-References: <20240326203017.310422-1-alexghiti@rivosinc.com>
+        d=1e100.net; s=20230601; t=1711485137; x=1712089937;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6VDCXcE5QdWHR9kG4pOhacMN9bewYQsjsFRjYTaqxso=;
+        b=tiu44HCMkpYEaSdwwlacx0tjKuPwjGjOfn8XfPkRL/7hv7D1lz0EqPaFyrTjWIWZQ3
+         8sbyv7xdWvqn7AZlI4K5ZTVX4M1EpoTezhFE8hVnYuhJ5fDS6Jt4DmKrXgIEWbI1ON8Q
+         Uy4eoIrbqlE3lcp5YNGr/IzlG1Yoo8koZwkJWaODavuoOLAJkfwY0TaWF6uZrOiodX34
+         DoWCaFUGkHZmsLdBf9hissvotyTp7JHc4VtgG3tvhvFFN1h3ByLF20lw9NnGQ47NenbD
+         IYFGKu0oWGoS6tu4qEMLayhu1xO5oobmxkRlVvovHSZ6zi72H3rDNFKwK85zHzc8UzAq
+         0XTA==
+X-Forwarded-Encrypted: i=1; AJvYcCXzCXR652iUtGO2iAxUJXhNoKah2OMXgO0aQLqg2UDefyu8mrSlCjryrpOdYfmFwChdqUD9O4OmrBJcbVkFOqWEHfz4FN2DRaiH/BJO
+X-Gm-Message-State: AOJu0YwFtmH3WyDwK9rp9W+0ZdbnsP/skWKyauUVsArJgH3f3z+P1YxA
+	HLpNR/uk8OT9BJzIIpuc/kKTzWjfhXTd0j3sylJqqSLdrUhf53X9JNt5HCU9fR4=
+X-Google-Smtp-Source: AGHT+IFOlD0xK8onRUJ9yqR9hLHwwtbhpRKjqRY+8LEBATvXBmdrFXwlqk/rYHKgRAJSLR25QhUOtQ==
+X-Received: by 2002:a17:906:4a0e:b0:a46:8c40:7a3a with SMTP id w14-20020a1709064a0e00b00a468c407a3amr1692821eju.26.1711485137449;
+        Tue, 26 Mar 2024 13:32:17 -0700 (PDT)
+Received: from [192.168.92.47] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id lb25-20020a170907785900b00a3d11feb32esm4583167ejc.186.2024.03.26.13.32.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Mar 2024 13:32:17 -0700 (PDT)
+Message-ID: <a789fc45-f689-4fd7-94d3-7da37aab340b@linaro.org>
+Date: Tue, 26 Mar 2024 21:32:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] interconnect: qcom: sm6115: Unspaghettify SNoC QoS
+ port numbering
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Georgi Djakov
+ <djakov@kernel.org>, Shawn Guo <shawn.guo@linaro.org>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
+References: <20240326-topic-rpm_icc_qos_cleanup-v1-0-357e736792be@linaro.org>
+ <20240326-topic-rpm_icc_qos_cleanup-v1-1-357e736792be@linaro.org>
+ <CAA8EJpo=JScW9ksFtq_rzvJKue_1bVcK2oiA5ZfjpyD=F3wNZA@mail.gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <CAA8EJpo=JScW9ksFtq_rzvJKue_1bVcK2oiA5ZfjpyD=F3wNZA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The following warning appears when using ftrace:
+On 26.03.2024 9:13 PM, Dmitry Baryshkov wrote:
+> On Tue, 26 Mar 2024 at 21:43, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
+>>
+>> When I was creating this driver, my bright mind overlooked the existence
+>> of desc->qos_offset and decided to make up for the difference it made by
+>> adding 21 (0x15) to the port index on SNoC and its downstream buses.
+>>
+>> Undo this mistake to make the indices actually mean something.
+> 
+> So, what is the meaning of qos_port?
 
-[89855.443413] RCU not on for: arch_cpu_idle+0x0/0x1c
-[89855.445640] WARNING: CPU: 5 PID: 0 at include/linux/trace_recursion.h:162 arch_ftrace_ops_list_func+0x208/0x228
-[89855.445824] Modules linked in: xt_conntrack(E) nft_chain_nat(E) xt_MASQUERADE(E) nf_conntrack_netlink(E) xt_addrtype(E) nft_compat(E) nf_tables(E) nfnetlink(E) br_netfilter(E) cfg80211(E) nls_iso8859_1(E) ofpart(E) redboot(E) cmdlinepart(E) cfi_cmdset_0001(E) virtio_net(E) cfi_probe(E) cfi_util(E) 9pnet_virtio(E) gen_probe(E) net_failover(E) virtio_rng(E) failover(E) 9pnet(E) physmap(E) map_funcs(E) chipreg(E) mtd(E) uio_pdrv_genirq(E) uio(E) dm_multipath(E) scsi_dh_rdac(E) scsi_dh_emc(E) scsi_dh_alua(E) drm(E) efi_pstore(E) backlight(E) ip_tables(E) x_tables(E) raid10(E) raid456(E) async_raid6_recov(E) async_memcpy(E) async_pq(E) async_xor(E) xor(E) async_tx(E) raid6_pq(E) raid1(E) raid0(E) virtio_blk(E)
-[89855.451563] CPU: 5 PID: 0 Comm: swapper/5 Tainted: G            E      6.8.0-rc6ubuntu-defconfig #2
-[89855.451726] Hardware name: riscv-virtio,qemu (DT)
-[89855.451899] epc : arch_ftrace_ops_list_func+0x208/0x228
-[89855.452016]  ra : arch_ftrace_ops_list_func+0x208/0x228
-[89855.452119] epc : ffffffff8016b216 ra : ffffffff8016b216 sp : ffffaf808090fdb0
-[89855.452171]  gp : ffffffff827c7680 tp : ffffaf808089ad40 t0 : ffffffff800c0dd8
-[89855.452216]  t1 : 0000000000000001 t2 : 0000000000000000 s0 : ffffaf808090fe30
-[89855.452306]  s1 : 0000000000000000 a0 : 0000000000000026 a1 : ffffffff82cd6ac8
-[89855.452423]  a2 : ffffffff800458c8 a3 : ffffaf80b1870640 a4 : 0000000000000000
-[89855.452646]  a5 : 0000000000000000 a6 : 00000000ffffffff a7 : ffffffffffffffff
-[89855.452698]  s2 : ffffffff82766872 s3 : ffffffff80004caa s4 : ffffffff80ebea90
-[89855.452743]  s5 : ffffaf808089bd40 s6 : 8000000a00006e00 s7 : 0000000000000008
-[89855.452787]  s8 : 0000000000002000 s9 : 0000000080043700 s10: 0000000000000000
-[89855.452831]  s11: 0000000000000000 t3 : 0000000000100000 t4 : 0000000000000064
-[89855.452874]  t5 : 000000000000000c t6 : ffffaf80b182dbfc
-[89855.452929] status: 0000000200000100 badaddr: 0000000000000000 cause: 0000000000000003
-[89855.453053] [<ffffffff8016b216>] arch_ftrace_ops_list_func+0x208/0x228
-[89855.453191] [<ffffffff8000e082>] ftrace_call+0x8/0x22
-[89855.453265] [<ffffffff800a149c>] do_idle+0x24c/0x2ca
-[89855.453357] [<ffffffff8000da54>] return_to_handler+0x0/0x26
-[89855.453429] [<ffffffff8000b716>] smp_callin+0x92/0xb6
-[89855.453785] ---[ end trace 0000000000000000 ]---
+"The index of the [data?] port that we're applying the QoS settings to"
 
-To fix this, mark arch_cpu_idle() as noinstr, like it is done in commit
-a9cbc1b471d2 ("s390/idle: mark arch_cpu_idle() noinstr").
-
-Reported-by: Evgenii Shatokhin <e.shatokhin@yadro.com>
-Closes: https://lore.kernel.org/linux-riscv/51f21b87-ebed-4411-afbc-c00d3dea2bab@yadro.com/
-Fixes: cfbc4f81c9d0 ("riscv: Select ARCH_WANTS_NO_INSTR")
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/riscv/kernel/process.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
-index 92922dbd5b5c..6abeecbfc51d 100644
---- a/arch/riscv/kernel/process.c
-+++ b/arch/riscv/kernel/process.c
-@@ -37,7 +37,7 @@ EXPORT_SYMBOL(__stack_chk_guard);
- 
- extern asmlinkage void ret_from_fork(void);
- 
--void arch_cpu_idle(void)
-+void noinstr arch_cpu_idle(void)
- {
- 	cpu_do_idle();
- }
--- 
-2.39.2
-
+Konrad
