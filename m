@@ -1,119 +1,116 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95EE512D76F
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6A313C831;
+	Tue, 26 Mar 2024 15:19:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711466358; cv=none; b=U+486ahaYIGY1hbZqhs3+V8KexSZatfstyd7TNyhAFRUqXqifZzekkDN2TsKUU/ZREag4V9wps42iLXJSY3hF7UfA4xc1Rd4FjInOeO/v0NYKG8dzIjEdnsl8t6ioCz6QdgbQG5TT3X6StFJ1kbi38qsbqs3ZVF+Hatbv6GGOoI=
+	t=1711466364; cv=none; b=gq9Nsj8QyeA7a952H3/8c+k0ZZTl27/ZM7tg0nqSwHeGnCIas3C1ASzSLO6jt/Y0FKT1xmW2OWLeNTFLoXRsVd9KFg1JaCIQLc9OzN3WFhzPv2syeVNz0u8Wh1FRkpz22B/aOGCopk9e6gSpfYFOB1aZs9zp+hcycBLBeUTwCsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711466358; c=relaxed/simple;
-	bh=SraOnsE2ZK1vLT3c1NA6VI0uTZIh2ButPyGByZ0auQA=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Z2CR0BTyKL4ujmYdrRw2ty0GG3gFbD+jkJm+epLvrze0O5FJZ0ULXsOJwa5AZp/sZGzteG1De29oXVp0pDobTXB1jq+BchmWfbaA5Y0cX4eokdiHlwcFsNbKCNftpsau99ED9JVTHhFimBZBAZHHYGECD+6xqiOiD+1MaxndRzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kyletso.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xzGuM1KZ; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kyletso.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xzGuM1KZ"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-1e0a4e28c06so22166085ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 08:19:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711466357; x=1712071157; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ZX5Wvd0xktos9WBEJLXysYQZfAByNmYU61XZUR2rboI=;
-        b=xzGuM1KZb0vhUSloPR47tQ+K1gKAwkakkn7KULQBpl+ezMMid8cwKiYLps3KYQ/mkb
-         M9YObxQcmmvWtqZP5szQoh76lZJSwyAqIzpDL2Y9tA6BQJs/C3V/EJ4OMjFTPCWoiM06
-         T6QUHjJ+4ycjMnYqgT+AXChbHKw8REBtDl3W/FNHT4ycjSOVYPF4utEEVd4WheJp0TOe
-         UYqaVS4bWwV/d7yemM+VcU2cHlX4GMO0vBYWPwzp8jFB+Lk0SAUnIpEzVB0xnKBenr7n
-         wbucMQ01UIl4qc0v7EmoxSMbYSalV72LfV0e8U+CNKKNCc0oKDzGl6YArBrPG3xd+DvG
-         RGjQ==
+	s=arc-20240116; t=1711466364; c=relaxed/simple;
+	bh=t/j9B4d1DAJG+x0WZEKX9sM5rtk+d1CT8qkjyuhY0Wo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SrzJKHvPnf+QA8dMtc98YyWSqPAVhx6t1gzSKtu03KHRT9V0Fmurutd4ENB/zpWdZI5AOJQ7ZiF22exTOX1Xjwd8qYaUTDz3CmHHgi8kMheS03+uF1As3DAnN4CaEGCwIO2IVggkQ4YZi3bsyTet4tbRrROFvenZVAe11nPcgto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-56bf6591865so4899242a12.0;
+        Tue, 26 Mar 2024 08:19:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711466357; x=1712071157;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZX5Wvd0xktos9WBEJLXysYQZfAByNmYU61XZUR2rboI=;
-        b=U2I+3g765sRbzUC1Arct3hZhtZdBCxcfDPUtqdD/iVVgXIxAm3H3dHmFHpvZOk6+mA
-         V6jCvHlfmk5iIh+eVmOy1Hp7Q9+ByLLjjfqMtjJ8/67uZOEx4Kt+eypwiSQHHIYMTQsf
-         4Ifd1c+iFkait3/kPrnV5Ib4fuPyq87138lXctYJUaP/K8snRrQ5ozlIwVf+auoXPiEA
-         SqXhQgaXKHC/s6LsTKaqHJMhIByL6pT/LaMnoYh1u4axXmg4tlKO8HPmxb030iXs9FfA
-         fYOejYwoxorrNMyuaKRqIr26sGklSEqdkx5Z2Bck0VIfQ+WuPNZUDX0ssBMjo2WmcHIc
-         Y3lA==
-X-Forwarded-Encrypted: i=1; AJvYcCWSr60r3kfoHq4UD97W7RbAhdo1HloZhKnANokSgOEyJ5rt5PuLSurIlbKN2p/g0Zt6Uc5b+1jMuskRBCxEZwuW9GigLOoAUpwR/7Gv
-X-Gm-Message-State: AOJu0YzmIbh3dDp4MZ3xXzVBzSIggN8HbFSR1eHouPSChpT/uAc6+jer
-	lynE2u6z70gBK1r8GiAqolgYUGJfRt74OnlAzcqnHFMWjwNO7s6YTE8faxtVV5/N7ataEnuQKP+
-	ZlFWjDA==
-X-Google-Smtp-Source: AGHT+IGpcix9zT2zJgL92BUZCTnJRPGRgLNYsBdbyVdVSZE0L1tCyIxVI05/4rz1JStR/B5emPq+lsM6JUK+
-X-Received: from kyletso-p620lin01.ntc.corp.google.com ([2401:fa00:a7:c:666:5c0e:98a6:f950])
- (user=kyletso job=sendgmr) by 2002:a17:902:fb43:b0:1e0:9a7:e629 with SMTP id
- lf3-20020a170902fb4300b001e009a7e629mr206486plb.7.1711466356714; Tue, 26 Mar
- 2024 08:19:16 -0700 (PDT)
-Date: Tue, 26 Mar 2024 23:19:09 +0800
+        d=1e100.net; s=20230601; t=1711466361; x=1712071161;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tswsOTneScV35e8ze8rWgk0pT/EhtrIbNgyGirLZBUU=;
+        b=rmcmEJ3zXU9nBLcvIa90ploL4bSOvIYEmp+9udi/U1GswxP9fON4zVd723mougbfQx
+         K6sSp35jKMz7rAzkxDCSxI68Z0zlFAf2jbx6UuKI3w+tLHECeiVXW/cCjYJUD6PiZfw8
+         pFYaBMdF7HkyViaVZMyhvbiq78FG8T3Cq3L1Yf81jwQbOO6paXzUmPBuOoKHL+dxjtgB
+         phwjXDq0vHtsFAY+qjVqkiEOX6H3dewUz5n/jFUsl35cPwnMS8WhH/gQQb0PN+B3jdY/
+         CQ63vD03OmhZTqLNz+O0WKKa/eSKsypgil9jjgVLck4dZjGiRQo4ukvBEE0IDCviNi7Z
+         KpYA==
+X-Forwarded-Encrypted: i=1; AJvYcCWVP1f1fhiDjdp4tMQvaxjrumT3gr5tzq6+B8SJ+IWefeI3fxZlYntioOUIbSLePniiLi7PGio2Svy3nHfwwgyPznGj6sViFFoTE2N6QRoe3Giy/xt5MTsgg4V1yZMmQJBu5Ihq
+X-Gm-Message-State: AOJu0YyXOIIX/qFhv2wITcVhUXPsMTU61plnKD5K/3U9b4ZruDixRLvg
+	RPTTXVIPpqvAgs9XZ0WqRrABW+TwOchl6TXJcUxWOARJrauuLuaw
+X-Google-Smtp-Source: AGHT+IGDFkOEbOFg6NKy2/q2daPeK0G7VvTQ5PUqeGY5wLXijc72wcmqCJ4IBXYbih5UcuyivJHFvw==
+X-Received: by 2002:aa7:ccd5:0:b0:56b:8d0e:1a08 with SMTP id y21-20020aa7ccd5000000b0056b8d0e1a08mr1222540edt.26.1711466361233;
+        Tue, 26 Mar 2024 08:19:21 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-117.fbsv.net. [2a03:2880:30ff:75::face:b00c])
+        by smtp.gmail.com with ESMTPSA id i23-20020a056402055700b00569731a1eb2sm4254328edx.46.2024.03.26.08.19.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 08:19:20 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: hengqi@linux.alibaba.com,
+	xuanzhuo@linux.alibaba.com,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: rbc@meta.com,
+	riel@surriel.com,
+	virtualization@lists.linux.dev (open list:VIRTIO CORE AND NET DRIVERS),
+	netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net v2 1/2] virtio_net: Do not set rss_indir if RSS is not supported
+Date: Tue, 26 Mar 2024 08:19:08 -0700
+Message-ID: <20240326151911.2155689-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
-Message-ID: <20240326151909.440275-1-kyletso@google.com>
-Subject: [PATCH v2] usb: typec: tcpm: Correct the PDO counting in pd_set
-From: Kyle Tso <kyletso@google.com>
-To: linux@roeck-us.net, heikki.krogerus@linux.intel.com, 
-	gregkh@linuxfoundation.org
-Cc: badhri@google.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	Kyle Tso <kyletso@google.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Off-by-one errors happen because nr_snk_pdo and nr_src_pdo are
-incorrectly added one. The index of the loop is equal to the number of
-PDOs to be updated when leaving the loop and it doesn't need to be added
-one.
+Do not set virtnet_info->rss_indir_table_size if RSS is not available
+for the device.
 
-When doing the power negotiation, TCPM relies on the "nr_snk_pdo" as
-the size of the local sink PDO array to match the Source capabilities
-of the partner port. If the off-by-one overflow occurs, a wrong RDO
-might be sent and unexpected power transfer might happen such as over
-voltage or over current (than expected).
+Currently, rss_indir_table_size is set if either has_rss or
+has_rss_hash_report is available, but, it should only be set if has_rss
+is set.
 
-"nr_src_pdo" is used to set the Rp level when the port is in Source
-role. It is also the array size of the local Source capabilities when
-filling up the buffer which will be sent as the Source PDOs (such as
-in Power Negotiation). If the off-by-one overflow occurs, a wrong Rp
-level might be set and wrong Source PDOs will be sent to the partner
-port. This could potentially cause over current or port resets.
+On the virtnet_set_rxfh(), return an invalid command if the request has
+indirection table set, but virtnet does not support RSS.
 
-Fixes: cd099cde4ed2 ("usb: typec: tcpm: Support multiple capabilities")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kyle Tso <kyletso@google.com>
+Suggested-by: Heng Qi <hengqi@linux.alibaba.com>
+Signed-off-by: Breno Leitao <leitao@debian.org>
 ---
-v1 -> v2:
-- update the commit message (adding the problems this patch solves)
+ drivers/net/virtio_net.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
- drivers/usb/typec/tcpm/tcpm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-index ae2b6c94482d..2464710ea0c8 100644
---- a/drivers/usb/typec/tcpm/tcpm.c
-+++ b/drivers/usb/typec/tcpm/tcpm.c
-@@ -6855,14 +6855,14 @@ static int tcpm_pd_set(struct typec_port *p, struct usb_power_delivery *pd)
- 	if (data->sink_desc.pdo[0]) {
- 		for (i = 0; i < PDO_MAX_OBJECTS && data->sink_desc.pdo[i]; i++)
- 			port->snk_pdo[i] = data->sink_desc.pdo[i];
--		port->nr_snk_pdo = i + 1;
-+		port->nr_snk_pdo = i;
- 		port->operating_snk_mw = data->operating_snk_mw;
- 	}
+diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+index c22d1118a133..c640fdf28fc5 100644
+--- a/drivers/net/virtio_net.c
++++ b/drivers/net/virtio_net.c
+@@ -3813,6 +3813,9 @@ static int virtnet_set_rxfh(struct net_device *dev,
+ 	    rxfh->hfunc != ETH_RSS_HASH_TOP)
+ 		return -EOPNOTSUPP;
  
- 	if (data->source_desc.pdo[0]) {
- 		for (i = 0; i < PDO_MAX_OBJECTS && data->source_desc.pdo[i]; i++)
- 			port->snk_pdo[i] = data->source_desc.pdo[i];
--		port->nr_src_pdo = i + 1;
-+		port->nr_src_pdo = i;
- 	}
++	if (rxfh->indir && !vi->has_rss)
++		return -EINVAL;
++
+ 	if (rxfh->indir) {
+ 		for (i = 0; i < vi->rss_indir_table_size; ++i)
+ 			vi->ctrl->rss.indirection_table[i] = rxfh->indir[i];
+@@ -4729,13 +4732,15 @@ static int virtnet_probe(struct virtio_device *vdev)
+ 	if (virtio_has_feature(vdev, VIRTIO_NET_F_HASH_REPORT))
+ 		vi->has_rss_hash_report = true;
  
- 	switch (port->state) {
+-	if (virtio_has_feature(vdev, VIRTIO_NET_F_RSS))
++	if (virtio_has_feature(vdev, VIRTIO_NET_F_RSS)) {
+ 		vi->has_rss = true;
+ 
+-	if (vi->has_rss || vi->has_rss_hash_report) {
+ 		vi->rss_indir_table_size =
+ 			virtio_cread16(vdev, offsetof(struct virtio_net_config,
+ 				rss_max_indirection_table_length));
++	}
++
++	if (vi->has_rss || vi->has_rss_hash_report) {
+ 		vi->rss_key_size =
+ 			virtio_cread8(vdev, offsetof(struct virtio_net_config, rss_max_key_size));
+ 
 -- 
-2.44.0.396.g6e790dbe36-goog
+2.43.0
 
