@@ -1,118 +1,243 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mo-csw-fb.securemx.jp (mo-csw-fb1120.securemx.jp [210.130.202.128])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B51345022
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 11:15:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A467134A8;
+	Tue, 26 Mar 2024 11:16:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711451742; cv=none; b=PvwWWlbaL0kxk25AH93a3vdeO2dMR5SUcGPPFTFRdqNMucqizT9jJbhE0aR3ylQJJbw5XjA/DPsc0elL4MYTUDzmEMjKfnERAYOkqAVu7VIAVIj0VTZ7bH93al3PzTezhMxeytIixTxEsA3Etl3L2J3tK8C9qCL9wIQACw4ry2A=
+	t=1711451811; cv=none; b=TCDgxGj3KD0UA6mjYn/eAcMVaoq7vjdRZyNlad+PoUjxdKtK05bl8eunLlLq8WB2J7yRtqUgNuIOrxeero6flgyyPT7X0ms+lrHonmM2AisOSKuM9O17SMFVoJZh+twdnZKZOpwyzc9mn5OLjifR+e/yNhHyQGCrl5U8pmexh4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711451742; c=relaxed/simple;
-	bh=p0SP+3hWz6lk8cCE7sf3j9Xgizc96y3imCYOUoZL1O0=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=dWwiDXORL+VFsqx8ritNGuZEHgcbMESqokqh72TjXVLzyXLWtrkKtGWwLsMJsx6oBW1pOCJpaIpc2VKk4B8Nwp7PiHReitpu9tKEIsMhDeUzV1JDLnEthOoXlm/ksbsy5PhnyC2g1uUzDUV50h+/iaeayQ3b4rG7slNC6uDEpT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=bO29NbXc; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bO29NbXc"
-Received: from pendragon.ideasonboard.com (aztw-30-b2-v4wan-166917-cust845.vm26.cable.virginm.net [82.37.23.78])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id E3C91497;
-	Tue, 26 Mar 2024 12:15:06 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1711451707;
-	bh=p0SP+3hWz6lk8cCE7sf3j9Xgizc96y3imCYOUoZL1O0=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=bO29NbXcyi6c8nEimTRS6uwmhTD+Pn8RY9rGvw3/jL9OXOJY9AO+/JWxo+ntB6A5R
-	 0NNy/2pCtYUUVGbzNcHpls4ZfalMSTvwl4pgMoP0F8VEUdgBWtXYQIuBasjKCgqr00
-	 yKHvnheJkotIct/IfxfqcWY2ZIpmcO7AsLgzX2Ts=
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1711451811; c=relaxed/simple;
+	bh=xSEzLoXG7ilM1etL8aaSD1TDnPKgw15ps6p0vsfPTXo=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=bQc5j7FOAycvyI/ea16OtSaWE84mU2mFfMcLXwYZKhNMD5HntyRw5IAMOOJfj5dWZO2P8x+JH6rOLS1nhYXIwhG5zr+LC2FCQ6ymadJs+OZqi0O5EAg9yApRLEmIdYpDFcy1MPFu54iwZHTBkb95wHHtgeiKfr0ikh2k9Glmcqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kioxia.com; spf=pass smtp.mailfrom=kioxia.com; arc=none smtp.client-ip=210.130.202.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kioxia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kioxia.com
+Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1120) id 42QATssb671701; Tue, 26 Mar 2024 19:29:54 +0900
+Received: by mo-csw.securemx.jp (mx-mo-csw1122) id 42QATdJk2611184; Tue, 26 Mar 2024 19:29:39 +0900
+X-Iguazu-Qid: 2rWg9o4uinxHarSWO2
+X-Iguazu-QSIG: v=2; s=0; t=1711448978; q=2rWg9o4uinxHarSWO2; m=VTooRhJM/Sss0dbxVP1M9CwhVAaK2S3XeIYq6RBLwrU=
+Received: from CNN1EMTA03.test.kioxia.com ([202.248.33.144])
+	by relay.securemx.jp (mx-mr1122) id 42QATcWM2454001
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Tue, 26 Mar 2024 19:29:38 +0900
+Received: from Switcher-Post_Send (gateway [10.232.20.1])
+	by CNN1EMTA03.test.kioxia.com (Postfix) with ESMTP id 3A26C32440;
+	Tue, 26 Mar 2024 19:29:38 +0900 (JST)
+Received: from CNN1ESTR03.kioxia.com (localhost [127.0.0.1])
+	by Switcher-Post_Send (Postfix) with ESMTP id AB3561938D7224;
+	Tue, 26 Mar 2024 19:08:11 +0900 (JST)
+Received: from localhost [127.0.0.1] 
+	 by CNN1ESTR03.kioxia.com with ESMTP id 0002VAAAAAA012FG;
+	 Tue, 26 Mar 2024 19:08:11 +0900
+Received: from CNN1EXMB01.r1.kioxia.com (CNN1EXMB01.r1.kioxia.com [10.232.20.150])
+	by Switcher-Pre_Send (Postfix) with ESMTP id A0015A035DC28;
+	Tue, 26 Mar 2024 19:08:11 +0900 (JST)
+Received: from CNN1EXMB03.r1.kioxia.com (10.232.20.152) by
+ CNN1EXMB01.r1.kioxia.com (10.232.20.150) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 26 Mar 2024 19:29:37 +0900
+Received: from CNN1EXMB03.r1.kioxia.com ([10.13.100.22]) by
+ CNN1EXMB03.r1.kioxia.com ([10.13.100.22]) with mapi id 15.01.2507.035; Tue,
+ 26 Mar 2024 19:29:37 +0900
+From: tada keisuke <keisuke1.tada@kioxia.com>
+To: "song@kernel.org" <song@kernel.org>,
+        "yukuai3@huawei.com"
+	<yukuai3@huawei.com>
+CC: "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH 06/11] md: avoid conflicts in active_aligned_reads operations
+Thread-Topic: [PATCH 06/11] md: avoid conflicts in active_aligned_reads
+ operations
+Thread-Index: Adp/ZElvNupNLKs/Rxilvj3/IfhIIg==
+Date: Tue, 26 Mar 2024 10:29:37 +0000
+Message-ID: <ffb112e756514a0eaab891379df0d834@kioxia.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tm-as-product-ver: ISME-14.0.0.2080-9.0.1002-28274.000
+x-tm-as-result: No-10--10.964700-8.000000
+x-tmase-matchedrid: +gTBWF+Z0ROmagT1k9kBpgrcxrzwsv5uXPK9y3z82GsPdZmyx8xAa4Ul
+	JlxlTIT+SMhOCdNodgNTbKunqk1vfbVQ6XPWwtdyEXjPIvKd74BMkOX0UoduufLIj08N6FsEuJE
+	UmdYPGSVzy5czsqHK1z4BLF18v1Ji23JrSYCBAcfN+qWlu2ZxaFr2hZxjCLzqMoh6scCF9jF96t
+	9wDfdERVvLgfDdKWEFEn91NheE+HWip6xhGipIWazGfgakLdja0NaTZUEzRZzC9DxHKrnk8luWw
+	Soz2HVyH7iboQD+7I4VaGy/EyU2eafccBtB84hSnXdphQTSK/K/yN2q8U674odzPqBXhP/S4Mmu
+	En4nwqo1W+3DxdRobxDflJk00ivp0FQxfjRHOzi4u3nS+3EEDuDDEwfnBUy6lwV2iaAfSWeDGx/
+	OQ1GV8t0H8LFZNFG7gaH1JgrOSO4aMUyeC0staN0RHUNUuP2opWu923L0/V6a+gqq4Q/lRG0nH4
+	VYvyBw3HbxZLSwb85agnrZz8DBG+ulxyHOcPoH
+x-tm-as-user-approved-sender: No
+x-tm-as-user-blocked-sender: No
+x-tmase-result: 10--10.964700-8.000000
+x-tmase-version: ISME-14.0.0.2080-9.0.1002-28274.000
+x-tm-snts-smtp: BD34B6522F5962555E5B84274C8D74DA3A9F433931466499FF82D0D1F3A5AB512000:8
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240319072712.133449-6-umang.jain@ideasonboard.com>
-References: <20240319072712.133449-1-umang.jain@ideasonboard.com> <20240319072712.133449-6-umang.jain@ideasonboard.com>
-Subject: Re: [PATCH v3 5/6] media: imx335: Fix active area height discrepency
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: Umang Jain <umang.jain@ideasonboard.com>
-To: Alexander Shiyan <eagle.alexander923@gmail.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Umang Jain <umang.jain@ideasonboard.com>, open list <linux-kernel@vger.kernel.org>
-Date: Tue, 26 Mar 2024 11:15:34 +0000
-Message-ID: <171145173466.1011926.14195824080886002217@ping.linuxembedded.co.uk>
-User-Agent: alot/0.10
+X-CrossPremisesHeadersFilteredBySendConnector: CNN1EXMB01.r1.kioxia.com
+X-OrganizationHeadersPreserved: CNN1EXMB01.r1.kioxia.com
 
-Quoting Umang Jain (2024-03-19 07:27:11)
-> The imx335 reports a recommended pixel area of - 2592x1944.
-> The driver supported mode however limits it to height=3D1940.
->=20
-> Fix the height discrepency by correctly the value of height
-> (with updates to vblank and mode registers).
+This patch depends on patch 03.
 
-"Fix the height discrepency by correcting the Y_OUT_SIZE,
-HTRIMMING_START, and changing the WINMODE, followed by the corresponding
-updates to reflect the new minimum vblanking periods."
+Change the type of active_aligned_reads from atomic_t to percpu_ref in perc=
+pu mode.
 
-I'm curious though - why does IMX335_REG_HTRIMMING_START jump /so/ much
-here? Something to do with the WINMODE change?
+Signed-off-by: Keisuke TADA <keisuke1.tada@kioxia.com>
+Signed-off-by: Toshifumi OHTAKE <toshifumi.ootake@kioxia.com>
+---
+ drivers/md/raid5.c | 26 ++++++++++++++++++--------
+ drivers/md/raid5.h | 13 ++++---------
+ 2 files changed, 22 insertions(+), 17 deletions(-)
 
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index c7186ebcd299..99f42bc02231 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -5436,8 +5436,7 @@ static void raid5_align_endio(struct bio *bi)
+=20
+ 	if (!error) {
+ 		bio_endio(raid_bi);
+-		if (active_aligned_reads_dec_and_test(conf))
+-			wake_up(&conf->wait_for_quiescent);
++		active_aligned_reads_dec(conf);
+ 		return;
+ 	}
+=20
+@@ -5508,8 +5507,8 @@ static int raid5_read_one_chunk(struct mddev *mddev, =
+struct bio *raid_bio)
+ 		/* quiesce is in progress, so we need to undo io activation and wait
+ 		 * for it to finish
+ 		 */
+-		if (did_inc && active_aligned_reads_dec_and_test(conf))
+-			wake_up(&conf->wait_for_quiescent);
++		if (did_inc)
++			active_aligned_reads_dec(conf);
+ 		spin_lock_irq(&conf->device_lock);
+ 		wait_event_lock_irq(conf->wait_for_quiescent, conf->quiesce =3D=3D 0,
+ 				    conf->device_lock);
+@@ -6609,8 +6608,7 @@ static int  retry_aligned_read(struct r5conf *conf, s=
+truct bio *raid_bio,
+=20
+ 	bio_endio(raid_bio);
+=20
+-	if (active_aligned_reads_dec_and_test(conf))
+-		wake_up(&conf->wait_for_quiescent);
++	active_aligned_reads_dec(conf);
+ 	return handled;
+ }
+=20
+@@ -7324,6 +7322,7 @@ static void free_conf(struct r5conf *conf)
+ {
+ 	int i;
+=20
++	percpu_ref_exit(&conf->active_aligned_reads);
+ 	log_exit(conf);
+=20
+ 	shrinker_free(conf->shrinker);
+@@ -7405,6 +7404,12 @@ static unsigned long raid5_cache_count(struct shrink=
+er *shrink,
+ 	return max_stripes - min_stripes;
+ }
+=20
++static void percpu_wakeup_handle_req_active(struct percpu_ref *r)
++{
++	struct r5conf *conf =3D container_of(r, struct r5conf, active_aligned_rea=
+ds);
++
++	wake_up(&conf->wait_for_quiescent);
++}
+=20
+ static struct r5conf *setup_conf(struct mddev *mddev, bool quiesce)
+ {
+@@ -7492,7 +7497,10 @@ static struct r5conf *setup_conf(struct mddev *mddev=
+, bool quiesce)
+ 		percpu_ref_init_flags =3D PERCPU_REF_ALLOW_REINIT | PERCPU_REF_INIT_DEAD=
+;
+ 	else
+ 		percpu_ref_init_flags =3D PERCPU_REF_ALLOW_REINIT;
+-	atomic_set(&conf->active_aligned_reads, 0);
++	ret =3D percpu_ref_init(&conf->active_aligned_reads, percpu_wakeup_handle=
+_req_active,
++		percpu_ref_init_flags, GFP_KERNEL);
++	if (ret)
++		goto abort;
+ 	spin_lock_init(&conf->pending_bios_lock);
+ 	conf->batch_bio_dispatch =3D true;
+ 	rdev_for_each(rdev, mddev) {
+@@ -7684,7 +7692,7 @@ static struct r5conf *setup_conf_for_takeover(struct =
+mddev *mddev)
+=20
+ 	if (mddev->level =3D=3D 4 || mddev->level =3D=3D 5 || mddev->level =3D=3D=
+ 6) {
+ 		conf =3D mddev->private;
+-		quiesce =3D false;
++		quiesce =3D percpu_ref_is_dying(&conf->active_aligned_reads);
+ 	}
+ 	return setup_conf(mddev, quiesce);
+ }
+@@ -8641,6 +8649,7 @@ static void raid5_quiesce(struct mddev *mddev, int qu=
+iesce)
+ 		 * quiesce started and reverts to slow (locked) path.
+ 		 */
+ 		smp_store_release(&conf->quiesce, 2);
++		percpu_ref_kill(&conf->active_aligned_reads);
+ 		wait_event_cmd(conf->wait_for_quiescent,
+ 				    atomic_read(&conf->active_stripes) =3D=3D 0 &&
+ 				    active_aligned_reads_is_zero(conf),
+@@ -8653,6 +8662,7 @@ static void raid5_quiesce(struct mddev *mddev, int qu=
+iesce)
+ 	} else {
+ 		/* re-enable writes */
+ 		lock_all_device_hash_locks_irq(conf);
++		percpu_ref_reinit(&conf->active_aligned_reads);
+ 		conf->quiesce =3D 0;
+ 		wake_up(&conf->wait_for_quiescent);
+ 		wake_up(&conf->wait_for_overlap);
+diff --git a/drivers/md/raid5.h b/drivers/md/raid5.h
+index 5bd6bb3540c5..c4ab418e2084 100644
+--- a/drivers/md/raid5.h
++++ b/drivers/md/raid5.h
+@@ -621,7 +621,7 @@ struct r5conf {
+ 	unsigned int		retry_read_offset; /* sector offset into retry_read_aligned=
+ */
+ 	struct bio		*retry_read_aligned_list; /* aligned bios retry list  */
+ 	atomic_t		preread_active_stripes; /* stripes with scheduled io */
+-	atomic_t		active_aligned_reads;
++	struct percpu_ref	active_aligned_reads;
+ 	atomic_t		pending_full_writes; /* full write backlog */
+ 	int			bypass_count; /* bypassed prereads */
+ 	int			bypass_threshold; /* preread nice */
+@@ -698,22 +698,17 @@ struct r5conf {
+=20
+ static inline void active_aligned_reads_inc(struct r5conf *conf)
+ {
+-	atomic_inc(&conf->active_aligned_reads);
++	percpu_ref_get(&conf->active_aligned_reads);
+ }
+=20
+ static inline void active_aligned_reads_dec(struct r5conf *conf)
+ {
+-	atomic_dec(&conf->active_aligned_reads);
++	percpu_ref_put(&conf->active_aligned_reads);
+ }
+=20
+ static inline bool active_aligned_reads_is_zero(struct r5conf *conf)
+ {
+-	return atomic_read(&conf->active_aligned_reads) =3D=3D 0;
+-}
+-
+-static inline bool active_aligned_reads_dec_and_test(struct r5conf *conf)
+-{
+-	return atomic_dec_and_test(&conf->active_aligned_reads);
++	return percpu_ref_is_zero(&conf->active_aligned_reads);
+ }
+=20
+ #if PAGE_SIZE =3D=3D DEFAULT_STRIPE_SIZE
+--=20
+2.34.1
 
-Because I've seen this works and with the optional update to the commit
-message:
-
-Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
-
->=20
-> Signed-off-by: Umang Jain <umang.jain@ideasonboard.com>
-> ---
->  drivers/media/i2c/imx335.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
->=20
-> diff --git a/drivers/media/i2c/imx335.c b/drivers/media/i2c/imx335.c
-> index 7609dbc537b1..10a09830dbd6 100644
-> --- a/drivers/media/i2c/imx335.c
-> +++ b/drivers/media/i2c/imx335.c
-> @@ -247,13 +247,13 @@ static const int imx335_tpg_val[] =3D {
->  };
-> =20
->  /* Sensor mode registers */
-> -static const struct cci_reg_sequence mode_2592x1940_regs[] =3D {
-> +static const struct cci_reg_sequence mode_2592x1944_regs[] =3D {
->         {IMX335_REG_MODE_SELECT, 0x01},
->         {IMX335_REG_MASTER_MODE, 0x00},
-> -       {IMX335_REG_WINMODE, 0x04},
-> -       {IMX335_REG_HTRIMMING_START, 384},
-> +       {IMX335_REG_WINMODE, 0x00},
-> +       {IMX335_REG_HTRIMMING_START, 48},
->         {IMX335_REG_HNUM, 2592},
-> -       {IMX335_REG_Y_OUT_SIZE, 1940},
-> +       {IMX335_REG_Y_OUT_SIZE, 1944},
->         {IMX335_REG_AREA3_ST_ADR_1, 176},
->         {IMX335_REG_AREA3_WIDTH_1, 3928},
->         {IMX335_REG_OPB_SIZE_V, 0},
-> @@ -404,15 +404,15 @@ static const u32 imx335_mbus_codes[] =3D {
->  /* Supported sensor mode configurations */
->  static const struct imx335_mode supported_mode =3D {
->         .width =3D 2592,
-> -       .height =3D 1940,
-> +       .height =3D 1944,
->         .hblank =3D 342,
-> -       .vblank =3D 2560,
-> -       .vblank_min =3D 2560,
-> +       .vblank =3D 2556,
-> +       .vblank_min =3D 2556,
->         .vblank_max =3D 133060,
->         .pclk =3D 396000000,
->         .reg_list =3D {
-> -               .num_of_regs =3D ARRAY_SIZE(mode_2592x1940_regs),
-> -               .regs =3D mode_2592x1940_regs,
-> +               .num_of_regs =3D ARRAY_SIZE(mode_2592x1944_regs),
-> +               .regs =3D mode_2592x1944_regs,
->         },
->  };
-> =20
-> --=20
-> 2.43.0
->
