@@ -1,64 +1,64 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDBDA13D24B
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 18:47:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360BC13CC57
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 18:47:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711478846; cv=none; b=dIZI/bPLcsQVEDsXAJKhwNxN3StfYCwCL55xlz2IGQmpmTdYLWXhsMxnEZsR1L+R8tCFUPthjMdOTnHW4G+mC1iMJm8e1g5n0m5D/I2f7Jx05q4Bty6kER39D17RVSJXsMUoqUVtnxxcBcbgVqInOAr4t+7Rw+I2ikjYJKV8tTY=
+	t=1711478855; cv=none; b=AJk0pmAwmEBz0PxA5Y8PaA/jRsHXu6nb4fJewNXYXJGVzehaUzeH3DelO716y6bTNQmpbGbpba9LzOcWfiDryNOO7mBgvumRYMAXhdU+S1tqMD6Ow86AMuyryaGJFhTNjpX+cMp5GEAOE2BKmkSittaC1FKaUz7P10VUm0w11/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711478846; c=relaxed/simple;
-	bh=Tj05ZjgtZ/hOdwZ88gRi5GLXab0H1IMeyOGQoh5qkOk=;
+	s=arc-20240116; t=1711478855; c=relaxed/simple;
+	bh=2t+HSzUts0lI6uWkIeviONst3D9MJ2COv0YlBAQl66Q=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ShZivsrglLhLZnqEp5kKjdPIX4kq3vRQjZzkC4KA+LXCHlbTU6Im8myxQNmLDvwhZH7sJxqUADDbjRR1wqu5irM650oL2wmgvel7I46hmTehexw1GvAoYzEQLeiIMA34I+PhU5uZvPyAEEr70ev/uWmDwKI4PgEyEi1caKJnbA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Py2Du6yx; arc=none smtp.client-ip=209.85.167.43
+	 MIME-Version; b=hUuNMB3yPUmXIA/lnjJM0cIuv3uXfbFvXLlES7pfhVZU00nRv9MElASXcqUTCIxycRhZ07LAkxu6PoSu94uQlLFvRvtsg1WVfkjuraKai5G+RZKFPVheFkofuXp5k0H+nDKGcanFXa0NF658vxYJ6z1HVSK2f5j0OWJDtccWrK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EB8V3YYh; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Py2Du6yx"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-513d599dbabso7644208e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 11:47:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EB8V3YYh"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5157af37806so7003819e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 11:47:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711478842; x=1712083642; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1711478851; x=1712083651; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NEktcFN4Tkz83zUX0ZQwuJWARcDRCH7/MENDIuUrEqI=;
-        b=Py2Du6yx4ErO5cjGjFAf1xLzIG+dHw84oJ31u5RiJJbGvFf29ciQiuaCd33diDu+lJ
-         0MyNE2SsEOd/Tsv+TgLfxzoykFOMAKn8eSUm1vlpipXJ0VVw9N8YSrA6YO5Bfdm8ohR6
-         r/+7TVLryJ59rBXzSSpm226GMIGAqJizHrCTnIIoD0F45F+UKIlo39dHPxqanDg5UjSG
-         4dfMr7t4hdQn/KRzQG50X+80j8fJnvjiRLwjZcPstELHnyk1RiNG8KgWuiRSvJ02hvmV
-         H5nyweDJfaHx3vSmjIl2eIC7/by5C/kclSyncvge2lV7Nt8PxTj6POri793s2unhRJzf
-         a8xA==
+        bh=1nhxx724yaPCU1qTaAWx0rFWTQnMWYRyaiWZKelBeQM=;
+        b=EB8V3YYhzYj+6n924K4ERBgZNrhzY2HIHFTtXwEPZh4sOcNAwVEQrsn6ZklD8v1N1N
+         NvTsKRcDLDj1FG20rIf3SOY3lsrEWgAxBpq6swL+BbzKRunwySoIVNw6FehhBXMDMrMj
+         W4TfY+m7WubF+EvvZURkxbb5Y7ZFpNIQlXddRfjQ9VaVsd5giAP8StXfWh52GaNKfnX4
+         KY8tiw4EjTHAej1uZvRN4odLiuJ3InlWJfmaUxlOZQfZCXUeUdLEoTONIgZj9mOMhVEX
+         s55X2e4PGizL4YfMlJskDLlCT74Cx+xZzx8WpaFJL1eEVtwKB1Qm1BdGSXrnF+u+GewI
+         DEog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711478842; x=1712083642;
+        d=1e100.net; s=20230601; t=1711478851; x=1712083651;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NEktcFN4Tkz83zUX0ZQwuJWARcDRCH7/MENDIuUrEqI=;
-        b=tMc/BEY+1CAxTBRXFxIT9ndnc54QcwWgiGe75qF07YW+pfUe6mCaGPuRRAmKllDkpL
-         ywTpLpQmiWF2KfFtkUIdS9a+zYgj7nS7YXySC/O4umezMBiBMgSARh9bX5s1AjNWimMl
-         LyszUTuEcxHpqWqQ/M4DnUb9fUWL5XH58T3qQRa32MS/f9Yh6JVyQudP9fXzD9Lxh4M2
-         k6QhGzhCHBhPF/dTaduF1rc9aDIJfz90mWxn0I66QB9RMC6rrX7fgARREAfWAlx0xltJ
-         1rULaiRdf7ybuA3fE9OL0ayrEHsm3Z0uS0+U6ugwIZ1APERkF1PB1Fy4xynRCQyXu3Ng
-         wkSg==
-X-Gm-Message-State: AOJu0YybzcGdwMMPByg0hcCetEGN+cjyKzo9izWGDJvXVCQKcLd59FuC
-	VCsUb9kOOP6Y5/ffL7jFKZePb2aK9uRQTg2D+cGO0ezFvouac6ZwpoPrN5aU
-X-Google-Smtp-Source: AGHT+IG1N8/J5GmyJjMCjb4ypOts/sOnJFOBvc3zeI/yn9bwxMSuQPfrXk1SLH2HWJvcN0WLJG/z4w==
-X-Received: by 2002:a05:6512:220d:b0:513:d1cd:b902 with SMTP id h13-20020a056512220d00b00513d1cdb902mr9234380lfu.32.1711478842382;
-        Tue, 26 Mar 2024 11:47:22 -0700 (PDT)
+        bh=1nhxx724yaPCU1qTaAWx0rFWTQnMWYRyaiWZKelBeQM=;
+        b=dmsTCtGc8nqpVEklX+JmqQ6wRwDsImkEH/QaP7AeA5F8DnwL24TKqibYQi6Qydte0i
+         0x1HRysYTJgJ41ciRJBF/LvVO0j9obKCVhvj8DF4+w+cfRTdVauDDB4lz0BgLnXlu0xE
+         Jt6qvT3J7DM5RqPdp4h9rIKpIVbQW0Vw4UISVMoeOOuhXBqFqrqslSuGiJoHc11pgmmY
+         sbJoCu2oB14/oP9R6JqtjuGGRezcMmRByWymEQ0R9sflHoi6Ph6Ws9kR4LBUuH/pkJn2
+         6vzVOfnpZmUmftgchXoDUCdKWJ6aofKKynsj7OQpyZpiJMVCG6ckAMQb/dRV2id5qmda
+         kjvA==
+X-Gm-Message-State: AOJu0Yy3pL05xkBzJoojMIPNwpwWKXQ198TgwFZ7FtRfhw0EILdPPS48
+	mjjoDBp1w7WFiOGHwBU69FnZ1wRn83KXKVHa4d+ujAg8dGOtJn9fPg7US6iq
+X-Google-Smtp-Source: AGHT+IEUiTuE7u76o63pf4XH4Aj5Sk7oCIXNDwZwyz5yefVdtlv3zt9t7+rwk3K6KVq/fbKy8pjXwA==
+X-Received: by 2002:a19:e05e:0:b0:513:cd70:8d90 with SMTP id g30-20020a19e05e000000b00513cd708d90mr2526296lfj.42.1711478850869;
+        Tue, 26 Mar 2024 11:47:30 -0700 (PDT)
 Received: from localhost.localdomain (109-252-14-191.nat.spd-mgts.ru. [109.252.14.191])
-        by smtp.gmail.com with ESMTPSA id m7-20020a056512014700b00515bb9de721sm122379lfo.76.2024.03.26.11.47.21
+        by smtp.gmail.com with ESMTPSA id v12-20020ac258ec000000b00515bbc2feedsm115718lfo.102.2024.03.26.11.47.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 11:47:22 -0700 (PDT)
+        Tue, 26 Mar 2024 11:47:30 -0700 (PDT)
 From: Maxim Moskalets <maximmosk4@gmail.com>
 X-Google-Original-From: Maxim Moskalets <Maxim.Moskalets@kaspersky.com>
 To: linux-kernel@vger.kernel.org
 Cc: maximmosk4@gmail.com,
 	Maxim Moskalets <Maxim.Moskalets@kaspersky.com>
-Subject: [PATCH 7/8] time: replace seq_puts by seq_putc
-Date: Tue, 26 Mar 2024 21:47:18 +0300
-Message-Id: <20240326184718.8828-1-Maxim.Moskalets@kaspersky.com>
+Subject: [PATCH 8/8] kernel: replace seq_puts by seq_putc
+Date: Tue, 26 Mar 2024 21:47:27 +0300
+Message-Id: <20240326184727.8858-1-Maxim.Moskalets@kaspersky.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240326184514.8478-1-Maxim.Moskalets@kaspersky.com>
 References: <20240326184514.8478-1-Maxim.Moskalets@kaspersky.com>
@@ -76,22 +76,22 @@ to use a more powerful and less fast function.
 
 Signed-off-by: Maxim Moskalets <Maxim.Moskalets@kaspersky.com>
 ---
- kernel/time/test_udelay.c | 2 +-
+ kernel/latencytop.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/time/test_udelay.c b/kernel/time/test_udelay.c
-index 20d5df631570..82fe239c3184 100644
---- a/kernel/time/test_udelay.c
-+++ b/kernel/time/test_udelay.c
-@@ -59,7 +59,7 @@ static int udelay_test_single(struct seq_file *s, int usecs, uint32_t iters)
- 			(usecs * 1000) - allowed_error_ns, min, avg, max);
- 	if (fail_count)
- 		seq_printf(s, " FAIL=%d", fail_count);
--	seq_puts(s, "\n");
-+	seq_putc(s, '\n');
+diff --git a/kernel/latencytop.c b/kernel/latencytop.c
+index 781249098cb6..08fe9ce35ec3 100644
+--- a/kernel/latencytop.c
++++ b/kernel/latencytop.c
+@@ -261,7 +261,7 @@ static int lstats_show(struct seq_file *m, void *v)
  
+ 				seq_printf(m, " %ps", (void *)bt);
+ 			}
+-			seq_puts(m, "\n");
++			seq_putc(m, '\n');
+ 		}
+ 	}
  	return 0;
- }
 -- 
 2.39.2
 
