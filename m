@@ -1,154 +1,113 @@
-Received: from out0-206.mail.aliyun.com (out0-206.mail.aliyun.com [140.205.0.206])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8BB1CAA5
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:12:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AF32762F7;
+	Tue, 26 Mar 2024 15:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711465958; cv=none; b=H7eWbG0/Z8vxsoOZFAnu9Wpws9UM27phr+bOO4iQynkXpgNpyx7M2FNfLgCAkpSGtxVfCxoOvwDoaPehI5tlsvsV1Uffy2Sf3rzc++wiCplaOK3+WZgkOtahWcPfxDg3dTqp2GFLxRHMiPNh93R/1KNWlnxzDhtueynQAJhzVgU=
+	t=1711465969; cv=none; b=laRkC1630F4hMHLH7/SamR0l5EP4a2epN23kHVbt4FkxGS7B9TA+qX0Er5pEUo5o0/RNnB9DtdXQxnAB/bjANHYS0yHGKTISTh4fTykok/hI70wZw9lNPVJZ2k75NCj0nV1L8Mf54fpWS1ZzxBvsL9PSI5EtDO/jSKBV/mcNTIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711465958; c=relaxed/simple;
-	bh=MYV9TzwGRyjDceakpJ5Cs2ISDl1dg5au4U578vK7RFc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IIs2Ohzh+vzFh3JjMnWJFhiOEZ7gYimgRoMe8lHQD8bu5yIO+bwGzwnX+HSD17BFJmEuK7XMa30imx6RWmzuOSpkgLAgloCsycz4YpNNnYwnOtO0lwPhGlDLlK8iqEZKQC0Y76quhB3P2KYX/k9Aaz7qxkFp8CNe8qcaE3ybRVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; arc=none smtp.client-ip=140.205.0.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R911e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047209;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---.WwaCo0l_1711465551;
-Received: from 30.39.128.129(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.WwaCo0l_1711465551)
-          by smtp.aliyun-inc.com;
-          Tue, 26 Mar 2024 23:07:11 +0800
-Message-ID: <9e396277-f742-41d7-be82-290c0b2368d2@antgroup.com>
-Date: Tue, 26 Mar 2024 23:07:11 +0800
+	s=arc-20240116; t=1711465969; c=relaxed/simple;
+	bh=ikOFR/1UVd3fugnFnAzk4C55A/EtnmPKtVt0ZnsoBy4=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=AfPN7K5GX/FTcqwqobMo2TcFe0ai5goSoTaREoo8l1zfC6TiXKya/sWsnrMlB9fRRECjAecw2f1HSyFXLxU80L70Mwkdq2Jpn/Yg5eGOTNvomGn2QXMorma3br4hy6WvDe74kgYVC49HfXCCGFAROJwV4TJ7K+X45ikoVkXj4m4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OnsBfmYQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OnsBfmYQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27B32C433C7;
+	Tue, 26 Mar 2024 15:12:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711465968;
+	bh=ikOFR/1UVd3fugnFnAzk4C55A/EtnmPKtVt0ZnsoBy4=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=OnsBfmYQ3kUcVfwdwLlABczD8xqZdTvhAxEk92k45DN6zQl3R3V8BxEPB52RsIOJU
+	 stjQT1G1rdii90U9qXs98IyMNHaaDTCEQRCjheQiJfv7GsfcP7WTfAP4YJC9bTC3E2
+	 U4oFUkXDi460w83MY86vMBZHhUlFJ0pfP1iQycDWwr8EXMRByqPpmCcdVUZhE/Einj
+	 E6YlO5SgsJNklcUdUcS8LDVPeYonQPsEUDpnoUl37oHfn/onPcn2ao3QZ3HiUzlsRv
+	 MzSCIzTfANfgo2cPdqYHxv5qhQzfesdvGwwYarZJxx3Kfgylj7B1kLIkeyxpS7QNck
+	 r6RdCdboYcXKQ==
+From: Kalle Valo <kvalo@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Marcel Holtmann <marcel@holtmann.org>,  Luiz Augusto von Dentz
+ <luiz.dentz@gmail.com>,  "David S . Miller" <davem@davemloft.net>,  Eric
+ Dumazet <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,  Paolo
+ Abeni <pabeni@redhat.com>,  Rob Herring <robh@kernel.org>,  Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,  Conor Dooley
+ <conor+dt@kernel.org>,  Bjorn Andersson <andersson@kernel.org>,  Konrad
+ Dybcio <konrad.dybcio@linaro.org>,  Liam Girdwood <lgirdwood@gmail.com>,
+  Mark Brown <broonie@kernel.org>,  Catalin Marinas
+ <catalin.marinas@arm.com>,  Will Deacon <will@kernel.org>,  Bjorn Helgaas
+ <bhelgaas@google.com>,  Saravana Kannan <saravanak@google.com>,  Geert
+ Uytterhoeven <geert+renesas@glider.be>,  Arnd Bergmann <arnd@arndb.de>,
+  Neil Armstrong <neil.armstrong@linaro.org>,  Marek Szyprowski
+ <m.szyprowski@samsung.com>,  Alex Elder <elder@linaro.org>,  Srini
+ Kandagatla <srinivas.kandagatla@linaro.org>,  Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>,  Abel Vesa <abel.vesa@linaro.org>,
+  Manivannan Sadhasivam <mani@kernel.org>,  Lukas Wunner <lukas@wunner.de>,
+  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+  linux-bluetooth@vger.kernel.org,  netdev@vger.kernel.org,
+  devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-wireless@vger.kernel.org,  linux-arm-msm@vger.kernel.org,
+  linux-arm-kernel@lists.infradead.org,  linux-pci@vger.kernel.org,
+  linux-pm@vger.kernel.org,  Bartosz Golaszewski
+ <bartosz.golaszewski@linaro.org>,  ath11k@lists.infradead.org,  Johan
+ Hovold <johan@kernel.org>
+Subject: Re: [PATCH v6 04/16] dt-bindings: net: wireless: qcom,ath11k:
+ describe the ath11k on QCA6390
+References: <20240325131624.26023-1-brgl@bgdev.pl>
+	<20240325131624.26023-5-brgl@bgdev.pl> <87r0fy8lde.fsf@kernel.org>
+	<CAMRc=Mc2Tc8oHr5NVo=aHAADkJtGCDAVvJs+7V-19m2zGi-vbw@mail.gmail.com>
+	<87frwe8jiu.fsf@kernel.org>
+	<CAMRc=MdCv+vTMZML-wzRQqZZavquV3DABYM4KYw-HwqS47sTyw@mail.gmail.com>
+Date: Tue, 26 Mar 2024 17:12:40 +0200
+In-Reply-To: <CAMRc=MdCv+vTMZML-wzRQqZZavquV3DABYM4KYw-HwqS47sTyw@mail.gmail.com>
+	(Bartosz Golaszewski's message of "Mon, 25 Mar 2024 17:23:35 +0100")
+Message-ID: <874jct10yf.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/9] um: Minor fixes and cleanups
-Content-Language: en-US
-To: Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: richard@nod.at, anton.ivanov@cambridgegreys.com,
- johannes@sipsolutions.net, jani.nikula@intel.com,
- linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
- intel-xe@lists.freedesktop.org
-References: <20240306101925.1088870-1-tiwei.btw@antgroup.com>
- <fbd44e8a-713b-4e66-9241-e18fc78c9168@antgroup.com>
- <zhm2eyo5hy6wta5ga6zqgg546q2atjekdxoivksht2kdrqppoy@6ck7iwpfxidr>
-From: "Tiwei Bie" <tiwei.btw@antgroup.com>
-In-Reply-To: <zhm2eyo5hy6wta5ga6zqgg546q2atjekdxoivksht2kdrqppoy@6ck7iwpfxidr>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On 3/26/24 10:16 PM, Lucas De Marchi wrote:
-> On Tue, Mar 26, 2024 at 08:27:25PM +0800, Tiwei Bie wrote:
->> Hi,
->>
->> Gentle ping.. Please take a look at this series if possible. The changes
->> in this series are very straightforward, so it shouldn't require much effort
->> to review. But they cover a wide area, making them prone to conflicts
->> with other patches :/, e.g.
->>
->> https://lore.kernel.org/linux-um/20240326073750.726636-1-surenb@google.com/T/#u
->>
->> Sorry to be impatient, but pinging this. This series was originally posted
->> two months ago, and hasn't received a review yet. Just want to make sure that
->> this series is not lost..
->>
->> PS. I have tested this series on both of 64bit and 32bit platforms manually.
->> There is also a CI test report from patchwork@emeril.freedesktop.org:
->>
->> https://lore.kernel.org/all/87bk7rzj70.fsf@intel.com/
-> 
-> 
-> yeah, it's a clear improvement.
-> 
-> For patches 1-5 and 7, feel free to add my Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
-> I commented on patch 8 as I'm not sure it's the right approach and same
-> thing applies to patch 9.  Patch 6 I'm just not sure as it's the first
-> time I see that file, so I will leave it to others.
+Bartosz Golaszewski <brgl@bgdev.pl> writes:
 
-Thanks for the review! I do appreciate it. :)
-
-Regards,
-Tiwei
-
-> 
-> thanks
-> Lucas De Marchi
-> 
+>> >> I don't know DT well enough to know what the "required:" above means,
+>> >> but does this take into account that there are normal "plug&play" type
+>> >> of QCA6390 boards as well which don't need any DT settings?
+>> >
+>> > Do they require a DT node though for some reason?
 >>
->> Thanks,
->> Tiwei
+>> You can attach the device to any PCI slot, connect the WLAN antenna and
+>> it just works without DT nodes. I'm trying to make sure here that basic
+>> setup still works.
 >>
->> On 3/6/24 6:19 PM, Tiwei Bie wrote:
->>> A series of minor fixes and cleanups for UML.
->>>
->>> Most changes in this series are very straightforward. Please consider
->>> picking this series for v6.9.
->>>
->>> There are still some remaining -Wmissing-prototypes warnings. I plan to
->>> send a followup RFC series first to fix those warnings.
->>>
->>> Feedbacks on this series would be appreciated. Thanks!
->>>
->>> Changes since v2:
->>> https://lore.kernel.org/lkml/20240205114708.25235-1-tiwei.btw@antgroup.com/
->>> - Add "um: Move declarations to proper headers";
->>> - Add "um: Fix -Wmissing-prototypes warnings for text_poke*";
->>> - Add "um: Fix -Wmissing-prototypes warnings for __warp_* and foo";
->>> - Make do_set_thread_area() static;
->>> - Add the missing header for calibrate_delay_is_known;
->>>
->>> Tiwei Bie (9):
->>>   um: Make local functions and variables static
->>>   um: Fix the declaration of vfree
->>>   um: Remove unused functions
->>>   um: Fix the return type of __switch_to
->>>   um: Add missing headers
->>>   um: Stop tracking host PID in cpu_tasks
->>>   um: Move declarations to proper headers
->>>   um: Fix -Wmissing-prototypes warnings for text_poke*
->>>   um: Fix -Wmissing-prototypes warnings for __warp_* and foo
->>>
->>>  arch/um/drivers/pcap_kern.c                |  4 +-
->>>  arch/um/drivers/ubd_user.c                 |  2 +-
->>>  arch/um/include/asm/ptrace-generic.h       |  3 ++
->>>  arch/um/include/shared/as-layout.h         |  1 -
->>>  arch/um/include/shared/kern_util.h         |  1 +
->>>  arch/um/include/shared/um_malloc.h         |  2 +-
->>>  arch/um/kernel/kmsg_dump.c                 |  2 +-
->>>  arch/um/kernel/mem.c                       |  2 +
->>>  arch/um/kernel/physmem.c                   |  3 +-
->>>  arch/um/kernel/process.c                   | 48 +++++-----------------
->>>  arch/um/kernel/ptrace.c                    |  3 --
->>>  arch/um/kernel/reboot.c                    |  1 +
->>>  arch/um/kernel/skas/mmu.c                  |  1 +
->>>  arch/um/kernel/skas/process.c              |  5 +--
->>>  arch/um/kernel/time.c                      |  7 ++--
->>>  arch/um/kernel/tlb.c                       |  7 +---
->>>  arch/um/kernel/um_arch.c                   |  1 +
->>>  arch/um/kernel/um_arch.h                   |  2 +
->>>  arch/um/os-Linux/drivers/ethertap_kern.c   |  2 +-
->>>  arch/um/os-Linux/drivers/tuntap_kern.c     |  2 +-
->>>  arch/um/os-Linux/main.c                    |  5 +++
->>>  arch/um/os-Linux/signal.c                  |  4 +-
->>>  arch/um/os-Linux/start_up.c                |  1 +
->>>  arch/x86/um/asm/ptrace.h                   |  6 +++
->>>  arch/x86/um/bugs_32.c                      |  1 +
->>>  arch/x86/um/bugs_64.c                      |  1 +
->>>  arch/x86/um/elfcore.c                      |  1 +
->>>  arch/x86/um/fault.c                        |  1 +
->>>  arch/x86/um/os-Linux/mcontext.c            |  1 +
->>>  arch/x86/um/os-Linux/registers.c           |  2 +-
->>>  arch/x86/um/os-Linux/tls.c                 |  1 +
->>>  arch/x86/um/ptrace_32.c                    |  2 -
->>>  arch/x86/um/shared/sysdep/kernel-offsets.h |  3 ++
->>>  arch/x86/um/tls_32.c                       |  2 +-
->>>  arch/x86/um/user-offsets.c                 |  3 ++
->>>  35 files changed, 63 insertions(+), 70 deletions(-)
->>>
+>
+> Sure, definitely. I there's no DT node, then the binding doesn't apply
+> and the driver (the platform part of it) will not probe.
+>
+>> Adding also Johan and ath11k list. For example, I don't know what's the
+>> plan with Lenovo X13s, will it use this framework? I guess in theory we
+>> could have devices which use qcom,ath11k-calibration-variant from DT but
+>> not any of these supply properties?
 >>
+>
+> Good point. I will receive the X13s in a month from now. I do plan on
+> upstreaming correct support for WLAN and BT for it as well.
+>
+> I guess we can always relax the requirements once a valid use-case appears?
 
+I think we have such cases already now:
+
+$ git grep ath11k-calibration-variant -- arch
+arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts:     qcom,ath11k-calibration-variant = "Fairphone_5";
+arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts:                     qcom,ath11k-calibration-variant = "LE_X13S";
+
+But please do check that. I'm no DT expert :)
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
