@@ -1,79 +1,95 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07ADF12B82
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:11:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8D512B82;
+	Tue, 26 Mar 2024 15:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711465897; cv=none; b=YScv9ezgiulkwCo5Ck7lQ1ldnHAukVlgrmbxMuVHDl9TqlMUQvb5fCGWyF3hGXe+1wBIeMH1BXY0rmYcUOnHxpU/KG+V1gZXhMMO+RsSJrZXylNJ4VYrZ9fH7x1MbI7V8FIFn/aJYE4t3VMgoLhxGDDvh5pQ48D1040MEGzuPKE=
+	t=1711465902; cv=none; b=I/SKZ4GuhktGZWq2ffWLZoED1fFtViV4eULpDBL0LhYUEYoh6vu/Bx/oPb05bEleVyasrmLY9Q1kwQtkgO+OSbzUHJWBgAKGDLqSy8MW3etOtnl7sa/TtCLazqmJ7AWYrw+43NmewPK7tI+mZ9jgUmPIoqoN04A4kaqpFADPl14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711465897; c=relaxed/simple;
-	bh=nPXqd/Tu7w5BMdmJLMP73PDxLrkZ9KP73/J8go7AqyY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BAB/KxolL3649emBca4aOCKU74+t8XkJOgVOoT8QA32sGE0twqKdcc4rdNuuJg9n3Q7M4fsUXlL88FiKLI98KtYXqJA+s5kq/fl0ENDGEdSkaUCING23kOjZQQeWAQqS9JkEAXqfIl57ROXUbunfK0ExsIzqrOwnm3VO5ATACXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F22812F4;
-	Tue, 26 Mar 2024 08:12:08 -0700 (PDT)
-Received: from [192.168.178.6] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8AE273F694;
-	Tue, 26 Mar 2024 08:11:33 -0700 (PDT)
-Message-ID: <6c1eed8f-455f-4612-be4e-02876f35e37e@arm.com>
-Date: Tue, 26 Mar 2024 16:11:31 +0100
+	s=arc-20240116; t=1711465902; c=relaxed/simple;
+	bh=WLa1hi3+Ql113gRhJTdmKN7z9fyxinYMoU43wM1KnpE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YVu7vvmxC22zfihGmHnZwHK5Ypovsbwu6XVqB3tQYxhmVB2C+iyGCjmCT2TIQb+Q0AOph4r7P5ptkyA4+njdl6FBh81VEwQ22G2toFavzm43i+5AhnZWzFBQQNLiQ5lndsoYmyEkJn3us84/vKJ/vewMbzFZekAP06bEgkHumqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=ckx1i64Z; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="ckx1i64Z"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4V3tYj0QYqz9sqM;
+	Tue, 26 Mar 2024 16:11:37 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1711465897;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3Nr5pbxteCfHgzj/i1W+/blhYMSR+J/eweuH6yYi/Aw=;
+	b=ckx1i64ZvOdoSlf/gp1LfF6YwXSO3PDpqi2rnltX3PTl7K8dZc83b+H262KO0u8DvboKq3
+	eM5tH0MilsVxjvMhzhWRTp87YG/yvg7MZuAy2A/2KXBcTHJv9fLjURlfu5WhYzbl/sQZi5
+	8axc0iDbBul5pMoK0AYCN1DTKc4VDTxvYxQTf3jtFeqtOTWMugNH6btgtA8KZg80nz83kj
+	2nL5Hawm8YGEwsg9qDH6ITS8VVbSFRofzZvr89iT/Jy+V7TAK9EgioV5IR8V29desK0FXA
+	4LU6yzkA4OxIkBWQaX68XBpwc9IKaAEiRrHUKkXE8y04TB+bDTg9iy/Ul2/2qA==
+Date: Tue, 26 Mar 2024 16:11:33 +0100
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	gost.dev@samsung.com, chandan.babu@oracle.com, hare@suse.de, mcgrof@kernel.org, 
+	djwong@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	david@fromorbit.com, akpm@linux-foundation.org, Pankaj Raghav <p.raghav@samsung.com>
+Subject: Re: [PATCH v3 04/11] readahead: rework loop in
+ page_cache_ra_unbounded()
+Message-ID: <k3pqp6aryvnekneqqs7hnolr7pkdayrudpjpizpptot6jp7xax@cog4esp24yve>
+References: <20240313170253.2324812-1-kernel@pankajraghav.com>
+ <20240313170253.2324812-5-kernel@pankajraghav.com>
+ <ZgHFPZ9tNLLjKZpz@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sched/fair: Simplify continue_balancing for newidle
-Content-Language: en-US
-To: Shrikanth Hegde <sshegde@linux.ibm.com>, Ingo Molnar <mingo@kernel.org>
-Cc: peterz@infradead.org, vincent.guittot@linaro.org, qyousef@layalina.io,
- linux-kernel@vger.kernel.org, vschneid@redhat.com, joshdon@google.com,
- riel@surriel.com
-References: <20240325153926.274284-1-sshegde@linux.ibm.com>
- <ZgKCXrUbBIxp6+mu@gmail.com>
- <7e6789d6-1e85-4945-8a7b-02cadc95cfa5@linux.ibm.com>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-In-Reply-To: <7e6789d6-1e85-4945-8a7b-02cadc95cfa5@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZgHFPZ9tNLLjKZpz@casper.infradead.org>
+X-Rspamd-Queue-Id: 4V3tYj0QYqz9sqM
 
-On 26/03/2024 10:00, Shrikanth Hegde wrote:
+On Mon, Mar 25, 2024 at 06:41:01PM +0000, Matthew Wilcox wrote:
+> On Wed, Mar 13, 2024 at 06:02:46PM +0100, Pankaj Raghav (Samsung) wrote:
+> > @@ -239,8 +239,8 @@ void page_cache_ra_unbounded(struct readahead_control *ractl,
+> >  			 * not worth getting one just for that.
+> >  			 */
+> >  			read_pages(ractl);
+> > -			ractl->_index++;
+> > -			i = ractl->_index + ractl->_nr_pages - index - 1;
+> > +			ractl->_index += folio_nr_pages(folio);
+> > +			i = ractl->_index + ractl->_nr_pages - index;
+> >  			continue;
+> >  		}
+> >  
+> > @@ -252,13 +252,14 @@ void page_cache_ra_unbounded(struct readahead_control *ractl,
+> >  			folio_put(folio);
+> >  			read_pages(ractl);
+> >  			ractl->_index++;
+> > -			i = ractl->_index + ractl->_nr_pages - index - 1;
+> > +			i = ractl->_index + ractl->_nr_pages - index;
+> >  			continue;
+> >  		}
 > 
-> On 3/26/24 1:37 PM, Ingo Molnar wrote:
->>
->> * Shrikanth Hegde <sshegde@linux.ibm.com> wrote:
->>
+> You changed index++ in the first hunk, but not the second hunk.  Is that
+> intentional?
+After having some back and forth with Hannes, I see where the confusion
+is coming from.
 
-[...]
+I intended this to be a non-functional change that helps with adding 
+min_order support later.
 
->> Is this actually true? Any change to behavior invalidates such a sentence.
-> 
-> From what i think, code path is same and I don't see any functionality changing. 
-> Correct me if i am wrong. 
-> 
-> Currently, sched_balance_newidle does the same check to bail out as the
-> should_we_balance check in case of newidle.  i.e  
-> 
-> should_we_balance
-> 	if (env->dst_rq->nr_running > 0 || env->dst_rq->ttwu_pending)
-> 			return 0;
-> 
-> sched_balance_newidle
-> 		if (pulled_task || this_rq->nr_running > 0 ||
-> 			this_rq->ttwu_pending)
-> 			break;
-> 		}
+As this is a non-functional change, I will move this patch to be at the
+start of the series as preparation patches before we start adding min_order
+helpers and support.
 
-LGTM. Commit 792b9f65a568 ("sched: Allow newidle balancing to bail out
-of load_balance") (Jun 22) made sure that we leave sched_balance_rq()
-(former load_balance()) for CPU_NEWLY_IDLE asap to reduce wakeup latency.
-
-So IMHO, we can use 'continue_balancing' instead of 'this_rq->nr_running
-> 0 || this_rq->ttwu_pending' in sched_balance_newidle() (former
-newidle_balance()).
-
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+--
+Pankaj
