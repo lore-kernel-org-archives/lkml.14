@@ -1,33 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1023F757F9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102B375806;
 	Tue, 26 Mar 2024 14:01:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711461693; cv=none; b=ffu1OgJ3IM/4y+4XkK2Ewda+LW6zdUsL3LvpTBQi9s6liWCRh/a5/Qoehe9kXqR5AE0Ry4rHW5chg0P7JbVW4QlEu+6TkQ/Mv109H6rN+laYL+O9yIue4/Z8ysKT7eNTEW6Tf3R93lLPosrFyqnaZuVgliMEB0MvjrnFFLM5la0=
+	t=1711461693; cv=none; b=mTZrJ6ZbVpbVBdKzEKyTTILtamxArQrHXYtlSyxaTFopkGNHode0ugBuW5q+S/XAKupPm7P+t3k/7/9ZGjnFJySvgF5vcVNfkKjCwBNFheCt55l4sCo0TfnPjl1v4Jr9AajgdkF2R539hUPrPUqUsdqkzk83oDneUpgEBwZY0Zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711461693; c=relaxed/simple;
-	bh=p+neOEhyWFphQhEik04O1urueBIxb2LuKNjZUh6Stbg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sUt5Li8bXQSQu+hEIf2chfzwzBEDMlJv3dz6zlIgclnJ+o2tjbNgUPYjJE3C1u7ZahPu9kWln0G16fxKPVVuwpEj3VUvrTTYEOkedmXSm9XXv94o3HMvMlwzbhEJXtf1OGx0szh7oDUTCsTIDWv5PgopIkVNQ85/2l2jY7D9muM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u4IrpKc2; arc=none smtp.client-ip=10.30.226.201
+	bh=yz4Tw4H/56nETqXKR1UOj4GtHTZDq3JA8OzpkBRqe+c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=UCxbKWNm/0s1icjmlnSPAxygojWbPyt+YfIxpRtLYspzlLjgRgkgmSHJTLvAMk8GDpsG91tinCMcr6WCWGrljNQEcG60TtphYkI4M7OjU6ajRjskh5Cg6274TGtRg3pWSXUHpsLK4wAu2zAMsa5Oh4zPkI/pc0BM/6aFnV62ISA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HEAw18pT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u4IrpKc2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E239C43390;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HEAw18pT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4673C43399;
 	Tue, 26 Mar 2024 14:01:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1711461692;
-	bh=p+neOEhyWFphQhEik04O1urueBIxb2LuKNjZUh6Stbg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=u4IrpKc27wjvhL8s1IZu9fX2qsZAGyeifmsxwJPicGBy6UXtAZy2hhKH6VPUKSbxy
-	 6eB76/hcljUgXwh/uK6XQqGUVNqpzKBmnueNax7ANv1YwV7i0iwhQ0LokGBe94yyuE
-	 x1HCEADMgnuqX0UUOuvHTdtosZL/tPDwqQKWrMDWbq+sghjUDb2VaOOgE36VNF7cCM
-	 hzl2KL/7xR0GcEcpLeug3XG9RVOKSND5xfE2HJfQgFMbUfmDBK7SAGjEZnBlrA4yQt
-	 yGYILrbzfMlagwnRpFPxS3a3d7hg3+sgpaF8WFvab1SaltwBnMHlIPXCV4JAXyOOZw
-	 2aN2/u9g2Vpww==
+	bh=yz4Tw4H/56nETqXKR1UOj4GtHTZDq3JA8OzpkBRqe+c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HEAw18pTYLJaYmZyq5gRSq+pnu16Uc6Bt6e+P0nEyiQTXO2qzcq0LG+eLR2gd9Sls
+	 0RUA2Np3QPYdEGdlfW4zwxwEmGe1VLGpAB51cYxW0TWkGdY11tcHfLV5eR3ozeqNLd
+	 euGgktPEcr8Uq6+a195UF54987YoPj9OKI9gdJEow11I5w+op8DczisLxhSIffWXct
+	 W5vMzZTzhg45bjR4sfy71xiYmyCsO7mXr0xRXcR+auJBT9QnDQoAhAgCqySoqBz1id
+	 XchLCb4YUb+A8kJ1joOoXS6RvWMxMJckMygWvtnvCOwAwNVORu3d42/9T2+v98+5RF
+	 tEewqYiJkS/ug==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1rp7My-000000005Yn-2fq0;
+	id 1rp7My-000000005Yr-3Rkg;
 	Tue, 26 Mar 2024 15:01:40 +0100
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Bjorn Andersson <andersson@kernel.org>
@@ -43,10 +44,12 @@ Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
 	linux-clk@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH 0/5] clk: qcom: gpucc-sc8280xp: fix GX external supply lookup
-Date: Tue, 26 Mar 2024 15:01:03 +0100
-Message-ID: <20240326140108.21307-1-johan+linaro@kernel.org>
+Subject: [PATCH 2/5] arm64: dts: qcom: sa8540p: use sa8540p gpucc compatible
+Date: Tue, 26 Mar 2024 15:01:05 +0100
+Message-ID: <20240326140108.21307-3-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240326140108.21307-1-johan+linaro@kernel.org>
+References: <20240326140108.21307-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,44 +60,32 @@ Content-Transfer-Encoding: 8bit
 
 The SA8540P platform is closely related to SC8280XP but differs in that
 it uses an external supply for the GX power domain.
-    
-This series adds a new SA8540P GPU clock controller compatible which
-can be used to determine whether to look up the external supply.
-    
-This specifically avoids warnings such as:
-    
-	gpu_cc-sc8280xp 3d90000.clock-controller: supply vdd-gfx not found, using dummy regulator
-    
-on SC8280XP, which were introduced in 6.9-rc1.
 
-Note that this also avoids triggering a potential deadlock on SC8280XP
-even if the underlying issue still remains for the derivative platforms
-like SA8540P and SA8295P that actually use the supply. [1]
+Use the new SA8540P compatible string for the GPU clock controller so
+that the OS can determine which resources to look for.
 
-Also note that this is a better alternative to simply making the
-external supply optional as that would suppress any warnings about
-missing supplies on platforms that actually require it. This series
-therefore supersedes [2].
+Note that a fallback SC8280XP compatible is added temporarily to avoid
+any temporary regressions for sa8295p-adp.
 
-Johan
+Fixes: fd5821a1a83c ("arm64: dts: qcom: sa8540p: Drop gfx.lvl as power-domain for gpucc")
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+ arch/arm64/boot/dts/qcom/sa8540p.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-
-[1] https://lore.kernel.org/lkml/Zf25Sv2x9WaCFuIH@hovoldconsulting.com/
-[2] https://lore.kernel.org/lkml/20240325081957.10946-1-johan+linaro@kernel.org/
-
-
-Johan Hovold (5):
-  dt-bindings: clock: qcom: add SA8540P gpucc
-  arm64: dts: qcom: sa8540p: use sa8540p gpucc compatible
-  clk: qcom: gpucc-sc8280xp: make cc descriptor const
-  clk: qcom: gpucc-sc8280xp: fix GX external supply lookup
-  arm64: dts: qcom: sa8540p: drop fallback gpucc compatible
-
- .../devicetree/bindings/clock/qcom,gpucc.yaml |  1 +
- arch/arm64/boot/dts/qcom/sa8540p.dtsi         |  2 +
- drivers/clk/qcom/gpucc-sc8280xp.c             | 42 ++++++++++++++++---
- 3 files changed, 39 insertions(+), 6 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/qcom/sa8540p.dtsi b/arch/arm64/boot/dts/qcom/sa8540p.dtsi
+index 23888029cc11..3b31a9ea3492 100644
+--- a/arch/arm64/boot/dts/qcom/sa8540p.dtsi
++++ b/arch/arm64/boot/dts/qcom/sa8540p.dtsi
+@@ -168,6 +168,8 @@ opp-2592000000 {
+ };
+ 
+ &gpucc {
++	compatible = "qcom,sa8540p-gpucc", "qcom,sc8280xp-gpucc";
++
+ 	/* SA8295P and SA8540P doesn't provide gfx.lvl */
+ 	/delete-property/ power-domains;
+ 
 -- 
 2.43.0
 
