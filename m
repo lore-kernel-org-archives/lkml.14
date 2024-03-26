@@ -1,109 +1,100 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F8E13D89D;
-	Tue, 26 Mar 2024 22:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4ACE13C831;
+	Tue, 26 Mar 2024 22:07:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711490836; cv=none; b=Ga+QqXz7QuijLSnOcn+bLxu5z9h+9dxlQVJnVshrySgnkn0+EIrtkVS4IaMYpI9H5NXJxNyQh49+hNzM2dQaSJdAhEs/AaX7msH+akw78Jhdzj1SNDiKudWl6XSmpXbn5t9g6pmtz9118u0anDW4o4tnCeuFzs2tUSe8Tk19P5U=
+	t=1711490854; cv=none; b=mAhAn2z97MeZJ2XiYORj6n3TdK+UDhC5YAFB/5CUhaaskTubYNvOfNKt4viX6F28JZMAry+z/z35gbl0gt7uv2160PvdfqTCRhxZV5rffo32o1Lv7VnI7RaA0Qic+Uhrn0YJpj977gByiMG7ojOs/kF/Imzb7wRU/gtnCC7tzdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711490836; c=relaxed/simple;
-	bh=YGvbIleA0LOhGaqG06ruV12u0OVqKMc60UnttBqAfqg=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=p258kqfvaEZH0k0W/Iy5gCtZJBiVbn13pFJPCJuVlUWwvOHVDmfMvkllzlKTT42/jGL/3tQnz/wT1s9pX4o+DGfkX77KfZ/t6QskhimBVrWkjs5XYbSPl6apO+rpnOrX/hpA8idfW8sTAZOeDLcSYQWXJubuU9dZCe/98CYZCD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lRywwh/x; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711490854; c=relaxed/simple;
+	bh=jTS7FgItFpU9cDGgCvhlPoCSnqjTktDvWdP8n9VpBvE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WOxP3ApGVGwYVqgiH5fzFxhUTiKh4KNrt0VRratED+SqMCCGqCpaN8Ks+roDLGNDHSyuGIxhrY5+UkhmSb035OkGmxlpDL0ijPLWCjDW28YctJjy8UFOEyrHlSARKSSKLiMzXg0ARGBe0PuKAYugheaJ6ghv+OIz2UzoJ+Yvp3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MsUKIw9y; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRywwh/x"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e0f0398553so11208775ad.3;
-        Tue, 26 Mar 2024 15:07:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711490833; x=1712095633; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-language:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a3fmf1adB2/rvktIlF/K8tyaOGpYk92mIufdpsSn9O0=;
-        b=lRywwh/xVdg6MpwRy3RMmM2+/9mkmeekVvLkMFeXRibZqwCMtixxmJbMhjMJSGtMyr
-         dwhj/d0nCaa5hcJcANr0TCwlF9ZpiGafyzwJKIUg+NEs6nqwC5IYjkZ1g3SG6dg35qHk
-         x7909eirYPGvqN6Z+0vt+RHzEKsCY6gxPX3feVh0F+KAeSYgpJy7SCColcJLfnXGuKir
-         7xnLI+SDkpBYVzT1nlzrv6l2CGbfEs8bjsp8voentUCHYQHKzT6RRYpRfDNSMjrVzjCp
-         5jMsvHb4QV0rAUPIy1MttkJQQhGZsZXBi/ggXrVMK7JGYQzmBEDx2aaC74NVB+ZJAyrj
-         UMkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711490833; x=1712095633;
-        h=content-transfer-encoding:content-language:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a3fmf1adB2/rvktIlF/K8tyaOGpYk92mIufdpsSn9O0=;
-        b=wfpDAPGRtUzzOkUqgJm9Bo+C8lAB9834IEg7FE6Dw5Ag77rpzOb00CrDj3yI9nCJbn
-         aSJbX+xMr4jkcjIfuEVhAsdBUqoBoWJt7aHK2sbROAmCbiuhsiZsQTBkshtRmw8VlVwP
-         w779HA3dURkzaP5hu9T3z2223X92sfCKZemPdNh/wbrezQA2dh4zrOA1cESUXQNYd/hR
-         AAwYYjBYpFwgUeWViLBk4UG7EUNDS9GhNEpQn/6RYsh1wuHK0RmSd8W/k5AeNArUyF3A
-         FID+BdbinhRCcYdjRWwC09/+EAkpevXpN3xgX/sPmLMNJpjMZ6x1+cGbNbhFlTO899iK
-         Wf6A==
-X-Forwarded-Encrypted: i=1; AJvYcCUyhiLY9q148/fzpjJsuGEcCjDfmxFuFhRqERgGNHf5XSlsqtutqeUlcw4sMWjkFqqAv7DQqMNRtlfK448jwYbHrbY/jCtDzbWYW2BBB5/33/gBausKHNrEQEwQ/ZsDwjjSISQupJbcQc+q3rjuypu2BMzSr/5EAwKyD21V8fD8sg==
-X-Gm-Message-State: AOJu0Yx2Nlfb60uoEfuseJRrkNJ0L4PeLS2/q/SlaYktDLcAzKEJIPuI
-	EB0HFTxMXj+n9OHs5sL/tcgLp7km1sdT244HofzkvWp+m54q2e07bJ9sBgPJQpE=
-X-Google-Smtp-Source: AGHT+IFxaXNxU+DnOrLBeSwZcxi9osHaZNBS5Ck+rrtSNCA3ap4piacyMK02b6gEPK269uVMRKmOLw==
-X-Received: by 2002:a17:903:120c:b0:1e0:fb8c:f45f with SMTP id l12-20020a170903120c00b001e0fb8cf45fmr2491401plh.2.1711490833528;
-        Tue, 26 Mar 2024 15:07:13 -0700 (PDT)
-Received: from [192.168.0.13] ([172.92.174.232])
-        by smtp.gmail.com with ESMTPSA id 13-20020a170902ee4d00b001dddcfca329sm7436304plo.148.2024.03.26.15.07.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Mar 2024 15:07:12 -0700 (PDT)
-Subject: Re: [PATCH v2] riscv: dts: starfive: Remove PMIC interrupt info for
- Visionfive 2 board
-To: Conor Dooley <conor@kernel.org>, ganboing@gmail.com, kernel@esmil.dk,
- robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, Shengyu Qu <wiagn233@outlook.com>
-Cc: Conor Dooley <conor.dooley@microchip.com>, stable@vger.kernel.org
-References: <TY3P286MB26116B828A34D614C09F4E8898202@TY3P286MB2611.JPNP286.PROD.OUTLOOK.COM>
- <20240326-create-motivate-2792be1692c5@spud>
-From: Bo Gan <ganboing@gmail.com>
-Message-ID: <f472affe-d1ef-cbdb-b5c5-76f6b3ac78b3@gmail.com>
-Date: Tue, 26 Mar 2024 15:06:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MsUKIw9y"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42QLj7dG021173;
+	Tue, 26 Mar 2024 22:07:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=fS8f3m9
+	ecVLmb249Cl5w4LbFnKVWeHEC1Yz9UUxx2nU=; b=MsUKIw9ykWHDaKfobww/1rm
+	SfxCBTf+2M6Yztz5tHo1L4POyUIM4U0EmlKXZ5YU3mymGiatjDJJkMBJimMUl1Cn
+	3frN28JkFaFih6rkg6jsmc+cmYfyf8KbE8iEJ4Kd5HfKYyXH3S8e8DrMD57SI6OQ
+	KamCLdbxKmxDVHyvSQnYSP7nITUosrDXCDG7SO23iV4udbTeC7c3X4YLWaLfWE42
+	flcKrwVvKn9Jp4bX/R21xYULlwTdwypQkJ7AZbzCFYaz6SgHHP+QbUuBBV9mkJ6w
+	E8tsBtKmYoPB5uAZ2qFgMXLq5wjoWied+ifuV/c2Dq8DXsXceDg7PYRkrr3+cvA=
+	=
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x403q14gs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Mar 2024 22:07:28 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42QM7R38028659
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Mar 2024 22:07:27 GMT
+Received: from hu-amelende-lv.qualcomm.com (10.49.16.6) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 26 Mar 2024 15:07:27 -0700
+From: Anjelique Melendez <quic_amelende@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_subbaram@quicinc.com>, <quic_collinsd@quicinc.com>,
+        <quic_jprakash@quicinc.com>,
+        Anjelique Melendez <quic_amelende@quicinc.com>
+Subject: [PATCH v2 0/4] Add GPIO support for various PMICs
+Date: Tue, 26 Mar 2024 15:06:25 -0700
+Message-ID: <20240326220628.2392802-1-quic_amelende@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240326-create-motivate-2792be1692c5@spud>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: zlyno8vQqL6X9TZLupaYIHdKpUcLkJto
+X-Proofpoint-GUID: zlyno8vQqL6X9TZLupaYIHdKpUcLkJto
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-26_08,2024-03-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ suspectscore=0 impostorscore=0 bulkscore=0 spamscore=0 priorityscore=1501
+ clxscore=1015 lowpriorityscore=0 phishscore=0 mlxlogscore=720
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403210001 definitions=main-2403260159
 
-On 3/26/24 1:37 PM, Conor Dooley wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
-> 
-> On Thu, 07 Mar 2024 20:21:12 +0800, Shengyu Qu wrote:
->> Interrupt line number of the AXP15060 PMIC is not a necessary part of
->> its device tree. And this would cause kernel to try to enable interrupt
->> line 0, which is not expected. So delete this part from device tree.
->>
->>
-> 
-> Applied to riscv-dt-fixes, thanks! And I didn't forget, so I re-wrote
-> the commit message to add some more information as promised.
-> 
-> [1/1] riscv: dts: starfive: Remove PMIC interrupt info for Visionfive 2 board
->        https://git.kernel.org/conor/c/0b163f43920d
-> 
-> Thanks,
-> Conor.
-> 
-Hi Conor,
+Add GPIO support for PMXR2230, PM6450, PMIH0108 and PMD8028
 
-Thank you very much for taking care of this. Actually the PLIC may silently
-ignore the enablement of interrupt 0, so the upstream openSBI won't notice
-anything. My modified version, however, will deliberately trigger a fault
-for all writes to the reserved fields of PLIC, thus catching this issue.
+Changes since v1:
+  - Removed wildcard character from PMIC names
+  - Combined patch 3/5 and 4/5
+  - Made subjects and commit messages consistent between changes
 
-Hope it can clarify things a bit more.
+Anjelique Melendez (3):
+  dt-bindings: pinctrl: qcom,pmic-gpio: Add PMIH0108 and PMD8028 support
+  pinctrl: qcom: spmi-gpio: Add PMXR2230 and PM6450 support
+  pinctrl: qcom: spmi-gpio: Add PMIH0108 and PMD8028 support
 
-Bo
+David Collins (1):
+  dt-bindings: pinctrl: qcom,pmic-gpio: Add PMXR2230 and PM6450 support
+
+ .../bindings/pinctrl/qcom,pmic-gpio.yaml      | 26 +++++++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c      |  4 +++
+ 2 files changed, 30 insertions(+)
+
+-- 
+2.34.1
+
