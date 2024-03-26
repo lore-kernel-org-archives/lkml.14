@@ -1,96 +1,191 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from rtg-sunil-navi33.amd.com (unknown [165.204.156.251])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6951CFBE
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 17:31:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EDD51CF8D
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 17:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=165.204.156.251
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711474306; cv=none; b=WEx0GYucoX1xR+Wn+6hBBW4b4QpoUfkwCrwBvU3CBIk5se5flPpQPpJ/AYCWNgH7DZuf41JJfVTlpLCdDO9Mc8n6XfHTysw1bAPgzq2fJck9ZEAKa5wMesA9rD06Ix0DT07+m0reKPGzWumbSrgnavd5BqIvxauA4cOIIWvUrzw=
+	t=1711474317; cv=none; b=VkMmu2dlgZp9bjULeJTUGLtQfgUp/9YEKxeq/5SkqBTopCh8p0f7Bmsu4s+Xbv5eNeigCx6JGaWtgPrZG5lgtKxmCkZJPsmdKGUMLNt1XQ1k2Hr4vmiyf1VhOtDCX8u8m3LtaSfIdLaQaiTugUj8Uf52z0FHa4gj6qv0cazj9NA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711474306; c=relaxed/simple;
-	bh=SbAoClBp6vcfCL54MkSlIoYTIV7r1b+nCCdUl2D5njA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sTNuhTInlM+FJu0XywOoEiIJHX3Y488zZTuK8j1Bj8Uk3ys2gKLdS99B/l1ccYITQgPmx6d0lDy5Annhys/cc9AqfxbJPj4IyVOoPc+UcpqpXX+7kHhoReTrJ6LnuidwXbjH/U4JKNyUKFOHRLO8Kxhx/VX4ULDmY+QQ4EVJAJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bb2LxkaE; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bb2LxkaE"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-60a5a11b59dso63753067b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 10:31:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711474304; x=1712079104; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9zt/phGBfZSdp8qy9N6Gw8zdXEBb0+nioLRknU84U6I=;
-        b=bb2LxkaElAqiObuviNo2utz9kb5g7gX6/zhj3E83ANUvnBUK7MvYc+bS05fc+GcNst
-         qArvvBL3Buoz0iMtiJFbtBwvEe7+oA8DT121n7lP9Wj/Q4RsNCvJXoZ1LYTR9EvZhXFI
-         SWvkoyQj7Y3cOeoQZqDG6cJnSvADWaPhIDlCco/gBJIkTzW4Q84+piy9P5wSfrO9wf5l
-         i/G+p0+ubv9pMzPmwvgQtSKU3b3sNgq4AyEBX5yEs2Z64buqRC7bqyT4QMqATlaN93m7
-         b7j94z/BCjEk8MvD7GGk73G3zV0lT5dvztOuqw8TqlNLEq1x4bTi7nmNnBBnxV3GotyS
-         zRGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711474304; x=1712079104;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9zt/phGBfZSdp8qy9N6Gw8zdXEBb0+nioLRknU84U6I=;
-        b=OSE6mcuctgyHyVcEutTwByV8Sa1xq7IV10L9deawPiewl1IQVtMISyCm2LxqbTKyxh
-         TAASTmzccrBwK8f67OJNIV6C8uxbYC8p2LWSQc3LUVkhRmNiT+1rBhVTt+rMlIfKf0dO
-         gOcS7m/Xo6SCWFSbV7tDjpHq1wwPXJVXEPL2o5O/9qv0tt5QAoelyeLnOmEfg4A0hEwX
-         ZbxQy/me/VfPG3Fv1WZL9lWNUUfHv6MR9qtIEJzs4+aDyp3i5yRuZI7tKeBmCD39BWB/
-         A+QvClTg546x/9zCy7Li7NO4g5z8VAXtoQgfc5ExBsXzjLYySf4br9x9Y63iOC2sBJjq
-         N4gw==
-X-Forwarded-Encrypted: i=1; AJvYcCVMLBMSPEBpscf6/7Eq3CQdkFN61nG50+rmPMysB4/V55edWKOKXPRM+VgaWszHRG+wYMBnhTx9YFUOdPYgAtFb+3aE4f3D9hetXTuc
-X-Gm-Message-State: AOJu0YxSgiMBdf0tKLV8OYHvg3E479Ca1u0ri/PWDi6c4QbZUVl0alPp
-	YsRFkWMvhm8tie1cUXgDQq8fwV4tTexeWo4k1cd3dagglBEJO9zesWwNtfueov8HOPl8e0Mafh0
-	sk6qiERvIAgW9LTTEiTFEw/6/+ScEcXqu/ysq8A==
-X-Google-Smtp-Source: AGHT+IHKvErihvCqyYvqxnaKemrvy7TNx3gwuqYnQoUJPA6s9U6270M569opHM8owaC5W9WEJhp8lM+R6e3WArVuFyo=
-X-Received: by 2002:a25:db10:0:b0:dcb:be59:25e1 with SMTP id
- g16-20020a25db10000000b00dcbbe5925e1mr291813ybf.30.1711474304335; Tue, 26 Mar
- 2024 10:31:44 -0700 (PDT)
+	s=arc-20240116; t=1711474317; c=relaxed/simple;
+	bh=1doTDbfUIsSx7SCqi/b7+CwUUWwogQrO+137VujhPzI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kW8z+zgcSq3idrT0FZvjcFYwKopOYBJEKhB1wqRFk1mpKY4Rj6B4f/15+Zlghxg8/sYEFcFjPeXVyVIoRorajSDyI5SyLIytKfojff9YT2Neh7FovzH+0XhzJE0/6B7rv72AVoA8o8YPN8vpiar6Fr9k9IakrE+h1C2Lk2bx8PU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com; spf=none smtp.mailfrom=rtg-sunil-navi33.amd.com; arc=none smtp.client-ip=165.204.156.251
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=rtg-sunil-navi33.amd.com
+Received: from rtg-sunil-navi33.amd.com (localhost [127.0.0.1])
+	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 42QHVjVC2324656;
+	Tue, 26 Mar 2024 23:01:45 +0530
+Received: (from sunil@localhost)
+	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Submit) id 42QHVj7W2324649;
+	Tue, 26 Mar 2024 23:01:45 +0530
+From: Sunil Khatri <sunil.khatri@amd.com>
+To: Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Shashank Sharma <shashank.sharma@amd.com>
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Hawking Zhang <Hawking.Zhang@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Lijo Lazar <lijo.lazar@amd.com>, Sunil Khatri <sunil.khatri@amd.com>
+Subject: [PATCH] drm/amdgpu: add IP's FW information to devcoredump
+Date: Tue, 26 Mar 2024 23:01:42 +0530
+Message-Id: <20240326173142.2324624-1-sunil.khatri@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326-msm-dp-cleanup-v1-0-e775556ecec0@quicinc.com> <20240326-msm-dp-cleanup-v1-4-e775556ecec0@quicinc.com>
-In-Reply-To: <20240326-msm-dp-cleanup-v1-4-e775556ecec0@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 26 Mar 2024 19:31:33 +0200
-Message-ID: <CAA8EJpoJQ+K6S7PbeWt740WhaMRWbNmu2LXz1Js+x8HgzuH24A@mail.gmail.com>
-Subject: Re: [PATCH 4/6] drm/msm/dp: Use function arguments for aux writes
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, Bjorn Andersson <quic_bjorande@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 26 Mar 2024 at 17:06, Bjorn Andersson <andersson@kernel.org> wrote:
->
-> From: Bjorn Andersson <quic_bjorande@quicinc.com>
->
-> The dp_aux write operations takes the data to be operated on through a
-> member of struct dp_catalog, rather than as an argument to the function.
->
-> No state is maintained other than across the calling of the functions,
-> so replace this member with a function argument.
+Add FW information of all the IP's in the devcoredump.
 
-Definitely yes, thank you!
+Signed-off-by: Sunil Khatri <sunil.khatri@amd.com>
+---
+ .../gpu/drm/amd/amdgpu/amdgpu_dev_coredump.c  | 122 ++++++++++++++++++
+ 1 file changed, 122 insertions(+)
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-
->
-> Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
-> ---
->  drivers/gpu/drm/msm/dp/dp_aux.c     | 9 +++------
->  drivers/gpu/drm/msm/dp/dp_catalog.c | 8 ++++----
->  drivers/gpu/drm/msm/dp/dp_catalog.h | 5 ++---
->  3 files changed, 9 insertions(+), 13 deletions(-)
-
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_dev_coredump.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_dev_coredump.c
+index 44c5da8aa9ce..d598b6520ec9 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_dev_coredump.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_dev_coredump.c
+@@ -69,6 +69,124 @@ const char *hw_ip_names[MAX_HWIP] = {
+ 	[PCIE_HWIP]		= "PCIE",
+ };
+ 
++static void amdgpu_devcoredump_fw_info(struct amdgpu_device *adev,
++				       struct drm_printer *p)
++{
++	uint32_t version;
++	uint32_t feature;
++	uint8_t smu_program, smu_major, smu_minor, smu_debug;
++
++	drm_printf(p, "VCE feature version: %u, fw version: 0x%08x\n",
++		   adev->vce.fb_version, adev->vce.fw_version);
++	drm_printf(p, "UVD feature version: %u, fw version: 0x%08x\n", 0,
++		   adev->uvd.fw_version);
++	drm_printf(p, "GMC feature version: %u, fw version: 0x%08x\n", 0,
++		   adev->gmc.fw_version);
++	drm_printf(p, "ME feature version: %u, fw version: 0x%08x\n",
++		   adev->gfx.me_feature_version, adev->gfx.me_fw_version);
++	drm_printf(p, "PFP feature version: %u, fw version: 0x%08x\n",
++		   adev->gfx.pfp_feature_version, adev->gfx.pfp_fw_version);
++	drm_printf(p, "CE feature version: %u, fw version: 0x%08x\n",
++		   adev->gfx.ce_feature_version, adev->gfx.ce_fw_version);
++	drm_printf(p, "RLC feature version: %u, fw version: 0x%08x\n",
++		   adev->gfx.rlc_feature_version, adev->gfx.rlc_fw_version);
++
++	drm_printf(p, "RLC SRLC feature version: %u, fw version: 0x%08x\n",
++		   adev->gfx.rlc_srlc_feature_version,
++		   adev->gfx.rlc_srlc_fw_version);
++	drm_printf(p, "RLC SRLG feature version: %u, fw version: 0x%08x\n",
++		   adev->gfx.rlc_srlg_feature_version,
++		   adev->gfx.rlc_srlg_fw_version);
++	drm_printf(p, "RLC SRLS feature version: %u, fw version: 0x%08x\n",
++		   adev->gfx.rlc_srls_feature_version,
++		   adev->gfx.rlc_srls_fw_version);
++	drm_printf(p, "RLCP feature version: %u, fw version: 0x%08x\n",
++		   adev->gfx.rlcp_ucode_feature_version,
++		   adev->gfx.rlcp_ucode_version);
++	drm_printf(p, "RLCV feature version: %u, fw version: 0x%08x\n",
++		   adev->gfx.rlcv_ucode_feature_version,
++		   adev->gfx.rlcv_ucode_version);
++	drm_printf(p, "MEC feature version: %u, fw version: 0x%08x\n",
++		   adev->gfx.mec_feature_version, adev->gfx.mec_fw_version);
++
++	if (adev->gfx.mec2_fw)
++		drm_printf(p, "MEC2 feature version: %u, fw version: 0x%08x\n",
++			   adev->gfx.mec2_feature_version,
++			   adev->gfx.mec2_fw_version);
++
++	drm_printf(p, "IMU feature version: %u, fw version: 0x%08x\n", 0,
++		   adev->gfx.imu_fw_version);
++	drm_printf(p, "PSP SOS feature version: %u, fw version: 0x%08x\n",
++		   adev->psp.sos.feature_version, adev->psp.sos.fw_version);
++	drm_printf(p, "PSP ASD feature version: %u, fw version: 0x%08x\n",
++		   adev->psp.asd_context.bin_desc.feature_version,
++		   adev->psp.asd_context.bin_desc.fw_version);
++
++	drm_printf(p, "TA XGMI feature version: 0x%08x, fw version: 0x%08x\n",
++		   adev->psp.xgmi_context.context.bin_desc.feature_version,
++		   adev->psp.xgmi_context.context.bin_desc.fw_version);
++	drm_printf(p, "TA RAS feature version: 0x%08x, fw version: 0x%08x\n",
++		   adev->psp.ras_context.context.bin_desc.feature_version,
++		   adev->psp.ras_context.context.bin_desc.fw_version);
++	drm_printf(p, "TA HDCP feature version: 0x%08x, fw version: 0x%08x\n",
++		   adev->psp.hdcp_context.context.bin_desc.feature_version,
++		   adev->psp.hdcp_context.context.bin_desc.fw_version);
++	drm_printf(p, "TA DTM feature version: 0x%08x, fw version: 0x%08x\n",
++		   adev->psp.dtm_context.context.bin_desc.feature_version,
++		   adev->psp.dtm_context.context.bin_desc.fw_version);
++	drm_printf(p, "TA RAP feature version: 0x%08x, fw version: 0x%08x\n",
++		   adev->psp.rap_context.context.bin_desc.feature_version,
++		   adev->psp.rap_context.context.bin_desc.fw_version);
++	drm_printf(
++		p,
++		"TA SECURE DISPLAY feature version: 0x%08x, fw version: 0x%08x\n",
++		adev->psp.securedisplay_context.context.bin_desc.feature_version,
++		adev->psp.securedisplay_context.context.bin_desc.fw_version);
++
++	/* SMC firmware */
++	version = adev->pm.fw_version;
++
++	smu_program = (version >> 24) & 0xff;
++	smu_major = (version >> 16) & 0xff;
++	smu_minor = (version >> 8) & 0xff;
++	smu_debug = (version >> 0) & 0xff;
++	drm_printf(p,
++		   "SMC feature version: %u, program: %d, fw version: 0x%08x (%d.%d.%d)\n",
++		   0, smu_program, version, smu_major, smu_minor, smu_debug);
++
++	/* SDMA firmware */
++	for (int i = 0; i < adev->sdma.num_instances; i++) {
++		drm_printf(p,
++			   "SDMA%d feature version: %u, firmware version: 0x%08x\n",
++			   i, adev->sdma.instance[i].feature_version,
++			   adev->sdma.instance[i].fw_version);
++	}
++
++	drm_printf(p, "VCN feature version: %u, fw version: 0x%08x\n", 0,
++		   adev->vcn.fw_version);
++	drm_printf(p, "DMCU feature version: %u, fw version: 0x%08x\n", 0,
++		   adev->dm.dmcu_fw_version);
++	drm_printf(p, "DMCUB feature version: %u, fw version: 0x%08x\n", 0,
++		   adev->dm.dmcub_fw_version);
++	drm_printf(p, "PSP TOC feature version: %u, fw version: 0x%08x\n",
++		   adev->psp.toc.feature_version, adev->psp.toc.fw_version);
++
++	version = adev->mes.kiq_version & AMDGPU_MES_VERSION_MASK;
++	feature = (adev->mes.kiq_version & AMDGPU_MES_FEAT_VERSION_MASK) >>
++		  AMDGPU_MES_FEAT_VERSION_SHIFT;
++	drm_printf(p, "MES_KIQ feature version: %u, fw version: 0x%08x\n",
++		   feature, version);
++
++	version = adev->mes.sched_version & AMDGPU_MES_VERSION_MASK;
++	feature = (adev->mes.sched_version & AMDGPU_MES_FEAT_VERSION_MASK) >>
++		  AMDGPU_MES_FEAT_VERSION_SHIFT;
++	drm_printf(p, "MES feature version: %u, fw version: 0x%08x\n", feature,
++		   version);
++
++	drm_printf(p, "VPE feature version: %u, fw version: 0x%08x\n",
++		   adev->vpe.feature_version, adev->vpe.fw_version);
++}
++
+ static ssize_t
+ amdgpu_devcoredump_read(char *buffer, loff_t offset, size_t count,
+ 			void *data, size_t datalen)
+@@ -118,6 +236,10 @@ amdgpu_devcoredump_read(char *buffer, loff_t offset, size_t count,
+ 		}
+ 	}
+ 
++	/* IP firmware information */
++	drm_printf(&p, "\nIP Firmwares\n");
++	amdgpu_devcoredump_fw_info(coredump->adev, &p);
++
+ 	if (coredump->ring) {
+ 		drm_printf(&p, "\nRing timed out details\n");
+ 		drm_printf(&p, "IP Type: %d Ring Name: %s\n",
 -- 
-With best wishes
-Dmitry
+2.34.1
+
