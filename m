@@ -1,166 +1,164 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A56F13D272;
-	Tue, 26 Mar 2024 19:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837BA13D255;
+	Tue, 26 Mar 2024 19:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711482883; cv=none; b=pPYapWxvq3E11o5Eyfpv8Kb4HOQ6Rq6LrPesyEkpBBq+UnFXpjqgjo8K/53yx4KYyUHJSvxeqfuprnuVPEh3qp6+Y3elZiYQji6kiut8/f+neakX9IqkZlj0d+cDpBRnqpkDPh8APvcJ6sTY9VBrQtnwiMN9T89xWoQlw886dcI=
+	t=1711482947; cv=none; b=W8S2WfJXaIIReBhGG0BlNU6i5THOds5sth0zvuP3QC2C6cKlBhEbt082qOkt6z/BRQns0g4MGzdziA4qq59ifrJRVlOUO8IjH48eAJMjXXMBuGzD8ySfguKTZvkKrrE3eQX1wNfDZrd8NEKzPQZUW221GLqxHK4voF9/ODEU1NU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711482883; c=relaxed/simple;
-	bh=l2Uqx7wrA6NoUxQ4rJTc5pIIxLEtsRzqWRIYJT+Ma08=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AMGJjAN3yrzAeqUdjsupzQ6X1OqY0Ji8p+w0ZFrvlul15EAzzcmusYN00/43FgCtCNdmsXLPz2t2lzabZ6uapPCWGbW7l/VX2W10tvTCRTxmHeCa1hlmM/DgRBVLUq8p/+XGRTk3DTGp4RaP1GyCGCZAf3x11PdstBiO1Wo6spk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=fFVw0o79; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1711482947; c=relaxed/simple;
+	bh=t7CqjsZ9pZfysEVOI/X9SWqo8ohcJk7OgFJGLNKeMEc=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=jy0HccwkGrscTZFtvqBO9dpjnUbxugJDKdYVj4DgwN4TSx490xMD8cEKWEwnrBT0up59y4BS5Pp7/AsEfWb4AAc/BkSJ3dgsKDpc3YOxVqweMnI6aNUShZZyMEsSuPwQeS1hOiPfOjvdtsvGgQWLaNRAEqWfC1bLiaV6Nb6F6WI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=Wt6eF98S; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fFVw0o79"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1711482872;
-	bh=l2Uqx7wrA6NoUxQ4rJTc5pIIxLEtsRzqWRIYJT+Ma08=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fFVw0o79eIaWlD03wcbtDVuqaM2fT86wyggWSzLP5JOc8LeMOSRHlFogkIEfG/LP/
-	 9O5pb7PYt4dBcQ+rh6r8CphFrXSlMRzIzHmz8gAjFzvxNnzWQlaNaf2UVdhsfMxd8L
-	 WWl+9LT/RtHsUSmDowy3BDw2HuJH/4btYykTnPi4dbLd3TrkkFg8ZQvD3Q9I9lG4pp
-	 VNcU+OLBcZHUcoNl7KkHHQ7JzjYzBIodazSwr6u5Pai/tDaIfyskbfhmZv+MUwnBti
-	 UM8Hc9/Hgyg/MjYPKg0WaiwAEfiPphHojG3ByKXW1Tp4uJO+7mk20FKcpaKATTaigf
-	 PyQX4EntyNBTw==
-Received: from mercury (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sre)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6205D37802F2;
-	Tue, 26 Mar 2024 19:54:32 +0000 (UTC)
-Received: by mercury (Postfix, from userid 1000)
-	id C7FED10608D9; Tue, 26 Mar 2024 20:54:31 +0100 (CET)
-Date: Tue, 26 Mar 2024 20:54:31 +0100
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Dragan Simic <dsimic@manjaro.org>
-Cc: linux-rockchip@lists.infradead.org, heiko@sntech.de, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, boris.brezillon@collabora.com, 
-	linux-kernel@vger.kernel.org, kernel@collabora.com
-Subject: Re: [PATCH] arm64: dts: rockchip: quartzpro64: Enable the GPU
-Message-ID: <jbyqey5y5ngr7mkrrmdxrwyw5ogd7rq56af6mrmhsckboanvyp@tcaav2tridos>
-References: <0f3759ee390f245dac447bbee038445ddfecbec0.1711383286.git.dsimic@manjaro.org>
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="Wt6eF98S"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vy7v7ft7rt4enblx"
-Content-Disposition: inline
-In-Reply-To: <0f3759ee390f245dac447bbee038445ddfecbec0.1711383286.git.dsimic@manjaro.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1711482942;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aK+zeuu0YN/Z0DLh3IdinoCfvuQvS+27+MOgeO9A3HQ=;
+	b=Wt6eF98SDxyLQr6Okc4sm2GV6BQH6/hFW+ovHSF7ID+oEYB+hSbXCUwv8qlAudRJWUJDNE
+	6GR41G9zyKwulpPei60k3pZQnzVMT3BBtHyVOlG6QuGEZ5ApyGFSmrYREdTdK8wIT2Je1T
+	i8u0oNVqFaIO3kSocywO16HTO/Gvc16y04SoyEqSlGA70SbHFTc2HwirwTqwvfBHBacHPk
+	kcIjW2tzvbT+b6BlDMELsbPOy1KYJJHt1HVL0+tvLOiMMB0+JV+qGBHgkGidlEjdD7UuIZ
+	EQoq34KPbf4Qblp/MsrgH2fejtnuN+/ZRHVa3fsp/cy4MmNfpB+Yr5evKbCtpg==
+Date: Tue, 26 Mar 2024 20:55:40 +0100
+From: Dragan Simic <dsimic@manjaro.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: dev@folker-schwesinger.de, Vinod Koul <vkoul@kernel.org>, Kishon Vijay
+ Abraham I <kishon@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Chris Ruehl
+ <chris.ruehl@gtsys.com.hk>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Christopher Obbard <chris.obbard@collabora.com>,
+ Alban Browaeys <alban.browaeys@gmail.com>, Doug Anderson
+ <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Jensen
+ Huang <jensenhuang@friendlyarm.com>, linux-phy@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/3] phy: rockchip: emmc: Enable pulldown for strobe line
+In-Reply-To: <20240326-tactical-onlooker-3df8d2352dc2@spud>
+References: <20240326-rk-default-enable-strobe-pulldown-v1-0-f410c71605c0@folker-schwesinger.de>
+ <20240326-rk-default-enable-strobe-pulldown-v1-1-f410c71605c0@folker-schwesinger.de>
+ <20240326-tactical-onlooker-3df8d2352dc2@spud>
+Message-ID: <436f78a981ecba441a0636912ddd1cf2@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
+Hello Conor and Folker,
 
---vy7v7ft7rt4enblx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2024-03-26 20:46, Conor Dooley wrote:
+> On Tue, Mar 26, 2024 at 07:54:35PM +0100, Folker Schwesinger via B4 
+> Relay wrote:
+>> From: Folker Schwesinger <dev@folker-schwesinger.de>
+>> 
+>> Restore the behavior of the Rockchip kernel that undconditionally
+>> enables the internal strobe pulldown.
+> 
+> What do you mean "restore the behaviour of the rockchip kernel"? Did
+> mainline behave the same as the rockchip kernel previously? If not,
+> using "restore" here is misleading. "Unconditionally" is also 
+> incorrect,
+> because you have a property that disables it.
+> 
+>> As the DT property rockchip,enable-strobe-pulldown is obsolete now,
+>> replace it with a property to disable the internal pulldown.
+>> 
+>> This fixes I/O errors observed on various Rock Pi 4 and NanoPi4 series
+>> boards with some eMMC modules. Other boards may also be affected.
+>> 
+>> An example of these errors is as follows:
+>> 
+>> [  290.060817] mmc1: running CQE recovery
+>> [  290.061337] blk_update_request: I/O error, dev mmcblk1, sector 
+>> 1411072 op 0x1:(WRITE) flags 0x800 phys_seg 36 prio class 0
+>> [  290.061370] EXT4-fs warning (device mmcblk1p1): ext4_end_bio:348: 
+>> I/O error 10 writing to inode 29547 starting block 176466)
+>> [  290.061484] Buffer I/O error on device mmcblk1p1, logical block 
+>> 172288
+>> 
+>> Fixes: 8b5c2b45b8f0 ("phy: rockchip: set pulldown for strobe line in 
+>> dts")
+>> Signed-off-by: Folker Schwesinger <dev@folker-schwesinger.de>
+>> ---
+>>  drivers/phy/rockchip/phy-rockchip-emmc.c | 6 +++---
+>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>> 
+>> diff --git a/drivers/phy/rockchip/phy-rockchip-emmc.c 
+>> b/drivers/phy/rockchip/phy-rockchip-emmc.c
+>> index 20023f6eb994..6e637f3e1b19 100644
+>> --- a/drivers/phy/rockchip/phy-rockchip-emmc.c
+>> +++ b/drivers/phy/rockchip/phy-rockchip-emmc.c
+>> @@ -376,14 +376,14 @@ static int rockchip_emmc_phy_probe(struct 
+>> platform_device *pdev)
+>>  	rk_phy->reg_offset = reg_offset;
+>>  	rk_phy->reg_base = grf;
+>>  	rk_phy->drive_impedance = PHYCTRL_DR_50OHM;
+>> -	rk_phy->enable_strobe_pulldown = PHYCTRL_REN_STRB_DISABLE;
+>> +	rk_phy->enable_strobe_pulldown = PHYCTRL_REN_STRB_ENABLE;
+>>  	rk_phy->output_tapdelay_select = PHYCTRL_OTAPDLYSEL_DEFAULT;
+>> 
+>>  	if (!of_property_read_u32(dev->of_node, "drive-impedance-ohm", 
+>> &val))
+>>  		rk_phy->drive_impedance = convert_drive_impedance_ohm(pdev, val);
+>> 
+>> -	if (of_property_read_bool(dev->of_node, 
+>> "rockchip,enable-strobe-pulldown"))
+>> -		rk_phy->enable_strobe_pulldown = PHYCTRL_REN_STRB_ENABLE;
+>> +	if (of_property_read_bool(dev->of_node, 
+>> "rockchip,disable-strobe-pulldown"))
+>> +		rk_phy->enable_strobe_pulldown = PHYCTRL_REN_STRB_DISABLE;
+> 
+> Unfortunately you cannot do this.
+> Previously no property at all meant disabled and a property was 
+> required
+> to enable it. With this change the absence of a property means that it
+> will be enabled.
+> An old devicetree is that wanted this to be disabled would have no
+> property and will now end up with it enabled. This is an ABI break and 
+> is
+> clearly not backwards compatible, that's a NAK unless it is 
+> demonstrable
+> that noone actually wants to disable it at all.
 
-Hi,
+Moreover, as I already explained some time ago, [1] some boards and
+devices are unfortunately miswired, and we don't want to enable the
+DATA STROBE pull-down on such boards.
 
-On Mon, Mar 25, 2024 at 05:19:04PM +0100, Dragan Simic wrote:
-> Following the approach used to enable the Mali GPU on the rk3588-evb1, [1]
-> do the same for the Pine64 QuartzPro64, which uses nearly identical hardw=
-are
-> design as the RK3588 EVB1.
->=20
-> The slight disadvantage is that the regulator coupling logic requires the
-> regulators to be always on, which is also noted in the comments.  This is
-> obviously something to be improved at some point in the future, but should
-> be fine for now, especially because the QuartzPro64 isn't a battery-power=
-ed
-> board, so low power consumption isn't paramount.
->=20
-> [1] https://lore.kernel.org/linux-rockchip/20240325153850.189128-5-sebast=
-ian.reichel@collabora.com/
->=20
-> Signed-off-by: Dragan Simic <dsimic@manjaro.org>
-> ---
+[1] 
+https://lore.kernel.org/linux-rockchip/ca5b7cad01f645c7c559ab26a8db8085@manjaro.org/#t
 
-FWIW
-
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-
--- Sebastian
-
->  .../arm64/boot/dts/rockchip/rk3588-quartzpro64.dts | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-quartzpro64.dts b/arch/a=
-rm64/boot/dts/rockchip/rk3588-quartzpro64.dts
-> index 67414d72e2b6..68d432c61ea5 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3588-quartzpro64.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588-quartzpro64.dts
-> @@ -285,6 +285,12 @@ &gmac0_rgmii_clk
->  	status =3D "okay";
->  };
-> =20
-> +&gpu {
-> +	mali-supply =3D <&vdd_gpu_s0>;
-> +	sram-supply =3D <&vdd_gpu_mem_s0>;
-> +	status =3D "okay";
-> +};
-> +
->  &i2c2 {
->  	status =3D "okay";
-> =20
-> @@ -491,11 +497,15 @@ rk806_dvs3_null: dvs3-null-pins {
->  		regulators {
->  			vdd_gpu_s0: dcdc-reg1 {
->  				regulator-name =3D "vdd_gpu_s0";
-> +				/* regulator coupling requires always-on */
-> +				regulator-always-on;
->  				regulator-boot-on;
->  				regulator-enable-ramp-delay =3D <400>;
->  				regulator-min-microvolt =3D <550000>;
->  				regulator-max-microvolt =3D <950000>;
->  				regulator-ramp-delay =3D <12500>;
-> +				regulator-coupled-with =3D <&vdd_gpu_mem_s0>;
-> +				regulator-coupled-max-spread =3D <10000>;
-> =20
->  				regulator-state-mem {
->  					regulator-off-in-suspend;
-> @@ -545,11 +555,15 @@ regulator-state-mem {
-> =20
->  			vdd_gpu_mem_s0: dcdc-reg5 {
->  				regulator-name =3D "vdd_gpu_mem_s0";
-> +				/* regulator coupling requires always-on */
-> +				regulator-always-on;
->  				regulator-boot-on;
->  				regulator-enable-ramp-delay =3D <400>;
->  				regulator-min-microvolt =3D <675000>;
->  				regulator-max-microvolt =3D <950000>;
->  				regulator-ramp-delay =3D <12500>;
-> +				regulator-coupled-with =3D <&vdd_gpu_s0>;
-> +				regulator-coupled-max-spread =3D <10000>;
-> =20
->  				regulator-state-mem {
->  					regulator-off-in-suspend;
-
---vy7v7ft7rt4enblx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmYDJ/MACgkQ2O7X88g7
-+prAXw//VFNyf9UpzEvJ2gmtgoAy+Uuxc8F9f3S6P58m/22P+THFPE3nNh1KnLZ4
-1uhZc3Gj2sf0nvXTr2Zl6fdV0Sr0xEKUlQGnXAcxH33nZ/TGWhjFu3ivzF59L98T
-RwXbIIQWKQyBjcyrwF1ssq9zdt9ywbTAGUcjnt7NzuJ+S8+W3eoyvJzEXT7ij+fa
-rShpniZV50t8DeqNLKgbSyOybguQRRo7cgKwrgQGeoNxb1IXkmkOzhmZ07fd84i0
-cusDkWNh2sk0wIL0xw9HRKuay2lY8PiPnS+th+hNf6SC5oF/CQfXjtXE//fNHhkI
-0L9xLtdPKt3zeKSSe9kB2xZMC4UO1Q1bxPAOT2hzoF/vHb5Tp8mO4usGTrGNHspc
-OiAtZt+V+4JblDIiVGSc2KLuERFxEvsQMkKilCOQbNDoWwsC/E9aGbcgt0lkaRKi
-AE4i79EE3uHiIR1q8dg28P4JZpt1LjjZIq7QjUWSIqOwXWGOY8d6yflJn9z1bQZm
-YfukUZ3IyYfJxHHt2zL7qIAXTj3oMzr69XYnAvVuZbZkzYOQ1wcduuSC7tr+AN0Q
-ZuJ152h5AtoviSvADObkhjzYoH5NTd2ep2/MMy2qdtkPt4i5kTmtt7VMpl2szzhk
-AS0FfOoWCSS5Uj6y7k0SyE1B72dYHej+raY8jySawgt+kQV4cyU=
-=tY+0
------END PGP SIGNATURE-----
-
---vy7v7ft7rt4enblx--
+> If this patch fixes a problem on a board that you have, I would suggest
+> that you add the property to enable it, as the binding tells you to.
+> 
+> Thanks,
+> Conor.
+> 
+>>  	if (!of_property_read_u32(dev->of_node, 
+>> "rockchip,output-tapdelay-select", &val)) {
+>>  		if (val <= PHYCTRL_OTAPDLYSEL_MAXVALUE)
+>> 
+>> --
+>> 2.44.0
+>> 
+>> 
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
