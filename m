@@ -1,103 +1,170 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3691B84D34
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 18:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE99B482EE;
+	Tue, 26 Mar 2024 18:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711476305; cv=none; b=rm4geP30nkXKPwBlfrPFoPgKKd0CtrvKgD/MCsL465cOr5cp+tmG00Ujrc0tFj/PBnASVwyygz96egnHTWBy7jAhDoG3m0ay6dijhnMgRzYyBFmcjNiijYDfeM78KBMVHk2RW5YaiKtendB7UYDrNIqIqGMQWl95L7OfTg6kbrc=
+	t=1711476335; cv=none; b=FCFU3uklS1mK/1OMUt41UYzP2I4lVR8OUv8d0tAxeOZNg29JARk9lA0O25yfu1r3vkh05+++ViwcjguUdzxL2V3RYItgKXp1uBgnBkKQbTzFwdGS1J2yqKkJX4ueLWUL55qmmrmAz5T8ITaEQJtAW0fbyLdrYArKmRxY7ECHCxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711476305; c=relaxed/simple;
-	bh=1HtAEn3GUDU1rNP6LZWmBuVwhufr+rjFcdlx8t9YYvw=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=RpKaelVFOXlJPvwBULwSBzr4/l90GV33dHRsMqzdFd33ew8jC4T4aUho5L64ch73YAstUFjs05vKDxIB+8T0F7KOkkQmwwByd2jPBBImX9MHh3XZR7ipL4//jSsapVU//k3HxXUPlpSjEvhJGr8O/+CgZL5mesuNJa51Jr+cjAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T8k8uz2T; arc=none smtp.client-ip=209.85.216.54
+	s=arc-20240116; t=1711476335; c=relaxed/simple;
+	bh=Hv4vka0g3KZRnfDy76dTJ9fCXHDjjTLzWVYBzJ9Zlfo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XC/PsXza1hion7IcF++K3z1PkSIXOeejsmjq2kuWo7nGzFVTgIU5hLRJ98EdeHiQn/Gswf3uHjStF8BDH07BXMCAI6NbbzYyA8DRIYUEAGx0mBKJnWLKqr9EfLaVHdV5J3SQQ9PL4HDMTrSKJ7HlH5AZiVBQKN5ssUSDOw0GeZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k6xoPK3g; arc=none smtp.client-ip=209.85.160.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T8k8uz2T"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2a07b092c4fso1437949a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 11:05:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k6xoPK3g"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-430c4e67d40so38128781cf.3;
+        Tue, 26 Mar 2024 11:05:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711476303; x=1712081103; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=InAZ9/C9EDyJhkW+bEV5eavwbh4jrGbQhGajHqMOaXs=;
-        b=T8k8uz2T2njzNwO9uuJCZUPbgR7UFW3VEzMiwRNl2nNnkzK0CQ0ib/Ud1d8W/cZ7zR
-         gs/sTUjSgsy+g9XB4s3HmW8K2Z4QH674pe38Y9CdG6pxuzLH60WLj2VLrdQvh5R9nK07
-         /TF0KH0xwUpPyLq8WJbFiuKVsH9uwJO8/hywywXg6O5vOjbVAvxYEAnanO899MyHqdoQ
-         PY3wMbQkBRl1gRtwlQcRV822sE+pi9QwTeRAvUWRIbtTYkfvLgOowj6kxQd0W/YpziZS
-         nKNAjMIhDWSu+Hr4SVNSGMF61ufFq7KGK9RBnHoWjajT0jqvruf8XqYrxvaxcTqVENfD
-         fv7Q==
+        d=gmail.com; s=20230601; t=1711476332; x=1712081132; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xZSO9NgzHjU3V7f5NqNNxEr8uk+T/G+ECQGvq3goiMU=;
+        b=k6xoPK3gss7+3+8rJ/V0Kzx9ZEy3EmMraJPrRk2mzw1EH+jHAvHLKAzVVafivThZd4
+         cBVyeCeMVLz8/jNBekr4KGlbhsbbRlwoqnCuiVv6bMkj3PjLECsc9bCIlm9kXCNGgNGJ
+         istXlXuzrSTjt5tVXJNkV0a9Fm5Yf5wOomb7jH5QsB630LZJnyfMdB2W1ZNHqki2i9ck
+         pwTOUdPe3pmlYe1x4ORDgqYjIleh4DkqTjcKiKevhB0M9RKYSlUZBaVzxaMGa3ozb9Vt
+         CFvLc35Ir6pY1YTZAzuWp494LskUiS1v6ohetj4v5kWXCv+hUxymAZGDqna5n6cbrk3n
+         GZBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711476303; x=1712081103;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=InAZ9/C9EDyJhkW+bEV5eavwbh4jrGbQhGajHqMOaXs=;
-        b=pWXkrvEv7H8s6aGXqyITehsameVNCy6Ejt1sAOSxNzspON3iQW56pq+1PmjZugKsy7
-         I+OMQ36d5GCraGFf/aw12+xpvFJ2tH+AdjTla91CQk1toai3Os/A81A/jqK6izJO2Lbi
-         VsG0uhVnL/vQPTkrM4yHX1R3ZJ5FzQNUSJHEAYGranX+oUtXvXdT5aAoJt9JXAg2J6K3
-         bu9Jl9WdtwzgGXpdpkYlUe2jlQnNFlGdJnPPOOFiEuQIplLgeaF8WkGuAcrT20sD+ZAO
-         73kgq72eviF2F6V0Sno1PdqUQC4uR5mcmsprngh7D5t3x2VpSayPd4EyBKUMpnWSnwgQ
-         QT0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXn6/1VmaaTzDrsqxY85zMiiDg4Zq0FSwt2K57L/m9QLrLWxT4WUS+knFz3bEDwRLkUihnSS1RSejYPgrzWq1d9ZdDI5MV8Faq/O+Lv
-X-Gm-Message-State: AOJu0YypFzQOebOc/9YC3VS8FsANXlRvTIaKetu+vZIG//37fcdSGMtc
-	slTZZ4FS+TecPaIfEHoyN7ueR8ObzuRPp5H4XFXuXjxFrQ5KgmbhosJ8DI1CLaQuKRaHkbTogWw
-	wT1Wx3AmQh3BdmkszAqDL8R10OkE=
-X-Google-Smtp-Source: AGHT+IEBhA+WnnRTf8AR2UyUOmIouX8FcColXZqyCdRGDNFO76HxCoWYBYVkcsPJZ6LizCzy9BOlPUU/AKNzLxSVaQ8=
-X-Received: by 2002:a17:90b:380c:b0:29f:e443:204f with SMTP id
- mq12-20020a17090b380c00b0029fe443204fmr8861033pjb.18.1711476303337; Tue, 26
- Mar 2024 11:05:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711476332; x=1712081132;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xZSO9NgzHjU3V7f5NqNNxEr8uk+T/G+ECQGvq3goiMU=;
+        b=Huz5Kjraa5Y2r+ndiE41oxxAmic1cMGgOUcyLn2OFpFEMEmid8GjU1cgwsHf3DcMyL
+         JthZVQJ+PeC0YXJ1bUqOi5exc2VTCdTbFAMV9kpOTIv1EV8ZltJKYCBGM0ngC9yiqOdk
+         v3pTigl5Hr6dmfB7u6r5taz6rrf+oiGJk8o/PcPmeRVCBRvkWF123R7XvS6I/YtNxCXf
+         diSCHfPwTiT7roOB2K99OI9yTgaIt4GDviAcKZ6g3qkffO6panQVltsfz7OQj7O+NWP/
+         8uAiumYygFX7vj4tHZdPNqDUVcnN9/ea/dlGrOQaahAWfHCEaYxx559ClxHTmWL9jI/G
+         7RCg==
+X-Forwarded-Encrypted: i=1; AJvYcCWYKx3+Fx18/5sxnezUZLSymYy79XTsPyFMsfJNqiaZoCUE/w3lv21A5ZijYFK63ZJErEFs+pwutwBAyq147GDguBUkC/xUnbbRBWqH
+X-Gm-Message-State: AOJu0YzG0A21p34x30MSO9tN4OC8wfONbk5W/kJ4olKnAt2fVvhKnTzv
+	eEW1WMeI+nNqGgJVcCzINRk8kgs182GxJo5whbJ3eDZGrPYht2FT
+X-Google-Smtp-Source: AGHT+IG8gHA4dkXqWrakr7SeqRSzlyXdkOE2gvjVAiu+TH5/Qlx0bJSYPgcttD13NxcF/jfGxJDJ/w==
+X-Received: by 2002:ac8:5886:0:b0:431:3d52:2fdc with SMTP id t6-20020ac85886000000b004313d522fdcmr1670387qta.65.1711476332466;
+        Tue, 26 Mar 2024 11:05:32 -0700 (PDT)
+Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id eh15-20020a05622a578f00b004309cd26bedsm3918473qtb.72.2024.03.26.11.05.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 11:05:32 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id 840031200066;
+	Tue, 26 Mar 2024 14:05:31 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Tue, 26 Mar 2024 14:05:31 -0400
+X-ME-Sender: <xms:aw4DZlkacnFatkwzA5RkY_rVwFbXZDRlC_HqGKtAKkMrl_8eVvzjSw>
+    <xme:aw4DZg1KQ5ECql0RVcLEfLvzMPqkT0UoJSzmiXZWFWQxizqpFYNOXQTm8xsjElXL4
+    vdnWzM4Xg_ss_x7zA>
+X-ME-Received: <xmr:aw4DZrqNis8bnnnO6laBW1Q98o0vNfDCKBQx9uXSUyw_rnj3P_TSercRp9Y>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddufedguddtlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhq
+    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
+    grthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveei
+    udffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedt
+    ieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfh
+    higihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:aw4DZlngrhFODrWi-nCoqnMlCBa0w0DFS9eLkDrtofiADq1znlRpfA>
+    <xmx:aw4DZj1AVeEVItFqJia_jZQj3JOGmqq1My61UDbxjylf_2vp3JleSA>
+    <xmx:aw4DZkvEJSiJjeHE-j6_w0kZm4Ahd2jIUro0dOQy8hHVrP9pYuvfAQ>
+    <xmx:aw4DZnWHMXgsXCTGPO_xJEuD6KUxulmGYt9-4C42-0FxJiOtuCYGlQ>
+    <xmx:aw4DZn50GFpZ1OGBPHG3IIf3TX-yq7T3r0iqZZdj9OHFKAmXc4zCfyZI3Pc>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 26 Mar 2024 14:05:30 -0400 (EDT)
+Date: Tue, 26 Mar 2024 11:04:57 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
+	Valentin Obst <kernel@valentinobst.de>,
+	Heghedus Razvan <heghedus.razvan@protonmail.com>,
+	Asahi Lina <lina@asahilina.net>
+Subject: Re: [PATCH 5/5] rust: time: Add Instant::elapsed() for monotonic
+ clocks
+Message-ID: <ZgMOSQFZl3Hwev0Z@boqun-archlinux>
+References: <20240324223339.971934-1-boqun.feng@gmail.com>
+ <20240324223339.971934-6-boqun.feng@gmail.com>
+ <kZmwObXVcyEJFVR3I05Nab0WdjcccDVARoOm6U9EmXhd89fxYRjvNmEAUZsueWTUlBlHp8jpU3i2YfgN9aWCLZameta0tPT_OgQdBOWUIko=@proton.me>
+ <ZgMNVNOjoLH4S4Fb@boqun-archlinux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 26 Mar 2024 19:04:34 +0100
-Message-ID: <CANiq72mbsAYmR_dRPpQQ=9-NWhTtp0TWiOz0v=V-0AvwYbWw4A@mail.gmail.com>
-Subject: drivers/gpu/drm/qxl/qxl_cmd.c:424:6: error: variable 'count' set but
- not used
-To: Dave Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	virtualization@lists.linux.dev, spice-devel@lists.freedesktop.org, 
-	dri-devel <dri-devel@lists.freedesktop.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZgMNVNOjoLH4S4Fb@boqun-archlinux>
 
-Hi,
+On Tue, Mar 26, 2024 at 11:00:52AM -0700, Boqun Feng wrote:
+[...]
+> > 
+> > Now that I thought a bit more about the design, I think allowing
+> > negative durations is a bad idea.
+> > Do you disagree?
+> > 
+> 
+> So yes, I don't think allowing negative duration is really good design.
+> But as I mentioned in the cover letter, I hope to support cases where:
+> 
+> 	d = ts2 - ts1;
+> 	ts = ts3 + d;
+> 
+> 	(where ts1, ts2, ts3 is Instant, and d is of course Duration)
+> 
+> without any branch instruction in the asm code. It's useful in the case
 
-In today's next, I got:
+To be accurate, the "ts = ts3 + d" can have (and should have) a branch
+to check overflows (and reset to KTIME_MAX if so), but that's the only
+branch.
 
-    drivers/gpu/drm/qxl/qxl_cmd.c:424:6: error: variable 'count' set
-but not used [-Werror,-Wunused-but-set-variable]
+Regards,
+Boqun
 
-`count` seems to be there since commit f64122c1f6ad ("drm: add new QXL
-driver. (v1.4)").
-
-Untested diff below -- if you want a formal patch, please let me know.
-
-Cheers,
-Miguel
-
-diff --git a/drivers/gpu/drm/qxl/qxl_cmd.c b/drivers/gpu/drm/qxl/qxl_cmd.c
-index 281edab518cd..d6ea01f3797b 100644
---- a/drivers/gpu/drm/qxl/qxl_cmd.c
-+++ b/drivers/gpu/drm/qxl/qxl_cmd.c
-@@ -421,7 +421,6 @@ int qxl_surface_id_alloc(struct qxl_device *qdev,
- {
-        uint32_t handle;
-        int idr_ret;
--       int count = 0;
- again:
-        idr_preload(GFP_ATOMIC);
-        spin_lock(&qdev->surf_id_idr_lock);
-@@ -433,7 +432,6 @@ int qxl_surface_id_alloc(struct qxl_device *qdev,
-        handle = idr_ret;
-
-        if (handle >= qdev->rom->n_surfaces) {
--               count++;
-                spin_lock(&qdev->surf_id_idr_lock);
-                idr_remove(&qdev->surf_id_idr, handle);
-                spin_unlock(&qdev->surf_id_idr_lock);
+> where ts1 is a old time base, and ts3 is the new one, and you want to
+> "remain" the delta between ts2 and t1 and apply that on ts3. To me there
+> are three options to achieve that: 1) allow negative durations (this
+> also mirrors what `ktime_t` represents for timedelta AKAIU), 2) have
+> a timedelta type that differs from Duration, and it can be negative, 3)
+> provide a function to do the above calculation for `Instant`. I choose
+> the first one because it's quick and simple (also easy to map to
+> `ktime_t`). But I don't have my own preference on these three options.
+> 
+> Regards,
+> Boqun
+> 
+> > If there is a case where you have a non-monotonic clock, or you are not
+> > sure if two timestamps are in the correct relation, we could have a
+> > function that returns a `Option<Duration>` or `Result<Duration>`.
+> > 
+> > -- 
+> > Cheers,
+> > Benno
+> > 
+> > > +    /// ```
+> > > +    pub fn elapsed(&self) -> Duration {
+> > > +        T::now() - *self
+> > > +    }
+> > > +}
+> > > +
+> > >  /// Contains the various clock source types available to the kernel.
+> > >  pub mod clock {
+> > >      use super::*;
+> > > --
+> > > 2.44.0
+> > >
