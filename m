@@ -1,93 +1,162 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A8613DDAC
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 22:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB58D13F420;
+	Tue, 26 Mar 2024 22:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711492213; cv=none; b=sY+74aRKcoldQkqmmpxSY3JQjcYDvOksn+a5d87TPrHFUxJs8vKvY6VEB922dIHUKAldX6qSpMVkUc9NJm+IphEyaO5f12VPblwIISHqpH6mjBxtG1ekGt1rDhLcq546RYZj6rz2do0SOv0sr5hbqInPp0gRTpZuBt5Xu27SR3w=
+	t=1711492214; cv=none; b=dlauUB+i48V7VvvUsoA35XVO5LX67vTNwREjtNLkMgx2kTcq9lvSpc+FFAgplPI9OlHn1rL279DYMyJrFbppByRUIQ05MQ56301raic0NUHAkYa2dlX9qDhIXVIFxfcnN8j22qf4CwCvUgiEXPrwowNTwGuXnQoFGHBrJhXZfbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711492213; c=relaxed/simple;
-	bh=w8Czqi2K8AT/tstKpsl1KE3WkzNI7atVD4WaXXsX2aU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ptFvEgaNdRy6swWy+UpvNDOKVelQ43XhNie0hRVBDix+YUxq/qxE42mCAkHHnx7eWMh/ApCO2ql7EAtF/nh3jymax4UNKlGbhF5TjorMNpC7hYC7pDqWEu818ejK6eRsJYm1EUKlc9qc/8t+TwDKihWj/TfHaAWuub+EKLH/Cek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JTmHKClI; arc=none smtp.client-ip=209.85.221.52
+	s=arc-20240116; t=1711492214; c=relaxed/simple;
+	bh=ry/DihWBqFAS5czADTnqSvM71OrE0DpTnMruEEdq/64=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=SrDpOBolCZfh/3ctzh4f2sfJ52SD4jlvfG3ClF40sIfH7ln9sZVXOqDWnM+p8uoGAcS7TAchpTxJzUWzP/7eLonyNBQV0YG2spvdY4G8P6W5K2T3VCms8ofvIGJVRFbpL/2KtKvVX9bUGT3as8o560malty8QGbJzrkmZqJkS5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CagB35W+; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JTmHKClI"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-33ecb04e018so4278907f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:30:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CagB35W+"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-33ed7ef0ae8so4319103f8f.0;
+        Tue, 26 Mar 2024 15:30:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711492210; x=1712097010; darn=vger.kernel.org;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=79Q4JSiG520z9H9GgKa1sOqwXXSclwi98WKQxVVkT0M=;
-        b=JTmHKClIKmTH/Gc0YI5B0VZfPin3ttzbdShwh+e9/pS1AZdf3cQPJrCBRypDEHiAip
-         wiPNqrMae9B3D+TxmaYrov0FjRPujWA1K1j3CwzPJseiDp8+nPrepguUCfcymxsQJtP9
-         w1IP2YFkcx9OVEV+iJBkU94OQUyAjCwnGqFl2ssCW1+YmylwRNJ6Io+3xxzw2ZElFonO
-         rHykHMktb3MY/aQne0BsKQ6QgqvmNe2APHsmm2Jr7esuSig6+bJJtuFyLnzAxka6gYvw
-         lnWQFhXRDa3Eeqn84IMwe7HlDrE/FtIRwqKqBByZHHv21KE1ssqzbKbeQg1Yk+rHSKlM
-         jZGw==
+        d=gmail.com; s=20230601; t=1711492211; x=1712097011; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lIIuyjYgKvlbHZWyIDIL4+6J6/vl+xy082AgaZCuG00=;
+        b=CagB35W+j0YsYHrAkY6GNr4dmrGyUmbxTZPnJ5uJTFXvraUfv5tqZKxWgDr1O4lGI3
+         N5g5Jk1fZ1iBhP8uykTzittPIJ+MhBnOmCD9wA52LKhp4gpGEJ+K2kPVxH81dODcCaJh
+         FbDsd1CnkaZsAeMtQ/gzJl+fUmmkxQxM5tN3g/oOH+yKa2R0yOXOsOxRjvZnpdVdIeWr
+         BgbDSVc6rMnlGaluzVfRDwRoa6zsWT1Rp0ZL10Z3Qnk7vICAZUPNWO3ROJ0sjT9mzpJl
+         TqHyMGugRDL/Hapc/CMQo8JEptlz/kiljZGiYv2JqqQIv+nyjNXsUnX/AU94n5YjGtF0
+         aoDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711492210; x=1712097010;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=79Q4JSiG520z9H9GgKa1sOqwXXSclwi98WKQxVVkT0M=;
-        b=Queis9UbtHEqibe6hnMVHVCd4tJQdOfXzxXSuVSgmAZxbKPzP1NWWiSRsd3KK1TlYW
-         E55y9r1FRF232HJU2lpkymG63MKQtFM/u1+0YzD2kvs/Qv9ZbNG7e214KvcxkihYsfYT
-         f96GysuqzqPbHHbOufj/9cT3mikB4PmCLhIhx2LzxagLqCKsgrmWaNQ/+4hEKMGSrdX3
-         0wqN/dQJmzWAKLHV6Y9/J2CoHLa3qoAZ15jqljsYGbgqBOLz+Jurm+FUyg5CdkuhrfLy
-         U5y6xg1NLLije881fZk5ZFSHa9C0zUMcX865gjywKVQ3e5TDnrtc8HI0Io0CgRCTOhdZ
-         5Kzw==
-X-Forwarded-Encrypted: i=1; AJvYcCXk2C///uAQFe23Fg+Q04AM1rZIIfPkKVRxUhKnrTsK1gDiUPs0FMo9OgiizMWSQG9iWJLqUggoZUDYFaSyrgsHPctCFh1lxSTsQldh
-X-Gm-Message-State: AOJu0YzUYnKGnpt9zNZ3CzMYdMx6p7ItatUMabB3oHpTjRqGpYtNHK29
-	GMX+vv2AUy+325qaF99qM4JDIByCvaNioYQpAqjPLx3uMnBV1oWSkH6xW7u6g0RAxpLC
-X-Google-Smtp-Source: AGHT+IH0zSgzCJUjVH92vO/QU4aWl7q+QMkDuJzT8hNDUaeajUA4XPo0MJSogLhPYHSfb6174eXpOg==
-X-Received: by 2002:a05:6000:5:b0:33e:c389:69ff with SMTP id h5-20020a056000000500b0033ec38969ffmr502235wrx.68.1711492209958;
-        Tue, 26 Mar 2024 15:30:09 -0700 (PDT)
-Received: from localhost (54-240-197-231.amazon.com. [54.240.197.231])
-        by smtp.gmail.com with ESMTPSA id h18-20020a5d4312000000b00341bdd87fcasm11049415wrq.103.2024.03.26.15.30.09
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2024 15:30:09 -0700 (PDT)
-From: Puranjay Mohan <puranjay12@gmail.com>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Jisheng Zhang <jszhang@kernel.org>,
- =?utf-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@kernel.org>, Pu Lehui <pulehui@huawei.com>, Daniel Borkmann
- <daniel@iogearbox.net>, Zong Li <zong.li@sifive.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: Re: [PATCH 0/2] ftrace fixes
-In-Reply-To: <20240326203017.310422-1-alexghiti@rivosinc.com>
-References: <20240326203017.310422-1-alexghiti@rivosinc.com>
-Date: Tue, 26 Mar 2024 22:30:07 +0000
-Message-ID: <mb61psf0cvd74.fsf@gmail.com>
+        d=1e100.net; s=20230601; t=1711492211; x=1712097011;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lIIuyjYgKvlbHZWyIDIL4+6J6/vl+xy082AgaZCuG00=;
+        b=iasTWao2HbLE9YZW06KbbiOPKJuz+vdCte9T2yxEGa3ZgO8fkQWGkAaAxiHZPXtx/K
+         UYUN0Yyyn5ckN5KO5BlrBW8iLRuLzkftlpmiAjOB9Y3VVQwPAE6tu0hg6uBB3AMXRULv
+         Lld7vsf2GqiJZlBRAHNAdZzn+A6HWTfnp2o7ywipWDEZXl0tEhraiHsGtqKZlC15gObA
+         CCIzNBZGaSjoy1DDS/YGwhcGpf8RF6/SJ9i9RAWaJvVRQ5JCH/AektaTe0h3iGDg8DFL
+         J5gRdPVkQ8B0XENF41MtiG8SoYOsRYsThedKNGp8FC3xGix9S245pTDlvOzBB80qXv27
+         tMOg==
+X-Forwarded-Encrypted: i=1; AJvYcCU8U87Vl476AhYWaRuYM1PKlTTEjzBd/aiUo6I1O2eeOmrzzf57dg7iEyCuHYC/uFsSA/EZffY+0rQ44BdPs7wM7YW9QJBUlhzzQx4TwyM2boYZV9pu+M4TgjyWkzCiuoPT9Gwt/ctiVrKTQDo5V7MyJNT45wJqlKofhdBdPojWqEwAbrg=
+X-Gm-Message-State: AOJu0Ywoic0Vq/FWKHBoNxZfzxNt7MeLUHxW07gVFDDZ1WFggzd0u6Jm
+	Qt5DwNSLnWyP2woqdERZr36lt0o8xPtx23XmXEGP3+vL378fuYZ8
+X-Google-Smtp-Source: AGHT+IF6MheTIv2ZJKp1Ji444fGpvCoXRwse0B6F+l4zy5HfHc9jBwkXEVn9+727Bjia8vH/z02VDA==
+X-Received: by 2002:a5d:4b81:0:b0:33e:bfb8:7320 with SMTP id b1-20020a5d4b81000000b0033ebfb87320mr9288720wrt.7.1711492211096;
+        Tue, 26 Mar 2024 15:30:11 -0700 (PDT)
+Received: from prasmi.home ([2a00:23c8:2500:a01:90ec:252a:cdf5:54e9])
+        by smtp.gmail.com with ESMTPSA id bs20-20020a056000071400b00341de138a2esm600647wrb.94.2024.03.26.15.30.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 15:30:10 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [RFC PATCH 10/13] pinctrl: renesas: pinctrl-rzg2l: Add function pointers for reading/writing OEN register
+Date: Tue, 26 Mar 2024 22:28:41 +0000
+Message-Id: <20240326222844.1422948-11-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240326222844.1422948-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20240326222844.1422948-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Alexandre Ghiti <alexghiti@rivosinc.com> writes:
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-> Both were reported recently as there are efforts ongoing to
-> reimplement ftrace on riscv and both are independent of this rework,
-> so here they are.
->
-> Alexandre Ghiti (2):
->   riscv: Fix warning by declaring arch_cpu_idle() as noinstr
->   riscv: Disable preemption when using patch_map()
->
+This patch introduces function pointers, read_oen() and write_oen(), in the
+struct rzg2l_pinctrl_data to facilitate reading and writing to the PFC_OEN
+register. On the RZ/V2H SoC, unlocking the PWPR.REGWE_B bit before writing
+to the PFC_OEN register is necessary, and the PFC_OEN register has more
+bits compared to the RZ/G2L family. To handle these differences between
+RZ/G2L and RZ/V2H and to reuse the existing code for RZ/V2H, these function
+pointers are introduced.
 
-Thanks for this.
+Additionally, this patch populates these function pointers with appropriate
+data for existing SoCs.
 
-Acked-by: Puranjay Mohan <puranjay12@gmail.com>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-for both patches.
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+index 3de97d5e198a..9bc110b00cbb 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+@@ -261,6 +261,8 @@ struct rzg2l_pinctrl_data {
+ 	void (*set_pfc_mode)(struct rzg2l_pinctrl *pctrl, u8 pin, u8 off, u8 func);
+ 	void (*pm_set_pfc)(struct rzg2l_pinctrl *pctrl);
+ 	void (*pmc_writeb)(struct rzg2l_pinctrl *pctrl, u8 val, void __iomem *addr);
++	u32 (*read_oen)(struct rzg2l_pinctrl *pctrl, u32 caps, u32 offset, u8 pin);
++	int (*write_oen)(struct rzg2l_pinctrl *pctrl, u32 caps, u32 offset, u8 pin, u8 oen);
+ };
+ 
+ /**
+@@ -1120,7 +1122,7 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
+ 		break;
+ 
+ 	case PIN_CONFIG_OUTPUT_ENABLE:
+-		arg = rzg2l_read_oen(pctrl, cfg, _pin, bit);
++		arg = pctrl->data->read_oen(pctrl, cfg, _pin, bit);
+ 		if (!arg)
+ 			return -EINVAL;
+ 		break;
+@@ -1228,7 +1230,7 @@ static int rzg2l_pinctrl_pinconf_set(struct pinctrl_dev *pctldev,
+ 
+ 		case PIN_CONFIG_OUTPUT_ENABLE:
+ 			arg = pinconf_to_config_argument(_configs[i]);
+-			ret = rzg2l_write_oen(pctrl, cfg, _pin, bit, !!arg);
++			ret = pctrl->data->write_oen(pctrl, cfg, _pin, bit, !!arg);
+ 			if (ret)
+ 				return ret;
+ 			break;
+@@ -2685,6 +2687,8 @@ static struct rzg2l_pinctrl_data r9a07g043_data = {
+ 	.set_pfc_mode = &rzg2l_pinctrl_set_pfc_mode,
+ 	.pm_set_pfc = &rzg2l_pinctrl_pm_setup_pfc,
+ 	.pmc_writeb = &rzg2l_pmc_writeb,
++	.read_oen = &rzg2l_read_oen,
++	.write_oen = &rzg2l_write_oen,
+ };
+ 
+ static struct rzg2l_pinctrl_data r9a07g044_data = {
+@@ -2699,6 +2703,8 @@ static struct rzg2l_pinctrl_data r9a07g044_data = {
+ 	.set_pfc_mode = &rzg2l_pinctrl_set_pfc_mode,
+ 	.pm_set_pfc = &rzg2l_pinctrl_pm_setup_pfc,
+ 	.pmc_writeb = &rzg2l_pmc_writeb,
++	.read_oen = &rzg2l_read_oen,
++	.write_oen = &rzg2l_write_oen,
+ };
+ 
+ static struct rzg2l_pinctrl_data r9a08g045_data = {
+@@ -2712,6 +2718,8 @@ static struct rzg2l_pinctrl_data r9a08g045_data = {
+ 	.set_pfc_mode = &rzg2l_pinctrl_set_pfc_mode,
+ 	.pm_set_pfc = &rzg2l_pinctrl_pm_setup_pfc,
+ 	.pmc_writeb = &rzg2l_pmc_writeb,
++	.read_oen = &rzg2l_read_oen,
++	.write_oen = &rzg2l_write_oen,
+ };
+ 
+ static const struct of_device_id rzg2l_pinctrl_of_table[] = {
+-- 
+2.34.1
 
-Puranjay
