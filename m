@@ -1,93 +1,149 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6424127B56
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 14:44:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746A313790B;
+	Wed, 27 Mar 2024 14:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711550664; cv=none; b=RdqxiqnCqNtPbio8iS6XqTUuoYVKSBBVqt9T761shTKxvdZNryq4AXFndR+w1fhkfoPCDRrw1HXP6r7uKGDrzRKhYeTtfuf5ZwRT+HNqHNOYvcK+xG788wRqTLcVVOoYnztdQMmdJsvyfdSBEJPeBf/gnfcUW66HptkrAOg1zPQ=
+	t=1711550679; cv=none; b=cn/hcHkdh5wc55iITmiodCFijCa7SesZRSDLdNPW8MNp+auiR8HW1Vgm6y97e/a7TUwRKdfnSym79W9Muml26cTMOz89cXMQJJYh2o2H1BWHrAqU0mBOEIeSNJwTltAJgbQXiF1ncb/8WUHLixc398gj4EWJIzsQE2b6BIjDBfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711550664; c=relaxed/simple;
-	bh=T5JrzvQt69iNjL4/EANWsxT3z20iGSHRmfedO6EBr8E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kfIt91FPzghstPtKh5vjSZtFXHh94PretBp1y1ZacMMn0nKKAlEz90sDFBXKv88ZHCBtsSaj0Gj1Dewmbod8UHAqNibmyrGm0d0hZQo1SH9VI4oSFUQyKfv8Qgj72xo2KMvv9aeowyrPrKRTC5hPLCe5D7HXhjASp0ktOLl2N5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HXboqwKN; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711550679; c=relaxed/simple;
+	bh=YSLGb1GXTxnIIfhyIvC9GwAUZFGWgRDDFdTmlm4yRqw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gmwhrf900JhTTQN1zSkGKjQRNbgZQabbTMWBm7xvYb2pLemNXTe7ppt4PmTtXuhAWDoakSAGlZB5g3swHlDiezNxFpnMG9sr6N9UjWCeV3cui9n26RuHm3WNJRSB5GthLIHajxb5Gzbn1+cbg5w02i7ylHw5LoSFtjs4VWxsGos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HaYZUqiJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HXboqwKN"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6e8f51d0bf0so5496208b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 07:44:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711550663; x=1712155463; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7q2C6v07RAOGYu2hu4GY7euXWF8ETU7ffxo3I9AlpmE=;
-        b=HXboqwKNPllksNoXo++jpdJAzBJLajKwaeeBYQjNnA7FgahulwVVS9lZrpINGTr1pa
-         L3qkuaRExDpEx3ylME/ggc/prcvMH1Btayrqd8OcApJM6jhZj3o/bs3dwTEVy4GInmqh
-         VayOWabSsUfjOHw7NU+v32m+DwT0rjgNJtQIt3SVoqWTadbX4NKZ6b0fkFFvUl5ySkAA
-         kL6PtXeFNrxBdxX0lbZWFJ2zogFPMIPTKSv/b+NDIuBcSc6QK13ZlKf2TBcjjsh1EmiK
-         aRSPDdc4eiFKGUrq/jg7d6bBcNVVMeh9Vada/RfgkaqMZ+DK/IvWXlGQoAUeQZ47XhPz
-         RZew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711550663; x=1712155463;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7q2C6v07RAOGYu2hu4GY7euXWF8ETU7ffxo3I9AlpmE=;
-        b=vn7RkxNB3Px65zKhnTR+XjZQuKqhGd//Gq2pYnGrQV4h7lvB2V6SvPpOQCOhrusoJk
-         zE8MTbAiDO5iKx/ydtPFOg7nbOiceHD4LMQxRsX6hI8Wu+DBiE2C5/V6/Vc2VPWj4TQF
-         3Sxm+JqCjjZDaGxnVaDiZ7Lq2gS/v6YolSxLsikrAlDHu/QFxOY43xzRAtP3dtE2eFX5
-         BZ52c93CH8awmhcUD0YYrJlDjpCe244gQ4gnTX5fcA6rvkJ8yFFgFrpuqdQd7YENWV1F
-         1qCJeN1IOZ4GJyePuPrfiwu2U5NiYEm4aSgdeou8SdNagyKrMUPWv+4cZ8DKcUoiKDub
-         pkoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW/Hc2rC7yZn0XT3BMQGfhRzLyeo2XvpjD+wk+AXdWm4S6YY7nD7FADIWuPyNk88J+PoBxsmA+3biWwo2mvCR9POYBLrR/ypb0/tteK
-X-Gm-Message-State: AOJu0YxxpJx2eya5B63rd7OQ0lgs9tFL/cMJSlGzTyipFXn8SQrOVFBb
-	es1nwJqAkRCTBzrwiQ/oaNZb+ZYZlan8Mo0JJlO7zTQ+uoCoRLakUTpJAUFVvJZvCYzu6+EIKw5
-	+9Rbu1Z18qLH1rerXToNxauWD9J8=
-X-Google-Smtp-Source: AGHT+IE1qaXoQhFdrtV7QT8MND6FcMTo2zAxmPDuHTiYsb86YGvn9Hfou3VfjATjJrHui3jRqwzdKYDjQpt/iPCMqrw=
-X-Received: by 2002:a05:6a20:7a9a:b0:1a3:69e9:63a9 with SMTP id
- u26-20020a056a207a9a00b001a369e963a9mr56558pzh.18.1711550663028; Wed, 27 Mar
- 2024 07:44:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HaYZUqiJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 463CDC433C7;
+	Wed, 27 Mar 2024 14:44:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711550679;
+	bh=YSLGb1GXTxnIIfhyIvC9GwAUZFGWgRDDFdTmlm4yRqw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HaYZUqiJa07VEuOX2hUbqIVTlZ8o22sLnSNBmDvYGZReqgO3lSbCQK9Or5zp1KJbR
+	 JvGvc2ZghpWxbzW5dcHWLkdtr9WPLtyBcYNZCtzYkZ0aehioYwzIa2QQF4Onnok8FB
+	 Wc4M/AdTqe1cmI5ouLQdACNeTQWP2vIBDKBtvzYFRBk3qaqst4TyhFgm3+FAsIAsGT
+	 mP0xgnOjCX2lX877lT3Jl7cBjQZe+yHaVUg+5xWuYNjiWEBCoNJyKr1tugz+G9vCSC
+	 fo6IjfObk8UjT+1n6kvF1dQ0obJmvxfW9gBCQkbrMpth/5YtLWt0cnhdydB5wLkqq1
+	 8N6oSbYrk2HYQ==
+Date: Wed, 27 Mar 2024 14:44:31 +0000
+From: Simon Horman <horms@kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Kees Cook <keescook@chromium.org>,
+	Daniel Diaz <daniel.diaz@linaro.org>,
+	David Gow <davidgow@google.com>,
+	Arthur Grillo <arthurgrillo@riseup.net>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org,
+	Linux Kernel Functional Testing <lkft@linaro.org>
+Subject: Re: [PATCH v2 12/14] sh: Add support for suppressing warning
+ backtraces
+Message-ID: <20240327144431.GL403975@kernel.org>
+References: <20240325175248.1499046-1-linux@roeck-us.net>
+ <20240325175248.1499046-13-linux@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CANiq72mbsAYmR_dRPpQQ=9-NWhTtp0TWiOz0v=V-0AvwYbWw4A@mail.gmail.com>
- <20240327-magnetic-nonchalant-hare-bbe8d2@houat>
-In-Reply-To: <20240327-magnetic-nonchalant-hare-bbe8d2@houat>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 27 Mar 2024 15:43:55 +0100
-Message-ID: <CANiq72kqqQfUxLkHJYqeBAhpc6YcX7bfR96gmmbF=j8hEOykqw@mail.gmail.com>
-Subject: Re: drivers/gpu/drm/qxl/qxl_cmd.c:424:6: error: variable 'count' set
- but not used
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Dave Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, virtualization@lists.linux.dev, 
-	spice-devel@lists.freedesktop.org, 
-	dri-devel <dri-devel@lists.freedesktop.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240325175248.1499046-13-linux@roeck-us.net>
 
-On Wed, Mar 27, 2024 at 8:59=E2=80=AFAM Maxime Ripard <mripard@kernel.org> =
-wrote:
->
-> It looks reasonable to me, can you send a formal patch?
+On Mon, Mar 25, 2024 at 10:52:46AM -0700, Guenter Roeck wrote:
+> Add name of functions triggering warning backtraces to the __bug_table
+> object section to enable support for suppressing WARNING backtraces.
+> 
+> To limit image size impact, the pointer to the function name is only added
+> to the __bug_table section if both CONFIG_KUNIT_SUPPRESS_BACKTRACE and
+> CONFIG_DEBUG_BUGVERBOSE are enabled. Otherwise, the __func__ assembly
+> parameter is replaced with a (dummy) NULL parameter to avoid an image size
+> increase due to unused __func__ entries (this is necessary because __func__
+> is not a define but a virtual variable).
+> 
+> Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Acked-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+> - Rebased to v6.9-rc1
+> - Added Tested-by:, Acked-by:, and Reviewed-by: tags
+> - Introduced KUNIT_SUPPRESS_BACKTRACE configuration option
+> 
+>  arch/sh/include/asm/bug.h | 26 ++++++++++++++++++++++----
+>  1 file changed, 22 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/sh/include/asm/bug.h b/arch/sh/include/asm/bug.h
+> index 05a485c4fabc..470ce6567d20 100644
+> --- a/arch/sh/include/asm/bug.h
+> +++ b/arch/sh/include/asm/bug.h
+> @@ -24,21 +24,36 @@
+>   * The offending file and line are encoded in the __bug_table section.
+>   */
+>  #ifdef CONFIG_DEBUG_BUGVERBOSE
+> +
+> +#ifdef CONFIG_KUNIT_SUPPRESS_BACKTRACE
+> +# define HAVE_BUG_FUNCTION
+> +# define __BUG_FUNC_PTR	"\t.long %O2\n"
+> +#else
+> +# define __BUG_FUNC_PTR
+> +#endif /* CONFIG_KUNIT_SUPPRESS_BACKTRACE */
+> +
 
-Will do -- I found another one when running the CI with the above one fixed=
-:
+Hi Guenter,
 
-    drivers/gpu/drm/qxl/qxl_ioctl.c:148:14: error: variable
-'num_relocs' set but not used [-Werror,-Wunused-but-set-variable]
+a minor nit from my side: this change results in a Kernel doc warning.
 
-I will send you one for that too then.
+     .../bug.h:29: warning: expecting prototype for _EMIT_BUG_ENTRY(). Prototype was for HAVE_BUG_FUNCTION() instead
 
-Thanks!
+Perhaps either the new code should be placed above the Kernel doc,
+or scripts/kernel-doc should be enhanced?
 
-Cheers,
-Miguel
+>  #define _EMIT_BUG_ENTRY				\
+>  	"\t.pushsection __bug_table,\"aw\"\n"	\
+>  	"2:\t.long 1b, %O1\n"			\
+> -	"\t.short %O2, %O3\n"			\
+> -	"\t.org 2b+%O4\n"			\
+> +	__BUG_FUNC_PTR				\
+> +	"\t.short %O3, %O4\n"			\
+> +	"\t.org 2b+%O5\n"			\
+>  	"\t.popsection\n"
+>  #else
+>  #define _EMIT_BUG_ENTRY				\
+>  	"\t.pushsection __bug_table,\"aw\"\n"	\
+>  	"2:\t.long 1b\n"			\
+> -	"\t.short %O3\n"			\
+> -	"\t.org 2b+%O4\n"			\
+> +	"\t.short %O4\n"			\
+> +	"\t.org 2b+%O5\n"			\
+>  	"\t.popsection\n"
+>  #endif
+>  
+> +#ifdef HAVE_BUG_FUNCTION
+> +# define __BUG_FUNC	__func__
+> +#else
+> +# define __BUG_FUNC	NULL
+> +#endif
+> +
+>  #define BUG()						\
+>  do {							\
+>  	__asm__ __volatile__ (				\
+
+...
