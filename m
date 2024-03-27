@@ -1,75 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF4D14D70F;
-	Wed, 27 Mar 2024 17:56:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8280E12EBEF;
+	Wed, 27 Mar 2024 17:56:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711562174; cv=none; b=Rr6sgYiw5wiMMB5cfxejC5v3uj/O5ybm3DFwQp15zPnAC1GmZHOVqJev+xDhxVCsMdJU5OwVCJ0tYTbsma9VEXYRoAyqLCJxxuWexvTgvnwJRgZvvLST16svbLFNVu4jfHcR+zkVLHFhA63/Hc75QGuYShHnJC3prw1El13kvEw=
+	t=1711562208; cv=none; b=aWc5xVEThrHR6YEA7D2HBehsU9yiiWMvLsw+FxWn9ft65Zc/aE3empMP+xiAEjRbgEnuBEOG2UkT/MZBVo60P6sb6U26QGgyg1COJLVmg9o1A/e/GZsGA0l05gBgWgA0hioLLJe4l1bbIbJ6TRfmsSufJ+Xu1sWZyHkGa8LraQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711562174; c=relaxed/simple;
-	bh=CARL3VpskHXs1C8+zISBJy2R8u90IIDk7xSKp4/PB1Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gZo9Jdtkg5oh40RgGtct0IwkH5GUQvtVhK5XZcDd3ONvXpDKHLVvrtd6GIjvLjDPXE81apRFtlftPoooiKjZcRpWf/7/UbqoWcsj9FmXifpKNRnvkvKDu1OrFR7MZCu+BP62bWbqAXJqxAB8hJVRDQBX8Ov4SysZT7OnsXNXsZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gXRuPs6t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711562208; c=relaxed/simple;
+	bh=pKuISH9h1n83BoSbEk6oIRQvBztb2uVAQCVjoqJHhUw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t7otQ+NIqLMqs4Zd24SAqFDUARbPXr1C9ImdrSIUnome0glmVym+q7jgIQyg4jBkILxO131zD20C3zD97liT9viM+yeI8uxq0YCW3CrJBpRzs6mN1AjNhVM4dLj04RsnLVRoxeW/Lx0v148yi/T3NaAvagYoRXC4iRUUtrKX6gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJLaRwV+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gXRuPs6t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25EE3C433F1;
-	Wed, 27 Mar 2024 17:56:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJLaRwV+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1B8DC433C7;
+	Wed, 27 Mar 2024 17:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711562174;
-	bh=CARL3VpskHXs1C8+zISBJy2R8u90IIDk7xSKp4/PB1Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gXRuPs6t0bSxHm22O6CNo4Kkp5D2JX3AjcxLSZ3kXyhEyi2UIsEmVFRTOhvpPRJ/7
-	 fMifnYGT6ixKL6DBXsG0U2PJ4Hj/UO2OOa6DPA/PcFsWKaBhGl4HhWXjcG+X7IoWiy
-	 yug3xt4/SqtnFsyzeJ3wM20n2mmj3ShbaIXs56YW/VaunkK2S6kfEsIpfgnvPI11zf
-	 cgDJm1UrhuC0xNgmZeSTTXCEGUKKMjMOhHY4B/Hjc6muQYzGM8/xNViTMW/aoikhZX
-	 liRX9UQur/rgHgHbECqiz232O331J34x5ppTuEgZ2oJmQq+0LNCQV+24WViVoJdyCm
-	 9ySP9hnevpMLg==
-Date: Wed, 27 Mar 2024 12:56:12 -0500
-From: Rob Herring <robh@kernel.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	linux-riscv@lists.infradead.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Jamie Gibbons <jamie.gibbons@microchip.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Valentina Fernandez <valentina.fernandezalanis@microchip.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Subject: Re: [PATCH v1 1/5] dt-bindings: riscv: microchip: document
- beaglev-fire
-Message-ID: <171156217116.3705201.6521563645353809470.robh@kernel.org>
-References: <20240327-parkway-dodgy-f0fe1fa20892@spud>
- <20240327-camper-brownnose-6392076d8699@spud>
+	s=k20201202; t=1711562208;
+	bh=pKuISH9h1n83BoSbEk6oIRQvBztb2uVAQCVjoqJHhUw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=oJLaRwV+CJsu2Yrg5VZootPUJY7AFWOEkOAzEDE2SL1OA52sYTmuQOHAfLhSaqRt6
+	 yusGg0Ou/c7wyIYWgoBR0mpsEeu5v7DZTINWbk1K7I6jEkagUTx4228++Eh9q6rlcS
+	 YHoNiJlhcF/ukHA0WGak2jy44J5O7zCArnXPeEW2Jzf+rdzuKHS2+Twe433TrbNtzg
+	 q8mYAkpcY0uT2EBAo1wtbCpr/c934Up7uVIUe6WoWgIDplJbm3j/w4JueLmA+FXTnu
+	 xWWYXh6H3An2kqJIVP6QNYrwHMs9T2MYZ4Tq2VRXlCbO9IsT5oBhGg5OGUmjzZHthm
+	 X3aIhw7ejkFyQ==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: Dave Airlie <airlied@redhat.com>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Cc: David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Alon Levy <alevy@redhat.com>,
+	Frediano Ziglio <fziglio@redhat.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	virtualization@lists.linux.dev,
+	spice-devel@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] drm/qxl: remove unused `count` variable from `qxl_surface_id_alloc()`
+Date: Wed, 27 Mar 2024 18:55:55 +0100
+Message-ID: <20240327175556.233126-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240327-camper-brownnose-6392076d8699@spud>
+Content-Transfer-Encoding: 8bit
 
+Clang 14 in an (essentially) defconfig loongarch64 build for next-20240326
+reports [1]:
 
-On Wed, 27 Mar 2024 12:24:36 +0000, Conor Dooley wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
-> 
-> The BeagleV Fire is a BeagleBone Black form-factor board with a
-> PolarFire SoC.
-> 
-> Link: https://www.beagleboard.org/boards/beaglev-fire
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
->  Documentation/devicetree/bindings/riscv/microchip.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+    drivers/gpu/drm/qxl/qxl_cmd.c:424:6: error: variable 'count' set
+    but not used [-Werror,-Wunused-but-set-variable]
 
-Acked-by: Rob Herring <robh@kernel.org>
+The variable is already unused in the version that got into the tree.
 
+Thus remove the unused variable.
+
+Fixes: f64122c1f6ad ("drm: add new QXL driver. (v1.4)")
+Closes: https://lore.kernel.org/lkml/CANiq72mjc5t4n25SQvYSrOEhxxpXYPZ4pPzneSJHEnc3qApu2Q@mail.gmail.com/
+Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+---
+Given there is a loop going on here, it would be good to double-check whether
+this variable was supposed to be used for something useful or if it was just a
+remnant of a version previous to v1.4.
+
+ drivers/gpu/drm/qxl/qxl_cmd.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/qxl/qxl_cmd.c b/drivers/gpu/drm/qxl/qxl_cmd.c
+index 281edab518cd..d6ea01f3797b 100644
+--- a/drivers/gpu/drm/qxl/qxl_cmd.c
++++ b/drivers/gpu/drm/qxl/qxl_cmd.c
+@@ -421,7 +421,6 @@ int qxl_surface_id_alloc(struct qxl_device *qdev,
+ {
+ 	uint32_t handle;
+ 	int idr_ret;
+-	int count = 0;
+ again:
+ 	idr_preload(GFP_ATOMIC);
+ 	spin_lock(&qdev->surf_id_idr_lock);
+@@ -433,7 +432,6 @@ int qxl_surface_id_alloc(struct qxl_device *qdev,
+ 	handle = idr_ret;
+
+ 	if (handle >= qdev->rom->n_surfaces) {
+-		count++;
+ 		spin_lock(&qdev->surf_id_idr_lock);
+ 		idr_remove(&qdev->surf_id_idr, handle);
+ 		spin_unlock(&qdev->surf_id_idr_lock);
+
+base-commit: 26074e1be23143b2388cacb36166766c235feb7c
+--
+2.44.0
