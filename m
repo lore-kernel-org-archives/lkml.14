@@ -1,130 +1,207 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B4B3EA86
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 08:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C899D40849;
+	Wed, 27 Mar 2024 08:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711529635; cv=none; b=tQw5qgROOtZkOana7ehoiGK0uxwrmOJsyMXXaCBEG9oDo3T6SXDuaQ4ksZm063bcCfaw65qvfenBf7J2wlmSHViZxqCRw9zUBlA1ATTGvRmqPUDJKRVR0KEzqy0jRiv8fAaT9x6mCCJjOCWAIRkv3LyiXm/WrPwfwZ6eITaK/4g=
+	t=1711529635; cv=none; b=R4UgTZ3lcwzS6Bw5s7wwcXdpJCtUNTx4CFgyyZrJZLEbC4Wqv43BSvcZg9hBC1Qbmzu3nz6nA0e61AOZ4dLLaPSUdKiRTFd2ky/3VlqHhMCDHc2Y8qo8w2GbNY5taNzYxF8unWhVJRQk/GIhpS632o0G6GZKWE5OizOfOAD7cLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711529635; c=relaxed/simple;
-	bh=G+lQKyO8XYPtuMapTR34hMDUALueaAFeQ9enFHtzrQs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ke3b13gelYeXPxMbQeK36RUGYemmP7fryVNQ4dWd0mEJ5f5knW/E3Yz6jl8n6J0ExbTPXVW2XZe8cC6fyqj9B8AAiK7hdOgP6MSZd7CWY4RO3Ra1aATucH8nH0qDO3uUQzKOv5oq9zWZF8n6rwkXbxt32yoeg9Scd+xy5ir78rI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GpEcppkS; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=mEMpsvf/Lu9Dlvkkk/Qka3rYdQiTY2A48dn0KD6WLwI=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=d1fvikrLkQLJ/WbuoHi5raTQvhiVnjPdbH7Pzb+bSCx9LPTwzL8qMMZr8Ma/NDyUUOFw1pVcpCOzqSESDAkij6RputY7iIF/4o2vksqzLVWsmTMZkTCFYZI6Zb9w0WgXfNHKMLzgQ34DgV7MIMVk+8AetzV4qiPqzH5SUVHWLIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tl2/c4cz; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GpEcppkS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711529632;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EQayDiLeMZdAEU12a7XUqQdU0MXKYllLESqhbcKtdFY=;
-	b=GpEcppkSbyJfy7XRPxQOAfsdM/W4YH/DIfVDFrJ4CW1YyvLGQa0lFt71CE9kWedjMcPnJB
-	47qK7MgAYvQVKxynr49wotxwbrmKl+yScTzJRCrHe0DxHzgkW3qxSVtZ93I073Vj/ZNSxZ
-	O9+qQhUG1KQMwM05pkgqNL9rxVgb4SQ=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-679-Lpk-1W4GMAe_Ie7AhY_Wbw-1; Wed, 27 Mar 2024 04:53:49 -0400
-X-MC-Unique: Lpk-1W4GMAe_Ie7AhY_Wbw-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-40e435a606aso35053985e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 01:53:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tl2/c4cz"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e0f0398553so14861615ad.3;
+        Wed, 27 Mar 2024 01:53:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711529633; x=1712134433; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QZEbTSOw9EjuXuuOhzMwhOK0HhVADXjRmiePaMQf/CY=;
+        b=Tl2/c4czTvOoLPfdZIzFxIQ1bi11G3C7p7fv+Vv7AnXVjXr5opULz/A1e8g3TDnoV5
+         K1iooePHEwRugKpFkwsdRn+PN1qgnK9voZxlXZd32q2+iV0p6wOJrVQYux+q1jqff1qx
+         /qL36//STvQKPjnmdoVHtDRwoItqX8fkZdKtyEIORxMH8CqQy0B/XfKOvkT6XKtsM22A
+         e/5m85dv2ICzDoYaqBrWVgPrFcvZKIx4+DYogb19cZZrUIOedgmNdgnVE+h1NGwybxFs
+         oF4HLgoLggsUBky4QT+Lv4MXfMRHzQLJicNrkbt2LlvBQrUkV+jZYXVIRd50jKTG3t+0
+         rVDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711529627; x=1712134427;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EQayDiLeMZdAEU12a7XUqQdU0MXKYllLESqhbcKtdFY=;
-        b=ophglYL56UInTj0xhTJpXBDabNTgwVrPCNXEGuPCeHN9OXdz74vFVnjfOMj1HF/Hn/
-         T0UFjWIMBkCa4oxrjq7wiSdbYzBYeKjnxOmPE2EG2XN9g+dNvZnF1FzYk8kg4SonlEj1
-         g5NwNl1pt2OXvyZQkdcytH5HWGfu3jUAIAqnDJnK8xN9aNOcrPaypWAwiZv0lCmQEDh3
-         efIQVsPCPUQbHG5ZXt3ZRl9/QtMSXcmUJpcBD0/t+oTkJtYd8MDq/hbvpEHUHh+QppnL
-         HED84+5WlLciA+aL2V9iNn3P8fXjhFO/Wmiun48KOM6obP07fD8gSEenhAU9dKWWhHZK
-         KXxA==
-X-Forwarded-Encrypted: i=1; AJvYcCXEruen4sZlF3YfK9OWTLyiGjMa72DreBouO8HwknqM3FtwCF9Mih6sh0TX8e6pWT2591SYY+4gtLATfr9XXWm0CE8nHYXNMex/5ksO
-X-Gm-Message-State: AOJu0YymfvfD5wPSGV9JHNonOSD+5ZZ27WATifFNCFKi8MfKChI90GM5
-	RjklNlDiQSVswNrsidV6sCj+tTB7vFrvDk8O/zbJX7tA/4oYHfwV4IxwPW40R7OHgN8VcjTz9HJ
-	V5p9XhcuDFDgWK1vVODsogQhPYu/zyQhVwcgGBqhql47L1QuHT3PqLQToF5aEsQ==
-X-Received: by 2002:adf:f451:0:b0:33e:48f9:169d with SMTP id f17-20020adff451000000b0033e48f9169dmr501991wrp.31.1711529627013;
-        Wed, 27 Mar 2024 01:53:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEyYZsP9X3qxXI8cZXakmL7rjWFiYhk/YTocnXK2U91YBDzGTzDlmcuOk2/rHJDPaHGdtJnTA==
-X-Received: by 2002:adf:f451:0:b0:33e:48f9:169d with SMTP id f17-20020adff451000000b0033e48f9169dmr501974wrp.31.1711529626671;
-        Wed, 27 Mar 2024 01:53:46 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:c:37e0:ced3:55bd:f454:e722? ([2a01:e0a:c:37e0:ced3:55bd:f454:e722])
-        by smtp.gmail.com with ESMTPSA id bt17-20020a056000081100b00341b5cf0527sm4147245wrb.11.2024.03.27.01.53.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Mar 2024 01:53:46 -0700 (PDT)
-Message-ID: <c04ebd16-f0b0-45be-a831-fae8b50b7011@redhat.com>
-Date: Wed, 27 Mar 2024 09:53:45 +0100
+        d=1e100.net; s=20230601; t=1711529633; x=1712134433;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QZEbTSOw9EjuXuuOhzMwhOK0HhVADXjRmiePaMQf/CY=;
+        b=d0Xai2EF0QjKCC8osRwVQLjKkjHrQ4+l/0qjxXLIPKBGhNkXvk7S6apqhk+kalVnPt
+         V8z0FH15Hw1QG1SBJORut/sPhyNHXlDsbMnIN2iVzVETjsw4AHUTepo52AkOK4IL3cmh
+         f+Qu/cG/eaDhZIkD67J1HvM5NMzCZkQ820kiDOitosBocpMrCTL+z/0PSQ3/A6U4fHO8
+         uAh6s5Ge99ph+EZIQFJNSXSWpo0S/Ewt6oYSwSG3fzGeMw//MoPP49Bl+AEThMsGo37J
+         qaezi1tACqfPokvwEjdPg4PGpIFQPdAl8WIjC0nHlse5q5QLs76KN6n1vvukwaa1NGlL
+         U/CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWLGubckVlm+g6C/OXvEDXMgRSmV7BbhcUpU4jCSfNkaJUfynAy51ubMT4LNRDVYBGllrqUdddhH/QxrzkQbcvGsWm2IovWNF/M79LZWQzni1uJ3ftw6apLID077No53Pef1s226do1gdG/5kR2oDeDdBDEh3zO/RGo6ctZwc0EE3Gs0M1NWqek
+X-Gm-Message-State: AOJu0YxVR+z1nWWgMHTSp7E2fEmaFOpBv298V6Cx0oulXfDWKHA2VTmk
+	hIQ5rULOAMRDpvIm0+QGJNxUH8kBM825GTNwQMHrcp05meqmU5bh
+X-Google-Smtp-Source: AGHT+IFlw6rOiGuhTJ4vNythc7vqhRqSyiMQo9PeosfY33Phf1K75pTfq+88EaBWSjn9tJXb1tX3pQ==
+X-Received: by 2002:a17:902:c94a:b0:1e0:acb1:7977 with SMTP id i10-20020a170902c94a00b001e0acb17977mr785333pla.49.1711529633261;
+        Wed, 27 Mar 2024 01:53:53 -0700 (PDT)
+Received: from peter-bmc.dhcpserver.bu9bmc.local (2001-b400-e383-3566-013c-5a87-9abc-381e.emome-ip6.hinet.net. [2001:b400:e383:3566:13c:5a87:9abc:381e])
+        by smtp.gmail.com with ESMTPSA id h12-20020a170902eecc00b001e0501d3058sm8356848plb.63.2024.03.27.01.53.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Mar 2024 01:53:52 -0700 (PDT)
+From: Peter Yin <peteryin.openbmc@gmail.com>
+To: patrick@stwcx.xyz,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	linux-watchdog@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 4/4] drivers: watchdog: ast2500 and ast2600 support bootstatus
+Date: Wed, 27 Mar 2024 16:53:30 +0800
+Message-Id: <20240327085330.3281697-5-peteryin.openbmc@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240327085330.3281697-1-peteryin.openbmc@gmail.com>
+References: <20240327085330.3281697-1-peteryin.openbmc@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/ast: Fix soft lockup
-Content-Language: en-US, fr
-To: Jammy Huang <orbit.huang@gmail.com>, tzimmermann@suse.de,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, airlied@redhat.com,
- airlied@gmail.com, daniel@ffwll.ch
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- Jammy Huang <jammy_huang@aspeedtech.com>, stable@vger.kernel.org
-References: <20240325033515.814-1-jammy_huang@aspeedtech.com>
-From: Jocelyn Falempe <jfalempe@redhat.com>
-In-Reply-To: <20240325033515.814-1-jammy_huang@aspeedtech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Add WDIOF_EXTERN1 and WDIOF_CARDRESET bootstatus in ast2600
 
-Thanks for your patch.
-I'm wondering how you can trigger this infinite loop ?
+Regarding the AST2600 specification, the WDTn Timeout Status Register
+(WDT10) has bit 1 reserved. Bit 1 of the status register indicates
+on ast2500 if the boot was from the second boot source.
+It does not indicate that the most recent reset was triggered by
+the watchdog. The code should just be changed to set WDIOF_CARDRESET
+if bit 0 of the status register is set.
 
-Also this looks like a simple fix, that can be easily backported, so I'm 
-adding stable in Cc.
+Include SCU register to veriy WDIOF_EXTERN1 in ast2600 SCU74 or
+ast2500 SCU3C when bit1 is set.
 
-If Thomas has no objections, I can push it to drm-misc-fixes.
+Signed-off-by: Peter Yin <peteryin.openbmc@gmail.com>
+---
+ drivers/watchdog/aspeed_wdt.c | 60 +++++++++++++++++++++++++----------
+ 1 file changed, 44 insertions(+), 16 deletions(-)
 
-Reviewed-by: Jocelyn Falempe <jfalempe@redhat.com>
-
+diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
+index b4773a6aaf8c..29e9afdee619 100644
+--- a/drivers/watchdog/aspeed_wdt.c
++++ b/drivers/watchdog/aspeed_wdt.c
+@@ -11,10 +11,12 @@
+ #include <linux/io.h>
+ #include <linux/kernel.h>
+ #include <linux/kstrtox.h>
++#include <linux/mfd/syscon.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_irq.h>
+ #include <linux/platform_device.h>
++#include <linux/regmap.h>
+ #include <linux/watchdog.h>
+ 
+ static bool nowayout = WATCHDOG_NOWAYOUT;
+@@ -65,23 +67,32 @@ MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
+ #define WDT_RELOAD_VALUE	0x04
+ #define WDT_RESTART		0x08
+ #define WDT_CTRL		0x0C
+-#define   WDT_CTRL_BOOT_SECONDARY	BIT(7)
+-#define   WDT_CTRL_RESET_MODE_SOC	(0x00 << 5)
+-#define   WDT_CTRL_RESET_MODE_FULL_CHIP	(0x01 << 5)
+-#define   WDT_CTRL_RESET_MODE_ARM_CPU	(0x10 << 5)
+-#define   WDT_CTRL_1MHZ_CLK		BIT(4)
+-#define   WDT_CTRL_WDT_EXT		BIT(3)
+-#define   WDT_CTRL_WDT_INTR		BIT(2)
+-#define   WDT_CTRL_RESET_SYSTEM		BIT(1)
+-#define   WDT_CTRL_ENABLE		BIT(0)
++#define WDT_CTRL_BOOT_SECONDARY	BIT(7)
++#define WDT_CTRL_RESET_MODE_SOC	(0x00 << 5)
++#define WDT_CTRL_RESET_MODE_FULL_CHIP	(0x01 << 5)
++#define WDT_CTRL_RESET_MODE_ARM_CPU	(0x10 << 5)
++#define WDT_CTRL_1MHZ_CLK		BIT(4)
++#define WDT_CTRL_WDT_EXT		BIT(3)
++#define WDT_CTRL_WDT_INTR		BIT(2)
++#define WDT_CTRL_RESET_SYSTEM		BIT(1)
++#define WDT_CTRL_ENABLE		BIT(0)
+ #define WDT_TIMEOUT_STATUS	0x10
+-#define   WDT_TIMEOUT_STATUS_IRQ		BIT(2)
+-#define   WDT_TIMEOUT_STATUS_BOOT_SECONDARY	BIT(1)
++#define WDT_TIMEOUT_STATUS_IRQ		BIT(2)
++#define WDT_TIMEOUT_STATUS_BOOT_SECONDARY	BIT(1)
++#define WDT_TIMEOUT_STATUS_EVENT		BIT(0)
+ #define WDT_CLEAR_TIMEOUT_STATUS	0x14
+-#define   WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION	BIT(0)
++#define WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION	BIT(0)
+ #define WDT_RESET_MASK1		0x1c
+ #define WDT_RESET_MASK2		0x20
+ 
++/*
++ * Ast2600 SCU74 bit1 is External reset flag
++ * Ast2500 SCU3C bit1 is External reset flag
++ */
++#define EXTERN_RESET_FLAG		BIT(1)
++#define AST2500_SYSTEM_RESET_EVENT	0x3C
++#define AST2600_SYSTEM_RESET_EVENT	0x74
++
+ /*
+  * WDT_RESET_WIDTH controls the characteristics of the external pulse (if
+  * enabled), specifically:
+@@ -330,6 +341,11 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
+ 	if (IS_ERR(wdt->base))
+ 		return PTR_ERR(wdt->base);
+ 
++	struct regmap *scu_base = syscon_regmap_lookup_by_phandle(dev->of_node,
++							     "aspeed,scu");
++	if (IS_ERR(scu_base))
++		return PTR_ERR(scu_base);
++
+ 	wdt->wdd.info = &aspeed_wdt_info;
+ 
+ 	if (wdt->cfg->irq_mask) {
+@@ -459,14 +475,26 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	status = readl(wdt->base + WDT_TIMEOUT_STATUS);
+-	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY) {
++	if (status & WDT_TIMEOUT_STATUS_EVENT)
+ 		wdt->wdd.bootstatus = WDIOF_CARDRESET;
+ 
+-		if (of_device_is_compatible(np, "aspeed,ast2400-wdt") ||
+-		    of_device_is_compatible(np, "aspeed,ast2500-wdt"))
+-			wdt->wdd.groups = bswitch_groups;
++	if (of_device_is_compatible(np, "aspeed,ast2600-wdt")) {
++		ret = regmap_read(scu_base,
++				  AST2600_SYSTEM_RESET_EVENT,
++				  &status);
++	} else {
++		ret = regmap_read(scu_base,
++				  AST2500_SYSTEM_RESET_EVENT,
++				  &status);
++		wdt->wdd.groups = bswitch_groups;
+ 	}
+ 
++	/*
++	 * Reset cause by Extern Reset
++	 */
++	if (status & EXTERN_RESET_FLAG && !ret)
++		wdt->wdd.bootstatus |= WDIOF_EXTERN1;
++
+ 	dev_set_drvdata(dev, wdt);
+ 
+ 	return devm_watchdog_register_device(dev, &wdt->wdd);
 -- 
-
-Jocelyn
-
-On 25/03/2024 04:35, Jammy Huang wrote:
-> Avoid infinite-loop in ast_dp_set_on_off().
-> 
-> Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
-> ---
->   drivers/gpu/drm/ast/ast_dp.c | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/ast/ast_dp.c b/drivers/gpu/drm/ast/ast_dp.c
-> index ebb6d8ebd44e..1e9259416980 100644
-> --- a/drivers/gpu/drm/ast/ast_dp.c
-> +++ b/drivers/gpu/drm/ast/ast_dp.c
-> @@ -180,6 +180,7 @@ void ast_dp_set_on_off(struct drm_device *dev, bool on)
->   {
->   	struct ast_device *ast = to_ast_device(dev);
->   	u8 video_on_off = on;
-> +	u32 i = 0;
->   
->   	// Video On/Off
->   	ast_set_index_reg_mask(ast, AST_IO_VGACRI, 0xE3, (u8) ~AST_DP_VIDEO_ENABLE, on);
-> @@ -192,6 +193,8 @@ void ast_dp_set_on_off(struct drm_device *dev, bool on)
->   						ASTDP_MIRROR_VIDEO_ENABLE) != video_on_off) {
->   			// wait 1 ms
->   			mdelay(1);
-> +			if (++i > 200)
-> +				break;
->   		}
->   	}
->   }
-> 
-> base-commit: b0546776ad3f332e215cebc0b063ba4351971cca
+2.25.1
 
