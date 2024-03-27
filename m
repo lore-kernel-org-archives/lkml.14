@@ -1,416 +1,159 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8A6153BED;
-	Wed, 27 Mar 2024 22:55:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D10C15219B;
+	Wed, 27 Mar 2024 22:56:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711580134; cv=none; b=pUuf9B3m9q5HZyudtmB+WqL4PJEjzbemyEtAVhUJhj5tKXdpUNzQE8MQ0zIeWWnJCsVT+LS3zy4v8H54nwm/A7DAq/Nnb70cyVvmehyd9AH21p2nXSST+BYOgu5UnFYNY50nStb7I6Wmkdp2dZA6VLxarBTru9dLDuRhRxfUJXg=
+	t=1711580220; cv=none; b=iRLBAhayXbnnDx5whRkNhsijBp2t9f7Py+JdPEH5yhPXL1Ihh6ppcAZmMHM1xxUdpWOIRfLi+HLZETVXf8g7RQMqR0Gkwh4DkzVxHbOXBwFyOIrqJGM/LPj+Xb4rhl1H5c4etpkEpSUKbuHOrS+MohKmA1Uwl1+qMiLkQULKERE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711580134; c=relaxed/simple;
-	bh=VUW8SqAA/+2sHQhA2ammk2FQgHtxhgRr3LE1tD2/QzQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JslUuwivjy5PvuZC8/MCIyzTNw3GwX278ugCJofTsKHzHeUbyUtGhMV+SnhMbxHcxgxsSZ0y9Bt/BdivQtqYswTKkyI66XpYHuyhlPSDrqfABjIZP9yzTrbViG90vrgw/kZu5/dG+qiN/Z4mU7Go0CZpMGeyQ7iKkbDAQM1NKmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C/Zjr4l+; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711580220; c=relaxed/simple;
+	bh=/WsGRor0OcIsp5twq3DCqyZDYfUawzcDpORqySW5HmA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tl7UAlYLttComqwwtB3X+KLm6KiTmQXvfYkZPRpMQGGlVFT2ENPOXfzw8ChPdvfeF67pw8XRITUEQ21lWuOvn9cxG/QKdhqfUuSc3YCTS583wbxLajdEzpkUsmZXVBLrdXedN4lqkqO93KzMrrx3B+9r2bkV5e0WcvJZVUqrTUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LVgMZSPb; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C/Zjr4l+"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-341b01dbebbso225149f8f.0;
-        Wed, 27 Mar 2024 15:55:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711580131; x=1712184931; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KP36tHqP7P+dmRhIwVHlpSLJhJGKUjScQFwDQs5TYi4=;
-        b=C/Zjr4l+ZoGJCbtUKuI6eEVuWw7ytQwA85B7OqHbm+1IJENhsToM8Q/YmKGUp8YNBI
-         /dlbd3a4I8oPTbTRBC/oB1hk1PzxF4xJMXdhPYx6lNwR5tYZykJS0JmayosHJBdOsPZ0
-         9cOhzZL/ADQCxjkw7rhAaBNWAOA6iz0UGjpx4FjRQ+FQqFHM/iYkmg2R4F5vcReFOsfz
-         O81I2usonFRDvDGw4tsB9F+h4ZbQ2cQ7tVwIhxi5G8oQER+m10QmNU5vuBYjUAEMPrOt
-         QUz0bZPi8iIWIqBjh2hWwf8xcEtbArdfzm3/j9hfj0WSbC3axiJlGg13Xu5KEYEQdZzV
-         bxaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711580131; x=1712184931;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KP36tHqP7P+dmRhIwVHlpSLJhJGKUjScQFwDQs5TYi4=;
-        b=Nreev+sZ6A/mUJHZ5Vq1d3TJpRp+0fYfXDYOIlA/i2JlC1UQBhjWmG0+L2c4Hk9+tB
-         hKLsDmZQeZqIdXC4UWwpt8sOAdolIdoOBiTAgyfqWnh49NZLXJmpNYVu1e7v7vNpQySw
-         QKttZuJdM0yxadXVxAV7dK2ws/LDJtfGwsTWHokN0n0z3R4W+JiO2wcrvbVAFuIv8Oh1
-         W5DISwj5k9e+orjBWINZTuvHrH7pNV8ZJn69tzb7SbyySt0l1550fvIZuuIaBWyQr/td
-         DB0FUP5EhVGWShygzln2obOkvZTlES3qFyRJxPOa3K8DL+DQMLxcePWeu4atwqmt/cOP
-         nk2w==
-X-Forwarded-Encrypted: i=1; AJvYcCXL5RmUvIVqR/IBt00Ew1BKiCGSdjwVQmMrx9WNGNxrYEf3zDWedp++pTbsxRcLuMkqgo4/M67mnEeREAO4IoeRLTJ+pL7xUcE2mUNzWaFMkX/RI6GPLGbvj6lhZbMpNLaM4UIBnOd1qOiSHjJMk/wKuyX0NPhsK2H2ZlKCur8d5Jw9FjflNR4/Kvs81o821N2Dfd9fJrdOleaB4A==
-X-Gm-Message-State: AOJu0Yw+jlk351tRu/fYMADJ2C1jE9uR847o1Y5FE72QGbyffAJwVphR
-	2ZZTEiywoUL/PPGqjsSoIAmRKX7xU/HrN2yFmcKddMoXI1YMPTmL
-X-Google-Smtp-Source: AGHT+IH7e2g0Y7KVgrgTneD3KILz2Xw+4uPpn/4EBcTEadHjIlt00UCW1BykdWehFemRxO7De3P+fw==
-X-Received: by 2002:a5d:59a8:0:b0:341:e5d1:d353 with SMTP id p8-20020a5d59a8000000b00341e5d1d353mr1355183wrr.14.1711580130666;
-        Wed, 27 Mar 2024 15:55:30 -0700 (PDT)
-Received: from rorona-tty.. ([154.121.114.3])
-        by smtp.googlemail.com with ESMTPSA id cc7-20020a5d5c07000000b0033e75e5f280sm152348wrb.113.2024.03.27.15.55.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 15:55:30 -0700 (PDT)
-From: Djalal Harouni <tixxdz@gmail.com>
-To: tixxdz@gmail.com
-Cc: Tejun Heo <tj@kernel.org>,
-	Zefan Li <lizefan.x@bytedance.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [RFC PATCH bpf-next 3/3] selftests/bpf: add selftest for bpf_task_freeze_cgroup
-Date: Wed, 27 Mar 2024 23:53:25 +0100
-Message-Id: <20240327225334.58474-4-tixxdz@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240327225334.58474-1-tixxdz@gmail.com>
-References: <20240327-ccb56fc7a6e80136db80876c@djalal>
- <20240327225334.58474-1-tixxdz@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LVgMZSPb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711580219; x=1743116219;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=/WsGRor0OcIsp5twq3DCqyZDYfUawzcDpORqySW5HmA=;
+  b=LVgMZSPbAN6AyEYdupw5c1D4LgSVjIgCvMtzQ4W94q/4NdHqMSwmGoVf
+   YSQkxKmvqbngcTh+w+UE2FNo5ksLyoN4zB2NvOojSpQdkOyitlgIfe2Ve
+   GLAbT1fkyFLHYI4FJgH7rAVzSU3pYV6aYuj8DyUB6CVZTzzbISuO01Pw9
+   EEu7VxtdOpHRJqjUzuZe/TRpSoozXn9c2ueZGp4yh+pSgj6UW34Uhn2cr
+   vF9LnEyZgxy1IzH7Z29bcwLvZQQVHZ1DE+2lbV48fun2RU2o5o9uKPOj/
+   h3/IRJ1TBObpAtrz4Qmrz+UyJH6C2vm1V/katakx0lqqdcXnMlLwrtEee
+   g==;
+X-CSE-ConnectionGUID: grbU7zUGRre0mD/XMJ3rGw==
+X-CSE-MsgGUID: iNaUGVOFQbOtwhDJw4Bo+g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="6575146"
+X-IronPort-AV: E=Sophos;i="6.07,160,1708416000"; 
+   d="scan'208";a="6575146"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 15:56:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,160,1708416000"; 
+   d="scan'208";a="16285299"
+Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 15:56:57 -0700
+Date: Wed, 27 Mar 2024 15:56:57 -0700
+From: Isaku Yamahata <isaku.yamahata@intel.com>
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Yamahata, Isaku" <isaku.yamahata@intel.com>,
+	"Zhang, Tina" <tina.zhang@intel.com>,
+	"seanjc@google.com" <seanjc@google.com>,
+	"Yuan, Hang" <hang.yuan@intel.com>,
+	"Huang, Kai" <kai.huang@intel.com>, "Chen, Bo2" <chen.bo@intel.com>,
+	"sagis@google.com" <sagis@google.com>,
+	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>,
+	"Aktas, Erdem" <erdemaktas@google.com>,
+	"pbonzini@redhat.com" <pbonzini@redhat.com>,
+	"sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+	isaku.yamahata@linux.intel.com
+Subject: Re: [PATCH v19 044/130] KVM: TDX: Do TDX specific vcpu initialization
+Message-ID: <20240327225657.GG2444378@ls.amr.corp.intel.com>
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <d6a21fe6ea9eb53c24b6527ef8e5a07f0c2e8806.1708933498.git.isaku.yamahata@intel.com>
+ <3f4f164a6375c8ada364dd2a83562a506019db86.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <3f4f164a6375c8ada364dd2a83562a506019db86.camel@intel.com>
 
-This adds a selftest for `bpf_task_freeze_cgroup` kfunc. The test works
-by forking a child then:
+On Wed, Mar 27, 2024 at 12:27:03AM +0000,
+"Edgecombe, Rick P" <rick.p.edgecombe@intel.com> wrote:
 
-1. Child:
- - Migrate to a new cgroup
- - Loads bpf programs
- - Trigger the 'lsm_freeze_cgroup' bpf program so it freeze itself.
-   by calling "bpf_task_freeze_cgroup(child, 1)"
+> On Mon, 2024-02-26 at 00:25 -0800, isaku.yamahata@intel.com wrote:
+> > +/* VMM can pass one 64bit auxiliary data to vcpu via RCX for guest BIOS. */
+> > +static int tdx_td_vcpu_init(struct kvm_vcpu *vcpu, u64 vcpu_rcx)
+> > +{
+> > +       struct kvm_tdx *kvm_tdx = to_kvm_tdx(vcpu->kvm);
+> > +       struct vcpu_tdx *tdx = to_tdx(vcpu);
+> > +       unsigned long *tdvpx_pa = NULL;
+> > +       unsigned long tdvpr_pa;
+> 
+> 
+> I think we could drop theselocal variables and just use tdx->tdvpr_pa and tdx->tdvpx_pa. Then we
+> don't have to have the assignments later.
 
-   <- wait for parent to unthaw
+Yes, let me clean it up. The old version acquired spin lock in the middle. Now
+we don't have it.
 
- - On unthaw it continues, forks another process and triggers the
-   'tp_newchild' bpf program to set some monitored pids of the new
-   process, that are asserted at user space, to ensure that we
-   resumed correctly.
 
-2. Parent:
- - Keeps reading the 'cgroup.freeze' file of the child cgroup until
-   it prints 1 which means the child cgroup is frozen
- - Attaches the sample 'lsm_task_free' so it triggers the bpf program
-   and then calls "bpf_task_freeze_cgroup(task, 0);" on the child task
-   to unthaw its cgroup.
- - Then waits for a clean exit of the child process.
+> > +       unsigned long va;
+> > +       int ret, i;
+> > +       u64 err;
+> > +
+> > +       if (is_td_vcpu_created(tdx))
+> > +               return -EINVAL;
+> > +
+> > +       /*
+> > +        * vcpu_free method frees allocated pages.  Avoid partial setup so
+> > +        * that the method can't handle it.
+> > +        */
+> > +       va = __get_free_page(GFP_KERNEL_ACCOUNT);
+> > +       if (!va)
+> > +               return -ENOMEM;
+> > +       tdvpr_pa = __pa(va);
+> > +
+> > +       tdvpx_pa = kcalloc(tdx_info->nr_tdvpx_pages, sizeof(*tdx->tdvpx_pa),
+> > +                          GFP_KERNEL_ACCOUNT);
+> > +       if (!tdvpx_pa) {
+> > +               ret = -ENOMEM;
+> > +               goto free_tdvpr;
+> > +       }
+> > +       for (i = 0; i < tdx_info->nr_tdvpx_pages; i++) {
+> > +               va = __get_free_page(GFP_KERNEL_ACCOUNT);
+> > +               if (!va) {
+> > +                       ret = -ENOMEM;
+> > +                       goto free_tdvpx;
+> > +               }
+> > +               tdvpx_pa[i] = __pa(va);
+> > +       }
+> > +
+> > +       err = tdh_vp_create(kvm_tdx->tdr_pa, tdvpr_pa);
+> > +       if (KVM_BUG_ON(err, vcpu->kvm)) {
+> > +               ret = -EIO;
+> > +               pr_tdx_error(TDH_VP_CREATE, err, NULL);
+> > +               goto free_tdvpx;
+> > +       }
+> > +       tdx->tdvpr_pa = tdvpr_pa;
+> > +
+> > +       tdx->tdvpx_pa = tdvpx_pa;
+> 
+> Or alternatively let's move these to right before they are used. (in the current branch 
+> 
+> > +       for (i = 0; i < tdx_info->nr_tdvpx_pages; i++) {
+> > +               err = tdh_vp_addcx(tdx->tdvpr_pa, tdvpx_pa[i]);
+> > +               if (KVM_BUG_ON(err, vcpu->kvm)) {
+> > +                       pr_tdx_error(TDH_VP_ADDCX, err, NULL);
+> > +                       for (; i < tdx_info->nr_tdvpx_pages; i++) {
+> > +                               free_page((unsigned long)__va(tdvpx_pa[i]));
+> > +                               tdvpx_pa[i] = 0;
+> > +                       }
+> > +                       /* vcpu_free method frees TDVPX and TDR donated to TDX */
+> > +                       return -EIO;
+> > +               }
+> > +       }
+> > 
+> > 
+> In the current branch tdh_vp_init() takes struct vcpu_tdx, so they would be moved right here.
+> 
+> What do you think?
 
-The scenario allows to test both: freeze and unthaw a task cgroup.
-
-Signed-off-by: Djalal Harouni <tixxdz@gmail.com>
----
- .../bpf/prog_tests/task_freeze_cgroup.c       | 165 ++++++++++++++++++
- .../bpf/progs/test_task_freeze_cgroup.c       | 110 ++++++++++++
- 2 files changed, 275 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/prog_tests/task_freeze_cgroup.c
- create mode 100644 tools/testing/selftests/bpf/progs/test_task_freeze_cgroup.c
-
-diff --git a/tools/testing/selftests/bpf/prog_tests/task_freeze_cgroup.c b/tools/testing/selftests/bpf/prog_tests/task_freeze_cgroup.c
-new file mode 100644
-index 000000000000..afb7d46194c5
---- /dev/null
-+++ b/tools/testing/selftests/bpf/prog_tests/task_freeze_cgroup.c
-@@ -0,0 +1,165 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2024 Isovalent */
-+
-+#include <sys/syscall.h>
-+#include <test_progs.h>
-+#include <cgroup_helpers.h>
-+#include <unistd.h>
-+#include "test_task_freeze_cgroup.skel.h"
-+
-+#define FOO	"/test-task-freeze-cgroup"
-+
-+static int bpf_sleepable(struct test_task_freeze_cgroup *skel)
-+{
-+	int err, foo;
-+	pid_t pid;
-+
-+	foo = test__join_cgroup(FOO);
-+	if (!ASSERT_OK(foo < 0, "cgroup_join_foo"))
-+		return -errno;
-+
-+	skel = test_task_freeze_cgroup__open();
-+	if (!ASSERT_OK_PTR(skel, "test_task_freeze_cgroup__open"))
-+		return -errno;
-+
-+	skel->rodata->parent_pid = getppid();
-+	skel->rodata->monitor_pid = getpid();
-+	skel->rodata->cgid = get_cgroup_id(FOO);
-+	skel->bss->new_pid = getpid();
-+	skel->bss->freeze = 1;
-+
-+	err = test_task_freeze_cgroup__load(skel);
-+	if (!ASSERT_OK(err, "test_task_freeze_cgroup__load"))
-+		goto cleanup;
-+
-+	/* First, attach the LSM program, and then it will be triggered when the
-+	 * TP_BTF program is attached.
-+	 */
-+	skel->links.lsm_freeze_cgroup =
-+		bpf_program__attach_lsm(skel->progs.lsm_freeze_cgroup);
-+	if (!ASSERT_OK_PTR(skel->links.lsm_freeze_cgroup, "attach_lsm")) {
-+		err = -errno;
-+		goto cleanup;
-+	}
-+
-+	/* This will fail */
-+	skel->links.tp_newchild =
-+		bpf_program__attach_trace(skel->progs.tp_newchild);
-+	if (!ASSERT_EQ(errno, EPERM, "attach_trace")) {
-+		err = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	/* Try again now */
-+	skel->links.tp_newchild =
-+		bpf_program__attach_trace(skel->progs.tp_newchild);
-+	if (!ASSERT_OK_PTR(skel->links.tp_newchild, "attach_trace")) {
-+		err = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	/* Trigger a new child and assert unfrozen state */
-+	pid = fork();
-+	if (pid == 0)
-+		exit(0);
-+
-+	err = (pid == -1);
-+	if (ASSERT_OK(err, "fork process"))
-+		wait(NULL);
-+
-+	/* Now we should continue, assert that new_pid reflects child */
-+	ASSERT_NEQ(skel->rodata->monitor_pid, skel->bss->new_pid,
-+		   "test task_freeze_cgroup failed  at monitor_pid != new_pid");
-+	ASSERT_NEQ(0, skel->bss->new_pid,
-+		   "test task_freeze_cgroup failed  at remote_pid != 0");
-+
-+	/* Assert that bpf set new_pid to new forked child pid */
-+	ASSERT_EQ(pid, skel->bss->new_pid,
-+		   "test task_freeze_cgroup failed  at pid == new_pid");
-+
-+	test_task_freeze_cgroup__detach(skel);
-+
-+cleanup:
-+	test_task_freeze_cgroup__destroy(skel);
-+	close(foo);
-+	return err;
-+}
-+
-+void test_task_freeze_cgroup(void)
-+{
-+	pid_t pid, result;
-+	char buf[512] = {0};
-+	char path[PATH_MAX] = {0};
-+	int ret, status, attempts, frozen = 0;
-+	struct test_task_freeze_cgroup *skel = NULL;
-+
-+	pid = fork();
-+	ret = (pid == -1);
-+	if (!ASSERT_OK(ret, "fork process"))
-+		return;
-+
-+	if (pid == 0) {
-+		ret = bpf_sleepable(skel);
-+		ASSERT_EQ(0, ret, "bpf_sleepable failed");
-+		exit(ret);
-+	}
-+
-+	skel = test_task_freeze_cgroup__open();
-+	if (!ASSERT_OK_PTR(skel, "test_task_freeze_cgroup__open"))
-+		goto out;
-+
-+	snprintf(path, sizeof(path),
-+		 "/sys/fs/cgroup/cgroup-test-work-dir%d%s/cgroup.freeze",
-+		 pid, FOO);
-+
-+	for (attempts = 5; attempts >= 0; attempts--) {
-+		ret = 0;
-+		int fd = open(path, O_RDONLY);
-+		if (fd > 0)
-+			ret = read(fd, buf, sizeof(buf) - 1);
-+		if (ret > 0) {
-+			errno = 0;
-+			frozen = strtol(buf, NULL, 10);
-+			if (errno)
-+				frozen = 0;
-+		}
-+
-+		close(fd);
-+		if (frozen)
-+			break;
-+		sleep(1);
-+	}
-+
-+	/* Assert that child cgroup is frozen */
-+	if (!ASSERT_EQ(1, frozen, "child cgroup not frozen"))
-+		goto out;
-+
-+	ret = test_task_freeze_cgroup__load(skel);
-+	if (!ASSERT_OK(ret, "test_task_freeze_cgroup__load"))
-+		goto out;
-+
-+	/* Unthaw child cgroup from parent */
-+	skel->links.lsm_task_free =
-+		bpf_program__attach_lsm(skel->progs.lsm_task_free);
-+	if (!ASSERT_OK_PTR(skel->links.lsm_task_free, "attach_lsm"))
-+		goto out;
-+
-+	result = waitpid(pid, &status, WUNTRACED);
-+	if (!ASSERT_NEQ(result, -1, "waitpid"))
-+		goto detach;
-+
-+	result = WIFEXITED(status);
-+	if (!ASSERT_EQ(result, 1, "forked process did not terminate normally"))
-+		goto detach;
-+
-+	result = WEXITSTATUS(status);
-+	if (!ASSERT_EQ(result, 0, "forked process did not exit successfully"))
-+		goto detach;
-+
-+detach:
-+	test_task_freeze_cgroup__detach(skel);
-+
-+out:
-+	if (skel)
-+		test_task_freeze_cgroup__destroy(skel);
-+}
-diff --git a/tools/testing/selftests/bpf/progs/test_task_freeze_cgroup.c b/tools/testing/selftests/bpf/progs/test_task_freeze_cgroup.c
-new file mode 100644
-index 000000000000..dbd2d60f464e
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/test_task_freeze_cgroup.c
-@@ -0,0 +1,110 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2024 Isovalent */
-+
-+#include <vmlinux.h>
-+#include <bpf/bpf_tracing.h>
-+#include <bpf/bpf_helpers.h>
-+#include <errno.h>
-+#include "bpf_misc.h"
-+
-+struct cgroup *bpf_cgroup_from_id(u64 cgid) __ksym;
-+long bpf_task_under_cgroup(struct task_struct *task, struct cgroup *ancestor) __ksym;
-+void bpf_cgroup_release(struct cgroup *p) __ksym;
-+struct task_struct *bpf_task_from_pid(s32 pid) __ksym;
-+struct task_struct *bpf_task_acquire(struct task_struct *p) __ksym;
-+void bpf_task_release(struct task_struct *p) __ksym;
-+
-+int bpf_task_freeze_cgroup(struct task_struct *task, int freeze) __ksym;
-+
-+const volatile int parent_pid;
-+const volatile int monitor_pid;
-+const volatile __u64 cgid;
-+int new_pid;
-+int freeze;
-+
-+SEC("tp_btf/task_newtask")
-+int BPF_PROG(tp_newchild, struct task_struct *task, u64 clone_flags)
-+{
-+	struct cgroup *cgrp = NULL;
-+	struct task_struct *acquired;
-+
-+	if (monitor_pid != (bpf_get_current_pid_tgid() >> 32))
-+		return 0;
-+
-+	acquired = bpf_task_acquire(task);
-+	if (!acquired)
-+		return 0;
-+
-+	cgrp = bpf_cgroup_from_id(cgid);
-+	if (!cgrp)
-+		goto out;
-+
-+	if (bpf_task_under_cgroup(acquired, cgrp))
-+		new_pid = acquired->tgid;
-+
-+out:
-+	if (cgrp)
-+		bpf_cgroup_release(cgrp);
-+	bpf_task_release(acquired);
-+
-+	return 0;
-+}
-+
-+/* This is attached from parent to trigger the bpf lsm hook, so parent
-+ * can unthaw the child.
-+ */
-+SEC("lsm/task_free")
-+int BPF_PROG(lsm_task_free, struct task_struct *task)
-+{
-+	return 0;
-+}
-+
-+SEC("lsm.s/bpf")
-+int BPF_PROG(lsm_freeze_cgroup, int cmd, union bpf_attr *attr, unsigned int size)
-+{
-+	int ret = 0;
-+	struct cgroup *cgrp = NULL;
-+	struct task_struct *task;
-+
-+	if (cmd != BPF_LINK_CREATE)
-+		return ret;
-+
-+	task = bpf_get_current_task_btf();
-+	if (parent_pid == task->pid) {
-+		/* Unthaw child from parent */
-+		task = bpf_task_from_pid(monitor_pid);
-+		if (!task)
-+			return -ENOENT;
-+
-+		ret = bpf_task_freeze_cgroup(task, 0);
-+		bpf_task_release(task);
-+		return ret;
-+	}
-+
-+	if (monitor_pid != task->pid)
-+		return 0;
-+
-+	/* Freeze the child cgroup from its context */
-+	cgrp = bpf_cgroup_from_id(cgid);
-+	if (!cgrp)
-+		goto out;
-+
-+	if (!bpf_task_under_cgroup(task, cgrp))
-+		goto out;
-+
-+	if (freeze) {
-+		/* Schedule freeze task and return -EPERM */
-+		ret = bpf_task_freeze_cgroup(task, 1);
-+		if (!ret) {
-+			ret = -EPERM;
-+			/* reset for next call */
-+			freeze = 0;
-+		}
-+	}
-+out:
-+	if (cgrp)
-+		bpf_cgroup_release(cgrp);
-+	return ret;
-+}
-+
-+char _license[] SEC("license") = "GPL";
+Yes, I should revise the error recovery path.
 -- 
-2.34.1
-
+Isaku Yamahata <isaku.yamahata@intel.com>
