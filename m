@@ -1,86 +1,99 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+Received: from mail-108-mta185.mxroute.com (mail-108-mta185.mxroute.com [136.175.108.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C46153591
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 22:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B7C153822
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 22:25:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711578321; cv=none; b=LN3cqbWAOm8g0v++RhKcQPK3bAepGBakeQrC+qAXDAr9Rsdlxee7RhEwuuikPUcST/RqHPSCLpnmsJ0hMUIBT+fYUQgUAU8zhYNAK4ZNl1shaIfhRimQijsBbr5vU3NfmAmB8W2lX3cCRyxX9Hz0jz3CvNWAgJumZ/z2f0kpBAE=
+	t=1711578359; cv=none; b=URzjhN7eBeChld+3T2jIUUUXf1P9n6fbSwagpDrVU8h654DqaMhY5BNXE2xZKegsAeRa1NCDbhdrI1+NTl9tdFTmcNDVw9ydGsLGyXcZ+A4nLx8rwF/AQOVPyU1IT3JksNBDJhT6q0uKoVnPf/hq2xVNuwPG1AXtmUTVlAnkbes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711578321; c=relaxed/simple;
-	bh=zvblnRjqyr9T+Xx2ZmU4DdKOyZ8u5C7pMHb7A/mXvSs=;
-	h=Date:Message-ID:MIME-Version:Content-Type:Content-Disposition:
-	 From:To:Cc:Subject:References:In-Reply-To; b=B8LT3XX7DiIHxXY4H/fhPokt1n7SI+EqIvssUBcCyxg2CoINZ6VKLOdkSzeXU1i6/6f8u+gYoGnNw307pNSMSupfF+TjfqBzus+8bYlpZBtMc53czY4nVfauczVHJEEhBRgMLp6DA8bCixXA7DmsgnA0JqWdz+MEFVoCUM1kPJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=f+QJukT0; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1711578359; c=relaxed/simple;
+	bh=AdHweroZnT+pHzZ/vSg+ukBfbmEglEx27aSOBLZQSiA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kZItLZb4I6pUjkwdo/XSyfdF+07eg00xVutcEv8lR8H5TZ927uOrzrirJ7MouCxjQio/U9Qoal4jdkCHggoR1KNlT8inbxcrQeKqmyfsc5JRFjZsi2p3iYrOK2Aw1VSMt7rRunpbcidaAUGC1wSUpRPXRyx1BrV47g/xT++g9aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=vV8EWvL2; arc=none smtp.client-ip=136.175.108.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="f+QJukT0"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-696315c9da5so2394136d6.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 15:25:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1711578317; x=1712183117; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :content-disposition:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=lJ3wjFaeU9Ztiyd+gJSW6nXLmVJwkYytMN2nUftxCkU=;
-        b=f+QJukT0jAngv/wLvWrZEm9Tk64blPq02R1Vk1PdvmYqtilE/L4ngpmMJf0q1Okjvp
-         HSpyKX43ScrDYCZiWSt9o+yLkKwasOFewwr9+4Ullrb7713SDlfmFC4eAiH4/3URqkX8
-         xh/3qJ+Dcx176AEFolsGV8OvH/dwBf8wENIAJ4iIfXXh+1UHfB9k9iAyhF5FL7sL706q
-         gKpyp53YkPwmiQ43/PWJZJQ3OLxBj94C7oqoBHe0MzvhqwJB8SBVJYk/tcYDmS/m4tx9
-         M5J0ooSyGwKoi9BbeXm7LZBRajhsHRECp8Qy5zm/OJs+po/Egten2KN2eBSZ6iuAfWwf
-         JYBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711578317; x=1712183117;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :content-disposition:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lJ3wjFaeU9Ztiyd+gJSW6nXLmVJwkYytMN2nUftxCkU=;
-        b=mQRfYEjumIQEbXOLenoB8lO8+xGn1NkWOJXsYdcoOL5Bw7LHyQgHhpaKzVz0pUFAF6
-         PfATsXdXpli+ABTF/bM/kov29/iPuDGb5NGhCzYgh+hYlEv7Iv+OnKAzXruKl2dq5ib+
-         ywfgS7re3HkjWicupXK0fs6fFwqlvZF3xmO7Y7MMmIL1SsuCuRd1x2qqU/YBbVNRaY+9
-         5tqVCmZ3+VUuJYB00KDuHKYLCqt4jLj3BTGry9SDj5RVv2wJaVoMlB19R5lZ13SP64rv
-         ap7LStUtLu9ws9bAinz0taKNmUmsAjGTAqk4AOVChGG5JRcp2eY6cWRxA8z4fvIIZULU
-         qCag==
-X-Forwarded-Encrypted: i=1; AJvYcCXfzR4wnZLAt3sAvsYinGdUTWtB3/RRg0aKS694nbSreW+Rxw8WZZVrlmlEy+SPVaAxm4mecf7qHN0mXXtihYsvNM9tygRahT3j6pMh
-X-Gm-Message-State: AOJu0Yw/uJaBHubPD/bWx2mBHsDV/eMfjbvu2tpN/oBI5cLoakUe66T0
-	PQMLtNnQt1WnGtuiWfp8c0xhWhFRbPZHxV211KvThYjd+HN7ksLtQHxmh+Qb4g==
-X-Google-Smtp-Source: AGHT+IEB1EtlYhSzjbkFAJS6d1yVX/gJOyNrRi/7DgIyCMvcLad2G6ZK7a6iGO+wA6rZSHqS0SZcJw==
-X-Received: by 2002:a0c:f847:0:b0:690:f1e3:ca7c with SMTP id g7-20020a0cf847000000b00690f1e3ca7cmr990364qvo.16.1711578317661;
-        Wed, 27 Mar 2024 15:25:17 -0700 (PDT)
-Received: from localhost ([70.22.175.108])
-        by smtp.gmail.com with ESMTPSA id js5-20020a0562142aa500b0069686d63c1esm44265qvb.69.2024.03.27.15.25.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 15:25:17 -0700 (PDT)
-Date: Wed, 27 Mar 2024 18:25:16 -0400
-Message-ID: <5da09fb04d92d9a4a9d7d5cc1ab14ebd@paul-moore.com>
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="vV8EWvL2"
+Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by mail-108-mta185.mxroute.com (ZoneMTA) with ESMTPSA id 18e82005e750003bea.00f
+ for <linux-kernel@vger.kernel.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Wed, 27 Mar 2024 22:20:46 +0000
+X-Zone-Loop: d3dd0f359467ac02fda335a9eb48df49908458b1c3b0
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=oPBK+fqL/hsM837Y3buk53bLBMvRdlTlsTvv2J3d9qk=; b=vV8EWvL2zYFXA8MhOAwfFxeG+E
+	L2VmoRtonsoQuddXRSAw/GDqP9EFVH3uJhmHP6EpLVj+HjqWj9saXiu9Jel8fKvQBJSh5e1iQt4sh
+	iLjeACpLqvZHEoCBOWFj446zlj44PVwhLJWmSdlbiowcNZ4OQzkwaQKPHkO1g3qfOPzQ/UYTtlxvS
+	VxwZCTIxw21NVEcmYva5FNHxZaX91loxdzAdR1KYxvX7hJrdjgb7HqMjztZwRzkiNzFuBP58biA37
+	jQybOfZKAXMBcpY3glnEXik44CUYLCQxJXEga39pkvRgT+fvwiwjNQgH5dhpc0nN7wnxsEk43peeO
+	k4st52Gw==;
+From: git@luigi311.com
+To: linux-media@vger.kernel.org
+Cc: dave.stevenson@raspberrypi.com,
+	jacopo.mondi@ideasonboard.com,
+	mchehab@kernel.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	sakari.ailus@linux.intel.com,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	x@xnux.eu
+Subject: [PATCH 01/23] media: i2c: imx258: Remove unused defines
+Date: Wed, 27 Mar 2024 16:20:13 -0600
+Message-ID: <20240327222035.47208-2-git@luigi311.com>
+In-Reply-To: <20240327222035.47208-1-git@luigi311.com>
+References: <20240327222035.47208-1-git@luigi311.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 
-Content-Type: text/plain; charset=utf-8 
-Content-Disposition: inline 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-From: Paul Moore <paul@paul-moore.com>
-To: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>, selinux@vger.kernel.org
-Cc: Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] selinux: make more use of current_sid()
-References: <20240315173105.636749-1-cgzones@googlemail.com>
-In-Reply-To: <20240315173105.636749-1-cgzones@googlemail.com>
+X-Authenticated-Id: personal@luigi311.com
 
-On Mar 15, 2024 =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com> wrote:
-> 
-> Use the internal helper current_sid() where applicable.
-> 
-> Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
-> ---
->  security/selinux/hooks.c | 22 ++++++----------------
->  security/selinux/xfrm.c  |  7 ++-----
->  2 files changed, 8 insertions(+), 21 deletions(-)
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-Merged into selinux/dev, thanks.
+The IMX258_FLL_* defines are unused. Remove them.
 
---
-paul-moore.com
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+---
+ drivers/media/i2c/imx258.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
+index a577afb530b7..2dbafd21dd70 100644
+--- a/drivers/media/i2c/imx258.c
++++ b/drivers/media/i2c/imx258.c
+@@ -29,12 +29,6 @@
+ #define IMX258_VTS_30FPS_VGA		0x034c
+ #define IMX258_VTS_MAX			0xffff
+ 
+-/*Frame Length Line*/
+-#define IMX258_FLL_MIN			0x08a6
+-#define IMX258_FLL_MAX			0xffff
+-#define IMX258_FLL_STEP			1
+-#define IMX258_FLL_DEFAULT		0x0c98
+-
+ /* HBLANK control - read only */
+ #define IMX258_PPL_DEFAULT		5352
+ 
+-- 
+2.42.0
+
