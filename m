@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFCA31534E4
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 20:04:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD06153501
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 20:04:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711569847; cv=none; b=Vl6ZFvQS0OCqetTypP3gRg4LrqNuNnVsnVx+VxhiMd2aNyZXF5U2950d055xPasmuV51r+loe3FTI6IbgNsvS0+mm3HdOHWGK4/bxwp5QWDRZaR8JglzLkFTuo+xpFvn0BpYsVhkDKwUrPK0KbxI1poVXbpiejFeBT5qJS3s2/U=
+	t=1711569848; cv=none; b=tb71K0bG7qMhzUpEUjapguxATb6a80//TbSIRso9+fjY2HcbAJ+e1rYbIFBrK0mF1gvwqfYd+XWfxoRp3hDv7VQJobnreJT05kN/YmB9r2oZza4sOUb2HvAguBpkIkO5sYODBE/2Jf8sWRbdbW+976LJPj2Xh7gvd0DZNk0G4XY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711569847; c=relaxed/simple;
-	bh=UAgoVYMozpNrZsRTA+xS7ef2Vl0uFY5WsmZWWJAct4o=;
+	s=arc-20240116; t=1711569848; c=relaxed/simple;
+	bh=PviGf2ukuqvClh6Tzg6t+9sRC+0cgDfB2kvycRzoQFo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ers8Z8pi7wyGYHmtlZYP2OtlHeGnigvFvrnoPcIeP9Lb8aZ1HA6Qz0FYkhZ2dDSn/pgsJ9INbTIPfbUF3zLfD0k8fAW7OscxPPsFiV3ETYr64v2qaUQ0QL7ymSWuodDHjy+MpJ1ZWpJPYR7EakNqx8qSsbQBQAk3ol0ItNa11LI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IpqP3vir; arc=none smtp.client-ip=198.175.65.12
+	 MIME-Version; b=Sz5MEHq2E50j/VmlReUsdbQsgFw5DFacLEk2UlRiCdRPVsOdyd2Cddc6g54U5FOgh+XvcKGsAe6vpyNAQi4jbs0VwhCrclYIPKttJqXJ71fDfAtZkM9L2scI+LaUwUZYI1v7HuyMjc3qDMZ7oA+O/CWDAbKF2Wetrbgh+heNYoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WaTh3hwz; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IpqP3vir"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WaTh3hwz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711569846; x=1743105846;
+  t=1711569847; x=1743105847;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=UAgoVYMozpNrZsRTA+xS7ef2Vl0uFY5WsmZWWJAct4o=;
-  b=IpqP3vir1n0myUR8bkMDAgCydRc0l5m3scLLrj9qm8TAQdYK6t/29Jos
-   gt3+HhRWYS5bpqDCHnTONdOFIRPrUFkWEceK4WPGQjwltefXF5YzPRISQ
-   p8tYJEig2UCiFQFUWW70p8YzpfknArZml/aFLfqtm0X0K35dD1j1UYwvR
-   ILWqpGgXYxEhk6xqzrIrl/XWdFez9PuM8iKu8S9UlDjvjGpDsJQ/cTfry
-   6C6dwvPx3irNdciotPM5GtnQe8Nf/1O3CpfFrWpEtaUjP7puj6ctwc4yr
-   Us8dGlnj/LAxXFOe2Jj+r6cUZUAe+aLMwTn0iNq+GBj6JBXJHca5YTu6T
-   A==;
-X-CSE-ConnectionGUID: mI7vn1vrRWWdPiSRdQLv4Q==
-X-CSE-MsgGUID: 57Sz/OgqR2Kx11eGzZCU+A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="18132983"
+  bh=PviGf2ukuqvClh6Tzg6t+9sRC+0cgDfB2kvycRzoQFo=;
+  b=WaTh3hwzWaE0WVUrIuUPcwwhbOOdEXYhi1eqWCNQTFTZBm3vGWEBaaro
+   sLfvhkiwhQR/PO81MqmMvtkTAxgvV+eEhNMHSj4gkBDd6Yv+1bgrOiLC/
+   UBUWyp1fo3Gjwy+harQfhHYvJ97IBSc709NwZUGr3tTHfrKXBKYVbE5Rm
+   RmH0bEguYS4fnMV+th68i44T1cWN9e4jZvcGdEKyB4rhnl37/28wYwzQt
+   PcbbfVrsrW96dv+MIxAd2oqCVJ/xD3zOe6ooyt9ZoklbGGE718VmJaFDf
+   Ea1G1IVpyihCuVa2hd0fJgCgDXJdvfaQDOMW1PJUlcw8PhRyYPRrBGIz/
+   w==;
+X-CSE-ConnectionGUID: AKLxWARnTd2Bqhzzg331Nw==
+X-CSE-MsgGUID: O1pdmX1uS9SW3oiU7qXAyA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="18132999"
 X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
-   d="scan'208";a="18132983"
+   d="scan'208";a="18132999"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 13:04:02 -0700
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 13:04:03 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
-   d="scan'208";a="16246118"
+   d="scan'208";a="16246128"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 13:04:02 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 13:04:03 -0700
 From: Tony Luck <tony.luck@intel.com>
 To: Fenghua Yu <fenghua.yu@intel.com>,
 	Reinette Chatre <reinette.chatre@intel.com>,
@@ -53,9 +53,9 @@ Cc: x86@kernel.org,
 	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH 04/10] x86/resctrl: Add pointer to enabled monitor resource
-Date: Wed, 27 Mar 2024 13:03:46 -0700
-Message-ID: <20240327200352.236835-5-tony.luck@intel.com>
+Subject: [PATCH 06/10] x86/resctrl: Update mkdir_mondata_subdir() for Sub-NUMA domains
+Date: Wed, 27 Mar 2024 13:03:48 -0700
+Message-ID: <20240327200352.236835-7-tony.luck@intel.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240327200352.236835-1-tony.luck@intel.com>
 References: <20240327200352.236835-1-tony.luck@intel.com>
@@ -67,145 +67,154 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Sub-NUMA cluster enabled systems do all monitoring using the SUBL3
-resource. Others use the regular L3 resource.
+When Sub-NUMA domain mode is enabled all the monitoring happens
+at the SUBL3 resource level. Changes are required to populate the
+"mon_data" directories in the resctrl file system.
 
-Replace the hard-coded rdt_resources_all[RDT_RESOURCE_L3].r_resctrl
-references with a new pointer "rdt_l3_mon_resource".
+When making the first SUBL3 directory code must first create the
+parent mon_L3_XX directory and fill it with files for each of
+the monitoring functions. Subsequent SUBL3 creation requests will
+simply use the directory that was created by the first request.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- arch/x86/kernel/cpu/resctrl/internal.h |  1 +
- arch/x86/kernel/cpu/resctrl/core.c     |  2 +-
- arch/x86/kernel/cpu/resctrl/monitor.c  | 19 ++++++++++++-------
- arch/x86/kernel/cpu/resctrl/rdtgroup.c |  7 +++----
- 4 files changed, 17 insertions(+), 12 deletions(-)
+ arch/x86/kernel/cpu/resctrl/internal.h | 12 +++++
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 74 ++++++++++++++++++--------
+ 2 files changed, 65 insertions(+), 21 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index 5fcff861e185..21d81f51838f 100644
+index 21d81f51838f..7f05502454c5 100644
 --- a/arch/x86/kernel/cpu/resctrl/internal.h
 +++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -464,6 +464,7 @@ int parse_bw(struct rdt_parse_data *data, struct resctrl_schema *s,
- extern struct mutex rdtgroup_mutex;
- 
- extern struct rdt_hw_resource rdt_resources_all[];
-+extern struct rdt_resource *rdt_l3_mon_resource;
- extern struct rdtgroup rdtgroup_default;
- extern struct dentry *debugfs_resctrl;
- 
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index bfa179f20802..2fa04375da8c 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -996,7 +996,7 @@ late_initcall(resctrl_late_init);
- 
- static void __exit resctrl_exit(void)
- {
--	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
-+	struct rdt_resource *r = rdt_l3_mon_resource;
- 
- 	cpuhp_remove_state(rdt_online);
- 
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index 84a2056190c8..95455cb187eb 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -78,6 +78,9 @@ static struct rmid_entry	*rmid_ptrs;
-  */
- bool rdt_mon_capable;
- 
-+/* Resource (L3 or SUBL3) that is base for monitoring */
-+struct rdt_resource *rdt_l3_mon_resource;
-+
- /*
-  * Global to indicate which monitoring events are enabled.
-  */
-@@ -321,7 +324,7 @@ static void limbo_release_entry(struct rmid_entry *entry)
-  */
- void __check_limbo(struct rdt_domain *d, bool force_free)
- {
--	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
-+	struct rdt_resource *r = rdt_l3_mon_resource;
- 	u32 idx_limit = resctrl_arch_system_num_rmid_idx();
- 	struct rmid_entry *entry;
- 	u32 idx, cur_idx = 1;
-@@ -467,7 +470,7 @@ int alloc_rmid(u32 closid)
- 
- static void add_rmid_to_limbo(struct rmid_entry *entry)
- {
--	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
-+	struct rdt_resource *r = rdt_l3_mon_resource;
- 	struct rdt_domain *d;
- 	u32 idx;
- 
-@@ -839,7 +842,7 @@ void mbm_handle_overflow(struct work_struct *work)
- 	if (!resctrl_mounted || !resctrl_arch_mon_capable())
- 		goto out_unlock;
- 
--	r = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
-+	r = rdt_l3_mon_resource;
- 	d = container_of(work, struct rdt_domain, mbm_over.work);
- 
- 	list_for_each_entry(prgrp, &rdt_all_groups, rdtgroup_list) {
-@@ -1036,7 +1039,9 @@ int __init rdt_get_mon_l3_config(struct rdt_resource *r)
- 	 */
- 	resctrl_rmid_realloc_threshold = resctrl_arch_round_mon_val(threshold);
- 
--	ret = dom_data_init(r);
-+	rdt_l3_mon_resource = r;
-+
-+	ret = dom_data_init(rdt_l3_mon_resource);
- 	if (ret)
- 		return ret;
- 
-@@ -1057,10 +1062,10 @@ int __init rdt_get_mon_l3_config(struct rdt_resource *r)
- 		}
- 	}
- 
--	l3_mon_evt_init(r);
-+	l3_mon_evt_init(rdt_l3_mon_resource);
- 
--	r->mon_capable = true;
--	r->mon_enabled = true;
-+	rdt_l3_mon_resource->mon_capable = true;
-+	rdt_l3_mon_resource->mon_enabled = true;
- 
- 	return 0;
+@@ -456,6 +456,18 @@ static inline struct rdt_hw_resource *resctrl_to_arch_res(struct rdt_resource *r
+ 	return container_of(r, struct rdt_hw_resource, r_resctrl);
  }
+ 
++static inline struct rdt_domain *get_parent_domain(struct rdt_resource *r,
++						   struct rdt_domain *d)
++{
++	struct  rdt_domain *pd;
++
++	list_for_each_entry(pd, &r->parent->domains, list)
++		if (pd->id == d->parent)
++			return pd;
++
++	return NULL;
++}
++
+ int parse_cbm(struct rdt_parse_data *data, struct resctrl_schema *s,
+ 	      struct rdt_domain *d);
+ int parse_bw(struct rdt_parse_data *data, struct resctrl_schema *s,
 diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index ffcafe567b25..a2ebd7e051bb 100644
+index f2af58a791a4..22effd8dc207 100644
 --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
 +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -2703,7 +2703,7 @@ static int rdt_get_tree(struct fs_context *fc)
- 		resctrl_mounted = true;
- 
- 	if (is_mbm_enabled()) {
--		r = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
-+		r = rdt_l3_mon_resource;
- 		list_for_each_entry(dom, &r->domains, list)
- 			mbm_setup_overflow_handler(dom, MBM_OVERFLOW_INTERVAL,
- 						   RESCTRL_PICK_ANY_CPU);
-@@ -4062,7 +4062,6 @@ static void clear_childcpus(struct rdtgroup *r, unsigned int cpu)
- 
- void resctrl_offline_cpu(unsigned int cpu)
- {
--	struct rdt_resource *l3 = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
- 	struct rdtgroup *rdtgrp;
- 	struct rdt_domain *d;
- 
-@@ -4074,10 +4073,10 @@ void resctrl_offline_cpu(unsigned int cpu)
- 		}
+@@ -3026,31 +3026,16 @@ static void rmdir_mondata_subdir_allrdtgrp(struct rdt_resource *r,
  	}
+ }
  
--	if (!l3->mon_enabled)
-+	if (!rdt_l3_mon_resource->mon_enabled)
- 		goto out_unlock;
+-static int mkdir_mondata_subdir(struct kernfs_node *parent_kn,
+-				struct rdt_domain *d,
+-				struct rdt_resource *r, struct rdtgroup *prgrp)
++static int mon_add_all_files(struct kernfs_node *kn, struct rdt_domain *d,
++			     struct rdt_resource *r, struct rdtgroup *prgrp)
+ {
+ 	union mon_data_bits priv;
+-	struct kernfs_node *kn;
+ 	struct mon_evt *mevt;
+ 	struct rmid_read rr;
+-	char name[32];
+ 	int ret;
  
--	d = get_domain_from_cpu(cpu, l3);
-+	d = get_domain_from_cpu(cpu, rdt_l3_mon_resource);
- 	if (d) {
- 		if (is_mbm_enabled() && cpu == d->mbm_work_cpu) {
- 			cancel_delayed_work(&d->mbm_over);
+-	sprintf(name, "mon_%s_%02d", r->name, d->id);
+-	/* create the directory */
+-	kn = kernfs_create_dir(parent_kn, name, parent_kn->mode, prgrp);
+-	if (IS_ERR(kn))
+-		return PTR_ERR(kn);
+-
+-	ret = rdtgroup_kn_set_ugid(kn);
+-	if (ret)
+-		goto out_destroy;
+-
+-	if (WARN_ON(list_empty(&r->evt_list))) {
+-		ret = -EPERM;
+-		goto out_destroy;
+-	}
++	if (WARN_ON(list_empty(&r->evt_list)))
++		return -EPERM;
+ 
+ 	priv.u.rid = r->rid;
+ 	priv.u.domid = d->id;
+@@ -3058,11 +3043,58 @@ static int mkdir_mondata_subdir(struct kernfs_node *parent_kn,
+ 		priv.u.evtid = mevt->evtid;
+ 		ret = mon_addfile(kn, mevt->name, priv.priv);
+ 		if (ret)
+-			goto out_destroy;
++			return ret;
+ 
+ 		if (is_mbm_event(mevt->evtid))
+ 			mon_event_read(&rr, r, d, prgrp, mevt->evtid, true);
+ 	}
++
++	return 0;
++}
++
++static int mkdir_mondata_subdir(struct kernfs_node *parent_kn,
++				struct rdt_domain *d,
++				struct rdt_resource *r, struct rdtgroup *prgrp)
++{
++	struct kernfs_node *kn = parent_kn, *ckn;
++	struct rdt_domain *pd;
++	char name[32];
++	int ret;
++
++	if (r->parent) {
++		pd = get_parent_domain(r, d);
++		if (!pd)
++			return 0;
++		sprintf(name, "mon_%s_%02d", r->parent->name, pd->id);
++		kn = kernfs_find_and_get_ns(parent_kn, name, NULL);
++		if (kn) {
++			parent_kn = kn;
++			goto subdir;
++		}
++		kn = kernfs_create_dir(parent_kn, name, parent_kn->mode, prgrp);
++		if (IS_ERR(kn))
++			return PTR_ERR(kn);
++		ret = rdtgroup_kn_set_ugid(kn);
++		if (ret)
++			goto out_destroy;
++		ret = mon_add_all_files(kn, d, r, prgrp);
++		if (ret)
++			goto out_destroy;
++	}
++subdir:
++	sprintf(name, "mon_%s_%02d", r->name, d->id);
++	/* create the directory */
++	ckn = kernfs_create_dir(kn, name, parent_kn->mode, prgrp);
++	if (IS_ERR(ckn))
++		goto out_destroy;
++
++	ret = rdtgroup_kn_set_ugid(ckn);
++	if (ret)
++		goto out_destroy;
++
++	ret = mon_add_all_files(ckn, d, r, prgrp);
++	if (ret)
++		goto out_destroy;
+ 	kernfs_activate(kn);
+ 	return 0;
+ 
+@@ -3078,8 +3110,8 @@ static int mkdir_mondata_subdir(struct kernfs_node *parent_kn,
+ static void mkdir_mondata_subdir_allrdtgrp(struct rdt_resource *r,
+ 					   struct rdt_domain *d)
+ {
+-	struct kernfs_node *parent_kn;
+ 	struct rdtgroup *prgrp, *crgrp;
++	struct kernfs_node *parent_kn;
+ 	struct list_head *head;
+ 
+ 	list_for_each_entry(prgrp, &rdt_all_groups, rdtgroup_list) {
 -- 
 2.44.0
 
