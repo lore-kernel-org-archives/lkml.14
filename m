@@ -1,159 +1,315 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F199130E26;
-	Wed, 27 Mar 2024 12:29:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671C6130E31
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 12:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711542548; cv=none; b=Tw/iOa/8uOggQaCwblsebKzAV/egqdOMxtBaYH4RsyT51yNl318X4S02affT/5jhLxwgBXKzxiT4TX/ov3zi7V7RUQpEDdDeC2jlivQ3n6NQQats4A/kLkQR3VEurO4ua8HqPs4JUcpVTYK5eJT9l00KSo6B6OtHJjz8wqBJ92Q=
+	t=1711542599; cv=none; b=NEiBEU/H6oS/2TvE+0vPZdrocRO1mvp9hk+IaOTLS7yuAWwXS+ufDCeeNhbr74L7rlP7Dl+JQoQpGr+WE6HJmNSctZvpLoLhDzcd8NrSB55GRrsS7t5VI/QN7YBoWAn4C3K/2HINBUnJudg0XoaQWf7pmwyiQKTuxD9H28oRhEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711542548; c=relaxed/simple;
-	bh=CO5GH4EA8whWcoaMAqHIvlMBS85gT/fzeKfIasWL0u4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nx2GuC8AGoqsOyrvF0Gq10GXvbhkpRA0V+0svAweb2rGZhwWYg4PR9luow6WN+lzK3F7HbEyznJh1KrZLSSTTgXHvHtDgZAViiVkPwkSBcUJ+IMAExxOvbd2LrOeAUjDRL42xmj5j5VJxqjA4Ho0+twwy8a6REhMG+NClBdudCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Y6U0j+OF; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1711542599; c=relaxed/simple;
+	bh=rBSk2crF8ZXx9ouVgILg9VbK8sh4lcnXRnYuSoDMFvY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lFxx5Uh1rJlVJeNEHRJzPI12I5TzSUIL3qkktSO9bmvG3mI8GWtsFXHfDvkygKOLoyPM8xPuMEhNRCWQrZeGhDLpK1CuADOePXSENJsV2yoE/1aO1ANfoQNXQa3+FcjW7XXv2G22HA3WZMorSGZZSEUe2ga+8Ev1f2A4Oc+cE/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=EOxICtBR; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Y6U0j+OF"
-Received: from [192.168.88.20] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id D157F1803;
-	Wed, 27 Mar 2024 13:28:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1711542513;
-	bh=CO5GH4EA8whWcoaMAqHIvlMBS85gT/fzeKfIasWL0u4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Y6U0j+OFBoERo4NLXOKKaj2rQdhlzROnRmG0SPXr0BzC8cPgxX5eLyopVOCtZ6Fg1
-	 PdY2shE1BVORLLodPIwDAcXWP69d0OZeMT+rgHTlw+QeUn/nzAYXhlfCy4qxAFWDop
-	 6QEAlXuKLNUlooSiAoK7/AfWsIUZNemcLT3rMPlA=
-Message-ID: <a4053c39-3781-4fc4-9c5e-45f32b5525ed@ideasonboard.com>
-Date: Wed, 27 Mar 2024 14:29:02 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="EOxICtBR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1711542594;
+	bh=rBSk2crF8ZXx9ouVgILg9VbK8sh4lcnXRnYuSoDMFvY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=EOxICtBRMJvl89NGYwRz8EelTFQaeNaEZMwmAMyaGwGJn1NhFzZtEOEP8DPLOGCC1
+	 llO1a4Vzza4tCGRN+hxJ9j76EjC4Xp+1yPmVVtqnFURSOXz2IfG8dG/zHwZvtn+bCk
+	 la7Sb6Y2ZgEwJ5+5HfqG4v9psGtYaQlDHck/Hp/LCCHNEHmd0QlogbKo+t2bAyA6ef
+	 Ik8WjHhGc2LWPQC1KMj+NVWxjae2IDQFammzz7cW4NNrcprjYw9xV6q2X/BEiNaTES
+	 D61kiS8AegG1PP+67AlK0iylUTb7koADgWSHjZjr9ydezAfRn1KZbQ61wXb/80cotM
+	 WL1LptNSBrXjQ==
+Received: from eldfell (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pq)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 14CBB37811CD;
+	Wed, 27 Mar 2024 12:29:53 +0000 (UTC)
+Date: Wed, 27 Mar 2024 14:29:51 +0200
+From: Pekka Paalanen <pekka.paalanen@collabora.com>
+To: Louis Chauvet <louis.chauvet@bootlin.com>
+Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, Melissa Wen
+ <melissa.srw@gmail.com>, =?UTF-8?B?TWHDrXJh?= Canal
+ <mairacanal@riseup.net>, Haneen Mohammed <hamohammed.sa@gmail.com>, Daniel
+ Vetter <daniel@ffwll.ch>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ arthurgrillo@riseup.net, Jonathan Corbet <corbet@lwn.net>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com,
+ thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com,
+ nicolejadeyee@google.com
+Subject: Re: [PATCH v5 10/16] drm/vkms: Re-introduce line-per-line
+ composition algorithm
+Message-ID: <20240327142951.192e0b5f.pekka.paalanen@collabora.com>
+In-Reply-To: <ZgLwTvjdzf8KTZsY@localhost.localdomain>
+References: <20240313-yuv-v5-0-e610cbd03f52@bootlin.com>
+	<20240313-yuv-v5-10-e610cbd03f52@bootlin.com>
+	<20240325174309.28f91bec.pekka.paalanen@collabora.com>
+	<ZgLwTvjdzf8KTZsY@localhost.localdomain>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] dma: Add lockdep asserts to virt-dma
-Content-Language: en-US
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Michal Simek <michal.simek@amd.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
-References: <20240308210034.3634938-1-sean.anderson@linux.dev>
- <20240308210034.3634938-4-sean.anderson@linux.dev>
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20240308210034.3634938-4-sean.anderson@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/lddhg.sxiDa51TLW7SbOP9Y";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 08/03/2024 23:00, Sean Anderson wrote:
-> Add lockdep asserts to all functions with "vc.lock must be held by
-> caller" in their documentation. This will help catch cases where these
-> assumptions do not hold.
-> 
-> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-> ---
+--Sig_/lddhg.sxiDa51TLW7SbOP9Y
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+On Tue, 26 Mar 2024 16:57:02 +0100
+Louis Chauvet <louis.chauvet@bootlin.com> wrote:
 
-  Tomi
+> [...]
+>=20
+> > > @@ -215,34 +188,146 @@ static void blend(struct vkms_writeback_job *w=
+b,
+> > >  {
+> > >  	struct vkms_plane_state **plane =3D crtc_state->active_planes;
+> > >  	u32 n_active_planes =3D crtc_state->num_active_planes;
+> > > -	int y_pos, x_dst, x_limit;
+> > > =20
+> > >  	const struct pixel_argb_u16 background_color =3D { .a =3D 0xffff };
+> > > =20
+> > > -	size_t crtc_y_limit =3D crtc_state->base.crtc->mode.vdisplay;
+> > > +	int crtc_y_limit =3D crtc_state->base.crtc->mode.vdisplay;
+> > > +	int crtc_x_limit =3D crtc_state->base.crtc->mode.hdisplay;
+> > > =20
+> > >  	/*
+> > >  	 * The planes are composed line-by-line to avoid heavy memory usage=
+. It is a necessary
+> > >  	 * complexity to avoid poor blending performance.
+> > >  	 *
+> > > -	 * The function vkms_compose_row is used to read a line, pixel-by-p=
+ixel, into the staging
+> > > -	 * buffer.
+> > > +	 * The function pixel_read_line callback is used to read a line, us=
+ing an efficient
+> > > +	 * algorithm for a specific format, into the staging buffer.
+> > >  	 */
+> > >  	for (size_t y =3D 0; y < crtc_y_limit; y++) {
+> > >  		fill_background(&background_color, output_buffer);
+> > > =20
+> > >  		/* The active planes are composed associatively in z-order. */
+> > >  		for (size_t i =3D 0; i < n_active_planes; i++) {
+> > > -			x_dst =3D plane[i]->frame_info->dst.x1;
+> > > -			x_limit =3D min_t(size_t, drm_rect_width(&plane[i]->frame_info->d=
+st),
+> > > -					stage_buffer->n_pixels);
+> > > -			y_pos =3D get_y_pos(plane[i]->frame_info, y);
+> > > +			struct vkms_plane_state *current_plane =3D plane[i];
+> > > =20
+> > > -			if (!check_limit(plane[i]->frame_info, y_pos))
+> > > +			/* Avoid rendering useless lines */
+> > > +			if (y < current_plane->frame_info->dst.y1 ||
+> > > +			    y >=3D current_plane->frame_info->dst.y2)
+> > >  				continue;
+> > > =20
+> > > -			vkms_compose_row(stage_buffer, plane[i], y_pos);
+> > > -			pre_mul_alpha_blend(stage_buffer, output_buffer, x_dst, x_limit);
+> > > +			/*
+> > > +			 * dst_line is the line to copy. The initial coordinates are insi=
+de the =20
+>=20
+> [...]
+>=20
+> > > +				 */
+> > > +				pixel_count =3D drm_rect_width(&src_line);
+> > > +				if (x_start < 0) {
+> > > +					pixel_count +=3D x_start;
+> > > +					x_start =3D 0;
+> > > +				}
+> > > +				if (x_start + pixel_count > current_plane->frame_info->fb->width=
+) {
+> > > +					pixel_count =3D
+> > > +						(int)current_plane->frame_info->fb->width - x_start;
+> > > +				}
+> > > +			} else {
+> > > +				/*
+> > > +				 * In vertical reading, the src_line height is the number of pix=
+el
+> > > +				 * to read
+> > > +				 */
+> > > +				pixel_count =3D drm_rect_height(&src_line);
+> > > +				if (y_start < 0) {
+> > > +					pixel_count +=3D y_start;
+> > > +					y_start =3D 0;
+> > > +				}
+> > > +				if (y_start + pixel_count > current_plane->frame_info->fb->heigh=
+t) {
+> > > +					pixel_count =3D
+> > > +						(int)current_plane->frame_info->fb->width - y_start;
+> > > +				} =20
+> >=20
+> > When you are clamping x_start or y_start or pixel_count to be inside
+> > the source FB, should you not equally adjust the destination
+> > coordinates as well? =20
+>=20
+> I did not think about it. Currently it is not an issue and it will not=20
+> read or write outside a buffer because the pixel count is properly=20
+> limited. But indeed, there is an issue here. I will fix it in the v6.
+> =20
+> > If we take a step back and look at the UAPI, I believe the answer is
+> > "no", but it's in no way obvious. It results from the combination of
+> > several facts:
+> >=20
+> > - UAPI checks reject any source rectangle that extends outside of the
+> >   source FB.
+> >=20
+> > - The source rectangle stretches to fill the destination rectangle
+> >   exactly.
+> >=20
+> > - VKMS does not support stretching (scaling), so its UAPI checks reject
+> >   any commit with source and destination rectangles of different sizes
+> >   after accounting for rotation. (Right?) =20
+>=20
+> I don't know what are exactly the UAPI contract but as the dst can be=20
+> outside the CRTC, I assumed that the src can be outside the source plane.=
+=20
+> After thinking it doesn't really make sense.
 
->   drivers/dma/virt-dma.h | 10 ++++++++++
->   1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/dma/virt-dma.h b/drivers/dma/virt-dma.h
-> index e9f5250fbe4d..59d9eabc8b67 100644
-> --- a/drivers/dma/virt-dma.h
-> +++ b/drivers/dma/virt-dma.h
-> @@ -81,6 +81,8 @@ static inline struct dma_async_tx_descriptor *vchan_tx_prep(struct virt_dma_chan
->    */
->   static inline bool vchan_issue_pending(struct virt_dma_chan *vc)
->   {
-> +	lockdep_assert_held(&vc->lock);
-> +
->   	list_splice_tail_init(&vc->desc_submitted, &vc->desc_issued);
->   	return !list_empty(&vc->desc_issued);
->   }
-> @@ -96,6 +98,8 @@ static inline void vchan_cookie_complete(struct virt_dma_desc *vd)
->   	struct virt_dma_chan *vc = to_virt_chan(vd->tx.chan);
->   	dma_cookie_t cookie;
->   
-> +	lockdep_assert_held(&vc->lock);
-> +
->   	cookie = vd->tx.cookie;
->   	dma_cookie_complete(&vd->tx);
->   	dev_vdbg(vc->chan.device->dev, "txd %p[%x]: marked complete\n",
-> @@ -146,6 +150,8 @@ static inline void vchan_terminate_vdesc(struct virt_dma_desc *vd)
->   {
->   	struct virt_dma_chan *vc = to_virt_chan(vd->tx.chan);
->   
-> +	lockdep_assert_held(&vc->lock);
-> +
->   	list_add_tail(&vd->node, &vc->desc_terminated);
->   
->   	if (vc->cyclic == vd)
-> @@ -160,6 +166,8 @@ static inline void vchan_terminate_vdesc(struct virt_dma_desc *vd)
->    */
->   static inline struct virt_dma_desc *vchan_next_desc(struct virt_dma_chan *vc)
->   {
-> +	lockdep_assert_held(&vc->lock);
-> +
->   	return list_first_entry_or_null(&vc->desc_issued,
->   					struct virt_dma_desc, node);
->   }
-> @@ -177,6 +185,8 @@ static inline struct virt_dma_desc *vchan_next_desc(struct virt_dma_chan *vc)
->   static inline void vchan_get_all_descriptors(struct virt_dma_chan *vc,
->   	struct list_head *head)
->   {
-> +	lockdep_assert_held(&vc->lock);
-> +
->   	list_splice_tail_init(&vc->desc_allocated, head);
->   	list_splice_tail_init(&vc->desc_submitted, head);
->   	list_splice_tail_init(&vc->desc_issued, head);
+The UAPI contract for source and destination rectangles is here:
+https://dri.freedesktop.org/docs/drm/gpu/drm-kms.html#standard-plane-proper=
+ties
 
+I assume there is some shared (helper?) code in DRM that enforces the
+contract and returns error to userspace if it is violated.
+
+> > I think this results in the clamping code being actually dead code.
+> > However, I would not delete the clamping code, because it is a cheap
+> > safety net in case something goes wrong. =20
+>=20
+> If UAPI check that the source rectangle is inside the plane, yes it is=20
+> just a safety net. Otherwise, it is required to manage properly the=20
+> userspace requests. In the v6, the outside of a source buffer is=20
+> transparent.
+>=20
+> > If you agree that it's just a safety net, then maybe explain that in a
+> > comment? If the safety net catches anything, the composition result
+> > will be wrong anyway, so it doesn't matter to adjust the destination
+> > rectangle to match. =20
+>=20
+> I will extract this whole clamping stuff in a function, is this comment=20
+> enough?
+>=20
+>  * This function is mainly a safety net to avoid reading outside the sour=
+ce buffer. As the
+>  * userspace should never ask to read outside the source plane, all the c=
+ases covered here should
+>  * be dead code.
+
+Sure. Perhaps use a bit more assertive tone about what the UAPI
+contract guarantees. Yes, userspace "should not", but the kernel DRM
+code ensures that it does not.
+
+> > When the last point is relaxed and VKMS gains scaling support, I think
+> > it won't change the fact that the clamping remains as a safety net. It
+> > just increases the risk of bugs that would be caught by the net.
+> >=20
+> > Going outside of FB boundaries is a serious bug and deserves to be
+> > checked. Going outside of the source rectangle would be a bug too,
+> > assuming that partially included pixels are considered fully included,
+> > but it's not serious enough to warrant explicit checks. Ideally IGT
+> > would catch it. =20
+>=20
+> That was exactly the idea behind all those check and clamping: avoid=20
+> access outside the buffers.
+
+Good.
+
+To catch a driver using pixels outside of a source rectangle, the test
+FB in IGT should be painted to have a different non-black color outside
+of the source rectangle.
+
+> > > +			}
+> > > +
+> > > +			if (pixel_count <=3D 0) {
+> > > +				/* Nothing to read, so avoid multiple function calls for nothing=
+ */
+> > > +				continue;
+> > > +			}
+> > > +
+> > > +			/*
+> > > +			 * Modify the starting point to take in account the rotation
+> > > +			 *
+> > > +			 * src_line is the top-left corner, so when reading READ_RIGHT_TO=
+_LEFT or
+> > > +			 * READ_BOTTOM_TO_TOP, it must be changed to the top-right/bottom=
+-left
+> > > +			 * corner.
+> > > +			 */
+> > > +			if (direction =3D=3D READ_RIGHT_TO_LEFT) {
+> > > +				// x_start is now the right point
+> > > +				x_start +=3D pixel_count - 1;
+> > > +			} else if (direction =3D=3D READ_BOTTOM_TO_TOP) {
+> > > +				// y_start is now the bottom point
+> > > +				y_start +=3D pixel_count - 1;
+> > > +			}
+> > > +
+> > > +			/*
+> > > +			 * Perform the conversion and the blending
+> > > +			 *
+> > > +			 * Here we know that the read line (x_start, y_start, pixel_count=
+) is
+> > > +			 * inside the source buffer [2] and we don't write outside the st=
+age
+> > > +			 * buffer [1]
+> > > +			 */
+> > > +			current_plane->pixel_read_line(
+> > > +				current_plane, x_start, y_start, direction, pixel_count,
+> > > +				&stage_buffer->pixels[current_plane->frame_info->dst.x1]);
+> > > +
+> > > +			pre_mul_alpha_blend(stage_buffer, output_buffer,
+> > > +					    current_plane->frame_info->dst.x1,
+> > > +					    pixel_count);
+> > >  		}
+> > > =20
+> > >  		apply_lut(crtc_state, output_buffer);
+> > > @@ -250,7 +335,7 @@ static void blend(struct vkms_writeback_job *wb,
+> > >  		*crc32 =3D crc32_le(*crc32, (void *)output_buffer->pixels, row_siz=
+e);
+> > > =20
+> > >  		if (wb)
+> > > -			vkms_writeback_row(wb, output_buffer, y_pos);
+> > > +			vkms_writeback_row(wb, output_buffer, y);
+> > >  	}
+> > >  }
+
+
+Thanks,
+pq
+
+--Sig_/lddhg.sxiDa51TLW7SbOP9Y
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAmYEET8ACgkQI1/ltBGq
+qqdLog//WG3lrD7UWAQgtj0+J3L/cX7uRLrdxOeZ9Iygg6n+qychr0ZCQv9Q4fsA
+hf/QmqXNT/zQsoV1+ZS8tlGOwvU8Q74PEMvNU8ij1jqtLuYh3ln+Cb6rY7lu59tw
+rdFpD/bygkVIOTSjCqIqXtz8ycqtzrcFT8/9txbkNZO11QPuDcMouZ2OX0j0Wdau
+yUdzTAs2Qc1xTn7khhHZjCCQyqJInEQEePrB5xOO4L/FoFxQqe+EhS7/zbmD8ePA
+VWk2EBgHoBgH0HL6nn+vGAuCyUOl13SK1Iced/RIp4tlyRnnYCaAE8y135jGOfKD
+nfW4y7BoxwTp7aLk/H6H1Y8rF7RlqdKRpIZKh+agsYA864NJIYeEqdA/4xcVxvZj
+6nZM0rSr7U7yxoVivZGiRo20LW9W3dE88rhTZajSnJhR8uMYEY2sEtoatOHrrr6i
++YsAW46SPPK4iCO/BiN0ofkXsWayoSz6WQjkIFL/r9jW0MZZhbfGXFS3MDwk9qyN
+EPF1WSygx4+isAB+IItKXiE2PGFLNmZEs4eVyKJvD+vKUDELMjvRuglEouJY8+9K
+HkPibXD+Y24h+lM1nEWN0Vq0bjuPqOW8DahqrRLe+iM1CatcpIPXhZri/EVTZZNb
+h4Dx31qvmnTPO3ynQ+mStdKfTTUeRljgIl3/8Uw0+aThj6VEmN0=
+=kB0e
+-----END PGP SIGNATURE-----
+
+--Sig_/lddhg.sxiDa51TLW7SbOP9Y--
