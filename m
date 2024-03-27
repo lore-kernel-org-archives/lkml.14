@@ -1,104 +1,94 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC15134CC0;
-	Wed, 27 Mar 2024 15:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4498613A3FF;
+	Wed, 27 Mar 2024 15:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711554280; cv=none; b=WV1IzF0lI0ejK2M5ZCdcSHCrEdL3BGjIlVgOoDCA+cuvP/DACHx8Ui8a2ftdITA/9Ihu6TI3S8ff1b9i6AWhmqPjUnu46nvH8JZ4WhOYQs5WVvqQ3a4MVyXDB/J2WKJjI/2KefjLeHON7tHfK23968zwqOk+FHiEfOm/H3Euvwo=
+	t=1711554290; cv=none; b=GBLuvUwEd48uxxrjkrKI7nB16e/oNJPiskyj2ZbzmRan8mi6r1d1mPW9ofa2HthMk+cIzsFIo2KzKK9weKtH8Ds9Tew6GcEGk6zu6EY+Z+XPRjoXWytAZXUksJ1semZbQslcXNx4Roo4THpo0EJkxKzl8djuXvRgVGyUDfn7IVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711554280; c=relaxed/simple;
-	bh=8RixWcSd2JJyYLHi087rVeRA/JkQ9IP17D2hcMIULYE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=k+iPlsZl9l5f3gZ9Hucr12CJJVV2nnfjB3ntYFqIN1mL9U2TCwmwpWlpsmBH6gqAQgJ2QwbX3tqfA8eqUoV8mBLl0r29jhcuajSG2QOXdkP1PuU8ecjRorc0qNRthKSMCYuLcLMAjAKuBauOCXBLhGg2dRx79LLWw7BcXW4BE4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=iz9Gw0BZ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1711554290; c=relaxed/simple;
+	bh=+NIa5J5TSJ7cA8Syi4CHzkOpCVlLP9HE63EdCDK+cRw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NXd35Wa/wIzIdDNGDDPwOOojGExnCPyyyCBqiU+MUyQWkpNN+cYIYk1t/l5fSSdS2d8YB3gLNJI2ua/EstleOJn+ameJCjhZChnABVn+MMGszUfcdapm2NgUi7zzFntsZJ/xYLtfLLqNQnoUYe6A99pNSixtj0Adxi3pZtTObq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TCmDhIHf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="iz9Gw0BZ"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42RAQv8N021075;
-	Wed, 27 Mar 2024 15:42:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=8DoMiz8HpEkPB1xE3p2eeM8oOzoz/X+6OQFWHtIe7wY=; b=iz
-	9Gw0BZH1FCzh/4v+cjUrBF3yu2dGmd6sCW2zGkJcdN++RmMIgqUfCnsYEabQvpOp
-	spjRvN7LNJKyXd3/1sbNdZUZDh0LF0xSvpWK8FOBlmNhG6EoK+G/ScQ95C0NAfBM
-	6o6dETSN7ylfYeZeuRhJ69sJd9Td3sFVrQXt2hCSG07ekvOmjGBsKCWUlkfZ1H3P
-	djK51e4W6ywekm69jkbNb8s6rlWuAY81DYXraYrdz+eUoW/VmsYP4EW2UJhz6em2
-	YZ1I9WxzUvXOPuzVoMxAm23mwapO4p9BJRVgMkQlnhcMWTaWvJH2wf9YoKHqZJ8G
-	mKlxItByWUJxwu8dZh6A==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x4etk9atv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 27 Mar 2024 15:42:57 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42RFgucx017852
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 27 Mar 2024 15:42:56 GMT
-Received: from [10.110.28.48] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 27 Mar
- 2024 08:42:56 -0700
-Message-ID: <00b1703a-47d7-4dc1-a3cd-f07f1a24db92@quicinc.com>
-Date: Wed, 27 Mar 2024 08:42:55 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TCmDhIHf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEACEC433C7;
+	Wed, 27 Mar 2024 15:44:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711554289;
+	bh=+NIa5J5TSJ7cA8Syi4CHzkOpCVlLP9HE63EdCDK+cRw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TCmDhIHf6MYt6jA/m2FOwtQnSjGrPsCib8wKZ3lf/Uzvhg7+mJ2LHSLQuFCnOJc5Q
+	 HFLB/wEwnK8UYU9ryDiRE7a+KtcX5mlYuaXi7DaZq8Mlq5J14HaFGP4sToa+MdDD0Q
+	 m6O/wWAs8Mg/l05twHo7LpO8FfSawuSoL0xDPVma7jIdrHdnTHKezIRL29+EyO3dUB
+	 KSoakbsf/HbC78vkt1/jQj2Ulx6Uz2PnPlJIwhZ4HA2ajwuwVD5YeDTsZOd2oA7ReM
+	 SksO4if+GZMc5eYfOlU7BIYvazUP0JEPsAU+CxC6ISt97+9HJH7+ZNzWbzWyYzAx2a
+	 4LquRaY27FEiQ==
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6e6a40a15c5so1996690a34.0;
+        Wed, 27 Mar 2024 08:44:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVrLX7XD9+ThVNU9sABWzC4OF1D2Bf0XVk4sX3NysVeD51fJ/krVmlCkqOxc1fg6/D7bKid4QV0mr9t2alfPQk0x4Y94KvfFS+oC+3PZfv2zvrvEx1gSb+HCNYHvSnNFKJAVSkEe/4=
+X-Gm-Message-State: AOJu0Yz+cr8i/OagRyQlz6wTUm05BywbbojJBAV0yPsKrdMbUFOMGbZl
+	hkNI2n/xyIhF/lpvtKu1yqTHOgOUywnA1KHNvXr8TO0VzPLAlzpovxawtDstCCzFjIAj/RpOaML
+	RIU4BoPzDc2Wi1dErzmKonwvqSxU=
+X-Google-Smtp-Source: AGHT+IFRjXu6XODER8iIXFwVOxGCKZ5u/SbJ86GhZp/aswG6CVO2u1aJZXwbY2lxvrkypGOkEjpRW2pIDL5E4cKCV4M=
+X-Received: by 2002:a05:6870:6715:b0:229:e46d:763a with SMTP id
+ gb21-20020a056870671500b00229e46d763amr63216oab.0.1711554289017; Wed, 27 Mar
+ 2024 08:44:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ath10k: allocate dummy net_device dynamically
-Content-Language: en-US
-To: Jakub Kicinski <kuba@kernel.org>, Breno Leitao <leitao@debian.org>
-CC: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
-        <keescook@chromium.org>,
-        "open list:NETWORKING DRIVERS (WIRELESS)"
-	<linux-wireless@vger.kernel.org>,
-        "open list:QUALCOMM ATHEROS ATH10K WIRELESS
- DRIVER" <ath10k@lists.infradead.org>,
-        open list
-	<linux-kernel@vger.kernel.org>
-References: <20240319104754.2535294-1-leitao@debian.org>
- <9fcdb857-da62-4832-ae11-043fe993e4ad@quicinc.com>
- <20240321072821.59f56757@kernel.org>
- <5039256c-03eb-4cda-8d11-49e4561cf1ef@quicinc.com>
- <20240321151744.246ce2d0@kernel.org> <Zf2ceu2O47lLbKU3@gmail.com>
- <20240322082336.49f110cc@kernel.org> <ZgQvTTnMoBn2oG1K@gmail.com>
- <20240327074516.624b7ecf@kernel.org>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <20240327074516.624b7ecf@kernel.org>
+References: <2331888.ElGaqSPkdT@kreacher> <42ffcfb8-33fd-4ea5-bfac-fa8c78cd1cd4@linaro.org>
+ <2273843.iZASKD2KPV@kreacher> <1f028df8-435a-43cb-b776-0c2141f1c374@linaro.org>
+In-Reply-To: <1f028df8-435a-43cb-b776-0c2141f1c374@linaro.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 27 Mar 2024 16:44:38 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0iz5+suB8jiHvxxCtibXo0mN5Grke1zzax4tQvV1kY-2w@mail.gmail.com>
+Message-ID: <CAJZ5v0iz5+suB8jiHvxxCtibXo0mN5Grke1zzax4tQvV1kY-2w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] thermal: More separation between the core and drivers
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 9t0qFKztIXR9CV8_LmGTXfCo6DyZLgh_
-X-Proofpoint-ORIG-GUID: 9t0qFKztIXR9CV8_LmGTXfCo6DyZLgh_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-27_12,2024-03-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- bulkscore=0 phishscore=0 spamscore=0 impostorscore=0 mlxlogscore=882
- priorityscore=1501 clxscore=1015 suspectscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2403210001 definitions=main-2403270108
+Content-Transfer-Encoding: quoted-printable
 
-On 3/27/2024 7:45 AM, Jakub Kicinski wrote:
-> On Wed, 27 Mar 2024 07:38:05 -0700 Breno Leitao wrote:
->>   -void init_dummy_netdev(struct net_device *dev)
->>   +void init_dummy_netdev_core(struct net_device *dev)
-> 
-> Can init_dummy_netdev_core() be a static function (and no export)?
-> alloc_netdev_dummy() is probably going to be the only user.
-> 
-> I'd also lean towards squashing the two commits into one.
+On Mon, Mar 25, 2024 at 5:05=E2=80=AFPM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> On 25/03/2024 14:39, Rafael J. Wysocki wrote:
+> > Hi Daniel,
+> >
+> > On Monday, March 25, 2024 2:33:27 PM CET Daniel Lezcano wrote:
+> >>
+> >> Hi Rafael,
+> >>
+> >> thank you for this series.
+> >>
+> >> It has been reported a regression with commit cf3986f8c01d3. I'm
+> >> investigating and confirming it. If it is the case a revert may impact
+> >> this series.
+> >
+> > Sure.
+> >
+> > Can you please give me a pointer to a BZ or e-mail thread where this is
+> > being handled?
+>
+> That has been reported to me directly. In a moment, I'll start a thread
 
-And once all of the conversions are complete, won't init_dummy_netdev() no
-longer be used and can be removed?
+There is only a tiny conflict in one hunk of patch [1/3] with this revert:
 
+https://lore.kernel.org/linux-pm/20240325222424.4179635-1-daniel.lezcano@li=
+naro.org/
 
+and it is straightforward to resolve, so no worries.
 
+I'll send an update of patch [1/3] nevertheless.
+
+Cheers!
