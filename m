@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8185814D2BC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A466D1514F5;
 	Wed, 27 Mar 2024 19:11:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711566710; cv=none; b=LpwkU+/YEsL8+y69ks66vWplu7XcvCVjnHi05AQ0sabw0L5AjTU2qS+gbxomuSH+SNBUghWhe7odV0r7qSAV/VvT6EFOtUJK+0vgPZOgUZDz96HjlW2MQLHsnny9KwBNUP2dnjUt7K+et7alWRdjFfeFnnmBlt/2Nxp+vBQXdrY=
+	t=1711566710; cv=none; b=odAWV/dYGunwRq1fOgsi3u255pGoHCtjCIgID12WBS0BDvX/+kQP44pbbpdsgEToj2X/gLqKupqJpK9GxbuHoWWd5nivr8pNnQCnurx+8kRepBF0Ngrve9jeKwVQjw8tp1jEpEeTQMzbbR2Cf4WvYFxS6/gGpz0a1rnO35fCFcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711566710; c=relaxed/simple;
-	bh=wi3UudNlYPIq+1jzeag//Ji0vym5lrn/VexnhbraNx8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XeA0zfaS1lOr2Up9wsgogm2EMPf5gTzPeYfC45+FwI1qO3LGMvLKZTvynDREzKjNu1I8BT8JG4ApDj8I4WHZRHyRU6rrIB/WuNqu3PxCfASJIcT4BOqUx1VgexgZiygXOiIWfMYRXT5zyqam7++kkkzbklbkTqvEynMga671a1s=
+	bh=4nUPryLtDGoo4If+YhVGo/DJxC63+p+eZWj9NhHwPaQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=V61JprHxEvL607aPd/aMRkqmmBY8gv52KE4zCqWDR+K2kKGSjhXxtzT9lDd5bb8VqyhuBTir+5DQquXxir0+rRXoxA6mMpStAZNs+JmGB9UQOQgmGNzXunAXRqubWQIfKzoXje+g4Iy5hx1zN8KAY7/Y3oh86ex7dRYpDntO2f0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09B1DC43390;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24B9DC43394;
 	Wed, 27 Mar 2024 19:11:50 +0000 (UTC)
 Received: by mercury (Postfix, from userid 1000)
-	id AF2871060995; Wed, 27 Mar 2024 20:11:47 +0100 (CET)
+	id A8BC110608D9; Wed, 27 Mar 2024 20:11:47 +0100 (CET)
 From: Sebastian Reichel <sebastian.reichel@collabora.com>
-Date: Wed, 27 Mar 2024 20:11:35 +0100
-Subject: [PATCH v2 4/7] ARM: dts: omap4: fix hsi-port node name
+Subject: [PATCH v2 0/7] Convert MIPI HSI DT bindings to YAML
+Date: Wed, 27 Mar 2024 20:11:31 +0100
+Message-Id: <20240327-hsi-dt-binding-v2-0-110fab4c32ae@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,9 +27,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240327-hsi-dt-binding-v2-4-110fab4c32ae@collabora.com>
-References: <20240327-hsi-dt-binding-v2-0-110fab4c32ae@collabora.com>
-In-Reply-To: <20240327-hsi-dt-binding-v2-0-110fab4c32ae@collabora.com>
+X-B4-Tracking: v=1; b=H4sIAGNvBGYC/3XMQQ6CMBCF4auQWTumFMHqynsYFkM70kmwNS0hG
+ sLdrexd/i953wqZk3CGa7VC4kWyxFBCHyqwnsLIKK40aKVPqtEt+izoZhwkOAkjUuu6TnPjOlV
+ DOb0SP+S9g/e+tJc8x/TZ/aX+rX+ppUaFxrDhy9k2RHyzcZpoiImONj6h37btC1U4FzOwAAAA
 To: Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
  Conor Dooley <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>
@@ -37,55 +37,90 @@ Cc: Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org,
  linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Sebastian Reichel <sebastian.reichel@collabora.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1082;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3162;
  i=sebastian.reichel@collabora.com; h=from:subject:message-id;
- bh=wi3UudNlYPIq+1jzeag//Ji0vym5lrn/VexnhbraNx8=;
- b=owEBbQKS/ZANAwAKAdju1/PIO/qaAcsmYgBmBG9yLqF+Q7axsNcb7l9NE0t+tdlJ7+wqWT/j4
- uJW54pYAAaJAjMEAAEKAB0WIQTvZg0HRj+Lcmp5VBPY7tfzyDv6mgUCZgRvcgAKCRDY7tfzyDv6
- mkYmD/9wFvwBiF6wSSaUM2Wpt/pkZ/K6OQGYfev3HEMXUOHQKCCPgV+A4KaQpk2d3tnF3w5D3ip
- P6rzN87Wczv99BLKdVXLI4irVk8EIlDoQP20PpXyzUqxjj2kUBoCEI6bFGqSYIdjQjozN2CZQ3W
- knvbflPuFuMwJLk+mo+fESP1UkQsItSiq84TmfkDtMATIbacP88lfKyE6pu6nAygURLZR0cVEG1
- 5KvCEWgoZwwdgLv1U9Jjd6KlS1DBob71Bz8d9YgVvDblLSHxLWjz/bqeOTmOZY+zc3/bFi1ljqy
- GEpwXW1rLKGINqbdBhcl06TEtUhBdHn9cfkKse6f0qviCJ2RReTBASLmoEV5GMVQ4hAn2Q9jNJN
- +2sFN+yHW5Cit2IZWZjYSYe1f+IP8nvv0zqKawM0HdRTkPGfDPDWrI2IlU5wSzPQLMXZH7Yn4op
- ILrbFuocUO3br4RvjE9u3CyJTYG1obIXmxVYeTmFJV/COZk6wUlulYALPUVmdJ1W/U91UqDC4kQ
- oKWDeNPZHkQBXydDVKgeFszA3CqDn7Xe0QyrK4FvaomamzHnlO5PhguaQtZ8UAo4oid38lErluD
- 4JcQmIsE+gSrqID+GDg1T0jtEXlidTMq1/dwpBviUVXVZpropFSHBnrFyVBhxQUCXpSez5DWelA
- rT/Isb6JbkvtRxA==
+ bh=4nUPryLtDGoo4If+YhVGo/DJxC63+p+eZWj9NhHwPaQ=;
+ b=owEBbQKS/ZANAwAKAdju1/PIO/qaAcsmYgBmBG9x/b+YytQSsGm+JuuxhwO8DgpUfrQ5+hgsY
+ YLrQD0Jmz6JAjMEAAEKAB0WIQTvZg0HRj+Lcmp5VBPY7tfzyDv6mgUCZgRvcQAKCRDY7tfzyDv6
+ mvwHD/0WN4FXiK/xWrK6kBd9G7xlLEBLmjOKAehn/7+CsJcEUjMoTbRBw0FdkpSIuc2BaztkO6K
+ IAULcZtV6tKJFDHqkLVDARnvsKAW3517tbN9CCgjtCMZwZKocYTk1uFAyX7H9ZOjktoKRKJ0nPY
+ 1TGy3iqYTHHE8c2la05Fec9FOiepQQ8tQ/8QfzD3aBYBh9F+37kafeNxnDedY5rMTyZUtO1Nh1H
+ 5zf4EsIysQoSh0dmo39Wx4EdYsIrA5p80L8pCCKHBQZmmlxBrkhwJ7Ok4Ihqi3rD3MBVId51dil
+ Amd6DekW0TFXuqr4dqBhZMarAjgMMFTrate6dmohF6cRL1PG+PTWVIE47bcJ0oBAR0id/ktExpR
+ iQK2MHAtqHzVQbCbBAHnJ5a/V9R5Yxx0lIUAa9iRSUaIs/GoWkw49ChO+pGWjR2oLp09Bz1c19L
+ j8dqqgpKbSqKwt4wSvHqN+zzL3sbAidSAlK9txw/qF5ZhqM+XN17Lvm0uGaswWuC8eqizGXtbyY
+ LqVTb2x5cBkbjZrepRhXCVI8QkPzmK7bD7OxBrv5zeIczeRM52Vx7CziGkhuQ4GakNQaC7SsHeV
+ 8NOL/O9SuF4oJXvCM3jtdoxLa9x+bRdfPB2m0C9uoEYmg8DLuwPVBlYjnAmM1otl+JQuoTvqJ43
+ Lpjjyu0RzOMKh2g==
 X-Developer-Key: i=sebastian.reichel@collabora.com; a=openpgp;
  fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
 
-The DT binding specifies, that the node names for the HSI ports should
-be just 'port@<address>' instead of 'hsi-port@<address>'.
+Hi,
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+This converts all MIPI HSI subystem DT bindings to YAML.
+I ran the following tests:
+
+1. Check binding files
+   make -j$(nproc) dt_binding_check DT_SCHEMA_FILES=/hsi/
+2. Check OMAP3 and nokia-modem DT
+   make -j$(nproc) CHECK_DTBS=y ti/omap/omap3-n900.dtb ti/omap/omap3-n950.dtb ti/omap/omap3-n9.dtb
+3. Check OMAP4 DT (OMAP4 HSI is not used upstream, so one is enough)
+   make -j$(nproc) CHECK_DTBS=y ti/omap/omap4-droid4-xt894.dtb
+
+FWIW I noticed a lots of warnings for OMAP3 & OMAP4, but
+none related to HSI/SSI.
+
+Greetings,
+
+-- Sebastian
+
 ---
- arch/arm/boot/dts/ti/omap/omap4-l4.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Changes in v2:
+- Link to v1: https://lore.kernel.org/r/20240325-hsi-dt-binding-v1-0-88e8e97c3aae@collabora.com
+- fixed, that "hsi-client" is not a generic node name
+- hsi-client.yaml needs to use oneOf instead of anyOf for the hsi-mode requirement
+- change nokia-modem.yaml to nokia,modem.yaml
+- add hsi-channel-ids constraints to nokia modem binding; I had to also add
+  $ref: /schemas/types.yaml#/definitions/uint32-array again, because otherwise
+  the tooling complained about the example DT having not enough IDs for
+  [[0], [1], [2], [3]]. It does properly inherit the hsi-client.yaml, though.
+  If I drop the constraints from the modem binding and change the generic binding
+  to require 5 IDs, the tooling does complain. So I think this is a bug in the DT
+  checking tool. For now readding the ref again seems to be a good enough workaround.
+- changed node name to "modem" for the nokia modem
+- renamed ti,ssi-cawake-gpio to ti,ssi-cawake-gpios
+- changed ssi-port@ & hsi-port@ to just port@
+- dropped blank line in omap-ssi binding
+- moved additionalProperties before the examples in omap-ssi binding
+- fixed indentation for the omaps-ssi example in the binding
+- added patches fixing up OMAP3 & OMAP4 DT files according to the latest changes
 
-diff --git a/arch/arm/boot/dts/ti/omap/omap4-l4.dtsi b/arch/arm/boot/dts/ti/omap/omap4-l4.dtsi
-index 3fcef3080eae..8963c966cac7 100644
---- a/arch/arm/boot/dts/ti/omap/omap4-l4.dtsi
-+++ b/arch/arm/boot/dts/ti/omap/omap4-l4.dtsi
-@@ -214,7 +214,7 @@ hsi: hsi@0 {
- 				#size-cells = <1>;
- 				ranges = <0 0 0x4000>;
- 
--				hsi_port1: hsi-port@2000 {
-+				hsi_port1: port@2000 {
- 					compatible = "ti,omap4-hsi-port";
- 					reg = <0x2000 0x800>,
- 					      <0x2800 0x800>;
-@@ -222,7 +222,7 @@ hsi_port1: hsi-port@2000 {
- 					interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
- 				};
- 
--				hsi_port2: hsi-port@3000 {
-+				hsi_port2: port@3000 {
- 					compatible = "ti,omap4-hsi-port";
- 					reg = <0x3000 0x800>,
- 					      <0x3800 0x800>;
+---
+Sebastian Reichel (7):
+      dt-bindings: hsi: hsi-client: convert to YAML
+      dt-bindings: hsi: nokia-modem: convert to YAML
+      dt-bindings: hsi: omap-ssi: convert to YAML
+      ARM: dts: omap4: fix hsi-port node name
+      ARM: dts: omap3: fix ssi-port node name
+      ARM: dts: omap3: fix ti,ssi-cawake-gpio property name
+      ARM: dts: omap3: use generic node name for hsi clients
 
+ .../devicetree/bindings/hsi/client-devices.txt     |  44 -----
+ .../devicetree/bindings/hsi/hsi-client.yaml        |  81 ++++++++++
+ .../devicetree/bindings/hsi/nokia,modem.yaml       | 106 ++++++++++++
+ .../devicetree/bindings/hsi/nokia-modem.txt        |  59 -------
+ Documentation/devicetree/bindings/hsi/omap-ssi.txt | 102 ------------
+ .../devicetree/bindings/hsi/ti,omap-ssi.yaml       | 177 +++++++++++++++++++++
+ arch/arm/boot/dts/ti/omap/omap3-n900.dts           |   4 +-
+ arch/arm/boot/dts/ti/omap/omap3-n950-n9.dtsi       |   4 +-
+ arch/arm/boot/dts/ti/omap/omap3.dtsi               |   4 +-
+ arch/arm/boot/dts/ti/omap/omap4-l4.dtsi            |   4 +-
+ 10 files changed, 372 insertions(+), 213 deletions(-)
+---
+base-commit: 4cece764965020c22cff7665b18a012006359095
+change-id: 20240325-hsi-dt-binding-a5d662e3d601
+
+Best regards,
 -- 
-2.43.0
+Sebastian Reichel <sebastian.reichel@collabora.com>
 
