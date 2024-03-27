@@ -1,64 +1,37 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B57B12DD87;
-	Wed, 27 Mar 2024 14:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35EC144D08
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 14:23:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711549394; cv=none; b=tNR1mnB5efJhEYINpKinOzjiqNQLx8Kb08c3MtidyrlpNW9knVynAqFYIrwP97npf/JmfIWYk9vRfUfOHHdIvufpQIwJYPOhTw0snQRlSK6n0WMg3DrNkYXv5kOB2MuL04ZG1eIAMgUyCXe6JxpHYIE8L1BZ+ii1ZVfQEIZd2jc=
+	t=1711549397; cv=none; b=PvE+rkZ1iDKRvf49zasg8zXpC+3sxk2iWol5YUAc4id2xkGjkjKMD0D68phHDYy8bE77zvOUwKQjlOroxqiWIJkgeO2rEaZDOMw7ks1vVblZpunDZFXzcoKbEJYLIWOcWcMSAn3eIh3SA6qlxoSfDC45vIK/Hksh0GxMoGEB2xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711549394; c=relaxed/simple;
-	bh=P4JbEcNYFbSu9LXCltDr+BrUszGs2RfxtXt7yDaOeNg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d1nsV2bNvkI7qDBXYngP+sSNQpxvVYpMG2Rp7uTzIHYl5c6npVDGh99BZQW0FL1Rar8QGr0brE+inGabxvovBn03bJAZPjtzil6x9Ka7VWB1NVThEqS76NOjTdH5dX/tSI6VoG2U8h18CUME4P7ij+oLKkzvRATLPXO410gd6lE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G/V/bLQp; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G/V/bLQp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711549393; x=1743085393;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=P4JbEcNYFbSu9LXCltDr+BrUszGs2RfxtXt7yDaOeNg=;
-  b=G/V/bLQpgDAd3yv03Dj3Kb9zCP8kEQa9crcPavzLRXOB0YjK334jSC3Z
-   p0s1pZFvwr/u8P54poY/T1vmnsqSw4CORfgn0dOqE4J9JQjTa0rQque1T
-   W42ixS7ixAz60h+AGb4Otb4cekCPxS38kBtvQBpCMvaKaR8pb3y/NGOWB
-   KLXcsJFTYER1R5I2n9xcKrwdoDm797g3jeZc9CvCAZRbxMC92sBt+xoPm
-   KGJKD4D5qp7wy6p3dnksfmldP+H5dUp9nKpdEiZbYaWXmyUpvABQLKkeG
-   dkoMAGOc7f9a4GgfHnhlnnxa9DjjCMWD1TgNgRu+ZqpSK/6ciL6RCkDNb
-   g==;
-X-CSE-ConnectionGUID: 7CZ7gxhqR9mgj/JeLA+rLA==
-X-CSE-MsgGUID: GRQSzYNcRT60mt7c2HDWcw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="6592519"
-X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
-   d="scan'208";a="6592519"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 07:23:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
-   d="scan'208";a="20973051"
-Received: from newjersey.igk.intel.com ([10.102.20.203])
-  by fmviesa004.fm.intel.com with ESMTP; 27 Mar 2024 07:23:10 -0700
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
-	intel-wired-lan@lists.osuosl.org,
-	linux-hardening@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 0/3] compiler_types: add Endianness-dependent __counted_by_{le,be}
-Date: Wed, 27 Mar 2024 15:22:38 +0100
-Message-ID: <20240327142241.1745989-1-aleksander.lobakin@intel.com>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1711549397; c=relaxed/simple;
+	bh=zRI5GV7a1ReZEinUIATHZ6Ua1rtRrj/S/oB2DPjv1eE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jdY5bV7vjNwHv/S2A9xc/7dYSd4XEuJh3yU0kO4drbpOI5FuKz8dEVqu+1kaS7dOR58R4WIQdlxPWsHOWDZnhnfURLYsmn61i3UkVoUWL/8m8sV4Z66UbhK0YqxQgfi81ehR9xV7ozZZBzyu0wwzUi+206yoMCSf7dOdIiu5zrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4V4TN94sBJzXjx6;
+	Wed, 27 Mar 2024 22:20:25 +0800 (CST)
+Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
+	by mail.maildlp.com (Postfix) with ESMTPS id 047BF140258;
+	Wed, 27 Mar 2024 22:23:13 +0800 (CST)
+Received: from DESKTOP-8RFUVS3.china.huawei.com (10.174.185.179) by
+ kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 27 Mar 2024 22:23:12 +0800
+From: Zenghui Yu <yuzenghui@huawei.com>
+To: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC: <tglx@linutronix.de>, <maz@kernel.org>, <wanghaibin.wang@huawei.com>,
+	Zenghui Yu <yuzenghui@huawei.com>, Tsahee Zidenberg
+	<tsahee@annapurnalabs.com>, Antoine Tenart <atenart@kernel.org>
+Subject: [PATCH] irqchip/alpine-msi: Fix off-by-one on allocation error path
+Date: Wed, 27 Mar 2024 22:23:05 +0800
+Message-ID: <20240327142305.1048-1-yuzenghui@huawei.com>
+X-Mailer: git-send-email 2.23.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,46 +39,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600007.china.huawei.com (7.193.23.208)
 
-Some structures contain flexible arrays at the end and the counter for
-them, but the counter has explicit Endianness and thus __counted_by()
-can't be used directly.
+When alpine_msix_gic_domain_alloc() returns an error, there is an
+off-by-one in the number of IRQs to be freed.
 
-To increase test coverage for potential problems without breaking
-anything, introduce __counted_by_{le,be} defined depending on platform's
-Endianness to either __counted_by() when applicable or noop otherwise.
-The first user will be virtchnl2.h from idpf just as example with 9 flex
-structures having Little Endian counters.
+Fix it by passing the number of successfully allocated IRQs, instead of the
+relative index of the last allocated one.
 
-Maybe it would be a good idea to introduce such attributes on compiler
-level if possible, but for now let's stop on what we have.
-
-Alexander Lobakin (3):
-  compiler_types: add Endianness-dependent __counted_by_{le,be}
-  idpf: make virtchnl2.h self-contained
-  idpf: sprinkle __counted_by{,_le}() in the virtchnl2 header
-
- Documentation/conf.py                       |  2 ++
- scripts/kernel-doc                          |  1 +
- include/linux/compiler_types.h              | 11 ++++++++++
- drivers/net/ethernet/intel/idpf/idpf_txrx.h |  2 ++
- drivers/net/ethernet/intel/idpf/virtchnl2.h | 24 ++++++++++-----------
- 5 files changed, 28 insertions(+), 12 deletions(-)
-
+Fixes: 3841245e8498 ("irqchip/alpine-msi: Fix freeing of interrupts on allocation error path")
+Cc: Tsahee Zidenberg <tsahee@annapurnalabs.com>
+Cc: Antoine Tenart <atenart@kernel.org>
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
 ---
-From v1[0]:
-* fix compilation of #2 (Jakub);
-* pick Acked-bys (Gustavo).
+ drivers/irqchip/irq-alpine-msi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-From RFC[1]:
-
-* teach kdoc new attributes (Simon, Kees);
-* add Acked-by (Kees);
-* fix a couple typos;
-* send to net-next (Kees).
-
-[0] https://lore.kernel.org/netdev/20240326164116.645718-1-aleksander.lobakin@intel.com
-[1] https://lore.kernel.org/netdev/20240318130354.2713265-1-aleksander.lobakin@intel.com
+diff --git a/drivers/irqchip/irq-alpine-msi.c b/drivers/irqchip/irq-alpine-msi.c
+index 9c8b1349ee17..a1430ab60a8a 100644
+--- a/drivers/irqchip/irq-alpine-msi.c
++++ b/drivers/irqchip/irq-alpine-msi.c
+@@ -165,7 +165,7 @@ static int alpine_msix_middle_domain_alloc(struct irq_domain *domain,
+ 	return 0;
+ 
+ err_sgi:
+-	irq_domain_free_irqs_parent(domain, virq, i - 1);
++	irq_domain_free_irqs_parent(domain, virq, i);
+ 	alpine_msix_free_sgi(priv, sgi, nr_irqs);
+ 	return err;
+ }
 -- 
-2.44.0
+2.33.0
 
