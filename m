@@ -1,165 +1,187 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2949145353
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 14:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234EC14535D;
+	Wed, 27 Mar 2024 14:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711549401; cv=none; b=gVdQUxJjdGP/g9T8RaiZhTbNftd6NgZ9nVuIxrvR/oT/dW+pivtRS9O8AMWU34OwYDUCzF01ozJtLERNLxaP2gkbWhpUoZlFVie7j29dvrpDlPYheRDPk710ib6ImD9QsMFb6+ISnmvyxMIe1QDk+S+fWgo1096aSuXOHJ3g9gU=
+	t=1711549403; cv=none; b=FJcq0pOg8Em11fhfT5CMI28sfcVcv5f2q848QYNZFSunG6NCSqwTgTLKi59gsuxZlQTXNHHZDBx6FsxX+PX4zoD7bzqGzesuERAFToDMltz+qO2ykPpKqiffKjAEiacJijY1rzTdW7nCcK6HT+2e/TPi8NRgvGIdZPigYVWwXNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711549401; c=relaxed/simple;
-	bh=TzGy4Nl10hTAM+7MIbRlkwoszFQuQWnX5BlJd7Ogg8k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ByxWsOETIJ8IbPIWaCMHNrFJb9wdpOu/TwxVRRsPxi0JQQDDCK7nk78wTHDCfaenF5TRQkn89TLnK/SYPLCpMBpwn1Okjcn1qrem1AV1svCVI7WZsWC6f2XEDai6azSE3zzyX/DDtldKHcyCcX2hqu5dg6mjFsm6U/SJ2N2OGLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=kRfupJzc; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1711549403; c=relaxed/simple;
+	bh=iiy+IT/DztQVWAIWT58TrPOTIu+zB11vMHnxpdfkMvE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LJ3F9gajsFs9EzblkevWEl3RFBYefPN7EhCrKs/pF4f5vzy+FW3nueP558hK2qujiRMlLH4gzPYfMMP+HybLjLhZQyaTAtxBpOSYtb3O6POO3kAS4iW/5DuyNB+QdRRGnRsIpeI08uoWsok8Mf56gPE1r0BHEqtnVVL1RRO5Qnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Re0GYhPS; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="kRfupJzc"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dccb1421bdeso6261676276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 07:23:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1711549399; x=1712154199; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gRFvGQGfmRLMn0TkT6BKRAVaaKQN9JenEnS46fWKpus=;
-        b=kRfupJzcZI3m1CplUeO63CC/YZihfvZrHkoZchKtYj4KZWqgSIaTSL9ydMUaAO9LHh
-         Dh//7AEKDxWeK2jtENF8c2Zh+n4r7n3XZg89877MLzN/Vsk7IymUXG4vPXOrsZVeNM2G
-         C2MGBfJFNIG4/htTSd85PgQvDxbbM7GJNdlf/rQ0oeeHgWyIxipKSonKhxX1pYacMCRr
-         HcooN6Fz9B+hK8+bvfJIes46/728t17aC87ztrR315hI3tElOBP78VTrZvZcf5G4Z4ix
-         95FzU121ovcl7pyUCipSqSEgfz+0Dy2/DjPMIKCdFr9hxa8unlqegqstwX5A554fexCN
-         p3Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711549399; x=1712154199;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gRFvGQGfmRLMn0TkT6BKRAVaaKQN9JenEnS46fWKpus=;
-        b=nQj1oJVSEvSnPegWb2x2ZaQ6DUejQD8syIzLwvcrxPF6e5lkRb6o5fZOu1ychIzU0Y
-         f7Jcf8wwDGkkdTYY7HjYsxMX8CM8zsQuR3qOj7Qe3Pu2Fe8m+AlpQBOW+/+3wpbGkP30
-         zL4Y1D2RX9F3BEiDnYdzAgQjeRw/Zbfwnz3FQvYNcgJHQg6rg3abpxFQqkwUxjMZDH7s
-         VWHw1SaKWhbtFZiVifrQ1zgy/1UKA+eSAgyhRCnXEEDzPPSzFwc3JBcC4GNzb9pG5zHM
-         m5AtSm2nZhUqeh/gsrr2J0bigK3LTSEh0jFi8JNUpfkbfQOOIdxVqcxj35YTcV1yQ37q
-         v4Cw==
-X-Forwarded-Encrypted: i=1; AJvYcCVFnRE/mT499sB4O8lFowewAVJnalmVU0wCbULOBevg5S0kR+AquLasOjO0Ec8FUftihotz3C/XPgukOIQF9XP1P+mLQ3T6k6mgXRxm
-X-Gm-Message-State: AOJu0YxAUuK9LDde6UIU7dzi6+Uoi1qSESK+ueGxCHgvE5xYy0TctWYU
-	gvJdbvBnsvoIrS77YaH6myZtIy6j7bsTmsoc43EGrex+DvNWXg7TqETlbdh8NxSPZpUXd2v5q3r
-	LgGI1bExSg+VB2jRbIeoqpLeKT2DtWnljIcOBbw==
-X-Google-Smtp-Source: AGHT+IGYxBizN2LWi9Q0EujC00wGP+OXjEg8ECCcaoV2+WotPGFiM/+Sna09HESRfbDarEimOdKSDh0zNwdww7Nkw9M=
-X-Received: by 2002:a25:7284:0:b0:dcb:e462:6e10 with SMTP id
- n126-20020a257284000000b00dcbe4626e10mr1148689ybc.58.1711549398808; Wed, 27
- Mar 2024 07:23:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Re0GYhPS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711549402; x=1743085402;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=iiy+IT/DztQVWAIWT58TrPOTIu+zB11vMHnxpdfkMvE=;
+  b=Re0GYhPSRqT+9Ck2LNl0UyFzSs2cvMof5Z9Vs4DhFSUNC6OdadPEVdBx
+   rAEcLO88pJdCL7NcNU29PWXArvw6IpXyZaPEPWK8oq5Ia1gbiYXjg8KGA
+   4pFsLInmr5AYIAR+S9xveDcwA+/TmfAOkTAbQ0KfZkkJKtaRxPEQ9GjjV
+   OATr3mFLrpGRjwbWK/IWoskZOcGC5rgjgTSQqgutYa3CgQKOhFypJx/wO
+   Vgq8M4dvbst6rjFDLj2Ouw8K92EQHZU/LNO6uc35J7bX7dQ/drfTJdHZh
+   vzNapZC+SN4aCFcf3ibZVV8muDfNBUsKswUI9ipVYCsZVlENzRLmd9MZs
+   A==;
+X-CSE-ConnectionGUID: s+OdSvCbQfqTnGeh9JKTEA==
+X-CSE-MsgGUID: C55Xa0mNTsCIpPmqOskaKw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="6592551"
+X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
+   d="scan'208";a="6592551"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 07:23:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
+   d="scan'208";a="20973106"
+Received: from newjersey.igk.intel.com ([10.102.20.203])
+  by fmviesa004.fm.intel.com with ESMTP; 27 Mar 2024 07:23:19 -0700
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
+	intel-wired-lan@lists.osuosl.org,
+	linux-hardening@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2 3/3] idpf: sprinkle __counted_by{,_le}() in the virtchnl2 header
+Date: Wed, 27 Mar 2024 15:22:41 +0100
+Message-ID: <20240327142241.1745989-4-aleksander.lobakin@intel.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240327142241.1745989-1-aleksander.lobakin@intel.com>
+References: <20240327142241.1745989-1-aleksander.lobakin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326203017.310422-1-alexghiti@rivosinc.com> <20240326203017.310422-2-alexghiti@rivosinc.com>
-In-Reply-To: <20240326203017.310422-2-alexghiti@rivosinc.com>
-From: Andy Chiu <andy.chiu@sifive.com>
-Date: Wed, 27 Mar 2024 22:23:08 +0800
-Message-ID: <CABgGipV1SaAxX6vL6CFdb-ctQtV2oA1=dE0zGZrrh2qbxDgkwQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] riscv: Fix warning by declaring arch_cpu_idle() as noinstr
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Jisheng Zhang <jszhang@kernel.org>, 
-	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
-	Pu Lehui <pulehui@huawei.com>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Puranjay Mohan <puranjay12@gmail.com>, Zong Li <zong.li@sifive.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Evgenii Shatokhin <e.shatokhin@yadro.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 27, 2024 at 4:33=E2=80=AFAM Alexandre Ghiti <alexghiti@rivosinc=
-.com> wrote:
->
-> The following warning appears when using ftrace:
->
-> [89855.443413] RCU not on for: arch_cpu_idle+0x0/0x1c
-> [89855.445640] WARNING: CPU: 5 PID: 0 at include/linux/trace_recursion.h:=
-162 arch_ftrace_ops_list_func+0x208/0x228
-> [89855.445824] Modules linked in: xt_conntrack(E) nft_chain_nat(E) xt_MAS=
-QUERADE(E) nf_conntrack_netlink(E) xt_addrtype(E) nft_compat(E) nf_tables(E=
-) nfnetlink(E) br_netfilter(E) cfg80211(E) nls_iso8859_1(E) ofpart(E) redbo=
-ot(E) cmdlinepart(E) cfi_cmdset_0001(E) virtio_net(E) cfi_probe(E) cfi_util=
-(E) 9pnet_virtio(E) gen_probe(E) net_failover(E) virtio_rng(E) failover(E) =
-9pnet(E) physmap(E) map_funcs(E) chipreg(E) mtd(E) uio_pdrv_genirq(E) uio(E=
-) dm_multipath(E) scsi_dh_rdac(E) scsi_dh_emc(E) scsi_dh_alua(E) drm(E) efi=
-_pstore(E) backlight(E) ip_tables(E) x_tables(E) raid10(E) raid456(E) async=
-_raid6_recov(E) async_memcpy(E) async_pq(E) async_xor(E) xor(E) async_tx(E)=
- raid6_pq(E) raid1(E) raid0(E) virtio_blk(E)
-> [89855.451563] CPU: 5 PID: 0 Comm: swapper/5 Tainted: G            E     =
- 6.8.0-rc6ubuntu-defconfig #2
-> [89855.451726] Hardware name: riscv-virtio,qemu (DT)
-> [89855.451899] epc : arch_ftrace_ops_list_func+0x208/0x228
-> [89855.452016]  ra : arch_ftrace_ops_list_func+0x208/0x228
-> [89855.452119] epc : ffffffff8016b216 ra : ffffffff8016b216 sp : ffffaf80=
-8090fdb0
-> [89855.452171]  gp : ffffffff827c7680 tp : ffffaf808089ad40 t0 : ffffffff=
-800c0dd8
-> [89855.452216]  t1 : 0000000000000001 t2 : 0000000000000000 s0 : ffffaf80=
-8090fe30
-> [89855.452306]  s1 : 0000000000000000 a0 : 0000000000000026 a1 : ffffffff=
-82cd6ac8
-> [89855.452423]  a2 : ffffffff800458c8 a3 : ffffaf80b1870640 a4 : 00000000=
-00000000
-> [89855.452646]  a5 : 0000000000000000 a6 : 00000000ffffffff a7 : ffffffff=
-ffffffff
-> [89855.452698]  s2 : ffffffff82766872 s3 : ffffffff80004caa s4 : ffffffff=
-80ebea90
-> [89855.452743]  s5 : ffffaf808089bd40 s6 : 8000000a00006e00 s7 : 00000000=
-00000008
-> [89855.452787]  s8 : 0000000000002000 s9 : 0000000080043700 s10: 00000000=
-00000000
-> [89855.452831]  s11: 0000000000000000 t3 : 0000000000100000 t4 : 00000000=
-00000064
-> [89855.452874]  t5 : 000000000000000c t6 : ffffaf80b182dbfc
-> [89855.452929] status: 0000000200000100 badaddr: 0000000000000000 cause: =
-0000000000000003
-> [89855.453053] [<ffffffff8016b216>] arch_ftrace_ops_list_func+0x208/0x228
-> [89855.453191] [<ffffffff8000e082>] ftrace_call+0x8/0x22
-> [89855.453265] [<ffffffff800a149c>] do_idle+0x24c/0x2ca
-> [89855.453357] [<ffffffff8000da54>] return_to_handler+0x0/0x26
-> [89855.453429] [<ffffffff8000b716>] smp_callin+0x92/0xb6
-> [89855.453785] ---[ end trace 0000000000000000 ]---
->
-> To fix this, mark arch_cpu_idle() as noinstr, like it is done in commit
-> a9cbc1b471d2 ("s390/idle: mark arch_cpu_idle() noinstr").
->
-> Reported-by: Evgenii Shatokhin <e.shatokhin@yadro.com>
-> Closes: https://lore.kernel.org/linux-riscv/51f21b87-ebed-4411-afbc-c00d3=
-dea2bab@yadro.com/
-> Fixes: cfbc4f81c9d0 ("riscv: Select ARCH_WANTS_NO_INSTR")
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Both virtchnl2.h and its consumer idpf_virtchnl.c are very error-prone.
+There are 10 structures with flexible arrays at the end, but 9 of them
+has flex member counter in Little Endian.
+Make the code a bit more robust by applying __counted_by_le() to those
+9. LE platforms is the main target for this driver, so they would
+receive additional protection.
+While we're here, add __counted_by() to virtchnl2_ptype::proto_id, as
+its counter is `u8` regardless of the Endianness.
+Compile test on x86_64 (LE) didn't reveal any new issues after applying
+the attributes.
 
-Reviewed-by: Andy Chiu <andy.chiu@sifive.com>
-Tested-by: Andy Chiu <andy.chiu@sifive.com>
+Acked-by: Kees Cook <keescook@chromium.org>
+Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+---
+ drivers/net/ethernet/intel/idpf/virtchnl2.h | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-> ---
->  arch/riscv/kernel/process.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
-> index 92922dbd5b5c..6abeecbfc51d 100644
-> --- a/arch/riscv/kernel/process.c
-> +++ b/arch/riscv/kernel/process.c
-> @@ -37,7 +37,7 @@ EXPORT_SYMBOL(__stack_chk_guard);
->
->  extern asmlinkage void ret_from_fork(void);
->
-> -void arch_cpu_idle(void)
-> +void noinstr arch_cpu_idle(void)
->  {
->         cpu_do_idle();
->  }
-> --
-> 2.39.2
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+diff --git a/drivers/net/ethernet/intel/idpf/virtchnl2.h b/drivers/net/ethernet/intel/idpf/virtchnl2.h
+index 29419211b3d9..63deb120359c 100644
+--- a/drivers/net/ethernet/intel/idpf/virtchnl2.h
++++ b/drivers/net/ethernet/intel/idpf/virtchnl2.h
+@@ -555,7 +555,7 @@ VIRTCHNL2_CHECK_STRUCT_LEN(32, virtchnl2_queue_reg_chunk);
+ struct virtchnl2_queue_reg_chunks {
+ 	__le16 num_chunks;
+ 	u8 pad[6];
+-	struct virtchnl2_queue_reg_chunk chunks[];
++	struct virtchnl2_queue_reg_chunk chunks[] __counted_by_le(num_chunks);
+ };
+ VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_queue_reg_chunks);
+ 
+@@ -703,7 +703,7 @@ struct virtchnl2_config_tx_queues {
+ 	__le32 vport_id;
+ 	__le16 num_qinfo;
+ 	u8 pad[10];
+-	struct virtchnl2_txq_info qinfo[];
++	struct virtchnl2_txq_info qinfo[] __counted_by_le(num_qinfo);
+ };
+ VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_config_tx_queues);
+ 
+@@ -782,7 +782,7 @@ struct virtchnl2_config_rx_queues {
+ 	__le32 vport_id;
+ 	__le16 num_qinfo;
+ 	u8 pad[18];
+-	struct virtchnl2_rxq_info qinfo[];
++	struct virtchnl2_rxq_info qinfo[] __counted_by_le(num_qinfo);
+ };
+ VIRTCHNL2_CHECK_STRUCT_LEN(24, virtchnl2_config_rx_queues);
+ 
+@@ -868,7 +868,7 @@ VIRTCHNL2_CHECK_STRUCT_LEN(32, virtchnl2_vector_chunk);
+ struct virtchnl2_vector_chunks {
+ 	__le16 num_vchunks;
+ 	u8 pad[14];
+-	struct virtchnl2_vector_chunk vchunks[];
++	struct virtchnl2_vector_chunk vchunks[] __counted_by_le(num_vchunks);
+ };
+ VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_vector_chunks);
+ 
+@@ -912,7 +912,7 @@ struct virtchnl2_rss_lut {
+ 	__le16 lut_entries_start;
+ 	__le16 lut_entries;
+ 	u8 pad[4];
+-	__le32 lut[];
++	__le32 lut[] __counted_by_le(lut_entries);
+ };
+ VIRTCHNL2_CHECK_STRUCT_LEN(12, virtchnl2_rss_lut);
+ 
+@@ -977,7 +977,7 @@ struct virtchnl2_ptype {
+ 	u8 ptype_id_8;
+ 	u8 proto_id_count;
+ 	__le16 pad;
+-	__le16 proto_id[];
++	__le16 proto_id[] __counted_by(proto_id_count);
+ } __packed __aligned(2);
+ VIRTCHNL2_CHECK_STRUCT_LEN(6, virtchnl2_ptype);
+ 
+@@ -1104,7 +1104,7 @@ struct virtchnl2_rss_key {
+ 	__le32 vport_id;
+ 	__le16 key_len;
+ 	u8 pad;
+-	u8 key_flex[];
++	u8 key_flex[] __counted_by_le(key_len);
+ } __packed;
+ VIRTCHNL2_CHECK_STRUCT_LEN(7, virtchnl2_rss_key);
+ 
+@@ -1131,7 +1131,7 @@ VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_queue_chunk);
+ struct virtchnl2_queue_chunks {
+ 	__le16 num_chunks;
+ 	u8 pad[6];
+-	struct virtchnl2_queue_chunk chunks[];
++	struct virtchnl2_queue_chunk chunks[] __counted_by_le(num_chunks);
+ };
+ VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_queue_chunks);
+ 
+@@ -1195,7 +1195,7 @@ struct virtchnl2_queue_vector_maps {
+ 	__le32 vport_id;
+ 	__le16 num_qv_maps;
+ 	u8 pad[10];
+-	struct virtchnl2_queue_vector qv_maps[];
++	struct virtchnl2_queue_vector qv_maps[] __counted_by_le(num_qv_maps);
+ };
+ VIRTCHNL2_CHECK_STRUCT_LEN(16, virtchnl2_queue_vector_maps);
+ 
+@@ -1247,7 +1247,7 @@ struct virtchnl2_mac_addr_list {
+ 	__le32 vport_id;
+ 	__le16 num_mac_addr;
+ 	u8 pad[2];
+-	struct virtchnl2_mac_addr mac_addr_list[];
++	struct virtchnl2_mac_addr mac_addr_list[] __counted_by_le(num_mac_addr);
+ };
+ VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_mac_addr_list);
+ 
+-- 
+2.44.0
+
