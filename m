@@ -1,84 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76AA72561B
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 07:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E7E29D03;
+	Wed, 27 Mar 2024 07:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.153.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711523841; cv=none; b=C4omFIpquAkU/BWuOH0ShawV7GAa79Cpi+y2sLS9VjtgcxQQG30FU+Y8Y7bcD4kNrt2nQLRy0S5e6KClGP7/aNWIoHM0ksUpwI3u2uFV5kdA6o+nxPFJsMbuXWDjJgTAB/2QJelfKSRW+z4gldYtmkekf9lyZPFrfa1dA4bmpnQ=
+	t=1711523853; cv=none; b=YVT7Dad/MIRszuTtCbDt2htk80ZkWM+B/cJW4LMqlWF6OfG8KCUJYsvPc/vN7TG7lzpc80h7+/ilf7vto9/E9LqKqVBbpLKUpdMXYxWiJF6wnpMawEWD2BlLj9YfyI6oONuxRoaEaKpCE9Uj/PDy7BfdR+e0tSj51E116wxdt/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711523841; c=relaxed/simple;
-	bh=xyQ3ZK+hiMYuRYnTpsz6pSIKbB4/60zOWfr6MnQ/X8I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wo+ovUXsuaYtFrniDrp1MwImMM9nDJ/w3oQ53zmGxdF/mGxzNwM8Ut7EXpBDKUq/5sIZrW4b3WBwDxztxvnQuWN0mVws1iX4Zif9LR9bmGzr2IqTSgXB0uz0qADfQeksPVTAsSVe5G63tgtsiG6mo9H1iUrT01uw1tFFjyqFmLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DprLV1YL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711523853; c=relaxed/simple;
+	bh=D9p4RfF5ezlFXA1XBBrfGcpjoZrd0yh0J08vc3C306I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LEoO6v/hzBc74rMXh09StZCm3KZeaLgh4mnh5AlpNGLst/JmAGMNPs5I4k8R/7zFvnsB+N5aBPaKapZm4ZWXf9LFezUzy/jAtftfeEhiUW36fu8mxyt9Pe/76AAuEIgMMseNSf3DA0H7aVhYuMo2Oemdir71PIWDDQ59xuJ8fE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=ifKIbeKz; arc=none smtp.client-ip=216.71.153.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DprLV1YL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DABC6C433F1;
-	Wed, 27 Mar 2024 07:17:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711523841;
-	bh=xyQ3ZK+hiMYuRYnTpsz6pSIKbB4/60zOWfr6MnQ/X8I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DprLV1YLawP0EOlRt7GxEvJwPKI3F0zNLQGKZDH7o2CYgPJm+l1Hs9/w3pEgga0Oq
-	 bcmEtWTLQsQIrHiFEv4Gvuvs2aN/Yc2OrriUFNzDRqlCYx6c4Ns431RPsFiSfTgchL
-	 DzXStZ1t86IcWM816wNw9G6K0XeXcqMwn2J1kb5E+3Ah53Ks+AfZ+UL5Ptl4AgAbe/
-	 rPsiOpCGcdNNUTzEOBl/AXnObjgiHlxclOatbS3I5Z6cRGu5gj694fIJIyZAX9d2Z9
-	 y7fC9OPF/XaIWENxEyLrqu57LbbVcRDhuSOD+aqhhFUjY2Dbg8BfVGz8eH80/RgM9B
-	 lGnpP8HcyZy7A==
-Date: Wed, 27 Mar 2024 15:04:05 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Samuel Holland <samuel.holland@sifive.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] riscv: Fix TASK_SIZE on 64-bit NOMMU
-Message-ID: <ZgPE5e7FzB5H4MnK@xhacker>
-References: <20240227003630.3634533-1-samuel.holland@sifive.com>
- <20240227003630.3634533-2-samuel.holland@sifive.com>
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ifKIbeKz"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1711523851; x=1743059851;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=D9p4RfF5ezlFXA1XBBrfGcpjoZrd0yh0J08vc3C306I=;
+  b=ifKIbeKz/baAMHd0ZFX5fytumXXcP5KRzpAgeoVyeCPu090ybJh07mZb
+   WGa5gG6Ril9pHXq385SZwZAtGu6dViYrvDJGpzNhIGufCtZQfzOxM8Khx
+   E38Ehi+eAOfkiz+TuyS6DuUKv2dsn2KwNEHgx7y2xt1qYA9EGhTYT3s8s
+   00DMtYZanle7jrizjKbU7Vu63gCnnqXgLpGbehjGUX7W0rmP2AdYdZOUK
+   HUrjixJ+8zaCSox2HMuH8yZEic88AWWgyo7DHLbi1CiMt+xIdubsuFXMI
+   VY72NIv/qupRgX+OCFRdEe3YRFrETBf/HUl3crXoFT/Thmqdl5A49CPKb
+   w==;
+X-CSE-ConnectionGUID: 4Yrb4TpOTKSBR9jzknzkBA==
+X-CSE-MsgGUID: SWUjxgMoQtuWjA9GPC/46g==
+X-IronPort-AV: E=Sophos;i="6.07,158,1708358400"; 
+   d="scan'208";a="12423273"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 27 Mar 2024 15:17:24 +0800
+IronPort-SDR: OxjDc8QUt+xi9Bv+Bz87UssT3MbScp8mk5ewG3bnT/p1PDTXhmxy5UHXVNnljuDhYUSiHMkV88
+ iMOIwZ0EZQ/A==
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 26 Mar 2024 23:20:28 -0700
+IronPort-SDR: FfGD8/6EtQX8e4wbLFYdT/qjbnSrpSvsyGzsWMp1rhmvRlV/JchFq2fxOAB+DhJgRFIJJDzEcb
+ wjHp71eILZBA==
+WDCIronportException: Internal
+Received: from bxygm33.ad.shared ([10.45.31.229])
+  by uls-op-cesaip02.wdc.com with ESMTP; 27 Mar 2024 00:17:21 -0700
+From: Avri Altman <avri.altman@wdc.com>
+To: "James E . J . Bottomley" <jejb@linux.ibm.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Bean Huo <beanhuo@micron.com>,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Avri Altman <avri.altman@wdc.com>
+Subject: [PATCH v2 0/1] Remove support for legacy UFS
+Date: Wed, 27 Mar 2024 09:17:12 +0200
+Message-ID: <20240327071714.757-1-avri.altman@wdc.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240227003630.3634533-2-samuel.holland@sifive.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 26, 2024 at 04:34:46PM -0800, Samuel Holland wrote:
-> On NOMMU, userspace memory can come from anywhere in physical RAM. The
-> current definition of TASK_SIZE is wrong if any RAM exists above 4G,
-> causing spurious failures in the userspace access routines.
-> 
-> Fixes: 6bd33e1ece52 ("riscv: add nommu support")
-> Fixes: c3f896dcf1e4 ("mm: switch the test_vmalloc module to use __vmalloc_node")
-> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+UFS1.0 and UFS1.1, published in the early 2010s, were more of a proof of
+concept rather than a mature functional spec. Toshiba was the only
+device manufacturer with the most accomplished phy team to come up with
+a small UFS1.0 device. Alas, there were no commercial platforms it can
+be paired with. Even UFS2.0 that was published in 2013, didn't really
+make it to the market: too moot to take effect. It's not until UFS2.1
+that was published in 2016, were a myriad of devices and platforms
+flooded the market. Designated to mobile devices, dictates a rapid short
+lives for those platforms. Hence, we can safely remove those pre-UFS2.1
+pieces of code.
 
-Reviewed-by: Jisheng Zhang <jszhang@kernel.org>
+Changes from v1:
+ - remove ufshcd_get_local_unipro_ver which practically mean squashing
+   patch 1 & 2 into a single patch (Christoph)
+ - restore an if clause to avoid functional change in
+   ufshcd_compl_one_cqe (Bart)
 
-> ---
-> 
->  arch/riscv/include/asm/pgtable.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-> index 0c94260b5d0c..a564a39e5676 100644
-> --- a/arch/riscv/include/asm/pgtable.h
-> +++ b/arch/riscv/include/asm/pgtable.h
-> @@ -882,7 +882,7 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
->  #define PAGE_SHARED		__pgprot(0)
->  #define PAGE_KERNEL		__pgprot(0)
->  #define swapper_pg_dir		NULL
-> -#define TASK_SIZE		0xffffffffUL
-> +#define TASK_SIZE		_AC(-1, UL)
->  #define VMALLOC_START		_AC(0, UL)
->  #define VMALLOC_END		TASK_SIZE
->  
-> -- 
-> 2.43.0
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
+Avri Altman (1):
+  scsi: ufs: Remove support for old UFSHCI versions
+
+ drivers/ufs/core/ufshcd.c   | 174 +++---------------------------------
+ drivers/ufs/host/ufs-qcom.c |   3 +-
+ include/ufs/ufshcd.h        |   2 -
+ include/ufs/ufshci.h        |   7 --
+ 4 files changed, 15 insertions(+), 171 deletions(-)
+
+-- 
+2.42.0
+
