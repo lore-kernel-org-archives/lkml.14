@@ -1,121 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA1C14A0BB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF9314A4C4;
 	Wed, 27 Mar 2024 12:13:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711541591; cv=none; b=bqYerT1RdXaeFHxWaHd27CrAi6PFVuewyTC3pJzv4HENQva0Qt3JU+v9xmTFVJyLczO2v8T4i3uc8fDGtJ7iFGv86uomdm2/2tmZPWG2OwZMLnd/VyAkg7tIa4f7m+n25ecnBV65oUljDAglkZVCKfVoiyF7LTuxDPTP0Okpqw8=
+	t=1711541591; cv=none; b=ZLHiAvUeuL8sxb+2sO0VW6TPXEUQbFKo5qerT7WWcwwBzgrczCLqYVb6k63/FUywpgkpUAUd7ZJjbm+d7BX8h4pAS+a4dhnLUjcK/T0+8rKuVBozV34mXDDJWKME/v6vo9j2/fxzw/PViZ8m/SWJwX2yxWtxWmoRnPD6PWPXGMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711541591; c=relaxed/simple;
-	bh=6nzb64oC/aS+38eYkHxWrJnO/Ec/5COHzsOHpbHjwq8=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aTPFQRFl42qPfCNEDy9nL/3QaBNhNub0f4WGXKbUU4KIdomxnEr8Iafk+9o0Z2G0IUzcg13Kr33XjitQlCQ1xx4pcXSCZ1HnybFS9+s5VchCkLLV4QVcBfQyLiP7IzZ14zx8qwvkX8VaMxiUPnnLI5EbfL6t5XKVA/bzLYlCVNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iYutqEe5; arc=none smtp.client-ip=10.30.226.201
+	bh=Qx1f+Bit2PBGnmqeA+Zc2IHMtb50F5hJmJM0ePDd0as=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OrWdhTio5NJsF/CzXgaSib8AI/MahzbUtuMfjF0y9PXUDyITaRSDkTrXGWSdUz+lBCtyVkvD2GVVTtFyEi4Iee3Fs5+bB+Gh+bukl7a/8Uml93BRsv8rAG1Wo69R3BQhQ981YPeR5jOi5mHPqEJrujshGLkBgO4ZtUi66K7JlrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F86+gZ5C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iYutqEe5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E52E3C43390;
-	Wed, 27 Mar 2024 12:13:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F86+gZ5C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD3A8C433F1;
+	Wed, 27 Mar 2024 12:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711541590;
-	bh=6nzb64oC/aS+38eYkHxWrJnO/Ec/5COHzsOHpbHjwq8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=iYutqEe5s0N9gvqdYsI1i59tc58latUbZgDX0+SbW82UFYr6MrNmzMRo7wACyvb7T
-	 DeHYGvTc8P1teXK1vtA0zmcQnp/3o+jMFUsAHinGhBHgQ81ebMqkoeWBDXCDCYQcsZ
-	 QGqrxYvnlRfSjvflGkmodVfCCHNPwaXxwyRyhUvOylTvTpqSV26GH8GwTjeO6PiDjt
-	 mDzTByGBUWz16Ja1pwIvm9yBf8uPgmymQ/cJmUvSkVNCtAmZP9cbHCsowYebcxImZZ
-	 S69O/cz21T+WpcKOtQsuyGDnlm38KPeYjL7eLslJr3Z5EnMoOvXBgwRKXcP5Xp0DVb
-	 Thlxr2JmBSx/g==
-Received: from 82-132-225-99.dab.02.net ([82.132.225.99] helo=wait-a-minute.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rpS9U-00GHA1-83;
-	Wed, 27 Mar 2024 12:13:08 +0000
-Date: Wed, 27 Mar 2024 12:12:55 +0000
-Message-ID: <87ttkrswjc.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-Cc: kvmarm@lists.linux.dev,	kvm@vger.kernel.org,	linux-arm-kernel@lists.infradead.org,	linux-kernel@vger.kernel.org,	oliver.upton@linux.dev,	darren@os.amperecomputing.com,	d.scott.phillips@amperecomputing.com
-Subject: Re: [RFC PATCH] kvm: nv: Optimize the unmapping of shadow S2-MMU tables.
-In-Reply-To: <92117ba1-54ff-4752-b446-0ed09bde7201@os.amperecomputing.com>
-References: <20240305054606.13261-1-gankulkarni@os.amperecomputing.com>
-	<86sf150w4t.wl-maz@kernel.org>
-	<6685c3a6-2017-4bc2-ad26-d11949097050@os.amperecomputing.com>
-	<86r0go201z.wl-maz@kernel.org>
-	<92117ba1-54ff-4752-b446-0ed09bde7201@os.amperecomputing.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1711541591;
+	bh=Qx1f+Bit2PBGnmqeA+Zc2IHMtb50F5hJmJM0ePDd0as=;
+	h=From:To:Cc:Subject:Date:From;
+	b=F86+gZ5CZ7HHFuORTI1NeshNQli207fWbAgCvsknK7t9H/LnYPj4glDG3eqXvVmX1
+	 XiCEWcMpQEv+7HWwTPkEC+903cWyEQ+wm7Si46vbglJlgdoUWKyhNo7l27TuxEZVgG
+	 rx4wOF+mgK6+P9CLGOdqeZZYunPk8k7G4a+ssk6GTcWmfIEDbR2GtANDxAcb+ze0Fd
+	 QoyNpp4E5YqFjSU4+QHCW6hw5kxV+GyL7PtXdDvThswwoPRDNOb+V3nBmykjpE05U0
+	 WF50ku2ezDIUtv49/DLuFh6BgTQSlWT1X1c7hhWdP3gXF9GhXXFpwguTc03aPi119K
+	 xKweUqiSXmRIw==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org,
+	wenjing.liu@amd.com
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Rodrigo Siqueira <rodrigo.siqueira@amd.com>,
+	Nevenko Stupar <nevenko.stupar@amd.com>,
+	Chaitanya Dhere <chaitanya.dhere@amd.com>,
+	Tom Chung <chiahsuan.chung@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: FAILED: Patch "drm/amd/display: fix incorrect mpc_combine array size" failed to apply to 6.1-stable tree
+Date: Wed, 27 Mar 2024 08:13:08 -0400
+Message-ID: <20240327121308.2830090-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 82.132.225.99
-X-SA-Exim-Rcpt-To: gankulkarni@os.amperecomputing.com, kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, oliver.upton@linux.dev, darren@os.amperecomputing.com, d.scott.phillips@amperecomputing.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+X-Patchwork-Hint: ignore
+X-stable: review
+Content-Transfer-Encoding: 8bit
 
-On Tue, 26 Mar 2024 11:33:27 +0000,
-Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com> wrote:
-> 
-> 
-> Hi Marc,
-> 
-> On 05-03-2024 08:33 pm, Marc Zyngier wrote:
-> > On Tue, 05 Mar 2024 13:29:08 +0000,
-> > Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com> wrote:
-> >> 
-> >> 
-> >> 
-> >> What are the core issues (please forgive me if you mentioned already)?
-> >> certainly we will prioritise them than this.
-> > 
-> > AT is a big one. Maintenance interrupts are more or less broken. I'm
-> > slowly plugging PAuth, but there's no testing whatsoever (running
-> > Linux doesn't count). Lack of SVE support is also definitely a
-> > blocker.
-> > 
-> 
-> I am debugging an issue where EDK2(ArmVirtPkg) boot hangs when tried
-> to boot from L1 using QEMU.
-> 
-> The hang is due to failure of AT instruction and resulting in
-> immediate return to Guest(L2) and the loop continues...
->
-> AT instruction is executed in function of
-> __get_fault_info(__translate_far_to_hpfar) in L1 when data abort is
-> forwarded. Then AT instruction is trapped and executed/emulated in L0
-> in function "__kvm_at_s1e01" is failing and resulting in the return to
-> guest.
-> 
-> Is this also the manifestation of the issue of AT that you are referring to?
+The patch below does not apply to the 6.1-stable tree.
+If someone wants it applied there, or to any other stable or longterm
+tree, then please email the backport, including the original git commit
+id to <stable@vger.kernel.org>.
 
-It's possible, but you are looking at the symptom and not necessarily
-the problem.
+Thanks,
+Sasha
 
-FWIW, I can boot EDK2 as built by debian as an L2 using QEMU without
-any problem, but I'm not using QEMU for L1 (it shouldn't have much of
-an impact anyway).
+------------------ original commit in Linus's tree ------------------
 
-I expect AT S1E1R to fail if any of the following are true:
+From 607e1b0cf480cb8dbd65b372397871d7389942b5 Mon Sep 17 00:00:00 2001
+From: Wenjing Liu <wenjing.liu@amd.com>
+Date: Thu, 18 Jan 2024 15:14:15 -0500
+Subject: [PATCH] drm/amd/display: fix incorrect mpc_combine array size
 
-- the guest S1 page tables have been swapped out in the interval
-  between the fault and the AT emulation
+[why]
+MAX_SURFACES is per stream, while MAX_PLANES is per asic. The
+mpc_combine is an array that records all the planes per asic. Therefore
+MAX_PLANES should be used as the array size. Using MAX_SURFACES causes
+array overflow when there are more than 3 planes.
 
-- the shadow S2 page tables do not have a translation for the output
-  of the S1 page tables yet
+[how]
+Use the MAX_PLANES for the mpc_combine array size.
 
-You will need to work out which of these two are true. It is perfectly
-possible that there are more edge cases that need addressing, as what
-you describe just works with my setup. It could also be that 4kB page
-support at L1 is broken (as I have no way to test it and only run with
-a 16kB L1).
+Cc: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Rodrigo Siqueira <rodrigo.siqueira@amd.com>
+Reviewed-by: Nevenko Stupar <nevenko.stupar@amd.com>
+Reviewed-by: Chaitanya Dhere <chaitanya.dhere@amd.com>
+Acked-by: Tom Chung <chiahsuan.chung@amd.com>
+Signed-off-by: Wenjing Liu <wenjing.liu@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+---
+ drivers/gpu/drm/amd/display/dc/dml/dcn32/dcn32_fpu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	M.
-
+diff --git a/drivers/gpu/drm/amd/display/dc/dml/dcn32/dcn32_fpu.c b/drivers/gpu/drm/amd/display/dc/dml/dcn32/dcn32_fpu.c
+index 9b80f65c04664..a7981a0c4158f 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml/dcn32/dcn32_fpu.c
++++ b/drivers/gpu/drm/amd/display/dc/dml/dcn32/dcn32_fpu.c
+@@ -1113,7 +1113,7 @@ struct pipe_slice_table {
+ 		struct pipe_ctx *pri_pipe;
+ 		struct dc_plane_state *plane;
+ 		int slice_count;
+-	} mpc_combines[MAX_SURFACES];
++	} mpc_combines[MAX_PLANES];
+ 	int mpc_combine_count;
+ };
+ 
 -- 
-Without deviation from the norm, progress is not possible.
+2.43.0
+
+
+
+
