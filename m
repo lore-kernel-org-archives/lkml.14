@@ -1,99 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6D11CA87;
-	Wed, 27 Mar 2024 06:21:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D351C171C4
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 06:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711520486; cv=none; b=t992qUxcDnTwoA2HlWy4jzOWJdLCsoPgQ/4aHoJG6JKUKd04omq0DM7CZJCylU856l2EOH5bPgqe5s6BdnWKvjvSsGxE36OX+D5zeFgjoEDEDG7+ZDYo5CdRHG3JQJv2yO86sPE26nE+wjZMQs5zapdEVNYUinK3IA/qS0i8uHs=
+	t=1711520609; cv=none; b=hWfRO2Uig1N+Bq647PiKGnSbgmSfLYhEMOmtoFt8PopuCp9PNg1ZjWAQrplPKwGI3dvf8Ug9ni967II6t2da5G2m68CgFiGQGwaB7NFKoct3+8mB5EGElwWSiuFq4yGB2/ylRP9N5nC9kDEpQ2Kw1AFoolLsCdH2PLcyDX2WurY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711520486; c=relaxed/simple;
-	bh=Q6c9wsY1u6FOsRL7X5jbUPnPFupmDKYBAc9xSo3Qfss=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=XbZH5J+UXbCVMsMHdZTUurHYWZomAxp361AL3BegwbY8in7wduvkrcgzMeRubRdVJOY6obWFvVdnhkIXnNpDnMnem7jg+d7twRRnmdIGDSWCadXFCLR4bXFQ3F/5/P6P1hrOrlqKZaLCoLhFlTsIv7yDlVy9FTEKrnWeYQlop7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2LdcKbb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711520609; c=relaxed/simple;
+	bh=0i2kC23zVuArs9RpNNp6dBE7+7F68jiyLEw1IczmYjQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dvRzDiGlDctmwwRhQNHNQZxiLmVLAxawWLLyMZbhQG9VI82Py3nKeUPWmoSMZorHp0N6roXw5q2Qdhyko0XcDo+rB/3pWS2N+lyGdfW/FjViHqLN7DHIsfyIMVOSE4z4gV04EzlmiyXvqQQ6EbDVjtbL/AAtSpLRZYwV+ZjU09Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I4nJrXK2; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2LdcKbb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B24E2C43390;
-	Wed, 27 Mar 2024 06:21:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711520485;
-	bh=Q6c9wsY1u6FOsRL7X5jbUPnPFupmDKYBAc9xSo3Qfss=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=G2LdcKbbWzlXrdk59OdDLGGF5ts9yKVVZp7OO3HjTjzRgbIeaLbw58leN3Decp/Iw
-	 ZKnOxfxm5yQWxwLcs05Ui3q5U3jV0uYuZZGbqZWdQMCafSicNEVNLownxcd3HOULz8
-	 hUvGwzBKM4invS+r1Bilb69Elcq7qWyBteRYnQNCpsqpAVXLRFbvRzQhhtVfhiTxJv
-	 UxdAU0cI/NUWwSMpDooc6yK8VlHT1IcwQwZTJQhvmLgzzzk4uSk79yuQ4pOB9tamnJ
-	 FotDQDuvPwPr5cB6D5FB3UrG6WoE8GfDwYMIDye6AyBpc6x/Zu+peY6Obj58QhOEYx
-	 Ose4qIIUaGRuQ==
-Date: Wed, 27 Mar 2024 01:21:24 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I4nJrXK2"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6ea9a605ca7so420959b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 23:23:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711520607; x=1712125407; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=O66PNVnF+NAj9JzaNCaQDZNthEAigIUk1c4UjwhWiQI=;
+        b=I4nJrXK2cI/PKcoqNc59u2DLbmEKQiRxVutvO8xrLDPGKtu+MejaQ2YLJDJeP3P4FD
+         QCYMURO8FQ+mjctHHWsYBDoWb4oE4ze48jf2vAg3h0oOxYD0XIM2N1CaMfIjNnCqmo9L
+         1RbFfJc9VIGrTsth+opIkMSu4rVxtsSfgLewtZFW6fGWcT79CiRHcqCJucNftY54NX7X
+         2bqP9HXwxvELrPXBKHxC8dLCsB3hE3XDGcZ1MB2evyVx1ia1Uhn7Gqz60ztFGGBzbRAm
+         W8Xo9Muu3YCGdriO0yiB/Ckgh2T5dGiiRHe/8trusn2VLbT/h+74Nkgh8CSkW17eA4vv
+         GINg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711520607; x=1712125407;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O66PNVnF+NAj9JzaNCaQDZNthEAigIUk1c4UjwhWiQI=;
+        b=sWfkrmfNbJfdA5T+SAkyq3NVAm7x/KvCwdVQIu+T5SvkurdKxpZvf6PtStkD1lkEnd
+         L3CwfC4sh1g1J+HiiLPU+8V1UT12KpETt1P7247JQW7UcYEExrd08Tr+su97MyGqRs2U
+         VFjtCg/6dtsqwuXdsHczYg6ad+NsaLm+hOsZ+QjlRIS+ymgbQKcuKEeC3cI/AITSfQ82
+         NFYHeGmsSzRDGpoPpoZiNRfw4xVsB3sgy0O8XzlRYwh5qUOPN4J5YEDGo8BML/QnXIxB
+         lfyQc39UrRjbhA5iDTswri7fFA+TxVeTclkWd3jprTnOir5aMg8MQQ3qXSD4YvPh/1WF
+         IQjg==
+X-Forwarded-Encrypted: i=1; AJvYcCX/lAVaepyeEHqvubbS2OKoRr7qNFJJVDTr/EVPtz6k7anuHZ74L6N7ZesHvimp0iRxQL7xxbNvcP8c+Ggf9Ib8hQireeP9PEJDr2rx
+X-Gm-Message-State: AOJu0Yy2VEwIrmJsNkk4+sSD07dhewme0rhPnDUVmSRO77cTpDyG6rQP
+	pMekMPfTTsS/CfA9k0ypg8zVboDybtqwcWgbDngi6XswiI0qgf3I6zVPywEVVQ==
+X-Google-Smtp-Source: AGHT+IFCckXKABUAWUGStYZCpEnS/af5chIzlaoQQySUuDkZ3MN4ob/4/Q5ohgOiBqFwo9wSZjXwQg==
+X-Received: by 2002:a05:6a00:8917:b0:6ea:c767:4699 with SMTP id hw23-20020a056a00891700b006eac7674699mr1677491pfb.13.1711520606896;
+        Tue, 26 Mar 2024 23:23:26 -0700 (PDT)
+Received: from google.com (60.89.247.35.bc.googleusercontent.com. [35.247.89.60])
+        by smtp.gmail.com with ESMTPSA id c17-20020aa781d1000000b006e6bfff6085sm7316210pfn.143.2024.03.26.23.23.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 23:23:26 -0700 (PDT)
+Date: Wed, 27 Mar 2024 06:23:22 +0000
+From: Mingwei Zhang <mizhang@google.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Zhenyu Wang <zhenyuw@linux.intel.com>,
+	Zhang Xiong <xiong.y.zhang@intel.com>,
+	Like Xu <like.xu.linux@gmail.com>,
+	Jinrong Liang <cloudliang@tencent.com>,
+	Dapeng Mi <dapeng1.mi@intel.com>
+Subject: Re: [kvm-unit-tests Patch v3 09/11] x86: pmu: Improve LLC misses
+ event verification
+Message-ID: <ZgO7Wr0URLc_ru1S@google.com>
+References: <20240103031409.2504051-1-dapeng1.mi@linux.intel.com>
+ <20240103031409.2504051-10-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Animesh Agarwal <animeshagarwal28@gmail.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh+dt@kernel.org>
-In-Reply-To: <20240327054014.36864-1-animeshagarwal28@gmail.com>
-References: <20240327054014.36864-1-animeshagarwal28@gmail.com>
-Message-Id: <171152048362.993925.5771433856261368802.robh@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: ata: ahci-da850: Convert to dtschema
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240103031409.2504051-10-dapeng1.mi@linux.intel.com>
 
+On Wed, Jan 03, 2024, Dapeng Mi wrote:
+> When running pmu test on SPR, sometimes the following failure is
+> reported.
+> 
+> 1 <= 0 <= 1000000
+> FAIL: Intel: llc misses-4
+> 
+> Currently The LLC misses occurring only depends on probability. It's
+> possible that there is no LLC misses happened in the whole loop(),
+> especially along with processors have larger and larger cache size just
+> like what we observed on SPR.
+> 
+> Thus, add clflush instruction into the loop() asm blob and ensure once
+> LLC miss is triggered at least.
+> 
+> Suggested-by: Jim Mattson <jmattson@google.com>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-On Wed, 27 Mar 2024 11:10:10 +0530, Animesh Agarwal wrote:
-> Convert the ahci-da850 bindings to DT schema.
-> 
-> Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
-> 
+I wonder if we can skip all LLC tests if CPU does not have
+clflush/clflushopt properties?
 > ---
-> Changes in v2:
-> - Added description for reg property items.
-> ---
->  .../devicetree/bindings/ata/ahci-da850.txt    | 18 ---------
->  .../bindings/ata/ti,da850-ahci.yaml           | 38 +++++++++++++++++++
->  2 files changed, 38 insertions(+), 18 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/ata/ahci-da850.txt
->  create mode 100644 Documentation/devicetree/bindings/ata/ti,da850-ahci.yaml
+>  x86/pmu.c | 43 ++++++++++++++++++++++++++++++-------------
+>  1 file changed, 30 insertions(+), 13 deletions(-)
 > 
-
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
-
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/ata/ti,da850-ahci.yaml:20:111: [warning] line too long (111 > 110 characters) (line-length)
-./Documentation/devicetree/bindings/ata/ti,da850-ahci.yaml:22:3: [error] syntax error: could not find expected ':' (syntax)
-
-dtschema/dtc warnings/errors:
-make[2]: *** Deleting file 'Documentation/devicetree/bindings/ata/ti,da850-ahci.example.dts'
-Documentation/devicetree/bindings/ata/ti,da850-ahci.yaml:22:3: could not find expected ':'
-make[2]: *** [Documentation/devicetree/bindings/Makefile:26: Documentation/devicetree/bindings/ata/ti,da850-ahci.example.dts] Error 1
-make[2]: *** Waiting for unfinished jobs....
-./Documentation/devicetree/bindings/ata/ti,da850-ahci.yaml:22:3: could not find expected ':'
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/ata/ti,da850-ahci.yaml: ignoring, error parsing file
-make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1430: dt_binding_check] Error 2
-make: *** [Makefile:240: __sub-make] Error 2
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240327054014.36864-1-animeshagarwal28@gmail.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+> diff --git a/x86/pmu.c b/x86/pmu.c
+> index b764827c1c3d..8fd3db0fbf81 100644
+> --- a/x86/pmu.c
+> +++ b/x86/pmu.c
+> @@ -20,19 +20,21 @@
+>  
+>  // Instrustion number of LOOP_ASM code
+>  #define LOOP_INSTRNS	10
+> -#define LOOP_ASM					\
+> +#define LOOP_ASM(_clflush)				\
+> +	_clflush "\n\t"                                 \
+> +	"mfence;\n\t"                                   \
+>  	"1: mov (%1), %2; add $64, %1;\n\t"		\
+>  	"nop; nop; nop; nop; nop; nop; nop;\n\t"	\
+>  	"loop 1b;\n\t"
+>  
+> -/*Enable GLOBAL_CTRL + disable GLOBAL_CTRL instructions */
+> -#define PRECISE_EXTRA_INSTRNS  (2 + 4)
+> +/*Enable GLOBAL_CTRL + disable GLOBAL_CTRL + clflush/mfence instructions */
+> +#define PRECISE_EXTRA_INSTRNS  (2 + 4 + 2)
+>  #define PRECISE_LOOP_INSTRNS   (N * LOOP_INSTRNS + PRECISE_EXTRA_INSTRNS)
+>  #define PRECISE_LOOP_BRANCHES  (N)
+> -#define PRECISE_LOOP_ASM						\
+> +#define PRECISE_LOOP_ASM(_clflush)					\
+>  	"wrmsr;\n\t"							\
+>  	"mov %%ecx, %%edi; mov %%ebx, %%ecx;\n\t"			\
+> -	LOOP_ASM							\
+> +	LOOP_ASM(_clflush)						\
+>  	"mov %%edi, %%ecx; xor %%eax, %%eax; xor %%edx, %%edx;\n\t"	\
+>  	"wrmsr;\n\t"
+>  
+> @@ -72,14 +74,30 @@ char *buf;
+>  static struct pmu_event *gp_events;
+>  static unsigned int gp_events_size;
+>  
+> +#define _loop_asm(_clflush)					\
+> +do {								\
+> +	asm volatile(LOOP_ASM(_clflush)				\
+> +		     : "=c"(tmp), "=r"(tmp2), "=r"(tmp3)	\
+> +		     : "0"(N), "1"(buf));			\
+> +} while (0)
+> +
+> +#define _precise_loop_asm(_clflush)				\
+> +do {								\
+> +	asm volatile(PRECISE_LOOP_ASM(_clflush)			\
+> +		     : "=b"(tmp), "=r"(tmp2), "=r"(tmp3)	\
+> +		     : "a"(eax), "d"(edx), "c"(global_ctl),	\
+> +		       "0"(N), "1"(buf)				\
+> +		     : "edi");					\
+> +} while (0)
+>  
+>  static inline void __loop(void)
+>  {
+>  	unsigned long tmp, tmp2, tmp3;
+>  
+> -	asm volatile(LOOP_ASM
+> -		     : "=c"(tmp), "=r"(tmp2), "=r"(tmp3)
+> -		     : "0"(N), "1"(buf));
+> +	if (this_cpu_has(X86_FEATURE_CLFLUSH))
+> +		_loop_asm("clflush (%1)");
+> +	else
+> +		_loop_asm("nop");
+>  }
+>  
+>  /*
+> @@ -96,11 +114,10 @@ static inline void __precise_count_loop(u64 cntrs)
+>  	u32 eax = cntrs & (BIT_ULL(32) - 1);
+>  	u32 edx = cntrs >> 32;
+>  
+> -	asm volatile(PRECISE_LOOP_ASM
+> -		     : "=b"(tmp), "=r"(tmp2), "=r"(tmp3)
+> -		     : "a"(eax), "d"(edx), "c"(global_ctl),
+> -		       "0"(N), "1"(buf)
+> -		     : "edi");
+> +	if (this_cpu_has(X86_FEATURE_CLFLUSH))
+> +		_precise_loop_asm("clflush (%1)");
+> +	else
+> +		_precise_loop_asm("nop");
+>  }
+>  
+>  static inline void loop(u64 cntrs)
+> -- 
+> 2.34.1
+> 
