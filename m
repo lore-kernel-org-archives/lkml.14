@@ -1,122 +1,125 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout3-smtp.messagingengine.com (fout3-smtp.messagingengine.com [103.168.172.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91CBF13B28B
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 15:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A424F5F8;
+	Wed, 27 Mar 2024 15:34:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711553580; cv=none; b=DKSyt6gFmgfu93yOaWD1/ZLtOCoL9HfMH9lwKDvBulCi9CtRX8jsN/ywc3AG/0fGMcntjUF9nruoy1vhbk7Lhj5VNKOs66DJ1MzxIUWbHuUbejD3sfrOdqY5mNO0nHOVUesCsT9FhFG0YkNJ8RKrBHZ+4Mdk83comwUudWl13R4=
+	t=1711553695; cv=none; b=feE3EWea2sSctiX4ahyCgn5GoKXKjoREEPUJ6iJTCrZU/4SjarwHbUjLet9CMa6DDdixnB7HDTAp9nsOIEbQUMcsSvEgJdnOpTyOXymrk6CtMjZ8scMVSKk6wjBe3pDJLelCSKq5Z83rgVFB/2xHAI2tyvnZRI3EespGLRttrVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711553580; c=relaxed/simple;
-	bh=P8G03x5KCTx8TF0jsmww7PVADh6Q30jFkCYr5AuRElA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZxmTDOetpfYVmckxdNlMo+T1nZkr7xkO9SixT7tKEI2kfnuwCjjavk3acRWfb5kdZtncRyHmVwWcs2vEkaic7ijL2LF3m2zfLQwXBRVzoAr1jB82LTgvgWcRUThF+AREv7AePmUZRifEiS0TpQm8jVIXPMf4dbum2rpMaAElv3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=dj9cK6Ah; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1711553695; c=relaxed/simple;
+	bh=lUHWRBpXKfmP0a3SvWBrN/BSuWtzBTXtGgk7O5R0Pz8=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=IKckvJZvS1Hxc4/6vB9kkUUFitoPtKgTv+dehR3/KOMcKiGjFeoTWQfMl8Cz8hxSdKz4cXdac8taqa2+p2hCE+f9OOI8VDjpqHJMN9Rqpr7WfVRb4APShi/COUw3bqfRAiUtCtDj+dGgkScBsHyaV83OxShOxC64iKKu2LAGQQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=JnmygjQ3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=L5St7XrR; arc=none smtp.client-ip=103.168.172.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="dj9cK6Ah"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3688d20b28dso14115105ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 08:32:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1711553577; x=1712158377; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PF7BpT7xgpetmn2SxPDafvgaaG8xfRfOiIeigueJv44=;
-        b=dj9cK6AhEWzqlbDhCvRDfli7Y1bPpYgYfvcKbdrLqmxFosf8oE9jmwoETfSouaKb3l
-         QJTKmLGzg8NhQVEcAz88u95V6k+gKfSaPV5dZGHf474ULtUAvrhQ0MWY80qz4LQvDiH6
-         bPgWqaPbp1b2gZDm4OZLIrgi7SpLRzCm3/IyIxKgDT09IXhItQiu/0yFVRyXnwhHBaR5
-         3STqfhsTjkwL4Dh0xBsasslrlYsc2GTmd2lkgtuk5cmPfJ5NE0731fdnjdazTlUOkm+p
-         8jR5YrUrNYwHqegjzz+w9SHRZZmc0UMvFOBtPuamlIBG6mt8qkfrgmVzmJZo4pFvXTuf
-         L7og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711553577; x=1712158377;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PF7BpT7xgpetmn2SxPDafvgaaG8xfRfOiIeigueJv44=;
-        b=B1ckrrryy3our7tDNWRyCo2UOWbOhluvdF7FceGsnuq+LhkmiEEWme2uEjc999owF6
-         GtU3QKgzMBl7q4FX50IsMLBtA342Z+FYi0MpmxidRSbqe0h8E/oqW1/gW4MxR/tb/QnH
-         SBWTHwF4qaF1dk41gNebgvaGnNrl/ONzt0bjvhW4evbIwZVPOiKYl5myCM6UGY/qiU3/
-         8oDQqOvSzFt8/MCffEKb1Zsl+zqbIe0Au01xV2Ff3210iBNShfCzsKkNFz/EL5CxJ7Xi
-         Fx/ikFVdDg5xNHK/fRixfU4h+eBxRLAl6WqEWrMJB2f9nrSOGdS0eqb1FvUVxVvTH/R7
-         nwxA==
-X-Forwarded-Encrypted: i=1; AJvYcCVNZDH0XTcg2OTdTz2iR/KjhMm/C2sqniqBcFCR+VwnoZegSTohr9s4hky0cn/1r3S458nzo3Y0Ud9xyZj6D4no/pSlvFbfWQFcLtX4
-X-Gm-Message-State: AOJu0YxlDxRPZ/5ucWc6xW7Lp+PELO7ELY7R1GvhCvmyofZsuva65cyl
-	s2eWZWK4PnPktlDV24V+xU0tYMwEpTr1F4ZZWitE6zGM7vqRa/EPXXLEt9HeVj4=
-X-Google-Smtp-Source: AGHT+IGdMChH50XwuKfroi9Ldx4vewY2tL5TXEOV1NEDYN3TGmpIkbk/uE2En+YsZ29z9C1dTS/OdQ==
-X-Received: by 2002:a92:c68e:0:b0:368:980a:d879 with SMTP id o14-20020a92c68e000000b00368980ad879mr354346ilg.17.1711553577622;
-        Wed, 27 Mar 2024 08:32:57 -0700 (PDT)
-Received: from [100.64.0.1] ([170.85.6.190])
-        by smtp.gmail.com with ESMTPSA id r10-20020a922a0a000000b003687950b384sm3021534ile.18.2024.03.27.08.32.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Mar 2024 08:32:57 -0700 (PDT)
-Message-ID: <c63150d8-a479-4d75-a826-3f87b1a792b9@sifive.com>
-Date: Wed, 27 Mar 2024 10:32:54 -0500
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="JnmygjQ3";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="L5St7XrR"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 4EE5A1380090;
+	Wed, 27 Mar 2024 11:34:52 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Wed, 27 Mar 2024 11:34:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1711553692; x=1711640092; bh=gJ7Xh4n4V5
+	9XATJeqHFzpnTJe2/5ypdcmW4oC7ig2Jw=; b=JnmygjQ3q8nH17VFO7y4ypXObv
+	H5QudRFgGDXD3iPOWTOhnrfraaE2jEe2ZuERyQqkAvzguzWvrw9Xbrl0BgYPsuM1
+	GQ91t4Eis0L2+PN6k9VKMgJbLNAEAnTipnubkg4/slYpNAUjCl+7dl3rILjuauvY
+	aYFmTGt9RAfZ5TxlObNwaJ+oNo8mE5Z20aV/t6095L8EmaBbAODemR5brQFz0I/m
+	fuM0RyeEluV2vMB/1pEl0KkawNa/6R5bW15G4adjuaejW5wrxm8e4nDLNXKnA27p
+	mnrmYFcBXYCaLlIpAzZ6XvBjrkwnGXvILz+PNvwuHH/zrAULDefFEz5MxgAA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1711553692; x=1711640092; bh=gJ7Xh4n4V59XATJeqHFzpnTJe2/5
+	ypdcmW4oC7ig2Jw=; b=L5St7XrR3/MAPQEbqvRF4QviegIL+Af8tRM+ibhX+Aae
+	E8zvBhoh6gXO0RvQC22z/HNJk0FQWX9oin4ojBOoC43Iif/1ukDnl7LtyhzQe/O7
+	WVmcp2VK6YD4xl8NARuAKzSaeCa01c5F4RffS1sQeaHJ9lGp/CPWI6d4lgHwzBmd
+	i6tYyXQtIEvPGQzUOhKL5jfH44+kvvAA2DsBR2jzM1LiIrFRBvuUERZuU+fmuqta
+	0T/1W/EkmLWLaeSkC0IG3JOGUbQIijCPQRq3t1CPyFBv+2H6eO79zC97SXw1SDbH
+	2q9WhEDNMb0UjKsxgbNa+Wb/wiOnjmuOw+ITwsaFkg==
+X-ME-Sender: <xms:mzwEZu78CN3xb6AsalWwSx4P7qfguZ-yv_lPNT-uYwb7STNBkAP1Uw>
+    <xme:mzwEZtKOeM70KUmof9Q-MtZ1_K8bRjZu_8gkqVVkOaDajHM8x87vxc2pZrw7qr1j7
+    KMh3oJk2VhR0tMLne0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudduiedgheegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:mzwEZvIa0ddXl7H1YeHdrSnPfbrS8lvG4dT2BrK5nfhSj4O6_NpDqQ>
+    <xmx:mzwEZjXbnqlH0QatGBlS6dFGkxorexklKNvm0yv3OwPZ5AOc7vVdrw>
+    <xmx:mzwEZpg8SyT9WSa8Ms_UCnN7MkzF4THhZf2o4VbSH6enMQBuAemUFQ>
+    <xmx:mzwEZm_aX6I356Aj0Po9_lJmRoa91EnBg2JiPYlouwvd42KNhHzBQw>
+    <xmx:nDwEZl4kWE5_OcwQPWec-d7QUMWV-jF7kzVebwQYJFkfSPeQ_ERQCg>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 7F4F4B60098; Wed, 27 Mar 2024 11:34:51 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-328-gc998c829b7-fm-20240325.002-gc998c829
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/7] riscv: Various text patching improvements
-To: Andrea Parri <parri.andrea@gmail.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Jason Baron <jbaron@akamai.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Steven Rostedt <rostedt@goodmis.org>, bpf@vger.kernel.org,
- Alexandre Ghiti <alexghiti@rivosinc.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@rivosinc.com>
-References: <20240212025529.1971876-1-samuel.holland@sifive.com>
- <ZctnfZWWO3HCiXe5@andrea>
-Content-Language: en-US
-From: Samuel Holland <samuel.holland@sifive.com>
-In-Reply-To: <ZctnfZWWO3HCiXe5@andrea>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Message-Id: <6242198a-8559-4465-918a-36442ea03e32@app.fastmail.com>
+In-Reply-To: 
+ <CO1PR18MB4666DF3B7684D340C3A3646DA1342@CO1PR18MB4666.namprd18.prod.outlook.com>
+References: <20240326223825.4084412-1-arnd@kernel.org>
+ <20240326223825.4084412-4-arnd@kernel.org>
+ <CO1PR18MB4666DF3B7684D340C3A3646DA1342@CO1PR18MB4666.namprd18.prod.outlook.com>
+Date: Wed, 27 Mar 2024 16:34:31 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Subbaraya Sundeep Bhatta" <sbhatta@marvell.com>,
+ "Arnd Bergmann" <arnd@kernel.org>,
+ "llvm@lists.linux.dev" <llvm@lists.linux.dev>,
+ "Ariel Elior" <aelior@marvell.com>, "Manish Chopra" <manishc@marvell.com>
+Cc: "David S . Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, "Nathan Chancellor" <nathan@kernel.org>,
+ "Nick Desaulniers" <ndesaulniers@google.com>,
+ "Bill Wendling" <morbo@google.com>, "Justin Stitt" <justinstitt@google.com>,
+ "Simon Horman" <horms@kernel.org>,
+ "Konstantin Khorenko" <khorenko@virtuozzo.com>,
+ "Sudarsana Reddy Kalluru" <sudarsana.kalluru@cavium.com>,
+ Netdev <netdev@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXTERNAL] [PATCH 3/9] qed: avoid truncating work queue length
+Content-Type: text/plain
 
-Hi Andrea,
+On Wed, Mar 27, 2024, at 15:04, Subbaraya Sundeep Bhatta wrote:
 
-On 2024-02-13 6:58 AM, Andrea Parri wrote:
-> On Sun, Feb 11, 2024 at 06:55:11PM -0800, Samuel Holland wrote:
->> Here are a few changes to minimize calls to stop_machine() and
->> flush_icache_*() in the various text patching functions, as well as
->> to simplify the code.
->>
->>
->> Samuel Holland (7):
->>   riscv: jump_label: Batch icache maintenance
->>   riscv: jump_label: Simplify assembly syntax
->>   riscv: kprobes: Use patch_text_nosync() for insn slots
->>   riscv: Simplify text patching loops
->>   riscv: Pass patch_text() the length in bytes
->>   riscv: Use offset_in_page() in text patching functions
->>   riscv: Remove extra variable in patch_text_nosync()
-> 
-> This does look like a nice clean-up.  Just curious (a "teach me"-like question),
-> how did you test these changes? kselftests, micro-benchmarks, other?
+>>-		snprintf(name, NAME_SIZE, "slowpath-%02x:%02x.%02x",
+>>-			 cdev->pdev->bus->number,
+>>-			 PCI_SLOT(cdev->pdev->devfn), hwfn->abs_pf_id);
+>>+		hwfn->slowpath_wq = alloc_workqueue("slowpath-
+>>%02x:%02x.%02x",
+>>+					 0, 0, cdev->pdev->bus->number,
+>>+					 PCI_SLOT(cdev->pdev->devfn),
+>>+					 hwfn->abs_pf_id);
+>
+> Confused. This should be alloc_workqueue("slowpath-%02x:%02x.%02x",  
+> cdev->pdev->bus->number, PCI_SLOT(cdev->pdev->devfn), hwfn->abs_pf_id, 
+> 0, 0);
+> Right?
 
-For all my patches, I do boot testing on various physical boards (Unmatched, D1,
-some internal hardware), plus some standard internal workloads. For
-performance-related patches, I run microbenchmarks or whole-system benchmarks
-(e.g. UnixBench). For this series specifically, I didn't do any extra
-benchmarking, as all of the functional changes should be as fast or faster by
-virtue of simply doing less work.
+I still think my version is the right one here, see the
+prototype:
 
-> BTW, I recall a parallel work from Alex and Bjorn [1] that might have some minor
-> conflict with these changes; + both of them to Cc: for further sync.
+__printf(1, 4) struct workqueue_struct *
+alloc_workqueue(const char *fmt, unsigned int flags, int max_active, ...);
 
-As suggested by Alex, v2 of this series will be based on the latest version of
-that patch.
+so the first argument in the format, while the printf arguments
+start after the flags and max_active arguments that are still both
+set to zero.
 
-Regards,
-Samuel
-
-> 
->   Andrea
-> 
-> [1] https://lore.kernel.org/lkml/20240206204607.527195-1-alexghiti@rivosinc.com/
-
+      Arnd
