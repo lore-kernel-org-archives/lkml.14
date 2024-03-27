@@ -1,1367 +1,182 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7187412AAC1;
-	Wed, 27 Mar 2024 11:48:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E140912BEAA
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 11:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711540137; cv=none; b=skW+21PWoe0/h1md1m5DLno6YZgpwEJMKNxBDV5krai48M4jMMwDbf24mKVQ++yeTSMe4bIo7pJX8Y825wFB8daGvNJh2kA8aaEjAftltR7nQGvzbCk1EpE4vD1wbTQya+eX11/MlGRD27TKXLOvmoyBy7PXyLYUk6zlNk6buEs=
+	t=1711540203; cv=none; b=W+ksuWxVD6pvR9jiRrhwxBK1dPLXbKL89bBJP6R3E2XAnDM0PwRYclbAwvlCBznjA1iYTVA8+sVTFHe9kdogLpLms3urNCkKUEpx/BQrYtlyTeRCEIydio4mRI8r6zWHk0WrOZ3OaAfadMr67GkIO7HY2mXF09+ThSHBktLD+vU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711540137; c=relaxed/simple;
-	bh=qIg/SavVQ9snJHICZKTgi/Tpsb6/gA/Z6LSZVsCSnbQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ik6ovM+asHU7jmxQnDhPG6+ukmh9mBOGS1xEv2KXxjcDXxbshVJMEfT+qxcfKqFPQ6frZ2vLFGzv8pS5EtRXuVdEUouVRWBUueTInT2uILSY8PcYxZGSlcuCQVEJYI1T8q5YhhX//d8XA0uJrRuaSOiVmD4GqyncLs9WcIk+in8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4V4PyC0qk5z29lHQ;
-	Wed, 27 Mar 2024 19:46:11 +0800 (CST)
-Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
-	by mail.maildlp.com (Postfix) with ESMTPS id A71F31402CA;
-	Wed, 27 Mar 2024 19:48:50 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.2) by
- kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 27 Mar 2024 19:48:49 +0800
-From: Jijie Shao <shaojijie@huawei.com>
-To: <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <jiri@resnulli.us>, <horms@kernel.org>,
-	<rkannoth@marvell.com>
-CC: <shenjian15@huawei.com>, <wangjie125@huawei.com>,
-	<liuyonglong@huawei.com>, <shaojijie@huawei.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH V6 net-next 2/4] net: hns3: move constants from hclge_debugfs.h to hclge_debugfs.c
-Date: Wed, 27 Mar 2024 19:43:28 +0800
-Message-ID: <20240327114330.1826631-3-shaojijie@huawei.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20240327114330.1826631-1-shaojijie@huawei.com>
-References: <20240327114330.1826631-1-shaojijie@huawei.com>
+	s=arc-20240116; t=1711540203; c=relaxed/simple;
+	bh=jUGLMXfJA53XClr/yZYHyekFyse0uCD0AkZBZQ9HFPg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VMAVG3qiTPU3iBko1WmW/RCg9O16cDInbH2c+ggKRojr51NNd3GOl3K2kBQDQSAQqQcDQo7oDX++Kd756RvyRSwg7z0EWyx4Bvd+1CF3kXGA3OF2d1HH9PLXY5u6czhuq9C9L37r/X0mf+ds5TryIibekVH+3WGRFckPUqDkd04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=BQBpcsby; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="BQBpcsby"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-789e2bf854dso388859385a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 04:50:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1711540200; x=1712145000; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cRCwxUtywPyv/sfMfB7vDdhGhWd2UBJnlU1eKR4NMmg=;
+        b=BQBpcsbyXCy0ANtozaTBatHeafDnspgjIEG2xp6GBwPgOxoUijzM9jeUsUmXP6fAvL
+         5VWSwAUiIyjShgj/OP2Q3356zJ7kL0fwkz42TM4jCBA0EwG6zofcfW16DZ4uTLhbaQIc
+         J45x64Z+Vwav2A+pKQRPuMThDY4lrOGgKnUQT14O3nu4dxTMiVZ+MiWgllzJ3GDk8psw
+         XQsHkKLz+1B7nRJaqkeqiPURhksE4fgkipKmNxMBM3Da7+oruXvhLwhrXSSDe5F/tX0c
+         6qrxMk4OD5x82v83ndu2aqnRGpYOHBfB943qmPcTj+ZgoYju4PxwLyihCgSMCnDtxqUZ
+         c6GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711540200; x=1712145000;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cRCwxUtywPyv/sfMfB7vDdhGhWd2UBJnlU1eKR4NMmg=;
+        b=B+g09JthKA33AvFdsVBW/xj9T2fDmkwBJvFRlEAcaodPOEDkQLVonkg8QQIm8e59YE
+         xKsiVplt1rr6X92A+krz6sbjXHfxeQUARxgJVhvxbfeGIo8ka5I8qD50566RlOaQ8YDG
+         0St97FX45EeVWvS84VraQYexQisHCaudJLSZbTgU6xTSvHmAstPi2YHfjyuCVlgcScWU
+         1Mt2DtAPlm4SFnPeZB+CTbkCT9eCpfJYTVc7oVn/GjM2jSNc/768FOgnjrh9JSHjY5cG
+         gSP5sZkBtsc0P9GxbllBJUwTvsjH7I5TEgeCjOUKWIX9nmmqExvshUOoOoGLdTi2E8nR
+         c3FQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUxJVHZYZIYAJge+GuToKjEEy7ziYCD+07tLESdKpi6/ACBZSQQJIi+v2ndJB4kAztcZ2Xp7k435irRex0gRxfSDrNCdT3qeFAcLGu1
+X-Gm-Message-State: AOJu0Yw+oT7bjDCpyzNdVpeaqhJN0FkdxJF1YiJDP7FohRp0W2Lm4avZ
+	UXjdN4Timef+Wkjg9XCe5xgoe/K2f1LcLV8Le9vrsbeDI7CTVC8m+vUcD31U62Q=
+X-Google-Smtp-Source: AGHT+IHwk5sSFKdm6Uh7Tlt4FGOA8xWOgg7e771JOsFUfYRAlXL6Y42sG4BEWKBvccGOUUtZiQb1mA==
+X-Received: by 2002:ae9:f407:0:b0:78a:5feb:d3aa with SMTP id y7-20020ae9f407000000b0078a5febd3aamr995720qkl.15.1711540199785;
+        Wed, 27 Mar 2024 04:49:59 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id k26-20020a05620a0b9a00b00789e2961225sm3808233qkh.61.2024.03.27.04.49.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Mar 2024 04:49:59 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1rpRn4-0051gL-Np;
+	Wed, 27 Mar 2024 08:49:58 -0300
+Date: Wed, 27 Mar 2024 08:49:58 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	Joao Martins <joao.m.martins@oracle.com>,
+	Nicolin Chen <nicolinc@nvidia.com>
+Cc: kernel@collabora.com, iommu@lists.linux.dev,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Kevin Tian <kevin.tian@intel.com>, Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH] selftests: iommu: add config needed for iommufd_fail_nth
+Message-ID: <20240327114958.GG8419@ziepe.ca>
+References: <20240325090048.1423908-1-usama.anjum@collabora.com>
+ <31fcc276-acd6-4277-bd6c-4a871c7fb28a@collabora.com>
+ <20240326150340.GE8419@ziepe.ca>
+ <56cc8b9e-c1cf-4520-ba45-b1237e8b7b64@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600007.china.huawei.com (7.193.23.208)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <56cc8b9e-c1cf-4520-ba45-b1237e8b7b64@collabora.com>
 
-some constants are defined in hclge_debugfs.h,
-but only used in hclge_debugfs.c.
-so move them from hclge_debugfs.h to hclge_debugfs.c.
+On Wed, Mar 27, 2024 at 03:14:25PM +0500, Muhammad Usama Anjum wrote:
+> On 3/26/24 8:03 PM, Jason Gunthorpe wrote:
+> > On Tue, Mar 26, 2024 at 06:09:34PM +0500, Muhammad Usama Anjum wrote:
+> >> Even after applying this config patch and following snippet (which doesn't
+> >> terminate the program if mmap doesn't allocate exactly as the hint), I'm
+> >> finding failed tests.
+> >>
+> >> @@ -1746,7 +1748,7 @@ FIXTURE_SETUP(iommufd_dirty_tracking)
+> >>         assert((uintptr_t)self->buffer % HUGEPAGE_SIZE == 0);
+> >>         vrc = mmap(self->buffer, variant->buffer_size, PROT_READ | PROT_WRITE,
+> >>                    mmap_flags, -1, 0);
+> >> -       assert(vrc == self->buffer);
+> >> +       assert(vrc == self->buffer);// ???
+> >>
+> >> On x86:
+> >> # Totals: pass:176 fail:4 xfail:0 xpass:0 skip:0 error:0
+> >> On ARM64:
+> >> # Totals: pass:166 fail:14 xfail:0 xpass:0 skip:0 error:0
+> >>
+> >> The log files are attached.
+> > 
+> > You probably don't have enough transparent huge pages available to the process
+> > 
+> >       echo 1024 > /proc/sys/vm/nr_hugepages
+> After making huge pages available, the iommufd test always passed on x86.
+> But there are still failures on arm64. I'm looking into the failures.
 
-Signed-off-by: Jijie Shao <shaojijie@huawei.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
----
- .../hisilicon/hns3/hns3pf/hclge_debugfs.c     | 640 ++++++++++++++++++
- .../hisilicon/hns3/hns3pf/hclge_debugfs.h     | 640 ------------------
- 2 files changed, 640 insertions(+), 640 deletions(-)
+Oh that is really strange. Joao? Nicolin?
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-index 9ec471ced3d6..243be19a7557 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-@@ -18,6 +18,646 @@ static const char * const hclge_mac_state_str[] = {
- 
- static const char * const tc_map_mode_str[] = { "PRIO", "DSCP" };
- 
-+static const struct hclge_dbg_dfx_message hclge_dbg_bios_common_reg[] = {
-+	{false, "Reserved"},
-+	{true,	"BP_CPU_STATE"},
-+	{true,	"DFX_MSIX_INFO_NIC_0"},
-+	{true,	"DFX_MSIX_INFO_NIC_1"},
-+	{true,	"DFX_MSIX_INFO_NIC_2"},
-+	{true,	"DFX_MSIX_INFO_NIC_3"},
-+
-+	{true,	"DFX_MSIX_INFO_ROC_0"},
-+	{true,	"DFX_MSIX_INFO_ROC_1"},
-+	{true,	"DFX_MSIX_INFO_ROC_2"},
-+	{true,	"DFX_MSIX_INFO_ROC_3"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+};
-+
-+static const struct hclge_dbg_dfx_message hclge_dbg_ssu_reg_0[] = {
-+	{false, "Reserved"},
-+	{true,	"SSU_ETS_PORT_STATUS"},
-+	{true,	"SSU_ETS_TCG_STATUS"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+	{true,	"SSU_BP_STATUS_0"},
-+
-+	{true,	"SSU_BP_STATUS_1"},
-+	{true,	"SSU_BP_STATUS_2"},
-+	{true,	"SSU_BP_STATUS_3"},
-+	{true,	"SSU_BP_STATUS_4"},
-+	{true,	"SSU_BP_STATUS_5"},
-+	{true,	"SSU_MAC_TX_PFC_IND"},
-+
-+	{true,	"MAC_SSU_RX_PFC_IND"},
-+	{true,	"BTMP_AGEING_ST_B0"},
-+	{true,	"BTMP_AGEING_ST_B1"},
-+	{true,	"BTMP_AGEING_ST_B2"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+
-+	{true,	"FULL_DROP_NUM"},
-+	{true,	"PART_DROP_NUM"},
-+	{true,	"PPP_KEY_DROP_NUM"},
-+	{true,	"PPP_RLT_DROP_NUM"},
-+	{true,	"LO_PRI_UNICAST_RLT_DROP_NUM"},
-+	{true,	"HI_PRI_MULTICAST_RLT_DROP_NUM"},
-+
-+	{true,	"LO_PRI_MULTICAST_RLT_DROP_NUM"},
-+	{true,	"NCSI_PACKET_CURR_BUFFER_CNT"},
-+	{true,	"BTMP_AGEING_RLS_CNT_BANK0"},
-+	{true,	"BTMP_AGEING_RLS_CNT_BANK1"},
-+	{true,	"BTMP_AGEING_RLS_CNT_BANK2"},
-+	{true,	"SSU_MB_RD_RLT_DROP_CNT"},
-+
-+	{true,	"SSU_PPP_MAC_KEY_NUM_L"},
-+	{true,	"SSU_PPP_MAC_KEY_NUM_H"},
-+	{true,	"SSU_PPP_HOST_KEY_NUM_L"},
-+	{true,	"SSU_PPP_HOST_KEY_NUM_H"},
-+	{true,	"PPP_SSU_MAC_RLT_NUM_L"},
-+	{true,	"PPP_SSU_MAC_RLT_NUM_H"},
-+
-+	{true,	"PPP_SSU_HOST_RLT_NUM_L"},
-+	{true,	"PPP_SSU_HOST_RLT_NUM_H"},
-+	{true,	"NCSI_RX_PACKET_IN_CNT_L"},
-+	{true,	"NCSI_RX_PACKET_IN_CNT_H"},
-+	{true,	"NCSI_TX_PACKET_OUT_CNT_L"},
-+	{true,	"NCSI_TX_PACKET_OUT_CNT_H"},
-+
-+	{true,	"SSU_KEY_DROP_NUM"},
-+	{true,	"MB_UNCOPY_NUM"},
-+	{true,	"RX_OQ_DROP_PKT_CNT"},
-+	{true,	"TX_OQ_DROP_PKT_CNT"},
-+	{true,	"BANK_UNBALANCE_DROP_CNT"},
-+	{true,	"BANK_UNBALANCE_RX_DROP_CNT"},
-+
-+	{true,	"NIC_L2_ERR_DROP_PKT_CNT"},
-+	{true,	"ROC_L2_ERR_DROP_PKT_CNT"},
-+	{true,	"NIC_L2_ERR_DROP_PKT_CNT_RX"},
-+	{true,	"ROC_L2_ERR_DROP_PKT_CNT_RX"},
-+	{true,	"RX_OQ_GLB_DROP_PKT_CNT"},
-+	{false, "Reserved"},
-+
-+	{true,	"LO_PRI_UNICAST_CUR_CNT"},
-+	{true,	"HI_PRI_MULTICAST_CUR_CNT"},
-+	{true,	"LO_PRI_MULTICAST_CUR_CNT"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+};
-+
-+static const struct hclge_dbg_dfx_message hclge_dbg_ssu_reg_1[] = {
-+	{true,	"prt_id"},
-+	{true,	"PACKET_TC_CURR_BUFFER_CNT_0"},
-+	{true,	"PACKET_TC_CURR_BUFFER_CNT_1"},
-+	{true,	"PACKET_TC_CURR_BUFFER_CNT_2"},
-+	{true,	"PACKET_TC_CURR_BUFFER_CNT_3"},
-+	{true,	"PACKET_TC_CURR_BUFFER_CNT_4"},
-+
-+	{true,	"PACKET_TC_CURR_BUFFER_CNT_5"},
-+	{true,	"PACKET_TC_CURR_BUFFER_CNT_6"},
-+	{true,	"PACKET_TC_CURR_BUFFER_CNT_7"},
-+	{true,	"PACKET_CURR_BUFFER_CNT"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+
-+	{true,	"RX_PACKET_IN_CNT_L"},
-+	{true,	"RX_PACKET_IN_CNT_H"},
-+	{true,	"RX_PACKET_OUT_CNT_L"},
-+	{true,	"RX_PACKET_OUT_CNT_H"},
-+	{true,	"TX_PACKET_IN_CNT_L"},
-+	{true,	"TX_PACKET_IN_CNT_H"},
-+
-+	{true,	"TX_PACKET_OUT_CNT_L"},
-+	{true,	"TX_PACKET_OUT_CNT_H"},
-+	{true,	"ROC_RX_PACKET_IN_CNT_L"},
-+	{true,	"ROC_RX_PACKET_IN_CNT_H"},
-+	{true,	"ROC_TX_PACKET_OUT_CNT_L"},
-+	{true,	"ROC_TX_PACKET_OUT_CNT_H"},
-+
-+	{true,	"RX_PACKET_TC_IN_CNT_0_L"},
-+	{true,	"RX_PACKET_TC_IN_CNT_0_H"},
-+	{true,	"RX_PACKET_TC_IN_CNT_1_L"},
-+	{true,	"RX_PACKET_TC_IN_CNT_1_H"},
-+	{true,	"RX_PACKET_TC_IN_CNT_2_L"},
-+	{true,	"RX_PACKET_TC_IN_CNT_2_H"},
-+
-+	{true,	"RX_PACKET_TC_IN_CNT_3_L"},
-+	{true,	"RX_PACKET_TC_IN_CNT_3_H"},
-+	{true,	"RX_PACKET_TC_IN_CNT_4_L"},
-+	{true,	"RX_PACKET_TC_IN_CNT_4_H"},
-+	{true,	"RX_PACKET_TC_IN_CNT_5_L"},
-+	{true,	"RX_PACKET_TC_IN_CNT_5_H"},
-+
-+	{true,	"RX_PACKET_TC_IN_CNT_6_L"},
-+	{true,	"RX_PACKET_TC_IN_CNT_6_H"},
-+	{true,	"RX_PACKET_TC_IN_CNT_7_L"},
-+	{true,	"RX_PACKET_TC_IN_CNT_7_H"},
-+	{true,	"RX_PACKET_TC_OUT_CNT_0_L"},
-+	{true,	"RX_PACKET_TC_OUT_CNT_0_H"},
-+
-+	{true,	"RX_PACKET_TC_OUT_CNT_1_L"},
-+	{true,	"RX_PACKET_TC_OUT_CNT_1_H"},
-+	{true,	"RX_PACKET_TC_OUT_CNT_2_L"},
-+	{true,	"RX_PACKET_TC_OUT_CNT_2_H"},
-+	{true,	"RX_PACKET_TC_OUT_CNT_3_L"},
-+	{true,	"RX_PACKET_TC_OUT_CNT_3_H"},
-+
-+	{true,	"RX_PACKET_TC_OUT_CNT_4_L"},
-+	{true,	"RX_PACKET_TC_OUT_CNT_4_H"},
-+	{true,	"RX_PACKET_TC_OUT_CNT_5_L"},
-+	{true,	"RX_PACKET_TC_OUT_CNT_5_H"},
-+	{true,	"RX_PACKET_TC_OUT_CNT_6_L"},
-+	{true,	"RX_PACKET_TC_OUT_CNT_6_H"},
-+
-+	{true,	"RX_PACKET_TC_OUT_CNT_7_L"},
-+	{true,	"RX_PACKET_TC_OUT_CNT_7_H"},
-+	{true,	"TX_PACKET_TC_IN_CNT_0_L"},
-+	{true,	"TX_PACKET_TC_IN_CNT_0_H"},
-+	{true,	"TX_PACKET_TC_IN_CNT_1_L"},
-+	{true,	"TX_PACKET_TC_IN_CNT_1_H"},
-+
-+	{true,	"TX_PACKET_TC_IN_CNT_2_L"},
-+	{true,	"TX_PACKET_TC_IN_CNT_2_H"},
-+	{true,	"TX_PACKET_TC_IN_CNT_3_L"},
-+	{true,	"TX_PACKET_TC_IN_CNT_3_H"},
-+	{true,	"TX_PACKET_TC_IN_CNT_4_L"},
-+	{true,	"TX_PACKET_TC_IN_CNT_4_H"},
-+
-+	{true,	"TX_PACKET_TC_IN_CNT_5_L"},
-+	{true,	"TX_PACKET_TC_IN_CNT_5_H"},
-+	{true,	"TX_PACKET_TC_IN_CNT_6_L"},
-+	{true,	"TX_PACKET_TC_IN_CNT_6_H"},
-+	{true,	"TX_PACKET_TC_IN_CNT_7_L"},
-+	{true,	"TX_PACKET_TC_IN_CNT_7_H"},
-+
-+	{true,	"TX_PACKET_TC_OUT_CNT_0_L"},
-+	{true,	"TX_PACKET_TC_OUT_CNT_0_H"},
-+	{true,	"TX_PACKET_TC_OUT_CNT_1_L"},
-+	{true,	"TX_PACKET_TC_OUT_CNT_1_H"},
-+	{true,	"TX_PACKET_TC_OUT_CNT_2_L"},
-+	{true,	"TX_PACKET_TC_OUT_CNT_2_H"},
-+
-+	{true,	"TX_PACKET_TC_OUT_CNT_3_L"},
-+	{true,	"TX_PACKET_TC_OUT_CNT_3_H"},
-+	{true,	"TX_PACKET_TC_OUT_CNT_4_L"},
-+	{true,	"TX_PACKET_TC_OUT_CNT_4_H"},
-+	{true,	"TX_PACKET_TC_OUT_CNT_5_L"},
-+	{true,	"TX_PACKET_TC_OUT_CNT_5_H"},
-+
-+	{true,	"TX_PACKET_TC_OUT_CNT_6_L"},
-+	{true,	"TX_PACKET_TC_OUT_CNT_6_H"},
-+	{true,	"TX_PACKET_TC_OUT_CNT_7_L"},
-+	{true,	"TX_PACKET_TC_OUT_CNT_7_H"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+};
-+
-+static const struct hclge_dbg_dfx_message hclge_dbg_ssu_reg_2[] = {
-+	{true,	"OQ_INDEX"},
-+	{true,	"QUEUE_CNT"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+};
-+
-+static const struct hclge_dbg_dfx_message hclge_dbg_igu_egu_reg[] = {
-+	{true,	"prt_id"},
-+	{true,	"IGU_RX_ERR_PKT"},
-+	{true,	"IGU_RX_NO_SOF_PKT"},
-+	{true,	"EGU_TX_1588_SHORT_PKT"},
-+	{true,	"EGU_TX_1588_PKT"},
-+	{true,	"EGU_TX_ERR_PKT"},
-+
-+	{true,	"IGU_RX_OUT_L2_PKT"},
-+	{true,	"IGU_RX_OUT_L3_PKT"},
-+	{true,	"IGU_RX_OUT_L4_PKT"},
-+	{true,	"IGU_RX_IN_L2_PKT"},
-+	{true,	"IGU_RX_IN_L3_PKT"},
-+	{true,	"IGU_RX_IN_L4_PKT"},
-+
-+	{true,	"IGU_RX_EL3E_PKT"},
-+	{true,	"IGU_RX_EL4E_PKT"},
-+	{true,	"IGU_RX_L3E_PKT"},
-+	{true,	"IGU_RX_L4E_PKT"},
-+	{true,	"IGU_RX_ROCEE_PKT"},
-+	{true,	"IGU_RX_OUT_UDP0_PKT"},
-+
-+	{true,	"IGU_RX_IN_UDP0_PKT"},
-+	{true,	"IGU_MC_CAR_DROP_PKT_L"},
-+	{true,	"IGU_MC_CAR_DROP_PKT_H"},
-+	{true,	"IGU_BC_CAR_DROP_PKT_L"},
-+	{true,	"IGU_BC_CAR_DROP_PKT_H"},
-+	{false, "Reserved"},
-+
-+	{true,	"IGU_RX_OVERSIZE_PKT_L"},
-+	{true,	"IGU_RX_OVERSIZE_PKT_H"},
-+	{true,	"IGU_RX_UNDERSIZE_PKT_L"},
-+	{true,	"IGU_RX_UNDERSIZE_PKT_H"},
-+	{true,	"IGU_RX_OUT_ALL_PKT_L"},
-+	{true,	"IGU_RX_OUT_ALL_PKT_H"},
-+
-+	{true,	"IGU_TX_OUT_ALL_PKT_L"},
-+	{true,	"IGU_TX_OUT_ALL_PKT_H"},
-+	{true,	"IGU_RX_UNI_PKT_L"},
-+	{true,	"IGU_RX_UNI_PKT_H"},
-+	{true,	"IGU_RX_MULTI_PKT_L"},
-+	{true,	"IGU_RX_MULTI_PKT_H"},
-+
-+	{true,	"IGU_RX_BROAD_PKT_L"},
-+	{true,	"IGU_RX_BROAD_PKT_H"},
-+	{true,	"EGU_TX_OUT_ALL_PKT_L"},
-+	{true,	"EGU_TX_OUT_ALL_PKT_H"},
-+	{true,	"EGU_TX_UNI_PKT_L"},
-+	{true,	"EGU_TX_UNI_PKT_H"},
-+
-+	{true,	"EGU_TX_MULTI_PKT_L"},
-+	{true,	"EGU_TX_MULTI_PKT_H"},
-+	{true,	"EGU_TX_BROAD_PKT_L"},
-+	{true,	"EGU_TX_BROAD_PKT_H"},
-+	{true,	"IGU_TX_KEY_NUM_L"},
-+	{true,	"IGU_TX_KEY_NUM_H"},
-+
-+	{true,	"IGU_RX_NON_TUN_PKT_L"},
-+	{true,	"IGU_RX_NON_TUN_PKT_H"},
-+	{true,	"IGU_RX_TUN_PKT_L"},
-+	{true,	"IGU_RX_TUN_PKT_H"},
-+	{false,	"Reserved"},
-+	{false,	"Reserved"},
-+};
-+
-+static const struct hclge_dbg_dfx_message hclge_dbg_rpu_reg_0[] = {
-+	{true, "tc_queue_num"},
-+	{true, "FSM_DFX_ST0"},
-+	{true, "FSM_DFX_ST1"},
-+	{true, "RPU_RX_PKT_DROP_CNT"},
-+	{true, "BUF_WAIT_TIMEOUT"},
-+	{true, "BUF_WAIT_TIMEOUT_QID"},
-+};
-+
-+static const struct hclge_dbg_dfx_message hclge_dbg_rpu_reg_1[] = {
-+	{false, "Reserved"},
-+	{true,	"FIFO_DFX_ST0"},
-+	{true,	"FIFO_DFX_ST1"},
-+	{true,	"FIFO_DFX_ST2"},
-+	{true,	"FIFO_DFX_ST3"},
-+	{true,	"FIFO_DFX_ST4"},
-+
-+	{true,	"FIFO_DFX_ST5"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+};
-+
-+static const struct hclge_dbg_dfx_message hclge_dbg_ncsi_reg[] = {
-+	{false, "Reserved"},
-+	{true,	"NCSI_EGU_TX_FIFO_STS"},
-+	{true,	"NCSI_PAUSE_STATUS"},
-+	{true,	"NCSI_RX_CTRL_DMAC_ERR_CNT"},
-+	{true,	"NCSI_RX_CTRL_SMAC_ERR_CNT"},
-+	{true,	"NCSI_RX_CTRL_CKS_ERR_CNT"},
-+
-+	{true,	"NCSI_RX_CTRL_PKT_CNT"},
-+	{true,	"NCSI_RX_PT_DMAC_ERR_CNT"},
-+	{true,	"NCSI_RX_PT_SMAC_ERR_CNT"},
-+	{true,	"NCSI_RX_PT_PKT_CNT"},
-+	{true,	"NCSI_RX_FCS_ERR_CNT"},
-+	{true,	"NCSI_TX_CTRL_DMAC_ERR_CNT"},
-+
-+	{true,	"NCSI_TX_CTRL_SMAC_ERR_CNT"},
-+	{true,	"NCSI_TX_CTRL_PKT_CNT"},
-+	{true,	"NCSI_TX_PT_DMAC_ERR_CNT"},
-+	{true,	"NCSI_TX_PT_SMAC_ERR_CNT"},
-+	{true,	"NCSI_TX_PT_PKT_CNT"},
-+	{true,	"NCSI_TX_PT_PKT_TRUNC_CNT"},
-+
-+	{true,	"NCSI_TX_PT_PKT_ERR_CNT"},
-+	{true,	"NCSI_TX_CTRL_PKT_ERR_CNT"},
-+	{true,	"NCSI_RX_CTRL_PKT_TRUNC_CNT"},
-+	{true,	"NCSI_RX_CTRL_PKT_CFLIT_CNT"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+
-+	{true,	"NCSI_MAC_RX_OCTETS_OK"},
-+	{true,	"NCSI_MAC_RX_OCTETS_BAD"},
-+	{true,	"NCSI_MAC_RX_UC_PKTS"},
-+	{true,	"NCSI_MAC_RX_MC_PKTS"},
-+	{true,	"NCSI_MAC_RX_BC_PKTS"},
-+	{true,	"NCSI_MAC_RX_PKTS_64OCTETS"},
-+
-+	{true,	"NCSI_MAC_RX_PKTS_65TO127OCTETS"},
-+	{true,	"NCSI_MAC_RX_PKTS_128TO255OCTETS"},
-+	{true,	"NCSI_MAC_RX_PKTS_255TO511OCTETS"},
-+	{true,	"NCSI_MAC_RX_PKTS_512TO1023OCTETS"},
-+	{true,	"NCSI_MAC_RX_PKTS_1024TO1518OCTETS"},
-+	{true,	"NCSI_MAC_RX_PKTS_1519TOMAXOCTETS"},
-+
-+	{true,	"NCSI_MAC_RX_FCS_ERRORS"},
-+	{true,	"NCSI_MAC_RX_LONG_ERRORS"},
-+	{true,	"NCSI_MAC_RX_JABBER_ERRORS"},
-+	{true,	"NCSI_MAC_RX_RUNT_ERR_CNT"},
-+	{true,	"NCSI_MAC_RX_SHORT_ERR_CNT"},
-+	{true,	"NCSI_MAC_RX_FILT_PKT_CNT"},
-+
-+	{true,	"NCSI_MAC_RX_OCTETS_TOTAL_FILT"},
-+	{true,	"NCSI_MAC_TX_OCTETS_OK"},
-+	{true,	"NCSI_MAC_TX_OCTETS_BAD"},
-+	{true,	"NCSI_MAC_TX_UC_PKTS"},
-+	{true,	"NCSI_MAC_TX_MC_PKTS"},
-+	{true,	"NCSI_MAC_TX_BC_PKTS"},
-+
-+	{true,	"NCSI_MAC_TX_PKTS_64OCTETS"},
-+	{true,	"NCSI_MAC_TX_PKTS_65TO127OCTETS"},
-+	{true,	"NCSI_MAC_TX_PKTS_128TO255OCTETS"},
-+	{true,	"NCSI_MAC_TX_PKTS_256TO511OCTETS"},
-+	{true,	"NCSI_MAC_TX_PKTS_512TO1023OCTETS"},
-+	{true,	"NCSI_MAC_TX_PKTS_1024TO1518OCTETS"},
-+
-+	{true,	"NCSI_MAC_TX_PKTS_1519TOMAXOCTETS"},
-+	{true,	"NCSI_MAC_TX_UNDERRUN"},
-+	{true,	"NCSI_MAC_TX_CRC_ERROR"},
-+	{true,	"NCSI_MAC_TX_PAUSE_FRAMES"},
-+	{true,	"NCSI_MAC_RX_PAD_PKTS"},
-+	{true,	"NCSI_MAC_RX_PAUSE_FRAMES"},
-+};
-+
-+static const struct hclge_dbg_dfx_message hclge_dbg_rtc_reg[] = {
-+	{false, "Reserved"},
-+	{true,	"LGE_IGU_AFIFO_DFX_0"},
-+	{true,	"LGE_IGU_AFIFO_DFX_1"},
-+	{true,	"LGE_IGU_AFIFO_DFX_2"},
-+	{true,	"LGE_IGU_AFIFO_DFX_3"},
-+	{true,	"LGE_IGU_AFIFO_DFX_4"},
-+
-+	{true,	"LGE_IGU_AFIFO_DFX_5"},
-+	{true,	"LGE_IGU_AFIFO_DFX_6"},
-+	{true,	"LGE_IGU_AFIFO_DFX_7"},
-+	{true,	"LGE_EGU_AFIFO_DFX_0"},
-+	{true,	"LGE_EGU_AFIFO_DFX_1"},
-+	{true,	"LGE_EGU_AFIFO_DFX_2"},
-+
-+	{true,	"LGE_EGU_AFIFO_DFX_3"},
-+	{true,	"LGE_EGU_AFIFO_DFX_4"},
-+	{true,	"LGE_EGU_AFIFO_DFX_5"},
-+	{true,	"LGE_EGU_AFIFO_DFX_6"},
-+	{true,	"LGE_EGU_AFIFO_DFX_7"},
-+	{true,	"CGE_IGU_AFIFO_DFX_0"},
-+
-+	{true,	"CGE_IGU_AFIFO_DFX_1"},
-+	{true,	"CGE_EGU_AFIFO_DFX_0"},
-+	{true,	"CGE_EGU_AFIFO_DFX_1"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+};
-+
-+static const struct hclge_dbg_dfx_message hclge_dbg_ppp_reg[] = {
-+	{false, "Reserved"},
-+	{true,	"DROP_FROM_PRT_PKT_CNT"},
-+	{true,	"DROP_FROM_HOST_PKT_CNT"},
-+	{true,	"DROP_TX_VLAN_PROC_CNT"},
-+	{true,	"DROP_MNG_CNT"},
-+	{true,	"DROP_FD_CNT"},
-+
-+	{true,	"DROP_NO_DST_CNT"},
-+	{true,	"DROP_MC_MBID_FULL_CNT"},
-+	{true,	"DROP_SC_FILTERED"},
-+	{true,	"PPP_MC_DROP_PKT_CNT"},
-+	{true,	"DROP_PT_CNT"},
-+	{true,	"DROP_MAC_ANTI_SPOOF_CNT"},
-+
-+	{true,	"DROP_IG_VFV_CNT"},
-+	{true,	"DROP_IG_PRTV_CNT"},
-+	{true,	"DROP_CNM_PFC_PAUSE_CNT"},
-+	{true,	"DROP_TORUS_TC_CNT"},
-+	{true,	"DROP_TORUS_LPBK_CNT"},
-+	{true,	"PPP_HFS_STS"},
-+
-+	{true,	"PPP_MC_RSLT_STS"},
-+	{true,	"PPP_P3U_STS"},
-+	{true,	"PPP_RSLT_DESCR_STS"},
-+	{true,	"PPP_UMV_STS_0"},
-+	{true,	"PPP_UMV_STS_1"},
-+	{true,	"PPP_VFV_STS"},
-+
-+	{true,	"PPP_GRO_KEY_CNT"},
-+	{true,	"PPP_GRO_INFO_CNT"},
-+	{true,	"PPP_GRO_DROP_CNT"},
-+	{true,	"PPP_GRO_OUT_CNT"},
-+	{true,	"PPP_GRO_KEY_MATCH_DATA_CNT"},
-+	{true,	"PPP_GRO_KEY_MATCH_TCAM_CNT"},
-+
-+	{true,	"PPP_GRO_INFO_MATCH_CNT"},
-+	{true,	"PPP_GRO_FREE_ENTRY_CNT"},
-+	{true,	"PPP_GRO_INNER_DFX_SIGNAL"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+
-+	{true,	"GET_RX_PKT_CNT_L"},
-+	{true,	"GET_RX_PKT_CNT_H"},
-+	{true,	"GET_TX_PKT_CNT_L"},
-+	{true,	"GET_TX_PKT_CNT_H"},
-+	{true,	"SEND_UC_PRT2HOST_PKT_CNT_L"},
-+	{true,	"SEND_UC_PRT2HOST_PKT_CNT_H"},
-+
-+	{true,	"SEND_UC_PRT2PRT_PKT_CNT_L"},
-+	{true,	"SEND_UC_PRT2PRT_PKT_CNT_H"},
-+	{true,	"SEND_UC_HOST2HOST_PKT_CNT_L"},
-+	{true,	"SEND_UC_HOST2HOST_PKT_CNT_H"},
-+	{true,	"SEND_UC_HOST2PRT_PKT_CNT_L"},
-+	{true,	"SEND_UC_HOST2PRT_PKT_CNT_H"},
-+
-+	{true,	"SEND_MC_FROM_PRT_CNT_L"},
-+	{true,	"SEND_MC_FROM_PRT_CNT_H"},
-+	{true,	"SEND_MC_FROM_HOST_CNT_L"},
-+	{true,	"SEND_MC_FROM_HOST_CNT_H"},
-+	{true,	"SSU_MC_RD_CNT_L"},
-+	{true,	"SSU_MC_RD_CNT_H"},
-+
-+	{true,	"SSU_MC_DROP_CNT_L"},
-+	{true,	"SSU_MC_DROP_CNT_H"},
-+	{true,	"SSU_MC_RD_PKT_CNT_L"},
-+	{true,	"SSU_MC_RD_PKT_CNT_H"},
-+	{true,	"PPP_MC_2HOST_PKT_CNT_L"},
-+	{true,	"PPP_MC_2HOST_PKT_CNT_H"},
-+
-+	{true,	"PPP_MC_2PRT_PKT_CNT_L"},
-+	{true,	"PPP_MC_2PRT_PKT_CNT_H"},
-+	{true,	"NTSNOS_PKT_CNT_L"},
-+	{true,	"NTSNOS_PKT_CNT_H"},
-+	{true,	"NTUP_PKT_CNT_L"},
-+	{true,	"NTUP_PKT_CNT_H"},
-+
-+	{true,	"NTLCL_PKT_CNT_L"},
-+	{true,	"NTLCL_PKT_CNT_H"},
-+	{true,	"NTTGT_PKT_CNT_L"},
-+	{true,	"NTTGT_PKT_CNT_H"},
-+	{true,	"RTNS_PKT_CNT_L"},
-+	{true,	"RTNS_PKT_CNT_H"},
-+
-+	{true,	"RTLPBK_PKT_CNT_L"},
-+	{true,	"RTLPBK_PKT_CNT_H"},
-+	{true,	"NR_PKT_CNT_L"},
-+	{true,	"NR_PKT_CNT_H"},
-+	{true,	"RR_PKT_CNT_L"},
-+	{true,	"RR_PKT_CNT_H"},
-+
-+	{true,	"MNG_TBL_HIT_CNT_L"},
-+	{true,	"MNG_TBL_HIT_CNT_H"},
-+	{true,	"FD_TBL_HIT_CNT_L"},
-+	{true,	"FD_TBL_HIT_CNT_H"},
-+	{true,	"FD_LKUP_CNT_L"},
-+	{true,	"FD_LKUP_CNT_H"},
-+
-+	{true,	"BC_HIT_CNT_L"},
-+	{true,	"BC_HIT_CNT_H"},
-+	{true,	"UM_TBL_UC_HIT_CNT_L"},
-+	{true,	"UM_TBL_UC_HIT_CNT_H"},
-+	{true,	"UM_TBL_MC_HIT_CNT_L"},
-+	{true,	"UM_TBL_MC_HIT_CNT_H"},
-+
-+	{true,	"UM_TBL_VMDQ1_HIT_CNT_L"},
-+	{true,	"UM_TBL_VMDQ1_HIT_CNT_H"},
-+	{true,	"MTA_TBL_HIT_CNT_L"},
-+	{true,	"MTA_TBL_HIT_CNT_H"},
-+	{true,	"FWD_BONDING_HIT_CNT_L"},
-+	{true,	"FWD_BONDING_HIT_CNT_H"},
-+
-+	{true,	"PROMIS_TBL_HIT_CNT_L"},
-+	{true,	"PROMIS_TBL_HIT_CNT_H"},
-+	{true,	"GET_TUNL_PKT_CNT_L"},
-+	{true,	"GET_TUNL_PKT_CNT_H"},
-+	{true,	"GET_BMC_PKT_CNT_L"},
-+	{true,	"GET_BMC_PKT_CNT_H"},
-+
-+	{true,	"SEND_UC_PRT2BMC_PKT_CNT_L"},
-+	{true,	"SEND_UC_PRT2BMC_PKT_CNT_H"},
-+	{true,	"SEND_UC_HOST2BMC_PKT_CNT_L"},
-+	{true,	"SEND_UC_HOST2BMC_PKT_CNT_H"},
-+	{true,	"SEND_UC_BMC2HOST_PKT_CNT_L"},
-+	{true,	"SEND_UC_BMC2HOST_PKT_CNT_H"},
-+
-+	{true,	"SEND_UC_BMC2PRT_PKT_CNT_L"},
-+	{true,	"SEND_UC_BMC2PRT_PKT_CNT_H"},
-+	{true,	"PPP_MC_2BMC_PKT_CNT_L"},
-+	{true,	"PPP_MC_2BMC_PKT_CNT_H"},
-+	{true,	"VLAN_MIRR_CNT_L"},
-+	{true,	"VLAN_MIRR_CNT_H"},
-+
-+	{true,	"IG_MIRR_CNT_L"},
-+	{true,	"IG_MIRR_CNT_H"},
-+	{true,	"EG_MIRR_CNT_L"},
-+	{true,	"EG_MIRR_CNT_H"},
-+	{true,	"RX_DEFAULT_HOST_HIT_CNT_L"},
-+	{true,	"RX_DEFAULT_HOST_HIT_CNT_H"},
-+
-+	{true,	"LAN_PAIR_CNT_L"},
-+	{true,	"LAN_PAIR_CNT_H"},
-+	{true,	"UM_TBL_MC_HIT_PKT_CNT_L"},
-+	{true,	"UM_TBL_MC_HIT_PKT_CNT_H"},
-+	{true,	"MTA_TBL_HIT_PKT_CNT_L"},
-+	{true,	"MTA_TBL_HIT_PKT_CNT_H"},
-+
-+	{true,	"PROMIS_TBL_HIT_PKT_CNT_L"},
-+	{true,	"PROMIS_TBL_HIT_PKT_CNT_H"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+};
-+
-+static const struct hclge_dbg_dfx_message hclge_dbg_rcb_reg[] = {
-+	{false, "Reserved"},
-+	{true,	"FSM_DFX_ST0"},
-+	{true,	"FSM_DFX_ST1"},
-+	{true,	"FSM_DFX_ST2"},
-+	{true,	"FIFO_DFX_ST0"},
-+	{true,	"FIFO_DFX_ST1"},
-+
-+	{true,	"FIFO_DFX_ST2"},
-+	{true,	"FIFO_DFX_ST3"},
-+	{true,	"FIFO_DFX_ST4"},
-+	{true,	"FIFO_DFX_ST5"},
-+	{true,	"FIFO_DFX_ST6"},
-+	{true,	"FIFO_DFX_ST7"},
-+
-+	{true,	"FIFO_DFX_ST8"},
-+	{true,	"FIFO_DFX_ST9"},
-+	{true,	"FIFO_DFX_ST10"},
-+	{true,	"FIFO_DFX_ST11"},
-+	{true,	"Q_CREDIT_VLD_0"},
-+	{true,	"Q_CREDIT_VLD_1"},
-+
-+	{true,	"Q_CREDIT_VLD_2"},
-+	{true,	"Q_CREDIT_VLD_3"},
-+	{true,	"Q_CREDIT_VLD_4"},
-+	{true,	"Q_CREDIT_VLD_5"},
-+	{true,	"Q_CREDIT_VLD_6"},
-+	{true,	"Q_CREDIT_VLD_7"},
-+
-+	{true,	"Q_CREDIT_VLD_8"},
-+	{true,	"Q_CREDIT_VLD_9"},
-+	{true,	"Q_CREDIT_VLD_10"},
-+	{true,	"Q_CREDIT_VLD_11"},
-+	{true,	"Q_CREDIT_VLD_12"},
-+	{true,	"Q_CREDIT_VLD_13"},
-+
-+	{true,	"Q_CREDIT_VLD_14"},
-+	{true,	"Q_CREDIT_VLD_15"},
-+	{true,	"Q_CREDIT_VLD_16"},
-+	{true,	"Q_CREDIT_VLD_17"},
-+	{true,	"Q_CREDIT_VLD_18"},
-+	{true,	"Q_CREDIT_VLD_19"},
-+
-+	{true,	"Q_CREDIT_VLD_20"},
-+	{true,	"Q_CREDIT_VLD_21"},
-+	{true,	"Q_CREDIT_VLD_22"},
-+	{true,	"Q_CREDIT_VLD_23"},
-+	{true,	"Q_CREDIT_VLD_24"},
-+	{true,	"Q_CREDIT_VLD_25"},
-+
-+	{true,	"Q_CREDIT_VLD_26"},
-+	{true,	"Q_CREDIT_VLD_27"},
-+	{true,	"Q_CREDIT_VLD_28"},
-+	{true,	"Q_CREDIT_VLD_29"},
-+	{true,	"Q_CREDIT_VLD_30"},
-+	{true,	"Q_CREDIT_VLD_31"},
-+
-+	{true,	"GRO_BD_SERR_CNT"},
-+	{true,	"GRO_CONTEXT_SERR_CNT"},
-+	{true,	"RX_STASH_CFG_SERR_CNT"},
-+	{true,	"AXI_RD_FBD_SERR_CNT"},
-+	{true,	"GRO_BD_MERR_CNT"},
-+	{true,	"GRO_CONTEXT_MERR_CNT"},
-+
-+	{true,	"RX_STASH_CFG_MERR_CNT"},
-+	{true,	"AXI_RD_FBD_MERR_CNT"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+	{false, "Reserved"},
-+};
-+
-+static const struct hclge_dbg_dfx_message hclge_dbg_tqp_reg[] = {
-+	{true, "q_num"},
-+	{true, "RCB_CFG_RX_RING_TAIL"},
-+	{true, "RCB_CFG_RX_RING_HEAD"},
-+	{true, "RCB_CFG_RX_RING_FBDNUM"},
-+	{true, "RCB_CFG_RX_RING_OFFSET"},
-+	{true, "RCB_CFG_RX_RING_FBDOFFSET"},
-+
-+	{true, "RCB_CFG_RX_RING_PKTNUM_RECORD"},
-+	{true, "RCB_CFG_TX_RING_TAIL"},
-+	{true, "RCB_CFG_TX_RING_HEAD"},
-+	{true, "RCB_CFG_TX_RING_FBDNUM"},
-+	{true, "RCB_CFG_TX_RING_OFFSET"},
-+	{true, "RCB_CFG_TX_RING_EBDNUM"},
-+};
-+
- static const struct hclge_dbg_reg_type_info hclge_dbg_reg_info[] = {
- 	{ .cmd = HNAE3_DBG_CMD_REG_BIOS_COMMON,
- 	  .dfx_msg = &hclge_dbg_bios_common_reg[0],
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h
-index 724052928b88..31a775fb032b 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.h
-@@ -99,646 +99,6 @@ struct hclge_dbg_status_dfx_info {
- 	char message[HCLGE_DBG_MAX_DFX_MSG_LEN];
- };
- 
--static const struct hclge_dbg_dfx_message hclge_dbg_bios_common_reg[] = {
--	{false, "Reserved"},
--	{true,	"BP_CPU_STATE"},
--	{true,	"DFX_MSIX_INFO_NIC_0"},
--	{true,	"DFX_MSIX_INFO_NIC_1"},
--	{true,	"DFX_MSIX_INFO_NIC_2"},
--	{true,	"DFX_MSIX_INFO_NIC_3"},
--
--	{true,	"DFX_MSIX_INFO_ROC_0"},
--	{true,	"DFX_MSIX_INFO_ROC_1"},
--	{true,	"DFX_MSIX_INFO_ROC_2"},
--	{true,	"DFX_MSIX_INFO_ROC_3"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--};
--
--static const struct hclge_dbg_dfx_message hclge_dbg_ssu_reg_0[] = {
--	{false, "Reserved"},
--	{true,	"SSU_ETS_PORT_STATUS"},
--	{true,	"SSU_ETS_TCG_STATUS"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--	{true,	"SSU_BP_STATUS_0"},
--
--	{true,	"SSU_BP_STATUS_1"},
--	{true,	"SSU_BP_STATUS_2"},
--	{true,	"SSU_BP_STATUS_3"},
--	{true,	"SSU_BP_STATUS_4"},
--	{true,	"SSU_BP_STATUS_5"},
--	{true,	"SSU_MAC_TX_PFC_IND"},
--
--	{true,	"MAC_SSU_RX_PFC_IND"},
--	{true,	"BTMP_AGEING_ST_B0"},
--	{true,	"BTMP_AGEING_ST_B1"},
--	{true,	"BTMP_AGEING_ST_B2"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--
--	{true,	"FULL_DROP_NUM"},
--	{true,	"PART_DROP_NUM"},
--	{true,	"PPP_KEY_DROP_NUM"},
--	{true,	"PPP_RLT_DROP_NUM"},
--	{true,	"LO_PRI_UNICAST_RLT_DROP_NUM"},
--	{true,	"HI_PRI_MULTICAST_RLT_DROP_NUM"},
--
--	{true,	"LO_PRI_MULTICAST_RLT_DROP_NUM"},
--	{true,	"NCSI_PACKET_CURR_BUFFER_CNT"},
--	{true,	"BTMP_AGEING_RLS_CNT_BANK0"},
--	{true,	"BTMP_AGEING_RLS_CNT_BANK1"},
--	{true,	"BTMP_AGEING_RLS_CNT_BANK2"},
--	{true,	"SSU_MB_RD_RLT_DROP_CNT"},
--
--	{true,	"SSU_PPP_MAC_KEY_NUM_L"},
--	{true,	"SSU_PPP_MAC_KEY_NUM_H"},
--	{true,	"SSU_PPP_HOST_KEY_NUM_L"},
--	{true,	"SSU_PPP_HOST_KEY_NUM_H"},
--	{true,	"PPP_SSU_MAC_RLT_NUM_L"},
--	{true,	"PPP_SSU_MAC_RLT_NUM_H"},
--
--	{true,	"PPP_SSU_HOST_RLT_NUM_L"},
--	{true,	"PPP_SSU_HOST_RLT_NUM_H"},
--	{true,	"NCSI_RX_PACKET_IN_CNT_L"},
--	{true,	"NCSI_RX_PACKET_IN_CNT_H"},
--	{true,	"NCSI_TX_PACKET_OUT_CNT_L"},
--	{true,	"NCSI_TX_PACKET_OUT_CNT_H"},
--
--	{true,	"SSU_KEY_DROP_NUM"},
--	{true,	"MB_UNCOPY_NUM"},
--	{true,	"RX_OQ_DROP_PKT_CNT"},
--	{true,	"TX_OQ_DROP_PKT_CNT"},
--	{true,	"BANK_UNBALANCE_DROP_CNT"},
--	{true,	"BANK_UNBALANCE_RX_DROP_CNT"},
--
--	{true,	"NIC_L2_ERR_DROP_PKT_CNT"},
--	{true,	"ROC_L2_ERR_DROP_PKT_CNT"},
--	{true,	"NIC_L2_ERR_DROP_PKT_CNT_RX"},
--	{true,	"ROC_L2_ERR_DROP_PKT_CNT_RX"},
--	{true,	"RX_OQ_GLB_DROP_PKT_CNT"},
--	{false, "Reserved"},
--
--	{true,	"LO_PRI_UNICAST_CUR_CNT"},
--	{true,	"HI_PRI_MULTICAST_CUR_CNT"},
--	{true,	"LO_PRI_MULTICAST_CUR_CNT"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--};
--
--static const struct hclge_dbg_dfx_message hclge_dbg_ssu_reg_1[] = {
--	{true,	"prt_id"},
--	{true,	"PACKET_TC_CURR_BUFFER_CNT_0"},
--	{true,	"PACKET_TC_CURR_BUFFER_CNT_1"},
--	{true,	"PACKET_TC_CURR_BUFFER_CNT_2"},
--	{true,	"PACKET_TC_CURR_BUFFER_CNT_3"},
--	{true,	"PACKET_TC_CURR_BUFFER_CNT_4"},
--
--	{true,	"PACKET_TC_CURR_BUFFER_CNT_5"},
--	{true,	"PACKET_TC_CURR_BUFFER_CNT_6"},
--	{true,	"PACKET_TC_CURR_BUFFER_CNT_7"},
--	{true,	"PACKET_CURR_BUFFER_CNT"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--
--	{true,	"RX_PACKET_IN_CNT_L"},
--	{true,	"RX_PACKET_IN_CNT_H"},
--	{true,	"RX_PACKET_OUT_CNT_L"},
--	{true,	"RX_PACKET_OUT_CNT_H"},
--	{true,	"TX_PACKET_IN_CNT_L"},
--	{true,	"TX_PACKET_IN_CNT_H"},
--
--	{true,	"TX_PACKET_OUT_CNT_L"},
--	{true,	"TX_PACKET_OUT_CNT_H"},
--	{true,	"ROC_RX_PACKET_IN_CNT_L"},
--	{true,	"ROC_RX_PACKET_IN_CNT_H"},
--	{true,	"ROC_TX_PACKET_OUT_CNT_L"},
--	{true,	"ROC_TX_PACKET_OUT_CNT_H"},
--
--	{true,	"RX_PACKET_TC_IN_CNT_0_L"},
--	{true,	"RX_PACKET_TC_IN_CNT_0_H"},
--	{true,	"RX_PACKET_TC_IN_CNT_1_L"},
--	{true,	"RX_PACKET_TC_IN_CNT_1_H"},
--	{true,	"RX_PACKET_TC_IN_CNT_2_L"},
--	{true,	"RX_PACKET_TC_IN_CNT_2_H"},
--
--	{true,	"RX_PACKET_TC_IN_CNT_3_L"},
--	{true,	"RX_PACKET_TC_IN_CNT_3_H"},
--	{true,	"RX_PACKET_TC_IN_CNT_4_L"},
--	{true,	"RX_PACKET_TC_IN_CNT_4_H"},
--	{true,	"RX_PACKET_TC_IN_CNT_5_L"},
--	{true,	"RX_PACKET_TC_IN_CNT_5_H"},
--
--	{true,	"RX_PACKET_TC_IN_CNT_6_L"},
--	{true,	"RX_PACKET_TC_IN_CNT_6_H"},
--	{true,	"RX_PACKET_TC_IN_CNT_7_L"},
--	{true,	"RX_PACKET_TC_IN_CNT_7_H"},
--	{true,	"RX_PACKET_TC_OUT_CNT_0_L"},
--	{true,	"RX_PACKET_TC_OUT_CNT_0_H"},
--
--	{true,	"RX_PACKET_TC_OUT_CNT_1_L"},
--	{true,	"RX_PACKET_TC_OUT_CNT_1_H"},
--	{true,	"RX_PACKET_TC_OUT_CNT_2_L"},
--	{true,	"RX_PACKET_TC_OUT_CNT_2_H"},
--	{true,	"RX_PACKET_TC_OUT_CNT_3_L"},
--	{true,	"RX_PACKET_TC_OUT_CNT_3_H"},
--
--	{true,	"RX_PACKET_TC_OUT_CNT_4_L"},
--	{true,	"RX_PACKET_TC_OUT_CNT_4_H"},
--	{true,	"RX_PACKET_TC_OUT_CNT_5_L"},
--	{true,	"RX_PACKET_TC_OUT_CNT_5_H"},
--	{true,	"RX_PACKET_TC_OUT_CNT_6_L"},
--	{true,	"RX_PACKET_TC_OUT_CNT_6_H"},
--
--	{true,	"RX_PACKET_TC_OUT_CNT_7_L"},
--	{true,	"RX_PACKET_TC_OUT_CNT_7_H"},
--	{true,	"TX_PACKET_TC_IN_CNT_0_L"},
--	{true,	"TX_PACKET_TC_IN_CNT_0_H"},
--	{true,	"TX_PACKET_TC_IN_CNT_1_L"},
--	{true,	"TX_PACKET_TC_IN_CNT_1_H"},
--
--	{true,	"TX_PACKET_TC_IN_CNT_2_L"},
--	{true,	"TX_PACKET_TC_IN_CNT_2_H"},
--	{true,	"TX_PACKET_TC_IN_CNT_3_L"},
--	{true,	"TX_PACKET_TC_IN_CNT_3_H"},
--	{true,	"TX_PACKET_TC_IN_CNT_4_L"},
--	{true,	"TX_PACKET_TC_IN_CNT_4_H"},
--
--	{true,	"TX_PACKET_TC_IN_CNT_5_L"},
--	{true,	"TX_PACKET_TC_IN_CNT_5_H"},
--	{true,	"TX_PACKET_TC_IN_CNT_6_L"},
--	{true,	"TX_PACKET_TC_IN_CNT_6_H"},
--	{true,	"TX_PACKET_TC_IN_CNT_7_L"},
--	{true,	"TX_PACKET_TC_IN_CNT_7_H"},
--
--	{true,	"TX_PACKET_TC_OUT_CNT_0_L"},
--	{true,	"TX_PACKET_TC_OUT_CNT_0_H"},
--	{true,	"TX_PACKET_TC_OUT_CNT_1_L"},
--	{true,	"TX_PACKET_TC_OUT_CNT_1_H"},
--	{true,	"TX_PACKET_TC_OUT_CNT_2_L"},
--	{true,	"TX_PACKET_TC_OUT_CNT_2_H"},
--
--	{true,	"TX_PACKET_TC_OUT_CNT_3_L"},
--	{true,	"TX_PACKET_TC_OUT_CNT_3_H"},
--	{true,	"TX_PACKET_TC_OUT_CNT_4_L"},
--	{true,	"TX_PACKET_TC_OUT_CNT_4_H"},
--	{true,	"TX_PACKET_TC_OUT_CNT_5_L"},
--	{true,	"TX_PACKET_TC_OUT_CNT_5_H"},
--
--	{true,	"TX_PACKET_TC_OUT_CNT_6_L"},
--	{true,	"TX_PACKET_TC_OUT_CNT_6_H"},
--	{true,	"TX_PACKET_TC_OUT_CNT_7_L"},
--	{true,	"TX_PACKET_TC_OUT_CNT_7_H"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--};
--
--static const struct hclge_dbg_dfx_message hclge_dbg_ssu_reg_2[] = {
--	{true,	"OQ_INDEX"},
--	{true,	"QUEUE_CNT"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--};
--
--static const struct hclge_dbg_dfx_message hclge_dbg_igu_egu_reg[] = {
--	{true,	"prt_id"},
--	{true,	"IGU_RX_ERR_PKT"},
--	{true,	"IGU_RX_NO_SOF_PKT"},
--	{true,	"EGU_TX_1588_SHORT_PKT"},
--	{true,	"EGU_TX_1588_PKT"},
--	{true,	"EGU_TX_ERR_PKT"},
--
--	{true,	"IGU_RX_OUT_L2_PKT"},
--	{true,	"IGU_RX_OUT_L3_PKT"},
--	{true,	"IGU_RX_OUT_L4_PKT"},
--	{true,	"IGU_RX_IN_L2_PKT"},
--	{true,	"IGU_RX_IN_L3_PKT"},
--	{true,	"IGU_RX_IN_L4_PKT"},
--
--	{true,	"IGU_RX_EL3E_PKT"},
--	{true,	"IGU_RX_EL4E_PKT"},
--	{true,	"IGU_RX_L3E_PKT"},
--	{true,	"IGU_RX_L4E_PKT"},
--	{true,	"IGU_RX_ROCEE_PKT"},
--	{true,	"IGU_RX_OUT_UDP0_PKT"},
--
--	{true,	"IGU_RX_IN_UDP0_PKT"},
--	{true,	"IGU_MC_CAR_DROP_PKT_L"},
--	{true,	"IGU_MC_CAR_DROP_PKT_H"},
--	{true,	"IGU_BC_CAR_DROP_PKT_L"},
--	{true,	"IGU_BC_CAR_DROP_PKT_H"},
--	{false, "Reserved"},
--
--	{true,	"IGU_RX_OVERSIZE_PKT_L"},
--	{true,	"IGU_RX_OVERSIZE_PKT_H"},
--	{true,	"IGU_RX_UNDERSIZE_PKT_L"},
--	{true,	"IGU_RX_UNDERSIZE_PKT_H"},
--	{true,	"IGU_RX_OUT_ALL_PKT_L"},
--	{true,	"IGU_RX_OUT_ALL_PKT_H"},
--
--	{true,	"IGU_TX_OUT_ALL_PKT_L"},
--	{true,	"IGU_TX_OUT_ALL_PKT_H"},
--	{true,	"IGU_RX_UNI_PKT_L"},
--	{true,	"IGU_RX_UNI_PKT_H"},
--	{true,	"IGU_RX_MULTI_PKT_L"},
--	{true,	"IGU_RX_MULTI_PKT_H"},
--
--	{true,	"IGU_RX_BROAD_PKT_L"},
--	{true,	"IGU_RX_BROAD_PKT_H"},
--	{true,	"EGU_TX_OUT_ALL_PKT_L"},
--	{true,	"EGU_TX_OUT_ALL_PKT_H"},
--	{true,	"EGU_TX_UNI_PKT_L"},
--	{true,	"EGU_TX_UNI_PKT_H"},
--
--	{true,	"EGU_TX_MULTI_PKT_L"},
--	{true,	"EGU_TX_MULTI_PKT_H"},
--	{true,	"EGU_TX_BROAD_PKT_L"},
--	{true,	"EGU_TX_BROAD_PKT_H"},
--	{true,	"IGU_TX_KEY_NUM_L"},
--	{true,	"IGU_TX_KEY_NUM_H"},
--
--	{true,	"IGU_RX_NON_TUN_PKT_L"},
--	{true,	"IGU_RX_NON_TUN_PKT_H"},
--	{true,	"IGU_RX_TUN_PKT_L"},
--	{true,	"IGU_RX_TUN_PKT_H"},
--	{false,	"Reserved"},
--	{false,	"Reserved"},
--};
--
--static const struct hclge_dbg_dfx_message hclge_dbg_rpu_reg_0[] = {
--	{true, "tc_queue_num"},
--	{true, "FSM_DFX_ST0"},
--	{true, "FSM_DFX_ST1"},
--	{true, "RPU_RX_PKT_DROP_CNT"},
--	{true, "BUF_WAIT_TIMEOUT"},
--	{true, "BUF_WAIT_TIMEOUT_QID"},
--};
--
--static const struct hclge_dbg_dfx_message hclge_dbg_rpu_reg_1[] = {
--	{false, "Reserved"},
--	{true,	"FIFO_DFX_ST0"},
--	{true,	"FIFO_DFX_ST1"},
--	{true,	"FIFO_DFX_ST2"},
--	{true,	"FIFO_DFX_ST3"},
--	{true,	"FIFO_DFX_ST4"},
--
--	{true,	"FIFO_DFX_ST5"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--};
--
--static const struct hclge_dbg_dfx_message hclge_dbg_ncsi_reg[] = {
--	{false, "Reserved"},
--	{true,	"NCSI_EGU_TX_FIFO_STS"},
--	{true,	"NCSI_PAUSE_STATUS"},
--	{true,	"NCSI_RX_CTRL_DMAC_ERR_CNT"},
--	{true,	"NCSI_RX_CTRL_SMAC_ERR_CNT"},
--	{true,	"NCSI_RX_CTRL_CKS_ERR_CNT"},
--
--	{true,	"NCSI_RX_CTRL_PKT_CNT"},
--	{true,	"NCSI_RX_PT_DMAC_ERR_CNT"},
--	{true,	"NCSI_RX_PT_SMAC_ERR_CNT"},
--	{true,	"NCSI_RX_PT_PKT_CNT"},
--	{true,	"NCSI_RX_FCS_ERR_CNT"},
--	{true,	"NCSI_TX_CTRL_DMAC_ERR_CNT"},
--
--	{true,	"NCSI_TX_CTRL_SMAC_ERR_CNT"},
--	{true,	"NCSI_TX_CTRL_PKT_CNT"},
--	{true,	"NCSI_TX_PT_DMAC_ERR_CNT"},
--	{true,	"NCSI_TX_PT_SMAC_ERR_CNT"},
--	{true,	"NCSI_TX_PT_PKT_CNT"},
--	{true,	"NCSI_TX_PT_PKT_TRUNC_CNT"},
--
--	{true,	"NCSI_TX_PT_PKT_ERR_CNT"},
--	{true,	"NCSI_TX_CTRL_PKT_ERR_CNT"},
--	{true,	"NCSI_RX_CTRL_PKT_TRUNC_CNT"},
--	{true,	"NCSI_RX_CTRL_PKT_CFLIT_CNT"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--
--	{true,	"NCSI_MAC_RX_OCTETS_OK"},
--	{true,	"NCSI_MAC_RX_OCTETS_BAD"},
--	{true,	"NCSI_MAC_RX_UC_PKTS"},
--	{true,	"NCSI_MAC_RX_MC_PKTS"},
--	{true,	"NCSI_MAC_RX_BC_PKTS"},
--	{true,	"NCSI_MAC_RX_PKTS_64OCTETS"},
--
--	{true,	"NCSI_MAC_RX_PKTS_65TO127OCTETS"},
--	{true,	"NCSI_MAC_RX_PKTS_128TO255OCTETS"},
--	{true,	"NCSI_MAC_RX_PKTS_255TO511OCTETS"},
--	{true,	"NCSI_MAC_RX_PKTS_512TO1023OCTETS"},
--	{true,	"NCSI_MAC_RX_PKTS_1024TO1518OCTETS"},
--	{true,	"NCSI_MAC_RX_PKTS_1519TOMAXOCTETS"},
--
--	{true,	"NCSI_MAC_RX_FCS_ERRORS"},
--	{true,	"NCSI_MAC_RX_LONG_ERRORS"},
--	{true,	"NCSI_MAC_RX_JABBER_ERRORS"},
--	{true,	"NCSI_MAC_RX_RUNT_ERR_CNT"},
--	{true,	"NCSI_MAC_RX_SHORT_ERR_CNT"},
--	{true,	"NCSI_MAC_RX_FILT_PKT_CNT"},
--
--	{true,	"NCSI_MAC_RX_OCTETS_TOTAL_FILT"},
--	{true,	"NCSI_MAC_TX_OCTETS_OK"},
--	{true,	"NCSI_MAC_TX_OCTETS_BAD"},
--	{true,	"NCSI_MAC_TX_UC_PKTS"},
--	{true,	"NCSI_MAC_TX_MC_PKTS"},
--	{true,	"NCSI_MAC_TX_BC_PKTS"},
--
--	{true,	"NCSI_MAC_TX_PKTS_64OCTETS"},
--	{true,	"NCSI_MAC_TX_PKTS_65TO127OCTETS"},
--	{true,	"NCSI_MAC_TX_PKTS_128TO255OCTETS"},
--	{true,	"NCSI_MAC_TX_PKTS_256TO511OCTETS"},
--	{true,	"NCSI_MAC_TX_PKTS_512TO1023OCTETS"},
--	{true,	"NCSI_MAC_TX_PKTS_1024TO1518OCTETS"},
--
--	{true,	"NCSI_MAC_TX_PKTS_1519TOMAXOCTETS"},
--	{true,	"NCSI_MAC_TX_UNDERRUN"},
--	{true,	"NCSI_MAC_TX_CRC_ERROR"},
--	{true,	"NCSI_MAC_TX_PAUSE_FRAMES"},
--	{true,	"NCSI_MAC_RX_PAD_PKTS"},
--	{true,	"NCSI_MAC_RX_PAUSE_FRAMES"},
--};
--
--static const struct hclge_dbg_dfx_message hclge_dbg_rtc_reg[] = {
--	{false, "Reserved"},
--	{true,	"LGE_IGU_AFIFO_DFX_0"},
--	{true,	"LGE_IGU_AFIFO_DFX_1"},
--	{true,	"LGE_IGU_AFIFO_DFX_2"},
--	{true,	"LGE_IGU_AFIFO_DFX_3"},
--	{true,	"LGE_IGU_AFIFO_DFX_4"},
--
--	{true,	"LGE_IGU_AFIFO_DFX_5"},
--	{true,	"LGE_IGU_AFIFO_DFX_6"},
--	{true,	"LGE_IGU_AFIFO_DFX_7"},
--	{true,	"LGE_EGU_AFIFO_DFX_0"},
--	{true,	"LGE_EGU_AFIFO_DFX_1"},
--	{true,	"LGE_EGU_AFIFO_DFX_2"},
--
--	{true,	"LGE_EGU_AFIFO_DFX_3"},
--	{true,	"LGE_EGU_AFIFO_DFX_4"},
--	{true,	"LGE_EGU_AFIFO_DFX_5"},
--	{true,	"LGE_EGU_AFIFO_DFX_6"},
--	{true,	"LGE_EGU_AFIFO_DFX_7"},
--	{true,	"CGE_IGU_AFIFO_DFX_0"},
--
--	{true,	"CGE_IGU_AFIFO_DFX_1"},
--	{true,	"CGE_EGU_AFIFO_DFX_0"},
--	{true,	"CGE_EGU_AFIFO_DFX_1"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--};
--
--static const struct hclge_dbg_dfx_message hclge_dbg_ppp_reg[] = {
--	{false, "Reserved"},
--	{true,	"DROP_FROM_PRT_PKT_CNT"},
--	{true,	"DROP_FROM_HOST_PKT_CNT"},
--	{true,	"DROP_TX_VLAN_PROC_CNT"},
--	{true,	"DROP_MNG_CNT"},
--	{true,	"DROP_FD_CNT"},
--
--	{true,	"DROP_NO_DST_CNT"},
--	{true,	"DROP_MC_MBID_FULL_CNT"},
--	{true,	"DROP_SC_FILTERED"},
--	{true,	"PPP_MC_DROP_PKT_CNT"},
--	{true,	"DROP_PT_CNT"},
--	{true,	"DROP_MAC_ANTI_SPOOF_CNT"},
--
--	{true,	"DROP_IG_VFV_CNT"},
--	{true,	"DROP_IG_PRTV_CNT"},
--	{true,	"DROP_CNM_PFC_PAUSE_CNT"},
--	{true,	"DROP_TORUS_TC_CNT"},
--	{true,	"DROP_TORUS_LPBK_CNT"},
--	{true,	"PPP_HFS_STS"},
--
--	{true,	"PPP_MC_RSLT_STS"},
--	{true,	"PPP_P3U_STS"},
--	{true,	"PPP_RSLT_DESCR_STS"},
--	{true,	"PPP_UMV_STS_0"},
--	{true,	"PPP_UMV_STS_1"},
--	{true,	"PPP_VFV_STS"},
--
--	{true,	"PPP_GRO_KEY_CNT"},
--	{true,	"PPP_GRO_INFO_CNT"},
--	{true,	"PPP_GRO_DROP_CNT"},
--	{true,	"PPP_GRO_OUT_CNT"},
--	{true,	"PPP_GRO_KEY_MATCH_DATA_CNT"},
--	{true,	"PPP_GRO_KEY_MATCH_TCAM_CNT"},
--
--	{true,	"PPP_GRO_INFO_MATCH_CNT"},
--	{true,	"PPP_GRO_FREE_ENTRY_CNT"},
--	{true,	"PPP_GRO_INNER_DFX_SIGNAL"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--
--	{true,	"GET_RX_PKT_CNT_L"},
--	{true,	"GET_RX_PKT_CNT_H"},
--	{true,	"GET_TX_PKT_CNT_L"},
--	{true,	"GET_TX_PKT_CNT_H"},
--	{true,	"SEND_UC_PRT2HOST_PKT_CNT_L"},
--	{true,	"SEND_UC_PRT2HOST_PKT_CNT_H"},
--
--	{true,	"SEND_UC_PRT2PRT_PKT_CNT_L"},
--	{true,	"SEND_UC_PRT2PRT_PKT_CNT_H"},
--	{true,	"SEND_UC_HOST2HOST_PKT_CNT_L"},
--	{true,	"SEND_UC_HOST2HOST_PKT_CNT_H"},
--	{true,	"SEND_UC_HOST2PRT_PKT_CNT_L"},
--	{true,	"SEND_UC_HOST2PRT_PKT_CNT_H"},
--
--	{true,	"SEND_MC_FROM_PRT_CNT_L"},
--	{true,	"SEND_MC_FROM_PRT_CNT_H"},
--	{true,	"SEND_MC_FROM_HOST_CNT_L"},
--	{true,	"SEND_MC_FROM_HOST_CNT_H"},
--	{true,	"SSU_MC_RD_CNT_L"},
--	{true,	"SSU_MC_RD_CNT_H"},
--
--	{true,	"SSU_MC_DROP_CNT_L"},
--	{true,	"SSU_MC_DROP_CNT_H"},
--	{true,	"SSU_MC_RD_PKT_CNT_L"},
--	{true,	"SSU_MC_RD_PKT_CNT_H"},
--	{true,	"PPP_MC_2HOST_PKT_CNT_L"},
--	{true,	"PPP_MC_2HOST_PKT_CNT_H"},
--
--	{true,	"PPP_MC_2PRT_PKT_CNT_L"},
--	{true,	"PPP_MC_2PRT_PKT_CNT_H"},
--	{true,	"NTSNOS_PKT_CNT_L"},
--	{true,	"NTSNOS_PKT_CNT_H"},
--	{true,	"NTUP_PKT_CNT_L"},
--	{true,	"NTUP_PKT_CNT_H"},
--
--	{true,	"NTLCL_PKT_CNT_L"},
--	{true,	"NTLCL_PKT_CNT_H"},
--	{true,	"NTTGT_PKT_CNT_L"},
--	{true,	"NTTGT_PKT_CNT_H"},
--	{true,	"RTNS_PKT_CNT_L"},
--	{true,	"RTNS_PKT_CNT_H"},
--
--	{true,	"RTLPBK_PKT_CNT_L"},
--	{true,	"RTLPBK_PKT_CNT_H"},
--	{true,	"NR_PKT_CNT_L"},
--	{true,	"NR_PKT_CNT_H"},
--	{true,	"RR_PKT_CNT_L"},
--	{true,	"RR_PKT_CNT_H"},
--
--	{true,	"MNG_TBL_HIT_CNT_L"},
--	{true,	"MNG_TBL_HIT_CNT_H"},
--	{true,	"FD_TBL_HIT_CNT_L"},
--	{true,	"FD_TBL_HIT_CNT_H"},
--	{true,	"FD_LKUP_CNT_L"},
--	{true,	"FD_LKUP_CNT_H"},
--
--	{true,	"BC_HIT_CNT_L"},
--	{true,	"BC_HIT_CNT_H"},
--	{true,	"UM_TBL_UC_HIT_CNT_L"},
--	{true,	"UM_TBL_UC_HIT_CNT_H"},
--	{true,	"UM_TBL_MC_HIT_CNT_L"},
--	{true,	"UM_TBL_MC_HIT_CNT_H"},
--
--	{true,	"UM_TBL_VMDQ1_HIT_CNT_L"},
--	{true,	"UM_TBL_VMDQ1_HIT_CNT_H"},
--	{true,	"MTA_TBL_HIT_CNT_L"},
--	{true,	"MTA_TBL_HIT_CNT_H"},
--	{true,	"FWD_BONDING_HIT_CNT_L"},
--	{true,	"FWD_BONDING_HIT_CNT_H"},
--
--	{true,	"PROMIS_TBL_HIT_CNT_L"},
--	{true,	"PROMIS_TBL_HIT_CNT_H"},
--	{true,	"GET_TUNL_PKT_CNT_L"},
--	{true,	"GET_TUNL_PKT_CNT_H"},
--	{true,	"GET_BMC_PKT_CNT_L"},
--	{true,	"GET_BMC_PKT_CNT_H"},
--
--	{true,	"SEND_UC_PRT2BMC_PKT_CNT_L"},
--	{true,	"SEND_UC_PRT2BMC_PKT_CNT_H"},
--	{true,	"SEND_UC_HOST2BMC_PKT_CNT_L"},
--	{true,	"SEND_UC_HOST2BMC_PKT_CNT_H"},
--	{true,	"SEND_UC_BMC2HOST_PKT_CNT_L"},
--	{true,	"SEND_UC_BMC2HOST_PKT_CNT_H"},
--
--	{true,	"SEND_UC_BMC2PRT_PKT_CNT_L"},
--	{true,	"SEND_UC_BMC2PRT_PKT_CNT_H"},
--	{true,	"PPP_MC_2BMC_PKT_CNT_L"},
--	{true,	"PPP_MC_2BMC_PKT_CNT_H"},
--	{true,	"VLAN_MIRR_CNT_L"},
--	{true,	"VLAN_MIRR_CNT_H"},
--
--	{true,	"IG_MIRR_CNT_L"},
--	{true,	"IG_MIRR_CNT_H"},
--	{true,	"EG_MIRR_CNT_L"},
--	{true,	"EG_MIRR_CNT_H"},
--	{true,	"RX_DEFAULT_HOST_HIT_CNT_L"},
--	{true,	"RX_DEFAULT_HOST_HIT_CNT_H"},
--
--	{true,	"LAN_PAIR_CNT_L"},
--	{true,	"LAN_PAIR_CNT_H"},
--	{true,	"UM_TBL_MC_HIT_PKT_CNT_L"},
--	{true,	"UM_TBL_MC_HIT_PKT_CNT_H"},
--	{true,	"MTA_TBL_HIT_PKT_CNT_L"},
--	{true,	"MTA_TBL_HIT_PKT_CNT_H"},
--
--	{true,	"PROMIS_TBL_HIT_PKT_CNT_L"},
--	{true,	"PROMIS_TBL_HIT_PKT_CNT_H"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--};
--
--static const struct hclge_dbg_dfx_message hclge_dbg_rcb_reg[] = {
--	{false, "Reserved"},
--	{true,	"FSM_DFX_ST0"},
--	{true,	"FSM_DFX_ST1"},
--	{true,	"FSM_DFX_ST2"},
--	{true,	"FIFO_DFX_ST0"},
--	{true,	"FIFO_DFX_ST1"},
--
--	{true,	"FIFO_DFX_ST2"},
--	{true,	"FIFO_DFX_ST3"},
--	{true,	"FIFO_DFX_ST4"},
--	{true,	"FIFO_DFX_ST5"},
--	{true,	"FIFO_DFX_ST6"},
--	{true,	"FIFO_DFX_ST7"},
--
--	{true,	"FIFO_DFX_ST8"},
--	{true,	"FIFO_DFX_ST9"},
--	{true,	"FIFO_DFX_ST10"},
--	{true,	"FIFO_DFX_ST11"},
--	{true,	"Q_CREDIT_VLD_0"},
--	{true,	"Q_CREDIT_VLD_1"},
--
--	{true,	"Q_CREDIT_VLD_2"},
--	{true,	"Q_CREDIT_VLD_3"},
--	{true,	"Q_CREDIT_VLD_4"},
--	{true,	"Q_CREDIT_VLD_5"},
--	{true,	"Q_CREDIT_VLD_6"},
--	{true,	"Q_CREDIT_VLD_7"},
--
--	{true,	"Q_CREDIT_VLD_8"},
--	{true,	"Q_CREDIT_VLD_9"},
--	{true,	"Q_CREDIT_VLD_10"},
--	{true,	"Q_CREDIT_VLD_11"},
--	{true,	"Q_CREDIT_VLD_12"},
--	{true,	"Q_CREDIT_VLD_13"},
--
--	{true,	"Q_CREDIT_VLD_14"},
--	{true,	"Q_CREDIT_VLD_15"},
--	{true,	"Q_CREDIT_VLD_16"},
--	{true,	"Q_CREDIT_VLD_17"},
--	{true,	"Q_CREDIT_VLD_18"},
--	{true,	"Q_CREDIT_VLD_19"},
--
--	{true,	"Q_CREDIT_VLD_20"},
--	{true,	"Q_CREDIT_VLD_21"},
--	{true,	"Q_CREDIT_VLD_22"},
--	{true,	"Q_CREDIT_VLD_23"},
--	{true,	"Q_CREDIT_VLD_24"},
--	{true,	"Q_CREDIT_VLD_25"},
--
--	{true,	"Q_CREDIT_VLD_26"},
--	{true,	"Q_CREDIT_VLD_27"},
--	{true,	"Q_CREDIT_VLD_28"},
--	{true,	"Q_CREDIT_VLD_29"},
--	{true,	"Q_CREDIT_VLD_30"},
--	{true,	"Q_CREDIT_VLD_31"},
--
--	{true,	"GRO_BD_SERR_CNT"},
--	{true,	"GRO_CONTEXT_SERR_CNT"},
--	{true,	"RX_STASH_CFG_SERR_CNT"},
--	{true,	"AXI_RD_FBD_SERR_CNT"},
--	{true,	"GRO_BD_MERR_CNT"},
--	{true,	"GRO_CONTEXT_MERR_CNT"},
--
--	{true,	"RX_STASH_CFG_MERR_CNT"},
--	{true,	"AXI_RD_FBD_MERR_CNT"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--	{false, "Reserved"},
--};
--
--static const struct hclge_dbg_dfx_message hclge_dbg_tqp_reg[] = {
--	{true, "q_num"},
--	{true, "RCB_CFG_RX_RING_TAIL"},
--	{true, "RCB_CFG_RX_RING_HEAD"},
--	{true, "RCB_CFG_RX_RING_FBDNUM"},
--	{true, "RCB_CFG_RX_RING_OFFSET"},
--	{true, "RCB_CFG_RX_RING_FBDOFFSET"},
--
--	{true, "RCB_CFG_RX_RING_PKTNUM_RECORD"},
--	{true, "RCB_CFG_TX_RING_TAIL"},
--	{true, "RCB_CFG_TX_RING_HEAD"},
--	{true, "RCB_CFG_TX_RING_FBDNUM"},
--	{true, "RCB_CFG_TX_RING_OFFSET"},
--	{true, "RCB_CFG_TX_RING_EBDNUM"},
--};
--
- #define HCLGE_DBG_INFO_LEN			256
- #define HCLGE_DBG_VLAN_FLTR_INFO_LEN		256
- #define HCLGE_DBG_VLAN_OFFLOAD_INFO_LEN		512
--- 
-2.30.0
+> #  RUN           iommufd_dirty_tracking.domain_dirty128k.get_dirty_bitmap ...
+> # iommufd_utils.h:374:get_dirty_bitmap:Expected j < npte (1) == test_bit(i + j, (unsigned long *)bitmap) (0)
+> # get_dirty_bitmap: Test terminated by assertion
+> #          FAIL  iommufd_dirty_tracking.domain_dirty128k.get_dirty_bitmap
+> not ok 139 iommufd_dirty_tracking.domain_dirty128k.get_dirty_bitmap
+
+> #  RUN           iommufd_dirty_tracking.domain_dirty128k.get_dirty_bitmap_no_clear ...
+> # iommufd_utils.h:374:get_dirty_bitmap_no_clear:Expected j < npte (1) == test_bit(i + j, (unsigned long *)bitmap) (0)
+> # get_dirty_bitmap_no_clear: Test terminated by assertion
+> #          FAIL  iommufd_dirty_tracking.domain_dirty128k.get_dirty_bitmap_no_clear
+> not ok 140 iommufd_dirty_tracking.domain_dirty128k.get_dirty_bitmap_no_clear
+
+> #  RUN           iommufd_dirty_tracking.domain_dirty256k.get_dirty_bitmap ...
+> # iommufd_utils.h:374:get_dirty_bitmap:Expected j < npte (1) == test_bit(i + j, (unsigned long *)bitmap) (0)
+> # get_dirty_bitmap: Test terminated by assertion
+> #          FAIL  iommufd_dirty_tracking.domain_dirty256k.get_dirty_bitmap
+> not ok 144 iommufd_dirty_tracking.domain_dirty256k.get_dirty_bitmap
+
+> #  RUN           iommufd_dirty_tracking.domain_dirty256k.get_dirty_bitmap_no_clear ...
+> # iommufd_utils.h:374:get_dirty_bitmap_no_clear:Expected j < npte (1) == test_bit(i + j, (unsigned long *)bitmap) (0)
+> # get_dirty_bitmap_no_clear: Test terminated by assertion
+> #          FAIL  iommufd_dirty_tracking.domain_dirty256k.get_dirty_bitmap_no_clear
+> not ok 145 iommufd_dirty_tracking.domain_dirty256k.get_dirty_bitmap_no_clear
+
+> #  RUN           iommufd_dirty_tracking.domain_dirty640k.get_dirty_bitmap ...
+> # iommufd_utils.h:374:get_dirty_bitmap:Expected j < npte (1) == test_bit(i + j, (unsigned long *)bitmap) (0)
+> # get_dirty_bitmap: Test terminated by assertion
+> #          FAIL  iommufd_dirty_tracking.domain_dirty640k.get_dirty_bitmap
+> not ok 149 iommufd_dirty_tracking.domain_dirty640k.get_dirty_bitmap
+
+> #  RUN           iommufd_dirty_tracking.domain_dirty640k.get_dirty_bitmap_no_clear ...
+> # iommufd_utils.h:374:get_dirty_bitmap_no_clear:Expected j < npte (1) == test_bit(i + j, (unsigned long *)bitmap) (0)
+> # get_dirty_bitmap_no_clear: Test terminated by assertion
+> #          FAIL  iommufd_dirty_tracking.domain_dirty640k.get_dirty_bitmap_no_clear
+> not ok 150 iommufd_dirty_tracking.domain_dirty640k.get_dirty_bitmap_no_clear
+
+> #  RUN           iommufd_dirty_tracking.domain_dirty128M_huge.get_dirty_bitmap ...
+> # iommufd_utils.h:374:get_dirty_bitmap:Expected j < npte (1) == test_bit(i + j, (unsigned long *)bitmap) (0)
+> # get_dirty_bitmap: Test terminated by assertion
+> #          FAIL  iommufd_dirty_tracking.domain_dirty128M_huge.get_dirty_bitmap
+> not ok 159 iommufd_dirty_tracking.domain_dirty128M_huge.get_dirty_bitmap
+
+> #  RUN           iommufd_dirty_tracking.domain_dirty128M_huge.get_dirty_bitmap_no_clear ...
+> # iommufd_utils.h:374:get_dirty_bitmap_no_clear:Expected j < npte (1) == test_bit(i + j, (unsigned long *)bitmap) (0)
+> # get_dirty_bitmap_no_clear: Test terminated by assertion
+> #          FAIL  iommufd_dirty_tracking.domain_dirty128M_huge.get_dirty_bitmap_no_clear
+> not ok 160 iommufd_dirty_tracking.domain_dirty128M_huge.get_dirty_bitmap_no_clear
+
+> #  RUN           iommufd_dirty_tracking.domain_dirty256M.get_dirty_bitmap ...
+> # iommufd_utils.h:374:get_dirty_bitmap:Expected j < npte (1) == test_bit(i + j, (unsigned long *)bitmap) (0)
+> # get_dirty_bitmap: Test terminated by assertion
+> #          FAIL  iommufd_dirty_tracking.domain_dirty256M.get_dirty_bitmap
+> not ok 164 iommufd_dirty_tracking.domain_dirty256M.get_dirty_bitmap
+
+> #  RUN           iommufd_dirty_tracking.domain_dirty256M.get_dirty_bitmap_no_clear ...
+> # iommufd_utils.h:374:get_dirty_bitmap_no_clear:Expected j < npte (1) == test_bit(i + j, (unsigned long *)bitmap) (0)
+> # get_dirty_bitmap_no_clear: Test terminated by assertion
+> #          FAIL  iommufd_dirty_tracking.domain_dirty256M.get_dirty_bitmap_no_clear
+> not ok 165 iommufd_dirty_tracking.domain_dirty256M.get_dirty_bitmap_no_clear
+
+> #  RUN           iommufd_dirty_tracking.domain_dirty256M_huge.get_dirty_bitmap ...
+> # iommufd_utils.h:374:get_dirty_bitmap:Expected j < npte (1) == test_bit(i + j, (unsigned long *)bitmap) (0)
+> # get_dirty_bitmap: Test terminated by assertion
+> #          FAIL  iommufd_dirty_tracking.domain_dirty256M_huge.get_dirty_bitmap
+> not ok 169 iommufd_dirty_tracking.domain_dirty256M_huge.get_dirty_bitmap
+
+> #  RUN           iommufd_dirty_tracking.domain_dirty256M_huge.get_dirty_bitmap_no_clear ...
+> # iommufd_utils.h:374:get_dirty_bitmap_no_clear:Expected j < npte (1) == test_bit(i + j, (unsigned long *)bitmap) (0)
+> # get_dirty_bitmap_no_clear: Test terminated by assertion
+> #          FAIL  iommufd_dirty_tracking.domain_dirty256M_huge.get_dirty_bitmap_no_clear
+> not ok 170 iommufd_dirty_tracking.domain_dirty256M_huge.get_dirty_bitmap_no_clear
 
