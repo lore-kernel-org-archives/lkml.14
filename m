@@ -1,83 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FDB125DB;
-	Wed, 27 Mar 2024 05:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261231EB3A;
+	Wed, 27 Mar 2024 05:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711518643; cv=none; b=fVEK3ik/3ZOwzEIwDQt5+A0du1eIZ8IAaU2UFFIr17rijs0bu57SJjdnTcsL+DRwTN0E4Vy9pYJbAgVa1o9IszS8an1dKdUY1PmoR7wdkn8Sbcqt1e+eOUpUH00bkoqpw2pGR5uYxtb2YSYhTbJdbEFICQVnY5QRTLv/oERTEZ0=
+	t=1711518746; cv=none; b=roj7EElc2lFD/YgjY0WtqklD2io26XcOqUKbldoUcmnN7WLLNvYPA3MAmn3uXQ24OLHswv3O4n4yP0yMBsC45dPDQHGfCoEs3jZM4FttGiP0dodu4P8So4QHQ0YBM4BzoMfrEnkXQZKWj4X0r04W0fS3wlu3ri49aRBqr9FGEp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711518643; c=relaxed/simple;
-	bh=jLBpGnJzrkmpn7RrQHTRBiUSa3Q7I21OjJbXmT8JEdw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xqms6pAWmUo6h9Hy7CUNTZZmIXCa3hwjJZmXXx238OcD4F8A8f/0OpU3Dxrp6bPoPXnooBRXohhofzJOdRUzCsvQ4ae4I4r6pSp6wlU9mEY4wtxsViQW1CSW8wPln1D6JbWQ3bFgcTaOQS+Cy/oGKiw0OOTjx2yBTWYNKQEau6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ES9KuCqz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711518746; c=relaxed/simple;
+	bh=DUYsEBhufHuKKK6bUgS5bqEt21XUzht90M0sAt1R+Mo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=A51WMIr6OPMPY5XPH/zH3c0byN4ZmLCsM3Ucz0A+WZ7i0SvC2CZ5ieqcxksGqpfGDmihkcURo2o1rBS6hBzR6QYN8ladodChbweatrQdmaIPwsdRW9vJnQsXUt8W8eOoAtErebIfpxogcRkjieTSFOp4+G7oq70kXePWPgSOgiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TeXiLPXo; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ES9KuCqz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0A20C43394;
-	Wed, 27 Mar 2024 05:50:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711518642;
-	bh=jLBpGnJzrkmpn7RrQHTRBiUSa3Q7I21OjJbXmT8JEdw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ES9KuCqzNRR7D2sIzqx3sEHNE+ovQ3eVPalP2bgIGxII8B8RGU/XeUYZFt2CHaXCl
-	 38XAKXxgxTe8IO1mPoKFG6HObsz27q26XpgX1cABsCW0ik/R9SPMMj/Y3OzSCZZWaf
-	 Ymr+B8auXXdXsm5ruMJocGoyZfMe3ftDbc5PeV2kyqED96RWIVoCnpokDuG7sSVXgy
-	 ZqPLuBPV/6/mrRKJhdRr17ExVj2ZlAaZGkTYN/m6vyCZzHdYLkq1axx0DZ7lrh2186
-	 QV5tailHiXAVZ/3rvYMIigcmA5ww04vVm0UNdIPaAERP5xPM61rLDYeRm2aKx/pV5L
-	 poDNrlhxrZUyg==
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2d6c8d741e8so58875191fa.3;
-        Tue, 26 Mar 2024 22:50:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV8myXDtccINGknvriPnGiJlgTiJ9ELoluxqcs/H0pCrruyi4b1zeVJm3A1Kg3OIf1jXfPKImhmw6G2wcZ7vKzPFdv+j230Agc6fhePd1kko/MMxVMeglTpE/BqhXOc+k2GQ8LUSqttjuR2Ax0nnw+QH2x37VwJ+k5u19usWBNueA==
-X-Gm-Message-State: AOJu0YxzA+4SSpTaj0IX1khkqtT8+M7L6zX02+HV3A9r9OCfudaMQr8V
-	Lj5VakGnqsSjOSYbvedi0yV5LSx66lxpLsha7UfCmfJJcOH9IP8wUzQlncKAZkMxjmFdSkNFcaB
-	jWmv3DAN9LY8RS/PbyCkTvLM71iw=
-X-Google-Smtp-Source: AGHT+IH8eKnjr6ZkRVVSqbgMuehmp4NU2FdLC9kX4zyT2D51U5p/g2QPYQYlbGp11PVA/yq7eglPHW8ni3RJSapnj2k=
-X-Received: by 2002:a2e:9859:0:b0:2d3:1bd0:6bcf with SMTP id
- e25-20020a2e9859000000b002d31bd06bcfmr1086298ljj.8.1711518640898; Tue, 26 Mar
- 2024 22:50:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TeXiLPXo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711518743; x=1743054743;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=DUYsEBhufHuKKK6bUgS5bqEt21XUzht90M0sAt1R+Mo=;
+  b=TeXiLPXoofhobFd2nlvewQ2n2qOzKpd88xnePb/yM2t8SB1AOB6mRssK
+   3XvFOHj7y740DcK8hgfwZdQRNvzDkrykOKSBYnaC/0TuFMpK6LlTZ7Zdd
+   TOq1zc0V52u3nYpjXzKmCsnXxc/ypkRQHRzCYN91kO57F/tTqvR7Kk7Bu
+   9BfE/sSiZ44/0bUgNoBFE1eZBHRK0/8yWUw/ULP+M04hgRZ92yoYTQaYq
+   3Bsfzzac/PeTj1evjrUuj5iGWqrkz2eEiZJlCSIWFIHhV0QeZbQzut/E7
+   h+mDGvf5a73CPz34G/uE9vwKdtehQe01dV2P+MY0u6oI7RvC3SUBOM/ct
+   Q==;
+X-CSE-ConnectionGUID: xG6sBxwRSUGtmVG8uaWXig==
+X-CSE-MsgGUID: qyD6Y8h1RuCgRGY+OFqL8A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="6788885"
+X-IronPort-AV: E=Sophos;i="6.07,157,1708416000"; 
+   d="scan'208";a="6788885"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 22:52:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,157,1708416000"; 
+   d="scan'208";a="20669682"
+Received: from yungchua-ws.ostc.intel.com (HELO yungchua-ws.intel.com) ([10.54.69.90])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 22:52:22 -0700
+From: Bard Liao <yung-chuan.liao@linux.intel.com>
+To: linux-sound@vger.kernel.org,
+	vkoul@kernel.org
+Cc: vinod.koul@linaro.org,
+	linux-kernel@vger.kernel.org,
+	pierre-louis.bossart@linux.intel.com,
+	bard.liao@intel.com
+Subject: [PATCH] soundwire: intel: add intel_free_stream() back
+Date: Wed, 27 Mar 2024 05:52:15 +0000
+Message-Id: <20240327055215.1097559-1-yung-chuan.liao@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240324234027.1354210-1-sashal@kernel.org> <20240324234027.1354210-34-sashal@kernel.org>
- <20240325010435.GA23652@lst.de> <ZgFfc2b6VsX_QSu4@sashalap>
- <20240326074029.GB9773@lst.de> <CAPhsuW7FREFLrAnt2iYDRoJG0d=OXm-5vy3OCJ7MOJDp2SE9GQ@mail.gmail.com>
- <a123d813-bdef-202d-2980-fb74c5a715e5@huaweicloud.com>
-In-Reply-To: <a123d813-bdef-202d-2980-fb74c5a715e5@huaweicloud.com>
-From: Song Liu <song@kernel.org>
-Date: Tue, 26 Mar 2024 22:50:29 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7SjGBejv11oCrX-njZ_WfyzXFc7x8X0beBRW_D3H1Ysg@mail.gmail.com>
-Message-ID: <CAPhsuW7SjGBejv11oCrX-njZ_WfyzXFc7x8X0beBRW_D3H1Ysg@mail.gmail.com>
-Subject: Re: [PATCH 5.10 033/238] md: implement ->set_read_only to hook into
- BLKROSET processing
-To: Li Nan <linan666@huaweicloud.com>
-Cc: Christoph Hellwig <hch@lst.de>, linux-raid <linux-raid@vger.kernel.org>, 
-	Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Jens Axboe <axboe@kernel.dk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 26, 2024 at 6:18=E2=80=AFPM Li Nan <linan666@huaweicloud.com> w=
-rote:
->
-> =E5=9C=A8 2024/3/26 16:46, Song Liu =E5=86=99=E9=81=93:
-> > Hi Li Nan,
-> >
-> > Could you please look into this (back port 9674f54e41ff to older stable
-> > kernels)? If there is no clean back port, I would recommend we not do
-> > the back port.
-> >
->
-> There are some conflicts to back port, which are not related to the
-> modification of this patch. If necessary, let me know and I can adapt and
-> send it :)
+From: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 
-I think it is not necessary to back port this to older kernels with conflic=
-ts.
-The error case exists theoretically. But we never got a bug report for it.
+Add the intel_free_stream() callback to deal with the change in IPC that
+requires additional steps to be done to clear the gateway node_id.
 
-Thanks,
-Song
+Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Reviewed-by: Rander Wang <rander.wang@intel.com>
+Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+---
+ drivers/soundwire/intel.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+index e15666962fe4..01e1a0f3ec39 100644
+--- a/drivers/soundwire/intel.c
++++ b/drivers/soundwire/intel.c
+@@ -700,6 +700,24 @@ static int intel_params_stream(struct sdw_intel *sdw,
+  * DAI routines
+  */
+ 
++static int intel_free_stream(struct sdw_intel *sdw,
++			     struct snd_pcm_substream *substream,
++			     struct snd_soc_dai *dai,
++			     int link_id)
++{
++	struct sdw_intel_link_res *res = sdw->link_res;
++	struct sdw_intel_stream_free_data free_data;
++
++	free_data.substream = substream;
++	free_data.dai = dai;
++	free_data.link_id = link_id;
++
++	if (res->ops && res->ops->free_stream && res->dev)
++		return res->ops->free_stream(res->dev, &free_data);
++
++	return 0;
++}
++
+ static int intel_hw_params(struct snd_pcm_substream *substream,
+ 			   struct snd_pcm_hw_params *params,
+ 			   struct snd_soc_dai *dai)
+@@ -831,6 +849,7 @@ static int
+ intel_hw_free(struct snd_pcm_substream *substream, struct snd_soc_dai *dai)
+ {
+ 	struct sdw_cdns *cdns = snd_soc_dai_get_drvdata(dai);
++	struct sdw_intel *sdw = cdns_to_intel(cdns);
+ 	struct sdw_cdns_dai_runtime *dai_runtime;
+ 	int ret;
+ 
+@@ -851,6 +870,12 @@ intel_hw_free(struct snd_pcm_substream *substream, struct snd_soc_dai *dai)
+ 		return ret;
+ 	}
+ 
++	ret = intel_free_stream(sdw, substream, dai, sdw->instance);
++	if (ret < 0) {
++		dev_err(dai->dev, "intel_free_stream: failed %d\n", ret);
++		return ret;
++	}
++
+ 	dai_runtime->pdi = NULL;
+ 
+ 	return 0;
+-- 
+2.34.1
+
