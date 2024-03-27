@@ -1,145 +1,71 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D8112E1EE
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 16:00:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B611A12F39A
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 16:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711555221; cv=none; b=tf/4YNjpRslAuMEKd30L65kVOFBuiF6A/r1WDhowor37gwszKfGalrbsyc7BtOKB6RzocAFjGDXZWp8fuM/Jw/NxVHl6V3uPA6qxMPtjMuciYlGy8T3tSXwu+HIz8EImG3shHtoQ8ppFxPsG0X6o865eY2cMZhom9S3BOBGZaqc=
+	t=1711555246; cv=none; b=FnCi8q1bbqlbYhhe4FtebvlWgv6xVHW57Cpu0ApYBlOjfJoRW8QLXkyaVD6BAWlWB8PFWv1raX1izHQRtkEwWmfpf8qID793rJfRWgDpcq5Gz1cK+k1nY2wrDeznY1Y9tBqNSlcMbePkB/9Ltapdv+SRf69doND41arzp4clvMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711555221; c=relaxed/simple;
-	bh=ULF32yPW5VnzXst8UpUYLUXbeHy7gDOzCHLEwUn1sWo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tCOTbT+pkXNOEW1KPwKAU8hHVMOmzTielhei1GXzCGDFKyZbcTAK/7UpntBiFd6RaMlQBDyJ/BALeiXOldHD2Fmwbic0xnwMigjoTg37+gfhTTNaCeG7Xb8QMiJdbcKv31CVOcUPApQK39YxTamgTmbBW2T0kqiiOx8jYZ2Bvrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=U881pNV/; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="U881pNV/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1711555209;
-	bh=ULF32yPW5VnzXst8UpUYLUXbeHy7gDOzCHLEwUn1sWo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=U881pNV/w+uDEY6kIYq5vU47bg01Pi/X3tOGuDGXmJ5aUo0nDPKA+pTkHxAMUzJVC
-	 M37nvyyGkmbqKRWPfSNke8BPfswVhSh2dCWIaqdELgzVb/rGnbF5i6P5hpmlf7c/Vz
-	 tTaQH9sGwuMJk3XVksWVFbmyO4nusIsuQ3Mibdhg=
-Received: from stargazer.. (unknown [IPv6:240e:358:111f:6100:dc73:854d:832e:8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 6C0571A4005;
-	Wed, 27 Mar 2024 12:00:01 -0400 (EDT)
-From: Xi Ruoyao <xry111@xry111.site>
-To: Dave Hansen <dave.hansen@linux.intel.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH v5] x86/mm: Don't disable INVLPG if "incomplete Global INVLPG flushes" is fixed by microcode
-Date: Wed, 27 Mar 2024 23:59:20 +0800
-Message-ID: <20240327155920.7026-1-xry111@xry111.site>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1711555246; c=relaxed/simple;
+	bh=JS5thebpPvWinK71tE9YoMKI5Q+RqwPZBFTYA15xw9E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h0RZlN6pfsXISLWfHy/47TiecoPB9ZvC+L/rxqWCD2YY6OBx5ZdWsx0RhwUXFNG7wWHxr0G3RQSM1K9puYyQ1AEdjVT3XZIVWg5q1F/1PabYp6TCEC8X99niXNRrhTWpKRaOpc8go7mb+BxU+StZa40cjubUeU1V28SvYBNxPIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 03CD22F4;
+	Wed, 27 Mar 2024 09:01:17 -0700 (PDT)
+Received: from [10.57.14.133] (unknown [10.57.14.133])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D2FAB3F64C;
+	Wed, 27 Mar 2024 09:00:41 -0700 (PDT)
+Message-ID: <14f5c4e4-6f8b-4e4d-9aa1-01819355ea07@arm.com>
+Date: Wed, 27 Mar 2024 16:00:45 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ABI: sysfs-driver-panfrost-profiling: fix indentation
+ problem
+Content-Language: en-GB
+To: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>
+Cc: kernel@collabora.com, Stephen Rothwell <sfr@canb.auug.org.au>,
+ linux-kernel@vger.kernel.org
+References: <20240326134812.4008775-1-adrian.larumbe@collabora.com>
+From: Steven Price <steven.price@arm.com>
+In-Reply-To: <20240326134812.4008775-1-adrian.larumbe@collabora.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Per the "Processor Specification Update" documentations referred by the
-intel-microcode-20240312 release note, this microcode release has fixed
-the issue for all affected models.
+On 26/03/2024 13:48, Adrián Larumbe wrote:
+> Also add a newline character at the end of the last one.
+> 
+> Fixes: b12f3ea7c188 ("drm/panfrost: Replace fdinfo's profiling debugfs knob with sysfs")
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Closes: https://lore.kernel.org/dri-devel/20240326160110.4c00e1e5@canb.auug.org.au/
+> Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
 
-So don't disable INVLPG if the microcode is new enough.  The precise
-minimum microcode revision fixing the issue is provided by engineer from
-Intel.
+Looks reasonable, the other option is to make this a proper ReST list,
+but it's probably not worth it with just two values.
 
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lore.kernel.org/all/168436059559.404.13934972543631851306.tip-bot2@tip-bot2/
-Link: https://github.com/intel/Intel-Linux-Processor-Microcode-Data-Files/releases/tag/microcode-20240312
-Link: https://cdrdv2.intel.com/v1/dl/getContent/740518 # RPL042, rev. 13
-Link: https://cdrdv2.intel.com/v1/dl/getContent/682436 # ADL063, rev. 24
-Link: https://lore.kernel.org/all/20240325231300.qrltbzf6twm43ftb@desk/
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-Reviewed-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
----
- arch/x86/mm/init.c | 39 +++++++++++++++++++++++++++------------
- 1 file changed, 27 insertions(+), 12 deletions(-)
+Reviewed-by: Steven Price <steven.price@arm.com>
 
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index 679893ea5e68..476eb39db09a 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -261,33 +261,48 @@ static void __init probe_page_size_mask(void)
- 	}
- }
- 
--#define INTEL_MATCH(_model) { .vendor  = X86_VENDOR_INTEL,	\
--			      .family  = 6,			\
--			      .model = _model,			\
--			    }
-+#define INTEL_MATCH(_model, _fixed_microcode)	\
-+	{					\
-+	  .vendor	= X86_VENDOR_INTEL,	\
-+	  .family	= 6,			\
-+	  .model	= _model,		\
-+	  .driver_data	= _fixed_microcode,	\
-+	}
-+
- /*
-  * INVLPG may not properly flush Global entries
-- * on these CPUs when PCIDs are enabled.
-+ * on these CPUs when PCIDs are enabled and the
-+ * microcode is not updated to fix the issue.
-  */
- static const struct x86_cpu_id invlpg_miss_ids[] = {
--	INTEL_MATCH(INTEL_FAM6_ALDERLAKE   ),
--	INTEL_MATCH(INTEL_FAM6_ALDERLAKE_L ),
--	INTEL_MATCH(INTEL_FAM6_ATOM_GRACEMONT ),
--	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE  ),
--	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_P),
--	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_S),
-+	INTEL_MATCH(INTEL_FAM6_ALDERLAKE,	0x2e),
-+	INTEL_MATCH(INTEL_FAM6_ALDERLAKE_L,	0x42c),
-+	INTEL_MATCH(INTEL_FAM6_ATOM_GRACEMONT,	0x11),
-+	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE,	0x118),
-+	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_P,	0x4117),
-+	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_S,	0x2e),
- 	{}
- };
- 
- static void setup_pcid(void)
- {
-+	const struct x86_cpu_id *invlpg_miss_match;
-+
- 	if (!IS_ENABLED(CONFIG_X86_64))
- 		return;
- 
- 	if (!boot_cpu_has(X86_FEATURE_PCID))
- 		return;
- 
--	if (x86_match_cpu(invlpg_miss_ids)) {
-+	invlpg_miss_match = x86_match_cpu(invlpg_miss_ids);
-+
-+	/*
-+	 * The hypervisor may lie about the microcode revision, conservatively
-+	 * consider the microcode not updated.
-+	 */
-+	if (invlpg_miss_match &&
-+	    (boot_cpu_has(X86_FEATURE_HYPERVISOR) ||
-+	     boot_cpu_data.microcode < invlpg_miss_match->driver_data)) {
- 		pr_info("Incomplete global flushes, disabling PCID");
- 		setup_clear_cpu_cap(X86_FEATURE_PCID);
- 		return;
--- 
-2.44.0
+> ---
+>  Documentation/ABI/testing/sysfs-driver-panfrost-profiling | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-driver-panfrost-profiling b/Documentation/ABI/testing/sysfs-driver-panfrost-profiling
+> index 1d8bb0978920..7597c420e54b 100644
+> --- a/Documentation/ABI/testing/sysfs-driver-panfrost-profiling
+> +++ b/Documentation/ABI/testing/sysfs-driver-panfrost-profiling
+> @@ -7,4 +7,4 @@ Description:
+>  		Valid values are:
+>  		0: Don't enable fdinfo job profiling sources.
+>  		1: Enable fdinfo job profiling sources, this enables both the GPU's
+> -		   timestamp and cycle counter registers.
+> \ No newline at end of file
+> +		timestamp and cycle counter registers.
 
