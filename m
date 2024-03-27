@@ -1,127 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AEB818146B;
-	Wed, 27 Mar 2024 12:25:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44F818148F;
+	Wed, 27 Mar 2024 12:25:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711542312; cv=none; b=dgNclMaRZmNeH6DnF0GA0JHcOdHukUluICEWU4zahy/EsWkm+jrgVcB72y8M6Fmur77Zvfp3TbJJIyKkFJn87N4PL9baTqOLWUrjBpyId00P74YocTf7Oi0qDQvybYaDo7T8Ai7dmWqj+iQF1S0JjGMhQrd/u+dlJoq1Gy40bow=
+	t=1711542314; cv=none; b=NannlXB46Tx+Kywwx60Zmc6f6MwAL2o70MZnBuwcolJeXGXDc6zXQ9IJAjFZ8XPkfjD4GtpiC/eKA1PwUTnKgMLVdpf8j7La+cUuftA/oVKUHFYDOH2Y8kPu/1ikZweO0KGwWfHrudbra8S6LRL0M9xt7TOZ7KTDye4K1qNqdtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711542312; c=relaxed/simple;
-	bh=lVwiLUFk1Ajwy3htFqot2nLyqDukULMSp8fVXddhUz8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E5VHAp/oDTDrbQtwpjjjr8vjbi6RVRkx2vacxCqA70MyFatGq8pHLoRuKTniRQ0VckV162y9Ybg2DKRgSmUf/D948g+KecQReJ8Q5mveZ4vpMElPjqbTvFXNGfDgpvpMYLxpmVKz+fyUutWOBSvanJJGWXTX+hcJVxJoS2MdctU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LTpJCld9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711542314; c=relaxed/simple;
+	bh=038VBIDo7wOXasBPUdMTZ8PLRSWfD0Ugbh34YKcaqAw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ii19KBDOEH7YAYN2vV+X0tWKB8Jqr/aaBuqcOXNrcnDMDA9s9z24vvP3/YVDFs5S3NQ41KYm5NGDiXsdRO/2QUJ+RKXIMTg56k2vyqcgYFu7O2yPtK31yJBNubtwcpqMmXny6hUSozQfEjz4mgH6A+5OjIXkTuoHnyBxeqt+Qls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kwr1lYv2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LTpJCld9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9BE7C433F1;
-	Wed, 27 Mar 2024 12:25:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kwr1lYv2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23145C43399;
+	Wed, 27 Mar 2024 12:25:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711542312;
-	bh=lVwiLUFk1Ajwy3htFqot2nLyqDukULMSp8fVXddhUz8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=LTpJCld9u8OHjBWcNTC0P4+qlXQhQJOTc0G0iQnGumGDKRAKuNj6a/aqIcP6lBWRu
-	 T1bikdCCcTLeyktq9iTV4K7OT3mWEIm8dhhbjGdcM2IgYo+TvJ1wAFZ0AHKD/9vpNH
-	 Vqa60wPJB9HNal5XmZhrYuGRZnPmv8gjF5GgdGlVWGHDuIfy31IYVR02pv20TTBPpi
-	 d2LSB+GWw5xPsiA5L7tGO5dUR02hBKf2Rp7hRxK1a5/FqfOpFvlIScA8YXn0XBoHyE
-	 U3eFQlcFpriPy/m8oQ/0Q0G7+ImxUzs0hSseAJzlm47QveLvz/hykXh++J8r9RXtRj
-	 qkCsbcrIdXNxg==
-From: Sasha Levin <sashal@kernel.org>
-To: stable@vger.kernel.org,
-	alex.williamson@redhat.com
-Cc: Kevin Tian <kevin.tian@intel.com>,
-	Eric Auger <eric.auger@redhat.com>,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: FAILED: Patch "vfio/pci: Disable auto-enable of exclusive INTx IRQ" failed to apply to 4.19-stable tree
-Date: Wed, 27 Mar 2024 08:25:10 -0400
-Message-ID: <20240327122510.2840000-1-sashal@kernel.org>
+	s=k20201202; t=1711542313;
+	bh=038VBIDo7wOXasBPUdMTZ8PLRSWfD0Ugbh34YKcaqAw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Kwr1lYv2X1QC6vcz5l+zu2KW28jKDMcUCckfHzTia2WHhQHNUkkqzcxlIhuH8bH0V
+	 oHRouwHNl91AZtFpfS8uSq4B8BjUJgT486AJqQp4NaDGbAoH+TEFEEZWT4AZusOaye
+	 ZNM0LetAPWIAXXHZHwqm7me/VV/2c/Mrj3fM3pvBRJkG7thwftZ8ovy/oN874gGMNa
+	 Ya4K0P3ZAtuGs68/oELfhLaGSxxvqRF3HHkpASq14EzDDMcOoNNu2QpGaPK3yNH8+q
+	 gZl+bRFZmz7AaPGs47pDBXEfvJz7WJebsBOGGgbXxhsynKneIAdK3NkdTNVFQ4ijgr
+	 at8b6J9qN8j7w==
+From: Conor Dooley <conor@kernel.org>
+To: linux-riscv@lists.infradead.org
+Cc: conor@kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Jamie Gibbons <jamie.gibbons@microchip.com>,
+	Valentina Fernandez <valentina.fernandezalanis@microchip.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v1 3/5] dt-bindings: gpio: mpfs: allow gpio-line-names
+Date: Wed, 27 Mar 2024 12:24:38 +0000
+Message-ID: <20240327-overrate-overuse-1e32abccd001@spud>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240327-parkway-dodgy-f0fe1fa20892@spud>
+References: <20240327-parkway-dodgy-f0fe1fa20892@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Patchwork-Hint: ignore
-X-stable: review
+X-Developer-Signature: v=1; a=openpgp-sha256; l=815; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=DQ/xOk1TKoK84RFxAr9nUQRMqrU2scD4cxuVi4j2DRs=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGksAqyTq1tfxFl23mh4eOftRUHLExaKZ7ubjEPOpDEK3 2X0bLvVUcrCIMbBICumyJJ4u69Fav0flx3OPW9h5rAygQxh4OIUgIk08TEyXHq56IBz2p6VonO0 3HTV9HW9zr01q1DPEmzO9hK6UpOUxcjwbcfUFsHNTqqXMqcvmMXHE3Zk3bklDh+7eJ8t2SI0c4Y FPwA=
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
 Content-Transfer-Encoding: 8bit
 
-The patch below does not apply to the 4.19-stable tree.
-If someone wants it applied there, or to any other stable or longterm
-tree, then please email the backport, including the original git commit
-id to <stable@vger.kernel.org>.
+From: Jamie Gibbons <jamie.gibbons@microchip.com>
 
-Thanks,
-Sasha
+The BeagleV Fire devicetree will make use of gpio-line-names, allow it
+in the binding.
 
------------------- original commit in Linus's tree ------------------
-
-From fe9a7082684eb059b925c535682e68c34d487d43 Mon Sep 17 00:00:00 2001
-From: Alex Williamson <alex.williamson@redhat.com>
-Date: Fri, 8 Mar 2024 16:05:22 -0700
-Subject: [PATCH] vfio/pci: Disable auto-enable of exclusive INTx IRQ
-
-Currently for devices requiring masking at the irqchip for INTx, ie.
-devices without DisINTx support, the IRQ is enabled in request_irq()
-and subsequently disabled as necessary to align with the masked status
-flag.  This presents a window where the interrupt could fire between
-these events, resulting in the IRQ incrementing the disable depth twice.
-This would be unrecoverable for a user since the masked flag prevents
-nested enables through vfio.
-
-Instead, invert the logic using IRQF_NO_AUTOEN such that exclusive INTx
-is never auto-enabled, then unmask as required.
-
-Cc:  <stable@vger.kernel.org>
-Fixes: 89e1f7d4c66d ("vfio: Add PCI device driver")
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Link: https://lore.kernel.org/r/20240308230557.805580-2-alex.williamson@redhat.com
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Jamie Gibbons <jamie.gibbons@microchip.com>
+Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- drivers/vfio/pci/vfio_pci_intrs.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/vfio/pci/vfio_pci_intrs.c b/drivers/vfio/pci/vfio_pci_intrs.c
-index 237beac838097..136101179fcbd 100644
---- a/drivers/vfio/pci/vfio_pci_intrs.c
-+++ b/drivers/vfio/pci/vfio_pci_intrs.c
-@@ -296,8 +296,15 @@ static int vfio_intx_set_signal(struct vfio_pci_core_device *vdev, int fd)
+diff --git a/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml b/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
+index 6884dacb2865..d61569b3f15b 100644
+--- a/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
+@@ -44,6 +44,7 @@ properties:
+     default: 32
  
- 	ctx->trigger = trigger;
+   gpio-controller: true
++  gpio-line-names: true
  
-+	/*
-+	 * Devices without DisINTx support require an exclusive interrupt,
-+	 * IRQ masking is performed at the IRQ chip.  The masked status is
-+	 * protected by vdev->irqlock. Setup the IRQ without auto-enable and
-+	 * unmask as necessary below under lock.  DisINTx is unmodified by
-+	 * the IRQ configuration and may therefore use auto-enable.
-+	 */
- 	if (!vdev->pci_2_3)
--		irqflags = 0;
-+		irqflags = IRQF_NO_AUTOEN;
- 
- 	ret = request_irq(pdev->irq, vfio_intx_handler,
- 			  irqflags, ctx->name, vdev);
-@@ -308,13 +315,9 @@ static int vfio_intx_set_signal(struct vfio_pci_core_device *vdev, int fd)
- 		return ret;
- 	}
- 
--	/*
--	 * INTx disable will stick across the new irq setup,
--	 * disable_irq won't.
--	 */
- 	spin_lock_irqsave(&vdev->irqlock, flags);
--	if (!vdev->pci_2_3 && ctx->masked)
--		disable_irq_nosync(pdev->irq);
-+	if (!vdev->pci_2_3 && !ctx->masked)
-+		enable_irq(pdev->irq);
- 	spin_unlock_irqrestore(&vdev->irqlock, flags);
- 
- 	return 0;
+ patternProperties:
+   "^.+-hog(-[0-9]+)?$":
 -- 
 2.43.0
-
-
-
 
