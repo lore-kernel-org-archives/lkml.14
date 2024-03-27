@@ -1,299 +1,161 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2093.outbound.protection.outlook.com [40.107.114.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB2514AA0;
-	Wed, 27 Mar 2024 05:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711518175; cv=none; b=RUNBcWP+cjWTzL1ERNDSal25JhGbv394YSuv0uvqt6IlYql7DZccftweSiI69y+fKpOJRIZ+Yzgdkx0TitxvK/5jNwR42vq/SnNVAQQ8VxELpJDpc1hxHqWmmToNhoXhi4HRQzmgQvuwee95dFzn3+5bM7kNVUWFerPvdNfh8iY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711518175; c=relaxed/simple;
-	bh=qdUJFWjNyT5FqUZi4Nkd0er0QFlFwh0ZUXZ+FdXh6KM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o9Y17tzM5cBDT8Fxo/a0ySormXqTeqdQjxkmaIXpc/nuniMj1NM27fW1M50YedwUVw54GOSqL1XB66+glzMZZsZYV4Zp3HlHDxoUoJiy+12KwkjCVvQWqdB7Wwyes+naKjK96EEHaN9SrF1OhiXJCCFyxa6sMJhGk78mUMYbs6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dHw3vH8N; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82F8D304;
+	Wed, 27 Mar 2024 05:45:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.114.93
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711518313; cv=fail; b=rl4Rw5oVBeIOEHc6Dp6t9d6aKChPI78HmJ8HCeQsjbulDTTFEOP68t8hIMk7s+/eaye/N8/YeBseUNm0aGihAR3ji1SZHTZLoBp+2oyB7hJBZqbldDsyMhwFwlD3JEXDQX/g6I0rhBexh9IUjV72sBPYMMxoQY4+QCG/cW3HqGI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711518313; c=relaxed/simple;
+	bh=Iw/53vxBsRihWl84U0I7kJcmefneVhb9Keu1IUavv3A=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=j+oH9588qYiFrg5+MHBkuXx+P7tPtDgPNJM+2Pln84Haf/gP5F3Kyz2f+plnKAGZqyLj+0iKiQ0lW1clmp2rzzw3gC4SqkHU7yh8KDZg9kQbImEc8UzDCRsZ/wR/sJniaru7+btqDKq39AblNgQ0TqF4Bm3f96mzO6evnxzcv5c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alpsalpine.com; spf=pass smtp.mailfrom=alpsalpine.com; dkim=pass (2048-bit key) header.d=alpsalpine.com header.i=@alpsalpine.com header.b=klBqQFEt; arc=fail smtp.client-ip=40.107.114.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alpsalpine.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpsalpine.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dHw3vH8N"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42R5gcPE071541;
-	Wed, 27 Mar 2024 00:42:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1711518158;
-	bh=/0a4mJ8FtpF0WeaxuGbAsK1zh4bpWkNR6oozcy/fkm8=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=dHw3vH8NiUIFDEi33w1gdSaStJSIIGWSSBqGKswssdfgeaDN+cGn9iAkFlc2fW69X
-	 xEmcdVIbgkro6ZELYYrzBB39gHiUrvjJSIx7pZ0Zq9EVTYpZVhT448ojQ+UIE3u3nj
-	 Z9Fu71Z/LTBDoJCPqWBWRxqMkRIjC1RxnHqVd2z0=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42R5gceQ020115
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 27 Mar 2024 00:42:38 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 27
- Mar 2024 00:42:38 -0500
-Received: from fllvsmtp8.itg.ti.com (10.64.41.158) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 27 Mar 2024 00:42:38 -0500
-Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
-	by fllvsmtp8.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42R5gboa018516;
-	Wed, 27 Mar 2024 00:42:37 -0500
-From: Chintan Vankar <c-vankar@ti.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>,
-        Siddharth Vadapalli
-	<s-vadapalli@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "Heiner
- Kallweit" <hkallweit1@gmail.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Chintan Vankar <c-vankar@ti.com>, Andrew Lunn <andrew@lunn.ch>,
-        Roger Quadros
-	<rogerq@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Paolo Abeni
-	<pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet
-	<edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
-Subject: [PATCH net-next v4 2/3] net: ethernet: ti: am65-cpsw: Enable RX HW timestamp only for PTP packets
-Date: Wed, 27 Mar 2024 11:12:33 +0530
-Message-ID: <20240327054234.1906957-2-c-vankar@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240327054234.1906957-1-c-vankar@ti.com>
-References: <20240327054234.1906957-1-c-vankar@ti.com>
+	dkim=pass (2048-bit key) header.d=alpsalpine.com header.i=@alpsalpine.com header.b="klBqQFEt"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PntNfRmHlnEZ4kWOGb5AV3QKiGyyP+mz7SJSfEkQPxb4broKCoyJeFwwf9VZ1Wc83UOEh5DQBPExUQnZwVWVx7gYpDRoyR8zrqNVSkJbfGGEhIEFACo0zb5hP1GY8DmDrkitx13sJocb/+fRd8Dn0PygC+djsroC2hphi1tVc/34e2pDsJp7HJoNTgZIS4wuT+OEGZxRruEPLgXOHy52zHwXBlT+Rr6vimzYGPzkV8IQbNfFopb6PTuHYCwI//bWLLLLBlOeGgmXU+A5Xaad8xnQq5DpEd6uFNGJVhiq7zpfzTGFYijjfAW4hYrqgwb0CPh3389+aAvnh+yPUsf1gg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=a6g1k8vaWviVcenabrA4wGTHHxp/jKeST2qd+QA+Ps8=;
+ b=QFe2pcoBYrOW77VHr1kfyaXD9Pce8MTUGQD5h307h0wDv06T8w+UmK7GnRhSm9uMwUGSYbxTg6PUB0pP8ly/bqhnE0WClp43hZRoCnukmata0rkOyq+EzHZ1HKdI2Lv9hII/7et0XI4ioyC65ZzhqfvN3f3CMVmeRiRI7x2IZgxkkh8Q1BVH99TOh8nnwKYh4SFoKv3QLUaDX4ZX1oQS2mHYG1xd/2detJC5u800yFPETWi0vhiPLFTI2nOY2a8NR7AWun6thVWraFlw41Fo7VBPlOGVEhZUYusKe/1a1ZDtAMCl3hKkZXBu8WvTBItIiYX7v6M4zDlqgfsFZbH0bw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=alpsalpine.com; dmarc=pass action=none
+ header.from=alpsalpine.com; dkim=pass header.d=alpsalpine.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alpsalpine.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a6g1k8vaWviVcenabrA4wGTHHxp/jKeST2qd+QA+Ps8=;
+ b=klBqQFEtIqAH8E3EmeXDDpERbPgk7qX5KRhezajtQqquNuOpNOnlFueHe3HsEkZCVGtZM4JDHvHOVezWiIaRsPCdxMpIqRA7NSuQQPVg9Ui6lgFZg6wauNhripe52Gn7FCgcQBURO1cFxgIptF0Cr719B9yZspQJinrloHYkkojCvnavgTpFx0yl0teo7DhcL+Avp/QBvlMIUylNPNI2H40CeyiV3ZW4NKD2Q92bVc+kRDNlrcfGiC5QquzlSgGXZ7YigXI3ug/kH44Y3bHs/Qb2kY8AAflg1gfhpt3O1XmCR4Ii3wejXyEtv2L3O0xk0HhJws48oVnN3oGr4/ZYMA==
+Received: from TYVPR01MB10781.jpnprd01.prod.outlook.com
+ (2603:1096:400:2ae::14) by OSZPR01MB9329.jpnprd01.prod.outlook.com
+ (2603:1096:604:1d7::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.33; Wed, 27 Mar
+ 2024 05:45:08 +0000
+Received: from TYVPR01MB10781.jpnprd01.prod.outlook.com
+ ([fe80::b541:f53c:6306:6e2b]) by TYVPR01MB10781.jpnprd01.prod.outlook.com
+ ([fe80::b541:f53c:6306:6e2b%4]) with mapi id 15.20.7409.031; Wed, 27 Mar 2024
+ 05:45:08 +0000
+From: Norihiko Hama <Norihiko.Hama@alpsalpine.com>
+To: stern@rowland.harvard.edu,
+	gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org,
+	usb-storage@lists.one-eyed-alien.net,
+	linux-kernel@vger.kernel.org
+Cc: Norihiko Hama <Norihiko.Hama@alpsalpine.com>
+Subject: [PATCH] usb-storage: Optimize scan delay more precisely
+Date: Wed, 27 Mar 2024 14:51:30 +0900
+Message-Id: <20240327055130.43206-1-Norihiko.Hama@alpsalpine.com>
+X-Mailer: git-send-email 2.17.1
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYCP286CA0200.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:385::6) To TYVPR01MB10781.jpnprd01.prod.outlook.com
+ (2603:1096:400:2ae::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYVPR01MB10781:EE_|OSZPR01MB9329:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	V+Y8tbVRDXKvLFTdI3Md7n8pWxerRyvpm8G+kUzUdrvgTf3I8ts97gTgYdmz+6qdlARQZuHDW6LhY//GvZoXlqYljxQsbGB2QQ/Hep7lujlhTBL1J5782DHYhO6osmCb0Kb16JjUBcaeeyIttKFYwcZD2h+CPGYq2zFCrlLtnfeyiY/gBTSbO6wTM4CSoIwgbdWhIl5K1UaviJWsqPiYAcZ/TMhea5+MBE2Xhj6Q5hd5yVF8QNGIn7m++4gF3QJMYme6VsFQyucIZOuuLbR9xE8jS1fjxtXvnt7Eo2/ntveGAm/OmWn3coD8byrIewknS0zIexJkHhtLBoG7+H+sMMeeUZ6hN7w1c835SYZjxojDsOGeea+DwR98B2Fgt+ejx8R78fvBPlV1CTyd+D6GCB+f02nKD59VpEUDhnCvKT2LrCPJxlN9iS+XPIRtEJlLxhG/ZGslqmTPqzCw+2NP4jEQbEgZ4OkOrIli3qq4P+1JxJaVLJdvJB4e03P+wr+R5Pi7lZLJrNGFrhNJ92uXC7yRUVDCNNqVxnXfDYrtYwfDqeHORX5zg5xZpEV7hlp8gd9g2KgGrsNz7p57eqgIs8YQJyPph7vtchsLNRWvmLqiYG3fm3ZR7hYsgmPQa2zQ9b5GK5jIPAesYi54NN3p3Q43sspdzTWUoLEVpxpJSpaEnHtLnogusiJIG1d18BSXv7W3Isagcd2sYtd7Wcg5LmF21e3klLAFGdOBCe3oONY=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYVPR01MB10781.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(52116005)(376005)(1800799015)(366007)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?dmkfGP4jcxxEW1hoFwbG6/iGJM2nliiN8qnmuJpPNI8MMd/DBnYy39+WK5lD?=
+ =?us-ascii?Q?BPi4mhnQ8KVakEjHuStLyNNVNGZgimBnwKQuEgrdCgu2Iz3KWHtdjcFXTXQM?=
+ =?us-ascii?Q?o36Wy4gX9SYbW47+BbQi14/CKOHwCHH75LNrFyulzu8c1D/I6CvVEk9tkdTg?=
+ =?us-ascii?Q?vN57esqpoIZC5q1RIpkZBRswaCC+drSfs2ve+2kIpluq+4b9pDWECCEG8wQk?=
+ =?us-ascii?Q?9Pxo7wL1Lz6D/5j/ABt+ypJqf41tLyhx0jLPa+5Tn6ClrjXJpNaxJ2/YIdDE?=
+ =?us-ascii?Q?pfHrvpy3GDq+uJHD7/dfhWPM594kAibTm6UL1Hj9uKhOOrNrgVORSPDkx1F+?=
+ =?us-ascii?Q?z5TqgpEHNThB21IsTp1QGH6/Oq3OeCrRuaLYh74F9MtkfogCAm3q754DDFwi?=
+ =?us-ascii?Q?XWWdFiDX7e+DaaeQiqrViq/inMci2akwo2v0+AMAHW4jsUrTrtl15GCg7U8U?=
+ =?us-ascii?Q?0Dj2LNXaBB6+Mdh+4LWgLClOBy14h801gyVpZbhpDERWrgd227VEZtDZ3y2c?=
+ =?us-ascii?Q?7aGcTQ0mvxp1LLkBax0YAkzHOUPbucHsNZpF1bSavgtfQxrmLsg12Lu78QeC?=
+ =?us-ascii?Q?P346Oktz+0z18sPmmexKgtgtzqKl6XZbQkM3BtcbycRlSKuXzUCKRcJU8auZ?=
+ =?us-ascii?Q?e7flRo7A3XWtFwyR6a9SNcRf3r9yCRVm1EU1fZq+bo9/h7otSj/3mcOOmteT?=
+ =?us-ascii?Q?ia1xfomiObfSXSlNQmw+utdNACQr97KtvY3ZFhnB9CoIDVSnzpdvIrfkkcku?=
+ =?us-ascii?Q?qAeIEms9YCVG5sKKAY4RfMyfPCKwuzMSwxg/tSkTPg5PWfzZ25l/TkaXhRoa?=
+ =?us-ascii?Q?YkS6YKMav6QiynC2yZAj4nnCQDLKuKV3yNv+GQsFPMiR7/yFzeT5qcwwMQox?=
+ =?us-ascii?Q?dGJ+iestFT5i5G0yPvibq3DIM3ByEiAcx/KO7GLpak1l8yI5GP6Fxmzdf27z?=
+ =?us-ascii?Q?PagjpEKin7W/jmz6x0F3rnRdSf7EwDIghns1BaZ/WM48y00pCTx+8JQ6jbhA?=
+ =?us-ascii?Q?O870zlf3H3SxF36Gz2JQ59xFx/bkdmzvmwuuz5CRT1Wom+sGcnERJVGZ2lZ8?=
+ =?us-ascii?Q?nAIgbfe2EmTGgsJ6/j4lubjPDSb4+k8/OOXY0ciJjL65gxgUTiEDCh2M73af?=
+ =?us-ascii?Q?KsIXl3ozCBBBrNEmWu7ROClIr/jxFRXpigXCgytXMn7YcKL/roRzUXiKYn4k?=
+ =?us-ascii?Q?+1C4/2SE1sc5hwXZoglILJ0eRxq6e8p6DcdohJKLzzLW2Q5r4WipS7cRD2II?=
+ =?us-ascii?Q?cs+djvMeGOJFTAQQXCHctX7/TlB9uAeL4IkTGFf58bjo/jr395TKbkmoEhhS?=
+ =?us-ascii?Q?/DKDwnCDEnrSxIpvVNlqgz7qMYYLmf4DkRc8YAH71Xr/x8na188elMhncDT2?=
+ =?us-ascii?Q?d8KyIhb/EHKDuKlPIv4fb3NLP4s5xP/O1GLwjEn/p1ZgRFxAQ8BbE5r1tG0Y?=
+ =?us-ascii?Q?15E1PQUAPw9WM6b0mYmiW56PUU8JxeCNJ1meeZtXLAUuYNAr9P9bfQ58iqfG?=
+ =?us-ascii?Q?JuX4PnjjN9wkMW6gvGVfEK3u6z2ohVw6RBKil1+/iQ+l6KVjRHu+ReC+Z4m3?=
+ =?us-ascii?Q?wiYRLsZIAX0Jin4Y1rTLBxYRJVuCCvOBjy/uXwxl?=
+X-OriginatorOrg: alpsalpine.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 741c1a02-6d5b-4a6f-5cc3-08dc4e210f5f
+X-MS-Exchange-CrossTenant-AuthSource: TYVPR01MB10781.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2024 05:45:08.0464
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 57e76998-77bd-4b82-a424-198f46eb2254
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OCg9iFOTG0uyAHCwC5jP+vt/Hfd3s9GODfxkn7Mmfx6zuS6uAaD8xWuAsU0YnXaKbUwBcZgNMcVb2WogeZ8P3Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSZPR01MB9329
 
-The current mechanism of timestamping, am65-cpsw-nuss driver
-enables hardware timestamping for all received packets by setting
-the TSTAMP_EN bit in CPTS_CONTROL register, which directs the CPTS
-module to timestamp all received packets, followed by passing timestamp
-via DMA descriptors. This mechanism is responsible for triggering
-errata i2401: "CPSW: Host Timestamps Cause CPSW Port to Lock up"
+Current storage scan delay is reduced by the following old commit.
 
-To prevent port lock up, disable TSTAMP_EN bit in CPTS_CONTROL
-register. The workaround for timestamping received packets is to
-utilize the CPTS Event FIFO that records timestamps corresponding to
-certain events, with one such event being the reception of an
-Ethernet packet with the EtherType field set to Precision Time
-Protocol (PTP).
+a4a47bc03fe5 ("Lower USB storage settling delay to something more reasonable")
 
-Fixes: b1f66a5bee07 ("net: ethernet: ti: am65-cpsw-nuss: enable packet timestamping support")
-Signed-off-by: Chintan Vankar <c-vankar@ti.com>
+It means that delay is at least 'one second', or zero with delay_use=0.
+'one second' is still long delay especially for embedded system but
+when delay_use is set to 0 (no delay), error still observed on some USB drives.
+
+So delay_use should not be set to 0 but 'one second' is quite long.
+
+This patch optimizes scan delay more precisely
+to minimize delay time but not to have any problems on USB drives
+by adding module parameter 'delay_scale' of delay-time divisor.
+By default, delay time is 'one second' for backward compatibility.
+For example, it seems to be good by changing delay_scale=100,
+that is 100 millisecond delay.
+
+Signed-off-by: Norihiko Hama <Norihiko.Hama@alpsalpine.com>
 ---
+ drivers/usb/storage/usb.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Changes from v3 to v4:
-- No changes in v4.
-
-Link to v3:
-https://lore.kernel.org/r/20240320102600.3418248-2-c-vankar@ti.com/
-
- drivers/net/ethernet/ti/am65-cpsw-nuss.c | 50 +++++++++++-------------
- drivers/net/ethernet/ti/am65-cpts.c      | 23 -----------
- drivers/net/ethernet/ti/am65-cpts.h      |  5 ---
- 3 files changed, 23 insertions(+), 55 deletions(-)
-
-diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-index 2939a21ca74f..7809bb814934 100644
---- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-+++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-@@ -101,6 +101,12 @@
- #define AM65_CPSW_PN_TS_CTL_TX_HOST_TS_EN	BIT(11)
- #define AM65_CPSW_PN_TS_CTL_MSG_TYPE_EN_SHIFT	16
+diff --git a/drivers/usb/storage/usb.c b/drivers/usb/storage/usb.c
+index 90aa9c12ffac..f4a755e364da 100644
+--- a/drivers/usb/storage/usb.c
++++ b/drivers/usb/storage/usb.c
+@@ -70,6 +70,9 @@ MODULE_LICENSE("GPL");
+ static unsigned int delay_use = 1;
+ module_param(delay_use, uint, S_IRUGO | S_IWUSR);
+ MODULE_PARM_DESC(delay_use, "seconds to delay before using a new device");
++static unsigned int delay_scale = MSEC_PER_SEC;
++module_param(delay_scale, uint, 0644);
++MODULE_PARM_DESC(delay_scale, "time scale of delay_use");
  
-+#define AM65_CPSW_PN_TS_CTL_RX_ANX_F_EN		BIT(0)
-+#define AM65_CPSW_PN_TS_CTL_RX_VLAN_LT1_EN	BIT(1)
-+#define AM65_CPSW_PN_TS_CTL_RX_VLAN_LT2_EN	BIT(2)
-+#define AM65_CPSW_PN_TS_CTL_RX_ANX_D_EN		BIT(3)
-+#define AM65_CPSW_PN_TS_CTL_RX_ANX_E_EN		BIT(9)
-+
- /* AM65_CPSW_PORTN_REG_TS_SEQ_LTYPE_REG register fields */
- #define AM65_CPSW_PN_TS_SEQ_ID_OFFSET_SHIFT	16
- 
-@@ -124,6 +130,11 @@
- 	 AM65_CPSW_PN_TS_CTL_TX_ANX_E_EN |	\
- 	 AM65_CPSW_PN_TS_CTL_TX_ANX_F_EN)
- 
-+#define AM65_CPSW_TS_RX_ANX_ALL_EN		\
-+	(AM65_CPSW_PN_TS_CTL_RX_ANX_D_EN |	\
-+	 AM65_CPSW_PN_TS_CTL_RX_ANX_E_EN |	\
-+	 AM65_CPSW_PN_TS_CTL_RX_ANX_F_EN)
-+
- #define AM65_CPSW_ALE_AGEOUT_DEFAULT	30
- /* Number of TX/RX descriptors */
- #define AM65_CPSW_MAX_TX_DESC	500
-@@ -749,18 +760,6 @@ static int am65_cpsw_nuss_ndo_slave_open(struct net_device *ndev)
- 	return ret;
- }
- 
--static void am65_cpsw_nuss_rx_ts(struct sk_buff *skb, u32 *psdata)
--{
--	struct skb_shared_hwtstamps *ssh;
--	u64 ns;
--
--	ns = ((u64)psdata[1] << 32) | psdata[0];
--
--	ssh = skb_hwtstamps(skb);
--	memset(ssh, 0, sizeof(*ssh));
--	ssh->hwtstamp = ns_to_ktime(ns);
--}
--
- /* RX psdata[2] word format - checksum information */
- #define AM65_CPSW_RX_PSD_CSUM_ADD	GENMASK(15, 0)
- #define AM65_CPSW_RX_PSD_CSUM_ERR	BIT(16)
-@@ -841,9 +840,6 @@ static int am65_cpsw_nuss_rx_packets(struct am65_cpsw_common *common,
- 	skb->dev = ndev;
- 
- 	psdata = cppi5_hdesc_get_psdata(desc_rx);
--	/* add RX timestamp */
--	if (port->rx_ts_enabled)
--		am65_cpsw_nuss_rx_ts(skb, psdata);
- 	csum_info = psdata[2];
- 	dev_dbg(dev, "%s rx csum_info:%#x\n", __func__, csum_info);
- 
-@@ -856,6 +852,8 @@ static int am65_cpsw_nuss_rx_packets(struct am65_cpsw_common *common,
- 		ndev_priv = netdev_priv(ndev);
- 		am65_cpsw_nuss_set_offload_fwd_mark(skb, ndev_priv->offload_fwd_mark);
- 		skb_put(skb, pkt_len);
-+		if (port->rx_ts_enabled)
-+			am65_cpts_rx_timestamp(common->cpts, skb);
- 		skb->protocol = eth_type_trans(skb, ndev);
- 		am65_cpsw_nuss_rx_csum(skb, csum_info);
- 		napi_gro_receive(&common->napi_rx, skb);
-@@ -1334,7 +1332,6 @@ static int am65_cpsw_nuss_ndo_slave_set_mac_address(struct net_device *ndev,
- static int am65_cpsw_nuss_hwtstamp_set(struct net_device *ndev,
- 				       struct ifreq *ifr)
- {
--	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
- 	struct am65_cpsw_port *port = am65_ndev_to_port(ndev);
- 	u32 ts_ctrl, seq_id, ts_ctrl_ltype2, ts_vlan_ltype;
- 	struct hwtstamp_config cfg;
-@@ -1358,11 +1355,6 @@ static int am65_cpsw_nuss_hwtstamp_set(struct net_device *ndev,
- 	case HWTSTAMP_FILTER_NONE:
- 		port->rx_ts_enabled = false;
- 		break;
--	case HWTSTAMP_FILTER_ALL:
--	case HWTSTAMP_FILTER_SOME:
--	case HWTSTAMP_FILTER_PTP_V1_L4_EVENT:
--	case HWTSTAMP_FILTER_PTP_V1_L4_SYNC:
--	case HWTSTAMP_FILTER_PTP_V1_L4_DELAY_REQ:
- 	case HWTSTAMP_FILTER_PTP_V2_L4_EVENT:
- 	case HWTSTAMP_FILTER_PTP_V2_L4_SYNC:
- 	case HWTSTAMP_FILTER_PTP_V2_L4_DELAY_REQ:
-@@ -1372,10 +1364,13 @@ static int am65_cpsw_nuss_hwtstamp_set(struct net_device *ndev,
- 	case HWTSTAMP_FILTER_PTP_V2_EVENT:
- 	case HWTSTAMP_FILTER_PTP_V2_SYNC:
- 	case HWTSTAMP_FILTER_PTP_V2_DELAY_REQ:
--	case HWTSTAMP_FILTER_NTP_ALL:
- 		port->rx_ts_enabled = true;
--		cfg.rx_filter = HWTSTAMP_FILTER_ALL;
-+		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
- 		break;
-+	case HWTSTAMP_FILTER_ALL:
-+	case HWTSTAMP_FILTER_SOME:
-+	case HWTSTAMP_FILTER_NTP_ALL:
-+		return -EOPNOTSUPP;
- 	default:
- 		return -ERANGE;
- 	}
-@@ -1405,6 +1400,10 @@ static int am65_cpsw_nuss_hwtstamp_set(struct net_device *ndev,
- 		ts_ctrl |= AM65_CPSW_TS_TX_ANX_ALL_EN |
- 			   AM65_CPSW_PN_TS_CTL_TX_VLAN_LT1_EN;
- 
-+	if (port->rx_ts_enabled)
-+		ts_ctrl |= AM65_CPSW_TS_RX_ANX_ALL_EN |
-+			   AM65_CPSW_PN_TS_CTL_RX_VLAN_LT1_EN;
-+
- 	writel(seq_id, port->port_base + AM65_CPSW_PORTN_REG_TS_SEQ_LTYPE_REG);
- 	writel(ts_vlan_ltype, port->port_base +
- 	       AM65_CPSW_PORTN_REG_TS_VLAN_LTYPE_REG);
-@@ -1412,9 +1411,6 @@ static int am65_cpsw_nuss_hwtstamp_set(struct net_device *ndev,
- 	       AM65_CPSW_PORTN_REG_TS_CTL_LTYPE2);
- 	writel(ts_ctrl, port->port_base + AM65_CPSW_PORTN_REG_TS_CTL);
- 
--	/* en/dis RX timestamp */
--	am65_cpts_rx_enable(common->cpts, port->rx_ts_enabled);
--
- 	return copy_to_user(ifr->ifr_data, &cfg, sizeof(cfg)) ? -EFAULT : 0;
- }
- 
-@@ -1431,7 +1427,7 @@ static int am65_cpsw_nuss_hwtstamp_get(struct net_device *ndev,
- 	cfg.tx_type = port->tx_ts_enabled ?
- 		      HWTSTAMP_TX_ON : HWTSTAMP_TX_OFF;
- 	cfg.rx_filter = port->rx_ts_enabled ?
--			HWTSTAMP_FILTER_ALL : HWTSTAMP_FILTER_NONE;
-+			HWTSTAMP_FILTER_PTP_V2_EVENT : HWTSTAMP_FILTER_NONE;
- 
- 	return copy_to_user(ifr->ifr_data, &cfg, sizeof(cfg)) ? -EFAULT : 0;
- }
-diff --git a/drivers/net/ethernet/ti/am65-cpts.c b/drivers/net/ethernet/ti/am65-cpts.c
-index 040953ea8cc2..53bfda6c798c 100644
---- a/drivers/net/ethernet/ti/am65-cpts.c
-+++ b/drivers/net/ethernet/ti/am65-cpts.c
-@@ -859,29 +859,6 @@ static long am65_cpts_ts_work(struct ptp_clock_info *ptp)
- 	return delay;
- }
- 
--/**
-- * am65_cpts_rx_enable - enable rx timestamping
-- * @cpts: cpts handle
-- * @en: enable
-- *
-- * This functions enables rx packets timestamping. The CPTS can timestamp all
-- * rx packets.
-- */
--void am65_cpts_rx_enable(struct am65_cpts *cpts, bool en)
--{
--	u32 val;
--
--	mutex_lock(&cpts->ptp_clk_lock);
--	val = am65_cpts_read32(cpts, control);
--	if (en)
--		val |= AM65_CPTS_CONTROL_TSTAMP_EN;
--	else
--		val &= ~AM65_CPTS_CONTROL_TSTAMP_EN;
--	am65_cpts_write32(cpts, val, control);
--	mutex_unlock(&cpts->ptp_clk_lock);
--}
--EXPORT_SYMBOL_GPL(am65_cpts_rx_enable);
--
- static int am65_skb_get_mtype_seqid(struct sk_buff *skb, u32 *mtype_seqid)
- {
- 	unsigned int ptp_class = ptp_classify_raw(skb);
-diff --git a/drivers/net/ethernet/ti/am65-cpts.h b/drivers/net/ethernet/ti/am65-cpts.h
-index 90296968a75c..6099d772799d 100644
---- a/drivers/net/ethernet/ti/am65-cpts.h
-+++ b/drivers/net/ethernet/ti/am65-cpts.h
-@@ -25,7 +25,6 @@ int am65_cpts_phc_index(struct am65_cpts *cpts);
- void am65_cpts_rx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb);
- void am65_cpts_tx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb);
- void am65_cpts_prep_tx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb);
--void am65_cpts_rx_enable(struct am65_cpts *cpts, bool en);
- u64 am65_cpts_ns_gettime(struct am65_cpts *cpts);
- int am65_cpts_estf_enable(struct am65_cpts *cpts, int idx,
- 			  struct am65_cpts_estf_cfg *cfg);
-@@ -64,10 +63,6 @@ static inline void am65_cpts_prep_tx_timestamp(struct am65_cpts *cpts,
- {
- }
- 
--static inline void am65_cpts_rx_enable(struct am65_cpts *cpts, bool en)
--{
--}
--
- static inline s64 am65_cpts_ns_gettime(struct am65_cpts *cpts)
- {
+ static char quirks[128];
+ module_param_string(quirks, quirks, sizeof(quirks), S_IRUGO | S_IWUSR);
+@@ -1066,7 +1069,7 @@ int usb_stor_probe2(struct us_data *us)
+ 	if (delay_use > 0)
+ 		dev_dbg(dev, "waiting for device to settle before scanning\n");
+ 	queue_delayed_work(system_freezable_wq, &us->scan_dwork,
+-			delay_use * HZ);
++			msecs_to_jiffies(delay_use * delay_scale));
  	return 0;
+ 
+ 	/* We come here if there are any problems */
 -- 
-2.34.1
+2.17.1
 
