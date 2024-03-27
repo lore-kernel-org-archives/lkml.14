@@ -1,82 +1,127 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2079.outbound.protection.outlook.com [40.107.93.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624D312A144;
-	Wed, 27 Mar 2024 18:50:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711565461; cv=none; b=flAMIHrtqjS62QY9Px8720Kv1PEjMh5m1xup8LgApuItUXk5pLiEWmcUsAZkwRBiORFlvscCi8x3ui1BVFDjapEwZe25kDDktJnMjLU9+axiU+aykC8QDYML42ocHeC3nm6j2BjikV2ux0CspC0ygIJkQD0Zc/xoKsvX4aWd9lw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711565461; c=relaxed/simple;
-	bh=y09bZO3s4B3d+j/TM9H4q7XelPEtm2A9MOJKZskWiUA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z6FoLJcFRH3YmWa2NjEBxDwGY+cYSfbrpqjA7CiboWoX5nr0XTu2vRUVPton+2wMmPJzDkGo4cIx/BekA1HCZYf3tWNOwkvoN1/77DsbunDlZ91Ch9qCzJ0wJeMkbbwu3EPIimTDShCaT8RCZ9mhOM1M/tiCa7ISFpRPZ24ejOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=J+QxylvG; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5E712EBEF;
+	Wed, 27 Mar 2024 18:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711565560; cv=fail; b=h+G/cwYhF4xmnvE/wdlX8/EYB1dPicQ1XJBO8EVQ1D5um4jMElavQ4mU9+EzZ/9w0k1UAC9cjNl2OoFBCJlX0Ml0K6cxcFSQSwFTdeJrjTKG+HsvcsV0NNgpcvmq30kXfU6F8KyWF/MgQVPmA/W06XGu6saHCoBcqZLKSXZ5qDU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711565560; c=relaxed/simple;
+	bh=kt+8xCq3XLd84Lywq4OMXt5/M2mpaCjXPWpPOPDk2kI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=h1pbcFpDHwDjT6dHbZBxnWt6ZRGV1pZ9LuRrJLS2y1/tBmn2q66CrhKrFYgT62jgib3SZYp0KZGnHpPR2zIk9C8/lpRG2DPdqDRavrP7dxM0QOpO0b+n6n3gPoER0dKN26ua+zrYuWTtssgrkuY3YQHw3/8ypFAVkWsOiFnkXk4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3S9HG0RH; arc=fail smtp.client-ip=40.107.93.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="J+QxylvG"
-Date: Wed, 27 Mar 2024 14:50:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1711565457;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y09bZO3s4B3d+j/TM9H4q7XelPEtm2A9MOJKZskWiUA=;
-	b=J+QxylvGe+QUAC4rKslSPaaxSYEQP3cf7gNLve1SEYbPfgmA7CwRURnaHGjh5p5JfcK31p
-	1vK9oRQxya417owqBEe+YnvUkm5JhxHTKK4jogYGU2YzTpjIXacfdr0pOFPKHUuXran9tX
-	iSGtM4qV++0E5TJXAzvqfoG+yBb5TyU=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: comex <comexk@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	"Dr. David Alan Gilbert" <dave@treblig.org>, Philipp Stanner <pstanner@redhat.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, rust-for-linux <rust-for-linux@vger.kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, llvm@lists.linux.dev, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, 
-	Alan Stern <stern@rowland.harvard.edu>, Andrea Parri <parri.andrea@gmail.com>, 
-	Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Nicholas Piggin <npiggin@gmail.com>, David Howells <dhowells@redhat.com>, 
-	Jade Alglave <j.alglave@ucl.ac.uk>, Luc Maranget <luc.maranget@inria.fr>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Akira Yokosawa <akiyks@gmail.com>, 
-	Daniel Lustig <dlustig@nvidia.com>, Joel Fernandes <joel@joelfernandes.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	kent.overstreet@gmail.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [WIP 0/3] Memory model and atomic API in Rust
-Message-ID: <qyjrex54hbhvhw4gmn7b6l2hr45o56bwt6fazfalykwcp5zzkx@vwt7k3d6kdwt>
-References: <CAHk-=whY5A=S=bLwCFL=043DoR0TTgSDUmfPDx2rXhkk3KANPQ@mail.gmail.com>
- <u2suttqa4c423q4ojehbucaxsm6wguqtgouj7vudp55jmuivq3@okzfgryarwnv>
- <CAHk-=whkQk=zq5XiMcaU3xj4v69+jyoP-y6Sywhq-TvxSSvfEA@mail.gmail.com>
- <c51227c9a4103ad1de43fc3cda5396b1196c31d7.camel@redhat.com>
- <CAHk-=wjP1i014DGPKTsAC6TpByC3xeNHDjVA4E4gsnzUgJBYBQ@mail.gmail.com>
- <bu3seu56hfozsvgpdqjarbdkqo3lsjfc4lhluk5oj456xmrjc7@lfbbjxuf4rpv>
- <CAHk-=wgLGWBXvNODAkzkVHEj7zrrnTq_hzMft62nKNkaL89ZGQ@mail.gmail.com>
- <ZgIRXL5YM2AwBD0Y@gallifrey>
- <CAHk-=wjwxKD9CxYsf5x+K5fJbJa_JYZh1eKB4PT5cZJq1+foGw@mail.gmail.com>
- <160DB953-1588-418E-A490-381009CD8DE0@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3S9HG0RH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Dh/oFsa76lO5qRDWOQT2Lo2NIKevd2AWH6vlUISGTf5DoPQnNHhVIHWhR8PCsueOUwK3m7UFU9HOqwmntmlETlJ3esOKgkIVexO+mA5MQbcMORHvzaiWEJSWXhIxs6fBhExATr4j56sng/2IFZs2aY5tZaMwUAaoXEpPZJJ8caz6MskIJe5BGAw9hg6GWXelJji3r14yBBUjog+5x/D0EbthhqgTCypfTzlzQew16qBpnydt4eEt14sjfTX8cQgmndz5GmiihEueS7zQp+sjJ2YTqGp9yVtvNywHsy3FZAmjCX1z+vMlUWGqmo9RnjyQvZEjjVMdJfULhaXrxH84sQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8HPmtjx3tIgLjT5XFDecE2BeIfnWZ4KU6vxTzvpwAUI=;
+ b=Yn1qSx729G3+ZPI9i1W0xFUbMmY1hYP9DBi+iYkeU+9NVgyJYb4P4W9Zyyw+G0V86YQz3zYJ2WCgKuKmz4PRqGZTv0Bv7qqgwfBSGcsSSKEzlx8Y9J5oHiMmYvtbK0CWIsVFL+lfghluGtT1cYuTs3VXNTGsESKQrE8sEZWClJmx9MrFSkc/K5Eu4G15YPWBgex+mo9uvxkkoHmfxtaIJMAN0blpSCUGzSwrR/krRnz5Tfqo/Ear+opKKmsvpdeKkYmLHBkFdgrb3+r6mnG+ngt+835KxWD1MOTNcXOq42e7UT+A/NTHb+X12WjPmH2ClJDIWnTPvpI6//z6Q0Z3EQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=alien8.de smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8HPmtjx3tIgLjT5XFDecE2BeIfnWZ4KU6vxTzvpwAUI=;
+ b=3S9HG0RHl4eDEqSNCGfDA856c/n/CsHmCA7oK5gm1W+J62KD/vVrJR68YOkN8omLrnUKBOaYJS0STWDSO0Q/tfkMMWx/WIBd5lMsUdp8f8k2ElZLp+NasIFOTXshMhwlJSK6i+O+VA5wbjslZSlFoGetLn5rDcKOmQrBdgyd8xM=
+Received: from SN7P222CA0010.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:124::33)
+ by SA0PR12MB4368.namprd12.prod.outlook.com (2603:10b6:806:9f::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Wed, 27 Mar
+ 2024 18:52:36 +0000
+Received: from SA2PEPF000015C8.namprd03.prod.outlook.com
+ (2603:10b6:806:124:cafe::8d) by SN7P222CA0010.outlook.office365.com
+ (2603:10b6:806:124::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.13 via Frontend
+ Transport; Wed, 27 Mar 2024 18:52:36 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SA2PEPF000015C8.mail.protection.outlook.com (10.167.241.198) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7409.10 via Frontend Transport; Wed, 27 Mar 2024 18:52:35 +0000
+Received: from jallen-jump-host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 27 Mar
+ 2024 13:52:35 -0500
+From: John Allen <john.allen@amd.com>
+To: <bp@alien8.de>, <linux-edac@vger.kernel.org>, <tony.luck@intel.com>,
+	<yazen.ghannam@amd.com>
+CC: <linux-kernel@vger.kernel.org>, <avadhut.naik@amd.com>,
+	<muralidhara.mk@amd.com>, John Allen <john.allen@amd.com>
+Subject: [PATCH v2 0/4] RAS: ATL: DF 4.5 NP2 Denormalization
+Date: Wed, 27 Mar 2024 18:52:18 +0000
+Message-ID: <20240327185222.98998-1-john.allen@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <160DB953-1588-418E-A490-381009CD8DE0@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015C8:EE_|SA0PR12MB4368:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5ebac95a-f265-494b-88f6-08dc4e8f116e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	nARdxeXxJz97HvDvGIShP9uqMCjW2Cj4sDW5JB+a16D4voPohNH/JJS/ZfVsBXCB9hvr2bzSa7YGg+fciKmocrMUv9ecZ5N8g8RwWKbtixRueAHoJsaMT2inNlr8EBjhRd8xM5mNLZ7JrRTuqdt9zhNoThf2gyKXuxdlrhrFN/kaoErapYOu7VbJqYzLI5MlhTV4VQ8HjD17ztacqF1ArVcwZpDutDHtc6LjKeXvzIDDRtgnTn8Hj6siKt3JtCAA4BRFJNczkymZoaM1+bZEXjuSY9rDX64T0S+HDEfHPGxQg4KFcfZvvlNXZHUzS0zcOG5jpeRKygxydyzLdkyBSozpiml6O8e8Hhp/OsR/2UpWEgsKHjB3u7Eze0WZIO/lUCabj/R8aFeN8YpojulljxH5tZGMGStZW2pAgYxFylzhYdND6UhtpHrqxRwwXai7wGDmHbHz/33eXQNsnBGNVV1tIrVk0+cBm4tepyg+p2f0RVfvw4lTqbiKIIQ+/XS2CzDH7Dhp37zP1Wqn8cDSKDWbdC7MSuutFJ/rsApFJkG2qrpQIAWGhjZewICJ9RUr2sdn3dZSOVC7duNHGXG1LWAlKTDkh0RmZ3u+bBM6yV455BCtjlUa6FFcC4SnZdPEnVCeGSbGEGo5vXHT0KzOFT5NoGUpID5p8QTJOx4wSJCfNU7NquwfeH43umBfW4oGkzPeaCqSKgUnXb8wbjomnrDV/kvQ2AiP8mE0x+kXWDocgB9ndGj8wgBvMJDQ5GdS
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(1800799015)(82310400014)(376005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2024 18:52:35.8733
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ebac95a-f265-494b-88f6-08dc4e8f116e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF000015C8.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4368
 
-On Wed, Mar 27, 2024 at 09:16:09AM -0700, comex wrote:
-> Meanwhile, Rust intentionally lacks strict aliasing.
+Implement non-power-of-two denormalization for Data Fabric 4.5 in the
+AMD address translation library.
 
-I wasn't aware of this. Given that unrestricted pointers are a real
-impediment to compiler optimization, I thought that with Rust we were
-finally starting to nail down a concrete enough memory model to tackle
-this safely. But I guess not?
+Tree: git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git
+Base commit: bd17b7c34fadef645becde1245b9394f69f31702 (origin/edac-amd-atl) 
+
+v2:
+  - Fix compilation error.
+  - Make remove_base_and_hole the inverse of add_base_and_hole.
+  - Move all map validation checks to validate_address_map at the beginning
+    of translation
+
+John Allen (4):
+  RAS/AMD/ATL: Read DRAM hole base early
+  RAS/AMD/ATL: Expand helpers for adding and removing base and hole
+  RAS/AMD/ATL: Validate address map when information is gathered
+  RAS/AMD/ATL: Implement DF 4.5 NP2 denormalization
+
+ drivers/ras/amd/atl/core.c        |  48 +--
+ drivers/ras/amd/atl/dehash.c      |  43 ---
+ drivers/ras/amd/atl/denormalize.c | 530 ++++++++++++++++++++++++++++++
+ drivers/ras/amd/atl/internal.h    |  45 +++
+ drivers/ras/amd/atl/map.c         | 105 ++++++
+ drivers/ras/amd/atl/system.c      |  21 ++
+ 6 files changed, 726 insertions(+), 66 deletions(-)
+
+-- 
+2.34.1
+
