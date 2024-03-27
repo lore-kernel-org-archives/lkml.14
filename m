@@ -1,40 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBC0535A4
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 15:41:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3DB12DDA6;
+	Wed, 27 Mar 2024 15:43:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711554106; cv=none; b=tZ84riJg6yMOw/FY5G3YwBQMOnxHrWH0dPvTJXp/uUu7/LK9Kye2TzppMYZdHPjymiaSwDvsPTXbIc6HVd1KVZkjCLjrY6MgSJH3GBXzz9DwJYF2qKp91LF9pC9Sp0RGhhsvSJjesTNLfikW0evx6Suwx7N55N75jgoRjHT+JOg=
+	t=1711554199; cv=none; b=mjCTqzsAjzdiRCIAN7kqbqNvQdLKPgEoGc4r9iAoDKyk+1vU6MrlV4yO1mC7cf/HAXrICMoPzBXUFjWEi0xqNhhRrATZbuXvF5OrZgYrDojNGarYTgy9MSUnKJiha20dU9UPfL6SeuY73kiCgimNEni7e2ELyyD2Oo1qaxvqJpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711554106; c=relaxed/simple;
-	bh=LSkdq/t94YMFNlamRqeWvTTfCAU7fVztXM9mzQlr1gQ=;
+	s=arc-20240116; t=1711554199; c=relaxed/simple;
+	bh=aBbxarP4jaK4Vd3GsndlzhtjPh19wImbPPVLqBPo3Zc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NcSKN3lPksYIvF1V20GjdVimW39xQexFiNF415ftWQWCTEMTQAmKQeFDa8g93p5Kr0ugHy4C8cEkbrnD7ZcmfLsKfXAtak64mU1WhtFDu21r5L6Ced1DGD8AbY8sfn2mzp1ysJO8AE8iKQOCHsDSzhXiOu6ee24vIMQOo2AEKVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kwj619xn; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=L6O7TfMYRFNMHTc6inPIFc3z9mT6azMMuyK2gwfMms58hja5iq5M/kUEBaDu6IjY/rANWrbqt2DfXMuvsPOvT5p4EI376f+c21FwTXK9JVkh3VmMTCmJUmaz5yTyWkGCHNdQ9VwGWl88QFXpTwsqi8UCmCv2f/TMTwfMaCgdFWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V1ETZVaO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kwj619xn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A8D6C433C7;
-	Wed, 27 Mar 2024 15:41:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V1ETZVaO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEEE2C4166A;
+	Wed, 27 Mar 2024 15:43:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711554105;
-	bh=LSkdq/t94YMFNlamRqeWvTTfCAU7fVztXM9mzQlr1gQ=;
+	s=k20201202; t=1711554198;
+	bh=aBbxarP4jaK4Vd3GsndlzhtjPh19wImbPPVLqBPo3Zc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kwj619xnpdyJcHARuFdyABjHRFcqAdSXTht6r7soAxbPD/i8JwH+Wbuob+V12R3n2
-	 rjT194985hg2t/tELpPWn6hp5xbV83OJPRUcfIIyw1XiOKlN+pZKuEoNANmwzA8bXf
-	 xibCFVjADjaBzJLD5hoFzVnQTvcKdyo0G82FBxUUQdfhnn4CUkqUgeMYvOCYAi5VRT
-	 ICQPFF6NQuQf4/VDzP7+eI7NawGxe8N8bucpZBSmyyIJQw1RHRtdi2tOpl6QuBm/+L
-	 aNjfOvRL6V2syLJt/UUb2Ue3dsT7fVlFSSHfAu+IrlAx8FS1BvBEkD0naTCJXB4YJQ
-	 /1gP29XdpE5vw==
-Date: Wed, 27 Mar 2024 17:41:03 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-	linuxppc-dev@lists.ozlabs.org, akpm@linux-foundation.org
-Subject: Re: [PATCH v2 6/6] mm/mm_init.c: remove arch_reserved_kernel_pages()
-Message-ID: <ZgQ-D5Gpvr_LJM-Z@kernel.org>
-References: <20240325145646.1044760-1-bhe@redhat.com>
- <20240325145646.1044760-7-bhe@redhat.com>
+	b=V1ETZVaOGmLgyK6y5BEngFQ7ogBt81FdTsOEwzKmc+Z6S7n2IMIb04Oqx4EEsellz
+	 TleDgc+tLzLHY2Dqb8AjQygzL0RPVJ4hNknke0FDWVQHVTkbv1jmR/IFad4Wjd6LE1
+	 wudwH2HdkvVWozDsCxoypt6vwZ71yHa5FozIppzux2irppfwjQcPdQniivxasEmx65
+	 fnw3hxCNdlcfxSEN4AxjbFRpj3L8VSwbMDs1SqUgqAWmM85nRNhqMldIg0K1WnpXqh
+	 PKUk+WLuQj2+XOQVxNuaEYhO3bMKbey8Vw2pnki3yu9QX8z7a3Wqb3qJFQS9gQU6bF
+	 kVxdD0sGNFKnQ==
+Date: Wed, 27 Mar 2024 10:43:16 -0500
+From: Rob Herring <robh@kernel.org>
+To: Raymond Hackley <raymondhackley@protonmail.com>
+Cc: linux-kernel@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Stephan Gerhold <stephan@gerhold.net>,
+	Nikita Travkin <nikita@trvn.ru>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 2/2] dt-bindings: qcom: Document samsung,fortuna
+Message-ID: <20240327154316.GA3453016-robh@kernel.org>
+References: <20240326141222.200452-1-raymondhackley@protonmail.com>
+ <20240326141222.200452-3-raymondhackley@protonmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,21 +48,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240325145646.1044760-7-bhe@redhat.com>
+In-Reply-To: <20240326141222.200452-3-raymondhackley@protonmail.com>
 
-On Mon, Mar 25, 2024 at 10:56:46PM +0800, Baoquan He wrote:
-> Since the current calculation of calc_nr_kernel_pages() has taken into
-> consideration of kernel reserved memory, no need to have
-> arch_reserved_kernel_pages() any more.
+On Tue, Mar 26, 2024 at 02:12:58PM +0000, Raymond Hackley wrote:
+> Document common binding samsung,fortuna used by the following
+> Samsung Galaxy Grand Prime devices below:
+> - SM-G530FZ (msm8916-samsung-grandprimelte)
+> - SM-G530H  (msm8216-samsung-fortuna3g)
+> - SM-G530W  (msm8916-gprimeltecan)
+
+Commit messages should answer "why?". Why do you need this?
+
+Please test this binding change against your dts changes. I think you 
+will find it fails.
+
 > 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-
-Reviewed-by: Mike Rapoport (IBM) <rppt@kernel.org>
-
+> Signed-off-by: Raymond Hackley <raymondhackley@protonmail.com>
 > ---
->  arch/powerpc/include/asm/mmu.h |  4 ----
->  arch/powerpc/kernel/fadump.c   |  5 -----
->  include/linux/mm.h             |  3 ---
->  mm/mm_init.c                   | 12 ------------
->  4 files changed, 24 deletions(-)
+>  Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+> index 66beaac60e1d..2db776d78d22 100644
+> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
+> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+> @@ -204,6 +204,7 @@ properties:
+>                - samsung,a5u-eur
+>                - samsung,e5
+>                - samsung,e7
+> +              - samsung,fortuna
+>                - samsung,fortuna3g
+>                - samsung,gprimeltecan
+>                - samsung,grandmax
+> -- 
+> 2.39.2
+> 
 > 
