@@ -1,115 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1146D12E5B
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 22:54:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C152D2EB04;
+	Wed, 27 Mar 2024 22:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711580089; cv=none; b=eIThxKlH8jmvoikM1fiT8zOb6ZXQL1F8RzdOSiXu3VpxuezT/28sZwad5UG0UyhMe9aP2YaPsdXGCmTt3cvwC2YhGydnoYVO9Wt4KwVNg713pjgGGh7s8I+ySgnj+KgIEMpa0i5t3QeDn0otXZFEf8tzglHSt2A+yo6wton0/2E=
+	t=1711580090; cv=none; b=BloZVl3iC5pDrj16S+g43NmUasnD8RLtNovTo3YVt/GODSI9b8Cvh6tPRu+L1stN3NBnbtJeHOcH/J/fFyTIszLzqwGXbRTdyQr83q/P6TVj0iemiBodXyRnaPDatSezDRZDR8ZVAEtrIuzw9Dyu6E5230n7k5Rx9YYWqeKPN8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711580089; c=relaxed/simple;
-	bh=ancmOeO68m/jYuGYzzAFJLG5SA6z3QUCP6Wp4sl5CqE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XpuJ4GE3/Uxame2Yw2CgNbjRIltj5KgBUC3/UE1d6nW3xJQxDrRZQjr4k4HO/Ac2Ggq104GgQCjn4979PVVvMEB+ZuFXfZORCRsdvcHPlU2ve7nLj9jvnEXERyiMoQ5oELDg1tU/6WmWlVL8sueHKPlUKirTFZTW8y+QSEY32xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fYCVgcZ8; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711580090; c=relaxed/simple;
+	bh=B4kQ7Md5GvHsR2L+XgbgKogJenUHgF+GDFDTZ3omF3c=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ORPFDO2pm2QK8dSlaCnZhWu/IZGMUCqdQECTh/G9Yx5kXQGivFvrr4/7ITYk2UmenMD1ZuGlCI1Lcn2qwt0LLAuAE/p1fI6Eb3A3rFcfW+9shCZfRMWNTgg94d2IIVx6jbKQxSwYxMsogk8InNIYZH8AU7NCN54AT8oiuBDHn9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BgsOZ+JQ; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fYCVgcZ8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711580087; x=1743116087;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ancmOeO68m/jYuGYzzAFJLG5SA6z3QUCP6Wp4sl5CqE=;
-  b=fYCVgcZ8h8UrFzkl+/KmVjmSmMHhrTAjpNQszAHgyf8gfsby2P8lw4xJ
-   yxogifBurSmtsf2TfEXWGx/Fqc2BZwo7QSP1WFiBwTk0AORcugRC0oDF/
-   QwHr+D1gfVj8YPH2boiwpnEZ/pUK7uSdyFsMH/uQmkMQhKBiFAlELJX/r
-   N21BPUWGsRlnscIRJVepxeKPt3waN2F0czPc4LQSj2DVe880QOM4EojZQ
-   fapr7PYKcn/oOm8jbeC3q0iFB8dqmswuCgCgoH04da4cI7R6sfTCvmyyy
-   OTs55g+GvHAEw6MM/YT9LzD7cXcAX6weHIrCw82QLQkSmSHOxzql5440C
-   A==;
-X-CSE-ConnectionGUID: IKbMOHhRQ6+n3P9nKoL8wQ==
-X-CSE-MsgGUID: eNfAvotmS8qwYUukJ2HiBg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="6931339"
-X-IronPort-AV: E=Sophos;i="6.07,160,1708416000"; 
-   d="scan'208";a="6931339"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 15:54:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,160,1708416000"; 
-   d="scan'208";a="21107711"
-Received: from lkp-server01.sh.intel.com (HELO be39aa325d23) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 27 Mar 2024 15:54:44 -0700
-Received: from kbuild by be39aa325d23 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rpcAL-0001Zq-2g;
-	Wed, 27 Mar 2024 22:54:41 +0000
-Date: Thu, 28 Mar 2024 06:53:44 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jisheng Zhang <jszhang@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: oe-kbuild-all@lists.linux.dev, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] clocksource/drivers/timer-clint: Add T-Head C9xx
- clint support
-Message-ID: <202403280636.SLv93x6B-lkp@intel.com>
-References: <20240325164021.3229-6-jszhang@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BgsOZ+JQ"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-34100f4f9a2so162724f8f.2;
+        Wed, 27 Mar 2024 15:54:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711580087; x=1712184887; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G15/cZOUwJ4wAwK3pv4/rQlxMz/GUR4FC5RGf/w3iUA=;
+        b=BgsOZ+JQH2nJUYy46m09uxxwJ2bqyPAio0LRk7LBu6Y6JCEIXzj1yw4g0ao+ZpoRPG
+         BQMW9INaHpPeC6VKysMxpxksQim8xwTRGJZJASfxbCWOmoxUo1K/vuSPcVfXD955G5kF
+         qy9S2Jn9NWdtFZ+urA2jRG1SXvm6MwOhmUR44DJpfgJwxPOsMrZQeTxga5+Z7SXIcetz
+         XcZ8H3Dh4TefXYBbEOcvszOQ4G9PVG9FxrI2T2+CHfEv52ozE8IqumsXrjxHHHyQIpWj
+         JouBMzvg7owUNN5vwlcPlbA8wQMzzkrdwKOtgfIgJzenw5rjLE6Q7kH83Rr4vgOD1yar
+         PQ4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711580087; x=1712184887;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G15/cZOUwJ4wAwK3pv4/rQlxMz/GUR4FC5RGf/w3iUA=;
+        b=ioMugbPVZ7NEMzGG0Z+I5fcxi1XH4RRGZZ5eDANgQhi6DhYlVbU0x2bFQ43XyQzIgY
+         5jT2z72LJnt0ICok9GLe6IHaRrjNLmC3OzVM4rWNZHvxxDLNTiA6bwtjjOExSMt9KPM1
+         tVUhWaaey+7P02IhvPm74gUNLG+SkVPhR6L4OQzL0ikbTBWcWvbL5Evabl+t18I87YP/
+         GzsF9Flmu1tvKPy7S0qkLASCMdvP8CFsSq+MZX9krtAG3afTqsZzN0SGwqnq68IyAev0
+         HOHk6ueUDBMJIyXjLGLGWm1sfg+ql681YbInpnYun/X154vRedvIyUFTAKBUKA+YhAsL
+         MLdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWr3UFDKITQ+sQVpwylQiD46pls6J28lERwOsDcdTDM0243xS09EWm4rPtkyBlbPAZJZ8yxIxmkz0Uz5XhA0YwrkbHICclURfZXLKc+kMX0+tGiMKx9llLKfMPAvzkR6er5iYw3NXxmB4YGPYI1iuMX+7cphHzbghUBjZbL/pX0HKp2+yjLCci0rPbtGavp0Cxrp+8A62ugPKoplg==
+X-Gm-Message-State: AOJu0YzbQ5U8ISo92LYsMTpyFjpebbKCCL6zYHhlZcoCMqtypwvpPoNH
+	QcBFRAJ+GmtlK1ZAvLb4w404cANlfFaEmQVbm9Y4u7Y966V4WzM6
+X-Google-Smtp-Source: AGHT+IFiZCk0HkqbCAQsllCUbaI0r3bBk8XB4pcoHzbYn3a/kHovV8RAYQ6NsVr5EfUqdqm/zagQUA==
+X-Received: by 2002:a5d:400e:0:b0:33e:69a8:fe85 with SMTP id n14-20020a5d400e000000b0033e69a8fe85mr858630wrp.37.1711580086806;
+        Wed, 27 Mar 2024 15:54:46 -0700 (PDT)
+Received: from rorona-tty.. ([154.121.114.3])
+        by smtp.googlemail.com with ESMTPSA id cc7-20020a5d5c07000000b0033e75e5f280sm152348wrb.113.2024.03.27.15.54.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Mar 2024 15:54:46 -0700 (PDT)
+From: Djalal Harouni <tixxdz@gmail.com>
+To: tixxdz@gmail.com
+Cc: Tejun Heo <tj@kernel.org>,
+	Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [RFC PATCH bpf-next 0/3] bpf: freeze a task cgroup from bpf
+Date: Wed, 27 Mar 2024 23:53:22 +0100
+Message-Id: <20240327225334.58474-1-tixxdz@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240327-ccb56fc7a6e80136db80876c@djalal>
+References: <20240327-ccb56fc7a6e80136db80876c@djalal>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240325164021.3229-6-jszhang@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-Hi Jisheng,
+This patch series adds support to freeze the task cgroup hierarchy
+that is on a default cgroup v2 without going through kernfs interface.
 
-kernel test robot noticed the following build warnings:
+For some cases we want to freeze the cgroup of a task based on some
+signals, doing so from bpf is better than user space which could be
+too late.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.9-rc1 next-20240327]
-[cannot apply to tip/timers/core]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Planned users of this feature are: tetragon and systemd when freezing
+a cgroup hierarchy that could be a K8s pod, container, system service
+or a user session.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jisheng-Zhang/riscv-nommu-remove-PAGE_OFFSET-hardcoding/20240326-021401
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240325164021.3229-6-jszhang%40kernel.org
-patch subject: [PATCH 5/5] clocksource/drivers/timer-clint: Add T-Head C9xx clint support
-config: riscv-randconfig-r131-20240326 (https://download.01.org/0day-ci/archive/20240328/202403280636.SLv93x6B-lkp@intel.com/config)
-compiler: riscv64-linux-gcc (GCC) 13.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20240328/202403280636.SLv93x6B-lkp@intel.com/reproduce)
+Patch 1: cgroup: add cgroup_freeze_no_kn() to freeze a cgroup from bpf
+Patch 2: bpf: add bpf_task_freeze_cgroup() to freeze the cgroup of a task
+Patch 3: selftests/bpf: add selftest for bpf_task_freeze_cgroup
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403280636.SLv93x6B-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/clocksource/timer-clint.c:253:19: warning: 'c900_clint_timer_init_dt' defined but not used [-Wunused-function]
-     253 | static int __init c900_clint_timer_init_dt(struct device_node *np)
-         |                   ^~~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/c900_clint_timer_init_dt +253 drivers/clocksource/timer-clint.c
-
-   252	
- > 253	static int __init c900_clint_timer_init_dt(struct device_node *np)
-   254	{
-   255		is_c900_clint = true;
-   256		return clint_timer_init_dt(np);
-   257	}
-   258	
+ include/linux/cgroup.h                                      |   2 ++
+ kernel/bpf/helpers.c                                        |  31 ++++
+ kernel/cgroup/cgroup.c                                      |  67 ++++++++
+ tools/testing/selftests/bpf/prog_tests/task_freeze_cgroup.c | 165 +++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/test_task_freeze_cgroup.c | 110 ++++++++++++++
+ 5 files changed, 375 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/task_freeze_cgroup.c
+ create mode 100644 tools/testing/selftests/bpf/progs/test_task_freeze_cgroup.c
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
