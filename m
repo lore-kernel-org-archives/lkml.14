@@ -1,102 +1,132 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4AB14A60E;
-	Wed, 27 Mar 2024 17:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888E812E1F0;
+	Wed, 27 Mar 2024 17:41:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711561242; cv=none; b=hT1h3bemIsj5f7fj8pptLwXeGsB+YEIFE0VJtV5vFxNI37a9PaFS4i5umqjrJch0l2tjXKczn+/kxjA+J60/IxBnUhw1cYvW35M8Wiw6HsNFirsD4DKuZbtJQpuvdvM1jKQ8Qy/Kr7XHvqC7ABuqlXKxeJvH5HeQeLcrid7Z97o=
+	t=1711561280; cv=none; b=FwfM+2xE4MC7W3ROgMRHlMSAS8RZ8OBVirGIeS1RXjaEZNUpR2I9I9ineIZo3QCzazmbau/rOVUA5GeRpCsXoXTej5tvoPqwr5t4i/1MRAFPA8BU51O12ZVG7loZN2mI6LKOzemfRKkpw/5Q6m4Cxh82buNJgnBQ0qWGQ+Es9/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711561242; c=relaxed/simple;
-	bh=srgctdpBr0p3tnZe1+I+kGnQ9airdU7dZhtChNsf194=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fvduotWDjY4kRtAeq6YPVufNoUp0Z9heIO3CMan8NPLuV6vwInFu4fDAz/8WDYdA+cXB57eFJMEhTm00T8xIYOFiaiVOcSFd8hmB5q/9NFu6GExuPuoFt1X/k/KdRbpHlMuMeb/6v8mP36QlIKqgSN+xGoJbQkBqr+SQiptagDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=j1liQETL; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1711561280; c=relaxed/simple;
+	bh=CgrYWenITCZVs5rgxOkYDcWumcyCEq1xPoUasY+8V8Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jE3ttxVbnjoItEkCKsGKSBokQ3aDPW++O0WvtLl1NcR5GwyYuCEOWyg6U23fiE8V34ubL5GOdehVCyyGRP2Gyb7j2JjCNij0PxCM53ho9oWRwAERTdButB/33JGv2JH2iNdvhRcIJMIIVlC+nroA8/j3XGFqEPRsYBqAClLl6RQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aycjg/sz; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="j1liQETL"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2506940E024C;
-	Wed, 27 Mar 2024 17:33:19 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id NEGRHPZY1Udy; Wed, 27 Mar 2024 17:33:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1711560795; bh=7hJcNztbvoltbNYuqLlcZ4eKB+PYom08C1n5dtPK9ic=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j1liQETLuNzbUZlMOehHIkqvcM36uSsIEz0qIYPLwz1LbPguT7XuBKfkQf9Ru3SX4
-	 F0hT16k3/m42OBUpKM8wvfmxs1rteeSEvO//NHexUdyUv8dU/g60vZpVZLnU8j75+d
-	 mo+KYYwTKsoSq7bgIpxQB+4See5S4BFVBXzV++BDOUy+1fIgfhIEgeFHWO6ryoaFel
-	 THmDopG604QqctncHRO3kHX/bAXpfAJY9yLTbu6jsmknQzNj+mABleokKcMVyGCiWp
-	 uI+8RgPWjuEnjHdblwtjo8aNuNQ7q/LLig1yPyjQgapTwXk7+WOiTBVL8j9/X7R/wq
-	 tvkgn2VfSsNfrzMBb07IP9AgIzkwWO8HJGe98cFbDyJUBYDdkkLqoQkvyf2BnXmYBS
-	 lrxpqbvD5c5Aqnpww+oGWFHHFb505nnDXExvSI6UkdL01C5cfgL0vRmbYiro+EX92q
-	 4goMCwx0e0F8uLKswzFS35E6L0rlaT0goFGyAHztVd5ByXn7jwx1BS+p+CF5tWcfMw
-	 rhQPE+KvUpIhy6cCrQBaL9XRlDKuHXdLHk06469C562e3fUInsClQIXOa6XXVB5Wgp
-	 1suToznxeCdRprNsMhOX7YgIWco2HEPOfL6zc70I7rjY6BiE6xpbi7UCaZvppLMNjH
-	 4KNy9KDl6A8BK85o5QhAu0jk=
-Received: from zn.tnic (p5de8ecf7.dip0.t-ipconnect.de [93.232.236.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4318140E0028;
-	Wed, 27 Mar 2024 17:32:52 +0000 (UTC)
-Date: Wed, 27 Mar 2024 18:32:45 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Douglas Thompson <dougthompson@xmission.com>,
-	James Morse <james.morse@arm.com>, Jan Luebbe <jlu@pengutronix.de>,
-	Johannes Thumshirn <morbidrsa@gmail.com>,
-	Khuong Dinh <khuong@os.amperecomputing.com>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	linux-edac@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Michal Simek <michal.simek@amd.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Ralf Baechle <ralf@linux-mips.org>,
-	Robert Richter <rric@kernel.org>,
-	Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>,
-	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>
-Subject: Re: [PATCH 0/7] EDAC: remove unused structure members
-Message-ID: <20240327173245.GFZgRYPTetxzmNZFAV@fat_crate.local>
-References: <20240213112051.27715-1-jirislaby@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aycjg/sz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711561279; x=1743097279;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=CgrYWenITCZVs5rgxOkYDcWumcyCEq1xPoUasY+8V8Q=;
+  b=aycjg/szt+05QwBPrT3JrrdbwtjnTCs1Y80eygq7DsVjuBi2KprJr64O
+   3KY3CfqDdur7L541bSmQZpWw0l5u7MrG8RsgTEzU/L+qu0GeZkPcNslFd
+   w+JGlxYvYcqc8EdpdTtDUsJP8Njm/tbe6QmqnZXP8t/WFShq7mRZYmD9T
+   DEflWyDvEC2hMxB7uKrpPP9xv5ZcdSRTEnxiIKX4DnM7ZQ2v1s7KA/TMV
+   BDuclb0rT+erni0nt5E42/dCS7UDwnNnIeeHK8vy2LF/ofm2vYV1Un8r6
+   hR7QOujIyqq0i1+7pyDnj/+yFG+4FRRygt6SYhVqgq3wbVEu3heHCp9wH
+   A==;
+X-CSE-ConnectionGUID: z3f/mZQMR1yMB6t7zZwYhw==
+X-CSE-MsgGUID: BE1/EEVfRiCxDJe2Wkc0DQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="17824937"
+X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
+   d="scan'208";a="17824937"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 10:41:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
+   d="scan'208";a="16998217"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.56.222]) ([10.212.56.222])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 10:41:07 -0700
+Message-ID: <4e24a03c-f557-4323-a836-ed01f72a3055@intel.com>
+Date: Wed, 27 Mar 2024 10:41:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240213112051.27715-1-jirislaby@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 12/26] cxl/pci: Factor out interrupt policy check
+Content-Language: en-US
+To: Ira Weiny <ira.weiny@intel.com>, Fan Ni <fan.ni@samsung.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Navneet Singh <navneet.singh@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, linux-btrfs@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+ <20240324-dcd-type2-upstream-v1-12-b7b00d623625@intel.com>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240324-dcd-type2-upstream-v1-12-b7b00d623625@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 13, 2024 at 12:20:44PM +0100, Jiri Slaby (SUSE) wrote:
-> Jiri Slaby (SUSE) (7):
->   EDAC/amd64: Remove amd64_pvt::ext_nbcfg
->   EDAC/device: Remove edac_dev_sysfs_block_attribute::{block,value}
->   EDAC/device: Remove edac_dev_sysfs_block_attribute::store()
->   EDAC: Remove dynamic attributes from edac_device_alloc_ctl_info()
->   EDAC: Remove edac_pci_ctl_info::edac_subsys
->   EDAC: Remove edac_pci_ctl_info::complete
->   EDAC: Remove edac_device_ctl_info::removal_complete
 
-All applied, the last three squashed into one patch.
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+On 3/24/24 4:18 PM, Ira Weiny wrote:
+> Dynamic capacity devices (DCD) require interrupts to notify the host of
+> events in the DCD log.  The interrupts for DCD may be supported despite
+> FW control of memory event logs.
+> 
+> Prepare to support DCD event interrupts separate from other event
+> interrupts by factoring out the check for event interrupt settings.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> 
+> ---
+> Changes for V3:
+> [iweiny: new patch]
+> ---
+>  drivers/cxl/pci.c | 23 ++++++++++++++++-------
+>  1 file changed, 16 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index ccaf4ad26a4f..12cd5d399230 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -738,6 +738,21 @@ static bool cxl_event_int_is_fw(u8 setting)
+>  	return mode == CXL_INT_FW;
+>  }
+>  
+> +static bool cxl_event_validate_mem_policy(struct cxl_memdev_state *mds,
+> +					  struct cxl_event_interrupt_policy *policy)
+> +{
+> +	if (cxl_event_int_is_fw(policy->info_settings) ||
+> +	    cxl_event_int_is_fw(policy->warn_settings) ||
+> +	    cxl_event_int_is_fw(policy->failure_settings) ||
+> +	    cxl_event_int_is_fw(policy->fatal_settings)) {
+> +		dev_err(mds->cxlds.dev,
+> +			"FW still in control of Event Logs despite _OSC settings\n");
+> +		return false;
+> +	}
+> +
+> +	return true;
+> +}
+> +
+>  static int cxl_event_config(struct pci_host_bridge *host_bridge,
+>  			    struct cxl_memdev_state *mds, bool irq_avail)
+>  {
+> @@ -760,14 +775,8 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
+>  	if (rc)
+>  		return rc;
+>  
+> -	if (cxl_event_int_is_fw(policy.info_settings) ||
+> -	    cxl_event_int_is_fw(policy.warn_settings) ||
+> -	    cxl_event_int_is_fw(policy.failure_settings) ||
+> -	    cxl_event_int_is_fw(policy.fatal_settings)) {
+> -		dev_err(mds->cxlds.dev,
+> -			"FW still in control of Event Logs despite _OSC settings\n");
+> +	if (!cxl_event_validate_mem_policy(mds, &policy))
+>  		return -EBUSY;
+> -	}
+>  
+>  	rc = cxl_event_config_msgnums(mds, &policy);
+>  	if (rc)
+> 
