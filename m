@@ -1,185 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3361412EBD8;
-	Wed, 27 Mar 2024 15:43:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 607BC12FF93;
+	Wed, 27 Mar 2024 15:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711554207; cv=none; b=r0o1IneuLbF6RIxXlXC1mIOTJKlbIO/r38Xu+HIDn6StVh4R+pCATbiyX7us3QgFVSvAYzn8guJ0mOe11QjLLLjHjhJt0puDkz+6nOXAdXCxyB1i0lVVRKW9RfDLXhAyFr7lTl2ILM06Ma1R1UOO0dIBFO2xfHbHwo8HBCFvd/Q=
+	t=1711554226; cv=none; b=Jmj9FutFo4/Z1hRg4sWqu9WuXALE9QabuK2bNuUXTdDkW3G/1Qcpvn1WroRCzinzGHRfS1Bpjj2ZewNmppHFi21tgGI88l4cUkSo10/GBxKe3gnzHzSlflRX6y5UOsJTb/Qfrvoab6W7TqcV7UFLjXpVQMbMowfEW6k+2gbLyVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711554207; c=relaxed/simple;
-	bh=l0AFTz7QNeuG4/Rna8jbSi7dILAGOV01dUFsJnzrOpM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=seOQISE7Tp/s8sjoHBI35yJyL4VblbUoE7bxhS15zICRsX3jb50btRYBq/qfx/vRLWFsbwycd1X/SWMig1pbp/RnknWNERqQYxquj3fKfs2i6mGGk9SmwKICfUsou2TNac6K0qYXIgMEhBz2LJk4DLZ/+DSS71Mnp3S/brOCvbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gSUJG0rs; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711554226; c=relaxed/simple;
+	bh=CwLgVLbFhdWZlf6OpWoWmOPSI+MJO8D+fJmBdVcWK00=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=koWXjHz/HHyVO4iGBhosR48jteyVlKr5+ppER7WXdy7ZFgC15PP4cgPIQmYpLg5HKhDwyF8sn/Mb9HhDNSe+tesZZ0goeLDMdAuBt1I7C9zrwGZUnfNbebZ0BkReZC3+iXnjIaWjIxAJ2/OH+uVpZ0pvQn+qBwvxh7iHfdzn/1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Zb53IOBN reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gSUJG0rs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711554205; x=1743090205;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=l0AFTz7QNeuG4/Rna8jbSi7dILAGOV01dUFsJnzrOpM=;
-  b=gSUJG0rsvmNkRiG0UYgXOw2wNNnPzCp+BxfMByHM6AUVRYVd066OucWt
-   31zwf0H/mwQz9FdlPtyGtfjvm0L4/6UzOlWdZBMyLpGJvGPl3e/6wts/w
-   U1qSRQmrA8kALThdgZ7HafFq/xKWczSIg3jFyjt98F4TGFpOZ/daPUCSq
-   sy8feqe8oVrV18nRy6382wWtIamyjhsz9REmWLm//CDXB4HfVqc6nXF36
-   gKGi43wOjaKCadgDmXyzN4Vz2n4hRzfvB73Y7EweR3SEywL3VZliTMqri
-   4CODpeUn5TjIot+1Be50cORtTYtcnQaqItOa38JOCY4aBtS94WtQHNmgu
-   Q==;
-X-CSE-ConnectionGUID: WnjgG3x3Sqq2PyeQFk9xqw==
-X-CSE-MsgGUID: pbruE37sTXeWWFuLfca/BQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="32109481"
-X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
-   d="scan'208";a="32109481"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 08:43:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
-   d="scan'208";a="16386553"
-Received: from aonyia-mobl.amr.corp.intel.com (HELO [10.212.56.222]) ([10.212.56.222])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 08:43:23 -0700
-Message-ID: <1c7f63c5-1b7a-4f7b-9d48-4dd8b017d7de@intel.com>
-Date: Wed, 27 Mar 2024 08:43:22 -0700
+	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Zb53IOBN"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0ACEC40E016C;
+	Wed, 27 Mar 2024 15:43:39 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 4MF7391Yt6C3; Wed, 27 Mar 2024 15:43:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1711554212; bh=NBcRvx/bwn4OFth+fx2rkp+KytsfIQknXzG4/vs/N2U=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Zb53IOBNca+6CXTKcM+KRd6Jc913BYVkCD5R4jNgC2g7Y8BL3jOIAd6P49eHdnZ8A
+	 fDXJrHIbpZgY75xN5QnUNuR0IU+yh8djTL8wE1nvn3NKGnCdFFWYTaMajc/C1KCCJP
+	 /6uGqGY6Hif0Hs02iEX8V/nxXA5X4ApexNXG27XR8F059A+RytqKWlqqMUTtXnXowj
+	 ROJAYXnjcqQZ14FX7PSQ4/1uiQWvTOGZ5+0AiJD/kuG1uuhfj4fslN1BwZ3GLhiGtK
+	 Mjs9mgtG1KXnb6QwYtpyHiIEZqIANlSRMqmqAJrmaUjbpD10E30cpfwFyk1nvi8R/8
+	 fdFAbsV4PM1XDMvBDtnoTEsW37HaQPYg58IDfpCeY9rA2Le4PjJ4YDSCIAyeyHpjls
+	 W7n6h7IINBEmDVOUYnPGhwlt2ZFWqFKurfDWwsVa633YFjh/fwpS08Y7jEQ7Y2S4Ke
+	 oGJbtfcbZX0/F8XKe2L40wmS9EppxnpZA4Jjd1KNHLDeYcjSLZM9f9Q7+17tJKoZN+
+	 OtFLOD+yP5o/YUF9UbUOAjf2LGlJQOkjiAIKaPTHkck/ViQXGdNVdvcGbFfZpj/19s
+	 35deHR57RRHo7au5LcO7x4sYZR+24P8/I4dz4PE/iWCGh691hja2JA6nkCYYrCj9pO
+	 CeM538tsNMW3MD0ygJe5p4sE=
+Received: from zn.tnic (p5de8ecf7.dip0.t-ipconnect.de [93.232.236.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4EC8B40E02A5;
+	Wed, 27 Mar 2024 15:43:25 +0000 (UTC)
+From: Borislav Petkov <bp@alien8.de>
+To: X86 ML <x86@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	KVM <kvm@vger.kernel.org>,
+	Ashish Kalra <ashish.kalra@amd.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Michael Roth <michael.roth@amd.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>
+Subject: [PATCH 0/5] x86/sev: Fix SNP host late disable
+Date: Wed, 27 Mar 2024 16:43:12 +0100
+Message-ID: <20240327154317.29909-1-bp@alien8.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/26] cxl/region: Add dynamic capacity decoder and region
- modes
-Content-Language: en-US
-To: ira.weiny@intel.com, Fan Ni <fan.ni@samsung.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Navneet Singh <navneet.singh@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, linux-btrfs@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
- <20240324-dcd-type2-upstream-v1-4-b7b00d623625@intel.com>
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240324-dcd-type2-upstream-v1-4-b7b00d623625@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
+From: "Borislav Petkov (AMD)" <bp@alien8.de>
 
+Hi,
 
-On 3/24/24 4:18 PM, ira.weiny@intel.com wrote:
-> From: Navneet Singh <navneet.singh@intel.com>
-> 
-> Region mode must reflect a general dynamic capacity type which is
-> associated with a specific Dynamic Capacity (DC) partitions in each
-> device decoder within the region.  DC partitions are also know as DC
-> regions per CXL 3.1.
+the intention to track SNP host status with the CPU feature bit
+X86_FEATURE_SEV_SNP was all fine and dandy but that can't work if stuff
+needs to be disabled late, after alternatives patching - see patch 5.
 
-This section reads somewhat awkward to me. Does this read any better?
+Therefore, convert the SNP status tracking to a cc_platform*() bit.
 
-One or more Dynamic Capacity (DC) partitions (and decoders) form a CXL software region. The region mode reflects composition of that entire software region. Decoder mode reflects a specific DC partition. DC partitions are also known as DC regions per CXL specification r3.1 but is not the same entity as CXL software regions.
+The first two are long overdue cleanups.
 
-DJ
+If no objections, 3-5 should go in now so that 6.9 releases fixed.
 
-> 
-> Decoder mode reflects a specific DC partition.
-> 
-> Define the new modes to use in subsequent patches and the helper
-> functions required to make the association between these new modes.
-> 
-> Signed-off-by: Navneet Singh <navneet.singh@intel.com>
-> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> ---
-> Changes for v1
-> [iweiny: split out from: Add dynamic capacity cxl region support.]
-> ---
->  drivers/cxl/core/region.c |  4 ++++
->  drivers/cxl/cxl.h         | 23 +++++++++++++++++++++++
->  2 files changed, 27 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 1723d17f121e..ec3b8c6948e9 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1690,6 +1690,8 @@ static bool cxl_modes_compatible(enum cxl_region_mode rmode,
->  		return true;
->  	if (rmode == CXL_REGION_PMEM && dmode == CXL_DECODER_PMEM)
->  		return true;
-> +	if (rmode == CXL_REGION_DC && cxl_decoder_mode_is_dc(dmode))
-> +		return true;
->  
->  	return false;
->  }
-> @@ -2824,6 +2826,8 @@ cxl_decoder_to_region_mode(enum cxl_decoder_mode mode)
->  		return CXL_REGION_RAM;
->  	case CXL_DECODER_PMEM:
->  		return CXL_REGION_PMEM;
-> +	case CXL_DECODER_DC0 ... CXL_DECODER_DC7:
-> +		return CXL_REGION_DC;
->  	case CXL_DECODER_MIXED:
->  	default:
->  		return CXL_REGION_MIXED;
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 9a0cce1e6fca..3b8935089c0c 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -365,6 +365,14 @@ enum cxl_decoder_mode {
->  	CXL_DECODER_NONE,
->  	CXL_DECODER_RAM,
->  	CXL_DECODER_PMEM,
-> +	CXL_DECODER_DC0,
-> +	CXL_DECODER_DC1,
-> +	CXL_DECODER_DC2,
-> +	CXL_DECODER_DC3,
-> +	CXL_DECODER_DC4,
-> +	CXL_DECODER_DC5,
-> +	CXL_DECODER_DC6,
-> +	CXL_DECODER_DC7,
->  	CXL_DECODER_MIXED,
->  	CXL_DECODER_DEAD,
->  };
-> @@ -375,6 +383,14 @@ static inline const char *cxl_decoder_mode_name(enum cxl_decoder_mode mode)
->  		[CXL_DECODER_NONE] = "none",
->  		[CXL_DECODER_RAM] = "ram",
->  		[CXL_DECODER_PMEM] = "pmem",
-> +		[CXL_DECODER_DC0] = "dc0",
-> +		[CXL_DECODER_DC1] = "dc1",
-> +		[CXL_DECODER_DC2] = "dc2",
-> +		[CXL_DECODER_DC3] = "dc3",
-> +		[CXL_DECODER_DC4] = "dc4",
-> +		[CXL_DECODER_DC5] = "dc5",
-> +		[CXL_DECODER_DC6] = "dc6",
-> +		[CXL_DECODER_DC7] = "dc7",
->  		[CXL_DECODER_MIXED] = "mixed",
->  	};
->  
-> @@ -383,10 +399,16 @@ static inline const char *cxl_decoder_mode_name(enum cxl_decoder_mode mode)
->  	return "mixed";
->  }
->  
-> +static inline bool cxl_decoder_mode_is_dc(enum cxl_decoder_mode mode)
-> +{
-> +	return (mode >= CXL_DECODER_DC0 && mode <= CXL_DECODER_DC7);
-> +}
-> +
->  enum cxl_region_mode {
->  	CXL_REGION_NONE,
->  	CXL_REGION_RAM,
->  	CXL_REGION_PMEM,
-> +	CXL_REGION_DC,
->  	CXL_REGION_MIXED,
->  };
->  
-> @@ -396,6 +418,7 @@ static inline const char *cxl_region_mode_name(enum cxl_region_mode mode)
->  		[CXL_REGION_NONE] = "none",
->  		[CXL_REGION_RAM] = "ram",
->  		[CXL_REGION_PMEM] = "pmem",
-> +		[CXL_REGION_DC] = "dc",
->  		[CXL_REGION_MIXED] = "mixed",
->  	};
->  
-> 
+Thx.
+
+Borislav Petkov (AMD) (5):
+  x86/alternatives: Remove a superfluous newline in _static_cpu_has()
+  x86/alternatives: Catch late X86_FEATURE modifiers
+  x86/kvm/Kconfig: Have KVM_AMD_SEV select ARCH_HAS_CC_PLATFORM
+  x86/cc: Add cc_platform_set/_clear() helpers
+  x86/CPU/AMD: Track SNP host status with cc_platform_*()
+
+ arch/x86/coco/core.c               | 52 ++++++++++++++++++++++++++++++
+ arch/x86/include/asm/cpufeature.h  | 11 ++++---
+ arch/x86/include/asm/sev.h         |  4 +--
+ arch/x86/kernel/cpu/amd.c          | 38 +++++++++++++---------
+ arch/x86/kernel/cpu/cpuid-deps.c   |  3 ++
+ arch/x86/kernel/cpu/mtrr/generic.c |  2 +-
+ arch/x86/kernel/sev.c              | 10 ------
+ arch/x86/kvm/Kconfig               |  1 +
+ arch/x86/kvm/svm/sev.c             |  2 +-
+ arch/x86/virt/svm/sev.c            | 26 ++++++++++-----
+ drivers/crypto/ccp/sev-dev.c       |  2 +-
+ drivers/iommu/amd/init.c           |  4 ++-
+ include/linux/cc_platform.h        | 12 +++++++
+ 13 files changed, 124 insertions(+), 43 deletions(-)
+
+--=20
+2.43.0
+
