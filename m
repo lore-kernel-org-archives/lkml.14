@@ -1,376 +1,104 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2FD131730;
-	Wed, 27 Mar 2024 15:44:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC15134CC0;
+	Wed, 27 Mar 2024 15:44:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711554272; cv=none; b=iKS0zm/kB9/VekjfkWtrNVS4bFDjGmVjjR88KML9lW5HY7XrqY/rZf7Z/bjNe8b46J1fcuHPocR11mUGJ4PRO/ZbXa2i000Qrh7mtZhTCo8h4NVc4JPY4UhOHwm7hbLue90V9otK9iuG0jaDdADyxWDtETxapnYcUZwe4OTTH+I=
+	t=1711554280; cv=none; b=WV1IzF0lI0ejK2M5ZCdcSHCrEdL3BGjIlVgOoDCA+cuvP/DACHx8Ui8a2ftdITA/9Ihu6TI3S8ff1b9i6AWhmqPjUnu46nvH8JZ4WhOYQs5WVvqQ3a4MVyXDB/J2WKJjI/2KefjLeHON7tHfK23968zwqOk+FHiEfOm/H3Euvwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711554272; c=relaxed/simple;
-	bh=Wx0ozuSqCZdhKVcTLTPlAfKFUjCzYb/1CBAldxIQAtc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nt/aUtN87dhpN1yamQ0RHqfL9k7hxlh6u36KkqrOcbdbQWh1o0NO/MMvY3NUQ83L/Zh1JSNVpHv3ik/bQNTvYElCEosgB7GkJMY+0EHtnsKK+miZXP0JtURImfPf+RKp0nSEROUvUaGrAYwX2HLgtvnhIJSPenZFlG2zIjz/Fck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=U2FxG29B reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1711554280; c=relaxed/simple;
+	bh=8RixWcSd2JJyYLHi087rVeRA/JkQ9IP17D2hcMIULYE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=k+iPlsZl9l5f3gZ9Hucr12CJJVV2nnfjB3ntYFqIN1mL9U2TCwmwpWlpsmBH6gqAQgJ2QwbX3tqfA8eqUoV8mBLl0r29jhcuajSG2QOXdkP1PuU8ecjRorc0qNRthKSMCYuLcLMAjAKuBauOCXBLhGg2dRx79LLWw7BcXW4BE4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=iz9Gw0BZ; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="U2FxG29B"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 42CD940E00B2;
-	Wed, 27 Mar 2024 15:44:28 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id omt3RGbrf7jW; Wed, 27 Mar 2024 15:44:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1711554257; bh=+dUCHK6EmPQVx3RpLkLvAlHJ4HZZHk3L6k/wPzC3lHs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=U2FxG29B0c/3uTEneZkK9xvQMo+dYLHTLzVpjEs2/ZYgFDHb/GaKHOjR3KzfMV27B
-	 doKKMlm+zjRm6+IbHlCmxU6bP8MCYGi5LysLnwl2Atz4FtVN5GLgT4nbpM2syavueH
-	 kd6+ad7pvuxKEITLYhPHhD1xcok2BAnNDIYCKBxT8ixtMFuErkwsTQFVstAgWpYjFJ
-	 02iKk46RRvPJsqanI9gBcuiV5f1tAfbzKDv0VG4jGtMEdyMkSYcQXqYaODPQk8gX6D
-	 cRzIO1aZ3bPu0xMW0iDRIAHVbMw/I9LxQiYD3Bpe+Kos5NIXagQZa97C8ESrMAmucv
-	 05IEHJN8AYu6ltZ7ZWey8Qm+KC7xPYNg/ZYXzBba+n55GmpBxHYJM4quhsE39uIDtA
-	 /YEB4+Bd+0or7ZEgXEl7cpckjoKUQVnFv6UGbON/G/IXsmIT1RYW7vcuiDrv4v08Ow
-	 MrqstGL7R6zGhe/p2Vb1OVG6F+VzA/qIigybooDr0Dd97LD6cxrJlzSLvXJud+pRiO
-	 SeIU0xvZz/461oGeiYajJmi+gFwHzJ0uPBcKV+Vsz2S9NujoNE8vj57Lvyt+inThlc
-	 vEJj1fFOtoAKeso0/yUvho8fQ9kDscMXsf1oCnB4hWR/rEMpJcu7Wka/2k0zuf+u9i
-	 f5trhH80yg01txbiVBGBf8Qs=
-Received: from zn.tnic (p5de8ecf7.dip0.t-ipconnect.de [93.232.236.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AC41540E02A7;
-	Wed, 27 Mar 2024 15:44:10 +0000 (UTC)
-From: Borislav Petkov <bp@alien8.de>
-To: X86 ML <x86@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	KVM <kvm@vger.kernel.org>,
-	Ashish Kalra <ashish.kalra@amd.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Michael Roth <michael.roth@amd.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH 5/5] x86/CPU/AMD: Track SNP host status with cc_platform_*()
-Date: Wed, 27 Mar 2024 16:43:17 +0100
-Message-ID: <20240327154317.29909-6-bp@alien8.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240327154317.29909-1-bp@alien8.de>
-References: <20240327154317.29909-1-bp@alien8.de>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="iz9Gw0BZ"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42RAQv8N021075;
+	Wed, 27 Mar 2024 15:42:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=8DoMiz8HpEkPB1xE3p2eeM8oOzoz/X+6OQFWHtIe7wY=; b=iz
+	9Gw0BZH1FCzh/4v+cjUrBF3yu2dGmd6sCW2zGkJcdN++RmMIgqUfCnsYEabQvpOp
+	spjRvN7LNJKyXd3/1sbNdZUZDh0LF0xSvpWK8FOBlmNhG6EoK+G/ScQ95C0NAfBM
+	6o6dETSN7ylfYeZeuRhJ69sJd9Td3sFVrQXt2hCSG07ekvOmjGBsKCWUlkfZ1H3P
+	djK51e4W6ywekm69jkbNb8s6rlWuAY81DYXraYrdz+eUoW/VmsYP4EW2UJhz6em2
+	YZ1I9WxzUvXOPuzVoMxAm23mwapO4p9BJRVgMkQlnhcMWTaWvJH2wf9YoKHqZJ8G
+	mKlxItByWUJxwu8dZh6A==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x4etk9atv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 27 Mar 2024 15:42:57 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42RFgucx017852
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 27 Mar 2024 15:42:56 GMT
+Received: from [10.110.28.48] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 27 Mar
+ 2024 08:42:56 -0700
+Message-ID: <00b1703a-47d7-4dc1-a3cd-f07f1a24db92@quicinc.com>
+Date: Wed, 27 Mar 2024 08:42:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ath10k: allocate dummy net_device dynamically
+Content-Language: en-US
+To: Jakub Kicinski <kuba@kernel.org>, Breno Leitao <leitao@debian.org>
+CC: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
+        <keescook@chromium.org>,
+        "open list:NETWORKING DRIVERS (WIRELESS)"
+	<linux-wireless@vger.kernel.org>,
+        "open list:QUALCOMM ATHEROS ATH10K WIRELESS
+ DRIVER" <ath10k@lists.infradead.org>,
+        open list
+	<linux-kernel@vger.kernel.org>
+References: <20240319104754.2535294-1-leitao@debian.org>
+ <9fcdb857-da62-4832-ae11-043fe993e4ad@quicinc.com>
+ <20240321072821.59f56757@kernel.org>
+ <5039256c-03eb-4cda-8d11-49e4561cf1ef@quicinc.com>
+ <20240321151744.246ce2d0@kernel.org> <Zf2ceu2O47lLbKU3@gmail.com>
+ <20240322082336.49f110cc@kernel.org> <ZgQvTTnMoBn2oG1K@gmail.com>
+ <20240327074516.624b7ecf@kernel.org>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <20240327074516.624b7ecf@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 9t0qFKztIXR9CV8_LmGTXfCo6DyZLgh_
+X-Proofpoint-ORIG-GUID: 9t0qFKztIXR9CV8_LmGTXfCo6DyZLgh_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-27_12,2024-03-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ bulkscore=0 phishscore=0 spamscore=0 impostorscore=0 mlxlogscore=882
+ priorityscore=1501 clxscore=1015 suspectscore=0 lowpriorityscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403210001 definitions=main-2403270108
 
-From: "Borislav Petkov (AMD)" <bp@alien8.de>
+On 3/27/2024 7:45 AM, Jakub Kicinski wrote:
+> On Wed, 27 Mar 2024 07:38:05 -0700 Breno Leitao wrote:
+>>   -void init_dummy_netdev(struct net_device *dev)
+>>   +void init_dummy_netdev_core(struct net_device *dev)
+> 
+> Can init_dummy_netdev_core() be a static function (and no export)?
+> alloc_netdev_dummy() is probably going to be the only user.
+> 
+> I'd also lean towards squashing the two commits into one.
 
-The host SNP worthiness can determined later, after alternatives have
-been patched, in snp_rmptable_init() depending on cmdline options like
-iommu=3Dpt which is incompatible with SNP, for example.
+And once all of the conversions are complete, won't init_dummy_netdev() no
+longer be used and can be removed?
 
-Which means that one cannot use X86_FEATURE_SEV_SNP and will need to
-have a special flag for that control.
 
-Use that newly added CC_ATTR_HOST_SEV_SNP in the appropriate places.
-
-Move kdump_sev_callback() to its rightfull place, while at it.
-
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
----
- arch/x86/include/asm/sev.h         |  4 ++--
- arch/x86/kernel/cpu/amd.c          | 38 ++++++++++++++++++------------
- arch/x86/kernel/cpu/mtrr/generic.c |  2 +-
- arch/x86/kernel/sev.c              | 10 --------
- arch/x86/kvm/svm/sev.c             |  2 +-
- arch/x86/virt/svm/sev.c            | 26 +++++++++++++-------
- drivers/crypto/ccp/sev-dev.c       |  2 +-
- drivers/iommu/amd/init.c           |  4 +++-
- 8 files changed, 49 insertions(+), 39 deletions(-)
-
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index 9477b4053bce..780182cda3ab 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -228,7 +228,6 @@ int snp_issue_guest_request(u64 exit_code, struct snp=
-_req_data *input, struct sn
- void snp_accept_memory(phys_addr_t start, phys_addr_t end);
- u64 snp_get_unsupported_features(u64 status);
- u64 sev_get_status(void);
--void kdump_sev_callback(void);
- void sev_show_status(void);
- #else
- static inline void sev_es_ist_enter(struct pt_regs *regs) { }
-@@ -258,7 +257,6 @@ static inline int snp_issue_guest_request(u64 exit_co=
-de, struct snp_req_data *in
- static inline void snp_accept_memory(phys_addr_t start, phys_addr_t end)=
- { }
- static inline u64 snp_get_unsupported_features(u64 status) { return 0; }
- static inline u64 sev_get_status(void) { return 0; }
--static inline void kdump_sev_callback(void) { }
- static inline void sev_show_status(void) { }
- #endif
-=20
-@@ -270,6 +268,7 @@ int psmash(u64 pfn);
- int rmp_make_private(u64 pfn, u64 gpa, enum pg_level level, u32 asid, bo=
-ol immutable);
- int rmp_make_shared(u64 pfn, enum pg_level level);
- void snp_leak_pages(u64 pfn, unsigned int npages);
-+void kdump_sev_callback(void);
- #else
- static inline bool snp_probe_rmptable_info(void) { return false; }
- static inline int snp_lookup_rmpentry(u64 pfn, bool *assigned, int *leve=
-l) { return -ENODEV; }
-@@ -282,6 +281,7 @@ static inline int rmp_make_private(u64 pfn, u64 gpa, =
-enum pg_level level, u32 as
- }
- static inline int rmp_make_shared(u64 pfn, enum pg_level level) { return=
- -ENODEV; }
- static inline void snp_leak_pages(u64 pfn, unsigned int npages) {}
-+static inline void kdump_sev_callback(void) { }
- #endif
-=20
- #endif
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 6d8677e80ddb..9bf17c9c29da 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -345,6 +345,28 @@ static void srat_detect_node(struct cpuinfo_x86 *c)
- #endif
- }
-=20
-+static void bsp_determine_snp(struct cpuinfo_x86 *c)
-+{
-+#ifdef CONFIG_ARCH_HAS_CC_PLATFORM
-+	cc_vendor =3D CC_VENDOR_AMD;
-+
-+	if (cpu_has(c, X86_FEATURE_SEV_SNP)) {
-+		/*
-+		 * RMP table entry format is not architectural and is defined by the
-+		 * per-processor PPR. Restrict SNP support on the known CPU models
-+		 * for which the RMP table entry format is currently defined for.
-+		 */
-+		if (!cpu_has(c, X86_FEATURE_HYPERVISOR) &&
-+		    c->x86 >=3D 0x19 && snp_probe_rmptable_info()) {
-+			cc_platform_set(CC_ATTR_HOST_SEV_SNP);
-+		} else {
-+			setup_clear_cpu_cap(X86_FEATURE_SEV_SNP);
-+			cc_platform_clear(CC_ATTR_HOST_SEV_SNP);
-+		}
-+	}
-+#endif
-+}
-+
- static void bsp_init_amd(struct cpuinfo_x86 *c)
- {
- 	if (cpu_has(c, X86_FEATURE_CONSTANT_TSC)) {
-@@ -452,21 +474,7 @@ static void bsp_init_amd(struct cpuinfo_x86 *c)
- 		break;
- 	}
-=20
--	if (cpu_has(c, X86_FEATURE_SEV_SNP)) {
--		/*
--		 * RMP table entry format is not architectural and it can vary by proc=
-essor
--		 * and is defined by the per-processor PPR. Restrict SNP support on th=
-e
--		 * known CPU model and family for which the RMP table entry format is
--		 * currently defined for.
--		 */
--		if (!boot_cpu_has(X86_FEATURE_ZEN3) &&
--		    !boot_cpu_has(X86_FEATURE_ZEN4) &&
--		    !boot_cpu_has(X86_FEATURE_ZEN5))
--			setup_clear_cpu_cap(X86_FEATURE_SEV_SNP);
--		else if (!snp_probe_rmptable_info())
--			setup_clear_cpu_cap(X86_FEATURE_SEV_SNP);
--	}
--
-+	bsp_determine_snp(c);
- 	return;
-=20
- warn:
-diff --git a/arch/x86/kernel/cpu/mtrr/generic.c b/arch/x86/kernel/cpu/mtr=
-r/generic.c
-index 422a4ddc2ab7..7b29ebda024f 100644
---- a/arch/x86/kernel/cpu/mtrr/generic.c
-+++ b/arch/x86/kernel/cpu/mtrr/generic.c
-@@ -108,7 +108,7 @@ static inline void k8_check_syscfg_dram_mod_en(void)
- 	      (boot_cpu_data.x86 >=3D 0x0f)))
- 		return;
-=20
--	if (cpu_feature_enabled(X86_FEATURE_SEV_SNP))
-+	if (cc_platform_has(CC_ATTR_HOST_SEV_SNP))
- 		return;
-=20
- 	rdmsr(MSR_AMD64_SYSCFG, lo, hi);
-diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
-index b59b09c2f284..1e1a3c3bd1e8 100644
---- a/arch/x86/kernel/sev.c
-+++ b/arch/x86/kernel/sev.c
-@@ -2287,16 +2287,6 @@ static int __init snp_init_platform_device(void)
- }
- device_initcall(snp_init_platform_device);
-=20
--void kdump_sev_callback(void)
--{
--	/*
--	 * Do wbinvd() on remote CPUs when SNP is enabled in order to
--	 * safely do SNP_SHUTDOWN on the local CPU.
--	 */
--	if (cpu_feature_enabled(X86_FEATURE_SEV_SNP))
--		wbinvd();
--}
--
- void sev_show_status(void)
- {
- 	int i;
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index ae0ac12382b9..3d310b473e05 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -3174,7 +3174,7 @@ struct page *snp_safe_alloc_page(struct kvm_vcpu *v=
-cpu)
- 	unsigned long pfn;
- 	struct page *p;
-=20
--	if (!cpu_feature_enabled(X86_FEATURE_SEV_SNP))
-+	if (!cc_platform_has(CC_ATTR_HOST_SEV_SNP))
- 		return alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
-=20
- 	/*
-diff --git a/arch/x86/virt/svm/sev.c b/arch/x86/virt/svm/sev.c
-index cffe1157a90a..ab0e8448bb6e 100644
---- a/arch/x86/virt/svm/sev.c
-+++ b/arch/x86/virt/svm/sev.c
-@@ -77,7 +77,7 @@ static int __mfd_enable(unsigned int cpu)
- {
- 	u64 val;
-=20
--	if (!cpu_feature_enabled(X86_FEATURE_SEV_SNP))
-+	if (!cc_platform_has(CC_ATTR_HOST_SEV_SNP))
- 		return 0;
-=20
- 	rdmsrl(MSR_AMD64_SYSCFG, val);
-@@ -98,7 +98,7 @@ static int __snp_enable(unsigned int cpu)
- {
- 	u64 val;
-=20
--	if (!cpu_feature_enabled(X86_FEATURE_SEV_SNP))
-+	if (!cc_platform_has(CC_ATTR_HOST_SEV_SNP))
- 		return 0;
-=20
- 	rdmsrl(MSR_AMD64_SYSCFG, val);
-@@ -174,11 +174,11 @@ static int __init snp_rmptable_init(void)
- 	u64 rmptable_size;
- 	u64 val;
-=20
--	if (!cpu_feature_enabled(X86_FEATURE_SEV_SNP))
-+	if (!cc_platform_has(CC_ATTR_HOST_SEV_SNP))
- 		return 0;
-=20
- 	if (!amd_iommu_snp_en)
--		return 0;
-+		goto nosnp;
-=20
- 	if (!probed_rmp_size)
- 		goto nosnp;
-@@ -225,7 +225,7 @@ static int __init snp_rmptable_init(void)
- 	return 0;
-=20
- nosnp:
--	setup_clear_cpu_cap(X86_FEATURE_SEV_SNP);
-+	cc_platform_clear(CC_ATTR_HOST_SEV_SNP);
- 	return -ENOSYS;
- }
-=20
-@@ -246,7 +246,7 @@ static struct rmpentry *__snp_lookup_rmpentry(u64 pfn=
-, int *level)
- {
- 	struct rmpentry *large_entry, *entry;
-=20
--	if (!cpu_feature_enabled(X86_FEATURE_SEV_SNP))
-+	if (!cc_platform_has(CC_ATTR_HOST_SEV_SNP))
- 		return ERR_PTR(-ENODEV);
-=20
- 	entry =3D get_rmpentry(pfn);
-@@ -363,7 +363,7 @@ int psmash(u64 pfn)
- 	unsigned long paddr =3D pfn << PAGE_SHIFT;
- 	int ret;
-=20
--	if (!cpu_feature_enabled(X86_FEATURE_SEV_SNP))
-+	if (!cc_platform_has(CC_ATTR_HOST_SEV_SNP))
- 		return -ENODEV;
-=20
- 	if (!pfn_valid(pfn))
-@@ -472,7 +472,7 @@ static int rmpupdate(u64 pfn, struct rmp_state *state=
-)
- 	unsigned long paddr =3D pfn << PAGE_SHIFT;
- 	int ret, level;
-=20
--	if (!cpu_feature_enabled(X86_FEATURE_SEV_SNP))
-+	if (!cc_platform_has(CC_ATTR_HOST_SEV_SNP))
- 		return -ENODEV;
-=20
- 	level =3D RMP_TO_PG_LEVEL(state->pagesize);
-@@ -558,3 +558,13 @@ void snp_leak_pages(u64 pfn, unsigned int npages)
- 	spin_unlock(&snp_leaked_pages_list_lock);
- }
- EXPORT_SYMBOL_GPL(snp_leak_pages);
-+
-+void kdump_sev_callback(void)
-+{
-+	/*
-+	 * Do wbinvd() on remote CPUs when SNP is enabled in order to
-+	 * safely do SNP_SHUTDOWN on the local CPU.
-+	 */
-+	if (cc_platform_has(CC_ATTR_HOST_SEV_SNP))
-+		wbinvd();
-+}
-diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
-index f44efbb89c34..2102377f727b 100644
---- a/drivers/crypto/ccp/sev-dev.c
-+++ b/drivers/crypto/ccp/sev-dev.c
-@@ -1090,7 +1090,7 @@ static int __sev_snp_init_locked(int *error)
- 	void *arg =3D &data;
- 	int cmd, rc =3D 0;
-=20
--	if (!cpu_feature_enabled(X86_FEATURE_SEV_SNP))
-+	if (!cc_platform_has(CC_ATTR_HOST_SEV_SNP))
- 		return -ENODEV;
-=20
- 	sev =3D psp->sev_data;
-diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
-index e7a44929f0da..33228c1c8980 100644
---- a/drivers/iommu/amd/init.c
-+++ b/drivers/iommu/amd/init.c
-@@ -3228,7 +3228,7 @@ static bool __init detect_ivrs(void)
- static void iommu_snp_enable(void)
- {
- #ifdef CONFIG_KVM_AMD_SEV
--	if (!cpu_feature_enabled(X86_FEATURE_SEV_SNP))
-+	if (!cc_platform_has(CC_ATTR_HOST_SEV_SNP))
- 		return;
- 	/*
- 	 * The SNP support requires that IOMMU must be enabled, and is
-@@ -3236,12 +3236,14 @@ static void iommu_snp_enable(void)
- 	 */
- 	if (no_iommu || iommu_default_passthrough()) {
- 		pr_err("SNP: IOMMU disabled or configured in passthrough mode, SNP can=
-not be supported.\n");
-+		cc_platform_clear(CC_ATTR_HOST_SEV_SNP);
- 		return;
- 	}
-=20
- 	amd_iommu_snp_en =3D check_feature(FEATURE_SNP);
- 	if (!amd_iommu_snp_en) {
- 		pr_err("SNP: IOMMU SNP feature not enabled, SNP cannot be supported.\n=
-");
-+		cc_platform_clear(CC_ATTR_HOST_SEV_SNP);
- 		return;
- 	}
-=20
---=20
-2.43.0
 
