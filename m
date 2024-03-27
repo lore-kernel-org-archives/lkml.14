@@ -1,145 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07037130E53;
-	Wed, 27 Mar 2024 15:41:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C35112E1D2
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 15:41:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711554073; cv=none; b=D/u6M53GnkzxzTcGvftbzvJU2qxSDIbfFBkcCCMQ/6r7HVoIZFrxW5l9bU7HA2lWan8jjx7A7p/h5kw6L+8WCso3l79iVndTMcRpERfJRu0qFebzXqAEuiPKSH5GdDuDIxLV2QJJi54WHo72vHAUIi7hgRMXoPVRabglcfa2SWo=
+	t=1711554081; cv=none; b=pGrg99R79SZ690EzPrpuPsyLDG52X3QHGoqwZTjhaXJX6jAiLI53EfssCOoXvrBzFD3FPxbnXC4+2CRrod7qBg1WTwf5xXLYFxf2U742EjHoXTY4NOkKr5X8XIv8C9xfKf3lRdgv1hK/P+lr81TioYv4BXicoYjGgBHKgmrlGo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711554073; c=relaxed/simple;
-	bh=adYfPRPaAgnaF9zHKCuXMObwFPX0P5v8n8aSuJcpmQQ=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=PBfCQ78LaeEMHDcU49/CScIW0XOyDBXQjOjGcrPnMQXQpXztb3OWlJgDyd0WUscrQIHTpo2le6v9AyBteSt1B7XONwc3tX5LTnYW0VuLreWQ512fXTj3JrclJ5Wayp5DNdugN7bFfuv7JMsR1sQRtwiSxO39bfRcF9H/421NjzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cj5/o/+b; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711554081; c=relaxed/simple;
+	bh=YkpXI8Y4E5O0pSnw1xlG7QH+gWTbFLfo1f7E5+HqAZM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P9bDKCsyN9+bco+SDOkJYADijWUif/4PG4tHaVWgbiD+02xZRZkUDi/bgEyXTzkpxnIdb4Qu8TPjvD2+AvRzUIAGPr2hKNd4VgAa1kuWqpyzmGHZyjwPhNjlarw792atJL9D58iqO9pzQ6iU5RvGnw7eZEj5Jl+amAm1d2bQxV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dkFAoSvE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cj5/o/+b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 654E1C433F1;
-	Wed, 27 Mar 2024 15:41:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dkFAoSvE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F2D3C433C7;
+	Wed, 27 Mar 2024 15:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711554072;
-	bh=adYfPRPaAgnaF9zHKCuXMObwFPX0P5v8n8aSuJcpmQQ=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=Cj5/o/+bnOXnQrLBgaU6cUkrj6Y1099utNdVKiwpcHSgZCbqgdtZA4VrSqbwhkh59
-	 rjPirSP2fx9l+24onWBSR/DkhEzKOnBkHl0zT0+rdULWOOkDkmWQ2xWytbnZyKBH6R
-	 e/vsDjagnUBBtF130I0myqCApuJ1B06snWduwskBu1RPJvAZX4sBfuVKmzOBr2o+JX
-	 NayP4V4EzgdISd1O61FCfjtUfVXWS/8Q1Ae/75yL4CEuyjIdbTD9elaG7mqZ1f99kA
-	 PUHLEoH8lpRMNyjgEAPlNejKWgqdEAPidSsAqhRp9M5MzWf3WG7092zxeYApGCRkp/
-	 wocW8SoBMRo+w==
-Date: Wed, 27 Mar 2024 10:41:11 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1711554081;
+	bh=YkpXI8Y4E5O0pSnw1xlG7QH+gWTbFLfo1f7E5+HqAZM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dkFAoSvECyFOu4CWh7hFOPMthOkr2i/TebRy5IlzhK+g5sPwyAtlgNi0H4s/QuTWQ
+	 p6mv6hTx4moEGi2CbURw76YIz/ZIklvZ2sAmsMbZ2YxnQwiR+VQvb1Xoti0mPvRTP+
+	 Wtt/YX34R4BJzWV2fbhV0pcrYowD31U4eG0N/Mkmobhe7NrfK54W0B/lBcqQbZQBPn
+	 pQSf5FjkUMtIptLuKVlNsq5LrZNQptBdoWxNXpO6W+QRfH7E5uhvXsJh4Xc+nvsCkz
+	 EO0OiTf1wxEv7h6euXU/0Pi7zjLjfz2+3S2zhs/xQ52LYDpY9Pian1dnYPcxnRCv7i
+	 8W3n4Jqw67LZg==
+Date: Wed, 27 Mar 2024 17:40:38 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+	linuxppc-dev@lists.ozlabs.org, akpm@linux-foundation.org
+Subject: Re: [PATCH v2 4/6] mm/mm_init.c: remove meaningless calculation of
+ zone->managed_pages in free_area_init_core()
+Message-ID: <ZgQ99kf4D893Y7-Y@kernel.org>
+References: <20240325145646.1044760-1-bhe@redhat.com>
+ <20240325145646.1044760-5-bhe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Sumit Garg <sumit.garg@linaro.org>
-Cc: krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org, 
- benjamin.missey@non.se.com, konrad.dybcio@linaro.org, 
- dmitry.baryshkov@linaro.org, neil.armstrong@linaro.org, 
- pascal.eberhard@se.com, devicetree@vger.kernel.org, andersson@kernel.org, 
- daniel.thompson@linaro.org, jimmy.lalande@se.com, conor+dt@kernel.org, 
- stephan@gerhold.net, linux-arm-msm@vger.kernel.org, 
- caleb.connolly@linaro.org, abdou.saker@se.com, linux-kernel@vger.kernel.org, 
- laetitia.mariottini@se.com
-In-Reply-To: <20240327063734.3236117-1-sumit.garg@linaro.org>
-References: <20240327063734.3236117-1-sumit.garg@linaro.org>
-Message-Id: <171155390164.3454213.14779164019451021567.robh@kernel.org>
-Subject: Re: [PATCH v4 0/3] arm64: dts: qcom: apq8016: Add Schneider HMIBSC
- board DTS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240325145646.1044760-5-bhe@redhat.com>
 
-
-On Wed, 27 Mar 2024 12:07:31 +0530, Sumit Garg wrote:
-> Add Schneider Electric HMIBSC board DTS. The HMIBSC board is an IIoT Edge
-> Box Core board based on the Qualcomm APQ8016E SoC. For more information
-> refer to the product page [1].
+On Mon, Mar 25, 2024 at 10:56:44PM +0800, Baoquan He wrote:
+> Currently, in free_area_init_core(), when initialize zone's field, a
+> rough value is set to zone->managed_pages. That value is calculated by
+> (zone->present_pages - memmap_pages).
 > 
-> One of the major difference from db410c is serial port where HMIBSC board
-> uses UART1 as the debug console with a default RS232 mode (UART1 mode mux
-> configured via gpio99 and gpio100).
+> In the meantime, add the value to nr_all_pages and nr_kernel_pages which
+> represent all free pages of system (only low memory or including HIGHMEM
+> memory separately). Both of them are gonna be used in
+> alloc_large_system_hash().
 > 
-> Support for Schneider Electric HMIBSC. Features:
-> - Qualcomm Snapdragon 410C SoC - APQ8016 (4xCortex A53, Adreno 306)
-> - 1GiB RAM
-> - 8GiB eMMC, SD slot
-> - WiFi and Bluetooth
-> - 2x Host, 1x Device USB port
-> - HDMI
-> - Discrete TPM2 chip over SPI
-> - USB ethernet adaptors (soldered)
+> However, the rough calculation and setting of zone->managed_pages is
+> meaningless because
+>   a) memmap pages are allocated on units of node in sparse_init() or
+>      alloc_node_mem_map(pgdat); The simple (zone->present_pages -
+>      memmap_pages) is too rough to make sense for zone;
+>   b) the set zone->managed_pages will be zeroed out and reset with
+>      acutal value in mem_init() via memblock_free_all(). Before the
+>      resetting, no buddy allocation request is issued.
 > 
-> This series is a v2 since v1 of this DTS file has been reviewed on the
-> U-Boot mailing list [2].
+> Here, remove the meaningless and complicated calculation of
+> (zone->present_pages - memmap_pages), initialize zone->managed_pages as 0
+> which reflect its actual value because no any page is added into buddy
+> system right now. It will be reset in mem_init().
 > 
-> Changes in v4:
-> - Dropped IRQ_TYPE_EDGE_FALLING for pm8916_resin given the expectations
->   of Linux kernel driver. Instead depend on systemd workaround suggested
->   by Caleb to get expected HMIBSC reset behaviour.
-> - Incorporated further DT coding style comments from Stephen.
-> - Warnings reported by Rob's DT check bot aren't related to HMIBSC
->   board DTS but rather they are due to msm8916.dtsi or extcon-usb-gpio.txt
->   still not converted to YAML format.
+> And also remove the assignment of nr_all_pages and nr_kernel_pages in
+> free_area_init_core(). Instead, call the newly added calc_nr_kernel_pages()
+> to count up all free but not reserved memory in memblock and assign to
+> nr_all_pages and nr_kernel_pages. The counting excludes memmap_pages,
+> and other kernel used data, which is more accurate than old way and
+> simpler, and can also cover the ppc required arch_reserved_kernel_pages()
+> case.
 > 
-> Changes in v3:
-> - Picked up tags.
-> - Fixed further DT schema warnings.
-> - Configure resin/power button interrupt as falling edge.
-> - Incorporate DTS coding style comments from Krzysztof and Konrad.
+> And also clean up the outdated code comment above free_area_init_core().
+> And free_area_init_core() is easy to understand now, no need to add
+> words to explain.
 > 
-> Changes in v2:
-> - Fix DT schema warnings.
-> - Incorporate suggestions from Stephan.
-> - Document UART1 mode GPIOs based mux.
-> 
-> [1] https://www.se.com/us/en/product/HMIBSCEA53D1L0T/iiot-edge-box-core-harmony-ipc-emmc-dc-linux-tpm/
-> [2] https://patchwork.ozlabs.org/project/uboot/patch/20240311111027.44577-6-sumit.garg@linaro.org/
-> 
-> Sumit Garg (3):
->   dt-bindings: vendor-prefixes: Add Schneider Electric
->   dt-bindings: arm: qcom: Add Schneider Electric HMIBSC board
->   arm64: dts: qcom: apq8016: Add Schneider HMIBSC board DTS
-> 
->  .../devicetree/bindings/arm/qcom.yaml         |   1 +
->  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
->  arch/arm64/boot/dts/qcom/Makefile             |   1 +
->  .../dts/qcom/apq8016-schneider-hmibsc.dts     | 490 ++++++++++++++++++
->  4 files changed, 494 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts
-> 
-> --
-> 2.34.1
-> 
-> 
-> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 
+Reviewed-by: Mike Rapoport (IBM) <rppt@kernel.org>
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-New warnings running 'make CHECK_DTBS=y qcom/apq8016-schneider-hmibsc.dtb' for 20240327063734.3236117-1-sumit.garg@linaro.org:
-
-arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dtb: /soc@0/audio-codec@771c000: failed to match any schema with compatible: ['qcom,msm8916-wcd-digital-codec']
-arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dtb: /soc@0/power-manager@b088000: failed to match any schema with compatible: ['qcom,msm8916-acc']
-arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dtb: /soc@0/power-manager@b098000: failed to match any schema with compatible: ['qcom,msm8916-acc']
-arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dtb: /soc@0/power-manager@b0a8000: failed to match any schema with compatible: ['qcom,msm8916-acc']
-arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dtb: /soc@0/power-manager@b0b8000: failed to match any schema with compatible: ['qcom,msm8916-acc']
-arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dtb: /usb-id: failed to match any schema with compatible: ['linux,extcon-usb-gpio']
-
-
-
-
-
+> ---
+>  mm/mm_init.c | 46 +++++-----------------------------------------
+>  1 file changed, 5 insertions(+), 41 deletions(-)
