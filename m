@@ -1,188 +1,96 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03CC94A35;
-	Wed, 27 Mar 2024 05:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6861AACA;
+	Wed, 27 Mar 2024 05:50:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711518600; cv=none; b=NiewU+ge+9yCm9ltPE6wBz25Nq0HWOeeUzmiQjFz3ITTitjDoYWDUWH5Ge3XgXEK3BSL+C83VZbMCKJDssFYDhlR1XyOalDRzbfz0EHX5ScjikZMzqaQRfbPaXEZsLJu0l1e/xZWilY3CJE09kx4foCy2yqgphsIcVJh/l1UrUM=
+	t=1711518605; cv=none; b=LqO0pfw3MtYGwSrh/aepuZQ4mpUOGxCNDx80E+Hqz1w2qfZgw1RnPU6sFQSDb0jNk3mQFDSdYZ7BuNjp4mvxWECZCw+L0dCKhZ/2ZexwNJ4nrokc0UVIdHEmqS9ji80G9KFBJjC+1426Y8jSgXUy13iS+ABeWKDr9k3I0dZSZIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711518600; c=relaxed/simple;
-	bh=FHstnsP1SDrBUHQB6q/i/oufx2RAf4ywwFzHK0KTvDg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jX+G3XDLDu4IWCMmzTMK2iIZjHbrkwn5dagfwiB40ImmwHZ2HIooNGi7/StiZQG806Ob/IqvOsfIAgPR+VI0GBuVSmSr3op8r4NvJF+cZGs6sxklejUAu8TUGAO887/+Uycv6azhCDRzRjZS541ICdEi61GcjSgP0sf+3oIpiZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y2LOMQek; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711518605; c=relaxed/simple;
+	bh=NGhsAu+sz1EG8a0MGs6ihEvAoXlJ1KKzmRjwQND6aHU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n7i8q0/gjgb+sQblwWDfp6gBCZpo1y9WtTLnjyFYufnC6N1zryLZVUq5sO4Mz2bCWx7L/VKMSrdSCc+OvNXwqgf0EQq5Kq7Za2j0d+G27zDo8+c++7dQuO41U+3OspZFxV3J0w2lJTYzcVrYazFEwax0Mm6Ac55X9pM17PjiC68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PT+Fg3NF; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y2LOMQek"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1dffa5e3f2dso41460545ad.2;
-        Tue, 26 Mar 2024 22:49:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711518598; x=1712123398; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=P7OYcKJp51JHzqHwSq9XW851pfhTE1Ptp9rlfuz3R/c=;
-        b=Y2LOMQek1HWcsx/2cPHQY85aS0zZn/4lOH9zC7IUr1Ffh7yDYgma3hrBrikIC3ajAq
-         okIllRKD2wYBucAvjSfQFFEkx5EBmDy7/Sdmq/JuZCz4AHWfqwBX3j7wZfwx5msMmlfa
-         VKHRtqHHtIZCLU6wdF4nzJuWZiTOPQsNThT2UKkHtl0QgRagmjJNQGlXwnLX70Uzld/h
-         Q1CXZluJ3FxBtJ0806dyojf4IR5YtGRZC/tbrO5DjL5cf5te/u2J5CEd1VAoC58kiXMC
-         KGWJfXlfILRSV8yHEwj+KOHDlshWWUcqnjoOvH5bGDeamFRNzzs4+pthbh7qtkreTOTk
-         Tyzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711518598; x=1712123398;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=P7OYcKJp51JHzqHwSq9XW851pfhTE1Ptp9rlfuz3R/c=;
-        b=m0gc2RJTp8PAky6S+v0BeRF/zKBUQQzV3S/WX63rGe27yNkaghy5086YMJYqFQHQho
-         fzbpkWqHUw6l18g3NM/Mvz4hPn5oVyXTTOb/9wIXwhoHXkK7OUoyEqd7AS1AodlAle4M
-         MWnFTNwZ4T/YLPiVEk+LlCmVug4JF+zKObbV4jwuRHbHbk3+v1iRAqAWXv4Nxq50UAq/
-         AIUsLSOibpu6YPzMAHwS0HRQyhb0co0QymPHnubRZt/BYwFuixt8mpYI5aiPK/M4I4Es
-         h1Kb+dwNCAUimn6pMUnMTEfc92O1T0787ep8NgoG2suBXr+XH5J+XmHm0wyYxPOmnWKS
-         J9Yw==
-X-Forwarded-Encrypted: i=1; AJvYcCUbAb560ybYVrG6e/r7rsCEYENBRNjuzzL/ZoV2znsUXkLkwgoR8cexjozHDmZWpIQ2UFcB7Rrft47hl1xieMVTQbrf2YKw/JIGMfW3eV0Qk0vpsAumWTnwEctcyUtum4f8zPWMwZ47O5ZXYRRHZfk/ZW/N1Solgod1XffPfQ5viKB6FwVAhw==
-X-Gm-Message-State: AOJu0Yw+w0KItWt+PX08mSZMdLKMUk/kD7XV3mD4JzoNdAA+MsGfInVj
-	Q6rvCRydnIYC7xBs+dnLi7QBWhDHJ+Hm1w0fjho7QrsPUIAQJ+bn
-X-Google-Smtp-Source: AGHT+IGMXSmuZrJ0pAAbisJq5ouEdATuxX9zC6nD4xEns155NaylWRnsFrQ06hSn2zG9SE67Bd4vqg==
-X-Received: by 2002:a17:903:2409:b0:1e0:d630:f18e with SMTP id e9-20020a170903240900b001e0d630f18emr361813plo.14.1711518598242;
-        Tue, 26 Mar 2024 22:49:58 -0700 (PDT)
-Received: from fedora.. ([2409:40f4:37:3d1f:3a25:2b3d:10de:3da2])
-        by smtp.gmail.com with ESMTPSA id l7-20020a170902f68700b001e0b863b815sm5761707plg.96.2024.03.26.22.49.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 22:49:57 -0700 (PDT)
-From: Animesh Agarwal <animeshagarwal28@gmail.com>
-To: 
-Cc: animeshagarwal28@gmail.com,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-crypto@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: crypto: ti,omap-sham: Convert to dtschema
-Date: Wed, 27 Mar 2024 11:19:06 +0530
-Message-ID: <20240327054911.43093-1-animeshagarwal28@gmail.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PT+Fg3NF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711518602; x=1743054602;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=NGhsAu+sz1EG8a0MGs6ihEvAoXlJ1KKzmRjwQND6aHU=;
+  b=PT+Fg3NF0C7oH+QLXjD+oLG2Fngukc7N2cQ+dlTxE5VMxxep7qXstjQK
+   CEWTgDTOcrvW8t395o249MaTB0+IxEKntOAIQtcehK0eU985B1i+ktF2p
+   rBP+YnZRsn3+mJNXi1dAlrkFS9W9bfkjXN95if3qtinaxFEHPIF2RiZRP
+   nXyUA2a63aBJP92We17G+gs1279X9u/xqMadcL33laFi86I2Ue6oA8Je6
+   1h+D8Ty6QBiUvjqby3Kh8ZWSX5BrJGJDTucBHmOA4l1nZat2Nh2rVJ+2z
+   5zLpSOECZCKgJdjxTYjIdLdDvtJEbQ8PLuvxMnv/AXYDN0ArH+DSMOCSk
+   w==;
+X-CSE-ConnectionGUID: XHH7WMu/R9uxxPYKNzoA1Q==
+X-CSE-MsgGUID: 8+PGB8ZtR2WGWhsPswjYyA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="9563591"
+X-IronPort-AV: E=Sophos;i="6.07,157,1708416000"; 
+   d="scan'208";a="9563591"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 22:50:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,157,1708416000"; 
+   d="scan'208";a="16833210"
+Received: from xuezengd-mobl.amr.corp.intel.com (HELO [10.209.17.216]) ([10.209.17.216])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 22:50:01 -0700
+Message-ID: <3cad4f7f-382e-4898-8867-d48340a2ed01@linux.intel.com>
+Date: Tue, 26 Mar 2024 22:50:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 0/7] ACPI: scan: A few ad-hoc cleanups
+Content-Language: en-US
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ acpica-devel@lists.linux.dev
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Robert Moore <robert.moore@intel.com>
+References: <20240325123444.3031851-1-andriy.shevchenko@linux.intel.com>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240325123444.3031851-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Convert the OMAP SoC SHA crypto Module bindings to DT Schema.
 
-Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
+On 3/25/24 5:32 AM, Andy Shevchenko wrote:
+> While looking for something else in the scan.c I noticed the room
+> of improvement. Hence this series. Also bus.c patches, which some
+> how were related to my research, but I think are independent from
+> the scan.c improvements.
 
----
-Changes in v2:
-- Moved vendor specific property below more common properties.
----
- .../devicetree/bindings/crypto/omap-sham.txt  | 28 ----------
- .../bindings/crypto/ti,omap-sham.yaml         | 56 +++++++++++++++++++
- 2 files changed, 56 insertions(+), 28 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/crypto/omap-sham.txt
- create mode 100644 Documentation/devicetree/bindings/crypto/ti,omap-sham.yaml
+Changes looks good to me.
 
-diff --git a/Documentation/devicetree/bindings/crypto/omap-sham.txt b/Documentation/devicetree/bindings/crypto/omap-sham.txt
-deleted file mode 100644
-index ad9115569611..000000000000
---- a/Documentation/devicetree/bindings/crypto/omap-sham.txt
-+++ /dev/null
-@@ -1,28 +0,0 @@
--OMAP SoC SHA crypto Module
--
--Required properties:
--
--- compatible : Should contain entries for this and backward compatible
--  SHAM versions:
--  - "ti,omap2-sham" for OMAP2 & OMAP3.
--  - "ti,omap4-sham" for OMAP4 and AM33XX.
--  - "ti,omap5-sham" for OMAP5, DRA7 and AM43XX.
--- ti,hwmods: Name of the hwmod associated with the SHAM module
--- reg : Offset and length of the register set for the module
--- interrupts : the interrupt-specifier for the SHAM module.
--
--Optional properties:
--- dmas: DMA specifiers for the rx dma. See the DMA client binding,
--	Documentation/devicetree/bindings/dma/dma.txt
--- dma-names: DMA request name. Should be "rx" if a dma is present.
--
--Example:
--	/* AM335x */
--	sham: sham@53100000 {
--		compatible = "ti,omap4-sham";
--		ti,hwmods = "sham";
--		reg = <0x53100000 0x200>;
--		interrupts = <109>;
--		dmas = <&edma 36>;
--		dma-names = "rx";
--	};
-diff --git a/Documentation/devicetree/bindings/crypto/ti,omap-sham.yaml b/Documentation/devicetree/bindings/crypto/ti,omap-sham.yaml
-new file mode 100644
-index 000000000000..d69b50228009
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/ti,omap-sham.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/crypto/ti,omap-sham.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: OMAP SoC SHA crypto Module
-+
-+maintainers:
-+  - Animesh Agarwal <animeshagarwal28@gmail.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,omap2-sham
-+      - ti,omap4-sham
-+      - ti,omap5-sham
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  dmas:
-+    maxItems: 1
-+
-+  dma-names:
-+    const: rx
-+
-+  ti,hwmods:
-+    description: Name of the hwmod associated with the SHAM module
-+    $ref: /schemas/types.yaml#/definitions/string
-+    enum: [sham]
-+
-+dependencies:
-+  dmas: [dma-names]
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - ti,hwmods
-+  - reg
-+  - interrupts
-+
-+examples:
-+  - |
-+    sham@53100000 {
-+        compatible = "ti,omap4-sham";
-+        ti,hwmods = "sham";
-+        reg = <0x53100000 0x200>;
-+        interrupts = <109>;
-+        dmas = <&edma 36>;
-+        dma-names = "rx";
-+    };
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>
+> Andy Shevchenko (7):
+>   ACPI: bus: Make container_of() no-op where it makes sense
+>   ACPI: bus: Don't use "proxy" headers
+>   ACPI: scan: Replace infinite for-loop with finite while-loop
+>   ACPI: scan: Use list_first_entry_or_null() in acpi_device_hid()
+>   ACPI: scan: Move misleading comment to acpi_dma_configure_id()
+>   ACPI: scan: Use standard error checking pattern
+>   ACPI: scan: Introduce typedef:s for struct acpi_hotplug_context
+>     members
+>
+>  drivers/acpi/dock.c     | 48 +++++++++++++++--------------------------
+>  drivers/acpi/scan.c     | 42 +++++++++++++++++-------------------
+>  include/acpi/acpi_bus.h | 28 +++++++++++++++---------
+>  3 files changed, 55 insertions(+), 63 deletions(-)
+>
 -- 
-2.44.0
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
