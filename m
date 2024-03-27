@@ -1,65 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A0D147C80;
-	Wed, 27 Mar 2024 14:26:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110C214882E
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 14:26:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711549576; cv=none; b=p//Nr49P7YGIpCYiu7l/2BXsDmmXyeGNoxbTa4aUDHEY3ZVLCNKzfO6EdzUXQ0lJm8+RHZ1jUx1VSy/h4dv6FmbUAiftZsfqnZPZRz8ToNLygNCi27Sz9X/sSYxlKctDdSex5dBLpobI6F6xDl0AKgmrbHsDGgsmf+SrtP54pKs=
+	t=1711549581; cv=none; b=AbDhN6jUz8w+K8hC6kRUVksN10UhiyIhSqlgU6rdD2n27obm2TZKZ5bsqNbLcb7TWtbt7zp8mZ3Z368txgs/waatxGEZ11+iZ+UDAbktrYyf+xLT7hdE0T91I0ztBwY+kQhwE26v/cMKLX9lnF4aiHM/AtRgXnCHiloEE6OxO3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711549576; c=relaxed/simple;
-	bh=tYPHhNepAAUe/RQ25n0j0I86CGTDkYfEPdE4S8lqpas=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uG46wo3EUNA/YP/0MPPKplkNSOMkUoRkRtsWpuwmLFY0uJXlQHLHT0Taofcy+cNdsTCoG6FNhZpZgrBY8Se0JjH/ru+F3aJNkPcWBcrYXZdQEbXdb1qzUHKRgWO4bEJIBYCtHvygcTW2DDGbvvg/16LUNY/cXuhWk7gfm7XwtmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rkCPQTx8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rkCPQTx8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 256A5C433F1;
-	Wed, 27 Mar 2024 14:26:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711549575;
-	bh=tYPHhNepAAUe/RQ25n0j0I86CGTDkYfEPdE4S8lqpas=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rkCPQTx86xKBwvhO7HDufGb5TKgJnEhkgurHdpJP2aGkREXb4bWU9HlVf2dDPQ8ht
-	 QQCXpMrDWKt40fjB3JZfbkKhRJwxTKqpsF1AONm11z/vKvlMlZwwYZOg63P6rE/VHZ
-	 P7ziXQhb+6A6CJ+L39PXLqydtd/ebYP0Z+OnOR3YtdQ9u4zA/FO34PrntOuZKTvvAC
-	 dMp6xdNb3OOWu+bqrD7RpqmmuLPC5DTrqZpJ3Ze2Ej5hXYqDSUIdxwSPzeOWwB7Mw1
-	 W8SRMhKw2dPENkg4EERVYrp/mQxgIu1+1Ii0Vkd6yBCduwZEiGwCGSnGJMWAHBecLn
-	 oLr9UgQ5W9E9w==
-Date: Wed, 27 Mar 2024 14:26:10 +0000
-From: Simon Horman <horms@kernel.org>
-To: Hariprasad Kelam <hkelam@marvell.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kuba@kernel.org,
-	davem@davemloft.net, sgoutham@marvell.com, gakula@marvell.com,
-	jerinj@marvell.com, lcherian@marvell.com, sbhatta@marvell.com,
-	naveenm@marvell.com, edumazet@google.com, pabeni@redhat.com
-Subject: Re: [net PATCH] Octeontx2-af: fix pause frame configuration in GMP
- mode
-Message-ID: <20240327142610.GI403975@kernel.org>
-References: <20240326052720.4441-1-hkelam@marvell.com>
+	s=arc-20240116; t=1711549581; c=relaxed/simple;
+	bh=tc99LQ8/bN2jng+sFvmWcqITHA+NqPWXNfa4bVPy7O8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G7Za8SjLDb4xwD6DN8NJWRS6lEtZewTiAB+8gSAm2+dUi4yVczB6wyY1QEz5wwAQhUCYb5C4D9nGXtqD41PiaGFQNiytBHUpBOJSaR2BT5UuhQuy4IAqSBBekkAoX5kjiR5l4/eOkA4urLys+c7tX3rTkoz9SVRBpyH85+7xsW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from fsav312.sakura.ne.jp (fsav312.sakura.ne.jp [153.120.85.143])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 42REPEUa015043;
+	Wed, 27 Mar 2024 23:25:14 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav312.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav312.sakura.ne.jp);
+ Wed, 27 Mar 2024 23:25:14 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav312.sakura.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 42REPEED015040
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Wed, 27 Mar 2024 23:25:14 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <895193c7-1339-45b3-99fa-6fc804040a3c@I-love.SAKURA.ne.jp>
+Date: Wed, 27 Mar 2024 23:25:14 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240326052720.4441-1-hkelam@marvell.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [kernel?] possible deadlock in console_flush_all (2)
+Content-Language: en-US
+To: John Ogness <john.ogness@linutronix.de>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        John Fastabend <john.fastabend@gmail.com>
+Cc: syzbot <syzbot+f78380e4eae53c64125c@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+References: <000000000000e40a2906072e9567@google.com>
+ <ab273ae2-80ec-45da-910a-e74298c71d50@I-love.SAKURA.ne.jp>
+ <CAADnVQLmLMt2bF9aAB26dtBCvy2oUFt+AAKDRgTTrc7Xk_zxJQ@mail.gmail.com>
+ <596aad11-ee69-4ef1-b945-7b67a9fb22d7@I-love.SAKURA.ne.jp>
+ <CAADnVQL6Q3k0+-5X3Xjov7W_xESxkmVXcsCxQRWitQvhTBsf7A@mail.gmail.com>
+ <dd264bf7-821b-4cf4-802b-60ae3c7b83bd@I-love.SAKURA.ne.jp>
+ <CAADnVQJt+aP=Zo4edCu4iQEmdQjiruR1pJn0qyZZboNym+zd0w@mail.gmail.com>
+ <87o7b0szno.fsf@jogness.linutronix.de>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <87o7b0szno.fsf@jogness.linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 26, 2024 at 10:57:20AM +0530, Hariprasad Kelam wrote:
-> The Octeontx2 MAC block (CGX) has separate data paths (SMU and GMP) for
-> different speeds, allowing for efficient data transfer.
+On 2024/03/27 20:05, John Ogness wrote:
+> The printk rework (which is not yet fully mainline) will correctly
+> handle this context.
 > 
-> The previous patch which added pause frame configuration has a bug due
-> to which pause frame feature is not working in GMP mode.
+> As to the patch [0] you suggested, it would be more appropriate to
+> perform deferred_enter/_exit *within* the locked critical section. But
+> we really only want these whack-a-mole workarounds for cases that can
+> occur in a non-bug situation. IMHO this is not such a case and falls
+> into the category of "known problem, the rework will handle it".
 > 
-> This patch fixes the issue by configurating appropriate registers.
+> John Ogness
 > 
-> Fixes: f7e086e754fe ("octeontx2-af: Pause frame configuration at cgx")
-> Signed-off-by: Hariprasad Kelam <hkelam@marvell.com>
+> [0] https://syzkaller.appspot.com/text?tag=Patch&x=121c92fe180000
+> 
 
-nit: For consistency with git history,
-     octeontx2-af should be all lowercase in the subject
+Since the cause of current flood of lockdep reports is already explained
+in https://syzkaller.appspot.com/bug?extid=c4f4d25859c2e5859988 , we don't
+need [0] for now. But it is unfortunate that the message which explains
+what went wrong cannot be reported due to reporting console_lock dependency.
+Therefore, I intend [0] as a workaround for a bug situation. We can revert [0]
+after the printk rework completed.
 
-Reviewed-by: Simon Horman <horms@kernel.org>
