@@ -1,101 +1,160 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D2414A62F;
-	Wed, 27 Mar 2024 12:44:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720BA14AD23
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 12:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711543498; cv=none; b=jIk6siq8qoD5jwOybKj/m6knrcxrqGyxH1DO0+9T8D4T0ovoUCW5ygAMQMLGBgP0YpsWa/8gBDPI/HD952lXEn3fCoSRP8XWqdnFNY7shxIvtXvFlhusEMEWN6kt3ad9NNKdABG3bI2a0jXcC9fkj69ycbTiv/N3qc237Nk7Nq0=
+	t=1711543506; cv=none; b=NREUrUG29iZACnTNU3gYwOMEMVvS0vP2kUGSt168/qwPxbKfzWSjoQL8o9Nlp++IuwnHt1CX/5L4jc8A5t+o8JQOB5sm3dkER7hCj+mPFAi/j4Q6CwtBQp9gOd6CFghSqEMCRRr/HnYDFjayJYr1CxLYzicr129BlUKvH1eAXl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711543498; c=relaxed/simple;
-	bh=KVlZQj8XUXytiuallTU5/HL5sY9jCIpvzzH0zeKt83Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f3ORjcVRuV72E0gSBpwxkeSoN0l42OVebeTF8HwTkjlL2OknkVwBNvftBLxo0NqzQ+14MGhP0D1SaQKhKh2b+MHLaf4oPqNJpj+hwv+eCe/2NWXBH81MVjzL2I5BKlCfczisQPwxDzfrEjWU1Ab+a+wNwFovgpkXl/r3onZemnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=EJMw9/TA; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1711543506; c=relaxed/simple;
+	bh=//Clpegv8bBxUlHlrbVbhwLuVMMJ/bk7DPF0aGjgRRI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=XRoYnKMklxHXhqH0BmF268JfRSMcwXROiXs9EMcWbvR1Vk1im+Tv19y6EmGASkD0uvXKmVGhdko9zan5KNIt9dTxpwve1UujxC2LFNhlSHGRtAlPCdnHN3jQPijB2WU/tFOLsPCHpdnwFI4KMSVVUiXLy0StOgIMPtcE8aCuMSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B07o5P9r; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="EJMw9/TA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=3Z065/I/LAJeMMl4zDwMUynhzEkIt59RXYcO6jgtIMk=; b=EJMw9/TA1wYV7JIcoHAuzkCiJ2
-	HufeCrgBWSCHMToIRIQ37ReXIp7lpICMVVy7ZEYrTS+D4LsBDCQjhiv7jfXQxvfq346cl4JAit+WN
-	n8OPb5GUx+wTpsdo30Zi82UdILDJnZ+a0TvxhBRx/5EqUisrL5fXRVfHquK6V6VylDVI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rpSe7-00BOLU-GL; Wed, 27 Mar 2024 13:44:47 +0100
-Date: Wed, 27 Mar 2024 13:44:47 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Lukasz Majewski <lukma@denx.de>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux@ew.tq-group.com,
-	Michael Krummsdorf <michael.krummsdorf@tq-group.com>
-Subject: Re: [PATCH] net: dsa: mv88e6xxx: fix usable ports on 88e6020
-Message-ID: <b5abcd09-8dda-4a9a-b6b2-47c9a50faccf@lunn.ch>
-References: <20240326123655.40666-1-matthias.schiffer@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B07o5P9r"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a468226e135so801683466b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 05:45:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711543502; x=1712148302; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=M0hmLEhtDW+HCSY30P31S1H131D4FuLuLKkbSxHVWro=;
+        b=B07o5P9rOb7FZbSCdgNjGMrnsuLx7L1xCV+iiHaV2D1HcrB6EaNmEOcQ/Ie3XqIQpa
+         mxxlT+d10BFGyVszlEz853n8gjG1+C611fnjQQIokfN1lbDy0V1xb/7jYehHkZVcnnV/
+         YXDdYEAOKsq9RdmWKdLVLbnXUh3jQTI3S+XU3ic2W9nuN0wqhJfvdfhWtz21vJn/qFoM
+         kGh70ROZ/HaMft3dXmDweSW2GaksupQ1ZfFzt/+dLQ+KpmZ/h7EpnWJ4lsX/jIKnOcE/
+         +qxynsfFbMmIf3vEzZiaGD5JLSSFqCz+5uYk0ZzuoX3UzipGbHLxrLUgJ66GoMPfaYQl
+         ePtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711543502; x=1712148302;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=M0hmLEhtDW+HCSY30P31S1H131D4FuLuLKkbSxHVWro=;
+        b=ku3mJVywmrFsZ9hOqmOZoxshqlZ6XKe763nQMw3yZAJKHtUVbeW3JvOUAtn5OZ9Sy1
+         pz78xzzUuBOhz+/2Y9Ggy4S+IM0oJKO7e/eEBr/K9jNa48c08ed+1fYpT7uY7Eq4+WNI
+         dQFfvFsFxAss/qqJbH9vk++HWjocTS53kfw1qpFvLXp1B8xZoCTQKRg+6gh3URhcKyAO
+         pkyndSCNP9WZwaa48Jm5W0FCoyyjx44xHNta5kGFCh+eY/tEyy+RTHW+L5qzak00ctv2
+         0uZcAsc+SP6ZMCkwwt4Fb+7BD3UW/St0l4syxbX1w/y+VBZXOGacl8upCvX8b3eZ91Zl
+         yYzg==
+X-Forwarded-Encrypted: i=1; AJvYcCWDuc++2oa4cHRoJYYO4l3sBO2Ya6vWK9AFQlknLW9U/jXWuHZTH32MddALlK4c83pA1cFdcvIvIjTIlTBeqcIAz11EqcwtTnj2zTfC
+X-Gm-Message-State: AOJu0YyAwsTdkPWacQw0Zsoa/hu/VokPPW18uipW3IGrTRWRY9A7WO8n
+	aPGAhEMpo8PDjwcYaMga3cuZdFdFOEP6bHXnMOku72fgIFqOE8r3qxSGfexhpLY=
+X-Google-Smtp-Source: AGHT+IEn6vRTkmoHQ1wiFr8qmjh3PJ0Q6up00xiHporN+nJtNCU2vs+jLj3PzJepGOiy+pfR8eLRwA==
+X-Received: by 2002:a17:907:9729:b0:a47:38c0:fb4e with SMTP id jg41-20020a170907972900b00a4738c0fb4emr4546499ejc.19.1711543501964;
+        Wed, 27 Mar 2024 05:45:01 -0700 (PDT)
+Received: from [127.0.1.1] ([178.197.206.205])
+        by smtp.gmail.com with ESMTPSA id gx16-20020a170906f1d000b00a4707ec7c34sm5379175ejb.166.2024.03.27.05.44.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Mar 2024 05:45:01 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Date: Wed, 27 Mar 2024 13:41:02 +0100
+Subject: [PATCH 09/22] gpio: virtio: drop owner assignment
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240326123655.40666-1-matthias.schiffer@ew.tq-group.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240327-module-owner-virtio-v1-9-0feffab77d99@linaro.org>
+References: <20240327-module-owner-virtio-v1-0-0feffab77d99@linaro.org>
+In-Reply-To: <20240327-module-owner-virtio-v1-0-0feffab77d99@linaro.org>
+To: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Richard Weinberger <richard@nod.at>, 
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+ Johannes Berg <johannes@sipsolutions.net>, 
+ Paolo Bonzini <pbonzini@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, 
+ Jens Axboe <axboe@kernel.dk>, Marcel Holtmann <marcel@holtmann.org>, 
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+ Olivia Mackall <olivia@selenic.com>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, Amit Shah <amit@kernel.org>, 
+ Arnd Bergmann <arnd@arndb.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Gonglei <arei.gonglei@huawei.com>, "David S. Miller" <davem@davemloft.net>, 
+ Viresh Kumar <vireshk@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, David Airlie <airlied@redhat.com>, 
+ Gerd Hoffmann <kraxel@redhat.com>, 
+ Gurchetan Singh <gurchetansingh@chromium.org>, 
+ Chia-I Wu <olvaffe@gmail.com>, 
+ Jean-Philippe Brucker <jean-philippe@linaro.org>, 
+ Joerg Roedel <joro@8bytes.org>, Alexander Graf <graf@amazon.com>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Eric Van Hensbergen <ericvh@kernel.org>, 
+ Latchesar Ionkov <lucho@ionkov.net>, 
+ Dominique Martinet <asmadeus@codewreck.org>, 
+ Christian Schoenebeck <linux_oss@crudebyte.com>, 
+ Stefano Garzarella <sgarzare@redhat.com>, Kalle Valo <kvalo@kernel.org>, 
+ Dan Williams <dan.j.williams@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+ Ira Weiny <ira.weiny@intel.com>, 
+ Pankaj Gupta <pankaj.gupta.linux@gmail.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Mathieu Poirier <mathieu.poirier@linaro.org>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>, 
+ Vivek Goyal <vgoyal@redhat.com>, Miklos Szeredi <miklos@szeredi.hu>, 
+ Anton Yakovlev <anton.yakovlev@opensynergy.com>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: virtualization@lists.linux.dev, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-um@lists.infradead.org, 
+ linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+ linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ iommu@lists.linux.dev, netdev@vger.kernel.org, v9fs@lists.linux.dev, 
+ kvm@vger.kernel.org, linux-wireless@vger.kernel.org, nvdimm@lists.linux.dev, 
+ linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, alsa-devel@alsa-project.org, 
+ linux-sound@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=678;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=//Clpegv8bBxUlHlrbVbhwLuVMMJ/bk7DPF0aGjgRRI=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmBBPhAflQ1FGJhDAzbOegIOtyn0DiKBCT3tO0B
+ s7IjiqYlSaJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZgQT4QAKCRDBN2bmhouD
+ 1wlSD/43RfNzYMYcTE6YGm6f/+zF4ZOeA7+AFzoz25hWACnn09ZJUKsqo8b4OOQmqYEITbWY9+h
+ XPRwnPPXeNlc4DgWGOJbLmvCBCUuBSqKMyqIVUHeiKQYkKcodvybd1f5lbAL+Uom9vSnbje9Plv
+ wIiwg36QHAiGjrP6FCrbFTARU+u3TVSo9UrmxbOR/Cs2zcsROAS787ue6dERDMHRhTICDHzchGs
+ 8lirSnX2eLweIUdLVeflXwAHFaVpdj5k9bUmCEJ9y8Dy0+5TaOREm3IIC+BMGqKTPwXr2xpX3Dd
+ iUxBWyxquOdJ4D2K/0LVhYSSC+VtEt5ZZuC3ZoWa4HTxJM5tAElcgWaOQps1lNfT5UbRtK8uoQi
+ iqAyMFhheEhnye6diL6L4H3hulkrYJw6LN27JtLkTStHd3lYU+1MW7TqZMKXQcujQNGhdzO9d+m
+ 3of1UO+mt5KeIH2CAx/mgbR5MLfW609xLhuHPWn3i/GzYYdKJxXMrj25rctSRtBvtmGHD8iF6o7
+ CMdorn7Yl1SzBIoYcHUmygb3XOTnW7Zn+L9RB2k2epy90G6CsuIsaV5Plxhgk41/NsTCYyh6gWq
+ GCkiLrJ9HW5biRhItd0RUt02PbEl7Tg1O0q20/cwbVq4IAyTVScxVYfx4ilMNlem9KQg/2l7ayl
+ fFGCYquCVzZZykw==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-On Tue, Mar 26, 2024 at 01:36:54PM +0100, Matthias Schiffer wrote:
-> From: Michael Krummsdorf <michael.krummsdorf@tq-group.com>
-> 
-> The switch has 4 ports with 2 internal PHYs, but ports are numbered up
-> to 6, with ports 0, 1, 5 and 6 being usable.
-> 
-> Fixes: 71d94a432a15 ("net: dsa: mv88e6xxx: add support for MV88E6020 switch")
-> Signed-off-by: Michael Krummsdorf <michael.krummsdorf@tq-group.com>
-> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> ---
-> 
-> I was unfortunately too busy to notice the issue when the patch this
-> Fixes was resubmitted in my name. It would have been better to change
-> my From into a Based-on-patch-by or similar when modifying it - and the
-> final version obviously wasn't even tested on an 88E6020...
-> 
-> Best regards,
-> Matthias
-> 
-> 
->  drivers/net/dsa/mv88e6xxx/chip.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-> index 9ed1821184ece..c95787cb90867 100644
-> --- a/drivers/net/dsa/mv88e6xxx/chip.c
-> +++ b/drivers/net/dsa/mv88e6xxx/chip.c
-> @@ -5503,8 +5503,12 @@ static const struct mv88e6xxx_info mv88e6xxx_table[] = {
->  		.family = MV88E6XXX_FAMILY_6250,
->  		.name = "Marvell 88E6020",
->  		.num_databases = 64,
-> -		.num_ports = 4,
-> +		/* Ports 2-4 are not routed to pins
-> +		 * => usable ports 0, 1, 5, 6
-> +		 */
-> +		.num_ports = 7,
->  		.num_internal_phys = 2,
-> +		.invalid_port_mask = BIT(2) | BIT(3) | BIT(4),
+virtio core already sets the .owner, so driver does not need to.
 
-This patch does what the commit message suggests. So
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+---
 
-It would however be nice to fully understand how it currently works
-for the deployed use case, just to ensure we are not missing
-something.
+Depends on the first patch.
+---
+ drivers/gpio/gpio-virtio.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-    Andrew
+diff --git a/drivers/gpio/gpio-virtio.c b/drivers/gpio/gpio-virtio.c
+index fcc5e8c08973..9fae8e396c58 100644
+--- a/drivers/gpio/gpio-virtio.c
++++ b/drivers/gpio/gpio-virtio.c
+@@ -653,7 +653,6 @@ static struct virtio_driver virtio_gpio_driver = {
+ 	.remove			= virtio_gpio_remove,
+ 	.driver			= {
+ 		.name		= KBUILD_MODNAME,
+-		.owner		= THIS_MODULE,
+ 	},
+ };
+ module_virtio_driver(virtio_gpio_driver);
+
+-- 
+2.34.1
+
