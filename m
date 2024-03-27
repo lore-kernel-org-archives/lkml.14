@@ -1,189 +1,216 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0334E16E87B;
-	Wed, 27 Mar 2024 12:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE54316EBEC;
+	Wed, 27 Mar 2024 12:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711542049; cv=none; b=g43wlYWsVa41qP6oixOzfaHofFO8dcswXvdcHns4bWuoh5jj9db4Fs3qe5bbu96SY20R9nB6369ZcoBrETuzLCbOtO8vrHOtR72byNxOQTwa3VWpz9KQRjIzhu14KvlQQxWre6W98OxGyJYKCYKxY5Z0mP4u9qvHavnWgCWEhkY=
+	t=1711542051; cv=none; b=BPGDK+e0tIPvbp522TT9AmJZWqlPrO9xFNqrvY3MjhWo/n4ORE4UATssy4nHASksvMsR0nveJQSWIvBSxAgBmys1M1ilT7T35mL4dW9pAe+E+yC3XwDM7rhkc2WYt10vznQEu71eZKVF4nVHLO2Cmd9DgvnCUDRink/ni6SBNU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711542049; c=relaxed/simple;
-	bh=LRqKiwGQKW7zOHKPcIfgNzsz56fEdVAyupC8tElZlts=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qgq3Jkm/ol3l6iZYTvNjPTm0jfHCGI4DfBepHpgje4rZfkEmoBiTeH0+BbDeGSrWZ/G7xRFg3dfHSE8XwqkRaPJLmNhHlBFNPdq1weeeL1aM+V+uEFlZfWZJ5QmSb7U8gFUp35GMZcseULLRi6gyzkQQn/woEec88oXbTbW8KU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8463E2F4;
-	Wed, 27 Mar 2024 05:21:21 -0700 (PDT)
-Received: from pluto (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 934533F694;
-	Wed, 27 Mar 2024 05:20:45 -0700 (PDT)
-Date: Wed, 27 Mar 2024 12:20:39 +0000
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>,
-	Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-Subject: Re: [PATCH v6 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Message-ID: <ZgQPF_jT07hudU1H@pluto>
-References: <20240323-pinctrl-scmi-v6-0-a895243257c0@nxp.com>
- <20240323-pinctrl-scmi-v6-3-a895243257c0@nxp.com>
- <4879ad5d-165c-4118-81f7-8f6348a5a5d4@moroto.mountain>
+	s=arc-20240116; t=1711542051; c=relaxed/simple;
+	bh=MY6Msd5ZZwC9n8085OfFa1is44/bOUeMRgmyWKGvnMw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bzRxTnYyIHcKnMX2YAKLGWb2pWVHUs9egaKGzpGQVSTYj+0v6CEAlwkqZoUckBKGo7QjQyvVdDp6WrNW6MJr0Hm523Xr+T0bg/JR/MXXxjrGw+geN3WdyOhTStJWjb87/u2B/vZY7uSKGECFPLeZfkcNHQfSEfhTsBfXoG5N/nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jbPLby8b; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jbPLby8b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0771C433A6;
+	Wed, 27 Mar 2024 12:20:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711542050;
+	bh=MY6Msd5ZZwC9n8085OfFa1is44/bOUeMRgmyWKGvnMw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jbPLby8bncUJG3SQ7WQc+tGs3ms5+A0r6TMHQxpgoueYOk9KTsVq+Ep0h5EUxd6nQ
+	 Ec0TQRAzA5q0A5z80SWGYdTVo9Uw5aPo1zDiloezE7ndyxm7hNQvGnNLTEtxciejcy
+	 RDkanMFngrGLvu8zIUx1adujiCbksCLyHvj5dkH6RjqNjC/+1J7bIzwbxKmmrHYPpB
+	 zdPMUjd+jxXfSJ9dJrTfYK5lSmo/8mlpvY0tIz3ArorPUJqbW9SAVErGEwq3FLYMBj
+	 r9EQ/qcfUwZW+JVVMadTOTjlpXeVnaj0mCbubuTuIrdnbbgg9NXU7MgErw0eLgAeKK
+	 q2FRCWnN2mCIg==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org,
+	dillon.varone@amd.com
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Chaitanya Dhere <chaitanya.dhere@amd.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: FAILED: Patch "drm/amd/display: Init DPPCLK from SMU on dcn32" failed to apply to 5.10-stable tree
+Date: Wed, 27 Mar 2024 08:20:48 -0400
+Message-ID: <20240327122048.2836343-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4879ad5d-165c-4118-81f7-8f6348a5a5d4@moroto.mountain>
+X-Patchwork-Hint: ignore
+X-stable: review
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 27, 2024 at 01:46:11PM +0300, Dan Carpenter wrote:
-> Looks really nice.  Just a few small comments below.
-> 
-
-Hi,
-
-I aa having a look at this today (and try to retest it), just a quick remark
-down below...
-
-> On Sat, Mar 23, 2024 at 08:15:16PM +0800, Peng Fan (OSS) wrote:
-> > +
-> > +struct scmi_msg_func_set {
-> > +	__le32 identifier;
-> > +	__le32 function_id;
-> > +	__le32 flags;
-> > +};
-> 
-> This scmi_msg_func_set struct is unused.  Delete.
-> 
-> > +static void
-> > +iter_pinctrl_settings_get_prepare_message(void *message, u32 desc_index,
-> > +					  const void *priv)
-> > +{
-> > +	struct scmi_msg_settings_get *msg = message;
-> > +	const struct scmi_settings_get_ipriv *p = priv;
-> > +	u32 attributes;
-> > +
-> > +	attributes = FIELD_PREP(CONFIG_FLAG_MASK, p->flag) |
-> > +		     FIELD_PREP(SELECTOR_MASK, p->type);
-> > +
-> > +	if (p->flag == 1)
-> > +		attributes |= FIELD_PREP(SKIP_CONFIGS_MASK, desc_index);
-> > +	else if (!p->flag)
-> 
-> This is a nit-pick but could you change these !p->flag conditions to
-> p->flag == 0?  It's a number zero, not a bool.
-> 
-> > +		attributes |= FIELD_PREP(CONFIG_TYPE_MASK, p->config_types[0]);
-> > +
-> > +	msg->attributes = cpu_to_le32(attributes);
-> > +	msg->identifier = cpu_to_le32(p->selector);
-> > +}
-> > +
-> > +static int
-> > +iter_pinctrl_settings_get_update_state(struct scmi_iterator_state *st,
-> > +				       const void *response, void *priv)
-> > +{
-> > +	const struct scmi_resp_settings_get *r = response;
-> > +	struct scmi_settings_get_ipriv *p = priv;
-> > +
-> > +	if (p->flag == 1) {
-> > +		st->num_returned = le32_get_bits(r->num_configs, GENMASK(7, 0));
-> > +		st->num_remaining = le32_get_bits(r->num_configs,
-> > +						  GENMASK(31, 24));
-> > +	} else {
-> > +		st->num_returned = 1;
-> > +		st->num_remaining = 0;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int
-> > +iter_pinctrl_settings_get_process_response(const struct scmi_protocol_handle *ph,
-> > +				       const void *response,
-> > +				       struct scmi_iterator_state *st,
-> > +				       void *priv)
-> > +{
-> > +	const struct scmi_resp_settings_get *r = response;
-> > +	struct scmi_settings_get_ipriv *p = priv;
-> > +
-> > +	if (!p->flag) {
-> 
-> 
-> if (p->flag == 0) {
-> 
-> > +		if (p->config_types[0] !=
-> > +		    le32_get_bits(r->configs[st->loop_idx * 2], GENMASK(7, 0)))
-> > +			return -EINVAL;
-> > +	} else if (p->flag == 1) {
-> > +		p->config_types[st->desc_index + st->loop_idx] =
-> > +			le32_get_bits(r->configs[st->loop_idx * 2],
-> > +				      GENMASK(7, 0));
-> > +	} else if (p->flag == 2) {
-> > +		return 0;
-> > +	}
-> > +
-> > +	p->config_values[st->desc_index + st->loop_idx] =
-> > +		le32_to_cpu(r->configs[st->loop_idx * 2 + 1]);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int
-> > +scmi_pinctrl_settings_get(const struct scmi_protocol_handle *ph, u32 selector,
-> > +			  enum scmi_pinctrl_selector_type type,
-> > +			  enum scmi_pinctrl_conf_type config_type,
-> > +			  u32 *config_value)
-> > +{
-> > +	int ret;
-> > +	void *iter;
-> > +	struct scmi_iterator_ops ops = {
-> > +		.prepare_message = iter_pinctrl_settings_get_prepare_message,
-> > +		.update_state = iter_pinctrl_settings_get_update_state,
-> > +		.process_response = iter_pinctrl_settings_get_process_response,
-> > +	};
-> > +	struct scmi_settings_get_ipriv ipriv = {
-> > +		.selector = selector,
-> > +		.type = type,
-> > +		.flag = 0,
-> 
-> ->flag should be 0-2.
-> 
-
-The .flag in this priv structure is for 'configuring' the iterators in
-the SCMI core to parse a multi-part response, so (looking at how the
-iterators functs are implemented above) setting it here to zero
-means issuing a SETTINGS_GET with attributes.config_flag[19:18] == 0,
-that in turn means requesting just a single config_value to be read...
-
-...if you want to support the other 'flavours' of SETTINGS_GET
-(multiple configs & selected_func) you will have to extend the signature
-of this function to optionally select to readback multiple configs (and to
-allow the return of such multiple config_values) and/or optionally request
-to return the selected function....
-
-...or maybe add distinct wrapper protocol_ops just for these flavours...
-
-Anyway, till now in this series it was avoided to add such 'flavours'
-support (e.g. for multiple configs) since there are no users for the
-multi-config and function selected in the pinctrl driver...so no way to test..
-
-Will the Linux GPIO driver need these ? Should we delay anyway the
-addition of the support of such variants of SETTING_GET for when a real
-user like GPIO driveer appears ?
-
-...anyway @Peng please add a comment somewhere explaining how p->flag is
-used to configure the type of SETTINGS_GET
+The patch below does not apply to the 5.10-stable tree.
+If someone wants it applied there, or to any other stable or longterm
+tree, then please email the backport, including the original git commit
+id to <stable@vger.kernel.org>.
 
 Thanks,
-Cristian
+Sasha
+
+------------------ original commit in Linus's tree ------------------
+
+From 4f5b8d78ca43fcc695ba16c83ebfabbfe09506d6 Mon Sep 17 00:00:00 2001
+From: Dillon Varone <dillon.varone@amd.com>
+Date: Wed, 21 Feb 2024 13:21:20 -0500
+Subject: [PATCH] drm/amd/display: Init DPPCLK from SMU on dcn32
+
+[WHY & HOW]
+DPPCLK ranges should be obtained from the SMU when available.
+
+Cc: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Chaitanya Dhere <chaitanya.dhere@amd.com>
+Acked-by: Alex Hung <alex.hung@amd.com>
+Signed-off-by: Dillon Varone <dillon.varone@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+---
+ .../display/dc/clk_mgr/dcn32/dcn32_clk_mgr.c  | 14 ++++++++++
+ .../drm/amd/display/dc/dml2/dml2_wrapper.c    | 28 +++++++++++++------
+ .../drm/amd/display/dc/dml2/dml2_wrapper.h    |  3 ++
+ .../dc/resource/dcn32/dcn32_resource.c        |  2 ++
+ .../dc/resource/dcn321/dcn321_resource.c      |  2 ++
+ 5 files changed, 41 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn32/dcn32_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn32/dcn32_clk_mgr.c
+index 668f05c8654ef..bec252e1dd27a 100644
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn32/dcn32_clk_mgr.c
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn32/dcn32_clk_mgr.c
+@@ -216,6 +216,16 @@ void dcn32_init_clocks(struct clk_mgr *clk_mgr_base)
+ 	if (clk_mgr_base->bw_params->dc_mode_limit.dispclk_mhz > 1950)
+ 		clk_mgr_base->bw_params->dc_mode_limit.dispclk_mhz = 1950;
+ 
++	/* DPPCLK */
++	dcn32_init_single_clock(clk_mgr, PPCLK_DPPCLK,
++			&clk_mgr_base->bw_params->clk_table.entries[0].dppclk_mhz,
++			&num_entries_per_clk->num_dppclk_levels);
++	num_levels = num_entries_per_clk->num_dppclk_levels;
++	clk_mgr_base->bw_params->dc_mode_limit.dppclk_mhz = dcn30_smu_get_dc_mode_max_dpm_freq(clk_mgr, PPCLK_DPPCLK);
++	//HW recommends limit of 1950 MHz in display clock for all DCN3.2.x
++	if (clk_mgr_base->bw_params->dc_mode_limit.dppclk_mhz > 1950)
++		clk_mgr_base->bw_params->dc_mode_limit.dppclk_mhz = 1950;
++
+ 	if (num_entries_per_clk->num_dcfclk_levels &&
+ 			num_entries_per_clk->num_dtbclk_levels &&
+ 			num_entries_per_clk->num_dispclk_levels)
+@@ -240,6 +250,10 @@ void dcn32_init_clocks(struct clk_mgr *clk_mgr_base)
+ 					= khz_to_mhz_ceil(clk_mgr_base->ctx->dc->debug.min_dpp_clk_khz);
+ 	}
+ 
++	for (i = 0; i < num_levels; i++)
++		if (clk_mgr_base->bw_params->clk_table.entries[i].dppclk_mhz > 1950)
++			clk_mgr_base->bw_params->clk_table.entries[i].dppclk_mhz = 1950;
++
+ 	/* Get UCLK, update bounding box */
+ 	clk_mgr_base->funcs->get_memclk_states_from_smu(clk_mgr_base);
+ 
+diff --git a/drivers/gpu/drm/amd/display/dc/dml2/dml2_wrapper.c b/drivers/gpu/drm/amd/display/dc/dml2/dml2_wrapper.c
+index 2a58a7687bdb5..72cca367062e1 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml2/dml2_wrapper.c
++++ b/drivers/gpu/drm/amd/display/dc/dml2/dml2_wrapper.c
+@@ -703,13 +703,8 @@ static inline struct dml2_context *dml2_allocate_memory(void)
+ 	return (struct dml2_context *) kzalloc(sizeof(struct dml2_context), GFP_KERNEL);
+ }
+ 
+-bool dml2_create(const struct dc *in_dc, const struct dml2_configuration_options *config, struct dml2_context **dml2)
++static void dml2_init(const struct dc *in_dc, const struct dml2_configuration_options *config, struct dml2_context **dml2)
+ {
+-	// Allocate Mode Lib Ctx
+-	*dml2 = dml2_allocate_memory();
+-
+-	if (!(*dml2))
+-		return false;
+ 
+ 	// Store config options
+ 	(*dml2)->config = *config;
+@@ -737,9 +732,18 @@ bool dml2_create(const struct dc *in_dc, const struct dml2_configuration_options
+ 	initialize_dml2_soc_bbox(*dml2, in_dc, &(*dml2)->v20.dml_core_ctx.soc);
+ 
+ 	initialize_dml2_soc_states(*dml2, in_dc, &(*dml2)->v20.dml_core_ctx.soc, &(*dml2)->v20.dml_core_ctx.states);
++}
++
++bool dml2_create(const struct dc *in_dc, const struct dml2_configuration_options *config, struct dml2_context **dml2)
++{
++	// Allocate Mode Lib Ctx
++	*dml2 = dml2_allocate_memory();
++
++	if (!(*dml2))
++		return false;
++
++	dml2_init(in_dc, config, dml2);
+ 
+-	/*Initialize DML20 instance which calls dml2_core_create, and core_dcn3_populate_informative*/
+-	//dml2_initialize_instance(&(*dml_ctx)->v20.dml_init);
+ 	return true;
+ }
+ 
+@@ -779,3 +783,11 @@ bool dml2_create_copy(struct dml2_context **dst_dml2,
+ 
+ 	return true;
+ }
++
++void dml2_reinit(const struct dc *in_dc,
++				 const struct dml2_configuration_options *config,
++				 struct dml2_context **dml2)
++{
++
++	dml2_init(in_dc, config, dml2);
++}
+diff --git a/drivers/gpu/drm/amd/display/dc/dml2/dml2_wrapper.h b/drivers/gpu/drm/amd/display/dc/dml2/dml2_wrapper.h
+index ee0eb184eb6d7..cc662d682fd4d 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml2/dml2_wrapper.h
++++ b/drivers/gpu/drm/amd/display/dc/dml2/dml2_wrapper.h
+@@ -214,6 +214,9 @@ void dml2_copy(struct dml2_context *dst_dml2,
+ 	struct dml2_context *src_dml2);
+ bool dml2_create_copy(struct dml2_context **dst_dml2,
+ 	struct dml2_context *src_dml2);
++void dml2_reinit(const struct dc *in_dc,
++				 const struct dml2_configuration_options *config,
++				 struct dml2_context **dml2);
+ 
+ /*
+  * dml2_validate - Determines if a display configuration is supported or not.
+diff --git a/drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c b/drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c
+index f844f57ecc49b..ce1754cc1f463 100644
+--- a/drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c
+@@ -1931,6 +1931,8 @@ static void dcn32_update_bw_bounding_box(struct dc *dc, struct clk_bw_params *bw
+ {
+ 	DC_FP_START();
+ 	dcn32_update_bw_bounding_box_fpu(dc, bw_params);
++	if (dc->debug.using_dml2 && dc->current_state && dc->current_state->bw_ctx.dml2)
++		dml2_reinit(dc, &dc->dml2_options, &dc->current_state->bw_ctx.dml2);
+ 	DC_FP_END();
+ }
+ 
+diff --git a/drivers/gpu/drm/amd/display/dc/resource/dcn321/dcn321_resource.c b/drivers/gpu/drm/amd/display/dc/resource/dcn321/dcn321_resource.c
+index b356fed1726d9..296a0a8e71459 100644
+--- a/drivers/gpu/drm/amd/display/dc/resource/dcn321/dcn321_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/resource/dcn321/dcn321_resource.c
+@@ -1581,6 +1581,8 @@ static void dcn321_update_bw_bounding_box(struct dc *dc, struct clk_bw_params *b
+ {
+ 	DC_FP_START();
+ 	dcn321_update_bw_bounding_box_fpu(dc, bw_params);
++	if (dc->debug.using_dml2 && dc->current_state && dc->current_state->bw_ctx.dml2)
++		dml2_reinit(dc, &dc->dml2_options, &dc->current_state->bw_ctx.dml2);
+ 	DC_FP_END();
+ }
+ 
+-- 
+2.43.0
+
+
+
+
