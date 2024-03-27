@@ -1,39 +1,38 @@
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF2B38395;
-	Wed, 27 Mar 2024 09:59:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BA93BBE5;
+	Wed, 27 Mar 2024 09:59:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711533554; cv=none; b=dCeZCkLYxY/MFd7StugoYtIHe/lE+Iy8UBVgc/hrUaosNxVfVUES9tAq1nTBD2wKv2TATKF7Vaa+jxKZLDjJcz3fxTPIRuPMhNinhX5jXFtriegl0OVBwB2YEMxdTE+r3Pl/+SGRlGihqjmIcU0ZtJo6pN1cuDWX6adb86rCGzo=
+	t=1711533555; cv=none; b=rraLIE6L+d85qc2fnSNogaC03ycMfONbQ+dJknBEbHa/mwp5WQALY3yc9+Y3kCaVBJcHH15IaC/7t44Z/zOgPOd0jF28XD03+Evh1JKOu2Jev9ljhBj0FS1VVsSgj30MNOIyEV179qQ8wrr60vEin2DLNdgzmwoU9lTGPRz8T2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711533554; c=relaxed/simple;
-	bh=0tN/2/cS6x19N/2l/Wo09eS8tiwkR/o9XaPpyzxE/c8=;
+	s=arc-20240116; t=1711533555; c=relaxed/simple;
+	bh=O0oknYQk5az9YCtIwYXgCgTNcoCSEGY/4TTLust/ZZM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZEHVdS7vbALoaPqEIDZ9LVcdDnwALJXnAHnlUng5+lPISAQPh/warA2RBtlMrBV0DxU9J+/uV9UJVyuluDHtS48CzWzzAp4GGn+whyM5mGSNiSCi/Nf0Wx7hGJWEknGO61e0lD7oA4GCGj9XTpc6EgS/EGtZzVfNNxfDdhex/nY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=l6Q7GSZi; arc=none smtp.client-ip=217.70.183.200
+	 In-Reply-To:To:Cc; b=poh1iVfUyX61chweiKj3GULhEB/WbhTXcwB0RykGxpgbMqmw1l1jrs1eVrTVmCYQGomTQUgmPfe7lrZl9vv/osmNEqvP4TizO2hj6gPwgjTmiDo3SBoBKo75v0fM+Msw9ON38nEoBUTv2vU1pzxEtaeDTGiocGSb1Lm4avv+DnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FbC8p5/A; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="l6Q7GSZi"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9FA8D2000B;
-	Wed, 27 Mar 2024 09:59:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FbC8p5/A"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E94EC2000E;
+	Wed, 27 Mar 2024 09:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1711533550;
+	t=1711533551;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4g70CEkuUSM1WtA7B5LTii3U2wOnA2Oz3/OdBqqrL5M=;
-	b=l6Q7GSZiup/bbdE0wbavpZwfrd7xGJe9vle11q+vc9vXfvzMn7zM7/E8Qi8rNtlJxsEseu
-	+VYfMMEbl3/frfCX/kadadS63dTaDWCG3apw/cqxoRK9mhysQVEUQ3J53i5J/tLGs3Ng0Y
-	chiv8YVfl2eTJcNer159ITHbdVxl5n4N3MDeUPXs8q4XhnnBIQQvw0myelrbls/ZBXCfBh
-	ts2NcDIMR29k4DYkup5BGbN9603EedrzU1u8aVjxA3VG9jw1/Tk8gMESGY+TUwcFL+6Lr6
-	qHLSPOC5g5/D4wnitDS5gGqJPNuhvshy6th0BvB3YN9p8Pk4xq8mUKzPiKnXCA==
+	bh=XLH57fwLTXfBUc6BX3tfnkCCcKVQ9c7Io2++9VEubdw=;
+	b=FbC8p5/A/zJBAFi+obVk3JTmtO4K7jIoBH0kTghWLEuZbxxDWAj2x6wN/4wacUDPLnbgSY
+	aIUmK6op2nt7cnMn9weKSjOhIi+djnoSpiIG7Pdbsd2bo87fqx4AskZ26h/zS9yA6t1SVw
+	2+2OU5rjVPqpQ7ucpvLOC55GxGewEeaEWUaWRm4swpVkAlVLOB4Prsk6ycZpAOxOPgqVI3
+	VtdnlageoRViWIeGnxHOd0dNVmAmXeScIvVSF3zti0wioj6/xicMPEHofk/aHF9hNTXfV0
+	msIC7VnF93VvOubQATG3rvnS1BIqAugodDZ4PHIpPSLBEWaAllIvVLMQ5rOxjA==
 From: Louis Chauvet <louis.chauvet@bootlin.com>
-Date: Wed, 27 Mar 2024 10:58:48 +0100
-Subject: [PATCH 1/3] dmaengine: xilinx: xdma: Fix wrong offsets in the
- buffers addresses in dma descriptor
+Date: Wed, 27 Mar 2024 10:58:50 +0100
+Subject: [PATCH 3/3] dmaengine: xilinx: xdma: Clarify kdoc in XDMA driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240327-digigram-xdma-fixes-v1-1-45f4a52c0283@bootlin.com>
+Message-Id: <20240327-digigram-xdma-fixes-v1-3-45f4a52c0283@bootlin.com>
 References: <20240327-digigram-xdma-fixes-v1-0-45f4a52c0283@bootlin.com>
 In-Reply-To: <20240327-digigram-xdma-fixes-v1-0-45f4a52c0283@bootlin.com>
 To: Lizhi Hou <lizhi.hou@amd.com>, Brian Xu <brian.xu@amd.com>, 
@@ -54,51 +53,60 @@ Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
  Louis Chauvet <louis.chauvet@bootlin.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1016;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1602;
  i=louis.chauvet@bootlin.com; h=from:subject:message-id;
- bh=Uzr2bK6DiI1V4GZAhaVT5cYNAM7G0VnbzgyNu2t/W38=;
- b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBmA+3s0JG0WdUbsy7i8QDPfbhTO08tGTlQ8yyvl92x
- mhKGN06JAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZgPt7AAKCRAgrS7GWxAs4g4LEA
- CggITrUpwzuuj5zMdD6jmZdbJKYNK+s2pg7X1fhI0UGcqV0xoraveSkRKutOQyLWZq+Ed84ipqZdjP
- MXlUapOFmdBj8saXaitR1COGB8uI47gmjB2taQAcQkS8Cxc9d6ws50ThDSYIPvbyt8SHYgJCOsKZVk
- PLgohKVXHgzWTOv4OB0nsjvy57uzt6R1atpK7Rs4jaQZ6MCzI1EwJa1Mvz+sihPcDuWch3jPnlleEM
- TkF1BFRS8Gz/rSORI13d6lAHRZTqg7Spz9uCSGwtV7malBOrjU0hpqh/sbG0GvjTSshVTDHWXfc16O
- n0YqzRd8tlbBxBc+IY+Cv/ibaeq3cX9jthdMcUREkeiQe+P4pX9ScFLLssIUHX//0wFxBbvpkRo0U4
- 8+VMRtWIqJA8lRHGN7DoAC3hMc0H++vybnbWVJILCCsJ93/Dg1gri6aJKWib2d5ynhhNi0MWO4EeqI
- LU4deXn7+m1HaH/SrPFQafgW74OCmhlIU5FEY3hAaLc8Sq+paZ1wIHyj4aOOfW+pD+bmOz456/8VX9
- kOR0xk9lOpV184m9twPtMeZMoC6UiWY3kAOb2eLxz0dSO2Pm1YuDcMLibOYqayi1bEzLete3blPbyY
- OO6W6kL2GB7PsPH/jiXQEUjx5xDuBgZa3u7MY9xy+00z5GS7SVAtExS/wdQw==
+ bh=Qu3N1kH//gP+Zhn4r+vc3YZmGiId+GfbdTx9l1LnfhA=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBmA+3sS9HVQIWiFg2uWF+TzbykBXZyV4P4JePFYOSL
+ GqiUWc+JAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZgPt7AAKCRAgrS7GWxAs4tV+EA
+ C5S9ZpDRclxOf6wzOsIvQV1M1IfOGbnVbBQvAn0EXG0QvS+XLMQTvQ/tzMEhc/xJw+dbLBCBRRT7yr
+ fjLCiLUUMsMJU/fU91gpORTSHZ82xttwR2AYCmvEi4VQmDZkZFMAgpQHXxHatc9Sge0wpL3LB0y6WS
+ 2zdY+gdaFguTg8zBza1SKMs/lsJ4y6pq2fytp7rr3hIOkfrNZH76BC6WV+9kbNIRgbdImB+HZlSopE
+ 6rgCgBY4ZB1ciu8/Buo0WDMy7RE96+PmgNsy7vhUFvoyBxuyDVojuXtTuWg9zSpnQXgAM23Avrey5g
+ xE9YFROL7cuqPWAQyYovPgj8nwueaePCZcQebWSUtga1DYikKxKb2oghPZw1Gz8Zh9O1nsMtQmNCk5
+ oDT7vnSlVE4DNUoLpGPHcB6DveeDvP2fM7j+b3wwf1zc+HQAy7lgcChqm1w1L9mwrhCsZWvIEXw/b+
+ 8t71rwvDB74V9Ihw2spnKDwiRcaV2DT7FCYouXSzDyF2VEnBGBA/ujyOtsL010kNZIat7xr6f1qwE2
+ 0QHEJwimgaoiBzXRqPD6mtpoxLxkbKe+XOGqsRDSXN/hl+EIPvH5m8mGoW4jnTqEt17wOsVU5MVzrD
+ tKoOox28Mis4O8s4pzjvdTvwoOPmTCd6655l5wfHyhzd4v9wqc0nOI+ipCHQ==
 X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
  fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
 X-GND-Sasl: louis.chauvet@bootlin.com
 
 From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-The addition of interleaved transfers slightly changed the way
-addresses inside DMA descriptors are derived, breaking cyclic
-transfers.
+Clarify the kernel doc of xdma_fill_descs(), especially how big chunks
+will be handled.
 
-Fixes: 3e184e64c2e5 ("dmaengine: xilinx: xdma: Prepare the introduction of interleaved DMA transfers")
-Cc: stable@vger.kernel.org
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 ---
- drivers/dma/xilinx/xdma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/xilinx/xdma.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
-index 170017ff2aad..b9788aa8f6b7 100644
+index 5a3a3293b21b..313b217388fe 100644
 --- a/drivers/dma/xilinx/xdma.c
 +++ b/drivers/dma/xilinx/xdma.c
-@@ -704,7 +704,7 @@ xdma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t address,
- 	desc_num = 0;
- 	for (i = 0; i < periods; i++) {
- 		desc_num += xdma_fill_descs(sw_desc, *src, *dst, period_size, desc_num);
--		addr += i * period_size;
-+		addr += period_size;
- 	}
+@@ -554,12 +554,14 @@ static void xdma_synchronize(struct dma_chan *chan)
+ }
  
- 	tx_desc = vchan_tx_prep(&xdma_chan->vchan, &sw_desc->vdesc, flags);
+ /**
+- * xdma_fill_descs - Fill hardware descriptors with contiguous memory block addresses
+- * @sw_desc: tx descriptor state container
+- * @src_addr: Value for a ->src_addr field of a first descriptor
+- * @dst_addr: Value for a ->dst_addr field of a first descriptor
+- * @size: Total size of a contiguous memory block
+- * @filled_descs_num: Number of filled hardware descriptors for corresponding sw_desc
++ * xdma_fill_descs() - Fill hardware descriptors for one contiguous memory chunk.
++ *		       More than one descriptor will be used if the size is bigger
++ *		       than XDMA_DESC_BLEN_MAX.
++ * @sw_desc: Descriptor container
++ * @src_addr: First value for the ->src_addr field
++ * @dst_addr: First value for the ->dst_addr field
++ * @size: Size of the contiguous memory block
++ * @filled_descs_num: Index of the first descriptor to take care of in @sw_desc
+  */
+ static inline u32 xdma_fill_descs(struct xdma_desc *sw_desc, u64 src_addr,
+ 				  u64 dst_addr, u32 size, u32 filled_descs_num)
 
 -- 
 2.43.0
