@@ -1,41 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A71B156255;
-	Wed, 27 Mar 2024 12:16:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6250D15666B;
+	Wed, 27 Mar 2024 12:16:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711541762; cv=none; b=tW63tvoHZjZ+3NPv81BQZbsmMVbXgPGtjuJVxpp/0xBACabFjLoI4Gz5W83umFu1XKidXtSUipIaQLOvfT3s4U4HnnvkOLUGFKk7phxL3umeFOo+Td4Vz8Vtdma/xjXJeprqo3KpVCME4RD192YWN5SFdAm8OCwAkaGyR9alfgQ=
+	t=1711541767; cv=none; b=WwSz0gOCQSfypnn5zZXCq4WC011VOsrh+/XqUlMPolFJuUWL8Hak5itUL8ieOALOM53Tog16DzDTbyui+52xc0AXmx+eW9Ong0uudwmJ3qTKefW8MJ56Z7eI5flMapCLxxcVLwRJTAGfvZzQnpS+HNT1RA1+imgiejc91P3lYMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711541762; c=relaxed/simple;
-	bh=nYxfiqXAgwCuN9FhY224C7MV4EWYfSXT1YcuSPNgbUw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JPE+gmC7xQosOLt04HhcnfYW6CRdmNq9cf6xqIlOiOLhTJP89dlg4zWf3aadLq8fnq7cTPFwr6W68cfD4qn2eDHnCfM/iOeaYHNQNCf8JZu9hub21eK8U2rlvweMoCEc5RL3AARsW0ZgL9jus58bkJ3U5CZyeTcukkFHKcd4GCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iov2eyRt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711541767; c=relaxed/simple;
+	bh=fe6XZGzRKfy7XqVYnGt6KUez//5L8jzE9WJfPWrvDd4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oYOSxe/AC3aW6JZKHXa4K67dyfWnfgMSZ4r6cuEL1FFnotNHquZ5rZXcPw/Fe0e69YL1NFXugTp4hOpoxhLv0yxLPjlT4dTCXHVElIn9fqx/XHuL3vlPbiSjEbySJIn23IZDuwqos2wjLODmNwv06SqdKnAPynqgov7MNvs9lBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TyhaN+Lz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iov2eyRt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0F24C433F1;
-	Wed, 27 Mar 2024 12:16:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TyhaN+Lz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C081C433C7;
+	Wed, 27 Mar 2024 12:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711541761;
-	bh=nYxfiqXAgwCuN9FhY224C7MV4EWYfSXT1YcuSPNgbUw=;
+	s=k20201202; t=1711541767;
+	bh=fe6XZGzRKfy7XqVYnGt6KUez//5L8jzE9WJfPWrvDd4=;
 	h=From:To:Cc:Subject:Date:From;
-	b=iov2eyRtMuW3oF3K0CFETNSnIZfX6LY7vfl/jdVhLQMpFcn8zvriq+HpK8aUiAasG
-	 JLQBYuwtObY5mTVwTHVIMdwX9hhsbNix6RkY79zBLcY9JEDo/auc0nSkgXkdFZ6YLD
-	 4hRKekz8k27c5B4QlAEK6NsCoMXMFFc31YUchvY0NNKLkZu+J/kttkCb2ENsves7WF
-	 iJ6VFypFn7LhaKqmcZA715XfnFpNqcV9voF5+oHJLC4F5GJYCHZit2HRIU1ern2U5M
-	 l8WGWpZTv3Zx1b+LUEOvOsbvF6LaANndtrbavYVXL9ums+XTjmaOgY2yg+ol2Y6kDd
-	 ZKY94KEufoa6Q==
+	b=TyhaN+Lz2Ohpg3Qvw9JqCt9Z22LdFHeTNSRqXlLa1vUjDYjsqCcddOui3wLVXjEN7
+	 lHnyO1KZNWzE2Or/4/K0vcGk7DIx2/bB40AvFT5wWeGnYK3Z1ezgWnFSCSwtRJusT8
+	 vd2LOshoKmAZFey2jJYR7+6+NR4lMgnXgw76Juf4NWes+fEndQVbFZDAFDc2crj63l
+	 b/MUCIA0eHPK/zZhD7LFLADbPMr4YS7ymGBoIpEvJVGkLI6nN4yiRvKFvkq/8OiBum
+	 H3Uh7JTOncrzNM+Dbb6Jr6YA2QhTOORCT5y5OMv4oduO43tuGUCLz2yl7M0EQqQ7Zc
+	 S9c1loe/Vv0Pg==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
-	alex.williamson@redhat.com
-Cc: Diana Craciun <diana.craciun@oss.nxp.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Eric Auger <eric.auger@redhat.com>,
-	kvm@vger.kernel.org,
+	mpe@ellerman.id.au
+Cc: linuxppc-dev@lists.ozlabs.org,
 	linux-kernel@vger.kernel.org
-Subject: FAILED: Patch "vfio/fsl-mc: Block calling interrupt handler without trigger" failed to apply to 5.15-stable tree
-Date: Wed, 27 Mar 2024 08:15:59 -0400
-Message-ID: <20240327121559.2832347-1-sashal@kernel.org>
+Subject: FAILED: Patch "powerpc/smp: Adjust nr_cpu_ids to cover all threads of a core" failed to apply to 5.15-stable tree
+Date: Wed, 27 Mar 2024 08:16:05 -0400
+Message-ID: <20240327121605.2832425-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -57,56 +54,39 @@ Sasha
 
 ------------------ original commit in Linus's tree ------------------
 
-From 7447d911af699a15f8d050dfcb7c680a86f87012 Mon Sep 17 00:00:00 2001
-From: Alex Williamson <alex.williamson@redhat.com>
-Date: Fri, 8 Mar 2024 16:05:28 -0700
-Subject: [PATCH] vfio/fsl-mc: Block calling interrupt handler without trigger
+From 5580e96dad5a439d561d9648ffcbccb739c2a120 Mon Sep 17 00:00:00 2001
+From: Michael Ellerman <mpe@ellerman.id.au>
+Date: Thu, 15 Feb 2024 00:14:04 +1100
+Subject: [PATCH] powerpc/smp: Adjust nr_cpu_ids to cover all threads of a core
 
-The eventfd_ctx trigger pointer of the vfio_fsl_mc_irq object is
-initially NULL and may become NULL if the user sets the trigger
-eventfd to -1.  The interrupt handler itself is guaranteed that
-trigger is always valid between request_irq() and free_irq(), but
-the loopback testing mechanisms to invoke the handler function
-need to test the trigger.  The triggering and setting ioctl paths
-both make use of igate and are therefore mutually exclusive.
+If nr_cpu_ids is too low to include at least all the threads of a single
+core adjust nr_cpu_ids upwards. This avoids triggering odd bugs in code
+that assumes all threads of a core are available.
 
-The vfio-fsl-mc driver does not make use of irqfds, nor does it
-support any sort of masking operations, therefore unlike vfio-pci
-and vfio-platform, the flow can remain essentially unchanged.
-
-Cc: Diana Craciun <diana.craciun@oss.nxp.com>
-Cc:  <stable@vger.kernel.org>
-Fixes: cc0ee20bd969 ("vfio/fsl-mc: trigger an interrupt via eventfd")
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Link: https://lore.kernel.org/r/20240308230557.805580-8-alex.williamson@redhat.com
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://msgid.link/20231229120107.2281153-1-mpe@ellerman.id.au
 ---
- drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/powerpc/kernel/prom.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c b/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
-index d62fbfff20b82..82b2afa9b7e31 100644
---- a/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
-+++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
-@@ -141,13 +141,14 @@ static int vfio_fsl_mc_set_irq_trigger(struct vfio_fsl_mc_device *vdev,
- 	irq = &vdev->mc_irqs[index];
+diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
+index 0b5878c3125b1..58e80076bed5c 100644
+--- a/arch/powerpc/kernel/prom.c
++++ b/arch/powerpc/kernel/prom.c
+@@ -375,6 +375,12 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
+ 	if (IS_ENABLED(CONFIG_PPC64))
+ 		boot_cpu_hwid = be32_to_cpu(intserv[found_thread]);
  
- 	if (flags & VFIO_IRQ_SET_DATA_NONE) {
--		vfio_fsl_mc_irq_handler(hwirq, irq);
-+		if (irq->trigger)
-+			eventfd_signal(irq->trigger);
- 
- 	} else if (flags & VFIO_IRQ_SET_DATA_BOOL) {
- 		u8 trigger = *(u8 *)data;
- 
--		if (trigger)
--			vfio_fsl_mc_irq_handler(hwirq, irq);
-+		if (trigger && irq->trigger)
-+			eventfd_signal(irq->trigger);
- 	}
- 
- 	return 0;
++	if (nr_cpu_ids % nthreads != 0) {
++		set_nr_cpu_ids(ALIGN(nr_cpu_ids, nthreads));
++		pr_warn("nr_cpu_ids was not a multiple of threads_per_core, adjusted to %d\n",
++			nr_cpu_ids);
++	}
++
+ 	/*
+ 	 * PAPR defines "logical" PVR values for cpus that
+ 	 * meet various levels of the architecture:
 -- 
 2.43.0
 
