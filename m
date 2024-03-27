@@ -1,116 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7ACC1304A6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 004F618130E;
 	Wed, 27 Mar 2024 12:25:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711542309; cv=none; b=D1lZjuHNfHqIChXzbVXJVNcN7IdnTYKN44BoljArMMomZddzOONr49NK0qzUS7JxJZ1IUenytnYioOKmj5TDdKi4BHQ7eLlpxS1Xd50rNH9daGbX9g5Q5UA+QOyEpYZYGEdjGgYVW/kz1g85JY2+qWfUuul4PqSJBvC7UxpQ9q8=
+	t=1711542310; cv=none; b=RT8Vc7K6InTUAAPfTcVN8dfPMJ/KiZf+CF7hGbI5RgccvoypRY/xHQ+4yJboGwcs0XlP+msAMK0ZEREvxlwKn00LXz8QdYtcTdMWbSBbbeeziqqVJWU5xfA1YEV4eOqoazKMJhtxYR6eplE46clgSHQ1H7pj0ZWhj0hLP/xE9lQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711542309; c=relaxed/simple;
-	bh=gPsBJl3+lGsrZ281LklEHOtcSRqfcnJMec/DLgQQb8o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aVxD+Ps+HcTqAWErD6OlFUULNDjRe2t8URgpxPASIoSxvw0YeXt5Ug+fBkM2A9ceQPfJT8whbJ6ezPVp07hG/KhcQj3SPk+06HLhHSAoiVuGkTSUIct9YysW46kEwBJpxxarKbMJwRIBjzRuW3zh4k+85P+5O4lCHt+kLgrmDwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZW0wI5Tc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711542310; c=relaxed/simple;
+	bh=tQOdbfRc0uu9USqlT0ZH22KXVG2u9wYpVV+XI4OZdkY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n/ngrnw7wNaukmGPlk1enARSaWb9uwUEHZ9/pAR3eDPTMbsOtCQE5+UaD0blOIyk2eOONF2sIYJmxobJ52uvMu+i8SBWNCvC+zFeR21tgyVZgqFigqsiAV0UD+0eqlYKOLu6UHghQJ7Vrx/kCke7dYUh8XJzgTIE/9Cj93db8EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QxM0JQ5x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZW0wI5Tc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C66DC43394;
-	Wed, 27 Mar 2024 12:25:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QxM0JQ5x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2AFBC43390;
+	Wed, 27 Mar 2024 12:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1711542309;
-	bh=gPsBJl3+lGsrZ281LklEHOtcSRqfcnJMec/DLgQQb8o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZW0wI5TcjqElnMJHmeOioieZAl/zxdpw5U71hNTwAiAOmdOqr5q57K4xXpMTNQlBJ
-	 6e+ut/LCN1zr7rhWDODQTIhyaGsz/yh0n0UwnqPd2EMLtSGSTH2JBnm0p8kF8FTUWF
-	 F/3Gvz8GPQ+FkMlTLULmuhkOMb4LUvPzx++1I+ojrCBvOAX1do3NRcymbivSJA7D2H
-	 OX+QqBB06vYQxtVrF3KHwgrhGaxnrPU3HS6SK11uiB0QF3caMzPMbuu+pVKBYNfTzz
-	 pvSOT4kzC3+TfCifJDNMaRLnoaXfWC2tpSig0c7hZlBJfYf3zUa7w20oWjayF8El8t
-	 MOnvJgJ3IHZ8g==
-From: Conor Dooley <conor@kernel.org>
-To: linux-riscv@lists.infradead.org
-Cc: conor@kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Jamie Gibbons <jamie.gibbons@microchip.com>,
-	Valentina Fernandez <valentina.fernandezalanis@microchip.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH v1 2/5] dt-bindings: gpio: mpfs: add coreGPIO support
-Date: Wed, 27 Mar 2024 12:24:37 +0000
-Message-ID: <20240327-procurer-rascal-33bca7d5d14b@spud>
+	bh=tQOdbfRc0uu9USqlT0ZH22KXVG2u9wYpVV+XI4OZdkY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QxM0JQ5x48rsAOWhahTtzTy0vnnzWLCo640LJfpFw8aGudttKkJuGuZkviR2lvYot
+	 Rt/ZPjZ3zXAQ1Q4b58Uf7ZoyJuaaRCUf8gED2K9OcTEj5fvrQRN+mbNxcRb4bk52V8
+	 FNHPKekQoWt4ID9JFUlCVuMULNesm5zCtTfiLU+vwexq7q1E9ScwvyWV/HnJKvvp/y
+	 Hudu0iQ6po2l+KYQ/4oxkfDEMT5WUvPxrTozBGwDjhvmWEeCtmU88ttRTVMZaRmCeJ
+	 HhJYM0kP3zCOYi9zEBo5iVa1vcbRlhtguz9hSFxfLWYY8Dp08lmTkAc0Gpu2uoh5ZA
+	 HhvG98iLIsjWA==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org,
+	wangyuli@uniontech.com
+Cc: WANG Xuerui <git@xen0n.name>,
+	Wentao Guan <guanwentao@uniontech.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	linux-crypto@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: FAILED: Patch "LoongArch/crypto: Clean up useless assignment operations" failed to apply to 4.19-stable tree
+Date: Wed, 27 Mar 2024 08:25:07 -0400
+Message-ID: <20240327122508.2839963-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240327-parkway-dodgy-f0fe1fa20892@spud>
-References: <20240327-parkway-dodgy-f0fe1fa20892@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1550; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=IMTT4E9wFHswzy76N6YWQpUY7X5/7P9UPRxEwIXGGcY=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGksAqwlMoeOTjkgsrLk+pXsCh2fyQc/lKY92M0gOH2W/ 432/QYKHaUsDGIcDLJiiiyJt/tapNb/cdnh3PMWZg4rE8gQBi5OAZhI/XdGhuN8d3y0a4TunTev fNci3W7XI797eZTd4m2zI8QWsjrJPWdkmBsmwLN97pkHCSZ/pzQrpjxmr73q8vSSXd9OEc71i/1 k2AA=
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+X-Patchwork-Hint: ignore
+X-stable: review
 Content-Transfer-Encoding: 8bit
 
-From: Jamie Gibbons <jamie.gibbons@microchip.com>
+The patch below does not apply to the 4.19-stable tree.
+If someone wants it applied there, or to any other stable or longterm
+tree, then please email the backport, including the original git commit
+id to <stable@vger.kernel.org>.
 
-The GPIO controllers on PolarFire SoC were based on the "soft" IP
-CoreGPIO, but the inp/outp registers are at different offsets. Add
-compatible to allow for support of both sets of offsets. The soft
-core will not always have interrupts wired up, so only enforce them for
-the "hard" core on PolarFire SoC.
+Thanks,
+Sasha
 
-Signed-off-by: Jamie Gibbons <jamie.gibbons@microchip.com>
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+------------------ original commit in Linus's tree ------------------
+
+From fea1c949f6ca5059e12de00d0483645debc5b206 Mon Sep 17 00:00:00 2001
+From: Yuli Wang <wangyuli@uniontech.com>
+Date: Tue, 19 Mar 2024 15:50:34 +0800
+Subject: [PATCH] LoongArch/crypto: Clean up useless assignment operations
+
+The LoongArch CRC32 hw acceleration is based on arch/mips/crypto/
+crc32-mips.c. While the MIPS code supports both MIPS32 and MIPS64,
+but LoongArch32 lacks the CRC instruction. As a result, the line
+"len -= sizeof(u32)" is unnecessary.
+
+Removing it can make context code style more unified and improve
+code readability.
+
+Cc: stable@vger.kernel.org
+Reviewed-by: WANG Xuerui <git@xen0n.name>
+Suggested-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- .../bindings/gpio/microchip,mpfs-gpio.yaml       | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ arch/loongarch/crypto/crc32-loongarch.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml b/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
-index d481e78958a7..6884dacb2865 100644
---- a/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
-@@ -14,6 +14,7 @@ properties:
-     items:
-       - enum:
-           - microchip,mpfs-gpio
-+          - microchip,coregpio-rtl-v3
+diff --git a/arch/loongarch/crypto/crc32-loongarch.c b/arch/loongarch/crypto/crc32-loongarch.c
+index a49e507af38c0..3eebea3a7b478 100644
+--- a/arch/loongarch/crypto/crc32-loongarch.c
++++ b/arch/loongarch/crypto/crc32-loongarch.c
+@@ -44,7 +44,6 @@ static u32 crc32_loongarch_hw(u32 crc_, const u8 *p, unsigned int len)
  
-   reg:
-     maxItems: 1
-@@ -62,12 +63,21 @@ patternProperties:
-       - gpio-hog
-       - gpios
+ 		CRC32(crc, value, w);
+ 		p += sizeof(u32);
+-		len -= sizeof(u32);
+ 	}
  
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: microchip,mpfs-gpio
-+    then:
-+      required:
-+        - interrupts
-+        - "#interrupt-cells"
-+        - interrupt-controller
-+
- required:
-   - compatible
-   - reg
--  - interrupts
--  - "#interrupt-cells"
--  - interrupt-controller
-   - "#gpio-cells"
-   - gpio-controller
-   - clocks
+ 	if (len & sizeof(u16)) {
+@@ -80,7 +79,6 @@ static u32 crc32c_loongarch_hw(u32 crc_, const u8 *p, unsigned int len)
+ 
+ 		CRC32C(crc, value, w);
+ 		p += sizeof(u32);
+-		len -= sizeof(u32);
+ 	}
+ 
+ 	if (len & sizeof(u16)) {
 -- 
 2.43.0
+
+
+
 
