@@ -1,77 +1,78 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC16B14EC64;
-	Wed, 27 Mar 2024 18:28:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151E514F9E6;
+	Wed, 27 Mar 2024 18:28:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711564092; cv=none; b=AT/P85IQalmVUoSVM38KIURixzsCSF3P+OueMH8EgQfAB2p+d09bUs8dJJS+hTVKIY5lyH81QYZzrvpPB+8+9BECSPZ546+jRSgYwl8lp0rNIipkRvjpuDYNLaNXRjeiTsSkAvYQBlUwt4nMMlBL55YAmHwnsqndUpaankSQyD4=
+	t=1711564101; cv=none; b=ePk9CGKHAMCRXFcSBf+kFBcWR/hmvD4ELTkfYpZOIDgC9I8b873coBvsHdeF3+DdaBFzh5moCgWqUGwWJLILgclNMNnMc5AycrleJB4kNTY13FCOyHHNaVju6hQB4n6nw50ewgexu7H02J7NpXBtvEquENo9vEmHg3sV8m95Cdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711564092; c=relaxed/simple;
-	bh=V/9V12yNo/giq/Rx+/426uZy/tUNa6L35feV63U/BC4=;
-	h=Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=lz2XyVqXxmI5AUq4fTt73ZGk/BagLwpoNpJiHxEkMFFavfpqSqjqrlbBZo1xJd6ovLluzcb3YdVv6dJM4/uJoM/O1pXKo4G19IzbIRFytH/dO8a3tF3ha5siHflAKoSDyuTB/lnMuY30SbhCjb72o/GIYvKBVz1rOr8Oun/1wy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from [192.168.1.105] (31.173.86.12) by msexch01.omp.ru (10.188.4.12)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Wed, 27 Mar
- 2024 21:28:06 +0300
-Subject: Re: [PATCH] ata: pata_macio: drop driver owner assignment
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Damien Le Moal
-	<dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
-	<linux-ide@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240327174936.519861-1-krzysztof.kozlowski@linaro.org>
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <ed7f0b72-5592-e1ff-aab3-28703de7307e@omp.ru>
-Date: Wed, 27 Mar 2024 21:28:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+	s=arc-20240116; t=1711564101; c=relaxed/simple;
+	bh=fTjEPUTSAxIObFeZmdbF/NJPctF2f0U4E2ZqBTsxoP8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mSxzoVqDElU9a5aeA5W02pScDOMRUeRJzpv97spAw42vfhHLUV/FhiOXdEjwpI7zcpeGFNyk8xC0mhfv/BeWQbgR14rFDsbDRsiKIRVI4mx4gZYFMi9Q62fAPZKN8+O3d646bNfDIWhmouRnoZoTtT+tn7/ziu5gOsqRQ5L1KM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=NIzq2VvQ; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="NIzq2VvQ"
+Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id C3AC51FA4A;
+	Wed, 27 Mar 2024 19:28:08 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1711564089;
+	bh=KeDW2eKtmrHGStARTdEcHeEhglHIknghvidML3youGE=; h=From:To:Subject;
+	b=NIzq2VvQ0oMePqxNGBUnhwO2Q7IsXFOs9qDexkxfB5ox9ZIb1DPVhn9G5L6/9r0RT
+	 SlvYw+GLDjkFYQxMp+oN7alOEh502uWRwajJ5fgaH9OiwCH7auDToPYww0Jsb2SYJX
+	 nKlV83bCgiSnASNGcxMC9+VcygLKOCEXdFr0Smt25AKQ4gWVijCZzqaHQkYgqLx6dS
+	 kk5kw7lxS8o5Thl+f29dx3bnkzg5ZpANXoFh/ImJqWlCFx2cwx8XryYhOeeepRZxCF
+	 wSVpth7ZbZ1KlXCfdzzMiEW/EY2l+JaatzJYLWyseNES7flrmAvP9/9mynPwMxCxtf
+	 dyvcxa9yKkwlA==
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Francesco Dolcini <francesco.dolcini@toradex.com>,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/2] arm64: dts: ti: k3-am625-verdin: fix GPIOs pinctrl
+Date: Wed, 27 Mar 2024 19:27:59 +0100
+Message-Id: <20240327182801.5997-1-francesco@dolcini.it>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240327174936.519861-1-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 03/27/2024 18:10:06
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 0
-X-KSE-AntiSpam-Info: Lua profiles 184451 [Mar 27 2024]
-X-KSE-AntiSpam-Info: Version: 6.1.0.4
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 13 0.3.13
- 9d58e50253d512f89cb08f71c87c671a2d0a1bca
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info:
-	127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1
-X-KSE-AntiSpam-Info: ApMailHostAddress: 31.173.86.12
-X-KSE-AntiSpam-Info: Rate: 0
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 03/27/2024 18:13:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 3/27/2024 3:07:00 PM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+Content-Transfer-Encoding: 8bit
 
-Well, strictly speaking, it's initializer, not assignment...
+From: Francesco Dolcini <francesco.dolcini@toradex.com>
 
-MBR, Sergey
+Fix a couple of issues on the Verdin AM62 pinctrl affecting multiple
+carrier boards.
+
+The first patch fixes a mistake on the pinctrl of the verdin-am62 mallow
+carrier board.
+
+The second patch allows using the mPCIe/M.2 slot available on multiple
+carrier boards with cards that use only the USB interface toward the host,
+this is achieved with a GPIO hog, given that no PCIe interface exists.
+
+Francesco Dolcini (2):
+  arm64: dts: ti: verdin-am62: mallow: fix GPIOs pinctrl
+  arm64: dts: ti: k3-am625-verdin: add PCIe reset gpio hog
+
+ .../boot/dts/ti/k3-am62-verdin-dahlia.dtsi    |  8 ++++++-
+ .../arm64/boot/dts/ti/k3-am62-verdin-dev.dtsi |  8 ++++++-
+ .../boot/dts/ti/k3-am62-verdin-mallow.dtsi    | 22 +++++++++++++++----
+ .../boot/dts/ti/k3-am62-verdin-yavia.dtsi     |  8 ++++++-
+ arch/arm64/boot/dts/ti/k3-am62-verdin.dtsi    |  9 ++++++++
+ 5 files changed, 48 insertions(+), 7 deletions(-)
+
+-- 
+2.39.2
+
