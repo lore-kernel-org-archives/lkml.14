@@ -1,150 +1,96 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 2.mo560.mail-out.ovh.net (2.mo560.mail-out.ovh.net [188.165.53.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00FC2376A
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 22:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0932376A
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 22:33:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.53.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711578779; cv=none; b=b5RRYrSSK8ir5bzUNtDRJDSEQXG2jpocCHkUDVajfejOcK4zJ7dxa4UQayhtRbIJIKYKj8WzjuqdPvGCK2334omVzh5P5ueaQAhKs4pwGkRoBZFts9SZYfj9uO+Jr02Chb1f9P2NT7pizaHVSE5/ySl+y0GL9a1JQukaoP8Ea3M=
+	t=1711578800; cv=none; b=cy+GARi5Mww0LMApk44CAiL4LS4h1djFU4B1/Bsl6xI2yJ13sXiqtJqazxI+quVIl9yJE/XOhwrSXu41R/6YSq91ghYHOc56vijdvS6uC3NlSmoqFFr6MPSMJ1/HDdQBEGaKhFgdYDwWrhsqFiq3K8WyN+H1VmZ2XjxGMPF6/e4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711578779; c=relaxed/simple;
-	bh=/lTCSwUchJ0J5uoW78moJ36BuUo2rz69VBWHSZG7Tzg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Il3x8gOli/9tnd28wHHPyXtzuSUuDgxk9WnVFO9+wRqdnCC0b6OVlM0DRvt5syOwYEnmXu3ZwD2ohjiYeA13K+YQdUpykCXIJCepqLI/tfB+1qJN6eS3rxFKBtMfa6gbVibdwxCTZ6VbSbYx/IuZ4Mt1kjAv7hBaCBg6M28okoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L6SXhoUN; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L6SXhoUN"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-568c714a9c7so315380a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 15:32:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711578776; x=1712183576; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gbcd+PIe6N4CDw4yRlMY0za1InBY4i1/TiiyWvtl4Fg=;
-        b=L6SXhoUNztu/7+uHxC1VbPJ78j6EZDOAzVqzjt+R7MNIUf7ScZJjVY/Zf7z1iMrf4X
-         s38TzprevV7r/H0+lAbEzvClE4QvW+maIQCjQPUj4rUCE+jasJgaxikBWE7GO5E+YKll
-         fyegiZ4iXrExkGFAMnDxpJXsiLBPHwrhrHfpEbcsGivt6LoOrsBLjU418xS8BCSMjTQx
-         k8/Gf2FCmxV0dTlJeVEMrqSGHwnaQ/jzjlYWmAocLG6TiN0KUKNOJeWRX+igva6sSPZ6
-         w2+rfamydjjvj7aSK44b8bWPgIpIhKvD6wNYMx42VjJ6HmvGPL/bRRoopVPmYWSDwhj7
-         YwcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711578776; x=1712183576;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gbcd+PIe6N4CDw4yRlMY0za1InBY4i1/TiiyWvtl4Fg=;
-        b=tDxwW6EiHX273PtqxzRmf27A5UaGGoOtxKVXCL6EytDHZd22Wk6zwnLggLGfcw0gMP
-         8Fr9E7anncoh2eHWvB9N+T6WBKcc+8EBDG0j1wCcpIfM33iKkpAGhrvMdaoZXBLQzNaE
-         zBEU2rfGI/85NKYKCafj2BpOBY0mEy0QLrkEhpW0Oa/KsT1ljiupOasGpYcF+cSuSJyD
-         Nfz4DePSnm0FsosevYBH1/KCGOF+8SsKUuUr8R/3DmLYMvkHlEkQgNHS2RckZz/FNDvR
-         CyfcOKnxT18JdnjLZAZgnB7ZQIdoWYIusNR4pXaEnI2VlvOAUM/ME9X4hQD0vD5DLYWp
-         GItA==
-X-Forwarded-Encrypted: i=1; AJvYcCUUSjJtFfeoqzSvePAygGF8CXlnX9Ex3GzM1CU4Wv0p306TYicqCGWoVeXM5YyhBTRRBIA0Bk7xC5sO1A5Ejy+nvcHdF+q6kb7oW6qM
-X-Gm-Message-State: AOJu0Yx15OTn+gZV5/v9jeZ+Ulgd1wz9JDmtqXlzbARv+skzXkGsms5E
-	+fKYYgHygVLAOQGWW/JLqhVvgJXp+DbWeh2TBB73nSlZl8cE/G716rlAyj73qtbi0/VKbkkTqOx
-	zF2V/K89IYbrJQ8ijEYWuNSUnY76jnbX8Y1jx
-X-Google-Smtp-Source: AGHT+IGA8qE9wQIsqVFqSUZImJGYLwiSCRayTaYDwN9BZH8LNDUx5Enn+51vzaGQm+Ek47WzMKwK4q3yATeuJ/ARmRw=
-X-Received: by 2002:a17:906:3c4c:b0:a46:ecdd:d1f3 with SMTP id
- i12-20020a1709063c4c00b00a46ecddd1f3mr488077ejg.56.1711578775819; Wed, 27 Mar
- 2024 15:32:55 -0700 (PDT)
+	s=arc-20240116; t=1711578800; c=relaxed/simple;
+	bh=uubMJfEGsx1wHMfNv8O85cjpX0Z4oxTc9ge4GrdhcKE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O3qVHDR52x3cNqCevnhfZjJHePaqsQSQNoI9T3otS0UD7rimozn59lDOy8V2nk82q/U2IowM7qBdwCw6KIbxQrq1QOGaDrrnS/l8sj1Ues/zgHhTrrX2RsJOogV79EW7WDEJQNBE9GyhRVl+9rw9GlJrC0yVrgx7h60u8xc9zRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=milecki.pl; spf=pass smtp.mailfrom=milecki.pl; arc=none smtp.client-ip=188.165.53.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=milecki.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=milecki.pl
+Received: from director9.ghost.mail-out.ovh.net (unknown [10.109.176.162])
+	by mo560.mail-out.ovh.net (Postfix) with ESMTP id 4V4gvv0d45z1JMc
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 22:15:07 +0000 (UTC)
+Received: from ghost-submission-6684bf9d7b-xfkn4 (unknown [10.110.178.52])
+	by director9.ghost.mail-out.ovh.net (Postfix) with ESMTPS id E1CF91FD2C;
+	Wed, 27 Mar 2024 22:15:03 +0000 (UTC)
+Received: from milecki.pl ([37.59.142.107])
+	by ghost-submission-6684bf9d7b-xfkn4 with ESMTPSA
+	id gjE7MWeaBGY6QxIAbVqslg
+	(envelope-from <rafal@milecki.pl>); Wed, 27 Mar 2024 22:15:03 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-107S0012491a7f4-335c-4194-8bbd-5f1ada98fd90,
+                    AD8588E3BB83D84E59DEA8CE8674EAB20989D6B2) smtp.auth=rafal@milecki.pl
+X-OVh-ClientIp:31.11.218.106
+Message-ID: <30bc0d38-b610-4397-ba42-46819d5507fc@milecki.pl>
+Date: Wed, 27 Mar 2024 23:15:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240325235018.2028408-1-yosryahmed@google.com>
- <20240325235018.2028408-5-yosryahmed@google.com> <fef4556f-5d22-4941-9990-a4a3cf003dc4@linux.dev>
-In-Reply-To: <fef4556f-5d22-4941-9990-a4a3cf003dc4@linux.dev>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Wed, 27 Mar 2024 15:32:19 -0700
-Message-ID: <CAJD7tkb-mo-ote4PGa06mksrVEfQ=qANXGneAwLn4OMSfVJySA@mail.gmail.com>
-Subject: Re: [RFC PATCH 4/9] mm: zswap: move more same-filled pages checks
- outside of zswap_store()
-To: Chengming Zhou <chengming.zhou@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] mtd: limit OTP NVMEM Cell parse to non Nand devices
+Content-Language: en-US
+To: Christian Marangi <ansuelsmth@gmail.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+ linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+References: <20240322040951.16680-1-ansuelsmth@gmail.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+In-Reply-To: <20240322040951.16680-1-ansuelsmth@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Ovh-Tracer-Id: 11126987304968301369
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrudduiedgudefgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptfgrfhgrlhcuofhilhgvtghkihcuoehrrghfrghlsehmihhlvggtkhhirdhplheqnecuggftrfgrthhtvghrnhepgeekvdfgleeuteeludfghfduvdffjeekhfehteefvefggeelheeludeuiedvueejnecukfhppeduvdejrddtrddtrddupdefuddruddurddvudekrddutdeipdefjedrheelrddugedvrddutdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehrrghfrghlsehmihhlvggtkhhirdhplhdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheeitddpmhhouggvpehsmhhtphhouhht
 
-On Tue, Mar 26, 2024 at 7:39=E2=80=AFPM Chengming Zhou <chengming.zhou@linu=
-x.dev> wrote:
->
-> On 2024/3/26 07:50, Yosry Ahmed wrote:
-> > Currently, zswap_store() check zswap_same_filled_pages_enabled, kmaps
-> > the folio, then calls zswap_is_page_same_filled() to check the folio
-> > contents. Move this logic into zswap_is_page_same_filled() as well (and
-> > rename it to use 'folio' while we are at it).
-> >
-> > This makes zswap_store() cleaner, and makes following changes to that
-> > logic contained within the helper.
-> >
-> > Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
->
-> LGTM with one comment below:
->
-> Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
->
-> > ---
-> >  mm/zswap.c | 45 ++++++++++++++++++++++++---------------------
-> >  1 file changed, 24 insertions(+), 21 deletions(-)
-> >
-> > diff --git a/mm/zswap.c b/mm/zswap.c
-> > index 6b890c8590ef7..498a6c5839bef 100644
-> > --- a/mm/zswap.c
-> > +++ b/mm/zswap.c
-> > @@ -1385,26 +1385,36 @@ static void shrink_worker(struct work_struct *w=
-)
-> >       } while (zswap_total_pages() > thr);
-> >  }
-> >
-> > -static int zswap_is_page_same_filled(void *ptr, unsigned long *value)
-> > +static bool zswap_is_folio_same_filled(struct folio *folio, unsigned l=
-ong *value)
-> >  {
-> >       unsigned long *page;
-> >       unsigned long val;
-> >       unsigned int pos, last_pos =3D PAGE_SIZE / sizeof(*page) - 1;
-> > +     bool ret;
-> >
-> > -     page =3D (unsigned long *)ptr;
-> > +     if (!zswap_same_filled_pages_enabled)
-> > +             return false;
-> > +
-> > +     page =3D kmap_local_folio(folio, 0);
-> >       val =3D page[0];
-> >
-> > -     if (val !=3D page[last_pos])
-> > -             return 0;
-> > +     if (val !=3D page[last_pos]) {
-> > +             ret =3D false;
-> > +             goto out;
-> > +     }
-> >
-> >       for (pos =3D 1; pos < last_pos; pos++) {
-> > -             if (val !=3D page[pos])
-> > -                     return 0;
-> > +             if (val !=3D page[pos]) {
-> > +                     ret =3D false;
->
-> nit: ret can be initialized to false, so
->
-> > +                     goto out;
-> > +             }
-> >       }
-> >
-> >       *value =3D val;
-> > -
-> > -     return 1;
-> > +     ret =3D true;
->
-> only need to set to true here.
+On 22.03.2024 05:09, Christian Marangi wrote:
+> diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
+> index 5887feb347a4..0de87bc63840 100644
+> --- a/drivers/mtd/mtdcore.c
+> +++ b/drivers/mtd/mtdcore.c
+> @@ -900,7 +900,7 @@ static struct nvmem_device *mtd_otp_nvmem_register(struct mtd_info *mtd,
+>   	config.name = compatible;
+>   	config.id = NVMEM_DEVID_AUTO;
+>   	config.owner = THIS_MODULE;
+> -	config.add_legacy_fixed_of_cells = true;
+> +	config.add_legacy_fixed_of_cells = !mtd_type_is_nand(mtd);
+>   	config.type = NVMEM_TYPE_OTP;
+>   	config.root_only = true;
+>   	config.ignore_wp = true;
 
-I didn't bother improving the code here because patch 6 will replace
-it anyway, but I will do that in the next version anyway, might as
-well.
+I think there may be even more unwanted behaviour here. If
+mtd_otp_nvmem_register() fails to find node with "user-otp" /
+"factory-otp" compatible then it sets "config.of_node" to NULL but that
+means NVMEM core still looks for NVMEM cells in device's "of_node".
 
-Thanks!
+I believe we should not look for OTP NVMEM cells out of the "user-otp" /
+"factory-otp" compatible nodes.
+
+So maybe what we need in the first place is just:
+config.add_legacy_fixed_of_cells = !!np;
+?
+
+Any extra limitation of .add_legacy_fixed_of_cells should probably be
+used only if we want to prevent new users of the legacy syntax. The
+problem is that mtd.yaml binding allowed "user-otp" and "factory-otp"
+with old syntax cells. It means every MTD device was allowed to have
+them.
+
+No in-kernel DTS even used "user-otp" or "factory-otp" with NVMEM legacy
+cells but I'm not sure about downstream DTS files. Ideally we would do
+config.add_legacy_fixed_of_cells = false;
+but that could break compatibility with some downstream DTS files.
