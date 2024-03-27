@@ -1,39 +1,65 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76BEC5024E
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 15:47:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6021312F586
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 15:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711554451; cv=none; b=aUQBKFPpPZK0q/LRcU26JqkvBXslbYXtGua/rhBgg/yqof4D0gmlhtMxL167T04H1/b9gLSy50tBHLBrCxEzkm1NxhbBYyIUN70wasHv673szT03OM9x4DniKvaERGtcWe+itF0l3141O4RfPvVRGShur36APQd/TbuzmaYt1BQ=
+	t=1711554463; cv=none; b=LIESxsAgKAtLmGjh5ppGaxmjjJ0xTFZYMMwHX8e3VzaLs5uFUiO7DDoWD+NhhNbOGWmmfKX863AfmFd0sGcBi52bWLbnQ3ES/us+iJTpfSRt1WwQzm2LdX6cW+1XNMmKYculqUCHmLcoaYPR41WTDeISRMAONJXvWPwGMZnhLGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711554451; c=relaxed/simple;
-	bh=WOEUQx2Bx5xtqlEVTcWnqO5EJ1iFRbf5K9XsgPzPXlA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ESxVapy55mMlpdTYI7vsiyBcXGh+5eDUl0AXBNaxBfOc9Vkz+Q+HK/pIAGuhHi2F2gWC1GhzpRKe/O53ZXSaoKUKpA3drUPLwjLR1ucZrXfvHOfKIeV5brpovZTEyZP28ciI/lRA4xHDBOBF6eNtY7pQMtBHlluwp4QuadjdD9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=GE/y00td; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1711554463; c=relaxed/simple;
+	bh=DVO1rReh4ydB46JorXpL28hCKteSlDiF68Vwr+w5mPE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UNoqXesQl1x32HjdZDvk8jaMZhTVrKXj82nQ7Fh6cC+am+nXyfNHQ0QWkAFNearmN1xuPxZohHze6FtI2lwAOfwtGMXvcrz3WQMVpgzwxaTXBgpiSi5jE5MoHwsry/NCqHxCfgx+Q1dRFmXWo792DmLzlaBNyhxTWFKDdxdOdF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SBY91gqt; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="GE/y00td"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Cc:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=xo1GqznxK0Gmyrr9ZOtGr4W7JP3bZGzh0OdZQVVxER4=; b=GE/y00td2HheVLK9VZTPtBY6ye
-	/PrHjfariKLUkb9H+jgTR7QYn9VnSny3EjwHCSc9KNx2PZZEbrDwqPEZPO0P4mMfMstLyNBpz9Xg/
-	krga2D4cuVcdmDWrFtcjTuBtEm3o5o4epeiX2kr2eHNl5QZYdDiKbpf7Wv0rHiY/99kcn2pfiDrhs
-	1vreE7SmpVRnBow5gq9BF2Wu9S2vMqun0IuU/70uR1Brl8gmC+e14yvFmkdU8+kNj+dCdB7X0+wHD
-	pYDsvT/HrJOArHmc2AKvrPQHEsijYm0zRXjUJxcw+f7AKO0ZAwNe/5FHmNY8OBSFfL51dFCx6zbUA
-	BST0201Q==;
-Received: from [177.34.169.255] (helo=[192.168.0.139])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1rpUoQ-00FtuU-P0; Wed, 27 Mar 2024 16:03:35 +0100
-Message-ID: <6be935f8-8a4d-4490-91df-7982d3beee38@igalia.com>
-Date: Wed, 27 Mar 2024 12:03:25 -0300
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SBY91gqt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711554461;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=nx2RBcEO1zlkXSO8aDJi6Uao1EiV9BqGUI/e60nrr6c=;
+	b=SBY91gqtVcFUzzi4TSoCzeGe9vmp0v24ukKZfzJt7wOw1zr/PfIBXYy9RUizIS09ggbs3a
+	MkVQfC6QTbV3ZUYN7NYQrK+73TU/RXejokfPRtFk0Rk9arlFsQlHfJfFpXTf02LeGM96FV
+	u1a2BhFKKDJrTeLC1ny8ABALMy3802w=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-617-MN6pIyPuOcOe2GooIL56pg-1; Wed, 27 Mar 2024 11:47:39 -0400
+X-MC-Unique: MN6pIyPuOcOe2GooIL56pg-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-41407fd718dso37361155e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 08:47:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711554458; x=1712159258;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nx2RBcEO1zlkXSO8aDJi6Uao1EiV9BqGUI/e60nrr6c=;
+        b=wzMSVb24VFRDrJwkOTKeukZ13J5ldCA0lqGkqA+q4F0zbsBJwcTFledEMm7pdy8NDX
+         0HOGY/VMhup+JKmQlxm47qiFc7aWUBBQbriZmqL9AxKT3+GALFiJRZzkLqyY1q8Qf4K9
+         CA1LsItXZqzh/WISTg6FaDIPD3RCWhruxflzZl5/91zYayANy1Zrv6YUuc8R6q5FsWZ9
+         Njri4d58IYOjL1g0H5cPqjA2LfYx21vtTQiLOfjErw2BtJpCQQJ5IBGzjS1FQOMzrqiN
+         Z/DNqZQ19AKfEdA2TfhSgO5HM72FqHaOyS969BZpFOG5mHpCCvUZUPdgMv7Ow+Mjbo/v
+         4X9A==
+X-Gm-Message-State: AOJu0YyOS3krHynbEmRQJtvgujKL8Sls5vVU+LauDOzywjFaFmbQSU/a
+	vRwOHnTXOz1j0HqMPtm9L29M6RcdYnFerWvhKMXHgY/3iBFR23BjanLrf1KdQMo4UFFqsAudBT8
+	SQNAqMI/OSMNypLpePvytuGCzpxHgZvPX/zLiYnlaZ/O39t0hHfdYm9dFeuvsOw==
+X-Received: by 2002:a05:600c:524d:b0:414:8c04:23d7 with SMTP id fc13-20020a05600c524d00b004148c0423d7mr351322wmb.12.1711554458572;
+        Wed, 27 Mar 2024 08:47:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGMMNr9uPGzoqufs3UzwsuyIJrM6qX29FP7ICBLhhHmRIezXNRoAaLgs2liyRBDuZ/By57oYw==
+X-Received: by 2002:a05:600c:524d:b0:414:8c04:23d7 with SMTP id fc13-20020a05600c524d00b004148c0423d7mr351286wmb.12.1711554458105;
+        Wed, 27 Mar 2024 08:47:38 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c708:8a00:362b:7e34:a3bc:9ddf? (p200300cbc7088a00362b7e34a3bc9ddf.dip0.t-ipconnect.de. [2003:cb:c708:8a00:362b:7e34:a3bc:9ddf])
+        by smtp.gmail.com with ESMTPSA id m31-20020a05600c3b1f00b004146bcdde06sm2534359wms.6.2024.03.27.08.47.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Mar 2024 08:47:37 -0700 (PDT)
+Message-ID: <7f9fd647-dd0a-4be0-9e3b-3f0fe5f479cc@redhat.com>
+Date: Wed, 27 Mar 2024 16:47:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,402 +67,112 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 04/16] drm/vkms: Add typedef and documentation for
- pixel_read and pixel_write functions
-To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
- Melissa Wen <melissa.srw@gmail.com>,
- Haneen Mohammed <hamohammed.sa@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, arthurgrillo@riseup.net,
- Jonathan Corbet <corbet@lwn.net>, pekka.paalanen@haloniitty.fi,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com,
- thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com,
- nicolejadeyee@google.com
-References: <20240313-yuv-v5-0-e610cbd03f52@bootlin.com>
- <20240313-yuv-v5-4-e610cbd03f52@bootlin.com>
- <b401851b-19ec-4ddb-beec-d4bd8578a620@igalia.com>
- <ZgLwSqFP5uMm8seR@localhost.localdomain>
+Subject: Re: [PATCH RFC 0/3] mm/gup: consistently call it GUP-fast
 Content-Language: en-US
-From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
-Autocrypt: addr=mcanal@igalia.com; keydata=
- xjMEZIsaeRYJKwYBBAHaRw8BAQdAGU6aY8oojw61KS5rGGMrlcilFqR6p6ID45IZ6ovX0h3N
- H01haXJhIENhbmFsIDxtY2FuYWxAaWdhbGlhLmNvbT7CjwQTFggANxYhBDMCqFtIvFKVRJZQ
- hDSPnHLaGFVuBQJkixp5BQkFo5qAAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQNI+cctoYVW5u
- GAEAwpaC5rI3wD8zqETKwGVoXd6+AbmGfZuVD40xepy7z/8BAM5w95/oyPsHUqOsg/xUTlNp
- rlbhA+WWoaOXA3XgR+wCzjgEZIsaeRIKKwYBBAGXVQEFAQEHQGoOK0jgh0IorMAacx6WUUWb
- s3RLiJYWUU6iNrk5wWUbAwEIB8J+BBgWCAAmFiEEMwKoW0i8UpVEllCENI+cctoYVW4FAmSL
- GnkFCQWjmoACGwwACgkQNI+cctoYVW6cqwD/Q9R98msvkhgRvi18fzUPFDwwogn+F+gQJJ6o
- pwpgFkAA/R2zOfla3IT6G3SBoV5ucdpdCpnIXFpQLbmfHK7dXsAC
-In-Reply-To: <ZgLwSqFP5uMm8seR@localhost.localdomain>
+To: Ryan Roberts <ryan.roberts@arm.com>, Peter Xu <peterx@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
+ John Hubbard <jhubbard@nvidia.com>, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, linux-mm@kvack.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ x86@kernel.org, Arnd Bergmann <arnd@arndb.de>
+References: <20240327130538.680256-1-david@redhat.com> <ZgQ5hNltQ2DHQXps@x1n>
+ <3922460a-4d01-4ecb-b8c5-7c57fd46f3fd@redhat.com>
+ <8727a618-30c4-4a13-b0e9-eccc3fd67c73@arm.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <8727a618-30c4-4a13-b0e9-eccc3fd67c73@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 3/26/24 12:56, Louis Chauvet wrote:
-> Le 25/03/24 - 10:56, Maíra Canal a écrit :
->> On 3/13/24 14:44, Louis Chauvet wrote:
->>> Introduce two typedefs: pixel_read_t and pixel_write_t. It allows the
->>> compiler to check if the passed functions take the correct arguments.
->>> Such typedefs will help ensuring consistency across the code base in
->>> case of update of these prototypes.
->>>
->>> Rename input/output variable in a consistent way between read_line and
->>> write_line.
->>>
->>> A warn has been added in get_pixel_*_function to alert when an unsupported
->>> pixel format is requested. As those formats are checked before
->>> atomic_update callbacks, it should never append.
->>>
->>> Document for those typedefs.
->>>
->>> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
->>> ---
->>>    drivers/gpu/drm/vkms/vkms_drv.h     |  23 ++++++-
->>>    drivers/gpu/drm/vkms/vkms_formats.c | 124 +++++++++++++++++++++---------------
->>>    drivers/gpu/drm/vkms/vkms_formats.h |   4 +-
->>>    drivers/gpu/drm/vkms/vkms_plane.c   |   2 +-
->>>    4 files changed, 95 insertions(+), 58 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
->>> index 18086423a3a7..4bfc62d26f08 100644
->>> --- a/drivers/gpu/drm/vkms/vkms_drv.h
->>> +++ b/drivers/gpu/drm/vkms/vkms_drv.h
->>> @@ -53,12 +53,31 @@ struct line_buffer {
->>>    	struct pixel_argb_u16 *pixels;
->>>    };
->>>    
->>> +/**
->>> + * typedef pixel_write_t - These functions are used to read a pixel from a
->>> + * `struct pixel_argb_u16*`, convert it in a specific format and write it in the @dst_pixels
->>> + * buffer.
+On 27.03.24 16:46, Ryan Roberts wrote:
 >>
->> Your brief description looks a bit big to me. Also, take a look at the
->> cross-references docs [1].
+>> Some of them look like mm-unstable issue, For example, arm64 fails with
+>>
+>>    CC      arch/arm64/mm/extable.o
+>> In file included from ./include/linux/hugetlb.h:828,
+>>                   from security/commoncap.c:19:
+>> ./arch/arm64/include/asm/hugetlb.h:25:34: error: redefinition of
+>> 'arch_clear_hugetlb_flags'
+>>     25 | #define arch_clear_hugetlb_flags arch_clear_hugetlb_flags
+>>        |                                  ^~~~~~~~~~~~~~~~~~~~~~~~
+>> ./include/linux/hugetlb.h:840:20: note: in expansion of macro
+>> 'arch_clear_hugetlb_flags'
+>>    840 | static inline void arch_clear_hugetlb_flags(struct folio *folio) { }
+>>        |                    ^~~~~~~~~~~~~~~~~~~~~~~~
+>> ./arch/arm64/include/asm/hugetlb.h:21:20: note: previous definition of
+>> 'arch_clear_hugetlb_flags' with t
+>> ype 'void(struct folio *)'
+>>     21 | static inline void arch_clear_hugetlb_flags(struct folio *folio)
+>>        |                    ^~~~~~~~~~~~~~~~~~~~~~~~
+>> In file included from ./include/linux/hugetlb.h:828,
+>>                   from mm/filemap.c:37:
+>> ./arch/arm64/include/asm/hugetlb.h:25:34: error: redefinition of
+>> 'arch_clear_hugetlb_flags'
+>>     25 | #define arch_clear_hugetlb_flags arch_clear_hugetlb_flags
+>>        |                                  ^~~~~~~~~~~~~~~~~~~~~~~~
+>> ./include/linux/hugetlb.h:840:20: note: in expansion of macro
+>> 'arch_clear_hugetlb_flags'
+>>    840 | static inline void arch_clear_hugetlb_flags(struct folio *folio) { }
+>>        |                    ^~~~~~~~~~~~~~~~~~~~~~~~
+>> ./arch/arm64/include/asm/hugetlb.h:21:20: note: previous definition of
+>> 'arch_clear_hugetlb_flags' with type 'void(struct folio *)'
+>>     21 | static inline void arch_clear_hugetlb_flags(struct folio *folio)
 > 
-> Is this description sufficient?
+> see: https://lore.kernel.org/linux-mm/ZgQvNKGdlDkwhQEX@casper.infradead.org/
 > 
-> 	typedef pixel_write_t - Convert a pixel from a &struct pixel_argb_u16 into a specific format
 
-Yeah.
+Yes, besides the other failures I see (odd targets), I was expecting 
+that someone else noticed that already :) thanks!
 
-Best Regards,
-- Maíra
+-- 
+Cheers,
 
->   
->> [1]
->> https://docs.kernel.org/doc-guide/kernel-doc.html#highlights-and-cross-references
->>
->>> + *
->>> + * @out_pixel: destination address to write the pixel
->>> + * @in_pixel: pixel to write
->>> + */
->>> +typedef void (*pixel_write_t)(u8 *out_pixel, struct pixel_argb_u16 *in_pixel);
->>> +
->>>    struct vkms_writeback_job {
->>>    	struct iosys_map data[DRM_FORMAT_MAX_PLANES];
->>>    	struct vkms_frame_info wb_frame_info;
->>> -	void (*pixel_write)(u8 *dst_pixels, struct pixel_argb_u16 *in_pixel);
->>> +	pixel_write_t pixel_write;
->>>    };
->>>    
->>> +/**
->>> + * typedef pixel_read_t - These functions are used to read a pixel in the source frame,
->>> + * convert it to `struct pixel_argb_u16` and write it to @out_pixel.
->>
->> Same.
-> 
-> 	typedef pixel_read_t - Read a pixel and convert it to a &struct pixel_argb_u16
->   
->>> + *
->>> + * @in_pixel: Pointer to the pixel to read
->>> + * @out_pixel: Pointer to write the converted pixel
->>
->> s/Pointer/pointer
-> 
-> Fixed in v6.
-> 
->>> + */
->>> +typedef void (*pixel_read_t)(u8 *in_pixel, struct pixel_argb_u16 *out_pixel);
->>> +
->>>    /**
->>>     * vkms_plane_state - Driver specific plane state
->>>     * @base: base plane state
->>> @@ -69,7 +88,7 @@ struct vkms_writeback_job {
->>>    struct vkms_plane_state {
->>>    	struct drm_shadow_plane_state base;
->>>    	struct vkms_frame_info *frame_info;
->>> -	void (*pixel_read)(u8 *src_buffer, struct pixel_argb_u16 *out_pixel);
->>> +	pixel_read_t pixel_read;
->>>    };
->>>    
->>>    struct vkms_plane {
->>> diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
->>> index 6e3dc8682ff9..55a4365d21a4 100644
->>> --- a/drivers/gpu/drm/vkms/vkms_formats.c
->>> +++ b/drivers/gpu/drm/vkms/vkms_formats.c
->>> @@ -76,7 +76,7 @@ static int get_x_position(const struct vkms_frame_info *frame_info, int limit, i
->>>     * They are used in the `vkms_compose_row` function to handle multiple formats.
->>>     */
->>>    
->>> -static void ARGB8888_to_argb_u16(u8 *src_pixels, struct pixel_argb_u16 *out_pixel)
->>> +static void ARGB8888_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
->>>    {
->>>    	/*
->>>    	 * The 257 is the "conversion ratio". This number is obtained by the
->>> @@ -84,48 +84,48 @@ static void ARGB8888_to_argb_u16(u8 *src_pixels, struct pixel_argb_u16 *out_pixe
->>>    	 * the best color value in a pixel format with more possibilities.
->>>    	 * A similar idea applies to others RGB color conversions.
->>>    	 */
->>> -	out_pixel->a = (u16)src_pixels[3] * 257;
->>> -	out_pixel->r = (u16)src_pixels[2] * 257;
->>> -	out_pixel->g = (u16)src_pixels[1] * 257;
->>> -	out_pixel->b = (u16)src_pixels[0] * 257;
->>> +	out_pixel->a = (u16)in_pixel[3] * 257;
->>> +	out_pixel->r = (u16)in_pixel[2] * 257;
->>> +	out_pixel->g = (u16)in_pixel[1] * 257;
->>> +	out_pixel->b = (u16)in_pixel[0] * 257;
->>>    }
->>>    
->>> -static void XRGB8888_to_argb_u16(u8 *src_pixels, struct pixel_argb_u16 *out_pixel)
->>> +static void XRGB8888_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
->>>    {
->>>    	out_pixel->a = (u16)0xffff;
->>> -	out_pixel->r = (u16)src_pixels[2] * 257;
->>> -	out_pixel->g = (u16)src_pixels[1] * 257;
->>> -	out_pixel->b = (u16)src_pixels[0] * 257;
->>> +	out_pixel->r = (u16)in_pixel[2] * 257;
->>> +	out_pixel->g = (u16)in_pixel[1] * 257;
->>> +	out_pixel->b = (u16)in_pixel[0] * 257;
->>>    }
->>>    
->>> -static void ARGB16161616_to_argb_u16(u8 *src_pixels, struct pixel_argb_u16 *out_pixel)
->>> +static void ARGB16161616_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
->>>    {
->>> -	u16 *pixels = (u16 *)src_pixels;
->>> +	u16 *pixel = (u16 *)in_pixel;
->>>    
->>> -	out_pixel->a = le16_to_cpu(pixels[3]);
->>> -	out_pixel->r = le16_to_cpu(pixels[2]);
->>> -	out_pixel->g = le16_to_cpu(pixels[1]);
->>> -	out_pixel->b = le16_to_cpu(pixels[0]);
->>> +	out_pixel->a = le16_to_cpu(pixel[3]);
->>> +	out_pixel->r = le16_to_cpu(pixel[2]);
->>> +	out_pixel->g = le16_to_cpu(pixel[1]);
->>> +	out_pixel->b = le16_to_cpu(pixel[0]);
->>>    }
->>>    
->>> -static void XRGB16161616_to_argb_u16(u8 *src_pixels, struct pixel_argb_u16 *out_pixel)
->>> +static void XRGB16161616_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
->>>    {
->>> -	u16 *pixels = (u16 *)src_pixels;
->>> +	u16 *pixel = (u16 *)in_pixel;
->>>    
->>>    	out_pixel->a = (u16)0xffff;
->>> -	out_pixel->r = le16_to_cpu(pixels[2]);
->>> -	out_pixel->g = le16_to_cpu(pixels[1]);
->>> -	out_pixel->b = le16_to_cpu(pixels[0]);
->>> +	out_pixel->r = le16_to_cpu(pixel[2]);
->>> +	out_pixel->g = le16_to_cpu(pixel[1]);
->>> +	out_pixel->b = le16_to_cpu(pixel[0]);
->>>    }
->>>    
->>> -static void RGB565_to_argb_u16(u8 *src_pixels, struct pixel_argb_u16 *out_pixel)
->>> +static void RGB565_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
->>>    {
->>> -	u16 *pixels = (u16 *)src_pixels;
->>> +	u16 *pixel = (u16 *)in_pixel;
->>>    
->>>    	s64 fp_rb_ratio = drm_fixp_div(drm_int2fixp(65535), drm_int2fixp(31));
->>>    	s64 fp_g_ratio = drm_fixp_div(drm_int2fixp(65535), drm_int2fixp(63));
->>>    
->>> -	u16 rgb_565 = le16_to_cpu(*pixels);
->>> +	u16 rgb_565 = le16_to_cpu(*pixel);
->>>    	s64 fp_r = drm_int2fixp((rgb_565 >> 11) & 0x1f);
->>>    	s64 fp_g = drm_int2fixp((rgb_565 >> 5) & 0x3f);
->>>    	s64 fp_b = drm_int2fixp(rgb_565 & 0x1f);
->>> @@ -169,12 +169,12 @@ void vkms_compose_row(struct line_buffer *stage_buffer, struct vkms_plane_state
->>>    
->>>    /*
->>>     * The following functions take one argb_u16 pixel and convert it to a specific format. The
->>> - * result is stored in @dst_pixels.
->>> + * result is stored in @out_pixel.
->>>     *
->>>     * They are used in the `vkms_writeback_row` to convert and store a pixel from the src_buffer to
->>>     * the writeback buffer.
->>>     */
->>> -static void argb_u16_to_ARGB8888(u8 *dst_pixels, struct pixel_argb_u16 *in_pixel)
->>> +static void argb_u16_to_ARGB8888(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
->>>    {
->>>    	/*
->>>    	 * This sequence below is important because the format's byte order is
->>> @@ -186,43 +186,43 @@ static void argb_u16_to_ARGB8888(u8 *dst_pixels, struct pixel_argb_u16 *in_pixel
->>>    	 * | Addr + 2 | = Red channel
->>>    	 * | Addr + 3 | = Alpha channel
->>>    	 */
->>> -	dst_pixels[3] = DIV_ROUND_CLOSEST(in_pixel->a, 257);
->>> -	dst_pixels[2] = DIV_ROUND_CLOSEST(in_pixel->r, 257);
->>> -	dst_pixels[1] = DIV_ROUND_CLOSEST(in_pixel->g, 257);
->>> -	dst_pixels[0] = DIV_ROUND_CLOSEST(in_pixel->b, 257);
->>> +	out_pixel[3] = DIV_ROUND_CLOSEST(in_pixel->a, 257);
->>> +	out_pixel[2] = DIV_ROUND_CLOSEST(in_pixel->r, 257);
->>> +	out_pixel[1] = DIV_ROUND_CLOSEST(in_pixel->g, 257);
->>> +	out_pixel[0] = DIV_ROUND_CLOSEST(in_pixel->b, 257);
->>>    }
->>>    
->>> -static void argb_u16_to_XRGB8888(u8 *dst_pixels, struct pixel_argb_u16 *in_pixel)
->>> +static void argb_u16_to_XRGB8888(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
->>>    {
->>> -	dst_pixels[3] = 0xff;
->>> -	dst_pixels[2] = DIV_ROUND_CLOSEST(in_pixel->r, 257);
->>> -	dst_pixels[1] = DIV_ROUND_CLOSEST(in_pixel->g, 257);
->>> -	dst_pixels[0] = DIV_ROUND_CLOSEST(in_pixel->b, 257);
->>> +	out_pixel[3] = 0xff;
->>> +	out_pixel[2] = DIV_ROUND_CLOSEST(in_pixel->r, 257);
->>> +	out_pixel[1] = DIV_ROUND_CLOSEST(in_pixel->g, 257);
->>> +	out_pixel[0] = DIV_ROUND_CLOSEST(in_pixel->b, 257);
->>>    }
->>>    
->>> -static void argb_u16_to_ARGB16161616(u8 *dst_pixels, struct pixel_argb_u16 *in_pixel)
->>> +static void argb_u16_to_ARGB16161616(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
->>>    {
->>> -	u16 *pixels = (u16 *)dst_pixels;
->>> +	u16 *pixel = (u16 *)out_pixel;
->>>    
->>> -	pixels[3] = cpu_to_le16(in_pixel->a);
->>> -	pixels[2] = cpu_to_le16(in_pixel->r);
->>> -	pixels[1] = cpu_to_le16(in_pixel->g);
->>> -	pixels[0] = cpu_to_le16(in_pixel->b);
->>> +	pixel[3] = cpu_to_le16(in_pixel->a);
->>> +	pixel[2] = cpu_to_le16(in_pixel->r);
->>> +	pixel[1] = cpu_to_le16(in_pixel->g);
->>> +	pixel[0] = cpu_to_le16(in_pixel->b);
->>>    }
->>>    
->>> -static void argb_u16_to_XRGB16161616(u8 *dst_pixels, struct pixel_argb_u16 *in_pixel)
->>> +static void argb_u16_to_XRGB16161616(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
->>>    {
->>> -	u16 *pixels = (u16 *)dst_pixels;
->>> +	u16 *pixel = (u16 *)out_pixel;
->>>    
->>> -	pixels[3] = 0xffff;
->>> -	pixels[2] = cpu_to_le16(in_pixel->r);
->>> -	pixels[1] = cpu_to_le16(in_pixel->g);
->>> -	pixels[0] = cpu_to_le16(in_pixel->b);
->>> +	pixel[3] = 0xffff;
->>> +	pixel[2] = cpu_to_le16(in_pixel->r);
->>> +	pixel[1] = cpu_to_le16(in_pixel->g);
->>> +	pixel[0] = cpu_to_le16(in_pixel->b);
->>>    }
->>>    
->>> -static void argb_u16_to_RGB565(u8 *dst_pixels, struct pixel_argb_u16 *in_pixel)
->>> +static void argb_u16_to_RGB565(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
->>>    {
->>> -	u16 *pixels = (u16 *)dst_pixels;
->>> +	u16 *pixel = (u16 *)out_pixel;
->>>    
->>>    	s64 fp_rb_ratio = drm_fixp_div(drm_int2fixp(65535), drm_int2fixp(31));
->>>    	s64 fp_g_ratio = drm_fixp_div(drm_int2fixp(65535), drm_int2fixp(63));
->>> @@ -235,7 +235,7 @@ static void argb_u16_to_RGB565(u8 *dst_pixels, struct pixel_argb_u16 *in_pixel)
->>>    	u16 g = drm_fixp2int(drm_fixp_div(fp_g, fp_g_ratio));
->>>    	u16 b = drm_fixp2int(drm_fixp_div(fp_b, fp_rb_ratio));
->>>    
->>> -	*pixels = cpu_to_le16(r << 11 | g << 5 | b);
->>> +	*pixel = cpu_to_le16(r << 11 | g << 5 | b);
->>>    }
->>>    
->>>    /**
->>> @@ -266,7 +266,7 @@ void vkms_writeback_row(struct vkms_writeback_job *wb,
->>>     *
->>>     * @format: DRM_FORMAT_* value for which to obtain a conversion function (see [drm_fourcc.h])
->>>     */
->>> -void *get_pixel_conversion_function(u32 format)
->>> +pixel_read_t get_pixel_read_function(u32 format)
->>>    {
->>>    	switch (format) {
->>>    	case DRM_FORMAT_ARGB8888:
->>> @@ -280,7 +280,16 @@ void *get_pixel_conversion_function(u32 format)
->>>    	case DRM_FORMAT_RGB565:
->>>    		return &RGB565_to_argb_u16;
->>>    	default:
->>> -		return NULL;
->>> +		/*
->>> +		 * This is a bug in vkms_plane_atomic_check. All the supported
->>
->> s/vkms_plane_atomic_check/vkms_plane_atomic_check()
-> 
-> Fixed in v6.
-> 
-> Thanks,
-> Louis Chauvet
-> 
->> Best Regards,
->> - Maíra
->>
->>> +		 * format must:
->>> +		 * - Be listed in vkms_formats in vkms_plane.c
->>> +		 * - Have a pixel_read callback defined here
->>> +		 */
->>> +		WARN(true,
->>> +		     "Pixel format %p4cc is not supported by VKMS planes. This is a kernel bug, atomic check must forbid this configuration.\n",
->>> +		     &format);
->>> +		return (pixel_read_t)NULL;
->>>    	}
->>>    }
->>>    
->>> @@ -291,7 +300,7 @@ void *get_pixel_conversion_function(u32 format)
->>>     *
->>>     * @format: DRM_FORMAT_* value for which to obtain a conversion function (see [drm_fourcc.h])
->>>     */
->>> -void *get_pixel_write_function(u32 format)
->>> +pixel_write_t get_pixel_write_function(u32 format)
->>>    {
->>>    	switch (format) {
->>>    	case DRM_FORMAT_ARGB8888:
->>> @@ -305,6 +314,15 @@ void *get_pixel_write_function(u32 format)
->>>    	case DRM_FORMAT_RGB565:
->>>    		return &argb_u16_to_RGB565;
->>>    	default:
->>> -		return NULL;
->>> +		/*
->>> +		 * This is a bug in vkms_writeback_atomic_check. All the supported
->>> +		 * format must:
->>> +		 * - Be listed in vkms_wb_formats in vkms_writeback.c
->>> +		 * - Have a pixel_write callback defined here
->>> +		 */
->>> +		WARN(true,
->>> +		     "Pixel format %p4cc is not supported by VKMS writeback. This is a kernel bug, atomic check must forbid this configuration.\n",
->>> +		     &format);
->>> +		return (pixel_write_t)NULL;
->>>    	}
->>>    }
->>> diff --git a/drivers/gpu/drm/vkms/vkms_formats.h b/drivers/gpu/drm/vkms/vkms_formats.h
->>> index cf59c2ed8e9a..3ecea4563254 100644
->>> --- a/drivers/gpu/drm/vkms/vkms_formats.h
->>> +++ b/drivers/gpu/drm/vkms/vkms_formats.h
->>> @@ -5,8 +5,8 @@
->>>    
->>>    #include "vkms_drv.h"
->>>    
->>> -void *get_pixel_conversion_function(u32 format);
->>> +pixel_read_t get_pixel_read_function(u32 format);
->>>    
->>> -void *get_pixel_write_function(u32 format);
->>> +pixel_write_t get_pixel_write_function(u32 format);
->>>    
->>>    #endif /* _VKMS_FORMATS_H_ */
->>> diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
->>> index 21b5adfb44aa..10e9b23dab28 100644
->>> --- a/drivers/gpu/drm/vkms/vkms_plane.c
->>> +++ b/drivers/gpu/drm/vkms/vkms_plane.c
->>> @@ -125,7 +125,7 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
->>>    	drm_rect_rotate(&frame_info->rotated, drm_rect_width(&frame_info->rotated),
->>>    			drm_rect_height(&frame_info->rotated), frame_info->rotation);
->>>    
->>> -	vkms_plane_state->pixel_read = get_pixel_conversion_function(fmt);
->>> +	vkms_plane_state->pixel_read = get_pixel_read_function(fmt);
->>>    }
->>>    
->>>    static int vkms_plane_atomic_check(struct drm_plane *plane,
->>>
-> 
+David / dhildenb
+
