@@ -1,98 +1,168 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6F41514F2
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 20:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D73814D6EB;
+	Wed, 27 Mar 2024 20:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711571883; cv=none; b=IC91dC11H7tg1lXviUxY74Egk7kP4r/LtrDKoNHJMP+LmaugLcm6wlCrX233yWR6Uu1VXcrzsZNLUKoKyZqXIDnOgulkXTqGnyABDcs0atdoRvAKc1m7OlTGYtzHYvKiJbSweIYGITFGkS0/o0YMAvFeCLecCf+8vWrHZ5KbaTE=
+	t=1711571986; cv=none; b=qnqJDiZTvGTZCUciQ7vCAK7HBUwMcxkvBsSbfsCl7WMH6lme1dQ3HXvi5T54ToXyiqYpZ9ofmB/OVmfW96FC6TtMkOXKHShcANt8oMmzL32iurMdG9yU7n84bt7A5Y/zMcCNLperL1FAc8JnpFEoEkcyuB71g8yeaURbhc6Ho9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711571883; c=relaxed/simple;
-	bh=+q1X6OO5OjLhXHnuIwVLwdI8semz6sAtm2DvDrQfzL0=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=OGVvKcT/Fa6LoY9geXnAKS014waJVXutLK862oAzpeWCyJVsIn0vf/KjpXGL7WyFX8uhXvSV1iCohk8w4Z/Z/g/X1JJd2cFswdU+M6D9dXvmNwKNCDQ1kYmJBPwQMMg8MMxjrg4so6gB0oD+aZvleAgFln6ceESi1ijLbsEDSD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OnhVmZ9d; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711571986; c=relaxed/simple;
+	bh=MYjXKGml4yTVTChKso7uNGqldcMcIKtOtNKtzVnHsmc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mcCDWvhDzJ9MJM6fFakHuLtRgVwfRL4+/qUXwVT2zMx6VVwA2RVvaghLD4SkAQbb+1hyk5SB4G9DKn3u6RUqJkcucn/gu1OxOdRV+pMZTtHIPFKf4gN0R/Kjp/k/WLZRMhXpVAugs9X3vJlxzJIiBYl3Hri09drVqRAjXMUIWOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=AsNXxNm2; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=c/+uD66h; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OnhVmZ9d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711571880;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6qoPQD+VTVHHhRyd75iNpboVK+lvHVLazCUjHaMH4s4=;
-	b=OnhVmZ9dFDBmRY+/OpAeMEHQFmgMjPnRthAZxdLK/7RdWw2xbC8dA4OWJwgUizywLnYPfa
-	DkgfS/LwcyurqRqtTAAstnjmwwL6hbniGS30MSaKj/qLNESwm7+a/sllGBltoQGKsi9wOU
-	VVwcziBaj+2gnu2wrMyBnxJu46wr+f8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-393-9x-QYYaoNBy5Yt-5m2eKqg-1; Wed, 27 Mar 2024 16:37:55 -0400
-X-MC-Unique: 9x-QYYaoNBy5Yt-5m2eKqg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="AsNXxNm2";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="c/+uD66h"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2DAB0101A552;
-	Wed, 27 Mar 2024 20:37:54 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.146])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 9A6CBC53360;
-	Wed, 27 Mar 2024 20:37:51 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <ZgRpPd1Ado-0_iYx@casper.infradead.org>
-References: <ZgRpPd1Ado-0_iYx@casper.infradead.org> <2318298.1711551844@warthog.procyon.org.uk> <2506007.1711562145@warthog.procyon.org.uk>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: dhowells@redhat.com, Miklos Szeredi <miklos@szeredi.hu>,
-    Trond Myklebust <trond.myklebust@hammerspace.com>,
-    Christoph Hellwig <hch@lst.de>,
-    Andrew Morton <akpm@linux-foundation.org>,
-    Alexander Viro <viro@zeniv.linux.org.uk>,
-    Christian Brauner <brauner@kernel.org>,
-    Jeff Layton <jlayton@kernel.org>, linux-mm@kvack.org,
-    linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev,
-    v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
-    ceph-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
-    linux-nfs@vger.kernel.org, devel@lists.orangefs.org,
-    linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2] mm, netfs: Provide a means of invalidation without using launder_folio
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C28DE229B9;
+	Wed, 27 Mar 2024 20:39:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1711571982; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=/IKbn2oj33so0jZy+ftN03yc0feDXvMhZ5ZgHhL7tD0=;
+	b=AsNXxNm2pZNhDHZEweT6VY5xGt5B8qgWaYhOgi3bBG5zaafR12F46jEt00GqbIao/rjmlD
+	I+61S66YhhqzD3KiJvevlZNgIYI+FvHH8Ucv863V46TNpSqLnAV+yI6WyEh/4bYGcR0ma6
+	Pt8x1x+x9hNu46I3fyNTvaTdPashRj4=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1711571981; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=/IKbn2oj33so0jZy+ftN03yc0feDXvMhZ5ZgHhL7tD0=;
+	b=c/+uD66hnaQgGXhed0gnWJzk9V5YrzEc2vxRPGrwIjSS5IypRqPeF+W0JJk5aHTtkIi9fW
+	mVQcX8hXkNCmbX5CO2twPLm5k4abgW6soisUEXyXl5oIDx+Ull2IUsI243TrNC7RWBR398
+	CQ1PSFhurU/fGpdX8PBIlEJdjnF2rh8=
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id B8E0613AB3;
+	Wed, 27 Mar 2024 20:39:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id IS7bLA2EBGYcFAAAn2gu4w
+	(envelope-from <dsterba@suse.com>); Wed, 27 Mar 2024 20:39:41 +0000
+From: David Sterba <dsterba@suse.com>
+To: torvalds@linux-foundation.org
+Cc: David Sterba <dsterba@suse.com>,
+	linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Btrfs fixes for 6.9-rc2
+Date: Wed, 27 Mar 2024 21:32:19 +0100
+Message-ID: <cover.1711571199.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2541307.1711571866.1@warthog.procyon.org.uk>
-Date: Wed, 27 Mar 2024 20:37:46 +0000
-Message-ID: <2541308.1711571866@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+Content-Transfer-Encoding: 8bit
+X-Spam-Score: -1.51
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-1.51 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	 FROM_HAS_DN(0.00)[];
+	 RCPT_COUNT_THREE(0.00)[4];
+	 R_MISSING_CHARSET(2.50)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 BROKEN_CONTENT_TYPE(1.50)[];
+	 TO_DN_SOME(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DWL_DNSWL_MED(-2.00)[suse.com:dkim];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 DKIM_TRACE(0.00)[suse.com:+];
+	 MX_GOOD(-0.01)[];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:98:from]
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b="c/+uD66h"
+X-Rspamd-Queue-Id: C28DE229B9
 
-Matthew Wilcox <willy@infradead.org> wrote:
+Hi,
 
-> > +	/* Prevent new folios from being added to the inode. */
-> > +	filemap_invalidate_lock(mapping);
-> 
-> I'm kind of surprised that the callers wouldn't want to hold that lock
-> over a call to this function.  I guess you're working on the callers,
-> so you'd know better than I would, but I would have used lockdep to
-> assert that invalidate_lock was held.
+here's another batch of stability fixes.
 
-I'm not sure.  None of the places that look like they'd be calling this
-currently take that lock (though possibly they should).
+The first fix is for the bug you also hit after 6.8-rc2 pull request [1].
+We got another report, fortunately it was reproducible and in the end we also
+got the fix.
 
-Also, should I provide it with explicit range, I wonder?
+[1] https://lore.kernel.org/linux-btrfs/CAHk-=whNdMaN9ntZ47XRKP6DBes2E5w7fi-0U3H2+PS18p+Pzw@mail.gmail.com/
 
-> > +	if (unlikely(!RB_EMPTY_ROOT(&mapping->i_mmap.rb_root)))
-> > +		unmap_mapping_pages(mapping, 0, ULONG_MAX, false);
-> 
-> Is this optimisation worth it?
+The rest is usual mix of fixes, zoned mode, device status handling and
+error handling.
 
-Perhaps not.
+Please pull, thanks.
 
-David
+- fix race when reading extent buffer and 'uptodate' status is missed by one
+  thread (introduced in 6.5)
 
+- do additional validation of devices using major:minor numbers
+
+- zoned mode fixes:
+  - use zone-aware super block access during scrub
+  - fix use-after-free during device replace (found by KASAN)
+  - also delete zones that are 100% unusable to reclaim space
+
+- extent unpinning fixes
+  - fix extent map leak after error handling
+  - print correct range in error message
+
+- error code and message updates
+
+----------------------------------------------------------------
+The following changes since commit 1cab1375ba6d5337a25acb346996106c12bb2dd0:
+
+  btrfs: reuse cloned extent buffer during fiemap to avoid re-allocations (2024-03-05 18:14:19 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.9-rc1-tag
+
+for you to fetch changes up to ef1e68236b9153c27cb7cf29ead0c532870d4215:
+
+  btrfs: fix race in read_extent_buffer_pages() (2024-03-26 16:42:39 +0100)
+
+----------------------------------------------------------------
+Anand Jain (2):
+      btrfs: validate device maj:min during open
+      btrfs: return accurate error code on open failure in open_fs_devices()
+
+Filipe Manana (4):
+      btrfs: fix extent map leak in unexpected scenario at unpin_extent_cache()
+      btrfs: fix warning messages not printing interval at unpin_extent_range()
+      btrfs: fix message not properly printing interval when adding extent map
+      btrfs: use btrfs_warn() to log message at btrfs_add_extent_mapping()
+
+Johannes Thumshirn (3):
+      btrfs: zoned: use zone aware sb location for scrub
+      btrfs: zoned: fix use-after-free in do_zone_finish()
+      btrfs: zoned: don't skip block groups with 100% zone unusable
+
+Tavian Barnes (1):
+      btrfs: fix race in read_extent_buffer_pages()
+
+ fs/btrfs/block-group.c |  3 ++-
+ fs/btrfs/extent_io.c   | 13 +++++++++++++
+ fs/btrfs/extent_map.c  | 16 ++++++++--------
+ fs/btrfs/scrub.c       | 12 +++++++++++-
+ fs/btrfs/volumes.c     | 27 ++++++++++++++++++++++-----
+ fs/btrfs/zoned.c       | 14 +++++++-------
+ 6 files changed, 63 insertions(+), 22 deletions(-)
