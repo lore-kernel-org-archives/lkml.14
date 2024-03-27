@@ -1,60 +1,111 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7F813F445
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 12:10:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0EB13FD60;
+	Wed, 27 Mar 2024 12:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711541421; cv=none; b=tBlUuo73LhYi6mpv/mrZPwbDwAb2oMtUexdwQ1vZKcPOLSDitGUVloSx3OVal5XU3pnCdcYLFsTXkQGVpAS5AgKLZzFW1gkVZ1BTc4jpEtjt8HwA2mTCkB5owb45pGogc3ERTi2HlIU0IM+PKS0Nda3U+MM1vH+VZzAAzutRUJU=
+	t=1711541422; cv=none; b=kKgbzkG27lvhN66PykEMZeqtq4AYHU7nnUThEPFrS01dRbfd0JViu4aGSAU7FVyGH30pzejaxxdYdZzdEqUpTHzevDwrulKS70g9eP7YwvgETxW2zYFWYF6x2fJjYtMA4Qy457WYYDosVPN8aLLR1ztdxXeLqFCLhzRUfQIySs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711541421; c=relaxed/simple;
-	bh=T2jvMXTe1SOLfEanpTmPTf4uFqXpkG3tnrz2T0d3HLg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h5q8tvxGnC2Br9vAYjOuSttEkUkmGpUuizpp10ZvpDCvGyduC+jtyubuLx66Tx+FDLZDX/fsjPZ1FAQ5sEPEUKnsWYhM4csNahlW1RyspI8uy87KogvAd8AyDhhc/ixtgcvwkooUUzkbewEB4xiEESRED+Rl6BrkQHPB603b3zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rF1gxh5g; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1711541422; c=relaxed/simple;
+	bh=n15hOzHIXDB2VbiSNmKcqjhmERERL1RmXbb9LVlt/O8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RUsClKGI84p4TRHc3zHRUBSzkYDzkYsLjaweZb8UcOQp1PcQsXE7pCK09/WyEi2uyL+dcI6OTclDG/CjdhmU+R/UKR4ly94qCCy246d6T1xLhG9ezREIZVYRVKW+OEmz4B8vf9QQvJWowjvVn3WJfSP4wqM0E2TUKwcCAmfbAdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N5sAach7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rF1gxh5g"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=WStYxaWmdcAd0EHdZG7F8WzduUaXJH+PLdTWTFJ9Was=; b=rF1gxh5geKNCFhMxyw1MJ6ZYRi
-	XSYU32Cju0TUtaZK/8AUtAXqCfpPT5DCMbGbZY6EuHenzsaWIwA7vRY6OWkWpEjRpp4g5eFBY+l5p
-	k+U678aYExmKK+QIJ+fUZGMHZuvMkGTFuDsA19ladr17nHufjRzQVSy1MwJ+Iv3o4XB5wvBmrcUDd
-	e/6wCnJuLUiKH4lDwbnBioVxD3tFXOd7UQUiVA6Yu1ChvQ5rmT7ZY24LJH0dv7sVptOogsRs2mYhv
-	z6IdmbsABmiFpvXjZ0JaOtzwViy9Hud8tjb6+V4Y5QScWR9tLBPcTIJsRYas2NrWDdUp+VxcWQ+ng
-	UXuwnJKg==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rpS6Z-00000003nvt-482Q;
-	Wed, 27 Mar 2024 12:10:08 +0000
-Date: Wed, 27 Mar 2024 12:10:07 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@infradead.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Zhaoyang Huang <huangzhaoyang@gmail.com>, steve.kang@unisoc.com
-Subject: Re: [PATCH] mm: get the folio's refcnt before clear PG_lru in
- folio_isolate_lru
-Message-ID: <ZgQMn_-GHfcWtScR@casper.infradead.org>
-References: <20240327075516.1367097-1-zhaoyang.huang@unisoc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N5sAach7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5537C433C7;
+	Wed, 27 Mar 2024 12:10:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711541422;
+	bh=n15hOzHIXDB2VbiSNmKcqjhmERERL1RmXbb9LVlt/O8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=N5sAach7eBznevmSH4vxulrM/JZqSVz7GYZox22+HUMeieVOas5RtfMX5DuWCAvSV
+	 PCVkHiD83+rrcApfvmKVUPWg8Rfd1iLZzrY8JQZq0BaZz0hNM1UTWA3HWDIL7RKMCf
+	 ACYSwvbEcldYQegOh78cwI1X9Lk5sJK4YXi9AYHCHwojySCkXrUYBrAze4fuiRyqo/
+	 5zHjO7PXzG6eKqQC9EcFhvo563ENWLoL9MUud1UiSv00+ZQla8T+9qR3p8LaqOg7wh
+	 tG/9LxGyD1mTrvo2wUKe8ntDa0sUA/0DSI2aycOIWQtnxEN/Q27vRjF+NSw8QL0Ieq
+	 U0meDPa5zNVZw==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org,
+	wenjing.liu@amd.com
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Rodrigo Siqueira <rodrigo.siqueira@amd.com>,
+	Nevenko Stupar <nevenko.stupar@amd.com>,
+	Chaitanya Dhere <chaitanya.dhere@amd.com>,
+	Tom Chung <chiahsuan.chung@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: FAILED: Patch "drm/amd/display: fix incorrect mpc_combine array size" failed to apply to 6.6-stable tree
+Date: Wed, 27 Mar 2024 08:10:19 -0400
+Message-ID: <20240327121019.2827857-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240327075516.1367097-1-zhaoyang.huang@unisoc.com>
+X-Patchwork-Hint: ignore
+X-stable: review
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 27, 2024 at 03:55:16PM +0800, zhaoyang.huang wrote:
-> From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-> 
-> Bellowing race happens when the caller of folio_isolate_lru rely on the
-> refcnt of page cache. Moving folio_get ahead of folio_test_clear_lru to
-> make it more robust.
+The patch below does not apply to the 6.6-stable tree.
+If someone wants it applied there, or to any other stable or longterm
+tree, then please email the backport, including the original git commit
+id to <stable@vger.kernel.org>.
 
-No, as explained to you multiple times before.
+Thanks,
+Sasha
+
+------------------ original commit in Linus's tree ------------------
+
+From 607e1b0cf480cb8dbd65b372397871d7389942b5 Mon Sep 17 00:00:00 2001
+From: Wenjing Liu <wenjing.liu@amd.com>
+Date: Thu, 18 Jan 2024 15:14:15 -0500
+Subject: [PATCH] drm/amd/display: fix incorrect mpc_combine array size
+
+[why]
+MAX_SURFACES is per stream, while MAX_PLANES is per asic. The
+mpc_combine is an array that records all the planes per asic. Therefore
+MAX_PLANES should be used as the array size. Using MAX_SURFACES causes
+array overflow when there are more than 3 planes.
+
+[how]
+Use the MAX_PLANES for the mpc_combine array size.
+
+Cc: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Rodrigo Siqueira <rodrigo.siqueira@amd.com>
+Reviewed-by: Nevenko Stupar <nevenko.stupar@amd.com>
+Reviewed-by: Chaitanya Dhere <chaitanya.dhere@amd.com>
+Acked-by: Tom Chung <chiahsuan.chung@amd.com>
+Signed-off-by: Wenjing Liu <wenjing.liu@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+---
+ drivers/gpu/drm/amd/display/dc/dml/dcn32/dcn32_fpu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/amd/display/dc/dml/dcn32/dcn32_fpu.c b/drivers/gpu/drm/amd/display/dc/dml/dcn32/dcn32_fpu.c
+index 9b80f65c04664..a7981a0c4158f 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml/dcn32/dcn32_fpu.c
++++ b/drivers/gpu/drm/amd/display/dc/dml/dcn32/dcn32_fpu.c
+@@ -1113,7 +1113,7 @@ struct pipe_slice_table {
+ 		struct pipe_ctx *pri_pipe;
+ 		struct dc_plane_state *plane;
+ 		int slice_count;
+-	} mpc_combines[MAX_SURFACES];
++	} mpc_combines[MAX_PLANES];
+ 	int mpc_combine_count;
+ };
+ 
+-- 
+2.43.0
+
+
+
+
