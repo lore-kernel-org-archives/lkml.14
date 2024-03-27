@@ -1,95 +1,137 @@
-Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C2F4DA11
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 08:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813D93418B
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 08:55:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711529678; cv=none; b=uxMykUqZtN2kyrJD4MXHYJEdH765Qk2ahWnH6E6lLM9WDv8eW8zrnYeYdQmYTl/j3iAvJeVXo73I9koZVOig3AXJ6bTelhj1Uz6TfDu3rUToh7sCYKBEHX7NVrA/kNICc9lnSnMMck79bN+M+/mrpW+bEKn5uoW5i+JB9Ote6OM=
+	t=1711529709; cv=none; b=rKgwnSovSGDdbzfT/rXvpZTnP+njaYcoAVE8awjVu9+SkRPKOwhIwr1t7+6xdkl27jZtakikr+tNv7bmM77vTAKojZoWmurJIfrcjY/bTNCwyQKUwn9M+eQQ34/AtfoWIfI/pyICV4NN+aWYZfWYMND3ygR7jWbyEzPyoSvllPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711529678; c=relaxed/simple;
-	bh=8qeOhLgDp4B6NSdcFUTzjGxs/APrSCobmWoiOp9La28=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Gsx7MKawyPs1PtQ+nX37c9H0YuHJ0bv4kDFhjZ7ilIZwCAAVGywzmhlCyq2m/i1PMj271QeupD66BTjTMSSZeQSbTQwHYHbA6G7dapuGDrXfwIxelEAfAo+0fxyZeBK7rwqEUJw75++wuSmMo89l9VSdwFTnNjRaEpVoPr3YL/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 42R8rtpk037904;
-	Wed, 27 Mar 2024 16:53:55 +0800 (+08)
-	(envelope-from Zhiguo.Niu@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4V4L5S56V1z2Lt7c3;
-	Wed, 27 Mar 2024 16:52:12 +0800 (CST)
-Received: from bj08434pcu.spreadtrum.com (10.0.73.87) by
- BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Wed, 27 Mar 2024 16:53:53 +0800
-From: Zhiguo Niu <zhiguo.niu@unisoc.com>
-To: <jaegeuk@kernel.org>, <chao@kernel.org>
-CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
-        <niuzhiguo84@gmail.com>, <zhiguo.niu@unisoc.com>, <ke.wang@unisoc.com>,
-        <hongyu.jin@unisoc.com>
-Subject: [PATCH V3] f2fs: fix to adjust appropirate defragment pg_end
-Date: Wed, 27 Mar 2024 16:53:40 +0800
-Message-ID: <1711529620-17576-1-git-send-email-zhiguo.niu@unisoc.com>
-X-Mailer: git-send-email 1.9.1
+	s=arc-20240116; t=1711529709; c=relaxed/simple;
+	bh=eD2FnmLx+X21p+zCd5l4yY/sDK9AVd2VRkFA39qHz8A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qZOL6VNZa36xRqdKlJQjouZ7NUAmpa1EyyGwh8+DtF92bu4CQZU2adGR1+OBg5TFiowAM1J3T9su96O+8JTa1edcAhHfbO9yr2y15K/ZsUQaK3f35gTrglUP3k/ZB+0VSqYEHcFJY6UO4jiWmDgtKRxiTZgPkDLUAbat22tKr4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Lz4iTux/; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lz4iTux/"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6e6b3dc3564so4588028b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 01:55:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711529707; x=1712134507; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9dKcZjC/OoDiaM+OdJQAME/VGMT+Uf23GJ2KQctLAZo=;
+        b=Lz4iTux/eSh0rfnIqiyh71E62M29pcVk9fdBjaA+/7Jw4YStG2UZQzlF+ZJ1Ozzo/h
+         M8Xai5gBewu4FvG+4+AA7Zg28o5V9YXW4kpVvwNipiNZFn7WDeTGSHylbQC46q57mDBb
+         ff9e307/mtR2sH2baKOsVXBguVQK4yE2s2Bes=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711529707; x=1712134507;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9dKcZjC/OoDiaM+OdJQAME/VGMT+Uf23GJ2KQctLAZo=;
+        b=URkL951Qygf408AsFBZQV1JKw26Cr1iKykhkt4IxUDwMNRgS/A1eITfgut2iupbPxV
+         wG3Iz+YObbRB+06fKxoLp7JG28N3dXOz5y34k36qu5bPqEHt9yH8N3PQ593HX7N1m9h/
+         MytF1wfkE56KHGATlDXdws3WkVJk7018t7LZqtk8QX0dp5ZUrkUX3EUf0LjWa5BBXt+I
+         tmqd2NFJQuu5+4m0IQag+Mx57zrNzs3gwh0K34GcpGaeS8LWIqEM5xZODNBQSiJ2R6G7
+         MYkwXxZNAEbp7py63zsomhn13gbLvMbE1e0WbmjbDfr/gqwrLm2SceZvRPZkyjPbhH6X
+         j6Lg==
+X-Forwarded-Encrypted: i=1; AJvYcCUuMxvZftdCYmaj4Zo2QrYFk6+nFyNSir2Ddr6BBVC//QCrh/oQb5ATGh2SFzewdn/iCNU6TUAsqPpPlQUuxbITL3eliPUWiQ2nD2pA
+X-Gm-Message-State: AOJu0Yxx6IGNIDjVm3cjr9vMzPbkYR7EZwqwKbRhmgm+uKxCaNvw/79s
+	3pnUIjrQG8ECJ/xFje9Po8tqzq+aUf0gx3Pio2StrEglzzoBE1haCjRWhakO0A==
+X-Google-Smtp-Source: AGHT+IFUfIVQvdLysyZn334SAY0D7Vx2KrUYwFkbjwbnUAsEt/qwEP0DXbUtpROi/ojeOIlZdyTbcw==
+X-Received: by 2002:a05:6a00:b48:b0:6e6:946b:a983 with SMTP id p8-20020a056a000b4800b006e6946ba983mr4563684pfo.10.1711529706853;
+        Wed, 27 Mar 2024 01:55:06 -0700 (PDT)
+Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:74c2:3606:170b:52f3])
+        by smtp.gmail.com with ESMTPSA id h7-20020aa79f47000000b006e724ccdc3esm7329514pfr.55.2024.03.27.01.55.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Mar 2024 01:55:06 -0700 (PDT)
+From: Chen-Yu Tsai <wenst@chromium.org>
+To: Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Chen-Yu Tsai <wenst@chromium.org>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] dt-bindings: display: bridge: it6505: Add #sound-dai-cells
+Date: Wed, 27 Mar 2024 16:52:48 +0800
+Message-ID: <20240327085250.3427496-1-wenst@chromium.org>
+X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-X-MAIL:SHSQR01.spreadtrum.com 42R8rtpk037904
+Content-Transfer-Encoding: 8bit
 
-A length that exceeds the real size of the inode may be
-specified from user, although these out-of-range areas
-are not mapped, but they still need to be check in
-while loop, which is unnecessary.
+The ITE IT6505 display bridge can take one I2S input and transmit it
+over the DisplayPort link.
 
-Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
----
-v3: adjust code positions according to Chao's suggestions
-v2: check i_size within inode lock according to Chao's suggestions
----
----
- fs/f2fs/file.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+Add #sound-dai-cells (= 0) to the binding for it.
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index bc190d5..9908017 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -2627,12 +2627,13 @@ static int f2fs_defragment_range(struct f2fs_sb_info *sbi,
- 	bool fragmented = false;
- 	int err;
+Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+---
+Changes since v1 [1]:
+- Reference /schemas/sound/dai-common.yaml
+- Change "additionalProperties: false" to "unevaluatedProperties: false"
+
+The driver side changes [2] are still being worked on.
+
+[1] https://lore.kernel.org/dri-devel/20240126073511.2708574-1-wenst@chromium.org/
+[2] https://lore.kernel.org/linux-arm-kernel/20230730180803.22570-4-jiaxin.yu@mediatek.com/
+---
+ .../devicetree/bindings/display/bridge/ite,it6505.yaml    | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+index c9a882ee6d98..c4469f463978 100644
+--- a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
++++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+@@ -9,6 +9,9 @@ title: ITE it6505
+ maintainers:
+   - Allen Chen <allen.chen@ite.com.tw>
  
--	pg_start = range->start >> PAGE_SHIFT;
--	pg_end = (range->start + range->len) >> PAGE_SHIFT;
--
- 	f2fs_balance_fs(sbi, true);
++allOf:
++  - $ref: /schemas/sound/dai-common.yaml#
++
+ description: |
+   The IT6505 is a high-performance DisplayPort 1.1a transmitter,
+   fully compliant with DisplayPort 1.1a, HDCP 1.3 specifications.
+@@ -52,6 +55,9 @@ properties:
+     maxItems: 1
+     description: extcon specifier for the Power Delivery
  
- 	inode_lock(inode);
-+	pg_start = range->start >> PAGE_SHIFT;
-+	pg_end = min_t(pgoff_t,
-+				(range->start + range->len) >> PAGE_SHIFT,
-+				DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE));
++  "#sound-dai-cells":
++    const: 0
++
+   ports:
+     $ref: /schemas/graph.yaml#/properties/ports
  
- 	if (is_inode_flag_set(inode, FI_COMPRESS_RELEASED)) {
- 		err = -EINVAL;
-@@ -2647,8 +2648,9 @@ static int f2fs_defragment_range(struct f2fs_sb_info *sbi,
- 	}
+@@ -105,7 +111,7 @@ required:
+   - extcon
+   - ports
  
- 	/* writeback all dirty pages in the range */
--	err = filemap_write_and_wait_range(inode->i_mapping, range->start,
--						range->start + range->len - 1);
-+	err = filemap_write_and_wait_range(inode->i_mapping,
-+						pg_start << PAGE_SHIFT,
-+						pg_end << PAGE_SHIFT - 1);
- 	if (err)
- 		goto out;
+-additionalProperties: false
++unevaluatedProperties: false
  
+ examples:
+   - |
+
+base-commit: 084c8e315db34b59d38d06e684b1a0dd07d30287
 -- 
-1.9.1
+2.44.0.396.g6e790dbe36-goog
 
