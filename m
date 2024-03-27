@@ -1,75 +1,133 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC1E14535D;
-	Wed, 27 Mar 2024 14:23:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D0614535D;
+	Wed, 27 Mar 2024 14:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711549425; cv=none; b=LYuPFJ45VvJyIYiRjACcTj4XWDfLbZsG8FASYwUsFpYMMPar1Zd7pFNDvxjAP6y43glRo0fpZcu2P5tz1BADkDS8Y+1MnKIfhKW2v/RMMrYF+HdVdLXNsRI94kHFvIByb2T452nCPMj4OAohhYl4MRdXk2zEa5WPAL6tWyOC6eo=
+	t=1711549434; cv=none; b=ngNwIiSdRROELj3XeEw5m0RtVeMsR+MWkrI/7alHmjRIm8NQ6aAFnhkrcr4FoZGnMutbKHq4+K4EkuqLg1ayf56IOQl4ZBf7qmt3gOu89aR8ELn/AR/U7vIy3h7ZLiL3YmUbT9ki0nDNoqLzElGxTB2pGM9tzrMmW4sHRDeNcQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711549425; c=relaxed/simple;
-	bh=S2tOvnXnLBWrNcDCTWsN+3QjTxjM5oG6sC2mw1nYkFc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=g3/gyK7qSS8YD4k8dPlfqvSh1XFdSYRsV1njTrHomUYssBpz8rqnmBAlLzusHA+FuzN4YBF3iokCWsNkFcpFWmf58DF1I5yBbCCW1fjRDiCd7IxT9cbQGXiCy8LhgSolsQZP3udYdhlGLzOt6xYmMGJellDZAvPciIU7STLItcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4V4TRK37pRz1GCtg;
-	Wed, 27 Mar 2024 22:23:09 +0800 (CST)
-Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
-	by mail.maildlp.com (Postfix) with ESMTPS id 74CCB1A0188;
-	Wed, 27 Mar 2024 22:23:40 +0800 (CST)
-Received: from DESKTOP-8RFUVS3.china.huawei.com (10.174.185.179) by
- kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 27 Mar 2024 22:23:39 +0800
-From: Zenghui Yu <yuzenghui@huawei.com>
-To: <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <tglx@linutronix.de>, <maz@kernel.org>, <wanghaibin.wang@huawei.com>,
-	Zenghui Yu <yuzenghui@huawei.com>, Huacai Chen <chenhuacai@kernel.org>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH] irqchip/loongson-pch-msi: Fix off-by-one on allocation error path
-Date: Wed, 27 Mar 2024 22:23:34 +0800
-Message-ID: <20240327142334.1098-1-yuzenghui@huawei.com>
-X-Mailer: git-send-email 2.23.0.windows.1
+	s=arc-20240116; t=1711549434; c=relaxed/simple;
+	bh=BmZ4SjxSQBnkpuUFtgR3wQXxh1obJ6n5r0ucuS+Wj4k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YMilRaZRvlDVdNTUS4PBRb6kVK9YaZJw7FU98e/AntXHg7mp3CHt+isYZ1vPsZSTf20bZ776bpLK4BuozlIvKzM5nXYTNQP00LLfsHlbzSPTrzjkOrhH0uG3jloOo3M9GZJwMOa5Fu4mOw9gpKIMhlCuQdpFHHtpjJ3liFc5prM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8748DC433F1;
+	Wed, 27 Mar 2024 14:23:53 +0000 (UTC)
+Date: Wed, 27 Mar 2024 10:26:34 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Tio Zhang <tiozhang@didiglobal.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Ingo Molnar <mingo@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, <linux-kernel@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>, <zyhtheonly@yeah.net>,
+ <zyhtheonly@gmail.com>
+Subject: Re: [PATCH] trace/sched: add tgid for sched_wakeup_template
+Message-ID: <20240327102634.17013392@gandalf.local.home>
+In-Reply-To: <20240327084948.GA28114@didi-ThinkCentre-M930t-N000>
+References: <20240327084948.GA28114@didi-ThinkCentre-M930t-N000>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600007.china.huawei.com (7.193.23.208)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-When pch_msi_parent_domain_alloc() returns an error, there is an off-by-one
-in the number of IRQs to be freed.
+On Wed, 27 Mar 2024 16:50:57 +0800
+Tio Zhang <tiozhang@didiglobal.com> wrote:
 
-Fix it by passing the number of successfully allocated IRQs, instead of the
-relative index of the last allocated one.
+> By doing this, we are able to filter tasks by tgid while we are
+> tracing wakeup events by ebpf or other methods.
+> 
+> For example, when we care about tracing a user space process (which has
+> uncertain number of LWPs, i.e, pids) to monitor its wakeup latency,
+> without tgid available in sched_wakeup tracepoints, we would struggle
+> finding out all pids to trace, or we could use kprobe to achieve tgid
+> tracing, which is less accurate and much less efficient than using
+> tracepoint.
 
-Fixes: 632dcc2c75ef ("irqchip: Add Loongson PCH MSI controller")
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
----
- drivers/irqchip/irq-loongson-pch-msi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This is a very common trace event, and I really do not want to add more
+data than necessary to it, as it increases the size of the event which
+means less events can be recorded on a fixed size trace ring buffer.
 
-diff --git a/drivers/irqchip/irq-loongson-pch-msi.c b/drivers/irqchip/irq-loongson-pch-msi.c
-index 6e1e1f011bb2..dd4d699170f4 100644
---- a/drivers/irqchip/irq-loongson-pch-msi.c
-+++ b/drivers/irqchip/irq-loongson-pch-msi.c
-@@ -136,7 +136,7 @@ static int pch_msi_middle_domain_alloc(struct irq_domain *domain,
- 
- err_hwirq:
- 	pch_msi_free_hwirq(priv, hwirq, nr_irqs);
--	irq_domain_free_irqs_parent(domain, virq, i - 1);
-+	irq_domain_free_irqs_parent(domain, virq, i);
- 
- 	return err;
- }
--- 
-2.33.0
+Note, you are not modifying the "tracepoint", but you are actually
+modifying a "trace event".
+
+ "tracepoint" is the hook in the kernel code:
+
+   trace_sched_wakeup()
+
+ "trace event" is defined by TRACE_EVENT() macro (and friends) that defines
+     what is exposed in the tracefs file system.
+
+I thought ebpf could hook directly to the tracepoint which is:
+
+	trace_sched_wakeup(p);
+
+I believe you can have direct access to the 'p' before it is processed from ebpf.
+
+There's also "trace probes" (I think we are lacking documentation on this,
+as well as event probes :-p):
+
+ $ gdb vmlinux
+(gdb) p &((struct task_struct *)0)->tgid
+$1 = (pid_t *) 0x56c
+(gdb) p &((struct task_struct *)0)->pid
+$2 = (pid_t *) 0x568
+
+ # echo 't:wakeup sched_waking pid=+0x568($arg1):u32 tgid=+0x56c($arg1):u32' > /sys/kernel/tracing/dynamic_events
+
+ # trace-cmd start -e wakeup
+ # trace-cmd show
+       trace-cmd-7307    [003] d..6. 599486.485762: wakeup: (__probestub_sched_waking+0x4/0x10) pid=845 tgid=845
+            bash-845     [001] d.s4. 599486.486136: wakeup: (__probestub_sched_waking+0x4/0x10) pid=17 tgid=17
+            bash-845     [001] d..4. 599486.486336: wakeup: (__probestub_sched_waking+0x4/0x10) pid=5516 tgid=5516
+   kworker/u18:2-5516    [001] d..4. 599486.486445: wakeup: (__probestub_sched_waking+0x4/0x10) pid=818 tgid=818
+          <idle>-0       [001] d.s4. 599486.491206: wakeup: (__probestub_sched_waking+0x4/0x10) pid=17 tgid=17
+          <idle>-0       [001] d.s5. 599486.493218: wakeup: (__probestub_sched_waking+0x4/0x10) pid=17 tgid=17
+          <idle>-0       [001] d.s4. 599486.497200: wakeup: (__probestub_sched_waking+0x4/0x10) pid=17 tgid=17
+          <idle>-0       [003] d.s4. 599486.829209: wakeup: (__probestub_sched_waking+0x4/0x10) pid=70 tgid=70
+
+The above attaches to the tracepoint and $arg1 is the 'struct task_struct *p'.
+
+-- Steve
+
+
+> 
+> Signed-off-by: Tio Zhang <tiozhang@didiglobal.com>
+> Signed-off-by: Dylane Chen <dylanechen@didiglobal.com>
+> ---
+>  include/trace/events/sched.h | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+> index dbb01b4b7451..ea7e525649e5 100644
+> --- a/include/trace/events/sched.h
+> +++ b/include/trace/events/sched.h
+> @@ -149,6 +149,7 @@ DECLARE_EVENT_CLASS(sched_wakeup_template,
+>  		__field(	pid_t,	pid			)
+>  		__field(	int,	prio			)
+>  		__field(	int,	target_cpu		)
+> +		__field(	pid_t,	tgid			)
+>  	),
+>  
+>  	TP_fast_assign(
+> @@ -156,11 +157,12 @@ DECLARE_EVENT_CLASS(sched_wakeup_template,
+>  		__entry->pid		= p->pid;
+>  		__entry->prio		= p->prio; /* XXX SCHED_DEADLINE */
+>  		__entry->target_cpu	= task_cpu(p);
+> +		__entry->tgid		= p->tgid;
+>  	),
+>  
+> -	TP_printk("comm=%s pid=%d prio=%d target_cpu=%03d",
+> +	TP_printk("comm=%s pid=%d prio=%d target_cpu=%03d tgid=%d",
+>  		  __entry->comm, __entry->pid, __entry->prio,
+> -		  __entry->target_cpu)
+> +		  __entry->target_cpu, __entry->tgid)
+>  );
+>  
+>  /*
 
