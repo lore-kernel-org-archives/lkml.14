@@ -1,88 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44F818148F;
-	Wed, 27 Mar 2024 12:25:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E54112E1D4;
+	Wed, 27 Mar 2024 12:25:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711542314; cv=none; b=NannlXB46Tx+Kywwx60Zmc6f6MwAL2o70MZnBuwcolJeXGXDc6zXQ9IJAjFZ8XPkfjD4GtpiC/eKA1PwUTnKgMLVdpf8j7La+cUuftA/oVKUHFYDOH2Y8kPu/1ikZweO0KGwWfHrudbra8S6LRL0M9xt7TOZ7KTDye4K1qNqdtM=
+	t=1711542315; cv=none; b=ov39tL0QyAqRHPci5z0eNkqMc1KsH5KF65v0XfFbOMmthXfWjVebUt2FgdFNi66umn/SWo5pC01oJPDM6icNfrawR87J4V4VMfDl3fk1xM1SIxqPIq3Ziz073Xyevd29Q+0dvx2m30qBnDX+OcUCnyF5fHDgnZI0lo5sgpjymTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711542314; c=relaxed/simple;
-	bh=038VBIDo7wOXasBPUdMTZ8PLRSWfD0Ugbh34YKcaqAw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ii19KBDOEH7YAYN2vV+X0tWKB8Jqr/aaBuqcOXNrcnDMDA9s9z24vvP3/YVDFs5S3NQ41KYm5NGDiXsdRO/2QUJ+RKXIMTg56k2vyqcgYFu7O2yPtK31yJBNubtwcpqMmXny6hUSozQfEjz4mgH6A+5OjIXkTuoHnyBxeqt+Qls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kwr1lYv2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711542315; c=relaxed/simple;
+	bh=6coZdrg6er/YMi8imRKNV+2sPsFUfWDU38m+cgUxXxQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AIBf/onodF9Cy8V8zpN9k7Z4Oyg9ADjyQN/NmWm5LSrIHbYlJVyQQNBtZFoynT5DH70k4x4EikItPZBNv6fMQ+sEIYiJuk6MrWKzf0yFVIgdfOUrxjNPGKB/vK7fUdQds9RjGW62bEhKDSDe0uwvhLKrkJok3FKr5fHKcVxptOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uBDNq32u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kwr1lYv2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23145C43399;
-	Wed, 27 Mar 2024 12:25:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uBDNq32u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43527C43390;
+	Wed, 27 Mar 2024 12:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711542313;
-	bh=038VBIDo7wOXasBPUdMTZ8PLRSWfD0Ugbh34YKcaqAw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Kwr1lYv2X1QC6vcz5l+zu2KW28jKDMcUCckfHzTia2WHhQHNUkkqzcxlIhuH8bH0V
-	 oHRouwHNl91AZtFpfS8uSq4B8BjUJgT486AJqQp4NaDGbAoH+TEFEEZWT4AZusOaye
-	 ZNM0LetAPWIAXXHZHwqm7me/VV/2c/Mrj3fM3pvBRJkG7thwftZ8ovy/oN874gGMNa
-	 Ya4K0P3ZAtuGs68/oELfhLaGSxxvqRF3HHkpASq14EzDDMcOoNNu2QpGaPK3yNH8+q
-	 gZl+bRFZmz7AaPGs47pDBXEfvJz7WJebsBOGGgbXxhsynKneIAdK3NkdTNVFQ4ijgr
-	 at8b6J9qN8j7w==
-From: Conor Dooley <conor@kernel.org>
-To: linux-riscv@lists.infradead.org
-Cc: conor@kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Jamie Gibbons <jamie.gibbons@microchip.com>,
-	Valentina Fernandez <valentina.fernandezalanis@microchip.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH v1 3/5] dt-bindings: gpio: mpfs: allow gpio-line-names
-Date: Wed, 27 Mar 2024 12:24:38 +0000
-Message-ID: <20240327-overrate-overuse-1e32abccd001@spud>
+	s=k20201202; t=1711542315;
+	bh=6coZdrg6er/YMi8imRKNV+2sPsFUfWDU38m+cgUxXxQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=uBDNq32uqtFz9MzD1zT7gxKmwZr7QSuTj1QFYlmb4IO0curoPzM3QOmSz9dzB1vMt
+	 LjXQj7xdFZN4+t7KcwA/W6Z4FOpajVbia/JuWn7t2iiBM/ALyvrde2xZbBFGEMFqp6
+	 rL47WeMyUGQq7OZEDzOrReRgBcvWabpiu+1r9Pwk46E4JvUjTefaqtOgX2Pp14PZMg
+	 VlbH+LkiMkAadMiFco/YsBugpQDh18xbIWdzP8EYOJsJ972OqpVgS7aEZ9C2URmWa6
+	 4DJrYGXAFhzLCiBXEZKvNvCrV+5mTdG7A8hMKJ5I4OunE3u3ngHMke26i63OYzGcKS
+	 BjDoKjnq6ntkQ==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org,
+	hamza.mahfooz@amd.com
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: FAILED: Patch "drm/amdgpu: make damage clips support configurable" failed to apply to 4.19-stable tree
+Date: Wed, 27 Mar 2024 08:25:13 -0400
+Message-ID: <20240327122513.2840041-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240327-parkway-dodgy-f0fe1fa20892@spud>
-References: <20240327-parkway-dodgy-f0fe1fa20892@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=815; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=DQ/xOk1TKoK84RFxAr9nUQRMqrU2scD4cxuVi4j2DRs=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGksAqyTq1tfxFl23mh4eOftRUHLExaKZ7ubjEPOpDEK3 2X0bLvVUcrCIMbBICumyJJ4u69Fav0flx3OPW9h5rAygQxh4OIUgIk08TEyXHq56IBz2p6VonO0 3HTV9HW9zr01q1DPEmzO9hK6UpOUxcjwbcfUFsHNTqqXMqcvmMXHE3Zk3bklDh+7eJ8t2SI0c4Y FPwA=
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+X-Patchwork-Hint: ignore
+X-stable: review
 Content-Transfer-Encoding: 8bit
 
-From: Jamie Gibbons <jamie.gibbons@microchip.com>
+The patch below does not apply to the 4.19-stable tree.
+If someone wants it applied there, or to any other stable or longterm
+tree, then please email the backport, including the original git commit
+id to <stable@vger.kernel.org>.
 
-The BeagleV Fire devicetree will make use of gpio-line-names, allow it
-in the binding.
+Thanks,
+Sasha
 
-Signed-off-by: Jamie Gibbons <jamie.gibbons@microchip.com>
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+------------------ original commit in Linus's tree ------------------
+
+From fc184dbe9fd99ad2dfb197b6fe18768bae1774b1 Mon Sep 17 00:00:00 2001
+From: Hamza Mahfooz <hamza.mahfooz@amd.com>
+Date: Thu, 8 Feb 2024 16:23:29 -0500
+Subject: [PATCH] drm/amdgpu: make damage clips support configurable
+
+We have observed that there are quite a number of PSR-SU panels on the
+market that are unable to keep up with what user space throws at them,
+resulting in hangs and random black screens. So, make damage clips
+support configurable and disable it by default for PSR-SU displays.
+
+Cc: stable@vger.kernel.org
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Hamza Mahfooz <hamza.mahfooz@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 ---
- Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu.h               |  1 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c           | 13 +++++++++++++
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |  7 +++++++
+ 3 files changed, 21 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml b/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
-index 6884dacb2865..d61569b3f15b 100644
---- a/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
-@@ -44,6 +44,7 @@ properties:
-     default: 32
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu.h b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+index 312dfaec7b4a7..1291b8eb9dffa 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu.h
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+@@ -198,6 +198,7 @@ extern uint amdgpu_dc_debug_mask;
+ extern uint amdgpu_dc_visual_confirm;
+ extern uint amdgpu_dm_abm_level;
+ extern int amdgpu_backlight;
++extern int amdgpu_damage_clips;
+ extern struct amdgpu_mgpu_info mgpu_info;
+ extern int amdgpu_ras_enable;
+ extern uint amdgpu_ras_mask;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+index 161ecf9b41747..6ef7f22c1152c 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+@@ -211,6 +211,7 @@ int amdgpu_seamless = -1; /* auto */
+ uint amdgpu_debug_mask;
+ int amdgpu_agp = -1; /* auto */
+ int amdgpu_wbrf = -1;
++int amdgpu_damage_clips = -1; /* auto */
  
-   gpio-controller: true
-+  gpio-line-names: true
+ static void amdgpu_drv_delayed_reset_work_handler(struct work_struct *work);
  
- patternProperties:
-   "^.+-hog(-[0-9]+)?$":
+@@ -859,6 +860,18 @@ int amdgpu_backlight = -1;
+ MODULE_PARM_DESC(backlight, "Backlight control (0 = pwm, 1 = aux, -1 auto (default))");
+ module_param_named(backlight, amdgpu_backlight, bint, 0444);
+ 
++/**
++ * DOC: damageclips (int)
++ * Enable or disable damage clips support. If damage clips support is disabled,
++ * we will force full frame updates, irrespective of what user space sends to
++ * us.
++ *
++ * Defaults to -1 (where it is enabled unless a PSR-SU display is detected).
++ */
++MODULE_PARM_DESC(damageclips,
++		 "Damage clips support (0 = disable, 1 = enable, -1 auto (default))");
++module_param_named(damageclips, amdgpu_damage_clips, int, 0444);
++
+ /**
+  * DOC: tmz (int)
+  * Trusted Memory Zone (TMZ) is a method to protect data being written
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index b7a717c3682f9..f9a7a16f1ec21 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -5254,6 +5254,7 @@ static void fill_dc_dirty_rects(struct drm_plane *plane,
+ 				struct drm_plane_state *new_plane_state,
+ 				struct drm_crtc_state *crtc_state,
+ 				struct dc_flip_addrs *flip_addrs,
++				bool is_psr_su,
+ 				bool *dirty_regions_changed)
+ {
+ 	struct dm_crtc_state *dm_crtc_state = to_dm_crtc_state(crtc_state);
+@@ -5278,6 +5279,10 @@ static void fill_dc_dirty_rects(struct drm_plane *plane,
+ 	num_clips = drm_plane_get_damage_clips_count(new_plane_state);
+ 	clips = drm_plane_get_damage_clips(new_plane_state);
+ 
++	if (num_clips && (!amdgpu_damage_clips || (amdgpu_damage_clips < 0 &&
++						   is_psr_su)))
++		goto ffu;
++
+ 	if (!dm_crtc_state->mpo_requested) {
+ 		if (!num_clips || num_clips > DC_MAX_DIRTY_RECTS)
+ 			goto ffu;
+@@ -8412,6 +8417,8 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
+ 			fill_dc_dirty_rects(plane, old_plane_state,
+ 					    new_plane_state, new_crtc_state,
+ 					    &bundle->flip_addrs[planes_count],
++					    acrtc_state->stream->link->psr_settings.psr_version ==
++					    DC_PSR_VERSION_SU_1,
+ 					    &dirty_rects_changed);
+ 
+ 			/*
 -- 
 2.43.0
+
+
+
 
