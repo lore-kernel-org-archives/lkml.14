@@ -1,118 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C61E4180A7F;
-	Wed, 27 Mar 2024 12:25:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7ACC1304A6;
+	Wed, 27 Mar 2024 12:25:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711542307; cv=none; b=laBS760JEwcGLmNRrfF10SxqYTLz/uAUtZNBlQUZio6b02SVQPY59YUwjsCCzQd9cVU/YZpptvrZZl8TKkRr+Avbau463NvNKKd/BBR+UH/wG5bpEsCpdt0rDsGXL8GVwja5gI/G+/rCioKHnQRm8T6AbWVf5WCd+jD1RxSFnxg=
+	t=1711542309; cv=none; b=D1lZjuHNfHqIChXzbVXJVNcN7IdnTYKN44BoljArMMomZddzOONr49NK0qzUS7JxJZ1IUenytnYioOKmj5TDdKi4BHQ7eLlpxS1Xd50rNH9daGbX9g5Q5UA+QOyEpYZYGEdjGgYVW/kz1g85JY2+qWfUuul4PqSJBvC7UxpQ9q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711542307; c=relaxed/simple;
-	bh=A9hSUXYumHvurTtNw6wQWDuxt/cfo6KsUIvxYDfkRkI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q09ygMSHXTR6g+59SAcE4FwRWSfpS7FIPRT0Lt3RMiO6GfdsFj44bs+3aSbm4Wsmf1T1vEASQRiEq8X7UFU8FxfiKpuEUkIstXA9Epbjk/Z+Z99jvxhTOQGz1QUCoaV0SlCGKi62RmBiRsupBh2u3hlWLsNXRVXCnO82rRoieUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EbXVS1KW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711542309; c=relaxed/simple;
+	bh=gPsBJl3+lGsrZ281LklEHOtcSRqfcnJMec/DLgQQb8o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aVxD+Ps+HcTqAWErD6OlFUULNDjRe2t8URgpxPASIoSxvw0YeXt5Ug+fBkM2A9ceQPfJT8whbJ6ezPVp07hG/KhcQj3SPk+06HLhHSAoiVuGkTSUIct9YysW46kEwBJpxxarKbMJwRIBjzRuW3zh4k+85P+5O4lCHt+kLgrmDwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZW0wI5Tc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EbXVS1KW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 439FEC43390;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZW0wI5Tc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C66DC43394;
 	Wed, 27 Mar 2024 12:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711542307;
-	bh=A9hSUXYumHvurTtNw6wQWDuxt/cfo6KsUIvxYDfkRkI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=EbXVS1KWJ3Z98klUYGFCsFaIT0725o8eNT7ujSlB5tYlOIbpJAha56XoBoDAM0yT8
-	 oa1DT0ZVuNpZXMOfFYRGzB2XIh9nNNa0cC3KN6a3URnHqZAHEzCZaNNTomHxKf++jg
-	 SbvpfuIafpEI+FAJlJgVy4XVHlq1Eja/4rx28oW8fhjXPgn9Hi2MP0PQflmHiIwlua
-	 RaHrRSBXueGohpCgEy9kabzU+Bsq6MOxgZCQLaEyZLeACBtEQM0SpyrPBDwQZ5F8Qt
-	 AFASZNsxWXo9OdPn9/eAFJavgBaEuEHx9SWIsnA5IKE1BmynaDlidgzVqsLO4WVNSr
-	 UUKGNwxwkTpUw==
-From: Sasha Levin <sashal@kernel.org>
-To: stable@vger.kernel.org,
-	zhikai.zhai@amd.com
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Wenjing Liu <wenjing.liu@amd.com>,
-	Aurabindo Pillai <aurabindo.pillai@amd.com>,
-	Daniel Wheeler <daniel.wheeler@amd.com>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: FAILED: Patch "drm/amd/display: Add align done check" failed to apply to 5.4-stable tree
-Date: Wed, 27 Mar 2024 08:25:05 -0400
-Message-ID: <20240327122505.2839914-1-sashal@kernel.org>
+	s=k20201202; t=1711542309;
+	bh=gPsBJl3+lGsrZ281LklEHOtcSRqfcnJMec/DLgQQb8o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ZW0wI5TcjqElnMJHmeOioieZAl/zxdpw5U71hNTwAiAOmdOqr5q57K4xXpMTNQlBJ
+	 6e+ut/LCN1zr7rhWDODQTIhyaGsz/yh0n0UwnqPd2EMLtSGSTH2JBnm0p8kF8FTUWF
+	 F/3Gvz8GPQ+FkMlTLULmuhkOMb4LUvPzx++1I+ojrCBvOAX1do3NRcymbivSJA7D2H
+	 OX+QqBB06vYQxtVrF3KHwgrhGaxnrPU3HS6SK11uiB0QF3caMzPMbuu+pVKBYNfTzz
+	 pvSOT4kzC3+TfCifJDNMaRLnoaXfWC2tpSig0c7hZlBJfYf3zUa7w20oWjayF8El8t
+	 MOnvJgJ3IHZ8g==
+From: Conor Dooley <conor@kernel.org>
+To: linux-riscv@lists.infradead.org
+Cc: conor@kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Jamie Gibbons <jamie.gibbons@microchip.com>,
+	Valentina Fernandez <valentina.fernandezalanis@microchip.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v1 2/5] dt-bindings: gpio: mpfs: add coreGPIO support
+Date: Wed, 27 Mar 2024 12:24:37 +0000
+Message-ID: <20240327-procurer-rascal-33bca7d5d14b@spud>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240327-parkway-dodgy-f0fe1fa20892@spud>
+References: <20240327-parkway-dodgy-f0fe1fa20892@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Patchwork-Hint: ignore
-X-stable: review
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1550; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=IMTT4E9wFHswzy76N6YWQpUY7X5/7P9UPRxEwIXGGcY=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGksAqwlMoeOTjkgsrLk+pXsCh2fyQc/lKY92M0gOH2W/ 432/QYKHaUsDGIcDLJiiiyJt/tapNb/cdnh3PMWZg4rE8gQBi5OAZhI/XdGhuN8d3y0a4TunTev fNci3W7XI797eZTd4m2zI8QWsjrJPWdkmBsmwLN97pkHCSZ/pzQrpjxmr73q8vSSXd9OEc71i/1 k2AA=
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
 Content-Transfer-Encoding: 8bit
 
-The patch below does not apply to the 5.4-stable tree.
-If someone wants it applied there, or to any other stable or longterm
-tree, then please email the backport, including the original git commit
-id to <stable@vger.kernel.org>.
+From: Jamie Gibbons <jamie.gibbons@microchip.com>
 
-Thanks,
-Sasha
+The GPIO controllers on PolarFire SoC were based on the "soft" IP
+CoreGPIO, but the inp/outp registers are at different offsets. Add
+compatible to allow for support of both sets of offsets. The soft
+core will not always have interrupts wired up, so only enforce them for
+the "hard" core on PolarFire SoC.
 
------------------- original commit in Linus's tree ------------------
-
-From 1b5078f01b953a43d6198180ca5b110017315672 Mon Sep 17 00:00:00 2001
-From: Zhikai Zhai <zhikai.zhai@amd.com>
-Date: Mon, 29 Jan 2024 17:02:18 +0800
-Subject: [PATCH] drm/amd/display: Add align done check
-
-[WHY]
-We Double-check link status if training successful,
-but miss the lane align status.
-
-[HOW]
-Add the lane align status check
-
-Cc: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Wenjing Liu <wenjing.liu@amd.com>
-Acked-by: Aurabindo Pillai <aurabindo.pillai@amd.com>
-Signed-off-by: Zhikai Zhai <zhikai.zhai@amd.com>
-Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Jamie Gibbons <jamie.gibbons@microchip.com>
+Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- .../gpu/drm/amd/display/dc/link/protocols/link_dp_training.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ .../bindings/gpio/microchip,mpfs-gpio.yaml       | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_training.c b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_training.c
-index e06d3c2d89102..e538c67d3ed91 100644
---- a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_training.c
-+++ b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_training.c
-@@ -517,6 +517,7 @@ enum link_training_result dp_check_link_loss_status(
- {
- 	enum link_training_result status = LINK_TRAINING_SUCCESS;
- 	union lane_status lane_status;
-+	union lane_align_status_updated dpcd_lane_status_updated;
- 	uint8_t dpcd_buf[6] = {0};
- 	uint32_t lane;
+diff --git a/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml b/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
+index d481e78958a7..6884dacb2865 100644
+--- a/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
+@@ -14,6 +14,7 @@ properties:
+     items:
+       - enum:
+           - microchip,mpfs-gpio
++          - microchip,coregpio-rtl-v3
  
-@@ -532,10 +533,12 @@ enum link_training_result dp_check_link_loss_status(
- 		 * check lanes status
- 		 */
- 		lane_status.raw = dp_get_nibble_at_index(&dpcd_buf[2], lane);
-+		dpcd_lane_status_updated.raw = dpcd_buf[4];
+   reg:
+     maxItems: 1
+@@ -62,12 +63,21 @@ patternProperties:
+       - gpio-hog
+       - gpios
  
- 		if (!lane_status.bits.CHANNEL_EQ_DONE_0 ||
- 			!lane_status.bits.CR_DONE_0 ||
--			!lane_status.bits.SYMBOL_LOCKED_0) {
-+			!lane_status.bits.SYMBOL_LOCKED_0 ||
-+			!dp_is_interlane_aligned(dpcd_lane_status_updated)) {
- 			/* if one of the channel equalization, clock
- 			 * recovery or symbol lock is dropped
- 			 * consider it as (link has been
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: microchip,mpfs-gpio
++    then:
++      required:
++        - interrupts
++        - "#interrupt-cells"
++        - interrupt-controller
++
+ required:
+   - compatible
+   - reg
+-  - interrupts
+-  - "#interrupt-cells"
+-  - interrupt-controller
+   - "#gpio-cells"
+   - gpio-controller
+   - clocks
 -- 
 2.43.0
-
-
-
 
