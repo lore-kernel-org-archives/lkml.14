@@ -1,83 +1,94 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CEC038393
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 09:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B667364AA;
+	Wed, 27 Mar 2024 09:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711531286; cv=none; b=NstJY0d7s8O6fBwc3Rg4EvdEzoh9JlP6mV0mNIaecTirArDPVOqUGXW+JsRpnj5WWXGPy/JbzF2S4UzNtTJEiowcuJWbQLPon3T/r/AxxgAK2XkB0e1Pgr6OjotUHh5NE+Zr/kBv1Ggs8coTbXXuyUTqMn526HSrNyPirjzQjnE=
+	t=1711531367; cv=none; b=Hx71qb3vcwLrwrH0MGSsCKQ8dJx/fVSj8GuJsPu2gjT+nvYb08sdUTQ6r4NDhfHOXHG1H2nyEqfxPuoBIym1rmMXn8p7L+hIA3qPYXa1h+8NC8k6VxZ7HZV3I5nAwpGVjy10NbxxOMLglXYRewlm1iM95LkFqW6ZH068t6yto1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711531286; c=relaxed/simple;
-	bh=BTnJHFY/nt7PFY4PT3msCip+fzBmYxAGj/lUvuDySlw=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=CXlMfyN/IDECD8FXSIenTo9Whz/xPdDH+Pk4sA6w90/Dmu6OepPl9aE27oupjpz6kDbu3zWnrRpnpQ8cFHEUqG0YU0r40ZUyXvJ80xKfrkoELwyEaJE99wNr5rO46FUBY+wLsYvRs7O6RZWI0vKnyWk09sWDw30Ygsw0sGcwKuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7cf179c3da4so648521039f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 02:21:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711531284; x=1712136084;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8ReOWwslIB13Fq9t7nccy52B9153T7KjTEtXzz+65A8=;
-        b=Iio5ug+LTKawhME2XWGKYJ7F0qY6Upw+Wk9TMd+fuXi4kNZSxgAq8jVIyHhIYZo6f6
-         IBS0urODPN9hr9kLkvVRsoHDaWWX4QeLpLAYgXdjlsZKMURJMvXDp1xmtkx0hQrsEnz7
-         gSNRNExp8+8sMiEwFCuRfWdnDVf0/6GGJ/MTbghd+AzGJ8OMC9dim37mFNCbWHEh9V3L
-         iPxk5Pq6IAoMrCRQvXKrjRROS/oCMQlecckyxHUjwft1MhAiulmZPBi9MApZsBWEVIHA
-         H+hmZrd3gJ0DMAeNt4a62mMd18yBgYnFg8OVrmohw5ce/i6zw5gGRysKTEn+DeObOd2s
-         Ck9g==
-X-Forwarded-Encrypted: i=1; AJvYcCURRE68AkPBlqmGmg30Dxviggx2a0BpvrXamZOgnTz06+y/ImcaJsJ9wPc2DudXR+LcNYcmVh1V9gKc+oPgdDMkJ9u2Bb6+fSjcSWwP
-X-Gm-Message-State: AOJu0YxLERRUncAqQi2xyfNYG205kmdEYGiT6tcrzklKe3k23Rl6VEKH
-	pv5h4cs/ZLF+ZuH1RZv4Q9rRoD8sMCVfHrWaubspS0EOIaDQzh8yQo9zXvgw0tbVVxm6NUIAa33
-	WmvixKwBM0wHmOngK0HcqxG9nqZFuGxaP/qS9BOq43G21rZznGgyWvOM=
-X-Google-Smtp-Source: AGHT+IG2mSBwqqNlErV4Wnfic3Uyo2AfbnE/SxUf4IRcmKE1tix18e348CPFw2dnX/bz968AcHk7NtqOELZN8TZt7UniSbLlX0YR
+	s=arc-20240116; t=1711531367; c=relaxed/simple;
+	bh=ZWv952oYFxc39419lBwrbDg10Bj8qOEyHA+YfiwWqv0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hF84bndqtOg51K99PF+k56GoKptqawZ9cuyp7UI3FLErWFw7hD/3KYDUuLb8PvAc4G0b3kwxuO0K4xLoiC/MPKGOvn1SVUiNL5aSUHzUbAFaKXYhSAa1jOMEuZRzbAwclnAlmDUv8QHcnPrukbN7XrlpH34ZlhMgegjoqny4z18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 243A52F4;
+	Wed, 27 Mar 2024 02:23:13 -0700 (PDT)
+Received: from [10.57.81.167] (unknown [10.57.81.167])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EF5C3F7C5;
+	Wed, 27 Mar 2024 02:22:35 -0700 (PDT)
+Message-ID: <d8fa8e1a-b2ce-4d91-9ab5-ad1b160111c6@arm.com>
+Date: Wed, 27 Mar 2024 09:22:33 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:628c:b0:47e:b8b2:dd80 with SMTP id
- fh12-20020a056638628c00b0047eb8b2dd80mr66686jab.3.1711531284151; Wed, 27 Mar
- 2024 02:21:24 -0700 (PDT)
-Date: Wed, 27 Mar 2024 02:21:24 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000036cf020614a0eed8@google.com>
-Subject: [syzbot] Monthly arm report (Mar 2024)
-From: syzbot <syzbot+listcb18b8c90f9e4d847c17@syzkaller.appspotmail.com>
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/19] amba: store owner from modules with
+ amba_driver_register()
+Content-Language: en-GB
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Russell King <linux@armlinux.org.uk>, Mike Leach <mike.leach@linaro.org>,
+ James Clark <james.clark@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Andi Shyti
+ <andi.shyti@kernel.org>, Olivia Mackall <olivia@selenic.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, Vinod Koul <vkoul@kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Michal Simek <michal.simek@amd.com>, Eric Auger <eric.auger@redhat.com>,
+ Alex Williamson <alex.williamson@redhat.com>
+Cc: linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-stm32@st-md-mailman.stormreply.com, linux-i2c@vger.kernel.org,
+ linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-input@vger.kernel.org, kvm@vger.kernel.org
+References: <20240326-module-owner-amba-v1-0-4517b091385b@linaro.org>
+ <3f61d6d3-a0d6-4c49-b094-6ba62d09ab14@arm.com>
+ <f23f2e60-e5c0-4c3c-9722-dba63a6e7ef6@linaro.org>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <f23f2e60-e5c0-4c3c-9722-dba63a6e7ef6@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello arm maintainers/developers,
+On 27/03/2024 05:57, Krzysztof Kozlowski wrote:
+> On 27/03/2024 00:24, Suzuki K Poulose wrote:
+>> Hi Krzysztof
+>>
+>> On 26/03/2024 20:23, Krzysztof Kozlowski wrote:
+>>> Merging
+>>> =======
+>>> All further patches depend on the first amba patch, therefore please ack
+>>> and this should go via one tree.
+>>
+>> Are you able to provide a stable branch with these patches once you pull
+> 
+> I doubt I will be merging this. I think amba code goes through Russell.
+> 
+>> them in to "one tree" here ? We have changes coming up in the coresight
+>> tree, which would conflict with the changes here (horribly).
+>>
+> 
+> You mean conflict with  coresight conversion to platform driver? Worst
 
-This is a 31-day syzbot report for the arm subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/arm
+Yes.
 
-During the period, 0 new issues were detected and 0 were fixed.
-In total, 4 issues are still open and 4 have been fixed so far.
+> case it is solveable: just drop .owner.
 
-Some of the still happening issues:
+Or, we could merge the CoreSight changes (as they are really not
+affected by the problem this series is trying to address) after the
+base changes land in AMBA, via the CoreSight tree.
 
-Ref Crashes Repro Title
-<1> 924     Yes   BUG: bad usercopy in fpa_set
-                  https://syzkaller.appspot.com/bug?extid=cb76c2983557a07cdb14
-<2> 22      No    WARNING in delayed_work_timer_fn
-                  https://syzkaller.appspot.com/bug?extid=e13e654d315d4da1277c
-<3> 8       No    WARNING in do_sve_acc
-                  https://syzkaller.appspot.com/bug?extid=95ffb6a83b20ea7f4f55
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Suzuki
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+> 
+> Best regards,
+> Krzysztof
+> 
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
