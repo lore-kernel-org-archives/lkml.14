@@ -1,192 +1,125 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C46132471;
-	Wed, 27 Mar 2024 14:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711548691; cv=fail; b=Sy6Dv6MFnPbNiQNGH5XkWr10Irf9xUsW87gKZVSEFXA8s6NnsFLaIJ7V42zc+BQ1SKxefcWsgGJJ5eIm9SWjnJZrmFhdyeUEdCjso+Rz78xB7egbsPWZntkYkb0Bjag8C6DRs+BUfI0cM2jnW970DXjwmIDBi7jTmHNR6LeofzM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711548691; c=relaxed/simple;
-	bh=x/XvQBhCyZZGVWn2uQ0/Jgtn8hU3KgxdxcQlaeaqcaM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=R6vMF7MFvl31fgedaXAkjk2P+3bw0vwTWAL0B6mqlPysKpcm6pi+KytQVlBR99aXhabY47Zm4NeMvvf2gf73mSA6xgJOiyGY3nD9227dKBywzgxI096w3/FiXVlrXRxQ8DKJUBjDwAUguBuhPhRJF2HWcqJkbcSMDMgYq/wRQKI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=VIoBdalQ; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ZzT9UGtu; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6C71327E9;
+	Wed, 27 Mar 2024 14:11:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711548701; cv=none; b=GPszvykbs9HH9uSFvX47R5xqQlDQZo6lbqezSOw9vsteLdlyX2M5XnDG/BfhijK5gvCfNJ/WlI8iWAWmaDyGkU2QNWeDv60nKw0AL1zBpG1ck+Nq1fXEoP+vfm5S4X1buAUsZD3TL2JDXkAiDD0hJ7bYTeJS902VHknTEhGB6W0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711548701; c=relaxed/simple;
+	bh=SGhC7f/OXl3SNF2nNKvyBrQPvyFTC9D9zvBTzNsTSAI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FF4yTobC0TChDHD9fNuDEy4cATk12XWfXllNoU9tTUd9+eOX3vHpOPlgsQm6XgFaKAwKYIzflR2V2IpXChkdjZ/l86npLCsj+AeunW/j3aPDKjIzElQHiGOiTxBN4V4Su9aN5SbSCooP3QE7QfYbuJ1Gbpjcc+iSLAl7o5pfKYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XwU7YQaN; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VIoBdalQ";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ZzT9UGtu"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42RDht58004244;
-	Wed, 27 Mar 2024 14:11:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=corp-2023-11-20;
- bh=SJycnzFx3wxWy+nUbSLDxNyij7KjEjSGC1sB0P3pOVs=;
- b=VIoBdalQTNlf2kchnzBBK5wQqvF1xYzJbYIyAFu3HOSGTWjnjnPjE4nTcSqfgJDleN9w
- 6OUmk3/XIESLLfb44irfruKPWd04+7NEkjaVV//TOh6F9qHqNdXjz6iqjz+Q6ax1Fc27
- 4KPEwQYjuXvYL3MTeA5kVknkwq8J9boire6h6l/cFxqWPp0ZsJqled65GCsKlDZES0jY
- fXUjC7UmfuGRxTl4CvBWdXcgNElz5oOEngtW8nHUUfcwEWK6XMaqfch+bIqoNBfLQx9e
- UdYW0eStQhprutDygljKYKGoK4/7iIbBUzWLLHzGExLKnDpkhtRJhxx9GSh5IDBs7ei3 Zw== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3x4cxy0wgs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 27 Mar 2024 14:11:00 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42RE5M3o012873;
-	Wed, 27 Mar 2024 14:10:59 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2040.outbound.protection.outlook.com [104.47.66.40])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3x1nh8hdm7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 27 Mar 2024 14:10:59 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DcFd6mdGh4c8EMRvZPmfFB/8R6pi+faVhKf0bAGHe8Zd6zCs0dKfkOhooEtBEZ2EDP4rlSbBL5cEcNYyPIVxDzmirgj8Y87TuGqwTeAS+9K7iR3rUKt8ztd6EJpzVQEb8gY1n9PGHovdOxB8ZP/CY2Lcx8N/foz7gMt4OrHs1RxjPsTPRrRdrXAzWhSY1FvNqoxyouTmSvT6ngANlglPo03t5lDuOXEAEMm9V4Jpm8U7y4LQQ84dwYyZ43YFfGYPB0/++sAG4MFfMx7o4qRaWpF6HJu5rhQBD6TNwdSwY++eeicDkbuecKwQMyAASILTC+7pvEuItTO3GGc4njQ3YA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SJycnzFx3wxWy+nUbSLDxNyij7KjEjSGC1sB0P3pOVs=;
- b=jgqMiBbhgr0nUXO7Bi6Ev6h6Dld5Uq7Ta0hd0S4jx+6oRX4/FOCfUsIfeQZMzdYCqNGGIjbKjifeSMgkhK+nIuGD2OpT/baee4oHpJHoSoqeCRSY28OZkGl2oVKJah3bPRYkQ0HBF6CsF45I/YuqDX/6x1AppnlEzIzSXxSUBxUlUVlaiuAiwwW1+8Gn9/OOKzBMqBP00WOpY7tV73VEXHstz99PKJ7245N3Uo4/UXCxazdhnezufX4qCRvnmFWvY2D37vs208E0cCF1RLWjNikTzTlAu0kVWiOt2M7DU6hQcQ4oc63Jo0UZuW+w8S6KubPd4XktvvbbIwuGJHuk6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XwU7YQaN"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-512b3b04995so3775660e87.3;
+        Wed, 27 Mar 2024 07:11:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SJycnzFx3wxWy+nUbSLDxNyij7KjEjSGC1sB0P3pOVs=;
- b=ZzT9UGtu7Q/z8XADChq9eXA1zR6FK9KNt64JHnOvwbKigZTVfIV3e0g5783bkU/LPcTkTCz3sbJAthBOls++aG7j+aTxic3CCbf5IWObURPOLi+FB+Ln6yTsYTJd4luuDPAe7bLKXQejFBlhFGA2jhGy7S5Grg06dKNmLZ/BFtc=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by CH2PR10MB4230.namprd10.prod.outlook.com (2603:10b6:610:a5::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.33; Wed, 27 Mar
- 2024 14:10:57 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ad12:a809:d789:a25b]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ad12:a809:d789:a25b%4]) with mapi id 15.20.7409.031; Wed, 27 Mar 2024
- 14:10:57 +0000
-Date: Wed, 27 Mar 2024 10:10:53 -0400
-From: Chuck Lever <chuck.lever@oracle.com>
-To: Aleksandr Aprelkov <aaprelkov@usergate.com>
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>, Jeff Layton <jlayton@kernel.org>,
-        Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lvc-project@linuxtesting.org
-Subject: Re: [PATCH] sunrpc: removed redundant procp check
-Message-ID: <ZgQo7TcAxYrBXQXj@tissot.1015granger.net>
-References: <20240327071044.365284-1-aaprelkov@usergate.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240327071044.365284-1-aaprelkov@usergate.com>
-X-ClientProxiedBy: CH0PR04CA0060.namprd04.prod.outlook.com
- (2603:10b6:610:77::35) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+        d=gmail.com; s=20230601; t=1711548697; x=1712153497; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IyJDkbjfmOBYuYreKRli55h3QqY7VDOWn83SMTw8obc=;
+        b=XwU7YQaNEnjXB4uAiH4v6y3H5rVwZv/b5Cu2SPdOQ3a5w/sd9g+ozOGeFK+lA6XG47
+         /B23EMVl67HoV31q8AXZUOosCzi8RmCoyjBs4EFyU64nifKCU3cAwO/EUlvJ45w4CWU2
+         n2+6/FHxic+h+c/VOHSRpzt6ROYx/uxVpMz7Ps5euUslyeRO4WO+Cxi3rJTxHupRx5xX
+         T9/JJppgj7mW+KGTT3+9ABThoqI/UWBrFJgjKKMJgrINFHm2FYx8U0BDJrN3ufnsZ3wH
+         mKAJfi4HuN/tAL0p+sT8KYdp7yVQkvg4sYY8zwO9wBQ0sHRlBSnEIQNSK532sozCNknr
+         Mtdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711548697; x=1712153497;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IyJDkbjfmOBYuYreKRli55h3QqY7VDOWn83SMTw8obc=;
+        b=Er+jUV718VFIAhsf7eY6SFijo01U+3gKHl0RMenLuk6quKqiNYHyZvew1y0TYlDWnO
+         QTk5jcWcUJdQRpkDFsMJ9dA1N0wQ984NM3so7etsNa9zsJZ6FtCwJJmc+Yxwy7Dnxx8F
+         Ig3hVIQEyhLog1DNFK6I+U8OVBQC9AWdafar6c3Mi/1gM8D/aw9OrPMXqikIDwwR1/4U
+         w3AoT/r/pYk30Ujsm6mIILOe5LjV0GvyCjlV9LXhgj64ZZ9GVdlAGxcRTAff8WBMi0cX
+         OxjSLZ64yUtMrONJnegMjYHrbtGiFPrMCoTGY5ME1ADhhA+6qRJMZ6r7Q/PesRTrFhHh
+         7mHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVuy7RZCuQ5HbgdDOkF5KV8yqt4XLOKvbltRV/i1c/xgAkkGE1NFr2BRGBtLaMSPDqfjB3yC4vi6W0vOPsYp3mDDDnNgtzN9lc2kVLBTh/Q1McSLncZ6r8yKQUPwkLiOTUREcOF/3giKA==
+X-Gm-Message-State: AOJu0Yx3bUG+KqHALRDE7rvx3l+ETjb53+L6lV1+15xoSXkzK7M/SMBA
+	8TO/GrkDDB3QiSKWfoe+JkRDj1mh6S+suilrw8x9QbcHPTF33Ptz
+X-Google-Smtp-Source: AGHT+IFnHmjmaTtiFBPUmuK7dtkmFwbJFIBG4stNIA1T2gnG9pi0Ma5TRetOj1+9JKO6OpqRl8wCFg==
+X-Received: by 2002:ac2:48a4:0:b0:515:a6dd:9657 with SMTP id u4-20020ac248a4000000b00515a6dd9657mr1693604lfg.16.1711548697135;
+        Wed, 27 Mar 2024 07:11:37 -0700 (PDT)
+Received: from [192.168.42.63] (mobile-access-6df024-232.dhcp.inet.fi. [109.240.36.232])
+        by smtp.gmail.com with ESMTPSA id br36-20020a056512402400b00515b071bc71sm892262lfb.305.2024.03.27.07.11.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Mar 2024 07:11:36 -0700 (PDT)
+Message-ID: <c6f5a515-61a1-4d87-a029-4000fa96f10e@gmail.com>
+Date: Wed, 27 Mar 2024 16:11:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CH2PR10MB4230:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9e53c5ad-1964-47bb-756a-08dc4e67b8cc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	+r1kMigkEXUHXhX8pwbEPUOy81x2dwaXAQpRnfxdfpLELePgknRAE9hkO4MVLMsP7g5LpwBPggSQ92bA6O0+3oAkqNqjMVsBh3qpKY0XyFqcbUTeCRoXKpBAdAxB1qoyHzVq+TEuXrjCKwCKOmg040LlHCxzmMyySgNyuqWhNenP6UhsKc+cnqWf3ggpbWiwD00qE/2yHRGHjCNZOXxeYmr5f88jndqcaiWYEDWYJ/hNKdc4WHgjUJTyUEcCjOUEbG1Wq09DuBvniDwknPcSLqvgGp2pZx/RbkJrl6rSYVQDuk+VpboMR6iYS5npvX2P9JHzp1fUjeUgPJ+Whoc8OBNCdzXpvOc2EQweqJtKo8ATBb8cOHjU//qUmQSbf0V3+bnDkWgyFhHOcr09HV4/kgdrWS7Y8OJblWG6TQQHqjmyfwakcFMRsuYEIZ/FOhHQarF0OYJ+nxAylJGw+IBDcJJuKT1lX4KCqC8FJLD867ffutHtVdmxGltRdpoaipXmMsjsMw4J9hF34DBgCp6FlyJZsvM+beDIAY0J7MX0ubT3X8ZAClWC3k3/bbjSzHzfWCAameFXVhhvzajzx1VXm800ODfpH1P7HQ/bzIU0Ae4wB6226a9oosH0T0Jx0PcY6/RorVhXfTAoxsVjfpzuX4V3puthrQ6m3ZF1lzrC0w8=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(1800799015)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?E6lBmlZIlyMzeq8/35N+j7DPFScSmO2Q/4qd/TruOliIO1B5ATsJaqn6ZCMD?=
- =?us-ascii?Q?Rs5Oftcd+Gc9N9IDlVjCRiKToiUcmncJvRvVg2KByo/P+z5rsERhngbQPDbj?=
- =?us-ascii?Q?ZL/9luXPiO9vdcZU2yeCifcA/Rps46J0SwHbrOTzMQYrnzVDpOko4dtzVla9?=
- =?us-ascii?Q?FZTx/NsB/jkgsjUGzCU++N/90+RZXfjjG9TwY7nvfszwXf8NrTJjvHhmDaKw?=
- =?us-ascii?Q?xaJyfKuRl5H9arUAKHQY/Ep3pNBzrHaz6LgsrXUV/nGX8b8OEIDbmgScVV48?=
- =?us-ascii?Q?UPWFJfJeIf70yYgwiYpBrFvnKCUQUg0MLy+D1ISX5n4IMV0EWMMcJg0WR/Oe?=
- =?us-ascii?Q?yiNmpY7jD2xJ0HfWI7wbueRzvLlAdsbffJ60oBkkfqpu3PTMX61Ne5PydYLK?=
- =?us-ascii?Q?LPIhWQpiFuO1nfw1h1molhFQk1yKPsTAw6QxwhfVcGzDSCL4GITqfLFq1jI+?=
- =?us-ascii?Q?QBveHAC3MgztROkTiyRCVOXnKjg/IpFJDmJhhHQl/hNHwETunLo9FQZX0+r0?=
- =?us-ascii?Q?3JU91VraUPnm3IX3zLIX+oEoMYoxWPSahU/d+rJ2uZkr8pwgr5yc7wUpKOiI?=
- =?us-ascii?Q?79xQIq6V6NZhh/hKfVtMhRoseNwHm/0b7dxVxrR3Y8nrfcoYpl4p2LJ3TG14?=
- =?us-ascii?Q?Cl61owAGWJPI3Bkdbc3k3fbJepSUcLG4DUIA3X1RJHe2DJxRKUEngTKF2psf?=
- =?us-ascii?Q?D3Mrj30ZLYgn1Yk40wJ9IFAWSnjckAOQuBL6HvaWeFYAqz1qqN22MIQVGxEu?=
- =?us-ascii?Q?b2eAk05ag0UPYBy5Nv2d+DcxzywanP1ucB/aZn/B4XAB7u6WJTPXC8fODHWx?=
- =?us-ascii?Q?cvQOrZ0Dg8QDZDGhRAOioozyNbtEyV3knYvI+6uwiaD/GA4+o8YfejjFHRHM?=
- =?us-ascii?Q?Ur2lM+vYD/PSp5qZkusEkQ40wpA0oGP30xg4csILAUqGgw5Vb/yATy5ImtAB?=
- =?us-ascii?Q?xYXDWstsiL8yu3vqr8Mh7Rz8i3SfFpJ1Lx6lb8pSy30cUxcs7JcGUSZ0VLGP?=
- =?us-ascii?Q?o/LfgvYfSkbTG7Mn80u1jNpato7Mq70jYyL8JheoGYfivbFIdmo/93JyMF7t?=
- =?us-ascii?Q?/4v2aF+RnKezD92HLes9QCpeG2+hcqTw7Vvm5gW4ih1KMWesbLDxLPHN46bF?=
- =?us-ascii?Q?v/qs6ymvQqGJAkAIc3YU+yLWKR2ljyzol6TxjaP5H3Y6ZfYlAuivdK6i7lSv?=
- =?us-ascii?Q?IhDWK1PAWzop4oLiX6qZw4biR0J+ctppm2sNYmhskC4bjmJ+91otDQeWO9tL?=
- =?us-ascii?Q?ufFJChNKNfR2gy3CNWk53iJQip2CumcPGie+iznHBaL8jFwpCFQGjAW5DHuB?=
- =?us-ascii?Q?z2bdSpk8AIxEOTp43hDnbHJWQSOifUpmT/UviKib19K9w+sVD3c520mLEzDf?=
- =?us-ascii?Q?rs2hrL5v5VccdRfgKywaLLOXOc6m6xz1wgG4zmYvYcb82kjewuRtlIi+cVdS?=
- =?us-ascii?Q?TR37XyXWZefJh1EcK6M7i0t2kgGpTMYnD5P+Qz9E5R5orvB0VgSqK3/vz/ic?=
- =?us-ascii?Q?3TAzAWuFD2feD2vJSJs2W5JwJ9CpP1qxbHy8ZdsHWlvngayfI32VDJ9yGvOt?=
- =?us-ascii?Q?6bxTwehR7vb6ImZoWi4oT4gbsMlSFZVN2hdSvsD6wH+WaiLJRhFgfL/myDls?=
- =?us-ascii?Q?iQ=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	OSxd4sRcS5TfJE8uLd08/XGMthst6AkDXFSs0KRv7z+Y9PVyh2+f/rdhFiX4NAP36pxI+6AefjxZ7cTqlnOIw1WWz1GeS4+i1mI6y8Qaw95dJi8Cva+oH417mVeBYdbGFtuirMQVwc+V8lwO6VeSKOI6AtliDPQI/VWhLWfDAhBHJHFGhceTMrgb4Ep3hUrMTHWTVusPvlyKLVYoqRgO8wo1/xQW6O3uTW4oMGuJd1gXdBoqQguu8s4mzz9WWX43xfPXyYtG2gNomG3B0MSVed0MQRQLwiZe476nTnTQ+NFUSiIlfPm9i/uKxh/0bxkKj3W3wy69myNM3EGdYNFWVGG7SQM+fekZtlVPZg6vT4/18cLWD9Evsf/UfFo0mo2NpzzLA7yRa53ksUADvaXb1PGCrHVdCYOuoiuk2qAWTL+gRcaXaFtxKIzknK2mO/uiA7+oenpDDIKmbozLJj7BnFfp5PIzq/wzHw0cIgwMuCNleJbxZ4r+DHGmUByYb+BaV6KiL+UpHTswzffvRUfs3kT+jgcscY8+4NST7NqYEf7DVMVoUPc1LqE3Dk+RnHc8u0ad90cIqgpdmdQ3fxr7jWHiSS57hbtk+mTuZgMRg6c=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e53c5ad-1964-47bb-756a-08dc4e67b8cc
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2024 14:10:57.0624
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: E87eN5Be4LR0L0xi/Wn3HsSN0kziJPQtv0po46qWzfA5EJBohHa/qcllCYk03pqAOANwB5HC2/I7mVkw8bJVJg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR10MB4230
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-27_11,2024-03-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=952
- suspectscore=0 adultscore=0 mlxscore=0 spamscore=0 malwarescore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2403270096
-X-Proofpoint-ORIG-GUID: VnWtpafmeiU_RyZF6ICjE__Gw9TQ7Yw6
-X-Proofpoint-GUID: VnWtpafmeiU_RyZF6ICjE__Gw9TQ7Yw6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] mfd: rohm-bd71828: Add power off functionality
+Content-Language: en-US, en-GB
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: lee@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ conor+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240326192258.298143-1-andreas@kemnade.info>
+ <20240326192258.298143-3-andreas@kemnade.info>
+ <815e1cdc-145e-4880-96a0-d9c21308b9b3@gmail.com>
+ <20240327140451.65ff8e18@aktux>
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20240327140451.65ff8e18@aktux>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 27, 2024 at 02:10:44PM +0700, Aleksandr Aprelkov wrote:
-> since vs_proc pointer is dereferenced before getting it's address there's
-> no need to check for NULL.
+On 3/27/24 15:04, Andreas Kemnade wrote:
+> Hi,
 > 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> On Wed, 27 Mar 2024 09:32:29 +0200
+> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
 > 
-> Fixes: 8e5b67731d08 ("SUNRPC: Add a callback to initialise server requests")
-> Signed-off-by: Aleksandr Aprelkov <aaprelkov@usergate.com>
+>> It's worth noting that there is another PMIC, BD71879, which, from the
+>> driver software point of view, should be (almost?) identical to the
+>> BD71828. I believe the BD71828 drivers should work with it as well - if
+>> not out of the box, at least with very minor modifications.
+>> Unfortunately I don't know products where the BD71879 is used or if it
+>> is sold via distributors - so I don't know if adding a DT
+>> compatible/chip type define for it would be beneficial.
+> 
+> yes, you already told we thet the BD71828 drivers are compatible with
+> the BD71879 and I am using the latter.
+> But that at least should be commented somewhere, so that
+> people do not raise questions, like: Do I have some strange board revision,
+> etc?
+> The most terse form to comment it is a separate dt compatible so we are
+> prepare any "almost identical" surprises.
 
-Applied to nfsd-next. Thanks!
+I agree. Reason why I haven't done this already is that I don't always 
+(like in this case) know which of the variant are eventually sold. So, 
+it's balancing dance between adding compatibles for ICs that will never 
+been seen by large audience, and missing compatibles for some of the 
+variants.
 
+This is also why I was interested in knowing which variant you had, and 
+where was it used.
 
-> ---
->  net/sunrpc/svc.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> index b33e429336fb..2b4b1276d4e8 100644
-> --- a/net/sunrpc/svc.c
-> +++ b/net/sunrpc/svc.c
-> @@ -1265,8 +1265,6 @@ svc_generic_init_request(struct svc_rqst *rqstp,
->  	if (rqstp->rq_proc >= versp->vs_nproc)
->  		goto err_bad_proc;
->  	rqstp->rq_procinfo = procp = &versp->vs_proc[rqstp->rq_proc];
-> -	if (!procp)
-> -		goto err_bad_proc;
->  
->  	/* Initialize storage for argp and resp */
->  	memset(rqstp->rq_argp, 0, procp->pc_argzero);
-> -- 
-> 2.34.1
-> 
+But yes, I think that as the BD71879 has obviously been found by a 
+community linux kernel user - it would make sense to add a compatible 
+for it!
+
+Do you feel like adding the compatible 'rohm,bd71879' in 
+rohm,bd71828-pmic.yaml as part of this series(?)
+
+Yours,
+	-- Matti
 
 -- 
-Chuck Lever
+Matti Vaittinen
+Linux kernel developer at ROHM Semiconductors
+Oulu Finland
+
+~~ When things go utterly wrong vim users can always type :help! ~~
+
