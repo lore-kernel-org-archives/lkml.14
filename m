@@ -1,133 +1,125 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA16614A61B
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 17:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5946714D6EA;
+	Wed, 27 Mar 2024 17:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711560053; cv=none; b=afjokPcGu0rI6HOd2AFxkz+evvxa14J6cI7U5b5X/AvTntb7HI8yu4V4hX79xA0YdJwAUcHELQJ+H7gU3FYs7B3I3QUi9cE1hgmPAw8N48+/n1VVAB0DdrnD3YNl5ZmxTzz0VXki4UD66ZDfWCjcDDlgdZyRIVBru7iw4/uTG0A=
+	t=1711560107; cv=none; b=oHbOXtvyV6IDcHPuif7Ot/bVzbKoO5FgWdA9lyrTarKv0N8LZEaROxzCzlCOwA+R4LEAGOtot1dq/hZQD8h2agpcgjQl/ilo7c6BM9T7vKTA0vWZQ4oNA/sxn3k9+JpTiHriB3i9KUSqIz50EEbtQN2BbMW8/74wZFGGfC2hlyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711560053; c=relaxed/simple;
-	bh=iq6mfR+Pypv0cLjNcshxFJnXWmcAuxgTZBdMICC3NfQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DQSXpkWPkQs2AEnnI4tmiefkpUdRRQ3QBSAthpDVKu8I7hkHtZfQDelF8tESlOABQwLcht1SwTyZFQ8bL1ChFj36/7T4yTVdC6YGcLTAyCI7PynXkeyWF/YIdwyywftJg4jugnWzALdR9njp0SaztEH0H3yDibETIeRyU0nMVpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BnXB/Qqo; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711560107; c=relaxed/simple;
+	bh=xROqHGua4j6HcszJt7ZG/hqG8TaOs2PmwN195yXx6hI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BgyUwuXRnQalIp5/T1gteLpD3WrBWYT/hyuSigeJ6zT3KaPAtNW59gHmOFF5mdAMXvggWfGiCGub205k6ei5y0qlX9FX0uQ7yvKi7qSDiOfzObrOL6Ep7Hd0pBlc8J9QJEdelyVVf6rydJ0SLqGBUf6ctDg+J2wJ43GkuUCYsYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RkImE1FJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BnXB/Qqo"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-56c36f8f932so2095548a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 10:20:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711560050; x=1712164850; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=x7bK1CWXDphx1it5hX+qBzGDk5cCZMiQMvvxYefH2X4=;
-        b=BnXB/QqouJIvWwUuHKi8Z80zblOBmeT4mq11nfppQonTDamdclUn4iZoPFv7X2hTJm
-         cfuoV52ev3Ozpz2tZEqXizst8BFOG2HAx/RUJYAFwMp6jCF0lUDg9rDaH2YI4eZ+US6J
-         X77slTFq06SRcrUwMfv8kKrROEiXWX+IFddFu+oQCgBTh/U+jXPEf6XjpY/9agvbo8qD
-         XCdRrDgQVWWLetyW3pG+eUn5vcaMixmjpRE8MbhBfW+/HJ4RzJg9dFdUE3QqUsGlJNa+
-         8vp3jeAbBiXbLThd7/8hx9qGnu0Mn2f/jJxXH/8puIT7Dbuhq12bacy7YirEKhsODXHV
-         m7aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711560050; x=1712164850;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x7bK1CWXDphx1it5hX+qBzGDk5cCZMiQMvvxYefH2X4=;
-        b=IvwnZrZJL0UnbWxehP9fq4mtsdScAHzUM446b6XiuH0DKLcnJkLiyjgZ8WjNLcTRCh
-         8+aUeigU32L6VA6Ka32oap9pMK+i0fjO5eIjFBMS762LS46A8ce0RQL8IELve7QwlMwb
-         OTRyyBFnhNyb6+zdNFMbBnkvDzuheMUfG0eieYKZNkFomHjBjOj8rd1dQcDbzAt8whut
-         gcab+EqoA0oFlBHciG8i95z+x5wMDhHhBGEJLBtSLfqz5uQYor4mhRetN73CRCpJZ9r1
-         Tah0n9LS+NTw/ZYw51Z1mX9qVfGNuRRaFiRSXzIb+3WX/WvRkpwQCCdd79iajgw0DnI0
-         99Jw==
-X-Forwarded-Encrypted: i=1; AJvYcCV781C9krG1yNOwR3amHsA6kBT3uW/8fRE9eKX0rZgGx6FJxBuiJeyyc3i1IY/BKq6lH9hO0WDA2G2kfrS8AyKdlTDeEUpza4rXqAgm
-X-Gm-Message-State: AOJu0Yz8oS8lSmjHYRPDggpXFPwgRRbPuiAdFL02Rer2/zncyRHZpzK1
-	Vd8Owo8exqYZfcuWtB4+xbkaTp6zC3ggULhXdE61Zw7aquERuIkg5dk9ekBObew=
-X-Google-Smtp-Source: AGHT+IG99Ntl7l/93YYkA5WMyia0kX6kFvTPSUbGNu6qe32Jo+56500mzGRf/Wtg/Za5MIFkq+igSQ==
-X-Received: by 2002:a50:d782:0:b0:56b:d013:a67e with SMTP id w2-20020a50d782000000b0056bd013a67emr182961edi.18.1711560050001;
-        Wed, 27 Mar 2024 10:20:50 -0700 (PDT)
-Received: from [192.168.92.47] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
-        by smtp.gmail.com with ESMTPSA id ck5-20020a0564021c0500b0056c1bf78a3asm2917580edb.28.2024.03.27.10.20.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Mar 2024 10:20:49 -0700 (PDT)
-Message-ID: <0e45efaa-4140-4cef-94cd-f2324d77abcd@linaro.org>
-Date: Wed, 27 Mar 2024 18:20:46 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RkImE1FJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BB83C433F1;
+	Wed, 27 Mar 2024 17:21:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711560106;
+	bh=xROqHGua4j6HcszJt7ZG/hqG8TaOs2PmwN195yXx6hI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RkImE1FJHLz0Xv9jw+4vLwPD8Oq+E3m9s1Im/KSpkWfV5O3b3fs1Wx2oQmZ8jY7SM
+	 vOPzxfL5oLH4VnEC9nvuwnjMM/3vkesrI9CxY2eJkgSbsmwVcuBzwBV2gY0D0WNE4T
+	 9/AtNS0r+mJhHpMjMKxAqxBOplYBMo7+NcpOCZQbVCEXHB+lQZPCr7S5a31aB1bEVH
+	 Pb6sNCHY9W2OhkVIP5svVIa40CCJXyb+3KXjJi9WEzLQMv63gDNV36olH6RKwwkXvg
+	 fw79W+Ko4rNsLJ6hqCA/6agFzRl4EVzUiZJbkNxCVTBmGaSTV1RAxQ4CaezxEHa5J8
+	 fllbgdiEyUiAw==
+Date: Wed, 27 Mar 2024 17:21:40 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Folker Schwesinger <dev@folker-schwesinger.de>
+Cc: Dragan Simic <dsimic@manjaro.org>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Chris Ruehl <chris.ruehl@gtsys.com.hk>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Christopher Obbard <chris.obbard@collabora.com>,
+	Alban Browaeys <alban.browaeys@gmail.com>,
+	Doug Anderson <dianders@chromium.org>,
+	Brian Norris <briannorris@chromium.org>,
+	Jensen Huang <jensenhuang@friendlyarm.com>,
+	linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/3] phy: rockchip: emmc: Enable pulldown for strobe line
+Message-ID: <20240327-reopen-subsoil-4b8434cbb41e@spud>
+References: <20240326-rk-default-enable-strobe-pulldown-v1-0-f410c71605c0@folker-schwesinger.de>
+ <20240326-rk-default-enable-strobe-pulldown-v1-1-f410c71605c0@folker-schwesinger.de>
+ <20240326-tactical-onlooker-3df8d2352dc2@spud>
+ <436f78a981ecba441a0636912ddd1cf2@manjaro.org>
+ <D04O57YQHYI4.1QNGSVKVT44CS@folker-schwesinger.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/6] arm64: dts: qcom: qcs6490-rb3gen2: Enable USB
- Type-C display
-To: Bjorn Andersson <quic_bjorande@quicinc.com>,
- cros-qcom-dts-watchers@chromium.org, Bjorn Andersson <andersson@kernel.org>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>
-References: <20240326-rb3gen2-dp-connector-v2-0-a9f1bc32ecaf@quicinc.com>
- <20240326-rb3gen2-dp-connector-v2-5-a9f1bc32ecaf@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
- BB/OmIWU6X+LZW6P88ZmHe+KeyABLMP5s1tJNK1j4ntT7mECcWZDzafPWF4F6m4WJOG27kTJ
- HGWdmtO+RvadOVi6CoUDqALsmfS3MUG5Pj2Ne9+0jRg4hEnB92AyF9rW2G3qisFcwPgvatt7
- TXD5E38mLyOPOUyXNj9XpDbt1hNwKQfiidmPh5e7VNAWRnW1iCMMoKqzM1Anzq7e5Afyeifz
- zRcQPLaqrPjnKqZGL2BKQSZDh6NkI5ZLRhhHQf61fkWcUpTp1oDC6jWVfT7hwRVIQLrrNj9G
- MpPzrlN4YuAqKeIer1FMt8cq64ifgTzxHzXsMcUdclzq2LTk2RXaPl6Jg/IXWqUClJHbamSk
- t1bfif3SnmhA6TiNvEpDKPiT3IDs42THU6ygslrBxyROQPWLI9IL1y8S6RtEh8H+NZQWZNzm
- UQ3imZirlPjxZtvz1BtnnBWS06e7x/UEAguj7VHCuymVgpl2Za17d1jj81YN5Rp5L9GXxkV1
- aUEwONM3eCI3qcYm5JNc5X+JthZOWsbIPSC1Rhxz3JmWIwP1udr5E3oNRe9u2LIEq+wH/toH
- kpPDhTeMkvt4KfE5m5ercid9+ZXAqoaYLUL4HCEw+HW0DXcKDwARAQABzShLb25yYWQgRHli
- Y2lvIDxrb25yYWQuZHliY2lvQGxpbmFyby5vcmc+wsGOBBMBCAA4FiEEU24if9oCL2zdAAQV
- R4cBcg5dfFgFAmQ5bqwCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQR4cBcg5dfFjO
- BQ//YQV6fkbqQCceYebGg6TiisWCy8LG77zV7DB0VMIWJv7Km7Sz0QQrHQVzhEr3trNenZrf
- yy+o2tQOF2biICzbLM8oyQPY8B///KJTWI2khoB8IJSJq3kNG68NjPg2vkP6CMltC/X3ohAo
- xL2UgwN5vj74QnlNneOjc0vGbtA7zURNhTz5P/YuTudCqcAbxJkbqZM4WymjQhe0XgwHLkiH
- 5LHSZ31MRKp/+4Kqs4DTXMctc7vFhtUdmatAExDKw8oEz5NbskKbW+qHjW1XUcUIrxRr667V
- GWH6MkVceT9ZBrtLoSzMLYaQXvi3sSAup0qiJiBYszc/VOu3RbIpNLRcXN3KYuxdQAptacTE
- mA+5+4Y4DfC3rUSun+hWLDeac9z9jjHm5rE998OqZnOU9aztbd6zQG5VL6EKgsVXAZD4D3RP
- x1NaAjdA3MD06eyvbOWiA5NSzIcC8UIQvgx09xm7dThCuQYJR4Yxjd+9JPJHI6apzNZpDGvQ
- BBZzvwxV6L1CojUEpnilmMG1ZOTstktWpNzw3G2Gis0XihDUef0MWVsQYJAl0wfiv/0By+XK
- mm2zRR+l/dnzxnlbgJ5pO0imC2w0TVxLkAp0eo0LHw619finad2u6UPQAkZ4oj++iIGrJkt5
- Lkn2XgB+IW8ESflz6nDY3b5KQRF8Z6XLP0+IEdLOOARkOW7yEgorBgEEAZdVAQUBAQdAwmUx
- xrbSCx2ksDxz7rFFGX1KmTkdRtcgC6F3NfuNYkYDAQgHwsF2BBgBCAAgFiEEU24if9oCL2zd
- AAQVR4cBcg5dfFgFAmQ5bvICGwwACgkQR4cBcg5dfFju1Q//Xta1ShwL0MLSC1KL1lXGXeRM
- 8arzfyiB5wJ9tb9U/nZvhhdfilEDLe0jKJY0RJErbdRHsalwQCrtq/1ewQpMpsRxXzAjgfRN
- jc4tgxRWmI+aVTzSRpywNahzZBT695hMz81cVZJoZzaV0KaMTlSnBkrviPz1nIGHYCHJxF9r
- cIu0GSIyUjZ/7xslxdvjpLth16H27JCWDzDqIQMtg61063gNyEyWgt1qRSaK14JIH/DoYRfn
- jfFQSC8bffFjat7BQGFz4ZpRavkMUFuDirn5Tf28oc5ebe2cIHp4/kajTx/7JOxWZ80U70mA
- cBgEeYSrYYnX+UJsSxpzLc/0sT1eRJDEhI4XIQM4ClIzpsCIN5HnVF76UQXh3a9zpwh3dk8i
- bhN/URmCOTH+LHNJYN/MxY8wuukq877DWB7k86pBs5IDLAXmW8v3gIDWyIcgYqb2v8QO2Mqx
- YMqL7UZxVLul4/JbllsQB8F/fNI8AfttmAQL9cwo6C8yDTXKdho920W4WUR9k8NT/OBqWSyk
- bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
- nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
- izWDgYvmBE8=
-In-Reply-To: <20240326-rb3gen2-dp-connector-v2-5-a9f1bc32ecaf@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="BktBpU3GHnzCWrgO"
+Content-Disposition: inline
+In-Reply-To: <D04O57YQHYI4.1QNGSVKVT44CS@folker-schwesinger.de>
 
-On 27.03.2024 3:04 AM, Bjorn Andersson wrote:
-> With the ADSP remoteproc loaded pmic_glink can be introduced and
-> together with the redriver wired up to provide role and orientation
-> switching signals as well as USB Type-C display on the RB3gen2.
-> 
-> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-> Tested-By: Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>
-> Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
-> ---
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+--BktBpU3GHnzCWrgO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Konrad
+On Wed, Mar 27, 2024 at 04:21:45PM +0000, Folker Schwesinger wrote:
+> Hi Conor and Dragan,
+>=20
+> thanks for your feedback!
+>=20
+> On Tue Mar 26, 2024 at 8:55 PM CET, Dragan Simic wrote:
+> > On 2024-03-26 20:46, Conor Dooley wrote:
+> > > On Tue, Mar 26, 2024 at 07:54:35PM +0100, Folker Schwesinger via B4
+> > > Relay wrote:
+> > >> From: Folker Schwesinger <dev@folker-schwesinger.de>
+> > >>
+> > >> Restore the behavior of the Rockchip kernel that undconditionally
+> > >> enables the internal strobe pulldown.
+> > >
+> > > What do you mean "restore the behaviour of the rockchip kernel"? Did
+> > > mainline behave the same as the rockchip kernel previously? If not,
+> > > using "restore" here is misleading. "Unconditionally" is also
+> > > incorrect,
+> > > because you have a property that disables it.
+>=20
+> Apologizes for the misleading commit message. Prior to 5.11 the Linux
+> kernel did not touch the pull-down registers. However, it seems the
+> register's (factory?) default was set to enable the pull-down. As it
+> was mentioned elsewhere that was the configuration recommended by
+> Rockchip. The 4.4 vendor (Rockchip) kernel reflects that by enabling the
+> pull-down in its kernel.
+
+Yeah, seems like a bit of a sticky situation. Probably the wrong
+polarity was chosen when the property was implemented and the property
+should have been the one you wanted to switch to given the default
+before it existed was the factory defaults.
+
+> Of course, this has nothing to do with the Linux kernel, so "restore"
+> was a bad choice here.
+>
+> I previously had split the driver patch into two separate patches, one
+> for changing the default (unconditionally at that point), the other for
+> adding the disable property. As both changes were minimal I decided to
+> squash the commits. I updated the cover letter, but forgot to update the
+> commit message. Sorry.
+
+No worries. Squashing them was probably the right thing to do anyway.
+
+--BktBpU3GHnzCWrgO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZgRVowAKCRB4tDGHoIJi
+0vZBAQCa7Y4ALYnndw09ojj/rscvv2/ascq71lwrZORFc7LgWwEA2fBPIlz+6yb+
+Su6b6pt5k4wywnxerLOAC3N/zmJbEwY=
+=lcb4
+-----END PGP SIGNATURE-----
+
+--BktBpU3GHnzCWrgO--
