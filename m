@@ -1,152 +1,97 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA35F54F8E
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 11:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F012208A8;
+	Wed, 27 Mar 2024 11:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711537505; cv=none; b=G+b4SDY2KWBJPTfLQzmNMUJL1ZktzlQexgLYoyLHTAM5llrTH3KOOEs2Y67r/X13O2smnBxGEVzzTTVwJ7oShuSOvzoTK+IOmuZ3gGVvNut+IL2xVxluIzjbdN89nTeRjnDM/UBwcFFGdvmyOA2vEUUjk4qk+lzptyKjFgigWKA=
+	t=1711537521; cv=none; b=W6pVEMdW8uuTUdEAje72zijW4vQtoQ3+8inFqRdtRyGoCnfKVyZ3qpLAUiwL9wiyZTbAyrqnIup5BE01j1dXBd3AtpVavC38HXeQ4CAsw+DCOwfT1yQaTJ2ilb8fBksy+suQjQ5r9pxW9EooA5e3VxHo7POIPuhOW3Fh7g2qJUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711537505; c=relaxed/simple;
-	bh=upv0HrU+fAJIXtKJgHf30BzfpxrYE164Sk0/vOZDB2U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gqocWj5qLlds/7QdF2F3MI/2jL2oL/ryKw/Xu4IKExb+jl/w3Ue/c6AqBRNoh/BmeRv3X4VxzPa1+ECjcIS+nkGOxEIAy5MkMtEt/VX4PCe1Kr5dLHyUxkAeWHab4TlSkf8i+vp+coidcZ7UuPznj8nfk2rwtsdsXLokUKlPpo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U+9DzooR; arc=none smtp.client-ip=209.85.208.174
+	s=arc-20240116; t=1711537521; c=relaxed/simple;
+	bh=2ybKd7wRmjS3EUGpteosq0iA1MFDnreqoLF22JlUHHQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=frNU4QkDBYVrihC7kNZV5o/Eou6FpJjRUpJGuEvGQ/9G8iOVA3cs05u4eucSh+Ek1daZXLsZxb6YpXzAK2LwKKzgXNlbED/yJdca3gOVcOH/l5IWksbOmqu0GA4Ia71NbCc4vG0FUhqVwLXgKPgNvOv8JzHZoud3uo/MsrPi3MI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eHJYEbsZ; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U+9DzooR"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d6ff0422a2so2243941fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 04:05:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eHJYEbsZ"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-41495c4a8f6so1667715e9.2;
+        Wed, 27 Mar 2024 04:05:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711537502; x=1712142302; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ifymdw0r8QQrsy/jrDgRy80PrPmMAwYeA7nyVuXGI4A=;
-        b=U+9DzooRBZ4xrCXQo/PaxI5sjVHA5IY+Lunf/RZe549AHh+5597a8CmCcgSSVkQO1O
-         MiXqpx/Cc639dl8bZM/LSEfWKRE1tj/7P6vx03bYHeAaJuLVz5LrpkQgscHtVQaaxWTV
-         YfZA/zZXrpePjt4LzN/KhDeW9uc6TCYM4pSRJopZ8NzCXjVCjKcsUp65ZaCdk76hmHrK
-         +PcDye9Ika7PDq11EPrNR+sWtiFotquBzNi0fdM8mGC/uMPYPfAIP0n8BeGSC9d/AIaT
-         3gBANIO15ixpPnneR7nCvj+WT1UryFPuulORQTBOn/iJBawsETBg214ZKLV0YUc/8oLh
-         3/kQ==
+        d=gmail.com; s=20230601; t=1711537518; x=1712142318; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=014p56NXkTx8ykc7/eVqJqevMHd3n2lLs/kLUplg5o0=;
+        b=eHJYEbsZonPI/9eIkv6IyPyX8AdWZthqRab5PfK6NniOtFXlid1e6jzJYgZCJKZGre
+         vhmyMstkzmsEoAi8CiThK2RPgaDv02xMrcvPS6kNm5DguAj21T2BvxdYXq5QtFu6ad6U
+         GD4WMpzF8EwNNjk8oiWVKoYnaZAdZrYWKDYbk2IyqieaoOJS7c6fGqQzGWLbDZvsV4fw
+         Q4sQwQ59s6iz3hUlsg3jX32Zj69CiZfqMtsaFoTmoXbmvLhoSi2a6tbU1zKBx6zyvH0n
+         Nb8qs8YHETPuk7rcD7Vn2fvivW1m1OaKjZUzpusCG/btrkSR4D1zBrVngva5eo3D10uT
+         xZHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711537502; x=1712142302;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ifymdw0r8QQrsy/jrDgRy80PrPmMAwYeA7nyVuXGI4A=;
-        b=trnWdinFAQoF6ZcEnVnGF8Ow3z7Lg3FwtlJVs9lr3TpSyQTwwfjFGQSPZXi70KsxzR
-         uoeQUwCL+J62UcQ4EHQnfl8QlpWV8KwSH8kDfeSGb8u2x2Mli/Q1y6jbLf/FFkA/JFuf
-         KpnTlCkZraCyCLlckwRKQK+sr7WLyhxcv3AJj/rC9IknXG6TII/o/2vnsNJ/e1YiwgMw
-         OAFjsh0/E2JwygLKI7nxZXr4vjG49vGQGXJ3fmXFP6HtfMHVAFW0rm5RnI5Vzh0pifj8
-         bcLaTHF59FrXm61HUqNjDh0HvV2uwprjr7OOUdP3dLsItTTRPXZZSvKyK7LCUylsryCc
-         9sbg==
-X-Forwarded-Encrypted: i=1; AJvYcCVQMf7tqdeA9KSRcB3TQUTEV1VmR2i/08+26b9jtlZqOynEPxTjPCbwjL/7dKsNhQwV3Q2w4RfbKzS9RiWo7nDD6suip3e+XUcW+hrd
-X-Gm-Message-State: AOJu0YwMpzcsPBsuUQvgyI6lRIs/SVCkRUu3AV9eTcJHscz45c1eCa3J
-	pe6DFoEg/2eaumYV/kAAjz9kgctAN8dKK0vAADdCPkjVDZBg9/77LKzNPwwUWCjrLSD/Z6nK1ZD
-	OR+zkGMVrN5neqSaEHNCaMNFTDNc=
-X-Google-Smtp-Source: AGHT+IFCtkun3aPv+TBFVnO2BQPj2UIM3665xmoS96Pe49jk/wc3sInWORK0KjckV4jOamBqI8twv7VVwZQ6tmPl69c=
-X-Received: by 2002:a2e:9f4a:0:b0:2d2:4108:72a with SMTP id
- v10-20020a2e9f4a000000b002d24108072amr621779ljk.12.1711537501678; Wed, 27 Mar
- 2024 04:05:01 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711537518; x=1712142318;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=014p56NXkTx8ykc7/eVqJqevMHd3n2lLs/kLUplg5o0=;
+        b=PzPTDld3ROAMWnqejZdg0KmueCpEzZjPj+lA6HrUIzn/nmA3CRnOE6GUU6Wz2GDtFL
+         fjMT1YkLAhqZhFNVaPvCa8LLHxSPJrm4ObZt87Mf7KJRunLGemMKcx0aZVLcV3q12HRz
+         XkP6b6zVSe6O61guskd1NIBzBHYkz9NF4Hw0fFwhDjNluzxNrNAs2xJ1AP2BWqcEvRtV
+         VfMkaMBogbtVAw84JVwz6BmP9WyRDCcq8w3HrLWoDlyGUWbMzabwFjLsCvdiJXfh34LC
+         xYXRRuaqyvRPsPYlrGHSBoX+5OGMfrnMP+r8rr+VC8cItC4AGe8YdiOy8ZrQaJnMNzrA
+         T+cA==
+X-Forwarded-Encrypted: i=1; AJvYcCWWCrCI6II08sCqqfIo8kTZPl1f8Z+TeJwQ47MHsyAfKr2cse1Z5BxeLFatBaSGX4pv9r/hdS0/BYieJExPTxky6qM8uztukCYM0/VU
+X-Gm-Message-State: AOJu0YxXGFvZY3JV/RJJkbUde3kpoQtkMatdzJxaoi2uV+KotpYaflmo
+	FcZl4qBbPeK2gvIVOkvLEQznvmkdw4le19JaMhPXzrVo0PSL6hLN
+X-Google-Smtp-Source: AGHT+IELU/7JO+2Zja+aj+L6RZpytn4mXOMjoQiGw3A+Qqveb4jzvTJ5TixVDe6G93XhZRpnua7/gw==
+X-Received: by 2002:a05:600c:358a:b0:413:f290:c747 with SMTP id p10-20020a05600c358a00b00413f290c747mr1671154wmq.33.1711537517652;
+        Wed, 27 Mar 2024 04:05:17 -0700 (PDT)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id dx23-20020a05600c63d700b00414887d9329sm1775106wmb.46.2024.03.27.04.05.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Mar 2024 04:05:17 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Anup Patel <anup@brainfault.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	linux-riscv@lists.infradead.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] irqchip/riscv-aplic: Fix spelling mistake "forwared" -> "forwarded"
+Date: Wed, 27 Mar 2024 11:05:16 +0000
+Message-Id: <20240327110516.283738-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326185032.72159-1-ryncsn@gmail.com> <878r24o07p.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <CAMgjq7B4Aejv16XK-zm9zPFrtVV1YutYWk5Ywzy8GwfMsTAXgA@mail.gmail.com> <58e4f0c2-99d1-42b9-ab70-907cf35ac1a7@arm.com>
-In-Reply-To: <58e4f0c2-99d1-42b9-ab70-907cf35ac1a7@arm.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Wed, 27 Mar 2024 19:04:45 +0800
-Message-ID: <CAMgjq7D0XA=rd5CuonrYnHYeSJR3tqC1O49vj7Cr+su0MgOQ8Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/10] mm/swap: always use swap cache for synchronization
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: "Huang, Ying" <ying.huang@intel.com>, linux-mm@kvack.org, Chris Li <chrisl@kernel.org>, 
-	Minchan Kim <minchan@kernel.org>, Barry Song <v-songbaohua@oppo.com>, Yu Zhao <yuzhao@google.com>, 
-	SeongJae Park <sj@kernel.org>, David Hildenbrand <david@redhat.com>, Yosry Ahmed <yosryahmed@google.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Matthew Wilcox <willy@infradead.org>, Nhat Pham <nphamcs@gmail.com>, 
-	Chengming Zhou <zhouchengming@bytedance.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 27, 2024 at 4:27=E2=80=AFPM Ryan Roberts <ryan.roberts@arm.com>=
- wrote:
->
-> [...]
->
-> >>> Test 1, sequential swapin/out of 30G zero page on ZRAM:
-> >>>
-> >>>                Before (us)        After (us)
-> >>> Swapout:       33619409           33886008
-> >>> Swapin:        32393771           32465441 (- 0.2%)
-> >>> Swapout (THP): 7817909            6899938  (+11.8%)
-> >>> Swapin (THP) : 32452387           33193479 (- 2.2%)
-> >>
-> >> If my understanding were correct, we don't have swapin (THP) support,
-> >> yet.  Right?
-> >
-> > Yes, this series doesn't change how swapin/swapout works with THP in
-> > general, but now THP swapout will leave shadows with large order, so
-> > it needs to be splitted upon swapin, that will slow down later swapin
-> > by a little bit but I think that's worth it.
-> >
-> > If we can do THP swapin in the future, this split on swapin can be
-> > saved to make the performance even better.
->
-> I'm confused by this (clearly my understanding of how this works is incor=
-rect).
-> Perhaps you can help me understand:
->
-> When you talk about "shadows" I assume you are referring to the swap cach=
-e? It
-> was my understanding that swapping out a THP would always leave the large=
- folio
-> in the swap cache, so this is nothing new?
->
-> And on swap-in, if the target page is in the swap cache, even if part of =
-a large
-> folio, why does it need to be split? I assumed the single page would just=
- be
-> mapped? (and if all the other pages subsequently fault, then you end up w=
-ith a
-> fully mapped large folio back in the process)?
->
-> Perhaps I'm misunderstanding what "shadows" are?
+There is a spelling mistake in a dev_info message. Fix it.
 
-Hi Ryan
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/irqchip/irq-riscv-aplic-msi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-My bad I haven't made this clear.
+diff --git a/drivers/irqchip/irq-riscv-aplic-msi.c b/drivers/irqchip/irq-riscv-aplic-msi.c
+index 36cd04a5057b..028444af48bd 100644
+--- a/drivers/irqchip/irq-riscv-aplic-msi.c
++++ b/drivers/irqchip/irq-riscv-aplic-msi.c
+@@ -251,7 +251,7 @@ int aplic_msi_setup(struct device *dev, void __iomem *regs)
+ 
+ 	/* Advertise the interrupt controller */
+ 	pa = priv->msicfg.base_ppn << APLIC_xMSICFGADDR_PPN_SHIFT;
+-	dev_info(dev, "%d interrupts forwared to MSI base %pa\n", priv->nr_irqs, &pa);
++	dev_info(dev, "%d interrupts forwarded to MSI base %pa\n", priv->nr_irqs, &pa);
+ 
+ 	return 0;
+ }
+-- 
+2.39.2
 
-Ying have posted the link to the commit that added "shadow" support
-for anon pages, it has become a very important part for LRU activation
-/ workingset tracking. Basically when folios are removed from the
-cache xarray (eg. after swap writeback is done), instead of releasing
-the xarray slot, an unsigned long / void * is stored to it, recording
-some info that will be used when refault happens, to decide how to
-handle the folio from LRU / workingset side.
-
-And about large folio in swapcahce: if you look at the current version
-of add_to_swap_cache in mainline (it adds a folio of any order into
-swap cache), it calls xas_create_range(&xas) which fill all xarray
-slots in entire range covered by the folio. But xarray supports
-multi-index storing, making use of the nature of the radix tree to
-save a lot of slots. eg. for a 2M THP page, previously 8 + 512 slots
-(8 extra xa nodes) is needed to store it, after this series it only
-needs 8 slots by using a multi-index store. (not sure if I did the
-math right).
-
-Same for shadow, when folio is being deleted, __delete_from_swap_cache
-will currently walk the xarray with xas_next update all 8 + 512 slots
-one by one, after this series only 8 stores are needed (ignoring
-fragmentation).
-
-And upon swapin, I was talking about swapin 1 sub page of a THP folio,
-and the folio is gone, leaving a few multi-index shadow slots. The
-multi-index slots need to be splitted (multi-index slot have to be
-updated as a whole or split first, __filemap_add_folio handles such
-split), I optimize and reused routine in __filemap_add_folio in this
-series so without too much work it works perfectly for swapcache.
