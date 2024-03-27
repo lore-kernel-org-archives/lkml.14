@@ -1,40 +1,40 @@
-Received: from mail-108-mta123.mxroute.com (mail-108-mta123.mxroute.com [136.175.108.123])
+Received: from mail-108-mta167.mxroute.com (mail-108-mta167.mxroute.com [136.175.108.167])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD1C156669
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 23:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F6515688A
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 23:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.167
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711581807; cv=none; b=Lp09sb4TXvgP3CDt4i1frTcOvkxcmRZcijrGXTUZTtExCTYMsZhTBnT7KkjXO1i6RdVOIkjPVId0aDoyUHWsBf/yD6Vk5zZpoIm743H5MdttCRyEb1ugnsr5CMa4YFcZpYHcMW2ErVICa5B+qoZ/MYon592doNiCjmmq6n9uP9k=
+	t=1711581812; cv=none; b=BoEUzjZ3CPmoeo8UOFfBaLzlEyb79a0DcNIXG8F9bNVQWzM6yOKgtRwVud/1w1THVCDjyVZ/yAtfDWNBsXiD7Yj1PMh7TTcQJ3KIIwZgN2jqtk7XSjOd2/HSahZRa3y9ODOzzK7wHe95vODrBAhx4Nr/lXTyoEdeZNHkfWDegPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711581807; c=relaxed/simple;
-	bh=6+2wz7C48VzI3IyZhlih65O+oIcytRh3P8S1DW3VqYU=;
+	s=arc-20240116; t=1711581812; c=relaxed/simple;
+	bh=KK5+U8lMkgK4gNO+TSSYed7H1+sDini9KcsqYjmCbcM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WWqtEZB+n5DNZRhB7WIiePm1BEoqBksY0epsZxZd89GqQKYh2aLq2WAf1ry2Pk72ElNNoya/ZwG17EGLtSWOZFTrvNByyz4bSYfoc/Y1nzeXsk1iAoFKnpbKKxwICv8qLfnoUoLuUhGokxMng5atJ/ChKNw0qm6KceKPWixWj88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=HJ1eg5oN; arc=none smtp.client-ip=136.175.108.123
+	 MIME-Version; b=dapI58fPsX7wCG37jbDPGTPaEM3d7QjuteDBfSKNSMksg3PDHLQ0DQLgine9Z0YJIC2zdj2k5i9ogw6V3RyVSP2mUwLlj31+7GIQy9GX6nzVa/QM9HUEUEzD/wM5Nng9u/UXiFQQUy6Mdh27oCW6WSIIP6QyN+YgjYOhIZEPH04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=ZQHpV/jM; arc=none smtp.client-ip=136.175.108.167
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="HJ1eg5oN"
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="ZQHpV/jM"
 Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
  (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta123.mxroute.com (ZoneMTA) with ESMTPSA id 18e823488ac0003bea.00f
+ by mail-108-mta167.mxroute.com (ZoneMTA) with ESMTPSA id 18e82349f110003bea.010
  for <linux-kernel@vger.kernel.org>
  (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Wed, 27 Mar 2024 23:17:44 +0000
-X-Zone-Loop: 772719196a745200371b9d60c1a9d2c9fccf6a25e704
+ Wed, 27 Mar 2024 23:17:50 +0000
+X-Zone-Loop: 0e647aa179c8a1b409aaaa0da999af9ff8a94d66c058
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
 	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
 	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=MWmmMzvpB7rAQwa1TAxwPfh+Zj5RVzbFzB4BAQpgxHA=; b=HJ1eg5oNFBw6ptNnK6DZzTUMzV
-	eizEzmCukzFA5ZssZ1MdX5BAte3cGofJ/hqCj6uVuVQxWdTOIcAB6FGDKE420+IytRo4HNswQy6FN
-	QQADfHQLAFNW88ni8/35rUCXtevGG3wkSdJK5pAfyDJMbTpTd5RI3/bhay2IZ3FQA7bkxvabqSlx+
-	Yu2Gy8YQnWQauI3NjagAnxbq/LJlYm3VrFd3rVRaiTMrMnUvrTzeCLfwdC1qakl1Y3LHSgiGoJFVH
-	CxcosMAqcgoF1xgeaL3Js5On987dUVbavhEkf4YpNn4jsogebyYaEjxb3q9lwlbmMvhrJAiok8oFr
-	EOelcVUg==;
+	bh=HHelyH8dUAACB6PBOj0zLfLWRDzbJsLmhryy/cNSXnk=; b=ZQHpV/jMB5FDL9PLkOb7BMtUAZ
+	X0tnG1+Rw9WM12WQdPZNnLw0+yCORvlej5sozcE1R/MRuIKFrhNVMVjjPNupsycNLClL3wrMjue6q
+	UtU2WMtA0YjPtUUZdCCFxyZOQ6e3R60zXorQAY2sj1NyFXZbDQM+Lk62n5XIO8xn8sqznQ3DNcpTA
+	TbCJYT8Xl0aQmmVVs6IIo09cJyUitO3o/qe+fQtlQp1js7vmdoYE1Od01e6FYAgTxJLcQbMsrfVOh
+	TfnzWKgseMlyfFh094dwdOw/a54tajIITvQslJUmUerAofOWpDHPgP8m9u3IuUOjg60ZE3IOV5tNi
+	xFAO/6Vg==;
 From: git@luigi311.com
 To: linux-media@vger.kernel.org
 Cc: dave.stevenson@raspberrypi.com,
@@ -51,10 +51,11 @@ Cc: dave.stevenson@raspberrypi.com,
 	devicetree@vger.kernel.org,
 	imx@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 14/23] media: i2c: imx258: Issue reset before starting streaming
-Date: Wed, 27 Mar 2024 17:17:00 -0600
-Message-ID: <20240327231710.53188-15-git@luigi311.com>
+	linux-kernel@vger.kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH 17/23] dt-bindings: media: imx258: Rename to include vendor prefix
+Date: Wed, 27 Mar 2024 17:17:03 -0600
+Message-ID: <20240327231710.53188-18-git@luigi311.com>
 In-Reply-To: <20240327231710.53188-1-git@luigi311.com>
 References: <20240327231710.53188-1-git@luigi311.com>
 Precedence: bulk
@@ -68,45 +69,47 @@ X-Authenticated-Id: personal@luigi311.com
 
 From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-Whilst not documented, register 0x0103 bit 0 is the soft
-reset for the sensor, so send it before trying to configure
-the sensor.
+imx258.yaml doesn't include the vendor prefix of sony, so
+rename to add it.
+Update the id entry and MAINTAINERS to match.
 
 Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- drivers/media/i2c/imx258.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ .../bindings/media/i2c/{imx258.yaml => sony,imx258.yaml}        | 2 +-
+ MAINTAINERS                                                     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+ rename Documentation/devicetree/bindings/media/i2c/{imx258.yaml => sony,imx258.yaml} (97%)
 
-diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
-index c2c5e819ddc0..a62ed8c26663 100644
---- a/drivers/media/i2c/imx258.c
-+++ b/drivers/media/i2c/imx258.c
-@@ -20,6 +20,8 @@
- #define IMX258_MODE_STANDBY		0x00
- #define IMX258_MODE_STREAMING		0x01
+diff --git a/Documentation/devicetree/bindings/media/i2c/imx258.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
+similarity index 97%
+rename from Documentation/devicetree/bindings/media/i2c/imx258.yaml
+rename to Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
+index 80d24220baa0..bee61a443b23 100644
+--- a/Documentation/devicetree/bindings/media/i2c/imx258.yaml
++++ b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+ %YAML 1.2
+ ---
+-$id: http://devicetree.org/schemas/media/i2c/imx258.yaml#
++$id: http://devicetree.org/schemas/media/i2c/sony,imx258.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
  
-+#define IMX258_REG_RESET		0x0103
-+
- /* Chip ID */
- #define IMX258_REG_CHIP_ID		0x0016
- #define IMX258_CHIP_ID			0x0258
-@@ -1059,6 +1061,16 @@ static int imx258_start_streaming(struct imx258 *imx258)
- 	const struct imx258_link_freq_config *link_freq_cfg;
- 	int ret, link_freq_index;
+ title: Sony IMX258 13 Mpixel CMOS Digital Image Sensor
+diff --git a/MAINTAINERS b/MAINTAINERS
+index aa3b947fb080..1f17f6734bf5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -20464,7 +20464,7 @@ M:	Sakari Ailus <sakari.ailus@linux.intel.com>
+ L:	linux-media@vger.kernel.org
+ S:	Maintained
+ T:	git git://linuxtv.org/media_tree.git
+-F:	Documentation/devicetree/bindings/media/i2c/imx258.yaml
++F:	Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
+ F:	drivers/media/i2c/imx258.c
  
-+	ret = imx258_write_reg(imx258, IMX258_REG_RESET, IMX258_REG_VALUE_08BIT,
-+			       0x01);
-+	if (ret) {
-+		dev_err(&client->dev, "%s failed to reset sensor\n", __func__);
-+		return ret;
-+	}
-+
-+	/* 12ms is required from poweron to standby */
-+	fsleep(12000);
-+
- 	/* Setup PLL */
- 	link_freq_index = imx258->cur_mode->link_freq_index;
- 	link_freq_cfg = &imx258->link_freq_configs[link_freq_index];
+ SONY IMX274 SENSOR DRIVER
 -- 
 2.42.0
 
