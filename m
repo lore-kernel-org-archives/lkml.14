@@ -1,103 +1,104 @@
-Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B91C14F9E4
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 21:53:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA85153572
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 21:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711576402; cv=none; b=kvF46SwDAhX8Vtd/9PPd1seV8NJysmefWul+vLvvYXt3q8aJZPcpMhSbmEXfuN7HmKRL0DBUt1uFIQYW/DvCl2nGa2c2SHUfSf9lQxpsPiVtTud3kbk+F3m8qmOu+wmgX9+N0uqEc3t+TvLvhERIr6/GZ5dJCgbnrxJkejWywmQ=
+	t=1711576518; cv=none; b=skSiJIwQU6bRZy35yRdPYHSxPb91fVzcrOhEkSUsTtCoyD62pv2U1qCid8FR8GyZPjod26FXmQX7jbOvIzkmN9Xy0rwmmjc2UjefpN41MOJtq8/kXh7crm1hfyUWc6cq8+ndEGEJH7EG1/clR4v5o8wQEznX2vilvTZnuGyKB/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711576402; c=relaxed/simple;
-	bh=2v7wc9fQwYf7d5X1GIFIUQt0lyBTBGde+QP7rENxUrY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OV1E7A/VTcwhLcZJYEqKb9WKibL24QAcLCpUR1yKcsUacxvLGxoxfi4ehnI2OyVV8+FeyTom0eOsq2UNLa0SR/ij9+F7QXfwYEebVTOc55U6uPS8SfNtp+9C452JDzLYfc0cGzT+Pdl4mT7pSZ4uZDVDYmnoujZYhqFDyKRigbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
-	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
-	id 4324b3c1-ec84-11ee-b972-005056bdfda7;
-	Wed, 27 Mar 2024 23:52:10 +0200 (EET)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Armin Wolf <W_Armin@gmx.de>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v1 1/1] platform/x86: quickstart: Miscellaneous improvements
-Date: Wed, 27 Mar 2024 23:52:08 +0200
-Message-ID: <20240327215208.649020-1-andy.shevchenko@gmail.com>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1711576518; c=relaxed/simple;
+	bh=PQVZZIRaKQhkJhUnG72lePTcQWJXDx/rUBRzSVF2ep0=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=X+GdIvUbv+4nmIvBUnLgJaSd4phcuKlYTQCdf+6UoKQjPBl+KRK1KpCwyFX/dGoV7QrRkUwq0GvL5HXdHsAoqbMN4whfmDjAF5fYNmJPw8UzGJQuMgwWCtT9hV/ikL8O6XgQqMsefQe/r4md2Pb8hIObxgvR9k1PbOCPDmx86PU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AzpC6ITk; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AzpC6ITk"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-341e36878b1so68323f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 14:55:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711576515; x=1712181315; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dwdGycr3xucKOW798pZ9AEyP81jNbTl3Rfs7NX+nxEI=;
+        b=AzpC6ITkzJhcbkjHS5MTAnZDW/sw7KKJno3k/nI6kC/7faLSA4Adr9VkvP1ZL6t2CI
+         0e50cKunK4imJS0vsu/W5ghvHxxYou6s34Xer+OxCzRp5q4LolfQ4mbNCw/Gl+ATVo+H
+         YMC33jlXKWl8BQ3YEq81EzR3+g7gxcGZjGDifdrxYxcJnBbI+7FMXEjgHiL1LwRtQvAB
+         F6nfyEV6b4AkBgrF6Gq3MJvMtEszbMFqQMaQdLqTfZNVc27bEmKz6ibp1u3W6cxFCD2G
+         kO8EB8Uu3tMz1Q5AagH368gt3FR23pafmiIFAJoAzACZNoMVTm15Tnp6EltjHcBaWq/g
+         UrPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711576515; x=1712181315;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=dwdGycr3xucKOW798pZ9AEyP81jNbTl3Rfs7NX+nxEI=;
+        b=jRAKLHEhnCQqdIf/czlDTACCgWddVsbEBz8c3ldPHnP/xBj9RBHB0gh4b7YrwnYCL0
+         SJwdtow6Ys9CEYbVTZ8iHtZHYU7nXq78U8butwYHUVkN3ydjjYWerjJDlMjLxUaVSVCp
+         QM8Fvuidffby696We82Vt8tBsqr3bZbhut33rlaTt5K2K2vTWcIyq3y+2+LZpZpOJ1KA
+         mYRlUbYvSUDRRQTAnjeFWCZpjS6/eKU/pWp+H9+ZShZDaGn18xoC45l6maSLgTg9j1fG
+         mrSYL7oOq+1TrvsTiZZzY4obBdX4wjWV0qM+L2w0M8Wc8lnZrWixIAIVExeMc2KN30Up
+         6arQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVfJ9FQrmz0TK374MLkPDzrrJ8y0w3WPXPKx/e1ChQd8rbI4r11eGx2GQzXrys1tYAzv+H9ofbUH1E0OZYscPQSt+75LoqLI69f+7Fj
+X-Gm-Message-State: AOJu0Yxuze6gwp4XjYPV6uqYBTd7jlHG9Y814TRjlam5q6ZKSL8yPm78
+	qMxNYvEhT/tGpxjHKAEE+Rlr9sCH8lw3V/q+Y7W6JbQVN9+6CelP
+X-Google-Smtp-Source: AGHT+IGccx9eaqBykQEYnZT3gkwcYJOSo1MsJiwoqilAQjnT5wLYFwDyTWEjzvUpPLXhEszbj19qmQ==
+X-Received: by 2002:a05:600c:1c21:b0:414:8554:73e with SMTP id j33-20020a05600c1c2100b004148554073emr992027wms.1.1711576514811;
+        Wed, 27 Mar 2024 14:55:14 -0700 (PDT)
+Received: from [192.168.0.104] (p54a07fa0.dip0.t-ipconnect.de. [84.160.127.160])
+        by smtp.gmail.com with ESMTPSA id h9-20020a05600c314900b004147b824b08sm192228wmo.7.2024.03.27.14.55.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Mar 2024 14:55:14 -0700 (PDT)
+Message-ID: <c4c5ab38-8c67-4c21-86bc-f4f3c06be358@gmail.com>
+Date: Wed, 27 Mar 2024 22:55:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Marcus Wolf <linux@wolf-entwicklungen.de>,
+ Marcus Wolf <marcus.wolf@wolf-entwicklungen.de>,
+ "linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Philipp Hortmann <philipp.g.hortmann@gmail.com>
+Subject: [RFC] staging: pi433: Proposal to remove unused driver
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-There is a mix of a few improvements to the driver.
-I have done this instead of review, so it can quickly be
-folded into the original code (partially or fully).
+Hi Marcus,
 
-Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
- drivers/platform/x86/quickstart.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+according to this homepage:
+https://www.kickstarter.com/projects/1292669042/pi433-a-radio-module-funkmodul-for-raspberry-pi
+you had a group of people to test and use the Pi433. But last 
+update/comments on this website are from November 21, 2017. What 
+happened afterwards? Did you organize the community differently?
 
-diff --git a/drivers/platform/x86/quickstart.c b/drivers/platform/x86/quickstart.c
-index ba3a7a25dda70..f686942662ccc 100644
---- a/drivers/platform/x86/quickstart.c
-+++ b/drivers/platform/x86/quickstart.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
- /*
-- * quickstart.c - ACPI Direct App Launch driver
-+ * ACPI Direct App Launch driver
-  *
-  * Copyright (C) 2024 Armin Wolf <W_Armin@gmx.de>
-  * Copyright (C) 2022 Arvid Norlander <lkml@vorapal.se>
-@@ -10,15 +10,18 @@
-  * <https://archive.org/details/microsoft-acpi-dirapplaunch>
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/acpi.h>
-+#include <linux/device.h>
-+#include <linux/errno.h>
- #include <linux/init.h>
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
--#include <linux/kernel.h>
-+#include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_wakeup.h>
-+#include <linux/printk.h>
-+#include <linux/slab.h>
- #include <linux/sysfs.h>
- #include <linux/types.h>
- 
-@@ -165,7 +168,8 @@ static int quickstart_probe(struct platform_device *pdev)
- 	data->dev = &pdev->dev;
- 	dev_set_drvdata(&pdev->dev, data);
- 
--	/* We have to initialize the device wakeup before evaluating GHID because
-+	/*
-+	 * We have to initialize the device wakeup before evaluating GHID because
- 	 * doing so will notify the device if the button was used to wake the machine
- 	 * from S5.
- 	 */
-@@ -202,7 +206,7 @@ static int quickstart_probe(struct platform_device *pdev)
- }
- 
- static const struct acpi_device_id quickstart_device_ids[] = {
--	{ "PNP0C32", 0 },
-+	{ "PNP0C32" },
- 	{ }
- };
- MODULE_DEVICE_TABLE(acpi, quickstart_device_ids);
--- 
-2.44.0
+On this homepage:
+https://www.pi433.de/en.html
+you wrote:
+"Purchase Pi433
+Due to the rules for recycling (WEEE guideline of EU) Smarthome-Wolf 
+decided to stop the direct distribution of Pi433.
 
+Business partner (e. g. online stores for selling Raspberry-Pi 
+accessories), interested in distribution of Pi433 are very welcome!"
+
+It seems that this was also in 2017
+
+Did you manage to find a business partner?
+How many devices have been sold after 2017? Are there people who got 
+more than 1 device?
+
+Please respond to avoid that unused code stays in the mainline kernel 
+forever.
+
+Thanks for your support.
+
+Bye Philipp
