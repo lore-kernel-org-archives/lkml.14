@@ -1,90 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4836F14A0B4;
-	Wed, 27 Mar 2024 15:25:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A168414A4C6;
+	Wed, 27 Mar 2024 15:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711553138; cv=none; b=fByThnwIj1mQXhkWbqcjwAIG3WDSxtnFafGGI4R0vlHAHGOHYcubQ0Y+lb0XL/oINnX1qRXC14ggQucSufz1awEfyeBODkRG+6OxB3ZOS5FUZt6vrZ7oau+Jk3fUMkhdxufdlnpN2ooGkzNFR9Qdyke5Qqv39e8mpYvUVbqGSXU=
+	t=1711553140; cv=none; b=T5ZxI0NdZZlZkdt8XvVdD9cNjfGJGf/ogQIulFZxHT37SeBe3pSta7zrpMJAQduWXmbG7q1QfthvSnbh3LmGAq4JviFuX8va8nT9G7r/SIM5PzXoLzLRh6stPQO5rv+fjdkVEwjmMIwyGRE2MOTA7kwGJd1/GESF/05SkfAs2uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711553138; c=relaxed/simple;
-	bh=HXxGyYs0zg9MvmwQmo/FM9aZyeFLcxqwQu3YQVRdxZw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=EPrlI+lPwMPdrpR4s65hYB8x4Lab2FNdeBSqG0h3gygzs8s+V5MmENvuN9QJT63oy33lKhyF8PLTjd/2syXDwJeo8K7tcaEdN5vsmugsoQAqAZx1nwePcMNfqAYIxK9W7Pu4KbSUmAXvKhjS0CxaKTEyCuzvnnj7CIBwbipNsdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R2KYClsI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711553140; c=relaxed/simple;
+	bh=MDXCZU+6/sp/Pz1ZIlFkVxZaZpKjxzjyHvJVBN9yhTE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=E/7Kcrut67JJK/hbhwUzxR6b0BcyzLiOwlKRFN6yhaxFEahw00/1Ehd27tVLvEDmqBFTawD+o494JNnGA1Zm1PFiOnqZ+sYor3PU1+NyEoIHuQqGA0iFv6nYwi0oS+ZduHR3kK0u5vVZqJMVn+mnaWOZBkV+7jUu+K8grCTjcA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H1bM4W47; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R2KYClsI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E717C43390;
-	Wed, 27 Mar 2024 15:25:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711553137;
-	bh=HXxGyYs0zg9MvmwQmo/FM9aZyeFLcxqwQu3YQVRdxZw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=R2KYClsIRScmJ/cKKxoS5swCi1tsAyfZSyP+rZdJS/EGlh7hm65GHmer/OZer4VXA
-	 cR8OxRcPSNnUBmD2NRkIWX4jRSIVLSNWfjG+fZ0Iu9G1G0yqvJkxU7q8Fn9c7tHRJm
-	 5CsaMNOilcdgDpyU5i59zJ4JJ/OFp3tRChChyI9Dw0b7NTLVmyVGxWKGiw9f94uB2g
-	 MNHiMW+/coaVZcJoAk+8Q9cMWpx2wJ5trKoVUH6iVbn24okAAQESZ1cOKqC3NS8dpD
-	 sXuT4UZPXe8iUk5nT0jRBSCon47w/sY3AXrvExeNmB4GI3vzUppZ+nrHv72QB7xIjL
-	 c+dRWYx96XN2w==
-Date: Wed, 27 Mar 2024 10:25:35 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] Documentation: PM: Update platform_pci_wakeup_init()
- reference
-Message-ID: <20240327152535.GA1523374@bhelgaas>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H1bM4W47"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711553138; x=1743089138;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=MDXCZU+6/sp/Pz1ZIlFkVxZaZpKjxzjyHvJVBN9yhTE=;
+  b=H1bM4W47JgaH7Xv1EcrkMBmMA9wFjPRryBHjelkbrMFe9WqjDJgjUuSx
+   OOB54e5iMb8gh/pSwkBF06EBcIBEZfALLwnq9bI9+9tXpX/OlTUKY6Vyk
+   nfz2RvVWZmpBHv23fwboJbztZaxyl14mTgR5J59skPeMGgZzbEi6A4PoA
+   ieSkmJeIxn/ohlNDdpsJXF4jDVg5tESc9Lse0QT/k+fH8+u32jFx2MXV9
+   aGt9Q7GHVUD9FTFEz44OCcZo8naWzfSr9kYQSw6OJbrJuEIDbbMqNtlfC
+   uK6KlbmKDoaET0gH23R6XXEU89OSVfZq2OWV8OMeUfQ1PBDlxwnSiZrMF
+   g==;
+X-CSE-ConnectionGUID: 6u3neXIRQVmsftsvaYZqnw==
+X-CSE-MsgGUID: M2yolieDSpCyiMc/sgBm1Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="6518302"
+X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
+   d="scan'208";a="6518302"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 08:25:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
+   d="scan'208";a="16414418"
+Received: from newjersey.igk.intel.com ([10.102.20.203])
+  by fmviesa008.fm.intel.com with ESMTP; 27 Mar 2024 08:25:35 -0700
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
+	intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Marcin Szycik <marcin.szycik@linux.intel.com>,
+	Simon Horman <horms@kernel.org>
+Subject: [PATCH net-next v6 20/21] ice: refactor ICE_TC_FLWR_FIELD_ENC_OPTS
+Date: Wed, 27 Mar 2024 16:23:57 +0100
+Message-ID: <20240327152358.2368467-21-aleksander.lobakin@intel.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240327152358.2368467-1-aleksander.lobakin@intel.com>
+References: <20240327152358.2368467-1-aleksander.lobakin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0j6SaxTG9+Zr1Sk9iN_bvzzOCD+7_s98HEes1CY825epQ@mail.gmail.com>
 
-On Wed, Mar 27, 2024 at 04:23:41PM +0100, Rafael J. Wysocki wrote:
-> On Mon, Mar 25, 2024 at 11:11 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> >
-> > platform_pci_wakeup_init() was removed by d2e5f0c16ad6 ("ACPI / PCI: Rework
-> > the setup and cleanup of device wakeup") but was still mentioned in the
-> > documentation.
-> >
-> > Update the doc to refer to pci_acpi_setup(), which does the equivalent
-> > work.
-> >
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > ---
-> >
-> > pci_acpi_setup() is a firmware-specific wart in this otherwise generic
-> > paragraph, so maybe there's some better way to express this?
-> >
-> >  Documentation/power/pci.rst | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/power/pci.rst b/Documentation/power/pci.rst
-> > index 12070320307e..e2c1fb8a569a 100644
-> > --- a/Documentation/power/pci.rst
-> > +++ b/Documentation/power/pci.rst
-> > @@ -333,7 +333,7 @@ struct pci_dev.
-> >  The PCI subsystem's first task related to device power management is to
-> >  prepare the device for power management and initialize the fields of struct
-> >  pci_dev used for this purpose.  This happens in two functions defined in
-> > -drivers/pci/pci.c, pci_pm_init() and platform_pci_wakeup_init().
-> > +drivers/pci/, pci_pm_init() and pci_acpi_setup().
-> >
-> >  The first of these functions checks if the device supports native PCI PM
-> >  and if that's the case the offset of its power management capability structure
-> > --
-> 
-> Applied as 6.10 material, or if you'd rather take it to the PCI tree,
-> please let me know.
+From: Marcin Szycik <marcin.szycik@linux.intel.com>
 
-Thanks, your tree is fine!
+FLOW_DISSECTOR_KEY_ENC_OPTS can be used for multiple headers, but currently
+it is treated as GTP-exclusive in ice. Rename ICE_TC_FLWR_FIELD_ENC_OPTS to
+ICE_TC_FLWR_FIELD_GTP_OPTS and check for tunnel type earlier. After this
+refactor, it is easier to add new headers using FLOW_DISSECTOR_KEY_ENC_OPTS
+- instead of checking tunnel type in ice_tc_count_lkups() and
+ice_tc_fill_tunnel_outer(), it needs to be checked only once, in
+ice_parse_tunnel_attr().
 
-Bjorn
+Signed-off-by: Marcin Szycik <marcin.szycik@linux.intel.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+---
+ drivers/net/ethernet/intel/ice/ice_tc_lib.h |  2 +-
+ drivers/net/ethernet/intel/ice/ice_tc_lib.c | 10 +++++-----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/ice/ice_tc_lib.h b/drivers/net/ethernet/intel/ice/ice_tc_lib.h
+index 65d387163a46..5d188ad7517a 100644
+--- a/drivers/net/ethernet/intel/ice/ice_tc_lib.h
++++ b/drivers/net/ethernet/intel/ice/ice_tc_lib.h
+@@ -22,7 +22,7 @@
+ #define ICE_TC_FLWR_FIELD_ENC_SRC_L4_PORT	BIT(15)
+ #define ICE_TC_FLWR_FIELD_ENC_DST_MAC		BIT(16)
+ #define ICE_TC_FLWR_FIELD_ETH_TYPE_ID		BIT(17)
+-#define ICE_TC_FLWR_FIELD_ENC_OPTS		BIT(18)
++#define ICE_TC_FLWR_FIELD_GTP_OPTS		BIT(18)
+ #define ICE_TC_FLWR_FIELD_CVLAN			BIT(19)
+ #define ICE_TC_FLWR_FIELD_PPPOE_SESSID		BIT(20)
+ #define ICE_TC_FLWR_FIELD_PPP_PROTO		BIT(21)
+diff --git a/drivers/net/ethernet/intel/ice/ice_tc_lib.c b/drivers/net/ethernet/intel/ice/ice_tc_lib.c
+index b890410a2bc0..80797db9f2b9 100644
+--- a/drivers/net/ethernet/intel/ice/ice_tc_lib.c
++++ b/drivers/net/ethernet/intel/ice/ice_tc_lib.c
+@@ -35,7 +35,7 @@ ice_tc_count_lkups(u32 flags, struct ice_tc_flower_lyr_2_4_hdrs *headers,
+ 	if (flags & ICE_TC_FLWR_FIELD_ENC_DST_MAC)
+ 		lkups_cnt++;
+ 
+-	if (flags & ICE_TC_FLWR_FIELD_ENC_OPTS)
++	if (flags & ICE_TC_FLWR_FIELD_GTP_OPTS)
+ 		lkups_cnt++;
+ 
+ 	if (flags & (ICE_TC_FLWR_FIELD_ENC_SRC_IPV4 |
+@@ -219,8 +219,7 @@ ice_tc_fill_tunnel_outer(u32 flags, struct ice_tc_flower_fltr *fltr,
+ 		i++;
+ 	}
+ 
+-	if (flags & ICE_TC_FLWR_FIELD_ENC_OPTS &&
+-	    (fltr->tunnel_type == TNL_GTPU || fltr->tunnel_type == TNL_GTPC)) {
++	if (flags & ICE_TC_FLWR_FIELD_GTP_OPTS) {
+ 		list[i].type = ice_proto_type_from_tunnel(fltr->tunnel_type);
+ 
+ 		if (fltr->gtp_pdu_info_masks.pdu_type) {
+@@ -1401,7 +1400,8 @@ ice_parse_tunnel_attr(struct net_device *dev, struct flow_rule *rule,
+ 		}
+ 	}
+ 
+-	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ENC_OPTS)) {
++	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ENC_OPTS) &&
++	    (fltr->tunnel_type == TNL_GTPU || fltr->tunnel_type == TNL_GTPC)) {
+ 		struct flow_match_enc_opts match;
+ 
+ 		flow_rule_match_enc_opts(rule, &match);
+@@ -1412,7 +1412,7 @@ ice_parse_tunnel_attr(struct net_device *dev, struct flow_rule *rule,
+ 		memcpy(&fltr->gtp_pdu_info_masks, &match.mask->data[0],
+ 		       sizeof(struct gtp_pdu_session_info));
+ 
+-		fltr->flags |= ICE_TC_FLWR_FIELD_ENC_OPTS;
++		fltr->flags |= ICE_TC_FLWR_FIELD_GTP_OPTS;
+ 	}
+ 
+ 	return 0;
+-- 
+2.44.0
+
