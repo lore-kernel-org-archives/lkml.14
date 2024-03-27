@@ -1,122 +1,383 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1114147C8B
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 12:12:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B714A147C8E;
+	Wed, 27 Mar 2024 12:12:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711541550; cv=none; b=fhz50NPQkLHGzJje9RA6ovp7jUQkf6YaSDKx0FJHw0W2iXnOCvxsFAYT7fJWuGmvrqtqvnwHJgrJj7NFzqEplQGaNcPgAF0C8f3AA6tiSBI7hFqZL+YMUGkmBkH/NTxrXxSU4/OURP5y4Ij47abqMI4wtyf+wsJYXoZBjdfjGr8=
+	t=1711541547; cv=none; b=g0e4DXK73yYFj5jDDZXtGKy4UhHAJmnU5aYgD2Bp9aFZK1izMzoUewAioRNrIt0nwNuUklUQYOBJMocjJHtDiBW4MG8FpzxiUANC/WV1U3yBxwZMsfWMdKXWS1nxb1BrJpcgL3BOEUuYpufKGQG0liO02nYbSauDnBDjW7ApI7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711541550; c=relaxed/simple;
-	bh=DiOWFNV13xwUAoCXem0V1LNeUxUEOlVmeRbu6TsGaME=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GWzXhcZMCyTdFNdcLcYD+h4UI0743xySlunjNMGjsl2IK6RbIzNbKLo/eoTyReeWDEoqyYMrvjqe3vso5qx2Kuv3xuGnQ92phWPo2InU9h6Y3JPIH+wQ9x5Xk8XgVujaNjTKy8tYit9xbYTFN/kCQCWDnyZcgQ7WRHYds+bMbI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rpS8K-0004ds-Ci; Wed, 27 Mar 2024 13:11:56 +0100
-Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rpS8I-008nwn-4g; Wed, 27 Mar 2024 13:11:54 +0100
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rpS8I-0007xg-0D;
-	Wed, 27 Mar 2024 13:11:54 +0100
-Message-ID: <5f6ab3804baa87f6e2299f668d2ab41be3a13f13.camel@pengutronix.de>
-Subject: Re: [PATCH v5 11/16] drm/vkms: Add YUV support
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Louis Chauvet <louis.chauvet@bootlin.com>, Rodrigo Siqueira
- <rodrigosiqueiramelo@gmail.com>, Melissa Wen <melissa.srw@gmail.com>, 
- =?ISO-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>, Haneen Mohammed
- <hamohammed.sa@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, arthurgrillo@riseup.net, Jonathan Corbet
- <corbet@lwn.net>,  pekka.paalanen@haloniitty.fi
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com, 
-	thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com, 
-	nicolejadeyee@google.com
-Date: Wed, 27 Mar 2024 13:11:53 +0100
-In-Reply-To: <20240313-yuv-v5-11-e610cbd03f52@bootlin.com>
-References: <20240313-yuv-v5-0-e610cbd03f52@bootlin.com>
-	 <20240313-yuv-v5-11-e610cbd03f52@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1711541547; c=relaxed/simple;
+	bh=oartVK6+nahYao5Vdj4udZvAQsS8HQpvnwVJVqPWdWc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N1ByRokmj9Jk0I/oKRd4XvUv9lwtYrvevQFERDT5ZpC7ZH8Z59onGKNd3FJ0vxHnrHqwGjJkNKDJAPmtILuQUYWw3lyVgs8kDkDmaVspL3WNhDwiOEXWOLWd2B0POWVTfOvfQLlovBhpe8HMGaLVWAXGh/Q2pGK2++i/Odavtbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EP2DrEtb; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EP2DrEtb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5774AC433F1;
+	Wed, 27 Mar 2024 12:12:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711541547;
+	bh=oartVK6+nahYao5Vdj4udZvAQsS8HQpvnwVJVqPWdWc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EP2DrEtbWAAWmwm1enwqHW9jCet4h5lwQTHvjrC6+QUVhJW2bpoBx6bdvEE8P+EAp
+	 Uos68N0Mpbmvmo9IFrqV63ANsg7fmwAGL4TQAnZe9FAhwDcj9LXz7Z2LUVNAoNFXPD
+	 zteAWVkJE4UwGJS+Au0B0fOIiU6QO1LLIvcvB+eHTFtzCdjHQ4/tO+BFzlkioGGCJK
+	 Yyb2Fw7jTIGLbx+4uCp242gobt/0bR8E2gicGMdPrlW6nmuf/lwS0q1mUYX0ilVqRg
+	 d6mUTSGYO8lF8sTpPzQRF27JLe9jSDzzKmquyfB6WlKUQxIfq8/4+d7k5jxB7A2NVG
+	 4tsQ6WpQ5xIhQ==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org,
+	nicholas.kazlauskas@amd.com
+Cc: Ovidiu Bunea <ovidiu.bunea@amd.com>,
+	Hamza Mahfooz <hamza.mahfooz@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: FAILED: Patch "drm/amd/display: Add more checks for exiting idle in DC" failed to apply to 6.1-stable tree
+Date: Wed, 27 Mar 2024 08:12:24 -0400
+Message-ID: <20240327121225.2829504-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-Patchwork-Hint: ignore
+X-stable: review
+Content-Transfer-Encoding: 8bit
 
-Hi Louis,
+The patch below does not apply to the 6.1-stable tree.
+If someone wants it applied there, or to any other stable or longterm
+tree, then please email the backport, including the original git commit
+id to <stable@vger.kernel.org>.
 
-On Mi, 2024-03-13 at 18:45 +0100, Louis Chauvet wrote:
-> From: Arthur Grillo <arthurgrillo@riseup.net>
->=20
-> Add support to the YUV formats bellow:
->=20
-> - NV12/NV16/NV24
-> - NV21/NV61/NV42
-> - YUV420/YUV422/YUV444
-> - YVU420/YVU422/YVU444
->=20
-> The conversion from yuv to rgb is done with fixed-point arithmetic, using
-> 32.32 floats and the drm_fixed helpers.
+Thanks,
+Sasha
 
-s/floats/fixed-point numbers/
+------------------ original commit in Linus's tree ------------------
 
-Nothing floating here, the point is fixed.
+From a9b1a4f684b32bcd33431b67acd6f4c275728380 Mon Sep 17 00:00:00 2001
+From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Date: Tue, 16 Jan 2024 09:52:58 -0500
+Subject: [PATCH] drm/amd/display: Add more checks for exiting idle in DC
 
-[...]
-> diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_=
-drv.h
-> index 23e1d247468d..f3116084de5a 100644
-> --- a/drivers/gpu/drm/vkms/vkms_drv.h
-> +++ b/drivers/gpu/drm/vkms/vkms_drv.h
-> @@ -99,6 +99,27 @@ typedef void (*pixel_read_line_t)(const struct vkms_pl=
-ane_state *plane, int x_st
->  				  int y_start, enum pixel_read_direction direction, int count,
->  				  struct pixel_argb_u16 out_pixel[]);
-> =20
-> +/**
-> + * CONVERSION_MATRIX_FLOAT_DEPTH - Number of digits after the point for =
-conversion matrix values
+[Why]
+Any interface that touches registers needs to wake up the system.
 
-s/CONVERSION_MATRIX_FLOAT_DEPTH/CONVERSION_MATRIX_FRACTIONAL_BITS/
+[How]
+Add a new interface dc_exit_ips_for_hw_access that wraps the check
+for IPS support and insert it into the public DC interfaces that
+touch registers.
 
-Just a suggestion, maybe there are better terms, but using "FLOAT" here
-is confusing.
+We don't re-enter, since we expect that the enter/exit to have been done
+on the DM side.
 
-> + */
-> +#define CONVERSION_MATRIX_FLOAT_DEPTH 32
-> +
-> +/**
-> + * struct conversion_matrix - Matrix to use for a specific encoding and =
-range
-> + *
-> + * @matrix: Conversion matrix from yuv to rgb. The matrix is stored in a=
- row-major manner and is
-> + * used to compute rgb values from yuv values:
-> + *     [[r],[g],[b]] =3D @matrix * [[y],[u],[v]]
-> + *   OR for yvu formats:
-> + *     [[r],[g],[b]] =3D @matrix * [[y],[v],[u]]
-> + *  The values of the matrix are fixed floats, 32.CONVERSION_MATRIX_FLOA=
-T_DEPTH
+Cc: stable@vger.kernel.org # 6.1+
+Reviewed-by: Ovidiu Bunea <ovidiu.bunea@amd.com>
+Acked-by: Hamza Mahfooz <hamza.mahfooz@amd.com>
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+---
+ drivers/gpu/drm/amd/display/dc/core/dc.c      | 42 +++++++++++++++++++
+ .../gpu/drm/amd/display/dc/core/dc_stream.c   | 18 ++++++++
+ .../gpu/drm/amd/display/dc/core/dc_surface.c  |  2 +
+ drivers/gpu/drm/amd/display/dc/dc.h           |  1 +
+ 4 files changed, 63 insertions(+)
 
-s/fixed floats/fixed-point numbers/
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index 2db361aeaf259..eb803d4d34786 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -417,6 +417,8 @@ bool dc_stream_adjust_vmin_vmax(struct dc *dc,
+ 	if (!memcmp(&stream->adjust, adjust, sizeof(*adjust)))
+ 		return true;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	stream->adjust.v_total_max = adjust->v_total_max;
+ 	stream->adjust.v_total_mid = adjust->v_total_mid;
+ 	stream->adjust.v_total_mid_frame_num = adjust->v_total_mid_frame_num;
+@@ -457,6 +459,8 @@ bool dc_stream_get_last_used_drr_vtotal(struct dc *dc,
+ 
+ 	int i = 0;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < MAX_PIPES; i++) {
+ 		struct pipe_ctx *pipe = &dc->current_state->res_ctx.pipe_ctx[i];
+ 
+@@ -487,6 +491,8 @@ bool dc_stream_get_crtc_position(struct dc *dc,
+ 	bool ret = false;
+ 	struct crtc_position position;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < MAX_PIPES; i++) {
+ 		struct pipe_ctx *pipe =
+ 				&dc->current_state->res_ctx.pipe_ctx[i];
+@@ -606,6 +612,8 @@ bool dc_stream_configure_crc(struct dc *dc, struct dc_stream_state *stream,
+ 	if (pipe == NULL)
+ 		return false;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	/* By default, capture the full frame */
+ 	param.windowa_x_start = 0;
+ 	param.windowa_y_start = 0;
+@@ -665,6 +673,8 @@ bool dc_stream_get_crc(struct dc *dc, struct dc_stream_state *stream,
+ 	struct pipe_ctx *pipe;
+ 	struct timing_generator *tg;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < MAX_PIPES; i++) {
+ 		pipe = &dc->current_state->res_ctx.pipe_ctx[i];
+ 		if (pipe->stream == stream)
+@@ -689,6 +699,8 @@ void dc_stream_set_dyn_expansion(struct dc *dc, struct dc_stream_state *stream,
+ 	int i;
+ 	struct pipe_ctx *pipe_ctx;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < MAX_PIPES; i++) {
+ 		if (dc->current_state->res_ctx.pipe_ctx[i].stream
+ 				== stream) {
+@@ -724,6 +736,8 @@ void dc_stream_set_dither_option(struct dc_stream_state *stream,
+ 	if (option > DITHER_OPTION_MAX)
+ 		return;
+ 
++	dc_exit_ips_for_hw_access(stream->ctx->dc);
++
+ 	stream->dither_option = option;
+ 
+ 	memset(&params, 0, sizeof(params));
+@@ -748,6 +762,8 @@ bool dc_stream_set_gamut_remap(struct dc *dc, const struct dc_stream_state *stre
+ 	bool ret = false;
+ 	struct pipe_ctx *pipes;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < MAX_PIPES; i++) {
+ 		if (dc->current_state->res_ctx.pipe_ctx[i].stream == stream) {
+ 			pipes = &dc->current_state->res_ctx.pipe_ctx[i];
+@@ -765,6 +781,8 @@ bool dc_stream_program_csc_matrix(struct dc *dc, struct dc_stream_state *stream)
+ 	bool ret = false;
+ 	struct pipe_ctx *pipes;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < MAX_PIPES; i++) {
+ 		if (dc->current_state->res_ctx.pipe_ctx[i].stream
+ 				== stream) {
+@@ -791,6 +809,8 @@ void dc_stream_set_static_screen_params(struct dc *dc,
+ 	struct pipe_ctx *pipes_affected[MAX_PIPES];
+ 	int num_pipes_affected = 0;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < num_streams; i++) {
+ 		struct dc_stream_state *stream = streams[i];
+ 
+@@ -1769,6 +1789,8 @@ void dc_enable_stereo(
+ 	int i, j;
+ 	struct pipe_ctx *pipe;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < MAX_PIPES; i++) {
+ 		if (context != NULL) {
+ 			pipe = &context->res_ctx.pipe_ctx[i];
+@@ -1788,6 +1810,8 @@ void dc_enable_stereo(
+ void dc_trigger_sync(struct dc *dc, struct dc_state *context)
+ {
+ 	if (context->stream_count > 1 && !dc->debug.disable_timing_sync) {
++		dc_exit_ips_for_hw_access(dc);
++
+ 		enable_timing_multisync(dc, context);
+ 		program_timing_sync(dc, context);
+ 	}
+@@ -2044,6 +2068,8 @@ enum dc_status dc_commit_streams(struct dc *dc,
+ 	if (!streams_changed(dc, streams, stream_count))
+ 		return res;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	DC_LOG_DC("%s: %d streams\n", __func__, stream_count);
+ 
+ 	for (i = 0; i < stream_count; i++) {
+@@ -3373,6 +3399,8 @@ static void commit_planes_for_stream_fast(struct dc *dc,
+ 	int i, j;
+ 	struct pipe_ctx *top_pipe_to_program = NULL;
+ 	struct dc_stream_status *stream_status = NULL;
++	dc_exit_ips_for_hw_access(dc);
++
+ 	dc_z10_restore(dc);
+ 
+ 	top_pipe_to_program = resource_get_otg_master_for_stream(
+@@ -3527,6 +3555,8 @@ static void commit_planes_for_stream(struct dc *dc,
+ 	// dc->current_state anymore, so we have to cache it before we apply
+ 	// the new SubVP context
+ 	subvp_prev_use = false;
++	dc_exit_ips_for_hw_access(dc);
++
+ 	dc_z10_restore(dc);
+ 	if (update_type == UPDATE_TYPE_FULL)
+ 		wait_for_outstanding_hw_updates(dc, context);
+@@ -4409,6 +4439,8 @@ bool dc_update_planes_and_stream(struct dc *dc,
+ 	bool is_plane_addition = 0;
+ 	bool is_fast_update_only;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	populate_fast_updates(fast_update, srf_updates, surface_count, stream_update);
+ 	is_fast_update_only = fast_update_only(dc, fast_update, srf_updates,
+ 			surface_count, stream_update, stream);
+@@ -4529,6 +4561,8 @@ void dc_commit_updates_for_stream(struct dc *dc,
+ 	int i, j;
+ 	struct dc_fast_update fast_update[MAX_SURFACES] = {0};
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	populate_fast_updates(fast_update, srf_updates, surface_count, stream_update);
+ 	stream_status = dc_stream_get_status(stream);
+ 	context = dc->current_state;
+@@ -4713,6 +4747,8 @@ void dc_set_power_state(
+ 	case DC_ACPI_CM_POWER_STATE_D0:
+ 		dc_state_construct(dc, dc->current_state);
+ 
++		dc_exit_ips_for_hw_access(dc);
++
+ 		dc_z10_restore(dc);
+ 
+ 		dc->hwss.init_hw(dc);
+@@ -4854,6 +4890,12 @@ void dc_allow_idle_optimizations(struct dc *dc, bool allow)
+ 		dc->idle_optimizations_allowed = allow;
+ }
+ 
++void dc_exit_ips_for_hw_access(struct dc *dc)
++{
++	if (dc->caps.ips_support)
++		dc_allow_idle_optimizations(dc, false);
++}
++
+ bool dc_dmub_is_ips_idle_state(struct dc *dc)
+ {
+ 	uint32_t idle_state = 0;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
+index 54670e0b15189..51a970fcb5d05 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
+@@ -423,6 +423,8 @@ bool dc_stream_add_writeback(struct dc *dc,
+ 		return false;
+ 	}
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	wb_info->dwb_params.out_transfer_func = stream->out_transfer_func;
+ 
+ 	dwb = dc->res_pool->dwbc[wb_info->dwb_pipe_inst];
+@@ -493,6 +495,8 @@ bool dc_stream_fc_disable_writeback(struct dc *dc,
+ 		return false;
+ 	}
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	if (dwb->funcs->set_fc_enable)
+ 		dwb->funcs->set_fc_enable(dwb, DWB_FRAME_CAPTURE_DISABLE);
+ 
+@@ -542,6 +546,8 @@ bool dc_stream_remove_writeback(struct dc *dc,
+ 		return false;
+ 	}
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	/* disable writeback */
+ 	if (dc->hwss.disable_writeback) {
+ 		struct dwbc *dwb = dc->res_pool->dwbc[dwb_pipe_inst];
+@@ -557,6 +563,8 @@ bool dc_stream_warmup_writeback(struct dc *dc,
+ 		int num_dwb,
+ 		struct dc_writeback_info *wb_info)
+ {
++	dc_exit_ips_for_hw_access(dc);
++
+ 	if (dc->hwss.mmhubbub_warmup)
+ 		return dc->hwss.mmhubbub_warmup(dc, num_dwb, wb_info);
+ 	else
+@@ -569,6 +577,8 @@ uint32_t dc_stream_get_vblank_counter(const struct dc_stream_state *stream)
+ 	struct resource_context *res_ctx =
+ 		&dc->current_state->res_ctx;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < MAX_PIPES; i++) {
+ 		struct timing_generator *tg = res_ctx->pipe_ctx[i].stream_res.tg;
+ 
+@@ -597,6 +607,8 @@ bool dc_stream_send_dp_sdp(const struct dc_stream_state *stream,
+ 	dc = stream->ctx->dc;
+ 	res_ctx = &dc->current_state->res_ctx;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < MAX_PIPES; i++) {
+ 		struct pipe_ctx *pipe_ctx = &res_ctx->pipe_ctx[i];
+ 
+@@ -628,6 +640,8 @@ bool dc_stream_get_scanoutpos(const struct dc_stream_state *stream,
+ 	struct resource_context *res_ctx =
+ 		&dc->current_state->res_ctx;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < MAX_PIPES; i++) {
+ 		struct timing_generator *tg = res_ctx->pipe_ctx[i].stream_res.tg;
+ 
+@@ -664,6 +678,8 @@ bool dc_stream_dmdata_status_done(struct dc *dc, struct dc_stream_state *stream)
+ 	if (i == MAX_PIPES)
+ 		return true;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	return dc->hwss.dmdata_status_done(pipe);
+ }
+ 
+@@ -698,6 +714,8 @@ bool dc_stream_set_dynamic_metadata(struct dc *dc,
+ 
+ 	pipe_ctx->stream->dmdata_address = attr->address;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	dc->hwss.program_dmdata_engine(pipe_ctx);
+ 
+ 	if (hubp->funcs->dmdata_set_attributes != NULL &&
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_surface.c b/drivers/gpu/drm/amd/display/dc/core/dc_surface.c
+index 19a2c7140ae84..19140fb65787c 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_surface.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_surface.c
+@@ -161,6 +161,8 @@ const struct dc_plane_status *dc_plane_get_status(
+ 		break;
+ 	}
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < dc->res_pool->pipe_count; i++) {
+ 		struct pipe_ctx *pipe_ctx =
+ 				&dc->current_state->res_ctx.pipe_ctx[i];
+diff --git a/drivers/gpu/drm/amd/display/dc/dc.h b/drivers/gpu/drm/amd/display/dc/dc.h
+index 74c871917eafc..53919c0eb1e3d 100644
+--- a/drivers/gpu/drm/amd/display/dc/dc.h
++++ b/drivers/gpu/drm/amd/display/dc/dc.h
+@@ -2325,6 +2325,7 @@ bool dc_is_plane_eligible_for_idle_optimizations(struct dc *dc, struct dc_plane_
+ 				struct dc_cursor_attributes *cursor_attr);
+ 
+ void dc_allow_idle_optimizations(struct dc *dc, bool allow);
++void dc_exit_ips_for_hw_access(struct dc *dc);
+ bool dc_dmub_is_ips_idle_state(struct dc *dc);
+ 
+ /* set min and max memory clock to lowest and highest DPM level, respectively */
+-- 
+2.43.0
 
-regards
-Philipp
+
+
+
