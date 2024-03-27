@@ -1,33 +1,25 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B9313793D;
-	Wed, 27 Mar 2024 12:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF8EC12F37F;
+	Wed, 27 Mar 2024 12:55:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711543992; cv=none; b=oyuhLUzVgGaNKUfW1i+xs3rR59NCWwLskAMHRMBEFmbsIRmcPNMW6Z94kMkMddnBJKNa6rVowP8IjInVtjA/LTgBqLvQIPW+TwwrpVdR7FmK7HlqzaYTfNio0hMtok7OgkcBiFzJRvucl+0od1BNnPKOYyHwr72SHTLEx3jXsnU=
+	t=1711544141; cv=none; b=K6E2oLhunFnQvbQNSRXveswcGDCAFo+gPypiUctUEd9Fyi5MsHVqm0/7+IesB9avRbGiPIr3UyjloE+urt/AyEle9FDTY8ZmWoUGynGAdR08f53gQpOD2f9yOGR2bh18uNg4mcW+uvH2HEFUO3VC1IWCWCbvsoL4HtAeE5cCmmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711543992; c=relaxed/simple;
-	bh=S83QBORogKvvtFt+xB9g1z1TUhvqrmHBi2LnzlxLI+w=;
+	s=arc-20240116; t=1711544141; c=relaxed/simple;
+	bh=3K5FY9zYoZ9NIYrs8JeXAE2pagjbwPp+dZ93De3oyV4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fuJrfQG2jjMVfCkEmzIR7JfYuSWPULdgtw/FIE0f7ElMVsg74jzEBfDVO6T9few7xb+1o6G2+h+YUKUtqZNv4VIOOJG9M9mUmRLJ7z11KNG0vK8YCp/kUvX2W+Zt/QllB47tGRmq1WzkHs+k19ibDgEZVvTebEW7PUfkLhmQhIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=RsvqqV1y; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="RsvqqV1y"
-Received: from [192.168.88.20] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0323513AC;
-	Wed, 27 Mar 2024 13:52:34 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1711543955;
-	bh=S83QBORogKvvtFt+xB9g1z1TUhvqrmHBi2LnzlxLI+w=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RsvqqV1ylYgKPTrEsc3QorvZgRVPWY2ERuy3XvqkE0surXevQSkZ0HHAV/Myll2/H
-	 DJfQZiPnzGheI/s6ncQRotKHDG0gItaVEil0L4g2tODmMm8qlXhgUvSJ5cFcOIjB4/
-	 kiATP5jVE4GNcNnsyuLeeZneJNM7Mjfk4a25w49w=
-Message-ID: <15f85f9f-d995-4146-82a9-5f11d715799a@ideasonboard.com>
-Date: Wed, 27 Mar 2024 14:53:04 +0200
+	 In-Reply-To:Content-Type; b=EK9zmRbNONZeGke3kZ1HaNlR6pkeGZsagmRjRX7c6yD3qbYeHbagALPCEYFJrquVd1AVQZDaSDxYNkAUjUeKgN1bJ7qhV6Lp2cNNCZsvK2lbi6xeSkqxnJB84EROndmZM8amMtff6lhKhdQwMsc91k9PH0EFy0so/SrbWvxZRxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27C1E2F4;
+	Wed, 27 Mar 2024 05:56:12 -0700 (PDT)
+Received: from [192.168.178.110] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1CD983F7C5;
+	Wed, 27 Mar 2024 05:55:35 -0700 (PDT)
+Message-ID: <410c5da7-c79c-4607-9aa3-2e78d991d2d7@arm.com>
+Date: Wed, 27 Mar 2024 13:55:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,228 +27,64 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] dmaengine: xilinx: dpdma: Add support for cyclic
- dma mode
+Subject: Re: [RESEND][PATCH v2 3/4] PM: EM: Add em_dev_update_chip_binning()
 Content-Language: en-US
-To: Vishal Sagar <vishal.sagar@amd.com>
-Cc: michal.simek@amd.com, dmaengine@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- varunkumar.allagadapa@amd.com, laurent.pinchart@ideasonboard.com,
- vkoul@kernel.org
-References: <20240228042124.3074044-1-vishal.sagar@amd.com>
- <20240228042124.3074044-3-vishal.sagar@amd.com>
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20240228042124.3074044-3-vishal.sagar@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: Lukasz Luba <lukasz.luba@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, sboyd@kernel.org, nm@ti.com,
+ linux-samsung-soc@vger.kernel.org, daniel.lezcano@linaro.org,
+ rafael@kernel.org, viresh.kumar@linaro.org, krzysztof.kozlowski@linaro.org,
+ alim.akhtar@samsung.com, m.szyprowski@samsung.com, mhiramat@kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20240322110850.77086-1-lukasz.luba@arm.com>
+ <20240322110850.77086-4-lukasz.luba@arm.com>
+ <eb9f48f6-cca8-405b-82a2-352893a79f14@arm.com>
+ <30ee98e9-3d9a-4be8-8127-043f68a7dcb1@arm.com>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+In-Reply-To: <30ee98e9-3d9a-4be8-8127-043f68a7dcb1@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 28/02/2024 06:21, Vishal Sagar wrote:
-> From: Rohit Visavalia <rohit.visavalia@xilinx.com>
+On 26/03/2024 21:32, Lukasz Luba wrote:
 > 
-> This patch adds support for DPDMA cyclic dma mode,
-> DMA cyclic transfers are required by audio streaming.
 > 
-> Signed-off-by: Rohit Visavalia <rohit.visavalia@amd.com>
-> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-> Signed-off-by: Vishal Sagar <vishal.sagar@amd.com>
+> On 3/26/24 10:09, Dietmar Eggemann wrote:
+>> On 22/03/2024 12:08, Lukasz Luba wrote:
+
+[...]
+
+>>> +    return em_recalc_and_update(dev, pd, em_table);
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(em_dev_update_chip_binning);
+>>
+>> In the previous version of 'chip-binning' you were using the new EM
+>> interface em_dev_compute_costs() (1) which is now replaced by
+>> em_recalc_and_update() -> em_compute_costs().
+>>
+>> https://lkml.kernel.org/r/20231220110339.1065505-2-lukasz.luba@arm.com
+>>
+>> Which leaves (1) still unused.
+>>
+>> That was why my concern back then that we shouldn't introduce EM
+>> interfaces without a user:
+>>
+>> https://lkml.kernel.org/r/8fc499cf-fca1-4465-bff7-a93dfd36f3c8@arm.com
+>>
+>> What happens now with em_dev_compute_costs()?
+>>
 > 
-> ---
->   drivers/dma/xilinx/xilinx_dpdma.c | 97 +++++++++++++++++++++++++++++++
->   1 file changed, 97 insertions(+)
+> For now it's not used, but modules which will create new EMs
+> with custom power values will use it. When such a module have
+> e.g. 5 EMs for one PD and only switches on one of them, then
+> this em_dev_compute_costs() will be used at setup for those
+> 5 EMs. Later it won't be used.
+> I don't wanted to combine the registration of new EM with
+> the compute cost, because that will create overhead in the
+> switching to new EM code path. Now we have only ~3us, which
+> was the main goal.
 > 
-> diff --git a/drivers/dma/xilinx/xilinx_dpdma.c b/drivers/dma/xilinx/xilinx_dpdma.c
-> index 28d9af8f00f0..88ad2f35538a 100644
-> --- a/drivers/dma/xilinx/xilinx_dpdma.c
-> +++ b/drivers/dma/xilinx/xilinx_dpdma.c
-> @@ -669,6 +669,84 @@ static void xilinx_dpdma_chan_free_tx_desc(struct virt_dma_desc *vdesc)
->   	kfree(desc);
->   }
->   
-> +/**
-> + * xilinx_dpdma_chan_prep_cyclic - Prepare a cyclic dma descriptor
-> + * @chan: DPDMA channel
-> + * @buf_addr: buffer address
-> + * @buf_len: buffer length
-> + * @period_len: number of periods
-> + * @flags: tx flags argument passed in to prepare function
-> + *
-> + * Prepare a tx descriptor incudling internal software/hardware descriptors
-> + * for the given cyclic transaction.
-> + *
-> + * Return: A dma async tx descriptor on success, or NULL.
-> + */
-> +static struct dma_async_tx_descriptor *
-> +xilinx_dpdma_chan_prep_cyclic(struct xilinx_dpdma_chan *chan,
-> +			      dma_addr_t buf_addr, size_t buf_len,
-> +			      size_t period_len, unsigned long flags)
-> +{
-> +	struct xilinx_dpdma_tx_desc *tx_desc;
-> +	struct xilinx_dpdma_sw_desc *sw_desc, *last = NULL;
-> +	unsigned int periods = buf_len / period_len;
-> +	unsigned int i;
-> +
-> +	tx_desc = xilinx_dpdma_chan_alloc_tx_desc(chan);
-> +	if (!tx_desc)
-> +		return (void *)tx_desc;
+> When our scmi-cpufreq get the support for EM update this
+> compute cost will be used there.
 
-Just return NULL here?
-
-> +
-> +	for (i = 0; i < periods; i++) {
-> +		struct xilinx_dpdma_hw_desc *hw_desc;
-> +
-> +		if (!IS_ALIGNED(buf_addr, XILINX_DPDMA_ALIGN_BYTES)) {
-> +			dev_err(chan->xdev->dev,
-> +				"buffer should be aligned at %d B\n",
-> +				XILINX_DPDMA_ALIGN_BYTES);
-> +			goto error;
-> +		}
-> +
-> +		sw_desc = xilinx_dpdma_chan_alloc_sw_desc(chan);
-> +		if (!sw_desc)
-> +			goto error;
-> +
-> +		xilinx_dpdma_sw_desc_set_dma_addrs(chan->xdev, sw_desc, last,
-> +						   &buf_addr, 1);
-> +		hw_desc = &sw_desc->hw;
-> +		hw_desc->xfer_size = period_len;
-> +		hw_desc->hsize_stride =
-> +			FIELD_PREP(XILINX_DPDMA_DESC_HSIZE_STRIDE_HSIZE_MASK,
-> +				   period_len) |
-> +			FIELD_PREP(XILINX_DPDMA_DESC_HSIZE_STRIDE_STRIDE_MASK,
-> +				   period_len);
-> +		hw_desc->control |= XILINX_DPDMA_DESC_CONTROL_PREEMBLE;
-> +		hw_desc->control |= XILINX_DPDMA_DESC_CONTROL_IGNORE_DONE;
-> +		hw_desc->control |= XILINX_DPDMA_DESC_CONTROL_COMPLETE_INTR;
-
-You could:
-
-hw_desc->control |= XILINX_DPDMA_DESC_CONTROL_PREEMBLE |
-		    XILINX_DPDMA_DESC_CONTROL_IGNORE_DONE |
-		    XILINX_DPDMA_DESC_CONTROL_COMPLETE_INTR;
-
-Although... Shouldn't control always be 0 here, so you can just 
-hw_desc->control = ...;
-
-> +
-> +		list_add_tail(&sw_desc->node, &tx_desc->descriptors);
-> +
-> +		buf_addr += period_len;
-> +		last = sw_desc;
-> +	}
-> +
-> +	sw_desc = list_first_entry(&tx_desc->descriptors,
-> +				   struct xilinx_dpdma_sw_desc, node);
-> +	last->hw.next_desc = lower_32_bits(sw_desc->dma_addr);
-> +	if (chan->xdev->ext_addr)
-> +		last->hw.addr_ext |=
-> +			FIELD_PREP(XILINX_DPDMA_DESC_ADDR_EXT_NEXT_ADDR_MASK,
-> +				   upper_32_bits(sw_desc->dma_addr));
-> +
-> +	last->hw.control |= XILINX_DPDMA_DESC_CONTROL_LAST_OF_FRAME;
-> +
-> +	return vchan_tx_prep(&chan->vchan, &tx_desc->vdesc, flags);
-> +
-> +error:
-> +	xilinx_dpdma_chan_free_tx_desc(&tx_desc->vdesc);
-> +
-> +	return NULL;
-> +}
-> +
->   /**
->    * xilinx_dpdma_chan_prep_interleaved_dma - Prepare an interleaved dma
->    *					    descriptor
-> @@ -1190,6 +1268,23 @@ static void xilinx_dpdma_chan_handle_err(struct xilinx_dpdma_chan *chan)
->   /* -----------------------------------------------------------------------------
->    * DMA Engine Operations
->    */
-> +static struct dma_async_tx_descriptor *
-> +xilinx_dpdma_prep_dma_cyclic(struct dma_chan *dchan, dma_addr_t buf_addr,
-> +			     size_t buf_len, size_t period_len,
-> +			     enum dma_transfer_direction direction,
-> +			     unsigned long flags)
-> +{
-> +	struct xilinx_dpdma_chan *chan = to_xilinx_chan(dchan);
-> +
-> +	if (direction != DMA_MEM_TO_DEV)
-> +		return NULL;
-> +
-> +	if (buf_len % period_len)
-> +		return NULL;
-> +
-> +	return xilinx_dpdma_chan_prep_cyclic(chan, buf_addr, buf_len,
-> +						 period_len, flags);
-
-The parameters should be aligned above.
-
-> +}
->   
->   static struct dma_async_tx_descriptor *
->   xilinx_dpdma_prep_interleaved_dma(struct dma_chan *dchan,
-> @@ -1673,6 +1768,7 @@ static int xilinx_dpdma_probe(struct platform_device *pdev)
->   
->   	dma_cap_set(DMA_SLAVE, ddev->cap_mask);
->   	dma_cap_set(DMA_PRIVATE, ddev->cap_mask);
-> +	dma_cap_set(DMA_CYCLIC, ddev->cap_mask);
->   	dma_cap_set(DMA_INTERLEAVE, ddev->cap_mask);
->   	dma_cap_set(DMA_REPEAT, ddev->cap_mask);
->   	dma_cap_set(DMA_LOAD_EOT, ddev->cap_mask);
-> @@ -1680,6 +1776,7 @@ static int xilinx_dpdma_probe(struct platform_device *pdev)
->   
->   	ddev->device_alloc_chan_resources = xilinx_dpdma_alloc_chan_resources;
->   	ddev->device_free_chan_resources = xilinx_dpdma_free_chan_resources;
-> +	ddev->device_prep_dma_cyclic = xilinx_dpdma_prep_dma_cyclic;
->   	ddev->device_prep_interleaved_dma = xilinx_dpdma_prep_interleaved_dma;
->   	/* TODO: Can we achieve better granularity ? */
->   	ddev->device_tx_status = dma_cookie_status;
-
-While I'm not too familiar with dma engines, this looks fine to me. So, 
-other than the few cosmetics comments:
-
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-
-  Tomi
+OK, I see. I checked the reloadable EM test module and
+em_dev_compute_costs() is used there like you described it.
 
