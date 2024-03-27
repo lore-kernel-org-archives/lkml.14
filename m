@@ -1,477 +1,177 @@
-Received: from mail-108-mta81.mxroute.com (mail-108-mta81.mxroute.com [136.175.108.81])
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089DE153BDC
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 22:26:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2D053371;
+	Wed, 27 Mar 2024 22:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711578390; cv=none; b=UWujpcanqV+im95jO7zaj/kjJU9GHVlCix2Xh/qx9ysm7BaA9GEEzBY61Sze/Ej9JnlyFvisRk+sSA9sAvpt3dSGoKUgWC2/FLwqXf6j876UZcmIOL7WOydIvfGi8IWjvxb/TGQEy976q/L42O4vvhjLUagGYmhUMeUr1KLQDts=
+	t=1711578411; cv=none; b=kV0/pj8oa3lmpNH3Hl9vJlHsRq8A8or2wxAr8yMJZTeRa25lOwlJwnuJxzSixSyl2ak62L8YDl4SEhUyyldFCfPEvf7dbuualdtTdUzP3igMjOGKYsxpNgRPMc8rDOvsCI4t/Y5jLsM3KsTgUGjp16s/qYc0Jtq96bR5Y84w86c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711578390; c=relaxed/simple;
-	bh=NA4X1r1+uHBdhIRfrPTtAP2uPVsX5ISROQaTF9/cHho=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CTPCWLR6+jvx1CzZ0tjjr7im3vSHxQ4kdvdzXaKU+3KXluVd8xd9j4nUeL+kBFgAZeuY4IBXaVqIdt2fltQZpJRE4bilLVA8l0F8LA0Hw7mMGdLqLvJcOZea3S30RL8syRBUqBdnFY1X1idikjf2q//bqMmBdqUKpxmPBubX/Cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=zSXtklX1; arc=none smtp.client-ip=136.175.108.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
+	s=arc-20240116; t=1711578411; c=relaxed/simple;
+	bh=0Eet4ylxwVn8zzff8qm5Ev6iikG6meyrEjfL2p8QNSI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jR90pNOd9w34PZd5F2D+rWHUlAVm2ijV6t1KGrabB1jDwngge7fhVaNdU/sUigLLzg7GMLnoQdDxVdkJ9OjstobuTDrEsv4r4Ult/VWsOrfAQQaIvJLVE3mkPu28I+2T0UabxxAGq1Pg9Fa54t8gHCXemWchHhI16ynKELRBSQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eXAMtdvT; arc=none smtp.client-ip=209.85.167.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="zSXtklX1"
-Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta81.mxroute.com (ZoneMTA) with ESMTPSA id 18e8200a3200003bea.00f
- for <linux-kernel@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Wed, 27 Mar 2024 22:21:03 +0000
-X-Zone-Loop: 2d5b0031d7ecdd0095fa60cc8aedb6ff043eb69ce815
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=JSVvy6qYqNREABJ9B24Hgd/994IGZ+daMOMn7F0GMDk=; b=zSXtklX19AqK1y2StbkvgusVkN
-	+kcE0HGGwYodEGai8R0iFRx74csIE7itCHjyOrD6lj9+47ynC0RjIj6I928KP5+Draffmxa/QFeOF
-	FI3R7NTDhjdFAkdLFmBmusRBjrRaMD0VS7UrRV7dZnxKnLS4Pm5aUqQK/ZDYUeaMvmolD6unbq5xD
-	9Ivvp/d3N03gn/HDGOdokoZPULXPdC4cJ/7SV5vOolr2Z3X1JKY9BlEQiWoVQ35+0rF5Zdaadxpwd
-	+hwjp7EvaiNGUtzPlI4oQPNZtrb7b2Uen3FW0SCwbj6D3ksbabGJxCHo5EjjarlAfGDTR1f+gqBiu
-	RxTTP4tQ==;
-From: git@luigi311.com
-To: linux-media@vger.kernel.org
-Cc: dave.stevenson@raspberrypi.com,
-	jacopo.mondi@ideasonboard.com,
-	mchehab@kernel.org,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	sakari.ailus@linux.intel.com,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	x@xnux.eu,
-	Luigi311 <git@luigi311.com>
-Subject: [PATCH 09/23] media: i2c: imx258: Add support for running on 2 CSI data lanes
-Date: Wed, 27 Mar 2024 16:20:21 -0600
-Message-ID: <20240327222035.47208-10-git@luigi311.com>
-In-Reply-To: <20240327222035.47208-1-git@luigi311.com>
-References: <20240327222035.47208-1-git@luigi311.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eXAMtdvT"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3bbc649c275so216530b6e.0;
+        Wed, 27 Mar 2024 15:26:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711578409; x=1712183209; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wwkzJWECmlG16QHW6cdxBA+RFUUXDB2JZzSWnyJ9i9M=;
+        b=eXAMtdvTXcqrV5fF/gApSbtWEJX1d1Q0V78I4hziiI7KwefykhWOytUA285ZGBt1R1
+         4Uo2x6PjZAX0PPZ+GZRy4skuQoUX1tJUkKJgMWxQR50K+SubocvkbMj5/gWFRk6oegb3
+         PUC/FZ86Blnbn97i8UzIIwg9Dfr+hLKY4UKGnha8QCFmIm1ilYshQUlJ6YYBeQc5GZL3
+         HZCUDVR/j8OFStPZHBDL5vxNS5OEK7C/UxDakmv5sbNLD5o1egKd/UQK4ZLu4QLHb811
+         J9sPh+6ilBSFX68sKdxn6dNzZYHRU1g9r/01uSW36HV3ieULTkVkwiFBiRmwrNqG0cmr
+         LB4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711578409; x=1712183209;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wwkzJWECmlG16QHW6cdxBA+RFUUXDB2JZzSWnyJ9i9M=;
+        b=GeYoJ3EbflZgQjpcLG79IVHnbjS+hTwFKe3RH05aXWFLQpzr1SFxng+QWhbvoxhqeX
+         EFWFGIHsW2Zn8IkozqIGuiTjoCQwrgBBH8+NgYaNFYWLApavzDHunCFK3W/TprL/46yz
+         zAGJdQhWs6036RC1ISaHzwWPf+S7+pTJPTdgI/NjndhlxI6tu8U1RQLpSlGMHe4P7BqS
+         RAr90+35OGC4lj+NhF0wqawqTC+YRCVgqOwEukwLjdt6IBkgYIF1N4ld5BKT7YnP8Guf
+         9WnKTJJI+E1BpASCYk5V7WYHlmXH/XsaQ450ZinQ3TwxpCdD/iH0pb8C1ufQGBh95nd4
+         FDMg==
+X-Forwarded-Encrypted: i=1; AJvYcCUYFjrY6b0WTIyQcxp0No5mjVFcFOzLTxv6VfHePMBdAWQxAPrANuz3KsyTJmGvBr9gxDIPW7LlaCuJIeJHUH8wiktuszS+mTBqWCwQ/V/cgrf2FjpJMtXnNA/luhLZpZ1Pr8LpNU2nFYB+7BAuLLzJhVzcm97xNuDu6ZlMWM2Z4SqXlS81wMhz+CBE+qbgS24nC8ah1S+wh22i0VNW5YxatyKX3HP8UA==
+X-Gm-Message-State: AOJu0YxpbKacbHHr9LGnGW6lAoWzdQiQ3KHRtww9S7LW5T1QfeZe8VNw
+	1XiN8+hUNbW03lwT5q4S3FUzFIcPR9CyQTOWTX9wLQSFUJKAe6T7
+X-Google-Smtp-Source: AGHT+IHGjWRkib9W0zZ7sBiv2+oNDjTn8vPgkUQXGuUBpsO88nnHMrIhshfeJQFgUjASDsrFPq59RQ==
+X-Received: by 2002:a05:6808:1920:b0:3c3:bc13:2ef6 with SMTP id bf32-20020a056808192000b003c3bc132ef6mr1745797oib.43.1711578408539;
+        Wed, 27 Mar 2024 15:26:48 -0700 (PDT)
+Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id cb9-20020a05622a1f8900b00430b907c234sm44446qtb.26.2024.03.27.15.26.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Mar 2024 15:26:47 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id BFF2F1200032;
+	Wed, 27 Mar 2024 18:26:46 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Wed, 27 Mar 2024 18:26:46 -0400
+X-ME-Sender: <xms:JJ0EZssyggSfZ6YjPdCrgVHmiiYnF9ISGg8qRTw2dRlJ_4OtCPIqng>
+    <xme:JJ0EZpceLAoOOR2BkRinIpB7dRQsbCeREWac5nra_IXl2PydmcB8OZW3KGErvv-26
+    O0FtNTCXxnnY-BgWg>
+X-ME-Received: <xmr:JJ0EZnwI2RQuYOE9TVkfAjn0DQ5LI00G7ZxHqNtuOdJFb-LnHSgcixl95Gs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudduiedgudefiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhq
+    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
+    grthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveei
+    udffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedt
+    ieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfh
+    higihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:JZ0EZvNwO33iGaiqTG-7ZzVuMMV87SwZDByVEsyd7zmVMGfHE69hKg>
+    <xmx:JZ0EZs8tEdCQFG8o_MfzJWRwjFgYey-NnTcb_k3LlVNwB9UV3wsQgQ>
+    <xmx:JZ0EZnUXM0RUg3Z1xRGgQQRPQK30oby7EvU786fOMY_TowKu7F7hEA>
+    <xmx:JZ0EZlesTXnuse3WVFfYtD1w__b0mzjqGbRixc-X4rlPGNIvtMZJ6A>
+    <xmx:Jp0EZvqzuiYJ8N-zPPc5jkCgD_cpCsPArUQB6bhYGCfZuCjG4HTPG--mOzIEAWfZ>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 27 Mar 2024 18:26:44 -0400 (EDT)
+Date: Wed, 27 Mar 2024 15:26:07 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,	comex <comexk@gmail.com>,
+	"Dr. David Alan Gilbert" <dave@treblig.org>,
+	Philipp Stanner <pstanner@redhat.com>,
+	rust-for-linux <rust-for-linux@vger.kernel.org>,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	llvm@lists.linux.dev, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Andrea Parri <parri.andrea@gmail.com>,	Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Nicholas Piggin <npiggin@gmail.com>,	David Howells <dhowells@redhat.com>,
+	Jade Alglave <j.alglave@ucl.ac.uk>,	Luc Maranget <luc.maranget@inria.fr>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Akira Yokosawa <akiyks@gmail.com>,	Daniel Lustig <dlustig@nvidia.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,	kent.overstreet@gmail.com,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,	Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [WIP 0/3] Memory model and atomic API in Rust
+Message-ID: <ZgSc_8PuBNs9Gp67@boqun-archlinux>
+References: <bu3seu56hfozsvgpdqjarbdkqo3lsjfc4lhluk5oj456xmrjc7@lfbbjxuf4rpv>
+ <CAHk-=wgLGWBXvNODAkzkVHEj7zrrnTq_hzMft62nKNkaL89ZGQ@mail.gmail.com>
+ <ZgIRXL5YM2AwBD0Y@gallifrey>
+ <CAHk-=wjwxKD9CxYsf5x+K5fJbJa_JYZh1eKB4PT5cZJq1+foGw@mail.gmail.com>
+ <160DB953-1588-418E-A490-381009CD8DE0@gmail.com>
+ <qyjrex54hbhvhw4gmn7b6l2hr45o56bwt6fazfalykwcp5zzkx@vwt7k3d6kdwt>
+ <CAHk-=wgQy+FRKjO_BvZgZN56w6-+jDO8p-Mt=X=zM70CG=CVBQ@mail.gmail.com>
+ <bjorlxatlpzjlh6dfulham3u4mqsfqt7ir5wtayacaoefr2r7x@lmfcqzcobl3f>
+ <ZgSNvzTkR4CY7kQC@boqun-archlinux>
+ <iurfeuqq5hfwhv66d2wozlzv24avyypgtgoqpmorghmimzqwur@zj2qfot47d76>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Id: personal@luigi311.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <iurfeuqq5hfwhv66d2wozlzv24avyypgtgoqpmorghmimzqwur@zj2qfot47d76>
 
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+On Wed, Mar 27, 2024 at 05:49:41PM -0400, Kent Overstreet wrote:
+[...]
+> > > Strict aliasing is crap in C and C++ because we started out with
+> > > unrestricetd pointers, and it just doesn't work in C and C++ with the
+> > > realities of the kind of code we have to write, and we never got any
+> > > kind of a model that would have made it workable. Never mind trying to
+> > > graft that onto existing codebases...
+> > > 
+> > > (Restrict was crap too... no scoping, nothing but a single f*cking
+> > > keyword? Who ever thought _that_ was going to work?)
+> > > 
+> > > _But_: the lack of any aliasing guarantees means that writing through
+> > > any pointer can invalidate practically anything, and this is a real
+> > 
+> > I don't know whether I'm 100% correct on this, but Rust has references,
+> > so things like "you have a unique reference to a part of memory, no one
+> > would touch it in the meanwhile" are represented by `&mut`, to get a
+> > `&mut` from a raw pointer, you need unsafe, where programmers can
+> > provide the reasoning of the safety of the accesses. More like "pointers
+> > can alias anyone but references cannot" to me.
+> 
+> That's not really a workable rule because in practice every data
+> structure has unsafe Rust underneath. Strict aliasing would mean that
 
-Extends the driver to also support 2 data lanes.
-Frame rates are obviously more restricted on 2 lanes, but some
-hardware simply hasn't wired more up.
+I don't follow, a plain data structure like:
 
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Signed-off-by: Luigi311 <git@luigi311.com>
----
- drivers/media/i2c/imx258.c | 214 ++++++++++++++++++++++++++++++++-----
- 1 file changed, 190 insertions(+), 24 deletions(-)
+	struct Point { x: i64, y: i64 }
 
-diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
-index 6ee7de079454..c65b9aad3b0a 100644
---- a/drivers/media/i2c/imx258.c
-+++ b/drivers/media/i2c/imx258.c
-@@ -86,12 +86,18 @@ struct imx258_reg_list {
- 	const struct imx258_reg *regs;
- };
- 
-+enum {
-+	IMX258_2_LANE_MODE,
-+	IMX258_4_LANE_MODE,
-+	IMX258_LANE_CONFIGS,
-+};
-+
- /* Link frequency config */
- struct imx258_link_freq_config {
- 	u32 pixels_per_line;
- 
- 	/* PLL registers for this link frequency */
--	struct imx258_reg_list reg_list;
-+	struct imx258_reg_list reg_list[IMX258_LANE_CONFIGS];
- };
- 
- /* Mode : resolution and related config&values */
-@@ -111,8 +117,34 @@ struct imx258_mode {
- 	struct imx258_reg_list reg_list;
- };
- 
--/* 4208x3120 needs 1267Mbps/lane, 4 lanes */
--static const struct imx258_reg mipi_1267mbps_19_2mhz[] = {
-+/*
-+ * 4208x3120 @ 30 fps needs 1267Mbps/lane, 4 lanes.
-+ * To avoid further computation of clock settings, adopt the same per
-+ * lane data rate when using 2 lanes, thus allowing a maximum of 15fps.
-+ */
-+static const struct imx258_reg mipi_1267mbps_19_2mhz_2l[] = {
-+	{ 0x0136, 0x13 },
-+	{ 0x0137, 0x33 },
-+	{ 0x0301, 0x0A },
-+	{ 0x0303, 0x02 },
-+	{ 0x0305, 0x03 },
-+	{ 0x0306, 0x00 },
-+	{ 0x0307, 0xC6 },
-+	{ 0x0309, 0x0A },
-+	{ 0x030B, 0x01 },
-+	{ 0x030D, 0x02 },
-+	{ 0x030E, 0x00 },
-+	{ 0x030F, 0xD8 },
-+	{ 0x0310, 0x00 },
-+
-+	{ 0x0114, 0x01 },
-+	{ 0x0820, 0x09 },
-+	{ 0x0821, 0xa6 },
-+	{ 0x0822, 0x66 },
-+	{ 0x0823, 0x66 },
-+};
-+
-+static const struct imx258_reg mipi_1267mbps_19_2mhz_4l[] = {
- 	{ 0x0136, 0x13 },
- 	{ 0x0137, 0x33 },
- 	{ 0x0301, 0x05 },
-@@ -126,16 +158,18 @@ static const struct imx258_reg mipi_1267mbps_19_2mhz[] = {
- 	{ 0x030E, 0x00 },
- 	{ 0x030F, 0xD8 },
- 	{ 0x0310, 0x00 },
-+
-+	{ 0x0114, 0x03 },
- 	{ 0x0820, 0x13 },
- 	{ 0x0821, 0x4C },
- 	{ 0x0822, 0xCC },
- 	{ 0x0823, 0xCC },
- };
- 
--static const struct imx258_reg mipi_1272mbps_24mhz[] = {
-+static const struct imx258_reg mipi_1272mbps_24mhz_2l[] = {
- 	{ 0x0136, 0x18 },
- 	{ 0x0137, 0x00 },
--	{ 0x0301, 0x05 },
-+	{ 0x0301, 0x0a },
- 	{ 0x0303, 0x02 },
- 	{ 0x0305, 0x04 },
- 	{ 0x0306, 0x00 },
-@@ -146,13 +180,59 @@ static const struct imx258_reg mipi_1272mbps_24mhz[] = {
- 	{ 0x030E, 0x00 },
- 	{ 0x030F, 0xD8 },
- 	{ 0x0310, 0x00 },
-+
-+	{ 0x0114, 0x01 },
- 	{ 0x0820, 0x13 },
- 	{ 0x0821, 0x4C },
- 	{ 0x0822, 0xCC },
- 	{ 0x0823, 0xCC },
- };
- 
--static const struct imx258_reg mipi_640mbps_19_2mhz[] = {
-+static const struct imx258_reg mipi_1272mbps_24mhz_4l[] = {
-+	{ 0x0136, 0x18 },
-+	{ 0x0137, 0x00 },
-+	{ 0x0301, 0x05 },
-+	{ 0x0303, 0x02 },
-+	{ 0x0305, 0x04 },
-+	{ 0x0306, 0x00 },
-+	{ 0x0307, 0xD4 },
-+	{ 0x0309, 0x0A },
-+	{ 0x030B, 0x01 },
-+	{ 0x030D, 0x02 },
-+	{ 0x030E, 0x00 },
-+	{ 0x030F, 0xD8 },
-+	{ 0x0310, 0x00 },
-+
-+	{ 0x0114, 0x03 },
-+	{ 0x0820, 0x13 },
-+	{ 0x0821, 0xE0 },
-+	{ 0x0822, 0x00 },
-+	{ 0x0823, 0x00 },
-+};
-+
-+static const struct imx258_reg mipi_640mbps_19_2mhz_2l[] = {
-+	{ 0x0136, 0x13 },
-+	{ 0x0137, 0x33 },
-+	{ 0x0301, 0x05 },
-+	{ 0x0303, 0x02 },
-+	{ 0x0305, 0x03 },
-+	{ 0x0306, 0x00 },
-+	{ 0x0307, 0x64 },
-+	{ 0x0309, 0x0A },
-+	{ 0x030B, 0x01 },
-+	{ 0x030D, 0x02 },
-+	{ 0x030E, 0x00 },
-+	{ 0x030F, 0xD8 },
-+	{ 0x0310, 0x00 },
-+
-+	{ 0x0114, 0x01 },
-+	{ 0x0820, 0x05 },
-+	{ 0x0821, 0x00 },
-+	{ 0x0822, 0x00 },
-+	{ 0x0823, 0x00 },
-+};
-+
-+static const struct imx258_reg mipi_640mbps_19_2mhz_4l[] = {
- 	{ 0x0136, 0x13 },
- 	{ 0x0137, 0x33 },
- 	{ 0x0301, 0x05 },
-@@ -166,13 +246,37 @@ static const struct imx258_reg mipi_640mbps_19_2mhz[] = {
- 	{ 0x030E, 0x00 },
- 	{ 0x030F, 0xD8 },
- 	{ 0x0310, 0x00 },
-+
-+	{ 0x0114, 0x03 },
-+	{ 0x0820, 0x0A },
-+	{ 0x0821, 0x00 },
-+	{ 0x0822, 0x00 },
-+	{ 0x0823, 0x00 },
-+};
-+
-+static const struct imx258_reg mipi_642mbps_24mhz_2l[] = {
-+	{ 0x0136, 0x18 },
-+	{ 0x0137, 0x00 },
-+	{ 0x0301, 0x0A },
-+	{ 0x0303, 0x02 },
-+	{ 0x0305, 0x04 },
-+	{ 0x0306, 0x00 },
-+	{ 0x0307, 0x6B },
-+	{ 0x0309, 0x0A },
-+	{ 0x030B, 0x01 },
-+	{ 0x030D, 0x02 },
-+	{ 0x030E, 0x00 },
-+	{ 0x030F, 0xD8 },
-+	{ 0x0310, 0x00 },
-+
-+	{ 0x0114, 0x01 },
- 	{ 0x0820, 0x0A },
- 	{ 0x0821, 0x00 },
- 	{ 0x0822, 0x00 },
- 	{ 0x0823, 0x00 },
- };
- 
--static const struct imx258_reg mipi_642mbps_24mhz[] = {
-+static const struct imx258_reg mipi_642mbps_24mhz_4l[] = {
- 	{ 0x0136, 0x18 },
- 	{ 0x0137, 0x00 },
- 	{ 0x0301, 0x05 },
-@@ -186,6 +290,8 @@ static const struct imx258_reg mipi_642mbps_24mhz[] = {
- 	{ 0x030E, 0x00 },
- 	{ 0x030F, 0xD8 },
- 	{ 0x0310, 0x00 },
-+
-+	{ 0x0114, 0x03 },
- 	{ 0x0820, 0x0A },
- 	{ 0x0821, 0x00 },
- 	{ 0x0822, 0x00 },
-@@ -240,7 +346,6 @@ static const struct imx258_reg mode_common_regs[] = {
- 	{ 0x5F05, 0xED },
- 	{ 0x0112, 0x0A },
- 	{ 0x0113, 0x0A },
--	{ 0x0114, 0x03 },
- 	{ 0x0342, 0x14 },
- 	{ 0x0343, 0xE8 },
- 	{ 0x0344, 0x00 },
-@@ -359,11 +464,13 @@ enum {
- 
- /*
-  * pixel_rate = link_freq * data-rate * nr_of_lanes / bits_per_sample
-- * data rate => double data rate; number of lanes => 4; bits per pixel => 10
-+ * data rate => double data rate;
-+ * number of lanes => (configurable 2 or 4);
-+ * bits per pixel => 10
-  */
--static u64 link_freq_to_pixel_rate(u64 f)
-+static u64 link_freq_to_pixel_rate(u64 f, unsigned int nlanes)
- {
--	f *= 2 * 4;
-+	f *= 2 * nlanes;
- 	do_div(f, 10);
- 
- 	return f;
-@@ -393,15 +500,27 @@ static const struct imx258_link_freq_config link_freq_configs_19_2[] = {
- 	[IMX258_LINK_FREQ_1267MBPS] = {
- 		.pixels_per_line = IMX258_PPL_DEFAULT,
- 		.reg_list = {
--			.num_of_regs = ARRAY_SIZE(mipi_1267mbps_19_2mhz),
--			.regs = mipi_1267mbps_19_2mhz,
-+			[IMX258_2_LANE_MODE] = {
-+				.num_of_regs = ARRAY_SIZE(mipi_1267mbps_19_2mhz_2l),
-+				.regs = mipi_1267mbps_19_2mhz_2l,
-+			},
-+			[IMX258_4_LANE_MODE] = {
-+				.num_of_regs = ARRAY_SIZE(mipi_1267mbps_19_2mhz_4l),
-+				.regs = mipi_1267mbps_19_2mhz_4l,
-+			},
- 		}
- 	},
- 	[IMX258_LINK_FREQ_640MBPS] = {
- 		.pixels_per_line = IMX258_PPL_DEFAULT,
- 		.reg_list = {
--			.num_of_regs = ARRAY_SIZE(mipi_640mbps_19_2mhz),
--			.regs = mipi_640mbps_19_2mhz,
-+			[IMX258_2_LANE_MODE] = {
-+				.num_of_regs = ARRAY_SIZE(mipi_640mbps_19_2mhz_2l),
-+				.regs = mipi_640mbps_19_2mhz_2l,
-+			},
-+			[IMX258_4_LANE_MODE] = {
-+				.num_of_regs = ARRAY_SIZE(mipi_640mbps_19_2mhz_4l),
-+				.regs = mipi_640mbps_19_2mhz_4l,
-+			},
- 		}
- 	},
- };
-@@ -410,15 +529,27 @@ static const struct imx258_link_freq_config link_freq_configs_24[] = {
- 	[IMX258_LINK_FREQ_1267MBPS] = {
- 		.pixels_per_line = IMX258_PPL_DEFAULT,
- 		.reg_list = {
--			.num_of_regs = ARRAY_SIZE(mipi_1272mbps_24mhz),
--			.regs = mipi_1272mbps_24mhz,
-+			[IMX258_2_LANE_MODE] = {
-+				.num_of_regs = ARRAY_SIZE(mipi_1272mbps_24mhz_2l),
-+				.regs = mipi_1272mbps_24mhz_2l,
-+			},
-+			[IMX258_4_LANE_MODE] = {
-+				.num_of_regs = ARRAY_SIZE(mipi_1272mbps_24mhz_4l),
-+				.regs = mipi_1272mbps_24mhz_4l,
-+			},
- 		}
- 	},
- 	[IMX258_LINK_FREQ_640MBPS] = {
- 		.pixels_per_line = IMX258_PPL_DEFAULT,
- 		.reg_list = {
--			.num_of_regs = ARRAY_SIZE(mipi_642mbps_24mhz),
--			.regs = mipi_642mbps_24mhz,
-+			[IMX258_2_LANE_MODE] = {
-+				.num_of_regs = ARRAY_SIZE(mipi_642mbps_24mhz_2l),
-+				.regs = mipi_642mbps_24mhz_2l,
-+			},
-+			[IMX258_4_LANE_MODE] = {
-+				.num_of_regs = ARRAY_SIZE(mipi_642mbps_24mhz_4l),
-+				.regs = mipi_642mbps_24mhz_4l,
-+			},
- 		}
- 	},
- };
-@@ -477,6 +608,7 @@ struct imx258 {
- 
- 	const struct imx258_link_freq_config *link_freq_configs;
- 	const s64 *link_freq_menu_items;
-+	unsigned int nlanes;
- 
- 	/*
- 	 * Mutex for serialized access:
-@@ -782,7 +914,7 @@ static int imx258_set_pad_format(struct v4l2_subdev *sd,
- 		__v4l2_ctrl_s_ctrl(imx258->link_freq, mode->link_freq_index);
- 
- 		link_freq = imx258->link_freq_menu_items[mode->link_freq_index];
--		pixel_rate = link_freq_to_pixel_rate(link_freq);
-+		pixel_rate = link_freq_to_pixel_rate(link_freq, imx258->nlanes);
- 		__v4l2_ctrl_s_ctrl_int64(imx258->pixel_rate, pixel_rate);
- 		/* Update limits and set FPS to default */
- 		vblank_def = imx258->cur_mode->vts_def -
-@@ -811,11 +943,13 @@ static int imx258_start_streaming(struct imx258 *imx258)
- {
- 	struct i2c_client *client = v4l2_get_subdevdata(&imx258->sd);
- 	const struct imx258_reg_list *reg_list;
-+	const struct imx258_link_freq_config *link_freq_cfg;
- 	int ret, link_freq_index;
- 
- 	/* Setup PLL */
- 	link_freq_index = imx258->cur_mode->link_freq_index;
--	reg_list = &imx258->link_freq_configs[link_freq_index].reg_list;
-+	link_freq_cfg = &imx258->link_freq_configs[link_freq_index];
-+	reg_list = &link_freq_cfg->reg_list[imx258->nlanes == 2 ? 0 : 1];
- 	ret = imx258_write_regs(imx258, reg_list->regs, reg_list->num_of_regs);
- 	if (ret) {
- 		dev_err(&client->dev, "%s failed to set plls\n", __func__);
-@@ -1033,9 +1167,11 @@ static int imx258_init_controls(struct imx258 *imx258)
- 		vflip->flags |= V4L2_CTRL_FLAG_READ_ONLY;
- 
- 	pixel_rate_max =
--		link_freq_to_pixel_rate(imx258->link_freq_menu_items[0]);
-+		link_freq_to_pixel_rate(imx258->link_freq_menu_items[0],
-+					imx258->nlanes);
- 	pixel_rate_min =
--		link_freq_to_pixel_rate(imx258->link_freq_menu_items[1]);
-+		link_freq_to_pixel_rate(imx258->link_freq_menu_items[1],
-+					imx258->nlanes);
- 	/* By default, PIXEL_RATE is read only */
- 	imx258->pixel_rate = v4l2_ctrl_new_std(ctrl_hdlr, &imx258_ctrl_ops,
- 				V4L2_CID_PIXEL_RATE,
-@@ -1132,6 +1268,10 @@ static int imx258_get_regulators(struct imx258 *imx258,
- static int imx258_probe(struct i2c_client *client)
- {
- 	struct imx258 *imx258;
-+	struct fwnode_handle *endpoint;
-+	struct v4l2_fwnode_endpoint ep = {
-+		.bus_type = V4L2_MBUS_CSI2_DPHY
-+	};
- 	int ret;
- 	u32 val = 0;
- 
-@@ -1172,13 +1312,35 @@ static int imx258_probe(struct i2c_client *client)
- 		return -EINVAL;
- 	}
- 
-+	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev), NULL);
-+	if (!endpoint) {
-+		dev_err(&client->dev, "Endpoint node not found\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = v4l2_fwnode_endpoint_alloc_parse(endpoint, &ep);
-+	fwnode_handle_put(endpoint);
-+	if (ret) {
-+		dev_err(&client->dev, "Parsing endpoint node failed\n");
-+		return ret;
-+	}
-+
-+	/* Get number of data lanes */
-+	imx258->nlanes = ep.bus.mipi_csi2.num_data_lanes;
-+	if (imx258->nlanes != 2 && imx258->nlanes != 4) {
-+		dev_err(&client->dev, "Invalid data lanes: %u\n",
-+			imx258->nlanes);
-+		ret = -EINVAL;
-+		goto error_endpoint_free;
-+	}
-+
- 	/* Initialize subdev */
- 	v4l2_i2c_subdev_init(&imx258->sd, client, &imx258_subdev_ops);
- 
- 	/* Will be powered off via pm_runtime_idle */
- 	ret = imx258_power_on(&client->dev);
- 	if (ret)
--		return ret;
-+		goto error_endpoint_free;
- 
- 	/* Check module identity */
- 	ret = imx258_identify_module(imx258);
-@@ -1211,6 +1373,7 @@ static int imx258_probe(struct i2c_client *client)
- 	pm_runtime_set_active(&client->dev);
- 	pm_runtime_enable(&client->dev);
- 	pm_runtime_idle(&client->dev);
-+	v4l2_fwnode_endpoint_free(&ep);
- 
- 	return 0;
- 
-@@ -1223,6 +1386,9 @@ static int imx258_probe(struct i2c_client *client)
- error_identify:
- 	imx258_power_off(&client->dev);
- 
-+error_endpoint_free:
-+	v4l2_fwnode_endpoint_free(&ep);
-+
- 	return ret;
- }
- 
--- 
-2.42.0
+doesn't have any unsafe Rust underneath I think.
 
+> unsafe Rust very much has to follow the aliasing rules too.
+> 
+
+The point I was trying to say, the aliasing rule on Rust raw pointers is 
+relatively relaxed compared to strict aliasing in C since Rust has
+references which should have more accurate informatio on aliasing.
+
+(but not a language expert).
+
+Regards,
+Boqun
