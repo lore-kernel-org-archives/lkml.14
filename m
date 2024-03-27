@@ -1,65 +1,40 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568FB14D6E3
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 20:08:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C93214E2DB;
+	Wed, 27 Mar 2024 20:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711570125; cv=none; b=eMj/9Q9X4WihAoVarQfNlFoXoyrDfmuOG4cC/bgamJMq1m0lsm4A894apT45+ezLRhQSJSlyccWIImA2FF46Y5q5swVQYfE+zj5b1G1ZbI7LNKKDCGnJcDlus/uIApPO2VU8VDl/wyik2pdZeYOXebXAsISWSI9dWmP/ur7R3No=
+	t=1711570408; cv=none; b=VN9Jk2rwdZ2Emyju4APnUxIiKF4L7azPlotqqwK6aB2TzY11ivhRQuu1K2SR/Jd+hjuWf+8BH6jXWEx2vsRugzNU8VowvyXexw98vZ8p/Mh7dlMlIoTxzXyzkupbivTuZftFOsHQ+cZXSIjtc1CI2jiQuUgG9+NGB+rTK1yzEYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711570125; c=relaxed/simple;
-	bh=30+SMF3Q4cLn9iLwhMHMGXF2lJwt/e/uG876R4xdZDU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hiHpTx83SPLGmvJcy5Nxl54P7jQCD0ecvDX68NTvTlffuENwJfJxItbf51y+5M7eepYjT7P6xLOOlqhk09nCIg11yV9hbPt0Bhi+G3wsd6tJ8HFfptoox1V56wPid7RLv94rbuIW8rBRBS2kK+ZqpRDp+GrsQsUe5UrOq4QEaqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QKLZAxmj; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711570408; c=relaxed/simple;
+	bh=kH3qgcziafB9PRru5e9dw4ePUTKVWnjog4AJOkah2g4=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=GPlMfgfXwz0R1hpM/C1KuKfcgwOwYMNO9SEVm9EfVvb4AW0Ip5wztnJg7fRdtuVoq9y+rUkg9jmm0EKAWmg8Pi8ocFVDRmqLeIn+Jdm36YOclrmuonwOOCkEQPXfzgnWVWP3gVyX1dOf8f7XJRr79RPiPqCrQqdPamo2M3ejgIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=XWV3o/On; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QKLZAxmj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711570122;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=u+rbOO6Xjs4/MSVYHbBLn8VkYr1ofXwAfF7JXAClqYE=;
-	b=QKLZAxmjpaQY97V6LVADqg4B6oSr4ooD0/5ksMbLY2wPzkQfVEg/LslrXDm/Ad3NHb16cI
-	HsQbQbvJYAEpuuQNMSmZEKzxscWokWFfa35JliG/sYFu4BmZvNPcaQEGVs0L8WzhaG1P8o
-	FgF38EpF4uJNpn4QoEAyuv4GxrPcq2k=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-474-0mMDrPNCOkG28fCL02PhsA-1; Wed, 27 Mar 2024 16:08:40 -0400
-X-MC-Unique: 0mMDrPNCOkG28fCL02PhsA-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a469d3547c7so21854966b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 13:08:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711570119; x=1712174919;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u+rbOO6Xjs4/MSVYHbBLn8VkYr1ofXwAfF7JXAClqYE=;
-        b=NbCWVtb8MXYydEOZcTfKC7HmjeOpF1M57e5KzHa0pOa9xKzSxRWq/MggnHtUZwLZvL
-         xbQaAh0vn/qNbEpzz/6ypnnk3jRRDEzsoIxlUM/+UxGrPBX44s4zMyrklAZ8qboik5/w
-         D1jYmVIlC0XmMgOXpcwpBDB52z9BiNpI2oQp811QPAjOqxT3Lf2Vj5lLt1gZZ3wHr2F6
-         YvGDhuMK32qv2flDqGHbLWLjyyaLW/3nPsziS4/AYcqgP/KYXTSMX7VaRajsTexy7lUW
-         65D1uNGpPcUeb7Poc1j12I/69KXI/b8CqVcZrpZVXzpBi/LhZD+Z12HsNyJUERBL+gb3
-         YDWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXwBLOjVt0aR8WEbn3gt9PV1+DxltvMtiWkNTesiVp8GhyPdByEX/fu6jDNZZLEvWooIce4bNo1+4dkf/ruamN32iymE41Bt/cez023
-X-Gm-Message-State: AOJu0Yxsbq9rSN7LzVxxmi57Xe9XigsG+jWA90wY4KeOHpvA6ZaWnBq8
-	iglzeIPNn1T0ufEDPoKk4zx8LgAttNA/BTybmu95VuuQblmIrQYqwV5gSAN/sOiXQ18bDNsngVP
-	1/Z9mCvBV2LIqat1kio4bpjHymEjA4dY/5lY1P42OpFd+IcS2hxFb6MSGaDI9Zw==
-X-Received: by 2002:a17:906:bcda:b0:a46:ebe6:742e with SMTP id lw26-20020a170906bcda00b00a46ebe6742emr306731ejb.23.1711570119672;
-        Wed, 27 Mar 2024 13:08:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGRPseT862/dYHMWEZUySiGhxw6iMcjeUjM2enE0KH2m9DZecWpuyWTRPHl2YQ5pmnSH+a0zw==
-X-Received: by 2002:a17:906:bcda:b0:a46:ebe6:742e with SMTP id lw26-20020a170906bcda00b00a46ebe6742emr306716ejb.23.1711570119373;
-        Wed, 27 Mar 2024 13:08:39 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id hj13-20020a170906874d00b00a474ef94fddsm4790814ejb.70.2024.03.27.13.08.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Mar 2024 13:08:39 -0700 (PDT)
-Message-ID: <adc4d0b8-412b-42b0-94fb-96bd6c23bb83@redhat.com>
-Date: Wed, 27 Mar 2024 21:08:38 +0100
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="XWV3o/On"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1711570398;
+	bh=kH3qgcziafB9PRru5e9dw4ePUTKVWnjog4AJOkah2g4=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=XWV3o/On0ufZZmO+RH7OA6H6e8GKH/ZyKQo5NhDZerpcWmifTveYtnO7AThQZRBQV
+	 S6tdjM01n0q6SnwzERfKs1BsrNfx1+vziFeA7HkXACoNEHNFygqtNIK00nTaBMWDIX
+	 EQ4Oyt91zto1I/k4xLYiWHBYPoOs1BxN1dJa2d9iP9XKhGQ1MJvjFqMG2OPmDuf1+G
+	 tE/sjT+fWPNuqIQ6qRGUtZfqslgImvJOvjexHi5grB7xtq//Ao8pAZTb/6Yuyimusy
+	 kNn5he9tI1mdmLVtIz9tbQFxrVYaJ6+d2Km05H6Usn7x6WUoO66p4R1eHPfqdGDm/x
+	 x2qs2PZ0TqbXA==
+Received: from [100.113.15.66] (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6D0E437804B2;
+	Wed, 27 Mar 2024 20:13:15 +0000 (UTC)
+Message-ID: <ccab9229-c0de-4c38-bb5c-7f32cbd7fa2b@collabora.com>
+Date: Thu, 28 Mar 2024 01:13:45 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,78 +42,100 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/6] platform: x86-android-tablets: other: Add swnode
- for Xiaomi pad2 indicator LED
-Content-Language: en-US, nl
-To: Kate Hsuan <hpa@redhat.com>, Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
- linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
- linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
- linux-pm@vger.kernel.org
-References: <20240322033736.9344-1-hpa@redhat.com>
- <20240322033736.9344-2-hpa@redhat.com>
- <bb7536be-9bed-4557-b111-6409ebfe48f4@redhat.com>
- <ZgGm7eDBQtwH37ya@smile.fi.intel.com>
- <CAEth8oEps=T3JGJiCEH_SknjkcGaTXv+ekBQLgVRm+Nc7qfa1g@mail.gmail.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAEth8oEps=T3JGJiCEH_SknjkcGaTXv+ekBQLgVRm+Nc7qfa1g@mail.gmail.com>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Nicolin Chen <nicolinc@nvidia.com>, kernel@collabora.com,
+ iommu@lists.linux.dev, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Kevin Tian <kevin.tian@intel.com>,
+ Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH] selftests: iommu: add config needed for iommufd_fail_nth
+Content-Language: en-US
+To: Jason Gunthorpe <jgg@ziepe.ca>, Joao Martins <joao.m.martins@oracle.com>
+References: <20240325090048.1423908-1-usama.anjum@collabora.com>
+ <31fcc276-acd6-4277-bd6c-4a871c7fb28a@collabora.com>
+ <20240326150340.GE8419@ziepe.ca>
+ <56cc8b9e-c1cf-4520-ba45-b1237e8b7b64@collabora.com>
+ <20240327114958.GG8419@ziepe.ca>
+ <51f493a9-08e7-44d8-ae4a-58b2994ea276@oracle.com>
+ <f78b685d-a147-4b59-beb2-cde9d34ce22a@collabora.com>
+ <e9cb60bf-5035-4fed-9b36-ca2edf048fe8@oracle.com>
+ <20240327182050.GA1363414@ziepe.ca>
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20240327182050.GA1363414@ziepe.ca>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi,
-
-On 3/27/24 7:09 AM, Kate Hsuan wrote:
-> Hi Hans,
+On 3/27/24 11:20 PM, Jason Gunthorpe wrote:
+> On Wed, Mar 27, 2024 at 06:09:37PM +0000, Joao Martins wrote:
+>> On 27/03/2024 17:49, Muhammad Usama Anjum wrote:
+>>> On 3/27/24 7:59 PM, Joao Martins wrote:
+>>>> On 27/03/2024 11:49, Jason Gunthorpe wrote:
+>>>>> On Wed, Mar 27, 2024 at 03:14:25PM +0500, Muhammad Usama Anjum wrote:
+>>>>>> On 3/26/24 8:03 PM, Jason Gunthorpe wrote:
+>>>>>>> On Tue, Mar 26, 2024 at 06:09:34PM +0500, Muhammad Usama Anjum wrote:
+>>>>>>>> Even after applying this config patch and following snippet (which doesn't
+>>>>>>>> terminate the program if mmap doesn't allocate exactly as the hint), I'm
+>>>>>>>> finding failed tests.
+>>>>>>>>
+>>>>>>>> @@ -1746,7 +1748,7 @@ FIXTURE_SETUP(iommufd_dirty_tracking)
+>>>>>>>>         assert((uintptr_t)self->buffer % HUGEPAGE_SIZE == 0);
+>>>>>>>>         vrc = mmap(self->buffer, variant->buffer_size, PROT_READ | PROT_WRITE,
+>>>>>>>>                    mmap_flags, -1, 0);
+>>>>>>>> -       assert(vrc == self->buffer);
+>>>>>>>> +       assert(vrc == self->buffer);// ???
+>>>>>>>>
+>>>>>>>> On x86:
+>>>>>>>> # Totals: pass:176 fail:4 xfail:0 xpass:0 skip:0 error:0
+>>>>>>>> On ARM64:
+>>>>>>>> # Totals: pass:166 fail:14 xfail:0 xpass:0 skip:0 error:0
+>>>>>>>>
+>>>>>>>> The log files are attached.
+>>>>>>>
+>>>>>>> You probably don't have enough transparent huge pages available to the process
+>>>>>>>
+>>>>>>>       echo 1024 > /proc/sys/vm/nr_hugepages
+>>>>>> After making huge pages available, the iommufd test always passed on x86.
+>>>>>> But there are still failures on arm64. I'm looking into the failures.
+>>>>>
+>>>>> Oh that is really strange. Joao? Nicolin?
+>>>>>
+>>>> Definitely strange, I'll have a look.
+>>>>
+>>>> So it set the expected number of dirty bits as that assert doesn't fail, but it
+>>>> is failing when we check that even bits are set but not odd ones. Like it's
+>>>> hasn't set those bits.
+>>>>
+>>>> For mock tests there should be no difference between x86 and ARM assuming the
+>>>> typical 4K page-size. Maybe this is 64k base pages in ARM? That's the only thing
+>>>> that I can think of that affected mock domain.
+>>> The config is attached. The defaults are being used i.e., 4k page.
+>>
+>> Looks like CONFIG_IOMMUFD_DRIVER is not defined :(
+>>
+>> Thus no bits are being set.
 > 
-> On Tue, Mar 26, 2024 at 12:32 AM Andy Shevchenko
-> <andriy.shevchenko@intel.com> wrote:
->>
->> On Mon, Mar 25, 2024 at 04:02:54PM +0100, Hans de Goede wrote:
->>> On 3/22/24 4:37 AM, Kate Hsuan wrote:
->>>> There is a KTD2026 LED controller to manage the indicator LED for Xiaomi
->>>> pad2. The ACPI for it is not properly made so the kernel can't get
->>>> a correct description of it.
->>>>
->>>> This work add a description for this RGB LED controller and also set a
->>>> trigger to indicate the chaging event (bq27520-0-charging). When it is
->>>> charging, the indicator LED will be turn on.
->>>>
->>>> Signed-off-by: Kate Hsuan <hpa@redhat.com>
->>>
->>> Thank you for your patch, I've applied this patch to my review-hans
->>> branch:
->>> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
->>>
->>> I will also merge [PATCH v5 6/6] platform: x86-android-tablets:
->>> others: Set the LED trigger to charging_red_full_green for Xiaomi pad2"
->>>
->>> Once the new power_supply trigger patch this relies on has been
->>> accepted.
->>>
->>> Once I've run some tests on this branch the patches there will be
->>> added to the platform-drivers-x86/for-next branch and eventually
->>> will be included in the pdx86 pull-request to Linus for the next
->>> merge-window.
->>
->> I believe I have commented on the "RESEND" version.
+> Oh! 
+> 
+> --- a/drivers/iommu/iommufd/Kconfig
+> +++ b/drivers/iommu/iommufd/Kconfig
+> @@ -37,6 +37,7 @@ config IOMMUFD_TEST
+>         depends on DEBUG_KERNEL
+>         depends on FAULT_INJECTION
+>         depends on RUNTIME_TESTING_MENU
+> +       select IOMMUFD_DRIVER
+>         default n
+>         help
+>           This is dangerous, do not enable unless running
+> 
+Tested this patch on my system and it fixes all issues for ARM64. Please
+add tag for this Kconfig patch:
+Tested by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 
-Right, sorry. Since there were just a few trivial comments
-I've fixed them up in my review-hans branch now, thank you
-for the review.
+Also please accept the patch in this current series.
+> 
+> ???
+> 
+> Jason
 
-> Thank you for your reviewing.
-> Please review the RESEND patch and I'll fix them according to Andy's comments.
-
-No need to do a new version I've squashed fixed for Andy's remarks +
-Andy's commit msg remarks into the version in my review-hans branch.
-
-Note I'm going offline for a long weekend and I won't be
-replying to emails until next week Tuesday.
-
-Regards,
-
-Hans
-
-
+-- 
+BR,
+Muhammad Usama Anjum
