@@ -1,100 +1,215 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CB6155734;
-	Wed, 27 Mar 2024 12:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB9115572A;
+	Wed, 27 Mar 2024 12:15:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711541750; cv=none; b=HIPP92JH53WrSTL5z1iblJPmCrapNljF/J2sc1Mi+oRoR25GpOnOMjfqcyIFju35/9ehyoW1194yYDBaWcuGqHEnHo3gnK2Es3eMQtZEWIFxOLQ/qXD5Z3DYrGVhKyQHaNd0G4wT/FI0uewTsTLJ3dPLI98h401unyJ9iNc2jpk=
+	t=1711541750; cv=none; b=onqtpLX3WkgiCQlVIv+Pil/otxt0JTmzCIa3YRfARJnVoHcPSpFaCBmIdGBJO1W+kCYdj0Q7XY7wxnq9zqSexf96/K0VqvDhBLYllFHeYcK1K9PPWP8EnGQ5L9AKRE34u6zwh2xC/4I1lYlVcRnR0RzniiZps949BqE/7PpphHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711541750; c=relaxed/simple;
-	bh=gSEg3FsJ7yLa9wiYXBGrlsIdWly0md4ZNt4KTha+zec=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tyqSWp6E8/AZTrwijK7NKAL26jZsQM+tYaOBtd/lz26ZR9f7JPKUgm6EC63qlO79tDrs3BD6d+TJsWnNi5TAf5UclfPSqiNj2Q18KCUV2ozqCO3zSz+it+NZUTJOAgDejzuHXxbjN8vAUrn5cMH5iQZzAvwz83oPfIhWJrLsTl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VTfRb8LF; arc=none smtp.client-ip=10.30.226.201
+	bh=k0NLiHpCEzJ5lJ8XZ06wUsWMe4rbmWJ5Hehw3aKgT14=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ZIbRps9anZB2gAjLvBEOERcYJaItQENjiglpFQkLkkX09N1EMhtVqfAXok/4CmHHYSk7Z9gOTwrl8DgfmPqvkuilGPpBi5aLpFvKpwTsPH4z1AH3NJeLxfuF7d2o35UELn7mXZHFSvkuaH+z1ciTGn85d26HVE7e/y9ciSnWKfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=T+wUnklq; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VTfRb8LF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06599C43390;
-	Wed, 27 Mar 2024 12:15:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711541749;
-	bh=gSEg3FsJ7yLa9wiYXBGrlsIdWly0md4ZNt4KTha+zec=;
-	h=From:To:Cc:Subject:Date:From;
-	b=VTfRb8LFdHV73nW+pph4G1QOOue8RZbpDMTwKZiWRjteQe/+s1J9nAd7eGq9kDNFD
-	 AU+9wV9wIOHqRLPjcNZIFJqSNMCoWQbqDXU3ZEJuBNURNqlBgTWfLNq9/W4wri6D5G
-	 ewebDUYlq/3H2g6OsIZciCD7I1z+7mIfIsthG3qEAN9E9pX25Cry4wgwMdDl9qkW8q
-	 iE7L69GyVU6ww/22oyaVhzZb0yZ7QRZKRmKBP+tK7mwCTz7d1/xbDxHXLpuUQhYxD0
-	 AKnTcBMK4lVrFADpNE3LouvPPG3elbmEUKoVxlx6buX4OLMU1KkCxHB8GcxEuFTOLx
-	 VweSCDyi9zVQw==
-From: Sasha Levin <sashal@kernel.org>
-To: stable@vger.kernel.org,
-	ville.syrjala@linux.intel.com
-Cc: Jani Nikula <jani.nikula@intel.com>,
-	intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: FAILED: Patch "drm/i915/dp: Limit SST link rate to <=8.1Gbps" failed to apply to 5.15-stable tree
-Date: Wed, 27 Mar 2024 08:15:47 -0400
-Message-ID: <20240327121548.2832193-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="T+wUnklq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1711541747;
+	bh=k0NLiHpCEzJ5lJ8XZ06wUsWMe4rbmWJ5Hehw3aKgT14=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=T+wUnklqoqOfGP13G/JdBdrKyWYUuvPwp78XkUWc9qIE1DWZBXKYmXMfQ75E6CBgM
+	 RYo5TTqCeAzc1D7EFv3zx3N9vHNILPt3RTUoxPbIZ8QBdI15x37JR4JUoI92/cMVI1
+	 x9H9o8OJoGxMWB6VgS7BcTKrKWeQ+B2lKGyeXEfPlkgJ8SYGCdVDA9HjrIIxIupfvu
+	 gRa5UELl/MW2YeI3fK6entdNqjs/I3oT85DH+W4LPamr55CozhVeyvLcixi22wBwPi
+	 N0rBqfYD05Z8IMsF7Hm4S/WFxvWmtu7gqYyluqQ1wZTKnzeST22UbaIPYPihnou/gu
+	 nV33NpBg1A0CA==
+Received: from [100.113.15.66] (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 698C937820E4;
+	Wed, 27 Mar 2024 12:15:43 +0000 (UTC)
+Message-ID: <0dacf491-29ec-4c24-927e-978056177648@collabora.com>
+Date: Wed, 27 Mar 2024 17:16:14 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Patchwork-Hint: ignore
-X-stable: review
+User-Agent: Mozilla Thunderbird
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, kernel@collabora.com,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] selftests: x86: test_vsyscall: conform test to TAP
+ format output
+Content-Language: en-US
+To: Shuah Khan <skhan@linuxfoundation.org>, Shuah Khan <shuah@kernel.org>
+References: <20240314103216.286603-1-usama.anjum@collabora.com>
+ <a1a6f5dd-80ab-4d53-90de-eb003c996cc1@linuxfoundation.org>
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <a1a6f5dd-80ab-4d53-90de-eb003c996cc1@linuxfoundation.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The patch below does not apply to the 5.15-stable tree.
-If someone wants it applied there, or to any other stable or longterm
-tree, then please email the backport, including the original git commit
-id to <stable@vger.kernel.org>.
+On 3/27/24 1:00 AM, Shuah Khan wrote:
+> On 3/14/24 04:32, Muhammad Usama Anjum wrote:
+>> Conform the layout, informational and status messages to TAP. No
+>> functional change is intended other than the layout of output messages.
+>> Without using TAP messages, the passed/failed/skip test names cannot be
+>> found.
+>>
+>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+>> ---
+> 
+> 
+> I am seeing lot more changes than conform and formatting changes.
+Counting total number of tests based on architecture was really difficult
+until the code needed to be moved around. I'll split this patch into 2. The
+first part would just simplify the test by moving functions around and use
+#ifdef precisely. The seconds part would convert it to the TAP.
 
-Thanks,
-Sasha
+> 
+>>   tools/testing/selftests/x86/test_vsyscall.c | 506 +++++++++-----------
+>>   1 file changed, 238 insertions(+), 268 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/x86/test_vsyscall.c
+>> b/tools/testing/selftests/x86/test_vsyscall.c
+>> index 47cab972807c4..d4c8e8d79d389 100644
+>> --- a/tools/testing/selftests/x86/test_vsyscall.c
+>> +++ b/tools/testing/selftests/x86/test_vsyscall.c
+>> @@ -21,6 +21,13 @@
+>>   #include <sys/uio.h>
+>>     #include "helpers.h"
+>> +#include "../kselftest.h"
+>> +
+>> +#ifdef __x86_64__
+>> +#define TOTAL_TESTS 13
+>> +#else
+>> +#define TOTAL_TESTS 8
+>> +#endif
+>>     #ifdef __x86_64__
+>>   # define VSYS(x) (x)
+>> @@ -39,18 +46,6 @@
+>>   /* max length of lines in /proc/self/maps - anything longer is skipped
+>> here */
+>>   #define MAPS_LINE_LEN 128
+>>   -static void sethandler(int sig, void (*handler)(int, siginfo_t *, void
+>> *),
+>> -               int flags)
+>> -{
+>> -    struct sigaction sa;
+>> -    memset(&sa, 0, sizeof(sa));
+>> -    sa.sa_sigaction = handler;
+>> -    sa.sa_flags = SA_SIGINFO | flags;
+>> -    sigemptyset(&sa.sa_mask);
+>> -    if (sigaction(sig, &sa, 0))
+>> -        err(1, "sigaction");
+>> -}
+>> -
+> 
+> Why is this deleted?
+> 
+>>   /* vsyscalls and vDSO */
+>>   bool vsyscall_map_r = false, vsyscall_map_x = false;
+>>   @@ -75,83 +70,25 @@ static void init_vdso(void)
+>>       if (!vdso)
+>>           vdso = dlopen("linux-gate.so.1", RTLD_LAZY | RTLD_LOCAL |
+>> RTLD_NOLOAD);
+>>       if (!vdso) {
+>> -        printf("[WARN]\tfailed to find vDSO\n");
+>> +        ksft_print_msg("[WARN] failed to find vDSO\n");
+>>           return;
+>>       }
+>>         vdso_gtod = (gtod_t)dlsym(vdso, "__vdso_gettimeofday");
+>>       if (!vdso_gtod)
+>> -        printf("[WARN]\tfailed to find gettimeofday in vDSO\n");
+>> +        ksft_print_msg("[WARN] failed to find gettimeofday in vDSO\n");
+>>         vdso_gettime = (vgettime_t)dlsym(vdso, "__vdso_clock_gettime");
+>>       if (!vdso_gettime)
+>> -        printf("[WARN]\tfailed to find clock_gettime in vDSO\n");
+>> +        ksft_print_msg("[WARN] failed to find clock_gettime in vDSO\n");
+>>         vdso_time = (time_func_t)dlsym(vdso, "__vdso_time");
+>>       if (!vdso_time)
+>> -        printf("[WARN]\tfailed to find time in vDSO\n");
+>> +        ksft_print_msg("[WARN] failed to find time in vDSO\n");
+>>         vdso_getcpu = (getcpu_t)dlsym(vdso, "__vdso_getcpu");
+>>       if (!vdso_getcpu)
+>> -        printf("[WARN]\tfailed to find getcpu in vDSO\n");
+>> -}
+>> -
+>> -static int init_vsys(void)
+>> -{
+>> -#ifdef __x86_64__
+>> -    int nerrs = 0;
+>> -    FILE *maps;
+>> -    char line[MAPS_LINE_LEN];
+>> -    bool found = false;
+>> -
+>> -    maps = fopen("/proc/self/maps", "r");
+>> -    if (!maps) {
+>> -        printf("[WARN]\tCould not open /proc/self/maps -- assuming
+>> vsyscall is r-x\n");
+>> -        vsyscall_map_r = true;
+>> -        return 0;
+>> -    }
+>> -
+>> -    while (fgets(line, MAPS_LINE_LEN, maps)) {
+>> -        char r, x;
+>> -        void *start, *end;
+>> -        char name[MAPS_LINE_LEN];
+>> -
+>> -        /* sscanf() is safe here as strlen(name) >= strlen(line) */
+>> -        if (sscanf(line, "%p-%p %c-%cp %*x %*x:%*x %*u %s",
+>> -               &start, &end, &r, &x, name) != 5)
+>> -            continue;
+>> -
+>> -        if (strcmp(name, "[vsyscall]"))
+>> -            continue;
+>> -
+>> -        printf("\tvsyscall map: %s", line);
+>> -
+>> -        if (start != (void *)0xffffffffff600000 ||
+>> -            end != (void *)0xffffffffff601000) {
+>> -            printf("[FAIL]\taddress range is nonsense\n");
+>> -            nerrs++;
+>> -        }
+>> -
+>> -        printf("\tvsyscall permissions are %c-%c\n", r, x);
+>> -        vsyscall_map_r = (r == 'r');
+>> -        vsyscall_map_x = (x == 'x');
+>> -
+>> -        found = true;
+>> -        break;
+>> -    }
+>> -
+>> -    fclose(maps);
+>> -
+>> -    if (!found) {
+>> -        printf("\tno vsyscall map in /proc/self/maps\n");
+>> -        vsyscall_map_r = false;
+>> -        vsyscall_map_x = false;
+>> -    }
+>> -
+>> -    return nerrs;
+>> -#else
+>> -    return 0;
+>> -#endif
+>> +        ksft_print_msg("[WARN] failed to find getcpu in vDSO\n");
+>>   }
+>>   
+> 
+> What's going on here?
+> 
+> These changes are more extensive than the changelog indicates.
+> Additional explanation is needed before I can accept this>
+> thanks,
+> -- Shuah
+> 
 
------------------- original commit in Linus's tree ------------------
-
-From 6061811d72e14f41f71b6a025510920b187bfcca Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>
-Date: Thu, 8 Feb 2024 17:45:52 +0200
-Subject: [PATCH] drm/i915/dp: Limit SST link rate to <=8.1Gbps
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-Limit the link rate to HBR3 or below (<=8.1Gbps) in SST mode.
-UHBR (10Gbps+) link rates require 128b/132b channel encoding
-which we have not yet hooked up into the SST/no-sideband codepaths.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20240208154552.14545-1-ville.syrjala@linux.intel.com
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
----
- drivers/gpu/drm/i915/display/intel_dp.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-index ab415f41924d7..5045c34a16be1 100644
---- a/drivers/gpu/drm/i915/display/intel_dp.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp.c
-@@ -2356,6 +2356,9 @@ intel_dp_compute_config_limits(struct intel_dp *intel_dp,
- 	limits->min_rate = intel_dp_common_rate(intel_dp, 0);
- 	limits->max_rate = intel_dp_max_link_rate(intel_dp);
- 
-+	/* FIXME 128b/132b SST support missing */
-+	limits->max_rate = min(limits->max_rate, 810000);
-+
- 	limits->min_lane_count = 1;
- 	limits->max_lane_count = intel_dp_max_lane_count(intel_dp);
- 
 -- 
-2.43.0
-
-
-
-
+BR,
+Muhammad Usama Anjum
