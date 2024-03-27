@@ -1,78 +1,127 @@
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E25249F9;
-	Wed, 27 Mar 2024 06:41:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C974C9D;
+	Wed, 27 Mar 2024 06:43:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711521687; cv=none; b=cjBFLJkhiuEI+1sYGcNjiULBebJZ3hQ0qbWZWlfviFPchSW7lIwNG4X+Qrn4NT3fz7PnjE/PjzsFAq8uxE3p0q9CvlU8al+wh+5wvxV92Pgm+eBgnrDAufdqllCi1l9IKN7qSj1asxbtMPe1vkrLqI6xbSIiIadBTJO3PtlzB5s=
+	t=1711521841; cv=none; b=QLBXSn4I5D5KBipdk9qmvCOu9MSnYx2fu+D+3ED6hFOfPMtbMRo+pl/nySolvVN7/N4PJHbuUQcDMqD/4Ixvl+opZknm67l/99X5t4uVTgpcTMqRyExP3apUEgDyORAIMYRfE2kelqZVMJgAMfFN2aQAWCRHX88MbPSuxsXx43E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711521687; c=relaxed/simple;
-	bh=Veuy1m8uxACdlf5PxY31xxr+35oOGhJJBwn68nyJ7qQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cyZJTwiDrJibGGLajlFlXjIaY6Krr6vKDdwanO9q3HEKZapvizhCAP4OmN/cP34zrg31kTTFzGbupduHf5dPElkRc2nHvOayrPPdI/AVmDPDFQAH7XSH6s9yZiiFocHTzaUetVBrH/29oLxDXBT1uvEufbls94EMuknja+O7F10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UqhmHbfT; arc=none smtp.client-ip=209.85.161.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711521841; c=relaxed/simple;
+	bh=gjxD+4XwapFfO+Ut0KmYydbgFTnH0aPydPXYf435b9o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rdIbXgA9R4vIOAgpp4QqWrpA4UGOxJ0BOdERHHf8KuXBoGo7HHbA+wqaT930szkhJDdSZhlvWUE8Nbe1ncnUz/UKuKHqclPgo67op6zrXx2BHlFn3u5s64Liwu2/2t2uKijYPC4giaxWLGE0BtSKCmckXk6xGFlK8b9EalFzDvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M0F6D7d8; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UqhmHbfT"
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5a4a2d99598so2922314eaf.2;
-        Tue, 26 Mar 2024 23:41:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711521685; x=1712126485; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Veuy1m8uxACdlf5PxY31xxr+35oOGhJJBwn68nyJ7qQ=;
-        b=UqhmHbfTtpFSORuRzSP6vYEtJ33VuxU4aFreq3glSVQg5sl0HOyMceh5USYkrdKcQT
-         vRE25UUIqHucp1OmMNX5se9dw/lUfI7sku6vnccLLcUXB5rcUrSxVMPjk/Lr0BcAHb3H
-         bdNfTpuwyo3qgwYJS7oCqWoT7YMsVzUGm9kTZoYV69uLwcJji7VkBnq4fxmHFEVjnyi2
-         UCRGm/AS8YJ4qn9LB/c7r3Ga9omsdmvZ/RvVJOoZj2DcfEK4dYkaan2YKolYL10Cfuy6
-         9eCn4VIIGKUyWLKDRF5O/ggDsFxHfJdeqpDCdE8QeM4q+xWKFECPo/8lGpyK5qussK4p
-         Df/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711521685; x=1712126485;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Veuy1m8uxACdlf5PxY31xxr+35oOGhJJBwn68nyJ7qQ=;
-        b=YBAdwDtzdKyJAEO4hTLENuZknfIlTRIn4SN6NNMEjI1II6FOtnHpSZAFwduj0crI5x
-         hH7IzuH2VorVqozqRdr/EZQ29aeqexI9vQA4Y33wyY/sI4xsSwn01M/eizjA73DICLVE
-         WSoOgesFJKVHk22adIlAtPSjH+7XEvbBPZiEuCPPy8fB/i2DGSy+VUTTQD2Sp6v/faHy
-         x92w0HPJkFpdRl8es5q40Unz9sslO1UfDOwvfo6bgzvF5/sl+sk81qHTIEZsKFwE1ZX4
-         HbFme5GaTjjkJX1P9yLKd9eF3vM8Vd3GkBWcnfHckH030Y7edgWH+tnzQE8v983EEGA5
-         EnPg==
-X-Forwarded-Encrypted: i=1; AJvYcCVzzPqc+wBYeA+ms3dFx1Sfvl4cMNieA8jm2JLMKDNzpXi2A9M3NUtEod/IXJneQYbUDzzuz+IDXSd0OkrukHfCmSiOGTtP/HKVmiHP5zz6GbaV+q8c1Yt4A8FCJUSJhYaH9tkd75qYotkrPOVUS4NVeOtpPKj+HgiUBlkx2YQYQUtniw==
-X-Gm-Message-State: AOJu0Yy4Iy7RSxds2mSh9LDOeDHqrgRnlPzkh8R9vPJypT/H1/PIkT9C
-	yLEaItpP3XV2FqrrVgOMFlCg0HGfTvTO2h7x2Zll9KQ8gJfciw3bXh12LiaIJ0eDK58mnF8XgKe
-	NFtCRsKpdeTiFwgq8lGaiTmpr0zI=
-X-Google-Smtp-Source: AGHT+IF8vDHk6Q1MwxoTL2+6tFKjhcI/muzpbx+Te0ONd18hgyVPNKFYdO09+0hEVm1IVvQjzt1TR0Sry4UYUnsMeHQ=
-X-Received: by 2002:a05:6870:5488:b0:222:d6a:9ae8 with SMTP id
- f8-20020a056870548800b002220d6a9ae8mr1751114oan.35.1711521685119; Tue, 26 Mar
- 2024 23:41:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M0F6D7d8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711521840; x=1743057840;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=gjxD+4XwapFfO+Ut0KmYydbgFTnH0aPydPXYf435b9o=;
+  b=M0F6D7d8kfGuBzYatjKPF+uZ0rWCmkRjfEZSh6pj/Q6+NtSMqfLTetCk
+   nUv2ZZ5rqkEoL5C+3BdntCN73H8phJANG8QRcGHpigYKLeaCoIzRnMQ9G
+   bs+/PRN9yLNtoqnKkThFHVeW4eKL7sSzUBNq8ErvJMA0AV36USA3p55U/
+   qxw7x8v7UVdADoIYvQo31Or9J0DNZpvOYjvi9Fq25zGRQdcc722GzqyDe
+   7k5npCNdgZ0jPVzsfXAXYS1lB+JmYopXFxEQuTRi9/RTeYyhcIDgZdwIZ
+   dFZz3BiyOhclqolBiQJtn5Ob0XWF+POTIwGKlJnBduGWMXnBiCC7rBhc+
+   w==;
+X-CSE-ConnectionGUID: pwNbSCW7Tt2t2El/7gYn0A==
+X-CSE-MsgGUID: UN6wFzF2R0Oh1FN8W1q1dw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="6735529"
+X-IronPort-AV: E=Sophos;i="6.07,158,1708416000"; 
+   d="scan'208";a="6735529"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 23:43:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,158,1708416000"; 
+   d="scan'208";a="16577421"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.125.242.198]) ([10.125.242.198])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 23:43:56 -0700
+Message-ID: <894d480c-5785-4896-bb79-9560611347cb@linux.intel.com>
+Date: Wed, 27 Mar 2024 14:43:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240327054014.36864-1-animeshagarwal28@gmail.com> <171152048362.993925.5771433856261368802.robh@kernel.org>
-In-Reply-To: <171152048362.993925.5771433856261368802.robh@kernel.org>
-From: Animesh Agarwal <animeshagarwal28@gmail.com>
-Date: Wed, 27 Mar 2024 12:11:14 +0530
-Message-ID: <CAE3Oz82AgokcQWJXJVvxYQZzqUURyv=2h=-uCgX4tbLu6Z2jLA@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: ata: ahci-da850: Convert to dtschema
-To: Rob Herring <robh@kernel.org>
-Cc: Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [kvm-unit-tests Patch v3 03/11] x86: pmu: Add asserts to warn
+ inconsistent fixed events and counters
+Content-Language: en-US
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Jim Mattson <jmattson@google.com>,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Zhenyu Wang <zhenyuw@linux.intel.com>, Zhang Xiong
+ <xiong.y.zhang@intel.com>, Like Xu <like.xu.linux@gmail.com>,
+ Jinrong Liang <cloudliang@tencent.com>, Dapeng Mi <dapeng1.mi@intel.com>
+References: <20240103031409.2504051-1-dapeng1.mi@linux.intel.com>
+ <20240103031409.2504051-4-dapeng1.mi@linux.intel.com>
+ <ZgOu5PP2qXhbflRc@google.com>
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <ZgOu5PP2qXhbflRc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 27, 2024 at 11:51=E2=80=AFAM Rob Herring <robh@kernel.org> wrot=
-e:
-> My bot found errors running 'make DT_CHECKER_FLAGS=3D-m dt_binding_check'
-> on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Sorry about the issue, I am fixing it now.
+On 3/27/2024 1:30 PM, Mingwei Zhang wrote:
+> On Wed, Jan 03, 2024, Dapeng Mi wrote:
+>> Current PMU code deosn't check whether PMU fixed counter number is
+>> larger than pre-defined fixed events. If so, it would cause memory
+>> access out of range.
+>>
+>> So add assert to warn this invalid case.
+>>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Reviewed-by: Mingwei Zhang <mizhang@google.com>
+>> ---
+>>   x86/pmu.c | 10 ++++++++--
+>>   1 file changed, 8 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/x86/pmu.c b/x86/pmu.c
+>> index a13b8a8398c6..a42fff8d8b36 100644
+>> --- a/x86/pmu.c
+>> +++ b/x86/pmu.c
+>> @@ -111,8 +111,12 @@ static struct pmu_event* get_counter_event(pmu_counter_t *cnt)
+>>   		for (i = 0; i < gp_events_size; i++)
+>>   			if (gp_events[i].unit_sel == (cnt->config & 0xffff))
+>>   				return &gp_events[i];
+>> -	} else
+>> -		return &fixed_events[cnt->ctr - MSR_CORE_PERF_FIXED_CTR0];
+>> +	} else {
+>> +		int idx = cnt->ctr - MSR_CORE_PERF_FIXED_CTR0;
+> maybe unsigned int is better?
+
+Make sense. Thanks for review.
+
+>> +
+>> +		assert(idx < ARRAY_SIZE(fixed_events));
+>> +		return &fixed_events[idx];
+>> +	}
+>>   
+>>   	return (void*)0;
+>>   }
+>> @@ -245,6 +249,7 @@ static void check_fixed_counters(void)
+>>   	};
+>>   	int i;
+>>   
+>> +	assert(pmu.nr_fixed_counters <= ARRAY_SIZE(fixed_events));
+>>   	for (i = 0; i < pmu.nr_fixed_counters; i++) {
+>>   		cnt.ctr = fixed_events[i].unit_sel;
+>>   		measure_one(&cnt);
+>> @@ -266,6 +271,7 @@ static void check_counters_many(void)
+>>   			gp_events[i % gp_events_size].unit_sel;
+>>   		n++;
+>>   	}
+>> +	assert(pmu.nr_fixed_counters <= ARRAY_SIZE(fixed_events));
+>>   	for (i = 0; i < pmu.nr_fixed_counters; i++) {
+>>   		cnt[n].ctr = fixed_events[i].unit_sel;
+>>   		cnt[n].config = EVNTSEL_OS | EVNTSEL_USR;
+>> -- 
+>> 2.34.1
+>>
