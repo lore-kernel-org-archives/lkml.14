@@ -1,530 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C70D131197;
-	Wed, 27 Mar 2024 14:44:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C842512F5B4;
+	Wed, 27 Mar 2024 14:45:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711550684; cv=none; b=RPFfnjEzJLMtmJ82F+59UQJ2D3RAWGLpmMpy2L7bX5OqkpBddg/CNIz1eMXegbt7uYi8Mkp01ZIurzOh40qStk71v40B5XWOhgDrw2UfqLHbQ/SVmtUcFXZI6E5IN1bwm7EiR/m3IfPHZjXrMeW5pz0GJmjY2q6aqFAiGEdVRK8=
+	t=1711550714; cv=none; b=LW+Ge+8EVItjxYnYmiR+kRXajXm8zSlOC2+dHYVEqQCl95jHJ52TAYHxn9q/HCt0JOnj+J9mAzEhjtrPD4MfcAT2Ktu6ONSTHMJzlXObqzWwzZUYm7xepNgjAAoJQFYV15OhwCWCyvHnxrnagUO+x8Vjuv9GO58wgCpF20vKeSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711550684; c=relaxed/simple;
-	bh=AS8Dn6hQC+bzM3iGPLZ41ITzx0BRa6l0wc10olNRkwE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IwLQXMGXLsPKUkkQzlRb/xOwDr1vdFEe7KR8F5wPSJzTxaZK0M7ckDuXzLpjU5j19d0Su03hbgcmv19SaHU/YQuBCurwUbe5yE/Mq058M55x6U2W3rzhFZWUPuWnJKbz5xd0rRMA3W3ezFq10yRXMVuOziCp7DCunTa2gloO64c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ndZafUL0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711550714; c=relaxed/simple;
+	bh=G6ZV58zkX33Obd5w85Utc6DxXzyUWVj1uIRJ4W5Xwao=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MoRm/Y3zK99feljTAilGfv8Ri0R77HspDOGW7/Xf7wgbIjAM1+Foevr1nZeJPtaerjO0q6oRLEhONDAu9v4I+KKoui04h4i4ZFDepJJL6JV/Qloj9i/eWKhN9hBvtR4hONW5XwuPFYO0rfmK8tDWQlZ9tLiGqE2VC0CLyM7Bilw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NhsGwOJZ; arc=none smtp.client-ip=209.85.160.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ndZafUL0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17213C43390;
-	Wed, 27 Mar 2024 14:44:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711550683;
-	bh=AS8Dn6hQC+bzM3iGPLZ41ITzx0BRa6l0wc10olNRkwE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ndZafUL0QM8QCzypjZH0wZgKxdqEHr9XRPhCrlkfLwntuquujRofS0S5C2WWIqsCV
-	 V2bKW99mbBdAlpAu/NwWySWq8O9P1YZZnN+A0qOSU6DAR8KF6AD8S3fPIgv52DjAxw
-	 OgXCj7s8RjLDGaB/im47wtIsu7s9yTswQv2+x7Xpa1gkVKHHBbnuQ2giwwbua/SK2q
-	 iNdYSynD8+XvCNxRdN0SLlwnzJLeOOx54qgBsRT3SBcdbnBfTwXmM9VG/RKNM9zmjF
-	 n+kFsMUR6imG1H5ITg6Y0BcMllo7sbpCn2zhDW1r6Wi3/VIysl/e4tmVC0TIZseIa3
-	 dlTmvQuOBFXtg==
-Date: Wed, 27 Mar 2024 16:43:58 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH RFC 1/3] mm/gup: consistently name GUP-fast functions
-Message-ID: <ZgQwrlyGpvgxwufT@kernel.org>
-References: <20240327130538.680256-1-david@redhat.com>
- <20240327130538.680256-2-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NhsGwOJZ"
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-22215ccbafeso3298504fac.0;
+        Wed, 27 Mar 2024 07:45:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711550712; x=1712155512; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wnV36qdnlfNuyZS7uSndjgNOhrMaNYjde0YXgs5g7cc=;
+        b=NhsGwOJZZl0/rznnBHHcNZa0YZ13i6Gv9Gn7nBNeNZza0f/HhWwi0h/jR6sqGuQvBc
+         GeAv6hR2bzjK21dRRXXn8oEP+gfaIGK7YGF/igjAvOrF0EW+pOxe2RI+rJDYP0lcT0y7
+         Fg4inW0KPMB3DYJ0Eoz8+jaBxqdH5tS27PJOk/YVs160S3W/FFSsqoAtQUG6irc/pQr4
+         HirGACH2qIKUtqRqewAdZyke/odSN1jHLz8AWU63KOPvFFpT+JoAlUf6NfgeTHNXFBw2
+         qKdjXpnV/vOf+Dlc0TnP0Z/dkIFF6boHHSe9Pdp7aWOawBxkKoatEgPv+oRbyy20D6IH
+         waHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711550712; x=1712155512;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wnV36qdnlfNuyZS7uSndjgNOhrMaNYjde0YXgs5g7cc=;
+        b=TBRNdOxfK+gRImUVP0oZoxIVj/2yw0lTpGvpU5mm+132IzdjOEomTajsZHdNj3U3wq
+         EzkEea+pRGVc58EiCdy8CQAeXVAGzh/P8r6VMLpIungR8cwVqIXKc9gnuYX35MGpo3n1
+         rgmCePygHUL7U/dEc62HZrNPJbFrd8Q1uxE8IAzcM1evIBdDU+4mJkuS6XNhdUSQzDZG
+         asXYko5XecXkUW75bO8EAyITXlng3TQI8YzBmsgzTF4QoJBi7WT6GAmwQCOu+WqDxOZh
+         gPtAHQFkrfXxd/ZhmhJ2q34UsDKn7IRIK2ypVTWlayeEsoTryiEqcCfBByHuXmO5FX/U
+         bSwg==
+X-Forwarded-Encrypted: i=1; AJvYcCU9sU77PNN2GgWVq0TUZM8hX0oLdkArts42L/gkHVyJbRcFCJbdlnjb9V3U8w+zdQCv6LtinoZ42Jko4IMW+lKQPRrvLg/Z0xfQImmriFBgoOZIiW4TcWoSJrKpM67dpU003B3GxcRJv2T9p5WvU7rKoWbIBJmFX+WvTzgNym5b
+X-Gm-Message-State: AOJu0YxaaXM27uL4k86P68LSawqkZPoojyhRtg+9MrKUJfi5miWfVX3B
+	dlxunCTtvOd4NJbNpf1uJaIWM7c/X/teNdsC708LrneWV0XF2eYLZ0DLYUTj
+X-Google-Smtp-Source: AGHT+IEkWkV4lUpvnsYu7XLudbEd8vmyWcxUpYjFmWonSSskQrRN0x5sPtw6hSk+bBCwA8ltYgeINQ==
+X-Received: by 2002:a05:6870:1c8:b0:229:f61d:7e52 with SMTP id n8-20020a05687001c800b00229f61d7e52mr6908575oad.34.1711550711899;
+        Wed, 27 Mar 2024 07:45:11 -0700 (PDT)
+Received: from [10.0.2.15] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
+        by smtp.gmail.com with ESMTPSA id fj11-20020a056a003a0b00b006eab7ca005esm3808785pfb.18.2024.03.27.07.45.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Mar 2024 07:45:11 -0700 (PDT)
+Message-ID: <8ce05c2d-eb0d-4c30-8e1e-eaf22528779e@gmail.com>
+Date: Wed, 27 Mar 2024 23:45:07 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240327130538.680256-2-david@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: FAILED: Patch "docs: Makefile: Add dependency to $(YNL_INDEX) for
+ targets other than htmldocs" failed to apply to 6.7-stable tree
+To: Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org
+Cc: Thorsten Blum <thorsten.blum@toblux.com>, Breno Leitao
+ <leitao@debian.org>, Jakub Kicinski <kuba@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Jonathan Corbet <corbet@lwn.net>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240327120842.2826444-1-sashal@kernel.org>
+Content-Language: en-US
+From: Akira Yokosawa <akiyks@gmail.com>
+In-Reply-To: <20240327120842.2826444-1-sashal@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 27, 2024 at 02:05:36PM +0100, David Hildenbrand wrote:
-> Let's consistently call the "fast-only" part of GUP "GUP-fast" and rename
-> all relevant internal functions to start with "gup_fast", to make it
-> clearer that this is not ordinary GUP. The current mixture of
-> "lockless", "gup" and "gup_fast" is confusing.
+On Wed, 27 Mar 2024 08:08:42 -0400, Sasha Levin wrote:
+> The patch below does not apply to the 6.7-stable tree.
+> If someone wants it applied there, or to any other stable or longterm
+> tree, then please email the backport, including the original git commit
+> id to <stable@vger.kernel.org>.
 > 
-> Further, avoid the term "huge" when talking about a "leaf" -- for
-> example, we nowadays check pmd_leaf() because pmd_huge() is gone. For the
-> "hugepd"/"hugepte" stuff, it's part of the name ("is_hugepd"), so that
-> says.
+> Thanks,
+> Sasha
+> 
+> ------------------ original commit in Linus's tree ------------------
+> 
+> From a304fa1d10fcb974c117d391e5b4d34c2baa9a62 Mon Sep 17 00:00:00 2001
+> From: Akira Yokosawa <akiyks@gmail.com>
+> Date: Tue, 5 Mar 2024 13:23:00 +0900
+> Subject: [PATCH] docs: Makefile: Add dependency to $(YNL_INDEX) for targets
+>  other than htmldocs
+> 
+> Commit f061c9f7d058 ("Documentation: Document each netlink family")
+> added recipes for YAML -> RST conversion.
+> Then commit 7da8bdbf8f5d ("docs: Makefile: Fix make cleandocs by
+> deleting generated .rst files") made sure those converted .rst files
+> are cleaned by "make cleandocs".
+> 
+> However, they took care of htmldocs build only.
+> 
+> If one of other targets such as latexdocs or epubdocs is built
+> without building htmldocs, missing .rst files can cause additional
+> WARNINGs from sphinx-build as follow:
+> 
+>     ./Documentation/userspace-api/netlink/specs.rst:18: WARNING: undefined label: 'specs'
+>     ./Documentation/userspace-api/netlink/netlink-raw.rst:64: WARNING: unknown document: '../../networking/netlink_spec/rt_link'
+>     ./Documentation/userspace-api/netlink/netlink-raw.rst:64: WARNING: unknown document: '../../networking/netlink_spec/tc'
+>     ./Documentation/userspace-api/netlink/index.rst:21: WARNING: undefined label: 'specs'
+> 
+> Add dependency to $(YNL_INDEX) for other targets and allow any targets
+> to be built cleanly right after "make cleandocs".
+> 
+> Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
+> Cc: stable@vger.kernel.org  # v6.7
 
-typo: stays
+My bad.
 
-> What remains is the "external" interface:
-> * get_user_pages_fast_only()
-> * get_user_pages_fast()
-> * pin_user_pages_fast()
-> 
-> And the "internal" interface that handles GUP-fast + fallback:
-> * internal_get_user_pages_fast()
-> 
-> The high-level internal function for GUP-fast is now:
-> * gup_fast()
-> 
-> The basic GUP-fast walker functions:
-> * gup_pgd_range() -> gup_fast_pgd_range()
-> * gup_p4d_range() -> gup_fast_p4d_range()
-> * gup_pud_range() -> gup_fast_pud_range()
-> * gup_pmd_range() -> gup_fast_pmd_range()
-> * gup_pte_range() -> gup_fast_pte_range()
-> * gup_huge_pgd()  -> gup_fast_pgd_leaf()
-> * gup_huge_pud()  -> gup_fast_pud_leaf()
-> * gup_huge_pmd()  -> gup_fast_pmd_leaf()
-> 
-> The weird hugepd stuff:
-> * gup_huge_pd() -> gup_fast_hugepd()
-> * gup_hugepte() -> gup_fast_hugepte()
-> 
-> The weird devmap stuff:
-> * __gup_device_huge_pud() -> gup_fast_devmap_pud_leaf()
-> * __gup_device_huge_pmd   -> gup_fast_devmap_pmd_leaf()
-> * __gup_device_huge()     -> gup_fast_devmap_leaf()
-> 
-> Helper functions:
-> * unpin_user_pages_lockless() -> gup_fast_unpin_user_pages()
-> * gup_fast_folio_allowed() is already properly named
-> * gup_fast_permitted() is already properly named
-> 
-> With "gup_fast()", we now even have a function that is referred to in
-> comment in mm/mmu_gather.c.
-> 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+This should have been "# v6.8".
+No need of backport.  Sorry for making the noise.
 
-Reviewed-by: Mike Rapoport (IBM) <rppt@kernel.org>
+        Regards, Akira
 
+> Cc: Thorsten Blum <thorsten.blum@toblux.com>
+> Cc: Breno Leitao <leitao@debian.org>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Reviwed-by: Breno Leitao <leitao@debian.org>
+> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+> Message-ID: <e876e3c8-109d-4bc8-9916-05a4bc4ee9ac@gmail.com>
 > ---
->  mm/gup.c | 164 ++++++++++++++++++++++++++++---------------------------
->  1 file changed, 84 insertions(+), 80 deletions(-)
+>  Documentation/Makefile | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 03b74b148e30..c293aff30c5d 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -440,7 +440,7 @@ void unpin_user_page_range_dirty_lock(struct page *page, unsigned long npages,
->  }
->  EXPORT_SYMBOL(unpin_user_page_range_dirty_lock);
+> diff --git a/Documentation/Makefile b/Documentation/Makefile
+> index 4479910166fc1..b68f8c816897b 100644
+> --- a/Documentation/Makefile
+> +++ b/Documentation/Makefile
+> @@ -111,7 +111,9 @@ $(YNL_INDEX): $(YNL_RST_FILES)
+>  $(YNL_RST_DIR)/%.rst: $(YNL_YAML_DIR)/%.yaml $(YNL_TOOL)
+>  	$(Q)$(YNL_TOOL) -i $< -o $@
 >  
-> -static void unpin_user_pages_lockless(struct page **pages, unsigned long npages)
-> +static void gup_fast_unpin_user_pages(struct page **pages, unsigned long npages)
->  {
->  	unsigned long i;
->  	struct folio *folio;
-> @@ -2431,7 +2431,7 @@ long get_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
->  EXPORT_SYMBOL(get_user_pages_unlocked);
->  
->  /*
-> - * Fast GUP
-> + * GUP-fast
->   *
->   * get_user_pages_fast attempts to pin user pages by walking the page
->   * tables directly and avoids taking locks. Thus the walker needs to be
-> @@ -2445,7 +2445,7 @@ EXPORT_SYMBOL(get_user_pages_unlocked);
->   *
->   * Another way to achieve this is to batch up page table containing pages
->   * belonging to more than one mm_user, then rcu_sched a callback to free those
-> - * pages. Disabling interrupts will allow the fast_gup walker to both block
-> + * pages. Disabling interrupts will allow the gup_fast() walker to both block
->   * the rcu_sched callback, and an IPI that we broadcast for splitting THPs
->   * (which is a relatively rare event). The code below adopts this strategy.
->   *
-> @@ -2589,9 +2589,9 @@ static void __maybe_unused undo_dev_pagemap(int *nr, int nr_start,
->   * also check pmd here to make sure pmd doesn't change (corresponds to
->   * pmdp_collapse_flush() in the THP collapse code path).
->   */
-> -static int gup_pte_range(pmd_t pmd, pmd_t *pmdp, unsigned long addr,
-> -			 unsigned long end, unsigned int flags,
-> -			 struct page **pages, int *nr)
-> +static int gup_fast_pte_range(pmd_t pmd, pmd_t *pmdp, unsigned long addr,
-> +		unsigned long end, unsigned int flags, struct page **pages,
-> +		int *nr)
->  {
->  	struct dev_pagemap *pgmap = NULL;
->  	int nr_start = *nr, ret = 0;
-> @@ -2688,20 +2688,19 @@ static int gup_pte_range(pmd_t pmd, pmd_t *pmdp, unsigned long addr,
->   *
->   * For a futex to be placed on a THP tail page, get_futex_key requires a
->   * get_user_pages_fast_only implementation that can pin pages. Thus it's still
-> - * useful to have gup_huge_pmd even if we can't operate on ptes.
-> + * useful to have gup_fast_pmd_leaf even if we can't operate on ptes.
->   */
-> -static int gup_pte_range(pmd_t pmd, pmd_t *pmdp, unsigned long addr,
-> -			 unsigned long end, unsigned int flags,
-> -			 struct page **pages, int *nr)
-> +static int gup_fast_pte_range(pmd_t pmd, pmd_t *pmdp, unsigned long addr,
-> +		unsigned long end, unsigned int flags, struct page **pages,
-> +		int *nr)
->  {
->  	return 0;
->  }
->  #endif /* CONFIG_ARCH_HAS_PTE_SPECIAL */
->  
->  #if defined(CONFIG_ARCH_HAS_PTE_DEVMAP) && defined(CONFIG_TRANSPARENT_HUGEPAGE)
-> -static int __gup_device_huge(unsigned long pfn, unsigned long addr,
-> -			     unsigned long end, unsigned int flags,
-> -			     struct page **pages, int *nr)
-> +static int gup_fast_devmap_leaf(unsigned long pfn, unsigned long addr,
-> +	unsigned long end, unsigned int flags, struct page **pages, int *nr)
->  {
->  	int nr_start = *nr;
->  	struct dev_pagemap *pgmap = NULL;
-> @@ -2734,15 +2733,15 @@ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
->  	return addr == end;
->  }
->  
-> -static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
-> -				 unsigned long end, unsigned int flags,
-> -				 struct page **pages, int *nr)
-> +static int gup_fast_devmap_pmd_leaf(pmd_t orig, pmd_t *pmdp, unsigned long addr,
-> +		unsigned long end, unsigned int flags, struct page **pages,
-> +		int *nr)
->  {
->  	unsigned long fault_pfn;
->  	int nr_start = *nr;
->  
->  	fault_pfn = pmd_pfn(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
-> -	if (!__gup_device_huge(fault_pfn, addr, end, flags, pages, nr))
-> +	if (!gup_fast_devmap_leaf(fault_pfn, addr, end, flags, pages, nr))
->  		return 0;
->  
->  	if (unlikely(pmd_val(orig) != pmd_val(*pmdp))) {
-> @@ -2752,15 +2751,15 @@ static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
->  	return 1;
->  }
->  
-> -static int __gup_device_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
-> -				 unsigned long end, unsigned int flags,
-> -				 struct page **pages, int *nr)
-> +static int gup_fast_devmap_pud_leaf(pud_t orig, pud_t *pudp, unsigned long addr,
-> +		unsigned long end, unsigned int flags, struct page **pages,
-> +		int *nr)
->  {
->  	unsigned long fault_pfn;
->  	int nr_start = *nr;
->  
->  	fault_pfn = pud_pfn(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
-> -	if (!__gup_device_huge(fault_pfn, addr, end, flags, pages, nr))
-> +	if (!gup_fast_devmap_leaf(fault_pfn, addr, end, flags, pages, nr))
->  		return 0;
->  
->  	if (unlikely(pud_val(orig) != pud_val(*pudp))) {
-> @@ -2770,17 +2769,17 @@ static int __gup_device_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
->  	return 1;
->  }
->  #else
-> -static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
-> -				 unsigned long end, unsigned int flags,
-> -				 struct page **pages, int *nr)
-> +static int gup_fast_devmap_pmd_leaf(pmd_t orig, pmd_t *pmdp, unsigned long addr,
-> +		unsigned long end, unsigned int flags, struct page **pages,
-> +		int *nr)
->  {
->  	BUILD_BUG();
->  	return 0;
->  }
->  
-> -static int __gup_device_huge_pud(pud_t pud, pud_t *pudp, unsigned long addr,
-> -				 unsigned long end, unsigned int flags,
-> -				 struct page **pages, int *nr)
-> +static int gup_fast_devmap_pud_leaf(pud_t pud, pud_t *pudp, unsigned long addr,
-> +		unsigned long end, unsigned int flags, struct page **pages,
-> +		int *nr)
->  {
->  	BUILD_BUG();
->  	return 0;
-> @@ -2806,9 +2805,9 @@ static unsigned long hugepte_addr_end(unsigned long addr, unsigned long end,
->  	return (__boundary - 1 < end - 1) ? __boundary : end;
->  }
->  
-> -static int gup_hugepte(pte_t *ptep, unsigned long sz, unsigned long addr,
-> -		       unsigned long end, unsigned int flags,
-> -		       struct page **pages, int *nr)
-> +static int gup_fast_hugepte(pte_t *ptep, unsigned long sz, unsigned long addr,
-> +		unsigned long end, unsigned int flags, struct page **pages,
-> +		int *nr)
->  {
->  	unsigned long pte_end;
->  	struct page *page;
-> @@ -2855,7 +2854,7 @@ static int gup_hugepte(pte_t *ptep, unsigned long sz, unsigned long addr,
->  	return 1;
->  }
->  
-> -static int gup_huge_pd(hugepd_t hugepd, unsigned long addr,
-> +static int gup_fast_hugepd(hugepd_t hugepd, unsigned long addr,
->  		unsigned int pdshift, unsigned long end, unsigned int flags,
->  		struct page **pages, int *nr)
->  {
-> @@ -2866,14 +2865,14 @@ static int gup_huge_pd(hugepd_t hugepd, unsigned long addr,
->  	ptep = hugepte_offset(hugepd, addr, pdshift);
->  	do {
->  		next = hugepte_addr_end(addr, end, sz);
-> -		if (!gup_hugepte(ptep, sz, addr, end, flags, pages, nr))
-> +		if (!gup_fast_hugepte(ptep, sz, addr, end, flags, pages, nr))
->  			return 0;
->  	} while (ptep++, addr = next, addr != end);
->  
->  	return 1;
->  }
->  #else
-> -static inline int gup_huge_pd(hugepd_t hugepd, unsigned long addr,
-> +static inline int gup_fast_hugepd(hugepd_t hugepd, unsigned long addr,
->  		unsigned int pdshift, unsigned long end, unsigned int flags,
->  		struct page **pages, int *nr)
->  {
-> @@ -2881,9 +2880,9 @@ static inline int gup_huge_pd(hugepd_t hugepd, unsigned long addr,
->  }
->  #endif /* CONFIG_ARCH_HAS_HUGEPD */
->  
-> -static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
-> -			unsigned long end, unsigned int flags,
-> -			struct page **pages, int *nr)
-> +static int gup_fast_pmd_leaf(pmd_t orig, pmd_t *pmdp, unsigned long addr,
-> +		unsigned long end, unsigned int flags, struct page **pages,
-> +		int *nr)
->  {
->  	struct page *page;
->  	struct folio *folio;
-> @@ -2895,8 +2894,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
->  	if (pmd_devmap(orig)) {
->  		if (unlikely(flags & FOLL_LONGTERM))
->  			return 0;
-> -		return __gup_device_huge_pmd(orig, pmdp, addr, end, flags,
-> -					     pages, nr);
-> +		return gup_fast_devmap_pmd_leaf(orig, pmdp, addr, end, flags,
-> +					        pages, nr);
->  	}
->  
->  	page = nth_page(pmd_page(orig), (addr & ~PMD_MASK) >> PAGE_SHIFT);
-> @@ -2925,9 +2924,9 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
->  	return 1;
->  }
->  
-> -static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
-> -			unsigned long end, unsigned int flags,
-> -			struct page **pages, int *nr)
-> +static int gup_fast_pud_leaf(pud_t orig, pud_t *pudp, unsigned long addr,
-> +		unsigned long end, unsigned int flags, struct page **pages,
-> +		int *nr)
->  {
->  	struct page *page;
->  	struct folio *folio;
-> @@ -2939,8 +2938,8 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
->  	if (pud_devmap(orig)) {
->  		if (unlikely(flags & FOLL_LONGTERM))
->  			return 0;
-> -		return __gup_device_huge_pud(orig, pudp, addr, end, flags,
-> -					     pages, nr);
-> +		return gup_fast_devmap_pud_leaf(orig, pudp, addr, end, flags,
-> +					        pages, nr);
->  	}
->  
->  	page = nth_page(pud_page(orig), (addr & ~PUD_MASK) >> PAGE_SHIFT);
-> @@ -2970,9 +2969,9 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
->  	return 1;
->  }
->  
-> -static int gup_huge_pgd(pgd_t orig, pgd_t *pgdp, unsigned long addr,
-> -			unsigned long end, unsigned int flags,
-> -			struct page **pages, int *nr)
-> +static int gup_fast_pgd_leaf(pgd_t orig, pgd_t *pgdp, unsigned long addr,
-> +		unsigned long end, unsigned int flags, struct page **pages,
-> +		int *nr)
->  {
->  	int refs;
->  	struct page *page;
-> @@ -3010,8 +3009,9 @@ static int gup_huge_pgd(pgd_t orig, pgd_t *pgdp, unsigned long addr,
->  	return 1;
->  }
->  
-> -static int gup_pmd_range(pud_t *pudp, pud_t pud, unsigned long addr, unsigned long end,
-> -		unsigned int flags, struct page **pages, int *nr)
-> +static int gup_fast_pmd_range(pud_t *pudp, pud_t pud, unsigned long addr,
-> +		unsigned long end, unsigned int flags, struct page **pages,
-> +		int *nr)
->  {
->  	unsigned long next;
->  	pmd_t *pmdp;
-> @@ -3025,11 +3025,11 @@ static int gup_pmd_range(pud_t *pudp, pud_t pud, unsigned long addr, unsigned lo
->  			return 0;
->  
->  		if (unlikely(pmd_leaf(pmd))) {
-> -			/* See gup_pte_range() */
-> +			/* See gup_fast_pte_range() */
->  			if (pmd_protnone(pmd))
->  				return 0;
->  
-> -			if (!gup_huge_pmd(pmd, pmdp, addr, next, flags,
-> +			if (!gup_fast_pmd_leaf(pmd, pmdp, addr, next, flags,
->  				pages, nr))
->  				return 0;
->  
-> @@ -3038,18 +3038,20 @@ static int gup_pmd_range(pud_t *pudp, pud_t pud, unsigned long addr, unsigned lo
->  			 * architecture have different format for hugetlbfs
->  			 * pmd format and THP pmd format
->  			 */
-> -			if (!gup_huge_pd(__hugepd(pmd_val(pmd)), addr,
-> -					 PMD_SHIFT, next, flags, pages, nr))
-> +			if (!gup_fast_hugepd(__hugepd(pmd_val(pmd)), addr,
-> +					     PMD_SHIFT, next, flags, pages, nr))
->  				return 0;
-> -		} else if (!gup_pte_range(pmd, pmdp, addr, next, flags, pages, nr))
-> +		} else if (!gup_fast_pte_range(pmd, pmdp, addr, next, flags,
-> +					       pages, nr))
->  			return 0;
->  	} while (pmdp++, addr = next, addr != end);
->  
->  	return 1;
->  }
->  
-> -static int gup_pud_range(p4d_t *p4dp, p4d_t p4d, unsigned long addr, unsigned long end,
-> -			 unsigned int flags, struct page **pages, int *nr)
-> +static int gup_fast_pud_range(p4d_t *p4dp, p4d_t p4d, unsigned long addr,
-> +		unsigned long end, unsigned int flags, struct page **pages,
-> +		int *nr)
->  {
->  	unsigned long next;
->  	pud_t *pudp;
-> @@ -3062,22 +3064,24 @@ static int gup_pud_range(p4d_t *p4dp, p4d_t p4d, unsigned long addr, unsigned lo
->  		if (unlikely(!pud_present(pud)))
->  			return 0;
->  		if (unlikely(pud_leaf(pud))) {
-> -			if (!gup_huge_pud(pud, pudp, addr, next, flags,
-> -					  pages, nr))
-> +			if (!gup_fast_pud_leaf(pud, pudp, addr, next, flags,
-> +					       pages, nr))
->  				return 0;
->  		} else if (unlikely(is_hugepd(__hugepd(pud_val(pud))))) {
-> -			if (!gup_huge_pd(__hugepd(pud_val(pud)), addr,
-> -					 PUD_SHIFT, next, flags, pages, nr))
-> +			if (!gup_fast_hugepd(__hugepd(pud_val(pud)), addr,
-> +					     PUD_SHIFT, next, flags, pages, nr))
->  				return 0;
-> -		} else if (!gup_pmd_range(pudp, pud, addr, next, flags, pages, nr))
-> +		} else if (!gup_fast_pmd_range(pudp, pud, addr, next, flags,
-> +					       pages, nr))
->  			return 0;
->  	} while (pudp++, addr = next, addr != end);
->  
->  	return 1;
->  }
->  
-> -static int gup_p4d_range(pgd_t *pgdp, pgd_t pgd, unsigned long addr, unsigned long end,
-> -			 unsigned int flags, struct page **pages, int *nr)
-> +static int gup_fast_p4d_range(pgd_t *pgdp, pgd_t pgd, unsigned long addr,
-> +		unsigned long end, unsigned int flags, struct page **pages,
-> +		int *nr)
->  {
->  	unsigned long next;
->  	p4d_t *p4dp;
-> @@ -3091,17 +3095,18 @@ static int gup_p4d_range(pgd_t *pgdp, pgd_t pgd, unsigned long addr, unsigned lo
->  			return 0;
->  		BUILD_BUG_ON(p4d_leaf(p4d));
->  		if (unlikely(is_hugepd(__hugepd(p4d_val(p4d))))) {
-> -			if (!gup_huge_pd(__hugepd(p4d_val(p4d)), addr,
-> -					 P4D_SHIFT, next, flags, pages, nr))
-> +			if (!gup_fast_hugepd(__hugepd(p4d_val(p4d)), addr,
-> +					     P4D_SHIFT, next, flags, pages, nr))
->  				return 0;
-> -		} else if (!gup_pud_range(p4dp, p4d, addr, next, flags, pages, nr))
-> +		} else if (!gup_fast_pud_range(p4dp, p4d, addr, next, flags,
-> +					       pages, nr))
->  			return 0;
->  	} while (p4dp++, addr = next, addr != end);
->  
->  	return 1;
->  }
->  
-> -static void gup_pgd_range(unsigned long addr, unsigned long end,
-> +static void gup_fast_pgd_range(unsigned long addr, unsigned long end,
->  		unsigned int flags, struct page **pages, int *nr)
->  {
->  	unsigned long next;
-> @@ -3115,19 +3120,20 @@ static void gup_pgd_range(unsigned long addr, unsigned long end,
->  		if (pgd_none(pgd))
->  			return;
->  		if (unlikely(pgd_leaf(pgd))) {
-> -			if (!gup_huge_pgd(pgd, pgdp, addr, next, flags,
-> -					  pages, nr))
-> +			if (!gup_fast_pgd_leaf(pgd, pgdp, addr, next, flags,
-> +					       pages, nr))
->  				return;
->  		} else if (unlikely(is_hugepd(__hugepd(pgd_val(pgd))))) {
-> -			if (!gup_huge_pd(__hugepd(pgd_val(pgd)), addr,
-> -					 PGDIR_SHIFT, next, flags, pages, nr))
-> +			if (!gup_fast_hugepd(__hugepd(pgd_val(pgd)), addr,
-> +					      PGDIR_SHIFT, next, flags, pages, nr))
->  				return;
-> -		} else if (!gup_p4d_range(pgdp, pgd, addr, next, flags, pages, nr))
-> +		} else if (!gup_fast_p4d_range(pgdp, pgd, addr, next, flags,
-> +					       pages, nr))
->  			return;
->  	} while (pgdp++, addr = next, addr != end);
->  }
->  #else
-> -static inline void gup_pgd_range(unsigned long addr, unsigned long end,
-> +static inline void gup_fast_pgd_range(unsigned long addr, unsigned long end,
->  		unsigned int flags, struct page **pages, int *nr)
->  {
->  }
-> @@ -3144,10 +3150,8 @@ static bool gup_fast_permitted(unsigned long start, unsigned long end)
->  }
->  #endif
->  
-> -static unsigned long lockless_pages_from_mm(unsigned long start,
-> -					    unsigned long end,
-> -					    unsigned int gup_flags,
-> -					    struct page **pages)
-> +static unsigned long gup_fast(unsigned long start, unsigned long end,
-> +		unsigned int gup_flags, struct page **pages)
->  {
->  	unsigned long flags;
->  	int nr_pinned = 0;
-> @@ -3175,16 +3179,16 @@ static unsigned long lockless_pages_from_mm(unsigned long start,
->  	 * that come from THPs splitting.
->  	 */
->  	local_irq_save(flags);
-> -	gup_pgd_range(start, end, gup_flags, pages, &nr_pinned);
-> +	gup_fast_pgd_range(start, end, gup_flags, pages, &nr_pinned);
->  	local_irq_restore(flags);
->  
->  	/*
->  	 * When pinning pages for DMA there could be a concurrent write protect
-> -	 * from fork() via copy_page_range(), in this case always fail fast GUP.
-> +	 * from fork() via copy_page_range(), in this case always fail GUP-fast.
->  	 */
->  	if (gup_flags & FOLL_PIN) {
->  		if (read_seqcount_retry(&current->mm->write_protect_seq, seq)) {
-> -			unpin_user_pages_lockless(pages, nr_pinned);
-> +			gup_fast_unpin_user_pages(pages, nr_pinned);
->  			return 0;
->  		} else {
->  			sanity_check_pinned_pages(pages, nr_pinned);
-> @@ -3224,7 +3228,7 @@ static int internal_get_user_pages_fast(unsigned long start,
->  	if (unlikely(!access_ok((void __user *)start, len)))
->  		return -EFAULT;
->  
-> -	nr_pinned = lockless_pages_from_mm(start, end, gup_flags, pages);
-> +	nr_pinned = gup_fast(start, end, gup_flags, pages);
->  	if (nr_pinned == nr_pages || gup_flags & FOLL_FAST_ONLY)
->  		return nr_pinned;
->  
-> -- 
-> 2.43.2
-> 
+> -htmldocs: $(YNL_INDEX)
+> +htmldocs texinfodocs latexdocs epubdocs xmldocs: $(YNL_INDEX)
+> +
+> +htmldocs:
+>  	@$(srctree)/scripts/sphinx-pre-install --version-check
+>  	@+$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,html,$(var),,$(var)))
+>
 
--- 
-Sincerely yours,
-Mike.
