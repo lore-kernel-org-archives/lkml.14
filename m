@@ -1,114 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93203147C75;
-	Wed, 27 Mar 2024 12:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1114147C8B
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 12:12:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711541544; cv=none; b=DBuG4XVOhqZ7T7LI8SDn335mNUOwKslGaJhLa1Yz4OY1TzSq2w/Rtuxx5N8fdl/1L8QOEAyEuaSjS4uLZvfng0c0gOFszqpq0aH653E4YLGtdwHlJ1IsaYcCXIoVtoIYakWLlGDLh5bX22czl/lTRZkKx2ySXCJqD0W6jjbc/eA=
+	t=1711541550; cv=none; b=fhz50NPQkLHGzJje9RA6ovp7jUQkf6YaSDKx0FJHw0W2iXnOCvxsFAYT7fJWuGmvrqtqvnwHJgrJj7NFzqEplQGaNcPgAF0C8f3AA6tiSBI7hFqZL+YMUGkmBkH/NTxrXxSU4/OURP5y4Ij47abqMI4wtyf+wsJYXoZBjdfjGr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711541544; c=relaxed/simple;
-	bh=xEQD51Y4r4BVDeyhKRxVKu1oI02w3mbL6BBkIsiHqjA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T+HtsXOcKE2mA8vEMgp4Pxrkt72x9s2sxXPkQGZqjTEFT5hOOTVP2NVbf3acayeW8cZJI4eiqm/mZ+4Bg4WU0R4Cd9aRxMuyLZZGbNQHrPVSF96M7BYc4Xz5yyI1oggiRjctdwcI2qZfueNGw3iUb28xkhulq/NZBk2ZGcahMqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SVKR3mTZ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SVKR3mTZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF4DEC433F1;
-	Wed, 27 Mar 2024 12:12:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711541544;
-	bh=xEQD51Y4r4BVDeyhKRxVKu1oI02w3mbL6BBkIsiHqjA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=SVKR3mTZGtpfG57liVyd5jNCw5VwT3jReXKy3boUBkayDCL5qQxjFJnoesT/BKI9O
-	 cK9GLrr2Nyd9ivnPAKe16nfoso/x7wZpEUVcrOl2fpHhKb/4ZfSQ3xhACKurUfDevC
-	 ySSVDd6odeEVzDA6U+B674pHNcn4rFt/UR8VzaRaqXfO3kKl8iYOnvRjUz8V6pfgFi
-	 VWHpCcD1rqNKOITCtR6HO+7s7cI7NuwjmVGyA9yJ+3tZA0QwJVvXB43lroLN7HwAXo
-	 +mmd1Vr2mMqka74dwFYgc2JBRu1/2WQ5+fYax+QkRaNy1qYl+SbPobD2b9idpKlIob
-	 x8Au4bACcMboA==
-From: Sasha Levin <sashal@kernel.org>
-To: stable@vger.kernel.org,
-	srinivasan.shanmugam@amd.com
-Cc: Alex Hung <alex.hung@amd.com>,
-	Aurabindo Pillai <aurabindo.pillai@amd.com>,
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-	Hamza Mahfooz <hamza.mahfooz@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: FAILED: Patch "drm/amd/display: Drop 'acrtc' and add 'new_crtc_state' NULL check for writeback requests." failed to apply to 6.1-stable tree
-Date: Wed, 27 Mar 2024 08:12:21 -0400
-Message-ID: <20240327121222.2829467-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1711541550; c=relaxed/simple;
+	bh=DiOWFNV13xwUAoCXem0V1LNeUxUEOlVmeRbu6TsGaME=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GWzXhcZMCyTdFNdcLcYD+h4UI0743xySlunjNMGjsl2IK6RbIzNbKLo/eoTyReeWDEoqyYMrvjqe3vso5qx2Kuv3xuGnQ92phWPo2InU9h6Y3JPIH+wQ9x5Xk8XgVujaNjTKy8tYit9xbYTFN/kCQCWDnyZcgQ7WRHYds+bMbI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rpS8K-0004ds-Ci; Wed, 27 Mar 2024 13:11:56 +0100
+Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rpS8I-008nwn-4g; Wed, 27 Mar 2024 13:11:54 +0100
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rpS8I-0007xg-0D;
+	Wed, 27 Mar 2024 13:11:54 +0100
+Message-ID: <5f6ab3804baa87f6e2299f668d2ab41be3a13f13.camel@pengutronix.de>
+Subject: Re: [PATCH v5 11/16] drm/vkms: Add YUV support
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Louis Chauvet <louis.chauvet@bootlin.com>, Rodrigo Siqueira
+ <rodrigosiqueiramelo@gmail.com>, Melissa Wen <melissa.srw@gmail.com>, 
+ =?ISO-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>, Haneen Mohammed
+ <hamohammed.sa@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, arthurgrillo@riseup.net, Jonathan Corbet
+ <corbet@lwn.net>,  pekka.paalanen@haloniitty.fi
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com, 
+	thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com, 
+	nicolejadeyee@google.com
+Date: Wed, 27 Mar 2024 13:11:53 +0100
+In-Reply-To: <20240313-yuv-v5-11-e610cbd03f52@bootlin.com>
+References: <20240313-yuv-v5-0-e610cbd03f52@bootlin.com>
+	 <20240313-yuv-v5-11-e610cbd03f52@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Patchwork-Hint: ignore
-X-stable: review
-Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The patch below does not apply to the 6.1-stable tree.
-If someone wants it applied there, or to any other stable or longterm
-tree, then please email the backport, including the original git commit
-id to <stable@vger.kernel.org>.
+Hi Louis,
 
-Thanks,
-Sasha
+On Mi, 2024-03-13 at 18:45 +0100, Louis Chauvet wrote:
+> From: Arthur Grillo <arthurgrillo@riseup.net>
+>=20
+> Add support to the YUV formats bellow:
+>=20
+> - NV12/NV16/NV24
+> - NV21/NV61/NV42
+> - YUV420/YUV422/YUV444
+> - YVU420/YVU422/YVU444
+>=20
+> The conversion from yuv to rgb is done with fixed-point arithmetic, using
+> 32.32 floats and the drm_fixed helpers.
 
------------------- original commit in Linus's tree ------------------
+s/floats/fixed-point numbers/
 
-From b2f26f49e84bea03dddb5f37ff137c97b165107b Mon Sep 17 00:00:00 2001
-From: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
-Date: Sat, 13 Jan 2024 14:32:27 +0530
-Subject: [PATCH] drm/amd/display: Drop 'acrtc' and add 'new_crtc_state' NULL
- check for writeback requests.
+Nothing floating here, the point is fixed.
 
-Return value of 'to_amdgpu_crtc' which is container_of(...) can't be
-null, so it's null check 'acrtc' is dropped.
+[...]
+> diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_=
+drv.h
+> index 23e1d247468d..f3116084de5a 100644
+> --- a/drivers/gpu/drm/vkms/vkms_drv.h
+> +++ b/drivers/gpu/drm/vkms/vkms_drv.h
+> @@ -99,6 +99,27 @@ typedef void (*pixel_read_line_t)(const struct vkms_pl=
+ane_state *plane, int x_st
+>  				  int y_start, enum pixel_read_direction direction, int count,
+>  				  struct pixel_argb_u16 out_pixel[]);
+> =20
+> +/**
+> + * CONVERSION_MATRIX_FLOAT_DEPTH - Number of digits after the point for =
+conversion matrix values
 
-Fixing the below:
-drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:9302 amdgpu_dm_atomic_commit_tail() error: we previously assumed 'acrtc' could be null (see line 9299)
+s/CONVERSION_MATRIX_FLOAT_DEPTH/CONVERSION_MATRIX_FRACTIONAL_BITS/
 
-Added 'new_crtc_state' NULL check for function
-'drm_atomic_get_new_crtc_state' that retrieves the new state for a CRTC,
-while enabling writeback requests.
+Just a suggestion, maybe there are better terms, but using "FLOAT" here
+is confusing.
 
-Cc: stable@vger.kernel.org
-Cc: Alex Hung <alex.hung@amd.com>
-Cc: Aurabindo Pillai <aurabindo.pillai@amd.com>
-Cc: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Cc: Hamza Mahfooz <hamza.mahfooz@amd.com>
-Signed-off-by: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
-Reviewed-by: Alex Hung <alex.hung@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
----
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> + */
+> +#define CONVERSION_MATRIX_FLOAT_DEPTH 32
+> +
+> +/**
+> + * struct conversion_matrix - Matrix to use for a specific encoding and =
+range
+> + *
+> + * @matrix: Conversion matrix from yuv to rgb. The matrix is stored in a=
+ row-major manner and is
+> + * used to compute rgb values from yuv values:
+> + *     [[r],[g],[b]] =3D @matrix * [[y],[u],[v]]
+> + *   OR for yvu formats:
+> + *     [[r],[g],[b]] =3D @matrix * [[y],[v],[u]]
+> + *  The values of the matrix are fixed floats, 32.CONVERSION_MATRIX_FLOA=
+T_DEPTH
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 36af104e7663c..8623722e954f9 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -9327,10 +9327,10 @@ static void amdgpu_dm_atomic_commit_tail(struct drm_atomic_state *state)
- 		if (!new_con_state->writeback_job)
- 			continue;
- 
--		new_crtc_state = NULL;
-+		new_crtc_state = drm_atomic_get_new_crtc_state(state, &acrtc->base);
- 
--		if (acrtc)
--			new_crtc_state = drm_atomic_get_new_crtc_state(state, &acrtc->base);
-+		if (!new_crtc_state)
-+			continue;
- 
- 		if (acrtc->wb_enabled)
- 			continue;
--- 
-2.43.0
+s/fixed floats/fixed-point numbers/
 
-
-
-
+regards
+Philipp
