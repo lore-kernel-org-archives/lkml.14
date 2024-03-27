@@ -1,118 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3478812DDA7;
-	Wed, 27 Mar 2024 16:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DE912D76A
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 16:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711556934; cv=none; b=qxuArM3L5N1ghR0nfpnk6Ts1yv92JlvNUGLFYvraFR2n2oCHspNLbSIQDDqa/jeY8F55yg84iuO4kjz8rrbEeRWgwvZdeeiHbKHD7zjBX+7qaNl7ChWb7bEZpdQcyMwhDD6tVXipH6fjEM3YHryaIvWjQa1l9R+PgbUk1rCamt0=
+	t=1711556957; cv=none; b=K29qNY6Vl0zYfRZEQoW3qpWBtcAMPimqY/QAF5SU+4YPzw8hz4hivf7XBQzR8sWXU5cUjbXavIKSh1BPZTGiCacSu0QIk6cKxgJB1x9YWfpX2BS3s1XYTReSBUFZLpUylAMfXRHcTjMNLrYoFAo7r6PD9U2jNwRV8/O2iN4QuxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711556934; c=relaxed/simple;
-	bh=d9DnxmW+a4P+dEszAOdKuPFSCcl7qq/W+ZbL07RwEwA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cBvHU7PAyI9g61hXT07Px+HsJonVOMnJ/w03rjUzV7xZrKz5iGHCjkeQ4gYkpf4erq43R9n5lyT1r1Qh6k9tkTD89Im7mqAP2Icrgu8YCt5S3woFK9uD858/btOzrVtCoEYqF7oksS3wyC+7ChLJo7SHLsXYoSQuFnRfD/9QssM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VMxbb0Y3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711556957; c=relaxed/simple;
+	bh=yzKmcrqxgFemQy0dfPuenWcZqlVFJ9u4XKYFhp7r5LY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=t9Wko1lC/+JUqrbl7lz2xB4+AcTryK19hOGsnhkAOv3S8CBJSR5cHPvH6EbyPuj/8oAbnbhyvcbjK9U6Den2ovJ88SWogussr/uuPOESgZjY4tDoopP4Sfr/2x3V/AudkRWz1ILhgUx8N2UQgKY4mORjTHhvgHCjz6MvUGZQDZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=uHMkgmZu; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VMxbb0Y3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34858C433C7;
-	Wed, 27 Mar 2024 16:28:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711556933;
-	bh=d9DnxmW+a4P+dEszAOdKuPFSCcl7qq/W+ZbL07RwEwA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VMxbb0Y3Qa/NNHrKY4OquYcNBThaVfbyHU61upgpTbCcFHlnFasflMqCeESKgyQ4A
-	 tSWfpWgupdbSS8VRsWTXgrUI2cRfVODARZzRVNqQoZl5Izn/lnhpbboebnIBN8fxbv
-	 InDRbXQFjTkFrPvEbUVQM940TJYOd3FxArh/rRuoN/G59hkw1eHpLjXLh0b+MeWh9A
-	 WxMGg8Tv5ReJlytHfW6AtCTbcWSocuF4cnSatbUoF4mf488EL6i+8cYxi9OMVGn5vT
-	 m4pvBPDiuT6fsBMZVvvnS/gJe7egoynptZ1ue20fS32a+ZIRPps2cGtCMBzyj8BIKg
-	 NtqzAhYhauw8A==
-Date: Wed, 27 Mar 2024 16:28:49 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Mihai Sain <mihai.sain@microchip.com>
-Cc: robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev, lgirdwood@gmail.com, broonie@kernel.org,
-	andrei.simion@microchip.com, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/7] regulator: mcp16502: Update the names from buck
- regulators
-Message-ID: <20240327-agreed-routine-0cc60186876b@spud>
-References: <20240327101724.2982-1-mihai.sain@microchip.com>
- <20240327101724.2982-8-mihai.sain@microchip.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="uHMkgmZu"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6ea729f2e38so11333b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 09:29:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1711556955; x=1712161755; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4IzTyaxEwSLWGHKB2lU+u54hh5UjrFpDvHA1AagdmQE=;
+        b=uHMkgmZuhhtr8pcRQrcqTsPkNXHFyXjmLwy3tk9brIfmMokyWTJ4oJUM7TI7hgra4O
+         JmcEt1uGsfR8v+o0EuCBPZ7X0UVmURugb4yx1lYma8z2/8zoAwVqRqeR+MDYGg+k9pnc
+         21Fvizd/7BM5aGcHngVjwYHKEkEdKx+vfzwAgsxH1J7E616NDE8sYoe7/MDSuKN0TEPN
+         Y2dvFEaLD0mJ0na0V7G7C7s2JuRcVyMisVsUiSq1g1o+BIGpQgXCicawPBfNXFjQ//MJ
+         yhvuDJWWgBgG0s7XoTtuIVRHv+rQNBT3muj7l9ws8a7wWW53K5BUdLmtMla4lATsYCxy
+         lMqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711556955; x=1712161755;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4IzTyaxEwSLWGHKB2lU+u54hh5UjrFpDvHA1AagdmQE=;
+        b=Lu1V+oSRve+y/PsVL8p1R+Eeb2e04J3XZ7izi/7tJ0aaGMST3uQ6ZXyv/n7HuS/LFP
+         xJ8xxCaZamMuUSnzBf7nkA+W5EcQQ/2yhBAONkOxB3PCgk63b7KTbc9rc5CV6CDH02LF
+         lM/j3ZpxU8vK3isOmG1fKQPZN8+aKnCdz0C8dHOCFlbjIR8/IxTXRqky9fymrSWpkIEr
+         JxIogsECwjpd0zIr9vJ7gmFfAqIWkh/5Qa+trShsETs/RrtqZrq+vvZQXy0vvyxxgm7Y
+         QQ1foJ/ckFmzBov70MAJ1DWN60CL6JsPfLu7vFPgj3fqx8SqJORqrWpHhYRFYPkIURTy
+         zM7A==
+X-Gm-Message-State: AOJu0Yw2rqXFuQerXLyjI1TvQVmUW0e7VlvyAvHKV9fI338YFnsVm6wf
+	2XzQ8kCrhihOtYuy0E/2d5OVyL+doa11eDdebKiRwXCXPZFqCeBfB+HI52wxqzs=
+X-Google-Smtp-Source: AGHT+IHvHfOO2nxh6smPSQiUPrNZXci7ylhmNv/x9FGT5+lxx/s6twPlVStZdyUHvqtrVAv5Cqk6KQ==
+X-Received: by 2002:a05:6a00:1828:b0:6ea:b9a1:63c6 with SMTP id y40-20020a056a00182800b006eab9a163c6mr368591pfa.1.1711556955165;
+        Wed, 27 Mar 2024 09:29:15 -0700 (PDT)
+Received: from [127.0.0.1] ([2620:10d:c090:600::1:5ff4])
+        by smtp.gmail.com with ESMTPSA id q9-20020aa79829000000b006ea75a0e223sm7998068pfl.110.2024.03.27.09.29.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Mar 2024 09:29:14 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Tim Chen <tim.c.chen@linux.intel.com>, 
+ Juri Lelli <juri.lelli@redhat.com>, Andrew Theurer <atheurer@redhat.com>, 
+ Joe Mario <jmario@redhat.com>, Sebastian Jug <sejug@redhat.com>, 
+ Frederic Weisbecker <frederic@kernel.org>, 
+ Bart Van Assche <bvanassche@acm.org>, Tejun Heo <tj@kernel.org>
+In-Reply-To: <20240322021244.1056223-1-ming.lei@redhat.com>
+References: <20240322021244.1056223-1-ming.lei@redhat.com>
+Subject: Re: [PATCH V5] blk-mq: don't schedule block kworker on isolated
+ CPUs
+Message-Id: <171155695404.507853.16905998627647073688.b4-ty@kernel.dk>
+Date: Wed, 27 Mar 2024 10:29:14 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lqf7Y/CEqKPOGaGb"
-Content-Disposition: inline
-In-Reply-To: <20240327101724.2982-8-mihai.sain@microchip.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.5-dev-2aabd
 
 
---lqf7Y/CEqKPOGaGb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, 22 Mar 2024 10:12:44 +0800, Ming Lei wrote:
+> Kernel parameter of `isolcpus=` or 'nohz_full=' are used to isolate CPUs
+> for specific task, and it isn't expected to let block IO disturb these CPUs.
+> blk-mq kworker shouldn't be scheduled on isolated CPUs. Also if isolated
+> CPUs is run for blk-mq kworker, long block IO latency can be caused.
+> 
+> Kernel workqueue only respects CPU isolation for WQ_UNBOUND, for bound
+> WQ, the responsibility is on user because CPU is specified as WQ API
+> parameter, such as mod_delayed_work_on(cpu), queue_delayed_work_on(cpu)
+> and queue_work_on(cpu).
+> 
+> [...]
 
-On Wed, Mar 27, 2024 at 12:17:24PM +0200, Mihai Sain wrote:
-> Use generic names for buck regulators to avoid any confusion.
-> Update the names from buck regulators in order to match
-> the datasheet block diagram for the buck regulators.
->=20
-> Signed-off-by: Mihai Sain <mihai.sain@microchip.com>
+Applied, thanks!
 
-I know the regulator core will create dummy regulators when they are not
-provided in the devicetree, so I am not 100% on how backwards
-compatibility works here.
-You'll end up with a bunch of dummies and therefore the regulator-names
-and constraints on the regulator will be lost, no?
-Can you explain how is this backwards compatible with the old
-devicetrees?
+[1/1] blk-mq: don't schedule block kworker on isolated CPUs
+      commit: 5f27f3d892743312fce237958a4194859ef93d69
 
-Thanks,
-Conor.
+Best regards,
+-- 
+Jens Axboe
 
-> ---
->  drivers/regulator/mcp16502.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/regulator/mcp16502.c b/drivers/regulator/mcp16502.c
-> index 0c15a19fe83a..d6fc9f1afaef 100644
-> --- a/drivers/regulator/mcp16502.c
-> +++ b/drivers/regulator/mcp16502.c
-> @@ -468,13 +468,13 @@ static const struct linear_range b234_ranges[] =3D {
-> =20
->  static const struct regulator_desc mcp16502_desc[] =3D {
->  	/* MCP16502_REGULATOR(_name, _id, ranges, regulator_ops, ramp_table) */
-> -	MCP16502_REGULATOR("VDD_IO", BUCK1, b1l12_ranges, mcp16502_buck_ops,
-> +	MCP16502_REGULATOR("BUCK1", BUCK1, b1l12_ranges, mcp16502_buck_ops,
->  			   mcp16502_ramp_b1l12),
-> -	MCP16502_REGULATOR("VDD_DDR", BUCK2, b234_ranges, mcp16502_buck_ops,
-> +	MCP16502_REGULATOR("BUCK2", BUCK2, b234_ranges, mcp16502_buck_ops,
->  			   mcp16502_ramp_b234),
-> -	MCP16502_REGULATOR("VDD_CORE", BUCK3, b234_ranges, mcp16502_buck_ops,
-> +	MCP16502_REGULATOR("BUCK3", BUCK3, b234_ranges, mcp16502_buck_ops,
->  			   mcp16502_ramp_b234),
-> -	MCP16502_REGULATOR("VDD_OTHER", BUCK4, b234_ranges, mcp16502_buck_ops,
-> +	MCP16502_REGULATOR("BUCK4", BUCK4, b234_ranges, mcp16502_buck_ops,
->  			   mcp16502_ramp_b234),
->  	MCP16502_REGULATOR("LDO1", LDO1, b1l12_ranges, mcp16502_ldo_ops,
->  			   mcp16502_ramp_b1l12),
-> --=20
-> 2.44.0
->=20
 
---lqf7Y/CEqKPOGaGb
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZgRJQAAKCRB4tDGHoIJi
-0jMkAQC28sZ5rt1TFDBpNnI9RQ9dzDj+9bBym/hmm2MyRGVBHAEA6VY1HcwfphJM
-UohqJE1s3Smp5X8Ku6nzNEe7i/s5Kwk=
-=CGed
------END PGP SIGNATURE-----
-
---lqf7Y/CEqKPOGaGb--
