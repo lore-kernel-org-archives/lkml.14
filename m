@@ -1,90 +1,148 @@
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out03.mta.xmission.com (out03.mta.xmission.com [166.70.13.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7BB12D774
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 12:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D8812C80B;
+	Wed, 27 Mar 2024 12:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711544184; cv=none; b=e3mdm30KTNZ8yWOQnSG7BPWahGiiWsdTXUXeIo/nAiPXMGDArATh+dZnbClvMj+A/TcraRiinmyt4iOlGDNl7h7AhuW4owT8c4I13EQY8TIYEtnWUsceEj84P+YHhHLDe1kYzsIicMV9Vvs8k/XFd3my47uOP0k6LfKXu9PuL2w=
+	t=1711544332; cv=none; b=Zs0qQwzKETCaWzADIixsXuQ5TmBQOOJPkXL6h+9RH0nh9m77He39ItkUZTJGH4YSWzutKrodYDh0BjnqR/+LMPLFBqUpJ6kmUFuTLVceSp8RAvVu7aUJQF1fkAr5gzjWgNttbU99C2pEhwD67Y7gzDspw6V4MjCYnyQy9TuWVCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711544184; c=relaxed/simple;
-	bh=w8fAAjUbn+V2AC0IttZ8M+6kKib99nE0E7k8uWfW6f8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UGqnTDN3nZN3MWkLjs2LJ2TNS7cx3Xx0JT3yYeGKVeJqo6xlUpHDKLHbB93w6rfKhsOPmsZRm6RyjmDfU2NjJhSA82LgD0H/B5ezZ+M/caXJzZBH4BQEX1HPOcOhUBIBkZhEqVOJWxrOkva7hr0kXksKgsoh6Pu9G1oP5R7DRQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=C69OYLw0; arc=none smtp.client-ip=209.85.166.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="C69OYLw0"
-Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7c8ccffacbcso178895939f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 05:56:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1711544182; x=1712148982; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eDUDMYuwU2SUxAqC60S/6H5qJEoJ0FMo+cGtvAM2eZo=;
-        b=C69OYLw0i3gMraRBWsUetmc26jqnS/DznsWavk0w53f6v38Rz+Fy3rf5K/VzyOaN4F
-         6l+h8T9LVnHcam6zZqD1dmyE0yluO9qs6FC10eLIHFz8nZRn55WYvkdQKOP+W+paMxhd
-         ykjbUY4QC96ivKvfP3FA+5fOYNLExspNOFrfiksbsZz39cvoOBwqsxnvl14//RuLwRqn
-         VQpjm8SEClxkLJZ+eWYjIlttPrO0mFo55yBM/nWFCB5lxeYn/zPji/tw84NjZmw3CAEF
-         XiXfLmnNxoqJ0bawg53OHgHZ47HG0d3N5juNi2plU68efh8h/ZbiqvlgZk8CME+qZ1vs
-         P2JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711544182; x=1712148982;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eDUDMYuwU2SUxAqC60S/6H5qJEoJ0FMo+cGtvAM2eZo=;
-        b=uFs76m50bU4fD0AaBRuUhWDHW/Nfqb3xa1siSoDYfkAzgxNOxTV47nI7USXR6tKPGG
-         3ahl2HOmlDsKyycMoUkRg94Bk3gqI2xsZUyuLFzmTgHDbtaHU/1hzxOATxQbo9caVMWF
-         Or4yGkyIaJX5gjEd03cAryroGhkGRwC0KxihR9b5BZZ6aHh6I8Y2vrsCvkivN4JGTfXC
-         9zTxquN3/T/Irsdq4t4BSGi78iHPHvctK/081CiPN8/Jw+M5l5ognUnVSjef6IiBYmhD
-         Mx2gzNOHkvFzeK1AOMUXUUE8T7gvIeLavc0OTxoM9rnbJKUTOOQ0u7YJAtCUvfzoyyMy
-         qWgQ==
-X-Gm-Message-State: AOJu0YzJ0gxdcddoRde7D0KdPdoooO4IIPXR7hzOJds/v1fV36HAYgvP
-	fAXK3JQRxafo0GCKRuh4E3pQmfzMBs7VYNirywVxdepnjSGJVCuHg+hLhjH1DgM=
-X-Google-Smtp-Source: AGHT+IGpHwDVcEaSCyL0jaVUFQB7IqtIxhkm8li1Yxlb1nP0/kTO6T5MUCR28gpsX+7hskI59QpZbA==
-X-Received: by 2002:a5d:8508:0:b0:7c8:dc57:4dd3 with SMTP id q8-20020a5d8508000000b007c8dc574dd3mr5226769ion.6.1711544181585;
-        Wed, 27 Mar 2024 05:56:21 -0700 (PDT)
-Received: from [100.64.0.1] ([170.85.6.190])
-        by smtp.gmail.com with ESMTPSA id k7-20020a02c647000000b00479db9b38f6sm3249826jan.66.2024.03.27.05.56.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Mar 2024 05:56:21 -0700 (PDT)
-Message-ID: <b929afe5-c148-499a-906d-fcf208b02fcc@sifive.com>
-Date: Wed, 27 Mar 2024 07:56:20 -0500
+	s=arc-20240116; t=1711544332; c=relaxed/simple;
+	bh=iG8uPrBOIOH+AQyDUzYn/BzO2DNiuhvbgR0PyAf2uwk=;
+	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type:Subject; b=Knqja2l5ETFLunV0iEgHkeqd7FQHFY99Mk3+OXsJzFb2yS362HwKnOfhwsnxP2n2VoKLKIogwJNEk1PU8LbfepbGHlyEWW8LhWzOC1um05JWZFsNdyr9kDViGSleBhfxnvPL+XpO/7swVorp13slqmqKV9sGhInH6zv+vnameBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
+Received: from in01.mta.xmission.com ([166.70.13.51]:49876)
+	by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1rpSrZ-001fy3-Ti; Wed, 27 Mar 2024 06:58:41 -0600
+Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:50926 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1rpSrY-00GeAq-LA; Wed, 27 Mar 2024 06:58:41 -0600
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Steve Wahl <steve.wahl@hpe.com>
+Cc: Russ Anderson <rja@hpe.com>,  Ingo Molnar <mingo@kernel.org>,  Dave
+ Hansen <dave.hansen@linux.intel.com>,  Andy Lutomirski <luto@kernel.org>,
+  Peter Zijlstra <peterz@infradead.org>,  Thomas Gleixner
+ <tglx@linutronix.de>,  Ingo Molnar <mingo@redhat.com>,  Borislav Petkov
+ <bp@alien8.de>,  x86@kernel.org,  "H. Peter Anvin" <hpa@zytor.com>,
+  linux-kernel@vger.kernel.org,  Linux regressions mailing list
+ <regressions@lists.linux.dev>,  Pavin Joseph <me@pavinjoseph.com>,
+  stable@vger.kernel.org,  Eric Hagberg <ehagberg@gmail.com>,  Simon Horman
+ <horms@verge.net.au>,  Dave Young <dyoung@redhat.com>,  Sarah Brofeldt
+ <srhb@dbc.dk>,  Dimitri Sivanich <sivanich@hpe.com>
+References: <20240322162135.3984233-1-steve.wahl@hpe.com>
+	<ZgABC1oQ9YJW6Bw3@gmail.com> <20240325020334.GA10309@hpe.com>
+	<87o7b273p2.fsf@email.froward.int.ebiederm.org>
+	<ZgHTXvCQr6ycbVzp@swahl-home.5wahls.com>
+Date: Wed, 27 Mar 2024 07:57:52 -0500
+In-Reply-To: <ZgHTXvCQr6ycbVzp@swahl-home.5wahls.com> (Steve Wahl's message of
+	"Mon, 25 Mar 2024 14:41:18 -0500")
+Message-ID: <87r0fv6ddb.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: 6.9-rc1 regression: irq: no irq domain found for
- interrupt-controller@c000000
-To: Andreas Schwab <schwab@suse.de>, linux-riscv@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-References: <mvmplvfg90v.fsf@suse.de>
-Content-Language: en-US
-From: Samuel Holland <samuel.holland@sifive.com>
-In-Reply-To: <mvmplvfg90v.fsf@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-XM-SPF: eid=1rpSrY-00GeAq-LA;;;mid=<87r0fv6ddb.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX18MbAr20HjhuH3WMgkVKae6ZAm/7EpD1rc=
+X-SA-Exim-Connect-IP: 68.227.168.167
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+	*      [score: 0.4918]
+	*  0.7 XMSubLong Long Subject
+	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
+	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
+	*      [sa05 1397; Body=1 Fuz1=1 Fuz2=1]
+	*  0.0 T_TooManySym_02 5+ unique symbols in subject
+	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
+	*  0.0 T_TooManySym_01 4+ unique symbols in subject
+X-Spam-DCC: XMission; sa05 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: ;Steve Wahl <steve.wahl@hpe.com>
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 699 ms - load_scoreonly_sql: 0.11 (0.0%),
+	signal_user_changed: 13 (1.9%), b_tie_ro: 11 (1.6%), parse: 1.68
+	(0.2%), extract_message_metadata: 19 (2.7%), get_uri_detail_list: 2.9
+	(0.4%), tests_pri_-2000: 7 (1.0%), tests_pri_-1000: 5 (0.7%),
+	tests_pri_-950: 1.68 (0.2%), tests_pri_-900: 1.37 (0.2%),
+	tests_pri_-90: 65 (9.3%), check_bayes: 64 (9.1%), b_tokenize: 12
+	(1.7%), b_tok_get_all: 10 (1.4%), b_comp_prob: 3.5 (0.5%),
+	b_tok_touch_all: 35 (4.9%), b_finish: 0.91 (0.1%), tests_pri_0: 341
+	(48.8%), check_dkim_signature: 0.57 (0.1%), check_dkim_adsp: 2.4
+	(0.3%), poll_dns_idle: 193 (27.7%), tests_pri_10: 6 (0.8%),
+	tests_pri_500: 233 (33.4%), rewrite_mail: 0.00 (0.0%)
+Subject: Re: [PATCH] x86/mm/ident_map: Use full gbpages in identity maps
+ except on UV platform.
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 
-Hi Andreas,
+Steve Wahl <steve.wahl@hpe.com> writes:
 
-On 2024-03-27 7:21 AM, Andreas Schwab wrote:
-> The SiFive ccache driver fails to look up its irqs:
-> 
-> [    0.762329] irq: no irq domain found for interrupt-controller@c000000 !
-> [    0.769358] CCACHE: Could not request IRQ 0
-> 
-> This is fatal for the JH7100 based boards, since they depend on it for
-> their DMA noncoherence.
+> On Mon, Mar 25, 2024 at 10:04:41AM -0500, Eric W. Biederman wrote:
+>> Russ Anderson <rja@hpe.com> writes:
+>> > Steve can certainly merge his two patches and resubmit, to replace the
+>> > reverted original patch.  He should be on in the morning to speak for
+>> > himself.
+>> 
+>> I am going to push back and suggest that this is perhaps a bug in the
+>> HPE UV systems firmware not setting up the cpus memory type range
+>> registers correctly.
+>> 
+>> Unless those systems are using new fangled cpus that don't have 16bit
+>> and 32bit support, and don't implement memory type range registers,
+>> I don't see how something that only affects HPE UV systems could be
+>> anything except an HPE UV specific bug.
+>
+> Eric,
+>
+> I took the time to communicate with others in the company who know
+> this stuff better than I do before replying on this.
+>
+> One of the problems with using the MTRRs for this is that there are
+> simply not enough of them.  The MTRRs size/alignment requirements mean
+> that more than one entry would be required per reserved region, and we
+> need one reserved region per socket on systems that currently can go
+> up to 32 sockets.  (In case you would think to ask, the reserved
+> regions also cannot be made contiguous.)
+>
+> So MTRRs will not work to keep speculation out of our reserved memory
+> regions.
+>
+> Let me know if you need more information from us on this.
 
-I have posted a fix at
-https://lore.kernel.org/linux-riscv/20240327054537.424980-1-samuel.holland@sifive.com/
+Thanks for this.
 
-Regards,
-Samuel
+Do you know if there are enough MTRRs for the first 4GB?
 
+I am curious if kexec should even consider going into 32bit mode without
+page tables or even into 16bit mode on such a system.  Or if such a
+system will always require using page tables.
+
+If you don't have enough MTRRs on a big NUMA system I think it is
+perfectly understandable, to need to use the page tables.
+
+Please include this the fact that splitting GBpages is necessary because
+of a lack of MTRRs in the change description.
+
+Given that it is the lack of MTRRs on a large NUMA system that make the
+change necessary.   The goes from a pure bug fix change to a change to
+accommodate systems without enough MTRRs.
+
+That information makes it more understandable why older systems (at
+least in the case of kexec) might not be ok with the change.  As for
+older systems their MTRRs are sufficient and thus they can use fewer
+page table entries.  Allowing for use of larger TLB entries.
+
+
+Eric
