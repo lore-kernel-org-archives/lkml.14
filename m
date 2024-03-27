@@ -1,135 +1,317 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB34412E1F0;
-	Wed, 27 Mar 2024 16:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2AC12FB2F
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 16:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711557614; cv=none; b=PdlSA6wLkS0LuWyT+GMxWo9HwBgPYhKC7YQDQ1zf3FLdNBDS8f0YsxGqZ5ZR5xXGAPhGQXm53A0DUH/p9wYxTpo4BEwKAFR8G47wzpUTer4dlTf36gu4nVbsZNjbzqwudN4igPA4uEPIlYIIp475mExJOWD7FTVCcMJik6TrtfY=
+	t=1711557670; cv=none; b=X0nG9qCQeWaYZyefFYaX2Utah5U1OVaCFM5cdKDgPTdxOAusxHg8w8+hefs731ciGLVXLJHgeJmt0J655NVJKgx7pJKSMgMramTYEtU1jWuE1Bik/Apzp3bjPKoiwjpnFUoumNU8dVz1ngEOPKwF4iG5PWXUyhw0XnAlPIkB8LY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711557614; c=relaxed/simple;
-	bh=55FixKpVvBnRnD4FrdIIFh3o0roqfl9/GYXUPXMDM48=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uTPMFVr2XXkYoKgBevHCIjwL0VaYd0Upgmy90pxyRgtCLqNSEk7OQtEkKXpeJuTHP0pz1UAyLHtO4HMT5AaeG1jREEBUvFMiNuLQrhr50mgSwRSkEM8WjYk59BMsTvumyb2TR3Gii+XExYp3/KlqafQDcGCRNBaxeq3Ikp9UuzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hy056Bx4; arc=none smtp.client-ip=209.85.128.51
+	s=arc-20240116; t=1711557670; c=relaxed/simple;
+	bh=Lt8v29rfoTTzWFuyXWFLKvY4kmtkIVJavMxahFMZrKQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=edThXvEbKLBOEaZDmEbF2ad7TJPSUoNPBJZbu3pru822Q4P9XvgDMx6VY9QaLWEQvUhkE9gIQAORpYHtRqpgH6/fnKDfW3lWiltSBDl/GcTjm4KfB19UMgbIjTCwfjNsh2D+jjfGuOiv62IBLzNAAMeILzRdRlzU6N50GSdUCzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YoLxYmUQ; arc=none smtp.client-ip=209.85.219.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hy056Bx4"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-414a2679222so1590985e9.1;
-        Wed, 27 Mar 2024 09:40:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YoLxYmUQ"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-690d7a8f904so9300076d6.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 09:41:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711557611; x=1712162411; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=vlQkpxaGQW3p984RRGKWywyzWKD0TWHivq5zfU3FFHY=;
-        b=hy056Bx4noBqiSSlfbowKe78cKS4+d6L8JNOtnzmvYwEdXLhXp9JnAI80hPmv1wQrT
-         5wCWKlTU4idNVGQANaTBbn5Li3Y0+zCoyRjCg5A6FX7MkBDlyd34D2ZuFKS9egScd0AS
-         dkSIo8FueHghi2tdnnHK9FN045iXbU+agY26bsWfDUnslFSaKVnX6RAcp92Q7FgGv6Yz
-         EslhNAhfmVBKNsPGrjjbraQv7IB7Y5TNNapNuliOqQwuRuByOCWssfwvR6zE1eJKLvX4
-         h2W35Pw3RC4F4T5UkW3jFwsZ0SULZ2/M6bLp2GuiBRctMvXCHNP/44SNctVDgamlQJsJ
-         pNYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711557611; x=1712162411;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1711557668; x=1712162468; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vlQkpxaGQW3p984RRGKWywyzWKD0TWHivq5zfU3FFHY=;
-        b=xVgmRGvjj/LwKRX2n9V7J92CzvTKBLYsjQmYrPbdHYOQ9uRBeJnb96uY9AmOVzxwoB
-         IWOdhWBGRguKhHCXtkphBLTnodnLGN5b38Td0Bf2tWPBqcIuuMmUTInAmyW/Qs/9Ne6W
-         inHu98o5KLlUByPxmc8I1MrGdBjDqhvGcD2mUCOFm77lEPxaw1YRE5ADNMBnycU2J6tq
-         WXW5AtVdewMcYgaryN8njqHcnb9TpcL4AXorqpwog6qJtcvtg1vqnXZIQ+D3ke5Xym60
-         rweUTWqNjNK4BeLYBW3OtAf/WxYIODS9MfpEvIGLrWI2YjYDgyDkzvknSDUFNZiko7J2
-         0UCg==
-X-Forwarded-Encrypted: i=1; AJvYcCUC0DRtyqhhAu15ZxxGVnXvcxWbxB8cdL0cj698esnehM0f9XC8Pk2eQCUiEDgJ2NucM4BMRWMDXMkw+sKKT2+lvgudQPrvVdS9BuyatqPslbosxKa2jzm7sr/Sgqrd5B6GH8jhbXUHcCdISS33ZLodlvR1tlndIFsjylxcOqTnN5bqZg==
-X-Gm-Message-State: AOJu0YxPvvKIUFAWmctwWugtLpFw9Tsrlj/I/eY799i2+N9TVodw4hD/
-	AeVC4rZGtPOMBxqfC+aQPHCH2bD9DpuO70+0Wl/xP6Nja94P7gZm
-X-Google-Smtp-Source: AGHT+IGlxMmgSl6wOcskjtwSMRobLESUDTi3KLNM9ekBedCGEFAVz8OWGEvAAhpMa74zmpbd08FWtw==
-X-Received: by 2002:a05:600c:4ed0:b0:414:8894:213d with SMTP id g16-20020a05600c4ed000b004148894213dmr382271wmq.35.1711557611033;
-        Wed, 27 Mar 2024 09:40:11 -0700 (PDT)
-Received: from Ansuel-XPS. (host-95-247-253-192.retail.telecomitalia.it. [95.247.253.192])
-        by smtp.gmail.com with ESMTPSA id j19-20020a05600c191300b00414924f307csm2630583wmq.26.2024.03.27.09.39.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 09:40:10 -0700 (PDT)
-Message-ID: <66044bea.050a0220.dee16.c250@mx.google.com>
-X-Google-Original-Message-ID: <ZgQ5RmS3eWaiVdwB@Ansuel-XPS.>
-Date: Wed, 27 Mar 2024 16:20:58 +0100
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Md Sadre Alam <quic_mdalam@quicinc.com>,
-	Sricharan Ramabadhran <quic_srichara@quicinc.com>,
-	linux-mtd@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] mtd: rawnand: qcom: Fix broken erase in
- misc_cmd_type in exec_op
-References: <20240325103053.24408-1-ansuelsmth@gmail.com>
- <20240326072512.GA8436@thinkpad>
+        bh=YMZWWaTaJ3lxeA3Kz3iKtD6XUKMHdnC8EWB2x35/ZWU=;
+        b=YoLxYmUQ/0sVNtPDv7dDa4WNcYnkIQkXlVrB2BIotztWuxGBdpARLfVBWY0opcZoa5
+         sWqmthJyhfh33DWoCd+KTauqyQF2apb+nHPj2UXCG5Gz9588lCC+22gagHPHSuncAScI
+         SO67m5Dco6Lagg1CrQ9lPQMtEsWi9R047jJmsq1ucreQwqWVXI34mP5bodFiB8kvyioe
+         yW7rm8ogY+3UHCvBaQw5H1j3FsBngYfvQVl/Gr0tJWjj0aFfS9scdprR1HxrrgT4gI7q
+         Ci9EFtGEc6h6wKHWFUHfKTTXWrieNg0YNA7t2cCpfpBx9PlpAzvX8Al+l7Gnm9GBLIja
+         14LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711557668; x=1712162468;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YMZWWaTaJ3lxeA3Kz3iKtD6XUKMHdnC8EWB2x35/ZWU=;
+        b=Hf/rlweyR/CiDVWRR8wIQ5jgDnn2sYlX1YZMS6SKc8VUPc5ov8a3g/ndZbGlOkTv81
+         lSFfh/pus3J4Nc+AFbTX1cCoO0iR6DQc+RGd9igxJE5v3FNPz+Xc9Zbdzw9t6/aEYkZr
+         /Osa4Ws/hX/zj+6MPHLdCWEFXgA/LJkcYd9lrtBrKy72sLtcVLYkJTalydpF6MU0/dsm
+         FHhdS8tq+ZoT8GxVDB6HiZHA2bGKk+fy45srbqXZsHhRjveUr+Jy/NB/IylE80RP2cib
+         t4VSygJdm8Qaajj9PDjMa2taOyCpmyxg/6gGwSxxYliGMZfQy9hDV3U3oF95bCeXe+N6
+         TiyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXfkOEn2y+LjdtoIVxqL94mBgIep6RMkjXyfQPIwCC9K2+8k02DjXTUoWQ+Hk3mVi70PpgBScE38kwk6WH0nu6QxOlkQALoFMe07G8Q
+X-Gm-Message-State: AOJu0Yy3yhtm8ALQ5I+mbukuHzz7MGSN0NZACQP0ue//hyiKuDs78sRN
+	uu0pqVNOW3CvMVDm31IYfU3LcO3+m4H9r5cWt6/VDU/lcLl+xbPMjHWODcPS65KOFvo9x6pL2KE
+	Ow+BHvVUHxLFwZGjonJJS+Ni8NPM=
+X-Google-Smtp-Source: AGHT+IEfdLDNpbWNtIYAq0kAU3sG8ft7rxFt6Nf3L/NlFTwxzVHYEkr+dnSwRJ1+e1UAcljWtVgdECbC493hK/wW/9Y=
+X-Received: by 2002:a05:6214:b14:b0:690:dc3b:179d with SMTP id
+ u20-20020a0562140b1400b00690dc3b179dmr203067qvj.20.1711557667999; Wed, 27 Mar
+ 2024 09:41:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240326072512.GA8436@thinkpad>
+References: <20240325235018.2028408-1-yosryahmed@google.com> <20240325235018.2028408-7-yosryahmed@google.com>
+In-Reply-To: <20240325235018.2028408-7-yosryahmed@google.com>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Wed, 27 Mar 2024 09:40:57 -0700
+Message-ID: <CAKEwX=OMtqFKLRXF5v2P-Z5WEq3x0Tb=6dPKta8uGqi3MXsZEA@mail.gmail.com>
+Subject: Re: [RFC PATCH 6/9] mm: zswap: drop support for non-zero same-filled
+ pages handling
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 26, 2024 at 12:55:12PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Mar 25, 2024 at 11:30:47AM +0100, Christian Marangi wrote:
-> > misc_cmd_type in exec_op have multiple problems. With commit a82990c8a409
-> > ("mtd: rawnand: qcom: Add read/read_start ops in exec_op path") it was
-> > reworked and generalized but actually broke the handling of the
-> > ERASE_BLOCK command.
-> > 
-> > Additional logic was added to the erase command cycle without clear
-> > explaination causing the erase command to be broken on testing it on
-> > a ipq806x nandc.
-> > 
-> > Fix the erase command by reverting the additional logic and only adding
-> > the NAND_DEV0_CFG0 additional call (required for erase command).
-> > 
-> > Fixes: a82990c8a409 ("mtd: rawnand: qcom: Add read/read_start ops in exec_op path")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> > ---
-> > Changes v2:
-> > - Split this and rework commit description and title
-> > 
-> >  drivers/mtd/nand/raw/qcom_nandc.c | 5 ++---
-> >  1 file changed, 2 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/mtd/nand/raw/qcom_nandc.c b/drivers/mtd/nand/raw/qcom_nandc.c
-> > index b079605c84d3..19d76e345a49 100644
-> > --- a/drivers/mtd/nand/raw/qcom_nandc.c
-> > +++ b/drivers/mtd/nand/raw/qcom_nandc.c
-> > @@ -2830,9 +2830,8 @@ static int qcom_misc_cmd_type_exec(struct nand_chip *chip, const struct nand_sub
-> >  	nandc_set_reg(chip, NAND_EXEC_CMD, 1);
-> >  
-> >  	write_reg_dma(nandc, NAND_FLASH_CMD, instrs, NAND_BAM_NEXT_SGL);
-> > -	(q_op.cmd_reg == OP_BLOCK_ERASE) ? write_reg_dma(nandc, NAND_DEV0_CFG0,
-> > -	2, NAND_BAM_NEXT_SGL) : read_reg_dma(nandc,
-> > -	NAND_FLASH_STATUS, 1, NAND_BAM_NEXT_SGL);
-> > +	if (q_op.cmd_reg == OP_BLOCK_ERASE)
-> > +		write_reg_dma(nandc, NAND_DEV0_CFG0, 2, NAND_BAM_NEXT_SGL);
-> 
-> So this only avoids the call to, 'read_reg_dma(nandc, NAND_FLASH_STATUS, 1,
-> NAND_BAM_NEXT_SGL)' if q_op.cmd_reg != OP_BLOCK_ERASE. But for q_op.cmd_reg ==
-> OP_BLOCK_ERASE, the result is the same.
-> 
-> I'm wondering how it results in fixing the OP_BLOCK_ERASE command.
-> 
-> Can you share the actual issue that you are seeing? Like error logs etc...
+On Mon, Mar 25, 2024 at 4:50=E2=80=AFPM Yosry Ahmed <yosryahmed@google.com>=
+ wrote:
+>
+> The current same-filled pages handling supports pages filled with any
+> repeated word-sized pattern. However, in practice, most of these should
+> be zero pages anyway. Other patterns should be nearly as common.
+
+It'd be nice if we can verify this somehow. Maybe hooking bpftrace,
+trace_printk, etc. here?
+
+That aside, my intuition is that this is correct too. It's much less
+likely to see a non-zero filled page.
+
+>
+> Drop the support for non-zero same-filled pages, but keep the names of
+> knobs exposed to userspace as "same_filled", which isn't entirely
+> inaccurate.
+>
+> This yields some nice code simplification and enables a following patch
+> that eliminates the need to allocate struct zswap_entry for those pages
+> completely.
+>
+> There is also a very small performance improvement observed over 50 runs
+> of kernel build test (kernbench) comparing the mean build time on a
+> skylake machine when building the kernel in a cgroup v1 container with a
+> 3G limit:
+>
+>                 base            patched         % diff
+> real            70.167          69.915          -0.359%
+> user            2953.068        2956.147        +0.104%
+> sys             2612.811        2594.718        -0.692%
+>
+> This probably comes from more optimized operations like memchr_inv() and
+> clear_highpage(). Note that the percentage of zero-filled pages during
+
+TIL clear_highpage() is a thing :)
+
+
+> this test was only around 1.5% on average, and was not affected by this
+> patch. Practical workloads could have a larger proportion of such pages
+> (e.g. Johannes observed around 10% [1]), so the performance improvement
+> should be larger.
+>
+> [1]https://lore.kernel.org/linux-mm/20240320210716.GH294822@cmpxchg.org/
+>
+> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+> ---
+>  mm/zswap.c | 76 ++++++++++++++----------------------------------------
+>  1 file changed, 20 insertions(+), 56 deletions(-)
+>
+> diff --git a/mm/zswap.c b/mm/zswap.c
+> index 0fc27ae950c74..413d9242cf500 100644
+> --- a/mm/zswap.c
+> +++ b/mm/zswap.c
+> @@ -44,8 +44,8 @@
+>  **********************************/
+>  /* The number of compressed pages currently stored in zswap */
+>  atomic_t zswap_stored_pages =3D ATOMIC_INIT(0);
+> -/* The number of same-value filled pages currently stored in zswap */
+> -static atomic_t zswap_same_filled_pages =3D ATOMIC_INIT(0);
+> +/* The number of zero-filled pages currently stored in zswap */
+> +static atomic_t zswap_zero_filled_pages =3D ATOMIC_INIT(0);
+>
+>  /*
+>   * The statistics below are not protected from concurrent access for
+> @@ -123,9 +123,9 @@ static unsigned int zswap_accept_thr_percent =3D 90; =
+/* of max pool size */
+>  module_param_named(accept_threshold_percent, zswap_accept_thr_percent,
+>                    uint, 0644);
+>
+> -/* Enable/disable handling non-same-value filled pages (enabled by defau=
+lt) */
+> -static bool zswap_non_same_filled_pages_enabled =3D true;
+> -module_param_named(non_same_filled_pages_enabled, zswap_non_same_filled_=
+pages_enabled,
+> +/* Enable/disable handling non-zero-filled pages (enabled by default) */
+> +static bool zswap_non_zero_filled_pages_enabled =3D true;
+> +module_param_named(non_same_filled_pages_enabled, zswap_non_zero_filled_=
+pages_enabled,
+>                    bool, 0644);
+>
+>  /* Number of zpools in zswap_pool (empirically determined for scalabilit=
+y) */
+> @@ -187,11 +187,10 @@ static struct shrinker *zswap_shrinker;
+>   *
+>   * swpentry - associated swap entry, the offset indexes into the red-bla=
+ck tree
+>   * length - the length in bytes of the compressed page data.  Needed dur=
+ing
+> - *          decompression. For a same value filled page length is 0, and=
+ both
+> + *          decompression. For a zero-filled page length is 0, and both
+>   *          pool and lru are invalid and must be ignored.
+>   * pool - the zswap_pool the entry's data is in
+>   * handle - zpool allocation handle that stores the compressed page data
+> - * value - value of the same-value filled pages which have same content
+>   * objcg - the obj_cgroup that the compressed memory is charged to
+>   * lru - handle to the pool's lru used to evict pages.
+>   */
+> @@ -199,10 +198,7 @@ struct zswap_entry {
+>         swp_entry_t swpentry;
+>         unsigned int length;
+>         struct zswap_pool *pool;
+> -       union {
+> -               unsigned long handle;
+> -               unsigned long value;
+> -       };
+> +       unsigned long handle;
+>         struct obj_cgroup *objcg;
+>         struct list_head lru;
+>  };
+> @@ -805,7 +801,7 @@ static struct zpool *zswap_find_zpool(struct zswap_en=
+try *entry)
+>  static void zswap_entry_free(struct zswap_entry *entry)
+>  {
+>         if (!entry->length)
+> -               atomic_dec(&zswap_same_filled_pages);
+> +               atomic_dec(&zswap_zero_filled_pages);
+>         else {
+>                 zswap_lru_del(&zswap_list_lru, entry);
+>                 zpool_free(zswap_find_zpool(entry), entry->handle);
+> @@ -1377,43 +1373,17 @@ static void shrink_worker(struct work_struct *w)
+>         } while (zswap_total_pages() > thr);
+>  }
+>
+> -static bool zswap_is_folio_same_filled(struct folio *folio, unsigned lon=
+g *value)
+> +static bool zswap_is_folio_zero_filled(struct folio *folio)
+>  {
+> -       unsigned long *page;
+> -       unsigned long val;
+> -       unsigned int pos, last_pos =3D PAGE_SIZE / sizeof(*page) - 1;
+> +       unsigned long *kaddr;
+>         bool ret;
+>
+> -       page =3D kmap_local_folio(folio, 0);
+> -       val =3D page[0];
+> -
+> -       if (val !=3D page[last_pos]) {
+> -               ret =3D false;
+> -               goto out;
+> -       }
+> -
+> -       for (pos =3D 1; pos < last_pos; pos++) {
+> -               if (val !=3D page[pos]) {
+> -                       ret =3D false;
+> -                       goto out;
+> -               }
+> -       }
+> -
+> -       *value =3D val;
+> -       ret =3D true;
+> -out:
+> -       kunmap_local(page);
+> +       kaddr =3D kmap_local_folio(folio, 0);
+> +       ret =3D !memchr_inv(kaddr, 0, PAGE_SIZE);
+> +       kunmap_local(kaddr);
+>         return ret;
+>  }
+>
+> -static void zswap_fill_page(void *ptr, unsigned long value)
+> -{
+> -       unsigned long *page;
+> -
+> -       page =3D (unsigned long *)ptr;
+> -       memset_l(page, value, PAGE_SIZE / sizeof(unsigned long));
+> -}
+> -
+>  static bool zswap_check_limit(void)
+>  {
+>         unsigned long cur_pages =3D zswap_total_pages();
+> @@ -1437,7 +1407,6 @@ bool zswap_store(struct folio *folio)
+>         struct obj_cgroup *objcg =3D NULL;
+>         struct mem_cgroup *memcg =3D NULL;
+>         struct zswap_entry *entry;
+> -       unsigned long value;
+>
+>         VM_WARN_ON_ONCE(!folio_test_locked(folio));
+>         VM_WARN_ON_ONCE(!folio_test_swapcache(folio));
+> @@ -1470,14 +1439,13 @@ bool zswap_store(struct folio *folio)
+>                 goto reject;
+>         }
+>
+> -       if (zswap_is_folio_same_filled(folio, &value)) {
+> +       if (zswap_is_folio_zero_filled(folio)) {
+>                 entry->length =3D 0;
+> -               entry->value =3D value;
+> -               atomic_inc(&zswap_same_filled_pages);
+> +               atomic_inc(&zswap_zero_filled_pages);
+>                 goto insert_entry;
+>         }
+>
+> -       if (!zswap_non_same_filled_pages_enabled)
+> +       if (!zswap_non_zero_filled_pages_enabled)
+>                 goto freepage;
+>
+>         /* if entry is successfully added, it keeps the reference */
+> @@ -1532,7 +1500,7 @@ bool zswap_store(struct folio *folio)
+>
+>  store_failed:
+>         if (!entry->length)
+> -               atomic_dec(&zswap_same_filled_pages);
+> +               atomic_dec(&zswap_zero_filled_pages);
+>         else {
+>                 zpool_free(zswap_find_zpool(entry), entry->handle);
+>  put_pool:
+> @@ -1563,7 +1531,6 @@ bool zswap_load(struct folio *folio)
+>         struct page *page =3D &folio->page;
+>         struct xarray *tree =3D swap_zswap_tree(swp);
+>         struct zswap_entry *entry;
+> -       u8 *dst;
+>
+>         VM_WARN_ON_ONCE(!folio_test_locked(folio));
+>
+> @@ -1573,11 +1540,8 @@ bool zswap_load(struct folio *folio)
+>
+>         if (entry->length)
+>                 zswap_decompress(entry, page);
+> -       else {
+> -               dst =3D kmap_local_page(page);
+> -               zswap_fill_page(dst, entry->value);
+> -               kunmap_local(dst);
+> -       }
+> +       else
+> +               clear_highpage(page);
+>
+>         count_vm_event(ZSWPIN);
+>         if (entry->objcg)
+> @@ -1679,7 +1643,7 @@ static int zswap_debugfs_init(void)
+>         debugfs_create_atomic_t("stored_pages", 0444,
+>                                 zswap_debugfs_root, &zswap_stored_pages);
+>         debugfs_create_atomic_t("same_filled_pages", 0444,
+> -                               zswap_debugfs_root, &zswap_same_filled_pa=
+ges);
+> +                               zswap_debugfs_root, &zswap_zero_filled_pa=
+ges);
+>
+>         return 0;
+>  }
+> --
+> 2.44.0.396.g6e790dbe36-goog
 >
 
-Issue is that nandc goes to ADM timeout as soon as a BLOCK_ERASE is
-called. BLOCK_ERASE operation match also another operation from MTD
-read. (parser also maps to other stuff)
+The code itself LGTM, FWIW:
 
-I will be away from the testing board for 7-10 days so I can't provide
-logs currently.
-
--- 
-	Ansuel
+Reviewed-by: Nhat Pham <nphamcs@gmail.com>
