@@ -1,48 +1,48 @@
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 448F3487A5;
-	Wed, 27 Mar 2024 10:18:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82FD54AEFB;
+	Wed, 27 Mar 2024 10:18:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711534704; cv=none; b=HcD4QEgxtZ4PqVELRU53unmWwV3qqpZ6foIO9hMuxWAMMbMVwvfjKPoRqUagi6igllXYEwF5rbXXzoI387U/FKoxr4YA6gTunAP7M24yP/8D+CRfCv7WdALztILPX8QPSj2hEqn1K50e+x98JBp/qFcu9UQiYWn14yaZP55AMU4=
+	t=1711534706; cv=none; b=Q0XcIxDovhneMBcQcGZY3nmu+IumUbhTbsct7Duf8k2CRanmSfpJV42QMNs8nLzexVt3F5yTlKoa6ftWAVk/RKu4aaJc9EyWZp0Lx2lmD0B+dqJB3SUNnTvJKvXky9P8E9an412WJcqRkfQYZaLbaWEtZV9D4lRU3i0/wmJGlp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711534704; c=relaxed/simple;
-	bh=wD2nTcpMdJZrzZufqmtVM7xTKD12zXfm5p9LDsV06bA=;
+	s=arc-20240116; t=1711534706; c=relaxed/simple;
+	bh=p/0BBHnJr+FFftUotJoEcJBJoL48GuwYWP98R4CFmoQ=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XK9S8aznJBWwUG/DtyLLRZDe+kXGem7eaSQ77iFVH2QOOMgv0FWhh6mNm7tqsujyN99/XJIrKVpKQ+zvk1SrYc1rYo6qkLrFuPKNa6kL49AtDwbZFubiBbAAliRMaN8XEe0Xv/G3jWiSJn3wMjd7AJwzBP/+LLuBZLui/3dN2wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=ZekZGj7s; arc=none smtp.client-ip=68.232.153.233
+	 MIME-Version:Content-Type; b=DOhiUcMwZEmTthRBMWeUxaecSfg2AB4R8GrDSrJINIqAxhW8BgLRGW03RhaZfCRhbS+DKlC3Jg8FHKScgYvWkrFfTKZOwhpCp64ajAdh/8S25U2wJkkbwt3/qwPsHvL0SNfaXX9IEoNwTqTBl4sdSrMg08VspAZ2PUGQyWzS6TY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=I89VUz2x; arc=none smtp.client-ip=68.232.153.233
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ZekZGj7s"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="I89VUz2x"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1711534704; x=1743070704;
+  t=1711534705; x=1743070705;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=wD2nTcpMdJZrzZufqmtVM7xTKD12zXfm5p9LDsV06bA=;
-  b=ZekZGj7s97P7QV5G6hoQTRBbtZAqxX48es6KxZFfHs0zIZDm69PG0x2R
-   5dlq5QSFU5PkzCp75JC+6beH3ZD8aCQDTmxS+E/c6Bqx39ZiVy0ITyQ7T
-   wP0GKYs6OdMCDzkY0DbRwRX4P5e0y5qAkhCXNXULmfDVc4kQXvxdeMVGw
-   iVjMVb0mHlPlM9HU+X0BBA2EuxmNV70HMLCoi93sVRN3qzFUtznvlV4n8
-   xXvH4rE2w7ThjSHn5dEpW87q67n4Wb8RczZYvOyMD6/Qg4BFVXvZzBmmV
-   6qU2mhhLD29w/oXv/Jbpy/syEU7fIo6iVWdHossw/TKZiSwFW36uFZ488
+  bh=p/0BBHnJr+FFftUotJoEcJBJoL48GuwYWP98R4CFmoQ=;
+  b=I89VUz2xJRV0GK151mUk3ZrOqzf74yJYQS52w3k/o9Qc4qfZSwEmSkOy
+   ruiJ8h4iNw/MyHvjA43j7y95/T/B2qQDmGbRfA97fo9lQif+3AKZNLNum
+   QijrA7K6p+ewq1Ue3m78oBfIzI1RImS135OG28YiemgUy7210oGO2QN+k
+   zhw7b4bSItEdJTRmZNwLO8M/vJTTlgOOpokmCBi0nLEQi96ATSW3sOTvO
+   jLkY614Sn5PX39VkadRiYIVLG+7pqVv+GspFswF8zwMCn6v1g7kuy6Igb
+   iVn0LR/3SGpTwA8BSxzRs9MrF+5qaRxfAzJUXvvTN5Kr75Mq5nU1SJTsb
    w==;
 X-CSE-ConnectionGUID: calzwGTlQgCl6fVaUG6ALA==
-X-CSE-MsgGUID: LNxzxDpGQwKx1MJ2IQ3y4A==
+X-CSE-MsgGUID: R3qN4wlUQN+db0QLsypdCg==
 X-IronPort-AV: E=Sophos;i="6.07,158,1708412400"; 
-   d="scan'208";a="18378694"
+   d="scan'208";a="18378697"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 Mar 2024 03:18:22 -0700
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 Mar 2024 03:18:23 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 27 Mar 2024 03:17:47 -0700
+ 15.1.2507.35; Wed, 27 Mar 2024 03:17:56 -0700
 Received: from archlinux.microchip.com (10.10.85.11) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Wed, 27 Mar 2024 03:17:44 -0700
+ 15.1.2507.35 via Frontend Transport; Wed, 27 Mar 2024 03:17:54 -0700
 From: Mihai Sain <mihai.sain@microchip.com>
 To: <robh@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
 	<conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
@@ -51,9 +51,9 @@ To: <robh@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
 	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-kernel@vger.kernel.org>
 CC: Mihai Sain <mihai.sain@microchip.com>
-Subject: [PATCH 3/7] ARM: dts: microchip: sama5d2_icp: Update the node names from pmic-regulators
-Date: Wed, 27 Mar 2024 12:17:20 +0200
-Message-ID: <20240327101724.2982-4-mihai.sain@microchip.com>
+Subject: [PATCH 6/7] regulator: dt-bindings: microchip,mcp16502: Update the node names from buck regulators
+Date: Wed, 27 Mar 2024 12:17:23 +0200
+Message-ID: <20240327101724.2982-7-mihai.sain@microchip.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240327101724.2982-1-mihai.sain@microchip.com>
 References: <20240327101724.2982-1-mihai.sain@microchip.com>
@@ -66,55 +66,64 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-Update the node names from pmic-regulators in order to match
+Update the node names from buck regulators in order to match
 the datasheet and driver namings for buck regulators.
 Using BUCK1-4 as node names is consistent with the node naming rules.
 
 Signed-off-by: Mihai Sain <mihai.sain@microchip.com>
 ---
- arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .../bindings/regulator/microchip,mcp16502.yaml         | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts b/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts
-index 999adeca6f33..f20de8180381 100644
---- a/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts
-+++ b/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts
-@@ -194,7 +194,7 @@ mcp16502@5b {
- 			lpm-gpios = <&pioBU 7 GPIO_ACTIVE_LOW>;
+diff --git a/Documentation/devicetree/bindings/regulator/microchip,mcp16502.yaml b/Documentation/devicetree/bindings/regulator/microchip,mcp16502.yaml
+index 1aca3646789e..72a1f8a92949 100644
+--- a/Documentation/devicetree/bindings/regulator/microchip,mcp16502.yaml
++++ b/Documentation/devicetree/bindings/regulator/microchip,mcp16502.yaml
+@@ -34,7 +34,7 @@ properties:
+     description: List of regulators and its properties.
  
- 			regulators {
--				vdd_io_reg: VDD_IO {
-+				vdd_io_reg: BUCK1 {
- 					regulator-name = "VDD_IO";
- 					regulator-min-microvolt = <3300000>;
- 					regulator-max-microvolt = <3300000>;
-@@ -213,7 +213,7 @@ regulator-state-mem {
- 					};
- 				};
+     patternProperties:
+-      "^(VDD_(IO|CORE|DDR|OTHER)|LDO[1-2])$":
++      "^(BUCK[1-4]|LDO[1-2])$":
+         type: object
+         $ref: regulator.yaml#
+         unevaluatedProperties: false
+@@ -70,7 +70,7 @@ examples:
+             reg = <0x5b>;
  
--				VDD_DDR {
-+				BUCK2 {
- 					regulator-name = "VDD_DDR";
- 					regulator-min-microvolt = <1350000>;
- 					regulator-max-microvolt = <1350000>;
-@@ -232,7 +232,7 @@ regulator-state-mem {
- 					};
- 				};
+             regulators {
+-                VDD_IO {
++                BUCK1 {
+                     regulator-name = "VDD_IO";
+                     regulator-min-microvolt = <3300000>;
+                     regulator-max-microvolt = <3300000>;
+@@ -89,7 +89,7 @@ examples:
+                     };
+                 };
  
--				VDD_CORE {
-+				BUCK3 {
- 					regulator-name = "VDD_CORE";
- 					regulator-min-microvolt = <1250000>;
- 					regulator-max-microvolt = <1250000>;
-@@ -251,7 +251,7 @@ regulator-state-mem {
- 					};
- 				};
+-                VDD_DDR {
++                BUCK2 {
+                     regulator-name = "VDD_DDR";
+                     regulator-min-microvolt = <1350000>;
+                     regulator-max-microvolt = <1350000>;
+@@ -108,7 +108,7 @@ examples:
+                     };
+                 };
  
--				VDD_OTHER {
-+				BUCK4 {
- 					regulator-name = "VDD_OTHER";
- 					regulator-min-microvolt = <600000>;
- 					regulator-max-microvolt = <1850000>;
+-                VDD_CORE {
++                BUCK3 {
+                     regulator-name = "VDD_CORE";
+                     regulator-min-microvolt = <1150000>;
+                     regulator-max-microvolt = <1150000>;
+@@ -127,7 +127,7 @@ examples:
+                     };
+                 };
+ 
+-                VDD_OTHER {
++                BUCK4 {
+                     regulator-name = "VDD_OTHER";
+                     regulator-min-microvolt = <1050000>;
+                     regulator-max-microvolt = <1250000>;
 -- 
 2.44.0
 
