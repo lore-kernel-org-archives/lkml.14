@@ -1,206 +1,160 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2051.outbound.protection.outlook.com [40.107.113.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFAB2C6B6
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 07:57:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711526277; cv=none; b=bu0opvCbkWJ/ZielsVhZZthz8lugAyunIa+kvLDqDBBfSIyCVaPFQA8BCLcPvu8PnorbYal70M/g6CwjhuZHqc6oMKtF7QjCUC6inPAjSxZJOwYNd5OukCQKmeZh01qZyyvhAd+bb21V4bXnEIF3xTgOVa10nzdrfIjv6a6JmWM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711526277; c=relaxed/simple;
-	bh=jdu3mEkxAJPXd8tZlrYxppddI8oOdg8IgXM8psnS3uE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Jlort38gkC8JIiJlUtqM6nSJN8WrMYh/rwGmatdldCNnE42z55GKu6hqe8xF3a8lzk4j4OtbrSHG5OOS9mxV1ZR2r/D7Wh6B6j52as/OIagz7Mizqr/Q3meb1LEkP/QBq6CcRVwAbKzBx9/yb+dh0GDFT9DBTUI3GQv63WwYp8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DCSAKhKM; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C2237140;
+	Wed, 27 Mar 2024 07:57:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.113.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711526278; cv=fail; b=utYy5fgBWZl6+1/OkYEYZHuFS9Q2c+Wn73sq7Gd3k94sZxlwJISpY9fPvpBvBj3Y9bKlFFr2SXAX6jyWmX1sp51oV7S1lkuI89SVDI65sW0ul/nTwuH02jlLXZVhekA3Kg2Ss+HaldJRsMxaXG8B0Ys/8PSpb5Cyiq4O/JKMr5Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711526278; c=relaxed/simple;
+	bh=0WhJBLt5dEv3QOkGYNnlpAl0Ww5Sk3sBEx0nDMrXrIM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=mwze6zLzP6LODk/GMEY5cwQjk+aAUB7E5i2VKYGYjHrxPvX5uuzhiCWp3hWVAz4QN78HWixHbNcS08/UuCHHByI2dj/2ZAZEc2UYNf88DxkViR2WpW+d8boJYPKnkN7TLsshKJmkhNH8/Qfgj+1uVMwCG8TTA0If4vmxTMQ+KdA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alpsalpine.com; spf=pass smtp.mailfrom=alpsalpine.com; dkim=pass (2048-bit key) header.d=alpsalpine.com header.i=@alpsalpine.com header.b=SrXbSmLb; arc=fail smtp.client-ip=40.107.113.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alpsalpine.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpsalpine.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DCSAKhKM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711526274;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nMSejyBZh+q/Djikou7LY9D5VawfjTNSh4zQaLgPqtU=;
-	b=DCSAKhKMAQY03+qaNXOFzab1h0m7GdBDpZT9s5Hv0KKdypW1naPnQjGHcezRLNELvRYhvv
-	KmtwlDEWnecFLIkkxwX6D2ja/0Y5/DSVmhVAZVo2mF0Stt7ZoFysErO19wMXPr2L6cyv00
-	g0Mvjt5pTaZ7dabzOXOQf9wdyiQzgLA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-661-cy8T5w0dNnOk7rL8fzoSoA-1; Wed, 27 Mar 2024 03:57:51 -0400
-X-MC-Unique: cy8T5w0dNnOk7rL8fzoSoA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B45DC8007A3;
-	Wed, 27 Mar 2024 07:57:50 +0000 (UTC)
-Received: from p1.luc.cera.cz (unknown [10.45.224.197])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 1B80AC15774;
-	Wed, 27 Mar 2024 07:57:49 +0000 (UTC)
-From: Ivan Vecera <ivecera@redhat.com>
-To: intel-wired-lan@lists.osuosl.org
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mschmidt@redhat.com,
-	aleksandr.loktionov@intel.com,
-	jesse.brandeburg@intel.com,
-	anthony.l.nguyen@intel.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Subject: [PATCH iwl-next v2 6/7] i40e: Add helper to access main VEB
-Date: Wed, 27 Mar 2024 08:57:32 +0100
-Message-ID: <20240327075733.8967-7-ivecera@redhat.com>
-In-Reply-To: <20240327075733.8967-1-ivecera@redhat.com>
-References: <20240327075733.8967-1-ivecera@redhat.com>
+	dkim=pass (2048-bit key) header.d=alpsalpine.com header.i=@alpsalpine.com header.b="SrXbSmLb"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kOYy+WIBPQGm2soXDbublHGD7khZzUPnWVLFW+0T5FzgwC0hU9zOddDs16w9uM+R5CahWrZW9qJaft/mlv+ygXDZpv9gq4DtDwinyhATnQw6yzmcKmgCSHZiGr+8wtlnO3AnQvC06YDgSqkr1RMPCSXdMkKD+VDoETZr9bWKtUYK+gV5sPiTcyI0aUZMtPwJ+GkFfYwP0p6TNReU5pJ3rdPJibymgzuul4ZWaBcgW3OUKhUbVihfRUElawLk0rADk9Ffaug9hwPRUEEiFQi5OeCV4mZVta6KTPOrCeG1ICArqOxLgZwoHE78kLk78Gm0YVDURtVhl3u/3axWHuu+3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nUnY80AUxnZ/SEHOshOFlSNKDOPCX0MdUNrtcVIJwFo=;
+ b=RyifpvFY4UAW9Xyhm+DMDeL7iGjD0k31mNe09J7VxghUazC6fYe4qmzScRIER5nZ1Hi9yQpp8LUrg30bfthztSB+1OfsQS7kIpiNDQDJ0o0uoLZS/kJp4dbmisyOqRkGmuTeplyCxVsfDu8CBmtlXoHISMCwWMW8OOZHuoLboxNHfRBtXUk1a/+Py4LRdidNk2PxbV7K4HnRubn+DdbODgwcPrVdvx64xr/PMA9JtZ+iOz78LHaWcFJj68FnbNTOa6Ia/vG2kSCNQl+uGS5HGntxl6xzhbHyCC3XcTn1bA/kKkSXo6IkYGaxOWMmjie4LUa22v7YGAIisU5z87EQCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=alpsalpine.com; dmarc=pass action=none
+ header.from=alpsalpine.com; dkim=pass header.d=alpsalpine.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alpsalpine.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nUnY80AUxnZ/SEHOshOFlSNKDOPCX0MdUNrtcVIJwFo=;
+ b=SrXbSmLbrmvu7tmujNvPu4OfQJ5aJwJEd/yrf3Mp2SjB5oMvLXlBUbdlAmuLizRbeAMIt6tmLPBwRsWez3eX/3bfNMOMVFbdqcJu9zZ2U00ewa9ncByurK2iKxnaCc37ppiYaj15DP37kqIO6lTEHo9q68Zp33IVOMN29rcrS6SwbzlPQZ0gU/UzZUfQRRLFV5JSVlKsAmlFyKZ+6WEuOwGwAL3WOVw/jZ3o1/QW9Jvz4n53+RX3cneCMUHps6yC4ySZEXhVsnSwl2sA5spgBGz/q8NfoIKZSipBCf+Tz/DHANxB7NQXtW1VjH1cdO+QFQ+mazdHF0qg6jdsot3f8w==
+Received: from TYVPR01MB10781.jpnprd01.prod.outlook.com
+ (2603:1096:400:2ae::14) by TY3PR01MB10191.jpnprd01.prod.outlook.com
+ (2603:1096:400:1d8::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.33; Wed, 27 Mar
+ 2024 07:57:52 +0000
+Received: from TYVPR01MB10781.jpnprd01.prod.outlook.com
+ ([fe80::b541:f53c:6306:6e2b]) by TYVPR01MB10781.jpnprd01.prod.outlook.com
+ ([fe80::b541:f53c:6306:6e2b%4]) with mapi id 15.20.7409.031; Wed, 27 Mar 2024
+ 07:57:52 +0000
+From: Norihiko Hama <norihiko.hama@alpsalpine.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+CC: "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"usb-storage@lists.one-eyed-alien.net"
+	<usb-storage@lists.one-eyed-alien.net>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] usb-storage: Optimize scan delay more precisely
+Thread-Topic: [PATCH] usb-storage: Optimize scan delay more precisely
+Thread-Index: AQHagAnskZ+PrXZ1a0CyN6BGkMIiXrFLFjOAgAAcfLCAAAKHgIAAAT8g
+Date: Wed, 27 Mar 2024 07:57:52 +0000
+Message-ID:
+ <TYVPR01MB10781723CBD338DC3EEB5F20590342@TYVPR01MB10781.jpnprd01.prod.outlook.com>
+References: <20240327055130.43206-1-Norihiko.Hama@alpsalpine.com>
+ <2024032757-surcharge-grime-d3dd@gregkh>
+ <TYVPR01MB107814D7A583CB986884AD4B290342@TYVPR01MB10781.jpnprd01.prod.outlook.com>
+ <2024032745-transfer-dazzler-2e15@gregkh>
+In-Reply-To: <2024032745-transfer-dazzler-2e15@gregkh>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=alpsalpine.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYVPR01MB10781:EE_|TY3PR01MB10191:EE_
+x-ms-office365-filtering-correlation-id: 60c2d1fd-55e5-474a-1f21-08dc4e339ac2
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ rAaip505sk1A37Af8lujYVEUSipPbYbY1h7ushptBr8tNI6exQ7WGXaW2Nr7XLZiqyDiMLZyDJN9qIN0I2c9WJLcdZ/sJtpkGIma67FbM9cNUDZmq0AkTVSQJnAVLgFHVLrv7ShEDqx6ADnYZwok6I9vSvQEv+/XXzPFpZ33fwjVJjhTJ+kGw5MAb6iAgX8lcaLNV3fRGwqrOO82krTZ0LVJIP6BBQUQGvglIQbuLpSu/d78qLfpb1zgX+llk4+nWs3MfuQeoKOgG/7Ki9LKiby1q1gBhu4Pp48EyuwAHAZdApQvTu9BdZGkbsDkLDBSXjXFp4xVRQ8OrbewzCh9y7GErguwPgemW6jygIihW6binA7AhjeGyfGsbehePY2waH5/Dj8y8SOJr8K7EJLZWwoy3uBroEHshRcumHDnft/I9Rl1kuh4to0OIPpxVQWaSZyHDSy00sJNfg9gnytRrwGLHQ9TAS8FBobZj5UT6rJ1jFpA6hwRLFN2DC9pq6Rlk90psp8HxBmbTf5sW0JesE4dlt03OTKjE+9pfrr4VLCImjuyJDU5Q4YsQ3Kb4tG7Mp82o9rPDPNwwA9jqP+R9aKbYGEZpvxwjfd02gP6LpIbqpl61hw9SBjZUbxn8gomJoGRw9ijOTcpCwt1fyWdxVpVPrqGz3TBMNNVhIXYCRuY1UPZOydvBCPBTHp1OYAbAbG3VaH8bYMsEcKvoGcOFAXRIC7NHlBXNnc70wPyNUU=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYVPR01MB10781.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-7?B?aU50clphZUhLSGxrcEVqelJ6bGVHTkRTRVROMHduc0RxemJVTG5HY2pXNmw0?=
+ =?utf-7?B?Z2FqRm1YVzhWTlcrLWdjWVBidVVQWlliTnppeTM3LzdmUVBUYXY1L1FGRUlp?=
+ =?utf-7?B?amFVVWx3YmIvNVpqWEUzOW15L1pIN3E5YjlLa0o4b0hTdXBVemlVbldXWEdp?=
+ =?utf-7?B?SjBQVUtNN2NvdnFFQ1hHNFJpeXdJaGd0MGhJVDNRdml2MWxwakN2dy9zb21F?=
+ =?utf-7?B?TG1IWjhuSTZiSWhtT0EyUFR4S3pPTUJIcEY0UEpKcGtnNFQ4NHRsU29oMVBL?=
+ =?utf-7?B?S1NOaVlyKy1ZTFYzeldYc1pkU0llWXNTKy1NbG4yL0hGaUNhN3dwcCstUVR6?=
+ =?utf-7?B?VjZremIxbDA1dVAyLzJCZTNyRzRSVklZeXJ5VnN5MjNuVERBVm9rbmRENmM4?=
+ =?utf-7?B?T3FPcTdNZDlleFRMdVlnRHVSOTFJMmFmNFg4U3lJV2o0Q2V1UHJvaUcvMWZw?=
+ =?utf-7?B?a2s5UzVmc21aTnVhVGgrLWlKMk54TVhEVVBJcTRzTWM1UUFOQU9wVDBNZGdi?=
+ =?utf-7?B?aEtwWGRSMHVZcHpSNEs3Z21oTklvWnBSYk85NWZ3OVFXbll5RzUxdystTHZm?=
+ =?utf-7?B?eXlmcWhQdU51aDU0ZEFYKy1FZzBFVGtBcXQrLW1oWVNYdDd2WlI1YUtFYnRB?=
+ =?utf-7?B?WUt3bjFZTElaMkV0ZUF4a3hFWjdKcUFyNFRWRmZDbk5wRXN0TE5TMFh6NkI2?=
+ =?utf-7?B?YS95MlZRbzVMT2lSSHNjaE5vZzdSd1hCeEpUODdRVFo5UjczVThLSGZHRk1l?=
+ =?utf-7?B?bGhvR0ZwNGpocWRLRFFtVkZQSGg0dkxFeFM3M2ZuRWNDOGxXWXlqcktDVnN1?=
+ =?utf-7?B?UERhdTRucVI5a1lNRDNRNTU4U1Q5b0NOdFQzSGd6YzlSYUpXZ1lUQktqS2NU?=
+ =?utf-7?B?bjdQdjNxck1RaHNDVmhpa2VFQ25IdnVoRFJrY3F0Z0NsTjVBNFFRNmd0RHBT?=
+ =?utf-7?B?UWx6UzZLcFN5b25nMVNVVk0zRmRwbTRRN3BGVENCcjJBRUZLWG82U3RpeFM2?=
+ =?utf-7?B?SjhuNXBRV2Z1WnExNlhldDM4SU0yZmg4RWNHNjFBRENLeWp4b215T3QyaFB3?=
+ =?utf-7?B?Ky1GN1hFd3ZuKy1wNEw4RzI4WFJTaTlCTURMUUpWRWtDVlBPMWJnQWFGNmFm?=
+ =?utf-7?B?MXFUZ2c1QW1BOEp4Y3E5QWd6ZlVQanhoVGkyYlNhWXlneFlnQWZoZnJ4ZEF3?=
+ =?utf-7?B?cGhKSG1jeUl4UnlBYVdDNk42VEFhRDhHYnZGeFFLZmhiRklGeEFzMHV6V1lF?=
+ =?utf-7?B?SVNVMTRjZUZZN2NpeVVsdkx4WmF4MEVWeTZlby9PcmdQNCstM0x6Q3hNc0Fk?=
+ =?utf-7?B?VmI5aFFPTFphMEJidGRCWW1ZL2VYNkhyeWlGTEZTODNsY0J0VUVjUzFUVjZI?=
+ =?utf-7?B?YzIxbzY4SmRPcldSVVJTNTJXWTVvME1mVistUkFieTcySUNscmdGNFBGZHFR?=
+ =?utf-7?B?Zmd5T2hxQUEwOVpkR05xL2NYUjg2NWN3bjR4ZEcvR2EzSzlLc2xtVWhJdExk?=
+ =?utf-7?B?WW02RDd4Z1lObm1rL3V1ZzJKZ1JYOFY0TnNFVTVZcEZXTkNiNkQ1bWhqY3dq?=
+ =?utf-7?B?MWFBT2tRL3ArLVlQTzM2dXBNM2NBeUtVaWJ6eml6b3pONGlXNmtjb0pIdnlq?=
+ =?utf-7?B?OFNoRkNSLzNldEFQQmk5aE02VzJwcDdIQTNwYlJvaEZPMnplWGs0N2hmSGtL?=
+ =?utf-7?B?WHVUeFpGWXJYTFFZVzFGY0tzTTRzSm5EbnpwT3JVd2xVeGZNZ0xRaEh3NXdk?=
+ =?utf-7?B?RlhqYXZXZnlkTmkrLUFjNDMrLWNzQUI4L0pnWHNKb01GajVaL0lPa0poTVhV?=
+ =?utf-7?B?SWZBOU1UaFJLb29OS2srLTlxOTdFY3kvZmxpdU9ibystZjh6bmxOZ0t0NjBv?=
+ =?utf-7?B?c09GYy9WUFJ3eDdhTmZYNmxKQ1dSb1gvV0YvNHZGM0JodFZ5Ky15NlVuOG93?=
+ =?utf-7?B?VU8vSzJ6VFJ3clVzeFk3djFUZXdkcnhJTEczdjdsalBBYSstb1lpQmR5MnpX?=
+ =?utf-7?B?UG13Vm9EUThRU3FseVdnWlh4MThKamlGanM0Q2VkY3lnNkpsdDQ1TjlZZmVa?=
+ =?utf-7?B?aEk2Ymk0T3E5SUJzVkVEc3dpSlVRbDFIaUoxdUdlMk9ScGY4clJSKy1PS3dp?=
+ =?utf-7?B?OWVnQjVJTTltSTlFWndzb3NWNmcrLVNYS1BkekNBOWZTR2o1SkUyMEJHMGE4?=
+ =?utf-7?B?Ug==?=
+Content-Type: text/plain; charset="utf-7"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+X-OriginatorOrg: alpsalpine.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYVPR01MB10781.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60c2d1fd-55e5-474a-1f21-08dc4e339ac2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2024 07:57:52.6197
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 57e76998-77bd-4b82-a424-198f46eb2254
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kg5hXeOcwW8pdPxIvwkc7tBgNHG1d/Vc94MUsI/B+gPKfE81e5U4uoaiwzJgN5oxYaQvg7cVtwpZw7M7BbsHJQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY3PR01MB10191
 
-Add a helper to access main VEB:
+On Wed, Mar 27, 2024 at 07:39:55AM +-0000, Norihiko Hama wrote:
++AD4- +AD4- +AD4- Sorry, but module parameters are from the 1990's, we will=
+ not go back to that if at all possible as it's not easy to maintain and wi=
+ll not work properly for multiple devices.
++AD4- +AD4- +AD4-
++AD4- +AD4- +AD4- I can understand wanting something between 1 and 0 second=
+s, but adding yet-another-option isn't probably the best way, sorry.
++AD4- +AD4- 1 second does not meet with performance requirement.
++AD4-
++AD4- Who is requiring such a performance requirement?  The USB specificati=
+on?
++AD4- Or something else?
+This is our customer requirement.
 
-i40e_pf_get_main_veb(pf) replaces 'pf->veb[pf->lan_veb]'
-
-Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
-Reviewed-by: Aleksandr Loktionov <aleksandr.loktionov@intel.com>
-Signed-off-by: Ivan Vecera <ivecera@redhat.com>
----
- drivers/net/ethernet/intel/i40e/i40e.h        | 11 ++++++++
- .../net/ethernet/intel/i40e/i40e_ethtool.c    |  9 +++----
- drivers/net/ethernet/intel/i40e/i40e_main.c   | 27 ++++++++++++-------
- 3 files changed, 31 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/i40e/i40e.h b/drivers/net/ethernet/intel/i40e/i40e.h
-index fb0b913692e1..2f135db416cf 100644
---- a/drivers/net/ethernet/intel/i40e/i40e.h
-+++ b/drivers/net/ethernet/intel/i40e/i40e.h
-@@ -1401,4 +1401,15 @@ i40e_pf_get_veb_by_seid(struct i40e_pf *pf, u16 seid)
- 	return NULL;
- }
- 
-+/**
-+ * i40e_pf_get_main_veb - get pointer to main VEB
-+ * @pf: pointer to a PF
-+ *
-+ * Return pointer to main VEB or NULL if it does not exist
-+ **/
-+static inline struct i40e_veb *i40e_pf_get_main_veb(struct i40e_pf *pf)
-+{
-+	return (pf->lan_veb != I40E_NO_VEB) ? pf->veb[pf->lan_veb] : NULL;
-+}
-+
- #endif /* _I40E_H_ */
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c b/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
-index 5cd0d1b45f01..4e28785c9fb2 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
-@@ -2425,14 +2425,11 @@ static void i40e_get_ethtool_stats(struct net_device *netdev,
- 	if (vsi->type != I40E_VSI_MAIN || pf->hw.partition_id != 1)
- 		goto check_data_pointer;
- 
--	veb_stats = ((pf->lan_veb != I40E_NO_VEB) &&
--		     (pf->lan_veb < I40E_MAX_VEB) &&
--		     test_bit(I40E_FLAG_VEB_STATS_ENA, pf->flags));
-+	veb = i40e_pf_get_main_veb(pf);
-+	veb_stats = veb && test_bit(I40E_FLAG_VEB_STATS_ENA, pf->flags);
- 
--	if (veb_stats) {
--		veb = pf->veb[pf->lan_veb];
-+	if (veb_stats)
- 		i40e_update_veb_stats(veb);
--	}
- 
- 	/* If veb stats aren't enabled, pass NULL instead of the veb so that
- 	 * we initialize stats to zero and update the data pointer
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index d6dbd0fd79eb..2e1955064abb 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -2480,7 +2480,7 @@ static int i40e_set_promiscuous(struct i40e_pf *pf, bool promisc)
- 	int aq_ret;
- 
- 	if (vsi->type == I40E_VSI_MAIN &&
--	    pf->lan_veb != I40E_NO_VEB &&
-+	    i40e_pf_get_main_veb(pf) &&
- 	    !test_bit(I40E_FLAG_MFP_ENA, pf->flags)) {
- 		/* set defport ON for Main VSI instead of true promisc
- 		 * this way we will get all unicast/multicast and VLAN
-@@ -9916,6 +9916,7 @@ static void i40e_veb_link_event(struct i40e_veb *veb, bool link_up)
- static void i40e_link_event(struct i40e_pf *pf)
- {
- 	struct i40e_vsi *vsi = i40e_pf_get_main_vsi(pf);
-+	struct i40e_veb *veb = i40e_pf_get_main_veb(pf);
- 	u8 new_link_speed, old_link_speed;
- 	bool new_link, old_link;
- 	int status;
-@@ -9955,8 +9956,8 @@ static void i40e_link_event(struct i40e_pf *pf)
- 	/* Notify the base of the switch tree connected to
- 	 * the link.  Floating VEBs are not notified.
- 	 */
--	if (pf->lan_veb < I40E_MAX_VEB && pf->veb[pf->lan_veb])
--		i40e_veb_link_event(pf->veb[pf->lan_veb], new_link);
-+	if (veb)
-+		i40e_veb_link_event(veb, new_link);
- 	else
- 		i40e_vsi_link_event(vsi, new_link);
- 
-@@ -14892,7 +14893,8 @@ static void i40e_setup_pf_switch_element(struct i40e_pf *pf,
- 		/* Main VEB? */
- 		if (uplink_seid != pf->mac_seid)
- 			break;
--		if (pf->lan_veb >= I40E_MAX_VEB) {
-+		veb = i40e_pf_get_main_veb(pf);
-+		if (!veb) {
- 			int v;
- 
- 			/* find existing or else empty VEB */
-@@ -14906,12 +14908,15 @@ static void i40e_setup_pf_switch_element(struct i40e_pf *pf,
- 				pf->lan_veb = v;
- 			}
- 		}
--		if (pf->lan_veb >= I40E_MAX_VEB)
-+
-+		/* Try to get again main VEB as pf->lan_veb may have changed */
-+		veb = i40e_pf_get_main_veb(pf);
-+		if (!veb)
- 			break;
- 
--		pf->veb[pf->lan_veb]->seid = seid;
--		pf->veb[pf->lan_veb]->uplink_seid = pf->mac_seid;
--		pf->veb[pf->lan_veb]->pf = pf;
-+		veb->seid = seid;
-+		veb->uplink_seid = pf->mac_seid;
-+		veb->pf = pf;
- 		break;
- 	case I40E_SWITCH_ELEMENT_TYPE_VSI:
- 		if (num_reported != 1)
-@@ -15056,13 +15061,15 @@ static int i40e_setup_pf_switch(struct i40e_pf *pf, bool reinit, bool lock_acqui
- 	/* first time setup */
- 	main_vsi = i40e_pf_get_main_vsi(pf);
- 	if (!main_vsi || reinit) {
-+		struct i40e_veb *veb;
- 		u16 uplink_seid;
- 
- 		/* Set up the PF VSI associated with the PF's main VSI
- 		 * that is already in the HW switch
- 		 */
--		if (pf->lan_veb < I40E_MAX_VEB && pf->veb[pf->lan_veb])
--			uplink_seid = pf->veb[pf->lan_veb]->seid;
-+		veb = i40e_pf_get_main_veb(pf);
-+		if (veb)
-+			uplink_seid = veb->seid;
- 		else
- 			uplink_seid = pf->mac_seid;
- 		if (!main_vsi)
--- 
-2.43.0
-
++AD4- +AD4- I have no good idea except module parameter so that we can main=
+tain backward compatibility but be configurable out of module.
++AD4- +AD4- Do you have any other better solution?
++AD4- How long do you exactly need to wait?  Why not figure out how long th=
+e device takes and if it fails, slowly back off until the full time delay h=
+appens and then you can abort?
+It's IOP issue and difficult to figure out because it depends on device its=
+elf.
+I know we have multiple devices with delay+AF8-use+AD0-0, but then it's rec=
+overed and detected by reset after 30s timeout, that is too long than 1 sec=
+.
