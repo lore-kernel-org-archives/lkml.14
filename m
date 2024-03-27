@@ -1,125 +1,180 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8E017A911;
-	Wed, 27 Mar 2024 12:24:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C7717A92C;
+	Wed, 27 Mar 2024 12:24:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711542251; cv=none; b=Lhao6yi2d6JJXetG3m+wDiQvakHF7qOX99qEm7VwuR1PD4mUYbuZy9V3/Zx7lV35Lswc7zmK0RfMc/LmtlDofxbQzG3aQ9mh8U+d2d1GxMKt1IWn+E6cobpMtWCJrJPFkBaYYsOHusrOhAt1XmkQLOUkL20ZcW9WRxeVaeSO9BI=
+	t=1711542253; cv=none; b=ROVOngXjJdTNPFI4wJK7Bz1OPWaMk44plpdHh6LZg1gyvwkpqloMF6T64dWBHdkWyCSRKjbsD/7pb2B2vwMvgs8yZ1EhDfvNDefGQc1bivHsdI8eTvLM1uDO0bpOZEv6F34Xf8NIaTQwKzmUMFEuyDIL17QInly17MxD9haKGm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711542251; c=relaxed/simple;
-	bh=aILctM/4IaWB0TVDutDw4QQqKI+aELVY+YewBrIQIbs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BkVau4HwsmcDN7Pfdot3W4Q1YUZ6wYISuIocDjFjpe4D+T+8V8icUIQpZ+Qij64vluRZTZ6wDClNq9P9ZxTmsSQQkHm62XzNwb2/plbwyf8iOHak2DZ1oVKLwi8U+jRWHMWFrjkChaeMtq5okcMB7eluEc7UBCcyuAkLm/NicDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lyn+UApI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711542253; c=relaxed/simple;
+	bh=zMW9hCD84j0PFOETQT30po9fz4tQTpyv4UDC4EL/t1c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=azs/QQmWVkCr/08lwkT05YDaQ7/Lmz5kzFZKCCDEK3d9YU7dfjAU38mVqrBD73QJykarT8xj96Ym67p9yscD/NtnvQRgE/zu+blpALxs/+w0YVK39zZITkLSCoEIckJfE4TjiYfxspgprp1eK+OqGQv5+IM9VgSN8/lpj3ApCeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lyf4vdzm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lyn+UApI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 822D0C433B1;
-	Wed, 27 Mar 2024 12:24:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lyf4vdzm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35853C433C7;
+	Wed, 27 Mar 2024 12:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711542251;
-	bh=aILctM/4IaWB0TVDutDw4QQqKI+aELVY+YewBrIQIbs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lyn+UApI7G6jvuwj8RDzwBHEzsxkiild9br+8R95OBWE/hoE6C6D83/Y11m+WRbax
-	 5KNcaLV6FEYOUcAvTRJBppcRwUBWDq1KWNwGDGRXartaesCMMvPxHsGEmwMvOzg9Tp
-	 Tm9mTKX0Vm0TPkhTDgxVv965YljQs+jwcNsLWIeJhZUXQ5Pw9Lgk4fe/MF4509rKyH
-	 brQ3hFBFhwzTjnMtGN02oY2Uotft08nHbJdKjTdqcJr+wH0n4aa23LH/LxD7zTbRX/
-	 wEJycNoT6XNubPIZdTcxwZnMxYMws24voL9XGQXwb3DvEJE3HoWgPjw6riY04U0mse
-	 GZqYHLV+YfcYQ==
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a4a39ab1a10so441487666b.1;
-        Wed, 27 Mar 2024 05:24:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV/ub6RndJuhGQxC4OCQbHens+xLo2vJ+VCNfqvB9Xa8LrWay5Y+d3WZPMGpyfbuDH08DrG9tYR0Iw1vqoMGvt3wfV3CZ2gwDx1OXwnbRwwLkPeLFG67BlnE1WJ2QzlBcg4
-X-Gm-Message-State: AOJu0Yz+rp5vZQN4sBrDVHF0q78/kNDmCw68f7tLDMjg5XpbMD8kBcyb
-	QoBI2T8jURdQrFVkKAmNkBQz6G4iejlK+oDZtmpk/yjrUYJDHs79HO2kH/MgDH18OD8GZPPBBOY
-	HhX4KUm1GP+w5ZO1eiJ3Aagmsc30=
-X-Google-Smtp-Source: AGHT+IH5QG4gK2oTVi3ncpzY0t5JIQmgvy6v0aZwbtRBomJdCe823Y8g9QFMk8+duWZLnOUiQv1hA8IKlQ37EBfGEDU=
-X-Received: by 2002:a17:906:3610:b0:a47:ae0:160 with SMTP id
- q16-20020a170906361000b00a470ae00160mr1774953ejb.73.1711542250005; Wed, 27
- Mar 2024 05:24:10 -0700 (PDT)
+	s=k20201202; t=1711542252;
+	bh=zMW9hCD84j0PFOETQT30po9fz4tQTpyv4UDC4EL/t1c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lyf4vdzmry05fRiKuZh4iT+BOxA/XE5ifdcI8UqdPERKKYgvkInlruTOt+2Bru5JQ
+	 dB/Qk9yrBC3Or+vsIuAX2IUtm/WCRATfUOW5rhABeTjGft3Sb9IGTatEEVoQMabjtF
+	 jf4qS9uhMb8GtvS8cdgCZg7zt7w2JMnEIKPPkabExiR6vZ3OMdhhJqZzrtbBgmLHT/
+	 jiFjDigO5WRagDV6RALSo++zGo1nxa23Nh2v++OZTdDHSAPzwwnd96lGI0Cky+pY0P
+	 zpA8qRECRUJtDwCeomh2rbquApEQClSy+kTRw5kC3O8huRHtFubkQkjkZinChNh8kS
+	 c6cEUI5KhOHDQ==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org,
+	josef@toxicpanda.com
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: FAILED: Patch "nfs: fix UAF in direct writes" failed to apply to 5.4-stable tree
+Date: Wed, 27 Mar 2024 08:24:10 -0400
+Message-ID: <20240327122411.2839189-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326224943.86912-1-puranjay12@gmail.com>
-In-Reply-To: <20240326224943.86912-1-puranjay12@gmail.com>
-From: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-Date: Wed, 27 Mar 2024 13:23:58 +0100
-X-Gmail-Original-Message-ID: <CAJ+HfNgi=nB1qneuAGkpEb7GihGoegVJFVp5ZN8o-m2v3UG1yw@mail.gmail.com>
-Message-ID: <CAJ+HfNgi=nB1qneuAGkpEb7GihGoegVJFVp5ZN8o-m2v3UG1yw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 0/2] bpf,riscv: Add support for BPF Arena
-To: Puranjay Mohan <puranjay12@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, bpf@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Pu Lehui <pulehui@huaweicloud.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Patchwork-Hint: ignore
+X-stable: review
+Content-Transfer-Encoding: 8bit
 
-On Tue, 26 Mar 2024 at 23:49, Puranjay Mohan <puranjay12@gmail.com> wrote:
->
-> Changes in V3
-> V2: https://lore.kernel.org/bpf/20240325155434.65589-1-puranjay12@gmail.c=
-om/
-> - Use REG_DONT_CLEAR_MARKER in place of DONT_CLEAR as the name.
-> - Use RV_REG_ZERO for the above as it is guaranteed to be never used in a=
-s
->   dst/src register in BPF LDX/STX/ST instructions.
-> - Use #define RV_REG_ARENA for RV_REG_S7
->
-> Changes in V2
-> V1: https://lore.kernel.org/bpf/20240323154652.54572-1-puranjay12@gmail.c=
-om/
-> - Used S7 in place of S11 for storing the kernel_vm_start
-> - Used 17 in place of 16 for DONT_CLEAR marker
-> - Remove an unused variable
-> - Removed some misleading information from the commit message.
->
-> This series adds the support for PROBE_MEM32 and bpf_addr_space_cast
-> instructions to the RISCV BPF JIT. These two instructions allow the
-> enablement of BPF Arena.
->
-> All arena related selftests are passing:
->
->   root@rv-tester:~/bpf# uname -p
->   riscv64
->   root@rv-tester:~/bpf# ./test_progs -a "*arena*"
->   #3/1     arena_htab/arena_htab_llvm:OK
->   #3/2     arena_htab/arena_htab_asm:OK
->   #3       arena_htab:OK
->   #4/1     arena_list/arena_list_1:OK
->   #4/2     arena_list/arena_list_1000:OK
->   #4       arena_list:OK
->   #434/1   verifier_arena/basic_alloc1:OK
->   #434/2   verifier_arena/basic_alloc2:OK
->   #434/3   verifier_arena/basic_alloc3:OK
->   #434/4   verifier_arena/iter_maps1:OK
->   #434/5   verifier_arena/iter_maps2:OK
->   #434/6   verifier_arena/iter_maps3:OK
->   #434     verifier_arena:OK
->   Summary: 3/10 PASSED, 0 SKIPPED, 0 FAILED
->
-> This feature needs the following two fixes in the bpf/bpf.git to work
-> properly:
->
-> f7f5d1808b1b6 ("bpf: verifier: fix addr_space_cast from as(1) to as(0)")
-> 443574b033876 ("riscv, bpf: Fix kfunc parameters incompatibility between =
-bpf and riscv abi")
->
-> There is a lot of code repetition for LDX, STX, and ST. I will be sending=
- a
-> follow-up patch to refactor these.
+The patch below does not apply to the 5.4-stable tree.
+If someone wants it applied there, or to any other stable or longterm
+tree, then please email the backport, including the original git commit
+id to <stable@vger.kernel.org>.
 
-Thank you, and please address Lehui's remarks as well.
+Thanks,
+Sasha
 
-For the series:
+------------------ original commit in Linus's tree ------------------
 
-Tested-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
-Acked-by: Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org>
+From 17f46b803d4f23c66cacce81db35fef3adb8f2af Mon Sep 17 00:00:00 2001
+From: Josef Bacik <josef@toxicpanda.com>
+Date: Fri, 1 Mar 2024 11:49:57 -0500
+Subject: [PATCH] nfs: fix UAF in direct writes
+
+In production we have been hitting the following warning consistently
+
+------------[ cut here ]------------
+refcount_t: underflow; use-after-free.
+WARNING: CPU: 17 PID: 1800359 at lib/refcount.c:28 refcount_warn_saturate+0x9c/0xe0
+Workqueue: nfsiod nfs_direct_write_schedule_work [nfs]
+RIP: 0010:refcount_warn_saturate+0x9c/0xe0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ ? __warn+0x9f/0x130
+ ? refcount_warn_saturate+0x9c/0xe0
+ ? report_bug+0xcc/0x150
+ ? handle_bug+0x3d/0x70
+ ? exc_invalid_op+0x16/0x40
+ ? asm_exc_invalid_op+0x16/0x20
+ ? refcount_warn_saturate+0x9c/0xe0
+ nfs_direct_write_schedule_work+0x237/0x250 [nfs]
+ process_one_work+0x12f/0x4a0
+ worker_thread+0x14e/0x3b0
+ ? ZSTD_getCParams_internal+0x220/0x220
+ kthread+0xdc/0x120
+ ? __btf_name_valid+0xa0/0xa0
+ ret_from_fork+0x1f/0x30
+
+This is because we're completing the nfs_direct_request twice in a row.
+
+The source of this is when we have our commit requests to submit, we
+process them and send them off, and then in the completion path for the
+commit requests we have
+
+if (nfs_commit_end(cinfo.mds))
+	nfs_direct_write_complete(dreq);
+
+However since we're submitting asynchronous requests we sometimes have
+one that completes before we submit the next one, so we end up calling
+complete on the nfs_direct_request twice.
+
+The only other place we use nfs_generic_commit_list() is in
+__nfs_commit_inode, which wraps this call in a
+
+nfs_commit_begin();
+nfs_commit_end();
+
+Which is a common pattern for this style of completion handling, one
+that is also repeated in the direct code with get_dreq()/put_dreq()
+calls around where we process events as well as in the completion paths.
+
+Fix this by using the same pattern for the commit requests.
+
+Before with my 200 node rocksdb stress running this warning would pop
+every 10ish minutes.  With my patch the stress test has been running for
+several hours without popping.
+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/direct.c        | 11 +++++++++--
+ fs/nfs/write.c         |  2 +-
+ include/linux/nfs_fs.h |  1 +
+ 3 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+index befcc167e25fe..6b8798d01e3a1 100644
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -672,10 +672,17 @@ static void nfs_direct_commit_schedule(struct nfs_direct_req *dreq)
+ 	LIST_HEAD(mds_list);
+ 
+ 	nfs_init_cinfo_from_dreq(&cinfo, dreq);
++	nfs_commit_begin(cinfo.mds);
+ 	nfs_scan_commit(dreq->inode, &mds_list, &cinfo);
+ 	res = nfs_generic_commit_list(dreq->inode, &mds_list, 0, &cinfo);
+-	if (res < 0) /* res == -ENOMEM */
+-		nfs_direct_write_reschedule(dreq);
++	if (res < 0) { /* res == -ENOMEM */
++		spin_lock(&dreq->lock);
++		if (dreq->flags == 0)
++			dreq->flags = NFS_ODIRECT_RESCHED_WRITES;
++		spin_unlock(&dreq->lock);
++	}
++	if (nfs_commit_end(cinfo.mds))
++		nfs_direct_write_complete(dreq);
+ }
+ 
+ static void nfs_direct_write_clear_reqs(struct nfs_direct_req *dreq)
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index 58adbb7709ba7..15359bbfa56bc 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -1646,7 +1646,7 @@ static int wait_on_commit(struct nfs_mds_commit_info *cinfo)
+ 				       !atomic_read(&cinfo->rpcs_out));
+ }
+ 
+-static void nfs_commit_begin(struct nfs_mds_commit_info *cinfo)
++void nfs_commit_begin(struct nfs_mds_commit_info *cinfo)
+ {
+ 	atomic_inc(&cinfo->rpcs_out);
+ }
+diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+index f5ce7b1011461..d59116ac82099 100644
+--- a/include/linux/nfs_fs.h
++++ b/include/linux/nfs_fs.h
+@@ -611,6 +611,7 @@ int nfs_wb_folio_cancel(struct inode *inode, struct folio *folio);
+ extern int  nfs_commit_inode(struct inode *, int);
+ extern struct nfs_commit_data *nfs_commitdata_alloc(void);
+ extern void nfs_commit_free(struct nfs_commit_data *data);
++void nfs_commit_begin(struct nfs_mds_commit_info *cinfo);
+ bool nfs_commit_end(struct nfs_mds_commit_info *cinfo);
+ 
+ static inline bool nfs_have_writebacks(const struct inode *inode)
+-- 
+2.43.0
+
+
+
+
