@@ -1,124 +1,220 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D822557E;
-	Wed, 27 Mar 2024 15:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC51E12E1C2
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 15:23:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711553012; cv=none; b=VEn40nRgzcESJz/j5jJ+We94A+eJq7La4I8BgNLcKcboeuy7OSwX1QfHvoWNFXnFjnAGDn88xEEm23AXbTiPn2g5Uf7Fap2XEkKGiTSoZCQnu9WyOLCF0I6qmqzxCVY1mFBuPZ6V+AhWkGI788I43DSJhZq0Z10FH0uuApekn98=
+	t=1711553020; cv=none; b=tc7g9+Ua4J3xcLKfSI5QFpyRqnrp9+v/LhQ2anaPQ+wasFO+KvzpSxWtfaTsPSnuRnqtwKNq7n8Wrrsb3cZQ7XONUop5Xc2LdlIfOZ2bViwTcX3exL/XmoLjBZdgPzi3QeNxsKHKlH3me5cnKJFUjcvjsi5JqfzqL5amVY9DaqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711553012; c=relaxed/simple;
-	bh=rMv9zxTLOc2gGvdPWGvZBa+aQKrI/aFqAI1di8hyPQw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=idO9ycIoWQ2HzKMYsekE8aBNp/aPYjirj4H/K7o0i3yTzQ500KA8HX2xG4HMbZb59K+ybOk3VW/Zekd71YTNGeyE/6NTtWQd25EbKWljv/EImkEd4Ol5pQ+PpKmEs/sXcBT4unxuIRxVOmSljpwRTIVDMrvHCF+I7HA46sH5+sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O4I/BuHF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711553020; c=relaxed/simple;
+	bh=ow1Cpx65pYXkvLHQRFNBQDOaePjd5ZZTj/9w/oXKR+g=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=HjbgwSD96Puw5rfu2V1k8SJha+mqI2pjhfnbV5GCrVvVpXnRnTndwf+bUFAOwcX0VhegB0RZjtXuQQotlrc5zcTsCCXlliq8oJ6z3AwBVc6I7oFTAyfumSRVzZdKkCzh9HVhu4KN/MaIyVvhZIflKRrjGpTpNhpU2zMGq8sKaTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Esbwt1vz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O4I/BuHF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91063C433A6;
-	Wed, 27 Mar 2024 15:23:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711553011;
-	bh=rMv9zxTLOc2gGvdPWGvZBa+aQKrI/aFqAI1di8hyPQw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=O4I/BuHF490WGur6hj5s8qbEij6Vu/xefRx3Pyhni6+LsfYGaZfW3nPTgP0r7OM6A
-	 4nMvSHfuaGAJYusAVP4Nlohpk+FgMGiFegJX7o1dEDkcRSJqnoTHZJ5YUZ+pTXpzh6
-	 aU5D+Ql/lbKdFFRdw/x4Was5dUMa0oSJ5mcZ5lFcfy5R5ufKGcmvOoUkcxJBKv48uL
-	 pqWsWxPw+KPEYpQKC2dpv+1rSBqAnaCpJePtwyOjtXouLguEM684QgLpFLS+hpvt9P
-	 WBYTKlV2tJ5m256ffDvs0Mw50yTMAALhp+W6H9b63vY2N0hqA8sypxb2NywF96YlEZ
-	 8lTlFNZdhpF1A==
-Date: Wed, 27 Mar 2024 10:23:29 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Victor Shih <victor.shih@genesyslogic.com.tw>,
-	Ben Chuang <benchuanggli@gmail.com>
-Subject: Re: [PATCH v3] PCI: Mask replay timer timeout of GL975x's rootport
-Message-ID: <20240327152329.GA1523226@bhelgaas>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Esbwt1vz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711553017;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=QY8+yIZm1ve5QuiynFE7MjMximJHpz8noDQuYnaNKN8=;
+	b=Esbwt1vzoKiRbSwFeQA3mApmKG0xnUIYry3Aps1G9dmr9I5n14dmseAN9JrBQMFi4LKFsY
+	D9L0PMo754iZAdXruU8CunaGwTexaO63iUH4ijBuidWwDP35a9ykck6nZl/ZJEsML/JrZ8
+	bGFYXbD0fQ/xpD6gOJCHnDUZw6zzskA=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-287-HRfmamJnNbqvMTQuYnCE6g-1; Wed, 27 Mar 2024 11:23:36 -0400
+X-MC-Unique: HRfmamJnNbqvMTQuYnCE6g-1
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-69152af7760so25771906d6.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 08:23:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711553016; x=1712157816;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QY8+yIZm1ve5QuiynFE7MjMximJHpz8noDQuYnaNKN8=;
+        b=KtpaZJnFji+6cArrWbJcKXeOm1rTbUtWZqPEUjtGijY2gUPRgcoU61uckpLydxoPpg
+         sMJ8Cc86f/Kb1pc7Q+7rB0v6ojGf1FrlOPKkDo4xNuX2bppTK1gWADxj4HD1JAk3Ti5p
+         6wEU8jIC4K3y+YOUFBE6LpH41kPXUZYVTJTaBN5pR1IGuqFUM/EmVJNxsXKmLFMXT7pC
+         25wyQQFuXx/MZeDM/idJRZAa8xvNkZGStld9lWAUKFiSg6rTpYtFuyXDxcISmdGOu2Vo
+         v1VZ8JgGcRbZg6GBLlqVXtQaTQv/2F8VBV1IF2LajyJC+dzb7l990ba2RgjAXL2D2tbH
+         B3Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCWxtuQBnI9cYnLiY6w+4CdpAEJcy8ydxIpQeY+lf4lLm5zxT8B1KuCIIvClRjCjjw0k8VEJ3KvxMhYoCAcEYeKfoITAwBPuIsLoelVv
+X-Gm-Message-State: AOJu0Yyh7m308py6PdM5gybp19HCutX1xT0QSIPMPu4921IsRiDMjIXn
+	BmG6nP0bRo+SgbWqRGDKE/OzTafZeHHgVZr/K+keVOJSgJk8IUL0nVPAFvqJH7bpPakcIb+bmHo
+	bxbhuNFeVOjyEMCIDKGc8YSqdxy843pZvsHhFkUvekUdpiyhVQP7nWzSLbZ5vzg==
+X-Received: by 2002:a05:6214:4a07:b0:696:8ecc:c368 with SMTP id pg7-20020a0562144a0700b006968eccc368mr9338918qvb.5.1711553015493;
+        Wed, 27 Mar 2024 08:23:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFIDOc++LqI5apT0o+E9CespyQta03LCPOzKebS/1UvNBD/Rvzf0d7U/D6UOW074NAt3LtIIw==
+X-Received: by 2002:a05:6214:4a07:b0:696:8ecc:c368 with SMTP id pg7-20020a0562144a0700b006968eccc368mr9338893qvb.5.1711553014922;
+        Wed, 27 Mar 2024 08:23:34 -0700 (PDT)
+Received: from x1n.redhat.com ([99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id hu4-20020a056214234400b00690dd47a41csm6412639qvb.86.2024.03.27.08.23.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Mar 2024 08:23:34 -0700 (PDT)
+From: peterx@redhat.com
+To: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: Yang Shi <shy828301@gmail.com>,
+	"Kirill A . Shutemov" <kirill@shutemov.name>,
+	Mike Kravetz <mike.kravetz@oracle.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	peterx@redhat.com,
+	Andrew Jones <andrew.jones@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	linux-riscv@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Rik van Riel <riel@surriel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	David Hildenbrand <david@redhat.com>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	James Houghton <jthoughton@google.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>
+Subject: [PATCH v4 00/13] mm/gup: Unify hugetlb, part 2
+Date: Wed, 27 Mar 2024 11:23:19 -0400
+Message-ID: <20240327152332.950956-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.44.0
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240327024509.1071189-1-kai.heng.feng@canonical.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 27, 2024 at 10:45:09AM +0800, Kai-Heng Feng wrote:
-> Any access to GL975x's config space, like `lspci -vv` or
-> pci_save_state(), can still trigger the replay timer timeout error even
-> after commit 015c9cbcf0ad ("mmc: sdhci-pci-gli: GL9750: Mask the replay
-> timer timeout of AER"), albeit with a lower reproduce rate.
-> 
-> The AER interrupt can prevent the system from suspending, or can flood
-> the kernel message. So mask the replay timer timeout to resolve the
-> issue.
-> 
-> Cc: Victor Shih <victor.shih@genesyslogic.com.tw>
-> Cc: Ben Chuang <benchuanggli@gmail.com>
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Peter Xu <peterx@redhat.com>
 
-Applied as below to pci/aer for v6.10, thanks!
+v4:
+- Fix build issues, tested on more archs/configs ([x86_64, i386, arm, arm64,
+  powerpc, riscv, s390] x [allno, alldef, allmod]).
+  - Squashed the fixup series into v3, touched up commit messages [1]
+  - Added the patch to fix pud_pfn() into the series [2]
+  - Fixed one more build issue on arm+alldefconfig, where pgd_t is a
+    two-item array.
+- Manage R-bs: add some, remove some (due to the squashes above)
+- Rebase to latest mm-unstable (2f6182cd23a7, March 26th)
 
-commit eeee3b5e6d0b ("PCI: Mask Replay Timer Timeout errors for Genesys GL975x SD host controller")
-Author: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Wed Mar 27 10:45:09 2024 +0800
+rfc: https://lore.kernel.org/r/20231116012908.392077-1-peterx@redhat.com
+v1:  https://lore.kernel.org/r/20231219075538.414708-1-peterx@redhat.com
+v2:  https://lore.kernel.org/r/20240103091423.400294-1-peterx@redhat.com
+v3:  https://lore.kernel.org/r/20240321220802.679544-1-peterx@redhat.com
 
-    PCI: Mask Replay Timer Timeout errors for Genesys GL975x SD host controller
-    
-    Due to a hardware defect in GL975x, config accesses when ASPM is enabled
-    frequently cause Replay Timer Timeouts in the Port leading to the device.
-    
-    These are Correctable Errors, so the Downstream Port logs it in its AER
-    Correctable Error Status register and, when the error is not masked, sends
-    an ERR_COR message upstream.  The message terminates at a Root Port, which
-    may generate an AER interrupt so the OS can log it.
-    
-    The Correctable Error logging is an annoyance but not a major issue itself.
-    But when the AER interrupt happens during suspend, it can prevent the
-    system from suspending.
-    
-    015c9cbcf0ad ("mmc: sdhci-pci-gli: GL9750: Mask the replay timer timeout of
-    AER") masked these errors in the GL975x itself.
-    
-    Mask these errors in the Port leading to GL975x as well.  Note that Replay
-    Timer Timeouts will still be logged in the AER Correctable Error Status
-    register, but they will not cause AER interrupts.
-    
-    Link: https://lore.kernel.org/r/20240327024509.1071189-1-kai.heng.feng@canonical.com
-    Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-    [bhelgaas: commit log, update dmesg note]
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-    Cc: Victor Shih <victor.shih@genesyslogic.com.tw>
-    Cc: Ben Chuang <benchuanggli@gmail.com>
+The series removes the hugetlb slow gup path after a previous refactor work
+[1], so that slow gup now uses the exact same path to process all kinds of
+memory including hugetlb.
 
+For the long term, we may want to remove most, if not all, call sites of
+huge_pte_offset().  It'll be ideal if that API can be completely dropped
+from arch hugetlb API.  This series is one small step towards merging
+hugetlb specific codes into generic mm paths.  From that POV, this series
+removes one reference to huge_pte_offset() out of many others.
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index bf4833221816..5cb0f7fae3b8 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -6261,3 +6261,23 @@ static void pci_fixup_d3cold_delay_1sec(struct pci_dev *pdev)
- 	pdev->d3cold_delay = 1000;
- }
- DECLARE_PCI_FIXUP_FINAL(0x5555, 0x0004, pci_fixup_d3cold_delay_1sec);
-+
-+#ifdef CONFIG_PCIEAER
-+static void pci_mask_replay_timer_timeout(struct pci_dev *pdev)
-+{
-+	struct pci_dev *parent = pci_upstream_bridge(pdev);
-+	u32 val;
-+
-+	if (!parent || !parent->aer_cap)
-+		return;
-+
-+	pci_info(parent, "mask Replay Timer Timeout Correctable Errors due to %s hardware defect",
-+		 pci_name(pdev));
-+
-+	pci_read_config_dword(parent, parent->aer_cap + PCI_ERR_COR_MASK, &val);
-+	val |= PCI_ERR_COR_REP_TIMER;
-+	pci_write_config_dword(parent, parent->aer_cap + PCI_ERR_COR_MASK, val);
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9750, pci_mask_replay_timer_timeout);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9755, pci_mask_replay_timer_timeout);
-+#endif
+One goal of such a route is that we can reconsider merging hugetlb features
+like High Granularity Mapping (HGM).  It was not accepted in the past
+because it may add lots of hugetlb specific codes and make the mm code even
+harder to maintain.  With a merged codeset, features like HGM can hopefully
+share some code with THP, legacy (PMD+) or modern (continuous PTEs).
+
+To make it work, the generic slow gup code will need to at least understand
+hugepd, which is already done like so in fast-gup.  Due to the specialty of
+hugepd to be software-only solution (no hardware recognizes the hugepd
+format, so it's purely artificial structures), there's chance we can merge
+some or all hugepd formats with cont_pte in the future.  That question is
+yet unsettled from Power side to have an acknowledgement.  As of now for
+this series, I kept the hugepd handling because we may still need to do so
+before getting a clearer picture of the future of hugepd.  The other reason
+is simply that we did it already for fast-gup and most codes are still
+around to be reused.  It'll make more sense to keep slow/fast gup behave
+the same before a decision is made to remove hugepd.
+
+There's one major difference for slow-gup on cont_pte / cont_pmd handling,
+currently supported on three architectures (aarch64, riscv, ppc).  Before
+the series, slow gup will be able to recognize e.g. cont_pte entries with
+the help of huge_pte_offset() when hstate is around.  Now it's gone but
+still working, by looking up pgtable entries one by one.
+
+It's not ideal, but hopefully this change should not affect yet on major
+workloads.  There's some more information in the commit message of the last
+patch.  If this would be a concern, we can consider teaching slow gup to
+recognize cont pte/pmd entries, and that should recover the lost
+performance.  But I doubt its necessity for now, so I kept it as simple as
+it can be.
+
+Test Done
+=========
+
+For x86_64, tested full gup_test matrix over 2MB huge pages. For aarch64,
+tested the same over 64KB cont_pte huge pages.
+
+One note is that this v3 didn't go through any ppc test anymore, as finding
+such system can always take time.  It's based on the fact that it was
+tested in previous versions, and this version should have zero change
+regarding to hugepd sections.
+
+If anyone (Christophe?) wants to give it a shot on PowerPC, please do and I
+would appreciate it: "./run_vmtests.sh -a -t gup_test" should do well
+enough (please consider [2] applied if hugepd is <1MB), as long as we're
+sure the hugepd pages are touched as expected.
+
+Patch layout
+=============
+
+Patch 1-8:    Preparation works, or cleanups in relevant code paths
+Patch 9-11:   Teach slow gup with all kinds of huge entries (pXd, hugepd)
+Patch 12:     Drop hugetlb_follow_page_mask()
+
+More information can be found in the commit messages of each patch.  Any
+comment will be welcomed.  Thanks.
+
+[1] https://lore.kernel.org/all/20230628215310.73782-1-peterx@redhat.com
+[2] https://lore.kernel.org/r/20240321215047.678172-1-peterx@redhat.com
+
+Peter Xu (13):
+  mm/Kconfig: CONFIG_PGTABLE_HAS_HUGE_LEAVES
+  mm/hugetlb: Declare hugetlbfs_pagecache_present() non-static
+  mm: Make HPAGE_PXD_* macros even if !THP
+  mm: Introduce vma_pgtable_walk_{begin|end}()
+  mm/arch: Provide pud_pfn() fallback
+  mm/gup: Drop folio_fast_pin_allowed() in hugepd processing
+  mm/gup: Refactor record_subpages() to find 1st small page
+  mm/gup: Handle hugetlb for no_page_table()
+  mm/gup: Cache *pudp in follow_pud_mask()
+  mm/gup: Handle huge pud for follow_pud_mask()
+  mm/gup: Handle huge pmd for follow_pmd_mask()
+  mm/gup: Handle hugepd for follow_page()
+  mm/gup: Handle hugetlb in the generic follow_page_mask code
+
+ arch/riscv/include/asm/pgtable.h    |   1 +
+ arch/s390/include/asm/pgtable.h     |   1 +
+ arch/sparc/include/asm/pgtable_64.h |   1 +
+ arch/x86/include/asm/pgtable.h      |   1 +
+ include/linux/huge_mm.h             |  37 +-
+ include/linux/hugetlb.h             |  16 +-
+ include/linux/mm.h                  |   3 +
+ include/linux/pgtable.h             |  10 +
+ mm/Kconfig                          |   6 +
+ mm/gup.c                            | 518 ++++++++++++++++++++--------
+ mm/huge_memory.c                    | 133 +------
+ mm/hugetlb.c                        |  75 +---
+ mm/internal.h                       |   7 +-
+ mm/memory.c                         |  12 +
+ 14 files changed, 441 insertions(+), 380 deletions(-)
+
+-- 
+2.44.0
+
