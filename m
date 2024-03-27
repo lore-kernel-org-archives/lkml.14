@@ -1,134 +1,249 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25934125C1;
-	Wed, 27 Mar 2024 00:48:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA6028EC
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 00:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711500496; cv=none; b=qSxwO2Ta4podXKgrMZqoXxv1y+mO7cC2yFIDj6zXmre8JCDDJryxsU2CqMJi9Y880GfK2cc6xhP9Lm6ljbYUFzJh1m8VTwTgEAm1IlQLVz5rkLVsdl3cllV1faL7Mat6hHRg4AV0Nd2MpnrzugR52XTVDdMPtzZaXv5O1jzMOxg=
+	t=1711500569; cv=none; b=r/51E0A5bqDIf6Df/yJDvzVhSVRE2l0Z/wpjGFIRAmFND0vOS33ellnwPRuWv8IUvD6C85NYp8rb0AQ285ihFsm8sGQqa9CjTux5gRXYwscbrNaJmJYT89J6izSRUKAyJNX3rROYf2jWbpSdNUMNwH8+HKZHadlyd2RFisQ+R94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711500496; c=relaxed/simple;
-	bh=vRIhKjtK5KUqqD/xM6V+L7t8LjfRUzw5/jZWpRZcMiY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RT7dF8fYBupQlclYAVdb4moRmUpo+rBDDFTIyGWENhE6YfvOdfBTD0VID/r+x7kwlSv/JtjDNrc5Kw8BnRf1IdrD3hEffxwo7NId7vFTU3KIiMoMDMrGw2zVC8IoocXmLESZpTDUuO/kAPAdvyTF41c3et3DJMtMcFluTf6ZVrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nBrVbisA; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nBrVbisA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711500494; x=1743036494;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=vRIhKjtK5KUqqD/xM6V+L7t8LjfRUzw5/jZWpRZcMiY=;
-  b=nBrVbisArdnhCcw6TuZaONQZsKS+yosp/G7/zS1ERb+ic7V3X7hbDe5n
-   GTV3cKoUzf/wQ+sj6crYUHoZ6aujKp1PqF3nnmiINO0tL/04Z+oVAuLp2
-   uFLZS+UrePkK9SifHUyU/VMqgOc4pN2i1v9W3NuZ8ViPVH2TfMI+4BSEJ
-   +JYyh7mNWLLM1nIPs5JLtwX16mWAGZgE/UGQmmhfG0qrDD0zpX82TX83Z
-   rVogNkttWdngXpwYnl2kSQwup6+I0czAb8AlukgmR+rJQIf5PhcGkdHD0
-   uHdjZ4kSiJ60igmmDVQowLGDMNb6VCtJkOvHn30UbwIdkidH0fBBLixDj
-   w==;
-X-CSE-ConnectionGUID: z+TD5Vu/QBiKEjJXl3Joqg==
-X-CSE-MsgGUID: 9TNezZRnQ2mvAidIdBt2ig==
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="17311751"
-X-IronPort-AV: E=Sophos;i="6.07,157,1708416000"; 
-   d="scan'208";a="17311751"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 17:48:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,157,1708416000"; 
-   d="scan'208";a="20609157"
-Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.238.10.225]) ([10.238.10.225])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 17:47:57 -0700
-Message-ID: <a3d0b8dd-4831-4cf3-839e-ef40bdcea234@linux.intel.com>
-Date: Wed, 27 Mar 2024 08:47:54 +0800
+	s=arc-20240116; t=1711500569; c=relaxed/simple;
+	bh=39WfqTv+M61F8zb/OI5yhNkSowtyuA7VeJlqLboB4Ig=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=JzCIsv6rvyHmqK8tEV+2Blr1SE4KGNXpVU2k1c+CJEQpKZ9JP4k5myN+6xsIlFAE8eO09DD914dwwNQ6tJTL8j2RV/ebmum/10mBoCaKQg6y3qqRSwOgyouHRteNOsVQkP6VqfTfbAKjOnC6DNfG4KGnW4XpVYngE7d4Vs+v2X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4V47KC2BFCz1R7Kc;
+	Wed, 27 Mar 2024 08:46:39 +0800 (CST)
+Received: from kwepemm600017.china.huawei.com (unknown [7.193.23.234])
+	by mail.maildlp.com (Postfix) with ESMTPS id C7ADC140412;
+	Wed, 27 Mar 2024 08:49:18 +0800 (CST)
+Received: from [10.174.179.234] (10.174.179.234) by
+ kwepemm600017.china.huawei.com (7.193.23.234) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 27 Mar 2024 08:49:16 +0800
+Message-ID: <54007f91-3614-37c2-49f6-fc30429ec67d@huawei.com>
+Date: Wed, 27 Mar 2024 08:49:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 048/130] KVM: Allow page-sized MMU caches to be
- initialized with custom 64-bit values
-To: Isaku Yamahata <isaku.yamahata@intel.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
- erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
- Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
- chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
- isaku.yamahata@linux.intel.com
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <9c392612eac4f3c489ad12dd4a4d505cf10d36dc.1708933498.git.isaku.yamahata@intel.com>
- <d2ea2f8e-80b1-4dda-bf47-2145859e7463@linux.intel.com>
- <20240326173414.GA2444378@ls.amr.corp.intel.com>
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <20240326173414.GA2444378@ls.amr.corp.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v11 0/5]arm64: add ARCH_HAS_COPY_MC support
+To: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Andrew Morton
+	<akpm@linux-foundation.org>, James Morse <james.morse@arm.com>, Robin Murphy
+	<robin.murphy@arm.com>, Andrey Konovalov <andreyknvl@gmail.com>, Dmitry
+ Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko
+	<glider@google.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Aneesh
+ Kumar K.V <aneesh.kumar@kernel.org>, "Naveen N. Rao"
+	<naveen.n.rao@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
+	<hpa@zytor.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-mm@kvack.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+	<wangkefeng.wang@huawei.com>, Guohanjun <guohanjun@huawei.com>
+References: <20240207132204.1720444-1-tongtiangen@huawei.com>
+From: Tong Tiangen <tongtiangen@huawei.com>
+In-Reply-To: <20240207132204.1720444-1-tongtiangen@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm600017.china.huawei.com (7.193.23.234)
 
+Hi Mark:
 
+	Kindly ping...
 
-On 3/27/2024 1:34 AM, Isaku Yamahata wrote:
-> On Tue, Mar 26, 2024 at 11:53:02PM +0800,
-> Binbin Wu <binbin.wu@linux.intel.com> wrote:
->
->>
->> On 2/26/2024 4:25 PM, isaku.yamahata@intel.com wrote:
->>> From: Sean Christopherson <seanjc@google.com>
->>>
->>> Add support to MMU caches for initializing a page with a custom 64-bit
->>> value, e.g. to pre-fill an entire page table with non-zero PTE values.
->>> The functionality will be used by x86 to support Intel's TDX, which needs
->>> to set bit 63 in all non-present PTEs in order to prevent !PRESENT page
->>> faults from getting reflected into the guest (Intel's EPT Violation #VE
->>> architecture made the less than brilliant decision of having the per-PTE
->>> behavior be opt-out instead of opt-in).
->>>
->>> Signed-off-by: Sean Christopherson <seanjc@google.com>
->>> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
->>> ---
->>>    include/linux/kvm_types.h |  1 +
->>>    virt/kvm/kvm_main.c       | 16 ++++++++++++++--
->>>    2 files changed, 15 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/include/linux/kvm_types.h b/include/linux/kvm_types.h
->>> index 9d1f7835d8c1..60c8d5c9eab9 100644
->>> --- a/include/linux/kvm_types.h
->>> +++ b/include/linux/kvm_types.h
->>> @@ -94,6 +94,7 @@ struct gfn_to_pfn_cache {
->>>    struct kvm_mmu_memory_cache {
->>>    	gfp_t gfp_zero;
->>>    	gfp_t gfp_custom;
->>> +	u64 init_value;
->>>    	struct kmem_cache *kmem_cache;
->>>    	int capacity;
->>>    	int nobjs;
->>> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
->>> index de38f308738e..d399009ef1d7 100644
->>> --- a/virt/kvm/kvm_main.c
->>> +++ b/virt/kvm/kvm_main.c
->>> @@ -401,12 +401,17 @@ static void kvm_flush_shadow_all(struct kvm *kvm)
->>>    static inline void *mmu_memory_cache_alloc_obj(struct kvm_mmu_memory_cache *mc,
->>>    					       gfp_t gfp_flags)
->>>    {
->>> +	void *page;
->>> +
->>>    	gfp_flags |= mc->gfp_zero;
->>>    	if (mc->kmem_cache)
->>>    		return kmem_cache_alloc(mc->kmem_cache, gfp_flags);
->>> -	else
->>> -		return (void *)__get_free_page(gfp_flags);
->>> +
->>> +	page = (void *)__get_free_page(gfp_flags);
->>> +	if (page && mc->init_value)
->>> +		memset64(page, mc->init_value, PAGE_SIZE / sizeof(mc->init_value));
->> Do we need a static_assert() to make sure mc->init_value is 64bit?
-> I don't see much value.  Is your concern sizeof() part?
-> If so, we can replace it with 8.
->
->          memset64(page, mc->init_value, PAGE_SIZE / 8);
+Thanks,
+Tong.
 
-Yes, but it's trivial. So, up to you. :)
-
+在 2024/2/7 21:21, Tong Tiangen 写道:
+> With the increase of memory capacity and density, the probability of memory
+> error also increases. The increasing size and density of server RAM in data
+> centers and clouds have shown increased uncorrectable memory errors.
+> 
+> Currently, more and more scenarios that can tolerate memory errors，such as
+> CoW[1,2], KSM copy[3], coredump copy[4], khugepaged[5,6], uaccess copy[7],
+> etc.
+> 
+> This patchset introduces a new processing framework on ARM64, which enables
+> ARM64 to support error recovery in the above scenarios, and more scenarios
+> can be expanded based on this in the future.
+> 
+> In arm64, memory error handling in do_sea(), which is divided into two cases:
+>   1. If the user state consumed the memory errors, the solution is to kill
+>      the user process and isolate the error page.
+>   2. If the kernel state consumed the memory errors, the solution is to
+>      panic.
+> 
+> For case 2, Undifferentiated panic may not be the optimal choice, as it can
+> be handled better. In some scenarios, we can avoid panic, such as uaccess,
+> if the uaccess fails due to memory error, only the user process will be
+> affected, killing the user process and isolating the user page with
+> hardware memory errors is a better choice.
+> 
+> [1] commit d302c2398ba2 ("mm, hwpoison: when copy-on-write hits poison, take page offline")
+> [2] commit 1cb9dc4b475c ("mm: hwpoison: support recovery from HugePage copy-on-write faults")
+> [3] commit 6b970599e807 ("mm: hwpoison: support recovery from ksm_might_need_to_copy()")
+> [4] commit 245f09226893 ("mm: hwpoison: coredump: support recovery from dump_user_range()")
+> [5] commit 98c76c9f1ef7 ("mm/khugepaged: recover from poisoned anonymous memory")
+> [6] commit 12904d953364 ("mm/khugepaged: recover from poisoned file-backed memory")
+> [7] commit 278b917f8cb9 ("x86/mce: Add _ASM_EXTABLE_CPY for copy user access")
+> 
+> ------------------
+> Test result:
+> 
+> 1. copy_page(), copy_mc_page() basic function test pass, and the disassembly
+>     contents remains the same before and after refactor.
+> 
+> 2. copy_to/from_user() access kernel NULL pointer raise translation fault
+>     and dump error message then die(), test pass.
+> 
+> 3. Test following scenarios: copy_from_user(), get_user(), COW.
+> 
+>     Before patched: trigger a hardware memory error then panic.
+>     After  patched: trigger a hardware memory error without panic.
+> 
+>     Testing step:
+>     step1. start an user-process.
+>     step2. poison(einj) the user-process's page.
+>     step3: user-process access the poison page in kernel mode, then trigger SEA.
+>     step4: the kernel will not panic, only the user process is killed, the poison
+>            page is isolated. (before patched, the kernel will panic in do_sea())
+> 
+> ------------------
+> 
+> Since V10:
+>   Accroding Mark's suggestion:
+>   1. Merge V10's patch2 and patch3 to V11's patch2.
+>   2. Patch2(V11): use new fixup_type for ld* in copy_to_user(), fix fatal
+>      issues (NULL kernel pointeraccess) been fixup incorrectly.
+>   3. Patch2(V11): refactoring the logic of do_sea().
+>   4. Patch4(V11): Remove duplicate assembly logic and remove do_mte().
+> 
+>   Besides:
+>   1. Patch2(V11): remove st* insn's fixup, st* generally not trigger memory error.
+>   2. Split a part of the logic of patch2(V11) to patch5(V11), for detail,
+>      see patch5(V11)'s commit msg.
+>   3. Remove patch6(v10) “arm64: introduce copy_mc_to_kernel() implementation”.
+>      During modification, some problems that cannot be solved in a short
+>      period are found. The patch will be released after the problems are
+>      solved.
+>   4. Add test result in this patch.
+>   5. Modify patchset title, do not use machine check and remove "-next".
+> 
+> Since V9:
+>   1. Rebase to latest kernel version 6.8-rc2.
+>   2. Add patch 6/6 to support copy_mc_to_kernel().
+> 
+> Since V8:
+>   1. Rebase to latest kernel version and fix topo in some of the patches.
+>   2. According to the suggestion of Catalin, I attempted to modify the
+>      return value of function copy_mc_[user]_highpage() to bytes not copied.
+>      During the modification process, I found that it would be more
+>      reasonable to return -EFAULT when copy error occurs (referring to the
+>      newly added patch 4).
+> 
+>      For ARM64, the implementation of copy_mc_[user]_highpage() needs to
+>      consider MTE. Considering the scenario where data copying is successful
+>      but the MTE tag copying fails, it is also not reasonable to return
+>      bytes not copied.
+>   3. Considering the recent addition of machine check safe support for
+>      multiple scenarios, modify commit message for patch 5 (patch 4 for V8).
+> 
+> Since V7:
+>   Currently, there are patches supporting recover from poison
+>   consumption for the cow scenario[1]. Therefore, Supporting cow
+>   scenario under the arm64 architecture only needs to modify the relevant
+>   code under the arch/.
+>   [1]https://lore.kernel.org/lkml/20221031201029.102123-1-tony.luck@intel.com/
+> 
+> Since V6:
+>   Resend patches that are not merged into the mainline in V6.
+> 
+> Since V5:
+>   1. Add patch2/3 to add uaccess assembly helpers.
+>   2. Optimize the implementation logic of arm64_do_kernel_sea() in patch8.
+>   3. Remove kernel access fixup in patch9.
+>   All suggestion are from Mark.
+> 
+> Since V4:
+>   1. According Michael's suggestion, add patch5.
+>   2. According Mark's suggestiog, do some restructuring to arm64
+>   extable, then a new adaptation of machine check safe support is made based
+>   on this.
+>   3. According Mark's suggestion, support machine check safe in do_mte() in
+>   cow scene.
+>   4. In V4, two patches have been merged into -next, so V5 not send these
+>   two patches.
+> 
+> Since V3:
+>   1. According to Robin's suggestion, direct modify user_ldst and
+>   user_ldp in asm-uaccess.h and modify mte.S.
+>   2. Add new macro USER_MC in asm-uaccess.h, used in copy_from_user.S
+>   and copy_to_user.S.
+>   3. According to Robin's suggestion, using micro in copy_page_mc.S to
+>   simplify code.
+>   4. According to KeFeng's suggestion, modify powerpc code in patch1.
+>   5. According to KeFeng's suggestion, modify mm/extable.c and some code
+>   optimization.
+> 
+> Since V2:
+>   1. According to Mark's suggestion, all uaccess can be recovered due to
+>      memory error.
+>   2. Scenario pagecache reading is also supported as part of uaccess
+>      (copy_to_user()) and duplication code problem is also solved.
+>      Thanks for Robin's suggestion.
+>   3. According Mark's suggestion, update commit message of patch 2/5.
+>   4. According Borisllav's suggestion, update commit message of patch 1/5.
+> 
+> Since V1:
+>   1.Consistent with PPC/x86, Using CONFIG_ARCH_HAS_COPY_MC instead of
+>     ARM64_UCE_KERNEL_RECOVERY.
+>   2.Add two new scenes, cow and pagecache reading.
+>   3.Fix two small bug(the first two patch).
+> 
+> V1 in here:
+> https://lore.kernel.org/lkml/20220323033705.3966643-1-tongtiangen@huawei.com/
+> 
+> Tong Tiangen (5):
+>    uaccess: add generic fallback version of copy_mc_to_user()
+>    arm64: add support for ARCH_HAS_COPY_MC
+>    mm/hwpoison: return -EFAULT when copy fail in
+>      copy_mc_[user]_highpage()
+>    arm64: support copy_mc_[user]_highpage()
+>    arm64: send SIGBUS to user process for SEA exception
+> 
+>   arch/arm64/Kconfig                   |  1 +
+>   arch/arm64/include/asm/asm-extable.h | 31 ++++++++++++---
+>   arch/arm64/include/asm/asm-uaccess.h |  4 ++
+>   arch/arm64/include/asm/extable.h     |  1 +
+>   arch/arm64/include/asm/mte.h         |  9 +++++
+>   arch/arm64/include/asm/page.h        | 10 +++++
+>   arch/arm64/lib/Makefile              |  2 +
+>   arch/arm64/lib/copy_mc_page.S        | 37 ++++++++++++++++++
+>   arch/arm64/lib/copy_page.S           | 50 +++----------------------
+>   arch/arm64/lib/copy_page_template.S  | 56 ++++++++++++++++++++++++++++
+>   arch/arm64/lib/copy_to_user.S        | 10 ++---
+>   arch/arm64/lib/mte.S                 | 29 ++++++++++++++
+>   arch/arm64/mm/copypage.c             | 45 ++++++++++++++++++++++
+>   arch/arm64/mm/extable.c              | 19 ++++++++++
+>   arch/arm64/mm/fault.c                | 39 ++++++++++++++-----
+>   arch/powerpc/include/asm/uaccess.h   |  1 +
+>   arch/x86/include/asm/uaccess.h       |  1 +
+>   include/linux/highmem.h              | 16 ++++++--
+>   include/linux/uaccess.h              |  9 +++++
+>   mm/khugepaged.c                      |  4 +-
+>   20 files changed, 304 insertions(+), 70 deletions(-)
+>   create mode 100644 arch/arm64/lib/copy_mc_page.S
+>   create mode 100644 arch/arm64/lib/copy_page_template.S
+> 
