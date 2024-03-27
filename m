@@ -1,220 +1,176 @@
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 818422D7B8;
-	Wed, 27 Mar 2024 08:16:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57F93DAC19
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 08:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711527385; cv=none; b=eOfKKBv9k/R+g2sshBeinsMaWUZVblW20GN0sQ2TdElrVFyvpy7tr9UIZD8gZxy3dCHwk1ivgj8JZ65oo94looDsU285pHF5dOH3rS9PpSBhxkuP5K64IYOmeFwQr7WCqs+Xg9xg3U7GpfFFnZQR42csAjFoknPzgqWukpQtTRg=
+	t=1711527509; cv=none; b=f4tg3uFeY582oREUUMG857ZeuyhtobbafZjYn86RJe0oMmLwTf1ruFTYmHtC6YVOK2Lihcs5OTvqCEpPwUFhfBpaOEN+9lZ+dfWf4fIP76jpbjCa7Cj2CYEaYa5ux72lzd7tY6gPGGqh6hLwwSsHuLWrQkHaMhB/t3ztoaL3IyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711527385; c=relaxed/simple;
-	bh=5XVLYxZnsE3IFzszPgGoCMdQGtUkTEW8giYsWGBSh3I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C8eBaGsySh3Ns0wk0MePQvfDgdPXJqzGjj49CabyKFl+sIKvzWmoP8/V6V6XHMy4KcSTnNmn2JR4ao0ywjhOhDakLLBKfYcxX558xAgNZkthM96V76lWSKvxd1ZNsbV2wCZdviV1dwGIQtJdBKj3c2QYC4BkTcUtIrzdmjvj8jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=R7DTwvkJ; arc=none smtp.client-ip=74.50.62.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+	s=arc-20240116; t=1711527509; c=relaxed/simple;
+	bh=4wWd4i/vKGYQmj3wwF8rqhpT36RPM/HAKao0l4UPWdo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=fw1Kqa5QIOD2jxKRoaKgNbVWFb94rOVcnpv5dO0mnZLv8y/ptJ5bmLlmpQhHxBithg/rKFIhPh06rCWARmNmnDiXqKZIdaIaox0n+1t4T8dn0H3IpeCKa2Dr4LSERcc/fP5sgC5WmSZHpl7mOZ0RE4jjc5d1Am3YApNUpU2Bhp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R6/fSfD7; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="R7DTwvkJ"
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id 4A71260462;
-	Wed, 27 Mar 2024 08:16:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1711527382;
-	bh=5XVLYxZnsE3IFzszPgGoCMdQGtUkTEW8giYsWGBSh3I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=R7DTwvkJlHqP04o/uUpJuZQJPY3/StqC/WYALswXEh0U7V66CkVLSd0BMzx5cXkmH
-	 +oRFSsH0XiNU5MZc0rkAM/hAWlqv+mU3EK/vz0dFuiPMke+DBPawEYCFCJSYqabzmv
-	 0aWpoe9p2CZzjXg+NYgnQgSQfCEo2dwEJ4oH5gpcTC+p1oqkH7DyhGg9MYwdPIgBpa
-	 KJt+kh48IgqRLYPvYONp5GMi+HOgXMlrA9ULZdP60lkmEiMh3BF0Fc9xsnEA+uEiWc
-	 5gm+TkIY2cPdyVugAek4/xvL5rRke0qcijVd2NjY3JziCrnJyhsmbyABHdFYCPxeSh
-	 kEvxP3FQ2XUcA==
-From: Tony Lindgren <tony@atomide.com>
-To: linux-omap@vger.kernel.org
-Cc: Dhruva Gole <d-gole@ti.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] bus: ti-sysc: Drop legacy idle quirk handling
-Date: Wed, 27 Mar 2024 10:15:08 +0200
-Message-ID: <20240327081508.36747-6-tony@atomide.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240327081508.36747-1-tony@atomide.com>
-References: <20240327081508.36747-1-tony@atomide.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R6/fSfD7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711527508; x=1743063508;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=4wWd4i/vKGYQmj3wwF8rqhpT36RPM/HAKao0l4UPWdo=;
+  b=R6/fSfD7XOGtz5HZ5bSK35OWPsVWTtIcGxRo1/GuySS02XIZ8T7nlgZo
+   jsuh4ktB5VvMEomgqa7eDgx5OQwepkqDN62yVNddw+MXOAlJjxBHZiOVU
+   INXvXP9HhQPRDhMUSgYH+VnUxQb3gcMe3otGpUUNLrQeVR6G8I+Wm5KsL
+   VNyKIKbvDwIj+yOEOE/CUpw17Y2itLCmBWMhbtXSv11Rw9lG/wKBWmr1p
+   3mA+/BnMv5hjuHX2ae1U+er4ItuXjT+gvBweoMgx9fGYhe3Ed+WVWGhkX
+   L6Lbm5GjhxDShECRrBtL4Twcw9HXBP3XEFL2jdl75HhbJXTzbnDeKLVVV
+   Q==;
+X-CSE-ConnectionGUID: nS42qyC0TkKnkhwAo5Iu2A==
+X-CSE-MsgGUID: KicvrPliTQWhxKCe5pi+sg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="32055610"
+X-IronPort-AV: E=Sophos;i="6.07,158,1708416000"; 
+   d="scan'208";a="32055610"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 01:18:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,158,1708416000"; 
+   d="scan'208";a="16156089"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 01:18:23 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Kairui Song <ryncsn@gmail.com>
+Cc: linux-mm@kvack.org,  Chris Li <chrisl@kernel.org>,  Minchan Kim
+ <minchan@kernel.org>,  Barry Song <v-songbaohua@oppo.com>,  Ryan Roberts
+ <ryan.roberts@arm.com>,  Yu Zhao <yuzhao@google.com>,  SeongJae Park
+ <sj@kernel.org>,  David Hildenbrand <david@redhat.com>,  Yosry Ahmed
+ <yosryahmed@google.com>,  Johannes Weiner <hannes@cmpxchg.org>,  Matthew
+ Wilcox <willy@infradead.org>,  Nhat Pham <nphamcs@gmail.com>,  Chengming
+ Zhou <zhouchengming@bytedance.com>,  Andrew Morton
+ <akpm@linux-foundation.org>,  linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 10/10] mm/swap: optimize synchronous swapin
+In-Reply-To: <CAMgjq7D9-6JXOzpd18t8MSBAotHgEG2YZbi4efNkJiwiSJyJmw@mail.gmail.com>
+	(Kairui Song's message of "Wed, 27 Mar 2024 15:14:03 +0800")
+References: <20240326185032.72159-1-ryncsn@gmail.com>
+	<20240326185032.72159-11-ryncsn@gmail.com>
+	<87zfukmbwz.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<CAMgjq7A-TxWkNKz0wwjaf0C-KZgps-VdPG+QcpY9tMmBY04TNA@mail.gmail.com>
+	<87r0fwmar4.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<CAMgjq7D9-6JXOzpd18t8MSBAotHgEG2YZbi4efNkJiwiSJyJmw@mail.gmail.com>
+Date: Wed, 27 Mar 2024 16:16:30 +0800
+Message-ID: <87il18m6n5.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-There are no more users that need the legacy idle quirk so let's drop
-the legacy idle quirk handling. This simplifies the PM code to just
-sysc_pm_ops with unified handling for all the interconnect targets.
+Kairui Song <ryncsn@gmail.com> writes:
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/bus/ti-sysc.c                 | 109 +-------------------------
- include/linux/platform_data/ti-sysc.h |   1 -
- 2 files changed, 2 insertions(+), 108 deletions(-)
+> On Wed, Mar 27, 2024 at 2:49=E2=80=AFPM Huang, Ying <ying.huang@intel.com=
+> wrote:
+>>
+>> Kairui Song <ryncsn@gmail.com> writes:
+>>
+>> > On Wed, Mar 27, 2024 at 2:24=E2=80=AFPM Huang, Ying <ying.huang@intel.=
+com> wrote:
+>> >>
+>> >> Kairui Song <ryncsn@gmail.com> writes:
+>> >>
+>> >> > From: Kairui Song <kasong@tencent.com>
+>> >> >
+>> >> > Interestingly the major performance overhead of synchronous is actu=
+ally
+>> >> > from the workingset nodes update, that's because synchronous swap in
+>> >>
+>> >> If it's the major overhead, why not make it the first optimization?
+>> >
+>> > This performance issue became much more obvious after doing other
+>> > optimizations, and other optimizations are for general swapin not only
+>> > for synchronous swapin, that's also how I optimized things step by
+>> > step, so I kept my patch order...
+>> >
+>> > And it is easier to do this after Patch 8/10 which introduces the new
+>> > interface for swap cache.
+>> >
+>> >>
+>> >> > keeps adding single folios into a xa_node, making the node no longer
+>> >> > a shadow node and have to be removed from shadow_nodes, then remove
+>> >> > the folio very shortly and making the node a shadow node again,
+>> >> > so it has to add back to the shadow_nodes.
+>> >>
+>> >> The folio is removed only if should_try_to_free_swap() returns true?
+>> >>
+>> >> > Mark synchronous swapin folio with a special bit in swap entry embe=
+dded
+>> >> > in folio->swap, as we still have some usable bits there. Skip worki=
+ngset
+>> >> > node update on insertion of such folio because it will be removed v=
+ery
+>> >> > quickly, and will trigger the update ensuring the workingset info is
+>> >> > eventual consensus.
+>> >>
+>> >> Is this safe?  Is it possible for the shadow node to be reclaimed aft=
+er
+>> >> the folio are added into node and before being removed?
+>> >
+>> > If a xa node contains any non-shadow entry, it can't be reclaimed,
+>> > shadow_lru_isolate will check and skip such nodes in case of race.
+>>
+>> In shadow_lru_isolate(),
+>>
+>>         /*
+>>          * The nodes should only contain one or more shadow entries,
+>>          * no pages, so we expect to be able to remove them all and
+>>          * delete and free the empty node afterwards.
+>>          */
+>>         if (WARN_ON_ONCE(!node->nr_values))
+>>                 goto out_invalid;
+>>         if (WARN_ON_ONCE(node->count !=3D node->nr_values))
+>>                 goto out_invalid;
+>>
+>> So, this isn't considered normal and will cause warning now.
+>
+> Yes, I added an exception in this patch:
+> -       if (WARN_ON_ONCE(node->count !=3D node->nr_values))
+> +       if (WARN_ON_ONCE(node->count !=3D node->nr_values &&
+> mapping->host !=3D NULL))
+>
+> The code is not a good final solution, but the idea might not be that
+> bad, list_lru provides many operations like LRU_ROTATE, we can even
+> lazy remove all the nodes as a general optimization, or add a
+> threshold for adding/removing a node from LRU.
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -1469,8 +1469,7 @@ static int __maybe_unused sysc_noirq_suspend(struct device *dev)
- 
- 	ddata = dev_get_drvdata(dev);
- 
--	if (ddata->cfg.quirks &
--	    (SYSC_QUIRK_LEGACY_IDLE | SYSC_QUIRK_NO_IDLE))
-+	if (ddata->cfg.quirks & SYSC_QUIRK_NO_IDLE)
- 		return 0;
- 
- 	if (!ddata->enabled)
-@@ -1488,8 +1487,7 @@ static int __maybe_unused sysc_noirq_resume(struct device *dev)
- 
- 	ddata = dev_get_drvdata(dev);
- 
--	if (ddata->cfg.quirks &
--	    (SYSC_QUIRK_LEGACY_IDLE | SYSC_QUIRK_NO_IDLE))
-+	if (ddata->cfg.quirks & SYSC_QUIRK_NO_IDLE)
- 		return 0;
- 
- 	if (ddata->cfg.quirks & SYSC_QUIRK_REINIT_ON_RESUME) {
-@@ -2457,89 +2455,6 @@ static int __maybe_unused sysc_child_runtime_resume(struct device *dev)
- 	return pm_generic_runtime_resume(dev);
- }
- 
--#ifdef CONFIG_PM_SLEEP
--static int sysc_child_suspend_noirq(struct device *dev)
--{
--	struct sysc *ddata;
--	int error;
--
--	ddata = sysc_child_to_parent(dev);
--
--	dev_dbg(ddata->dev, "%s %s\n", __func__,
--		ddata->name ? ddata->name : "");
--
--	error = pm_generic_suspend_noirq(dev);
--	if (error) {
--		dev_err(dev, "%s error at %i: %i\n",
--			__func__, __LINE__, error);
--
--		return error;
--	}
--
--	if (!pm_runtime_status_suspended(dev)) {
--		error = pm_generic_runtime_suspend(dev);
--		if (error) {
--			dev_dbg(dev, "%s busy at %i: %i\n",
--				__func__, __LINE__, error);
--
--			return 0;
--		}
--
--		error = sysc_runtime_suspend(ddata->dev);
--		if (error) {
--			dev_err(dev, "%s error at %i: %i\n",
--				__func__, __LINE__, error);
--
--			return error;
--		}
--
--		ddata->child_needs_resume = true;
--	}
--
--	return 0;
--}
--
--static int sysc_child_resume_noirq(struct device *dev)
--{
--	struct sysc *ddata;
--	int error;
--
--	ddata = sysc_child_to_parent(dev);
--
--	dev_dbg(ddata->dev, "%s %s\n", __func__,
--		ddata->name ? ddata->name : "");
--
--	if (ddata->child_needs_resume) {
--		ddata->child_needs_resume = false;
--
--		error = sysc_runtime_resume(ddata->dev);
--		if (error)
--			dev_err(ddata->dev,
--				"%s runtime resume error: %i\n",
--				__func__, error);
--
--		error = pm_generic_runtime_resume(dev);
--		if (error)
--			dev_err(ddata->dev,
--				"%s generic runtime resume: %i\n",
--				__func__, error);
--	}
--
--	return pm_generic_resume_noirq(dev);
--}
--#endif
--
--static struct dev_pm_domain sysc_child_pm_domain = {
--	.ops = {
--		SET_RUNTIME_PM_OPS(sysc_child_runtime_suspend,
--				   sysc_child_runtime_resume,
--				   NULL)
--		USE_PLATFORM_PM_SLEEP_OPS
--		SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(sysc_child_suspend_noirq,
--					      sysc_child_resume_noirq)
--	}
--};
--
- /* Caller needs to take list_lock if ever used outside of cpu_pm */
- static void sysc_reinit_modules(struct sysc_soc_info *soc)
- {
-@@ -2610,25 +2525,6 @@ static void sysc_add_restored(struct sysc *ddata)
- 	mutex_unlock(&sysc_soc->list_lock);
- }
- 
--/**
-- * sysc_legacy_idle_quirk - handle children in omap_device compatible way
-- * @ddata: device driver data
-- * @child: child device driver
-- *
-- * Allow idle for child devices as done with _od_runtime_suspend().
-- * Otherwise many child devices will not idle because of the permanent
-- * parent usecount set in pm_runtime_irq_safe().
-- *
-- * Note that the long term solution is to just modify the child device
-- * drivers to not set pm_runtime_irq_safe() and then this can be just
-- * dropped.
-- */
--static void sysc_legacy_idle_quirk(struct sysc *ddata, struct device *child)
--{
--	if (ddata->cfg.quirks & SYSC_QUIRK_LEGACY_IDLE)
--		dev_pm_domain_set(child, &sysc_child_pm_domain);
--}
--
- static int sysc_notifier_call(struct notifier_block *nb,
- 			      unsigned long event, void *device)
- {
-@@ -2645,7 +2541,6 @@ static int sysc_notifier_call(struct notifier_block *nb,
- 		error = sysc_child_add_clocks(ddata, dev);
- 		if (error)
- 			return error;
--		sysc_legacy_idle_quirk(ddata, dev);
- 		break;
- 	default:
- 		break;
-diff --git a/include/linux/platform_data/ti-sysc.h b/include/linux/platform_data/ti-sysc.h
---- a/include/linux/platform_data/ti-sysc.h
-+++ b/include/linux/platform_data/ti-sysc.h
-@@ -71,7 +71,6 @@ struct sysc_regbits {
- #define SYSC_QUIRK_SWSUP_SIDLE_ACT	BIT(12)
- #define SYSC_QUIRK_SWSUP_SIDLE		BIT(11)
- #define SYSC_QUIRK_EXT_OPT_CLOCK	BIT(10)
--#define SYSC_QUIRK_LEGACY_IDLE		BIT(9)
- #define SYSC_QUIRK_RESET_STATUS		BIT(8)
- #define SYSC_QUIRK_NO_IDLE		BIT(7)
- #define SYSC_QUIRK_NO_IDLE_ON_INIT	BIT(6)
--- 
-2.44.0
+We can compare different solutions.  For this one, we still need to deal
+with the cases where the folio isn't removed from the swap cache, that
+is, should_try_to_free_swap() returns false.
+
+>>
+>> >>
+>> >> If so, we may consider some other methods.  Make shadow_nodes per-cpu?
+>> >
+>> > That's also an alternative solution if there are other risks.
+>>
+>> This appears a general optimization and more clean.
+>
+> I'm not sure if synchronization between CPUs will make more burden,
+> because shadow nodes are globally shared, one node can be referenced
+> by multiple CPUs, I can have a try to see if this is doable. Maybe a
+> per-cpu batch is better but synchronization might still be an issue.
+
+Yes.  Per-CPU shadow_nodes needs to find list from shadow node.  That
+has some overhead.
+
+If lock contention on list_lru lock is the root cause, we can use hashed
+shadow node lists.  That can reduce lock contention effectively.
+
+--
+Best Regards,
+Huang, Ying
