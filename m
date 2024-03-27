@@ -1,297 +1,197 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2422E645
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 08:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298272D61B
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 08:25:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711527893; cv=none; b=PZ1eBWhNc6zyOOccCMtsL2eK6xNK2PUNZLScNSU7cxUj5gzSay4LJXOakubLr5BmS293NqGCKpeuUClYO8YZzhFBpRV2utZ0XD6Mbg/if0342j6xSwdQNjLx8qNwOvX0sDbN/oCzhtbLJPTqzauzgtkk1J3zGwSa0c7OQ4Iyct0=
+	t=1711527908; cv=none; b=FxiKH4ABlcYLkrj8I+cGGzQJVzxR8BagPIGh8+ZG8QrsRNsEl6KdFAmj5eDMmn1+6UZUQLCuFDQZhVyIIXW2hc7iHKNj5pA7LPn2xRi51UZTlSoYLeEv37Sxn7NYkTWLVWohJIaZnRWx8WsErdh4XoDR5roEMY/o6ZPCrynvsyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711527893; c=relaxed/simple;
-	bh=9RLuwP/ogAKSLndvjalwDyIeMRGXBo7XEO//Re2gJyk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fhnrGXvbBGLRf/cK9wOlsICrHW5RRDxLZ+KgVolqy9wnQ8/tHJ1gMPrQ2TqXmxuyO0SJT4TEueNq/oBYQDxPmzhEGv+ivbc/ZNe8N9Nv0b9Yt1Wom1OyOS/xxwMnZ9oaBImPpABY+fxga+Yuh2dUHPR4HFV7dRNWJFJsp6HwMaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KN2VspRS; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1711527908; c=relaxed/simple;
+	bh=Ze8zK2HY9+0PRvVXT50gi5jYVTJlg7k/wpO4RIzfls4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QAnrS8TbHnY92qJ1q+Ri+GFGo9uqagrfzwBYOC7dorVecBOrpD/xoForSC48AjFo8I9IrUeVmqG9WVeCimd5TcygT6lgZ0d8Mc5l99AZESdZbaMhivDIUCmDRWW/GwYmcuhUxpFOx1iCKeiVo6qZJd0V7rfwXGdlEbNrZLwSvTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at; spf=pass smtp.mailfrom=sigma-star.at; dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b=gZiImaV+; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sigma-star.at
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KN2VspRS"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-430c63d4da9so45520881cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 01:24:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b="gZiImaV+"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d6c9678cbdso53094761fa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 01:25:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711527891; x=1712132691; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OmWRpBECwxe7ijkwLIPczozPsnS1Cw5Xsz7/RS0qQRY=;
-        b=KN2VspRSefxtVCrZwxhPyUR3lyvvXDry6xKhdC9et//LgUKh5H5xwzegX7Yfn9PJ8b
-         TWWIlCZJa62htCAp6yvw2FYJvQE2vOOedJig99A3mOIsYmK6U+aTAofQc8iabmis2v2a
-         EoTlH6WjhMJFREThjwvC8b2SDwcCnDsElQhEY=
+        d=sigma-star.at; s=google; t=1711527904; x=1712132704; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jXnPhQZ/7MwqBVH7e72M3iqDK5PHqiK3NcW8fk9T+qY=;
+        b=gZiImaV+WStIGoHn7lC47kIhZg4G3h+FDJrdHrnaQjDzOWa4Fd+HQAQSiWjfA7aNi/
+         teQOtXTFUeTcCQEGDDr0Q6PCZGG+18Szom39b0TfzdEIt5lwFmoweaRENqDpG2nTM81v
+         XaKZMTl+w4VNa99Cpgbokm9OFRpgUA1FhpL5rugcOMwDTLSmwl0X8kFy+aQ1uOtfat/3
+         3cEuDqdIVpVUvCS2alftIm4wERpMh3JuKVZwt37buiqa7SvFuQ5yHHUHkMk2OfJwjE/S
+         x9nuy1l370P8A2uUj6NpBBXXcQj5ydR9yiL2HwXwuHV9P2L6w042mot2x9DHk3oiquQI
+         dmiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711527891; x=1712132691;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OmWRpBECwxe7ijkwLIPczozPsnS1Cw5Xsz7/RS0qQRY=;
-        b=Ur8PxqM8+v4g4Ldow/TQJTdckIG1WhI1Abrp6t9jJuIVGmN+CwpUlRKqohFFneATnv
-         57CYTXYBPL6ZoLkvYQFe0oqt1h4bvZnVxnS6/kRzqcA1kG/ecsUE65ZY+0QOq/K6uSXj
-         nig9+jtNSRoeZc1Qa/uDzXrjZqmGwIECJFbMDJ/pNPl1mspiKz0HaJWq3BCNWrGPmCkV
-         CAP/FJR9VUHQ/8/h7RXZK/b3D9f4P29iDEYEfp7gE9b8b1KobLcJ4HiLIeahLLBRLgU9
-         /fKlMlGt/fQXGY1pGliMrHDxX/Eas+lj2xzd6ErzSCpF9Gk/9q/Jun5/rsCH1Hacumi5
-         keyw==
-X-Forwarded-Encrypted: i=1; AJvYcCXkmcef/I6MbzVef3lRsgQ9AtOcZRb8/O2sBpb1N1cXD/qCEHG3g4b6uW67Pz/nU1h5bdX31nEpYZV0eoE4y3TlP++JAplMez9PSSot
-X-Gm-Message-State: AOJu0Yy2rMyBkca8+gJWzIBMMoozZGfQZrLZfhDoVekOct2wZQyzOPN5
-	/THAwl4m9UuNPr0cm20qQMPfjs7vTCx0dtMAv9O0PxmS4i70ApfW5Ighf3BgDw==
-X-Google-Smtp-Source: AGHT+IHcrYLlePvtS2L+3EOSxz98tF2AwNVGbSteXEp13d492FBjYS/lfiS4OitGu1Suvpn3kOVSXw==
-X-Received: by 2002:a05:622a:253:b0:431:50a0:9154 with SMTP id c19-20020a05622a025300b0043150a09154mr4232946qtx.18.1711527890552;
-        Wed, 27 Mar 2024 01:24:50 -0700 (PDT)
-Received: from denia.c.googlers.com (131.65.194.35.bc.googleusercontent.com. [35.194.65.131])
-        by smtp.gmail.com with ESMTPSA id ca9-20020a05622a1f0900b00430ea220b32sm4581691qtb.71.2024.03.27.01.24.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 01:24:49 -0700 (PDT)
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Wed, 27 Mar 2024 08:24:45 +0000
-Subject: [PATCH v4 2/4] media: uvcvideo: Refactor the status irq API
+        d=1e100.net; s=20230601; t=1711527904; x=1712132704;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jXnPhQZ/7MwqBVH7e72M3iqDK5PHqiK3NcW8fk9T+qY=;
+        b=ds9BashVpPpBOY0Qz83D4Cwfz8izuvjBMTdwI0UTHuw/I/WRvAfHP+dd+WDeoLURNl
+         kvi083iCN+FEaMTNxEMQaVijXgqajcnVnSw/26CfFYrTq8LiEuqbt7zyepYH0y8refVX
+         iYxDi61Fv1N9DaofpbqEnzhwWHGHtDi82NikSEsLnHPYf2nna+zHWGR/paUNvYDdZrx5
+         yXFJIs9rc8hGk/OMxDDzYY7XdkgwOwMpS2dGUhx8SauSzX3axtS3lsARBFeQKiAp68QL
+         mRE8IMr00idkFOh06+N6ruTZS6o/Ybs9G/6aGAeLLfk7/Uasy+N0IxM1uyQ5XGt9gGWS
+         CzGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXxhVIgX5Z/Uc/Tq1TGu8/Q5OsWZKw2cRI/HmR4PfwK0pxikyYVIqALzHH6g9fFMRgo/wjm1fO/EVv+eFdTVZgdf1MzhyTPkh+Vp1wW
+X-Gm-Message-State: AOJu0Yy+qC9Nv7CnvTAD79QDdvnkYPySOgMVZtdHu5EiKxXt7akQlH+8
+	CCCKGK/5bqZCFbI1dJocLVEsoVj/yRdd2zNa/LDGBbBEdPZruSyQMiELYx+uhmI=
+X-Google-Smtp-Source: AGHT+IEWDMVFB/sih4uk6d/ut3w2v5mnLyG+wQLmIUZcFC2ZLVZVl9kZujBi8i5UNu5rg7+ev/+CLw==
+X-Received: by 2002:a2e:a984:0:b0:2d4:170d:245f with SMTP id x4-20020a2ea984000000b002d4170d245fmr2716878ljq.12.1711527904204;
+        Wed, 27 Mar 2024 01:25:04 -0700 (PDT)
+Received: from localhost ([82.150.214.1])
+        by smtp.gmail.com with UTF8SMTPSA id ch9-20020a5d5d09000000b00341c6778171sm9880373wrb.83.2024.03.27.01.25.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Mar 2024 01:25:04 -0700 (PDT)
+From: David Gstir <david@sigma-star.at>
+To: Mimi Zohar <zohar@linux.ibm.com>,
+	James Bottomley <jejb@linux.ibm.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>
+Cc: David Gstir <david@sigma-star.at>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Ahmad Fatoum <a.fatoum@pengutronix.de>,
+	sigma star Kernel Team <upstream+dcp@sigma-star.at>,
+	David Howells <dhowells@redhat.com>,
+	Li Yang <leoyang.li@nxp.com>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Tejun Heo <tj@kernel.org>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-integrity@vger.kernel.org,
+	keyrings@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-security-module@vger.kernel.org
+Subject: [PATCH v7 0/6] DCP as trusted keys backend
+Date: Wed, 27 Mar 2024 09:24:46 +0100
+Message-ID: <20240327082454.13729-1-david@sigma-star.at>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240327-guenter-mini-v4-2-49955c198eae@chromium.org>
-References: <20240327-guenter-mini-v4-0-49955c198eae@chromium.org>
-In-Reply-To: <20240327-guenter-mini-v4-0-49955c198eae@chromium.org>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, Max Staudt <mstaudt@chromium.org>, 
- Tomasz Figa <tfiga@chromium.org>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Alan Stern <stern@rowland.harvard.edu>, 
- Hans Verkuil <hverkuil-cisco@xs4all.nl>, linux-media@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Sean Paul <seanpaul@chromium.org>, 
- Ricardo Ribalda <ribalda@chromium.org>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>
-X-Mailer: b4 0.12.4
+Content-Transfer-Encoding: 8bit
 
-There are two different use-cases of uvc_status():
-	- adding/removing a user when the camera is open/closed
-	- stopping/starting when the camera is suspended/resumed
+This is a revival of the previous patch set submitted by Richard Weinberger:
+https://lore.kernel.org/linux-integrity/20210614201620.30451-1-richard@nod.at/
 
-Make the API reflect these two use-cases and move all the refcounting
-and locking logic to the uvc_status.c file.
+After having been thoroughly reviewed by Jarkko, it would be great if this
+could go into 6.10. :-)
 
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
----
- drivers/media/usb/uvc/uvc_driver.c | 13 ++-------
- drivers/media/usb/uvc/uvc_status.c | 55 ++++++++++++++++++++++++++++++++++++--
- drivers/media/usb/uvc/uvc_v4l2.c   | 22 +++++----------
- drivers/media/usb/uvc/uvcvideo.h   | 10 ++++---
- 4 files changed, 67 insertions(+), 33 deletions(-)
+v6 is here (please ignore the incorrect version number in the cover letter):
+https://lore.kernel.org/keyrings/20240307153842.80033-1-david@sigma-star.at/
 
-diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-index 17fc945c8deb6..b579644ac0745 100644
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -2116,7 +2116,6 @@ static int uvc_probe(struct usb_interface *intf,
- 	INIT_LIST_HEAD(&dev->streams);
- 	kref_init(&dev->ref);
- 	atomic_set(&dev->nmappings, 0);
--	mutex_init(&dev->lock);
- 
- 	dev->udev = usb_get_dev(udev);
- 	dev->intf = usb_get_intf(intf);
-@@ -2282,10 +2281,7 @@ static int uvc_suspend(struct usb_interface *intf, pm_message_t message)
- 	/* Controls are cached on the fly so they don't need to be saved. */
- 	if (intf->cur_altsetting->desc.bInterfaceSubClass ==
- 	    UVC_SC_VIDEOCONTROL) {
--		mutex_lock(&dev->lock);
--		if (dev->users)
--			uvc_status_stop(dev);
--		mutex_unlock(&dev->lock);
-+		uvc_status_suspend(dev);
- 		return 0;
- 	}
- 
-@@ -2316,12 +2312,7 @@ static int __uvc_resume(struct usb_interface *intf, int reset)
- 				return ret;
- 		}
- 
--		mutex_lock(&dev->lock);
--		if (dev->users)
--			ret = uvc_status_start(dev, GFP_NOIO);
--		mutex_unlock(&dev->lock);
--
--		return ret;
-+		return uvc_status_resume(dev);
- 	}
- 
- 	list_for_each_entry(stream, &dev->streams, list) {
-diff --git a/drivers/media/usb/uvc/uvc_status.c b/drivers/media/usb/uvc/uvc_status.c
-index a78a88c710e24..375a95dd30110 100644
---- a/drivers/media/usb/uvc/uvc_status.c
-+++ b/drivers/media/usb/uvc/uvc_status.c
-@@ -257,6 +257,8 @@ int uvc_status_init(struct uvc_device *dev)
- 	unsigned int pipe;
- 	int interval;
- 
-+	mutex_init(&dev->status_lock);
-+
- 	if (ep == NULL)
- 		return 0;
- 
-@@ -302,18 +304,22 @@ void uvc_status_cleanup(struct uvc_device *dev)
- 	kfree(dev->status);
- }
- 
--int uvc_status_start(struct uvc_device *dev, gfp_t flags)
-+static int __uvc_status_start(struct uvc_device *dev, gfp_t flags)
- {
-+	lockdep_assert_held(&dev->status_lock);
-+
- 	if (dev->int_urb == NULL)
- 		return 0;
- 
- 	return usb_submit_urb(dev->int_urb, flags);
- }
- 
--void uvc_status_stop(struct uvc_device *dev)
-+static void __uvc_status_stop(struct uvc_device *dev)
- {
- 	struct uvc_ctrl_work *w = &dev->async_ctrl;
- 
-+	lockdep_assert_held(&dev->status_lock);
-+
- 	/*
- 	 * Prevent the asynchronous control handler from requeing the URB. The
- 	 * barrier is needed so the flush_status change is visible to other
-@@ -350,3 +356,48 @@ void uvc_status_stop(struct uvc_device *dev)
- 	 */
- 	smp_store_release(&dev->flush_status, false);
- }
-+
-+int uvc_status_resume(struct uvc_device *dev)
-+{
-+	int ret = 0;
-+
-+	mutex_lock(&dev->status_lock);
-+	if (dev->status_users)
-+		ret = __uvc_status_start(dev, GFP_NOIO);
-+	mutex_unlock(&dev->status_lock);
-+
-+	return ret;
-+}
-+
-+void uvc_status_suspend(struct uvc_device *dev)
-+{
-+	mutex_lock(&dev->status_lock);
-+	if (dev->status_users)
-+		__uvc_status_stop(dev);
-+	mutex_unlock(&dev->status_lock);
-+}
-+
-+int uvc_status_get(struct uvc_device *dev)
-+{
-+	int ret = 0;
-+
-+	mutex_lock(&dev->status_lock);
-+	if (!dev->status_users)
-+		ret = __uvc_status_start(dev, GFP_KERNEL);
-+	if (!ret)
-+		dev->status_users++;
-+	mutex_unlock(&dev->status_lock);
-+
-+	return ret;
-+}
-+
-+void uvc_status_put(struct uvc_device *dev)
-+{
-+	mutex_lock(&dev->status_lock);
-+	if (dev->status_users == 1)
-+		__uvc_status_stop(dev);
-+	WARN_ON(!dev->status_users);
-+	if (dev->status_users)
-+		dev->status_users--;
-+	mutex_unlock(&dev->status_lock);
-+}
-diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-index f4988f03640ae..97c5407f66032 100644
---- a/drivers/media/usb/uvc/uvc_v4l2.c
-+++ b/drivers/media/usb/uvc/uvc_v4l2.c
-@@ -628,20 +628,13 @@ static int uvc_v4l2_open(struct file *file)
- 		return -ENOMEM;
- 	}
- 
--	mutex_lock(&stream->dev->lock);
--	if (stream->dev->users == 0) {
--		ret = uvc_status_start(stream->dev, GFP_KERNEL);
--		if (ret < 0) {
--			mutex_unlock(&stream->dev->lock);
--			usb_autopm_put_interface(stream->dev->intf);
--			kfree(handle);
--			return ret;
--		}
-+	ret = uvc_status_get(stream->dev);
-+	if (ret) {
-+		usb_autopm_put_interface(stream->dev->intf);
-+		kfree(handle);
-+		return ret;
- 	}
- 
--	stream->dev->users++;
--	mutex_unlock(&stream->dev->lock);
--
- 	v4l2_fh_init(&handle->vfh, &stream->vdev);
- 	v4l2_fh_add(&handle->vfh);
- 	handle->chain = stream->chain;
-@@ -670,10 +663,7 @@ static int uvc_v4l2_release(struct file *file)
- 	kfree(handle);
- 	file->private_data = NULL;
- 
--	mutex_lock(&stream->dev->lock);
--	if (--stream->dev->users == 0)
--		uvc_status_stop(stream->dev);
--	mutex_unlock(&stream->dev->lock);
-+	uvc_status_put(stream->dev);
- 
- 	usb_autopm_put_interface(stream->dev->intf);
- 	return 0;
-diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-index 6fb0a78b1b009..00b600eb058cc 100644
---- a/drivers/media/usb/uvc/uvcvideo.h
-+++ b/drivers/media/usb/uvc/uvcvideo.h
-@@ -555,8 +555,6 @@ struct uvc_device {
- 
- 	const struct uvc_device_info *info;
- 
--	struct mutex lock;		/* Protects users */
--	unsigned int users;
- 	atomic_t nmappings;
- 
- 	/* Video control interface */
-@@ -578,6 +576,8 @@ struct uvc_device {
- 	struct usb_host_endpoint *int_ep;
- 	struct urb *int_urb;
- 	struct uvc_status *status;
-+	struct mutex status_lock; /* Protects status_users */
-+	unsigned int status_users;
- 	bool flush_status;
- 
- 	struct input_dev *input;
-@@ -744,8 +744,10 @@ int uvc_register_video_device(struct uvc_device *dev,
- int uvc_status_init(struct uvc_device *dev);
- void uvc_status_unregister(struct uvc_device *dev);
- void uvc_status_cleanup(struct uvc_device *dev);
--int uvc_status_start(struct uvc_device *dev, gfp_t flags);
--void uvc_status_stop(struct uvc_device *dev);
-+int uvc_status_resume(struct uvc_device *dev);
-+void uvc_status_suspend(struct uvc_device *dev);
-+int uvc_status_get(struct uvc_device *dev);
-+void uvc_status_put(struct uvc_device *dev);
- 
- /* Controls */
- extern const struct uvc_control_mapping uvc_ctrl_power_line_mapping_limited;
+v6 -> v7:
+- Add Reviewed-by from Jarkko Sakkinen for patches #1 and #3
+- Improved commit messages
+- Changed log level for non-trusted/secure mode check from error to warning
+v5 -> v6:
+- Cleaned up coding style and commit messages to make the whole series more
+  coherent as suggested by Jarkko Sakkinen
+- Added Acked-By from Jarkko Sakkinen to patch #4 - thanks!
+- Rebased against next-20240307
+v4 -> v5:
+- Make Kconfig for trust source check scalable as suggested by Jarkko Sakkinen
+- Add Acked-By from Herbert Xu to patch #1 - thanks!
+v3 -> v4:
+- Split changes on MAINTAINERS and documentation into dedicated patches
+- Use more concise wording in commit messages as suggested by Jarkko Sakkinen
+v2 -> v3:
+- Addressed review comments from Jarkko Sakkinen
+v1 -> v2:
+- Revive and rebase to latest version
+- Include review comments from Ahmad Fatoum
+
+The Data Co-Processor (DCP) is an IP core built into many NXP SoCs such
+as i.mx6ull.
+
+Similar to the CAAM engine used in more powerful SoCs, DCP can AES-
+encrypt/decrypt user data using a unique, never-disclosed,
+device-specific key. Unlike CAAM though, it cannot directly wrap and
+unwrap blobs in hardware. As DCP offers only the bare minimum feature
+set and a blob mechanism needs aid from software. A blob in this case
+is a piece of sensitive data (e.g. a key) that is encrypted and
+authenticated using the device-specific key so that unwrapping can only
+be done on the hardware where the blob was wrapped.
+
+This patch series adds a DCP based, trusted-key backend and is similar
+in spirit to the one by Ahmad Fatoum [0] that does the same for CAAM.
+It is of interest for similar use cases as the CAAM patch set, but for
+lower end devices, where CAAM is not available.
+
+Because constructing and parsing the blob has to happen in software,
+we needed to decide on a blob format and chose the following:
+
+struct dcp_blob_fmt {
+	__u8 fmt_version;
+	__u8 blob_key[AES_KEYSIZE_128];
+	__u8 nonce[AES_KEYSIZE_128];
+	__le32 payload_len;
+	__u8 payload[];
+} __packed;
+
+The `fmt_version` is currently 1.
+
+The encrypted key is stored in the payload area. It is AES-128-GCM
+encrypted using `blob_key` and `nonce`, GCM auth tag is attached at
+the end of the payload (`payload_len` does not include the size of
+the auth tag).
+
+The `blob_key` itself is encrypted in AES-128-ECB mode by DCP using
+the OTP or UNIQUE device key. A new `blob_key` and `nonce` are generated
+randomly, when sealing/exporting the DCP blob.
+
+This patchset was tested with dm-crypt on an i.MX6ULL board.
+
+[0] https://lore.kernel.org/keyrings/20220513145705.2080323-1-a.fatoum@pengutronix.de/
+
+David Gstir (6):
+  crypto: mxs-dcp: Add support for hardware-bound keys
+  KEYS: trusted: improve scalability of trust source config
+  KEYS: trusted: Introduce NXP DCP-backed trusted keys
+  MAINTAINERS: add entry for DCP-based trusted keys
+  docs: document DCP-backed trusted keys kernel params
+  docs: trusted-encrypted: add DCP as new trust source
+
+ .../admin-guide/kernel-parameters.txt         |  13 +
+ .../security/keys/trusted-encrypted.rst       |  85 +++++
+ MAINTAINERS                                   |   9 +
+ drivers/crypto/mxs-dcp.c                      | 104 +++++-
+ include/keys/trusted_dcp.h                    |  11 +
+ include/soc/fsl/dcp.h                         |  20 ++
+ security/keys/trusted-keys/Kconfig            |  18 +-
+ security/keys/trusted-keys/Makefile           |   2 +
+ security/keys/trusted-keys/trusted_core.c     |   6 +-
+ security/keys/trusted-keys/trusted_dcp.c      | 313 ++++++++++++++++++
+ 10 files changed, 567 insertions(+), 14 deletions(-)
+ create mode 100644 include/keys/trusted_dcp.h
+ create mode 100644 include/soc/fsl/dcp.h
+ create mode 100644 security/keys/trusted-keys/trusted_dcp.c
 
 -- 
-2.44.0.396.g6e790dbe36-goog
+2.35.3
 
