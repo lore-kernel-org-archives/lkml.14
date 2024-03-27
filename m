@@ -1,54 +1,54 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C714171AA;
-	Wed, 27 Mar 2024 01:54:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6611D558;
+	Wed, 27 Mar 2024 01:55:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711504496; cv=none; b=YvHhdziITTWdI9jgFUHNMvCX5KDpG2LMdsfRTkrHY7102/0jS9TR6Bn2DDDvqMgpeUEGnFa/q9cJF8AhGjLrW2dUkS+zIPB6rYA7ve6ge8lC/soTldYvIcfrkCJOh9CLljfB0KE/6cWVPboCPzphP6gkDNU7OFkDRQlj6b/j4gg=
+	t=1711504557; cv=none; b=lUeHtADCt3dkF1ytYKh19LVsCbdp7Kctlkng+sUSmgZgEQqXAcZZ/PNl0/Gfwqc80/VG49e5xdDJO43nuIttPDpD+z5Qki6aIHoqo+f6Qnuotk2Mt5rlEmSRs56drj/Sz2ywBpK/kgrY5Pb+kbmCak7kGbZBpZSZyd8pBx7bx24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711504496; c=relaxed/simple;
-	bh=FoYbO0a2Je1kVmNjGr+RP+p3WTuSP82yWZkwZKa3D+o=;
+	s=arc-20240116; t=1711504557; c=relaxed/simple;
+	bh=UycgFYJkC6B+eNaf0pABfiDLaxalrtUXiws4fyinvfE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LfLX8D7/wsvz3fGoyoxOGuYZyNhrbz7m3riz7vlvBEZUeul/BassI0Ozpaz/HZ9EfWJ+xutY3F5tEbBVsY34HjZVrLEEefmCtd2ajO0lthDdEOAvt1kFeX/xteyi3fpg+16+vlFOSLPeYHa+RO0XC4ddfXagQfuexj45rzk1L40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IiK4RNs1; arc=none smtp.client-ip=209.85.128.178
+	 To:Cc:Content-Type; b=Apdmy3EvOCQ9T/twy/LWNy9CnlU1IxilS38kN8CXcduhFtsQRi4kzb9ibdbYXuCT7usczCzcngMz5ZysIACH5P7+C1QEbyMP/vEkGMAImyqcGIpJTFlbU1qWtkMJBlOPEc4hD99kSIShTY2EGu1F4Tn5Wpze3aF+DD+YhwYaDuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hcdnjaOY; arc=none smtp.client-ip=209.85.128.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IiK4RNs1"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-609ed7ca444so61316887b3.1;
-        Tue, 26 Mar 2024 18:54:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hcdnjaOY"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-609f4155b76so66445877b3.1;
+        Tue, 26 Mar 2024 18:55:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711504493; x=1712109293; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1711504555; x=1712109355; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=QCwc5oiE7bv0Gk8lOXEE7BpXnVaQLJjI0nzttKeHIEI=;
-        b=IiK4RNs1AaqzAyRUpwDLJanPlA3NwVNV0lI98QxR2dyOvTgpj6+NuJYqEUVroEjexj
-         fZj/GkNfSr/GDDWLt4EWoj3aNqKttniCCGjAG/zK8ZIcZIWu8CFtiHIt/25/+9iuraWf
-         9Jne6KfKsnQz23hfkLf+SGU5yCYCaUe4IHkD23qim/Vk7Z5nEmIkw+FxOxe15cbH3CK7
-         XiAlmGnwKRP4VjR5aiYmYTSqWLnVSVauyhudek86D6KBDg1wxT0K4SMEFbaqWLcjGXcC
-         M9C/M4aQ7UHnVDWBtoK13n0sRlYgflN4lB4WJ2zoBujM/E014CWFeCy8EWSXYtlvwREo
-         mHEQ==
+        bh=Kvb2heaB5MlFNklb0U8+GEqGfobjRGt+M5eC5wBBXm8=;
+        b=hcdnjaOYAbtzYRRk8hC57L8l529MF7hqw0upxUjobSZv6ruOxx0MHVRliRiiKOtCNm
+         HfR/FGiI86L5KYlwCQsdflFjtTn6fePJ+tQyRPaPYsFieIjFXnLbv+mS6lyzLlgjj5+m
+         cliJiS1K1uKne5HLnTmQXrHjnTw0+viwdgPySdJmxqFCEBDgV36vZ4mlIbYbgnPLg/q0
+         IJGOD6y8ZIGcuFx4wQGo6Rg7RsEnEWeDazSKvfgVXkdvP9y0E9G4Vci+/4dCqoChDxWf
+         BUTTa8cEdM4Rm4Plz7ip9GIkAT/a7+xZHxjOz3/1tmkt5+0iu+zIrhPGoRZ5m7h//mJC
+         52vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711504493; x=1712109293;
+        d=1e100.net; s=20230601; t=1711504555; x=1712109355;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=QCwc5oiE7bv0Gk8lOXEE7BpXnVaQLJjI0nzttKeHIEI=;
-        b=AgSbKxc4o8Qu/eqq4UpAVms4ZOX0G4B/AgPwbQbOM9+GvE4Y+jWISin9245iEDTX2i
-         cXNlIq8dbJFVpOILuszAn2/88sYXPQim9e/IoQt2LOKkxMoLtOJYxs4Csm3EO/dyeOpd
-         1bqYdsjAZqy3Yh2TrC5AT/gEgExMQENZ0CANgfUp45Y1uCfv7ZFZtuKtoGI1Z19fIQHZ
-         T3T5xtTKagmGw+21VqZXPyC7WMmeOHbpiMSt/dpMaw7ExVMgCWXIHX5mK9p4Xq+A6ibM
-         zDqONnQPNI1zAmY1/r4/IXc734QhPiQ4S1RPU13waWlrDiUUzKNUzG3sFUnhbls1xeUz
-         SKmg==
-X-Forwarded-Encrypted: i=1; AJvYcCVif8QiA+dEAmtlkeg2OmxbujdSqR+v06cuhO2hIpTdupqcr2P7UAk+zM3H1dSMx92fVt7C8dNmEPraM6iYY2bAQDVatI6Njwfhp2A0
-X-Gm-Message-State: AOJu0YweNsNWB19NdOKDMp1S+FML9sNHhWojr3YKpMgA/sj3yK1hr7ku
-	GYOCRcBtgwu0bNKj60pQRq0bAhA7beCY6hJFf88wR1zBn+LmcTWRDtm1G+C/mucqLSRQAgeDKyC
-	Jm+yPzsjCXoEmNhPJ3vaWzKu0yZg=
-X-Google-Smtp-Source: AGHT+IH0TYSLZNgpGUSham0NQWiGnSTD4LNUT3+wz4r+K4nevbDBykzwxocNFOT3xa31NYxDsyc5LmsKj8pVxM4w+EM=
-X-Received: by 2002:a0d:ff03:0:b0:611:2009:c5db with SMTP id
- p3-20020a0dff03000000b006112009c5dbmr2639231ywf.14.1711504493261; Tue, 26 Mar
- 2024 18:54:53 -0700 (PDT)
+        bh=Kvb2heaB5MlFNklb0U8+GEqGfobjRGt+M5eC5wBBXm8=;
+        b=AJHD+hHGRb/BxVfET0J/AfnkCXm1WKXmCYNejs6eU5w5gafGTW7phx+qrSZ9LB5QtC
+         Sd5NK1FTFhj8rs5jUty7cgLo6sGvaDk445YVifnn//wRESxb3FeBwjHWg9RI7Sx/mWEd
+         S7djAKTVjkSQUF/1S2vbaAFwGkO235WcZDuatPKYvdi7TItkOjPqyE9VtdAPxPwplr58
+         i8Umvx2kdpGRt+7isFDpDK07hDaX7WaPKBwedoVerySY7u4kK3fsDvJV6ZqA+oEUfszX
+         SDdMSjAnXgy7shTzo8iu5OvGsGPdH1JGnmXwzUN6WnREqQu6cn7rnqaRl21+9vYxezyn
+         OGKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVwZcRo7OvccOz7hq6VoF8Hji7DjXraITPox9TG9HhugcGNaKo/9EMhleX3Tv6ioN2ot2pRdNeBrHbwg0D56V0+3vZBWzNh4BGvEBWZ
+X-Gm-Message-State: AOJu0YwM63mCAFXnT9McrDFIzLUCAEZwgdRQ1Q7+Y2tDgkwbSGDiYDb7
+	6yKmkQHpEkbiBi9q8sUvJgz9/joafBb2DUfF7QTkOkQfxWLraQ3zsQ9RRypTCPys6CGIYxL5fy7
+	gVQlhwzO4gex1Xt2/k+9fBGUeRc4=
+X-Google-Smtp-Source: AGHT+IHQs2HjZ0BJmwhBo4wwhQSLy5dFnitSXqQXKBq4Ri2owY3hVtVth7HRqrQYXKO3Yzj/+tIbiNHUJWBhEUCRxv0=
+X-Received: by 2002:a05:690c:3184:b0:608:d673:f7c3 with SMTP id
+ fd4-20020a05690c318400b00608d673f7c3mr8192498ywb.49.1711504554732; Tue, 26
+ Mar 2024 18:55:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,8 +60,8 @@ References: <20240325195418.166013-1-wedsonaf@gmail.com> <20240325195418.166013-
  <CANeycqrbuzDwDhUjz+rZv2Q_peK54L1yPG6A1L6-PwjyLKiSAw@mail.gmail.com> <4HXcIXSpP2nHdpuTb2aAIwspZ8Az9XYU3KUp18oUlsi3yIqXNPvbe80x57P0hLIYHrlf67DUCxD96blhqCsGmR3oecopCnaZA6kRlvKCl5g=@proton.me>
 In-Reply-To: <4HXcIXSpP2nHdpuTb2aAIwspZ8Az9XYU3KUp18oUlsi3yIqXNPvbe80x57P0hLIYHrlf67DUCxD96blhqCsGmR3oecopCnaZA6kRlvKCl5g=@proton.me>
 From: Wedson Almeida Filho <wedsonaf@gmail.com>
-Date: Tue, 26 Mar 2024 22:54:42 -0300
-Message-ID: <CANeycqrbroDQv8fWsmQjAFVYRZTZx5Ww-ye3OQKG5fQ5GgkrrA@mail.gmail.com>
+Date: Tue, 26 Mar 2024 22:55:44 -0300
+Message-ID: <CANeycqpCGPHpEyXxtmPcOHewdmdXj-X8K0WAndPqQGomeyQRpg@mail.gmail.com>
 Subject: Re: [PATCH 06/10] rust: alloc: introduce the `BoxExt` trait
 To: Benno Lossin <benno.lossin@proton.me>
 Cc: rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, 
@@ -110,12 +110,6 @@ On Tue, 26 Mar 2024 at 10:30, Benno Lossin <benno.lossin@proton.me> wrote:
 >
 > One thing I forgot to say: I think these modules should be named
 > `box_ext` and `vec_ext`. It fits better with the usual style.
-
-Yeah, looking at std for precedents, I see one module called
-`backtrace` but also `assert_matches` and `async_iter`.
-
-Snake case is the standard anyway, so I'll make the change for v2.
-
 >
 > >>>
 > >>>    /// Flags to be used when allocating memory.
@@ -251,8 +245,5 @@ Snake case is the standard anyway, so I'll make the change for v2.
 >
 > Thanks for the explanation, again it would be nice to be able to just
 > write `Box::new`.
->
-> --
-> Cheers,
-> Benno
->
+
+Indeed, that's what I had originally but we don't want to break rusttest.
