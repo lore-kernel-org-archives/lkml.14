@@ -1,215 +1,108 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB9115572A;
-	Wed, 27 Mar 2024 12:15:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F56155A21;
+	Wed, 27 Mar 2024 12:15:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711541750; cv=none; b=onqtpLX3WkgiCQlVIv+Pil/otxt0JTmzCIa3YRfARJnVoHcPSpFaCBmIdGBJO1W+kCYdj0Q7XY7wxnq9zqSexf96/K0VqvDhBLYllFHeYcK1K9PPWP8EnGQ5L9AKRE34u6zwh2xC/4I1lYlVcRnR0RzniiZps949BqE/7PpphHo=
+	t=1711541752; cv=none; b=b9cCzCsZ4TJk56tDbvmYd/rBaxxq+DRx8pa1sU8svBt6HvRuOOuFNdVC5ipgu8knPAMZhnDAIs1gcMJbD8hp4+GMNcf3QRSKQOWexPoQ3Sx4H7ugjRNw0EY0Yan1DmhhR0BNHZ0JIs/amKAGFDqNJMFdWULWC7YLn+8w0cTDdiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711541750; c=relaxed/simple;
-	bh=k0NLiHpCEzJ5lJ8XZ06wUsWMe4rbmWJ5Hehw3aKgT14=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ZIbRps9anZB2gAjLvBEOERcYJaItQENjiglpFQkLkkX09N1EMhtVqfAXok/4CmHHYSk7Z9gOTwrl8DgfmPqvkuilGPpBi5aLpFvKpwTsPH4z1AH3NJeLxfuF7d2o35UELn7mXZHFSvkuaH+z1ciTGn85d26HVE7e/y9ciSnWKfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=T+wUnklq; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1711541752; c=relaxed/simple;
+	bh=3+V2U7muuYuUHbgibQGFaEi7TgqiH0XZ5mLY9AXwdv8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IxuenpYxmMYjNlulUop7lwIi9ATpDd4J2Dire5ly9ZEiCLa8eMd2NtdlDoGo7HyZNlhmyBtKiODQEnUL8UIu3OsmoOQgPEQ1fqvtbwsI+yHpVyLEqibBkjZs+DORMJE0OKnwF2BYAHoUP+dngyZhCEKz1XavazBHWRDHWLKulr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iJd24pYf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="T+wUnklq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1711541747;
-	bh=k0NLiHpCEzJ5lJ8XZ06wUsWMe4rbmWJ5Hehw3aKgT14=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=T+wUnklqoqOfGP13G/JdBdrKyWYUuvPwp78XkUWc9qIE1DWZBXKYmXMfQ75E6CBgM
-	 RYo5TTqCeAzc1D7EFv3zx3N9vHNILPt3RTUoxPbIZ8QBdI15x37JR4JUoI92/cMVI1
-	 x9H9o8OJoGxMWB6VgS7BcTKrKWeQ+B2lKGyeXEfPlkgJ8SYGCdVDA9HjrIIxIupfvu
-	 gRa5UELl/MW2YeI3fK6entdNqjs/I3oT85DH+W4LPamr55CozhVeyvLcixi22wBwPi
-	 N0rBqfYD05Z8IMsF7Hm4S/WFxvWmtu7gqYyluqQ1wZTKnzeST22UbaIPYPihnou/gu
-	 nV33NpBg1A0CA==
-Received: from [100.113.15.66] (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 698C937820E4;
-	Wed, 27 Mar 2024 12:15:43 +0000 (UTC)
-Message-ID: <0dacf491-29ec-4c24-927e-978056177648@collabora.com>
-Date: Wed, 27 Mar 2024 17:16:14 +0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJd24pYf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B31E7C433F1;
+	Wed, 27 Mar 2024 12:15:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711541752;
+	bh=3+V2U7muuYuUHbgibQGFaEi7TgqiH0XZ5mLY9AXwdv8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=iJd24pYf16qof84a0RKFVR4FZ97cf2iRe2CmfoyHIPA3+JpHp/Xahb+pYvQXKIDe3
+	 Zj5pp91mCu+Z/z7DZX+iYwjyUXy/wTd244Pa4UWRkE4+HI1uNK8HUX2UCS5WZr0u9/
+	 3w/M2Gp8OOSRTpkuDRLISKBead6f0DMt4VySAfmpOxkVj4z3vAKb4h4Mk3Mqrd5zDS
+	 6Ax2cF8IxxeyigI1jrD0KCTupePTGSdyOaD572km7P6XFVYaVP3rrHAHIhYY/AVqcu
+	 j9pC8RPaXbuoFAE27yrBzQfw+lQjtxbNjkDwwLKdW0sCTqQywCKc/WW6W+smJmbfVy
+	 9SmQPJ/tRqdhw==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org,
+	david@redhat.com
+Cc: stable@kernel.org,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: FAILED: Patch "virtio: reenable config if freezing device failed" failed to apply to 5.15-stable tree
+Date: Wed, 27 Mar 2024 08:15:50 -0400
+Message-ID: <20240327121550.2832232-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, kernel@collabora.com,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] selftests: x86: test_vsyscall: conform test to TAP
- format output
-Content-Language: en-US
-To: Shuah Khan <skhan@linuxfoundation.org>, Shuah Khan <shuah@kernel.org>
-References: <20240314103216.286603-1-usama.anjum@collabora.com>
- <a1a6f5dd-80ab-4d53-90de-eb003c996cc1@linuxfoundation.org>
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <a1a6f5dd-80ab-4d53-90de-eb003c996cc1@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8
+X-Patchwork-Hint: ignore
+X-stable: review
 Content-Transfer-Encoding: 8bit
 
-On 3/27/24 1:00 AM, Shuah Khan wrote:
-> On 3/14/24 04:32, Muhammad Usama Anjum wrote:
->> Conform the layout, informational and status messages to TAP. No
->> functional change is intended other than the layout of output messages.
->> Without using TAP messages, the passed/failed/skip test names cannot be
->> found.
->>
->> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
->> ---
-> 
-> 
-> I am seeing lot more changes than conform and formatting changes.
-Counting total number of tests based on architecture was really difficult
-until the code needed to be moved around. I'll split this patch into 2. The
-first part would just simplify the test by moving functions around and use
-#ifdef precisely. The seconds part would convert it to the TAP.
+The patch below does not apply to the 5.15-stable tree.
+If someone wants it applied there, or to any other stable or longterm
+tree, then please email the backport, including the original git commit
+id to <stable@vger.kernel.org>.
 
-> 
->>   tools/testing/selftests/x86/test_vsyscall.c | 506 +++++++++-----------
->>   1 file changed, 238 insertions(+), 268 deletions(-)
->>
->> diff --git a/tools/testing/selftests/x86/test_vsyscall.c
->> b/tools/testing/selftests/x86/test_vsyscall.c
->> index 47cab972807c4..d4c8e8d79d389 100644
->> --- a/tools/testing/selftests/x86/test_vsyscall.c
->> +++ b/tools/testing/selftests/x86/test_vsyscall.c
->> @@ -21,6 +21,13 @@
->>   #include <sys/uio.h>
->>     #include "helpers.h"
->> +#include "../kselftest.h"
->> +
->> +#ifdef __x86_64__
->> +#define TOTAL_TESTS 13
->> +#else
->> +#define TOTAL_TESTS 8
->> +#endif
->>     #ifdef __x86_64__
->>   # define VSYS(x) (x)
->> @@ -39,18 +46,6 @@
->>   /* max length of lines in /proc/self/maps - anything longer is skipped
->> here */
->>   #define MAPS_LINE_LEN 128
->>   -static void sethandler(int sig, void (*handler)(int, siginfo_t *, void
->> *),
->> -               int flags)
->> -{
->> -    struct sigaction sa;
->> -    memset(&sa, 0, sizeof(sa));
->> -    sa.sa_sigaction = handler;
->> -    sa.sa_flags = SA_SIGINFO | flags;
->> -    sigemptyset(&sa.sa_mask);
->> -    if (sigaction(sig, &sa, 0))
->> -        err(1, "sigaction");
->> -}
->> -
-> 
-> Why is this deleted?
-> 
->>   /* vsyscalls and vDSO */
->>   bool vsyscall_map_r = false, vsyscall_map_x = false;
->>   @@ -75,83 +70,25 @@ static void init_vdso(void)
->>       if (!vdso)
->>           vdso = dlopen("linux-gate.so.1", RTLD_LAZY | RTLD_LOCAL |
->> RTLD_NOLOAD);
->>       if (!vdso) {
->> -        printf("[WARN]\tfailed to find vDSO\n");
->> +        ksft_print_msg("[WARN] failed to find vDSO\n");
->>           return;
->>       }
->>         vdso_gtod = (gtod_t)dlsym(vdso, "__vdso_gettimeofday");
->>       if (!vdso_gtod)
->> -        printf("[WARN]\tfailed to find gettimeofday in vDSO\n");
->> +        ksft_print_msg("[WARN] failed to find gettimeofday in vDSO\n");
->>         vdso_gettime = (vgettime_t)dlsym(vdso, "__vdso_clock_gettime");
->>       if (!vdso_gettime)
->> -        printf("[WARN]\tfailed to find clock_gettime in vDSO\n");
->> +        ksft_print_msg("[WARN] failed to find clock_gettime in vDSO\n");
->>         vdso_time = (time_func_t)dlsym(vdso, "__vdso_time");
->>       if (!vdso_time)
->> -        printf("[WARN]\tfailed to find time in vDSO\n");
->> +        ksft_print_msg("[WARN] failed to find time in vDSO\n");
->>         vdso_getcpu = (getcpu_t)dlsym(vdso, "__vdso_getcpu");
->>       if (!vdso_getcpu)
->> -        printf("[WARN]\tfailed to find getcpu in vDSO\n");
->> -}
->> -
->> -static int init_vsys(void)
->> -{
->> -#ifdef __x86_64__
->> -    int nerrs = 0;
->> -    FILE *maps;
->> -    char line[MAPS_LINE_LEN];
->> -    bool found = false;
->> -
->> -    maps = fopen("/proc/self/maps", "r");
->> -    if (!maps) {
->> -        printf("[WARN]\tCould not open /proc/self/maps -- assuming
->> vsyscall is r-x\n");
->> -        vsyscall_map_r = true;
->> -        return 0;
->> -    }
->> -
->> -    while (fgets(line, MAPS_LINE_LEN, maps)) {
->> -        char r, x;
->> -        void *start, *end;
->> -        char name[MAPS_LINE_LEN];
->> -
->> -        /* sscanf() is safe here as strlen(name) >= strlen(line) */
->> -        if (sscanf(line, "%p-%p %c-%cp %*x %*x:%*x %*u %s",
->> -               &start, &end, &r, &x, name) != 5)
->> -            continue;
->> -
->> -        if (strcmp(name, "[vsyscall]"))
->> -            continue;
->> -
->> -        printf("\tvsyscall map: %s", line);
->> -
->> -        if (start != (void *)0xffffffffff600000 ||
->> -            end != (void *)0xffffffffff601000) {
->> -            printf("[FAIL]\taddress range is nonsense\n");
->> -            nerrs++;
->> -        }
->> -
->> -        printf("\tvsyscall permissions are %c-%c\n", r, x);
->> -        vsyscall_map_r = (r == 'r');
->> -        vsyscall_map_x = (x == 'x');
->> -
->> -        found = true;
->> -        break;
->> -    }
->> -
->> -    fclose(maps);
->> -
->> -    if (!found) {
->> -        printf("\tno vsyscall map in /proc/self/maps\n");
->> -        vsyscall_map_r = false;
->> -        vsyscall_map_x = false;
->> -    }
->> -
->> -    return nerrs;
->> -#else
->> -    return 0;
->> -#endif
->> +        ksft_print_msg("[WARN] failed to find getcpu in vDSO\n");
->>   }
->>   
-> 
-> What's going on here?
-> 
-> These changes are more extensive than the changelog indicates.
-> Additional explanation is needed before I can accept this>
-> thanks,
-> -- Shuah
-> 
+Thanks,
+Sasha
 
+------------------ original commit in Linus's tree ------------------
+
+From 310227f42882c52356b523e2f4e11690eebcd2ab Mon Sep 17 00:00:00 2001
+From: David Hildenbrand <david@redhat.com>
+Date: Tue, 13 Feb 2024 14:54:25 +0100
+Subject: [PATCH] virtio: reenable config if freezing device failed
+
+Currently, we don't reenable the config if freezing the device failed.
+
+For example, virtio-mem currently doesn't support suspend+resume, and
+trying to freeze the device will always fail. Afterwards, the device
+will no longer respond to resize requests, because it won't get notified
+about config changes.
+
+Let's fix this by re-enabling the config if freezing fails.
+
+Fixes: 22b7050a024d ("virtio: defer config changed notifications")
+Cc: <stable@kernel.org>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Message-Id: <20240213135425.795001-1-david@redhat.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+---
+ drivers/virtio/virtio.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+index f4080692b3513..f513ee21b1c18 100644
+--- a/drivers/virtio/virtio.c
++++ b/drivers/virtio/virtio.c
+@@ -510,8 +510,10 @@ int virtio_device_freeze(struct virtio_device *dev)
+ 
+ 	if (drv && drv->freeze) {
+ 		ret = drv->freeze(dev);
+-		if (ret)
++		if (ret) {
++			virtio_config_enable(dev);
+ 			return ret;
++		}
+ 	}
+ 
+ 	if (dev->config->destroy_avq)
 -- 
-BR,
-Muhammad Usama Anjum
+2.43.0
+
+
+
+
