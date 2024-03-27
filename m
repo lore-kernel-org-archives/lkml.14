@@ -1,40 +1,40 @@
-Received: from mail-108-mta245.mxroute.com (mail-108-mta245.mxroute.com [136.175.108.245])
+Received: from mail-108-mta191.mxroute.com (mail-108-mta191.mxroute.com [136.175.108.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4BF91552FC
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 23:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB80155A59
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 23:23:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711581787; cv=none; b=ihx4McW9rkNUlQ+Q60/2TVVcmO24L/qqI0dbISefCqMBM/NoRePHbEaJ6mY0qHVONfPqtkPkZxHw/SZI4O3p9LxuTWgM155u16RyJWyTkUwwIRm/QAI34eCm7gTvp7L1J0YWxiNmrMgSyilfAYet93Hf3LG+tbD89ggQ3Jh3N20=
+	t=1711581792; cv=none; b=WLAgYOQ/Qla9sVJHrh2rWirl8QL+p6xFCeYWW5UKPvEZfAkPZxc/TjRMAD9TqhvE+5xV+RgQirTVSGgTTBQ6VuN6IZJJ7yTynoN/BV+OaHJmf6yhS7gv1i4pKYkHsz1mEPD6lAdoOu9XmtlLeHusgbPkhFnbeI26LRccKqPHmSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711581787; c=relaxed/simple;
-	bh=EJ+FJnRlZhoxTDV+e79XawEmBOjEGQW5SwK6cuWM8Mg=;
+	s=arc-20240116; t=1711581792; c=relaxed/simple;
+	bh=4IFlHHYQOC9tV4yl8FKLXbjVjJLVUilxrsOQLLplhHk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E3A64q8TZUXQgMZ0616sf1ihbIfrglDap8mdqUKUh3nYn0351BDleLC8i7IYHww26LoK0mj5J9FgHoJowdCEstbAkC2aQ/4NsU1ffpYV74QCU0CHa/5XTqYBjBsgLY3V6NhjT8MWFqPIjuJW3xBctZTwDMwMmmNM/7HtlmXxY8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=zpbqHRT6; arc=none smtp.client-ip=136.175.108.245
+	 MIME-Version; b=mv2bmskdZM4SeXbGUzyFuD1H+1D4Na50bKp9vJQShfAZvIUcE0dZNZXRW9owfmInSdQwIb4LNrgP4scOn71/2nnI4KGyVqTF8ZdpPFx4U4r2/e2t3Z7mg9S9EUBXI2HEJCLgUrsU0s2HkAIdTHE5WTzOvkn4LbjB/+IJXSwpJEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=jjSDi0ap; arc=none smtp.client-ip=136.175.108.191
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="zpbqHRT6"
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="jjSDi0ap"
 Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
  (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta245.mxroute.com (ZoneMTA) with ESMTPSA id 18e823453e00003bea.00f
+ by mail-108-mta191.mxroute.com (ZoneMTA) with ESMTPSA id 18e823473d50003bea.00f
  for <linux-kernel@vger.kernel.org>
  (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Wed, 27 Mar 2024 23:17:31 +0000
-X-Zone-Loop: d661deafbcdeae1d7d1f653ccdc214bcae7f576f08e4
+ Wed, 27 Mar 2024 23:17:39 +0000
+X-Zone-Loop: 2d6fe2b772aba4f69230dfdd857a25831a8ca9f0c9f3
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
 	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
 	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=JsJQaJuq/Y8/E5VAKWZ8Y8tdFAXhqbEJOpojskktF5o=; b=zpbqHRT659Uw+mZhsA3haLrllC
-	doxOCusepPGGdYvtPSPUpWQOBqwoPvWO4IzLzmryPs/Du6vHxfkWQfoiF/NwG9dkTHckbRgXPIxsp
-	6aNiD/1MVEoL27RB+CaqLfZ/dRddmDWchSSGscj2gxtUyOt8Sb7aqFu/tkCt6ERYOT6/IsO+m0c4B
-	8W75LMzOY6z0t8nydLYQuNR5JHLJNcMaxjKqPJrDGNPVXL/0mCTj8DkyOzs1hBcFORlvCWmcAYsNZ
-	77FzTeC38Vq85bfqDT1x/JxoLy+Q5IwuzQ/7Ju864Z5siL6aG77ViVt1yzpXCMO5b4pdb6V4LAq2G
-	Cbe7EdQQ==;
+	bh=KTzgM/Hg/qDUQABeevstUkAZjkMCak0+N7cZAxmCg3o=; b=jjSDi0apZwodL/ENrPR2nIWVBK
+	0YJHaHEqGP2vIlEsZWNEvBhXySz5pt+VvjrFo31pqxt/X8hmZyokc5Vu06BUpmk+PJc198ZrE9O5F
+	LB0DHgUix/P0IVmDDGM7437z/dGiXanogqUOPy5W3hXm0xSkkgj1Qh0OlUYnwU/p6SuumnxEuaUyl
+	CicIVvuADexow2WYWq9ghTX4kwPZ52dAEMajoOyoFIfeu66c9kgEf8832g+9sZDCEIJMIzaMxSbl1
+	PqafgWgTf3DlA+8e/qIPl0XkIXVL+scReX9jB5gLX9sU1Lne3DSSjO/qOIjRAv/oe2riA6lww60w5
+	eFuUM5PQ==;
 From: git@luigi311.com
 To: linux-media@vger.kernel.org
 Cc: dave.stevenson@raspberrypi.com,
@@ -51,10 +51,11 @@ Cc: dave.stevenson@raspberrypi.com,
 	devicetree@vger.kernel.org,
 	imx@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 07/23] media: i2c: imx258: Split out common registers from the mode based ones
-Date: Wed, 27 Mar 2024 17:16:53 -0600
-Message-ID: <20240327231710.53188-8-git@luigi311.com>
+	linux-kernel@vger.kernel.org,
+	Luigi311 <git@luigi311.com>
+Subject: [PATCH 11/23] media: i2c: imx258: Add get_selection for pixel array information
+Date: Wed, 27 Mar 2024 17:16:57 -0600
+Message-ID: <20240327231710.53188-12-git@luigi311.com>
 In-Reply-To: <20240327231710.53188-1-git@luigi311.com>
 References: <20240327231710.53188-1-git@luigi311.com>
 Precedence: bulk
@@ -68,320 +69,173 @@ X-Authenticated-Id: personal@luigi311.com
 
 From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-Out of all the registers that are defined for each mode, only around
-10 differ between the modes.
-
-Split the table into common and mode specific ones.
+Libcamera requires the cropping information for each mode, so
+add this information to the driver.
 
 Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Signed-off-by: Luigi311 <git@luigi311.com>
 Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
 ---
- drivers/media/i2c/imx258.c | 236 ++++---------------------------------
- 1 file changed, 21 insertions(+), 215 deletions(-)
+ drivers/media/i2c/imx258.c | 90 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 90 insertions(+)
 
 diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
-index 321b504c6a48..351add1bc5d5 100644
+index 1f5fb980cfbe..979ac7872249 100644
 --- a/drivers/media/i2c/imx258.c
 +++ b/drivers/media/i2c/imx258.c
-@@ -151,7 +151,7 @@ static const struct imx258_reg mipi_data_rate_640mbps[] = {
- 	{ 0x0823, 0x00 },
- };
+@@ -77,6 +77,14 @@
+ #define REG_CONFIG_MIRROR_FLIP		0x03
+ #define REG_CONFIG_FLIP_TEST_PATTERN	0x02
  
--static const struct imx258_reg mode_4208x3120_regs[] = {
-+static const struct imx258_reg mode_common_regs[] = {
- 	{ 0x0136, 0x13 },
- 	{ 0x0137, 0x33 },
- 	{ 0x3051, 0x00 },
-@@ -216,27 +216,17 @@ static const struct imx258_reg mode_4208x3120_regs[] = {
- 	{ 0x0383, 0x01 },
- 	{ 0x0385, 0x01 },
- 	{ 0x0387, 0x01 },
--	{ 0x0900, 0x00 },
--	{ 0x0901, 0x11 },
--	{ 0x0401, 0x00 },
- 	{ 0x0404, 0x00 },
--	{ 0x0405, 0x10 },
- 	{ 0x0408, 0x00 },
- 	{ 0x0409, 0x00 },
- 	{ 0x040A, 0x00 },
- 	{ 0x040B, 0x00 },
- 	{ 0x040C, 0x10 },
- 	{ 0x040D, 0x70 },
--	{ 0x040E, 0x0C },
--	{ 0x040F, 0x30 },
- 	{ 0x3038, 0x00 },
- 	{ 0x303A, 0x00 },
- 	{ 0x303B, 0x10 },
- 	{ 0x300D, 0x00 },
--	{ 0x034C, 0x10 },
--	{ 0x034D, 0x70 },
--	{ 0x034E, 0x0C },
--	{ 0x034F, 0x30 },
- 	{ 0x0350, 0x01 },
- 	{ 0x0204, 0x00 },
- 	{ 0x0205, 0x00 },
-@@ -266,234 +256,43 @@ static const struct imx258_reg mode_4208x3120_regs[] = {
- 	{ 0x0220, 0x00 },
- };
- 
-+static const struct imx258_reg mode_4208x3120_regs[] = {
-+	{ 0x0900, 0x00 },
-+	{ 0x0901, 0x11 },
-+	{ 0x0401, 0x00 },
-+	{ 0x0405, 0x10 },
-+	{ 0x040E, 0x0C },
-+	{ 0x040F, 0x30 },
-+	{ 0x034C, 0x10 },
-+	{ 0x034D, 0x70 },
-+	{ 0x034E, 0x0C },
-+	{ 0x034F, 0x30 },
-+};
++/* IMX258 native and active pixel array size. */
++#define IMX258_NATIVE_WIDTH		4224U
++#define IMX258_NATIVE_HEIGHT		3192U
++#define IMX258_PIXEL_ARRAY_LEFT		8U
++#define IMX258_PIXEL_ARRAY_TOP		16U
++#define IMX258_PIXEL_ARRAY_WIDTH	4208U
++#define IMX258_PIXEL_ARRAY_HEIGHT	3120U
 +
- static const struct imx258_reg mode_2104_1560_regs[] = {
--	{ 0x0136, 0x13 },
--	{ 0x0137, 0x33 },
--	{ 0x3051, 0x00 },
--	{ 0x3052, 0x00 },
--	{ 0x4E21, 0x14 },
--	{ 0x6B11, 0xCF },
--	{ 0x7FF0, 0x08 },
--	{ 0x7FF1, 0x0F },
--	{ 0x7FF2, 0x08 },
--	{ 0x7FF3, 0x1B },
--	{ 0x7FF4, 0x23 },
--	{ 0x7FF5, 0x60 },
--	{ 0x7FF6, 0x00 },
--	{ 0x7FF7, 0x01 },
--	{ 0x7FF8, 0x00 },
--	{ 0x7FF9, 0x78 },
--	{ 0x7FFA, 0x00 },
--	{ 0x7FFB, 0x00 },
--	{ 0x7FFC, 0x00 },
--	{ 0x7FFD, 0x00 },
--	{ 0x7FFE, 0x00 },
--	{ 0x7FFF, 0x03 },
--	{ 0x7F76, 0x03 },
--	{ 0x7F77, 0xFE },
--	{ 0x7FA8, 0x03 },
--	{ 0x7FA9, 0xFE },
--	{ 0x7B24, 0x81 },
--	{ 0x7B25, 0x00 },
--	{ 0x6564, 0x07 },
--	{ 0x6B0D, 0x41 },
--	{ 0x653D, 0x04 },
--	{ 0x6B05, 0x8C },
--	{ 0x6B06, 0xF9 },
--	{ 0x6B08, 0x65 },
--	{ 0x6B09, 0xFC },
--	{ 0x6B0A, 0xCF },
--	{ 0x6B0B, 0xD2 },
--	{ 0x6700, 0x0E },
--	{ 0x6707, 0x0E },
--	{ 0x9104, 0x00 },
--	{ 0x4648, 0x7F },
--	{ 0x7420, 0x00 },
--	{ 0x7421, 0x1C },
--	{ 0x7422, 0x00 },
--	{ 0x7423, 0xD7 },
--	{ 0x5F04, 0x00 },
--	{ 0x5F05, 0xED },
--	{ 0x0112, 0x0A },
--	{ 0x0113, 0x0A },
--	{ 0x0114, 0x03 },
--	{ 0x0342, 0x14 },
--	{ 0x0343, 0xE8 },
--	{ 0x0344, 0x00 },
--	{ 0x0345, 0x00 },
--	{ 0x0346, 0x00 },
--	{ 0x0347, 0x00 },
--	{ 0x0348, 0x10 },
--	{ 0x0349, 0x6F },
--	{ 0x034A, 0x0C },
--	{ 0x034B, 0x2F },
--	{ 0x0381, 0x01 },
--	{ 0x0383, 0x01 },
--	{ 0x0385, 0x01 },
--	{ 0x0387, 0x01 },
- 	{ 0x0900, 0x01 },
- 	{ 0x0901, 0x12 },
- 	{ 0x0401, 0x01 },
--	{ 0x0404, 0x00 },
- 	{ 0x0405, 0x20 },
--	{ 0x0408, 0x00 },
--	{ 0x0409, 0x00 },
--	{ 0x040A, 0x00 },
--	{ 0x040B, 0x00 },
--	{ 0x040C, 0x10 },
--	{ 0x040D, 0x70 },
- 	{ 0x040E, 0x06 },
- 	{ 0x040F, 0x18 },
--	{ 0x3038, 0x00 },
--	{ 0x303A, 0x00 },
--	{ 0x303B, 0x10 },
--	{ 0x300D, 0x00 },
- 	{ 0x034C, 0x08 },
- 	{ 0x034D, 0x38 },
- 	{ 0x034E, 0x06 },
- 	{ 0x034F, 0x18 },
--	{ 0x0350, 0x01 },
--	{ 0x0204, 0x00 },
--	{ 0x0205, 0x00 },
--	{ 0x020E, 0x01 },
--	{ 0x020F, 0x00 },
--	{ 0x0210, 0x01 },
--	{ 0x0211, 0x00 },
--	{ 0x0212, 0x01 },
--	{ 0x0213, 0x00 },
--	{ 0x0214, 0x01 },
--	{ 0x0215, 0x00 },
--	{ 0x7BCD, 0x01 },
--	{ 0x94DC, 0x20 },
--	{ 0x94DD, 0x20 },
--	{ 0x94DE, 0x20 },
--	{ 0x95DC, 0x20 },
--	{ 0x95DD, 0x20 },
--	{ 0x95DE, 0x20 },
--	{ 0x7FB0, 0x00 },
--	{ 0x9010, 0x3E },
--	{ 0x9419, 0x50 },
--	{ 0x941B, 0x50 },
--	{ 0x9519, 0x50 },
--	{ 0x951B, 0x50 },
--	{ 0x3030, 0x00 },
--	{ 0x3032, 0x00 },
--	{ 0x0220, 0x00 },
+ struct imx258_reg {
+ 	u16 address;
+ 	u8 val;
+@@ -116,6 +124,9 @@ struct imx258_mode {
+ 	u32 link_freq_index;
+ 	/* Default register values */
+ 	struct imx258_reg_list reg_list;
++
++	/* Analog crop rectangle. */
++	struct v4l2_rect crop;
  };
  
- static const struct imx258_reg mode_1048_780_regs[] = {
--	{ 0x0136, 0x13 },
--	{ 0x0137, 0x33 },
--	{ 0x3051, 0x00 },
--	{ 0x3052, 0x00 },
--	{ 0x4E21, 0x14 },
--	{ 0x6B11, 0xCF },
--	{ 0x7FF0, 0x08 },
--	{ 0x7FF1, 0x0F },
--	{ 0x7FF2, 0x08 },
--	{ 0x7FF3, 0x1B },
--	{ 0x7FF4, 0x23 },
--	{ 0x7FF5, 0x60 },
--	{ 0x7FF6, 0x00 },
--	{ 0x7FF7, 0x01 },
--	{ 0x7FF8, 0x00 },
--	{ 0x7FF9, 0x78 },
--	{ 0x7FFA, 0x00 },
--	{ 0x7FFB, 0x00 },
--	{ 0x7FFC, 0x00 },
--	{ 0x7FFD, 0x00 },
--	{ 0x7FFE, 0x00 },
--	{ 0x7FFF, 0x03 },
--	{ 0x7F76, 0x03 },
--	{ 0x7F77, 0xFE },
--	{ 0x7FA8, 0x03 },
--	{ 0x7FA9, 0xFE },
--	{ 0x7B24, 0x81 },
--	{ 0x7B25, 0x00 },
--	{ 0x6564, 0x07 },
--	{ 0x6B0D, 0x41 },
--	{ 0x653D, 0x04 },
--	{ 0x6B05, 0x8C },
--	{ 0x6B06, 0xF9 },
--	{ 0x6B08, 0x65 },
--	{ 0x6B09, 0xFC },
--	{ 0x6B0A, 0xCF },
--	{ 0x6B0B, 0xD2 },
--	{ 0x6700, 0x0E },
--	{ 0x6707, 0x0E },
--	{ 0x9104, 0x00 },
--	{ 0x4648, 0x7F },
--	{ 0x7420, 0x00 },
--	{ 0x7421, 0x1C },
--	{ 0x7422, 0x00 },
--	{ 0x7423, 0xD7 },
--	{ 0x5F04, 0x00 },
--	{ 0x5F05, 0xED },
--	{ 0x0112, 0x0A },
--	{ 0x0113, 0x0A },
--	{ 0x0114, 0x03 },
--	{ 0x0342, 0x14 },
--	{ 0x0343, 0xE8 },
--	{ 0x0344, 0x00 },
--	{ 0x0345, 0x00 },
--	{ 0x0346, 0x00 },
--	{ 0x0347, 0x00 },
--	{ 0x0348, 0x10 },
--	{ 0x0349, 0x6F },
--	{ 0x034A, 0x0C },
--	{ 0x034B, 0x2F },
--	{ 0x0381, 0x01 },
--	{ 0x0383, 0x01 },
--	{ 0x0385, 0x01 },
--	{ 0x0387, 0x01 },
- 	{ 0x0900, 0x01 },
- 	{ 0x0901, 0x14 },
- 	{ 0x0401, 0x01 },
--	{ 0x0404, 0x00 },
- 	{ 0x0405, 0x40 },
--	{ 0x0408, 0x00 },
--	{ 0x0409, 0x00 },
--	{ 0x040A, 0x00 },
--	{ 0x040B, 0x00 },
--	{ 0x040C, 0x10 },
--	{ 0x040D, 0x70 },
- 	{ 0x040E, 0x03 },
- 	{ 0x040F, 0x0C },
--	{ 0x3038, 0x00 },
--	{ 0x303A, 0x00 },
--	{ 0x303B, 0x10 },
--	{ 0x300D, 0x00 },
- 	{ 0x034C, 0x04 },
- 	{ 0x034D, 0x18 },
- 	{ 0x034E, 0x03 },
- 	{ 0x034F, 0x0C },
--	{ 0x0350, 0x01 },
--	{ 0x0204, 0x00 },
--	{ 0x0205, 0x00 },
--	{ 0x020E, 0x01 },
--	{ 0x020F, 0x00 },
--	{ 0x0210, 0x01 },
--	{ 0x0211, 0x00 },
--	{ 0x0212, 0x01 },
--	{ 0x0213, 0x00 },
--	{ 0x0214, 0x01 },
--	{ 0x0215, 0x00 },
--	{ 0x7BCD, 0x00 },
--	{ 0x94DC, 0x20 },
--	{ 0x94DD, 0x20 },
--	{ 0x94DE, 0x20 },
--	{ 0x95DC, 0x20 },
--	{ 0x95DD, 0x20 },
--	{ 0x95DE, 0x20 },
--	{ 0x7FB0, 0x00 },
--	{ 0x9010, 0x3E },
--	{ 0x9419, 0x50 },
--	{ 0x941B, 0x50 },
--	{ 0x9519, 0x50 },
--	{ 0x951B, 0x50 },
--	{ 0x3030, 0x00 },
--	{ 0x3032, 0x00 },
--	{ 0x0220, 0x00 },
+ /*
+@@ -567,6 +578,12 @@ static const struct imx258_mode supported_modes[] = {
+ 			.regs = mode_4208x3120_regs,
+ 		},
+ 		.link_freq_index = IMX258_LINK_FREQ_1267MBPS,
++		.crop = {
++			.left = IMX258_PIXEL_ARRAY_LEFT,
++			.top = IMX258_PIXEL_ARRAY_TOP,
++			.width = 4208,
++			.height = 3120,
++		},
+ 	},
+ 	{
+ 		.width = 2104,
+@@ -578,6 +595,12 @@ static const struct imx258_mode supported_modes[] = {
+ 			.regs = mode_2104_1560_regs,
+ 		},
+ 		.link_freq_index = IMX258_LINK_FREQ_640MBPS,
++		.crop = {
++			.left = IMX258_PIXEL_ARRAY_LEFT,
++			.top = IMX258_PIXEL_ARRAY_TOP,
++			.width = 4208,
++			.height = 3120,
++		},
+ 	},
+ 	{
+ 		.width = 1048,
+@@ -589,6 +612,12 @@ static const struct imx258_mode supported_modes[] = {
+ 			.regs = mode_1048_780_regs,
+ 		},
+ 		.link_freq_index = IMX258_LINK_FREQ_640MBPS,
++		.crop = {
++			.left = IMX258_PIXEL_ARRAY_LEFT,
++			.top = IMX258_PIXEL_ARRAY_TOP,
++			.width = 4208,
++			.height = 3120,
++		},
+ 	},
  };
  
- static const char * const imx258_test_pattern_menu[] = {
-@@ -955,6 +754,13 @@ static int imx258_start_streaming(struct imx258 *imx258)
- 		return ret;
- 	}
+@@ -705,6 +734,7 @@ static int imx258_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
+ {
+ 	struct v4l2_mbus_framefmt *try_fmt =
+ 		v4l2_subdev_state_get_format(fh->state, 0);
++	struct v4l2_rect *try_crop;
  
-+	ret = imx258_write_regs(imx258, mode_common_regs,
-+				ARRAY_SIZE(mode_common_regs));
-+	if (ret) {
-+		dev_err(&client->dev, "%s failed to set common regs\n", __func__);
-+		return ret;
+ 	/* Initialize try_fmt */
+ 	try_fmt->width = supported_modes[0].width;
+@@ -712,6 +742,13 @@ static int imx258_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
+ 	try_fmt->code = MEDIA_BUS_FMT_SBGGR10_1X10;
+ 	try_fmt->field = V4L2_FIELD_NONE;
+ 
++	/* Initialize try_crop */
++	try_crop = v4l2_subdev_state_get_crop(fh->state, 0);
++	try_crop->left = IMX258_PIXEL_ARRAY_LEFT;
++	try_crop->top = IMX258_PIXEL_ARRAY_TOP;
++	try_crop->width = IMX258_PIXEL_ARRAY_WIDTH;
++	try_crop->height = IMX258_PIXEL_ARRAY_HEIGHT;
++
+ 	return 0;
+ }
+ 
+@@ -959,6 +996,58 @@ static int imx258_set_pad_format(struct v4l2_subdev *sd,
+ 	return 0;
+ }
+ 
++static const struct v4l2_rect *
++__imx258_get_pad_crop(struct imx258 *imx258,
++		      struct v4l2_subdev_state *sd_state,
++		      unsigned int pad, enum v4l2_subdev_format_whence which)
++{
++	switch (which) {
++	case V4L2_SUBDEV_FORMAT_TRY:
++		return v4l2_subdev_state_get_crop(sd_state, pad);
++	case V4L2_SUBDEV_FORMAT_ACTIVE:
++		return &imx258->cur_mode->crop;
 +	}
 +
- 	/* Apply default values of current mode */
- 	reg_list = &imx258->cur_mode->reg_list;
- 	ret = imx258_write_regs(imx258, reg_list->regs, reg_list->num_of_regs);
++	return NULL;
++}
++
++static int imx258_get_selection(struct v4l2_subdev *sd,
++				struct v4l2_subdev_state *sd_state,
++				struct v4l2_subdev_selection *sel)
++{
++	switch (sel->target) {
++	case V4L2_SEL_TGT_CROP: {
++		struct imx258 *imx258 = to_imx258(sd);
++
++		mutex_lock(&imx258->mutex);
++		sel->r = *__imx258_get_pad_crop(imx258, sd_state, sel->pad,
++						sel->which);
++		mutex_unlock(&imx258->mutex);
++
++		return 0;
++	}
++
++	case V4L2_SEL_TGT_NATIVE_SIZE:
++		sel->r.left = 0;
++		sel->r.top = 0;
++		sel->r.width = IMX258_NATIVE_WIDTH;
++		sel->r.height = IMX258_NATIVE_HEIGHT;
++
++		return 0;
++
++	case V4L2_SEL_TGT_CROP_DEFAULT:
++	case V4L2_SEL_TGT_CROP_BOUNDS:
++		sel->r.left = IMX258_PIXEL_ARRAY_LEFT;
++		sel->r.top = IMX258_PIXEL_ARRAY_TOP;
++		sel->r.width = IMX258_PIXEL_ARRAY_WIDTH;
++		sel->r.height = IMX258_PIXEL_ARRAY_HEIGHT;
++
++		return 0;
++	}
++
++	return -EINVAL;
++}
++
+ /* Start streaming */
+ static int imx258_start_streaming(struct imx258 *imx258)
+ {
+@@ -1135,6 +1224,7 @@ static const struct v4l2_subdev_pad_ops imx258_pad_ops = {
+ 	.get_fmt = imx258_get_pad_format,
+ 	.set_fmt = imx258_set_pad_format,
+ 	.enum_frame_size = imx258_enum_frame_size,
++	.get_selection = imx258_get_selection,
+ };
+ 
+ static const struct v4l2_subdev_ops imx258_subdev_ops = {
 -- 
 2.42.0
 
