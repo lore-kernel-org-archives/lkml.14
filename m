@@ -1,197 +1,113 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F117228DB3
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 06:37:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948182EB05
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 06:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711521468; cv=none; b=s2nMnjSxFRzllgg4Db26cdHOveImuaKzZetBH1tNtf6Ss2V/bXLm1ihZPnAZkEgncRJAe2IAVlUsJ1n/tH7vyq6EHwqYSsROMaooYGGVXJKmqrXBnYL6G2C9CRZKdvTIAF3z6n5Z+qTqGiPFnf+BdDuamkQcjsadJFLeU47kQoo=
+	t=1711521474; cv=none; b=gYIBNzPBrlb4W/aBshcD4TDgPIU8iAR6+/uKFD1wHccZYaSyqo1YYmg3b1cqtQZCPILp1jhrMSQKTY6WqDTBQ5/siJ6VzCz6MtOe4LV5M2R+YQjnhWXdRA4V6e4piQIoCwzNZnZ9YqOcrucKWmN6ckPTpAhXabbY3t5Jb6BNksg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711521468; c=relaxed/simple;
-	bh=4pckZjBmxNpusZkqA+M22ldG4knwHCaY60uejIejplk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eJqK0E09yEHe1J//hxdN8w6rMASu4KJwNZZyEG91Auj2Jx7tJYdyvesSBlA/1Hwa+XANeKeOtVPXEeq1hF+L1VnccIIJ+hbEI6jqFVyOkc19hVq7GO9I2PONXRvOlDo/anr8ZvCyLFjsj9dv6Jki148d9bXrYX7UIXjqj0T4H6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o2Dihzpn; arc=none smtp.client-ip=209.85.214.180
+	s=arc-20240116; t=1711521474; c=relaxed/simple;
+	bh=rPfFrJBnAulSY0rHFnC89I3kUqU3f8YhptHrQUiyOjs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=QahEzbns6Q2VxDjx0DqyxfYSlniTl5RCyUCZuMc9+kkWl4/VNJy6qP4WXDjXkoIYvNdPIGltXTi57d2+YvXPHiFwh07e0Z29tRWrFJhR4srF6tx+b8kHxp2LH1exdI+HsprwB2uTOs4okUOyJ/oKiyYTzwC3Qwrg3JrIL/J6mec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IT0Myisn; arc=none smtp.client-ip=209.85.215.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o2Dihzpn"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1e0878b76f3so4487405ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 23:37:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IT0Myisn"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-53fa455cd94so4301888a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 23:37:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711521465; x=1712126265; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4fbftbLuAcGOCvJ547ndsEKPrfAbJI6lg5QkNn87c6A=;
-        b=o2DihzpnKDYVUZ23KN1s5jCBABHSlublPgq+2JRawGfLMaO6TR4rD4lT9xhofQmKI9
-         pXK3DwNjxElYmZ40YhrYLZUHzOwNOo87oGzGNdp5LtpjPLLj2w/66nmPgt3AAFouZ7T4
-         BcXhL302lC9sX9yqcogkBpLEEoZCFNBnJHFDnx5ubnGbDmkUjgQLo3iPNshsxATTlLyv
-         dvHN6XffuuW5M2rp1qWsa5Ydyz/7X3Ae/meTlMobAQCQNG1cQX3e3eVG77zJDg2tDxL8
-         cqwGizYINGc8dKzIA6J77LehbenyfINnEdCa1CHyg/NPdEDfQ1tNlG6omPV/Kkp/y+Z0
-         +fNA==
+        d=linaro.org; s=google; t=1711521472; x=1712126272; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BaoVf9eqjsot1BqIU97nmYIfRRMIaK539UE6et7+tDo=;
+        b=IT0MyisnLu4Th6GpX55SDgnroU7masedlLrvG08ZOL+scjcNIkfgk5aE/tD8gW9Zg7
+         h+YZJGrJGTaA1EBx/iCh+Vd9y98qLGrmzPJ/SoKUnzmxQpVCgd62QvFQD96j6Z8m77bA
+         7gWnkf5msU+0xxeTmogfa9gNrwU/ToQedEzrhIPMBWdg34k5/Lyw07PJAfgJL3T5zaOk
+         0qYLEn/txe5NWG1DBkX9c00W8nEDgrOxcj0SncobiY9mcs/UwEAUtn02XGTt1aIJeSao
+         1bfuePGCXiyem6KA6+yPLt0JGst4ctb+sf39c3U/i4DXaUqwvuqsRWcO539Z09Lqs2On
+         Gr1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711521465; x=1712126265;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1711521472; x=1712126272;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4fbftbLuAcGOCvJ547ndsEKPrfAbJI6lg5QkNn87c6A=;
-        b=DzIg27FwJRr/83SMQh4STYjeWgyBgNu5KBYn1+36gj4lO0V4cXGLfek6MHeQYBPee3
-         O1zJD5R+gc76Fdcer9DS7Cd1UJgnHEwwu0NdVLusNnLc1J6Z/JX5KN3xy63Ndv9//6v2
-         8n9sTAseb1dd/hztsHkNZO51rqckFqyHIwCjBEEg4/pjCtdYE6Ggjc+MZR9WldiDMXMO
-         lBZjIRYKHB+JP0lOqqUwyqd79VAf+d8fVIewvGxSob/ddmTThhOyybhrVhjreBK/D0yB
-         V7DSlHmiL0E8kY/FxVynLzHtNOFk9d02eHywBwxzVY1FoH+x23Y4pXbgo5A2PS/RK7nq
-         s9Kw==
-X-Forwarded-Encrypted: i=1; AJvYcCXGoC3BDF4bfUzZhb3uA3+/ltTcCwPb+yNwbJykAoNN5GZ3Q9QI9dn8JKW8zRJWyEfE3Fl7ei+ZsOHtjTPK24D2rRlumOnllqpd6BhZ
-X-Gm-Message-State: AOJu0YxQsQ027ejSkqjMR5FPkF0hUKD+rU08T7DvXnGXbyKhdMDzqPq6
-	2eY8ParFzVvpoY8PWskuUJ5oRD9EdFWrPNTStBxMirogPSkipZIR0Z7yn3CW6A==
-X-Google-Smtp-Source: AGHT+IEL2kQ/E2w8VNPZzPOZ/AXjQBKSfaIRVHPHsHH5DUZufhi/FZ0THiRCOOjOJPVwkmxhtjEwaA==
-X-Received: by 2002:a17:902:ec92:b0:1dd:8ed0:59d0 with SMTP id x18-20020a170902ec9200b001dd8ed059d0mr5552393plg.17.1711521464905;
-        Tue, 26 Mar 2024 23:37:44 -0700 (PDT)
-Received: from [127.0.1.1] ([117.207.28.168])
-        by smtp.gmail.com with ESMTPSA id r9-20020a170902be0900b001e14807c7dfsm602553pls.86.2024.03.26.23.37.23
+        bh=BaoVf9eqjsot1BqIU97nmYIfRRMIaK539UE6et7+tDo=;
+        b=bDCE8/AQgOzZvbYsJLuzsszJ/KsOBQcC5shsl09SacMaeB4le4V3q81UqhQ3fbTS+z
+         zFV7Amj+cuteIA+u6Uu6RJuHgkH1pdI9YF5gFt26ku+4ph8RHuMK+/xvm4lMTH4tmOwZ
+         Q+q5gs4rP1R06OWMc645H2ATJOsfbI6cm62HOvOq25BWpyncQdfDiVfRGLpxXAeW7y95
+         6c+qLu9p1zY6CKaFRxkdyONnB5uohYOJZ6sdEzFP3zMDzzaY7CQ1pr0JICpuvLDIsHmJ
+         JGI9SV4WxE/AJPmgcNaBq5Yvpxj8ELb7UKJj73kiS/aDQGDykJv5kYTzL7Oy0yPe4EQG
+         nE2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVY+AyPTAr74SSa/5IBWzRLARpJhLkoj7mJSqSQRi5pftWr/E8jg/20xZjQ5xc+TrDZ3sn8Tsvp2rNYpfSzH2P4yP6EsPBQstLQqStF
+X-Gm-Message-State: AOJu0YyOeSp1Lr9VnxRWBR61oX8fQAJWQX5dvI73u3jBUg6RplO04ClC
+	GcQn4o5PtnKN2z/erk/hHgLd1yEIx4UvCUpAmZmlmzhOomZmutUFVjgBFTznxZk=
+X-Google-Smtp-Source: AGHT+IGMuZtHvazZJBQcFvWTWdLA5CF2Rtu8zNn8wDCz0Gyn60Y05qjs1srXfeJjghEVBNqAlY80gA==
+X-Received: by 2002:a05:6a20:bb1f:b0:1a3:685f:9f48 with SMTP id fc31-20020a056a20bb1f00b001a3685f9f48mr259413pzb.30.1711521472055;
+        Tue, 26 Mar 2024 23:37:52 -0700 (PDT)
+Received: from sumit-X1.. ([223.178.208.127])
+        by smtp.gmail.com with ESMTPSA id qd5-20020a17090b3cc500b002a02f8d350fsm772765pjb.53.2024.03.26.23.37.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 23:37:44 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Date: Wed, 27 Mar 2024 12:05:50 +0530
-Subject: [PATCH v11 4/8] PCI: dwc: ep: Rename dw_pcie_ep_exit() to
- dw_pcie_ep_deinit()
+        Tue, 26 Mar 2024 23:37:51 -0700 (PDT)
+From: Sumit Garg <sumit.garg@linaro.org>
+To: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org
+Cc: andersson@kernel.org,
+	konrad.dybcio@linaro.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	stephan@gerhold.net,
+	caleb.connolly@linaro.org,
+	neil.armstrong@linaro.org,
+	dmitry.baryshkov@linaro.org,
+	laetitia.mariottini@se.com,
+	pascal.eberhard@se.com,
+	abdou.saker@se.com,
+	jimmy.lalande@se.com,
+	benjamin.missey@non.se.com,
+	daniel.thompson@linaro.org,
+	linux-kernel@vger.kernel.org,
+	Sumit Garg <sumit.garg@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v4 1/3] dt-bindings: vendor-prefixes: Add Schneider Electric
+Date: Wed, 27 Mar 2024 12:07:32 +0530
+Message-Id: <20240327063734.3236117-2-sumit.garg@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240327063734.3236117-1-sumit.garg@linaro.org>
+References: <20240327063734.3236117-1-sumit.garg@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240327-pci-dbi-rework-v11-4-6f5259f90673@linaro.org>
-References: <20240327-pci-dbi-rework-v11-0-6f5259f90673@linaro.org>
-In-Reply-To: <20240327-pci-dbi-rework-v11-0-6f5259f90673@linaro.org>
-To: Jingoo Han <jingoohan1@gmail.com>, 
- Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Marek Vasut <marek.vasut+renesas@gmail.com>, 
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, 
- Kishon Vijay Abraham I <kishon@ti.com>, Vidya Sagar <vidyas@nvidia.com>, 
- Vignesh Raghavendra <vigneshr@ti.com>, Richard Zhu <hongxing.zhu@nxp.com>, 
- Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
- Minghuan Lian <minghuan.Lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, 
- Roy Zang <roy.zang@nxp.com>, 
- Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Jesper Nilsson <jesper.nilsson@axis.com>, 
- Srikanth Thokala <srikanth.thokala@intel.com>, 
- Shawn Lin <shawn.lin@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
- Niklas Cassel <cassel@kernel.org>, linux-arm-kernel@axis.com, 
- linux-rockchip@lists.infradead.org, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Frank Li <Frank.Li@nxp.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3334;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=4pckZjBmxNpusZkqA+M22ldG4knwHCaY60uejIejplk=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBmA75VlvEI0iis4/mkrgePkLoXBVTtHKaqjt41b
- U9Tp0UU8diJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZgO+VQAKCRBVnxHm/pHO
- 9WCIB/49HeYYYzpNo0IRZF4N+qJBcgCa5NyT0Fg2bMN5zwctdcsIeJc0KjBFpj+1feSCAHJ0xDZ
- 6BH3+IYqHU6ZvNG46DCzRLBbjtCAfQE7NM+viqwGUhY/HqnMXhH86Eld5xbYMvPUN2zgWJUkGA3
- wRZEWcLlR6eeWiL23cmECPesRsWTAsY/k432+j0ekBkhHdb1Ni7M2ZiR+KT4LnLlII7xSEhWLlq
- q0JjZv/RjCw2M7C4OTi4w7OkM8PMBhmcekNLARohzzIQqn3Kef5UOMpUdWDEkbsT/TucQb9CiNC
- I7PqNzDxoRcw06lKPoHn2kk4tg4slh6L68ZO57XG1aETSGRe
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
+Content-Transfer-Encoding: 8bit
 
-dw_pcie_ep_exit() API is undoing what the dw_pcie_ep_init() API has done
-already (at least partly). But the API name dw_pcie_ep_exit() is not quite
-reflecting that. So let's rename it to dw_pcie_ep_deinit() to make the
-purpose of this API clear. This also aligns with the DWC host driver.
+Add vendor prefix for Schneider Electric (https://www.se.com/).
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 ---
- drivers/pci/controller/dwc/pcie-designware-ep.c | 6 +++---
- drivers/pci/controller/dwc/pcie-designware.h    | 4 ++--
- drivers/pci/controller/dwc/pcie-rcar-gen4.c     | 2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 7d60abe4fef7..7ff2015736ef 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -618,13 +618,13 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
- }
- 
- /**
-- * dw_pcie_ep_exit - Deinitialize the endpoint device
-+ * dw_pcie_ep_deinit - Deinitialize the endpoint device
-  * @ep: DWC EP device
-  *
-  * Deinitialize the endpoint device. EPC device is not destroyed since that will
-  * be taken care by Devres.
-  */
--void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
-+void dw_pcie_ep_deinit(struct dw_pcie_ep *ep)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 	struct pci_epc *epc = ep->epc;
-@@ -636,7 +636,7 @@ void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
- 
- 	pci_epc_mem_exit(epc);
- }
--EXPORT_SYMBOL_GPL(dw_pcie_ep_exit);
-+EXPORT_SYMBOL_GPL(dw_pcie_ep_deinit);
- 
- static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
- {
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index ab7431a37209..61465203bb60 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -671,7 +671,7 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep);
- int dw_pcie_ep_init(struct dw_pcie_ep *ep);
- int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep);
- void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep);
--void dw_pcie_ep_exit(struct dw_pcie_ep *ep);
-+void dw_pcie_ep_deinit(struct dw_pcie_ep *ep);
- int dw_pcie_ep_raise_intx_irq(struct dw_pcie_ep *ep, u8 func_no);
- int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
- 			     u8 interrupt_num);
-@@ -701,7 +701,7 @@ static inline void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
- {
- }
- 
--static inline void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
-+static inline void dw_pcie_ep_deinit(struct dw_pcie_ep *ep)
- {
- }
- 
-diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
-index ac97d594ea47..9d9d22e367bb 100644
---- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
-+++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
-@@ -430,7 +430,7 @@ static int rcar_gen4_add_dw_pcie_ep(struct rcar_gen4_pcie *rcar)
- 
- static void rcar_gen4_remove_dw_pcie_ep(struct rcar_gen4_pcie *rcar)
- {
--	dw_pcie_ep_exit(&rcar->dw.ep);
-+	dw_pcie_ep_deinit(&rcar->dw.ep);
- 	rcar_gen4_pcie_ep_deinit(rcar);
- }
- 
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 1a0dc04f1db4..4ef38573e411 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1211,6 +1211,8 @@ patternProperties:
+     description: Smart Battery System
+   "^schindler,.*":
+     description: Schindler
++  "^schneider,.*":
++    description: Schneider Electric
+   "^seagate,.*":
+     description: Seagate Technology PLC
+   "^seeed,.*":
 -- 
-2.25.1
+2.34.1
 
