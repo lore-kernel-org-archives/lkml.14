@@ -1,171 +1,93 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE1022EF3
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 02:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E797F21101;
+	Wed, 27 Mar 2024 02:45:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711507505; cv=none; b=st6puLYxW59xuB5JLedTXONM5600pfxGkRrPiSEuHSWr8uzLBnezh2vfKO2ea8sArpliISoYRdlop1xRUFGXzTAz3s/OVUc0XUYM4Uc6Jyru2wgRk3U0nZSLCIrbmWX8zvtnelZqI364KaUOvith3J06KsznCs0SzOKicwb52Gk=
+	t=1711507528; cv=none; b=aR13txl6lHbyOQ4JcvNlA5QAl7HpOalRoOk7o3yvb9+AQx7x/aGed7lL/Q7LXDr6azu7/1OWOJVaaqnezy6lahrwm6Ol898zEzgdbje1zz08DpMhPMj9boMyfE6iLV38M5ZkwmU30UeymEOx9zb2sbXFvc8LohNbQbMycyWM0oM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711507505; c=relaxed/simple;
-	bh=IqGg7LyLJ4vm9PU6ptmTZNKaGaZu+PMIhLvA/eSMrIs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iBb38vueO7FlqF0tGYdFJFCCbwLOg282oWmjthFbMbXyApJTmv1qkc0lge/ukBA0+yM/4HtJWqBH7SYEblmUxdra5cJEo7E3nvmX5KXc7johzOX7lAy+UvRjsRjAzeT4r01bmToGR/LHG+PNat5WQ0xytBKRbrdrq2QHsT1Fdok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Yzj8f8cT; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711507528; c=relaxed/simple;
+	bh=5MHiWieVQ4gbjFpnZPpz8dKpkqqX+jPNDtx3xM1CSzg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=EXbEimKnkbf1JENCajgXvvQaBoxn1pdb0ICODwwZ3A83h6wDB21W06N12TXmuCh0E0aszXE47lGha1Sh7FzchQnlKTMBOzzIHxAcp5G+sgxIRa4ppWO44gvx8Y2J8ME7RINnzxMpXN658twXuz41Uh664CbLgFIvsn9U/oeW0lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=oX5hrtcW; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yzj8f8cT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711507503;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LkfmtcIYl603EVBW7jCFuDGcWJSt5orkk6Zu8ttf8Fk=;
-	b=Yzj8f8cTtFYG6y5KiFk5izPD8nkSBAQtnjbCm8eOtgiz/OgDZU4etkVGG7BzxfnyZpO/at
-	9IJFFUnOUdhaUD/W2sj7bOdMhCNA0GWpm6OCCZs9vCqSiFCvPfTQn+qEFD0unrheGILis1
-	l5X9WtvFH9wktHYouxxhVOBc69AD/bs=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-176-rlfewEGeNxS55itN_pZOYA-1; Tue, 26 Mar 2024 22:45:01 -0400
-X-MC-Unique: rlfewEGeNxS55itN_pZOYA-1
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2a039b47c5fso334467a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 19:45:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711507499; x=1712112299;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LkfmtcIYl603EVBW7jCFuDGcWJSt5orkk6Zu8ttf8Fk=;
-        b=lpJNQv2uDxFley6hYe6OWhZr7k1ZOOqdS/xC0/eRQdp9+h3f0jYqEx5nIYBpNLUrHq
-         XMvlK+Gzq8FfvpvYiAci8xt/5tpL1gcjjDRkVUs4yuU44betYhZLHdyHamssQFROisIb
-         Z4u7A2/yjID5nALjwjjrBWq5103MO27NAz715HFQsWQNdzU6wMx72y1bVIaw/gK+ZAl2
-         eycIUwsWT8mGLtJpe0Ltu1yAEUtWxzfzmr8b41CgUFFCpjleoEMIRwUrhwEGaY8Qpl8G
-         a5gr+oc6AyBGPyiGTilRp07TACtyY/w/ox7iiO6MvIOEk82iqMNB4h/lb8uZYuvH9caH
-         v+cw==
-X-Forwarded-Encrypted: i=1; AJvYcCUSduLbh+QoBcuhLxzJd2aO1FJWNnQLF4dB8TMwBJYJjMha7GydBDhOaULFz6tgsWuumJsE09UPXg2pp5j8mb8FWgLybT2NkoHjg/uH
-X-Gm-Message-State: AOJu0YzBTYkXsonkUmu5d+TtEJ9kUVcqF5hGdtI7l9TP0DS1Bg9XGK78
-	j5akjAXRxIY5bpAgM6L6hDOAz9oF6relnXLABBzK9R2ef+kNfidAkofmPq3WcT20QRmi2nyzB45
-	F9aJ6dwG95l44C/DHO4HMPmbOWA1gdUqKo7rmJhbcrMGl8hSEdLJKXY0LmQiqrZK4XTBvqXqqTN
-	vO7FSLKarH6LJkkJ5IX5f/4J7+G/E3bFo8DEXU
-X-Received: by 2002:a17:90a:c703:b0:2a0:76b1:896 with SMTP id o3-20020a17090ac70300b002a076b10896mr4392454pjt.12.1711507499588;
-        Tue, 26 Mar 2024 19:44:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH3MSgO2iAnKqGRMUSsmYhf817+2wItKWdIG835eY+e3znNWn8QDzGM+32n0mUkdpfVvpgn44vCtIs5VuWjmrI=
-X-Received: by 2002:a17:90a:c703:b0:2a0:76b1:896 with SMTP id
- o3-20020a17090ac70300b002a076b10896mr4392437pjt.12.1711507499282; Tue, 26 Mar
- 2024 19:44:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oX5hrtcW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1711507523;
+	bh=UNyyFnWd5iTHu4DRnwAINrJMJPeoN+TCGrIUZ8pnd9k=;
+	h=Date:From:To:Cc:Subject:From;
+	b=oX5hrtcWDm0CiNoiy4z22mDNXDRLFYt4OuDU/GuDX/BtXQlubZuOEicAeqktVgJDV
+	 DxHclqmzKa7h25/yJQWY+iA1NzFr6UsADhHttCAvOcWw4+0L2XEOaCC7GEx6zAxxhb
+	 tf5tX59KaC9pno3gY40rVJklHXuibi0p8biT6hackfw6x9D0sNFh/MWITA4rWTx0ge
+	 rY2J57Vedla9C3r0LGD315g6ffQII3FgtY2iIfwRIeg1LECVteYhaKyPc7IbY7U1qZ
+	 MxXc86EMIkulx09iOtu4zTCLpy7vXGc+BO0d5J9GDW6VtY1qzbPukPEJZVVaSllBWs
+	 DXd6dmAcwZt6g==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4V49yC0yXDz4wd7;
+	Wed, 27 Mar 2024 13:45:23 +1100 (AEDT)
+Date: Wed, 27 Mar 2024 13:45:22 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Igor Pylypiv <ipylypiv@google.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the scsi-mkp tree
+Message-ID: <20240327134522.7ac4cb54@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326233846.1086253-1-gshan@redhat.com> <20240326233846.1086253-2-gshan@redhat.com>
- <CACGkMEtyEo2QQSEh0ZnZDUJSXMMhzeO97Jp0wF4_rhzUBGk4Zg@mail.gmail.com>
-In-Reply-To: <CACGkMEtyEo2QQSEh0ZnZDUJSXMMhzeO97Jp0wF4_rhzUBGk4Zg@mail.gmail.com>
-From: Jason Wang <jasowang@redhat.com>
-Date: Wed, 27 Mar 2024 10:44:48 +0800
-Message-ID: <CACGkMEtUdgDr_M-F8-gdFkJp+29Xuw9DCib2-diFmJxFxDN2Bw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] vhost: Add smp_rmb() in vhost_vq_avail_empty()
-To: Gavin Shan <gshan@redhat.com>
-Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	mst@redhat.com, davem@davemloft.net, stefanha@redhat.com, sgarzare@redhat.com, 
-	keirf@google.com, yihyu@redhat.com, shan.gavin@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/6V+TiWKkVGZQcTnjs349U9o";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/6V+TiWKkVGZQcTnjs349U9o
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 27, 2024 at 10:34=E2=80=AFAM Jason Wang <jasowang@redhat.com> w=
-rote:
->
-> On Wed, Mar 27, 2024 at 7:39=E2=80=AFAM Gavin Shan <gshan@redhat.com> wro=
-te:
-> >
-> > A smp_rmb() has been missed in vhost_vq_avail_empty(), spotted by
-> > Will Deacon <will@kernel.org>. Otherwise, it's not ensured the
-> > available ring entries pushed by guest can be observed by vhost
-> > in time, leading to stale available ring entries fetched by vhost
-> > in vhost_get_vq_desc(), as reported by Yihuang Yu on NVidia's
-> > grace-hopper (ARM64) platform.
-> >
-> >   /home/gavin/sandbox/qemu.main/build/qemu-system-aarch64      \
-> >   -accel kvm -machine virt,gic-version=3Dhost -cpu host          \
-> >   -smp maxcpus=3D1,cpus=3D1,sockets=3D1,clusters=3D1,cores=3D1,threads=
-=3D1 \
-> >   -m 4096M,slots=3D16,maxmem=3D64G                                 \
-> >   -object memory-backend-ram,id=3Dmem0,size=3D4096M                \
-> >    :                                                           \
-> >   -netdev tap,id=3Dvnet0,vhost=3Dtrue                              \
-> >   -device virtio-net-pci,bus=3Dpcie.8,netdev=3Dvnet0,mac=3D52:54:00:f1:=
-26:b0
-> >    :
-> >   guest# netperf -H 10.26.1.81 -l 60 -C -c -t UDP_STREAM
-> >   virtio_net virtio0: output.0:id 100 is not a head!
-> >
-> > Add the missed smp_rmb() in vhost_vq_avail_empty(). Note that it
-> > should be safe until vq->avail_idx is changed by commit 275bf960ac697
-> > ("vhost: better detection of available buffers").
-> >
-> > Fixes: 275bf960ac697 ("vhost: better detection of available buffers")
-> > Cc: <stable@kernel.org> # v4.11+
-> > Reported-by: Yihuang Yu <yihyu@redhat.com>
-> > Signed-off-by: Gavin Shan <gshan@redhat.com>
-> > ---
-> >  drivers/vhost/vhost.c | 11 ++++++++++-
-> >  1 file changed, 10 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> > index 045f666b4f12..00445ab172b3 100644
-> > --- a/drivers/vhost/vhost.c
-> > +++ b/drivers/vhost/vhost.c
-> > @@ -2799,9 +2799,18 @@ bool vhost_vq_avail_empty(struct vhost_dev *dev,=
- struct vhost_virtqueue *vq)
-> >         r =3D vhost_get_avail_idx(vq, &avail_idx);
-> >         if (unlikely(r))
-> >                 return false;
-> > +
-> >         vq->avail_idx =3D vhost16_to_cpu(vq, avail_idx);
-> > +       if (vq->avail_idx !=3D vq->last_avail_idx) {
-> > +               /* Similar to what's done in vhost_get_vq_desc(), we ne=
-ed
-> > +                * to ensure the available ring entries have been expos=
-ed
-> > +                * by guest.
-> > +                */
->
-> We need to be more verbose here. For example, which load needs to be
-> ordered with which load.
->
-> The rmb in vhost_get_vq_desc() is used to order the load of avail idx
-> and the load of head. It is paired with e.g virtio_wmb() in
-> virtqueue_add_split().
->
-> vhost_vq_avail_empty() are mostly used as a hint in
-> vhost_net_busy_poll() which is under the protection of the vq mutex.
->
-> An exception is the tx_can_batch(), but in that case it doesn't even
-> want to read the head.
+Hi all,
 
-Ok, if it is needed only in that path, maybe we can move the barriers there=
-.
+After merging the scsi-mkp tree, today's linux-next build (arm64
+defconfig) failed like this:
 
-Thanks
+aarch64-linux-gnu-ld: drivers/ata/libata-sata.o:drivers/ata/libata-sata.c:9=
+00: multiple definition of `dev_attr_ncq_prio_supported'; drivers/scsi/libs=
+as/sas_ata.o:drivers/scsi/libsas/sas_ata.c:984: first defined here
+aarch64-linux-gnu-ld: drivers/ata/libata-sata.o:drivers/ata/libata-sata.c:1=
+026: multiple definition of `dev_attr_ncq_prio_enable'; drivers/scsi/libsas=
+/sas_ata.o:drivers/scsi/libsas/sas_ata.c:1022: first defined here
 
->
-> Thanks
->
->
-> > +               smp_rmb();
-> > +               return false;
-> > +       }
-> >
-> > -       return vq->avail_idx =3D=3D vq->last_avail_idx;
-> > +       return true;
-> >  }
-> >  EXPORT_SYMBOL_GPL(vhost_vq_avail_empty);
-> >
-> > --
-> > 2.44.0
-> >
+Caused by commit
 
+  b4d3ddd2df75 ("scsi: libsas: Define NCQ Priority sysfs attributes for SAT=
+A devices")
+
+I have used the scsi-mkp tree from next-20240326 for today.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/6V+TiWKkVGZQcTnjs349U9o
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYDiEIACgkQAVBC80lX
+0Gx1kwgAlcy71BSzACqBTfsHwKEMbxPzlaVklXmye8xLbQdKF04NOLbswfh5dxLa
+PrPXZ49DywoSxD83ff9bUFTmCRj74zF6mxoHXxaNYBewI86h8liFJq2DYwpVtd4X
+WT3Y1T5ddMKCugg0qkFe08UTkeHMgtA7FkWEplK0ZRlmf1iLoRwaAwC9MjUV5S37
+IXxRVjyFifcKwFLiY8ldnQp9yv037ucnzY8LyzfYkBOiHEya/rjp6Kv7FIyDKPzp
+5WSd9YpjtgxBK6leUnfbIoBuD0NCMm1eUnN4qz3OXgc8VwMAkhFfSnOLLXzIilP6
+u6KEPm3Vc8X+OqmnMwjxMJAShbNhdA==
+=1FqZ
+-----END PGP SIGNATURE-----
+
+--Sig_/6V+TiWKkVGZQcTnjs349U9o--
