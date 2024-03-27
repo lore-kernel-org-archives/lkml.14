@@ -1,86 +1,185 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3DB12DDA6;
-	Wed, 27 Mar 2024 15:43:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3361412EBD8;
+	Wed, 27 Mar 2024 15:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711554199; cv=none; b=mjCTqzsAjzdiRCIAN7kqbqNvQdLKPgEoGc4r9iAoDKyk+1vU6MrlV4yO1mC7cf/HAXrICMoPzBXUFjWEi0xqNhhRrATZbuXvF5OrZgYrDojNGarYTgy9MSUnKJiha20dU9UPfL6SeuY73kiCgimNEni7e2ELyyD2Oo1qaxvqJpI=
+	t=1711554207; cv=none; b=r0o1IneuLbF6RIxXlXC1mIOTJKlbIO/r38Xu+HIDn6StVh4R+pCATbiyX7us3QgFVSvAYzn8guJ0mOe11QjLLLjHjhJt0puDkz+6nOXAdXCxyB1i0lVVRKW9RfDLXhAyFr7lTl2ILM06Ma1R1UOO0dIBFO2xfHbHwo8HBCFvd/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711554199; c=relaxed/simple;
-	bh=aBbxarP4jaK4Vd3GsndlzhtjPh19wImbPPVLqBPo3Zc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L6O7TfMYRFNMHTc6inPIFc3z9mT6azMMuyK2gwfMms58hja5iq5M/kUEBaDu6IjY/rANWrbqt2DfXMuvsPOvT5p4EI376f+c21FwTXK9JVkh3VmMTCmJUmaz5yTyWkGCHNdQ9VwGWl88QFXpTwsqi8UCmCv2f/TMTwfMaCgdFWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V1ETZVaO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711554207; c=relaxed/simple;
+	bh=l0AFTz7QNeuG4/Rna8jbSi7dILAGOV01dUFsJnzrOpM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=seOQISE7Tp/s8sjoHBI35yJyL4VblbUoE7bxhS15zICRsX3jb50btRYBq/qfx/vRLWFsbwycd1X/SWMig1pbp/RnknWNERqQYxquj3fKfs2i6mGGk9SmwKICfUsou2TNac6K0qYXIgMEhBz2LJk4DLZ/+DSS71Mnp3S/brOCvbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gSUJG0rs; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V1ETZVaO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEEE2C4166A;
-	Wed, 27 Mar 2024 15:43:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711554198;
-	bh=aBbxarP4jaK4Vd3GsndlzhtjPh19wImbPPVLqBPo3Zc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V1ETZVaOGmLgyK6y5BEngFQ7ogBt81FdTsOEwzKmc+Z6S7n2IMIb04Oqx4EEsellz
-	 TleDgc+tLzLHY2Dqb8AjQygzL0RPVJ4hNknke0FDWVQHVTkbv1jmR/IFad4Wjd6LE1
-	 wudwH2HdkvVWozDsCxoypt6vwZ71yHa5FozIppzux2irppfwjQcPdQniivxasEmx65
-	 fnw3hxCNdlcfxSEN4AxjbFRpj3L8VSwbMDs1SqUgqAWmM85nRNhqMldIg0K1WnpXqh
-	 PKUk+WLuQj2+XOQVxNuaEYhO3bMKbey8Vw2pnki3yu9QX8z7a3Wqb3qJFQS9gQU6bF
-	 kVxdD0sGNFKnQ==
-Date: Wed, 27 Mar 2024 10:43:16 -0500
-From: Rob Herring <robh@kernel.org>
-To: Raymond Hackley <raymondhackley@protonmail.com>
-Cc: linux-kernel@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Stephan Gerhold <stephan@gerhold.net>,
-	Nikita Travkin <nikita@trvn.ru>, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 2/2] dt-bindings: qcom: Document samsung,fortuna
-Message-ID: <20240327154316.GA3453016-robh@kernel.org>
-References: <20240326141222.200452-1-raymondhackley@protonmail.com>
- <20240326141222.200452-3-raymondhackley@protonmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gSUJG0rs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711554205; x=1743090205;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=l0AFTz7QNeuG4/Rna8jbSi7dILAGOV01dUFsJnzrOpM=;
+  b=gSUJG0rsvmNkRiG0UYgXOw2wNNnPzCp+BxfMByHM6AUVRYVd066OucWt
+   31zwf0H/mwQz9FdlPtyGtfjvm0L4/6UzOlWdZBMyLpGJvGPl3e/6wts/w
+   U1qSRQmrA8kALThdgZ7HafFq/xKWczSIg3jFyjt98F4TGFpOZ/daPUCSq
+   sy8feqe8oVrV18nRy6382wWtIamyjhsz9REmWLm//CDXB4HfVqc6nXF36
+   gKGi43wOjaKCadgDmXyzN4Vz2n4hRzfvB73Y7EweR3SEywL3VZliTMqri
+   4CODpeUn5TjIot+1Be50cORtTYtcnQaqItOa38JOCY4aBtS94WtQHNmgu
+   Q==;
+X-CSE-ConnectionGUID: WnjgG3x3Sqq2PyeQFk9xqw==
+X-CSE-MsgGUID: pbruE37sTXeWWFuLfca/BQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="32109481"
+X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
+   d="scan'208";a="32109481"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 08:43:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
+   d="scan'208";a="16386553"
+Received: from aonyia-mobl.amr.corp.intel.com (HELO [10.212.56.222]) ([10.212.56.222])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 08:43:23 -0700
+Message-ID: <1c7f63c5-1b7a-4f7b-9d48-4dd8b017d7de@intel.com>
+Date: Wed, 27 Mar 2024 08:43:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240326141222.200452-3-raymondhackley@protonmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 04/26] cxl/region: Add dynamic capacity decoder and region
+ modes
+Content-Language: en-US
+To: ira.weiny@intel.com, Fan Ni <fan.ni@samsung.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Navneet Singh <navneet.singh@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, linux-btrfs@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+ <20240324-dcd-type2-upstream-v1-4-b7b00d623625@intel.com>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240324-dcd-type2-upstream-v1-4-b7b00d623625@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 26, 2024 at 02:12:58PM +0000, Raymond Hackley wrote:
-> Document common binding samsung,fortuna used by the following
-> Samsung Galaxy Grand Prime devices below:
-> - SM-G530FZ (msm8916-samsung-grandprimelte)
-> - SM-G530H  (msm8216-samsung-fortuna3g)
-> - SM-G530W  (msm8916-gprimeltecan)
 
-Commit messages should answer "why?". Why do you need this?
 
-Please test this binding change against your dts changes. I think you 
-will find it fails.
+On 3/24/24 4:18 PM, ira.weiny@intel.com wrote:
+> From: Navneet Singh <navneet.singh@intel.com>
+> 
+> Region mode must reflect a general dynamic capacity type which is
+> associated with a specific Dynamic Capacity (DC) partitions in each
+> device decoder within the region.  DC partitions are also know as DC
+> regions per CXL 3.1.
+
+This section reads somewhat awkward to me. Does this read any better?
+
+One or more Dynamic Capacity (DC) partitions (and decoders) form a CXL software region. The region mode reflects composition of that entire software region. Decoder mode reflects a specific DC partition. DC partitions are also known as DC regions per CXL specification r3.1 but is not the same entity as CXL software regions.
+
+DJ
 
 > 
-> Signed-off-by: Raymond Hackley <raymondhackley@protonmail.com>
+> Decoder mode reflects a specific DC partition.
+> 
+> Define the new modes to use in subsequent patches and the helper
+> functions required to make the association between these new modes.
+> 
+> Signed-off-by: Navneet Singh <navneet.singh@intel.com>
+> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > ---
->  Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
->  1 file changed, 1 insertion(+)
+> Changes for v1
+> [iweiny: split out from: Add dynamic capacity cxl region support.]
+> ---
+>  drivers/cxl/core/region.c |  4 ++++
+>  drivers/cxl/cxl.h         | 23 +++++++++++++++++++++++
+>  2 files changed, 27 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
-> index 66beaac60e1d..2db776d78d22 100644
-> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
-> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
-> @@ -204,6 +204,7 @@ properties:
->                - samsung,a5u-eur
->                - samsung,e5
->                - samsung,e7
-> +              - samsung,fortuna
->                - samsung,fortuna3g
->                - samsung,gprimeltecan
->                - samsung,grandmax
-> -- 
-> 2.39.2
-> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 1723d17f121e..ec3b8c6948e9 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -1690,6 +1690,8 @@ static bool cxl_modes_compatible(enum cxl_region_mode rmode,
+>  		return true;
+>  	if (rmode == CXL_REGION_PMEM && dmode == CXL_DECODER_PMEM)
+>  		return true;
+> +	if (rmode == CXL_REGION_DC && cxl_decoder_mode_is_dc(dmode))
+> +		return true;
+>  
+>  	return false;
+>  }
+> @@ -2824,6 +2826,8 @@ cxl_decoder_to_region_mode(enum cxl_decoder_mode mode)
+>  		return CXL_REGION_RAM;
+>  	case CXL_DECODER_PMEM:
+>  		return CXL_REGION_PMEM;
+> +	case CXL_DECODER_DC0 ... CXL_DECODER_DC7:
+> +		return CXL_REGION_DC;
+>  	case CXL_DECODER_MIXED:
+>  	default:
+>  		return CXL_REGION_MIXED;
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 9a0cce1e6fca..3b8935089c0c 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -365,6 +365,14 @@ enum cxl_decoder_mode {
+>  	CXL_DECODER_NONE,
+>  	CXL_DECODER_RAM,
+>  	CXL_DECODER_PMEM,
+> +	CXL_DECODER_DC0,
+> +	CXL_DECODER_DC1,
+> +	CXL_DECODER_DC2,
+> +	CXL_DECODER_DC3,
+> +	CXL_DECODER_DC4,
+> +	CXL_DECODER_DC5,
+> +	CXL_DECODER_DC6,
+> +	CXL_DECODER_DC7,
+>  	CXL_DECODER_MIXED,
+>  	CXL_DECODER_DEAD,
+>  };
+> @@ -375,6 +383,14 @@ static inline const char *cxl_decoder_mode_name(enum cxl_decoder_mode mode)
+>  		[CXL_DECODER_NONE] = "none",
+>  		[CXL_DECODER_RAM] = "ram",
+>  		[CXL_DECODER_PMEM] = "pmem",
+> +		[CXL_DECODER_DC0] = "dc0",
+> +		[CXL_DECODER_DC1] = "dc1",
+> +		[CXL_DECODER_DC2] = "dc2",
+> +		[CXL_DECODER_DC3] = "dc3",
+> +		[CXL_DECODER_DC4] = "dc4",
+> +		[CXL_DECODER_DC5] = "dc5",
+> +		[CXL_DECODER_DC6] = "dc6",
+> +		[CXL_DECODER_DC7] = "dc7",
+>  		[CXL_DECODER_MIXED] = "mixed",
+>  	};
+>  
+> @@ -383,10 +399,16 @@ static inline const char *cxl_decoder_mode_name(enum cxl_decoder_mode mode)
+>  	return "mixed";
+>  }
+>  
+> +static inline bool cxl_decoder_mode_is_dc(enum cxl_decoder_mode mode)
+> +{
+> +	return (mode >= CXL_DECODER_DC0 && mode <= CXL_DECODER_DC7);
+> +}
+> +
+>  enum cxl_region_mode {
+>  	CXL_REGION_NONE,
+>  	CXL_REGION_RAM,
+>  	CXL_REGION_PMEM,
+> +	CXL_REGION_DC,
+>  	CXL_REGION_MIXED,
+>  };
+>  
+> @@ -396,6 +418,7 @@ static inline const char *cxl_region_mode_name(enum cxl_region_mode mode)
+>  		[CXL_REGION_NONE] = "none",
+>  		[CXL_REGION_RAM] = "ram",
+>  		[CXL_REGION_PMEM] = "pmem",
+> +		[CXL_REGION_DC] = "dc",
+>  		[CXL_REGION_MIXED] = "mixed",
+>  	};
+>  
 > 
