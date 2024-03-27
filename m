@@ -1,59 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E53412E1F0;
-	Wed, 27 Mar 2024 17:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4AB14A60E;
+	Wed, 27 Mar 2024 17:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711561211; cv=none; b=DefaHdq3BTh2bEImWUWaJED67SbWbohjzGec8h67/qS9AgfuTWog7PgGgL+rxp1tgcdiVLxR9Ky1yCRAN9dGwvhc/CN9H5BVokA5T3J7lbXZLd6DcbrptNdVbPMN7NheTiomTs4KesUnt2ymAgIfqqOaqfSHIcbReqvm1I6CSgo=
+	t=1711561242; cv=none; b=hT1h3bemIsj5f7fj8pptLwXeGsB+YEIFE0VJtV5vFxNI37a9PaFS4i5umqjrJch0l2tjXKczn+/kxjA+J60/IxBnUhw1cYvW35M8Wiw6HsNFirsD4DKuZbtJQpuvdvM1jKQ8Qy/Kr7XHvqC7ABuqlXKxeJvH5HeQeLcrid7Z97o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711561211; c=relaxed/simple;
-	bh=I6x60ia+rggB1OgVHo+pcCe2/5EmZUntXUlWS6xFGsQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=m5cb3blqgbItv5QQMCzeIEwIVmCJU+Tz05RpnNoFAL43GT0X8ezwQ01gbqDs3jtWLcEuU3glxZiCZFgenKfLMqUaobQuW7WwjBxGdHcJPbPjaQUGv5yZZy+xSCsTBxJD/6u60iGPs4rD46r1Z2QSsjRxGZFeTuBzubk3W5mNkCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Lyan0XKk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711561242; c=relaxed/simple;
+	bh=srgctdpBr0p3tnZe1+I+kGnQ9airdU7dZhtChNsf194=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fvduotWDjY4kRtAeq6YPVufNoUp0Z9heIO3CMan8NPLuV6vwInFu4fDAz/8WDYdA+cXB57eFJMEhTm00T8xIYOFiaiVOcSFd8hmB5q/9NFu6GExuPuoFt1X/k/KdRbpHlMuMeb/6v8mP36QlIKqgSN+xGoJbQkBqr+SQiptagDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=j1liQETL; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Lyan0XKk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB2EFC433C7;
-	Wed, 27 Mar 2024 17:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1711561211;
-	bh=I6x60ia+rggB1OgVHo+pcCe2/5EmZUntXUlWS6xFGsQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Lyan0XKkyPAmuDpmWQRdO4kPwUWsHKKFPRzR+jFMTZhBNdgDY1mzOh8Zvhp4h94Hf
-	 VQ0ynNWRsVmi8yXVhWA+xbqA28k23Dd1JQMjKNX4Jw0ahspmVHeKybdifIdb4XAofD
-	 UjdseAN13zD79wSDoh/4LweFnooobhxtunWjgEkM=
-Date: Wed, 27 Mar 2024 10:40:10 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: willy@infradead.org, jack@suse.cz, bfoster@redhat.com, tj@kernel.org,
- dsterba@suse.com, mjguzik@gmail.com, dhowells@redhat.com,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 0/6] Improve visibility of writeback
-Message-Id: <20240327104010.73d1180fbabe586f9e3f7bd2@linux-foundation.org>
-In-Reply-To: <20240327155751.3536-1-shikemeng@huaweicloud.com>
-References: <20240327155751.3536-1-shikemeng@huaweicloud.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="j1liQETL"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2506940E024C;
+	Wed, 27 Mar 2024 17:33:19 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id NEGRHPZY1Udy; Wed, 27 Mar 2024 17:33:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1711560795; bh=7hJcNztbvoltbNYuqLlcZ4eKB+PYom08C1n5dtPK9ic=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=j1liQETLuNzbUZlMOehHIkqvcM36uSsIEz0qIYPLwz1LbPguT7XuBKfkQf9Ru3SX4
+	 F0hT16k3/m42OBUpKM8wvfmxs1rteeSEvO//NHexUdyUv8dU/g60vZpVZLnU8j75+d
+	 mo+KYYwTKsoSq7bgIpxQB+4See5S4BFVBXzV++BDOUy+1fIgfhIEgeFHWO6ryoaFel
+	 THmDopG604QqctncHRO3kHX/bAXpfAJY9yLTbu6jsmknQzNj+mABleokKcMVyGCiWp
+	 uI+8RgPWjuEnjHdblwtjo8aNuNQ7q/LLig1yPyjQgapTwXk7+WOiTBVL8j9/X7R/wq
+	 tvkgn2VfSsNfrzMBb07IP9AgIzkwWO8HJGe98cFbDyJUBYDdkkLqoQkvyf2BnXmYBS
+	 lrxpqbvD5c5Aqnpww+oGWFHHFb505nnDXExvSI6UkdL01C5cfgL0vRmbYiro+EX92q
+	 4goMCwx0e0F8uLKswzFS35E6L0rlaT0goFGyAHztVd5ByXn7jwx1BS+p+CF5tWcfMw
+	 rhQPE+KvUpIhy6cCrQBaL9XRlDKuHXdLHk06469C562e3fUInsClQIXOa6XXVB5Wgp
+	 1suToznxeCdRprNsMhOX7YgIWco2HEPOfL6zc70I7rjY6BiE6xpbi7UCaZvppLMNjH
+	 4KNy9KDl6A8BK85o5QhAu0jk=
+Received: from zn.tnic (p5de8ecf7.dip0.t-ipconnect.de [93.232.236.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4318140E0028;
+	Wed, 27 Mar 2024 17:32:52 +0000 (UTC)
+Date: Wed, 27 Mar 2024 18:32:45 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Douglas Thompson <dougthompson@xmission.com>,
+	James Morse <james.morse@arm.com>, Jan Luebbe <jlu@pengutronix.de>,
+	Johannes Thumshirn <morbidrsa@gmail.com>,
+	Khuong Dinh <khuong@os.amperecomputing.com>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	linux-edac@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Michal Simek <michal.simek@amd.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Ralf Baechle <ralf@linux-mips.org>,
+	Robert Richter <rric@kernel.org>,
+	Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>,
+	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>
+Subject: Re: [PATCH 0/7] EDAC: remove unused structure members
+Message-ID: <20240327173245.GFZgRYPTetxzmNZFAV@fat_crate.local>
+References: <20240213112051.27715-1-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240213112051.27715-1-jirislaby@kernel.org>
 
-On Wed, 27 Mar 2024 23:57:45 +0800 Kemeng Shi <shikemeng@huaweicloud.com> wrote:
+On Tue, Feb 13, 2024 at 12:20:44PM +0100, Jiri Slaby (SUSE) wrote:
+> Jiri Slaby (SUSE) (7):
+>   EDAC/amd64: Remove amd64_pvt::ext_nbcfg
+>   EDAC/device: Remove edac_dev_sysfs_block_attribute::{block,value}
+>   EDAC/device: Remove edac_dev_sysfs_block_attribute::store()
+>   EDAC: Remove dynamic attributes from edac_device_alloc_ctl_info()
+>   EDAC: Remove edac_pci_ctl_info::edac_subsys
+>   EDAC: Remove edac_pci_ctl_info::complete
+>   EDAC: Remove edac_device_ctl_info::removal_complete
 
-> This series tries to improve visilibity of writeback.
+All applied, the last three squashed into one patch.
 
-Well...  why?  Is anyone usefully using the existing instrumentation? 
-What is to be gained by expanding it further?  What is the case for
-adding this code?
+Thx.
 
-I don't recall hearing of anyone using the existing debug
-instrumentation so perhaps we should remove it!
+-- 
+Regards/Gruss,
+    Boris.
 
-Also, I hit a build error and a pile of warnings with an arm
-allnoconfig build.
+https://people.kernel.org/tglx/notes-about-netiquette
