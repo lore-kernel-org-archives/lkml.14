@@ -1,29 +1,29 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 100B1131196;
-	Wed, 27 Mar 2024 16:03:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9CD2136E2C;
+	Wed, 27 Mar 2024 16:03:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711555407; cv=none; b=NT4FUj4/aW4IV0bVNkRgII/2oZFJgja0VZ/ImWppEtFrHswM/RoIEoDheBvwaiXO/5Xp9uFCYwLkd+aBod8pfpKYfheOZycXuO8C6lMLwsNVFuAI++akFLMsijQ+bixGsPM3MFSCLhiL+OluBZlEquUAy6nuUkurfnn7FIo1zBM=
+	t=1711555412; cv=none; b=P/oy7le7tvxTQHRJ6hpedXaTDZUtrJlXLaG/3n8ntoEHSZj+nnQd5K0F6OaqoZjChnBFGcQ1Yt0v0T5S9ns7elOfM+azoNYBvGVC3N2tW718zysyHGnu/Ry01Hm3p1cFV/CW8qcDX8EQBroCNAjH8eKVuAKr2rFfQofE7dSWe84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711555407; c=relaxed/simple;
-	bh=xb5oDQrE6zGzkKm2q4xKrvrg4jLM8zK2ARFdvVVkwUM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=ea7vgWNOh4TNedRgf+D2qF1x8fs3XdUgwDcYaxeNtyuzupqkN7rlar4EpmpquElou9/T5f6k4RLAwsTYB3yqUhTxHtRqD1CEQzSMfzuVbVvS83EkLu+VdQVrFUXHzAVocv7wlyJ1FyBZU71HP27cSUON/O/6WXUzfCx0b6T2diY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=LF4c8+u7; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1711555412; c=relaxed/simple;
+	bh=M/Fp3wp6r3tLzTtR/puvtE/fR/pE6x2xHVeRjoALJuU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=BwJZ0wCYG9gd/0/zxv4QbAiJX1Qce7hvfB3WWEaJRORl/2u6sZYCx3Kb0XTGfJo112Fscdc+cVSRMaTyNT10l7Et8MFGTXpPZlzvlJ5CC0O8zGhnBbmu/aTgCxHdyMu6WGUux8gb2AVCVucuGekGZLIxyn7bjds5CQKR3teuU1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=qqrrXo5l; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="LF4c8+u7"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qqrrXo5l"
 Received: from apais-vm1.0synte4vioeebbvidf5q0vz2ua.xx.internal.cloudapp.net (unknown [52.183.86.224])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 85F7C2085D12;
-	Wed, 27 Mar 2024 09:03:21 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 85F7C2085D12
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5196C208B32D;
+	Wed, 27 Mar 2024 09:03:22 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5196C208B32D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1711555401;
-	bh=haxatjJf3ExzQxyLxhyBSdBbLt149x1NFm9OJuTg9mI=;
+	s=default; t=1711555402;
+	bh=Kzv1AWOVV8GwTK+7jQ3kzJ2xEaKpz9QhVy5gAjNjK7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LF4c8+u7hxH1gtkMde2nUFLeOY7qhsSOLX3MYrPKOxgU6onwRJa3Beop1iYM8rhwY
-	 JKJWabOHr3bDubopTkSrfOda6dk06SLxefXbd0NX6Vz+Vhi9K8wsJz84JBq49IJQPt
-	 zQ1biSALtkbOTUh7I9PCcfln+/IY04Wu2+8SHeT0=
+	b=qqrrXo5lmMz+nfVNN9r5cBg6a0WE9kMxRH4QKGEt97MvZ5OTYlhItum+d/Dt8FYns
+	 jLTUDWcoZbdYSBF9SUUK19Rtc09qXlm1au2glAYLh7DoVs08kRZPQ+6L/Q5VrqnVTO
+	 GE1JR4g35YmWcS2Wb0B0gHhtq9fb3bDtUTSJFZuw=
 From: Allen Pais <apais@linux.microsoft.com>
 To: linux-kernel@vger.kernel.org
 Cc: tj@kernel.org,
@@ -107,9 +107,9 @@ Cc: tj@kernel.org,
 	linux-s390@vger.kernel.org,
 	netdev@vger.kernel.org,
 	linux-usb@vger.kernel.org
-Subject: [PATCH 3/9] IB: Convert from tasklet to BH workqueue
-Date: Wed, 27 Mar 2024 16:03:08 +0000
-Message-Id: <20240327160314.9982-4-apais@linux.microsoft.com>
+Subject: [PATCH 7/9] s390: Convert from tasklet to BH workqueue
+Date: Wed, 27 Mar 2024 16:03:12 +0000
+Message-Id: <20240327160314.9982-8-apais@linux.microsoft.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240327160314.9982-1-apais@linux.microsoft.com>
 References: <20240327160314.9982-1-apais@linux.microsoft.com>
@@ -130,911 +130,870 @@ This patch converts drivers/infiniband/* from tasklet to BH workqueue.
 Based on the work done by Tejun Heo <tj@kernel.org>
 Branch: https://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git for-6.10
 
+Note: Not tested. Please test/review.
+
 Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 ---
- drivers/infiniband/hw/bnxt_re/bnxt_re.h    |  3 +-
- drivers/infiniband/hw/bnxt_re/qplib_fp.c   | 21 ++++++------
- drivers/infiniband/hw/bnxt_re/qplib_fp.h   |  2 +-
- drivers/infiniband/hw/bnxt_re/qplib_rcfw.c | 25 ++++++++-------
- drivers/infiniband/hw/bnxt_re/qplib_rcfw.h |  2 +-
- drivers/infiniband/hw/erdma/erdma.h        |  3 +-
- drivers/infiniband/hw/erdma/erdma_eq.c     | 11 ++++---
- drivers/infiniband/hw/hfi1/rc.c            |  2 +-
- drivers/infiniband/hw/hfi1/sdma.c          | 37 +++++++++++-----------
- drivers/infiniband/hw/hfi1/sdma.h          |  9 +++---
- drivers/infiniband/hw/hfi1/tid_rdma.c      |  6 ++--
- drivers/infiniband/hw/irdma/ctrl.c         |  2 +-
- drivers/infiniband/hw/irdma/hw.c           | 24 +++++++-------
- drivers/infiniband/hw/irdma/main.h         |  5 +--
- drivers/infiniband/hw/qib/qib.h            |  7 ++--
- drivers/infiniband/hw/qib/qib_iba7322.c    |  9 +++---
- drivers/infiniband/hw/qib/qib_rc.c         | 16 +++++-----
- drivers/infiniband/hw/qib/qib_ruc.c        |  4 +--
- drivers/infiniband/hw/qib/qib_sdma.c       | 11 ++++---
- drivers/infiniband/sw/rdmavt/qp.c          |  2 +-
- 20 files changed, 106 insertions(+), 95 deletions(-)
+ drivers/s390/block/dasd.c              | 42 ++++++++++++------------
+ drivers/s390/block/dasd_int.h          | 10 +++---
+ drivers/s390/char/con3270.c            | 27 ++++++++--------
+ drivers/s390/crypto/ap_bus.c           | 24 +++++++-------
+ drivers/s390/crypto/ap_bus.h           |  2 +-
+ drivers/s390/crypto/zcrypt_msgtype50.c |  2 +-
+ drivers/s390/crypto/zcrypt_msgtype6.c  |  4 +--
+ drivers/s390/net/ctcm_fsms.c           |  4 +--
+ drivers/s390/net/ctcm_main.c           | 15 ++++-----
+ drivers/s390/net/ctcm_main.h           |  5 +--
+ drivers/s390/net/ctcm_mpc.c            | 12 +++----
+ drivers/s390/net/ctcm_mpc.h            |  7 ++--
+ drivers/s390/net/lcs.c                 | 26 +++++++--------
+ drivers/s390/net/lcs.h                 |  2 +-
+ drivers/s390/net/qeth_core_main.c      |  2 +-
+ drivers/s390/scsi/zfcp_qdio.c          | 45 +++++++++++++-------------
+ drivers/s390/scsi/zfcp_qdio.h          |  9 +++---
+ 17 files changed, 117 insertions(+), 121 deletions(-)
 
-diff --git a/drivers/infiniband/hw/bnxt_re/bnxt_re.h b/drivers/infiniband/hw/bnxt_re/bnxt_re.h
-index 9dca451ed522..f511c8415806 100644
---- a/drivers/infiniband/hw/bnxt_re/bnxt_re.h
-+++ b/drivers/infiniband/hw/bnxt_re/bnxt_re.h
-@@ -42,6 +42,7 @@
- #include <rdma/uverbs_ioctl.h>
- #include "hw_counters.h"
- #include <linux/hashtable.h>
-+#include <linux/workqueue.h>
- #define ROCE_DRV_MODULE_NAME		"bnxt_re"
+diff --git a/drivers/s390/block/dasd.c b/drivers/s390/block/dasd.c
+index 0a97cfedd706..c6f9910f0a98 100644
+--- a/drivers/s390/block/dasd.c
++++ b/drivers/s390/block/dasd.c
+@@ -54,8 +54,8 @@ MODULE_LICENSE("GPL");
+  * SECTION: prototypes for static functions of dasd.c
+  */
+ static int dasd_flush_block_queue(struct dasd_block *);
+-static void dasd_device_tasklet(unsigned long);
+-static void dasd_block_tasklet(unsigned long);
++static void dasd_device_work(struct work_struct *);
++static void dasd_block_work(struct work_struct *);
+ static void do_kick_device(struct work_struct *);
+ static void do_reload_device(struct work_struct *);
+ static void do_requeue_requests(struct work_struct *);
+@@ -114,9 +114,8 @@ struct dasd_device *dasd_alloc_device(void)
+ 	dasd_init_chunklist(&device->erp_chunks, device->erp_mem, PAGE_SIZE);
+ 	dasd_init_chunklist(&device->ese_chunks, device->ese_mem, PAGE_SIZE * 2);
+ 	spin_lock_init(&device->mem_lock);
+-	atomic_set(&device->tasklet_scheduled, 0);
+-	tasklet_init(&device->tasklet, dasd_device_tasklet,
+-		     (unsigned long) device);
++	atomic_set(&device->work_scheduled, 0);
++	INIT_WORK(&device->bh, dasd_device_work);
+ 	INIT_LIST_HEAD(&device->ccw_queue);
+ 	timer_setup(&device->timer, dasd_device_timeout, 0);
+ 	INIT_WORK(&device->kick_work, do_kick_device);
+@@ -154,9 +153,8 @@ struct dasd_block *dasd_alloc_block(void)
+ 	/* open_count = 0 means device online but not in use */
+ 	atomic_set(&block->open_count, -1);
  
- #define BNXT_RE_DESC	"Broadcom NetXtreme-C/E RoCE Driver"
-@@ -162,7 +163,7 @@ struct bnxt_re_dev {
- 	u8				cur_prio_map;
- 
- 	/* FP Notification Queue (CQ & SRQ) */
--	struct tasklet_struct		nq_task;
-+	struct work_struct 		nq_work;
- 
- 	/* RCFW Channel */
- 	struct bnxt_qplib_rcfw		rcfw;
-diff --git a/drivers/infiniband/hw/bnxt_re/qplib_fp.c b/drivers/infiniband/hw/bnxt_re/qplib_fp.c
-index 439d0c7c5d0c..052906982cdf 100644
---- a/drivers/infiniband/hw/bnxt_re/qplib_fp.c
-+++ b/drivers/infiniband/hw/bnxt_re/qplib_fp.c
-@@ -46,6 +46,7 @@
- #include <linux/delay.h>
- #include <linux/prefetch.h>
- #include <linux/if_ether.h>
-+#include <linux/workqueue.h>
- #include <rdma/ib_mad.h>
- 
- #include "roce_hsi.h"
-@@ -294,9 +295,9 @@ static void __wait_for_all_nqes(struct bnxt_qplib_cq *cq, u16 cnq_events)
- 	}
- }
- 
--static void bnxt_qplib_service_nq(struct tasklet_struct *t)
-+static void bnxt_qplib_service_nq(struct work_struct *t)
+-	atomic_set(&block->tasklet_scheduled, 0);
+-	tasklet_init(&block->tasklet, dasd_block_tasklet,
+-		     (unsigned long) block);
++	atomic_set(&block->work_scheduled, 0);
++	INIT_WORK(&block->bh, dasd_block_work);
+ 	INIT_LIST_HEAD(&block->ccw_queue);
+ 	spin_lock_init(&block->queue_lock);
+ 	INIT_LIST_HEAD(&block->format_list);
+@@ -2148,12 +2146,12 @@ EXPORT_SYMBOL_GPL(dasd_flush_device_queue);
+ /*
+  * Acquire the device lock and process queues for the device.
+  */
+-static void dasd_device_tasklet(unsigned long data)
++static void dasd_device_work(struct work_struct *t)
  {
--	struct bnxt_qplib_nq *nq = from_tasklet(nq, t, nq_tasklet);
-+	struct bnxt_qplib_nq *nq = from_work(nq, t, nq_work);
- 	struct bnxt_qplib_hwq *hwq = &nq->hwq;
- 	struct bnxt_qplib_cq *cq;
- 	int budget = nq->budget;
-@@ -394,7 +395,7 @@ void bnxt_re_synchronize_nq(struct bnxt_qplib_nq *nq)
- 	int budget = nq->budget;
+-	struct dasd_device *device = (struct dasd_device *) data;
++	struct dasd_device *device = from_work(device, t, bh);
+ 	struct list_head final_queue;
  
- 	nq->budget = nq->hwq.max_elements;
--	bnxt_qplib_service_nq(&nq->nq_tasklet);
-+	bnxt_qplib_service_nq(&nq->nq_work);
- 	nq->budget = budget;
+-	atomic_set (&device->tasklet_scheduled, 0);
++	atomic_set (&device->work_scheduled, 0);
+ 	INIT_LIST_HEAD(&final_queue);
+ 	spin_lock_irq(get_ccwdev_lock(device->cdev));
+ 	/* Check expire time of first request on the ccw queue. */
+@@ -2174,15 +2172,15 @@ static void dasd_device_tasklet(unsigned long data)
  }
  
-@@ -409,7 +410,7 @@ static irqreturn_t bnxt_qplib_nq_irq(int irq, void *dev_instance)
- 	prefetch(bnxt_qplib_get_qe(hwq, sw_cons, NULL));
- 
- 	/* Fan out to CPU affinitized kthreads? */
--	tasklet_schedule(&nq->nq_tasklet);
-+	queue_work(system_bh_wq, &nq->nq_work);
- 
- 	return IRQ_HANDLED;
- }
-@@ -430,8 +431,8 @@ void bnxt_qplib_nq_stop_irq(struct bnxt_qplib_nq *nq, bool kill)
- 	nq->name = NULL;
- 
- 	if (kill)
--		tasklet_kill(&nq->nq_tasklet);
--	tasklet_disable(&nq->nq_tasklet);
-+		cancel_work_sync(&nq->nq_work);
-+	disable_work_sync(&nq->nq_work);
- }
- 
- void bnxt_qplib_disable_nq(struct bnxt_qplib_nq *nq)
-@@ -465,9 +466,9 @@ int bnxt_qplib_nq_start_irq(struct bnxt_qplib_nq *nq, int nq_indx,
- 
- 	nq->msix_vec = msix_vector;
- 	if (need_init)
--		tasklet_setup(&nq->nq_tasklet, bnxt_qplib_service_nq);
-+		INIT_WORK(&nq->nq_work, bnxt_qplib_service_nq);
- 	else
--		tasklet_enable(&nq->nq_tasklet);
-+		enable_and_queue_work(system_bh_wq, &nq->nq_work);
- 
- 	nq->name = kasprintf(GFP_KERNEL, "bnxt_re-nq-%d@pci:%s",
- 			     nq_indx, pci_name(res->pdev));
-@@ -477,7 +478,7 @@ int bnxt_qplib_nq_start_irq(struct bnxt_qplib_nq *nq, int nq_indx,
- 	if (rc) {
- 		kfree(nq->name);
- 		nq->name = NULL;
--		tasklet_disable(&nq->nq_tasklet);
-+		disable_work_sync(&nq->nq_work);
- 		return rc;
- 	}
- 
-@@ -541,7 +542,7 @@ int bnxt_qplib_enable_nq(struct pci_dev *pdev, struct bnxt_qplib_nq *nq,
- 	nq->cqn_handler = cqn_handler;
- 	nq->srqn_handler = srqn_handler;
- 
--	/* Have a task to schedule CQ notifiers in post send case */
-+	/* Have a work to schedule CQ notifiers in post send case */
- 	nq->cqn_wq  = create_singlethread_workqueue("bnxt_qplib_nq");
- 	if (!nq->cqn_wq)
- 		return -ENOMEM;
-diff --git a/drivers/infiniband/hw/bnxt_re/qplib_fp.h b/drivers/infiniband/hw/bnxt_re/qplib_fp.h
-index 7fd4506b3584..6ee3e501d136 100644
---- a/drivers/infiniband/hw/bnxt_re/qplib_fp.h
-+++ b/drivers/infiniband/hw/bnxt_re/qplib_fp.h
-@@ -494,7 +494,7 @@ struct bnxt_qplib_nq {
- 	u16				ring_id;
- 	int				msix_vec;
- 	cpumask_t			mask;
--	struct tasklet_struct		nq_tasklet;
-+	struct work_struct 		nq_work;
- 	bool				requested;
- 	int				budget;
- 
-diff --git a/drivers/infiniband/hw/bnxt_re/qplib_rcfw.c b/drivers/infiniband/hw/bnxt_re/qplib_rcfw.c
-index 3ffaef0c2651..2fba712d88db 100644
---- a/drivers/infiniband/hw/bnxt_re/qplib_rcfw.c
-+++ b/drivers/infiniband/hw/bnxt_re/qplib_rcfw.c
-@@ -43,6 +43,7 @@
- #include <linux/pci.h>
- #include <linux/prefetch.h>
- #include <linux/delay.h>
-+#include <linux/workqueue.h>
- 
- #include "roce_hsi.h"
- #include "qplib_res.h"
-@@ -51,7 +52,7 @@
- #include "qplib_fp.h"
- #include "qplib_tlv.h"
- 
--static void bnxt_qplib_service_creq(struct tasklet_struct *t);
-+static void bnxt_qplib_service_creq(struct work_struct *t);
- 
- /**
-  * bnxt_qplib_map_rc  -  map return type based on opcode
-@@ -165,7 +166,7 @@ static int __wait_for_resp(struct bnxt_qplib_rcfw *rcfw, u16 cookie)
- 		if (!crsqe->is_in_used)
- 			return 0;
- 
--		bnxt_qplib_service_creq(&rcfw->creq.creq_tasklet);
-+		bnxt_qplib_service_creq(&rcfw->creq.creq_work);
- 
- 		if (!crsqe->is_in_used)
- 			return 0;
-@@ -206,7 +207,7 @@ static int __block_for_resp(struct bnxt_qplib_rcfw *rcfw, u16 cookie)
- 
- 		udelay(1);
- 
--		bnxt_qplib_service_creq(&rcfw->creq.creq_tasklet);
-+		bnxt_qplib_service_creq(&rcfw->creq.creq_work);
- 		if (!crsqe->is_in_used)
- 			return 0;
- 
-@@ -403,7 +404,7 @@ static int __poll_for_resp(struct bnxt_qplib_rcfw *rcfw, u16 cookie)
- 
- 		usleep_range(1000, 1001);
- 
--		bnxt_qplib_service_creq(&rcfw->creq.creq_tasklet);
-+		bnxt_qplib_service_creq(&rcfw->creq.creq_work);
- 		if (!crsqe->is_in_used)
- 			return 0;
- 		if (jiffies_to_msecs(jiffies - issue_time) >
-@@ -727,9 +728,9 @@ static int bnxt_qplib_process_qp_event(struct bnxt_qplib_rcfw *rcfw,
- }
- 
- /* SP - CREQ Completion handlers */
--static void bnxt_qplib_service_creq(struct tasklet_struct *t)
-+static void bnxt_qplib_service_creq(struct work_struct *t)
+ /*
+- * Schedules a call to dasd_tasklet over the device tasklet.
++ * Schedules a call to dasd_work over the device wq.
+  */
+ void dasd_schedule_device_bh(struct dasd_device *device)
  {
--	struct bnxt_qplib_rcfw *rcfw = from_tasklet(rcfw, t, creq.creq_tasklet);
-+	struct bnxt_qplib_rcfw *rcfw = from_work(rcfw, t, creq.creq_work);
- 	struct bnxt_qplib_creq_ctx *creq = &rcfw->creq;
- 	u32 type, budget = CREQ_ENTRY_POLL_BUDGET;
- 	struct bnxt_qplib_hwq *hwq = &creq->hwq;
-@@ -800,7 +801,7 @@ static irqreturn_t bnxt_qplib_creq_irq(int irq, void *dev_instance)
- 	sw_cons = HWQ_CMP(hwq->cons, hwq);
- 	prefetch(bnxt_qplib_get_qe(hwq, sw_cons, NULL));
- 
--	tasklet_schedule(&creq->creq_tasklet);
-+	queue_work(system_bh_wq, &creq->creq_work);
- 
- 	return IRQ_HANDLED;
+ 	/* Protect against rescheduling. */
+-	if (atomic_cmpxchg (&device->tasklet_scheduled, 0, 1) != 0)
++	if (atomic_cmpxchg (&device->work_scheduled, 0, 1) != 0)
+ 		return;
+ 	dasd_get_device(device);
+-	tasklet_hi_schedule(&device->tasklet);
++	queue_work(system_bh_highpri_wq, &device->bh);
  }
-@@ -1007,8 +1008,8 @@ void bnxt_qplib_rcfw_stop_irq(struct bnxt_qplib_rcfw *rcfw, bool kill)
- 	creq->irq_name = NULL;
- 	atomic_set(&rcfw->rcfw_intr_enabled, 0);
- 	if (kill)
--		tasklet_kill(&creq->creq_tasklet);
--	tasklet_disable(&creq->creq_tasklet);
-+		cancel_work_sync(&creq->creq_work);
-+	disable_work_sync(&creq->creq_work);
- }
+ EXPORT_SYMBOL(dasd_schedule_device_bh);
  
- void bnxt_qplib_disable_rcfw_channel(struct bnxt_qplib_rcfw *rcfw)
-@@ -1045,9 +1046,9 @@ int bnxt_qplib_rcfw_start_irq(struct bnxt_qplib_rcfw *rcfw, int msix_vector,
- 
- 	creq->msix_vec = msix_vector;
- 	if (need_init)
--		tasklet_setup(&creq->creq_tasklet, bnxt_qplib_service_creq);
-+		INIT_WORK(&creq->creq_work, bnxt_qplib_service_creq);
+@@ -2595,7 +2593,7 @@ int dasd_sleep_on_immediatly(struct dasd_ccw_req *cqr)
  	else
--		tasklet_enable(&creq->creq_tasklet);
-+		enable_and_queue_work(system_bh_wq, &creq->creq_work);
+ 		rc = -EIO;
  
- 	creq->irq_name = kasprintf(GFP_KERNEL, "bnxt_re-creq@pci:%s",
- 				   pci_name(res->pdev));
-@@ -1058,7 +1059,7 @@ int bnxt_qplib_rcfw_start_irq(struct bnxt_qplib_rcfw *rcfw, int msix_vector,
- 	if (rc) {
- 		kfree(creq->irq_name);
- 		creq->irq_name = NULL;
--		tasklet_disable(&creq->creq_tasklet);
-+		disable_work_sync(&creq->creq_work);
- 		return rc;
- 	}
- 	creq->requested = true;
-diff --git a/drivers/infiniband/hw/bnxt_re/qplib_rcfw.h b/drivers/infiniband/hw/bnxt_re/qplib_rcfw.h
-index 45996e60a0d0..8efa474fcf3f 100644
---- a/drivers/infiniband/hw/bnxt_re/qplib_rcfw.h
-+++ b/drivers/infiniband/hw/bnxt_re/qplib_rcfw.h
-@@ -207,7 +207,7 @@ struct bnxt_qplib_creq_ctx {
- 	struct bnxt_qplib_hwq		hwq;
- 	struct bnxt_qplib_creq_db	creq_db;
- 	struct bnxt_qplib_creq_stat	stats;
--	struct tasklet_struct		creq_tasklet;
-+	struct work_struct 		creq_work;
- 	aeq_handler_t			aeq_handler;
- 	u16				ring_id;
- 	int				msix_vec;
-diff --git a/drivers/infiniband/hw/erdma/erdma.h b/drivers/infiniband/hw/erdma/erdma.h
-index 5df401a30cb9..9a47c1432c27 100644
---- a/drivers/infiniband/hw/erdma/erdma.h
-+++ b/drivers/infiniband/hw/erdma/erdma.h
-@@ -11,6 +11,7 @@
- #include <linux/netdevice.h>
- #include <linux/pci.h>
- #include <linux/xarray.h>
-+#include <linux/workqueue.h>
- #include <rdma/ib_verbs.h>
+-	/* kick tasklets */
++	/* kick works */
+ 	dasd_schedule_device_bh(device);
+ 	if (device->block)
+ 		dasd_schedule_block_bh(device->block);
+@@ -2891,15 +2889,15 @@ static void __dasd_block_start_head(struct dasd_block *block)
+  * block layer request queue, creates ccw requests, enqueues them on
+  * a dasd_device and processes ccw requests that have been returned.
+  */
+-static void dasd_block_tasklet(unsigned long data)
++static void dasd_block_work(struct work_struct *t)
+ {
+-	struct dasd_block *block = (struct dasd_block *) data;
++	struct dasd_block *block = from_work(block, t, bh);
+ 	struct list_head final_queue;
+ 	struct list_head *l, *n;
+ 	struct dasd_ccw_req *cqr;
+ 	struct dasd_queue *dq;
  
- #include "erdma_hw.h"
-@@ -161,7 +162,7 @@ struct erdma_eq_cb {
- 	void *dev; /* All EQs use this fields to get erdma_dev struct */
- 	struct erdma_irq irq;
- 	struct erdma_eq eq;
+-	atomic_set(&block->tasklet_scheduled, 0);
++	atomic_set(&block->work_scheduled, 0);
+ 	INIT_LIST_HEAD(&final_queue);
+ 	spin_lock_irq(&block->queue_lock);
+ 	/* Finish off requests on ccw queue */
+@@ -2970,7 +2968,7 @@ static int _dasd_requests_to_flushqueue(struct dasd_block *block,
+ 		if (rc < 0)
+ 			break;
+ 		/* Rechain request (including erp chain) so it won't be
+-		 * touched by the dasd_block_tasklet anymore.
++		 * touched by the dasd_block_work anymore.
+ 		 * Replace the callback so we notice when the request
+ 		 * is returned from the dasd_device layer.
+ 		 */
+@@ -3025,16 +3023,16 @@ static int dasd_flush_block_queue(struct dasd_block *block)
+ }
+ 
+ /*
+- * Schedules a call to dasd_tasklet over the device tasklet.
++ * Schedules a call to dasd_work over the device wq.
+  */
+ void dasd_schedule_block_bh(struct dasd_block *block)
+ {
+ 	/* Protect against rescheduling. */
+-	if (atomic_cmpxchg(&block->tasklet_scheduled, 0, 1) != 0)
++	if (atomic_cmpxchg(&block->work_scheduled, 0, 1) != 0)
+ 		return;
+ 	/* life cycle of block is bound to it's base device */
+ 	dasd_get_device(block->base);
+-	tasklet_hi_schedule(&block->tasklet);
++	queue_work(system_bh_highpri_wq, &block->bh);
+ }
+ EXPORT_SYMBOL(dasd_schedule_block_bh);
+ 
+diff --git a/drivers/s390/block/dasd_int.h b/drivers/s390/block/dasd_int.h
+index e5f40536b425..abe4d43f474e 100644
+--- a/drivers/s390/block/dasd_int.h
++++ b/drivers/s390/block/dasd_int.h
+@@ -28,7 +28,7 @@
+  *   known -> basic: request irq line for the device.
+  *   basic -> ready: do the initial analysis, e.g. format detection,
+  *                   do block device setup and detect partitions.
+- *   ready -> online: schedule the device tasklet.
++ *   ready -> online: schedule the device work.
+  * Things to do for shutdown state transitions:
+  *   online -> ready: just set the new device state.
+  *   ready -> basic: flush requests from the block device layer, clear
+@@ -579,8 +579,8 @@ struct dasd_device {
+ 	struct list_head erp_chunks;
+ 	struct list_head ese_chunks;
+ 
+-	atomic_t tasklet_scheduled;
+-        struct tasklet_struct tasklet;
++	atomic_t work_scheduled;
++	struct work_struct bh;
+ 	struct work_struct kick_work;
+ 	struct work_struct reload_device;
+ 	struct work_struct kick_validate;
+@@ -630,8 +630,8 @@ struct dasd_block {
+ 	struct list_head ccw_queue;
+ 	spinlock_t queue_lock;
+ 
+-	atomic_t tasklet_scheduled;
 -	struct tasklet_struct tasklet;
-+	struct work_struct work;
- };
++	atomic_t work_scheduled;
++	struct work_struct bh;
+ 	struct timer_list timer;
  
- struct erdma_resource_cb {
-diff --git a/drivers/infiniband/hw/erdma/erdma_eq.c b/drivers/infiniband/hw/erdma/erdma_eq.c
-index ea47cb21fdb8..252906fd73b0 100644
---- a/drivers/infiniband/hw/erdma/erdma_eq.c
-+++ b/drivers/infiniband/hw/erdma/erdma_eq.c
-@@ -160,14 +160,16 @@ static irqreturn_t erdma_intr_ceq_handler(int irq, void *data)
- {
- 	struct erdma_eq_cb *ceq_cb = data;
- 
--	tasklet_schedule(&ceq_cb->tasklet);
-+	queue_work(system_bh_wq, &ceq_cb->work);
- 
- 	return IRQ_HANDLED;
- }
- 
--static void erdma_intr_ceq_task(unsigned long data)
-+static void erdma_intr_ceq_task(struct work_struct *t)
- {
--	erdma_ceq_completion_handler((struct erdma_eq_cb *)data);
-+	struct erdma_eq_cb *ceq_cb = from_work(ceq_cb, t, work);
-+
-+	erdma_ceq_completion_handler(ceq_cb);
- }
- 
- static int erdma_set_ceq_irq(struct erdma_dev *dev, u16 ceqn)
-@@ -179,8 +181,7 @@ static int erdma_set_ceq_irq(struct erdma_dev *dev, u16 ceqn)
- 		 pci_name(dev->pdev));
- 	eqc->irq.msix_vector = pci_irq_vector(dev->pdev, ceqn + 1);
- 
--	tasklet_init(&dev->ceqs[ceqn].tasklet, erdma_intr_ceq_task,
--		     (unsigned long)&dev->ceqs[ceqn]);
-+	INIT_WORK(&dev->ceqs[ceqn].work, erdma_intr_ceq_task);
- 
- 	cpumask_set_cpu(cpumask_local_spread(ceqn + 1, dev->attrs.numa_node),
- 			&eqc->irq.affinity_hint_mask);
-diff --git a/drivers/infiniband/hw/hfi1/rc.c b/drivers/infiniband/hw/hfi1/rc.c
-index b36242c9d42c..ec19ddbfdacb 100644
---- a/drivers/infiniband/hw/hfi1/rc.c
-+++ b/drivers/infiniband/hw/hfi1/rc.c
-@@ -1210,7 +1210,7 @@ static inline void hfi1_queue_rc_ack(struct hfi1_packet *packet, bool is_fecn)
- 	if (is_fecn)
- 		qp->s_flags |= RVT_S_ECN;
- 
--	/* Schedule the send tasklet. */
-+	/* Schedule the send work. */
- 	hfi1_schedule_send(qp);
- unlock:
- 	spin_unlock_irqrestore(&qp->s_lock, flags);
-diff --git a/drivers/infiniband/hw/hfi1/sdma.c b/drivers/infiniband/hw/hfi1/sdma.c
-index b67d23b1f286..5e1a1dd45511 100644
---- a/drivers/infiniband/hw/hfi1/sdma.c
-+++ b/drivers/infiniband/hw/hfi1/sdma.c
-@@ -11,6 +11,7 @@
- #include <linux/timer.h>
- #include <linux/vmalloc.h>
- #include <linux/highmem.h>
+ 	struct dentry *debugfs_dentry;
+diff --git a/drivers/s390/char/con3270.c b/drivers/s390/char/con3270.c
+index 251d2a1c3eef..993275e9b2f4 100644
+--- a/drivers/s390/char/con3270.c
++++ b/drivers/s390/char/con3270.c
+@@ -28,6 +28,7 @@
+ #include <asm/ebcdic.h>
+ #include <asm/cpcmd.h>
+ #include <linux/uaccess.h>
 +#include <linux/workqueue.h>
  
- #include "hfi.h"
- #include "common.h"
-@@ -190,11 +191,11 @@ static const struct sdma_set_state_action sdma_action_table[] = {
- static void sdma_complete(struct kref *);
- static void sdma_finalput(struct sdma_state *);
- static void sdma_get(struct sdma_state *);
--static void sdma_hw_clean_up_task(struct tasklet_struct *);
-+static void sdma_hw_clean_up_task(struct work_struct *);
- static void sdma_put(struct sdma_state *);
- static void sdma_set_state(struct sdma_engine *, enum sdma_states);
- static void sdma_start_hw_clean_up(struct sdma_engine *);
--static void sdma_sw_clean_up_task(struct tasklet_struct *);
-+static void sdma_sw_clean_up_task(struct work_struct *);
- static void sdma_sendctrl(struct sdma_engine *, unsigned);
- static void init_sdma_regs(struct sdma_engine *, u32, uint);
- static void sdma_process_event(
-@@ -503,9 +504,9 @@ static void sdma_err_progress_check(struct timer_list *t)
- 	schedule_work(&sde->err_halt_worker);
+ #include "raw3270.h"
+ #include "keyboard.h"
+@@ -107,8 +108,8 @@ struct tty3270 {
+ 	struct raw3270_request *readpartreq;
+ 	unsigned char inattr;		/* Visible/invisible input. */
+ 	int throttle, attn;		/* tty throttle/unthrottle. */
+-	struct tasklet_struct readlet;	/* Tasklet to issue read request. */
+-	struct tasklet_struct hanglet;	/* Tasklet to hang up the tty. */
++	struct work_struct read_work;	/* Work to issue read request. */
++	struct work_struct hang_work;	/* Work to hang up the tty. */
+ 	struct kbd_data *kbd;		/* key_maps stuff. */
+ 
+ 	/* Escape sequence parsing. */
+@@ -667,9 +668,9 @@ static void tty3270_scroll_backward(struct kbd_data *kbd)
+ /*
+  * Pass input line to tty.
+  */
+-static void tty3270_read_tasklet(unsigned long data)
++static void tty3270_read_work(struct work_struct *T)
+ {
+-	struct raw3270_request *rrq = (struct raw3270_request *)data;
++	struct raw3270_request *rrq = from_work(rrq, t, read_work);
+ 	static char kreset_data = TW_KR;
+ 	struct tty3270 *tp = container_of(rrq->view, struct tty3270, view);
+ 	char *input;
+@@ -734,8 +735,8 @@ static void tty3270_read_callback(struct raw3270_request *rq, void *data)
+ 	struct tty3270 *tp = container_of(rq->view, struct tty3270, view);
+ 
+ 	raw3270_get_view(rq->view);
+-	/* Schedule tasklet to pass input to tty. */
+-	tasklet_schedule(&tp->readlet);
++	/* Schedule work to pass input to tty. */
++	queue_work(system_bh_wq, &tp->read_work);
  }
  
--static void sdma_hw_clean_up_task(struct tasklet_struct *t)
-+static void sdma_hw_clean_up_task(struct work_struct *t)
+ /*
+@@ -768,9 +769,9 @@ static void tty3270_issue_read(struct tty3270 *tp, int lock)
+ /*
+  * Hang up the tty
+  */
+-static void tty3270_hangup_tasklet(unsigned long data)
++static void tty3270_hangup_work(struct work_struct *t)
  {
--	struct sdma_engine *sde = from_tasklet(sde, t,
-+	struct sdma_engine *sde = from_work(sde, t,
- 					       sdma_hw_clean_up_task);
- 	u64 statuscsr;
+-	struct tty3270 *tp = (struct tty3270 *)data;
++	struct tty3270 *tp = from_work(tp, t, hang_work);
  
-@@ -563,9 +564,9 @@ static void sdma_flush_descq(struct sdma_engine *sde)
- 		sdma_desc_avail(sde, sdma_descq_freecnt(sde));
- }
+ 	tty_port_tty_hangup(&tp->port, true);
+ 	raw3270_put_view(&tp->view);
+@@ -797,7 +798,7 @@ static void tty3270_deactivate(struct raw3270_view *view)
  
--static void sdma_sw_clean_up_task(struct tasklet_struct *t)
-+static void sdma_sw_clean_up_task(struct work_struct *t)
+ static void tty3270_irq(struct tty3270 *tp, struct raw3270_request *rq, struct irb *irb)
  {
--	struct sdma_engine *sde = from_tasklet(sde, t, sdma_sw_clean_up_task);
-+	struct sdma_engine *sde = from_work(sde, t, sdma_sw_clean_up_task);
- 	unsigned long flags;
+-	/* Handle ATTN. Schedule tasklet to read aid. */
++	/* Handle ATTN. Schedule work to read aid. */
+ 	if (irb->scsw.cmd.dstat & DEV_STAT_ATTENTION) {
+ 		if (!tp->throttle)
+ 			tty3270_issue_read(tp, 0);
+@@ -809,7 +810,7 @@ static void tty3270_irq(struct tty3270 *tp, struct raw3270_request *rq, struct i
+ 		if (irb->scsw.cmd.dstat & DEV_STAT_UNIT_CHECK) {
+ 			rq->rc = -EIO;
+ 			raw3270_get_view(&tp->view);
+-			tasklet_schedule(&tp->hanglet);
++			queue_work(system_bh_wq, &tp->hang_work);
+ 		} else {
+ 			/* Normal end. Copy residual count. */
+ 			rq->rescnt = irb->scsw.cmd.count;
+@@ -850,10 +851,8 @@ static struct tty3270 *tty3270_alloc_view(void)
  
- 	spin_lock_irqsave(&sde->tail_lock, flags);
-@@ -624,7 +625,7 @@ static void sdma_sw_tear_down(struct sdma_engine *sde)
+ 	tty_port_init(&tp->port);
+ 	timer_setup(&tp->timer, tty3270_update, 0);
+-	tasklet_init(&tp->readlet, tty3270_read_tasklet,
+-		     (unsigned long)tp->read);
+-	tasklet_init(&tp->hanglet, tty3270_hangup_tasklet,
+-		     (unsigned long)tp);
++	INIT_WORK(&tp->read_work, tty3270_read_work);
++	INIT_WORK(&tp->hang_work, tty3270_hangup_work);
+ 	return tp;
  
- static void sdma_start_hw_clean_up(struct sdma_engine *sde)
- {
--	tasklet_hi_schedule(&sde->sdma_hw_clean_up_task);
-+	queue_work(system_bh_highpri_wq, &sde->sdma_hw_clean_up_task);
- }
+ out_readpartreq:
+diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
+index cce0bafd4c92..5136ecd965ae 100644
+--- a/drivers/s390/crypto/ap_bus.c
++++ b/drivers/s390/crypto/ap_bus.c
+@@ -111,10 +111,10 @@ static void ap_scan_bus_wq_callback(struct work_struct *);
+ static DECLARE_WORK(ap_scan_bus_work, ap_scan_bus_wq_callback);
  
- static void sdma_set_state(struct sdma_engine *sde,
-@@ -1415,9 +1416,9 @@ int sdma_init(struct hfi1_devdata *dd, u8 port)
- 		sde->tail_csr =
- 			get_kctxt_csr_addr(dd, this_idx, SD(TAIL));
- 
--		tasklet_setup(&sde->sdma_hw_clean_up_task,
-+		INIT_WORK(&sde->sdma_hw_clean_up_task,
- 			      sdma_hw_clean_up_task);
--		tasklet_setup(&sde->sdma_sw_clean_up_task,
-+		INIT_WORK(&sde->sdma_sw_clean_up_task,
- 			      sdma_sw_clean_up_task);
- 		INIT_WORK(&sde->err_halt_worker, sdma_err_halt_wait);
- 		INIT_WORK(&sde->flush_worker, sdma_field_flush);
-@@ -2741,7 +2742,7 @@ static void __sdma_process_event(struct sdma_engine *sde,
- 		switch (event) {
- 		case sdma_event_e00_go_hw_down:
- 			sdma_set_state(sde, sdma_state_s00_hw_down);
--			tasklet_hi_schedule(&sde->sdma_sw_clean_up_task);
-+			queue_work(system_bh_highpri_wq, &sde->sdma_sw_clean_up_task);
- 			break;
- 		case sdma_event_e10_go_hw_start:
- 			break;
-@@ -2783,13 +2784,13 @@ static void __sdma_process_event(struct sdma_engine *sde,
- 		switch (event) {
- 		case sdma_event_e00_go_hw_down:
- 			sdma_set_state(sde, sdma_state_s00_hw_down);
--			tasklet_hi_schedule(&sde->sdma_sw_clean_up_task);
-+			queue_work(system_bh_highpri_wq, &sde->sdma_sw_clean_up_task);
- 			break;
- 		case sdma_event_e10_go_hw_start:
- 			break;
- 		case sdma_event_e15_hw_halt_done:
- 			sdma_set_state(sde, sdma_state_s30_sw_clean_up_wait);
--			tasklet_hi_schedule(&sde->sdma_sw_clean_up_task);
-+			queue_work(system_bh_highpri_wq, &sde->sdma_sw_clean_up_task);
- 			break;
- 		case sdma_event_e25_hw_clean_up_done:
- 			break;
-@@ -2824,13 +2825,13 @@ static void __sdma_process_event(struct sdma_engine *sde,
- 		switch (event) {
- 		case sdma_event_e00_go_hw_down:
- 			sdma_set_state(sde, sdma_state_s00_hw_down);
--			tasklet_hi_schedule(&sde->sdma_sw_clean_up_task);
-+			queue_work(system_bh_highpri_wq, &sde->sdma_sw_clean_up_task);
- 			break;
- 		case sdma_event_e10_go_hw_start:
- 			break;
- 		case sdma_event_e15_hw_halt_done:
- 			sdma_set_state(sde, sdma_state_s30_sw_clean_up_wait);
--			tasklet_hi_schedule(&sde->sdma_sw_clean_up_task);
-+			queue_work(system_bh_highpri_wq, &sde->sdma_sw_clean_up_task);
- 			break;
- 		case sdma_event_e25_hw_clean_up_done:
- 			break;
-@@ -2864,7 +2865,7 @@ static void __sdma_process_event(struct sdma_engine *sde,
- 		switch (event) {
- 		case sdma_event_e00_go_hw_down:
- 			sdma_set_state(sde, sdma_state_s00_hw_down);
--			tasklet_hi_schedule(&sde->sdma_sw_clean_up_task);
-+			queue_work(system_bh_highpri_wq, &sde->sdma_sw_clean_up_task);
- 			break;
- 		case sdma_event_e10_go_hw_start:
- 			break;
-@@ -2888,7 +2889,7 @@ static void __sdma_process_event(struct sdma_engine *sde,
- 			break;
- 		case sdma_event_e81_hw_frozen:
- 			sdma_set_state(sde, sdma_state_s82_freeze_sw_clean);
--			tasklet_hi_schedule(&sde->sdma_sw_clean_up_task);
-+			queue_work(system_bh_highpri_wq, &sde->sdma_sw_clean_up_task);
- 			break;
- 		case sdma_event_e82_hw_unfreeze:
- 			break;
-@@ -2903,7 +2904,7 @@ static void __sdma_process_event(struct sdma_engine *sde,
- 		switch (event) {
- 		case sdma_event_e00_go_hw_down:
- 			sdma_set_state(sde, sdma_state_s00_hw_down);
--			tasklet_hi_schedule(&sde->sdma_sw_clean_up_task);
-+			queue_work(system_bh_highpri_wq, &sde->sdma_sw_clean_up_task);
- 			break;
- 		case sdma_event_e10_go_hw_start:
- 			break;
-@@ -2947,7 +2948,7 @@ static void __sdma_process_event(struct sdma_engine *sde,
- 		switch (event) {
- 		case sdma_event_e00_go_hw_down:
- 			sdma_set_state(sde, sdma_state_s00_hw_down);
--			tasklet_hi_schedule(&sde->sdma_sw_clean_up_task);
-+			queue_work(system_bh_highpri_wq, &sde->sdma_sw_clean_up_task);
- 			break;
- 		case sdma_event_e10_go_hw_start:
- 			break;
-diff --git a/drivers/infiniband/hw/hfi1/sdma.h b/drivers/infiniband/hw/hfi1/sdma.h
-index d77246b48434..3f047260cebe 100644
---- a/drivers/infiniband/hw/hfi1/sdma.h
-+++ b/drivers/infiniband/hw/hfi1/sdma.h
-@@ -11,6 +11,7 @@
- #include <asm/byteorder.h>
- #include <linux/workqueue.h>
- #include <linux/rculist.h>
-+#include <linux/workqueue.h>
- 
- #include "hfi.h"
- #include "verbs.h"
-@@ -346,11 +347,11 @@ struct sdma_engine {
- 
- 	/* CONFIG SDMA for now, just blindly duplicate */
- 	/* private: */
--	struct tasklet_struct sdma_hw_clean_up_task
-+	struct work_struct sdma_hw_clean_up_task
- 		____cacheline_aligned_in_smp;
- 
- 	/* private: */
--	struct tasklet_struct sdma_sw_clean_up_task
-+	struct work_struct sdma_sw_clean_up_task
- 		____cacheline_aligned_in_smp;
- 	/* private: */
- 	struct work_struct err_halt_worker;
-@@ -471,7 +472,7 @@ void _sdma_txreq_ahgadd(
-  * Completions of submitted requests can be gotten on selected
-  * txreqs by giving a completion routine callback to sdma_txinit() or
-  * sdma_txinit_ahg().  The environment in which the callback runs
-- * can be from an ISR, a tasklet, or a thread, so no sleeping
-+ * can be from an ISR, a work, or a thread, so no sleeping
-  * kernel routines can be used.   Aspects of the sdma ring may
-  * be locked so care should be taken with locking.
+ /*
+- * Tasklet & timer for AP request polling and interrupts
++ * Work & timer for AP request polling and interrupts
+  */
+-static void ap_tasklet_fn(unsigned long);
+-static DECLARE_TASKLET_OLD(ap_tasklet, ap_tasklet_fn);
++static void ap_work_fn(struct work_struct *);
++static DECLARE_WORK(ap_work, ap_work_fn);
+ static DECLARE_WAIT_QUEUE_HEAD(ap_poll_wait);
+ static struct task_struct *ap_poll_kthread;
+ static DEFINE_MUTEX(ap_poll_thread_mutex);
+@@ -450,16 +450,16 @@ void ap_request_timeout(struct timer_list *t)
+  * ap_poll_timeout(): AP receive polling for finished AP requests.
+  * @unused: Unused pointer.
   *
-@@ -551,7 +552,7 @@ static inline int sdma_txinit_ahg(
-  * Completions of submitted requests can be gotten on selected
-  * txreqs by giving a completion routine callback to sdma_txinit() or
-  * sdma_txinit_ahg().  The environment in which the callback runs
-- * can be from an ISR, a tasklet, or a thread, so no sleeping
-+ * can be from an ISR, a work, or a thread, so no sleeping
-  * kernel routines can be used.   The head size of the sdma ring may
-  * be locked so care should be taken with locking.
+- * Schedules the AP tasklet using a high resolution timer.
++ * Schedules the AP work using a high resolution timer.
+  */
+ static enum hrtimer_restart ap_poll_timeout(struct hrtimer *unused)
+ {
+-	tasklet_schedule(&ap_tasklet);
++	queue_work(system_bh_wq, &ap_work);
+ 	return HRTIMER_NORESTART;
+ }
+ 
+ /**
+- * ap_interrupt_handler() - Schedule ap_tasklet on interrupt
++ * ap_interrupt_handler() - Schedule ap_work on interrupt
+  * @airq: pointer to adapter interrupt descriptor
+  * @tpi_info: ignored
+  */
+@@ -467,23 +467,23 @@ static void ap_interrupt_handler(struct airq_struct *airq,
+ 				 struct tpi_info *tpi_info)
+ {
+ 	inc_irq_stat(IRQIO_APB);
+-	tasklet_schedule(&ap_tasklet);
++	queue_work(system_bh_wq, &ap_work);
+ }
+ 
+ /**
+- * ap_tasklet_fn(): Tasklet to poll all AP devices.
+- * @dummy: Unused variable
++ * ap_work_fn(): Work to poll all AP devices.
++ * @t: pointer to work_struct
   *
-diff --git a/drivers/infiniband/hw/hfi1/tid_rdma.c b/drivers/infiniband/hw/hfi1/tid_rdma.c
-index c465966a1d9c..31cb5a092f42 100644
---- a/drivers/infiniband/hw/hfi1/tid_rdma.c
-+++ b/drivers/infiniband/hw/hfi1/tid_rdma.c
-@@ -2316,7 +2316,7 @@ void hfi1_rc_rcv_tid_rdma_read_req(struct hfi1_packet *packet)
+  * Poll all AP devices on the bus.
+  */
+-static void ap_tasklet_fn(unsigned long dummy)
++static void ap_work_fn(struct work_struct *t)
+ {
+ 	int bkt;
+ 	struct ap_queue *aq;
+ 	enum ap_sm_wait wait = AP_SM_WAIT_NONE;
+ 
+ 	/* Reset the indicator if interrupts are used. Thus new interrupts can
+-	 * be received. Doing it in the beginning of the tasklet is therefore
++	 * be received. Doing it in the beginning of the work is therefore
+ 	 * important that no requests on any AP get lost.
  	 */
- 	qpriv->r_tid_alloc = qp->r_head_ack_queue;
- 
--	/* Schedule the send tasklet. */
-+	/* Schedule the send work. */
- 	qp->s_flags |= RVT_S_RESP_PENDING;
- 	if (fecn)
- 		qp->s_flags |= RVT_S_ECN;
-@@ -3807,7 +3807,7 @@ void hfi1_rc_rcv_tid_rdma_write_req(struct hfi1_packet *packet)
- 	hfi1_tid_write_alloc_resources(qp, true);
- 	trace_hfi1_tid_write_rsp_rcv_req(qp);
- 
--	/* Schedule the send tasklet. */
-+	/* Schedule the send work. */
- 	qp->s_flags |= RVT_S_RESP_PENDING;
- 	if (fecn)
- 		qp->s_flags |= RVT_S_ECN;
-@@ -5389,7 +5389,7 @@ static void hfi1_do_tid_send(struct rvt_qp *qp)
- 
- 			/*
- 			 * If the packet cannot be sent now, return and
--			 * the send tasklet will be woken up later.
-+			 * the send work will be woken up later.
- 			 */
- 			if (hfi1_verbs_send(qp, &ps))
- 				return;
-diff --git a/drivers/infiniband/hw/irdma/ctrl.c b/drivers/infiniband/hw/irdma/ctrl.c
-index 6aed6169c07d..e9644f2b774d 100644
---- a/drivers/infiniband/hw/irdma/ctrl.c
-+++ b/drivers/infiniband/hw/irdma/ctrl.c
-@@ -5271,7 +5271,7 @@ int irdma_process_cqp_cmd(struct irdma_sc_dev *dev,
- }
- 
- /**
-- * irdma_process_bh - called from tasklet for cqp list
-+ * irdma_process_bh - called from work for cqp list
-  * @dev: sc device struct
-  */
- int irdma_process_bh(struct irdma_sc_dev *dev)
-diff --git a/drivers/infiniband/hw/irdma/hw.c b/drivers/infiniband/hw/irdma/hw.c
-index ad50b77282f8..18d552919c28 100644
---- a/drivers/infiniband/hw/irdma/hw.c
-+++ b/drivers/infiniband/hw/irdma/hw.c
-@@ -440,12 +440,12 @@ static void irdma_ena_intr(struct irdma_sc_dev *dev, u32 msix_id)
- }
- 
- /**
-- * irdma_dpc - tasklet for aeq and ceq 0
-- * @t: tasklet_struct ptr
-+ * irdma_dpc - work for aeq and ceq 0
-+ * @t: work_struct ptr
-  */
--static void irdma_dpc(struct tasklet_struct *t)
-+static void irdma_dpc(struct work_struct *t)
- {
--	struct irdma_pci_f *rf = from_tasklet(rf, t, dpc_tasklet);
-+	struct irdma_pci_f *rf = from_work(rf, t, dpc_work);
- 
- 	if (rf->msix_shared)
- 		irdma_process_ceq(rf, rf->ceqlist);
-@@ -455,11 +455,11 @@ static void irdma_dpc(struct tasklet_struct *t)
- 
- /**
-  * irdma_ceq_dpc - dpc handler for CEQ
-- * @t: tasklet_struct ptr
-+ * @t: work_struct ptr
-  */
--static void irdma_ceq_dpc(struct tasklet_struct *t)
-+static void irdma_ceq_dpc(struct work_struct *t)
- {
--	struct irdma_ceq *iwceq = from_tasklet(iwceq, t, dpc_tasklet);
-+	struct irdma_ceq *iwceq = from_work(iwceq, t, dpc_work);
- 	struct irdma_pci_f *rf = iwceq->rf;
- 
- 	irdma_process_ceq(rf, iwceq);
-@@ -533,7 +533,7 @@ static irqreturn_t irdma_irq_handler(int irq, void *data)
- {
- 	struct irdma_pci_f *rf = data;
- 
--	tasklet_schedule(&rf->dpc_tasklet);
-+	queue_work(system_bh_wq, &rf->dpc_work);
- 
- 	return IRQ_HANDLED;
- }
-@@ -550,7 +550,7 @@ static irqreturn_t irdma_ceq_handler(int irq, void *data)
- 	if (iwceq->irq != irq)
- 		ibdev_err(to_ibdev(&iwceq->rf->sc_dev), "expected irq = %d received irq = %d\n",
- 			  iwceq->irq, irq);
--	tasklet_schedule(&iwceq->dpc_tasklet);
-+	queue_work(system_bh_wq, &iwceq->dpc_work);
- 
- 	return IRQ_HANDLED;
- }
-@@ -1121,14 +1121,14 @@ static int irdma_cfg_ceq_vector(struct irdma_pci_f *rf, struct irdma_ceq *iwceq,
- 	if (rf->msix_shared && !ceq_id) {
- 		snprintf(msix_vec->name, sizeof(msix_vec->name) - 1,
- 			 "irdma-%s-AEQCEQ-0", dev_name(&rf->pcidev->dev));
--		tasklet_setup(&rf->dpc_tasklet, irdma_dpc);
-+		INIT_WORK(&rf->dpc_work, irdma_dpc);
- 		status = request_irq(msix_vec->irq, irdma_irq_handler, 0,
- 				     msix_vec->name, rf);
- 	} else {
- 		snprintf(msix_vec->name, sizeof(msix_vec->name) - 1,
- 			 "irdma-%s-CEQ-%d",
- 			 dev_name(&rf->pcidev->dev), ceq_id);
--		tasklet_setup(&iwceq->dpc_tasklet, irdma_ceq_dpc);
-+		INIT_WORK(&iwceq->dpc_work, irdma_ceq_dpc);
- 
- 		status = request_irq(msix_vec->irq, irdma_ceq_handler, 0,
- 				     msix_vec->name, iwceq);
-@@ -1162,7 +1162,7 @@ static int irdma_cfg_aeq_vector(struct irdma_pci_f *rf)
- 	if (!rf->msix_shared) {
- 		snprintf(msix_vec->name, sizeof(msix_vec->name) - 1,
- 			 "irdma-%s-AEQ", dev_name(&rf->pcidev->dev));
--		tasklet_setup(&rf->dpc_tasklet, irdma_dpc);
-+		INIT_WORK(&rf->dpc_work, irdma_dpc);
- 		ret = request_irq(msix_vec->irq, irdma_irq_handler, 0,
- 				  msix_vec->name, rf);
+ 	if (ap_irq_flag)
+@@ -546,7 +546,7 @@ static int ap_poll_thread(void *data)
+ 			try_to_freeze();
+ 			continue;
+ 		}
+-		ap_tasklet_fn(0);
++		queue_work(system_bh_wq, &ap_work);
  	}
-diff --git a/drivers/infiniband/hw/irdma/main.h b/drivers/infiniband/hw/irdma/main.h
-index b65bc2ea542f..54301093b746 100644
---- a/drivers/infiniband/hw/irdma/main.h
-+++ b/drivers/infiniband/hw/irdma/main.h
-@@ -30,6 +30,7 @@
- #endif
- #include <linux/auxiliary_bus.h>
- #include <linux/net/intel/iidc.h>
-+#include <linux/workqueue.h>
- #include <crypto/hash.h>
- #include <rdma/ib_smi.h>
- #include <rdma/ib_verbs.h>
-@@ -192,7 +193,7 @@ struct irdma_ceq {
- 	u32 irq;
- 	u32 msix_idx;
- 	struct irdma_pci_f *rf;
--	struct tasklet_struct dpc_tasklet;
-+	struct work_struct dpc_work;
- 	spinlock_t ce_lock; /* sync cq destroy with cq completion event notification */
+ 
+ 	return 0;
+diff --git a/drivers/s390/crypto/ap_bus.h b/drivers/s390/crypto/ap_bus.h
+index 59c7ed49aa02..7daea5c536c9 100644
+--- a/drivers/s390/crypto/ap_bus.h
++++ b/drivers/s390/crypto/ap_bus.h
+@@ -223,7 +223,7 @@ struct ap_message {
+ 	u16 flags;			/* Flags, see AP_MSG_FLAG_xxx */
+ 	int rc;				/* Return code for this message */
+ 	void *private;			/* ap driver private pointer. */
+-	/* receive is called from tasklet context */
++	/* receive is called from work context */
+ 	void (*receive)(struct ap_queue *, struct ap_message *,
+ 			struct ap_message *);
  };
+diff --git a/drivers/s390/crypto/zcrypt_msgtype50.c b/drivers/s390/crypto/zcrypt_msgtype50.c
+index 3b39cb8f926d..c7bf389f2938 100644
+--- a/drivers/s390/crypto/zcrypt_msgtype50.c
++++ b/drivers/s390/crypto/zcrypt_msgtype50.c
+@@ -403,7 +403,7 @@ static int convert_response(struct zcrypt_queue *zq,
+ /*
+  * This function is called from the AP bus code after a crypto request
+  * "msg" has finished with the reply message "reply".
+- * It is called from tasklet context.
++ * It is called from work context.
+  * @aq: pointer to the AP device
+  * @msg: pointer to the AP message
+  * @reply: pointer to the AP reply message
+diff --git a/drivers/s390/crypto/zcrypt_msgtype6.c b/drivers/s390/crypto/zcrypt_msgtype6.c
+index 215f257d2360..b62e2c9cee58 100644
+--- a/drivers/s390/crypto/zcrypt_msgtype6.c
++++ b/drivers/s390/crypto/zcrypt_msgtype6.c
+@@ -847,7 +847,7 @@ static int convert_response_rng(struct zcrypt_queue *zq,
+ /*
+  * This function is called from the AP bus code after a crypto request
+  * "msg" has finished with the reply message "reply".
+- * It is called from tasklet context.
++ * It is called from work context.
+  * @aq: pointer to the AP queue
+  * @msg: pointer to the AP message
+  * @reply: pointer to the AP reply message
+@@ -913,7 +913,7 @@ static void zcrypt_msgtype6_receive(struct ap_queue *aq,
+ /*
+  * This function is called from the AP bus code after a crypto request
+  * "msg" has finished with the reply message "reply".
+- * It is called from tasklet context.
++ * It is called from work context.
+  * @aq: pointer to the AP queue
+  * @msg: pointer to the AP message
+  * @reply: pointer to the AP reply message
+diff --git a/drivers/s390/net/ctcm_fsms.c b/drivers/s390/net/ctcm_fsms.c
+index 9678c6a2cda7..3b02a41c4386 100644
+--- a/drivers/s390/net/ctcm_fsms.c
++++ b/drivers/s390/net/ctcm_fsms.c
+@@ -1420,12 +1420,12 @@ static void ctcmpc_chx_rx(fsm_instance *fi, int event, void *arg)
+ 		case MPCG_STATE_READY:
+ 			skb_put_data(new_skb, skb->data, block_len);
+ 			skb_queue_tail(&ch->io_queue, new_skb);
+-			tasklet_schedule(&ch->ch_tasklet);
++			queue_work(system_bh_wq, &ch->ch_work);
+ 			break;
+ 		default:
+ 			skb_put_data(new_skb, skb->data, len);
+ 			skb_queue_tail(&ch->io_queue, new_skb);
+-			tasklet_hi_schedule(&ch->ch_tasklet);
++			queue_work(system_bh_highpri_wq, &ch->ch_work);
+ 			break;
+ 		}
+ 	}
+diff --git a/drivers/s390/net/ctcm_main.c b/drivers/s390/net/ctcm_main.c
+index 878fe3ce53ad..c504db179982 100644
+--- a/drivers/s390/net/ctcm_main.c
++++ b/drivers/s390/net/ctcm_main.c
+@@ -223,8 +223,8 @@ static void channel_remove(struct channel *ch)
+ 				dev_kfree_skb_any(ch->trans_skb);
+ 			}
+ 			if (IS_MPC(ch)) {
+-				tasklet_kill(&ch->ch_tasklet);
+-				tasklet_kill(&ch->ch_disc_tasklet);
++				cancel_work_sync(&ch->ch_work);
++				cancel_work_sync(&ch->ch_disc_work);
+ 				kfree(ch->discontact_th);
+ 			}
+ 			kfree(ch->ccw);
+@@ -1027,7 +1027,7 @@ static void ctcm_free_netdevice(struct net_device *dev)
+ 				kfree_fsm(grp->fsm);
+ 			dev_kfree_skb(grp->xid_skb);
+ 			dev_kfree_skb(grp->rcvd_xid_skb);
+-			tasklet_kill(&grp->mpc_tasklet2);
++			cancel_work_sync(&grp->mpc_work2);
+ 			kfree(grp);
+ 			priv->mpcg = NULL;
+ 		}
+@@ -1118,8 +1118,7 @@ static struct net_device *ctcm_init_netdevice(struct ctcm_priv *priv)
+ 			free_netdev(dev);
+ 			return NULL;
+ 		}
+-		tasklet_init(&grp->mpc_tasklet2,
+-				mpc_group_ready, (unsigned long)dev);
++		INIT_WORK(&grp->mpc_work2, mpc_group_ready);
+ 		dev->mtu = MPC_BUFSIZE_DEFAULT -
+ 				TH_HEADER_LENGTH - PDU_HEADER_LENGTH;
  
-@@ -316,7 +317,7 @@ struct irdma_pci_f {
- 	struct mc_table_list mc_qht_list;
- 	struct irdma_msix_vector *iw_msixtbl;
- 	struct irdma_qvlist_info *iw_qvlist;
--	struct tasklet_struct dpc_tasklet;
-+	struct work_struct dpc_work;
- 	struct msix_entry *msix_entries;
- 	struct irdma_dma_mem obj_mem;
- 	struct irdma_dma_mem obj_next;
-diff --git a/drivers/infiniband/hw/qib/qib.h b/drivers/infiniband/hw/qib/qib.h
-index 26c615772be3..d2ebaf31ce5a 100644
---- a/drivers/infiniband/hw/qib/qib.h
-+++ b/drivers/infiniband/hw/qib/qib.h
-@@ -53,6 +53,7 @@
- #include <linux/sched.h>
- #include <linux/kthread.h>
- #include <linux/xarray.h>
+@@ -1319,10 +1318,8 @@ static int add_channel(struct ccw_device *cdev, enum ctcm_channel_types type,
+ 					goto nomem_return;
+ 
+ 		ch->discontact_th->th_blk_flag = TH_DISCONTACT;
+-		tasklet_init(&ch->ch_disc_tasklet,
+-			mpc_action_send_discontact, (unsigned long)ch);
+-
+-		tasklet_init(&ch->ch_tasklet, ctcmpc_bh, (unsigned long)ch);
++		INIT_WORK(&ch->ch_disc_work, mpc_action_send_discontact);
++		INIT_WORK(&ch->ch_work, ctcmpc_bh);
+ 		ch->max_bufsize = (MPC_BUFSIZE_DEFAULT - 35);
+ 		ccw_num = 17;
+ 	} else
+diff --git a/drivers/s390/net/ctcm_main.h b/drivers/s390/net/ctcm_main.h
+index 25164e8bf13d..1143c037a7f7 100644
+--- a/drivers/s390/net/ctcm_main.h
++++ b/drivers/s390/net/ctcm_main.h
+@@ -13,6 +13,7 @@
+ 
+ #include <linux/skbuff.h>
+ #include <linux/netdevice.h>
 +#include <linux/workqueue.h>
- #include <rdma/ib_hdrs.h>
- #include <rdma/rdma_vt.h>
  
-@@ -562,7 +563,7 @@ struct qib_pportdata {
- 	u8                    sdma_generation;
- 	u8                    sdma_intrequest;
+ #include "fsm.h"
+ #include "ctcm_dbug.h"
+@@ -154,7 +155,7 @@ struct channel {
+ 	int max_bufsize;
+ 	struct sk_buff *trans_skb;	/* transmit/receive buffer */
+ 	struct sk_buff_head io_queue;	/* universal I/O queue */
+-	struct tasklet_struct ch_tasklet;	/* MPC ONLY */
++	struct work_struct ch_work;	/* MPC ONLY */
+ 	/*
+ 	 * TX queue for collecting skb's during busy.
+ 	 */
+@@ -188,7 +189,7 @@ struct channel {
+ 	fsm_timer		sweep_timer;
+ 	struct sk_buff_head	sweep_queue;
+ 	struct th_header	*discontact_th;
+-	struct tasklet_struct	ch_disc_tasklet;
++	struct work_struct 	ch_disc_work;
+ 	/* MPC ONLY section end */
  
--	struct tasklet_struct sdma_sw_clean_up_task
-+	struct work_struct sdma_sw_clean_up_task
- 		____cacheline_aligned_in_smp;
+ 	int retry;		/* retry counter for misc. operations */
+diff --git a/drivers/s390/net/ctcm_mpc.c b/drivers/s390/net/ctcm_mpc.c
+index 9e580ef69bda..0b7ed15ce29d 100644
+--- a/drivers/s390/net/ctcm_mpc.c
++++ b/drivers/s390/net/ctcm_mpc.c
+@@ -588,7 +588,7 @@ void ctc_mpc_flow_control(int port_num, int flowc)
+ 			fsm_newstate(grp->fsm, MPCG_STATE_READY);
+ 			/* ensure any data that has accumulated */
+ 			/* on the io_queue will now be sen t	*/
+-			tasklet_schedule(&rch->ch_tasklet);
++			queue_work(system_bh_wq, &rch->ch_work);
+ 		}
+ 		/* possible race condition			*/
+ 		if (mpcg_state == MPCG_STATE_READY) {
+@@ -847,7 +847,7 @@ static void mpc_action_go_ready(fsm_instance *fsm, int event, void *arg)
+ 	grp->out_of_sequence = 0;
+ 	grp->estconn_called = 0;
  
- 	wait_queue_head_t state_wait; /* for state_wanted */
-@@ -1068,8 +1069,8 @@ struct qib_devdata {
- 	u8 psxmitwait_supported;
- 	/* cycle length of PS* counters in HW (in picoseconds) */
- 	u16 psxmitwait_check_rate;
--	/* high volume overflow errors defered to tasklet */
--	struct tasklet_struct error_tasklet;
-+	/* high volume overflow errors defered to work */
-+	struct work_struct error_work;
+-	tasklet_hi_schedule(&grp->mpc_tasklet2);
++	queue_work(system_bh_highpri_wq, &grp->mpc_work2);
  
- 	int assigned_node_id; /* NUMA node closest to HCA */
- };
-diff --git a/drivers/infiniband/hw/qib/qib_iba7322.c b/drivers/infiniband/hw/qib/qib_iba7322.c
-index f93906d8fc09..c3325071f2b3 100644
---- a/drivers/infiniband/hw/qib/qib_iba7322.c
-+++ b/drivers/infiniband/hw/qib/qib_iba7322.c
-@@ -46,6 +46,7 @@
- #include <rdma/ib_smi.h>
- #ifdef CONFIG_INFINIBAND_QIB_DCA
- #include <linux/dca.h>
-+#include <linux/workqueue.h>
- #endif
- 
- #include "qib.h"
-@@ -1711,9 +1712,9 @@ static noinline void handle_7322_errors(struct qib_devdata *dd)
  	return;
  }
- 
--static void qib_error_tasklet(struct tasklet_struct *t)
-+static void qib_error_work(struct work_struct *t)
- {
--	struct qib_devdata *dd = from_tasklet(dd, t, error_tasklet);
-+	struct qib_devdata *dd = from_work(dd, t, error_work);
- 
- 	handle_7322_errors(dd);
- 	qib_write_kreg(dd, kr_errmask, dd->cspec->errormask);
-@@ -3001,7 +3002,7 @@ static noinline void unlikely_7322_intr(struct qib_devdata *dd, u64 istat)
- 		unknown_7322_gpio_intr(dd);
- 	if (istat & QIB_I_C_ERROR) {
- 		qib_write_kreg(dd, kr_errmask, 0ULL);
--		tasklet_schedule(&dd->error_tasklet);
-+		queue_work(system_bh_wq, &dd->error_work);
- 	}
- 	if (istat & INT_MASK_P(Err, 0) && dd->rcd[0])
- 		handle_7322_p_errors(dd->rcd[0]->ppd);
-@@ -3515,7 +3516,7 @@ static void qib_setup_7322_interrupt(struct qib_devdata *dd, int clearpend)
- 	for (i = 0; i < ARRAY_SIZE(redirect); i++)
- 		qib_write_kreg(dd, kr_intredirect + i, redirect[i]);
- 	dd->cspec->main_int_mask = mask;
--	tasklet_setup(&dd->error_tasklet, qib_error_tasklet);
-+	INIT_WORK(&dd->error_work, qib_error_work);
+@@ -1213,16 +1213,16 @@ static void ctcmpc_unpack_skb(struct channel *ch, struct sk_buff *pskb)
  }
  
- /**
-diff --git a/drivers/infiniband/hw/qib/qib_rc.c b/drivers/infiniband/hw/qib/qib_rc.c
-index a1c20ffb4490..79e31921e384 100644
---- a/drivers/infiniband/hw/qib/qib_rc.c
-+++ b/drivers/infiniband/hw/qib/qib_rc.c
-@@ -593,7 +593,7 @@ int qib_make_rc_req(struct rvt_qp *qp, unsigned long *flags)
+ /*
+- * tasklet helper for mpc's skb unpacking.
++ * work helper for mpc's skb unpacking.
   *
-  * This is called from qib_rc_rcv() and qib_kreceive().
-  * Note that RDMA reads and atomics are handled in the
-- * send side QP state and tasklet.
-+ * send side QP state and work.
+  * ch		The channel to work on.
+  * Allow flow control back pressure to occur here.
+  * Throttling back channel can result in excessive
+  * channel inactivity and system deact of channel
   */
- void qib_send_rc_ack(struct rvt_qp *qp)
+-void ctcmpc_bh(unsigned long thischan)
++void ctcmpc_bh(struct work_struct *t)
  {
-@@ -670,7 +670,7 @@ void qib_send_rc_ack(struct rvt_qp *qp)
- 		/*
- 		 * We are out of PIO buffers at the moment.
- 		 * Pass responsibility for sending the ACK to the
--		 * send tasklet so that when a PIO buffer becomes
-+		 * send work so that when a PIO buffer becomes
- 		 * available, the ACK is sent ahead of other outgoing
- 		 * packets.
- 		 */
-@@ -715,7 +715,7 @@ void qib_send_rc_ack(struct rvt_qp *qp)
- 		qp->s_nak_state = qp->r_nak_state;
- 		qp->s_ack_psn = qp->r_ack_psn;
- 
--		/* Schedule the send tasklet. */
-+		/* Schedule the send work. */
- 		qib_schedule_send(qp);
+-	struct channel	  *ch	= (struct channel *)thischan;
++	struct channel	  *ch	= from_work(ch, t, ch_work);
+ 	struct sk_buff	  *skb;
+ 	struct net_device *dev	= ch->netdev;
+ 	struct ctcm_priv  *priv	= dev->ml_priv;
+@@ -1380,7 +1380,7 @@ static void mpc_action_go_inop(fsm_instance *fi, int event, void *arg)
+ 	case MPCG_STATE_FLOWC:
+ 	case MPCG_STATE_READY:
+ 	default:
+-		tasklet_hi_schedule(&wch->ch_disc_tasklet);
++		queue_work(system_bh_wq, &wch->ch_disc_work);
  	}
- unlock:
-@@ -806,7 +806,7 @@ static void reset_psn(struct rvt_qp *qp, u32 psn)
- 	qp->s_psn = psn;
- 	/*
- 	 * Set RVT_S_WAIT_PSN as qib_rc_complete() may start the timer
--	 * asynchronously before the send tasklet can get scheduled.
-+	 * asynchronously before the send work can get scheduled.
- 	 * Doing it in qib_make_rc_req() is too late.
- 	 */
- 	if ((qib_cmp24(qp->s_psn, qp->s_sending_hpsn) <= 0) &&
-@@ -1292,7 +1292,7 @@ static void qib_rc_rcv_resp(struct qib_ibport *ibp,
- 		    (qib_cmp24(qp->s_sending_psn, qp->s_sending_hpsn) <= 0)) {
  
- 			/*
--			 * If send tasklet not running attempt to progress
-+			 * If send work not running attempt to progress
- 			 * SDMA queue.
- 			 */
- 			if (!(qp->s_flags & RVT_S_BUSY)) {
-@@ -1629,7 +1629,7 @@ static int qib_rc_rcv_error(struct ib_other_headers *ohdr,
- 	case OP(FETCH_ADD): {
- 		/*
- 		 * If we didn't find the atomic request in the ack queue
--		 * or the send tasklet is already backed up to send an
-+		 * or the send work is already backed up to send an
- 		 * earlier entry, we can ignore this request.
- 		 */
- 		if (!e || e->opcode != (u8) opcode || old_req)
-@@ -1996,7 +1996,7 @@ void qib_rc_rcv(struct qib_ctxtdata *rcd, struct ib_header *hdr,
- 		qp->r_nak_state = 0;
- 		qp->r_head_ack_queue = next;
+ 	grp->xid2_tgnum = 0;
+diff --git a/drivers/s390/net/ctcm_mpc.h b/drivers/s390/net/ctcm_mpc.h
+index da41b26f76d1..735bea5d565a 100644
+--- a/drivers/s390/net/ctcm_mpc.h
++++ b/drivers/s390/net/ctcm_mpc.h
+@@ -13,6 +13,7 @@
  
--		/* Schedule the send tasklet. */
-+		/* Schedule the send work. */
- 		qp->s_flags |= RVT_S_RESP_PENDING;
- 		qib_schedule_send(qp);
- 
-@@ -2059,7 +2059,7 @@ void qib_rc_rcv(struct qib_ctxtdata *rcd, struct ib_header *hdr,
- 		qp->r_nak_state = 0;
- 		qp->r_head_ack_queue = next;
- 
--		/* Schedule the send tasklet. */
-+		/* Schedule the send work. */
- 		qp->s_flags |= RVT_S_RESP_PENDING;
- 		qib_schedule_send(qp);
- 
-diff --git a/drivers/infiniband/hw/qib/qib_ruc.c b/drivers/infiniband/hw/qib/qib_ruc.c
-index 1fa21938f310..f44a2a8b4b1e 100644
---- a/drivers/infiniband/hw/qib/qib_ruc.c
-+++ b/drivers/infiniband/hw/qib/qib_ruc.c
-@@ -257,7 +257,7 @@ void _qib_do_send(struct work_struct *work)
-  * @qp: pointer to the QP
-  *
-  * Process entries in the send work queue until credit or queue is
-- * exhausted.  Only allow one CPU to send a packet per QP (tasklet).
-+ * exhausted.  Only allow one CPU to send a packet per QP (work).
-  * Otherwise, two threads could send packets out of order.
-  */
- void qib_do_send(struct rvt_qp *qp)
-@@ -299,7 +299,7 @@ void qib_do_send(struct rvt_qp *qp)
- 			spin_unlock_irqrestore(&qp->s_lock, flags);
- 			/*
- 			 * If the packet cannot be sent now, return and
--			 * the send tasklet will be woken up later.
-+			 * the send work will be woken up later.
- 			 */
- 			if (qib_verbs_send(qp, priv->s_hdr, qp->s_hdrwords,
- 					   qp->s_cur_sge, qp->s_cur_size))
-diff --git a/drivers/infiniband/hw/qib/qib_sdma.c b/drivers/infiniband/hw/qib/qib_sdma.c
-index 5e86cbf7d70e..facb3964d2ec 100644
---- a/drivers/infiniband/hw/qib/qib_sdma.c
-+++ b/drivers/infiniband/hw/qib/qib_sdma.c
-@@ -34,6 +34,7 @@
- #include <linux/spinlock.h>
- #include <linux/netdevice.h>
- #include <linux/moduleparam.h>
+ #include <linux/interrupt.h>
+ #include <linux/skbuff.h>
 +#include <linux/workqueue.h>
+ #include "fsm.h"
  
- #include "qib.h"
- #include "qib_common.h"
-@@ -62,7 +63,7 @@ static void sdma_get(struct qib_sdma_state *);
- static void sdma_put(struct qib_sdma_state *);
- static void sdma_set_state(struct qib_pportdata *, enum qib_sdma_states);
- static void sdma_start_sw_clean_up(struct qib_pportdata *);
--static void sdma_sw_clean_up_task(struct tasklet_struct *);
-+static void sdma_sw_clean_up_task(struct work_struct *);
- static void unmap_desc(struct qib_pportdata *, unsigned);
+ /*
+@@ -156,8 +157,8 @@ struct mpcg_info {
+ };
  
- static void sdma_get(struct qib_sdma_state *ss)
-@@ -119,9 +120,9 @@ static void clear_sdma_activelist(struct qib_pportdata *ppd)
+ struct mpc_group {
+-	struct tasklet_struct mpc_tasklet;
+-	struct tasklet_struct mpc_tasklet2;
++	struct work_struct mpc_work;
++	struct work_struct mpc_work2;
+ 	int	changed_side;
+ 	int	saved_state;
+ 	int	channels_terminating;
+@@ -233,6 +234,6 @@ void mpc_group_ready(unsigned long adev);
+ void mpc_channel_action(struct channel *ch, int direction, int action);
+ void mpc_action_send_discontact(unsigned long thischan);
+ void mpc_action_discontact(fsm_instance *fi, int event, void *arg);
+-void ctcmpc_bh(unsigned long thischan);
++void ctcmpc_bh(struct work_struct *t);
+ #endif
+ /* --- This is the END my friend --- */
+diff --git a/drivers/s390/net/lcs.c b/drivers/s390/net/lcs.c
+index 25d4e6376591..751b7b212c91 100644
+--- a/drivers/s390/net/lcs.c
++++ b/drivers/s390/net/lcs.c
+@@ -49,7 +49,7 @@ static struct device *lcs_root_dev;
+ /*
+  * Some prototypes.
+  */
+-static void lcs_tasklet(unsigned long);
++static void lcs_work(struct work_struct *);
+ static void lcs_start_kernel_thread(struct work_struct *);
+ static void lcs_get_frames_cb(struct lcs_channel *, struct lcs_buffer *);
+ #ifdef CONFIG_IP_MULTICAST
+@@ -140,8 +140,8 @@ static void
+ lcs_cleanup_channel(struct lcs_channel *channel)
+ {
+ 	LCS_DBF_TEXT(3, setup, "cleanch");
+-	/* Kill write channel tasklets. */
+-	tasklet_kill(&channel->irq_tasklet);
++	/* Kill write channel works. */
++	cancel_work_sync(&channel->irq_work);
+ 	/* Free channel buffers. */
+ 	lcs_free_channel(channel);
+ }
+@@ -244,9 +244,8 @@ lcs_setup_read(struct lcs_card *card)
+ 	LCS_DBF_TEXT(3, setup, "initread");
+ 
+ 	lcs_setup_read_ccws(card);
+-	/* Initialize read channel tasklet. */
+-	card->read.irq_tasklet.data = (unsigned long) &card->read;
+-	card->read.irq_tasklet.func = lcs_tasklet;
++	/* Initialize read channel work. */
++	INIT_WORK(card->read.irq_work, lcs_work);
+ 	/* Initialize waitqueue. */
+ 	init_waitqueue_head(&card->read.wait_q);
+ }
+@@ -290,9 +289,8 @@ lcs_setup_write(struct lcs_card *card)
+ 	LCS_DBF_TEXT(3, setup, "initwrit");
+ 
+ 	lcs_setup_write_ccws(card);
+-	/* Initialize write channel tasklet. */
+-	card->write.irq_tasklet.data = (unsigned long) &card->write;
+-	card->write.irq_tasklet.func = lcs_tasklet;
++	/* Initialize write channel work. */
++	INIT_WORK(card->write.irq_work, lcs_work);
+ 	/* Initialize waitqueue. */
+ 	init_waitqueue_head(&card->write.wait_q);
+ }
+@@ -1429,22 +1427,22 @@ lcs_irq(struct ccw_device *cdev, unsigned long intparm, struct irb *irb)
  	}
+ 	if (irb->scsw.cmd.fctl & SCSW_FCTL_CLEAR_FUNC)
+ 		channel->state = LCS_CH_STATE_CLEARED;
+-	/* Do the rest in the tasklet. */
+-	tasklet_schedule(&channel->irq_tasklet);
++	/* Do the rest in the work. */
++	queue_work(system_bh_wq, &channel->irq_work);
  }
  
--static void sdma_sw_clean_up_task(struct tasklet_struct *t)
-+static void sdma_sw_clean_up_task(struct work_struct *t)
+ /*
+- * Tasklet for IRQ handler
++ * Work for IRQ handler
+  */
+ static void
+-lcs_tasklet(unsigned long data)
++lcs_work(struct work_struct *t)
  {
--	struct qib_pportdata *ppd = from_tasklet(ppd, t,
-+	struct qib_pportdata *ppd = from_work(ppd, t,
- 						 sdma_sw_clean_up_task);
  	unsigned long flags;
+ 	struct lcs_channel *channel;
+ 	struct lcs_buffer *iob;
+ 	int buf_idx;
  
-@@ -188,7 +189,7 @@ static void sdma_sw_tear_down(struct qib_pportdata *ppd)
+-	channel = (struct lcs_channel *) data;
++	channel = from_work(channel, t, irq_work);
+ 	LCS_DBF_TEXT_(5, trace, "tlet%s", dev_name(&channel->ccwdev->dev));
  
- static void sdma_start_sw_clean_up(struct qib_pportdata *ppd)
- {
--	tasklet_hi_schedule(&ppd->sdma_sw_clean_up_task);
-+	queue_work(system_bh_highpri_wq, &ppd->sdma_sw_clean_up_task);
+ 	/* Check for processed buffers. */
+diff --git a/drivers/s390/net/lcs.h b/drivers/s390/net/lcs.h
+index a2699b70b050..66bc02e1d7e5 100644
+--- a/drivers/s390/net/lcs.h
++++ b/drivers/s390/net/lcs.h
+@@ -290,7 +290,7 @@ struct lcs_channel {
+ 	struct ccw_device *ccwdev;
+ 	struct ccw1 ccws[LCS_NUM_BUFFS + 1];
+ 	wait_queue_head_t wait_q;
+-	struct tasklet_struct irq_tasklet;
++	struct work_struct irq_work;
+ 	struct lcs_buffer iob[LCS_NUM_BUFFS];
+ 	int io_idx;
+ 	int buf_idx;
+diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
+index a0cce6872075..10ea95abc753 100644
+--- a/drivers/s390/net/qeth_core_main.c
++++ b/drivers/s390/net/qeth_core_main.c
+@@ -2911,7 +2911,7 @@ static int qeth_init_input_buffer(struct qeth_card *card,
+ 	}
+ 
+ 	/*
+-	 * since the buffer is accessed only from the input_tasklet
++	 * since the buffer is accessed only from the input_work
+ 	 * there shouldn't be a need to synchronize; also, since we use
+ 	 * the QETH_IN_BUF_REQUEUE_THRESHOLD we should never run  out off
+ 	 * buffers
+diff --git a/drivers/s390/scsi/zfcp_qdio.c b/drivers/s390/scsi/zfcp_qdio.c
+index 8cbc5e1711af..407590697c66 100644
+--- a/drivers/s390/scsi/zfcp_qdio.c
++++ b/drivers/s390/scsi/zfcp_qdio.c
+@@ -13,6 +13,7 @@
+ #include <linux/lockdep.h>
+ #include <linux/slab.h>
+ #include <linux/module.h>
++#include <linux/workqueue.h>
+ #include "zfcp_ext.h"
+ #include "zfcp_qdio.h"
+ 
+@@ -72,9 +73,9 @@ static void zfcp_qdio_int_req(struct ccw_device *cdev, unsigned int qdio_err,
+ 	zfcp_qdio_handler_error(qdio, "qdireq1", qdio_err);
  }
  
- static void sdma_set_state(struct qib_pportdata *ppd,
-@@ -437,7 +438,7 @@ int qib_setup_sdma(struct qib_pportdata *ppd)
+-static void zfcp_qdio_request_tasklet(struct tasklet_struct *tasklet)
++static void zfcp_qdio_request_work(struct work_struct *work)
+ {
+-	struct zfcp_qdio *qdio = from_tasklet(qdio, tasklet, request_tasklet);
++	struct zfcp_qdio *qdio = from_work(qdio, work, request_work);
+ 	struct ccw_device *cdev = qdio->adapter->ccw_device;
+ 	unsigned int start, error;
+ 	int completed;
+@@ -104,7 +105,7 @@ static void zfcp_qdio_request_timer(struct timer_list *timer)
+ {
+ 	struct zfcp_qdio *qdio = from_timer(qdio, timer, request_timer);
  
- 	INIT_LIST_HEAD(&ppd->sdma_activelist);
+-	tasklet_schedule(&qdio->request_tasklet);
++	queue_work(system_bh_wq, &qdio->request_work);
+ }
  
--	tasklet_setup(&ppd->sdma_sw_clean_up_task, sdma_sw_clean_up_task);
-+	INIT_WORK(&ppd->sdma_sw_clean_up_task, sdma_sw_clean_up_task);
+ static void zfcp_qdio_int_resp(struct ccw_device *cdev, unsigned int qdio_err,
+@@ -158,15 +159,15 @@ static void zfcp_qdio_int_resp(struct ccw_device *cdev, unsigned int qdio_err,
+ 		zfcp_erp_adapter_reopen(qdio->adapter, 0, "qdires2");
+ }
  
- 	ret = dd->f_init_sdma_regs(ppd);
- 	if (ret)
-diff --git a/drivers/infiniband/sw/rdmavt/qp.c b/drivers/infiniband/sw/rdmavt/qp.c
-index e6203e26cc06..efe4689151c2 100644
---- a/drivers/infiniband/sw/rdmavt/qp.c
-+++ b/drivers/infiniband/sw/rdmavt/qp.c
-@@ -1306,7 +1306,7 @@ int rvt_error_qp(struct rvt_qp *qp, enum ib_wc_status err)
+-static void zfcp_qdio_irq_tasklet(struct tasklet_struct *tasklet)
++static void zfcp_qdio_irq_work(struct work_struct *work)
+ {
+-	struct zfcp_qdio *qdio = from_tasklet(qdio, tasklet, irq_tasklet);
++	struct zfcp_qdio *qdio = from_work(qdio, work, irq_work);
+ 	struct ccw_device *cdev = qdio->adapter->ccw_device;
+ 	unsigned int start, error;
+ 	int completed;
  
- 	rdi->driver_f.notify_error_qp(qp);
+ 	if (atomic_read(&qdio->req_q_free) < QDIO_MAX_BUFFERS_PER_Q)
+-		tasklet_schedule(&qdio->request_tasklet);
++		queue_work(system_bh_wq, &qdio->request_work);
  
--	/* Schedule the sending tasklet to drain the send work queue. */
-+	/* Schedule the sending work to drain the send work queue. */
- 	if (READ_ONCE(qp->s_last) != qp->s_head)
- 		rdi->driver_f.schedule_send(qp);
+ 	/* Check the Response Queue: */
+ 	completed = qdio_inspect_input_queue(cdev, 0, &start, &error);
+@@ -178,14 +179,14 @@ static void zfcp_qdio_irq_tasklet(struct tasklet_struct *tasklet)
  
+ 	if (qdio_start_irq(cdev))
+ 		/* More work pending: */
+-		tasklet_schedule(&qdio->irq_tasklet);
++		queue_work(system_bh_wq, &qdio->irq_work);
+ }
+ 
+ static void zfcp_qdio_poll(struct ccw_device *cdev, unsigned long data)
+ {
+ 	struct zfcp_qdio *qdio = (struct zfcp_qdio *) data;
+ 
+-	tasklet_schedule(&qdio->irq_tasklet);
++	queue_work(system_bh_wq, &qdio->irq_work);
+ }
+ 
+ static struct qdio_buffer_element *
+@@ -315,7 +316,7 @@ int zfcp_qdio_send(struct zfcp_qdio *qdio, struct zfcp_qdio_req *q_req)
+ 
+ 	/*
+ 	 * This should actually be a spin_lock_bh(stat_lock), to protect against
+-	 * Request Queue completion processing in tasklet context.
++	 * Request Queue completion processing in work context.
+ 	 * But we can't do so (and are safe), as we always get called with IRQs
+ 	 * disabled by spin_lock_irq[save](req_q_lock).
+ 	 */
+@@ -339,7 +340,7 @@ int zfcp_qdio_send(struct zfcp_qdio *qdio, struct zfcp_qdio_req *q_req)
+ 	}
+ 
+ 	if (atomic_read(&qdio->req_q_free) <= 2 * ZFCP_QDIO_MAX_SBALS_PER_REQ)
+-		tasklet_schedule(&qdio->request_tasklet);
++		queue_work(system_bh_wq, &qdio->request_work);
+ 	else
+ 		timer_reduce(&qdio->request_timer,
+ 			     jiffies + msecs_to_jiffies(ZFCP_QDIO_REQUEST_SCAN_MSECS));
+@@ -406,8 +407,8 @@ void zfcp_qdio_close(struct zfcp_qdio *qdio)
+ 
+ 	wake_up(&qdio->req_q_wq);
+ 
+-	tasklet_disable(&qdio->irq_tasklet);
+-	tasklet_disable(&qdio->request_tasklet);
++	disable_work_sync(&qdio->irq_work);
++	disable_work_sync(&qdio->request_work);
+ 	del_timer_sync(&qdio->request_timer);
+ 	qdio_stop_irq(adapter->ccw_device);
+ 	qdio_shutdown(adapter->ccw_device, QDIO_FLAG_CLEANUP_USING_CLEAR);
+@@ -511,11 +512,11 @@ int zfcp_qdio_open(struct zfcp_qdio *qdio)
+ 	atomic_or(ZFCP_STATUS_ADAPTER_QDIOUP, &qdio->adapter->status);
+ 
+ 	/* Enable processing for Request Queue completions: */
+-	tasklet_enable(&qdio->request_tasklet);
++	enable_and_queue_work(system_bh_wq, &qdio->request_work);
+ 	/* Enable processing for QDIO interrupts: */
+-	tasklet_enable(&qdio->irq_tasklet);
++	enable_and_queue_work(system_bh_wq, &qdio->irq_work);
+ 	/* This results in a qdio_start_irq(): */
+-	tasklet_schedule(&qdio->irq_tasklet);
++	queue_work(system_bh_wq, &qdio->irq_work);
+ 
+ 	zfcp_qdio_shost_update(adapter, qdio);
+ 
+@@ -534,8 +535,8 @@ void zfcp_qdio_destroy(struct zfcp_qdio *qdio)
+ 	if (!qdio)
+ 		return;
+ 
+-	tasklet_kill(&qdio->irq_tasklet);
+-	tasklet_kill(&qdio->request_tasklet);
++	cancel_work_sync(&qdio->irq_work);
++	cancel_work_sync(&qdio->request_work);
+ 
+ 	if (qdio->adapter->ccw_device)
+ 		qdio_free(qdio->adapter->ccw_device);
+@@ -563,10 +564,10 @@ int zfcp_qdio_setup(struct zfcp_adapter *adapter)
+ 	spin_lock_init(&qdio->req_q_lock);
+ 	spin_lock_init(&qdio->stat_lock);
+ 	timer_setup(&qdio->request_timer, zfcp_qdio_request_timer, 0);
+-	tasklet_setup(&qdio->irq_tasklet, zfcp_qdio_irq_tasklet);
+-	tasklet_setup(&qdio->request_tasklet, zfcp_qdio_request_tasklet);
+-	tasklet_disable(&qdio->irq_tasklet);
+-	tasklet_disable(&qdio->request_tasklet);
++	INIT_WORK(&qdio->irq_work, zfcp_qdio_irq_work);
++	INIT_WORK(&qdio->request_work, zfcp_qdio_request_work);
++	disable_work_sync(&qdio->irq_work);
++	disable_work_sync(&qdio->request_work);
+ 
+ 	adapter->qdio = qdio;
+ 	return 0;
+@@ -580,7 +581,7 @@ int zfcp_qdio_setup(struct zfcp_adapter *adapter)
+  * wrapper function sets a flag to ensure hardware logging is only
+  * triggered once before going through qdio shutdown.
+  *
+- * The triggers are always run from qdio tasklet context, so no
++ * The triggers are always run from qdio work context, so no
+  * additional synchronization is necessary.
+  */
+ void zfcp_qdio_siosl(struct zfcp_adapter *adapter)
+diff --git a/drivers/s390/scsi/zfcp_qdio.h b/drivers/s390/scsi/zfcp_qdio.h
+index 8f7d2ae94441..ce92d2378b98 100644
+--- a/drivers/s390/scsi/zfcp_qdio.h
++++ b/drivers/s390/scsi/zfcp_qdio.h
+@@ -11,6 +11,7 @@
+ #define ZFCP_QDIO_H
+ 
+ #include <linux/interrupt.h>
++#include <linux/workqueue.h>
+ #include <asm/qdio.h>
+ 
+ #define ZFCP_QDIO_SBALE_LEN	PAGE_SIZE
+@@ -30,8 +31,8 @@
+  * @req_q_util: used for accounting
+  * @req_q_full: queue full incidents
+  * @req_q_wq: used to wait for SBAL availability
+- * @irq_tasklet: used for QDIO interrupt processing
+- * @request_tasklet: used for Request Queue completion processing
++ * @irq_work: used for QDIO interrupt processing
++ * @request_work: used for Request Queue completion processing
+  * @request_timer: used to trigger the Request Queue completion processing
+  * @adapter: adapter used in conjunction with this qdio structure
+  * @max_sbale_per_sbal: qdio limit per sbal
+@@ -48,8 +49,8 @@ struct zfcp_qdio {
+ 	u64			req_q_util;
+ 	atomic_t		req_q_full;
+ 	wait_queue_head_t	req_q_wq;
+-	struct tasklet_struct	irq_tasklet;
+-	struct tasklet_struct	request_tasklet;
++	struct work_struct 	irq_work;
++	struct work_struct 	request_work;
+ 	struct timer_list	request_timer;
+ 	struct zfcp_adapter	*adapter;
+ 	u16			max_sbale_per_sbal;
 -- 
 2.17.1
 
