@@ -1,194 +1,142 @@
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F00914F9CC;
-	Wed, 27 Mar 2024 19:00:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A67B137C2A
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 19:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711566044; cv=none; b=DglguzQ2TCXF9Agl9ljH3choP2sUZz5uLVSPYHLit+zMnxS1WH0P0YstkO/lZLZZmhpyDjuDjqosCYC1SXW1PUOl2JGBOT+pBdehUc2DIWIgfnHWHLZkhLnTR4rVe4+m9scic+Ea8HOHUc1z3WfOrVU71M6a47O/8/lnAgxhXVQ=
+	t=1711566076; cv=none; b=Rg5ubYmiLQXsTeM5HGduiZGII6gKvgP4jYUM2xDaC5HVVTlQ4TNHUQYlaxgJ7dP+ur2YfFZ5yVR5a0ESfwUKpCe+wUPK9Iis4U55NtVq8Fj8Tgij/7Yhk8FkXVjSVw04v13Km1qXcLWWPo+gXAkHCB+/iDq+fOsXPaaZwaXjPuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711566044; c=relaxed/simple;
-	bh=tFY3qsvVbT0Zq995oHAN6t96RnHL9EvsVFbgj+YDy+g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S3DcemRbkJ3GH0pQHQce3u2ONGGJ7oQFx/6Bw46rSpqg2NULnGmMtJEgXXNa4TbOqDBgJYP075spOphQOw6tsKb07gAvG4+ib/VeGz5jFbV0Q/RiwFb/FE3+0dGKgFcinbHgnOKfvYKDe/H6HNWYMlAEdfqtvo4qzcMlLo0alRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CeiqN3GL; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711566076; c=relaxed/simple;
+	bh=0xDg5IGU2fptrvRGCEYpwmMvi+bDQMQ2MpEW+h2oemg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mx1egpGFWjSyQ4ty6uKpnN66+l3QTA17q6l29CaC5/TFqSwZzTPdQ9X7VueXnev4AgUkqM462fXcoZgzmYYs76kr3C+OaTXPd6rHE3g/lXfupCnUfrZqcLRriGWA0RlYeAm1XN115Wy/5+KbtaV7mwWvTOsZNePTDn+oysdUhyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=Dkmp2OPr; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CeiqN3GL"
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-4d42ea640f0so60802e0c.3;
-        Wed, 27 Mar 2024 12:00:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="Dkmp2OPr"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-42f2d02fbdeso546461cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 12:01:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711566038; x=1712170838; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Hins2IPDwZVL8ICx6pFRq72ob96M45mjuvu0W81u9V0=;
-        b=CeiqN3GLsRsUOJK4+aLf49cMo4cKcat9ifWoiivgMElMSzsMIHxPT9A6vgiPp/gL8D
-         60OuqrRRhiIARL8A6ZYviCQF+J5TeJETNCoqzffV4VW/zer+mgdlL+3AXc/i40RBQcOu
-         NzG7S5+tCA+bsyyTaThSsDUawT2C47gdjtLDBWSldiY8nhr9bE/CqIYx0Ykpi9tMAf4X
-         CyNaOA0jTZPzXFeoMKnipOMGYlsAn2mXzKja7zebAnOcjsCeBjMMrp3NzNomk/v6rAiZ
-         WQl9Yb2546CRWqGm8/DXkynMye5UP/vcmdqZf0VFWHqGzYnP3YEgvHE8VZ8cgLIPbBLP
-         H5ww==
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1711566073; x=1712170873; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8GxQ/m2i2KHb6JEyfIRJnzrg7z0UGo5xSQekII3ANKE=;
+        b=Dkmp2OPrfVlMpBownJn590M/pOiTyrJCvBGvNrgQ4CsZTgCpCdfMMpsCBWjSVudNvB
+         wptOaFKHye1DAmUY+VLmPuB9riWZmQ3sDY98YQ/MrarGdPRywrpZx9qGJV0MnGaNJFiB
+         ZqeNjdSZSWXLvbtTDn/cYsXnkTJlmvGrq+3M0Sk9v3PgyEgKoBO8ILAygyw5EGj1SyH5
+         P/WYomzED5rqLYG+G8iQrKbJawJses3HZSYAqSxXk1ZlFsX8kRwVPzdFyVIF9IExJ5+m
+         kAz64j2dJWxxwrI7hQWlQFPlYmEmN4p6OryOO1I9TEXjCDd0iqqAzISUTLN5C8yhVpy/
+         aisA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711566038; x=1712170838;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Hins2IPDwZVL8ICx6pFRq72ob96M45mjuvu0W81u9V0=;
-        b=cIbvya408KtjwiLTo1nM7ggVJdHfQH6J+NdtXbgcfzOklf+ynh+rlZkZkjb0O5jvmD
-         uE6mGCgjjNWBh2oWw58IjeXuDL78XEhNH3TAgtfR6EyMf81z8+A067L7K65gh2QJjHIW
-         cPbulpbo6/B4cScHP0XTyk+7UZzrLcbDKx3GjfQ5K7KHb6gyqFdCTT/LdR5fDHva7kFz
-         jOztUGdhp31Pdy+2x55/1jhBwZOKJAKyajZL6COgpsRqj4dlGx/0XINxvjHc7TLKcKRX
-         ugKQFSC/bLPjhWM+m53LGW0jTQHY3I7IwiW+WmiR4aQ1d8XUG06oCC0g6/6w7NjrqfJI
-         5VgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVcHhoYzM5hT6FQeZvim50X92GqHKGDRXt/UiT6H0ycL4a79Zzwpa9ilmHtdajBWnQPSmbhMeXzyC6TWkWPzI8cF/eJJKrOZya/SS5qO1XFEYBxuzqjtGeFGwIwgd70ruWJvazzGg6nQkCAJw0rpcU2FTIzORRTm6oSlR+yXUCxwH70Rh6EgK3Z/V08SSM5dMlok4kJ8o6oHBpuqhHaDpKYdLUfxFz9hg==
-X-Gm-Message-State: AOJu0YyCSKoaVOvzx/u+4w5akD5I7oqjrvrkK2tXv3h5eGccu45fljx7
-	D0CXUzrutzCljjeonWim7BdKgn6vWAOt8amiH29y+Ctnpn/V7xIrXm/GTDorSrzNSaO6bIwtyYX
-	oijGwnDFNapDAlCsvhTu8Me0CWa4=
-X-Google-Smtp-Source: AGHT+IHWbdqtpnoguZT9P+DnYXrJ3uP4UXxPjR/3Aad87Vu+DiiH0+DFP6s2lN+TdFl78boCV7iVbRem4fBppekeuj0=
-X-Received: by 2002:a05:6122:4595:b0:4c0:2d32:612f with SMTP id
- de21-20020a056122459500b004c02d32612fmr1018877vkb.15.1711566036698; Wed, 27
- Mar 2024 12:00:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711566073; x=1712170873;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8GxQ/m2i2KHb6JEyfIRJnzrg7z0UGo5xSQekII3ANKE=;
+        b=DFJ+oBCZ2lBVWmZYQKBwEIn8cyCOMWqr8C2lxelyRRTDrgpZ0zreHQ/pxnGyFP0EYA
+         szbpOETxbTQpuNLfdMeVharJzalmg+ZYA4hBRXmDT/qT4YqoRriIvK3+9yjYdelMCGui
+         ELgg2YkPOD5QZuvHLrvF4SoMUO8PluDAmIQP2UWnWlOLzozg1JTphSIqOp7P5B3ICfsf
+         5h14+lZ1jrxXVi/GhwekCpTO6li8QS0mIqkM5IbVwdgKy5LaC0TGxyXDl9q8McjpSGyv
+         a2YCfHvcgreZGVuVfv28Zw3vb+zwZ0uLTKQozX/+K02fDrVZqxk/jHMQQlRjwTE+4aP/
+         NAOw==
+X-Forwarded-Encrypted: i=1; AJvYcCW4peG6jtMcQMQm2dRVAUZYaxc2hhGwbXWELXNDtT0Wa6/+7NKv4YmQQSdM5h3S7SHXuBuHo7zBVzju09TMGGy1SawD7wQ0NNzEMzKp
+X-Gm-Message-State: AOJu0Yx44zTYFTIFuFQzQ8K59tFbZa6E6wmHckXVi5/XSsbR75dA2Dfm
+	RnURMK51o3s3o2OzR7QKjNDpj0dUzSJNL7/q3TujA6Yru3jhxFIGAtXa29eHLxo=
+X-Google-Smtp-Source: AGHT+IEMWc0z3NWlQR8No9ANDoskQvZ+0Bj532IQLCTNjDCCjXJTlv4aoJ+acHAsX68VVMDqZgNiCg==
+X-Received: by 2002:a0c:f085:0:b0:690:734e:50c9 with SMTP id g5-20020a0cf085000000b00690734e50c9mr540594qvk.24.1711566073038;
+        Wed, 27 Mar 2024 12:01:13 -0700 (PDT)
+Received: from localhost (2603-7000-0c01-2716-da5e-d3ff-fee7-26e7.res6.spectrum.com. [2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with ESMTPSA id 2-20020a0562140d6200b0069778761fb4sm154033qvs.73.2024.03.27.12.01.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Mar 2024 12:01:12 -0700 (PDT)
+Date: Wed, 27 Mar 2024 15:01:11 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Mel Gorman <mgorman@techsingularity.net>, Zi Yan <ziy@nvidia.com>,
+	"Huang, Ying" <ying.huang@intel.com>,
+	David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] mm: page_alloc: batch vmstat updates in expand()
+Message-ID: <20240327190111.GC7597@cmpxchg.org>
+References: <20240320180429.678181-1-hannes@cmpxchg.org>
+ <20240320180429.678181-11-hannes@cmpxchg.org>
+ <b5b09acc-8bca-4e8c-82d4-6542fc7e9aec@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326222844.1422948-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240326222844.1422948-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240327172439.GA3664500-robh@kernel.org>
-In-Reply-To: <20240327172439.GA3664500-robh@kernel.org>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Wed, 27 Mar 2024 18:58:53 +0000
-Message-ID: <CA+V-a8t5KyDZ3FCP2GqYwK8AY_x0++HB471KxQgAbPdLTVHzGw@mail.gmail.com>
-Subject: Re: [RFC PATCH 02/13] dt-bindings: pinctrl: renesas: Document
- RZ/V2H(P) SoC
-To: Rob Herring <robh@kernel.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b5b09acc-8bca-4e8c-82d4-6542fc7e9aec@suse.cz>
 
-Hi Rob,
+On Wed, Mar 27, 2024 at 09:54:01AM +0100, Vlastimil Babka wrote:
+> > @@ -1314,10 +1349,10 @@ static inline void expand(struct zone *zone, struct page *page,
+> >  		 * Corresponding page table entries will not be touched,
+> >  		 * pages will stay not present in virtual address space
+> >  		 */
+> > -		if (set_page_guard(zone, &page[size], high, migratetype))
+> > +		if (set_page_guard(zone, &page[size], high))
+> >  			continue;
+> >  
+> > -		add_to_free_list(&page[size], zone, high, migratetype);
+> > +		add_to_free_list(&page[size], zone, high, migratetype, false);
+> 
+> This is account_freepages() in the hot loop, what if we instead used
+> __add_to_free_list(), sum up nr_pages and called account_freepages() once
+> outside of the loop?
 
-Thank you for the review.
+How about this on top of the series? Could be folded into
+mm-page_alloc-consolidate-free-page-accounting, but for credit and
+bisectability (just in case) I think stand-alone makes sense.
 
-On Wed, Mar 27, 2024 at 5:24=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
-:
->
-> On Tue, Mar 26, 2024 at 10:28:33PM +0000, Prabhakar wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Add documentation for the pin controller found on the Renesas RZ/V2H(P)
-> > (R9A09G057) SoC. Compared to RZ/G2L family of SoCs there are slight
-> > differences on the RZ/V2H(P) SoC for pinmuxing.
-> >
-> > Also add 'renesas-rzv2h,output-impedance' property. Drive strength
-> > setting on RZ/V2H(P) depends on the different power rails which are
-> > coming out from the PMIC (connected via i2c). These power rails
-> > (required for drive strength) can be 1.2/1.8/3.3V.
-> >
-> > Pin are grouped into 4 groups,
-> >
-> > Group1: Impedance
-> > - 150/75/38/25 ohms (at 3.3 V)
-> > - 130/65/33/22 ohms (at 1.8 V)
-> >
-> > Group2: Impedance
-> > - 50/40/33/25 ohms (at 1.8 V)
-> >
-> > Group3: Impedance
-> > - 150/75/37.5/25 ohms (at 3.3 V)
-> > - 130/65/33/22 ohms (at 1.8 V)
-> >
-> > Group4: Impedance
-> > - 110/55/30/20 ohms (at 1.8 V)
-> > - 150/75/38/25 ohms (at 1.2 V)
-> >
-> > 'renesas-rzv2h,output-impedance' property as documented which can be
-> > [1, 2, 4, 6] indicates x Value strength.
->
-> Looks like the values are x1, x1.5, x3ish, x6...
->
-> >
-> > As the power rail information cannot be available very early in the
-> > boot process as 'renesas-rzv2h,output-impedance' property is added
-> > instead of reusing output-impedance-ohms property.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  .../pinctrl/renesas,rzg2l-pinctrl.yaml        | 22 +++++++++++++++----
-> >  1 file changed, 18 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pi=
-nctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctr=
-l.yaml
-> > index 881e992adca3..77f4fc7f4a21 100644
-> > --- a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.y=
-aml
-> > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.y=
-aml
-> > @@ -26,6 +26,7 @@ properties:
-> >                - renesas,r9a07g043-pinctrl # RZ/G2UL{Type-1,Type-2} and=
- RZ/Five
-> >                - renesas,r9a07g044-pinctrl # RZ/G2{L,LC}
-> >                - renesas,r9a08g045-pinctrl # RZ/G3S
-> > +              - renesas,r9a09g057-pinctrl # RZ/V2H(P)
-> >
-> >        - items:
-> >            - enum:
-> > @@ -66,10 +67,14 @@ properties:
-> >      maxItems: 1
-> >
-> >    resets:
-> > -    items:
-> > -      - description: GPIO_RSTN signal
-> > -      - description: GPIO_PORT_RESETN signal
-> > -      - description: GPIO_SPARE_RESETN signal
-> > +    oneOf:
-> > +      - items:
-> > +          - description: GPIO_RSTN signal
-> > +          - description: GPIO_PORT_RESETN signal
-> > +          - description: GPIO_SPARE_RESETN signal
-> > +      - items:
-> > +          - description: PFC main reset
-> > +          - description: Reset for the control register related to WDT=
-UDFCA and WDTUDFFCM pins
-> >
-> >  additionalProperties:
-> >    anyOf:
-> > @@ -111,6 +116,15 @@ additionalProperties:
-> >          output-high: true
-> >          output-low: true
-> >          line-name: true
-> > +        renesas-rzv2h,output-impedance:
->
-> 'renesas-rzv2h' is not a vendor.
->
-I will update this to "renesas,output-impedance".
+---
 
-> That should give you a warning if you actually used this somewhere.
->
-I did run dtbs_check with this property in the DTS and haven't seen
-any warning. Also now I included this property in the example node in
-the binding doc and seen no warnings reported by dt_binding_check too.
+From 361f5df28183d85c7718fe0b579438d3d58777be Mon Sep 17 00:00:00 2001
+From: Johannes Weiner <hannes@cmpxchg.org>
+Date: Wed, 27 Mar 2024 12:29:25 -0400
+Subject: [PATCH 3/3] mm: page_alloc: batch vmstat updates in expand()
 
-> > +          description: |
-> > +            Output impedance for pins on RZ/V2H(P) SoC.
-> > +            x1: Corresponds to 0 in IOLH register.
-> > +            x2: Corresponds to 1 in IOLH register.
-> > +            x4: Corresponds to 2 in IOLH register.
-> > +            x6: Corresponds to 3 in IOLH register.
->
-> Why not just use 0-3 for the values?
->
-Fine by me. I'll update this in the next version.
+expand() currently updates vmstat for every subpage. This is
+unnecessary, since they're all of the same zone and migratetype.
 
-Cheers,
-Prabhakar
+Count added pages locally, then do a single vmstat update.
+
+Suggested-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ mm/page_alloc.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 8987e8869f6d..13fe5c612fbe 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1341,6 +1341,7 @@ static inline void expand(struct zone *zone, struct page *page,
+ 	int low, int high, int migratetype)
+ {
+ 	unsigned long size = 1 << high;
++	unsigned long nr_added = 0;
+ 
+ 	while (high > low) {
+ 		high--;
+@@ -1356,9 +1357,11 @@ static inline void expand(struct zone *zone, struct page *page,
+ 		if (set_page_guard(zone, &page[size], high))
+ 			continue;
+ 
+-		add_to_free_list(&page[size], zone, high, migratetype, false);
++		__add_to_free_list(&page[size], zone, high, migratetype, false);
+ 		set_buddy_order(&page[size], high);
++		nr_added += size;
+ 	}
++	account_freepages(zone, nr_added, migratetype);
+ }
+ 
+ static void check_new_page_bad(struct page *page)
+-- 
+2.44.0
+
