@@ -1,130 +1,109 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www522.your-server.de (www522.your-server.de [195.201.215.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE86712D20E;
-	Wed, 27 Mar 2024 19:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D7214E2D9;
+	Wed, 27 Mar 2024 19:56:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.215.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711569217; cv=none; b=B+wH0NArVB61kwNi4K0QoxvYOowtsL7pm3t07jTcLV09s62tT+cBup2BtzQdPL4crduhz0iCVqr3WA/s5/tJ92v+uc+vf9sfVaeLsNY7l61tgY3KM+UtY3QW2lhRjAWeNPrIV2JD56bWuwXo3Ug1iYl3KeEEMXXtZRo41haBImI=
+	t=1711569404; cv=none; b=MY69trweyMw5UpcmDAirXtq6FEzB7oJ1Mh2FGXrrFgwt/EwDhSDIkYiGM+WSVi/XyLMy9Tbv8pe+q4cvzdgRIyVoW1KiGUuCXm4OCZBA/p7SY9wNkbbe8l20PW6aXJZNruVoA5Ng26cyEUrUmKD3o+cMYivSeQrqdi4+lktQJUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711569217; c=relaxed/simple;
-	bh=ljsJCTmbqL+1Z6c/Njgs93wJGruVEOG6LewDHWZFBDc=;
+	s=arc-20240116; t=1711569404; c=relaxed/simple;
+	bh=axd3a0fX0rgtyK/RmzGt3WlUIVH/eX2dB52K53T7X8A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cnfOO5CqIeLxCmWGZO7H51abLRgUAKiz+DtHlZ6gWMK6euSAkr5wQM091aGMGLDNFpqeWR7ONtWTV7kkSMW3tlnpAQF6ok0RV6eMN5733BO8RX9SGPZFi+yUhzL5dTnHh6qR1KOCbh3RynORpa0a91Hla87vF+ZQ6EmmR8I7qMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BBxovmex; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=I+9clCqLWt1uDKIxirFhgeWY4v5CKjltRDpXd2X91UcaaGnZqF5tUILNm2FawWGVlo5Ts1empcKMq8NmRQ6FgsKEwh6NjjCMyJ2NXr1JB5Ki1sjV7Ve5E9UTjJVbky10bsVlJu1dbzot0emRWTynk7z5TttLAfe4ivtxvdjq4OE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de; spf=pass smtp.mailfrom=folker-schwesinger.de; dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b=VR8kDsBc; arc=none smtp.client-ip=195.201.215.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=folker-schwesinger.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BBxovmex"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a4715d4c2cbso25575066b.1;
-        Wed, 27 Mar 2024 12:53:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711569214; x=1712174014; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qdNTF6Kva1P11bABP85E0dh07br2jNGfWJsQyRATEsM=;
-        b=BBxovmexgv30ZJIVg5EEmg+uWauTEJL69vbzUan6S9sbJaNDpenARGmsRA+rdRZavr
-         7C7VoxGMnl7d54noop4+DmQF/xpN6/7obKcUpdBpZaurnxVJJKCcahsSVvnj5Di7uzd1
-         NHPDH5X4A7tARUGSAY+6BCPP7N0qU7WXZ+r9DEzT1egYB60V3V1Qxe0di1Q0s6XmOU9z
-         lQZltl224I46JOXLQQgbH3DyT/ygt/nG6D/zSoWxn5XOfPbUWyVnnwnpUIzzBhRIi6Qh
-         A+G4OCrN/HJrCHPYgbSEXqqzfXV2dANoBxP32OEkFu+VCL/FSxgUdKICKtpHf6ZbQhQ3
-         /J+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711569214; x=1712174014;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qdNTF6Kva1P11bABP85E0dh07br2jNGfWJsQyRATEsM=;
-        b=UXGT0mSqUOXlAsQzMq70a92xPsq9xUjfB1JITq1c+uHibznRN45p9UOKahYEi64keI
-         xl/qX/kHeqIg0D/ni3uzRFGU3OUsjhdp+Y57liMXmP8D3NMqs2VT6wsV+A9IGX7NM4f1
-         HyrrnTiNovohfXhkLwqNsGHmy/0BvKBn0+xOFGNBY09HYpjSBTBlGH6qyeinWHw9wZh4
-         PTj0sl818M02wjKHgh8mD+VKAlDRdvqaJ92SQjB7fP57ppRHHmf+5sRcna9TtsAWHs3E
-         jqyO/1VgM9q0dIRaFPyPYWTKwa/vMoS2Dp4wdRgi3yyLQBNOS9fNS9oFhRBtlR26e85Q
-         W4jw==
-X-Forwarded-Encrypted: i=1; AJvYcCUiJygnoIEYvHH8v1ugTetDDZnxNPv1yLwY10r9Phq4SjgU+Z1YIOEeSCOIpVyzyHdSLQ7+wLOjFkC8hrXwDu9iZzEs5eR5QurpdccD
-X-Gm-Message-State: AOJu0YzJrl/v21s7zuy/VPtaOnBzNZnmkvIaM7A5TuYtpk81IWYoWZZB
-	MWQ8T/BH2QNlhcB7w/O9y42jwUjJeTDz4TpR9Lxe7c+oS2zvlhPHonFitEdJkk0=
-X-Google-Smtp-Source: AGHT+IEJHCTAYc5wMgN6Si7Qw5l/pWCJQkkzN4bIwHlGrIGZr8/mrHXa8XC/hK8xrg65wMHL8M4lnw==
-X-Received: by 2002:a17:906:e59:b0:a4e:a7a:84e0 with SMTP id q25-20020a1709060e5900b00a4e0a7a84e0mr335504eji.34.1711569213895;
-        Wed, 27 Mar 2024 12:53:33 -0700 (PDT)
-Received: from jernej-laptop.localnet (86-58-6-171.dynamic.telemach.net. [86.58.6.171])
-        by smtp.gmail.com with ESMTPSA id z11-20020a1709060acb00b00a4733982ba9sm5757294ejf.160.2024.03.27.12.53.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 12:53:33 -0700 (PDT)
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Chen-Yu Tsai <wens@csie.org>, Samuel Holland <samuel@sholland.org>,
- John Watts <contact@jookia.org>
-Cc: linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
- John Watts <contact@jookia.org>
-Subject: Re: [PATCH] ASoC: sunxi: sun4i-i2s: Enable 32-bit audio formats
-Date: Wed, 27 Mar 2024 20:53:32 +0100
-Message-ID: <23447395.6Emhk5qWAg@jernej-laptop>
-In-Reply-To: <20240326-sunxi_s32-v1-1-899f71dcb1e6@jookia.org>
-References: <20240326-sunxi_s32-v1-1-899f71dcb1e6@jookia.org>
+	dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b="VR8kDsBc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=folker-schwesinger.de; s=default2212; h=Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
+	:Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=PbW/dVoNioC9H6nvXtciGc7SM7HI15MyzienCfKIkR4=; b=VR8kDsBcDbAEnaXTexmEIWas1t
+	b2KR+fJi/XsXdOE1V5MMnZVMxq+8uMaUz04wzmN+wb13IgLK02yZtNeDGVjG4pQ4+iBemvahrXXOK
+	a/xmDMbSeXX0Yk6BIByz4W0CW7/q17x1DsyiZ0cm3FVdQ4PC16h7Y09OoYOfY19fi6Y7aDtSX5eFZ
+	GE+u8lB2OrlJRt4fHmCWrFTJxLwXjnfRFFmmk9R14VMxi8vsH0qTPEAVsfnN49ILe0VQqDUYjC5mO
+	GSpfupQcYcfrrzfGw2j3qWsENzLylLIXG0vNrUkEsfp+VhUcE2LlHSjKbXnNC2QDJzSVRC+Anc4nD
+	Tu8HyuKw==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+	by www522.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <dev@folker-schwesinger.de>)
+	id 1rpYvT-000Isr-4F; Wed, 27 Mar 2024 20:27:07 +0100
+Received: from [185.209.196.215] (helo=homedev.localdomain)
+	by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <dev@folker-schwesinger.de>)
+	id 1rpYvS-000Iyc-EA; Wed, 27 Mar 2024 20:27:06 +0100
+From: Folker Schwesinger <dev@folker-schwesinger.de>
+To: Vinod Koul <vkoul@kernel.org>,
+	Yogesh Hegde <yogi.kernel@gmail.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Chris Ruehl <chris.ruehl@gtsys.com.hk>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Folker Schwesinger <dev@folker-schwesinger.de>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Christopher Obbard <chris.obbard@collabora.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH 2/2] arm64: dts: rockchip: Add enable-strobe-pulldown to emmc phy on ROCK 4C+
+Date: Wed, 27 Mar 2024 20:26:38 +0100
+Message-ID: <20240327192641.14220-3-dev@folker-schwesinger.de>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240327192641.14220-1-dev@folker-schwesinger.de>
+References: <20240327192641.14220-1-dev@folker-schwesinger.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: dev@folker-schwesinger.de
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27227/Wed Mar 27 09:33:27 2024)
 
-Dne torek, 26. marec 2024 ob 04:50:03 CET je John Watts napisal(a):
-> The I2S driver already supports and checks for 32-bit sample sizes,
-> so indicate this size is available for use in the DAI driver.
-> 
-> This change has been tested on the T113-S3, but it should work just
-> fine on older hardware as get_sr checks for sample size support
-> correctly according to each core's datasheet.
-> 
-> Signed-off-by: John Watts <contact@jookia.org>
-> ---
-> This patch enables support for 32-bit audio in the sunxi I2S driver.
-> 
-> I have only tested this on the Allwinner T113 but I'm fairly
-> certain it will work on older boards.
-> ---
->  sound/soc/sunxi/sun4i-i2s.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-> index a736f632bf0b..aeea852141c1 100644
-> --- a/sound/soc/sunxi/sun4i-i2s.c
-> +++ b/sound/soc/sunxi/sun4i-i2s.c
-> @@ -1103,7 +1103,8 @@ static const struct snd_soc_dai_ops sun4i_i2s_dai_ops = {
->  
->  #define SUN4I_FORMATS	(SNDRV_PCM_FMTBIT_S16_LE | \
->  			 SNDRV_PCM_FMTBIT_S20_LE | \
-> -			 SNDRV_PCM_FMTBIT_S24_LE)
-> +			 SNDRV_PCM_FMTBIT_S24_LE | \
-> +			 SNDRV_PCM_FMTBIT_S32_LE)
+Commit 8b5c2b45b8f0 disabled the internal pull-down for the strobe line
+causing I/O errors in HS400 mode for various eMMC modules.
 
-I wish it would be that simple. SUN4I_FORMATS is cross section of all I2S
-variants that are supported by this driver. If you check A10, you'll see that
-it doesn't support S32.
+Enable the internal strobe pull-down for the ROCK 4C+ board. Also re-enable
+HS400 mode, that was replaced with HS200 mode as a workaround for the
+stability issues in:
+2bd1d2dd808c ("arm64: dts: rockchip: Disable HS400 for eMMC on ROCK 4C+").
 
-If you want to add support for S32, you'll have to add new quirk for each
-variant.
+Fixes: 8b5c2b45b8f0 ("phy: rockchip: set pulldown for strobe line in dts")
+Signed-off-by: Folker Schwesinger <dev@folker-schwesinger.de>
+---
+ arch/arm64/boot/dts/rockchip/rk3399-rock-4c-plus.dts | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Best regards,
-Jernej
-
->  
->  static struct snd_soc_dai_driver sun4i_i2s_dai = {
->  	.capture = {
-> 
-> ---
-> base-commit: 72fb52fb0ac44b6a1edd9bc390e44bce3acccd26
-> change-id: 20240326-sunxi_s32-f2ab25b8e688
-> 
-> Best regards,
-> 
-
-
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-4c-plus.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-4c-plus.dts
+index 7baf9d1b22fd..972aea843afd 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rock-4c-plus.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-4c-plus.dts
+@@ -151,6 +151,7 @@ &cpu_b1 {
+ };
+ 
+ &emmc_phy {
++	rockchip,enable-strobe-pulldown;
+ 	status = "okay";
+ };
+ 
+@@ -549,7 +550,8 @@ &saradc {
+ &sdhci {
+ 	max-frequency = <150000000>;
+ 	bus-width = <8>;
+-	mmc-hs200-1_8v;
++	mmc-hs400-1_8v;
++	mmc-hs400-enhanced-strobe;
+ 	non-removable;
+ 	status = "okay";
+ };
+-- 
+2.44.0
 
