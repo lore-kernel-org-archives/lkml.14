@@ -1,125 +1,79 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from grilo.cascardo.info (trem.minaslivre.org [195.201.110.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77EB6381DD
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 09:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0468747F5C;
+	Wed, 27 Mar 2024 09:56:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.110.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711533361; cv=none; b=cV1Hv0qTKVnffmeFFWwLOcQMmfYHR9dMgCik65NaqzOS8tm2f3mXpufSnHm/p/p8JZhjgLfrYkuChqIvrwrOQX1RUq95k0w4ZdAA/Yj21pimWYbOJcq6Gts0slFSdAEV+PME/xPafaXh5V66BABi5xeri0pF/T+1gLSxUsd2fyU=
+	t=1711533378; cv=none; b=N5iYq7WeUsE9AShcPwRUPRsVwLtq5nskHZCX39bqXPYgbkVGs/8R0wLjtRuqh0COlc+QGOzi+afTsm2FY3OHPJaV+fjQopICIrARBuY4bCXcJMVkLwIGeEdfFRDspcviRIpN9ppbVf7FjPrrjPmv3zGDzIx/xx83bFrkhUSQGjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711533361; c=relaxed/simple;
-	bh=bsl5mlaY8cNqyw4oUG32H7euTa4u8AfSfG4rvl5y9Qw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BauzGEUGkIa6Jq9y6vAGAe4AZfmDCUZydKVrBTPqT3RA3r93qqzFdbVDFhMidGPZB0GjwTvbSUGyTiu7W7ENQM8DCA75qjpCt6DIAclvFZ68OsMBGXeTcKd2u7ohm3hjd8T8ajnjnE5SIBu6b702NTrv5Kc+4dHmm47zpB97oYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexus-software.ie; spf=none smtp.mailfrom=nexus-software.ie; dkim=pass (2048-bit key) header.d=nexus-software-ie.20230601.gappssmtp.com header.i=@nexus-software-ie.20230601.gappssmtp.com header.b=O9YMWmJx; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexus-software.ie
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nexus-software.ie
+	s=arc-20240116; t=1711533378; c=relaxed/simple;
+	bh=oZRj03f71Z6Mzs3OczjzQ0sW5FiStEjx1m5pPidYIQk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TMEnQ/sTFkQDm8HBuvrg6mZQ0Of7Td36aZ6DrEoMnPSeygkMOqbumSJMyV85Ebo4GKSEzIkjCAw7C90wkawQDWt5QE8aIGJhq/soYxIWYd0LbfUwnbCzkNlib9WlMPU/XD+bffgqbdD8fBycl+mK1d87K4GJf31MitvezIrF2hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=holoscopio.com; spf=pass smtp.mailfrom=holoscopio.com; dkim=pass (2048-bit key) header.d=holoscopio.com header.i=@holoscopio.com header.b=I7W44Pc+; arc=none smtp.client-ip=195.201.110.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=holoscopio.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=holoscopio.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nexus-software-ie.20230601.gappssmtp.com header.i=@nexus-software-ie.20230601.gappssmtp.com header.b="O9YMWmJx"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d29aad15a5so81610331fa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 02:55:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=nexus-software-ie.20230601.gappssmtp.com; s=20230601; t=1711533357; x=1712138157; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jSvnWidHd7x1wPI9eyKH1ULMOk/MMh1qH/IqJxdxFNI=;
-        b=O9YMWmJxyTmLmP4Q8HFMVUUm5LcC+0Z7AxIJToprD9IMmfh/KN2dsIdgnSAayv7Zx1
-         BrzSvWTykeYyGJgqHRM3mzLgLH6Qr7V0mZun6bkLCFybHLS7EB6rK08c6GK4gkPHmO95
-         w+5Z82RhLPmP/AcElwFRx/Pu0tnIWugG4dRbAuj1WSKtME4IWtbb8WLcsLlRrGeAM1u8
-         lAo9Xfy18nkxG82mYA3Jr+LuCkoOkOqrG0qzAb6+vuWRBRlNs0a0DKxNC/c/emBbcGtP
-         8gdSHT+qSrHCUUA0WlhCMGLA94d0j04nJoBgIxrvcL11n5AgR1KOGwDaJwqILQ2kosjN
-         z3HQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711533357; x=1712138157;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jSvnWidHd7x1wPI9eyKH1ULMOk/MMh1qH/IqJxdxFNI=;
-        b=gOdaws1+SW74cD2o3Pu3N79QSrx2MUAkagtRnRAn6eC2WNeRWYGreVrws5UmLEsbWH
-         sjb1BecTaEYWt0fb6LvTEDKNq9HMRujq/84TdrP3aFpgr194flLgHu8dMvmNPdWYVRK3
-         YWOQkP/v3WBCBq27SpAJrV/Z4IuK5pulPlR+BxKbSB86KRuxsCX1Q4SZ4Bf8mkueeaa6
-         gHjfakit8zt71EFkxDQBfMw3cP5cQWqjLwSZBzvUwK4uRbkFogMWiTzVmvG/wdiMeGMy
-         2ISfZc9iEcdOx4AK0U/H+BKPYznJv7fo4NzdJ4bt/ZbEpTIp5WKNnjoZE0vyYlTHi7We
-         6xfg==
-X-Forwarded-Encrypted: i=1; AJvYcCViwd85wJRs4GAbGt0gGDu7mHmDTP45y4b9rIw7JzITCmo8GXL6ljyJCyj8b6jA+QRvPh1FJZP1a1EquPtyKrVs8mfq9pgSCdYu/GGI
-X-Gm-Message-State: AOJu0YzTHFAUFbpfrfs7ANfOu2HdDFHetNR2UTAmSB5K3jcWWB04cljx
-	0qD2PQKVLTNSMdU5uMZ69E6CGjfP5sJOGQTHx4S0KHJ4xh5BITAKWiySWTKM960=
-X-Google-Smtp-Source: AGHT+IFw/7ZLAi36bN7TwpWrmHEI/IaB3nTNikltKHCbY/u3xwMKPK8WN26Ir2ty+IvIQZGG0TLPYA==
-X-Received: by 2002:a2e:b5ae:0:b0:2d6:f67a:cca9 with SMTP id f14-20020a2eb5ae000000b002d6f67acca9mr1150752ljn.33.1711533357297;
-        Wed, 27 Mar 2024 02:55:57 -0700 (PDT)
-Received: from [192.168.0.102] ([176.61.106.68])
-        by smtp.gmail.com with ESMTPSA id d8-20020a05600c3ac800b004149455335csm1532653wms.12.2024.03.27.02.55.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Mar 2024 02:55:56 -0700 (PDT)
-Message-ID: <072aacd2-fedf-485a-970e-a705748cc92e@nexus-software.ie>
-Date: Wed, 27 Mar 2024 09:55:55 +0000
+	dkim=pass (2048-bit key) header.d=holoscopio.com header.i=@holoscopio.com header.b="I7W44Pc+"
+Received: from siri.cascardo.eti.br (unknown [IPv6:2804:431:e7c4:d08f:6a17:29ff:fe00:4f38])
+	by grilo.cascardo.info (Postfix) with ESMTPSA id 22F3E206F1A;
+	Wed, 27 Mar 2024 06:48:09 -0300 (-03)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=holoscopio.com;
+	s=mail; t=1711532892;
+	bh=oZRj03f71Z6Mzs3OczjzQ0sW5FiStEjx1m5pPidYIQk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I7W44Pc+qYTAd1YSNmEfPHrZvFEzsjJgtVRtDUKvyrJBZjhs71t595lKUm+6bHrxB
+	 U2RCPrm9JEp2wGl/Dw6y9rEt7DgsbkE1zxPfiBPxG7G2dsx4D/nnBDP2rWHFnr+lxg
+	 sNrtv/aeSdqNN3t+d6dpc8SpXxBPm7nkpehz6URLeyGXq7FxXofAxd3BmtEDL8SeM8
+	 H4ExMJviG/MIge/gu/xAUcUgWqO/VuzLitivTi0CJkfZlCjGoulAcveX8zKC252TMQ
+	 NyNFY1bOf7ZKWow2k9jLLa1+VI5jgu/3HysbGbjihXLLVvXGujBM74z2msdhoXeBkF
+	 jRoY6f7ma2BAw==
+Date: Wed, 27 Mar 2024 06:48:03 -0300
+From: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: MAINTAINERS: drop Daniel Oliveira
+ Nascimento
+Message-ID: <ZgPrU0EZbaMwy5y9@siri.cascardo.eti.br>
+References: <20240327081434.306106-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/20] media: venus: pm_helpers: Add kerneldoc to
- venus_clks_get()
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
- Vikash Garodia <quic_vgarodia@quicinc.com>, Andy Gross <agross@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>,
- Stanimir Varbanov <stanimir.varbanov@linaro.org>,
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
- linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20230911-topic-mars-v2-0-3dac84b88c4b@linaro.org>
- <20230911-topic-mars-v2-3-3dac84b88c4b@linaro.org>
- <b6d6beab-39f5-4f00-8427-52b662181864@linaro.org>
- <30945f7a-b18b-483a-bc43-99f913fb98c3@linaro.org>
-Content-Language: en-US
-From: Bryan O'Donoghue <pure.logic@nexus-software.ie>
-In-Reply-To: <30945f7a-b18b-483a-bc43-99f913fb98c3@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240327081434.306106-1-krzysztof.kozlowski@linaro.org>
 
-On 26/03/2024 21:23, Konrad Dybcio wrote:
-> On 6.03.2024 1:20 PM, Bryan O'Donoghue wrote:
->> On 09/02/2024 21:09, Konrad Dybcio wrote:
->>> To make it easier to understand the various clock requirements within
->>> this driver, add kerneldoc to venus_clk_get() explaining the fluff.
->>>
->>> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
->>> ---
->>>    drivers/media/platform/qcom/venus/pm_helpers.c | 28 ++++++++++++++++++++++++++
->>>    1 file changed, 28 insertions(+)
->>>
->>> diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
->>> index ac7c83404c6e..ea0a7d4601e2 100644
->>> --- a/drivers/media/platform/qcom/venus/pm_helpers.c
->>> +++ b/drivers/media/platform/qcom/venus/pm_helpers.c
->>> @@ -23,6 +23,34 @@
->>>      static bool legacy_binding;
->>>    +/**
->>> + * venus_clks_get() - Get Venus clocks that are not bound to a vcodec
->>
->> Get non-codec Venus clocks.
+On Wed, Mar 27, 2024 at 09:14:34AM +0100, Krzysztof Kozlowski wrote:
+> Emails to Daniel Oliveira Nascimento bounce:
 > 
-> No, this is not necessarily the case.. these may still include
-> vcodec clocks, that are specified under the root venus node (which
-> is the only way we'd like to keep)
+>   "550 5.1.1 The email account that you tried to reach does not exist."
 > 
-> I applied the rest of your suggestions, do I keep your rb?
-> 
-> Konrad
-> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Sure
+Acked-by: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
 
-BTW, I plan to test this series when I can - do you have a working tree ?
-
----
-bod
+> ---
+>  MAINTAINERS | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 51d5a64a5a36..de17c0950d83 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5207,7 +5207,6 @@ F:	lib/closure.c
+>  
+>  CMPC ACPI DRIVER
+>  M:	Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
+> -M:	Daniel Oliveira Nascimento <don@syst.com.br>
+>  L:	platform-driver-x86@vger.kernel.org
+>  S:	Supported
+>  F:	drivers/platform/x86/classmate-laptop.c
+> -- 
+> 2.34.1
+> 
