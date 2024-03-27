@@ -1,97 +1,167 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F012208A8;
-	Wed, 27 Mar 2024 11:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9795466A;
+	Wed, 27 Mar 2024 11:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711537521; cv=none; b=W6pVEMdW8uuTUdEAje72zijW4vQtoQ3+8inFqRdtRyGoCnfKVyZ3qpLAUiwL9wiyZTbAyrqnIup5BE01j1dXBd3AtpVavC38HXeQ4CAsw+DCOwfT1yQaTJ2ilb8fBksy+suQjQ5r9pxW9EooA5e3VxHo7POIPuhOW3Fh7g2qJUs=
+	t=1711537535; cv=none; b=ax8l+H/dCj/f74EYxe87lgQRPP/GSSXmKW60X9PO59uqYWHFW6kxWveSlYjARwXi70ZdRHQEiGPt54KpjKinjoo/7nIQCld6I8w4c7LEfBtBGZcriichex4x/NZIDSDgnz6ahEu3RfOVlYcsQCKVLEy8tLGT2E3A4Pszw+RYNy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711537521; c=relaxed/simple;
-	bh=2ybKd7wRmjS3EUGpteosq0iA1MFDnreqoLF22JlUHHQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=frNU4QkDBYVrihC7kNZV5o/Eou6FpJjRUpJGuEvGQ/9G8iOVA3cs05u4eucSh+Ek1daZXLsZxb6YpXzAK2LwKKzgXNlbED/yJdca3gOVcOH/l5IWksbOmqu0GA4Ia71NbCc4vG0FUhqVwLXgKPgNvOv8JzHZoud3uo/MsrPi3MI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eHJYEbsZ; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711537535; c=relaxed/simple;
+	bh=IAiG7Iel/I/NB72gzfGSIwR3l5+5tuvxdr9L53z4X4g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Eodl3LMbJ7cbsG1A5cWQ769vPmt9alwCmP7l185j+vwGHsrKMcyLXjBjtpFs3AVq3ZgPjXjhORZNQaI9xxdWgUGMWu+nLgbh8md3gJltkEowCjI+ByuxkMVpsBAUAaJeGMtxPQ27bq4gsuw/lvUWyWIV0BSsI3prlxBn2iUTN3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=obUAKFFT; arc=none smtp.client-ip=74.50.62.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eHJYEbsZ"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-41495c4a8f6so1667715e9.2;
-        Wed, 27 Mar 2024 04:05:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711537518; x=1712142318; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=014p56NXkTx8ykc7/eVqJqevMHd3n2lLs/kLUplg5o0=;
-        b=eHJYEbsZonPI/9eIkv6IyPyX8AdWZthqRab5PfK6NniOtFXlid1e6jzJYgZCJKZGre
-         vhmyMstkzmsEoAi8CiThK2RPgaDv02xMrcvPS6kNm5DguAj21T2BvxdYXq5QtFu6ad6U
-         GD4WMpzF8EwNNjk8oiWVKoYnaZAdZrYWKDYbk2IyqieaoOJS7c6fGqQzGWLbDZvsV4fw
-         Q4sQwQ59s6iz3hUlsg3jX32Zj69CiZfqMtsaFoTmoXbmvLhoSi2a6tbU1zKBx6zyvH0n
-         Nb8qs8YHETPuk7rcD7Vn2fvivW1m1OaKjZUzpusCG/btrkSR4D1zBrVngva5eo3D10uT
-         xZHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711537518; x=1712142318;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=014p56NXkTx8ykc7/eVqJqevMHd3n2lLs/kLUplg5o0=;
-        b=PzPTDld3ROAMWnqejZdg0KmueCpEzZjPj+lA6HrUIzn/nmA3CRnOE6GUU6Wz2GDtFL
-         fjMT1YkLAhqZhFNVaPvCa8LLHxSPJrm4ObZt87Mf7KJRunLGemMKcx0aZVLcV3q12HRz
-         XkP6b6zVSe6O61guskd1NIBzBHYkz9NF4Hw0fFwhDjNluzxNrNAs2xJ1AP2BWqcEvRtV
-         VfMkaMBogbtVAw84JVwz6BmP9WyRDCcq8w3HrLWoDlyGUWbMzabwFjLsCvdiJXfh34LC
-         xYXRRuaqyvRPsPYlrGHSBoX+5OGMfrnMP+r8rr+VC8cItC4AGe8YdiOy8ZrQaJnMNzrA
-         T+cA==
-X-Forwarded-Encrypted: i=1; AJvYcCWWCrCI6II08sCqqfIo8kTZPl1f8Z+TeJwQ47MHsyAfKr2cse1Z5BxeLFatBaSGX4pv9r/hdS0/BYieJExPTxky6qM8uztukCYM0/VU
-X-Gm-Message-State: AOJu0YxXGFvZY3JV/RJJkbUde3kpoQtkMatdzJxaoi2uV+KotpYaflmo
-	FcZl4qBbPeK2gvIVOkvLEQznvmkdw4le19JaMhPXzrVo0PSL6hLN
-X-Google-Smtp-Source: AGHT+IELU/7JO+2Zja+aj+L6RZpytn4mXOMjoQiGw3A+Qqveb4jzvTJ5TixVDe6G93XhZRpnua7/gw==
-X-Received: by 2002:a05:600c:358a:b0:413:f290:c747 with SMTP id p10-20020a05600c358a00b00413f290c747mr1671154wmq.33.1711537517652;
-        Wed, 27 Mar 2024 04:05:17 -0700 (PDT)
-Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.gmail.com with ESMTPSA id dx23-20020a05600c63d700b00414887d9329sm1775106wmb.46.2024.03.27.04.05.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 04:05:17 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Anup Patel <anup@brainfault.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	linux-riscv@lists.infradead.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] irqchip/riscv-aplic: Fix spelling mistake "forwared" -> "forwarded"
-Date: Wed, 27 Mar 2024 11:05:16 +0000
-Message-Id: <20240327110516.283738-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="obUAKFFT"
+Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
+	by mail5.25mail.st (Postfix) with ESMTPSA id 94730604C8;
+	Wed, 27 Mar 2024 11:04:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
+	s=25mailst; t=1711537533;
+	bh=IAiG7Iel/I/NB72gzfGSIwR3l5+5tuvxdr9L53z4X4g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=obUAKFFT/XlFjk6L0ylNfMhGcQYe8HOghL+haCxCjjTrEqmtOLKnq2kj9hRpZkR66
+	 EAYb0t3sw2bzccSGy8JH0HltMfDfEnQ3nokv+M2caTC3NUQd5CvcNqhiV+CV3VY7A7
+	 pR7OXiibV6+LdnAIz1RlUIbmzG9pYsN+6V4DC1fiPV/e0cvW5Rt+4uYSGsHnVGTiaj
+	 IbtcoTXBQaxotftVnJXrfTv87X7AhGrPYcbgXSNS01DvzyN/0gLYwPfsOXlegPJEs9
+	 Tsj0lDQ1mKVmGgJTOakfMAq4gw1XlLtMBp40qG/rLZ/w8wMNMqkf0rjI8GaqatGoWQ
+	 h/rXKzBSqhEAA==
+From: Tony Lindgren <tony@atomide.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: "David S . Miller" <davem@davemloft.net>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Dhruva Gole <d-gole@ti.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Johan Hovold <johan@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	Sebastian Reichel <sre@kernel.org>,
+	linux-doc@vger.kernel.org
+Subject: [PATCH v7 6/7] serial: 8250: Add preferred console in serial8250_isa_init_ports()
+Date: Wed, 27 Mar 2024 12:59:40 +0200
+Message-ID: <20240327110021.59793-7-tony@atomide.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240327110021.59793-1-tony@atomide.com>
+References: <20240327110021.59793-1-tony@atomide.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-There is a spelling mistake in a dev_info message. Fix it.
+Prepare 8250 ISA ports to drop kernel command line serial console
+handling from console_setup().
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+We need to set the preferred console in serial8250_isa_init_ports()
+to drop a dependency to setup_console() handling the ttyS related
+quirks. Otherwise when console_setup() handles the ttyS related
+options, console gets enabled only at driver probe time.
+
+Note that this mostly affects x86 as this happens based on define
+SERIAL_PORT_DFNS.
+
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- drivers/irqchip/irq-riscv-aplic-msi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/8250/8250_core.c  |  5 +++++
+ drivers/tty/serial/serial_base.h     |  8 ++++++++
+ drivers/tty/serial/serial_base_bus.c | 21 +++++++++++++++++++++
+ 3 files changed, 34 insertions(+)
 
-diff --git a/drivers/irqchip/irq-riscv-aplic-msi.c b/drivers/irqchip/irq-riscv-aplic-msi.c
-index 36cd04a5057b..028444af48bd 100644
---- a/drivers/irqchip/irq-riscv-aplic-msi.c
-+++ b/drivers/irqchip/irq-riscv-aplic-msi.c
-@@ -251,7 +251,7 @@ int aplic_msi_setup(struct device *dev, void __iomem *regs)
+diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+--- a/drivers/tty/serial/8250/8250_core.c
++++ b/drivers/tty/serial/8250/8250_core.c
+@@ -15,6 +15,7 @@
+  */
  
- 	/* Advertise the interrupt controller */
- 	pa = priv->msicfg.base_ppn << APLIC_xMSICFGADDR_PPN_SHIFT;
--	dev_info(dev, "%d interrupts forwared to MSI base %pa\n", priv->nr_irqs, &pa);
-+	dev_info(dev, "%d interrupts forwarded to MSI base %pa\n", priv->nr_irqs, &pa);
+ #include <linux/acpi.h>
++#include <linux/cleanup.h>
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
+ #include <linux/ioport.h>
+@@ -41,6 +42,8 @@
  
+ #include <asm/irq.h>
+ 
++#include "../serial_base.h"	/* For serial_base_add_isa_preferred_console() */
++
+ #include "8250.h"
+ 
+ /*
+@@ -563,6 +566,8 @@ static void __init serial8250_isa_init_ports(void)
+ 		port->irqflags |= irqflag;
+ 		if (serial8250_isa_config != NULL)
+ 			serial8250_isa_config(i, &up->port, &up->capabilities);
++
++		serial_base_add_isa_preferred_console(serial8250_reg.dev_name, i);
+ 	}
+ }
+ 
+diff --git a/drivers/tty/serial/serial_base.h b/drivers/tty/serial/serial_base.h
+--- a/drivers/tty/serial/serial_base.h
++++ b/drivers/tty/serial/serial_base.h
+@@ -51,6 +51,8 @@ void serial_core_unregister_port(struct uart_driver *drv, struct uart_port *port
+ int serial_base_add_preferred_console(struct uart_driver *drv,
+ 				      struct uart_port *port);
+ 
++int serial_base_add_isa_preferred_console(const char *name, int idx);
++
+ #else
+ 
+ static inline
+@@ -60,4 +62,10 @@ int serial_base_add_preferred_console(struct uart_driver *drv,
  	return 0;
  }
+ 
++static inline
++int serial_base_add_isa_preferred_console(const char *name, int idx)
++{
++	return 0;
++}
++
+ #endif
+diff --git a/drivers/tty/serial/serial_base_bus.c b/drivers/tty/serial/serial_base_bus.c
+--- a/drivers/tty/serial/serial_base_bus.c
++++ b/drivers/tty/serial/serial_base_bus.c
+@@ -317,6 +317,27 @@ int serial_base_add_preferred_console(struct uart_driver *drv,
+ 	return serial_base_add_one_prefcon(port_match, drv->dev_name, port->line);
+ }
+ 
++#ifdef CONFIG_SERIAL_8250_CONSOLE
++
++/*
++ * Early ISA ports initialize the console before there is no struct device.
++ * This should be only called from serial8250_isa_init_preferred_console(),
++ * other callers are likely wrong and should rely on earlycon instead.
++ */
++int serial_base_add_isa_preferred_console(const char *name, int idx)
++{
++	return serial_base_add_prefcon(name, idx);
++}
++
++#else
++
++int serial_base_add_isa_preferred_console(const char *name, int idx)
++{
++	return 0;
++}
++
++#endif
++
+ #endif
+ 
+ static int serial_base_init(void)
 -- 
-2.39.2
-
+2.44.0
