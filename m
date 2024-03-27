@@ -1,27 +1,41 @@
-Received: from mx2.usergate.com (mx2.usergate.com [46.229.79.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7B12C1A2;
-	Wed, 27 Mar 2024 07:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.229.79.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8C12C1A6
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 07:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711525299; cv=none; b=uRP+NNLYWM9mUnOc0AhK8hRMi3lp1op4ylicnuvWp7w/BEzdPNE51Z6rsvXKUAZaqiXQ6IKLzP+mUZIDE2u7dW/E2xVjiyQWqKqxt+iW3u/4OmebwSNB98Qxaeza1fN7VpIoz9fFYcZqBAjTEm67i2sMRAj3qDFwhuEqbSlACwQ=
+	t=1711525350; cv=none; b=BRSOyESUz5hkp46PvKcz7J2U2CY/lYQhjEI2bslZ8yOJReE3cMkxH4gzk1GDXyKCcSUARR2tEX7Z6v/oVhBq/2Y/ahU8t0tXtSkkzsFkOl5gz24D8+zFyEOb+k4fqA9fCMxBnpaaZ1OlvDjpsUJ+YRmQuAjR/c/IlRaC1ofGsEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711525299; c=relaxed/simple;
-	bh=WEZbm4Q05nrIoUPa93HT1baOMt9IyxBknCAiOcLJqc4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tSviREG1O217XV08EvjgjTPV/nILzmrgNtRMU2K6dYsBUmu/syNwWuMp09GRcKb8Rx6EewFh4SGzY9y7NduGzpmcMn1L2KZFihPdDF5V/GD5ZqwQwdbTmFgelWIzzR8g91cTO8wfI4Olb2obxK2rhiAymJiQf1hg8l6flZwRnAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=usergate.com; spf=pass smtp.mailfrom=usergate.com; arc=none smtp.client-ip=46.229.79.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=usergate.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=usergate.com
-Received: from mail.usergate.com[192.168.90.36] by mx2.usergate.com with ESMTP id
-	 DFB3A364686B451CA267CD06A10D08A9; Wed, 27 Mar 2024 14:11:02 +0700
-From: Aleksandr Aprelkov <aaprelkov@usergate.com>
-To: Trond Myklebust <trond.myklebust@hammerspace.com>
-CC: Aleksandr Aprelkov <aaprelkov@usergate.com>,Anna Schumaker <anna@kernel.org>,Chuck Lever <chuck.lever@oracle.com>,Jeff Layton <jlayton@kernel.org>,Neil Brown <neilb@suse.de>,Olga Kornievskaia <kolga@netapp.com>,Dai Ngo <Dai.Ngo@oracle.com>,Tom Talpey <tom@talpey.com>,"David S. Miller" <davem@davemloft.net>,Eric Dumazet <edumazet@google.com>,Jakub Kicinski <kuba@kernel.org>,Paolo Abeni <pabeni@redhat.com>,<linux-nfs@vger.kernel.org>,<netdev@vger.kernel.org>,<linux-kernel@vger.kernel.org>,<lvc-project@linuxtesting.org>
-Subject: [PATCH] sunrpc: removed redundant procp check
-Date: Wed, 27 Mar 2024 14:10:44 +0700
-Message-ID: <20240327071044.365284-1-aaprelkov@usergate.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1711525350; c=relaxed/simple;
+	bh=TD71V4olm06QmOSssnupFr6nfPYdbww3XJe4yFkCmgU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mpIF48XdAJqjhry87X6g20tCtOqZqxTS2b0FQumtN/8J442Vbi4ZVOELl3ZNeoVrznjh/+ADdjLi94GmD4DBf4MQjmnOhxSuZixR+VAirprgGrYc4glVfeyTHm8yUkMg3D0h6unam4BBdsoAMsCN/SeGKY6ohUH4YDhokNuiKjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qDLB564J; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qDLB564J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84F45C433F1;
+	Wed, 27 Mar 2024 07:42:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711525350;
+	bh=TD71V4olm06QmOSssnupFr6nfPYdbww3XJe4yFkCmgU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qDLB564J1OPwdwaFjSwzPzdcxFpNkqvpBadoGyDILaGBfDQtBKe/wBFp6J7UZRqe4
+	 3B4IhdXATZKPWzkkeNGod/WFIl34byKVQo9bQp4Y5uN0anx0XaluWog960yH453uj7
+	 clvqPz2bXb6vZ1f4GZAvNFJyT7hefXy7eaN8tpnGzOLQLQXEV68PFZzRf7SdSD0+ho
+	 IRg7DAtqPwDnygmq9gNwQ/rxsX5x8rB4si4+3UHSCLKHiGrhDG/mBb19qzjPr/FCRo
+	 x7yWe4cey05PBTvVRXUpto7GmnUjZH6scZvsl7ifQGcj1t/U/thHhQFIS+bYPxVKqn
+	 q8EeEn2uWvZtA==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>,
+	Yi Zhang <yi.zhang@redhat.com>,
+	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Subject: [PATCH v2] f2fs: multidev: fix to recognize valid zero block address
+Date: Wed, 27 Mar 2024 15:42:23 +0800
+Message-Id: <20240327074223.2216487-1-chao@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -29,36 +43,114 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ESLSRV-EXCH-01.esafeline.com (192.168.90.36) To
- nsk02-mbx01.esafeline.com (10.10.1.35)
-X-Message-Id: BCE3BE4874C140DD802FC89A20BCC59A
-X-MailFileId: CE9AECCD9CD84540A70607A1150C868E
 
-since vs_proc pointer is dereferenced before getting it's address there's
-no need to check for NULL.
+As reported by Yi Zhang in mailing list [1], kernel warning was catched
+during zbd/010 test as below:
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+./check zbd/010
+zbd/010 (test gap zone support with F2FS)                    [failed]
+    runtime    ...  3.752s
+    something found in dmesg:
+    [ 4378.146781] run blktests zbd/010 at 2024-02-18 11:31:13
+    [ 4378.192349] null_blk: module loaded
+    [ 4378.209860] null_blk: disk nullb0 created
+    [ 4378.413285] scsi_debug:sdebug_driver_probe: scsi_debug: trim
+poll_queues to 0. poll_q/nr_hw = (0/1)
+    [ 4378.422334] scsi host15: scsi_debug: version 0191 [20210520]
+                     dev_size_mb=1024, opts=0x0, submit_queues=1, statistics=0
+    [ 4378.434922] scsi 15:0:0:0: Direct-Access-ZBC Linux
+scsi_debug       0191 PQ: 0 ANSI: 7
+    [ 4378.443343] scsi 15:0:0:0: Power-on or device reset occurred
+    [ 4378.449371] sd 15:0:0:0: Attached scsi generic sg5 type 20
+    [ 4378.449418] sd 15:0:0:0: [sdf] Host-managed zoned block device
+    ...
+    (See '/mnt/tests/gitlab.com/api/v4/projects/19168116/repository/archive.zip/storage/blktests/blk/blktests/results/nodev/zbd/010.dmesg'
 
-Fixes: 8e5b67731d08 ("SUNRPC: Add a callback to initialise server requests")
-Signed-off-by: Aleksandr Aprelkov <aaprelkov@usergate.com>
+WARNING: CPU: 22 PID: 44011 at fs/iomap/iter.c:51
+CPU: 22 PID: 44011 Comm: fio Not tainted 6.8.0-rc3+ #1
+RIP: 0010:iomap_iter+0x32b/0x350
+Call Trace:
+ <TASK>
+ __iomap_dio_rw+0x1df/0x830
+ f2fs_file_read_iter+0x156/0x3d0 [f2fs]
+ aio_read+0x138/0x210
+ io_submit_one+0x188/0x8c0
+ __x64_sys_io_submit+0x8c/0x1a0
+ do_syscall_64+0x86/0x170
+ entry_SYSCALL_64_after_hwframe+0x6e/0x76
+
+Shinichiro Kawasaki helps to analyse this issue and proposes a potential
+fixing patch in [2].
+
+Quoted from reply of Shinichiro Kawasaki:
+
+"I confirmed that the trigger commit is dbf8e63f48af as Yi reported. I took a
+look in the commit, but it looks fine to me. So I thought the cause is not
+in the commit diff.
+
+I found the WARN is printed when the f2fs is set up with multiple devices,
+and read requests are mapped to the very first block of the second device in the
+direct read path. In this case, f2fs_map_blocks() and f2fs_map_blocks_cached()
+modify map->m_pblk as the physical block address from each block device. It
+becomes zero when it is mapped to the first block of the device. However,
+f2fs_iomap_begin() assumes that map->m_pblk is the physical block address of the
+whole f2fs, across the all block devices. It compares map->m_pblk against
+NULL_ADDR == 0, then go into the unexpected branch and sets the invalid
+iomap->length. The WARN catches the invalid iomap->length.
+
+This WARN is printed even for non-zoned block devices, by following steps.
+
+ - Create two (non-zoned) null_blk devices memory backed with 128MB size each:
+   nullb0 and nullb1.
+ # mkfs.f2fs /dev/nullb0 -c /dev/nullb1
+ # mount -t f2fs /dev/nullb0 "${mount_dir}"
+ # dd if=/dev/zero of="${mount_dir}/test.dat" bs=1M count=192
+ # dd if="${mount_dir}/test.dat" of=/dev/null bs=1M count=192 iflag=direct
+
+..."
+
+So, the root cause of this issue is: when multi-devices feature is on,
+f2fs_map_blocks() may return zero blkaddr in non-primary device, which is
+a verified valid block address, however, f2fs_iomap_begin() treats it as
+an invalid block address, and then it triggers the warning in iomap
+framework code.
+
+Finally, as discussed, we decide to use a more simple and direct way that
+checking (map.m_flags & F2FS_MAP_MAPPED) condition instead of
+(map.m_pblk != NULL_ADDR) to fix this issue.
+
+Thanks a lot for the effort of Yi Zhang and Shinichiro Kawasaki on this
+issue.
+
+[1] https://lore.kernel.org/linux-f2fs-devel/CAHj4cs-kfojYC9i0G73PRkYzcxCTex=-vugRFeP40g_URGvnfQ@mail.gmail.com/
+[2] https://lore.kernel.org/linux-f2fs-devel/gngdj77k4picagsfdtiaa7gpgnup6fsgwzsltx6milmhegmjff@iax2n4wvrqye/
+
+Reported-by: Yi Zhang <yi.zhang@redhat.com>
+Closes: https://lore.kernel.org/linux-f2fs-devel/CAHj4cs-kfojYC9i0G73PRkYzcxCTex=-vugRFeP40g_URGvnfQ@mail.gmail.com/
+Tested-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Tested-by: Yi Zhang <yi.zhang@redhat.com>
+Fixes: 1517c1a7a445 ("f2fs: implement iomap operations")
+Fixes: 8d3c1fa3fa5e ("f2fs: don't rely on F2FS_MAP_* in f2fs_iomap_begin")
+Signed-off-by: Chao Yu <chao@kernel.org>
 ---
- net/sunrpc/svc.c | 2 --
- 1 file changed, 2 deletions(-)
+v2:
+- add Tested-by tag of Yi Zhang.
+ fs/f2fs/data.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index b33e429336fb..2b4b1276d4e8 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -1265,8 +1265,6 @@ svc_generic_init_request(struct svc_rqst *rqstp,
- 	if (rqstp->rq_proc >= versp->vs_nproc)
- 		goto err_bad_proc;
- 	rqstp->rq_procinfo = procp = &versp->vs_proc[rqstp->rq_proc];
--	if (!procp)
--		goto err_bad_proc;
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 08815394223a..fa5398ac4505 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -4196,7 +4196,7 @@ static int f2fs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+ 	if (WARN_ON_ONCE(map.m_pblk == COMPRESS_ADDR))
+ 		return -EINVAL;
  
- 	/* Initialize storage for argp and resp */
- 	memset(rqstp->rq_argp, 0, procp->pc_argzero);
+-	if (map.m_pblk != NULL_ADDR) {
++	if (map.m_flags & F2FS_MAP_MAPPED) {
+ 		iomap->length = blks_to_bytes(inode, map.m_len);
+ 		iomap->type = IOMAP_MAPPED;
+ 		iomap->flags |= IOMAP_F_MERGED;
 -- 
-2.34.1
+2.40.1
 
