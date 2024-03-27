@@ -1,168 +1,254 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CAC381BD
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 09:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529A5376E1
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 09:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711530827; cv=none; b=lnvvK1nQ85o28fck7oIDZNtQkdx/CvUyoKQ9M6kLlpnJPnUcEPz8hY+jbCjXRKJKnO6erSct8NNIHBnSVcTMzWcnzWIF+qcTTBAFyWs0JTeBZYVYhNI0c7w2/HsozyMKlBKtD+nM//302Dkl6HZOulUiHt57Yb/7h+NuvCQ6UYE=
+	t=1711530842; cv=none; b=EHOKyL+P1IZD7f1ZDwTX7dnsgbvFCWPc4mht/kFYkUWt+1SDyEtc0GKPFo/l0me9/nuZoo9/sMKeFFSmJmOP4X6KhZOadgw2YAupUKtdoTt2zrmamyL+ox1a+gbzGXzn/FPvdPLPkvRXsFYiSxrUC1YSqLDYTaa9slcW6xORDsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711530827; c=relaxed/simple;
-	bh=v+aOuo/K4QIUDcJG8uJaze7G5zKoZoCjGDknbGfD5sQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EJGA+q0CyFtcjj49mi6VrznP8m6swMqjARdcR18UZpSQc15xlxOvsBGu3XbvfJjdY3goOlpOU40HG0Pm/JMvfw06rIvktPhku9pNMAzmEZV51anhYRttdqv4ewUoteAMSJgb8uzmILo5RIFYwYqrIF1D4fgoX3eMf4K1XzZTmHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=aJgl/CjM; arc=none smtp.client-ip=209.85.167.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1711530842; c=relaxed/simple;
+	bh=iO9oNvG+QPX6EBHlzWrbZgkGzqEkhIYMPjFQURkQp1E=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=tpKlEEJ7wo/eE23ZPWvLYZsMML8u509n/iNzMAyaC5B04DgjyS8bWlJo+QUnUxAVkmcgghIEkr8jHZ2keomkvK5WF4tDxykDJF4cX9GSIfPvzjWcQFqWhSyhzwLpmOk1/qMn6iiKUeJvVgg317QeZgJOA8hRXEGAC9C/0AdE0oQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IcKPRZhz; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aJgl/CjM"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3c3d7e7402dso992342b6e.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 02:13:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IcKPRZhz"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6e6888358dfso2898772a34.2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 02:14:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711530825; x=1712135625; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4iOYt4zJ+o1C7+SnoOb0q+ySfizskDZk97tdK1KywqY=;
-        b=aJgl/CjMnpU+IQldzlojpxYqgMqKpji42FqQYb69aO6I/oRmuG31Fard4wyZxdHItO
-         9xmIqhnj3655tM8lC7JrDvT8+pMyv6PqKxIM2OcEZwu8sjm38sXRFNidl0DE2JDMq9rd
-         LggOA1IAVqc3qVofQkmUidYPAJf8DYvvb7YLg=
+        d=linaro.org; s=google; t=1711530839; x=1712135639; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=m7YoevRtWoIrX5inKpmhV/jNINZnpRhSbmQj7YxoH3s=;
+        b=IcKPRZhzBxsVoMKJCIFCqtYXft62VqgsDo8rX1MvH6oBHhTuLS3xMgKEdynu1A4WE3
+         YO5M4nVvUH/f0BsbbrTEeyYFj8XA8YRSEiKRnaECszKP5pG7LllZMgmYl7oZazfsAr+5
+         axK5c9ZrBRYH1P6aoZe9Q8Lj9MRLBCUZASOO9bpvDVs1zHmL6DSqRxN6f5JIiEeiJ5GE
+         DD13rMf+8klJXI2fKrc5b4gbYazwVm6ixS+1T+RUEODP8he5ltvtYvudzxhGBMnszKfX
+         tE5pSuTCBFt+MuWvJHAXon08m1/2Prb6686QGZxybQfI4BfsVDblcyUx13IyZKaANxMy
+         nx6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711530825; x=1712135625;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4iOYt4zJ+o1C7+SnoOb0q+ySfizskDZk97tdK1KywqY=;
-        b=FBvMuwKnhjw9hD7XDwZXA+RD1uGrAgaGQjLJVIchtsVcFTZ49Bc5CIi8+nNEQ6PrJR
-         lFaxh1xN+mC1DKkDFwD0jE8XSdRTGYbPoGx9hQXzYKOPeHxmudO0fmTnrhHtTNOCkLo8
-         Xax3un50MRh3aMVEdRuE5t1OnHXZTnBsHORMhczdYg6JMY1uy3i+N+VfBfRc7A3y3uYB
-         doVlpTIICwogEC2joWVjH4gelEUz6waBfEMhvgp3aaB+NqV1gJUxOLrHsYtBYqeB9Vn1
-         CPItwGqd8t5TEAkkVg9rI7i+2XmvzQncnO/lguvCk2BK1h9J6jYP/xsWKlSDWkA4PSy2
-         Go+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVG47/8b7E2pGNbiF5Fc+RAxcmIjGR7uDqDW/W4OkzqhueGI6tWAvpb2B69Vunxnucyj3G9fY+wC/aBTRlfDY0jlSsckVRPCwgtAZgJ
-X-Gm-Message-State: AOJu0YwOMSH2ZKRhCkzuHrQPgTuhnIoiRfoQCq9sCTjTS7QJs66Br7D0
-	krmuqH745lo6AcMZNILpLheckUGDq+EFHwx+WfQpinkxouo4Z/v3n7/wkaVCRA==
-X-Google-Smtp-Source: AGHT+IF3aqIva/K4jRimDmX4/NLQURpL14i8+mvF0x7rMtjQj5U78MiIs6pbbKkfU3lhicktx6j8iA==
-X-Received: by 2002:a05:6808:319a:b0:3c3:878e:a43b with SMTP id cd26-20020a056808319a00b003c3878ea43bmr772486oib.44.1711530825181;
-        Wed, 27 Mar 2024 02:13:45 -0700 (PDT)
-Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:74c2:3606:170b:52f3])
-        by smtp.gmail.com with ESMTPSA id fa31-20020a056a002d1f00b006e69cb93585sm7342911pfb.83.2024.03.27.02.13.43
+        d=1e100.net; s=20230601; t=1711530839; x=1712135639;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m7YoevRtWoIrX5inKpmhV/jNINZnpRhSbmQj7YxoH3s=;
+        b=UfDqGHUdOBvXGwCMtSerk+I64vsO5BfRD9vcTdhkoFmcaUsO+nIvXUafbtwraWROo7
+         mgEiRKyGZzLYKh/EYkitCICXORTmEOykr0g8VKlkshY5i/Z4AN8ojRRVJcHOVHzFGCFg
+         2PNPT1av64D5XkX2Tbj6ArVAHOG5wCuJyhQA/F0FrxjD65Y27UrcAJ+4m+5356SZvumn
+         nnRxK7KPj28ylxCqW2Z9h6oJ5sNtaxFflOYUfSxzC/cMEv1q/HErzvd82mwUX8z8B9nD
+         ySv4nZMdGj+P2awDrmsDFFZgt0TdjAGS2xnDud6S0sQjRZBOnFQjJZyKUWS4t/tiEIf/
+         K0rA==
+X-Forwarded-Encrypted: i=1; AJvYcCUJGTVELzoyulOzn8stlcMEGqyvxJCtNYr2zTVYUeO9fB1aivgwX7uqjt2qFNIIfvZE59X2JamowqcAFzfW0mzvyOJGcR8okcyYzbVo
+X-Gm-Message-State: AOJu0YzYsbP/eJhM8uvNedeWAPLrvWLI9AKfwiqQNMi6P3nEPzbABi0S
+	azQLFclEre17q0iZX3sdQCJLMmo3bmZkxwo/5HZYc5dpq5Ocq8fknQvFdEB25A==
+X-Google-Smtp-Source: AGHT+IHLrC+cElHqEJHgQI6bNudg5V3T5UyMpSvlDNp0VTqd68nwYnF3OIdtHfvbZn/Wx5NtZMwQqQ==
+X-Received: by 2002:a9d:4f07:0:b0:6e6:ded0:8a69 with SMTP id d7-20020a9d4f07000000b006e6ded08a69mr5193012otl.31.1711530839288;
+        Wed, 27 Mar 2024 02:13:59 -0700 (PDT)
+Received: from [127.0.1.1] ([120.60.52.77])
+        by smtp.gmail.com with ESMTPSA id h190-20020a6383c7000000b005dc4fc80b21sm8673871pge.70.2024.03.27.02.13.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 02:13:44 -0700 (PDT)
-From: Chen-Yu Tsai <wenst@chromium.org>
-To: Sean Wang <sean.wang@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] pinctrl: mediatek: paris: Rework support for PIN_CONFIG_{INPUT,OUTPUT}_ENABLE
-Date: Wed, 27 Mar 2024 17:13:34 +0800
-Message-ID: <20240327091336.3434141-3-wenst@chromium.org>
-X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
-In-Reply-To: <20240327091336.3434141-1-wenst@chromium.org>
-References: <20240327091336.3434141-1-wenst@chromium.org>
+        Wed, 27 Mar 2024 02:13:58 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v12 0/8] PCI: dwc: ep: Fix DBI access failure for drivers
+ requiring refclk from host
+Date: Wed, 27 Mar 2024 14:43:29 +0530
+Message-Id: <20240327-pci-dbi-rework-v12-0-082625472414@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADnjA2YC/3XPS2oDMQyA4asEr+Mgy56Huuo9SheOLSeiYRw8Z
+ doS5u71ZNME06UE/yd0UzMX4Vm97G6q8CKz5KkOBvc7Fc5+OrGWWBcKAR0gOn0NouNRdOGvXD7
+ 0EZnI90gWgqrRtXCS77v49l7ns8yfufzcDyzjtv2XWkYNundhSBFC4t69XmTyJR9yOanNWuivt
+ 9D2VHuk6KyNRCH6pjfwAJgWMFAF47zrQufJjtwK5kHAoRXM9kPqsKNE0A/2SVjX9ReJR8rQcgE
+ AAA==
+To: Jingoo Han <jingoohan1@gmail.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Marek Vasut <marek.vasut+renesas@gmail.com>, 
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>, 
+ Vignesh Raghavendra <vigneshr@ti.com>, Richard Zhu <hongxing.zhu@nxp.com>, 
+ Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
+ Minghuan Lian <minghuan.Lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, 
+ Roy Zang <roy.zang@nxp.com>, 
+ Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Jesper Nilsson <jesper.nilsson@axis.com>, 
+ Srikanth Thokala <srikanth.thokala@intel.com>, 
+ Shawn Lin <shawn.lin@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+ Niklas Cassel <cassel@kernel.org>, linux-arm-kernel@axis.com, 
+ linux-rockchip@lists.infradead.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Frank Li <Frank.Li@nxp.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6302;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=iO9oNvG+QPX6EBHlzWrbZgkGzqEkhIYMPjFQURkQp1E=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBmA+NIo/FDU1Qzm8K9RhxHEI8Jtmbq4KExhILxr
+ h8EcXGlx0SJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZgPjSAAKCRBVnxHm/pHO
+ 9XMZB/9ZVvwo9sSG/E7aVel5CSG/nMG/jLxOi0rHJgyMN7yji8HK5ajSrTKUXs0jT4mdCTclZ8j
+ yGj4IxADoOnlwcHIjiz7NfE8eueVtUlnoWSzqXxWV9FrLNUtwYp98RXIOc3UvpMlvG/0QgbH3uv
+ K7YTyqGd4NsP7zM3fHjaWXkw0pB60QsEos4YQLk9lBpRKQxz40KLuAET6DwRV5ZNfua1ew+4L65
+ zr+NXa5ghbAqbrbm05gK3xe5iivUEFGH7lu9dMy5+yyytQgKM7Qf1VrUGShOtJKMAPZ0TB5p/5R
+ pFm/tz8l8TQYBVCiCxd0wAYH21S9gVFyCpuDBh/w4ikx2xHy
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
 
-There is a misinterpretation of some of the PIN_CONFIG_* options in this
-driver library. PIN_CONFIG_OUTPUT_ENABLE should refer to a buffer or
-switch in the output direction of the electrical path. The MediaTek
-hardware does not have such a thing. The driver incorrectly maps this
-option to the GPIO function's direction.
+Hello,
 
-Likewise, PIN_CONFIG_INPUT_ENABLE should refer to a buffer or switch in
-the input direction. The hardware does have such a mechanism, and is
-mapped to the IES bit. The driver however sets the direction in addition
-to the IES bit, which is incorrect. On readback, the IES bit isn't even
-considered.
+This series is the continuation of previous work by Vidya Sagar [1] to fix the
+issues related to accessing DBI register space before completing the core
+initialization in some EP platforms like Tegra194/234 and Qcom EP.
 
-Ironically, the driver does not support readback for PIN_CONFIG_OUTPUT,
-while its readback of PIN_CONFIG_{INPUT,OUTPUT}_ENABLE is what it should
-be doing for PIN_CONFIG_OUTPUT.
+Since Vidya is busy, I took over the series based on his consent (off-list
+discussion).
 
-Rework support for these three options, so that PIN_CONFIG_OUTPUT_ENABLE
-is completely removed, PIN_CONFIG_INPUT_ENABLE is only linked to the IES
-bit, and PIN_CONFIG_OUTPUT is linked to the GPIO function's direction
-and output level.
+NOTE
+====
 
-Fixes: 805250982bb5 ("pinctrl: mediatek: add pinctrl-paris that implements the vendor dt-bindings")
-Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+Based on the comments received in v7 [2], I've heavily modified the series
+to fix several other issues reported by Bjorn and Niklas. One noticeable
+change is getting rid of the 'core_init_notifer' flag added to differentiate
+between glue drivers requiring refclk from host and drivers getting refclk
+locally.
+
+By getting rid of this flag, now both the DWC EP driver and the EPF drivers
+can use a single flow and need not distinguish between the glue drivers.
+
+We can also get rid of the 'link_up_notifier' flag in the future by following
+the same convention.
+
+Testing
+=======
+
+I've tested the series on Qcom SM8450 based dev board that depends on refclk
+from host with EPF_MHI driver. It'd be good to test this series on platforms
+that generate refclk locally and also with EPF_TEST driver.
+
+- Mani
+
+[1] https://lore.kernel.org/linux-pci/20221013175712.7539-1-vidyas@nvidia.com/
+[2] https://lore.kernel.org/linux-pci/20231120084014.108274-1-manivannan.sadhasivam@linaro.org/
+
+Changes in v12:
+- Fixed the init_notify() API used in non-dwc drivers (thanks Niklas)
+- Dropped Gustavo from CC since his email is bouncing
+- Link to v11: https://lore.kernel.org/r/20240327-pci-dbi-rework-v11-0-6f5259f90673@linaro.org
+
+Changes in v11:
+- Minor cleanups reported by Niklas
+- 'epc->init_complete = false' is set in dw_pcie_ep_cleanup() to avoid
+  triggering init complete notification before refclk. This will be moved to EPC
+  core in the following series adding deinit notifier.
+- Collected review tags.
+- Link to v10: https://lore.kernel.org/r/20240314-pci-dbi-rework-v10-0-14a45c5a938e@linaro.org
+
+Changes in v10:
+- Reordered the commits by moving the independent fixes/cleanups first (Niklas)
+- Addressed several comments from Niklas
+- Moved PTM register setting out of dw_pcie_ep_init_non_sticky_registers() (Niklas)
+- Addressed the issue that EPF drivers were missing init notification after the
+  removal of core_init_notifier (Niklas)
+- Dropped a few cleanup patches to be clubbed with the follow up series
+- Collected review tags
+- Dropped the review tags for patch 8/8 as it got changed
+- Link to v9: https://lore.kernel.org/r/20240304-pci-dbi-rework-v9-0-29d433d99cda@linaro.org
+
+Changes in v9:
+- Incorporated changes for missing drivers (Niklas)
+- Reworded the dw_pcie_ep_cleanup() API kdoc (Niklas)
+- Reworded the description of patch 6/10 (Frank)
+- Collected reviews
+- Link to v8: https://lore.kernel.org/r/20240224-pci-dbi-rework-v8-0-64c7fd0cfe64@linaro.org
+
+Changes in v8:
+
+- Rebased on top of v6.8-rc1
+- Removed the deinit callback from struct dw_pcie_ep_ops
+- Renamed dw_pcie_ep_exit() to dw_pcie_ep_deinit()
+- Introduced dw_pcie_ep_cleanup() API for drivers supporting PERST#
+- Renamed dw_pcie_ep_init_complete() to dw_pcie_ep_init_registers()
+- Called dw_pcie_ep_init_registers() API directly from all glue drivers
+- Removed "core_init_notifier" flag
+- Added a generic dw_pcie_ep_linkdown() API to handle LINK_DOWN event and used
+  it in qcom driver
+- Added Kernel-doc comments for DWC EP APIs
+
+Changes in v7:
+
+- Rebased on top of v6.7-rc1
+- Kept the current dw_pcie_ep_init_complete() API instead of renaming it to
+  dw_pcie_ep_init_late(), since changing the name causes a slight ambiguity.
+- Splitted the change that moves pci_epc_init_notify() inside
+  dw_pcie_ep_init_notify() to help bisecting and also to avoid build issue.
+- Added a new patch that moves pci_epc_init_notify() inside
+  dw_pcie_ep_init_notify().
+- Took over the authorship and dropped the previous Ack as the patches are
+  heavily modified.
+
+Changes in v6:
+
+- Rebased on top of pci/next (6e2fca71e187)
+- removed ep_init_late() callback as it is no longer necessary
+
+For previous changelog, please refer [1].
+
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/pinctrl/mediatek/pinctrl-paris.c | 38 +++++++-----------------
- 1 file changed, 11 insertions(+), 27 deletions(-)
+Manivannan Sadhasivam (8):
+      PCI: dwc: ep: Fix DBI access failure for drivers requiring refclk from host
+      PCI: dwc: ep: Add Kernel-doc comments for APIs
+      PCI: dwc: ep: Remove deinit() callback from struct dw_pcie_ep_ops
+      PCI: dwc: ep: Rename dw_pcie_ep_exit() to dw_pcie_ep_deinit()
+      PCI: dwc: ep: Introduce dw_pcie_ep_cleanup() API for drivers supporting PERST#
+      PCI: dwc: ep: Rename dw_pcie_ep_init_complete() to dw_pcie_ep_init_registers()
+      PCI: dwc: ep: Call dw_pcie_ep_init_registers() API directly from all glue drivers
+      PCI: endpoint: Remove "core_init_notifier" flag
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-index 9353f78a52f0..b19bc391705e 100644
---- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-@@ -165,20 +165,21 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
- 		err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_SR, &ret);
- 		break;
- 	case PIN_CONFIG_INPUT_ENABLE:
--	case PIN_CONFIG_OUTPUT_ENABLE:
-+		err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_IES, &ret);
-+		if (!ret)
-+			err = -EINVAL;
-+		break;
-+	case PIN_CONFIG_OUTPUT:
- 		err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &ret);
- 		if (err)
- 			break;
--		/*     CONFIG     Current direction return value
--		 * -------------  ----------------- ----------------------
--		 * OUTPUT_ENABLE       output       1 (= HW value)
--		 *                     input        0 (= HW value)
--		 * INPUT_ENABLE        output       0 (= reverse HW value)
--		 *                     input        1 (= reverse HW value)
--		 */
--		if (param == PIN_CONFIG_INPUT_ENABLE)
--			ret = !ret;
- 
-+		if (!ret) {
-+			err = -EINVAL;
-+			break;
-+		}
-+
-+		err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DO, &ret);
- 		break;
- 	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
- 		err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &ret);
-@@ -283,26 +284,9 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 			break;
- 		err = hw->soc->bias_set_combo(hw, desc, 0, arg);
- 		break;
--	case PIN_CONFIG_OUTPUT_ENABLE:
--		err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_SMT,
--				       MTK_DISABLE);
--		/* Keep set direction to consider the case that a GPIO pin
--		 *  does not have SMT control
--		 */
--		if (err != -ENOTSUPP)
--			break;
--
--		err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DIR,
--				       MTK_OUTPUT);
--		break;
- 	case PIN_CONFIG_INPUT_ENABLE:
- 		/* regard all non-zero value as enable */
- 		err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_IES, !!arg);
--		if (err)
--			break;
--
--		err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DIR,
--				       MTK_INPUT);
- 		break;
- 	case PIN_CONFIG_SLEW_RATE:
- 		/* regard all non-zero value as enable */
+ drivers/pci/controller/cadence/pcie-cadence-ep.c  |   2 +
+ drivers/pci/controller/dwc/pci-dra7xx.c           |   9 +
+ drivers/pci/controller/dwc/pci-imx6.c             |  10 +
+ drivers/pci/controller/dwc/pci-keystone.c         |  11 +
+ drivers/pci/controller/dwc/pci-layerscape-ep.c    |   9 +
+ drivers/pci/controller/dwc/pcie-artpec6.c         |  15 +-
+ drivers/pci/controller/dwc/pcie-designware-ep.c   | 238 +++++++++++++++-------
+ drivers/pci/controller/dwc/pcie-designware-plat.c |  11 +
+ drivers/pci/controller/dwc/pcie-designware.h      |  14 +-
+ drivers/pci/controller/dwc/pcie-keembay.c         |  18 +-
+ drivers/pci/controller/dwc/pcie-qcom-ep.c         |   4 +-
+ drivers/pci/controller/dwc/pcie-rcar-gen4.c       |  28 ++-
+ drivers/pci/controller/dwc/pcie-tegra194.c        |   5 +-
+ drivers/pci/controller/dwc/pcie-uniphier-ep.c     |  15 +-
+ drivers/pci/controller/pcie-rcar-ep.c             |   2 +
+ drivers/pci/controller/pcie-rockchip-ep.c         |   2 +
+ drivers/pci/endpoint/functions/pci-epf-test.c     |  18 +-
+ drivers/pci/endpoint/pci-ep-cfs.c                 |   9 +
+ drivers/pci/endpoint/pci-epc-core.c               |  22 ++
+ include/linux/pci-epc.h                           |   7 +-
+ 20 files changed, 338 insertions(+), 111 deletions(-)
+---
+base-commit: 4cece764965020c22cff7665b18a012006359095
+change-id: 20240224-pci-dbi-rework-b2e99a62930c
+
+Best regards,
 -- 
-2.44.0.396.g6e790dbe36-goog
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
