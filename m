@@ -1,107 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-221-233.mail.qq.com (out203-205-221-233.mail.qq.com [203.205.221.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A0D14535D
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 14:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EEEA146A8F
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 14:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711549419; cv=none; b=CAy3Bzj0fG+TWujeLk1Q55fTQ3/B5reuJE0rOoL8CdyAciU8UO7rJHD/08baMrn39selbPoG4iaOw4GbXnHEth4EQNeYwXCDfUKRJOX66Q0TaYyA8F1i0HNefF06ORsp+lUf0pUDPSKmhnUYeYXaLi+Fd7o+GXIBxK8qaPq9BJg=
+	t=1711549423; cv=none; b=KsPxsCPZapM9x1P6m30r6g+qQufywvEBeGvySxmLyGLPO4WWaDU0fK4OQdat/mOCgav6tN3MhVQuG37DvUy49W+E46X2o5nk4qzEy/zJC+TsHC5B89yvotgdoe/bPVjTdAx3kplkJOJbGOhKIY9Rz/97FzgW+MoSNBaR1jTT4MI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711549419; c=relaxed/simple;
-	bh=Sksl8i8PnOiTqr4IVGDYXs4HXDKRPWF92JDKDZBGrGk=;
-	h=Date:From:To:Cc:Subject:Message-Id:Mime-Version:Content-Type; b=A74CqaJDjW3x7UJqc0d3nou8gi1QtBrEDfv+NEW7hHpEMZHjA2D8IfN1R/pzazRc4qAOKPo9DpSPD+XF3eA5mkJi0ZDqeRAqzl0ieIPEHJKJ5xhHKlO6oC57ltneV4aHe5fecjaKGfFcKrcmel2AoxzR9GpvCvvQr8CC0Mg0ZVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VNSF++lG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711549423; c=relaxed/simple;
+	bh=J7UhRdgWg8g0gvaZs0hX56TeUc4gLGidHY4DvHhM/W8=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=n2HNmgdIuWm80pTeYCuBH949+dy6arYaUXj41YH64OJJZBbdjfiIprqy39f+nb7dKWWeacAPUAWpqKyuNMOuuQ9Vlqn5Hdw3l3HaSy+7dXgJsnLKg4bI5AvOxIRY9llzsclG6ma+RpglocvRFR8q1+t2VpM589gPBEE0e3lavY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Qj/uUrN0; arc=none smtp.client-ip=203.205.221.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VNSF++lG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 443F8C433C7;
-	Wed, 27 Mar 2024 14:23:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711549418;
-	bh=Sksl8i8PnOiTqr4IVGDYXs4HXDKRPWF92JDKDZBGrGk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=VNSF++lGGgcAk0F3gsRRNKpNnyXiZJOxodQVycktupLQWWOqXus9X4/1tVh1TOfv6
-	 Hj7fm2HMjaM5XnfVwUumlU8Lmqd1aLw5fOJbhkm1ZSxj2RaUwBlcRKetFT5xYITdQe
-	 POM1ebitJylhnfiSlW6PFBHOWyScGf5sXRRebtmx7HCKwxTY7aeFexcr2CzDJt4qBj
-	 CTwimF4VDC1BnEqbqwOO/eIzYVWyOjkbIGLYDCJl55NqvTTAaWxuQjDoPfHTautPb3
-	 TBprYsc6F0tqFxTVqHM/4IyXWQIFeE5IRgxD2mfU2I5oegdnz9P1tH9KWhlGvbb5E5
-	 +1s7jTB4jtwIA==
-Date: Wed, 27 Mar 2024 23:23:35 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masami Hiramatsu (Google) <mhiramat@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- linux-kernel@vger.kernel.org
-Subject: [GIT PULL] probes: Fixes for v6.9-rc1
-Message-Id: <20240327232335.c817e6f17b84328f462d9e57@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Qj/uUrN0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1711549111; bh=l1g3KVEUbPfrnpMbSqUvtMmtEzMFFaEtMNlAt4sADcc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Qj/uUrN0gwAnlLYXJhtVshFGNk3wXZ0p7jKn8hmRcoWga419uXk8ELJHu5CosTAUx
+	 nbKa4qZSOW7ux6WCcKY9aumvMfEU9gvyAzUvmecijmfnRaLSA96ENeMrSWKhyBCyFE
+	 romae2OwWTj1AHs3MnTy0uGE0VzgJVrvcMdcASvE=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrszb6-0.qq.com (NewEsmtp) with SMTP
+	id 49DBEC1D; Wed, 27 Mar 2024 22:18:29 +0800
+X-QQ-mid: xmsmtpt1711549109teqxmcxs0
+Message-ID: <tencent_87499A2ED6AEFA4CB927C7C6F992F5067F06@qq.com>
+X-QQ-XMAILINFO: OCYbvBDBNb9rZde+3q3Z/T+3QxFn6xkpS8ZSBpzfFLhHrXpKmxsWaYXdGCG+RE
+	 +sPbI2+bJIsRY80jNApE+RUJA9mv8yrcvidYcBQcorXQqvE5om2xpUpjQctk/Tdmm+zhhKMK0KiK
+	 DTjIb+38YsafmFdlbe06/U7gfS2p2IvZLVfCw4D7DmlG5poNekOorsJbYLZVbQ9x5HZB7UZ+PUeS
+	 /ipxKDc2tvjukq0aXgNpxnaVSno+VaLOUvvjSpTsFAdtEt0NMoB7ILBFAzg7tK9ENPA3H2y7Yqg5
+	 hMzIVKsb7Hm9kl+gFCA5m0UX/J9/W17yDaMQBvCO4rdtCHhgPdh3i6mfgYpFVA6xoVwvLusbNFvV
+	 zBsxpAIJS9SlziIJAapysFA8w8/xcIX2gITVTE2Izz25kj70CM1KddWoV+zvei0dgKzpxKsNrVqM
+	 yy9Yuoj3cZyOXTZNDqSVN3JNRvzrtjncTINgX113m1OWtfm8FlHPZ9ocMx1nFILVnxrXVjAOTCjk
+	 7ZoBEkFo8AlTOvh6hQJ22nawG9McV9uYGaZ6YIqO8ctNUmdvqjaOF9YNjXTieOQctMPF9Mv83pW+
+	 ui5CKpkT2Go0ayJUDwgbvRCkzH5xCZzi7Akaycl3zS8eGuVUznUoCjT6BFtUNvTG4YsEvgH6WsEv
+	 o4mzlz3kVAvs9OF5dJb8JUIOnQ2Uifb4H29QgBd0jio0BVPg/iLAOjqQGyxXju88EMsv3/7ydkCl
+	 maGbyrbY4xTdN3nTuSSMXaNoihlC/Sf3PXQ5B5ERNPbdXaISZNGQlBATUWcpzKuhipZfhr7a9adW
+	 SCrf6MOZbH4stoCQYv2dVpgwxs/S4d98OcLt2KsPFIh1cJ9pfSvBme1fqMQ8sOIf0hIGvN68qiZo
+	 g3ChNOvB2BJPWwGYKunxFZlYwcn1IhKWIlPNVILP3QMzZLa/fpXD4=
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+af9492708df9797198d6@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [bpf?] [net?] general protection fault in dev_map_enqueue
+Date: Wed, 27 Mar 2024 22:18:30 +0800
+X-OQ-MSGID: <20240327141829.3279427-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <00000000000069ee1a06149ff00c@google.com>
+References: <00000000000069ee1a06149ff00c@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Linus,
+please test null ptr deref in dev_map_enqueue
 
-Probes fixes for v6.9-rc1:
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 
- - tracing/probes: initialize a 'val' local variable with zero. This variable
-   is read by FETCH_OP_ST_EDATA in a loop, and is expected to be initialized
-   by FETCH_OP_ARG in the same loop. Since this expectation is not obvious,
-   thus smatch warns it. Initializing 'val' with zero fixes this warning.
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 8adf95765cdd..721b85aebf58 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -4381,6 +4381,11 @@ static __always_inline int __xdp_do_redirect_frame(struct bpf_redirect_info *ri,
+ 			err = dev_map_enqueue_multi(xdpf, dev, map,
+ 						    ri->flags & BPF_F_EXCLUDE_INGRESS);
+ 		} else {
++			fwd = dev_get_by_index_rcu(dev_net(dev), ri->tgt_index);
++			if (unlikely(!fwd)) {
++				err = -EINVAL;
++				break;
++			}
+ 			err = dev_map_enqueue(fwd, xdpf, dev);
+ 		}
+ 		break;
 
-
-Please pull the latest probes-fixes-v6.9-rc1 tree, which can be found at:
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-probes-fixes-v6.9-rc1
-
-Tag SHA1: f7e169092950bdda7a36a77325e3490700668a66
-Head SHA1: 0add699ad068d26e5b1da9ff28b15461fc4005df
-
-
-Masami Hiramatsu (Google) (1):
-      tracing: probes: Fix to zero initialize a local variable
-
-----
- kernel/trace/trace_probe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
----------------------------
-commit 0add699ad068d26e5b1da9ff28b15461fc4005df
-Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Date:   Wed Mar 20 17:10:38 2024 +0900
-
-    tracing: probes: Fix to zero initialize a local variable
-    
-    Fix to initialize 'val' local variable with zero.
-    Dan reported that Smatch static code checker reports an error that a local
-    'val' variable needs to be initialized. Actually, the 'val' is expected to
-    be initialized by FETCH_OP_ARG in the same loop, but it is not obvious. So
-    initialize it with zero.
-    
-    Link: https://lore.kernel.org/all/171092223833.237219.17304490075697026697.stgit@devnote2/
-    
-    Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-    Closes: https://lore.kernel.org/all/b010488e-68aa-407c-add0-3e059254aaa0@moroto.mountain/
-    Fixes: 25f00e40ce79 ("tracing/probes: Support $argN in return probe (kprobe and fprobe)")
-    Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-    Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 217169de0920..dfe3ee6035ec 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -839,7 +839,7 @@ int traceprobe_get_entry_data_size(struct trace_probe *tp)
- void store_trace_entry_data(void *edata, struct trace_probe *tp, struct pt_regs *regs)
- {
- 	struct probe_entry_arg *earg = tp->entry_arg;
--	unsigned long val;
-+	unsigned long val = 0;
- 	int i;
- 
- 	if (!earg)
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
