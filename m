@@ -1,81 +1,84 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A03524211;
-	Wed, 27 Mar 2024 07:15:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76AA72561B
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 07:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711523714; cv=none; b=QrawCD72gkxLauNlx9aAeT57Xd+wBP8vIIjBYd4PFWX8O2AO4y+WPEPOu90EjHiwxngoIGUMNkyrKzWovvwo2Ow3JP64eJzd+T8J/xkJ1gYsVa+V96c8dg8yzgm7bKy8jgxh2lH9wFAse7vc9C8gXDhwKDF048trGZRI/XCjPrM=
+	t=1711523841; cv=none; b=C4omFIpquAkU/BWuOH0ShawV7GAa79Cpi+y2sLS9VjtgcxQQG30FU+Y8Y7bcD4kNrt2nQLRy0S5e6KClGP7/aNWIoHM0ksUpwI3u2uFV5kdA6o+nxPFJsMbuXWDjJgTAB/2QJelfKSRW+z4gldYtmkekf9lyZPFrfa1dA4bmpnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711523714; c=relaxed/simple;
-	bh=FpltiPoOASUUqaJrAExtzb8bLYhXKlhsV1BX25LynyQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E7FutSJZFrK9uLcZ3AqbCs5FsedLUowuZRuLmX7BVvEn9elK0hPcIwCh+XgewadHdmwkbtz9UJiddgnCMSYKluQNs1CtHx1+l25jdo37sFisAZNJz+5yvVzMXcXuqvAakuzy1yIiBxlMn3I0HSL6jcQ038Hkv4nkf0JYGkhn7qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VfMgmRxF; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1711523841; c=relaxed/simple;
+	bh=xyQ3ZK+hiMYuRYnTpsz6pSIKbB4/60zOWfr6MnQ/X8I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wo+ovUXsuaYtFrniDrp1MwImMM9nDJ/w3oQ53zmGxdF/mGxzNwM8Ut7EXpBDKUq/5sIZrW4b3WBwDxztxvnQuWN0mVws1iX4Zif9LR9bmGzr2IqTSgXB0uz0qADfQeksPVTAsSVe5G63tgtsiG6mo9H1iUrT01uw1tFFjyqFmLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DprLV1YL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VfMgmRxF"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id EBAD260003;
-	Wed, 27 Mar 2024 07:14:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1711523705;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FpltiPoOASUUqaJrAExtzb8bLYhXKlhsV1BX25LynyQ=;
-	b=VfMgmRxFYX4HLXhCtPo9SVwr9StoByzqEyU48zdz29ynsFKM4bTU8jfUjDbdvaZKdMu7Jh
-	uEt7edg1OmMEo50g/tK7fwaSNu4HNQoej1KckJX1lgSzU1WHgytP86s/R/59TiXGkX3qk6
-	uLIwa308iZeafubo5l2bSrhKpepxhrWK8IKS6dQJ1weUH0RMauJy5RX/E6QuA0UfESe5k/
-	//wJD8B0to1epvnfj59VDEyaWWdXm4GqQcDJA6RI3enX7n5fMtDSNSR5DhvWnVJbFxHBH+
-	3nGFHSQ8GDquX2aRBn5PKcAmM6vRsEH/G6LDBqhh2fTOB7Kk5Uu5YT3Ppprt/w==
-Date: Wed, 27 Mar 2024 08:14:56 +0100
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Russell King <linux@armlinux.org.uk>, Suzuki K Poulose
- <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, James Clark
- <james.clark@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Linus Walleij <linus.walleij@linaro.org>,
- Andi Shyti <andi.shyti@kernel.org>, Olivia Mackall <olivia@selenic.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, Vinod Koul <vkoul@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michal Simek
- <michal.simek@amd.com>, Eric Auger <eric.auger@redhat.com>, Alex Williamson
- <alex.williamson@redhat.com>, linux-kernel@vger.kernel.org,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-stm32@st-md-mailman.stormreply.com, linux-i2c@vger.kernel.org,
- linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-input@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH 18/19] memory: pl353-smc: drop owner assignment
-Message-ID: <20240327081457.0347cf17@xps-13>
-In-Reply-To: <20240326-module-owner-amba-v1-18-4517b091385b@linaro.org>
-References: <20240326-module-owner-amba-v1-0-4517b091385b@linaro.org>
-	<20240326-module-owner-amba-v1-18-4517b091385b@linaro.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DprLV1YL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DABC6C433F1;
+	Wed, 27 Mar 2024 07:17:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711523841;
+	bh=xyQ3ZK+hiMYuRYnTpsz6pSIKbB4/60zOWfr6MnQ/X8I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DprLV1YLawP0EOlRt7GxEvJwPKI3F0zNLQGKZDH7o2CYgPJm+l1Hs9/w3pEgga0Oq
+	 bcmEtWTLQsQIrHiFEv4Gvuvs2aN/Yc2OrriUFNzDRqlCYx6c4Ns431RPsFiSfTgchL
+	 DzXStZ1t86IcWM816wNw9G6K0XeXcqMwn2J1kb5E+3Ah53Ks+AfZ+UL5Ptl4AgAbe/
+	 rPsiOpCGcdNNUTzEOBl/AXnObjgiHlxclOatbS3I5Z6cRGu5gj694fIJIyZAX9d2Z9
+	 y7fC9OPF/XaIWENxEyLrqu57LbbVcRDhuSOD+aqhhFUjY2Dbg8BfVGz8eH80/RgM9B
+	 lGnpP8HcyZy7A==
+Date: Wed, 27 Mar 2024 15:04:05 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] riscv: Fix TASK_SIZE on 64-bit NOMMU
+Message-ID: <ZgPE5e7FzB5H4MnK@xhacker>
+References: <20240227003630.3634533-1-samuel.holland@sifive.com>
+ <20240227003630.3634533-2-samuel.holland@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240227003630.3634533-2-samuel.holland@sifive.com>
 
-Hi Krzysztof,
+On Mon, Feb 26, 2024 at 04:34:46PM -0800, Samuel Holland wrote:
+> On NOMMU, userspace memory can come from anywhere in physical RAM. The
+> current definition of TASK_SIZE is wrong if any RAM exists above 4G,
+> causing spurious failures in the userspace access routines.
+> 
+> Fixes: 6bd33e1ece52 ("riscv: add nommu support")
+> Fixes: c3f896dcf1e4 ("mm: switch the test_vmalloc module to use __vmalloc_node")
+> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 
-krzysztof.kozlowski@linaro.org wrote on Tue, 26 Mar 2024 21:23:48 +0100:
+Reviewed-by: Jisheng Zhang <jszhang@kernel.org>
 
-> Amba bus core already sets owner, so driver does not need to.
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->=20
 > ---
-
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-
-Thanks,
-Miqu=C3=A8l
+> 
+>  arch/riscv/include/asm/pgtable.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+> index 0c94260b5d0c..a564a39e5676 100644
+> --- a/arch/riscv/include/asm/pgtable.h
+> +++ b/arch/riscv/include/asm/pgtable.h
+> @@ -882,7 +882,7 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
+>  #define PAGE_SHARED		__pgprot(0)
+>  #define PAGE_KERNEL		__pgprot(0)
+>  #define swapper_pg_dir		NULL
+> -#define TASK_SIZE		0xffffffffUL
+> +#define TASK_SIZE		_AC(-1, UL)
+>  #define VMALLOC_START		_AC(0, UL)
+>  #define VMALLOC_END		TASK_SIZE
+>  
+> -- 
+> 2.43.0
+> 
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
