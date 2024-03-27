@@ -1,149 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B850F16E875;
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0334E16E87B;
 	Wed, 27 Mar 2024 12:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711542047; cv=none; b=iOduPGIhQUYp+TCshHbsZewnZa7oEWvsXqWtoqe9+qFGAu8APiRDxhVYJoiXOBQt3FEmcdkZkx0aZsTK8WYZw0lR2kTqrJICzveruUBd6M7No38dmDZHPDzZ4V6ksWTtCX7QAmEovsFr1B732KOwHrR3wTICQDD9twnEuE41x+w=
+	t=1711542049; cv=none; b=g43wlYWsVa41qP6oixOzfaHofFO8dcswXvdcHns4bWuoh5jj9db4Fs3qe5bbu96SY20R9nB6369ZcoBrETuzLCbOtO8vrHOtR72byNxOQTwa3VWpz9KQRjIzhu14KvlQQxWre6W98OxGyJYKCYKxY5Z0mP4u9qvHavnWgCWEhkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711542047; c=relaxed/simple;
-	bh=BXLvhNCgC/YLtiNUbjr30+il9Xkr2H1JhrdeFzhOhCw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Dq5qxmrxQJQ00PurEB9PGQ9PtdwAxHjCHNj7xawKGhHXZG2t0bzN/lT7jAZXlxJvRRM5x1py9GQkGUAnrkOMhTkNN8cBewygZcQzJX+XGPl1HmYEV1SEmkwJm6yMI2OVffHD6LiQrGAwduUMyNM2yUmhIJra6pT2kRmO2Ov9UUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EsNfVlKf; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EsNfVlKf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86297C433C7;
-	Wed, 27 Mar 2024 12:20:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711542047;
-	bh=BXLvhNCgC/YLtiNUbjr30+il9Xkr2H1JhrdeFzhOhCw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=EsNfVlKf/cbjveoaQaCuaZwv3HA7LQO3+H6QKJ2rjnEDbKHtHkqtKKpc0BVr48J3D
-	 pM9+/oLX9Q0wrHYXn0vamikbHvQd6235CEyfyjhuimVbtNSwmKYeVqLO69d3PpJowG
-	 /DxtLClMLCfl9Qwdc9z+evzbAGL/3LUdfxOWv/35/Fp705+xQOXHXC2zwdDWrgTEO+
-	 2DVvk3rtOCmZarIAXaVTTZoVG/mAzH+X+uDdbPBH0J+I4Tg3cyUsYMRPPDPHl2N5i9
-	 DTWzZw6eXq0sw/wTS13htDEbXcL73giPYKSe0+luxLz7iHcvDMI01H1Hj4bRFjbd+v
-	 VNFr34wxC/99g==
-From: Sasha Levin <sashal@kernel.org>
-To: stable@vger.kernel.org,
-	nicholas.kazlauskas@amd.com
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Charlene Liu <charlene.liu@amd.com>,
-	Alex Hung <alex.hung@amd.com>,
-	Daniel Wheeler <daniel.wheeler@amd.com>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: FAILED: Patch "drm/amd/display: Port DENTIST hang and TDR fixes to OTG disable W/A" failed to apply to 5.10-stable tree
-Date: Wed, 27 Mar 2024 08:20:45 -0400
-Message-ID: <20240327122045.2836306-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1711542049; c=relaxed/simple;
+	bh=LRqKiwGQKW7zOHKPcIfgNzsz56fEdVAyupC8tElZlts=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qgq3Jkm/ol3l6iZYTvNjPTm0jfHCGI4DfBepHpgje4rZfkEmoBiTeH0+BbDeGSrWZ/G7xRFg3dfHSE8XwqkRaPJLmNhHlBFNPdq1weeeL1aM+V+uEFlZfWZJ5QmSb7U8gFUp35GMZcseULLRi6gyzkQQn/woEec88oXbTbW8KU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8463E2F4;
+	Wed, 27 Mar 2024 05:21:21 -0700 (PDT)
+Received: from pluto (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 934533F694;
+	Wed, 27 Mar 2024 05:20:45 -0700 (PDT)
+Date: Wed, 27 Mar 2024 12:20:39 +0000
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>,
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+Subject: Re: [PATCH v6 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+Message-ID: <ZgQPF_jT07hudU1H@pluto>
+References: <20240323-pinctrl-scmi-v6-0-a895243257c0@nxp.com>
+ <20240323-pinctrl-scmi-v6-3-a895243257c0@nxp.com>
+ <4879ad5d-165c-4118-81f7-8f6348a5a5d4@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Patchwork-Hint: ignore
-X-stable: review
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4879ad5d-165c-4118-81f7-8f6348a5a5d4@moroto.mountain>
 
-The patch below does not apply to the 5.10-stable tree.
-If someone wants it applied there, or to any other stable or longterm
-tree, then please email the backport, including the original git commit
-id to <stable@vger.kernel.org>.
+On Wed, Mar 27, 2024 at 01:46:11PM +0300, Dan Carpenter wrote:
+> Looks really nice.  Just a few small comments below.
+> 
+
+Hi,
+
+I aa having a look at this today (and try to retest it), just a quick remark
+down below...
+
+> On Sat, Mar 23, 2024 at 08:15:16PM +0800, Peng Fan (OSS) wrote:
+> > +
+> > +struct scmi_msg_func_set {
+> > +	__le32 identifier;
+> > +	__le32 function_id;
+> > +	__le32 flags;
+> > +};
+> 
+> This scmi_msg_func_set struct is unused.  Delete.
+> 
+> > +static void
+> > +iter_pinctrl_settings_get_prepare_message(void *message, u32 desc_index,
+> > +					  const void *priv)
+> > +{
+> > +	struct scmi_msg_settings_get *msg = message;
+> > +	const struct scmi_settings_get_ipriv *p = priv;
+> > +	u32 attributes;
+> > +
+> > +	attributes = FIELD_PREP(CONFIG_FLAG_MASK, p->flag) |
+> > +		     FIELD_PREP(SELECTOR_MASK, p->type);
+> > +
+> > +	if (p->flag == 1)
+> > +		attributes |= FIELD_PREP(SKIP_CONFIGS_MASK, desc_index);
+> > +	else if (!p->flag)
+> 
+> This is a nit-pick but could you change these !p->flag conditions to
+> p->flag == 0?  It's a number zero, not a bool.
+> 
+> > +		attributes |= FIELD_PREP(CONFIG_TYPE_MASK, p->config_types[0]);
+> > +
+> > +	msg->attributes = cpu_to_le32(attributes);
+> > +	msg->identifier = cpu_to_le32(p->selector);
+> > +}
+> > +
+> > +static int
+> > +iter_pinctrl_settings_get_update_state(struct scmi_iterator_state *st,
+> > +				       const void *response, void *priv)
+> > +{
+> > +	const struct scmi_resp_settings_get *r = response;
+> > +	struct scmi_settings_get_ipriv *p = priv;
+> > +
+> > +	if (p->flag == 1) {
+> > +		st->num_returned = le32_get_bits(r->num_configs, GENMASK(7, 0));
+> > +		st->num_remaining = le32_get_bits(r->num_configs,
+> > +						  GENMASK(31, 24));
+> > +	} else {
+> > +		st->num_returned = 1;
+> > +		st->num_remaining = 0;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int
+> > +iter_pinctrl_settings_get_process_response(const struct scmi_protocol_handle *ph,
+> > +				       const void *response,
+> > +				       struct scmi_iterator_state *st,
+> > +				       void *priv)
+> > +{
+> > +	const struct scmi_resp_settings_get *r = response;
+> > +	struct scmi_settings_get_ipriv *p = priv;
+> > +
+> > +	if (!p->flag) {
+> 
+> 
+> if (p->flag == 0) {
+> 
+> > +		if (p->config_types[0] !=
+> > +		    le32_get_bits(r->configs[st->loop_idx * 2], GENMASK(7, 0)))
+> > +			return -EINVAL;
+> > +	} else if (p->flag == 1) {
+> > +		p->config_types[st->desc_index + st->loop_idx] =
+> > +			le32_get_bits(r->configs[st->loop_idx * 2],
+> > +				      GENMASK(7, 0));
+> > +	} else if (p->flag == 2) {
+> > +		return 0;
+> > +	}
+> > +
+> > +	p->config_values[st->desc_index + st->loop_idx] =
+> > +		le32_to_cpu(r->configs[st->loop_idx * 2 + 1]);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int
+> > +scmi_pinctrl_settings_get(const struct scmi_protocol_handle *ph, u32 selector,
+> > +			  enum scmi_pinctrl_selector_type type,
+> > +			  enum scmi_pinctrl_conf_type config_type,
+> > +			  u32 *config_value)
+> > +{
+> > +	int ret;
+> > +	void *iter;
+> > +	struct scmi_iterator_ops ops = {
+> > +		.prepare_message = iter_pinctrl_settings_get_prepare_message,
+> > +		.update_state = iter_pinctrl_settings_get_update_state,
+> > +		.process_response = iter_pinctrl_settings_get_process_response,
+> > +	};
+> > +	struct scmi_settings_get_ipriv ipriv = {
+> > +		.selector = selector,
+> > +		.type = type,
+> > +		.flag = 0,
+> 
+> ->flag should be 0-2.
+> 
+
+The .flag in this priv structure is for 'configuring' the iterators in
+the SCMI core to parse a multi-part response, so (looking at how the
+iterators functs are implemented above) setting it here to zero
+means issuing a SETTINGS_GET with attributes.config_flag[19:18] == 0,
+that in turn means requesting just a single config_value to be read...
+
+...if you want to support the other 'flavours' of SETTINGS_GET
+(multiple configs & selected_func) you will have to extend the signature
+of this function to optionally select to readback multiple configs (and to
+allow the return of such multiple config_values) and/or optionally request
+to return the selected function....
+
+...or maybe add distinct wrapper protocol_ops just for these flavours...
+
+Anyway, till now in this series it was avoided to add such 'flavours'
+support (e.g. for multiple configs) since there are no users for the
+multi-config and function selected in the pinctrl driver...so no way to test..
+
+Will the Linux GPIO driver need these ? Should we delay anyway the
+addition of the support of such variants of SETTING_GET for when a real
+user like GPIO driveer appears ?
+
+...anyway @Peng please add a comment somewhere explaining how p->flag is
+used to configure the type of SETTINGS_GET
 
 Thanks,
-Sasha
-
------------------- original commit in Linus's tree ------------------
-
-From 6c605f44086af24d7ac1867245aa10bb3360c5bf Mon Sep 17 00:00:00 2001
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Date: Fri, 15 Dec 2023 11:01:42 -0500
-Subject: [PATCH] drm/amd/display: Port DENTIST hang and TDR fixes to OTG
- disable W/A
-
-[Why]
-We can experience DENTIST hangs during optimize_bandwidth or TDRs if
-FIFO is toggled and hangs.
-
-[How]
-Port the DCN35 fixes to DCN314.
-
-Cc: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Charlene Liu <charlene.liu@amd.com>
-Acked-by: Alex Hung <alex.hung@amd.com>
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
----
- .../dc/clk_mgr/dcn314/dcn314_clk_mgr.c        | 21 ++++++++-----------
- 1 file changed, 9 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn314/dcn314_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn314/dcn314_clk_mgr.c
-index 878c0e7b78abd..a84f1e376dee4 100644
---- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn314/dcn314_clk_mgr.c
-+++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn314/dcn314_clk_mgr.c
-@@ -145,30 +145,27 @@ static int dcn314_get_active_display_cnt_wa(
- 	return display_count;
- }
- 
--static void dcn314_disable_otg_wa(struct clk_mgr *clk_mgr_base, struct dc_state *context, bool disable)
-+static void dcn314_disable_otg_wa(struct clk_mgr *clk_mgr_base, struct dc_state *context,
-+				  bool safe_to_lower, bool disable)
- {
- 	struct dc *dc = clk_mgr_base->ctx->dc;
- 	int i;
- 
- 	for (i = 0; i < dc->res_pool->pipe_count; ++i) {
--		struct pipe_ctx *pipe = &dc->current_state->res_ctx.pipe_ctx[i];
-+		struct pipe_ctx *pipe = safe_to_lower
-+			? &context->res_ctx.pipe_ctx[i]
-+			: &dc->current_state->res_ctx.pipe_ctx[i];
- 
- 		if (pipe->top_pipe || pipe->prev_odm_pipe)
- 			continue;
- 		if (pipe->stream && (pipe->stream->dpms_off || dc_is_virtual_signal(pipe->stream->signal))) {
--			struct stream_encoder *stream_enc = pipe->stream_res.stream_enc;
--
- 			if (disable) {
--				if (stream_enc && stream_enc->funcs->disable_fifo)
--					pipe->stream_res.stream_enc->funcs->disable_fifo(stream_enc);
-+				if (pipe->stream_res.tg && pipe->stream_res.tg->funcs->immediate_disable_crtc)
-+					pipe->stream_res.tg->funcs->immediate_disable_crtc(pipe->stream_res.tg);
- 
--				pipe->stream_res.tg->funcs->immediate_disable_crtc(pipe->stream_res.tg);
- 				reset_sync_context_for_pipe(dc, context, i);
- 			} else {
- 				pipe->stream_res.tg->funcs->enable_crtc(pipe->stream_res.tg);
--
--				if (stream_enc && stream_enc->funcs->enable_fifo)
--					pipe->stream_res.stream_enc->funcs->enable_fifo(stream_enc);
- 			}
- 		}
- 	}
-@@ -297,11 +294,11 @@ void dcn314_update_clocks(struct clk_mgr *clk_mgr_base,
- 	}
- 
- 	if (should_set_clock(safe_to_lower, new_clocks->dispclk_khz, clk_mgr_base->clks.dispclk_khz)) {
--		dcn314_disable_otg_wa(clk_mgr_base, context, true);
-+		dcn314_disable_otg_wa(clk_mgr_base, context, safe_to_lower, true);
- 
- 		clk_mgr_base->clks.dispclk_khz = new_clocks->dispclk_khz;
- 		dcn314_smu_set_dispclk(clk_mgr, clk_mgr_base->clks.dispclk_khz);
--		dcn314_disable_otg_wa(clk_mgr_base, context, false);
-+		dcn314_disable_otg_wa(clk_mgr_base, context, safe_to_lower, false);
- 
- 		update_dispclk = true;
- 	}
--- 
-2.43.0
-
-
-
-
+Cristian
