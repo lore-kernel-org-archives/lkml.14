@@ -1,64 +1,65 @@
-Received: from mail-108-mta188.mxroute.com (mail-108-mta188.mxroute.com [136.175.108.188])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26BD154438
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 22:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98ADA153BCA
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 22:26:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711578370; cv=none; b=YWf+EjW1elDBXnldIFJUF1Nx3soxWBixZ9aA8aPD/R3G2zwX6hTufXSb/JuVvKWXJ06FMeYUqPBJKdZiRlpBthzOtrsAlcbghX1MUcmtM7c7jhsPQ/RskBFwH0jhkXC09uGcZKLKUv0v1NZiAFnBjVy2vZz+p43jnt8Fd2jY2KA=
+	t=1711578380; cv=none; b=synzM0LTLeD9O3RMEYxvWm3JROAR7N5fGANqwbXGH0OC4wlahXn5F2zDzJglzJVrIU0n6LO9T1UGNV/UTsra1SReYgSAeZa+HwzH1+iKhNt8YRL9+RLyaSAKAOwoTgGt6MDkIJEbqpHj87SOeIkldGkag94o6S7mNs25MJ4O10g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711578370; c=relaxed/simple;
-	bh=1iE8P7W9oJH44MhsahqLftnU88zvC+0TSEH6ZniPwWY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uO80eXHN1o4jlTkpvu0zxfMUBZS8A1eKqM8kQ6B+JH4jgV1jcZZ524gvM7qRto9FXhvtnvMnKTXECwKYWeK24X6/LngrEqzdpvJllGo8vkM/GTfreEVZdespeLvVSVcO/c6vrh89TQx5hcNpzUYXxOl5kFOZ1UJ0MQqej45fKJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=l5j3WqYw; arc=none smtp.client-ip=136.175.108.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
+	s=arc-20240116; t=1711578380; c=relaxed/simple;
+	bh=IpFdxipUZyLZ1WGndAkgbYxrgUnIpmiqCPmPgoQjeak=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=APd8m6/QkOQhuGli0+ZhE3Akt+z2YgWxOTGB00FOeHFo+hnaXdyYMRwjBvR8JjabbArBi7m5KSs/JF8DvTFxMJbTs73RAVvBJ1ScbOAj04jHAp9sRIxLbkIgOv1aU/Pi7bkugYi4DWw5QI+OdxN0G5/FeQr5WmnmQbuuiXg7Nqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=0/rHPNp2; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="l5j3WqYw"
-Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta188.mxroute.com (ZoneMTA) with ESMTPSA id 18e8200834f0003bea.00f
- for <linux-kernel@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Wed, 27 Mar 2024 22:20:55 +0000
-X-Zone-Loop: 85ad39cba60223f5a5bdf5e6b713489c151324fb30de
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=hq3LXvJ1k7/mJNF6jC9ba4k3K25mnAdHN91vxGscAic=; b=l5j3WqYwm1yQqP4q7XGWFUr8cc
-	jt4NAY3WR2i7sG+rGOZtAWOJFXP9BtTGtXVgF+3fVP3xD+DshPQatURUBS35MZzndim5GnnqOhva0
-	5ALuPnLQ7h1qrc7Ggu7+Pv7R1gHKNqNVWYyDJFmEvI4Db9CE91ULHxHIwSh2fRY1rA5U1sSryVeaV
-	qZ12MvXLadtqt72XB/FMnr+ci+UvmUr4ogD6mzF5ES2mmtZn32Xc0ZSzsY56rpC8eXBCc2MKQyVU8
-	o1rcJtLDaIpXkmZsQQa61WDvwKcVEAyyBcfpQy8FhcODzG758tEYG2BbRl5Grh/Bkit1sHNQjNxBT
-	bnYAYfbQ==;
-From: git@luigi311.com
-To: linux-media@vger.kernel.org
-Cc: dave.stevenson@raspberrypi.com,
-	jacopo.mondi@ideasonboard.com,
-	mchehab@kernel.org,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	sakari.ailus@linux.intel.com,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="0/rHPNp2"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-41497adae1eso2168005e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 15:26:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1711578376; x=1712183176; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jc/kebwJfSc9In02r4D75fEwv6vQMObeE/5ZkpkXrTQ=;
+        b=0/rHPNp2PG3YSSyg3i/Z7nSAkPEyb0wtVIr1Bd64nIBXoswvKUu60vXe8pZGTDEf0L
+         /qoZkQhmGC0YTlwWhPLh6I0FSTnK/4THPJbhgyIZmAqVotF+4tmxBsROSAaislUr7WTO
+         ls/1PVKhlQuh77EumOXhDE4Np/cLSiVg+YlqF8CPpZHYTzXQFc1UpMuYkIpGNpmEHskB
+         vOhWQJ77qxUvlwTfIcEcPIVQApQNYmrk0LKwzDqdmU0agYXVwKFKY6clRK1iUOREXcXE
+         PgVy2eq988AkC5xClpoanmj6YGawXV7/uFE3roXPBQRh3CKpeVbgi8ynSX8FHGs4qg5S
+         TjVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711578376; x=1712183176;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Jc/kebwJfSc9In02r4D75fEwv6vQMObeE/5ZkpkXrTQ=;
+        b=uDlZVW2xNbzQ2O/h77CY5q82jrawL+ivdXlPO58Zbu+lFyPMvlXtB+QnkjHRGpXvMB
+         rr/6LZlaNUFKPtyOnrbLBmynwNth1ANzWPrJZHyQNtjTAC60LfZxnOU1YiDgyflDF9Tv
+         F1qqcANY/1x9fWSrprrcicZOV9jDMDhbfeskiq73GLdLUdTnf5H0jdqEgQoUsBmLNWfN
+         4vXzV4kwBolbKXNm6+mmyH6/gF1oin2utYzY9I9Mg3kiztzKLeUJctK6ybw+RFlTuAg8
+         R0K4V/8x2D6HSDK/aIXDUdvUa7huyD9v+7ev/15COKBDNviB8GfS0jLndkZ4E9SpaQnI
+         bkOA==
+X-Forwarded-Encrypted: i=1; AJvYcCUS64wQ4bFoXLdMGsrcr6u3U2pir6jrtJJDbNdlxyTePiJe54Xe58ZGp3R4jwz2Ax0jYPTI+CFybCJnsLmW9ylhGaI+HLA162jjBU7C
+X-Gm-Message-State: AOJu0YzKu3SGQBsmedg/nUNi0uhnU4nWqmZjWVBt1ycgNghb8paqJzst
+	pTPIw6ta6Vlibrw7msf5agatpLXR4XPqh/m/cNdp7UVi4W7U5bbO3zTYK3CaQo0=
+X-Google-Smtp-Source: AGHT+IFwNhiusV4dv7iZPuOpk/UITq2tStkbzgluwVYTIG7ZthGgEhWlZHDMpFJQMLFh/fxwUE2peg==
+X-Received: by 2002:a05:600c:22d7:b0:414:8889:5a65 with SMTP id 23-20020a05600c22d700b0041488895a65mr1177566wmg.30.1711578375898;
+        Wed, 27 Mar 2024 15:26:15 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-82-135-80-212.dynamic.mnet-online.de. [82.135.80.212])
+        by smtp.gmail.com with ESMTPSA id l20-20020a05600c1d1400b004146a304863sm3390089wms.34.2024.03.27.15.26.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Mar 2024 15:26:15 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>
+Cc: linux-crypto@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	x@xnux.eu,
-	Luigi311 <git@luigi311.com>
-Subject: [PATCH 05/23] media: i2c: imx258: Add regulator control
-Date: Wed, 27 Mar 2024 16:20:17 -0600
-Message-ID: <20240327222035.47208-6-git@luigi311.com>
-In-Reply-To: <20240327222035.47208-1-git@luigi311.com>
-References: <20240327222035.47208-1-git@luigi311.com>
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] crypto: jitter - Use kvfree_sensitive() to fix Coccinelle warning
+Date: Wed, 27 Mar 2024 23:25:09 +0100
+Message-ID: <20240327222507.42731-3-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,117 +67,32 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Authenticated-Id: personal@luigi311.com
 
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Replace memzero_explicit() and kvfree() with kvfree_sensitive() to fix
+the following Coccinelle/coccicheck warning reported by
+kfree_sensitive.cocci:
 
-The device tree bindings define the relevant regulators for the
-sensor, so update the driver to request the regulators and control
-them at the appropriate times.
+	WARNING opportunity for kfree_sensitive/kvfree_sensitive
 
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Signed-off-by: Luigi311 <git@luigi311.com>
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
 ---
- drivers/media/i2c/imx258.c | 42 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 41 insertions(+), 1 deletion(-)
+ crypto/jitterentropy-kcapi.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
-index df7ed4716762..495eaada2945 100644
---- a/drivers/media/i2c/imx258.c
-+++ b/drivers/media/i2c/imx258.c
-@@ -7,6 +7,7 @@
- #include <linux/i2c.h>
- #include <linux/module.h>
- #include <linux/pm_runtime.h>
-+#include <linux/regulator/consumer.h>
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-device.h>
- #include <media/v4l2-fwnode.h>
-@@ -507,6 +508,16 @@ static const char * const imx258_test_pattern_menu[] = {
- 	"Pseudorandom Sequence (PN9)",
- };
+diff --git a/crypto/jitterentropy-kcapi.c b/crypto/jitterentropy-kcapi.c
+index 76edbf8af0ac..c24d4ff2b4a8 100644
+--- a/crypto/jitterentropy-kcapi.c
++++ b/crypto/jitterentropy-kcapi.c
+@@ -61,8 +61,7 @@ void *jent_kvzalloc(unsigned int len)
  
-+/* regulator supplies */
-+static const char * const imx258_supply_name[] = {
-+	/* Supplies can be enabled in any order */
-+	"vana",  /* Analog (2.8V) supply */
-+	"vdig",  /* Digital Core (1.2V) supply */
-+	"vif",  /* IF (1.8V) supply */
-+};
-+
-+#define IMX258_NUM_SUPPLIES ARRAY_SIZE(imx258_supply_name)
-+
- /* Configurations for supported link frequencies */
- #define IMX258_LINK_FREQ_634MHZ	633600000ULL
- #define IMX258_LINK_FREQ_320MHZ	320000000ULL
-@@ -611,6 +622,7 @@ struct imx258 {
- 	struct mutex mutex;
- 
- 	struct clk *clk;
-+	struct regulator_bulk_data supplies[IMX258_NUM_SUPPLIES];
- };
- 
- static inline struct imx258 *to_imx258(struct v4l2_subdev *_sd)
-@@ -995,9 +1007,19 @@ static int imx258_power_on(struct device *dev)
- 	struct imx258 *imx258 = to_imx258(sd);
- 	int ret;
- 
-+	ret = regulator_bulk_enable(IMX258_NUM_SUPPLIES,
-+				    imx258->supplies);
-+	if (ret) {
-+		dev_err(dev, "%s: failed to enable regulators\n",
-+			__func__);
-+		return ret;
-+	}
-+
- 	ret = clk_prepare_enable(imx258->clk);
--	if (ret)
-+	if (ret) {
- 		dev_err(dev, "failed to enable clock\n");
-+		regulator_bulk_disable(IMX258_NUM_SUPPLIES, imx258->supplies);
-+	}
- 
- 	return ret;
- }
-@@ -1008,6 +1030,7 @@ static int imx258_power_off(struct device *dev)
- 	struct imx258 *imx258 = to_imx258(sd);
- 
- 	clk_disable_unprepare(imx258->clk);
-+	regulator_bulk_disable(IMX258_NUM_SUPPLIES, imx258->supplies);
- 
- 	return 0;
- }
-@@ -1220,6 +1243,18 @@ static void imx258_free_controls(struct imx258 *imx258)
- 	mutex_destroy(&imx258->mutex);
- }
- 
-+static int imx258_get_regulators(struct imx258 *imx258,
-+				 struct i2c_client *client)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < IMX258_NUM_SUPPLIES; i++)
-+		imx258->supplies[i].supply = imx258_supply_name[i];
-+
-+	return devm_regulator_bulk_get(&client->dev,
-+				    IMX258_NUM_SUPPLIES, imx258->supplies);
-+}
-+
- static int imx258_probe(struct i2c_client *client)
+ void jent_kvzfree(void *ptr, unsigned int len)
  {
- 	struct imx258 *imx258;
-@@ -1230,6 +1265,11 @@ static int imx258_probe(struct i2c_client *client)
- 	if (!imx258)
- 		return -ENOMEM;
+-	memzero_explicit(ptr, len);
+-	kvfree(ptr);
++	kvfree_sensitive(ptr, len);
+ }
  
-+	ret = imx258_get_regulators(imx258, client);
-+	if (ret)
-+		return dev_err_probe(&client->dev, ret,
-+				     "failed to get regulators\n");
-+
- 	imx258->clk = devm_clk_get_optional(&client->dev, NULL);
- 	if (IS_ERR(imx258->clk))
- 		return dev_err_probe(&client->dev, PTR_ERR(imx258->clk),
+ void *jent_zalloc(unsigned int len)
 -- 
-2.42.0
+2.44.0
 
