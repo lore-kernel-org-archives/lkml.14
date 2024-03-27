@@ -1,210 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4846436AFE;
-	Wed, 27 Mar 2024 08:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C2F4DA11
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 08:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711529671; cv=none; b=H9Kza/e87gMDMy/kX3CoqDXpm2ftDzjTYxELVj22gjQtuhNPwpuVkc6EXg8VJAvx5YJjWnPPN8YCq5dCwokE7la1GuzPN1/mxaMgLny5s0c2NRYuMy/Cu0q3GjDvftCNP9hN2LFfb03aQ3ym4xhHo0U9iuyKOCF/HRtz7Eg7PHc=
+	t=1711529678; cv=none; b=uxMykUqZtN2kyrJD4MXHYJEdH765Qk2ahWnH6E6lLM9WDv8eW8zrnYeYdQmYTl/j3iAvJeVXo73I9koZVOig3AXJ6bTelhj1Uz6TfDu3rUToh7sCYKBEHX7NVrA/kNICc9lnSnMMck79bN+M+/mrpW+bEKn5uoW5i+JB9Ote6OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711529671; c=relaxed/simple;
-	bh=SgpzKo6HLMQEjZmUiiMRhMUEOtW2adAqo3vdC7W24+U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FM6hFlW97mYmAeATPdFvsVr3RguRC4ztNly+o4viN02Lm83g6y21ULJNmoR10PTTyThpJTpTMmHs1qIrH46EibzFi8ie5Ujx+ekGyHQnDEG15J+Yi3zKSfqDo8J/CcqwtDC1rWaE2CpiDbw81HLFUytivk5cwjG4df/o1bXIHUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VuzKOcNQ; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VuzKOcNQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711529669; x=1743065669;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=SgpzKo6HLMQEjZmUiiMRhMUEOtW2adAqo3vdC7W24+U=;
-  b=VuzKOcNQxgt0DBcRJziYefSNXAA0u36iDSiWnh1i+fn9BJeLbjRrn3AJ
-   WNNh/iDls7/OzKzYFKIqsQaDtU+NXl+JaR8MBt9X07TFA07R3biiFCoM+
-   nxm0vzf9faAatIcm7Mu2rVTdAEc06YElltXgjtJPXyCJ7xLLznLWMsm1r
-   W036mArk3OtYxzxmMgzz6FZLzCMpLvCOHPBSCEVyvP+743skILXyPYL7E
-   8gZ6iav4OzHPn+jE+xB8gxON6JKOeNSL/WGvgMN0bYqzDw01QC3mKSOFC
-   34IYcg/2CLdreeXqShNZUWGL9IWb9NOV8k/xbwUaSx0oi3UMcSNp5NNyc
-   g==;
-X-CSE-ConnectionGUID: 5bgsL15SSAu57/FwAy8prA==
-X-CSE-MsgGUID: slmwq82xR6ChJKoh417MpA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="29094230"
-X-IronPort-AV: E=Sophos;i="6.07,158,1708416000"; 
-   d="scan'208";a="29094230"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 01:54:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,158,1708416000"; 
-   d="scan'208";a="16612483"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.125.242.198]) ([10.125.242.198])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 01:54:25 -0700
-Message-ID: <c838c85e-c448-4f83-a79f-deb20c6aaf90@linux.intel.com>
-Date: Wed, 27 Mar 2024 16:54:22 +0800
+	s=arc-20240116; t=1711529678; c=relaxed/simple;
+	bh=8qeOhLgDp4B6NSdcFUTzjGxs/APrSCobmWoiOp9La28=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Gsx7MKawyPs1PtQ+nX37c9H0YuHJ0bv4kDFhjZ7ilIZwCAAVGywzmhlCyq2m/i1PMj271QeupD66BTjTMSSZeQSbTQwHYHbA6G7dapuGDrXfwIxelEAfAo+0fxyZeBK7rwqEUJw75++wuSmMo89l9VSdwFTnNjRaEpVoPr3YL/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 42R8rtpk037904;
+	Wed, 27 Mar 2024 16:53:55 +0800 (+08)
+	(envelope-from Zhiguo.Niu@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4V4L5S56V1z2Lt7c3;
+	Wed, 27 Mar 2024 16:52:12 +0800 (CST)
+Received: from bj08434pcu.spreadtrum.com (10.0.73.87) by
+ BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Wed, 27 Mar 2024 16:53:53 +0800
+From: Zhiguo Niu <zhiguo.niu@unisoc.com>
+To: <jaegeuk@kernel.org>, <chao@kernel.org>
+CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
+        <niuzhiguo84@gmail.com>, <zhiguo.niu@unisoc.com>, <ke.wang@unisoc.com>,
+        <hongyu.jin@unisoc.com>
+Subject: [PATCH V3] f2fs: fix to adjust appropirate defragment pg_end
+Date: Wed, 27 Mar 2024 16:53:40 +0800
+Message-ID: <1711529620-17576-1-git-send-email-zhiguo.niu@unisoc.com>
+X-Mailer: git-send-email 1.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [kvm-unit-tests Patch v3 04/11] x86: pmu: Switch instructions and
- core cycles events sequence
-Content-Language: en-US
-To: Mingwei Zhang <mizhang@google.com>
-Cc: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Jim Mattson <jmattson@google.com>,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Zhenyu Wang <zhenyuw@linux.intel.com>, Zhang Xiong
- <xiong.y.zhang@intel.com>, Like Xu <like.xu.linux@gmail.com>,
- Jinrong Liang <cloudliang@tencent.com>, Dapeng Mi <dapeng1.mi@intel.com>
-References: <20240103031409.2504051-1-dapeng1.mi@linux.intel.com>
- <20240103031409.2504051-5-dapeng1.mi@linux.intel.com>
- <ZgOwVvTVlvk3iN3x@google.com>
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <ZgOwVvTVlvk3iN3x@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX02.spreadtrum.com (10.0.64.8)
+X-MAIL:SHSQR01.spreadtrum.com 42R8rtpk037904
 
+A length that exceeds the real size of the inode may be
+specified from user, although these out-of-range areas
+are not mapped, but they still need to be check in
+while loop, which is unnecessary.
 
-On 3/27/2024 1:36 PM, Mingwei Zhang wrote:
-> On Wed, Jan 03, 2024, Dapeng Mi wrote:
->> When running pmu test on SPR, sometimes the following failure is
->> reported.
->>
->> PMU version:         2
->> GP counters:         8
->> GP counter width:    48
->> Mask length:         8
->> Fixed counters:      3
->> Fixed counter width: 48
->> 1000000 <= 55109398 <= 50000000
->> FAIL: Intel: core cycles-0
->> 1000000 <= 18279571 <= 50000000
->> PASS: Intel: core cycles-1
->> 1000000 <= 12238092 <= 50000000
->> PASS: Intel: core cycles-2
->> 1000000 <= 7981727 <= 50000000
->> PASS: Intel: core cycles-3
->> 1000000 <= 6984711 <= 50000000
->> PASS: Intel: core cycles-4
->> 1000000 <= 6773673 <= 50000000
->> PASS: Intel: core cycles-5
->> 1000000 <= 6697842 <= 50000000
->> PASS: Intel: core cycles-6
->> 1000000 <= 6747947 <= 50000000
->> PASS: Intel: core cycles-7
->>
->> The count of the "core cycles" on first counter would exceed the upper
->> boundary and leads to a failure, and then the "core cycles" count would
->> drop gradually and reach a stable state.
->>
->> That looks reasonable. The "core cycles" event is defined as the 1st
->> event in xxx_gp_events[] array and it is always verified at first.
->> when the program loop() is executed at the first time it needs to warm
->> up the pipeline and cache, such as it has to wait for cache is filled.
->> All these warm-up work leads to a quite large core cycles count which
->> may exceeds the verification range.
->>
->> The event "instructions" instead of "core cycles" is a good choice as
->> the warm-up event since it would always return a fixed count. Thus
->> switch instructions and core cycles events sequence in the
->> xxx_gp_events[] array.
-> The observation is great. However, it is hard to agree that we fix the
-> problem by switching the order. Maybe directly tweaking the N from 50 to
-> a larger value makes more sense.
->
-> Thanks.
-> -Mingwei
+Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+---
+v3: adjust code positions according to Chao's suggestions
+v2: check i_size within inode lock according to Chao's suggestions
+---
+---
+ fs/f2fs/file.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-yeah, a larger upper boundary can fix the fault as well, but the 
-question is how large it would be enough. For different CPU model, the 
-needed cycles could be different for warming up. So we may have to set a 
-quite large upper boundary but a large boundary would decrease 
-credibility of this validation. Not sure which one is better. Any inputs 
-from other ones?
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index bc190d5..9908017 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -2627,12 +2627,13 @@ static int f2fs_defragment_range(struct f2fs_sb_info *sbi,
+ 	bool fragmented = false;
+ 	int err;
+ 
+-	pg_start = range->start >> PAGE_SHIFT;
+-	pg_end = (range->start + range->len) >> PAGE_SHIFT;
+-
+ 	f2fs_balance_fs(sbi, true);
+ 
+ 	inode_lock(inode);
++	pg_start = range->start >> PAGE_SHIFT;
++	pg_end = min_t(pgoff_t,
++				(range->start + range->len) >> PAGE_SHIFT,
++				DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE));
+ 
+ 	if (is_inode_flag_set(inode, FI_COMPRESS_RELEASED)) {
+ 		err = -EINVAL;
+@@ -2647,8 +2648,9 @@ static int f2fs_defragment_range(struct f2fs_sb_info *sbi,
+ 	}
+ 
+ 	/* writeback all dirty pages in the range */
+-	err = filemap_write_and_wait_range(inode->i_mapping, range->start,
+-						range->start + range->len - 1);
++	err = filemap_write_and_wait_range(inode->i_mapping,
++						pg_start << PAGE_SHIFT,
++						pg_end << PAGE_SHIFT - 1);
+ 	if (err)
+ 		goto out;
+ 
+-- 
+1.9.1
 
-
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>   x86/pmu.c | 16 ++++++++--------
->>   1 file changed, 8 insertions(+), 8 deletions(-)
->>
->> diff --git a/x86/pmu.c b/x86/pmu.c
->> index a42fff8d8b36..67ebfbe55b49 100644
->> --- a/x86/pmu.c
->> +++ b/x86/pmu.c
->> @@ -31,16 +31,16 @@ struct pmu_event {
->>   	int min;
->>   	int max;
->>   } intel_gp_events[] = {
->> -	{"core cycles", 0x003c, 1*N, 50*N},
->>   	{"instructions", 0x00c0, 10*N, 10.2*N},
->> +	{"core cycles", 0x003c, 1*N, 50*N},
->>   	{"ref cycles", 0x013c, 1*N, 30*N},
->>   	{"llc references", 0x4f2e, 1, 2*N},
->>   	{"llc misses", 0x412e, 1, 1*N},
->>   	{"branches", 0x00c4, 1*N, 1.1*N},
->>   	{"branch misses", 0x00c5, 0, 0.1*N},
->>   }, amd_gp_events[] = {
->> -	{"core cycles", 0x0076, 1*N, 50*N},
->>   	{"instructions", 0x00c0, 10*N, 10.2*N},
->> +	{"core cycles", 0x0076, 1*N, 50*N},
->>   	{"branches", 0x00c2, 1*N, 1.1*N},
->>   	{"branch misses", 0x00c3, 0, 0.1*N},
->>   }, fixed_events[] = {
->> @@ -307,7 +307,7 @@ static void check_counter_overflow(void)
->>   	int i;
->>   	pmu_counter_t cnt = {
->>   		.ctr = MSR_GP_COUNTERx(0),
->> -		.config = EVNTSEL_OS | EVNTSEL_USR | gp_events[1].unit_sel /* instructions */,
->> +		.config = EVNTSEL_OS | EVNTSEL_USR | gp_events[0].unit_sel /* instructions */,
->>   	};
->>   	overflow_preset = measure_for_overflow(&cnt);
->>   
->> @@ -365,11 +365,11 @@ static void check_gp_counter_cmask(void)
->>   {
->>   	pmu_counter_t cnt = {
->>   		.ctr = MSR_GP_COUNTERx(0),
->> -		.config = EVNTSEL_OS | EVNTSEL_USR | gp_events[1].unit_sel /* instructions */,
->> +		.config = EVNTSEL_OS | EVNTSEL_USR | gp_events[0].unit_sel /* instructions */,
->>   	};
->>   	cnt.config |= (0x2 << EVNTSEL_CMASK_SHIFT);
->>   	measure_one(&cnt);
->> -	report(cnt.count < gp_events[1].min, "cmask");
->> +	report(cnt.count < gp_events[0].min, "cmask");
->>   }
->>   
->>   static void do_rdpmc_fast(void *ptr)
->> @@ -446,7 +446,7 @@ static void check_running_counter_wrmsr(void)
->>   	uint64_t count;
->>   	pmu_counter_t evt = {
->>   		.ctr = MSR_GP_COUNTERx(0),
->> -		.config = EVNTSEL_OS | EVNTSEL_USR | gp_events[1].unit_sel,
->> +		.config = EVNTSEL_OS | EVNTSEL_USR | gp_events[0].unit_sel,
->>   	};
->>   
->>   	report_prefix_push("running counter wrmsr");
->> @@ -455,7 +455,7 @@ static void check_running_counter_wrmsr(void)
->>   	loop();
->>   	wrmsr(MSR_GP_COUNTERx(0), 0);
->>   	stop_event(&evt);
->> -	report(evt.count < gp_events[1].min, "cntr");
->> +	report(evt.count < gp_events[0].min, "cntr");
->>   
->>   	/* clear status before overflow test */
->>   	if (this_cpu_has_perf_global_status())
->> @@ -493,7 +493,7 @@ static void check_emulated_instr(void)
->>   	pmu_counter_t instr_cnt = {
->>   		.ctr = MSR_GP_COUNTERx(1),
->>   		/* instructions */
->> -		.config = EVNTSEL_OS | EVNTSEL_USR | gp_events[1].unit_sel,
->> +		.config = EVNTSEL_OS | EVNTSEL_USR | gp_events[0].unit_sel,
->>   	};
->>   	report_prefix_push("emulated instruction");
->>   
->> -- 
->> 2.34.1
->>
