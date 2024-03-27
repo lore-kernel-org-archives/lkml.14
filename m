@@ -1,60 +1,59 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2135.outbound.protection.outlook.com [40.107.255.135])
+Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2134.outbound.protection.outlook.com [40.107.113.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22E217BA6;
-	Wed, 27 Mar 2024 02:29:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6F520334;
+	Wed, 27 Mar 2024 02:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.113.134
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711506561; cv=fail; b=rti32+5iKZKGTumbgRhD7xmq6+WqS8fLf5R2qqv99KhKrxuHFADrm4J3OsbGOKxDDZBu3V+rZwb5ld43PGajxqtkpcNp/Sa7k0+9P0wIywv162ACoWo283L73fniYyOlM2RMOtnqzJMWcR6ErNXJ1pR3bcJIas90LXT+i8UXGLI=
+	t=1711506563; cv=fail; b=J78G+fJ4pp4AP4wsuBZs4TjF/gpcLuYVhzpeC86xDhxxPt4JJqyrd9ctamf5e3he0U1HlL34NIS7to/3ew78t30Tl/9nF/A8aXN3f4WjlCapQMQNzvL9tG1Uju11+YzbQNQc6nTv7kVM3DFE4egKVYAmZECae3J0U/9U1US5rXY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711506561; c=relaxed/simple;
-	bh=d5eCP8ZItzhIeDzQQM6S/dKCd3K2JQGytXRFEVsTYmM=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=RcRTuNVncpAiZUiCWlp9ciZWMDZPvLQVVZIvBxnAy242PwGMzM0bLNP/hqzJ6iSR2gLWhDAWSupFehzVILL2IFazf6gLHw4cAQc2rkJBgTOmnqlIMNRAKGCEqSUlLojmH7qJR/TXtjwtp3aA+PXfnjIfkVuBi99P7iZAGz15Onc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=fTjp7iE9; arc=fail smtp.client-ip=40.107.255.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	s=arc-20240116; t=1711506563; c=relaxed/simple;
+	bh=bcSPt0o+R86DMAIyz/4fmPlJuaWr8Db+d/SKKEXBBME=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=n9aDRQh58PybUBBFgNycgHapb1LOYP6eZ8sR3EvFGFQqogyUO/M4xZP1iMLUh3b++WlpPFWwT3Llw1/o6Uz5skf2keiBX5fMiRmuZemmUMpCyQQdX7Ry8ahqo4iZxPWT4gPxkB3HRP8Q+e2dRU769cfv3A5w+QGYmOMi+tXg5IM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alpsalpine.com; spf=pass smtp.mailfrom=alpsalpine.com; dkim=pass (2048-bit key) header.d=alpsalpine.com header.i=@alpsalpine.com header.b=b3KXxCs+; arc=fail smtp.client-ip=40.107.113.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alpsalpine.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpsalpine.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="fTjp7iE9"
+	dkim=pass (2048-bit key) header.d=alpsalpine.com header.i=@alpsalpine.com header.b="b3KXxCs+"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MIIAotVjYImFjrwRQv2Mpb39zMhHp5EZlVH6a3cLwL6Ws8fFzP4CB8YAce/77cCNd7ebN9hMLDmvvVRDay2PUTVgtUu812+3ie6P+8tIYdwAjhY46vBJUi6BkNy6Rs1wdEUTdNwaBVHVjio5o7HNw0WsJl20ELBP2xF2pW4mbDw4PWikacoNKyuZxSk738ie23wOCT/DEgofbfkyIfGQY1rqCnp85+d8Jqd51go8XLhA8P8KkQWD/rQmwOGNA613DLE0A121Uykr72vVfeOKDbaN6Gvw9k173nanzXYJ8ZI7jOD0hfE3yZJ1hMe69bGjR+nKl8HsV5ue7yDanJIZ0g==
+ b=RbpyMUPJoEeyGFRhptpGLhCz+X1xMNyAjN0lzm9dXz3kOGvS5FGncYuNzsSDZ/Op4TuohzqrmRj8ukwKE+fMg4vjTqlcyxcKa2N7GmmLPrbNMZOjaRq5lAiA4EtyqVNqH9H9/buRdUlpvbZnc136UHbYy8vCbdnNW+FiYn+mwYCRh9DyixgQgFdF6eCl4ufP4h/bXzgEq2QsPs+39hYTknZLa7bVQsSGlkutbrJmjbJsuvzw3J1TrRkMBYSKASLBotgdB/8zFpiGi+Ct/ZxQeWrtb96QE4Oj7BnOg/glSr32sjb217zDd5cAwat25dLx6nJVvH6ZRu7VATEg+T+syA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Qaf+zladn37bMtw43Qj0rOz1L1uTahX8BhvlUF1DZIE=;
- b=hvNE0fWxLghoWacgMMiPwUfSyYmcIEiCAGm1H2tCD/Vvqu4yGyamGbBqAx22+DMr8ePu6nPSlW0fwAX+2oxMeelJeE5n5csqhQZCJQLulOoqIAb9a/c/iH19bS0jPpcymOqsaq2UJz4tBNdAo5YesLcu/BRrPGaIuQ46nBoa5Bd+zP4uxcthBluLIQlSSx3iCTmnDb36snGsXdcuy6XRX7wyMi7nIBt4GoT29qM6PWXWLOUAA+d8y77Ja6TFZ+Ra4iYvvP6oYOhyydmyQygQ2lXIhvdIZpp7456J/slF2VwlR19O5kcpWoh+QiBzmKYUK0BGObeZ7CADH2evI4D0yA==
+ bh=rRAj2StyC12et08+jrHIp9lbg8RjAoGkr8bjdFiCeGo=;
+ b=ikY7Gx4gBpRfesnpy9R9UKERhyPzWjai0TH8ByvZsbohKxGztr9h46N4pzvuUOfyAsJmRoK76zfIoioPm874HHNU9JRfGtKYW4MnAGYX9DcalFGbXxri+StzJD4OhpH80nmINE3+Fw9cFbvD/T+mH8Y8fC3Cow1QhrHc2LsOrYswHohJkUuj5UpMyUfl5klXWV8ARsk9VWB4vu9LIY0BJs+cZUrax8mplrRLpGfMpYeESLoxsmQjUgK6sExQpROng8De4xCc+ojYtFBClQHoi7wqMhQykibRdhTkv23AwXvs105guzZxMZqHcz2NgpIKKglon4ZB/oa5mbmLhRoZyQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ smtp.mailfrom=alpsalpine.com; dmarc=pass action=none
+ header.from=alpsalpine.com; dkim=pass header.d=alpsalpine.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alpsalpine.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qaf+zladn37bMtw43Qj0rOz1L1uTahX8BhvlUF1DZIE=;
- b=fTjp7iE9XQ2gNOb7OFSK4Fe3hyauLCeQZhFwm80W7B3rZTdbvJUP/vMu+OpnYYHPB43u5TLhDX+iiZUYWJSOTuzeAKbO1Efd6y4gg082RTHEysvdJr5bOhakX0HUNpxqGvColG6sHXZCimGtqXa8EkmaO6iR6/ZHMX6U7Tay6MitaQB/vOO1tyxMPCuXSmwsaSu7jrKEh3qx5vlOlEt3V3KN/exdkutC3HV/oh7I2Cpff7c80ek/VbYpCO+s6jLObOmbwX82SPwWqoSsuv4UoqrMfjihgKL6FmWWle0NoxA0NMWHvDHNaPeHO6EejOQiQm+QBdyoIDoLWhjcX/sfGA==
-Received: from JH0PR06MB6849.apcprd06.prod.outlook.com (2603:1096:990:47::12)
- by SEZPR06MB5176.apcprd06.prod.outlook.com (2603:1096:101:73::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.33; Wed, 27 Mar
- 2024 02:29:12 +0000
-Received: from JH0PR06MB6849.apcprd06.prod.outlook.com
- ([fe80::575d:49f:44bb:b50d]) by JH0PR06MB6849.apcprd06.prod.outlook.com
- ([fe80::575d:49f:44bb:b50d%6]) with mapi id 15.20.7409.028; Wed, 27 Mar 2024
- 02:29:12 +0000
-From: Zhiguo Jiang <justinjiang@vivo.com>
-To: Sumit Semwal <sumit.semwal@linaro.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org,
+ bh=rRAj2StyC12et08+jrHIp9lbg8RjAoGkr8bjdFiCeGo=;
+ b=b3KXxCs+DP8yHtv6YfeZexzdcchvM7zqZQMIV7IZD1N+Erk4aL8k6jqlTdWDWm3w7/k3ekJxVp9381sUEdtuO1aNQUH4lkNjOgKI7lh485GZ1pqRyAz1aFj52N24QUX9ApABIVvx0TQ0L63sv51edJclDU4CWd+9EzJkFbCQzYAoMlUNo3TRfzaTn2GVUadcSmpRjKcoyRut7dHKW0iqA7PASuAE4AezyA91/Xi7+F+4dLgsRh1sr2K0cGnSP39bKJrs6XBSLC++yO9eJlb/IYmnH0QOYrsSbpicPF+d7eEiWaUALh4WkJGjwQng9K/yav/40d0NIR3HrAqonFTb1g==
+Received: from TYVPR01MB10781.jpnprd01.prod.outlook.com
+ (2603:1096:400:2ae::14) by TYWPR01MB10969.jpnprd01.prod.outlook.com
+ (2603:1096:400:395::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.26; Wed, 27 Mar
+ 2024 02:29:16 +0000
+Received: from TYVPR01MB10781.jpnprd01.prod.outlook.com
+ ([fe80::b541:f53c:6306:6e2b]) by TYVPR01MB10781.jpnprd01.prod.outlook.com
+ ([fe80::b541:f53c:6306:6e2b%4]) with mapi id 15.20.7409.031; Wed, 27 Mar 2024
+ 02:29:16 +0000
+From: Norihiko Hama <Norihiko.Hama@alpsalpine.com>
+To: balbi@kernel.org,
+	gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: opensource.kernel@vivo.com,
-	Zhiguo Jiang <justinjiang@vivo.com>
-Subject: [PATCH] dmabuf: fix dmabuf file poll uaf issue
-Date: Wed, 27 Mar 2024 10:29:03 +0800
-Message-ID: <20240327022903.776-1-justinjiang@vivo.com>
-X-Mailer: git-send-email 2.41.0.windows.3
-Content-Transfer-Encoding: 8bit
+Cc: Norihiko Hama <Norihiko.Hama@alpsalpine.com>
+Subject: [PATCH v2] usb: gadget: f_ncm: Fix UAF ncm object at re-bind after usb ep transport error
+Date: Wed, 27 Mar 2024 11:35:50 +0900
+Message-Id: <20240327023550.51214-1-Norihiko.Hama@alpsalpine.com>
+X-Mailer: git-send-email 2.17.1
+Content-Transfer-Encoding: 7bit
 Content-Type: text/plain
-X-ClientProxiedBy: SG2P153CA0038.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c6::7)
- To JH0PR06MB6849.apcprd06.prod.outlook.com (2603:1096:990:47::12)
+X-ClientProxiedBy: OS0P286CA0153.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:604:16a::10) To TYVPR01MB10781.jpnprd01.prod.outlook.com
+ (2603:1096:400:2ae::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,172 +61,124 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: JH0PR06MB6849:EE_|SEZPR06MB5176:EE_
+X-MS-TrafficTypeDiagnostic: TYVPR01MB10781:EE_|TYWPR01MB10969:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	dIU0N4othX3dc6e9RQlVhM9w+pXR+F/2POdw9JiXqnt7eoCbjsbQ8gEl+WloZuFn/d8H3vmdGmjBi47rIZUohwiMARUpwNxVLB7OB6No9KzSNQbW/GlHkngeIPoMiUuBKRmk/X/C5uVCYQfwKzclRQaEdYlUpOoGgdlqHrL24kpqoCMXccndGJCrQWalrC4W7pB1E3dyub2Cwby2EKW9g04utrWSHdjoNyIXFkX6Q5MoJPfNv5cjRxaCYtaL5/v9jNTIHNkKxb6mhOESMesnvcWg8F2hGiktdKoOamz9nb1yHAggXrQloSMpG9ZGik2mtdOWwRWaUWpolkwpoRLJ1easvcnD3UQEWVtUCdRiHWJbCxLPWgNFXsohYzJ/5705xt3wiGarkdNGK/FBefHp1C2R5Qff2/4c5aU6It5p+AGH4umTV/DiZV66XljAeBFhLBkuc8x3B+4lMlcMzcA2QuWXR/qye01S3zVvbRAimXwtVnI79/WQ9Wram6iFPAvVah5OCWQi0X7HS4HDCcuXOG6OnnnEBbVgUczVN3Fpx1DCA5uEPH1uRuj18AM59NO35Q0o/yQM0oC6QB7lDK2QenAdzXG/u8cu61bCg4pgEplhElKdrkQBUoxkTcrpP8go7JQwMGFP6iQ9RA/Aj+hwkNtLnmp4WnKjf1JjyJsYK7VxJPilaIltz3XvScMbZTuxNmtsk76TucMIh3prdSDn8V/h+CHqiNCq4w7Fee8VJsQ=
+	EU7mViq5Bi2pcI3+xwNi35c2656rGI7s2VGLFFwx8K5NOYP//Xdcm/Pz3YSI7AZUMLrdPxZl1Y9QEKCjMGMlHUmKockKwDgVLT6fqg43/wyXgGyOHstDnhjUjkEhRD1u89mW1mXSzI8jy4lgT/hR+7ULGXtCS8ywDzwi7OSYuY4MTdTFtF/pkshLayqMA/Sar9OF5bkV/DV6wCvP+gp3osjRTyXE0hkXqT22TnsT7ycuIxzLAFO7TLP4WqA3m8BLGVSOB8jEHbixYsvBTKRt6ninPu2qd5558t7+3xwBLE4eOMFyHeczgEDP6sK3YxBKF8knBPpeVQZKGFlR0+8ZwwfxFwefWRpwdzsQsfrveVuw3W0OOJGkNhDv0w6az4fYXElQYN22uux60lIcZxcXg9g1Bvkq1h4Ti6nfNzJk1Pwx//0pF4YrJFKMd8gEzDToGM3+J3R/SK3WE4kJQ+o6h5AgDNz8717HtHyQL8VVFLhElnX87Atc70rpPU26dKMMXgZjGOtJw2+VFsGLlnmwRnEqZtb3Y1jLx7x6KzpB8jmGoUWiXrPUtp9hLP5iu/4iuVUujM1bEhjXcKGf1FWXqN5K/mIEw342PbgR67mhDtAMKlwT13yPMu1tNkJtaBHrNRKqWQUMbAalkALgoMggYzndHU1gePQk0s6MvgDerWy+o/3rA2I5VaUnx3DowKSKGEgyyOUg+CAjI8lOgl3dBw==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:JH0PR06MB6849.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(52116005)(1800799015)(366007)(38350700005);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYVPR01MB10781.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(52116005)(366007)(1800799015)(376005)(38350700005);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?XkbhkUqakJfIbYcYloP9Z1dwaQJZz4YfZ7vVWnYAqfdxkUiCRQKtKz0Xm/xT?=
- =?us-ascii?Q?WIvh0t9qO4duCgKEugqCy7vdtmz723WigV0aBD3N7SwrSfa0P5+ALANMvsP7?=
- =?us-ascii?Q?SJf5LzT6G8SJQ+seobnY6TCC3amOgS3x0Iksm0X1KNQEaTgj3DhGOkITcAz7?=
- =?us-ascii?Q?fGeo3fD/15czz4Sxx8hpvl7c7oWQEvEEKziAQW2/hEr361Lwys4sLxlfuJww?=
- =?us-ascii?Q?mbpBddbrcdWj/XaWqF8+WSQByOmj5D1jyral4wljgb6rkF28Wpu/xH4YFGxD?=
- =?us-ascii?Q?qUgy5CKnr6yrjZ8sLud6YlMpy2GmTw3hfY5K9y1LcZX0mW6/ELlqny2oLrH+?=
- =?us-ascii?Q?Zag1ICiGHrr/xBxMJuhs0NrFkm5+If05f8R2p98uNwycT9w5jF6BtGuLLiP3?=
- =?us-ascii?Q?P/tPlyrHlojY8+3Sk3jBdBgRq/1oUj7Z6MRnUwsXQk0za5zLr2S7XZlMUM8b?=
- =?us-ascii?Q?5WopB4RLEn37hfTOHCHohATvwhsD9gkWBdy1LMBZ8r/wqhxbEAg7RbTpd8pM?=
- =?us-ascii?Q?lxYPxoqhth3K4X3Joar8EamfY0l5AoSGVhwEE6AIt3jgG7pq7SnX6eRM9+89?=
- =?us-ascii?Q?gQvW85lsCiVb2ye5QCtNYekk4uxE4ZM2GZ8+PGhMbkCNtaWdG1pnNpvzw7Ah?=
- =?us-ascii?Q?y9PWfau+hFfC1dVzi6P2R2L4rj2QRmdoWwAjRcgOjN5U3YuhKXkJ5uCBcfXk?=
- =?us-ascii?Q?1BAJyQuycCteL1+rm9BAnm7Ud8wTE0HZYdwekc1YK6gJSuP/BgFHAubHqgYs?=
- =?us-ascii?Q?GKdzM61vg1M0564kyS0JNj6Sp88Q1tUZ3RZ4C/6GLlTGaJI8HcEkVwvfKDLN?=
- =?us-ascii?Q?5X+K9tYKBA8/5C3HkvWvkZuQsk6/BLofH5NvahRyafVNarAce5ogB+dimGOx?=
- =?us-ascii?Q?l8CpQc81fn/28O3+ZeibceCQ9A3Z8k4rCf3ToLGm/U1EVzkwZ7JMNofWm3y0?=
- =?us-ascii?Q?KKq6sjBuyIerEIq74azgzk4MesbcDipfyZEek0eLGYywGxIBKCO8qGdtWWnM?=
- =?us-ascii?Q?3dgLaQRWZ6cM+QCeU7PY6TEj+OM8yzVzm42mdVnjF9ncFFuN1Kr8uLB40qL7?=
- =?us-ascii?Q?k/TN437XmroejNsFsp3MlD6tdpANpr2QzZ6bSe8suwR3BXyKnuEkLUMWTOLY?=
- =?us-ascii?Q?CKrhomSXrdSg+yX/WWbCMTNspCV5GH42rn0jwLeRUG+Zaa0i3FsUZCtHDlpt?=
- =?us-ascii?Q?XsKhJyC+xLp8J58iDM35+CVhJAHJ/RuGqa1cUjPsw6h3VCkqaterBEWFngDu?=
- =?us-ascii?Q?wJYdFxEnwGOmvKuQdWkw091KexsI4EhUuGyrpE3ZTSvSsFEL6M7kIdo+c3RC?=
- =?us-ascii?Q?muX/DfB9dndt8g5TWf0pnEU7rvJN4PAFEUFy6nMK3RPBmrQ1IyYjh9CnGsq7?=
- =?us-ascii?Q?UtI3O9zbm9T2lLhOxPXId+SrQ6QKKYcyCo8SjJ80j/A9h5JMHz1POZYXbGIt?=
- =?us-ascii?Q?3/WxvfvCNqEIb6ncBOLIA0HqU8OP901wYs9gUmfw5UdU/fjdbxCDfBY0BSgb?=
- =?us-ascii?Q?PZcqaPNfTP6BKdItLG4Sf2yv8JK7de1jpn65fhHGsWUDWMkgwG9GONIjvixA?=
- =?us-ascii?Q?qmOwzIqyQaRhO/Bxvf2Xlf6hT3ZU/m6XXS+aDcZz?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b0ee4ad5-ceec-4a4e-526c-08dc4e05b040
-X-MS-Exchange-CrossTenant-AuthSource: JH0PR06MB6849.apcprd06.prod.outlook.com
+	=?us-ascii?Q?yiC2YxHko/cMDoCdsxfTABZokbbcoKnFZmA3YLA6bMTyAGswhL+6Nct7XT3N?=
+ =?us-ascii?Q?ZmzXu89pw4KXzxg1WAPsVgH61ir9WoiiEc3u141rf4MwBn6egKaB1olPEfwQ?=
+ =?us-ascii?Q?9m2mIsa4SfW1Wu9KlKzui35DwMx7tYx2nd/2n5L61SVdthA16RqIZMLnKaRi?=
+ =?us-ascii?Q?FfX/CSdis+egIZtgeiEwyXo0OAjQW/aszmoKjRRl69u3FoZgT7NMRzOlaMOh?=
+ =?us-ascii?Q?EtNWeNAGgzl4OBVN+tCDT7mn2U/7trgPZHbk+/U+E0CQNCsdgflJlkifsZHA?=
+ =?us-ascii?Q?QALHOjlRDfj+/36sEs4luqa80yZ3WInMUPKt1MQ5vg5YDMLi81696DwJMrhj?=
+ =?us-ascii?Q?YpZwu1qcui0XTmtdMzsvvjh+/iqZmVhR6H6m8LlXwGwDeyo8KW42B4zdeGvj?=
+ =?us-ascii?Q?Vxr4GgvehpdzYDuTIsVwen7uyAbTgf54wCqAS5SXzH/JCaj40Qny0+okksFL?=
+ =?us-ascii?Q?ACCTjAtOOcVaWf/bXuD9+rCjqYAtBMRk8FTPx0+ep6sncani59vn+N8pkSlm?=
+ =?us-ascii?Q?dDu/9LKsdN9SCQPO+c9yHxPd3GhtLRrPmCrcDPczAlt3XfHsQFmIfm/Fzurt?=
+ =?us-ascii?Q?zZABezssPhQfAwLLZirKGq1p/UMMdroLeESyDqbOWCNzlwjvbQIhIDKWVpUh?=
+ =?us-ascii?Q?WEwqJUZmxalJozH1g7aA3/g7cANTNGZh5wIIivAuIwBi4R3XEku1Xa+oVihu?=
+ =?us-ascii?Q?LVvabd8mofER1TiO4f8nJFgBfCfjEvDjVXnPHGSKYRAvwQWEGHgefnEJh0kA?=
+ =?us-ascii?Q?v6I/Q+N40Dy1IcWZjFl8xofp/TdO8e9zRYXqzDDwrETKNpNpqeFpLYUaJAf/?=
+ =?us-ascii?Q?zWUOGe+JlF4elUxbUa27hX6HemJOgYOTYqO6FwDQx8S7/CgYRoE0LnHClMd5?=
+ =?us-ascii?Q?x0zpYxv+RQaxaKKozlg2w5gzQozgcJPdqVHXaNGnw6WjLgFoq+dflcN5Rp9s?=
+ =?us-ascii?Q?Fgh5A1h20OvHtMBVCSiChgEFEx61gn3Stds07jMJ5GmUe+K8FNdLPFcF6MGa?=
+ =?us-ascii?Q?DLxh+mmunWXF1uXKyk/7EgdDOJRPNO8eoUJSdQXKB39fKP+kAv+wNhweiC31?=
+ =?us-ascii?Q?hMvY2YHPJdIf1mPEkNRX6JNjarvZkbGT7hdC3S6i7gGSOav+BnWiFKs1Xlj5?=
+ =?us-ascii?Q?satuK5zfcAovd2ghhyq7n4kE0JLjBLif40YxVL0dBact9L88vKqTBF47FWxP?=
+ =?us-ascii?Q?qVEMsvKJT3auhZJpJne+fabHo59H8eCI7yOBNGGZcjreDbFOmXdkQBAQQjYB?=
+ =?us-ascii?Q?ziZgH4hn4o1ksEyHwv07Zt8kq9HtgZYhmBNAM/pgF5q+VsGouvUoq/3WDacZ?=
+ =?us-ascii?Q?Chaqag5Ky7m3aQ8c94zMslQ7BGwWXWmPQCWLl1JH0ave5SL2j5EoxVlMazoA?=
+ =?us-ascii?Q?gNQd/uB6jOOlSBVLNvK9fZOLGJ4mBCH6s+zlRwPf56c1T0eOUVfmxqCfKxPf?=
+ =?us-ascii?Q?kxUoefV9TmyfflQzTIWjhB4Do9nYQz9w2D8nJTIMGcZx5MPV6tGEiy7yXc0h?=
+ =?us-ascii?Q?IluEUM+RzXWx/marcBhf3KdDKk2u68SsfNaCjypMIevwT/XcUxRiYVyuMhJK?=
+ =?us-ascii?Q?/IFjSYqkvJys1URt5zDJoViuau8AlvQmRsBFEAua?=
+X-OriginatorOrg: alpsalpine.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af0511cd-0944-4012-8a25-08dc4e05b297
+X-MS-Exchange-CrossTenant-AuthSource: TYVPR01MB10781.jpnprd01.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2024 02:29:11.9721
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2024 02:29:15.9086
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-Id: 57e76998-77bd-4b82-a424-198f46eb2254
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tqWMMCO9whZl2fUqDSoG8hjwTCfJzA9A8KX+tkJ0R0yZbI9FhNtTb6yAIUlfoWvY378gz1LdesizAk3QE0uh4w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB5176
+X-MS-Exchange-CrossTenant-UserPrincipalName: +AYx2TnEREaKZsqsED2tNBIZG8PPXGt01Y0g9ylmjD5dNoM0zUXWfWWLx+wuNUxnBmrXaJi8DoZN2+aOEap7Aw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWPR01MB10969
 
-The issue is a UAF issue of dmabuf file fd. Throght debugging, we found
-that the dmabuf file fd is added to the epoll event listener list, and
-when it is released, it is not removed from the epoll list, which leads
-to the UAF(Use-After-Free) issue. 
+It seems to be potential issue for long time.
 
-The UAF issue can be solved by checking dmabuf file->f_count value and
-skipping the poll operation for the closed dmabuf file in the
-dma_buf_poll(). We have tested this solved patch multiple times and
-have not reproduced the uaf issue.
+When ncm function is working and then stop usb0 interface for link down,
+eth_stop() is called. At this piont, accidentally if usb transport error
+should happen in usb_ep_enable(), 'in_ep' and/or 'out_ep' may not be enabled.
 
-crash dump:
-list_del corruption, ffffff8a6f143a90->next is LIST_POISON1
-(dead000000000100)
-------------[ cut here ]------------
-kernel BUG at lib/list_debug.c:55!
-Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
-pc : __list_del_entry_valid+0x98/0xd4
-lr : __list_del_entry_valid+0x98/0xd4
-sp : ffffffc01d413d00
-x29: ffffffc01d413d00 x28: 00000000000000c0 x27: 0000000000000020
-x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000080007
-x23: ffffff8b22e5dcc0 x22: ffffff88a6be12d0 x21: ffffff8b22e572b0
-x20: ffffff80254ed0a0 x19: ffffff8a6f143a00 x18: ffffffda5efed3c0
-x17: 6165642820314e4f x16: 53494f505f545349 x15: 4c20736920747865
-x14: 6e3e2d3039613334 x13: 2930303130303030 x12: 0000000000000018
-x11: ffffff8b6c188000 x10: 00000000ffffffff x9 : 6c8413a194897b00
-x8 : 6c8413a194897b00 x7 : 74707572726f6320 x6 : 6c65645f7473696c
-x5 : ffffff8b6c3b2a3e x4 : ffffff8b6c3b2a40 x3 : ffff103000001005
-x2 : 0000000000000001 x1 : 00000000000000c0 x0 : 000000000000004e
-Call trace:
- __list_del_entry_valid+0x98/0xd4
- dma_buf_file_release+0x48/0x90
- __fput+0xf4/0x280
- ____fput+0x10/0x20
- task_work_run+0xcc/0xf4
- do_notify_resume+0x2a0/0x33c
- el0_svc+0x5c/0xa4
- el0t_64_sync_handler+0x68/0xb4
- el0t_64_sync+0x1a0/0x1a4
-Code: d0006fe0 912c5000 f2fbd5a2 94231a01 (d4210000) 
----[ end trace 0000000000000000 ]---
-Kernel panic - not syncing: Oops - BUG: Fatal exception
-SMP: stopping secondary CPUs
+After that, ncm_disable() is called to disable for ncm unbind
+but gether_disconnect() is never called since 'in_ep' is not enabled.
 
-Signed-off-by: Zhiguo Jiang <justinjiang@vivo.com>
+As the result, ncm object is released in ncm unbind
+but 'dev->port_usb' associated to 'ncm->port' is not NULL.
+
+And when ncm bind again to recover netdev, ncm object is reallocated
+but usb0 interface is already associated to previous released ncm object.
+
+Therefore, once usb0 interface is up and eth_start_xmit() is called,
+released ncm object is dereferrenced and it might cause use-after-free memory.
+
+[function unlink via configfs]
+  usb0: eth_stop dev->port_usb=ffffff9b179c3200
+  --> error happens in usb_ep_enable().
+  NCM: ncm_disable: ncm=ffffff9b179c3200
+  --> no gether_disconnect() since ncm->port.in_ep->enabled is false.
+  NCM: ncm_unbind: ncm unbind ncm=ffffff9b179c3200
+  NCM: ncm_free: ncm free ncm=ffffff9b179c3200   <-- released ncm
+
+[function link via configfs]
+  NCM: ncm_alloc: ncm alloc ncm=ffffff9ac4f8a000
+  NCM: ncm_bind: ncm bind ncm=ffffff9ac4f8a000
+  NCM: ncm_set_alt: ncm=ffffff9ac4f8a000 alt=0
+  usb0: eth_open dev->port_usb=ffffff9b179c3200  <-- previous released ncm
+  usb0: eth_start dev->port_usb=ffffff9b179c3200 <--
+  eth_start_xmit()
+  --> dev->wrap()
+  Unable to handle kernel paging request at virtual address dead00000000014f
+
+This patch addresses the issue by checking if 'ncm->netdev' is not NULL at
+ncm_disable() to call gether_disconnect() to deassociate 'dev->port_usb'.
+It's more reasonable to check 'ncm->netdev' to call gether_connect/disconnect
+rather than check 'ncm->port.in_ep->enabled' since it might not be enabled
+but the gether connection might be established.
+
+Signed-off-by: Norihiko Hama <Norihiko.Hama@alpsalpine.com>
 ---
- drivers/dma-buf/dma-buf.c | 28 ++++++++++++++++++++++++----
- 1 file changed, 24 insertions(+), 4 deletions(-)
- mode change 100644 => 100755 drivers/dma-buf/dma-buf.c
+ drivers/usb/gadget/function/f_ncm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-index 8fe5aa67b167..e469dd9288cc
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -240,6 +240,10 @@ static __poll_t dma_buf_poll(struct file *file, poll_table *poll)
- 	struct dma_resv *resv;
- 	__poll_t events;
+diff --git a/drivers/usb/gadget/function/f_ncm.c b/drivers/usb/gadget/function/f_ncm.c
+index bd095ae569ed..23960cd16463 100644
+--- a/drivers/usb/gadget/function/f_ncm.c
++++ b/drivers/usb/gadget/function/f_ncm.c
+@@ -888,7 +888,7 @@ static int ncm_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
+ 		if (alt > 1)
+ 			goto fail;
  
-+	/* Check if the file exists */
-+	if (!file_count(file))
-+		return EPOLLERR;
-+
- 	dmabuf = file->private_data;
- 	if (!dmabuf || !dmabuf->resv)
- 		return EPOLLERR;
-@@ -266,8 +270,15 @@ static __poll_t dma_buf_poll(struct file *file, poll_table *poll)
- 		spin_unlock_irq(&dmabuf->poll.lock);
+-		if (ncm->port.in_ep->enabled) {
++		if (ncm->netdev) {
+ 			DBG(cdev, "reset ncm\n");
+ 			ncm->netdev = NULL;
+ 			gether_disconnect(&ncm->port);
+@@ -1365,7 +1365,7 @@ static void ncm_disable(struct usb_function *f)
  
- 		if (events & EPOLLOUT) {
--			/* Paired with fput in dma_buf_poll_cb */
--			get_file(dmabuf->file);
-+			/*
-+			 * Paired with fput in dma_buf_poll_cb,
-+			 * Skip poll for the closed file.
-+			 */
-+			if (!get_file_rcu(&dmabuf->file)) {
-+				events &= ~EPOLLOUT;
-+				dcb->active = 0;
-+				goto clear_out_event;
-+			}
+ 	DBG(cdev, "ncm deactivated\n");
  
- 			if (!dma_buf_poll_add_cb(resv, true, dcb))
- 				/* No callback queued, wake up any other waiters */
-@@ -277,6 +288,7 @@ static __poll_t dma_buf_poll(struct file *file, poll_table *poll)
- 		}
+-	if (ncm->port.in_ep->enabled) {
++	if (ncm->netdev) {
+ 		ncm->netdev = NULL;
+ 		gether_disconnect(&ncm->port);
  	}
- 
-+clear_out_event:
- 	if (events & EPOLLIN) {
- 		struct dma_buf_poll_cb_t *dcb = &dmabuf->cb_in;
- 
-@@ -289,8 +301,15 @@ static __poll_t dma_buf_poll(struct file *file, poll_table *poll)
- 		spin_unlock_irq(&dmabuf->poll.lock);
- 
- 		if (events & EPOLLIN) {
--			/* Paired with fput in dma_buf_poll_cb */
--			get_file(dmabuf->file);
-+			/*
-+			 * Paired with fput in dma_buf_poll_cb,
-+			 * Skip poll for the closed file.
-+			 */
-+			if (!get_file_rcu(&dmabuf->file)) {
-+				events &= ~EPOLLIN;
-+				dcb->active = 0;
-+				goto clear_in_event;
-+			}
- 
- 			if (!dma_buf_poll_add_cb(resv, false, dcb))
- 				/* No callback queued, wake up any other waiters */
-@@ -300,6 +319,7 @@ static __poll_t dma_buf_poll(struct file *file, poll_table *poll)
- 		}
- 	}
- 
-+clear_in_event:
- 	dma_resv_unlock(resv);
- 	return events;
- }
 -- 
-2.39.0
+2.17.1
 
