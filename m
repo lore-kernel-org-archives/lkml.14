@@ -1,86 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-108-mta190.mxroute.com (mail-108-mta190.mxroute.com [136.175.108.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90402433D8;
-	Wed, 27 Mar 2024 23:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFB5154BF3
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 23:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711581453; cv=none; b=ks6C7k9crJ2ljBRUEV5Uh22OXJgsnqY+9mEOkeXWj1A4uglDIMKKQS5K4um+8i2EjFq/QUx5qMlXzxYn/O9015Bvlr/1lEN/wx/E7fs3CrqP/gB7gcl27r1gwtF3FIfUGXFhPWn4ewlQV1QwaLIjZlpLnt+KruWi0J/SCVNKRZE=
+	t=1711581470; cv=none; b=Ra/e8GMPPfsGeVhQihA9U5m7OY8fDa1NHPm32uUv7tisIpU2+WsiJ4AtdxBXmmw159tPxXzxYJBfF6Crc0haFGGKoU2S4s+9RalvAGjfjzVIIJc8UuSbRS60A8KGDYmK9mzB1L35y1mMK9jdX0ddaDVBD/Axvy6lY1YHa02D3Xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711581453; c=relaxed/simple;
-	bh=4WjYjDwm3w6B8gj/uMoHHzsRpfRNRmomT5co1eXnBjg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s/KFP/C9DOPveRynt/UK/ss8eHPAl2L35k3u2e+ru7886LMrFB1tZxgfQDcdMU0Q9jUoXXHghprJX+gG1BrSo/6QFbMTJuypzG2bepo7V0vmSQgSLJgNvTcuVfSs6dswmPBoZgKyZXNrBKoPrQaD/LTySS176fWFhlyE44YrzNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dmHuOjuk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711581470; c=relaxed/simple;
+	bh=1iE8P7W9oJH44MhsahqLftnU88zvC+0TSEH6ZniPwWY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MWJBqtExIo/niPOnFpIXU9eIwzO84cp4x4tgLLeLitmtcbqIoErSql6mojP96e+cFPiaC9/whLlCoKLzmSst/5BGOJ7bJsNuATHhh7cZJ5bKTyVpNvDM25j5jStHI23ZKmupAlQudNwy8EkEwTqDNlv7vSSXwxt+a8YiSfYaYVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=ZFaMkrGC; arc=none smtp.client-ip=136.175.108.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dmHuOjuk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B581C433F1;
-	Wed, 27 Mar 2024 23:17:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711581453;
-	bh=4WjYjDwm3w6B8gj/uMoHHzsRpfRNRmomT5co1eXnBjg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=dmHuOjukP1kaGro22Y0vhnpswDZgRdNyRJt7B3uGRuZ3lrksJ4JUVg52O1Kgj1vfh
-	 k/y/tJjqqZ8kepp0hFZ7qKpem4EkaPTqM2f8kWLalCtunJG0JcGrUPS1XtdX0JsFGa
-	 l4YeBpR0lwCCqKFDNdEFsLlXcCvsxVFxwUsn6WFgPywShmEWGNhjD+ZicAz2r3Xs4h
-	 solnW6arXUGJ59dtOVSX2DaabGrPHCbxJ776kZcuUYodG1V3xwAPVd5DvqW+XNrr0J
-	 DTXYfNZDphhJlhZ+UYnUFpmvG0fWviuF/eqTjTKWFL50RqrZ8yGTE56RkIMtwYnmYM
-	 9nJ88asHnfDng==
-Date: Wed, 27 Mar 2024 16:17:31 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- quic_jjohnson@quicinc.com, kvalo@kernel.org, leon@kernel.org,
- dennis.dalessandro@cornelisnetworks.com, Jiri Pirko <jiri@resnulli.us>,
- Simon Horman <horms@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Coco Li <lixiaoyan@google.com>,
- netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
- linux-kernel@vger.kernel.org (open list)
-Subject: Re: [PATCH net-next] net: create a dummy net_device allocator
-Message-ID: <20240327161731.6b100cb8@kernel.org>
-In-Reply-To: <20240327200809.512867-1-leitao@debian.org>
-References: <20240327200809.512867-1-leitao@debian.org>
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="ZFaMkrGC"
+Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by mail-108-mta190.mxroute.com (ZoneMTA) with ESMTPSA id 18e823447750003bea.00f
+ for <linux-kernel@vger.kernel.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Wed, 27 Mar 2024 23:17:28 +0000
+X-Zone-Loop: a1067ebaf39cb9b6bbd7a44f8dd65ede421c7bfc7bd7
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=hq3LXvJ1k7/mJNF6jC9ba4k3K25mnAdHN91vxGscAic=; b=ZFaMkrGCR1VTgX5BJNZOHrhz+Z
+	KLQI+o+Pd5s+9A9IseKwvfEU9EQK9bJRrCB+iG4OIo1SNJBDHHRBTyXVnU9GubB5obZfiVxtWwHcX
+	cTxNm85ckb3KuflObK/r8YEazGnH8pip9kUxd7yFTxx4+aLYZejrhub1FHNMPt8bsMsma0knekvvj
+	UOFLAlTz7Ai73jkJtFjKEK7eb0zz9c0vAhvMq5EpiJesb6YMjbsF/nhDiowRhy7adyO8t5CczWHRu
+	37K1+kXrXa4rZKArZQdrCe5GZdNIXeslLOjFgtR+Q6mgFEai9gSmYEkolyFMnV4KTXZCBY63CugD1
+	8EUSyzrQ==;
+From: git@luigi311.com
+To: linux-media@vger.kernel.org
+Cc: dave.stevenson@raspberrypi.com,
+	jacopo.mondi@ideasonboard.com,
+	mchehab@kernel.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	sakari.ailus@linux.intel.com,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Luigi311 <git@luigi311.com>
+Subject: [PATCH 05/23] media: i2c: imx258: Add regulator control
+Date: Wed, 27 Mar 2024 17:16:51 -0600
+Message-ID: <20240327231710.53188-6-git@luigi311.com>
+In-Reply-To: <20240327231710.53188-1-git@luigi311.com>
+References: <20240327231710.53188-1-git@luigi311.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Id: personal@luigi311.com
 
-On Wed, 27 Mar 2024 13:08:04 -0700 Breno Leitao wrote:
-> It is impossible to use init_dummy_netdev together with alloc_netdev()
-> as the 'setup' argument.
-> 
-> This is because alloc_netdev() initializes some fields in the net_device
-> structure, and later init_dummy_netdev() memzero them all. This causes
-> some problems as reported here:
-> 
-> 	https://lore.kernel.org/all/20240322082336.49f110cc@kernel.org/
-> 
-> Split the init_dummy_netdev() function in two. Create a new function called
-> init_dummy_netdev_core() that does not memzero the net_device structure.
-> Then have init_dummy_netdev() memzero-ing and calling
-> init_dummy_netdev_core(), keeping the old behaviour.
-> 
-> init_dummy_netdev_core() is the new function that could be called as an
-> argument for alloc_netdev().
-> 
-> Also, create a helper to allocate and initialize dummy net devices,
-> leveraging init_dummy_netdev_core() as the setup argument. This function
-> basically simplify the allocation of dummy devices, by allocating and
-> initializing it. Freeing the device continue to be done through
-> free_netdev()
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-Ah, but you need to make it part of the series with some caller.
-Maybe convert all the ethernet ones?
+The device tree bindings define the relevant regulators for the
+sensor, so update the driver to request the regulators and control
+them at the appropriate times.
 
-$ git grep 'struct net_device [^*]*;' -- drivers/net/ethernet/
-drivers/net/ethernet/cavium/thunder/thunder_bgx.c:      struct net_device       netdev;
-drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:  struct net_device napi_dev;
-drivers/net/ethernet/microchip/vcap/vcap_api_debugfs_kunit.c:static struct net_device test_netdev = {};
-drivers/net/ethernet/microchip/vcap/vcap_api_kunit.c:static struct net_device test_netdev = {};
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Signed-off-by: Luigi311 <git@luigi311.com>
+---
+ drivers/media/i2c/imx258.c | 42 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 41 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
+index df7ed4716762..495eaada2945 100644
+--- a/drivers/media/i2c/imx258.c
++++ b/drivers/media/i2c/imx258.c
+@@ -7,6 +7,7 @@
+ #include <linux/i2c.h>
+ #include <linux/module.h>
+ #include <linux/pm_runtime.h>
++#include <linux/regulator/consumer.h>
+ #include <media/v4l2-ctrls.h>
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-fwnode.h>
+@@ -507,6 +508,16 @@ static const char * const imx258_test_pattern_menu[] = {
+ 	"Pseudorandom Sequence (PN9)",
+ };
+ 
++/* regulator supplies */
++static const char * const imx258_supply_name[] = {
++	/* Supplies can be enabled in any order */
++	"vana",  /* Analog (2.8V) supply */
++	"vdig",  /* Digital Core (1.2V) supply */
++	"vif",  /* IF (1.8V) supply */
++};
++
++#define IMX258_NUM_SUPPLIES ARRAY_SIZE(imx258_supply_name)
++
+ /* Configurations for supported link frequencies */
+ #define IMX258_LINK_FREQ_634MHZ	633600000ULL
+ #define IMX258_LINK_FREQ_320MHZ	320000000ULL
+@@ -611,6 +622,7 @@ struct imx258 {
+ 	struct mutex mutex;
+ 
+ 	struct clk *clk;
++	struct regulator_bulk_data supplies[IMX258_NUM_SUPPLIES];
+ };
+ 
+ static inline struct imx258 *to_imx258(struct v4l2_subdev *_sd)
+@@ -995,9 +1007,19 @@ static int imx258_power_on(struct device *dev)
+ 	struct imx258 *imx258 = to_imx258(sd);
+ 	int ret;
+ 
++	ret = regulator_bulk_enable(IMX258_NUM_SUPPLIES,
++				    imx258->supplies);
++	if (ret) {
++		dev_err(dev, "%s: failed to enable regulators\n",
++			__func__);
++		return ret;
++	}
++
+ 	ret = clk_prepare_enable(imx258->clk);
+-	if (ret)
++	if (ret) {
+ 		dev_err(dev, "failed to enable clock\n");
++		regulator_bulk_disable(IMX258_NUM_SUPPLIES, imx258->supplies);
++	}
+ 
+ 	return ret;
+ }
+@@ -1008,6 +1030,7 @@ static int imx258_power_off(struct device *dev)
+ 	struct imx258 *imx258 = to_imx258(sd);
+ 
+ 	clk_disable_unprepare(imx258->clk);
++	regulator_bulk_disable(IMX258_NUM_SUPPLIES, imx258->supplies);
+ 
+ 	return 0;
+ }
+@@ -1220,6 +1243,18 @@ static void imx258_free_controls(struct imx258 *imx258)
+ 	mutex_destroy(&imx258->mutex);
+ }
+ 
++static int imx258_get_regulators(struct imx258 *imx258,
++				 struct i2c_client *client)
++{
++	unsigned int i;
++
++	for (i = 0; i < IMX258_NUM_SUPPLIES; i++)
++		imx258->supplies[i].supply = imx258_supply_name[i];
++
++	return devm_regulator_bulk_get(&client->dev,
++				    IMX258_NUM_SUPPLIES, imx258->supplies);
++}
++
+ static int imx258_probe(struct i2c_client *client)
+ {
+ 	struct imx258 *imx258;
+@@ -1230,6 +1265,11 @@ static int imx258_probe(struct i2c_client *client)
+ 	if (!imx258)
+ 		return -ENOMEM;
+ 
++	ret = imx258_get_regulators(imx258, client);
++	if (ret)
++		return dev_err_probe(&client->dev, ret,
++				     "failed to get regulators\n");
++
+ 	imx258->clk = devm_clk_get_optional(&client->dev, NULL);
+ 	if (IS_ERR(imx258->clk))
+ 		return dev_err_probe(&client->dev, PTR_ERR(imx258->clk),
 -- 
-pw-bot: cr
+2.42.0
+
