@@ -1,170 +1,673 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2044.outbound.protection.outlook.com [40.107.92.44])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713E886AF1;
-	Wed, 27 Mar 2024 11:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711539637; cv=fail; b=bOUvl7yvOzgAmigjBPWCm0sQsSCcMb9OeRfxR72Bb9Uo4FMZulltLq+8zdaeekH2C1kALTauudejdS8YmI39qLN9zWpJo7YPRrsiR3rMflDRhAGCUndOFf4js04+Psb4jyZAgedhx8CDzKLurHMKY2C26Pc+1cKNXvF++iAyySU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711539637; c=relaxed/simple;
-	bh=L8yM5bAEnoLa/uofoKOojU1hXsPHn0RfVeE9Tq+7NGI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=AZN4UQ/inFXI9NLX8D88lTk7Cg4tgeK9i7rJ4JnScY7ykGkEgK87KhKuvY9NsGuFZcoTpbUlTjxi+pZG0mkE3xo5ll+qGXUEGUvDaDysFzxOcCB3bQ/iNKQMP+uRGpNpFcQTONcxLqBqjGvMzjCjDLwf90THXFONXkoS3dk/d/4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=jqWV1w4J; arc=fail smtp.client-ip=40.107.92.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B8A1272AB;
+	Wed, 27 Mar 2024 11:41:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711539690; cv=none; b=m9c+IV9/7VitPaCnrNuhkxXQPqcT7S/YBk0jkQQavPz/ob5p/UI/h+NdX4FAX0Bikn4looAv5igM73FW6SHiWRNirqcHtHjcaQrQf2bSZME8Py7HGsHPYA0T45bKuV05LB94QqG4l8PtXzZizhdRiqo3EaEOs5jpYpLEIyKnjNU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711539690; c=relaxed/simple;
+	bh=57bVaN+Gx+TsJTpj/YMJ+vFFewlMwW/W771335atic8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XdPUdEkcz8jzUouulTV6rR9zcnMKoq7Zqxa8Dp9YbbeWfLlpSu5gaxHv6wIQdaiJpGRIN62fqeh4L1Ouyd152BKnfk6ZsHBOlnFSUG+/abpTNIDc3CInTc7U55SLLff04fNbSC61srv6ggxzijCwaN9BpcDCzVAqxzNkaMJqT3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=WS3b+Vkh; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="jqWV1w4J"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Kd7rTmid0K5CZIJmj9r/c4LunDxUotws3o1MVsFymJaDGoc+zbGKn1MXVzKUFbjj7RXo4jQudwYj63l9MoXXCcNA4i9emtY9ahD2x2hBwUqmfFXgJ3AU5CLv1cEICeUX1r6VztjgCJ1sOZoXXUVr9sL6cOTFR9k/LtGrH07w4vvo5YfZq+m+WYVHGQdIunB/o4t0nZhnNMn2fUm5miuPjBPEy5Y5FH1nZUv5VmcRw+34W7QG/J+Lt6+ItG7+NzOml3a0MSW9UfrJ7FnbyoyLb3ahnjVI/8vysLH5AuTrb1uZVqx/r7v0HzY0PK4iCFABc4UMN7H+UPlH0PeBreGtNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3LJ6byHNF2VmlVFbuwoPHuGJEgZtn0FpoRv+NiVeSrs=;
- b=erqALgy9DDALJVsum21YEo4uRizWOHalNDgM33DQT/5Za6TCWoAvebSY/oPwnAySlX0P0oo3HSkGIbrOC1oS6SwdNP9xnUuXhi6wKPpWlvFTVJjxtzie/992KwxL/ZBXoOF32fKd2KJv4FbZ8DxgKPResxOe/5nGQcW/ch62FRJpL/9KOMxrVCEK/OewRdi5eJBNtqEoK8WrxFE4fAE0a3YQPo61TeL5B1q0iSKACbkPFMVkdg/69VZH2HsEYTo2TOEg2Rklgujp0VUrnsBIwlABK+dRw6XFUOg37Yyd48S0UYYAiz7kjOTkMjA5kOO93TQ4sLgJiPZVpubbeCTUqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3LJ6byHNF2VmlVFbuwoPHuGJEgZtn0FpoRv+NiVeSrs=;
- b=jqWV1w4JQ2IuM/0an+pIsZ+oSlh4dLwFvXdO34GisL5RXVNjT+tnFY9FoHvIAZ+QpW6ORcIht/q5AcNWQXArFHNSzBayi+yWSNaItAJwnSvsZOJTRNDydCU9QBl0jy5Kf86nJ5jz3thWt8bq+O+1ofp9iweJAWnahHCi2QIxEnml69Qm5ao85kOtAgHWSZ8tgEnGQC3mjkJPdmaNgz+84QfQS5PgEuk2ctJLsrarUDTDFbOrgela8xmlf7OoA6QkeMJxmHOldDNXhwR91tlIsmLej3xpVDbcM6OLuCkpPd/k5hvN6WT8nma3qA40BBuPg84f1kVy42NEbcxl926xnw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
- by DM4PR12MB5938.namprd12.prod.outlook.com (2603:10b6:8:69::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7409.32; Wed, 27 Mar 2024 11:40:30 +0000
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::6aec:dbca:a593:a222]) by DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::6aec:dbca:a593:a222%5]) with mapi id 15.20.7409.031; Wed, 27 Mar 2024
- 11:40:30 +0000
-Date: Wed, 27 Mar 2024 08:40:29 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Joao Martins <joao.m.martins@oracle.com>
-Cc: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>, iommu@lists.linux.dev,
-	Kevin Tian <kevin.tian@intel.com>, Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [BUG] seltests/iommu: runaway ./iommufd consuming 99% CPU after
- a failed assert()
-Message-ID: <20240327114029.GC946323@nvidia.com>
-References: <0d5c3b29-fc5b-41d9-9556-5ce94262dac8@alu.unizg.hr>
- <20240319135852.GA393211@nvidia.com>
- <a692d5d7-11d5-4c1b-9abc-208d2194ccde@alu.unizg.hr>
- <cdc9c46b-1bad-41cd-8f98-38cc2171186a@oracle.com>
- <20240325135207.GC6245@nvidia.com>
- <f8e03425-98cf-4076-8959-d85eda846bab@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f8e03425-98cf-4076-8959-d85eda846bab@oracle.com>
-X-ClientProxiedBy: MN2PR20CA0041.namprd20.prod.outlook.com
- (2603:10b6:208:235::10) To DM6PR12MB3849.namprd12.prod.outlook.com
- (2603:10b6:5:1c7::26)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WS3b+Vkh"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42RBf2MC017509;
+	Wed, 27 Mar 2024 06:41:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1711539662;
+	bh=WAmaFssw+adWOPFx7l24TdOhOe8S9UsrYTfgqwqsyG4=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=WS3b+VkhS4x2KbnfYcqCSnr0L9/3yr+0XzOYmgSTNy1TabF5PXyNZyFBpDJR+dkXP
+	 uRsJgA66pcwP9HbNn7qUUDBHSeAeoH+UWG9RFUVckE/x1vdYLj6nWUbRZpnPTDMbDN
+	 8irw9b01nHD9rhSMIL4z4Z+3b2gjAnyT0XwqdLDg=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42RBf2Z6044410
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 27 Mar 2024 06:41:02 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 27
+ Mar 2024 06:41:02 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 27 Mar 2024 06:41:02 -0500
+Received: from fllv0122.itg.ti.com (fllv0122.itg.ti.com [10.247.120.72])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42RBf1D7079697;
+	Wed, 27 Mar 2024 06:41:01 -0500
+Received: from localhost (danish-tpc.dhcp.ti.com [10.24.69.25])
+	by fllv0122.itg.ti.com (8.14.7/8.14.7) with ESMTP id 42RBf1RK025450;
+	Wed, 27 Mar 2024 06:41:01 -0500
+From: MD Danish Anwar <danishanwar@ti.com>
+To: Diogo Ivo <diogo.ivo@siemens.com>, Rob Herring <robh@kernel.org>,
+        Dan
+ Carpenter <dan.carpenter@linaro.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>, Simon Horman <horms@kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Wolfram Sang
+	<wsa+renesas@sang-engineering.com>,
+        Arnd Bergmann <arnd@arndb.de>, Vignesh
+ Raghavendra <vigneshr@ti.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Roger Quadros <rogerq@kernel.org>,
+        MD Danish Anwar <danishanwar@ti.com>, Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>, Eric
+ Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+CC: <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <srk@ti.com>, <r-gunasekaran@ti.com>
+Subject: [PATCH net-next v3 2/3] net: ti: icssg-switch: Add switchdev based driver for ethernet switch support
+Date: Wed, 27 Mar 2024 17:10:53 +0530
+Message-ID: <20240327114054.1907278-3-danishanwar@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240327114054.1907278-1-danishanwar@ti.com>
+References: <20240327114054.1907278-1-danishanwar@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|DM4PR12MB5938:EE_
-X-MS-Office365-Filtering-Correlation-Id: 59516d3f-030f-4cc9-6380-08dc4e52b462
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	rVcKwg8gjjji47c7h4So5wJ2ZOBFH97R4+FyLTr92TI+34crpMpMFh0nvRFLlchRB4ZLofJgR1gn1BFmrio81geHO8rTvTKuinUa/q89YXXArhvPGw6uqXnxinLWqOkeefaPEl6xBplnrgDMm0thmGDe8gpiPTm5YKP3TGZUgv1FLUzJiiK+wCkY4dIeL8wfbJoO/PmvN7cvEa1lolL9VeuYucW+KUH0gHl2fw+WCVu8TdFvYkC8N0YIvDUn8Kwwqkbvg03hVESBtc9jaTQeZGA4aBIvG73zStJcF0E+pXYnKejtC3gMgguE0e6MLSq0B1FHav7XUB83A0aeNY6syVZ6spRWiU8gU2+aXzGsYs6w21cU7Og2OW02WGoPWSkulUZbEB1XsDziM1G+lh/NH01nBm4gOqoBB/z9flgl1ORtYnmzCW2iaR7nMIpPOkuzZSEfj1JjP754aMPeOke+Exp9CqvCIzANdC40fzwhyM3hQQyXgEdA1dRiNsk/DWsR5O16qVvKbBL7l+egcuaNhTfi//ZPZBbNoUwtw/tgXVn4SeqNYv744BoE6mtWWBRXHMv03isTAlc7D+LsJlxxjk4i9RbX+WwM31j3a5IetZjaJaUaqHLV+z8IabtbAy+7IcFTh7C9BaGHqCbyVJy+CVuRxpFhBtmoEXT3cliuDVE=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TzN5UkRvSzdnUEtFQ3V4N3djTlArbmRySXBtQlNwL1M2UDYyTkVSM056V3pZ?=
- =?utf-8?B?N3JNQVZBNllkcUNDdVdQaVFiY2RYTktFc2ZVdnYxc0JxOXZTbDQybkR0YWtB?=
- =?utf-8?B?VlBXUnFJMEYxbC9oTG1MLzBrZ2RwZ0NjWVJNYnFpRnNQK3g5YitJVnRFbHBa?=
- =?utf-8?B?YjR0LzJES3RMRVlPT3Y0TnlaS3NXNDZTaSs2alBCN1RST3JwVnVlNjlCVU9i?=
- =?utf-8?B?MWdacE5rUHFkdDR1L3hHeXh3dC9mN0trR2J6TWNuUlFlOVh1aHI4Z2laKzF1?=
- =?utf-8?B?bG1scTRobUROZlZjTlFDckZMTUFLaVR5dzJBbUNZeWVCUEE4Y1VnV240TWs2?=
- =?utf-8?B?SWd3SXJUVEdIT1JEZ050aWxUVmVyREsyVjgxeWQ0eWZ6enB0OEJYSUkzTVlm?=
- =?utf-8?B?UCtudndRSGdoYlBVUllBNHIvUFZEZFVZNDVzSTRUY0RLemlYYUZ3cktoeW1p?=
- =?utf-8?B?bU5SVG1LYWdWKzJHNnFTbEJ4RHROWmRlWkxUZ3JYb1Uyd2N6WkxTYmttRHBZ?=
- =?utf-8?B?NHlPVzF2YWFwSTFNbFNjT2ZxSzQ2cWU5Z2J4cVVnS1JYMUNNNGpIUmFMMitw?=
- =?utf-8?B?NFJtc0ttWENnZk5ZMnNiUjZreWdudGNlS2tIYXRqMkthVEZKTVhNSTBwcVZK?=
- =?utf-8?B?SUJublUrd0dQeXAxY04wdHZyTXR3SUZibC91QTNSMGI4L3lodTRkNDBnUG5D?=
- =?utf-8?B?VlNoVk52dTN4UTh1Q01lTlcyNEZLYzBlc2h5eUNLZ2QvakFrelpVS1kxZDEr?=
- =?utf-8?B?aStxWTNyaVY0Sm5jaHExYlI2TVpOeUhWNVg4dkVJZFBUWGNnTTdqTnd4T0Mr?=
- =?utf-8?B?ak1ubWdMYUVHNFlwdC82N2RBMXlhSDJrTE9pQjl4cThlTWp6QVRtalhWSUl4?=
- =?utf-8?B?UTVFbkp6ZldtKzNwVUpLeGQrcUI4WHhydE92bUVWejBYcndiSXZnRFlXZ2lG?=
- =?utf-8?B?ZktzSWRxQU5KN2psZ09MQW9WNEZ3SFZGbDVBS016eUprRmhVaHA0c1lmYU55?=
- =?utf-8?B?VzNnQ2lKd0VIY0FYbkVvS3NuRTlDRGZwb0RjWG9OYmRMNUhrQ0xyTlc5ZGRr?=
- =?utf-8?B?VW13N0ZKb29CcWkxQ3VicG9LbWpMSjBsYWFuMGw4RGJldkZ5NE5oM3kzaktG?=
- =?utf-8?B?VytFT3RCZWU4VDBDbmFmY1VMdHZhTHB4Z1F4MTVmVEg1R1ZKczhGaXFndU5v?=
- =?utf-8?B?SXdaSHE5dFNyNFZrQ0hqUVZOY2tJSnNDRXlSWVhPRGpINXFMcGJlYkZ2Q3Nm?=
- =?utf-8?B?dzZadXYwYXAwMW9pRHk5WXloOGpHWkNBazVkeGxQcjJoTEVDNFE4K1NEUlJl?=
- =?utf-8?B?b1dTUHlVakFSNWdIR2Fna2E5MGtoaWVoeG52R0huR2xKVWtQYnV2S0FJcXN2?=
- =?utf-8?B?a1AvZXZBcWVlV25ickkyNmVldExDbWhNM1RLRHBlOWNyQjk3TkM3T09YTFQr?=
- =?utf-8?B?V1pKRzQ4V3lBbjRuaHExSlhGemE4Ykt2azRpSDZIR3dOZ1FWbWZwcitzSkhh?=
- =?utf-8?B?UFZETDhjbkY4ckRkNDM5Ym1HRk5lSmhPV28wUTc0Y0N4ZzZyUklQME5hVjNm?=
- =?utf-8?B?T0tjUTJ6VmdhbndkSzM3NzB1dHRZQlF3dGJqK0VzYVhtUjQxRmE2K0dhbE12?=
- =?utf-8?B?cTNnS2pLNE0wZERBVTlINDVaTzA3Tng1eGhmRHBTYTFLdnFtZ0ZXTWE4SVBU?=
- =?utf-8?B?SWd5U0FKdXczZ2VvTTNCZ0JJbFZlcmdHNW0vSVZ0STdPalgxZnV6VWVWd3p5?=
- =?utf-8?B?Mll5c0Q0R0NlOUw2WEpabXZabUt0Z2FQWitDc2hiT3pvV3RsTWlyVC9CL09m?=
- =?utf-8?B?aWZQcFA1WS8xb2wzZXhxZVpDLzZuMFZhMmtibnM2VWlTalg2SUViWGVPa1RY?=
- =?utf-8?B?OWs1eFFOemN4WTgvTDdaeUxpNm4xYzFrdmFRUExqdFIyTGNjcll1a281eUVN?=
- =?utf-8?B?WEI0V2cwRkNSYitWeE1PYUxVeDlNNGRZb09rOENMNXBkM3BIcjZLMmw1RWNF?=
- =?utf-8?B?L1lXZ2I4U1NaYW1GWVVTaEdBcVNRcEhGbnpySEdpNnFUSXdNN0hlS2RuLzcv?=
- =?utf-8?B?aklNUm5STmFRL05uQlRVWHBEVjNTQTl5YWYyZk1EQTNVbVNsT21TdVphc0VO?=
- =?utf-8?Q?eWgeS/WkodgJKZIuE/MMefn32?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 59516d3f-030f-4cc9-6380-08dc4e52b462
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2024 11:40:30.1619
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0Khe17rxqiZFNdR/GsO+pQSbfkmCHzeI61k0dwN8CGDhyw4EItiCcn6CS68WV5Hd
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5938
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Wed, Mar 27, 2024 at 10:41:52AM +0000, Joao Martins wrote:
-> On 25/03/2024 13:52, Jason Gunthorpe wrote:
-> > On Mon, Mar 25, 2024 at 12:17:28PM +0000, Joao Martins wrote:
-> >>> However, I am not smart enough to figure out why ...
-> >>>
-> >>> Apparently, from the source, mmap() fails to allocate pages on the desired address:
-> >>>
-> >>>   1746         assert((uintptr_t)self->buffer % HUGEPAGE_SIZE == 0);
-> >>>   1747         vrc = mmap(self->buffer, variant->buffer_size, PROT_READ |
-> >>> PROT_WRITE,
-> >>>   1748                    mmap_flags, -1, 0);
-> >>> → 1749         assert(vrc == self->buffer);
-> >>>   1750
-> >>>
-> >>> But I am not that deep into the source to figure our what was intended and what
-> >>> went
-> >>> wrong :-/
-> >>
-> >> I can SKIP() the test rather assert() in here if it helps. Though there are
-> >> other tests that fail if no hugetlb pages are reserved.
-> >>
-> >> But I am not sure if this is problem here as the initial bug email had an
-> >> enterily different set of failures? Maybe all you need is an assert() and it
-> >> gets into this state?
-> > 
-> > I feel like there is something wrong with the kselftest framework,
-> > there should be some way to fail the setup/teardown operations without
-> > triggering an infinite loop :(
-> 
-> I am now wondering if the problem is the fact that we have an assert() in the
-> middle of FIXTURE_{TEST,SETUP} whereby we should be having ASSERT_TRUE() (or any
-> other kselftest macro that). The expect/assert macros from kselftest() don't do
-> asserts and it looks like we are failing mid tests in the assert().
+ICSSG can operating in switch mode with 2 ext port and 1 host port with
+VLAN/FDB/MDB and STP offloading. Add switchdev based driver to
+support the same.
 
-Those ASSERT_TRUE cause infinite loops when used within the setup
-context, I removed them and switched to assert because of this - which
-did work OK in my testing at least.
+Driver itself will be integrated with icssg_prueth in future commits
 
-Jason
+Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
+---
+ drivers/net/ethernet/ti/icssg/icssg_prueth.c  |   1 +
+ drivers/net/ethernet/ti/icssg/icssg_prueth.h  |  24 +
+ .../net/ethernet/ti/icssg/icssg_switchdev.c   | 477 ++++++++++++++++++
+ .../net/ethernet/ti/icssg/icssg_switchdev.h   |  13 +
+ 4 files changed, 515 insertions(+)
+ create mode 100644 drivers/net/ethernet/ti/icssg/icssg_switchdev.c
+ create mode 100644 drivers/net/ethernet/ti/icssg/icssg_switchdev.h
+
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.c b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
+index cf7b73f8f450..9168ab3c4b9e 100644
+--- a/drivers/net/ethernet/ti/icssg/icssg_prueth.c
++++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
+@@ -30,6 +30,7 @@
+ 
+ #include "icssg_prueth.h"
+ #include "icssg_mii_rt.h"
++#include "icssg_switchdev.h"
+ #include "../k3-cppi-desc-pool.h"
+ 
+ #define PRUETH_MODULE_DESCRIPTION "PRUSS ICSSG Ethernet driver"
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.h b/drivers/net/ethernet/ti/icssg/icssg_prueth.h
+index 006f77217bd1..04e88acdb42c 100644
+--- a/drivers/net/ethernet/ti/icssg/icssg_prueth.h
++++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.h
+@@ -174,6 +174,9 @@ struct prueth_emac {
+ 
+ 	struct pruss_mem_region dram;
+ 
++	bool offload_fwd_mark;
++	int port_vlan;
++
+ 	struct delayed_work stats_work;
+ 	u64 stats[ICSSG_NUM_STATS];
+ };
+@@ -182,10 +185,12 @@ struct prueth_emac {
+  * struct prueth_pdata - PRUeth platform data
+  * @fdqring_mode: Free desc queue mode
+  * @quirk_10m_link_issue: 10M link detect errata
++ * @switch_mode: switch firmware support
+  */
+ struct prueth_pdata {
+ 	enum k3_ring_mode fdqring_mode;
+ 	u32	quirk_10m_link_issue:1;
++	u32	switch_mode:1;
+ };
+ 
+ /**
+@@ -211,6 +216,15 @@ struct prueth_pdata {
+  * @iep0: pointer to IEP0 device
+  * @iep1: pointer to IEP1 device
+  * @vlan_tbl: VLAN-FID table pointer
++ * @hw_bridge_dev: pointer to HW bridge net device
++ * @br_members: bitmask of bridge member ports
++ * @prueth_netdevice_nb: netdevice notifier block
++ * @prueth_switchdev_nb: switchdev notifier block
++ * @prueth_switchdev_bl_nb: switchdev blocking notifier block
++ * @is_switch_mode: flag to indicate if device is in Switch mode
++ * @is_switchmode_supported: indicates platform support for switch mode
++ * @switch_id: ID for mapping switch ports to bridge
++ * @default_vlan: Default VLAN for host
+  */
+ struct prueth {
+ 	struct device *dev;
+@@ -236,6 +250,16 @@ struct prueth {
+ 	struct icss_iep *iep0;
+ 	struct icss_iep *iep1;
+ 	struct prueth_vlan_tbl *vlan_tbl;
++
++	struct net_device *hw_bridge_dev;
++	u8 br_members;
++	struct notifier_block prueth_netdevice_nb;
++	struct notifier_block prueth_switchdev_nb;
++	struct notifier_block prueth_switchdev_bl_nb;
++	bool is_switch_mode;
++	bool is_switchmode_supported;
++	unsigned char switch_id[MAX_PHYS_ITEM_ID_LEN];
++	int default_vlan;
+ };
+ 
+ struct emac_tx_ts_response {
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_switchdev.c b/drivers/net/ethernet/ti/icssg/icssg_switchdev.c
+new file mode 100644
+index 000000000000..fceb8bb7d34e
+--- /dev/null
++++ b/drivers/net/ethernet/ti/icssg/icssg_switchdev.c
+@@ -0,0 +1,477 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/* Texas Instruments K3 ICSSG Ethernet Switchdev Driver
++ *
++ * Copyright (C) 2021 Texas Instruments Incorporated - https://www.ti.com/
++ *
++ */
++
++#include <linux/etherdevice.h>
++#include <linux/if_bridge.h>
++#include <linux/netdevice.h>
++#include <linux/workqueue.h>
++#include <net/switchdev.h>
++
++#include "icssg_prueth.h"
++#include "icssg_switchdev.h"
++#include "icssg_mii_rt.h"
++
++struct prueth_switchdev_event_work {
++	struct work_struct work;
++	struct switchdev_notifier_fdb_info fdb_info;
++	struct prueth_emac *emac;
++	unsigned long event;
++};
++
++static int prueth_switchdev_stp_state_set(struct prueth_emac *emac,
++					  u8 state)
++{
++	enum icssg_port_state_cmd emac_state;
++	int ret = 0;
++
++	switch (state) {
++	case BR_STATE_FORWARDING:
++		emac_state = ICSSG_EMAC_PORT_FORWARD;
++		break;
++	case BR_STATE_DISABLED:
++		emac_state = ICSSG_EMAC_PORT_DISABLE;
++		break;
++	case BR_STATE_LISTENING:
++	case BR_STATE_BLOCKING:
++		emac_state = ICSSG_EMAC_PORT_BLOCK;
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	emac_set_port_state(emac, emac_state);
++	netdev_dbg(emac->ndev, "STP state: %u\n", emac_state);
++
++	return ret;
++}
++
++static int prueth_switchdev_attr_br_flags_set(struct prueth_emac *emac,
++					      struct net_device *orig_dev,
++					      struct switchdev_brport_flags brport_flags)
++{
++	enum icssg_port_state_cmd emac_state;
++
++	if (brport_flags.mask & BR_MCAST_FLOOD)
++		emac_state = ICSSG_EMAC_PORT_MC_FLOODING_ENABLE;
++	else
++		emac_state = ICSSG_EMAC_PORT_MC_FLOODING_DISABLE;
++
++	netdev_dbg(emac->ndev, "BR_MCAST_FLOOD: %d port %u\n",
++		   emac_state, emac->port_id);
++
++	emac_set_port_state(emac, emac_state);
++
++	return 0;
++}
++
++static int prueth_switchdev_attr_br_flags_pre_set(struct net_device *netdev,
++						  struct switchdev_brport_flags brport_flags)
++{
++	if (brport_flags.mask & ~(BR_LEARNING | BR_MCAST_FLOOD))
++		return -EINVAL;
++
++	return 0;
++}
++
++static int prueth_switchdev_attr_set(struct net_device *ndev, const void *ctx,
++				     const struct switchdev_attr *attr,
++				     struct netlink_ext_ack *extack)
++{
++	struct prueth_emac *emac = netdev_priv(ndev);
++	int ret;
++
++	netdev_dbg(ndev, "attr: id %u port: %u\n", attr->id, emac->port_id);
++
++	switch (attr->id) {
++	case SWITCHDEV_ATTR_ID_PORT_PRE_BRIDGE_FLAGS:
++		ret = prueth_switchdev_attr_br_flags_pre_set(ndev,
++							     attr->u.brport_flags);
++		break;
++	case SWITCHDEV_ATTR_ID_PORT_STP_STATE:
++		ret = prueth_switchdev_stp_state_set(emac,
++						     attr->u.stp_state);
++		netdev_dbg(ndev, "stp state: %u\n", attr->u.stp_state);
++		break;
++	case SWITCHDEV_ATTR_ID_PORT_BRIDGE_FLAGS:
++		ret = prueth_switchdev_attr_br_flags_set(emac, attr->orig_dev,
++							 attr->u.brport_flags);
++		break;
++	default:
++		ret = -EOPNOTSUPP;
++		break;
++	}
++
++	return ret;
++}
++
++static void prueth_switchdev_fdb_offload_notify(struct net_device *ndev,
++						struct switchdev_notifier_fdb_info *rcv)
++{
++	struct switchdev_notifier_fdb_info info;
++
++	memset(&info, 0, sizeof(info));
++	info.addr = rcv->addr;
++	info.vid = rcv->vid;
++	info.offloaded = true;
++	call_switchdev_notifiers(SWITCHDEV_FDB_OFFLOADED,
++				 ndev, &info.info, NULL);
++}
++
++static void prueth_switchdev_event_work(struct work_struct *work)
++{
++	struct prueth_switchdev_event_work *switchdev_work =
++		container_of(work, struct prueth_switchdev_event_work, work);
++	struct prueth_emac *emac = switchdev_work->emac;
++	struct switchdev_notifier_fdb_info *fdb;
++	int port_id = emac->port_id;
++	int ret;
++
++	rtnl_lock();
++	switch (switchdev_work->event) {
++	case SWITCHDEV_FDB_ADD_TO_DEVICE:
++		fdb = &switchdev_work->fdb_info;
++
++		netdev_dbg(emac->ndev, "prueth_fdb_add: MACID = %pM vid = %u flags = %u %u -- port %d\n",
++			   fdb->addr, fdb->vid, fdb->added_by_user,
++			   fdb->offloaded, port_id);
++
++		if (!fdb->added_by_user)
++			break;
++		if (!ether_addr_equal(emac->mac_addr, fdb->addr))
++			break;
++
++		ret = icssg_fdb_add_del(emac, fdb->addr, fdb->vid,
++					BIT(port_id), true);
++		if (!ret)
++			prueth_switchdev_fdb_offload_notify(emac->ndev, fdb);
++		break;
++	case SWITCHDEV_FDB_DEL_TO_DEVICE:
++		fdb = &switchdev_work->fdb_info;
++
++		netdev_dbg(emac->ndev, "prueth_fdb_del: MACID = %pM vid = %u flags = %u %u -- port %d\n",
++			   fdb->addr, fdb->vid, fdb->added_by_user,
++			   fdb->offloaded, port_id);
++
++		if (!fdb->added_by_user)
++			break;
++		if (!ether_addr_equal(emac->mac_addr, fdb->addr))
++			break;
++		icssg_fdb_add_del(emac, fdb->addr, fdb->vid,
++				  BIT(port_id), false);
++		break;
++	default:
++		break;
++	}
++	rtnl_unlock();
++
++	kfree(switchdev_work->fdb_info.addr);
++	kfree(switchdev_work);
++	dev_put(emac->ndev);
++}
++
++static int prueth_switchdev_event(struct notifier_block *unused,
++				  unsigned long event, void *ptr)
++{
++	struct net_device *ndev = switchdev_notifier_info_to_dev(ptr);
++	struct prueth_switchdev_event_work *switchdev_work;
++	struct switchdev_notifier_fdb_info *fdb_info = ptr;
++	struct prueth_emac *emac = netdev_priv(ndev);
++	int err;
++
++	if (!prueth_dev_check(ndev))
++		return NOTIFY_DONE;
++
++	if (event == SWITCHDEV_PORT_ATTR_SET) {
++		err = switchdev_handle_port_attr_set(ndev, ptr,
++						     prueth_dev_check,
++						     prueth_switchdev_attr_set);
++		return notifier_from_errno(err);
++	}
++
++	switchdev_work = kzalloc(sizeof(*switchdev_work), GFP_ATOMIC);
++	if (WARN_ON(!switchdev_work))
++		return NOTIFY_BAD;
++
++	INIT_WORK(&switchdev_work->work, prueth_switchdev_event_work);
++	switchdev_work->emac = emac;
++	switchdev_work->event = event;
++
++	switch (event) {
++	case SWITCHDEV_FDB_ADD_TO_DEVICE:
++	case SWITCHDEV_FDB_DEL_TO_DEVICE:
++		memcpy(&switchdev_work->fdb_info, ptr,
++		       sizeof(switchdev_work->fdb_info));
++		switchdev_work->fdb_info.addr = kzalloc(ETH_ALEN, GFP_ATOMIC);
++		if (!switchdev_work->fdb_info.addr)
++			goto err_addr_alloc;
++		ether_addr_copy((u8 *)switchdev_work->fdb_info.addr,
++				fdb_info->addr);
++		dev_hold(ndev);
++		break;
++	default:
++		kfree(switchdev_work);
++		return NOTIFY_DONE;
++	}
++
++	queue_work(system_long_wq, &switchdev_work->work);
++
++	return NOTIFY_DONE;
++
++err_addr_alloc:
++	kfree(switchdev_work);
++	return NOTIFY_BAD;
++}
++
++static int prueth_switchdev_vlan_add(struct prueth_emac *emac, bool untag, bool pvid,
++				     u8 vid, struct net_device *orig_dev)
++{
++	bool cpu_port = netif_is_bridge_master(orig_dev);
++	int untag_mask = 0;
++	int port_mask;
++	int ret = 0;
++
++	if (cpu_port)
++		port_mask = BIT(PRUETH_PORT_HOST);
++	else
++		port_mask = BIT(emac->port_id);
++
++	if (untag)
++		untag_mask = port_mask;
++
++	icssg_vtbl_modify(emac, vid, port_mask, untag_mask, true);
++
++	netdev_dbg(emac->ndev, "VID add vid:%u port_mask:%X untag_mask %X PVID %d\n",
++		   vid, port_mask, untag_mask, pvid);
++
++	if (!pvid)
++		return ret;
++
++	icssg_set_pvid(emac->prueth, vid, emac->port_id);
++
++	return ret;
++}
++
++static int prueth_switchdev_vlan_del(struct prueth_emac *emac, u16 vid,
++				     struct net_device *orig_dev)
++{
++	bool cpu_port = netif_is_bridge_master(orig_dev);
++	int port_mask;
++	int ret = 0;
++
++	if (cpu_port)
++		port_mask = BIT(PRUETH_PORT_HOST);
++	else
++		port_mask = BIT(emac->port_id);
++
++	icssg_vtbl_modify(emac, vid, port_mask, 0, false);
++
++	if (cpu_port)
++		icssg_fdb_add_del(emac, emac->mac_addr, vid,
++				  BIT(PRUETH_PORT_HOST), false);
++
++	if (vid == icssg_get_pvid(emac))
++		icssg_set_pvid(emac->prueth, 0, emac->port_id);
++
++	netdev_dbg(emac->ndev, "VID del vid:%u port_mask:%X\n",
++		   vid, port_mask);
++
++	return ret;
++}
++
++static int prueth_switchdev_vlans_add(struct prueth_emac *emac,
++				      const struct switchdev_obj_port_vlan *vlan)
++{
++	bool untag = vlan->flags & BRIDGE_VLAN_INFO_UNTAGGED;
++	struct net_device *orig_dev = vlan->obj.orig_dev;
++	bool cpu_port = netif_is_bridge_master(orig_dev);
++	bool pvid = vlan->flags & BRIDGE_VLAN_INFO_PVID;
++
++	netdev_dbg(emac->ndev, "VID add vid:%u flags:%X\n",
++		   vlan->vid, vlan->flags);
++
++	if (cpu_port && !(vlan->flags & BRIDGE_VLAN_INFO_BRENTRY))
++		return 0;
++
++	if (vlan->vid > 0xff)
++		return 0;
++
++	return prueth_switchdev_vlan_add(emac, untag, pvid, vlan->vid,
++					 orig_dev);
++}
++
++static int prueth_switchdev_vlans_del(struct prueth_emac *emac,
++				      const struct switchdev_obj_port_vlan *vlan)
++{
++	if (vlan->vid > 0xff)
++		return 0;
++
++	return prueth_switchdev_vlan_del(emac, vlan->vid,
++					 vlan->obj.orig_dev);
++}
++
++static int prueth_switchdev_mdb_add(struct prueth_emac *emac,
++				    struct switchdev_obj_port_mdb *mdb)
++{
++	struct net_device *orig_dev = mdb->obj.orig_dev;
++	u8 port_mask, fid_c2;
++	bool cpu_port;
++	int err;
++
++	cpu_port = netif_is_bridge_master(orig_dev);
++
++	if (cpu_port)
++		port_mask = BIT(PRUETH_PORT_HOST);
++	else
++		port_mask = BIT(emac->port_id);
++
++	fid_c2 = icssg_fdb_lookup(emac, mdb->addr, mdb->vid);
++
++	err = icssg_fdb_add_del(emac, mdb->addr, mdb->vid, fid_c2 | port_mask, true);
++	netdev_dbg(emac->ndev, "MDB add vid %u:%pM  ports: %X\n",
++		   mdb->vid, mdb->addr, port_mask);
++
++	return err;
++}
++
++static int prueth_switchdev_mdb_del(struct prueth_emac *emac,
++				    struct switchdev_obj_port_mdb *mdb)
++{
++	struct net_device *orig_dev = mdb->obj.orig_dev;
++	int del_mask, ret, fid_c2;
++	bool cpu_port;
++
++	cpu_port = netif_is_bridge_master(orig_dev);
++
++	if (cpu_port)
++		del_mask = BIT(PRUETH_PORT_HOST);
++	else
++		del_mask = BIT(emac->port_id);
++
++	fid_c2 = icssg_fdb_lookup(emac, mdb->addr, mdb->vid);
++
++	if (fid_c2 & ~del_mask)
++		ret = icssg_fdb_add_del(emac, mdb->addr, mdb->vid, fid_c2 & ~del_mask, true);
++	else
++		ret = icssg_fdb_add_del(emac, mdb->addr, mdb->vid, 0, false);
++
++	netdev_dbg(emac->ndev, "MDB del vid %u:%pM  ports: %X\n",
++		   mdb->vid, mdb->addr, del_mask);
++
++	return ret;
++}
++
++static int prueth_switchdev_obj_add(struct net_device *ndev, const void *ctx,
++				    const struct switchdev_obj *obj,
++				    struct netlink_ext_ack *extack)
++{
++	struct switchdev_obj_port_vlan *vlan = SWITCHDEV_OBJ_PORT_VLAN(obj);
++	struct switchdev_obj_port_mdb *mdb = SWITCHDEV_OBJ_PORT_MDB(obj);
++	struct prueth_emac *emac = netdev_priv(ndev);
++	int err = 0;
++
++	netdev_dbg(ndev, "obj_add: id %u port: %u\n", obj->id, emac->port_id);
++
++	switch (obj->id) {
++	case SWITCHDEV_OBJ_ID_PORT_VLAN:
++		err = prueth_switchdev_vlans_add(emac, vlan);
++		break;
++	case SWITCHDEV_OBJ_ID_PORT_MDB:
++	case SWITCHDEV_OBJ_ID_HOST_MDB:
++		err = prueth_switchdev_mdb_add(emac, mdb);
++		break;
++	default:
++		err = -EOPNOTSUPP;
++		break;
++	}
++
++	return err;
++}
++
++static int prueth_switchdev_obj_del(struct net_device *ndev, const void *ctx,
++				    const struct switchdev_obj *obj)
++{
++	struct switchdev_obj_port_vlan *vlan = SWITCHDEV_OBJ_PORT_VLAN(obj);
++	struct switchdev_obj_port_mdb *mdb = SWITCHDEV_OBJ_PORT_MDB(obj);
++	struct prueth_emac *emac = netdev_priv(ndev);
++	int err = 0;
++
++	netdev_dbg(ndev, "obj_del: id %u port: %u\n", obj->id, emac->port_id);
++
++	switch (obj->id) {
++	case SWITCHDEV_OBJ_ID_PORT_VLAN:
++		err = prueth_switchdev_vlans_del(emac, vlan);
++		break;
++	case SWITCHDEV_OBJ_ID_PORT_MDB:
++	case SWITCHDEV_OBJ_ID_HOST_MDB:
++		err = prueth_switchdev_mdb_del(emac, mdb);
++		break;
++	default:
++		err = -EOPNOTSUPP;
++		break;
++	}
++
++	return err;
++}
++
++static int prueth_switchdev_blocking_event(struct notifier_block *unused,
++					   unsigned long event, void *ptr)
++{
++	struct net_device *dev = switchdev_notifier_info_to_dev(ptr);
++	int err;
++
++	switch (event) {
++	case SWITCHDEV_PORT_OBJ_ADD:
++		err = switchdev_handle_port_obj_add(dev, ptr,
++						    prueth_dev_check,
++						    prueth_switchdev_obj_add);
++		return notifier_from_errno(err);
++	case SWITCHDEV_PORT_OBJ_DEL:
++		err = switchdev_handle_port_obj_del(dev, ptr,
++						    prueth_dev_check,
++						    prueth_switchdev_obj_del);
++		return notifier_from_errno(err);
++	case SWITCHDEV_PORT_ATTR_SET:
++		err = switchdev_handle_port_attr_set(dev, ptr,
++						     prueth_dev_check,
++						     prueth_switchdev_attr_set);
++		return notifier_from_errno(err);
++	default:
++		break;
++	}
++
++	return NOTIFY_DONE;
++}
++
++int prueth_switchdev_register_notifiers(struct prueth *prueth)
++{
++	int ret = 0;
++
++	prueth->prueth_switchdev_nb.notifier_call = &prueth_switchdev_event;
++	ret = register_switchdev_notifier(&prueth->prueth_switchdev_nb);
++	if (ret) {
++		dev_err(prueth->dev, "register switchdev notifier fail ret:%d\n",
++			ret);
++		return ret;
++	}
++
++	prueth->prueth_switchdev_bl_nb.notifier_call = &prueth_switchdev_blocking_event;
++	ret = register_switchdev_blocking_notifier(&prueth->prueth_switchdev_bl_nb);
++	if (ret) {
++		dev_err(prueth->dev, "register switchdev blocking notifier ret:%d\n",
++			ret);
++		unregister_switchdev_notifier(&prueth->prueth_switchdev_nb);
++	}
++
++	return ret;
++}
++
++void prueth_switchdev_unregister_notifiers(struct prueth *prueth)
++{
++	unregister_switchdev_blocking_notifier(&prueth->prueth_switchdev_bl_nb);
++	unregister_switchdev_notifier(&prueth->prueth_switchdev_nb);
++}
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_switchdev.h b/drivers/net/ethernet/ti/icssg/icssg_switchdev.h
+new file mode 100644
+index 000000000000..0e64e7760a00
+--- /dev/null
++++ b/drivers/net/ethernet/ti/icssg/icssg_switchdev.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright (C) 2021 Texas Instruments Incorporated - https://www.ti.com/
++ */
++#ifndef __NET_TI_ICSSG_SWITCHDEV_H
++#define __NET_TI_ICSSG_SWITCHDEV_H
++
++#include "icssg_prueth.h"
++
++int prueth_switchdev_register_notifiers(struct prueth *prueth);
++void prueth_switchdev_unregister_notifiers(struct prueth *prueth);
++bool prueth_dev_check(const struct net_device *ndev);
++
++#endif /* __NET_TI_ICSSG_SWITCHDEV_H */
+-- 
+2.34.1
+
