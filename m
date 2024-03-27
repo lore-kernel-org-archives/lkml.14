@@ -1,100 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B904415251C;
-	Wed, 27 Mar 2024 12:56:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7BB12D774
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 12:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711544175; cv=none; b=lziqLRHkzMO5a/41BZ8RfBZKyw1ZuoMfnVoKhR67CCoLMpbT+pgHg/xfaPc27R1BgdUXoTwvTx5cwsHvbtovVaVliEkE5QM9PVyE4Ax3gh/NiMoVTNfST8x50dN9KYoeCDHFi+E+FmS/vZvGWjPCg7Z8HtKZuqJflWz2U3eGx+A=
+	t=1711544184; cv=none; b=e3mdm30KTNZ8yWOQnSG7BPWahGiiWsdTXUXeIo/nAiPXMGDArATh+dZnbClvMj+A/TcraRiinmyt4iOlGDNl7h7AhuW4owT8c4I13EQY8TIYEtnWUsceEj84P+YHhHLDe1kYzsIicMV9Vvs8k/XFd3my47uOP0k6LfKXu9PuL2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711544175; c=relaxed/simple;
-	bh=t5Dr+QPEU1FaZbxI2VzHHPUV33oVM25Zuyjp8wRwBxQ=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=iFm3YA9kLj68XOWKZcMRSYtsJmWzLlxAfwsXERyDsxAoNx3HWu2zAjq//C8KpfGHKaIh/1yL63SZodp8dOBqiUC8HIuV0k4HF8w5tUBXDozTAVIEki1Pmua8JBKKALMd37+APWhJMOPMcYPPQ5aWVRnaqtddhkPWUmIU1B2XmeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PeI1DRl9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711544184; c=relaxed/simple;
+	bh=w8fAAjUbn+V2AC0IttZ8M+6kKib99nE0E7k8uWfW6f8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UGqnTDN3nZN3MWkLjs2LJ2TNS7cx3Xx0JT3yYeGKVeJqo6xlUpHDKLHbB93w6rfKhsOPmsZRm6RyjmDfU2NjJhSA82LgD0H/B5ezZ+M/caXJzZBH4BQEX1HPOcOhUBIBkZhEqVOJWxrOkva7hr0kXksKgsoh6Pu9G1oP5R7DRQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=C69OYLw0; arc=none smtp.client-ip=209.85.166.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PeI1DRl9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59C93C43390;
-	Wed, 27 Mar 2024 12:56:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711544174;
-	bh=t5Dr+QPEU1FaZbxI2VzHHPUV33oVM25Zuyjp8wRwBxQ=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=PeI1DRl97jSBL5h+TjLof7OmsdrUn8XoRsGQVaXc1QrS2MsqMVnRRdmF+M5dmweaA
-	 Cf4i01dUWOny6pJ6QuLijRvpE44xS0PcZc1e9PeN+WBhzhBO4xJy/Ts3k409QwdVEV
-	 p+A11VpmypxO3Ps9Q8jXDfwY+GDNk4U7h2495MzupWAahXb3s6nMhf4xTbKbYBv9sH
-	 Qg2EVim4HGea+Pk1qx3RaNxw1jAVCalYFQ1zjH9SvFpUEhLNt2Q6UwcJWGcqLuJGpO
-	 jNEGpE3iLazGfTCtetqVqdY3FWUY6/vKk+gRsmlO3tArdLh8t7rKXHMt3Lo2FnfSbu
-	 armFDkXpy3JVQ==
-From: Kalle Valo <kvalo@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>,  Jason Wang
- <jasowang@redhat.com>,  Xuan Zhuo <xuanzhuo@linux.alibaba.com>,  Richard
- Weinberger <richard@nod.at>,  Anton Ivanov
- <anton.ivanov@cambridgegreys.com>,  Johannes Berg
- <johannes@sipsolutions.net>,  Paolo Bonzini <pbonzini@redhat.com>,  Stefan
- Hajnoczi <stefanha@redhat.com>,  Jens Axboe <axboe@kernel.dk>,  Marcel
- Holtmann <marcel@holtmann.org>,  Luiz Augusto von Dentz
- <luiz.dentz@gmail.com>,  Olivia Mackall <olivia@selenic.com>,  Herbert Xu
- <herbert@gondor.apana.org.au>,  Amit Shah <amit@kernel.org>,  Arnd
- Bergmann <arnd@arndb.de>,  Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,  Gonglei <arei.gonglei@huawei.com>,  "David
- S. Miller" <davem@davemloft.net>,  Viresh Kumar <vireshk@kernel.org>,
-  Linus Walleij <linus.walleij@linaro.org>,  Bartosz Golaszewski
- <brgl@bgdev.pl>,  David Airlie <airlied@redhat.com>,  Gerd Hoffmann
- <kraxel@redhat.com>,  Gurchetan Singh <gurchetansingh@chromium.org>,
-  Chia-I Wu <olvaffe@gmail.com>,  Jean-Philippe Brucker
- <jean-philippe@linaro.org>,  Joerg Roedel <joro@8bytes.org>,  Alexander
- Graf <graf@amazon.com>,  Eric Dumazet <edumazet@google.com>,  Jakub
- Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>,  Eric Van
- Hensbergen <ericvh@kernel.org>,  Latchesar Ionkov <lucho@ionkov.net>,
-  Dominique Martinet <asmadeus@codewreck.org>,  Christian Schoenebeck
- <linux_oss@crudebyte.com>,  Stefano Garzarella <sgarzare@redhat.com>,  Dan
- Williams <dan.j.williams@intel.com>,  Vishal Verma
- <vishal.l.verma@intel.com>,  Dave Jiang <dave.jiang@intel.com>,  Ira Weiny
- <ira.weiny@intel.com>,  Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-  Bjorn Andersson <andersson@kernel.org>,  Mathieu Poirier
- <mathieu.poirier@linaro.org>,  "Martin K. Petersen"
- <martin.petersen@oracle.com>,  Vivek Goyal <vgoyal@redhat.com>,  Miklos
- Szeredi <miklos@szeredi.hu>,  Anton Yakovlev
- <anton.yakovlev@opensynergy.com>,  Jaroslav Kysela <perex@perex.cz>,
-  Takashi Iwai <tiwai@suse.com>,  virtualization@lists.linux.dev,
-  linux-doc@vger.kernel.org,  linux-kernel@vger.kernel.org,
-  linux-um@lists.infradead.org,  linux-block@vger.kernel.org,
-  linux-bluetooth@vger.kernel.org,  linux-crypto@vger.kernel.org,
-  linux-arm-kernel@lists.infradead.org,  linux-gpio@vger.kernel.org,
-  dri-devel@lists.freedesktop.org,  iommu@lists.linux.dev,
-  netdev@vger.kernel.org,  v9fs@lists.linux.dev,  kvm@vger.kernel.org,
-  linux-wireless@vger.kernel.org,  nvdimm@lists.linux.dev,
-  linux-remoteproc@vger.kernel.org,  linux-scsi@vger.kernel.org,
-  linux-fsdevel@vger.kernel.org,  alsa-devel@alsa-project.org,
-  linux-sound@vger.kernel.org
-Subject: Re: [PATCH 17/22] wireless: mac80211_hwsim: drop owner assignment
-References: <20240327-module-owner-virtio-v1-0-0feffab77d99@linaro.org>
-	<20240327-module-owner-virtio-v1-17-0feffab77d99@linaro.org>
-Date: Wed, 27 Mar 2024 14:55:58 +0200
-In-Reply-To: <20240327-module-owner-virtio-v1-17-0feffab77d99@linaro.org>
-	(Krzysztof Kozlowski's message of "Wed, 27 Mar 2024 13:41:10 +0100")
-Message-ID: <87plvf7s0x.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="C69OYLw0"
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7c8ccffacbcso178895939f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 05:56:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1711544182; x=1712148982; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eDUDMYuwU2SUxAqC60S/6H5qJEoJ0FMo+cGtvAM2eZo=;
+        b=C69OYLw0i3gMraRBWsUetmc26jqnS/DznsWavk0w53f6v38Rz+Fy3rf5K/VzyOaN4F
+         6l+h8T9LVnHcam6zZqD1dmyE0yluO9qs6FC10eLIHFz8nZRn55WYvkdQKOP+W+paMxhd
+         ykjbUY4QC96ivKvfP3FA+5fOYNLExspNOFrfiksbsZz39cvoOBwqsxnvl14//RuLwRqn
+         VQpjm8SEClxkLJZ+eWYjIlttPrO0mFo55yBM/nWFCB5lxeYn/zPji/tw84NjZmw3CAEF
+         XiXfLmnNxoqJ0bawg53OHgHZ47HG0d3N5juNi2plU68efh8h/ZbiqvlgZk8CME+qZ1vs
+         P2JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711544182; x=1712148982;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eDUDMYuwU2SUxAqC60S/6H5qJEoJ0FMo+cGtvAM2eZo=;
+        b=uFs76m50bU4fD0AaBRuUhWDHW/Nfqb3xa1siSoDYfkAzgxNOxTV47nI7USXR6tKPGG
+         3ahl2HOmlDsKyycMoUkRg94Bk3gqI2xsZUyuLFzmTgHDbtaHU/1hzxOATxQbo9caVMWF
+         Or4yGkyIaJX5gjEd03cAryroGhkGRwC0KxihR9b5BZZ6aHh6I8Y2vrsCvkivN4JGTfXC
+         9zTxquN3/T/Irsdq4t4BSGi78iHPHvctK/081CiPN8/Jw+M5l5ognUnVSjef6IiBYmhD
+         Mx2gzNOHkvFzeK1AOMUXUUE8T7gvIeLavc0OTxoM9rnbJKUTOOQ0u7YJAtCUvfzoyyMy
+         qWgQ==
+X-Gm-Message-State: AOJu0YzJ0gxdcddoRde7D0KdPdoooO4IIPXR7hzOJds/v1fV36HAYgvP
+	fAXK3JQRxafo0GCKRuh4E3pQmfzMBs7VYNirywVxdepnjSGJVCuHg+hLhjH1DgM=
+X-Google-Smtp-Source: AGHT+IGpHwDVcEaSCyL0jaVUFQB7IqtIxhkm8li1Yxlb1nP0/kTO6T5MUCR28gpsX+7hskI59QpZbA==
+X-Received: by 2002:a5d:8508:0:b0:7c8:dc57:4dd3 with SMTP id q8-20020a5d8508000000b007c8dc574dd3mr5226769ion.6.1711544181585;
+        Wed, 27 Mar 2024 05:56:21 -0700 (PDT)
+Received: from [100.64.0.1] ([170.85.6.190])
+        by smtp.gmail.com with ESMTPSA id k7-20020a02c647000000b00479db9b38f6sm3249826jan.66.2024.03.27.05.56.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Mar 2024 05:56:21 -0700 (PDT)
+Message-ID: <b929afe5-c148-499a-906d-fcf208b02fcc@sifive.com>
+Date: Wed, 27 Mar 2024 07:56:20 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: 6.9-rc1 regression: irq: no irq domain found for
+ interrupt-controller@c000000
+To: Andreas Schwab <schwab@suse.de>, linux-riscv@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+References: <mvmplvfg90v.fsf@suse.de>
+Content-Language: en-US
+From: Samuel Holland <samuel.holland@sifive.com>
+In-Reply-To: <mvmplvfg90v.fsf@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> writes:
+Hi Andreas,
 
-> virtio core already sets the .owner, so driver does not need to.
->
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+On 2024-03-27 7:21 AM, Andreas Schwab wrote:
+> The SiFive ccache driver fails to look up its irqs:
+> 
+> [    0.762329] irq: no irq domain found for interrupt-controller@c000000 !
+> [    0.769358] CCACHE: Could not request IRQ 0
+> 
+> This is fatal for the JH7100 based boards, since they depend on it for
+> their DMA noncoherence.
 
-We use "wifi:" in the title, not "wireless:". It would be nice if you
-can fix this during commit.
+I have posted a fix at
+https://lore.kernel.org/linux-riscv/20240327054537.424980-1-samuel.holland@sifive.com/
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+Regards,
+Samuel
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
