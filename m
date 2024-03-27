@@ -1,78 +1,88 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AB8C12DDAF;
-	Wed, 27 Mar 2024 15:48:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D1C131732
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 15:48:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711554500; cv=none; b=dFji8geqZ7tJLIU0Qnk9TyK/J2/jL9GvFgUJ05NIGbI1ncaYopOy+lo3Lz9cG0Cu/g+4pWDFfPNTs77nescRZlhAf+MksP/VrQGJzDY5J2s+JYwVY+ziS5z0UE+2gWyu02rhpbbgE/8HMmGnwVOIxZy/LQ45znfRwt2pjiI1Qag=
+	t=1711554501; cv=none; b=VS1lmQlJ/i4tfEhm422EukChvRV4GSWJtr1VlaFZRLzXFFoI74Yx/MoW+b/4FxL+AjaTSuwdb+WSS8VHoPFozYWJgtLR4XZZ1LPb2z6Aai4CywpmQb8h598rwzjGMKljSAfvtoM6oxQSdAS0xWwaHg1QQF0wpYjY5RLAEYKx1+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711554500; c=relaxed/simple;
-	bh=76OeUfIHMBxJhe8IVfeoWgftOWgpYR+KcvuA/0YJZ20=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rqTv7/ooJgxXT5RnFbdb7CARfYFWZdgV8EK0SeVc0jm7bhpYBAE7PfjbZ+/Tj+FmC1IvPSSgIjhd7xkfsgkzamUsl8u0G2ORZvs1lorbP/8XW3Hdb6wwaReK5L9BH9/E9Km6gWZm69MuwxSGpPgTxiqfj5PW7mv6e7e6yxIa2cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=aSYnsKqT; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1711554501; c=relaxed/simple;
+	bh=kxw8lEOeXnx/duF9z7ST9TT/zC6EoGrvtJe8oJFI1B0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=F1hOieLV/PYxIiL5qF3GJFnV8DCni4bXu3QpWkc1wsHSVNFUCk+VYDWS9k72ggM1bcmUBp4qkqzKNLY4V8t4ZBJj7+rMsAFOtm7J9HjDE+jT1FrduRfNzoRR4LulFK2R16f40bUAVpmzxTml4pBtlbxIE3Nb2ZEPnFbbnLRcOIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sr1y1Cuu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="aSYnsKqT"
-Received: from [100.64.128.218] (unknown [20.29.225.195])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 8344F2098E07;
-	Wed, 27 Mar 2024 08:48:18 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8344F2098E07
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1711554498;
-	bh=y+2+9j6sWbPoLeSeuAktrd2FKSwR04iT4UsblobGcEo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aSYnsKqTNvT3v1QSZJomn1eKSsYHIkcl42F7FToV2X9hSN1YPhzZMnutZN+JOtLZ4
-	 BHI1WG/HkmTgSbC05nsvNYmSzXJ6ozZyJEF84DOzH82F09+B9SzfnFx/lD9z2ZL6pn
-	 cd1rjP0mCGRYzc7ljxNor7ODIW35T/dLnrPOV/uI=
-Message-ID: <b34308af-ebc9-4a0e-a27b-90d6e176c526@linux.microsoft.com>
-Date: Wed, 27 Mar 2024 08:48:17 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sr1y1Cuu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A95BC433C7;
+	Wed, 27 Mar 2024 15:48:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711554501;
+	bh=kxw8lEOeXnx/duF9z7ST9TT/zC6EoGrvtJe8oJFI1B0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Sr1y1Cuu9f/Se064mDUn1HaCUkTnbO9IBcwOnhO4s3a/Mlvj19hhrxttE8kNOJA1i
+	 zW0nSCuYqRkkblNx79/0IToZ+uYKPrVtK/RsRTGET65JvBUlbnBr+xnURpFy6E9uEO
+	 Jsc+HyY1Qqo4OpmJ5FHxS0LBgybRWxjAhhIC2DbLn+PzW/Mry+jN1z3i0/FuRNrs0A
+	 T0BNpgtrWjidXAsNZVrDC5m0wr0xCw1IWoUuwrYkFCsnQe19gwecezPAQgkZcYdkCK
+	 Jl7Orhrx+qfMJ4Tv93a6bLdHSbX/8kFx+KwKZCKZ40GSm5YwG8T0gWZ6tGf2kVX46Y
+	 V+Yf/i5ucujfA==
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] clocksource/drivers/timer-riscv: Add set_state_oneshot_stopped
+Date: Wed, 27 Mar 2024 23:35:00 +0800
+Message-ID: <20240327153502.2133-2-jszhang@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240327153502.2133-1-jszhang@kernel.org>
+References: <20240327153502.2133-1-jszhang@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: FAILED: Patch "ACPI: CPPC: Use access_width over bit_width for
- system memory accesses" failed to apply to 5.15-stable tree
-To: Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org,
- jarredwhite@linux.microsoft.com
-Cc: "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240327121738.2833692-1-sashal@kernel.org>
-Content-Language: en-CA
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-In-Reply-To: <20240327121738.2833692-1-sashal@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Sasha,
+To avoid spurious timer interrupts when KTIME_MAX is used, we need to
+configure set_state_oneshot_stopped(). Although implementing this is
+optional, it still affects things like power management for the extra
+timer interrupt.
 
-On 3/27/2024 5:17 AM, Sasha Levin wrote:
-> The patch below does not apply to the 5.15-stable tree.
-> If someone wants it applied there, or to any other stable or longterm
-> tree, then please email the backport, including the original git commit
-> id to <stable@vger.kernel.org>.
-> 
-> Thanks,
-> Sasha
-> 
-> ------------------ original commit in Linus's tree ------------------
-> 
->>From 2f4a4d63a193be6fd530d180bb13c3592052904c Mon Sep 17 00:00:00 2001
-> From: Jarred White <jarredwhite@linux.microsoft.com>
-> Date: Fri, 1 Mar 2024 11:25:59 -0800
-> Subject: [PATCH] ACPI: CPPC: Use access_width over bit_width for system memory
->  accesses
-> 
-> To align with ACPI 6.3+, since bit_width can be any 8-bit value, it
-> cannot be depended on to be always on a clean 8b boundary. This was
-> uncovered on the Cobalt 100 platform.
-> 
+Check commit 8fff52fd5093 ("clockevents: Introduce
+CLOCK_EVT_STATE_ONESHOT_STOPPED state") for more information.
 
-Please see the backport for this patch I sent earlier: https://lore.kernel.org/stable/6df99ad6-0402-4dcf-9a1c-7259436768dd@linux.microsoft.com/T/#u
+Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+---
+ drivers/clocksource/timer-riscv.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-Thanks,
-Easwar
+diff --git a/drivers/clocksource/timer-riscv.c b/drivers/clocksource/timer-riscv.c
+index 48ce50c5f5e6..e661fc037337 100644
+--- a/drivers/clocksource/timer-riscv.c
++++ b/drivers/clocksource/timer-riscv.c
+@@ -69,11 +69,12 @@ static int riscv_clock_shutdown(struct clock_event_device *evt)
+ 
+ static unsigned int riscv_clock_event_irq;
+ static DEFINE_PER_CPU(struct clock_event_device, riscv_clock_event) = {
+-	.name			= "riscv_timer_clockevent",
+-	.features		= CLOCK_EVT_FEAT_ONESHOT,
+-	.rating			= 100,
+-	.set_next_event		= riscv_clock_next_event,
+-	.set_state_shutdown	= riscv_clock_shutdown,
++	.name				= "riscv_timer_clockevent",
++	.features			= CLOCK_EVT_FEAT_ONESHOT,
++	.rating				= 100,
++	.set_next_event			= riscv_clock_next_event,
++	.set_state_shutdown		= riscv_clock_shutdown,
++	.set_state_oneshot_stopped	= riscv_clock_shutdown,
+ };
+ 
+ /*
+-- 
+2.43.0
 
