@@ -1,163 +1,139 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5B92577A;
-	Wed, 27 Mar 2024 06:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1861C11
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 06:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711521869; cv=none; b=Z5W1s7LiLl2wTzMBMUmiIlqvHh8xTqYqJk0Y/lqMHIrTRvoco4rqU8cAmlDuuxJ7jzeDLhbBgEy021ZkEdQOgQy+C94L9f0FqbZxIBbgt2P6F3JeBD+98wXzdF3mURntgPXgqa07GIoHMG6lKoVUZdFH5MN11bXghsEWFhY5SI0=
+	t=1711522183; cv=none; b=dGbsjlQP8wukBwiz3d613bXeWWBfy+xi7pi9mTnE/6CE4ccPCooytQeCbPinGlVHxucHduv5IwcdQYX+a1sJCACeJ/wi8t4TbQ9vqzFfGPueI4uBjr0aD1g7yB7pU/gDBv6t1ndCLEhP16aDQ3FfhVEgm4L9EjCAegIMg6aUW4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711521869; c=relaxed/simple;
-	bh=gaY4uxUtw/VyYyckWAO5Sda2ZlYWBVwNlEmKIyc4jbA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BeVpFl/YG9YoSEflDgQ8xH+QpVv/JWQLefrfcVnR/ev64rmIUakEvj3F31bQfOAQv0gVW2d/68I/9xEnXnIPUn8SsIGW5vcZxJcCi2YHVn5N6dkp3x9bfowPJaqnQ4VKMlHu9y/60u52J3HzbqyxGHY57NQVmDTnZ8ryfsNboxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V/syqnZj; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711522183; c=relaxed/simple;
+	bh=NpBdR2o53eZcSNfBWFivW7bvko295qnK4Dgh0nt/fNc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=byCn5aOTa2QLDgsSNeFX02R4Ghd93+JMluIfyvLkkRDuLSt4hSXAl4bE/EguyW9bawmCqFnWlhYctQ45GBE7xTK5nylSyRTdreSJtDyxFnZFLir0ivp+7Jg7lFa+jwaDgGFUI9zRR1NVKf5vIcWvl5sD5sNOOQXfvjTrWDrpwWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OM7GjAr1; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V/syqnZj"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e6b3dc3564so4516719b3a.2;
-        Tue, 26 Mar 2024 23:44:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711521867; x=1712126667; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=r6dZugYqHLKD48hNBCyfJRW1Kclovt4nu1MkauiHbJ8=;
-        b=V/syqnZjk4fQBpWZCfFHCRgSxANpkxm0BlsAS4pATVJx75bGehFCjbJw5cTIPWkEgC
-         KENk3OA/afUtJyq19te5I4RGBVEZYRORs9ce1mcLOsiewUVi7UtMS+xBMzH3K1E47FAB
-         URpjdrwGDKU3W0T/pGAKIwUEvux3PF/3vbd5qKY7yVTt0rLI2AzvmoSc9xUHTuQBdT6C
-         iNDYQNUicO5HuC/FswLkFdUzJVaIFUVLGb6RUJcGvDM/ci/WxEzAtm48gGFveigdNK5Z
-         fr8gkgrFwc/Y0qwSHnx2wXMA/jEEmZWk+2YbaWokMu3eUIMRQtb3AS+CnQCwIvC7vj9E
-         D0GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711521867; x=1712126667;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r6dZugYqHLKD48hNBCyfJRW1Kclovt4nu1MkauiHbJ8=;
-        b=CIg7OD/vPCh+Y448XWG8Loz+4NSug/VBUpcQ+yKMYyZhLYnDps/RgPXcEBVyDNfbml
-         qkS1uD5yM4TmTNFgxYeijV+64lkD+vF1s2t3YS9Vk5ROxLTDmxPi8e/8Jk3Q3FWQHKQ8
-         3HG4ijaCKcpW5ZZf0h8CPZeTSWBJ3ursKfEP2eeamZiX02frmcR3gcf8rMdcUqWdIWP1
-         hVtI7gtM7yLvWXEV8A3EcSvs6J8VFfUTrujWKh/gYIMEMDS9gqO/bw0NHFktuxJkeR8e
-         dhMYKAoK0L5JT5rrGU/tPBkTQQuQDMxoOe5WCQcVhl/uTeSlUWi8qPymabuutXFAfOFc
-         dxBA==
-X-Forwarded-Encrypted: i=1; AJvYcCXHwlBkEcaKvhCfShIOAN7ZXDVta3l0+ZFfusMQpPwtn6koCem4XSZXeC4C+PZdnk55A/hg8f+YlIz0lj48//GcaBhFT40jay7KB9O8pBbQ1VSD7jBAupxl2uY+d76CZO72su0wDJa86uCJdisJzglkJR60MgA5qG9cu4DAIITZ+z3hRA==
-X-Gm-Message-State: AOJu0YwFlXUWgs8vafsWMDUgsfBPg9iC8oJASI7HqgVWCPEBBvHtyzN1
-	6BWRblArROV6MvYJmDYcbJBVWlKn7FPUMMt4wt+fMBmayTUnR7JR
-X-Google-Smtp-Source: AGHT+IELbG/lC0SlpK0hEcU3eD3jc67RaNLZQPnP6YvgN6qsnMrfI47ZjrXTHm4QnvLMRVLz1nnsJQ==
-X-Received: by 2002:a05:6a20:8409:b0:1a3:c3e1:6a23 with SMTP id c9-20020a056a20840900b001a3c3e16a23mr3536644pzd.43.1711521867452;
-        Tue, 26 Mar 2024 23:44:27 -0700 (PDT)
-Received: from localhost.localdomain ([122.187.117.179])
-        by smtp.gmail.com with ESMTPSA id v13-20020a170902f0cd00b001e09c35e058sm8074962pla.195.2024.03.26.23.44.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 23:44:27 -0700 (PDT)
-From: Animesh Agarwal <animeshagarwal28@gmail.com>
-To: 
-Cc: animeshagarwal28@gmail.com,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-ide@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] dt-bindings: ata: ahci-da850: Convert to dtschema
-Date: Wed, 27 Mar 2024 12:13:51 +0530
-Message-ID: <20240327064354.17384-1-animeshagarwal28@gmail.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OM7GjAr1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711522182; x=1743058182;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=NpBdR2o53eZcSNfBWFivW7bvko295qnK4Dgh0nt/fNc=;
+  b=OM7GjAr1ocZSg2KQ0tR41dYV+C1SyI07QkFxdp6J1y7ayStrByoajC6B
+   sdoP7eDVKECq9dYlJJGPecDu+Fng3gbNViLmtZRzd7T2DfmgguCsh4jOo
+   ATsRrg2y98YMYmhj51ixA9iqhHtJoG0WipjZuiyYt4PmtEydqFpgxTN9u
+   O+VlVSSqPPr7/MhKWyP/ukdhtJ5BoMFmuLEA0HSS8+Ufltxu4c9FVtJh3
+   qMfYBbYhvZmqvhJNgiPf+QhI0meHJmeyIZYVKaNixCXsPVylRy2UxlLLn
+   H3cYznEAeNWsig3EzGi6mY0YggzGIHEJ+qtRVejr28V4NiMl6bddU8+ix
+   w==;
+X-CSE-ConnectionGUID: xIxvcPRxR4aI5QIdJL2YKQ==
+X-CSE-MsgGUID: Aunz6d88RQKq4oQalBslKw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="6462094"
+X-IronPort-AV: E=Sophos;i="6.07,158,1708416000"; 
+   d="scan'208";a="6462094"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 23:49:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,158,1708416000"; 
+   d="scan'208";a="16185085"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 23:49:37 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Kairui Song <ryncsn@gmail.com>
+Cc: linux-mm@kvack.org,  Chris Li <chrisl@kernel.org>,  Minchan Kim
+ <minchan@kernel.org>,  Barry Song <v-songbaohua@oppo.com>,  Ryan Roberts
+ <ryan.roberts@arm.com>,  Yu Zhao <yuzhao@google.com>,  SeongJae Park
+ <sj@kernel.org>,  David Hildenbrand <david@redhat.com>,  Yosry Ahmed
+ <yosryahmed@google.com>,  Johannes Weiner <hannes@cmpxchg.org>,  Matthew
+ Wilcox <willy@infradead.org>,  Nhat Pham <nphamcs@gmail.com>,  Chengming
+ Zhou <zhouchengming@bytedance.com>,  Andrew Morton
+ <akpm@linux-foundation.org>,  linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 10/10] mm/swap: optimize synchronous swapin
+In-Reply-To: <CAMgjq7A-TxWkNKz0wwjaf0C-KZgps-VdPG+QcpY9tMmBY04TNA@mail.gmail.com>
+	(Kairui Song's message of "Wed, 27 Mar 2024 14:37:27 +0800")
+References: <20240326185032.72159-1-ryncsn@gmail.com>
+	<20240326185032.72159-11-ryncsn@gmail.com>
+	<87zfukmbwz.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<CAMgjq7A-TxWkNKz0wwjaf0C-KZgps-VdPG+QcpY9tMmBY04TNA@mail.gmail.com>
+Date: Wed, 27 Mar 2024 14:47:43 +0800
+Message-ID: <87r0fwmar4.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Convert the ahci-da850 bindings to DT schema.
+Kairui Song <ryncsn@gmail.com> writes:
 
-Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
+> On Wed, Mar 27, 2024 at 2:24=E2=80=AFPM Huang, Ying <ying.huang@intel.com=
+> wrote:
+>>
+>> Kairui Song <ryncsn@gmail.com> writes:
+>>
+>> > From: Kairui Song <kasong@tencent.com>
+>> >
+>> > Interestingly the major performance overhead of synchronous is actually
+>> > from the workingset nodes update, that's because synchronous swap in
+>>
+>> If it's the major overhead, why not make it the first optimization?
+>
+> This performance issue became much more obvious after doing other
+> optimizations, and other optimizations are for general swapin not only
+> for synchronous swapin, that's also how I optimized things step by
+> step, so I kept my patch order...
+>
+> And it is easier to do this after Patch 8/10 which introduces the new
+> interface for swap cache.
+>
+>>
+>> > keeps adding single folios into a xa_node, making the node no longer
+>> > a shadow node and have to be removed from shadow_nodes, then remove
+>> > the folio very shortly and making the node a shadow node again,
+>> > so it has to add back to the shadow_nodes.
+>>
+>> The folio is removed only if should_try_to_free_swap() returns true?
+>>
+>> > Mark synchronous swapin folio with a special bit in swap entry embedded
+>> > in folio->swap, as we still have some usable bits there. Skip workings=
+et
+>> > node update on insertion of such folio because it will be removed very
+>> > quickly, and will trigger the update ensuring the workingset info is
+>> > eventual consensus.
+>>
+>> Is this safe?  Is it possible for the shadow node to be reclaimed after
+>> the folio are added into node and before being removed?
+>
+> If a xa node contains any non-shadow entry, it can't be reclaimed,
+> shadow_lru_isolate will check and skip such nodes in case of race.
 
----
-Changes in v3:
-- Fixed line length issue on line 20
-- Removed unneccessary '|' character
-Changes in v2:
-- Added description for reg property items.
----
- .../devicetree/bindings/ata/ahci-da850.txt    | 18 ---------
- .../bindings/ata/ti,da850-ahci.yaml           | 39 +++++++++++++++++++
- 2 files changed, 39 insertions(+), 18 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/ata/ahci-da850.txt
- create mode 100644 Documentation/devicetree/bindings/ata/ti,da850-ahci.yaml
+In shadow_lru_isolate(),
 
-diff --git a/Documentation/devicetree/bindings/ata/ahci-da850.txt b/Documentation/devicetree/bindings/ata/ahci-da850.txt
-deleted file mode 100644
-index 5f8193417725..000000000000
---- a/Documentation/devicetree/bindings/ata/ahci-da850.txt
-+++ /dev/null
-@@ -1,18 +0,0 @@
--Device tree binding for the TI DA850 AHCI SATA Controller
-----------------------------------------------------------
--
--Required properties:
--  - compatible: must be "ti,da850-ahci"
--  - reg: physical base addresses and sizes of the two register regions
--         used by the controller: the register map as defined by the
--         AHCI 1.1 standard and the Power Down Control Register (PWRDN)
--         for enabling/disabling the SATA clock receiver
--  - interrupts: interrupt specifier (refer to the interrupt binding)
--
--Example:
--
--	sata: sata@218000 {
--		compatible = "ti,da850-ahci";
--		reg = <0x218000 0x2000>, <0x22c018 0x4>;
--		interrupts = <67>;
--	};
-diff --git a/Documentation/devicetree/bindings/ata/ti,da850-ahci.yaml b/Documentation/devicetree/bindings/ata/ti,da850-ahci.yaml
-new file mode 100644
-index 000000000000..ce13c76bdffb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ata/ti,da850-ahci.yaml
-@@ -0,0 +1,39 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/ata/ti,da850-ahci.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: TI DA850 AHCI SATA Controller
-+
-+maintainers:
-+  - Animesh Agarwal <animeshagarwal28@gmail.com>
-+
-+properties:
-+  compatible:
-+    const: ti,da850-ahci
-+
-+  reg:
-+    items:
-+      - description: Address and size of the register map as defined by the AHCI 1.1 standard.
-+      - description:
-+          Address and size of Power Down Control Register (PWRDN) for enabling/disabling the SATA clock
-+          receiver.
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    sata@218000 {
-+        compatible = "ti,da850-ahci";
-+        reg = <0x218000 0x2000>, <0x22c018 0x4>;
-+        interrupts = <67>;
-+    };
--- 
-2.44.0
+	/*
+	 * The nodes should only contain one or more shadow entries,
+	 * no pages, so we expect to be able to remove them all and
+	 * delete and free the empty node afterwards.
+	 */
+	if (WARN_ON_ONCE(!node->nr_values))
+		goto out_invalid;
+	if (WARN_ON_ONCE(node->count !=3D node->nr_values))
+		goto out_invalid;
 
+So, this isn't considered normal and will cause warning now.
+
+>>
+>> If so, we may consider some other methods.  Make shadow_nodes per-cpu?
+>
+> That's also an alternative solution if there are other risks.
+
+This appears a general optimization and more clean.
+
+--
+Best Regards,
+Huang, Ying
