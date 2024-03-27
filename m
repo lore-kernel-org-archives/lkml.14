@@ -1,174 +1,98 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-108-mta61.mxroute.com (mail-108-mta61.mxroute.com [136.175.108.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F8014F11F
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 23:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF15153BF0
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 23:22:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711581729; cv=none; b=E3yd4KLxRfZsRgEsErU2jkBJfRBzAJkIJf/dyFz1u3ya2bS/K4uvDWiDVW55kGrJlAy+Kp2HXvIkrXDE69f5mChrrbsrq9WkduTicDY+ACOdOkUcYpZILxE4qCaXM+aq5hVeDsD+VVsiCLsJ+IhV8b1QnUbiMAIusPlGntKGgZA=
+	t=1711581753; cv=none; b=H52jGpDpC+TLd5HLOU77K9oN6OdBBseXctV2hIGc8x9jbhk/NOGEreaFkc6RtANZhtQ6VUNBYh9ii/YZn28iGO2nU9WD0rCkgjdtJ1jzVJZXfnW5d+dbPbwZCN1MKbEkxZTXvnhYVCaaTKiZGg8zHXYvTWhS1UHFV7CqvlVhshg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711581729; c=relaxed/simple;
-	bh=genQle1dnjC/tcYAhJLWj2ZdmStfOip7SwdldmDZJ10=;
-	h=Date:From:To:Cc:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=S2x3Xsm7bo2jIXYwaLNYq4AYuSbuy99PWzA1SEIErsTGXdtbEXBw67972lEBUksJ3TTuZIPcTGqEejWE5/gfrTWbmVjzk5PNhczbYN/QwQ8HVXojzloX0VGmXXkbOn4fjNU4FosBvtzdIu6mW80fF6goQNvvzBTV1Lz8psEy+eY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L+6EDexu; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711581753; c=relaxed/simple;
+	bh=AdHweroZnT+pHzZ/vSg+ukBfbmEglEx27aSOBLZQSiA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kbONMlGc3jHD8uCQQ1TRMnkIAPWCaRvfh4HLCVbdRyZB1HluMHAoEb0to8kZYTwueOxrgBUSZ7OSGIhz9oH/Gghycwtq6FcIh6PX+p5fk799zUAKazj8ozVLiI8XFkYZylpVe62StmLX8GOoIi+l08CZnQVNFaOl0rwrB4v70Ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=XuedZhcO; arc=none smtp.client-ip=136.175.108.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L+6EDexu"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1df01161b39so3389355ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 16:22:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711581727; x=1712186527; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+mD4qrrRfeWTdIqZYGCrVV289ijc09GRQuxlRnO0N+Q=;
-        b=L+6EDexuvcUQFPHTEWIJUHlqk+5lw8JRNavXbPQznyxM5DLI585HvTzwTKlYQ1S03p
-         QtZJlNPp34d9i1gaGnu3PUHNETsTdjXCWPmcKI9KZ46Tk1pHbdCej/yfTN+YzBgbKzkM
-         oXrHL9RjlCNF0YyfcUCk13Q6WQPCRIGSeyLL2ud3/qZIpkCpmXPy03OSp2RE8TJdI4nq
-         oX0Uo4j9A7IyeGUjDS/8QcdjZoaHXwYI9ZxZMHoFpb2dy/oukOqbfAs9fAlqVLn00i+z
-         sYNN+KWPoYlmxNGA+RYvCHBAgBk8H4RgYL8374Yx6W+SBdhS3+AAB4cblwEuNtMdnPXO
-         FkkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711581727; x=1712186527;
-        h=content-disposition:mime-version:message-id:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+mD4qrrRfeWTdIqZYGCrVV289ijc09GRQuxlRnO0N+Q=;
-        b=lSH2tHcBHQXIH5gDV4ewuv6DXl5d3QvCF+ypr6oPlihuMQQiW/S86PvP9Mo0H+YOGw
-         XBI91VAWGjUtrfnMs4JRtmTE2QL1ySKH+/2lcCyPX5NL4HFWz69MPYUNiXWjfqPPv7U+
-         9BUsq+EiQKZi/XOKd20Cf0wMskCgI7ix+yZ+84WER6qHtPp39d/QMYq8TwS+LMqJAMlP
-         PoP0CZ1ew1ihczhyxaix7UhAEXZgisjgIi0nRAgWKrtJXDWYoJRGK82bVYaPzElVkjCb
-         ul0rk3FZYVDkR5e32o5v/4C7MjoSwuJ1oHn164TMEkOcfihGkQP3UfzlBoLpNhZWtwQV
-         YZmA==
-X-Forwarded-Encrypted: i=1; AJvYcCVpQpFcYVkf+fyO92oKrpiHSXZ1PurSeI8UbqNMYENTOhe0tlN+WSjkRQk+1eqUk3IQMEsyEKYColUJEdMDeSdj7xDp3VaZIOEEkrfV
-X-Gm-Message-State: AOJu0YxSIXi6dovSM6Fvwww51OyORmotj9Zipx4Wcs+hFe6w2eQ8+iER
-	oB+599s+M2iU5sYpkwuGLgdLiKQbPfmNx47ndwa05QR9GF+r8NPjBXeP0Vi1l7w=
-X-Google-Smtp-Source: AGHT+IGZQaRcemCZ5KSFdtOfMK2+k/2WDtxscZha6+vWJRcDx88RUiNrhozYlw7oFmDM1u1K+KGTTQ==
-X-Received: by 2002:a17:903:230a:b0:1e0:b75a:8f8b with SMTP id d10-20020a170903230a00b001e0b75a8f8bmr1607050plh.45.1711581727139;
-        Wed, 27 Mar 2024 16:22:07 -0700 (PDT)
-Received: from ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx ([103.6.158.68])
-        by smtp.gmail.com with ESMTPSA id n20-20020a170902d0d400b001d8aa88f59esm81649pln.110.2024.03.27.16.22.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 16:22:06 -0700 (PDT)
-Date: Thu, 28 Mar 2024 04:52:01 +0530
-From: Ayush Tiwari <ayushtiw0110@gmail.com>
-To: fabio.maria.de.francesco@linux.intel.com, mic@digikod.net,
-	florian.c.schilhabel@googlemail.com, gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
-	alison.schofield@intel.com
-Cc: paul@paul-moore.com, outreachy@lists.linux.dev
-Message-ID: <ZgSqGXDOg3CPZfaQ@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="XuedZhcO"
+Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by mail-108-mta61.mxroute.com (ZoneMTA) with ESMTPSA id 18e82342a660003bea.00f
+ for <linux-kernel@vger.kernel.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Wed, 27 Mar 2024 23:17:20 +0000
+X-Zone-Loop: 563a5d4e7a2cf39018951d00b91e233360e9bc057e4c
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=oPBK+fqL/hsM837Y3buk53bLBMvRdlTlsTvv2J3d9qk=; b=XuedZhcOk3oxws/6gsMm1d6NPc
+	CUNpuVFVG+a888XylOiGJqtT0HeZPaGljb9MbfFDV+Qqb8yDOxK/FIDTjskVaK52+g1Vynhc8sKcg
+	daKoLdGV9tTJDnKcnxnBxXKKW5lUqlcLcuCoIIy/xz2017e0+uw+ySDR4VEgxjmiheLlNllk1PXPH
+	Cj6FTLD6mSBjs8PAzafDzUEijaGhkRBhdyWfiQwXlPevVAhk+lJX1GfZQw4Cg18/viTViCA9dDl0o
+	S8DJ0vmgh6gmR96gnOU9sphI2wvl44xE9XCKmiUmWcGXminJkyZ7zy4WsGv2msV5Ik3LqZgfqj5Hl
+	8K7EVUGg==;
+From: git@luigi311.com
+To: linux-media@vger.kernel.org
+Cc: dave.stevenson@raspberrypi.com,
+	jacopo.mondi@ideasonboard.com,
+	mchehab@kernel.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	sakari.ailus@linux.intel.com,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 01/23] media: i2c: imx258: Remove unused defines
+Date: Wed, 27 Mar 2024 17:16:47 -0600
+Message-ID: <20240327231710.53188-2-git@luigi311.com>
+In-Reply-To: <20240327231710.53188-1-git@luigi311.com>
+References: <20240327231710.53188-1-git@luigi311.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Id: personal@luigi311.com
 
-linux-security-module@vger.kernel.org, ayushtiw0110@gmail.com 
-Bcc: 
-Subject: [PATCH] LANDLOCK: use kmem_cache for landlock_object
-Reply-To: 
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-Use kmem_cache replace kzalloc() calls with kmem_cache_zalloc() for
-struct landlock_object and update the related dependencies.
+The IMX258_FLL_* defines are unused. Remove them.
 
-Signed-off-by: Ayush Tiwari <ayushtiw0110@gmail.com>
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
 ---
- security/landlock/fs.c     |  2 +-
- security/landlock/object.c | 14 ++++++++++++--
- security/landlock/object.h |  4 ++++
- security/landlock/setup.c  |  2 ++
- 4 files changed, 19 insertions(+), 3 deletions(-)
+ drivers/media/i2c/imx258.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/security/landlock/fs.c b/security/landlock/fs.c
-index fc520a06f9af..227dd67dd902 100644
---- a/security/landlock/fs.c
-+++ b/security/landlock/fs.c
-@@ -124,7 +124,7 @@ static struct landlock_object *get_inode_object(struct inode *const inode)
- 	if (unlikely(rcu_access_pointer(inode_sec->object))) {
- 		/* Someone else just created the object, bail out and retry. */
- 		spin_unlock(&inode->i_lock);
--		kfree(new_object);
-+		kmem_cache_free(landlock_object_cache, new_object);
+diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
+index a577afb530b7..2dbafd21dd70 100644
+--- a/drivers/media/i2c/imx258.c
++++ b/drivers/media/i2c/imx258.c
+@@ -29,12 +29,6 @@
+ #define IMX258_VTS_30FPS_VGA		0x034c
+ #define IMX258_VTS_MAX			0xffff
  
- 		rcu_read_lock();
- 		goto retry;
-diff --git a/security/landlock/object.c b/security/landlock/object.c
-index 1f50612f0185..df1354215617 100644
---- a/security/landlock/object.c
-+++ b/security/landlock/object.c
-@@ -17,6 +17,15 @@
+-/*Frame Length Line*/
+-#define IMX258_FLL_MIN			0x08a6
+-#define IMX258_FLL_MAX			0xffff
+-#define IMX258_FLL_STEP			1
+-#define IMX258_FLL_DEFAULT		0x0c98
+-
+ /* HBLANK control - read only */
+ #define IMX258_PPL_DEFAULT		5352
  
- #include "object.h"
- 
-+struct kmem_cache *landlock_object_cache;
-+
-+void __init landlock_object_init(void)
-+{
-+	landlock_object_cache = kmem_cache_create(
-+		"landlock_object_cache", sizeof(struct landlock_object), 0,
-+		SLAB_PANIC, NULL);
-+}
-+
- struct landlock_object *
- landlock_create_object(const struct landlock_object_underops *const underops,
- 		       void *const underobj)
-@@ -25,7 +34,8 @@ landlock_create_object(const struct landlock_object_underops *const underops,
- 
- 	if (WARN_ON_ONCE(!underops || !underobj))
- 		return ERR_PTR(-ENOENT);
--	new_object = kzalloc(sizeof(*new_object), GFP_KERNEL_ACCOUNT);
-+	new_object =
-+		kmem_cache_zalloc(landlock_object_cache, GFP_KERNEL_ACCOUNT);
- 	if (!new_object)
- 		return ERR_PTR(-ENOMEM);
- 	refcount_set(&new_object->usage, 1);
-@@ -62,6 +72,6 @@ void landlock_put_object(struct landlock_object *const object)
- 		 * @object->underobj to @object (if it still exists).
- 		 */
- 		object->underops->release(object);
--		kfree_rcu(object, rcu_free);
-+		kmem_cache_free(landlock_object_cache, object);
- 	}
- }
-diff --git a/security/landlock/object.h b/security/landlock/object.h
-index 5f28c35e8aa8..8ba1af3ddc2e 100644
---- a/security/landlock/object.h
-+++ b/security/landlock/object.h
-@@ -13,6 +13,10 @@
- #include <linux/refcount.h>
- #include <linux/spinlock.h>
- 
-+extern struct kmem_cache *landlock_object_cache;
-+
-+void __init landlock_object_init(void);
-+
- struct landlock_object;
- 
- /**
-diff --git a/security/landlock/setup.c b/security/landlock/setup.c
-index f6dd33143b7f..a5fca4582ee1 100644
---- a/security/landlock/setup.c
-+++ b/security/landlock/setup.c
-@@ -16,6 +16,7 @@
- #include "net.h"
- #include "ptrace.h"
- #include "setup.h"
-+#include "object.h"
- 
- bool landlock_initialized __ro_after_init = false;
- 
-@@ -33,6 +34,7 @@ const struct lsm_id landlock_lsmid = {
- 
- static int __init landlock_init(void)
- {
-+	landlock_object_init();
- 	landlock_add_cred_hooks();
- 	landlock_add_ptrace_hooks();
- 	landlock_add_fs_hooks();
 -- 
-2.40.1
+2.42.0
 
