@@ -1,95 +1,80 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328D62C6AD
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 08:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B219823D7;
+	Wed, 27 Mar 2024 08:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711527281; cv=none; b=HsdOlAeaHrxwBl3e17JNjfkYx4doC8ZVKKmlSER9ClxhQUamuEOpowggcVlG2vC/SUIQkhjFY1vJXhYCf2s/AgikrwLeYt9bc8GHO8vs3WezGOndO91SCKeIHRX2gs7uiq5R/5f5G/95fIS+w73puY1bUVg9RWsJQT1xdkJWbPg=
+	t=1711527331; cv=none; b=MbFuWBW0lYSEAgvDIn3ZrR7RdUFUahLjrvpYOwyLTlhfbXDz1f5KIPfFtKdh/wrRS+QIBdZRUW2fSJjh5umfa53cGo/TcIb3UHUCRJYA/Ul4iZJGSCxY9VvBrxPfTDBTkANv4T7qESMqDkqurQzkreQodIfT+pnma560WgoPncA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711527281; c=relaxed/simple;
-	bh=J+RN3hJRTTGLVUedvZwunXC+U3v2nB/A62NUBTLgzc8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NjPzjfnOzXAmTRM3wMNzpQymaoS7Odl2LiWjW85241gmBHXtwmA7r/kDqwJF0KIC9cvDEiTP+Ghaa+s1YiOaVQH43PEYtjOVOSgRph6t0DRYMnDcumv5T2L9A9Sp9ErcRRSntIIj4m8l7CziKA5+0/q/tOWofJdO6ih0u6hMnaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aKa6fjnv; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711527331; c=relaxed/simple;
+	bh=xVHaqZ1u760s+2uA6tdl2keH+dzuvpVmNgm8RSxlN50=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MH5ih2EwJ9JxvxmFJGLxfJFnQVx6rVuvT0I0/9HjgY3l6BwV4zFKCjh+pEvHElcBCnObG2a4rK5vVp8wOAOLhVWNgRC8evcwgUA/PvrWMXOuIBh5K7NfdyWSpTffzOGOOn1rjwl31jI0lKwYLEX1kkv24orcvcTkMtBBL5WZ+hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=uFSGxBkF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aKa6fjnv"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-56bc8cfc19fso7107491a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 01:14:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711527278; x=1712132078; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vGgUTwKlHME2QDnguByWBsbbg6zeHGMGTyqt6xg/ofo=;
-        b=aKa6fjnvhABIv4eBDExxQ3VKmne7fLBmf53KFQcyd7lsjqvYXYrgQDVfePiVOJUP4O
-         F0fTdORMqLkYzT8EHq+efyR2KVpXre/TpS04wc3fZA291/1b9+Ai/VgZhtZuvsnZ/sKt
-         gcqN1zE61qywFBSIzs9q75l6pRBbbl4At87CxLB9wCX78mkMp1NyC0kxl7j8Y7v6WN7O
-         hXAzzOUsrTP/mvYjI1utAxhSHz1FDjX7wieicq0+Kv3lfUSPOjR7gz/RzHwea8P6Tb8J
-         S2NHIyKqictXYDXJHme8S950R74xdp38G3CrKcjEVvmC0mtofkzLoDI1q4ixL02HKktC
-         zDEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711527278; x=1712132078;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vGgUTwKlHME2QDnguByWBsbbg6zeHGMGTyqt6xg/ofo=;
-        b=kFuCKZD1NQ0b7E4P1+uBXX39nwc3zinKdsqUHTfvL2ND/A8NPaw/aJSuPcJowGH6YJ
-         0JpV5TgOX5JlAWLReo+HcBmLUkF6aWoY64eDQ1NFDNybcsMQATqUs08sEjPITYMRB8iL
-         M7V/EyRTzU73NfUxg6YqijDXuLaZedUWVoh8I3QaoURBtgaQ/uFGrU0ywSODkJhA+jwE
-         p/SyalN7ARd0mS8TdfaQg/PEt7LVHRpYD7klfYrN92EDmy4cMAJMm/Fn9ymAUVDv30Fb
-         rvEeoLblXhFTs8lHGRJGFxnwKU15g0/NXLr258o+RZp8YTDWNKYCE4wEqYeaafWYFocK
-         3gIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVpTBn+RE7GKlip7daGM09dJeTThrYdARXRuIxDSXvF3mhFzUSPUyUKsuAEoP2x4EiBRdpWraBFWN9W7RrZ8JFkBo5WWUOfZViOhJD+
-X-Gm-Message-State: AOJu0YxHkVh6mHE9eN6V1ZiJSsLVoSTuxMp35Ha0xrmNMZGOa+Q9Z6rR
-	QCmxV3VIrvgu9xszfvG3rMzMyLabXAL5OcbjlTzyqbigUgto7PDHcRSMeJPKARA=
-X-Google-Smtp-Source: AGHT+IF2WYb63mDp3YYRsu55oQqYhgUaP/nqOCYF9KAD2K6IRNfSBG5mnyYgPX2fUXSl5J4iimH1Rg==
-X-Received: by 2002:a50:ccd6:0:b0:567:3ed0:47ec with SMTP id b22-20020a50ccd6000000b005673ed047ecmr2379022edj.23.1711527278609;
-        Wed, 27 Mar 2024 01:14:38 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.206.205])
-        by smtp.gmail.com with ESMTPSA id ck5-20020a0564021c0500b0056c1bf78a3asm2386723edb.28.2024.03.27.01.14.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 01:14:38 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] platform/x86: MAINTAINERS: drop Daniel Oliveira Nascimento
-Date: Wed, 27 Mar 2024 09:14:34 +0100
-Message-Id: <20240327081434.306106-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="uFSGxBkF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2025C433C7;
+	Wed, 27 Mar 2024 08:15:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1711527331;
+	bh=xVHaqZ1u760s+2uA6tdl2keH+dzuvpVmNgm8RSxlN50=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uFSGxBkFaIMIAEsa4zemQnwPcMOfoNFWZPB+2Ka9mznGd0UGAhY2D69zeimXf6RGX
+	 y5Gx28eXDgyHIrcyobJexzf4puxWw2sk840SLc+c12F6CXH2HlqI4RJk1ozhgzyGlB
+	 1N++CXZZE7EOCtBsPWCzQtOa7OidhTh3LGSxsdNc=
+Date: Wed, 27 Mar 2024 09:15:28 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Norihiko Hama <norihiko.hama@alpsalpine.com>
+Cc: "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"usb-storage@lists.one-eyed-alien.net" <usb-storage@lists.one-eyed-alien.net>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] usb-storage: Optimize scan delay more precisely
+Message-ID: <2024032750-violator-trivial-90a3@gregkh>
+References: <20240327055130.43206-1-Norihiko.Hama@alpsalpine.com>
+ <2024032757-surcharge-grime-d3dd@gregkh>
+ <TYVPR01MB107814D7A583CB986884AD4B290342@TYVPR01MB10781.jpnprd01.prod.outlook.com>
+ <2024032745-transfer-dazzler-2e15@gregkh>
+ <TYVPR01MB10781723CBD338DC3EEB5F20590342@TYVPR01MB10781.jpnprd01.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TYVPR01MB10781723CBD338DC3EEB5F20590342@TYVPR01MB10781.jpnprd01.prod.outlook.com>
 
-Emails to Daniel Oliveira Nascimento bounce:
+On Wed, Mar 27, 2024 at 07:57:52AM +0000, Norihiko Hama wrote:
+> On Wed, Mar 27, 2024 at 07:39:55AM +0000, Norihiko Hama wrote:
+> > > > Sorry, but module parameters are from the 1990's, we will not go back to that if at all possible as it's not easy to maintain and will not work properly for multiple devices.
+> > > >
+> > > > I can understand wanting something between 1 and 0 seconds, but adding yet-another-option isn't probably the best way, sorry.
+> > > 1 second does not meet with performance requirement.
+> >
+> > Who is requiring such a performance requirement?  The USB specification?
+> > Or something else?
+> This is our customer requirement.
 
-  "550 5.1.1 The email account that you tried to reach does not exist."
+If it is impossible to do, why are they making you do it?  :)
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
+> > > I have no good idea except module parameter so that we can maintain backward compatibility but be configurable out of module.
+> > > Do you have any other better solution?
+> > How long do you exactly need to wait?  Why not figure out how long the device takes and if it fails, slowly back off until the full time delay happens and then you can abort?
+> It's IOP issue and difficult to figure out because it depends on device itself.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 51d5a64a5a36..de17c0950d83 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5207,7 +5207,6 @@ F:	lib/closure.c
- 
- CMPC ACPI DRIVER
- M:	Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
--M:	Daniel Oliveira Nascimento <don@syst.com.br>
- L:	platform-driver-x86@vger.kernel.org
- S:	Supported
- F:	drivers/platform/x86/classmate-laptop.c
--- 
-2.34.1
+Agreed.
 
+> I know we have multiple devices with delay_use=0, but then it's recovered and detected by reset after 30s timeout, that is too long than 1 sec.
+
+So how do you know that making this smaller will help?  There are many
+many odd and broken devices out there that take a long time to spin up
+before they are able to be accessed.  That's what that option is there
+for, if you "know" you don't need to wait, you don't have to wait.
+Otherwise you HAVE to wait as you do not know how long things take.
+
+sorry,
+
+greg k-h
