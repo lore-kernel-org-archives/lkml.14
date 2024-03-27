@@ -1,43 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5CC2C1B4
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 07:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CD62D60C
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 07:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711525726; cv=none; b=e2nmrrENPNSAGYdP38MK/TzfwUEg4JfnfWjlgzSotwGL3nhoZORiScnLJgSlscrA2QfqBeerTf7q0wgNMmLw8cYhmW8ho4iu1JOlI8Vt4M9RQIUL21xt+MmOU17mUz++0bZZQvyaWLKDs1lPh4ro9aXnvnOnDpwS6bAQXzGlOZ4=
+	t=1711525730; cv=none; b=eeoj4L9rm/+OZYGw9wphpo6PWjVkx9QkeUEjtLR4UuJniNC24ZJRG09TfzP1kD1Tt2SKp/rQwqnbN0tSQbpW7FBwoG0VRo9oyVc5gS6jT2h/fnQowmq3zHB/C4Wi6/zOc1xWiRswi7QAubTlsYxvQntkt6ATEB8ocz43pOeVjSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711525726; c=relaxed/simple;
-	bh=4sl0oSN1BXFDdtolW8v8qbePP+GxgJ1NSQEbU86HuFg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZL9XMLRbbprHnyj9SLW4eJZtu0fAGEGuE8J09a5DzOXpmgsgDHJ4fD2HTuv9kheqaNNKHJRw/vUwhx2XWqjIKNllSA6Wv8yV2rpWiVksM9GlQ05BPL/6tQwxPhaVdWu+XntorcA3EjiBtZ9L3Ej8IbUuxWkEkGxzl8P1kEAVHWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aGE283kE; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1711525730; c=relaxed/simple;
+	bh=LrsSjOnKfdNKL1oRXvODcAn/AZQFtv3Cnr57H0+QRQo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LnGCNHbZ+bwcoiO6zHMAnKBxpJkfp/4Qi7HUme96e9ROZqnvIIksmrRjRZWAA4LZprg1NrRGhlXZvfnyPwgMobzKT0FN9w6fnJKSIhKOoTSWCNHotxrpSf7xaSo9qK4e4+IRYeKvL2uMM6MHQ5BpTjpuUP4t3mNKhoIKbMDX+ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q3mxlP6g; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aGE283kE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q3mxlP6g"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711525724;
+	s=mimecast20190719; t=1711525727;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=0yBaS1hfGcIJ0g5TQWCk0L3glJvaFE4LWtb3UsOxD4A=;
-	b=aGE283kEVQWNHW5XrAnBtR2OugjtvVKsnEcws5rxrwP3ArK4DK3Z7510OqhbfjAMeNqtFv
-	psgx71onjRInA4LCDzLZJK03uMSSeZ/cl0WZ9nA4gMhDz6Pd/l+8jbDbGXNjw8SIh77phF
-	KTkvPqmCHN5Bosl/VMtqSvAxa85wKKo=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N+vJ4y8728T3L9n2yO+KxzjgFoRPr4ko2Xa6mIcSVO4=;
+	b=Q3mxlP6gJ6cY/RKFG8GWak3JXp+mSTOPipUXj2YeDUVCPNt0FUFjmz+LHXqO4ysGbjtBUX
+	WmF0+CahsqAsCX6mD+55HQUY0/AJCELzRGZc0yPNZjOLzhz3nw7gae+OTx8JuhG9L+t3v6
+	X6n/YLoopXF7VIWecgXxoNbFpSJqMWk=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-362-sv2Iot2kNQKb-W_tfZ0jdA-1; Wed, 27 Mar 2024 03:48:40 -0400
-X-MC-Unique: sv2Iot2kNQKb-W_tfZ0jdA-1
+ us-mta-475-YkeoPfo2OTKuRZZgk9uOHg-1; Wed, 27 Mar 2024 03:48:44 -0400
+X-MC-Unique: YkeoPfo2OTKuRZZgk9uOHg-1
 Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B0EF185CE42;
-	Wed, 27 Mar 2024 07:48:39 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B20DC80180A;
+	Wed, 27 Mar 2024 07:48:43 +0000 (UTC)
 Received: from p1.luc.cera.cz (unknown [10.45.224.197])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0C62F492BD4;
-	Wed, 27 Mar 2024 07:48:37 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id F1B0D492BDD;
+	Wed, 27 Mar 2024 07:48:41 +0000 (UTC)
 From: Ivan Vecera <ivecera@redhat.com>
 To: intel-wired-lan@lists.osuosl.org
 Cc: netdev@vger.kernel.org,
@@ -49,10 +51,13 @@ Cc: netdev@vger.kernel.org,
 	davem@davemloft.net,
 	edumazet@google.com,
 	kuba@kernel.org,
-	pabeni@redhat.com
-Subject: [PATCH iwl-next v2 0/7] i40e: cleanups & refactors
-Date: Wed, 27 Mar 2024 08:48:25 +0100
-Message-ID: <20240327074833.8701-1-ivecera@redhat.com>
+	pabeni@redhat.com,
+	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>
+Subject: [PATCH iwl-next v2 2/8] i40e: Remove flags field from i40e_veb
+Date: Wed, 27 Mar 2024 08:48:27 +0100
+Message-ID: <20240327074833.8701-3-ivecera@redhat.com>
+In-Reply-To: <20240327074833.8701-1-ivecera@redhat.com>
+References: <20240327074833.8701-1-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,46 +67,107 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-This series do following:
-Patch 1 - Removes write-only flags field from i40e_veb structure and
-          from i40e_veb_setup() parameters
-Patch 2 - Refactors parameter of i40e_notify_client_of_l2_param_changes()
-          and i40e_notify_client_of_netdev_close()
-Patch 3 - Refactors parameter of i40e_detect_recover_hung()
-Patch 4 - Adds helper i40e_pf_get_main_vsi() to get main VSI and uses it
-          in existing code
-Patch 5 - Consolidates checks whether given VSI is the main one
-Patch 6 - Adds helper i40e_pf_get_main_veb() to get main VEB and uses it
-          in existing code
-Patch 7 - Adds helper i40e_vsi_reconfig_tc() to reconfigure TC for
-          particular and uses it to replace existing open-coded pieces
+The field is initialized always to zero and it is never read.
+Remove it.
 
-Changes since v1:
-- adjusted titles for patches 2 & 3
+Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
+Reviewed-by: Aleksandr Loktionov <aleksandr.loktionov@intel.com>
+Reviewed-by: Kalesh AP <kalesh-anakkur.purayil@broadcom.com>
+Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+---
+ drivers/net/ethernet/intel/i40e/i40e.h         |  3 +--
+ drivers/net/ethernet/intel/i40e/i40e_debugfs.c |  2 +-
+ drivers/net/ethernet/intel/i40e/i40e_main.c    | 13 +++++--------
+ 3 files changed, 7 insertions(+), 11 deletions(-)
 
-Ivan Vecera (8):
-  i40e: Enforce software interrupt during busy-poll exit
-  i40e: Remove flags field from i40e_veb
-  i40e: Refactor argument of several client notification functions
-  i40e: Refactor argument of i40e_detect_recover_hung()
-  i40e: Add helper to access main VSI
-  i40e: Consolidate checks whether given VSI is main
-  i40e: Add helper to access main VEB
-  i40e: Add and use helper to reconfigure TC for given VSI
-
- drivers/net/ethernet/intel/i40e/i40e.h        |  30 ++-
- drivers/net/ethernet/intel/i40e/i40e_client.c |  28 +--
- drivers/net/ethernet/intel/i40e/i40e_ddp.c    |   3 +-
- .../net/ethernet/intel/i40e/i40e_debugfs.c    |  36 +--
- .../net/ethernet/intel/i40e/i40e_ethtool.c    |  29 ++-
- drivers/net/ethernet/intel/i40e/i40e_main.c   | 205 ++++++++++--------
- drivers/net/ethernet/intel/i40e/i40e_ptp.c    |   6 +-
- .../net/ethernet/intel/i40e/i40e_register.h   |   3 +
- drivers/net/ethernet/intel/i40e/i40e_txrx.c   |  98 ++++++---
- drivers/net/ethernet/intel/i40e/i40e_txrx.h   |   3 +-
- .../ethernet/intel/i40e/i40e_virtchnl_pf.c    |  14 +-
- 11 files changed, 282 insertions(+), 173 deletions(-)
-
+diff --git a/drivers/net/ethernet/intel/i40e/i40e.h b/drivers/net/ethernet/intel/i40e/i40e.h
+index 2fbabcdb5bb5..5248e78f7849 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e.h
++++ b/drivers/net/ethernet/intel/i40e/i40e.h
+@@ -788,7 +788,6 @@ struct i40e_veb {
+ 	u16 stats_idx;		/* index of VEB parent */
+ 	u8  enabled_tc;
+ 	u16 bridge_mode;	/* Bridge Mode (VEB/VEPA) */
+-	u16 flags;
+ 	u16 bw_limit;
+ 	u8  bw_max_quanta;
+ 	bool is_abs_credits;
+@@ -1213,7 +1212,7 @@ void i40e_vsi_stop_rings(struct i40e_vsi *vsi);
+ void i40e_vsi_stop_rings_no_wait(struct  i40e_vsi *vsi);
+ int i40e_vsi_wait_queues_disabled(struct i40e_vsi *vsi);
+ int i40e_reconfig_rss_queues(struct i40e_pf *pf, int queue_count);
+-struct i40e_veb *i40e_veb_setup(struct i40e_pf *pf, u16 flags, u16 uplink_seid,
++struct i40e_veb *i40e_veb_setup(struct i40e_pf *pf, u16 uplink_seid,
+ 				u16 downlink_seid, u8 enabled_tc);
+ void i40e_veb_release(struct i40e_veb *veb);
+ 
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_debugfs.c b/drivers/net/ethernet/intel/i40e/i40e_debugfs.c
+index f9ba45f596c9..6147c5f128e8 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_debugfs.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_debugfs.c
+@@ -867,7 +867,7 @@ static ssize_t i40e_dbg_command_write(struct file *filp,
+ 			goto command_write_done;
+ 		}
+ 
+-		veb = i40e_veb_setup(pf, 0, uplink_seid, vsi_seid, enabled_tc);
++		veb = i40e_veb_setup(pf, uplink_seid, vsi_seid, enabled_tc);
+ 		if (veb)
+ 			dev_info(&pf->pdev->dev, "added relay %d\n", veb->seid);
+ 		else
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index 663b2237eb4e..2f1604ae78c7 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -13138,7 +13138,7 @@ static int i40e_ndo_bridge_setlink(struct net_device *dev,
+ 
+ 		/* Insert a new HW bridge */
+ 		if (!veb) {
+-			veb = i40e_veb_setup(pf, 0, vsi->uplink_seid, vsi->seid,
++			veb = i40e_veb_setup(pf, vsi->uplink_seid, vsi->seid,
+ 					     vsi->tc_config.enabled_tc);
+ 			if (veb) {
+ 				veb->bridge_mode = mode;
+@@ -14394,10 +14394,10 @@ struct i40e_vsi *i40e_vsi_setup(struct i40e_pf *pf, u8 type,
+ 		}
+ 
+ 		if (vsi->uplink_seid == pf->mac_seid)
+-			veb = i40e_veb_setup(pf, 0, pf->mac_seid, vsi->seid,
++			veb = i40e_veb_setup(pf, pf->mac_seid, vsi->seid,
+ 					     vsi->tc_config.enabled_tc);
+ 		else if ((vsi->flags & I40E_VSI_FLAG_VEB_OWNER) == 0)
+-			veb = i40e_veb_setup(pf, 0, vsi->uplink_seid, vsi->seid,
++			veb = i40e_veb_setup(pf, vsi->uplink_seid, vsi->seid,
+ 					     vsi->tc_config.enabled_tc);
+ 		if (veb) {
+ 			if (vsi->seid != pf->vsi[pf->lan_vsi]->seid) {
+@@ -14791,7 +14791,6 @@ static int i40e_add_veb(struct i40e_veb *veb, struct i40e_vsi *vsi)
+ /**
+  * i40e_veb_setup - Set up a VEB
+  * @pf: board private structure
+- * @flags: VEB setup flags
+  * @uplink_seid: the switch element to link to
+  * @vsi_seid: the initial VSI seid
+  * @enabled_tc: Enabled TC bit-map
+@@ -14804,9 +14803,8 @@ static int i40e_add_veb(struct i40e_veb *veb, struct i40e_vsi *vsi)
+  * Returns pointer to the successfully allocated VEB sw struct on
+  * success, otherwise returns NULL on failure.
+  **/
+-struct i40e_veb *i40e_veb_setup(struct i40e_pf *pf, u16 flags,
+-				u16 uplink_seid, u16 vsi_seid,
+-				u8 enabled_tc)
++struct i40e_veb *i40e_veb_setup(struct i40e_pf *pf, u16 uplink_seid,
++				u16 vsi_seid, u8 enabled_tc)
+ {
+ 	struct i40e_vsi *vsi = NULL;
+ 	struct i40e_veb *veb;
+@@ -14837,7 +14835,6 @@ struct i40e_veb *i40e_veb_setup(struct i40e_pf *pf, u16 flags,
+ 	if (veb_idx < 0)
+ 		goto err_alloc;
+ 	veb = pf->veb[veb_idx];
+-	veb->flags = flags;
+ 	veb->uplink_seid = uplink_seid;
+ 	veb->enabled_tc = (enabled_tc ? enabled_tc : 0x1);
+ 
 -- 
 2.43.0
 
