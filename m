@@ -1,174 +1,312 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBCE22616;
-	Wed, 27 Mar 2024 03:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A4022EEF
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 03:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711511435; cv=none; b=eljMHelg/2E5bZ7JXZYyhZXYFQSHGg/ydsqPe7WQ7s4YGPz69yu9j2fkqRRk92qYsMHYDKXBsALBSAIiNuw52K+trXOMgHkmuYopYIg7I+Bpx+GHlQZjpQPtD2uwXb5rrs1qPcLfIoEPOnTYCX07JhcA2LO0GqCnXwe0X8SiLk0=
+	t=1711511519; cv=none; b=jQcBIbkHZfUrBPBueLCPaQ3tv4ddhDjywUy1BgQb1xrbEkCUM38ob6LyGueEeMA+usrzoYK4hY28qzVwNXbLKY2qNE/ceILv2UFw63gAZbg+1mjG1NZlH/hVKH/MsaFZCjIuvFLWdUlnIxIawP0/txhLyeOucVeKEP5hdgpPid0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711511435; c=relaxed/simple;
-	bh=8FuvHj1lo7MqFCoSr7VmIEgHXsnZYyUvy3bJUnQm6yI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EQ4OFF0txsF+g2BZa2/4HRvnKM4M1Rl6fblXuNb+TWb3FbrQWv41W8zFlnuSznXHqUinRjk6FGkjN6h677kJdZHSJHL7TMTxjvgY3DAkhQJyboG4/QBd2aez5ef40PSvJC5GNVE4cfmbE2GL1bHHUBmDtWIHdOcmjoZT1MygiIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BxqHrO38; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1711511519; c=relaxed/simple;
+	bh=QJXMC3Tfd+pY2vuD9RHG++UN+yhGriDzRLPIyxqGcfo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kgIFshR2ybGIA5hARGORNL5lxbOuJIXtl0WKv+vY34h+NgjA0HLW5nMftu3dQCCqkJ21Vog2iJ6vtslRKMD3ZcCg9O81/10xGcu7eSebYcdTyr2wkpF7ucerjCkEPGU+6edGeVgv5CxDugTA6rKqXC4h5z6wLObSAYKPzl4kmw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BzjYRUbS; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BxqHrO38"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711511434; x=1743047434;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=8FuvHj1lo7MqFCoSr7VmIEgHXsnZYyUvy3bJUnQm6yI=;
-  b=BxqHrO38YtHJ9zC1mgQUCw+yujzgwou92LtLD5YDTCm2+fKcL37W3wm8
-   Maeta4GM8L0jYD56OrGFgmZbw46NBgnEXC8DYDIdhDMUg+j7gRcbxUBVn
-   Jxv23S8H22zaAJ2n2lSXyucQDLTYZ5Qe9BF/Q2M6RBYvfg+BTqrBUF5JV
-   A17DbJKw/sJd6rGXRpFl0adv3Ks8pw4bu/S+6b/Ad2KQTi1IjgU2KzlLB
-   a4r/IGYzSh9xy0U6Ky4Jywi2aAKC65UX+MuZz3q2eTRmSt8CzfzxBpUoY
-   1Vq03D4/B36cSB8629r+YO7uhzmC8rv4SGBtHxlQ/Zg/uSuse2fiNzVK/
-   g==;
-X-CSE-ConnectionGUID: 7mwmToZtSb2O5iri4IJnyg==
-X-CSE-MsgGUID: YFuImnXbSK6bB4vvdIJDmA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="6449941"
-X-IronPort-AV: E=Sophos;i="6.07,157,1708416000"; 
-   d="scan'208";a="6449941"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 20:50:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,157,1708416000"; 
-   d="scan'208";a="16095770"
-Received: from zjiang7-mobl.ccr.corp.intel.com (HELO [10.254.212.75]) ([10.254.212.75])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 20:50:10 -0700
-Message-ID: <ac855191-1289-40f5-b910-fb9558d5df76@linux.intel.com>
-Date: Wed, 27 Mar 2024 11:49:35 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BzjYRUbS"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6ea9a60f7f5so3032533b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 20:51:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711511517; x=1712116317; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lmokegW/aYOBSsEsNTcEzid1Q/wMq3xKUwCpHBJxfNU=;
+        b=BzjYRUbSMjG4l+hCU3iWE/wdkNRfc/wOXFuXsTVVIB0z9dY+Lr8Y2phRbwB+bAtbTS
+         phvzMKVUaio+M+Ct5Ms0YiMRbCxRQI4TP3ZOJRIxM8TLYamPu47iNf4lY8BJssixeFn+
+         DAn7IvjR9h19orZ2Vl4WCQaPmimifYOYJaZhuhzF0HJ5p72XhjhHFYNXOO5soyHO+v80
+         gVcl+LenvprbwzaYd8jGE5MmyTGzWbERx75pmP0xGi8TtjSftPPwtcYNj/oNd83GbRUJ
+         RTZENlDXwGc5rQdxATHXMJKshvNUXURPhe6Pg+Fw9O7cw+6KKINWCX8EVv5QFbzrgbqw
+         HHVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711511517; x=1712116317;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lmokegW/aYOBSsEsNTcEzid1Q/wMq3xKUwCpHBJxfNU=;
+        b=jJR2g9b8A5dYBUMZ7K6kKYnBIFGvqgBZ8RqieUJRDnzru6jO1Fk3dvqV166SF9U3zw
+         2LrsiuUYcDyhPaGtExMYigj8kYORyhz1iznNGkq9I/UKWD8/ehq+m0YzQ97ZzGo0mxLm
+         CUTya6/0NObyhp6kcyLGTGoJwne7mQU9+dpanGgQk1DyPG4QY4Dr/tD6ED/sKNtCubz0
+         TSu5fXbxdNHZz5YsQOHpNaTKrexTjwFqTKJDldoaR0ifbN3dcr4EaaHkpdK0m0Vg7TCr
+         hCkY+wOPAo8Opz9tcY/3VFfL+1SIBrw51fyKdjXDK/uUQ5PiwIOSPkUUo7cTu+IldF/1
+         c4SQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWWIRd15vBIS1PI2qeiLNYx8+uz99NvBfFaQ/+uaQCqoAAcylu20i5j18bIbvOTIfIFk33bARx4JplJAPK4PBXylEEMeiejZFTdNc7r
+X-Gm-Message-State: AOJu0YwBzjIEzsXstvinzoDwDcsSIyLBGhZj2nPx/Z3A7vV+P68vYC0K
+	eav8HDg905PKYi0hq+DLV4JCmYD6fQ/AmXcYVPNOEo2VTCNRkyde/V+43SBlstSf6Zz0Rc+PosU
+	oZZTO+rAcEGfIUAZp3mKMqP4u0jAvNR0nlGM=
+X-Google-Smtp-Source: AGHT+IGUsPYb9972j6yCMOmaks7UNYlKIisX9svjagf58yyhiFOkRq2is776kHhGpq8sJnFdM7jJUN9HgOUaw6O9Yng=
+X-Received: by 2002:a05:6a21:1706:b0:1a3:e46d:1a03 with SMTP id
+ nv6-20020a056a21170600b001a3e46d1a03mr601803pzb.24.1711511517237; Tue, 26 Mar
+ 2024 20:51:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv3 pci-next 1/2] PCI/AER: correctable error message as
- KERN_INFO
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Xi Ruoyao <xry111@xry111.site>, Grant Grundler <grundler@chromium.org>,
- bhelgaas@google.com, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- mahesh@linux.ibm.com, oohall@gmail.com, rajat.khandelwal@linux.intel.com,
- rajatja@chromium.org
-References: <20240326211705.GA1497507@bhelgaas>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-In-Reply-To: <20240326211705.GA1497507@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240131075703.24600-1-maqianga@uniontech.com>
+ <A65A2F93D9F165EC+20240313141827.40f30bd5@john-PC> <BL1PR12MB5144F6A9CAB0504C8AD5728CF7292@BL1PR12MB5144.namprd12.prod.outlook.com>
+ <933F2B53EE8DA7B7+20240327113100.6742ccd5@john-PC>
+In-Reply-To: <933F2B53EE8DA7B7+20240327113100.6742ccd5@john-PC>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Tue, 26 Mar 2024 23:51:45 -0400
+Message-ID: <CADnq5_OrMX=hVyLHWZecy8N6=dUaFOrMF+pf_2GTMRB3-iWskg@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/amdgpu: Clear the hotplug interrupt ack bit before
+ hpd initialization
+To: Qiang Ma <maqianga@uniontech.com>
+Cc: "Deucher, Alexander" <Alexander.Deucher@amd.com>, 
+	"Koenig, Christian" <Christian.Koenig@amd.com>, "Pan, Xinhui" <Xinhui.Pan@amd.com>, 
+	"airlied@gmail.com" <airlied@gmail.com>, "daniel@ffwll.ch" <daniel@ffwll.ch>, 
+	"SHANMUGAM, SRINIVASAN" <SRINIVASAN.SHANMUGAM@amd.com>, 
+	"sunran001@208suo.com" <sunran001@208suo.com>, 
+	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, 
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/27/2024 5:17 AM, Bjorn Helgaas wrote:
-> On Tue, Mar 26, 2024 at 09:39:54AM +0800, Ethan Zhao wrote:
->> On 3/25/2024 6:15 PM, Xi Ruoyao wrote:
->>> On Mon, 2024-03-25 at 16:45 +0800, Ethan Zhao wrote:
->>>> On 3/25/2024 1:19 AM, Xi Ruoyao wrote:
->>>>> On Mon, 2023-09-18 at 14:39 -0500, Bjorn Helgaas wrote:
->>>>>> On Mon, Sep 18, 2023 at 07:42:30PM +0800, Xi Ruoyao wrote:
->>>>>>> ...
->>>>>>> My workstation suffers from too much correctable AER reporting as well
->>>>>>> (related to Intel's errata "RPL013: Incorrectly Formed PCIe Packets May
->>>>>>> Generate Correctable Errors" and/or the motherboard design, I guess).
->>>>>> We should rate-limit correctable error reporting so it's not
->>>>>> overwhelming.
->>>>>>
->>>>>> At the same time, I'm *also* interested in the cause of these errors,
->>>>>> in case there's a Linux defect or a hardware erratum that we can work
->>>>>> around.  Do you have a bug report with any more details, e.g., a dmesg
->>>>>> log and "sudo lspci -vv" output?
->>>>> Hi Bjorn,
->>>>>
->>>>> Sorry for the *very* late reply (somehow I didn't see the reply at all
->>>>> before it was removed by my cron job, and now I just savaged it from
->>>>> lore.kernel.org...)
->>>>>
->>>>> The dmesg is like:
->>>>>
->>>>> [  882.456994] pcieport 0000:00:1c.1: AER: Multiple Correctable error message received from 0000:00:1c.1
->>>>> [  882.457002] pcieport 0000:00:1c.1: AER: found no error details for 0000:00:1c.1
->>>>> [  882.457003] pcieport 0000:00:1c.1: AER: Multiple Correctable error message received from 0000:06:00.0
->>>>> [  883.545763] pcieport 0000:00:1c.1: AER: Multiple Correctable error message received from 0000:00:1c.1
->>>>> [  883.545789] pcieport 0000:00:1c.1: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Receiver ID)
->>>>> [  883.545790] pcieport 0000:00:1c.1:   device [8086:7a39] error status/mask=00000001/00002000
->>>>> [  883.545792] pcieport 0000:00:1c.1:    [ 0] RxErr                  (First)
->>>>> [  883.545794] pcieport 0000:00:1c.1: AER:   Error of this Agent is reported first
->>>>> [  883.545798] r8169 0000:06:00.0: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Transmitter ID)
->>>>> [  883.545799] r8169 0000:06:00.0:   device [10ec:8125] error status/mask=00001101/0000e000
->>>>> [  883.545800] r8169 0000:06:00.0:    [ 0] RxErr                  (First)
->>>>> [  883.545801] r8169 0000:06:00.0:    [ 8] Rollover
->>>>> [  883.545802] r8169 0000:06:00.0:    [12] Timeout
->>>>> [  883.545815] pcieport 0000:00:1c.1: AER: Correctable error message received from 0000:00:1c.1
->>>>> [  883.545823] pcieport 0000:00:1c.1: AER: found no error details for 0000:00:1c.1
->>>>> [  883.545824] pcieport 0000:00:1c.1: AER: Multiple Correctable error message received from 0000:06:00.0
->>>>>
->>>>> lspci output attached.
->>>>>
->>>>> Intel has issued an errata "RPL013" saying:
->>>>>
->>>>> "Under complex microarchitectural conditions, the PCIe controller may
->>>>> transmit an incorrectly formed Transaction Layer Packet (TLP), which
->>>>> will fail CRC checks. When this erratum occurs, the PCIe end point may
->>>>> record correctable errors resulting in either a NAK or link recovery.
->>>>> Intel® has not observed any functional impact due to this erratum."
->>>>>
->>>>> But I'm really unsure if it describes my issue.
->>>>>
->>>>> Do you think I have some broken hardware and I should replace the CPU
->>>>> and/or the motherboard (where the r8169 is soldered)?  I've noticed that
->>>>> my 13900K is almost impossible to overclock (despite it's a K), but I've
->>>>> not encountered any issue other than these AER reporting so far after I
->>>>> gave up overclocking.
->>>> Seems there are two r8169 nics on your board, only 0000:06:00.0 reports
->>>> aer errors, how about another one the 0000:07:00.0 nic ?
->>> It never happens to 0000:07:00.0, even if I plug the ethernet cable into
->>> it instead of 0000:06:00.0.
->> So something is wrong with the physical layer, I guess.
->>
->>> Maybe I should just use 0000:07:00.0 and blacklist 0000:06:00.0 as I
->>> don't need two NICs?
->> Yup,
->> ratelimit the AER warning is another choice instead of change WARN to INFO.
->> if corrected error flood happens, even the function is working, suggests
->> something was already wrong, likely will be worse, that is the meaning of
->> WARN I think.
-> We should fix this.  IMHO Correctable Errors should be "info" level,
-> non-alarming, and rate-limited.  They're basically hints about link
-> integrity.
+On Tue, Mar 26, 2024 at 11:41=E2=80=AFPM Qiang Ma <maqianga@uniontech.com> =
+wrote:
+>
+> On Thu, 14 Mar 2024 14:40:40 +0000
+> "Deucher, Alexander" <Alexander.Deucher@amd.com> wrote:
+>
+> > [Public]
+> >
+> > > -----Original Message-----
+> > > From: Qiang Ma <maqianga@uniontech.com>
+> > > Sent: Wednesday, March 13, 2024 2:18 AM
+> > > To: Deucher, Alexander <Alexander.Deucher@amd.com>; Koenig,
+> > > Christian <Christian.Koenig@amd.com>; Pan, Xinhui
+> > > <Xinhui.Pan@amd.com>; airlied@gmail.com; daniel@ffwll.ch;
+> > > SHANMUGAM, SRINIVASAN <SRINIVASAN.SHANMUGAM@amd.com>;
+> > > sunran001@208suo.com Cc: amd-gfx@lists.freedesktop.org;
+> > > dri-devel@lists.freedesktop.org; linux- kernel@vger.kernel.org
+> > > Subject: Re: [PATCH v2] drm/amdgpu: Clear the hotplug interrupt ack
+> > > bit before hpd initialization
+> > >
+> > > On Wed, 31 Jan 2024 15:57:03 +0800
+> > > Qiang Ma <maqianga@uniontech.com> wrote:
+> > >
+> > > Hello everyone, please help review this patch.
+> >
+> > This was applied back in January, sorry if I forget to reply.
+> >
+> > Alex
+>
+> Hi, Alex, it doesn't matter, please take some time to help review this
+> patch.
+>
+> This patch mainly solves the problem that after unplugging the HDMI
+> display during bios initialization, the display does not light up after
+> the system starts.
+>
 
-This case, hit following errors:
+I already reviewed and applied the patch.  It's in mainline:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
+id=3Daeaf3e6cf84282500b6fa03621b0c225ce1af18a
 
-[  883.545800] r8169 0000:06:00.0:    [ 0] RxErr
-[  883.545801] r8169 0000:06:00.0:    [ 8] Rollover
-[  883.545802] r8169 0000:06:00.0:    [12] Timeout
+Alex
 
-#1 Timeout -- replay timer timeout, means endpoint didn't response with ACK DLLP or
-NACK in time, that caused the re-send timer timeout, the sender will re-send the
-packet.
-
-#2 Rollover -- the counter of re-transmission reaches 0 (from 11b ->00b), means the
-sender had tried 3 times. that would trigger link retraining to recover.
-
-#1 & #2 happened together, but no uncorrected errors reported, means the link was
-recovered, the issue mostly caused by improper TxEQ, receiver equalization, bad
-signal integrity.
-
-#3 RxErr -- bad DLLP, bad TLP, clock issue, signal integrity issue etc.
-
-so, yup, basically, the signal integrity is not good enough.
-Though the function could work, its performance will be impacted.
-
-If we change it to "info" level, by default, users wouldn't see such errors, they
-might hit more serious data corruption/malfunction in the future without WARN
-precaution to them.
-
-Thanks,
-Ethan
-
-> Bjorn
+> Qiang Ma
+> >
+> > >
+> > >   Qiang Ma
+> > >
+> > > > Problem:
+> > > > The computer in the bios initialization process, unplug the HDMI
+> > > > display, wait until the system up, plug in the HDMI display, did
+> > > > not enter the hotplug interrupt function, the display is not
+> > > > bright.
+> > > >
+> > > > Fix:
+> > > > After the above problem occurs, and the hpd ack interrupt bit is
+> > > > 1, the interrupt should be cleared during hpd_init initialization
+> > > > so that when the driver is ready, it can respond to the hpd
+> > > > interrupt normally.
+> > > >
+> > > > Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+> > > > ---
+> > > > v2:
+> > > >  - Remove unused variable 'tmp'
+> > > >  - Fixed function spelling errors
+> > > >
+> > > > drivers/gpu/drm/amd/amdgpu/dce_v10_0.c |  2 ++
+> > > > drivers/gpu/drm/amd/amdgpu/dce_v11_0.c |  2 ++
+> > > > drivers/gpu/drm/amd/amdgpu/dce_v6_0.c  | 22
+> > > > ++++++++++++++++++---
+> > > -
+> > > > drivers/gpu/drm/amd/amdgpu/dce_v8_0.c  | 22
+> > > > ++++++++++++++++++---
+> > > -
+> > > >  4 files changed, 40 insertions(+), 8 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/amd/amdgpu/dce_v10_0.c
+> > > > b/drivers/gpu/drm/amd/amdgpu/dce_v10_0.c index
+> > > > bb666cb7522e..12a8ba929a72 100644 ---
+> > > > a/drivers/gpu/drm/amd/amdgpu/dce_v10_0.c +++
+> > > > b/drivers/gpu/drm/amd/amdgpu/dce_v10_0.c @@ -51,6 +51,7 @@
+> > > >
+> > > >  static void dce_v10_0_set_display_funcs(struct amdgpu_device
+> > > > *adev); static void dce_v10_0_set_irq_funcs(struct amdgpu_device
+> > > > *adev); +static void dce_v10_0_hpd_int_ack(struct amdgpu_device
+> > > > *adev, int hpd);
+> > > >  static const u32 crtc_offsets[] =3D {
+> > > >     CRTC0_REGISTER_OFFSET,
+> > > > @@ -363,6 +364,7 @@ static void dce_v10_0_hpd_init(struct
+> > > > amdgpu_device *adev) AMDGPU_HPD_DISCONNECT_INT_DELAY_IN_MS);
+> > > >             WREG32(mmDC_HPD_TOGGLE_FILT_CNTL +
+> > > > hpd_offsets[amdgpu_connector->hpd.hpd], tmp);
+> > > > +           dce_v10_0_hpd_int_ack(adev,
+> > > > amdgpu_connector->hpd.hpd); dce_v10_0_hpd_set_polarity(adev,
+> > > > amdgpu_connector->hpd.hpd); amdgpu_irq_get(adev, &adev->hpd_irq,
+> > > >                            amdgpu_connector->hpd.hpd); diff --git
+> > > > a/drivers/gpu/drm/amd/amdgpu/dce_v11_0.c
+> > > > b/drivers/gpu/drm/amd/amdgpu/dce_v11_0.c index
+> > > > 7af277f61cca..745e4fdffade 100644 ---
+> > > > a/drivers/gpu/drm/amd/amdgpu/dce_v11_0.c +++
+> > > > b/drivers/gpu/drm/amd/amdgpu/dce_v11_0.c @@ -51,6 +51,7 @@
+> > > >
+> > > >  static void dce_v11_0_set_display_funcs(struct amdgpu_device
+> > > > *adev); static void dce_v11_0_set_irq_funcs(struct amdgpu_device
+> > > > *adev); +static void dce_v11_0_hpd_int_ack(struct amdgpu_device
+> > > > *adev, int hpd);
+> > > >  static const u32 crtc_offsets[] =3D
+> > > >  {
+> > > > @@ -387,6 +388,7 @@ static void dce_v11_0_hpd_init(struct
+> > > > amdgpu_device *adev) AMDGPU_HPD_DISCONNECT_INT_DELAY_IN_MS);
+> > > >             WREG32(mmDC_HPD_TOGGLE_FILT_CNTL +
+> > > > hpd_offsets[amdgpu_connector->hpd.hpd], tmp);
+> > > > +           dce_v11_0_hpd_int_ack(adev,
+> > > > amdgpu_connector->hpd.hpd); dce_v11_0_hpd_set_polarity(adev,
+> > > > amdgpu_connector->hpd.hpd); amdgpu_irq_get(adev, &adev->hpd_irq,
+> > > > amdgpu_connector->hpd.hpd); } diff --git
+> > > > a/drivers/gpu/drm/amd/amdgpu/dce_v6_0.c
+> > > > b/drivers/gpu/drm/amd/amdgpu/dce_v6_0.c index
+> > > > 143efc37a17f..28c4a735716b 100644 ---
+> > > > a/drivers/gpu/drm/amd/amdgpu/dce_v6_0.c +++
+> > > > b/drivers/gpu/drm/amd/amdgpu/dce_v6_0.c @@ -272,6 +272,21 @@
+> > > static
+> > > > void dce_v6_0_hpd_set_polarity(struct amdgpu_device *adev,
+> > > > WREG32(mmDC_HPD1_INT_CONTROL + hpd_offsets[hpd], tmp); }
+> > > >
+> > > > +static void dce_v6_0_hpd_int_ack(struct amdgpu_device *adev,
+> > > > +                            int hpd)
+> > > > +{
+> > > > +   u32 tmp;
+> > > > +
+> > > > +   if (hpd >=3D adev->mode_info.num_hpd) {
+> > > > +           DRM_DEBUG("invalid hdp %d\n", hpd);
+> > > > +           return;
+> > > > +   }
+> > > > +
+> > > > +   tmp =3D RREG32(mmDC_HPD1_INT_CONTROL + hpd_offsets[hpd]);
+> > > > +   tmp |=3D DC_HPD1_INT_CONTROL__DC_HPD1_INT_ACK_MASK;
+> > > > +   WREG32(mmDC_HPD1_INT_CONTROL + hpd_offsets[hpd], tmp); }
+> > > > +
+> > > >  /**
+> > > >   * dce_v6_0_hpd_init - hpd setup callback.
+> > > >   *
+> > > > @@ -311,6 +326,7 @@ static void dce_v6_0_hpd_init(struct
+> > > amdgpu_device
+> > > > *adev) continue;
+> > > >             }
+> > > >
+> > > > +           dce_v6_0_hpd_int_ack(adev,
+> > > > amdgpu_connector->hpd.hpd); dce_v6_0_hpd_set_polarity(adev,
+> > > > amdgpu_connector->hpd.hpd); amdgpu_irq_get(adev, &adev->hpd_irq,
+> > > > amdgpu_connector->hpd.hpd); } @@ -3088,7 +3104,7 @@ static int
+> > > > dce_v6_0_hpd_irq(struct amdgpu_device *adev, struct amdgpu_irq_src
+> > > > *source,
+> > > >                         struct amdgpu_iv_entry *entry)  {
+> > > > -   uint32_t disp_int, mask, tmp;
+> > > > +   uint32_t disp_int, mask;
+> > > >     unsigned hpd;
+> > > >
+> > > >     if (entry->src_data[0] >=3D adev->mode_info.num_hpd) { @@
+> > > > -3101,9 +3117,7 @@ static int dce_v6_0_hpd_irq(struct
+> > > > amdgpu_device *adev, mask =3D interrupt_status_offsets[hpd].hpd;
+> > > >
+> > > >     if (disp_int & mask) {
+> > > > -           tmp =3D RREG32(mmDC_HPD1_INT_CONTROL +
+> > > > hpd_offsets[hpd]);
+> > > > -           tmp |=3D
+> > > DC_HPD1_INT_CONTROL__DC_HPD1_INT_ACK_MASK;
+> > > > -           WREG32(mmDC_HPD1_INT_CONTROL + hpd_offsets[hpd],
+> > > > tmp);
+> > > > +           dce_v6_0_hpd_int_ack(adev, hpd);
+> > > >             schedule_delayed_work(&adev->hotplug_work, 0);
+> > > >             DRM_DEBUG("IH: HPD%d\n", hpd + 1);
+> > > >     }
+> > > > diff --git a/drivers/gpu/drm/amd/amdgpu/dce_v8_0.c
+> > > > b/drivers/gpu/drm/amd/amdgpu/dce_v8_0.c index
+> > > > adeddfb7ff12..8ff2b5adfd95 100644 ---
+> > > > a/drivers/gpu/drm/amd/amdgpu/dce_v8_0.c +++
+> > > > b/drivers/gpu/drm/amd/amdgpu/dce_v8_0.c @@ -264,6 +264,21 @@
+> > > static
+> > > > void dce_v8_0_hpd_set_polarity(struct amdgpu_device *adev,
+> > > > WREG32(mmDC_HPD1_INT_CONTROL + hpd_offsets[hpd], tmp); }
+> > > >
+> > > > +static void dce_v8_0_hpd_int_ack(struct amdgpu_device *adev,
+> > > > +                            int hpd)
+> > > > +{
+> > > > +   u32 tmp;
+> > > > +
+> > > > +   if (hpd >=3D adev->mode_info.num_hpd) {
+> > > > +           DRM_DEBUG("invalid hdp %d\n", hpd);
+> > > > +           return;
+> > > > +   }
+> > > > +
+> > > > +   tmp =3D RREG32(mmDC_HPD1_INT_CONTROL + hpd_offsets[hpd]);
+> > > > +   tmp |=3D DC_HPD1_INT_CONTROL__DC_HPD1_INT_ACK_MASK;
+> > > > +   WREG32(mmDC_HPD1_INT_CONTROL + hpd_offsets[hpd], tmp); }
+> > > > +
+> > > >  /**
+> > > >   * dce_v8_0_hpd_init - hpd setup callback.
+> > > >   *
+> > > > @@ -303,6 +318,7 @@ static void dce_v8_0_hpd_init(struct
+> > > amdgpu_device
+> > > > *adev) continue;
+> > > >             }
+> > > >
+> > > > +           dce_v8_0_hpd_int_ack(adev,
+> > > > amdgpu_connector->hpd.hpd); dce_v8_0_hpd_set_polarity(adev,
+> > > > amdgpu_connector->hpd.hpd); amdgpu_irq_get(adev, &adev->hpd_irq,
+> > > > amdgpu_connector->hpd.hpd); } @@ -3176,7 +3192,7 @@ static int
+> > > > dce_v8_0_hpd_irq(struct amdgpu_device *adev, struct amdgpu_irq_src
+> > > > *source,
+> > > >                         struct amdgpu_iv_entry *entry)  {
+> > > > -   uint32_t disp_int, mask, tmp;
+> > > > +   uint32_t disp_int, mask;
+> > > >     unsigned hpd;
+> > > >
+> > > >     if (entry->src_data[0] >=3D adev->mode_info.num_hpd) { @@
+> > > > -3189,9 +3205,7 @@ static int dce_v8_0_hpd_irq(struct
+> > > > amdgpu_device *adev, mask =3D interrupt_status_offsets[hpd].hpd;
+> > > >
+> > > >     if (disp_int & mask) {
+> > > > -           tmp =3D RREG32(mmDC_HPD1_INT_CONTROL +
+> > > > hpd_offsets[hpd]);
+> > > > -           tmp |=3D
+> > > DC_HPD1_INT_CONTROL__DC_HPD1_INT_ACK_MASK;
+> > > > -           WREG32(mmDC_HPD1_INT_CONTROL + hpd_offsets[hpd],
+> > > > tmp);
+> > > > +           dce_v8_0_hpd_int_ack(adev, hpd);
+> > > >             schedule_delayed_work(&adev->hotplug_work, 0);
+> > > >             DRM_DEBUG("IH: HPD%d\n", hpd + 1);
+> > > >     }
+> >
+> >
 >
