@@ -1,119 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBC2153830;
-	Wed, 27 Mar 2024 12:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344EE153817;
+	Wed, 27 Mar 2024 12:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711541719; cv=none; b=AjZytmSkJdjrW8wliqqcq4QWsa5oFPxGOcZezcC8eEQvrnG0wCTdZkcBYXP0JhwMy0hpoGY7PW5qHrKJufzWBXijIXT721dGpGKUuqsmJPN0e2KTbB51AK1xd7rahsS0cnxXehJ7Z8cjyMj9dOJ6CTDLsI2X98J1m9gYgaTnXNI=
+	t=1711541721; cv=none; b=QZiHyLQ4bgNZxk7MtMy8j9WOXeKXKJWmTdDuWZQ62l9k3uZJGK+ds/btd5eGueC0nKgKZ6IYXxCHndF2SD3gs3LMpQrt9am6YWZH/MbWCtzxhVpPLdGOemGZTvtr90+dDg8P5m+NHEfeNFsUhUt9lJaj/eLFCcpRpfhRsEl4HKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711541719; c=relaxed/simple;
-	bh=4uVU4wn70eY5pwU3aJoqhGiWGcO4W6VpxdBgFZucCJc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oXuxFwTdMlRayChk8aVb3o3YN1GqsBa121LZzNMGU/SnXDpOUmL/+n0JsecqwCcjXJ4AO6/8a1/eVqjOfC8Mi56C7vEMcnPhlIxNXBVVvH2HlQeMjySFFNVgPs0eVZjiCyTBzBuYeTPKULse6tq74XyJvjnfXATvEBlHQA500A4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hQiy30As; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711541721; c=relaxed/simple;
+	bh=l1FCJiDrafS1WbsKl/A/tt3LYg6Mw6bdZbLD376WIhk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ufylvMw7P5I/HkmEW6GeEO/S2nexrZKwBkS2e4X/UerGuOd9m83XsGM1pJgfRM0gPNITbBrmcb2HjyLCZ8DZKVOzK5cdN6apulJQXYx98G6YZqE8TWvDbHiAEuJrNU1ZDXyVPt9845XvZQqQTCH61AzXS3A5EdiXt0tp5ce+QXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U5+IoVyL; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hQiy30As"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EE94C433F1;
-	Wed, 27 Mar 2024 12:15:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711541718;
-	bh=4uVU4wn70eY5pwU3aJoqhGiWGcO4W6VpxdBgFZucCJc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=hQiy30AsC0rVH+L+AwFPJyBV0uKaC3ziwvcd3OQUrlaDfIEZKbE3hyLtinM0Hf7hi
-	 L6TdwkiVFbA7K78sQ4kihcsZk+s2Vs8bXVQ+pX9kYp74atNi9wiQLqgdA+/xcgBhEu
-	 HzX2vQzXjOo3S7GR9Ee90wRzcS8zuKezV5NTryoDQGkCyyLf88KSACQLtnrpMBUOiU
-	 NQen1FPyaPIC9Lbssw8Y6AXIKPkE1X6kvoGFxAaMHTCWw9NozhmFP+UB4Bf3hU2fZv
-	 jKPyEgOKgVxcmfWk1GZxMzVF2Wa7ueLuUVy+IMY8c9zANLc+c59asuw2QugrEM9LQ2
-	 DmBZTOvRmlTxg==
-From: Sasha Levin <sashal@kernel.org>
-To: stable@vger.kernel.org,
-	chenhuacai@kernel.org
-Cc: Xiaotian Wu <wuxiaotian@loongson.cn>,
-	Miao Wang <shankerwangmiao@gmail.com>,
-	Xing Li <lixing@loongson.cn>,
-	Hongchen Zhang <zhanghongchen@loongson.cn>,
-	Rui Wang <wangrui@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	linux-mm@kvack.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: FAILED: Patch "LoongArch: Change __my_cpu_offset definition to avoid mis-optimization" failed to apply to 5.15-stable tree
-Date: Wed, 27 Mar 2024 08:15:16 -0400
-Message-ID: <20240327121516.2831778-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U5+IoVyL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711541719; x=1743077719;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=l1FCJiDrafS1WbsKl/A/tt3LYg6Mw6bdZbLD376WIhk=;
+  b=U5+IoVyLOHpKnXHwiw582lZArLIRIpCSPKLSJ5Ufd7Hp4jRfxhYDyO4v
+   kN3/jBM4lnSzDrFrLMxK32gJghUKqEr6nyvWcNtLAtnvM2zIk6vo3dDzs
+   MrqzQP+QNK8w0EB9VKQXaLdThngS8qeUc7ZNudfzBWwFlqs/5KsITR1iL
+   O/HmKup4V01v1JIDmCF/MyRE6he6ODMGzGn1MaM9Asz8DK7Vb6OPtKfQO
+   /6eTT44rSl24rYLYwYOUGF3BZd/O7CpOGSm+Xb4XMRPbEFRGpdB/RpUdj
+   dtaXSfl9to9i3wwI/2Z7I4P28FxKwq3bNHOYohHo2X/4YyIfnQTGz2f07
+   Q==;
+X-CSE-ConnectionGUID: 2fg0gIkhRlugBhxZ70RkOg==
+X-CSE-MsgGUID: v8jxIV6GSS29bUqLPR/FzA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="18068663"
+X-IronPort-AV: E=Sophos;i="6.07,158,1708416000"; 
+   d="scan'208";a="18068663"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 05:15:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,158,1708416000"; 
+   d="scan'208";a="53754611"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.21])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 05:15:16 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 27 Mar 2024 14:15:12 +0200 (EET)
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+cc: naveenkrishna.chatradhi@amd.com, LKML <linux-kernel@vger.kernel.org>, 
+    Carlos Bilbao <carlos.bilbao@amd.com>, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3] platform/x86/amd/hsmp: switch to use
+ device_add_groups()
+In-Reply-To: <2024032732-thigh-smite-f5dd@gregkh>
+Message-ID: <ee89e9ec-e0d2-96d5-fba1-6259146e5dca@linux.intel.com>
+References: <2024032732-thigh-smite-f5dd@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Patchwork-Hint: ignore
-X-stable: review
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323328-1326726891-1711541712=:3296"
 
-The patch below does not apply to the 5.15-stable tree.
-If someone wants it applied there, or to any other stable or longterm
-tree, then please email the backport, including the original git commit
-id to <stable@vger.kernel.org>.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Thanks,
-Sasha
+--8323328-1326726891-1711541712=:3296
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
------------------- original commit in Linus's tree ------------------
+On Wed, 27 Mar 2024, Greg Kroah-Hartman wrote:
 
-From c87e12e0e8c1241410e758e181ca6bf23efa5b5b Mon Sep 17 00:00:00 2001
-From: Huacai Chen <chenhuacai@loongson.cn>
-Date: Tue, 19 Mar 2024 15:50:34 +0800
-Subject: [PATCH] LoongArch: Change __my_cpu_offset definition to avoid
- mis-optimization
+> devm_device_add_groups() is being removed from the kernel, so move the
+> hsmp driver to use device_add_groups() instead.  The logic is identical,
+> when the device is removed the driver core will properly clean up and
+> remove the groups, and the memory used by the attribute groups will be
+> freed because it was created with dev_* calls, so this is functionally
+> identical overall.
+>=20
+> Cc: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+> Cc: Carlos Bilbao <carlos.bilbao@amd.com>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: "Ilpo J=C3=A4rvinen" <ilpo.jarvinen@linux.intel.com>
+> Cc: platform-driver-x86@vger.kernel.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+> v3: change the changelog text to reflect that this change is identical
+>     to the current code.  Rebase against 6.9-rc1
+> v2: rebased against platform/for-next
+>=20
+>  drivers/platform/x86/amd/hsmp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/h=
+smp.c
+> index 1927be901108..d84ea66eecc6 100644
+> --- a/drivers/platform/x86/amd/hsmp.c
+> +++ b/drivers/platform/x86/amd/hsmp.c
+> @@ -693,7 +693,7 @@ static int hsmp_create_non_acpi_sysfs_if(struct devic=
+e *dev)
+>  =09=09hsmp_create_attr_list(attr_grp, dev, i);
+>  =09}
+> =20
+> -=09return devm_device_add_groups(dev, hsmp_attr_grps);
+> +=09return device_add_groups(dev, hsmp_attr_grps);
+>  }
+> =20
+>  static int hsmp_create_acpi_sysfs_if(struct device *dev)
 
-From GCC commit 3f13154553f8546a ("df-scan: remove ad-hoc handling of
-global regs in asms"), global registers will no longer be forced to add
-to the def-use chain. Then current_thread_info(), current_stack_pointer
-and __my_cpu_offset may be lifted out of the loop because they are no
-longer treated as "volatile variables".
+Thanks for the update.
 
-This optimization is still correct for the current_thread_info() and
-current_stack_pointer usages because they are associated to a thread.
-However it is wrong for __my_cpu_offset because it is associated to a
-CPU rather than a thread: if the thread migrates to a different CPU in
-the loop, __my_cpu_offset should be changed.
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 
-Change __my_cpu_offset definition to treat it as a "volatile variable",
-in order to avoid such a mis-optimization.
+--=20
+ i.
 
-Cc: stable@vger.kernel.org
-Reported-by: Xiaotian Wu <wuxiaotian@loongson.cn>
-Reported-by: Miao Wang <shankerwangmiao@gmail.com>
-Signed-off-by: Xing Li <lixing@loongson.cn>
-Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
-Signed-off-by: Rui Wang <wangrui@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/include/asm/percpu.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/include/asm/percpu.h b/arch/loongarch/include/asm/percpu.h
-index 9b36ac003f890..8f290e5546cf7 100644
---- a/arch/loongarch/include/asm/percpu.h
-+++ b/arch/loongarch/include/asm/percpu.h
-@@ -29,7 +29,12 @@ static inline void set_my_cpu_offset(unsigned long off)
- 	__my_cpu_offset = off;
- 	csr_write64(off, PERCPU_BASE_KS);
- }
--#define __my_cpu_offset __my_cpu_offset
-+
-+#define __my_cpu_offset					\
-+({							\
-+	__asm__ __volatile__("":"+r"(__my_cpu_offset));	\
-+	__my_cpu_offset;				\
-+})
- 
- #define PERCPU_OP(op, asm_op, c_op)					\
- static __always_inline unsigned long __percpu_##op(void *ptr,		\
--- 
-2.43.0
-
-
-
-
+--8323328-1326726891-1711541712=:3296--
