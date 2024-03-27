@@ -1,164 +1,183 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0039f301.pphosted.com (mx0b-0039f301.pphosted.com [148.163.137.242])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99ADD4D9E0;
-	Wed, 27 Mar 2024 21:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711576592; cv=none; b=gw79dZBqr2x7lsgaIrV80gBtHBq0s8xexg/J+6X4+WdNdJVioEXk/H5OUHvekpHodR/3cQiGqAoKs7JYyKEkljCBk0IPG9QS1uMn0Nukycql9idm3VjxCeTP4FbcZd4ULhGfNQKzYME06+J1uQeRVYj8Uub0aboTFFD5QV+biWY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711576592; c=relaxed/simple;
-	bh=f5xsXA8uoaoP6TMv4Mkq2g98eO/qBSM7LLZjWvgKBes=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=R3eAn7iCghyURLHrv4LB8jNEwP0gG0Kq/hSH3fj5dS/u16iZdZ7vjd9Uu5L99mAwDtKvgpgp/lGfwnhYLb479Vb2Vrg8wx6pe93O+NOJHbRnJArokgcG/TQrf5xBsVO995JvMs4oWcT/EpV05w8f8BRrTIjfTws6RU0XCh2FFyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UF6vLyx2; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24BD114D2AB;
+	Wed, 27 Mar 2024 21:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.137.242
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711576610; cv=fail; b=DuQDRi/rE8sVpl6BYBip4KZh59VanjoYeGuGo3Pv3iEmIyZbZkUmIg/ZvDcbjO7ihBlREmphSCaeRStlDBV/WMBKUjzWjbGFNYqZU2qGlqv30N9399kVJSAI4whSTIpuI6AeAMfeIWB/d7PdyusjmqyLtvgi2utZJ1AL8BEUAhw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711576610; c=relaxed/simple;
+	bh=5asUPYl1vXWW7N0jGMd7tTIlwJYRcQZ8JGLTDFMQjYI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=lGdrzbWaGWpIQ41UZG82K77saDKrrK7iu2Rq3mD2kvond7DZql8foBt+a+P5a62VLmRKEnd/lvFB6Pkq+MC6eWUphdr5sR5ofVIzfLOm3OaB8cdJ5MlDF6ZSNrBpEgiREe7pnDPMe8IhEujd3Y9KwhpvwMYVH0qMsDT2YKyFYig=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=epam.com; spf=pass smtp.mailfrom=epam.com; dkim=pass (2048-bit key) header.d=epam.com header.i=@epam.com header.b=luGaqH78; arc=fail smtp.client-ip=148.163.137.242
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=epam.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=epam.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UF6vLyx2"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6e709e0c123so342433b3a.1;
-        Wed, 27 Mar 2024 14:56:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711576590; x=1712181390; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9nK7oGytjkYckNrpr1HYOqjdMAjgZf6eYRbl5oXGuqE=;
-        b=UF6vLyx2u0gIUw8hAdEX6wjR5zlsQAg9ATTAFNJPDUwvTQ5hlvurdJsDLTHDxF9qIz
-         3dh/qVGW7lN6Bsk1XgtOS8Up0FjD+kCql0kHRnLytyZjN0dfkjEzpYJk28ESQT57ltm4
-         BNyoPiWwvT+9sG7WeccJgp8OhbZozP1LhhF3HNh0+7Z4bORQztX3yX2dO9HHUKsH7iGd
-         YyMKfYVUcUJHF/muEJd+8kRml3WCILFGWvUbaGS9CJXnwWSZBMgAvrMgtO0IIZDYE/5S
-         AjxMnN5pA5coJw0MMqXgcA7mk9rQ8lxXCSiST6M5Jwzu/+ZFAJpHvAogICfCYY7S57IP
-         grcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711576590; x=1712181390;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9nK7oGytjkYckNrpr1HYOqjdMAjgZf6eYRbl5oXGuqE=;
-        b=DN4P9ck+C78yR7zH98P6FArgxhsZyz8Haut3o7siWDBbKPslDl1ECFcSqt7yrS0+Io
-         eWX7h+pSF+EsBfDErUH4Qd5COtPUoXkVnMSk/QDBVC4wRSncqiLCjWs+6ItfnDz0U7wi
-         RX78z3WBT25tRnhk057L+9czFOedvsw0t6CbFVqA1dJMlcbbJATDh0BeInDGqEH1SsPj
-         jHEvSE7c34OGeZQW1H5ipyCs9gA2dTrA+BilaP+AkqqbSbYKW57qC0GaCx9mGjVZFSqY
-         gnd+aUEsIEgeOkgTCSmvIXGDTL8zuptU2hBgDDNkNTHIqQIuOctV7ay+Nm9/JQ2UmgBf
-         jrFA==
-X-Forwarded-Encrypted: i=1; AJvYcCUWfv3lVJ3AThi+zi4frCs+7gjJO/43prc8cfyzRbo6zpZXMAeoVUcgFIxrlcUyFDTsUte4zS1WR0liSANbc9yDSFJfzzpMSCa1dDNdXsz43YImKUyKXnEcsNt6O3j5FqNyuC9kQA6LmZSv2rKmZ84WU8zvvkbCLfYYKX34cqDHezrRddnskVKpD5D7gNty8gwb9CuZZrTIsii5J/5CqXXGKPBSWmbYcQ==
-X-Gm-Message-State: AOJu0YyEyOyu9CevzTSSnsz9HaKEhTG9pwL9qOMpbpnNwRvFYlWJ/rwh
-	rNch1OeQ+o/zv9fdptq9ePND2jQxOH30TtauXINY9wMDHB65rjg8rYTNrbfiP08=
-X-Google-Smtp-Source: AGHT+IGdMR9pJlgf4CvRTiRkOkrpDFtL+V/Uc4Lolo4AeOU6/H/PL2BKoUiaYbvFxC9xrMHCeaCtlQ==
-X-Received: by 2002:a05:6a00:18a9:b0:6ea:ad01:3550 with SMTP id x41-20020a056a0018a900b006eaad013550mr1304630pfh.18.1711576589327;
-        Wed, 27 Mar 2024 14:56:29 -0700 (PDT)
-Received: from smtpclient.apple ([2601:647:4d7e:dba0:5840:a196:2bf3:3600])
-        by smtp.gmail.com with ESMTPSA id bm20-20020a056a00321400b006e740d23674sm21510pfb.140.2024.03.27.14.56.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Mar 2024 14:56:28 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=epam.com header.i=@epam.com header.b="luGaqH78"
+Received: from pps.filterd (m0174682.ppops.net [127.0.0.1])
+	by mx0b-0039f301.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42RGbawC032613;
+	Wed, 27 Mar 2024 21:04:17 GMT
+Received: from eur04-vi1-obe.outbound.protection.outlook.com (mail-vi1eur04lp2051.outbound.protection.outlook.com [104.47.14.51])
+	by mx0b-0039f301.pphosted.com (PPS) with ESMTPS id 3x4q50rh0r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 27 Mar 2024 21:04:17 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PtNPd+yiUkXj1H0+pq8DsT8FZnTIQRt9LTgaSRxFhOsX7opgYQN0izxlW7KMDSZ+qqVsWzIx9eAKSEsgdTxde9fdxl4svMW6xTCo6fClf+Z89cfedjjjarD71d28NCeTX3Lkl/e3g6nOhRvpf1+gH/+SaOekIGn4fh2fKj/9pozLW3cl8ActL6XUZh6H8PH6UwFNmh0Kvcn0V+QcPs2WWfriKtATq20ZdJMlSEjRvIR1DFpkoy4ytJP48cQ6OK81+bWWkDGAy7bjkyKNg50aZQfxv/TvV95C6cymzm7/V4g2jUPhtAw43477VC+ixcXsYFgDXAh0oAwp0uwquQDe0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5asUPYl1vXWW7N0jGMd7tTIlwJYRcQZ8JGLTDFMQjYI=;
+ b=AQ6ndYNQOKk9Y2kMUOFwcA+J4P+nhBMUegnzMcNPd8wbULcyR6BSmD2sHCnBAth7VQuHFcf6nHEqHIUgS/ooYyrzU4sCEw/EHEpxAVyfXZ0jybvjBjtdNY7M8o9yEfMZTgyw6Bzfigu5oqozMZSBj4Qg6F0bG+Bl1JC29sHsV6Wf6lFV1Hv1UQJC0JJku2fPeE9pErSrvlf5MJg43wr5na1NYforWjzE/5GGAoxAw3X6cOeFxnXENlFTZ8yUlOkooYGM6XveqrPOA7YYMyWtbppAv6S8QAexo8GovS8+YSkCOF6Baq0JZFhgsgnd98fH/eIlTe6+KoYV7mqspTuisA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=epam.com; dmarc=pass action=none header.from=epam.com;
+ dkim=pass header.d=epam.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=epam.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5asUPYl1vXWW7N0jGMd7tTIlwJYRcQZ8JGLTDFMQjYI=;
+ b=luGaqH78Z8KMaZYNVCnBzBHEcL/9gT0GdI8CcVwJsZW99iw+dY2hnlgQZbT0JSFhjRKvT4LI8yGwqc7STs1GppisPyQ2ThrU7hdTBg1kCkSy2K13YRkvxx2j8th1abELISMFXHQWgu8lULibTgzmDgpetnBm/p0bkiqjjcxWRxrlklP1j+TxP/o/EENuVyhOpxpBX4it9UJXgdd1IRZz/HYRuDxmU9m5kO3jHN2oAcfeTlzESJdFeHl3+aIQJqMqeBK78alUCmiW1xNT7kBXZEIyK2ajZ1R9OxD3c5jxnljMlBsaa7Wz3ns+wAEVJ7MNqL7N5wuxqcS+D5yOtgANxQ==
+Received: from GV1PR03MB10456.eurprd03.prod.outlook.com
+ (2603:10a6:150:16a::21) by DB9PR03MB7227.eurprd03.prod.outlook.com
+ (2603:10a6:10:1fe::5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Wed, 27 Mar
+ 2024 21:04:14 +0000
+Received: from GV1PR03MB10456.eurprd03.prod.outlook.com
+ ([fe80::74c9:2488:1dd7:b976]) by GV1PR03MB10456.eurprd03.prod.outlook.com
+ ([fe80::74c9:2488:1dd7:b976%3]) with mapi id 15.20.7409.028; Wed, 27 Mar 2024
+ 21:04:13 +0000
+From: Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+CC: Caleb Connolly <caleb.connolly@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        "linux-arm-msm@vger.kernel.org"
+	<linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob
+ Clark <robdclark@gmail.com>
+Subject: Re: [PATCH] soc: qcom: cmd-db: map shared memory as WT, not WB
+Thread-Topic: [PATCH] soc: qcom: cmd-db: map shared memory as WT, not WB
+Thread-Index: AQHagIKviCrPH112HEOpsjr5BCtYWLFMDkOAgAAEYgA=
+Date: Wed, 27 Mar 2024 21:04:13 +0000
+Message-ID: <87a5mjz8s3.fsf@epam.com>
+References: <20240327200917.2576034-1-volodymyr_babchuk@epam.com>
+ <e0586d43-284c-4bef-a8be-4ffbc12bf787@linaro.org>
+In-Reply-To: <e0586d43-284c-4bef-a8be-4ffbc12bf787@linaro.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: mu4e 1.10.7; emacs 29.1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: GV1PR03MB10456:EE_|DB9PR03MB7227:EE_
+x-ms-office365-filtering-correlation-id: 5b06d9b5-db31-4bc4-b5af-08dc4ea174a6
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 
+ TkyCPWg+SB2MddGLWmJw5DPVRtFEKU3AGj13UrIv/l9c9amyVQioK0jWCg4EqD8dMMFTQzJAVQU+6VkgU1SDu1GPxdvdHIth6AAlp62EgOqgFMYT9IEcfFgX3oQbTeO2u6HeGlkuSYKHy/XKsrrKaJ72AXM7gzXCfqJKwMDb83wzJ7aCt/g3a7Sgn+qQBu4XypUGesZaWkHKWGj2mo2OpX2BJkJv5PGJ81FK349Ot4UUPKj7AU2CGq3ED1g6t4RYTrNjLUXylmnQ35nVM/GgKR+E+9KdPJhiNb4vAkmOkBOXBc/G3aw0U6kCv4n5ObS5/bHxSUu5crqfzDhg9SjYeuzrB2sGJIsALOyjeveEyhc0AtpoBluvpfI+fHLdSjgH/p5d4Zc5egnlHHt5rbNPYSkRX3PRybJNOvCXy+6YfEiQIsNUyxj1npINQDJW/Tw8cYx8umomlg8sea5cMZslaVpKAxW+PJOIBBdKRyXuxq8GVZxkXn//4wXB1Vhezsvgtn2oRR7t+njRaUuENbrxOCqao0Y8L1vbLrygfAYMKIbtsWxjcmZz4/YXhCuXIPewe3nfVTvMSIPy9/DmxEZ6bbvtwf2eE7vXmPl6wf8PFdtaq43BUeMUFbsLOKp5LQMaK/3IpGYVHNB74j1pz1oKpazBUrcdX3z5EVDHMzpqblPsixb1USZ6yZ2aESFebW6G4mvMjIZgWNnvlhJHkGgaviNHbTA2+Uw3IP1vagsZ+FY=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR03MB10456.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?iso-8859-1?Q?y/MNfGEpMZGTLDayiKWRS8JElzfJTSmfE2C/bjrUm4cz5OlGEZ3umhOvLY?=
+ =?iso-8859-1?Q?ybWIpGsRj3aGFWN0Wxds5wEELNDF95yWbleiROf8ZQQ5gLffnDdAXhHABG?=
+ =?iso-8859-1?Q?+u/1+Rm30rT/AjpKLu98Yf7hEUeV3ihvr2Hq963XBKlYSXpwQRwBux3j5Q?=
+ =?iso-8859-1?Q?sao9H2xlHU7spfo2SWSnKUdMQwzEny1eZJIDWmqlreIRRKnMYhjfVMizUy?=
+ =?iso-8859-1?Q?QnsVwAbCbAxblaYySIKHi0LyK3Lr1VhGbwUJi07lnq+XNTUUhEwi9URsxc?=
+ =?iso-8859-1?Q?VjK6qcWoLBhD15J1/Y1LtWzY+Lrj6+/LvglGm/4ksdkT2kQRWZMWct+CCU?=
+ =?iso-8859-1?Q?geCZ0x5Lx1k4qp+F1TKf9q6Fh51sRRG1l8V020DDpVqiQHE7Enj/dritem?=
+ =?iso-8859-1?Q?pHyHvS2rH7Bt7cDwtc+QBYKcXNDPOvhADuwbIZo4EEOmtsJKMVfg13QBlP?=
+ =?iso-8859-1?Q?oWz2wSVh+qMBUbGV3qAdpfgA9rgejxnENR5LYl9xyC4jM9DjKPBb5FgHcu?=
+ =?iso-8859-1?Q?gLsciy/5qozvRAZBP6V1iphSTyQNFwa14JjTBnLZd1piStL3V6xHV5xvkx?=
+ =?iso-8859-1?Q?rtPKzSDpCaeLyTjQCTtM5zB5vKC5QB30Bb37k1smb1x9NjuEGQATn7hLDh?=
+ =?iso-8859-1?Q?07oY3XaGEp2U7Zrh98J9SXdk8Udm4rBoW8EXsBCJ/o/nvDXo7KQZINpCWr?=
+ =?iso-8859-1?Q?bybHTOYwfEK6Yf4r93RNpzzCkA0KFkpAGX36jDi+y7fTrE5gnbgdMFsPrZ?=
+ =?iso-8859-1?Q?WTF2K5iNFV+MysdjkFr8E2SKDVaA/QcHIGagRfRF9h8LmJ6P6R1pouWh2v?=
+ =?iso-8859-1?Q?V05ljPD2WWvsyse3JVGiyn5WmIl/obsNJjydREO+QGBy8jzWZkasPjR9kW?=
+ =?iso-8859-1?Q?ryXfeypeMGIDUsgKYn/v9KpfleVnMiEHcl+5Z9y2qNay5ljB4j/BPMonzy?=
+ =?iso-8859-1?Q?DDfdWt/F+i7dJ5nqvDpL/yGiP1fDEiDtaF9ILvHOfl3h37otChmDNQFmgb?=
+ =?iso-8859-1?Q?rUM55T3npb/nH09Mj1Kpp2zlKGLYqjKdhx1DkZ2SMuCaqC0WfqopIs/60S?=
+ =?iso-8859-1?Q?GNtubu9Syh5uRWm9LWsAj7BkjZShy/WgvOHBl2W8NLhHHVtnxykFa86sDO?=
+ =?iso-8859-1?Q?ReqTWqYhLeE140t0NAodzXOJsbcUU9D3YKYoDTNj6X0TV+2hyX9p6C7yIh?=
+ =?iso-8859-1?Q?lHPrwOL27oTsGjiMTTPNPnX1UJfT3mh8yctKo4IFALyNi6Dlfbvfs9FzAs?=
+ =?iso-8859-1?Q?3nTIBSibapZvqLB/F9NPJp+lbQcYgcUcminYCh+vKPqpD+vUmVHjwgDH9n?=
+ =?iso-8859-1?Q?Bx7RhNnMXMMSS27fPGVwwSJwNXmEyzY/wo8V3qTSGB8vSvf4SykFsSJDXT?=
+ =?iso-8859-1?Q?RqCbMznmCth2hLYsOZHv8fba3ahWIZNUSpiijsP5WCaLm18GS0RM+KYsb9?=
+ =?iso-8859-1?Q?AAAB6hR+SVq8W6vZfldEPFXP0d5yumOILjuFS0AQZpgXfeAts2/+Luitpp?=
+ =?iso-8859-1?Q?b2Ls8zKvBb/9QhbIzkYuaWZeNfABVoq3fpzdCgi9IHx1tebdq51dYy3EoO?=
+ =?iso-8859-1?Q?7SUUut/2iVDCFXkWl6owTFa0D0FfiYJU+lKPOGhgD+IJ0k2+T9B/99NMkg?=
+ =?iso-8859-1?Q?MGFcqyToe9+pRxeMEe/9JLto7/zu5UOpXCF+LrnFGBNBQJUOtvZVGFZA?=
+ =?iso-8859-1?Q?=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
-Subject: Re: [WIP 0/3] Memory model and atomic API in Rust
-From: comex <comexk@gmail.com>
-In-Reply-To: <ZgSNvzTkR4CY7kQC@boqun-archlinux>
-Date: Wed, 27 Mar 2024 14:56:13 -0700
-Cc: Kent Overstreet <kent.overstreet@linux.dev>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- "Dr. David Alan Gilbert" <dave@treblig.org>,
- Philipp Stanner <pstanner@redhat.com>,
- rust-for-linux <rust-for-linux@vger.kernel.org>,
- linux-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org,
- llvm@lists.linux.dev,
- Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Wedson Almeida Filho <wedsonaf@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@samsung.com>,
- Alice Ryhl <aliceryhl@google.com>,
- Alan Stern <stern@rowland.harvard.edu>,
- Andrea Parri <parri.andrea@gmail.com>,
- Will Deacon <will@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Nicholas Piggin <npiggin@gmail.com>,
- David Howells <dhowells@redhat.com>,
- Jade Alglave <j.alglave@ucl.ac.uk>,
- Luc Maranget <luc.maranget@inria.fr>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- Akira Yokosawa <akiyks@gmail.com>,
- Daniel Lustig <dlustig@nvidia.com>,
- Joel Fernandes <joel@joelfernandes.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>,
- kent.overstreet@gmail.com,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Marco Elver <elver@google.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>,
- Catalin Marinas <catalin.marinas@arm.com>,
- linux-arm-kernel@lists.infradead.org,
- linux-fsdevel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <5246D3E2-E503-40BA-9A72-1876BCF1186B@gmail.com>
-References: <c51227c9a4103ad1de43fc3cda5396b1196c31d7.camel@redhat.com>
- <CAHk-=wjP1i014DGPKTsAC6TpByC3xeNHDjVA4E4gsnzUgJBYBQ@mail.gmail.com>
- <bu3seu56hfozsvgpdqjarbdkqo3lsjfc4lhluk5oj456xmrjc7@lfbbjxuf4rpv>
- <CAHk-=wgLGWBXvNODAkzkVHEj7zrrnTq_hzMft62nKNkaL89ZGQ@mail.gmail.com>
- <ZgIRXL5YM2AwBD0Y@gallifrey>
- <CAHk-=wjwxKD9CxYsf5x+K5fJbJa_JYZh1eKB4PT5cZJq1+foGw@mail.gmail.com>
- <160DB953-1588-418E-A490-381009CD8DE0@gmail.com>
- <qyjrex54hbhvhw4gmn7b6l2hr45o56bwt6fazfalykwcp5zzkx@vwt7k3d6kdwt>
- <CAHk-=wgQy+FRKjO_BvZgZN56w6-+jDO8p-Mt=X=zM70CG=CVBQ@mail.gmail.com>
- <bjorlxatlpzjlh6dfulham3u4mqsfqt7ir5wtayacaoefr2r7x@lmfcqzcobl3f>
- <ZgSNvzTkR4CY7kQC@boqun-archlinux>
-To: Boqun Feng <boqun.feng@gmail.com>
-X-Mailer: Apple Mail (2.3774.500.171.1.1)
+MIME-Version: 1.0
+X-OriginatorOrg: epam.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: GV1PR03MB10456.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b06d9b5-db31-4bc4-b5af-08dc4ea174a6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2024 21:04:13.3141
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b41b72d0-4e9f-4c26-8a69-f949f367c91d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ieyzz0Py4ChcHca82pe8Bmbw2/TOEpBF6lDNmyt+11XgUXpBK4PAH2k2JnPrMvJvxBUJFT4X/iN8x0xFabkYJY++TClVCTPE6ilVLl2AMlA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR03MB7227
+X-Proofpoint-GUID: D87HMTI_2x9DmDAUEDPMEOc7Oqksf5aC
+X-Proofpoint-ORIG-GUID: D87HMTI_2x9DmDAUEDPMEOc7Oqksf5aC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-27_18,2024-03-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ clxscore=1011 spamscore=0 impostorscore=0 lowpriorityscore=0 bulkscore=0
+ malwarescore=0 phishscore=0 priorityscore=1501 suspectscore=0
+ mlxlogscore=847 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403210001 definitions=main-2403270149
 
 
+Hi Konrad,
 
-> On Mar 27, 2024, at 2:21=E2=80=AFPM, Boqun Feng <boqun.feng@gmail.com> =
-wrote:
->=20
-> I don't know whether I'm 100% correct on this, but Rust has =
-references,
-> so things like "you have a unique reference to a part of memory, no =
-one
-> would touch it in the meanwhile" are represented by `&mut`, to get a
-> `&mut` from a raw pointer, you need unsafe, where programmers can
-> provide the reasoning of the safety of the accesses. More like =
-"pointers
-> can alias anyone but references cannot" to me.
+Konrad Dybcio <konrad.dybcio@linaro.org> writes:
 
-Right.  When I said =E2=80=9Cstrict aliasing=E2=80=9D I meant type-based =
-aliasing rules, which is what GCC calls =E2=80=9Cstrict aliasing".  But =
-Rust does have stricter aliasing rules than C in a different way.  Both =
-mutable and immutable references are annotated with LLVM `noalias` by =
-default, equivalent to C `restrict`. For mutable references it=E2=80=99s =
-justified because those references should be unique.  For immutable =
-references it's justified because the memory behind the reference =
-shouldn=E2=80=99t be mutated at all.  (There=E2=80=99s an exception for =
-types with =E2=80=98interior mutability=E2=80=99, where =E2=80=98immutable=
-' references actually can be used for mutation.)
+> On 27.03.2024 9:09 PM, Volodymyr Babchuk wrote:
+>> It appears that hardware does not like cacheable accesses to this
+>> region. Trying to access this shared memory region as Normal Memory
+>> leads to secure interrupt which causes an endless loop somewhere in
+>> Trust Zone.
+>>=20
+>> The only reason it is working right now is because Qualcomm Hypervisor
+>> maps the same region as Non-Cacheable memory in Stage 2 translation
+>> tables. The issue manifests if we want to use another hypervisor (like
+>> Xen or KVM), which does not know anything about those specific
+>> mappings. This patch fixes the issue by mapping the shared memory as
+>> Write-Through. This removes dependency on correct mappings in Stage 2
+>> tables.
+>>=20
+>> I tested this on SA8155P with Xen.
+>>=20
+>> Signed-off-by: Volodymyr Babchuk <volodymyr_babchuk@epam.com>
+>> ---
+>
+> Interesting..
+>
+> +Doug, Rob have you ever seen this on Chrome? (FYI, Volodymyr, chromebook=
+s
+> ship with no qcom hypervisor)
 
-The hope has always been that this gives Rust better overall =
-optimizability than C or C++ and makes up for the losses from the lack =
-of type-based aliasing rules.  If there=E2=80=99s any empirical data to =
-justify or refute this, I=E2=80=99m not aware of it.  But that=E2=80=99s =
-the hope, and by this point Rust is committed to the approach.
+Well, maybe I was wrong when called this thing "hypervisor". All I know
+that it sits in hyp.mbn partition and all what it does is setup EL2
+before switching to EL1 and running UEFI.
 
-(Why only function parameters?  Mainly because of limitations of what =
-LLVM IR can express.  =46rom the perspective of the work-in-progress =
-Rust memory model spec, function parameters are special in *some* ways, =
-but many of the optimizations could apply to all uses of references.  =
-That's just not currently implemented.)
+In my experiments I replaced contents of hyp.mbn with U-Boot, which gave
+me access to EL2 and I was able to boot Xen and then Linux as Dom0.
 
-
+--=20
+WBR, Volodymyr=
