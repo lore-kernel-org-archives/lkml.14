@@ -1,80 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B219823D7;
-	Wed, 27 Mar 2024 08:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711527331; cv=none; b=MbFuWBW0lYSEAgvDIn3ZrR7RdUFUahLjrvpYOwyLTlhfbXDz1f5KIPfFtKdh/wrRS+QIBdZRUW2fSJjh5umfa53cGo/TcIb3UHUCRJYA/Ul4iZJGSCxY9VvBrxPfTDBTkANv4T7qESMqDkqurQzkreQodIfT+pnma560WgoPncA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711527331; c=relaxed/simple;
-	bh=xVHaqZ1u760s+2uA6tdl2keH+dzuvpVmNgm8RSxlN50=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MH5ih2EwJ9JxvxmFJGLxfJFnQVx6rVuvT0I0/9HjgY3l6BwV4zFKCjh+pEvHElcBCnObG2a4rK5vVp8wOAOLhVWNgRC8evcwgUA/PvrWMXOuIBh5K7NfdyWSpTffzOGOOn1rjwl31jI0lKwYLEX1kkv24orcvcTkMtBBL5WZ+hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=uFSGxBkF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="uFSGxBkF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2025C433C7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748F12D608;
 	Wed, 27 Mar 2024 08:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1711527331;
-	bh=xVHaqZ1u760s+2uA6tdl2keH+dzuvpVmNgm8RSxlN50=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uFSGxBkFaIMIAEsa4zemQnwPcMOfoNFWZPB+2Ka9mznGd0UGAhY2D69zeimXf6RGX
-	 y5Gx28eXDgyHIrcyobJexzf4puxWw2sk840SLc+c12F6CXH2HlqI4RJk1ozhgzyGlB
-	 1N++CXZZE7EOCtBsPWCzQtOa7OidhTh3LGSxsdNc=
-Date: Wed, 27 Mar 2024 09:15:28 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Norihiko Hama <norihiko.hama@alpsalpine.com>
-Cc: "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"usb-storage@lists.one-eyed-alien.net" <usb-storage@lists.one-eyed-alien.net>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] usb-storage: Optimize scan delay more precisely
-Message-ID: <2024032750-violator-trivial-90a3@gregkh>
-References: <20240327055130.43206-1-Norihiko.Hama@alpsalpine.com>
- <2024032757-surcharge-grime-d3dd@gregkh>
- <TYVPR01MB107814D7A583CB986884AD4B290342@TYVPR01MB10781.jpnprd01.prod.outlook.com>
- <2024032745-transfer-dazzler-2e15@gregkh>
- <TYVPR01MB10781723CBD338DC3EEB5F20590342@TYVPR01MB10781.jpnprd01.prod.outlook.com>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711527334; cv=none; b=NSuapoz444x9pl7fC3vJFOHt5kxaxC93uKcggSCryPLEsHK9LDWolf1Xe37rmx4DHccCwn5UiauHHRwg9S4v/oIF3AoOPXpYgcyhHTMRoUsyUATuw7ZPraSNbPsLhlQunLYMog5mVUVSpv9iD+K8wr7CSvMNNHtikAUc2P9pwRk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711527334; c=relaxed/simple;
+	bh=bwTaJYoOBQkF6LmWoVbC5LbrdBob5Fa5c9FLhiT8Iag=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XZ5Ma71m0/gR/rnLl06jNFBpcRAqDguPhQf7NEdHiKr1OhmDz+mLejMb1nSY5/UaIUzbTLAR1wFBt8AuVYxk1lkFZSug8qH91p8alTBJnbequqIczZF5yUUDa/ZIwL7PBtKKIi3OzrN2En630mxSUUnH50A4chNtCe7W7GXYa24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=QZ0Gt1fV; arc=none smtp.client-ip=74.50.62.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="QZ0Gt1fV"
+Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
+	by mail5.25mail.st (Postfix) with ESMTPSA id 7B91460462;
+	Wed, 27 Mar 2024 08:15:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
+	s=25mailst; t=1711527330;
+	bh=bwTaJYoOBQkF6LmWoVbC5LbrdBob5Fa5c9FLhiT8Iag=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QZ0Gt1fVE1vAAnvaHYSCVH6b1GhQdms4zbA69UDa+2hyKHAEI31Iu/zmi4Qvcjbkt
+	 GAzb2JG4fzjmA2hpQa0KBt9vXDSWbZsJhZZ/Modqw3bM4A/f5Isnpj9Uz/9Kr2LGNd
+	 KUM75770M10hhLherPp1GZCe+XgYy4pLhG9JyUCEd4lVhSStt3SNd/wPMArymJTLOU
+	 N0nNlYwXNxSm7Ga30k0C6Aj4kDO8d/tWCoxyotV5uy4zpFDbWKIbEruiwU5vLplCOP
+	 hbMbqfy8LFZpKVL6hY6BWNJZV9CX4XEBX73H8nmgQtAoIyoOxQNF+Bczkk5cwj+gwg
+	 7hU1tSF6X0JSQ==
+From: Tony Lindgren <tony@atomide.com>
+To: linux-omap@vger.kernel.org
+Cc: Dhruva Gole <d-gole@ti.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] Updates for ti-sysc interconnect target driver
+Date: Wed, 27 Mar 2024 10:15:03 +0200
+Message-ID: <20240327081508.36747-1-tony@atomide.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <TYVPR01MB10781723CBD338DC3EEB5F20590342@TYVPR01MB10781.jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 27, 2024 at 07:57:52AM +0000, Norihiko Hama wrote:
-> On Wed, Mar 27, 2024 at 07:39:55AM +0000, Norihiko Hama wrote:
-> > > > Sorry, but module parameters are from the 1990's, we will not go back to that if at all possible as it's not easy to maintain and will not work properly for multiple devices.
-> > > >
-> > > > I can understand wanting something between 1 and 0 seconds, but adding yet-another-option isn't probably the best way, sorry.
-> > > 1 second does not meet with performance requirement.
-> >
-> > Who is requiring such a performance requirement?  The USB specification?
-> > Or something else?
-> This is our customer requirement.
+Hi all,
 
-If it is impossible to do, why are they making you do it?  :)
+Here are few updates for ti-sysc. We were missing copyrights, have one
+non-urgent issue on reset handling, and can finally drop all the quirks
+related to the legacy use of pm_runtime_irq_safe() for uart and
+smartreflex.
 
-> > > I have no good idea except module parameter so that we can maintain backward compatibility but be configurable out of module.
-> > > Do you have any other better solution?
-> > How long do you exactly need to wait?  Why not figure out how long the device takes and if it fails, slowly back off until the full time delay happens and then you can abort?
-> It's IOP issue and difficult to figure out because it depends on device itself.
+Regards,
 
-Agreed.
+Tony
 
-> I know we have multiple devices with delay_use=0, but then it's recovered and detected by reset after 30s timeout, that is too long than 1 sec.
+Tony Lindgren (5):
+  bus: ti-sysc: Move check for no-reset-on-init
+  bus: ti-sysc: Add a description and copyrights
+  bus: ti-sysc: Drop legacy quirk handling for uarts
+  bus: ti-sysc: Drop legacy quirk handling for smartreflex
+  bus: ti-sysc: Drop legacy idle quirk handling
 
-So how do you know that making this smaller will help?  There are many
-many odd and broken devices out there that take a long time to spin up
-before they are able to be accessed.  That's what that option is there
-for, if you "know" you don't need to wait, you don't have to wait.
-Otherwise you HAVE to wait as you do not know how long things take.
+ drivers/bus/ti-sysc.c                 | 165 ++++++--------------------
+ include/linux/platform_data/ti-sysc.h |   1 -
+ 2 files changed, 34 insertions(+), 132 deletions(-)
 
-sorry,
-
-greg k-h
+-- 
+2.44.0
