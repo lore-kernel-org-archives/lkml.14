@@ -1,148 +1,86 @@
-Received: from mail-108-mta109.mxroute.com (mail-108-mta109.mxroute.com [136.175.108.109])
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7077914E2D1
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 22:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.109
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C46153591
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 22:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711578084; cv=none; b=Zi549n68v47rGnJ5toKEyEj9iFKmLFOIHn5v7y2VUyWTn6bO4nS/eSOfNq8JYIMF/sixIlvo1b767Jr5HAhoTQdtRdGWzAHoxSLZwyM0VWBqXQLIHdxUPS2dstOBFvy4Uu1+rq5PHuRnHMWG1hmC8P8OV1RFEuDhxFVj5W4Kdl4=
+	t=1711578321; cv=none; b=LN3cqbWAOm8g0v++RhKcQPK3bAepGBakeQrC+qAXDAr9Rsdlxee7RhEwuuikPUcST/RqHPSCLpnmsJ0hMUIBT+fYUQgUAU8zhYNAK4ZNl1shaIfhRimQijsBbr5vU3NfmAmB8W2lX3cCRyxX9Hz0jz3CvNWAgJumZ/z2f0kpBAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711578084; c=relaxed/simple;
-	bh=l/d1KTSxrdSi8t1Av6GsBX7faXE7YS03/s1Y6XmUM9o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jk5wnL7szr1LtlVWM7ugu2aZDH0H5hPxgE6yBO4ONrEgXtW7HKB7ohRu7jmUqzWBFl9F68DVwgzllzvTFCT83iLwqMPr8xzeMpujI3RoU4nvC/4yuQproPfCL8jKKPJtvmSCUjSrFPWOjMpkTETbz98iHbgm6bfdJJvMB5mEC24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=wkfO23G8; arc=none smtp.client-ip=136.175.108.109
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
+	s=arc-20240116; t=1711578321; c=relaxed/simple;
+	bh=zvblnRjqyr9T+Xx2ZmU4DdKOyZ8u5C7pMHb7A/mXvSs=;
+	h=Date:Message-ID:MIME-Version:Content-Type:Content-Disposition:
+	 From:To:Cc:Subject:References:In-Reply-To; b=B8LT3XX7DiIHxXY4H/fhPokt1n7SI+EqIvssUBcCyxg2CoINZ6VKLOdkSzeXU1i6/6f8u+gYoGnNw307pNSMSupfF+TjfqBzus+8bYlpZBtMc53czY4nVfauczVHJEEhBRgMLp6DA8bCixXA7DmsgnA0JqWdz+MEFVoCUM1kPJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=f+QJukT0; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="wkfO23G8"
-Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta109.mxroute.com (ZoneMTA) with ESMTPSA id 18e8200a9520003bea.00f
- for <linux-kernel@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Wed, 27 Mar 2024 22:21:05 +0000
-X-Zone-Loop: 68ce8d984520cdde10326635c43e3d834e55519162e3
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Wfd3IM9yvSlmOOZPNTkn/UcYNYLQj3XQ9wKwbMSeFFA=; b=wkfO23G8d0f1UmDKwI19ALxOur
-	Whk3/ewONqmq7ThLU38LoZaX7TeVQZ/ZlWhkVCY1Nv72S47KuKoOsoZPYF5APnEL11iLUJPqE40ZQ
-	UeGs1Py8YqIIcqYkUDRvFcF0XycPaaersLvz1IDyI+8ExNFLwf07T/bgSeB7rBV0Z4Vg7tGKdc00f
-	ZF9VlALEMgUZEvkk0Zgljww5smZWqUoEtjXB5t1CEVSvVFQs/jziUp1nED2tsJ2wrD1WCqUZWR7h6
-	RnGE5Ifiy+US2qVPFxjNTNMtSDYZPm/Vw46Bz4FodRkj0K2tNnbv/VrZ+uiMiRmOqJA0ZWmFMFMF6
-	+HODCqiA==;
-From: git@luigi311.com
-To: linux-media@vger.kernel.org
-Cc: dave.stevenson@raspberrypi.com,
-	jacopo.mondi@ideasonboard.com,
-	mchehab@kernel.org,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	sakari.ailus@linux.intel.com,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	x@xnux.eu
-Subject: [PATCH 10/23] media: i2c: imx258: Follow normal V4L2 behaviours for clipping exposure
-Date: Wed, 27 Mar 2024 16:20:22 -0600
-Message-ID: <20240327222035.47208-11-git@luigi311.com>
-In-Reply-To: <20240327222035.47208-1-git@luigi311.com>
-References: <20240327222035.47208-1-git@luigi311.com>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="f+QJukT0"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-696315c9da5so2394136d6.2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 15:25:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1711578317; x=1712183117; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :content-disposition:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lJ3wjFaeU9Ztiyd+gJSW6nXLmVJwkYytMN2nUftxCkU=;
+        b=f+QJukT0jAngv/wLvWrZEm9Tk64blPq02R1Vk1PdvmYqtilE/L4ngpmMJf0q1Okjvp
+         HSpyKX43ScrDYCZiWSt9o+yLkKwasOFewwr9+4Ullrb7713SDlfmFC4eAiH4/3URqkX8
+         xh/3qJ+Dcx176AEFolsGV8OvH/dwBf8wENIAJ4iIfXXh+1UHfB9k9iAyhF5FL7sL706q
+         gKpyp53YkPwmiQ43/PWJZJQ3OLxBj94C7oqoBHe0MzvhqwJB8SBVJYk/tcYDmS/m4tx9
+         M5J0ooSyGwKoi9BbeXm7LZBRajhsHRECp8Qy5zm/OJs+po/Egten2KN2eBSZ6iuAfWwf
+         JYBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711578317; x=1712183117;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :content-disposition:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lJ3wjFaeU9Ztiyd+gJSW6nXLmVJwkYytMN2nUftxCkU=;
+        b=mQRfYEjumIQEbXOLenoB8lO8+xGn1NkWOJXsYdcoOL5Bw7LHyQgHhpaKzVz0pUFAF6
+         PfATsXdXpli+ABTF/bM/kov29/iPuDGb5NGhCzYgh+hYlEv7Iv+OnKAzXruKl2dq5ib+
+         ywfgS7re3HkjWicupXK0fs6fFwqlvZF3xmO7Y7MMmIL1SsuCuRd1x2qqU/YBbVNRaY+9
+         5tqVCmZ3+VUuJYB00KDuHKYLCqt4jLj3BTGry9SDj5RVv2wJaVoMlB19R5lZ13SP64rv
+         ap7LStUtLu9ws9bAinz0taKNmUmsAjGTAqk4AOVChGG5JRcp2eY6cWRxA8z4fvIIZULU
+         qCag==
+X-Forwarded-Encrypted: i=1; AJvYcCXfzR4wnZLAt3sAvsYinGdUTWtB3/RRg0aKS694nbSreW+Rxw8WZZVrlmlEy+SPVaAxm4mecf7qHN0mXXtihYsvNM9tygRahT3j6pMh
+X-Gm-Message-State: AOJu0Yw/uJaBHubPD/bWx2mBHsDV/eMfjbvu2tpN/oBI5cLoakUe66T0
+	PQMLtNnQt1WnGtuiWfp8c0xhWhFRbPZHxV211KvThYjd+HN7ksLtQHxmh+Qb4g==
+X-Google-Smtp-Source: AGHT+IEB1EtlYhSzjbkFAJS6d1yVX/gJOyNrRi/7DgIyCMvcLad2G6ZK7a6iGO+wA6rZSHqS0SZcJw==
+X-Received: by 2002:a0c:f847:0:b0:690:f1e3:ca7c with SMTP id g7-20020a0cf847000000b00690f1e3ca7cmr990364qvo.16.1711578317661;
+        Wed, 27 Mar 2024 15:25:17 -0700 (PDT)
+Received: from localhost ([70.22.175.108])
+        by smtp.gmail.com with ESMTPSA id js5-20020a0562142aa500b0069686d63c1esm44265qvb.69.2024.03.27.15.25.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Mar 2024 15:25:17 -0700 (PDT)
+Date: Wed, 27 Mar 2024 18:25:16 -0400
+Message-ID: <5da09fb04d92d9a4a9d7d5cc1ab14ebd@paul-moore.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+MIME-Version: 1.0 
+Content-Type: text/plain; charset=utf-8 
+Content-Disposition: inline 
 Content-Transfer-Encoding: 8bit
-X-Authenticated-Id: personal@luigi311.com
+From: Paul Moore <paul@paul-moore.com>
+To: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>, selinux@vger.kernel.org
+Cc: Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] selinux: make more use of current_sid()
+References: <20240315173105.636749-1-cgzones@googlemail.com>
+In-Reply-To: <20240315173105.636749-1-cgzones@googlemail.com>
 
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+On Mar 15, 2024 =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com> wrote:
+> 
+> Use the internal helper current_sid() where applicable.
+> 
+> Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
+> ---
+>  security/selinux/hooks.c | 22 ++++++----------------
+>  security/selinux/xfrm.c  |  7 ++-----
+>  2 files changed, 8 insertions(+), 21 deletions(-)
 
-V4L2 sensor drivers are expected are expected to clip the supported
-exposure range based on the VBLANK configured.
-IMX258 wasn't doing that as register 0x350 (FRM_LENGTH_CTL)
-switches it to a mode where frame length tracks coarse exposure time.
+Merged into selinux/dev, thanks.
 
-Disable this mode and clip the range for V4L2_CID_EXPOSURE appropriately
-based on V4L2_CID_VBLANK.
-
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
----
- drivers/media/i2c/imx258.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
-index c65b9aad3b0a..1f5fb980cfbe 100644
---- a/drivers/media/i2c/imx258.c
-+++ b/drivers/media/i2c/imx258.c
-@@ -37,10 +37,11 @@
- 
- /* Exposure control */
- #define IMX258_REG_EXPOSURE		0x0202
-+#define IMX258_EXPOSURE_OFFSET		10
- #define IMX258_EXPOSURE_MIN		4
- #define IMX258_EXPOSURE_STEP		1
- #define IMX258_EXPOSURE_DEFAULT		0x640
--#define IMX258_EXPOSURE_MAX		65535
-+#define IMX258_EXPOSURE_MAX		(IMX258_VTS_MAX - IMX258_EXPOSURE_OFFSET)
- 
- /* Analog gain control */
- #define IMX258_REG_ANALOG_GAIN		0x0204
-@@ -371,7 +372,7 @@ static const struct imx258_reg mode_common_regs[] = {
- 	{ 0x303A, 0x00 },
- 	{ 0x303B, 0x10 },
- 	{ 0x300D, 0x00 },
--	{ 0x0350, 0x01 },
-+	{ 0x0350, 0x00 },
- 	{ 0x0204, 0x00 },
- 	{ 0x0205, 0x00 },
- 	{ 0x020E, 0x01 },
-@@ -741,6 +742,19 @@ static int imx258_update_digital_gain(struct imx258 *imx258, u32 len, u32 val)
- 	return 0;
- }
- 
-+static void imx258_adjust_exposure_range(struct imx258 *imx258)
-+{
-+	int exposure_max, exposure_def;
-+
-+	/* Honour the VBLANK limits when setting exposure. */
-+	exposure_max = imx258->cur_mode->height + imx258->vblank->val -
-+		       IMX258_EXPOSURE_OFFSET;
-+	exposure_def = min(exposure_max, imx258->exposure->val);
-+	__v4l2_ctrl_modify_range(imx258->exposure, imx258->exposure->minimum,
-+				 exposure_max, imx258->exposure->step,
-+				 exposure_def);
-+}
-+
- static int imx258_set_ctrl(struct v4l2_ctrl *ctrl)
- {
- 	struct imx258 *imx258 =
-@@ -748,6 +762,13 @@ static int imx258_set_ctrl(struct v4l2_ctrl *ctrl)
- 	struct i2c_client *client = v4l2_get_subdevdata(&imx258->sd);
- 	int ret = 0;
- 
-+	/*
-+	 * The VBLANK control may change the limits of usable exposure, so check
-+	 * and adjust if necessary.
-+	 */
-+	if (ctrl->id == V4L2_CID_VBLANK)
-+		imx258_adjust_exposure_range(imx258);
-+
- 	/*
- 	 * Applying V4L2 control value only happens
- 	 * when power is up for streaming
--- 
-2.42.0
-
+--
+paul-moore.com
