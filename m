@@ -1,74 +1,121 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9EE152E12
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 20:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5F5152526;
+	Wed, 27 Mar 2024 20:32:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711571525; cv=none; b=kb1KxFWk1dazrpV31DQmtBYrcBPUcwOuIQKr5YjA4zs+2Hd97vlkk9Qdt2e2gi0YQwuUK/UKsZk2Ydo0VDNW5kR9Ly5fuOqh/GvBXV8jAmFMzMlyspwbWqajWaRI55z55psFOj5bgCTRUX36XdBD2wtQQIWKucW74VXppF3hR1o=
+	t=1711571558; cv=none; b=KI9UKrIr7XLSo1AaI/jTiyG/r2+XZCi+KslOeIKMcLFcH5+3V87cI2qzYLyYCqhDnD/Lvze6boktDre2yFIvYv5Q9E1iKP2/u/hXRhrh5Y7uflEpkGwXhol/vfGmYKsSQlf0LMmJSAp5FfXdq0DkTGFEyOxtDjwyhAmpt1SdTYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711571525; c=relaxed/simple;
-	bh=nRwlE/hA+5kIdWWS/56V+tZqn6E78CxeZd1m1w7AwQ4=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=NUY4uuF0lEdO8fVCjiGETWHWrZHZOYCxNFenEISyGoH2qdbl/zoqbO5CjCy6wNhgbW5DHm0J3NFRMrCMtc4x60+u+RzK3tvvG+HsFzu6q9lrCQfrlrJxatIiG7EJka+J3OXvWFZRkTQvAboqJ3MAfgZnC8L4dmAUlYD6DExhmmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7cc0a422d43so23714639f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 13:32:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711571523; x=1712176323;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GrIQKBS2v/d7YU14An08GRjqL5ZRUdHZeXnpNFfQdUk=;
-        b=icMuBb7K5F1xjovTxQUYmiblK2Ms5fSswmWeclUFnbUfTQ3GqBkt0YEuAyYWVEutUJ
-         KIY0ccfyoaK7cbLoNbWhkb/xn+1ljaGBB3vX76C1YzAdb+wtuaWeLjPT7YTKIhdlNJVD
-         uSaDN+xkT+BnIXIkF2s9Vje7YMbovgHS2zel0vlPHgyQKSsJRaBvM3z9+DoOdCN9uY0L
-         8kccWx20RO56kzcAqdWo+Fzg4heQhKzpZjlSvc4el1zatHIY5/alVieEtfUAm6mcCi6b
-         ZdoineelfxctuesTxsPW4o+BYUUaNqpd4n7g+dkr3N/ixNLAS1eowbGsezzwgsB+KiqB
-         M3HQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXaO2C2oDqFsNe+5WnMRGrhmJhENlRd7ON/Ge2JSOASuOwYdPPOmuTzQJDJzN7I3diLkUepTmU5yCtR0u+rVEy9ScL2+REsbx4z/mF2
-X-Gm-Message-State: AOJu0YyhvCtLKlbtvjtmyoO9I5DI/+x63994SNdhY6dNoo+IPtG4K6KR
-	8gLEbQnZzlvIB+uTE7JCn9MpmrxmHQNVG7hUGTRE8wkQYqNVHm8TFXXHRD7Z7k7nvHdcuw4bsd2
-	aP5E9uTcYz0oRnRO4kFOXloiTNHQxPilsXexh9ottxBGXu/tkjW4P9h4=
-X-Google-Smtp-Source: AGHT+IEv1GS0F1bIQIoueTKC7US/um1YmwFLw785Q/O0DHu40YUikpwnw4dFaz1J6Vc+zuxa3ZZur/MOvmSybjnXmQSPHjqMWXYb
+	s=arc-20240116; t=1711571558; c=relaxed/simple;
+	bh=bUD7hRVKwVDpYh8ceARY/rXBSbxh69k1obIrokK7TR8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RYjfx9TTba+ofvUEiaqBFjbEPDa/8bDRRbQwFKv5vZcorgp2AahaJ5UwlzCSmpD4WrmRDODQrUlNtF6sbqy8C2yPXALxSnoOs63IB9Jf4rp9TmwPQ9FZc31MpNUhUfFo2Sxb8zzKLZonvORU1enpwfpywaFdNMoEMZ01mNOpWTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I1aKgMjR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I1aKgMjR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56B50C433C7;
+	Wed, 27 Mar 2024 20:32:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711571557;
+	bh=bUD7hRVKwVDpYh8ceARY/rXBSbxh69k1obIrokK7TR8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I1aKgMjRz70NgKGq3kD7zdlCAncjjYgZt6draVS17IT5OqyIWMKVqHkFdF+uIiBdw
+	 wKwCAAXNnOc1SNd+WdyxcSVCn03YYTUgpJW4iCHcOVq90o8OexCDaIkYStDtPUxUBr
+	 at82lhQwaBm5ZRWywlyHGN0mh5omIQzwAzghqk5EPIqUqY5eIOxGPEb1ZALZ86PUPB
+	 CZBD9DnUhpMXBlIZRjBkzaKCm9EfqstsXrL8k0/4RY6iBVld0d/ZhxBr1dWD1oFd0F
+	 XzXaBERa6K2024PS0nriLLOIiT6+5MbTCiDKJ/8dpvnCaQQ7fxxD1j3B9refO27qTZ
+	 wTDGskEYXb1/w==
+Date: Wed, 27 Mar 2024 20:32:33 +0000
+From: Conor Dooley <conor@kernel.org>
+To: =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	linux-riscv@lists.infradead.org, Andy Chiu <andy.chiu@sifive.com>,
+	Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: RISC-V for-next/fixes (cont'd from PW sync)
+Message-ID: <20240327-irrigate-unread-d9de28174437@spud>
+References: <87ttkro3b5.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2d81:b0:7c8:c7ec:2b71 with SMTP id
- k1-20020a0566022d8100b007c8c7ec2b71mr4702iow.3.1711571523139; Wed, 27 Mar
- 2024 13:32:03 -0700 (PDT)
-Date: Wed, 27 Mar 2024 13:32:03 -0700
-In-Reply-To: <87le63bfuf.fsf@cloudflare.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a50cbd0614aa4ceb@google.com>
-Subject: Re: [syzbot] [bpf?] [net?] possible deadlock in ahci_single_level_irq_intr
-From: syzbot <syzbot+d4066896495db380182e@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, davem@davemloft.net, edumazet@google.com, 
-	jakub@cloudflare.com, john.fastabend@gmail.com, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="+H3UkLQ2ywM6BKxo"
+Content-Disposition: inline
+In-Reply-To: <87ttkro3b5.fsf@all.your.base.are.belong.to.us>
 
-Hello,
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+--+H3UkLQ2ywM6BKxo
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reported-and-tested-by: syzbot+d4066896495db380182e@syzkaller.appspotmail.com
+On Wed, Mar 27, 2024 at 08:57:50PM +0100, Bj=F6rn T=F6pel wrote:
+> Hi,
+>=20
+> I figured I'd put some words on the "how to update the RISC-V
+> for-next/fixes branches [1]" that came up on the patchwork call today.
+>=20
+> In RISC-V land, the for-next branch is used for features, and typically
+> sent as a couple of PRs to Linus when the merge window is open. The
+> fixes branch is sent as PR(s) between the RCs of a release.
+>=20
+> Today, the baseline for for-next/fixes is the CURRENT_RELEASE-rc1, and
+> features/fixes are based on that.
+>=20
+> This has IMO a couple of issues:
+>=20
+> 1. fixes is missing the non-RISC-V fixes from releases later than
+>    -rc1, which makes it harder for contributors.
+> 2. for-next does not have the fixes from RISC-V/rest of the kernel,
+>    and it's hard for contributors to test the work on for-next (buggy,
+>    no fixes, and sometime missing deps).
+>=20
+> I used to spend a whole lot of mine time in the netdev tree of the
+> kernel, and this is how they manage it (Thanks Kuba!):
+>=20
+> Netdev (here exchanged to RISC-V trees), fast-forward fixes, and then
+> cross-merge fixes into for-next -- for every -rc.
+>=20
+> E.g., say fixes is submitted for -rc2 to Linus, once he pulls, do:
+>=20
+>   git push --delete origin $SOMETAG
+>   git tag -d $SOMETAG
+>   git pull --ff-only --tags git://git.kernel.org/pub/scm/linux/kernel/git=
+/torvalds/linux.git
+>   build / test / push out.
+>=20
+> Then pull fixes into for-next:
+>=20
+>   git pull --tags git://git.kernel.org/pub/scm/linux/kernel/git/riscv/lin=
+ux.git fixes
+>=20
+>=20
+> Personally (obviously biased), I think this would be easier for
+> contributors. Any downsides from a RISC-V perspective?
 
-Tested on:
+After you left, Palmer said he'd go for merging his fixes tag into
+for-next after they got merged by Linus. At least I think it was that,
+rather than Linus' -rcs...
 
-commit:         4dd65107 bpf: update BPF LSM designated reviewer list
-git tree:       bpf
-console output: https://syzkaller.appspot.com/x/log.txt?x=116d23e6180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5826764df8e788a7
-dashboard link: https://syzkaller.appspot.com/bug?extid=d4066896495db380182e
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1593c145180000
+--+H3UkLQ2ywM6BKxo
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Note: testing is done by a robot and is best-effort only.
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZgSCYQAKCRB4tDGHoIJi
+0jSXAQC9hx3TKykVdHY3TVEbOmGffTwUej+VecLBQq9NlaLEaQD8DHwblxB6xvNU
+37YujV2wcGemH2l70tsYuN6yZnL1vwg=
+=ZRKV
+-----END PGP SIGNATURE-----
+
+--+H3UkLQ2ywM6BKxo--
