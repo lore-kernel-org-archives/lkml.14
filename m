@@ -1,243 +1,103 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE4D364D6
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 09:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86414125C9
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 09:13:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711530554; cv=none; b=dsXHSm3rRPIESCoXq8KG8chclGtrtOZI+0Kkjr67Tn+mcmKYzwJmQteSLnZ3MHYmAz+FImU+njzCBcDzcDIolKdT8eetTpjIXv+8LMniX5H7riI+mWSt/23L8Cw/AQrPFFwTiC7M3pvsYuMuyADMmeAOaQF8FMTGg60sXf/98XA=
+	t=1711530823; cv=none; b=dfo58S3CXhUDjnq0fNCIvg3CamQV9xsJU8Wj/ip0MdqdT8BguJq1O2t8DSpZCvtsbdWcQ/BRIIpE/aLUDUPZoB3Q0Q4iTgJC8TWweNd0R5AcUxjLD9/FePD3kfTHjU9LPx4Kk483Kb0LLNrEic/iQblON6TI08Wra6Np9V0sTOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711530554; c=relaxed/simple;
-	bh=oycWeHZoc4HFDl3X6OSlh68zAovOinIaWcnaZm5TJ7Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WfCmZAn8jnv31iAUfpzA6ktkNOuqFwyN5uqSJ43VyKGj/ab+MAyaNFXFYnh8glt8b8WO4zYyVx6hkCVpOZUvIitfB3idK8uZmUtiC4R0hU2J80vJEfbjByo/xlKiT9vedxPKNWkY6hcM9K/OpeS+zlPe/ZRPrWbaw0BnxGQlh+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LOAfzCuq; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711530823; c=relaxed/simple;
+	bh=PjDcWxabCM5zhojYO64Rjs9rcFKOjg+P9yQ2hF4+9bw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BM+TA6mixTcGAgYQWAJt5LOy09oQWNbqDigKKUWMuBDVpSiJgTKMHa85Icsd7looc7uESefOqc65Fn293FqgkV8OWmpGDU6auvtmOWjEJs/m0ad0eqK2m0S31TnewEktvP6BXbaMoik4pmkpoTKmekxo9YE9uhIGCT1OIbHKcmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=OqvcAHOs; arc=none smtp.client-ip=209.85.160.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LOAfzCuq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711530551;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PiUO7iPSPavIkRv/nSLB+20MvgfvmGJfy8IPlO0GJ2M=;
-	b=LOAfzCuqbVbx0FZRm83PgdS2+6ujQd5M0SqGyeCr33lzmcBgBAGTrl+/pBRPM/NhN8MynT
-	5XM78VN+VG4eG55iaqaE4hBHRY9tgheeEKiReT1aeZUiZDooKUHyOHaDmXfTUnbjO/5/Qu
-	rcNEH7ZLWLUMrN97Ql9DiMJNDWoLGgQ=
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
- [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-100-7CZYyJX0MACIpcD6gvP6qw-1; Wed, 27 Mar 2024 05:09:09 -0400
-X-MC-Unique: 7CZYyJX0MACIpcD6gvP6qw-1
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-5dc992f8c8aso4767321a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 02:09:09 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OqvcAHOs"
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-22a5df0f789so714334fac.3
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 02:13:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711530820; x=1712135620; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mxElVZwgDSK1YSb8hGRkSJE7Hq+zmgPYXh8LPg2gT3Q=;
+        b=OqvcAHOsm5DHICqRPV1TBh7v9tcWsaLNgTuW2k5xXnDrPPlK/Ihh04JzxtK6RlXupR
+         NPm6zR1HOvT+4ZAS4MW6TzgtKwuSWPdUda7xtzPqbyLqYmrFpyoqLeb5XLD4wWlER4M+
+         yy9obZHcHNBQmoo/jPNQSWJK/MHLFOiSbVOdw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711530548; x=1712135348;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PiUO7iPSPavIkRv/nSLB+20MvgfvmGJfy8IPlO0GJ2M=;
-        b=cJSQdwoTbMDtoGOdjvDdbyVzY59ZbN/aHXuGVmNOciCGTsLfsq5ZZD65il3zNnVj38
-         JuCDaPhOVOM4wXXQCp4KuvGLG8/GrPcUYcJKdhPHsg5rvmBnLY5hBuSasSDxW8sQZXPa
-         M/TPdEpR9CNnTY3pDwEhGTo7TM5KVSNNL7S7meDxfzNFRqTfINd9yerjZSOJH4kqZcIC
-         fpE7rDyhPdJHWWHVI2RGJ0fVFyMZaph8o5kIFdWXUqM9x93TGrDfYkBa4xLk/jVD8QGe
-         b9A0WL0RuBJkT/SWrz5hQrhnXqdkSTuP2y2Cq04j98DZlhYXMrIj/p5BZF693CtUmMYp
-         JmtA==
-X-Forwarded-Encrypted: i=1; AJvYcCV8toAonDU39AjFYVOfVZkniBUjJ/xCXuY1WUX13raCcSw/89Nz2j3eh/oHuGsx83ma/Aazs7ptoFLUJOm9SBFyInjpOKe0loz5QGwV
-X-Gm-Message-State: AOJu0YzNz0bR8+Jd8vip94ROtN4hNau0oBZrqFYM+M52HjRQr1xqG6NS
-	58KCa5FpVy3KpTHhqzDhmo4vj75lfS79GWyHSYrA/XgMFzI3A9vcRldFcgSGU8WE9x/JAC8CxoC
-	QIn1LIzNwnQZ8boH721TFpScIVZ78nFkvc6/pDrFD579ZZj5vWrpS6IfKtkufgU9XS2W+T6PxDu
-	gix2la8068KIpq40U32MFderOZsBL450vvgDOa
-X-Received: by 2002:a17:90a:6581:b0:2a0:4c3b:2c39 with SMTP id k1-20020a17090a658100b002a04c3b2c39mr3854626pjj.23.1711530548359;
-        Wed, 27 Mar 2024 02:09:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG7tW6F7qZe1Du7rhci+GrM9/pq6pNY9ImSzOjZdt98cUB1LtGctHbGEdhdQAtSqBjEaTzuTsGNpS1MIZsG1uo=
-X-Received: by 2002:a17:90a:6581:b0:2a0:4c3b:2c39 with SMTP id
- k1-20020a17090a658100b002a04c3b2c39mr3854612pjj.23.1711530548014; Wed, 27 Mar
- 2024 02:09:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711530820; x=1712135620;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mxElVZwgDSK1YSb8hGRkSJE7Hq+zmgPYXh8LPg2gT3Q=;
+        b=j1BgtfyPj+P7+LFm6O8BMCB9n6+wkAYGtA8x5b8EPDXhdpYReC17m9/71MKHj/YOTL
+         IWJJOTFT0stzxvubQAPrEJ4NVQbjGxqvAYjPq+nRGOLjV/Y+bGj0hd+VohojjWpVpmod
+         AUhrmZJdy7KlBnjrG3/fH1RALudsOe9DvzyZM96NzpRkDNqRiG+K88DYVdJB5hiXrNjY
+         1SD1Cfsag2agnS8TNKzVLpW2ztpdg+pxQFQ6b9aItnilsK2yf3WEDqmxBuMGhx6/EBC2
+         b+IQbaR1k47Q7041PbN4kGpSE4eFHOxFAc+DQQBJzMifjV6PHIozHXp5hRubP25fkL6Z
+         KMrA==
+X-Forwarded-Encrypted: i=1; AJvYcCWnsVMxVOV8exIO5wpJ46er1QUeKha2RLsFqxChfM11E/iVc9BsztgBRYJrCLhNBoy1sVRCSRkxuAaP6pbPBzX7l4k/gQ9sF0OKhp1U
+X-Gm-Message-State: AOJu0Yw+m9DFdYxDt3dSzJIBFUtoYZQradJhOWvrVBueZgtq4MKeYHw+
+	ialfmYV1BJUEXjqT4mJfpdUPNBQAWlpicBH1S7sEC90YxyRNm4wIIqwwqa9c8A==
+X-Google-Smtp-Source: AGHT+IEb932ORwMZAWuJMDZYxzAxef8XwPiw/kk7kOZAgwvVteC2Tlm4yt0lNUvQ8BGf1TisMGWnlQ==
+X-Received: by 2002:a05:6870:1c8:b0:229:f61d:7e52 with SMTP id n8-20020a05687001c800b00229f61d7e52mr6040680oad.34.1711530820771;
+        Wed, 27 Mar 2024 02:13:40 -0700 (PDT)
+Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:74c2:3606:170b:52f3])
+        by smtp.gmail.com with ESMTPSA id fa31-20020a056a002d1f00b006e69cb93585sm7342911pfb.83.2024.03.27.02.13.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Mar 2024 02:13:40 -0700 (PDT)
+From: Chen-Yu Tsai <wenst@chromium.org>
+To: Sean Wang <sean.wang@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Chen-Yu Tsai <wenst@chromium.org>,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] pinctrl: mediatek: paris: More pin config cleanups
+Date: Wed, 27 Mar 2024 17:13:32 +0800
+Message-ID: <20240327091336.3434141-1-wenst@chromium.org>
+X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240320101912.28210-1-w_angrong@163.com> <20240321025920-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20240321025920-mutt-send-email-mst@kernel.org>
-From: Jason Wang <jasowang@redhat.com>
-Date: Wed, 27 Mar 2024 17:08:57 +0800
-Message-ID: <CACGkMEuHRf0ZfBiAYxyNHB3pxuzz=QCWt5VyHPLz-+-+LM=+bg@mail.gmail.com>
-Subject: Re: [PATCH v3] vhost/vdpa: Add MSI translation tables to iommu for
- software-managed MSI
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Wang Rong <w_angrong@163.com>, kvm@vger.kernel.org, virtualization@lists.linux.dev, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 21, 2024 at 3:00=E2=80=AFPM Michael S. Tsirkin <mst@redhat.com>=
- wrote:
->
-> On Wed, Mar 20, 2024 at 06:19:12PM +0800, Wang Rong wrote:
-> > From: Rong Wang <w_angrong@163.com>
-> >
-> > Once enable iommu domain for one device, the MSI
-> > translation tables have to be there for software-managed MSI.
-> > Otherwise, platform with software-managed MSI without an
-> > irq bypass function, can not get a correct memory write event
-> > from pcie, will not get irqs.
-> > The solution is to obtain the MSI phy base address from
-> > iommu reserved region, and set it to iommu MSI cookie,
-> > then translation tables will be created while request irq.
-> >
-> > Change log
-> > ----------
-> >
-> > v1->v2:
-> > - add resv iotlb to avoid overlap mapping.
-> > v2->v3:
-> > - there is no need to export the iommu symbol anymore.
-> >
-> > Signed-off-by: Rong Wang <w_angrong@163.com>
->
-> There's in interest to keep extending vhost iotlb -
-> we should just switch over to iommufd which supports
-> this already.
+Hi,
 
-IOMMUFD is good but VFIO supports this before IOMMUFD. This patch
-makes vDPA run without a backporting of full IOMMUFD in the production
-environment. I think it's worth.
+Here are a couple more pin config cleanups for the MediaTek paris
+pinctrl driver library.
 
-If you worry about the extension, we can just use the vhost iotlb
-existing facility to do this.
+Patch 1 fixes readback of PIN_CONFIG_INPUT_SCHMITT_ENABLE. The function
+was passing back the disabled state incorrectly.
+
+Patch 2 reworks support for PIN_CONFIG_{INPUT,OUTPUT}_ENABLE, following
+discussions on the bcm2835/bcm2711 pinctrl drivers [1]. The driver is
+made to follow the definitions of each option as described in the DT
+bindings and pinctrl core.
+
+Please have a look and merge if possible.
+
 
 Thanks
+ChenYu
 
->
-> > ---
-> >  drivers/vhost/vdpa.c | 59 +++++++++++++++++++++++++++++++++++++++++---
-> >  1 file changed, 56 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
-> > index ba52d128aeb7..28b56b10372b 100644
-> > --- a/drivers/vhost/vdpa.c
-> > +++ b/drivers/vhost/vdpa.c
-> > @@ -49,6 +49,7 @@ struct vhost_vdpa {
-> >       struct completion completion;
-> >       struct vdpa_device *vdpa;
-> >       struct hlist_head as[VHOST_VDPA_IOTLB_BUCKETS];
-> > +     struct vhost_iotlb resv_iotlb;
-> >       struct device dev;
-> >       struct cdev cdev;
-> >       atomic_t opened;
-> > @@ -247,6 +248,7 @@ static int _compat_vdpa_reset(struct vhost_vdpa *v)
-> >  static int vhost_vdpa_reset(struct vhost_vdpa *v)
-> >  {
-> >       v->in_batch =3D 0;
-> > +     vhost_iotlb_reset(&v->resv_iotlb);
-> >       return _compat_vdpa_reset(v);
-> >  }
-> >
-> > @@ -1219,10 +1221,15 @@ static int vhost_vdpa_process_iotlb_update(stru=
-ct vhost_vdpa *v,
-> >           msg->iova + msg->size - 1 > v->range.last)
-> >               return -EINVAL;
-> >
-> > +     if (vhost_iotlb_itree_first(&v->resv_iotlb, msg->iova,
-> > +                                     msg->iova + msg->size - 1))
-> > +             return -EINVAL;
-> > +
-> >       if (vhost_iotlb_itree_first(iotlb, msg->iova,
-> >                                   msg->iova + msg->size - 1))
-> >               return -EEXIST;
-> >
-> > +
-> >       if (vdpa->use_va)
-> >               return vhost_vdpa_va_map(v, iotlb, msg->iova, msg->size,
-> >                                        msg->uaddr, msg->perm);
-> > @@ -1307,6 +1314,45 @@ static ssize_t vhost_vdpa_chr_write_iter(struct =
-kiocb *iocb,
-> >       return vhost_chr_write_iter(dev, from);
-> >  }
-> >
-> > +static int vhost_vdpa_resv_iommu_region(struct iommu_domain *domain, s=
-truct device *dma_dev,
-> > +     struct vhost_iotlb *resv_iotlb)
-> > +{
-> > +     struct list_head dev_resv_regions;
-> > +     phys_addr_t resv_msi_base =3D 0;
-> > +     struct iommu_resv_region *region;
-> > +     int ret =3D 0;
-> > +     bool with_sw_msi =3D false;
-> > +     bool with_hw_msi =3D false;
-> > +
-> > +     INIT_LIST_HEAD(&dev_resv_regions);
-> > +     iommu_get_resv_regions(dma_dev, &dev_resv_regions);
-> > +
-> > +     list_for_each_entry(region, &dev_resv_regions, list) {
-> > +             ret =3D vhost_iotlb_add_range_ctx(resv_iotlb, region->sta=
-rt,
-> > +                             region->start + region->length - 1,
-> > +                             0, 0, NULL);
-> > +             if (ret) {
-> > +                     vhost_iotlb_reset(resv_iotlb);
-> > +                     break;
-> > +             }
-> > +
-> > +             if (region->type =3D=3D IOMMU_RESV_MSI)
-> > +                     with_hw_msi =3D true;
-> > +
-> > +             if (region->type =3D=3D IOMMU_RESV_SW_MSI) {
-> > +                     resv_msi_base =3D region->start;
-> > +                     with_sw_msi =3D true;
-> > +             }
-> > +     }
-> > +
-> > +     if (!ret && !with_hw_msi && with_sw_msi)
-> > +             ret =3D iommu_get_msi_cookie(domain, resv_msi_base);
-> > +
-> > +     iommu_put_resv_regions(dma_dev, &dev_resv_regions);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> >  static int vhost_vdpa_alloc_domain(struct vhost_vdpa *v)
-> >  {
-> >       struct vdpa_device *vdpa =3D v->vdpa;
-> > @@ -1335,11 +1381,16 @@ static int vhost_vdpa_alloc_domain(struct vhost=
-_vdpa *v)
-> >
-> >       ret =3D iommu_attach_device(v->domain, dma_dev);
-> >       if (ret)
-> > -             goto err_attach;
-> > +             goto err_alloc_domain;
-> >
-> > -     return 0;
-> > +     ret =3D vhost_vdpa_resv_iommu_region(v->domain, dma_dev, &v->resv=
-_iotlb);
-> > +     if (ret)
-> > +             goto err_attach_device;
-> >
-> > -err_attach:
-> > +     return 0;
-> > +err_attach_device:
-> > +     iommu_detach_device(v->domain, dma_dev);
-> > +err_alloc_domain:
-> >       iommu_domain_free(v->domain);
-> >       v->domain =3D NULL;
-> >       return ret;
-> > @@ -1595,6 +1646,8 @@ static int vhost_vdpa_probe(struct vdpa_device *v=
-dpa)
-> >               goto err;
-> >       }
-> >
-> > +     vhost_iotlb_init(&v->resv_iotlb, 0, 0);
-> > +
-> >       r =3D dev_set_name(&v->dev, "vhost-vdpa-%u", minor);
-> >       if (r)
-> >               goto err;
-> > --
-> > 2.27.0
-> >
->
+[1] https://lore.kernel.org/linux-arm-kernel/CAGb2v66XpjvDnTpi2=SPbeAPf844FLCai6YFwvVqvmF9z4Mj=A@mail.gmail.com/
+
+Chen-Yu Tsai (2):
+  pinctrl: mediatek: paris: Fix PIN_CONFIG_INPUT_SCHMITT_ENABLE readback
+  pinctrl: mediatek: paris: Rework support for
+    PIN_CONFIG_{INPUT,OUTPUT}_ENABLE
+
+ drivers/pinctrl/mediatek/pinctrl-paris.c | 40 ++++++++----------------
+ 1 file changed, 13 insertions(+), 27 deletions(-)
+
+-- 
+2.44.0.396.g6e790dbe36-goog
 
