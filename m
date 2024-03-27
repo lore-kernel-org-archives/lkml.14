@@ -1,78 +1,60 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8E41CAAF
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 08:06:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2FD2C68E
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 08:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711526800; cv=none; b=JPdT8CHOr8oQ3WCy0mAYuM62CGFzC4VCRcRUtptGMR3U8h/OPZr6yY0657RBYok06T41+InW/83fBjVsit/I/GyW1lmujEgn7IPY7nhUo4ErlBrDCZttOamSEocXewCymRNzeo5NF58KCGXC/XlyuUITT9TmSuCwo+bAKwbtGHY=
+	t=1711526918; cv=none; b=Sn0xJxN1srRfklp4iAcNFv+6AxZGQpj5wopCrSkq+qFpaijwXuXOoXe2xYJI0gfeGsfgiHvCy+tflTZ+l/zxSi7V5s684Egko3DnrAPoBxNMBzkUByuF0aXwYX5bXB7jcF/JiyeaeoTttEwIgHkPgqhBQAftU5tx29sYWaoBz/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711526800; c=relaxed/simple;
-	bh=BRYtL9VGgWS00XBNCQ/ZnOHDdP8AkBM62WVQ5Nj+mmQ=;
+	s=arc-20240116; t=1711526918; c=relaxed/simple;
+	bh=Oc9Iv5diB5DzfcVhZ+RCWd76hDCbOkvCx734DwkPblE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FyMJRSQj67TgYHjskJxiJLgzJFb/qTg3RV1EC/NlN1NFa7++FeiFf0COqLawc8XWUsxXIS6+hAWigfKFHuxd1XooRso8arnJYbDi+IvmJ4XsqJoGFJ6GVwOpk4RxV6ttdrE7RC7zDSA6nHffROI5qHR2Z8/gzmvtrsb0sXiYBE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=SWMgrUe0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=tb6KkLnb; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=SWMgrUe0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=tb6KkLnb; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 In-Reply-To:Content-Type; b=qck9e5lumSmr/1j5UpZdTpn6iF5vYX2jmziEB18rlM9GM/ogAu6VD1qXCvDUGhG88gz1elU7S5+jzRj6cYpdVhaxMrnzdgKk36okrtXlU1fAEymcQ9jOQyWpKKiI+YVsvVVdWV7hgEkxildcvXhfJUNwXaDWHdgKhASTucIlDR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ONmXkiid; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="SWMgrUe0";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="tb6KkLnb";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="SWMgrUe0";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="tb6KkLnb"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 2B0BF60071;
-	Wed, 27 Mar 2024 08:06:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1711526794; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vUYGU3NEIN9vfbTpc5QK6zxczRpH5cZaM9EFD/D7o+I=;
-	b=SWMgrUe0rVobFstorj0qemCViLTqQvMZ3NT4aeBCF6X6ptvJxKKAYUk36j2xeppHTDjCKP
-	AIkths8wXl14AMnzYkey6vU+UZlIJrZiZTzOFDFXu5Jg3eQ38bSRtsUGCibPopNRCDZZVH
-	Ea+NkZVOlvkz6vm31Q0ToZSb409LfTo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1711526794;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vUYGU3NEIN9vfbTpc5QK6zxczRpH5cZaM9EFD/D7o+I=;
-	b=tb6KkLnbGFwiwIcR7r2R+UBjpcD19aWhPP1tGdn8r7vTTwBqr8tnveYJav4svZijzAPUAK
-	C42BX3fDs0DJKCAg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1711526794; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vUYGU3NEIN9vfbTpc5QK6zxczRpH5cZaM9EFD/D7o+I=;
-	b=SWMgrUe0rVobFstorj0qemCViLTqQvMZ3NT4aeBCF6X6ptvJxKKAYUk36j2xeppHTDjCKP
-	AIkths8wXl14AMnzYkey6vU+UZlIJrZiZTzOFDFXu5Jg3eQ38bSRtsUGCibPopNRCDZZVH
-	Ea+NkZVOlvkz6vm31Q0ToZSb409LfTo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1711526794;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vUYGU3NEIN9vfbTpc5QK6zxczRpH5cZaM9EFD/D7o+I=;
-	b=tb6KkLnbGFwiwIcR7r2R+UBjpcD19aWhPP1tGdn8r7vTTwBqr8tnveYJav4svZijzAPUAK
-	C42BX3fDs0DJKCAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 16F561369F;
-	Wed, 27 Mar 2024 08:06:34 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id nGAbBYrTA2aJBAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 27 Mar 2024 08:06:34 +0000
-Message-ID: <c97ba53f-b11e-42e3-a528-54a83884eec1@suse.cz>
-Date: Wed, 27 Mar 2024 09:06:33 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ONmXkiid"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-56bdf81706aso6747256a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 01:08:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711526915; x=1712131715; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=obxAsZqjQz5NFCsemkq6GbW/laq9L0gPO3GCkwtXJlM=;
+        b=ONmXkiid9vq1dp6D/7yTze0vJP21KKiirpquwzzbz+BTLjgG+R4e0mHtdVqjTA8upk
+         Ypf72DKib697dBFk80r5gr+c3FnIyprh3VQKpvhfJeHs2bROdE/5HbpdLjg2TyQXihib
+         nfMn/fD3jRudBR5SUAPPuixxDSevHyaRB0xmaePpLKkUHcvSxwgPjXDrfG+3ioIk4TBf
+         934ed2gzzZPMuuRYO9QreVMDNDzu4Osja7oJdB2Nhde3FF7a2snlbUksjco+10tqkajN
+         p2gO7rPOiIilzQYpuQAmCHuYxWbhFMmdQ4ACbEyC5Ek+2ryxrYx1i/Et6Kego2/X4c9j
+         hZfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711526915; x=1712131715;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=obxAsZqjQz5NFCsemkq6GbW/laq9L0gPO3GCkwtXJlM=;
+        b=wj+pgM6AuJv/k7QL6pLggpSYVLmkQ8RYGuK/PG4zIsSNsawkbjdq4jFWMnyLgUaIGN
+         baocAN7WvH2AFpZ0VUUJcT5wOZxqC7SOdAJnVNaXA1X7P7KYTDJ9wy9syh/uKFNtmHPr
+         IxheVY98kR1MuebggPfvT+74BDTltXGF9bBtqRs44MdMdncNQJBM98d4HDJqJp2b2WoB
+         xt9F53PufyjasbKZd8rbZ1FfA3sl1inRn2TXI5YGll8mz1exMB3Wb/TKi1cwQzYle8ia
+         ixKhiLXFQjInnedos8Gm3Wg75zuY0+yR722oyi9cmIt/3HFrF4zu2ZHePWf2cqoemb7q
+         FUBA==
+X-Forwarded-Encrypted: i=1; AJvYcCWltbiIQPEmKNS/XTUgssX3K6KAW7E5N6DnZGtYyr7mI7wLN7lBAJtGk6SkxqP38BsNyqL+BCRqlxoaZnDPdEfGyI8/9SiYN5YD3T26
+X-Gm-Message-State: AOJu0YzhXOPsq5gouzI75qPBmTT4nkmaj+ObAkKGqPV2xP+66MrOYiXU
+	fBOTETLaiktc8LzrGJ65WGIhr58z0gwlMoKPVYNXwZD/bocnacgx40S2paS8aW0=
+X-Google-Smtp-Source: AGHT+IH9Rhol6bx4mSpOLsYkvw7rBvwEt9QkpNW/BVY05fFsQyPnFGF3f+h1lkvsoqSdr+5AAem4OQ==
+X-Received: by 2002:a50:8706:0:b0:56c:19d2:85b2 with SMTP id i6-20020a508706000000b0056c19d285b2mr2639075edb.35.1711526915427;
+        Wed, 27 Mar 2024 01:08:35 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.206.205])
+        by smtp.gmail.com with ESMTPSA id r14-20020aa7da0e000000b0056bf31fa2a3sm4996730eds.80.2024.03.27.01.08.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Mar 2024 01:08:34 -0700 (PDT)
+Message-ID: <a3accd7e-b89f-4d26-b89b-31e5c282014f@linaro.org>
+Date: Wed, 27 Mar 2024 09:08:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,94 +62,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/10] mm: page_isolation: prepare for hygienic freelists
-To: Johannes Weiner <hannes@cmpxchg.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>, Zi Yan <ziy@nvidia.com>,
- "Huang, Ying" <ying.huang@intel.com>, David Hildenbrand <david@redhat.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20240320180429.678181-1-hannes@cmpxchg.org>
- <20240320180429.678181-10-hannes@cmpxchg.org>
+Subject: Re: [PATCH 4/4] dt-bindings: arm: keystone: Remove
+ ti,system-reboot-controller property
+To: Andrew Davis <afd@ti.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>,
+ Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240326223730.54639-1-afd@ti.com>
+ <20240326223730.54639-5-afd@ti.com>
 Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20240320180429.678181-10-hannes@cmpxchg.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240326223730.54639-5-afd@ti.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=SWMgrUe0;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=tb6KkLnb
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-1.50 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 XM_UA_NO_VERSION(0.01)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 BAYES_HAM(-0.00)[22.77%];
-	 MIME_GOOD(-0.10)[text/plain];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[8];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[]
-X-Spam-Score: -1.50
-X-Rspamd-Queue-Id: 2B0BF60071
-X-Spam-Flag: NO
 
-On 3/20/24 7:02 PM, Johannes Weiner wrote:
-> Page isolation currently sets MIGRATE_ISOLATE on a block, then drops
-> zone->lock and scans the block for straddling buddies to split
-> up. Because this happens non-atomically wrt the page allocator, it's
-> possible for allocations to get a buddy whose first block is a regular
-> pcp migratetype but whose tail is isolated. This means that in certain
-> cases memory can still be allocated after isolation. It will also
-> trigger the freelist type hygiene warnings in subsequent patches.
+On 26/03/2024 23:37, Andrew Davis wrote:
+> This property was only ever used in one device. It is no longer needed as
+> what it signaled is now default. Remove this unneeded/unused property.
 > 
-> start_isolate_page_range()
->   isolate_single_pageblock()
->     set_migratetype_isolate(tail)
->       lock zone->lock
->       move_freepages_block(tail) // nop
->       set_pageblock_migratetype(tail)
->       unlock zone->lock
->                                                      __rmqueue_smallest()
->                                                        del_page_from_freelist(head)
->                                                        expand(head, head_mt)
->                                                          WARN(head_mt != tail_mt)
->     start_pfn = ALIGN_DOWN(MAX_ORDER_NR_PAGES)
->     for (pfn = start_pfn, pfn < end_pfn)
->       if (PageBuddy())
->         split_free_page(head)
-> 
-> Introduce a variant of move_freepages_block() provided by the
-> allocator specifically for page isolation; it moves free pages,
-> converts the block, and handles the splitting of straddling buddies
-> while holding zone->lock.
-> 
-> The allocator knows that pageblocks and buddies are always naturally
-> aligned, which means that buddies can only straddle blocks if they're
-> actually >pageblock_order. This means the search-and-split part can be
-> simplified compared to what page isolation used to do.
-> 
-> Also tighten up the page isolation code around the expectations of
-> which pages can be large, and how they are freed.
-> 
-> Based on extensive discussions with and invaluable input from Zi Yan.
-> 
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Andrew Davis <afd@ti.com>
+> ---
+>  Documentation/devicetree/bindings/arm/keystone/ti,sci.yaml | 5 -----
+>  1 file changed, 5 deletions(-)
 
-Nice cleanup of hairy code as well!
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Best regards,
+Krzysztof
 
