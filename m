@@ -1,153 +1,401 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C262D149DE0;
-	Wed, 27 Mar 2024 15:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523561304A7;
+	Wed, 27 Mar 2024 15:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711553133; cv=none; b=d1l1dHlqs//CzlL1kIxaXeT5qO+rDY7hgsQaPJWno7/NT6FxU2RTrpuqwzoalUkOFtKsICvBBciIJu3HL8033lDAJ23bdwsiIPycDALVyNAVkw2BkOOPpz7UT7Qiu1QQXE4BOleIbhF4zNhZ1ecFaTWARNHv1ILJWnFBsX9J+3Y=
+	t=1711553134; cv=none; b=WAuXQ0Um0uhz56UOaDa1KJxwyz9WXRPXkkPkg4D/H/c5shd9YVJ4ntWkVKNKhmv3bt5LXWwMTLjU5hvGbdJkD1laxidveMMPK8/IoJmWgP7My0afkriAulkGDSHY7Yb9bsDK/rt63cu318AXZTraOu/au17Xs4HfVRE+f018AOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711553133; c=relaxed/simple;
-	bh=DLhR7AzkO0xf8+xYLiFt7UJXuf/uTo3qQMUJ4AihCJI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BF49v8B5G0AyU9Kklpm55ALVf+KmHb1zMaACSH4+cuKhy5bPH+CRQk0oNQNpID0EqCCxReZjtvvz9UQwySW/S1yqijm1M30ivj/J45jvLI2bTcGcpurAjUCP5gIffSyORmYXT6yZzEWLv/NfIPYcWynyaiWpotG7IOtbF0Vsl3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c0UtVpHi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711553134; c=relaxed/simple;
+	bh=SM/Y4i2PvzK59BicbBlf0+j7v97Q3/Neb7MphCaY43s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=d+ocB5N6c2lRWaN3Ik4KiCnYXSRcvJY5otNE4o2FCZf9a/LEL5cOs2TpxM5BoXsqIUMgHbNesCTN98or+DuiPjuyPkSazJ/m/A+tXKI/j9raSjoffTX+g+D0CNV26iAawa4u9X9p5K4+Sydc32lEqLHWoAlJ6dZWudEYcRBmaOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ae729x8m; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c0UtVpHi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B652C433B2;
-	Wed, 27 Mar 2024 15:25:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711553133;
-	bh=DLhR7AzkO0xf8+xYLiFt7UJXuf/uTo3qQMUJ4AihCJI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=c0UtVpHiXxvyCG626zVmhvcD4i+DEkn1Q1tGU04kzVzfizD8QtqNSfEwsNap+m4WS
-	 CtNJKmGYp0wu+cXzP4jDO4594oQ3oeCTPymspkML0Um5vg5kv6kJ4krIijtROSiJzn
-	 ap4GENDyB5KmbFgWXpjg1NdWrounhPxuWcZOnvyJqGRL2HAk9nq84HmfMeS0M4JJZf
-	 RMnVxMRfoQGVSB1fRr1wvZV0FeXbBZt9X57sdCBwnYb/z+FKNt+jVrf7H64tToLTZm
-	 wXdyPRhxgEqbt7OaZY6Kvw1bwBwBXgDEDKopFSAiz4tm0X2xOUsRewT/7K6xhga9j4
-	 1G6ucz3FPMhlQ==
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6e67ad4c2e3so494569a34.1;
-        Wed, 27 Mar 2024 08:25:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXKNLHpx6t6dhxtCbLSJJK8VyscTgloL+YVZ58CfmXNoKi7NyTtkXu2sNbv3f2llEAXk8NooMoGqtPfbUKEHF2uBt2Od+Te/M0uc+59P+NG38WHYnBZIcvTFqrmO2T/+6kp+xwGpxo=
-X-Gm-Message-State: AOJu0YwNYDivdQpFOdgc9wH6cmnhknRgaxAj0rrybhHzh3aDy2rSAR75
-	blsb9QMeL5bnoKdzkoXEcdaWJHpoog+AChGNGo1yTBhLwIN0LYN7yWMY4mf4lZSethoGLgKx/eV
-	ZusLTJDdDA9dBztXPeGmOU7okxEg=
-X-Google-Smtp-Source: AGHT+IHyocjUoMb2836C7kecUnLxqysy7ocHQMv/hFnJPjZWGdKMobN2j6lJ80C5dtAFC/mUPOpuzP9Ai7SGpBhOzPE=
-X-Received: by 2002:a05:6870:14d6:b0:229:e3d8:128c with SMTP id
- l22-20020a05687014d600b00229e3d8128cmr13824960oab.1.1711553132646; Wed, 27
- Mar 2024 08:25:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ae729x8m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711553132; x=1743089132;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=SM/Y4i2PvzK59BicbBlf0+j7v97Q3/Neb7MphCaY43s=;
+  b=ae729x8m7kcDGmGXTqYryDUs/WgfmxPo/emTUGP7FC2Zg+b7U4LRXPuz
+   ZUkDocYgDK/SPnmeXTDuKlUhL9EU238aiTQJFV+rEhzjcmRCx/U+drdbE
+   84dI5Fbe78Cb5V7OwCeKjESd4BTdJY98uuS+dqTJQ7HuQNvlVnBR9WLWm
+   zcG6W989NlhY+8hIrHx+uccOde5Cc2+woCpqg7YJowCuQ2WMS7c3rUyh7
+   9zqIQt6rNUaaWFc4G4lVb7Pc1YmpI7lD7HTbvNY1ucke7s7GYn9I3r3BV
+   nydtceLx7Z9BKj/dTfPlDznj6seXuMDwPPrS7fADtPYE5NObZR918swjS
+   Q==;
+X-CSE-ConnectionGUID: 6MimCK4BQnmJLMkQa4FpnA==
+X-CSE-MsgGUID: 8ddXyaymQrKYOSWfpk9EbA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="6518277"
+X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
+   d="scan'208";a="6518277"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 08:25:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
+   d="scan'208";a="16414395"
+Received: from newjersey.igk.intel.com ([10.102.20.203])
+  by fmviesa008.fm.intel.com with ESMTP; 27 Mar 2024 08:25:28 -0700
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
+	intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wojciech Drewek <wojciech.drewek@intel.com>,
+	Marcin Szycik <marcin.szycik@linux.intel.com>,
+	Simon Horman <horms@kernel.org>
+Subject: [PATCH net-next v6 18/21] pfcp: add PFCP module
+Date: Wed, 27 Mar 2024 16:23:55 +0100
+Message-ID: <20240327152358.2368467-19-aleksander.lobakin@intel.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240327152358.2368467-1-aleksander.lobakin@intel.com>
+References: <20240327152358.2368467-1-aleksander.lobakin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240321-gpa-no-cooling-devs-v1-1-5c9e0ef2062e@trvn.ru>
-In-Reply-To: <20240321-gpa-no-cooling-devs-v1-1-5c9e0ef2062e@trvn.ru>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 27 Mar 2024 16:25:21 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0jAq=iMKzYBz-Ni6Zqpbgxp3_0UYpPiAoSLcfGNJ8ruhQ@mail.gmail.com>
-Message-ID: <CAJZ5v0jAq=iMKzYBz-Ni6Zqpbgxp3_0UYpPiAoSLcfGNJ8ruhQ@mail.gmail.com>
-Subject: Re: [PATCH] thermal: gov_power_allocator: Allow binding without
- cooling devices
-To: nikita@trvn.ru, Lukasz Luba <lukasz.luba@arm.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 21, 2024 at 3:44=E2=80=AFPM Nikita Travkin <nikita@trvn.ru> wro=
-te:
->
-> Commit e83747c2f8e3 ("thermal: gov_power_allocator: Set up trip points ea=
-rlier")
-> added a check that would fail binding the governer if there is no
-> cooling devices bound to the thermal zone. Unfortunately this causes
-> issues in cases when the TZ is bound to the governer before the cooling
-> devices are attached to it. (I.e. when the tz is registered using
-> thermal_zone_device_register_with_trips().)
->
-> Additionally, the documentation across gov_power_allocator suggests it's
-> intended to allow it to be bound to thermal zones without cooling
-> devices (and thus without passive/active trip points), however the same
-> change added a check for the trip point to be present, causing those TZ
-> to fail probing.
->
-> Those changes cause all thermal zones to fail on some devices (such as
-> sc7180-acer-aspire1) and prevent the kernel from controlling the cpu/gpu
-> frequency based on the temperature, as well as losing all the other
-> "informational" thermal zones if power_allocator is set as default.
->
-> This commit partially reverts the referenced one by dropping the trip
-> point check and by allowing the TZ to probe even if no actor buffer was
-> allocated to allow those TZ to probe again.
->
-> Fixes: e83747c2f8e3 ("thermal: gov_power_allocator: Set up trip points ea=
-rlier")
-> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
-> ---
-> I've noticed that all thermal zones fail probing with -EINVAL on my
-> sc7180 based Acer Aspire 1 since 6.8. This commit allows me to bring
-> them back.
+From: Wojciech Drewek <wojciech.drewek@intel.com>
 
-=C5=81ukasz, any comments?
+Packet Forwarding Control Protocol (PFCP) is a 3GPP Protocol
+used between the control plane and the user plane function.
+It is specified in TS 29.244[1].
 
-> ---
->  drivers/thermal/gov_power_allocator.c | 14 +++++---------
->  1 file changed, 5 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/thermal/gov_power_allocator.c b/drivers/thermal/gov_=
-power_allocator.c
-> index 1b17dc4c219c..4f2d7f3b7508 100644
-> --- a/drivers/thermal/gov_power_allocator.c
-> +++ b/drivers/thermal/gov_power_allocator.c
-> @@ -679,11 +679,6 @@ static int power_allocator_bind(struct thermal_zone_=
-device *tz)
->                 return -ENOMEM;
->
->         get_governor_trips(tz, params);
-> -       if (!params->trip_max) {
-> -               dev_warn(&tz->device, "power_allocator: missing trip_max\=
-n");
-> -               kfree(params);
-> -               return -EINVAL;
-> -       }
->
->         ret =3D check_power_actors(tz, params);
->         if (ret < 0) {
-> @@ -693,7 +688,7 @@ static int power_allocator_bind(struct thermal_zone_d=
-evice *tz)
->         }
->
->         ret =3D allocate_actors_buffer(params, ret);
-> -       if (ret) {
-> +       if (ret && ret !=3D -EINVAL) {
->                 dev_warn(&tz->device, "power_allocator: allocation failed=
-\n");
->                 kfree(params);
->                 return ret;
-> @@ -714,9 +709,10 @@ static int power_allocator_bind(struct thermal_zone_=
-device *tz)
->         else
->                 params->sustainable_power =3D tz->tzp->sustainable_power;
->
-> -       estimate_pid_constants(tz, tz->tzp->sustainable_power,
-> -                              params->trip_switch_on,
-> -                              params->trip_max->temperature);
-> +       if (params->trip_max)
-> +               estimate_pid_constants(tz, tz->tzp->sustainable_power,
-> +                                      params->trip_switch_on,
-> +                                      params->trip_max->temperature);
->
->         reset_pid_controller(params);
->
->
-> ---
-> base-commit: e7528c088874326d3060a46f572252be43755a86
-> change-id: 20240321-gpa-no-cooling-devs-c79ee3288325
->
-> Best regards,
-> --
-> Nikita Travkin <nikita@trvn.ru>
->
+Note that this module is not designed to support this Protocol
+in the kernel space. There is no support for parsing any PFCP messages.
+There is no API that could be used by any userspace daemon.
+Basically it does not support PFCP. This protocol is sophisticated
+and there is no need for implementing it in the kernel. The purpose
+of this module is to allow users to setup software and hardware offload
+of PFCP packets using tc tool.
+
+When user requests to create a PFCP device, a new socket is created.
+The socket is set up with port number 8805 which is specific for
+PFCP [29.244 4.2.2]. This allow to receive PFCP request messages,
+response messages use other ports.
+
+Note that only one PFCP netdev can be created.
+
+Only IPv4 is supported at this time.
+
+[1] https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=3111
+
+Signed-off-by: Wojciech Drewek <wojciech.drewek@intel.com>
+Signed-off-by: Marcin Szycik <marcin.szycik@linux.intel.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+---
+ drivers/net/Kconfig  |  13 +++
+ drivers/net/Makefile |   1 +
+ include/net/pfcp.h   |  17 ++++
+ drivers/net/pfcp.c   | 223 +++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 254 insertions(+)
+ create mode 100644 include/net/pfcp.h
+ create mode 100644 drivers/net/pfcp.c
+
+diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
+index 8ca0bc223b30..172d84e39129 100644
+--- a/drivers/net/Kconfig
++++ b/drivers/net/Kconfig
+@@ -290,6 +290,19 @@ config GTP
+ 	  To compile this drivers as a module, choose M here: the module
+ 	  will be called gtp.
+ 
++config PFCP
++	tristate "Packet Forwarding Control Protocol (PFCP)"
++	depends on INET
++	select NET_UDP_TUNNEL
++	help
++	  This allows one to create PFCP virtual interfaces that allows to
++	  set up software and hardware offload of PFCP packets.
++	  Note that this module does not support PFCP protocol in the kernel space.
++	  There is no support for parsing any PFCP messages.
++
++	  To compile this drivers as a module, choose M here: the module
++	  will be called pfcp.
++
+ config AMT
+ 	tristate "Automatic Multicast Tunneling (AMT)"
+ 	depends on INET && IP_MULTICAST
+diff --git a/drivers/net/Makefile b/drivers/net/Makefile
+index 7cab36f94782..9c053673d6b2 100644
+--- a/drivers/net/Makefile
++++ b/drivers/net/Makefile
+@@ -38,6 +38,7 @@ obj-$(CONFIG_GENEVE) += geneve.o
+ obj-$(CONFIG_BAREUDP) += bareudp.o
+ obj-$(CONFIG_GTP) += gtp.o
+ obj-$(CONFIG_NLMON) += nlmon.o
++obj-$(CONFIG_PFCP) += pfcp.o
+ obj-$(CONFIG_NET_VRF) += vrf.o
+ obj-$(CONFIG_VSOCKMON) += vsockmon.o
+ obj-$(CONFIG_MHI_NET) += mhi_net.o
+diff --git a/include/net/pfcp.h b/include/net/pfcp.h
+new file mode 100644
+index 000000000000..3f9ebf27a8ff
+--- /dev/null
++++ b/include/net/pfcp.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _PFCP_H_
++#define _PFCP_H_
++
++#include <linux/netdevice.h>
++#include <linux/string.h>
++#include <linux/types.h>
++
++#define PFCP_PORT 8805
++
++static inline bool netif_is_pfcp(const struct net_device *dev)
++{
++	return dev->rtnl_link_ops &&
++	       !strcmp(dev->rtnl_link_ops->kind, "pfcp");
++}
++
++#endif
+diff --git a/drivers/net/pfcp.c b/drivers/net/pfcp.c
+new file mode 100644
+index 000000000000..3f1ee0ae7111
+--- /dev/null
++++ b/drivers/net/pfcp.c
+@@ -0,0 +1,223 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * PFCP according to 3GPP TS 29.244
++ *
++ * Copyright (C) 2022, Intel Corporation.
++ */
++
++#include <linux/module.h>
++#include <linux/netdevice.h>
++#include <linux/rculist.h>
++#include <linux/skbuff.h>
++#include <linux/types.h>
++
++#include <net/udp.h>
++#include <net/udp_tunnel.h>
++#include <net/pfcp.h>
++
++struct pfcp_dev {
++	struct list_head	list;
++
++	struct socket		*sock;
++	struct net_device	*dev;
++	struct net		*net;
++};
++
++static unsigned int pfcp_net_id __read_mostly;
++
++struct pfcp_net {
++	struct list_head	pfcp_dev_list;
++};
++
++static void pfcp_del_sock(struct pfcp_dev *pfcp)
++{
++	udp_tunnel_sock_release(pfcp->sock);
++	pfcp->sock = NULL;
++}
++
++static void pfcp_dev_uninit(struct net_device *dev)
++{
++	struct pfcp_dev *pfcp = netdev_priv(dev);
++
++	pfcp_del_sock(pfcp);
++}
++
++static int pfcp_dev_init(struct net_device *dev)
++{
++	struct pfcp_dev *pfcp = netdev_priv(dev);
++
++	pfcp->dev = dev;
++
++	return 0;
++}
++
++static const struct net_device_ops pfcp_netdev_ops = {
++	.ndo_init		= pfcp_dev_init,
++	.ndo_uninit		= pfcp_dev_uninit,
++	.ndo_get_stats64	= dev_get_tstats64,
++};
++
++static const struct device_type pfcp_type = {
++	.name = "pfcp",
++};
++
++static void pfcp_link_setup(struct net_device *dev)
++{
++	dev->netdev_ops = &pfcp_netdev_ops;
++	dev->needs_free_netdev = true;
++	SET_NETDEV_DEVTYPE(dev, &pfcp_type);
++
++	dev->hard_header_len = 0;
++	dev->addr_len = 0;
++
++	dev->type = ARPHRD_NONE;
++	dev->flags = IFF_POINTOPOINT | IFF_NOARP | IFF_MULTICAST;
++	dev->priv_flags |= IFF_NO_QUEUE;
++
++	netif_keep_dst(dev);
++}
++
++static struct socket *pfcp_create_sock(struct pfcp_dev *pfcp)
++{
++	struct udp_tunnel_sock_cfg tuncfg = {};
++	struct udp_port_cfg udp_conf = {
++		.local_ip.s_addr	= htonl(INADDR_ANY),
++		.family			= AF_INET,
++	};
++	struct net *net = pfcp->net;
++	struct socket *sock;
++	int err;
++
++	udp_conf.local_udp_port = htons(PFCP_PORT);
++
++	err = udp_sock_create(net, &udp_conf, &sock);
++	if (err)
++		return ERR_PTR(err);
++
++	setup_udp_tunnel_sock(net, sock, &tuncfg);
++
++	return sock;
++}
++
++static int pfcp_add_sock(struct pfcp_dev *pfcp)
++{
++	pfcp->sock = pfcp_create_sock(pfcp);
++
++	return PTR_ERR_OR_ZERO(pfcp->sock);
++}
++
++static int pfcp_newlink(struct net *net, struct net_device *dev,
++			struct nlattr *tb[], struct nlattr *data[],
++			struct netlink_ext_ack *extack)
++{
++	struct pfcp_dev *pfcp = netdev_priv(dev);
++	struct pfcp_net *pn;
++	int err;
++
++	pfcp->net = net;
++
++	err = pfcp_add_sock(pfcp);
++	if (err) {
++		netdev_dbg(dev, "failed to add pfcp socket %d\n", err);
++		goto exit_err;
++	}
++
++	err = register_netdevice(dev);
++	if (err) {
++		netdev_dbg(dev, "failed to register pfcp netdev %d\n", err);
++		goto exit_del_pfcp_sock;
++	}
++
++	pn = net_generic(dev_net(dev), pfcp_net_id);
++	list_add_rcu(&pfcp->list, &pn->pfcp_dev_list);
++
++	netdev_dbg(dev, "registered new PFCP interface\n");
++
++	return 0;
++
++exit_del_pfcp_sock:
++	pfcp_del_sock(pfcp);
++exit_err:
++	pfcp->net = NULL;
++	return err;
++}
++
++static void pfcp_dellink(struct net_device *dev, struct list_head *head)
++{
++	struct pfcp_dev *pfcp = netdev_priv(dev);
++
++	list_del_rcu(&pfcp->list);
++	unregister_netdevice_queue(dev, head);
++}
++
++static struct rtnl_link_ops pfcp_link_ops __read_mostly = {
++	.kind		= "pfcp",
++	.priv_size	= sizeof(struct pfcp_dev),
++	.setup		= pfcp_link_setup,
++	.newlink	= pfcp_newlink,
++	.dellink	= pfcp_dellink,
++};
++
++static int __net_init pfcp_net_init(struct net *net)
++{
++	struct pfcp_net *pn = net_generic(net, pfcp_net_id);
++
++	INIT_LIST_HEAD(&pn->pfcp_dev_list);
++	return 0;
++}
++
++static void __net_exit pfcp_net_exit(struct net *net)
++{
++	struct pfcp_net *pn = net_generic(net, pfcp_net_id);
++	struct pfcp_dev *pfcp;
++	LIST_HEAD(list);
++
++	rtnl_lock();
++	list_for_each_entry(pfcp, &pn->pfcp_dev_list, list)
++		pfcp_dellink(pfcp->dev, &list);
++
++	unregister_netdevice_many(&list);
++	rtnl_unlock();
++}
++
++static struct pernet_operations pfcp_net_ops = {
++	.init	= pfcp_net_init,
++	.exit	= pfcp_net_exit,
++	.id	= &pfcp_net_id,
++	.size	= sizeof(struct pfcp_net),
++};
++
++static int __init pfcp_init(void)
++{
++	int err;
++
++	err = register_pernet_subsys(&pfcp_net_ops);
++	if (err)
++		goto exit_err;
++
++	err = rtnl_link_register(&pfcp_link_ops);
++	if (err)
++		goto exit_unregister_subsys;
++	return 0;
++
++exit_unregister_subsys:
++	unregister_pernet_subsys(&pfcp_net_ops);
++exit_err:
++	pr_err("loading PFCP module failed: err %d\n", err);
++	return err;
++}
++late_initcall(pfcp_init);
++
++static void __exit pfcp_exit(void)
++{
++	rtnl_link_unregister(&pfcp_link_ops);
++	unregister_pernet_subsys(&pfcp_net_ops);
++
++	pr_info("PFCP module unloaded\n");
++}
++module_exit(pfcp_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Wojciech Drewek <wojciech.drewek@intel.com>");
++MODULE_DESCRIPTION("Interface driver for PFCP encapsulated traffic");
++MODULE_ALIAS_RTNL_LINK("pfcp");
+-- 
+2.44.0
+
