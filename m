@@ -1,221 +1,266 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A8118C9F3;
-	Wed, 27 Mar 2024 12:26:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481B018E0CD;
+	Wed, 27 Mar 2024 12:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711542411; cv=none; b=mbkNpELU7LXEbj8c3+8UEhTHZDH+rTRp+vUky9edzv+2dCp5SEIZ4HO6+yJZM5AMi9Js5xegIVQOF+rJqyuus7g/x99kAr/tZ/KuBuPtGZ0ikaZ/o/8m48uQpllUdgPmvtSNP287c/82biU9umNXHN9J194xpx1UkB6TdW77RoA=
+	t=1711542414; cv=none; b=u+FqHeDb/uZzJA0ul/onISu08IMqPdDM1lu9VdjF7Tg7Y7hx3Uzo8Xa5Xj2jY9Fuy3unsfOMgSWnP2G2Sa1Ij4n3+EXst+GXm6J1bbESPfbXh/dEkYSJL7cJuq8Z02Wdzbw9wrooCpnQTsui6jImTzf5o7OO/Jv+UciblUppGlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711542411; c=relaxed/simple;
-	bh=DVg52Ew3U5j5zZL1/z9QRNQpCoKZZHYMPcKlLTQF/xM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ad+Ezw/gseBHJc1qjV264ODnawy3L/16Ib9o6muCPBY6sjrGnr/x+3zOqUx12pzqCbrkaxONXamGA0eKmcjqY0/CT/xtFazUaYnygacpPglisf7ZYdmFMhpW0i8Kn0zwepxqY8jQCZOC98gU5hlrn2oYZbb1FVcuiKhp6Oyt2SA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q+ljkFOK; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711542414; c=relaxed/simple;
+	bh=+PswCz0QfOBCmTWqnUH5gEesvyjDhZQd4YlAbO0n5b0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OYwfgjnzucG0kueQ+A9EXtGpkxFWOp08qw5X3kHJe3YwFy+WYb6169pu2psGrgQIrHyHO+bJxG+jc+1CpQlLwmM7BIx7wor9s39rdPIFu69OsQ4Q7/VpOxebZnV1oxcDrV8eAIcrMMJYdItUrN5cyq1o5ZCcJAEImT0pNrgvgHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sPF7FXjl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+ljkFOK"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-515a86daf09so5007269e87.3;
-        Wed, 27 Mar 2024 05:26:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711542407; x=1712147207; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jZi1ihD7jb4n7LHpF8XtHp/FApS7UcJ7/s08szlYQpw=;
-        b=Q+ljkFOKszbgy/HvVevVEL6cJ3W+hyrmsgNqh6WOTRqvYYPWHAeKK9C7s8V3mKd8jE
-         Ua991EB4HKZWzCcHohbJhwV7U4OuexW6rxJNUF3twZ7h3Fwzp1Bh4SszV0KMrVD16PVD
-         CmwfpSqyo+EtQBWl0OwoI9xonRGP/f8Tzx/fH3Gsyq5BgmVl9KyiZoKJtveDnbwhQ/C7
-         GZQ3gbUncg/XdvacE4wXkEurZcXMNN80qBdHY04g60JZHHWRMmVjYQthQxKdT/kzKpoe
-         sbUDMSewvPXQW0Vr/fO5eNCDWkr4kE2wB5OQecOu4hdkhV+wRj5ZsflKr8947tmisSnu
-         +yvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711542407; x=1712147207;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jZi1ihD7jb4n7LHpF8XtHp/FApS7UcJ7/s08szlYQpw=;
-        b=vMLJHfNFEqjAXT3k5fEUlReVlxtqYDt0eQiMoapq0mp4u6ZyRS/Dg4VxKbRurSGWHM
-         wUdwylAt1/ApX7kcvRH1/4rjkbAToFXk/sKdedy2EYleRnmsi+4a4hh0E6K199V5+kPy
-         9Ku38QcAaXUHCaXbnDoN9ncq3v5MttphHHBwGWNAEec7yvEeqSGsmkPm57KzPNITgcTF
-         2gR/hJcDs8DH0W3UGdtuqhoKH+q8MRuz3Ns27RBMKi6G8c2tY9bV+y8wvfK4ll4YIzdp
-         iqy9E4ls6XkqKs6gVHQZlxPHJki1FN65QiKh0+7HQMG2961c3hj2OLJTU7KZFoaSbeSN
-         QfUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVsgdM/LSKkuH+1tVJl4IZxhHzeWr1HBW8PYN1Z3PqSAlw4k1C7LHyy9hK9CoybXL+aoZAD690shdzoulWWnQTtKBb4BEHjm5fGJtBr
-X-Gm-Message-State: AOJu0Yyy0pvzOeeXhkcov6PY68ez/KvgBklNEzIIo7zI2373GkJuThzp
-	7EfXivW2Rkn3ahdYbHZZsvzSAaeTEeGPjXurtlrLq3UGwuJWGwyS
-X-Google-Smtp-Source: AGHT+IEn+IKBA1m4vUYaNhqcW+3lQ2x8L4xpEjXc73JlZyF1Bd6lYH7hKZMN5cYrtBDzol+pDBe1AA==
-X-Received: by 2002:ac2:5f9b:0:b0:515:9dcd:22ae with SMTP id r27-20020ac25f9b000000b005159dcd22aemr902917lfe.66.1711542406820;
-        Wed, 27 Mar 2024 05:26:46 -0700 (PDT)
-Received: from localhost.localdomain ([178.70.43.28])
-        by smtp.gmail.com with ESMTPSA id er15-20020a05651248cf00b00513d1ff9eb2sm1810444lfb.208.2024.03.27.05.26.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 05:26:46 -0700 (PDT)
-Date: Wed, 27 Mar 2024 15:26:44 +0300
-From: Ivan Bornyakov <brnkv.i1@gmail.com>
-To: Nas Chung <nas.chung@chipsnmedia.com>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jackson.lee" <jackson.lee@chipsnmedia.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: RE: [PATCH v2 4/5] media: chips-media: wave5: drop "sram-size"
- DT prop
-Message-ID: <5hd7duzqhgdxpmvom3opkhwxkq55dmitk4gwdl4dy46q662in6@xxkmvdj6plqb>
-References: <20240325064102.9278-1-brnkv.i1@gmail.com>
- <20240325064102.9278-5-brnkv.i1@gmail.com>
- <SL2P216MB1246537DD623B813453B28F9FB342@SL2P216MB1246.KORP216.PROD.OUTLOOK.COM>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sPF7FXjl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BDE1C43390;
+	Wed, 27 Mar 2024 12:26:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711542414;
+	bh=+PswCz0QfOBCmTWqnUH5gEesvyjDhZQd4YlAbO0n5b0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sPF7FXjlKCpOYlvkhCMqeXXzGJdZmUwO76N5QVrth9jmTvwAYeN4f5ro6Lp4FNqy8
+	 7I6BJCWj4jYACDt+MKh63VWm4KgqvTZFcXoo+bD71wHtcXCRG7Sdxe6d3WwhhvOCmT
+	 A7FYNFA5ZlteFZLQVswxJHfjSBKdFmo76duBK7raugIQ3xzpSs8Zg4yIT5VSGuj6Z+
+	 6lOtRDHXKp8bpfbTj7nzU9pOwMcL8MTp366C/DQyOwgAsjoIe+CcOom0/j+lvB/Hww
+	 hpe7DY0exEmd6h0u2hm/4R+pJV9WATNVlUh6bU3HE3zHqDeIZhoaDrwaNLn1s43K5E
+	 aiaTYUW64n+UQ==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org,
+	friedrich.vock@gmx.de
+Cc: Joshua Ashton <joshua@froggi.es>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: FAILED: Patch "drm/amdgpu: Reset IH OVERFLOW_CLEAR bit" failed to apply to 4.19-stable tree
+Date: Wed, 27 Mar 2024 08:26:51 -0400
+Message-ID: <20240327122652.2841417-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SL2P216MB1246537DD623B813453B28F9FB342@SL2P216MB1246.KORP216.PROD.OUTLOOK.COM>
+X-Patchwork-Hint: ignore
+X-stable: review
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 27, 2024 at 10:27:19AM +0000, Nas Chung wrote:
-> Hi, Ivan.
-> 
-> >-----Original Message-----
-> >From: Ivan Bornyakov <brnkv.i1@gmail.com>
-> >Sent: Monday, March 25, 2024 3:41 PM
-> >To: Nas Chung <nas.chung@chipsnmedia.com>; jackson.lee
-> ><jackson.lee@chipsnmedia.com>; Mauro Carvalho Chehab <mchehab@kernel.org>;
-> >Philipp Zabel <p.zabel@pengutronix.de>
-> >Cc: Ivan Bornyakov <brnkv.i1@gmail.com>; linux-media@vger.kernel.org;
-> >linux-kernel@vger.kernel.org
-> >Subject: [PATCH v2 4/5] media: chips-media: wave5: drop "sram-size" DT
-> >prop
-> >
-> >Use all available SRAM memory up to WAVE5_MAX_SRAM_SIZE. Remove
-> >excessive "sram-size" device-tree property as genalloc is already able
-> >to determine available memory.
-> >
-> >Signed-off-by: Ivan Bornyakov <brnkv.i1@gmail.com>
-> >---
-> > .../platform/chips-media/wave5/wave5-vdi.c    | 21 ++++++++++---------
-> > .../platform/chips-media/wave5/wave5-vpu.c    |  7 -------
-> > .../platform/chips-media/wave5/wave5-vpuapi.h |  1 -
-> > .../chips-media/wave5/wave5-vpuconfig.h       |  2 ++
-> > 4 files changed, 13 insertions(+), 18 deletions(-)
-> >
-> >diff --git a/drivers/media/platform/chips-media/wave5/wave5-vdi.c
-> >b/drivers/media/platform/chips-media/wave5/wave5-vdi.c
-> >index 3809f70bc0b4..a63fffed55e9 100644
-> >--- a/drivers/media/platform/chips-media/wave5/wave5-vdi.c
-> >+++ b/drivers/media/platform/chips-media/wave5/wave5-vdi.c
-> >@@ -174,16 +174,19 @@ int wave5_vdi_allocate_array(struct vpu_device
-> >*vpu_dev, struct vpu_buf *array,
-> > void wave5_vdi_allocate_sram(struct vpu_device *vpu_dev)
-> > {
-> > 	struct vpu_buf *vb = &vpu_dev->sram_buf;
-> >+	dma_addr_t daddr;
-> >+	void *vaddr;
-> >+	size_t size;
-> >
-> >-	if (!vpu_dev->sram_pool || !vpu_dev->sram_size)
-> >+	if (!vpu_dev->sram_pool || vb->vaddr)
-> > 		return;
-> >
-> >-	if (!vb->vaddr) {
-> >-		vb->size = vpu_dev->sram_size;
-> >-		vb->vaddr = gen_pool_dma_alloc(vpu_dev->sram_pool, vb->size,
-> >-					       &vb->daddr);
-> >-		if (!vb->vaddr)
-> >-			vb->size = 0;
-> >+	size = min_t(size_t, WAVE5_MAX_SRAM_SIZE, gen_pool_avail(vpu_dev-
-> >>sram_pool));
-> >+	vaddr = gen_pool_dma_alloc(vpu_dev->sram_pool, size, &daddr);
-> >+	if (vaddr) {
-> >+		vb->vaddr = vaddr;
-> >+		vb->daddr = daddr;
-> >+		vb->size = size;
-> > 	}
-> >
-> > 	dev_dbg(vpu_dev->dev, "%s: sram daddr: %pad, size: %zu, vaddr:
-> >0x%p\n",
-> >@@ -197,9 +200,7 @@ void wave5_vdi_free_sram(struct vpu_device *vpu_dev)
-> > 	if (!vb->size || !vb->vaddr)
-> > 		return;
-> >
-> >-	if (vb->vaddr)
-> >-		gen_pool_free(vpu_dev->sram_pool, (unsigned long)vb->vaddr,
-> >-			      vb->size);
-> >+	gen_pool_free(vpu_dev->sram_pool, (unsigned long)vb->vaddr, vb-
-> >>size);
-> >
-> > 	memset(vb, 0, sizeof(*vb));
-> > }
-> >diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpu.c
-> >b/drivers/media/platform/chips-media/wave5/wave5-vpu.c
-> >index 1e631da58e15..2a972cddf4a6 100644
-> >--- a/drivers/media/platform/chips-media/wave5/wave5-vpu.c
-> >+++ b/drivers/media/platform/chips-media/wave5/wave5-vpu.c
-> >@@ -177,13 +177,6 @@ static int wave5_vpu_probe(struct platform_device
-> >*pdev)
-> > 		goto err_reset_assert;
-> > 	}
-> >
-> >-	ret = of_property_read_u32(pdev->dev.of_node, "sram-size",
-> >-				   &dev->sram_size);
-> >-	if (ret) {
-> >-		dev_warn(&pdev->dev, "sram-size not found\n");
-> >-		dev->sram_size = 0;
-> >-	}
-> >-
-> > 	dev->sram_pool = of_gen_pool_get(pdev->dev.of_node, "sram", 0);
-> > 	if (!dev->sram_pool)
-> > 		dev_warn(&pdev->dev, "sram node not found\n");
-> >diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
-> >b/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
-> >index da530fd98964..975d96b22191 100644
-> >--- a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
-> >+++ b/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
-> >@@ -750,7 +750,6 @@ struct vpu_device {
-> > 	struct vpu_attr attr;
-> > 	struct vpu_buf common_mem;
-> > 	u32 last_performance_cycles;
-> >-	u32 sram_size;
-> > 	struct gen_pool *sram_pool;
-> > 	struct vpu_buf sram_buf;
-> > 	void __iomem *vdb_register;
-> >diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpuconfig.h
-> >b/drivers/media/platform/chips-media/wave5/wave5-vpuconfig.h
-> >index d9751eedb0f9..9d99afb78c89 100644
-> >--- a/drivers/media/platform/chips-media/wave5/wave5-vpuconfig.h
-> >+++ b/drivers/media/platform/chips-media/wave5/wave5-vpuconfig.h
-> >@@ -28,6 +28,8 @@
-> > #define WAVE521ENC_WORKBUF_SIZE         (128 * 1024)      //HEVC 128K, AVC
-> >40K
-> > #define WAVE521DEC_WORKBUF_SIZE         (1784 * 1024)
-> >
-> >+#define WAVE5_MAX_SRAM_SIZE		(64 * 1024)
-> 
-> WAVE521 can support 8K stream decoding/encoding.
-> So, I suggest the MAX_SRAME_SIZE to 128 * 1024 (128KB).
-> 
-> And, Current driver always enable sec_axi_info option if sram buffer is allocated.
-> But, we have to enable/disable the sec_axi_info option after checking the allocated sram size is enough to decode/encode current bitstream resolution.
+The patch below does not apply to the 4.19-stable tree.
+If someone wants it applied there, or to any other stable or longterm
+tree, then please email the backport, including the original git commit
+id to <stable@vger.kernel.org>.
 
-Do we really? As an experiment I tried to provide to Wave515 1KB of SRAM
-memory and decoded 4k sample file was fine...
+Thanks,
+Sasha
 
-> Wave5 can enable/disable the sec_axi_info option for each instance.
-> 
-> How about handle sram-size through match_data ?
-> I can find some drivers which use match_data to configure the sram size.
-> 
-> We can use current "ti,k3-j721s2-wave521c" device as a 4K supported device.
-> - .sram_size = (64 * 1024);
-> Driver just allocate the sram-size for max supported resolution of each device, and we don't need to check the sram-size is enough or not.
-> 
-> Thanks.
-> Nas.
-> 
-> >+
-> > #define MAX_NUM_INSTANCE                32
-> >
-> > #define W5_MIN_ENC_PIC_WIDTH            256
-> >--
-> >2.44.0
-> 
+------------------ original commit in Linus's tree ------------------
+
+From 9217b91c64587459362f211b0310e2bdaeb67719 Mon Sep 17 00:00:00 2001
+From: Friedrich Vock <friedrich.vock@gmx.de>
+Date: Tue, 23 Jan 2024 12:52:03 +0100
+Subject: [PATCH] drm/amdgpu: Reset IH OVERFLOW_CLEAR bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Allows us to detect subsequent IH ring buffer overflows as well.
+
+Cc: Joshua Ashton <joshua@froggi.es>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: Christian König <christian.koenig@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Friedrich Vock <friedrich.vock@gmx.de>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+---
+ drivers/gpu/drm/amd/amdgpu/cik_ih.c     | 6 ++++++
+ drivers/gpu/drm/amd/amdgpu/cz_ih.c      | 5 +++++
+ drivers/gpu/drm/amd/amdgpu/iceland_ih.c | 5 +++++
+ drivers/gpu/drm/amd/amdgpu/ih_v6_0.c    | 6 ++++++
+ drivers/gpu/drm/amd/amdgpu/ih_v6_1.c    | 7 +++++++
+ drivers/gpu/drm/amd/amdgpu/navi10_ih.c  | 6 ++++++
+ drivers/gpu/drm/amd/amdgpu/si_ih.c      | 6 ++++++
+ drivers/gpu/drm/amd/amdgpu/tonga_ih.c   | 6 ++++++
+ drivers/gpu/drm/amd/amdgpu/vega10_ih.c  | 6 ++++++
+ drivers/gpu/drm/amd/amdgpu/vega20_ih.c  | 6 ++++++
+ 10 files changed, 59 insertions(+)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/cik_ih.c b/drivers/gpu/drm/amd/amdgpu/cik_ih.c
+index 6f7c031dd197a..f24e34dc33d1d 100644
+--- a/drivers/gpu/drm/amd/amdgpu/cik_ih.c
++++ b/drivers/gpu/drm/amd/amdgpu/cik_ih.c
+@@ -204,6 +204,12 @@ static u32 cik_ih_get_wptr(struct amdgpu_device *adev,
+ 		tmp = RREG32(mmIH_RB_CNTL);
+ 		tmp |= IH_RB_CNTL__WPTR_OVERFLOW_CLEAR_MASK;
+ 		WREG32(mmIH_RB_CNTL, tmp);
++
++		/* Unset the CLEAR_OVERFLOW bit immediately so new overflows
++		 * can be detected.
++		 */
++		tmp &= ~IH_RB_CNTL__WPTR_OVERFLOW_CLEAR_MASK;
++		WREG32(mmIH_RB_CNTL, tmp);
+ 	}
+ 	return (wptr & ih->ptr_mask);
+ }
+diff --git a/drivers/gpu/drm/amd/amdgpu/cz_ih.c b/drivers/gpu/drm/amd/amdgpu/cz_ih.c
+index b8c47e0cf37ad..c19681492efa7 100644
+--- a/drivers/gpu/drm/amd/amdgpu/cz_ih.c
++++ b/drivers/gpu/drm/amd/amdgpu/cz_ih.c
+@@ -216,6 +216,11 @@ static u32 cz_ih_get_wptr(struct amdgpu_device *adev,
+ 	tmp = REG_SET_FIELD(tmp, IH_RB_CNTL, WPTR_OVERFLOW_CLEAR, 1);
+ 	WREG32(mmIH_RB_CNTL, tmp);
+ 
++	/* Unset the CLEAR_OVERFLOW bit immediately so new overflows
++	 * can be detected.
++	 */
++	tmp = REG_SET_FIELD(tmp, IH_RB_CNTL, WPTR_OVERFLOW_CLEAR, 0);
++	WREG32(mmIH_RB_CNTL, tmp);
+ 
+ out:
+ 	return (wptr & ih->ptr_mask);
+diff --git a/drivers/gpu/drm/amd/amdgpu/iceland_ih.c b/drivers/gpu/drm/amd/amdgpu/iceland_ih.c
+index aecad530b10a6..2c02ae69883d2 100644
+--- a/drivers/gpu/drm/amd/amdgpu/iceland_ih.c
++++ b/drivers/gpu/drm/amd/amdgpu/iceland_ih.c
+@@ -215,6 +215,11 @@ static u32 iceland_ih_get_wptr(struct amdgpu_device *adev,
+ 	tmp = REG_SET_FIELD(tmp, IH_RB_CNTL, WPTR_OVERFLOW_CLEAR, 1);
+ 	WREG32(mmIH_RB_CNTL, tmp);
+ 
++	/* Unset the CLEAR_OVERFLOW bit immediately so new overflows
++	 * can be detected.
++	 */
++	tmp = REG_SET_FIELD(tmp, IH_RB_CNTL, WPTR_OVERFLOW_CLEAR, 0);
++	WREG32(mmIH_RB_CNTL, tmp);
+ 
+ out:
+ 	return (wptr & ih->ptr_mask);
+diff --git a/drivers/gpu/drm/amd/amdgpu/ih_v6_0.c b/drivers/gpu/drm/amd/amdgpu/ih_v6_0.c
+index d9ed7332d805d..ad4ad39f128f7 100644
+--- a/drivers/gpu/drm/amd/amdgpu/ih_v6_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/ih_v6_0.c
+@@ -418,6 +418,12 @@ static u32 ih_v6_0_get_wptr(struct amdgpu_device *adev,
+ 	tmp = RREG32_NO_KIQ(ih_regs->ih_rb_cntl);
+ 	tmp = REG_SET_FIELD(tmp, IH_RB_CNTL, WPTR_OVERFLOW_CLEAR, 1);
+ 	WREG32_NO_KIQ(ih_regs->ih_rb_cntl, tmp);
++
++	/* Unset the CLEAR_OVERFLOW bit immediately so new overflows
++	 * can be detected.
++	 */
++	tmp = REG_SET_FIELD(tmp, IH_RB_CNTL, WPTR_OVERFLOW_CLEAR, 0);
++	WREG32_NO_KIQ(ih_regs->ih_rb_cntl, tmp);
+ out:
+ 	return (wptr & ih->ptr_mask);
+ }
+diff --git a/drivers/gpu/drm/amd/amdgpu/ih_v6_1.c b/drivers/gpu/drm/amd/amdgpu/ih_v6_1.c
+index 8fb05eae340ad..b8da0fc29378c 100644
+--- a/drivers/gpu/drm/amd/amdgpu/ih_v6_1.c
++++ b/drivers/gpu/drm/amd/amdgpu/ih_v6_1.c
+@@ -418,6 +418,13 @@ static u32 ih_v6_1_get_wptr(struct amdgpu_device *adev,
+ 	tmp = RREG32_NO_KIQ(ih_regs->ih_rb_cntl);
+ 	tmp = REG_SET_FIELD(tmp, IH_RB_CNTL, WPTR_OVERFLOW_CLEAR, 1);
+ 	WREG32_NO_KIQ(ih_regs->ih_rb_cntl, tmp);
++
++	/* Unset the CLEAR_OVERFLOW bit immediately so new overflows
++	 * can be detected.
++	 */
++	tmp = REG_SET_FIELD(tmp, IH_RB_CNTL, WPTR_OVERFLOW_CLEAR, 0);
++	WREG32_NO_KIQ(ih_regs->ih_rb_cntl, tmp);
++
+ out:
+ 	return (wptr & ih->ptr_mask);
+ }
+diff --git a/drivers/gpu/drm/amd/amdgpu/navi10_ih.c b/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
+index 57d04ed20357b..4178f4e5dad73 100644
+--- a/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
++++ b/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
+@@ -442,6 +442,12 @@ static u32 navi10_ih_get_wptr(struct amdgpu_device *adev,
+ 	tmp = RREG32_NO_KIQ(ih_regs->ih_rb_cntl);
+ 	tmp = REG_SET_FIELD(tmp, IH_RB_CNTL, WPTR_OVERFLOW_CLEAR, 1);
+ 	WREG32_NO_KIQ(ih_regs->ih_rb_cntl, tmp);
++
++	/* Unset the CLEAR_OVERFLOW bit immediately so new overflows
++	 * can be detected.
++	 */
++	tmp = REG_SET_FIELD(tmp, IH_RB_CNTL, WPTR_OVERFLOW_CLEAR, 0);
++	WREG32_NO_KIQ(ih_regs->ih_rb_cntl, tmp);
+ out:
+ 	return (wptr & ih->ptr_mask);
+ }
+diff --git a/drivers/gpu/drm/amd/amdgpu/si_ih.c b/drivers/gpu/drm/amd/amdgpu/si_ih.c
+index 9a24f17a57502..cada9f300a7f5 100644
+--- a/drivers/gpu/drm/amd/amdgpu/si_ih.c
++++ b/drivers/gpu/drm/amd/amdgpu/si_ih.c
+@@ -119,6 +119,12 @@ static u32 si_ih_get_wptr(struct amdgpu_device *adev,
+ 		tmp = RREG32(IH_RB_CNTL);
+ 		tmp |= IH_RB_CNTL__WPTR_OVERFLOW_CLEAR_MASK;
+ 		WREG32(IH_RB_CNTL, tmp);
++
++		/* Unset the CLEAR_OVERFLOW bit immediately so new overflows
++		 * can be detected.
++		 */
++		tmp &= ~IH_RB_CNTL__WPTR_OVERFLOW_CLEAR_MASK;
++		WREG32(IH_RB_CNTL, tmp);
+ 	}
+ 	return (wptr & ih->ptr_mask);
+ }
+diff --git a/drivers/gpu/drm/amd/amdgpu/tonga_ih.c b/drivers/gpu/drm/amd/amdgpu/tonga_ih.c
+index 917707bba7f36..450b6e8315091 100644
+--- a/drivers/gpu/drm/amd/amdgpu/tonga_ih.c
++++ b/drivers/gpu/drm/amd/amdgpu/tonga_ih.c
+@@ -219,6 +219,12 @@ static u32 tonga_ih_get_wptr(struct amdgpu_device *adev,
+ 	tmp = REG_SET_FIELD(tmp, IH_RB_CNTL, WPTR_OVERFLOW_CLEAR, 1);
+ 	WREG32(mmIH_RB_CNTL, tmp);
+ 
++	/* Unset the CLEAR_OVERFLOW bit immediately so new overflows
++	 * can be detected.
++	 */
++	tmp = REG_SET_FIELD(tmp, IH_RB_CNTL, WPTR_OVERFLOW_CLEAR, 0);
++	WREG32(mmIH_RB_CNTL, tmp);
++
+ out:
+ 	return (wptr & ih->ptr_mask);
+ }
+diff --git a/drivers/gpu/drm/amd/amdgpu/vega10_ih.c b/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
+index d364c6dd152c3..bf68e18e3824b 100644
+--- a/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
++++ b/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
+@@ -373,6 +373,12 @@ static u32 vega10_ih_get_wptr(struct amdgpu_device *adev,
+ 	tmp = REG_SET_FIELD(tmp, IH_RB_CNTL, WPTR_OVERFLOW_CLEAR, 1);
+ 	WREG32_NO_KIQ(ih_regs->ih_rb_cntl, tmp);
+ 
++	/* Unset the CLEAR_OVERFLOW bit immediately so new overflows
++	 * can be detected.
++	 */
++	tmp = REG_SET_FIELD(tmp, IH_RB_CNTL, WPTR_OVERFLOW_CLEAR, 0);
++	WREG32_NO_KIQ(ih_regs->ih_rb_cntl, tmp);
++
+ out:
+ 	return (wptr & ih->ptr_mask);
+ }
+diff --git a/drivers/gpu/drm/amd/amdgpu/vega20_ih.c b/drivers/gpu/drm/amd/amdgpu/vega20_ih.c
+index ddfc6941f9d55..db66e6cccaf2a 100644
+--- a/drivers/gpu/drm/amd/amdgpu/vega20_ih.c
++++ b/drivers/gpu/drm/amd/amdgpu/vega20_ih.c
+@@ -421,6 +421,12 @@ static u32 vega20_ih_get_wptr(struct amdgpu_device *adev,
+ 	tmp = REG_SET_FIELD(tmp, IH_RB_CNTL, WPTR_OVERFLOW_CLEAR, 1);
+ 	WREG32_NO_KIQ(ih_regs->ih_rb_cntl, tmp);
+ 
++	/* Unset the CLEAR_OVERFLOW bit immediately so new overflows
++	 * can be detected.
++	 */
++	tmp = REG_SET_FIELD(tmp, IH_RB_CNTL, WPTR_OVERFLOW_CLEAR, 0);
++	WREG32_NO_KIQ(ih_regs->ih_rb_cntl, tmp);
++
+ out:
+ 	return (wptr & ih->ptr_mask);
+ }
+-- 
+2.43.0
+
+
+
+
