@@ -1,103 +1,63 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61EBF14D2B5;
-	Wed, 27 Mar 2024 21:56:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF08383A3;
+	Wed, 27 Mar 2024 21:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711576616; cv=none; b=j2e9y9CC0NJ3xgPsO4Dj3zJFlU5nNmSGMM9X1DJTAKFJF2Pcqk3Izdf5XbhejsP07vgZbf8R1OuOk13gUFUKpJ2YejiMQdE0rRxN+Fs9FOLMyqHQckZJu73hdesXfX/dYvE0NUSLRAn5znogWdkR/HC5ivJs0HjwhFZYmuU2Png=
+	t=1711576625; cv=none; b=ReM7dZBo313BWvQS/NqmT29Exnt6rQmaU4LASaG4QkEsKOe4Ymy73LJqVJsBFb6axGgMEYKEwrg/BFJZ9WQmp8BZjci5uY5hjAlTSh10dtLJIbgJSHA28QGpf0f50oPUOuq7QUPf1xb3DIA3nWg1CDc/lFF063te5kIVTNLxp4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711576616; c=relaxed/simple;
-	bh=ISq7nL0MCjV0q2xYanA81OaMJO+3t4kSdLr8g3E1Nyg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mS9GeIsPqT/H3xU3N5QzG8Nhm8iGdHFYdjInFPP7JSOJ7uzCynBSf5d9kzU2j7cJxKax/CCe2V30TVl8WVB7UUYjDFyGzU/oaCvrIC7TJlVYjl1gfjbc9kMhaXROLC2sPyKcUzv+FrAV4m4tGwXfXw8lVBKE6AJ6fyHBZPua8Ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Q1A9XLWL; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1711576625; c=relaxed/simple;
+	bh=R03k2iNA6mn8aOBmXhKL6b85cm3baq7AW4OLPbqCTmk=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=mBMvuYL1YhSs5KOE6qlA2bohfqu+AP/oVGLi0b/Oh/4P/oWV1/BdG47T5L1DNvscRsuaNgOoB0AYPCkiR2vFZDyWVCnpgH1ZAyQ13qmJJZoGYRYItmu2zcCy8ggOdC68rRFe2abGBfm65mjlp7iJLusYH82dDIcJ9dUSUlmIRfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tInB74ik; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Q1A9XLWL"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42RLmDJZ019592;
-	Wed, 27 Mar 2024 21:56:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=vv8xA4/mVYkR+YakQcsUhlKG9wQSF4c/gv/+lZU9rLw=; b=Q1
-	A9XLWLkht511vU9Fic9Yp9rvGCpwHEWde8nV/HR6/F7fpVZwIgoDDGJqJNyz77BD
-	NkOVrveQeJxfxBUwERSOxaW+pNe4tuRV/SQQbD41tddYGoV5hJ2KbYZuLn6wldrE
-	xM6aHpXMLV5hnfHlGnjddy08hWIEl4cXSTF5e/jEPPnyXUJJnnKDETrPammsAetO
-	DVBkATTKMCqCxkcKE/OId2qV8+5KJmhQuDkQQQ8Ajoa2geSGCgq5iegPSrgEsRiH
-	mS4mg5ZOc+InGPtdysbOzNZQ7/HOtrMz0kuqTNeiaKb9qzMnok5gg3v1XT18iia+
-	pgszRl2OVERzlLMFJHAQ==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x4u208389-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 27 Mar 2024 21:56:50 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42RLunV9030345
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 27 Mar 2024 21:56:49 GMT
-Received: from [10.227.110.203] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 27 Mar
- 2024 14:56:49 -0700
-Message-ID: <258a3863-36ce-4f07-a1cb-a28673ad1f17@quicinc.com>
-Date: Wed, 27 Mar 2024 14:56:48 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tInB74ik"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C3751C433C7;
+	Wed, 27 Mar 2024 21:57:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711576624;
+	bh=R03k2iNA6mn8aOBmXhKL6b85cm3baq7AW4OLPbqCTmk=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=tInB74ikrM8xoDkUeQyfMBj+oWx7Ezbq8cjXbHORzb4HU/jfQTQ5eGoqbZz6u3uaT
+	 iTOwxZtJtHVoDvcL5l2Fg34ozYjqJy58Fci5CTh/eKsuHOwSSA6QjbixsUh7NhVfiE
+	 D3uqxOjkci0Vsl9NP83Hpdb2sJOvR/LjvBHYNmc1lsbPKnZP7RPxH/h1xdVoBYvBUl
+	 Z6X+Rd0wrBOt1LPkUaDsb5+r82D+KpmIRssa4/71Fk2FApgWNuSLznzVf1/Rk4QGFU
+	 AL6dNkGjhaXUYzLKR7igNTsjpPrZSyV/cUYVVzjEofsTyRkEzZ+9lonnlhyp9rHhRW
+	 /yEeWWm7foO5A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id BA269D2D0EC;
+	Wed, 27 Mar 2024 21:57:04 +0000 (UTC)
+Subject: Re: [GIT PULL] Btrfs fixes for 6.9-rc2
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <cover.1711571199.git.dsterba@suse.com>
+References: <cover.1711571199.git.dsterba@suse.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <cover.1711571199.git.dsterba@suse.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.9-rc1-tag
+X-PR-Tracked-Commit-Id: ef1e68236b9153c27cb7cf29ead0c532870d4215
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 400dd456bda8be0b566f2690c51609ea02f85766
+Message-Id: <171157662475.29991.2167921703743876804.pr-tracker-bot@kernel.org>
+Date: Wed, 27 Mar 2024 21:57:04 +0000
+To: David Sterba <dsterba@suse.com>
+Cc: torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2][next] wifi: wil6210: cfg80211: Use __counted_by() in
- struct wmi_start_scan_cmd and avoid some -Wfamnae warnings
-Content-Language: en-US
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Kalle Valo
-	<kvalo@kernel.org>
-CC: <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>
-References: <ZgSP/CMSVfr68R2u@neat>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <ZgSP/CMSVfr68R2u@neat>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: qWe04CBVAaAy2kQTpNuk_ALUq3tMYgW3
-X-Proofpoint-GUID: qWe04CBVAaAy2kQTpNuk_ALUq3tMYgW3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-27_18,2024-03-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
- bulkscore=0 priorityscore=1501 mlxlogscore=717 impostorscore=0 mlxscore=0
- adultscore=0 suspectscore=0 phishscore=0 lowpriorityscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2403210001
- definitions=main-2403270156
 
-On 3/27/2024 2:30 PM, Gustavo A. R. Silva wrote:
-> Prepare for the coming implementation by GCC and Clang of the
-> __counted_by attribute. Flexible array members annotated with
-> __counted_by can have their accesses bounds-checked at run-time
-> via CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE
-> (for strcpy/memcpy-family functions).
-> 
-> Also, -Wflex-array-member-not-at-end is coming in GCC-14, and we are
-> getting ready to enable it globally.
-> 
-> So, use the `DEFINE_FLEX()` helper for an on-stack definition of
-> a flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
-> 
-> So, with these changes, fix the following warning:
-> drivers/net/wireless/ath/wil6210/cfg80211.c:896:43: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Link: https://github.com/KSPP/linux/issues/202
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+The pull request you sent on Wed, 27 Mar 2024 21:32:19 +0100:
 
-Reviewed-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.9-rc1-tag
 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/400dd456bda8be0b566f2690c51609ea02f85766
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
