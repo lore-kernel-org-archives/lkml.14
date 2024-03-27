@@ -1,317 +1,186 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www522.your-server.de (www522.your-server.de [195.201.215.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2AC12FB2F
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 16:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365D0149DEA;
+	Wed, 27 Mar 2024 16:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.215.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711557670; cv=none; b=X0nG9qCQeWaYZyefFYaX2Utah5U1OVaCFM5cdKDgPTdxOAusxHg8w8+hefs731ciGLVXLJHgeJmt0J655NVJKgx7pJKSMgMramTYEtU1jWuE1Bik/Apzp3bjPKoiwjpnFUoumNU8dVz1ngEOPKwF4iG5PWXUyhw0XnAlPIkB8LY=
+	t=1711557703; cv=none; b=oXAgY6ppJa+vMRswWPcWBITFH713dZYYicgOjSH4VyrJNYVV9TFjoSQa1nPXJkGstJde3oc93/VBbJt2jm57u/t2DzZj+5xRfyarT6q7bkWgxw85Hjr3ghSQK+YwzszOWO0UQ15Iun30NbbLhP8vU+J6cM1eBJtuaONe2Q3s1Eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711557670; c=relaxed/simple;
-	bh=Lt8v29rfoTTzWFuyXWFLKvY4kmtkIVJavMxahFMZrKQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=edThXvEbKLBOEaZDmEbF2ad7TJPSUoNPBJZbu3pru822Q4P9XvgDMx6VY9QaLWEQvUhkE9gIQAORpYHtRqpgH6/fnKDfW3lWiltSBDl/GcTjm4KfB19UMgbIjTCwfjNsh2D+jjfGuOiv62IBLzNAAMeILzRdRlzU6N50GSdUCzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YoLxYmUQ; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711557703; c=relaxed/simple;
+	bh=MNOFpOXkMOwWidvj9ganot3yFkYgKYqPs0TUbj4drHQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=A+afbpfxb6MZds7KMCYJ0hEpqMLHDpgK3EMp4+UJcAEeQhF/+/i3FECSQlTeqYn+rpfFljqbd/Oc7to2Byuv9SKjckvvKHnOLrItkBySUrkHa3QdWN6L+04NxpYZVR1toeMMyfmMAIsgRNXVfuPjzK03710WFYLnNG7PXk1F1MU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de; spf=pass smtp.mailfrom=folker-schwesinger.de; dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b=osjBcYNJ; arc=none smtp.client-ip=195.201.215.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=folker-schwesinger.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YoLxYmUQ"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-690d7a8f904so9300076d6.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 09:41:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711557668; x=1712162468; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YMZWWaTaJ3lxeA3Kz3iKtD6XUKMHdnC8EWB2x35/ZWU=;
-        b=YoLxYmUQ/0sVNtPDv7dDa4WNcYnkIQkXlVrB2BIotztWuxGBdpARLfVBWY0opcZoa5
-         sWqmthJyhfh33DWoCd+KTauqyQF2apb+nHPj2UXCG5Gz9588lCC+22gagHPHSuncAScI
-         SO67m5Dco6Lagg1CrQ9lPQMtEsWi9R047jJmsq1ucreQwqWVXI34mP5bodFiB8kvyioe
-         yW7rm8ogY+3UHCvBaQw5H1j3FsBngYfvQVl/Gr0tJWjj0aFfS9scdprR1HxrrgT4gI7q
-         Ci9EFtGEc6h6wKHWFUHfKTTXWrieNg0YNA7t2cCpfpBx9PlpAzvX8Al+l7Gnm9GBLIja
-         14LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711557668; x=1712162468;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YMZWWaTaJ3lxeA3Kz3iKtD6XUKMHdnC8EWB2x35/ZWU=;
-        b=Hf/rlweyR/CiDVWRR8wIQ5jgDnn2sYlX1YZMS6SKc8VUPc5ov8a3g/ndZbGlOkTv81
-         lSFfh/pus3J4Nc+AFbTX1cCoO0iR6DQc+RGd9igxJE5v3FNPz+Xc9Zbdzw9t6/aEYkZr
-         /Osa4Ws/hX/zj+6MPHLdCWEFXgA/LJkcYd9lrtBrKy72sLtcVLYkJTalydpF6MU0/dsm
-         FHhdS8tq+ZoT8GxVDB6HiZHA2bGKk+fy45srbqXZsHhRjveUr+Jy/NB/IylE80RP2cib
-         t4VSygJdm8Qaajj9PDjMa2taOyCpmyxg/6gGwSxxYliGMZfQy9hDV3U3oF95bCeXe+N6
-         TiyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXfkOEn2y+LjdtoIVxqL94mBgIep6RMkjXyfQPIwCC9K2+8k02DjXTUoWQ+Hk3mVi70PpgBScE38kwk6WH0nu6QxOlkQALoFMe07G8Q
-X-Gm-Message-State: AOJu0Yy3yhtm8ALQ5I+mbukuHzz7MGSN0NZACQP0ue//hyiKuDs78sRN
-	uu0pqVNOW3CvMVDm31IYfU3LcO3+m4H9r5cWt6/VDU/lcLl+xbPMjHWODcPS65KOFvo9x6pL2KE
-	Ow+BHvVUHxLFwZGjonJJS+Ni8NPM=
-X-Google-Smtp-Source: AGHT+IEfdLDNpbWNtIYAq0kAU3sG8ft7rxFt6Nf3L/NlFTwxzVHYEkr+dnSwRJ1+e1UAcljWtVgdECbC493hK/wW/9Y=
-X-Received: by 2002:a05:6214:b14:b0:690:dc3b:179d with SMTP id
- u20-20020a0562140b1400b00690dc3b179dmr203067qvj.20.1711557667999; Wed, 27 Mar
- 2024 09:41:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b="osjBcYNJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=folker-schwesinger.de; s=default2212; h=In-Reply-To:References:
+	Content-Transfer-Encoding:To:From:Cc:Subject:Message-Id:Date:Content-Type:
+	Mime-Version:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=jVmOJXz8MFZvDytCaXScOnp+CPymaJ0ZJNEjuWISf3k=; b=osjBcYNJq/cKgUy9AWTyY8hS6E
+	E5HLAhY7omewDvChR3tHPmlbqGq5T2YdOAGnaZ5M0cmn71ww8qXth6+OXvYfe1nl+O45vivL9zVmg
+	voHjd5t0NE0wivjq8NEIZKIy7Oz2MkS1388qo4lC0yPTuXHXwqdqU3eo8BjHLq9nnaMx0uGpTch5K
+	ImjEjU+yoH4m/nIVzGrgoiSGYA0A7puBQ7I5mCekHohziTKpaj7atNdUx/yd8nCgejZNEZjHzWS++
+	WrB9zPGqXne7gRdpFt2KxZu7tC4KoBnjhD2RjUDfQsDNASlXkWUhT546ddF5zLe8d+uoAc2gVqzFv
+	DX8I6/yA==;
+Received: from sslproxy07.your-server.de ([78.47.199.104])
+	by www522.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <dev@folker-schwesinger.de>)
+	id 1rpW2I-000Cfv-EQ; Wed, 27 Mar 2024 17:21:58 +0100
+Received: from [185.209.196.215] (helo=localhost)
+	by sslproxy07.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <dev@folker-schwesinger.de>)
+	id 1rpW26-000PGF-0o;
+	Wed, 27 Mar 2024 17:21:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240325235018.2028408-1-yosryahmed@google.com> <20240325235018.2028408-7-yosryahmed@google.com>
-In-Reply-To: <20240325235018.2028408-7-yosryahmed@google.com>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Wed, 27 Mar 2024 09:40:57 -0700
-Message-ID: <CAKEwX=OMtqFKLRXF5v2P-Z5WEq3x0Tb=6dPKta8uGqi3MXsZEA@mail.gmail.com>
-Subject: Re: [RFC PATCH 6/9] mm: zswap: drop support for non-zero same-filled
- pages handling
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: multipart/signed;
+ boundary=f7cdc72aa3c9a69fa8ec481bcf6809df63323df0173f7777bf3d43c54eaf;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Wed, 27 Mar 2024 16:21:45 +0000
+Message-Id: <D04O57YQHYI4.1QNGSVKVT44CS@folker-schwesinger.de>
+Subject: Re: [PATCH 1/3] phy: rockchip: emmc: Enable pulldown for strobe
+ line
+Cc: "Vinod Koul" <vkoul@kernel.org>, "Kishon Vijay Abraham I"
+ <kishon@kernel.org>, "Heiko Stuebner" <heiko@sntech.de>, "Chris Ruehl"
+ <chris.ruehl@gtsys.com.hk>, "Rob Herring" <robh@kernel.org>, "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Christopher Obbard" <chris.obbard@collabora.com>,
+ "Alban Browaeys" <alban.browaeys@gmail.com>, "Doug Anderson"
+ <dianders@chromium.org>, "Brian Norris" <briannorris@chromium.org>, "Jensen
+ Huang" <jensenhuang@friendlyarm.com>, <linux-phy@lists.infradead.org>,
+ <linux-arm-kernel@lists.infradead.org>,
+ <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ <devicetree@vger.kernel.org>
+From: "Folker Schwesinger" <dev@folker-schwesinger.de>
+To: "Dragan Simic" <dsimic@manjaro.org>, "Conor Dooley" <conor@kernel.org>
 Content-Transfer-Encoding: quoted-printable
+X-Mailer: aerc 0.17.0-82-g6ffc0ed5991b
+References: <20240326-rk-default-enable-strobe-pulldown-v1-0-f410c71605c0@folker-schwesinger.de> <20240326-rk-default-enable-strobe-pulldown-v1-1-f410c71605c0@folker-schwesinger.de> <20240326-tactical-onlooker-3df8d2352dc2@spud> <436f78a981ecba441a0636912ddd1cf2@manjaro.org>
+In-Reply-To: <436f78a981ecba441a0636912ddd1cf2@manjaro.org>
+X-Authenticated-Sender: dev@folker-schwesinger.de
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27227/Wed Mar 27 09:33:27 2024)
 
-On Mon, Mar 25, 2024 at 4:50=E2=80=AFPM Yosry Ahmed <yosryahmed@google.com>=
- wrote:
->
-> The current same-filled pages handling supports pages filled with any
-> repeated word-sized pattern. However, in practice, most of these should
-> be zero pages anyway. Other patterns should be nearly as common.
+--f7cdc72aa3c9a69fa8ec481bcf6809df63323df0173f7777bf3d43c54eaf
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-It'd be nice if we can verify this somehow. Maybe hooking bpftrace,
-trace_printk, etc. here?
+Hi Conor and Dragan,
 
-That aside, my intuition is that this is correct too. It's much less
-likely to see a non-zero filled page.
+thanks for your feedback!
 
->
-> Drop the support for non-zero same-filled pages, but keep the names of
-> knobs exposed to userspace as "same_filled", which isn't entirely
-> inaccurate.
->
-> This yields some nice code simplification and enables a following patch
-> that eliminates the need to allocate struct zswap_entry for those pages
-> completely.
->
-> There is also a very small performance improvement observed over 50 runs
-> of kernel build test (kernbench) comparing the mean build time on a
-> skylake machine when building the kernel in a cgroup v1 container with a
-> 3G limit:
->
->                 base            patched         % diff
-> real            70.167          69.915          -0.359%
-> user            2953.068        2956.147        +0.104%
-> sys             2612.811        2594.718        -0.692%
->
-> This probably comes from more optimized operations like memchr_inv() and
-> clear_highpage(). Note that the percentage of zero-filled pages during
+On Tue Mar 26, 2024 at 8:55 PM CET, Dragan Simic wrote:
+> On 2024-03-26 20:46, Conor Dooley wrote:
+> > On Tue, Mar 26, 2024 at 07:54:35PM +0100, Folker Schwesinger via B4
+> > Relay wrote:
+> >> From: Folker Schwesinger <dev@folker-schwesinger.de>
+> >>
+> >> Restore the behavior of the Rockchip kernel that undconditionally
+> >> enables the internal strobe pulldown.
+> >
+> > What do you mean "restore the behaviour of the rockchip kernel"? Did
+> > mainline behave the same as the rockchip kernel previously? If not,
+> > using "restore" here is misleading. "Unconditionally" is also
+> > incorrect,
+> > because you have a property that disables it.
 
-TIL clear_highpage() is a thing :)
+Apologizes for the misleading commit message. Prior to 5.11 the Linux
+kernel did not touch the pull-down registers. However, it seems the
+register's (factory?) default was set to enable the pull-down. As it
+was mentioned elsewhere that was the configuration recommended by
+Rockchip. The 4.4 vendor (Rockchip) kernel reflects that by enabling the
+pull-down in its kernel.
+Of course, this has nothing to do with the Linux kernel, so "restore"
+was a bad choice here.
+
+I previously had split the driver patch into two separate patches, one
+for changing the default (unconditionally at that point), the other for
+adding the disable property. As both changes were minimal I decided to
+squash the commits. I updated the cover letter, but forgot to update the
+commit message. Sorry.
+
+> >> Fixes: 8b5c2b45b8f0 ("phy: rockchip: set pulldown for strobe line in
+> >> dts")
+> >> Signed-off-by: Folker Schwesinger <dev@folker-schwesinger.de>
+> >> ---
+> >>  drivers/phy/rockchip/phy-rockchip-emmc.c | 6 +++---
+> >>  1 file changed, 3 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/drivers/phy/rockchip/phy-rockchip-emmc.c
+> >> b/drivers/phy/rockchip/phy-rockchip-emmc.c
+> >> index 20023f6eb994..6e637f3e1b19 100644
+> >> --- a/drivers/phy/rockchip/phy-rockchip-emmc.c
+> >> +++ b/drivers/phy/rockchip/phy-rockchip-emmc.c
+> >> @@ -376,14 +376,14 @@ static int rockchip_emmc_phy_probe(struct
+> >> platform_device *pdev)
+> >>  	rk_phy->reg_offset = reg_offset;
+> >>  	rk_phy->reg_base = grf;
+> >>  	rk_phy->drive_impedance = PHYCTRL_DR_50OHM;
+> >> -	rk_phy->enable_strobe_pulldown = PHYCTRL_REN_STRB_DISABLE;
+> >> +	rk_phy->enable_strobe_pulldown = PHYCTRL_REN_STRB_ENABLE;
+> >>  	rk_phy->output_tapdelay_select = PHYCTRL_OTAPDLYSEL_DEFAULT;
+> >>
+> >>  	if (!of_property_read_u32(dev->of_node, "drive-impedance-ohm",
+> >> &val))
+> >>  		rk_phy->drive_impedance = convert_drive_impedance_ohm(pdev, val);
+> >>
+> >> -	if (of_property_read_bool(dev->of_node,
+> >> "rockchip,enable-strobe-pulldown"))
+> >> -		rk_phy->enable_strobe_pulldown = PHYCTRL_REN_STRB_ENABLE;
+> >> +	if (of_property_read_bool(dev->of_node,
+> >> "rockchip,disable-strobe-pulldown"))
+> >> +		rk_phy->enable_strobe_pulldown = PHYCTRL_REN_STRB_DISABLE;
+> >
+> > Unfortunately you cannot do this.
+> > Previously no property at all meant disabled and a property was
+> > required
+> > to enable it. With this change the absence of a property means that it
+> > will be enabled.
+> > An old devicetree is that wanted this to be disabled would have no
+> > property and will now end up with it enabled. This is an ABI break and
+> > is
+> > clearly not backwards compatible, that's a NAK unless it is
+> > demonstrable
+> > that noone actually wants to disable it at all.
+> >
+>
+> Moreover, as I already explained some time ago, [1] some boards and
+> devices are unfortunately miswired, and we don't want to enable the
+> DATA STROBE pull-down on such boards.
+>
+> [1]
+> https://lore.kernel.org/linux-rockchip/ca5b7cad01f645c7c559ab26a8db8085@manjaro.org/#t
+>
+> > If this patch fixes a problem on a board that you have, I would suggest
+> > that you add the property to enable it, as the binding tells you to.
+
+I agree, I'll post the patches later.
+
+Best regards
+
+Folker
 
 
-> this test was only around 1.5% on average, and was not affected by this
-> patch. Practical workloads could have a larger proportion of such pages
-> (e.g. Johannes observed around 10% [1]), so the performance improvement
-> should be larger.
->
-> [1]https://lore.kernel.org/linux-mm/20240320210716.GH294822@cmpxchg.org/
->
-> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
-> ---
->  mm/zswap.c | 76 ++++++++++++++----------------------------------------
->  1 file changed, 20 insertions(+), 56 deletions(-)
->
-> diff --git a/mm/zswap.c b/mm/zswap.c
-> index 0fc27ae950c74..413d9242cf500 100644
-> --- a/mm/zswap.c
-> +++ b/mm/zswap.c
-> @@ -44,8 +44,8 @@
->  **********************************/
->  /* The number of compressed pages currently stored in zswap */
->  atomic_t zswap_stored_pages =3D ATOMIC_INIT(0);
-> -/* The number of same-value filled pages currently stored in zswap */
-> -static atomic_t zswap_same_filled_pages =3D ATOMIC_INIT(0);
-> +/* The number of zero-filled pages currently stored in zswap */
-> +static atomic_t zswap_zero_filled_pages =3D ATOMIC_INIT(0);
->
->  /*
->   * The statistics below are not protected from concurrent access for
-> @@ -123,9 +123,9 @@ static unsigned int zswap_accept_thr_percent =3D 90; =
-/* of max pool size */
->  module_param_named(accept_threshold_percent, zswap_accept_thr_percent,
->                    uint, 0644);
->
-> -/* Enable/disable handling non-same-value filled pages (enabled by defau=
-lt) */
-> -static bool zswap_non_same_filled_pages_enabled =3D true;
-> -module_param_named(non_same_filled_pages_enabled, zswap_non_same_filled_=
-pages_enabled,
-> +/* Enable/disable handling non-zero-filled pages (enabled by default) */
-> +static bool zswap_non_zero_filled_pages_enabled =3D true;
-> +module_param_named(non_same_filled_pages_enabled, zswap_non_zero_filled_=
-pages_enabled,
->                    bool, 0644);
->
->  /* Number of zpools in zswap_pool (empirically determined for scalabilit=
-y) */
-> @@ -187,11 +187,10 @@ static struct shrinker *zswap_shrinker;
->   *
->   * swpentry - associated swap entry, the offset indexes into the red-bla=
-ck tree
->   * length - the length in bytes of the compressed page data.  Needed dur=
-ing
-> - *          decompression. For a same value filled page length is 0, and=
- both
-> + *          decompression. For a zero-filled page length is 0, and both
->   *          pool and lru are invalid and must be ignored.
->   * pool - the zswap_pool the entry's data is in
->   * handle - zpool allocation handle that stores the compressed page data
-> - * value - value of the same-value filled pages which have same content
->   * objcg - the obj_cgroup that the compressed memory is charged to
->   * lru - handle to the pool's lru used to evict pages.
->   */
-> @@ -199,10 +198,7 @@ struct zswap_entry {
->         swp_entry_t swpentry;
->         unsigned int length;
->         struct zswap_pool *pool;
-> -       union {
-> -               unsigned long handle;
-> -               unsigned long value;
-> -       };
-> +       unsigned long handle;
->         struct obj_cgroup *objcg;
->         struct list_head lru;
->  };
-> @@ -805,7 +801,7 @@ static struct zpool *zswap_find_zpool(struct zswap_en=
-try *entry)
->  static void zswap_entry_free(struct zswap_entry *entry)
->  {
->         if (!entry->length)
-> -               atomic_dec(&zswap_same_filled_pages);
-> +               atomic_dec(&zswap_zero_filled_pages);
->         else {
->                 zswap_lru_del(&zswap_list_lru, entry);
->                 zpool_free(zswap_find_zpool(entry), entry->handle);
-> @@ -1377,43 +1373,17 @@ static void shrink_worker(struct work_struct *w)
->         } while (zswap_total_pages() > thr);
->  }
->
-> -static bool zswap_is_folio_same_filled(struct folio *folio, unsigned lon=
-g *value)
-> +static bool zswap_is_folio_zero_filled(struct folio *folio)
->  {
-> -       unsigned long *page;
-> -       unsigned long val;
-> -       unsigned int pos, last_pos =3D PAGE_SIZE / sizeof(*page) - 1;
-> +       unsigned long *kaddr;
->         bool ret;
->
-> -       page =3D kmap_local_folio(folio, 0);
-> -       val =3D page[0];
-> -
-> -       if (val !=3D page[last_pos]) {
-> -               ret =3D false;
-> -               goto out;
-> -       }
-> -
-> -       for (pos =3D 1; pos < last_pos; pos++) {
-> -               if (val !=3D page[pos]) {
-> -                       ret =3D false;
-> -                       goto out;
-> -               }
-> -       }
-> -
-> -       *value =3D val;
-> -       ret =3D true;
-> -out:
-> -       kunmap_local(page);
-> +       kaddr =3D kmap_local_folio(folio, 0);
-> +       ret =3D !memchr_inv(kaddr, 0, PAGE_SIZE);
-> +       kunmap_local(kaddr);
->         return ret;
->  }
->
-> -static void zswap_fill_page(void *ptr, unsigned long value)
-> -{
-> -       unsigned long *page;
-> -
-> -       page =3D (unsigned long *)ptr;
-> -       memset_l(page, value, PAGE_SIZE / sizeof(unsigned long));
-> -}
-> -
->  static bool zswap_check_limit(void)
->  {
->         unsigned long cur_pages =3D zswap_total_pages();
-> @@ -1437,7 +1407,6 @@ bool zswap_store(struct folio *folio)
->         struct obj_cgroup *objcg =3D NULL;
->         struct mem_cgroup *memcg =3D NULL;
->         struct zswap_entry *entry;
-> -       unsigned long value;
->
->         VM_WARN_ON_ONCE(!folio_test_locked(folio));
->         VM_WARN_ON_ONCE(!folio_test_swapcache(folio));
-> @@ -1470,14 +1439,13 @@ bool zswap_store(struct folio *folio)
->                 goto reject;
->         }
->
-> -       if (zswap_is_folio_same_filled(folio, &value)) {
-> +       if (zswap_is_folio_zero_filled(folio)) {
->                 entry->length =3D 0;
-> -               entry->value =3D value;
-> -               atomic_inc(&zswap_same_filled_pages);
-> +               atomic_inc(&zswap_zero_filled_pages);
->                 goto insert_entry;
->         }
->
-> -       if (!zswap_non_same_filled_pages_enabled)
-> +       if (!zswap_non_zero_filled_pages_enabled)
->                 goto freepage;
->
->         /* if entry is successfully added, it keeps the reference */
-> @@ -1532,7 +1500,7 @@ bool zswap_store(struct folio *folio)
->
->  store_failed:
->         if (!entry->length)
-> -               atomic_dec(&zswap_same_filled_pages);
-> +               atomic_dec(&zswap_zero_filled_pages);
->         else {
->                 zpool_free(zswap_find_zpool(entry), entry->handle);
->  put_pool:
-> @@ -1563,7 +1531,6 @@ bool zswap_load(struct folio *folio)
->         struct page *page =3D &folio->page;
->         struct xarray *tree =3D swap_zswap_tree(swp);
->         struct zswap_entry *entry;
-> -       u8 *dst;
->
->         VM_WARN_ON_ONCE(!folio_test_locked(folio));
->
-> @@ -1573,11 +1540,8 @@ bool zswap_load(struct folio *folio)
->
->         if (entry->length)
->                 zswap_decompress(entry, page);
-> -       else {
-> -               dst =3D kmap_local_page(page);
-> -               zswap_fill_page(dst, entry->value);
-> -               kunmap_local(dst);
-> -       }
-> +       else
-> +               clear_highpage(page);
->
->         count_vm_event(ZSWPIN);
->         if (entry->objcg)
-> @@ -1679,7 +1643,7 @@ static int zswap_debugfs_init(void)
->         debugfs_create_atomic_t("stored_pages", 0444,
->                                 zswap_debugfs_root, &zswap_stored_pages);
->         debugfs_create_atomic_t("same_filled_pages", 0444,
-> -                               zswap_debugfs_root, &zswap_same_filled_pa=
-ges);
-> +                               zswap_debugfs_root, &zswap_zero_filled_pa=
-ges);
->
->         return 0;
->  }
-> --
-> 2.44.0.396.g6e790dbe36-goog
->
+--f7cdc72aa3c9a69fa8ec481bcf6809df63323df0173f7777bf3d43c54eaf
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The code itself LGTM, FWIW:
+-----BEGIN PGP SIGNATURE-----
 
-Reviewed-by: Nhat Pham <nphamcs@gmail.com>
+iJAEABYKADgWIQQFbmi0A2l3pTuK+esCQHEyPYq7fQUCZgRHmhocZGV2QGZvbGtl
+ci1zY2h3ZXNpbmdlci5kZQAKCRACQHEyPYq7fRamAP9MGs6G0N7CCPyktEFGvWmc
+v++fFAIl9dcZbzwkg9Dj9wD+KrYIRbmeqWtdkS3AfQoBJgBfYClulmn68BrCShah
+EAY=
+=o+ot
+-----END PGP SIGNATURE-----
+
+--f7cdc72aa3c9a69fa8ec481bcf6809df63323df0173f7777bf3d43c54eaf--
