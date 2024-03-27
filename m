@@ -1,93 +1,102 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C953D130A4C
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 15:57:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C754F890
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 15:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711555027; cv=none; b=KdxRpv180e0/S6G3rpLRpVAjzpEq2oCvlNHZ6cuL30UUwrtPndVUfXQiLxJlNNmywBZOtKa5iWj3J/GksdAE9btCWMgEPHvRl9LmZnu7Si/Id38VXnG+ZYmm1psOjxbxRRQO/8Qko3IZmB7djLxNZHr+SC+vwBituQ/O9EOA1IY=
+	t=1711555089; cv=none; b=bTzGGsdQj5Nh1IDtijLjPshC9C44NiCxh1AIysNPXcCFQo2DnDdgWMfNn9Fq5v5P8BdjHgB7gYzFMPpGvQbVE1PJMllJ0bFDpjCn4dlJUu2/7Xu2o55dyBvrV072AWRJXTKaSaL9t7gOdKpU/0uD5nhbCh0VLSiRYRJenfQWj2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711555027; c=relaxed/simple;
-	bh=xolD+KStM6h/UiYhVPWl/rlwdm70NGrlHVhiiIw3IFo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d8zRVPpsahlOGf/At5xSEYUSlEHvpfmGEziEoSQUFWRM0vifKN0X3BD+mKebau/UVm9doR4o0mX7Vr2H7NCfYy4PxY+l/OYBirQN/3DlIntKyXh3Bf23HbFG5KVMg0EHZECt7nV4c7w5OZL+bpZfnb5XN85RagEnCVzLxUO7gPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=AqFEAUAg; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1711555089; c=relaxed/simple;
+	bh=HNMz2aWlmehG41cOCB1cvONMDtg23aN/Dbw96CBAx9A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IfdiUevo0iAJGwEST6wfd/yAE3bpZfPoXT14tw9hVYvZnZ0skmLnkM5IIG5DkkoWSPjlCoZGJQhxbz0lPoBlD8OovJII9A5CB5fYMwt6mAi3vUVunwxUqy/TuSAxAOs9NOAKRomPKlSeLDjOGL1DdZNO1Fu1730pG+V4IQK3DeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NZrQJifP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="AqFEAUAg"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-34175878e3cso4958655f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 08:57:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1711555023; x=1712159823; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9RZc0Oa6GSoT+Kr5s8/A3SHBWT32jBMU5zycY9Q3gRs=;
-        b=AqFEAUAg66OUCs4cvNCII+1BXiKdoqKW+IocND8dKdLVxBKb2jl6Xi4c4SyKiltTJo
-         h8OlMJTLUepTzlcFbBY3mwFCWlhfk9zpUeK5jmqG45l+FsVcbXjn17IFVPsCuQUySXjC
-         sHJFcuoLGs1ajVhaSq1gXP6fsNp+EoFbobYOCIlmCxp+XaCPFU/mEC4xslfYlzN8dLLI
-         2z+R24xeb6FvNJZniDeEq3wG3MhaTzgfXIY6orDDofB6VcvRRGWAzNZeUe7jPZ9fUMQC
-         QzEfYEzL/fxHF85rvvHyYbdh/VtwSPgDgmRTg8ln9Bk2JKaWCF74BJTq2bKvEmOAcmO1
-         cMow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711555023; x=1712159823;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9RZc0Oa6GSoT+Kr5s8/A3SHBWT32jBMU5zycY9Q3gRs=;
-        b=VX0gFNo+mxfAbzZrW5cJUQxYhExA4O0fxKWth8Jbblp4lW10HvfVhMC1vvn5yu/ucX
-         IL8eiFlatQBqv3WaKFtj2i7z+HhWxDiNpRNm3wfl5GxLYDla8EZJpsw+Z/GXnG5h1xRk
-         oDehp7pt9sbP5CzlSy4NEsnaKyvWsLptD7Cealw3omvbPe4GTTHSN9DqUwJ5GbinDZVK
-         uS4dHRsQgkyWPdoGltnc12ydwWcTu0uqCMQbpsZ/G0LzL67J0XH5MxoddDZ/UlvbOuKd
-         HmhxiGRnfO8jG7AlyBKeM0FIFe/heDZO3a2U/jH+Asg+N02NxfdGMzwFCUHF3NEWYgRh
-         oGwA==
-X-Gm-Message-State: AOJu0YwI7HOb+qjwrfD5DM3o1oYR7WPkgRgw+aa0jU0yMuM9IM4P2brE
-	A0/VbVHWz41kXvrHXbsKY5MC4bitHheJ9JQQPj+i6k2cjk90+o5YU9pHGTis1j8=
-X-Google-Smtp-Source: AGHT+IGs2esijcve1nRhIVXtWvFzpZT8RBRfuKIIZL72paxU0tXDteZDw9GkTgvgK4Lg2nhkK5RElA==
-X-Received: by 2002:adf:f78e:0:b0:33e:c7e7:cc6 with SMTP id q14-20020adff78e000000b0033ec7e70cc6mr246826wrp.2.1711555023034;
-        Wed, 27 Mar 2024 08:57:03 -0700 (PDT)
-Received: from ?IPV6:2a10:bac0:b000:73fa:7285:c2ff:fedd:7e3a? ([2a10:bac0:b000:73fa:7285:c2ff:fedd:7e3a])
-        by smtp.gmail.com with ESMTPSA id x3-20020adfcc03000000b0033e41e1ad93sm15104926wrh.57.2024.03.27.08.57.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Mar 2024 08:57:02 -0700 (PDT)
-Message-ID: <540c12cb-f42d-469d-b3de-a52155298dda@suse.com>
-Date: Wed, 27 Mar 2024 17:57:01 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NZrQJifP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0639EC433F1
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 15:58:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711555089;
+	bh=HNMz2aWlmehG41cOCB1cvONMDtg23aN/Dbw96CBAx9A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=NZrQJifPMMyA5hKKh2Hcx2KLYYuoN3aDm6QSEyeDB1ejV87RlOVGLGpBQRwofEp/N
+	 +tu0Xx20i4GFn+2n3RD6tMPVl1MlPKgpBbNtKz4MjIvm4cxHP7nZc1F/eo776Fwu92
+	 iVjw0N+VKKmGriQiKcC+r7m3m7VuzrB5Xxkcjy2QHXCFpLIJkUmwi6vXXppdP7cpIQ
+	 MxH804AdTe4RKY7YN3lxgO1PchQ6Po6SYWITYrDaY5q01htVPJwFg0HxI6bpxT8mqE
+	 P2cTPhXROouH1Doee82D8xPjUU+LSw5Cf4Tnf6NkEk2JAL675denshpeljWN3Cr/wJ
+	 SWl6Su/blIbXA==
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-515b3077d09so2603105e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 08:58:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVYoYgqybgsR7C1jVEs8nWH5HDvm4rbNV/njy52bS5Ex/ldlt1+m0JW+96WUZ/iD+vYRZ8gRN7HARKPIKi5vykRzDq4Q/LGlfvatUKA
+X-Gm-Message-State: AOJu0YzOu4m5AXO16bZfhaP+Yser3e+wVmWRqw9B1N3ZKtj5XmOhKl6o
+	C84F0+7dil+FeBs8TOBAhKo0FCh3SvYvSK2DRMDvNkTXVtrt81w9O3s4+7qZbczATsd50Vno48N
+	Fo1DAOLNCJWmVJCi5m6K7PLMHano=
+X-Google-Smtp-Source: AGHT+IG/Uw55ZKqvrsoFxvPLi09AXqfe8sO16NwSTCXvP//bM3HxdO+WBuC3WtWfxiMdd4VNsdhmX4/G5C+3gtcciTw=
+X-Received: by 2002:ac2:4d9a:0:b0:515:95cd:68a9 with SMTP id
+ g26-20020ac24d9a000000b0051595cd68a9mr1435049lfe.24.1711555087376; Wed, 27
+ Mar 2024 08:58:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] x86/alternatives: Catch late X86_FEATURE modifiers
-Content-Language: en-US
-To: Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, KVM <kvm@vger.kernel.org>,
- Ashish Kalra <ashish.kalra@amd.com>, Joerg Roedel <joro@8bytes.org>,
- Michael Roth <michael.roth@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>
-References: <20240327154317.29909-1-bp@alien8.de>
- <20240327154317.29909-3-bp@alien8.de>
-From: Nikolay Borisov <nik.borisov@suse.com>
-In-Reply-To: <20240327154317.29909-3-bp@alien8.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240326101448.3453626-1-ryan.roberts@arm.com>
+ <CAMj1kXEEi2ZXs+1qwR97zod5Z+TerPKcKZBN8LGZ5XTRV0_-rg@mail.gmail.com>
+ <e1078fe2-0b0b-48c6-8d24-3b2e835201b1@arm.com> <CAMj1kXGtNYce5cOwUc+X5ceyxLGzD1xUEx7JRXqg7+4XQMAORw@mail.gmail.com>
+ <7f69758c-b849-48ca-b279-569469183e91@arm.com>
+In-Reply-To: <7f69758c-b849-48ca-b279-569469183e91@arm.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 27 Mar 2024 17:57:55 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGVNWrm6=sWixL3PiXr1DQN_buvm1YxQW2+zALgd3b-hA@mail.gmail.com>
+Message-ID: <CAMj1kXGVNWrm6=sWixL3PiXr1DQN_buvm1YxQW2+zALgd3b-hA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] Speed up boot with faster linear map creation
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, David Hildenbrand <david@redhat.com>, 
+	Donald Dutile <ddutile@redhat.com>, Eric Chanudet <echanude@redhat.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Wed, 27 Mar 2024 at 17:01, Ryan Roberts <ryan.roberts@arm.com> wrote:
+>
+> On 27/03/2024 13:36, Ard Biesheuvel wrote:
+> > On Wed, 27 Mar 2024 at 12:43, Ryan Roberts <ryan.roberts@arm.com> wrote:
+> >>
+> >> On 27/03/2024 10:09, Ard Biesheuvel wrote:
+...
+> >
+> > I think a mix of the fixmap approach with a 1:1 map could work here:
+> > - use TTBR0 to create a temp 1:1 map of DRAM
+> > - map page tables lazily as they are allocated but using a coarse mapping
+> > - avoid all TLB maintenance except at the end when tearing down the 1:1 mapping.
+>
+> Yes that could work I think. So to make sure I've understood:
+>
+>  - create a 1:1 map for all of DRAM using block and cont mappings where possible
+>      - use memblock_phys_alloc_*() to allocate pgtable memory
+>      - access via fixmap (should be minimal due to block mappings)
 
+Yes but you'd only need the fixmap for pages that are not in the 1:1
+map yet, so after an initial ramp up you wouldn't need it at all,
+assuming locality of memblock allocations and the use of PMD mappings.
+The only tricky thing here is ensuring that we are not mapping memory
+that we shouldn't be touching.
 
-On 27.03.24 г. 17:43 ч., Borislav Petkov wrote:
-> From: "Borislav Petkov (AMD)" <bp@alien8.de>
-> 
-> After alternatives have been patched, changes to the X86_FEATURE flags
-> won't take effect and could potentially even be wrong.
-> 
-> Warn about it.
-> 
-> This is something which has been long overdue.
-> 
-> Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+>  - install it in TTBR0
+>  - create all the swapper mappings as normal (no block or cont mappings)
+>      - use memblock_phys_alloc_*() to alloc pgtable memory
+>      - phys address is also virtual address due to installed 1:1 map
+>  - Remove 1:1 map from TTBR0
+>  - memblock_phys_free() all the memory associated with 1:1 map
+>
 
-nit: While cleaning this bit mind if you also switch 
-alternatives_patched to a bool?
+Indeed.
 
+> That sounds doable on top of the first 2 patches in this series - I'll have a
+> crack. The only missing piece is depth-first 1:1 map traversal to free the
+> tables. I'm guessing something already exists that I can repurpose?
+>
 
+Not that I am aware of, but that doesn't sound too complicated.
