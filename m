@@ -1,188 +1,127 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926C01534EC
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 23:43:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C97C15359C
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 23:44:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711583030; cv=none; b=ug5S7dqE5aR00W7aZUjui4ngOx8qbNPMeoDFUCBCqMQHZDepxPvFbQvQpLvJMCvaiKksaz6VLumJyK9s2pCffjsWjyvho0ionCizx1Sl6mYAakA8J7CYMfiYiGlQvsBnLobdbBcx3ZcX+stspRJrwnDAougVYHVEEPhlI/EsR/Y=
+	t=1711583058; cv=none; b=OnJ6gh3/uFLMvZQpb2QrUgVeJKyw3djFlje+Qxm/lNSh3F4HF9qb8XD8Vi6FSjZedpyNmYAu2JwTMad3UlP9b5WhRkhV5lJuGykeI3PzieKnq47yXUWkLJweAw3pTY0awvGLS1moofwWdAruV9Of9iOPIJRWYRLIQY1cZLYzGmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711583030; c=relaxed/simple;
-	bh=LHSTVg05tlSrlDZR4E07ykDqUEUkIg1dZ8Yhyx6TfZs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VdXJeKIHo0R0IbV1N8FhGSe+TV/Ez6Era1hsUiHwfD62NMKmKFW53TbzEFitFkSQpOnLOQVzY2Q8jABw2YLNqqtsAdPXMTRBcEPTZQx4f24jIeG3SJk7k+K5JgIAQ7+PhT8CnDhNXZlxKRPGmDyDYriGyn0qJaeBxw+ivQApMR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=DnKqWhRk; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1711583058; c=relaxed/simple;
+	bh=dzBreCw05Zj1z2WXknwvtlBCs0CVANyQ6oNok2B+YWI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Mcz6Bnc+Shp2gbf+xRfRR9nPI2i+dZz0B4uzQ/KUaeMGXQJE7qZqsWwhoe+kggTPfN39v6KuA71x9rMFCsX33MAOrBVs6PIaNzQ/yhLBAU42qJcw9I6y+L4tdnyif2BDIYsVzLohTjK00lsTgSclowTv4rk6JPgXy8atV4DHJpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=none smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=G+/0RXGe; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=daynix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="DnKqWhRk"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-609f060cbafso4789127b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 16:43:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="G+/0RXGe"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a46de423039so20980366b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 16:44:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1711583027; x=1712187827; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DsqU9PXjgnx5iMV4Gv2GAE/CJCMtgSBEOxF0nZeWP9w=;
-        b=DnKqWhRkNNFRkN868BBDfaaMasrOZKbpuo0lu9nfxAodgZgqnBd+dl11LpF4xphv/H
-         zN+cKxH7oiigp9Fq4z5ZMIVFJBoHofUnUhX5nC4xNURk6LopWDajhp75pc9WfE6wEED1
-         OYLmuq5WPwu2ryBPp6X8IranWoHPIlEnh4xvx88swtCs1l/zg6KxTs9JRzMcg7+qrdiH
-         v6uZjfSB6WrKiTvEgzbZP4QiZBRSMnv7ZWswLnGVLLblmVHidLOsoiH43bAmMMZhbGRb
-         /Ket1pwRvZxsAeEEHHj6vyUlef2YMoi98HnZmnzPLGREBdbIPs6d5As52Upm8E0Oawq4
-         OA+Q==
+        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1711583055; x=1712187855; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uafOqS8+Hx03UMEMNJ98UkxQPudcualGmS525ViN+u4=;
+        b=G+/0RXGemv25P/Hg9aic/QOJWWkPl3ECvxPJ5Z8ILPNBe41hiuMiw7rnT95hKNdUMW
+         w3FzNtE11lJdGGK+mjV+Nde35g4YUELzWMGPZRURdsj0xmuyOnEe3MXOdNYtSqIGePfJ
+         hrukdWGqK6iCM73WjsVfVJSOpLbjG4XABs2bcRay+WM0v1hnfe9J/MmCRy5d+7M08Qw3
+         2deBSbvtz/8Ox2BrbkSOyJmIUgSnymNtX/rwm8cWOezqJ8pkjsAYXGQ+zUCuj6w3kJ6R
+         eG7zc4ifb3iFLkEK+0YTW8pg67F5XLJQ/CdqTiArIFbgB94X6J1gURX3BYzDkyJQpdEy
+         NH/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711583027; x=1712187827;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DsqU9PXjgnx5iMV4Gv2GAE/CJCMtgSBEOxF0nZeWP9w=;
-        b=Hgu55rsz/A/RbvFAJaWtmQiIAbROm/RizcMl4L4Nts+KrxHg8e+wTWsnSPDZVkNaO/
-         NXcwcxUTcWSumktrHe/0JPVWA7spkBz0+Lenr2CPbwL1IERPHoulJ+CQrwInF4HYu94T
-         00635AT3pBppaZaPn9SLvxXGrrm6VEsLcMLij2JWhjoPSyiRWdOAjnWT6uw6Q4yAaEFS
-         wJjhIujCw0AysyGicYwLsRQMhJ7W7jaKaHeSR4IDClC8o2WGMYag2ZIuLBjz9Z8NxdrA
-         hj6ZpLUmvy9PBI8shbuOX4XoJy90YQJqraMMmJCrpVd0pYG2WfyCVM0SyuVz+Piho4Yd
-         qIOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUdA5JQyqVwrrJBs0RVY6TPn3sAQssV9hB9rjlmQJdrA2+bCgealOwtzsCrOnoPP2QuZ9BJQ0Z2vgTwpvKcoNW4mO8Z/RVyg2L+YADh
-X-Gm-Message-State: AOJu0Ywh0yKjzGP5zKqMN5dRuoMsCLhQ8b/3fkIepuOnuvjU9tqCzWoM
-	xQtU2YQTA8fG8id8ji3XlTJPqFKjqB9yhrgPt3FNMCk2uuCx0whEPIIlG9u8rrsF1Rkq/o3epuM
-	A3vglP2KBwwJXRCmSa0BgStM4/oQ9Oq8XQjgg
-X-Google-Smtp-Source: AGHT+IFzJD42WxwIyDiJQ7hk0af16PEilvyKG/ivl0LgZM5S63lug/B1fRKIBhG8Khsl/MpMDLRdegs8EKQUu4OpC7E=
-X-Received: by 2002:a81:8397:0:b0:611:1eee:3af3 with SMTP id
- t145-20020a818397000000b006111eee3af3mr1296551ywf.7.1711583027605; Wed, 27
- Mar 2024 16:43:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711583055; x=1712187855;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uafOqS8+Hx03UMEMNJ98UkxQPudcualGmS525ViN+u4=;
+        b=SxNVnibkTuEk2/frzjjv9Rz4tJyunU3nDWIZww5OMWzEt+3I4fyufpDdg+M7EynI0C
+         rnXrWCG8R2TZMKG77IDkjBCmC67KMCBxqrQtyvrk1xsuMqd6XGZ7ATIlB3FXH63FBtHo
+         w2so0JAUGcIJ5XNfVazcn2YzInQph5roQWkq019nhD8Z6iuBhaxK+HttabgQ2VtQvFH3
+         RSQtvZ0/l9RtVf5w225GCsTLJJ+mmvObzp8MWgLLgJyvIuWcxc13ovmzTCb8WYGTznC2
+         gcSxHM7csEdZha+fHWXrFWxQ/aWT5mXQmyEmnH4ympwNyHdC8Hi8fJY9nklkFbN3jpKT
+         sfVw==
+X-Forwarded-Encrypted: i=1; AJvYcCVsZQ1bHRqNizwvhMw1yPwUjll1To8FvfGXmT74ft2B3Vw/Jbf2NGo+DITLzaTimstleLZUL31qsvpvehX+vslk5qMPgO0Whgh6AfkO
+X-Gm-Message-State: AOJu0YwxtMJC8Mw31EkPpRfbTwHujaAtQ95gO2MnhISt5QRitH6b6dC0
+	Y7O/zVDkWpgOzNO+UlNbbtuOcLXPETjDoqq8aZceTDFU/RVle0SMZgTXGMMBYRQ=
+X-Google-Smtp-Source: AGHT+IG7URuP7axjuQKV/J+VTSyGmCmmaOiCo+Mv3EERteoqR/3prQyrSPwxKzpmfIt9Ury01gmlHg==
+X-Received: by 2002:a50:8a93:0:b0:56c:18b4:d2ab with SMTP id j19-20020a508a93000000b0056c18b4d2abmr1042066edj.42.1711583054754;
+        Wed, 27 Mar 2024 16:44:14 -0700 (PDT)
+Received: from localhost.localdomain (178.165.195.38.wireless.dyn.drei.com. [178.165.195.38])
+        by smtp.gmail.com with ESMTPSA id eo12-20020a056402530c00b00568afb0e731sm139243edb.63.2024.03.27.16.44.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Mar 2024 16:44:14 -0700 (PDT)
+From: Andrew Melnychenko <andrew@daynix.com>
+To: mst@redhat.com,
+	jasowang@redhat.com,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	hawk@kernel.org,
+	john.fastabend@gmail.com,
+	kvm@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Cc: yuri.benditovich@daynix.com,
+	yan@daynix.com
+Subject: [PATCH v2 1/1] vhost: Added pad cleanup if vnet_hdr is not present.
+Date: Thu, 28 Mar 2024 01:18:26 +0200
+Message-ID: <20240327231826.1725488-1-andrew@daynix.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZgSrBVidW1U6yP+h@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
-In-Reply-To: <ZgSrBVidW1U6yP+h@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
-From: Paul Moore <paul@paul-moore.com>
-Date: Wed, 27 Mar 2024 19:43:36 -0400
-Message-ID: <CAHC9VhRYDNoqkbkgdUSg-kYSHVbheD5NtezmVxyRakZ0-DzuSg@mail.gmail.com>
-Subject: Re: [PATCH] LANDLOCK: use kmem_cache for landlock_object
-To: Ayush Tiwari <ayushtiw0110@gmail.com>
-Cc: alison.schofield@intel.com, mic@digikod.net, 
-	fabio.maria.de.francesco@linux.intel.com, linux-staging@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, 
-	outreachy@lists.linux.dev, linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 27, 2024 at 7:26=E2=80=AFPM Ayush Tiwari <ayushtiw0110@gmail.co=
-m> wrote:
->
-> Use kmem_cache replace kzalloc() calls with kmem_cache_zalloc() for
-> struct landlock_object and update the related dependencies.
->
-> Signed-off-by: Ayush Tiwari <ayushtiw0110@gmail.com>
-> ---
->  security/landlock/fs.c     |  2 +-
->  security/landlock/object.c | 14 ++++++++++++--
->  security/landlock/object.h |  4 ++++
->  security/landlock/setup.c  |  2 ++
->  4 files changed, 19 insertions(+), 3 deletions(-)
+When the Qemu launched with vhost but without tap vnet_hdr,
+vhost tries to copy vnet_hdr from socket iter with size 0
+to the page that may contain some trash.
+That trash can be interpreted as unpredictable values for
+vnet_hdr.
+That leads to dropping some packets and in some cases to
+stalling vhost routine when the vhost_net tries to process
+packets and fails in a loop.
 
-Hi Ayush,
+Qemu options:
+  -netdev tap,vhost=on,vnet_hdr=off,...
 
-Micka=C3=ABl has the final say on Landlock patches, but I had a few
-comments that I've included below ...
+From security point of view, wrong values on field used later
+tap's tap_get_user_xdp() and will affect skb gso and options.
+Later the header(and data in headroom) should not be used by the stack.
+Using custom socket as a backend to vhost_net can reveal some data
+in the vnet_hdr, although it would require kernel access to implement.
 
-> diff --git a/security/landlock/fs.c b/security/landlock/fs.c
-> index fc520a06f9af..227dd67dd902 100644
-> --- a/security/landlock/fs.c
-> +++ b/security/landlock/fs.c
-> @@ -124,7 +124,7 @@ static struct landlock_object *get_inode_object(struc=
-t inode *const inode)
->         if (unlikely(rcu_access_pointer(inode_sec->object))) {
->                 /* Someone else just created the object, bail out and ret=
-ry. */
->                 spin_unlock(&inode->i_lock);
-> -               kfree(new_object);
-> +               kmem_cache_free(landlock_object_cache, new_object);
+The issue happens because the value of sock_len in virtqueue is 0.
+That value is set at vhost_net_set_features() with
+VHOST_NET_F_VIRTIO_NET_HDR, also it's set to zero at device open()
+and reset() routine.
+So, currently, to trigger the issue, we need to set up qemu with
+vhost=on,vnet_hdr=off, or do not configure vhost in the custom program.
 
-See my comment below, but you may want to wrap this in a Landlock
-object API function.
+Signed-off-by: Andrew Melnychenko <andrew@daynix.com>
+---
+ drivers/vhost/net.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
->                 rcu_read_lock();
->                 goto retry;
-> diff --git a/security/landlock/object.c b/security/landlock/object.c
-> index 1f50612f0185..df1354215617 100644
-> --- a/security/landlock/object.c
-> +++ b/security/landlock/object.c
-> @@ -17,6 +17,15 @@
->
->  #include "object.h"
->
-> +struct kmem_cache *landlock_object_cache;
-> +
-> +void __init landlock_object_init(void)
-> +{
-> +       landlock_object_cache =3D kmem_cache_create(
-> +               "landlock_object_cache", sizeof(struct landlock_object), =
-0,
-> +               SLAB_PANIC, NULL);
+diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+index f2ed7167c848..57411ac2d08b 100644
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -735,6 +735,9 @@ static int vhost_net_build_xdp(struct vhost_net_virtqueue *nvq,
+ 	hdr = buf;
+ 	gso = &hdr->gso;
+ 
++	if (!sock_hlen)
++		memset(buf, 0, pad);
++
+ 	if ((gso->flags & VIRTIO_NET_HDR_F_NEEDS_CSUM) &&
+ 	    vhost16_to_cpu(vq, gso->csum_start) +
+ 	    vhost16_to_cpu(vq, gso->csum_offset) + 2 >
+-- 
+2.43.0
 
-The comments in include/linux/slab.h suggest using the KMEM_CACHE()
-macro, instead of kmem_cache_create(), as a best practice for creating
-slab caches.
-
-> +}
-> +
->  struct landlock_object *
->  landlock_create_object(const struct landlock_object_underops *const unde=
-rops,
->                        void *const underobj)
-> @@ -25,7 +34,8 @@ landlock_create_object(const struct landlock_object_und=
-erops *const underops,
->
->         if (WARN_ON_ONCE(!underops || !underobj))
->                 return ERR_PTR(-ENOENT);
-> -       new_object =3D kzalloc(sizeof(*new_object), GFP_KERNEL_ACCOUNT);
-> +       new_object =3D
-> +               kmem_cache_zalloc(landlock_object_cache, GFP_KERNEL_ACCOU=
-NT);
-
-If the line is too long, you might want to consider splitting the
-function parameters like this:
-
-  new_object =3D kmem_cache_zalloc(landlock_object_cache,
-                                 GFP_KERNEL_ACCOUNT);
-
->         if (!new_object)
->                 return ERR_PTR(-ENOMEM);
->         refcount_set(&new_object->usage, 1);
-> @@ -62,6 +72,6 @@ void landlock_put_object(struct landlock_object *const =
-object)
->                  * @object->underobj to @object (if it still exists).
->                  */
->                 object->underops->release(object);
-> -               kfree_rcu(object, rcu_free);
-> +               kmem_cache_free(landlock_object_cache, object);
->         }
->  }
-> diff --git a/security/landlock/object.h b/security/landlock/object.h
-> index 5f28c35e8aa8..8ba1af3ddc2e 100644
-> --- a/security/landlock/object.h
-> +++ b/security/landlock/object.h
-> @@ -13,6 +13,10 @@
->  #include <linux/refcount.h>
->  #include <linux/spinlock.h>
->
-> +extern struct kmem_cache *landlock_object_cache;
-
-This really is a decision for Micka=C3=ABl, but you may want to make
-@landlock_object_cache private to object.c and create functions to
-manage it as needed, e.g. put/free operations.
-
-> +void __init landlock_object_init(void);
-> +
->  struct landlock_object;
->
->  /**
-> diff --git a/security/landlock/setup.c b/security/landlock/setup.c
-> index f6dd33143b7f..a5fca4582ee1 100644
-
---=20
-paul-moore.com
