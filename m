@@ -1,160 +1,96 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8EC1465A0
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 12:42:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92F4146D64
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 12:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711543332; cv=none; b=vEnUXbmdBqSjLf4zqxDtBTAv/8CPSHOHqG8m8Q8MzoKN4OJdn3PuL/msheWnzKrFAMQadet6J2YX5sVDbFktHej2HDnOe0bBBZpmlwtXPkYtzeet5iLg4rICQIh0SJdzyNAKafs/WG8P83aXrEFyHa/P24gaiHCPlnSe5fsxsxg=
+	t=1711543345; cv=none; b=OywzTR4LAxqH4PmiT4Dz1xdJ3hQDpsVoqhOh07Su/4+ZEaJMYYTm5xIKKeGRXpI75QIWWg6kl7XmUtiUfFqFPtUTrigi8jQp9KEa+0ASlW0j9PLZAAwpPlIWqX7K/KLgWYJEdt8UnMZyKGrOLElvz70W/4xzb9sgdEzdZrFbGoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711543332; c=relaxed/simple;
-	bh=i29GGpteKXJOT7Y7HQVb9d3eZ/9hZZ41eKapONuqqTs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fGqG7kikA1AlIe30QX8otIn8g3lo0fUG0IeEuUMK49OsEcMJy2Toyy8xWfVCh1fZotH0MJ8zzaftZXA+QZgc39oEio5ELsmkeJOhcimoEkxdNJtSJLqTe39GkoZKmuBX16aChSQ939MTucG8UbSLslj16X2j2DcDGZr16JtV3NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VTp8hAeQ; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711543345; c=relaxed/simple;
+	bh=fIUWXJRrxbtYXLlSLOpvxXJLHkM+ks7iBm6J3zBbb3E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KW3qCNTZNo634tUUu0MRidyvZ9pwH88bvrEAxSmwYZQ5p5j7Le2E+zz5PUnNVCw79G4pNOC6LgYo0t5NwqaCAMNLia5tEtLWMvgzBP65jfBfs0eHxgs15cKtK7iQez4RgtH31Qd83X7Cb+jqyw+iTGxvRgmszRI2yuSp9wLYFdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=geDSCJnN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VTp8hAeQ"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a474c4faf5eso437940666b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 05:42:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711543328; x=1712148128; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z2N77S+83trKseWxbTwOaTLrIYXxobuVp9FyL/kFGQQ=;
-        b=VTp8hAeQhWIxGPk+fWvBhPZPMLW2rQiXpfA1OUa07cBe0tOT/W31mS9dUqsr54ipxD
-         FceoJcikL4WgnfQoOo+VKcU3Xg4ISVisGOGa4uaedOsuqz/aoq+gVfu7nl7v8mYBOSCm
-         Enz7YSGkK9FQ6mPT0Y7+AzKXRU6DNGK1RrATwV123OWT6R7pJIeNvMLAcPhU1WufWgNp
-         rFOCdnK1yULPMnduRO/QM61YXXUkkSNGhMe+jOwxyYsnUiDbfMlMHDNM0Bur9XnQUJsC
-         9gyuHvV5GwlpuC6pwLN6rYL1dwfSIK150D3nQs1IzCIFw/rS9Lb4fkSJgp5wrtHXoo8a
-         VunA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711543328; x=1712148128;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z2N77S+83trKseWxbTwOaTLrIYXxobuVp9FyL/kFGQQ=;
-        b=nX4d/S6EXFCdq2UTPjsyVZ0wgBnIROnIWCMV+uwC6fO/55NZP0vUEm6QUpBWsrcDXn
-         RK45wVpqvqQAhAIZ8FHycPbpo7lduaBdL5BXT1e1RDkaB0Zq3Eu6zX/MQ5ZdZDdwWOPV
-         L2Nvbv63ordJsFiKaVCcB5rm4eHzLHu2/PWhB6tEclhcAJpb/3IBHU7YDvP7+Ki9GPs3
-         eIkZLIBQKX9TJqXYlxiK4D/ueuSBzH9xuhw0Adj7+ZgDT18lGfHVGRDsMQxS9P0/dAFN
-         aRkpDtCcKdMSOJMWphwG2DDF59soOd3WyHlRRe31IKTwvXPoFwZIFmqEdxRoYiqVw1LH
-         KQPw==
-X-Forwarded-Encrypted: i=1; AJvYcCUgm/gxu8xT2/o1spLWZYSx2Oocdjkc9SbB+1EkJgsFCOxI+p8roMjO1qyVi4krq1gOowjpyYX+11SxZAwPNFkmR01iBC3jxAVzBwYn
-X-Gm-Message-State: AOJu0YxBPynVp1UnS+Yiy7rKxM5Lewjm1NLoEPfDiPOuawIWQmYNkvho
-	5MAG4kMT1OUOvcqJVZcB05S0bb1ClVsFYzA18E8T83hlHFcTFL4LN7pRsZQ9D3Q=
-X-Google-Smtp-Source: AGHT+IEkE4pNot1uzWqq/Dxu/KgO4mLE7QfsgLYuIObS5ATO5treG1hWzzYXKuUBzpsw7NHEclpATw==
-X-Received: by 2002:a17:906:718f:b0:a47:47fc:441e with SMTP id h15-20020a170906718f00b00a4747fc441emr836212ejk.47.1711543328069;
-        Wed, 27 Mar 2024 05:42:08 -0700 (PDT)
-Received: from [127.0.1.1] ([178.197.206.205])
-        by smtp.gmail.com with ESMTPSA id gx16-20020a170906f1d000b00a4707ec7c34sm5379175ejb.166.2024.03.27.05.41.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 05:42:07 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Wed, 27 Mar 2024 13:40:55 +0100
-Subject: [PATCH 02/22] um: virt-pci: drop owner assignment
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="geDSCJnN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 804BEC433C7;
+	Wed, 27 Mar 2024 12:42:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711543345;
+	bh=fIUWXJRrxbtYXLlSLOpvxXJLHkM+ks7iBm6J3zBbb3E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=geDSCJnNZPAPoorLnoR/kJHCntkR91w2/ZmB+UdHCYY2jMce7bYFtuhaoQYpDj5ha
+	 UfhU5VefCdAdiipbGWDmfAGmHv9fdZPj8vJsVbKzJ9NLP/OTgTzXUiki/PJH+BR5L7
+	 edOf4S8w0PfQ3deJSVcztt3zytaN32fKVr8Pir+wwN98qBtkqcxpH5pHF2KlcKMlv2
+	 5cZYZyIUP7aIo+qtKKsqXIsLLBkaz/1iQBRyxqYPW8A6o5XGU+UYSTrCvTkpHoENld
+	 QPihyCh3ERFG3qw+U5js0R2Bh6jlNAu+23UV2fYy9My+6U7Dnl2s+mUZm/TGIGswTk
+	 3DwTwymT8Sa4Q==
+Date: Wed, 27 Mar 2024 13:42:22 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Alex Shi <alexs@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Barry Song <song.bao.hua@hisilicon.com>
+Subject: Re: for_each_domain()/sched_domain_span() has offline CPUs (was Re:
+ [PATCH 2/2] timers: Fix removed self-IPI on global timer's enqueue in
+ nohz_full)
+Message-ID: <ZgQULtxy0UnoXfGi@localhost.localdomain>
+References: <20240318230729.15497-3-frederic@kernel.org>
+ <464f6be2-4a72-440d-be53-6a1035d56a4f@paulmck-laptop>
+ <1b5752c8-ef32-4ed4-b539-95d507ec99ce@paulmck-laptop>
+ <ZfsLtMijRrNZfqh6@localhost.localdomain>
+ <6a95b6ac-6681-4492-b155-e30c19bb3341@paulmck-laptop>
+ <ZfwdEROGFFmIbkCM@lothringen>
+ <bf8689c2-0749-47cb-9535-53cf66e34f5e@paulmck-laptop>
+ <Zf1sSv/6mQHJuJ8G@lothringen>
+ <Zf2GDjekyemQKn7I@lothringen>
+ <xhsmhwmppaqls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240327-module-owner-virtio-v1-2-0feffab77d99@linaro.org>
-References: <20240327-module-owner-virtio-v1-0-0feffab77d99@linaro.org>
-In-Reply-To: <20240327-module-owner-virtio-v1-0-0feffab77d99@linaro.org>
-To: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Richard Weinberger <richard@nod.at>, 
- Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
- Johannes Berg <johannes@sipsolutions.net>, 
- Paolo Bonzini <pbonzini@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, 
- Jens Axboe <axboe@kernel.dk>, Marcel Holtmann <marcel@holtmann.org>, 
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
- Olivia Mackall <olivia@selenic.com>, 
- Herbert Xu <herbert@gondor.apana.org.au>, Amit Shah <amit@kernel.org>, 
- Arnd Bergmann <arnd@arndb.de>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Gonglei <arei.gonglei@huawei.com>, "David S. Miller" <davem@davemloft.net>, 
- Viresh Kumar <vireshk@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, David Airlie <airlied@redhat.com>, 
- Gerd Hoffmann <kraxel@redhat.com>, 
- Gurchetan Singh <gurchetansingh@chromium.org>, 
- Chia-I Wu <olvaffe@gmail.com>, 
- Jean-Philippe Brucker <jean-philippe@linaro.org>, 
- Joerg Roedel <joro@8bytes.org>, Alexander Graf <graf@amazon.com>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Eric Van Hensbergen <ericvh@kernel.org>, 
- Latchesar Ionkov <lucho@ionkov.net>, 
- Dominique Martinet <asmadeus@codewreck.org>, 
- Christian Schoenebeck <linux_oss@crudebyte.com>, 
- Stefano Garzarella <sgarzare@redhat.com>, Kalle Valo <kvalo@kernel.org>, 
- Dan Williams <dan.j.williams@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
- Ira Weiny <ira.weiny@intel.com>, 
- Pankaj Gupta <pankaj.gupta.linux@gmail.com>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Mathieu Poirier <mathieu.poirier@linaro.org>, 
- "Martin K. Petersen" <martin.petersen@oracle.com>, 
- Vivek Goyal <vgoyal@redhat.com>, Miklos Szeredi <miklos@szeredi.hu>, 
- Anton Yakovlev <anton.yakovlev@opensynergy.com>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: virtualization@lists.linux.dev, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-um@lists.infradead.org, 
- linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
- linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- iommu@lists.linux.dev, netdev@vger.kernel.org, v9fs@lists.linux.dev, 
- kvm@vger.kernel.org, linux-wireless@vger.kernel.org, nvdimm@lists.linux.dev, 
- linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org, 
- linux-fsdevel@vger.kernel.org, alsa-devel@alsa-project.org, 
- linux-sound@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=718;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=i29GGpteKXJOT7Y7HQVb9d3eZ/9hZZ41eKapONuqqTs=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmBBPbywJQXZioM2grDNH1GhnbC9jT7FlHBu8Il
- BXxYGwRjraJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZgQT2wAKCRDBN2bmhouD
- 141rD/4uo4AQiIOCl21dlkWWoVLjNoCmALlYeYWtYXDJLeS9+PR/4c2YDTN11rNGZIY/nuXht+R
- 08R2mFazQGyBslNrJRa5JhTm27rGZioRY5wiYiHqxItX9wtbLBAaPUS9Nophm+R4wqOUhsZnpH2
- iXQpVZU+WxzXQWPWb37iMmYzasbeW4glBRKXiiC3CiF8u0wRyTUDts0V602SqlnsxNufaQ8Fhkw
- v2BkNkkV2fb7XDmngW8OJ0kdV0Jyz61GQTc1t+4KdTLSlm4BqGSDVopNAVcuGaanCqBF/52q9Vw
- GwfqQB77dn2XOgo/ZR0RSXAr23vu/0OwanIMUXPmNtLP0HdBjsPDci1Vl6eBKtREXmXYWwbZZYz
- CWS0C80pM9J/VlR5mCSMck3fBmEeDTvE8F9MpZEre2yc2Q29DVx/bpfm6ztE/EyVr0F9Up8O/Tr
- VA6FaMUz1KovyBRE8weaVHwCZ12Ab+SEc/U7hZ50L35WTjMLlYVRdlVUmcIzP2KmiQnV3W6jpMz
- orbUL5s/p8br6ozoNcPu5ZcZz+mLi4MpfFyp/6zJ+ciMyf/3IUkaehDBf8Q36omx98PhwP8KxB6
- /565K/p5SNWNrrGqH3SAriemyZe8lv2MhxVq7qZ+7WqhhglZ3FWLG0w1uleUDxPVaxFkVFtntn7
- qgSaAlhyRZ+9xPg==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <xhsmhwmppaqls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 
-virtio core already sets the .owner, so driver does not need to.
+Le Tue, Mar 26, 2024 at 05:46:07PM +0100, Valentin Schneider a écrit :
+> > Then with that patch I ran TREE07, just some short iterations:
+> >
+> > tools/testing/selftests/rcutorture/bin/kvm.sh --configs "10*TREE07" --allcpus --bootargs "rcutorture.onoff_interval=200" --duration 2
+> >
+> > And the warning triggers very quickly. At least since v6.3 but maybe since
+> > earlier. Is this expected behaviour or am I right to assume that
+> > for_each_domain()/sched_domain_span() shouldn't return an offline CPU?
+> >
+> 
+> I would very much assume an offline CPU shouldn't show up in a
+> sched_domain_span().
+> 
+> Now, on top of the above, there's one more thing worth noting:
+>   cpu_up_down_serialize_trainwrecks()
+> 
+> This just flushes the cpuset work, so after that the sched_domain topology
+> should be sane. However I see it's invoked at the tail end of _cpu_down(),
+> IOW /after/ takedown_cpu() has run, which sounds too late. The comments
+> around this vs. lock ordering aren't very reassuring however, so I need to
+> look into this more.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Ouch...
 
----
+> 
+> Maybe as a "quick" test to see if this is the right culprit, you could try
+> that with CONFIG_CPUSET=n? Because in that case the sched_domain update is
+> ran within sched_cpu_deactivate().
 
-Depends on the first patch.
----
- arch/um/drivers/virt-pci.c | 1 -
- 1 file changed, 1 deletion(-)
+I just tried and I fear that doesn't help. It still triggers even without
+cpusets :-s
 
-diff --git a/arch/um/drivers/virt-pci.c b/arch/um/drivers/virt-pci.c
-index 97a37c062997..7cb503469bbd 100644
---- a/arch/um/drivers/virt-pci.c
-+++ b/arch/um/drivers/virt-pci.c
-@@ -752,7 +752,6 @@ MODULE_DEVICE_TABLE(virtio, id_table);
- 
- static struct virtio_driver um_pci_virtio_driver = {
- 	.driver.name = "virtio-pci",
--	.driver.owner = THIS_MODULE,
- 	.id_table = id_table,
- 	.probe = um_pci_virtio_probe,
- 	.remove = um_pci_virtio_remove,
-
--- 
-2.34.1
-
+Thanks.
