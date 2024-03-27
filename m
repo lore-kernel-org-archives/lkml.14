@@ -1,135 +1,146 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D9F150981
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 18:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0087A12A144;
+	Wed, 27 Mar 2024 18:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711565218; cv=none; b=Wmlv4kHiaSUXJFGWlKHbzS1cwc37UgxbMvowLsctjeOPIv6vJKnbBz1xhCca6SeddOsJJhdgccvepo+h5AyReKddUIyHnxOmPFALtgAwg60vSpdZysJ92hNv+5dlkghTRziQuZjApSW76E1D1EhNXpsWBJwe6eOfvkP9tDba0EM=
+	t=1711565456; cv=none; b=PLVhESmaZnBS+5k5lePMyoN5X73x2tYeQBUcutPt66S6zj21x2VWbZ3GjjNVB+jNCFJGj9TeUNQlqTA5G2yQFTI3F6CAZJAZZ9eUTN4fSioQebZE3HN2bCenlSnI5qHaKQZBfE1uWOPIAlSPXk6WaENG2gZJeOIw10vVgD/yB0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711565218; c=relaxed/simple;
-	bh=wOYDqXQBwndxLNpGzVpA/alUz261GjYTc0wTNh/rnrg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qFqpaKNY0U8Zce0QRGYiF6MsEQpyjioSeNUNczmU5VAJEgzNN9r7RxIl9xefF2eW0oOkpFNmeJwY6dnArkcbB3b3ZwosrsBkyB9hQTZr0EnNHqV97WYYFGX+u1Kz6p6k9FJy22tH1fb9nyGKdlvAqpuZWDxzzz1udgBEQKWmjJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Vz588ZcO; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1711565456; c=relaxed/simple;
+	bh=qpmpb6mRaGuhJK5sjkD5qbyw9yG7+XNJ/p3wzxWXdp4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Pez9bN5cyhtTzrUUSeWQuRfnVhbAOGpgZFybg9HSi258IjDgc62RbiBA0t1C1RiekjPgkurKv2X5ZYFiipYCLGC0Y12wvMqlRM/rRd8hoMG12ddDxOuJJRJevfK6fw6ppD/fVOsAYL4wLcyyofcjbCqPc+NyNHChNk1Jxtc1LXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JlbUqpRC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Vz588ZcO"
-Message-ID: <c621f56d-6354-45a3-8c41-1380f5f03b1f@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1711565213;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Yx1UbkHwdHZLLbNuRcSx7DJyIY0QwP+4nFSmm21yDtQ=;
-	b=Vz588ZcOD6FrUivNA4zc/O2aYjnlG2CqGtHPSocyox7umNsKF3yrwoGxP1Xubf7bKxC3qD
-	PdLQbAW86bvNr3QJAtjD+9zFfsK5J7mP1o1wTd3mzIRv2X7ddNDqhmGbirF6+MM4bUQ+Ib
-	vU6poku+UMDG74k7C13EYaeERKDSLeA=
-Date: Wed, 27 Mar 2024 11:46:42 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JlbUqpRC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03846C433F1;
+	Wed, 27 Mar 2024 18:50:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711565455;
+	bh=qpmpb6mRaGuhJK5sjkD5qbyw9yG7+XNJ/p3wzxWXdp4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=JlbUqpRCa0HYhHCaPC01tZxS1z3riWCuuqj0Gj5voTcCiRcnkO6npEAZhB5cYr16S
+	 ZN5CvTgdrZ3sy35aJ/dPqwZ259M5fRAVol3IH5FabkQvuksxwks99Un/DpNB8SpNTk
+	 BJE3iQwA1wK6GaLB+he1Z+SeoKNqKjrbrKkV0ziANrof44oTWv1mABDVwn6c3A5+H2
+	 li/AInDIe0O20xgfbu4L6hA/HABidjyxvJktEZ5kJ4EQuMwoZmMVAkh303x0jzvGeU
+	 ROwCTJiB7e3qYiTD1XACxAG/tpWBEUprWf9t1VyKWrz2IXOe5f/HEcUqKWFUatyyVh
+	 22TDrIykc0wAg==
+Date: Wed, 27 Mar 2024 12:50:52 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] wifi: cfg80211: Use __counted_by() in struct
+ wmi_start_scan_cmd and avoid -Wfamnae warning
+Message-ID: <ZgRqjGShTl3y5FFB@neat>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [syzbot] [bpf?] [net?] KMSAN: uninit-value in dev_map_lookup_elem
-Content-Language: en-US
-To: Yonghong Song <yonghong.song@linux.dev>,
- Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- syzbot <syzbot+1a3cf6f08d68868f9db3@syzkaller.appspotmail.com>,
- bpf <bpf@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eddy Z <eddyz87@gmail.com>, Hao Luo <haoluo@google.com>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, Jiri Olsa <jolsa@kernel.org>,
- KP Singh <kpsingh@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Network Development <netdev@vger.kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Song Liu <song@kernel.org>
-References: <0000000000006f876b061478e878@google.com>
- <a402206e-a9c9-40bd-bf78-710054506071@linux.dev>
- <CAADnVQLXyQ_o5hSA0OpHYj231WKPFNRNMyr0NePMr2ypusiLmg@mail.gmail.com>
- <5063d525-d9df-4aaf-991d-bcb9f495c041@linux.dev>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <5063d525-d9df-4aaf-991d-bcb9f495c041@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 3/26/24 9:47 PM, Yonghong Song wrote:
-> 
-> On 3/26/24 6:07 PM, Alexei Starovoitov wrote:
->> On Tue, Mar 26, 2024 at 5:54 PM Martin KaFai Lau <martin.lau@linux.dev> wrote:
->>> On 3/25/24 2:36 AM, syzbot wrote:
->>>> Hello,
->>>>
->>>> syzbot found the following issue on:
->>>>
->>>> HEAD commit:    5e74df2f8f15 Merge tag 'x86-urgent-2024-03-24' of git://gi..
->>>> git tree:       upstream
->>>> console+strace: https://syzkaller.appspot.com/x/log.txt?x=148872a5180000
->>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=e6bd769cb793b98a
->>>> dashboard link: https://syzkaller.appspot.com/bug?extid=1a3cf6f08d68868f9db3
->>>> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for 
->>>> Debian) 2.40
->>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15921a6e180000
->>>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12e081f1180000
->>>>
->>>> Downloadable assets:
->>>> disk image: 
->>>> https://storage.googleapis.com/syzbot-assets/1a82880723a7/disk-5e74df2f.raw.xz
->>>> vmlinux: 
->>>> https://storage.googleapis.com/syzbot-assets/fd3046ac43b9/vmlinux-5e74df2f.xz
->>>> kernel image: 
->>>> https://storage.googleapis.com/syzbot-assets/2097be59cbc1/bzImage-5e74df2f.xz
->>>>
->>>> IMPORTANT: if you fix the issue, please add the following tag to the commit:
->>>> Reported-by: syzbot+1a3cf6f08d68868f9db3@syzkaller.appspotmail.com
->>>>
->>>> =====================================================
->>>> BUG: KMSAN: uninit-value in __dev_map_lookup_elem kernel/bpf/devmap.c:441 
->>>> [inline]
->>>> BUG: KMSAN: uninit-value in dev_map_lookup_elem+0xf3/0x170 
->>>> kernel/bpf/devmap.c:796
->>>>    __dev_map_lookup_elem kernel/bpf/devmap.c:441 [inline]
->>>>    dev_map_lookup_elem+0xf3/0x170 kernel/bpf/devmap.c:796
->>>>    ____bpf_map_lookup_elem kernel/bpf/helpers.c:42 [inline]
->>>>    bpf_map_lookup_elem+0x5c/0x80 kernel/bpf/helpers.c:38
->>>>    ___bpf_prog_run+0x13fe/0xe0f0 kernel/bpf/core.c:1997
->>>>    __bpf_prog_run256+0xb5/0xe0 kernel/bpf/core.c:2237
->>> It should be in the interpreter mode.
->>>
->>> The C reproducer is trying to run the following bpf prog:
->>>
->>>      0: (18) r0 = 0x0
->>>      2: (18) r1 = map[id:49]
->>>      4: (b7) r8 = 16777216
->>>      5: (7b) *(u64 *)(r10 -8) = r8
->>>      6: (bf) r2 = r10
->>>      7: (07) r2 += -229
->>>              ^^^^^^^^^^
->>>
->>>      8: (b7) r3 = 8
->>>      9: (b7) r4 = 0
->>>     10: (85) call dev_map_lookup_elem#1543472
->>>     11: (95) exit
->>>
->>> I think this KMSAN report (and a few others related to lookup/delete_elem)
->>> should only happen in the interpreter mode.
->>>
->>> Does it worth to suppress it by always initializing the stack in the interpreter
->>> mode considering the interpreter is not very speed sensitive ?
->> Maybe we can mark it as initialized from kmsan pov ?
->> There are kasan_poison/unpoison helpers that may fit ?
-> 
-> Maybe use kmsan_unpoison_memory()?
+Prepare for the coming implementation by GCC and Clang of the
+__counted_by attribute. Flexible array members annotated with
+__counted_by can have their accesses bounds-checked at run-time
+via CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE
+(for strcpy/memcpy-family functions).
 
-Good idea. It should do. My qemu cannot boot with CONFIG_KMSAN somehow.
-I will ask syzbot to test.
+Also, -Wflex-array-member-not-at-end is coming in GCC-14, and we are
+getting ready to enable it globally.
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/martin.lau/bpf-next.git interpreter.kmsan
+So, use the `DEFINE_FLEX()` helper for an on-stack definition of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
+
+So, with these changes, fix the following warning:
+drivers/net/wireless/ath/wil6210/cfg80211.c:896:43: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Link: https://github.com/KSPP/linux/issues/202
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/wireless/ath/wil6210/cfg80211.c | 22 ++++++++++-----------
+ drivers/net/wireless/ath/wil6210/wmi.h      |  2 +-
+ 2 files changed, 11 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/wil6210/cfg80211.c b/drivers/net/wireless/ath/wil6210/cfg80211.c
+index dbe4b3478f03..836b49954171 100644
+--- a/drivers/net/wireless/ath/wil6210/cfg80211.c
++++ b/drivers/net/wireless/ath/wil6210/cfg80211.c
+@@ -892,10 +892,8 @@ static int wil_cfg80211_scan(struct wiphy *wiphy,
+ 	struct wil6210_priv *wil = wiphy_to_wil(wiphy);
+ 	struct wireless_dev *wdev = request->wdev;
+ 	struct wil6210_vif *vif = wdev_to_vif(wil, wdev);
+-	struct {
+-		struct wmi_start_scan_cmd cmd;
+-		u16 chnl[4];
+-	} __packed cmd;
++	DEFINE_FLEX(struct wmi_start_scan_cmd, cmd,
++		    channel_list, num_channels, 4);
+ 	uint i, n;
+ 	int rc;
+ 
+@@ -977,9 +975,9 @@ static int wil_cfg80211_scan(struct wiphy *wiphy,
+ 	vif->scan_request = request;
+ 	mod_timer(&vif->scan_timer, jiffies + WIL6210_SCAN_TO);
+ 
+-	memset(&cmd, 0, sizeof(cmd));
+-	cmd.cmd.scan_type = WMI_ACTIVE_SCAN;
+-	cmd.cmd.num_channels = 0;
++	memset(cmd, 0, sizeof(*cmd));
++	cmd->scan_type = WMI_ACTIVE_SCAN;
++	cmd->num_channels = 0;
+ 	n = min(request->n_channels, 4U);
+ 	for (i = 0; i < n; i++) {
+ 		int ch = request->channels[i]->hw_value;
+@@ -991,7 +989,8 @@ static int wil_cfg80211_scan(struct wiphy *wiphy,
+ 			continue;
+ 		}
+ 		/* 0-based channel indexes */
+-		cmd.cmd.channel_list[cmd.cmd.num_channels++].channel = ch - 1;
++		cmd->num_channels++;
++		cmd->channel_list[cmd->num_channels - 1].channel = ch - 1;
+ 		wil_dbg_misc(wil, "Scan for ch %d  : %d MHz\n", ch,
+ 			     request->channels[i]->center_freq);
+ 	}
+@@ -1007,16 +1006,15 @@ static int wil_cfg80211_scan(struct wiphy *wiphy,
+ 	if (rc)
+ 		goto out_restore;
+ 
+-	if (wil->discovery_mode && cmd.cmd.scan_type == WMI_ACTIVE_SCAN) {
+-		cmd.cmd.discovery_mode = 1;
++	if (wil->discovery_mode && cmd->scan_type == WMI_ACTIVE_SCAN) {
++		cmd->discovery_mode = 1;
+ 		wil_dbg_misc(wil, "active scan with discovery_mode=1\n");
+ 	}
+ 
+ 	if (vif->mid == 0)
+ 		wil->radio_wdev = wdev;
+ 	rc = wmi_send(wil, WMI_START_SCAN_CMDID, vif->mid,
+-		      &cmd, sizeof(cmd.cmd) +
+-		      cmd.cmd.num_channels * sizeof(cmd.cmd.channel_list[0]));
++		      cmd, struct_size(cmd, channel_list, cmd->num_channels));
+ 
+ out_restore:
+ 	if (rc) {
+diff --git a/drivers/net/wireless/ath/wil6210/wmi.h b/drivers/net/wireless/ath/wil6210/wmi.h
+index 71bf2ae27a98..b47606d9068c 100644
+--- a/drivers/net/wireless/ath/wil6210/wmi.h
++++ b/drivers/net/wireless/ath/wil6210/wmi.h
+@@ -474,7 +474,7 @@ struct wmi_start_scan_cmd {
+ 	struct {
+ 		u8 channel;
+ 		u8 reserved;
+-	} channel_list[];
++	} channel_list[] __counted_by(num_channels);
+ } __packed;
+ 
+ #define WMI_MAX_PNO_SSID_NUM	(16)
+-- 
+2.34.1
+
