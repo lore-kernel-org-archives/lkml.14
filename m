@@ -1,95 +1,254 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E7A171AD
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 02:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDE4171AD;
+	Wed, 27 Mar 2024 02:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711507462; cv=none; b=Phh49u4IW91zouaz1eYRa+DgmQAKT2NhcFVcNtBhMrIq6SJc4byZ4uWP6byfouPPCwmPRMQBcmBT645qWwTrXg+xsAakMLrizmCvpc2XXe2tFiKzbM4GAqY2Wf0T2/HRt7H6LziMJjsgydaA2vB7MBU4efPXUqGhsqbEx8VREB8=
+	t=1711507491; cv=none; b=XdEl/O3i0QGyagoBGF5TSVbFjyLWUQS3dZ+mMMFAk55z2tV5ATDtwWQJ0M22DDW0w7U1Jz00H6POPjfBxFvR5H/d3epkHDh6ljHpxddbGls1txmA9XiBt1T+lqnJo0Pqv/3JkbxnU/azcOcozXdgeiLKXG8j8G16ioTEAxQZmaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711507462; c=relaxed/simple;
-	bh=/nMN9bGkyVCXT67rKhoWoGALr6/KJ3zxKEc+pwvCYUQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HI/tGs1ORicTuSiQcGb5vMb8qM9dmzTDjXWGeB1GNrnhi5KbeEtFMVJIrcArZEjhDwxEdVLEdLbbSvboDnGOBeA4ZH9Ib16NkFXZxtlBgXXaBHxHr2w2zHrvoDjupSyqpkFcbIpVTfSE8OK8NgFp3w57c31Wm0ncj+SFnktU9CM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cTZ+xcvy; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1711507491; c=relaxed/simple;
+	bh=sxBIlRRXsth6YYqnrWJgKwagTA+TS5BCoWocctZPtBE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WzyijtzJA1QQxMPNTi/SpXwOt8BiA0ph0W6LoIEp9TIyvfx3nlnfXPz5zEq9zc30kOmxya/HMX/9OoYoQXLTeAIlh0+xO2AEWm5T+Zf22Zu+WE2dQakk2wzgXTC8rby25pbcwsaTVSbiqwzFhFmky/IGJNaU21zZAdYJveKvjk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=GfPbjfeE; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cTZ+xcvy"
-Message-ID: <3e1eedef-5e4c-448f-95ea-d50b431c4265@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1711507458;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YV9H8m8+M/zUWvTG1qNucKVLnNsHNqSeiCVsLZ0jiZY=;
-	b=cTZ+xcvyv/fKg+yi81sxZkRCkjFqaUAHzDZ1hrlBPH1XAZ/4IKg97CGVzN6PK+HSGNkiT5
-	U5eKUmTFF27fJfnrwHSaLXTASqRuwHd/u8yb9JHHJdBJ62RypfYOVkdK8cVNwsUwWdgfKA
-	TBXKcFBErfo+Cz3FokjtYa0q1hfii0c=
-Date: Wed, 27 Mar 2024 10:44:01 +0800
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="GfPbjfeE"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1711507485; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=UOO0zYL/R8/POaduYOpKB0fD0kNEnTD3fHeKwvGHVyw=;
+	b=GfPbjfeEEPzy6jI6jR+Az9cuej2PX/BsBKNy3+j+cA0Dj5z/zarmUltqcuIx3/JmqlUvdqDjUflj25PXjwh3OfwgraYzuqWMg8nq92pdI+BnpN1HJE3Gi6Zo4xdH9a+IPz2QsZ7T8UiXNSAb3ZTFEELvXgtRusMlrBd0vmSvyIQ=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R821e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=dtcccc@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W3N27Kt_1711507477;
+Received: from localhost.localdomain(mailfrom:dtcccc@linux.alibaba.com fp:SMTPD_---0W3N27Kt_1711507477)
+          by smtp.aliyun-inc.com;
+          Wed, 27 Mar 2024 10:44:44 +0800
+From: Tianchen Ding <dtcccc@linux.alibaba.com>
+To: linux-kernel@vger.kernel.org
+Cc: Tejun Heo <tj@kernel.org>,
+	Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Shuah Khan <shuah@kernel.org>,
+	cgroups@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH] selftests: cgroup: skip test_cgcore_lesser_ns_open when cgroup2 mounted without nsdelegate
+Date: Wed, 27 Mar 2024 10:44:37 +0800
+Message-Id: <20240327024437.3196-1-dtcccc@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [RFC PATCH 5/9] mm: zswap: remove zswap_same_filled_pages_enabled
-Content-Language: en-US
-To: Yosry Ahmed <yosryahmed@google.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20240325235018.2028408-1-yosryahmed@google.com>
- <20240325235018.2028408-6-yosryahmed@google.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <20240325235018.2028408-6-yosryahmed@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On 2024/3/26 07:50, Yosry Ahmed wrote:
-> There is no logical reason to refuse storing same-filled pages more
-> efficiently and opt for compression. Remove the userspace knob.
-> 
-> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+The test case test_cgcore_lesser_ns_open only tasks effect when cgroup2
+is mounted with "nsdelegate" mount option. If it misses this option, or
+is remounted without "nsdelegate", the test case will fail. For example,
+running bpf/test_cgroup_storage first, and then run cgroup/test_core will
+fail on test_cgcore_lesser_ns_open. Skip it if "nsdelegate" is not
+detected in cgroup2 mount options.
 
-LGTM, should we also remove zswap_non_same_filled_pages_enabled?
-Not sure if it has real usage...
+Fixes: bf35a7879f1d ("selftests: cgroup: Test open-time cgroup namespace usage for migration checks")
+Signed-off-by: Tianchen Ding <dtcccc@linux.alibaba.com>
+---
+ tools/testing/selftests/cgroup/cgroup_util.c        | 8 +++++---
+ tools/testing/selftests/cgroup/cgroup_util.h        | 2 +-
+ tools/testing/selftests/cgroup/test_core.c          | 7 ++++++-
+ tools/testing/selftests/cgroup/test_cpu.c           | 2 +-
+ tools/testing/selftests/cgroup/test_cpuset.c        | 2 +-
+ tools/testing/selftests/cgroup/test_freezer.c       | 2 +-
+ tools/testing/selftests/cgroup/test_hugetlb_memcg.c | 2 +-
+ tools/testing/selftests/cgroup/test_kill.c          | 2 +-
+ tools/testing/selftests/cgroup/test_kmem.c          | 2 +-
+ tools/testing/selftests/cgroup/test_memcontrol.c    | 2 +-
+ tools/testing/selftests/cgroup/test_zswap.c         | 2 +-
+ 11 files changed, 20 insertions(+), 13 deletions(-)
 
-Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
+diff --git a/tools/testing/selftests/cgroup/cgroup_util.c b/tools/testing/selftests/cgroup/cgroup_util.c
+index 0340d4ca8f51..432db923bced 100644
+--- a/tools/testing/selftests/cgroup/cgroup_util.c
++++ b/tools/testing/selftests/cgroup/cgroup_util.c
+@@ -195,10 +195,10 @@ int cg_write_numeric(const char *cgroup, const char *control, long value)
+ 	return cg_write(cgroup, control, buf);
+ }
+ 
+-int cg_find_unified_root(char *root, size_t len)
++int cg_find_unified_root(char *root, size_t len, bool *nsdelegate)
+ {
+ 	char buf[10 * PAGE_SIZE];
+-	char *fs, *mount, *type;
++	char *fs, *mount, *type, *options;
+ 	const char delim[] = "\n\t ";
+ 
+ 	if (read_text("/proc/self/mounts", buf, sizeof(buf)) <= 0)
+@@ -211,12 +211,14 @@ int cg_find_unified_root(char *root, size_t len)
+ 	for (fs = strtok(buf, delim); fs; fs = strtok(NULL, delim)) {
+ 		mount = strtok(NULL, delim);
+ 		type = strtok(NULL, delim);
+-		strtok(NULL, delim);
++		options = strtok(NULL, delim);
+ 		strtok(NULL, delim);
+ 		strtok(NULL, delim);
+ 
+ 		if (strcmp(type, "cgroup2") == 0) {
+ 			strncpy(root, mount, len);
++			if (nsdelegate)
++				*nsdelegate = !!strstr(options, "nsdelegate");
+ 			return 0;
+ 		}
+ 	}
+diff --git a/tools/testing/selftests/cgroup/cgroup_util.h b/tools/testing/selftests/cgroup/cgroup_util.h
+index 1df7f202214a..89e8519fb271 100644
+--- a/tools/testing/selftests/cgroup/cgroup_util.h
++++ b/tools/testing/selftests/cgroup/cgroup_util.h
+@@ -21,7 +21,7 @@ static inline int values_close(long a, long b, int err)
+ 	return abs(a - b) <= (a + b) / 100 * err;
+ }
+ 
+-extern int cg_find_unified_root(char *root, size_t len);
++extern int cg_find_unified_root(char *root, size_t len, bool *nsdelegate);
+ extern char *cg_name(const char *root, const char *name);
+ extern char *cg_name_indexed(const char *root, const char *name, int index);
+ extern char *cg_control(const char *cgroup, const char *control);
+diff --git a/tools/testing/selftests/cgroup/test_core.c b/tools/testing/selftests/cgroup/test_core.c
+index 80aa6b2373b9..a5672a91d273 100644
+--- a/tools/testing/selftests/cgroup/test_core.c
++++ b/tools/testing/selftests/cgroup/test_core.c
+@@ -18,6 +18,8 @@
+ #include "../kselftest.h"
+ #include "cgroup_util.h"
+ 
++static bool nsdelegate;
++
+ static int touch_anon(char *buf, size_t size)
+ {
+ 	int fd;
+@@ -775,6 +777,9 @@ static int test_cgcore_lesser_ns_open(const char *root)
+ 	pid_t pid;
+ 	int status;
+ 
++	if (!nsdelegate)
++		return KSFT_SKIP;
++
+ 	cg_test_a = cg_name(root, "cg_test_a");
+ 	cg_test_b = cg_name(root, "cg_test_b");
+ 
+@@ -862,7 +867,7 @@ int main(int argc, char *argv[])
+ 	char root[PATH_MAX];
+ 	int i, ret = EXIT_SUCCESS;
+ 
+-	if (cg_find_unified_root(root, sizeof(root)))
++	if (cg_find_unified_root(root, sizeof(root), &nsdelegate))
+ 		ksft_exit_skip("cgroup v2 isn't mounted\n");
+ 
+ 	if (cg_read_strstr(root, "cgroup.subtree_control", "memory"))
+diff --git a/tools/testing/selftests/cgroup/test_cpu.c b/tools/testing/selftests/cgroup/test_cpu.c
+index 24020a2c68dc..186bf96f6a28 100644
+--- a/tools/testing/selftests/cgroup/test_cpu.c
++++ b/tools/testing/selftests/cgroup/test_cpu.c
+@@ -700,7 +700,7 @@ int main(int argc, char *argv[])
+ 	char root[PATH_MAX];
+ 	int i, ret = EXIT_SUCCESS;
+ 
+-	if (cg_find_unified_root(root, sizeof(root)))
++	if (cg_find_unified_root(root, sizeof(root), NULL))
+ 		ksft_exit_skip("cgroup v2 isn't mounted\n");
+ 
+ 	if (cg_read_strstr(root, "cgroup.subtree_control", "cpu"))
+diff --git a/tools/testing/selftests/cgroup/test_cpuset.c b/tools/testing/selftests/cgroup/test_cpuset.c
+index b061ed1e05b4..4034d14ba69a 100644
+--- a/tools/testing/selftests/cgroup/test_cpuset.c
++++ b/tools/testing/selftests/cgroup/test_cpuset.c
+@@ -249,7 +249,7 @@ int main(int argc, char *argv[])
+ 	char root[PATH_MAX];
+ 	int i, ret = EXIT_SUCCESS;
+ 
+-	if (cg_find_unified_root(root, sizeof(root)))
++	if (cg_find_unified_root(root, sizeof(root), NULL))
+ 		ksft_exit_skip("cgroup v2 isn't mounted\n");
+ 
+ 	if (cg_read_strstr(root, "cgroup.subtree_control", "cpuset"))
+diff --git a/tools/testing/selftests/cgroup/test_freezer.c b/tools/testing/selftests/cgroup/test_freezer.c
+index 8845353aca53..8730645d363a 100644
+--- a/tools/testing/selftests/cgroup/test_freezer.c
++++ b/tools/testing/selftests/cgroup/test_freezer.c
+@@ -827,7 +827,7 @@ int main(int argc, char *argv[])
+ 	char root[PATH_MAX];
+ 	int i, ret = EXIT_SUCCESS;
+ 
+-	if (cg_find_unified_root(root, sizeof(root)))
++	if (cg_find_unified_root(root, sizeof(root), NULL))
+ 		ksft_exit_skip("cgroup v2 isn't mounted\n");
+ 	for (i = 0; i < ARRAY_SIZE(tests); i++) {
+ 		switch (tests[i].fn(root)) {
+diff --git a/tools/testing/selftests/cgroup/test_hugetlb_memcg.c b/tools/testing/selftests/cgroup/test_hugetlb_memcg.c
+index f0fefeb4cc24..856f9508ea56 100644
+--- a/tools/testing/selftests/cgroup/test_hugetlb_memcg.c
++++ b/tools/testing/selftests/cgroup/test_hugetlb_memcg.c
+@@ -214,7 +214,7 @@ int main(int argc, char **argv)
+ 		return ret;
+ 	}
+ 
+-	if (cg_find_unified_root(root, sizeof(root)))
++	if (cg_find_unified_root(root, sizeof(root), NULL))
+ 		ksft_exit_skip("cgroup v2 isn't mounted\n");
+ 
+ 	switch (test_hugetlb_memcg(root)) {
+diff --git a/tools/testing/selftests/cgroup/test_kill.c b/tools/testing/selftests/cgroup/test_kill.c
+index 6153690319c9..0e5bb6c7307a 100644
+--- a/tools/testing/selftests/cgroup/test_kill.c
++++ b/tools/testing/selftests/cgroup/test_kill.c
+@@ -276,7 +276,7 @@ int main(int argc, char *argv[])
+ 	char root[PATH_MAX];
+ 	int i, ret = EXIT_SUCCESS;
+ 
+-	if (cg_find_unified_root(root, sizeof(root)))
++	if (cg_find_unified_root(root, sizeof(root), NULL))
+ 		ksft_exit_skip("cgroup v2 isn't mounted\n");
+ 	for (i = 0; i < ARRAY_SIZE(tests); i++) {
+ 		switch (tests[i].fn(root)) {
+diff --git a/tools/testing/selftests/cgroup/test_kmem.c b/tools/testing/selftests/cgroup/test_kmem.c
+index c82f974b85c9..137506db0312 100644
+--- a/tools/testing/selftests/cgroup/test_kmem.c
++++ b/tools/testing/selftests/cgroup/test_kmem.c
+@@ -420,7 +420,7 @@ int main(int argc, char **argv)
+ 	char root[PATH_MAX];
+ 	int i, ret = EXIT_SUCCESS;
+ 
+-	if (cg_find_unified_root(root, sizeof(root)))
++	if (cg_find_unified_root(root, sizeof(root), NULL))
+ 		ksft_exit_skip("cgroup v2 isn't mounted\n");
+ 
+ 	/*
+diff --git a/tools/testing/selftests/cgroup/test_memcontrol.c b/tools/testing/selftests/cgroup/test_memcontrol.c
+index c7c9572003a8..b462416b3806 100644
+--- a/tools/testing/selftests/cgroup/test_memcontrol.c
++++ b/tools/testing/selftests/cgroup/test_memcontrol.c
+@@ -1314,7 +1314,7 @@ int main(int argc, char **argv)
+ 	char root[PATH_MAX];
+ 	int i, proc_status, ret = EXIT_SUCCESS;
+ 
+-	if (cg_find_unified_root(root, sizeof(root)))
++	if (cg_find_unified_root(root, sizeof(root), NULL))
+ 		ksft_exit_skip("cgroup v2 isn't mounted\n");
+ 
+ 	/*
+diff --git a/tools/testing/selftests/cgroup/test_zswap.c b/tools/testing/selftests/cgroup/test_zswap.c
+index f0e488ed90d8..ef7f39545317 100644
+--- a/tools/testing/selftests/cgroup/test_zswap.c
++++ b/tools/testing/selftests/cgroup/test_zswap.c
+@@ -440,7 +440,7 @@ int main(int argc, char **argv)
+ 	char root[PATH_MAX];
+ 	int i, ret = EXIT_SUCCESS;
+ 
+-	if (cg_find_unified_root(root, sizeof(root)))
++	if (cg_find_unified_root(root, sizeof(root), NULL))
+ 		ksft_exit_skip("cgroup v2 isn't mounted\n");
+ 
+ 	if (!zswap_configured())
+-- 
+2.39.3
 
-> ---
->  mm/zswap.c | 11 -----------
->  1 file changed, 11 deletions(-)
-> 
-> diff --git a/mm/zswap.c b/mm/zswap.c
-> index 498a6c5839bef..0fc27ae950c74 100644
-> --- a/mm/zswap.c
-> +++ b/mm/zswap.c
-> @@ -123,14 +123,6 @@ static unsigned int zswap_accept_thr_percent = 90; /* of max pool size */
->  module_param_named(accept_threshold_percent, zswap_accept_thr_percent,
->  		   uint, 0644);
->  
-> -/*
-> - * Enable/disable handling same-value filled pages (enabled by default).
-> - * If disabled every page is considered non-same-value filled.
-> - */
-> -static bool zswap_same_filled_pages_enabled = true;
-> -module_param_named(same_filled_pages_enabled, zswap_same_filled_pages_enabled,
-> -		   bool, 0644);
-> -
->  /* Enable/disable handling non-same-value filled pages (enabled by default) */
->  static bool zswap_non_same_filled_pages_enabled = true;
->  module_param_named(non_same_filled_pages_enabled, zswap_non_same_filled_pages_enabled,
-> @@ -1392,9 +1384,6 @@ static bool zswap_is_folio_same_filled(struct folio *folio, unsigned long *value
->  	unsigned int pos, last_pos = PAGE_SIZE / sizeof(*page) - 1;
->  	bool ret;
->  
-> -	if (!zswap_same_filled_pages_enabled)
-> -		return false;
-> -
->  	page = kmap_local_folio(folio, 0);
->  	val = page[0];
->  
