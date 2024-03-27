@@ -1,157 +1,119 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A58380
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 03:35:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381D1380;
+	Wed, 27 Mar 2024 03:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711510507; cv=none; b=RnTKSZY3h2+Uj+PSOqK4RTOHUGazJxTivRaK8d464kmmVAc2n5QsVlYSpbILaiPNxlDkbr5mKsjAjOhZuPQuhjbpMeTzb5MpbJTwaiEXwoEzb9EpdDyDnT2m17GUcm3eZJ3Ycfu2R+vaYsbiVOF+GgVZkiVCxmKVsfqQBuzngfM=
+	t=1711510584; cv=none; b=Sz5q6se6ZZ++lIqqzvZNbDtoEQqkRgbtXPkNB94R9izka5uySqK0JQfcwdlcjTzBo1Xwgpw3aAOQabbCh70fO6M1GK8vK4+j/AxB6H+y2Enu8+M2wSoKS/pkUc8lgRxk7hVjgoU0BuJSZgX8V/Il3c1r9vKnp3KPyoRz6USRviQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711510507; c=relaxed/simple;
-	bh=yE4PMETRYM/2rpfGQXheo9i6JB20t0k0UI0M+ZWUews=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
-	 References; b=GgPA5SH9SBj9V+t0KqoELlODwnWGy6VKZ2Wi0HAIJgJF0FxJCpQcam15mWIGmxYvxC0pRYvqv1mbviGwgReGo53T7GgNg5210REO8J32IoqJ+2F5TbooGrmEcwyoKJWaXvb6pwQT0HB2RJU8DOIeq+eHJaoq9dkmXbF5+vIV4WM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=iZi6g87e; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1711510584; c=relaxed/simple;
+	bh=ELn58N+L0xZPkRNnH2tXMHqdiTIRFhrdZS8Co23GSYE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r4CPhQmT9KMxkjXEA/B7dJLwCkSEn+0LnDfEvbDzYm9Wa1C8f5BYe9JFTiVvfDyka3XDOqSu9CpxaiYwH6MY6KPX5VRQejXI3ie8qmlyiodzIx21PK3fklJac/Ino104gswMiO4E2VVrr101qy81niYO3/FFCFuRBpqwYczMcGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=TjUIK2c6; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="iZi6g87e"
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240327033502epoutp03e89f9005433181a7a21c82ba89642d59~AgbvzUGAb2505925059epoutp03M
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 03:35:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240327033502epoutp03e89f9005433181a7a21c82ba89642d59~AgbvzUGAb2505925059epoutp03M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1711510502;
-	bh=4vLIx4cKbVxH4k3P7I50/kDpmxK4TCaZJ+e8oBu8dro=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=iZi6g87ey5by0Q6f2un91DzAOAAfMvHjRGZCsxE1TmoJXggJhp+xFVKk5RZItBwZU
-	 DyJF0p3hWBKAq/h7c+eKdkZwHnwLVnMC7DYuC2f2aCII8zqW5Yzg0fUipBSnn0EYFW
-	 0jtAQbF6Rf94YufEyE+ZZFnTHg+Q1STnr1NvPBdM=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-	20240327033502epcas2p4835a84a54f1999514440b7d361df4a41~AgbvcJbu02511025110epcas2p40;
-	Wed, 27 Mar 2024 03:35:02 +0000 (GMT)
-Received: from epsmges2p2.samsung.com (unknown [182.195.36.91]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4V4C3T3MMwz4x9QH; Wed, 27 Mar
-	2024 03:35:01 +0000 (GMT)
-Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
-	epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-	0B.EA.09639.5E393066; Wed, 27 Mar 2024 12:35:01 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240327033501epcas2p2bbe21301da5584f7f3a073c51a363c00~AgbuWqU8y1245812458epcas2p2F;
-	Wed, 27 Mar 2024 03:35:01 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240327033501epsmtrp2cac592103009f2358a153ff29e04f89b~AgbuV7hV42125621256epsmtrp2k;
-	Wed, 27 Mar 2024 03:35:01 +0000 (GMT)
-X-AuditID: b6c32a46-8ddfa700000025a7-2f-660393e5a775
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	82.91.19234.4E393066; Wed, 27 Mar 2024 12:35:01 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.229.9.55]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240327033500epsmtip10f06e521fafec7b31e710706bda00497~AgbuMrnZD0139001390epsmtip1B;
-	Wed, 27 Mar 2024 03:35:00 +0000 (GMT)
-From: Jaewon Kim <jaewon02.kim@samsung.com>
-To: Andi Shyti <andi.shyti@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Alim Akhtar
-	<alim.akhtar@samsung.com>
-Cc: linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jaewon
-	Kim <jaewon02.kim@samsung.com>
-Subject: [PATCH] spi: s3c64xx: Use DMA mode from fifo size
-Date: Wed, 27 Mar 2024 12:30:41 +0900
-Message-ID: <20240327033041.83625-1-jaewon02.kim@samsung.com>
-X-Mailer: git-send-email 2.43.2
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="TjUIK2c6"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42R2QxMh000777;
+	Tue, 26 Mar 2024 20:35:20 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=pfpt0220; bh=/3g8+gcN/N/fkBBn2xX9Lb
+	NNMGPt0xdxXZxOaqbWxH8=; b=TjUIK2c6AEnSxCK1i/ej+oHRMvHhCCtQsX0Hxh
+	X9E0HOg3JIjh5Y67QTWFjwvAAh6Q0l20AUaqFg11o5cWEhzu+mkLpHKrP8hKV9nU
+	U5Bjg+fWXTgmoIWlmLaXITIfVwr6jhsbuaks1XmJLeLWAjBIXzLdNRDh5XlpmKqN
+	5mBwmjGegHFNgZa94k5BdYnsEmKtPx0EsMbPINQfNI48SJ9D6vI9DQkO/EODyDVn
+	nBMSEzJ/v3EHplULRG2l2FfDqGrbSg9Yqq9Op3yU8QR7TqPpvKYAEpFFCGRKNQMU
+	bJaW3KfisNl6xK6svMlaDZNbeY5aS7+Hlo9ATRQmT1y/IL0Q==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3x4ap806nf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Mar 2024 20:35:20 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Tue, 26 Mar 2024 20:35:19 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Tue, 26 Mar 2024 20:35:19 -0700
+Received: from maili.marvell.com (unknown [10.28.36.165])
+	by maili.marvell.com (Postfix) with SMTP id 1CAB63F70C2;
+	Tue, 26 Mar 2024 20:35:13 -0700 (PDT)
+Date: Wed, 27 Mar 2024 09:05:12 +0530
+From: Ratheesh Kannoth <rkannoth@marvell.com>
+To: Lukasz Majewski <lukma@denx.de>
+CC: <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Eric Dumazet
+	<edumazet@google.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Oleksij Rempel
+	<o.rempel@pengutronix.de>, <Tristram.Ha@microchip.com>,
+        Sebastian Andrzej
+ Siewior <bigeasy@linutronix.de>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Ravi
+ Gunasekaran <r-gunasekaran@ti.com>,
+        Simon Horman <horms@kernel.org>,
+        Nikita
+ Zhandarovich <n.zhandarovich@fintech.ru>,
+        Murali Karicheri
+	<m-karicheri2@ti.com>, Jiri Pirko <jiri@resnulli.us>,
+        Dan Carpenter
+	<dan.carpenter@linaro.org>,
+        Ziyang Xuan <william.xuanziyang@huawei.com>,
+        Shigeru Yoshida <syoshida@redhat.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 RESEND] net: hsr: Provide RedBox support
+Message-ID: <20240327033512.GA1371300@maili.marvell.com>
+References: <20240326090220.3259927-1-lukma@denx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupkk+LIzCtJLcpLzFFi42LZdljTVPfpZOY0g5VLxCwezNvGZnH/awej
-	xdSHT9gsdjQcYbXY+3oru8Wmx9dYLS7vmsNmMeP8PiaLxo832R04PTat6mTzuHNtD5vH5iX1
-	Hn1bVjF6fN4kF8AalW2TkZqYklqkkJqXnJ+SmZduq+QdHO8cb2pmYKhraGlhrqSQl5ibaqvk
-	4hOg65aZA3SPkkJZYk4pUCggsbhYSd/Opii/tCRVISO/uMRWKbUgJafAvECvODG3uDQvXS8v
-	tcTK0MDAyBSoMCE7487VG0wFZ7krWt9NY2tg3MDZxcjJISFgInGm7y5zFyMXh5DADkaJr5cP
-	sUA4nxgllre9YYVzZn4/zgbTMmfDdEaIxE5Gibt39kP1f2SUeHh0DQtIFZuAtsT39YvB2kUE
-	VjBKbLvwAWwws8B6Rol1F74wgVQJC1hJfFu8gBXEZhFQlZi9YQqQzcHBK2ArsfxdNcQ6eYm7
-	Z2Yxg9i8AoISJ2c+AVvADBRv3jobbLOEwC12ibPtDxghGlwktvx5DXWrsMSr41vYIWwpic/v
-	9kLF8yXarpyBitdIbFxwCarXXmLRmZ/sIDcwC2hKrN+lD2JKCChLHLkFtZZPouPwX3aIMK9E
-	R5sQRKOaxP2p56CGy0hMOrKSCcL2kGhpnApmCwnESqz/9419AqP8LCTPzELyzCyEvQsYmVcx
-	iqUWFOempxYbFRjBYzU5P3cTIzhNarntYJzy9oPeIUYmDsZDjBIczEoivC1fGNKEeFMSK6tS
-	i/Lji0pzUosPMZoCQ3cis5Rocj4wUeeVxBuaWBqYmJkZmhuZGpgrifPea52bIiSQnliSmp2a
-	WpBaBNPHxMEp1cC0uv5Ws7NSW0VP5tqpfP6TXh9Vzug2zJohe5H1zecpridXMVz6ZVB1rVhr
-	arFFaX0A+/K03Nl77l1aGfgipDCxlvkt10vW9/oCFf5rcuNXpocrTWmZvl35ocq/cwWetVUu
-	3y2m9W3QCBf2+poXqjJH0engpUWqnr12oUnOjse8Lyz9pORy11L1yZP/m+euexBnc+X2lhif
-	4PcvmSxuylSFWHspd77Wn+i3x37uhNlvZvwTsF95NPLWw+hrR5oClEJPTEk/r6Oybuqrez2u
-	Gz9svWuzoHMy7057q6WP+b8kvOQ/s+0p48ECy+knGVj+KC41qfP3n6nmaMAe3Ju3Zb2tt39T
-	/u5FhiFHu/bWbuVUYinOSDTUYi4qTgQAAk81zBwEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKLMWRmVeSWpSXmKPExsWy7bCSnO7TycxpBqt/MFo8mLeNzeL+1w5G
-	i6kPn7BZ7Gg4wmqx9/VWdotNj6+xWlzeNYfNYsb5fUwWjR9vsjtwemxa1cnmcefaHjaPzUvq
-	Pfq2rGL0+LxJLoA1issmJTUnsyy1SN8ugSvjztUbTAVnuSta301ja2DcwNnFyMkhIWAiMWfD
-	dMYuRi4OIYHtjBL3Fy5nh0jISCx/1scGYQtL3G85wgpR9J5RYsG69WAJNgFtie/rF4MlRARW
-	MUpsWn4GbBSzwGZGifbz51hBqoQFrCS+LV4AZrMIqErM3jAFyObg4BWwlVj+rhpig7zE3TOz
-	mEFsXgFBiZMzn7CA2MxA8eats5knMPLNQpKahSS1gJFpFaNoakFxbnpucoGhXnFibnFpXrpe
-	cn7uJkZwyGoF7WBctv6v3iFGJg7GQ4wSHMxKIrwtXxjShHhTEiurUovy44tKc1KLDzFKc7Ao
-	ifMq53SmCAmkJ5akZqemFqQWwWSZODilGpjmTTZvYW79OHv6jNkHRNkFf4QHsYlEf3q2PSk/
-	edenJW+MmmL/uB1K/ZJ0z2Xy89sNmRLR17d7yZXe0V21Vv3pEjWeYPVPqltNg2Y0pk3QXata
-	+yzKc2GQYFNZFL+yRp7reS5WsRsh7l6d16TepH17HpxluoVjmc+2t0aTTtecSbETes9y20F+
-	U+X5Vhu3TTYLtXo3/yt6f2vCacll2h+2pH61jOCreWfd+KbkllTnFp6FrjImdnO9W1evOXVw
-	doY8xxP5Cqk1N58pfJZZfY3B6XzUAevyi8arNx49vueA2RtFDgm184f3PDELSLlT7dZy7d3r
-	k8v0Xy1aHntyjvok6/Oz6zol3j/1m16rl6ukxFKckWioxVxUnAgAnZWtWsgCAAA=
-X-CMS-MailID: 20240327033501epcas2p2bbe21301da5584f7f3a073c51a363c00
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240327033501epcas2p2bbe21301da5584f7f3a073c51a363c00
-References: <CGME20240327033501epcas2p2bbe21301da5584f7f3a073c51a363c00@epcas2p2.samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240326090220.3259927-1-lukma@denx.de>
+X-Proofpoint-GUID: TMpQI2rxpqqFpSpd-C4xTzuUy0S4KnaZ
+X-Proofpoint-ORIG-GUID: TMpQI2rxpqqFpSpd-C4xTzuUy0S4KnaZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-26_12,2024-03-21_02,2023-05-22_02
 
-The SPI data size is smaller than FIFO, it operates in PIO mode,
-and if it is larger than FIFO mode, DMA mode is selected.
-
-If the data size is the same as the FIFO size, it operates in PIO mode
-and data is separated into two transfer. In order to prevent,
-DMA mode must be used from the case of FIFO and data size.
-
-Fixes: 1ee806718d5e ("spi: s3c64xx: support interrupt based pio mode")
-Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
----
- drivers/spi/spi-s3c64xx.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-index 9fcbe040cb2f..81ed5fddf83e 100644
---- a/drivers/spi/spi-s3c64xx.c
-+++ b/drivers/spi/spi-s3c64xx.c
-@@ -430,7 +430,7 @@ static bool s3c64xx_spi_can_dma(struct spi_controller *host,
- 	struct s3c64xx_spi_driver_data *sdd = spi_controller_get_devdata(host);
- 
- 	if (sdd->rx_dma.ch && sdd->tx_dma.ch)
--		return xfer->len > sdd->fifo_depth;
-+		return xfer->len >= sdd->fifo_depth;
- 
- 	return false;
- }
-@@ -826,11 +826,11 @@ static int s3c64xx_spi_transfer_one(struct spi_controller *host,
- 			return status;
- 	}
- 
--	if (!is_polling(sdd) && (xfer->len > fifo_len) &&
-+	if (!is_polling(sdd) && xfer->len >= fifo_len &&
- 	    sdd->rx_dma.ch && sdd->tx_dma.ch) {
- 		use_dma = 1;
- 
--	} else if (xfer->len >= fifo_len) {
-+	} else if (xfer->len > fifo_len) {
- 		tx_buf = xfer->tx_buf;
- 		rx_buf = xfer->rx_buf;
- 		origin_len = xfer->len;
--- 
-2.43.2
-
+On 2024-03-26 at 14:32:20, Lukasz Majewski (lukma@denx.de) wrote:
+> --- a/net/hsr/hsr_device.h
+> +++ b/net/hsr/hsr_device.h
+> @@ -16,8 +16,8 @@
+>  void hsr_del_ports(struct hsr_priv *hsr);
+>  void hsr_dev_setup(struct net_device *dev);
+>  int hsr_dev_finalize(struct net_device *hsr_dev, struct net_device *slave[2],
+> -		     unsigned char multicast_spec, u8 protocol_version,
+> -		     struct netlink_ext_ack *extack);
+> +		     struct net_device *interlink, unsigned char multicast_spec,
+> +		     u8 protocol_version, struct netlink_ext_ack *extack);
+>  void hsr_check_carrier_and_operstate(struct hsr_priv *hsr);
+>  int hsr_get_max_mtu(struct hsr_priv *hsr);
+>  #endif /* __HSR_DEVICE_H */
+> diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
+> index 5d68cb181695..7c5a4bda1cca 100644
+> --- a/net/hsr/hsr_forward.c
+> +++ b/net/hsr/hsr_forward.c
+> @@ -377,6 +377,15 @@ static int hsr_xmit(struct sk_buff *skb, struct hsr_port *port,
+>  		 */
+>  		ether_addr_copy(eth_hdr(skb)->h_source, port->dev->dev_addr);
+>  	}
+> +
+> +	/* When HSR node is used as RedBox - the frame received from HSR ring
+> +	 * requires source MAC address (SA) replacement to one which can be
+> +	 * recognized by SAN devices (otherwise, frames are dropped by switch)
+> +	 */
+> +	if (port->type == HSR_PT_INTERLINK)
+> +		memcpy(&eth_hdr(skb)->h_source, port->hsr->macaddress_redbox,
+> +		       ETH_ALEN);
+why not ether_addr_copy here too ?
