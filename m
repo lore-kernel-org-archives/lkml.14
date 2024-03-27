@@ -1,391 +1,383 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5664512F59E
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 12:08:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5558C13A275;
+	Wed, 27 Mar 2024 12:08:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711541326; cv=none; b=c8JBsFaN2bL7L/ebeDxOUZ+BaQmQpXXJ0Cnc+tkAmNoAQ/Ne0OJaNiemAVxDhrDAORNwgHSTsW8sjUEmtE9ywgQtrqC3P/1eNbVXzuHteQ2SjnVPWxn4anrv80DLvdSooXNCp892sbwmSgcWK8bpi069rDdzxFFAbZGMmkSaKGg=
+	t=1711541328; cv=none; b=DqzJVrGpD0IeS7ApaHoyIoJwX5yKJKIAGAwJj3SUZdwy9Eqde4daj+5vSMalf+cJOMejosE2sjgi/07izxX4WtmofYmARHYGFghqEJCU3PIbmEP8opzwkhLjwRD0v30IbwSHJySUJS5kRRsoytW7LVW86cFhet1pbtvuePrEbMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711541326; c=relaxed/simple;
-	bh=YxJ+QA/6XuU3osPC5/Qxx/5mKVJCLnVdTXqMJCytxJg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JO2PUHS5PG36Yo2NT9WckUJKF0j4CWrc1Ms6xA9SVFkcXvUZFGwbYjlleHBPaWAdHtuguUuCGsiRbkcE9AbiF3R4d/2I0xBZYblrvbzgyUl9PMewpjDl12nDKekbUeuZO/XRLYT6+BQWR8lWrYQd6zmEjH9z+AgHQbI0y5zdmSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ocxp9Kvt; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711541328; c=relaxed/simple;
+	bh=jmZrnoglClDQMYg6rqnO+hHRZBg157LsP3IC6Tafh8k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l6CgqEqPb71km9xwmwIj4iZwgvVu4NzMvqe6zKt0cBVztBEx9IZliCaF65HZiRP9GZLNf0A2JjLG0/biFGalGf87NNQNmaPwBRMavt8+bHQVe/15yEAw0DI4OX9xpcPKl6Th2ajBFV7PnO5/sxl4Bfboo42w6ucGbBinDski58I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GfVejvFi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ocxp9Kvt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711541323;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ItomEgLv28WUD6jaiAYWwN8p2rpJktwWWUzWfeqvDNw=;
-	b=Ocxp9Kvt3WBfIcnNMiy60RC7nxsGSVsgHMO/bgITn/XWPHyxe29vtteQa/vCiliO7QmXjW
-	JPu6xudrJyaLCrU5FUZJ5e+u8Bh9M7/Nuwewtft413Yz97DshPh4XdZt/6QC30gUlA4uCu
-	bFkQRArRfdkT9wz+tf3EqNHC5WDyi04=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-692-BINKbuvGMhmEyfDriL6YlA-1; Wed, 27 Mar 2024 08:08:42 -0400
-X-MC-Unique: BINKbuvGMhmEyfDriL6YlA-1
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-78a43601cddso386753585a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 05:08:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711541322; x=1712146122;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ItomEgLv28WUD6jaiAYWwN8p2rpJktwWWUzWfeqvDNw=;
-        b=HTJImTYwR2wiJyxMrgSsEoAgQ5G8z4l2f6OLrB2ARy4IN8fmm5CgDC90eJVRnNJ2G7
-         ObEaItVs+qwCCYiO5EJ04/Vw+jQ5tdoAYzxZRH+ZcjuKF0WKF0ZZ3fUU70O+7P5IwFNa
-         xN0h2eI+JaqfsIsVaemmN4TVtYNbpU9wGKt2SE0rk4LphRK8qXtoOzuIEAzx+hYgqrP3
-         wK2ghF6gC+Is0TJVuF4MZu7ebGP4SZmQfvTjTdgZYIguPjVWC1HQZHY6WF3AsqyPQQwc
-         thOKKV9VI9u2gDHMz/+ESXvO1vzfadnFJa49uK/ORSct+bWNQBj7w62W3fRmWcDdYP6J
-         L4Cg==
-X-Forwarded-Encrypted: i=1; AJvYcCUtzjNIelKg45TSXPqVP5mj6eMnaNT8/RT75uhoNzJDaQrv4kbw00MhwFf1p15nD1X6NALNqZU1W9wGoEW/1pGXKuolS+Qba9IWuDzQ
-X-Gm-Message-State: AOJu0YzAYHXaeKQtrMxo3rQA0x8UyVPg4cdhZwmZ8s2JrluaCMW7tY1K
-	3UOjr09ntfcEdPJAmrOmtg0o4IjdGXfcENb6a13lWh55J3+xuAocrA8sM3Md7SK+3hAnu9RJIIp
-	JZRduoasXTD1F0WB5qQepGHvTKcQ1LE2D9B7bcSkODGHZjCiRJ0Ujr5rGDRRz
-X-Received: by 2002:a05:620a:a12:b0:789:e71e:2692 with SMTP id i18-20020a05620a0a1200b00789e71e2692mr3912278qka.48.1711541321754;
-        Wed, 27 Mar 2024 05:08:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEt/f3cTrkOy702r2FqG3aXaBs2frYu0NpFj+2J2eoStZAs4AEY8C3spyK8IPpgIcgI9W2G2g==
-X-Received: by 2002:a05:620a:a12:b0:789:e71e:2692 with SMTP id i18-20020a05620a0a1200b00789e71e2692mr3912257qka.48.1711541321479;
-        Wed, 27 Mar 2024 05:08:41 -0700 (PDT)
-Received: from klayman.redhat.com (net-2-34-30-89.cust.vodafonedsl.it. [2.34.30.89])
-        by smtp.gmail.com with ESMTPSA id dy50-20020a05620a60f200b00789ef21c9b8sm3845919qkb.65.2024.03.27.05.08.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 05:08:41 -0700 (PDT)
-From: Marco Pagani <marpagan@redhat.com>
-To: Moritz Fischer <mdf@kernel.org>,
-	Wu Hao <hao.wu@intel.com>,
-	Xu Yilun <yilun.xu@intel.com>,
-	Tom Rix <trix@redhat.com>
-Cc: Marco Pagani <marpagan@redhat.com>,
-	linux-fpga@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GfVejvFi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBA31C433F1;
+	Wed, 27 Mar 2024 12:08:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711541327;
+	bh=jmZrnoglClDQMYg6rqnO+hHRZBg157LsP3IC6Tafh8k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=GfVejvFixkppQ5pF3DUOb24n6/u5EZ86U+wIWJfxIq4zRvKEKg3gNq3VoafDBg0R5
+	 SNPTInjRWJipsfMwm/awUzv0kg28QGFyuv5QwNGMP3ZwAXf/7bNq0ddvkdDjZiqABg
+	 rICOdC+5LI4mcZeBEVE0LzX4aoFten+NA9GpsgK1MRj2jGCHMplOELbP2FYPz5ALd+
+	 dYpYwqlvknFeT8aoUxe0Ib6KkA0mpKAWk77hsG+/XN/aexjYL/aEPRfytQXXfNeEfr
+	 t+vHnPXghC4JmAhbHwfMmhVGgkyHscXgA1/V/RGK6yb99Vk+ErfLl83xIffgMpU2Ua
+	 IhWylhKJhVoZQ==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org,
+	nicholas.kazlauskas@amd.com
+Cc: Ovidiu Bunea <ovidiu.bunea@amd.com>,
+	Hamza Mahfooz <hamza.mahfooz@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] fpga: tests: use KUnit devices instead of platform devices
-Date: Wed, 27 Mar 2024 13:08:17 +0100
-Message-ID: <20240327120818.148430-1-marpagan@redhat.com>
-X-Mailer: git-send-email 2.44.0
+Subject: FAILED: Patch "drm/amd/display: Add more checks for exiting idle in DC" failed to apply to 6.7-stable tree
+Date: Wed, 27 Mar 2024 08:08:45 -0400
+Message-ID: <20240327120846.2826481-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Patchwork-Hint: ignore
+X-stable: review
 Content-Transfer-Encoding: 8bit
 
-KUnit now provides helper functions to create fake devices, so use them
-instead of relying on platform devices.
+The patch below does not apply to the 6.7-stable tree.
+If someone wants it applied there, or to any other stable or longterm
+tree, then please email the backport, including the original git commit
+id to <stable@vger.kernel.org>.
 
-Other changes: remove an unnecessary white space in the fpga region suite.
+Thanks,
+Sasha
 
-Signed-off-by: Marco Pagani <marpagan@redhat.com>
+------------------ original commit in Linus's tree ------------------
+
+From a9b1a4f684b32bcd33431b67acd6f4c275728380 Mon Sep 17 00:00:00 2001
+From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Date: Tue, 16 Jan 2024 09:52:58 -0500
+Subject: [PATCH] drm/amd/display: Add more checks for exiting idle in DC
+
+[Why]
+Any interface that touches registers needs to wake up the system.
+
+[How]
+Add a new interface dc_exit_ips_for_hw_access that wraps the check
+for IPS support and insert it into the public DC interfaces that
+touch registers.
+
+We don't re-enter, since we expect that the enter/exit to have been done
+on the DM side.
+
+Cc: stable@vger.kernel.org # 6.1+
+Reviewed-by: Ovidiu Bunea <ovidiu.bunea@amd.com>
+Acked-by: Hamza Mahfooz <hamza.mahfooz@amd.com>
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 ---
- drivers/fpga/tests/fpga-bridge-test.c | 33 ++++++++++-----------
- drivers/fpga/tests/fpga-mgr-test.c    | 16 +++++------
- drivers/fpga/tests/fpga-region-test.c | 41 +++++++++++++--------------
- 3 files changed, 44 insertions(+), 46 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc.c      | 42 +++++++++++++++++++
+ .../gpu/drm/amd/display/dc/core/dc_stream.c   | 18 ++++++++
+ .../gpu/drm/amd/display/dc/core/dc_surface.c  |  2 +
+ drivers/gpu/drm/amd/display/dc/dc.h           |  1 +
+ 4 files changed, 63 insertions(+)
 
-diff --git a/drivers/fpga/tests/fpga-bridge-test.c b/drivers/fpga/tests/fpga-bridge-test.c
-index 1d258002cdd7..2f7a24f23808 100644
---- a/drivers/fpga/tests/fpga-bridge-test.c
-+++ b/drivers/fpga/tests/fpga-bridge-test.c
-@@ -7,8 +7,8 @@
-  * Author: Marco Pagani <marpagan@redhat.com>
-  */
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index 2db361aeaf259..eb803d4d34786 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -417,6 +417,8 @@ bool dc_stream_adjust_vmin_vmax(struct dc *dc,
+ 	if (!memcmp(&stream->adjust, adjust, sizeof(*adjust)))
+ 		return true;
  
-+#include <kunit/device.h>
- #include <kunit/test.h>
--#include <linux/device.h>
- #include <linux/fpga/fpga-bridge.h>
- #include <linux/module.h>
- #include <linux/types.h>
-@@ -19,7 +19,7 @@ struct bridge_stats {
++	dc_exit_ips_for_hw_access(dc);
++
+ 	stream->adjust.v_total_max = adjust->v_total_max;
+ 	stream->adjust.v_total_mid = adjust->v_total_mid;
+ 	stream->adjust.v_total_mid_frame_num = adjust->v_total_mid_frame_num;
+@@ -457,6 +459,8 @@ bool dc_stream_get_last_used_drr_vtotal(struct dc *dc,
  
- struct bridge_ctx {
- 	struct fpga_bridge *bridge;
--	struct platform_device *pdev;
-+	struct device *dev;
- 	struct bridge_stats stats;
- };
+ 	int i = 0;
  
-@@ -43,30 +43,31 @@ static const struct fpga_bridge_ops fake_bridge_ops = {
- /**
-  * register_test_bridge() - Register a fake FPGA bridge for testing.
-  * @test: KUnit test context object.
-+ * @dev_name: name of the kunit device to be registered
-  *
-  * Return: Context of the newly registered FPGA bridge.
-  */
--static struct bridge_ctx *register_test_bridge(struct kunit *test)
-+static struct bridge_ctx *register_test_bridge(struct kunit *test, const char *dev_name)
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < MAX_PIPES; i++) {
+ 		struct pipe_ctx *pipe = &dc->current_state->res_ctx.pipe_ctx[i];
+ 
+@@ -487,6 +491,8 @@ bool dc_stream_get_crtc_position(struct dc *dc,
+ 	bool ret = false;
+ 	struct crtc_position position;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < MAX_PIPES; i++) {
+ 		struct pipe_ctx *pipe =
+ 				&dc->current_state->res_ctx.pipe_ctx[i];
+@@ -606,6 +612,8 @@ bool dc_stream_configure_crc(struct dc *dc, struct dc_stream_state *stream,
+ 	if (pipe == NULL)
+ 		return false;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	/* By default, capture the full frame */
+ 	param.windowa_x_start = 0;
+ 	param.windowa_y_start = 0;
+@@ -665,6 +673,8 @@ bool dc_stream_get_crc(struct dc *dc, struct dc_stream_state *stream,
+ 	struct pipe_ctx *pipe;
+ 	struct timing_generator *tg;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < MAX_PIPES; i++) {
+ 		pipe = &dc->current_state->res_ctx.pipe_ctx[i];
+ 		if (pipe->stream == stream)
+@@ -689,6 +699,8 @@ void dc_stream_set_dyn_expansion(struct dc *dc, struct dc_stream_state *stream,
+ 	int i;
+ 	struct pipe_ctx *pipe_ctx;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < MAX_PIPES; i++) {
+ 		if (dc->current_state->res_ctx.pipe_ctx[i].stream
+ 				== stream) {
+@@ -724,6 +736,8 @@ void dc_stream_set_dither_option(struct dc_stream_state *stream,
+ 	if (option > DITHER_OPTION_MAX)
+ 		return;
+ 
++	dc_exit_ips_for_hw_access(stream->ctx->dc);
++
+ 	stream->dither_option = option;
+ 
+ 	memset(&params, 0, sizeof(params));
+@@ -748,6 +762,8 @@ bool dc_stream_set_gamut_remap(struct dc *dc, const struct dc_stream_state *stre
+ 	bool ret = false;
+ 	struct pipe_ctx *pipes;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < MAX_PIPES; i++) {
+ 		if (dc->current_state->res_ctx.pipe_ctx[i].stream == stream) {
+ 			pipes = &dc->current_state->res_ctx.pipe_ctx[i];
+@@ -765,6 +781,8 @@ bool dc_stream_program_csc_matrix(struct dc *dc, struct dc_stream_state *stream)
+ 	bool ret = false;
+ 	struct pipe_ctx *pipes;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < MAX_PIPES; i++) {
+ 		if (dc->current_state->res_ctx.pipe_ctx[i].stream
+ 				== stream) {
+@@ -791,6 +809,8 @@ void dc_stream_set_static_screen_params(struct dc *dc,
+ 	struct pipe_ctx *pipes_affected[MAX_PIPES];
+ 	int num_pipes_affected = 0;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < num_streams; i++) {
+ 		struct dc_stream_state *stream = streams[i];
+ 
+@@ -1769,6 +1789,8 @@ void dc_enable_stereo(
+ 	int i, j;
+ 	struct pipe_ctx *pipe;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < MAX_PIPES; i++) {
+ 		if (context != NULL) {
+ 			pipe = &context->res_ctx.pipe_ctx[i];
+@@ -1788,6 +1810,8 @@ void dc_enable_stereo(
+ void dc_trigger_sync(struct dc *dc, struct dc_state *context)
  {
- 	struct bridge_ctx *ctx;
+ 	if (context->stream_count > 1 && !dc->debug.disable_timing_sync) {
++		dc_exit_ips_for_hw_access(dc);
++
+ 		enable_timing_multisync(dc, context);
+ 		program_timing_sync(dc, context);
+ 	}
+@@ -2044,6 +2068,8 @@ enum dc_status dc_commit_streams(struct dc *dc,
+ 	if (!streams_changed(dc, streams, stream_count))
+ 		return res;
  
- 	ctx = kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
++	dc_exit_ips_for_hw_access(dc);
++
+ 	DC_LOG_DC("%s: %d streams\n", __func__, stream_count);
  
--	ctx->pdev = platform_device_register_simple("bridge_pdev", PLATFORM_DEVID_AUTO, NULL, 0);
--	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->pdev);
-+	ctx->dev = kunit_device_register(test, dev_name);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->dev);
+ 	for (i = 0; i < stream_count; i++) {
+@@ -3373,6 +3399,8 @@ static void commit_planes_for_stream_fast(struct dc *dc,
+ 	int i, j;
+ 	struct pipe_ctx *top_pipe_to_program = NULL;
+ 	struct dc_stream_status *stream_status = NULL;
++	dc_exit_ips_for_hw_access(dc);
++
+ 	dc_z10_restore(dc);
  
--	ctx->bridge = fpga_bridge_register(&ctx->pdev->dev, "Fake FPGA bridge", &fake_bridge_ops,
-+	ctx->bridge = fpga_bridge_register(ctx->dev, "Fake FPGA bridge", &fake_bridge_ops,
- 					   &ctx->stats);
- 	KUNIT_ASSERT_FALSE(test, IS_ERR_OR_NULL(ctx->bridge));
+ 	top_pipe_to_program = resource_get_otg_master_for_stream(
+@@ -3527,6 +3555,8 @@ static void commit_planes_for_stream(struct dc *dc,
+ 	// dc->current_state anymore, so we have to cache it before we apply
+ 	// the new SubVP context
+ 	subvp_prev_use = false;
++	dc_exit_ips_for_hw_access(dc);
++
+ 	dc_z10_restore(dc);
+ 	if (update_type == UPDATE_TYPE_FULL)
+ 		wait_for_outstanding_hw_updates(dc, context);
+@@ -4409,6 +4439,8 @@ bool dc_update_planes_and_stream(struct dc *dc,
+ 	bool is_plane_addition = 0;
+ 	bool is_fast_update_only;
  
- 	return ctx;
++	dc_exit_ips_for_hw_access(dc);
++
+ 	populate_fast_updates(fast_update, srf_updates, surface_count, stream_update);
+ 	is_fast_update_only = fast_update_only(dc, fast_update, srf_updates,
+ 			surface_count, stream_update, stream);
+@@ -4529,6 +4561,8 @@ void dc_commit_updates_for_stream(struct dc *dc,
+ 	int i, j;
+ 	struct dc_fast_update fast_update[MAX_SURFACES] = {0};
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	populate_fast_updates(fast_update, srf_updates, surface_count, stream_update);
+ 	stream_status = dc_stream_get_status(stream);
+ 	context = dc->current_state;
+@@ -4713,6 +4747,8 @@ void dc_set_power_state(
+ 	case DC_ACPI_CM_POWER_STATE_D0:
+ 		dc_state_construct(dc, dc->current_state);
+ 
++		dc_exit_ips_for_hw_access(dc);
++
+ 		dc_z10_restore(dc);
+ 
+ 		dc->hwss.init_hw(dc);
+@@ -4854,6 +4890,12 @@ void dc_allow_idle_optimizations(struct dc *dc, bool allow)
+ 		dc->idle_optimizations_allowed = allow;
  }
  
--static void unregister_test_bridge(struct bridge_ctx *ctx)
-+static void unregister_test_bridge(struct kunit *test, struct bridge_ctx *ctx)
++void dc_exit_ips_for_hw_access(struct dc *dc)
++{
++	if (dc->caps.ips_support)
++		dc_allow_idle_optimizations(dc, false);
++}
++
+ bool dc_dmub_is_ips_idle_state(struct dc *dc)
  {
- 	fpga_bridge_unregister(ctx->bridge);
--	platform_device_unregister(ctx->pdev);
-+	kunit_device_unregister(test, ctx->dev);
- }
+ 	uint32_t idle_state = 0;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
+index 54670e0b15189..51a970fcb5d05 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
+@@ -423,6 +423,8 @@ bool dc_stream_add_writeback(struct dc *dc,
+ 		return false;
+ 	}
  
- static void fpga_bridge_test_get(struct kunit *test)
-@@ -74,10 +75,10 @@ static void fpga_bridge_test_get(struct kunit *test)
- 	struct bridge_ctx *ctx = test->priv;
- 	struct fpga_bridge *bridge;
++	dc_exit_ips_for_hw_access(dc);
++
+ 	wb_info->dwb_params.out_transfer_func = stream->out_transfer_func;
  
--	bridge = fpga_bridge_get(&ctx->pdev->dev, NULL);
-+	bridge = fpga_bridge_get(ctx->dev, NULL);
- 	KUNIT_EXPECT_PTR_EQ(test, bridge, ctx->bridge);
+ 	dwb = dc->res_pool->dwbc[wb_info->dwb_pipe_inst];
+@@ -493,6 +495,8 @@ bool dc_stream_fc_disable_writeback(struct dc *dc,
+ 		return false;
+ 	}
  
--	bridge = fpga_bridge_get(&ctx->pdev->dev, NULL);
-+	bridge = fpga_bridge_get(ctx->dev, NULL);
- 	KUNIT_EXPECT_EQ(test, PTR_ERR(bridge), -EBUSY);
++	dc_exit_ips_for_hw_access(dc);
++
+ 	if (dwb->funcs->set_fc_enable)
+ 		dwb->funcs->set_fc_enable(dwb, DWB_FRAME_CAPTURE_DISABLE);
  
- 	fpga_bridge_put(ctx->bridge);
-@@ -105,19 +106,19 @@ static void fpga_bridge_test_get_put_list(struct kunit *test)
- 	int ret;
+@@ -542,6 +546,8 @@ bool dc_stream_remove_writeback(struct dc *dc,
+ 		return false;
+ 	}
  
- 	ctx_0 = test->priv;
--	ctx_1 = register_test_bridge(test);
-+	ctx_1 = register_test_bridge(test, "fpga-bridge-test-dev-1");
- 
- 	INIT_LIST_HEAD(&bridge_list);
- 
- 	/* Get bridge 0 and add it to the list */
--	ret = fpga_bridge_get_to_list(&ctx_0->pdev->dev, NULL, &bridge_list);
-+	ret = fpga_bridge_get_to_list(ctx_0->dev, NULL, &bridge_list);
- 	KUNIT_EXPECT_EQ(test, ret, 0);
- 
- 	KUNIT_EXPECT_PTR_EQ(test, ctx_0->bridge,
- 			    list_first_entry_or_null(&bridge_list, struct fpga_bridge, node));
- 
- 	/* Get bridge 1 and add it to the list */
--	ret = fpga_bridge_get_to_list(&ctx_1->pdev->dev, NULL, &bridge_list);
-+	ret = fpga_bridge_get_to_list(ctx_1->dev, NULL, &bridge_list);
- 	KUNIT_EXPECT_EQ(test, ret, 0);
- 
- 	KUNIT_EXPECT_PTR_EQ(test, ctx_1->bridge,
-@@ -141,19 +142,19 @@ static void fpga_bridge_test_get_put_list(struct kunit *test)
- 
- 	KUNIT_EXPECT_TRUE(test, list_empty(&bridge_list));
- 
--	unregister_test_bridge(ctx_1);
-+	unregister_test_bridge(test, ctx_1);
- }
- 
- static int fpga_bridge_test_init(struct kunit *test)
++	dc_exit_ips_for_hw_access(dc);
++
+ 	/* disable writeback */
+ 	if (dc->hwss.disable_writeback) {
+ 		struct dwbc *dwb = dc->res_pool->dwbc[dwb_pipe_inst];
+@@ -557,6 +563,8 @@ bool dc_stream_warmup_writeback(struct dc *dc,
+ 		int num_dwb,
+ 		struct dc_writeback_info *wb_info)
  {
--	test->priv = register_test_bridge(test);
-+	test->priv = register_test_bridge(test, "fpga-bridge-test-dev-0");
++	dc_exit_ips_for_hw_access(dc);
++
+ 	if (dc->hwss.mmhubbub_warmup)
+ 		return dc->hwss.mmhubbub_warmup(dc, num_dwb, wb_info);
+ 	else
+@@ -569,6 +577,8 @@ uint32_t dc_stream_get_vblank_counter(const struct dc_stream_state *stream)
+ 	struct resource_context *res_ctx =
+ 		&dc->current_state->res_ctx;
  
- 	return 0;
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < MAX_PIPES; i++) {
+ 		struct timing_generator *tg = res_ctx->pipe_ctx[i].stream_res.tg;
+ 
+@@ -597,6 +607,8 @@ bool dc_stream_send_dp_sdp(const struct dc_stream_state *stream,
+ 	dc = stream->ctx->dc;
+ 	res_ctx = &dc->current_state->res_ctx;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < MAX_PIPES; i++) {
+ 		struct pipe_ctx *pipe_ctx = &res_ctx->pipe_ctx[i];
+ 
+@@ -628,6 +640,8 @@ bool dc_stream_get_scanoutpos(const struct dc_stream_state *stream,
+ 	struct resource_context *res_ctx =
+ 		&dc->current_state->res_ctx;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < MAX_PIPES; i++) {
+ 		struct timing_generator *tg = res_ctx->pipe_ctx[i].stream_res.tg;
+ 
+@@ -664,6 +678,8 @@ bool dc_stream_dmdata_status_done(struct dc *dc, struct dc_stream_state *stream)
+ 	if (i == MAX_PIPES)
+ 		return true;
+ 
++	dc_exit_ips_for_hw_access(dc);
++
+ 	return dc->hwss.dmdata_status_done(pipe);
  }
  
- static void fpga_bridge_test_exit(struct kunit *test)
- {
--	unregister_test_bridge(test->priv);
-+	unregister_test_bridge(test, test->priv);
- }
+@@ -698,6 +714,8 @@ bool dc_stream_set_dynamic_metadata(struct dc *dc,
  
- static struct kunit_case fpga_bridge_test_cases[] = {
-diff --git a/drivers/fpga/tests/fpga-mgr-test.c b/drivers/fpga/tests/fpga-mgr-test.c
-index 6acec55b60ce..125b3a4d43c6 100644
---- a/drivers/fpga/tests/fpga-mgr-test.c
-+++ b/drivers/fpga/tests/fpga-mgr-test.c
-@@ -7,8 +7,8 @@
-  * Author: Marco Pagani <marpagan@redhat.com>
-  */
+ 	pipe_ctx->stream->dmdata_address = attr->address;
  
-+#include <kunit/device.h>
- #include <kunit/test.h>
--#include <linux/device.h>
- #include <linux/fpga/fpga-mgr.h>
- #include <linux/module.h>
- #include <linux/scatterlist.h>
-@@ -40,7 +40,7 @@ struct mgr_stats {
- struct mgr_ctx {
- 	struct fpga_image_info *img_info;
- 	struct fpga_manager *mgr;
--	struct platform_device *pdev;
-+	struct device *dev;
- 	struct mgr_stats stats;
- };
++	dc_exit_ips_for_hw_access(dc);
++
+ 	dc->hwss.program_dmdata_engine(pipe_ctx);
  
-@@ -194,7 +194,7 @@ static void fpga_mgr_test_get(struct kunit *test)
- 	struct mgr_ctx *ctx = test->priv;
- 	struct fpga_manager *mgr;
+ 	if (hubp->funcs->dmdata_set_attributes != NULL &&
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_surface.c b/drivers/gpu/drm/amd/display/dc/core/dc_surface.c
+index 19a2c7140ae84..19140fb65787c 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_surface.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_surface.c
+@@ -161,6 +161,8 @@ const struct dc_plane_status *dc_plane_get_status(
+ 		break;
+ 	}
  
--	mgr = fpga_mgr_get(&ctx->pdev->dev);
-+	mgr = fpga_mgr_get(ctx->dev);
- 	KUNIT_EXPECT_PTR_EQ(test, mgr, ctx->mgr);
++	dc_exit_ips_for_hw_access(dc);
++
+ 	for (i = 0; i < dc->res_pool->pipe_count; i++) {
+ 		struct pipe_ctx *pipe_ctx =
+ 				&dc->current_state->res_ctx.pipe_ctx[i];
+diff --git a/drivers/gpu/drm/amd/display/dc/dc.h b/drivers/gpu/drm/amd/display/dc/dc.h
+index 74c871917eafc..53919c0eb1e3d 100644
+--- a/drivers/gpu/drm/amd/display/dc/dc.h
++++ b/drivers/gpu/drm/amd/display/dc/dc.h
+@@ -2325,6 +2325,7 @@ bool dc_is_plane_eligible_for_idle_optimizations(struct dc *dc, struct dc_plane_
+ 				struct dc_cursor_attributes *cursor_attr);
  
- 	fpga_mgr_put(ctx->mgr);
-@@ -284,14 +284,14 @@ static int fpga_mgr_test_init(struct kunit *test)
- 	ctx = kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
+ void dc_allow_idle_optimizations(struct dc *dc, bool allow);
++void dc_exit_ips_for_hw_access(struct dc *dc);
+ bool dc_dmub_is_ips_idle_state(struct dc *dc);
  
--	ctx->pdev = platform_device_register_simple("mgr_pdev", PLATFORM_DEVID_AUTO, NULL, 0);
--	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->pdev);
-+	ctx->dev = kunit_device_register(test, "fpga-manager-test-dev");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->dev);
- 
--	ctx->mgr = devm_fpga_mgr_register(&ctx->pdev->dev, "Fake FPGA Manager", &fake_mgr_ops,
-+	ctx->mgr = devm_fpga_mgr_register(ctx->dev, "Fake FPGA Manager", &fake_mgr_ops,
- 					  &ctx->stats);
- 	KUNIT_ASSERT_FALSE(test, IS_ERR_OR_NULL(ctx->mgr));
- 
--	ctx->img_info = fpga_image_info_alloc(&ctx->pdev->dev);
-+	ctx->img_info = fpga_image_info_alloc(ctx->dev);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->img_info);
- 
- 	test->priv = ctx;
-@@ -304,7 +304,7 @@ static void fpga_mgr_test_exit(struct kunit *test)
- 	struct mgr_ctx *ctx = test->priv;
- 
- 	fpga_image_info_free(ctx->img_info);
--	platform_device_unregister(ctx->pdev);
-+	kunit_device_unregister(test, ctx->dev);
- }
- 
- static struct kunit_case fpga_mgr_test_cases[] = {
-diff --git a/drivers/fpga/tests/fpga-region-test.c b/drivers/fpga/tests/fpga-region-test.c
-index baab07e3fc59..bcf0651df261 100644
---- a/drivers/fpga/tests/fpga-region-test.c
-+++ b/drivers/fpga/tests/fpga-region-test.c
-@@ -7,12 +7,12 @@
-  * Author: Marco Pagani <marpagan@redhat.com>
-  */
- 
-+#include <kunit/device.h>
- #include <kunit/test.h>
- #include <linux/fpga/fpga-bridge.h>
- #include <linux/fpga/fpga-mgr.h>
- #include <linux/fpga/fpga-region.h>
- #include <linux/module.h>
--#include <linux/platform_device.h>
- #include <linux/types.h>
- 
- struct mgr_stats {
-@@ -26,11 +26,11 @@ struct bridge_stats {
- 
- struct test_ctx {
- 	struct fpga_manager *mgr;
--	struct platform_device *mgr_pdev;
-+	struct device *mgr_dev;
- 	struct fpga_bridge *bridge;
--	struct platform_device *bridge_pdev;
-+	struct device *bridge_dev;
- 	struct fpga_region *region;
--	struct platform_device *region_pdev;
-+	struct device *region_dev;
- 	struct bridge_stats bridge_stats;
- 	struct mgr_stats mgr_stats;
- };
-@@ -91,7 +91,7 @@ static void fpga_region_test_class_find(struct kunit *test)
- 	struct test_ctx *ctx = test->priv;
- 	struct fpga_region *region;
- 
--	region = fpga_region_class_find(NULL, &ctx->region_pdev->dev, fake_region_match);
-+	region = fpga_region_class_find(NULL, ctx->region_dev, fake_region_match);
- 	KUNIT_EXPECT_PTR_EQ(test, region, ctx->region);
- 
- 	put_device(&region->dev);
-@@ -108,7 +108,7 @@ static void fpga_region_test_program_fpga(struct kunit *test)
- 	char img_buf[4];
- 	int ret;
- 
--	img_info = fpga_image_info_alloc(&ctx->mgr_pdev->dev);
-+	img_info = fpga_image_info_alloc(ctx->mgr_dev);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, img_info);
- 
- 	img_info->buf = img_buf;
-@@ -148,32 +148,30 @@ static int fpga_region_test_init(struct kunit *test)
- 	ctx = kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
- 
--	ctx->mgr_pdev = platform_device_register_simple("mgr_pdev", PLATFORM_DEVID_AUTO, NULL, 0);
--	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->mgr_pdev);
-+	ctx->mgr_dev = kunit_device_register(test, "fpga-manager-test-dev");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->mgr_dev);
- 
--	ctx->mgr = devm_fpga_mgr_register(&ctx->mgr_pdev->dev, "Fake FPGA Manager", &fake_mgr_ops,
--					  &ctx->mgr_stats);
-+	ctx->mgr = devm_fpga_mgr_register(ctx->mgr_dev, "Fake FPGA Manager",
-+					  &fake_mgr_ops, &ctx->mgr_stats);
- 	KUNIT_ASSERT_FALSE(test, IS_ERR_OR_NULL(ctx->mgr));
- 
--	ctx->bridge_pdev = platform_device_register_simple("bridge_pdev", PLATFORM_DEVID_AUTO,
--							   NULL, 0);
--	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->bridge_pdev);
-+	ctx->bridge_dev = kunit_device_register(test, "fpga-bridge-test-dev");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->bridge_dev);
- 
--	ctx->bridge = fpga_bridge_register(&ctx->bridge_pdev->dev, "Fake FPGA Bridge",
-+	ctx->bridge = fpga_bridge_register(ctx->bridge_dev, "Fake FPGA Bridge",
- 					   &fake_bridge_ops, &ctx->bridge_stats);
- 	KUNIT_ASSERT_FALSE(test, IS_ERR_OR_NULL(ctx->bridge));
- 
- 	ctx->bridge_stats.enable = true;
- 
--	ctx->region_pdev = platform_device_register_simple("region_pdev", PLATFORM_DEVID_AUTO,
--							   NULL, 0);
--	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->region_pdev);
-+	ctx->region_dev = kunit_device_register(test, "fpga-region-test-dev");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->region_dev);
- 
- 	region_info.mgr = ctx->mgr;
- 	region_info.priv = ctx->bridge;
- 	region_info.get_bridges = fake_region_get_bridges;
- 
--	ctx->region = fpga_region_register_full(&ctx->region_pdev->dev, &region_info);
-+	ctx->region = fpga_region_register_full(ctx->region_dev, &region_info);
- 	KUNIT_ASSERT_FALSE(test, IS_ERR_OR_NULL(ctx->region));
- 
- 	test->priv = ctx;
-@@ -186,18 +184,17 @@ static void fpga_region_test_exit(struct kunit *test)
- 	struct test_ctx *ctx = test->priv;
- 
- 	fpga_region_unregister(ctx->region);
--	platform_device_unregister(ctx->region_pdev);
-+	kunit_device_unregister(test, ctx->region_dev);
- 
- 	fpga_bridge_unregister(ctx->bridge);
--	platform_device_unregister(ctx->bridge_pdev);
-+	kunit_device_unregister(test, ctx->bridge_dev);
- 
--	platform_device_unregister(ctx->mgr_pdev);
-+	kunit_device_unregister(test, ctx->mgr_dev);
- }
- 
- static struct kunit_case fpga_region_test_cases[] = {
- 	KUNIT_CASE(fpga_region_test_class_find),
- 	KUNIT_CASE(fpga_region_test_program_fpga),
--
- 	{}
- };
- 
-
-base-commit: b1a91ca25f15b6d7b311de4465854a5981dee3d3
+ /* set min and max memory clock to lowest and highest DPM level, respectively */
 -- 
-2.44.0
+2.43.0
+
+
+
 
