@@ -1,98 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B8914535D
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 14:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A0D14535D
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 14:23:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711549413; cv=none; b=qdeUgcYH2iEEOUhqTFULIPWD55syW6RPSvRu3b4yiu5G6CUY8lLWDhTw5EtmjQJ3qVUUoEpEmRMy787KOQnvWPe4PYtQoFRfVtMZEAyHHHQmCjlm7smAA1rlmbdVe03renYv0il/eMSHC8bwil1OXpFbJMZjuzHFWeOgNAPsapg=
+	t=1711549419; cv=none; b=CAy3Bzj0fG+TWujeLk1Q55fTQ3/B5reuJE0rOoL8CdyAciU8UO7rJHD/08baMrn39selbPoG4iaOw4GbXnHEth4EQNeYwXCDfUKRJOX66Q0TaYyA8F1i0HNefF06ORsp+lUf0pUDPSKmhnUYeYXaLi+Fd7o+GXIBxK8qaPq9BJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711549413; c=relaxed/simple;
-	bh=978Ys2NHTIo9kyqZglKr1qHAlExbEvvvunWm5NCUUPM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qqG/9ZRPVmrs7JOrB0amC71piAiMokKL/zSpzjlGXFhL9qOH6MoYMusyvyBVjySRNlNO13fBK1YbM4WnGevhG5R4npS9R7E7hv8rbBmdQ8kLBW6VDErfqMDNEo1og1qCCzZVyTs9whgWfQBxAW1NiQbPuf/vYZdeaEpVt7WK+bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zip2nYae; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1711549419; c=relaxed/simple;
+	bh=Sksl8i8PnOiTqr4IVGDYXs4HXDKRPWF92JDKDZBGrGk=;
+	h=Date:From:To:Cc:Subject:Message-Id:Mime-Version:Content-Type; b=A74CqaJDjW3x7UJqc0d3nou8gi1QtBrEDfv+NEW7hHpEMZHjA2D8IfN1R/pzazRc4qAOKPo9DpSPD+XF3eA5mkJi0ZDqeRAqzl0ieIPEHJKJ5xhHKlO6oC57ltneV4aHe5fecjaKGfFcKrcmel2AoxzR9GpvCvvQr8CC0Mg0ZVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VNSF++lG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zip2nYae"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711549411; x=1743085411;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=978Ys2NHTIo9kyqZglKr1qHAlExbEvvvunWm5NCUUPM=;
-  b=Zip2nYaejpXEOWT9CKj3OF42dWY7Lti70jw2KMrWuPzBkW36oqVyQuJ7
-   XbCUN+JaaHBBkoAKZ3CRgVLqaDZplI7sgS1SN54FSWYX/3I/+XUiF2trZ
-   ++E0Yi44E77UM4Dses7Y83qSjPb6Mz0b16u5hc+Ld9SgRLlO39T3AMBRg
-   J5USh26T5Ngr/bSf7IzRfpMD60xWnyDQ7u4zAupRBYZsSC60g+az/P5Fz
-   vJSNruwEVF1mtm71gk5i39ankEpfnFsQSiPAT8YwiSSU2afS7UZcDgFnv
-   DxsweivVTLuvl1nYAwwYrE22pJB4iUtsYG54WQ6Cea1tLbYiN5OnrTlbb
-   Q==;
-X-CSE-ConnectionGUID: X0JcHqL7T52fKyhnL0m6gg==
-X-CSE-MsgGUID: gNrCzXBDTVSmSv6mvotsNg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="6592562"
-X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
-   d="scan'208";a="6592562"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 07:23:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="914914548"
-X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
-   d="scan'208";a="914914548"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 07:23:29 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rpUBb-0000000Geo3-13as;
-	Wed, 27 Mar 2024 16:23:27 +0200
-Date: Wed, 27 Mar 2024 16:23:26 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Lee Jones <lee@kernel.org>
-Cc: Mateusz K <mateusz.kaduk@gmail.com>, Bjorn Helgaas <helgaas@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] mfd: intel-lpss: Switch over to MSI interrupts
-Message-ID: <ZgQr3sU_BIYv-Ynv@smile.fi.intel.com>
-References: <20240312165905.1764507-1-andriy.shevchenko@linux.intel.com>
- <20240325211915.GA1449994@bhelgaas>
- <CAPf=4Rc2vQrWqcs=-ND3iOZFJyKE7FdPoqU9w6DKjoSaJo6KaQ@mail.gmail.com>
- <ZgLefFQanbq-ozKM@smile.fi.intel.com>
- <ZgLooJa1JVKEMOtf@smile.fi.intel.com>
- <20240327131711.GR13211@google.com>
- <ZgQeKfsFy9i0h4Kj@smile.fi.intel.com>
- <20240327141229.GS13211@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VNSF++lG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 443F8C433C7;
+	Wed, 27 Mar 2024 14:23:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711549418;
+	bh=Sksl8i8PnOiTqr4IVGDYXs4HXDKRPWF92JDKDZBGrGk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=VNSF++lGGgcAk0F3gsRRNKpNnyXiZJOxodQVycktupLQWWOqXus9X4/1tVh1TOfv6
+	 Hj7fm2HMjaM5XnfVwUumlU8Lmqd1aLw5fOJbhkm1ZSxj2RaUwBlcRKetFT5xYITdQe
+	 POM1ebitJylhnfiSlW6PFBHOWyScGf5sXRRebtmx7HCKwxTY7aeFexcr2CzDJt4qBj
+	 CTwimF4VDC1BnEqbqwOO/eIzYVWyOjkbIGLYDCJl55NqvTTAaWxuQjDoPfHTautPb3
+	 TBprYsc6F0tqFxTVqHM/4IyXWQIFeE5IRgxD2mfU2I5oegdnz9P1tH9KWhlGvbb5E5
+	 +1s7jTB4jtwIA==
+Date: Wed, 27 Mar 2024 23:23:35 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Masami Hiramatsu (Google) <mhiramat@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ linux-kernel@vger.kernel.org
+Subject: [GIT PULL] probes: Fixes for v6.9-rc1
+Message-Id: <20240327232335.c817e6f17b84328f462d9e57@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240327141229.GS13211@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 27, 2024 at 02:12:29PM +0000, Lee Jones wrote:
-> On Wed, 27 Mar 2024, Andy Shevchenko wrote:
-> > On Wed, Mar 27, 2024 at 01:17:11PM +0000, Lee Jones wrote:
-> > > On Tue, 26 Mar 2024, Andy Shevchenko wrote:
-> > > > On Tue, Mar 26, 2024 at 04:41:01PM +0200, Andy Shevchenko wrote:
+Hi Linus,
 
-...
+Probes fixes for v6.9-rc1:
 
-> > > > Hold on, but IIUC this is the report about new hardware that never had
-> > > > a support by Linux before.
-> > > 
-> > > So a revert is no longer required?
-> > 
-> > No, it seems an old issue unrelated to this patch.
-> 
-> Very well, consider it *not* done. :)
+ - tracing/probes: initialize a 'val' local variable with zero. This variable
+   is read by FETCH_OP_ST_EDATA in a loop, and is expected to be initialized
+   by FETCH_OP_ARG in the same loop. Since this expectation is not obvious,
+   thus smatch warns it. Initializing 'val' with zero fixes this warning.
 
-Thank you!
 
+Please pull the latest probes-fixes-v6.9-rc1 tree, which can be found at:
+
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+probes-fixes-v6.9-rc1
+
+Tag SHA1: f7e169092950bdda7a36a77325e3490700668a66
+Head SHA1: 0add699ad068d26e5b1da9ff28b15461fc4005df
+
+
+Masami Hiramatsu (Google) (1):
+      tracing: probes: Fix to zero initialize a local variable
+
+----
+ kernel/trace/trace_probe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+---------------------------
+commit 0add699ad068d26e5b1da9ff28b15461fc4005df
+Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Date:   Wed Mar 20 17:10:38 2024 +0900
+
+    tracing: probes: Fix to zero initialize a local variable
+    
+    Fix to initialize 'val' local variable with zero.
+    Dan reported that Smatch static code checker reports an error that a local
+    'val' variable needs to be initialized. Actually, the 'val' is expected to
+    be initialized by FETCH_OP_ARG in the same loop, but it is not obvious. So
+    initialize it with zero.
+    
+    Link: https://lore.kernel.org/all/171092223833.237219.17304490075697026697.stgit@devnote2/
+    
+    Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+    Closes: https://lore.kernel.org/all/b010488e-68aa-407c-add0-3e059254aaa0@moroto.mountain/
+    Fixes: 25f00e40ce79 ("tracing/probes: Support $argN in return probe (kprobe and fprobe)")
+    Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+    Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 217169de0920..dfe3ee6035ec 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -839,7 +839,7 @@ int traceprobe_get_entry_data_size(struct trace_probe *tp)
+ void store_trace_entry_data(void *edata, struct trace_probe *tp, struct pt_regs *regs)
+ {
+ 	struct probe_entry_arg *earg = tp->entry_arg;
+-	unsigned long val;
++	unsigned long val = 0;
+ 	int i;
+ 
+ 	if (!earg)
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
