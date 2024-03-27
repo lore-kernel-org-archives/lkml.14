@@ -1,143 +1,127 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86AC3130AD3;
-	Wed, 27 Mar 2024 16:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D0A12F394
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 16:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711557011; cv=none; b=Da2jNWLJLlGQXQ3UWKHYnITsOk4GdD9DxAmA7GOnaqsAlxsVemg74mFkr6T5LKgX6v6JPHLzP0wvvjJm6k2Uxjx6upGkMdj2WuyOtQqcOuCmCiJVtG7qFTR5gHbB0yBPrLi03VECnOL8vdVqetZGM9ZwqKOjQg982o0NiRKeLlA=
+	t=1711557020; cv=none; b=XqmBmUuaEQ3I5HCn8a/S+eonxElR35swlAsuKPUGYtmhT8WRDg+quPxbiqWM7lMA57oVVdWQpJONtYGIkCsg0OmStLNOhMBL6dY04AM3fSFECyDqxNCwW2vae+O1/X65HzlXw+JCQgH7M8mi8Tz4SrEvyZwQnOp/Cp8QE3LI8Po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711557011; c=relaxed/simple;
-	bh=ynrZQjK78RiFfHs8spnknPgeIpfTWGgafOjmPY/DV0o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QIPOOtImKWM6oz5LcjEIRfPIp/7ZAApe+LRtO28J/e4K5D+jVJL2M3P0koifkcoFKPeYIRbf3Wa6zqR/STVYy/cv17V37zUELhXl56kSYUZ59aqquf/m5oSnCOalTxXvJ4F3vvaIBivsU/l6tnB/y1HM48fTRo6S6snS8E8U9pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hYFnl4+6; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711557020; c=relaxed/simple;
+	bh=7lYhr5rYnI3FxdZmdKOYuJuz5A6ebiYutbR0u/5ejF0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AEUD+7JKJPV9+4b94b4EL2iOuuHXIe+eETq1YdlChcBvtQAlsCdB+fsyA6JZ5h7t+ZjVtXwX9oSWJJFrYFGacMMuvWogNlr5rBTKxUmLjE/b/kUUFtxEzGyQLk6SJriPDX2mR1CVPbH2B1pkotfc8vmStPwWfRhOWYTNg7nuAHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=X1YrToIE; arc=none smtp.client-ip=209.85.166.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hYFnl4+6"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-56845954ffeso12345a12.2;
-        Wed, 27 Mar 2024 09:30:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="X1YrToIE"
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7cc864215caso243628639f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 09:30:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711557007; x=1712161807; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=em40ZdcYw5a0qmsk0GSXegTRRtyY4Q3EIhC6d6DCO1M=;
-        b=hYFnl4+65t2KB66aBCiqwiRjlcGevWK6k8mtRnZIG36KSzDKEilQ7ge6xsZ4NDD7PI
-         q49xGXbcocYYT3Hpr2xr84vdPolXzO5YUr2jCFuy7ar6ave2g4t4OR6z5WF0YVuTrys6
-         AMTtFphfGR+DE+phkTE7CaJldD2J1Tm6zPMHDXJkY+L4f4bq4+O1wPSkjpKH+TaSq9vX
-         yFtyqSFCAvDM6muTcUVnCocAJeMlTL6x/4vlH1xuflfJvvfX5v98xovpfuHimnpGVGAv
-         XEJ0UCMOHLJWFlBTjJmTSVqgXLwozV4aJn4pp/8Ft1vN7Fukylq4e9heTQeszElKkbUa
-         OsvQ==
+        d=sifive.com; s=google; t=1711557017; x=1712161817; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Y3/CPQu0kt0AK01jL1gmP6nDgmIk8fvdY19xmLzWhxc=;
+        b=X1YrToIEWbucSZinabH7a/qI2G/G/z8chDkmVa01DXHqvnjsDb4uBs/U+GiC3IiaLg
+         kgQTiDNqd/bUDOKnIs0gJ5xcQZk9QeHetNYQ1p7YgMdjGu3Jvg/VFXuTzCmVbcgiqgmz
+         BRyHsJZD/D2XxeYG+xBXJbW8isx7kuLAHlGCl36bizmOudYHCQEKB130C0Ym3wP4EbXq
+         QjMBbqI60TcDWsVUeoUllxzK5Lu9magd0I5io5ZvV1FDc7IHgU+zva/17RfE51Z1EJAU
+         Okxc2IWmZ6Wu4nofn+GebEaGM96msvo9ZkaDHjUcwfpG/oxk6tBxbKt8k73NXFPn1I51
+         T5bA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711557007; x=1712161807;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=em40ZdcYw5a0qmsk0GSXegTRRtyY4Q3EIhC6d6DCO1M=;
-        b=RsfslPAkXKfM1qTl378LJ8ssAeLXJgg0Y29iy+s0k1Kn1gV41eHeqJqTobjZgGyKeO
-         R09/eyKFwuzsqbF50t2rMFsqvd+yzPpVWAvXD2h8hLA//wEiqJKmw8LESQMLycESFMub
-         ot42HW5X2ZBN74zzVQzkdRuSkrPKIpqo60COdBhoJFbozwJqSP5LC1uRnOykKJpATRoc
-         FeruPXtMfb3FuU1bvYddv1rqBfcdJiBDqtYAhOlVbxB53TZEgKc3J1Fb1+/WjJR2yz0B
-         URrxTU4JoqOcJcLmly5MPArY9uedjk9R2Mq7dRlTkUtkbmZefQ5Xxs02R/rq7wfJrJiv
-         E+Ng==
-X-Forwarded-Encrypted: i=1; AJvYcCVAkfjTJ5Ac+jOlkIikLd6D0lB10GWF4u8tFDzOMiHA9JUZmtXlwelVIPxo3VGlCu9MEksm9aLVvxvZ2srwFeVolwJwZn1rOKanL0Hm
-X-Gm-Message-State: AOJu0Yw9ubNKuZ8Eonjm8wG9F7jGCdZtrQfbDfotjCtuX03RmHS4pCp0
-	fth6h7PLo7LZktlI+sc78NFzX8oA62AezDvW+jBjHNZgoXmjuEWf0lFQfKwmbzw=
-X-Google-Smtp-Source: AGHT+IGk9dp4lkbSkdtzFPdEB7sD8HaIbkmvaSXvGTU9OnFIWAMR90hLatWAeyEvMtPI47877NvIpA==
-X-Received: by 2002:a17:907:7e88:b0:a4e:113b:52cd with SMTP id qb8-20020a1709077e8800b00a4e113b52cdmr139936ejc.20.1711557007316;
-        Wed, 27 Mar 2024 09:30:07 -0700 (PDT)
-Received: from WBEC325.dom.lan ([185.188.71.122])
-        by smtp.gmail.com with ESMTPSA id o9-20020a170906774900b00a46a2ac0dbasm5609385ejn.197.2024.03.27.09.30.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 09:30:06 -0700 (PDT)
-From: Pawel Dembicki <paweldembicki@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Pawel Dembicki <paweldembicki@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Dimitri Fedrau <dima.fedrau@gmail.com>,
-	Stefan Eichenberger <eichest@gmail.com>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	Shay Agroskin <shayagr@amazon.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 1/3] net: phy: marvell: add basic support of 88E308X/88E609X family
-Date: Wed, 27 Mar 2024 17:29:12 +0100
-Message-Id: <20240327162918.2426792-1-paweldembicki@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1711557017; x=1712161817;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y3/CPQu0kt0AK01jL1gmP6nDgmIk8fvdY19xmLzWhxc=;
+        b=bfIRem8Wl2toVcz7wQeYgsUgYFE7hRz+gmb7TlUtR1LQfX01NFd68X/5gxmc+6Np0c
+         8e49f1QFasach7YhxvsS7Jw8urbiyM54B/fN3XL98PRodi+ipMOYmleXurseBYk4C9EB
+         PKnbNgdHRO12QouUMJNeaJAU+Gh2XYrxyKqL7sEvK5p/ZW9HpWSPcsTGPeGx3+4diBZz
+         MWhYujaM45jVlDGVYsrMxlihcfsaoS7jmz71AhvIaZK1p9ABlzlBB5AmD6SI+CW7NPfI
+         1CHj7N1rRYHRmoCAnpbxSAD8OeqNKokynkk9VIhTVTd9rEkAQ/t/ss/xzW1p6kDmiMUX
+         3MRA==
+X-Forwarded-Encrypted: i=1; AJvYcCWz8PMzz2iHPSxlG5//JeUL2pBIik1GuwsaTG1LG1Wv+FaSmiCzaGwV1bIAKjKgHyQrUUnTPxgkJn6QqeEttVvx05AKm+YVC4mxTQ57
+X-Gm-Message-State: AOJu0YyAL4NSCq4IaZDkHiheXDpCjUNPML26I2hhK975zgCyhD6lAJfn
+	FyJzuYpzlU3MpNcY9BCY3ugtbmia6VMHyoD7e6J0ob9V6QitogK2gkYXS3R1TOo=
+X-Google-Smtp-Source: AGHT+IEy3lKCG/WWVtYoOT4PxqKJ027BC01H+gdizwaqfKFmuLxv8JHVT57g0CZAesVwbRKs+7j44w==
+X-Received: by 2002:a6b:da06:0:b0:7d0:2b22:7221 with SMTP id x6-20020a6bda06000000b007d02b227221mr502270iob.20.1711557017625;
+        Wed, 27 Mar 2024 09:30:17 -0700 (PDT)
+Received: from [100.64.0.1] ([170.85.6.190])
+        by smtp.gmail.com with ESMTPSA id h8-20020a056602130800b007cc840d1d0bsm3647584iov.25.2024.03.27.09.30.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Mar 2024 09:30:17 -0700 (PDT)
+Message-ID: <4f89f7e4-cd89-42a7-a13e-5eb25f7b2f4e@sifive.com>
+Date: Wed, 27 Mar 2024 11:30:15 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] clocksource/drivers/timer-clint: Add
+ set_state_shutdown
+To: Jisheng Zhang <jszhang@kernel.org>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Thomas Gleixner <tglx@linutronix.de>
+References: <20240327153502.2133-1-jszhang@kernel.org>
+ <20240327153502.2133-3-jszhang@kernel.org>
+Content-Language: en-US
+From: Samuel Holland <samuel.holland@sifive.com>
+In-Reply-To: <20240327153502.2133-3-jszhang@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This patch implements only basic support.
+Hi Jisheng,
 
-It covers PHY used in multiple IC:
-PHY: 88E3082, 88E3083
-Switch: 88E6096, 88E6097
+On 2024-03-27 10:35 AM, Jisheng Zhang wrote:
+> Add clocksource detach/shutdown callback to disable RISC-V timer interrupt when
+> switching out clockevent from clint timer to another timer.
+> 
+> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> ---
+>  drivers/clocksource/timer-clint.c | 18 ++++++++++++++----
+>  1 file changed, 14 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/clocksource/timer-clint.c b/drivers/clocksource/timer-clint.c
+> index 09fd292eb83d..56cf6c672e6d 100644
+> --- a/drivers/clocksource/timer-clint.c
+> +++ b/drivers/clocksource/timer-clint.c
+> @@ -119,11 +119,21 @@ static int clint_clock_next_event(unsigned long delta,
+>  	return 0;
+>  }
+>  
+> +static int clint_clock_shutdown(struct clock_event_device *evt)
+> +{
+> +	void __iomem *r = clint_timer_cmp +
+> +			  cpuid_to_hartid_map(smp_processor_id());
+> +
+> +	writeq_relaxed(ULONG_MAX, r);
 
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+This needs to be ULLONG_MAX to produce a 64-bit value on riscv32.
 
----
-v2:
-  - resend only
+Regards,
+Samuel
 
- drivers/net/phy/marvell.c   | 13 +++++++++++++
- include/linux/marvell_phy.h |  1 +
- 2 files changed, 14 insertions(+)
-
-diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
-index 42ed013385bf..fae7eb57ee2c 100644
---- a/drivers/net/phy/marvell.c
-+++ b/drivers/net/phy/marvell.c
-@@ -3289,6 +3289,18 @@ static struct phy_driver marvell_drivers[] = {
- 		.get_strings = marvell_get_strings,
- 		.get_stats = marvell_get_stats,
- 	},
-+	{
-+		.phy_id = MARVELL_PHY_ID_88E3082,
-+		.phy_id_mask = MARVELL_PHY_ID_MASK,
-+		.name = "Marvell 88E308X/88E609X Family",
-+		/* PHY_BASIC_FEATURES */
-+		.probe = marvell_probe,
-+		.config_init = marvell_config_init,
-+		.aneg_done = marvell_aneg_done,
-+		.read_status = marvell_read_status,
-+		.resume = genphy_resume,
-+		.suspend = genphy_suspend,
-+	},
- 	{
- 		.phy_id = MARVELL_PHY_ID_88E1112,
- 		.phy_id_mask = MARVELL_PHY_ID_MASK,
-@@ -3742,6 +3754,7 @@ module_phy_driver(marvell_drivers);
- 
- static struct mdio_device_id __maybe_unused marvell_tbl[] = {
- 	{ MARVELL_PHY_ID_88E1101, MARVELL_PHY_ID_MASK },
-+	{ MARVELL_PHY_ID_88E3082, MARVELL_PHY_ID_MASK },
- 	{ MARVELL_PHY_ID_88E1112, MARVELL_PHY_ID_MASK },
- 	{ MARVELL_PHY_ID_88E1111, MARVELL_PHY_ID_MASK },
- 	{ MARVELL_PHY_ID_88E1111_FINISAR, MARVELL_PHY_ID_MASK },
-diff --git a/include/linux/marvell_phy.h b/include/linux/marvell_phy.h
-index 693eba9869e4..88254f9aec2b 100644
---- a/include/linux/marvell_phy.h
-+++ b/include/linux/marvell_phy.h
-@@ -7,6 +7,7 @@
- 
- /* Known PHY IDs */
- #define MARVELL_PHY_ID_88E1101		0x01410c60
-+#define MARVELL_PHY_ID_88E3082		0x01410c80
- #define MARVELL_PHY_ID_88E1112		0x01410c90
- #define MARVELL_PHY_ID_88E1111		0x01410cc0
- #define MARVELL_PHY_ID_88E1118		0x01410e10
--- 
-2.25.1
+> +	return 0;
+> +}
+> +
+>  static DEFINE_PER_CPU(struct clock_event_device, clint_clock_event) = {
+> -	.name		= "clint_clockevent",
+> -	.features	= CLOCK_EVT_FEAT_ONESHOT,
+> -	.rating		= 100,
+> -	.set_next_event	= clint_clock_next_event,
+> +	.name				= "clint_clockevent",
+> +	.features			= CLOCK_EVT_FEAT_ONESHOT,
+> +	.rating				= 100,
+> +	.set_next_event			= clint_clock_next_event,
+> +	.set_state_shutdown		= clint_clock_shutdown,
+>  };
+>  
+>  static int clint_timer_starting_cpu(unsigned int cpu)
 
