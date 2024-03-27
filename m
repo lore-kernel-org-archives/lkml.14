@@ -1,174 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336BE149DE6;
-	Wed, 27 Mar 2024 12:13:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA1C14A0BB;
+	Wed, 27 Mar 2024 12:13:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711541588; cv=none; b=sAzI4XcM9MvnBBQFckeo5WLqm7P01M9/HcJ/s57y2DxalXtZ4Npw/k24ZL1OeTf2ujSOZEoZGxuP7F5qZ1s0LU3f6RyAxXYXBZRkiDiq6d14Rw0oUEMGQtj3LFADbvP8F0E1unsA+qn9XGJ3TCKVbcMiCnpn6N069NLExCqoWsM=
+	t=1711541591; cv=none; b=bqYerT1RdXaeFHxWaHd27CrAi6PFVuewyTC3pJzv4HENQva0Qt3JU+v9xmTFVJyLczO2v8T4i3uc8fDGtJ7iFGv86uomdm2/2tmZPWG2OwZMLnd/VyAkg7tIa4f7m+n25ecnBV65oUljDAglkZVCKfVoiyF7LTuxDPTP0Okpqw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711541588; c=relaxed/simple;
-	bh=bvFf50gKkBSe43/H7Qar+5HnGyWggDxUtaodGznFoQo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q271P1Z8JOJRxI0DQEd2d25xpMMrckujjvzUCUgUmmya0VZiISzXnDtMGFmtqttI0lqdhGiEeFGQzfiEBY1IFDLdQzdaoq4hWLcftQNby1mPbmgceWWtopcq2j3E2DzMmM1HOrLprhusJxs+vcJLjW3t6eTUPebWEKZG2VdVMkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bn2AAxD9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711541591; c=relaxed/simple;
+	bh=6nzb64oC/aS+38eYkHxWrJnO/Ec/5COHzsOHpbHjwq8=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aTPFQRFl42qPfCNEDy9nL/3QaBNhNub0f4WGXKbUU4KIdomxnEr8Iafk+9o0Z2G0IUzcg13Kr33XjitQlCQ1xx4pcXSCZ1HnybFS9+s5VchCkLLV4QVcBfQyLiP7IzZ14zx8qwvkX8VaMxiUPnnLI5EbfL6t5XKVA/bzLYlCVNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iYutqEe5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bn2AAxD9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF918C433C7;
-	Wed, 27 Mar 2024 12:13:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iYutqEe5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E52E3C43390;
+	Wed, 27 Mar 2024 12:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711541588;
-	bh=bvFf50gKkBSe43/H7Qar+5HnGyWggDxUtaodGznFoQo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bn2AAxD9Xv1VB/Bl/W3eH7hFa2/nxhXpyhlv4bPOikMQYkvz5KCHcMHDlOTDo6qWh
-	 5LjhmSVPd0x5FnsF2dsh1ONoWDrweLPR+ai6uHR4Zu2Jt/e/J93mpPiF955ekP2Dt7
-	 zHL4RJ3if8H0batSWsxkyaiX9CSkCWQ76wef019ZSuvFgfskObJfGSU9ACzHUB6wSV
-	 nl5O8vI9qmpwMkAPt3TtoBMprfVBkZ6c47CWJPXuDjSpKfL/f2zVPfa7XZNILMdgKj
-	 tnpOd6oneuDXX04uFbjCBauOz54O4Wxv4pTN8Rd0vM6BwLk/DqSulPuOWrz8H0BSoL
-	 hmW4Pi/ZpkRhA==
-From: Sasha Levin <sashal@kernel.org>
-To: stable@vger.kernel.org,
-	sohaib.nadeem@amd.com
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Josip Pavic <josip.pavic@amd.com>,
-	Aurabindo Pillai <aurabindo.pillai@amd.com>,
-	Daniel Wheeler <daniel.wheeler@amd.com>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: FAILED: Patch "drm/amd/display: fixed integer types and null check locations" failed to apply to 6.1-stable tree
-Date: Wed, 27 Mar 2024 08:13:05 -0400
-Message-ID: <20240327121305.2830053-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=k20201202; t=1711541590;
+	bh=6nzb64oC/aS+38eYkHxWrJnO/Ec/5COHzsOHpbHjwq8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=iYutqEe5s0N9gvqdYsI1i59tc58latUbZgDX0+SbW82UFYr6MrNmzMRo7wACyvb7T
+	 DeHYGvTc8P1teXK1vtA0zmcQnp/3o+jMFUsAHinGhBHgQ81ebMqkoeWBDXCDCYQcsZ
+	 QGqrxYvnlRfSjvflGkmodVfCCHNPwaXxwyRyhUvOylTvTpqSV26GH8GwTjeO6PiDjt
+	 mDzTByGBUWz16Ja1pwIvm9yBf8uPgmymQ/cJmUvSkVNCtAmZP9cbHCsowYebcxImZZ
+	 S69O/cz21T+WpcKOtQsuyGDnlm38KPeYjL7eLslJr3Z5EnMoOvXBgwRKXcP5Xp0DVb
+	 Thlxr2JmBSx/g==
+Received: from 82-132-225-99.dab.02.net ([82.132.225.99] helo=wait-a-minute.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rpS9U-00GHA1-83;
+	Wed, 27 Mar 2024 12:13:08 +0000
+Date: Wed, 27 Mar 2024 12:12:55 +0000
+Message-ID: <87ttkrswjc.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Cc: kvmarm@lists.linux.dev,	kvm@vger.kernel.org,	linux-arm-kernel@lists.infradead.org,	linux-kernel@vger.kernel.org,	oliver.upton@linux.dev,	darren@os.amperecomputing.com,	d.scott.phillips@amperecomputing.com
+Subject: Re: [RFC PATCH] kvm: nv: Optimize the unmapping of shadow S2-MMU tables.
+In-Reply-To: <92117ba1-54ff-4752-b446-0ed09bde7201@os.amperecomputing.com>
+References: <20240305054606.13261-1-gankulkarni@os.amperecomputing.com>
+	<86sf150w4t.wl-maz@kernel.org>
+	<6685c3a6-2017-4bc2-ad26-d11949097050@os.amperecomputing.com>
+	<86r0go201z.wl-maz@kernel.org>
+	<92117ba1-54ff-4752-b446-0ed09bde7201@os.amperecomputing.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Patchwork-Hint: ignore
-X-stable: review
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 82.132.225.99
+X-SA-Exim-Rcpt-To: gankulkarni@os.amperecomputing.com, kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, oliver.upton@linux.dev, darren@os.amperecomputing.com, d.scott.phillips@amperecomputing.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-The patch below does not apply to the 6.1-stable tree.
-If someone wants it applied there, or to any other stable or longterm
-tree, then please email the backport, including the original git commit
-id to <stable@vger.kernel.org>.
+On Tue, 26 Mar 2024 11:33:27 +0000,
+Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com> wrote:
+> 
+> 
+> Hi Marc,
+> 
+> On 05-03-2024 08:33 pm, Marc Zyngier wrote:
+> > On Tue, 05 Mar 2024 13:29:08 +0000,
+> > Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com> wrote:
+> >> 
+> >> 
+> >> 
+> >> What are the core issues (please forgive me if you mentioned already)?
+> >> certainly we will prioritise them than this.
+> > 
+> > AT is a big one. Maintenance interrupts are more or less broken. I'm
+> > slowly plugging PAuth, but there's no testing whatsoever (running
+> > Linux doesn't count). Lack of SVE support is also definitely a
+> > blocker.
+> > 
+> 
+> I am debugging an issue where EDK2(ArmVirtPkg) boot hangs when tried
+> to boot from L1 using QEMU.
+> 
+> The hang is due to failure of AT instruction and resulting in
+> immediate return to Guest(L2) and the loop continues...
+>
+> AT instruction is executed in function of
+> __get_fault_info(__translate_far_to_hpfar) in L1 when data abort is
+> forwarded. Then AT instruction is trapped and executed/emulated in L0
+> in function "__kvm_at_s1e01" is failing and resulting in the return to
+> guest.
+> 
+> Is this also the manifestation of the issue of AT that you are referring to?
 
-Thanks,
-Sasha
+It's possible, but you are looking at the symptom and not necessarily
+the problem.
 
------------------- original commit in Linus's tree ------------------
+FWIW, I can boot EDK2 as built by debian as an L2 using QEMU without
+any problem, but I'm not using QEMU for L1 (it shouldn't have much of
+an impact anyway).
 
-From 616b39467e816851335277d817ec98b7a9b92758 Mon Sep 17 00:00:00 2001
-From: Sohaib Nadeem <sohaib.nadeem@amd.com>
-Date: Wed, 31 Jan 2024 16:40:37 -0500
-Subject: [PATCH] drm/amd/display: fixed integer types and null check locations
+I expect AT S1E1R to fail if any of the following are true:
 
-[why]:
-issues fixed:
-- comparison with wider integer type in loop condition which can cause
-infinite loops
-- pointer dereference before null check
+- the guest S1 page tables have been swapped out in the interval
+  between the fault and the AT emulation
 
-Cc: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Josip Pavic <josip.pavic@amd.com>
-Acked-by: Aurabindo Pillai <aurabindo.pillai@amd.com>
-Signed-off-by: Sohaib Nadeem <sohaib.nadeem@amd.com>
-Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
----
- .../gpu/drm/amd/display/dc/bios/bios_parser2.c   | 16 ++++++++++------
- .../drm/amd/display/dc/link/link_validation.c    |  2 +-
- 2 files changed, 11 insertions(+), 7 deletions(-)
+- the shadow S2 page tables do not have a translation for the output
+  of the S1 page tables yet
 
-diff --git a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
-index 960c4b4f6ddf3..05f392501c0ae 100644
---- a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
-+++ b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
-@@ -1850,19 +1850,21 @@ static enum bp_result get_firmware_info_v3_2(
- 		/* Vega12 */
- 		smu_info_v3_2 = GET_IMAGE(struct atom_smu_info_v3_2,
- 							DATA_TABLES(smu_info));
--		DC_LOG_BIOS("gpuclk_ss_percentage (unit of 0.001 percent): %d\n", smu_info_v3_2->gpuclk_ss_percentage);
- 		if (!smu_info_v3_2)
- 			return BP_RESULT_BADBIOSTABLE;
- 
-+		DC_LOG_BIOS("gpuclk_ss_percentage (unit of 0.001 percent): %d\n", smu_info_v3_2->gpuclk_ss_percentage);
-+
- 		info->default_engine_clk = smu_info_v3_2->bootup_dcefclk_10khz * 10;
- 	} else if (revision.minor == 3) {
- 		/* Vega20 */
- 		smu_info_v3_3 = GET_IMAGE(struct atom_smu_info_v3_3,
- 							DATA_TABLES(smu_info));
--		DC_LOG_BIOS("gpuclk_ss_percentage (unit of 0.001 percent): %d\n", smu_info_v3_3->gpuclk_ss_percentage);
- 		if (!smu_info_v3_3)
- 			return BP_RESULT_BADBIOSTABLE;
- 
-+		DC_LOG_BIOS("gpuclk_ss_percentage (unit of 0.001 percent): %d\n", smu_info_v3_3->gpuclk_ss_percentage);
-+
- 		info->default_engine_clk = smu_info_v3_3->bootup_dcefclk_10khz * 10;
- 	}
- 
-@@ -2422,10 +2424,11 @@ static enum bp_result get_integrated_info_v11(
- 	info_v11 = GET_IMAGE(struct atom_integrated_system_info_v1_11,
- 					DATA_TABLES(integratedsysteminfo));
- 
--	DC_LOG_BIOS("gpuclk_ss_percentage (unit of 0.001 percent): %d\n", info_v11->gpuclk_ss_percentage);
- 	if (info_v11 == NULL)
- 		return BP_RESULT_BADBIOSTABLE;
- 
-+	DC_LOG_BIOS("gpuclk_ss_percentage (unit of 0.001 percent): %d\n", info_v11->gpuclk_ss_percentage);
-+
- 	info->gpu_cap_info =
- 	le32_to_cpu(info_v11->gpucapinfo);
- 	/*
-@@ -2637,11 +2640,12 @@ static enum bp_result get_integrated_info_v2_1(
- 
- 	info_v2_1 = GET_IMAGE(struct atom_integrated_system_info_v2_1,
- 					DATA_TABLES(integratedsysteminfo));
--	DC_LOG_BIOS("gpuclk_ss_percentage (unit of 0.001 percent): %d\n", info_v2_1->gpuclk_ss_percentage);
- 
- 	if (info_v2_1 == NULL)
- 		return BP_RESULT_BADBIOSTABLE;
- 
-+	DC_LOG_BIOS("gpuclk_ss_percentage (unit of 0.001 percent): %d\n", info_v2_1->gpuclk_ss_percentage);
-+
- 	info->gpu_cap_info =
- 	le32_to_cpu(info_v2_1->gpucapinfo);
- 	/*
-@@ -2799,11 +2803,11 @@ static enum bp_result get_integrated_info_v2_2(
- 	info_v2_2 = GET_IMAGE(struct atom_integrated_system_info_v2_2,
- 					DATA_TABLES(integratedsysteminfo));
- 
--	DC_LOG_BIOS("gpuclk_ss_percentage (unit of 0.001 percent): %d\n", info_v2_2->gpuclk_ss_percentage);
--
- 	if (info_v2_2 == NULL)
- 		return BP_RESULT_BADBIOSTABLE;
- 
-+	DC_LOG_BIOS("gpuclk_ss_percentage (unit of 0.001 percent): %d\n", info_v2_2->gpuclk_ss_percentage);
-+
- 	info->gpu_cap_info =
- 	le32_to_cpu(info_v2_2->gpucapinfo);
- 	/*
-diff --git a/drivers/gpu/drm/amd/display/dc/link/link_validation.c b/drivers/gpu/drm/amd/display/dc/link/link_validation.c
-index 1c038e2a527b3..1aed55b0ab6a0 100644
---- a/drivers/gpu/drm/amd/display/dc/link/link_validation.c
-+++ b/drivers/gpu/drm/amd/display/dc/link/link_validation.c
-@@ -359,7 +359,7 @@ bool link_validate_dpia_bandwidth(const struct dc_stream_state *stream, const un
- 	struct dc_link *dpia_link[MAX_DPIA_NUM] = {0};
- 	int num_dpias = 0;
- 
--	for (uint8_t i = 0; i < num_streams; ++i) {
-+	for (unsigned int i = 0; i < num_streams; ++i) {
- 		if (stream[i].signal == SIGNAL_TYPE_DISPLAY_PORT) {
- 			/* new dpia sst stream, check whether it exceeds max dpia */
- 			if (num_dpias >= MAX_DPIA_NUM)
+You will need to work out which of these two are true. It is perfectly
+possible that there are more edge cases that need addressing, as what
+you describe just works with my setup. It could also be that 4kB page
+support at L1 is broken (as I have no way to test it and only run with
+a 16kB L1).
+
+	M.
+
 -- 
-2.43.0
-
-
-
-
+Without deviation from the norm, progress is not possible.
