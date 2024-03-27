@@ -1,173 +1,121 @@
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vern.gendns.com (vern.gendns.com [98.142.107.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6EA156643
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 23:19:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FFC714C5B1
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 23:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.142.107.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711581554; cv=none; b=tFQUToOv2rEPYPw5u7ukvkaV5wEIMTDtAiCqnlAM+g0sRPYWOniRjawn08Lf6ot8XIDY/40n5ju/YrXIPYwlnsu9RFCyOaLGl/Rh3QAJsnPUrlYLDh3AB+ljASdjgMEPRAawzRIeqm504Uhwo1qNpbEwzDS1uVlQ7m5UW6Sz1FU=
+	t=1711581627; cv=none; b=CUP8rbZ+u0rpKAal8h3eqO6DLTCGWq6dzFtux+4zC5c6h27OFaSkHGWEklQxiPm24Wl2MPOFO8isWRU3qIeg6Nu6ooPwoD89OSiBNFIpSFVjREiu9J5YxMxFV3EpxcmxgH4gybes3ZKG7eOxDpQvYexKeKCqmu+npL08u5EFaMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711581554; c=relaxed/simple;
-	bh=h9SozZx07F/ieSA3Tkw6/3vSYWM+YqSBRP3PPQIUB78=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hHN1+cir6c4J+HK7F+4KAhsBta4arsF4ldmVRJ36BM3bJYt0EQy4pJeGHCM6tG3iagFMaKxWuSxodfpkdODVTvfdI7hBUEEi3gaSR0wZexQdwDtJFVzTnVFTFcu0t7vpELGSSGlarFhZBMzErWg5ze+/+wVIpTJH0ks5OM36Q9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=eAqfAphT; arc=none smtp.client-ip=209.85.160.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1711581627; c=relaxed/simple;
+	bh=GqRS/t2xV6jc5khiwR5ot3NzbiCZobtJ+/179aX9kts=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Kjufng4k8IC359iw4RDa1ixk6g8YQ2b8YecIOOkPDPVChnkxdUiQNzwYbBhO8nbThxfIeyv9/0dh/8t5/8mZH+SWITPVKDchIU0VF/l+xfLDJSZ1g4kfSVMLFMLngZUwiKB4YJb/6KWQXb8FY/MHndRSJB5DH9aXN55xGqNYThQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com; spf=pass smtp.mailfrom=lechnology.com; dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b=Gb8Umenx; arc=none smtp.client-ip=98.142.107.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lechnology.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="eAqfAphT"
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-229cbc52318so225219fac.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 16:19:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711581550; x=1712186350; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CJZsj0mH5Na8/6xZVfDNraoADX8hsL14D7DbLT7TMPI=;
-        b=eAqfAphTCe5xMLO7IDsfaBpiCj4b/x+7v8ccb8ODULuM2G7hkEN25kFJncN2sx/fvG
-         QqUtlTjU4y695H2BTg3WTXcN767DuqbeSF6kh71SM1I0HU3UoyK8Q8jlsJwuNGAUdaqX
-         v3y9v/LDcuEfFDJ4KrGbQzJPSwxGrC0/1sCznd7hZFChgt5v4WDZzdU2UoIMUeDGcrs/
-         PvpmycHNdqEKepsxWgg5WbEUrtho04hZf5xJ9rtPoZYW5V2jgvQTNy3hKTKqqAXl9uw2
-         AZCTB49zFOmtYTVDnDYwbARUFzNRGtTcij9x4iAXUwJ5fZatOfL/jouVCMKin9BmsZnq
-         WBCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711581550; x=1712186350;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CJZsj0mH5Na8/6xZVfDNraoADX8hsL14D7DbLT7TMPI=;
-        b=wm/+jOKTrdvI2yEwuhvc+e9VzB2f38kRDFSmcXYqrR4dxOdA7xGfU+4Qr7N80xSgv/
-         GI1ZDleorXDro+JDNXWYKrPBNXCP0+cP28cBpN7AB+Zr8KTC90M/H/wLoICech5VQP3G
-         o8IJnx7Wks7PHYocTGRVzYpzf7GvBuF8Ga11eMEPEixH9srNmsz/boq8Cu98Zqap/SQi
-         8+Z4OrPddff3hk8TERuLXenoyBwRIoFsMdFEZ5nyTAUS0lhsLXyCYp6wk6u2SEZGKvfm
-         7henSbFzkrdLNbZSMbHx0ViNJPc3nrrNJrY3lOSZw6Wf5P1RJj2kFTqAQWOzlFaL9Q/A
-         AYmw==
-X-Forwarded-Encrypted: i=1; AJvYcCXgjxtZN5MRYOYtElO4xnqgm+Mb7IoZoRqtaKXw+yIa4JjU92eNIW1fv1Kc5py8hjt30fYLRIkS1TKugD4LaAgsd/SPbymFKBESC+ZN
-X-Gm-Message-State: AOJu0Yxb8lS1VMXeSJcOt7W8wa8I4sDgXyOe6rQldzfLQ+SaAGmpJedR
-	bIp5oWDNtPR4jqVy4d6cmnh7V7HCr7oFG10w4XcRjPmeeI7QsIGtN2lDZlUFQXU=
-X-Google-Smtp-Source: AGHT+IFF6sA3ju+9mCH35rHh1zhgVOle14esmb64OwmiwIjcccCZ+Gff/k0HvFE6jlRCad9wpwZTGw==
-X-Received: by 2002:a05:6871:3a14:b0:221:9013:d783 with SMTP id pu20-20020a0568713a1400b002219013d783mr1213589oac.34.1711581550253;
-        Wed, 27 Mar 2024 16:19:10 -0700 (PDT)
-Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id js3-20020a056870bac300b0022a0519183csm81381oab.2.2024.03.27.16.19.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 16:19:09 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Support Opensource <support.opensource@diasemi.com>,
-	Cosmin Tanislav <cosmin.tanislav@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Antoniu Miclaus <antoniu.miclaus@analog.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: David Lechner <dlechner@baylibre.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	linux-input@vger.kernel.org
-Subject: [PATCH RFC 7/7] Input: mpr121: Use devm_regulator_get_enable_get_voltage()
-Date: Wed, 27 Mar 2024 18:18:56 -0500
-Message-ID: <20240327-regulator-get-enable-get-votlage-v1-7-5f4517faa059@baylibre.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240327-regulator-get-enable-get-votlage-v1-0-5f4517faa059@baylibre.com>
-References: <20240327-regulator-get-enable-get-votlage-v1-0-5f4517faa059@baylibre.com>
+	dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="Gb8Umenx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:To:Subject:MIME-Version:Date:Message-ID:Sender:
+	Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=GqRS/t2xV6jc5khiwR5ot3NzbiCZobtJ+/179aX9kts=; b=Gb8UmenxOdRBJWALOOtlLBiJR8
+	kIl9ql22arklLvrU5yjgRH3dl+hncG0KnlK9wh55bCdoM9j4EmtecAOMgrWzo0xV8H6QKnuvxsF+N
+	Rw62mlB+of/JYc7QC4gvtDkKFKGxJbDwuLFc5+N8fa/jnVD4MVf6B4gsnC5OwjZhGWKorziErazhe
+	aZ8RmUAUF+JlW9wtOgCMQQPlAI3ICsmjgrnxYVEeNxddHR2W4SYMTHtVVwN5bgtVhxZQMty9PgGFH
+	+B9p7tMQl0Gtuaor8VD2ZCSJSy/0KPQStz5Q3ACEm0/2sW6MiXT0jAreYXUQYB200Ka4c6I/E7ylW
+	myKnAqMA==;
+Received: from ip98-183-112-25.ok.ok.cox.net ([98.183.112.25]:44708 helo=[192.168.0.142])
+	by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <david@lechnology.com>)
+	id 1rpcVm-0004r2-2p;
+	Wed, 27 Mar 2024 19:14:28 -0400
+Message-ID: <b44e62bf-59c4-4e57-b40f-3ce8a091ba2c@lechnology.com>
+Date: Wed, 27 Mar 2024 18:14:25 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.12.4
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] drm/tiny: ili9225: drop driver owner assignment
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20240327174842.519758-1-krzysztof.kozlowski@linaro.org>
+From: David Lechner <david@lechnology.com>
+Autocrypt: addr=david@lechnology.com; keydata=
+ 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
+In-Reply-To: <20240327174842.519758-1-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-We can reduce boilerplate code by using
-devm_regulator_get_enable_get_voltage().
+On 3/27/24 12:48 PM, Krzysztof Kozlowski wrote:
+> Core in spi_register_driver() already sets the .owner, so driver
+> does not need to.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
 
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
- drivers/input/keyboard/mpr121_touchkey.c | 45 +++-----------------------------
- 1 file changed, 3 insertions(+), 42 deletions(-)
+Acked-by: David Lechner <david@lechnology.com>
 
-diff --git a/drivers/input/keyboard/mpr121_touchkey.c b/drivers/input/keyboard/mpr121_touchkey.c
-index d434753afab1..c59e7451f3cd 100644
---- a/drivers/input/keyboard/mpr121_touchkey.c
-+++ b/drivers/input/keyboard/mpr121_touchkey.c
-@@ -82,42 +82,6 @@ static const struct mpr121_init_register init_reg_table[] = {
- 	{ AUTO_CONFIG_CTRL_ADDR, 0x0b },
- };
- 
--static void mpr121_vdd_supply_disable(void *data)
--{
--	struct regulator *vdd_supply = data;
--
--	regulator_disable(vdd_supply);
--}
--
--static struct regulator *mpr121_vdd_supply_init(struct device *dev)
--{
--	struct regulator *vdd_supply;
--	int err;
--
--	vdd_supply = devm_regulator_get(dev, "vdd");
--	if (IS_ERR(vdd_supply)) {
--		dev_err(dev, "failed to get vdd regulator: %ld\n",
--			PTR_ERR(vdd_supply));
--		return vdd_supply;
--	}
--
--	err = regulator_enable(vdd_supply);
--	if (err) {
--		dev_err(dev, "failed to enable vdd regulator: %d\n", err);
--		return ERR_PTR(err);
--	}
--
--	err = devm_add_action_or_reset(dev, mpr121_vdd_supply_disable,
--				       vdd_supply);
--	if (err) {
--		dev_err(dev, "failed to add disable regulator action: %d\n",
--			err);
--		return ERR_PTR(err);
--	}
--
--	return vdd_supply;
--}
--
- static void mpr_touchkey_report(struct input_dev *dev)
- {
- 	struct mpr121_touchkey *mpr121 = input_get_drvdata(dev);
-@@ -233,7 +197,6 @@ static int mpr121_phys_init(struct mpr121_touchkey *mpr121,
- static int mpr_touchkey_probe(struct i2c_client *client)
- {
- 	struct device *dev = &client->dev;
--	struct regulator *vdd_supply;
- 	int vdd_uv;
- 	struct mpr121_touchkey *mpr121;
- 	struct input_dev *input_dev;
-@@ -241,11 +204,9 @@ static int mpr_touchkey_probe(struct i2c_client *client)
- 	int error;
- 	int i;
- 
--	vdd_supply = mpr121_vdd_supply_init(dev);
--	if (IS_ERR(vdd_supply))
--		return PTR_ERR(vdd_supply);
--
--	vdd_uv = regulator_get_voltage(vdd_supply);
-+	vdd_uv = devm_regulator_get_enable_get_voltage(dev, "vdd");
-+	if (vdd_uv < 0)
-+		return vdd_uv;
- 
- 	mpr121 = devm_kzalloc(dev, sizeof(*mpr121), GFP_KERNEL);
- 	if (!mpr121)
-
--- 
-2.43.2
 
