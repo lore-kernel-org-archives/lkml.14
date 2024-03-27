@@ -1,296 +1,158 @@
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A9017BD2
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 01:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6461862C
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 01:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711503263; cv=none; b=GLIABGr5biJh8ftPRVT1Yl+yaMwPrJuVWmnnfxDK/WLudkvSmAaNwcPuY/Eb6eYuts0Bmnb8/A0tneC2sIhnzW+ptvZb4lFtiJbfirIKOfGb0Mmg2skk3jPOCZg7bavLt6VovNBShDKgZxUkiTxhnF652WV3GMjgwSMqobhPIj0=
+	t=1711503378; cv=none; b=I+riCUFWfUmXJ2yKCE7JZKuzken1tQ4zTxBTNDj6ohyQ752sAJJI44EPbmSRA/vTUgBuSaMLxkA0Ctz6hFJE0Ds73hLq4NMg9T9dmLujS9lhiRGufRwGGA5wGlCd5HDGQvSTXybZJnTJFTEG+0y2C9vZHRBIXpXdi4Pp42TIYFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711503263; c=relaxed/simple;
-	bh=f73qLbMMBJKUFLQcYp+jfmn3MzoXvcHWVQAHEnqfeK0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RKj8KrkUYZvBEdwtNSTJMUEkmo7xVa3Pz6A/R6kvhPXJy7q+KOyTJWSQJvUpYRj0ImzCPTKy9A/f0qclUSVklezFlR9T0HJ7z4+Fgb1yApVrH56uSbiF1gIi2Clqu+UyuUp6gNGRRKfjzmyeWp7QQ0u/bG0s8Ij0/Ujy2ykhZd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=asZrNfI6; arc=none smtp.client-ip=209.85.217.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711503378; c=relaxed/simple;
+	bh=ECemb7/KX8BGFyghPRdr8JHojkYBtQzWD/1aRhBEX7Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RwD3Xrcuevf3Uxm4MBRZH1XcNHRMEjby5ZKu+AaAlwVCubdOccMxkHZz0yqcCbJJAsqA9zC/I/VVd0ITZ3tDUb+KUroV/CA/k7645xJyB15eNqGgn1/yrp+9CchXsfJkS8sf5xGKFnyc3bsACcQQK4d5HT7cSWIH40Q3qmyKrKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Eu3X/HBi; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asZrNfI6"
-Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-47679ac2798so1662776137.2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 18:34:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711503260; x=1712108060; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VCYB7c+BMWHnOOEe3cAwNiyes927XAOxAN0PxG44CVM=;
-        b=asZrNfI666mVFLSP1i3XmtxZnZ2boYgES0mq0b6KhXlhxFUNZuiqvFRp/Lw11SvBi6
-         1yYLV78Is/+ZhD6D0Wy2ej2O8icBlfksbSYcAhj1eUb6FbfOjzz11aUT83Da06tMDvmO
-         vEC1TQaXSbBL88RF2S2id96TuKTtZ9CK1va1GfVKnoiqdV5BK1lX4ZTiJPlyTnz2Jw87
-         B2HBT+5r/qV+FRAr2p8tJjxsxsXh8YrbYa0O0N168Xp0vwUnSMT++Hp6GZcdH9UBnJPn
-         u6/e43WtNy23LBP1f2Rl2uLzQNgcm67dqTaJ5vszrQuhQQ/OYK9hihTJ37cipgMDvAZZ
-         AsFA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Eu3X/HBi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711503375;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=iYPTOunHLd/Diy0hNlVVbA0CQwtG77CQYjtLHeiLuNo=;
+	b=Eu3X/HBiPgUwywAvsA2JT5akEyLVjmMinuHQeMfqw4UKePoNiDpOplFI2R5Q7yK/82YLnS
+	958yqbhM1OwKArKeQWrXaOPImlpGrIM1p23AIi+cMv8Su0xlNlZU78+gl7QPOjS+UJ0eme
+	b9ZG7mzxFTIUSwkDYaYhs1So53wJj+0=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-250-LkaNSJ3YNy2Cx1WJHUkc9w-1; Tue, 26 Mar 2024 21:36:14 -0400
+X-MC-Unique: LkaNSJ3YNy2Cx1WJHUkc9w-1
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-696914b6d2dso25566676d6.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 18:36:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711503260; x=1712108060;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VCYB7c+BMWHnOOEe3cAwNiyes927XAOxAN0PxG44CVM=;
-        b=QJuXy86ZNeWFNtg53WL1ojAXHZimTPyxuaYXcdMw30Mc7upTMSJdWtAydioLfdWtIy
-         N69IYBqv3ae0UxOPgouLRtmVNZlMP9z5hI8DOpjAe/ICM78RqifoovCGLVuc4iFe8vj9
-         sLeMIgEbZRiegWLhG8EzHK4g9YsLtUc84sXoRakt0K1DSRDuRPjl3oGHv1rEYKG3+6ba
-         tlqIuQUs55MhOWw3AbyLkG56r4BNwWX3SxRRgk2tHv2X1Sx7gtFnofBc0SSJtDx6xH52
-         Hxjo+JtGVMl5L/MjUW4PbajIBPcM3kE9qP43o9xZX99ZtW46aH2hAWQ8nKIUhMA+nYIG
-         9YBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUno+rsIEy97aKw2c1rmrRn9YDTB/evgbJ5me4Ecv+Hjy4C0VXnTsHwjGp3cUd1SRNiD4FngSa3iSFjZYwDAXnQQgaHLmMvAiJGfbFI
-X-Gm-Message-State: AOJu0YwhF5GHZELq8f/pJi6+iLkaPT4lc1shX7XaNYhTquMfG/5SFKAn
-	mbOL4xDD+Ws5WG0uu1JaIDQOGOSnozBaa965mhi1pXk3IH6bEpqgqkdVh+RkECwpcmLz184jF9x
-	DiTHxkjuRdo5cnAAugm8v0RHBUeo=
-X-Google-Smtp-Source: AGHT+IGcOWldV2TYE5N0G/Ct0a7Zt3ICmaV1ZDUQCub4y7h5dq1o3m51b3vR3b0n7p3KF5iHGCAzfwGleI/UKNanIT8=
-X-Received: by 2002:a67:e91a:0:b0:476:d5f9:bf96 with SMTP id
- c26-20020a67e91a000000b00476d5f9bf96mr8044725vso.0.1711503260425; Tue, 26 Mar
- 2024 18:34:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711503374; x=1712108174;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iYPTOunHLd/Diy0hNlVVbA0CQwtG77CQYjtLHeiLuNo=;
+        b=L+7LzkJVbOhkDUDo9lV01eymSW11RD5uMRjSq37nUEvcHiopwZi+Yv3UPjRoHY2Tv3
+         pulslS0juhNlMv6qeFTJxjN5aY3Gz/LBXcvQtwzfuWUZhWvboPLRl9W7WlB3LtOtmSXH
+         ySbfjAA2ClmvB8Tk3JyR7gcHBpE/MxyrWikz+Fub987eU5ZvjZb0Vq2ChJKArQ2LTL0v
+         0LRzWe/GCPq897OPFoeGfqqVsfRUtGpmXaYckujFQD/cmiQiNM0FOJcSXHx+bpA7SLcU
+         boNsIYqj6h1rXo/KoWG2ZVlFa6AWW0jHCVfkuBOCVQaoKeO4a64xQ7/B1rFmUirGGA89
+         xLHw==
+X-Gm-Message-State: AOJu0YyZID7disobWwW67E56GeyNCkb8XMdqSiidxdzE43mfg6MapSpw
+	wqnrinENkSo7nvg5YzykgClYfmjEZmlfmHsKLbX9hOaplNLCsoOiBKp6kC71Xc09cPvpu0yAZsD
+	xOyfkYQ6lNuqcGfMdXo1F3UfANsFa+kSr0u0pzb0ekYza/jZeekXwkfUjiacIVA==
+X-Received: by 2002:a05:6214:e6c:b0:690:b3a3:2261 with SMTP id jz12-20020a0562140e6c00b00690b3a32261mr2857118qvb.53.1711503374032;
+        Tue, 26 Mar 2024 18:36:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHhUP8icqSJJoJYHIjBdnpMjQxvYXH/YAk6xTmiVd4FaN0LmOOpbpBO3pJH1Xwh2Qag7NMJiA==
+X-Received: by 2002:a05:6214:e6c:b0:690:b3a3:2261 with SMTP id jz12-20020a0562140e6c00b00690b3a32261mr2857103qvb.53.1711503373718;
+        Tue, 26 Mar 2024 18:36:13 -0700 (PDT)
+Received: from LeoBras.redhat.com ([2804:1b3:a801:90ea:8d3f:e47:b819:941d])
+        by smtp.gmail.com with ESMTPSA id x11-20020ad4458b000000b00696a47179a1sm819669qvu.14.2024.03.26.18.36.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 18:36:12 -0700 (PDT)
+From: Leonardo Bras <leobras@redhat.com>
+To: Helen Koike <helen.koike@collabora.com>,
+	Leonardo Bras <leobras@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH v1 1/1] gitlab-ci: Let project define runner using environment variables
+Date: Tue, 26 Mar 2024 22:30:54 -0300
+Message-ID: <20240327013055.139494-2-leobras@redhat.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <a49546e8-6749-4458-98da-67fd37b7df18@rivosinc.com>
- <mhng-a3b495e6-aca6-4137-a3c1-8fcacafd8596@palmer-ri-x1c9a>
- <ZfLxip96o5MVjHAF@xhacker> <ZfL1buKdDI-p5b9X@xhacker> <ZgGteKG_a3KGn5wV@xhacker>
- <CAGu26P_tUpSvXqdSz3pOdPNHbe6MyEYJ2XCHo8pD8jeE5pT+_Q@mail.gmail.com> <ZgNzBwsmeibHMjvc@xhacker>
-In-Reply-To: <ZgNzBwsmeibHMjvc@xhacker>
-From: Charles Lohr <lohr85@gmail.com>
-Date: Tue, 26 Mar 2024 18:34:09 -0700
-Message-ID: <CAGu26P-CqdsQzNTNDidBUg=pxU3vs7QhNEajokGKe7p8M2sLBA@mail.gmail.com>
-Subject: Re: [PATCH] riscv: deprecate CONFIG_MMU=n
-To: Jisheng Zhang <jszhang@kernel.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, cleger@rivosinc.com, 
-	Conor Dooley <conor@kernel.org>, samuel.holland@sifive.com, 
-	Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Conor Dooley <conor.dooley@microchip.com>, ajones@ventanamicro.com, dlemoal@kernel.org, 
-	Bjorn Topel <bjorn@rivosinc.com>, Atish Patra <atishp@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Sorry, if you don't mind clarifying, do you know which version you
-used, where you got it, and if you had to apply any patches?
+Currently it's not possible to select which runner will handle a pipeline
+without changing the codebase.
 
-Charles
+Add CI_TAGS environment variable, which can be used to select a runner
+either from a commit message, or directly from Gitlab interface.
 
-On Tue, Mar 26, 2024 at 6:28=E2=80=AFPM Jisheng Zhang <jszhang@kernel.org> =
-wrote:
->
-> On Tue, Mar 26, 2024 at 01:25:08PM -0700, Charles Lohr wrote:
-> > Jisheng, are you using musl or uclibc? I've been having difficulty
-> > getting new versions of each working with the newer kernels with
-> > system calls not lining up.
->
-> Hi Charles,
->
-> I tested nommu linux with uclibc, both rv32 and rv64
->
-> Thanks
->
-> >
-> > Also, is there a better place to ask questions about the more
-> > user-spacy stuff?  That's really where I've been struggling to
-> > maintain things, keeping buildroot working when targeting RV32 NOMMU.
-> > Thankfully a lot of the stickiest problems have all been upstreamed.
-> >
-> > Charles
-> >
-> > On Mon, Mar 25, 2024 at 10:12=E2=80=AFAM Jisheng Zhang <jszhang@kernel.=
-org> wrote:
-> > >
-> > > On Thu, Mar 14, 2024 at 09:02:43PM +0800, Jisheng Zhang wrote:
-> > > > On Thu, Mar 14, 2024 at 08:46:21PM +0800, Jisheng Zhang wrote:
-> > > > > On Tue, Feb 27, 2024 at 08:38:50AM -0800, Palmer Dabbelt wrote:
-> > > > > > On Tue, 27 Feb 2024 01:11:41 PST (-0800), cleger@rivosinc.com w=
-rote:
-> > > > > > >
-> > > > > > >
-> > > > > > > On 26/02/2024 20:00, Charles Lohr wrote:
-> > > > > > > > WOAH! Please DO NOT deprecate NOMMU. I use the NOMMU build =
-constantly
-> > > > > > > > and NOMMU Linux on RISC-V is the avenue used by many FPGA s=
-oft cores
-> > > > > > > > for Linux, as well as some limited systems.
-> > > > > >
-> > > > > > OK.
-> > > > > >
-> > > > > > I just build test this stuff, as I don't really have a use for =
-it
-> > > > > > personally.  I figured if nobody's reporting bugs then probably=
- it's broken
-> > > > > > and nobody's noticed because nobody's using it.
-> > > > > >
-> > > > > > > > I get new copies of the kernel when there are releases and =
-test them
-> > > > > > > > frequently to make sure everything is still working as expe=
-cted.
-> > > > > >
-> > > > > > I'd actually expected it to be broken, but I guess we managed t=
-o avoid
-> > > > > > screwing things up ;)
-> > > > > >
-> > > > > > > > For us we just don't care about XIP. I mean if someone did =
-push it
-> > > > >
-> > > > > I don't care XIP either, and IMHO the XIP's maintenance effort is=
- much
-> > > > > bigger than NOMMU(just check the various XIP_FIXUP* or CONFIG_XIP=
-_KERNEL
-> > > > > macros around lowlevel pgtable.h, page.h). If we can remove XIP, =
-the
-> > > > > code readability will be much better.
-> > > > >
-> > > > > Or sending out a similar XIP deprecation patch to see whether the=
-re's
-> > > > > any complain ? ;)
-> > > > >
-> > > > > > > > through to fruition, I'd also test and use it, but I urge y=
-ou please
-> > > > > > > > do not deprecate this.  While it's sometimes needed a bit o=
-f a
-> > > > >
-> > > > > +1 for urge the upstream please do not deprecate NOMMU.
-> > > > >
-> > > > > Besides the soft(FPGA) core mentioned by Charles, here is another=
- real
-> > > >
-> > > > And I'd like to write more about soft core: riscv is a free and ope=
-n
-> > > > ISA, this make it really good for education, for simple riscv
-> > > > implementation or emulator. Once riscv IMA is implemented(even if M=
-MU,
-> > > > cache, TLB stuff don't exist), it's not far away from making linux
-> > > > running on the FPGA or emulator. If the gain is larger than the mai=
-ntenance
-> > > > effort, I'd like to urge keeping the NOMMU support.
-> > > >
-> > > > Thanks a lot
-> > > >
-> > > > > usage case: As is known, Sophgo CV1800B platforms such as Milk Du=
-o
-> > > > > contains two C906 core, one(a.k.a big core) with MMU another(a.k.=
-a small
-> > > > > core)w/o MMU. The vendor sdk runs freertos on the small core, but=
- it
-> > > > > doesn't prevent users to run other OS such as threadx, zephyr or =
-nommu
-> > > > > linux on the small core. In fact, I sucessfully brought up nommu =
-linux
-> > > > > on the small core. I didn't just send out the patches in time dur=
-ing this
-> > > > > dev window duo to my personal career reason(I spent the time on h=
-unting
-> > > > > for a new job)
-> > > > >
-> > > > > I plan to send out NOMMU related patches once 6.9-rc1 is out.
-> > >
-> > > As is promised, the NOMMU improvement patches are sent out
-> > > https://lore.kernel.org/linux-riscv/20240325164021.3229-1-jszhang@ker=
-nel.org/T/#t
-> > >
-> > > Thanks
-> > >
-> > > > >
-> > > > > > > > creative build to get everything working, I've never needed=
- to patch
-> > > > > > > > anything in the kernel beyond patching in a custom console =
-for serial
-> > > > > > > > output.
-> > > > > > > >
-> > > > > > >
-> > > > > > > Hey Charles,
-> > > > > > >
-> > > > > > > No worries, we actually did not expected NOMMU to have *so ma=
-ny* users.
-> > > > > > > I guess deprecating stuff is a good way to have immediate fee=
-dback ;).
-> > > > > > > Having FDPIC psABI to be merged upstream could also probably =
-be a
-> > > > > > > positive point toward a better NOMMU support.
-> > > > > >
-> > > > > > Ya, that's probably the right way to do it.  Touching anything =
-in the psABI
-> > > > > > is pretty miserable, though, so I don't really want to force pe=
-ople to do
-> > > > > > it...
-> > > > > >
-> > > > > > > > I am happy to discuss the possibility of me and or one of t=
-he other
-> > > > > > > > RISC-V soft (FPGA) core people stepping up to try to be mor=
-e active,
-> > > > > > > > but so far we've just been very well serviced by the curren=
-t NOMMU
-> > > > > > > > Linux setup.
-> > > > > > >
-> > > > > > > It could probably be nice to have some feedback/Tested-by: fr=
-om NOMMU
-> > > > > > > users for new releases then.
-> > > > > >
-> > > > > > Having more upstream interaction from users is always appreciat=
-ed, that's
-> > > > > > the best way to prove people are using the code.  If you guys h=
-ave the time
-> > > > > > it'd be great to get this into some sort of CI, ideally running=
- on some real
-> > > > > > platform.
-> > > > >
-> > > > > As above, I'd also like to step up on the NOMMU stuff, at least t=
-est
-> > > > > nommu on milkv duo's small core. And can be seen from my git comm=
-it
-> > > > > histotry, I was active, and I belive I will still be active on ri=
-scv linux
-> > > > > kernel development.
-> > > > >
-> > > > > >
-> > > > > > > Thanks,
-> > > > > > >
-> > > > > > > Cl=C3=A9ment
-> > > > > > >
-> > > > > > > >
-> > > > > > > > Charles
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > On Mon, Feb 26, 2024 at 8:03=E2=80=AFAM Conor Dooley <conor=
-@kernel.org> wrote:
-> > > > > > > > >
-> > > > > > > > > On Mon, Feb 26, 2024 at 04:25:24PM +0100, Cl=C3=A9ment L=
-=C3=A9ger wrote:
-> > > > > > > > > > I guess I could also mark XIP as deprecated.
-> > > > > > > > >
-> > > > > > > > > I'm not so sure, people recently added XIP support to QEM=
-U (and sent
-> > > > > > > > > kernel fixes in December). XIP is also not nearly as much=
- of a problem
-> > > > > > > > > to support, there's far less that it does differently, th=
-e main barrier
-> > > > > > > > > was the inability to test it which is no longer the case.
-> > > > > > > > > That said, XIP is gonna kill itself off I feel as it does=
- not support
-> > > > > > > > > runtime patching and therefore is extremely limited on ex=
-tensions, given
-> > > > > > > > > we use alternatives for all of that (although I suppose i=
-f someone has a
-> > > > > > > > > usecase they could make nasty macros worse and implement =
-a compiletime
-> > > > > > > > > switch in the alternatives too).
-> > > > > > > > >
-> > > > > > > > > Cheers,
-> > > > > > > > > Conor.
-> > > > > > > > >
-> > > > > > > > > _______________________________________________
-> > > > > > > > > linux-riscv mailing list
-> > > > > > > > > linux-riscv@lists.infradead.org
-> > > > > > > > > http://lists.infradead.org/mailman/listinfo/linux-riscv
-> > > > > >
-> > > > > > _______________________________________________
-> > > > > > linux-riscv mailing list
-> > > > > > linux-riscv@lists.infradead.org
-> > > > > > http://lists.infradead.org/mailman/listinfo/linux-riscv
+Also add Documentation for this variable.
+
+Signed-off-by: Leonardo Bras <leobras@redhat.com>
+---
+
+This patch goes on top on a previous patchset sent by Helen:
+https://lore.kernel.org/all/20240228225527.1052240-1-helen.koike@collabora.com/
+
+With this patch I could run CI with gitlab.com runners, by setting
+CI_TAGS=saas-linux-medium-amd64 
+
+The result of this pipeline can be seen in:
+https://gitlab.com/linux-kernel/linux/-/pipelines/1228999646
+
+ Documentation/ci/gitlab-ci/gitlab-ci.rst | 5 +++++
+ ci/gitlab-ci/yml/gitlab-ci.yml           | 2 ++
+ 2 files changed, 7 insertions(+)
+
+diff --git a/Documentation/ci/gitlab-ci/gitlab-ci.rst b/Documentation/ci/gitlab-ci/gitlab-ci.rst
+index 4f7ef03cca95..18360da835bd 100644
+--- a/Documentation/ci/gitlab-ci/gitlab-ci.rst
++++ b/Documentation/ci/gitlab-ci/gitlab-ci.rst
+@@ -304,20 +304,25 @@ Description of Each Variable
+ **KCI_CHECKPATCH_OPTIONS**
+     Used in `checkpatch.pl "$KCI_CHECKPATCH_OPTIONS"` (see checkpatch
+     documentation). It is commonly used with the --ignore flag to suppress
+     specific warnings generated by checkpatch.pl. It can also be defined in the
+     commit message, since it is evaluated in run time.
+ 
+ **KCI_PATCH_SERIES_SIZE**
+     Used to define the size of the patch series, see `job: checkpatch` section
+     above. It is evaluated in run time, and can be set in the commit message.
+ 
++**CI_TAGS**
++    Used to help choose which runner will deal with the current pipeline.
++    If using Gitlab.com runners, set saas-linux-medium-amd64 or a better runner
++    so there is enough resources to build & commit the base image.
++
+ .. _triggering-pipelines-from-command-line:
+ 
+ Triggering Pipelines from Command Line
+ --------------------------------------
+ 
+ Pipelines can be triggered from the command line with custom variables using the
+ `GitLab CLI tool <https://docs.gitlab.com/ee/editor_extensions/gitlab_cli>`_.
+ 
+ Example:
+ 
+diff --git a/ci/gitlab-ci/yml/gitlab-ci.yml b/ci/gitlab-ci/yml/gitlab-ci.yml
+index 57b9c0290471..359b7715e3ab 100644
+--- a/ci/gitlab-ci/yml/gitlab-ci.yml
++++ b/ci/gitlab-ci/yml/gitlab-ci.yml
+@@ -33,20 +33,22 @@ workflow:
+     - if: $FORCE_CI == 'true'
+ 
+ variables:
+   FDO_UPSTREAM_REPO: helen.fornazier/linux   # The repo where to look for cached images
+     # ccache builds in gitlab-runner to speed up builds
+   SMATCH_DB_DIR: /smatch/smatch_data
+   # exit code of bash script on `script` will be the exit code of the job
+   FF_USE_NEW_BASH_EVAL_STRATEGY: "true"
+ 
+ default:
++  tags:
++    - $CI_TAGS
+   artifacts:
+     paths:
+       - artifacts/
+     when: always
+ 
+ include:
+   - remote: 'https://gitlab.freedesktop.org/freedesktop/ci-templates/-/raw/16bc29078de5e0a067ff84a1a199a3760d3b3811/templates/ci-fairy.yml'
+   - remote: 'https://gitlab.freedesktop.org/freedesktop/ci-templates/-/raw/16bc29078de5e0a067ff84a1a199a3760d3b3811/templates/debian.yml'
+ 
+   - ci/gitlab-ci/yml/kernel-combinations.yml
+-- 
+2.44.0
+
