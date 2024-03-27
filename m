@@ -1,108 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A620B59B71;
-	Wed, 27 Mar 2024 15:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F961EB39
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 15:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711554527; cv=none; b=m4h8/Ywyo2k0VfYWlVtPdK8rfeP+uQYFOXrSh7McVxECtgwpPBW1UBlcKCSU/yS+F5kUg69/c2OobLOr3gFszLywierVQOx+BUu9rENO4WXN9cPnDC2ifiIQAK+aVbqLpdeywAal5/oV+9YW61FZaedZpkH2/k5J19zIImZzYKU=
+	t=1711554540; cv=none; b=mnybBtPQo/k67XwW/obyrEaDI6BRTS2SaBj5q36bizcO1YMG5D9+MXeCpIBk3FSDwlKY/a6yOlqaDbdPRRuDwK3Nx738EyhZi+HPcWKDqqlfT3+VGLU0VVjK3vi4Zwae5PdF1frr6Q22fUu0SLPnr4fJke9MxaeCQJruLEfhf5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711554527; c=relaxed/simple;
-	bh=/Fy+XebLi84xhsuIn0Baks2bdrJHrKjSXbeknmduzQQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j1yre8lcxQ1uqC980iO9uUckDi1ZkUavBm4WLgcM4zHSgXEhDttd0B+KvGeyjhrEwkznWf3UGyQrS2RtZu+Zc8trdyIp60RCjs0j8oRAN60qnHHSeIN6/1DBWJz2RPvPAnxYuMOsiK8atrVoVqHf7yOKvZ7n5/i/D665bzeMef4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kkSyUHW/; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1711554540; c=relaxed/simple;
+	bh=1JEBFVvgpt+AK0UYB8PdiFuLztxGMTAvlKxCQtFg5ow=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=adeadxlNF6PYNqkxeZux4EZmkmJEniAELz5Zyo/LNJdtvAP46pFiCKt8I12wa/YShiHNxb5U5O29KWjPpg+RAuzEe2a29OykPblMMtdIUTi3FsEGKeBCuGXh7EyeNtlAFEcbe0S3LTcbBl/N/CtroAdBaLJhjKnKHbECtt2QQ2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bLPjnDHg; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kkSyUHW/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711554526; x=1743090526;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/Fy+XebLi84xhsuIn0Baks2bdrJHrKjSXbeknmduzQQ=;
-  b=kkSyUHW/2PYK1GRO1HK04wjlFtJoeWO6hQScOxYolLGEAsxqsuURWqVh
-   TAjj80i9Nnq/z1qdR8Y42vtSL7nhyJFaWuRO4zxps2JM612FrdnT7HO3O
-   kHC3G/bxygHwUmGVHwllr6VBgP1aUPFc303MfQ73Ah9DDj8BlNN64wPwb
-   UyUvowuF6nua91zFW8vLFQr0d5Lm05WJTVXT4LUbGRWN/g5yNxTkri1Eq
-   kB82A2Sx5CFPaFcYftIvyRcEDcLC5XAk10+9nlRAAWm3Tl1yMzz16si3o
-   4WKMtqVx2K3jDP5Sz4xHVF8R7LbFN+kIHaudo1pUlr12/FGZkorDgI60E
-   Q==;
-X-CSE-ConnectionGUID: 1l8k0xYFS+mLAK9NhKsaxA==
-X-CSE-MsgGUID: whvq8QYyTk+YYMitxoeVmg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="24119406"
-X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
-   d="scan'208";a="24119406"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 08:48:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="914916637"
-X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
-   d="scan'208";a="914916637"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 08:48:35 -0700
-Received: from andy by smile with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rpVVe-0000000Gjzz-2WQr;
-	Wed, 27 Mar 2024 17:48:14 +0200
-Date: Wed, 27 Mar 2024 17:47:56 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
-	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 02/21] lib/test_bitmap: add tests for
- bitmap_{read,write}()
-Message-ID: <ZgQ_rP5KnMfL-0b2@smile.fi.intel.com>
-References: <20240327152358.2368467-1-aleksander.lobakin@intel.com>
- <20240327152358.2368467-3-aleksander.lobakin@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bLPjnDHg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711554538;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type;
+	bh=1JEBFVvgpt+AK0UYB8PdiFuLztxGMTAvlKxCQtFg5ow=;
+	b=bLPjnDHghe6O0E2YGtBUsbBmwkQagb/R4erDqxad6myv9e8/XbalE6dgM093zcY8vI9hc8
+	04zyfP09DxfviHqNBWtOnuioTVvVWhN4fLJZP/d4OgVtlV28G0XJGiDOnPcAuM4BfiHd8J
+	XfrZZci7uv6uoThI27muCiSeG2Q2kNU=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-489-DU0fDMqSPzexVt38Jh1uFg-1; Wed, 27 Mar 2024 11:48:56 -0400
+X-MC-Unique: DU0fDMqSPzexVt38Jh1uFg-1
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2d491456df2so5143851fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 08:48:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711554535; x=1712159335;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1JEBFVvgpt+AK0UYB8PdiFuLztxGMTAvlKxCQtFg5ow=;
+        b=g4rWB8nmndQe6ivInXjBXaoGkxnMVS+ymsbQwxLtH2UPeQj7nv4P497OM/0AJDQSt3
+         DKOdHVhrESPnLXzLAnMRJwNCcwj4hm5jBUEgbzsQbODazMDODPoVRTcNuBqwC1KSI7GX
+         q4Lrx96YK5kPvc0ZGclzhhqu7ACv5qGwlyujkfiew06JOOCIicFvtIzwwdVvVBivXwGT
+         2hl1eHoPiQAoeG2n8Gb36D9jJ6+KoZGhMEvlHbiTsMfPKKJN403NOh8KTkrpNMuKQoWz
+         eJd9YQozxRHhdJInPZpfqDKxIX869386+uDvunmM3hems/SEMW+CPfuWiGhroN+w0iG6
+         vZ1Q==
+X-Gm-Message-State: AOJu0YyXIS/Z6FowkcDj/16slqUZ8f4hodA0RAtGeemaoUA/BwUhOo1V
+	7ebfilQlMsTe5oSeqq/8SHQFVjAr9i/fT8ID2HThnO8DHLvQk1cbINrjhjF1zcFSwylAHc3RQuD
+	zlrP2bHSU4g0iW25II28Z8YySRdm94ITqEW5IfmZC4gBQ0TdLpdFkkq1/hZtDmc0WERdFt9CirC
+	ow5raL8IUke4Y7TzUmOCnhLyLF+57ziiziqDs50KJ0GxUW5zE=
+X-Received: by 2002:a05:651c:150a:b0:2d6:f17f:f975 with SMTP id e10-20020a05651c150a00b002d6f17ff975mr1855338ljf.2.1711554535050;
+        Wed, 27 Mar 2024 08:48:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFi7a+HqfScThf7Q1EQVy43yWBkUorPXtKnUtUHAdaE0/GM2Yc7Vn/QFi2fBEPvXO5LnKkfFNH66HKUacS0KGM=
+X-Received: by 2002:a05:651c:150a:b0:2d6:f17f:f975 with SMTP id
+ e10-20020a05651c150a00b002d6f17ff975mr1855335ljf.2.1711554534718; Wed, 27 Mar
+ 2024 08:48:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240327152358.2368467-3-aleksander.lobakin@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Alexander Aring <aahringo@redhat.com>
+Date: Wed, 27 Mar 2024 11:48:43 -0400
+Message-ID: <CAK-6q+i_r3obNeD=DLMRp704pnoSEgeMAv3EcMCg-r0_nxM9Dg@mail.gmail.com>
+Subject: hammering timers cause soft lockup?
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Mar 27, 2024 at 04:23:39PM +0100, Alexander Lobakin wrote:
-> From: Alexander Potapenko <glider@google.com>
-> 
-> Add basic tests ensuring that values can be added at arbitrary positions
-> of the bitmap, including those spanning into the adjacent unsigned
-> longs.
-> 
-> Two new performance tests, test_bitmap_read_perf() and
-> test_bitmap_write_perf(), can be used to assess future performance
-> improvements of bitmap_read() and bitmap_write():
-> 
-> [    0.431119][    T1] test_bitmap: Time spent in test_bitmap_read_perf:	615253
-> [    0.433197][    T1] test_bitmap: Time spent in test_bitmap_write_perf:	916313
-> 
-> (numbers from a Intel(R) Xeon(R) Gold 6154 CPU @ 3.00GHz machine running
-> QEMU).
-> 
-> Signed-off-by: Alexander Potapenko <glider@google.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Yury Norov <yury.norov@gmail.com>
+Hi,
 
-> Signed-off-by: Yury Norov <yury.norov@gmail.com>
+I am currently trying to debug a timer issue on v6.9-rc1 and was able
+to write a small reproducer module [0]. If this module gets loaded I
+run into a soft lockup e.g. [1]. As far I see several concurrent
+timers are getting soft lockups.
 
-This is a bit strange.
-Can you explain the SoB chain in this patch and similar which have Yury's SoB?
+As far as I know, I am not doing anything wrong in my timer module
+[2]. Please somebody correct me if I am wrong. It does not do much,
+except hammering timers. I tried a longterm kernel v6.6.23 and still
+have issues.
 
-> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+I appreciate any help somebody can provide.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks.
 
+- Alex
+
+[0] https://gitlab.com/netcoder/timer_softlock
+[1] https://gitlab.com/netcoder/timer_softlock/-/blob/main/calltrace_softlockup
+[2] https://gitlab.com/netcoder/timer_softlock/-/blob/main/timer_softlock.c
 
