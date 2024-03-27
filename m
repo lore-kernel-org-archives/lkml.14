@@ -1,125 +1,86 @@
-Received: from vern.gendns.com (vern.gendns.com [98.142.107.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E292DF92
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 23:15:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.142.107.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90402433D8;
+	Wed, 27 Mar 2024 23:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711581332; cv=none; b=pgCo/t+RcAuZIb9ngW5AJMVZZeUHQZM+HId8B8R6zP4IE4RwC5SFFOr42KU4MDWYs7owKks8QHDnpzhj98MASCDj4f2n1FWFkBneuhkE2hVSLHAkpuTrr3fbfdLLCXqoDmHTFBRTNnkRkM5hxvywvG0NejTmKN1EmFcajmhT1O0=
+	t=1711581453; cv=none; b=ks6C7k9crJ2ljBRUEV5Uh22OXJgsnqY+9mEOkeXWj1A4uglDIMKKQS5K4um+8i2EjFq/QUx5qMlXzxYn/O9015Bvlr/1lEN/wx/E7fs3CrqP/gB7gcl27r1gwtF3FIfUGXFhPWn4ewlQV1QwaLIjZlpLnt+KruWi0J/SCVNKRZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711581332; c=relaxed/simple;
-	bh=DUyvXZzQa8WhjPdi6WukFvMTBkK9GDFMh4bSiY4uxa4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=a2gpuZPajpZ6s25aYvZAYu6H9QEmFRGcRxlrXeYg9RDC8WEACnPgkfd/gRklc4C0NTndCmSNKhMcvHHCs+hXdQ2NTD63BlyIIv95pby2KwJYBiSgLGlKTU5ahEGeZ5PO13fVylz7D47Zvtwii5RWcS5cOs7V35zb2piEkcRQwFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com; spf=pass smtp.mailfrom=lechnology.com; dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b=ciE5EvF3; arc=none smtp.client-ip=98.142.107.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lechnology.com
+	s=arc-20240116; t=1711581453; c=relaxed/simple;
+	bh=4WjYjDwm3w6B8gj/uMoHHzsRpfRNRmomT5co1eXnBjg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=s/KFP/C9DOPveRynt/UK/ss8eHPAl2L35k3u2e+ru7886LMrFB1tZxgfQDcdMU0Q9jUoXXHghprJX+gG1BrSo/6QFbMTJuypzG2bepo7V0vmSQgSLJgNvTcuVfSs6dswmPBoZgKyZXNrBKoPrQaD/LTySS176fWFhlyE44YrzNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dmHuOjuk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="ciE5EvF3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:To:Subject:MIME-Version:Date:Message-ID:Sender:
-	Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Tq6fp3ekjnEJ8gVE18Kru8i3K6frCdHEJ+bGBUMA+L0=; b=ciE5EvF3zMz/9fJDvUWPwGZz3Q
-	/sCsjqsSWnbLLxOqykTYKXMIVrMVWSlEv9mBbZF5z673z7YYkB3bT9euY2PXTyJ1axVAkWMKjAlpP
-	7s/mAo8X3eLzC8uUy3los+K8eiPwmalnlIcfAbJH8N/ItREfgrIMUORnh3+dGuPAkc7pcWVBcugvs
-	rE4XBdvPk5O0awl31/FRIRBkU0TOXF2fvcDp/CcDTJN7uP3Ua8eIRSoAmucti2Ez41iDeeZwKhSew
-	qaYgn5bt108CA35lu3By0tDaweyJAjodOIr8HSBeHWeZ9i+sYWbm+TRc0Whu4eCWVm6ae2tDsh17W
-	aWXIpoqQ==;
-Received: from ip98-183-112-25.ok.ok.cox.net ([98.183.112.25]:44708 helo=[192.168.0.142])
-	by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <david@lechnology.com>)
-	id 1rpcWl-0004r2-0j;
-	Wed, 27 Mar 2024 19:15:27 -0400
-Message-ID: <7cea41a4-3ec1-4846-bfa0-0aef92dc3b1f@lechnology.com>
-Date: Wed, 27 Mar 2024 18:15:27 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dmHuOjuk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B581C433F1;
+	Wed, 27 Mar 2024 23:17:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711581453;
+	bh=4WjYjDwm3w6B8gj/uMoHHzsRpfRNRmomT5co1eXnBjg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dmHuOjukP1kaGro22Y0vhnpswDZgRdNyRJt7B3uGRuZ3lrksJ4JUVg52O1Kgj1vfh
+	 k/y/tJjqqZ8kepp0hFZ7qKpem4EkaPTqM2f8kWLalCtunJG0JcGrUPS1XtdX0JsFGa
+	 l4YeBpR0lwCCqKFDNdEFsLlXcCvsxVFxwUsn6WFgPywShmEWGNhjD+ZicAz2r3Xs4h
+	 solnW6arXUGJ59dtOVSX2DaabGrPHCbxJ776kZcuUYodG1V3xwAPVd5DvqW+XNrr0J
+	 DTXYfNZDphhJlhZ+UYnUFpmvG0fWviuF/eqTjTKWFL50RqrZ8yGTE56RkIMtwYnmYM
+	 9nJ88asHnfDng==
+Date: Wed, 27 Mar 2024 16:17:31 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ quic_jjohnson@quicinc.com, kvalo@kernel.org, leon@kernel.org,
+ dennis.dalessandro@cornelisnetworks.com, Jiri Pirko <jiri@resnulli.us>,
+ Simon Horman <horms@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Lorenzo Bianconi <lorenzo@kernel.org>, Coco Li <lixiaoyan@google.com>,
+ netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
+ linux-kernel@vger.kernel.org (open list)
+Subject: Re: [PATCH net-next] net: create a dummy net_device allocator
+Message-ID: <20240327161731.6b100cb8@kernel.org>
+In-Reply-To: <20240327200809.512867-1-leitao@debian.org>
+References: <20240327200809.512867-1-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] drm/tiny: st7586: drop driver owner assignment
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20240327174842.519758-1-krzysztof.kozlowski@linaro.org>
- <20240327174842.519758-4-krzysztof.kozlowski@linaro.org>
-From: David Lechner <david@lechnology.com>
-Autocrypt: addr=david@lechnology.com; keydata=
- xsFNBFFxkZ8BEADXzbnj9t8XSZYxKJGHdHqYgEBVzRElb3+f11qhDZKzVCMsn1+AN+PlHqC7
- VrCWLsWTSY7WsHB2fW3aXaoidtac5FYoX2IXAun1Sbv15NcBdapImkMv6zxhAyWz6LqPfdCp
- QV+3x6qwUPFeLHdmew8mkSq56qTFgDQr9oQhsrXKHkXFD7aIAf5bM6janQCHgGTVDraRDfEO
- rV9rj7Wu/SfjUCVSCvW/SuWBa3IXTLNgbrNwBfo7Pl/tHuto0jxkVCIJ6J3xa85BKMw1WjA+
- jKzh12S6KWrLUfhEUt64G9WJHiZOnVAjxgCR7TUahVM2OQHcp49ouG/JZsGNniulXH4ErA2O
- Wt6seUEx8XQIm48H96RWgKrwKJ+1WoLEmUcYOJDZUcguMZVc3Astx8aSaRjf6IRBO8XlJSJV
- OorkguvrTQBZJfjoicuFx7VlpdMggMZayv0cqEvzZMSHUt8DCUG74rLhtab9LCg/9wdCwqyE
- JEi/8jaV7JWxwiCmzVpw0mHn1DiUlp5kapZT+Hart0Gc1WW915psA4G6KneisFM5DJe+S5mn
- dUJb5IttTOx37jQQi2igwlSBdSC/M+Zy3sb+DXYJUVjVxK56RGAnlSvjHUx/TkID6Vb6HXvm
- Fgm9vQamTEf+C3XzlY2v1YaMMX8yQjfrzQSoGfB0+9zaD9J/cwARAQABzSREYXZpZCBMZWNo
- bmVyIDxkYXZpZEBsZWNobm9sb2d5LmNvbT7CwXgEEwECACIFAlFxkZ8CGwMGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheAAAoJEB+K+IyC93wDdcMQALkIsjA/nWJZY+Z6AkpL9HfeyYA6D2LK
- LFwWQ5fPok9G5wArvf+yHnbnVvtlZKPEdUAzbBacaATeLGRC0Kzei1asDgb/IR5YXQRMdshj
- 5Bd+DutTbT270p6jrzI3p7r1K7AycFcpfgSpOUQY7Wde7AT7KHCHaDjsy/a4d8EVjEhKZBg1
- wgBr8L+2lVgjQP4x/tuj4KrWKygcCNiombhKW4iz2uR7EspoS18D+9MD8vLVrOqDKBWGswes
- cDblcjMv8FXIc7JR8x6ZbubFODoRzAs4MAlOgGT8FBAK/DUD63gMHTtKJrVghjoDNe77pmW1
- zQK0P0zu9zciPg4h3AE+ENsJxqHoOEwCvJMQbhliFVYL4O0tM648V6K0o1btt4Ps0FEFASfX
- ZDa7uO30YZG+uqevP4wp6bfPpiHEUku32tSKZstbxljprLe0wDwYFSgXvVYUDUD6G3N1e3p0
- xDXo+Oj/8yoZaPrOzMbqL66uSVghVTya7FjgT2aG1HfzH19NfO7SN+BQ4ld94gnDL2wWjA6h
- pddm+me8Aqa/xp0Wfhzs77/tyYd2FhV8RRs/tt1RN/8COblLnFGpNjtHCtpUuPCMTPN04+hg
- fEQVsW03//yRgt4teDogaklG+mYSbpkANMjyMN1LKVWM3YJTQcKIgpT8HvZwdrYBjB8CMHLb
- K2zgzsFNBFFxkZ8BEADSVjyceG8Up24FFXwv5YmV7yX520kM97N11e1RJVMI1RSU+Na3Xo9J
- 1BW6EFMAdibD6hH8PiMmToKxBrfYSLStLh2MbHA2T/3zqicU1nuk376LMyrAuoV/fl8/7Jld
- wh1c9AADaYXNQfZ84R6nyaTRjy4fqcc/dG2kw5ZMln909SMKZc3HdVynmo9pLT2HBOnXu2d3
- bIGmzuDnDXzh1X8+ods4gViuvB31xU1WiANr4TbhaNU+/LmEVfvhS+34Cmz3U5Xs5x7nWdpM
- 6fFfDOSz2sIYXOGAcaV3oJ121Uul2U2bMTsXxiwdbjmZP9jrzEfvhD5KIOutX+0OzdtM9QVB
- 70QQOEh3maW/FwGdL5stYcadsBiEEI6Y2ymVpBgzrPS6HzC+UZLUShOE+aLx+SYBYAuypikM
- PvG9W3MqWHCsXXEfyp2mCeorKb7PafyaBO/E5REjPmYUpkGMNZH1lGV3jegE9WdOBfXW9xvC
- wf0UefoFaVhjsjtzvl8lMQndrDBdKPpJ7zIIG6FGSsUYmCtvE+JAk83tfpUpSZKDSzsqtLTI
- 8GE2fQzEuZcBqm6Yk2V1+u6rjUjmqEBIzunyeUupaUc+p00JiwNE8v/wcx7UbD5m+PGOkNoL
- MLe0ti0O7nFlY8avZzy3eLBQenu4WsJjPVYeQGeGB3oLvCGIhT9/WwARAQABwsFfBBgBAgAJ
- BQJRcZGfAhsMAAoJEB+K+IyC93wDC44P/0bAjHgFUPHl7jG5CrWGwgdTNN8NrjpmIxSk37kI
- uKMzcwP9BWhFF0mx6mCUEaxvGdAQ9Va/uXB2TOyhLCGXhlf8uCwxcIyrOlhi2bK6ZIwwovyj
- jh7GCRnm8cP8ohDCJlDUpHkOpmU4tcapbZiBrFaFAahxPMjwK9GJ3JY0lx63McgCEIwm6txN
- cMnVX5Y3HeW5Wo8DtmeM3XajJLFaBXIhEfoNHMfDON6UGiXFeR8S9W8dpaX8XEwzPUjZyOG2
- LvOMAEPXx+kB9mZPTogong8LekL1HZHSY4OYffzQy5fVE+woHAMADkrmuosGkTRCP4IQHXOa
- goax/Dox01lKTLnlUL1iWWQjfRaFXVKxEc2PF1RZUpoO/IQYFB1twcaF2ibT3TlGolbmb3qU
- YBo/Apl5GJUj/xOWwrbikD+Ci+vx8yuFUlulbS9Ht+3z1dFjBUDbtZ4Bdy/1heNpA9xORiRs
- +M4GyTil33pnBXEZp29nh7ev4VJ96sVvnQFzls3motvG+pq/c37Ms1gYayeCzA2iCDuKx6Zk
- ybHg7IzNEduqZQ4bkaBpnEt+vwE3Gg5l4dAUFWAs9qY13nyBANQ282FNctziEHCUJZ/Map6T
- dzHWO6hU1HuvmlwcJSFCOey8yhkt386E6KfVYzrIhwTtabg+DLyMZK40Rop1VcU7Nx0M
-In-Reply-To: <20240327174842.519758-4-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
 
-On 3/27/24 12:48 PM, Krzysztof Kozlowski wrote:
-> Core in spi_register_driver() already sets the .owner, so driver
-> does not need to.
+On Wed, 27 Mar 2024 13:08:04 -0700 Breno Leitao wrote:
+> It is impossible to use init_dummy_netdev together with alloc_netdev()
+> as the 'setup' argument.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
+> This is because alloc_netdev() initializes some fields in the net_device
+> structure, and later init_dummy_netdev() memzero them all. This causes
+> some problems as reported here:
+> 
+> 	https://lore.kernel.org/all/20240322082336.49f110cc@kernel.org/
+> 
+> Split the init_dummy_netdev() function in two. Create a new function called
+> init_dummy_netdev_core() that does not memzero the net_device structure.
+> Then have init_dummy_netdev() memzero-ing and calling
+> init_dummy_netdev_core(), keeping the old behaviour.
+> 
+> init_dummy_netdev_core() is the new function that could be called as an
+> argument for alloc_netdev().
+> 
+> Also, create a helper to allocate and initialize dummy net devices,
+> leveraging init_dummy_netdev_core() as the setup argument. This function
+> basically simplify the allocation of dummy devices, by allocating and
+> initializing it. Freeing the device continue to be done through
+> free_netdev()
 
+Ah, but you need to make it part of the series with some caller.
+Maybe convert all the ethernet ones?
 
-Acked-by: David Lechner <david@lechnology.com>
-
-
-
-
+$ git grep 'struct net_device [^*]*;' -- drivers/net/ethernet/
+drivers/net/ethernet/cavium/thunder/thunder_bgx.c:      struct net_device       netdev;
+drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:  struct net_device napi_dev;
+drivers/net/ethernet/microchip/vcap/vcap_api_debugfs_kunit.c:static struct net_device test_netdev = {};
+drivers/net/ethernet/microchip/vcap/vcap_api_kunit.c:static struct net_device test_netdev = {};
+-- 
+pw-bot: cr
