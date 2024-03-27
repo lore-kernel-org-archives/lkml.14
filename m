@@ -1,37 +1,67 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35EC144D08
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 14:23:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97E71448FF;
+	Wed, 27 Mar 2024 14:23:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711549397; cv=none; b=PvE+rkZ1iDKRvf49zasg8zXpC+3sxk2iWol5YUAc4id2xkGjkjKMD0D68phHDYy8bE77zvOUwKQjlOroxqiWIJkgeO2rEaZDOMw7ks1vVblZpunDZFXzcoKbEJYLIWOcWcMSAn3eIh3SA6qlxoSfDC45vIK/Hksh0GxMoGEB2xg=
+	t=1711549397; cv=none; b=aHZHEC2dbVSjbAxddz4g3Are8JiLllCWm1sJLwr/ZAxxya9dXJy0LoTy8mB1B4SJE+JY59JA+HtczCiIQxOxAmqm4LbT3TG3EcT0HLtCwh9nq6hz7lE9iWb+6CoGLx9ayUydHRD4yELAjK47vXzhvXLd7W2QpXtzXr+vY9zuB1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711549397; c=relaxed/simple;
-	bh=zRI5GV7a1ReZEinUIATHZ6Ua1rtRrj/S/oB2DPjv1eE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jdY5bV7vjNwHv/S2A9xc/7dYSd4XEuJh3yU0kO4drbpOI5FuKz8dEVqu+1kaS7dOR58R4WIQdlxPWsHOWDZnhnfURLYsmn61i3UkVoUWL/8m8sV4Z66UbhK0YqxQgfi81ehR9xV7ozZZBzyu0wwzUi+206yoMCSf7dOdIiu5zrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4V4TN94sBJzXjx6;
-	Wed, 27 Mar 2024 22:20:25 +0800 (CST)
-Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
-	by mail.maildlp.com (Postfix) with ESMTPS id 047BF140258;
-	Wed, 27 Mar 2024 22:23:13 +0800 (CST)
-Received: from DESKTOP-8RFUVS3.china.huawei.com (10.174.185.179) by
- kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 27 Mar 2024 22:23:12 +0800
-From: Zenghui Yu <yuzenghui@huawei.com>
-To: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC: <tglx@linutronix.de>, <maz@kernel.org>, <wanghaibin.wang@huawei.com>,
-	Zenghui Yu <yuzenghui@huawei.com>, Tsahee Zidenberg
-	<tsahee@annapurnalabs.com>, Antoine Tenart <atenart@kernel.org>
-Subject: [PATCH] irqchip/alpine-msi: Fix off-by-one on allocation error path
-Date: Wed, 27 Mar 2024 22:23:05 +0800
-Message-ID: <20240327142305.1048-1-yuzenghui@huawei.com>
-X-Mailer: git-send-email 2.23.0.windows.1
+	bh=7vqygDDKbWmFw/FAY/rPhdZQEFODtjXCpRmC6ygQulQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Zzvbu23N0vj1ecdbwKZrIfp0VgApki4/kILa8Ah0cjTA/kaALx6pzzW8+liThIrkpAjvHa4AWd6g4Z4tr24ueOqEojc6D6nhNhY2JYX5Ybi9vZqNwxuVqHJx5CLuG5U2dPNRmoe8SC4Xi5OvlOI+zNWCM6jBLVrPUeOeILtQsLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jMyx3sBU; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jMyx3sBU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711549395; x=1743085395;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=7vqygDDKbWmFw/FAY/rPhdZQEFODtjXCpRmC6ygQulQ=;
+  b=jMyx3sBU9+wa9TizPmIWAx2j3/sJ3hR3notAmROrGsB0dcaGE7Z3+Kcy
+   +jjS67LkwiOe0ICP/Dsvnkpm71s42rRLA1EGshIuXs/WvUdNifgGhinHI
+   xriB5pNQjlYDs5CB8Fr+rmZxDzqPdumsFMtVfz6sQM8r+nQ3Ng/SKPxCR
+   PnjVT7JrLZu74RYoXdw5TO2eMUowpoFf04ZzynFOG69+P3gV8u+Zw9AQ9
+   9GzbdfCgX0liwhIds75i47+PliAK+oW7f6bfBMvaFqonxqjxosBb8p0Rp
+   yp0ns7s+ZljzelUFDfPXuiK/y59bcTeH+dDYkCsY3nJckPN93Phk4uTnj
+   A==;
+X-CSE-ConnectionGUID: OuZOBmLZSu+B6t2qrgE3oQ==
+X-CSE-MsgGUID: UNFEn9dWR5GgMcWDXYIkTw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="6592530"
+X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
+   d="scan'208";a="6592530"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 07:23:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
+   d="scan'208";a="20973064"
+Received: from newjersey.igk.intel.com ([10.102.20.203])
+  by fmviesa004.fm.intel.com with ESMTP; 27 Mar 2024 07:23:13 -0700
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
+	intel-wired-lan@lists.osuosl.org,
+	linux-hardening@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2 1/3] compiler_types: add Endianness-dependent __counted_by_{le,be}
+Date: Wed, 27 Mar 2024 15:22:39 +0100
+Message-ID: <20240327142241.1745989-2-aleksander.lobakin@intel.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240327142241.1745989-1-aleksander.lobakin@intel.com>
+References: <20240327142241.1745989-1-aleksander.lobakin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,37 +69,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600007.china.huawei.com (7.193.23.208)
 
-When alpine_msix_gic_domain_alloc() returns an error, there is an
-off-by-one in the number of IRQs to be freed.
+Some structures contain flexible arrays at the end and the counter for
+them, but the counter has explicit Endianness and thus __counted_by()
+can't be used directly.
 
-Fix it by passing the number of successfully allocated IRQs, instead of the
-relative index of the last allocated one.
+To increase test coverage for potential problems without breaking
+anything, introduce __counted_by_{le,be}() defined depending on
+platform's Endianness to either __counted_by() when applicable or noop
+otherwise.
+Maybe it would be a good idea to introduce such attributes on compiler
+level if possible, but for now let's stop on what we have.
 
-Fixes: 3841245e8498 ("irqchip/alpine-msi: Fix freeing of interrupts on allocation error path")
-Cc: Tsahee Zidenberg <tsahee@annapurnalabs.com>
-Cc: Antoine Tenart <atenart@kernel.org>
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Acked-by: Kees Cook <keescook@chromium.org>
+Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
 ---
- drivers/irqchip/irq-alpine-msi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/conf.py          |  2 ++
+ scripts/kernel-doc             |  1 +
+ include/linux/compiler_types.h | 11 +++++++++++
+ 3 files changed, 14 insertions(+)
 
-diff --git a/drivers/irqchip/irq-alpine-msi.c b/drivers/irqchip/irq-alpine-msi.c
-index 9c8b1349ee17..a1430ab60a8a 100644
---- a/drivers/irqchip/irq-alpine-msi.c
-+++ b/drivers/irqchip/irq-alpine-msi.c
-@@ -165,7 +165,7 @@ static int alpine_msix_middle_domain_alloc(struct irq_domain *domain,
- 	return 0;
+diff --git a/Documentation/conf.py b/Documentation/conf.py
+index d148f3e8dd57..0c2205d536b3 100644
+--- a/Documentation/conf.py
++++ b/Documentation/conf.py
+@@ -75,6 +75,8 @@ if major >= 3:
+             "__rcu",
+             "__user",
+             "__force",
++            "__counted_by_le",
++            "__counted_by_be",
  
- err_sgi:
--	irq_domain_free_irqs_parent(domain, virq, i - 1);
-+	irq_domain_free_irqs_parent(domain, virq, i);
- 	alpine_msix_free_sgi(priv, sgi, nr_irqs);
- 	return err;
- }
+             # include/linux/compiler_attributes.h:
+             "__alias",
+diff --git a/scripts/kernel-doc b/scripts/kernel-doc
+index 967f1abb0edb..1474e95dbe4f 100755
+--- a/scripts/kernel-doc
++++ b/scripts/kernel-doc
+@@ -1143,6 +1143,7 @@ sub dump_struct($$) {
+         $members =~ s/\s*$attribute/ /gi;
+         $members =~ s/\s*__aligned\s*\([^;]*\)/ /gos;
+         $members =~ s/\s*__counted_by\s*\([^;]*\)/ /gos;
++        $members =~ s/\s*__counted_by_(le|be)\s*\([^;]*\)/ /gos;
+         $members =~ s/\s*__packed\s*/ /gos;
+         $members =~ s/\s*CRYPTO_MINALIGN_ATTR/ /gos;
+         $members =~ s/\s*____cacheline_aligned_in_smp/ /gos;
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index 2abaa3a825a9..a29ba6ef1e27 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -282,6 +282,17 @@ struct ftrace_likely_data {
+ #define __no_sanitize_or_inline __always_inline
+ #endif
+ 
++/*
++ * Apply __counted_by() when the Endianness matches to increase test coverage.
++ */
++#ifdef __LITTLE_ENDIAN
++#define __counted_by_le(member)	__counted_by(member)
++#define __counted_by_be(member)
++#else
++#define __counted_by_le(member)
++#define __counted_by_be(member)	__counted_by(member)
++#endif
++
+ /* Do not trap wrapping arithmetic within an annotated function. */
+ #ifdef CONFIG_UBSAN_SIGNED_WRAP
+ # define __signed_wrap __attribute__((no_sanitize("signed-integer-overflow")))
 -- 
-2.33.0
+2.44.0
 
