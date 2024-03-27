@@ -1,52 +1,54 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86414125C9
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 09:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13FE36B0D
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 09:13:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711530823; cv=none; b=dfo58S3CXhUDjnq0fNCIvg3CamQV9xsJU8Wj/ip0MdqdT8BguJq1O2t8DSpZCvtsbdWcQ/BRIIpE/aLUDUPZoB3Q0Q4iTgJC8TWweNd0R5AcUxjLD9/FePD3kfTHjU9LPx4Kk483Kb0LLNrEic/iQblON6TI08Wra6Np9V0sTOo=
+	t=1711530825; cv=none; b=QlN3blImEThZ/PS97FdLzETlxVuOq6G88Dqbc0nbmO5ZjnPoV5fRXRE1cSfNSaacv5k/3T98dQ0F9qhQNiYJCXTEnqaKFTdhWg7c3CPgUx81VGJSxzGyj2EEAmWuBP4jGkkutkweHw4v3NAqZJJxaG9wx/31G/a4YkJbYCGHL7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711530823; c=relaxed/simple;
-	bh=PjDcWxabCM5zhojYO64Rjs9rcFKOjg+P9yQ2hF4+9bw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BM+TA6mixTcGAgYQWAJt5LOy09oQWNbqDigKKUWMuBDVpSiJgTKMHa85Icsd7looc7uESefOqc65Fn293FqgkV8OWmpGDU6auvtmOWjEJs/m0ad0eqK2m0S31TnewEktvP6BXbaMoik4pmkpoTKmekxo9YE9uhIGCT1OIbHKcmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=OqvcAHOs; arc=none smtp.client-ip=209.85.160.45
+	s=arc-20240116; t=1711530825; c=relaxed/simple;
+	bh=j/C0SCAAOc716GeWq9CRGrnpPBh/Os9U7D52YdIVHpk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=eGkz/dpkS764Co8h8whFfsByFq+faOoRxoWARC9mnTaLK0VKzm6j+IjLwiOb1D1njgQPZsr8euo7ULhVppglb5KhVhTF8JqGuedQyhexTPrQfi/9s3d6jFEroOqsUUax23g9hdVxM4oW4XQy2H2VnARyGaVHb6fPuRwEy22T3jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gKYgg1ic; arc=none smtp.client-ip=209.85.210.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OqvcAHOs"
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-22a5df0f789so714334fac.3
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 02:13:41 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gKYgg1ic"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6e6afb754fcso5713028b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 02:13:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711530820; x=1712135620; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mxElVZwgDSK1YSb8hGRkSJE7Hq+zmgPYXh8LPg2gT3Q=;
-        b=OqvcAHOsm5DHICqRPV1TBh7v9tcWsaLNgTuW2k5xXnDrPPlK/Ihh04JzxtK6RlXupR
-         NPm6zR1HOvT+4ZAS4MW6TzgtKwuSWPdUda7xtzPqbyLqYmrFpyoqLeb5XLD4wWlER4M+
-         yy9obZHcHNBQmoo/jPNQSWJK/MHLFOiSbVOdw=
+        d=chromium.org; s=google; t=1711530823; x=1712135623; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rCP1xxVL+2XFFuRCnhWKsh1+37AXhGb+RDaWbRieDPQ=;
+        b=gKYgg1icNJ7+cKeEiFs+Ash7jz3s1dulAxcoZ+zsBlaLyMoEKzMfgmTZc4ryTZV47a
+         PDv9BVVi4prA6odyC0faQGacLotLB5UVUN92kGNfsvDbKckBrA0kmEPFXdIsaNt0U91n
+         wmEfZH87++dBjlA6v1phk7AXkEu9RSWImFiNA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711530820; x=1712135620;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mxElVZwgDSK1YSb8hGRkSJE7Hq+zmgPYXh8LPg2gT3Q=;
-        b=j1BgtfyPj+P7+LFm6O8BMCB9n6+wkAYGtA8x5b8EPDXhdpYReC17m9/71MKHj/YOTL
-         IWJJOTFT0stzxvubQAPrEJ4NVQbjGxqvAYjPq+nRGOLjV/Y+bGj0hd+VohojjWpVpmod
-         AUhrmZJdy7KlBnjrG3/fH1RALudsOe9DvzyZM96NzpRkDNqRiG+K88DYVdJB5hiXrNjY
-         1SD1Cfsag2agnS8TNKzVLpW2ztpdg+pxQFQ6b9aItnilsK2yf3WEDqmxBuMGhx6/EBC2
-         b+IQbaR1k47Q7041PbN4kGpSE4eFHOxFAc+DQQBJzMifjV6PHIozHXp5hRubP25fkL6Z
-         KMrA==
-X-Forwarded-Encrypted: i=1; AJvYcCWnsVMxVOV8exIO5wpJ46er1QUeKha2RLsFqxChfM11E/iVc9BsztgBRYJrCLhNBoy1sVRCSRkxuAaP6pbPBzX7l4k/gQ9sF0OKhp1U
-X-Gm-Message-State: AOJu0Yw+m9DFdYxDt3dSzJIBFUtoYZQradJhOWvrVBueZgtq4MKeYHw+
-	ialfmYV1BJUEXjqT4mJfpdUPNBQAWlpicBH1S7sEC90YxyRNm4wIIqwwqa9c8A==
-X-Google-Smtp-Source: AGHT+IEb932ORwMZAWuJMDZYxzAxef8XwPiw/kk7kOZAgwvVteC2Tlm4yt0lNUvQ8BGf1TisMGWnlQ==
-X-Received: by 2002:a05:6870:1c8:b0:229:f61d:7e52 with SMTP id n8-20020a05687001c800b00229f61d7e52mr6040680oad.34.1711530820771;
-        Wed, 27 Mar 2024 02:13:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711530823; x=1712135623;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rCP1xxVL+2XFFuRCnhWKsh1+37AXhGb+RDaWbRieDPQ=;
+        b=MNxm3IOt+hlH9MrDyEh3gUn+mFBEvZ7Fy+9Sy7KO6onS1M5xfV7q9OfuUXjYU9uqts
+         Eh/m1b4+DsFMnlXdX+W0IBZpB59grcajkriZ3ysbs2Vqv3aoIXOa6Ez0E9BjMJicljIT
+         KutHyu2nDFarUWbhR8kFgF1SagbbEmm5cFfF+ySq2m4GJcYfQuSo/XrzCjAbdkp150Pf
+         RtLxKzW9XsvYFMX/xI3DiSMOsd8l4/m+zvOPGuD8pWrvogbTinXiRWfnheTxXPYCiOPn
+         v8vbTsYYwHgVBmIdU/ODhIRgK75BpH6unY7/44OHexn1aJj8/RC4GO0FJ3Bzo5GLRgGZ
+         B6yA==
+X-Forwarded-Encrypted: i=1; AJvYcCUiJqMKOpf/1z3Ye3VGFhZ90BYZh3JlBhereLbTcg1/MQ4kX7tY7tg8P5XvMQbE2DG0tK7YrN/UqfpNkN+mEVsqlpqnAljYLQjoGiDN
+X-Gm-Message-State: AOJu0YzRV0Du7d6H1GXQKhQHz4/EB4VtlxaRS+3Ja3shu8zjLx3enYCf
+	dQH0J8lmzIad1ZO1ixvQuYzlDiD+F7Wgk+Owyo3oDL1VEK9pfRxsXrtCmccgVA==
+X-Google-Smtp-Source: AGHT+IGO/q6xt1tiCf12rN/iTWiDaEhcezoHgM4FVnnPfonMbt9q2BCRE5wf+w6mxtmS4gbOe5GCww==
+X-Received: by 2002:a05:6a00:cc1:b0:6ea:c46a:3b66 with SMTP id b1-20020a056a000cc100b006eac46a3b66mr2396932pfv.16.1711530822949;
+        Wed, 27 Mar 2024 02:13:42 -0700 (PDT)
 Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:74c2:3606:170b:52f3])
-        by smtp.gmail.com with ESMTPSA id fa31-20020a056a002d1f00b006e69cb93585sm7342911pfb.83.2024.03.27.02.13.38
+        by smtp.gmail.com with ESMTPSA id fa31-20020a056a002d1f00b006e69cb93585sm7342911pfb.83.2024.03.27.02.13.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 02:13:40 -0700 (PDT)
+        Wed, 27 Mar 2024 02:13:42 -0700 (PDT)
 From: Chen-Yu Tsai <wenst@chromium.org>
 To: Sean Wang <sean.wang@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
@@ -57,10 +59,12 @@ Cc: Chen-Yu Tsai <wenst@chromium.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] pinctrl: mediatek: paris: More pin config cleanups
-Date: Wed, 27 Mar 2024 17:13:32 +0800
-Message-ID: <20240327091336.3434141-1-wenst@chromium.org>
+Subject: [PATCH 1/2] pinctrl: mediatek: paris: Fix PIN_CONFIG_INPUT_SCHMITT_ENABLE readback
+Date: Wed, 27 Mar 2024 17:13:33 +0800
+Message-ID: <20240327091336.3434141-2-wenst@chromium.org>
 X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
+In-Reply-To: <20240327091336.3434141-1-wenst@chromium.org>
+References: <20240327091336.3434141-1-wenst@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,35 +73,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+In the generic pin config library, readback of some options are handled
+differently compared to the setting of those options: the argument value
+is used to convey enable/disable of an option in the set path, but
+success or -EINVAL is used to convey if an option is enabled or disabled
+in the debugfs readback path.
 
-Here are a couple more pin config cleanups for the MediaTek paris
-pinctrl driver library.
+PIN_CONFIG_INPUT_SCHMITT_ENABLE is one such option. Fix the readback of
+the option in the mediatek-paris library, so that the debugfs dump is
+not showing "input schmitt enabled" for pins that don't have it enabled.
 
-Patch 1 fixes readback of PIN_CONFIG_INPUT_SCHMITT_ENABLE. The function
-was passing back the disabled state incorrectly.
+Fixes: 1bea6afbc842 ("pinctrl: mediatek: Refine mtk_pinconf_get()")
+Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+---
+ drivers/pinctrl/mediatek/pinctrl-paris.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Patch 2 reworks support for PIN_CONFIG_{INPUT,OUTPUT}_ENABLE, following
-discussions on the bcm2835/bcm2711 pinctrl drivers [1]. The driver is
-made to follow the definitions of each option as described in the DT
-bindings and pinctrl core.
-
-Please have a look and merge if possible.
-
-
-Thanks
-ChenYu
-
-[1] https://lore.kernel.org/linux-arm-kernel/CAGb2v66XpjvDnTpi2=SPbeAPf844FLCai6YFwvVqvmF9z4Mj=A@mail.gmail.com/
-
-Chen-Yu Tsai (2):
-  pinctrl: mediatek: paris: Fix PIN_CONFIG_INPUT_SCHMITT_ENABLE readback
-  pinctrl: mediatek: paris: Rework support for
-    PIN_CONFIG_{INPUT,OUTPUT}_ENABLE
-
- drivers/pinctrl/mediatek/pinctrl-paris.c | 40 ++++++++----------------
- 1 file changed, 13 insertions(+), 27 deletions(-)
-
+diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+index b6bc31abd2b0..9353f78a52f0 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-paris.c
++++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+@@ -193,6 +193,8 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
+ 		}
+ 
+ 		err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_SMT, &ret);
++		if (!ret)
++			err = -EINVAL;
+ 		break;
+ 	case PIN_CONFIG_DRIVE_STRENGTH:
+ 		if (!hw->soc->drive_get)
 -- 
 2.44.0.396.g6e790dbe36-goog
 
