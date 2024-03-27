@@ -1,112 +1,182 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA3F15DBC5;
-	Wed, 27 Mar 2024 13:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04977130A62;
+	Wed, 27 Mar 2024 13:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711547634; cv=none; b=RIJM9NUBEQKFqGJjm/cu/Z41wWTxN+RYUeGuFHzBxSXaC1i4nhhcIbGj176GEYFbbabMxJ25qL0x9xcH3rD0PW340ZTJyxRcRXSkH5jsLSmJcYuiWCTUtUQdS7TzQ3rNiUo6kqXl2Sx3qEvh/U6SllR4DnAUm2b+GQvGBJORVeY=
+	t=1711547669; cv=none; b=kMxfesqfcEJUu9nA82trs97WJiEW2i6kQ5hDM2FvbpOYhwJ/xhk0jaB+jeWLXSrxGMzyGKtR4VG0szDDp46enG16s6IEn45t/H2kSR6UiacPHyvBkgmexpfWcukJ5rzjeudDNK1L9W6ZpoKy9KBeZEtxsTQSvcGqTMmgen2kHGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711547634; c=relaxed/simple;
-	bh=PYKcrln81x8z3Qo4vIUuoUg+0Pyz3VOd7xpWYi5tU+M=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GY+pBBBoG1BJXCBfItFf/6uJGrBobDpIByYAKEsypbErresS+Nz7SEh/RvLDcy0r53qBt8oFjymUqkNS1386xIcQ7zpgCzBI7EdU74cEAjb9rI0ZzcdTZABnU1ULgwRddQ8+80mlEUky0qVJnOI47shTQaJ0o/GxlweWrBzxpSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=grTOPeG+; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1711547669; c=relaxed/simple;
+	bh=Hbd3oWX03uwgOp8a2/PzaUpi1gu4Eu9ujvTUgEuMWWk=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Lmcb4RCS9GTehHst8f8vNn/pEUl0dyyivXLhnmhD8HRw0Oz1BJJSnQHhM3Ez/0G7GdE9r3brUT1jMGrYyvuF1q5/CbjEh8huYZ4ZbUFw7LP/ys3SQ3JSMqgnf0Xm+pJzArx3mHedhOnokVQ4Xk+akckXV1ofaEk4fhVBMlXuv5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=U+SNVTVB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9biMVoDr; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="grTOPeG+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=qk3erv7bpnda7fik5nay6uxary.protonmail; t=1711547630; x=1711806830;
-	bh=/KrGQPoa4XBEU6DDwx50UKASQ/ZJLt8f1jEe0AMQoto=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=grTOPeG+dT+t1VUrin8lKlmqwqEh2CM2cMGUNXFKyoPDxAuUvQXnRIELS5cWaW5ZL
-	 7xzwXPbq553XTsmrbIqVbQ1wasodBvZvUdIwflXHcOEJl/SgTarU0Gi1m1c/UHpyO1
-	 Pf2BZ9DJcDM5Mqr5KUNbWstdoGhZaBfqP8Nnb2AcD1z3C7wFjreX5Wc+eih5aMtNXE
-	 eSqAjNsaZDvmIKI/8vzJCGhgwbox1nm2C3YPvNE9EUM2kbBvUBYu6cvFu20gvFOlSB
-	 souYPudMxHxIe/gvfGegN0IJKEyADxSdXoYb3w4fx9i82mzwCnMLzCKLbLk6koEoqx
-	 OIbQsdAgyb9sA==
-Date: Wed, 27 Mar 2024 13:53:33 +0000
-To: Wedson Almeida Filho <wedsonaf@gmail.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, linux-kernel@vger.kernel.org, Wedson Almeida Filho <walmeida@microsoft.com>
-Subject: Re: [PATCH 2/2] samples: rust: add in-place initialisation sample
-Message-ID: <ffuYV4VQCfRoM7Fws9Z7TOVXS_dJp89q9--Sv9fipzWpOUqkjad5EfXsZPcBZ8ciGzrPo-U-2rEy5CUOitXNp4e4hAJHwZ0uH_u3zDxr0zE=@proton.me>
-In-Reply-To: <20240327032337.188938-3-wedsonaf@gmail.com>
-References: <20240327032337.188938-1-wedsonaf@gmail.com> <20240327032337.188938-3-wedsonaf@gmail.com>
-Feedback-ID: 71780778:user:proton
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="U+SNVTVB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9biMVoDr"
+Date: Wed, 27 Mar 2024 13:54:25 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1711547666;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aX/b2fH59/QoshOtDLF5aBhUA82IfpCHJbAu6eh8aNA=;
+	b=U+SNVTVB+fRhWGa5kDgbn8dLUOZD0e9FXp+YWf0nysL1emuq67X7kuYwqlWFUXAG54j1e/
+	JNjCiGq92GWJ05Xyz/nyZJfZp+f76O/ZxZHQnjTRjdy14cSDcnz18MXnMPOD/eGq5qysL4
+	B5FE6QrAmNcmkSV0489EgHtJeCeUs/56ucnTJ8SyStZsVk/Txxn+QWqMVasshCH+APW+rx
+	igYJVEu1myjAmjWUlFoM+qeeR5MZloy0WR2uHZgBVS4lHoFHWLdPapW9eK5yOiD/T4RwLl
+	NcNvi0YS5PLpjrLsIaNG9Y5sSQin9QcXPauw9m2xAekwTb0kdrf+0En2UtXTuA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1711547666;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aX/b2fH59/QoshOtDLF5aBhUA82IfpCHJbAu6eh8aNA=;
+	b=9biMVoDrckGZfzZyN4y9kGAxlgbFb0oP7TQaIFYXPf1ZQLFXoln2tuyLpJ7Kj5r/Sy9Aep
+	b3E44xIlDOLrsUBg==
+From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/urgent] MAINTAINERS: Add co-maintainers for time[rs]
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ "Anna-Maria Behnsen" <anna-maria@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240325172048.548199937@linutronix.de>
+References: <20240325172048.548199937@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <171154766510.10875.12229558418881097070.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On 27.03.24 04:23, Wedson Almeida Filho wrote:
-> diff --git a/samples/rust/rust_inplace.rs b/samples/rust/rust_inplace.rs
-> new file mode 100644
-> index 000000000000..ba8d051cac56
-> --- /dev/null
-> +++ b/samples/rust/rust_inplace.rs
-> @@ -0,0 +1,42 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Rust minimal in-place sample.
-> +
-> +use kernel::prelude::*;
-> +
-> +module! {
-> +    type: RustInPlace,
-> +    name: "rust_inplace",
-> +    author: "Rust for Linux Contributors",
-> +    description: "Rust minimal in-place sample",
-> +    license: "GPL",
-> +}
-> +
-> +#[pin_data(PinnedDrop)]
-> +struct RustInPlace {
-> +    numbers: Vec<i32>,
-> +}
-> +
-> +impl kernel::InPlaceModule for RustInPlace {
-> +    fn init(_module: &'static ThisModule) -> impl PinInit<Self, Error> {
-> +        pr_info!("Rust minimal sample (init)\n");
+The following commit has been merged into the timers/urgent branch of tip:
 
-This text needs updating.
+Commit-ID:     1fed2f1ea62aa79e8c1df79b26e5bf5c8cf45065
+Gitweb:        https://git.kernel.org/tip/1fed2f1ea62aa79e8c1df79b26e5bf5c8cf45065
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Mon, 25 Mar 2024 18:23:17 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 27 Mar 2024 14:48:11 +01:00
 
-> +        pr_info!("Am I built-in? {}\n", !cfg!(MODULE));
-> +        try_pin_init!(Self {
-> +            numbers: {
-> +                let mut numbers =3D Vec::new();
-> +                numbers.push(72, GFP_KERNEL)?;
-> +                numbers.push(108, GFP_KERNEL)?;
-> +                numbers.push(200, GFP_KERNEL)?;
-> +                numbers
-> +            },
-> +        })
+MAINTAINERS: Add co-maintainers for time[rs]
 
-I think it might be useful to also have a field that needs pin-init, eg
-a `Mutex` or similar. What about placing the `Vec` inside of a mutex?
+Anna-Maria and Frederic are working in this area for years. Volunteer them
+into co-maintainer roles.
 
---=20
-Cheers,
-Benno
+While at it bring the file lists up to date.
 
-> +    }
-> +}
-> +
-> +#[pinned_drop]
-> +impl PinnedDrop for RustInPlace {
-> +    fn drop(self: Pin<&mut Self>) {
-> +        pr_info!("My numbers are {:?}\n", self.numbers);
-> +        pr_info!("Rust minimal inplace sample (exit)\n");
-> +    }
-> +}
-> --
-> 2.34.1
->=20
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Acked-by: Frederic Weisbecker <frederic@kernel.org>
+Link: https://lore.kernel.org/r/20240325172048.548199937@linutronix.de
+---
+ MAINTAINERS | 35 +++++++++++++++++++++++++++--------
+ 1 file changed, 27 insertions(+), 8 deletions(-)
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index aa3b947..c8c4a70 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9653,7 +9653,9 @@ L:	linux-input@vger.kernel.org
+ S:	Maintained
+ F:	drivers/hid/hid-logitech-hidpp.c
+ 
+-HIGH-RESOLUTION TIMERS, CLOCKEVENTS
++HIGH-RESOLUTION TIMERS, TIMER WHEEL, CLOCKEVENTS
++M:	Anna-Maria Behnsen <anna-maria@linutronix.de>
++M:	Frederic Weisbecker <frederic@kernel.org>
+ M:	Thomas Gleixner <tglx@linutronix.de>
+ L:	linux-kernel@vger.kernel.org
+ S:	Maintained
+@@ -9661,9 +9663,13 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
+ F:	Documentation/timers/
+ F:	include/linux/clockchips.h
+ F:	include/linux/hrtimer.h
++F:	include/linux/timer.h
+ F:	kernel/time/clockevents.c
+ F:	kernel/time/hrtimer.c
+-F:	kernel/time/timer_*.c
++F:	kernel/time/timer.c
++F:	kernel/time/timer_list.c
++F:	kernel/time/timer_migration.*
++F:	tools/testing/selftests/timers/
+ 
+ HIGH-SPEED SCC DRIVER FOR AX.25
+ L:	linux-hams@vger.kernel.org
+@@ -15627,9 +15633,10 @@ F:	drivers/misc/nsm.c
+ F:	include/uapi/linux/nsm.h
+ 
+ NOHZ, DYNTICKS SUPPORT
++M:	Anna-Maria Behnsen <anna-maria@linutronix.de>
+ M:	Frederic Weisbecker <frederic@kernel.org>
+-M:	Thomas Gleixner <tglx@linutronix.de>
+ M:	Ingo Molnar <mingo@kernel.org>
++M:	Thomas Gleixner <tglx@linutronix.de>
+ L:	linux-kernel@vger.kernel.org
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/nohz
+@@ -17590,15 +17597,20 @@ F:	drivers/pnp/
+ F:	include/linux/pnp.h
+ 
+ POSIX CLOCKS and TIMERS
++M:	Anna-Maria Behnsen <anna-maria@linutronix.de>
++M:	Frederic Weisbecker <frederic@kernel.org>
+ M:	Thomas Gleixner <tglx@linutronix.de>
+ L:	linux-kernel@vger.kernel.org
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
+ F:	fs/timerfd.c
+ F:	include/linux/time_namespace.h
+-F:	include/linux/timer*
++F:	include/linux/timerfd.h
++F:	include/uapi/linux/time.h
++F:	include/uapi/linux/timerfd.h
+ F:	include/trace/events/timer*
+-F:	kernel/time/*timer*
++F:	kernel/time/itimer.c
++F:	kernel/time/posix-*
+ F:	kernel/time/namespace.c
+ 
+ POWER MANAGEMENT CORE
+@@ -22254,13 +22266,20 @@ S:	Supported
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
+ F:	include/linux/clocksource.h
+ F:	include/linux/time.h
++F:	include/linux/timekeeper_internal.h
++F:	include/linux/timekeeping.h
+ F:	include/linux/timex.h
+ F:	include/uapi/linux/time.h
+ F:	include/uapi/linux/timex.h
+ F:	kernel/time/alarmtimer.c
+-F:	kernel/time/clocksource.c
+-F:	kernel/time/ntp.c
+-F:	kernel/time/time*.c
++F:	kernel/time/clocksource*
++F:	kernel/time/ntp*
++F:	kernel/time/time.c
++F:	kernel/time/timeconst.bc
++F:	kernel/time/timeconv.c
++F:	kernel/time/timecounter.c
++F:	kernel/time/timekeeping*
++F:	kernel/time/time_test.c
+ F:	tools/testing/selftests/timers/
+ 
+ TIPC NETWORK LAYER
