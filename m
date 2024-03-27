@@ -1,30 +1,47 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69EB523754;
-	Wed, 27 Mar 2024 07:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2468F28DBC
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 07:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711524529; cv=none; b=atyGNzukVQnMzT9n/FJN+sAOf+EhVB7Cp5Seg6XaD3lUTnsgHUeapoidVh8gQO2dTPvNeBpSKY0fyrT6sdqSboPfxQqn7PRRue8I30RdBpbPdHiLHlvZU8jJMl9pzhWzCwI2snVo2I7Z4nyDWJ5XEwpS/w5FSceQm5OQeJAqcCg=
+	t=1711524588; cv=none; b=PxjMn2ckkJhsUpqXkFnUMn2yHp2YQdCPsmCiEA2/PhZ8NYxnodelyanAT5xNAhaWCuNcvv0HMWEQkrVnA39DnjM82q19AY0p+fh+n/C8xY24ACLKQEegq41j2TWIOrhcDtLNmbXEPabYKqq84rglqx+YcnA/KBInOAZkFDoHuwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711524529; c=relaxed/simple;
-	bh=zRPikjOVGuxUHj0iYEwFs+kVUlxAZ63d9nP1HOlrotM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=ksRi3QfJYdIWNDzogKBV8m8+9DLDowMh4YDju322dLVxy4FuqDXRnKrDbaOTmeTspgz1MUmDmE+PzxsUwpkPFK/2QUjD/+aDVB+Fzh76Ymf4eVO57HT7CFXYlDul3AsHEwj5LhkW4t3sKhDsumnt6KvHwHTI0owT9a7wZpi9RNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4V4JF201Dbz4f3khv;
-	Wed, 27 Mar 2024 15:28:37 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 389161A0568;
-	Wed, 27 Mar 2024 15:28:44 +0800 (CST)
-Received: from [10.67.109.184] (unknown [10.67.109.184])
-	by APP1 (Coremail) with SMTP id cCh0CgBngQqrygNmXjPeIA--.44585S2;
-	Wed, 27 Mar 2024 15:28:43 +0800 (CST)
-Message-ID: <bb48f1f1-70c8-4cab-86f7-91f19c00724e@huaweicloud.com>
-Date: Wed, 27 Mar 2024 15:28:43 +0800
+	s=arc-20240116; t=1711524588; c=relaxed/simple;
+	bh=u2wKnhEypQjtnqRaK5MI7baqVABv6jSUiswMbhJsllU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=CplxO6srCnhofcumDKbxhygi0fg35ROurXiXfTJyQMkWFg7VE+vjyXAfIXCSRtOitLEo+Tl3TU6tjecbI6E6vzszvvxCkbFB0TjoLXv4vk5erC7J1v9uGBrG4W70gVanUoCyVYiqv0//SxswaTFPeixPSggGiMrHjm0KieVdC7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DDkQ134D; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DDkQ134D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711524586;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I+MC2q8y8nD5KthMzwqiAm8lJS2baMGc2mOBEQ/3u6A=;
+	b=DDkQ134DfZgt3OlE6vPNPw4DD+OmycyGhVherG3Hpp/yD8+9byE0lWzrmP+aMZsdxLFv6Z
+	Pr1z/CIR2QXgvA7GK76EjA5UHiyU2+SXssRoK4M+JADNAvtbm2BrhYiZGAPYvgmmEbLHgb
+	sD/uSHNxzIJJZJEqSA7ofs/+Lu6VVzs=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-156-nqxTmeZ1MK2Q_AuxGNsxpA-1; Wed,
+ 27 Mar 2024 03:29:42 -0400
+X-MC-Unique: nqxTmeZ1MK2Q_AuxGNsxpA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D63653800E8D;
+	Wed, 27 Mar 2024 07:29:41 +0000 (UTC)
+Received: from [10.45.224.197] (unknown [10.45.224.197])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 32D79C017A2;
+	Wed, 27 Mar 2024 07:29:40 +0000 (UTC)
+Message-ID: <8e585156-4f6f-4837-9375-f29842fa7f85@redhat.com>
+Date: Wed, 27 Mar 2024 08:29:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,120 +49,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v3 2/2] bpf,riscv: Implement bpf_addr_space_cast
- instruction
+Subject: Re: [PATCH net] i40e: Fix VF MAC filter removal
+From: Ivan Vecera <ivecera@redhat.com>
+To: netdev@vger.kernel.org, Tony Nguyen <anthony.l.nguyen@intel.com>
+Cc: aleksandr.loktionov@intel.com, mschmidt@redhat.com, horms@kernel.org,
+ Jesse Brandeburg <jesse.brandeburg@intel.com>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ "moderated list:INTEL ETHERNET DRIVERS" <intel-wired-lan@lists.osuosl.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20240313135618.20930-1-ivecera@redhat.com>
 Content-Language: en-US
-To: Puranjay Mohan <puranjay12@gmail.com>
-References: <20240326224943.86912-1-puranjay12@gmail.com>
- <20240326224943.86912-3-puranjay12@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@kernel.org>, Luke Nelson <luke.r.nels@gmail.com>,
- Xi Wang <xi.wang@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- bpf@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-From: Pu Lehui <pulehui@huaweicloud.com>
-In-Reply-To: <20240326224943.86912-3-puranjay12@gmail.com>
+In-Reply-To: <20240313135618.20930-1-ivecera@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:cCh0CgBngQqrygNmXjPeIA--.44585S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxWw1xXr17Xw4xCw1fAry5urg_yoW5Xr1DpF
-	45GFn3CrWvqwn7XF13Ja1UWr45Ars5ua12gFy7CrW5XFsIqry8Gw1rK3W5JrZ8CFy8W3Wr
-	CFWY9rnak3s7X37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI
-	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6x
-	AIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UdxhLUUUUU=
-X-CM-SenderInfo: psxovxtxl6x35dzhxuhorxvhhfrp/
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-
-On 2024/3/27 6:49, Puranjay Mohan wrote:
-> LLVM generates bpf_addr_space_cast instruction while translating
-> pointers between native (zero) address space and
-> __attribute__((address_space(N))). The addr_space=0 is reserved as
-> bpf_arena address space.
+On 13. 03. 24 14:56, Ivan Vecera wrote:
+> Commit 73d9629e1c8c ("i40e: Do not allow untrusted VF to remove
+> administratively set MAC") fixed an issue where untrusted VF was
+> allowed to remove its own MAC address although this was assigned
+> administratively from PF. Unfortunately the introduced check
+> is wrong because it causes that MAC filters for other MAC addresses
+> including multi-cast ones are not removed.
 > 
-> rY = addr_space_cast(rX, 0, 1) is processed by the verifier and
-> converted to normal 32-bit move: wX = wY
+> <snip>
+> 	if (ether_addr_equal(addr, vf->default_lan_addr.addr) &&
+> 	    i40e_can_vf_change_mac(vf))
+> 		was_unimac_deleted = true;
+> 	else
+> 		continue;
 > 
-> rY = addr_space_cast(rX, 1, 0) has to be converted by JIT.
+> 	if (i40e_del_mac_filter(vsi, al->list[i].addr)) {
+> 	...
+> </snip>
 > 
-> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+> The else path with `continue` effectively skips any MAC filter
+> removal except one for primary MAC addr when VF is allowed to do so.
+> Fix the check condition so the `continue` is only done for primary
+> MAC address.
+> 
+> Fixes: 73d9629e1c8c ("i40e: Do not allow untrusted VF to remove administratively set MAC")
+> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
 > ---
->   arch/riscv/net/bpf_jit.h        |  1 +
->   arch/riscv/net/bpf_jit_comp64.c | 14 ++++++++++++++
->   arch/riscv/net/bpf_jit_core.c   |  1 +
->   3 files changed, 16 insertions(+)
+>   drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 11 ++++++-----
+>   1 file changed, 6 insertions(+), 5 deletions(-)
 > 
-> diff --git a/arch/riscv/net/bpf_jit.h b/arch/riscv/net/bpf_jit.h
-> index 8a47da08dd9c..5fc374ed98ea 100644
-> --- a/arch/riscv/net/bpf_jit.h
-> +++ b/arch/riscv/net/bpf_jit.h
-> @@ -82,6 +82,7 @@ struct rv_jit_context {
->   	unsigned long flags;
->   	int stack_size;
->   	u64 arena_vm_start;
-> +	u64 user_vm_start;
->   };
->   
->   /* Convert from ninsns to bytes. */
-> diff --git a/arch/riscv/net/bpf_jit_comp64.c b/arch/riscv/net/bpf_jit_comp64.c
-> index 73726f455f6b..77ea306452d4 100644
-> --- a/arch/riscv/net/bpf_jit_comp64.c
-> +++ b/arch/riscv/net/bpf_jit_comp64.c
-> @@ -1081,6 +1081,15 @@ int bpf_jit_emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
->   	/* dst = src */
->   	case BPF_ALU | BPF_MOV | BPF_X:
->   	case BPF_ALU64 | BPF_MOV | BPF_X:
-> +		if (insn_is_cast_user(insn)) {
-> +			emit_mv(RV_REG_T1, rs, ctx);
-> +			emit_zextw(RV_REG_T1, RV_REG_T1, ctx);
-> +			emit_imm(rd, (ctx->user_vm_start >> 32) << 32, ctx);
-> +			emit(rv_beq(RV_REG_T1, RV_REG_ZERO, 4), ctx);
-> +			emit_or(RV_REG_T1, rd, RV_REG_T1, ctx);
-> +			emit_mv(rd, RV_REG_T1, ctx);
-> +			break;
+> diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+> index b34c71770887..10267a300770 100644
+> --- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+> +++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+> @@ -3143,11 +3143,12 @@ static int i40e_vc_del_mac_addr_msg(struct i40e_vf *vf, u8 *msg)
+>   		/* Allow to delete VF primary MAC only if it was not set
+>   		 * administratively by PF or if VF is trusted.
+>   		 */
+> -		if (ether_addr_equal(addr, vf->default_lan_addr.addr) &&
+> -		    i40e_can_vf_change_mac(vf))
+> -			was_unimac_deleted = true;
+> -		else
+> -			continue;
+> +		if (ether_addr_equal(addr, vf->default_lan_addr.addr)) {
+> +			if (i40e_can_vf_change_mac(vf))
+> +				was_unimac_deleted = true;
+> +			else
+> +				continue;
 > +		}
->   		if (imm == 1) {
->   			/* Special mov32 for zext */
->   			emit_zextw(rd, rd, ctx);
-> @@ -2026,3 +2035,8 @@ bool bpf_jit_supports_ptr_xchg(void)
->   {
->   	return true;
->   }
-> +
-> +bool bpf_jit_supports_arena(void)
-> +{
-> +	return true;
-> +}
-> diff --git a/arch/riscv/net/bpf_jit_core.c b/arch/riscv/net/bpf_jit_core.c
-> index 9ab739b9f9a2..8a69d6d81e32 100644
-> --- a/arch/riscv/net/bpf_jit_core.c
-> +++ b/arch/riscv/net/bpf_jit_core.c
-> @@ -81,6 +81,7 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
->   	}
 >   
->   	ctx->arena_vm_start = bpf_arena_get_kern_vm_start(prog->aux->arena);
-> +	ctx->user_vm_start = bpf_arena_get_user_vm_start(prog->aux->arena);
->   	ctx->prog = prog;
->   	ctx->offset = kcalloc(prog->len, sizeof(int), GFP_KERNEL);
->   	if (!ctx->offset) {
+>   		if (i40e_del_mac_filter(vsi, al->list[i].addr)) {
+>   			ret = -EINVAL;
 
-Reviewed-by: Pu Lehui <pulehui@huawei.com>
-Tested-by: Pu Lehui <pulehui@huawei.com>
+Hi Tony,
+the fix is not part of your recent pull series for i40e... I have 
+submitted it to 'net' instead of 'iwl-net' as it fixes recent commit 
+that causes MAC filter resource leaks that should be fixed as soon as 
+possible. But its status in patchwork is 'Awaiting upstream' so it has 
+to be resubmitted by yourself... Or should this be picked directly by 
+netdev maintainers?
+
+Thanks,
+Ivan
 
