@@ -1,265 +1,153 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44B4149C48;
-	Wed, 27 Mar 2024 15:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C262D149DE0;
+	Wed, 27 Mar 2024 15:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711553130; cv=none; b=uYfPI9TM2zZnxEx/H4rMrxnOSWB/vmlWzfieTRJZvLA/ZpIbCAoNHhMyXQ0uyDzK/zcgtv5ZqMoELwlE+gD3iqf/yqmserJ+wsTRfBk6lHr5jwoWjSjoGV7YSYMJd2loHgE0XF7MpcaGjinqBy7+akUnd/b+zPvh3uVjm5awDcI=
+	t=1711553133; cv=none; b=d1l1dHlqs//CzlL1kIxaXeT5qO+rDY7hgsQaPJWno7/NT6FxU2RTrpuqwzoalUkOFtKsICvBBciIJu3HL8033lDAJ23bdwsiIPycDALVyNAVkw2BkOOPpz7UT7Qiu1QQXE4BOleIbhF4zNhZ1ecFaTWARNHv1ILJWnFBsX9J+3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711553130; c=relaxed/simple;
-	bh=XijAiJr8ED45Yq86XEpAzxGAIQnSHo95M8Ili6sTQNI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jardtW56yejaIQxrtJ5pEkD+aEoOSmK6mOBNKtSPxtQ8sgqN3ZmmA3gG4MfEW+rT7ZpRhssG8MCl97ev9s5diAjaq5/7hguTpxwosH3HHp4gUv3DZ8zT8Cf5KrDzAVJWcGrGPLbDsVY55Iu/JOq0xrfR5nOk5WU7OmHGbuaXMKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CBWxC/xD; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711553133; c=relaxed/simple;
+	bh=DLhR7AzkO0xf8+xYLiFt7UJXuf/uTo3qQMUJ4AihCJI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BF49v8B5G0AyU9Kklpm55ALVf+KmHb1zMaACSH4+cuKhy5bPH+CRQk0oNQNpID0EqCCxReZjtvvz9UQwySW/S1yqijm1M30ivj/J45jvLI2bTcGcpurAjUCP5gIffSyORmYXT6yZzEWLv/NfIPYcWynyaiWpotG7IOtbF0Vsl3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c0UtVpHi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CBWxC/xD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711553129; x=1743089129;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=XijAiJr8ED45Yq86XEpAzxGAIQnSHo95M8Ili6sTQNI=;
-  b=CBWxC/xDrlTTMmosu2xRLBt1P7zEjG5hqGTSPLYkspm90AiUy6gvv8Ht
-   I/IximDzP234q9/aHul03INRSLONdWI5BoHKX23QJIG0EdMZqzjO0NJYA
-   7hk5khbmhSvl7zgS4mblxsf0aUszroej8Ktzn8JNfM911vv+GIIaMq1jD
-   WmAsyKUADiKYAfuJajhD3zxrOcFVQEXsQgXeqpsmI6WvFaUARQbdO80L7
-   shYovtuncrEFaDsoKsMJ/VRVGyZVcSYZQF5wU3xnzMJFNsDgnNdrg3+CK
-   278F2TA1ITixlCAR18volwKnDegQQnJ0NllMiFOaG0MySLoG2sYhW0BlE
-   A==;
-X-CSE-ConnectionGUID: tllghLzJSkqi2IorGlpmbw==
-X-CSE-MsgGUID: 3lTRd0mlQsy80MLcRsnC0A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="6518262"
-X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
-   d="scan'208";a="6518262"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 08:25:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
-   d="scan'208";a="16414381"
-Received: from newjersey.igk.intel.com ([10.102.20.203])
-  by fmviesa008.fm.intel.com with ESMTP; 27 Mar 2024 08:25:25 -0700
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
-	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v6 17/21] net: net_test: add tests for IP tunnel flags conversion helpers
-Date: Wed, 27 Mar 2024 16:23:54 +0100
-Message-ID: <20240327152358.2368467-18-aleksander.lobakin@intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240327152358.2368467-1-aleksander.lobakin@intel.com>
-References: <20240327152358.2368467-1-aleksander.lobakin@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c0UtVpHi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B652C433B2;
+	Wed, 27 Mar 2024 15:25:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711553133;
+	bh=DLhR7AzkO0xf8+xYLiFt7UJXuf/uTo3qQMUJ4AihCJI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=c0UtVpHiXxvyCG626zVmhvcD4i+DEkn1Q1tGU04kzVzfizD8QtqNSfEwsNap+m4WS
+	 CtNJKmGYp0wu+cXzP4jDO4594oQ3oeCTPymspkML0Um5vg5kv6kJ4krIijtROSiJzn
+	 ap4GENDyB5KmbFgWXpjg1NdWrounhPxuWcZOnvyJqGRL2HAk9nq84HmfMeS0M4JJZf
+	 RMnVxMRfoQGVSB1fRr1wvZV0FeXbBZt9X57sdCBwnYb/z+FKNt+jVrf7H64tToLTZm
+	 wXdyPRhxgEqbt7OaZY6Kvw1bwBwBXgDEDKopFSAiz4tm0X2xOUsRewT/7K6xhga9j4
+	 1G6ucz3FPMhlQ==
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6e67ad4c2e3so494569a34.1;
+        Wed, 27 Mar 2024 08:25:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXKNLHpx6t6dhxtCbLSJJK8VyscTgloL+YVZ58CfmXNoKi7NyTtkXu2sNbv3f2llEAXk8NooMoGqtPfbUKEHF2uBt2Od+Te/M0uc+59P+NG38WHYnBZIcvTFqrmO2T/+6kp+xwGpxo=
+X-Gm-Message-State: AOJu0YwNYDivdQpFOdgc9wH6cmnhknRgaxAj0rrybhHzh3aDy2rSAR75
+	blsb9QMeL5bnoKdzkoXEcdaWJHpoog+AChGNGo1yTBhLwIN0LYN7yWMY4mf4lZSethoGLgKx/eV
+	ZusLTJDdDA9dBztXPeGmOU7okxEg=
+X-Google-Smtp-Source: AGHT+IHyocjUoMb2836C7kecUnLxqysy7ocHQMv/hFnJPjZWGdKMobN2j6lJ80C5dtAFC/mUPOpuzP9Ai7SGpBhOzPE=
+X-Received: by 2002:a05:6870:14d6:b0:229:e3d8:128c with SMTP id
+ l22-20020a05687014d600b00229e3d8128cmr13824960oab.1.1711553132646; Wed, 27
+ Mar 2024 08:25:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240321-gpa-no-cooling-devs-v1-1-5c9e0ef2062e@trvn.ru>
+In-Reply-To: <20240321-gpa-no-cooling-devs-v1-1-5c9e0ef2062e@trvn.ru>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 27 Mar 2024 16:25:21 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0jAq=iMKzYBz-Ni6Zqpbgxp3_0UYpPiAoSLcfGNJ8ruhQ@mail.gmail.com>
+Message-ID: <CAJZ5v0jAq=iMKzYBz-Ni6Zqpbgxp3_0UYpPiAoSLcfGNJ8ruhQ@mail.gmail.com>
+Subject: Re: [PATCH] thermal: gov_power_allocator: Allow binding without
+ cooling devices
+To: nikita@trvn.ru, Lukasz Luba <lukasz.luba@arm.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now that there are helpers for converting IP tunnel flags between the
-old __be16 format and the bitmap format, make sure they work as expected
-by adding a couple of tests to the networking testing suite. The helpers
-are all inline, so no dependencies on the related CONFIG_* (or a
-standalone module) are needed.
+On Thu, Mar 21, 2024 at 3:44=E2=80=AFPM Nikita Travkin <nikita@trvn.ru> wro=
+te:
+>
+> Commit e83747c2f8e3 ("thermal: gov_power_allocator: Set up trip points ea=
+rlier")
+> added a check that would fail binding the governer if there is no
+> cooling devices bound to the thermal zone. Unfortunately this causes
+> issues in cases when the TZ is bound to the governer before the cooling
+> devices are attached to it. (I.e. when the tz is registered using
+> thermal_zone_device_register_with_trips().)
+>
+> Additionally, the documentation across gov_power_allocator suggests it's
+> intended to allow it to be bound to thermal zones without cooling
+> devices (and thus without passive/active trip points), however the same
+> change added a check for the trip point to be present, causing those TZ
+> to fail probing.
+>
+> Those changes cause all thermal zones to fail on some devices (such as
+> sc7180-acer-aspire1) and prevent the kernel from controlling the cpu/gpu
+> frequency based on the temperature, as well as losing all the other
+> "informational" thermal zones if power_allocator is set as default.
+>
+> This commit partially reverts the referenced one by dropping the trip
+> point check and by allowing the TZ to probe even if no actor buffer was
+> allocated to allow those TZ to probe again.
+>
+> Fixes: e83747c2f8e3 ("thermal: gov_power_allocator: Set up trip points ea=
+rlier")
+> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
+> ---
+> I've noticed that all thermal zones fail probing with -EINVAL on my
+> sc7180 based Acer Aspire 1 since 6.8. This commit allows me to bring
+> them back.
 
-Cover three possible cases:
+=C5=81ukasz, any comments?
 
-1. No bits past BIT(15) are set, VTI/SIT bits are not set. This
-   conversion is almost a direct assignment.
-2. No bits past BIT(15) are set, but VTI/SIT bit is set. During the
-   conversion, it must be transformed into BIT(16) in the bitmap,
-   but still compatible with the __be16 format.
-3. The bitmap has bits past BIT(15) set (not the VTI/SIT one). The
-   result will be truncated.
-   Note that currently __IP_TUNNEL_FLAG_NUM is 17 (incl. special),
-   which means that the result of this case is currently
-   semi-false-positive. When BIT(17) is finally here, it will be
-   adjusted accordingly.
-
-Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
----
- net/core/Makefile                   |   2 +-
- net/core/{gso_test.c => net_test.c} | 132 ++++++++++++++++++++++++++--
- 2 files changed, 125 insertions(+), 9 deletions(-)
- rename net/core/{gso_test.c => net_test.c} (67%)
-
-diff --git a/net/core/Makefile b/net/core/Makefile
-index 6e6548011fae..21d6fbc7e884 100644
---- a/net/core/Makefile
-+++ b/net/core/Makefile
-@@ -41,4 +41,4 @@ obj-$(CONFIG_NET_SOCK_MSG) += skmsg.o
- obj-$(CONFIG_BPF_SYSCALL) += sock_map.o
- obj-$(CONFIG_BPF_SYSCALL) += bpf_sk_storage.o
- obj-$(CONFIG_OF)	+= of_net.o
--obj-$(CONFIG_NET_TEST) += gso_test.o
-+obj-$(CONFIG_NET_TEST) += net_test.o
-diff --git a/net/core/gso_test.c b/net/core/net_test.c
-similarity index 67%
-rename from net/core/gso_test.c
-rename to net/core/net_test.c
-index 358c44680d91..30062b9621e4 100644
---- a/net/core/gso_test.c
-+++ b/net/core/net_test.c
-@@ -1,6 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
- 
- #include <kunit/test.h>
-+
-+/* GSO */
-+
- #include <linux/skbuff.h>
- 
- static const char hdr[] = "abcdefgh";
-@@ -258,17 +261,130 @@ static void gso_test_func(struct kunit *test)
- 	consume_skb(skb);
- }
- 
--static struct kunit_case gso_test_cases[] = {
--	KUNIT_CASE_PARAM(gso_test_func, gso_test_gen_params),
--	{}
-+/* IP tunnel flags */
-+
-+#include <net/ip_tunnels.h>
-+
-+struct ip_tunnel_flags_test {
-+	const char	*name;
-+
-+	const u16	*src_bits;
-+	const u16	*exp_bits;
-+	u8		src_num;
-+	u8		exp_num;
-+
-+	__be16		exp_val;
-+	bool		exp_comp;
-+};
-+
-+#define IP_TUNNEL_FLAGS_TEST(n, src, comp, eval, exp) {	\
-+	.name		= (n),				\
-+	.src_bits	= (src),			\
-+	.src_num	= ARRAY_SIZE(src),		\
-+	.exp_comp	= (comp),			\
-+	.exp_val	= (eval),			\
-+	.exp_bits	= (exp),			\
-+	.exp_num	= ARRAY_SIZE(exp),		\
-+}
-+
-+/* These are __be16-compatible and can be compared as is */
-+static const u16 ip_tunnel_flags_1[] = {
-+	IP_TUNNEL_KEY_BIT,
-+	IP_TUNNEL_STRICT_BIT,
-+	IP_TUNNEL_ERSPAN_OPT_BIT,
-+};
-+
-+/* Due to the previous flags design limitation, setting either
-+ * ``IP_TUNNEL_CSUM_BIT`` (on Big Endian) or ``IP_TUNNEL_DONT_FRAGMENT_BIT``
-+ * (on Little) also sets VTI/ISATAP bit. In the bitmap implementation, they
-+ * correspond to ``BIT(16)``, which is bigger than ``U16_MAX``, but still is
-+ * backward-compatible.
-+ */
-+#ifdef __LITTLE_ENDIAN
-+#define IP_TUNNEL_CONFLICT_BIT	IP_TUNNEL_DONT_FRAGMENT_BIT
-+#else
-+#define IP_TUNNEL_CONFLICT_BIT	IP_TUNNEL_CSUM_BIT
-+#endif
-+
-+static const u16 ip_tunnel_flags_2_src[] = {
-+	IP_TUNNEL_CONFLICT_BIT,
-+};
-+
-+static const u16 ip_tunnel_flags_2_exp[] = {
-+	IP_TUNNEL_CONFLICT_BIT,
-+	IP_TUNNEL_SIT_ISATAP_BIT,
- };
- 
--static struct kunit_suite gso_test_suite = {
--	.name = "net_core_gso",
--	.test_cases = gso_test_cases,
-+/* Bits 17 and higher are not compatible with __be16 flags */
-+static const u16 ip_tunnel_flags_3_src[] = {
-+	IP_TUNNEL_VXLAN_OPT_BIT,
-+	17,
-+	18,
-+	20,
- };
- 
--kunit_test_suite(gso_test_suite);
-+static const u16 ip_tunnel_flags_3_exp[] = {
-+	IP_TUNNEL_VXLAN_OPT_BIT,
-+};
-+
-+static const struct ip_tunnel_flags_test ip_tunnel_flags_test[] = {
-+	IP_TUNNEL_FLAGS_TEST("compat", ip_tunnel_flags_1, true,
-+			     cpu_to_be16(BIT(IP_TUNNEL_KEY_BIT) |
-+					 BIT(IP_TUNNEL_STRICT_BIT) |
-+					 BIT(IP_TUNNEL_ERSPAN_OPT_BIT)),
-+			     ip_tunnel_flags_1),
-+	IP_TUNNEL_FLAGS_TEST("conflict", ip_tunnel_flags_2_src, true,
-+			     VTI_ISVTI, ip_tunnel_flags_2_exp),
-+	IP_TUNNEL_FLAGS_TEST("new", ip_tunnel_flags_3_src,
-+			     /* This must be set to ``false`` once
-+			      * ``__IP_TUNNEL_FLAG_NUM`` goes above 17.
-+			      */
-+			     true, cpu_to_be16(BIT(IP_TUNNEL_VXLAN_OPT_BIT)),
-+			     ip_tunnel_flags_3_exp),
-+};
-+
-+static void
-+ip_tunnel_flags_test_case_to_desc(const struct ip_tunnel_flags_test *t,
-+				  char *desc)
-+{
-+	strscpy(desc, t->name, KUNIT_PARAM_DESC_SIZE);
-+}
-+KUNIT_ARRAY_PARAM(ip_tunnel_flags_test, ip_tunnel_flags_test,
-+		  ip_tunnel_flags_test_case_to_desc);
-+
-+static void ip_tunnel_flags_test_run(struct kunit *test)
-+{
-+	const struct ip_tunnel_flags_test *t = test->param_value;
-+	IP_TUNNEL_DECLARE_FLAGS(src) = { };
-+	IP_TUNNEL_DECLARE_FLAGS(exp) = { };
-+	IP_TUNNEL_DECLARE_FLAGS(out);
-+
-+	for (u32 j = 0; j < t->src_num; j++)
-+		__set_bit(t->src_bits[j], src);
-+	for (u32 j = 0; j < t->exp_num; j++)
-+		__set_bit(t->exp_bits[j], exp);
-+
-+	KUNIT_ASSERT_EQ(test, t->exp_comp,
-+			ip_tunnel_flags_is_be16_compat(src));
-+	KUNIT_ASSERT_EQ(test, (__force u16)t->exp_val,
-+			(__force u16)ip_tunnel_flags_to_be16(src));
-+
-+	ip_tunnel_flags_from_be16(out, t->exp_val);
-+	KUNIT_ASSERT_TRUE(test, __ipt_flag_op(bitmap_equal, exp, out));
-+}
-+
-+static struct kunit_case net_test_cases[] = {
-+	KUNIT_CASE_PARAM(gso_test_func, gso_test_gen_params),
-+	KUNIT_CASE_PARAM(ip_tunnel_flags_test_run,
-+			 ip_tunnel_flags_test_gen_params),
-+	{ },
-+};
-+
-+static struct kunit_suite net_test_suite = {
-+	.name		= "net_core",
-+	.test_cases	= net_test_cases,
-+};
-+kunit_test_suite(net_test_suite);
- 
-+MODULE_DESCRIPTION("KUnit tests for networking core");
- MODULE_LICENSE("GPL");
--MODULE_DESCRIPTION("KUnit tests for segmentation offload");
--- 
-2.44.0
-
+> ---
+>  drivers/thermal/gov_power_allocator.c | 14 +++++---------
+>  1 file changed, 5 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/thermal/gov_power_allocator.c b/drivers/thermal/gov_=
+power_allocator.c
+> index 1b17dc4c219c..4f2d7f3b7508 100644
+> --- a/drivers/thermal/gov_power_allocator.c
+> +++ b/drivers/thermal/gov_power_allocator.c
+> @@ -679,11 +679,6 @@ static int power_allocator_bind(struct thermal_zone_=
+device *tz)
+>                 return -ENOMEM;
+>
+>         get_governor_trips(tz, params);
+> -       if (!params->trip_max) {
+> -               dev_warn(&tz->device, "power_allocator: missing trip_max\=
+n");
+> -               kfree(params);
+> -               return -EINVAL;
+> -       }
+>
+>         ret =3D check_power_actors(tz, params);
+>         if (ret < 0) {
+> @@ -693,7 +688,7 @@ static int power_allocator_bind(struct thermal_zone_d=
+evice *tz)
+>         }
+>
+>         ret =3D allocate_actors_buffer(params, ret);
+> -       if (ret) {
+> +       if (ret && ret !=3D -EINVAL) {
+>                 dev_warn(&tz->device, "power_allocator: allocation failed=
+\n");
+>                 kfree(params);
+>                 return ret;
+> @@ -714,9 +709,10 @@ static int power_allocator_bind(struct thermal_zone_=
+device *tz)
+>         else
+>                 params->sustainable_power =3D tz->tzp->sustainable_power;
+>
+> -       estimate_pid_constants(tz, tz->tzp->sustainable_power,
+> -                              params->trip_switch_on,
+> -                              params->trip_max->temperature);
+> +       if (params->trip_max)
+> +               estimate_pid_constants(tz, tz->tzp->sustainable_power,
+> +                                      params->trip_switch_on,
+> +                                      params->trip_max->temperature);
+>
+>         reset_pid_controller(params);
+>
+>
+> ---
+> base-commit: e7528c088874326d3060a46f572252be43755a86
+> change-id: 20240321-gpa-no-cooling-devs-c79ee3288325
+>
+> Best regards,
+> --
+> Nikita Travkin <nikita@trvn.ru>
+>
