@@ -1,175 +1,97 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78ECB374EE
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 08:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from mx9.didiglobal.com (mx9.didiglobal.com [111.202.70.124])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 7959E364AE;
+	Wed, 27 Mar 2024 08:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.202.70.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711529645; cv=none; b=Ybliw4CUkc+zhqeP6nEANf0hTv9XCh43EoQ10BFpWeT3knQm6QZ4NGmZCrmWsa7hP67kSgSiNh/NR0VInZQQIakPsIFmc0Yezc/wtHIKSNsJOsbW/KIDw+v513QHHLRujIeggLoLVwFoFaExSraE29h7pT5qlQpwZTp87BtpHIk=
+	t=1711529657; cv=none; b=PM/toD/F1Mo/HstrC9Lhjuh7sjVXKBDKKVCVxcvqbWNRgODcFJuu4B+IPvC3PwZgzUvQUIcxj6CB1YIIhnvejcR7e+2LVz1RipHPgAxRNrd9P8eebTGUkFQXbyqi6cPRT5/IHAw2Onz++w+TtR9LSGgNk3BQIUteqBNcnHbUoaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711529645; c=relaxed/simple;
-	bh=GGGRmxLCnhGsli+4HWWsw1sGOsAmpPiu8AylFrevOsM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kN31uNk8+6fDZMTraz6PncpCUmCxI1UUdWSwJZ4HhxwxFFHzSO/vsa4UJgqtQqhcDAKAwJ7WwOHLuNn3UbYDtjzyYEPQRNs4tnl9kFIWyG33G1Mxi+OQy4kv1zAYoSTxrcuiDEvyuDiCIhvTBiE1rX+BBQCIq8tIgLUQEHmZ2ZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WccdZ039; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ajaJdWBh; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=WccdZ039; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ajaJdWBh; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WccdZ039";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ajaJdWBh";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WccdZ039";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ajaJdWBh"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 97CEC387A0;
-	Wed, 27 Mar 2024 08:54:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1711529641; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y+nV4FXBFEIfJn1nP8KUD8AMey9E2WlbuBTskPgjqLA=;
-	b=WccdZ039zT2VYCeEx1fbN9pXmOzpC4yqHc244P7N4vsp49KINYXndVzA19aXb2My8LxC9W
-	y1ZtertV+n/jmdCd+LqY1wGmi8Tc+e8WWBC0rUIooiKA9QmzuC0ZjL+/6LuaR8aUCfsfP1
-	kLYwF7H8IPwChGDNG0CMpO8/B5+obBU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1711529641;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y+nV4FXBFEIfJn1nP8KUD8AMey9E2WlbuBTskPgjqLA=;
-	b=ajaJdWBh2rUGqYrQsQGKWEw9mOWQ2CMgNekLA8QJSk8QJ2ewkHqfY+v3MO81wKzUvDTiDk
-	Sr4TfnTfYbTxzcDQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1711529641; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y+nV4FXBFEIfJn1nP8KUD8AMey9E2WlbuBTskPgjqLA=;
-	b=WccdZ039zT2VYCeEx1fbN9pXmOzpC4yqHc244P7N4vsp49KINYXndVzA19aXb2My8LxC9W
-	y1ZtertV+n/jmdCd+LqY1wGmi8Tc+e8WWBC0rUIooiKA9QmzuC0ZjL+/6LuaR8aUCfsfP1
-	kLYwF7H8IPwChGDNG0CMpO8/B5+obBU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1711529641;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y+nV4FXBFEIfJn1nP8KUD8AMey9E2WlbuBTskPgjqLA=;
-	b=ajaJdWBh2rUGqYrQsQGKWEw9mOWQ2CMgNekLA8QJSk8QJ2ewkHqfY+v3MO81wKzUvDTiDk
-	Sr4TfnTfYbTxzcDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 82BB513688;
-	Wed, 27 Mar 2024 08:54:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ZVZxH6neA2bMDwAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 27 Mar 2024 08:54:01 +0000
-Message-ID: <b5b09acc-8bca-4e8c-82d4-6542fc7e9aec@suse.cz>
-Date: Wed, 27 Mar 2024 09:54:01 +0100
+	s=arc-20240116; t=1711529657; c=relaxed/simple;
+	bh=F0q1atU/QCJOZoZpsRigCnnKYENo2GCPE2bMe3TQydU=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=YKmABU3Uv+fMQZCcycH4FtatCY0QmdG2ycucotpDYODoJgyGxxmV7Ld9Ch89mfwsYiLwNn8IxWES+wYBsP6/tdS5BxzlFZ4oPvAQT4BmZxwZBY1/y2tjoZSXVEd0MgDTW1qmJZ/yOXgC43/OMBGrjOaK1cuo5njlYv3+KA2HLto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com; spf=pass smtp.mailfrom=didiglobal.com; arc=none smtp.client-ip=111.202.70.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=didiglobal.com
+Received: from mail.didiglobal.com (unknown [10.79.65.12])
+	by mx9.didiglobal.com (MailData Gateway V2.8.8) with ESMTPS id D794318C709D10;
+	Wed, 27 Mar 2024 16:51:02 +0800 (CST)
+Received: from didi-ThinkCentre-M930t-N000 (10.79.64.101) by
+ ZJY02-ACTMBX-02.didichuxing.com (10.79.65.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 27 Mar 2024 16:51:02 +0800
+Date: Wed, 27 Mar 2024 16:50:57 +0800
+X-MD-Sfrom: tiozhang@didiglobal.com
+X-MD-SrcIP: 10.79.65.12
+From: Tio Zhang <tiozhang@didiglobal.com>
+To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+	<mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+CC: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<tiozhang@didiglobal.com>, <zyhtheonly@yeah.net>, <zyhtheonly@gmail.com>
+Subject: [PATCH] trace/sched: add tgid for sched_wakeup_template
+Message-ID: <20240327084948.GA28114@didi-ThinkCentre-M930t-N000>
+Mail-Followup-To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, zyhtheonly@yeah.net,
+	zyhtheonly@gmail.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/10] mm: page_alloc: consolidate free page accounting
-Content-Language: en-US
-To: Johannes Weiner <hannes@cmpxchg.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>, Zi Yan <ziy@nvidia.com>,
- "Huang, Ying" <ying.huang@intel.com>, David Hildenbrand <david@redhat.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20240320180429.678181-1-hannes@cmpxchg.org>
- <20240320180429.678181-11-hannes@cmpxchg.org>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20240320180429.678181-11-hannes@cmpxchg.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Score: -2.24
-X-Spamd-Result: default: False [-2.24 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 BAYES_HAM(-0.95)[86.56%];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_SEVEN(0.00)[8];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[]
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Flag: NO
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: ZJY01-PUBMBX-01.didichuxing.com (10.79.64.32) To
+ ZJY02-ACTMBX-02.didichuxing.com (10.79.65.12)
 
-On 3/20/24 7:02 PM, Johannes Weiner wrote:
-> Free page accounting currently happens a bit too high up the call
-> stack, where it has to deal with guard pages, compaction capturing,
-> block stealing and even page isolation. This is subtle and fragile,
-> and makes it difficult to hack on the code.
-> 
-> Now that type violations on the freelists have been fixed, push the
-> accounting down to where pages enter and leave the freelist.
+By doing this, we are able to filter tasks by tgid while we are
+tracing wakeup events by ebpf or other methods.
 
-Awesome!
+For example, when we care about tracing a user space process (which has
+uncertain number of LWPs, i.e, pids) to monitor its wakeup latency,
+without tgid available in sched_wakeup tracepoints, we would struggle
+finding out all pids to trace, or we could use kprobe to achieve tgid
+tracing, which is less accurate and much less efficient than using
+tracepoint.
 
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Signed-off-by: Tio Zhang <tiozhang@didiglobal.com>
+Signed-off-by: Dylane Chen <dylanechen@didiglobal.com>
+---
+ include/trace/events/sched.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index dbb01b4b7451..ea7e525649e5 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -149,6 +149,7 @@ DECLARE_EVENT_CLASS(sched_wakeup_template,
+ 		__field(	pid_t,	pid			)
+ 		__field(	int,	prio			)
+ 		__field(	int,	target_cpu		)
++		__field(	pid_t,	tgid			)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -156,11 +157,12 @@ DECLARE_EVENT_CLASS(sched_wakeup_template,
+ 		__entry->pid		= p->pid;
+ 		__entry->prio		= p->prio; /* XXX SCHED_DEADLINE */
+ 		__entry->target_cpu	= task_cpu(p);
++		__entry->tgid		= p->tgid;
+ 	),
+ 
+-	TP_printk("comm=%s pid=%d prio=%d target_cpu=%03d",
++	TP_printk("comm=%s pid=%d prio=%d target_cpu=%03d tgid=%d",
+ 		  __entry->comm, __entry->pid, __entry->prio,
+-		  __entry->target_cpu)
++		  __entry->target_cpu, __entry->tgid)
+ );
+ 
+ /*
+-- 
+2.17.1
 
-Just some nits:
-
-> @@ -1314,10 +1349,10 @@ static inline void expand(struct zone *zone, struct page *page,
->  		 * Corresponding page table entries will not be touched,
->  		 * pages will stay not present in virtual address space
->  		 */
-> -		if (set_page_guard(zone, &page[size], high, migratetype))
-> +		if (set_page_guard(zone, &page[size], high))
->  			continue;
->  
-> -		add_to_free_list(&page[size], zone, high, migratetype);
-> +		add_to_free_list(&page[size], zone, high, migratetype, false);
-
-This is account_freepages() in the hot loop, what if we instead used
-__add_to_free_list(), sum up nr_pages and called account_freepages() once
-outside of the loop?
-
->  		set_buddy_order(&page[size], high);
->  	}
->  }
-
-<snip>
-
-> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-> index 042937d5abe4..914a71c580d8 100644
-> --- a/mm/page_isolation.c
-> +++ b/mm/page_isolation.c
-> @@ -252,7 +252,8 @@ static void unset_migratetype_isolate(struct page *page, int migratetype)
->  		 * Isolating this block already succeeded, so this
->  		 * should not fail on zone boundaries.
->  		 */
-> -		WARN_ON_ONCE(!move_freepages_block_isolate(zone, page, migratetype));
-> +		WARN_ON_ONCE(!move_freepages_block_isolate(zone, page,
-> +							   migratetype));
->  	} else {
->  		set_pageblock_migratetype(page, migratetype);
->  		__putback_isolated_page(page, order, migratetype);
-
-Looks like a drive-by edit of an extra file just to adjust identation.
