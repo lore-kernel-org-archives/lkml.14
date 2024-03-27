@@ -1,160 +1,136 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D7B12C552;
-	Wed, 27 Mar 2024 16:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC621304BF;
+	Wed, 27 Mar 2024 16:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711555672; cv=none; b=eghX7mgOmk4+X1rtVv8jn9724T3XdOFGfrnyhS9+KaILVV4XfSsCYGv52STa5Q0bpDL9cWrD4l3RHPtVbuXMjSRjh4aM1kYA8g/Lhh8qBW6K7N92SDFnk10PQDWTm4Gz1v7KLTM+0gKq5kxKN+XWz62Eb/FCE6EaZBb73QjuKiI=
+	t=1711555696; cv=none; b=ONW3PCo4s0dU3tHUAdfomWb0JCcBcRZ0+zygFH0rm8T36Bd2+chexIGTVtzaTdCHDgYhZEpJbioW+2mniosn8EjOWk1xsMr0ncaDPMfCFrGl/FWbZoGELKHsx1x7Z3dPN0t4nanrqQOTFQlzFez1XXk+aNguruJXjTBOwFoNej0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711555672; c=relaxed/simple;
-	bh=qd8XkIwmxLisWezHTIfyREA/lnHyigma5+JJYJQKENI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jMQ8YfQMZ/NpFi2VWWmS7kocVOiyZ9Y5bqepGGqKTldL7S7mkUmhHTvBDm5VaMD2bO+3VyVveFuIyHK9ObYsQMBV5eK2rrMbvOEUeakzr/X5sfh5bXcvw5eGhs4cyWGi8qRj6HrwhQaYW3D5TjDkOMlPp3To2IBoij8dJAj4v8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RvW5xy9N; arc=none smtp.client-ip=209.85.128.44
+	s=arc-20240116; t=1711555696; c=relaxed/simple;
+	bh=3J9oWvkrDOBZNCeoIPGbHWUfU8diyk8bQx/Xctp+3Nc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gtku04tLxaURe3ES8LVeEqMq0YNRlkgNjSXpU6fdACvJAMgq87QA+xg0RODaL37UxSVtGsCTLZXFgbAYZu8h6ouOH/evCVLSdy+eA2JYM45POYZLOmyKnfuQSMSleeeWvqyHFr4K7D047oofDUWfH2NjrRhbKTcjvCD53SoirCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mKSzsCIZ; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RvW5xy9N"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-41493e0fbf2so6148495e9.1;
-        Wed, 27 Mar 2024 09:07:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mKSzsCIZ"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-41488e17e1cso21199705e9.0;
+        Wed, 27 Mar 2024 09:08:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711555668; x=1712160468; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1aoTSdMd/YSVHtvQI+80zrqseLyOiRVNHBsZL+C3hws=;
-        b=RvW5xy9NC8Vd+SXtveFS5UO2zwpzrbBPqenj5P0PgIEIiMWYXpYaUED8mTVhTKS0Tv
-         TR4g56/6UgyVHR+DrQs06hHd0+WrJ227wC330BhkuBXGVVapwUEPfe4NFbkAiHC/HH9B
-         9prXYrEGGlv98eCuwOU95W7eLRhy9R4jezsCUSMFTenJo61kIEoP2GkYNwQWmi6oB9eO
-         yQpoigzKA5ddnfC8nOP9RtZJEbhYBcQl6x02/Kzg1OtSjOzf03LSHn+JLs1vjtKXqQjQ
-         97gMZEaj9p1Tt13U+nlU8AeszjLBZD9KtLmovnvcijBmeO7NjOXbBjx6JkmSTqfDuefL
-         0KqQ==
+        d=gmail.com; s=20230601; t=1711555693; x=1712160493; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bT1raRNJeqKOym+LNB+gUSk7/A9iCImFlQwqZliyRIw=;
+        b=mKSzsCIZZtW75FS1vxMQMnzNYam+rlgiCui/9nrqtWsFNcWbKwJ4T4NHg3YwoqYyhV
+         Xo/JB/VXjoWqdKx065hiUeYiFBUauncK/+kB0H/ZYG6AnD/v6x+MhnFSjhJxmWf6fX4B
+         hJUft4lQMUd5f45yL8XHNBlZPw759KzuGQOvyCJOx28xZ3v7e6kGZqQ5miHuWFJzbmZE
+         7C9hiaRhx01DiDm6cT0oaTqHTlegbZWEpT97z8Jd6TjCwqWFydtZNtUZXYXJXc2YIx9T
+         i0WB8dEmQWZhZlbWblKSzxJOVe8ehztdwNc2stXMCjVDDsg7ZGQnNIX++H7vXE1hBlGu
+         Po0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711555668; x=1712160468;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1aoTSdMd/YSVHtvQI+80zrqseLyOiRVNHBsZL+C3hws=;
-        b=USIb7sb4u0BJtBhMPZLrxzhWNYIarFr7FdspwGcRd7ZQSS6sEdYT56Nr8zmMLrggKI
-         mVLk2hPlGz3AxPjEdeZc9B6tqdLiy0kWWlQtHiRg/aRF1JdpXdggHcMJlYodtqGLgm44
-         6ykPskbBHuivYka3XAcgZDW6nJOEnOw2ZMj+C3pSx9AA01ueQ+OVF1cOecrpUhxGc1g3
-         OhNJmmL7R8FMR/cmPmdneDNClDRiwiPWMJt6xgcseg7KvzrQOwykJk4QGdFa92rxhzBL
-         +fUFsRoCHDkenDE3JAUOiai/t3f4Fw0qdft9NfUhVt65O42tMqFTmKxRZLHCUaLcbCiB
-         mxoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUrdVkIsAVf4XoBPKUDzUW4QrWsA9hMYDBRiI0pF6yZ7GitHZW7o1e3wTGsC1cJsOWKU6S45v7p9ZpbI/qg6D02CLpmHtlSvS+hMTqJxLVKiNI+FGoJ5v5gwbl3wC4G+KUbAdSw/MUieynDhnyDdtXMjl9jIO1R805Z6NfFgKrL9qp5NP8NKKwh
-X-Gm-Message-State: AOJu0YxTe3Rup9plxdlWsvSEBXB1Ky1YFFUe3Ey75Ob7Pspf8g6eStbB
-	5CaytFRjNS5IJCAXN+NyIMUm/vUu4R0732YFhBKAX2uUErI0B5BOSuSM6GyMU7wlJsYtlbZVp0y
-	JDdTHe4Bjuep3f7JjkVzYPwKQFZw=
-X-Google-Smtp-Source: AGHT+IH7/Jqj90OxYt8pWZTIjiz20FfICzxEflsOFI82rOwXB5yBQWTi+VkGbyeoop7QhohLovTBy7V1DlPYZuwJH3E=
-X-Received: by 2002:a05:600c:1c01:b0:413:ff06:83cd with SMTP id
- j1-20020a05600c1c0100b00413ff0683cdmr344618wms.3.1711555668321; Wed, 27 Mar
- 2024 09:07:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711555693; x=1712160493;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bT1raRNJeqKOym+LNB+gUSk7/A9iCImFlQwqZliyRIw=;
+        b=uugbDCqBAjG4ZlpsoN6S9IusOxSkv1fiRdyF1GJEzXyh+0EoeO/Cvci1goxsROiXMz
+         UkNWPXEELc24NZkynF2YDv6RJEL59pycupkoJ4uam8qiHadxhTv3ovdBNRONlPFGhLok
+         sZ2W2zQTVph0P3pD+VW0F06At8Rk8PuoDBn+3r59Gen1nGWB4yCfroWCy2KURUAY2yvX
+         3Ra/vNA8bBZMjFKNqnbgnr2SPnOOwMk08np4xQMl/cNZOInS03HfyFbg5tT4N+Gakyte
+         HLRNUB3y1GK1ewMAbn9lRrM3d82pUErwjVXy4GDbceVacH8tQ+R1w6CAtvM3WFQX4Wxl
+         pN8g==
+X-Forwarded-Encrypted: i=1; AJvYcCW6nJaDCqWvcDTkwQ49mPUDFj3wuXF4gs7q9R15/sHfjjYSYdBgXC8XuvuWSROnq7PIfanuTDb08aQNJXKV+Lvdt88sR7NKeiKDBooKnf8cdJ4CrH7tkGbfT3XyqBUQVFwHV2EifdEqU2qBAQ==
+X-Gm-Message-State: AOJu0Yzzr0vcbQKMSfRV7Bj5xVR+pXQb/Q/liFm2n5N55r+bg5AiMhwi
+	WPirPda+96LS8+WHWb5RcV1W/3PsHdkj/yQWZWymIjtnmf/SqEZE
+X-Google-Smtp-Source: AGHT+IEXvy4Ta0nK+BLZfesQlwIb3cRLvbmhAGKfIRDppfcPcRXyU4g++og2mjweWhcQCI94BM3PQw==
+X-Received: by 2002:adf:fd81:0:b0:341:b47f:e45a with SMTP id d1-20020adffd81000000b00341b47fe45amr225786wrr.50.1711555692968;
+        Wed, 27 Mar 2024 09:08:12 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:181:90d0:6ce1:d6aa:6a23:353b? ([2a01:e0a:181:90d0:6ce1:d6aa:6a23:353b])
+        by smtp.gmail.com with ESMTPSA id y6-20020a5d4ac6000000b0033ec8739918sm15212344wrs.41.2024.03.27.09.08.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Mar 2024 09:08:12 -0700 (PDT)
+Message-ID: <9f2ec032-20bd-46d0-959c-deeb9a3503ac@gmail.com>
+Date: Wed, 27 Mar 2024 17:08:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240327085330.3281697-1-peteryin.openbmc@gmail.com>
- <20240327085330.3281697-5-peteryin.openbmc@gmail.com> <f0b03c0b-eb54-420e-a4f7-8286e20b9df6@roeck-us.net>
-In-Reply-To: <f0b03c0b-eb54-420e-a4f7-8286e20b9df6@roeck-us.net>
-From: Chia Hsing Yin <peteryin.openbmc@gmail.com>
-Date: Thu, 28 Mar 2024 00:07:37 +0800
-Message-ID: <CAPSyxFQ8Dpks6c17XpF-fw9ppgoKfYfvYADvqVw2PYHNFptWTQ@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] drivers: watchdog: ast2500 and ast2600 support bootstatus
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: patrick@stwcx.xyz, Wim Van Sebroeck <wim@linux-watchdog.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
-	linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFT 00/15] tty: serial: switch from circ_buf to kfifo
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>, linux-serial@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Al Cooper <alcooperx@gmail.com>,
+ Alexander Shiyan <shc_work@mail.ru>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>, Baruch Siach
+ <baruch@tkos.co.il>, Bjorn Andersson <andersson@kernel.org>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ "David S. Miller" <davem@davemloft.net>, Fabio Estevam <festevam@gmail.com>,
+ Hammer Hsieh <hammerh0314@gmail.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Chunyan Zhang <zhang.lyra@gmail.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>, Kevin Hilman <khilman@baylibre.com>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
+ Laxman Dewangan <ldewangan@nvidia.com>,
+ linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+ "Maciej W. Rozycki" <macro@orcam.me.uk>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <michal.simek@amd.com>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Nicholas Piggin <npiggin@gmail.com>, Orson Zhai <orsonzhai@gmail.com>,
+ =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+ Patrice Chotard <patrice.chotard@foss.st.com>,
+ Peter Korsgaard <jacmet@sunsite.dk>,
+ Richard Genoud <richard.genoud@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Shawn Guo <shawnguo@kernel.org>, Stefani Seibold <stefani@seibold.net>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ Taichi Sugaya <sugaya.taichi@socionext.com>,
+ Takao Orito <orito.takao@socionext.com>,
+ Tharun Kumar P <tharunkumar.pasumarthi@microchip.com>,
+ Thierry Reding <thierry.reding@gmail.com>, Timur Tabi <timur@kernel.org>,
+ Vineet Gupta <vgupta@kernel.org>
+References: <20240319095315.27624-1-jirislaby@kernel.org>
+From: Richard Genoud <richard.genoud@gmail.com>
+Content-Language: fr-FR
+In-Reply-To: <20240319095315.27624-1-jirislaby@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 27, 2024 at 11:47=E2=80=AFPM Guenter Roeck <linux@roeck-us.net>=
- wrote:
->
-> On 3/27/24 01:53, Peter Yin wrote:
-> > Add WDIOF_EXTERN1 and WDIOF_CARDRESET bootstatus in ast2600
-> >
-> > Regarding the AST2600 specification, the WDTn Timeout Status Register
-> > (WDT10) has bit 1 reserved. Bit 1 of the status register indicates
-> > on ast2500 if the boot was from the second boot source.
-> > It does not indicate that the most recent reset was triggered by
-> > the watchdog. The code should just be changed to set WDIOF_CARDRESET
-> > if bit 0 of the status register is set.
-> >
-> > Include SCU register to veriy WDIOF_EXTERN1 in ast2600 SCU74 or
-> > ast2500 SCU3C when bit1 is set.
-> >
-> > Signed-off-by: Peter Yin <peteryin.openbmc@gmail.com>
-> > ---
-> >   drivers/watchdog/aspeed_wdt.c | 60 +++++++++++++++++++++++++---------=
--
-> >   1 file changed, 44 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wd=
-t.c
-> > index b4773a6aaf8c..29e9afdee619 100644
-> > --- a/drivers/watchdog/aspeed_wdt.c
-> > +++ b/drivers/watchdog/aspeed_wdt.c
-> > @@ -11,10 +11,12 @@
-> >   #include <linux/io.h>
-> >   #include <linux/kernel.h>
-> >   #include <linux/kstrtox.h>
-> > +#include <linux/mfd/syscon.h>
-> >   #include <linux/module.h>
-> >   #include <linux/of.h>
-> >   #include <linux/of_irq.h>
-> >   #include <linux/platform_device.h>
-> > +#include <linux/regmap.h>
-> >   #include <linux/watchdog.h>
-> >
-> >   static bool nowayout =3D WATCHDOG_NOWAYOUT;
-> > @@ -65,23 +67,32 @@ MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
-> >   #define WDT_RELOAD_VALUE    0x04
-> >   #define WDT_RESTART         0x08
-> >   #define WDT_CTRL            0x0C
-> > -#define   WDT_CTRL_BOOT_SECONDARY    BIT(7)
-> > -#define   WDT_CTRL_RESET_MODE_SOC    (0x00 << 5)
-> > -#define   WDT_CTRL_RESET_MODE_FULL_CHIP      (0x01 << 5)
-> > -#define   WDT_CTRL_RESET_MODE_ARM_CPU        (0x10 << 5)
-> > -#define   WDT_CTRL_1MHZ_CLK          BIT(4)
-> > -#define   WDT_CTRL_WDT_EXT           BIT(3)
-> > -#define   WDT_CTRL_WDT_INTR          BIT(2)
-> > -#define   WDT_CTRL_RESET_SYSTEM              BIT(1)
-> > -#define   WDT_CTRL_ENABLE            BIT(0)
-> > +#define WDT_CTRL_BOOT_SECONDARY      BIT(7)
-> > +#define WDT_CTRL_RESET_MODE_SOC      (0x00 << 5)
-> > +#define WDT_CTRL_RESET_MODE_FULL_CHIP        (0x01 << 5)
-> > +#define WDT_CTRL_RESET_MODE_ARM_CPU  (0x10 << 5)
-> > +#define WDT_CTRL_1MHZ_CLK            BIT(4)
-> > +#define WDT_CTRL_WDT_EXT             BIT(3)
-> > +#define WDT_CTRL_WDT_INTR            BIT(2)
-> > +#define WDT_CTRL_RESET_SYSTEM                BIT(1)
-> > +#define WDT_CTRL_ENABLE              BIT(0)
-> >   #define WDT_TIMEOUT_STATUS  0x10
-> > -#define   WDT_TIMEOUT_STATUS_IRQ             BIT(2)
-> > -#define   WDT_TIMEOUT_STATUS_BOOT_SECONDARY  BIT(1)
-> > +#define WDT_TIMEOUT_STATUS_IRQ               BIT(2)
-> > +#define WDT_TIMEOUT_STATUS_BOOT_SECONDARY    BIT(1)
-> > +#define WDT_TIMEOUT_STATUS_EVENT             BIT(0)
-> >   #define WDT_CLEAR_TIMEOUT_STATUS    0x14
-> > -#define   WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION  BIT(0)
-> > +#define WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION    BIT(0)
-> >   #define WDT_RESET_MASK1             0x1c
-> >   #define WDT_RESET_MASK2             0x20
-> >
->
-> The above bit value defines were indented to show what is
-> registers and what is register bit values. Why are you
-> changing that other than for personal preference ?
->
-> Guenter
->
-Oh! I'm sorry, I didn't realize this was a rule. I thought it was just
-an alignment issue. I will revert it in the next version. Thank you
-for explaining.
+Le 19/03/2024 à 10:52, Jiri Slaby (SUSE) a écrit :
+> This series switches tty serial layer to use kfifo instead of circ_buf.
+> Excerpt from the switching patch:
+> """
+> Switch from struct circ_buf to proper kfifo. kfifo provides much better
+> API, esp. when wrap-around of the buffer needs to be taken into account.
+> Look at pl011_dma_tx_refill() or cpm_uart_tx_pump() changes for example.
+> 
+> Kfifo API can also fill in scatter-gather DMA structures, so it easier
+> for that use case too. Look at lpuart_dma_tx() for example. Note that
+> not all drivers can be converted to that (like atmel_serial), they
+> handle DMA specially.
+> 
+> Note that usb-serial uses kfifo for TX for ages.
+> """
+> 
+> This is Request for Testing as I cannot test all the changes
+> (obviously). So please test your HW's serial properly.
+
+Tested-by: Richard Genoud <richard.genoud@gmail.com> # on at91sam9g20-ek sama5d3_xplained and sama5d2_xplained
