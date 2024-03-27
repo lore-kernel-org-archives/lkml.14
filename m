@@ -1,260 +1,316 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0FF137764
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 17:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7197E12FB3E;
+	Wed, 27 Mar 2024 17:27:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711560397; cv=none; b=CfTCFFnkwoZiYd7kHrFYQHO8NPMcmu2TBmNnWka7Hdixulryo/LeUMIWsKQL4MiEdll+D2Cs/qyWtbM3yHRiWDiWLZiiERfht6wi/syGMo7OfOsLAxRJXH6cHYZVTMrnWD3fdPrZxr28bIn6cXkV0Kn8ILP6L68Pb6Vq5AEm2eQ=
+	t=1711560466; cv=none; b=b4AvYmV5NUcvsylrZSosdbtxol+ku+VAeQVsgsnjaupt7SL8ZSCBb1W08aGWnvycLEyGG/emnqV90PDVv34R0GaQ2Zijegn3yRzeDXz08byObPlPdODDW4AmSxzXT/lYWrn1ayAZSpH8o100DwLaUn6Q7RnBINr8RugPhElp2JI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711560397; c=relaxed/simple;
-	bh=KO68VCsBjC7YXYAlyG5RlT0YZwWtlqL82EO6khY7yOQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=nVSy6CX/0E7o7f1VxmqqCpk4bK02w9I0sSEOAwIIw8OJbHjobPraIxk2dpxDgThQYGDJVECznzTReXF4Z7tmdliuldARAiogJmBgG4aAJkPk2htZg/FMMPIxw0D0V0If5XjnBHIvEpG0ePvqTeDHlt1Ye648jiI1GHvNdgL2JI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JKQcH3Li; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711560466; c=relaxed/simple;
+	bh=xq4tevDffl124Rs0SAZHCv/vVKGMDoRQlDy6HZvW3zk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RVBAQquHCYnVtn0iBjUvkwAVEsDWsGhfzH88wIVjnZgAajlQ+NbW/7hSqbGPncIiGky9JJ/jUdmHnPeYq8Qq5oJvCEdU0jCT+FaE4grG4H9HYcuW7uKW0w3xQdgXITjZ9GqdT/lF0i656MSTH3g5CrgUdPjaPvkOhE2YfqODGIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aTBl3vHx; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JKQcH3Li"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711560394;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=/EOUB4d8qVh5umKC4okNLh+AeZuN4LrBRasgfUriSZs=;
-	b=JKQcH3Li4Usdw0S0YcsOMz4HNs0HDMgb3b1nSA7080PdF6qkGJ7h4bFbsLE2rRVGzhx7qj
-	XrNhyus8sFRkK8kJ244R10UVx+hBzUhPHKpLGrI2xC+dXWDmld+zDNgp0/DBPCrlBIWSVC
-	3wWNxasLTy3dmYTOVucrluq71fP64Ic=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-499-_LHhGj7NNhGuhFQVxTb_wA-1; Wed, 27 Mar 2024 13:26:32 -0400
-X-MC-Unique: _LHhGj7NNhGuhFQVxTb_wA-1
-Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2d491456df2so5634161fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 10:26:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711560391; x=1712165191;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/EOUB4d8qVh5umKC4okNLh+AeZuN4LrBRasgfUriSZs=;
-        b=C8wGC6VO3r8mrCZH6H4+/SD6C8FpO0OtRirEy7KK4hf2wzKW8jjoHPem65JMiVbyUx
-         mFVeGtZ18ib/U867a6TVn+O6WDldkQrv2XE/dHWndKqZkM/H+8Fi6aV0UW2/f2TeF2rt
-         HF4kM9O1+hi0++FVt1BfH0hnxxWTfpaDxS3A0DbKvchrDze7ca0TrWNynZQ0sAQLFp5q
-         bCLcTs4WhhI06Wlm8oiufs+aXx2DYx8HJBcJ7f2fcSK0ClLai5+mQWtGvReQ1Tr4/ahc
-         Rw2/0lwLu3+IE7wThvsh3PeyvtewpI7LOM1drKozUZZ3GjqkVmrgx+1vIEapUnFH0IFb
-         FSCA==
-X-Gm-Message-State: AOJu0YyIVT1RSqy3+EqFnfWkwo0jydx6H27jHrpd0vgBV2T2Vb4XaMPu
-	xDwb2Y0A6kMprdbeHbuwXquN1XnyJYlds3TLqYbTcMNeZ3GoXtsxtNYRTvxHi613dZdDzflXFT6
-	XDIMjSnnttHUYPZDiqbA6hzCaLQ9nKTr8EMvqEqrgrpkQQ3mhPlkONaUPKAlxyF6OfxFX0sjZXm
-	XKB2X42Nq4upAjTRbf2HtNUgN60pseKAt2c8nYOns=
-X-Received: by 2002:a19:ca4b:0:b0:513:e69a:a1ff with SMTP id h11-20020a19ca4b000000b00513e69aa1ffmr72104lfj.33.1711560390621;
-        Wed, 27 Mar 2024 10:26:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFsrrH9Se2ailCE8t/vJCFLbo93g75ddmuCiDF++8BsJ7zx/RU+W9ujlWe6Cep9MzUutd5uVA==
-X-Received: by 2002:a19:ca4b:0:b0:513:e69a:a1ff with SMTP id h11-20020a19ca4b000000b00513e69aa1ffmr72081lfj.33.1711560389862;
-        Wed, 27 Mar 2024 10:26:29 -0700 (PDT)
-Received: from redhat.com ([2.52.20.36])
-        by smtp.gmail.com with ESMTPSA id e5-20020a196905000000b00515904f7ba3sm1947672lfc.198.2024.03.27.10.26.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 10:26:29 -0700 (PDT)
-Date: Wed, 27 Mar 2024 13:26:23 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org, Gavin Shan <gshan@redhat.com>,
-	Will Deacon <will@kernel.org>, Jason Wang <jasowang@redhat.com>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>, kvm@vger.kernel.org,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org
-Subject: [PATCH untested] vhost: order avail ring reads after index updates
-Message-ID: <f7be6f4ed4bc5405e9a6b848e5ac3dd1f9955c2a.1711560268.git.mst@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aTBl3vHx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711560465; x=1743096465;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=xq4tevDffl124Rs0SAZHCv/vVKGMDoRQlDy6HZvW3zk=;
+  b=aTBl3vHxEhYtt+5IgZ8tQDyZq4SZlFZqlphwAYmHjfl2PVWN1fbkIlD0
+   HFYH07iJiKqn9nvp6W7Hb5vKQXBs+UYuBwEqfOA4PkAv1PJK5NLQsOrvN
+   LCgLN5VolMSzjbnXEJGrT3XWsvm7hBVxdTfi+J1KImNq6YkNGUARLCCu/
+   555kn/Sy3IxnA6sePIjxeokbNeBy7ihVo7n5mpG/M4aP0HOZfUBotZH54
+   Al7Xv0HhLiXLHhdtRBxGIrISoWjeLNb8WEq1K1Z1BiiR+6SuvE3H3OSAC
+   RUC2VSeKxHf2XGjK3fJEwEPgN9/Mv1j5BT2IDp6iTa630/2DYlWSFRusq
+   A==;
+X-CSE-ConnectionGUID: wpXd1wosRnG4cypRbuUULw==
+X-CSE-MsgGUID: S+Tg85n7SqiNIfhGmfJIDg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="9640692"
+X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
+   d="scan'208";a="9640692"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 10:27:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,159,1708416000"; 
+   d="scan'208";a="16287061"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.56.222]) ([10.212.56.222])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 10:27:43 -0700
+Message-ID: <dde02c34-fcf3-4adc-8920-7fd7fe202d54@intel.com>
+Date: Wed, 27 Mar 2024 10:27:42 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
-X-Mutt-Fcc: =sent
-
-vhost_get_vq_desc (correctly) uses smp_rmb to order
-avail ring reads after index reads.
-However, over time we added two more places that read the
-index and do not bother with barriers.
-Since vhost_get_vq_desc when it was written assumed it is the
-only reader when it sees a new index value is cached
-it does not bother with a barrier either, as a result,
-on the nvidia-gracehopper platform (arm64) available ring
-entry reads have been observed bypassing ring reads, causing
-a ring corruption.
-
-To fix, factor out the correct index access code from vhost_get_vq_desc.
-As a side benefit, we also validate the index on all paths now, which
-will hopefully help catch future errors earlier.
-
-Note: current code is inconsistent in how it handles errors:
-some places treat it as an empty ring, others - non empty.
-This patch does not attempt to change the existing behaviour.
-
-Cc: stable@vger.kernel.org
-Reported-by: Gavin Shan <gshan@redhat.com>
-Reported-by: Will Deacon <will@kernel.org>
-Suggested-by: Will Deacon <will@kernel.org>
-Fixes: 275bf960ac69 ("vhost: better detection of available buffers")
-Cc: "Jason Wang" <jasowang@redhat.com>
-Fixes: d3bb267bbdcb ("vhost: cache avail index in vhost_enable_notify()")
-Cc: "Stefano Garzarella" <sgarzare@redhat.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
----
-
-I think it's better to bite the bullet and clean up the code.
-Note: this is still only built, not tested.
-Gavin could you help test please?
-Especially on the arm platform you have?
-
-Will thanks so much for finding this race!
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 09/26] cxl/region: Add Dynamic Capacity CXL region support
+Content-Language: en-US
+To: ira.weiny@intel.com, Fan Ni <fan.ni@samsung.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Navneet Singh <navneet.singh@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, linux-btrfs@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+ <20240324-dcd-type2-upstream-v1-9-b7b00d623625@intel.com>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240324-dcd-type2-upstream-v1-9-b7b00d623625@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
- drivers/vhost/vhost.c | 80 +++++++++++++++++++++++--------------------
- 1 file changed, 42 insertions(+), 38 deletions(-)
 
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index 045f666b4f12..26b70b1fd9ff 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -1290,10 +1290,38 @@ static void vhost_dev_unlock_vqs(struct vhost_dev *d)
- 		mutex_unlock(&d->vqs[i]->mutex);
- }
- 
--static inline int vhost_get_avail_idx(struct vhost_virtqueue *vq,
--				      __virtio16 *idx)
-+static inline int vhost_get_avail_idx(struct vhost_virtqueue *vq)
- {
--	return vhost_get_avail(vq, *idx, &vq->avail->idx);
-+	__virtio16 idx;
-+	u16 avail_idx;
-+	int r = vhost_get_avail(vq, idx, &vq->avail->idx);
-+
-+	if (unlikely(r < 0)) {
-+		vq_err(vq, "Failed to access avail idx at %p: %d\n",
-+		       &vq->avail->idx, r);
-+		return -EFAULT;
-+	}
-+
-+	avail_idx = vhost16_to_cpu(vq, idx);
-+
-+	/* Check it isn't doing very strange things with descriptor numbers. */
-+	if (unlikely((u16)(avail_idx - vq->last_avail_idx) > vq->num)) {
-+		vq_err(vq, "Guest moved used index from %u to %u",
-+		       vq->last_avail_idx, vq->avail_idx);
-+		return -EFAULT;
-+	}
-+
-+	/* Nothing new? We are done. */
-+	if (avail_idx == vq->avail_idx)
-+		return 0;
-+
-+	vq->avail_idx = avail_idx;
-+
-+	/* We updated vq->avail_idx so we need a memory barrier between
-+	 * the index read above and the caller reading avail ring entries.
-+	 */
-+	smp_rmb();
-+	return 1;
- }
- 
- static inline int vhost_get_avail_head(struct vhost_virtqueue *vq,
-@@ -2498,38 +2526,21 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
- {
- 	struct vring_desc desc;
- 	unsigned int i, head, found = 0;
--	u16 last_avail_idx;
--	__virtio16 avail_idx;
-+	u16 last_avail_idx = vq->last_avail_idx;
- 	__virtio16 ring_head;
- 	int ret, access;
- 
--	/* Check it isn't doing very strange things with descriptor numbers. */
--	last_avail_idx = vq->last_avail_idx;
- 
- 	if (vq->avail_idx == vq->last_avail_idx) {
--		if (unlikely(vhost_get_avail_idx(vq, &avail_idx))) {
--			vq_err(vq, "Failed to access avail idx at %p\n",
--				&vq->avail->idx);
--			return -EFAULT;
--		}
--		vq->avail_idx = vhost16_to_cpu(vq, avail_idx);
--
--		if (unlikely((u16)(vq->avail_idx - last_avail_idx) > vq->num)) {
--			vq_err(vq, "Guest moved used index from %u to %u",
--				last_avail_idx, vq->avail_idx);
--			return -EFAULT;
--		}
-+		ret = vhost_get_avail_idx(vq);
-+		if (unlikely(ret < 0))
-+			return ret;
- 
- 		/* If there's nothing new since last we looked, return
- 		 * invalid.
- 		 */
--		if (vq->avail_idx == last_avail_idx)
-+		if (!ret)
- 			return vq->num;
--
--		/* Only get avail ring entries after they have been
--		 * exposed by guest.
--		 */
--		smp_rmb();
- 	}
- 
- 	/* Grab the next descriptor number they're advertising, and increment
-@@ -2790,25 +2801,21 @@ EXPORT_SYMBOL_GPL(vhost_add_used_and_signal_n);
- /* return true if we're sure that avaiable ring is empty */
- bool vhost_vq_avail_empty(struct vhost_dev *dev, struct vhost_virtqueue *vq)
- {
--	__virtio16 avail_idx;
- 	int r;
- 
- 	if (vq->avail_idx != vq->last_avail_idx)
- 		return false;
- 
--	r = vhost_get_avail_idx(vq, &avail_idx);
--	if (unlikely(r))
--		return false;
--	vq->avail_idx = vhost16_to_cpu(vq, avail_idx);
-+	r = vhost_get_avail_idx(vq);
- 
--	return vq->avail_idx == vq->last_avail_idx;
-+	/* Note: we treat error as non-empty here */
-+	return r == 0;
- }
- EXPORT_SYMBOL_GPL(vhost_vq_avail_empty);
- 
- /* OK, now we need to know about added descriptors. */
- bool vhost_enable_notify(struct vhost_dev *dev, struct vhost_virtqueue *vq)
- {
--	__virtio16 avail_idx;
- 	int r;
- 
- 	if (!(vq->used_flags & VRING_USED_F_NO_NOTIFY))
-@@ -2832,13 +2839,10 @@ bool vhost_enable_notify(struct vhost_dev *dev, struct vhost_virtqueue *vq)
- 	/* They could have slipped one in as we were doing that: make
- 	 * sure it's written, then check again. */
- 	smp_mb();
--	r = vhost_get_avail_idx(vq, &avail_idx);
--	if (r) {
--		vq_err(vq, "Failed to check avail idx at %p: %d\n",
--		       &vq->avail->idx, r);
-+	r = vhost_get_avail_idx(vq);
-+	/* Note: we treat error as empty here */
-+	if (r < 0)
- 		return false;
--	}
--	vq->avail_idx = vhost16_to_cpu(vq, avail_idx);
- 
- 	return vq->avail_idx != vq->last_avail_idx;
- }
--- 
-MST
+On 3/24/24 4:18 PM, ira.weiny@intel.com wrote:
+> From: Navneet Singh <navneet.singh@intel.com>
+> 
+> CXL devices optionally support dynamic capacity.  CXL Regions must be
+> configured correctly to access this capacity.  Similar to ram and pmem
+> partitions, DC Regions, as they are called in CXL 3.1, represent
+> different partitions of the DPA space.
+> 
+> Introduce the concept of a sparse DAX region.  Add the create_dc_region
+> sysfs entry to create sparse DC DAX regions.  Special case DC capable
+> regions to create a 0 sized seed DAX device to maintain backwards
+> compatibility with older software which needs a default DAX device to
+> hold the region reference.
+> 
+> Flag sparse DAX regions to indicate 0 capacity available until such time
+> as DC capacity is added.
+> 
+> Interleaving is deferred in this series.  Add an early check.
+> 
+> Signed-off-by: Navneet Singh <navneet.singh@intel.com>
+> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> ---
+> Changes for v1:
+> [djiang: mark sysfs entries to be in 6.10 kernel including date]
+> [djbw: change dax region typing to be 'sparse' rather than 'dynamic']
+> [iweiny: rebase changes to master instead of type2 patches]
+> ---
+>  Documentation/ABI/testing/sysfs-bus-cxl | 22 +++++++++++-----------
+>  drivers/cxl/core/core.h                 |  1 +
+>  drivers/cxl/core/port.c                 |  1 +
+>  drivers/cxl/core/region.c               | 33 +++++++++++++++++++++++++++++++++
+>  drivers/dax/bus.c                       |  8 ++++++++
+>  drivers/dax/bus.h                       |  1 +
+>  drivers/dax/cxl.c                       | 15 +++++++++++++--
+>  7 files changed, 68 insertions(+), 13 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index 8a4f572c8498..f0cf52fff9fa 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -411,20 +411,20 @@ Description:
+>  		interleave_granularity).
+>  
+>  
+> -What:		/sys/bus/cxl/devices/decoderX.Y/create_{pmem,ram}_region
+> -Date:		May, 2022, January, 2023
+> -KernelVersion:	v6.0 (pmem), v6.3 (ram)
+> +What:		/sys/bus/cxl/devices/decoderX.Y/create_{pmem,ram,dc}_region
+> +Date:		May, 2022, January, 2023, June 2024
+> +KernelVersion:	v6.0 (pmem), v6.3 (ram), v6.10 (dc)
+>  Contact:	linux-cxl@vger.kernel.org
+>  Description:
+>  		(RW) Write a string in the form 'regionZ' to start the process
+> -		of defining a new persistent, or volatile memory region
+> -		(interleave-set) within the decode range bounded by root decoder
+> -		'decoderX.Y'. The value written must match the current value
+> -		returned from reading this attribute. An atomic compare exchange
+> -		operation is done on write to assign the requested id to a
+> -		region and allocate the region-id for the next creation attempt.
+> -		EBUSY is returned if the region name written does not match the
+> -		current cached value.
+> +		of defining a new persistent, volatile, or Dynamic Capacity
+> +		(DC) memory region (interleave-set) within the decode range
+> +		bounded by root decoder 'decoderX.Y'. The value written must
+> +		match the current value returned from reading this attribute.
+> +		An atomic compare exchange operation is done on write to assign
+> +		the requested id to a region and allocate the region-id for the
+> +		next creation attempt.  EBUSY is returned if the region name
 
+-EBUSY?
+
+> +		written does not match the current cached value.
+>  
+>  
+>  What:		/sys/bus/cxl/devices/decoderX.Y/delete_region
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index 3b64fb1b9ed0..91abeffbe985 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -13,6 +13,7 @@ extern struct attribute_group cxl_base_attribute_group;
+>  #ifdef CONFIG_CXL_REGION
+>  extern struct device_attribute dev_attr_create_pmem_region;
+>  extern struct device_attribute dev_attr_create_ram_region;
+> +extern struct device_attribute dev_attr_create_dc_region;
+>  extern struct device_attribute dev_attr_delete_region;
+>  extern struct device_attribute dev_attr_region;
+>  extern const struct device_type cxl_pmem_region_type;
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 036b61cb3007..661177b575f7 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -335,6 +335,7 @@ static struct attribute *cxl_decoder_root_attrs[] = {
+>  	&dev_attr_qos_class.attr,
+>  	SET_CXL_REGION_ATTR(create_pmem_region)
+>  	SET_CXL_REGION_ATTR(create_ram_region)
+> +	SET_CXL_REGION_ATTR(create_dc_region)
+>  	SET_CXL_REGION_ATTR(delete_region)
+>  	NULL,
+>  };
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index ec3b8c6948e9..0d7b09a49dcf 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -2205,6 +2205,7 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
+>  	switch (mode) {
+>  	case CXL_REGION_RAM:
+>  	case CXL_REGION_PMEM:
+> +	case CXL_REGION_DC:
+>  		break;
+>  	default:
+>  		dev_err(&cxlrd->cxlsd.cxld.dev, "unsupported mode %s\n",
+> @@ -2314,6 +2315,32 @@ static ssize_t create_ram_region_store(struct device *dev,
+>  }
+>  DEVICE_ATTR_RW(create_ram_region);
+>  
+> +static ssize_t create_dc_region_show(struct device *dev,
+> +				     struct device_attribute *attr, char *buf)
+> +{
+> +	return __create_region_show(to_cxl_root_decoder(dev), buf);
+> +}
+> +
+> +static ssize_t create_dc_region_store(struct device *dev,
+> +				      struct device_attribute *attr,
+> +				      const char *buf, size_t len)
+> +{
+> +	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev);
+> +	struct cxl_region *cxlr;
+> +	int rc, id;
+> +
+> +	rc = sscanf(buf, "region%d\n", &id);
+> +	if (rc != 1)
+> +		return -EINVAL;
+> +
+> +	cxlr = __create_region(cxlrd, CXL_REGION_DC, id);
+> +	if (IS_ERR(cxlr))
+> +		return PTR_ERR(cxlr);
+> +
+> +	return len;
+> +}
+> +DEVICE_ATTR_RW(create_dc_region);
+> +
+>  static ssize_t region_show(struct device *dev, struct device_attribute *attr,
+>  			   char *buf)
+>  {
+> @@ -2759,6 +2786,11 @@ static int devm_cxl_add_dax_region(struct cxl_region *cxlr)
+>  	struct device *dev;
+>  	int rc;
+>  
+> +	if (cxlr->mode == CXL_REGION_DC && cxlr->params.interleave_ways != 1) {
+> +		dev_err(&cxlr->dev, "Interleaving DC not supported\n");
+> +		return -EINVAL;
+> +	}
+> +
+>  	cxlr_dax = cxl_dax_region_alloc(cxlr);
+>  	if (IS_ERR(cxlr_dax))
+>  		return PTR_ERR(cxlr_dax);
+> @@ -3040,6 +3072,7 @@ static int cxl_region_probe(struct device *dev)
+>  	case CXL_REGION_PMEM:
+>  		return devm_cxl_add_pmem_region(cxlr);
+>  	case CXL_REGION_RAM:
+> +	case CXL_REGION_DC:
+>  		/*
+>  		 * The region can not be manged by CXL if any portion of
+>  		 * it is already online as 'System RAM'
+> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+> index cb148f74ceda..903566aff5eb 100644
+> --- a/drivers/dax/bus.c
+> +++ b/drivers/dax/bus.c
+> @@ -181,6 +181,11 @@ static bool is_static(struct dax_region *dax_region)
+>  	return (dax_region->res.flags & IORESOURCE_DAX_STATIC) != 0;
+>  }
+>  
+> +static bool is_sparse(struct dax_region *dax_region)
+> +{
+> +	return (dax_region->res.flags & IORESOURCE_DAX_SPARSE_CAP) != 0;
+> +}
+> +
+>  bool static_dev_dax(struct dev_dax *dev_dax)
+>  {
+>  	return is_static(dev_dax->region);
+> @@ -304,6 +309,9 @@ static unsigned long long dax_region_avail_size(struct dax_region *dax_region)
+>  
+>  	WARN_ON_ONCE(!rwsem_is_locked(&dax_region_rwsem));
+>  
+> +	if (is_sparse(dax_region))
+> +		return 0;
+> +
+>  	for_each_dax_region_resource(dax_region, res)
+>  		size -= resource_size(res);
+>  	return size;
+> diff --git a/drivers/dax/bus.h b/drivers/dax/bus.h
+> index cbbf64443098..783bfeef42cc 100644
+> --- a/drivers/dax/bus.h
+> +++ b/drivers/dax/bus.h
+> @@ -13,6 +13,7 @@ struct dax_region;
+>  /* dax bus specific ioresource flags */
+>  #define IORESOURCE_DAX_STATIC BIT(0)
+>  #define IORESOURCE_DAX_KMEM BIT(1)
+> +#define IORESOURCE_DAX_SPARSE_CAP BIT(2)
+>  
+>  struct dax_region *alloc_dax_region(struct device *parent, int region_id,
+>  		struct range *range, int target_node, unsigned int align,
+> diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
+> index c696837ab23c..415d03fbf9b6 100644
+> --- a/drivers/dax/cxl.c
+> +++ b/drivers/dax/cxl.c
+> @@ -13,19 +13,30 @@ static int cxl_dax_region_probe(struct device *dev)
+>  	struct cxl_region *cxlr = cxlr_dax->cxlr;
+>  	struct dax_region *dax_region;
+>  	struct dev_dax_data data;
+> +	resource_size_t dev_size;
+> +	unsigned long flags;
+>  
+>  	if (nid == NUMA_NO_NODE)
+>  		nid = memory_add_physaddr_to_nid(cxlr_dax->hpa_range.start);
+>  
+> +	flags = IORESOURCE_DAX_KMEM;
+> +	if (cxlr->mode == CXL_REGION_DC)
+> +		flags |= IORESOURCE_DAX_SPARSE_CAP;
+> +
+>  	dax_region = alloc_dax_region(dev, cxlr->id, &cxlr_dax->hpa_range, nid,
+> -				      PMD_SIZE, IORESOURCE_DAX_KMEM);
+> +				      PMD_SIZE, flags);
+>  	if (!dax_region)
+>  		return -ENOMEM;
+>  
+> +	dev_size = range_len(&cxlr_dax->hpa_range);
+> +	/* Add empty seed dax device */
+> +	if (cxlr->mode == CXL_REGION_DC)
+> +		dev_size = 0;
+
+Nit. Just do if/else so dev_size isn't set twice if mode is DC.
+
+> +
+>  	data = (struct dev_dax_data) {
+>  		.dax_region = dax_region,
+>  		.id = -1,
+> -		.size = range_len(&cxlr_dax->hpa_range),
+> +		.size = dev_size,
+>  		.memmap_on_memory = true,
+>  	};
+>  
+> 
