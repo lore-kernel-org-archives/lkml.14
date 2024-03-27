@@ -1,225 +1,623 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB6636119
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 06:38:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D42336103
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 06:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711521486; cv=none; b=XRceg6x4alSJjtKEuvCq0F5fC0urMkCfY0xKrKkYQ1xYtaIR6gifyjbwEb7j6RnNg5gRzahEDrgzvOwovhDyH1+vDlK29JtLrFqD1t2DHF3n55Lzb+355VLXMOLBBKFuhh66KQQv9PSye+9AZFvmujRfhR9hvHVG0WI6vSdpSUQ=
+	t=1711521488; cv=none; b=eS2o9dVpJ2M5nmUUrFLcl1+jfxuin9hHz5xIhI8Y61grNGA/WfGANJxSC/zMTmfP3bRzzwmMV3ZD+RjwyQOgJ8TnSRDAscvfmBCqYLgJD+pzlKrlPahsG9OJbGCPdq5bSYBWVQxJaiHKJYHnfs+A5PW0XSnmxcCx+AWi/tx0rls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711521486; c=relaxed/simple;
-	bh=qsrXEYDJ7iRM5G49lWMuNsUTn79ZQLOBCbqctpAd/Xc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kvPXbyysYOVU6x6/21jWKAC2hOI5nJs2HS+A5fzbJc9Kl+gh1raqB291AjPlLhBVFEWr17wf0rz6kcWMF3BOLX2Loow4QqF6pcsW3nGXldrYlbWlDuNsKQYmwLRfgbJakUHzNPBwfxz7u749u+b1dOs2NojsW2ORpQH+fPpLVdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q4NclsD3; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1711521488; c=relaxed/simple;
+	bh=/zgPoTsWQ8+Px7pH2aiN0stelTOuQg4rAQjnNvIUR4s=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=u74OTJ8pHrwLVoHjHj4c+V5eroKsk5Ypzo+5TF1D5rd4E4OAaqkSUMRtY+shlZ0hbQzbU/1D3W8NiggIDVZGMKh16GPL2EPfltiumY0czBU0xbpUyAzlfgmGwIKqgV6ziwmlIfDyo0JRoEm1VE3y0/UNxqWFW3WsYgj9RlA51rE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OVbQgCKi; arc=none smtp.client-ip=209.85.216.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q4NclsD3"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1e034607879so50657925ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 23:38:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OVbQgCKi"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-29f69710cbbso403604a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2024 23:38:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711521483; x=1712126283; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mivPPYHKcOKy4Ao8y34XOU96LcUYepuBhGKc2WiBoys=;
-        b=q4NclsD3/Pvn5OvVmCmeRwdSIKEv46Xeg8T2s3OtozdWY1bXvIp9atfvZeL7Ok4Bcq
-         hiA6aRpuXaYdBQ7PYbcJfTzX/cBrddLvRtkHgqgtx2sc9BsQD59cMRxGz0CRc2IDaG8d
-         S6C7maDu86/bhH3XhgAFbA674uSQy7e64uKtlJ5kD+QvrWBBqk0kOWOPvH204euzzocL
-         ND/mn2nPvQ2EnU3Qu+Iv9zvlJn23E0qU/yKLgyFFPIuRLchSvIqIjVVLgWhNvFOFvv6S
-         0wGGh4Wy8j14A8JOefH8ZtOJFtQSzILnhqkCvGVmHsXURfNgC6yzy4NrnAde62wF0ulA
-         eCpw==
+        d=linaro.org; s=google; t=1711521485; x=1712126285; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/XNik2O3V0WKV7eei4+cw3tetLyilzp5Bhin/NLKwTE=;
+        b=OVbQgCKiIZdEYX3oZZc+HKw+duzu3vCPzvyHHC7ln7829dAlh2gvCUksWUJi7cTlne
+         aQi8fKLR5EfS53U4U2ciN24qe4/ZP4dJcvaTf7N+RbF8vwLzOFRFa6fcwNYDy7I8M8Xc
+         wImPGAgJJPi6hlvI+pFcSesanXvAUn4Q2XMBoIkOiCPT6OzAwDyCs9MhDuVjlfER5gQ3
+         hdyH6TyG5U02QCg/gkqOnwfZ1mU2CcmDek0WhfTqBliVx3vWMqUjflmTihlHn7+R57/K
+         NdqpSPJTAkVWtibsPtiuHXX06v7ZSIdc74AgIiraU/D3Vp2i1kOEQcz0kLiYiESNkRju
+         YUpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711521483; x=1712126283;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1711521485; x=1712126285;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mivPPYHKcOKy4Ao8y34XOU96LcUYepuBhGKc2WiBoys=;
-        b=k1fFxqMw7G1iwS1XT91Ssso3tbK5REYig+GzhfHL3EUI1ndkVd+7RVdcBS10B3FMOB
-         Vq9pUY+g3i31MG+D9katozja9PSdz8vYqNOVtGcZkX/6XDNcmluz14csj0egzvtf11s/
-         o356liwa9MLEtVAxHH7jQ5bBKDmJW5xDNA3ZpsgVT6s21kLTss5PxLft1IVCUnontj3l
-         xJrxK0vylB3DXvkhkxgcZpXPXsr/ddC+ZRsWTYiff223e/MvOWVTQZH/TwoKKE9eY+co
-         JEx7QNzZMWedbtG1kqBRca0VpflA/px+JHVumfTT6vguABHR1aXQv8GH+6XoWWufja87
-         gnHg==
-X-Forwarded-Encrypted: i=1; AJvYcCXCbGDseOC+dh2exE3DBzkwrir/hZ6ie4pnNIpfpyplHUuxWuyqqNNco+f4VojGgudTClqtFHp563I+LPAqfevsRg4Co3OYkKbfp7es
-X-Gm-Message-State: AOJu0YwyCURnxG2xF3ixVt9c9OaXicwbdJhVdI1iRG4B3juuSc1XH0e9
-	FLro5Jd/+nFdClrr2etyDih3uUtDk52GL/DDDrQRUk1lwcWIY/rPrpwU/Xt9xA==
-X-Google-Smtp-Source: AGHT+IEuNX01LcBtzwtH1ZI1Dnk/TQQT/XSxPGrtDLuR/pAohoCQdzccf1w7VRPss1JRAfOGZf94TQ==
-X-Received: by 2002:a17:902:ea09:b0:1e0:bd8e:5a66 with SMTP id s9-20020a170902ea0900b001e0bd8e5a66mr442911plg.8.1711521483320;
-        Tue, 26 Mar 2024 23:38:03 -0700 (PDT)
-Received: from [127.0.1.1] ([117.207.28.168])
-        by smtp.gmail.com with ESMTPSA id r9-20020a170902be0900b001e14807c7dfsm602553pls.86.2024.03.26.23.37.45
+        bh=/XNik2O3V0WKV7eei4+cw3tetLyilzp5Bhin/NLKwTE=;
+        b=knpooxyDw5e4KSJR01Xt6AoiclVPMaT5Vw8vGzmvYjEsZiQiJB/V0rxHJhgceN1UNs
+         hpLRL4O3T4O0yAB52ji8Q33ZeOfGJZdUyzaAG8W3YFYwQZDX/ZnpWmokZfs7b2NbhPp8
+         jmWOI5eqjoQZ8GlvrFK8crtO8KRzxGjU1F+HhJfiYnXgaCQMGQoVNCcj9E9LBpssfrgS
+         P/WFUc8oW8FjLDlv4vec0QWpwj1BBFWM8+oCoiQa1PGr+v49kj6IO64OLK7xduJvZv1D
+         hTiEQklb0ygWsuAAnXX8zR1F84HtKnG+e+agnK7fpscvyp8Mi9g7JTs0HaehW0xHmTRG
+         7Dlg==
+X-Forwarded-Encrypted: i=1; AJvYcCVpkJGVOfT5+M4mCl+52C6B4VAiunHOFC3uf8oq2OPyzx9aTAQcaiNs925K1VCfMS+XHVuY2Q+wkfUFmtXZvVZfY5ctIxM7ewr3JvMN
+X-Gm-Message-State: AOJu0Yz39MNF1+RvS+W5Pi1qa53Il6Tey+gZtD4XE0wzSyptHwa9UooP
+	+OwUqj/kpYp/qDv7RkIS1Iifz9XEOKFBsBcUznbYbVOc2ez76gmPxNpuHaTH3nY=
+X-Google-Smtp-Source: AGHT+IEF5G4b01ViVP2gw2u01FEvPPxA8D+nBgRJJXgS2E/XShyqcT5N4YyxRiEVjAeBNGzqovr48A==
+X-Received: by 2002:a17:90a:bb0f:b0:29c:570d:7f5d with SMTP id u15-20020a17090abb0f00b0029c570d7f5dmr5458717pjr.9.1711521484691;
+        Tue, 26 Mar 2024 23:38:04 -0700 (PDT)
+Received: from sumit-X1.. ([223.178.208.127])
+        by smtp.gmail.com with ESMTPSA id qd5-20020a17090b3cc500b002a02f8d350fsm772765pjb.53.2024.03.26.23.37.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 23:38:02 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Date: Wed, 27 Mar 2024 12:05:51 +0530
-Subject: [PATCH v11 5/8] PCI: dwc: ep: Introduce dw_pcie_ep_cleanup() API
- for drivers supporting PERST#
+        Tue, 26 Mar 2024 23:38:04 -0700 (PDT)
+From: Sumit Garg <sumit.garg@linaro.org>
+To: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org
+Cc: andersson@kernel.org,
+	konrad.dybcio@linaro.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	stephan@gerhold.net,
+	caleb.connolly@linaro.org,
+	neil.armstrong@linaro.org,
+	dmitry.baryshkov@linaro.org,
+	laetitia.mariottini@se.com,
+	pascal.eberhard@se.com,
+	abdou.saker@se.com,
+	jimmy.lalande@se.com,
+	benjamin.missey@non.se.com,
+	daniel.thompson@linaro.org,
+	linux-kernel@vger.kernel.org,
+	Sumit Garg <sumit.garg@linaro.org>,
+	Jagdish Gediya <jagdish.gediya@linaro.org>
+Subject: [PATCH v4 3/3] arm64: dts: qcom: apq8016: Add Schneider HMIBSC board DTS
+Date: Wed, 27 Mar 2024 12:07:34 +0530
+Message-Id: <20240327063734.3236117-4-sumit.garg@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240327063734.3236117-1-sumit.garg@linaro.org>
+References: <20240327063734.3236117-1-sumit.garg@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240327-pci-dbi-rework-v11-5-6f5259f90673@linaro.org>
-References: <20240327-pci-dbi-rework-v11-0-6f5259f90673@linaro.org>
-In-Reply-To: <20240327-pci-dbi-rework-v11-0-6f5259f90673@linaro.org>
-To: Jingoo Han <jingoohan1@gmail.com>, 
- Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Marek Vasut <marek.vasut+renesas@gmail.com>, 
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, 
- Kishon Vijay Abraham I <kishon@ti.com>, Vidya Sagar <vidyas@nvidia.com>, 
- Vignesh Raghavendra <vigneshr@ti.com>, Richard Zhu <hongxing.zhu@nxp.com>, 
- Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
- Minghuan Lian <minghuan.Lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, 
- Roy Zang <roy.zang@nxp.com>, 
- Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Jesper Nilsson <jesper.nilsson@axis.com>, 
- Srikanth Thokala <srikanth.thokala@intel.com>, 
- Shawn Lin <shawn.lin@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
- Niklas Cassel <cassel@kernel.org>, linux-arm-kernel@axis.com, 
- linux-rockchip@lists.infradead.org, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Frank Li <Frank.Li@nxp.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4250;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=qsrXEYDJ7iRM5G49lWMuNsUTn79ZQLOBCbqctpAd/Xc=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBmA75WoMjoLUGDerPhNIv6VyZTOayQ0uU/PY+4B
- kAPbZoTMMyJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZgO+VgAKCRBVnxHm/pHO
- 9ZymB/42xHgi+oA0QmT/QC4mzKmaeoOjY/JSPU1j3L93vbjOssxOJeezhE7Swp/n6lyaHPxoY+r
- ZUoL9JO8pKFg9cX69Kz2fjso7GFmQTr+32IhNeaQjJKvCFAgudmbh1oJodl/NyDHnbqkGnprS2d
- L5o+eAB6f4MmYT6ecfcpzH4aHPJzkjC5Tn8H16P4w7vjT63h0WZCZe2RRRTaI5ieaRGE2Gm1H49
- /tjWHhmjJlptTfyF0MFN9Qfy2Bba9LzKYjsPZrWo/d1ip0fYBaYxDBHdlShr0Ea4mHZRVM+gOn8
- W6QF6ehLfXxKTDiMLCJ3CLVqU3YxefS9Wy+lpHGuCAJcVkzG
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
+Content-Transfer-Encoding: 8bit
 
-For DWC glue drivers supporting PERST# (currently Qcom and Tegra194), some
-of the DWC resources like eDMA should be cleaned up during the PERST#
-assert time.
+Add Schneider Electric HMIBSC board DTS. The HMIBSC board is an IIoT Edge
+Box Core board based on the Qualcomm APQ8016E SoC.
 
-So let's introduce a dw_pcie_ep_cleanup() API that could be called by these
-drivers to cleanup the DWC specific resources. Currently, it just removes
-eDMA.
+Support for Schneider Electric HMIBSC. Features:
+- Qualcomm Snapdragon 410C SoC - APQ8016 (4xCortex A53, Adreno 306)
+- 1GiB RAM
+- 8GiB eMMC, SD slot
+- WiFi and Bluetooth
+- 2x Host, 1x Device USB port
+- HDMI
+- Discrete TPM2 chip over SPI
+- USB ethernet adaptors (soldered)
 
-Reported-by: Niklas Cassel <cassel@kernel.org>
-Closes: https://lore.kernel.org/linux-pci/ZWYmX8Y%2F7Q9WMxES@x1-carbon
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Co-developed-by: Jagdish Gediya <jagdish.gediya@linaro.org>
+Signed-off-by: Jagdish Gediya <jagdish.gediya@linaro.org>
+Reviewed-by: Caleb Connolly <caleb.connolly@linaro.org>
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 ---
- drivers/pci/controller/dwc/pcie-designware-ep.c | 19 +++++++++++++++++--
- drivers/pci/controller/dwc/pcie-designware.h    |  5 +++++
- drivers/pci/controller/dwc/pcie-qcom-ep.c       |  1 +
- drivers/pci/controller/dwc/pcie-tegra194.c      |  2 ++
- 4 files changed, 25 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../dts/qcom/apq8016-schneider-hmibsc.dts     | 490 ++++++++++++++++++
+ 2 files changed, 491 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 7ff2015736ef..7509fa1d1e7d 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -617,6 +617,22 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
- 	return 0;
- }
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 39889d5f8e12..ad55e52e950b 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -5,6 +5,7 @@ apq8016-sbc-usb-host-dtbs	:= apq8016-sbc.dtb apq8016-sbc-usb-host.dtbo
  
-+/**
-+ * dw_pcie_ep_cleanup - Cleanup DWC EP resources after fundamental reset
-+ * @ep: DWC EP device
-+ *
-+ * Cleans up the DWC EP specific resources like eDMA etc... after fundamental
-+ * reset like PERST#. Note that this API is only applicable for drivers
-+ * supporting PERST# or any other methods of fundamental reset.
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc-usb-host.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc-d3-camera-mezzanine.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-schneider-hmibsc.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8039-t2.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8094-sony-xperia-kitakami-karin_windy.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts b/arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts
+new file mode 100644
+index 000000000000..62ce862ff5c0
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts
+@@ -0,0 +1,490 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2015, The Linux Foundation. All rights reserved.
++ * Copyright (c) 2024, Linaro Ltd.
 + */
-+void dw_pcie_ep_cleanup(struct dw_pcie_ep *ep)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
 +
-+	dw_pcie_edma_remove(pci);
-+}
-+EXPORT_SYMBOL_GPL(dw_pcie_ep_cleanup);
++/dts-v1/;
 +
- /**
-  * dw_pcie_ep_deinit - Deinitialize the endpoint device
-  * @ep: DWC EP device
-@@ -626,10 +642,9 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
-  */
- void dw_pcie_ep_deinit(struct dw_pcie_ep *ep)
- {
--	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 	struct pci_epc *epc = ep->epc;
- 
--	dw_pcie_edma_remove(pci);
-+	dw_pcie_ep_cleanup(ep);
- 
- 	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
- 			      epc->mem->window.page_size);
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 61465203bb60..351d2fe3ea4d 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -672,6 +672,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep);
- int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep);
- void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep);
- void dw_pcie_ep_deinit(struct dw_pcie_ep *ep);
-+void dw_pcie_ep_cleanup(struct dw_pcie_ep *ep);
- int dw_pcie_ep_raise_intx_irq(struct dw_pcie_ep *ep, u8 func_no);
- int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
- 			     u8 interrupt_num);
-@@ -705,6 +706,10 @@ static inline void dw_pcie_ep_deinit(struct dw_pcie_ep *ep)
- {
- }
- 
-+static inline void dw_pcie_ep_cleanup(struct dw_pcie_ep *ep)
-+{
-+}
++#include "msm8916-pm8916.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/leds/common.h>
++#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
++#include <dt-bindings/pinctrl/qcom,pmic-mpp.h>
++#include <dt-bindings/sound/apq8016-lpass.h>
 +
- static inline int dw_pcie_ep_raise_intx_irq(struct dw_pcie_ep *ep, u8 func_no)
- {
- 	return 0;
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index 36e5e80cd22f..59b1c0110288 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -507,6 +507,7 @@ static void qcom_pcie_perst_assert(struct dw_pcie *pci)
- 		return;
- 	}
- 
-+	dw_pcie_ep_cleanup(&pci->ep);
- 	qcom_pcie_disable_resources(pcie_ep);
- 	pcie_ep->link_status = QCOM_PCIE_EP_LINK_DISABLED;
- }
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 7afa9e9aabe2..68bfeed3429b 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -1715,6 +1715,8 @@ static void pex_ep_event_pex_rst_assert(struct tegra_pcie_dw *pcie)
- 	if (ret)
- 		dev_err(pcie->dev, "Failed to go Detect state: %d\n", ret);
- 
-+	dw_pcie_ep_cleanup(&pcie->pci.ep);
++/ {
++	model = "Schneider Electric HMIBSC Board";
++	compatible = "schneider,apq8016-hmibsc", "qcom,apq8016";
 +
- 	reset_control_assert(pcie->core_rst);
- 
- 	tegra_pcie_disable_phy(pcie);
-
++	aliases {
++		i2c1 = &blsp_i2c6;
++		i2c3 = &blsp_i2c4;
++		i2c4 = &blsp_i2c3;
++		mmc0 = &sdhc_1; /* eMMC */
++		mmc1 = &sdhc_2; /* SD card */
++		serial0 = &blsp_uart1;
++		serial1 = &blsp_uart2;
++		spi0 = &blsp_spi5;
++		usid0 = &pm8916_0;
++	};
++
++	chosen {
++		stdout-path = "serial0";
++	};
++
++	hdmi-out {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con: endpoint {
++				remote-endpoint = <&adv7533_out>;
++			};
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		autorepeat;
++		pinctrl-0 = <&msm_key_volp_n_default>;
++		pinctrl-names = "default";
++
++		button {
++			label = "Volume Up";
++			linux,code = <KEY_VOLUMEUP>;
++			gpios = <&tlmm 107 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-0 = <&pm8916_mpps_leds>;
++		pinctrl-names = "default";
++
++		led-1 {
++			function = LED_FUNCTION_WLAN;
++			color = <LED_COLOR_ID_YELLOW>;
++			gpios = <&pm8916_mpps 2 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "phy0tx";
++			default-state = "off";
++		};
++
++		led-2 {
++			function = LED_FUNCTION_BLUETOOTH;
++			color = <LED_COLOR_ID_BLUE>;
++			gpios = <&pm8916_mpps 3 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "bluetooth-power";
++			default-state = "off";
++		};
++	};
++
++	memory@80000000 {
++		reg = <0 0x80000000 0 0x40000000>;
++	};
++
++	reserved-memory {
++		ramoops@bff00000 {
++			compatible = "ramoops";
++			reg = <0x0 0xbff00000 0x0 0x100000>;
++			record-size = <0x20000>;
++			console-size = <0x20000>;
++			ftrace-size = <0x20000>;
++			ecc-size = <16>;
++		};
++	};
++
++	usb-hub {
++		compatible = "smsc,usb3503";
++		reset-gpios = <&pm8916_gpios 1 GPIO_ACTIVE_LOW>;
++		initial-mode = <1>;
++	};
++
++	usb_id: usb-id {
++		compatible = "linux,extcon-usb-gpio";
++		id-gpios = <&tlmm 110 GPIO_ACTIVE_HIGH>;
++		pinctrl-0 = <&usb_id_default>;
++		pinctrl-names = "default";
++	};
++};
++
++&blsp_i2c3 {
++	status = "okay";
++
++	eeprom@50 {
++		compatible = "atmel,24c32";
++		reg = <0x50>;
++	};
++};
++
++&blsp_i2c4 {
++	status = "okay";
++
++	adv_bridge: bridge@39 {
++		compatible = "adi,adv7533";
++		reg = <0x39>;
++		interrupts-extended = <&tlmm 31 IRQ_TYPE_EDGE_FALLING>;
++
++		adi,dsi-lanes = <4>;
++		clocks = <&rpmcc RPM_SMD_BB_CLK2>;
++		clock-names = "cec";
++		pd-gpios = <&tlmm 32 GPIO_ACTIVE_HIGH>;
++
++		avdd-supply = <&pm8916_l6>;
++		a2vdd-supply = <&pm8916_l6>;
++		dvdd-supply = <&pm8916_l6>;
++		pvdd-supply = <&pm8916_l6>;
++		v1p2-supply = <&pm8916_l6>;
++		v3p3-supply = <&pm8916_l17>;
++
++		pinctrl-0 = <&adv7533_int_active &adv7533_switch_active>;
++		pinctrl-1 = <&adv7533_int_suspend &adv7533_switch_suspend>;
++		pinctrl-names = "default","sleep";
++		#sound-dai-cells = <0>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				adv7533_in: endpoint {
++					remote-endpoint = <&mdss_dsi0_out>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				adv7533_out: endpoint {
++					remote-endpoint = <&hdmi_con>;
++				};
++			};
++		};
++	};
++};
++
++&blsp_i2c6 {
++	status = "okay";
++
++	rtc@30 {
++		compatible = "sii,s35390a";
++		reg = <0x30>;
++	};
++
++	eeprom@50 {
++		compatible = "atmel,24c256";
++		reg = <0x50>;
++	};
++};
++
++&blsp_spi5 {
++	cs-gpios = <&tlmm 18 GPIO_ACTIVE_LOW>;
++	status = "okay";
++
++	tpm@0 {
++		compatible = "infineon,slb9670", "tcg,tpm_tis-spi";
++		reg = <0>;
++		spi-max-frequency = <500000>;
++	};
++};
++
++&blsp_uart1 {
++	label = "UART0";
++	status = "okay";
++};
++
++&blsp_uart2 {
++	label = "UART1";
++	status = "okay";
++};
++
++&lpass {
++	status = "okay";
++};
++
++&mdss {
++	status = "okay";
++};
++
++&mdss_dsi0_out {
++	data-lanes = <0 1 2 3>;
++	remote-endpoint = <&adv7533_in>;
++};
++
++&pm8916_codec {
++	qcom,mbhc-vthreshold-low = <75 150 237 450 500>;
++	qcom,mbhc-vthreshold-high = <75 150 237 450 500>;
++	status = "okay";
++};
++
++&pm8916_gpios {
++	gpio-line-names =
++		"USB_HUB_RESET_N_PM",
++		"USB_SW_SEL_PM",
++		"NC",
++		"NC";
++
++	usb_hub_reset_pm: usb-hub-reset-pm-state {
++		pins = "gpio1";
++		function = PMIC_GPIO_FUNC_NORMAL;
++		input-disable;
++		output-high;
++	};
++
++	usb_hub_reset_pm_device: usb-hub-reset-pm-device-state {
++		pins = "gpio1";
++		function = PMIC_GPIO_FUNC_NORMAL;
++		output-low;
++	};
++
++	usb_sw_sel_pm: usb-sw-sel-pm-state {
++		pins = "gpio2";
++		function = PMIC_GPIO_FUNC_NORMAL;
++		power-source = <PM8916_GPIO_VPH>;
++		input-disable;
++		output-high;
++	};
++
++	usb_sw_sel_pm_device: usb-sw-sel-pm-device-state {
++		pins = "gpio2";
++		function = PMIC_GPIO_FUNC_NORMAL;
++		power-source = <PM8916_GPIO_VPH>;
++		input-disable;
++		output-low;
++	};
++};
++
++&pm8916_mpps {
++	gpio-line-names =
++		"NC",
++		"WLAN_LED_CTRL",
++		"BT_LED_CTRL",
++		"NC";
++
++	pm8916_mpps_leds: pm8916-mpps-state {
++		pins = "mpp2", "mpp3";
++		function = "digital";
++		output-low;
++	};
++};
++
++&pm8916_resin {
++	linux,code = <KEY_POWER>;
++	status = "okay";
++};
++
++&pm8916_rpm_regulators {
++	pm8916_l17: l17 {
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++};
++
++&sdhc_1 {
++	status = "okay";
++};
++
++&sdhc_2 {
++	pinctrl-0 = <&sdc2_default &sdc2_cd_default>;
++	pinctrl-1 = <&sdc2_sleep &sdc2_cd_default>;
++	pinctrl-names = "default", "sleep";
++	cd-gpios = <&tlmm 38 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
++
++&sound {
++	pinctrl-0 = <&cdc_pdm_default &sec_mi2s_default>;
++	pinctrl-1 = <&cdc_pdm_sleep &sec_mi2s_sleep>;
++	pinctrl-names = "default", "sleep";
++	model = "HMIBSC";
++	audio-routing =
++		"AMIC2", "MIC BIAS Internal2",
++		"AMIC3", "MIC BIAS External1";
++	status = "okay";
++
++	quaternary-dai-link {
++		link-name = "ADV7533";
++		cpu {
++			sound-dai = <&lpass MI2S_QUATERNARY>;
++		};
++		codec {
++			sound-dai = <&adv_bridge 0>;
++		};
++	};
++
++	primary-dai-link {
++		link-name = "WCD";
++		cpu {
++			sound-dai = <&lpass MI2S_PRIMARY>;
++		};
++		codec {
++			sound-dai = <&lpass_codec 0>, <&pm8916_codec 0>;
++		};
++	};
++
++	tertiary-dai-link {
++		link-name = "WCD-Capture";
++		cpu {
++			sound-dai = <&lpass MI2S_TERTIARY>;
++		};
++		codec {
++			sound-dai = <&lpass_codec 1>, <&pm8916_codec 1>;
++		};
++	};
++};
++
++&tlmm {
++	pinctrl-0 = <&uart1_mux0_rs232_high &uart1_mux1_rs232_low>;
++	pinctrl-names = "default";
++
++	adv7533_int_active: adv533-int-active-state {
++		pins = "gpio31";
++		function = "gpio";
++		drive-strength = <16>;
++		bias-disable;
++	};
++
++	adv7533_int_suspend: adv7533-int-suspend-state {
++		pins = "gpio31";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	adv7533_switch_active: adv7533-switch-active-state {
++		pins = "gpio32";
++		function = "gpio";
++		drive-strength = <16>;
++		bias-disable;
++	};
++
++	adv7533_switch_suspend: adv7533-switch-suspend-state {
++		pins = "gpio32";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	msm_key_volp_n_default: msm-key-volp-n-default-state {
++		pins = "gpio107";
++		function = "gpio";
++		drive-strength = <8>;
++		bias-pull-up;
++	};
++
++	sdc2_cd_default: sdc2-cd-default-state {
++		pins = "gpio38";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	/*
++	 * UART1 being the debug console supports various modes of
++	 * operation (RS-232/485/422) controlled via GPIOs configured
++	 * mux as follows:
++	 *
++	 *   gpio100    gpio99    UART mode
++	 *   0          0         loopback
++	 *   0          1         RS-232
++	 *   1          0         RS-485
++	 *   1          1         RS-422
++	 *
++	 * The default mode configured here is RS-232 mode.
++	 */
++	uart1_mux0_rs232_high: uart1-mux0-rs232-state {
++		bootph-all;
++		pins = "gpio99";
++		function = "gpio";
++		drive-strength = <16>;
++		bias-disable;
++		output-high;
++	};
++
++	uart1_mux1_rs232_low: uart1-mux1-rs232-state {
++		bootph-all;
++		pins = "gpio100";
++		function = "gpio";
++		drive-strength = <16>;
++		bias-disable;
++		output-low;
++	};
++
++	usb_id_default: usb-id-default-state {
++		pins = "gpio110";
++		function = "gpio";
++		drive-strength = <8>;
++		bias-pull-up;
++	};
++};
++
++&usb {
++	extcon = <&usb_id>, <&usb_id>;
++	pinctrl-0 = <&usb_sw_sel_pm &usb_hub_reset_pm>;
++	pinctrl-1 = <&usb_sw_sel_pm_device &usb_hub_reset_pm_device>;
++	pinctrl-names = "default", "device";
++	status = "okay";
++};
++
++&usb_hs_phy {
++	extcon = <&usb_id>;
++};
++
++&wcnss {
++	firmware-name = "qcom/apq8016/wcnss.mbn";
++	status = "okay";
++};
++
++&wcnss_ctrl {
++	firmware-name = "qcom/apq8016/WCNSS_qcom_wlan_nv_sbc.bin";
++};
++
++&wcnss_iris {
++	compatible = "qcom,wcn3620";
++};
++
++&wcnss_mem {
++	status = "okay";
++};
++
++/* PINCTRL - additions to nodes defined in msm8916.dtsi */
++
++/*
++ * 2mA drive strength is not enough when connecting multiple
++ * I2C devices with different pull up resistors.
++ */
++&blsp_i2c4_default {
++	drive-strength = <16>;
++};
++
++&blsp_i2c6_default {
++	drive-strength = <16>;
++};
++
++&blsp_uart1_default {
++	bootph-all;
++};
++
++/* Enable CoreSight */
++&cti0 { status = "okay"; };
++&cti1 { status = "okay"; };
++&cti12 { status = "okay"; };
++&cti13 { status = "okay"; };
++&cti14 { status = "okay"; };
++&cti15 { status = "okay"; };
++&debug0 { status = "okay"; };
++&debug1 { status = "okay"; };
++&debug2 { status = "okay"; };
++&debug3 { status = "okay"; };
++&etf { status = "okay"; };
++&etm0 { status = "okay"; };
++&etm1 { status = "okay"; };
++&etm2 { status = "okay"; };
++&etm3 { status = "okay"; };
++&etr { status = "okay"; };
++&funnel0 { status = "okay"; };
++&funnel1 { status = "okay"; };
++&replicator { status = "okay"; };
++&stm { status = "okay"; };
++&tpiu { status = "okay"; };
 -- 
-2.25.1
+2.34.1
 
