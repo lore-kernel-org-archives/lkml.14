@@ -1,103 +1,105 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C07513BC28
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 12:22:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F08E172BBD;
+	Wed, 27 Mar 2024 12:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711542130; cv=none; b=kyWxe0LexPJsXPdrFWtArjuBbUrKymid+Kb4Sbod1ZeEmyZmyMdDBFo9sUmPReJrb3LUJqbCy3K8HvKwlk6FOeNN6i4+KBo/t3YsdFN9W7bKhA3aZoPMsLuAnthn44thoQAziLt+PJy2zlLKBKjPXAMNrFG4sddHL99sO7Qp9hY=
+	t=1711542131; cv=none; b=o96cAXheQLV8jWozDdsYjKlDMCQ0mbClbKPo8iNVBDxkHgVarByzG7tJZBqzqAM44mpvApTWhPoKTvzs5C8WngICBSUBE6eCN4E0tubuY6+NRhYLzRO4S6B+r5g2jVUq/SYpWIgJu34fo2DrUvHYpy/gWaokdKLGjJXHHIKDVOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711542130; c=relaxed/simple;
-	bh=Jy/9HP4HKK4M4X4eZcrJHQRu3OFUTPW5Tfvm+BXpQ9s=;
-	h=From:To:Subject:CC:Date:Message-ID:MIME-Version:Content-Type; b=Kth3mUxHWoLFwmJTJQkbM84Uw99NuDwGlpsJ07jHvS4cW6dCGbd0zltl8KFZW/1ydQszAneGxP1my+qdeKyMkiOeC5J5wAgVyPBOvd32eKUn+gRHr5P1Wk6ojejzKPaAhV0HFg+J10XgN1YROFrXG6tfgVYzA7erHrRbk70tIuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Ssdt28OT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=T238+SQL; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Ssdt28OT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=T238+SQL; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1711542131; c=relaxed/simple;
+	bh=ykjY/LEF5AdESRFdRyYNtcueT9YyqaLCT+q2FCQRXvM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cJ0UtcJHa4tyaYsZxn8ejo/smi2aokGzBFLH3fgqPeLMiW1GBT/p/feDtsbYdMRiCn221J7bZ6AC9xHM5LTaVm7tsDtDyjLztMfThzKuP5/ERBGS3qC+8gLOv4VPg2PJJKaqfZ+hNgEvBYwQJaH5/c94P+Kh9MPipFkeAsK2QCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tQxibpZM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Ssdt28OT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="T238+SQL";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Ssdt28OT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="T238+SQL"
-Received: from hawking.nue2.suse.org (unknown [10.168.4.11])
-	by smtp-out2.suse.de (Postfix) with ESMTP id 8DE77604F3;
-	Wed, 27 Mar 2024 12:22:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1711542126; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=gM8O9BMvpmcweC/49S6T4WsOquW93fnYjM6IK+bwXKE=;
-	b=Ssdt28OT7qmUKLV8uScEd66ypiVH1N+F5aNhuNO1pdtTDLKthe/NdnKwwUIRBrNYWbuhSK
-	62GDE5ReODFKOz0CcWBy5WCMSIEjpu+AMO23TwXBW2eoZlZLQgHJz9g778LTBcAFizzeio
-	RUioF3j4Tv/bvID9gjEXuAunOCS6eYI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1711542126;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=gM8O9BMvpmcweC/49S6T4WsOquW93fnYjM6IK+bwXKE=;
-	b=T238+SQLURftQENgTnWvF65vJFoVbQlKraD9/dCFYuO1oaynJhrNiWDu98IQwa0xCCpc+s
-	je9TJAvTDe1u7LDA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1711542126; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=gM8O9BMvpmcweC/49S6T4WsOquW93fnYjM6IK+bwXKE=;
-	b=Ssdt28OT7qmUKLV8uScEd66ypiVH1N+F5aNhuNO1pdtTDLKthe/NdnKwwUIRBrNYWbuhSK
-	62GDE5ReODFKOz0CcWBy5WCMSIEjpu+AMO23TwXBW2eoZlZLQgHJz9g778LTBcAFizzeio
-	RUioF3j4Tv/bvID9gjEXuAunOCS6eYI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1711542126;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=gM8O9BMvpmcweC/49S6T4WsOquW93fnYjM6IK+bwXKE=;
-	b=T238+SQLURftQENgTnWvF65vJFoVbQlKraD9/dCFYuO1oaynJhrNiWDu98IQwa0xCCpc+s
-	je9TJAvTDe1u7LDA==
-Received: by hawking.nue2.suse.org (Postfix, from userid 17005)
-	id 53E954AACE2; Wed, 27 Mar 2024 13:21:36 +0100 (CET)
-From: Andreas Schwab <schwab@suse.de>
-To: linux-riscv@lists.infradead.org
-Subject: 6.9-rc1 regression: irq: no irq domain found for
- interrupt-controller@c000000
-CC: linux-kernel@vger.kernel.org
-X-Yow: Eisenhower!!  Your mimeograph machine upsets my stomach!!
-Date: Wed, 27 Mar 2024 13:21:36 +0100
-Message-ID: <mvmplvfg90v.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tQxibpZM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 839C6C433C7;
+	Wed, 27 Mar 2024 12:22:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711542129;
+	bh=ykjY/LEF5AdESRFdRyYNtcueT9YyqaLCT+q2FCQRXvM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=tQxibpZMh2r0EfGID32QX22FPWhIYwvgGvtxEtg04m7kgL5OhsRb1/6WkKmGfrHBD
+	 Im7RYaXm3zBKct+3VGCvhvNLBpbmh7ho8dDCXQKLUCwKKjD3ck8U9SZ32c9ONC/f0C
+	 +5BDvkwEfqD/DelaQaixaE3F+gHfGQzzyvnJ5HrbdeHoxeLT+4rj8y0J71l+pGEI0j
+	 5qhO0yHh427cZcInLuJ5sJlyXT6ZLtB0EPzfpdILcCoThDb+nu3ovMhwZYRLSyWwVT
+	 3wxiv6rvgy4awJkJnKkcsO3odPS7UTKSLUPo5IFFVBCPPwe4MICcpP1tv6BbBFLGTU
+	 SXDDpWpBqhiPg==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org,
+	dillon.varone@amd.com
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Martin Leung <martin.leung@amd.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: FAILED: Patch "drm/amd/display: Init link enc resources in dc_state only if res_pool presents" failed to apply to 5.4-stable tree
+Date: Wed, 27 Mar 2024 08:22:07 -0400
+Message-ID: <20240327122207.2837449-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -1.29
-X-Spamd-Result: default: False [-1.29 / 50.00];
-	 ARC_NA(0.00)[];
-	 BAYES_SPAM(0.01)[46.21%];
-	 FROM_HAS_DN(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 TO_DN_NONE(0.00)[];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_TWO(0.00)[2];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 RCVD_COUNT_ZERO(0.00)[0];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_MATCH_FROM(0.00)[]
-X-Spam-Flag: NO
+X-Patchwork-Hint: ignore
+X-stable: review
+Content-Transfer-Encoding: 8bit
 
-The SiFive ccache driver fails to look up its irqs:
+The patch below does not apply to the 5.4-stable tree.
+If someone wants it applied there, or to any other stable or longterm
+tree, then please email the backport, including the original git commit
+id to <stable@vger.kernel.org>.
 
-[    0.762329] irq: no irq domain found for interrupt-controller@c000000 !
-[    0.769358] CCACHE: Could not request IRQ 0
+Thanks,
+Sasha
 
-This is fatal for the JH7100 based boards, since they depend on it for
-their DMA noncoherence.
+------------------ original commit in Linus's tree ------------------
 
+From ca25a2b5f841f991e472e2dde7f5e2d337dbea08 Mon Sep 17 00:00:00 2001
+From: Dillon Varone <dillon.varone@amd.com>
+Date: Thu, 28 Dec 2023 21:36:39 -0500
+Subject: [PATCH] drm/amd/display: Init link enc resources in dc_state only if
+ res_pool presents
+
+[Why & How]
+res_pool is not initialized in all situations such as virtual
+environments, and therefore link encoder resources should not be
+initialized if res_pool is NULL.
+
+Cc: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Martin Leung <martin.leung@amd.com>
+Acked-by: Alex Hung <alex.hung@amd.com>
+Signed-off-by: Dillon Varone <dillon.varone@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+---
+ drivers/gpu/drm/amd/display/dc/core/dc_state.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_state.c b/drivers/gpu/drm/amd/display/dc/core/dc_state.c
+index 460a8010c79fe..56feee0ff01b1 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_state.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_state.c
+@@ -267,7 +267,8 @@ void dc_state_construct(struct dc *dc, struct dc_state *state)
+ 	state->clk_mgr = dc->clk_mgr;
+ 
+ 	/* Initialise DIG link encoder resource tracking variables. */
+-	link_enc_cfg_init(dc, state);
++	if (dc->res_pool)
++		link_enc_cfg_init(dc, state);
+ }
+ 
+ void dc_state_destruct(struct dc_state *state)
 -- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+2.43.0
+
+
+
+
