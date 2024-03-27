@@ -1,99 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8CB137921;
-	Wed, 27 Mar 2024 15:23:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9931386A1
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 15:23:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711553033; cv=none; b=vAL/DgkSoZox2d61Nj4SkoGHAAT6XGibNu4nCadLPGXLqwXCyJxIMTR3/TTVmB3J0GPFSKe16C2ivxZ5LbhfsfMvn/m3zyby3UAnlVNhN3YSvbsqigoKnpCM2sEDeMDZ2h2cGoowtWgDl2o1m2B49/ytfGp798rDDo/rdt0CmuM=
+	t=1711553034; cv=none; b=qErBmDMM+ZYD6wJ2ezZYS4BK3FpiDtmbgkF9r/vFj4OvprLdAV2I5jmW5S80T+ih+rnCfqLPLl7S8XzYCVXV8QEIkKMPHBFUrcoiqppKGuUTB5aBrJ2a1BBER6pJ8rhJ1+ReHErBmhLqOvs2lL5A7jYJAwsvQEQQi07KWvquH9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711553033; c=relaxed/simple;
-	bh=3VMwR39j8weliV+6NBseozQ2vW9EVpKn2q9EWN43Fbg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WNox+W58Kz7lwobR3wdLDvVaf7WLJdWeJdRpx1vzoYsdKAW5706dN2t4Z42H9IhDydIrBdDbP/vEHx0ZPasCvM7VumEzrzfFX/UIdQP30yVv1GU/pEhRUfXxJ8lEQVoeMRlXLDSTZTh8kGD6VHohYgRQz2qBV2QXDBHEMnxArPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kfl54Krp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711553034; c=relaxed/simple;
+	bh=JdU2xvMnMNAGrluWGr3Tb65X2k9KhflWIWuKDDNpCS4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=W8mfF9iZSgMnUTw4ADC/UtTxlj6d5OcIlKbMdz63S4tcKIvi06vrLTiXqnSKZzGyhZ8kj0TuVW4bI/0xq/aEr0JTd7vEBgMa3Mw+WqW1ukcNV6KZwvcLqEOewyhgj7gtfyaifEkYhG6YvRXZheQ1Pd311Tk3HvmAKpFZT/oQgFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Be9JyX9J; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kfl54Krp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BE13C433B1;
-	Wed, 27 Mar 2024 15:23:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711553033;
-	bh=3VMwR39j8weliV+6NBseozQ2vW9EVpKn2q9EWN43Fbg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kfl54KrpGwKEcsKwcQ5MYF3qjPvupQxIMPPXPjQOFzlFAloQVNpWmTS1lU2a/cNfb
-	 C/do0a1YEpQOKC1aEokxm2HNnUXgZccLBa17WwS+bjezyaf53gH34EtUKFSzPLlre6
-	 LZT4WoozcJB4A6hktm8Wc8S8blz6va6a62Du2FBDuZee+zX9NEU5E0w8eyRG0Yz6Tc
-	 MfVTAk04umkvJTfLbroFyLufKUhfgPV9EO++Xok4AnQG3BSUECXhiY2iOGggO87ARr
-	 TPKnLOry79euk+t4wbIyEEA3jtrE9ZpsslqbC1i+XtOdBPi9QWthyacm8JPKwA1Hna
-	 c+IdCg8ZHlvww==
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5a4e0859b65so1553414eaf.0;
-        Wed, 27 Mar 2024 08:23:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWcf3plSaE0oDIouMa1lTduLm7cV25dDVDTy+gb1gqHizSWwRUomBJYj2S4LeBWSwZhFUAHqqunsEbPxR+Rmhhl4oQTWdZkQe8DJsVwDNJI9YLodSFiloleFrmGmD4dpLZXoEncHHU=
-X-Gm-Message-State: AOJu0YzQzzwDl9gx7oleFOny05JVxL4ju3BcpJuHLfAyG12AIdMF2+nD
-	dkFFAtgK4NStJEZ28D2h7fEEgIr3Mh2ntQVBBIJgEGSvma46U2DvoajmzPZblWF3WXQbOOXFEpG
-	3y2ZHea/Nx492Dlscid3eZBimnjA=
-X-Google-Smtp-Source: AGHT+IHnnPd1qt0QJuSVrS8+m3tGMC4EBht4R7Ia3lYi2xIGB8baAo+spJupmQK/R5BKggmU0YjFtvHyMt+CM0fAJec=
-X-Received: by 2002:a05:6871:289c:b0:22a:1e0c:8bc6 with SMTP id
- bq28-20020a056871289c00b0022a1e0c8bc6mr11717648oac.2.1711553032614; Wed, 27
- Mar 2024 08:23:52 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Be9JyX9J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711553032;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gD68z8/n0HSMW69QF19tjjGBtDgz4n3uypdcneHmRPc=;
+	b=Be9JyX9JvA65ONDxFsD9SKnjxqa6Zwk20P+cUWd2U6TGD5mRH+lWveIwWV7QuM4d4mQx7O
+	ubwFvp0CxiUshNNkCD7DyK+4JUOIxG1L/JQ2B2stc/N/+QZRj4dEAJc991uQXw6SQhkY/0
+	r9k6xZPdGJ9k3PRrVMCVHcgd3e7Ps4U=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-12-fCQKtxl8MHWgcrpVhXXKgg-1; Wed, 27 Mar 2024 11:23:50 -0400
+X-MC-Unique: fCQKtxl8MHWgcrpVhXXKgg-1
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-69627b26a51so3093566d6.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 08:23:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711553029; x=1712157829;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gD68z8/n0HSMW69QF19tjjGBtDgz4n3uypdcneHmRPc=;
+        b=WhGZ743jylBPjiUxIaucyh6lFqqffJjnAIQ9Ovfo6eBegCZs+BwG9yvYEZwIcmzy5H
+         +u4vJY3ttBlGA4l1sQBdmcJgCA4zzSA0hxRIymWGSnCjNWb258cZw4hjYGb00KX2dQ5f
+         4tFS8vHKBFxPWlNBgXNoGQDAiV2p7KrlPSUzm4aEK0kZaI3xC29nHSWX9rH/KLMafPqn
+         9mt9E5n6BtVshionnZuXOy74W2+uFwpuTipIQPUgBmK2nCR4Db3sXJ5hdvHnr1SZKwkN
+         1rIJKUqEGA9t4ONMkHPKC39nUWH45/kjTuPdHQaqVm/66VIPTulSzCW5x5oxgKGNEBoy
+         FwdA==
+X-Forwarded-Encrypted: i=1; AJvYcCWjF4FSZPwJq7H85m0UlX3BYCdf1+6aMPRVBQsUNOAqEoTQZWHB3b74ljmEj6hbAnms9zUWaeb02pqKp6o7wHvtiHr+SbJouxa6Jsel
+X-Gm-Message-State: AOJu0YxF5LGptyogd/B++PtTsBM/KHttTMUfb95/KMuLI8PWn2fQM6lt
+	MXMDYDxF2Y09jS5HZ4nlc7UAvwKwzZLVTgRO41Cu60RFRbGA04UFYD1Qv0k2Hb4eqR8c22evghh
+	q4FclafemUytLoaRmRhk8Bv6bIfeAklvjWGUSX9kjiWdo/zH1PUz5Aq0rBoxkOA==
+X-Received: by 2002:a05:6214:3a01:b0:696:81b8:a462 with SMTP id nw1-20020a0562143a0100b0069681b8a462mr13234462qvb.0.1711553028773;
+        Wed, 27 Mar 2024 08:23:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFaIIFSwEPr6utJECaPIJXCgmHTkHVcLUQEzRJpciko/79sjH/yOlRx7KIof08fJkHOKzrhqQ==
+X-Received: by 2002:a05:6214:3a01:b0:696:81b8:a462 with SMTP id nw1-20020a0562143a0100b0069681b8a462mr13234423qvb.0.1711553028305;
+        Wed, 27 Mar 2024 08:23:48 -0700 (PDT)
+Received: from x1n.redhat.com ([99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id hu4-20020a056214234400b00690dd47a41csm6412639qvb.86.2024.03.27.08.23.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Mar 2024 08:23:47 -0700 (PDT)
+From: peterx@redhat.com
+To: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: Yang Shi <shy828301@gmail.com>,
+	"Kirill A . Shutemov" <kirill@shutemov.name>,
+	Mike Kravetz <mike.kravetz@oracle.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	peterx@redhat.com,
+	Andrew Jones <andrew.jones@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	linux-riscv@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Rik van Riel <riel@surriel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	David Hildenbrand <david@redhat.com>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	James Houghton <jthoughton@google.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>
+Subject: [PATCH v4 06/13] mm/gup: Drop folio_fast_pin_allowed() in hugepd processing
+Date: Wed, 27 Mar 2024 11:23:25 -0400
+Message-ID: <20240327152332.950956-7-peterx@redhat.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240327152332.950956-1-peterx@redhat.com>
+References: <20240327152332.950956-1-peterx@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240325220952.1453477-1-helgaas@kernel.org>
-In-Reply-To: <20240325220952.1453477-1-helgaas@kernel.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 27 Mar 2024 16:23:41 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0j6SaxTG9+Zr1Sk9iN_bvzzOCD+7_s98HEes1CY825epQ@mail.gmail.com>
-Message-ID: <CAJZ5v0j6SaxTG9+Zr1Sk9iN_bvzzOCD+7_s98HEes1CY825epQ@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: PM: Update platform_pci_wakeup_init() reference
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 25, 2024 at 11:11=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org>=
- wrote:
->
-> From: Bjorn Helgaas <bhelgaas@google.com>
->
-> platform_pci_wakeup_init() was removed by d2e5f0c16ad6 ("ACPI / PCI: Rewo=
-rk
-> the setup and cleanup of device wakeup") but was still mentioned in the
-> documentation.
->
-> Update the doc to refer to pci_acpi_setup(), which does the equivalent
-> work.
->
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->
-> pci_acpi_setup() is a firmware-specific wart in this otherwise generic
-> paragraph, so maybe there's some better way to express this?
->
->  Documentation/power/pci.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/power/pci.rst b/Documentation/power/pci.rst
-> index 12070320307e..e2c1fb8a569a 100644
-> --- a/Documentation/power/pci.rst
-> +++ b/Documentation/power/pci.rst
-> @@ -333,7 +333,7 @@ struct pci_dev.
->  The PCI subsystem's first task related to device power management is to
->  prepare the device for power management and initialize the fields of str=
-uct
->  pci_dev used for this purpose.  This happens in two functions defined in
-> -drivers/pci/pci.c, pci_pm_init() and platform_pci_wakeup_init().
-> +drivers/pci/, pci_pm_init() and pci_acpi_setup().
->
->  The first of these functions checks if the device supports native PCI PM
->  and if that's the case the offset of its power management capability str=
-ucture
-> --
+From: Peter Xu <peterx@redhat.com>
 
-Applied as 6.10 material, or if you'd rather take it to the PCI tree,
-please let me know.
+Hugepd format for GUP is only used in PowerPC with hugetlbfs.  There are
+some kernel usage of hugepd (can refer to hugepd_populate_kernel() for
+PPC_8XX), however those pages are not candidates for GUP.
+
+Commit a6e79df92e4a ("mm/gup: disallow FOLL_LONGTERM GUP-fast writing to
+file-backed mappings") added a check to fail gup-fast if there's potential
+risk of violating GUP over writeback file systems.  That should never apply
+to hugepd.  Considering that hugepd is an old format (and even
+software-only), there's no plan to extend hugepd into other file typed
+memories that is prone to the same issue.
+
+Drop that check, not only because it'll never be true for hugepd per any
+known plan, but also it paves way for reusing the function outside
+fast-gup.
+
+To make sure we'll still remember this issue just in case hugepd will be
+extended to support non-hugetlbfs memories, add a rich comment above
+gup_huge_pd(), explaining the issue with proper references.
+
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Lorenzo Stoakes <lstoakes@gmail.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ mm/gup.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/mm/gup.c b/mm/gup.c
+index e7510b6ce765..db35b056fc9a 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -2832,11 +2832,6 @@ static int gup_hugepte(pte_t *ptep, unsigned long sz, unsigned long addr,
+ 		return 0;
+ 	}
+ 
+-	if (!folio_fast_pin_allowed(folio, flags)) {
+-		gup_put_folio(folio, refs, flags);
+-		return 0;
+-	}
+-
+ 	if (!pte_write(pte) && gup_must_unshare(NULL, flags, &folio->page)) {
+ 		gup_put_folio(folio, refs, flags);
+ 		return 0;
+@@ -2847,6 +2842,14 @@ static int gup_hugepte(pte_t *ptep, unsigned long sz, unsigned long addr,
+ 	return 1;
+ }
+ 
++/*
++ * NOTE: currently GUP for a hugepd is only possible on hugetlbfs file
++ * systems on Power, which does not have issue with folio writeback against
++ * GUP updates.  When hugepd will be extended to support non-hugetlbfs or
++ * even anonymous memory, we need to do extra check as what we do with most
++ * of the other folios. See writable_file_mapping_allowed() and
++ * folio_fast_pin_allowed() for more information.
++ */
+ static int gup_huge_pd(hugepd_t hugepd, unsigned long addr,
+ 		unsigned int pdshift, unsigned long end, unsigned int flags,
+ 		struct page **pages, int *nr)
+-- 
+2.44.0
+
