@@ -1,161 +1,116 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA3A8F6B
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 23:01:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42094F1FA
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 23:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711666899; cv=none; b=C/09fEArK+jUxekjnbK2r9s+Hb1QkFbqOTZNkMjCp4eE+PrgTp3ngxK1kIqv6XRGJPsi7mMF2wyOoWqEheAFgkzRyyBYKSFaovIL36EXQ3s83N380royfnWeT8XH5WfwW1YPebXGv48Ll6phip6nsHHRXOW+gh43W/JX10hLCOQ=
+	t=1711667124; cv=none; b=X7tCErFYSkNYKIojzGrEHMtV2+lyVVr1wNUSVgDFUc/YVnRku0qfYKJ2orcOT6bDjdEX3YXvyKFlPltcIfSRCXmNf76o+ujRF9887i6E7mwN2HEE+UKv8Baxw1JzZ5qQ5DnBUPjeo/FA4yL0OrLYkoH8R6sOjrA4LB6XThO0xTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711666899; c=relaxed/simple;
-	bh=TKsivGU+pbBggUpaqWi4+K2eNDTC87QeNNtNFbqc9rM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oKNOkeYHhM2Js9MhUQKvQ4sw3JuQ+kHSQh5Hd77KBCsVrtGoyWEhxw8vZdjVSE11t/4R12fZkony/yOjXTrL6Pp7iQPSu5qJS8YA8/O5OqBj9QLhQYHmImyzk241QGD5krEOFFpLE2nidFM2A343xT9NavouYatxAFHiEHBZv4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GMQWgHpE; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1711667124; c=relaxed/simple;
+	bh=z3tf46ej8qpBQPDevbtFzGy9O5nWOl/MaSu7nJvWxGA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=MKhAsgEWaHPwVJulE/0h0okuMKFN3TYVBKPprtZyvke45Spt1JH8+f2qszQG9AJxYBnqck+J7EsP0ZmJeEJAWlorKts7ebooBYRej64Wu9qGK0DjaaDF10uCG2OJUW3Oi7dqKid/HsR8uno/fkI0TX1E/Un7cA7TehiBsY8OFm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=whoze/eT; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GMQWgHpE"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-56bf6591865so2250048a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:01:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="whoze/eT"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-29df844539bso403137a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:05:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711666895; x=1712271695; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1711667122; x=1712271922; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oA17YR4InWjyg8TEVheIC338xk5MwmSEpPeuNx4GZW0=;
-        b=GMQWgHpEIlA6ssVxKsnzAifYz/G4QkGGXeIYxEBjtyM+BLoXGaFydipWM6tuak1fXa
-         +janLWgU/mf50mfNdgLL/Uguxs9tuOGwqy9s7UreTGiI/vF4ULNLUTW8y+B7auFu3jPC
-         MqogNQE9cHzJXBKhXy51qVds5F4b8iZk2Sek6kdNA1neHlobRQrZCI73hc3V+PGUKWrM
-         Gcb3nOm6jhdavuFV4q4ZYx4PFi8FVxnvx19W4KAiSb+fC7FJ7n0gnmsWnUk4h+qOrwJp
-         ywVLyZdhzYfDqmnlhRMsbibZbLtO/Hj8mY5W8I3L+ZO6uDmN8R9NOvRAFEna9AA0yXnK
-         lsJg==
+        bh=/3aFzydSyExlB9BmbA34QemVRJ/ZXxJRv4umeOt6fqw=;
+        b=whoze/eTuQ7WCfQ2KvL3NhiXL9NdmAEclm+rcZS0cncIpOf/Vikox6zms2HxC9Ae2N
+         4cWzjapfm+Ag5yRjl++DCupMT9G0IjnCYZ3nNC+kJfMkiLbw5EVML96+SqYgGbQPf/VS
+         bAegt8fbYFAnyvUsUkMvGFyBvyRQ5XH1TQCwZ8wp/hMoUEc+ou+Jdrl/U/B/9hbIN9Pz
+         ca5G59PaLbaPt/Ea3p2x0ca8jA0mNfAZEvQ0udRXouYnoxRhALy1hoiVPXZMyYFszsBy
+         Y+cdwWib2eaKcRcCvB5aEASf2HOtQ3qrKmO1UrZPwMKUknip7iwA4w74FrCGZOhdUpof
+         hOeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711666895; x=1712271695;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1711667122; x=1712271922;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oA17YR4InWjyg8TEVheIC338xk5MwmSEpPeuNx4GZW0=;
-        b=lTzykwIhiTWmISriLffqOqRJAQgZlQWb5Ebcrtq72cqA/yen7iP9Kp5SLMT0BWdbh4
-         LEAVUiEeU+FTcCnihs/AOFVMtUeGqTt6v7fUWEcj6zjYJkYN9MDNAM9st0SkoxkVLx52
-         oqAsmM9PCSJ26Qdz8ka1IPRCCGEiNu6t20DpwEj9I7riCFc6WLDaSw6gp9ZXDtyecJHC
-         mEyc874aZNSN+iD+6foLjLRjgGE4W9kAFhCoRO8CKADnMDTH/jeEfpX+U0XmqtWvP3Ma
-         0a/VblSBssLYaLLsrHX0V9RTZLgf5vpG19J3E2FIbrN9gQj+lERY977IGK03mRNrPBsq
-         gzUg==
-X-Gm-Message-State: AOJu0YxjF6cf8K83wMDeYAtHaRCay6OujfRxSY2nzCg7geQEVo/LdbxI
-	RYJXv4qVw0F7/lbnYzwbRH84znaDIAmdIYHrLhq7HFhppdhHgUxKSXRynj7/vvpOm8v0QDeGI6A
-	7JHJVtpTxQUJ1ZUZCgVHlaT0Emv+zEKmc8zml
-X-Google-Smtp-Source: AGHT+IHSDimwfZi+Mu8w7ftuh2TFjJ1pdwWklM9rbYXTjg5wTtqltWADADutdRuEB4qRyX7gMEY0XftN4jstinrasFQ=
-X-Received: by 2002:a05:6402:51cd:b0:56a:2b6b:42cd with SMTP id
- r13-20020a05640251cd00b0056a2b6b42cdmr433486edd.3.1711666895187; Thu, 28 Mar
- 2024 16:01:35 -0700 (PDT)
+        bh=/3aFzydSyExlB9BmbA34QemVRJ/ZXxJRv4umeOt6fqw=;
+        b=GR1AddiHazXFoQ/ZlDWj5wYXoZsK4Fp+K5THlCZ00cJdpIepVhZSWcQUfMo5nGKOjU
+         oZflx7Z4Sise36vALION7YQAGHFv5q2wWXWvmlWMjY6z7dgh4VqZA1hMzb4FkB78ADnQ
+         v1TRiGPGJJ7BX91SafjBa2snAaTXdAkehMH/LaBjtOySUc/agJHkfvijG2i9ij/WOu+y
+         cGS4FzKHe8x4/bliDGrKtBObFgIvyKPYXqeBUY7qnRoGW9GyHSmlSReZlGwBl4v6TIa4
+         F9m+EZrGIahaX/0auTisqxA9GCrafQPvG+TH0eAYiGUqhQV91GxTgZeFGr3oZedUyST6
+         5Log==
+X-Forwarded-Encrypted: i=1; AJvYcCWDKn/FCxUyxRrLOSs8/m/s6bIs+yxZ7GOxkv+29dSjMxfDo3fbreAknHkIlN1b2Ao4To8PQchFb9r/v2Dzz3Fxs/DdUQ8g5zsALJ2p
+X-Gm-Message-State: AOJu0Yxutnr8yrzp84EY8smlPiK8/asEZ4HVP89RxnE8qLlfV/zwJ2Ym
+	InMqXy7OkLGUd566KDcE7c3ilbC2kG0ekplufMoAjPzjwmtQLOY4Vi5x7fTz+QU=
+X-Google-Smtp-Source: AGHT+IGt0gkc119snKbJARF7UnrFMVXsS7gpTXjZzbZBfCEKd0wr8mr1SMS6Ds7kY42qafqSBM/uug==
+X-Received: by 2002:a17:90b:3504:b0:29b:780c:c671 with SMTP id ls4-20020a17090b350400b0029b780cc671mr907698pjb.0.1711667121826;
+        Thu, 28 Mar 2024 16:05:21 -0700 (PDT)
+Received: from [127.0.0.1] ([50.234.116.5])
+        by smtp.gmail.com with ESMTPSA id cx18-20020a17090afd9200b0029d7e7b7b41sm4013902pjb.33.2024.03.28.16.05.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 16:05:21 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Muchun Song <muchun.song@linux.dev>, Miaohe Lin <linmiaohe@huawei.com>, 
+ Naoya Horiguchi <naoya.horiguchi@nec.com>, 
+ John Johansen <john.johansen@canonical.com>, 
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+ "Serge E. Hallyn" <serge@hallyn.com>, David Howells <dhowells@redhat.com>, 
+ Jarkko Sakkinen <jarkko@kernel.org>, Kees Cook <keescook@chromium.org>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Pavel Begunkov <asml.silence@gmail.com>, 
+ Atish Patra <atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>, 
+ Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Joel Granados <j.granados@samsung.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, linux-mm@kvack.org, 
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
+ keyrings@vger.kernel.org, linux-crypto@vger.kernel.org, 
+ io-uring@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20240328-jag-sysctl_remset_misc-v1-0-47c1463b3af2@samsung.com>
+References: <20240328-jag-sysctl_remset_misc-v1-0-47c1463b3af2@samsung.com>
+Subject: Re: (subset) [PATCH 0/7] sysctl: Remove sentinel elements from
+ misc directories
+Message-Id: <171166712004.796545.8747989552701562593.b4-ty@kernel.dk>
+Date: Thu, 28 Mar 2024 17:05:20 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240328140512.4148825-1-arnd@kernel.org> <20240328140512.4148825-10-arnd@kernel.org>
-In-Reply-To: <20240328140512.4148825-10-arnd@kernel.org>
-From: Justin Stitt <justinstitt@google.com>
-Date: Thu, 28 Mar 2024 16:01:23 -0700
-Message-ID: <CAFhGd8oHht+uMBouT7_AXZt4DMRJi=A7_=fyhZ2Hf_ne+8xE8w@mail.gmail.com>
-Subject: Re: [PATCH 09/11] staging: rtl8723bs: convert strncpy to strscpy
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: linux-kernel@vger.kernel.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Franziska Naepelt <franziska.naepelt@googlemail.com>, 
-	Johannes Berg <johannes.berg@intel.com>, Yang Yingliang <yangyingliang@huawei.com>, 
-	Erick Archer <erick.archer@gmx.com>, linux-staging@lists.linux.dev, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.5-dev-2aabd
 
-Hi,
 
-On Thu, Mar 28, 2024 at 7:07=E2=80=AFAM Arnd Bergmann <arnd@kernel.org> wro=
-te:
->
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> gcc-9 complains about a possibly unterminated string in the strncpy() des=
-tination:
->
-> In function 'rtw_cfg80211_add_monitor_if',
->     inlined from 'cfg80211_rtw_add_virtual_intf' at drivers/staging/rtl87=
-23bs/os_dep/ioctl_cfg80211.c:2209:9:
-> drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c:2146:2: error: 'strncpy=
-' specified bound 16 equals destination size [-Werror=3Dstringop-truncation=
-]
->  2146 |  strncpy(mon_ndev->name, name, IFNAMSIZ);
->       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->
-> This one is a false-positive because of the explicit termination in the f=
-ollowing
-> line, and recent versions of clang and gcc no longer warn about this.
->
-> Interestingly, the other strncpy() in this file is missing a termination =
-but
-> does not produce a warning, possibly because of the type confusion and th=
-e
-> cast between u8 and char.
->
-> Change both strncpy() instances to strscpy(), which avoids the warning as=
- well
-> as the possibly missing termination. No additional padding is needed here=
-.
+On Thu, 28 Mar 2024 16:57:47 +0100, Joel Granados wrote:
+> What?
+> These commits remove the sentinel element (last empty element) from the
+> sysctl arrays of all the files under the "mm/", "security/", "ipc/",
+> "init/", "io_uring/", "drivers/perf/" and "crypto/" directories that
+> register a sysctl array. The inclusion of [4] to mainline allows the
+> removal of sentinel elements without behavioral change. This is safe
+> because the sysctl registration code (register_sysctl() and friends) use
+> the array size in addition to checking for a sentinel [1].
+> 
+> [...]
 
-Could you also clean up the strncpy present in
-drivers/staging/rtl8723bs/os_dep/os_intfs.c so all these are cleaned
-up at once?
+Applied, thanks!
 
-Maybe we could use the new 2-argument version of strscpy() introduced
-in Commit e6584c3964f2f ("string: Allow 2-argument strscpy()") for all
-3 of these too.
+[6/7] io_uring: Remove the now superfluous sentinel elements from ctl_table array
+      (no commit info)
 
-It looks like:
-    strscpy(dest, src);
+Best regards,
+-- 
+Jens Axboe
 
 
 
-
-
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c b/drivers/=
-staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-> index 65a450fcdce7..98bc5520e77d 100644
-> --- a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-> +++ b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-> @@ -884,7 +884,7 @@ static int cfg80211_rtw_add_key(struct wiphy *wiphy, =
-struct net_device *ndev,
->                 goto addkey_end;
->         }
->
-> -       strncpy((char *)param->u.crypt.alg, alg_name, IEEE_CRYPT_ALG_NAME=
-_LEN);
-> +       strscpy(param->u.crypt.alg, alg_name, IEEE_CRYPT_ALG_NAME_LEN);
->
->         if (!mac_addr || is_broadcast_ether_addr(mac_addr))
->                 param->u.crypt.set_tx =3D 0; /* for wpa/wpa2 group key */
-> @@ -2143,8 +2143,7 @@ static int rtw_cfg80211_add_monitor_if(struct adapt=
-er *padapter, char *name, str
->         }
->
->         mon_ndev->type =3D ARPHRD_IEEE80211_RADIOTAP;
-> -       strncpy(mon_ndev->name, name, IFNAMSIZ);
-> -       mon_ndev->name[IFNAMSIZ - 1] =3D 0;
-> +       strscpy(mon_ndev->name, name, IFNAMSIZ);
->         mon_ndev->needs_free_netdev =3D true;
->         mon_ndev->priv_destructor =3D rtw_ndev_destructor;
->
-> --
-> 2.39.2
->
-
-Thanks
-Justin
