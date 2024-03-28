@@ -1,138 +1,151 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C06B42A8B
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 08:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10E054773
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 08:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711613548; cv=none; b=ry04r24jC/S5aHYr+WY9GMUq5rPClk2NbSy2seTMHX8wpK4gdumTYP0i1DGXSfTmayIns7T3EuIvT6LikjAKwujJ2GEQTAUBG2/iVPxj4r/s3WUUuDkF3EQfBNgV33LpkuhlH7FqrZeiVl02FoiqMf220jiRQjev6wDFNmlu/Ms=
+	t=1711613565; cv=none; b=RWiz8dY7FKoquLdh+GtBJDHEWfjlwIYs+5HpZ6nPcMgfk06nifwbKtR97Cxr7iWeP1KJUHsAS93/fIr4LYdQbKUO+bC5En9OI15o5WAG0BzQGlk692aqNc4fpVh0CzsYaJOjuY2SpqdgD6McVtJG2JoBwWCnjisJ6+CI1YglDG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711613548; c=relaxed/simple;
-	bh=gb6MKVyB1Z8XbC5BzK8Z2vs4Yz7PgGAmQ7D3YG5+8D4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G+BfOHscyuZ2igH05lxX3lzAcujyKp9h5soV+DHW9hRJ/a75037zWm/ByLXFgAwjO1UdRCPIaaAy6JNFc6v5b3sU2Nn0X6yytVpw+VfNIrUGuac92JrNlhbT4SOvPn42MfpEDkUZq/A84WxaZ3KdMcdit9s9pV8An2bwLWvXjE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=none smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=Sz3KYgQ7; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=daynix.com
+	s=arc-20240116; t=1711613565; c=relaxed/simple;
+	bh=PFeWiLIAKM8JaPmrSFnV15YMIsPtkTmht+d/gq6PPKM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hxIQwkKeWnb7BKRLOz4G71Crnvlhv9ZuT0l7nuePwYR9cHlRjuPTcmf8myn9jxJZfAeJnCEDp5Xme2eBrx+8kP9AbK63imXkykwqXpwdqPp1R3P1fA2ET/thhwvFqKiOV1usuAk+C41XL452DFwJxhLxnlvrFmxk7PpuOKT4GkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=E4z2wUN7; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="Sz3KYgQ7"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56c2b4850d2so754435a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 01:12:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1711613545; x=1712218345; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j7rvoFRBKxf0yE7YY8RQnWrAo8fviROdMGC4hs1RKLE=;
-        b=Sz3KYgQ7g2JZNBQ1+wrfP7/MNRWdJ1TLoLN0kDTWwxQJns/xx7qtHS8+RHVteDUra1
-         91PA8T1WqO8BM/9GPZlLWzwfwmKkqHAdhjUoDjvxes+GqDGjRuHpHXmbPp14286YGU8z
-         xC1KHBeE2ww9fOnIpkNxzvuJ+8FvbOcIQawEJQzB3Kec7DoF1vzDpHMbusiLFhsNGGuy
-         kmxeVBZ1Um/oZCoQDGxo+7m2pjFqCJHpeCOSz7YhpvR9BoukfdE/jYPdHP7L4IlBiBFR
-         9hi8JY19fw9CzJmBUqI9UtcXg/tZcBnooD3FuKRbe8clRRwXYo74fguza3ngLXD9tJfQ
-         faog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711613545; x=1712218345;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j7rvoFRBKxf0yE7YY8RQnWrAo8fviROdMGC4hs1RKLE=;
-        b=YDCc2DlaWI8NSzy3tKmq5WGerd8UZkxRSdkuQCEpHSwNHV7lKRlcp+i5MlSdS+Y4kY
-         rGXhvXwRGP5N1ORCCqkCGqVUhsA32Qt0NRKkWDVSqSX75EEKsdzJAT2Ho7rfh0vrz/Kn
-         mUuRDlcmbpZvJM40iNh9aSEV+rBwDuooSHSdf334O1vrFYEkHGu35wZbR7hRTzYa0bYd
-         96KdVwDOtepo4H9V+XyXLAWI8DYXdpqMs+SFx7pv6GBa1wwF/5px/5xm7Ls5AgdCqQrf
-         aSioaRfZw+ROYzBNxaoAY2PbbMjLs16huffbPNdUXBb02ORKW2Rtj5M5AHuKGKxJVxJQ
-         blLw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWi59p8v8fQ33KWG3XIe3DRTRVbGz91PaZReaJhCrZk2F0AnoJY3UDfLU5VJP4K9BV+wNCwMGdX30at0Q9Xd2g3bWsLX/Ty551OKGp
-X-Gm-Message-State: AOJu0Yw6boFoYJR2aiAExpvT9WOXR7cFn2NWIheKV1VSGaYhSsPeYhC1
-	264Lffzma87oPrGEfmmSfdobkFSU81m/1s4X4YwuAaNlyhBnAKCdwXaoBnnRK/r+MQLtpUdCdLl
-	GfAe+0vz1GDtbyJz/gbiuc0mwKuex2VooaiKVEw==
-X-Google-Smtp-Source: AGHT+IFhAfd17DEM8g97DoHFH/S7dRUsoNxHZs84UzKZHQqH0hGnUpb1JsLJhLdhVjny84cLIFvqAV6Qd+lOthHSzAA=
-X-Received: by 2002:a50:c318:0:b0:56c:d64:26b2 with SMTP id
- a24-20020a50c318000000b0056c0d6426b2mr1397511edb.9.1711613544772; Thu, 28 Mar
- 2024 01:12:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="E4z2wUN7"
+Message-ID: <098bfa48-75d5-45b5-b81d-a2a84b394352@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1711613559;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+z86Nxu+WnBrjtSTW47HkgM2M7XmIhiMD7Mp8KdBeRU=;
+	b=E4z2wUN7Sx3Tt3DqFMxB2tqqJACJcSfpHfhXm5Sonb0EWOesDfpI9WYWmmVmtcR2n6omSs
+	QVjfIZUZoHljMcySgJHhu+52Tdn+uVmT3yuARaa3wsZ5hTlQBv3b07wsfOxKOiiLfoJXM0
+	7ZgNghLmGreRRgQrZnP0Zbea29codik=
+Date: Thu, 28 Mar 2024 16:12:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240327231826.1725488-1-andrew@daynix.com> <CACGkMEuW8jLvje0_oqCT=-ih9JEgxOrWRsvjvfwQXw=OWT_RtQ@mail.gmail.com>
-In-Reply-To: <CACGkMEuW8jLvje0_oqCT=-ih9JEgxOrWRsvjvfwQXw=OWT_RtQ@mail.gmail.com>
-From: Andrew Melnichenko <andrew@daynix.com>
-Date: Thu, 28 Mar 2024 09:46:36 +0200
-Message-ID: <CABcq3pFRookhQ8a8Sf9ri2ONOhHME9mXBMUZEOG1eGkJvAxQNw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] vhost: Added pad cleanup if vnet_hdr is not present.
-To: Jason Wang <jasowang@redhat.com>
-Cc: mst@redhat.com, ast@kernel.org, daniel@iogearbox.net, davem@davemloft.net, 
-	kuba@kernel.org, hawk@kernel.org, john.fastabend@gmail.com, 
-	kvm@vger.kernel.org, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	yuri.benditovich@daynix.com, yan@daynix.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC PATCH 7/9] mm: zswap: store zero-filled pages without a
+ zswap_entry
+Content-Language: en-US
+To: Yosry Ahmed <yosryahmed@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240325235018.2028408-1-yosryahmed@google.com>
+ <20240325235018.2028408-8-yosryahmed@google.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+In-Reply-To: <20240325235018.2028408-8-yosryahmed@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Thanks, I'll look into it.
+On 2024/3/26 07:50, Yosry Ahmed wrote:
+> After the rbtree to xarray conversion, and dropping zswap_entry.refcount
+> and zswap_entry.value, the only members of zswap_entry utilized by
+> zero-filled pages are zswap_entry.length (always 0) and
+> zswap_entry.objcg. Store the objcg pointer directly in the xarray as a
+> tagged pointer and avoid allocating a zswap_entry completely for
+> zero-filled pages.
+> 
+> This simplifies the code as we no longer need to special case
+> zero-length cases. We are also able to further separate the zero-filled
+> pages handling logic and completely isolate them within store/load
+> helpers.  Handling tagged xarray pointers is handled in these two
+> helpers, as well as the newly introduced helper for freeing tree
+> elements, zswap_tree_free_element().
+> 
+> There is also a small performance improvement observed over 50 runs of
+> kernel build test (kernbench) comparing the mean build time on a skylake
+> machine when building the kernel in a cgroup v1 container with a 3G
+> limit. This is on top of the improvement from dropping support for
+> non-zero same-filled pages:
+> 
+> 		base            patched         % diff
+> real            69.915          69.757		-0.229%
+> user            2956.147        2955.244	-0.031%
+> sys             2594.718        2575.747	-0.731%
+> 
+> This probably comes from avoiding the zswap_entry allocation and
+> cleanup/freeing for zero-filled pages. Note that the percentage of
+> zero-filled pages during this test was only around 1.5% on average.
+> Practical workloads could have a larger proportion of such pages (e.g.
+> Johannes observed around 10% [1]), so the performance improvement should
+> be larger.
+> 
+> This change also saves a small amount of memory due to less allocated
+> zswap_entry's. In the kernel build test above, we save around 2M of
+> slab usage when we swap out 3G to zswap.
+> 
+> [1]https://lore.kernel.org/linux-mm/20240320210716.GH294822@cmpxchg.org/
+> 
+> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
 
-On Thu, Mar 28, 2024 at 6:03=E2=80=AFAM Jason Wang <jasowang@redhat.com> wr=
-ote:
->
-> On Thu, Mar 28, 2024 at 7:44=E2=80=AFAM Andrew Melnychenko <andrew@daynix=
-.com> wrote:
-> >
-> > When the Qemu launched with vhost but without tap vnet_hdr,
-> > vhost tries to copy vnet_hdr from socket iter with size 0
-> > to the page that may contain some trash.
-> > That trash can be interpreted as unpredictable values for
-> > vnet_hdr.
-> > That leads to dropping some packets and in some cases to
-> > stalling vhost routine when the vhost_net tries to process
-> > packets and fails in a loop.
-> >
-> > Qemu options:
-> >   -netdev tap,vhost=3Don,vnet_hdr=3Doff,...
-> >
-> > From security point of view, wrong values on field used later
-> > tap's tap_get_user_xdp() and will affect skb gso and options.
-> > Later the header(and data in headroom) should not be used by the stack.
-> > Using custom socket as a backend to vhost_net can reveal some data
-> > in the vnet_hdr, although it would require kernel access to implement.
-> >
-> > The issue happens because the value of sock_len in virtqueue is 0.
-> > That value is set at vhost_net_set_features() with
-> > VHOST_NET_F_VIRTIO_NET_HDR, also it's set to zero at device open()
-> > and reset() routine.
-> > So, currently, to trigger the issue, we need to set up qemu with
-> > vhost=3Don,vnet_hdr=3Doff, or do not configure vhost in the custom prog=
-ram.
-> >
-> > Signed-off-by: Andrew Melnychenko <andrew@daynix.com>
->
-> Acked-by: Jason Wang <jasowang@redhat.com>
->
-> It seems it has been merged by Michael.
->
-> Thanks
->
-> > ---
-> >  drivers/vhost/net.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-> > index f2ed7167c848..57411ac2d08b 100644
-> > --- a/drivers/vhost/net.c
-> > +++ b/drivers/vhost/net.c
-> > @@ -735,6 +735,9 @@ static int vhost_net_build_xdp(struct vhost_net_vir=
-tqueue *nvq,
-> >         hdr =3D buf;
-> >         gso =3D &hdr->gso;
-> >
-> > +       if (!sock_hlen)
-> > +               memset(buf, 0, pad);
-> > +
-> >         if ((gso->flags & VIRTIO_NET_HDR_F_NEEDS_CSUM) &&
-> >             vhost16_to_cpu(vq, gso->csum_start) +
-> >             vhost16_to_cpu(vq, gso->csum_offset) + 2 >
-> > --
-> > 2.43.0
-> >
->
+The code looks good, just one comment below.
+
+Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
+
+> ---
+>  mm/zswap.c | 137 ++++++++++++++++++++++++++++++-----------------------
+>  1 file changed, 78 insertions(+), 59 deletions(-)
+> 
+> diff --git a/mm/zswap.c b/mm/zswap.c
+> index 413d9242cf500..efc323bab2f22 100644
+> --- a/mm/zswap.c
+> +++ b/mm/zswap.c
+> @@ -183,12 +183,11 @@ static struct shrinker *zswap_shrinker;
+>   * struct zswap_entry
+>   *
+[..]
+>  
+> @@ -1531,26 +1552,27 @@ bool zswap_load(struct folio *folio)
+>  	struct page *page = &folio->page;
+>  	struct xarray *tree = swap_zswap_tree(swp);
+>  	struct zswap_entry *entry;
+> +	struct obj_cgroup *objcg;
+> +	void *elem;
+>  
+>  	VM_WARN_ON_ONCE(!folio_test_locked(folio));
+>  
+> -	entry = xa_erase(tree, offset);
+> -	if (!entry)
+> +	elem = xa_erase(tree, offset);
+> +	if (!elem)
+>  		return false;
+>  
+> -	if (entry->length)
+> +	if (!zswap_load_zero_filled(elem, page, &objcg)) {
+> +		entry = elem;
+
+nit: entry seems no use anymore.
+
+> +		objcg = entry->objcg;
+>  		zswap_decompress(entry, page);
+> -	else
+> -		clear_highpage(page);
+> +	}
+>  
+>  	count_vm_event(ZSWPIN);
+> -	if (entry->objcg)
+> -		count_objcg_event(entry->objcg, ZSWPIN);
+> -
+> -	zswap_entry_free(entry);
+> +	if (objcg)
+> +		count_objcg_event(objcg, ZSWPIN);
+>  
+> +	zswap_tree_free_element(elem);
+>  	folio_mark_dirty(folio);
+> -
+>  	return true;
+>  }
+[..]
