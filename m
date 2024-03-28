@@ -1,138 +1,89 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9725512F37B
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 15:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D38F8626D;
+	Thu, 28 Mar 2024 15:22:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711639306; cv=none; b=N19kpMTpQv1om3KC7H54ct8KxD396pjQP8M9dZHfEMeTCBAxcZCrWXYexSxz6+57kEurZ/0Lj3NM7MnniRmqFQMqbDZaxfNP+OY4pYtjvq9CQg7d5Vnit1CSt8T08AAvOfbss87SqdDyRP9sJ0oe7W7DJtXSTX0tvPFUOomIl5Q=
+	t=1711639334; cv=none; b=sC2sqq/BgY04pYIx9bDwgD6fkv5g+nHmftMXaJqhH01uXYbCL7gfj2Ccz8+X2nuxC938Bd6dLeY/FVCZEoPUL9E1nuA7NZfvXYxhAiKXzS/vZgtDJkYgwa9bVhKyKibby75lr9ewZiaDhWEcK6NDbnHVqYsL+OiI1PR47GRZkGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711639306; c=relaxed/simple;
-	bh=ondHyxfZ8OX6rwV1SB59go4V4JhpfH4Z1BXh1xU7Kls=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oMKqHHUUVzg3DOfbqRthjW2QMQDpuDcAzWQ8kqn64urDT8ysPjYXy+C9UjMvOdif3NTwUEvaqWQRAnWxELAdI8nFQf6CeEcaSTHWeCR3s106oKhkUHej5cRlY5LA5Nv7ZVsobhjAXTVC41xcdOBgUGaj1OuHR0/XaFJU/7kzdD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ezE9sumk; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711639334; c=relaxed/simple;
+	bh=vozNlw6gpO1XJWv36UdylIBiUWYDdoPfKk5/j4lfe/8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nSG4Skujjf5hh2wiGbbtH00lZIwua+tbm+39UIukALFk4WqvYVdnRhYMTAOT6q4YJjptnFv8A8BMmDCimkqiZQaxVFXaoaA6Fg0lxmpvEmiqIyIOZ6msZV/D2v8hMJElhkaUv4R6XqtoVa1Seg8oxV5Bdsch0TnNAT6aTevtrL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qK2XdBMn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ezE9sumk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711639303;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ondHyxfZ8OX6rwV1SB59go4V4JhpfH4Z1BXh1xU7Kls=;
-	b=ezE9sumktW73q3kaCNMA37Ifb9J5LVgd0XLBttqry/2AaVTP9bOYXFRqTMB++rrW7NHXt9
-	VhVMPYXF3p0vvHBXfSspfpcWsslycdAjy5btixJhi+bG+zAATQIcymKt5mwgRuo9gdho1D
-	Go2mFx/buRVBwVLX5fL8t59aPnSBHes=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-17-B-8QFY0YMkOxqdIyfwGQOQ-1; Thu, 28 Mar 2024 11:21:41 -0400
-X-MC-Unique: B-8QFY0YMkOxqdIyfwGQOQ-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-33ec826d427so245922f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 08:21:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711639300; x=1712244100;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ondHyxfZ8OX6rwV1SB59go4V4JhpfH4Z1BXh1xU7Kls=;
-        b=qeMIxANj6HoSH9kjNcUwxROcmOGOXlhwmWcyfShSYXLiJieSJMnFx6Sdw7OnyKsAHL
-         9Qr12MtSHh0L0spe3MTqdeqhGh7xd5NUP58h/5iYYp2yOdlJ4B47hpRUZSYA+G0X4VIu
-         a1Ut/hUCAnsZ+xkzAjRcuOl1LPlWtXCXqlQc0L7YOcGeXJCKRj+oeV8wBl9HjYSGaCO4
-         9yMjW3P08AANIzluweWVIpgCzmJ96mnlV2SUqsa4eM8obt4T4ZSffJDY2y50/kOAq32o
-         5qb13mUocwLC7lBf/bapwTaW60LoWmJyY58FWw1tHAgalnileTOE3X5B4x4Xarv0DUXm
-         ueEg==
-X-Forwarded-Encrypted: i=1; AJvYcCXUto9C2DnJyNFK9fyA5nZSbl0Evqk7w2r31uZ64lNEx1noU4yYpc3uqPOYefeJcj5CaxBsr9cOZJIPOLV+1Uv5M5xA5fuZEDKFfO1V
-X-Gm-Message-State: AOJu0YxNZzfAI3qNCkNcEWmHhUHf8RWi0mz4AKnklX5PYMft41hNalSN
-	qNTFlJjEVGfcGajfmkw5zRYMT8a/OOFIdwVjanKcKqvWEFZlJ6fJHgUJAw4yCpPvPzVLz8k/KrE
-	fJNTv/pTEyXm8bDjYOa2UfrWW2AbQxyC25sTMd/hgJBy4map+vzZJqGT/L2ifMQnvE+6BHQ==
-X-Received: by 2002:a5d:4d12:0:b0:341:8f18:db39 with SMTP id z18-20020a5d4d12000000b003418f18db39mr2162765wrt.1.1711639299849;
-        Thu, 28 Mar 2024 08:21:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG4wODag+R6YZegPQpjBBcHxwLoBqvrwbnJ8kbwMlZZahD5JYP2dGk26tLHT2tkN0npnp32mg==
-X-Received: by 2002:a5d:4d12:0:b0:341:8f18:db39 with SMTP id z18-20020a5d4d12000000b003418f18db39mr2162753wrt.1.1711639299507;
-        Thu, 28 Mar 2024 08:21:39 -0700 (PDT)
-Received: from pstanner-thinkpadt14sgen1.remote.csb ([2001:9e8:32de:9a00:227b:d2ff:fe26:2a7a])
-        by smtp.gmail.com with ESMTPSA id m3-20020adffa03000000b003432dcdb5d3sm1987109wrr.35.2024.03.28.08.21.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 08:21:39 -0700 (PDT)
-Message-ID: <25b5f2297c98500ed91971a61ccc4bfa5921035e.camel@redhat.com>
-Subject: Re: [PATCH 6/9] nilfs2: fix out-of-range warning
-From: Philipp Stanner <pstanner@redhat.com>
-To: Arnd Bergmann <arnd@kernel.org>, linux-kernel@vger.kernel.org, Ryusuke
-	Konishi <konishi.ryusuke@gmail.com>, Nathan Chancellor <nathan@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Nick Desaulniers
- <ndesaulniers@google.com>,  Bill Wendling <morbo@google.com>, Justin Stitt
- <justinstitt@google.com>, Andrew Morton <akpm@linux-foundation.org>,
- Christian Brauner <brauner@kernel.org>, Jeff Layton <jlayton@kernel.org>,
- Thorsten Blum <thorsten.blum@toblux.com>,  linux-nilfs@vger.kernel.org,
- llvm@lists.linux.dev, pstanner@redhat.com
-Date: Thu, 28 Mar 2024 16:21:38 +0100
-In-Reply-To: <20240328143051.1069575-7-arnd@kernel.org>
-References: <20240328143051.1069575-1-arnd@kernel.org>
-	 <20240328143051.1069575-7-arnd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qK2XdBMn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88098C433F1;
+	Thu, 28 Mar 2024 15:22:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711639334;
+	bh=vozNlw6gpO1XJWv36UdylIBiUWYDdoPfKk5/j4lfe/8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qK2XdBMn83E6sWLnuqy7ufTtf7QtdwBq7TOHEVsVXuj5DlwqaNourPcQKQ7KkNUH7
+	 iKb7WcFSeJ5lVoMNpSKFH3eoZQ6N7u2BJdtKEp+iPj+/yfhvzsXcIP18BSzIqoGFRv
+	 sDchmBwBpXjAoI9EppNdn1uydU45Nbz+dXqDIfJ75JpuyPoyu5HXpY+oTjaidjUmqV
+	 EiInY6rBB+IvT3NSTC1ZDVBRlkukMHY2LocTlJFQS6W0ExtrSFaBry3/otf3xk9apo
+	 twLJNjuceeRGH8zrHTbAI0gPC3+sj8IhGE9iIhJOXO8orE6vpe60jIeLLAWjP6/Pu7
+	 qxnm0sHCBnKsw==
+Date: Thu, 28 Mar 2024 15:22:07 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Seven Lee <wtli@nuvoton.com>
+Cc: lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+	devicetree@vger.kernel.org, linux-sound@vger.kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, linux-kernel@vger.kernel.org,
+	robh+dt@kernel.org, conor+dt@kernel.org, perex@perex.cz,
+	tiwai@suse.com, YHCHuang@nuvoton.com, KCHSU0@nuvoton.com,
+	CTLIN0@nuvoton.com, SJLIN0@nuvoton.com, scott6986@gmail.com,
+	supercraig0719@gmail.com, dardar923@gmail.com
+Subject: Re: [PATCH v5 2/2] ASoC: nau8325: new driver
+Message-ID: <8278611a-a46f-4d5e-9861-67ff1084db50@sirena.org.uk>
+References: <20240327075755.3410381-1-wtli@nuvoton.com>
+ <20240327075755.3410381-3-wtli@nuvoton.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="EYfydwHOIW727Hww"
+Content-Disposition: inline
+In-Reply-To: <20240327075755.3410381-3-wtli@nuvoton.com>
+X-Cookie: Yes, but which self do you want to be?
 
-On Thu, 2024-03-28 at 15:30 +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
->=20
-> clang-14 points out that v_size is always smaller than a 64KB
-> page size if that is configured by the CPU architecture:
->=20
-> fs/nilfs2/ioctl.c:63:19: error: result of comparison of constant
-> 65536 with expression of type '__u16' (aka 'unsigned short') is
-> always false [-Werror,-Wtautological-constant-out-of-range-compare]
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (argv->v_size > PAGE_SIZE)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ~~~~~~=
-~~~~~~ ^ ~~~~~~~~~
->=20
-> This is ok, so just shut up that warning with a cast.
 
-nit:
-It's not a warning, but actually a compile error, right?
+--EYfydwHOIW727Hww
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-(no idea why they make that an error btw. Warning would be perfectly
-fine)
+On Wed, Mar 27, 2024 at 03:57:55PM +0800, Seven Lee wrote:
 
->=20
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> +static const char * const nau8325_dac_oversampl[] = {
+> +	"64", "256", "128", "", "32" };
+> +
+> +static const struct soc_enum nau8325_dac_oversampl_enum =
+> +	SOC_ENUM_SINGLE(NAU8325_R29_DAC_CTRL1, NAU8325_DAC_OVERSAMPLE_SFT,
+> +			ARRAY_SIZE(nau8325_dac_oversampl),
+> +			nau8325_dac_oversampl);
 
-Should / could that be backported to stable kernels in case people
-start building those with clang-14?
+This should really be a SOC_VALUE_ENUM so you can just hide the fourth
+value rather than having the empty (presumably invalid) option.  Please
+send an incremental patch doing this.
 
-Regards,
-P.
+--EYfydwHOIW727Hww
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> ---
-> =C2=A0fs/nilfs2/ioctl.c | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/fs/nilfs2/ioctl.c b/fs/nilfs2/ioctl.c
-> index f1a01c191cf5..8be471ce4f19 100644
-> --- a/fs/nilfs2/ioctl.c
-> +++ b/fs/nilfs2/ioctl.c
-> @@ -60,7 +60,7 @@ static int nilfs_ioctl_wrap_copy(struct the_nilfs
-> *nilfs,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (argv->v_nmembs =3D=3D=
- 0)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0return 0;
-> =C2=A0
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (argv->v_size > PAGE_SIZE)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if ((size_t)argv->v_size > PAG=
-E_SIZE)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0return -EINVAL;
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/*
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmYFix8ACgkQJNaLcl1U
+h9BlSQf9EyTsgJpalcSaLea4nqxS0rWOxqW45DemoZI42X3n4+1V/McyJUdeRp4g
+uhtCOzVmY+IpsWRTjh7JkmXeCINHodUMWV9pJ5DNtnkssW0APQ3NTnNCcLfxyZMF
+jDAj/Bp6Q+uZSI5lmoEhZ21bzefN0ysYMtrzEym5lT3EA4RCKDuuJEBY248mT/y0
+21d/BmZpJfmbwqr5EkLBnYYSItkVtXu4+XRh8bPlL0RVGAv3EYLKLTq45wgsznbQ
+UUqTz1+NWfeETQDMV3m2RcEafHiE2DBkb9ZptqtObVuXsx5DUyrnjGpSocfv850C
+iPdllwLhZ2RkwVo1Rlaq17ockWjx2g==
+=j0PB
+-----END PGP SIGNATURE-----
+
+--EYfydwHOIW727Hww--
