@@ -1,113 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B2F7F488;
-	Thu, 28 Mar 2024 13:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A8F3771E
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 13:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711631297; cv=none; b=kDvuIf1nZ/07VHUV4ymiEtrb0ZiriSmWGCOTbekox+myatvTsVssEXg9seh4DLFeOXUuXSRCPdndH86dQi8Asfjn0sX1DCTzwID6L+vyKaYzHP+WNMzFWS4f/aBMi8U1SODHPnzJarZu67W2BX5B2gMaIHeAXIO9daLIMB5YdmU=
+	t=1711631316; cv=none; b=e7Yot/ReknMX2YwI5RhC5oOm1dkHWiCCWh38Obs1YIi9NrqMb9SqGuDVMqxtfRCWFE/HPn9JDRhnMC7kHRHmDldxNvEldFUeZuEKUPuzpVOjPJ9sERiJBkovM9D7xjPTDfquZx8jrILrzUxsfexh5ulPOfM5QMcmvGchJvcVtH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711631297; c=relaxed/simple;
-	bh=nShQvEWBHWFkHeUvTXhbDAYLvFW0P8doKSZGdt8MvuI=;
-	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
-	 Cc:Message-ID:Date; b=AN+B38ojtv3Ujho8R+2H2ShpcG2e92/oriDFEeRbbLlNnyqqQ3OVhdcjWDUC5obwmoE5sBNOTOz05mze7DKPbopsbSjo/AQaEg1spUXis0Ey5+tuNpIRIuKrf3eUwUGA7zL2km0ib/PDNKdZgPpAqz0KycHseqEvuSIvoOIj7Es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UjkKoVwQ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UjkKoVwQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0484C433F1;
-	Thu, 28 Mar 2024 13:08:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711631296;
-	bh=nShQvEWBHWFkHeUvTXhbDAYLvFW0P8doKSZGdt8MvuI=;
-	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-	b=UjkKoVwQrROwSq73YwDIuiTrCSQZORLenJpjokIRrD+XNzf3/uY7PHRmSYY1ZSn6T
-	 12IOGyhNLap82s6+lHGUDUSUrFP+0B/+y5nXKiAuV0D+KCAeptqdKxdqZMNpWDiqCY
-	 sHxZK6L4XBO350+Z+l4t4Vgh3B8hqB0GO9fjJRmfswFYO1rNM/5aiKD1dfCFkvIUIU
-	 jHCaYGFeZjE1tNoypMRBvuvWqIEzADfty3RXOBCkZn2XRrwl35A0QqthJjsHJhYISU
-	 hccPxmrYw/QdBp9kTbxlmqfrkeak/6Bs4To9Mis8+JhsYb7nGoUP5QUne1xf1bTq1+
-	 bSNYo1WaqVmhg==
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1711631316; c=relaxed/simple;
+	bh=1Gq5pEaNXrbu7yF2EJf5b4IE0l7/gZsdHSMEOPyFyyY=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=Y/Biuv3M3ZOQ2uYZ455RDXpKGT77SyCIsMpXoXrRSlfd4twwlRR1PJPRhVJHhvvwjAWv3oLuvLMxWjPZRCyxHF9NpBboIbOKjh2PSH7owwTTcSOr0BJtTc/rxhLEd4dYXqLfpPorz0Xat49CGlPs5GhTL+MzFzmIHUbGso5FpK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7c7e21711d0so55865639f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 06:08:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711631313; x=1712236113;
+        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=phTm8D9QxIqku3+dzOk7mAuzWATH8ccFfySGlvdYVpw=;
+        b=Bp5x4WnzQHvrZdGIPeChpeLBpzk26WpokSFFxcrv4ni0RXqeDhSmZabWwTgPQ8UoaH
+         YddNpmWNl7wVY+COhTqi3e7VC8meeduhThLiMQ62m+TL5aT3uspm9K5iYUUGGMvqEzR1
+         F+RAjTSaC3uQs5b7apoKwbX7GdEbWJQZZl0YAfj/Gsl0YTN+Ar75l3ADYj23JR99D0Ks
+         am5w5XU3AwWDvXmDhwsdM+fRy6rCsr2fPYyh3imB78MrdaTyd6pePykI8Fkx2+YP1PtO
+         678b6oUHeVg8WvOUZaUoFLPHQ6aottmXojqv7e+feFx3HBOn5OggUl05VCwD8lkN0p7+
+         RtTw==
+X-Forwarded-Encrypted: i=1; AJvYcCWv0LZBUsWSGvTr0CXFv6zfKBCPTALhzkGhY1iZI97K3esCx08aYpDVbzFjhINoVEKwwLPxWcvXqaKFsrS/YxwsGn4zMV4eF1GLw9Qk
+X-Gm-Message-State: AOJu0YxqhQeLuORcKTy0ndGGPEkNoNltJZixOM7XUB30hw5HmhNcuHN5
+	dQ7GSfxzFg/6oyPpdWPbHH5dBHxF0J5aKX5xNnOU5u1Sppfhsk+bfHM6SjrGs4qbS2eGckiow0Q
+	ehsTCp99SJV1s91kpaQWh4Np3mT8LeoIPZ7842490QvYqPk7FdYH+BXg=
+X-Google-Smtp-Source: AGHT+IHVstareIQr2iQt8P9A37R24y5Hcmor2dMv1fVqXV3He2chAs+ykyZXD9HnfYyfbzs67ps9/XJ4T8VQ1Cu/MRR2oRPtrbdB
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH][next] wifi: mwl8k: Avoid -Wflex-array-member-not-at-end
- warnings
-From: Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <ZgDrhe5pbV/WvDiZ@neat>
-References: <ZgDrhe5pbV/WvDiZ@neat>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
-Message-ID: <171163129374.129280.17590412225670656069.kvalo@kernel.org>
-Date: Thu, 28 Mar 2024 13:08:15 +0000 (UTC)
+X-Received: by 2002:a05:6602:3413:b0:7cc:7112:ea9c with SMTP id
+ n19-20020a056602341300b007cc7112ea9cmr54675ioz.2.1711631313702; Thu, 28 Mar
+ 2024 06:08:33 -0700 (PDT)
+Date: Thu, 28 Mar 2024 06:08:33 -0700
+In-Reply-To: <271f4b9c-f879-4933-b1e9-1e7481a809eb@ghiti.fr>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000070a2660614b83885@google.com>
+Subject: Re: [syzbot] riscv/fixes boot error: can't ssh into the instance (3)
+From: syzbot <syzbot+620209d95a0e9fde702f@syzkaller.appspotmail.com>
+To: alex@ghiti.fr
+Cc: alex@ghiti.fr, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, palmer@dabbelt.com, paul.walmsley@sifive.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+> On 28/03/2024 09:27, syzbot wrote:
+>> Hello,
+>>
+>> syzbot found the following issue on:
+>>
+>> HEAD commit:    653650c468be riscv: Mark __se_sys_* functions __used
+>> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git fixes
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=1110f1e6180000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=88360569be845301
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=620209d95a0e9fde702f
+>> compiler:       riscv64-linux-gnu-gcc (Debian 12.2.0-13) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+>> userspace arch: riscv64
+>>
+>> Downloadable assets:
+>> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/a741b348759c/non_bootable_disk-653650c4.raw.xz
+>> vmlinux: https://storage.googleapis.com/syzbot-assets/2701bf6276c4/vmlinux-653650c4.xz
+>> kernel image: https://storage.googleapis.com/syzbot-assets/aed54fe6b3d5/Image-653650c4.xz
+>>
+>> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+>> Reported-by: syzbot+620209d95a0e9fde702f@syzkaller.appspotmail.com
+>>
+>>
+>>
+>> ---
+>> This report is generated by a bot. It may contain errors.
+>> See https://goo.gl/tpsmEJ for more information about syzbot.
+>> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>>
+>> syzbot will keep track of this issue. See:
+>> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>>
+>> If the report is already addressed, let syzbot know by replying with:
+>> #syz fix: exact-commit-title
+>>
+>> If you want to overwrite report's subsystems, reply with:
+>> #syz set subsystems: new-subsystem
+>> (See the list of subsystem names on the web dashboard)
+>>
+>> If the report is a duplicate of another one, reply with:
+>> #syz dup: exact-subject-of-another-report
+>>
+>> If you want to undo deduplication, reply with:
+>> #syz undup
+>>
+>> _______________________________________________
+>> linux-riscv mailing list
+>> linux-riscv@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-riscv	
+>
+>
+> So this is fixed by 
+> https://lore.kernel.org/all/20240326063036.6242-1-osalvador@suse.de/
+>
+> Here are the relevant syzbot tags (hopefully I get them right):
+>
+> #syz dup: [syzbot] [mm?] upstream boot error: WARNING: refcount bug in 
+> __reset_page_owner
+>
+> #syz fix: mm,page_owner: Fix refcount imbalance
+>
+> Thanks,
+>
+> Alex
+>
 
-> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
-> ready to enable it globally.
-> 
-> There is currently an object (`header`), at the beginning of multiple
-> structures, that contains a flexible structure (`struct mwl8k_cmd_pkt`),
-> for example:
-> 
-> struct mwl8k_cmd_get_hw_spec_sta {
->         struct mwl8k_cmd_pkt header;
-> 
-> 	...
-> 
-> 	__le32 num_tx_desc_per_queue;
->         __le32 total_rxd;
-> } __packed;
-> 
-> So, in order to avoid ending up with flexible-array members in the
-> middle of multiple other structs, we use the `__struct_group()` helper
-> to separate the flexible array from the rest of the members in the
-> flexible structure:
-> 
-> struct mwl8k_cmd_pkt {
->         __struct_group(mwl8k_cmd_pkt_hdr, hdr, __packed,
-> 
-> 	... the rest of the members
-> 
->         );
->         char payload[];
-> } __packed;
-> 
-> With the change described above, we now declare objects of the type of
-> the tagged struct, in this case `struct mwl8k_cmd_pkt_hdr`, without
-> embedding flexible arrays in the middle of another struct:
-> 
-> struct mwl8k_cmd_get_hw_spec_sta {
->         struct mwl8k_cmd_pkt_hdr header;
-> 
->         ...
-> 
->         __le32 num_tx_desc_per_queue;
->         __le32 total_rxd;
-> } __packed;
-> 
-> Also, update the type of a couple of variables and function parameters
-> from `struct mwl8k_cmd_pkt` to `struct mwl8k_cmd_pkt_hdr`.
-> 
-> So, with these changes, fix 33 of the following warnings[1]:
-> drivers/net/wireless/marvell/mwl8k.c:2353:30: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Link: https://gist.github.com/GustavoARSilva/7a841a92c0f24e5efdb30ce02b601eb8 [1]
-> Link: https://github.com/KSPP/linux/issues/202
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Patch applied to wireless-next.git, thanks.
-
-5c4250092fad wifi: mwl8k: Avoid -Wflex-array-member-not-at-end warnings
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/ZgDrhe5pbV/WvDiZ@neat/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Command #1:
+can't find the dup bug
 
