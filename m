@@ -1,171 +1,117 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4788465
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 01:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D90D0200D5;
+	Thu, 28 Mar 2024 01:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711589266; cv=none; b=PJ0F2m7VhQPhGuunlGRXM/9EqYEgqDcspQ+eDZlV/LxUnsLf81kF3GEDhq8OmQhfKNS99exe9O5cenfpTWoiapcwRgxUZZ4vl8tdDQN2c3xLoWxCaCr6fPyVAPu0g4tTUUFBfkG37eCZnum09TNqMKgnu8N8AM9+ri46Au6r47Y=
+	t=1711589420; cv=none; b=pSTL5P1zNyLZqnBZ6Mlpy6NWfEVTyV4ZEBYtGY2v3k/X4r2GfxtGhSbs7GBw/Jo9y2PmlIUPGDBI9q8IwA/qP06l9bqzeGBFVOe4k8AZ+Q2r0Jjk/skLYWYzrgFYmBvtS5PurQvj+n3idicSH+psa6Xwogn2u7ZvArIFO6sYYxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711589266; c=relaxed/simple;
-	bh=fBO8KAJmy3wMi2rgjJu6UmFyCOj/5ge41qGaheG6254=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bzcgxPvHkyT8KtbPZegFChIhW0GVzea47CVpR136s7fwHIXsQJBx4FtcYwcPUkIoxisD3sy38PKEUi7a0gD6b2F+e5/yr1EV09XFsLO06msQzuWbTDFBoJGtGIXEO0D7Z4JKKV0x3rIJOnp7ZydpMZhjVN05XfF1yEAAAahwglY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iWgsu5tL; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711589420; c=relaxed/simple;
+	bh=5aCurHOHta8QRuhaeNAeu28tMitK//VvdG5YQ9yPLRU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CcQe9YMDwxBhTD5ZmhAbcCOTUR73idTvt/m37UFBlhvbFt9u9aK0BKqcTtxC7KRHkBtAU81E7SCMHMEqf7+JyuH5p5X1LkEH/Dtq8GY2hUmYEUKy/FW4dcYXsT9LmpUi5f09khHV/ivND4jv9H7ymWhTbyM9R8uoalfyz5atwAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qcz63bWB; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iWgsu5tL"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d485886545so5983301fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 18:27:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711589263; x=1712194063; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a4+6bhV4ASkyXzhB6rRjo48e6+mgSPLqfD3+eCsrCCs=;
-        b=iWgsu5tLNneGAI8ArfZPjiBnze9Cbxblk/hUzM50dnEUcpBxwcNomO28paj/vD9S74
-         R2v14eX59VmKihIuZDyqhKYmqNzmMJ67qOmgXtzF4hdLSrRY2EabLXi4YR/hZjjz9mKC
-         Nb5kXgQsQCaQvS+E+p2W267ACEkBwSbA8Z9hNkZNj8Fxw6IcyQ+ymFp++M2D0mTYGjlK
-         ZtQOVLIDrSwmUrYXAr4BVzKu8WNAcBeZ21UaJg+Sy+X/qrkepcj42h8uoCcxJjE/kltZ
-         G+Kohp5GJDCxa+c36n7EdoUq5KgKBUPY/2k7bETVBbvTxoIoUsZ2bz9EGcZCBMwx3nZI
-         vwyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711589263; x=1712194063;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a4+6bhV4ASkyXzhB6rRjo48e6+mgSPLqfD3+eCsrCCs=;
-        b=Ci2l419iPFxvc2Rg+KPG3NA2cTI5KB/muhgnvsnMz6QdJHS3gKoV4/UrYzpfQCdMxQ
-         85Kt4sVDcSK3MwGGPhTL7oIMkVif+KhbNlA0n6T6wv8d/ySiLhtumMIhc6U4gVmA6+HA
-         997qMZypeSksTGrhyRaKEZuN/stGvMjkT7E6pGRcvYc/ElN62OysfaW69zfcpI6FhB9I
-         ynY5sKKUb3Pzkm0exkEMnWfZNQqg17kFCNAGNn+bmCbUYn9FO4TP2MWRqUHOn+G9fULP
-         XgTVXSDeiln2n+OTgZmz9Nrz6OYmK6RjpYesiBITFil1ijMVw/NPO8tOdx09S2r5ONAP
-         ljgA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4BXJazgR2lnWnzSO6IoYFw4DJERdhS1MYcdjtNerqsL6atHeVn5mQ8jkhR7OdvLIixctnheB9Hc3bSFXPGaJb5QGYLLWFeXcNdp7t
-X-Gm-Message-State: AOJu0YyT2RmG1BDdL17LHpmz/wyUPCPkCuAJl0yqmIb3HqOZbKKp7nL7
-	PUjOa/3SPKSeXq7uDye+av83XakJ2yE/qb5E6Yv+k+CMq/biaNGILEUmnIxwNHO/EtlYYyS/eMm
-	dVESviF39Vf0D35LZyE77M4rxrXk=
-X-Google-Smtp-Source: AGHT+IHjHc/M5wg8Kjv4Xh41rdEpeSo18qi7fVeBXzM21c5hf+atpQ+Bm9FW8uywUPCAPYwN/gDi0QxSLifoeLU+Wbk=
-X-Received: by 2002:a2e:8551:0:b0:2d5:acde:9065 with SMTP id
- u17-20020a2e8551000000b002d5acde9065mr1501774ljj.34.1711589262680; Wed, 27
- Mar 2024 18:27:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qcz63bWB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711589419; x=1743125419;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=5aCurHOHta8QRuhaeNAeu28tMitK//VvdG5YQ9yPLRU=;
+  b=Qcz63bWBPtmy7lOkscUGrcUQECXgbPvX+Yz31sppPlo4YO8BDsqW0GJT
+   nt+iI3bBhVDhfljeYRql7Ql5CFLnRQm5gI+kVv8OPvHYMFuNbvwW3sxSB
+   bryATcOyfMuvfKmPouCAHm9ZuKWfglTCYm9W2f2lWK7cdy0HRqrrBu2bN
+   H98JYGr/fLhz5oqXqJzlse2jBILHBiNdutO3WR1gS6dgbSmjH98sw8Gft
+   zB5Ba5m6AgZCQfgVk8Db01TBqPo6FzIVjCdOqXJI+25BXd7TcA+cjX7rM
+   uzmour0+YU/7o9B30RFfozS3m2PTrkakK5aqoo4Hd4ikDLWs4Yoq/hldV
+   A==;
+X-CSE-ConnectionGUID: dj0kqkB6S5Wm/jj9/XyOaw==
+X-CSE-MsgGUID: AuSX9eYQTLKZ/X2D64uq/A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="10505872"
+X-IronPort-AV: E=Sophos;i="6.07,160,1708416000"; 
+   d="scan'208";a="10505872"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 18:30:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,160,1708416000"; 
+   d="scan'208";a="21145884"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.224.7]) ([10.124.224.7])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 18:30:15 -0700
+Message-ID: <20ef977a-75e5-4bbc-9acf-fa1250132138@intel.com>
+Date: Thu, 28 Mar 2024 09:30:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Zfj_-LbiIsAVWcPX@casper.infradead.org> <CAGWkznHOWVPpKHOuvvDF2zppkTT0_x4WyJ5S75j+EghhZmEDdg@mail.gmail.com>
- <ZfwpuRjAZV07_lc3@casper.infradead.org> <CAGWkznFtez1fj2L2CtFnA5k-Tn4WtxmDOw=fjOWPg-ZGJX=VWw@mail.gmail.com>
- <Zfz4_GJAHRInB8ul@casper.infradead.org> <CAGWkznEzpcWi4oXVn_WFahnQj3dHcwc_4VW6m1Ss-KJ8mD3F3Q@mail.gmail.com>
- <ZgDt9mwN-Py5Y-xr@casper.infradead.org> <CAGWkznHO27EpVVpFyKnv-SX-JTYCXQxb0MG+EW07gaupocR4RQ@mail.gmail.com>
- <ZgK91II_eSYY6D2F@casper.infradead.org> <CAGWkznGLySzLE17+rCe=UoA26vx=iM375o2zkruKM9ssG05QzA@mail.gmail.com>
- <ZgQRtQ60mrvOUKXo@casper.infradead.org>
-In-Reply-To: <ZgQRtQ60mrvOUKXo@casper.infradead.org>
-From: Zhaoyang Huang <huangzhaoyang@gmail.com>
-Date: Thu, 28 Mar 2024 09:27:31 +0800
-Message-ID: <CAGWkznF3GfCs8odhR-Hue5H8MZ=eXb82V20ZoCCjeoSjAPQ9cw@mail.gmail.com>
-Subject: Re: summarize all information again at bottom//reply: reply: [PATCH]
- mm: fix a race scenario in folio_isolate_lru
-To: Matthew Wilcox <willy@infradead.org>
-Cc: =?UTF-8?B?6buE5pyd6ZizIChaaGFveWFuZyBIdWFuZyk=?= <zhaoyang.huang@unisoc.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	=?UTF-8?B?5bq357qq5ruoIChTdGV2ZSBLYW5nKQ==?= <Steve.Kang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 059/130] KVM: x86/tdp_mmu: Don't zap private pages for
+ unsupported cases
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+ "Gao, Chao" <chao.gao@intel.com>, "Yamahata, Isaku"
+ <isaku.yamahata@intel.com>
+Cc: "Zhang, Tina" <tina.zhang@intel.com>,
+ "isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>,
+ "seanjc@google.com" <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>,
+ "Chen, Bo2" <chen.bo@intel.com>, "sagis@google.com" <sagis@google.com>,
+ "isaku.yamahata@linux.intel.com" <isaku.yamahata@linux.intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "Aktas, Erdem" <erdemaktas@google.com>,
+ "pbonzini@redhat.com" <pbonzini@redhat.com>, "Yuan, Hang"
+ <hang.yuan@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+References: <96fcb59cd53ece2c0d269f39c424d087876b3c73.camel@intel.com>
+ <20240325190525.GG2357401@ls.amr.corp.intel.com>
+ <5917c0ee26cf2bb82a4ff14d35e46c219b40a13f.camel@intel.com>
+ <20240325221836.GO2357401@ls.amr.corp.intel.com>
+ <20240325231058.GP2357401@ls.amr.corp.intel.com>
+ <edcfc04cf358e6f885f65d881ef2f2165e059d7e.camel@intel.com>
+ <20240325233528.GQ2357401@ls.amr.corp.intel.com>
+ <ZgIzvHKobT2K8LZb@chao-email>
+ <20db87741e356e22a72fadeda8ab982260f26705.camel@intel.com>
+ <ZgKt6ljcmnfSbqG/@chao-email>
+ <20240326174859.GB2444378@ls.amr.corp.intel.com>
+ <481141ba-4bdf-40f3-9c32-585281c7aa6f@intel.com>
+ <34ca8222fcfebf1d9b2ceb20e44582176d2cef24.camel@intel.com>
+ <873263e8-371a-47a0-bba3-ed28fcc1fac0@intel.com>
+ <e0ac83c57da3c853ffc752636a4a50fe7b490884.camel@intel.com>
+ <5f07dd6c-b06a-49ed-ab16-24797c9f1bf7@intel.com>
+ <d7a0ed833909551c24bf1c2c52b8955d75359249.camel@intel.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <d7a0ed833909551c24bf1c2c52b8955d75359249.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 27, 2024 at 8:31=E2=80=AFPM Matthew Wilcox <willy@infradead.org=
-> wrote:
->
-> On Wed, Mar 27, 2024 at 09:25:59AM +0800, Zhaoyang Huang wrote:
-> > > Ignoring any other thread, you're basically saying that there's a
-> > > refcount imbalance here.  Which means we'd hit an assert (that folio
-> > > refcount went below zero) in the normal case where another thread was=
-n't
-> > > simultaneously trying to do anything.
-> > Theoretically Yes but it is rare in practice as aops->readahead will
-> > launch all pages to IO under most scenarios.
->
-> Rare, but this path has been tested.
->
-> > read_pages
-> >     aops->readahead[1]
-> > ...
-> >     while (folio =3D readahead_folio)[2]
-> >         filemap_remove_folio
-> >
-> > IMO, according to the comments of readahead_page, the refcnt
-> > represents page cache dropped in [1] makes sense for two reasons, '1.
-> > The folio is going to do IO and is locked until IO done;2. The refcnt
-> > will be added back when found again from the page cache and then serve
-> > for PTE or vfs' while it doesn't make sense in [2] as the refcnt of
-> > page cache will be dropped in filemap_remove_folio
-> >
-> >  * Context: The page is locked and has an elevated refcount.  The calle=
-r
-> >  * should decreases the refcount once the page has been submitted for I=
-/O
-> >  * and unlock the page once all I/O to that page has completed.
-> >  * Return: A pointer to the next page, or %NULL if we are done.
->
-> Follow the refcount through.
->
-> In page_cache_ra_unbounded():
->
->                 folio =3D filemap_alloc_folio(gfp_mask, 0);
-> (folio has refcount 1)
->                 ret =3D filemap_add_folio(mapping, folio, index + i, gfp_=
-mask);
-> (folio has refcount 2)
->
-> Then we call read_pages()
-> First we call ->readahead() which for some reason stops early.
-> Then we call readahead_folio() which calls folio_put()
-> (folio has refcount 1)
-> Then we call folio_get()
-> (folio has refcount 2)
-> Then we call filemap_remove_folio()
-> (folio has refcount 1)
-> Then we call folio_unlock()
-> Then we call folio_put()
-ok, I missed the refcnt from alloc_pages. However, I still think it is
-a bug to call readahead_folio in read_pages as the refcnt obtained by
-alloc_pages should be its final guard which is paired to the one which
-checked in shrink_folio_list->__remove_mapping->folio_ref_freeze(2)(this
-2 represent alloc_pages & page cache). If we removed this one without
-isolating the folio from LRU, the following race could happen.
-Furthermore, the refcnt dropped in the readahead_folio represents page
-cache, it doesn't make sense to drop it twice in read_pages.
+On 3/28/2024 9:06 AM, Edgecombe, Rick P wrote:
+> On Thu, 2024-03-28 at 08:58 +0800, Xiaoyao Li wrote:
+>>> How so? Userspace needs to learn to create a TD first.
+>>
+>> The current ABI of KVM_EXIT_X86_RDMSR/WRMSR is that userspace itself
+>> sets up MSR fitler at first, then it will get such EXIT_REASON when
+>> guest accesses the MSRs being filtered.
+>>
+>> If you want to use this EXIT reason, then you need to enforce userspace
+>> setting up the MSR filter. How to enforce?
+> 
+> I think Isaku's proposal was to let userspace configure it.
+> 
+> For the sake of conversation, what if we don't enforce it? The downside of not enforcing it is that
+> we then need to worry about code paths in KVM the MTRRs would call. But what goes wrong
+> functionally? If userspace doesn't fully setup a TD things can go wrong for the TD.
+> 
+> A plus side of using the MSR filter stuff is it reuses existing functionality.
+> 
+>>   If not enforce, but exit with
+>> KVM_EXIT_X86_RDMSR/WRMSR no matter usersapce sets up MSR filter or not.
+>> Then you are trying to introduce divergent behavior in KVM.
+> 
+> The current ABI of KVM_EXIT_X86_RDMSR when TDs are created is nothing. So I don't see how this is
+> any kind of ABI break. If you agree we shouldn't try to support MTRRs, do you have a different exit
+> reason or behavior in mind?
 
-0. Thread_readahead:
-    folio_put()
-        folio_put_test_zero() =3D=3D true
-        __folio_put()
-            folio_test_lru() =3D=3D true
-            <preempted>
-
-1. Thread_isolate
-     folio_isolate_lru
-         folio_test_clear_lru()
-         lruvec_del_folio()
-
-2. Thread_readahead
-    folio_put()
-        folio_put_test_zero() =3D=3D true
-        __folio_put
-            folio_test_lru() =3D=3D true
-            <schedule back from 0>
-            lruvec_del_folio()
-
-
-
-> (folio has refcount 0 and is freed)
->
-> Yes, other things can happen in there to increment the refcount, so this
-> folio_put() might not be the last put, but we hold the folio locked the
-> entire time, so many things which might be attempted will block on the
-> folio lock.  In particular, nobody can remove it from the page cache,
-> so its refcount cannot reach 0 until the last folio_put() of the
-> sequence.
+Just return error on TDVMCALL of RDMSR/WRMSR on TD's access of MTRR MSRs.
