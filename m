@@ -1,111 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C6440852;
-	Thu, 28 Mar 2024 16:57:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 716001DDCE;
+	Thu, 28 Mar 2024 16:57:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711645027; cv=none; b=CfxH1W73S0oz+NGfK3+tu4BYLJwnikHEARD+BuDNjscwSHVUT3Ro1Bhjj3CMVnSZgirZ12v4dmkZ3PbnacNswwJaHNbBT8NeLlff/FVaDyDBab1W63ts0NB8CdI0MRXFl54Aapjuy+H0YSxzV9W7WGe4YwjcwTgRq1PXa7PXZAU=
+	t=1711645033; cv=none; b=MzDt9+sS4SOFnYshABVQlUI5q9djeUQ9iwym6dT7Nv88GoNxFYq90suWbwLJ7i4U+ES14KwohjIoxve4uPpE9DcEvtmYQhmO7ZkCA3Hjbhtrf8BiluqZ3iYHBo1NXgNyPP+iDhvlQIJEw8yIsatw51kq1J21fgaq69RxqS9ETQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711645027; c=relaxed/simple;
-	bh=qX8ERP3MjA3dKFRsy6HjmzCyO64pCY9x430Gltfx0wQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OvY8MQ+MgEwQcvcdRgY1hANlbG4ISP8KiPCetgOd6PpiUdvW1Xvcz5dQq6MbxfqjNzZbEYaNv1nPLXr+ql9R36Zs1p1euooHKdM3A8Bd1HUrxmwzRYHJEganFWYHX7j/0pXrYL3B2usCHVQG2N72PZ/5Bhz5auv4Y97Ist6qB38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K1QE8VBF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711645033; c=relaxed/simple;
+	bh=EHJUzSEdjzJ/cmKsFNEvG7B/Q1Bo729hqrAONKDR4so=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NzMO9bdgHu8WsuTnpsxfXA2aZpstBzGW2ft5bRcFHxBtz7CQynXvyhHdofKYgQUFcpbkvccGnu+oXzuUcWalVdwMXikPljqAM/Rg0Gge6gaue+elN0fMONdho9Hi1GxoRjONUjycRsVxraaPAExrWE33KwY6kZQDwOzRhdQNmGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=iBeAoiSb; arc=none smtp.client-ip=109.73.34.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K1QE8VBF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46BB1C433C7;
-	Thu, 28 Mar 2024 16:57:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711645027;
-	bh=qX8ERP3MjA3dKFRsy6HjmzCyO64pCY9x430Gltfx0wQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=K1QE8VBFbj7+ZnTIFGyvwBRCOb9d949THgq1iDHiI+raKzEQpa37gDXpBmc2NwSwU
-	 97k1a8IuOfgijujEdWntt6utCM36V6FoUx01NXu8V2PglNd4W5GdtZh4kJu4Zgo+7x
-	 Ql9VpSpme+BkbesDto3S3eEeBulvKcpehpjmP6rPSRtdTuxGYKdnNWMvSNWtOy8gyQ
-	 inwer6xXQNAk/FmKy4FHH7zCUnsHLH8m3qXvIRLUrvtsd/5oaiTP6w9DYoP9XfJXld
-	 rRPjnTEpihv/rGnp8xBZO58zjhwz1PpzGvSAK7Cr1XwM9HQoVJ0yDz542AJZ2fESLo
-	 hkexWnPXmHXDQ==
-Date: Thu, 28 Mar 2024 16:56:50 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Nuno Sa via B4 Relay <devnull+nuno.sa.analog.com@kernel.org>
-Cc: nuno.sa@analog.com, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Olivier Moysan <olivier.moysan@foss.st.com>, Jyoti Bhayana
- <jbhayana@google.com>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v4 0/6] iio: temperature: ltc2983: small improvements
-Message-ID: <20240328165650.1d8d4216@jic23-huawei>
-In-Reply-To: <20240328-ltc2983-misc-improv-v4-0-0cc428c07cd5@analog.com>
-References: <20240328-ltc2983-misc-improv-v4-0-0cc428c07cd5@analog.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="iBeAoiSb"
+Received: from mx1.t-argos.ru (localhost [127.0.0.1])
+	by mx1.t-argos.ru (Postfix) with ESMTP id 09146100002;
+	Thu, 28 Mar 2024 19:56:51 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
+	t=1711645011; bh=JCP/D9Zpg32pYmuOTl3bze6wQcVUGIRiAN7maoEjdPY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=iBeAoiSbFz0WxHExYG2lu08xrzugFz9q8AqvjJbP+ttnmnmtuwBQqQbSngvhCi/st
+	 IVcqxnqBY/TaoyflxCx990IQuq0AXsaIEYl8spe0YK4V1fv4Th7kuT+jXXnJNooNej
+	 q6LN6+obz6/6H8YvgwxNO1Ru8oYopXAPgDoAaax5hGx3bAt/WQGtTwijHtH3YlLBFM
+	 CasuIu47gIzq6Y7g6O9eGYy6bExmB8/EGR69dVSgl67dncPyi19mXx9D7GlyeVrfwg
+	 1KQHJctjOlxnJQKckWJmck4kGa8mTYkG8+WXA5ohPgviuMCBMlWQTZGQnd20jwn9CV
+	 bFKhduICU5vzg==
+Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
+	by mx1.t-argos.ru (Postfix) with ESMTP;
+	Thu, 28 Mar 2024 19:55:33 +0300 (MSK)
+Received: from localhost.localdomain (172.17.215.6) by ta-mail-02
+ (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 28 Mar
+ 2024 19:55:13 +0300
+From: Aleksandr Mishin <amishin@t-argos.ru>
+To: Sunil Goutham <sgoutham@marvell.com>
+CC: Aleksandr Mishin <amishin@t-argos.ru>, Linu Cherian
+	<lcherian@marvell.com>, Geetha sowjanya <gakula@marvell.com>, Jerin Jacob
+	<jerinj@marvell.com>, hariprasad <hkelam@marvell.com>, Subbaraya Sundeep
+	<sbhatta@marvell.com>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
+Subject: [PATCH net v2] octeontx2-af: Add array index check
+Date: Thu, 28 Mar 2024 19:55:05 +0300
+Message-ID: <20240328165505.19106-1-amishin@t-argos.ru>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
+ (172.17.13.212)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184474 [Mar 28 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 14 0.3.14 5a0c43d8a1c3c0e5b0916cc02a90d4b950c01f96, {Tracking_from_domain_doesnt_match_to}, mx1.t-argos.ru.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;t-argos.ru:7.1.1, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/03/28 16:17:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/03/28 12:50:00 #24493847
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Thu, 28 Mar 2024 17:22:00 +0100
-Nuno Sa via B4 Relay <devnull+nuno.sa.analog.com@kernel.org> wrote:
+In rvu_map_cgx_lmac_pf() the 'iter', which is used as an array index, can reach
+value (up to 14) that exceed the size (MAX_LMAC_COUNT = 8) of the array.
+Fix this bug by adding 'iter' value check.
 
-> The v4 introduces an new dev_errp_probe() helper to deal with cases
-> where we want to return error pointers. The refactor in the IIO ltc2983
-> is an heavy user of the pattern and was the main motivation for this.
->=20
-> Also added two new patches so we have three users of the new
-> dev_errp_probe() helper.=20
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-Probably better to do this as 2 series. The other ltc2983 changes in one se=
-ries
-and one with a cover letter title that will get noticed by
-those who care about dev_printk helpers.
+Fixes: 91c6945ea1f9 ("octeontx2-af: cn10k: Add RPM MAC support")
+Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+---
+v2: Fix subject according to the networking rules
 
-=46rom a quick look the content of the patches is fine.
+ drivers/net/ethernet/marvell/octeontx2/af/rvu_cgx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Jonathan
-
->=20
-> ---
-> Changes in v4:
-> - Link to v3: https://lore.kernel.org/r/20240301-ltc2983-misc-improv-v3-0=
--c09516ac0efc@analog.com
-> - Patch 1
->  * New patch
-> - Patch 2
->  * Use dev_errp_probe() instead of local variant
-> - Patch 5
->  * New patch
-> - Patch 6
->  * New patch
->=20
-> ---
-> Nuno Sa (6):
->       printk: add new dev_errp_probe() helper
->       iio: temperature: ltc2983: convert to dev_err_probe()
->       dt-bindings: iio: temperature: ltc2983: document power supply
->       iio: temperature: ltc2983: support vdd regulator
->       iio: backend: make use dev_errp_probe()
->       iio: common: scmi_iio: convert to dev_err_probe()
->=20
->  .../bindings/iio/temperature/adi,ltc2983.yaml      |   4 +
->  drivers/iio/common/scmi_sensors/scmi_iio.c         |  45 ++--
->  drivers/iio/industrialio-backend.c                 |   8 +-
->  drivers/iio/temperature/ltc2983.c                  | 260 ++++++++++-----=
-------
->  include/linux/dev_printk.h                         |   5 +
->  5 files changed, 151 insertions(+), 171 deletions(-)
-> ---
-> base-commit: 27eea4778db8268cd6dc80a5b853c599bd3099f1
-> change-id: 20240227-ltc2983-misc-improv-d9c4a3819b1f
-> --
->=20
-> Thanks!
-> - Nuno S=C3=A1
->=20
->=20
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_cgx.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_cgx.c
+index 72e060cf6b61..e9bf9231b018 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_cgx.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_cgx.c
+@@ -160,6 +160,8 @@ static int rvu_map_cgx_lmac_pf(struct rvu *rvu)
+ 			continue;
+ 		lmac_bmap = cgx_get_lmac_bmap(rvu_cgx_pdata(cgx, rvu));
+ 		for_each_set_bit(iter, &lmac_bmap, rvu->hw->lmac_per_cgx) {
++			if (iter >= MAX_LMAC_COUNT)
++				continue;
+ 			lmac = cgx_get_lmacid(rvu_cgx_pdata(cgx, rvu),
+ 					      iter);
+ 			rvu->pf2cgxlmac_map[pf] = cgxlmac_id_to_bmap(cgx, lmac);
+-- 
+2.30.2
 
