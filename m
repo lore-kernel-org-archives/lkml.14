@@ -1,73 +1,115 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from forward501a.mail.yandex.net (forward501a.mail.yandex.net [178.154.239.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7249C2561F;
-	Thu, 28 Mar 2024 07:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4BC152F6C;
+	Thu, 28 Mar 2024 07:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711610960; cv=none; b=BTxBgBqjDpifQd8z+LdTyZWYvysqLjYOtsvq4GudzmfZmoUyMwLdmGPD30WXQW7dKFxAM2LAxtmnoqwPKrOOG3ubPwsVW6KTxQ7qvYNFx/ObMvmHDV8fMe0MQ80m6n6VQ2XfL6c9hXeliTIUzPGQxVUE9lXKPY6zwEwtwzYcOxg=
+	t=1711611019; cv=none; b=tc8mY55wBJZGN0BHpV2iKL20jHVwUdF/GZTqTO3RCVP4JJohwj5X+6SZlmD0t32TjDOg6iUIHGjibbTQA/Xf3PasyuGGbIPleLe4RqNOEzDEckc2iiz3qUM7OwUzfA0YvoNjMhlQEBdchcdWAMmUvgK2LbycTa+toG2Qbk/Ygyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711610960; c=relaxed/simple;
-	bh=FiCIkTLUjia6oZra0f+d1gUdBJtXinTNpnbzT5pmwP8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z1fZAjaZJkbaKmjGFaPiyAtdBxl3/26NXQrN4xri44lumFJQDDPvbtzIxoTibIg4Tn0aBK6szG+Rcwb7JhrxDXuW9hMqy2h7lW/tgbPEh+Ct4UcyIcd1qvIDZ2t+c6DuJmCjH+RmTDO4o6HA2CRdc7SHKantjjogF71RqNCdQz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jgFUBrYk; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1711611019; c=relaxed/simple;
+	bh=bRVgFqHFRGemmtjNQzkJSMwtxi1ANVGaKfrKPoTWPXs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=kHvwx2SHpznVvbZ/bNTfMyNvMMqcn5nNVVsTtftjSJNLr9E/nfv2Dl4r+iMxJxXDMEKwBnuVeId99tIOK1bFmuaRl6LAumYo7URtceA7k0ZFPkhcG+5zHjBPH86dPwwCf8YxTt+lPRmbfy2ThphmND90UM4rSjq0wZ9I4FqPP/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me; spf=pass smtp.mailfrom=maquefel.me; dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b=A9e2NBjX; arc=none smtp.client-ip=178.154.239.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maquefel.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jgFUBrYk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ZHG7bc9PgDrabFkR4+E2NwrDV4EJzWyNJdahkzxAUog=; b=jgFUBrYkh6xtqYLnocTPXtT4Qq
-	CqMvUpA5U1MUFNbuiCcp9o3fqf3wwWo34KUnJBUjmAsVoJy47B0NPIlwUtKD74+qiM2AibCiWGj6/
-	o4nUm+jgd3Qo5y6Pg7beHlq5qHrunMoLYYJ6yuZq3+9uBdPKEoAJThZOTmbHBR2U1cIslYGkElsme
-	FOPnGjnUzr0cFqmyNVmbrVVmVNacqp6OWU5nAZAgrGP8z8IP2ckIx4u2keAS3aCUnjzzOiDp4tC3G
-	zzTZ6Zv6/LWWYWMsyTKLpsFANpK7Yjb9SqmAmOVaLqriwYD3pIFU0cc1T5QiaipA8WnaUyx78jUFr
-	9kB1bkYg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rpkCL-0000000Cs43-0GGI;
-	Thu, 28 Mar 2024 07:29:17 +0000
-Date: Thu, 28 Mar 2024 00:29:16 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Yihang Li <liyihang9@huawei.com>, Christoph Hellwig <hch@infradead.org>,
-	John Garry <john.g.garry@oracle.com>, yanaijie@huawei.com,
-	jejb@linux.ibm.com, martin.petersen@oracle.com,
-	chenxiang66@hisilicon.com, linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linuxarm@huawei.com,
-	prime.zeng@huawei.com, yangxingui@huawei.com
-Subject: Re: [PATCH v2] scsi: libsas: Allocation SMP request is aligned to
- ARCH_DMA_MINALIGN
-Message-ID: <ZgUcTLQnoLuqhOxO@infradead.org>
-References: <20240326124358.2466259-1-liyihang9@huawei.com>
- <5b5b9392-7fd2-4c87-8e41-5e54adf20003@kernel.org>
- <0ba9914d-7060-498a-beac-2b19770e1963@oracle.com>
- <ZgUPpwhkE9bRwHec@infradead.org>
- <75df3e2d-10c3-5370-3cd8-fe2fb0ff2acc@huawei.com>
- <03ed6449-eb57-4a55-b2bf-ecbb9787feca@kernel.org>
+	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="A9e2NBjX"
+Received: from mail-nwsmtp-smtp-production-main-74.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-74.vla.yp-c.yandex.net [IPv6:2a02:6b8:c0d:193:0:640:a325:0])
+	by forward501a.mail.yandex.net (Yandex) with ESMTPS id ADBDB61D82;
+	Thu, 28 Mar 2024 10:24:25 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-74.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id OOHQfKCGluQ0-10d0dH6M;
+	Thu, 28 Mar 2024 10:24:25 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail;
+	t=1711610665; bh=bRVgFqHFRGemmtjNQzkJSMwtxi1ANVGaKfrKPoTWPXs=;
+	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
+	b=A9e2NBjXYR/su5FPIUiqJbhtyLfm93unMpbCKmofAVDuYnY8DyM6Ypa1/SJeYEGd7
+	 QZWu/11UcJwjYQhBsmOLEPwHJP72dsBn9pMtYzdz8ap+NjA5zaM4Z0lXhSjZR+hQLb
+	 blU6ZNFUt4mncN4245FGlcYKW4+SeWWX6spLTirs=
+Authentication-Results: mail-nwsmtp-smtp-production-main-74.vla.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
+Message-ID: <821da3f70fcd326860a995514791b228e3f3f7b7.camel@maquefel.me>
+Subject: Re: [PATCH v9 09/38] dma: cirrus: Convert to DT for Cirrus EP93xx
+From: Nikita Shubin <nikita.shubin@maquefel.me>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann
+	 <arnd@arndb.de>
+Date: Thu, 28 Mar 2024 10:24:25 +0300
+In-Reply-To: <ZgTytMtgvqcHlEsO@matsya>
+References: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
+	 <20240326-ep93xx-v9-9-156e2ae5dfc8@maquefel.me> <ZgTytMtgvqcHlEsO@matsya>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <03ed6449-eb57-4a55-b2bf-ecbb9787feca@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Thu, Mar 28, 2024 at 04:23:22PM +0900, Damien Le Moal wrote:
-> But I thought that the original issue was that some arch have ARCH_DMA_MINALIGN
-> down to 8B but hisi driver needs at least 16 ?
-> 
-> So in the end, you need something like:
-> 
-> 	size = ALIGN(size, max(16, ARCH_DMA_MINALIGN));
-> 
-> no ?
+Hello Vinod!
 
-I don't think we ever have an 8 byte dma minalign.  With 8-byte
-aligned addresses dma_mapping_error could run into problems.
+Thank you for looking into this.
+
+On Thu, 2024-03-28 at 10:01 +0530, Vinod Koul wrote:
+> On 26-03-24, 12:18, Nikita Shubin via B4 Relay wrote:
+> > From: Nikita Shubin <nikita.shubin@maquefel.me>
+> >=20
+> > +enum ep93xx_dma_type {
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0M2P_DMA,
+>=20
+> Is this missing P2M?
+>=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0M2M_DMA,
+> > +};
+> > +
+
+These are internal types used only to distinguish M2P/P2M and M2M
+capable controllers in "of_device_id ep93xx_dma_of_ids[]".
+
+So M2P_DMA is M2P/P2M, a can rename M2P_DMA to M2P_P2M_DMA to avoid
+confusion.
+
+
+> > =C2=A0struct ep93xx_dma_engine;
+> > =C2=A0static int ep93xx_dma_slave_config_write(struct dma_chan *chan,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 enum
+> > dma_transfer_direction dir,
+> > @@ -129,11 +136,17 @@ struct ep93xx_dma_desc {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct list_head=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0node;
+> > =C2=A0};
+> > =C2=A0
+> > +struct ep93xx_dma_chan_cfg {
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u8=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0port;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0enum dma_transfer_direction=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0dir;
+>=20
+> Why is direction stored here, it should be derived from the prep_xxx
+> call, that has direction as an argument
+>=20
+>=20
+
+M2P/P2M channels aren't unidirectional.
+
+Citing "EP9xx User Guide":
+
+"Ten fully independent, programmable DMA controller internal M2P/P2M
+channels (5 Tx and 5 Rx)."
+
+We need to return correct channel based on Device Tree provided data,
+because we need direction in device_alloc_chan_resources() for hardware
+setup before prepping.
+
+May be i am mistaking somewhere.
 
