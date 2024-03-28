@@ -1,89 +1,72 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2124.outbound.protection.partner.outlook.cn [139.219.17.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBED2594;
-	Thu, 28 Mar 2024 09:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F0F535DE;
+	Thu, 28 Mar 2024 09:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.124
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711618379; cv=fail; b=s7ZC6w26swNtL/s15maw1ssLbccInm1vsmnScK5B0unMG4dA0/6ZyQ9hz5/IeiM0tkZfMBaXL+eZ0qIyqLPChsaGwurqJVbAeQVrKzcOaAGhZ3GumVKIDYVUiITgBtaxDJYYV3CBgiKyKWXa+/mwA/ZtrjA5CUyAUi84qI1/TpU=
+	t=1711618402; cv=fail; b=LqYFc1FVHL2nVpCTilnusQFkQ44FSww1wAvvLu7kfQApyY2SMVC/8Um2JFuWb7Ku94Z6kxOsMDLzOSBlrsJ+hUT7Yjm9dUuxD59mfrvxUwbLcdQijxzn/sHo1CrhNc2iJ0wSuPuHOxkQtULp26vV/qB4vJgroo5FjFiJtFjVRj0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711618379; c=relaxed/simple;
-	bh=YXqOUiV0UG2Xh9cK+rO6yYwfy8X/nPIvwIkLERi3rh4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=qaTNeYXfwTRgeBmXLb6Xfr/ems6fagM5Y7hqEGFjNTdRU7t+9MRX7/m6eQEYzrieWoSxvG27brnmSNC0RgC7lK9W4W7Zf2oh4/3Rb3Wi8tvxo9YG/gmBc87TcI20XjO8KMNxAKrxEEAi/YHbbpK+zTFby83Nqs29mcBp4JE/a9M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=EHkqQqXZ; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=cvli/9HT; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EHkqQqXZ";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="cvli/9HT"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42S8x2K5025134;
-	Thu, 28 Mar 2024 09:32:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-11-20;
- bh=e9arifviVQnIvEa0vfWXv/uZVahryFWO/rMyuh+syp0=;
- b=EHkqQqXZ44nX4BV+JRfT+t6LlbHutxiw3mmgbIlbVUUPd0u7RV2BH/Ra3A3ZwhBIx3Y/
- mjpo1Ni+JAANY0rJu28ru+vRUbydijpnEBwzMToJdmKjQ4Mv1BcvHorshbp+I6gSGw+f
- /0kXJpyRrRHaKJBsj+66nj1c+zpZjpx5VHdLCs4cneaX0ZhUARWNUALd3HIdxEwD1yGD
- oKpRoA/Hl2K0mDwMjYE/sALSVFmtS1rL+2yqGJxI4tBSTJ0jWKHaz2IIToQ7C7xWGhGF
- zqD7QWNDrHSJpJ0XcpdSppMZt0mFEGQ5C9zUxfaVg5lXyrwyxyQ3Rn09+zwh1hvQdhMX kQ== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3x4cxy2qur-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 28 Mar 2024 09:32:30 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42S9GrZ6014429;
-	Thu, 28 Mar 2024 09:32:30 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2101.outbound.protection.outlook.com [104.47.58.101])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3x1nh9run1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 28 Mar 2024 09:32:30 +0000
+	s=arc-20240116; t=1711618402; c=relaxed/simple;
+	bh=gEit66vODnszpCd0ucr2+f4oEuxPscA1zlwujMHo3ys=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=O9UB0mmiPqovK8zlqFsImlVtDram0MMz2arzWsGf4DF7ecmJJGWWJ7g3V6dtevdiTUYG9OiF5tI3OgLZ+0SsC0Kyynk8GvZ5M2d3L7Pf3jp0d5B/wXIbxeag+Uk6EKQU+4pzrCNHdfYK9SrYRyNf4NG4RYK7zdnE3kGr7E7V+EI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=etz4exy5sRqFrE4IuD0rPnMitEehDS1SpLXTZr4oRotNeRSbyj9rRseokrKwaRUdUY5gDKz2zRPCBW3Dv1WvUO8HeNtyDXHMSPgIiBHeUeUAjjwmIRLgPXq8o7XiOq9VQQZ9PhNuzlYm3qygUd7gjeVXZmYGGaZxy87hf2oW/Mtyu/EGKi5rEr6vAZ2G5remLID4HBjtfl9Qg2eGIVA5xM5ExSOGIVzOPtaOMEzP13TVikvc7X7zO3tCTax43roecoVcE0zcZDqat71ghcPUhjuVKkqIBB6ptAAdxQXdY1ao6xrBLwv6jhIZSiNTt9d30sHriWyXQeZwDJVpkjraKQ==
+ b=Z8a2WrG62mfgKVBRiccgVw0WTfGX8/9tXWs91R2AJoQy4Er4rTsVrER5/h9DZ3Nal9xlkLvkyR8bSExrS8mTLbWffAK+yzTXQliAIbg/Px9/ShIznYgME7AobD9pf500jtGOLdNhOQPIE0BLRz4KdraWtcfT4fugi2Dh9ny3w39hKtyT7OpOIXAlac8UnBS6TWpjY+aIrRwsf35DitGmUctmzywhha1EMNKHOWJtYGobKvpaLu1Sln/p+2+OzgTnAc+2hMZIxF79nOgHsXq5aLegoJ4Zu4vL2XvKCF0TGLLlko+yy75tluPBvqGMpo3I7bwl+Ih0+OqJblEJB8uJJw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=e9arifviVQnIvEa0vfWXv/uZVahryFWO/rMyuh+syp0=;
- b=hgrnkc6pqi7s6ynNca2FcjJssDW2s7yr4QdVXeFZIATI9j0TxMSkkaJbx6o6l9oQ8UT6B49RYkNnMf6mpq6tzsKXQUpOydiWQZrPBvqKlR0LvrnEv7fIhRk+9IXwK2SQDnZ0e3IFs+S/yTRvyw72DLVRnt50DiCSfY1reIOy70TD6pAR/T4vWr/TMdltHxAOcIMBreStBqib5nSv3w/eA61mb0IDmwr8wnJALBtd3WcJLs90gTmFqDVTmZGCvSfKKFCP9eum1T21CHrQV6gjn9HhrwbSDP9azx13a8CpgY33HjIi59pSogqmxI9WyYhQyoBGvRIjGQXygUjoJ4+zBA==
+ bh=Y0xQ+n7Z9xr/tqKO1GG6+qOqHTvU7sd+8IFwaPvoiPU=;
+ b=ggxUDmg/vXjcQ5zJOE+vUbspfloQfwjQ7/zj/9vGAuNtUoipYx394NMXk79l2Tc845wEfRuKuCoAvzXs7pal2fPjHW7m9y2tZiaxu/hHKq3KWbPjnTeev6JLN5hEowwxdUR/8pF87Z8QCnR7xtH0jd3EBdOuE+vp6DiYVQh+AUabBbmdTR1ohFaIURIRjQl9hEw9OI1/e35ptL5TKcukbyDEJFTMVaTf8YEV1pB1tmS4tWv0aInfi3zqsKxI1gkWkW2HeKoS9RBHjHNqSCQk+JOoC2EfTjIUTntRihHQl/eoxqm0KiwiHM+s7vi4FFluBfbi91U6RZqle0G2aQO3VA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e9arifviVQnIvEa0vfWXv/uZVahryFWO/rMyuh+syp0=;
- b=cvli/9HT8TCQwP6xwYtF+yoIGzCegnuBu8uqlA+J9Q6ojP5Fnsi7hiAp/qpqdjMg8Ks7abxHtMybRK5Nc+OzjVHEvvv1UEiIu4dgHtNFDnTHRMN9mLk0EdSRI6V9/1aTcrPJi2/TII0Ae7I917XqP+UZPshgGuFE0rO9vGHuE3k=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by IA0PR10MB7205.namprd10.prod.outlook.com (2603:10b6:208:406::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.33; Thu, 28 Mar
- 2024 09:32:28 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::ae68:7d51:133f:324]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::ae68:7d51:133f:324%4]) with mapi id 15.20.7409.031; Thu, 28 Mar 2024
- 09:32:28 +0000
-Message-ID: <225d75ff-c7a6-45ee-a149-51eb720c5420@oracle.com>
-Date: Thu, 28 Mar 2024 09:32:23 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] scsi: libsas: Allocation SMP request is aligned to
- ARCH_DMA_MINALIGN
-To: Yihang Li <liyihang9@huawei.com>, yanaijie@huawei.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, dlemoal@kernel.org,
-        chenxiang66@hisilicon.com
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com, prime.zeng@huawei.com, yangxingui@huawei.com
-References: <20240328090626.621147-1-liyihang9@huawei.com>
-Content-Language: en-US
-From: John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <20240328090626.621147-1-liyihang9@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0036.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:151::23) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::15) by SHXPR01MB0496.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:1f::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Thu, 28 Mar
+ 2024 09:18:46 +0000
+Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+ ([fe80::c738:9e6b:f92e:8bb9]) by
+ SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn ([fe80::c738:9e6b:f92e:8bb9%6])
+ with mapi id 15.20.7409.031; Thu, 28 Mar 2024 09:18:46 +0000
+From: Minda Chen <minda.chen@starfivetech.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Conor Dooley <conor@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Mason Huo <mason.huo@starfivetech.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Kevin Xie <kevin.xie@starfivetech.com>,
+	Minda Chen <minda.chen@starfivetech.com>
+Subject: [PATCH v16 02/22] PCI: microchip: Move pcie-microchip-host.c to plda directory
+Date: Thu, 28 Mar 2024 17:18:15 +0800
+Message-Id: <20240328091835.14797-3-minda.chen@starfivetech.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240328091835.14797-1-minda.chen@starfivetech.com>
+References: <20240328091835.14797-1-minda.chen@starfivetech.com>
+Content-Type: text/plain
+X-ClientProxiedBy: NT0PR01CA0020.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:c::16) To SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -91,123 +74,184 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|IA0PR10MB7205:EE_
-X-MS-Office365-Filtering-Correlation-Id: a656d402-a38a-44b9-3560-08dc4f09fbce
+X-MS-TrafficTypeDiagnostic: SHXPR01MB0863:EE_|SHXPR01MB0496:EE_
+X-MS-Office365-Filtering-Correlation-Id: fd71faf1-982b-4b89-0c56-08dc4f0811e9
 X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	mEnHov7Zk3EEfY9OsWl9tPjsoBz/ij9+nprJArZhcEMZRHlGTkKhSmM8cjOl94o91M71a8BOOPvtxd9+RBewmsyNFML/Y+egba/EwHRYn1m8UQtosPHvquWhnqLizlrnk/1rKb8rqxKxZMgzGzBnfluheLpZ43JAvwTlspWDhmVtyEJJwFUvVY1rVVMM1a/7DH6c+pkDpCKKyAq6V7OLuReGDwnVIrZ/zvdSKTkpyXf1NOZqSmA/fAsN3nJJBPTWYJfmPbG61Wpj3je2buziV6ZSAeQckUTYbW852n4TU5gL9itZT/E8nxpx9Hg2rt3veSiFJtcRIjPnEwFA+rGbnGLl+yR1QlCzSEbKkxGoSJg5FM8CnoZlOy5C1uZ+v6laoMA8tizFIfARDpKTN57PjvaiJQFGWSXYPOxKJJaShacYQhs0wy24kv5MLjCI65f5T6KTwvH3F4WaRZkKP5A+FV/RoPAWuou+IeZOCsa26cI4CgW8MKS/Xf97HncaFfGntXjhWabD7ErvZ1crr6NNK75r+/nGiv8GfsM1sT5hexoM0Tt+P5KdSqVJCG345ZiVgfWGXt5e8DnCzAoRBIF4RQMbVL5Ao9xTazDG1PqQxL4=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(7416005)(1800799015);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info:
+	680hlDLRwuCT3fowQQIvfcaZ+WsFtzljXdlry5Q9gPRgR0zl+xUNq5/Ww1reV7ublXfrZFV7cSQmnDl+ppdjIsevZoBegVz9K25FbRZzFd0M+vCLBbpP8Yj9zHZ6LKbQhuaXAm3cfBUhDmD8tmEgP4sGsu1dR5RhUtFLAHsjieOstCW/V/qgtt1rYwe4hdAkLZ3qp+pgFO8vjs9KlHB5Nb3CoV8rrQU+h+7ZePxr2EayU+61gJl1GCcB+6eY3mXkBETBkQhHrdpemPyVkXgTX1xLI82IsSpmDuou8w96GsNIxUST8gEi/zuytp8uM9P3ZTTQhO2znPFzQF7B9Z6DbtjHX/XXH8W/13WvvRAcJX2MRBbGxh7xBEM8D5S3pWmJ4IAspVSO29sji372f2g0AjPaTDJ7BVDtkJZl95SnScRIeoR3JbZ6j5aF7zk8S3TOMAtsFYbkmNy2wtAUawKGmXLGtoCkGChwzwPhV1/xysQy1x02lcD/xGN6ZLE+S5tpgKyZIzHypQVdHgNAKVAf67BE5EA1exJhlT4GDLm3i8DxTmBXB2N4c8gx3qhP9xHeypJjY7LUoKTkOqR8UrfY7ehKGujecHLhwtT8N6AulFBDlKvtpQggdtweZiMCh0sM
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(52116005)(1800799015)(7416005)(41320700004)(366007)(38350700005);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?L25rYTgzRCt4L2ZhQnJKNG5TbUpZaldvY3dxWExXVHphWVUxTEhHQlRiN2d6?=
- =?utf-8?B?TXJ0d2hUZDBJYlVYc3hvL0p0bTN3VHNyWUpGWEU3Yi9tMEhHQTNTeGNqc3FX?=
- =?utf-8?B?SVR5MG5Kc0ZLRWMyUGVGVDY4ajJMU1BidmQ1d3dNVGQwV2NpMDVjVlVQbCtI?=
- =?utf-8?B?SFJTK3I0c1plcEhuRnVRSE41ejY4NTFnMVpsR1N6QVhLdW5OVzdEUUtmQXV4?=
- =?utf-8?B?aC9oczlDVnRsZ1k5azR0WXM4N3kreUJOYktEbUd4WkNlMVVXckFOWHN6SGl1?=
- =?utf-8?B?VjNuVVBJaHpYWGxVekszYXRaTmhsakRHNXNIeVFZUDdFTy9TV1Bjb2s5aHJa?=
- =?utf-8?B?VTIzUmpCZ1ZtMzZoeWU1NWI4WUE0SktPWDhnZ3VEbWFXSFppWUEydSs1bWZu?=
- =?utf-8?B?S2hFTUFRSmdNbTFrY2tlT0NvWXNVbjZXVjBLWSs2Nm5oRm5tQ1dKeFAyQnR4?=
- =?utf-8?B?aEp1ZE9YbkE4NHg5ZThNbm9BWWZaeERHM2NORWdreGdqcXNnVE42U3piZ0Jt?=
- =?utf-8?B?ZnJqU2UzaHRiMjJnWnRUaEhlbWhCcWhvazZaNmpUQTYvMzFvM1A1Z3lBcU9a?=
- =?utf-8?B?amg5L3ZuRFZRWHdTSGVGanlSRXVlTlh2SDhxbHB1M2s2U0k2ejNxWWduTit2?=
- =?utf-8?B?WXFHcHRhRk9reC91d0MrR1U5V2drN01UdURvenZMOG1lUUJ6MHhmN0FEOG1H?=
- =?utf-8?B?Zk4rU0ZoV2tYN21qTWpybUNUcW1QTjN5VGp3cmFvYjdJL1NhdERqL0pjWGJS?=
- =?utf-8?B?UTdDRmU3SFh0dDB6QVczQU9RT21rSU9NNjd6MXNKWFNQVjBZUFlHWEVkOE5H?=
- =?utf-8?B?ZkgrZkIyc1VaTldDZVNXOFlqTVVOTU9OYzA0NG5MV1hWM3RuYloxY3RTYjlN?=
- =?utf-8?B?OU9NSVYwUDV5U1BMWEZJcW1pY1p3SGFNZmpJTldxekhxYldieDVEY3JkVnJZ?=
- =?utf-8?B?czArTGJUQ2lwWnFkTkpWazRlOE9uY3U1QTZ1cXp6RWVPdEQ5UWNmUDRrRHpS?=
- =?utf-8?B?WnpRQjB3cXdtck9PVUtjeHYydVgwL1JBWlhIM1N6YzZCbHk3T1orMmJsY3B1?=
- =?utf-8?B?aDhUNlY4czRuVktDU20weHIzK0tmeVo0RG5iaC9vaGRncmczcjJRWFJJOExS?=
- =?utf-8?B?NWtKRjhHLzZEYkd4ZkQ0U0NZWnMwd0J5WTdwUG1Fcjlra085bS85cnFTRmxj?=
- =?utf-8?B?TmlkcXJjckUxZnVURlZwQ1FqVUc5UlVVUDdoTExNakxuMlQ2RlhIZkd0NWRT?=
- =?utf-8?B?WjlmN0d2YWgrckVYT0Q0NEFyL1czSHdsQlJic3ErRkhhQlR0TDJwUUdtWkJv?=
- =?utf-8?B?bmk0dWFuNk1oU0FXMWJ2SmpEa2hRblM0aUdaMkQzSW5LNGRqNEZVRFlrNkRW?=
- =?utf-8?B?ZHY0d21jRFVHVG9TeWZFaUhmT2ppWFIrdjJrVXRvTEhWREVKM1l6QzVsaUNq?=
- =?utf-8?B?ODNwMFJSVUI0bW9abi91V0t2LzBOV0VlUSttMmI0MWlHNmRaZlBWS2JFU1Zi?=
- =?utf-8?B?SFlFeGxlS0RlRDIwYVZwNmdRcEx1S0swSUlsQ3MzdVI2TDZzWXZNZWNyazVx?=
- =?utf-8?B?YjJOS3JMWUJyYlhYTkxWdHJVR0pGeUZIZFdTVWxLUm9qbVJOOGFQdWZJOERJ?=
- =?utf-8?B?WEdETlVuT2swdTJqWmhQRmUvalJZUWtwYnoxK2NMQjlOQ2NJSzFINnYrOXhC?=
- =?utf-8?B?TU4rdnd5c2JMS0ozeHN1aDBraW1sUEFCQXI5TENOYVQxc01pY1lESFdDWWRN?=
- =?utf-8?B?aTRiRjdpbDQydWZlTmM0N0NpL1ZNS2Z2MUFzcnd2RTJKVnQyQ3ZubytMYVFw?=
- =?utf-8?B?RWhlT0pRSFViUjR3WEJiWkRhVVpRZWFFWFk5Y0JFR0I3M2kvYXhrY0FsNW4y?=
- =?utf-8?B?bUk1MUNnRGtlblRJR0Y2aTRvcXhpZTVsQlc0dlJ5S1lWeTB3RkJOdjFmSUFx?=
- =?utf-8?B?OXErL1A1REthR29VcE9VSXVPa2pFdFdGa0VZbzZSUTExN0FWSCtlSzlIdENM?=
- =?utf-8?B?S2t4ZE1pbWtReVV5Mkg2SzR0OUFRQlMyY1RaUlllcnZwL1l1SnZ4YVdpUXZu?=
- =?utf-8?B?SVNTNFlFbXVSODJ2ZE1RYnRETjdwQk9iTzh5cFNoZ3loSFBITEI0TjV4TFRh?=
- =?utf-8?B?RUFtNzZ5K0dSWEZicStXUHVNeDRmWlQ3bE5EY2huOStsVCt4WnhQSnpTcGRz?=
- =?utf-8?B?NHc9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	6ZEtEtLSwEgs23uO6euGP4fE0nGjL4QIubPfifPJi8ZKUUa+K/kojSNh/osprQyemf/jmEa4Xbqsspi7QFI1DXSmm3pzhlfu3CFWX/fMP+ctodIWaT3qyiOBb7t6VVvV6RdQCNIzbWvITazGYGl/jlRM4f6wznk9+AYDKctqwMzPTr+t6oK6z2aCPZPlrzs8MfLWento3+ff/kvYgD4WZqmCZb46Ny5fjeNEHxl6U3e0APdmckPSB/Q1rjLSzoqQKyz2/cYNJw1A2NGN6DAlTdITfwXOEHFlWj3ntUo8sonapDTFEaURd9vrqlVTU6rDzGjvmE2r30RQq40NX+1mIGKtz51G3TXaUT+bBBrRQvM/qCfsZ8ir2XEjo/nQF3tB0MSbQgFzQmtO06eBjDDhA1UZJG/Q/7Tr/1VZCSzhv9c94EUyGvVgwmlMjUpuO4skedUtCKFGSvz+H527Bj21hmbdzplHh7G+Yz64clVE3LwcGpxAXtzcnF21lEkVhIOGhotZQiKnkBNxQrBt14cxedeeTqNi7V5OQ+p9DvcOlFGYXRUvk4FFsUk2m8oUIt221jRnKEXfTxRH/aFJQknbylieYM3JOTb0xV8F8zIF7nQ=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a656d402-a38a-44b9-3560-08dc4f09fbce
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?wrDTMtPcou/msgBhE3arEgQCYw5uq07V82MU0fVkThlSFwQz+Mo/RBnpg47v?=
+ =?us-ascii?Q?7AY3j5eF/aYgTCE4KpsX4Eki5SocxOIgKhc0Ed/b/bdoXguvxdjz8On97v5U?=
+ =?us-ascii?Q?fRiA28w+bdmPFRVAWsA1aDmALnzuuljafknvKMPbq4ywSvNvzseOsuEzxjt0?=
+ =?us-ascii?Q?yBK3WzA718ZtrMz1MGyrBsMXQxpBPApIeqSW8Rp76kLVNE1LjB/tFAn0O9Ix?=
+ =?us-ascii?Q?XibC/yx6HYQ5oxkZdkoUYbN/2q8yOEiiJJMA+08082h72yjUciOzy/qMEy0i?=
+ =?us-ascii?Q?MjGgn0Pdug0Kd0yuaJ7xJXApahm+DQmNjgdxr9Q18+fhIJ0SiHBMjh6lJj7e?=
+ =?us-ascii?Q?xXZJ7OfpCEukjjWWznSf2rjwdG+Wf7xqKOTExyuZKCIyZGGCkL8p/0cPCFmB?=
+ =?us-ascii?Q?s4gSawEktouK1gS+4ZqIL67I1EWHjtt0khqZBThdQ6EIauev2dEhd0yLUw7X?=
+ =?us-ascii?Q?F4jfdKCYQTPSzR6dMvKkWIO/16mIPTP700uPtj19AH5VscGc2s4KGY0FpbmE?=
+ =?us-ascii?Q?Gh2ynaGWk21NFQhe7c14sExcoWll3rfcuStFPAAtHUypTTz1DMvYys8/WJWw?=
+ =?us-ascii?Q?AQruIQkoyWzODrKQ24Y6yaOCQVCitB+1S2AzVgyZ3YpZFMPXur+5a5rkbzbv?=
+ =?us-ascii?Q?J54ptRECyt18F1eUv4ztUAsrFXKCBMoESU+wjc3YXuPpzrF3C2f7TTfTNFEE?=
+ =?us-ascii?Q?fLdluKlEExXB+MaFPsSb+g3VtQC/TkWv/hEydVFJIcFCxnmrTFIL5Ti4QaU0?=
+ =?us-ascii?Q?kJg/YKPSbK/r9er8dNDv9ubE9iymED9qeHJHLrM2FWbMS3IebqTmCd9Dz2XK?=
+ =?us-ascii?Q?W0xdeupLX85qxj3n2aj0k8hm0m85feblqJYbTA+bexS+h0BMasDz0HZVu4RI?=
+ =?us-ascii?Q?KfpI8p6UVuJNv9KJKrVLqqdSUbNmMRY5fsZQjDrZ7nQW9uyG/2kglb9VqVGh?=
+ =?us-ascii?Q?MQf0o45KFYrBwlHkRfeDtQWsGNhWeDTSuvR5ZB3FbLs9AO8NfsonS2zxX8iW?=
+ =?us-ascii?Q?i0aIwtUIFuMRH3paiqZm/zlEbOMHzZUMQUqIUeMHAPrFyhEwoRRwc8hYlul1?=
+ =?us-ascii?Q?S7z62/Kr67UotM6vqFVqXUxJ/JNxzC4Gefj9E/TnjIXdlnT3TyKBMjRnOl2s?=
+ =?us-ascii?Q?jOepPdd3bfWXeM2hDn1h4zuzh65KB+4Yzgz9paNTQVgJupmyU53PpRN7EH+5?=
+ =?us-ascii?Q?UVj90tSnre3AF+jb+5j5cS9SVBZmrcSrKXCJLdnkzaGx8UtXXhZkP5JAGYEi?=
+ =?us-ascii?Q?B4V2qJ4QbPFK5rzBfvjHoo7AK2wk+0Htl3QuClaoVZT+ToibPVSymQ00Ks21?=
+ =?us-ascii?Q?uyI9eUvA9on30SXiDG81nFl0h2V5GVBUXYEp3PaD8kihQtakEZzOS1Y4SYfh?=
+ =?us-ascii?Q?9zITbYpqEAbCYFrlKT/IS9ZvDR1uury0tLfqYGDrEaXcsyrj0MRXclCQrB4K?=
+ =?us-ascii?Q?ENdSudzhlMmef0Woh00NuLpjrWUqU2waWHUhgOTs0bVZ+SWa9W5Om1bV2+/A?=
+ =?us-ascii?Q?+hnn+88sJNp8FDg6F2WbKpdQjEsS/L0kSSmQfJxiRBl4bUmw/lM5UPTCEtRL?=
+ =?us-ascii?Q?0HjeChY0L77EAR5EgWZ2LO6pithBaDj4vjmioIlaPq1BAUXqsd5w9TDxWBZX?=
+ =?us-ascii?Q?oA=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd71faf1-982b-4b89-0c56-08dc4f0811e9
+X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2024 09:32:27.9360
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2024 09:18:45.9663
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CSN6MAIY5Ft60LOpU0xMzNNfwe4TwIuuP9w3Gnd7CEOu532ueLv1Z5qjr7JjsRRrpIzq3Zb9r0xh5qRIn1VkIA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR10MB7205
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-28_09,2024-03-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- phishscore=0 mlxscore=0 mlxlogscore=999 spamscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2403280063
-X-Proofpoint-ORIG-GUID: B8-XyKb_Men1aLxeBSseHLXThMAKW48v
-X-Proofpoint-GUID: B8-XyKb_Men1aLxeBSseHLXThMAKW48v
+X-MS-Exchange-CrossTenant-UserPrincipalName: aTtpTG5maX9EC9DQy4sR7poYi1XZywHrDk2sUdnMMaN/sLSIeOTLb6KRRr605i8rthOsj6A3g7VtM+hUATWGoPi1nycxtesML/eYxWEleks=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0496
 
-On 28/03/2024 09:06, Yihang Li wrote:
-> This series [1] reducing the kmalloc() minimum alignment on arm64 to 8
-> (from 128). In libsas, this will cause SMP requests to be 8-byte-aligned
-> through kmalloc() allocation. However, for the hisi_sas hardware, all
-> commands address must be 16-byte-aligned. Otherwise, the commands fail to
-> be executed.
-> 
-> ARCH_DMA_MINALIGN represents the minimum (static) alignment for safe DMA
-> operations, so use ARCH_DMA_MINALIGN as the alignment for SMP request.
+Since Microchip Polarfire PCIe host is PLDA XpressRich IP, move to
+PLDA directory. Prepare for refactoring the codes.
 
-I'd say that we must align to at least ARCH_DMA_MINALIGN for memory 
-which we want to map for DMA. ARCH_DMA_MINALIGN would never be less than 
-the 16B requirement for hisi_sas, so just align to ARCH_DMA_MINALIGN.
+Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+---
+ MAINTAINERS                                        |  4 ++--
+ drivers/pci/controller/Kconfig                     |  9 +--------
+ drivers/pci/controller/Makefile                    |  2 +-
+ drivers/pci/controller/plda/Kconfig                | 14 ++++++++++++++
+ drivers/pci/controller/plda/Makefile               |  2 ++
+ .../controller/{ => plda}/pcie-microchip-host.c    |  2 +-
+ 6 files changed, 21 insertions(+), 12 deletions(-)
+ create mode 100644 drivers/pci/controller/plda/Kconfig
+ create mode 100644 drivers/pci/controller/plda/Makefile
+ rename drivers/pci/controller/{ => plda}/pcie-microchip-host.c (99%)
 
-> 
-> Link: https://urldefense.com/v3/__https://lkml.kernel.org/r/20230612153201.554742-1-catalin.marinas@arm.com__;!!ACWV5N9M2RV99hQ!LbkCJSfklWds8mk0UGjtg0qRNpWuAc-ibudDMl7sI_Qip4Hd6WNqHZmRbuJfObd4fcZXj0sC8nGTs1UbA5PlCA$  [1]
-> Signed-off-by: Yihang Li <liyihang9@huawei.com>
-> Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
-
-Reviewed-by: John Garry <john.g.garry@oracle.com>
-
-> ---
-> Changes since v3:
-> - Still aligned to ARCH_DMA_MINALIGN for safe DMA operations.
-> 
-> Changes since v2:
-> - Use 16B as alignment for SMP requests instead of ARCH_DMA_MINALIGN.
-> 
-> Changes since v1:
-> - Directly modify alloc_smp_req() instead of using handler callback.
-> ---
->   drivers/scsi/libsas/sas_expander.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
-> index a2204674b680..c989d182fc75 100644
-> --- a/drivers/scsi/libsas/sas_expander.c
-> +++ b/drivers/scsi/libsas/sas_expander.c
-> @@ -135,7 +135,7 @@ static int smp_execute_task(struct domain_device *dev, void *req, int req_size,
->   
->   static inline void *alloc_smp_req(int size)
->   {
-> -	u8 *p = kzalloc(size, GFP_KERNEL);
-> +	u8 *p = kzalloc(ALIGN(size, ARCH_DMA_MINALIGN), GFP_KERNEL);
->   	if (p)
->   		p[0] = SMP_REQUEST;
->   	return p;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 06278f1db13f..dd158cc7b009 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17183,7 +17183,7 @@ M:	Daire McNamara <daire.mcnamara@microchip.com>
+ L:	linux-pci@vger.kernel.org
+ S:	Supported
+ F:	Documentation/devicetree/bindings/pci/microchip*
+-F:	drivers/pci/controller/*microchip*
++F:	drivers/pci/controller/plda/*microchip*
+ 
+ PCIE DRIVER FOR QUALCOMM MSM
+ M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+@@ -18963,7 +18963,7 @@ F:	drivers/clk/microchip/clk-mpfs*.c
+ F:	drivers/firmware/microchip/mpfs-auto-update.c
+ F:	drivers/i2c/busses/i2c-microchip-corei2c.c
+ F:	drivers/mailbox/mailbox-mpfs.c
+-F:	drivers/pci/controller/pcie-microchip-host.c
++F:	drivers/pci/controller/plda/pcie-microchip-host.c
+ F:	drivers/pwm/pwm-microchip-core.c
+ F:	drivers/reset/reset-mpfs.c
+ F:	drivers/rtc/rtc-mpfs.c
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+index e534c02ee34f..4d2c188f5835 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -215,14 +215,6 @@ config PCIE_MT7621
+ 	help
+ 	  This selects a driver for the MediaTek MT7621 PCIe Controller.
+ 
+-config PCIE_MICROCHIP_HOST
+-	tristate "Microchip AXI PCIe controller"
+-	depends on PCI_MSI && OF
+-	select PCI_HOST_COMMON
+-	help
+-	  Say Y here if you want kernel to support the Microchip AXI PCIe
+-	  Host Bridge driver.
+-
+ config PCI_HYPERV_INTERFACE
+ 	tristate "Microsoft Hyper-V PCI Interface"
+ 	depends on ((X86 && X86_64) || ARM64) && HYPERV && PCI_MSI
+@@ -356,4 +348,5 @@ config PCIE_XILINX_CPM
+ source "drivers/pci/controller/cadence/Kconfig"
+ source "drivers/pci/controller/dwc/Kconfig"
+ source "drivers/pci/controller/mobiveil/Kconfig"
++source "drivers/pci/controller/plda/Kconfig"
+ endmenu
+diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+index f2b19e6174af..038ccbd9e3ba 100644
+--- a/drivers/pci/controller/Makefile
++++ b/drivers/pci/controller/Makefile
+@@ -33,7 +33,6 @@ obj-$(CONFIG_PCIE_ROCKCHIP_EP) += pcie-rockchip-ep.o
+ obj-$(CONFIG_PCIE_ROCKCHIP_HOST) += pcie-rockchip-host.o
+ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
+ obj-$(CONFIG_PCIE_MEDIATEK_GEN3) += pcie-mediatek-gen3.o
+-obj-$(CONFIG_PCIE_MICROCHIP_HOST) += pcie-microchip-host.o
+ obj-$(CONFIG_VMD) += vmd.o
+ obj-$(CONFIG_PCIE_BRCMSTB) += pcie-brcmstb.o
+ obj-$(CONFIG_PCI_LOONGSON) += pci-loongson.o
+@@ -44,6 +43,7 @@ obj-$(CONFIG_PCIE_MT7621) += pcie-mt7621.o
+ # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
+ obj-y				+= dwc/
+ obj-y				+= mobiveil/
++obj-y				+= plda/
+ 
+ 
+ # The following drivers are for devices that use the generic ACPI
+diff --git a/drivers/pci/controller/plda/Kconfig b/drivers/pci/controller/plda/Kconfig
+new file mode 100644
+index 000000000000..5cb3be4fc98c
+--- /dev/null
++++ b/drivers/pci/controller/plda/Kconfig
+@@ -0,0 +1,14 @@
++# SPDX-License-Identifier: GPL-2.0
++
++menu "PLDA-based PCIe controllers"
++	depends on PCI
++
++config PCIE_MICROCHIP_HOST
++	tristate "Microchip AXI PCIe controller"
++	depends on PCI_MSI && OF
++	select PCI_HOST_COMMON
++	help
++	  Say Y here if you want kernel to support the Microchip AXI PCIe
++	  Host Bridge driver.
++
++endmenu
+diff --git a/drivers/pci/controller/plda/Makefile b/drivers/pci/controller/plda/Makefile
+new file mode 100644
+index 000000000000..e1a265cbf91c
+--- /dev/null
++++ b/drivers/pci/controller/plda/Makefile
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0
++obj-$(CONFIG_PCIE_MICROCHIP_HOST) += pcie-microchip-host.o
+diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
+similarity index 99%
+rename from drivers/pci/controller/pcie-microchip-host.c
+rename to drivers/pci/controller/plda/pcie-microchip-host.c
+index 137fb8570ba2..cb09a8137e25 100644
+--- a/drivers/pci/controller/pcie-microchip-host.c
++++ b/drivers/pci/controller/plda/pcie-microchip-host.c
+@@ -18,7 +18,7 @@
+ #include <linux/pci-ecam.h>
+ #include <linux/platform_device.h>
+ 
+-#include "../pci.h"
++#include "../../pci.h"
+ 
+ /* Number of MSI IRQs */
+ #define MC_MAX_NUM_MSI_IRQS			32
+-- 
+2.17.1
 
