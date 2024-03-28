@@ -1,142 +1,143 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from esa2.ltts.com (unknown [14.140.155.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B064F208;
-	Thu, 28 Mar 2024 12:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7C74F208;
+	Thu, 28 Mar 2024 12:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.140.155.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711629611; cv=none; b=O8FSiCkzAfJFw3d0KuPc/HAEc8sIC6LCGUylIWMhddqnJsOPgYEWHttw3dsJBi/ijd2Xsw7w718EpEprrJPw0y3EkUFg/H7L9KgZ00VXS/ENhq44YP5wDaBO+luH4d3YbGjlVN/ajoOeNpd6ExJ0tpA3HDS8p7UTbfUky6OllHU=
+	t=1711629635; cv=none; b=dSJauf1LY5JBclWfK3b+nR6AS0qStYGN9PgIU2tLWvXzwFYNjYZ9SPGDyGCQwo1Ct8C6c8svaAerq1jfby6bUApNQABU+NCbzQAzcjBvWdZF7WC2HdsLHRVusq+/QIRe2VMBLJYEZ2zfWDOXherQiPJXYrx3bDvRPos8Cuu+noU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711629611; c=relaxed/simple;
-	bh=oZOsfm72DJFPdo+Ma1cBA1aIH+t/Ab5Yx45MSHSwUlU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aGRuRX1rpLMRIpkUeZ4iN2H7suwhKU307ZMzd8yvro5gV9hA6lGzp5WezBrcU9TIZkZce2nnDAHG2VtcPPf/CRZ489RAjMPyP7ety7iHof0b1Qo3AkQqTC+ZWcO3PD/AAwCKu7FoXhlM4a+OlxyYcTDu7GeveQoIVa6Qnkzq/1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=mKB8vWPv; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="mKB8vWPv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=JXm7K82jLtWg1VPIcy9g3aAbs1bY6vhIc6AnyNaOJ/A=; b=mKB8vWPvqezitANxKHzqo/ndrR
-	DRYKB0GMxgDF/Zilsy2tgDkup6uo9bWJd93JMRzkMyD9EXwj6202WEeWZSn8EfESZ948Ki5sXt/3O
-	NmsyP/lrFSrhQGDPjPHR7kWec1fMitA65R6fHd6W4309RrevvkX+Gxj77l31kop1//T0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rpp2m-00BUsX-UA; Thu, 28 Mar 2024 13:39:44 +0100
-Date: Thu, 28 Mar 2024 13:39:44 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: MD Danish Anwar <danishanwar@ti.com>
-Cc: Diogo Ivo <diogo.ivo@siemens.com>, Rob Herring <robh@kernel.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Simon Horman <horms@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Roger Quadros <rogerq@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, srk@ti.com, r-gunasekaran@ti.com
-Subject: Re: [PATCH net-next v3 3/3] net: ti: icssg-prueth: Add support for
- ICSSG switch firmware
-Message-ID: <cca25c3d-a352-4531-a8ae-5a0fb7de44df@lunn.ch>
-References: <20240327114054.1907278-1-danishanwar@ti.com>
- <20240327114054.1907278-4-danishanwar@ti.com>
- <27d960ed-8e67-431b-a910-e6b2fc12e292@lunn.ch>
- <c94815f8-798a-4167-8f69-359b9b28b7ce@ti.com>
+	s=arc-20240116; t=1711629635; c=relaxed/simple;
+	bh=SLDXXofNNvtb1d/IS5CU1TtMgweqPGf2VKfgDW1fXlA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZSxQJMumRjKmorWr36OrcrBxyATGLJ70pCoOcMhwvy0F94zdCCIFB/t+nfX3kVu+OaVOxgHBcTQ/qXSGhsZiecvcml0NegPlNdSHaf0ysYlrX2AqMUGmB63TTnI+jrjmI+tVGREgD/6CIvsmabm+o+6rXG4/9b8zm042k3Y4o44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=14.140.155.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
+IronPort-SDR: lI+H9/AL0wOgQc7cIgU/AeOSWi6HzUcIOiwcI/fmVPQ03l7nX4T5+2Van+3pquDHRLQ18pKXVJ
+ MWgDOIor931g==
+Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
+  by esa2.ltts.com with ESMTP; 28 Mar 2024 18:10:28 +0530
+From: Bhargav Raviprakash <bhargav.r@ltts.com>
+To: linux-kernel@vger.kernel.org
+Cc: m.nirmaladevi@ltts.com,
+	lee@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	jpanis@baylibre.com,
+	devicetree@vger.kernel.org,
+	arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	linus.walleij@linaro.org,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	nm@ti.com,
+	vigneshr@ti.com,
+	kristo@kernel.org,
+	eblanc@baylibre.com,
+	Bhargav Raviprakash <bhargav.r@ltts.com>
+Subject: [PATCH v5 00/11] Add support for TI TPS65224 PMIC
+Date: Thu, 28 Mar 2024 18:10:05 +0530
+Message-Id: <20240328124016.161959-1-bhargav.r@ltts.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c94815f8-798a-4167-8f69-359b9b28b7ce@ti.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 28, 2024 at 11:39:33AM +0530, MD Danish Anwar wrote:
-> Hi Andrew,
-> 
-> On 27/03/24 6:05 pm, Andrew Lunn wrote:
-> > On Wed, Mar 27, 2024 at 05:10:54PM +0530, MD Danish Anwar wrote:
-> >> Add support for ICSSG switch firmware using existing Dual EMAC driver
-> >> with switchdev.
-> >>
-> >> Limitations:
-> >> VLAN offloading is limited to 0-256 IDs.
-> >> MDB/FDB static entries are limited to 511 entries and different FDBs can
-> >> hash to same bucket and thus may not completely offloaded
-> >>
-> >> Switch mode requires loading of new firmware into ICSSG cores. This
-> >> means interfaces have to taken down and then reconfigured to switch
-> >> mode.
-> > 
-> > Patch 0/3 does not say this. It just shows the interfaces being added
-> 
-> I will modify the cover letter to state that.
-> 
-> > to the bridge. There should not be any need to down the interfaces.
-> > 
-> 
-> The interfaces needs to be turned down for switching between dual emac
-> and switch mode.
-> 
-> Dual Emac mode runs with ICSSG Dual Emac firmware where as Switch mode
-> works with ICSSG Switch firmware. These firmware are running on the
-> dedicated PRU RPROC cores (pru0, rtu0, txpru0). When switch mode is
-> enabled, these pru cores need to be stopped and then Switch firmware is
-> loaded on these cores and then the cores are started again.
-> 
-> We stop the cores when interfaces are down and start the cores when
-> interfaces are up.
-> 
-> In short, Dual EMAC firmware runs on pru cores, we put down the
-> interface, stop pru cores, load switch firmware on the cores, bring the
-> interface up and start the pru cores and now Switch mode is enabled.
+This series modifies the existing TPS6594 drivers to add support for the
+TPS65224 PMIC device that is a derivative of TPS6594. TPS65224 has a
+similar register map to TPS6594 with a few differences. SPI, I2C, ESM,
+PFSM, Regulators and GPIO features overlap between the two devices.
 
-This is not the Linux model. Try it, add an interface to a software
-bridge. It does not care if it is admin up or down.
+TPS65224 is a Power Management IC (PMIC) which provides regulators and
+other features like GPIOs, Watchdog, Error Signal Monitor (ESM) and
+Pre-configurable Finite State Machine (PFSM). The SoC and the PMIC can
+communicate through the I2C or SPI interfaces. The PMIC TPS65224
+additionally has a 12-bit ADC.
+Data Sheet for TPS65224: https://www.ti.com/product/TPS65224-Q1
 
-You need to hide this difference in your driver.
+Driver re-use is applied following the advice of the following series:
+https://lore.kernel.org/lkml/2f467b0a-1d11-4ec7-8ca6-6c4ba66e5887@baylibre.com/
 
-> > I keep asking this, so it would be good to explain it in the commit
-> > message. What configuration is preserved over a firmware reload, and
-> > what is lost?
-> > 
-> > Can i add VLAN in duel MAC mode and then swap into the switch firmware
-> > and all the VLANs are preserved? Can i add fdb entries to a port in
-> > dual MAC mode, and then swap into the swtich firmware and the FDB
-> > table is preserved? What about STP port state? What about ... ?
-> > 
-> 
-> When ports are brought up (firmware reload) we do a full cleaning of all
-> the shared memories i.e. SMEM (shared RAM). [1]
-> 
-> Vlan table and FDB table are stored in SMEM so all the configuration
-> done to VLAN / FDB tables will be lost.
-> 
-> We don't clear DRAM. DRAM is used for sending r30 commands [see
-> emac_r30_cmd_init()], configure half duplex [see
-> icssg_config_half_duplex()] and configure link speed [see
-> icssg_config_set_speed()]. r30 commands are used to set port state (stp).
-> 
-> Now when the interfaces are brought up (firmware reload) r30 command is
-> reconfigured as a result any changes done to port state (stp) will be
-> lost. But the duplex and speed settings will be preserved.
-> 
-> To summarize,
-> VLAN table / FDB table and port states are lost during a firmware reload.
+The features implemented in this series are:
+- TPS65224 Register definitions
+- Core (MFD I2C and SPI entry points)
+- PFSM	
+- Regulators
+- Pinctrl
 
-So you also need to work around this in your driver. I think it is
-possible to get the network stack to enumerate the configuration. Take
-a look at the Mellanox driver. If i remember it does something like
-this, but i don't remember the details.
+TPS65224 Register definitions:
+This patch adds macros for register field definitions of TPS65224
+to the existing TPS6594 driver.  
 
-      Andrew
+Core description:
+I2C and SPI interface protocols are implemented, with and without
+the bit-integrity error detection feature (CRC mode).
+
+PFSM description:
+Strictly speaking, PFSM is not hardware. It is a piece of code.
+PMIC integrates a state machine which manages operational modes.
+Depending on the current operational mode, some voltage domains
+remain energized while others can be off.
+PFSM driver can be used to trigger transitions between configured
+states.
+
+Regulators description:
+4 BUCKs and 3 LDOs.
+BUCK12 can be used in dual-phase mode.
+
+Pinctrl description:
+TPS65224 family has 6 GPIOs. Those GPIOs can also serve different
+functions such as I2C or SPI interface or watchdog disable functions.
+The driver provides both pinmuxing for the functions and GPIO capability.
+
+This series was tested on linux-next tag: next-20240118
+
+Test logs can be found here:
+https://gist.github.com/LeonardMH/58ec135921fb1062ffd4a8b384831eb0
+
+Changelog v4 -> v5:
+- Regulator events changed to REGULATOR_EVENT_REGULATION_OUT for _UVOV 
+- Fixed pinctrl probe issues with TPS6593 PMIC
+- Refactoring pinctrl driver: reduced no. of switch case statements and 
+  using template structs for initializing tps6594_pinctrl.
+
+Bhargav Raviprakash (8):
+  mfd: tps6594: use volatile_table instead of volatile_reg
+  mfd: tps6594: add regmap config in match data
+  dt-bindings: mfd: ti,tps6594: Add TI TPS65224 PMIC
+  mfd: tps6594-i2c: Add TI TPS65224 PMIC I2C
+  mfd: tps6594-spi: Add TI TPS65224 PMIC SPI
+  mfd: tps6594-core: Add TI TPS65224 PMIC core
+  misc: tps6594-pfsm: Add TI TPS65224 PMIC PFSM
+  arch: arm64: dts: ti: k3-am62p5-sk: Add TPS65224 PMIC support in AM62P
+    dts
+
+Nirmala Devi Mal Nadar (3):
+  mfd: tps6594: Add register definitions for TI TPS65224 PMIC
+  regulator: tps6594-regulator: Add TI TPS65224 PMIC regulators
+  pinctrl: pinctrl-tps6594: Add TPS65224 PMIC pinctrl and GPIO
+
+ .../devicetree/bindings/mfd/ti,tps6594.yaml   |   1 +
+ arch/arm64/boot/dts/ti/k3-am62p5-sk.dts       |  95 +++++
+ drivers/mfd/tps6594-core.c                    | 253 ++++++++++--
+ drivers/mfd/tps6594-i2c.c                     |  41 +-
+ drivers/mfd/tps6594-spi.c                     |  43 ++-
+ drivers/misc/tps6594-pfsm.c                   |  48 ++-
+ drivers/pinctrl/pinctrl-tps6594.c             | 275 ++++++++++---
+ drivers/regulator/Kconfig                     |   4 +-
+ drivers/regulator/tps6594-regulator.c         | 238 ++++++++++--
+ include/linux/mfd/tps6594.h                   | 362 +++++++++++++++++-
+ 10 files changed, 1215 insertions(+), 145 deletions(-)
+
+
+base-commit: 2863b714f3ad0a9686f2de1b779228ad8c7a8052
+-- 
+2.25.1
+
