@@ -1,106 +1,99 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13DE017BB9
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 08:16:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5EB351C45
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 08:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711613769; cv=none; b=VrxmhjmbXsLKN/KcYa3o5II3qkkhYblW7xBhvNCtYlu7tZt+v4p+Z8DRqdKQIXp2qH3sgqpHK2f0CG3L32s+x6jRAwfSF5AIYF6eCcXo7wyAp5mU+hElmrz0RdtIKHlTEuaJMxM6w+T/Vehtj/pJLMqRej9wbAYXewCBKhnq/sE=
+	t=1711613903; cv=none; b=sv8cPy1YvE+KZPBHnWQKRGexi2IzZgBslPf5FNw/hBYsNtWqQuh6LwfYdHgxaHb4OtzAGf3Bs9++smqSdggOYTRs/db0D/WmxaJTunXLvhYjHZptFWqV1PlrG3MlGQ+2SCLyNScbX1j5KQgxeWqXomG0AfGw5G/If0zSnxojBHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711613769; c=relaxed/simple;
-	bh=dlGKVS+WvTf5/rAhT2E+OEMVaU2rjznUwxa7cmPIehw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nKLUkcThhTqlbAf9e8pVMdSvW//j9TwEiMkHgue/eHLIapiVmoaLTDQrevv9x9AZEhfSaVupNrRef9o5qEB82q9CyfpQSEffs8rNZsOnrEjg0MKYgmCi9Xs4dLN8+SU+3BsqjML5TNgibKWK+fHoVEPXLfmAHrIxw0Yx1o5iRhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kOMXbJDC; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1711613903; c=relaxed/simple;
+	bh=E4W+r8TfulGjSmOA1LdOpEM8S3uPAlvCQu3lib2TuNg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=okxpuwazWv57B+5IB9zLLaGYT8LbY8AwWDYgnbTdlBPKUTeqdNqrtMd8GFYlOJ/WzGwYb9Lz/K3qA5CxtOtO0TcrhcGSj3tH7nguJQBg+GChSPzLyIioP2yBSIFQzS/V5hXA+Ci1soNrW2BTJ9iMrdFmZCxUP9anZKcCFCr1eTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=IG34/QgP; arc=none smtp.client-ip=85.214.250.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kOMXbJDC"
-Message-ID: <160b54f1-b578-40d5-a977-00b71fd22e34@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1711613765;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5tn2JXPtKgDb/RvnAaA2HxiulPKE1lezZ4kqGlrru2k=;
-	b=kOMXbJDCyhekg4mdOuMJGuSHoVXwmrSC+tdEiXJm6Th2+sFjCM1dfRMYPcqQXINLd7J/2T
-	xKLX06BUo0aabg+gmiTVW9sr7eMDj9ruk2h/27JDhTMlSusDB24NCxEsTSWmNtxx8adi0x
-	5n1miXWD9XczovsTmc8kX3cEoqQQ0Ds=
-Date: Thu, 28 Mar 2024 16:15:49 +0800
+	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="IG34/QgP"
+Received: from 8bytes.org (p4ffe1eea.dip0.t-ipconnect.de [79.254.30.234])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.8bytes.org (Postfix) with ESMTPSA id 72C052810A1;
+	Thu, 28 Mar 2024 09:18:20 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
+	s=default; t=1711613900;
+	bh=E4W+r8TfulGjSmOA1LdOpEM8S3uPAlvCQu3lib2TuNg=;
+	h=Date:From:To:Cc:Subject:From;
+	b=IG34/QgPa0IP27cm2dZWuDmVArq8mQEmiYfzGlXQSoE7lXXjo0DbqMEt6I7ehsHTD
+	 OGFwyrG/zwdXb0hjZF7LaiAVJ8wnJt+hMHF4bx4zGuUwWL33m/3Rg9e48Put9IMxXA
+	 wsuSJyr3lxUfFX/gLJ5njoD7FlvvBkqZslYCH1CI1HkKyWJdubvX8egmW4UhAPl+mY
+	 kHuhb/A08lp61uK69qzR/WNwyd0vt3HEqivK07uS8C3pE3w0PuDvZFPbXsQuIHWXSS
+	 x+IWE9E5d45p/BVid6sq+C1vMTEsINWLuWl/xzvn7mfsfcHLI+TbUtoRPDi6n+ZXWt
+	 TbvONu6RgVXdQ==
+Date: Thu, 28 Mar 2024 09:18:18 +0100
+From: Joerg Roedel <joro@8bytes.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev
+Subject: [git pull] IOMMU Fixes for Linux v6.9-rc1
+Message-ID: <ZgUnyqosVrEtULhz@8bytes.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [RFC PATCH 8/9] mm: zswap: do not check the global limit for
- zero-filled pages
-Content-Language: en-US
-To: Yosry Ahmed <yosryahmed@google.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20240325235018.2028408-1-yosryahmed@google.com>
- <20240325235018.2028408-9-yosryahmed@google.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <20240325235018.2028408-9-yosryahmed@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 2024/3/26 07:50, Yosry Ahmed wrote:
-> When storing zero-filled pages, there is no point of checking the global
-> zswap limit. These pages do not consume any memory that contributes
-> toward the limit. Move the limit checking after zero-filled pages are
-> handled.
-> 
-> This avoids having zero-filled pages skip zswap and go to disk swap if
-> the limit is hit. It also avoids queueing the shrink worker, which may
-> end up being unnecessary if the zswap usage goes down on its own before
-> another store is attempted.
-> 
-> Ignoring the memcg limits as well for zero-filled pages is more
-> controversial. Those limits are more a matter of per-workload policy.
-> Some workloads disable zswap completely by setting memory.zswap.max = 0,
-> and those workloads could start observing some zswap activity even after
-> disabling zswap. Although harmless, this could cause confusion to
-> userspace. Remain conservative and keep respecting those limits.
-> 
-> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+Hi Linus,
 
-Yeah, it looks reasonable to keep the memcg limits check.
+The following changes since commit 4cece764965020c22cff7665b18a012006359095:
 
-Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
+  Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
 
-Thanks.
+are available in the Git repository at:
 
-> ---
->  mm/zswap.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/zswap.c b/mm/zswap.c
-> index efc323bab2f22..9357328d940af 100644
-> --- a/mm/zswap.c
-> +++ b/mm/zswap.c
-> @@ -1460,9 +1460,6 @@ bool zswap_store(struct folio *folio)
->  		mem_cgroup_put(memcg);
->  	}
->  
-> -	if (!zswap_check_limit())
-> -		goto reject;
-> -
->  	if (zswap_is_folio_zero_filled(folio)) {
->  		if (zswap_store_zero_filled(tree, offset, objcg))
->  			goto reject;
-> @@ -1472,6 +1469,9 @@ bool zswap_store(struct folio *folio)
->  	if (!zswap_non_zero_filled_pages_enabled)
->  		goto reject;
->  
-> +	if (!zswap_check_limit())
-> +		goto reject;
-> +
->  	entry = zswap_entry_cache_alloc(GFP_KERNEL, folio_nid(folio));
->  	if (!entry) {
->  		zswap_reject_kmemcache_fail++;
+  git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-v6.9-rc1
+
+for you to fetch changes up to c404f55c26fc23c70a9f2262f3f36a69fc46289b:
+
+  iommu: Validate the PASID in iommu_attach_device_pasid() (2024-03-28 06:38:40 +0100)
+
+----------------------------------------------------------------
+IOMMU Fixes for Linux v6.9-rc1:
+
+Including:
+
+	- ARM SMMU fixes:
+
+	  - Fix swabbing of the STE fields in the unlikely event of
+	    running on a big-endian machine.
+	  - Fix setting of STE.SHCFG on hardware that doesn't implement
+	    support for attribute overrides.
+
+	- IOMMU core:
+
+	  - PASID validation fix in device attach path
+
+----------------------------------------------------------------
+Jason Gunthorpe (2):
+      iommu/arm-smmu-v3: Add cpu_to_le64() around STRTAB_STE_0_V
+      iommu: Validate the PASID in iommu_attach_device_pasid()
+
+Joerg Roedel (1):
+      Merge tag 'arm-smmu-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/will/linux into iommu/fixes
+
+Mostafa Saleh (1):
+      iommu/arm-smmu-v3: Fix access for STE.SHCFG
+
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 38 +++++++++++++++++++----------
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h |  2 ++
+ drivers/iommu/iommu.c                       | 11 ++++++++-
+ 3 files changed, 37 insertions(+), 14 deletions(-)
+
+Please pull.
+
+Thanks,
+
+	Joerg
