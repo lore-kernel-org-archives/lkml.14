@@ -1,120 +1,97 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305FC13173E
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 22:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A084D13AA54
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 22:06:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711663504; cv=none; b=UUJxBGk8XdB0ShHQvY6j1Z/h2/ORW+PihQ5Pg+2rftoiHbbUu1CjW+cgD+1o6C/nBwNTnWlhPC2s08CTfbEKA/Zm4/VY3OyER1LEkUf8X4n9ivBil636z8qvwg6Ffva9ZBSuwNMiBVPu7i7RDku2s4EPoBFad0DBkhVD+Ry95iM=
+	t=1711663566; cv=none; b=W9s+KdfKxMxBvdcKJ9F+WTJUBUrfOKj5eBw1znaIYBWG+5byhGmpdwFHi6Z991uA+1TjGI6wLrau6p6+ofKFmcUOTm8t7HhpzieKUF8nXqqeV4xnrquznHH0dN/YRx4KwhGGjHyFvxvUn0MQcuYYByCiIaALoEgCivyCID3q4NY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711663504; c=relaxed/simple;
-	bh=9ZSPvENfmgfhIsnuJFWhvL6BmUkVhFz5PSQ7INGUgHQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P1Z/yfD1RankBlPeAiTs1QEqrjJijMJehfn8Qw9NXdCwaLZucOSjlziUzzMt/pjhDme0uIKMUcjTyejKDqHwgDe2LUEgy66LmZduaIUpIyCmpKLDMVkETDyIBtn/yTFO7rHAVaH2hgllq2oS6V4EK4ZZ8ikgPiDi8eArybS2dOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3e9R8CFY; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1711663566; c=relaxed/simple;
+	bh=BMVe5w6WOEXTcXCCqr7XwIN6WHhygsRAlRjfU3X7bhI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mCAy1rzV1T7jx21SdMvxnMDN6IBZeOn1dhwYfkxcgYQ7AcJLldqicPxvDYASH/kB6K1Lbtp0OWF5bUHxq9yWwesQhRvZgc16XY/X7IT2D51z3oJQOaYh18e/zr3dTadtHGqt2G9LX79XdNDoyRX7KtaYjJ+FiHgj3Q2WOYIk5YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=D87S6gOX; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3e9R8CFY"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-56c404da0ebso2248876a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 15:05:02 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D87S6gOX"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6e782e955adso1371998b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 15:06:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711663501; x=1712268301; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MGMxoG8AQ8BGP67PTNjLH3VS7bl1OwfTgMURF7OtwG4=;
-        b=3e9R8CFYk4xjW7QBhCdJc/gM8mLEfGvLcbf051vzhpu2zFvFzZX0urTkZ6D3i9795p
-         29DbUncFM+7y1IktSL96E1UC5aMZlFJnO0g6C9vb9wIqcsVtNxCMXqMpSV2n/q+ecnzv
-         pYmuMpikZ9fkSnRWZMhYqQAl51UYAnQeMul8Jyjp2vlvxdRmX0Iyyd4EA0qi+XcFUxG4
-         rT6uKbHEHvYaEsI+nhXf2DR5WZclKPXe9/tV37YTK9Z3CQVu4kVQMmizqwbkVfBoDvIg
-         CZmjqR9MuDLE9xf4gftr5D33nqTy1cuyuHeF+ZBzWix/r5u70eh3ACzKBJ3uTYcMYgTp
-         ibuQ==
+        d=chromium.org; s=google; t=1711663564; x=1712268364; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+ulFT2YtYHRUyQ2m0L9C0dai4nEzKGQhAD0pMYhyoW8=;
+        b=D87S6gOX1X8YYp1S+39cRqkjIoufWeL7TSIWKdYownLn/P0FLhPF43SGJ/9hMeBd32
+         MkKwSzcJCEL6sudRqtwG94OTZJWRwg4j5pvbVH7O+w+6MufzwOS8RMaXLeZeukxJRoKB
+         PEu1p+qG97hMrUpvyuVGRSZFY/gPahbDogvXM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711663501; x=1712268301;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MGMxoG8AQ8BGP67PTNjLH3VS7bl1OwfTgMURF7OtwG4=;
-        b=Ljf/gtr+BTCNb1gS/AtdIeGrXGsjlsYu0H7N1Sdfls/m9gFhaDhjJXM6Ja1TpC8YR6
-         gWGPsPYWJ7Aup6A5c7UzYthhb6/HsGIO4tYB+FjIqVLapne7MpOX3VMZTrUyCKeXj1Y4
-         sPGAFRMdO7Ufe39MEugA7VBFQWnntBWQXjzdkO90Yk0PIRoh5zqtFmzFYLOjpEVH3dDQ
-         FBvw8trn56kPoNdxyrT4LrZW+LB3/r/wRKhKP9/6EvTjwHKij5iHup/kz+hJGbtli7VI
-         ow9EjG8szbObl2/LKwsSv5ANvjmzYfYSxotNZakBPoXb/tvVYivQYvGX5kwNeytm88Yt
-         swfA==
-X-Gm-Message-State: AOJu0YzlKKCcwCgU9VfJqAy0UWA01ZmlcPU8VKUknJRx4pQj9LDbaPf8
-	G7/HgFWfk6GYp6dKoOUEH++ir6/N2NwoZk5zu8OD8Nen3sqPx3ZzguTJdDrrR20zSHfcEQJ97Gg
-	H11HiFUvXbM+IGGQk8k9DtpVQqUDEt38dSWXnyaB5zWPx6lpDpbHt
-X-Google-Smtp-Source: AGHT+IGI1NuivKb4Ji1liwhmjoNA08qow9K2J1nHBY2lkA7t+bjvkMMP3tHaIzK6dIha9lwR+QhUcEEc6nDcKmlEY7E=
-X-Received: by 2002:a05:6402:35ca:b0:56c:2ef7:f3ed with SMTP id
- z10-20020a05640235ca00b0056c2ef7f3edmr442959edc.35.1711663501455; Thu, 28 Mar
- 2024 15:05:01 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711663564; x=1712268364;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+ulFT2YtYHRUyQ2m0L9C0dai4nEzKGQhAD0pMYhyoW8=;
+        b=F1utYEa5qa+Zn2GUTZ+IEdstx0O6a23RMyx98UIsjcaPpnfttsT725S3Jr+vH5R0lT
+         ZdMBg2Mtg8ti8FBl42eugoTtJc+ywohnDyKYOQgFIvwIJXKroHoKsDDkmbU1DfcuC8Dw
+         44uVPmQj4/9wp7KLnPUdDzxLMgeE41WqbNgtuifM+4wMM2XlzK6OR2IcLGIiLCoW0UzB
+         vpovFPmV6bWz/OrgaFs0Zzi2fQ4q8dx5eLej6m/dNSk8BWVutCclTWPtNQeUROZv7BQ3
+         3Qo8HgoX1mbRcHY91a0rBQFJH6ZqPZrV2vtfrjqORXiYdUwc4K0r+j8XlTcqNNKhjnqL
+         WA4w==
+X-Forwarded-Encrypted: i=1; AJvYcCXFMAZhaHdhIcZ2+JLFufiwYrACXTCmKq2XVFH3X0hbVhnp9eSGAmuXIWCZRhCGlb4W8j8GY/1PsO6kVQ7hpxxDsPjtLUOxHJJUiAYB
+X-Gm-Message-State: AOJu0YxIKxF0K+Qx48uDyECWE+ESbbXIXPkA7s64bh0fehO3YykFu0mw
+	r4elMNmW4cFQHVAfhM+1h21WN2+GmFKcJWkISZ/pGUzRCGmkbjQ6HdefOCyh3Q==
+X-Google-Smtp-Source: AGHT+IHMcpSW028XxTQvmxpihDQRd+NUVdxm2dqXDSvZsx+g48XAeL0IeezbbE3UA8t48l295BDITQ==
+X-Received: by 2002:a05:6a00:a90:b0:6ea:7647:282d with SMTP id b16-20020a056a000a9000b006ea7647282dmr715662pfl.29.1711663564040;
+        Thu, 28 Mar 2024 15:06:04 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id n19-20020aa78a53000000b006e6c16179dbsm1876305pfa.24.2024.03.28.15.06.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 15:06:03 -0700 (PDT)
+Date: Thu, 28 Mar 2024 15:06:03 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] reiserfs: replace deprecated strncpy with scnprintf
+Message-ID: <202403281505.C5C8691@keescook>
+References: <20240328-strncpy-fs-reiserfs-item_ops-c-v1-1-2dab6d22a996@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240328143051.1069575-1-arnd@kernel.org> <20240328143051.1069575-7-arnd@kernel.org>
-In-Reply-To: <20240328143051.1069575-7-arnd@kernel.org>
-From: Justin Stitt <justinstitt@google.com>
-Date: Thu, 28 Mar 2024 15:04:49 -0700
-Message-ID: <CAFhGd8oJ5trNE7na9jCDbEt5kox1rg0mia59EHj+XikHUnay5w@mail.gmail.com>
-Subject: Re: [PATCH 6/9] nilfs2: fix out-of-range warning
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Philipp Stanner <pstanner@redhat.com>, 
-	Christian Brauner <brauner@kernel.org>, Jeff Layton <jlayton@kernel.org>, 
-	Thorsten Blum <thorsten.blum@toblux.com>, linux-nilfs@vger.kernel.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240328-strncpy-fs-reiserfs-item_ops-c-v1-1-2dab6d22a996@google.com>
 
-On Thu, Mar 28, 2024 at 7:32=E2=80=AFAM Arnd Bergmann <arnd@kernel.org> wro=
-te:
->
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> clang-14 points out that v_size is always smaller than a 64KB
-> page size if that is configured by the CPU architecture:
+On Thu, Mar 28, 2024 at 09:16:52PM +0000, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> Our goal here is to get @namebuf populated with @name's contents but
+> surrounded with quotes. There is some careful handling done to ensure we
+> properly truncate @name so that we have room for a literal quote as well
+> as a NUL-term. All this careful handling can be done with scnprintf
+> using the dynamic string width specifier %.*s which allows us to pass in
+> the max size for a source string. Doing this, we can put literal quotes
+> in our format specifier and ensure @name is truncated to fit inbetween
+> these quotes (-3 is from 2 quotes + 1 NUL-byte).
+> 
+> All in all, we get to remove a deprecated use of strncpy and clean up
+> this code nicely!
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Is this only with clang-14?
+Yeah, I like the use of %.*s here. This is much more clear now I think.
 
->
-> fs/nilfs2/ioctl.c:63:19: error: result of comparison of constant 65536 wi=
-th expression of type '__u16' (aka 'unsigned short') is always false [-Werr=
-or,-Wtautological-constant-out-of-range-compare]
->         if (argv->v_size > PAGE_SIZE)
->             ~~~~~~~~~~~~ ^ ~~~~~~~~~
->
-> This is ok, so just shut up that warning with a cast.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-My question out of curiosity aside,
-
-Reviewed-by: Justin Stitt <justinstitt@google.com>
-
-> ---
->  fs/nilfs2/ioctl.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/nilfs2/ioctl.c b/fs/nilfs2/ioctl.c
-> index f1a01c191cf5..8be471ce4f19 100644
-> --- a/fs/nilfs2/ioctl.c
-> +++ b/fs/nilfs2/ioctl.c
-> @@ -60,7 +60,7 @@ static int nilfs_ioctl_wrap_copy(struct the_nilfs *nilf=
-s,
->         if (argv->v_nmembs =3D=3D 0)
->                 return 0;
->
-> -       if (argv->v_size > PAGE_SIZE)
-> +       if ((size_t)argv->v_size > PAGE_SIZE)
->                 return -EINVAL;
->
->         /*
-> --
-> 2.39.2
->
+-- 
+Kees Cook
