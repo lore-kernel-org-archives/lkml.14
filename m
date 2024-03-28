@@ -1,106 +1,66 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68AC23D3B6;
-	Thu, 28 Mar 2024 19:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3582B9A7
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 19:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711653218; cv=none; b=iOcZvdLb8iCLGoZT/tyDByd6orHMewZuXLMzeRnAJVoDu8cCtlomU+iSfKGKluUkEHJJPiAnnbqOg2D2hmFWIer3BM7GkBmkeqV2Iu7i3zUwYxgLjipjMPjnJrAj84WgmFzhHEiEWdmGgPqCxHmlhf+dFr1UIj1P9qacSA7etWE=
+	t=1711653313; cv=none; b=Ls+qPKUvFuoL3lKoNr5dj81YTxuqat6J217fKCfColZvMLhvpwpnpoxjQEI5R5D1F3TpnvI/impUvA3H/IeoKasdslfnlzBXqoG1dL0X4rlQ7i7PeQh0WNFEn1faP/RkhCKFbzSXvS6Ees1Si6xtF8pC0d7bCSVo81RRmz6ejJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711653218; c=relaxed/simple;
-	bh=rnSWslXWohvsbfuSkLuBUu1/TF9fW9a72TKkohDGhEU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qvLJvdNRTV7h4wSxKaGAJzom+E8/u98xUa0IxBlARlbO5BxyvfCvb+E4TaZQ1HgSdyd4u9ubXxZsswp4Uq2hbP0oHJGjsukOvnmGdaVyfGFjk2tGuF7ih61pEtFKRrx4I93GvrwpMtuQZBTOXW9hLJtwS4tR+atBlmYQGZbsl9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=N6dgwb8q; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	s=arc-20240116; t=1711653313; c=relaxed/simple;
+	bh=zM7PQiHxWzOWOO4OCrDwshJ55wl6Sv3jEAqMenXlYfw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FJxQFLIx6J154FTbFhp8krfFxXLq2Sks1EWJccag20scJiZ8NBIF3evjbhQ5hUd103cHq+SStPtTswAJWo+ijif/q0kcd+dnvZt2TBfM4nc9+fYTOx36LKO8GKmTwTBwzo+8ZAHQXXvNvUuAUIfMLIYAGvosHGlkhFDLkE76VCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KvJB7SoZ; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="N6dgwb8q"
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 82B33120003;
-	Thu, 28 Mar 2024 22:13:29 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 82B33120003
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1711653209;
-	bh=JInZBtKkASoN1jfIy+D2n9+9WIjAH4zJOpdoFKT/o9s=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=N6dgwb8qUyNXhkZD3Jyr958bqrEXqGa3Fqecuy3VA0XcXBO78XHQw1e8W3+x0goUD
-	 mwWOy09wL8/lie3378OX6EUipQwKrRq9nebA+ZU3Ir+00Y2OtEYbBMT/ZbIrcrT+OM
-	 fbiIUSCjCdiudGDqTBQl69caIkImIe9QhnSeYoioDf8bORB4TYE3/21a7f+OsqZuIW
-	 5VzRwIY9K8oIcGXDxhwtDIhH/ZvV8U6j2bXCb0sdfBWnHgezi3xQjSBSWvECA+N91f
-	 PLGW3lIXrIXI5xOUWwgCKr0WIOhDY+Lt4qxhgsfGq/ZkaugG9f4CElgKTAdBzc8463
-	 ia9qTvX3ZajnA==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Thu, 28 Mar 2024 22:13:29 +0300 (MSK)
-Received: from CAB-WSD-L081021.sberdevices.ru (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 28 Mar 2024 22:13:28 +0300
-From: Dmitry Rokosov <ddrokosov@salutedevices.com>
-To: <neil.armstrong@linaro.org>, <jbrunet@baylibre.com>,
-	<mturquette@baylibre.com>, <khilman@baylibre.com>,
-	<martin.blumenstingl@googlemail.com>, <glaroque@baylibre.com>,
-	<rafael@kernel.org>, <daniel.lezcano@linaro.org>, <rui.zhang@intel.com>,
-	<lukasz.luba@arm.com>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
-CC: <kernel@salutedevices.com>, <rockosov@gmail.com>,
-	<linux-amlogic@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, Dmitry Rokosov
-	<ddrokosov@salutedevices.com>
-Subject: [PATCH v2 0/2] thermal: amlogic: introduce A1 SoC family Thermal Sensor controller
-Date: Thu, 28 Mar 2024 22:13:09 +0300
-Message-ID: <20240328191322.17551-1-ddrokosov@salutedevices.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KvJB7SoZ"
+Date: Thu, 28 Mar 2024 15:15:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1711653308;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UiiYaB+fnO7Vb9P9+KhFx8SmJF7I5vpoUotl6zT2/zs=;
+	b=KvJB7SoZJKVuzlqFVWM0vRr2iWIHkYGpJutBec/Y0CDeoRB3ZqbEZnoiYkOlkksKTFjkgc
+	ZCl0V6MkQaKz+XlvCm77TLAL4XRYFaNjdlbdfH1ZqLGFKR/WklakWlabZ6DvLfZlpu8cMo
+	T9CtcB9YVXDlDIj6D7xWNsnofVKorJA=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Kemeng Shi <shikemeng@huaweicloud.com>, willy@infradead.org, 
+	jack@suse.cz, bfoster@redhat.com, tj@kernel.org, dsterba@suse.com, 
+	mjguzik@gmail.com, dhowells@redhat.com, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 0/6] Improve visibility of writeback
+Message-ID: <kind5tn6ythzjca3r5wrshjyveawm7il7ng4n6zyfwctafmqwo@eldoiinbwtbn>
+References: <20240327155751.3536-1-shikemeng@huaweicloud.com>
+ <20240327104010.73d1180fbabe586f9e3f7bd2@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184477 [Mar 28 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: ddrokosov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 14 0.3.14 5a0c43d8a1c3c0e5b0916cc02a90d4b950c01f96, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, 100.64.160.123:7.1.2;lore.kernel.org:7.1.1;salutedevices.com:7.1.1;127.0.0.199:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/03/28 18:21:00
-X-KSMG-LinksScanning: Clean, bases: 2024/03/28 18:21:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/03/28 18:13:00 #24496606
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240327104010.73d1180fbabe586f9e3f7bd2@linux-foundation.org>
+X-Migadu-Flow: FLOW_OUT
 
-It is primarily based on the G12A thermal controller, with only a slight
-variation in the offset value of the efuse parameters. Therefore, this
-patch series provides appropriate platform data and dt-bindings to
-ensure proper support.
+On Wed, Mar 27, 2024 at 10:40:10AM -0700, Andrew Morton wrote:
+> On Wed, 27 Mar 2024 23:57:45 +0800 Kemeng Shi <shikemeng@huaweicloud.com> wrote:
+> 
+> > This series tries to improve visilibity of writeback.
+> 
+> Well...  why?  Is anyone usefully using the existing instrumentation? 
+> What is to be gained by expanding it further?  What is the case for
+> adding this code?
+> 
+> I don't recall hearing of anyone using the existing debug
+> instrumentation so perhaps we should remove it!
 
-Changes v2 since v1 at [1]:
-    - provide Neil RvB
-    - remove 'amlogic,a1-thermal' fallback, cause it's not needed
+Remove debug instrumentation!? Surely you just?
 
-Links:
-    [1] https://lore.kernel.org/all/20240328133802.15651-1-ddrokosov@salutedevices.com/
-
-Dmitry Rokosov (2):
-  dt-bindings: thermal: amlogic: add support for A1 thermal sensor
-  thermal: amlogic: support A1 SoC family Thermal Sensor controller
-
- .../devicetree/bindings/thermal/amlogic,thermal.yaml | 12 +++++++-----
- drivers/thermal/amlogic_thermal.c                    | 10 ++++++++++
- 2 files changed, 17 insertions(+), 5 deletions(-)
-
--- 
-2.43.0
-
+I generally don't hear from users of my code when things are working, I
+only expect to hear from people when it's not.
