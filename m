@@ -1,72 +1,117 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2091.outbound.protection.partner.outlook.cn [139.219.17.91])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76FB364DA;
-	Thu, 28 Mar 2024 09:52:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A77B71DDFF;
+	Thu, 28 Mar 2024 09:53:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711619551; cv=fail; b=AG4rfK6QH3RzpOTCo5xY1jlgsDcTH9oyXZcAECFN5mV/mH4swQCRs4Knw+cMECLR3BnJ+Lf53hHQbPBWtELmZqh4UvE0ff+DJ2vV61xux2ElhNqdRHxB9CmSkjOgeL0tZnSQ3ypGqiE0GNRUke5LKfXkwJF25uepUgC6urUvvr4=
+	t=1711619600; cv=fail; b=WI/BvBSkwdn/nb70HQYfh5YKNNiOcLbDQiyCaM01tPLBPpohJv4mjF7rgfLyoLTstZA+v/0/aeG3ZUR6xS/RS3rc8JZWofTfYMu8lWoCg0/63VvgvS9UE5n8sqVgC+GwyRuA5FzC7Q4Kq5EMTRLvDGiZpJPPia/NKC55Ddgdle0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711619551; c=relaxed/simple;
-	bh=IWyU3Nb1lDW6JHJuysFfcNHrQ2UWhgpcddVWnUVeB88=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=guRf51+cLPiInFaiOC3WsmDE6z0cpjwsgozFNmU4PPSvkP7lYqrP1CQCvkV0xiM99q115qQokeALRKHZE80OpCiDGId1tJeHpzRc5agiuCEx0Mk69AXBWzD+DKcewHq5QYujuRf/BAu4R8kglLMxobhJ/Y0AWZ4DUpwTNtsXNBs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+	s=arc-20240116; t=1711619600; c=relaxed/simple;
+	bh=tnGiCiyxNe2aFPWQfDUS/7qsZGOsFOuZZALsVoJefCo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=oU1rDm5la73Yp6IDzXLZ0gruAdsnjvVgaJPtS1nQyeGwBwnFiwyvkrIfjEVmDPTk0i/yWxnR8hR3/OIbfyALLS6WaTyPXFTfdy30VO2AFq8lRno/+eEPbf5rS5uUl0x6p01CuaQZRvu8/tpcsCF+7SfW3ilFhCyt6nsutJY91VE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WpLOPPCL; arc=fail smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WpLOPPCL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711619598; x=1743155598;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=tnGiCiyxNe2aFPWQfDUS/7qsZGOsFOuZZALsVoJefCo=;
+  b=WpLOPPCLJiM33zwaA0vNf7zUY/ddnoDutdwBDVIDh+iZxp9KsHBRSnBw
+   o263A0/dzNkQRpYZ5jt0LMJNy9VjmsHH7PRd2/0g8havBUf587V76loFD
+   ZKp35MtewVw02iPOCb/JoN/k1l9GYIkFTJfZG2rhsLowmaqUMgXbs0EUe
+   o0fU/Aa1fqsOlkIzyVhwax2NX3NEdhXbE2hiW7p7C+83Igkf0GIr7IfkI
+   2495v3O/gQV+uIOWD+tLAngG4l7D7Qmh9haLuw1Li0iaefkDowUQjtNFm
+   2izDnobc3doIjB4+q25JWVmVp7LDW+5ore+EPJ0LuMrPKRGLPX3udvebh
+   Q==;
+X-CSE-ConnectionGUID: rwEoqtIpR1+WB1zDExoAXQ==
+X-CSE-MsgGUID: qlNoMXd9SMWCsmk2Wwfbmw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="29243903"
+X-IronPort-AV: E=Sophos;i="6.07,161,1708416000"; 
+   d="scan'208";a="29243903"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 02:53:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,161,1708416000"; 
+   d="scan'208";a="21068677"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 28 Mar 2024 02:53:17 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 28 Mar 2024 02:53:16 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 28 Mar 2024 02:53:16 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Thu, 28 Mar 2024 02:53:16 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 28 Mar 2024 02:53:16 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e9mDw4XwaL2qCTufFfYbS17sAghny7xo91p9nk5lk0l2lUFuX67a1G75h1F35rQpf56Ep1cr6fsrwr3jRHyNw9XOp9mQl1c/gAH1xfmC+vEkf+b2AgDSWohHdlwfD12jPVFHFcWbP9alomLXr3Wb2DJ2tdXOMDpO053d5HnlaPAY5XA3RvHR7cBsM7LLWaTruPHuWF1OG0l8YofacK4oEKAwOVKjVTagTyH72M9NGwSLAQZhzOsdiPOrpA2AOfklxHhAc4IHwycAWAH2M23BUZDeAkT4XS3TmNfS5tLUwUPQ4tpKdSfkb5YOTJ8RO66UKyYJ2tvNmg4xjTH5/LSlCg==
+ b=MJcatQJ0Wajn0raFi6y6bPgQ5nIF92i5IYFj5zn5pCD96XNxwjPVO7vII+aN6pYAfAtJ3eCOAEzeMrjhlvbVLT0YzzVpZ6dZ7JUOK3eGCZE9z/I8EiGE3ghYHLKa8eWW/IscE7cNpjCRClRJ7iyVfZf1zbDz1jPgeTi8tnei0jv4TJmNiRTfUSj6QpEKWalvKDqWkPvkiE0lmMeBFcMQg+V+mrNDsDkDWlpsmE+aS8vNWaVDPPn+YTlRqIhjcgL1ZItQJLybE1bRxHwVQQvlez/wFSoMcfqBDvCMrmYwzaRwEQlJKgNOeu4x6kmLKsz/SFEqJs94kAwjcIHVO03x8w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=e/CTRHF8OXhnsuS900QIctOG+tZySCVcRZiWfg2uaPc=;
- b=mOU3mUcUSwiFgzQ3aOxKkC8FgkaYQfs08AMvoqFpnUM+IROl1VPKeifTH0fOkXPbdkzdj7FcFwhNGfn/CJs3C0Ma5w4MBqLf/VrUAjRvIgKUQ7R3iIaSpTUDqtzaE2sfy4xVC0F21IrJBcj+ATPlrWM2THmeeUEfsRp9sjNj9gasI+wW0J2svtrPzry01y/u+5SQdraExocMCJxBt1hR17Gt4WAJyvwtoiLX1i0gfCAJAdAgR/GDEgHPL83W+rIw1zD/gUnE88XqDdC3dg2HOpH9ZEqxZDA2ZsDsIjeaTUWteqPU78dPge69UVf98OHJf9smB4vIj7FuECCJQR8k5A==
+ bh=eel9r2OPUllpH6NvQ+I5KFgEwvwbaVkHVDGA2LUwfyU=;
+ b=FB08ysLzHxBITcy9n5O6QTOxUoX/3JupKSXW9VDD1RvNZDFLGsfzDUZuubKVw395zD853MNRsaa0zDB8acm/0sxgUVpPxOmL1OwAo6HLv3ZD2ZN62AHn1sD9XcnUNIKNikdupdNDpMhUCzj3fR7lsPPBVwhRUnWsUG7dXg12E+O2tp2GLxvEP1g/T+CxDJAPDaDrbMDM1VoGwAvyXgvnTh+JB6a3H25GN5Jme7PrPNsABr4rADH+FBCuGvGhAjnZGrr1cWauwBGNwzpjTD87La9k+fmmcj0QAiOZ+Oarc697R/gWSf/OCnLOdt+i4MfGZmxT5eT2pgYcmjA/vFEH7A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::15) by SHXPR01MB0496.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:1f::21) with Microsoft SMTP Server (version=TLS1_2,
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
+ by IA0PR11MB8336.namprd11.prod.outlook.com (2603:10b6:208:490::22) with
+ Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Thu, 28 Mar
- 2024 09:18:48 +0000
-Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- ([fe80::c738:9e6b:f92e:8bb9]) by
- SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn ([fe80::c738:9e6b:f92e:8bb9%6])
- with mapi id 15.20.7409.031; Thu, 28 Mar 2024 09:18:48 +0000
-From: Minda Chen <minda.chen@starfivetech.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Conor Dooley <conor@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Mason Huo <mason.huo@starfivetech.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Kevin Xie <kevin.xie@starfivetech.com>,
-	Minda Chen <minda.chen@starfivetech.com>
-Subject: [PATCH v16 04/22] PCI: microchip: Add bridge_addr field to struct mc_pcie
-Date: Thu, 28 Mar 2024 17:18:17 +0800
-Message-Id: <20240328091835.14797-5-minda.chen@starfivetech.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240328091835.14797-1-minda.chen@starfivetech.com>
-References: <20240328091835.14797-1-minda.chen@starfivetech.com>
-Content-Type: text/plain
-X-ClientProxiedBy: NT0PR01CA0020.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:c::16) To SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::15)
+ 2024 09:53:14 +0000
+Received: from CH3PR11MB8660.namprd11.prod.outlook.com
+ ([fe80::5135:2255:52ba:c64e]) by CH3PR11MB8660.namprd11.prod.outlook.com
+ ([fe80::5135:2255:52ba:c64e%4]) with mapi id 15.20.7409.031; Thu, 28 Mar 2024
+ 09:53:14 +0000
+Date: Thu, 28 Mar 2024 17:53:03 +0800
+From: Chao Gao <chao.gao@intel.com>
+To: Xiaoyao Li <xiaoyao.li@intel.com>
+CC: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "Yamahata, Isaku"
+	<isaku.yamahata@intel.com>, "Zhang, Tina" <tina.zhang@intel.com>,
+	"seanjc@google.com" <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>,
+	"sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>, "Chen,
+ Bo2" <chen.bo@intel.com>, "sagis@google.com" <sagis@google.com>,
+	"isaku.yamahata@linux.intel.com" <isaku.yamahata@linux.intel.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Aktas, Erdem"
+	<erdemaktas@google.com>, "isaku.yamahata@gmail.com"
+	<isaku.yamahata@gmail.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"Yuan, Hang" <hang.yuan@intel.com>, "pbonzini@redhat.com"
+	<pbonzini@redhat.com>
+Subject: Re: [PATCH v19 059/130] KVM: x86/tdp_mmu: Don't zap private pages
+ for unsupported cases
+Message-ID: <ZgU9/61//F17r1nw@chao-email>
+References: <20240325231058.GP2357401@ls.amr.corp.intel.com>
+ <edcfc04cf358e6f885f65d881ef2f2165e059d7e.camel@intel.com>
+ <20240325233528.GQ2357401@ls.amr.corp.intel.com>
+ <ZgIzvHKobT2K8LZb@chao-email>
+ <20db87741e356e22a72fadeda8ab982260f26705.camel@intel.com>
+ <ZgKt6ljcmnfSbqG/@chao-email>
+ <20240326174859.GB2444378@ls.amr.corp.intel.com>
+ <481141ba-4bdf-40f3-9c32-585281c7aa6f@intel.com>
+ <34ca8222fcfebf1d9b2ceb20e44582176d2cef24.camel@intel.com>
+ <873263e8-371a-47a0-bba3-ed28fcc1fac0@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <873263e8-371a-47a0-bba3-ed28fcc1fac0@intel.com>
+X-ClientProxiedBy: SI2PR02CA0044.apcprd02.prod.outlook.com
+ (2603:1096:4:196::17) To CH3PR11MB8660.namprd11.prod.outlook.com
+ (2603:10b6:610:1ce::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,159 +119,102 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SHXPR01MB0863:EE_|SHXPR01MB0496:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1531236a-9d19-4211-6dec-08dc4f081319
+X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|IA0PR11MB8336:EE_
+X-MS-Office365-Filtering-Correlation-Id: aace672d-bcc8-4d53-f3f5-08dc4f0ce286
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	4m4Fsdzby4aHg6pwz3IWaXSLKZIhQObJ3Z0DA/3a9DiDu/HS9lCLh74WuWlYLCCr10hH32DE8SDv+2aNrKgnMQFXYn/rBmv4dW44U3iMDdTivCB06cnOdgw7piv/W06HiJ/raWVUxacbrm897DbKtmOXJkNGY2/Nab3ZQpQ54NfIyvK4frd82VDi5daiifuAXYhzQH8X5yWW5ISTgtRj+GHEZdvK9SPKt0eDBWgundAzUNyg2wsx3ah2gFuzShgOhuImd5A0mOCQTP8F94eagTw6efFLtdAiSVfYqinxAVLKNNSm6MCixXIha6IGlUu2ieXJZ8C0cRckRYoJ/4bsG4t1fFlj3VWT1fJVtoErguwHyLQVVnB9XyEjRAQAVfBGWF4E23v8OdMQauQpQy17+iCP8/JAPSFem9jsgxpIUnYLM/QbUCqOJPy7Sqs5OQwWfC1CgTEtlDRhC36v2oobXErWcqb8Hu3UdfxwY7ahxLeoCk7oahMFhdvm9s31XExld88ZqapfI6gSacceLVZKVxI1E2tAkN0BJvCQIW8pcS8EXmL4JPXrY9qGgnfjnfMpKe72S/sgHRiWx1V8iJYhvRF79gf4DAbisDHntvJLaKunKnbDnjBDxl0YKt5YZdjC
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(52116005)(1800799015)(7416005)(41320700004)(366007)(38350700005);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: 1Bm0DXYPARjEIEypJCgqLPBmBiE9plnNxRqa/pUHETplAXeN4HJJs3uQlrSno6ivC1m013DYwYlFw4yrm5FF6oVte8hS6uvGeI6s/LHfd8Et4QPOUixG0eYKlYHgVR1d8aUAFCMQMcDpW0Cv1EPFN7vi3abx4Hej7eHYiksIUr57lZVzt/L9TUhQNslS6Mar1xWkvt37RiollQJl4RzdpCToAa+VZzFEeWEPPzohDfvxEnQHonswV68TOxrxA/mk4LTiM00jSH7hBh/Qg8A3fkr+m3tWfDOvevKfwZt0rTCljHiurypGTw6lpQUwtEawdzrx9/ENT/rD8XpQ4krKsptzjC9qUz7paS+M6zsfvyDdQhmv+jYNIofBjt+5HE2/i1a5PZIQvlstGjRW2ZL3xzODHWsYE9waQ6Lc8qFDwoGANFLCyQPus55ViG3fyZexfCI98Q93J8xTU7eo035/7/hHIzRZ75FsCXcf0Oa9X5yEEbupfZ1yTpBl27h2IOJDOrsmOVTrJ/HQv4GbLPEp3LA501wS2QEj45mxPxEWJIFJ9Urz8wdiA6I2U52AQNLXbT5efNDk8A45bc6JvT77ODeHnn1LESIPdLOgMBad2Kn+6sIVGpXuGz4QKKT6BxA6GwIzUCHhEo/XBeMx/l4MOg/CYGoom25rFQyaDNPFAJg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?LEP7CU1dKkthXxiP42OrVoaHH0lnkRudwzyiUW12FVOPJu0j9OQG4yAWmm7g?=
- =?us-ascii?Q?WDyqq0+ehRsXHGvQSewc3CZgvxYiyE4AGDQPW3u0XlNCU/ZRIBNWiYtxeQGZ?=
- =?us-ascii?Q?mC4Uk0Gm/ZY61ET7s+5X1ExsAgbQ65s6Delj2Z9UBrw2Ss1ruUu7gEl/2RNt?=
- =?us-ascii?Q?+XoLrSfwx+buaWE3uMrMQigqGi+j3wUpLrMFzsAeSi/sbAiNaW8lnhgSPsSW?=
- =?us-ascii?Q?HsY2JDJ4qYAoJHAvQsJHswVvbwu9zS25xBptpDsU1H8YEZ/b1pNyEe40bAJb?=
- =?us-ascii?Q?wHDU9UwraFRGGiBay1VI94Oe8l6WSGbMDcANRgBdssP9r7rMtSJXRKpNVE25?=
- =?us-ascii?Q?968oi7IQTK6Vk/8CItxFK9LoVIviYPqhZLk3Px8AVfY8OYJDM42N7/fWTcP3?=
- =?us-ascii?Q?OTGrfbNztcFQ92OmzF92V1wLDeHgOVCsTBM4Cz1nQWHaNdEJbRQzEFQ+v2Zl?=
- =?us-ascii?Q?56R9BjBezw5fELuZhV77eDcobWf2ayqeAB5O+RDKo91EGUt1hME0/epp1ORK?=
- =?us-ascii?Q?+aJsh5xE+UJpDxqxva7Hf0uO+Akn0wXixk5GPxLwEvtTExVdFMQTGYFml+UA?=
- =?us-ascii?Q?iy4h1NEkwQ9tS/wNicPYPDT07reZlRAIk7rXLuNMYCx1lmQ1WrSbygnqJKjn?=
- =?us-ascii?Q?C/SrQJzDVijhJa5gB7JKIf2zAPBtuImIvK2jFvIbvlUuqhE8jjyuOtLbIeOS?=
- =?us-ascii?Q?ngSEIx7NKfBEPdkvL0RDm5he9LDfK4YOr43PV3I2hW7MF4wnUeFlxbrIAVTj?=
- =?us-ascii?Q?DhIvhsW/BDdu/fd1KR4W4D8xiwhhA+5uJkyJS3JarrP4BTN/QVDG6719g1Ct?=
- =?us-ascii?Q?3RbLCr9ZlGrV6vPiSvoAdkNCTJZOeuuyGJdsKzvxAHbB3qtwTjTk3x0WLV46?=
- =?us-ascii?Q?tF09rmmzdlKAAqIwSICyBMXtElmcMjhdU/5l//C7MS98UWfao/L9w2+y+xYm?=
- =?us-ascii?Q?Fbibcin7JB3twI5iq86L1YpaTapCwMToVrh+E9R31amwrnGUXeOwqpMOTOWd?=
- =?us-ascii?Q?4obCvJtBEmY0JZEghNWyuU5fKG1PlC0tmF4+dPg7ONOTtMpbF3ujSMwwLBWQ?=
- =?us-ascii?Q?okeK4zbIhc7220h3+vFPKYa1EVihKMe4jZpUyFg9tDNSZH2SwCz/pXC9JaUK?=
- =?us-ascii?Q?YNjM0Cx1mI3QFgawoz+j4TkXOV2xkzMLfXNcKhOCbKqc38h5mUsVpcEXvPRn?=
- =?us-ascii?Q?7uA1m3FJd2P+i04QJA91HIlSGnH5lvWHWbHDKTN7md79IYUPAaC67Tobp+/C?=
- =?us-ascii?Q?B9rrKRopaynyf1PKPtFcHzDYQ4NKEY/6W5T8JJTQ8YIYIs1JbXLlxdQJXI4/?=
- =?us-ascii?Q?41tZhup7l5vociEa0BhS+Uy2TaUBuZTXKa1TtwjucrUBBHT6agFwioCYaRAS?=
- =?us-ascii?Q?672YeUJuCoBq83fezEePf3p2/DPlsEVKFyeQdEuyL15oQ/v+gPnZMHKjlcmT?=
- =?us-ascii?Q?T+/vgyQXyAlurmvJkm38jmYxUPr9PCR7wOJvOKC29BlvOhe5N7/fBVxTGolL?=
- =?us-ascii?Q?0WABNmFNbhrO4Fp9Xi5dMCiAzZMgxNoy1yz2jxRQWm8u0qVl5xp1xqrE/BPl?=
- =?us-ascii?Q?MtCcBJNcz/9sjXUmKUSnHQKmIkItZ0Gc6zGcsCKJd1Zuds9IsDaERE0wMRn1?=
- =?us-ascii?Q?Jg=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1531236a-9d19-4211-6dec-08dc4f081319
-X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TmpIUTNTT1BCL091QSsxcFRJWndlSWVVVzVHNmIySk9OT1JhdFhTNVExdVFy?=
+ =?utf-8?B?NmxOSVd2TFlTbFM4RDQ3UGFZTW5TdWhYYmFMbHZ5MFFzZFl0YzZYbDRlM3ds?=
+ =?utf-8?B?Z3RweXVVR2VXclBDcmExRXJraVJ0bmhPZ21iWFRzcE1DU3AvUHZYRVFtRjlM?=
+ =?utf-8?B?T3hHOVJlYUpNdjRudjFHN3YrNi81UE5DM1ZVZkczQjZ3VHcxeFJncXo2Q2g3?=
+ =?utf-8?B?N1E0VFVlemltSlpHSkl0MTlienBZQnFyME0vT1MxNXpsQ2k3QTRINnphNXhR?=
+ =?utf-8?B?SHJDRUhyQ29PRUQrRnN4Slk1bUdINVlHa3YzQ3duOW43YStCQlRzamk4bVZ5?=
+ =?utf-8?B?NVVQYU1Hb1FhdkpOZXU3SGRnZzVHeU80YWhlbHJhK3BpUkgzUWpWTi9QbEdG?=
+ =?utf-8?B?NVFzTG9COGhpdGhJTitLUVBXazZtdWJlb3hjR1RQRHBUdEFRUDZDU0dZNnNm?=
+ =?utf-8?B?VE5UWkM5N00rYzFudWkxVVdOUmgyVUtnQ1drcytReVFwVjhxSEtUREF0NzQ1?=
+ =?utf-8?B?YTRlT3VUZXBzOXJ5OTVwU0gvNndiRG5FcWxSMHNXalF2WllrQmJmT0J5bWFy?=
+ =?utf-8?B?YkpwK05ldm9YUUIyUXZJbHBpeEs2czNYTTNxYjhrZm92WmF4dGVFWmxpOHo4?=
+ =?utf-8?B?UEEwN2h6NHI2bld6TXhtWmdXNlhaUHVsczZGMVdsL1gxL1pSWlR4WlBKaVJM?=
+ =?utf-8?B?RHNCNUQrR0QwTStldVRHVk8rY2I1SUxJU2V5Y1plL2VIandWVHlwaUt6Vk54?=
+ =?utf-8?B?d1gyUmFRV2R5WmlTalNjNXJMZEEwNXNjOVZySUVUZG5uMStxMk5iUkZGZXJW?=
+ =?utf-8?B?RDF0NE5EVlYrQVhXV0dlSlN0c3Ixcm1yVXBtNm9ZWVlPaTZaWXRHSUloY3M1?=
+ =?utf-8?B?VGo2TXo5MzBVZ1J5Sk5PeStORkJ6L2VzKzNmUDU0NVU1WjJIQVZVeGIyL1JE?=
+ =?utf-8?B?bkdHZzNwTnJVM0VuNERjang3bXN2L1NyVVF4Q1ZSQk4wcVJZckxsMDdvcWR2?=
+ =?utf-8?B?d2JoakRYaTlyRExKa2UvVVBsQlNKcE90TldHZkdkR2U2M1hIcWgwUEwyS2hk?=
+ =?utf-8?B?Y1FTbGJUcVZCT1ArZVI5OHdDejBmL2ZCL1BpQTAzR0dxUjNGcG44ZlNIdU5k?=
+ =?utf-8?B?bUVQdTBsOGM1ZHFpZ0cvMTczc3NLdE9haWJPbGROM1hCTmRrNjl6MVhwTWF0?=
+ =?utf-8?B?M0wwR1NQM0RBOEZSak1zdjg1eUxFNVdpRnRveGo4aFpsZHFGc2NMbW9aRkxo?=
+ =?utf-8?B?cE1GcnpmVlRvYml5aUp5NVZiN2JyRi9xOFN2NWVjNjBpOVdQREZqbnRDNkpp?=
+ =?utf-8?B?K0JYcUpVc0tXd1kzM0lLQ2lHenMyWG5NN2ZhdkdtTFhHQjZKQ0F6Nm0ycUc3?=
+ =?utf-8?B?dHBsOVh2czhLck1yY1JZN0lLSWlPaGo0U2ZWQm55b1hjeW9OaGdTS0lnTEQ1?=
+ =?utf-8?B?QVBjVkxFV1g1UzFKcTFGV095MlVITWJFRm5YS3BLTmJad3l0ekVFcitONFhs?=
+ =?utf-8?B?Q0lHMkJ2NVQzZUNwNnY2NTF3eUZLTkhUVGRXbEx4NVhuQzJScTlVRklxT1FN?=
+ =?utf-8?B?ejVNYnROOCtOQXNZWHZTeHFOb243cFhWb2FOZUNLTUR0UnhCYlVTSVEySElr?=
+ =?utf-8?B?eFE3YWhkSXhJaUYzaGZwZHB3N0hTSFN0US9Jd1Vscm50eStab0UrOExzam80?=
+ =?utf-8?B?VFhHV3lmMkw1Q3A2bUl3RUJuS01wYS8rVnEyZU9KV2tXaHJNU0JqSEw1c2Er?=
+ =?utf-8?B?cVBqMWFrZTVYTTV6TVdPMDQyQXIvUWdxU2krbjdxMGpkUk9xUkdBdm1GdHl3?=
+ =?utf-8?B?MDRGaW5IRUltazBxWHFxUE10WC9pZ1pzYjBDVklzaUpZd0tWeVBPeHRqMFJN?=
+ =?utf-8?B?R3FzcXdBMGxJbjNVeS9ZSzh6bkN1R1ZKaDRiakhTTE9NOTZaUWlGY3JFYnVM?=
+ =?utf-8?B?dHNmS2IwNDZRaG53VGhBZUsxMXh3eDZGbUthcmI5NlZrKzNHNzJaQjBKR2xT?=
+ =?utf-8?B?SFF2OXNIVy8vMFlYM09YRHdSNHA3aHc2UWZkRnU1N2M0cldhZGN6VEJKK3BI?=
+ =?utf-8?B?dkRLZVErWEwyN3hRZnN3d2FsQmtMRVRmL2ZGcFNFNDNWRTVZRkpzT0UzWDVh?=
+ =?utf-8?Q?fkKSJvUjNAQVqSgnM6l0+aum1?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: aace672d-bcc8-4d53-f3f5-08dc4f0ce286
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8660.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2024 09:18:47.9642
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2024 09:53:14.1919
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Gf84FnfnzkpyIrmswrcBLts8mO6yyTzHR5G5q0UeeXUlZmKrreFUeANWOiyHY/Shg2WF9+71H/72+xy0qF8RrBkmZyzGro8SDmBLfJ5X/Vg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0496
+X-MS-Exchange-CrossTenant-UserPrincipalName: OOJ4Qr52aXTktmEoUDWpf69x6dKk16W6Z7S/HjGLEzKbfoVxX7UVPQQ+dpziEZl1XhcI73/BA4KWGsA8rZ9pFg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB8336
+X-OriginatorOrg: intel.com
 
-Bridge address base is common PLDA field, add this to struct mc_pcie
-first.
+On Thu, Mar 28, 2024 at 08:06:53AM +0800, Xiaoyao Li wrote:
+>On 3/28/2024 1:36 AM, Edgecombe, Rick P wrote:
+>> On Wed, 2024-03-27 at 10:54 +0800, Xiaoyao Li wrote:
+>> > > > If QEMU doesn't configure the msr filter list correctly, KVM has to handle
+>> > > > guest's MTRR MSR accesses. In my understanding, the
+>> > > > suggestion is KVM zap private memory mappings.
+>
+>TDX spec states that
+>
+>  18.2.1.4.1 Memory Type for Private and Opaque Access
+>
+>  The memory type for private and opaque access semantics, which use a
+>  private HKID, is WB.
+>
+>  18.2.1.4.2 Memory Type for Shared Accesses
+>
+>  Intel SDM, Vol. 3, 28.2.7.2 Memory Type Used for Translated Guest-
+>  Physical Addresses
+>
+>  The memory type for shared access semantics, which use a shared HKID,
+>  is determined as described below. Note that this is different from the
+>  way memory type is determined by the hardware during non-root mode
+>  operation. Rather, it is a best-effort approximation that is designed
+>  to still allow the host VMM some control over memory type.
+>    • For shared access during host-side (SEAMCALL) flows, the memory
+>      type is determined by MTRRs.
+>    • For shared access during guest-side flows (VM exit from the guest
+>      TD), the memory type is determined by a combination of the Shared
+>      EPT and MTRRs.
+>      o If the memory type determined during Shared EPT walk is WB, then
+>        the effective memory type for the access is determined by MTRRs.
+>      o Else, the effective memory type for the access is UC.
+>
+>My understanding is that guest MTRR doesn't affect the memory type for
+>private memory. So we don't need to zap private memory mappings.
 
-INTx and MSI interrupt code will be changed to common code, so get
-the bridge base address from port->bridge_addr instead of
-axi_base_addr. axi_base_addr is Microchip its own data.
+This isn't related to the discussion. IIUC, this is the memory type used
+by TDX module code to access shared/private memory.
 
-Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
----
- .../pci/controller/plda/pcie-microchip-host.c | 23 ++++++++-----------
- 1 file changed, 9 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
-index d9030d550482..c55ede80a6d0 100644
---- a/drivers/pci/controller/plda/pcie-microchip-host.c
-+++ b/drivers/pci/controller/plda/pcie-microchip-host.c
-@@ -195,6 +195,7 @@ struct mc_pcie {
- 	struct irq_domain *event_domain;
- 	raw_spinlock_t lock;
- 	struct mc_msi msi;
-+	void __iomem *bridge_addr;
- };
- 
- struct cause {
-@@ -339,8 +340,7 @@ static void mc_handle_msi(struct irq_desc *desc)
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
- 	struct device *dev = port->dev;
- 	struct mc_msi *msi = &port->msi;
--	void __iomem *bridge_base_addr =
--		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-+	void __iomem *bridge_base_addr = port->bridge_addr;
- 	unsigned long status;
- 	u32 bit;
- 	int ret;
-@@ -365,8 +365,7 @@ static void mc_handle_msi(struct irq_desc *desc)
- static void mc_msi_bottom_irq_ack(struct irq_data *data)
- {
- 	struct mc_pcie *port = irq_data_get_irq_chip_data(data);
--	void __iomem *bridge_base_addr =
--		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-+	void __iomem *bridge_base_addr = port->bridge_addr;
- 	u32 bitpos = data->hwirq;
- 
- 	writel_relaxed(BIT(bitpos), bridge_base_addr + ISTATUS_MSI);
-@@ -488,8 +487,7 @@ static void mc_handle_intx(struct irq_desc *desc)
- 	struct mc_pcie *port = irq_desc_get_handler_data(desc);
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
- 	struct device *dev = port->dev;
--	void __iomem *bridge_base_addr =
--		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-+	void __iomem *bridge_base_addr = port->bridge_addr;
- 	unsigned long status;
- 	u32 bit;
- 	int ret;
-@@ -514,8 +512,7 @@ static void mc_handle_intx(struct irq_desc *desc)
- static void mc_ack_intx_irq(struct irq_data *data)
- {
- 	struct mc_pcie *port = irq_data_get_irq_chip_data(data);
--	void __iomem *bridge_base_addr =
--		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-+	void __iomem *bridge_base_addr = port->bridge_addr;
- 	u32 mask = BIT(data->hwirq + PM_MSI_INT_INTX_SHIFT);
- 
- 	writel_relaxed(mask, bridge_base_addr + ISTATUS_LOCAL);
-@@ -524,8 +521,7 @@ static void mc_ack_intx_irq(struct irq_data *data)
- static void mc_mask_intx_irq(struct irq_data *data)
- {
- 	struct mc_pcie *port = irq_data_get_irq_chip_data(data);
--	void __iomem *bridge_base_addr =
--		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-+	void __iomem *bridge_base_addr = port->bridge_addr;
- 	unsigned long flags;
- 	u32 mask = BIT(data->hwirq + PM_MSI_INT_INTX_SHIFT);
- 	u32 val;
-@@ -540,8 +536,7 @@ static void mc_mask_intx_irq(struct irq_data *data)
- static void mc_unmask_intx_irq(struct irq_data *data)
- {
- 	struct mc_pcie *port = irq_data_get_irq_chip_data(data);
--	void __iomem *bridge_base_addr =
--		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-+	void __iomem *bridge_base_addr = port->bridge_addr;
- 	unsigned long flags;
- 	u32 mask = BIT(data->hwirq + PM_MSI_INT_INTX_SHIFT);
- 	u32 val;
-@@ -896,8 +891,7 @@ static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
- static int mc_pcie_setup_windows(struct platform_device *pdev,
- 				 struct mc_pcie *port)
- {
--	void __iomem *bridge_base_addr =
--		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-+	void __iomem *bridge_base_addr = port->bridge_addr;
- 	struct pci_host_bridge *bridge = platform_get_drvdata(pdev);
- 	struct resource_entry *entry;
- 	u64 pci_addr;
-@@ -1081,6 +1075,7 @@ static int mc_host_probe(struct platform_device *pdev)
- 	mc_disable_interrupts(port);
- 
- 	bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-+	port->bridge_addr = bridge_base_addr;
- 
- 	/* Allow enabling MSI by disabling MSI-X */
- 	val = readl(bridge_base_addr + PCIE_PCI_IRQ_DW0);
--- 
-2.17.1
-
+I didn't suggest zapping private memory. It is my understanding about what
+we will end up with, if KVM relies on QEMU to filter MTRR MSRs but somehow
+QEMU fails to do that.
