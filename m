@@ -1,28 +1,28 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43F3413A89A;
-	Thu, 28 Mar 2024 20:17:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96A4D13B596;
+	Thu, 28 Mar 2024 20:17:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711657058; cv=none; b=OfDm1EFUtWEF9pPKgSmNhUTGa5o15j8TIlEyLpqQYUrrTsBjGfxMi3AuLTkVwwDFRpwR9xY6kgKIMb7yr458CBs9JZdz4hURv6GxaDiJ9pkpTOd4L5AS6rC1xoQzvPefpYixb8gy6qhWx+FPpqIEYWTnY9Ew8DN9Z1Qg4y8MFt8=
+	t=1711657059; cv=none; b=gJtIYYoD7v02okp64jfWdNt5nRafDH037/h4ABWYnO2OWZrN/9VbyakGRDRgQLnTtqDN3ZPS7slDEZA/60UZp6o7DBVjVQC4zWr/6l2u27w7pX6Dy/urItR7d7Ox6xk0sK9nTe5nzh4M9MeCmGb3RxYdZDvyxYKljAexP0oHgcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711657058; c=relaxed/simple;
-	bh=q9tRkxZ9iRq2oPGxRnCgC8vawNrdvakBIuthmdAExDU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=darkfMUrqVl8KdiT+EgQOhpb/B+E3A+XbFasppPfLhWsSmILc1Pyx/HCdYODmH33VVrslLBeDsTS00puI7uKOapzo/qorJUQL/XuHbzlzXHoA0+UPAdiX00SfJwYsje7GH1HEmFZ9twMI8Gwhylysm+8QUrPG7wyebgxzerFGi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=LrfnChzU; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1711657059; c=relaxed/simple;
+	bh=EjXs9VumHAg1ulCFSuIO0bjrjQbwCFD8CwYNxt1adyI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=bk54m9xxFsFhSiqsbkENsprAwpJjpJ8UcggJQ9Pw7MaCULjb/uqlynztRcilbVxgCO4ZklLsjEecQcJz9n2j547ZsBPLDwbvfyuSSRop3NY0zyzu+J3HhLSphAQ8rqt+PfRGBx9Bz8Tn6tB1/08dm6tYyW4EmU/y02UYrplGpDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=YHmv/YgQ; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="LrfnChzU"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="YHmv/YgQ"
 Received: by linux.microsoft.com (Postfix, from userid 1052)
-	id 06FCF20E6F3E; Thu, 28 Mar 2024 13:17:28 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 06FCF20E6F3E
+	id 70CEF20E6F71; Thu, 28 Mar 2024 13:17:28 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 70CEF20E6F71
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1711657049;
-	bh=yZGrxkn+cU25usdylZ35Wq2Q4Amf947/qY8qYPcsQI8=;
+	bh=i5S1j5RJqtgF4FcOU0PI+rfLU5UIKlNxifvaZtv0SO8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LrfnChzUTVcoJReIyte1qtkKUbQW4jCaBKqpNQDG8i4Cm9dYdEdEss0UdTvjrmasM
-	 ZaGMmuPRE9OpJRdOCXXysbLukp+yy04PqZ4CLQpDSN2KurnlXuVq9DHywAQD4C7VoN
-	 AYvq98x1G/21af0VyYFLJjZwM4BPfcNa1s7ZTJVg=
+	b=YHmv/YgQGc7F7LMC7p6PYSeq83TcUQbnR/EbOOH1F2xfrqZTX4W8tVUqkZ0BKDj/N
+	 TjSAIwNug++aQNayVphaFIdZTtUUnFE2X/yyaEiyZKe0A+ww8jVNAMgmUGOtq/bbVp
+	 cums8ti7/ZE/bx6gUvoRf7Ys+MSBDLCQ/YcOW9yY=
 From: Fan Wu <wufan@linux.microsoft.com>
 To: corbet@lwn.net,
 	zohar@linux.ibm.com,
@@ -45,9 +45,9 @@ Cc: linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Deven Bowers <deven.desai@linux.microsoft.com>,
 	Fan Wu <wufan@linux.microsoft.com>
-Subject: [PATCH v16 11/20] block|security: add LSM blob to block_device
-Date: Thu, 28 Mar 2024 13:17:18 -0700
-Message-Id: <1711657047-10526-12-git-send-email-wufan@linux.microsoft.com>
+Subject: [PATCH v16 18/20] scripts: add boot policy generation program
+Date: Thu, 28 Mar 2024 13:17:25 -0700
+Message-Id: <1711657047-10526-19-git-send-email-wufan@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1711657047-10526-1-git-send-email-wufan@linux.microsoft.com>
 References: <1711657047-10526-1-git-send-email-wufan@linux.microsoft.com>
@@ -59,36 +59,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
 From: Deven Bowers <deven.desai@linux.microsoft.com>
 
-Some block devices have valuable security properties that is only
-accessible during the creation time.
-
-For example, when creating a dm-verity block device, the dm-verity's
-roothash and roothash signature, which are extreme important security
-metadata, are passed to the kernel. However, the roothash will be saved
-privately in dm-verity, which prevents the security subsystem to easily
-access that information. Worse, in the current implementation the
-roothash signature will be discarded after the verification, making it
-impossible to utilize the roothash signature by the security subsystem.
-
-With this patch, an LSM blob is added to the block_device structure.
-This enables the security subsystem to store security-sensitive data
-related to block devices within the security blob. For example, LSM can
-use the new LSM blob to save the roothash signature of a dm-verity,
-and LSM can make access decision based on the data inside the signature,
-like the signer certificate.
-
-The implementation follows the same approach used for security blobs in
-other structures like struct file, struct inode, and struct superblock.
-The initialization of the security blob occurs after the creation of the
-struct block_device, performed by the security subsystem. Similarly, the
-security blob is freed by the security subsystem before the struct
-block_device is deallocated or freed.
-
-This patch also introduces a new hook to save block device's integrity
-data. For example, for dm-verity, LSMs can use this hook to save
-the roothash signature of a dm-verity into the security blob,
-and LSMs can make access decisions based on the data inside
-the signature, like the signer certificate.
+Enables an IPE policy to be enforced from kernel start, enabling access
+control based on trust from kernel startup. This is accomplished by
+transforming an IPE policy indicated by CONFIG_IPE_BOOT_POLICY into a
+c-string literal that is parsed at kernel startup as an unsigned policy.
 
 Signed-off-by: Deven Bowers <deven.desai@linux.microsoft.com>
 Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
@@ -98,45 +72,36 @@ v2:
   + No Changes
 
 v3:
-  + Minor style changes from checkpatch --strict
+  + No Changes
 
 v4:
   + No Changes
 
 v5:
-  + Allow multiple callers to call security_bdev_setsecurity
+  + No Changes
 
 v6:
-  + Simplify security_bdev_setsecurity break condition
+  + No Changes
 
 v7:
-  + Squash all dm-verity related patches to two patches,
-    the additions to dm-verity/fs, and the consumption of
-    the additions.
+  + Move from 01/11 to 14/16
+  + Don't return errno directly.
+  + Make output of script more user-friendly
+  + Add escaping for tab and '?'
+  + Mark argv pointer const
+  + Invert return code check in the boot policy parsing code path.
 
 v8:
-  + Split dm-verity related patches squashed in v7 to 3 commits based on
-    topic:
-      + New LSM hook
-      + Consumption of hook outside LSM
-      + Consumption of hook inside LSM.
-
-  + change return of security_bdev_alloc / security_bdev_setsecurity
-    to LSM_RET_DEFAULT instead of 0.
-
-  + Change return code to -EOPNOTSUPP, bring inline with other
-    setsecurity hooks.
+  + No significant changes.
 
 v9:
-  + Add Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
-  + Remove unlikely when calling LSM hook
-  + Make the security field dependent on CONFIG_SECURITY
+  + No changes
 
 v10:
-  + No changes
+  + Update the init part code for rcu changes in the eval loop patch
 
 v11:
-  + No changes
+  + Fix code style issues
 
 v12:
   + No changes
@@ -148,276 +113,346 @@ v14:
   + No changes
 
 v15:
-  + Drop security_bdev_setsecurity() for new hook
-    security_bdev_setintegrity() in the next commit
-  + Update call_int_hook() for 260017f
+  + Fix one grammar issue in Kconfig
 
 v16:
-  + Drop Reviewed-by tag for the new changes
-  + Squash the security_bdev_setintegrity() into this commit
-  + Rename enum from lsm_intgr_type to lsm_integrity_type
-  + Switch to use call_int_hook() for bdev_setintegrity()
-  + Correct comment
-  + Fix return in security_bdev_alloc()
+  + No changes
 ---
- block/bdev.c                  |  7 +++
- include/linux/blk_types.h     |  3 ++
- include/linux/lsm_hook_defs.h |  5 ++
- include/linux/lsm_hooks.h     |  1 +
- include/linux/security.h      | 26 ++++++++++
- security/security.c           | 89 +++++++++++++++++++++++++++++++++++
- 6 files changed, 131 insertions(+)
+ MAINTAINERS                   |   1 +
+ scripts/Makefile              |   1 +
+ scripts/ipe/Makefile          |   2 +
+ scripts/ipe/polgen/.gitignore |   2 +
+ scripts/ipe/polgen/Makefile   |   5 ++
+ scripts/ipe/polgen/polgen.c   | 145 ++++++++++++++++++++++++++++++++++
+ security/ipe/.gitignore       |   2 +
+ security/ipe/Kconfig          |  10 +++
+ security/ipe/Makefile         |  11 +++
+ security/ipe/fs.c             |   8 ++
+ security/ipe/ipe.c            |  12 +++
+ 11 files changed, 199 insertions(+)
+ create mode 100644 scripts/ipe/Makefile
+ create mode 100644 scripts/ipe/polgen/.gitignore
+ create mode 100644 scripts/ipe/polgen/Makefile
+ create mode 100644 scripts/ipe/polgen/polgen.c
+ create mode 100644 security/ipe/.gitignore
 
-diff --git a/block/bdev.c b/block/bdev.c
-index 7a5f611c3d2e..9e9c3cc8780b 100644
---- a/block/bdev.c
-+++ b/block/bdev.c
-@@ -24,6 +24,7 @@
- #include <linux/pseudo_fs.h>
- #include <linux/uio.h>
- #include <linux/namei.h>
-+#include <linux/security.h>
- #include <linux/part_stat.h>
- #include <linux/uaccess.h>
- #include <linux/stat.h>
-@@ -313,6 +314,11 @@ static struct inode *bdev_alloc_inode(struct super_block *sb)
- 	if (!ei)
- 		return NULL;
- 	memset(&ei->bdev, 0, sizeof(ei->bdev));
-+
-+	if (security_bdev_alloc(&ei->bdev)) {
-+		kmem_cache_free(bdev_cachep, ei);
-+		return NULL;
-+	}
- 	return &ei->vfs_inode;
- }
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 16e29f2361c9..f4c66ef54ef9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10749,6 +10749,7 @@ M:	Fan Wu <wufan@linux.microsoft.com>
+ L:	linux-security-module@vger.kernel.org
+ S:	Supported
+ T:	git https://github.com/microsoft/ipe.git
++F:	scripts/ipe/
+ F:	security/ipe/
  
-@@ -322,6 +328,7 @@ static void bdev_free_inode(struct inode *inode)
+ INTEL 810/815 FRAMEBUFFER DRIVER
+diff --git a/scripts/Makefile b/scripts/Makefile
+index bc90520a5426..cae8a14fa40d 100644
+--- a/scripts/Makefile
++++ b/scripts/Makefile
+@@ -55,6 +55,7 @@ targets += module.lds
+ subdir-$(CONFIG_GCC_PLUGINS) += gcc-plugins
+ subdir-$(CONFIG_MODVERSIONS) += genksyms
+ subdir-$(CONFIG_SECURITY_SELINUX) += selinux
++subdir-$(CONFIG_SECURITY_IPE) += ipe
  
- 	free_percpu(bdev->bd_stats);
- 	kfree(bdev->bd_meta_info);
-+	security_bdev_free(bdev);
- 
- 	if (!bdev_is_partition(bdev)) {
- 		if (bdev->bd_disk && bdev->bd_disk->bdi)
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index cb1526ec44b5..effe3c4e6b35 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -70,6 +70,9 @@ struct block_device {
- #endif
- 	bool			bd_ro_warned;
- 	int			bd_writers;
-+#ifdef CONFIG_SECURITY
-+	void			*security;
-+#endif
- 	/*
- 	 * keep this out-of-line as it's both big and not needed in the fast
- 	 * path
-diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-index 7db99ae75651..b391a7f13053 100644
---- a/include/linux/lsm_hook_defs.h
-+++ b/include/linux/lsm_hook_defs.h
-@@ -452,3 +452,8 @@ LSM_HOOK(int, 0, uring_cmd, struct io_uring_cmd *ioucmd)
- #endif /* CONFIG_IO_URING */
- 
- LSM_HOOK(void, LSM_RET_VOID, initramfs_populated, void)
-+
-+LSM_HOOK(int, 0, bdev_alloc_security, struct block_device *bdev)
-+LSM_HOOK(void, LSM_RET_VOID, bdev_free_security, struct block_device *bdev)
-+LSM_HOOK(int, 0, bdev_setintegrity, struct block_device *bdev,
-+	 enum lsm_integrity_type type, const void *value, size_t size)
-diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-index a2ade0ffe9e7..f1692179aa56 100644
---- a/include/linux/lsm_hooks.h
-+++ b/include/linux/lsm_hooks.h
-@@ -78,6 +78,7 @@ struct lsm_blob_sizes {
- 	int	lbs_msg_msg;
- 	int	lbs_task;
- 	int	lbs_xattr_count; /* number of xattr slots in new_xattrs array */
-+	int	lbs_bdev;
- };
- 
- /**
-diff --git a/include/linux/security.h b/include/linux/security.h
-index f35af7b6cfba..8e646189740e 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -83,6 +83,10 @@ enum lsm_event {
- 	LSM_POLICY_CHANGE,
- };
- 
-+enum lsm_integrity_type {
-+	__LSM_INT_MAX
-+};
-+
- /*
-  * These are reasons that can be passed to the security_locked_down()
-  * LSM hook. Lockdown reasons that protect kernel integrity (ie, the
-@@ -509,6 +513,11 @@ int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen);
- int security_locked_down(enum lockdown_reason what);
- int lsm_fill_user_ctx(struct lsm_ctx __user *uctx, u32 *uctx_len,
- 		      void *val, size_t val_len, u64 id, u64 flags);
-+int security_bdev_alloc(struct block_device *bdev);
-+void security_bdev_free(struct block_device *bdev);
-+int security_bdev_setintegrity(struct block_device *bdev,
-+			       enum lsm_integrity_type type, const void *value,
-+			       size_t size);
- #else /* CONFIG_SECURITY */
- 
- static inline int call_blocking_lsm_notifier(enum lsm_event event, void *data)
-@@ -1483,6 +1492,23 @@ static inline int lsm_fill_user_ctx(struct lsm_ctx __user *uctx,
- {
- 	return -EOPNOTSUPP;
- }
-+
-+static inline int security_bdev_alloc(struct block_device *bdev)
-+{
-+	return 0;
-+}
-+
-+static inline void security_bdev_free(struct block_device *bdev)
-+{
-+}
-+
-+static inline int security_bdev_setintegrity(struct block_device *bdev,
-+					     enum lsm_integrity_type, type,
-+					     const void *value, size_t size)
-+{
-+	return 0;
-+}
-+
- #endif	/* CONFIG_SECURITY */
- 
- #if defined(CONFIG_SECURITY) && defined(CONFIG_WATCH_QUEUE)
-diff --git a/security/security.c b/security/security.c
-index b10230c51c0b..8f462d82bd8b 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -29,6 +29,7 @@
- #include <linux/msg.h>
- #include <linux/overflow.h>
- #include <net/flow.h>
-+#include <linux/fs.h>
- 
- /* How many LSMs were built into the kernel? */
- #define LSM_COUNT (__end_lsm_info - __start_lsm_info)
-@@ -232,6 +233,7 @@ static void __init lsm_set_blob_sizes(struct lsm_blob_sizes *needed)
- 	lsm_set_blob_size(&needed->lbs_task, &blob_sizes.lbs_task);
- 	lsm_set_blob_size(&needed->lbs_xattr_count,
- 			  &blob_sizes.lbs_xattr_count);
-+	lsm_set_blob_size(&needed->lbs_bdev, &blob_sizes.lbs_bdev);
- }
- 
- /* Prepare LSM for initialization. */
-@@ -405,6 +407,7 @@ static void __init ordered_lsm_init(void)
- 	init_debug("superblock blob size = %d\n", blob_sizes.lbs_superblock);
- 	init_debug("task blob size       = %d\n", blob_sizes.lbs_task);
- 	init_debug("xattr slots          = %d\n", blob_sizes.lbs_xattr_count);
-+	init_debug("bdev blob size       = %d\n", blob_sizes.lbs_bdev);
- 
- 	/*
- 	 * Create any kmem_caches needed for blobs
-@@ -737,6 +740,28 @@ static int lsm_msg_msg_alloc(struct msg_msg *mp)
- 	return 0;
- }
- 
-+/**
-+ * lsm_bdev_alloc - allocate a composite block_device blob
-+ * @bdev: the block_device that needs a blob
-+ *
-+ * Allocate the block_device blob for all the modules
-+ *
-+ * Returns 0, or -ENOMEM if memory can't be allocated.
+ # Let clean descend into subdirs
+ subdir-	+= basic dtc gdb kconfig mod
+diff --git a/scripts/ipe/Makefile b/scripts/ipe/Makefile
+new file mode 100644
+index 000000000000..e87553fbb8d6
+--- /dev/null
++++ b/scripts/ipe/Makefile
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0-only
++subdir-y := polgen
+diff --git a/scripts/ipe/polgen/.gitignore b/scripts/ipe/polgen/.gitignore
+new file mode 100644
+index 000000000000..b6f05cf3dc0e
+--- /dev/null
++++ b/scripts/ipe/polgen/.gitignore
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0-only
++polgen
+diff --git a/scripts/ipe/polgen/Makefile b/scripts/ipe/polgen/Makefile
+new file mode 100644
+index 000000000000..c20456a2f2e9
+--- /dev/null
++++ b/scripts/ipe/polgen/Makefile
+@@ -0,0 +1,5 @@
++# SPDX-License-Identifier: GPL-2.0
++hostprogs-always-y	:= polgen
++HOST_EXTRACFLAGS += \
++	-I$(srctree)/include \
++	-I$(srctree)/include/uapi \
+diff --git a/scripts/ipe/polgen/polgen.c b/scripts/ipe/polgen/polgen.c
+new file mode 100644
+index 000000000000..40b6fe07f47b
+--- /dev/null
++++ b/scripts/ipe/polgen/polgen.c
+@@ -0,0 +1,145 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) Microsoft Corporation. All rights reserved.
 + */
-+static int lsm_bdev_alloc(struct block_device *bdev)
++
++#include <stdlib.h>
++#include <stddef.h>
++#include <stdio.h>
++#include <unistd.h>
++#include <errno.h>
++
++static void usage(const char *const name)
 +{
-+	if (blob_sizes.lbs_bdev == 0) {
-+		bdev->security = NULL;
++	printf("Usage: %s OutputFile (PolicyFile)\n", name);
++	exit(EINVAL);
++}
++
++static int policy_to_buffer(const char *pathname, char **buffer, size_t *size)
++{
++	int rc = 0;
++	FILE *fd;
++	char *lbuf;
++	size_t fsize;
++	size_t read;
++
++	fd = fopen(pathname, "r");
++	if (!fd) {
++		rc = errno;
++		goto out;
++	}
++
++	fseek(fd, 0, SEEK_END);
++	fsize = ftell(fd);
++	rewind(fd);
++
++	lbuf = malloc(fsize);
++	if (!lbuf) {
++		rc = ENOMEM;
++		goto out_close;
++	}
++
++	read = fread((void *)lbuf, sizeof(*lbuf), fsize, fd);
++	if (read != fsize) {
++		rc = -1;
++		goto out_free;
++	}
++
++	*buffer = lbuf;
++	*size = fsize;
++	fclose(fd);
++
++	return rc;
++
++out_free:
++	free(lbuf);
++out_close:
++	fclose(fd);
++out:
++	return rc;
++}
++
++static int write_boot_policy(const char *pathname, const char *buf, size_t size)
++{
++	int rc = 0;
++	FILE *fd;
++	size_t i;
++
++	fd = fopen(pathname, "w");
++	if (!fd) {
++		rc = errno;
++		goto err;
++	}
++
++	fprintf(fd, "/* This file is automatically generated.");
++	fprintf(fd, " Do not edit. */\n");
++	fprintf(fd, "#include <linux/stddef.h>\n");
++	fprintf(fd, "\nextern const char *const ipe_boot_policy;\n\n");
++	fprintf(fd, "const char *const ipe_boot_policy =\n");
++
++	if (!buf || size == 0) {
++		fprintf(fd, "\tNULL;\n");
++		fclose(fd);
 +		return 0;
 +	}
 +
-+	bdev->security = kzalloc(blob_sizes.lbs_bdev, GFP_KERNEL);
-+	if (!bdev->security)
-+		return -ENOMEM;
++	fprintf(fd, "\t\"");
++
++	for (i = 0; i < size; ++i) {
++		switch (buf[i]) {
++		case '"':
++			fprintf(fd, "\\\"");
++			break;
++		case '\'':
++			fprintf(fd, "'");
++			break;
++		case '\n':
++			fprintf(fd, "\\n\"\n\t\"");
++			break;
++		case '\\':
++			fprintf(fd, "\\\\");
++			break;
++		case '\t':
++			fprintf(fd, "\\t");
++			break;
++		case '\?':
++			fprintf(fd, "\\?");
++			break;
++		default:
++			fprintf(fd, "%c", buf[i]);
++		}
++	}
++	fprintf(fd, "\";\n");
++	fclose(fd);
 +
 +	return 0;
-+}
 +
- /**
-  * lsm_early_task - during initialization allocate a composite task blob
-  * @task: the task that needs a blob
-@@ -5568,6 +5593,70 @@ int security_locked_down(enum lockdown_reason what)
- }
- EXPORT_SYMBOL(security_locked_down);
- 
-+/**
-+ * security_bdev_alloc() - Allocate a block device LSM blob
-+ * @bdev: block device
-+ *
-+ * Allocate and attach a security structure to @bdev->security.  The
-+ * security field is initialized to NULL when the bdev structure is
-+ * allocated.
-+ *
-+ * Return: Return 0 if operation was successful.
-+ */
-+int security_bdev_alloc(struct block_device *bdev)
-+{
-+	int rc = 0;
-+
-+	rc = lsm_bdev_alloc(bdev);
-+	if (unlikely(rc))
-+		return rc;
-+
-+	rc = call_int_hook(bdev_alloc_security, bdev);
-+	if (unlikely(rc))
-+		security_bdev_free(bdev);
-+
++err:
++	if (fd)
++		fclose(fd);
 +	return rc;
 +}
-+EXPORT_SYMBOL(security_bdev_alloc);
 +
-+/**
-+ * security_bdev_free() - Free a block device's LSM blob
-+ * @bdev: block device
-+ *
-+ * Deallocate the bdev security structure and set @bdev->security to NULL.
-+ */
-+void security_bdev_free(struct block_device *bdev)
++int main(int argc, const char *const argv[])
 +{
-+	if (!bdev->security)
-+		return;
++	int rc = 0;
++	size_t len = 0;
++	char *policy = NULL;
 +
-+	call_void_hook(bdev_free_security, bdev);
++	if (argc < 2)
++		usage(argv[0]);
 +
-+	kfree(bdev->security);
-+	bdev->security = NULL;
++	if (argc > 2) {
++		rc = policy_to_buffer(argv[2], &policy, &len);
++		if (rc != 0)
++			goto cleanup;
++	}
++
++	rc = write_boot_policy(argv[1], policy, len);
++cleanup:
++	if (policy)
++		free(policy);
++	if (rc != 0)
++		perror("An error occurred during policy conversion: ");
++	return rc;
 +}
-+EXPORT_SYMBOL(security_bdev_free);
+diff --git a/security/ipe/.gitignore b/security/ipe/.gitignore
+new file mode 100644
+index 000000000000..07313d3fd74a
+--- /dev/null
++++ b/security/ipe/.gitignore
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0-only
++boot-policy.c
+diff --git a/security/ipe/Kconfig b/security/ipe/Kconfig
+index 1b3159c0e129..5c7c773ed84f 100644
+--- a/security/ipe/Kconfig
++++ b/security/ipe/Kconfig
+@@ -18,6 +18,16 @@ menuconfig SECURITY_IPE
+ 	  If unsure, answer N.
+ 
+ if SECURITY_IPE
++config IPE_BOOT_POLICY
++	string "Integrity policy to apply on system startup"
++	help
++	  This option specifies a filepath to an IPE policy that is compiled
++	  into the kernel. This policy will be enforced until a policy update
++	  is deployed via the $securityfs/ipe/policies/$policy_name/active
++	  interface.
 +
-+/**
-+ * security_bdev_setintegrity() - Set the device's integrity data
-+ * @bdev: block device
-+ * @type: type of integrity, e.g. hash digest, signature, etc
-+ * @value: the integrity value
-+ * @size: size of the integrity value
-+ *
-+ * Register a verified integrity measurement of a bdev with LSMs.
-+ * LSMs should free the previously saved data if @value is NULL.
-+ *
-+ * Return: Returns 0 on success, negative values on failure.
-+ */
-+int security_bdev_setintegrity(struct block_device *bdev,
-+			       enum lsm_integrity_type type, const void *value,
-+			       size_t size)
-+{
-+	return call_int_hook(bdev_setintegrity, bdev, type, value, size);
-+}
-+EXPORT_SYMBOL(security_bdev_setintegrity);
++	  If unsure, leave blank.
 +
- #ifdef CONFIG_PERF_EVENTS
- /**
-  * security_perf_event_open() - Check if a perf event open is allowed
+ menu "IPE Trust Providers"
+ 
+ config IPE_PROP_DM_VERITY
+diff --git a/security/ipe/Makefile b/security/ipe/Makefile
+index 66de53687d11..ce23101b66ba 100644
+--- a/security/ipe/Makefile
++++ b/security/ipe/Makefile
+@@ -5,7 +5,16 @@
+ # Makefile for building the IPE module as part of the kernel tree.
+ #
+ 
++quiet_cmd_polgen = IPE_POL $(2)
++      cmd_polgen = scripts/ipe/polgen/polgen security/ipe/boot-policy.c $(2)
++
++targets += boot-policy.c
++
++$(obj)/boot-policy.c: scripts/ipe/polgen/polgen $(CONFIG_IPE_BOOT_POLICY) FORCE
++	$(call if_changed,polgen,$(CONFIG_IPE_BOOT_POLICY))
++
+ obj-$(CONFIG_SECURITY_IPE) += \
++	boot-policy.o \
+ 	digest.o \
+ 	eval.o \
+ 	hooks.o \
+@@ -15,3 +24,5 @@ obj-$(CONFIG_SECURITY_IPE) += \
+ 	policy_fs.o \
+ 	policy_parser.o \
+ 	audit.o \
++
++clean-files := boot-policy.c \
+diff --git a/security/ipe/fs.c b/security/ipe/fs.c
+index b16d87443a3b..8af6e39f9914 100644
+--- a/security/ipe/fs.c
++++ b/security/ipe/fs.c
+@@ -190,6 +190,7 @@ static const struct file_operations enforce_fops = {
+ static int __init ipe_init_securityfs(void)
+ {
+ 	int rc = 0;
++	struct ipe_policy *ap;
+ 
+ 	if (!ipe_enabled)
+ 		return -EOPNOTSUPP;
+@@ -220,6 +221,13 @@ static int __init ipe_init_securityfs(void)
+ 		goto err;
+ 	}
+ 
++	ap = rcu_access_pointer(ipe_active_policy);
++	if (ap) {
++		rc = ipe_new_policyfs_node(ap);
++		if (rc)
++			goto err;
++	}
++
+ 	np = securityfs_create_file("new_policy", 0200, root, NULL, &np_fops);
+ 	if (IS_ERR(np)) {
+ 		rc = PTR_ERR(np);
+diff --git a/security/ipe/ipe.c b/security/ipe/ipe.c
+index 86b87e287b69..788118a40c02 100644
+--- a/security/ipe/ipe.c
++++ b/security/ipe/ipe.c
+@@ -9,6 +9,7 @@
+ #include "hooks.h"
+ #include "eval.h"
+ 
++extern const char *const ipe_boot_policy;
+ bool ipe_enabled;
+ 
+ static struct lsm_blob_sizes ipe_blobs __ro_after_init = {
+@@ -73,9 +74,20 @@ static struct security_hook_list ipe_hooks[] __ro_after_init = {
+  */
+ static int __init ipe_init(void)
+ {
++	struct ipe_policy *p = NULL;
++
+ 	security_add_hooks(ipe_hooks, ARRAY_SIZE(ipe_hooks), &ipe_lsmid);
+ 	ipe_enabled = true;
+ 
++	if (ipe_boot_policy) {
++		p = ipe_new_policy(ipe_boot_policy, strlen(ipe_boot_policy),
++				   NULL, 0);
++		if (IS_ERR(p))
++			return PTR_ERR(p);
++
++		rcu_assign_pointer(ipe_active_policy, p);
++	}
++
+ 	return 0;
+ }
+ 
 -- 
 2.44.0
 
