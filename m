@@ -1,42 +1,41 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3137D13B592;
-	Thu, 28 Mar 2024 21:17:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7372713B596;
+	Thu, 28 Mar 2024 21:17:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711660671; cv=none; b=lTV0ude8MzVqSWuNZyDUd3EbjvHGG/olUco5wGpB6mbPqAOtfkQDIgX1AEqp5DJOYtGtuMvyKpsKkaYBGDKsnIzG0B/WMB/16rIR5DdNPYelYbOqNoMEbl1G01q21KoH3COIk34/IOJUCnwf0NaXVBOUUAn0M9ndd7Y/Ba++9/4=
+	t=1711660672; cv=none; b=D2wUSOLer22E1XwIbbE/WHA86EywoPVGdvTSsccZ+4qRQBRLvVDLD7n+yW/RG9briGRN0r3NMPyC8z0yuOpFfCnbhQTt0UtkXgFMxkHQ2XF/KAA3OrY27BAix/qrZc3b8YKQv5eGF8rTa4Dfxqj7YTx0zcyugc1Y2NstI9aIcBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711660671; c=relaxed/simple;
-	bh=lLggCMkacyFIKiAwDIxS1YmwOfm04H26CBHH8Ka7iog=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HYsOHsFKir2dtGPfi71uHiy/kQc0hrpL7AIRj2fwks17bINYvxmIGQr9WEb4E6+7sTItBLf1Q9CH1TlVRxiV6VZDe9m7tcEF1dpcx9JzmWeI6qzz52Jx4nddYv14deg+L901JV++atxpDm/7cYEdJC/Hj8cmPB1zRau8I2D0rT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OeMPOJvM; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1711660672; c=relaxed/simple;
+	bh=j0JGGPFhy/onZUZbbAhS1IVqM5lPLVs9j9gED/C9V1A=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CVhPO10svPqQFpK51Rb6RQ+/L4Sho85bGCj+O6Oep4DILqvNW8kvxiV8afbzEdSFBz65GOba9we0PpFEgE5v/PFs49l5BcNGqJya85TIuVUseKVOvkCYA3umigwdYnuYOQKA4coFJrxvmaqIYkmVIiCTci2dmUgIRjt8tp0Hr08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aaJ3ODN8; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OeMPOJvM"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42SKDfJ2016218;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aaJ3ODN8"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42SKgQPB024748;
 	Thu, 28 Mar 2024 21:16:36 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=+MY78+lW5U3e/L0EKh1VpFdXxuRr29FRbMT8d19Xzfo=; b=Oe
-	MPOJvMA5uIvef9XtZKoKUZBkeDjx8zjlNZRdLblLc7IrarXR3aYl/Dxj51MJvChl
-	QnHYk1qX3PPjAWfSvGdnUTzJjFBrEIO4Pqjgo3LGUPDyUXl0yZpzRJjfbdeUT6wn
-	o07DUiFxcnsjVaUbrazufs12vnd6qU0+xLQ+LTjjLyr5JJZu2TMdsI73ErQbgEwU
-	7Nd8sEhpBRHcSNpKX5YGKEA74iIx5eyo19QTTo1Wso0VijSyY3EftG7ppjcCVtUQ
-	+2F4FQL/++dg5+cZBQw22NP7uXq3VwD/igjVCBShyerX6UkoLJaB3FPd2YZH1ROq
-	yw6nZmH8JET4jaJEr5MQ==
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=D8O5+mH
+	IUcg/G6ki6b37Wx2+aNdV3Y2NASjj7xE/r8Y=; b=aaJ3ODN87+28iow01lBjOwG
+	hOJrrM66I+BtPGs3P2jv0yvSKX4XRvD53k3hInkFDgDkd/yQhv4zyNLgfDl+psuX
+	HYVCTj4iZ7Uf+OcXqrKGFoGymGFoyC4z3DDCv5QcUv1eUtLXNKIANSPduMS9Wnos
+	c64TEVTK3NYO4BY+OaYcxyowCmmZQLfps7QNaeZv1Ut9nOIuJdGKP0QyBadKJZAI
+	v+5jecUNK52zgHF2aGvKww3IBUvsBGpHZ0TTiEhf1G908DEto0bgrSxkBIvlrZ9y
+	bkse1jv2q9i8p1KxaZeZncF8MwA7RyhBifpoMPz+4pNeWQXq+UjWsL1LIBOLRhA=
+	=
 Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x54r6275n-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x5fs8827d-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 28 Mar 2024 21:16:36 +0000 (GMT)
+	Thu, 28 Mar 2024 21:16:35 +0000 (GMT)
 Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42SLGY8p032402
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42SLGY8n032402
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 28 Mar 2024 21:16:35 GMT
+	Thu, 28 Mar 2024 21:16:34 GMT
 Received: from hu-obabatun-lv.qualcomm.com (10.49.16.6) by
  nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
@@ -56,12 +55,10 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <robh+dt@kernel.org>,
 CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
         <kernel@quicinc.com>, Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-Subject: [PATCH v5 2/4] of: reserved_mem: Add code to dynamically allocate reserved_mem array
-Date: Thu, 28 Mar 2024 14:15:41 -0700
-Message-ID: <20240328211543.191876-3-quic_obabatun@quicinc.com>
+Subject: [PATCH v5 0/4] Dynamic Allocation of the reserved_mem array
+Date: Thu, 28 Mar 2024 14:15:39 -0700
+Message-ID: <20240328211543.191876-1-quic_obabatun@quicinc.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240328211543.191876-1-quic_obabatun@quicinc.com>
-References: <20240328211543.191876-1-quic_obabatun@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,168 +71,167 @@ X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
  nalasex01b.na.qualcomm.com (10.47.209.197)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: oXCDOQgYN7dmB4uBe8RxCQGEXTK2cGvB
-X-Proofpoint-ORIG-GUID: oXCDOQgYN7dmB4uBe8RxCQGEXTK2cGvB
+X-Proofpoint-GUID: dRAOY21zhi6KXxMrbJqojpnpkqq8auss
+X-Proofpoint-ORIG-GUID: dRAOY21zhi6KXxMrbJqojpnpkqq8auss
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-03-28_17,2024-03-28_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- priorityscore=1501 clxscore=1015 lowpriorityscore=0 malwarescore=0
- bulkscore=0 suspectscore=0 impostorscore=0 spamscore=0 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 phishscore=0 mlxlogscore=999 spamscore=0 suspectscore=0
+ mlxscore=0 adultscore=0 malwarescore=0 impostorscore=0 clxscore=1015
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2403210001 definitions=main-2403280152
 
-The reserved_mem array is statically allocated with a size of
-MAX_RESERVED_REGIONS(64). Therefore, if the number of reserved_mem
-regions exceeds this size, there will not be enough space to store
-all the data.
+The reserved_mem array is used to store data for the different
+reserved memory regions defined in the DT of a device.  The array
+stores information such as region name, node reference, start-address,
+and size of the different reserved memory regions.
 
-Hence, extend the use of the static array by introducing a
-dynamically allocated array based on the number of reserved memory
-regions specified in the DT.
+The array is currently statically allocated with a size of
+MAX_RESERVED_REGIONS(64). This means that any system that specifies a
+number of reserved memory regions greater than MAX_RESERVED_REGIONS(64)
+will not have enough space to store the information for all the regions.
+
+This can be fixed by making the reserved_mem array a dynamically sized
+array which is allocated using memblock_alloc() based on the exact
+number of reserved memory regions defined in the DT.
 
 On architectures such as arm64, memblock allocated memory is not
-writable until after the page tables have been setup. Hence, the
-dynamic allocation of the reserved_mem array will need to be done only
-after the page tables have been setup.
+writable until after the page tables have been setup.
+This is an issue because the current implementation initializes the
+reserved memory regions and stores their information in the array before
+the page tables are setup. Hence, dynamically allocating the
+reserved_mem array and attempting to write information to it at this
+point will fail.
 
-As a result, a temporary static array is still needed in the initial
-stages to store the information of the dynamically-placed reserved
-memory regions because the start address is selected only at run-time
-and is not stored anywhere else.
-It is not possible to wait until the reserved_mem array is allocated
-because this is done after the page tables are setup and the reserved
-memory regions need to be initialized before then.
+Therefore, the allocation of the reserved_mem array will need to be done
+after the page tables have been setup, which means that the reserved
+memory regions will also need to wait until after the page tables have
+been setup to be stored in the array.
 
-After the reserved_mem array is allocated, all entries from the static
-array is copied over to the new array, and the rest of the information
-for the statically-placed reserved memory regions are read in from the
-DT and stored in the new array as well.
+When processing the reserved memory regions defined in the DT, these
+regions are marked as reserved by calling memblock_reserve(base, size).
+Where:  base = base address of the reserved region.
+	size = the size of the reserved memory region.
 
-Once the init process is completed, the temporary static array is
-released back to the system because it is no longer needed. This is
-achieved by marking it as __initdata.
+Depending on if that region is defined using the "no-map" property,
+memblock_mark_nomap(base, size) is also called.
 
-Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
----
- drivers/of/of_reserved_mem.c | 58 +++++++++++++++++++++++++++++++++---
- 1 file changed, 54 insertions(+), 4 deletions(-)
+The "no-map" property is used to indicate to the operating system that a
+mapping of the specified region must NOT be created. This also means
+that no access (including speculative accesses) is allowed on this
+region of memory except when it is coming from the device driver that
+this region of memory is being reserved for.[1]
 
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index db991de16cc0..0aba366eba59 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -27,7 +27,9 @@
- 
- #include "of_private.h"
- 
--static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
-+static struct reserved_mem reserved_mem_array[MAX_RESERVED_REGIONS] __initdata;
-+static struct reserved_mem *reserved_mem __refdata = reserved_mem_array;
-+static int total_reserved_mem_cnt = MAX_RESERVED_REGIONS;
- static int reserved_mem_count;
- 
- static int __init early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
-@@ -55,6 +57,45 @@ static int __init early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
- 	return err;
- }
- 
-+/*
-+ * alloc_reserved_mem_array() - allocate memory for the reserved_mem
-+ * array using memblock
-+ *
-+ * This function is used to allocate memory for the reserved_mem array
-+ * according to the total number of reserved memory regions defined in
-+ * the DT.
-+ * After the new array is allocated, the information stored in the
-+ * initial static array is copied over to this new array and the new
-+ * array is used from this point on.
-+ */
-+static void __init alloc_reserved_mem_array(void)
-+{
-+	struct reserved_mem *new_array;
-+	size_t alloc_size, copy_size, memset_size;
-+
-+	alloc_size = array_size(total_reserved_mem_cnt, sizeof(*new_array));
-+	if (alloc_size == SIZE_MAX)
-+		pr_err("Failed to allocate memory for reserved_mem array with err: %d", -EOVERFLOW);
-+
-+	new_array = memblock_alloc(alloc_size, SMP_CACHE_BYTES);
-+	if (!new_array)
-+		pr_err("Failed to allocate memory for reserved_mem array with err: %d", -ENOMEM);
-+
-+	copy_size = array_size(reserved_mem_count, sizeof(*new_array));
-+	if (copy_size == SIZE_MAX) {
-+		memblock_free(new_array, alloc_size);
-+		total_reserved_mem_cnt = MAX_RESERVED_REGIONS;
-+		pr_err("Failed to allocate memory for reserved_mem array with err: %d", -EOVERFLOW);
-+	}
-+
-+	memset_size = alloc_size - copy_size;
-+
-+	memcpy(new_array, reserved_mem, copy_size);
-+	memset(new_array + reserved_mem_count, 0, memset_size);
-+
-+	reserved_mem = new_array;
-+}
-+
- /*
-  * fdt_reserved_mem_save_node() - save fdt node for second pass initialization
-  */
-@@ -63,7 +104,7 @@ static void __init fdt_reserved_mem_save_node(unsigned long node, const char *un
- {
- 	struct reserved_mem *rmem = &reserved_mem[reserved_mem_count];
- 
--	if (reserved_mem_count == ARRAY_SIZE(reserved_mem)) {
-+	if (reserved_mem_count == total_reserved_mem_cnt) {
- 		pr_err("not enough space for all defined regions.\n");
- 		return;
- 	}
-@@ -220,7 +261,7 @@ static int __init __reserved_mem_alloc_size(unsigned long node, const char *unam
- int __init fdt_scan_reserved_mem(void)
- {
- 	int node, child;
--	int dynamic_nodes_cnt = 0;
-+	int dynamic_nodes_cnt = 0, count = 0;
- 	int dynamic_nodes[MAX_RESERVED_REGIONS];
- 	const void *fdt = initial_boot_params;
- 
-@@ -243,6 +284,8 @@ int __init fdt_scan_reserved_mem(void)
- 		uname = fdt_get_name(fdt, child, NULL);
- 
- 		err = __reserved_mem_reserve_reg(child, uname);
-+		if (!err)
-+			count++;
- 		/*
- 		 * Save the nodes for the dynamically-placed regions
- 		 * into an array which will be used for allocation right
-@@ -257,11 +300,16 @@ int __init fdt_scan_reserved_mem(void)
- 	}
- 	for (int i = 0; i < dynamic_nodes_cnt; i++) {
- 		const char *uname;
-+		int err;
- 
- 		child = dynamic_nodes[i];
- 		uname = fdt_get_name(fdt, child, NULL);
--		__reserved_mem_alloc_size(child, uname);
-+
-+		err = __reserved_mem_alloc_size(child, uname);
-+		if (!err)
-+			count++;
- 	}
-+	total_reserved_mem_cnt = count++;
- 	return 0;
- }
- 
-@@ -494,6 +542,8 @@ void __init fdt_init_reserved_mem(void)
- {
- 	int i;
- 
-+	alloc_reserved_mem_array();
-+
- 	fdt_scan_reserved_mem_reg_nodes();
- 
- 	/* check for overlapping reserved regions */
+Therefore, it is important to call memblock_reserve() and
+memblock_mark_nomap() on all the reserved memory regions before the
+system sets up the page tables so that the system does not unknowingly
+include any of the no-map reserved memory regions in the memory map.
+
+There are two ways to define how/where a reserved memory region is
+placed in memory:
+i) Statically-placed reserved memory regions
+i.e. regions defined with a set start address and size using the
+     "reg" property in the DT.
+ii) Dynamically-placed reserved memory regions.
+i.e. regions defined by specifying a range of addresses where they can
+     be placed in memory using the "alloc_ranges" and "size" properties
+     in the DT.
+
+The dynamically-placed reserved memory regions get assigned a start
+address only at runtime. And this needs to  be done before the page
+tables are setup so that memblock_reserve() and memblock_mark_nomap()
+can be called on the allocated region as explained above.
+Since the dynamically allocated reserved_mem array can only available
+after the page tables have been setup, the information for the
+dynamically-placed reserved memory regions needs to be stored somewhere
+temporarily until the reserved_mem array is available.
+
+Therefore, this series makes use of a temporary static array to store
+the information of the dynamically-placed reserved memory regions until
+the reserved_mem array is allocated.
+Once the reserved_mem array is available, the information is copied over
+from the temporary array into the reserved_mem array, and the memory for
+the temporary array is freed back to the system.
+
+The information for the statically-placed reserved memory regions does
+not need to be stored in a temporary array because their starting
+address is already stored in the devicetree.
+Hence, the only thing that needs to be done for these regions before the
+page tables are setup is to call memblock_reserve() and
+memblock_mark_nomap().
+Once the reserved_mem array is allocated, the information for the
+statically-placed reserved memory regions is added to the array.
+
+Note:
+Because of the use of a temporary array to store the information of the
+dynamically-placed reserved memory regions, there still exists a
+limitation of 64 for this particular kind of reserved memory regions.
+From my observation, these regions are typically small in number and
+hence I expect this to not be an issue for now.
+
+Dependency:
+This series is dependent on the acceptance of the below patchset for
+proper behavior on the sh architecture. The patchset has already been
+sent out and is pending review from the sh maintainters.
+https://lore.kernel.org/all/1707524971-146908-1-git-send-email-quic_obabatun@quicinc.com/
+
+Patch Versions:
+v5 (Current Patchset):
+- Rebased changes on top of v6.9-rc1.
+- Addressed minor code comments from v4.
+
+v4:
+- Move fdt_init_reserved_mem() back into the unflatten_device_tree()
+  function.
+- Fix warnings found by Kernel test robot:
+  https://lore.kernel.org/all/202401281219.iIhqs1Si-lkp@intel.com/
+  https://lore.kernel.org/all/202401281304.tsu89Kcm-lkp@intel.com/
+  https://lore.kernel.org/all/202401291128.e7tdNh5x-lkp@intel.com/
+
+v3:
+https://lore.kernel.org/all/20240126235425.12233-1-quic_obabatun@quicinc.com/
+- Make use of __initdata to delete the temporary static array after
+  dynamically allocating memory for reserved_mem array using memblock.
+- Move call to fdt_init_reserved_mem() out of the
+  unflatten_device_tree() function and into architecture specific setup
+  code.
+- Breaking up the changes for the individual architectures into separate
+  patches.
+
+v2:
+https://lore.kernel.org/all/20231204041339.9902-1-quic_obabatun@quicinc.com/
+- Extend changes to all other relevant architectures by moving
+  fdt_init_reserved_mem() into the unflatten_device_tree() function.
+- Add code to use unflatten devicetree APIs to process the reserved
+  memory regions.
+
+v1:
+https://lore.kernel.org/all/20231019184825.9712-1-quic_obabatun@quicinc.com/
+
+
+References:
+[1]
+https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/reserved-memory/reserved-memory.yaml#L79
+
+Oreoluwa Babatunde (4):
+  of: reserved_mem: Restruture how the reserved memory regions are
+    processed
+  of: reserved_mem: Add code to dynamically allocate reserved_mem array
+  of: reserved_mem: Use the unflatten_devicetree APIs to scan reserved
+    mem. nodes
+  of: reserved_mem: Rename fdt_* functions to refelct use of
+    unflatten_devicetree APIs
+
+ drivers/of/fdt.c                |   5 +-
+ drivers/of/of_private.h         |   3 +-
+ drivers/of/of_reserved_mem.c    | 249 ++++++++++++++++++++++++--------
+ include/linux/of_reserved_mem.h |   2 +-
+ kernel/dma/coherent.c           |   8 +-
+ kernel/dma/contiguous.c         |   8 +-
+ kernel/dma/swiotlb.c            |  10 +-
+ 7 files changed, 209 insertions(+), 76 deletions(-)
+
 -- 
 2.34.1
 
