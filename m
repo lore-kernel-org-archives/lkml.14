@@ -1,93 +1,78 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0FD13790B;
-	Thu, 28 Mar 2024 19:16:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68CC4136E13;
+	Thu, 28 Mar 2024 19:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711653370; cv=none; b=Ck8NfRy25yJNlBOFK4HpJJrsHW9p2hrLC4HEMwMFLmqdd4cs0VOqSv+or8sGU4rDnroeEjhHxWXdjsOXVCokWiFMTBf7XiWmB9zlunZFKP4UCXMdhqysr8YTBCpe6LPENukJhD68Z29YwlLIetNNRtBTKaU52PF2phiaGAy4GuI=
+	t=1711653535; cv=none; b=rlYhcpQeBOAdZSPUGJZgkaji4DhQCQXUx+rgwBNpnWGTI7x8VnqDwKXHXpiBT4C9T31Iey0D6mWuHoTh1mAi6SSlbl4v+8L7KVzcTcfOee/Euq8WPXopFIQBCKyVaAVrtn1ZiLegu5XyAV07zTLqnePG7Rov7TLg7XCe3259P+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711653370; c=relaxed/simple;
-	bh=9Lgv0V7X4JpFVS6gpkChpJio0Trbpgps85IWj8gCbhM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EfPs51unCTMvjEvkIrvkSV06XFkrDo6Vwruemew/54nRkYXMt69KZEaFAThMPbsAJJEm+xjazGur/dobWRVzJS31U3CMGo/c9g1oI2RLN86qVRLScuykKiaKL79VvCJz+ThJsqBkkFBPaNGvUIQyxvBmA8lkfjQPXhDoATSSAI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wa+m6+Zi; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711653535; c=relaxed/simple;
+	bh=/2FwrcuxW2z/ha9sIbh7100tVXqzXgvk1gda2cIs5nE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=C6AmgatxdrLWufvbxdP9DKiYRBBm4zlu1vsmiU5NirrmYXubb7JNEwilC1ZrPWyDlAOu9jNmb+IZMIQsxXnKpja/jTrQlmNV9jE3rkTFEFHYRCZ8oDKSjk8Sn2O51zL3Izj3in2uH4CjHzzeHI4eW0qlfUdDISSa6RdIuwq3eOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jftcwO4r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wa+m6+Zi"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-690be110d0dso7394056d6.3;
-        Thu, 28 Mar 2024 12:16:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711653368; x=1712258168; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9Lgv0V7X4JpFVS6gpkChpJio0Trbpgps85IWj8gCbhM=;
-        b=Wa+m6+Zit5RrC7da8xkMnqvc2/Xrsij64z+RdqAVBWxLeej+Ti9G6/oDPIn4s4KoqW
-         Y4OujmENKNe9IWZ6oAbcWdT3fLvBkgc7JjqARf8n+y6lh2h6SZQp9CWD66HEx1rrt2XN
-         iKtTs3OetJxJK4ovYijGFRDXNZj1fDSnL03xT5abbYrVSm4xaI2tK2dzSFvQy1lNwErs
-         jLRIuOf5FOmdn7vw9ym+bcVAo9+VkkWfOCpVBXUR3D4MxhXBFoONwxxHH8OZvn1LsbW4
-         2flIb5PSVDaol+3UcEPjnNDiB8O1y3cOGa5EI9DqGiBh+6JF38mlYNr4nle9PEUV85P4
-         sMrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711653368; x=1712258168;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9Lgv0V7X4JpFVS6gpkChpJio0Trbpgps85IWj8gCbhM=;
-        b=CuZyAarqxeu/TOO8gUTkeMh3blM6r6cw0l1ue3Z8BnXrcUMOPlq0R7kiIPTf28pzIp
-         q29WVYuONOzGqCGfNhlYRrlBzxzERDpDhI9Yqaj3+Cxt4q6ZwrFOtMju0imzYsNqSvOP
-         ldO8IrQeOiXUqcqk76iXfNH8+0ixctU04LeGRI8cQI6s7KhhN0c4f89XZ0o+Vdty6ulb
-         WJfWLQJraCVauYZeLzBTv/bqDk9HzHTNde97DCuw31/8YVUCJnbAhalkoGucjTo11QiY
-         +CRCwBRBGp+VCLgzcqPzi67hYxfhTLW9r6OmkLRVUa6pUY7HbbJuH/A1SXodWL2hLFEd
-         aVDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVjkHmrQ7/8kLYCisod/vsV6MqWhbir8C1Bw3KZgd6CWcmtYYekNYDhbaPwcusa3kvXhSOv1oUQT9hCvA4oefR90Kon+9OIam+o/OL2h86OF/sXgynEPd3FOM9eyQoc+e0xJOLr0KY/ew==
-X-Gm-Message-State: AOJu0YzOT4vX0c5Z/WC1mGTn1yOiVFdv/EGwOsKejDkCX0gotuxpFm2U
-	fgkMOsm3F8gNkseZMMnbn8JH/FUJaMt4KXUVNQxAhRtxv9/lo8RwAlKQKa/yKStiw+zPeBQXRXE
-	uIiImX7WVZCsa3UEhjQ7qhnQpkF1vTJ+NCFU=
-X-Google-Smtp-Source: AGHT+IGoq/C70EcDddBRk46x0pF+WHP98cR4N2Udzd6XL+evhCo+RhymPI2X1noY93YiN54R+wumOFnJfECgqCxnbZ0=
-X-Received: by 2002:a05:6214:2b47:b0:696:5363:7787 with SMTP id
- jy7-20020a0562142b4700b0069653637787mr135402qvb.62.1711653368006; Thu, 28 Mar
- 2024 12:16:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jftcwO4r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 031CBC433C7;
+	Thu, 28 Mar 2024 19:18:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711653535;
+	bh=/2FwrcuxW2z/ha9sIbh7100tVXqzXgvk1gda2cIs5nE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=jftcwO4rh+t+5iSEKiw4//3BPGSDqE225ZiJLIkwXVLno6+pnx8oayEnKYBp2VDKu
+	 W73Dws42e20irofCdvDtVM5PuDXBLb8j39L9gl3s5jXWXRuv2kJdCSp+gbQfT+79BM
+	 zNxc6bnX7oV3oEW6ab2IXbNc41KAWVdaZ2N9rNoWvfcLX0UC8CU3PDo1M0g5ihzq1b
+	 IyfKD06Wrz94YX+ODmpHaXVHObLIpByI2Umk/9D34gegd1FR8yzSb+fiYyexKu8CBK
+	 8thgdmZNGyyldMX8uUJfw6Zt4iMv+H4drImBnvw6eCZAHUwiZQlq1ThUyuVYwM4aKK
+	 n1J8ESUJsgGeg==
+From: Vinod Koul <vkoul@kernel.org>
+To: Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Johan Hovold <johan@kernel.org>, Abel Vesa <abel.vesa@linaro.org>
+Cc: linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20240324-x1e80100-phy-edp-compatible-refactor-v5-0-a0db5f3150bc@linaro.org>
+References: <20240324-x1e80100-phy-edp-compatible-refactor-v5-0-a0db5f3150bc@linaro.org>
+Subject: Re: [PATCH RESEND v5 0/2] phy: qcom: edp: Allow eDP/DP configuring
+ via set_mode op
+Message-Id: <171165353052.152303.10328548451703763437.b4-ty@kernel.org>
+Date: Fri, 29 Mar 2024 00:48:50 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240328191205.82295-1-robertcnelson@gmail.com> <20240328191205.82295-2-robertcnelson@gmail.com>
-In-Reply-To: <20240328191205.82295-2-robertcnelson@gmail.com>
-From: Robert Nelson <robertcnelson@gmail.com>
-Date: Thu, 28 Mar 2024 14:15:41 -0500
-Message-ID: <CAOCHtYiSYat771sfx-Pdv59GDUBH_TzqkxUM+BMf0Q7Z0KEC9A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: ti: Add k3-j722s-beagley-ai
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Cc: Nishanth Menon <nm@ti.com>, Jared McArthur <j-mcarthur@ti.com>, 
-	Jason Kridner <jkridner@beagleboard.org>, Deepak Khatri <lorforlinux@beagleboard.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.3
 
-On Thu, Mar 28, 2024 at 2:12=E2=80=AFPM Robert Nelson <robertcnelson@gmail.=
-com> wrote:
->
-> BeagleBoard.org BeagleY-AI is an easy to use, affordable open source
-> hardware single board computer based on the Texas Instruments AM67A,
-> which features a quad-core 64-bit Arm CPU subsystem, 2 general-purpose
-> digital-signal-processors (DSP) and matrix-multiply-accelerators (MMA),
-> GPU, vision and deep learning accelerators, and multiple Arm Cortex-R5
-> cores for low-power, low-latency GPIO control.
->
-> https://beagley-ai.org/
-> https://openbeagle.org/beagley-ai/beagley-ai
 
-@Jason Kridner we need this to become public when you are ready ^ ;)
+On Sun, 24 Mar 2024 20:50:16 +0200, Abel Vesa wrote:
+> Until now, all platform that supported both eDP and DP had different
+> compatibles for each mode. Using different compatibles for basically
+> the same IP block but for a different configuration is bad way all
+> around. There is a new compute platform from Qualcomm that supports
+> both eDP and DP with the same PHY. So instead of following the old
+> method, we should allow the submode to be configured via set_mode from
+> the controller driver.
+> 
+> [...]
 
-Boot log:
+Applied, thanks!
 
-https://gist.github.com/RobertCNelson/9db8ea04848e7ce2ca52c038fab0e1b7
+[1/2] phy: Add Embedded DisplayPort and DisplayPort submodes
+      commit: 368d67dab4cc4a3ffd39fbd062b2f5796cdbb37b
+[2/2] phy: qcom: edp: Add set_mode op for configuring eDP/DP submode
+      commit: 6078b8ce070cad3f9a8ecfce65d0f6d595494f02
 
---=20
-Robert Nelson
-https://rcn-ee.com/
+Best regards,
+-- 
+~Vinod
+
+
