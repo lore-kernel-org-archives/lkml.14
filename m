@@ -1,82 +1,74 @@
-Received: from 8.mo550.mail-out.ovh.net (8.mo550.mail-out.ovh.net [178.33.110.239])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE83151C28
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 07:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.33.110.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B93754729;
+	Thu, 28 Mar 2024 07:55:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711612530; cv=none; b=Cj9IABXUuKk55IsLw41tyhXUd42G7uMc/+n0HcnmHb8wqsj+BZQ4QfCHHSa+cvGw9XDQxlVYroSBB2+wio5+nMHeJDgsdykh9RRqRRLV6yqQuJl8RWZTE0ZptqKZgoNFz6OmrgyuAsE9RWnYQRKbg1afQed4sYrYsqoRYLa7cQE=
+	t=1711612536; cv=none; b=pvmxOqC33ev1wOey1NGg8PnkqilaZSEWC/MvUugJ3usrWu9ei3C5SMuzNnPngOEEyuK6P8KXQZzg3ptzCd80IGFovBGR6wLnZ3v7Qe8KJID1WEVk+kdAHKHed9v2GwwAUhlF6lcsFwIZMukDqKjDGDh3ZDZjIfQN/cuEMUsMQFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711612530; c=relaxed/simple;
-	bh=FoK+TTnkZBEIxAuqwtZNUFYhYqEUw8/IIA5uwrrKnQc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=eLnc/PikTn08GUZ++hv/NFtg7azQXLPamIBjTcFp2dfeyixOKbA2PnZ2lgJ/poHxxo4hOXvmKEYIznOmPYxSOIpYdkNtqAubJ7QPRkooBiObjgFuT6G34tyxxd42Mv8pOZs0JbFUnOYq7rt3SqLSilxz+BxoO/be13ZvycyZS+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=178.33.110.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
-Received: from director10.ghost.mail-out.ovh.net (unknown [10.109.140.55])
-	by mo550.mail-out.ovh.net (Postfix) with ESMTP id 4V4wMy16r1z1MtY
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 07:36:46 +0000 (UTC)
-Received: from ghost-submission-6684bf9d7b-ldk78 (unknown [10.110.96.65])
-	by director10.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 92A881FEE9;
-	Thu, 28 Mar 2024 07:36:43 +0000 (UTC)
-Received: from etezian.org ([37.59.142.99])
-	by ghost-submission-6684bf9d7b-ldk78 with ESMTPSA
-	id irrGGgseBWbkIwAANZbBaA
-	(envelope-from <andi@etezian.org>); Thu, 28 Mar 2024 07:36:43 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-99G00369bef739-e97a-4666-95b7-831df257c96e,
-                    6D693167F0AB1D8A9C15294DA3267AC24BED3ACC) smtp.auth=andi@etezian.org
-X-OVh-ClientIp:89.217.109.169
-From: Andi Shyti <andi.shyti@kernel.org>
-To: konrad.dybcio@linaro.org, andersson@kernel.org, vkoul@kernel.org, 
- wsa@kernel.org, linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, 
- Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Cc: quic_vdadhani@quicinc.com, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <20240313052639.1747078-1-quic_msavaliy@quicinc.com>
-References: <20240313052639.1747078-1-quic_msavaliy@quicinc.com>
-Subject: Re: [PATCH v4] i2c: i2c-qcom-geni: Parse Error correctly in i2c
- GSI mode
-Message-Id: <171161140136.2698925.4294566764047886777.b4-ty@kernel.org>
-Date: Thu, 28 Mar 2024 08:36:41 +0100
+	s=arc-20240116; t=1711612536; c=relaxed/simple;
+	bh=qtwxnMr7h0StCKaCcZw5U9g1eJHIlZTOcNS8LKETAP8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MTxCHgPb/AIUDLMtsf45Fo+rS7MRWNUhDlv8sVDemf5gHFtal3Pc5FTcFLVqqTM15nqZJn4RNo2hQH3USndKWEkiob5svCWu3TCOS4pm8ckoRKygmUQUZ1nP8HSF+FZRdbDGt7lfdyQR2ABYlhlMRCHZ84ldUEhQngvUQNeI/3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FcyWY31+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FcyWY31+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7FFFC433F1;
+	Thu, 28 Mar 2024 07:55:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711612535;
+	bh=qtwxnMr7h0StCKaCcZw5U9g1eJHIlZTOcNS8LKETAP8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FcyWY31+GrMBvGrVGqFz8Ek4ORULThUO5C0m5XvK6nOk3tPcEftwNr+Go5N5dCZ77
+	 r103gqrmxD47TN4mLoy3jakKXJPW5q8btiMw/kcwGKm0wgx+gcclnqbWMe+465fSA4
+	 oX8spooTokgRDeAl5q3n0HEn+1V73J8ZuDMTt5WGcFkQft19pUybu2xZhqvxxrXcbc
+	 CJB7EvfYYJOfBsyUsBv6x2OH85xk2+v5WMa8GjRK6bEqDMuHm0nVG+Yvrh72bSNdrm
+	 P01TzUajNFKfAA1hmACtGGfSbetkZ6XDllz2ox7ZEhot/htS0CtpH/YIwvqsfD+BpJ
+	 FOYgkEtJw2KMg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rpkbw-000000002Ez-23ac;
+	Thu, 28 Mar 2024 08:55:45 +0100
+Date: Thu, 28 Mar 2024 08:55:44 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: Re: [PATCH v2] PCI: dwc: Use the correct sleep function in
+ wait_for_link
+Message-ID: <ZgUigCJ1Cq4Mz8sO@hovoldconsulting.com>
+References: <20240215-topic-pci_sleep-v2-1-79334884546b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
-X-Ovh-Tracer-Id: 2165386998096661243
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledruddukedguddtlecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevjghfuffkffggtgfgofesthejredtredtjeenucfhrhhomheptehnughiucfuhhihthhiuceorghnughirdhshhihthhisehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnhepffetheduffdvhfdugfffudfgjeejudehheegfeeguefhieeugffhgfeuffdvgfefnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddvjedrtddrtddruddpkeelrddvudejrddutdelrdduieelpdefjedrheelrddugedvrdelleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomheprghnughisegvthgviihirghnrdhorhhgpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehhedtpdhmohguvgepshhmthhpohhuth
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240215-topic-pci_sleep-v2-1-79334884546b@linaro.org>
 
-Hi
-
-On Wed, 13 Mar 2024 10:56:39 +0530, Mukesh Kumar Savaliya wrote:
-> I2C driver currently reports "DMA txn failed" error even though it's
-> NACK OR BUS_PROTO OR ARB_LOST. Detect NACK error when no device ACKs
-> on the bus instead of generic transfer failure which doesn't give any
-> specific clue.
+On Wed, Mar 27, 2024 at 07:24:49PM +0100, Konrad Dybcio wrote:
+> According to [1], msleep should be used for large sleeps, such as the
+> 100-ish ms one in this function. Comply with the guide and use it.
 > 
-> Make Changes inside i2c driver callback handler function
-> i2c_gpi_cb_result() to parse these errors and make sure GSI driver
-> stores the error status during error interrupt.
+> [1] https://www.kernel.org/doc/Documentation/timers/timers-howto.txt
 > 
-> [...]
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> ---
+> Tested on Qualcomm SC8280XP CRD
+> ---
+> Changes in v2:
+> - Rename the define
+> - Sleep for 90ms (the lower boundary) instead of 100
+> - Link to v1: https://lore.kernel.org/r/20240215-topic-pci_sleep-v1-1-7ac79ac9739a@linaro.org
 
-Applied to i2c/i2c-host-next on
-
-git://git.kernel.org/pub/scm/linux/kernel/git/local tree
-
-Thank you,
-Andi
-
-Patches applied
-===============
-[1/1] i2c: i2c-qcom-geni: Parse Error correctly in i2c GSI mode
-      commit: 394b3e3ead0d9fdcc1ef53bb893fdbe7bf1db3ac
-
+Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
