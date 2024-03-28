@@ -1,47 +1,47 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D027E118;
-	Thu, 28 Mar 2024 13:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7830083A08;
+	Thu, 28 Mar 2024 13:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711634199; cv=none; b=pwekpAczO5H+E/MRfsWS6MfJV5PjCcflVklM/tuBMCzLUZalv9IKe4qjvNE+5w1JaZEyzl4FFuOghSYz3WBxN/e9WrWpHqEedtP+j0u3B2HO4dWWRq0t80734pPI9KUCyM5PIeX3J3vYwao9DC/rGEHxjRM01I7k0GwW0ZUfeNk=
+	t=1711634201; cv=none; b=I3r3tbAVop4pt/5unkDJWQZWvcOZtNJopMNFrhm4OCme78SoFzbUreJeK7KacH3+Ctxc5m1VhizZcCyXiQvo2BkbFa7Q+4WEZ8XL9+sisXi68i0X3rRJUjOjMm2f+qVZaOHo16TQso9iAJlrMiv2ydZk7A0+/8ViDbD5egH0tEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711634199; c=relaxed/simple;
-	bh=P0f42Sn7SI7DOEZLjCSWkOOSn29G4boIkz35tOQKdYE=;
+	s=arc-20240116; t=1711634201; c=relaxed/simple;
+	bh=zCWARO4cU6ipBjqQ0ides2u7RHSpySTD3YjFyt5mff8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jFrWT1F6agF5SlbJxr0U90J5FmtYvJ3nxq9LxQ4Z+/5bfQltxBucuI2SuDZKjyNNErxV1p/Qdy1oF9e6jShRhNmrjCUQ0JuPNQPcxX1Mduu7hajeYB+871Ep3ltsV2GA4gTphd8ILUOZkHtKNAA3UkTF1KHFxLxZph4uYkB0pt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.47
+	 In-Reply-To:To:Cc; b=ZK8KWiHn/uqa3YPojoRqSOSrqR+GptlNXuY8Vtzf3LgLRs+hOoEiKbHR2B4XVXOPiyJFPiuEJqt8SQGBpuusC+LY15jofBP/o2qEOKr8OmtUz+YUbftkW5dHO4AiARC8EBj7tbnz4ws3yJDzfFNNAgUgAMJpMj071Ht1qvX0a84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-415447b16aaso4794515e9.1;
-        Thu, 28 Mar 2024 06:56:37 -0700 (PDT)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4141156f245so6984525e9.2;
+        Thu, 28 Mar 2024 06:56:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711634196; x=1712238996;
+        d=1e100.net; s=20230601; t=1711634198; x=1712238998;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kGbNHcQQIa4fEr+2BYTczM4lGtJMpzlUMjpU5OLKXRg=;
-        b=vy2gh7IX2CQa3pswsnezLvtZ82dmjpLHfo0CHkrghfLEiu7Zsj9+KVpzGd/dzfh8TV
-         5RyHzLPEIMebPLeUCBQunGE4S7YRzdZtK2o3wTXbckX9R1tSBCmKW429XJXItTAk3EvI
-         f+XPzVHkGCjUfAKsweVH7SIj7QSNUHzPOLxTivgUaVdwi0PI618OFxgRZUd4u9JocHIf
-         YOg7b9NTkDyACCjKkMNvepU6jifvDSbFIRGD1Rjw3MKjcOmu+b2gbTmAoG7Ci4IQ3kRw
-         xUtiygAGDZWvh/nfvFX8cNH9hNdI9G+dvs+ykr8Ci1+bAAPzxPcwyh0EDteacqXfojsz
-         3CbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXVM6CjVhougBRGno0PHsxpWTYuWTTghXU22g+DCxxPs823/OzlRBfjNcI4JPFOVqtp7gKMwxWiI3uyNQSXjSRUt1lnWDmX8l02DVCF
-X-Gm-Message-State: AOJu0Yw6Xdsn06BD4LLcNUYXLOi5FQSGnEkIWmmyoLAoVEiNFoKN8W/v
-	scmsqglBc9GSIHZ+QXA2Gftuu6TMpC1UzjEYNsmf8w7UuLybnhDN
-X-Google-Smtp-Source: AGHT+IExk6I7CazJfNI1VszLAF4yoh33/Gci+xPydpUTofQ9azqL3acrdLu62dS4kJE9CDH6NDRk2g==
-X-Received: by 2002:a05:600c:4ba8:b0:412:efc8:299b with SMTP id e40-20020a05600c4ba800b00412efc8299bmr2322471wmp.39.1711634195714;
-        Thu, 28 Mar 2024 06:56:35 -0700 (PDT)
+        bh=jnf2sQ/2dHHFn3aPbM4EqErtjtbBBjy2+Un0IzylCkY=;
+        b=qgoxpadkEXWNa6MEDG52puX7geva75oJQGLgWSuHjjwTg6Xl4EjUL4289sWkJRlrni
+         FIQgWUnLbXkq99O1ns/MPdfXhuHP6Vo9pOQjx80MVpgmq9pXAT2pKMzLP2j8NeGqa4mn
+         ot8n+CE0tRIcAAj2HQi5HJq+x1ifAf+pbJ0W63/XwG6/9lccolrZJ+A2bevBLhZeC2tB
+         eRiUZF1hJdfAb9FJzIc4LYiLlhuTstKq1+XDCG8sYmw8fPXtTQWsnXPcoD6gCDpg5Jng
+         899G24aVF761CJssJ9u49wuMyHAqZgMow44AmpEh8r1WFKJwRxMhztlrBn5MGnwHcmlU
+         x33g==
+X-Forwarded-Encrypted: i=1; AJvYcCWmVkd8XM38uiAf4nYDyIJNDOtGrzjMyeM5YrgRdgG7C5sV5K7LQFJymqmSLXGor4ejfp6GenMrs8qUX9YQYQVcHQ7NXviiGSBcnDIH
+X-Gm-Message-State: AOJu0YwkvY8x15Hrm7ONYHXBxDFmsBhXuiyckhNfmVMtkFvidDxT3D9q
+	ndn1Sm9Fe5VXwCq6cTMIhqjJydYS4hxoS5ixmQWQJ6iNf+pVF+IA
+X-Google-Smtp-Source: AGHT+IHSc0Ag57wUydtZUmvEIUV8BIzYY3xcCT7jti83u0Y+vnsmmK+sU5mP7C00IW8aorHW0nWMBg==
+X-Received: by 2002:a05:600c:4593:b0:414:9456:2f61 with SMTP id r19-20020a05600c459300b0041494562f61mr2215120wmo.14.1711634197795;
+        Thu, 28 Mar 2024 06:56:37 -0700 (PDT)
 Received: from [127.0.0.1] (p200300f6f7068b00fa633ffffe02074c.dip0.t-ipconnect.de. [2003:f6:f706:8b00:fa63:3fff:fe02:74c])
-        by smtp.gmail.com with ESMTPSA id o10-20020a05600c510a00b004148a5e3188sm5519570wms.25.2024.03.28.06.56.34
+        by smtp.gmail.com with ESMTPSA id o10-20020a05600c510a00b004148a5e3188sm5519570wms.25.2024.03.28.06.56.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 06:56:35 -0700 (PDT)
+        Thu, 28 Mar 2024 06:56:37 -0700 (PDT)
 From: Johannes Thumshirn <jth@kernel.org>
-Date: Thu, 28 Mar 2024 14:56:31 +0100
-Subject: [PATCH RFC PATCH 1/3] btrfs: zoned: traverse device list in should
- reclaim under rcu_read_lock
+Date: Thu, 28 Mar 2024 14:56:33 +0100
+Subject: [PATCH RFC PATCH 3/3] btrfs: zoned: kick cleaner kthread if low on
+ space
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240328-hans-v1-1-4cd558959407@kernel.org>
+Message-Id: <20240328-hans-v1-3-4cd558959407@kernel.org>
 References: <20240328-hans-v1-0-4cd558959407@kernel.org>
 In-Reply-To: <20240328-hans-v1-0-4cd558959407@kernel.org>
 To: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
@@ -63,41 +63,38 @@ X-Mailer: b4 0.12.4
 
 From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 
-As btrfs_zoned_should_reclaim() traverses the device list with the
-device_list_mutex held. But we're never changing the device list. All we
-do is gathering the used and total bytes.
-
-So change the list traversal from the holding the device_list_mutex to
-rcu_read_lock(). This also opens up the possibilities to call
-btrfs_zoned_should_reclaim() with the chunk_mutex held.
+Kick the cleaner kthread on chunk allocation if we're slowly running out
+of usable space on a zoned filesystem.
 
 Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 ---
- fs/btrfs/zoned.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/btrfs/zoned.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/fs/btrfs/zoned.c b/fs/btrfs/zoned.c
-index 4cba80b34387..d51faf7f4162 100644
+index fb8707f4cab5..25c1a17873db 100644
 --- a/fs/btrfs/zoned.c
 +++ b/fs/btrfs/zoned.c
-@@ -2446,7 +2446,7 @@ bool btrfs_zoned_should_reclaim(struct btrfs_fs_info *fs_info)
- 	if (fs_info->bg_reclaim_threshold == 0)
- 		return false;
+@@ -1040,6 +1040,7 @@ int btrfs_reset_sb_log_zones(struct block_device *bdev, int mirror)
+ u64 btrfs_find_allocatable_zones(struct btrfs_device *device, u64 hole_start,
+ 				 u64 hole_end, u64 num_bytes)
+ {
++	struct btrfs_fs_info *fs_info = device->fs_info;
+ 	struct btrfs_zoned_device_info *zinfo = device->zone_info;
+ 	const u8 shift = zinfo->zone_size_shift;
+ 	u64 nzones = num_bytes >> shift;
+@@ -1051,6 +1052,11 @@ u64 btrfs_find_allocatable_zones(struct btrfs_device *device, u64 hole_start,
+ 	ASSERT(IS_ALIGNED(hole_start, zinfo->zone_size));
+ 	ASSERT(IS_ALIGNED(num_bytes, zinfo->zone_size));
  
--	mutex_lock(&fs_devices->device_list_mutex);
-+	rcu_read_lock();
- 	list_for_each_entry(device, &fs_devices->devices, dev_list) {
- 		if (!device->bdev)
- 			continue;
-@@ -2454,7 +2454,7 @@ bool btrfs_zoned_should_reclaim(struct btrfs_fs_info *fs_info)
- 		total += device->disk_total_bytes;
- 		used += device->bytes_used;
- 	}
--	mutex_unlock(&fs_devices->device_list_mutex);
-+	rcu_read_unlock();
- 
- 	factor = div64_u64(used * 100, total);
- 	return factor >= fs_info->bg_reclaim_threshold;
++	if (!test_bit(BTRFS_FS_CLEANER_RUNNING, &fs_info->flags) &&
++	    btrfs_zoned_should_reclaim(fs_info)) {
++		wake_up_process(fs_info->cleaner_kthread);
++	}
++
+ 	while (pos < hole_end) {
+ 		begin = pos >> shift;
+ 		end = begin + nzones;
 
 -- 
 2.35.3
