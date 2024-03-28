@@ -1,97 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4816137908;
-	Thu, 28 Mar 2024 18:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC3E137759;
+	Thu, 28 Mar 2024 18:55:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711652129; cv=none; b=tYfsZEs0fvQlSU0zyUKXftG9sDOjX9L1mQiUZIujRTJYb1LdfBYW5NEXFmCtJzLc99WBWki0acuIbrmMyjeiKOG79zKpx2zipfq+FvbmqWcU77koa+8MaHs61/yx8gYYGUoNw4fiLFyBzj2vz3/KEa+zPxyC+XHHMBhvXxsoXZk=
+	t=1711652129; cv=none; b=gV/oEU3dJ2ykNpJfgxqp+PzF1AujdGF10Bq8og1Uuw8rQoJLbnJ15gPyKRSoqA66JjO/vkmpeinSN1gsZrk5P66qEBUY11TGJPagyKZuMCl2g78uNJ5FcQhAUdWe3F43lYdvjpUpUZ9A7Nj6SJmCAigt1lUVWzz91QsbEhik/6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711652129; c=relaxed/simple;
-	bh=O6RUd0FiuATOUi3p2Fr6EOtVM8/VxTL6vhWICc/xTtE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hAhlguzQ4pNbykAHftW19X/Rvj6WgzATmqbD+McapbIUhxoquMGI4DmOAADDE9V7wBdL36YD0XenDTuOEb2xClA7Jk9Nky/LmPzbuW3TdfkKerZgJFQKCyMz9Xlrx6TW7lK8if5q+MQbdyg9GrF15OlyYFqUiEUeovSIslznmZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rMVJ+HLg; arc=none smtp.client-ip=10.30.226.201
+	bh=NayzaHMIdkqA2GQKmhidauAzYN535DNAcYvmEvRbSGU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jLvid5iTJmxT1AHd9EQgA5yYH81RwhT7d6ESPx7mnKX/P5s6BtmbC6zE73jSKjc7tInbB/T7SI/aX2VR8FhzX/DjxJwisphaFK7AiGXrQ9YT5ArDwRr9oHgMb7kc49UkvX10jT1eQVGTUfpxqTNhw5uB4qAWkHJJPWY35Ox72pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=1U5LUssV; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rMVJ+HLg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 285F8C433F1;
-	Thu, 28 Mar 2024 18:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711652128;
-	bh=O6RUd0FiuATOUi3p2Fr6EOtVM8/VxTL6vhWICc/xTtE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rMVJ+HLghR8zyz+qCC2JJP7kQGIEGPxr5Ml98x4dA7YSvWIuBNBkAKz5BVNnt1cKC
-	 U4X26lSPrv66WvoaSs7HO7Wjv4vJagUioEMbZYr1bzr4fbuCXEYXLEBlrzMCUfI9oK
-	 7Q8cOeQUyi5lfFD2idby9yZOvPuqWB7rhehfUD0c5e1jbcPeMeCUWGyKB7TWceDNYH
-	 NiCdtRDgKp5SrrIGkWBPfkU55FKLpe/A0hGW9al8izHQTEQemTRp611vGqDyI+9lvW
-	 uC+e9g+wberfvYWj6IomFhK8s2kj1mbgF965VRhIRBkGAHahwkwi0j++Am1kna3fJ5
-	 EFVYHhWqdN2Nw==
-Date: Thu, 28 Mar 2024 13:55:26 -0500
-From: Rob Herring <robh@kernel.org>
-To: git@luigi311.com
-Cc: linux-media@vger.kernel.org, dave.stevenson@raspberrypi.com,
-	jacopo.mondi@ideasonboard.com, mchehab@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, sakari.ailus@linux.intel.com,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 18/23] dt-bindings: media: imx258: Add alternate
- compatible strings
-Message-ID: <20240328185526.GA88354-robh@kernel.org>
-References: <20240327231710.53188-1-git@luigi311.com>
- <20240327231710.53188-19-git@luigi311.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="1U5LUssV"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42SDVYLU018955;
+	Thu, 28 Mar 2024 19:55:03 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	selector1; bh=/ayeJsyEPgg8rhZQtvTpIeeccnD5/K0UyzBzpWjer9Y=; b=1U
+	5LUssVvBm7XiRB7M429ok1g/vrFLx8CCKUDhHXv1gpsZ48PwsR9+5zYp4NiiuFMR
+	+w8GT/9ics2YvzR0Y2/lorRagOF/gJRwNfB0jV4jAgDX16tIjjlGETcINAPzVjPW
+	2skxQYWB+zrU0mxbZSHBVnPDs8lTyU8yUHZCih2rzsgqbvIe9vbdErVqeQMux/ta
+	xkJVPXkYMxWENiqa5ivdaFwpT6FkUdtJnOyKxzcwRJ4XeBqOwE7uOaGhODX5ezWK
+	h3AoGIituoJj5N0qHNgheWNuhJdo6aJ154Ugn1GnPz222vLB+EdBHPftxRNMqssF
+	WoleT5yGIFL8OGo6a5qg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3x1ncmc6yg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 28 Mar 2024 19:55:03 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 72C1F4002D;
+	Thu, 28 Mar 2024 19:54:58 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EADDA22D174;
+	Thu, 28 Mar 2024 19:53:44 +0100 (CET)
+Received: from localhost (10.252.8.203) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 28 Mar
+ 2024 19:53:44 +0100
+From: Christophe Roullier <christophe.roullier@foss.st.com>
+To: "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark
+ Brown <broonie@kernel.org>,
+        Christophe Roullier
+	<christophe.roullier@foss.st.com>,
+        Marek Vasut <marex@denx.de>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v6 1/1] dt-bindings: net: dwmac: Document STM32 property st,ext-phyclk
+Date: Thu, 28 Mar 2024 19:53:37 +0100
+Message-ID: <20240328185337.332703-2-christophe.roullier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240328185337.332703-1-christophe.roullier@foss.st.com>
+References: <20240328185337.332703-1-christophe.roullier@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240327231710.53188-19-git@luigi311.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-28_17,2024-03-28_01,2023-05-22_02
 
-On Wed, Mar 27, 2024 at 05:17:04PM -0600, git@luigi311.com wrote:
-> From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-> 
-> There are a number of variants of the imx258 modules that can not
-> be differentiated at runtime, so add compatible strings for them.
+The Linux kernel dwmac-stm32 driver currently supports three DT
+properties used to configure whether PHY clock are generated by
+the MAC or supplied to the MAC from the PHY.
 
-But you are only adding 1 variant.
+Originally there were two properties, st,eth-clk-sel and
+st,eth-ref-clk-sel, each used to configure MAC clocking in
+different bus mode and for different MAC clock frequency.
+Since it is possible to determine the MAC 'eth-ck' clock
+frequency from the clock subsystem and PHY bus mode from
+the 'phy-mode' property, two disparate DT properties are
+no longer required to configure MAC clocking.
 
-> 
-> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-> Signed-off-by: Luigi311 <git@luigi311.com>
-> ---
->  .../devicetree/bindings/media/i2c/sony,imx258.yaml          | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
-> index bee61a443b23..c7856de15ba3 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
-> +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
-> @@ -14,10 +14,14 @@ description: |-
->    type stacked image sensor with a square pixel array of size 4208 x 3120. It
->    is programmable through I2C interface.  Image data is sent through MIPI
->    CSI-2.
-> +  There are a number of variants of the sensor which cannot be detected at
-> +  runtime, so multiple compatible strings are required to differentiate these.
+Linux kernel commit 1bb694e20839 ("net: ethernet: stmmac: simplify phy modes management for stm32")
+introduced a third, unified, property st,ext-phyclk. This property
+covers both use cases of st,eth-clk-sel and st,eth-ref-clk-sel DT
+properties, as well as a new use case for 25 MHz clock generated
+by the MAC.
 
-That's more reasoning/why for the patch than description of the h/w.
+The third property st,ext-phyclk is so far undocumented,
+document it.
 
->  properties:
->    compatible:
-> -    const: sony,imx258
-> +    - enum:
-> +        - sony,imx258
-> +        - sony,imx258-pdaf
+Below table summarizes the clock requirement and clock sources for
+supported PHY interface modes.
+ __________________________________________________________________________
+|PHY_MODE | Normal | PHY wo crystal|   PHY wo crystal   |No 125Mhz from PHY|
+|         |        |      25MHz    |        50MHz       |                  |
 
-How do I know which one to use? Please define what PDAF means somewhere 
-as well as perhaps what the original/default variant is or isn't.
+---------------------------------------------------------------------------
+|  MII    |    -   |     eth-ck    |        n/a         |       n/a        |
+|         |        | st,ext-phyclk |                    |                  |
 
->  
->    assigned-clocks: true
->    assigned-clock-parents: true
-> -- 
-> 2.42.0
-> 
+---------------------------------------------------------------------------
+|  GMII   |    -   |     eth-ck    |        n/a         |       n/a        |
+|         |        | st,ext-phyclk |                    |                  |
+
+---------------------------------------------------------------------------
+| RGMII   |    -   |     eth-ck    |        n/a         |      eth-ck      |
+|         |        | st,ext-phyclk |                    | st,eth-clk-sel or|
+|         |        |               |                    | st,ext-phyclk    |
+
+---------------------------------------------------------------------------
+| RMII    |    -   |     eth-ck    |      eth-ck        |       n/a        |
+|         |        | st,ext-phyclk | st,eth-ref-clk-sel |                  |
+|         |        |               | or st,ext-phyclk   |                  |
+
+---------------------------------------------------------------------------
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Marek Vasut <marex@denx.de>
+Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
+---
+ Documentation/devicetree/bindings/net/stm32-dwmac.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+index fc8c96b08d7dc..857d58949b029 100644
+--- a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
++++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+@@ -82,6 +82,13 @@ properties:
+       Should be phandle/offset pair. The phandle to the syscon node which
+       encompases the glue register, and the offset of the control register
+ 
++  st,ext-phyclk:
++    description:
++      set this property in RMII mode when you have PHY without crystal 50MHz and want to
++      select RCC clock instead of ETH_REF_CLK. OR in RGMII mode when you want to select
++      RCC clock instead of ETH_CLK125.
++    type: boolean
++
+   st,eth-clk-sel:
+     description:
+       set this property in RGMII PHY when you want to select RCC clock instead of ETH_CLK125.
+-- 
+2.25.1
+
