@@ -1,122 +1,150 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37ED1657B0;
-	Thu, 28 Mar 2024 08:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE08C657BF
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 08:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711612881; cv=none; b=jMme6ESJDP9xJzmbGzFEaDqSeQJZI7i3Ku+ez5qqPLfQkBCBhLSBp+28l22SWF/bqzpNOnIKc79m6zIel2C0elY1R3CjR3LtEay1b2ly3c1zfM7mll3Xs6de70G2NWDGkG0E8t9pvA3qrtbcVch4bdUK+9oqy7XpBwSbp5/UGCk=
+	t=1711612888; cv=none; b=Ri8P2zkXJNeEkGldS9F+I8uluMQpn7K/urDaSWNqTHtWzH/b/wmwsvD5tSKLg7BOb+QhQgZvOj/i+k1KmOF9NDzWaxlJC0ivApzIdbhJ9j0n7J/GKMBg1FElIjMpD9QebjBgN/nD4C6tuK2QoCHE5wn0Tg77H3STVZiS13rfGww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711612881; c=relaxed/simple;
-	bh=lnS95bunV/EH9UhcF3G/sCrMeEzpcJBQkovuEjBYQDA=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Nn7lH2oMYwx78qg5cL3sxBpRORPvQ9XADTZYfaJhYe+3xYsuHmue5zVW+AOkaMZCkUUdwMhQvuD6lmu/J17u0Om5G/RWsOuYA9kTJsZBdZpcMs7gIwtSe/Oq913IH0f45cikxWHt6VXeYlOa1vghNiE1aCHsP61SiOaQxJZZg/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cRgQ4w19; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1711612888; c=relaxed/simple;
+	bh=iGPkZ93mPGMHekKKmEQJnZAQ7M3hRddQQyp6Ob/5spM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WBW2YTqwmx2uvOGA8lSji12kuVOJgjNAhG2GFHxHbnRAc3jmftbCEnQM+SsXcU0XNBAcl6eQUjFuO3OQ+GtuqpOZAfrnkz+1+01qrGPTgNvn8xgvVadhSz/8pcjp+fm1nG2tpFM7JKvAKnCTcOqjcPUPh4h6gnoaP1gobgvYXLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=IzCHboNc; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cRgQ4w19"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42S6qqCd028045;
-	Thu, 28 Mar 2024 08:01:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=9CHl93Q8DRAjWAYjiISTKY13GhosV9C3yA+9XS3PrZ8=; b=cR
-	gQ4w19SfWkN9xcN8GAG2T20HVd2hGpVPg9Wt/J2cnB9vOHSo9DJwHpkSQrkmbKsi
-	0wqFxGhRi6M6QHXQeTtw1L4LLKlgg8tyagw0m3C4JdmQKZHfE5DSDO/uFn1qSvCs
-	4XulNdi3KHzq6sBlsxpfbj69Mk34z2UezfwBIw8bBmpfKfTkRifO6C0TJjv41Af0
-	QwG86st2hApH8JGTZ7lktsDlXgXZmKU5HeRxxHqbp1W6L/cj8r1aD5FE2DjH0sdK
-	kNwxJZF41LfgJ1QzvpelNdU5rbJnCbLI/MiA1Cf3SgWu5ZXvj2c8UvtMGFvnt7gA
-	PtI3Wst7hAMqDLFVJ8zA==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x53nxg8ft-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 28 Mar 2024 08:01:15 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42S81FoF032666
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 28 Mar 2024 08:01:15 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 28 Mar 2024 01:01:10 -0700
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <djakov@kernel.org>, <dmitry.baryshkov@linaro.org>,
-        <quic_varada@quicinc.com>, <quic_anusha@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>
-Subject: [PATCH v5 5/5] arm64: dts: qcom: ipq9574: Add icc provider ability to gcc
-Date: Thu, 28 Mar 2024 13:29:36 +0530
-Message-ID: <20240328075936.223461-6-quic_varada@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240328075936.223461-1-quic_varada@quicinc.com>
-References: <20240328075936.223461-1-quic_varada@quicinc.com>
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="IzCHboNc"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-41544aef01aso2193405e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 01:01:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1711612882; x=1712217682; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sOFRtkco0210L/WuRcYQ2nRZLqQCloOmB/yxmLTCTIQ=;
+        b=IzCHboNcSD6S71uyiZCJjwvWfO6o0LaUf+9SOu0KyA5/a8JJCXmKD2/4qjqjEzekUj
+         HlGlpMlIdet8abtzXEw/O4DOa/Q7SWLKOJ3CVPJQuTUdZ8On5zlgjy3DoFbG/HjAwsQs
+         XHi7YulBehbsd0ttOqouZGEW66Ge6C9hCq+mPl31me5jdMF1kzZS3aOAKFdt8cGr+uIf
+         bqsr4ONXzdrN4gnYdoZsT1Y/obcsAHcfLC7BXvxh17JJNzqU/Qzribs6vyd5FxrvRimg
+         sNHymoC1Y4jhWikkBJ0vkZjtCtKZtZ3Y/OnrLuKwMBGX8oWi5ed5PhwM+hQSU2E7mlND
+         Kkqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711612882; x=1712217682;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sOFRtkco0210L/WuRcYQ2nRZLqQCloOmB/yxmLTCTIQ=;
+        b=Mo4LXTzdxIUnRTH8dpD9vGP7HdyJP0SApWEu+WlbBmluFkz2dGVx5QpgzXsVVtVQZM
+         XFdnZ3omAXydfcPwIuLQ54R0s6i4fXv32kiKmTJ+BBKfs/+6FxhyeAUbhJNs5AgHB9SR
+         MHQeSLY57blSrs2klcMclZ/INc1D10+LRVWT58DTgEXGPzB5z2qCcQx9qhbBgeoCg0SY
+         f64UsfGvzVSPxmCONXHdCZzKOmTwQdwv1yKZXYM/6+mh1O4fJleiazT8W6IXfmTeIvOw
+         7qsoa1yjndG5McI+gtK2WStk4GLehvIjaEGi13+vyw/2LjxBP4+dNcsnZG+XuL19HED7
+         S+Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCVlrDlsfq3EUx+nlmu5o3Tr8Cujsb4BziTrpjl58pjEtWCCC4gN4JeOgEBTNMGozI8rbyWLFiil65IUFcJhcTjz1xl/1Eo7Ua7Bmvy4
+X-Gm-Message-State: AOJu0YwllrbBJJMNB+XVj7WNUXP1VXXxZbsrH5zK6ZzD7r6B1RWgXvdl
+	NAaRh68kJtXMacQpdNlpgSyhQ2wU2KkWFoOjHfNO0mHearoIACd4iPbNA5ZXb14=
+X-Google-Smtp-Source: AGHT+IEfucJcctzZC8UBvZQeq6f9QZjWkgL5lvSz0lZ62cuXHSgW+76tyPLaKHZwCKmq33V0C3VBOA==
+X-Received: by 2002:a05:600c:5250:b0:413:f3f0:c591 with SMTP id fc16-20020a05600c525000b00413f3f0c591mr1901771wmb.41.1711612882008;
+        Thu, 28 Mar 2024 01:01:22 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.144])
+        by smtp.gmail.com with ESMTPSA id jg5-20020a05600ca00500b00414850d567fsm4609630wmb.1.2024.03.28.01.01.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Mar 2024 01:01:21 -0700 (PDT)
+Message-ID: <c200e87e-1c65-4926-9307-16229e90594e@tuxon.dev>
+Date: Thu, 28 Mar 2024 10:01:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 5LtL_ZPHX62bXERG3HLXtmNbS9LFN_uD
-X-Proofpoint-ORIG-GUID: 5LtL_ZPHX62bXERG3HLXtmNbS9LFN_uD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-28_07,2024-03-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=999 impostorscore=0 spamscore=0 bulkscore=0 mlxscore=0
- lowpriorityscore=0 priorityscore=1501 phishscore=0 malwarescore=0
- adultscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2403210001 definitions=main-2403280052
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 07/13] pinctrl: renesas: pinctrl-rzg2l: Validate power
+ registers for SD and ETH
+Content-Language: en-US
+To: Prabhakar <prabhakar.csengg@gmail.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20240326222844.1422948-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240326222844.1422948-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <20240326222844.1422948-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-IPQ SoCs dont involve RPM in managing NoC related clocks and
-there is no NoC scaling. Linux itself handles these clocks.
-However, these should not be exposed as just clocks and align
-with other Qualcomm SoCs that handle these clocks from a
-interconnect provider.
+Hi, Prabhakar,
 
-Hence include icc provider capability to the gcc node so that
-peripherals can use the interconnect facility to enable these
-clocks.
+On 27.03.2024 00:28, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> 
+> On RZ/V2H(P) SoC, the power registers for SD and ETH do not exist,
+> resulting in invalid register offsets. Ensure that the register offsets
+> are valid before any read/write operations are performed. If the power
+> registers are not available, both SD and ETH will be set to -EINVAL.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  drivers/pinctrl/renesas/pinctrl-rzg2l.c | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> index 348fdccaff72..705372faaeff 100644
+> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> @@ -184,8 +184,8 @@
+>   */
+>  struct rzg2l_register_offsets {
+>  	u16 pwpr;
+> -	u16 sd_ch;
+> -	u16 eth_poc;
+> +	int sd_ch;
+> +	int eth_poc;
+>  };
+>  
+>  /**
+> @@ -2567,8 +2567,10 @@ static int rzg2l_pinctrl_suspend_noirq(struct device *dev)
+>  	rzg2l_pinctrl_pm_setup_dedicated_regs(pctrl, true);
+>  
+>  	for (u8 i = 0; i < 2; i++) {
+> -		cache->sd_ch[i] = readb(pctrl->base + SD_CH(regs->sd_ch, i));
+> -		cache->eth_poc[i] = readb(pctrl->base + ETH_POC(regs->eth_poc, i));
+> +		if (regs->sd_ch != -EINVAL)
 
-Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
----
-v2: Fix include file order
-    Move to separate patch
----
- arch/arm64/boot/dts/qcom/ipq9574.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+As of my knowledge, the current users of this driver uses SD and ETH
+offsets different from zero. To avoid populating these values for all the
+SoCs and avoid increasing the size of these fields I think you can add
+checks like these:
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-index 7f2e5cbf3bbb..5b3e69379b1f 100644
---- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-@@ -8,6 +8,7 @@
- 
- #include <dt-bindings/clock/qcom,apss-ipq.h>
- #include <dt-bindings/clock/qcom,ipq9574-gcc.h>
-+#include <dt-bindings/interconnect/qcom,ipq9574.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset/qcom,ipq9574-gcc.h>
- #include <dt-bindings/thermal/thermal.h>
-@@ -306,6 +307,7 @@ gcc: clock-controller@1800000 {
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
- 			#power-domain-cells = <1>;
-+			#interconnect-cells = <1>;
- 		};
- 
- 		tcsr_mutex: hwlock@1905000 {
--- 
-2.34.1
+if (regs->sd_ch)
+	// set sd_ch
 
+
+Same for the rest.
+
+> +			cache->sd_ch[i] = readb(pctrl->base + SD_CH(regs->sd_ch, i));
+> +		if (regs->eth_poc != -EINVAL)
+> +			cache->eth_poc[i] = readb(pctrl->base + ETH_POC(regs->eth_poc, i));
+>  	}
+>  
+>  	cache->qspi = readb(pctrl->base + QSPI);
+> @@ -2599,8 +2601,10 @@ static int rzg2l_pinctrl_resume_noirq(struct device *dev)
+>  	writeb(cache->qspi, pctrl->base + QSPI);
+>  	writeb(cache->eth_mode, pctrl->base + ETH_MODE);
+>  	for (u8 i = 0; i < 2; i++) {
+> -		writeb(cache->sd_ch[i], pctrl->base + SD_CH(regs->sd_ch, i));
+> -		writeb(cache->eth_poc[i], pctrl->base + ETH_POC(regs->eth_poc, i));
+> +		if (regs->sd_ch != -EINVAL)
+> +			writeb(cache->sd_ch[i], pctrl->base + SD_CH(regs->sd_ch, i));
+> +		if (regs->eth_poc != -EINVAL)
+> +			writeb(cache->eth_poc[i], pctrl->base + ETH_POC(regs->eth_poc, i));
+>  	}
+>  
+>  	rzg2l_pinctrl_pm_setup_pfc(pctrl);
