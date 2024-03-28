@@ -1,171 +1,233 @@
-Received: from fout6-smtp.messagingengine.com (fout6-smtp.messagingengine.com [103.168.172.149])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A118C53E28;
-	Thu, 28 Mar 2024 10:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2963D7D081;
+	Thu, 28 Mar 2024 10:09:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711620553; cv=none; b=EnaqEe2QUFIs8TC+WICkGDZbH4V8VpB9vOelr1DsNs9YtqAYOAIa/mBICx9YxJiwnEsxPvQS5vlFEWVUmlAvKQsRXykysudS9WqM7sEUZDvolOSPnv30jAG5PYAtHA2x8d5p0M4iPkY+BywZmg8+n+hp/he8ZVLTlPQr3XoCr1o=
+	t=1711620569; cv=none; b=qy5MBRcAjhp1o24I0fydco5Bt+6k/teZMv+Kok4OATLg+TiYSg1iSeWD1q2HGKG+l4Zpq1QV4nzis7SGy+1JLQfe4pjAzmnd5cJPAADjGdPrg+MZQRmHHZV6MBUxVhgVNZyxt/kqmxWpwYTUsmJS+bEnNcm1KsBN6mmyNNEgc9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711620553; c=relaxed/simple;
-	bh=rjRj8lT9t8c0kTmFFh6anVK23ZDO/NaAc4KKhIVP/Dg=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=pgza2ybZzsFYyiDRMB00k8z+4gp+4nQ1/S3jErV3GuJ8R3SVhCGZn6iVeaacnIEWLdEE88n1HW1qqaHtFNDNDsP2T97nvLBlcTVTE6YnPn5VsxT50sYycS3D4MZCd64kB66n5ZcCtiHH575KJwjfztDT1XdLN/SnYNC1oghyDb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=kuMfx8bc; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=E7CyJ3/s; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1711620569; c=relaxed/simple;
+	bh=vWXeQU2KQO42RPmw/5gfcrKLDwqxa+yTVOBVA9d+7Jo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ohHUCwIwz3/Ddmbf2b23hKTrKCbENOBTjJpqcWZiFkdHx72eb/sTvjQganP8zgCGGY7C59TKPrY+T9CAYw9GZ86T0JUj8snGc6xXRg37TgygSOou65bAsXHXUnc2K8xB9jpI6Kg4hTZJWHmTO51deXC6jO3Gula3Wqm/vL6vGFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hiDYjDdc; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="kuMfx8bc";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="E7CyJ3/s"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 93C1413800CC;
-	Thu, 28 Mar 2024 06:09:10 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 28 Mar 2024 06:09:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1711620550; x=1711706950; bh=pYBjGEQadh
-	25rkMc0fkoc5Y7p79L1tP3xKDkS0IogRA=; b=kuMfx8bc1R4WUipcKL3tIzF3N4
-	t3zOBlcnNWDIjDe7ipHZ2vdT8gjFEPI1e+ODQbTkh7dUk5LNLdH719riG/7S23u9
-	309OowkR1D0rX5rjd1oDDkcNZe/zfRVVl/h7s7JfZ0aDU1bPjSm0hIEnzbFG9z5d
-	fZQs/LIhA7ZaDgthlMZZPByr7T+nIaqNafh0zRk/d9JNzTnIwNM75wPeatuGsvJu
-	Vq9S8uOTkkaEMlwp3RXo+JBYMzLwFYLCKo/A1UzzbQWuBCuXekHkJzt6XPQ8TNq0
-	tQYhv/S7h0++y+XLR2ohIzKvK/W4GKBW0sO7O0tHfshYhs7bYX0yHfgvb/2A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1711620550; x=1711706950; bh=pYBjGEQadh25rkMc0fkoc5Y7p79L
-	1tP3xKDkS0IogRA=; b=E7CyJ3/sS3/gu76u1633stL9057wQIWYvG9vs6NHo239
-	7KFVH5M+YFwRBpbadfOh0IrOE9j4E7XE2sRBAIPKToAbDSVOK/ax1a0sOrbNo1ee
-	HE2lX3ra68I5G6+wDY65qsdnqLej3HDSJFNyvB6/pL9He2U4fdOMxGYaZ0mva4gx
-	tJF6Lfvk2fEXAm0uFD9oIE3EiQrZhWq8TW2d9nb3vmsns61RTvDrPIxeT4GFvMi/
-	wMG6FliHZtmYgvC6R+hGoAU23GBHUBuECiPfrHriLa5i6tczRd0gr63KSOr/UuG+
-	wWszyTwz22LUBqLfZhgf0rb6euQgm1MTKFDblo6DTg==
-X-ME-Sender: <xms:xEEFZolFPnT81Y-rndenCatO24lANcXwvUAv5AbEcS6B-fVcESzGpg>
-    <xme:xEEFZn3NPqHUVb1AhRyUqb5lXl84u2sw1P5dnDZdhqRie4xQImtwjSJc52BIh0l55
-    tLPsrk9hiHSfeAkQ-U>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudduledgudduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:xEEFZmok-OCemU4JAF5NU7jOeDZ0210zw_dLM7C15bHf57_OfZn3fQ>
-    <xmx:xEEFZkkp-nxlq4w1XAeOI--fNjf8CgUJC5qdXlw0QOLYa6255LvI2g>
-    <xmx:xEEFZm3uKpGPWEVtVjuP0m1GHYswkywEhk7aH97h7ry4lumVs3mO8w>
-    <xmx:xEEFZrsO4DTwAwnWN8Y9emNtvmcbBvklHjtDyl9-an0DJHfoFqkixQ>
-    <xmx:xkEFZk17tDydakQ4cViz-gWKfkvwjCrZ3ZRO6zwIJ5CzvibKhGcP5g>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id E6410B6008D; Thu, 28 Mar 2024 06:09:07 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-333-gbfea15422e-fm-20240327.001-gbfea1542
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hiDYjDdc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711620567; x=1743156567;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=vWXeQU2KQO42RPmw/5gfcrKLDwqxa+yTVOBVA9d+7Jo=;
+  b=hiDYjDdcRAzSwJi60fI2LzFOZtr9Vyad3QbULwUBnDbrHTjbL58uvr+O
+   p5vqeslBMjju34eT03zxrGF+yzitwUzlcWGUNdq4Ue288ya3PqlyDsBjm
+   Eu+HY9WvNAQeZt5va6Sj2Ua3Jcj6CVp7p+J4gq8O4IDvNBL3yFv/QiM/I
+   KNSCjU4E3LG4ZoxgzpZFSfLMOxLEBIGVrJ48el16Lnu2ZbhQZY6vCKuH+
+   tBDZ+2Rwf1blXpa/ybXHxi0OQ79VnCcsD2hV2SYUm16A9KWgd20j8UknG
+   11E7vp7Jm224YKwXVLP1LYLwJ/0eapz093gI0waC/Uc4WzoB0SM5t9AIv
+   A==;
+X-CSE-ConnectionGUID: gR8vQ817Rba2RpoFp+XlzQ==
+X-CSE-MsgGUID: FvvGUwmhQ0y90fPjtBaKEQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="6622487"
+X-IronPort-AV: E=Sophos;i="6.07,161,1708416000"; 
+   d="scan'208";a="6622487"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 03:09:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,161,1708416000"; 
+   d="scan'208";a="21322227"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.125.242.198]) ([10.125.242.198])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 03:09:23 -0700
+Message-ID: <e230e2e2-9b51-4ad7-bbc5-a90e6d169e92@linux.intel.com>
+Date: Thu, 28 Mar 2024 18:09:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <2e9257af-c123-406b-a189-eaebeecc1d71@app.fastmail.com>
-In-Reply-To: <ZgUGXTKPVhrA1tam@matsya>
-References: <20240327160314.9982-1-apais@linux.microsoft.com>
- <20240327160314.9982-3-apais@linux.microsoft.com> <ZgUGXTKPVhrA1tam@matsya>
-Date: Thu, 28 Mar 2024 11:08:47 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Vinod Koul" <vkoul@kernel.org>, "Allen Pais" <apais@linux.microsoft.com>
-Cc: linux-kernel@vger.kernel.org, "Tejun Heo" <tj@kernel.org>,
- "Kees Cook" <keescook@chromium.org>, "Hector Martin" <marcan@marcan.st>,
- "Sven Peter" <sven@svenpeter.dev>,
- "Florian Fainelli" <florian.fainelli@broadcom.com>,
- "Ray Jui" <rjui@broadcom.com>, "Scott Branden" <sbranden@broadcom.com>,
- "Paul Cercueil" <paul@crapouillou.net>, Eugeniy.Paltsev@synopsys.com,
- "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
- "Viresh Kumar" <vireshk@kernel.org>, "Frank Li" <Frank.Li@nxp.com>,
- "Leo Li" <leoyang.li@nxp.com>, zw@zh-kernel.org,
- "Zhou Wang" <wangzhou1@hisilicon.com>, haijie1@huawei.com,
- "Shawn Guo" <shawnguo@kernel.org>,
- "Sascha Hauer" <s.hauer@pengutronix.de>,
- "Sean Wang" <sean.wang@mediatek.com>,
- "Matthias Brugger" <matthias.bgg@gmail.com>,
- "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>,
- =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, logang@deltatee.com,
- "Daniel Mack" <daniel@zonque.org>,
- "Haojian Zhuang" <haojian.zhuang@gmail.com>,
- "Robert Jarzmik" <robert.jarzmik@free.fr>,
- "Bjorn Andersson" <andersson@kernel.org>,
- "Konrad Dybcio" <konrad.dybcio@linaro.org>,
- "Orson Zhai" <orsonzhai@gmail.com>,
- "Baolin Wang" <baolin.wang@linux.alibaba.com>,
- "Chunyan Zhang" <zhang.lyra@gmail.com>,
- "Patrice Chotard" <patrice.chotard@foss.st.com>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Chen-Yu Tsai" <wens@csie.org>,
- "Jernej Skrabec" <jernej.skrabec@gmail.com>, peter.ujfalusi@gmail.com,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- "Haiyang Zhang" <haiyangz@microsoft.com>, "Wei Liu" <wei.liu@kernel.org>,
- "Dexuan Cui" <decui@microsoft.com>,
- "Jassi Brar" <jassisinghbrar@gmail.com>,
- "Mauro Carvalho Chehab" <mchehab@kernel.org>,
- maintainers@bluecherrydvr.com, aubin.constans@microchip.com,
- "Ulf Hansson" <ulf.hansson@linaro.org>,
- "Manuel Lauss" <manuel.lauss@gmail.com>,
- =?UTF-8?Q?Micha=C5=82_Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
- "jh80.chung" <jh80.chung@samsung.com>, oakad@yahoo.com,
- "Kunihiko Hayashi" <hayashi.kunihiko@socionext.com>,
- "Masami Hiramatsu" <mhiramat@kernel.org>, brucechang@via.com.tw,
- HaraldWelte@viatech.com, pierre@ossman.eu, duncan.sands@free.fr,
- "Alan Stern" <stern@rowland.harvard.edu>,
- "Oliver Neukum" <oneukum@suse.com>,
- openipmi-developer@lists.sourceforge.net, dmaengine@vger.kernel.org,
- asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-rpi-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
- imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-mediatek@lists.infradead.org, linux-actions@lists.infradead.org,
- linux-arm-msm@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-media@vger.kernel.org,
- "linux-mmc @ vger . kernel . org" <linux-mmc@vger.kernel.org>,
- Linux-OMAP <linux-omap@vger.kernel.org>,
- Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
- linux-s390@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
- linux-usb@vger.kernel.org
-Subject: Re: [PATCH 2/9] dma: Convert from tasklet to BH workqueue
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [kvm-unit-tests Patch v3 04/11] x86: pmu: Switch instructions and
+ core cycles events sequence
+Content-Language: en-US
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Jim Mattson <jmattson@google.com>,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Zhenyu Wang <zhenyuw@linux.intel.com>, Zhang Xiong
+ <xiong.y.zhang@intel.com>, Like Xu <like.xu.linux@gmail.com>,
+ Jinrong Liang <cloudliang@tencent.com>, Dapeng Mi <dapeng1.mi@intel.com>
+References: <20240103031409.2504051-1-dapeng1.mi@linux.intel.com>
+ <20240103031409.2504051-5-dapeng1.mi@linux.intel.com>
+ <ZgOwVvTVlvk3iN3x@google.com>
+ <c838c85e-c448-4f83-a79f-deb20c6aaf90@linux.intel.com>
+ <ZgRSBITQNIRIgu8N@google.com>
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <ZgRSBITQNIRIgu8N@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 28, 2024, at 06:55, Vinod Koul wrote:
-> On 27-03-24, 16:03, Allen Pais wrote:
->> The only generic interface to execute asynchronously in the BH context is
->> tasklet; however, it's marked deprecated and has some design flaws. To
->> replace tasklets, BH workqueue support was recently added. A BH workqueue
->> behaves similarly to regular workqueues except that the queued work items
->> are executed in the BH context.
+
+On 3/28/2024 1:06 AM, Mingwei Zhang wrote:
+> On Wed, Mar 27, 2024, Mi, Dapeng wrote:
+>> On 3/27/2024 1:36 PM, Mingwei Zhang wrote:
+>>> On Wed, Jan 03, 2024, Dapeng Mi wrote:
+>>>> When running pmu test on SPR, sometimes the following failure is
+>>>> reported.
+>>>>
+>>>> PMU version:         2
+>>>> GP counters:         8
+>>>> GP counter width:    48
+>>>> Mask length:         8
+>>>> Fixed counters:      3
+>>>> Fixed counter width: 48
+>>>> 1000000 <= 55109398 <= 50000000
+>>>> FAIL: Intel: core cycles-0
+>>>> 1000000 <= 18279571 <= 50000000
+>>>> PASS: Intel: core cycles-1
+>>>> 1000000 <= 12238092 <= 50000000
+>>>> PASS: Intel: core cycles-2
+>>>> 1000000 <= 7981727 <= 50000000
+>>>> PASS: Intel: core cycles-3
+>>>> 1000000 <= 6984711 <= 50000000
+>>>> PASS: Intel: core cycles-4
+>>>> 1000000 <= 6773673 <= 50000000
+>>>> PASS: Intel: core cycles-5
+>>>> 1000000 <= 6697842 <= 50000000
+>>>> PASS: Intel: core cycles-6
+>>>> 1000000 <= 6747947 <= 50000000
+>>>> PASS: Intel: core cycles-7
+>>>>
+>>>> The count of the "core cycles" on first counter would exceed the upper
+>>>> boundary and leads to a failure, and then the "core cycles" count would
+>>>> drop gradually and reach a stable state.
+>>>>
+>>>> That looks reasonable. The "core cycles" event is defined as the 1st
+>>>> event in xxx_gp_events[] array and it is always verified at first.
+>>>> when the program loop() is executed at the first time it needs to warm
+>>>> up the pipeline and cache, such as it has to wait for cache is filled.
+>>>> All these warm-up work leads to a quite large core cycles count which
+>>>> may exceeds the verification range.
+>>>>
+>>>> The event "instructions" instead of "core cycles" is a good choice as
+>>>> the warm-up event since it would always return a fixed count. Thus
+>>>> switch instructions and core cycles events sequence in the
+>>>> xxx_gp_events[] array.
+>>> The observation is great. However, it is hard to agree that we fix the
+>>> problem by switching the order. Maybe directly tweaking the N from 50 to
+>>> a larger value makes more sense.
+>>>
+>>> Thanks.
+>>> -Mingwei
+>> yeah, a larger upper boundary can fix the fault as well, but the question is
+>> how large it would be enough. For different CPU model, the needed cycles
+>> could be different for warming up. So we may have to set a quite large upper
+>> boundary but a large boundary would decrease credibility of this validation.
+>> Not sure which one is better. Any inputs from other ones?
+>>
+> Just checked with an expert from our side, so "core cycles" (0x003c)
+> is affected the current CPU state/frequency, ie., its counting value
+> could vary largely. In that sense, "warming" up seems reasonable.
+> However, switching the order would be a terrible idea for maintanence
+> since people will forget it and the problem will come back.
 >
-> Thanks for conversion, am happy with BH alternative as it helps in
-> dmaengine where we need shortest possible time between tasklet and
-> interrupt handling to maximize dma performance
+>  From another perspective, "warming" up seems just a best effort. Nobody
+> knows how warm is really warm. Besides, some systems might turn off some
+> C-State and may set a cap on max turbo frequency. All of these will
+> directly affect the warm-up process and the counting result of 0x003c.
+>
+> So, while adding a warm-up blob is reasonable, tweaking the heuristics
+> seems to be same for me. Regarding the value, I think I will rely on
+> your experiments and observation.
 
-I still feel that we want something different for dmaengine,
-at least in the long run. As we have discussed in the past,
-the tasklet context in these drivers is what the callbacks
-from the dma client device is run in, and a lot of these probably
-want something other than tasklet context, e.g. just call
-complete() on a client-provided completion structure.
+Per my understanding, most of extra cpu cycles should come from the warm 
+up for cache. If we don't want to change the validation order,  it may 
+be doable to add an extra warm-up phase before starting the validation. 
+Thus we don't need to enlarge the upper boundary. It looks not a 
+preferred way since it would decrease the credibility of the validation.
 
-Instead of open-coding the use of the system_bh_wq in each
-dmaengine, how about we start with a custom WQ_BH
-specifically for the dmaengine subsystem and wrap them
-inside of another interface.
+Let me try to add a warm-up phase first and check if it works as expect.
 
-Since almost every driver associates the tasklet with the
-dma_chan, we could go one step further and add the
-work_queue structure directly into struct dma_chan,
-with the wrapper operating on the dma_chan rather than
-the work_queue.
 
-      Arnd
+>
+> Thanks.
+> -Mingwei
+>>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>>>> ---
+>>>>    x86/pmu.c | 16 ++++++++--------
+>>>>    1 file changed, 8 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/x86/pmu.c b/x86/pmu.c
+>>>> index a42fff8d8b36..67ebfbe55b49 100644
+>>>> --- a/x86/pmu.c
+>>>> +++ b/x86/pmu.c
+>>>> @@ -31,16 +31,16 @@ struct pmu_event {
+>>>>    	int min;
+>>>>    	int max;
+>>>>    } intel_gp_events[] = {
+>>>> -	{"core cycles", 0x003c, 1*N, 50*N},
+>>>>    	{"instructions", 0x00c0, 10*N, 10.2*N},
+>>>> +	{"core cycles", 0x003c, 1*N, 50*N},
+>>>>    	{"ref cycles", 0x013c, 1*N, 30*N},
+>>>>    	{"llc references", 0x4f2e, 1, 2*N},
+>>>>    	{"llc misses", 0x412e, 1, 1*N},
+>>>>    	{"branches", 0x00c4, 1*N, 1.1*N},
+>>>>    	{"branch misses", 0x00c5, 0, 0.1*N},
+>>>>    }, amd_gp_events[] = {
+>>>> -	{"core cycles", 0x0076, 1*N, 50*N},
+>>>>    	{"instructions", 0x00c0, 10*N, 10.2*N},
+>>>> +	{"core cycles", 0x0076, 1*N, 50*N},
+>>>>    	{"branches", 0x00c2, 1*N, 1.1*N},
+>>>>    	{"branch misses", 0x00c3, 0, 0.1*N},
+>>>>    }, fixed_events[] = {
+>>>> @@ -307,7 +307,7 @@ static void check_counter_overflow(void)
+>>>>    	int i;
+>>>>    	pmu_counter_t cnt = {
+>>>>    		.ctr = MSR_GP_COUNTERx(0),
+>>>> -		.config = EVNTSEL_OS | EVNTSEL_USR | gp_events[1].unit_sel /* instructions */,
+>>>> +		.config = EVNTSEL_OS | EVNTSEL_USR | gp_events[0].unit_sel /* instructions */,
+>>>>    	};
+>>>>    	overflow_preset = measure_for_overflow(&cnt);
+>>>> @@ -365,11 +365,11 @@ static void check_gp_counter_cmask(void)
+>>>>    {
+>>>>    	pmu_counter_t cnt = {
+>>>>    		.ctr = MSR_GP_COUNTERx(0),
+>>>> -		.config = EVNTSEL_OS | EVNTSEL_USR | gp_events[1].unit_sel /* instructions */,
+>>>> +		.config = EVNTSEL_OS | EVNTSEL_USR | gp_events[0].unit_sel /* instructions */,
+>>>>    	};
+>>>>    	cnt.config |= (0x2 << EVNTSEL_CMASK_SHIFT);
+>>>>    	measure_one(&cnt);
+>>>> -	report(cnt.count < gp_events[1].min, "cmask");
+>>>> +	report(cnt.count < gp_events[0].min, "cmask");
+>>>>    }
+>>>>    static void do_rdpmc_fast(void *ptr)
+>>>> @@ -446,7 +446,7 @@ static void check_running_counter_wrmsr(void)
+>>>>    	uint64_t count;
+>>>>    	pmu_counter_t evt = {
+>>>>    		.ctr = MSR_GP_COUNTERx(0),
+>>>> -		.config = EVNTSEL_OS | EVNTSEL_USR | gp_events[1].unit_sel,
+>>>> +		.config = EVNTSEL_OS | EVNTSEL_USR | gp_events[0].unit_sel,
+>>>>    	};
+>>>>    	report_prefix_push("running counter wrmsr");
+>>>> @@ -455,7 +455,7 @@ static void check_running_counter_wrmsr(void)
+>>>>    	loop();
+>>>>    	wrmsr(MSR_GP_COUNTERx(0), 0);
+>>>>    	stop_event(&evt);
+>>>> -	report(evt.count < gp_events[1].min, "cntr");
+>>>> +	report(evt.count < gp_events[0].min, "cntr");
+>>>>    	/* clear status before overflow test */
+>>>>    	if (this_cpu_has_perf_global_status())
+>>>> @@ -493,7 +493,7 @@ static void check_emulated_instr(void)
+>>>>    	pmu_counter_t instr_cnt = {
+>>>>    		.ctr = MSR_GP_COUNTERx(1),
+>>>>    		/* instructions */
+>>>> -		.config = EVNTSEL_OS | EVNTSEL_USR | gp_events[1].unit_sel,
+>>>> +		.config = EVNTSEL_OS | EVNTSEL_USR | gp_events[0].unit_sel,
+>>>>    	};
+>>>>    	report_prefix_push("emulated instruction");
+>>>> -- 
+>>>> 2.34.1
+>>>>
