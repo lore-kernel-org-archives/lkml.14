@@ -1,128 +1,203 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A56981AB1
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 14:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998E7127B67
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 14:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711636760; cv=none; b=ly4lhq096xS2plvgSM15jTesgaWuno8CNOPK+2IsD3vR+RigBcRjB2OYmySxjlKwDJmi3q6hiOtx/z7ocnPoHJbL8xeXmmCJPLOEniAGgOxyuU5Uf2Kn2jwP5dpH8ZhM1N4QAskBBPV4vZanuAtLN9LaT+xbfwfdZRZlP1sq46s=
+	t=1711636949; cv=none; b=i82Ycwt/vG+FSuTvAUgKHjTF4z/+dRcZM32g+HRaYHwwZGyRoQvEPEdCFk3IRxt7rYxxzrmHUaloEm9GtxQzZle380XmcxHzfFD0JyHHLm3WhrqgNyKEoF7iwuNrxgxAmHIbxwOgzh6eM0nE2Zvhion2NXSMEdyOsVpw1nrQBS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711636760; c=relaxed/simple;
-	bh=Ru308I4dDHQiIDd0ZiPEniDzXfl3CyUPaMxijJK+YwI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lQL0yhAcfb6sMT/HSCpS6eAXTeDU6W379fl+6PPTSN7BAXZCz0lxuaInlxWa/Z8vUu/JFZDehvkgFKk+U6hkUjAqTiakHP6foI8OWYow9fI12OKLMopVfL++2IzWWVbUtKqCa+L+SjmgKxy87PkuJbfeYACfR3yVdTzOfNYAdY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fY+4BPeN; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711636949; c=relaxed/simple;
+	bh=Gc8satM/FTCQ1mZJea9kW64b0UoXxa5bHnts8j6XkdI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u6bIxt0uaK8Pz/nJrQSnghCdRIamdybykZjI1c7E0kBQ8VGYFFWooWByhDqQL+x8tHuGjNU7FAZ3asjaKBP5p1LdJzNgo8jYCw0tGKZrMAHF1Fz/QTS/ENWk9GS5XsswsZ4R99MozfEcX/WAqKShi1MkM4yS/aFKl9CPXX7tSy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Uj3GWBEf; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fY+4BPeN"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a44f2d894b7so128522566b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 07:39:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Uj3GWBEf"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5dbd519bde6so719831a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 07:42:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711636756; x=1712241556; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=kaCBaHT7hXldldYcPC8G9uij87AF1KjDiODyYjR9hp0=;
-        b=fY+4BPeNsU2XsdlfAFI7zNmN/jwpmZeXCORa39REAyNEO2Xbg3jAPZ/XTUV5ejoPQv
-         RYs5hcUqIcaoCKdHQ1Zz0BX8QaJ563L5nBjyMmXBXWSx5JDHTnos84DHxPAOKssrTtz4
-         UxBXLZsaVa799pghmzT7y2230UwYeL79vtWSgbaK7n6XQmoVqtDiz2ULQElxVgk0bo56
-         5EkMQeJ7o58xLbRoHxa6GeMWpXXKNZ8jlCu9WkYYsdor8sle5DLyHKECDGXHxrrtlABK
-         gDnHF632qMg1Qvp3DcufurD0wB1e4SboKKgTxNupo2rqg6lBqKTbs1/p7WoWA1/vN/LR
-         uvSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711636756; x=1712241556;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=bytedance.com; s=google; t=1711636945; x=1712241745; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kaCBaHT7hXldldYcPC8G9uij87AF1KjDiODyYjR9hp0=;
-        b=DfuvUF7xKhWB2MlByXCOJ7e4xTJgR+rLR5rlx5ZvmlIv7tW5w2eqk1XJtrJKBktvfU
-         m34NjbAUpAz6db1gioIG7mPTUOIxwZqiB7sTgMWyMesdTmENtEqPZsI4UgCb+KZn7fxD
-         ZhDZtqKU9sBGLF4bJo1/qhez1TDzw1NGmAyyDsB1DhcerSTMBXgs2o0OdwwIoDa6v0Kp
-         vJEAQO+cmZfHI2aT6QzImrH/emRnGoWLQqRhTZZS7ONF2LHOjHeObyugP/xmfBPM2sNq
-         PL2MYZriR/9AiUGkZ564E93VpnqxgL1ijC26v7XzG5bTQeOZN7VtISXh2t76LMiLCWtI
-         vrIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU52Aq/P6Xsp2z/0EueGM/8PizsqtVCIb8b7+QPiRXO41M32ZCaWQrq1wOHS4MFcwoOhe98lsqBkYDCpUEnEVnaeGxo1nwOTAow6vGH
-X-Gm-Message-State: AOJu0YzxVj8I5SSM8PyRScvEFu94k5AFjrz55oXkqTkg/3G3hji4ZB6A
-	yyLcwvroRZAefbceX5cLDdrOnrTa5bywaqJta0sdWkk2/GOqBYisyuJVzK+XDLU=
-X-Google-Smtp-Source: AGHT+IG5ySbk25KDg1IH7yUwoP5tNphiX6f6ec9FGdW4V/pSvWueZlNdwyorw/Ub0Cs2Qi+Xd7vkvQ==
-X-Received: by 2002:a17:907:b9c8:b0:a4e:2ac2:bb26 with SMTP id xa8-20020a170907b9c800b00a4e2ac2bb26mr432053ejc.1.1711636756566;
-        Thu, 28 Mar 2024 07:39:16 -0700 (PDT)
-Received: from [192.168.92.47] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
-        by smtp.gmail.com with ESMTPSA id d6-20020a1709063ec600b00a474c3c2f9dsm817982ejj.38.2024.03.28.07.39.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Mar 2024 07:39:16 -0700 (PDT)
-Message-ID: <ca4ed5e3-32ea-451a-82ca-25fba07877dc@linaro.org>
-Date: Thu, 28 Mar 2024 15:39:14 +0100
+        bh=zOp5govZZQSJRzD95rrhGtQGcUj+k1AZvhk4Bdb7Q3s=;
+        b=Uj3GWBEfDEWNV6Q9ppTZHPzRDEPC9fxtMAqn1djsqbVx20F79rNmK5bgA+C8ycXzbU
+         oEFFP/gogMOePAlDaU9sVoBoNebgesz3ut+o36ul5HOYBJMd8FDxSpMcBn1jKhPVMvtM
+         DOdpDn/ex6muGP4REazyeb/Gp3+Vf6TU9sEauM9bIcCGDUYSn/p3IKSRnP+fMBS21t5i
+         /qa1vZpEOYBTcSQHBpW+JtgJaF1zEFiESDT0I/7Bw21YTEoLdZ5ZsbLSsNzml8/LiCyi
+         1le6TYrKh/3U7j84SubQtc6js3WFKAVLHZd+ZVJrYF1zJM3z31z5W0BC5+zFqi3Zp6l5
+         1w2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711636945; x=1712241745;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zOp5govZZQSJRzD95rrhGtQGcUj+k1AZvhk4Bdb7Q3s=;
+        b=eF1yp+1Ml9ePkLYchjC5FJWOsBRSiuItmxbzTgojUmevvXEldUtDiqRsRWhzdew/ZJ
+         88fjFJ5BGaH1eoZ0P2u7xw0yCEzF7589AzXcQGtoGZOezjQ9COij19s//lNhCRHFt6v/
+         4gkqCm4h8TQEnt4BUF6EFcAcn+Nl0+YI8EfaY3HK6Z7J5I5BHnb9sxe00o4bYW3hZfHR
+         QJClWUhSiNVnZty1ioH3XKtdwZVFBUJPZPqdsdXpjAbgFXnGqT4wDhs+XsBpz4LRi+Iy
+         BFV71ltSQ/vg4YBQacrZkmoLyPP9R5xdYzGRVtR6Puko54Gma2XDhf6iBmaC4DWpA6Wk
+         oTjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUXWLSfN1QnqPI2HmHMilcfg15BZVyg4jLsIHWWJirxwOBnvb9imbQoZMJu0CI/oNj8qDloABXWY7gB7u8vbhQJ4VK9QbAz+pMzPaL7
+X-Gm-Message-State: AOJu0YxuL+OtN7JSkiGKMULl6xlIfJYlpFeNUxPS9VqOAlS62teaMGN9
+	c1FnnBe/lHzzPBY60FzhGKY5oSsiB6g41bVIVP7TACF2satNio7A7zMVTMCExUZ3kWTVvlMmfn1
+	isK+nkLxvID/pfVYgR6edopzan2tTFeuBUkImGw==
+X-Google-Smtp-Source: AGHT+IHIvCiL9/viH3Zv87RhUz8r9B/nNMpWCgwAx/ZU6AQHkrpwzseaugUZlw+S2sSjSOL/j/AgVGUngrHrFzkoTBM=
+X-Received: by 2002:a17:90a:d481:b0:2a2:88d:19d9 with SMTP id
+ s1-20020a17090ad48100b002a2088d19d9mr1331992pju.1.1711636945073; Thu, 28 Mar
+ 2024 07:42:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: arm: qcom: Add Samsung Galaxy Z Fold5
-To: serdeliuk@yahoo.com, Bjorn Andersson <andersson@kernel.org>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240328-dt-bindings-arm-qcom-add-support-for-samsung-galaxy-zfold5-v1-1-cb612e3ade18@yahoo.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <20240328-dt-bindings-arm-qcom-add-support-for-samsung-galaxy-zfold5-v1-1-cb612e3ade18@yahoo.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240311093526.1010158-1-dongmenglong.8@bytedance.com>
+ <20240311093526.1010158-2-dongmenglong.8@bytedance.com> <CAADnVQKQPS5NcvEouH4JqZ2fKgQAC+LtcwhX9iXYoiEkF_M94Q@mail.gmail.com>
+ <CALz3k9i5G5wWi+rtvHPwVLOUAXVMCiU_8QUZs87TEYgR_0wpPA@mail.gmail.com>
+ <CAADnVQJ_ZCzMmT1aBsNXEBFfYNSVBdBXmLocjR0PPEWtYQrQFw@mail.gmail.com>
+ <CALz3k9icPePb0c4FE67q=u1U0hrePorN9gDpQrKTR_sXbLMfDA@mail.gmail.com>
+ <CAADnVQLwgw8bQ7OHBbqLhcPJ2QpxiGw3fkMFur+2cjZpM_78oA@mail.gmail.com>
+ <CALz3k9g9k7fEwdTZVLhrmGoXp8CE47Q+83r-AZDXrzzuR+CjVA@mail.gmail.com>
+ <CAADnVQLHpi3J6cBJ0QBgCQ2aY6fWGnVvNGdfi3W-jmoa9d1eVQ@mail.gmail.com> <CALz3k9g-U8ih=ycJPRbyU9x_9cp00fNkU3PGQ6jP0WJ+=uKmqQ@mail.gmail.com>
+In-Reply-To: <CALz3k9g-U8ih=ycJPRbyU9x_9cp00fNkU3PGQ6jP0WJ+=uKmqQ@mail.gmail.com>
+From: =?UTF-8?B?5qKm6b6Z6JGj?= <dongmenglong.8@bytedance.com>
+Date: Thu, 28 Mar 2024 22:43:46 +0800
+Message-ID: <CALz3k9jG5Jrqw=BGjt05yMkEF-1u909GbBYrV-02W0dQtm6KQQ@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH bpf-next v2 1/9] bpf: tracing: add support
+ to record and check the accessed args
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Jiri Olsa <jolsa@kernel.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	X86 ML <x86@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Quentin Monnet <quentin@isovalent.com>, 
+	bpf <bpf@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, 
+	Network Development <netdev@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 28.03.2024 3:31 PM, Alexandru Marc Serdeliuc via B4 Relay wrote:
-> From: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
-> 
-> This documents Samsung Galaxy Z Fold5 (samsung,q5q)
-> which is a foldable phone by Samsung based on the sm8550 SoC.
-> 
-> Signed-off-by: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
-> ---
-> This documents Samsung Galaxy Z Fold5 (samsung,q5q)
-> which is a foldable phone by Samsung based on the sm8550 SoC.
-> ---
+On Fri, Mar 15, 2024 at 4:00=E2=80=AFPM =E6=A2=A6=E9=BE=99=E8=91=A3 <dongme=
+nglong.8@bytedance.com> wrote:
+>
+> On Thu, Mar 14, 2024 at 8:27=E2=80=AFAM Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+> >
+> > On Tue, Mar 12, 2024 at 6:53=E2=80=AFPM =E6=A2=A6=E9=BE=99=E8=91=A3 <do=
+ngmenglong.8@bytedance.com> wrote:
+> [......]
+> > > What does "a hundred attachments max" means? Can't I
+> > > trace thousands of kernel functions with a bpf program of
+> > > tracing multi-link?
+> >
+> > I mean what time does it take to attach one program
+> > to 100 fentry-s ?
+> > What is the time for 1k and for 10k ?
+> >
+> > The kprobe multi test attaches to pretty much all funcs in
+> > /sys/kernel/tracing/available_filter_functions
+> > and it's fast enough to run in test_progs on every commit in bpf CI.
+> > See get_syms() in prog_tests/kprobe_multi_test.c
+> >
+> > Can this new multi fentry do that?
+> > and at what speed?
+> > The answer will decide how applicable this api is going to be.
+> > Generating different trampolines for every attach point
+> > is an approach as well. Pls benchmark it too.
+>
+> I see. Creating plenty of trampolines does take a lot of time,
+> and I'll do testing on it.
+>
 
-That's very welcome, but are you going to submit a devicetree for it?
+I have done a simple benchmark on creating 1000
+trampolines. It is slow, quite slow, which consume up to
+60s. We can't do it this way.
 
-Konrad
+Now, I have a bad idea. How about we introduce
+a "dynamic trampoline"? The basic logic of it can be:
+
+"""
+save regs
+bpfs =3D trampoline_lookup_ip(ip)
+fentry =3D bpfs->fentries
+while fentry:
+  fentry(ctx)
+  fentry =3D fentry->next
+
+call origin
+save return value
+
+fexit =3D bpfs->fexits
+while fexit:
+  fexit(ctx)
+  fexit =3D fexit->next
+
+xxxxxx
+"""
+
+And we lookup the "bpfs" by the function ip in a hash map
+in trampoline_lookup_ip. The type of "bpfs" is:
+
+struct bpf_array {
+  struct bpf_prog *fentries;
+ struct bpf_prog *fexits;
+  struct bpf_prog *modify_returns;
+}
+
+When we need to attach the bpf progA to function A/B/C,
+we only need to create the bpf_arrayA, bpf_arrayB, bpf_arrayC
+and add the progA to them, and insert them to the hash map
+"direct_call_bpfs", and attach the "dynamic trampoline" to
+A/B/C. If bpf_arrayA exist, just add progA to the tail of
+bpf_arrayA->fentries. When we need to attach progB to
+B/C, just add progB to bpf_arrayB->fentries and
+bpf_arrayB->fentries.
+
+Compared to the trampoline, extra overhead is introduced
+by the hash lookuping.
+
+I have not begun to code yet, and I am not sure the overhead is
+acceptable. Considering that we also need to do hash lookup
+by the function in kprobe_multi, maybe the overhead is
+acceptable?
+
+Thanks!
+Menglong Dong
+
+> >
+> > > >
+> > > > Let's step back.
+> [......]
+> >
+> > For one trampoline to handle all attach points we might
+> > need some arch support, but we can start simple.
+> > Make btf_func_model with MAX_BPF_FUNC_REG_ARGS
+> > by calling btf_distill_func_proto() with func=3D=3DNULL.
+> > And use that to build a trampoline.
+> >
+> > The challenge is how to use minimal number of trampolines
+> > when bpf_progA is attached for func1, func2, func3
+> > and bpf_progB is attached to func3, func4, func5.
+> > We'd still need 3 trampolines:
+> > for func[12] to call bpf_progA,
+> > for func3 to call bpf_progA and bpf_progB,
+> > for func[45] to call bpf_progB.
+> >
+> > Jiri was trying to solve it in the past. His slides from LPC:
+> > https://lpc.events/event/16/contributions/1350/attachments/1033/1983/pl=
+umbers.pdf
+> >
+> > Pls study them and his prior patchsets to avoid stepping on the same ra=
+kes.
