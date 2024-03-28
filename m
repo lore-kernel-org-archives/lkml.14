@@ -1,120 +1,313 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38568847C
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 13:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1527F847C
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 14:01:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711634346; cv=none; b=rKhCyV17rbunN0uRNkB6Q0WhweoAJ91ZnKOi3fEnoqkSTHL/+5sHZLcNvP0zjcFjGrzypgg9acSInMxUKsLFbUiqwcaJTupqTVbZ1pMTdE6+TAkxzD27HQ4IA0yZM/rPbSSE1m2PG/un0asMGObjIzNMoKxUg0XIvxpHnGnhrsw=
+	t=1711634465; cv=none; b=llHhji/uLs3LKgTMvJx6/SXGGXw+9Itr4Wtwasx+5dHx8p5Z41ejW+uLUP65CxncdIpYjYD6DFihZPc3PFJnG8UBSU7W7iLXSG9se/Uy0xC4TcaozlU7EejL5MFdBwI8dOlsDYsgBf/lp3eGY2Hz9s0oTIHlnev79WZ0SiJACZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711634346; c=relaxed/simple;
-	bh=NK7LET77latJxFetZ4zO1WlQhyaBRI6+mpEFOHPiO1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g/1s5FWptl7uWecyrP6a0n21aUvqNeA0vk9jCtYWjZrAJtG+xZRkBFKQq+iQHxhrB2aiv+UPZF0DoDqjK1dmqcRShBeTw57WNDSyejThFhUIJWR5gGyCiJn7HTCBw0m9NRjITXPDFLDcP5nScK3UPbsvF1IcF1yfLwf0pCUAnk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=u3SzPdnH; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1711634465; c=relaxed/simple;
+	bh=4eyuktlj3zT+S0v4lDjOGGPXuz5uyxEP9zOsIuqV3IU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UJ4l9YXLHvfBr6NiIdIkvmx5eFgAUkLsTM4l01xapxg+3AnAOce8duiWtejgWCdmjrqfIMp5Q+vO2OTQ7a1O22X20AtTBFz3Cj8B6NRHm60Hi89BCGI7GJ05q9IUEKVr1PG3UDoLcUMDCG0JCfpuZItYL+QdArCg8wLHNZX5aU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=rjNbN4Uv; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u3SzPdnH"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-413f8c8192eso75065e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 06:59:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711634343; x=1712239143; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UhSlWCplow3q0UiENwQXBqJUPqprxyAeOLjfYZq98Wg=;
-        b=u3SzPdnHOelpWdOjkfNoyINnyjT1lHSr693ZDRQuVdkUCe3RoVv6Lm9ZRjHqvddDyI
-         rHNCCkzKsEpurUYawiOefeDOUieGigBXO8nZ//SBY/DS31ny7roWiDZsO3S2Sb5BRLDJ
-         TPIIKvuduUIi6CnVurDExWnTvMyUuxWJSpoAa0NpCweenpo5Mi3sG2fMkJpRk2z/fh2A
-         Bv61hgGqT1vVmBJS7/urKaainLbdvj9fA45zh7gtteQuo8x1IMtuwjL0vFT0PqUxUQL4
-         oQziwsUJoUPOe7pXV/ezTMyhKgZbz6XKkGa02C1c66QGtmp8v8sRLpyp+u76orr/1GBj
-         Dnqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711634343; x=1712239143;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UhSlWCplow3q0UiENwQXBqJUPqprxyAeOLjfYZq98Wg=;
-        b=J1fmYhRc+KaTPfbc5vwF5hBtxY7o0mm9yZh8dY712QVCINGtR/8xomFkj9UILqQuSY
-         aL4XJn8rakB/708TEIJt0TF7iQv4X5t5Aum7y2FVLF4syH3/CiJWUhnSrsgji+R+l3w4
-         cI2i0erYrXfGzm3DZZN1WtobFQ7jFtK4BZXTih7Koe3BUJNKYeJILuJewvJ1GpjNkgw6
-         G3sRNByD8kdpwQPKhvSuQ9kBbNwWdG7qQneC22+L6RLtCmz7iimX1iAss44UHoilfogo
-         F+KACRVGn4IovpfZELxEX5rsJZOeJQwel3j9YJgVQGKcPhNhDaRibm5Hq2Uh3wX4WaCe
-         /IIA==
-X-Forwarded-Encrypted: i=1; AJvYcCUUf2K0UX9LDij7V+5lJQitypxhPXLk/AWw593jeN5fl8/QWnx3Op0WGN3oSlZehmrV+toaE2Bot2wkU+snqXnZnP+5xWLBadkgf0XC
-X-Gm-Message-State: AOJu0YzN94huC3do+kwAyxtwQEGnJDeA5F3L4aTzeo7U24Rdhrb6v0bS
-	++YFiHU56guYvYl+pLZU/sZdSIgbIJ73xmkBM03eeHJvynSE/fjVh44OW2A6aw==
-X-Google-Smtp-Source: AGHT+IFkjqEo9WYWh9uwV7qW8tTZm/X3G1itWmwY9D+9DsKXDmdQqm31owW8ZokBAn+BbbDZkcRWnw==
-X-Received: by 2002:a05:600c:3584:b0:414:daa3:c192 with SMTP id p4-20020a05600c358400b00414daa3c192mr213991wmq.0.1711634343417;
-        Thu, 28 Mar 2024 06:59:03 -0700 (PDT)
-Received: from google.com (248.199.140.34.bc.googleusercontent.com. [34.140.199.248])
-        by smtp.gmail.com with ESMTPSA id l6-20020a05600c4f0600b0041469869d11sm5499477wmq.47.2024.03.28.06.59.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 06:59:02 -0700 (PDT)
-Date: Thu, 28 Mar 2024 13:59:00 +0000
-From: Sebastian Ene <sebastianene@google.com>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: catalin.marinas@arm.com, james.morse@arm.com, jean-philippe@linaro.org,
-	maz@kernel.org, qperret@google.com, qwandor@google.com,
-	suzuki.poulose@arm.com, tabba@google.com, will@kernel.org,
-	yuzenghui@huawei.com, kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel-team@android.com
-Subject: Re: [PATCH 2/2] KVM: arm64: Allow only the specified FF-A calls to
- be forwarded to TZ
-Message-ID: <ZgV3pGvUhaK5otUL@google.com>
-References: <20240322124303.309423-1-sebastianene@google.com>
- <20240322124303.309423-2-sebastianene@google.com>
- <Zf45eDs8Bd1UQ94Z@linux.dev>
- <ZgFgI0Ky2m4MUbw-@google.com>
- <ZgKKcurtndJaIwAV@linux.dev>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="rjNbN4Uv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1711634460;
+	bh=4eyuktlj3zT+S0v4lDjOGGPXuz5uyxEP9zOsIuqV3IU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rjNbN4UvU30FBUsy6OLV1q02Y4AR8Sd4StjrsgDfdkbqqEeuT/4bchJz0gddXxLao
+	 qKtA/XmCUKifgYKiVHgGLHKCqlaIiX81cnL9d1hCslPv62yrh5KswPVYe94B3qxeZN
+	 ptrzmGrPZUF/W4c3IKTwgObjRVhD+bKmngET2b0gu6S92jOwx9hQ4KBVYfYC9P1nl5
+	 MW/CxvJHniM/6ia9vRcE7LKvVV4VHJQ7TPVkxmp8A2kgUIa0ehfPPfEtlrZ7uu+L0e
+	 b4CAXXEGnvZ8RNug8Wq5VxToeyMOBlFxyV3tPA0ekP1c3+Wq1NgIFWkK2fseN3Kus0
+	 WldEfaMgvh19A==
+Received: from eldfell (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pq)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 1D3A73780629;
+	Thu, 28 Mar 2024 14:00:59 +0000 (UTC)
+Date: Thu, 28 Mar 2024 16:00:57 +0200
+From: Pekka Paalanen <pekka.paalanen@collabora.com>
+To: Louis Chauvet <louis.chauvet@bootlin.com>
+Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, Melissa Wen
+ <melissa.srw@gmail.com>, =?UTF-8?B?TWHDrXJh?= Canal
+ <mairacanal@riseup.net>, Haneen Mohammed <hamohammed.sa@gmail.com>, Daniel
+ Vetter <daniel@ffwll.ch>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ arthurgrillo@riseup.net, Jonathan Corbet <corbet@lwn.net>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com,
+ thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com,
+ nicolejadeyee@google.com
+Subject: Re: [PATCH v5 16/16] drm/vkms: Add support for DRM_FORMAT_R*
+Message-ID: <20240328160057.124b32c4.pekka.paalanen@collabora.com>
+In-Reply-To: <20240313-yuv-v5-16-e610cbd03f52@bootlin.com>
+References: <20240313-yuv-v5-0-e610cbd03f52@bootlin.com>
+	<20240313-yuv-v5-16-e610cbd03f52@bootlin.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZgKKcurtndJaIwAV@linux.dev>
+Content-Type: multipart/signed; boundary="Sig_/P3OiAf8YwdepAoHMsEV.zAB";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Tue, Mar 26, 2024 at 01:42:26AM -0700, Oliver Upton wrote:
-> On Mon, Mar 25, 2024 at 11:29:39AM +0000, Sebastian Ene wrote:
-> > On Fri, Mar 22, 2024 at 07:07:52PM -0700, Oliver Upton wrote:
-> > > On Fri, Mar 22, 2024 at 12:43:03PM +0000, Sebastian Ene wrote:
-> > > > The previous logic used a deny list to filter the FF-A calls. Because of
-> > > > this, some of the calls escaped the check and they were forwarded by
-> > > > default to Trustzone. (eg. FFA_MSG_SEND_DIRECT_REQ was denied but the 64
-> > > > bit version of the call was not).
-> > > > Modify the logic to use an allowlist and allow only the calls specified in
-> > > > the filter function to be proxied to TZ from the hypervisor.
-> > 
-> > Hi Oliver,
-> > 
-> > > 
-> > > I had discussed this with Will back when the feature was upstreamed and
-> > > he said there's a lot of off-label calls that necessitate a denylist
-> > > implementation. Has anything changed to give us confidence that we can
-> > > be restrictive, at least on the FF-A range?
-> > > 
-> > 
-> > I remember your proposal for having an allowlist instead. The current change makes
-> > sense if we have https://lore.kernel.org/kvmarm/20240322124303.309423-1-sebastianene@google.com/
-> > which opens the window for more FF-A calls to be forwarded to TZ.
-> 
-> Got it. Last time I didn't catch the level of abuse we expect to endure
-> from vendors, but now it seems we will not support non-conforming calls
-> that appear in standardized SMC ranges.
-> 
-> Adding mention of this to the changelog might be a good idea then.
-> 
+--Sig_/P3OiAf8YwdepAoHMsEV.zAB
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-That's a good point. I didn't create a changelog for this but I should
-add one and specify this.
+On Wed, 13 Mar 2024 18:45:10 +0100
+Louis Chauvet <louis.chauvet@bootlin.com> wrote:
 
-> -- 
-> Thanks,
-> Oliver
+> This add the support for:
+> - R1/R2/R4/R8
+>=20
+> R1 format was tested with [1] and [2].
+>=20
+> [1]: https://lore.kernel.org/r/20240313-new_rotation-v2-0-6230fd5cae59@bo=
+otlin.com
+> [2]: https://lore.kernel.org/igt-dev/20240306-b4-kms_tests-v1-0-8fe451efd=
+2ac@bootlin.com/
+>=20
+> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> ---
+>  drivers/gpu/drm/vkms/vkms_formats.c | 100 ++++++++++++++++++++++++++++++=
+++++++
+>  drivers/gpu/drm/vkms/vkms_plane.c   |   6 ++-
+>  2 files changed, 105 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/v=
+kms_formats.c
+> index 863fc91d6d48..cbb2ec09564a 100644
+> --- a/drivers/gpu/drm/vkms/vkms_formats.c
+> +++ b/drivers/gpu/drm/vkms/vkms_formats.c
+> @@ -201,6 +201,11 @@ static struct pixel_argb_u16 argb_u16_from_RGB565(co=
+nst u16 *pixel)
+>  	return out_pixel;
+>  }
+> =20
+> +static struct pixel_argb_u16 argb_u16_from_gray8(u8 gray)
+> +{
+> +	return argb_u16_from_u8888(255, gray, gray, gray);
+> +}
+> +
+>  VISIBLE_IF_KUNIT struct pixel_argb_u16 argb_u16_from_yuv888(u8 y, u8 cb,=
+ u8 cr,
+>  							    struct conversion_matrix *matrix)
+>  {
+> @@ -269,6 +274,89 @@ static void black_to_argb_u16(const struct vkms_plan=
+e_state *plane, int x_start,
+>  	}
+>  }
+> =20
+> +static void Rx_read_line(const struct vkms_plane_state *plane, int x_sta=
+rt,
+> +			 int y_start, enum pixel_read_direction direction, int count,
+> +			 struct pixel_argb_u16 out_pixel[], u8 bit_per_pixel, u8 lum_per_leve=
+l)
+> +{
+> +	struct pixel_argb_u16 *end =3D out_pixel + count;
+> +	u8 *src_pixels;
+> +	int rem_x, rem_y;
+> +
+> +	packed_pixels_addr(plane->frame_info, x_start, y_start, 0, &src_pixels,=
+ &rem_x, &rem_y);
+
+Maybe assert that rem_y =3D 0? Or block_h =3D 1.
+
+> +	int bit_offset =3D (int)rem_x * bit_per_pixel;
+
+Why cast rem_x to int when it was defined to be int?
+
+> +	int step =3D get_step_next_block(plane->frame_info->fb, direction, 0);
+> +	int mask =3D (0x1 << bit_per_pixel) - 1;
+
+Since mask will interact with u8, it should be unsigned too.
+
+> +
+> +	if (direction =3D=3D READ_LEFT_TO_RIGHT || direction =3D=3D READ_RIGHT_=
+TO_LEFT) {
+> +		int restart_bit_offset =3D 0;
+> +		int step_bit_offset =3D bit_per_pixel;
+> +
+> +		if (direction =3D=3D READ_RIGHT_TO_LEFT) {
+> +			restart_bit_offset =3D 8 - bit_per_pixel;
+> +			step_bit_offset =3D -bit_per_pixel;
+> +		}
+> +
+> +		while (out_pixel < end) {
+> +			u8 val =3D (*src_pixels & (mask << bit_offset)) >> bit_offset;
+
+or shorter: (*src_pixels >> bit_offset) & mask
+
+However, shouldn't the first pixel be on the high bits?
+
+That how I would understand the comments in drm_fourcc.h.
+
+Again a reason to avoid a solid color fill in IGT.
+
+> +
+> +			*out_pixel =3D argb_u16_from_gray8(val * lum_per_level);
+> +
+> +			bit_offset +=3D step_bit_offset;
+> +			if (bit_offset < 0 || 8 <=3D bit_offset) {
+> +				bit_offset =3D restart_bit_offset;
+> +				src_pixels +=3D step;
+> +			}
+> +			out_pixel +=3D 1;
+> +		}
+> +	} else if (direction =3D=3D READ_TOP_TO_BOTTOM || direction =3D=3D READ=
+_BOTTOM_TO_TOP) {
+> +		while (out_pixel < end) {
+> +			u8 val =3D (*src_pixels & (mask << bit_offset)) >> bit_offset;
+> +			*out_pixel =3D argb_u16_from_gray8(val * lum_per_level);
+> +			src_pixels +=3D step;
+> +			out_pixel +=3D 1;
+> +		}
+> +	}
+> +}
+> +
+> +static void R1_read_line(const struct vkms_plane_state *plane, int x_sta=
+rt,
+> +			 int y_start, enum pixel_read_direction direction, int count,
+> +			 struct pixel_argb_u16 out_pixel[])
+> +{
+> +	Rx_read_line(plane, x_start, y_start, direction, count, out_pixel, 1, 0=
+xFF);
+> +}
+> +
+> +static void R2_read_line(const struct vkms_plane_state *plane, int x_sta=
+rt,
+> +			 int y_start, enum pixel_read_direction direction, int count,
+> +			 struct pixel_argb_u16 out_pixel[])
+> +{
+> +	Rx_read_line(plane, x_start, y_start, direction, count, out_pixel, 2, 0=
+x55);
+> +}
+> +
+> +static void R4_read_line(const struct vkms_plane_state *plane, int x_sta=
+rt,
+> +			 int y_start, enum pixel_read_direction direction, int count,
+> +			 struct pixel_argb_u16 out_pixel[])
+> +{
+> +	Rx_read_line(plane, x_start, y_start, direction, count, out_pixel, 4, 0=
+x11);
+> +}
+> +
+> +static void R8_read_line(const struct vkms_plane_state *plane, int x_sta=
+rt,
+> +			 int y_start, enum pixel_read_direction direction, int count,
+> +			 struct pixel_argb_u16 out_pixel[])
+> +{
+> +	struct pixel_argb_u16 *end =3D out_pixel + count;
+> +	u8 *src_pixels;
+> +	int rem_x, rem_y;
+> +	int step =3D get_step_next_block(plane->frame_info->fb, direction, 0);
+> +
+> +	packed_pixels_addr(plane->frame_info, x_start, y_start, 0, &src_pixels,=
+ &rem_x, &rem_y);
+
+Assert on block size?
+
+
+> +
+> +	while (out_pixel < end) {
+> +		*out_pixel =3D argb_u16_from_gray8(*src_pixels);
+> +		src_pixels +=3D step;
+> +		out_pixel +=3D 1;
+> +	}
+> +}
+> +
+>  static void ARGB8888_read_line(const struct vkms_plane_state *plane, int=
+ x_start, int y_start,
+>  			       enum pixel_read_direction direction, int count,
+>  			       struct pixel_argb_u16 out_pixel[])
+> @@ -582,6 +670,14 @@ pixel_read_line_t get_pixel_read_line_function(u32 f=
+ormat)
+>  	case DRM_FORMAT_YVU422:
+>  	case DRM_FORMAT_YVU444:
+>  		return &planar_yuv_read_line;
+> +	case DRM_FORMAT_R1:
+> +		return &R1_read_line;
+> +	case DRM_FORMAT_R2:
+> +		return &R2_read_line;
+> +	case DRM_FORMAT_R4:
+> +		return &R4_read_line;
+> +	case DRM_FORMAT_R8:
+> +		return &R8_read_line;
+>  	default:
+>  		/*
+>  		 * This is a bug in vkms_plane_atomic_check. All the supported
+> @@ -855,6 +951,10 @@ get_conversion_matrix_to_argb_u16(u32 format, enum d=
+rm_color_encoding encoding,
+>  	case DRM_FORMAT_ARGB16161616:
+>  	case DRM_FORMAT_XRGB16161616:
+>  	case DRM_FORMAT_RGB565:
+> +	case DRM_FORMAT_R1:
+> +	case DRM_FORMAT_R2:
+> +	case DRM_FORMAT_R4:
+> +	case DRM_FORMAT_R8:
+>  		/*
+>  		 * Those formats are supported, but they don't need a conversion matri=
+x. Return
+
+It is strange that you need to list irrelevant formats here.
+
+
+>  		 * a valid pointer to avoid kernel panic in case this matrix is used/c=
+hecked
+> diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkm=
+s_plane.c
+> index e21cc92cf497..dc9d62acf350 100644
+> --- a/drivers/gpu/drm/vkms/vkms_plane.c
+> +++ b/drivers/gpu/drm/vkms/vkms_plane.c
+> @@ -29,7 +29,11 @@ static const u32 vkms_formats[] =3D {
+>  	DRM_FORMAT_YUV444,
+>  	DRM_FORMAT_YVU420,
+>  	DRM_FORMAT_YVU422,
+> -	DRM_FORMAT_YVU444
+> +	DRM_FORMAT_YVU444,
+> +	DRM_FORMAT_R1,
+> +	DRM_FORMAT_R2,
+> +	DRM_FORMAT_R4,
+> +	DRM_FORMAT_R8
+>  };
+> =20
+>  static struct drm_plane_state *
+>=20
 
 Thanks,
-Sebastian
+pq
+
+--Sig_/P3OiAf8YwdepAoHMsEV.zAB
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAmYFeBkACgkQI1/ltBGq
+qqeHVhAAoWHtPFfcwQBZAL8Q2nrXxgfDguVWiSRZBMVFBhBnGc2t1v3U+BSBNy6u
+lENqEU1LrzRR3aN9LCJVKvz6/7Iq/qvSZXjsqwbs9WRNSytcOxWAXlss+7yn1TS0
+k0DxI1JhJWGCX2D9LyGVc0EzaWKx/GiPqZfAu2F0Tft16IOSUVZ1CT3//XakQGPS
+6mNuyC42XPEWkJVyfXz6tNkLrOS8HIYvLPtsNFzJIv/Z5oDGE72N5ZwWma9UfrEa
+/3c/szbVru6gYzHn7Yhvm0W/H1zOTMqQFRNuRap4EbjKv4XYd9ZwRexn5r23mGpA
+TPZegTlUotCoPUD95ZqQ5oCobP0+K+5CyFy6atBjX0tXkEIdYU1cht4XPeZ2GfsX
+4Pwcpzv3ptCgOZXdjZrz9OkwSzpNsMzdUEVsnGTSqpoxGemJpqNUslQ951HvQvri
+SIC4ZBQ3WQI7BpjekupY9z/BXnR8VOkGQXdaX8+bkEBVW3zD60A3WQXrUAl71RRP
+f1moRzIrRJZYjndttF++GLsBMsTVuUcO6Kce7+n93w8Gzo9tXQzCIRS20uAFJJ0b
+C8H/+mBgboXBfq3oZINHsv/F3T2ttxdh7E8cVNsiLChAJzuskdO2kSddPI+vZVqG
+GWTBF6l0KNI6qKzoS0r/RqbEQQapSFMm/tPnSk7JV4EAkScMxG4=
+=jP0O
+-----END PGP SIGNATURE-----
+
+--Sig_/P3OiAf8YwdepAoHMsEV.zAB--
