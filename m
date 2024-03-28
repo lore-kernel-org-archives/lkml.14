@@ -1,115 +1,197 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 803BE374EF
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:58:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C6C3BBF4
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711645112; cv=none; b=uCXWyYiekDzLKV2+rhQjMMyTRmaSjstyn3Zt3UVG+3j8Zl8uzSILWnNtlYsfcVP4jejpYfEMRztbMvNClsUqBGjE8XTCQFuHuI+aAZu9fMySGoAHQtImFeljlAzfLEVtR8cE0TPRT+fd7bDMZkVvRwgrpkC5Ys+4T4V4Rqf+kEY=
+	t=1711645142; cv=none; b=jcGhnNAw2wwFLase5jbwweUT2s9MB2djrCFu3za30+gC38+C+6dF3xR9dKBvBkzyAAPZHnD/yeQQB8Hnyc05EeTvneUpPkaZvoMNOkGiP14FjkdLktcnpV71TEqTswk16ZEKk1kRtoOR4m1MBCCx1eEhp/z4vchkGhqPQ0Lax1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711645112; c=relaxed/simple;
-	bh=KhPInAdx2nEJYM6yTKhhz/EBhNBtCggFtt2VVOVqMv8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EraqajV3YOWg/613wXTp2ULvdnhhF1/PdAOO0rzlikmwPtfiHSy5sfWZqWriUPZ+u+H+Gw3i7GRnWV9QP5S8pA9aDMeDQCmgdFkEORRJhEpcoIHLa1FjNRlmCxsh+X5uTvL3OijqgklmvnTXQULmNeyvSRk5TgDt5T/MphdIAag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O7FmQspM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711645142; c=relaxed/simple;
+	bh=apCXXFZ6j3TcjCJV2Cam6vpg1nsRKdd8BKx/sY8Vqwc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pGUfsMcSE7LXoXaswNhU5ft9ndgx0d7MmAu/d9aP5DuL0FPjMyvgEu183WKikmpazJcWP/PJUdqILG6pXJ/5N4hkToolKY5G3bsmONJOJoEEedSzj3jZLs2+BdjYDT07vX/FTz8OPT8Z3HvDtUQ3SPO/sh/Rh8p78fsCXsQpBQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ngl3Mzip; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O7FmQspM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3DB9C433F1;
-	Thu, 28 Mar 2024 16:58:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711645112;
-	bh=KhPInAdx2nEJYM6yTKhhz/EBhNBtCggFtt2VVOVqMv8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O7FmQspM9lp+3HWGQh2hR/8dK0LWwbeYQxtgpXKYR7eYfuL95dhk/iRKe5lBpDb2F
-	 MHlycOKA+V9nV8wjmWsx7jeFVFRt9fxqhcFp9MM3uKRHyqBuepTfDpXlmrQVlxhVG0
-	 ERbXIqHhW/x66k/JeIyInMyc01FT4ohqhTGnqGl+YkoLQCxVuthn4y/gEL/vpieQvo
-	 bS63AdHkii3cbRInAEm/X90B/tOoGoYlOkd78xmnk9un1lMIBkcoYN+SaDpCp4l9xa
-	 WJf+T7DKk3V4pEcWVxPJoDL4IHtpsw/f3Pl0lB+d1s1o4Z9QPeK0NK3ZNLvvMoKICK
-	 e4PA+W+9NCJJQ==
-Date: Thu, 28 Mar 2024 17:58:29 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Alex Shi <alexs@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Barry Song <song.bao.hua@hisilicon.com>
-Subject: Re: for_each_domain()/sched_domain_span() has offline CPUs (was Re:
- [PATCH 2/2] timers: Fix removed self-IPI on global timer's enqueue in
- nohz_full)
-Message-ID: <ZgWhteHzLb8Jutp3@localhost.localdomain>
-References: <ZfsLtMijRrNZfqh6@localhost.localdomain>
- <6a95b6ac-6681-4492-b155-e30c19bb3341@paulmck-laptop>
- <ZfwdEROGFFmIbkCM@lothringen>
- <bf8689c2-0749-47cb-9535-53cf66e34f5e@paulmck-laptop>
- <Zf1sSv/6mQHJuJ8G@lothringen>
- <Zf2GDjekyemQKn7I@lothringen>
- <xhsmhwmppaqls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <ZgQULtxy0UnoXfGi@localhost.localdomain>
- <xhsmhttkrbvfb.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <xhsmhr0fubgaf.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ngl3Mzip"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711645139;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=jiVas1tSBjQdCIB/ofa+v43rtug1Sw6ETjtuvBUyvtU=;
+	b=Ngl3Mzipy6aoliCq44CyfJBn1iEbVCDpQIR3zaAXVW6PsTzXV20r/HHCJiXlyhdHEFmI6w
+	Ngqyx2cFCqIC23vz0gZCeHT37lcRJbJKVObLmCbL7ONjzxm4duybQ6zvJ2zjhOwyWOkb5v
+	6CWwtCsi90REeSbz+URpv8GkZBzdmcw=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-544-_lsKnMXBNLeQiQjtN82f-g-1; Thu,
+ 28 Mar 2024 12:58:54 -0400
+X-MC-Unique: _lsKnMXBNLeQiQjtN82f-g-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 051F63C01C19;
+	Thu, 28 Mar 2024 16:58:54 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.146])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 622EDC4C7A1;
+	Thu, 28 Mar 2024 16:58:52 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Steve French <smfrench@gmail.com>
+Cc: David Howells <dhowells@redhat.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	Christian Brauner <christian@brauner.io>,
+	netfs@lists.linux.dev,
+	linux-cifs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6 00/15] netfs, cifs: Delegate high-level I/O to netfslib
+Date: Thu, 28 Mar 2024 16:57:51 +0000
+Message-ID: <20240328165845.2782259-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <xhsmhr0fubgaf.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-Le Thu, Mar 28, 2024 at 03:08:08PM +0100, Valentin Schneider a écrit :
-> On 27/03/24 15:28, Valentin Schneider wrote:
-> > On 27/03/24 13:42, Frederic Weisbecker wrote:
-> >> Le Tue, Mar 26, 2024 at 05:46:07PM +0100, Valentin Schneider a écrit :
-> >>> > Then with that patch I ran TREE07, just some short iterations:
-> >>> >
-> >>> > tools/testing/selftests/rcutorture/bin/kvm.sh --configs "10*TREE07" --allcpus --bootargs "rcutorture.onoff_interval=200" --duration 2
-> >>> >
-> >>> > And the warning triggers very quickly. At least since v6.3 but maybe since
-> >>> > earlier. Is this expected behaviour or am I right to assume that
-> >>> > for_each_domain()/sched_domain_span() shouldn't return an offline CPU?
-> >>> >
-> >>> 
-> >>> I would very much assume an offline CPU shouldn't show up in a
-> >>> sched_domain_span().
-> >>> 
-> >>> Now, on top of the above, there's one more thing worth noting:
-> >>>   cpu_up_down_serialize_trainwrecks()
-> >>> 
-> >>> This just flushes the cpuset work, so after that the sched_domain topology
-> >>> should be sane. However I see it's invoked at the tail end of _cpu_down(),
-> >>> IOW /after/ takedown_cpu() has run, which sounds too late. The comments
-> >>> around this vs. lock ordering aren't very reassuring however, so I need to
-> >>> look into this more.
-> >>
-> >> Ouch...
-> >>
-> >>> 
-> >>> Maybe as a "quick" test to see if this is the right culprit, you could try
-> >>> that with CONFIG_CPUSET=n? Because in that case the sched_domain update is
-> >>> ran within sched_cpu_deactivate().
-> >>
-> >> I just tried and I fear that doesn't help. It still triggers even without
-> >> cpusets :-s
-> >>
-> >
-> > What, you mean I can't always blame cgroups? What has the world come to?
-> >
-> > That's interesting, it means the deferred work item isn't the (only)
-> > issue. I'll grab your test patch and try to reproduce on TREE07.
-> >
-> 
-> Unfortunately I haven't been able to trigger your warning with ~20 runs of
-> TREE07 & CONFIG_CPUSETS=n, however it does trigger reliably with
-> CONFIG_CPUSETS=y, so I'm back to thinking the cpuset work is a likely
-> culprit...
+Hi Steve,
 
-Funny, I just checked again and I can still reliably reproduce with:
+Here are patches to convert cifs to use the netfslib library.  I've tested
+them with and without a cache.  Unfortunately, if "-o fsc" is specified a leak
+of a tcon object shows up, particularly with the generic/013 xfstest that
+prevents further testing.  I've investigated this and found that the tcon leak
+is actually present upstream, but just goes unnoticed unless it also pins an
+fscache volume cookie.
 
-./tools/testing/selftests/rcutorture/bin/kvm.sh --kconfig "CONFIG_CPUSETS=n CONFIG_PROC_PID_CPUSET=n" --configs "10*TREE07" --allcpus --bootargs "rcutorture.onoff_interval=200" --duration 2
+The patches remove around 2000 lines from CIFS.
 
-I'm thinking there might be several culprits... ;-)
+Notes:
+
+ (1) CIFS is made to use unbuffered I/O for unbuffered caching modes and
+     write-through caching for cache=strict.
+
+ (2) Various cifs fallocate() function implementations have issues that
+     aren't easily fixed without enhanced protocol support.
+
+ (3) It should be possible to turn on multipage folio support in CIFS now.
+
+ (4) The then-unused CIFS code is removed in three patches, not one, to
+     avoid the git patch generator from producing confusing patches in
+     which it thinks code is being moved around rather than just being
+     removed.
+
+The patches can be found here also:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=cifs-netfs
+
+Changes
+=======
+ver #6)
+ - The netfslib write helpers got rewritten and, consequently, some changes
+   were made here.
+ - Rearranged the patch order a little to put the smaller changes first.
+ - Use a different way to invalidate that doesn't use ->launder_folio().
+ - Attempt to open the handle on the server READ+WRITE, even if the user
+   asks for O_WRONLY, if the mount was with "-o fsc" so that we can fill in
+   the gaps in partial folio writes; if we can't fall back to WRITE-only
+   and disable caching.
+ - Fixed the cookie key to match the key used by iget5_locked() to avoid
+   "Duplicate cookie" errors.
+ - Made add_credits_and_wake_if() clear the number of returned credits,
+   allowing it to be called multiple times in cleanup/error handling.
+ - Made ->async_writev() not return an error directly, but always set it on
+   the subreq.
+ - Fixed error handling from writethrough writing.
+
+ver #5)
+ - Rebased to -rc3 plus SteveF's for-next branch as netfslib is now
+   upstream, as are a couple of patches from this series.
+ - Replace the ->replay bool Shyam added with a flag on the netfs
+   subrequest.  This is tested by the code, but not currently set (see
+   above).
+
+ver #4)
+ - Slimmed down the branch:
+   - Split the cifs-related patches off to a separate branch (cifs-netfs)
+   - Deferred the content-encryption to the in-progress ceph changes.
+   - Deferred the use-PG_writeback rather than PG_fscache patch
+ - Rebased on a later linux-next with afs-rotation patches.
+
+ver #3)
+ - Moved the fscache module into netfslib to avoid export cycles.
+ - Fixed a bunch of bugs.
+ - Got CIFS to pass as much of xfstests as possible.
+ - Added a patch to make 9P use all the helpers.
+ - Added a patch to stop using PG_fscache, but rather dirty pages on
+   reading and have writepages write to the cache.
+
+ver #2)
+ - Folded the addition of NETFS_RREQ_NONBLOCK/BLOCKED into first patch that
+   uses them.
+ - Folded addition of rsize member into first user.
+ - Don't set rsize in ceph (yet) and set it in kafs to 256KiB.  cifs sets
+   it dynamically.
+ - Moved direct_bv next to direct_bv_count in struct netfs_io_request and
+   labelled it with a __counted_by().
+ - Passed flags into netfs_xa_store_and_mark() rather than two bools.
+ - Removed netfs_set_up_buffer() as it wasn't used.
+
+David
+
+Link: https://lore.kernel.org/r/20231213152350.431591-1-dhowells@redhat.com/ [1]
+Link: https://lore.kernel.org/r/20231013160423.2218093-1-dhowells@redhat.com/ # v1
+Link: https://lore.kernel.org/r/20231117211544.1740466-1-dhowells@redhat.com/ # v2
+Link: https://lore.kernel.org/r/20231207212206.1379128-1-dhowells@redhat.com/ # v3
+Link: https://lore.kernel.org/r/20231213154139.432922-1-dhowells@redhat.com/ # v4
+Link: https://lore.kernel.org/r/20240205225726.3104808-1-dhowells@redhat.com/ # v5
+
+David Howells (15):
+  cifs: Replace cifs_readdata with a wrapper around netfs_io_subrequest
+  cifs: Replace cifs_writedata with a wrapper around netfs_io_subrequest
+  cifs: Use more fields from netfs_io_subrequest
+  cifs: Make wait_mtu_credits take size_t args
+  cifs: Replace the writedata replay bool with a netfs sreq flag
+  cifs: Move cifs_loose_read_iter() and cifs_file_write_iter() to file.c
+  cifs: Set zero_point in the copy_file_range() and remap_file_range()
+  cifs: Add mempools for cifs_io_request and cifs_io_subrequest structs
+  cifs: Make add_credits_and_wake_if() clear deducted credits
+  cifs: Implement netfslib hooks
+  cifs: When caching, try to open O_WRONLY file rdwr on server
+  cifs: Cut over to using netfslib
+  cifs: Remove some code that's no longer used, part 1
+  cifs: Remove some code that's no longer used, part 2
+  cifs: Remove some code that's no longer used, part 3
+
+ fs/netfs/buffered_write.c    |    6 +
+ fs/netfs/io.c                |    7 +-
+ fs/smb/client/Kconfig        |    1 +
+ fs/smb/client/cifsfs.c       |  124 +-
+ fs/smb/client/cifsfs.h       |   10 +-
+ fs/smb/client/cifsglob.h     |   65 +-
+ fs/smb/client/cifsproto.h    |   12 +-
+ fs/smb/client/cifssmb.c      |  120 +-
+ fs/smb/client/dir.c          |   15 +
+ fs/smb/client/file.c         | 2841 ++++++----------------------------
+ fs/smb/client/fscache.c      |  109 --
+ fs/smb/client/fscache.h      |   54 +-
+ fs/smb/client/inode.c        |   19 +-
+ fs/smb/client/smb2ops.c      |   10 +-
+ fs/smb/client/smb2pdu.c      |  186 ++-
+ fs/smb/client/smb2proto.h    |    5 +-
+ fs/smb/client/trace.h        |  144 +-
+ fs/smb/client/transport.c    |   17 +-
+ include/linux/netfs.h        |    1 +
+ include/trace/events/netfs.h |    1 +
+ 20 files changed, 946 insertions(+), 2801 deletions(-)
+
