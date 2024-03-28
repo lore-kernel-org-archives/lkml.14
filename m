@@ -1,81 +1,104 @@
-Received: from gbr-app-1.alpinelinux.org (gbr-app-1.alpinelinux.org [213.219.36.190])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19AB4A18;
-	Thu, 28 Mar 2024 11:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.219.36.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308EC374EF
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 11:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711624205; cv=none; b=QnRCdd1lTAHODB6IWyYeBvBCmJghvnZdg9NFSrKCr0xTKzDpbkGqan8hTDbhSqRPnghmd73In/UAeAdsCp5NcgMrQKCxdIk50MrseO4kB0ojYKV6ozl5+dYPd0n4eXfI9JuqhIa310nvd+AmxFKlM5Blav76njJGYkr3rRc15CE=
+	t=1711624274; cv=none; b=fUcsdkpbKawakoIliGOylTF8CWuXMMDek2yzf+yW5eRK9RDCb57eBvvYdP6CrAm6RUMnyCDJn+6OJvRAMnXWUzUJK/YOrAoQXF0beTRvUOJL2UnihGcIP++oldfXiuZZmwwk3s6yWHTwMQM4M11Tnx1voA09DVITdUY3dxmOKXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711624205; c=relaxed/simple;
-	bh=YPtwI/73XQMq5pLXmdBDn594QE8iR58OHaXvHludfN0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GGXmaIclnMpHTdCZ1EZmsrO4S9Vs8j6nyVFfaYVYY6EMBBaJWrr12aMgtsAaYo7cds5gOVtXEVs4emrcysAMJyrWVmdCsTFFbJxY2jzMYtQ5KAT9IQ8JV6JRzBefa2X5w9TJYxBbwObL5xqHugtJ0vZDBacbrsgjUQwwQw107VQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpinelinux.org; spf=pass smtp.mailfrom=alpinelinux.org; dkim=pass (1024-bit key) header.d=alpinelinux.org header.i=@alpinelinux.org header.b=dpXOQPKD; arc=none smtp.client-ip=213.219.36.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpinelinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpinelinux.org
+	s=arc-20240116; t=1711624274; c=relaxed/simple;
+	bh=0sjnUhGSLWF4zdEeCOtICFa6SD4hLB0WrMWUZ010M2M=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ap7ixnps3bpeEWIit8ZfgowAeEsnceqQKgDf+CDT2fL38sx3p9ZcPJ7Wb5tubRDfhSMLVwlCJphO9yqjzrsdkx/wghqoh4t0UAFOowVS3nH3IKdlczzLakNnvH1H+u++AEbPmloioyMaGUzRq7lNRTa7xdBas8h0F6V6zY/I8cQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SF/KD1cn; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=alpinelinux.org header.i=@alpinelinux.org header.b="dpXOQPKD"
-Received: from ncopa-desktop.lan (ti0056a400-4037.bb.online.no [85.167.238.210])
-	(Authenticated sender: ncopa@alpinelinux.org)
-	by gbr-app-1.alpinelinux.org (Postfix) with ESMTPSA id AE80B226016;
-	Thu, 28 Mar 2024 11:01:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alpinelinux.org;
-	s=smtp; t=1711623671;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=e3J+7uknz3z0s1JqJlEsccjqrrENP/4M0ZqplTq5eJU=;
-	b=dpXOQPKDkCmrGhqGtBgCQrWFj4n4hd60kAQwPK9oWxZK4nzVZv0Ek02vCFVsu0sUavFj3B
-	iWRCjOFoqF/LdParHOH5uf+yZe0QieCKFmxpW5EvuwS+Mx/skL0HWDUBjNQXooQuXATPq5
-	2h/gQTWy8YdnnRV12Jzob3ZYqBmIRLI=
-From: Natanael Copa <ncopa@alpinelinux.org>
-To: bpf@vger.kernel.org
-Cc: Natanael Copa <ncopa@alpinelinux.org>,
-	stable@vger.kernel.org,
-	Viktor Malik <vmalik@redhat.com>,
-	Daniel Xu <dxu@dxuuu.xyz>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] tools/resolve_btfids: fix build with musl libc
-Date: Thu, 28 Mar 2024 11:59:13 +0100
-Message-ID: <20240328110103.28734-1-ncopa@alpinelinux.org>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SF/KD1cn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711624273; x=1743160273;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=0sjnUhGSLWF4zdEeCOtICFa6SD4hLB0WrMWUZ010M2M=;
+  b=SF/KD1cnq7+1T1miHqS+0y0yBtfMX3zWu46E2Ro54sFs95q9E2kobvtg
+   BzT4L7CeaOwmoGwXgNHgPBaI5AaCWQamvPs7f4vL2nWWhZ0Zj822nY01X
+   ngM/0KAG0FZ6hz3tOIOeA1Pym1i5IVLL3IPDkEEUa4cUv4f+ZdXYoReay
+   ahyh9o/MAooHkSUQlnfwet6SXPSqQQrp2NoSjzRqRoJr6OePs5cSvsS9T
+   mkZ9y9791W0MO9jW4eG/QVjNIX+jsrehv/iSbHr8+dVOAfT7LF6pczIwy
+   fk9rVmTlGjrM47yXQ01cW6t/XcYG0jo7KqP9u86x0dp3ImW6V3z2sPtUC
+   w==;
+X-CSE-ConnectionGUID: HJs1G2kCR3+vymIbbrFUbA==
+X-CSE-MsgGUID: by14qiRnSx6Lzh4fnqEPhQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="18205792"
+X-IronPort-AV: E=Sophos;i="6.07,161,1708416000"; 
+   d="scan'208";a="18205792"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 04:11:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,161,1708416000"; 
+   d="scan'208";a="17229579"
+Received: from abdulqaf-mobl2.amr.corp.intel.com (HELO localhost) ([10.252.57.138])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 04:11:09 -0700
+From: Jani Nikula <jani.nikula@intel.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Hamza Mahfooz <hamza.mahfooz@amd.com>,
+ Javier Martinez Canillas <javierm@redhat.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Geert
+ Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH] drm: DRM_WERROR should depend on DRM
+In-Reply-To: <87msqkhhts.fsf@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <631a1f4c066181b54617bfe2f38b0bd0ac865b68.1711474200.git.geert+renesas@glider.be>
+ <87msqkhhts.fsf@intel.com>
+Date: Thu, 28 Mar 2024 13:11:06 +0200
+Message-ID: <87jzlmfw6t.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Include the header that defines u32.
+On Tue, 26 Mar 2024, Jani Nikula <jani.nikula@intel.com> wrote:
+> On Tue, 26 Mar 2024, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+>> There is no point in asking the user about enforcing the DRM compiler
+>> warning policy when configuring a kernel without DRM support.
+>>
+>> Fixes: f89632a9e5fa6c47 ("drm: Add CONFIG_DRM_WERROR")
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> D'oh! My bad.
+>
+> Reviewed-by: Jani Nikula <jani.nikula@intel.com>
 
-Fixes: 9707ac4fe2f5 ("tools/resolve_btfids: Refactor set sorting with types from btf_ids.h")
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218647
-Cc: stable@vger.kernel.org
-Signed-off-by: Natanael Copa <ncopa@alpinelinux.org>
----
-This fixes build of 6.6.23 and 6.1.83 kernels for Alpine Linux, which
-uses musl libc. I assume that GNU libc indirecly pulls in linux/types.h.
+And pushed to drm-misc-next. Thanks for the patch!
 
- tools/include/linux/btf_ids.h | 2 ++
- 1 file changed, 2 insertions(+)
+BR,
+Jani.
 
-diff --git a/tools/include/linux/btf_ids.h b/tools/include/linux/btf_ids.h
-index 72535f00572f..72ea363d434d 100644
---- a/tools/include/linux/btf_ids.h
-+++ b/tools/include/linux/btf_ids.h
-@@ -3,6 +3,8 @@
- #ifndef _LINUX_BTF_IDS_H
- #define _LINUX_BTF_IDS_H
- 
-+#include <linux/types.h> /* for u32 */
-+
- struct btf_id_set {
- 	u32 cnt;
- 	u32 ids[];
+>
+>> ---
+>>  drivers/gpu/drm/Kconfig | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+>> index f2bcf5504aa77679..2e1b23ccf30423a9 100644
+>> --- a/drivers/gpu/drm/Kconfig
+>> +++ b/drivers/gpu/drm/Kconfig
+>> @@ -423,7 +423,7 @@ config DRM_PRIVACY_SCREEN
+>>  
+>>  config DRM_WERROR
+>>  	bool "Compile the drm subsystem with warnings as errors"
+>> -	depends on EXPERT
+>> +	depends on DRM && EXPERT
+>>  	default n
+>>  	help
+>>  	  A kernel build should not cause any compiler warnings, and this
+
 -- 
-2.44.0
-
+Jani Nikula, Intel
