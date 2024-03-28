@@ -1,22 +1,23 @@
 Received: from esa2.ltts.com (unknown [14.140.155.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7C74F208;
-	Thu, 28 Mar 2024 12:40:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE257F489;
+	Thu, 28 Mar 2024 12:40:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.140.155.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711629635; cv=none; b=dSJauf1LY5JBclWfK3b+nR6AS0qStYGN9PgIU2tLWvXzwFYNjYZ9SPGDyGCQwo1Ct8C6c8svaAerq1jfby6bUApNQABU+NCbzQAzcjBvWdZF7WC2HdsLHRVusq+/QIRe2VMBLJYEZ2zfWDOXherQiPJXYrx3bDvRPos8Cuu+noU=
+	t=1711629638; cv=none; b=oHsRcrH/FDWMzBBMOvy7ydecqWC7RgeHdPTs7mt9XwPCB3FxsqrqpuzwexTpnIQJIf4CxxFeL7xgnmW0Nd4D+RJvoWBj251vhp9RaRPFx0eayPl9Hvk67bsqvNcJLBMZ0dmVn/IWmJzRdVkHEDCDkG1pCbO2afcB8qZGbCjSyxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711629635; c=relaxed/simple;
-	bh=SLDXXofNNvtb1d/IS5CU1TtMgweqPGf2VKfgDW1fXlA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZSxQJMumRjKmorWr36OrcrBxyATGLJ70pCoOcMhwvy0F94zdCCIFB/t+nfX3kVu+OaVOxgHBcTQ/qXSGhsZiecvcml0NegPlNdSHaf0ysYlrX2AqMUGmB63TTnI+jrjmI+tVGREgD/6CIvsmabm+o+6rXG4/9b8zm042k3Y4o44=
+	s=arc-20240116; t=1711629638; c=relaxed/simple;
+	bh=pjple3N7K1u1+TmH4sBZ9GXxe47P7tkb4dir/HgayiU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kYQC4qix/zKySg4eDV+l4LR1oGjUEoGv4Ej/J+/6l0VUdn5yMNeai709qqKwzqki6zcaGn713IsYxudaoWOckphmgZIoLwSjuFPuZDs96KOiLm+nYqZbi724PnxjUPQXYsNl851KQvtMZT6yC833kv32wJe6yqYDlnIcQtHy7D8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=14.140.155.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
-IronPort-SDR: lI+H9/AL0wOgQc7cIgU/AeOSWi6HzUcIOiwcI/fmVPQ03l7nX4T5+2Van+3pquDHRLQ18pKXVJ
- MWgDOIor931g==
+IronPort-SDR: Ir1UCVolBnE9b4GSpyFlWzrpM9q+joAxWd5mDML2gTD5B7VcCdrbirr463da0bQeUIOWcBl2NK
+ U5il/6y/LZ+w==
 Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
-  by esa2.ltts.com with ESMTP; 28 Mar 2024 18:10:28 +0530
+  by esa2.ltts.com with ESMTP; 28 Mar 2024 18:10:31 +0530
 From: Bhargav Raviprakash <bhargav.r@ltts.com>
 To: linux-kernel@vger.kernel.org
 Cc: m.nirmaladevi@ltts.com,
@@ -38,10 +39,12 @@ Cc: m.nirmaladevi@ltts.com,
 	kristo@kernel.org,
 	eblanc@baylibre.com,
 	Bhargav Raviprakash <bhargav.r@ltts.com>
-Subject: [PATCH v5 00/11] Add support for TI TPS65224 PMIC
-Date: Thu, 28 Mar 2024 18:10:05 +0530
-Message-Id: <20240328124016.161959-1-bhargav.r@ltts.com>
+Subject: [PATCH v5 02/11] mfd: tps6594: use volatile_table instead of volatile_reg
+Date: Thu, 28 Mar 2024 18:10:07 +0530
+Message-Id: <20240328124016.161959-3-bhargav.r@ltts.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240328124016.161959-1-bhargav.r@ltts.com>
+References: <20240328124016.161959-1-bhargav.r@ltts.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,94 +53,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series modifies the existing TPS6594 drivers to add support for the
-TPS65224 PMIC device that is a derivative of TPS6594. TPS65224 has a
-similar register map to TPS6594 with a few differences. SPI, I2C, ESM,
-PFSM, Regulators and GPIO features overlap between the two devices.
+In regmap_config use volatile_table instead of volatile_reg. This change
+makes it easier to add support for TPS65224 PMIC.
 
-TPS65224 is a Power Management IC (PMIC) which provides regulators and
-other features like GPIOs, Watchdog, Error Signal Monitor (ESM) and
-Pre-configurable Finite State Machine (PFSM). The SoC and the PMIC can
-communicate through the I2C or SPI interfaces. The PMIC TPS65224
-additionally has a 12-bit ADC.
-Data Sheet for TPS65224: https://www.ti.com/product/TPS65224-Q1
+Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+Acked-by: Julien Panis <jpanis@baylibre.com>
+---
+ drivers/mfd/tps6594-core.c  | 16 ++++++++++------
+ drivers/mfd/tps6594-i2c.c   |  2 +-
+ drivers/mfd/tps6594-spi.c   |  2 +-
+ include/linux/mfd/tps6594.h |  4 +++-
+ 4 files changed, 15 insertions(+), 9 deletions(-)
 
-Driver re-use is applied following the advice of the following series:
-https://lore.kernel.org/lkml/2f467b0a-1d11-4ec7-8ca6-6c4ba66e5887@baylibre.com/
-
-The features implemented in this series are:
-- TPS65224 Register definitions
-- Core (MFD I2C and SPI entry points)
-- PFSM	
-- Regulators
-- Pinctrl
-
-TPS65224 Register definitions:
-This patch adds macros for register field definitions of TPS65224
-to the existing TPS6594 driver.  
-
-Core description:
-I2C and SPI interface protocols are implemented, with and without
-the bit-integrity error detection feature (CRC mode).
-
-PFSM description:
-Strictly speaking, PFSM is not hardware. It is a piece of code.
-PMIC integrates a state machine which manages operational modes.
-Depending on the current operational mode, some voltage domains
-remain energized while others can be off.
-PFSM driver can be used to trigger transitions between configured
-states.
-
-Regulators description:
-4 BUCKs and 3 LDOs.
-BUCK12 can be used in dual-phase mode.
-
-Pinctrl description:
-TPS65224 family has 6 GPIOs. Those GPIOs can also serve different
-functions such as I2C or SPI interface or watchdog disable functions.
-The driver provides both pinmuxing for the functions and GPIO capability.
-
-This series was tested on linux-next tag: next-20240118
-
-Test logs can be found here:
-https://gist.github.com/LeonardMH/58ec135921fb1062ffd4a8b384831eb0
-
-Changelog v4 -> v5:
-- Regulator events changed to REGULATOR_EVENT_REGULATION_OUT for _UVOV 
-- Fixed pinctrl probe issues with TPS6593 PMIC
-- Refactoring pinctrl driver: reduced no. of switch case statements and 
-  using template structs for initializing tps6594_pinctrl.
-
-Bhargav Raviprakash (8):
-  mfd: tps6594: use volatile_table instead of volatile_reg
-  mfd: tps6594: add regmap config in match data
-  dt-bindings: mfd: ti,tps6594: Add TI TPS65224 PMIC
-  mfd: tps6594-i2c: Add TI TPS65224 PMIC I2C
-  mfd: tps6594-spi: Add TI TPS65224 PMIC SPI
-  mfd: tps6594-core: Add TI TPS65224 PMIC core
-  misc: tps6594-pfsm: Add TI TPS65224 PMIC PFSM
-  arch: arm64: dts: ti: k3-am62p5-sk: Add TPS65224 PMIC support in AM62P
-    dts
-
-Nirmala Devi Mal Nadar (3):
-  mfd: tps6594: Add register definitions for TI TPS65224 PMIC
-  regulator: tps6594-regulator: Add TI TPS65224 PMIC regulators
-  pinctrl: pinctrl-tps6594: Add TPS65224 PMIC pinctrl and GPIO
-
- .../devicetree/bindings/mfd/ti,tps6594.yaml   |   1 +
- arch/arm64/boot/dts/ti/k3-am62p5-sk.dts       |  95 +++++
- drivers/mfd/tps6594-core.c                    | 253 ++++++++++--
- drivers/mfd/tps6594-i2c.c                     |  41 +-
- drivers/mfd/tps6594-spi.c                     |  43 ++-
- drivers/misc/tps6594-pfsm.c                   |  48 ++-
- drivers/pinctrl/pinctrl-tps6594.c             | 275 ++++++++++---
- drivers/regulator/Kconfig                     |   4 +-
- drivers/regulator/tps6594-regulator.c         | 238 ++++++++++--
- include/linux/mfd/tps6594.h                   | 362 +++++++++++++++++-
- 10 files changed, 1215 insertions(+), 145 deletions(-)
-
-
-base-commit: 2863b714f3ad0a9686f2de1b779228ad8c7a8052
+diff --git a/drivers/mfd/tps6594-core.c b/drivers/mfd/tps6594-core.c
+index 783ee5990..089ab8cc8 100644
+--- a/drivers/mfd/tps6594-core.c
++++ b/drivers/mfd/tps6594-core.c
+@@ -319,12 +319,16 @@ static struct regmap_irq_chip tps6594_irq_chip = {
+ 	.handle_post_irq = tps6594_handle_post_irq,
+ };
+ 
+-bool tps6594_is_volatile_reg(struct device *dev, unsigned int reg)
+-{
+-	return (reg >= TPS6594_REG_INT_TOP && reg <= TPS6594_REG_STAT_READBACK_ERR) ||
+-	       reg == TPS6594_REG_RTC_STATUS;
+-}
+-EXPORT_SYMBOL_GPL(tps6594_is_volatile_reg);
++static const struct regmap_range tps6594_volatile_ranges[] = {
++	regmap_reg_range(TPS6594_REG_INT_TOP, TPS6594_REG_STAT_READBACK_ERR),
++	regmap_reg_range(TPS6594_REG_RTC_STATUS, TPS6594_REG_RTC_STATUS),
++};
++
++const struct regmap_access_table tps6594_volatile_table = {
++	.yes_ranges = tps6594_volatile_ranges,
++	.n_yes_ranges = ARRAY_SIZE(tps6594_volatile_ranges),
++};
++EXPORT_SYMBOL_GPL(tps6594_volatile_table);
+ 
+ static int tps6594_check_crc_mode(struct tps6594 *tps, bool primary_pmic)
+ {
+diff --git a/drivers/mfd/tps6594-i2c.c b/drivers/mfd/tps6594-i2c.c
+index 899c88c0f..c125b474b 100644
+--- a/drivers/mfd/tps6594-i2c.c
++++ b/drivers/mfd/tps6594-i2c.c
+@@ -187,7 +187,7 @@ static const struct regmap_config tps6594_i2c_regmap_config = {
+ 	.reg_bits = 16,
+ 	.val_bits = 8,
+ 	.max_register = TPS6594_REG_DWD_FAIL_CNT_REG,
+-	.volatile_reg = tps6594_is_volatile_reg,
++	.volatile_table = &tps6594_volatile_table,
+ 	.read = tps6594_i2c_read,
+ 	.write = tps6594_i2c_write,
+ };
+diff --git a/drivers/mfd/tps6594-spi.c b/drivers/mfd/tps6594-spi.c
+index 24b72847e..5afb1736f 100644
+--- a/drivers/mfd/tps6594-spi.c
++++ b/drivers/mfd/tps6594-spi.c
+@@ -70,7 +70,7 @@ static const struct regmap_config tps6594_spi_regmap_config = {
+ 	.reg_bits = 16,
+ 	.val_bits = 8,
+ 	.max_register = TPS6594_REG_DWD_FAIL_CNT_REG,
+-	.volatile_reg = tps6594_is_volatile_reg,
++	.volatile_table = &tps6594_volatile_table,
+ 	.reg_read = tps6594_spi_reg_read,
+ 	.reg_write = tps6594_spi_reg_write,
+ 	.use_single_read = true,
+diff --git a/include/linux/mfd/tps6594.h b/include/linux/mfd/tps6594.h
+index e754c01ac..16543fd4d 100644
+--- a/include/linux/mfd/tps6594.h
++++ b/include/linux/mfd/tps6594.h
+@@ -1337,7 +1337,9 @@ struct tps6594 {
+ 	struct regmap_irq_chip_data *irq_data;
+ };
+ 
+-bool tps6594_is_volatile_reg(struct device *dev, unsigned int reg);
++extern const struct regmap_access_table tps6594_volatile_table;
++extern const struct regmap_access_table tps65224_volatile_table;
++
+ int tps6594_device_init(struct tps6594 *tps, bool enable_crc);
+ 
+ #endif /*  __LINUX_MFD_TPS6594_H */
 -- 
 2.25.1
 
