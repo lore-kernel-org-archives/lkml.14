@@ -1,137 +1,252 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121E61EEFC
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 15:36:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960363DAC13;
+	Thu, 28 Mar 2024 15:37:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711640209; cv=none; b=aFrNbVmbnS3bU0xfIoiKc7Yfrzybi8RicBci2PyH380pex27E4d64ijvSMUg9fp9DM08l7JncukXVdtLqiTb1yU0i/TsEVKzOpRSkfxD4F3Rx5EYwilPVe/YIf8cWMciaqG/NCHZKVfTQiXkekqXClwow+sgaDdrZPlXFncunTY=
+	t=1711640244; cv=none; b=qk0NCfKT63/39eXJAslyUFDZ1pS1uCB9+AvzMeokNMpOHfdGW3PoA3B77glwjUgZjFzPi1Hmfn7SOKX5gueckl1jME231qRqABlbWK8JhC1GAY2jc0cd1W+745Dy9PlMboUU1I19XJ738tIuvurtfCrzhRPJ4jqFhYkyQ2CXTPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711640209; c=relaxed/simple;
-	bh=jNozf9uaUn62BQc5Mx2KoSKHOm3OswtOuVbxNmfLA24=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XnrKFxH0K6jqYcutbQCnG9kZU9R6StghEyuDtEyZ3dxybiQKO7W1uRFIKAaYmINaVmegC5/vrExAlpFPGv27cO5XSqDLMoOi54CBJgwmtMtp2gVwHe2c+4CNUinjnKaFnQxOqCfhUMGqB7JXhLN8a4kV/YSkOYaixz0Oghv1+8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=DsewIpLf; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DsewIpLf"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-78a66ba49dcso69476585a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 08:36:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711640205; x=1712245005; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jNozf9uaUn62BQc5Mx2KoSKHOm3OswtOuVbxNmfLA24=;
-        b=DsewIpLfp6Az2N9LqNhRIYkXLHot1Du0xOXIF96RyarWm1+VcG96BT6yNiGLtWov8m
-         OqhU9vcTKO+P+WHCcpPKLc4kzeIVKR2U9uLfjHj3naDnlt1uk083cIwcZhPbE0H8/PW3
-         3tKYuL9HClXc2IIx0GqWMyo3tKwZW2uNFlsRA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711640205; x=1712245005;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jNozf9uaUn62BQc5Mx2KoSKHOm3OswtOuVbxNmfLA24=;
-        b=TKMO8evPFa+Zweti56Vf6msICtF/TGDU+GnBsMFizW9rzb5XcFVGTOch3pzqqVi3OO
-         EaGwo8DDRfW49LQzsvCJEdqtkiKsN+0I7Fgr72z0tQaeovciUHPwF3Y8C2bXZHIFV7lk
-         88x7yPYM4gYlIehWxp9v7QG1x1rDy2dSpo6RlmPneThM5Oz7jgPOVAIw/SiRcxthFFq9
-         ZET1jdbeqLbLBrS5mGxRcPe/qSPTZZLkVjlXfLQwaHJqZGKmh8bMPeukQZjRQMLSDkg8
-         BnXEUZtVJRO7ZrzdnTvdipPg0atmZtNJdIqC5hRVZuTiak0ow/C2DDWxERaAsXzO7ljp
-         eDDA==
-X-Forwarded-Encrypted: i=1; AJvYcCW3zDfT6Xxy6RnMMUMEJnwuSTYA4K6tT7mp6wlLbIG9GyQYhivhkfh1eLuR7+cVt48rwEgeHO2kIgeYBKHg80ALyJ6/k9lJWXNCMlwr
-X-Gm-Message-State: AOJu0Yw2nnDKHfMcdGURJJ8gsKDN/a6IoQlGcrfzgtZrfZ95G4IqwFzQ
-	xtykWBKEtbMrOWMg3E5PzQPkX5dURgEn3qsmIpvDpIXIp3GykvPaWvn3b/nwKQueBAJjnjjkUnI
-	=
-X-Google-Smtp-Source: AGHT+IEYXWoUrUQIx22afAtX7pwUI5/Xqd+hSYpql+9ctujC431spA5yy6rneH/GjMA6iI39eOb/CQ==
-X-Received: by 2002:ad4:559a:0:b0:697:2ec8:55a7 with SMTP id f26-20020ad4559a000000b006972ec855a7mr2845151qvx.65.1711640204861;
-        Thu, 28 Mar 2024 08:36:44 -0700 (PDT)
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com. [209.85.160.170])
-        by smtp.gmail.com with ESMTPSA id 11-20020ad45b8b000000b0069895b7df25sm337612qvp.84.2024.03.28.08.36.43
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Mar 2024 08:36:43 -0700 (PDT)
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-428405a0205so381661cf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 08:36:43 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVR2zNs0xyl+Px3XsKfW5KHp64iEz3elrI28CzlqAWANXkfx4cAbZzNhVqfbVfuCbjnewQGN+NTbKJuPOeKwGzRhV0INRPV0blpgoqS
-X-Received: by 2002:a05:622a:5a0d:b0:431:74f8:8ae6 with SMTP id
- fy13-20020a05622a5a0d00b0043174f88ae6mr287854qtb.19.1711640203361; Thu, 28
- Mar 2024 08:36:43 -0700 (PDT)
+	s=arc-20240116; t=1711640244; c=relaxed/simple;
+	bh=M1/MI7ctmoanaJzMS8Vaa21avZdB8bKDRkpxkpFOS8Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=duoNiSJMi4Nd9lcUzIxdRVE/TJsg961wOyhOq7mmyWhSiEOyeMxslBhYxXUvP0avr54munlknbN2pdP2Upqiz5OtKNfVA16WVe/Lbx5UaqbNRF3kcEDqUXnFbQ7DrkpU8jG/EDl6CUhewvs0/X/Gs+Q+r/o3DgdUEEisoP8objw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE36FC433F1;
+	Thu, 28 Mar 2024 15:37:20 +0000 (UTC)
+Date: Thu, 28 Mar 2024 11:40:04 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Yi-De Wu <yi-de.wu@mediatek.com>
+Cc: Yingshiuan Pan <yingshiuan.pan@mediatek.com>, Ze-Yu Wang
+ <ze-yu.wang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas
+ <catalin.marinas@arm.com>, Wihl Deacon <will@kernel.org>, "Masami
+ Hiramatsu" <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Richard Cochran
+ <richardcochran@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-trace-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+ <linux-mediatek@lists.infradead.org>, David Bradil <dbrazdil@google.com>,
+ Trilok Soni <quic_tsoni@quicinc.com>, Jade Shih <jades.shih@mediatek.com>,
+ Ivan Tseng <ivan.tseng@mediatek.com>, My Chuang <my.chuang@mediatek.com>,
+ Shawn Hsiao <shawn.hsiao@mediatek.com>, PeiLun Suei
+ <peilun.suei@mediatek.com>, Liju Chen <liju-clr.chen@mediatek.com>, "Willix
+ Yeh" <chi-shen.yeh@mediatek.com>, Kevenny Hsieh
+ <kevenny.hsieh@mediatek.com>
+Subject: Re: [PATCH v8 19/20] virt: geniezone: Add tracing support for hyp
+ call and vcpu exit_reason
+Message-ID: <20240328114004.5793230a@gandalf.local.home>
+In-Reply-To: <20231228105147.13752-20-yi-de.wu@mediatek.com>
+References: <20231228105147.13752-1-yi-de.wu@mediatek.com>
+	<20231228105147.13752-20-yi-de.wu@mediatek.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240205092626.v2.1.Id9ad163b60d21c9e56c2d686b0cc9083a8ba7924@changeid>
- <CAD=FV=WgGuJLBWmXBOU5oHMvWP2M1cSMS201K8HpyXSYiBPJXQ@mail.gmail.com>
- <CAD=FV=U82H41q3sKxZK_i1ffaQuqwFo98MLiPhSo=mY8SWLJcA@mail.gmail.com> <ZgWNtmcyZOMZR1Fi@arm.com>
-In-Reply-To: <ZgWNtmcyZOMZR1Fi@arm.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Thu, 28 Mar 2024 08:36:26 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WaiQSbCnKz8t9VFt74vVXhOCX+L=abFn-QOV9OeQx5Aw@mail.gmail.com>
-Message-ID: <CAD=FV=WaiQSbCnKz8t9VFt74vVXhOCX+L=abFn-QOV9OeQx5Aw@mail.gmail.com>
-Subject: Re: [PATCH v2] regset: use kvzalloc() for regset_get_alloc()
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Mark Brown <broonie@kernel.org>, 
-	Will Deacon <will@kernel.org>, Dave Martin <Dave.Martin@arm.com>, Oleg Nesterov <oleg@redhat.com>, 
-	linux-arm-kernel@lists.infradead.org, Matthew Wilcox <willy@infradead.org>, 
-	Eric Biederman <ebiederm@xmission.com>, Jan Kara <jack@suse.cz>, Kees Cook <keescook@chromium.org>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On Thu, 28 Dec 2023 18:51:46 +0800
+Yi-De Wu <yi-de.wu@mediatek.com> wrote:
 
-On Thu, Mar 28, 2024 at 8:33=E2=80=AFAM Catalin Marinas <catalin.marinas@ar=
-m.com> wrote:
->
-> > I'm not trying to be a pest here, so if this is on someone's todo list
-> > and they'll get to it eventually then feel free to tell me to go away
-> > and I'll snooze this for another few months. I just want to make sure
-> > it's not forgotten.
-> >
-> > I've been assuming that someone like Al Viro or Christian Brauner
-> > would land this patch eventually and I know Al responded rather
-> > quickly to my v1 [2]. I think all of Al's issues were resolved by Mark
-> > Brown's patch [1] (which has landed in the arm64 tree) and my updating
-> > of the patch description in v2. I see that Al and Christian are
-> > flagged as maintainers of "fs/binfmt_elf.c" which is one of the two
-> > files I'm touching, so that's mostly why I was assuming they would
-> > land it.
-> >
-> > ...but I realize that perhaps my assumptions are wrong and this needs
-> > to go through a different maintainer. In this case (if I'm reading it
-> > correctly) Al and Christian are listed because the file is under "fs"
-> > even though this isn't _really_ much of a filesystem-related patch.
-> > Perhaps this needs to go through something like Andrew Morton's tree
-> > since he often picks up patches that have nowhere else to land? If
-> > someone else has suggestions, I'm all ears. I'm also happy to repost
-> > this patch in case it helps with a maintainer applying it.
->
-> FWIW, for this patch:
->
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> Add tracepoints for hypervisor calls and VCPU exit reasons in GenieZone
+> driver. It aids performance debugging by providing more information
+> about hypervisor operations and VCPU behavior.
+> 
+> Command Usage:
+> echo geniezone:* >> /sys/kernel/tracing/set_event
+> echo 1 > /sys/kernel/tracing/tracing_on
+> echo 0 > /sys/kernel/tracing/tracing_on
+> cat /sys/kernel/tracing/trace
+> 
+> For example:
+> crosvm_vcpu0-4838 [004] ..... 76053.536034: mtk_hypcall_enter: id=0xbb001005
+> crosvm_vcpu0-4838 [004] ..... 76053.540039: mtk_hypcall_leave: id=0xbb001005 invalid=0
+> crosvm_vcpu0-4838 [004] ..... 76053.540040: mtk_vcpu_exit: vcpu exit_reason=0x92920003
 
-Thanks!
+Cleaning out patchwork, I noticed this patch.
 
-> Yeah, normally Al or Christian would take it but with their ack we can
-> also take it through the arm64 tree (or Andrew can pick it up through
-> the mm tree).
+You can make the above more informative by having it output:
 
-OK, let's see what folks say.
+ crosvm_vcpu0-4838 [004] ..... 76053.540040: mtk_vcpu_exit: vcpu exit_reason=IRQ
 
 
-> With Mark's fix, I assume this is no longer urgent, cc stable material,
-> but rather something nice in the future to reduce the risk of allocation
-> failure on this path.
+> 
+> This example tracks a hypervisor function call by an ID (`0xbb001005`)
+> from initiation to termination, which is supported (invalid=0). A vCPU
+> exit is triggered by an Interrupt Request (IRQ) (exit reason: 0x92920003).
+> 
+> /* VM exit reason */
+> enum {
+> 	GZVM_EXIT_UNKNOWN = 0x92920000,
+> 	GZVM_EXIT_MMIO = 0x92920001,
+> 	GZVM_EXIT_HYPERCALL = 0x92920002,
+> 	GZVM_EXIT_IRQ = 0x92920003,
+> 	GZVM_EXIT_EXCEPTION = 0x92920004,
+> 	GZVM_EXIT_DEBUG = 0x92920005,
+> 	GZVM_EXIT_FAIL_ENTRY = 0x92920006,
+> 	GZVM_EXIT_INTERNAL_ERROR = 0x92920007,
+> 	GZVM_EXIT_SYSTEM_EVENT = 0x92920008,
+> 	GZVM_EXIT_SHUTDOWN = 0x92920009,
+> 	GZVM_EXIT_GZ = 0x9292000a,
+> };
+> 
+> Signed-off-by: Liju-clr Chen <liju-clr.chen@mediatek.com>
+> Signed-off-by: Yi-De Wu <yi-de.wu@mediatek.com>
+> ---
+>  arch/arm64/geniezone/vm.c          |  5 +++
+>  drivers/virt/geniezone/gzvm_vcpu.c |  3 ++
+>  include/trace/events/geniezone.h   | 54 ++++++++++++++++++++++++++++++
+>  3 files changed, 62 insertions(+)
+>  create mode 100644 include/trace/events/geniezone.h
+> 
+> diff --git a/arch/arm64/geniezone/vm.c b/arch/arm64/geniezone/vm.c
+> index a9d264bbb3b1..5667643251b5 100644
+> --- a/arch/arm64/geniezone/vm.c
+> +++ b/arch/arm64/geniezone/vm.c
+> @@ -7,6 +7,8 @@
+>  #include <linux/err.h>
+>  #include <linux/uaccess.h>
+>  
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/geniezone.h>
+>  #include <linux/gzvm.h>
+>  #include <linux/gzvm_drv.h>
+>  #include "gzvm_arch_common.h"
+> @@ -33,7 +35,10 @@ int gzvm_hypcall_wrapper(unsigned long a0, unsigned long a1,
+>  			 unsigned long a6, unsigned long a7,
+>  			 struct arm_smccc_res *res)
+>  {
+> +	trace_mtk_hypcall_enter(a0);
+>  	arm_smccc_hvc(a0, a1, a2, a3, a4, a5, a6, a7, res);
+> +	trace_mtk_hypcall_leave(a0, (res->a0 != ERR_NOT_SUPPORTED) ? 0 : 1);
+> +
+>  	return gzvm_err_to_errno(res->a0);
+>  }
+>  
+> diff --git a/drivers/virt/geniezone/gzvm_vcpu.c b/drivers/virt/geniezone/gzvm_vcpu.c
+> index 86c690749277..138ec064596b 100644
+> --- a/drivers/virt/geniezone/gzvm_vcpu.c
+> +++ b/drivers/virt/geniezone/gzvm_vcpu.c
+> @@ -10,6 +10,8 @@
+>  #include <linux/mm.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+> +
+> +#include <trace/events/geniezone.h>
+>  #include <linux/gzvm_drv.h>
+>  
+>  /* maximum size needed for holding an integer */
+> @@ -103,6 +105,7 @@ static long gzvm_vcpu_run(struct gzvm_vcpu *vcpu, void __user *argp)
+>  
+>  	while (!need_userspace && !signal_pending(current)) {
+>  		gzvm_arch_vcpu_run(vcpu, &exit_reason);
+> +		trace_mtk_vcpu_exit(exit_reason);
+>  
+>  		switch (exit_reason) {
+>  		case GZVM_EXIT_MMIO:
+> diff --git a/include/trace/events/geniezone.h b/include/trace/events/geniezone.h
+> new file mode 100644
+> index 000000000000..1fa44f9c4b3c
+> --- /dev/null
+> +++ b/include/trace/events/geniezone.h
+> @@ -0,0 +1,54 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2023 MediaTek Inc.
+> + */
+> +
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM geniezone
+> +
+> +#define _TRACE_GENIEZONE_H
+> +
+> +#include <linux/tracepoint.h>
 
-It's not quite as urgent as before Mark's fix, which gets rid of the
-order 7 allocation. ...but an unnecessary order 5 allocation is still
-nothing to sneeze at. I'd let others make the decision about whether
-to CC stable, but I'll at least advocate backporting it to all the
-kernel trees I'm directly involved in.
+#define GZVM_EXIT_REASONS	\
+	EM(UNKNOWN)		\
+	EM(MMIO)		\
+	EM(HYPERCALL)		\
+	EM(IRQ)			\
+	EM(EXCEPTION)		\
+	EM(DEBUG)		\
+	EM(FAIL_ENTRY)		\
+	EM(INTERNAL_ERROR)	\
+	EM(SYSTEM_EVENT)	\
+	EM(SHUTDOWN)		\
+	EMe(GZ)
 
--Doug
+#undef EM
+#undef EMe
+#define EM(a) TRACE_DEFINE_ENUM(GZVM_EXIT_##a);
+#define EMe(a) TRACE_DEFINE_ENUM(GZVM_EXIT_##a);
+
+GZVM_EXIT_REASONS
+
+#undef EM
+#undef EMe
+
+#define EM(a)       { GZVM_EXIT_##a, #a },
+#define EMe(a)      { GZVM_EXIT_##a, #a }
+
+> +
+> +TRACE_EVENT(mtk_hypcall_enter,
+> +	    TP_PROTO(unsigned long id),
+> +
+> +	    TP_ARGS(id),
+> +
+> +	    TP_STRUCT__entry(__field(unsigned long, id)),
+> +
+> +	    TP_fast_assign(__entry->id = id;),
+> +
+> +	    TP_printk("id=0x%lx", __entry->id)
+> +);
+> +
+> +TRACE_EVENT(mtk_hypcall_leave,
+> +	    TP_PROTO(unsigned long id, unsigned long invalid),
+> +
+> +	    TP_ARGS(id, invalid),
+> +
+> +	    TP_STRUCT__entry(__field(unsigned long, id)
+> +			     __field(unsigned long, invalid)
+> +	    ),
+> +
+> +	    TP_fast_assign(__entry->id = id;
+> +			   __entry->invalid = invalid;
+> +	    ),
+> +
+> +	    TP_printk("id=0x%lx invalid=%lu", __entry->id, __entry->invalid)
+> +);
+> +
+> +TRACE_EVENT(mtk_vcpu_exit,
+> +	    TP_PROTO(unsigned long exit_reason),
+> +
+> +	    TP_ARGS(exit_reason),
+> +
+> +	    TP_STRUCT__entry(__field(unsigned long, exit_reason)),
+> +
+> +	    TP_fast_assign(__entry->exit_reason = exit_reason;),
+> +
+> +	    TP_printk("vcpu exit_reason=0x%lx", __entry->exit_reason)
+
+	    TP_printk("vcpu exit_reason=0x%lx",
+		__print_symbolic(__entry->exit_reason, GZVM_EXIT_REASONS))
+
+
+And instead of having the cryptic enum values printed, you will have human
+readable reasons.
+
+-- Steve
+
+
+> +);
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
+
