@@ -1,81 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E7513A3F3;
-	Thu, 28 Mar 2024 20:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EDA13A3E7
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 20:39:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711658392; cv=none; b=Czb3LQsT5mn4D0WrS45GN4YTKYJ3Ch1a7W1I6fSVvooueqhp9dMnISAcTgOimB1sukrGVpJGcnsRvQ8YzFUp3nF4zTDkDPBLhbt7Ri3y1oll1ls25P7WUQoFDqHr1fgamUVtqN1HiH3WnSXJMR1xTx6XZN3dTO4E050bU1rId1I=
+	t=1711658393; cv=none; b=FhbI493x39Nohwa261lbC7UAHmLI2ho69qUV6yhnSiFWc7LvsDacX6DnJzcgqayU0J996ItfOqJ32MUDTBsOHTbsS0KxkKKAmiws1JD7J/HfQ3tuydFz/rIHGKcZX+pcLmVwyayvdL1ISBcrPBNsshTbmrvYa107zPQJmc++n2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711658392; c=relaxed/simple;
-	bh=wNEOt6nhkwgxlBg+GMM4yjneoi9cWEwTzl98ewOO420=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=GN5HUGz4Ytuf+CN5RRPEukeIkBPhH1s0ZBQ+zomWXhrLzSIXWhEmO8FG9QmrzM7tLSUjvZF7Rg4Mjj5GxHskRwRYiCTM/lfvpVCJIaHxQYLIgRKdgj2Zd6S5Nazr/4lGltCHSRIMa1KwHYWQkgLP5TfBXOiwZIt4TwePxNQAZZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MgEJipg7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711658393; c=relaxed/simple;
+	bh=Z/9BALdmqq/q3tmjj2QgJEd4wnfZA9Ii706QeBSvW/w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=McWFrD6XiM+Y7FMby4Z6DAaFZXBrM3kIqC2SrHBMZX84tNJkWCXS+bjfmT5Yu1n11bYZXoUOu5UY/dDrESKa7n3BXVp79gKZsPz3hmAo1C2aLwXY3GWOB2NSLvcHJF0Kn3HHfRCd4lr4+WOndrxaSEZ8crfHD/gwuKD1GlOymSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QEZ1G5FZ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MgEJipg7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86231C433C7;
-	Thu, 28 Mar 2024 20:39:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711658391;
-	bh=wNEOt6nhkwgxlBg+GMM4yjneoi9cWEwTzl98ewOO420=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=MgEJipg7BZ/754JMJHKXgeKjLH176NZLsTXmtVLrvKdyP0VMh3TR1/JX3TvNgkoLL
-	 N7YKW7C7bG8Eynwl5xFwOXDlApOan5+v+UNR8w4+5A+8Jzj8axLQcaR90CZJO3c4R3
-	 R3+qfW+dY5qU1LApyEXXxHFOJxAu3wutofCzxkcoHMz3nvH9lKt+H1CeUuZiu/u/I1
-	 5zynv11b7kaO1rvJ/JqfQCLth0GQ8/OV8wIiVChsb4CpdginmFrMSy0O2+5B8dwdXV
-	 mkUE3IpIaFm+H6SeYaXCAlBKr3pxHiFOt7fi5mWx1eEb62RCGvxdahszMLaP88UN7j
-	 Vg65e8SlqyHXQ==
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-	id 7074611A1DC6; Thu, 28 Mar 2024 21:39:48 +0100 (CET)
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@kernel.org>
-To: Jesper Dangaard Brouer <hawk@kernel.org>, Alexei Starovoitov
- <alexei.starovoitov@gmail.com>, syzbot
- <syzbot+af9492708df9797198d6@syzkaller.appspotmail.com>
-Cc: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
- daniel@iogearbox.net, davem@davemloft.net, eddyz87@gmail.com,
- haoluo@google.com, john.fastabend@gmail.com, jolsa@kernel.org,
- kpsingh@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org,
- martin.lau@linux.dev, netdev@vger.kernel.org, sdf@google.com,
- song@kernel.org, syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
-Subject: Re: [syzbot] [bpf?] [net?] general protection fault in dev_map_enqueue
-In-Reply-To: <42106158-ca2b-48f5-9397-87e7cd9d4fc8@kernel.org>
-References: <000000000000f6531b061494e696@google.com>
- <00000000000069ee1a06149ff00c@google.com>
- <CAADnVQLpJwEfLoF9ORc7bSsDPG7Y05mWUpWWyfi7qjY+2LhC+Q@mail.gmail.com>
- <42106158-ca2b-48f5-9397-87e7cd9d4fc8@kernel.org>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date: Thu, 28 Mar 2024 21:39:48 +0100
-Message-ID: <878r222iqz.fsf@toke.dk>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QEZ1G5FZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711658390;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ifdaXHJafNhgJEodv1uxro7ZmRQAOz8+u7BNkXOalBo=;
+	b=QEZ1G5FZ2vWF9jfR84zg1Rvli180LBl1uvUGYmw5BbSAGIQvdphmUSZUiJOnQFok0DweJB
+	autHHgHYoPl8HVi8ooQuWy/uLT9FqAf1p76ymFeiWxMCKKVwCIqRFxXf8eERfxccchhnLX
+	4FYv46cyIND5SRki7Gzvvk7hR473rFI=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-492-EC1kfjvMNx-NTQDJ-Tmc6A-1; Thu,
+ 28 Mar 2024 16:39:46 -0400
+X-MC-Unique: EC1kfjvMNx-NTQDJ-Tmc6A-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CAC9A1C2CDF2;
+	Thu, 28 Mar 2024 20:39:45 +0000 (UTC)
+Received: from localhost (unknown [10.39.194.117])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C12A3492BDA;
+	Thu, 28 Mar 2024 20:39:44 +0000 (UTC)
+From: Stefan Hajnoczi <stefanha@redhat.com>
+To: linux-block@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	eblake@redhat.com,
+	Alasdair Kergon <agk@redhat.com>,
+	Mikulas Patocka <mpatocka@redhat.com>,
+	dm-devel@lists.linux.dev,
+	David Teigland <teigland@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Joe Thornber <ejt@redhat.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>
+Subject: [RFC 1/9] block: add llseek(SEEK_HOLE/SEEK_DATA) support
+Date: Thu, 28 Mar 2024 16:39:02 -0400
+Message-ID: <20240328203910.2370087-2-stefanha@redhat.com>
+In-Reply-To: <20240328203910.2370087-1-stefanha@redhat.com>
+References: <20240328203910.2370087-1-stefanha@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-Jesper Dangaard Brouer <hawk@kernel.org> writes:
+The SEEK_HOLE/SEEK_DATA interface is used by userspace applications to
+detect sparseness. This makes copying and backup applications faster and
+reduces space consumption because only ranges that do not contain data
+can be skipped.
 
-> On 27/03/2024 16.19, Alexei Starovoitov wrote:
->> Toke, Jesper,
->> 
->> please take a look.
->> It's reproducible 100% of the time.
->> dst is NULL in dev_map_enqueue().
->> 
->
-> The `dst` (NULL) is basically `ri->tgt_value` being passed through
-> (unmodified) via xdp_do_redirect_frame() and __xdp_do_redirect_frame()
-> into dev_map_enqueue().
->
-> I think something is wrong in xdp_test_run_batch().
-> The `ri->tgt_value` is being set in __bpf_xdp_redirect_map(), but I
-> cannot see __bpf_xdp_redirect_map() being used in xdp_test_run_batch().
->
-> Toke, can you take a look at xdp_test_run_batch() and where
-> `ri->tgt_value` is getting set?
+Handle SEEK_HOLE/SEEK_DATA for block devices. No block drivers implement
+the new callback yet so the entire block device will appear to contain
+data. Later patches will add support to drivers so this actually becomes
+useful.
 
-Sure! I'm off for Easter, but I'll take a look when I get back next week :)
+Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
+---
+ include/linux/blkdev.h |  7 +++++++
+ block/fops.c           | 43 +++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 49 insertions(+), 1 deletion(-)
 
--Toke
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index c3e8f7cf96be9..eecfbf9c27fc4 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -332,6 +332,9 @@ int blkdev_zone_mgmt(struct block_device *bdev, enum req_op op,
+ int blk_revalidate_disk_zones(struct gendisk *disk,
+ 		void (*update_driver_data)(struct gendisk *disk));
+ 
++loff_t blkdev_seek_hole_data(struct block_device *bdev, loff_t offset,
++		int whence);
++
+ /*
+  * Independent access ranges: struct blk_independent_access_range describes
+  * a range of contiguous sectors that can be accessed using device command
+@@ -1432,6 +1435,10 @@ struct block_device_operations {
+ 	 * driver.
+ 	 */
+ 	int (*alternative_gpt_sector)(struct gendisk *disk, sector_t *sector);
++
++	/* Like llseek(SEEK_HOLE/SEEK_DATA). This callback may be NULL. */
++	loff_t (*seek_hole_data)(struct block_device *bdev, loff_t offset,
++			int whence);
+ };
+ 
+ #ifdef CONFIG_COMPAT
+diff --git a/block/fops.c b/block/fops.c
+index 679d9b752fe82..8ffbfec6b4c25 100644
+--- a/block/fops.c
++++ b/block/fops.c
+@@ -523,6 +523,43 @@ const struct address_space_operations def_blk_aops = {
+ };
+ #endif /* CONFIG_BUFFER_HEAD */
+ 
++/* Like llseek(SEEK_HOLE/SEEK_DATA) */
++loff_t blkdev_seek_hole_data(struct block_device *bdev, loff_t offset,
++		int whence)
++{
++	const struct block_device_operations *fops = bdev->bd_disk->fops;
++	loff_t size;
++
++	if (fops->seek_hole_data)
++		return fops->seek_hole_data(bdev, offset, whence);
++
++	size = bdev_nr_bytes(bdev);
++
++	switch (whence) {
++	case SEEK_DATA:
++		if ((unsigned long long)offset >= size)
++			return -ENXIO;
++		return offset;
++	case SEEK_HOLE:
++		if ((unsigned long long)offset >= size)
++			return -ENXIO;
++		return size;
++	default:
++		return -EINVAL;
++	}
++}
++
++static loff_t blkdev_llseek_hole_data(struct file *file, loff_t offset,
++		int whence)
++{
++	struct block_device *bdev = file_bdev(file);
++
++	offset = blkdev_seek_hole_data(bdev, offset, whence);
++	if (offset >= 0)
++		offset = vfs_setpos(file, offset, bdev_nr_bytes(bdev));
++	return offset;
++}
++
+ /*
+  * for a block special file file_inode(file)->i_size is zero
+  * so we compute the size by hand (just as in block_read/write above)
+@@ -533,7 +570,11 @@ static loff_t blkdev_llseek(struct file *file, loff_t offset, int whence)
+ 	loff_t retval;
+ 
+ 	inode_lock(bd_inode);
+-	retval = fixed_size_llseek(file, offset, whence, i_size_read(bd_inode));
++	if (whence == SEEK_HOLE || whence == SEEK_DATA)
++		retval = blkdev_llseek_hole_data(file, offset, whence);
++	else
++		retval = fixed_size_llseek(file, offset, whence,
++					   i_size_read(bd_inode));
+ 	inode_unlock(bd_inode);
+ 	return retval;
+ }
+-- 
+2.44.0
+
