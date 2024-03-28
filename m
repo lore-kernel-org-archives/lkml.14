@@ -1,689 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7090126F3F;
-	Thu, 28 Mar 2024 23:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4BA657BC
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 23:08:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711667318; cv=none; b=iHD+pbDB0neGHBTQfbd255FlZOKruGndhQbwtLRfNslzaaKXeB5jhoWfsadWh4FkVvNsJXwIwTbG5xaDZlV5l54JgD65qaM2KLSBHh/1y68y3XFA6+ISYAE9mEG0ybzR4/yagDiTNJEVEfQu5U8gW4rPA+JzRWMoeplY8L5eO60=
+	t=1711667334; cv=none; b=oEiZZcHp1APt00ztvyJdur5zcCnEIUe3avQxHWAIUKwPsiJ81xf8cVbnDvnIN3BMnsWIi9U1JPhspe0IWsSny7/QStwgoryyH73nLv0g6IFviL0ylyePVYvggOsi15/n1VCzUsN233cJG9+K4GALU3GlQQgJpCr/RCrdyGHkOgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711667318; c=relaxed/simple;
-	bh=4Fz4KA9xik4O8bn1vIsWmK8pnv9KRIQ6/DuW+13bNHc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mFATWk1fopJj1/elMCsFFgg0hBVRbqbekH+Ng+ypMZxj+hT96rsLczUsqK3tJzsU3w8gQ1OMN9CUWSR7TQ7GGhNl/McL/OdRo5y5AwqOiJ6I6d2LCSK1XYN1JN7iJZdoEUKvf2AkIVB1Rn9gJi1epu2SdUKXfRSyQQvHqfNuHyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IusjRYAK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711667334; c=relaxed/simple;
+	bh=O4rtQZGlV/wx6M+vu+AV+jxl5oNZk1HfuZuYghttxEc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=prctoaa/1qWim5T7Jn0NQ2/5kBLr8oiGds8yXDmN0C81+ZTKZO66pP1RryzDcyDktMpeMyj0wJ7nHFsCYVX/+9o5pEMD4rM14YmRn4+RAcO7aaAvyEhOgSv4WI0apC2Y33eMqI769kbLG3fLM1KomFgISfKHCtMRPBFHZHElm54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iuS5OM8u; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IusjRYAK"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 741D7C4166A;
-	Thu, 28 Mar 2024 23:08:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711667318;
-	bh=4Fz4KA9xik4O8bn1vIsWmK8pnv9KRIQ6/DuW+13bNHc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=IusjRYAKd+Abt8yg8PA7eRDqXG0Mimivx5HSO88iTl8O36OZBhvJZeozWXOYInLyY
-	 NUFqL93F/FtyDx9gyq/yVdoSv8rn9fSdziNs2gZOfNwHnFuAJnXph24k4rKI2ehkBh
-	 zLry/xQKe/LdXG0xgreqwIXPrVqoqoEoH9ovAhXjRYIj1WrogNxxxSH9UB0v3ElBGt
-	 A77BntixeNtVMqockVsAmVBwzSBK9txGiMH/HxYHmxdvr5KKsoMc3xoOL/C8sD2tBC
-	 mgY1nqqGDFuOJbg5VySOHOO2Ksx3vs5tDdcAcZEHP/kwx0lpVgIXHtDLYRTXL6ZEB8
-	 YTmhEO+5gJIJQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4823ACD11DD;
-	Thu, 28 Mar 2024 23:08:38 +0000 (UTC)
-From: Alexandru Marc Serdeliuc via B4 Relay <devnull+serdeliuk.yahoo.com@kernel.org>
-Date: Fri, 29 Mar 2024 00:08:34 +0100
-Subject: [PATCH 1/2] V2 arm64: dts: qcom: Add support for Samsung Galaxy Z
- Fold5
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iuS5OM8u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711667331;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O7NE4hNdw70IHlUQLVH8pzLazVAP9l2/O8oPbhQHcdo=;
+	b=iuS5OM8u1TG9A7m9+AqOOsgrXHs5qCsyTyEzDugZKs/AZB7ja6TCDHZw6DziOc19Z2WuAY
+	/P6NtNmOx6sE1FZs5yksORquNnfMlALKuI5bTFuHWfVzPw+mIDGawnsEgiourLLX4JV07Y
+	FsIkwY/s8ApfVO3X/y+37tQEW5U72QM=
+Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com
+ [209.85.167.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-138-2nXZ72X_MPyapbrds-l9jg-1; Thu, 28 Mar 2024 19:08:50 -0400
+X-MC-Unique: 2nXZ72X_MPyapbrds-l9jg-1
+Received: by mail-oi1-f199.google.com with SMTP id 5614622812f47-3c3cfc89b23so1045768b6e.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:08:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711667329; x=1712272129;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O7NE4hNdw70IHlUQLVH8pzLazVAP9l2/O8oPbhQHcdo=;
+        b=JExeqH7wARF+tcwcN6dtNaq/L6UtIPTZZ6Q9BnLxiPNafZ+62zUpoNCxZ5uN8hm2T3
+         a8GpxgUcRMf/mcStuJnXgS3oOme2Em3u9DbFYh+JaWRX/4GSgdhmylmnzTuCpA/vqNdG
+         0Z6yiHGYTKg0xokU83rSItpAEerNbFGOW9OaiDGU8v/cFu6agqcY/OGFA8Yu3+Pz8NED
+         h4mUxF8ulhA2uK6f8eXUxUbC+hjazVddmOPcG5ijqpOyLBqjx72fdVv0kPqy2pqC4K2k
+         0o5Q62X6GrRSKorMOS9GxR/szAcwCjEecNwAw/nyfyKZWAzPB7ffWStMyXi+hdUMq2hH
+         BuwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXDNNrXU5eFmRv7p+nKvX7oHMrlGuit+F4AjS1+w9Uj4eCyp6UDVUkjpQmLQC2A+T7455QEmcbsef/k+t7sLKHuine4LnPAPmowpYe1
+X-Gm-Message-State: AOJu0YxLOJVOcCrC+88rEv8q/Vx9gA6bjKIVoDOWKlTb5Wp+mQB4IVdb
+	kKt2B7jghbIfeiiZDuN7MPn3P+NbTYrolPKCTjRNBg3P7A/hbXhTZtYKcnCGWDls0QwA9dUMCKh
+	lTCjic/cU6LnUsx7+NddMv0izz+3yzCUAsWLOIDvhxLX4CTMTB6P9gzQ0eB6S0i5OrZhT+A==
+X-Received: by 2002:a05:6808:2190:b0:3c3:d84d:57e8 with SMTP id be16-20020a056808219000b003c3d84d57e8mr876887oib.12.1711667328954;
+        Thu, 28 Mar 2024 16:08:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHKZnccDiZUdMQffUr0xP433TBZBYIUWQatnRWhKhMSiHtFKV2ddEcbBUxykmIDeers9Ty4oA==
+X-Received: by 2002:a05:6808:2190:b0:3c3:d84d:57e8 with SMTP id be16-20020a056808219000b003c3d84d57e8mr876863oib.12.1711667328390;
+        Thu, 28 Mar 2024 16:08:48 -0700 (PDT)
+Received: from localhost (pool-71-184-142-128.bstnma.fios.verizon.net. [71.184.142.128])
+        by smtp.gmail.com with ESMTPSA id js3-20020a0562142aa300b006961cc3f91asm1064646qvb.20.2024.03.28.16.08.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 16:08:47 -0700 (PDT)
+Date: Thu, 28 Mar 2024 19:08:47 -0400
+From: Eric Chanudet <echanude@redhat.com>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, David Hildenbrand <david@redhat.com>, 
+	Donald Dutile <ddutile@redhat.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/3] Speed up boot with faster linear map creation
+Message-ID: <lgyiy6z7rss6t3ytmcg2ofcfzpxg5nw6mbbc2evnshhw7xls4i@vfnbqiyabmi2>
+References: <20240326101448.3453626-1-ryan.roberts@arm.com>
+ <ec1d0885-9cda-496c-870c-fa8e1dcab974@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240329-v2-dts-add-support-for-samsung-galaxy-zfold5-v1-1-9a91e635cacc@yahoo.com>
-References: <20240329-v2-dts-add-support-for-samsung-galaxy-zfold5-v1-0-9a91e635cacc@yahoo.com>
-In-Reply-To: <20240329-v2-dts-add-support-for-samsung-galaxy-zfold5-v1-0-9a91e635cacc@yahoo.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711667317; l=16870;
- i=serdeliuk@yahoo.com; s=20240326; h=from:subject:message-id;
- bh=JUhJcthAEBAOK9ETobTrU47l+D/ZWXx0WnZCVSUgz48=;
- b=3Ujx9NXWnxO/hoaaWImRl6DRaP5g2RnJQb9hDYnnsEc2iLSpj7HeEZMDpveWQvJiP/mLuiyPV
- XEwzH8wIEZ2D3XKSarv0+K3cB6EvnROROFh8M6Qwe7MofwLjyEc91hb
-X-Developer-Key: i=serdeliuk@yahoo.com; a=ed25519;
- pk=aWyveUE11qfDOOlRIFayXukrNn39BvZ9k9uq94dAsgY=
-X-Endpoint-Received: by B4 Relay for serdeliuk@yahoo.com/20240326 with
- auth_id=147
-X-Original-From: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
-Reply-To: serdeliuk@yahoo.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ec1d0885-9cda-496c-870c-fa8e1dcab974@arm.com>
 
-From: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
+On Wed, Mar 27, 2024 at 07:12:06PM +0000, Ryan Roberts wrote:
+> On 26/03/2024 10:14, Ryan Roberts wrote:
+> > Hi All,
+> > 
+> > It turns out that creating the linear map can take a significant proportion of
+> > the total boot time, especially when rodata=full. And a large portion of the
+> > time it takes to create the linear map is issuing TLBIs. This series reworks the
+> > kernel pgtable generation code to significantly reduce the number of TLBIs. See
+> > each patch for details.
+> > 
+> > The below shows the execution time of map_mem() across a couple of different
+> > systems with different RAM configurations. We measure after applying each patch
+> > and show the improvement relative to base (v6.9-rc1):
+> > 
+> >                | Apple M2 VM | Ampere Altra| Ampere Altra| Ampere Altra
+> >                | VM, 16G     | VM, 64G     | VM, 256G    | Metal, 512G
+> > ---------------|-------------|-------------|-------------|-------------
+> >                |   ms    (%) |   ms    (%) |   ms    (%) |    ms    (%)
+> > ---------------|-------------|-------------|-------------|-------------
+> > base           |  151   (0%) | 2191   (0%) | 8990   (0%) | 17443   (0%)
+> > no-cont-remap  |   77 (-49%) |  429 (-80%) | 1753 (-80%) |  3796 (-78%)
+> > no-alloc-remap |   77 (-49%) |  375 (-83%) | 1532 (-83%) |  3366 (-81%)
+> > lazy-unmap     |   63 (-58%) |  330 (-85%) | 1312 (-85%) |  2929 (-83%)
+> 
+> I've just appended an additional patch to this series. This takes us to a ~95%
+> reduction overall:
+> 
+>                | Apple M2 VM | Ampere Altra| Ampere Altra| Ampere Altra
+>                | VM, 16G     | VM, 64G     | VM, 256G    | Metal, 512G
+> ---------------|-------------|-------------|-------------|-------------
+>                |   ms    (%) |   ms    (%) |   ms    (%) |    ms    (%)
+> ---------------|-------------|-------------|-------------|-------------
+> base           |  151   (0%) | 2191   (0%) | 8990   (0%) | 17443   (0%)
+> no-cont-remap  |   77 (-49%) |  429 (-80%) | 1753 (-80%) |  3796 (-78%)
+> no-alloc-remap |   77 (-49%) |  375 (-83%) | 1532 (-83%) |  3366 (-81%)
+> lazy-unmap     |   63 (-58%) |  330 (-85%) | 1312 (-85%) |  2929 (-83%)
+> batch-barriers |   11 (-93%) |   61 (-97%) |  261 (-97%) |   837 (-95%)
+> 
+> Don't believe the intermediate block-based pgtable idea will now be neccessary
+> so I don't intend to persue that. It might be that we choose to drop the middle
+> two patchs; I'm keen to hear opinions.
+> 
 
-Add support for Samsung Galaxy Z Fold5 (q5q) foldable phone
+Applied on v6.9-rc1, I have much shorter base timing on a similar
+machine (Ampere HR350A). no-alloc-remap didn't show much difference
+either.
 
-Currently working features:
-- Framebuffer
-- UFS
-- i2c
-- Buttons
+               | SA8775p-ride | Ampere HR350A|
+               | VM, 36G      | Metal, 256G  |
+---------------|--------------|--------------|
+               |   ms     (%) |   ms     (%) |
+---------------|--------------|--------------|
+base           |  358    (0%) | 2213    (0%) |
+no-cont-remap  |  232  (-35%) | 1283  (-42%) |
+no-alloc-remap |  228  (-36%) | 1282  (-42%) |
+lazy-unmap     |  231  (-35%) | 1248  (-44%) |
+batch-barriers |   25  (-93%) |  204  (-91%) |
 
-Signed-off-by: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
----
- arch/arm64/boot/dts/qcom/Makefile               |   1 +
- arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dts | 584 ++++++++++++++++++++++++
- 2 files changed, 585 insertions(+)
+Tested-By: Eric Chanudet <echanude@redhat.com>
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 7d40ec5e7d21..a7503fd35b6c 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -241,6 +241,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sm8450-sony-xperia-nagara-pdx224.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8550-hdk.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8550-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8550-qrd.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= sm8550-samsung-q5q.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8650-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8650-qrd.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-crd.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dts b/arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dts
-new file mode 100644
-index 000000000000..aec375fc32b4
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dts
-@@ -0,0 +1,584 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2024, Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
-+ * Copyright (c) 2024, David Wronek <david@mainlining.org>
-+ * Copyright (c) 2022, Linaro Limited
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-+#include "sm8550.dtsi"
-+#include "pm8550.dtsi"
-+#include "pm8550vs.dtsi"
-+#include "pmk8550.dtsi"
-+
-+/ {
-+	model = "Samsung Galaxy Z Fold5";
-+	compatible = "samsung,q5q", "qcom,sm8550";
-+	#address-cells = <0x02>;
-+	#size-cells = <0x02>;
-+	chassis-type = "handset";
-+
-+	aliases {
-+		serial0 = &uart7;
-+	};
-+
-+	chosen {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		framebuffer: framebuffer@b8000000 {
-+			compatible = "simple-framebuffer";
-+			reg = <0x0 0xb8000000 0x0 0x2b00000>;
-+			width = <2176>;
-+			height = <1812>;
-+			stride = <(2176 * 4)>;
-+			format = "a8r8g8b8";
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		pinctrl-0 = <&volume_up_n>;
-+		pinctrl-names = "default";
-+
-+		key-volume-up {
-+			label = "Volume Up";
-+			linux,code = <KEY_VOLUMEUP>;
-+			gpios = <&pm8550_gpios 6 GPIO_ACTIVE_LOW>;
-+			debounce-interval = <15>;
-+			linux,can-disable;
-+			wakeup-source;
-+		};
-+	};
-+
-+	vph_pwr: vph-pwr-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vph_pwr";
-+		regulator-min-microvolt = <3700000>;
-+		regulator-max-microvolt = <3700000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	reserved-memory {
-+		/*
-+		 * The bootloader will only keep display hardware enabled
-+		 * if this memory region is named exactly 'splash_region'
-+		 */
-+		splash_region@b8000000 {
-+			reg = <0x0 0xb8000000 0x0 0x2b00000>;
-+			no-map;
-+		};
-+	};
-+};
-+
-+&apps_rsc {
-+	regulators-0 {
-+		compatible = "qcom,pm8550-rpmh-regulators";
-+		qcom,pmic-id = "b";
-+
-+		vreg_bob1: bob1 {
-+			regulator-name = "vreg_bob1";
-+			regulator-min-microvolt = <3296000>;
-+			regulator-max-microvolt = <3960000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_bob2: bob2 {
-+			regulator-name = "vreg_bob2";
-+			regulator-min-microvolt = <2720000>;
-+			regulator-max-microvolt = <3960000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l1b_1p8: ldo1 {
-+			regulator-name = "vreg_l1b_1p8";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l2b_3p0: ldo2 {
-+			regulator-name = "vreg_l2b_3p0";
-+			regulator-min-microvolt = <3008000>;
-+			regulator-max-microvolt = <3008000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l5b_3p1: ldo5 {
-+			regulator-name = "vreg_l5b_3p1";
-+			regulator-min-microvolt = <3104000>;
-+			regulator-max-microvolt = <3104000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l6b_1p8: ldo6 {
-+			regulator-name = "vreg_l6b_1p8";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3008000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l7b_1p8: ldo7 {
-+			regulator-name = "vreg_l7b_1p8";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3008000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l8b_1p8: ldo8 {
-+			regulator-name = "vreg_l8b_1p8";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3008000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l9b_2p9: ldo9 {
-+			regulator-name = "vreg_l9b_2p9";
-+			regulator-min-microvolt = <2960000>;
-+			regulator-max-microvolt = <3008000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l11b_1p2: ldo11 {
-+			regulator-name = "vreg_l11b_1p2";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1504000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l12b_1p8: ldo12 {
-+			regulator-name = "vreg_l12b_1p8";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l13b_3p0: ldo13 {
-+			regulator-name = "vreg_l13b_3p0";
-+			regulator-min-microvolt = <3000000>;
-+			regulator-max-microvolt = <3000000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l14b_3p2: ldo14 {
-+			regulator-name = "vreg_l14b_3p2";
-+			regulator-min-microvolt = <3200000>;
-+			regulator-max-microvolt = <3200000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l15b_1p8: ldo15 {
-+			regulator-name = "vreg_l15b_1p8";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+			regulator-always-on;
-+		};
-+
-+		vreg_l16b_2p8: ldo16 {
-+			regulator-name = "vreg_l16b_2p8";
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l17b_2p5: ldo17 {
-+			regulator-name = "vreg_l17b_2p5";
-+			regulator-min-microvolt = <2504000>;
-+			regulator-max-microvolt = <2504000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+
-+	regulators-1 {
-+		compatible = "qcom,pm8550vs-rpmh-regulators";
-+		qcom,pmic-id = "c";
-+
-+		vreg_l3c_0p91: ldo3 {
-+			regulator-name = "vreg_l3c_0p9";
-+			regulator-min-microvolt = <880000>;
-+			regulator-max-microvolt = <912000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+
-+	regulators-2 {
-+		compatible = "qcom,pm8550vs-rpmh-regulators";
-+		qcom,pmic-id = "d";
-+
-+		vreg_l1d_0p88: ldo1 {
-+			regulator-name = "vreg_l1d_0p88";
-+			regulator-min-microvolt = <880000>;
-+			regulator-max-microvolt = <920000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+
-+	regulators-3 {
-+		compatible = "qcom,pm8550vs-rpmh-regulators";
-+		qcom,pmic-id = "e";
-+
-+		vreg_s4e_0p9: smps4 {
-+			regulator-name = "vreg_s4e_0p9";
-+			regulator-min-microvolt = <904000>;
-+			regulator-max-microvolt = <984000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_s5e_1p1: smps5 {
-+			regulator-name = "vreg_s5e_1p1";
-+			regulator-min-microvolt = <1080000>;
-+			regulator-max-microvolt = <1120000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l1e_0p88: ldo1 {
-+			regulator-name = "vreg_l1e_0p88";
-+			regulator-min-microvolt = <880000>;
-+			regulator-max-microvolt = <880000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l2e_0p9: ldo2 {
-+			regulator-name = "vreg_l2e_0p9";
-+			regulator-min-microvolt = <904000>;
-+			regulator-max-microvolt = <970000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l3e_1p2: ldo3 {
-+			regulator-name = "vreg_l3e_1p2";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+
-+	regulators-4 {
-+		compatible = "qcom,pm8550ve-rpmh-regulators";
-+		qcom,pmic-id = "f";
-+
-+		vreg_s4f_0p5: smps4 {
-+			regulator-name = "vreg_s4f_0p5";
-+			regulator-min-microvolt = <500000>;
-+			regulator-max-microvolt = <700000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l1f_0p9: ldo1 {
-+			regulator-name = "vreg_l1f_0p9";
-+			regulator-min-microvolt = <912000>;
-+			regulator-max-microvolt = <912000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l2f_0p88: ldo2 {
-+			regulator-name = "vreg_l2f_0p88";
-+			regulator-min-microvolt = <880000>;
-+			regulator-max-microvolt = <912000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l3f_0p91: ldo3 {
-+			regulator-name = "vreg_l3f_0p91";
-+			regulator-min-microvolt = <880000>;
-+			regulator-max-microvolt = <912000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+
-+	regulators-5 {
-+		compatible = "qcom,pm8550vs-rpmh-regulators";
-+		qcom,pmic-id = "g";
-+
-+		vreg_s1g_1p2: smps1 {
-+			regulator-name = "vreg_s1g_1p2";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1300000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_s2g_0p8: smps2 {
-+			regulator-name = "vreg_s2g_0p8";
-+			regulator-min-microvolt = <800000>;
-+			regulator-max-microvolt = <1000000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_s3g_0p7: smps3 {
-+			regulator-name = "vreg_s3g_0p7";
-+			regulator-min-microvolt = <300000>;
-+			regulator-max-microvolt = <1004000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_s4g_1p3: smps4 {
-+			regulator-name = "vreg_s4g_1p3";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1352000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_s5g_0p8: smps5 {
-+			regulator-name = "vreg_s5g_0p8";
-+			regulator-min-microvolt = <500000>;
-+			regulator-max-microvolt = <1004000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_s6g_1p8: smps6 {
-+			regulator-name = "vreg_s6g_1p8";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2000000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l1g_1p2: ldo1 {
-+			regulator-name = "vreg_l1g_1p2";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l2g_1p2: ldo2 {
-+			regulator-name = "vreg_l2g_1p2";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l3g_1p2: ldo3 {
-+			regulator-name = "vreg_l3g_1p2";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+
-+	regulators-6 {
-+		compatible = "qcom,pm8010-rpmh-regulators";
-+		qcom,pmic-id = "m";
-+
-+		vreg_l1m_1p056: ldo1 {
-+			regulator-name = "vreg_l1m_1p056";
-+			regulator-min-microvolt = <1056000>;
-+			regulator-max-microvolt = <1056000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l2m_1p056: ldo2 {
-+			regulator-name = "vreg_l2m_1p056";
-+			regulator-min-microvolt = <1056000>;
-+			regulator-max-microvolt = <1056000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l3m_2p8: ldo3 {
-+			regulator-name = "vreg_l3m_2p8";
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l4m_2p8: ldo4 {
-+			regulator-name = "vreg_l4m_2p8";
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l5m_1p8: ldo5 {
-+			regulator-name = "vreg_l5m_1p8";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l6m_1p8: ldo6 {
-+			regulator-name = "vreg_l6m_1p8";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l7m_2p9: ldo7 {
-+			regulator-name = "vreg_l7m_2p9";
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2904000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+
-+	regulators-7 {
-+		compatible = "qcom,pm8010-rpmh-regulators";
-+		qcom,pmic-id = "n";
-+
-+		vreg_l1n_1p1: ldo1 {
-+			regulator-name = "vreg_l1n_1p1";
-+			regulator-min-microvolt = <1104000>;
-+			regulator-max-microvolt = <1200000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l2n_1p1: ldo2 {
-+			regulator-name = "vreg_l2n_1p1";
-+			regulator-min-microvolt = <1104000>;
-+			regulator-max-microvolt = <1200000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l3n_2p8: ldo3 {
-+			regulator-name = "vreg_l3n_2p8";
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <3000000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l4n_2p8: ldo4 {
-+			regulator-name = "vreg_l4n_2p8";
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l5n_1p8: ldo5 {
-+			regulator-name = "vreg_l5n_1p8";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l6n_3p3: ldo6 {
-+			regulator-name = "vreg_l6n_3p3";
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <3304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l7n_2p96: ldo7 {
-+			regulator-name = "vreg_l7n_2p96";
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2960000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+};
-+
-+
-+&dispcc {
-+	status = "disabled";
-+};
-+
-+&i2c_master_hub_0 {
-+	status = "okay";
-+};
-+
-+&pcie_1_phy_aux_clk {
-+	clock-frequency = <1000>;
-+};
-+
-+&pcie0 {
-+	wake-gpios = <&tlmm 96 GPIO_ACTIVE_HIGH>;
-+	perst-gpios = <&tlmm 94 GPIO_ACTIVE_LOW>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie0_default_state>;
-+	status = "okay";
-+};
-+
-+&pcie0_phy {
-+	vdda-phy-supply = <&vreg_l1e_0p88>;
-+	vdda-pll-supply = <&vreg_l3e_1p2>;
-+	status = "okay";
-+};
-+
-+&pcie1 {
-+	wake-gpios = <&tlmm 99 GPIO_ACTIVE_HIGH>;
-+	perst-gpios = <&tlmm 97 GPIO_ACTIVE_LOW>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie1_default_state>;
-+	status = "okay";
-+};
-+
-+&pcie1_phy {
-+	vdda-phy-supply = <&vreg_l3c_0p91>;
-+	vdda-pll-supply = <&vreg_l3e_1p2>;
-+	vdda-qref-supply = <&vreg_l1e_0p88>;
-+	status = "okay";
-+};
-+
-+&pm8550_gpios {
-+	volume_up_n: volume-up-n-state {
-+		pins = "gpio6";
-+		function = "normal";
-+		power-source = <1>;
-+		bias-pull-up;
-+		input-enable;
-+	};
-+};
-+
-+&pon_pwrkey {
-+	status = "okay";
-+};
-+
-+&pon_resin {
-+	status = "okay";
-+	linux,code = <KEY_VOLUMEDOWN>;
-+};
-+
-+&qupv3_id_0 {
-+	status = "okay";
-+};
-+
-+&remoteproc_adsp {
-+	firmware-name = "qcom/sm8550/adsp.mbn",
-+			"qcom/sm8550/adsp_dtb.mbn";
-+	status = "okay";
-+};
-+
-+&remoteproc_cdsp {
-+	firmware-name = "qcom/sm8550/cdsp.mbn",
-+			"qcom/sm8550/cdsp_dtb.mbn";
-+	status = "okay";
-+};
-+
-+&remoteproc_mpss {
-+	firmware-name = "qcom/sm8550/modem.mbn",
-+			"qcom/sm8550/modem_dtb.mbn";
-+	status = "okay";
-+};
-+
-+&sleep_clk {
-+	clock-frequency = <32000>;
-+};
-+
-+&tlmm {
-+	gpio-reserved-ranges = <36 4>, <50 2>;
-+};
-+
-+&ufs_mem_hc {
-+	reset-gpios = <&tlmm 210 GPIO_ACTIVE_LOW>;
-+	vcc-supply = <&vreg_l17b_2p5>;
-+	vcc-max-microamp = <1300000>;
-+	vccq-supply = <&vreg_l1g_1p2>;
-+	vccq-max-microamp = <1200000>;
-+	vdd-hba-supply = <&vreg_l3g_1p2>;
-+	status = "okay";
-+};
-+
-+&ufs_mem_phy {
-+	vdda-phy-supply = <&vreg_l1d_0p88>;
-+	vdda-pll-supply = <&vreg_l3e_1p2>;
-+	status = "okay";
-+};
-+
-+&xo_board {
-+	clock-frequency = <76800000>;
-+};
+
+> > This series applies on top of v6.9-rc1. All mm selftests pass. I haven't yet
+> > tested all VA size configs (although I don't anticipate any issues); I'll do
+> > this as part of followup.
+> > 
+> > Thanks,
+> > Ryan
+> > 
+> > 
+> > Ryan Roberts (3):
+> >   arm64: mm: Don't remap pgtables per- cont(pte|pmd) block
+> >   arm64: mm: Don't remap pgtables for allocate vs populate
+> >   arm64: mm: Lazily clear pte table mappings from fixmap
+> > 
+> >  arch/arm64/include/asm/fixmap.h  |   5 +-
+> >  arch/arm64/include/asm/mmu.h     |   8 +
+> >  arch/arm64/include/asm/pgtable.h |   4 -
+> >  arch/arm64/kernel/cpufeature.c   |  10 +-
+> >  arch/arm64/mm/fixmap.c           |  11 +
+> >  arch/arm64/mm/mmu.c              | 364 +++++++++++++++++++++++--------
+> >  include/linux/pgtable.h          |   8 +
+> >  7 files changed, 307 insertions(+), 103 deletions(-)
+> > 
+> > --
+> > 2.25.1
+> > 
+> 
 
 -- 
-2.34.1
-
+Eric Chanudet
 
