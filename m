@@ -1,127 +1,80 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E32F2561F;
-	Thu, 28 Mar 2024 07:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC33251C3E;
+	Thu, 28 Mar 2024 07:36:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711611101; cv=none; b=l35qVSooQJgulXf8OEKXM4ee0eiW9zEiabwibizv6f8FKhsfkL2kBsAFdsaSVFGnwEn/j5SNqdoECfx+4U/wzWExWXSMbiYW1R5710zGqQWe24Zt57/6WWij+zk0Y4X16uKXZLVUG59umzXIyA3yrmEdXTITyXfMyzhZ9bFyVQA=
+	t=1711611376; cv=none; b=Ne2oSMB9GXGCB9HnI+GdBInJPiTwY8OBr/mgzsrT0GUV3oWKhvyi0SzK65vufrEIghE/BEtNT1LFbaZiWjMMZD56wSqf9JGWib9dF7h0Hw4mEKGj/6oRClyTRUkqmswAa9CtvPi8Wimknlj36JUGtbyFkQrdyHaIYL6DpqPJN7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711611101; c=relaxed/simple;
-	bh=UiexvZQWK+4Yc+SMZ9M3zHpPBZVoEYHrn9anANb9C5w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d5Fm6ImLcHPV6UYzlsQeYNsjvAQufCBZvBPsa210F2htuofaAshATEDf/2A5+yv08JlFkWpjmTYRAyXYwW6T0YT/0SU5eCH/gYnEQ9pXljqsRinJCl/lnkDFftrLbeUWzIEzBr/O7AtKnfMOcFBuMtBpAoSVFpTIrHmgldSXXD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gcYWJotu; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1711611376; c=relaxed/simple;
+	bh=E0xlW2CX/m4Lsu+pWv53RNQvI+T8j1SSWWH4AEJ0ZTE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mToZOxKhhyIDw/RolCw18+XebVFE6udwgCcFUsSyApwuKf/ZoyzTAWAcYXjnOepXzOeVn0QLF+QkJ0tXaKKNADsDeptcothzJRek5p1o2d0f7ZX+Y6HXpRg7eJpopLwVILFPRIR5n5tzUmkP8/wugPOllnE7B1rCO8/8qQ7RPXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OTsrj5/y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gcYWJotu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=vttzHoZOnFV3RpiKvH6mM16x2BnNpMVa6ppcy7eNO+k=; b=gcYWJotuQVW8GYZ0l03Qd1Y7Rx
-	geRqzubUVBuSA9E2/DAQoiPMRqhx1n9l+w28Wiufj/ZAExFJaqfwavTjC8gzuWje1jZN2jUSkE+qE
-	Q15FOsZFQN2b0luQEwgHnGe7lzK15zDdvK7FQjfmrbwwmVTazNYcBHn8mWmTha+YKF08jxIWc0REQ
-	+8EyFi9U6Gl0G+TAuZmP4Qd6h8HYQgYngvPlmHvo3Jo8XSRKsSWUmgiFQ8nfw+lmfCUH+lF0bMRBm
-	3NB7t68iGeniQOu1nPNBlIsx+leXTDUB9ZbdcRiTXuwjN/rjZyp29U3bvNZvER0Ozv/NSab0o7bxJ
-	CYLe7RCQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rpkEV-0000000CslI-1PHG;
-	Thu, 28 Mar 2024 07:31:31 +0000
-Date: Thu, 28 Mar 2024 00:31:31 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Mina Almasry <almasrymina@google.com>
-Cc: Christoph Hellwig <hch@infradead.org>, shakeel.butt@linux.dev,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-	Matt Turner <mattst88@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	David Ahern <dsahern@kernel.org>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Yunsheng Lin <linyunsheng@huawei.com>,
-	Shailend Chand <shailend@google.com>,
-	Harshitha Ramamurthy <hramamurthy@google.com>,
-	Jeroen de Borst <jeroendb@google.com>,
-	Praveen Kaligineedi <pkaligineedi@google.com>
-Subject: Re: [RFC PATCH net-next v6 02/15] net: page_pool: create hooks for
- custom page providers
-Message-ID: <ZgUc07Szbx5x-obb@infradead.org>
-References: <20240305020153.2787423-1-almasrymina@google.com>
- <20240305020153.2787423-3-almasrymina@google.com>
- <ZfegzB341oNc_Ocz@infradead.org>
- <CAHS8izOUi6qGp=LSQb_o5oph-EnhNOuhLkPSfbQRU3eniZvbdA@mail.gmail.com>
- <ZgC5JoSiWAYf3IgX@infradead.org>
- <CAHS8izO5-giYhM1bVCLLOXRXq-Xd0=pi0kPq5E1-R=3i=XihmQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OTsrj5/y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A64C2C433F1;
+	Thu, 28 Mar 2024 07:36:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711611375;
+	bh=E0xlW2CX/m4Lsu+pWv53RNQvI+T8j1SSWWH4AEJ0ZTE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OTsrj5/yuI9HrDeYC88Dy5LI7sOBqHTuh8HRW1ucI8jv3M33MU55h60Miw93JHe1n
+	 y+uZOcTRtLcQNy+CygyIi9j7DniRqXMfm7QBbf3s8icNKzb9AuEmQVAE4KXePw7scM
+	 6xQopNIUHFyzW/UEB7UxUx5jvEfEAS6gMkIT7M8ohVEgOB/k5lqVhVCs7ioIZypIdk
+	 1Oc9qSo2Dz5Ue3nbX+rqydCPJs7ClA42eLZuNrZP1Ce+k8QUSYhjIDnI+NGrSNfCVV
+	 dmgc47avnlbwPCBHkFI7LrlE9LVvOATK0IndzhHUNRIrEYG94hHpvm0IZEF2iT9+Dq
+	 PE/4zJlUMK5KA==
+Message-ID: <ba7d201b-3746-4ee1-9574-5782cccbc88e@kernel.org>
+Date: Thu, 28 Mar 2024 16:36:12 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHS8izO5-giYhM1bVCLLOXRXq-Xd0=pi0kPq5E1-R=3i=XihmQ@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] scsi: libsas: Allocation SMP request is aligned to
+ ARCH_DMA_MINALIGN
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Yihang Li <liyihang9@huawei.com>, John Garry <john.g.garry@oracle.com>,
+ yanaijie@huawei.com, jejb@linux.ibm.com, martin.petersen@oracle.com,
+ chenxiang66@hisilicon.com, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxarm@huawei.com, prime.zeng@huawei.com,
+ yangxingui@huawei.com
+References: <20240326124358.2466259-1-liyihang9@huawei.com>
+ <5b5b9392-7fd2-4c87-8e41-5e54adf20003@kernel.org>
+ <0ba9914d-7060-498a-beac-2b19770e1963@oracle.com>
+ <ZgUPpwhkE9bRwHec@infradead.org>
+ <75df3e2d-10c3-5370-3cd8-fe2fb0ff2acc@huawei.com>
+ <03ed6449-eb57-4a55-b2bf-ecbb9787feca@kernel.org>
+ <ZgUcTLQnoLuqhOxO@infradead.org>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <ZgUcTLQnoLuqhOxO@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 26, 2024 at 01:19:20PM -0700, Mina Almasry wrote:
+On 3/28/24 16:29, Christoph Hellwig wrote:
+> On Thu, Mar 28, 2024 at 04:23:22PM +0900, Damien Le Moal wrote:
+>> But I thought that the original issue was that some arch have ARCH_DMA_MINALIGN
+>> down to 8B but hisi driver needs at least 16 ?
+>>
+>> So in the end, you need something like:
+>>
+>> 	size = ALIGN(size, max(16, ARCH_DMA_MINALIGN));
+>>
+>> no ?
 > 
-> Are you envisioning that dmabuf support would be added to the block
-> layer
+> I don't think we ever have an 8 byte dma minalign.  With 8-byte
+> aligned addresses dma_mapping_error could run into problems.
 
-Yes.
+My bad: it is kmalloc() that can return something aligned to 8B...
+So "size = ALIGN(size, ARCH_DMA_MINALIGN);" is the right thing to do.
 
-> (which I understand is part of the VFS and not driver specific),
-
-The block layer isn't really the VFS, it's just another core stack
-like the network stack.
-
-> or as part of the specific storage driver (like nvme for example)? If
-> we can add dmabuf support to the block layer itself that sounds
-> awesome. We may then be able to do devmem TCP on all/most storage
-> devices without having to modify each individual driver.
-
-I suspect we'll still need to touch the drivers to understand it,
-but hopefully all the main infrastructure can live in the block layer.
-
-> In your estimation, is adding dmabuf support to the block layer
-> something technically feasible & acceptable upstream? I notice you
-> suggested it so I'm guessing yes to both, but I thought I'd confirm.
-
-I think so, and I know there has been quite some interest to at least
-pre-register userspace memory so that the iommu overhead can be
-pre-loaded.  It also is a much better interface for Peer to Peer
-transfers than what we currently have.
+-- 
+Damien Le Moal
+Western Digital Research
 
