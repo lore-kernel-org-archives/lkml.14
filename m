@@ -1,234 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A93913DAC11;
-	Thu, 28 Mar 2024 05:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD1A3D55D
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 05:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711605347; cv=none; b=J3Ds7r5eOMEbWMfQ7uqDEJlqtCz+JrTHmxnGm4WED/Cy4b1CkuubQ1a/CYrY8lzS8tsG/9TCriJTZenJnvbwuM3Q4VbJr8g79ZddLaknWhon35QjmHZ4MsrmmJ6j3GwirWSyoLAKChtFvN40iHQ5/flt0i/ln//S4hLoN3CPkfQ=
+	t=1711605386; cv=none; b=JoCs+Nu5Fm3LWRwVCBQmCFP2G+TFIW2mJX/iIZwj8WyztlLl3OnDEX6ChhOWj/qRr1shTSjxoofezjiyzPZD5AfpkWrldqfX0a3p1YZm4E4a76s7zBmFBRSV/CU6beUnptZGvmLzBKt8jGLlPyVt4LffQelRpRdeMl9Wb0xYa70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711605347; c=relaxed/simple;
-	bh=C6skgkr2NMPDni3brGoFkl+5/I4LRqRBMa9zmdDL9uY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OLlER+IyhNXi5cnVjcrG/OL81p81BVQFfPzNN3Zk1SeAZj0z82TyWSUGM40COJDwd2xQkSZ6tyNK4gyFtFA5dLU3naWd19RAA53MPAz6HSVVU5QQzQTPdqi6lAd72Jw7gVyEpVhqsNjM9jesmL6Ppa5Ujox0TN6hi0BOjZwwDac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hysjLZhk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711605386; c=relaxed/simple;
+	bh=W9F6dKTx8apjtqWMs7sN48xTPDp7rEc9yPZmuSK5piU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=OTJTK7z33xCzQnY0Mcr0zn6beOTYprH650s6O6oJGxJgoMleTeV4QcyD6bL4wvxpODyhS85PRYJDxSaSeYUOBj783miBzxbWX0rxTacFc19hpAfaPc7v/Upj1G1hLffiqXhHoIr2p3qh5x19/tXZ6BI5Nw2LitB8sq5ZBLGbt7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kJhtJxzi; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hysjLZhk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55E6DC433F1;
-	Thu, 28 Mar 2024 05:55:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711605346;
-	bh=C6skgkr2NMPDni3brGoFkl+5/I4LRqRBMa9zmdDL9uY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hysjLZhkEnvXnxd+HtHwjnxShxKJsdr7YRORWMMbG9CAv2Wo4v/3W17f+9SmlwjYP
-	 AyxLZuXRv9YJGW7TBEhuFvjqai5JqAqlAjT7kP1ISp5EH8RS9fJ2YPnuq82HTriscX
-	 k3oc9NY2bXpiP0jGnfR7dbOxiqpXyBbLE3Kr+zaoP4w8AQS+EkbA1t2gSCobYQ2KlV
-	 32f78em/AA4bHgFdo/ljQvmpapnRbgSvmNw6bLqNSxN3FzIz/Su4hMEut3jzJjbgI6
-	 ErlOb5+1jhqeBVqohmzPhEaaC6pQ2kHQXfpk3998EVOS2mUbOgGjtxbSO/uM8abY2C
-	 N/IIGvRGfpoEA==
-Date: Thu, 28 Mar 2024 11:25:41 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Allen Pais <apais@linux.microsoft.com>
-Cc: linux-kernel@vger.kernel.org, tj@kernel.org, keescook@chromium.org,
-	marcan@marcan.st, sven@svenpeter.dev, florian.fainelli@broadcom.com,
-	rjui@broadcom.com, sbranden@broadcom.com, paul@crapouillou.net,
-	Eugeniy.Paltsev@synopsys.com, manivannan.sadhasivam@linaro.org,
-	vireshk@kernel.org, Frank.Li@nxp.com, leoyang.li@nxp.com,
-	zw@zh-kernel.org, wangzhou1@hisilicon.com, haijie1@huawei.com,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, sean.wang@mediatek.com,
-	matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
-	afaerber@suse.de, logang@deltatee.com, daniel@zonque.org,
-	haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
-	andersson@kernel.org, konrad.dybcio@linaro.org, orsonzhai@gmail.com,
-	baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com,
-	patrice.chotard@foss.st.com, linus.walleij@linaro.org,
-	wens@csie.org, jernej.skrabec@gmail.com, peter.ujfalusi@gmail.com,
-	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, jassisinghbrar@gmail.com, mchehab@kernel.org,
-	maintainers@bluecherrydvr.com, aubin.constans@microchip.com,
-	ulf.hansson@linaro.org, manuel.lauss@gmail.com,
-	mirq-linux@rere.qmqm.pl, jh80.chung@samsung.com, oakad@yahoo.com,
-	hayashi.kunihiko@socionext.com, mhiramat@kernel.org,
-	brucechang@via.com.tw, HaraldWelte@viatech.com, pierre@ossman.eu,
-	duncan.sands@free.fr, stern@rowland.harvard.edu, oneukum@suse.com,
-	openipmi-developer@lists.sourceforge.net, dmaengine@vger.kernel.org,
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-mediatek@lists.infradead.org,
-	linux-actions@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-tegra@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-s390@vger.kernel.org,
-	netdev@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 2/9] dma: Convert from tasklet to BH workqueue
-Message-ID: <ZgUGXTKPVhrA1tam@matsya>
-References: <20240327160314.9982-1-apais@linux.microsoft.com>
- <20240327160314.9982-3-apais@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kJhtJxzi"
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42S4s9Ge013568;
+	Thu, 28 Mar 2024 05:55:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : references : from : cc : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=5iBy/ptrVfmV4CSoC8pTkTBKP/9KsD7p+66bZNrlyuA=;
+ b=kJhtJxziow0+fJNENlWZE2GrrMt71yL9os067zOfqsiEGEzF5YWaEZLgWDf6E48g4grX
+ j69cc814h5nCT/xDRnr4VN7JPrjKjtAgWVc8+FUEeELIZOVCBKwCvUhgFmnXfW/sLvv4
+ YOmxG+mEzJNX6WJQ5R9NbLeMVsWRjkXiC5CsnBmgvzOgz4M9qqBIfGD0hqowX6sMRQ1C
+ Cgy851xfFsJXJkbJu30mDXEtxyxSeoxXK6W/wEFeVpcqg/78uTewfuYS+JMK9dNAq43B
+ YVcAaIgnqL+M0XPiuIl34QZstcPiCWc2hMTddVbiAcCU4d1EDube/AzZ8HrUULVzB8jC JA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x513r07e6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 28 Mar 2024 05:55:55 +0000
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42S5tsA9010447;
+	Thu, 28 Mar 2024 05:55:55 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x513r07dw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 28 Mar 2024 05:55:54 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42S3u7sn016410;
+	Thu, 28 Mar 2024 05:51:40 GMT
+Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x29dubwth-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 28 Mar 2024 05:51:40 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42S5pbWo22151734
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 28 Mar 2024 05:51:39 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4A4C958056;
+	Thu, 28 Mar 2024 05:51:37 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C424F5803F;
+	Thu, 28 Mar 2024 05:51:33 +0000 (GMT)
+Received: from [9.109.201.126] (unknown [9.109.201.126])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 28 Mar 2024 05:51:33 +0000 (GMT)
+Message-ID: <f6bd6617-b8fb-4760-a90b-ceeca6d4e415@linux.ibm.com>
+Date: Thu, 28 Mar 2024 11:21:32 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240327160314.9982-3-apais@linux.microsoft.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] sched/fair: allow disabling newidle_balance with
+ sched_relax_domain_level
+To: Vitalii Bursov <vitaly@bursov.com>
+References: <cover.1711584739.git.vitaly@bursov.com>
+ <da4454bf368e51369c74e4574d22e8f0bfd9d368.1711584739.git.vitaly@bursov.com>
+Content-Language: en-US
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira
+ <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org
+In-Reply-To: <da4454bf368e51369c74e4574d22e8f0bfd9d368.1711584739.git.vitaly@bursov.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 0dh4HQ8jmSb8Bkv3gcdyFXOIA2cbL5Gt
+X-Proofpoint-GUID: L0huLa5-XIVqrPf0rZu6f2BFTRi5r8gd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-28_04,2024-03-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
+ impostorscore=0 mlxscore=0 mlxlogscore=999 adultscore=0 lowpriorityscore=0
+ spamscore=0 suspectscore=0 priorityscore=1501 bulkscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2403210000
+ definitions=main-2403280035
 
-Hi Allen,
 
-Subsytem is dmaengine, can you rename this to dmaengine: ...
 
-On 27-03-24, 16:03, Allen Pais wrote:
-> The only generic interface to execute asynchronously in the BH context is
-> tasklet; however, it's marked deprecated and has some design flaws. To
-> replace tasklets, BH workqueue support was recently added. A BH workqueue
-> behaves similarly to regular workqueues except that the queued work items
-> are executed in the BH context.
-
-Thanks for conversion, am happy with BH alternative as it helps in
-dmaengine where we need shortest possible time between tasklet and
-interrupt handling to maximize dma performance
-
+On 3/28/24 6:00 AM, Vitalii Bursov wrote:
+> Change relax_domain_level checks so that it would be possible
+> to exclude all domains from newidle balancing.
 > 
-> This patch converts drivers/dma/* from tasklet to BH workqueue.
-
+> This matches the behavior described in the documentation:
+>   -1   no request. use system default or follow request of others.
+>    0   no search.
+>    1   search siblings (hyperthreads in a core).
 > 
-> Based on the work done by Tejun Heo <tj@kernel.org>
-> Branch: git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git for-6.10
+> "2" enables levels 0 and 1, level_max excludes the last (level_max)
+> level, and level_max+1 includes all levels.
 > 
-> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+> Signed-off-by: Vitalii Bursov <vitaly@bursov.com>
 > ---
->  drivers/dma/altera-msgdma.c                   | 15 ++++----
->  drivers/dma/apple-admac.c                     | 15 ++++----
->  drivers/dma/at_hdmac.c                        |  2 +-
->  drivers/dma/at_xdmac.c                        | 15 ++++----
->  drivers/dma/bcm2835-dma.c                     |  2 +-
->  drivers/dma/dma-axi-dmac.c                    |  2 +-
->  drivers/dma/dma-jz4780.c                      |  2 +-
->  .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    |  2 +-
->  drivers/dma/dw-edma/dw-edma-core.c            |  2 +-
->  drivers/dma/dw/core.c                         | 13 +++----
->  drivers/dma/dw/regs.h                         |  3 +-
->  drivers/dma/ep93xx_dma.c                      | 15 ++++----
->  drivers/dma/fsl-edma-common.c                 |  2 +-
->  drivers/dma/fsl-qdma.c                        |  2 +-
->  drivers/dma/fsl_raid.c                        | 11 +++---
->  drivers/dma/fsl_raid.h                        |  2 +-
->  drivers/dma/fsldma.c                          | 15 ++++----
->  drivers/dma/fsldma.h                          |  3 +-
->  drivers/dma/hisi_dma.c                        |  2 +-
->  drivers/dma/hsu/hsu.c                         |  2 +-
->  drivers/dma/idma64.c                          |  4 +--
->  drivers/dma/img-mdc-dma.c                     |  2 +-
->  drivers/dma/imx-dma.c                         | 27 +++++++-------
->  drivers/dma/imx-sdma.c                        |  6 ++--
->  drivers/dma/ioat/dma.c                        | 17 ++++-----
->  drivers/dma/ioat/dma.h                        |  5 +--
->  drivers/dma/ioat/init.c                       |  2 +-
->  drivers/dma/k3dma.c                           | 19 +++++-----
->  drivers/dma/mediatek/mtk-cqdma.c              | 35 ++++++++++---------
->  drivers/dma/mediatek/mtk-hsdma.c              |  2 +-
->  drivers/dma/mediatek/mtk-uart-apdma.c         |  4 +--
->  drivers/dma/mmp_pdma.c                        | 13 +++----
->  drivers/dma/mmp_tdma.c                        | 11 +++---
->  drivers/dma/mpc512x_dma.c                     | 17 ++++-----
->  drivers/dma/mv_xor.c                          | 13 +++----
->  drivers/dma/mv_xor.h                          |  5 +--
->  drivers/dma/mv_xor_v2.c                       | 23 ++++++------
->  drivers/dma/mxs-dma.c                         | 13 +++----
->  drivers/dma/nbpfaxi.c                         | 15 ++++----
->  drivers/dma/owl-dma.c                         |  2 +-
->  drivers/dma/pch_dma.c                         | 17 ++++-----
->  drivers/dma/pl330.c                           | 31 ++++++++--------
->  drivers/dma/plx_dma.c                         | 13 +++----
->  drivers/dma/ppc4xx/adma.c                     | 17 ++++-----
->  drivers/dma/ppc4xx/adma.h                     |  5 +--
->  drivers/dma/pxa_dma.c                         |  2 +-
->  drivers/dma/qcom/bam_dma.c                    | 35 ++++++++++---------
->  drivers/dma/qcom/gpi.c                        | 18 +++++-----
->  drivers/dma/qcom/hidma.c                      | 11 +++---
->  drivers/dma/qcom/hidma.h                      |  5 +--
->  drivers/dma/qcom/hidma_ll.c                   | 11 +++---
->  drivers/dma/qcom/qcom_adm.c                   |  2 +-
->  drivers/dma/sa11x0-dma.c                      | 27 +++++++-------
->  drivers/dma/sf-pdma/sf-pdma.c                 | 23 ++++++------
->  drivers/dma/sf-pdma/sf-pdma.h                 |  5 +--
->  drivers/dma/sprd-dma.c                        |  2 +-
->  drivers/dma/st_fdma.c                         |  2 +-
->  drivers/dma/ste_dma40.c                       | 17 ++++-----
->  drivers/dma/sun6i-dma.c                       | 33 ++++++++---------
->  drivers/dma/tegra186-gpc-dma.c                |  2 +-
->  drivers/dma/tegra20-apb-dma.c                 | 19 +++++-----
->  drivers/dma/tegra210-adma.c                   |  2 +-
->  drivers/dma/ti/edma.c                         |  2 +-
->  drivers/dma/ti/k3-udma.c                      | 11 +++---
->  drivers/dma/ti/omap-dma.c                     |  2 +-
->  drivers/dma/timb_dma.c                        | 23 ++++++------
->  drivers/dma/txx9dmac.c                        | 29 +++++++--------
->  drivers/dma/txx9dmac.h                        |  5 +--
->  drivers/dma/virt-dma.c                        |  9 ++---
->  drivers/dma/virt-dma.h                        |  9 ++---
->  drivers/dma/xgene-dma.c                       | 21 +++++------
->  drivers/dma/xilinx/xilinx_dma.c               | 23 ++++++------
->  drivers/dma/xilinx/xilinx_dpdma.c             | 21 +++++------
->  drivers/dma/xilinx/zynqmp_dma.c               | 21 +++++------
->  74 files changed, 442 insertions(+), 395 deletions(-)
+>  kernel/cgroup/cpuset.c  | 2 +-
+>  kernel/sched/debug.c    | 1 +
+>  kernel/sched/topology.c | 2 +-
+>  3 files changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/dma/altera-msgdma.c b/drivers/dma/altera-msgdma.c
-> index a8e3615235b8..611b5290324b 100644
-> --- a/drivers/dma/altera-msgdma.c
-> +++ b/drivers/dma/altera-msgdma.c
-> @@ -20,6 +20,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
->  #include <linux/of_dma.h>
-> +#include <linux/workqueue.h>
+> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> index 4237c874871..da24187c4e0 100644
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> @@ -2948,7 +2948,7 @@ bool current_cpuset_is_being_rebound(void)
+>  static int update_relax_domain_level(struct cpuset *cs, s64 val)
+>  {
+>  #ifdef CONFIG_SMP
+> -	if (val < -1 || val >= sched_domain_level_max)
+> +	if (val < -1 || val > sched_domain_level_max + 1)
+>  		return -EINVAL;
+>  #endif
 >  
->  #include "dmaengine.h"
+> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+> index 8d5d98a5834..8454cd4e5e1 100644
+> --- a/kernel/sched/debug.c
+> +++ b/kernel/sched/debug.c
+> @@ -423,6 +423,7 @@ static void register_sd(struct sched_domain *sd, struct dentry *parent)
 >  
-> @@ -170,7 +171,7 @@ struct msgdma_sw_desc {
->  struct msgdma_device {
->  	spinlock_t lock;
->  	struct device *dev;
-> -	struct tasklet_struct irq_tasklet;
-> +	struct work_struct irq_work;
+>  #undef SDM
+>  
+> +	debugfs_create_u32("level", 0444, parent, (u32 *)&sd->level);
 
-Can we name these as bh_work to signify that we are always in bh
-context? here and everywhere please
+It would be better if the level can be after group_flags since its a new addition?
 
-
->  	struct list_head pending_list;
->  	struct list_head free_list;
->  	struct list_head active_list;
-> @@ -676,12 +677,12 @@ static int msgdma_alloc_chan_resources(struct dma_chan *dchan)
+>  	debugfs_create_file("flags", 0444, parent, &sd->flags, &sd_flags_fops);
+>  	debugfs_create_file("groups_flags", 0444, parent, &sd->groups->flags, &sd_flags_fops);
 >  }
+> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+> index 99ea5986038..3127c9b30af 100644
+> --- a/kernel/sched/topology.c
+> +++ b/kernel/sched/topology.c
+> @@ -1468,7 +1468,7 @@ static void set_domain_attribute(struct sched_domain *sd,
+>  	} else
+>  		request = attr->relax_domain_level;
 >  
->  /**
-> - * msgdma_tasklet - Schedule completion tasklet
-> + * msgdma_work - Schedule completion work
+> -	if (sd->level > request) {
+> +	if (sd->level >= request) {
+>  		/* Turn off idle balance on this domain: */
+>  		sd->flags &= ~(SD_BALANCE_WAKE|SD_BALANCE_NEWIDLE);
+>  	}
 
-...
-
-> @@ -515,7 +516,7 @@ struct gpii {
->  	enum gpi_pm_state pm_state;
->  	rwlock_t pm_lock;
->  	struct gpi_ring ev_ring;
-> -	struct tasklet_struct ev_task; /* event processing tasklet */
-> +	struct work_struct ev_task; /* event processing work */
->  	struct completion cmd_completion;
->  	enum gpi_cmd gpi_cmd;
->  	u32 cntxt_type_irq_msk;
-> @@ -755,7 +756,7 @@ static void gpi_process_ieob(struct gpii *gpii)
->  	gpi_write_reg(gpii, gpii->ieob_clr_reg, BIT(0));
->  
->  	gpi_config_interrupts(gpii, MASK_IEOB_SETTINGS, 0);
-> -	tasklet_hi_schedule(&gpii->ev_task);
-> +	queue_work(system_bh_highpri_wq, &gpii->ev_task);
-
-This is good conversion, thanks for ensuring system_bh_highpri_wq is
-used here
--- 
-~Vinod
+Other than the above change looks good. 
