@@ -1,139 +1,138 @@
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D833C0B
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 08:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C06B42A8B
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 08:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711613502; cv=none; b=UBdkI7374TLFZCji6UE5oQSpen7veRMfDGJ6+9LrnCwx1vowWWEcioDvvQpZs6XXVjxKJs1jZd41KrgVhtN//u1YsotAR06dp4LuBilZyuIoL/OLqHuive61UnWMGiAYglqByEcb5cDFsfT/z/FNZfKD24Nk4OjsYov8ayCX2IQ=
+	t=1711613548; cv=none; b=ry04r24jC/S5aHYr+WY9GMUq5rPClk2NbSy2seTMHX8wpK4gdumTYP0i1DGXSfTmayIns7T3EuIvT6LikjAKwujJ2GEQTAUBG2/iVPxj4r/s3WUUuDkF3EQfBNgV33LpkuhlH7FqrZeiVl02FoiqMf220jiRQjev6wDFNmlu/Ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711613502; c=relaxed/simple;
-	bh=Y82VdzFzmjXfxBXVodOSz/QFARL593f+ckQ6qJTqgoU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=RlWqm5aLzEed2mjRH5loTiEQZv1w45dwgOPx8KRoW29I/DQRynsyueHFWoUn+ES7psuOcYHpE68h5iHPH7ah+jUmV/qnna+dtMw5SH1agNyEnazBHHfFpgrb+FvBwFPmISumFMg4iOGAz0HG6GOOE0fdvBcGbfXhKiQOuik18V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4V4wnR1SkTz9xrdp
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 15:55:23 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id 6888E140893
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:11:25 +0800 (CST)
-Received: from [10.81.206.1] (unknown [10.81.206.1])
-	by APP2 (Coremail) with SMTP id GxC2BwD3LyQlJgVmWJYbBQ--.7342S2;
-	Thu, 28 Mar 2024 09:11:24 +0100 (CET)
-Message-ID: <a8e2444e-7fab-485e-975b-6563504f3efa@huaweicloud.com>
-Date: Thu, 28 Mar 2024 09:11:14 +0100
+	s=arc-20240116; t=1711613548; c=relaxed/simple;
+	bh=gb6MKVyB1Z8XbC5BzK8Z2vs4Yz7PgGAmQ7D3YG5+8D4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G+BfOHscyuZ2igH05lxX3lzAcujyKp9h5soV+DHW9hRJ/a75037zWm/ByLXFgAwjO1UdRCPIaaAy6JNFc6v5b3sU2Nn0X6yytVpw+VfNIrUGuac92JrNlhbT4SOvPn42MfpEDkUZq/A84WxaZ3KdMcdit9s9pV8An2bwLWvXjE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=none smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=Sz3KYgQ7; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=daynix.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="Sz3KYgQ7"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56c2b4850d2so754435a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 01:12:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1711613545; x=1712218345; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j7rvoFRBKxf0yE7YY8RQnWrAo8fviROdMGC4hs1RKLE=;
+        b=Sz3KYgQ7g2JZNBQ1+wrfP7/MNRWdJ1TLoLN0kDTWwxQJns/xx7qtHS8+RHVteDUra1
+         91PA8T1WqO8BM/9GPZlLWzwfwmKkqHAdhjUoDjvxes+GqDGjRuHpHXmbPp14286YGU8z
+         xC1KHBeE2ww9fOnIpkNxzvuJ+8FvbOcIQawEJQzB3Kec7DoF1vzDpHMbusiLFhsNGGuy
+         kmxeVBZ1Um/oZCoQDGxo+7m2pjFqCJHpeCOSz7YhpvR9BoukfdE/jYPdHP7L4IlBiBFR
+         9hi8JY19fw9CzJmBUqI9UtcXg/tZcBnooD3FuKRbe8clRRwXYo74fguza3ngLXD9tJfQ
+         faog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711613545; x=1712218345;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j7rvoFRBKxf0yE7YY8RQnWrAo8fviROdMGC4hs1RKLE=;
+        b=YDCc2DlaWI8NSzy3tKmq5WGerd8UZkxRSdkuQCEpHSwNHV7lKRlcp+i5MlSdS+Y4kY
+         rGXhvXwRGP5N1ORCCqkCGqVUhsA32Qt0NRKkWDVSqSX75EEKsdzJAT2Ho7rfh0vrz/Kn
+         mUuRDlcmbpZvJM40iNh9aSEV+rBwDuooSHSdf334O1vrFYEkHGu35wZbR7hRTzYa0bYd
+         96KdVwDOtepo4H9V+XyXLAWI8DYXdpqMs+SFx7pv6GBa1wwF/5px/5xm7Ls5AgdCqQrf
+         aSioaRfZw+ROYzBNxaoAY2PbbMjLs16huffbPNdUXBb02ORKW2Rtj5M5AHuKGKxJVxJQ
+         blLw==
+X-Forwarded-Encrypted: i=1; AJvYcCWWi59p8v8fQ33KWG3XIe3DRTRVbGz91PaZReaJhCrZk2F0AnoJY3UDfLU5VJP4K9BV+wNCwMGdX30at0Q9Xd2g3bWsLX/Ty551OKGp
+X-Gm-Message-State: AOJu0Yw6boFoYJR2aiAExpvT9WOXR7cFn2NWIheKV1VSGaYhSsPeYhC1
+	264Lffzma87oPrGEfmmSfdobkFSU81m/1s4X4YwuAaNlyhBnAKCdwXaoBnnRK/r+MQLtpUdCdLl
+	GfAe+0vz1GDtbyJz/gbiuc0mwKuex2VooaiKVEw==
+X-Google-Smtp-Source: AGHT+IFhAfd17DEM8g97DoHFH/S7dRUsoNxHZs84UzKZHQqH0hGnUpb1JsLJhLdhVjny84cLIFvqAV6Qd+lOthHSzAA=
+X-Received: by 2002:a50:c318:0:b0:56c:d64:26b2 with SMTP id
+ a24-20020a50c318000000b0056c0d6426b2mr1397511edb.9.1711613544772; Thu, 28 Mar
+ 2024 01:12:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] um: Add winch to winch_handlers before registering winch
- IRQ
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: richard@nod.at, anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net
-Cc: linux-kernel@vger.kernel.org, linux-um@lists.infradead.org,
- Roberto Sassu <roberto.sassu@huawei.com>
-References: <20240307104926.3531358-1-roberto.sassu@huaweicloud.com>
- <2d70513e9f84e650ef1ede5a8ae5960a9de782bc.camel@huaweicloud.com>
-Content-Language: en-US
-In-Reply-To: <2d70513e9f84e650ef1ede5a8ae5960a9de782bc.camel@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:GxC2BwD3LyQlJgVmWJYbBQ--.7342S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7CFy8KF4kWr4fZrykGF4rXwb_yoW8Kry8pF
-	WDKasakrWFq3W09anrXan0yF97Aws7Gr1Uur1kK3y5Zryqvr9aqF1rGa4agF1DCry7Jr93
-	Xr4rCa9xuFZ8AwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUgmb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
-	AY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAI
-	cVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMI
-	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU1zuWJUUUUU==
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAQBF1jj5vieQACsm
+References: <20240327231826.1725488-1-andrew@daynix.com> <CACGkMEuW8jLvje0_oqCT=-ih9JEgxOrWRsvjvfwQXw=OWT_RtQ@mail.gmail.com>
+In-Reply-To: <CACGkMEuW8jLvje0_oqCT=-ih9JEgxOrWRsvjvfwQXw=OWT_RtQ@mail.gmail.com>
+From: Andrew Melnichenko <andrew@daynix.com>
+Date: Thu, 28 Mar 2024 09:46:36 +0200
+Message-ID: <CABcq3pFRookhQ8a8Sf9ri2ONOhHME9mXBMUZEOG1eGkJvAxQNw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] vhost: Added pad cleanup if vnet_hdr is not present.
+To: Jason Wang <jasowang@redhat.com>
+Cc: mst@redhat.com, ast@kernel.org, daniel@iogearbox.net, davem@davemloft.net, 
+	kuba@kernel.org, hawk@kernel.org, john.fastabend@gmail.com, 
+	kvm@vger.kernel.org, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	yuri.benditovich@daynix.com, yan@daynix.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/7/2024 1:43 PM, Roberto Sassu wrote:
-> On Thu, 2024-03-07 at 11:49 +0100, Roberto Sassu wrote:
->> From: Roberto Sassu <roberto.sassu@huawei.com>
->>
->> Registering a winch IRQ is racy, an interrupt may occur before the winch is
->> added to the winch_handlers list.
->>
->> If that happens, register_winch_irq() adds to that list a winch that is
->> scheduled to be (or has already been) freed, causing a panic later in
->> winch_cleanup().
->>
->> Avoid the race by adding the winch to the winch_handlers list before
->> registering the IRQ, and rolling back if um_request_irq() fails.
->>
->> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> 
-> Fixes: 42a359e31a0e ("uml: SIGIO support cleanup")
-> 
-> I see that before that commit there was the same ordering (list_add()
-> before um_request_irq()).
-> 
-> Failure from um_request_irq() should not result in executing
-> winch_interrupt() which could call list_del() itself. Then, it should
-> be fine to delete the winch in the error path.
+Thanks, I'll look into it.
 
-Richard, did you have time to look at this?
-
-Thanks
-
-Roberto
-
-> Roberto
-> 
->> ---
->>   arch/um/drivers/line.c | 14 ++++++++------
->>   1 file changed, 8 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/um/drivers/line.c b/arch/um/drivers/line.c
->> index ffc5cb92fa36..d82bc3fdb86e 100644
->> --- a/arch/um/drivers/line.c
->> +++ b/arch/um/drivers/line.c
->> @@ -676,24 +676,26 @@ void register_winch_irq(int fd, int tty_fd, int pid, struct tty_port *port,
->>   		goto cleanup;
->>   	}
->>   
->> -	*winch = ((struct winch) { .list  	= LIST_HEAD_INIT(winch->list),
->> -				   .fd  	= fd,
->> +	*winch = ((struct winch) { .fd  	= fd,
->>   				   .tty_fd 	= tty_fd,
->>   				   .pid  	= pid,
->>   				   .port 	= port,
->>   				   .stack	= stack });
->>   
->> +	spin_lock(&winch_handler_lock);
->> +	list_add(&winch->list, &winch_handlers);
->> +	spin_unlock(&winch_handler_lock);
->> +
->>   	if (um_request_irq(WINCH_IRQ, fd, IRQ_READ, winch_interrupt,
->>   			   IRQF_SHARED, "winch", winch) < 0) {
->>   		printk(KERN_ERR "register_winch_irq - failed to register "
->>   		       "IRQ\n");
->> +		spin_lock(&winch_handler_lock);
->> +		list_del(&winch->list);
->> +		spin_unlock(&winch_handler_lock);
->>   		goto out_free;
->>   	}
->>   
->> -	spin_lock(&winch_handler_lock);
->> -	list_add(&winch->list, &winch_handlers);
->> -	spin_unlock(&winch_handler_lock);
->> -
->>   	return;
->>   
->>    out_free:
-
+On Thu, Mar 28, 2024 at 6:03=E2=80=AFAM Jason Wang <jasowang@redhat.com> wr=
+ote:
+>
+> On Thu, Mar 28, 2024 at 7:44=E2=80=AFAM Andrew Melnychenko <andrew@daynix=
+.com> wrote:
+> >
+> > When the Qemu launched with vhost but without tap vnet_hdr,
+> > vhost tries to copy vnet_hdr from socket iter with size 0
+> > to the page that may contain some trash.
+> > That trash can be interpreted as unpredictable values for
+> > vnet_hdr.
+> > That leads to dropping some packets and in some cases to
+> > stalling vhost routine when the vhost_net tries to process
+> > packets and fails in a loop.
+> >
+> > Qemu options:
+> >   -netdev tap,vhost=3Don,vnet_hdr=3Doff,...
+> >
+> > From security point of view, wrong values on field used later
+> > tap's tap_get_user_xdp() and will affect skb gso and options.
+> > Later the header(and data in headroom) should not be used by the stack.
+> > Using custom socket as a backend to vhost_net can reveal some data
+> > in the vnet_hdr, although it would require kernel access to implement.
+> >
+> > The issue happens because the value of sock_len in virtqueue is 0.
+> > That value is set at vhost_net_set_features() with
+> > VHOST_NET_F_VIRTIO_NET_HDR, also it's set to zero at device open()
+> > and reset() routine.
+> > So, currently, to trigger the issue, we need to set up qemu with
+> > vhost=3Don,vnet_hdr=3Doff, or do not configure vhost in the custom prog=
+ram.
+> >
+> > Signed-off-by: Andrew Melnychenko <andrew@daynix.com>
+>
+> Acked-by: Jason Wang <jasowang@redhat.com>
+>
+> It seems it has been merged by Michael.
+>
+> Thanks
+>
+> > ---
+> >  drivers/vhost/net.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+> > index f2ed7167c848..57411ac2d08b 100644
+> > --- a/drivers/vhost/net.c
+> > +++ b/drivers/vhost/net.c
+> > @@ -735,6 +735,9 @@ static int vhost_net_build_xdp(struct vhost_net_vir=
+tqueue *nvq,
+> >         hdr =3D buf;
+> >         gso =3D &hdr->gso;
+> >
+> > +       if (!sock_hlen)
+> > +               memset(buf, 0, pad);
+> > +
+> >         if ((gso->flags & VIRTIO_NET_HDR_F_NEEDS_CSUM) &&
+> >             vhost16_to_cpu(vq, gso->csum_start) +
+> >             vhost16_to_cpu(vq, gso->csum_offset) + 2 >
+> > --
+> > 2.43.0
+> >
+>
