@@ -1,96 +1,111 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B72912F59C
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 14:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D4612D209;
+	Thu, 28 Mar 2024 14:31:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711636305; cv=none; b=rvXYFvyFrtXftWn0xVpRkMnkCM0Dg1XhKdHnGI9ko7OJpnABRze2jdhDvAAK6P0IBjqMcnfVwg6lJZbpzzhB401x8op6fWStgdFD37HM5tEU+zpn4U/dwGPXSw1QrT7+f0SOEl9zDBvfm5KMIvZQrXYWCFgWQZ5KJvf4hqJiZCE=
+	t=1711636313; cv=none; b=u9TkTQTKadAKw5YUhM3/ZuZELFGTh+e+Fz5LL9cR3wjDZy4WSrYhCTFP+PLl3mXpBqD41peDy87heqz0b4K3SKHZii6AV8C9cMNwhCosxeq+QzMR2C53nOAGB3GN6xOY8w8feKyBw3Y6jDhetrEbSsZK2SRqoU5jrFNBVPgDjuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711636305; c=relaxed/simple;
-	bh=5O+TwBZvRG0k8j6e/UUWYU5Cujug21yG+d8/Er2szuY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NEzs13cCnaYDNo0TdnnTqZ/i8+5rBnSvh2JfvJUH5PjjDjN4MRtG5q7L+cVRk3OkiLy07SUAejWI02uAVAoPTBr9xJ/xiWt/bzaq7PIy0vYuP3zhZVVEd/XfkgPqnQbZgLzOsKKks8CBMol1IFDLO045ncZ7lhrmSJzb+F/8PE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=a6Nvosw3; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1711636313; c=relaxed/simple;
+	bh=63E3lJn+RbWzhvFRPe7NeWgxZ0tEg6xP/LcfJ4ruTtU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=YQWBsT1aUuYNNiZN6nfJ44ii5iCVrELo6R18lYFSyBEs0dvvy33MYGrlUxc7YPUlCqYwQx1IJ8Li558jXre3qbiTgvEKcINfjSHYmNjkaQFrD2pUZNrAJIqqXwXr3eem+VEz5dTHRCgUYzs+BkF2KkVq4bIQ9/QS3B7FMcgcp8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IeIzeJPL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a6Nvosw3"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-430dcd64e58so5738221cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 07:31:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711636300; x=1712241100; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dYgQMPpl9MqgJ6pOUKLRybn6o9k2/c6Xhse3GpUhIos=;
-        b=a6Nvosw3YoWjlnnQZymqabw+hTGlQWqw95PPII74pRtfWe73WjY7nqqpg71tvdTz6V
-         xq571aprOiRjaaOGpgLPLUc50zUqPO1xGppQaLLLOVSLtQpl5d764SYrwdhqYY5ai1vx
-         HSe8m6QXiVBIhrGpk+N3M6TP12ubk3UokQUSw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711636300; x=1712241100;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dYgQMPpl9MqgJ6pOUKLRybn6o9k2/c6Xhse3GpUhIos=;
-        b=GSC1r14bWzmsomYT9yokkt91rO0Xium2Dgk8KpwRzhnz2XZFSBHgeLni92LoMG+bRI
-         29XKnnSMBZAnLFDY+z66u/Q+/LhnQJT6fkIfKGUh775TxhQsikHQzPNqWH+ECZp86Voe
-         nfLuxBwHUSdrOWMUP9W++kmRGKW7s+F0Mno9XQiNhU0IerLDS5oewb0ZAcd0ZhURX+xX
-         A6Wn4XcLZKSM9+mqn4LttLRyroOkJY39oa2ROaC9dMol3hYo9Y9rinhCx95rWX6SMqgV
-         Dc5WYSkZheX+nFBsrybVLSFg5ZqqIsd4FuLc6aPHnYqfwrcb3Yit8w2XdonN4fIK8bBr
-         siVA==
-X-Forwarded-Encrypted: i=1; AJvYcCUTFsMQ+boTNZYkqi0QQCLh3ze8xcZxhfr1+BNhw9px3WYFBvY0BoyApu4m3nbxk82/fO7iHTg841iTgFZcLVUlhPi60Kfouv5pY7QF
-X-Gm-Message-State: AOJu0YxOL+5+Njkxxjlc+Z0AH2c+/kAdQajS+SyekJN+LnyJSRrNtAUk
-	3y0LNWKhDtgqbKATxaB3tWybSjPSTQkiCD1MqAuSaSdnBfKH0HsTh1uWfwrycygv/JuUE37Tvo0
-	=
-X-Google-Smtp-Source: AGHT+IGjNV6jGm1aSB88QCHwfCg7Yt8wn94LDKvrLLDZIYs0kfUo3gxGGZyvPWPtRSDHWzPFjo+CAQ==
-X-Received: by 2002:a05:622a:c7:b0:431:1ed2:b246 with SMTP id p7-20020a05622a00c700b004311ed2b246mr3485965qtw.45.1711636299765;
-        Thu, 28 Mar 2024 07:31:39 -0700 (PDT)
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com. [209.85.160.179])
-        by smtp.gmail.com with ESMTPSA id er7-20020a05622a5e8700b0043153615c82sm669372qtb.37.2024.03.28.07.31.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Mar 2024 07:31:38 -0700 (PDT)
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-430d3fcc511so304851cf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 07:31:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVTjhPc+hekkx3ScNZ+MzUKc8/AI2VA3JaIBDq2jp/Rn8AqlqaNmWMpAgGD1BH2gWIoOiQH3gfOY5sN5TXJ+T5mdAaANrh67spFUuQJ
-X-Received: by 2002:a05:622a:5b8c:b0:432:b4d0:ab2c with SMTP id
- ec12-20020a05622a5b8c00b00432b4d0ab2cmr192920qtb.1.1711636298118; Thu, 28 Mar
- 2024 07:31:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IeIzeJPL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73B14C433C7;
+	Thu, 28 Mar 2024 14:31:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711636313;
+	bh=63E3lJn+RbWzhvFRPe7NeWgxZ0tEg6xP/LcfJ4ruTtU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=IeIzeJPLkhJmIX8tfvNCyH/kz7dBZEaGv2AH5mRvXEHTKzjG/bGvkl1wrQQSGhHhR
+	 WAlroVk1KIkwQ+Q3j546UO8T09Xwgq/PY6cz6Ni1I+dxI3+5Qm72UOXucjukpc5yFH
+	 i41C1dQwmNLmjnPVXyDRWAY/cNcBJqm7V4Vmdqq8VtznuVDuRQKbNognTdbcoHH/dr
+	 DBEQCkj5UgVY9xr9OQxUF6szyNPMOywEknh4MEaqD+Su+pv3NDwx9F2ZS6Og5GR9aB
+	 analtJheeLW2+JVcuCKBt3GTI318iexloMXaM3CNcDQ9ZU4TbZBVBkGMfOCL0WXWSJ
+	 WJRJmX9ZP13/Q==
+From: Arnd Bergmann <arnd@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Nathan Chancellor <nathan@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Dmitry Safonov <0x7f454c46@gmail.com>,
+	Neal Cardwell <ncardwell@google.com>,
+	"mfreemon@cloudflare.com" <mfreemon@cloudflare.com>,
+	Yan Zhai <yan@cloudflare.com>,
+	netdev@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH 5/9] ipv4: tcp_output: avoid warning about NET_ADD_STATS
+Date: Thu, 28 Mar 2024 15:30:43 +0100
+Message-Id: <20240328143051.1069575-6-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240328143051.1069575-1-arnd@kernel.org>
+References: <20240328143051.1069575-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240328140015.388654-3-thorsten.blum@toblux.com>
-In-Reply-To: <20240328140015.388654-3-thorsten.blum@toblux.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Thu, 28 Mar 2024 07:31:24 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=V3Cpo38ss1nFvPMbXadaXXpVuN5jdfUKZS4ngDLQX_wQ@mail.gmail.com>
-Message-ID: <CAD=FV=V3Cpo38ss1nFvPMbXadaXXpVuN5jdfUKZS4ngDLQX_wQ@mail.gmail.com>
-Subject: Re: [PATCH] kdb: Use str_plural() to fix Coccinelle warning
-To: Thorsten Blum <thorsten.blum@toblux.com>
-Cc: Jason Wessel <jason.wessel@windriver.com>, 
-	Daniel Thompson <daniel.thompson@linaro.org>, 
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Yuran Pereira <yuran.pereira@hotmail.com>, 
-	kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Arnd Bergmann <arnd@arndb.de>
 
-On Thu, Mar 28, 2024 at 7:03=E2=80=AFAM Thorsten Blum <thorsten.blum@toblux=
-.com> wrote:
->
-> Fixes the following Coccinelle/coccicheck warning reported by
-> string_choices.cocci:
->
->         opportunity for str_plural(days)
->
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
-> ---
->  kernel/debug/kdb/kdb_main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Clang warns about a range check in percpu_add_op() being impossible
+to hit for an u8 variable:
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+net/ipv4/tcp_output.c:188:3: error: result of comparison of constant -1 with expression of type 'u8' (aka 'unsigned char') is always false [-Werror,-Wtautological-constant-out-of-range-compare]
+                NET_ADD_STATS(sock_net(sk), LINUX_MIB_TCPACKCOMPRESSED,
+                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+include/net/ip.h:291:41: note: expanded from macro 'NET_ADD_STATS'
+ #define NET_ADD_STATS(net, field, adnd) SNMP_ADD_STATS((net)->mib.net_statistics, field, adnd)
+                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+include/net/snmp.h:143:4: note: expanded from macro 'SNMP_ADD_STATS'
+                        this_cpu_add(mib->mibs[field], addend)
+                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+include/linux/percpu-defs.h:509:33: note: expanded from macro 'this_cpu_add'
+ #define this_cpu_add(pcp, val)          __pcpu_size_call(this_cpu_add_, pcp, val)
+                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+note: (skipping 1 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+<scratch space>:187:1: note: expanded from here
+this_cpu_add_8
+^
+arch/x86/include/asm/percpu.h:326:35: note: expanded from macro 'this_cpu_add_8'
+ #define this_cpu_add_8(pcp, val)                percpu_add_op(8, volatile, (pcp), val)
+                                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/include/asm/percpu.h:127:31: note: expanded from macro 'percpu_add_op'
+                              ((val) == 1 || (val) == -1)) ?            \
+                                             ~~~~~ ^  ~~
+
+Avoid this warning with a cast to a signed 'int'.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ net/ipv4/tcp_output.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index e3167ad96567..dbe54fceee08 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -183,7 +183,7 @@ static inline void tcp_event_ack_sent(struct sock *sk, u32 rcv_nxt)
+ 
+ 	if (unlikely(tp->compressed_ack)) {
+ 		NET_ADD_STATS(sock_net(sk), LINUX_MIB_TCPACKCOMPRESSED,
+-			      tp->compressed_ack);
++			      (int)tp->compressed_ack);
+ 		tp->compressed_ack = 0;
+ 		if (hrtimer_try_to_cancel(&tp->compressed_ack_timer) == 1)
+ 			__sock_put(sk);
+-- 
+2.39.2
+
