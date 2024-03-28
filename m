@@ -1,135 +1,95 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE7D7F7D5;
-	Thu, 28 Mar 2024 12:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA9E43ABE;
+	Thu, 28 Mar 2024 12:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711627286; cv=none; b=XAUgOSLve6lOZ00NpOKUEPU7Se0kHo1MCYtK0tmFFObq6UT/LIOuMnJ6MlgYcX4kdEMzy+fcniJ6CsnKbYM2lLpoJsHpf7U6J+wb2iDynIYq6wSRg3LByRx0/nKEa/6fXoxMAUUfZ5iZlm+15cQglTPq7398QJe1QNp8O1N9iXI=
+	t=1711627415; cv=none; b=Kel7dRxyoMltVn/+HICb8BxEk36ffOUOkR38A3p7ixckL3VAWrOf69BVzMK47zbOt+y+sQOPc9ND22agl9t2lmXBeF6w7FBLKIPcLguU7ufWn0TgSZy33DDTj8/NwSQ2E5Lf1aEZy2YJDnibgU4yxTWDKXBO3fkr4uJCKySNBFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711627286; c=relaxed/simple;
-	bh=qQGL3KEVALIYTB3iaYhCLAJRzfoPdhBLQhivo5AcuHw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:CC:From:
-	 In-Reply-To:Content-Type; b=kmtIcoGqzm7+jtCy2RgOJgGBE85V6P+cam8MRNGj6/0ABMVpqjQqJ2eK8F3OTC/UHysnBWd5qwRlOOQ6vHLuyqc+Mx+SI9wFBViZV6enVGawiW4bDdNGw5KyH9AV74KK2XycNC01j8uREJxkeuHWT26rypFt5IWCxMo4izBuwSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gxC+Npgr; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1711627415; c=relaxed/simple;
+	bh=ftAi0138ljeybsCkA3p2TsAqoWmZb2V8KjzoPIukDkY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LFBAaJEziu65Ak3myrfMspCzFP/f9T5d21x3mD0lNzsJV6hF3BdPkOK48cqtgKbPyz8SascSDNvrkORuNJF62z6W9JKgjytFDc4qs9yfyhWlehEGDA9ZFUoUMuoNe5i+BLzBIwmbWqmeT+HXkEPKIfaM/AMuL7u+1zcZFZpjl0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CTITSUoj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gxC+Npgr"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42SAVtgk030829;
-	Thu, 28 Mar 2024 12:01:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:references:cc:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=zJ4nt5TmQ8B8l4dzJcYb0Pb3LyYOiQTCoq/dt1LSxRU=; b=gx
-	C+NpgruJtTLYOyZu5+jHAxl0uRsJIqXHlZK4/0WbkZx0cUQ6+K4lZ39ApazVT5yw
-	nRb3JpnBp2SJseOAX7VNwyW4EZLrG1ptpq8MV7uxy9cV06tSuOc8kJjBNb/hpEPr
-	UCvebmVcV6mxw029kTAbrurYxayRzu56CMwWbQfeskzIvtOvdSQhCMm8djhNmYvh
-	5oDqOeSEsR1PMcGDikcJpV1C7jtjWj+6PUG7uw7Fn1+N0nX5jnfYW8H0qje4vUYa
-	rau4JmZRjStd3WeE91BhVYlHDZKWx9Ppuw9qUmFFnfvgCHlpJUJJHVXdd62JZ3pU
-	umyaPREy6Ow34DxLnYxQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x4u2037qg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 28 Mar 2024 12:01:11 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42SC1Axq030884
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 28 Mar 2024 12:01:10 GMT
-Received: from [10.216.61.17] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 28 Mar
- 2024 05:01:07 -0700
-Message-ID: <19bb6ff0-04ff-4e88-8c8a-499c054bdea4@quicinc.com>
-Date: Thu, 28 Mar 2024 17:31:04 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CTITSUoj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E19BC433F1;
+	Thu, 28 Mar 2024 12:03:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711627415;
+	bh=ftAi0138ljeybsCkA3p2TsAqoWmZb2V8KjzoPIukDkY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CTITSUojfmL0QlCbb0gXnBadPu3eZ1mEGnEUggOhx6hAPXuzr6DWg/p5xHLL7F5dp
+	 21D3HwDhdniSffz69djLfuzgiRBX446JxR5288pRPaaYZBcYPG9mrWULd7HizmEkVr
+	 pDkt63Tz6AKuBL1MMgiA5OdVC2txUtV28GA5fmhPmBtdlJfRtVUVAIy6y6SeSeWk0I
+	 CexovdNTwSrf9Pi9PVzdCOjax6p/MNikaA6kADIRd4z4J5t3I4VnHP63m2HTYYG4bT
+	 0/XfCsR0jPtXdAZL3ZnFGWR427QIEEPUNI3nHdgf3lC6sGEqEbJKIHybHwxvNzDSeE
+	 R7ymhIV1S2e1w==
+Date: Thu, 28 Mar 2024 12:03:29 +0000
+From: Lee Jones <lee@kernel.org>
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Samuel Holland <samuel@sholland.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev,
+	Ryan Walklin <ryan@testtoast.com>
+Subject: Re: [GIT PULL] Immutable branch between MFD and Regulator due for
+ the v6.9 merge window:wq
+Message-ID: <20240328120329.GF13211@google.com>
+References: <20240310010211.28653-1-andre.przywara@arm.com>
+ <20240328095631.GW13211@google.com>
+ <20240328111108.5ddfa073@minigeek.lan>
+ <20240328120011.GE13211@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] soc: qcom: cmd-db: map shared memory as WT, not WB
-Content-Language: en-US
-To: Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
-References: <20240327200917.2576034-1-volodymyr_babchuk@epam.com>
-CC: Caleb Connolly <caleb.connolly@linaro.org>, <Volodymyr_Babchuk@epam.com>,
-        "andersson@kernel.org >> Bjorn Andersson" <andersson@kernel.org>,
-        Konrad
- Dybcio <konrad.dybcio@linaro.org>,
-        linux-arm-msm
-	<linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-From: "Maulik Shah (mkshah)" <quic_mkshah@quicinc.com>
-In-Reply-To: <20240327200917.2576034-1-volodymyr_babchuk@epam.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: vSol2qy5wNRC1Autn8p6AtWI4KUfl8yT
-X-Proofpoint-ORIG-GUID: vSol2qy5wNRC1Autn8p6AtWI4KUfl8yT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-28_11,2024-03-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- lowpriorityscore=0 spamscore=0 impostorscore=0 malwarescore=0 phishscore=0
- adultscore=0 clxscore=1011 mlxlogscore=999 mlxscore=0 priorityscore=1501
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2403210001 definitions=main-2403280081
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240328120011.GE13211@google.com>
 
+On Thu, 28 Mar 2024, Lee Jones wrote:
 
-
-On 3/28/2024 1:39 AM, Volodymyr Babchuk wrote:
-> It appears that hardware does not like cacheable accesses to this
-> region. Trying to access this shared memory region as Normal Memory
-> leads to secure interrupt which causes an endless loop somewhere in
-> Trust Zone.
-
-Linux does not write into cmd-db region. This region is write protected 
-by XPU. Making this region uncached magically solves the XPU write fault
-issue.
-
-Can you please include above details?
-
+> On Thu, 28 Mar 2024, Andre Przywara wrote:
 > 
-> The only reason it is working right now is because Qualcomm Hypervisor
-> maps the same region as Non-Cacheable memory in Stage 2 translation
-> tables. The issue manifests if we want to use another hypervisor (like
-> Xen or KVM), which does not know anything about those specific
-> mappings. This patch fixes the issue by mapping the shared memory as
-> Write-Through. This removes dependency on correct mappings in Stage 2
-> tables.
-
-Using MEMREMAP_WC also resolves for qcm6490, see below comment.
-
+> > On Thu, 28 Mar 2024 09:56:31 +0000
+> > Lee Jones <lee@kernel.org> wrote:
+> > 
+> > Hi Lee,
+> > 
+> > many thanks for picking this up!
+> > 
+> > > Enjoy!
+> > > 
+> > > The following changes since commit 4cece764965020c22cff7665b18a012006359095:
+> > > 
+> > >   Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
+> > > 
+> > > are available in the Git repository at:
+> > > 
+> > >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-regulator-v6.9
+> > > 
+> > > for you to fetch changes up to d2ac3df75c3a995064cfac0171e082a30d8c4c66:
+> > > 
+> > >   regulator: axp20x: add support for the AXP717 (2024-03-28 09:51:03 +0000)
+> > > 
+> > > ----------------------------------------------------------------
+> > > Immutable branch between MFD and Regulator due for the v6.9 merge window
+> > 
+> > Did you mean v6.10 merge window? Or is there a plan to merge this into
+> > 6.9 still?
 > 
-> I tested this on SA8155P with Xen.
-> 
-> Signed-off-by: Volodymyr Babchuk <volodymyr_babchuk@epam.com>
-> ---
->   drivers/soc/qcom/cmd-db.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/soc/qcom/cmd-db.c b/drivers/soc/qcom/cmd-db.c
-> index a5fd68411bed5..dd5ababdb476c 100644
-> --- a/drivers/soc/qcom/cmd-db.c
-> +++ b/drivers/soc/qcom/cmd-db.c
-> @@ -324,7 +324,7 @@ static int cmd_db_dev_probe(struct platform_device *pdev)
->   		return -EINVAL;
->   	}
->   
-> -	cmd_db_header = memremap(rmem->base, rmem->size, MEMREMAP_WB);
-> +	cmd_db_header = memremap(rmem->base, rmem->size, MEMREMAP_WT);
+> Yes - off-by-one!
 
-In downstream, we have below which resolved similar issue on qcm6490.
+Just recreated ib-mfd-regulator-v6.10 for all the OCD types (like me!).
 
-cmd_db_header = memremap(rmem->base, rmem->size, MEMREMAP_WC);
-
-Downstream SA8155P also have MEMREMAP_WC. Can you please give it a try 
-on your device?
-
-Thanks,
-Maulik
+-- 
+Lee Jones [李琼斯]
