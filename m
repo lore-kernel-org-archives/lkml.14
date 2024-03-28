@@ -1,322 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A77A17EF;
-	Thu, 28 Mar 2024 20:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC40413A418
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 20:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711658346; cv=none; b=gW615JZiK3UJq4popaQq9MrWmZzyPi/QqSPsJvS/rIloAZWtdoFuenXAIxtMTrDk1+3V1wqhM7tvdW+VKxp/TniMWab1HzqqsrPeeUMGC+aYv5HgOFZuL65uPbBhTJnpI9z/oxE08/EkPWS3n11eTuDaHJpl21oHxdMHpRoNZpw=
+	t=1711658350; cv=none; b=ClPyG8YrJrPhgpCMgXkoqsZjUdsC5C3hSpQ+min5mh8is1aDhgdEwN8X+TzFxyOk9WqGq9j9EtDpxMCu4sPkyoRBFIBbDzuZ2C9Ka8JGNyW3FaYoEnNxh038tXtJo79FnbmZZ9ADLnxOsrrK6NWoVBsAJfdSG9jq4cNsqFZHp18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711658346; c=relaxed/simple;
-	bh=zp2qL6ydfBycrCAW9nXS8bSJZLCcBUydjvSCCE1BPt0=;
+	s=arc-20240116; t=1711658350; c=relaxed/simple;
+	bh=c76w6ANOZw/3hvDVKikFOR104FP3uq0xGTMZX9yqf8I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jXsvCEorZXaBrvvKh4/Z/2lD9CAR5QNmflKrA/VdiNZGp+cSTw+7bd5tt2j5UX9nthH/vEMcY32HgJoGywuI55ReX+AQTxokTJIPfAbqX1qWbzZHU1eAWrMPjt5d3zjt3e7MowZg07JwYzNB7H3n6kUktxydpDG4GfKLiVlD71I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f+rbttlR; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=NA+x4qZ5p0qsqeejsbQqcTJ7qn9KXT/bwOCWJ8RFA2o7TERrmPKrpFCfqiiyv/cy92a2kwYMNlXTOpUJ+XF05NOWDTnxjd2v2lP+Z2ZljkMI6+BMVyL9MkrFWdJrd4JAdl9dgQYC/ZK0oREsdpdJBLBWIa+4ORFqKOdbTQvCvUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WBgEDQy7; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f+rbttlR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711658344; x=1743194344;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zp2qL6ydfBycrCAW9nXS8bSJZLCcBUydjvSCCE1BPt0=;
-  b=f+rbttlRzNYNt3VGUdAfAABpfFncBRX6VuTD3g6fnP2wXQXPTpxk4IY3
-   tXlAK3vufN5oi2EBIM52RJs5o/hHXgVLn14uN2mdbJkIebaBobxdfiWFW
-   YJnK5SB2aYv2ojfXgm3EXOBQ2UJ/kfm3LH1jcnK2OZEzvdwr2YH+v/DGp
-   cvTlhumJNcrbLRZvzmpz8ujyn8Q48NRZgEFaKpfJjVLSQInviZenoUCCu
-   lOhvGtR3X2i3g5OcYzPzkObYPlqLGnWB2ma17H2v+GZLr+BCgqw8UQvr9
-   xjdt89mO9n/dptIPeLrjGk/i2qkq9ABNwzOjbFdra8taPc1l57xgPMX8R
-   A==;
-X-CSE-ConnectionGUID: LlRI8Bi+SkuUtP8CV4OpDA==
-X-CSE-MsgGUID: +t/WAQ5IRaiPWRTT8+WU8A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="6734012"
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="6734012"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 13:39:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="16595289"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 13:39:03 -0700
-Date: Thu, 28 Mar 2024 13:39:02 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: "Huang, Kai" <kai.huang@intel.com>
-Cc: "Yamahata, Isaku" <isaku.yamahata@intel.com>,
-	"Zhang, Tina" <tina.zhang@intel.com>,
-	"isaku.yamahata@linux.intel.com" <isaku.yamahata@linux.intel.com>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"Yuan, Hang" <hang.yuan@intel.com>,
-	"sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-	"Chen, Bo2" <chen.bo@intel.com>,
-	"sagis@google.com" <sagis@google.com>,
-	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>,
-	"Aktas, Erdem" <erdemaktas@google.com>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v19 038/130] KVM: TDX: create/destroy VM structure
-Message-ID: <20240328203902.GP2444378@ls.amr.corp.intel.com>
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <7a508f88e8c8b5199da85b7a9959882ddf390796.1708933498.git.isaku.yamahata@intel.com>
- <a0627c0f-5c2d-4403-807f-fc800b43fd3b@intel.com>
- <20240327225337.GF2444378@ls.amr.corp.intel.com>
- <4d925a79-d3cf-4555-9c00-209be445310d@intel.com>
- <20240328053432.GO2444378@ls.amr.corp.intel.com>
- <65a1a35e0a3b9a6f0a123e50ec9ddb755f70da52.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WBgEDQy7"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a450bedffdfso163188266b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 13:39:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711658347; x=1712263147; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vXXOSZfz8O5OKgyE9PyGnB12GSSexqRiRe1MSPJ2Dvs=;
+        b=WBgEDQy7jidLSUfSCwFur8lXCW6mFyw0ulkGHuki29/26T/2wHrX6X0Bjgh2Bkw83+
+         Bmc/hIjvy0KLSttN3MLGxbM8+YA8Tc35p6aYG/9ADdu9TxPPV8ir23EKvL3FQgU9hVqE
+         I3oB0dPHhag3EjamTZPjCVnq9AAsCP/gSa84RxZMBiM0qzESuug1q5r1YkII7peSkYqM
+         dqCGjF5IqkTvqbz+937bJICfienaLYlEVGxCVxKN9QEeQ3lh+aWNi1tvM5ZOj+B85bUQ
+         yCTqq0et3426MtSKEaiCPltTPzpjwAmlldOh5CXtex73ZqPz+gQAbE/S00snahLvCuiL
+         jT9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711658347; x=1712263147;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vXXOSZfz8O5OKgyE9PyGnB12GSSexqRiRe1MSPJ2Dvs=;
+        b=BKewio+8fofoW6KO5X022MUlCI2YAzoQSadlvDnJyuxkG0Du+oou3ex1Qj08ATinh9
+         xfAzNENV/ZsThwJ4lg+AI+9Ferav3Sl0FQJUv0s+rSibH+Yn+qKB/WxcEqonJ+YonI+X
+         7QywgpPyHnnUj4fMR5ORjqgRapH9RQm1ooywokbLvf21JFIkRYNGCXgcHiE5i1nxFSqz
+         tE6e7fTjr3m0WFwVAHgqPY5N1PQ70T4Dkmqi5G0qTJM8YGatCX+u/drLzGFD5l0KWA2a
+         QfsKrw9MYE/HcjTTtoSH3IBaKiD2WAKPO7CWZv6saiVZhUa6r5yjm6xsoSzL81qInGCG
+         C6CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU/4dZ0E/U0TuwTJWUnVQsXcPYu4DRBznS27RpZQrIYEc+Dp2wTni57Y/2t0LBB8sGIqDDcmXeZVYjoA8R/PSAOx+0bZauk5tfN9y++
+X-Gm-Message-State: AOJu0YxT4IHkES09cWfnx+DCxPm/Aj7oMIyViYwoUaowI+/s7Zf2LOe1
+	Xn5DxilndC7NJ/MM1Qpa8gQxTzidliqqEr1VEZGvVbuZqnlneLUzvGRpeDhQkMiIssGxbfs2YTL
+	M
+X-Google-Smtp-Source: AGHT+IEfI6/ElqbxX011QI3EBz6Tqo72909UkKh+kFTHngulAL02ypmJA9aR2eFcAe+MhiuYzBH3uw==
+X-Received: by 2002:a17:906:2654:b0:a4d:d356:fd69 with SMTP id i20-20020a170906265400b00a4dd356fd69mr219001ejc.12.1711658346886;
+        Thu, 28 Mar 2024 13:39:06 -0700 (PDT)
+Received: from linaro.org ([79.114.172.194])
+        by smtp.gmail.com with ESMTPSA id mf9-20020a170906cb8900b00a46faaf7427sm1133467ejb.121.2024.03.28.13.39.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 13:39:06 -0700 (PDT)
+Date: Thu, 28 Mar 2024 22:39:04 +0200
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Kuogee Hsieh <quic_khsieh@quicinc.com>
+Cc: dri-devel@lists.freedesktop.org, robdclark@gmail.com, sean@poorly.run,
+	swboyd@chromium.org, dianders@chromium.org, vkoul@kernel.org,
+	daniel@ffwll.ch, airlied@gmail.com, agross@kernel.org,
+	dmitry.baryshkov@linaro.org, andersson@kernel.org,
+	quic_abhinavk@quicinc.com, quic_jesszhan@quicinc.com,
+	quic_sbillaka@quicinc.com, marijn.suijten@somainline.org,
+	freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] drm/msm/dp: assign correct DP controller ID to
+ interface table
+Message-ID: <ZgXVaA6mbbUbVR0p@linaro.org>
+References: <1711656246-3483-1-git-send-email-quic_khsieh@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <65a1a35e0a3b9a6f0a123e50ec9ddb755f70da52.camel@intel.com>
+In-Reply-To: <1711656246-3483-1-git-send-email-quic_khsieh@quicinc.com>
 
-On Thu, Mar 28, 2024 at 11:14:42AM +0000,
-"Huang, Kai" <kai.huang@intel.com> wrote:
-
-> On Wed, 2024-03-27 at 22:34 -0700, Isaku Yamahata wrote:
-> > On Thu, Mar 28, 2024 at 02:49:56PM +1300,
-> > "Huang, Kai" <kai.huang@intel.com> wrote:
-> > 
-> > > 
-> > > 
-> > > On 28/03/2024 11:53 am, Isaku Yamahata wrote:
-> > > > On Tue, Mar 26, 2024 at 02:43:54PM +1300,
-> > > > "Huang, Kai" <kai.huang@intel.com> wrote:
-> > > > 
-> > > > > ... continue the previous review ...
-> > > > > 
-> > > > > > +
-> > > > > > +static void tdx_reclaim_control_page(unsigned long td_page_pa)
-> > > > > > +{
-> > > > > > +	WARN_ON_ONCE(!td_page_pa);
-> > > > > 
-> > > > >  From the name 'td_page_pa' we cannot tell whether it is a control page, but
-> > > > > this function is only intended for control page AFAICT, so perhaps a more
-> > > > > specific name.
-> > > > > 
-> > > > > > +
-> > > > > > +	/*
-> > > > > > +	 * TDCX are being reclaimed.  TDX module maps TDCX with HKID
-> > > > > 
-> > > > > "are" -> "is".
-> > > > > 
-> > > > > Are you sure it is TDCX, but not TDCS?
-> > > > > 
-> > > > > AFAICT TDCX is the control structure for 'vcpu', but here you are handling
-> > > > > the control structure for the VM.
-> > > > 
-> > > > TDCS, TDVPR, and TDCX.  Will update the comment.
-> > > 
-> > > But TDCX, TDVPR are vcpu-scoped.  Do you want to mention them _here_?
-> > 
-> > So I'll make the patch that frees TDVPR, TDCX will change this comment.
-> > 
+On 24-03-28 13:04:05, Kuogee Hsieh wrote:
+> At current x1e80100 interface table, interface #3 is wrongly
+> connected to DP controller #0 and interface #4 wrongly connected
+> to DP controller #2. Fix this problem by connect Interface #3 to
+> DP controller #0 and interface #4 connect to DP controller #1.
+> Also add interface #6, #7 and #8 connections to DP controller to
+> complete x1e80100 interface table.
 > 
-> Hmm.. Looking again, I am not sure why do we even need
-> tdx_reclaim_control_page()?
+> Signed-off-by: Kuogee Hsieh <quic_khsieh@quicinc.com>
+> ---
+
+Nitpick: Probably mention the x1e80100 in the subject line somehow.
+
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+
+>  .../drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h   | 34 ++++++++++++++++++++--
+>  1 file changed, 31 insertions(+), 3 deletions(-)
 > 
-> It basically does tdx_reclaim_page() + free_page():
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h
+> index 9a9f709..a3e60ac 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h
+> @@ -324,6 +324,7 @@ static const struct dpu_wb_cfg x1e80100_wb[] = {
+>  	},
+>  };
+>  
+> +/* TODO: INTF 3, 8 and 7 are used for MST, marked as INTF_NONE for now */
+>  static const struct dpu_intf_cfg x1e80100_intf[] = {
+>  	{
+>  		.name = "intf_0", .id = INTF_0,
+> @@ -358,8 +359,8 @@ static const struct dpu_intf_cfg x1e80100_intf[] = {
+>  		.name = "intf_3", .id = INTF_3,
+>  		.base = 0x37000, .len = 0x280,
+>  		.features = INTF_SC7280_MASK,
+> -		.type = INTF_DP,
+> -		.controller_id = MSM_DP_CONTROLLER_1,
+> +		.type = INTF_NONE,
+> +		.controller_id = MSM_DP_CONTROLLER_0,	/* pair with intf_0 for DP MST */
+>  		.prog_fetch_lines_worst_case = 24,
+>  		.intr_underrun = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 30),
+>  		.intr_vsync = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 31),
+> @@ -368,7 +369,7 @@ static const struct dpu_intf_cfg x1e80100_intf[] = {
+>  		.base = 0x38000, .len = 0x280,
+>  		.features = INTF_SC7280_MASK,
+>  		.type = INTF_DP,
+> -		.controller_id = MSM_DP_CONTROLLER_2,
+> +		.controller_id = MSM_DP_CONTROLLER_1,
+>  		.prog_fetch_lines_worst_case = 24,
+>  		.intr_underrun = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 20),
+>  		.intr_vsync = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 21),
+> @@ -381,6 +382,33 @@ static const struct dpu_intf_cfg x1e80100_intf[] = {
+>  		.prog_fetch_lines_worst_case = 24,
+>  		.intr_underrun = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 22),
+>  		.intr_vsync = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 23),
+> +	}, {
+> +		.name = "intf_6", .id = INTF_6,
+> +		.base = 0x3A000, .len = 0x280,
+> +		.features = INTF_SC7280_MASK,
+> +		.type = INTF_DP,
+> +		.controller_id = MSM_DP_CONTROLLER_2,
+> +		.prog_fetch_lines_worst_case = 24,
+> +		.intr_underrun = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 17),
+> +		.intr_vsync = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 16),
+> +	}, {
+> +		.name = "intf_7", .id = INTF_7,
+> +		.base = 0x3b000, .len = 0x280,
+> +		.features = INTF_SC7280_MASK,
+> +		.type = INTF_NONE,
+> +		.controller_id = MSM_DP_CONTROLLER_2,	/* pair with intf_6 for DP MST */
+> +		.prog_fetch_lines_worst_case = 24,
+> +		.intr_underrun = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 18),
+> +		.intr_vsync = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 19),
+> +	}, {
+> +		.name = "intf_8", .id = INTF_8,
+> +		.base = 0x3c000, .len = 0x280,
+> +		.features = INTF_SC7280_MASK,
+> +		.type = INTF_NONE,
+> +		.controller_id = MSM_DP_CONTROLLER_1,	/* pair with intf_4 for DP MST */
+> +		.prog_fetch_lines_worst_case = 24,
+> +		.intr_underrun = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 12),
+> +		.intr_vsync = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 13),
+>  	},
+>  };
+>  
+> -- 
+> 2.7.4
 > 
-> +static void tdx_reclaim_control_page(unsigned long td_page_pa)
-> +{
-> +	WARN_ON_ONCE(!td_page_pa);
-> +
-> +	/*
-> +	 * TDCX are being reclaimed.  TDX module maps TDCX with HKID
-> +	 * assigned to the TD.  Here the cache associated to the TD
-> +	 * was already flushed by TDH.PHYMEM.CACHE.WB before here, So
-> +	 * cache doesn't need to be flushed again.
-> +	 */
-> +	if (tdx_reclaim_page(td_page_pa))
-> +		/*
-> +		 * Leak the page on failure:
-> +		 * tdx_reclaim_page() returns an error if and only if there's
-> an
-> +		 * unexpected, fatal error, e.g. a SEAMCALL with bad params,
-> +		 * incorrect concurrency in KVM, a TDX Module bug, etc.
-> +		 * Retrying at a later point is highly unlikely to be
-> +		 * successful.
-> +		 * No log here as tdx_reclaim_page() already did.
-> +		 */
-> +		return;
-> +	free_page((unsigned long)__va(td_page_pa));
-> +}
-> 
-> And why do you need a special function just for control page(s)?
-
-We can revise the code to have common function for reclaiming page.
-
-
-> > > Otherwise you will have to explain them.
-> > > 
-> > > [...]
-> > > 
-> > > > > > +
-> > > > > > +void tdx_mmu_release_hkid(struct kvm *kvm)
-> > > > > > +{
-> > > > > > +	bool packages_allocated, targets_allocated;
-> > > > > > +	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-> > > > > > +	cpumask_var_t packages, targets;
-> > > > > > +	u64 err;
-> > > > > > +	int i;
-> > > > > > +
-> > > > > > +	if (!is_hkid_assigned(kvm_tdx))
-> > > > > > +		return;
-> > > > > > +
-> > > > > > +	if (!is_td_created(kvm_tdx)) {
-> > > > > > +		tdx_hkid_free(kvm_tdx);
-> > > > > > +		return;
-> > > > > > +	}
-> > > > > 
-> > > > > I lost tracking what does "td_created()" mean.
-> > > > > 
-> > > > > I guess it means: KeyID has been allocated to the TDX guest, but not yet
-> > > > > programmed/configured.
-> > > > > 
-> > > > > Perhaps add a comment to remind the reviewer?
-> > > > 
-> > > > As Chao suggested, will introduce state machine for vm and vcpu.
-> > > > 
-> > > > https://lore.kernel.org/kvm/ZfvI8t7SlfIsxbmT@chao-email/
-> > > 
-> > > Could you elaborate what will the state machine look like?
-> > > 
-> > > I need to understand it.
-> > 
-> > Not yet. Chao only propose to introduce state machine. Right now it's just an
-> > idea.
-> 
-> Then why state machine is better?  I guess we need some concrete example to tell
-> which is better?
-
-At this point we don't know which is better.  I personally think it's worthwhile
-to give it a try.  After experiment, we may discard or adapt the idea.
-
-Because the TDX spec already defines its state machine, we could follow it.
-
-
-> > > > How about this?
-> > > > 
-> > > > /*
-> > > >   * We need three SEAMCALLs, TDH.MNG.VPFLUSHDONE(), TDH.PHYMEM.CACHE.WB(), and
-> > > >   * TDH.MNG.KEY.FREEID() to free the HKID.
-> > > >   * Other threads can remove pages from TD.  When the HKID is assigned, we need
-> > > >   * to use TDH.MEM.SEPT.REMOVE() or TDH.MEM.PAGE.REMOVE().
-> > > >   * TDH.PHYMEM.PAGE.RECLAIM() is needed when the HKID is free.  Get lock to not
-> > > >   * present transient state of HKID.
-> > > >   */
-> > > 
-> > > Could you elaborate why it is still possible to have other thread removing
-> > > pages from TD?
-> > > 
-> > > I am probably missing something, but the thing I don't understand is why
-> > > this function is triggered by MMU release?  All the things done in this
-> > > function don't seem to be related to MMU at all.
-> > 
-> > The KVM releases EPT pages on MMU notifier release.  kvm_mmu_zap_all() does. If
-> > we follow that way, kvm_mmu_zap_all() zaps all the Secure-EPTs by
-> > TDH.MEM.SEPT.REMOVE() or TDH.MEM.PAGE.REMOVE().  Because
-> > TDH.MEM.{SEPT, PAGE}.REMOVE() is slow, we can free HKID before kvm_mmu_zap_all()
-> > to use TDH.PHYMEM.PAGE.RECLAIM().
-> 
-> Can you elaborate why TDH.MEM.{SEPT,PAGE}.REMOVE is slower than
-> TDH.PHYMEM.PAGE.RECLAIM()?
-> 
-> And does the difference matter in practice, i.e. did you see using the former
-> having noticeable performance downgrade?
-
-Yes. With HKID alive, we have to assume that vcpu can run still. It means TLB
-shootdown. The difference is 2 extra SEAMCALL + IPI synchronization for each
-guest private page.  If the guest has hundreds of GB, the difference can be
-tens of minutes.
-
-With HKID alive, we need to assume vcpu is alive.
-- TDH.MEM.PAGE.REMOVE()
-- TDH.PHYMEM.PAGE_WBINVD()
-- TLB shoot down
-  - TDH.MEM.TRACK()
-  - IPI to other vcpus
-  - wait for other vcpu to exit
-
-After freeing HKID
-- TDH.PHYMEM.PAGE.RECLAIM()
-  We already flushed TLBs and memory cache.
-
-
-> > > Freeing vcpus is done in
-> > > kvm_arch_destroy_vm(), which is _after_ mmu_notifier->release(), in which
-> > > this tdx_mmu_release_keyid() is called?
-> > 
-> > guest memfd complicates things.  The race is between guest memfd release and mmu
-> > notifier release.  kvm_arch_destroy_vm() is called after closing all kvm fds
-> > including guest memfd.
-> > 
-> > Here is the example.  Let's say, we have fds for vhost, guest_memfd, kvm vcpu,
-> > and kvm vm.  The process is exiting.  Please notice vhost increments the
-> > reference of the mmu to access guest (shared) memory.
-> > 
-> > exit_mmap():
-> >   Usually mmu notifier release is fired. But not yet because of vhost.
-> > 
-> > exit_files()
-> >   close vhost fd. vhost starts timer to issue mmput().
-> 
-> Why does it need to start a timer to issue mmput(), but not call mmput()
-> directly?
-
-That's how vhost implements it.  It's out of KVM control.  Other component or
-user space as other thread can get reference to mmu or FDs.  They can keep/free
-them as they like.
-
-
-> >   close guest_memfd.  kvm_gmem_release() calls kvm_mmu_unmap_gfn_range().
-> >     kvm_mmu_unmap_gfn_range() eventually this calls TDH.MEM.SEPT.REMOVE()
-> >     and TDH.MEM.PAGE.REMOVE().  This takes time because it processes whole
-> >     guest memory. Call kvm_put_kvm() at last.
-> > 
-> >   During unmapping on behalf of guest memfd, the timer of vhost fires to call
-> >   mmput().  It triggers mmu notifier release.
-> > 
-> >   Close kvm vcpus/vm. they call kvm_put_kvm().  The last one calls
-> >   kvm_destroy_vm().  
-> > 
-> > It's ideal to free HKID first for efficiency. But KVM doesn't have control on
-> > the order of fds.
-> 
-> Firstly, what kinda performance efficiency gain are we talking about?
-
-2 extra SEAMCALL + IPI sync for each guest private page.  If the guest memory
-is hundreds of GB, the difference can be tens of minutes.
-
-
-> We cannot really tell whether it can be justified to use two different methods
-> to tear down SEPT page because of this.
-> 
-> Even if it's worth to do, it is an optimization, which can/should be done later
-> after you have put all building blocks together.
-> 
-> That being said, you are putting too many logic in this patch, i.e., it just
-> doesn't make sense to release TDX keyID in the MMU code path in _this_ patch.
-
-I agree that this patch is too huge, and that we should break it into smaller
-patches.
-
-
-> > > But here we are depending vcpus to be freed before tdx_mmu_release_hkid()?
-> > 
-> > Not necessarily.
-> 
-> I am wondering when is TDH.VP.FLUSH done?  Supposedly it should be called when
-> we free vcpus?  But again this means you need to call TDH.MNG.VPFLUSHDONE
-> _after_ freeing vcpus.  And this  looks conflicting if you make
-> tdx_mmu_release_keyid() being called from MMU notifier.
-
-tdx_mmu_release_keyid() call it explicitly for all vcpus.
--- 
-Isaku Yamahata <isaku.yamahata@intel.com>
