@@ -1,91 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0960682880;
-	Thu, 28 Mar 2024 14:05:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897D382880;
+	Thu, 28 Mar 2024 14:05:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711634742; cv=none; b=V9n7CXzWm6GU6mUJ/ApU0nhfAcNlYWLu9AG2J0ipr+p+cN8jbyJxuZh4YxilNAISWYAIboCIuIJ5KT9E6ouLqYDBhcvOFiUY/ialivb+C3MeLRR2XUrbXnqcqnQA4ucBxPtyyhBYa35+4bkblUKl2ON/nMmQEVi/CEXmrXNprrQ=
+	t=1711634746; cv=none; b=pN1rcF6129xR3vkULVnwu8ddyxHrRVphYLXirm1bDch+e/VPlmi2CIeshOxQHxPquAzDBGNBSHtb9wSn2/ZlPo3Bq2v1aQtHZiT4Nnkvwra9QPiqAds6Z74BQYaGw2vzAb/ikOjj5ACK9Fyv02IDrBgCxaSPJuNwil3p75AzwPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711634742; c=relaxed/simple;
-	bh=EinO3RtbM3TdIgTBE67vxWObbXsICsHEkufTBzcRYss=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FTAjV1xw3s6g+gNU05kC5caPmCXwts2cOzRvJvqprW3+2PvyjtdoDtABe0o9a+3BxOgP1zWXgMwgROfK+FrKJYuXe08nIvhZSX6VNDhJkxFuw7B30SS6R1hBTT8d7hcXRN45uQswBCphsaG9TIN+uhDhHUDScaSJsD/RfVdCkNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EynValxe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711634746; c=relaxed/simple;
+	bh=zNvaXNiAxujiBLsJut5bqHVAOcViyLttpUXYqlyY1zw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=YnUY5BWxDwW6pJVerghyXcLb40NJP6OI/IaHQRER1Szhy3KYM93sAZRX4lr54kO6DEun1NP0+xpxF/iqZsSFDd1xnDyPlKOxngrcW2A+/55okVRzBe8e1WHIDq6np5dZ79tzA06lrPcjM5sEwlTjNrsmi5z8wFN3QDq2UGijxYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V8I3yIcn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EynValxe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D80DC433C7;
-	Thu, 28 Mar 2024 14:05:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V8I3yIcn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E7EBC43399;
+	Thu, 28 Mar 2024 14:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711634741;
-	bh=EinO3RtbM3TdIgTBE67vxWObbXsICsHEkufTBzcRYss=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=EynValxen7HB5uREd61Y/MCiL3SKrBpIwIK+Odpq57OsuEHRPhKesevco8VnJuQUA
-	 ZnNRKgLy+fWHQaODETgdJXJ8q7vjEGZ/s0AH2Jw/NLurT1jnFSqpXEdBZOzTjkZajz
-	 ZZB+zXjdn61nbtrXvJwkGEMSaTUIV/RHQiOVeebhZPyS6B275LVVHfpLgzZN6ioyNk
-	 4rgk43euFuglZCzHla+KzLQFI4zjgVTO33ICUepAihQY5yzrofLiF2S1ElC26sL5mn
-	 7g2KMrhPBYDjVv3iBg2xcxWs7fCLE1K1VIf1NhRI1Jqy2O9iHkCIftuHveOC3kt4qA
-	 SNEgvjJ05Vuog==
-Date: Thu, 28 Mar 2024 14:05:25 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter
- Roeck <linux@roeck-us.net>, Support Opensource
- <support.opensource@diasemi.com>, Cosmin Tanislav
- <cosmin.tanislav@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
- Hennerich <Michael.Hennerich@analog.com>, Antoniu Miclaus
- <antoniu.miclaus@analog.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-staging@lists.linux.dev, linux-input@vger.kernel.org
-Subject: Re: [PATCH RFC 2/7] hwmon: (adc128d818) Use
- devm_regulator_get_optional_enable_get_voltage()
-Message-ID: <20240328140525.6364512e@jic23-huawei>
-In-Reply-To: <20240327-regulator-get-enable-get-votlage-v1-2-5f4517faa059@baylibre.com>
-References: <20240327-regulator-get-enable-get-votlage-v1-0-5f4517faa059@baylibre.com>
-	<20240327-regulator-get-enable-get-votlage-v1-2-5f4517faa059@baylibre.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	s=k20201202; t=1711634746;
+	bh=zNvaXNiAxujiBLsJut5bqHVAOcViyLttpUXYqlyY1zw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=V8I3yIcnVZWurSiHgMev/PaIZPsXUsNqVQKwHJ7+mgOKCcTPUXHUqEknMBntcAITu
+	 lBy02fiZlzDY1HrIVoQ6ESWZpX1lmaA3l6htVPoAbw69TmEc+E9473jJ6QlohLlyqS
+	 UvnWqh6+PSPbvVAseM27BsB1r34XDSYPszmmLgTuVSzOnsTLT0YhDQcHTrBtUGsHQz
+	 x5iqy1CFrKZrcmoPc07sHv5F+4iVgPeDzXgUiw2CpeHLueJ835FfTGSTEMJzTp8nqF
+	 H6czJFBuYYnPeGiMFd3KYXKRYt8+RywOmtLP0YP1mcjwGDZT8kfs3lYxjMUscxR1q+
+	 tDvHoVJ3e2TIQ==
+From: Arnd Bergmann <arnd@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Chris Down <chris@chrisdown.name>,
+	Petr Mladek <pmladek@suse.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	linux-scsi@vger.kernel.org
+Subject: [PATCH 02/11] scsi: devinfo: rework scsi_strcpy_devinfo()
+Date: Thu, 28 Mar 2024 15:04:46 +0100
+Message-Id: <20240328140512.4148825-3-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240328140512.4148825-1-arnd@kernel.org>
+References: <20240328140512.4148825-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Wed, 27 Mar 2024 18:18:51 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+From: Arnd Bergmann <arnd@arndb.de>
 
-> We can reduce boilerplate code and eliminate the driver remove()
-> function by using devm_regulator_get_optional_enable_get_voltage().
-> 
-> A new external_vref flag is added since we no longer have the handle
-> to the regulator to check if it is present.
-> 
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-One trivial thing.
-With that tidied up...
+scsi_strcpy_devinfo() appears to work as intended but its semantics are
+so confusing that gcc warns about it when -Wstringop-truncation is enabled:
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+In function 'scsi_strcpy_devinfo',
+    inlined from 'scsi_dev_info_list_add_keyed' at drivers/scsi/scsi_devinfo.c:370:2:
+drivers/scsi/scsi_devinfo.c:297:9: error: 'strncpy' specified bound 16 equals destination size [-Werror=stringop-truncation]
+  297 |         strncpy(to, from, to_length);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
->  	hwmon_dev = devm_hwmon_device_register_with_groups(dev, client->name,
->  							   data, adc128_groups);
->  	if (IS_ERR(hwmon_dev)) {
->  		err = PTR_ERR(hwmon_dev);
-> -		goto error;
-> +		return err;
+Reorganize the function to completely separate the nul-terminated from
+the space-padded/non-terminated case. The former is just strscpy_pad(),
+while the latter does not have a standard function.
 
-return PTR_ERR()
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/scsi/scsi_devinfo.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
->  	}
->  
->  	return 0;
-> -
-> -error:
-> -	if (data->regulator)
-> -		regulator_disable(data->regulator);
-> -	return err;
-> -}
+diff --git a/drivers/scsi/scsi_devinfo.c b/drivers/scsi/scsi_devinfo.c
+index ba7237e83863..58726c15ebac 100644
+--- a/drivers/scsi/scsi_devinfo.c
++++ b/drivers/scsi/scsi_devinfo.c
+@@ -290,18 +290,28 @@ static struct scsi_dev_info_list_table *scsi_devinfo_lookup_by_key(int key)
+ static void scsi_strcpy_devinfo(char *name, char *to, size_t to_length,
+ 				char *from, int compatible)
+ {
+-	size_t from_length;
++	int ret;
+ 
+-	from_length = strlen(from);
+-	/* This zero-pads the destination */
+-	strncpy(to, from, to_length);
+-	if (from_length < to_length && !compatible) {
+-		/*
+-		 * space pad the string if it is short.
+-		 */
+-		memset(&to[from_length], ' ', to_length - from_length);
++	if (compatible) {
++		/* This zero-pads and nul-terminates the destination */
++		ret = strscpy_pad(to, from, to_length);
++	} else {
++		/* no nul-termination but space-padding for short strings */
++		size_t from_length = strlen(from);
++		ret = from_length;
++
++		if (from_length > to_length) {
++			from_length = to_length;
++			ret = -E2BIG;
++		}
++
++		memcpy(to, from, from_length);
++
++		if (from_length < to_length)
++			memset(&to[from_length], ' ', to_length - from_length);
+ 	}
+-	if (from_length > to_length)
++
++	if (ret < 0)
+ 		 printk(KERN_WARNING "%s: %s string '%s' is too long\n",
+ 			__func__, name, from);
+ }
+-- 
+2.39.2
+
