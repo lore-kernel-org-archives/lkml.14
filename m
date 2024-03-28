@@ -1,110 +1,136 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA2912FF9C;
-	Thu, 28 Mar 2024 15:39:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3864212FF96;
+	Thu, 28 Mar 2024 15:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711640380; cv=none; b=UzW8WJIEo6viKfhibEP1JFeZPmgSPCrd/spwoeDp42kqqrJ14+6qBbKQHNDQ5jxWRRGc4s17TS89R5jyhA73KbHNaxc8whEOyCQV2Dw5Ssx3Zsw7gQU2ncRNU9F6StsJ0qsuF9vsoiXHKZU0Hqv4s0UVUvbYrmAmgIEjhwSmxzI=
+	t=1711640440; cv=none; b=TwAwdNW5436Pq/1iQ0Q6ZZOQyQjIiMNUh3uA2vtGo+x5DL86urN/wWGq2vBktjpj6J8VdFd3gc3MAxUzWS7CU1/PDhNo/zVdccrGXez5Z18xgxezdp5XUme9fBb14QdEt18vw2B3pQgPITF8SBaIK8dRq62kmziPAtZMWLfamsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711640380; c=relaxed/simple;
-	bh=qFpjInxBSRGeS4eLn5//waKAvTtSRtM80g21c3bF4XU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oVOqdQbY3AwN5lTgtIeFM7tbExTz38/wszShAXV0m1SLNTfVaCyODOX+uYnnrqjoVW1G93ocHEB8N0Gtnv6u9m56gDYBOIf9D5cUX1xk7Cu/FAUQvcvCW+/KTYGtL4SLvh0yELgd7PCJnVuVjo/Q5GMsaEIRjoNjVZqPB8qtsjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=QngdAr6+; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1711640440; c=relaxed/simple;
+	bh=jrbuO52ZBSIAk7BVgz4HVemMnghQxGKVn3QHhdB/BIY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=MALNPo4PuCth3xTf9GRPAXEfFOq2ECKzB0Nl6uV/dBxkawviN6aaWu30RNPDm4aCddDnrLS45RTBj4y8y6ausIelQlodsSd3gkKdZ1kbRCTuzP0oJTsEHnN/PhL4rPsyaq65dqoDyiR+QFoIaxHmkS4w28mnJDt0QB78b6+cqxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oQA/vlzv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="QngdAr6+"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BE37B40E016B;
-	Thu, 28 Mar 2024 15:39:33 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id br_Jfh_3Oy_y; Thu, 28 Mar 2024 15:39:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1711640369; bh=Ejb8lv3Vq0VWJRdrieqp/miwPgnvt0ExrNRBJ+G7hRs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QngdAr6+2bgCXZFKu1pL1PYr7qPFjAEUCQY3ZG4jc91Bsrw+KhNEbs4LDjqfZtGjk
-	 gKl4ibxnSgNTP77wiATk1HnVEZTcu9RLFaMqa12AWvOPqRhd1DwUkpqyvLpDIjWtPu
-	 ZdETPhAo+c3JNE+X90NzitgpwIguinfJe4pzBrlAyR3PRmg4pHFYdtcfaI+gX3Stbk
-	 03MrPGidKcGyjja/AUzeaOFI918ntiQVr0KCCxlFXl+/ml2cZ3GEoCrxLoy0WTilw2
-	 3YICcDtx52a5DBALC+kii4UmrCyS2AQxYDBCCcOxsyX1SVBn9hq6e/tY3nzv3xZjm9
-	 FWTy3SQGTnZq25HcxMpTqxOvNRUafQIMRxeLmLxQPgqYPeukc1Q3Z9uHqPt2fz43+P
-	 Y8HyhS5ZweVUoX5qxJFzzHGkKmO1bW59PDihVAv27yVyPkFWm/k4jjQSI5xNcisBGJ
-	 Gm09COvxMkXrCdUOymegXpFzJo0NNtH3OmWkSWMg6zrfY1jd/6CNAtIZ/zkT4503re
-	 dHg+tZKQr6pp+l/xE27XQV8W4iOyjU6VSApJMqTURZl64eYzb3sB4Fhg7W4PoAd9yz
-	 uzfzKGG0/+elQ3l+P2/nMITTWSLofdO0+rQpEN5fGGn4/+V40XxLjXNC8fkEwvWAsu
-	 fQtSfl7P7bTeLlmGM5J5a9Lo=
-Received: from zn.tnic (p5de8ecf7.dip0.t-ipconnect.de [93.232.236.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9F55040E00B2;
-	Thu, 28 Mar 2024 15:39:21 +0000 (UTC)
-Date: Thu, 28 Mar 2024 16:39:14 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
-Cc: X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	KVM <kvm@vger.kernel.org>, Ashish Kalra <ashish.kalra@amd.com>,
-	Joerg Roedel <joro@8bytes.org>, Michael Roth <michael.roth@amd.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH 5/5] x86/CPU/AMD: Track SNP host status with
- cc_platform_*()
-Message-ID: <20240328153914.GBZgWPIvLT6EXAPJci@fat_crate.local>
-References: <20240327154317.29909-1-bp@alien8.de>
- <20240327154317.29909-6-bp@alien8.de>
- <f6bb6f62-c114-4a82-bbaf-9994da8999cd@linux.microsoft.com>
- <20240328134109.GAZgVzdfQob43XAIr9@fat_crate.local>
- <ac4f34a0-036a-48b9-ab56-8257700842fc@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oQA/vlzv"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AD024C433A6;
+	Thu, 28 Mar 2024 15:40:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711640439;
+	bh=jrbuO52ZBSIAk7BVgz4HVemMnghQxGKVn3QHhdB/BIY=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=oQA/vlzvxQ9BWKY2rjejUTd71kOPqqX9g2MOXCwu9kbLB0L9vmtfyKXGPEHh15sQ8
+	 DXQyfwCHD6bwawq+VERXYAFvy998J5WYQOxkIoRcHQqe0mYPZod/ctPR519YUbG4L5
+	 JyBt+Fc3JNBipLzeQzK26XMH7ViMMK4yuRUdRtZ8uuXHB/hy8l/tq/gMWYiA+qknae
+	 t0hkjgFBdh5HTj+RSAvMfNNvDXn1IDrQLP4cmJShEczDYmTrauTNpD+u17YQf4vBm6
+	 6SWc+MV662z5ePOpsEAPf7VcqEsu6OQFk6n1wHF+HPRCPvfrJw0d2wpHhh7PP188s6
+	 3jjPCakHdxZlw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A25ACCD1288;
+	Thu, 28 Mar 2024 15:40:39 +0000 (UTC)
+From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
+Date: Thu, 28 Mar 2024 16:40:04 +0100
+Subject: [PATCH v2 3/4] appletalk: Remove the now superfluous sentinel
+ elements from ctl_table array
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ac4f34a0-036a-48b9-ab56-8257700842fc@linux.microsoft.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240328-jag-sysctl_remset_net-v2-3-52c9fad9a1af@samsung.com>
+References: <20240328-jag-sysctl_remset_net-v2-0-52c9fad9a1af@samsung.com>
+In-Reply-To: <20240328-jag-sysctl_remset_net-v2-0-52c9fad9a1af@samsung.com>
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Alexander Aring <alex.aring@gmail.com>, 
+ Stefan Schmidt <stefan@datenfreihafen.org>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, David Ahern <dsahern@kernel.org>, 
+ Steffen Klassert <steffen.klassert@secunet.com>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, 
+ Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, 
+ Remi Denis-Courmont <courmisch@gmail.com>, 
+ Allison Henderson <allison.henderson@oracle.com>, 
+ David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
+ Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, 
+ Xin Long <lucien.xin@gmail.com>, Wenjia Zhang <wenjia@linux.ibm.com>, 
+ Jan Karcher <jaka@linux.ibm.com>, "D. Wythe" <alibuda@linux.alibaba.com>, 
+ Tony Lu <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>, 
+ Trond Myklebust <trond.myklebust@hammerspace.com>, 
+ Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
+ Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, Jon Maloy <jmaloy@redhat.com>, 
+ Ying Xue <ying.xue@windriver.com>, Martin Schiller <ms@dev.tdt.de>, 
+ Pablo Neira Ayuso <pablo@netfilter.org>, 
+ Jozsef Kadlecsik <kadlec@netfilter.org>, Florian Westphal <fw@strlen.de>, 
+ Roopa Prabhu <roopa@nvidia.com>, Nikolay Aleksandrov <razor@blackwall.org>, 
+ Simon Horman <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>, 
+ Joerg Reuter <jreuter@yaina.de>, Luis Chamberlain <mcgrof@kernel.org>, 
+ Kees Cook <keescook@chromium.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ dccp@vger.kernel.org, linux-wpan@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-hams@vger.kernel.org, linux-rdma@vger.kernel.org, 
+ rds-devel@oss.oracle.com, linux-afs@lists.infradead.org, 
+ linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org, 
+ linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net, 
+ linux-x25@vger.kernel.org, netfilter-devel@vger.kernel.org, 
+ coreteam@netfilter.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org, 
+ Joel Granados <j.granados@samsung.com>
+X-Mailer: b4 0.13-dev-2d940
+X-Developer-Signature: v=1; a=openpgp-sha256; l=954;
+ i=j.granados@samsung.com; h=from:subject:message-id;
+ bh=XDIcCkZ78Jc0dTs1FMG4vIEa4qRq4WIrQqvTanRSSyI=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYFj3SuqfQsiaSf+fFZpsP0jHhd/mrZlzlVz
+ 23Vit0koICrdIkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmBY90AAoJELqXzVK3
+ lkFPXqAMAIxC+7QFDIIRdXgRwfA0cSaHn3wdRaAIg6vrDr4LyqJ9qLZwZdRyZvDu0UwAgyX1s19
+ td8wZ6GE9yEgj1abGgEjcXm0hOY8lDe9UAsCCwWkG7VTPahH15cgga6yXM6XphN9BudLFQ+7RSY
+ 4ioezGlJDBoIJoXyGphVjy/F6YX4753RAJkEZOOTvpAiZ5d7lURowJWeyxlb9JwPLCCBTEN9Phb
+ Z0s9dAxUP34JmG1VzzzhaBiUPibm+Q+LWbS0JW8AomRsZ3r86TL5WPFCRLzYmpH2w87rleAcEpv
+ MlslpsG5ToZFD5KVglKvcwrNT/NYXZsHz1LQxbTky1tk1ZqnB1DLdY5t7/ijveSREO7/lgas242
+ iNNqjT5iCg24C/5TF9Tr/16nk0TQOqJgJNkjASEq0lyjO2JbKsYDULL8XoHbZfFdbsI5tujHD4/
+ M++BX6CHdHzh4X+T/bWc8RCv25S3NiNdH0LrwdvrJTpEgQ1mXwIevDeWq69QO1+xJny+IC0jBZ9
+ iU=
+X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
+ fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
+X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
+ auth_id=70
+X-Original-From: Joel Granados <j.granados@samsung.com>
+Reply-To: j.granados@samsung.com
 
-On Thu, Mar 28, 2024 at 03:24:29PM +0100, Jeremi Piotrowski wrote:
-> It's not but if you set it before the check it will be set for all AMD
-> systems, even if they are neither CC hosts nor CC guests.
+From: Joel Granados <j.granados@samsung.com>
 
-That a problem?
+This commit comes at the tail end of a greater effort to remove the
+empty elements at the end of the ctl_table arrays (sentinels) which will
+reduce the overall build time size of the kernel and run time memory
+bloat by ~64 bytes per sentinel (further information Link :
+https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
 
-It is under a CONFIG_ARCH_HAS_CC_PLATFORM...
+Remove sentinel from atalk_table ctl_table array.
 
-> To leave open the possibility of an SNP hypervisor running nested.
+Signed-off-by: Joel Granados <j.granados@samsung.com>
+---
+ net/appletalk/sysctl_net_atalk.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-But !CC_ATTR_GUEST_SEV_SNP doesn't mean that. It means it is not
-a SEV-SNP guest.
-
-> I thought you wanted to filter out SEV-SNP guests, which also have
-> X86_FEATURE_SEV_SNP CPUID bit set.
-
-I want to run snp_probe_rmptable_info() only on baremetal where it makes
-sense.
-
-> My understanding is that these are the cases:
-> 
-> CPUID(SEV_SNP) | MSR(SEV_SNP)     | what am I
-> ---------------------------------------------
-> set            | set              | SNP-guest
-> set            | unset            | SNP-host
-> unset          | ??               | not SNP
-
-So as you can see, we can't use X86_FEATURE_SEV_SNP for anything due to
-the late disable need. So we should be moving away from it.
-
-So we need a test for "am I a nested SNP hypervisor?"
-
-So, can your thing clear X86_FEATURE_HYPERVISOR and thus "emulate"
-baremetal?
+diff --git a/net/appletalk/sysctl_net_atalk.c b/net/appletalk/sysctl_net_atalk.c
+index d945b7c0176d..7aebfe903242 100644
+--- a/net/appletalk/sysctl_net_atalk.c
++++ b/net/appletalk/sysctl_net_atalk.c
+@@ -40,7 +40,6 @@ static struct ctl_table atalk_table[] = {
+ 		.mode		= 0644,
+ 		.proc_handler	= proc_dointvec_jiffies,
+ 	},
+-	{ },
+ };
+ 
+ static struct ctl_table_header *atalk_table_header;
 
 -- 
-Regards/Gruss,
-    Boris.
+2.43.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
