@@ -1,124 +1,109 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9033313AA5F;
-	Thu, 28 Mar 2024 21:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBCD4131E4B
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 21:08:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711660114; cv=none; b=j+rZd78t14F6jvdhht9fMfxmK3WyWl9UItlUbxm/EiSzPFG/kommxuZvu1J4lZOC1woZpNjHfGl3raG2ai2ldKlIdQEUe14GwQfHmtapt7dh9RbnZeDFpcuWfG+q+iLNi2As4CVI0hcR/iUIsbbo+lmQpVJYtHSgHuHmpmmyH/Y=
+	t=1711660134; cv=none; b=ELeLwQ/rzyj2SPfs8Pw9KYTntoTMCaNhR0SEm+z/dHdQSYhED5oIQz5WbZoDCn/9UW/9HMr6VyT7UvgxQxpugT+gysCKG+pB6llTXOsB8+xh+W4gYW4cidjCk+8MZHLu8VpQU6G8zl/oEhQXRpXxV+8nPM9Bc1FikLb9xOSHdLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711660114; c=relaxed/simple;
-	bh=7nBpC+ZQDDjgWAiXHx2Dnp9F7qfeWRyKrR0L8kcTm+I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=ZUyM0NcLT2PmBRGD6aKVqQJNAn5Lyf9445ptci6fhVesT1iDK/j0oItM6w91080yoR8SXRPkHuQRcLsG+6vI0BoRcrICbw3xb9yzl21r48G5y+ShnnaYWBRAZ6MfTWMyj+58Vk5ogAq8XFO5Csg9mDURw3N9UUM35MPB5TiKFZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Z9AbJH6g; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1711660134; c=relaxed/simple;
+	bh=F4IrvSS6WvfTbwg+S1nOzbzpIHvcq0dGlD5txkHzVK0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MpulzlBUfTDiX6Auan5jq5fRZVTEjtV+doPhWSxIVWU1/3vdxk2ohO8v8QB9oR6KZNl+nMxQuDn5ClbeUauUfnv4qYkx3pScnMZwrVOl26W5qAV9lgB1IscG7HLOnlY3LAIiTn8juGd58Ds8/nz0ajneeimPOlytDy1E1x2kr60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca; spf=none smtp.mailfrom=draconx.ca; dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b=yQP1ckTt; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=draconx.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Z9AbJH6g"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42SJsU0T025706;
-	Thu, 28 Mar 2024 21:08:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:to:cc; s=qcppdkim1; bh=C6u
-	J8bKPl3Ejk7cVp0J1A3lZipXuKjyCmUAO09Yk2R0=; b=Z9AbJH6gblrSqefCJwm
-	F0PqiNLlMLCbcAl1EzS6c/g10KXDdGL02bc0T3cHBHdJIoVUZwEouYmUggefJ7S+
-	aVdfebC5OLBNpU+2vioiNIrgoWTpF5NOME2IZjAY+caT2sSTRWmtxjyv0fJX02Ck
-	io3LbHc/0TWEA2uOsSXzWgbCicc7Sl3AvR5+175gO86dwbjytLLkUwPfvN5X6tfS
-	98jT4zctEJ4W2Aolng+aki3YonJ8JCkULrzhqMUcTorMo3gOCqV8l+MPHznfVuOu
-	5kOpa00VpHQhe5Mjl0fo/u+Cpe25daPapo6VlB7eOKdq4pMwhlCe3xIzF3eS8aNR
-	5bg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x575m9jn0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 28 Mar 2024 21:08:20 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42SL8JHg031875
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 28 Mar 2024 21:08:19 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 28 Mar
- 2024 14:08:19 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Thu, 28 Mar 2024 14:08:18 -0700
-Subject: [PATCH] wifi: mac80222: Fix ieee80211_i.h kernel-doc issues
+	dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b="yQP1ckTt"
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5a470320194so721882eaf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 14:08:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=draconx-ca.20230601.gappssmtp.com; s=20230601; t=1711660132; x=1712264932; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fhOqlDsFnhyStsUL+RT7PNmxZO7uBWizHf6GICmX+OI=;
+        b=yQP1ckTtFa0Nbah0PwcMmMl2brmJIdALgYkA3qHiG1ptTpY4BohkbmtlFBzcj8nP1u
+         XvI69UyDvJ0UXzCzpl1G13BGZtSlewsF//tWfHsMic2Pi+LQz+thKHxN7d5nhw0ugRAn
+         NsX0BETOnK+cVvFPTVvOQ9NG+P4OKCGfzwHi8krhtuFmmSs63oLtRGrkeADWBX0EfMvj
+         6y0v+bE8cngBRTVknruywhgm8fonta1JI/NnqFCfVsxfcBIn6xjPblwi9p7UuPYCFjx3
+         xbHcXHcMKUwtMjJGjWtIzU1y6eRC1EYWDkc0EB2wrewgNotwZ7KBcvh+5B02cJO0rlCc
+         jpbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711660132; x=1712264932;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fhOqlDsFnhyStsUL+RT7PNmxZO7uBWizHf6GICmX+OI=;
+        b=o8RmQxNqn8BorJ4KOiEY6WfSC9SO8ytDgq1/BltNbEkfWm5Qy41pOa0jB207Cd1UTV
+         6CpMr4bki/Xg2k97hm4lx7QcyoI2EKlFSajcBnautqonAILTenYzbiy1adlBGDRX0l70
+         ylCwKEJGZEK7gSmNjf1lDfu5j4Jo27GAkfUU6ZcFdHUC94dmir9A4taauBv2FhLTsfFJ
+         z7TtMF/vnC9iWSSxBDPLanp4la6v+SGSACU4iD5hlkzgArEqkZShE3KxvWzjchTuV5+g
+         iOKnT1dTDkvri59DTflhBqjL81u5omtBVJz3jwjIwRm2PgO5S4WMPkrITb1hhOsXcyw4
+         Xn8g==
+X-Gm-Message-State: AOJu0Yxsa6QkIf9v6DI3F+iplj9b3N7Egui7QszCiKx9bY1BXH6UOGpt
+	BeHAlpDXF5x3dEilofnwap/Iarz7+cQcpVGn2qqlok9BM8eVjnwn9RcqvtHHq0U+3H0BBbkRpei
+	aMDQ=
+X-Google-Smtp-Source: AGHT+IGfo+9brJXeQXDPL+VZY/J/lhapMlsOdjDfc2YE8PgBEa/Sxxdwof6mO9UnEH8hZci7XVl3nQ==
+X-Received: by 2002:a05:6820:208:b0:5a4:7696:6ba8 with SMTP id bw8-20020a056820020800b005a476966ba8mr317575oob.7.1711660131965;
+        Thu, 28 Mar 2024 14:08:51 -0700 (PDT)
+Received: from [192.168.0.50] (dhcp-24-53-241-2.cable.user.start.ca. [24.53.241.2])
+        by smtp.gmail.com with ESMTPSA id l26-20020ac848da000000b0042ee2bda028sm954486qtr.54.2024.03.28.14.08.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Mar 2024 14:08:51 -0700 (PDT)
+Message-ID: <943c6d11-e214-43c8-8813-8e1aba6be15c@draconx.ca>
+Date: Thu, 28 Mar 2024 17:08:50 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: PROBLEM: Only one CPU active on Ultra 60 since ~4.8 (regression)
+Content-Language: en-US
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+ sparclinux@vger.kernel.org, Andreas Larsson <andreas@gaisler.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <CADyTPEwt=ZNams+1bpMB1F9w_vUdPsGCt92DBQxxq_VtaLoTdw@mail.gmail.com>
+ <CADyTPEyAidGgBT3f1VJLHb3ouO-r1UyvFp1PcwXxy0NRG94sbw@mail.gmail.com>
+ <1df92fec-7f57-5080-94ed-b149ed384280@leemhuis.info>
+ <14dcd743-144a-9f7b-849c-0843d50e4c04@draconx.ca>
+ <4dce7447-678d-4e60-b76e-b01988bd6515@leemhuis.info>
+ <CAHk-=wgFuoHpMk_Z_R3qMXVDgq0N1592+bABkyGjwwSL4zBtHA@mail.gmail.com>
+From: Nick Bowler <nbowler@draconx.ca>
+In-Reply-To: <CAHk-=wgFuoHpMk_Z_R3qMXVDgq0N1592+bABkyGjwwSL4zBtHA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240328-ieee80211_i-kerneldoc-v1-1-e848bdec58f3@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAEHcBWYC/x3MQQqDMBBG4avIrA0kEwOpVxEpJfPbDpUoCYgg3
- r2hy2/x3kUVRVFp7C4qOLTqlhtc31H6vPIbRqWZ2PJgPUejAKJl555qvigZq2zJCEd5hCWkIJ5
- auxcsev6/03zfP7s+tptnAAAA
-To: Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>
-CC: <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: UExPF2-IgkRs6AVdZn0HSU9qCAHPWbXp
-X-Proofpoint-GUID: UExPF2-IgkRs6AVdZn0HSU9qCAHPWbXp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-28_17,2024-03-28_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- mlxscore=0 spamscore=0 mlxlogscore=775 lowpriorityscore=0 malwarescore=0
- clxscore=1015 impostorscore=0 phishscore=0 priorityscore=1501 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2403210001
- definitions=main-2403280151
 
-kernel-doc flagged the following issues:
+On 2024-03-28 16:09, Linus Torvalds wrote:
+> On Thu, 28 Mar 2024 at 12:36, Linux regression tracking (Thorsten
+> Leemhuis) <regressions@leemhuis.info> wrote:
+>>
+>> [CCing Linus, in case I say something to his disliking]
+>>
+>> On 22.03.24 05:57, Nick Bowler wrote:
+>>>
+>>> Just a friendly reminder that this issue still happens on Linux 6.8 and
+>>> reverting commit 9b2f753ec237 as indicated below is still sufficient to
+>>> resolve the problem.
+>>
+>> FWIW, that commit 9b2f753ec23710 ("sparc64: Fix cpu_possible_mask if
+>> nr_cpus is set") is from v4.8. Reverting it after all that time might
+>> easily lead to even bigger trouble.
+> 
+> I'm definitely not reverting a patch from almost a decade ago as a regression.
+> 
+> If it took that long to find, it can't be that critical of a regression.
 
-net/mac80211/ieee80211_i.h:146: warning: expecting prototype for enum ieee80211_corrupt_data_flags. Prototype was for enum ieee80211_bss_corrupt_data_flags instead
-net/mac80211/ieee80211_i.h:163: warning: expecting prototype for enum ieee80211_valid_data_flags. Prototype was for enum ieee80211_bss_valid_data_flags instead
+FWIW I'm not the first person to notice this problem.  Searching the sparclinux
+archive for "ultra 60" which turns up this very similar report[1] from two years
+prior to mine which also went nowhere (sadly, this reporter did not perform a
+bisection to find the problematic commit -- perhaps because nobody asked).
 
-Correct the documentation to match the code.
+[1] https://lore.kernel.org/sparclinux/20201009161924.c8f031c079dd852941307870@gmx.de/
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
-This file is being modified by a quicinc.com patch and my review
-process flagged these pre-existing kernel-doc issues.
----
- net/mac80211/ieee80211_i.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/net/mac80211/ieee80211_i.h b/net/mac80211/ieee80211_i.h
-index def611e4e55f..458f63ce9a32 100644
---- a/net/mac80211/ieee80211_i.h
-+++ b/net/mac80211/ieee80211_i.h
-@@ -132,7 +132,7 @@ struct ieee80211_bss {
- };
- 
- /**
-- * enum ieee80211_corrupt_data_flags - BSS data corruption flags
-+ * enum ieee80211_bss_corrupt_data_flags - BSS data corruption flags
-  * @IEEE80211_BSS_CORRUPT_BEACON: last beacon frame received was corrupted
-  * @IEEE80211_BSS_CORRUPT_PROBE_RESP: last probe response received was corrupted
-  *
-@@ -145,7 +145,7 @@ enum ieee80211_bss_corrupt_data_flags {
- };
- 
- /**
-- * enum ieee80211_valid_data_flags - BSS valid data flags
-+ * enum ieee80211_bss_valid_data_flags - BSS valid data flags
-  * @IEEE80211_BSS_VALID_WMM: WMM/UAPSD data was gathered from non-corrupt IE
-  * @IEEE80211_BSS_VALID_RATES: Supported rates were gathered from non-corrupt IE
-  * @IEEE80211_BSS_VALID_ERP: ERP flag was gathered from non-corrupt IE
-
----
-base-commit: b68b2beadfd30907faae944358de3a17acf6fdb6
-change-id: 20240328-ieee80211_i-kerneldoc-d28d95f5c5d3
-
+Cheers,
+  Nick
