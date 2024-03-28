@@ -1,85 +1,128 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87126A332
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 09:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4C4134CB;
+	Thu, 28 Mar 2024 09:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711617729; cv=none; b=DFXPlJlJsYv+VQBCbbV4YnCQYeiB6ifWxnMd2Y3NNLSK98g7jSa3zEqAUf/Co+2LblqS2EgsLzsmkmOHWyxap9jRZ61BJxqCpFpEjiawTDp0rCIsCTsK5ARVJ6ZEk4+YXNbxNRFeG5PY0101Ro1zAShxUqKXSM4J7BWPL4ZRB3s=
+	t=1711617807; cv=none; b=N/L65/+/lOTP7AYG2GHzdqLtQAq9QcuLZGma3WbV7dgJCvxLbeVSXgu+7gQDlFJOIKF/hOW+01XliUiB+mKwAhj0sRK6MJAttoyWqusajx7JWb6u9ubNnnu0wOL1MvfLm+ZlEFegFfCITM/kXelqq2jrntTK0Bv5HcVubJYhS8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711617729; c=relaxed/simple;
-	bh=KmM01ktywWehktxODkpSjA7WCyV+sF2XwLnzGhFtu0w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VFgPP7vPLnK0KZc1hWuTBvea5SONM4uzKLKL5GPz5C88G4LgYk5jJvC4N51fEjEoITWmhOakfOIEkGLxgAzLNNt+a3x2e63oosq2p8t+p/3yN4P/EAn0q2JfyC5IWSnjnlxSPv7dT7tAGpKvHOqmswS3ICOZAIXkKBQsBN7bs3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XIcCcuFY; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711617807; c=relaxed/simple;
+	bh=M8HHIKevIxc77HrQP75VS/7x/3zEwQAFlO5tgpeUBkM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=H/rUWp2AyRECnWP4D8vxkt55P+kAPj6ym5ItMrt6T8/exwjqH1+wnNoy475MJ4xmBFdjlaVPDbebdF6dGrDvQa/9XjKyE/Ke259EBAYbRz3ioqjQ3YkaQKXGlpKZ1SqWfmAjo0Tx4WvfnyQpH19QY3uuLRTQhJSquqxghovJeeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z92uH96+; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XIcCcuFY"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dcc73148611so759826276.3
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 02:22:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z92uH96+"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56c0a249bacso874572a12.1;
+        Thu, 28 Mar 2024 02:23:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711617727; x=1712222527; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KmM01ktywWehktxODkpSjA7WCyV+sF2XwLnzGhFtu0w=;
-        b=XIcCcuFYo/ZGzlCsA9S6F/mv6nJyh+xdp9s6IRpd0uzxm7EEV3a3rWTvSBa6TcfHZV
-         XYkLHKgR3yQpo91TmXsbANVBsZwKRykqrRGN6SCfiqjOdi08P6qW3xvmLiYxEWPu4ZIx
-         TT5WTHUFDxwsbuQi4U4QCuMV3nu+CV2BmK63Z+m0LYJYhbvakRxfzSaV4FOUV9fBp1zU
-         /Qow8jJDSmKQNo60AmPAo4F0lATgKkunvHiGKCbeNk4NdjzarvW4rwzbl6E1vf8O4PR1
-         n9vIXSntHrOjsXe6q3rre+0PBZS/VlYZoN3V0aS+MkWG5tPOximAgqlyjfYJiA0Zvj/M
-         YUvw==
+        d=gmail.com; s=20230601; t=1711617804; x=1712222604; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=76sr1FMyUWOhL+InHmaTktpONdMRRLx62idYpcBzy94=;
+        b=Z92uH96+cRwbIomvybeQq9l6W3OBKxlX90Pq3UFWof8MqY0xGduHbdbAZDjFhqC25G
+         lvVj95n0miv7Kow8ENpZUjoUXo36RViVITn075mXS+Ap5nIdxJlXKWyKPW1ryrLpgTCe
+         haRh1arlX9lpVyi5KBgZgLndp6fugzYQKqmOt9fzAv8O4bPsQaVrnInUPNvAheoCSX6U
+         yBGb3w0qFFpCVKrbYdvw/RwQLtj/0hdJ7dsl/4n1nxjJ9s9NDLO6pwpovi/ygAv7GKhz
+         h9MjrEhKQAwEfJRHtfz3avlPUbOECl9yD7bFsrVJ+gOfxUHoNEEsO8vTWjuL8etHivCG
+         I+9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711617727; x=1712222527;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KmM01ktywWehktxODkpSjA7WCyV+sF2XwLnzGhFtu0w=;
-        b=ANrOJzU31RaEMxldrHzU/3ay9dNqH1YOFZyuhP1mYVVW4fJKw1uBU/jVc9Jo68a8Tz
-         H4TfiuZSc8y8m3keTwHw3JeS2NAYrYYdkq50l2RcayxKrRXD1jQ4apirRJD3qOrXKRrJ
-         BdjGRSeQ+zFePGxc/k1oyc+FBF1f6RklzkDW8FmZYMv+JAYVWO899As4Hn9aDw9vdu6D
-         y6n1kEiYmfLZDKLbb6PQTLFbpXTx/t701JY5jeLrJsjO3yo0G4e6SNVcJKCpiW+gYq2T
-         yr1PGiUJvyXQA2O1q281Gc113jOTELN3SbpQnZI+fyM4Bwn04gMp6SpUPtPrf/UvRmck
-         zWTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUFQNmnUcVDNivu7mY+KQ+xWc0R/SeEQvnPXwOXuydwIzc8R71n/ZyWHLAe6ie/ukLFRfGOXDZ5npUNlWzo+aZK0DIzgOcRDiwK1dFM
-X-Gm-Message-State: AOJu0YxgVqujmi1NszWVVft+nPzd4TcfWBhgd1EQkdh8KA1syOgxAost
-	rX9Ud0mSI0dfwJ0RTFv9djSGtpk+vMgmyYCczybi9gMzVWYmX9K7I7PZkC9M6glTo7VvKHTvsou
-	xRrojgB9nxCxkBznV2svKvaJfICFG1hIBNDgodg==
-X-Google-Smtp-Source: AGHT+IGySaDVmJFg1Xn+UuYwx8+Ype6KnAhYqICfy2/PSAfH5Gv9Rq/+PhakcOkeIpkT04dMSdTGtY+WLZOt4y0BmHM=
-X-Received: by 2002:a25:68c1:0:b0:dcd:c3ba:d788 with SMTP id
- d184-20020a2568c1000000b00dcdc3bad788mr2378061ybc.47.1711617726741; Thu, 28
- Mar 2024 02:22:06 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711617804; x=1712222604;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=76sr1FMyUWOhL+InHmaTktpONdMRRLx62idYpcBzy94=;
+        b=OJowfPo3OgoA191nI/GduJ0Mc1jak31XEWox4hmSHCRAlIAqK0EglXPYV+mYUCQw95
+         lLUj/0UtarlPI+qrYbMp3m/pNZ/JmNR6pyQvfz1ZXe1ESewvI+wyK6AL+87X0lYF5jjY
+         xd54/UnlfLOav5CHIgZ3d6z3zwbYm32ZcFfYqb58ZBjoESUspZuBxoGIVi/QiSV08h0L
+         JVTrdRZEojQrXyaO7szv4wyAuJ4TFTLa2glhwwwvVUOHeGxsETP9//j9IsHDYPHmp6m0
+         FgXk6mgHgGWQGSDLnS3RpavBuygZZnY15X58FStNCPRRjuGkkY5oFaGjcyICpEBJ/OJy
+         O0xQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWwZENPduc4IC1gILZwdZ77wDipaGNMdgl4+8pdQIa0H8IK+pn9Z5COueCy+ZRoEEIBxGFI3wJAavC6h0eZNuNckI5GiTYmctNuC9x4nkvXZ5DbYinMUCSdZYAl/To8vFEn5EYOaH5S
+X-Gm-Message-State: AOJu0Yz6PeKDEX8GL80TIwsbHfNIMbWJUgzEyam4x936NGEn9e4QY9RS
+	KGnQ7+c6JwBcJm+E4MxKrxcyAtbpcdRPKAmHUX2jRtM2cy6O7IAv
+X-Google-Smtp-Source: AGHT+IE3J5JOX1g8Ck4ra/FFcNf6SzeadCdYhTqGYRrbUyGiFt9NhynmUm7P+nLaZECE3OhvHzUDtA==
+X-Received: by 2002:a50:cdc2:0:b0:566:ab45:e6c5 with SMTP id h2-20020a50cdc2000000b00566ab45e6c5mr1733391edj.28.1711617803822;
+        Thu, 28 Mar 2024 02:23:23 -0700 (PDT)
+Received: from [192.168.20.102] (57657817.catv.pool.telekom.hu. [87.101.120.23])
+        by smtp.googlemail.com with ESMTPSA id cf2-20020a0564020b8200b0056b0af78d80sm609298edb.34.2024.03.28.02.23.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 02:23:23 -0700 (PDT)
+From: Gabor Juhos <j4g8y7@gmail.com>
+Subject: [PATCH v4 0/5] clk: qcom: apss-ipq-pll: various cleanups
+Date: Thu, 28 Mar 2024 10:23:09 +0100
+Message-Id: <20240328-apss-ipq-pll-cleanup-v4-0-eddbf617f0c8@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240313235422.180075-1-andy.shevchenko@gmail.com>
-In-Reply-To: <20240313235422.180075-1-andy.shevchenko@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 28 Mar 2024 10:21:56 +0100
-Message-ID: <CACRpkdZUnmnLj6ZJ8_p2tyN4txCA1fkSvqPo5gTqi=v33FToKg@mail.gmail.com>
-Subject: Re: [PATCH v1 00/11] pinctrl: aw9523: number of cleanups
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAP02BWYC/3XN3wqCMBTH8VeRXbdw/8p11XtEF2s708HUtZUU4
+ rs3hUAiL78/OJ8zogTRQUKnYkQRBpdc3+XguwLpRnU1YGdyI1pSXjIisAopYRfuOHiPtQfVPQN
+ WBKRUVppKcJRPQwTrXgt7ueZuXHr08b18Gci8fsHqPzgQXGJB7VEKTqUR5ly3yvm97ls0gwNdI
+ ZRsIDQjtCSW6QxZw38RtkYOGwjLCBGaK4Ab4UqvkWmaPu+x4aZCAQAA
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Gabor Juhos <j4g8y7@gmail.com>
+X-Mailer: b4 0.13.0
 
-On Thu, Mar 14, 2024 at 12:54=E2=80=AFAM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+This series contains a few patches to perform some cleanup in the
+apss-ipq-pll driver.
 
-> Just noticed that the newly introduced driver has some leftovers or unnee=
-ded
-> customisation. Hence this series. It may (or may not :-) be sent as an up=
-date
-> after v6.9-rc1 for v6.9 cycle, but TBH there is nothing functional critic=
-al.
+The set is based on v6.9-rc1 and it depends on the following patches:
+  - "clk: qcom: apss-ipq-pll: use stromer ops for IPQ5018 to fix boot failure"
+     Link: https://lore.kernel.org/r/20240315-apss-ipq-pll-ipq5018-hang-v2-1-6fe30ada2009@gmail.com
+  - "clk: qcom: clk-alpha-pll: Stromer register cleanup"
+     Link: https://lore.kernel.org/r/20240311-alpha-pll-stromer-cleanup-v1-0-f7c0c5607cca@gmail.com
 
-There is some speling mistake making patch 4 fail according to kernelbot,
-if you rebase on v6.9-rc1 and fix patch 4 I think I can just apply the lot.
+Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+---
+Changes in v4:
+  - fix a typo in the subject of patch 5
+  - collect Reviewed-by tags
+  - Link to v3: https://lore.kernel.org/r/20240326-apss-ipq-pll-cleanup-v3-0-15c4aeeb14ac@gmail.com
 
-Thanks!
-Linus Walleij
+Changes in v3:
+  - rebase on top of v6.9-rc1
+  - change patch 3 to use private values for pll_type instead of removing the 
+    field of struct apss_pll_data
+  - collect Reviewed-by tags
+  - Link to v2: https://lore.kernel.org/r/20240321-apss-ipq-pll-cleanup-v2-0-201f3cf79fd4@gmail.com
+
+Changes in v2:
+  - add a new patch at the end to remove the 'cbf_pll_regs' register map
+    from clk-cbf-8996.c
+  - change patch 2 to move huayra register map to clk-alpha-pll.c
+  - collect Reviewed-by tags
+  - Link to v1: https://lore.kernel.org/r/20240318-apss-ipq-pll-cleanup-v1-0-52f795429d5d@gmail.com
+
+---
+Gabor Juhos (5):
+      clk: qcom: apss-ipq-pll: reuse Stromer reg offsets from 'clk_alpha_pll_regs'
+      clk: qcom: apss-ipq-pll: move Huayra register map to 'clk_alpha_pll_regs'
+      clk: qcom: apss-ipq-pll: constify match data structures
+      clk: qcom: apss-ipq-pll: constify clk_init_data structures
+      clk: qcom: clk-cbf-8996: use HUAYRA_APSS register map for cbf_pll
+
+ drivers/clk/qcom/apss-ipq-pll.c  | 56 ++++++++++------------------------------
+ drivers/clk/qcom/clk-alpha-pll.c | 10 +++++++
+ drivers/clk/qcom/clk-alpha-pll.h |  1 +
+ drivers/clk/qcom/clk-cbf-8996.c  | 13 +---------
+ 4 files changed, 25 insertions(+), 55 deletions(-)
+---
+base-commit: 9755120255d6e7b6480509e753e9aecd6171e04a
+change-id: 20240315-apss-ipq-pll-cleanup-a1e99af9d854
+
+Best regards,
+-- 
+Gabor Juhos <j4g8y7@gmail.com>
+
