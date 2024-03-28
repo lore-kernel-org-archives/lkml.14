@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C051E130A4D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C056E130AF5
 	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:05:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711641940; cv=none; b=XpSna9mUcY3ywS2rap6GStFK94Xa/XBoGYJOFi3Veez1OZR09KBw/iP8vMO17nuqjmV1b6tKA9Bu1lTP/BuR1EUMXAjWGFAPVEBuCmeoSBOhhbUNz8pxMoM2op86ji9p91lFPVPhcpn6qKCnunAfOUDvf94u89z6E9YgQ/HZz8c=
+	t=1711641942; cv=none; b=KiCgnUj8v5Qalknm+8CDteTYVCf2/67rf+IFb27/1eFSbC+hAOSO4HeuMv0WALBxtPs3bFl3jcxsOo/Fa2KjY7j8VcvTokHWlY0t/WFZzrzffi53n+TeqJjnX+ypsGNTRakHEE00/2jm6dnrVSgzJZOyzKkgLk0bfa3yJIv6WnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711641940; c=relaxed/simple;
-	bh=h3mUp113EuS+pYH6g9qCQyZzMqErhSLV2EvjsvWtczs=;
+	s=arc-20240116; t=1711641942; c=relaxed/simple;
+	bh=oDLvPsuazzH8hrGu4tA/9DBRUKW3BMutpKwJ+YpYx1c=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=exaVuo8YxPwYMjIeumC2j2hLcm6qtyYyqraE1qvIOTy+0QrSUEc+Y7MIwzmM88z+doU+KJxYozkFXFcFbraUmTrXSrkNq+7Dcpq259K9u91PKJDiW4lm/enBBMN1BEkTo1TUsJCP7kfRbNDmwurVPWnwz1y/GnN6B/NzLK/08Es=
+	 MIME-Version; b=rByqEP89Z6AjYjHVupPMYErfrTJhKnavdzWhFM02UK9k5zuDrlcpDKTpirHScZpvw6bkm2PRMTlnLz5qjxL/oHTlotWNbYXHXJIZ2do55ye3p8qvGVmqg6ehUbAFMhe+o3wzO6CsbUTX1lsNZ/KlAtTMgwxJd4Vq+6hw1ljXOF8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,15 +18,15 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rpsFm-00058k-N5; Thu, 28 Mar 2024 17:05:22 +0100
+	id 1rpsFm-00058m-N4; Thu, 28 Mar 2024 17:05:22 +0100
 Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rpsFj-0092JK-El; Thu, 28 Mar 2024 17:05:19 +0100
+	id 1rpsFj-0092JS-Hn; Thu, 28 Mar 2024 17:05:19 +0100
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rpsFj-00A3OL-1F;
+	id 1rpsFj-00A3PP-1T;
 	Thu, 28 Mar 2024 17:05:19 +0100
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
@@ -47,9 +47,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	Simon Horman <horms@kernel.org>,
 	Willem de Bruijn <willemb@google.com>,
 	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH net-next v1 4/9] net: dsa: microchip: add multi queue support for KSZ88X3 variants
-Date: Thu, 28 Mar 2024 17:05:13 +0100
-Message-Id: <20240328160518.2396238-5-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v1 8/9] net: dsa: microchip: init predictable IPV to queue mapping for all non KSZ8xxx variants
+Date: Thu, 28 Mar 2024 17:05:17 +0100
+Message-Id: <20240328160518.2396238-9-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240328160518.2396238-1-o.rempel@pengutronix.de>
 References: <20240328160518.2396238-1-o.rempel@pengutronix.de>
@@ -65,168 +65,112 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-KSZ88X3 switches support up to 4 queues. Rework ksz8795_set_prio_queue()
-to support KSZ8795 and KSZ88X3 families of switches.
-
-Per default, configure KSZ88X3 to use one queue, since it need special
-handling due to priority related errata. Errata handling is implemented
-in a separate patch.
+Init priority to queue mapping in the way as it shown in IEEE 802.1Q
+mapping example.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- drivers/net/dsa/microchip/ksz8795.c     | 87 ++++++++++++++++---------
- drivers/net/dsa/microchip/ksz8795_reg.h |  9 ++-
- 2 files changed, 61 insertions(+), 35 deletions(-)
+ drivers/net/dsa/microchip/ksz_common.c | 53 ++++++++++++++------------
+ 1 file changed, 29 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/net/dsa/microchip/ksz8795.c b/drivers/net/dsa/microchip/ksz8795.c
-index 14923535ca7e8..0ead198bacb2c 100644
---- a/drivers/net/dsa/microchip/ksz8795.c
-+++ b/drivers/net/dsa/microchip/ksz8795.c
-@@ -127,37 +127,56 @@ int ksz8_change_mtu(struct ksz_device *dev, int port, int mtu)
- 	return -EOPNOTSUPP;
+diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
+index 08426f85f7707..78e9610044ea8 100644
+--- a/drivers/net/dsa/microchip/ksz_common.c
++++ b/drivers/net/dsa/microchip/ksz_common.c
+@@ -24,6 +24,7 @@
+ #include <linux/of_net.h>
+ #include <linux/micrel_phy.h>
+ #include <net/dsa.h>
++#include <net/ieee8021q.h>
+ #include <net/pkt_cls.h>
+ #include <net/switchdev.h>
+ 
+@@ -2692,9 +2693,29 @@ static int ksz_port_mdb_del(struct dsa_switch *ds, int port,
+ 	return dev->dev_ops->mdb_del(dev, port, mdb, db);
  }
  
--static void ksz8795_set_prio_queue(struct ksz_device *dev, int port, int queue)
-+static int ksz8_port_queue_split(struct ksz_device *dev, int port, int queues)
++static int ksz_set_default_prio_queue_mapping(struct ksz_device *dev, int port)
++{
++	u32 queue_map = 0;
++	int ipv;
++
++	for (ipv = 0; ipv < dev->info->max_ipvs; ipv++) {
++		int queue;
++
++		/* Traffic Type (TT) is corresponding to the Internal Priority
++		 * Value (IPV) in the switch. Traffic Class (TC) is
++		 * corresponding to the queue in the switch.
++		 */
++		queue = ieee8021q_tt_to_tc(ipv, dev->info->num_tx_queues);
++		queue_map |= queue << (ipv * KSZ9477_PORT_TC_MAP_S);
++	}
++
++	return ksz_pwrite32(dev, port, KSZ9477_PORT_MRI_TC_MAP__4, queue_map);
++}
++
+ static int ksz_port_setup(struct dsa_switch *ds, int port)
  {
--	u8 hi, lo;
-+	u8 mask_4q, mask_2q;
-+	u8 reg_4q, reg_2q;
-+	u8 data_4q = 0;
-+	u8 data_2q = 0;
+ 	struct ksz_device *dev = ds->priv;
 +	int ret;
  
--	/* Number of queues can only be 1, 2, or 4. */
--	switch (queue) {
--	case 4:
--	case 3:
--		queue = PORT_QUEUE_SPLIT_4;
--		break;
+ 	if (!dsa_is_user_port(ds, port))
+ 		return 0;
+@@ -2702,6 +2723,12 @@ static int ksz_port_setup(struct dsa_switch *ds, int port)
+ 	/* setup user port */
+ 	dev->dev_ops->port_setup(dev, port, false);
+ 
++	if (!is_ksz8(dev)) {
++		ret = ksz_set_default_prio_queue_mapping(dev, port);
++		if (ret)
++			return ret;
++	}
++
+ 	/* port_stp_state_set() will be called after to enable the port so
+ 	 * there is no need to do anything.
+ 	 */
+@@ -3566,8 +3593,7 @@ static int ksz_tc_ets_add(struct ksz_device *dev, int port,
+ 
+ static int ksz_tc_ets_del(struct ksz_device *dev, int port)
+ {
+-	int ret, queue, tc_prio, s;
+-	u32 queue_map = 0;
++	int ret, queue;
+ 
+ 	/* To restore the default chip configuration, set all queues to use the
+ 	 * WRR scheduler with a weight of 1.
+@@ -3579,31 +3605,10 @@ static int ksz_tc_ets_del(struct ksz_device *dev, int port)
+ 			return ret;
+ 	}
+ 
+-	switch (dev->info->num_tx_queues) {
 -	case 2:
--		queue = PORT_QUEUE_SPLIT_2;
+-		s = 2;
+-		break;
+-	case 4:
+-		s = 1;
+-		break;
+-	case 8:
+-		s = 0;
 -		break;
 -	default:
--		queue = PORT_QUEUE_SPLIT_1;
-+	if (ksz_is_ksz88x3(dev)) {
-+		mask_4q = KSZ8873_PORT_4QUEUE_SPLIT_EN;
-+		mask_2q = KSZ8873_PORT_2QUEUE_SPLIT_EN;
-+		reg_4q = REG_PORT_CTRL_0;
-+		reg_2q = REG_PORT_CTRL_2;
-+
-+		/* KSZ8795 family switches have Weighted Fair Queueing (WFQ)
-+		 * enabled by default. Enable it for KSZ8873 family switches
-+		 * too. Default value for KSZ8873 family is strict priority,
-+		 * which should be enabled by using TC_SETUP_QDISC_ETS, not
-+		 * by default.
-+		 */
-+		ret = ksz_rmw8(dev, REG_SW_CTRL_3, WEIGHTED_FAIR_QUEUE_ENABLE,
-+			       WEIGHTED_FAIR_QUEUE_ENABLE);
-+		if (ret)
-+			return ret;
-+	} else {
-+		mask_4q = KSZ8795_PORT_4QUEUE_SPLIT_EN;
-+		mask_2q = KSZ8795_PORT_2QUEUE_SPLIT_EN;
-+		reg_4q = REG_PORT_CTRL_13;
-+		reg_2q = REG_PORT_CTRL_0;
-+
-+		/* TODO: this is legacy from initial KSZ8795 driver, should be
-+		 * moved to appropriate place in the future.
-+		 */
-+		ret = ksz_rmw8(dev, REG_SW_CTRL_19,
-+			       SW_OUT_RATE_LIMIT_QUEUE_BASED,
-+			       SW_OUT_RATE_LIMIT_QUEUE_BASED);
-+		if (ret)
-+			return ret;
- 	}
--	ksz_pread8(dev, port, REG_PORT_CTRL_0, &lo);
--	ksz_pread8(dev, port, P_DROP_TAG_CTRL, &hi);
--	lo &= ~PORT_QUEUE_SPLIT_L;
--	if (queue & PORT_QUEUE_SPLIT_2)
--		lo |= PORT_QUEUE_SPLIT_L;
--	hi &= ~PORT_QUEUE_SPLIT_H;
--	if (queue & PORT_QUEUE_SPLIT_4)
--		hi |= PORT_QUEUE_SPLIT_H;
--	ksz_pwrite8(dev, port, REG_PORT_CTRL_0, lo);
--	ksz_pwrite8(dev, port, P_DROP_TAG_CTRL, hi);
+-		return -EINVAL;
+-	}
 -
--	/* Default is port based for egress rate limit. */
--	if (queue != PORT_QUEUE_SPLIT_1)
--		ksz_cfg(dev, REG_SW_CTRL_19, SW_OUT_RATE_LIMIT_QUEUE_BASED,
--			true);
-+
-+	if (queues == 4)
-+		data_4q = mask_4q;
-+	if (queues == 2)
-+		data_2q = mask_2q;
-+
-+	ret = ksz_prmw8(dev, port, reg_4q, mask_4q, data_4q);
-+	if (ret)
-+		return ret;
-+
-+	return ksz_prmw8(dev, port, reg_2q, mask_2q, data_2q);
+ 	/* Revert the queue mapping for TC-priority to its default setting on
+ 	 * the chip.
+ 	 */
+-	for (tc_prio = 0; tc_prio < dev->info->max_ipvs; tc_prio++) {
+-		int queue;
+-
+-		queue = tc_prio >> s;
+-		queue_map |= queue << (tc_prio * KSZ9477_PORT_TC_MAP_S);
+-	}
+-
+-	return ksz_pwrite32(dev, port, KSZ9477_PORT_MRI_TC_MAP__4, queue_map);
++	return ksz_set_default_prio_queue_mapping(dev, port);
  }
  
- void ksz8_r_mib_cnt(struct ksz_device *dev, int port, u16 addr, u64 *cnt)
-@@ -1512,6 +1531,7 @@ void ksz8_port_setup(struct ksz_device *dev, int port, bool cpu_port)
- {
- 	struct dsa_switch *ds = dev->ds;
- 	const u32 *masks;
-+	int queues;
- 	u8 member;
- 
- 	masks = dev->info->masks;
-@@ -1519,8 +1539,15 @@ void ksz8_port_setup(struct ksz_device *dev, int port, bool cpu_port)
- 	/* enable broadcast storm limit */
- 	ksz_port_cfg(dev, port, P_BCAST_STORM_CTRL, PORT_BROADCAST_STORM, true);
- 
--	if (!ksz_is_ksz88x3(dev))
--		ksz8795_set_prio_queue(dev, port, 4);
-+	/* For KSZ88x3 enable only one queue by default, otherwise we won't
-+	 * be able to get rid of PCP prios on Port 2.
-+	 */
-+	if (ksz_is_ksz88x3(dev))
-+		queues = 1;
-+	else
-+		queues = dev->info->num_tx_queues;
-+
-+	ksz8_port_queue_split(dev, port, queues);
- 
- 	/* disable DiffServ priority */
- 	ksz_port_cfg(dev, port, P_PRIO_CTRL, PORT_DIFFSERV_ENABLE, false);
-diff --git a/drivers/net/dsa/microchip/ksz8795_reg.h b/drivers/net/dsa/microchip/ksz8795_reg.h
-index 7c9341ef73b03..2a2a00202f643 100644
---- a/drivers/net/dsa/microchip/ksz8795_reg.h
-+++ b/drivers/net/dsa/microchip/ksz8795_reg.h
-@@ -124,7 +124,8 @@
- #define PORT_BASED_PRIO_3		3
- #define PORT_INSERT_TAG			BIT(2)
- #define PORT_REMOVE_TAG			BIT(1)
--#define PORT_QUEUE_SPLIT_L		BIT(0)
-+#define KSZ8795_PORT_2QUEUE_SPLIT_EN	BIT(0)
-+#define KSZ8873_PORT_4QUEUE_SPLIT_EN	BIT(0)
- 
- #define REG_PORT_1_CTRL_1		0x11
- #define REG_PORT_2_CTRL_1		0x21
-@@ -143,6 +144,7 @@
- #define REG_PORT_4_CTRL_2		0x42
- #define REG_PORT_5_CTRL_2		0x52
- 
-+#define KSZ8873_PORT_2QUEUE_SPLIT_EN	BIT(7)
- #define PORT_INGRESS_FILTER		BIT(6)
- #define PORT_DISCARD_NON_VID		BIT(5)
- #define PORT_FORCE_FLOW_CTRL		BIT(4)
-@@ -463,10 +465,7 @@
- #define REG_PORT_4_CTRL_13		0xE1
- #define REG_PORT_5_CTRL_13		0xF1
- 
--#define PORT_QUEUE_SPLIT_H		BIT(1)
--#define PORT_QUEUE_SPLIT_1		0
--#define PORT_QUEUE_SPLIT_2		1
--#define PORT_QUEUE_SPLIT_4		2
-+#define KSZ8795_PORT_4QUEUE_SPLIT_EN	BIT(1)
- #define PORT_DROP_TAG			BIT(0)
- 
- #define REG_PORT_1_CTRL_14		0xB2
+ static int ksz_tc_ets_validate(struct ksz_device *dev, int port,
 -- 
 2.39.2
 
