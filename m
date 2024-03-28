@@ -1,131 +1,172 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA545380D;
-	Thu, 28 Mar 2024 07:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11125380D
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 07:51:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711612299; cv=none; b=s+hz7s8WCUJghEhZakYWmOeAQQy2tUIsxSLYho/bTH3nvLJxNywO5SLeNzvzGY+Simqq3+PMCzJBoT+UPWS5y8QWOAANtzCQjMsWnKmW49F+WReK+mtwSGyY6ybyGveVY3ajgvqxPvd/rQ6N1HpW6Vj0UQ2AbHh5yBdRvmd9/V0=
+	t=1711612321; cv=none; b=XJ8hzeoaMRaQU6mNG7i9SNluOmcecHayv20jACJ1ARMwTqPBVyHmUD3vMqmo9PFL254Yu18IeygDGv8aQbnVXY5gjsc2jIGcrYb7zQf9hy5hCC00Zn7MoTLZ0PXZZ5OgL6Suh/OhtvteB7sWODi1TTbQqT2mwmjCuEgUIyyNy1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711612299; c=relaxed/simple;
-	bh=1u4ClC0nXJYWtLmcNlGJ9Evf3oh4cLDO6utJlz4b/+Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jHamKHR6XA5k8dvzRKhJDuaj/5nSsSPSE+xYIwYZOviaqkCKyaHuQ9LYJlPJGQRceYwyIZ6O+SfeEnKTbYkLJ8Ia2wM0otNAMlcF6VpADZEvWBxKY+rltR1UOwaFC/DRmxODCw1QIdrtf4IUrvYVG7A/vmUEHB0FJL36w8gS2LU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fcVj1oRu; arc=none smtp.client-ip=209.85.160.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711612321; c=relaxed/simple;
+	bh=Oi4D9lTrBK5LxMVsvn+m+xvSmAC6nHrSQxGDBSqviBg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E+XAgWjhYoukV8hhsbsN9gBD9PVdW4Q7/Ng1PnLYdVTdT7IJBXzoSAUQkG67yptxPMgM9seq6lu+9FLsanfnxdbXBEf6sazUgVxouZf3Rp0KSxJ7DVp3srMUqKucOPE8gcMlK53BDZbr6SHH/NjCDiCzKAZZN2eHVfdGBh60aO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bSQ2IEQM; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fcVj1oRu"
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2282597eff5so478301fac.3;
-        Thu, 28 Mar 2024 00:51:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bSQ2IEQM"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4150cd01febso4601915e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 00:51:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711612296; x=1712217096; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kb+0BwtXCOHTxNecM62LX9dxsLjU1SobPdBfLYOqsoE=;
-        b=fcVj1oRuCRVoGBClW2Kr66cb/PPnfdvEjmoYlR+lqG1c45efv+5Bs4iQOsZyxuZfcd
-         WWtpvEg3KsSKpBWDOw9Gr9zDsb67TfcwhorDJ3e42tVTdchSwwVhzqWiORAUjNSr7umk
-         EpKa4KZe70WUUuFNPzzyUih5BKM4QzGEfGVOwCZOru9BoeaBxZaWlSs0tNHl0AEcNtMw
-         2Qxu6fgQ8Ph3WIHLY0S2Algtq+GVCye8QoKmFvY5xN/Xupu+VOfFvbEkJtJ0tW+4aA50
-         hnWE/dDqTg+mwgNEkKloHMGiyHTC4uxVW+JH7QnfYQ3Djv57FQlscAf67ksw1lNUwIQQ
-         7epQ==
+        d=linaro.org; s=google; t=1711612318; x=1712217118; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=2WIu5epjAJHOEWnR5hcLu+XP8J82cuP3g6jjZF3M8iI=;
+        b=bSQ2IEQMn8xpszHJwx/k5kzPvGQr1aJ7xVN5DDD3Q2yUVDq2H279NO9BAhSXDUmVub
+         FW7i3yzc23EQkUbIb1OsW5oo/OfJsa/jtIRd+6QmGlUXsWDFlX1fbO9MUJUmuE1pMoBr
+         Hl8o05NVG5NPAQPAi4yJGW9msXrdun3cxgOdJKHGqrtQhm269hv59GHXgiUdGqmkSLFA
+         kB4mwv9Mh+RExoRZEAN2vfcD6pQIW4IuzvhcOoR0aYRMXbW9y51Qua1KT0JdNv8JEuos
+         r5uwYO6CQcmjY3puG/6Wk1Ea3j7OD2DjXhaZqBLEdEXR0v/s3JMEkBaE09R5y5RhPS+P
+         PeFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711612296; x=1712217096;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kb+0BwtXCOHTxNecM62LX9dxsLjU1SobPdBfLYOqsoE=;
-        b=W5inbw0NmiJCeCMRX+XX76CLiJnTSiKvJG1jJwIADhteLIY5TnjzX9ySAE5YgkO924
-         v+TBDg+7eyG0hiGFWazDHdGpwh4PS06voceE7NwJ9BLjGPN5hjmSz/WWHK0QrF4j4XhJ
-         jmc8O8ZwynKy4FESLNvBrO9RgBG9URy/b9R8xpdfwQZbfvH30PVTsZzJC5gX+Q3Yl5HX
-         AdwonZiy8DbG5nYIgSG9B5kLYLVhF9uyTDxVyGMEcsgcZrlpjMD75CNGtRaw5ucSQJGL
-         aYFB/f+RYuUX/nGV1UA7AQykdIuLBaiwXiSODHBp9iWHl7fJhs3WV4IsIc3k6GCbmFQi
-         DjCA==
-X-Gm-Message-State: AOJu0Yyz4XEasFhK2FbBydwSHHf9fcmWahYb7Ak05H/uBHHOAqadiqTL
-	nXLqpXNGtqLTi32fhoA/ISOQVEsyoUqzzTfA0lgjG7kxjDo+JPQcJcqpE/rg
-X-Google-Smtp-Source: AGHT+IEzqMx8djm+FHmNWfNhehJ+tHqeZFhrJJCl/Hxw+o3WO/76dLEGu+gqfnycvOWAL9IbEKWnGg==
-X-Received: by 2002:a05:6871:4406:b0:229:e636:921f with SMTP id nd6-20020a056871440600b00229e636921fmr2181447oab.49.1711612296343;
-        Thu, 28 Mar 2024 00:51:36 -0700 (PDT)
-Received: from localhost ([47.88.5.130])
-        by smtp.gmail.com with ESMTPSA id e18-20020aa79812000000b006ea81423c65sm774667pfl.148.2024.03.28.00.51.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2024 00:51:35 -0700 (PDT)
-From: Lai Jiangshan <jiangshanlai@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: rcu@vger.kernel.org,
-	x86@kernel.org,
-	Lai Jiangshan <jiangshan.ljs@antgroup.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH 10/10] x86/rcu: Add THUNK rcu_read_unlock_special_thunk
-Date: Thu, 28 Mar 2024 15:53:18 +0800
-Message-Id: <20240328075318.83039-11-jiangshanlai@gmail.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20240328075318.83039-1-jiangshanlai@gmail.com>
-References: <20240328075318.83039-1-jiangshanlai@gmail.com>
+        d=1e100.net; s=20230601; t=1711612318; x=1712217118;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2WIu5epjAJHOEWnR5hcLu+XP8J82cuP3g6jjZF3M8iI=;
+        b=lBnqvG19IupzDZgdpZLpHsbp9eSD3kyXstcAfp3lT7TkQF6EIVfHS4+DEFD6UfNT1A
+         TW55jcA0eohjbwiqsbLX3JcVwthU8KMuMo+xxZjhfkE94B/hUG5TsuhYU3k5hS9KtX89
+         qTEo5n1R5IzWz/DUvYCOD0AJHFSx4ZgHaKsNWWmTJY1aBzKBO0wPoKPBz7818ncKh3bA
+         zM0X8ftfT3D4iDECaZbP4u6tDYyZwFRlZbXk9R8AYQlAXyMge0Vx5swcJ5CUHtj8WqBC
+         uLlt8ksV1qdM/6WMmB2I8TCch1j+2fBJLmgbs3bQW0kKplaGV20skpJEocy1PV1Oc32h
+         dxjA==
+X-Forwarded-Encrypted: i=1; AJvYcCW51bfKTdrpQ1QqkOv4hBWOmWHKT9RlT7YjwSivzyYaBXTcRytT31Yb6LCjbsk8oKxVfbBQKiZ674DivXUimxOVKbsx+I4BjuSGmnLb
+X-Gm-Message-State: AOJu0YwSt8jwKnv34pJZiWIuUGbNOvj/8087Aasu6JZBHNxWTKOjyDAP
+	p710PhuVNV7BhhfShRHQdS5N+izb96CCgeDGgbyZpavjzhyeLElu/ahBD/2sm1Y=
+X-Google-Smtp-Source: AGHT+IFXMQWdOmZhU5YF1GpARsMqHvRsZ6j2ByO2I8Vygrxh4HD+auy0yyJigMMJuCmYaSgf3lHGDg==
+X-Received: by 2002:a05:600c:3c9f:b0:414:6211:14a7 with SMTP id bg31-20020a05600c3c9f00b00414621114a7mr1475302wmb.14.1711612318113;
+        Thu, 28 Mar 2024 00:51:58 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.148])
+        by smtp.gmail.com with ESMTPSA id bg34-20020a05600c3ca200b004148cd4d484sm4594451wmb.9.2024.03.28.00.51.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Mar 2024 00:51:57 -0700 (PDT)
+Message-ID: <c33833ad-9102-40e6-97bf-9a4e1bf0a3d9@linaro.org>
+Date: Thu, 28 Mar 2024 08:51:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/19] amba: store owner from modules with
+ amba_driver_register()
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Olivia Mackall
+ <olivia@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+ Vinod Koul <vkoul@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Michal Simek <michal.simek@amd.com>, Eric Auger <eric.auger@redhat.com>,
+ Alex Williamson <alex.williamson@redhat.com>, linux-kernel@vger.kernel.org,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-stm32@st-md-mailman.stormreply.com, linux-i2c@vger.kernel.org,
+ linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-input@vger.kernel.org, kvm@vger.kernel.org
+References: <20240326-module-owner-amba-v1-0-4517b091385b@linaro.org>
+ <20240326-module-owner-amba-v1-1-4517b091385b@linaro.org>
+ <6p4cdmbhrezm7fqbe3kgrkblqgrhaq4fgiw5x4n5dnptii7kjp@vmbj2pkjglp7>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
+ m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
+ HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
+ XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
+ mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
+ v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
+ cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
+ rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
+ qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
+ aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
+ gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
+ dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
+ NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
+ hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
+ oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
+ H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
+ yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
+ 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
+ 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
+ +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
+ FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
+ 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
+ DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
+ oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
+ 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
+ Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
+ qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
+ /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
+ qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
+ EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
+ KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
+ fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <6p4cdmbhrezm7fqbe3kgrkblqgrhaq4fgiw5x4n5dnptii7kjp@vmbj2pkjglp7>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
+On 27/03/2024 21:33, Andi Shyti wrote:
+> Hi Krzysztof,
+> 
+> ...
+> 
+>>  /**
+>> - *	amba_driver_register - register an AMBA device driver
+>> + *	__amba_driver_register - register an AMBA device driver
+>>   *	@drv: amba device driver structure
+>> + *	@owner: owning module/driver
+>>   *
+>>   *	Register an AMBA device driver with the Linux device model
+>>   *	core.  If devices pre-exist, the drivers probe function will
+>>   *	be called.
+>>   */
+>> -int amba_driver_register(struct amba_driver *drv)
+>> +int __amba_driver_register(struct amba_driver *drv,
+> 
+> ...
+> 
+>> +/*
+>> + * use a macro to avoid include chaining to get THIS_MODULE
+>> + */
+> 
+> Should the documentation be moved here? Well... I don't see any
+> documentation linking this file yet, but in case it comes we want
+> documented amba_driver_register() rather than
+> __amba_driver_register().
+> 
 
-Add rcu_read_unlock_special_thunk(), so that the inlined rcu_read_unlock()
-doesn't need any code to save the caller-saved registers.
+That's just a wrapper, not API... why would we care to have kerneldoc
+for it?
 
-Make rcu_read_unlock() only two instructions in the slow path at the
-caller site.
-
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Lai Jiangshan <jiangshan.ljs@antgroup.com>
----
- arch/x86/entry/thunk_64.S          | 5 +++++
- arch/x86/include/asm/rcu_preempt.h | 4 +++-
- 2 files changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/entry/thunk_64.S b/arch/x86/entry/thunk_64.S
-index 119ebdc3d362..10c60369a67c 100644
---- a/arch/x86/entry/thunk_64.S
-+++ b/arch/x86/entry/thunk_64.S
-@@ -13,3 +13,8 @@ THUNK preempt_schedule_thunk, preempt_schedule
- THUNK preempt_schedule_notrace_thunk, preempt_schedule_notrace
- EXPORT_SYMBOL(preempt_schedule_thunk)
- EXPORT_SYMBOL(preempt_schedule_notrace_thunk)
-+
-+#ifdef CONFIG_PCPU_RCU_PREEMPT_COUNT
-+THUNK rcu_read_unlock_special_thunk, rcu_read_unlock_special
-+EXPORT_SYMBOL_GPL(rcu_read_unlock_special_thunk)
-+#endif /* #ifdef CONFIG_PCPU_RCU_PREEMPT_COUNT */
-diff --git a/arch/x86/include/asm/rcu_preempt.h b/arch/x86/include/asm/rcu_preempt.h
-index cb25ebe038a5..acdd73b74c05 100644
---- a/arch/x86/include/asm/rcu_preempt.h
-+++ b/arch/x86/include/asm/rcu_preempt.h
-@@ -97,9 +97,11 @@ static __always_inline bool pcpu_rcu_preempt_count_dec_and_test(void)
- 			       __percpu_arg([var]));
- }
- 
-+extern asmlinkage void rcu_read_unlock_special_thunk(void);
-+
- #define pcpu_rcu_read_unlock_special()						\
- do {										\
--	rcu_read_unlock_special();						\
-+	asm volatile ("call rcu_read_unlock_special_thunk" : ASM_CALL_CONSTRAINT);\
- } while (0)
- 
- #endif // #ifdef CONFIG_PCPU_RCU_PREEMPT_COUNT
--- 
-2.19.1.6.gb485710b
+Best regards,
+Krzysztof
 
