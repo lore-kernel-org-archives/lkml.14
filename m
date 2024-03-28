@@ -1,119 +1,115 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55FE55C3C
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 09:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B7941C62
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 09:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711617427; cv=none; b=QsJG70d+S/Mw3QT2pVeBLuD8soufOonha7AdhUpGArX0R75umdZGvIs/MvXbYKtSekUcjM2hMNcGEr8So/d2lq8qaBBsWvlh/1z7AqDw/t4P6GsGJS6uFZOqppmvLZvVIHgVi5fihVrNTHX5YMx6d8uOjkv3zU5GH3J3yWcfvKU=
+	t=1711617511; cv=none; b=CdsWHl/N2923QGQpQt4PFWljVku0lB2+J11u0dKbUKmicc5E3vCyv1P6S3VuN8OjPZrDBqbRtY5diH5mapPA8R/JMVDe7s1Sm7Fq2B6dxqoePMHFP7sI7fplakw14aD79pGB+PUbaiI+v9ZkBEpBTYOqcIcEIz6SbP2bw+W7lWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711617427; c=relaxed/simple;
-	bh=6Gy4ugoy8i2cxQlvWL7ALq6UFeZ+OdAO4iKWFswgcnY=;
+	s=arc-20240116; t=1711617511; c=relaxed/simple;
+	bh=JdlPi/D8q9gRz0rC7iT/EQjBcreVsogwectsXFf1ljg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iozPfC0HzqC/TLqNXI8qphFCwyznyXkrhm0IzZO918Xat+n5jflRcSSt/9o/xB2psIGwabYs+y0SvVxxoHAaXW5hA+2cb/wYU+SKcyrAdYwydN2uyFQbZ6cbto9tASG+wjzC9+WRHzp1gRZUgOrjJc6vqOThcByUPdMg7r/jz5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cY6JOo6N; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=FX5n4bqouNAZLF56ApsqS+/BM1B/N2KF1212Q8KKQCFODS1G07LyWxiMT9CcfEvsogslNh3pXGtEvjQAzn0OhxDL3TOzJF3uhwpI1nEhP6DnJXCuYAyPG0dPdSpkKpZds44Gn3gBxmmF9cLm4eSKKomLWC2wHeIP7WeShVCibA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ge8+E60J; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cY6JOo6N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711617424;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RHdntgzQNe3U9Pl83BPn/RLVFTNLwSPTo5R9/5t/aKc=;
-	b=cY6JOo6NF4hbbVQk0RWom1z9Su5sluBHObiyG68PmAYDKa3wXf5tB7xhoSUrmmCddmyZfG
-	wbh0pi43JrJkDg6dCXDXx+S23L0wiX+IvNfnCbKy4DmClfs19yIKP1bwKJTv3M6o5v3d9t
-	ptYzrfFgnh1D19r8B2//+y6/CRCHjiI=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-455-CygW7fBIP52v-8oJZHr3Yg-1; Thu, 28 Mar 2024 05:17:02 -0400
-X-MC-Unique: CygW7fBIP52v-8oJZHr3Yg-1
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-29de93371cdso615835a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 02:17:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ge8+E60J"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dbed0710c74so633588276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 02:18:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711617508; x=1712222308; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JdlPi/D8q9gRz0rC7iT/EQjBcreVsogwectsXFf1ljg=;
+        b=Ge8+E60J8rUtUpEjf/SYxfz+LLF1ltrNfOwUG9itZ2RRzLSKLJ2iogWDjw5ubV2vs3
+         hFdW4nfCcibBd54P09d8/XzggdSF16IIkVIpakX/b/MmpsdHfgUhJw0x75fkrcw5RmnQ
+         /7EcdXNLgTu4Yxdq9u4KAts/9VZnPeMYNrj1/KK7H5vN6W5A5y1C7cjg0NlqICwg6m5X
+         g3dR8R3AYg1i6a+3WDdQjHa1NA4ecsMEPTA2RW+hjcTtJ4K/cLwx+wgxBON6L4w6IyKA
+         P6YY5nk0PgPKPEwmarQ7FOlC8bysJ2CCgsB1nAEE+L494xyoWNzlRe5pXIVS74zPnTZn
+         yZiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711617421; x=1712222221;
+        d=1e100.net; s=20230601; t=1711617508; x=1712222308;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RHdntgzQNe3U9Pl83BPn/RLVFTNLwSPTo5R9/5t/aKc=;
-        b=AtxI/okhc2RZsDSiSlwSfiyBo+krAtyW/4psWEBToZVwrVKT/vCObStLvEVyi6LjUW
-         f09ozswuISOV7F/g9TrxcCGqpq0ZwT+gLLLxb/+lWsxXLoYLrlY8TFH+AnTPhfolXw/+
-         A8Z0DMCKY8jHG9KcJN0j3grlmsXD4fnNEfXkZG+Q9unv5xMrK0vdamOUOSb3Z7W/REpy
-         RsKPJfi1tqriKtCZszyGcjqNkFOaN86Ebxu21UJoDFl3nKrFhtRt03PpzfzWEeAMqGc9
-         HhkcvJTjLZcCyXEGv2ugl5UQvf9Ql9XLCUX6Q2OCqupfqeyo6rZgzdDir9PHGz+B6lCz
-         ILYw==
-X-Forwarded-Encrypted: i=1; AJvYcCVCdd15IyEVF+ofHAbRHKx03sjRarV1RwSgJcqA0w5ykvSwBjL3JGK9MnHlBpYpQHN14ye/Ir/gOnKB6bqdZ237J4jRHB5qmyJNSDfJ
-X-Gm-Message-State: AOJu0YyDvYAntsMbow1G09zl2Q4Xnbg9evxwZWFoG0WLwsanOj6JGpK4
-	M+VzBE6nCzegaHbp1ivrUuvIf0O9LEsmUA/GvroVTWV1jQmt/5GDakM/LP1o5z1gfpnxOYCXLR6
-	qvBs8OK24E/i47G67+1DCKdxIBnh3HzHjNaMjnbVSJNAuDxzv7ertaY/0kSgN/wdUhej9I2pe59
-	1BNEMJi5Sf9toWxuAyXtePWvUJKpnfvZ30+eVW
-X-Received: by 2002:a17:90a:3045:b0:29f:a779:1075 with SMTP id q5-20020a17090a304500b0029fa7791075mr1930919pjl.37.1711617420963;
-        Thu, 28 Mar 2024 02:17:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHh7LIZK1grxIAjSEbZxJU8sfdCnSCR08Lls19g/j9dBiAagox0TRBn0uSzYPXhg4LEkFCO+54lcOqzrGPqdQw=
-X-Received: by 2002:a17:90a:3045:b0:29f:a779:1075 with SMTP id
- q5-20020a17090a304500b0029fa7791075mr1930908pjl.37.1711617420686; Thu, 28 Mar
- 2024 02:17:00 -0700 (PDT)
+        bh=JdlPi/D8q9gRz0rC7iT/EQjBcreVsogwectsXFf1ljg=;
+        b=TfF/avbK+p3cDADT5hs9qFwuHh70apEiLefXvWtHqNC7IEDrKLUUtC9RTABTxPnweq
+         R/hcojCMPH98OB96nloVE5TXGuIQC5Bq2hHfcDKv0adJhiwpv1WLgFxgIXUBg+DzGe8c
+         GZtJvA6ayXuwKKwB84tDtmFyFuJlbBlCWnKMKYPG/3UnRkfd4V1jSWZsJBKB4esvGYAs
+         jOOkJeqz8r0aDQuLoc1fFuhTpChZCqZCVTeHIHWCETepjbqPnhLMVHJBWu+rz/KKdnJ5
+         n1iRZDZ2kAHg+XWXVtp6BfPhqkWJb7k6UvpZjKObIFmeUiSF3AQ/IB2bZ4PtBfn3FXHY
+         frMw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjbt8A0uYIyvuvSgBYVlRiHqkjTaIFi2OaQkxZQ5pVvwzz31TyrmG7nvEdgeQeZnt5+bqgAwG7rZDv3udeNt1PsxStaOQkjE5Ynhtu
+X-Gm-Message-State: AOJu0Yz2LeUI5V0EZTVV7rgRevEFYMtpqOUPMaU+d3LN3MiYQK+kG4Rv
+	TdQvLMcw3V/0gCFRIBAw6ZaAs18kGjn8ydfrhNg0pn3OG+TTD/38ViJICQuSD3mBGprTeaMGk6j
+	lQ+Osv+ZiSiodkYoov2sthiRUmlgV+TUe4zA0pQ==
+X-Google-Smtp-Source: AGHT+IHUYiXsFEyaSrFSbE/Sr9EQQEbq6LIDEHkAK2tUEMiEJLOv+Yp1LaCp4ieBZ7Wds5RI7onQUIkumjvsdiSFxmI=
+X-Received: by 2002:a25:9091:0:b0:dca:e4fd:b6d6 with SMTP id
+ t17-20020a259091000000b00dcae4fdb6d6mr2028363ybl.61.1711617507999; Thu, 28
+ Mar 2024 02:18:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240324150107.976025-1-hpa@redhat.com> <20240324150107.976025-3-hpa@redhat.com>
- <CAHp75VdosbYNKU90QWt+6SU_i5dWC94=xZy0GXiKvoQeDF30wg@mail.gmail.com>
- <CAEth8oFuPTRq0z-YbMMFt=kKgre6x+bDhtpUkj2vJeK-u8O72A@mail.gmail.com> <CAHp75Vc6=0-eMMXYQEn9w5N09rKR9NNrqFPR8LBvZZyOiscsig@mail.gmail.com>
-In-Reply-To: <CAHp75Vc6=0-eMMXYQEn9w5N09rKR9NNrqFPR8LBvZZyOiscsig@mail.gmail.com>
-From: Kate Hsuan <hpa@redhat.com>
-Date: Thu, 28 Mar 2024 17:16:49 +0800
-Message-ID: <CAEth8oF_YD1dosS4a9N8UgTiQyUXuJF+HJR5xNv3+vz4KUzw-w@mail.gmail.com>
-Subject: Re: [PATCH v5 RESEND 2/6] leds: rgb: leds-ktd202x: Get device
- properties through fwnode to support ACPI
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	=?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
-	linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
+References: <20240326144741.3094687-1-arnd@kernel.org> <20240326144741.3094687-2-arnd@kernel.org>
+In-Reply-To: <20240326144741.3094687-2-arnd@kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 28 Mar 2024 10:18:17 +0100
+Message-ID: <CACRpkdbSsgzzwkTLTBvyc6JRVrAuVF=iFVQX7RZFJw5UyGuwyQ@mail.gmail.com>
+Subject: Re: [PATCH 01/12] kbuild: make -Woverride-init warnings more consistent
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>, 
+	Harry Wentland <harry.wentland@amd.com>, Alex Deucher <alexander.deucher@amd.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>, 
+	Oded Gabbay <ogabbay@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Andrew Jeffery <andrew@codeconstruct.com.au>, Joel Stanley <joel@jms.id.au>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrew Morton <akpm@linux-foundation.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-mm@kvack.org, 
+	llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 27, 2024 at 7:08=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Wed, Mar 27, 2024 at 8:53=E2=80=AFAM Kate Hsuan <hpa@redhat.com> wrote=
-:
-> > On Mon, Mar 25, 2024 at 3:57=E2=80=AFAM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Sun, Mar 24, 2024 at 5:02=E2=80=AFPM Kate Hsuan <hpa@redhat.com> w=
-rote:
->
-> ...
->
-> > > > +       .id_table =3D ktd202x_id,
-> > >
-> > > Seems to me that you may split the I=C2=B2C ID table addition into a =
-separate change.
-> >
-> > Could you please describe this more clearly? Thank you
->
-> I don't see how the introduction of the I=C2=B2C ID table is related to
-> this patch. If needed it can be done separately, no?
+On Tue, Mar 26, 2024 at 3:49=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wro=
+te:
 
-Okay. I'll prepare a separate patch to describe the i2c ID table.
-
-Thank you :)
-
+> From: Arnd Bergmann <arnd@arndb.de>
 >
-> --
-> With Best Regards,
-> Andy Shevchenko
+> The -Woverride-init warn about code that may be intentional or not,
+> but the inintentional ones tend to be real bugs, so there is a bit of
+> disagreement on whether this warning option should be enabled by default
+> and we have multiple settings in scripts/Makefile.extrawarn as well as
+> individual subsystems.
 >
+> Older versions of clang only supported -Wno-initializer-overrides with
+> the same meaning as gcc's -Woverride-init, though all supported versions
+> now work with both. Because of this difference, an earlier cleanup of
+> mine accidentally turned the clang warning off for W=3D1 builds and only
+> left it on for W=3D2, while it's still enabled for gcc with W=3D1.
+>
+> There is also one driver that only turns the warning off for newer
+> versions of gcc but not other compilers, and some but not all the
+> Makefiles still use a cc-disable-warning conditional that is no
+> longer needed with supported compilers here.
+>
+> Address all of the above by removing the special cases for clang
+> and always turning the warning off unconditionally where it got
+> in the way, using the syntax that is supported by both compilers.
+>
+> Fixes: 2cd3271b7a31 ("kbuild: avoid duplicate warning options")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
+Neat!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
---=20
-BR,
-Kate
-
+Yours,
+Linus Walleij
