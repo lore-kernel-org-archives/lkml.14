@@ -1,80 +1,127 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423274A18;
-	Thu, 28 Mar 2024 10:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B797E2561D
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 10:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711621825; cv=none; b=SsijwSsfNdIMpFJrlxDo1LU0zQyDP586IhMf6e6P1C2OiG5InYzHB4EwcFRT0trBcmSjH+1vg6JhasYsSK/KWepbUCe/SXl0pF24PYT0jh290NKe9MDLhogS6ymUEvnR/cuBXPBiYY4r5f/9S2Sz33zZyV2RqYnlprTqPM/VB/Y=
+	t=1711621926; cv=none; b=phdxv6QUk1iKDFK5rAG1wkxilALARNWsesCOtuU31C2NfeQWIaIK/9sKknsH10YUqS9Hd9GcTQVpuw7OCQTqzEySnfIvnzcoZMfuxhUVZiD8Mxbg26I3Rczhe12FoYjla95bL/vOANNN8HmTbGykSSsEOPgu7DSswLR0zOnQ3sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711621825; c=relaxed/simple;
-	bh=JR9iqgTeubnrq/uVPcMjl9IKr5EmGLhVBGHkhPwE0NI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NZrfdhs61GXjc0wzqbTAEoIor0Or2A19f70gK61KCvRglAoY6RFuLzxPlnIwjekM4kdn6bUsMdrd92ORQriJkWAiaSgliJ1wY1WV0kb7kz3PV9LmBeaHfBwSSgpgcrXLPyXbd4TnuKWkWDzaOSTJO6AtJ8qCSDQaCMdQlJIyySI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de; spf=fail smtp.mailfrom=denx.de; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=denx.de
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 853451C007E; Thu, 28 Mar 2024 11:30:21 +0100 (CET)
-Date: Thu, 28 Mar 2024 11:30:21 +0100
-From: Pavel Machek <pavel@denx.de>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Tavian Barnes <tavianator@tavianator.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH 6.1 018/451] nfsd: Fix creation time serialization order
-Message-ID: <ZgVGvd3A/nqycSbX@duo.ucw.cz>
-References: <20240324231207.1351418-1-sashal@kernel.org>
- <20240324231207.1351418-19-sashal@kernel.org>
+	s=arc-20240116; t=1711621926; c=relaxed/simple;
+	bh=DbApLdDZAmNNw+lBFSYQMYJ85045pjEt/MqBmNGIQHQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mffMZnUMwmxJJF6kxnuJUFpqAMNbD3efTXY5smzz7V37zKgc0iC/xMDTlh167hWQ0PWhrccfFV9ZCksJ1AsUciLfbqzwlvR5OADMj9nWf4TOK274Ofqt5rOI4f45C+WQetDwcVWgHHfKsgv8Z016ngERmTdo+8fHS+O7RZf3Ghg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LKRKJw9i; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LKRKJw9i"
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42SADI01017816;
+	Thu, 28 Mar 2024 10:31:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : reply-to : from :
+ in-reply-to : content-type : content-transfer-encoding; s=pp1;
+ bh=xq1vdUjsxLabunhH0HEjKDIOKqNQwqt0iOgnsoCq9ao=;
+ b=LKRKJw9iQ+Wa2o4VIy9baJSdFHtK8Ys98tKiHYBa3FOvwtEDZyn9L4UjF2gXscgDPsvq
+ uUIpH7K6WgqIPB5mjg30OHCgHB0p0LyfoFmlWUaEECM4tLgFGmQ0Qe1dCxCHvCgmALcX
+ sgpg07bZ4MAaF+O5xqyoxTDijbsDno18xQyOVljctGYDMh6ZWosUTtCUdZ3C0SxSHCEi
+ uBv48E73dl7fUBwBdgccecYeuBS6fDoCaZ3LumY3Po7z9xioV8N5yng+lIcfjaW/enm5
+ SPCLdxdRan1lpXTEirDGoM5fKxb0K+9lXJ9q6pXL4E14mj9T1qHbRlNauG9446+BNufL Kw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x56ke014e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 28 Mar 2024 10:31:41 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42SAVfC3015323;
+	Thu, 28 Mar 2024 10:31:41 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x56ke0148-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 28 Mar 2024 10:31:41 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42S908Yo011358;
+	Thu, 28 Mar 2024 10:26:39 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x2bmmcgfj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 28 Mar 2024 10:26:39 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42SAQbrl38797786
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 28 Mar 2024 10:26:39 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6A79F5805E;
+	Thu, 28 Mar 2024 10:26:37 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8328758066;
+	Thu, 28 Mar 2024 10:26:29 +0000 (GMT)
+Received: from [9.43.118.127] (unknown [9.43.118.127])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 28 Mar 2024 10:26:29 +0000 (GMT)
+Message-ID: <8bce19b2-37d9-4722-ba83-0088a4c9fc6a@linux.ibm.com>
+Date: Thu, 28 Mar 2024 15:56:27 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1zfRCI3yqJQlBjBy"
-Content-Disposition: inline
-In-Reply-To: <20240324231207.1351418-19-sashal@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/1] sched/eevdf: Curb wakeup preemption further
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira
+ <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org,
+        Tobias Huschle <huschle@linux.ibm.com>,
+        Luis Machado <luis.machado@arm.com>, Chen Yu <yu.c.chen@intel.com>,
+        Abel Wu <wuyun.abel@bytedance.com>,
+        Tianchen Ding
+ <dtcccc@linux.alibaba.com>,
+        Youssef Esmat <youssefesmat@chromium.org>,
+        Xuewen Yan <xuewen.yan94@gmail.com>,
+        "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+        Ingo Molnar
+ <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+References: <20240325060226.1540-1-kprateek.nayak@amd.com>
+Content-Language: en-US
+Reply-To: 20240325060226.1540-1-kprateek.nayak@amd.com
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+In-Reply-To: <20240325060226.1540-1-kprateek.nayak@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: aENkfz_59so_ETzrpR3Nu2gWvO2tvIiW
+X-Proofpoint-ORIG-GUID: zh8Eo6U9UnoE-zQvMXu7JZu83wE4E-ej
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-28_10,2024-03-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ suspectscore=0 adultscore=0 mlxlogscore=823 spamscore=0 clxscore=1011
+ impostorscore=0 mlxscore=0 priorityscore=1501 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403210000 definitions=main-2403280070
 
+Hi Prateek,
 
---1zfRCI3yqJQlBjBy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 25/03/24 11:32, K Prateek Nayak wrote:
+> Wakeup preemption problem
+> =========================
+> 
+> With the curr entity's eligibility check, a wakeup preemption is very
+> likely when an entity with positive lag joins the runqueue pushing the
+> avg_vruntime of the runqueue backwards, making the vruntime of the
+> current entity ineligible. This leads to aggressive wakeup preemption
+> which was previously guarded by wakeup_granularity_ns in legacy CFS.
 
-Hi!
+Is base_slice_ns not guarding it in EEVDF?
 
-On Sun 2024-03-24 19:04:54, Sasha Levin wrote:
-> From: Tavian Barnes <tavianator@tavianator.com>
->=20
-> In nfsd4_encode_fattr(), TIME_CREATE was being written out after all
-> other times.  However, they should be written out in an order that
-> matches the bit flags in bmval1, which in this case are
+> Below figure depicts one such aggressive preemption scenario with EEVDF:
 
-This misses upstream marking, probably should be:
-
-commit d7dbed457c2ef83709a2a2723a2d58de43623449
-Author: Tavian Barnes <tavianator@tavianator.com>
-Date:   Fri Jun 23 17:09:06 2023 -0400
-
-    nfsd: Fix creation time serialization order
-
-Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---1zfRCI3yqJQlBjBy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZgVGvQAKCRAw5/Bqldv6
-8nLJAJ9kuw1vzUkXQRmIUPbwTtO1hMOuKwCeMhyCOLAn1EJJrG+Qyj6kFp8h2nc=
-=lfLG
------END PGP SIGNATURE-----
-
---1zfRCI3yqJQlBjBy--
+Thanks and Regards
+Madadi Vineeth Reddy
