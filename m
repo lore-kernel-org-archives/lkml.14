@@ -1,45 +1,45 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912DD13B7BC
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:38:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54F340858
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:38:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711643893; cv=none; b=WDRRLy15tabJ7u2QaovISDQ76AE+kpx/pTCF2yUD9dBuUbCmZ5P8YFQfws4OA5fNMg753k+BiATvHnXnsONpdvVHtZVppE2nloZ8rYEZEPtySh18/aYTQANAJstt76pR4RvdVsvkBCTi7Bqn8vMAj4isyrCUKAsLnG9Ux0usH1o=
+	t=1711643913; cv=none; b=LPppQVn0QG7bNuwFCgNKxywGlG284PHgEdEI7oITflx/Xpr7zhXKuHFxeiozw5b/hGUVsZlTVo9qRg7iC+ejNybP2DFQwvRdamOWozovgLBLYyzTdyElgSGFQGe0wsZOz2jSjDaWZC1O9R1Byc0IY9GK2hxsFSsbH8PvMktb780=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711643893; c=relaxed/simple;
-	bh=nhc5rvuZJ1+r04+ZDNGXMdd1gVMPrAcfjn/g3l1m4dw=;
+	s=arc-20240116; t=1711643913; c=relaxed/simple;
+	bh=ZHer5lBdtvALDuMFH2wxDgdMkLBv4TEQJRmyQoctO08=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iFasm0lAYFidP/xcrktQpBBlzevb1/hXIXyc/BkdSz9IWno9VHJNG8uxWJpcAvF5mitDljxvucTTIvp2a6HE8C9iPx7dBVbEZ+INQpQTOIFH8AB2Ed22C0yYEtbe6ckD6/B+WDuOwVhwfu0rHRqVjHeHBP/A1/SlErENHiNCrAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GiLtrGp0; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=A1pvDUChh/nrMvjQtpqNvXYDy1bhzE4K+WziW0OsDdlUByowBDXss2bZUDVHPPuMckUXFkXt845hnbakA52vWqhFeamL8X+pAVvvloysttd4/j7kO803m6SuDakYUGaHulUkWTJEjo5ViWvDp4Y9i+nOm8P646wtEV8IGZWR1dA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KkJMCNCZ; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GiLtrGp0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KkJMCNCZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711643890;
+	s=mimecast20190719; t=1711643911;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JI9PX3u9k9FTrB5i0WWXWgMwPBin4UAr3u+00DhFGiU=;
-	b=GiLtrGp0/e9lmReNbTYdr0AN9fe7ndSXPt3RTPa/GEboqjpgCjYd+mW8IT83PhlgRiZAGY
-	tOCaQ9AFnUWyDCJVds6c+hfxTdbbiZiN/nxRCxyQHVI4Z9v8bdXCynbeYNLeiDzriVCs+u
-	G5MFuzFhi/2QL1Q58B3aVRyfLDa0cXA=
+	bh=PtpBbjrD+Slaag5TH6kef/+TLI8uFihL8QWdtpo1kX0=;
+	b=KkJMCNCZiu6eHoItCxJWFVQaQrAr7Tf5raP0wgzBG1pKLE2aTUE+qkyK1JWfUIFlvURH2C
+	mqguG+//6JbP3pfmQSyn3zDuA+kQoFxTP3B6VawflOfvmcikfBPJPk3YZ+kLho/gojC27K
+	bXgDscomV+lZtE50Umiml6zfw08uOmM=
 Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-114-2sgLOBL1P_u0EwB7rUYwvg-1; Thu,
- 28 Mar 2024 12:38:09 -0400
-X-MC-Unique: 2sgLOBL1P_u0EwB7rUYwvg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-64-Lg6OOJb5N_K3mFAM9aV-nw-1; Thu,
+ 28 Mar 2024 12:38:24 -0400
+X-MC-Unique: Lg6OOJb5N_K3mFAM9aV-nw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2F7C2383CD7C;
-	Thu, 28 Mar 2024 16:38:08 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DC9A629AC002;
+	Thu, 28 Mar 2024 16:38:23 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.42.28.146])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 1B5A11C060D0;
-	Thu, 28 Mar 2024 16:38:05 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id EED572166B35;
+	Thu, 28 Mar 2024 16:38:20 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -66,9 +66,9 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-mm@kvack.org,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 18/26] netfs: Add some write-side stats and clean up some stat names
-Date: Thu, 28 Mar 2024 16:34:10 +0000
-Message-ID: <20240328163424.2781320-19-dhowells@redhat.com>
+Subject: [PATCH 20/26] netfs, afs: Implement helpers for new write code
+Date: Thu, 28 Mar 2024 16:34:12 +0000
+Message-ID: <20240328163424.2781320-21-dhowells@redhat.com>
 In-Reply-To: <20240328163424.2781320-1-dhowells@redhat.com>
 References: <20240328163424.2781320-1-dhowells@redhat.com>
 Precedence: bulk
@@ -78,137 +78,109 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-Add some write-side stats to count buffered writes, buffered writethrough,
-and writepages calls.
-
-Whilst we're at it, clean up the naming on some of the existing stats
-counters and organise the output into two sets.
+Implement the helpers for the new write code in afs.  There's now an
+optional ->prepare_write() that allows the filesystem to set the parameters
+for the next write, such as maximum size and maximum segment count, and an
+->issue_write() that is called to initiate an (asynchronous) write
+operation.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
 cc: Jeff Layton <jlayton@kernel.org>
+cc: linux-afs@lists.infradead.org
 cc: netfs@lists.linux.dev
 cc: linux-fsdevel@vger.kernel.org
 ---
- fs/netfs/buffered_read.c  |  2 +-
- fs/netfs/buffered_write.c |  3 +++
- fs/netfs/direct_write.c   |  2 +-
- fs/netfs/internal.h       |  7 +++++--
- fs/netfs/stats.c          | 17 ++++++++++++-----
- 5 files changed, 22 insertions(+), 9 deletions(-)
+ fs/afs/file.c     |  3 +++
+ fs/afs/internal.h |  3 +++
+ fs/afs/write.c    | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 52 insertions(+)
 
-diff --git a/fs/netfs/buffered_read.c b/fs/netfs/buffered_read.c
-index 47603f08680e..a6bb03bea920 100644
---- a/fs/netfs/buffered_read.c
-+++ b/fs/netfs/buffered_read.c
-@@ -282,7 +282,7 @@ int netfs_read_folio(struct file *file, struct folio *folio)
- 	if (ret == -ENOMEM || ret == -EINTR || ret == -ERESTARTSYS)
- 		goto discard;
+diff --git a/fs/afs/file.c b/fs/afs/file.c
+index dfd8f60f5e1f..db9ebae84fa2 100644
+--- a/fs/afs/file.c
++++ b/fs/afs/file.c
+@@ -400,6 +400,9 @@ const struct netfs_request_ops afs_req_ops = {
+ 	.update_i_size		= afs_update_i_size,
+ 	.invalidate_cache	= afs_netfs_invalidate_cache,
+ 	.create_write_requests	= afs_create_write_requests,
++	.begin_writeback	= afs_begin_writeback,
++	.prepare_write		= afs_prepare_write,
++	.issue_write		= afs_issue_write,
+ };
  
--	netfs_stat(&netfs_n_rh_readpage);
-+	netfs_stat(&netfs_n_rh_read_folio);
- 	trace_netfs_read(rreq, rreq->start, rreq->len, netfs_read_trace_readpage);
- 
- 	/* Set up the output buffer */
-diff --git a/fs/netfs/buffered_write.c b/fs/netfs/buffered_write.c
-index db4ad158948b..244d67a43972 100644
---- a/fs/netfs/buffered_write.c
-+++ b/fs/netfs/buffered_write.c
-@@ -215,6 +215,9 @@ ssize_t netfs_perform_write(struct kiocb *iocb, struct iov_iter *iter,
- 		if (!is_sync_kiocb(iocb))
- 			wreq->iocb = iocb;
- 		wreq->cleanup = netfs_cleanup_buffered_write;
-+		netfs_stat(&netfs_n_wh_writethrough);
-+	} else {
-+		netfs_stat(&netfs_n_wh_buffered_write);
- 	}
- 
- 	do {
-diff --git a/fs/netfs/direct_write.c b/fs/netfs/direct_write.c
-index bee047e20f5d..37c91188107b 100644
---- a/fs/netfs/direct_write.c
-+++ b/fs/netfs/direct_write.c
-@@ -143,7 +143,7 @@ ssize_t netfs_unbuffered_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 		return 0;
- 
- 	trace_netfs_write_iter(iocb, from);
--	netfs_stat(&netfs_n_rh_dio_write);
-+	netfs_stat(&netfs_n_wh_dio_write);
- 
- 	ret = netfs_start_io_direct(inode);
- 	if (ret < 0)
-diff --git a/fs/netfs/internal.h b/fs/netfs/internal.h
-index c67da478cd2b..58289cc65e25 100644
---- a/fs/netfs/internal.h
-+++ b/fs/netfs/internal.h
-@@ -106,9 +106,8 @@ int netfs_end_writethrough(struct netfs_io_request *wreq, struct kiocb *iocb);
+ static void afs_add_open_mmap(struct afs_vnode *vnode)
+diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+index b93aa026daa4..dcf0ae0323d3 100644
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -1598,6 +1598,9 @@ extern int afs_check_volume_status(struct afs_volume *, struct afs_operation *);
+ /*
+  * write.c
   */
- #ifdef CONFIG_NETFS_STATS
- extern atomic_t netfs_n_rh_dio_read;
--extern atomic_t netfs_n_rh_dio_write;
- extern atomic_t netfs_n_rh_readahead;
--extern atomic_t netfs_n_rh_readpage;
-+extern atomic_t netfs_n_rh_read_folio;
- extern atomic_t netfs_n_rh_rreq;
- extern atomic_t netfs_n_rh_sreq;
- extern atomic_t netfs_n_rh_download;
-@@ -125,6 +124,10 @@ extern atomic_t netfs_n_rh_write_begin;
- extern atomic_t netfs_n_rh_write_done;
- extern atomic_t netfs_n_rh_write_failed;
- extern atomic_t netfs_n_rh_write_zskip;
-+extern atomic_t netfs_n_wh_buffered_write;
-+extern atomic_t netfs_n_wh_writethrough;
-+extern atomic_t netfs_n_wh_dio_write;
-+extern atomic_t netfs_n_wh_writepages;
- extern atomic_t netfs_n_wh_wstream_conflict;
- extern atomic_t netfs_n_wh_upload;
- extern atomic_t netfs_n_wh_upload_done;
-diff --git a/fs/netfs/stats.c b/fs/netfs/stats.c
-index deeba9f9dcf5..0892768eea32 100644
---- a/fs/netfs/stats.c
-+++ b/fs/netfs/stats.c
-@@ -10,9 +10,8 @@
- #include "internal.h"
++void afs_prepare_write(struct netfs_io_subrequest *subreq);
++void afs_issue_write(struct netfs_io_subrequest *subreq);
++void afs_begin_writeback(struct netfs_io_request *wreq);
+ extern int afs_writepages(struct address_space *, struct writeback_control *);
+ extern int afs_fsync(struct file *, loff_t, loff_t, int);
+ extern vm_fault_t afs_page_mkwrite(struct vm_fault *vmf);
+diff --git a/fs/afs/write.c b/fs/afs/write.c
+index 1bc26466eb72..89b073881cac 100644
+--- a/fs/afs/write.c
++++ b/fs/afs/write.c
+@@ -194,6 +194,52 @@ void afs_create_write_requests(struct netfs_io_request *wreq, loff_t start, size
+ 		netfs_queue_write_request(subreq);
+ }
  
- atomic_t netfs_n_rh_dio_read;
--atomic_t netfs_n_rh_dio_write;
- atomic_t netfs_n_rh_readahead;
--atomic_t netfs_n_rh_readpage;
-+atomic_t netfs_n_rh_read_folio;
- atomic_t netfs_n_rh_rreq;
- atomic_t netfs_n_rh_sreq;
- atomic_t netfs_n_rh_download;
-@@ -29,6 +28,10 @@ atomic_t netfs_n_rh_write_begin;
- atomic_t netfs_n_rh_write_done;
- atomic_t netfs_n_rh_write_failed;
- atomic_t netfs_n_rh_write_zskip;
-+atomic_t netfs_n_wh_buffered_write;
-+atomic_t netfs_n_wh_writethrough;
-+atomic_t netfs_n_wh_dio_write;
-+atomic_t netfs_n_wh_writepages;
- atomic_t netfs_n_wh_wstream_conflict;
- atomic_t netfs_n_wh_upload;
- atomic_t netfs_n_wh_upload_done;
-@@ -39,13 +42,17 @@ atomic_t netfs_n_wh_write_failed;
- 
- int netfs_stats_show(struct seq_file *m, void *v)
- {
--	seq_printf(m, "Netfs  : DR=%u DW=%u RA=%u RP=%u WB=%u WBZ=%u\n",
-+	seq_printf(m, "Netfs  : DR=%u RA=%u RF=%u WB=%u WBZ=%u\n",
- 		   atomic_read(&netfs_n_rh_dio_read),
--		   atomic_read(&netfs_n_rh_dio_write),
- 		   atomic_read(&netfs_n_rh_readahead),
--		   atomic_read(&netfs_n_rh_readpage),
-+		   atomic_read(&netfs_n_rh_read_folio),
- 		   atomic_read(&netfs_n_rh_write_begin),
- 		   atomic_read(&netfs_n_rh_write_zskip));
-+	seq_printf(m, "Netfs  : BW=%u WT=%u DW=%u WP=%u\n",
-+		   atomic_read(&netfs_n_wh_buffered_write),
-+		   atomic_read(&netfs_n_wh_writethrough),
-+		   atomic_read(&netfs_n_wh_dio_write),
-+		   atomic_read(&netfs_n_wh_writepages));
- 	seq_printf(m, "Netfs  : ZR=%u sh=%u sk=%u\n",
- 		   atomic_read(&netfs_n_rh_zero),
- 		   atomic_read(&netfs_n_rh_short_read),
++/*
++ * Writeback calls this when it finds a folio that needs uploading.  This isn't
++ * called if writeback only has copy-to-cache to deal with.
++ */
++void afs_begin_writeback(struct netfs_io_request *wreq)
++{
++	wreq->io_streams[0].avail = true;
++}
++
++/*
++ * Prepare a subrequest to write to the server.  This sets the max_len
++ * parameter.
++ */
++void afs_prepare_write(struct netfs_io_subrequest *subreq)
++{
++	//if (test_bit(NETFS_SREQ_RETRYING, &subreq->flags))
++	//	subreq->max_len = 512 * 1024;
++	//else
++	subreq->max_len = 256 * 1024 * 1024;
++}
++
++/*
++ * Issue a subrequest to write to the server.
++ */
++void afs_issue_write(struct netfs_io_subrequest *subreq)
++{
++	struct afs_vnode *vnode = AFS_FS_I(subreq->rreq->inode);
++	ssize_t ret;
++
++	_enter("%x[%x],%zx",
++	       subreq->rreq->debug_id, subreq->debug_index, subreq->io_iter.count);
++
++#if 0 // Error injection
++	if (subreq->debug_index == 3)
++		return netfs_write_subrequest_terminated(subreq, -ENOANO, false);
++
++	if (!test_bit(NETFS_SREQ_RETRYING, &subreq->flags)) {
++		set_bit(NETFS_SREQ_NEED_RETRY, &subreq->flags);
++		return netfs_write_subrequest_terminated(subreq, -EAGAIN, false);
++	}
++#endif
++
++	ret = afs_store_data(vnode, &subreq->io_iter, subreq->start);
++	netfs_write_subrequest_terminated(subreq, ret < 0 ? ret : subreq->len, false);
++}
++
+ /*
+  * write some of the pending data back to the server
+  */
 
