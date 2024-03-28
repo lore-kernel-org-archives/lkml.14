@@ -1,82 +1,90 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+Received: from forward100b.mail.yandex.net (forward100b.mail.yandex.net [178.154.239.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E57912F398
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 15:00:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B0E12F59C;
+	Thu, 28 Mar 2024 15:00:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711638047; cv=none; b=YJZG55Tz/HTxEZ2S6k3i9tLZMl3SefnhmMN5uUyFOkXpEszApV59V1cHr3YDvNkvHB7xBXwjAJBRXo/QQGfFq3ZplicPEW08iipQdGYAugiDNxyDbAliZKVnCb4bI/RYDj3diTZaRtyfX25Fn/wwh4pV/fNazqJBGMvWhgXOrjM=
+	t=1711638050; cv=none; b=MG+WVrEv/OySqbpaGcf1Dz79evrAgfX/ysL0wsBqRc/cF0HRCcp5xx3vo4X/IgB0KgeoIvyaGKQz7DXT9jy3xSDPKMzEty16ohQVvJUL55OzXefABtJL7hS5XAALJ49ZsZizZqBW1ziuNeRPrE8YIefrLzqaS7uY0vktM7a4XIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711638047; c=relaxed/simple;
-	bh=EoHim42owK348cZhl/I9M1pymb0CHHmvTuAnkh/utqo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bXc7UNNj0QNbcY8op2f8VbVOv/K/vX0s1rE+vL9CmuIaL4Ov7BUFy1A9dsQx46ll6xzw9igKTA+x+UBrB/UY5YSygufZx9VRgMxXJCmn9g7ood8PbCQgcdndaxohj/ybCAOf6laWb+MD5bEc0jsfmeVTIGIAGm5Ja4Hy5ceJLFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org; spf=none smtp.mailfrom=jookia.org; dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b=LGKHhnyS; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=jookia.org
+	s=arc-20240116; t=1711638050; c=relaxed/simple;
+	bh=RPApgADsKlI29chKvdFy7O12Bng/LmzDghTbECdn9Sg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hO6h4aJEtPPkDNIPDl9nNuRfcL1kuRz8V0jiguTj/5jWgmOpm8bVVAF3qoqJsYDsejPe81K7WUuLKIhf0jlc+qI8v0zcFvbq2VRxnAx6uI/YKCVLbG7pVFhG/U7bZyzYbyfbJHPH5spsG4Tvx9vvTxsn7NgqyWqoySuIoeDwWLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=FdWvpB8g; arc=none smtp.client-ip=178.154.239.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b="LGKHhnyS"
-Date: Fri, 29 Mar 2024 01:56:24 +1100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jookia.org; s=key1;
-	t=1711638043;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fwp1Qw0/EtEt4456dlzV/Bdcj7tMPkZXlkry1Wr4Z8Y=;
-	b=LGKHhnySkPwGebCdv/mVHphyxvQc8crAcv2Oui6bANMhmRHEJY6K/I2Ih6ly5HFvYpnUHr
-	RaUk1/+0ZaAAyPuNk32vxYEQYx4aouN64DPVOXSzVM0WlRfOVF3VvetqnNrc7RB6mHZfUR
-	inf9ihorMeBYe1/lMJsjrHpxhqHn/RM3fcBpIbCgRU5OFMhfta4Roy8pnpjHXNQhBSuCtA
-	0ZUlE2egI+t8HpZUXQuAiqiYiO023tOnBUL8Gs0BxbWGG2YGwH2bL9q89kJuOAViz0zvBS
-	AEIE4C395ksCyP/I+kqd4xxYCwZBNHvU5GWaOirrFG3WcF3d3oxrDVehHlndWw==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: John Watts <contact@jookia.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Chen-Yu Tsai <wens@csie.org>, Samuel Holland <samuel@sholland.org>,
-	linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: sunxi: sun4i-i2s: Enable 32-bit audio formats
-Message-ID: <ZgWFGHvjjGkRVubV@titan>
-References: <20240326-sunxi_s32-v1-1-899f71dcb1e6@jookia.org>
- <23447395.6Emhk5qWAg@jernej-laptop>
- <ZgTUIWh8qXH_7oxQ@titan>
- <9055efa5-8da6-47b2-b2db-d1f8e02d2267@sirena.org.uk>
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="FdWvpB8g"
+Received: from mail-nwsmtp-smtp-production-main-44.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-44.sas.yp-c.yandex.net [IPv6:2a02:6b8:c24:a33:0:640:d837:0])
+	by forward100b.mail.yandex.net (Yandex) with ESMTPS id 4A4E260B30;
+	Thu, 28 Mar 2024 18:00:44 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-44.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id W0PPosAetiE0-QIB3q1ZZ;
+	Thu, 28 Mar 2024 18:00:43 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1711638043; bh=EhuReZ9ZlrI84XoRVD7915LFMz58XbYYesStZiY24qI=;
+	h=Message-Id:Date:Cc:Subject:To:From;
+	b=FdWvpB8gA8a2Kh3dRx5zF7roYDfXz6QoaoH/oQ0RRs7FnSwQeF1fLGnilBQrD1I7/
+	 62j/erUwvTIPDN9sIx603VpSAooEQe1p6AKzOXKYQi9rAXN6/AFyBqnEckY54Pqira
+	 l+5ufyhOxqPesjMjr0QIHxbSoIeuu7uxsQ62kwUs=
+Authentication-Results: mail-nwsmtp-smtp-production-main-44.sas.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Mikhail Ukhin <mish.uxin2012@yandex.ru>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Mikhail Ukhin <mish.uxin2012@yandex.ru>,
+	linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	Pavel Koshutin <koshutin.pavel@yandex.ru>,
+	Artem Sadovnikov <ancowi69@gmail.com>,
+	Mikhail Ivanov <iwanov-23@bk.ru>
+Subject: [PATCH 5.10/5.15] ata: libata-scsi: check cdb length for VARIABLE_LENGTH_CMD commands
+Date: Thu, 28 Mar 2024 18:00:26 +0300
+Message-Id: <20240328150026.9129-1-mish.uxin2012@yandex.ru>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9055efa5-8da6-47b2-b2db-d1f8e02d2267@sirena.org.uk>
-X-Migadu-Flow: FLOW_OUT
 
-On Thu, Mar 28, 2024 at 01:56:42PM +0000, Mark Brown wrote:
-> On Thu, Mar 28, 2024 at 01:21:21PM +1100, John Watts wrote:
-> > On Wed, Mar 27, 2024 at 08:53:32PM +0100, Jernej Škrabec wrote:
-> 
-> > > I wish it would be that simple. SUN4I_FORMATS is cross section of all I2S
-> > > variants that are supported by this driver. If you check A10, you'll see that
-> > > it doesn't support S32.
-> 
-> > > If you want to add support for S32, you'll have to add new quirk for each
-> > > variant.
-> 
-> > Yes, A10 doesn't support it. But it should error out in hw_params due to
-> > get_sr not supporting 32-bit, no?
-> 
-> The constraints shouldn't be advertising things that hw_params() will
-> error out on, sometimes there are contingent constraints that prevent
-> this but something that just doesn't work isn't one of those times.
+Fuzzing of 5.10 stable branch reports a slab-out-of-bounds error in
+ata_scsi_pass_thru.
 
-Oh right! I'm not sure how I forgot about this, given I went through this
-exact discussion for my wm8782 patch.
+The error is fixed in 5.18 by commit ce70fd9a551a ("scsi: core: Remove the
+cmd field from struct scsi_request").
+Backporting this commit would require significant changes to the code so
+it is bettter to use a simple fix for that particular error.
 
-I'll try and get v2 patch for this soon. :)
+The problem is that the length of the received SCSI command is not
+validated if scsi_op == VARIABLE_LENGTH_CMD. It can lead to out-of-bounds
+reading if the user sends a request with SCSI command of length less than
+32.
 
-John.
+Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+
+Signed-off-by: Artem Sadovnikov <ancowi69@gmail.com>
+Signed-off-by: Mikhail Ivanov <iwanov-23@bk.ru>
+---
+ drivers/ata/libata-scsi.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+index dfa090ccd21c..77589e911d3d 100644
+--- a/drivers/ata/libata-scsi.c
++++ b/drivers/ata/libata-scsi.c
+@@ -4065,6 +4065,9 @@ int __ata_scsi_queuecmd(struct scsi_cmnd *scmd, struct ata_device *dev)
+ 
+ 	if (unlikely(!scmd->cmd_len))
+ 		goto bad_cdb_len;
++
++	if (scsi_op == VARIABLE_LENGTH_CMD && scmd->cmd_len < 32)
++		goto bad_cdb_len;
+ 
+ 	if (dev->class == ATA_DEV_ATA || dev->class == ATA_DEV_ZAC) {
+ 		if (unlikely(scmd->cmd_len > dev->cdb_len))
+-- 
+2.25.1
+
