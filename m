@@ -1,109 +1,112 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18EEA1384B6;
-	Thu, 28 Mar 2024 19:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E0B3BBEB;
+	Thu, 28 Mar 2024 19:47:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711655203; cv=none; b=NefvQHDoPc+C6GdTch6Q3/WUZLJ3oKgK4CE9khl4tpC7bW6zpMF1caSjhHFgFLwN5oaesop8evlLpQ2iK4jkSsRnFeBxCe5OEZ4YnME4rL+hDfBMKH65mS0VTPxKu5n35hWrYWHqcnf70iMkRO7uInD+mU91eaQd+Ra8bY+wl5U=
+	t=1711655240; cv=none; b=S7CaoVEOVo8lZ20TkfzZnJqGOg91tVn/AHoDHTsiWhVvgZ1lOrGJMxT+kf88xKzjBcfBr4FhP588j7oDAqKv8Bp7OIyp7CEHHANFih3u4g1vid4fDNClTP5C8w065P370Dub8jpu9eQUw56f4FaZW0Qfuqs9HNWFQSRaZ00YNlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711655203; c=relaxed/simple;
-	bh=JoHSfNWCuszTvS+sHkAQkYlMRsDabPUMrlciOUgvssg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bEyGoMiwmB0HwlS8tk9SPiNVv++15gsmfzuHi60KcODwfl3+LM4Igq51v1qRxPXiRPw7iJ6uv7n3Rh12knBuSYz2XY8x82KurlcNDgi3UglTKwmH6kzIGmz+4douYtjDou9plLgM6k0dQyQwqvZHRUZQtUQ+mT8gSO7whAOWl4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YaNiX4Qi; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	s=arc-20240116; t=1711655240; c=relaxed/simple;
+	bh=1Mt4TUpvlSuvJ96g0VUvqcJE8it+xvkFfhZZ5MLz++E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uLBwgjiNQK24n7hL1J7faBcTh0VTivWC03nJG2O4jb9zhpXZ2xI+HXL+yrBYcgjwpNiG+QFLuRuiPcaD7KvKfiktkCwUYbYpfTbyPmr/mKG7iDRRQjx3wDy6cCytVUspDxYEVZUiC+2egZXmfuT4Dw/E4HLr198Ocrs9MbRdPNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KyQBiupU; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YaNiX4Qi"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6e703e0e5deso1176943b3a.3;
-        Thu, 28 Mar 2024 12:46:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KyQBiupU"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-4d86ef290e0so689050e0c.1;
+        Thu, 28 Mar 2024 12:47:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711655201; x=1712260001; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uT3+EvMk0DC3SU3LipXNa10bWu769Nw/MuJjqYhTZRY=;
-        b=YaNiX4QidYQgPKY3Bwl/v+9WSLnEWSGmVRp/hv8Y37aXERbLIIgJ6vpr0yPE3ZGw+T
-         X3I/YwhATfj5usEVVfSqbMg9xM4sMMTdfQzwflnUvpigw3ne1krXJ9VfJrYTRkC66ieW
-         H77OkQ7tK2uk/iLltPqeMiJqqI3vL4n9bPjxINzsR/KtrXjVlPgNVm5LcneUZLgVMAKX
-         6Hr5WxmbdOfggcNO622ks0gCNGA79s/6S8dzVj13PfoHHhKfZ4WH67U73lmg5OrZ+Fvq
-         oo85l2JkbOV+e++P50pAQKcSwSJR+VIl7ryp0V8O/DU8en1C7r3yEAK/0eaaIHCAM9Xu
-         CrLQ==
+        d=gmail.com; s=20230601; t=1711655237; x=1712260037; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y98AXy2EPHAOgeK4+7hLFbzZGIuwi3MKj49JJNRL6V4=;
+        b=KyQBiupUpx9bp73BnhcBkdHss0e+9KqXYpwf5Juc6x4/RKXek45QzGFR8QIVEOV6oU
+         KpWJdt0IvnX3gcrGkOeeiRXJZeFeSIoSo1/B4D/uvvOgDG92FPf6UGKlxm3ovJUEcuQQ
+         C/5+wS1LTgvwdIxRHB34Xjzo+uP9fsChtcQQZzE5AJ5P5JVmA6+Leon1OsykF8uP4VXQ
+         JNvgnsWQb7CtNN1muItCHpRLk2yJfoORkzFHmsffx2VXuXnihLqFy0Oz0UNxV7NI+5Ff
+         js5aCse7XMDsTUtQQ+N23KwQTybrMW6K8BYENqFsllH00zd3Pyg+ow6R4FrvU2hqPCiQ
+         Rvdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711655201; x=1712260001;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1711655237; x=1712260037;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uT3+EvMk0DC3SU3LipXNa10bWu769Nw/MuJjqYhTZRY=;
-        b=LAZMEsuU1MAC1fGcb9/rHXxAraFVOOgO1WFF+PQyjgM1xf1iJTAUBNNTW1iYQ16fDy
-         kT6pAFO55kHO0L1fl9mF4yQqeCiI73JwV3ggBNB8ryHRER7zFRVJqgcw74KF6YquXdzF
-         Lx7pxZs2IRcKDMFIOVWlIhxgGpuhs4ntlJf7bDss+VZzm15YmB8u2AXouHgNc2oevd5N
-         zN5uCrW6eF9pFJ58fvbg+MVSn5iq0whfoToBkYX/a0Jopn7PmOiWwiVTGJVroafBl+ef
-         7MmB6smH7tl9n3amdLKWy0X38h7tdy//5eObLzqN9t6pbotJ3l2pUYHhuZFEljZ1dgD4
-         2NUw==
-X-Forwarded-Encrypted: i=1; AJvYcCX5iUGMxtU1e+5fCnCkB9WOGpESlAfh80SDLkWv/N+cjeHGSGgiNoq9nXZ1mQ2gxz4l6DiAXLugAVbIXOrFzVbz6Iktc5LpD6gp9m2k4+z+gCKhNigHimI7+QVENf41DIU4xAbbInzlMO1uHw==
-X-Gm-Message-State: AOJu0Yzd6e4Rez6w4JU1KyQWjIZuXfG+sbbhPOuqh3DALVdQGeKhbFyP
-	w/MS+kVKxVfTmpC/Zy5jpO+KLWJw1F3mJGbj8Y82nzxv4ood82+K
-X-Google-Smtp-Source: AGHT+IF3eoTQgD9p1GZXsRa08ouQFunv1CReXF3z4bK+mnRZ/sst243Nva6MmFlH7Lv8JBr8KGEIyQ==
-X-Received: by 2002:a05:6a00:10c7:b0:6ea:e2d8:473 with SMTP id d7-20020a056a0010c700b006eae2d80473mr303558pfu.6.1711655201451;
-        Thu, 28 Mar 2024 12:46:41 -0700 (PDT)
-Received: from localhost (dhcp-141-239-158-86.hawaiiantel.net. [141.239.158.86])
-        by smtp.gmail.com with ESMTPSA id k7-20020aa790c7000000b006ea916eac02sm1753620pfk.42.2024.03.28.12.46.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 12:46:41 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Thu, 28 Mar 2024 09:46:39 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Kemeng Shi <shikemeng@huaweicloud.com>, akpm@linux-foundation.org,
-	willy@infradead.org, jack@suse.cz, bfoster@redhat.com,
-	dsterba@suse.com, mjguzik@gmail.com, dhowells@redhat.com,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 0/6] Improve visibility of writeback
-Message-ID: <ZgXJH9XQNqda7fpz@slm.duckdns.org>
-References: <20240327155751.3536-1-shikemeng@huaweicloud.com>
- <qyzaompqkxwdquqtofmqghvpi4m3twkrawn26rxs56aw4n2j3o@kt32f47dkjtu>
- <ZgXFrabAqunDctVp@slm.duckdns.org>
- <n2znv2ioy62rrrzz4nl2x7x5uighuxf2fgozhpfdkj6ialdiqe@a3mnfez7mitl>
+        bh=Y98AXy2EPHAOgeK4+7hLFbzZGIuwi3MKj49JJNRL6V4=;
+        b=OkSmUAVg4XDEJ+cQxXbwb1HkoT7UZyopTVzJEYQAgRcs7zLxeL/X/m/Zrq8FliHRpY
+         jDSnkIKVeaUSJoxMy9C02q3ogdlyLpxI8C+T3pLGd9PtArMrfEgHKCaE4eq0mzujtQ2r
+         b0tMaRbRf6BS0iLctKptJuaKzbZp+UsPw8DqB1LeaeFNw2wMkrkNu1z7H96VuIYI/SA4
+         sf57ZQLRt27hfERg6GcFCGp1Lvi6i8ifDWTtnOCVZ4O437clMARs2D+oNXI7bR3MqkQL
+         cNCW8E5iVwsaktQ5ibphEkAVsHN+14lha/jAi7cwwmcpBctvdDu+c1kNDIXpVUcop3LQ
+         zhBA==
+X-Forwarded-Encrypted: i=1; AJvYcCVPsfxwcTTt74FxmMy+lcfdI+1EsZx8dhx5YSVpa0C5aBTLIZYJV7UtJF+z7j3zqRonQtyMs61Drr9gBF0bFWkTlS5GwVZ/ulK4C23ptBMiOkkrA82WK05FHz9Mw+rpvrDpgeKochrOAHWbs1iZTkFV7EbbyJE9SxvrXb6/p2BNtpPkf72uXCf04ZKhWpLA84j2T0qYRaAf9i3wghOEdZrMDrlEIHIdig==
+X-Gm-Message-State: AOJu0YyPxsBAvgk6jtr3Szv6qk363XTe2BSbUC0kcp7ECrH9V6IsCcx9
+	zrzGJ7dUhY6zkhsFOWdTchs/F6KmAyxr9e8601Lk4TlTBWFRBmxX844zGMGHJGF2ODffCdJt8S8
+	oKrPes0C59PhYozy/Yl2w9J9FP76HqHqa
+X-Google-Smtp-Source: AGHT+IHq+M0xcSEGdG0zTRcuGqPDcXDiiWkDbr8S6oB/sxErqalgI2SDqSXZm4KesSzFeB3zGJXaJSvNZYTFxI7LGSg=
+X-Received: by 2002:a05:6122:c8a:b0:4d8:76fc:3aa9 with SMTP id
+ ba10-20020a0561220c8a00b004d876fc3aa9mr3104788vkb.6.1711655237587; Thu, 28
+ Mar 2024 12:47:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <n2znv2ioy62rrrzz4nl2x7x5uighuxf2fgozhpfdkj6ialdiqe@a3mnfez7mitl>
+References: <20240326222844.1422948-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240326222844.1422948-9-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <4bd3b33d-564a-45e0-905c-d0deb52e6f38@tuxon.dev> <3d3a651e-2853-4b5b-bc8a-6f494250d9c7@tuxon.dev>
+In-Reply-To: <3d3a651e-2853-4b5b-bc8a-6f494250d9c7@tuxon.dev>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Thu, 28 Mar 2024 19:45:33 +0000
+Message-ID: <CA+V-a8u3C_-V=s64qj-EN+YB1Men37m-r1p7x8dmEvU+JXdMJw@mail.gmail.com>
+Subject: Re: [RFC PATCH 08/13] pinctrl: renesas: pinctrl-rzg2l: Add function
+ pointers for writing to PFC
+To: claudiu beznea <claudiu.beznea@tuxon.dev>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi Claudiu,
 
-On Thu, Mar 28, 2024 at 03:40:02PM -0400, Kent Overstreet wrote:
-> Collecting latency numbers at various key places is _enormously_ useful.
-> The hard part is deciding where it's useful to collect; that requires
-> intimate knowledge of the code. Once you're defining those collection
-> poitns statically, doing it with BPF is just another useless layer of
-> indirection.
+Thank you for the review.
 
-Given how much flexibility helps with debugging, claiming it useless is a
-stretch.
+On Thu, Mar 28, 2024 at 8:13=E2=80=AFAM claudiu beznea <claudiu.beznea@tuxo=
+n.dev> wrote:
+>
+>
+>
+> On 28.03.2024 10:02, claudiu beznea wrote:
+> > Hi, Prabhakar,
+> >
+> > On 27.03.2024 00:28, Prabhakar wrote:
+> >> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >>
+> >> On the RZ/G2L SoC, the PFCWE bit controls writing to PFC registers.
+> >> However, on the RZ/V2H(P) SoC, the PFCWE (REGWE_A on RZ/V2H) bit contr=
+ols
+> >> writing to both PFC and PMC registers. To accommodate these difference=
+s
+> >> across SoC variants, introduce set_pfc_mode() and pm_set_pfc() functio=
+n
+> >> pointers.
+> >
+> > I think the overall code can be simplified if you add  1 function that =
+does
+> > the lock/unlock for PWPR. See patch 13.
+>
+> I meant to say one function for lock and one for unlock.
+>
+I agree, let me remodel it that way.
 
-> The time stats stuff I wrote is _really_ cheap, and you really want this
-> stuff always on so that you've actually got the data you need when
-> you're bughunting.
-
-For some stats and some use cases, always being available is useful and
-building fixed infra for them makes sense. For other stats and other use
-cases, flexibility is pretty useful too (e.g. what if you want percentile
-distribution which is filtered by some criteria?). They aren't mutually
-exclusive and I'm not sure bdi wb instrumentation is on top of enough
-people's minds.
-
-As for overhead, BPF instrumentation can be _really_ cheap too. We often run
-these programs per packet.
-
-Thanks.
-
--- 
-tejun
+Cheers,
+Prabhakar
