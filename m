@@ -1,243 +1,139 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0F71EA6E
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 20:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FAE61386A3;
+	Thu, 28 Mar 2024 20:02:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711656113; cv=none; b=rbPj2ElfHdtmc0gZCWZ/Mhy5hh6WsdxG+sgr3Y/y79XxrQHafrF5FLdW0W9MDYjPHro98lfb+tbrrIZcL0DQAtHgA/Q+J0Y+nH4ZjcRKaOZcDwqTiQo++ESR/+PLSezHigzJhZmRSXYOE5CrkZ1M+oNW+c+H6oiFyblPzY7ozmc=
+	t=1711656129; cv=none; b=i2zazoDTWaJ+6MLHup7TFr8mzieYqWXiKSqhmuRE8whDzvNM5moDrLnA5iTtntp6lh5hbpHHT7Cf513ObGPScB1GEyxgE5MBS+GckX0UkagcFfO4WU4l381154kCm8FUZA6MQnjFtB72tDWzwD/fN1qVnY7pnEgFZTD2NriNav8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711656113; c=relaxed/simple;
-	bh=P8jZccudYkqES945q0Ut1Lb+avcA1ifhBKmqB9AvAko=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:References; b=uV+H/u0ZF1cZzmFYvhJYhT3t2BkJUATBbaRcItSGHzGoEOmnda5xP1jXWcJoY+ViFWzNP/BBYqMKOUb9CobXCSDCaJjo7LUDKd/RDxwIzgWcGwzLl+kSg+2WQinMiNXhdqaG1QtQ1dS1ZIbm8PtGRrVsGsGdljGNThsXsPEqpL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=bW8CmYKO; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1711656129; c=relaxed/simple;
+	bh=vbVoj5mONYHNgf9JQ9GQnrB9tevCRqpIKROsT3wC2Fk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aQDn780sZYebxjKuWtxtArXsoQWS8YUE2abjTwhaNi3kbxUgwTAWELPJ4cIkHFTfMmNmqLcNLjLU3rLSJs5enN7TARthl/qriO+GyTaTGZen/evS6B+ykAw9On6aihH6BOloC174SLUXGK0H0/X94B65tsXsx2iknOTJm2nJjYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MnFeXEgR; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bW8CmYKO"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240328200142euoutp023a41cb17ab6dc2fca591e4d337c23501~BBif-pFE82272322723euoutp02z;
-	Thu, 28 Mar 2024 20:01:42 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240328200142euoutp023a41cb17ab6dc2fca591e4d337c23501~BBif-pFE82272322723euoutp02z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1711656102;
-	bh=FUHAmFE1jPsyGY3FGfhuWJKOZo6nqnOFwAUmyJ4+EqA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=bW8CmYKOxd6yFp+xzPDfzaxIkYhYOmyuMz0Ss9ggagFf3lwZBuRYhLsV2SCEVTo+t
-	 vPsHOkaPkwVHGdUSr7xkQWuCgZuEJ4dPQCNxkRNLnz/oQLXZCCy2RRUou5LlPXU/e2
-	 rTyrwXX0ZAvX1hrgpe6GiLmi5RVBDAzEuEQcpVsg=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20240328200141eucas1p2b144a36d6e3d9e37af6be159a6c76c00~BBifsSxo40307803078eucas1p2x;
-	Thu, 28 Mar 2024 20:01:41 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id 35.4C.09539.5ACC5066; Thu, 28
-	Mar 2024 20:01:41 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240328200141eucas1p2f85de76e86cb8cc192b0d495279af934~BBifZQt_t0306403064eucas1p2o;
-	Thu, 28 Mar 2024 20:01:41 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240328200141eusmtrp1a6a835c9571e235918655c002e49daad~BBifYvtSX2279422794eusmtrp1I;
-	Thu, 28 Mar 2024 20:01:41 +0000 (GMT)
-X-AuditID: cbfec7f2-515ff70000002543-c5-6605cca5d2ab
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 79.39.10702.5ACC5066; Thu, 28
-	Mar 2024 20:01:41 +0000 (GMT)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240328200141eusmtip155b8fac5558877af60a9ccb98b044aa7~BBifPuWQF0094500945eusmtip1N;
-	Thu, 28 Mar 2024 20:01:41 +0000 (GMT)
-Received: from localhost (106.210.248.208) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Thu, 28 Mar 2024 20:01:40 +0000
-Date: Thu, 28 Mar 2024 17:53:41 +0100
-From: Joel Granados <j.granados@samsung.com>
-To: <wenyang.linux@foxmail.com>
-CC: Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>,
-	Christian Brauner <brauner@kernel.org>, "Eric W . Biederman"
-	<ebiederm@xmission.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] sysctl: move the extra1/2 boundary check of u8 to
- sysctl_check_table_array
-Message-ID: <20240328165341.3ov54gwjymghtp2g@joelS2.panther.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MnFeXEgR"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-78bbed7adaaso62353085a.0;
+        Thu, 28 Mar 2024 13:02:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711656126; x=1712260926; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=lQZIemFmXjC6xyiLulQ43Ea/EhoY/GbG4RXFhJQU0/8=;
+        b=MnFeXEgRmJ8f/Thf359xa0PfiBqvx125ew/dpKNWEckOjf+6AdypIilBzVHgmUxEB8
+         j/cK6vSO/lus03UI2oeny9YgY2tG255XXyfkePANTbNipm3m9ifqWOVyecfIecWIfTpc
+         7i4bmaI5QKpg9+xrUptRwlLzDXTR257RcAZUMgeZLInnagtlfVgsSZnnEPVAYg8kEGOU
+         C1h3kCzgYWjPoO+XBGKACSt9Dlq571mr1I0iYroLoSPuaSX8x/6h+cKRNoMOmDVxan3a
+         W6FK82S7VSZf36gvXV89NWkjuU2y2q9EGzU4UiIsjze2gfYHYL25kHnUR6CCS12s8k3h
+         tAlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711656126; x=1712260926;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lQZIemFmXjC6xyiLulQ43Ea/EhoY/GbG4RXFhJQU0/8=;
+        b=SLJlE9zejPDz7sGl+6KhHJKo4U1/cpYXZ4Os2DgJbhosAJz5VrFBFjN0tRNnp4V49R
+         kw6Nd9SAX9LvEqH3wfDDtc1zBk26gntuUsqbBzjuIXmC3IvcylFsINa5OJla2fdTmSWv
+         z2ahcSGbAvqwMaI3gA8f0t2Tr2AAd63z2EyNQSB1MxYqUWvh45mWfEo3VxKDAxk+ITNf
+         flWdWLCchQHpurvnpJZ59cKM7sSdb2AtNSJPlGCrffM24H1R5MV1x9t/6ox8ScAf/D3N
+         1/qAlKJVk9SG9u5t/nXoMBF/7fOsJFEHJStHCE2fypxxMxmMQCjw5BuHtXlzF8STbIYr
+         Rjbw==
+X-Forwarded-Encrypted: i=1; AJvYcCV5QhxBVq8GyDhaCGFeAz6pR3XPLpM5Es5GPX9kwesJYRAvjaqpb06hcjEhOFeOpDuBjTh2o2jOqR3kDGaoyYVTW1Sex+WVrD9BgfvUuUnD1H2RLrJ3KUkH5iEMTlzsNAh64w6NXONGjFo7NChEWUb0VzHwLQt+xGlqZG3BKWe2ReVKJxiAQXUwwDladpdMkSyVpksHR1vGzJ2TPeyfJr1VtWyh7SLF2ONkmwS4qalkuNP+5oDsXSEWlghadgfxJtYZaI6f1WKggVLfXEzJYiCXaDJ9C/d0TJTYFVFGH26c1WgB630WsrjUXYZ/XDa+vF4/QBTNclbcGOtaest0/byACtXI02nRhyF0d195J0qGljlVl0o+c2ETyDVJHlb3j26aE6FBcr7axDReDaRi78nqgNn/LB//szg02P3iBymBEWhZb76uQpkMtLiXBxQjKQOUwPv2ZPN23I4skbRfcCd9haSOuuSwCWE6+1FU6sAOb1BhlbBKk2dqcIMAtyRvxtsUne5RF3QjfhFwnuajS91Ex7PowdCTrz0KA9SE4oohSuP7RQhfx6MSA4fMoue0bDy9e3v1zIkI2TtP1GJG2yQ=
+X-Gm-Message-State: AOJu0Ywga9JRFfjU/ra9iEZPIfgKMhFv5i2QAwcQedg1c/WcRSZ1+fGt
+	j09Clmr3sygLEyltgYhZcU2vxs9wgVTl74VjDweQ2kNKYEzV4Hyp4PrxpW1l13qRWESm5VfH14K
+	tDzhUbwUTq933fg/SNrczhExWjyQ=
+X-Google-Smtp-Source: AGHT+IFQNOvoxYEranyGbOCvmAR4etDDhau+OcrTFex7JkKGx6yINzP/h18hs1c4qiY1arvh6SuEYWtwfkxWkgaJ4wM=
+X-Received: by 2002:a05:620a:c4e:b0:78a:62a6:7e2f with SMTP id
+ u14-20020a05620a0c4e00b0078a62a67e2fmr5081544qki.5.1711656126274; Thu, 28 Mar
+ 2024 13:02:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="o5jgyvl67e7knwjj"
-Content-Disposition: inline
-In-Reply-To: <tencent_8599CCEFED19AF4A8A5A358862B226FD8A05@qq.com>
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA2VSe0hTYRzl2+69uxutblfBX5pZS1eo2Utx1YoMs1FBEVSwXq68Tm2bsfmq
-	KCyGqUmNLGxmZVFamy0bNdRepkwrLR+9lmkvVomzLM3oISu3aw/ov/M7j49z4CO59G3cn0zW
-	pDFajUIlIgSYreFby7SzzXjijHbbLImrvh9Jftr0PEnzfrXkQU0JIXEY3iCJ3lyDLyRkx7Lb
-	MFlpQQtXZjXlEbIB6wTZ4bp92EpcLpAmMKrkDEY7fUG8IOnpUyNn25WJWef1ViwbnQzIR3wS
-	qEiov9eN5yMBSVPnEJxwtHPY4zOCD4NG3OOiqQEE7mr574ThrmEkUY7A7mrk/jHVGsWscAXB
-	7WeXeR4Bo0LgR57F+xJBhUNLb6c34EsFwX2niecJcCk7gl69yyv4UAnQnjPkxUJqIRSU5xAs
-	Hgt3jE7Mg7lUFlQd6Rj2kMM4AMrdpIfmU4ugtKQGY5tOhq7cJoLFu+Du5Q7vNKAO8qG27zHO
-	CrFQUfWWw2If6GlkSwM1HpoKCzA2UIjgpvsjjz3MCMr2DI4k5oH+oXMkEQPVlW5vI6BGg+P9
-	WLboaDhkKxqhhZCbQ7NuMZif92IGNLn4n2nF/0wr/juNpcOh9Go/8R8dBmWnXFwWzweLpQ8r
-	RTwT8mPSdWolo5upYTIjdAq1Ll2jjNiSqrai4Q/W5G7sr0LHez5F1CEOiepQ8HD4daW5Fflj
-	mlQNI/IVVtuxRFqYoNi+g9GmbtKmqxhdHQogMZGfMCQhiKEppSKN2cow2xjtb5VD8v2zOfLB
-	qPzZW+j1p98Gi7+ve555adXXwFFTvlw/OibSKc2LexTUrMQqcnOmZkpvRvNmCQoMHYeGxNtT
-	pN/Pvfu6wTEwd/cinwuXKlsDAw2OdvGCi4uTna+i56OMUZtvKQ/0uyw/O+c+CB+jrhcl7m0s
-	e7IyJjw0ffWK0Iy0ljZBJY1POkZfVQUs1WZUHI0xMSp0Nq52hnmJyogPFJ3ZsTWsJ96KLtq7
-	ThEO2rfnQ9vGkrjCssK1G5alxO+MPY3Ld/Gla8xZD2OJE3OUncFdWVHfIqNmJ8lNK7qdhuii
-	himfnA194qLm5WG2dS9TxiXZW19MHUqx+En9IuO7r01fHHgg5AZXJMJ0SYqZoVytTvEL3YbG
-	Q9sDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMIsWRmVeSWpSXmKPExsVy+t/xu7pLz7CmGZzuVbR4ffgTo8X/bS3s
-	Fme6cy0u75rDZnFjwlNGi5bVu1gd2DxmN1xk8VjQc57ZY9OqTjaPz5vkPKYcamcJYI3SsynK
-	Ly1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy3i7/BV7wWaF
-	iq/PRBsY50p3MXJySAiYSEw4NYG1i5GLQ0hgKaPEs6l/GCESMhIbv1xlhbCFJf5c62KDKPrI
-	KHHj+H5mCGcro8TjuStYQKpYBFQlfneuA+tgE9CROP/mDjOILSIgL3HuySp2kAZmgaOMEm9a
-	XoMlhAVSJC61/QGzeQUcJHqWt0GtmMoocXXvFEaIhKDEyZlPgDZwAHWXSRxezglhSkss/8cB
-	UsEp4CSxYM4uFohLlSXudpxmg7BrJT7/fcY4gVF4FpJBsxAGzUIYBFLBLKAlcePfSyYMYW2J
-	ZQtfM0PYthLr1r1nWcDIvopRJLW0ODc9t9hIrzgxt7g0L10vOT93EyMwhrcd+7llB+PKVx/1
-	DjEycTAeYlQB6ny0YfUFRimWvPy8VCUR3p1HWdKEeFMSK6tSi/Lji0pzUosPMZoCA3Eis5Ro
-	cj4wueSVxBuaGZgamphZGphamhkrifN6FnQkCgmkJ5akZqemFqQWwfQxcXBKNTCleb6z1r6x
-	Ie9wts783dd6j8yp9Hp/vsnslU2Xm55j26PrWyastFZWWv6ZuUhX+4KuvdAM+6hnW97kzNP/
-	3L4h74n6ffOjaU/n7Mo6EfPkxN+rRZpaCnPnBiQr/XzD/tDiYO3JJo9stm0+7DcXb926sW5m
-	+NoZX/fJVTyRDNBnT3GTif6eLH764I85jOmrS60XJehW7nhVdjhXk3NFy/1c8VN3JIpjgju8
-	P5dUHmHoZZ2+1GFNMN8LC4cUUcV7x454Cx5nUfQK4qwO+8t+QPKBTfj/U89NHY8FWTIfuMqZ
-	uFjkn7b2uqxJb9v6pCs3n/edHnzm6D+On7zRxWdEf/otvx1Yy/5S+PKSn0cmhPkosRRnJBpq
-	MRcVJwIAwITzbXYDAAA=
-X-CMS-MailID: 20240328200141eucas1p2f85de76e86cb8cc192b0d495279af934
-X-Msg-Generator: CA
-X-RootMTR: 20240302152805eucas1p22ac49edeee0be22bcf5562daeba11716
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240302152805eucas1p22ac49edeee0be22bcf5562daeba11716
-References: <CGME20240302152805eucas1p22ac49edeee0be22bcf5562daeba11716@eucas1p2.samsung.com>
-	<tencent_8599CCEFED19AF4A8A5A358862B226FD8A05@qq.com>
+References: <20240327160314.9982-1-apais@linux.microsoft.com>
+ <20240327160314.9982-3-apais@linux.microsoft.com> <ZgUGXTKPVhrA1tam@matsya>
+ <2e9257af-c123-406b-a189-eaebeecc1d71@app.fastmail.com> <ZgW3j1qkLA-QU4iM@matsya>
+ <CAOMdWSKY9D75FM3bswUfXn2o7bGtrei3G5kLt6JdcdOPDXaG8g@mail.gmail.com> <678ba20b-9f1d-41cb-8a25-e716b61ffafe@app.fastmail.com>
+In-Reply-To: <678ba20b-9f1d-41cb-8a25-e716b61ffafe@app.fastmail.com>
+From: Allen <allen.lkml@gmail.com>
+Date: Thu, 28 Mar 2024 13:01:55 -0700
+Message-ID: <CAOMdWSKC4B8zn6N+=5DssB_BiR6JkHBEpJr0ohKb149eJvCKMQ@mail.gmail.com>
+Subject: Re: [PATCH 2/9] dma: Convert from tasklet to BH workqueue
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Vinod Koul <vkoul@kernel.org>, Allen Pais <apais@linux.microsoft.com>, 
+	linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>, 
+	Kees Cook <keescook@chromium.org>, Hector Martin <marcan@marcan.st>, 
+	Sven Peter <sven@svenpeter.dev>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Paul Cercueil <paul@crapouillou.net>, Eugeniy.Paltsev@synopsys.com, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Viresh Kumar <vireshk@kernel.org>, 
+	Frank Li <Frank.Li@nxp.com>, Leo Li <leoyang.li@nxp.com>, zw@zh-kernel.org, 
+	Zhou Wang <wangzhou1@hisilicon.com>, haijie1@huawei.com, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Sean Wang <sean.wang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	=?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, logang@deltatee.com, 
+	Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, 
+	Robert Jarzmik <robert.jarzmik@free.fr>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
+	Patrice Chotard <patrice.chotard@foss.st.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, peter.ujfalusi@gmail.com, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Jassi Brar <jassisinghbrar@gmail.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, maintainers@bluecherrydvr.com, 
+	aubin.constans@microchip.com, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Manuel Lauss <manuel.lauss@gmail.com>, =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>, 
+	"jh80.chung" <jh80.chung@samsung.com>, oakad@yahoo.com, 
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	brucechang@via.com.tw, HaraldWelte@viatech.com, pierre@ossman.eu, 
+	Duncan Sands <duncan.sands@free.fr>, Alan Stern <stern@rowland.harvard.edu>, 
+	Oliver Neukum <oneukum@suse.com>, openipmi-developer@lists.sourceforge.net, 
+	dmaengine@vger.kernel.org, asahi@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, 
+	linux-mips@vger.kernel.org, imx@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org, linux-mediatek@lists.infradead.org, 
+	linux-actions@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	linux-tegra@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, linux-media@vger.kernel.org, 
+	"linux-mmc @ vger . kernel . org" <linux-mmc@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-s390@vger.kernel.org, 
+	Netdev <netdev@vger.kernel.org>, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
---o5jgyvl67e7knwjj
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> >> > Since almost every driver associates the tasklet with the
+> >> > dma_chan, we could go one step further and add the
+> >> > work_queue structure directly into struct dma_chan,
+> >> > with the wrapper operating on the dma_chan rather than
+> >> > the work_queue.
+> >>
+> >> I think that is very great idea. having this wrapped in dma_chan would
+> >> be very good way as well
+> >>
+> >> Am not sure if Allen is up for it :-)
+> >
+> >  Thanks Arnd, I know we did speak about this at LPC. I did start
+> > working on using completion. I dropped it as I thought it would
+> > be easier to move to workqueues.
+>
+> It's definitely easier to do the workqueue conversion as a first
+> step, and I agree adding support for the completion right away is
+> probably too much. Moving the work_struct into the dma_chan
+> is probably not too hard though, if you leave your current
+> approach for the cases where the tasklet is part of the
+> dma_dev rather than the dma_chan.
+>
 
-On Sat, Mar 02, 2024 at 11:27:45PM +0800, wenyang.linux@foxmail.com wrote:
-> From: Wen Yang <wenyang.linux@foxmail.com>
->=20
+ Alright, I will work on moving work_struck into the dma_chan and
+leave the dma_dev as is (using bh workqueues) and post a RFC.
+Once reviewed, I could move to the next step.
 
-<--- snip --->
+Thank you.
 
-> diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
-> index 6ef887c19c48..84e759a8328f 100644
-> --- a/kernel/sysctl-test.c
-> +++ b/kernel/sysctl-test.c
-> @@ -367,6 +367,35 @@ static void sysctl_test_api_dointvec_write_single_gr=
-eater_int_max(
->  	KUNIT_EXPECT_EQ(test, 0, *((int *)table.data));
->  }
-> =20
-> +/*
-> + * Test that registering an invalid extra value is not allowed.
-> + */
-> +static void sysctl_test_register_sysctl_sz_invalid_extra_value(
-> +		struct kunit *test)
-> +{
-> +	unsigned char data =3D 0;
-> +	struct ctl_table table[] =3D {
-I'm pretty sure that this is going to clash with the constification that
-Thomas is working on. Please re-work this patch knowing that these
-ctl_tables are going to have to change to const at some point.
-
-> +		{
-> +			.procname	=3D "foo",
-> +			.data		=3D &data,
-> +			.maxlen		=3D sizeof(u8),
-> +			.mode		=3D 0644,
-> +			.proc_handler	=3D proc_dou8vec_minmax,
-> +			.extra1		=3D SYSCTL_ZERO,
-> +			.extra2		=3D SYSCTL_ONE_THOUSAND,
-> +		},
-> +		{}
-Don't use the sentinel here. We are removing them and all new sysctl
-tables (even the test ones) should be created without them
-
-> +	};
-> +	unsigned int size =3D ARRAY_SIZE(table);
-You do not need size here. When you use register_sysctl, the size will
-be automatically calculated for you.
-
-> +
-> +	KUNIT_EXPECT_NULL(test, register_sysctl_sz("foo", table, size));
-> +	table[0].extra1 =3D SYSCTL_ONE_THOUSAND;
-> +	KUNIT_EXPECT_NULL(test, register_sysctl_sz("foo", table, size));
-> +	table[0].extra1 =3D SYSCTL_ONE_HUNDRED;
-> +	table[0].extra2 =3D SYSCTL_TWO_HUNDRED;
-> +	KUNIT_EXPECT_NOT_NULL(test, register_sysctl_sz("foo", table, size));
-Replace all these by register_sysctl please.
-
-> +}
-> +
->  static struct kunit_case sysctl_test_cases[] =3D {
->  	KUNIT_CASE(sysctl_test_api_dointvec_null_tbl_data),
->  	KUNIT_CASE(sysctl_test_api_dointvec_table_maxlen_unset),
-> @@ -378,6 +407,7 @@ static struct kunit_case sysctl_test_cases[] =3D {
->  	KUNIT_CASE(sysctl_test_dointvec_write_happy_single_negative),
->  	KUNIT_CASE(sysctl_test_api_dointvec_write_single_less_int_min),
->  	KUNIT_CASE(sysctl_test_api_dointvec_write_single_greater_int_max),
-> +	KUNIT_CASE(sysctl_test_register_sysctl_sz_invalid_extra_value),
->  	{}
->  };
-> =20
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index f67b39d3d6e5..28888744626a 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -977,16 +977,10 @@ int proc_dou8vec_minmax(struct ctl_table *table, in=
-t write,
->  	if (table->maxlen !=3D sizeof(u8))
->  		return -EINVAL;
-> =20
-> -	if (table->extra1) {
-> -		min =3D *(unsigned int *) table->extra1;
-> -		if (min > 255U)
-> -			return -EINVAL;
-> -	}
-> -	if (table->extra2) {
-> -		max =3D *(unsigned int *) table->extra2;
-> -		if (max > 255U)
-> -			return -EINVAL;
-> -	}
-> +	if (table->extra1)
-> +		min =3D *(unsigned char *) table->extra1;
-> +	if (table->extra2)
-> +		max =3D *(unsigned char *) table->extra2;
-> =20
->  	tmp =3D *table;
-> =20
-> --=20
-> 2.25.1
->=20
-
---=20
-
-Joel Granados
-
---o5jgyvl67e7knwjj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmYFoJUACgkQupfNUreW
-QU8CjQv+Pgocvz4Gd33upP9+RQKbhhX72UVKZFRIIwEViy/M93mkHVAH/OzSwA6x
-TMht01qmi2ZtFJjUM4N6WdHnzLtflrDKLqUasdOjvF5ufrBKxa0dj548Xfqg4xHi
-06vRchhZbfaRK3Sj5F3E4X3gNAkgY0sfz/ugRw7ZUAx0logTh8lxk/7Yz7kyY/fN
-AZGL/3ITwopK/7hb8csHFLndg94LGXTgpvj9yZtql+cKfgRng2AU2MGISUkSJpz1
-QBkLDP1Njp48t+YeY5oN4qyeFihD6v/ZaIpGBUFsluVCThMy5I0OEg27O3s++nZX
-PTdjkxOR57S1cvn6vlTXgjDgUy8AS5QlxzP2gKPcuhdMdIyGFHFliftG70GnFmk2
-05JIeM1HEGxEM+UMgxSsnsEilZoegTZ/KrYMdLJ62fIYdlcaZucCVZhf/BHVoRtA
-yTWvNlY3mu0t5uTJwkdDMdPnmnJC1oAtLqGp7PXSY/7s4y3c9M5hG4DPjpK+FPsR
-6kWYpr5x
-=kGut
------END PGP SIGNATURE-----
-
---o5jgyvl67e7knwjj--
+- Allen
