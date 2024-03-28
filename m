@@ -1,133 +1,64 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F1B130E3B
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 18:27:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB2712FB36;
+	Thu, 28 Mar 2024 18:28:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711650439; cv=none; b=GYatNWIExwtxGdBtHrpGFCygyzw8/qyFrAlcmJyNrHOel1eLbDc+Wn3v3wrdGsqvCaSFJQ/GjQHtlGVg6GQe3+1u77iMTp7i9GBhcSBdXrYGkUIAjh1uOXl4MjO6qNW4wOps6bH6EJxcKPqEuPKvlZac3FLSijnuPkEBHaYExcg=
+	t=1711650501; cv=none; b=bO+1Z4IeFoyWgI0Jcng6JihJpgbytqGBfcnXuZqR1r7MMzNM0QXGf1TAyqHRP2XA6u1gS0eNS38bqldBKgbdtxkE0YLYlrI/Bp0VY05kbeJNffGF/N8uKMA1XX/XZ08B2JZ5R3Bb3SLcd4zopN2SneMmkInYuXX88rilXFmelEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711650439; c=relaxed/simple;
-	bh=gqw95WreaXzk3tMtnlHwBkwwBSkVdhBkoy3UNovDKa0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b70gVPS60ErCoJihU92V99LeWXXpvSizy6MSk1B4ec9cO2IW8zeVSbjbSLQHmmfziyIPO3vSVgEfv4P2boeY+5L5jngbmx9F29VRBBU7yubvVb4yzBEbcPcp5NgEyZjP14Hwu5UL8McZwEizUfxIyijq1LfK8Wl8gBo+LKwE+90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=z8LJgOgn; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1711650501; c=relaxed/simple;
+	bh=qnTHkMKWFqmASjF7Mj+8qIPTwlEXLcYYW+bC2hrrVzU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WIDDJNcxu+OPLn6XFdQEXjf+Lx4QQEj5Q/1qO2B/hZ8IC2j8mXX0OdvqzvoyqbV/FyL0dEovxi6zNQKd3iqNZf/L9aCMvYBc6k1ioQN2hCQX4922OJbWXluvBUPnKM7xzjZ+7vPRCfrfUsR9t5K43WiY1MoWzLxYYd4sDdTSjhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e/+K/ruK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="z8LJgOgn"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-56beb6e68aeso1251a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 11:27:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711650434; x=1712255234; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=85okgPI5wmbRinylcWdySXAu6sDEJZPcZsliJr3EhXc=;
-        b=z8LJgOgnrwMqle+GIquH01Fabr8jP4LsXvMPDVfpqJmtQbRVcAOmb9hi8P9DM2vYB/
-         9/8aCRzvhIoEP7q8fVyjIXdY1G+NNDuZNNNErMi3NNzOz7nJmLHHkxD7p4GC7k3QxsMz
-         NxQCOtPevO/USSxnjRQPzdpz6wSa2DF++8BepS++RKdAW9VhHBwmdMsTwJqZahvKUSGb
-         A+IF244xSG0KKVMOeABtEFEvQ0AVoSsV9nUzKJCMTV86RiTdF9locAxPj4cDSevWKtUP
-         9nuFRoD7/cC05LRDAMdBFP9U6dIANqfolcMfPReR2RpJN6923ZUZtVQlalah/H7za/lk
-         4l+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711650434; x=1712255234;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=85okgPI5wmbRinylcWdySXAu6sDEJZPcZsliJr3EhXc=;
-        b=g6dMcIEBLPWJb+gBkKeL/jqL2mzj7JzgRqzqTM27eJmx+8kaWC0XWD8pO8JTM1Ntw+
-         2ZExHOMNS6uyP6qSlKads6xXSaq0XTr1enZ6F/BP0uxdwNHMNNgu96UlR8pG6m/Hvr9f
-         q2cbANuetMpjEGfKJTN2A8fPlBzDJIByTEjEfZSGiLunaRS1UvHzH6KYmIX5ICBmWpck
-         EoG4aFL2dwZKU0WXCPD2BhqpFonaFZr37n75Y66x0kT4bZoQEjcn9bfRBicwDvqgFCgd
-         XCAd/4qb3LDUnXtoCfgVdK4MoP2j09z9lzMFWpGAmynaNawAZji5aCWkdJ2dPgrmVA2T
-         0MBg==
-X-Forwarded-Encrypted: i=1; AJvYcCV3tCe64LmY2/6RhYz7CcTCIievGdL3obBBX0zicUZwoNuVMRw6JTioZEcwQhngKfylSH+nqSk9m+5gG4U8hxiRu5OV0UXU65AZ9j6l
-X-Gm-Message-State: AOJu0YwMquhLxzKOyV8ZZxdYKXX/SHgJ1SSkvgmsNc3hcMPdpBLXGndu
-	DV0NieI7eBm52fmG6Y5SRbuT1rTsZ64MzJAbYGqOkmtpiNJuvrKN+LHf+nvBIxnaOfYMdjCgFFq
-	Whyl1gmZ7XOuAUHHpUrpjlMjnH7r4wqJv8QmD
-X-Google-Smtp-Source: AGHT+IHv6+ovKmGeILX0PNxbWAx4gi+qItJhFc9E/82fPI5xJuf6KrzJPUedneSe7yPE7D3rJKz2FyvDSWy8TPjOzGc=
-X-Received: by 2002:aa7:cd1a:0:b0:56c:53ac:b34 with SMTP id
- b26-20020aa7cd1a000000b0056c53ac0b34mr15774edw.1.1711650434337; Thu, 28 Mar
- 2024 11:27:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e/+K/ruK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAAD7C433C7;
+	Thu, 28 Mar 2024 18:28:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711650500;
+	bh=qnTHkMKWFqmASjF7Mj+8qIPTwlEXLcYYW+bC2hrrVzU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=e/+K/ruKxZb7JvjBJcoirN9aLxCRTyZpGFXYzUtBh+XcBHlV0RLiUsH/ELMzaekKK
+	 ic8Nr98JWNxPmMjJ5WNnrQZNNpxdHB/45BjPqVo1D6qftZvJfRTg+gvZrvJ8BcXm5U
+	 umsPNXdQ8/3IAa4gLPFPMo0s8Th6f6V6vxeDnqEkXlInG9ek42QSvSlcscILVfMI8j
+	 r5iLLBn583f4KnMLhZNOL0p1JvYvoEOsByhDSxO9yYlagbTfv3x0pXgq6N2sOpbGHJ
+	 FKy6I0g4ow/sRsXYFyAk0S/NqWtvzxMOcRgmnf7Mg4zyrGoqhzClmGc6Iw7YWIZVMy
+	 EOg2vtGhCfuDg==
+Date: Thu, 28 Mar 2024 11:28:18 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Aleksandr Mishin <amishin@t-argos.ru>
+Cc: Sunil Goutham <sgoutham@marvell.com>, Linu Cherian
+ <lcherian@marvell.com>, Geetha sowjanya <gakula@marvell.com>, Jerin Jacob
+ <jerinj@marvell.com>, hariprasad <hkelam@marvell.com>, Subbaraya Sundeep
+ <sbhatta@marvell.com>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <lvc-project@linuxtesting.org>
+Subject: Re: [PATCH] octeontx2-af: Add array index check
+Message-ID: <20240328112818.49c0de17@kernel.org>
+In-Reply-To: <20240328081648.13193-1-amishin@t-argos.ru>
+References: <20240328081648.13193-1-amishin@t-argos.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240328142004.2144568-1-jackmanb@google.com>
-In-Reply-To: <20240328142004.2144568-1-jackmanb@google.com>
-From: Daniel Latypov <dlatypov@google.com>
-Date: Thu, 28 Mar 2024 11:27:01 -0700
-Message-ID: <CAGS_qxr_vdix2mnoZve+L4EZv4wO-XdnJ1burnn7fM-at6EuEg@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: kunit: Clarify test filter format
-To: Brendan Jackman <jackmanb@google.com>
-Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Brendan Higgins <brendan.higgins@linux.dev>, davidgow@google.com, rmoar@google.com, 
-	corbet@lwn.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 28, 2024 at 7:20=E2=80=AFAM 'Brendan Jackman' via KUnit
-Development <kunit-dev@googlegroups.com> wrote:
->
-> It seems obvious once you know, but at first I didn't realise that the
-> suite name is part of this format. Document it and add example.
->
-> Signed-off-by: Brendan Jackman <jackmanb@google.com>
-> ---
->  Documentation/dev-tools/kunit/run_wrapper.rst | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/dev-tools/kunit/run_wrapper.rst b/Documentatio=
-n/dev-tools/kunit/run_wrapper.rst
-> index 19ddf5e07013..e75a5fc05814 100644
-> --- a/Documentation/dev-tools/kunit/run_wrapper.rst
-> +++ b/Documentation/dev-tools/kunit/run_wrapper.rst
-> @@ -156,13 +156,20 @@ Filtering tests
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
->  By passing a bash style glob filter to the ``exec`` or ``run``
-> -commands, we can run a subset of the tests built into a kernel . For
-> +commands, we can run a subset of the tests built into a kernel,
-> +identified by a string like ``$suite_name.$test_name``. For
+On Thu, 28 Mar 2024 11:16:48 +0300 Aleksandr Mishin wrote:
+> In rvu_map_cgx_lmac_pf() the 'iter', which is used as an array index, can reach
+> value (up to 14) that exceed the size (MAX_LMAC_COUNT = 8) of the array.
+> Fix this bug by adding 'iter' value check.
 
-Apologies for the overly terse docs, that's my fault :)
-I'm wondering if we can further improve it while we're here.
+I'm guessing you got the 14 from:
 
-Note, the format for the glob is: $suite_name[.$test_name].
+	hw->lmac_per_cgx = (nix_const >> 8) & 0xFULL;
 
-This current wording and examples (before and after this change) might
-make the user think otherwise, i.e. that it works like
-  effective_name =3D suite_name + '.' + test_name
-  return glob_matches(effective_name, filter_glob)
-
-E.g. given a test name like `suite.test_name` and glob=3D'suite*name'
-they might expect it to match, but it does *not*.
-
-The logic actually works like:
-  suite_glob, test_glob =3D split(filter_glob)
-  if not_glob_matches(suite_name, suite_glob):
-     return False
-  if test_glob and not glob_matches(test_name, test_glob):
-     return False
-  return True
-
-Perhaps expanding the list of examples to cover more of the edge cases
-could help get the right intuition?
-
-E.g. perhaps these:
-  kunit.py run <suite_name>  # runs all tests in a specific suite
-  kunit.py run <suite_name>.<test_name>  # run a specific test
-
-  kunit.py run suite_prefix*  # what the current example shows
-  kunit.py run *.*test_suffix  # matches all suites, only tests w/ a
-certain suffix
-  kunit.py run suite_prefix*.*test_suffix # combined version of above
-
-Thoughts?
-
-Thanks,
-Daniel
+Seems more reasonable to cap the size at that point than every use
+afterwards.
+-- 
+pw-bot: cr
