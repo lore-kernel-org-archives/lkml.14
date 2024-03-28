@@ -1,180 +1,89 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DC113BC27;
-	Thu, 28 Mar 2024 19:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB9413BC27
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 19:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711655737; cv=none; b=fMSqC8J6cpltg8xUHnI7b2zNNtLWL6Zi4GzqqugNvkNg6IHnAhXGNwzDeXvr/CixSSgn4ZQl9T5TGnbuH2KSML+JLYNboPNc/LcZoDuxz7l6MpXcJCMU6ogKuRpu+vHvMW0y7TTJW5isxFcobIZzGpYFKcHU6Le/pTBoPdU4bok=
+	t=1711655744; cv=none; b=t8e6ME2PVBFtB2LnsxE3/G5RpLQDocaLJvlHuM4rl52s5GLEyjyD/ywmxNvSEQW4EfCNITkQDcYDISQ6/AvkwLoplTjnvo+0XqXWT0stqsgeEuK0hsArihpbWsx0y8UWtpKJwFgvpLNt54OMwd3HLKHxWh8BE1nXJQuDbYMC/qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711655737; c=relaxed/simple;
-	bh=wWj//ZRkBbl8k60DprtNUbePyBaev0Or6IZeN9Y0ZaE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mZIvUr8Ft/KcqoEXfePbU/oC7L7pb5vXuAak7Moopg0u8DYRpf2OhKbqBQoZDHk5OSbaFcFKCk60ZcfZc0o8I5TWlVdbth4OPavhLW5DzI0hDW0AqSG1HWy44ILy3LRK2mpjP4agd7atnh2NzCNM2xMNl9ZoMxz3W6UGCfWhgB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D3QhY6pb; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711655744; c=relaxed/simple;
+	bh=3dm7hXsEyv3o3RpQMnPL3+cUR/Meb3nCFGnidYwVRSk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tWoZ/hB0VPCffwbY2482Fdn6VFV62TO6NL1OYvjwgsZPmMDosxeWyAbHCLmi6EArek8UTzTKbZcga4mtk1SVJE5hGfFHzGw19660IWVbVTgOW55rBlDosDU1/m+QtpHxE5EhLZojaJPP582n2MeTp7Iwh71Zsg1U5OYkWehsyTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oWnTZB6k; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D3QhY6pb"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1dddbe47ac1so16416315ad.1;
-        Thu, 28 Mar 2024 12:55:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711655735; x=1712260535; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FSb8eKkSmpgApznHJ4AQVQvwhW2C0OCmaJRtnqePdn0=;
-        b=D3QhY6pbNoh936GluYPFBXQN+gzC+/IFa3A75000ODAywdMBJiQT+U42SxvtTuMDFb
-         Uyc/xjuyo22P6jsAtp0ie356IfQXK4oGD6R7zJSodh5D9VC5R67ElIZJU9H731ZoK4VG
-         91drqQ4dM73wssfGwr8oKI2K4HfjXb724LO+axkabUIDo7JjhjqSuj9K0HY5+CGnRWXN
-         VnuzTzfKLSfizfF2Rq8Evq7YWiSRcUzaRHTP7j+ydrgmCOCn/pq585tJ+3UUuDfQxGmH
-         t5mJfWVcvmX6EGreoQFxwL77RA43EVIunyZuURHt5vVWGOI3amCTVtf+ZzACv3ykypIC
-         LN8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711655736; x=1712260536;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FSb8eKkSmpgApznHJ4AQVQvwhW2C0OCmaJRtnqePdn0=;
-        b=NMNsHNwAiSfWSPrQGzGriecta0S7n5TjTjJIgUZD6c4VBgRDrlzLPVVOdyKPwpgMWG
-         4AahqgOw+RNm5ht/5lekvoiAWazv9rTCiVq9qxo7N8hI4ch1oHLNLkQP7fzFWSuph1m3
-         P0ZB2m/mKLBvGl82yqCqg/H/PO0J7n/2uHXaQfMyZehtVWvxsbtdPnnC4pB+7fNxP/Gg
-         DUpLiZmvN86Nn1xuh1qQ51S4FyELzDV0lM1eywYtoeO0ql12Q3X9e2Vh8/bTsHoyKIsy
-         5dU5SLoZmpBguGusQGdZVxJbXm6bDhMX/VcS4Z+uEAdGbG5gPLEIwUGgq4NriqkBCVqn
-         LJ4g==
-X-Forwarded-Encrypted: i=1; AJvYcCUmYaXS3HbbHxuOnQ0hwWb1NaR0B20EYjD7hqV/rI0HWTRW3n0cVyviqgmrOAVMrEIWFhfYNsna5+Cf+p4CM/5SJAckxYVTyHadxTVr
-X-Gm-Message-State: AOJu0Ywlnoiy4SEiFcLyiUMZtUdZkZNhPKRXEwfdjzw5lIPEczX3sshI
-	6tBU2Gp8Ci7IoxJpXrtycu2xlBipnQ0Ns8Kh7e2weyBzu5Wq173VmRwbEdFI
-X-Google-Smtp-Source: AGHT+IEYlLJemolUcBMlceKN++uY05ZJZtrov0oZFQWPSostxpmZPLoRzERpdQ0s6Sky87FcZRHvVg==
-X-Received: by 2002:a17:903:1c7:b0:1e0:115c:e05a with SMTP id e7-20020a17090301c700b001e0115ce05amr5392991plh.12.1711655735653;
-        Thu, 28 Mar 2024 12:55:35 -0700 (PDT)
-Received: from wedsonaf-dev.home.lan ([189.124.190.154])
-        by smtp.googlemail.com with ESMTPSA id p16-20020a170902e75000b001dd7a97a266sm2006520plf.282.2024.03.28.12.55.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 12:55:35 -0700 (PDT)
-From: Wedson Almeida Filho <wedsonaf@gmail.com>
-To: rust-for-linux@vger.kernel.org
-Cc: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	linux-kernel@vger.kernel.org,
-	Wedson Almeida Filho <walmeida@microsoft.com>
-Subject: [PATCH v2 5/5] samples: rust: add in-place initialisation sample
-Date: Thu, 28 Mar 2024 16:54:57 -0300
-Message-Id: <20240328195457.225001-6-wedsonaf@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240328195457.225001-1-wedsonaf@gmail.com>
-References: <20240328195457.225001-1-wedsonaf@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oWnTZB6k"
+Date: Thu, 28 Mar 2024 15:55:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1711655740;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qZtbR5ybrM4VN5GkPPv/g85e7nM016zaozBUPlrxiOw=;
+	b=oWnTZB6kB9RObBVUWC/hoNPZhiMDaIS4FrtDJC3YG581FBvbZRo8QPodfZzy1XDijlrlj2
+	P6YB8HOLpxFyGwFBccNqr0Jiz+2zMdON2s77rPR4nar3PWbDLXIMyV/gdCigVUGLt9wZdP
+	TAamaZnrSzR9I7ilSTIl2Rr1LRdSwVk=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Tejun Heo <tj@kernel.org>
+Cc: Kemeng Shi <shikemeng@huaweicloud.com>, akpm@linux-foundation.org, 
+	willy@infradead.org, jack@suse.cz, bfoster@redhat.com, dsterba@suse.com, 
+	mjguzik@gmail.com, dhowells@redhat.com, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 0/6] Improve visibility of writeback
+Message-ID: <wgec7wbhdn7ilvwddcalkbgxzjutp6h7dgfrijzffb64pwpksz@e6tqcybzfu2f>
+References: <20240327155751.3536-1-shikemeng@huaweicloud.com>
+ <qyzaompqkxwdquqtofmqghvpi4m3twkrawn26rxs56aw4n2j3o@kt32f47dkjtu>
+ <ZgXFrabAqunDctVp@slm.duckdns.org>
+ <n2znv2ioy62rrrzz4nl2x7x5uighuxf2fgozhpfdkj6ialdiqe@a3mnfez7mitl>
+ <ZgXJH9XQNqda7fpz@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZgXJH9XQNqda7fpz@slm.duckdns.org>
+X-Migadu-Flow: FLOW_OUT
 
-From: Wedson Almeida Filho <walmeida@microsoft.com>
+On Thu, Mar 28, 2024 at 09:46:39AM -1000, Tejun Heo wrote:
+> Hello,
+> 
+> On Thu, Mar 28, 2024 at 03:40:02PM -0400, Kent Overstreet wrote:
+> > Collecting latency numbers at various key places is _enormously_ useful.
+> > The hard part is deciding where it's useful to collect; that requires
+> > intimate knowledge of the code. Once you're defining those collection
+> > poitns statically, doing it with BPF is just another useless layer of
+> > indirection.
+> 
+> Given how much flexibility helps with debugging, claiming it useless is a
+> stretch.
 
-This is a modified version of rust_minimal that is initialised in-place
-and has a mutex.
+Well, what would it add?
 
-Signed-off-by: Wedson Almeida Filho <walmeida@microsoft.com>
----
- samples/rust/Kconfig         | 11 +++++++++
- samples/rust/Makefile        |  1 +
- samples/rust/rust_inplace.rs | 44 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 56 insertions(+)
- create mode 100644 samples/rust/rust_inplace.rs
+> > The time stats stuff I wrote is _really_ cheap, and you really want this
+> > stuff always on so that you've actually got the data you need when
+> > you're bughunting.
+> 
+> For some stats and some use cases, always being available is useful and
+> building fixed infra for them makes sense. For other stats and other use
+> cases, flexibility is pretty useful too (e.g. what if you want percentile
+> distribution which is filtered by some criteria?). They aren't mutually
+> exclusive and I'm not sure bdi wb instrumentation is on top of enough
+> people's minds.
+> 
+> As for overhead, BPF instrumentation can be _really_ cheap too. We often run
+> these programs per packet.
 
-diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
-index b0f74a81c8f9..59f44a8b6958 100644
---- a/samples/rust/Kconfig
-+++ b/samples/rust/Kconfig
-@@ -20,6 +20,17 @@ config SAMPLE_RUST_MINIMAL
- 
- 	  If unsure, say N.
- 
-+config SAMPLE_RUST_INPLACE
-+	tristate "Minimal in-place"
-+	help
-+	  This option builds the Rust minimal module with in-place
-+	  initialisation.
-+
-+	  To compile this as a module, choose M here:
-+	  the module will be called rust_inplace.
-+
-+	  If unsure, say N.
-+
- config SAMPLE_RUST_PRINT
- 	tristate "Printing macros"
- 	help
-diff --git a/samples/rust/Makefile b/samples/rust/Makefile
-index 03086dabbea4..791fc18180e9 100644
---- a/samples/rust/Makefile
-+++ b/samples/rust/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- 
- obj-$(CONFIG_SAMPLE_RUST_MINIMAL)		+= rust_minimal.o
-+obj-$(CONFIG_SAMPLE_RUST_INPLACE)		+= rust_inplace.o
- obj-$(CONFIG_SAMPLE_RUST_PRINT)			+= rust_print.o
- 
- subdir-$(CONFIG_SAMPLE_RUST_HOSTPROGS)		+= hostprogs
-diff --git a/samples/rust/rust_inplace.rs b/samples/rust/rust_inplace.rs
-new file mode 100644
-index 000000000000..0410e97a689f
---- /dev/null
-+++ b/samples/rust/rust_inplace.rs
-@@ -0,0 +1,44 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Rust minimal in-place sample.
-+
-+use kernel::prelude::*;
-+use kernel::{new_mutex, sync::Mutex};
-+
-+module! {
-+    type: RustInPlace,
-+    name: "rust_inplace",
-+    author: "Rust for Linux Contributors",
-+    description: "Rust minimal in-place sample",
-+    license: "GPL",
-+}
-+
-+#[pin_data(PinnedDrop)]
-+struct RustInPlace {
-+    #[pin]
-+    numbers: Mutex<Vec<i32>>,
-+}
-+
-+impl kernel::InPlaceModule for RustInPlace {
-+    fn init(_module: &'static ThisModule) -> impl PinInit<Self, Error> {
-+        pr_info!("Rust in-place minimal sample (init)\n");
-+        pr_info!("Am I built-in? {}\n", !cfg!(MODULE));
-+        try_pin_init!(Self {
-+            numbers <- {
-+                let mut numbers = Vec::new();
-+                numbers.push(72, GFP_KERNEL)?;
-+                numbers.push(108, GFP_KERNEL)?;
-+                numbers.push(200, GFP_KERNEL)?;
-+                new_mutex!(numbers)
-+            },
-+        })
-+    }
-+}
-+
-+#[pinned_drop]
-+impl PinnedDrop for RustInPlace {
-+    fn drop(self: Pin<&mut Self>) {
-+        pr_info!("My numbers are {:?}\n", *self.numbers.lock());
-+        pr_info!("Rust minimal inplace sample (exit)\n");
-+    }
-+}
--- 
-2.34.1
+The main things I want are just
+ - elapsed time since last writeback IO completed, so we can see at a
+   glance if it's stalled
+ - time stats on writeback io initiation to completion
 
+The main value of this one will be tracking down tail latency issues and
+finding out where in the stack they originate.
