@@ -1,132 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B2A2C6AD;
-	Thu, 28 Mar 2024 15:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00BBC139F
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 15:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711638651; cv=none; b=RTF9NSHXD+5MhH16WmzEsgBTAMHv5ymC3bHdaNYbwEbeBwYZmuhtjESbIG32YEAU/3A9o9B9sRqpH813TbJ1VJlV9ScMQoC5me7S318cwAXy0IDCcrc/rueWivK4dn2euhCnfWdvrVO79K6rnoW+CmrqWHIywX9Mu3knaQYMK1A=
+	t=1711638722; cv=none; b=Zsg2nihAwO3ubLbc2WDuIaVXe8OG9eHmCahGQeC/WFp2SnUJ1XBmIdmelshVvDWl9GxjayPDnQK3zqGjShk6UQWAXusmIh5p9nAP1xj0i+V2j2vf4HG6ntvNiVmAb/MIShyOeF3R5CrpV74nwAcYzQdAxDeQHgli8p1Ob61axZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711638651; c=relaxed/simple;
-	bh=r2D0EqkpCrFqFode/ZlZv88Dg4Xknt6j7iyrIgxbYTU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZrLs/p/darscR+NvP4+RVCZY73NhOQzeshRJ3qXd6r1FWuvJGfJv0F4JqW6gZYetnh3TH61LJ9Zc1Ch7Kb0z0CYuRI+BHxvs9E5PKPZqVeFXneU3UMXcNHyTC7QUddAc6/+WXNB0fbW87TAnaNWrSnH93X9jJXa8kxH/O/lhXDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95D2BC433C7;
-	Thu, 28 Mar 2024 15:10:47 +0000 (UTC)
-Date: Thu, 28 Mar 2024 11:13:30 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: =?UTF-8?B?5qKm6b6Z6JGj?= <dongmenglong.8@bytedance.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Jiri Olsa
- <jolsa@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov
- <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, Song Liu
- <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
- <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
- Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, "David S.
- Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, Dave
- Hansen <dave.hansen@linux.intel.com>, X86 ML <x86@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Quentin Monnet
- <quentin@isovalent.com>, bpf <bpf@vger.kernel.org>, linux-arm-kernel
- <linux-arm-kernel@lists.infradead.org>, LKML
- <linux-kernel@vger.kernel.org>, linux-riscv
- <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>,
- Network Development <netdev@vger.kernel.org>,
- linux-trace-kernel@vger.kernel.org, "open list:KERNEL SELFTEST FRAMEWORK"
- <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [External] Re: [PATCH bpf-next v2 1/9] bpf: tracing: add
- support to record and check the accessed args
-Message-ID: <20240328111330.194dcbe5@gandalf.local.home>
-In-Reply-To: <CALz3k9jG5Jrqw=BGjt05yMkEF-1u909GbBYrV-02W0dQtm6KQQ@mail.gmail.com>
-References: <20240311093526.1010158-1-dongmenglong.8@bytedance.com>
-	<20240311093526.1010158-2-dongmenglong.8@bytedance.com>
-	<CAADnVQKQPS5NcvEouH4JqZ2fKgQAC+LtcwhX9iXYoiEkF_M94Q@mail.gmail.com>
-	<CALz3k9i5G5wWi+rtvHPwVLOUAXVMCiU_8QUZs87TEYgR_0wpPA@mail.gmail.com>
-	<CAADnVQJ_ZCzMmT1aBsNXEBFfYNSVBdBXmLocjR0PPEWtYQrQFw@mail.gmail.com>
-	<CALz3k9icPePb0c4FE67q=u1U0hrePorN9gDpQrKTR_sXbLMfDA@mail.gmail.com>
-	<CAADnVQLwgw8bQ7OHBbqLhcPJ2QpxiGw3fkMFur+2cjZpM_78oA@mail.gmail.com>
-	<CALz3k9g9k7fEwdTZVLhrmGoXp8CE47Q+83r-AZDXrzzuR+CjVA@mail.gmail.com>
-	<CAADnVQLHpi3J6cBJ0QBgCQ2aY6fWGnVvNGdfi3W-jmoa9d1eVQ@mail.gmail.com>
-	<CALz3k9g-U8ih=ycJPRbyU9x_9cp00fNkU3PGQ6jP0WJ+=uKmqQ@mail.gmail.com>
-	<CALz3k9jG5Jrqw=BGjt05yMkEF-1u909GbBYrV-02W0dQtm6KQQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1711638722; c=relaxed/simple;
+	bh=4Pw+pFI94Xaxlpp7zHktGYlCAl2z0xnGa/oih8dZYgc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rSbzw+fVvYA64W8VbB6mEfvH9KY4+UJV9S1p0WFn1UvrmkklYG+KqZ/3Z+EePG9iAOYMlkPESNLn6h9D838q/arYiY5z5UvKGjPJ43Ap7UQyoSelso5Bf7YaWR6pUDY4WlcvsGzFRPDFvMK5dZC/Ogjlbp1ZR0ZC8Lc3udTAAHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K0Sgsalk; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K0Sgsalk"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dcc7cdb3a98so1018848276.2
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 08:12:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711638720; x=1712243520; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=K1dRERqIwvawP6yvst+7RzsJv2Gfa3ZP4TWtYVKk144=;
+        b=K0SgsalkI2tp6jrsOrtUEBk4vsiHwmRqWTO7fVoOG0lc/f2FOsoyJXSJwFt5N9LYWJ
+         OgFKevD3POjo9Qt093Bc5CPHw/ZFi4XlY3fNG2c4dZg6dT2oq6cB2BbMH6PpQRYo7c/e
+         JGRuzOzotJK3LxC03d9jC6DDAfRTRU4yH4ew/RruKqxDS4cey6V+0iifKP5kN/hTBtJe
+         fzuDZ6MaF/vdn7JcWhNGLIv7dIObgpKM9iYnNjxjphP325BU2YTEwbXO4n6vMfX3YG9H
+         2vht0iSadDy9gcZlJrtdc2SFOSs92G+RvSaaX04ZkS/io75llyh7ZZiHwYofgwQ0fnAB
+         JJ6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711638720; x=1712243520;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K1dRERqIwvawP6yvst+7RzsJv2Gfa3ZP4TWtYVKk144=;
+        b=hTK9iNYgHsat5n/AM9yfVpG1YEQ3Vk9c7eyADwd29pF2Q0Qarz3pWRo7VM/qnSqcI8
+         ejWKjefCNiHEDgBkiEp8312CggQIedXkBS3fh3gt0iHxaUH1d/TWEI63j2VMKww3WcAB
+         rH4ogJyL2inIVNJFoK8C8LnB0HEUbQ55LOCYPnAd8anDKlMhf2hVz2/QgtXSNovl1mNQ
+         0efGHhOoFczrwwkq8aQbY1zdPPYflA91h8umUPjwHXdmHS7KzsgqZ86tZL++CRnoAunQ
+         RFD99aelA6XTua456/MI6d7t2zmQSU+H6mIIL/pUj+RmLam4Cn0YoZvdEMr7D0BC5Gq+
+         GkBg==
+X-Forwarded-Encrypted: i=1; AJvYcCUdLU9iYim/ptTMOHZ/E+ewitxUtrGcRZGe5gwkAgDGzbHgBfpBiYXxOI+V/L4wCr7e0C4rB8wGG0VCW8G74Z0m/HHNMsWFtjsAV6dB
+X-Gm-Message-State: AOJu0Yzs/NCGKkOweg7UB6IixWrG4A1bcilO68DkCnIu7ogwxVJzHFJf
+	El6kFdmmDRtkfQkoRF8GnNFGBJOGiBammB3z0ao9eb0U4ESIXVL7tOXMUBRKIwYu0bceje4lo3Q
+	f1DZIMuthjU1uRE+3BfM4d09yXtKhBpf5yhetfA==
+X-Google-Smtp-Source: AGHT+IGrkzP9Sxso9Vjo20YSLlSXYjup2Hg+RTtCFuuy76qY0UhZk+SCGzz1Uxer7GzjgHrcr7xJIaioiBDkEDXa2kE=
+X-Received: by 2002:a25:db85:0:b0:dd1:7128:617b with SMTP id
+ g127-20020a25db85000000b00dd17128617bmr3216871ybf.38.1711638719977; Thu, 28
+ Mar 2024 08:11:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20240328-sm6350-dp-v1-0-215ca2b81c35@fairphone.com> <20240328-sm6350-dp-v1-3-215ca2b81c35@fairphone.com>
+In-Reply-To: <20240328-sm6350-dp-v1-3-215ca2b81c35@fairphone.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Thu, 28 Mar 2024 17:11:49 +0200
+Message-ID: <CAA8EJpp1XEh1CR8898HnStWizcgByREGk-2ae_Yr2xTvcrEbag@mail.gmail.com>
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: sm6350: Add DisplayPort controller
+To: Luca Weiss <luca.weiss@fairphone.com>
+Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Kuogee Hsieh <quic_khsieh@quicinc.com>, 
+	Krishna Manikandan <quic_mkrishn@quicinc.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, ~postmarketos/upstreaming@lists.sr.ht, 
+	phone-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 28 Mar 2024 22:43:46 +0800
-=E6=A2=A6=E9=BE=99=E8=91=A3 <dongmenglong.8@bytedance.com> wrote:
+On Thu, 28 Mar 2024 at 11:43, Luca Weiss <luca.weiss@fairphone.com> wrote:
+>
+> Add the node for the DisplayPort controller found on the SM6350 SoC.
+>
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
+>  arch/arm64/boot/dts/qcom/sm6350.dtsi | 88 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 88 insertions(+)
+>
 
-> I have done a simple benchmark on creating 1000
-> trampolines. It is slow, quite slow, which consume up to
-> 60s. We can't do it this way.
->=20
-> Now, I have a bad idea. How about we introduce
-> a "dynamic trampoline"? The basic logic of it can be:
->=20
-> """
-> save regs
-> bpfs =3D trampoline_lookup_ip(ip)
-> fentry =3D bpfs->fentries
-> while fentry:
->   fentry(ctx)
->   fentry =3D fentry->next
->=20
-> call origin
-> save return value
->=20
-> fexit =3D bpfs->fexits
-> while fexit:
->   fexit(ctx)
->   fexit =3D fexit->next
->=20
-> xxxxxx
-> """
->=20
-> And we lookup the "bpfs" by the function ip in a hash map
-> in trampoline_lookup_ip. The type of "bpfs" is:
->=20
-> struct bpf_array {
->   struct bpf_prog *fentries;
->  struct bpf_prog *fexits;
->   struct bpf_prog *modify_returns;
-> }
->=20
-> When we need to attach the bpf progA to function A/B/C,
-> we only need to create the bpf_arrayA, bpf_arrayB, bpf_arrayC
-> and add the progA to them, and insert them to the hash map
-> "direct_call_bpfs", and attach the "dynamic trampoline" to
-> A/B/C. If bpf_arrayA exist, just add progA to the tail of
-> bpf_arrayA->fentries. When we need to attach progB to
-> B/C, just add progB to bpf_arrayB->fentries and
-> bpf_arrayB->fentries.
->=20
-> Compared to the trampoline, extra overhead is introduced
-> by the hash lookuping.
->=20
-> I have not begun to code yet, and I am not sure the overhead is
-> acceptable. Considering that we also need to do hash lookup
-> by the function in kprobe_multi, maybe the overhead is
-> acceptable?
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Sounds like you are just recreating the function management that ftrace
-has. It also can add thousands of trampolines very quickly, because it does
-it in batches. It takes special synchronization steps to attach to fentry.
-ftrace (and I believe multi-kprobes) updates all the attachments for each
-step, so the synchronization needed is only done once.
-
-If you really want to have thousands of functions, why not just register it
-with ftrace itself. It will give you the arguments via the ftrace_regs
-structure. Can't you just register a program as the callback?
-
-It will probably make your accounting much easier, and just let ftrace
-handle the fentry logic. That's what it was made to do.
-
--- Steve
+-- 
+With best wishes
+Dmitry
