@@ -1,118 +1,200 @@
-Received: from 9.mo575.mail-out.ovh.net (9.mo575.mail-out.ovh.net [46.105.78.111])
+Received: from smtp-8fae.mail.infomaniak.ch (smtp-8fae.mail.infomaniak.ch [83.166.143.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34DE412DDA7
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 14:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.78.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3757525763
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 14:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711637595; cv=none; b=unTmNu3xe44JVSOt5l/kibPqfcLo15/3t1z064Do8K9Ka+zhczU89FcNa5ou+XTtuZvhRT0yN8TA42uMq4bMYTV8bfEQAv8MWnz8+nZA64zQ4rj46Uzbun0yZfqvrhd/6OIditQBPfvgjoSRajjWkZUrOPLVoGJ2gJm6i2ZUncY=
+	t=1711637599; cv=none; b=RBwli8nTVY3CCEsDimlEyezQ+wQlezPXLYEVFb/4OAmuecWxwXb4r3zci93s0ooU9mvWw2vfweMSWNq0ZVa5spHp5fMoGZM23vKlV4qgpguYBKldC3BbNhtHvSt2OOgzNfIcJkBKzFToeyFdGy5B417OuLC3KdGLm8XqLveWktU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711637595; c=relaxed/simple;
-	bh=PBil/XoTgdd3/TtGZlrRclNaQYhUhUn9fk15tLO9hdA=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=BJJV/J3czYszO29qkZOWHQYmZEqJNe/4SVqF1QTJ1AEY1lmv7HoLVLsmBo5KhjaYpQ352pixKYo+jGO8IoG7wYb8QKyMLntU9cxO5jQ9bpB2mRJ3jB8MQ0GbaVeaLyTCHEuB6aJynizf2J2p4yQ93o9wGi+kDruVJL0u7SlrsQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=milecki.pl; spf=pass smtp.mailfrom=milecki.pl; arc=none smtp.client-ip=46.105.78.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=milecki.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=milecki.pl
-Received: from director2.ghost.mail-out.ovh.net (unknown [10.108.2.72])
-	by mo575.mail-out.ovh.net (Postfix) with ESMTP id 4V55sD6mzLz1Sqp
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 14:44:16 +0000 (UTC)
-Received: from ghost-submission-6684bf9d7b-wxtpn (unknown [10.110.113.85])
-	by director2.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 7E9DF1FE90;
-	Thu, 28 Mar 2024 14:44:15 +0000 (UTC)
-Received: from milecki.pl ([37.59.142.101])
-	by ghost-submission-6684bf9d7b-wxtpn with ESMTPSA
-	id IMV9Hj+CBWbZXggAzwvfSA
-	(envelope-from <rafal@milecki.pl>); Thu, 28 Mar 2024 14:44:15 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-101G0045d0b1274-b274-498f-8ead-e6da2683c4fd,
-                    2235DC1EC97375EE3D784BB84CDB06A8C08B71DD) smtp.auth=rafal@milecki.pl
-X-OVh-ClientIp:51.255.71.60
+	s=arc-20240116; t=1711637599; c=relaxed/simple;
+	bh=m6ExSO75re8+h+0kqgmc3taw/nhfvJpWp0RzVChKUD8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aSIyJLkQbv21Z0McJAGR0MOKt7wMoE+cgkFp6mm9IG66YQwRdaZBxNPepTi1cIyqVoq91jthRzhf3lvU3mQ+Xc+BxrHl/bg9HdhFUGo8zV5gbnTCpPkBtww4OmVi2TeC47V59yOgxVTSRSmPwH8g9qQKUby0xLx21dujBjtD1yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=0RoR5jKm; arc=none smtp.client-ip=83.166.143.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="0RoR5jKm"
+Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4V55tK0jHzzh88;
+	Thu, 28 Mar 2024 15:45:13 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1711637112;
+	bh=m6ExSO75re8+h+0kqgmc3taw/nhfvJpWp0RzVChKUD8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=0RoR5jKmSZESMEyzyyfqQCBdDMidK2YEM0S6giPp/MumsJXKnukq6p0yh+n8lBUDh
+	 +Ly2A2jkpU9UJdKMMJ6cjtSIPEwpe4ycoBks2M1+RnFT/H4YsiMgWes0h2Ema/J11K
+	 C0XwLrdz1/Cpkjimu+R6Lc8YtVwHzWf4nOEcEtsg=
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4V55tJ47G7zsZc;
+	Thu, 28 Mar 2024 15:45:12 +0100 (CET)
+Date: Thu, 28 Mar 2024 15:45:12 +0100
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Ayush Tiwari <ayushtiw0110@gmail.com>
+Cc: Paul Moore <paul@paul-moore.com>, alison.schofield@intel.com, 
+	fabio.maria.de.francesco@linux.intel.com, linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	gregkh@linuxfoundation.org, outreachy@lists.linux.dev, linux-security-module@vger.kernel.org
+Subject: Re: [PATCH] LANDLOCK: use kmem_cache for landlock_object
+Message-ID: <20240328.aiPh0phaJ6ai@digikod.net>
+References: <ZgSrBVidW1U6yP+h@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
+ <CAHC9VhRYDNoqkbkgdUSg-kYSHVbheD5NtezmVxyRakZ0-DzuSg@mail.gmail.com>
+ <ZgUh7cIQIsOgvWpw@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 28 Mar 2024 15:44:15 +0100
-From: =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger
- <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Jernej Skrabec
- <jernej.skrabec@gmail.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Srinivas Kandagatla
- <srinivas.kandagatla@linaro.org>, linux-mtd@lists.infradead.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v3] mtd: limit OTP NVMEM Cell parse to non Nand devices
-In-Reply-To: <66057c71.050a0220.e4ba.97dc@mx.google.com>
-References: <20240322040951.16680-1-ansuelsmth@gmail.com>
- <30bc0d38-b610-4397-ba42-46819d5507fc@milecki.pl>
- <66057c71.050a0220.e4ba.97dc@mx.google.com>
-Message-ID: <a4632f1ba701f6b333c50a5366723cf4@milecki.pl>
-X-Sender: rafal@milecki.pl
-X-Webmail-UserID: rafal@milecki.pl
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 9385501623872629561
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrudduledgieejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggffhffvvefujghfkfigihgtgfesthekjhdttddtjeenucfhrhhomheptfgrfhgrlhcuofhilhgvtghkihcuoehrrghfrghlsehmihhlvggtkhhirdhplheqnecuggftrfgrthhtvghrnhepgedttdevfffhueduvddvgfeufedtudevgefgteehhfehudelteehteekteeuffeinecuffhomhgrihhnpehophgvnhifrhhtrdhorhhgnecukfhppeduvdejrddtrddtrddupdefuddruddurddvudekrddutdeipdehuddrvdehhedrjedurdeitddpfeejrdehledrudegvddruddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomheprhgrfhgrlhesmhhilhgvtghkihdrphhlpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehjeehpdhmohguvgepshhmthhpohhuth
+In-Reply-To: <ZgUh7cIQIsOgvWpw@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
+X-Infomaniak-Routing: alpha
 
-On 2024-03-28 15:19, Christian Marangi wrote:
-> On Wed, Mar 27, 2024 at 11:15:02PM +0100, Rafał Miłecki wrote:
->> On 22.03.2024 05:09, Christian Marangi wrote:
->> > diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
->> > index 5887feb347a4..0de87bc63840 100644
->> > --- a/drivers/mtd/mtdcore.c
->> > +++ b/drivers/mtd/mtdcore.c
->> > @@ -900,7 +900,7 @@ static struct nvmem_device *mtd_otp_nvmem_register(struct mtd_info *mtd,
->> >   	config.name = compatible;
->> >   	config.id = NVMEM_DEVID_AUTO;
->> >   	config.owner = THIS_MODULE;
->> > -	config.add_legacy_fixed_of_cells = true;
->> > +	config.add_legacy_fixed_of_cells = !mtd_type_is_nand(mtd);
->> >   	config.type = NVMEM_TYPE_OTP;
->> >   	config.root_only = true;
->> >   	config.ignore_wp = true;
->> 
->> I think there may be even more unwanted behaviour here. If
->> mtd_otp_nvmem_register() fails to find node with "user-otp" /
->> "factory-otp" compatible then it sets "config.of_node" to NULL but 
->> that
->> means NVMEM core still looks for NVMEM cells in device's "of_node".
->> 
->> I believe we should not look for OTP NVMEM cells out of the "user-otp" 
->> /
->> "factory-otp" compatible nodes.
->> 
->> So maybe what we need in the first place is just:
->> config.add_legacy_fixed_of_cells = !!np;
->> ?
->> 
->> Any extra limitation of .add_legacy_fixed_of_cells should probably be
->> used only if we want to prevent new users of the legacy syntax. The
->> problem is that mtd.yaml binding allowed "user-otp" and "factory-otp"
->> with old syntax cells. It means every MTD device was allowed to have
->> them.
->> 
->> No in-kernel DTS even used "user-otp" or "factory-otp" with NVMEM 
->> legacy
->> cells but I'm not sure about downstream DTS files. Ideally we would do
->> config.add_legacy_fixed_of_cells = false;
->> but that could break compatibility with some downstream DTS files.
+The subject should start with "landlock: Use" instead of "LANDLOCK: use"
+
+On Thu, Mar 28, 2024 at 01:23:17PM +0530, Ayush Tiwari wrote:
+> Hello Paul
+> Thanks a lot for the feedback. Apologies for the mistakes. Could you
+> help me in some places so that I can correct the errors, like:
+> On Wed, Mar 27, 2024 at 07:43:36PM -0400, Paul Moore wrote:
+> > On Wed, Mar 27, 2024 at 7:26 PM Ayush Tiwari <ayushtiw0110@gmail.com> wrote:
+> > >
+> > > Use kmem_cache replace kzalloc() calls with kmem_cache_zalloc() for
+> > > struct landlock_object and update the related dependencies.
+> > >
+> > > Signed-off-by: Ayush Tiwari <ayushtiw0110@gmail.com>
+> > > ---
+> > >  security/landlock/fs.c     |  2 +-
+> > >  security/landlock/object.c | 14 ++++++++++++--
+> > >  security/landlock/object.h |  4 ++++
+> > >  security/landlock/setup.c  |  2 ++
+> > >  4 files changed, 19 insertions(+), 3 deletions(-)
+> > 
+> > Hi Ayush,
+> > 
+> > Mickaël has the final say on Landlock patches, but I had a few
+> > comments that I've included below ...
+> > 
+> > > diff --git a/security/landlock/fs.c b/security/landlock/fs.c
+> > > index fc520a06f9af..227dd67dd902 100644
+> > > --- a/security/landlock/fs.c
+> > > +++ b/security/landlock/fs.c
+> > > @@ -124,7 +124,7 @@ static struct landlock_object *get_inode_object(struct inode *const inode)
+> > >         if (unlikely(rcu_access_pointer(inode_sec->object))) {
+> > >                 /* Someone else just created the object, bail out and retry. */
+> > >                 spin_unlock(&inode->i_lock);
+> > > -               kfree(new_object);
+> > > +               kmem_cache_free(landlock_object_cache, new_object);
+> > 
+> > See my comment below, but you may want to wrap this in a Landlock
+> > object API function.
+> Sure. I will definitely implement this.
+> > 
+> > >                 rcu_read_lock();
+> > >                 goto retry;
+> > > diff --git a/security/landlock/object.c b/security/landlock/object.c
+> > > index 1f50612f0185..df1354215617 100644
+> > > --- a/security/landlock/object.c
+> > > +++ b/security/landlock/object.c
+> > > @@ -17,6 +17,15 @@
+> > >
+> > >  #include "object.h"
+> > >
+> > > +struct kmem_cache *landlock_object_cache;
+> > > +
+> > > +void __init landlock_object_init(void)
+> > > +{
+> > > +       landlock_object_cache = kmem_cache_create(
+> > > +               "landlock_object_cache", sizeof(struct landlock_object), 0,
+
+No need for the "_cache" name suffix.
+
+> > > +               SLAB_PANIC, NULL);
+> > 
+> > The comments in include/linux/slab.h suggest using the KMEM_CACHE()
+> > macro, instead of kmem_cache_create(), as a best practice for creating
+> > slab caches.
+> > 
+> Sure. Apologies I didn't see that, I tried to implement it from scratch
+> using the reference from linux memory management APIs.
+> > > +}
+> > > +
+> > >  struct landlock_object *
+> > >  landlock_create_object(const struct landlock_object_underops *const underops,
+> > >                        void *const underobj)
+> > > @@ -25,7 +34,8 @@ landlock_create_object(const struct landlock_object_underops *const underops,
+> > >
+> > >         if (WARN_ON_ONCE(!underops || !underobj))
+> > >                 return ERR_PTR(-ENOENT);
+> > > -       new_object = kzalloc(sizeof(*new_object), GFP_KERNEL_ACCOUNT);
+> > > +       new_object =
+> > > +               kmem_cache_zalloc(landlock_object_cache, GFP_KERNEL_ACCOUNT);
+> > 
+> > If the line is too long, you might want to consider splitting the
+> > function parameters like this:
+> > 
+> >   new_object = kmem_cache_zalloc(landlock_object_cache,
+> >                                  GFP_KERNEL_ACCOUNT);
+> > 
 > 
-> Yes the main problem is prevent regression in downstream. I feel for 
-> the
-> nand usage, this is 100% of the times broken. For SPI and other corner
-> case MTD devices it's not?
-> 
-> Anyway did you by chance have a suggestion for a better fixes tag?
+> Sure. I didn't do as it was below the 100 columns limit, but will
+> definitely implement it.
 
-My personal idea for that would be to put two Fixes with two commits and
-describe in commit body that one just exposed existing bug.
+Please just use clang-format.
 
-You may check my OpenWrt quick patch for an idea how I'd handle that:
-https://git.openwrt.org/?p=openwrt/openwrt.git;a=blob;f=target/linux/generic/pending-6.6/440-mtd-don-t-look-for-OTP-legacy-NVMEM-cells-if-proper-.patch;h=d9d15a4048c144d8565c8ea38e15a79f7f4a5fe1;hb=dd78a59cd7b029560b33cb3ac0e1aa8b747bd807
+> > >         if (!new_object)
+> > >                 return ERR_PTR(-ENOMEM);
+> > >         refcount_set(&new_object->usage, 1);
+> > > @@ -62,6 +72,6 @@ void landlock_put_object(struct landlock_object *const object)
+> > >                  * @object->underobj to @object (if it still exists).
+> > >                  */
+> > >                 object->underops->release(object);
+> > > -               kfree_rcu(object, rcu_free);
 
--- 
-Rafał Miłecki
+Is it safe?
+
+According to commit ae65a5211d90 ("mm/slab: document kfree() as allowed
+for kmem_cache_alloc() objects"), no change should be needed (and it
+must not be backported to kernels older than 6.4 with CONFIG_SLOB). This
+way we can avoid exporting landlock_object_cache.  Please add a note
+about this commit and the related warning in the commit message.
+
+> > > +               kmem_cache_free(landlock_object_cache, object);
+> > >         }
+> > >  }
+> > > diff --git a/security/landlock/object.h b/security/landlock/object.h
+> > > index 5f28c35e8aa8..8ba1af3ddc2e 100644
+> > > --- a/security/landlock/object.h
+> > > +++ b/security/landlock/object.h
+> > > @@ -13,6 +13,10 @@
+> > >  #include <linux/refcount.h>
+> > >  #include <linux/spinlock.h>
+> > >
+> > > +extern struct kmem_cache *landlock_object_cache;
+> > 
+> > This really is a decision for Mickaël, but you may want to make
+> > @landlock_object_cache private to object.c and create functions to
+> > manage it as needed, e.g. put/free operations.
+> > 
+> Okay. I didn't make it private as I was using it in fs.c to use
+> kmem_cache_free, but if this is supposed to be private, I can modify the
+> approach and expose it via some function, not directly exposing
+> landlock_object_cache.
+
+Yes, that would be better.
+
+> > > +void __init landlock_object_init(void);
+> > > +
+> > >  struct landlock_object;
+> > >
+> > >  /**
+> > > diff --git a/security/landlock/setup.c b/security/landlock/setup.c
+> > > index f6dd33143b7f..a5fca4582ee1 100644
+> > 
+> > -- 
+> > paul-moore.com
+> I will make all the changes you mentioned, and as you said, I will
+> wait for Mickael's say.
+
+Agree with Paul and Greg unless commented otherwise. Thanks
