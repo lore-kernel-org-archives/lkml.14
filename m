@@ -1,54 +1,54 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D3080C11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1335823CB
 	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 14:20:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711635632; cv=none; b=MwgUYXi7qA3mfwS4+RPGUbbTNPGQtYS1zTYZ3j05597D0p2NwtNnyusaZarAYc51/9CQ2JojxTcQ8ovpEYznVowVXkFhd0j+/uhgZYESy/cnp3UuUGOIN3bVUpr6e+jsFunKzaUASD/X4W392W+MYQS8brjneWCW3DjKzlg9dzs=
+	t=1711635633; cv=none; b=D4Oe+4UUvGKyzqz1VHs4NMwRPQflGtQYT/5A19e0SJ/lEc+P7VYrC2n0HLXTeZqgozAnmFqqWFSQVbl48wIDkYShVWtcfZmw4uvtwx5RhfcniyImJYu+Nz6hmFWG3jOaunJkOCIB5yEiCfTszoTlXjuZjWBNI3Rlh2KbS/k72zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711635632; c=relaxed/simple;
-	bh=T8DLcIMd2SwGMGXpo5o6c1OWUqQbagaVQM/hTLTTZaM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=uRWQyBEjps7u5RBEEY/Tw9THu6BQvi4DxYYjy2r0PjxqtU7zJI7GVHm98pocyAqQHudJsTbATB1t1F6wTb2yk+ruCsBJ9GkRHkrScl3Aa23d4aoLQndWVddHUxK5O9GhUztklbCLtE4Wmhu9CvLoeaeQWq3qqS7+CLs7k6TQ6ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+	s=arc-20240116; t=1711635633; c=relaxed/simple;
+	bh=Bq9LWOx+1iPt2NmZWbnO9eJmfYrUT9ZFxtW8nkO9COA=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=WEH9eLPDm4RHHvj0bKStC6+7aEUK6xuYYFBnVCsbFXcZp+juSKXiigK00FSVNRn3M98QnbwM06dKFS03ebMzNmmyeaYZ6AQ6tZjXCy4NF/65toNIHFA/alW9ijFzf0lIIRXTRaVopTtu6YNQ/WhwWf4QygsEMUDSkyF7u4rLc1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7d096c4d663so11328439f.2
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-368a3864192so7387135ab.2
         for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 07:20:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711635630; x=1712240430;
+        d=1e100.net; s=20230601; t=1711635631; x=1712240431;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=kehk7qvxJZP+l6TvYnKQNOGXzfsQSvUSobZ1QiEcyr4=;
-        b=VwjQ/I4o6OCMmGDWJH4V1WvN1yi9GWkkyubK2wz6z4FouBh/zPOujI/udPrGKpudCN
-         609jG51pXKjhtN1UJ6dFElbu09tOH3BCrd/oM7IEDD8Z1DJ0zGp0D38SJMX6AZohIACa
-         tWm+aZgfmcsNi3f0gKA2Z5liqutlJnU1fmVc8GFJ6ykm4F/DpYA92CW9kLo3Iz5wFbPs
-         g12cijWQ+AV5zdw7wb6fdD2GBiBE2FCcr+vkj8gRHrWhW2/V/5Nl132RTeqKBq1/ccCM
-         XKk9xMkmu24aO34qn+SYd6GSeoY1jirf3jlzfaM2vA9o7i3+htiRlMa8Thz/xRezeVQp
-         DqLA==
-X-Forwarded-Encrypted: i=1; AJvYcCVPXKk1PupbYY+H/PywfQJdCc9J5FkN+UwRdqYffNL25ph7jtuuDl3YWzkmXKLFeRzDYMZqZQe1ORkaREL3ob8swQSS8dstngZwS/DU
-X-Gm-Message-State: AOJu0YxqZJNYdv8xxO+ZQBgeg/BrwNM7VqawkeUGAHdggKPo5m4f0Rww
-	AJsgTM0ox2mfTgaa0W1dJjJaP7smUNME/CWity30THo6VgneHDxhy3INZqiu49pRTnFnOrh5VTa
-	PA3ne9j0mGVOra7PtQPoJtN9Zv3avBKoS1bV0KftK9jKKwub2XEJHqzk=
-X-Google-Smtp-Source: AGHT+IHOQEDKEzHMPEyNia95LF4eqnhBYXOxv4nISoba8zmXfetT82PhsR/uf4+tnT3yCeFM1un4zFCaMoHGDCSRlqr6DT6N/wv0
+        bh=EtBIqGObUrXQ9PDYL92r63zx6gFykZehyqeUGmcuBHc=;
+        b=oKNq+vCdVYvDPswrMQjqrkUzFIqGNw9sTbO7j3aFtQ3Pa9vdkfDCqMaxUvsRfBWJbr
+         UihBXEO69emsL7QDrPVjBUUte9oBKf9mzwtys5QKCuaEZvyJ8+cEfYfNdHgTq6n+9f97
+         3PR1QoyT6hbIAmClzAtZy0JI8fO41qS/dQdrNpXt+GODL3BonC6Uy18ZLIRaIdihCosx
+         DrZ4UoZ+ggLDvVFX/nukKWTe3T4stLlL4KFb8EYYbrG/oyD+joNZGzq/4Uxx1Pb8p8fZ
+         PV9Hkl3Lh2BTWvxdxCv41H0tOn5n1nzK0pN8aEAO9DFIM7dSY8cXUv3wvufKiq/jwJuP
+         qbjg==
+X-Forwarded-Encrypted: i=1; AJvYcCViyXtWsSV3T6GD4K2kAoWdDls/nmlPPYuZZhiCEOq/CkZ1W8Z+zPWJYy6Q9M8fuERMeGVs6AGVjz0qKqTLcIVU/FAD6XwYR+DcYblL
+X-Gm-Message-State: AOJu0Yz43IJO3G9wXRWRd11twrMPhC9JJP4/OKGzKmEfsvxolt1LOe8z
+	dyA3ktvaAVaiE660J4OYQ2gbrvfCr3GNT9uyhnit7RAs3iMG9V/5ywVFdT2jefPZCZi28eOhNQ5
+	xhNf+qRCkIvLarchOGFb7fuWa3Vc5/VY+eBf1C2KyF4SfaX815riGpJg=
+X-Google-Smtp-Source: AGHT+IF2okDFYYACtM78GHxJSW7p6ypgkem81yHhPqKP6LvZ5bVld3W2oLnEEXSYlqAtJNOeFP5QVMMUjRI2y5nX0LRea7OuEUMl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:506:b0:366:a77e:62dc with SMTP id
- d6-20020a056e02050600b00366a77e62dcmr53014ils.2.1711635629257; Thu, 28 Mar
- 2024 07:20:29 -0700 (PDT)
-Date: Thu, 28 Mar 2024 07:20:29 -0700
+X-Received: by 2002:a05:6e02:1d81:b0:368:b289:38b2 with SMTP id
+ h1-20020a056e021d8100b00368b28938b2mr64156ila.1.1711635630923; Thu, 28 Mar
+ 2024 07:20:30 -0700 (PDT)
+Date: Thu, 28 Mar 2024 07:20:30 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000aacdcb0614b939ad@google.com>
-Subject: [syzbot] [fs?] WARNING: ODEBUG bug in bdev_super_lock
-From: syzbot <syzbot+9c0a93c676799fdf466c@syzkaller.appspotmail.com>
-To: brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	viro@zeniv.linux.org.uk
+Message-ID: <000000000000c430800614b93936@google.com>
+Subject: [syzbot] [net?] possible deadlock in hsr_dev_xmit (2)
+From: syzbot <syzbot+fbf74291c3b7e753b481@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
 Hello,
@@ -57,61 +57,135 @@ syzbot found the following issue on:
 
 HEAD commit:    fe46a7dd189e Merge tag 'sound-6.9-rc1' of git://git.kernel..
 git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=17d1c4f9180000
+console output: https://syzkaller.appspot.com/x/log.txt?x=11cc4c51180000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=fe78468a74fdc3b7
-dashboard link: https://syzkaller.appspot.com/bug?extid=9c0a93c676799fdf466c
+dashboard link: https://syzkaller.appspot.com/bug?extid=fbf74291c3b7e753b481
 compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16577eb1180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=106fa941180000
+userspace arch: i386
+
+Unfortunately, I don't have any reproducer for this issue yet.
 
 Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/0f7abe4afac7/disk-fe46a7dd.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/82598d09246c/vmlinux-fe46a7dd.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/efa23788c875/bzImage-fe46a7dd.xz
+disk image: https://storage.googleapis.com/syzbot-assets/55a16212fbdf/disk-fe46a7dd.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/704972635ac7/vmlinux-fe46a7dd.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/a04b0d8c481f/bzImage-fe46a7dd.xz
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+9c0a93c676799fdf466c@syzkaller.appspotmail.com
+Reported-by: syzbot+fbf74291c3b7e753b481@syzkaller.appspotmail.com
 
-WARNING: CPU: 1 PID: 5462 at lib/debugobjects.c:517 debug_print_object+0x17a/0x1f0 lib/debugobjects.c:514
-Modules linked in:
-CPU: 1 PID: 5462 Comm: syz-executor454 Not tainted 6.8.0-syzkaller-08951-gfe46a7dd189e #0
+============================================
+WARNING: possible recursive locking detected
+6.8.0-syzkaller-08951-gfe46a7dd189e #0 Not tainted
+--------------------------------------------
+kworker/u8:3/49 is trying to acquire lock:
+ffff888050f26da0 (&hsr->seqnr_lock){+.-.}-{2:2}, at: spin_lock_bh include/linux/spinlock.h:356 [inline]
+ffff888050f26da0 (&hsr->seqnr_lock){+.-.}-{2:2}, at: hsr_dev_xmit+0x13e/0x1d0 net/hsr/hsr_device.c:229
+
+but task is already holding lock:
+ffff88807cdaeda0 (&hsr->seqnr_lock){+.-.}-{2:2}, at: spin_lock_bh include/linux/spinlock.h:356 [inline]
+ffff88807cdaeda0 (&hsr->seqnr_lock){+.-.}-{2:2}, at: send_hsr_supervision_frame+0x276/0xad0 net/hsr/hsr_device.c:310
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(&hsr->seqnr_lock);
+  lock(&hsr->seqnr_lock);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+9 locks held by kworker/u8:3/49:
+ #0: ffff88802a81f948 ((wq_completion)bat_events){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3229 [inline]
+ #0: ffff88802a81f948 ((wq_completion)bat_events){+.+.}-{0:0}, at: process_scheduled_works+0x8e0/0x1770 kernel/workqueue.c:3335
+ #1: ffffc90000b97d00 ((work_completion)(&(&bat_priv->nc.work)->work)
+){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3230 [inline]
+){+.+.}-{0:0}, at: process_scheduled_works+0x91b/0x1770 kernel/workqueue.c:3335
+ #2: ffffc90000a08ca0 ((&hsr->announce_timer)){+.-.}-{0:0}
+, at: call_timer_fn+0xc0/0x600 kernel/time/timer.c:1789
+ #3: ffffffff8e132020 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:298 [inline]
+ #3: ffffffff8e132020 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:750 [inline]
+ #3: ffffffff8e132020 (rcu_read_lock){....}-{1:2}, at: hsr_announce+0xa3/0x370 net/hsr/hsr_device.c:387
+ #4: ffff88807cdaeda0 (&hsr->seqnr_lock
+){+.-.}-{2:2}, at: spin_lock_bh include/linux/spinlock.h:356 [inline]
+){+.-.}-{2:2}, at: send_hsr_supervision_frame+0x276/0xad0 net/hsr/hsr_device.c:310
+ #5: ffffffff8e132020 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:298 [inline]
+ #5: ffffffff8e132020 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:750 [inline]
+ #5: ffffffff8e132020 (rcu_read_lock){....}-{1:2}, at: hsr_forward_skb+0xae/0x2400 net/hsr/hsr_forward.c:614
+ #6: ffffffff8e132080 (rcu_read_lock_bh){....}-{1:2}, at: local_bh_disable include/linux/bottom_half.h:20 [inline]
+ #6: ffffffff8e132080 (rcu_read_lock_bh){....}-{1:2}, at: rcu_read_lock_bh include/linux/rcupdate.h:802 [inline]
+ #6: ffffffff8e132080 (rcu_read_lock_bh){....}-{1:2}, at: __dev_queue_xmit+0x2c4/0x3b10 net/core/dev.c:4260
+ #7: ffffffff8e132020 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:298 [inline]
+ #7: ffffffff8e132020 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:750 [inline]
+ #7: ffffffff8e132020 (rcu_read_lock){....}-{1:2}, at: br_dev_xmit+0x1b9/0x1a10 net/bridge/br_device.c:44
+ #8: ffffffff8e132080 (rcu_read_lock_bh){....}-{1:2}, at: local_bh_disable include/linux/bottom_half.h:20 [inline]
+ #8: ffffffff8e132080 (rcu_read_lock_bh){....}-{1:2}, at: rcu_read_lock_bh include/linux/rcupdate.h:802 [inline]
+ #8: ffffffff8e132080 (rcu_read_lock_bh){....}-{1:2}, at: __dev_queue_xmit+0x2c4/0x3b10 net/core/dev.c:4260
+
+stack backtrace:
+CPU: 1 PID: 49 Comm: kworker/u8:3 Not tainted 6.8.0-syzkaller-08951-gfe46a7dd189e #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024
-RIP: 0010:debug_print_object+0x17a/0x1f0 lib/debugobjects.c:514
-Code: e8 0b ce 4a fd 4c 8b 0b 48 c7 c7 c0 dc fe 8b 48 8b 74 24 08 48 89 ea 44 89 e1 4d 89 f8 ff 34 24 e8 fb 52 aa fc 48 83 c4 08 90 <0f> 0b 90 90 ff 05 1c f7 d9 0a 48 83 c4 10 5b 41 5c 41 5d 41 5e 41
-RSP: 0018:ffffc9000909f918 EFLAGS: 00010286
-RAX: a857c73db866d400 RBX: ffffffff8babd760 RCX: ffff888026321e00
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffffffff8bfede40 R08: ffffffff8157cc12 R09: 1ffff92001213ec0
-R10: dffffc0000000000 R11: fffff52001213ec1 R12: 0000000000000001
-R13: ffffffff8bfedd58 R14: dffffc0000000000 R15: ffff8880267c6880
-FS:  000055555d3d6380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f2334c3f130 CR3: 000000002c7fe000 CR4: 0000000000350ef0
+Workqueue: bat_events batadv_nc_worker
 Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ check_deadlock kernel/locking/lockdep.c:3062 [inline]
+ validate_chain+0x15c1/0x58e0 kernel/locking/lockdep.c:3856
+ __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
+ lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+ __raw_spin_lock_bh include/linux/spinlock_api_smp.h:126 [inline]
+ _raw_spin_lock_bh+0x35/0x50 kernel/locking/spinlock.c:178
+ spin_lock_bh include/linux/spinlock.h:356 [inline]
+ hsr_dev_xmit+0x13e/0x1d0 net/hsr/hsr_device.c:229
+ __netdev_start_xmit include/linux/netdevice.h:4903 [inline]
+ netdev_start_xmit include/linux/netdevice.h:4917 [inline]
+ xmit_one net/core/dev.c:3531 [inline]
+ dev_hard_start_xmit+0x26a/0x790 net/core/dev.c:3547
+ __dev_queue_xmit+0x19f4/0x3b10 net/core/dev.c:4335
+ dev_queue_xmit include/linux/netdevice.h:3091 [inline]
+ br_dev_queue_push_xmit+0x701/0x8d0 net/bridge/br_forward.c:53
+ NF_HOOK+0x3a7/0x460 include/linux/netfilter.h:314
+ br_forward_finish+0xe5/0x140 net/bridge/br_forward.c:66
+ NF_HOOK+0x3a7/0x460 include/linux/netfilter.h:314
+ __br_forward+0x489/0x660 net/bridge/br_forward.c:115
+ deliver_clone net/bridge/br_forward.c:131 [inline]
+ maybe_deliver+0xb3/0x150 net/bridge/br_forward.c:190
+ br_flood+0x2e4/0x660 net/bridge/br_forward.c:236
+ br_dev_xmit+0x118c/0x1a10
+ __netdev_start_xmit include/linux/netdevice.h:4903 [inline]
+ netdev_start_xmit include/linux/netdevice.h:4917 [inline]
+ xmit_one net/core/dev.c:3531 [inline]
+ dev_hard_start_xmit+0x26a/0x790 net/core/dev.c:3547
+ __dev_queue_xmit+0x19f4/0x3b10 net/core/dev.c:4335
+ dev_queue_xmit include/linux/netdevice.h:3091 [inline]
+ hsr_xmit net/hsr/hsr_forward.c:380 [inline]
+ hsr_forward_do net/hsr/hsr_forward.c:471 [inline]
+ hsr_forward_skb+0x183f/0x2400 net/hsr/hsr_forward.c:619
+ send_hsr_supervision_frame+0x548/0xad0 net/hsr/hsr_device.c:333
+ hsr_announce+0x1a9/0x370 net/hsr/hsr_device.c:389
+ call_timer_fn+0x17e/0x600 kernel/time/timer.c:1792
+ expire_timers kernel/time/timer.c:1843 [inline]
+ __run_timers kernel/time/timer.c:2408 [inline]
+ __run_timer_base+0x66a/0x8e0 kernel/time/timer.c:2419
+ run_timer_base kernel/time/timer.c:2428 [inline]
+ run_timer_softirq+0xb7/0x170 kernel/time/timer.c:2438
+ __do_softirq+0x2bc/0x943 kernel/softirq.c:554
+ do_softirq+0x11b/0x1e0 kernel/softirq.c:455
+ </IRQ>
  <TASK>
- debug_object_activate+0x357/0x510 lib/debugobjects.c:732
- debug_rcu_head_queue kernel/rcu/rcu.h:227 [inline]
- __call_rcu_common kernel/rcu/tree.c:2719 [inline]
- call_rcu+0x97/0xa70 kernel/rcu/tree.c:2838
- put_super fs/super.c:424 [inline]
- bdev_super_lock+0x1ea/0x360 fs/super.c:1384
- fs_bdev_sync+0x17/0x50 fs/super.c:1419
- blkdev_flushbuf block/ioctl.c:380 [inline]
- blkdev_common_ioctl+0x88e/0x2880 block/ioctl.c:512
- blkdev_ioctl+0x532/0x740 block/ioctl.c:634
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:904 [inline]
- __se_sys_ioctl+0xfe/0x170 fs/ioctl.c:890
- do_syscall_64+0xfd/0x240
- entry_SYSCALL_64_after_hwframe+0x6d/0x75
-RIP: 0033:0x7f2334bc5b69
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 c1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffe40c66978 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f2334bc5b69
-RDX: 0000000000000000 RSI: 0000000000001261 RDI: 0000000000000003
-RBP: 00000000000f4240 R08: 00000000000000a0 R09: 00000000000000a0
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000014ed2
-R13: 00007ffe40c6698c R14: 00007ffe40c669a0 R15: 00007ffe40c66990
+ __local_bh_enable_ip+0x1bb/0x200 kernel/softirq.c:382
+ spin_unlock_bh include/linux/spinlock.h:396 [inline]
+ batadv_nc_purge_paths+0x30f/0x3b0 net/batman-adv/network-coding.c:471
+ batadv_nc_worker+0x328/0x610 net/batman-adv/network-coding.c:720
+ process_one_work kernel/workqueue.c:3254 [inline]
+ process_scheduled_works+0xa00/0x1770 kernel/workqueue.c:3335
+ worker_thread+0x86d/0xd70 kernel/workqueue.c:3416
+ kthread+0x2f0/0x390 kernel/kthread.c:388
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
  </TASK>
 
 
@@ -125,10 +199,6 @@ https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
 If the report is already addressed, let syzbot know by replying with:
 #syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
 
 If you want to overwrite report's subsystems, reply with:
 #syz set subsystems: new-subsystem
