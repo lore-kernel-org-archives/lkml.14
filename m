@@ -1,147 +1,113 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C3D13E6D4;
-	Thu, 28 Mar 2024 22:13:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBE012FF95;
+	Thu, 28 Mar 2024 22:16:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711664017; cv=none; b=jE926ST6TUF85e0+z+CdVhYokIjkPDjnH8Ij1vzP1VsP0ws0Z2a6NU0yvq/FedmfVYgTDu6fXohigKUWm/ICN/jRD6BUBvXHE91wSo1qt5oemudWvEASKBLT7SXotzWmVC1WBwxirvxfOiFv2p+BX86myHT3EC/MuwJL8DtElm0=
+	t=1711664177; cv=none; b=DGNVL0LWXsopWDbJNkAY2MjwRRM0fLxpEhv5Gf/eRdQxtwLqz78eXsKsv2hu7FSDPrJB2A/YMvEL70BosHNZsNhPVZcCACCiKBDy5KkJk8PVoojFDC8VmSMww0mtz+sjuav5jG6me+WCeJmkfUqz1yqPbIJlaQN51s8ec0d9SbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711664017; c=relaxed/simple;
-	bh=2lMT6KNPvKzbBMwVwrI0RDmqQ5yOjbh0txjmVUXqLU0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bLQLCzHq80BHXipMn6i4+Wsm9mS1lscjHPZSDc+xHLVmCKw5MMlHpnX+jhP9LeCosgpD51QylkbwawrDZgk/fd26yBuBW71FMzPerABZl9yfzQ4ReemTjR1Odjg6SpgQd4Rk8lEg7ihnAwjyFz2hEIvDRkYou9rt2hc0g9ga4YY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YJjV2iSO; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711664177; c=relaxed/simple;
+	bh=fdtZQoLZf+k6qboyWg53YmVU9ZYYXUnvEjjAvY2Zbuc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W0LE/RkoPvPsjPHCiztSukqrfYv4P6cA/etmEGP1mUiyFY3hl2lILSd2RZfnjwA0CnUpQZDmgjYYUEECe2suj4rF3uicfXLxb1t85XoyJQ5xoOAzn8/XOREcaqO/MMIpx2yzzjqFmSm2WW9KtUFd9ZJhQ28SQw+q1ElcPFiNQaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=1FYqTFq4; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YJjV2iSO"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d4a8bddc21so18433351fa.0;
-        Thu, 28 Mar 2024 15:13:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711664014; x=1712268814; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aZDt6XPS0X9RrCsopZrtOFphc1SwMJgyr4eQSlHmJ/w=;
-        b=YJjV2iSO+rmmmXNCQDupEnIu+EVekdFoaMhN7vD2k9msuhAteuD7jPIdC//jtVRB5c
-         4atDpAm0BXEWQnhmm+fIRVuk/snhvGKM67JO4If79iz1KvJXEPrnlzOV5qtI/wEdFMiN
-         xWDiBI0LO5ZjlzVO9HRVGZHTb+j3uWuSGC+eWb8pnSS4ceDcW5tN5rJPrCb3oUJg5s6y
-         U/D1r9CwxKHQMOiTcOvULfZRgGoXm72BWuuGofqmcs+hifNJe3XyIYISm7Q9UawzRbWe
-         xJ9G4AQaC5EHMGtJfx30sMpSS7gwRFPaZC/b8xdzr/tytKXK6hznPhJkZ+i02dP1OqQP
-         aYMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711664014; x=1712268814;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aZDt6XPS0X9RrCsopZrtOFphc1SwMJgyr4eQSlHmJ/w=;
-        b=RFNMBOQ9aOJke3Om/vUHwbQqZGqAIKO5OtiDJMEC8w6utH3BVwE+lmxNnuGxKIYviJ
-         TbLrzdxgSyGikPTADy4Xo2LGlbCvSnnEqEh5PIvqlgNLpkbpkSiOElQYsrPuQi5izKBV
-         iLd/JHOrx2RDfYOBJY2O5a6A2ZKJHkK3Jie8hN3NkBevBg9myoTqUNkDSD6BW5YEaIS3
-         bN+PyNS1MB9o7Q3x2FqjxDgmdWdLfSb0NDifkXNwCAsRUiatCZ0AWne9KJ/tSjuwJfMv
-         rcTh6IWIvX+swa/dzTZKk3yqMglAPYneBGFgivt0N5d/EPB4A7YVty32/V1Wyq3Dq61l
-         3/OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX9sTICMr+Wpk4p9FKLvnMshPqKVhJUQ5QhJxPZEj27PGktZcuKDJnGetEcGFLOtDH12srfsDwgrnFlbec+EmvkXi8YOp8P8GJnSX0svSBRZROMKBXSzzt8jpGugWK7mZrHfiNtKcuyJt4=
-X-Gm-Message-State: AOJu0YzBEqQ0FQHhCBlEb6Gsk+LWb+y44Sey5JFc9yruaAPENFCRdUlA
-	msbT+7VX5iUeppm4JG3EsTgBB+Z6nmeIcr/cMYROQxXmN8iNNc10S5631dbpcNc=
-X-Google-Smtp-Source: AGHT+IEQXyiCKApTwZRRWL08M7GZqI7Ri9/gYPz/35OH0zL1qkQi4HnbVQl7wV1Kcip+ZffOmf4zUg==
-X-Received: by 2002:a2e:9d45:0:b0:2d4:707e:623 with SMTP id y5-20020a2e9d45000000b002d4707e0623mr254372ljj.37.1711664014152;
-        Thu, 28 Mar 2024 15:13:34 -0700 (PDT)
-Received: from lmc-playground.localdomain ([188.25.208.244])
-        by smtp.gmail.com with ESMTPSA id m28-20020a05600c3b1c00b00414688af147sm6666778wms.20.2024.03.28.15.13.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 15:13:33 -0700 (PDT)
-From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-To: broonie@kernel.org
-Cc: lgirdwood@gmail.com,
-	peter.ujfalusi@linux.intel.com,
-	pierre-louis.bossart@linux.intel.com,
-	daniel.baluta@nxp.com,
-	iuliana.prodan@nxp.com,
-	linux-sound@vger.kernel.org,
-	imx@lists.linux.dev,
-	laurentiu.mihalcea@nxp.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] ASoC: SOF: imx: remove imx8_*_clocks API
-Date: Fri, 29 Mar 2024 00:12:01 +0200
-Message-Id: <20240328221201.24722-3-laurentiumihalcea111@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240328221201.24722-1-laurentiumihalcea111@gmail.com>
-References: <20240328221201.24722-1-laurentiumihalcea111@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1FYqTFq4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=3ilz03y73fsrB9+n9Uy1QM7lLm0rRc6zHwaEe0RJkzw=; b=1FYqTFq4DcCU2YvlnoviU4q3hR
+	iN522UQydezjRLomRP9sBO6dNPuBVE2ulNe+3qTQ4Fb80kPqgwrSdMrPKOD95BOfMpmx8qiNoVtwt
+	+BKJ6PTbQfRvsXsHzCaQMiWJgU2JyffRmZphRmtiyF2KZ9ZfU8k8NSCK6K/KFLT0awC0+YlBF24hT
+	KBKx3WRDqAixwQWCy4EgZjzZwoD0qgMxOmHYIiaxp3LMaNc4DiS2E/DeRZMjI38aqHgFMUWSZC0JL
+	DI9FGUxeyhCFUmxoQ19OzXe3LQtCHdpJUTTLAVJd5z817HIept4Zjr9eaYcF+8qRZRVMxhuG676Y0
+	KqPp6Zqw==;
+Received: from [50.53.2.121] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rpy2Z-0000000FtcS-3SpS;
+	Thu, 28 Mar 2024 22:16:07 +0000
+Message-ID: <a009a21a-56d7-4a1a-aaf9-feefa5acc561@infradead.org>
+Date: Thu, 28 Mar 2024 15:16:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] wifi: mac80222: Fix ieee80211_i.h kernel-doc issues
+Content-Language: en-US
+To: Jeff Johnson <quic_jjohnson@quicinc.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240328-ieee80211_i-kerneldoc-v1-1-e848bdec58f3@quicinc.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240328-ieee80211_i-kerneldoc-v1-1-e848bdec58f3@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+Hi,
 
-Since the i.MX drivers no longer use the imx8_*_clocks API
-this can be removed.
+On 3/28/24 14:08, Jeff Johnson wrote:
+> kernel-doc flagged the following issues:
+> 
+> net/mac80211/ieee80211_i.h:146: warning: expecting prototype for enum ieee80211_corrupt_data_flags. Prototype was for enum ieee80211_bss_corrupt_data_flags instead
+> net/mac80211/ieee80211_i.h:163: warning: expecting prototype for enum ieee80211_valid_data_flags. Prototype was for enum ieee80211_bss_valid_data_flags instead
+> 
+> Correct the documentation to match the code.
+> 
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 
-Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
-Reviewed-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
----
- sound/soc/sof/imx/imx-common.c | 24 ------------------------
- sound/soc/sof/imx/imx-common.h |  9 ---------
- 2 files changed, 33 deletions(-)
+These seem to be corrected in linux-next already.
+However, I do still see this one:
 
-diff --git a/sound/soc/sof/imx/imx-common.c b/sound/soc/sof/imx/imx-common.c
-index 36e3d414a18f..2981aea123d9 100644
---- a/sound/soc/sof/imx/imx-common.c
-+++ b/sound/soc/sof/imx/imx-common.c
-@@ -74,28 +74,4 @@ void imx8_dump(struct snd_sof_dev *sdev, u32 flags)
- }
- EXPORT_SYMBOL(imx8_dump);
- 
--int imx8_parse_clocks(struct snd_sof_dev *sdev, struct imx_clocks *clks)
--{
--	int ret;
--
--	ret = devm_clk_bulk_get(sdev->dev, clks->num_dsp_clks, clks->dsp_clks);
--	if (ret)
--		dev_err(sdev->dev, "Failed to request DSP clocks\n");
--
--	return ret;
--}
--EXPORT_SYMBOL(imx8_parse_clocks);
--
--int imx8_enable_clocks(struct snd_sof_dev *sdev, struct imx_clocks *clks)
--{
--	return clk_bulk_prepare_enable(clks->num_dsp_clks, clks->dsp_clks);
--}
--EXPORT_SYMBOL(imx8_enable_clocks);
--
--void imx8_disable_clocks(struct snd_sof_dev *sdev, struct imx_clocks *clks)
--{
--	clk_bulk_disable_unprepare(clks->num_dsp_clks, clks->dsp_clks);
--}
--EXPORT_SYMBOL(imx8_disable_clocks);
--
- MODULE_LICENSE("Dual BSD/GPL");
-diff --git a/sound/soc/sof/imx/imx-common.h b/sound/soc/sof/imx/imx-common.h
-index ec4b3a5c7496..13d7f3ef675e 100644
---- a/sound/soc/sof/imx/imx-common.h
-+++ b/sound/soc/sof/imx/imx-common.h
-@@ -15,13 +15,4 @@ void imx8_get_registers(struct snd_sof_dev *sdev,
- 
- void imx8_dump(struct snd_sof_dev *sdev, u32 flags);
- 
--struct imx_clocks {
--	struct clk_bulk_data *dsp_clks;
--	int num_dsp_clks;
--};
--
--int imx8_parse_clocks(struct snd_sof_dev *sdev, struct imx_clocks *clks);
--int imx8_enable_clocks(struct snd_sof_dev *sdev, struct imx_clocks *clks);
--void imx8_disable_clocks(struct snd_sof_dev *sdev, struct imx_clocks *clks);
--
- #endif
+ieee80211_i.h:689: warning: missing initial short description on line:
+ * struct mesh_table
+
+Thanks.
+
+> ---
+> This file is being modified by a quicinc.com patch and my review
+> process flagged these pre-existing kernel-doc issues.
+> ---
+>  net/mac80211/ieee80211_i.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/mac80211/ieee80211_i.h b/net/mac80211/ieee80211_i.h
+> index def611e4e55f..458f63ce9a32 100644
+> --- a/net/mac80211/ieee80211_i.h
+> +++ b/net/mac80211/ieee80211_i.h
+> @@ -132,7 +132,7 @@ struct ieee80211_bss {
+>  };
+>  
+>  /**
+> - * enum ieee80211_corrupt_data_flags - BSS data corruption flags
+> + * enum ieee80211_bss_corrupt_data_flags - BSS data corruption flags
+>   * @IEEE80211_BSS_CORRUPT_BEACON: last beacon frame received was corrupted
+>   * @IEEE80211_BSS_CORRUPT_PROBE_RESP: last probe response received was corrupted
+>   *
+> @@ -145,7 +145,7 @@ enum ieee80211_bss_corrupt_data_flags {
+>  };
+>  
+>  /**
+> - * enum ieee80211_valid_data_flags - BSS valid data flags
+> + * enum ieee80211_bss_valid_data_flags - BSS valid data flags
+>   * @IEEE80211_BSS_VALID_WMM: WMM/UAPSD data was gathered from non-corrupt IE
+>   * @IEEE80211_BSS_VALID_RATES: Supported rates were gathered from non-corrupt IE
+>   * @IEEE80211_BSS_VALID_ERP: ERP flag was gathered from non-corrupt IE
+> 
+> ---
+> base-commit: b68b2beadfd30907faae944358de3a17acf6fdb6
+> change-id: 20240328-ieee80211_i-kerneldoc-d28d95f5c5d3
+> 
+> 
+
 -- 
-2.34.1
-
+#Randy
