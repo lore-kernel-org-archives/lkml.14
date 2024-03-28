@@ -1,172 +1,201 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11125380D
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 07:51:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961B823768;
+	Thu, 28 Mar 2024 07:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711612321; cv=none; b=XJ8hzeoaMRaQU6mNG7i9SNluOmcecHayv20jACJ1ARMwTqPBVyHmUD3vMqmo9PFL254Yu18IeygDGv8aQbnVXY5gjsc2jIGcrYb7zQf9hy5hCC00Zn7MoTLZ0PXZZ5OgL6Suh/OhtvteB7sWODi1TTbQqT2mwmjCuEgUIyyNy1Q=
+	t=1711612405; cv=none; b=liHQ3vyV8oQoAA715DoTmEH9pWhoTJ63twhRa6mfdwL4hdDJbTzMOLSLSTO7IMJ/giWRTDuvMNNTkC2s/rs59K3XzoiFDw6nq7YWTCcexvoFO6lsrH4Zkpi9xuqOt4Le8HyFB87Lsov3t1uJelGF/PfKA5KqOfh0IyNEHrK9wCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711612321; c=relaxed/simple;
-	bh=Oi4D9lTrBK5LxMVsvn+m+xvSmAC6nHrSQxGDBSqviBg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E+XAgWjhYoukV8hhsbsN9gBD9PVdW4Q7/Ng1PnLYdVTdT7IJBXzoSAUQkG67yptxPMgM9seq6lu+9FLsanfnxdbXBEf6sazUgVxouZf3Rp0KSxJ7DVp3srMUqKucOPE8gcMlK53BDZbr6SHH/NjCDiCzKAZZN2eHVfdGBh60aO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bSQ2IEQM; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711612405; c=relaxed/simple;
+	bh=hXUOINxev2sW2aHJR3Tsa4GArFRCJyPX7m0SK/yhJVM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YYKXXw+UZwnbRJjSPnYEotQGw1dOSVmj3pOX5VWwbMA2olOQHFgWZ7X8f0qwFWcphmTHJiTMuKpQ3BY6DvGgwdBTWtSUaqiPvxV1T1IyXFRhGaR5jayoq6jSGY3Hq0jFmuHChghISA30wtuTSzEfZTLp60OySSpkE2NErR3Q2uQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lXEc6qN1; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bSQ2IEQM"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4150cd01febso4601915e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 00:51:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXEc6qN1"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6ea80de0e97so517783b3a.2;
+        Thu, 28 Mar 2024 00:53:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711612318; x=1712217118; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=2WIu5epjAJHOEWnR5hcLu+XP8J82cuP3g6jjZF3M8iI=;
-        b=bSQ2IEQMn8xpszHJwx/k5kzPvGQr1aJ7xVN5DDD3Q2yUVDq2H279NO9BAhSXDUmVub
-         FW7i3yzc23EQkUbIb1OsW5oo/OfJsa/jtIRd+6QmGlUXsWDFlX1fbO9MUJUmuE1pMoBr
-         Hl8o05NVG5NPAQPAi4yJGW9msXrdun3cxgOdJKHGqrtQhm269hv59GHXgiUdGqmkSLFA
-         kB4mwv9Mh+RExoRZEAN2vfcD6pQIW4IuzvhcOoR0aYRMXbW9y51Qua1KT0JdNv8JEuos
-         r5uwYO6CQcmjY3puG/6Wk1Ea3j7OD2DjXhaZqBLEdEXR0v/s3JMEkBaE09R5y5RhPS+P
-         PeFQ==
+        d=gmail.com; s=20230601; t=1711612403; x=1712217203; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=VWzLPeLLlmGOBtEnLvR7ID/q8d8vc0GlObcdJceoe8U=;
+        b=lXEc6qN1yEubZR1zYuMGyfIv2BoMmN663mzQkkadMXjYgPIlSnz4DAQ5j0xaxowPB1
+         Yx4Sv66vTubAJ4dtAvB2Kgqf6jGPQ4DPZo6nhzeTDse/T7PNQpfwcTX2PaTPENwZ0E3I
+         uU3M7/ArTissTUZnJj5gNMmGlJ8D7Pz8NFKwc0Mk5el/bewkqPPDvZNIhPqYXqJUFPhJ
+         UUpVBND6hnBO1/2N4kACJM0FnplOLFNTwNJWTs0CqgkhXWFPz32qkUH4c1Eg+5K4BN49
+         DmItCbekEN/jxLqQVqwXcv/tkZfHekpNkMSslNxscRgHapIKxBG0TEp6lACBevzUtUcR
+         tLUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711612318; x=1712217118;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2WIu5epjAJHOEWnR5hcLu+XP8J82cuP3g6jjZF3M8iI=;
-        b=lBnqvG19IupzDZgdpZLpHsbp9eSD3kyXstcAfp3lT7TkQF6EIVfHS4+DEFD6UfNT1A
-         TW55jcA0eohjbwiqsbLX3JcVwthU8KMuMo+xxZjhfkE94B/hUG5TsuhYU3k5hS9KtX89
-         qTEo5n1R5IzWz/DUvYCOD0AJHFSx4ZgHaKsNWWmTJY1aBzKBO0wPoKPBz7818ncKh3bA
-         zM0X8ftfT3D4iDECaZbP4u6tDYyZwFRlZbXk9R8AYQlAXyMge0Vx5swcJ5CUHtj8WqBC
-         uLlt8ksV1qdM/6WMmB2I8TCch1j+2fBJLmgbs3bQW0kKplaGV20skpJEocy1PV1Oc32h
-         dxjA==
-X-Forwarded-Encrypted: i=1; AJvYcCW51bfKTdrpQ1QqkOv4hBWOmWHKT9RlT7YjwSivzyYaBXTcRytT31Yb6LCjbsk8oKxVfbBQKiZ674DivXUimxOVKbsx+I4BjuSGmnLb
-X-Gm-Message-State: AOJu0YwSt8jwKnv34pJZiWIuUGbNOvj/8087Aasu6JZBHNxWTKOjyDAP
-	p710PhuVNV7BhhfShRHQdS5N+izb96CCgeDGgbyZpavjzhyeLElu/ahBD/2sm1Y=
-X-Google-Smtp-Source: AGHT+IFXMQWdOmZhU5YF1GpARsMqHvRsZ6j2ByO2I8Vygrxh4HD+auy0yyJigMMJuCmYaSgf3lHGDg==
-X-Received: by 2002:a05:600c:3c9f:b0:414:6211:14a7 with SMTP id bg31-20020a05600c3c9f00b00414621114a7mr1475302wmb.14.1711612318113;
-        Thu, 28 Mar 2024 00:51:58 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.148])
-        by smtp.gmail.com with ESMTPSA id bg34-20020a05600c3ca200b004148cd4d484sm4594451wmb.9.2024.03.28.00.51.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Mar 2024 00:51:57 -0700 (PDT)
-Message-ID: <c33833ad-9102-40e6-97bf-9a4e1bf0a3d9@linaro.org>
-Date: Thu, 28 Mar 2024 08:51:55 +0100
+        d=1e100.net; s=20230601; t=1711612403; x=1712217203;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VWzLPeLLlmGOBtEnLvR7ID/q8d8vc0GlObcdJceoe8U=;
+        b=VfR7kkqN3QtD1SXRw9aBMbGn3o//+7l5jvkb7e9uB8llhmTp+1qtKbhWn7Wia+x46X
+         GM4w3atE1X9Va2e8v8pt03B8MKpFC7/J5C/WtuSRb2v9w25zenJ1la/a/XOhCYtxWmqv
+         NQyXRgX+4qS3YqPlxCIvXZPiCn1u8sSz8Q5Lo/0JRlL4z2cB5AwXUhfpuIHh899fMz+3
+         P0z8L/j6Fp38Qt4HGGtiPcqQJc7pxQtaw6iLOroHYVZo+IzAht9k3+N/bONyAonwq8Fv
+         nWVaHm37nbk/M7X4sS3a9x/WrcgBwlE15NOKrTolNv+Zzy7x2ftxvV5RtSmmERoxvmF7
+         EupA==
+X-Forwarded-Encrypted: i=1; AJvYcCXKRP8EA9Cu5UOwZcynR8+zQ2DWMrsjGHUvi76OpgOKEj6tNSGKTJmoehcPWaJbifjP60nIDYattTkksZQP/kFlYLxEkvlPGGrLDshuI+GekqNbu8APGgopXX8m6xwZStGxk+NTFuY2BJGZSuB71hkvsOCC
+X-Gm-Message-State: AOJu0Yz1mV3KIzWMdffK+8CiJIYcauEnxzlKnSzz1OVoJP97N+BAPTab
+	IoT0V/R/6uNoeoAXwEenXNnP3ACSgoWjTVIOH5OBkf6lCsr4JIR1
+X-Google-Smtp-Source: AGHT+IGNSCAzjZUIEUhikEwCO0OBMmnJm83tV+FlDjZ9po4KHUV3/ZohPm+enyNSfYnUY3P+hJl5KA==
+X-Received: by 2002:a05:6a20:d049:b0:1a3:6ec2:d23b with SMTP id hv9-20020a056a20d04900b001a36ec2d23bmr2957496pzb.15.1711612402804;
+        Thu, 28 Mar 2024 00:53:22 -0700 (PDT)
+Received: from ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx ([103.6.158.65])
+        by smtp.gmail.com with ESMTPSA id d13-20020a170902654d00b001d9fc6df457sm879274pln.5.2024.03.28.00.53.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 00:53:22 -0700 (PDT)
+Date: Thu, 28 Mar 2024 13:23:17 +0530
+From: Ayush Tiwari <ayushtiw0110@gmail.com>
+To: Paul Moore <paul@paul-moore.com>
+Cc: alison.schofield@intel.com, mic@digikod.net,
+	fabio.maria.de.francesco@linux.intel.com,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	gregkh@linuxfoundation.org, outreachy@lists.linux.dev,
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH] LANDLOCK: use kmem_cache for landlock_object
+Message-ID: <ZgUh7cIQIsOgvWpw@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
+References: <ZgSrBVidW1U6yP+h@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
+ <CAHC9VhRYDNoqkbkgdUSg-kYSHVbheD5NtezmVxyRakZ0-DzuSg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/19] amba: store owner from modules with
- amba_driver_register()
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Linus Walleij <linus.walleij@linaro.org>, Olivia Mackall
- <olivia@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>,
- Vinod Koul <vkoul@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Michal Simek <michal.simek@amd.com>, Eric Auger <eric.auger@redhat.com>,
- Alex Williamson <alex.williamson@redhat.com>, linux-kernel@vger.kernel.org,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-stm32@st-md-mailman.stormreply.com, linux-i2c@vger.kernel.org,
- linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-input@vger.kernel.org, kvm@vger.kernel.org
-References: <20240326-module-owner-amba-v1-0-4517b091385b@linaro.org>
- <20240326-module-owner-amba-v1-1-4517b091385b@linaro.org>
- <6p4cdmbhrezm7fqbe3kgrkblqgrhaq4fgiw5x4n5dnptii7kjp@vmbj2pkjglp7>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <6p4cdmbhrezm7fqbe3kgrkblqgrhaq4fgiw5x4n5dnptii7kjp@vmbj2pkjglp7>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHC9VhRYDNoqkbkgdUSg-kYSHVbheD5NtezmVxyRakZ0-DzuSg@mail.gmail.com>
 
-On 27/03/2024 21:33, Andi Shyti wrote:
-> Hi Krzysztof,
+Hello Paul
+Thanks a lot for the feedback. Apologies for the mistakes. Could you
+help me in some places so that I can correct the errors, like:
+On Wed, Mar 27, 2024 at 07:43:36PM -0400, Paul Moore wrote:
+> On Wed, Mar 27, 2024 at 7:26 PM Ayush Tiwari <ayushtiw0110@gmail.com> wrote:
+> >
+> > Use kmem_cache replace kzalloc() calls with kmem_cache_zalloc() for
+> > struct landlock_object and update the related dependencies.
+> >
+> > Signed-off-by: Ayush Tiwari <ayushtiw0110@gmail.com>
+> > ---
+> >  security/landlock/fs.c     |  2 +-
+> >  security/landlock/object.c | 14 ++++++++++++--
+> >  security/landlock/object.h |  4 ++++
+> >  security/landlock/setup.c  |  2 ++
+> >  4 files changed, 19 insertions(+), 3 deletions(-)
 > 
-> ...
+> Hi Ayush,
 > 
->>  /**
->> - *	amba_driver_register - register an AMBA device driver
->> + *	__amba_driver_register - register an AMBA device driver
->>   *	@drv: amba device driver structure
->> + *	@owner: owning module/driver
->>   *
->>   *	Register an AMBA device driver with the Linux device model
->>   *	core.  If devices pre-exist, the drivers probe function will
->>   *	be called.
->>   */
->> -int amba_driver_register(struct amba_driver *drv)
->> +int __amba_driver_register(struct amba_driver *drv,
+> Mickaël has the final say on Landlock patches, but I had a few
+> comments that I've included below ...
 > 
-> ...
+> > diff --git a/security/landlock/fs.c b/security/landlock/fs.c
+> > index fc520a06f9af..227dd67dd902 100644
+> > --- a/security/landlock/fs.c
+> > +++ b/security/landlock/fs.c
+> > @@ -124,7 +124,7 @@ static struct landlock_object *get_inode_object(struct inode *const inode)
+> >         if (unlikely(rcu_access_pointer(inode_sec->object))) {
+> >                 /* Someone else just created the object, bail out and retry. */
+> >                 spin_unlock(&inode->i_lock);
+> > -               kfree(new_object);
+> > +               kmem_cache_free(landlock_object_cache, new_object);
 > 
->> +/*
->> + * use a macro to avoid include chaining to get THIS_MODULE
->> + */
+> See my comment below, but you may want to wrap this in a Landlock
+> object API function.
+Sure. I will definitely implement this.
 > 
-> Should the documentation be moved here? Well... I don't see any
-> documentation linking this file yet, but in case it comes we want
-> documented amba_driver_register() rather than
-> __amba_driver_register().
+> >                 rcu_read_lock();
+> >                 goto retry;
+> > diff --git a/security/landlock/object.c b/security/landlock/object.c
+> > index 1f50612f0185..df1354215617 100644
+> > --- a/security/landlock/object.c
+> > +++ b/security/landlock/object.c
+> > @@ -17,6 +17,15 @@
+> >
+> >  #include "object.h"
+> >
+> > +struct kmem_cache *landlock_object_cache;
+> > +
+> > +void __init landlock_object_init(void)
+> > +{
+> > +       landlock_object_cache = kmem_cache_create(
+> > +               "landlock_object_cache", sizeof(struct landlock_object), 0,
+> > +               SLAB_PANIC, NULL);
+> 
+> The comments in include/linux/slab.h suggest using the KMEM_CACHE()
+> macro, instead of kmem_cache_create(), as a best practice for creating
+> slab caches.
+> 
+Sure. Apologies I didn't see that, I tried to implement it from scratch
+using the reference from linux memory management APIs.
+> > +}
+> > +
+> >  struct landlock_object *
+> >  landlock_create_object(const struct landlock_object_underops *const underops,
+> >                        void *const underobj)
+> > @@ -25,7 +34,8 @@ landlock_create_object(const struct landlock_object_underops *const underops,
+> >
+> >         if (WARN_ON_ONCE(!underops || !underobj))
+> >                 return ERR_PTR(-ENOENT);
+> > -       new_object = kzalloc(sizeof(*new_object), GFP_KERNEL_ACCOUNT);
+> > +       new_object =
+> > +               kmem_cache_zalloc(landlock_object_cache, GFP_KERNEL_ACCOUNT);
+> 
+> If the line is too long, you might want to consider splitting the
+> function parameters like this:
+> 
+>   new_object = kmem_cache_zalloc(landlock_object_cache,
+>                                  GFP_KERNEL_ACCOUNT);
 > 
 
-That's just a wrapper, not API... why would we care to have kerneldoc
-for it?
-
-Best regards,
-Krzysztof
-
+Sure. I didn't do as it was below the 100 columns limit, but will
+definitely implement it.
+> >         if (!new_object)
+> >                 return ERR_PTR(-ENOMEM);
+> >         refcount_set(&new_object->usage, 1);
+> > @@ -62,6 +72,6 @@ void landlock_put_object(struct landlock_object *const object)
+> >                  * @object->underobj to @object (if it still exists).
+> >                  */
+> >                 object->underops->release(object);
+> > -               kfree_rcu(object, rcu_free);
+> > +               kmem_cache_free(landlock_object_cache, object);
+> >         }
+> >  }
+> > diff --git a/security/landlock/object.h b/security/landlock/object.h
+> > index 5f28c35e8aa8..8ba1af3ddc2e 100644
+> > --- a/security/landlock/object.h
+> > +++ b/security/landlock/object.h
+> > @@ -13,6 +13,10 @@
+> >  #include <linux/refcount.h>
+> >  #include <linux/spinlock.h>
+> >
+> > +extern struct kmem_cache *landlock_object_cache;
+> 
+> This really is a decision for Mickaël, but you may want to make
+> @landlock_object_cache private to object.c and create functions to
+> manage it as needed, e.g. put/free operations.
+> 
+Okay. I didn't make it private as I was using it in fs.c to use
+kmem_cache_free, but if this is supposed to be private, I can modify the
+approach and expose it via some function, not directly exposing
+landlock_object_cache.
+> > +void __init landlock_object_init(void);
+> > +
+> >  struct landlock_object;
+> >
+> >  /**
+> > diff --git a/security/landlock/setup.c b/security/landlock/setup.c
+> > index f6dd33143b7f..a5fca4582ee1 100644
+> 
+> -- 
+> paul-moore.com
+I will make all the changes you mentioned, and as you said, I will
+wait for Mickael's say.
