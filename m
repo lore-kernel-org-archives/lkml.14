@@ -1,120 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.actia.se (mail.actia.se [212.181.117.226])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5761327E6;
-	Thu, 28 Mar 2024 15:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE15130AE8;
+	Thu, 28 Mar 2024 15:59:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711641546; cv=none; b=do36iJrDsIsimtaqYC98ot3HFzfzv5p/knBn3YRzLLPW8hlEijTk1cjuQJjTzURqcFgM9Kg+EpMx/wKou+VYvz96wBIOeyb5qKFrjULzqS4UJm4WodxtUAE2PGuk7OFM9GKRnu4Z5tMdV43xw4b4a4D1Zbdv+c1v/uwefIFF5lE=
+	t=1711641576; cv=none; b=kiEj8MoOYYd8Ie3Djx1kZ0TKGuJwx8zfY6ssSfc9rFnQ5Ta3rSUU8M0UG963r+PFayaBYrjHMawrNLdQyz1x0EunqtRTzuELLeswQPhLgzXEDj0nYUXkPRFwSkyBxgRyJlWTEn99If+DsmNfWKv2zbyyz7PGK+Wlj+0CBuKkEPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711641546; c=relaxed/simple;
-	bh=43XallgnzSLZhguS4VWitQ2Fcw54C6K2Ncxf6+7BSRI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RtHLcgbgrBp/5JWs2pdZL8AuGuI2YZbyRHs0+F2GZ2dxB1MwuXfYc7vtP+cnMSwwi130hK9zNKdcjqIh9cE9MbvCmKsvoePsQtK0qgoeOUlDhx9fse4fiDOt4VVz0CORh5/TRzUq5nWs4gEsj2Ps9tgQonEhxtNp9W5sgm+5Cbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fKgqsRfH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fKgqsRfH"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2F74AC43142;
-	Thu, 28 Mar 2024 15:59:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711641546;
-	bh=43XallgnzSLZhguS4VWitQ2Fcw54C6K2Ncxf6+7BSRI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=fKgqsRfHUCx6aBs250bwLQxrFH3Lt/DFlxIi8K/W26txiNrqxJep69UlidZtSxnVn
-	 k7iSc3CfIlmPR0UbHZqUpdqicpM92Ww6KLLDJoV/Qry79ox2BJ1pTf+muRfMeS23BZ
-	 p4i2qIH1mZzObREbjVuGDqhXLNAMEJnhF5aQtvrBlxljhYj0EgbZmcQ0Dp4zfo04Me
-	 C+tPRd7A842f/XiH5yoJ14adYy7E/MbzAGR7hwyIzfLBoLIe+y1x820s9EyNVwrNBO
-	 yN40GaJTPuM2NJdmotsIDLpSQg7ygtHrme3rJNFUudKpg+rfSWF+pZEf5nxlBBQ4AD
-	 uBTUPLvTuJ9ig==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23321CD1283;
-	Thu, 28 Mar 2024 15:59:06 +0000 (UTC)
-From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Date: Thu, 28 Mar 2024 16:57:53 +0100
-Subject: [PATCH 6/7] io_uring: Remove the now superfluous sentinel elements
- from ctl_table array
+	s=arc-20240116; t=1711641576; c=relaxed/simple;
+	bh=rEYm+RuDegHUaXhNywXY5gVCIeEihjWtUykcULPsMHs=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=PSC8pL5owfQ/Iwn9uSoXU85HNkOJEIEQUnJTOl4LLCu/htn9PMD17cUJSCflmyKO2adJeHsCbStJ1ia6sqOTP0d1H0A5d5U1usIMxrx9FTR9n3TD5qqn4o3sxsQ5hzs158Tuu5njrsSxR0K8Y+NItPnHyY5SUhlEMvnCpVfnLqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=actia.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
+Received: from S036ANL.actianordic.se (10.12.31.117) by S035ANL.actianordic.se
+ (10.12.31.116) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Thu, 28 Mar
+ 2024 16:59:29 +0100
+Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
+ S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%4]) with mapi id
+ 15.01.2507.037; Thu, 28 Mar 2024 16:59:29 +0100
+From: John Ernberg <john.ernberg@actia.se>
+To: Wei Fang <wei.fang@nxp.com>
+CC: Shenwei Wang <shenwei.wang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "Heiner
+ Kallweit" <hkallweit1@gmail.com>, "imx@lists.linux.dev"
+	<imx@lists.linux.dev>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Florian
+ Fainelli" <f.fainelli@gmail.com>, Russell King <linux@armlinux.org.uk>,
+	"Maxime Chevallier" <maxime.chevallier@bootlin.com>, John Ernberg
+	<john.ernberg@actia.se>
+Subject: [PATCH net v4 0/1] net: fec: Fix to suspend / resume with
+ mac_managed_pm
+Thread-Topic: [PATCH net v4 0/1] net: fec: Fix to suspend / resume with
+ mac_managed_pm
+Thread-Index: AQHagSjquwfDL2zjHkCW93uNOBsjcQ==
+Date: Thu, 28 Mar 2024 15:59:29 +0000
+Message-ID: <20240328155909.59613-1-john.ernberg@actia.se>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mailer: git-send-email 2.44.0
+x-esetresult: clean, is OK
+x-esetid: 37303A2921D729556C7D60
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240328-jag-sysctl_remset_misc-v1-6-47c1463b3af2@samsung.com>
-References: <20240328-jag-sysctl_remset_misc-v1-0-47c1463b3af2@samsung.com>
-In-Reply-To: <20240328-jag-sysctl_remset_misc-v1-0-47c1463b3af2@samsung.com>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- Muchun Song <muchun.song@linux.dev>, Miaohe Lin <linmiaohe@huawei.com>, 
- Naoya Horiguchi <naoya.horiguchi@nec.com>, 
- John Johansen <john.johansen@canonical.com>, 
- Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
- "Serge E. Hallyn" <serge@hallyn.com>, David Howells <dhowells@redhat.com>, 
- Jarkko Sakkinen <jarkko@kernel.org>, Kees Cook <keescook@chromium.org>, 
- Herbert Xu <herbert@gondor.apana.org.au>, 
- "David S. Miller" <davem@davemloft.net>, Jens Axboe <axboe@kernel.dk>, 
- Pavel Begunkov <asml.silence@gmail.com>, 
- Atish Patra <atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>, 
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, linux-mm@kvack.org, 
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
- keyrings@vger.kernel.org, linux-crypto@vger.kernel.org, 
- io-uring@vger.kernel.org, linux-riscv@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, 
- Joel Granados <j.granados@samsung.com>
-X-Mailer: b4 0.13-dev-2d940
-X-Developer-Signature: v=1; a=openpgp-sha256; l=866;
- i=j.granados@samsung.com; h=from:subject:message-id;
- bh=fE/NZmB4pRzGY5dsPYrxUBO9ZoOr+5OhzOId8tu7QTs=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYFk8bmxZGot17fJWYqTrmMAyaWIBy9sBUWG
- aHGw/deIYoGrIkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmBZPGAAoJELqXzVK3
- lkFPPqgL/j0Ld5LzYavMO9DP8fYz7mNmdGMwclTzF1+obs3fJGdIR8B/yld44GUGxZL131jYcMG
- rHpj3oVP4UfarmvGW9AI2OimEgbMMWPFc1ZmFkY/CrgzinI5TjytwY+i2r2AavTNWRMT7zcLAQf
- Vdq3FZfdbZ+JpLovP5iiwvyb2Cd96kkzD/e4Oa1nyGkxFYPOAxO80j4LDy7GfxL6+9UIIGGFZv4
- DaZKSWK1X2UrZOmVK1qgRXej8kHjlVxhl53AUNyQ+rFa5VbLRO405J68WgjMP32GJMISyVW57h5
- ocoprGgLHRyg4LpPfHIL4yohqv2RIyMpZPgpoTW5dpYZqFRcURac/bVmRZRQx5wpJjjEowDk45c
- H7nH57Hsk+EcGqekPtpXVg4vLZuvXOmv5CConYIlM2ttcTJItblMO8RCNiIqgE21QlZc99oAynV
- a/OGIOEYnrYir1BnHvhD/LINHxzOFzcChPE2iJr9kbQNFsz7wr+soDr8zShfiwcyJ1Ika8nd5s7
- ik=
-X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
- fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
-X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
- auth_id=70
-X-Original-From: Joel Granados <j.granados@samsung.com>
-Reply-To: j.granados@samsung.com
 
-From: Joel Granados <j.granados@samsung.com>
+Since the introduction of mac_managed_pm in the FEC driver there were some
+discrepancies regarding power management of the PHY.
 
-This commit comes at the tail end of a greater effort to remove the
-empty elements at the end of the ctl_table arrays (sentinels) which will
-reduce the overall build time size of the kernel and run time memory
-bloat by ~64 bytes per sentinel (further information Link :
-https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
+This failed on our board that has a permanently powered Microchip LAN8700R
+attached to the FEC. Although the root cause of the failure can be traced
+back to f166f890c8f0 ("net: ethernet: fec: Replace interrupt driven MDIO
+with polled IO") and probably even before that, we only started noticing
+the problem going from 5.10 to 6.1.
 
-Remove sentinel element from kernel_io_uring_disabled_table
+Since 557d5dc83f68 ("net: fec: use mac-managed PHY PM") is actually a fix
+to most of the power management sequencing problems that came with power
+managing the MDIO bus which for the FEC meant adding a race with FEC
+resume (and phy_start() if netif was running) and PHY resume.
 
-Signed-off-by: Joel Granados <j.granados@samsung.com>
----
- io_uring/io_uring.c | 1 -
- 1 file changed, 1 deletion(-)
+That it worked before for us was probably just luck...
 
-diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-index 5d4b448fdc50..fe3c93e21e2c 100644
---- a/io_uring/io_uring.c
-+++ b/io_uring/io_uring.c
-@@ -169,7 +169,6 @@ static struct ctl_table kernel_io_uring_disabled_table[] = {
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec,
- 	},
--	{},
- };
- #endif
- 
+Thanks to Wei's response to my report at [1] I was able to pick up his
+patch and start honing in on the remaining missing details.
 
--- 
-2.43.0
+[1]: https://lore.kernel.org/netdev/1f45bdbe-eab1-4e59-8f24-add177590d27@ac=
+tia.se/
 
+v4:
+ - Adjustments to commit message in patch 1
+ - Drop patch 2 after discussion in v3.
 
+v3: https://lore.kernel.org/netdev/20240306133734.4144808-1-john.ernberg@ac=
+tia.se/
+ - Implement feedback from Wei Fang for patch 2
+ - Fixes tag in patch 2 dropped, should it be delayed for net-next now?
+
+v2: https://lore.kernel.org/netdev/20240229105256.2903095-1-john.ernberg@ac=
+tia.se/
+ - Completely different approach that should be much more correct
+   (Wei Fang, Jakub Kicinski)
+ - Re-target to net tree, because I have fixes tags now
+
+v1: https://lore.kernel.org/netdev/20240212105010.2258421-1-john.ernberg@ac=
+tia.se/
+
+Wei Fang (1):
+  net: fec: Set mac_managed_pm during probe
+
+ drivers/net/ethernet/freescale/fec_main.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+--=20
+2.44.0
