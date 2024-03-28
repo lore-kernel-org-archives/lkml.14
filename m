@@ -1,93 +1,124 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E67681AB1
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 13:43:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7737E7BAE7;
+	Thu, 28 Mar 2024 13:44:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711633439; cv=none; b=NrvaS8oP0TqPVFqNLJAZOiEJm4cLQOurYX7HJyYIo59/tgGu/C69Zv9aNaSyJzVFFxO23X8lHVrbCW6SZJ7BgjfUxYiSm3x1fDqPqXDAW29yUUD1E1tnT8aAOLsUNLHMWiy+wTw2SMFuRbrERG8rObkMKeeHEuDqaGeuTPj84B8=
+	t=1711633463; cv=none; b=RM7d5wl3IbklrUTe8PuAWDXcgkxWuk7gxllhKMlvSWhInWZhHUzIVeK+ooQ8RTS2Nt8ROG2HMlizXM2VjEdSL8QTlIi/suHdyeQ/QuTsREO37iMSezgABuULtc7r9HifCCsG7Nkd+hb840VIObeZxruqGOvTkq7BAmzBbO5JKjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711633439; c=relaxed/simple;
-	bh=qxebtBwnyGPsO2kNr2fwFrTYCj37epzSvHLje1owcyI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Y7wrTnPybJImZoA+HFOXbjGLEOz4LduqwY8oPRO4anQPTIuENkGV03Hpcz8aE4QHnC1b9U5QrR5neZX1MMAK5dRL1HV7+v7pbY1lfHUh22k/9NP4Sr9MJhbjw7NDc8y/APJJPSiUKUYGzSqs4421auOferLJHR7xNHddZHfP4pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=eALxJRbv; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1711633463; c=relaxed/simple;
+	bh=1Zt/GNPnr+5CkPkwpfsrDaDy69KR996nG4gXgRgk1IE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Bnk+gCF453imatwkGnkZEAA750+3/NQFdB63W6/usu1exejji33FhmBl+QiXCYkBsgyksgsAl6DB5Ehg0eASb20vrQIJhr5XXzBImKeFv9t0gAh/uBekiXADQs2I55gV3A6rT23zZlopLCYb8DBy+BEVV7IvER5SHD2O2+hGTVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=m79MW81C; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="eALxJRbv"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1e21e09abbcso215175ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 06:43:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1711633436; x=1712238236; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J0z5YahbsAjIT5061DUG7My51zSMHhvhSzF4hs3eYCc=;
-        b=eALxJRbvLkcPw68Yc2Y728cC8WX2NkckD+ZZwmNG9obp9VoogGGjlsB+WtRiUD76AH
-         i5UnV4yNLme7WlmEvtWSY6FPbsLggSgSm7oGktcloHCk0ZrTQZrQB2a3snmMxhkPZmXl
-         KCS1/hhtaHlqWZDXF5k4Nvmzjsw/2AcCrMpAbn2HwrvXHXPbkhdOTgmf57f04U4SE8Zy
-         lCmJWTknH9xsXN9QCagdiZr9n8BtrGdWY/hJ6gwCbIfMcU/YUtzxceeoD/OtRP+76TfW
-         2hB++xk3IkL51YPpPandKgzcKEFbBHWHvJ0XcIbLFhmdDH5CA0Zy0lyl1pSSLjRM8BKA
-         xEOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711633436; x=1712238236;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J0z5YahbsAjIT5061DUG7My51zSMHhvhSzF4hs3eYCc=;
-        b=UkSCCCzk0Ta0PQk7KrKhQtAC/bS/vNNOAJNqIPzQr7TuBGi1raIov2cn9j+Om9j/fs
-         fdgnBTs60a1sR33PDwG8BongJ3ps75Cv9vr9w1bwg6hqxUJJllZGDzgkv2TfUw+ikb8C
-         cly3xiZ+tD1qIcw0zsi1J1tEWVEoSFOz/dp5fZ7kaPtmTQuWLs9pbUxwcyrG5ppRLCaN
-         hHg8ogUkN4iMO52MVFLTd3x0N1VZbWZZTZGxTgTbrdlzvlexsys6ACRJlwi0nsLEXzsQ
-         dH5q9+2dyAknG3d9bCqR443C0KEZ9pW8yNL7nKxhMEbp8RjeKiiebXgeUGMbHj0LyzIM
-         q4Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCUQPOfgu/mptcSTtFBNO6u2cVYEmvhE9HD5cX8BEPe/s42TYXh8H+U46us2JDxNJ0fGMpmbFQbQuxw7E9SqbZo899CvZyIs0EXnwzHt
-X-Gm-Message-State: AOJu0YxR3Bx5WeAw4cbgGc0hCNX0+JiFaoTgmtCcxq4l4F876ONCRv8Q
-	Q5VKpdp2zGXh6g06qaGfayTPicezIylW6xgCo1Cnbg9vtL3dpjGal8TMxM4J92w=
-X-Google-Smtp-Source: AGHT+IFnQRsHsmxK4vwmS9Tg55Qe1iLFntXEoAK8JTSx6l+VP7TfB+ycddefH0KZHVT5td0CkdLzTw==
-X-Received: by 2002:a17:902:7b87:b0:1dd:e128:16b1 with SMTP id w7-20020a1709027b8700b001dde12816b1mr2739817pll.6.1711633435683;
-        Thu, 28 Mar 2024 06:43:55 -0700 (PDT)
-Received: from [127.0.0.1] ([50.234.116.5])
-        by smtp.gmail.com with ESMTPSA id y4-20020a170902ed4400b001e0abeb8fb5sm1564522plb.271.2024.03.28.06.43.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 06:43:55 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Cc: asml.silence@gmail.com, io-uring@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
-In-Reply-To: <20240328022324.78029-1-jiapeng.chong@linux.alibaba.com>
-References: <20240328022324.78029-1-jiapeng.chong@linux.alibaba.com>
-Subject: Re: [PATCH] io_uring: Remove unused function
-Message-Id: <171163343470.657312.11623417523875571291.b4-ty@kernel.dk>
-Date: Thu, 28 Mar 2024 07:43:54 -0600
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="m79MW81C"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0B70B40006;
+	Thu, 28 Mar 2024 13:43:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1711633452;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PfNHoYf2InNiPGVC9qzo7631eEUXZGyrHux3q5scrBc=;
+	b=m79MW81COP1lStBzobUR/lbuPqe9Bta+GahxCqAPDJXqf6xKNvnwn6EHCJ+KIAHGsH74uq
+	n9ThN05SXJKK1w0GaN4WMkycD04/4b0dc9i/UKqgGHrle44cw9y5QwpLhMfkU4gEqCSXP0
+	ovVwtrPlnNVkR/JbR5V6vUcUfLqr+cias6g2pvNy6Cmt0z/A+Gah+z1Ntvw1X/uJ2adcxW
+	UAf68E5WwOzt0y242sjZreyBhpeL60aEnSnKIcmYzgMqdPuoCEXPjoSEBUZbazgthzCiuN
+	s5QdjnM2IuZymwUcS7W3HwkywqmjdisEzikegeNV+CvX8UkVecYgXtChPPFLBw==
+Date: Thu, 28 Mar 2024 14:43:37 +0100
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Luis Chamberlain
+ <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Oleksij Rempel <o.rempel@pengutronix.de>, Mark Brown <broonie@kernel.org>,
+ Frank Rowand <frowand.list@gmail.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ devicetree@vger.kernel.org, Dent Project <dentproject@linuxfoundation.org>
+Subject: Re: [PATCH net-next v6 10/17] net: pse-pd: Add support for PSE PIs
+Message-ID: <20240328144337.4456e596@kmaincent-XPS-13-7390>
+In-Reply-To: <f3bafb50-406b-444a-8411-5ddae8d84c31@lunn.ch>
+References: <20240326-feature_poe-v6-0-c1011b6ea1cb@bootlin.com>
+	<20240326-feature_poe-v6-10-c1011b6ea1cb@bootlin.com>
+	<f3bafb50-406b-444a-8411-5ddae8d84c31@lunn.ch>
+Organization: bootlin
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.5-dev-2aabd
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: kory.maincent@bootlin.com
 
+On Thu, 28 Mar 2024 13:24:00 +0100
+Andrew Lunn <andrew@lunn.ch> wrote:
 
-On Thu, 28 Mar 2024 10:23:24 +0800, Jiapeng Chong wrote:
-> The function are defined in the io_uring.c file, but not called
-> elsewhere, so delete the unused function.
-> 
-> io_uring/io_uring.c:646:20: warning: unused function '__io_cq_unlock'.
-> 
-> 
+> > +.. code-block::
+> > +
+> > +         +-------------+
+> > +         |    PSE PI   |
+> > + 8  -----+                             +-------------+
+> > + 7  -----+                    Rail 1   |
+> > + 6  -----+------+----------------------+
+> > + 5  -----+      |                      |
+> > + 4  -----+     /              Rail 2   |  PSE 1
+> > + 3  -----+----?          +-------------+
+> > + 2  -----+----+---------?              |
+> > + 1  -----+---?                         +-------------+
+> > +         |
+> > +         +-------------+ =20
+>=20
+> Is ? a standard markup character? I don't remember seeing it used like
+> this before.
 
-Applied, thanks!
+It seems the Documentation copy-pasted from Oleksij mail bring me few weird
+characters.
+I will fix it.
 
-[1/1] io_uring: Remove unused function
-      commit: 976a421d86422abb554b4544ddcad31f1cade3a4
+> > +static int of_load_single_pse_pi_pairset(struct device_node *node,
+> > +					 struct pse_pi *pi,
+> > +					 int pairset_num)
+> > +{
+> > +	struct device_node *pairset_np;
+> > +	const char *name;
+> > +	int ret;
+> > +
+> > +	ret =3D of_property_read_string_index(node, "pairset-names",
+> > +					    pairset_num, &name);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	if (!strcmp(name, "alternative-a")) {
+> > +		pi->pairset[pairset_num].pinout =3D ALTERNATIVE_A;
+> > +	} else if (!strcmp(name, "alternative-b")) {
+> > +		pi->pairset[pairset_num].pinout =3D ALTERNATIVE_B;
+> > +	} else {
+> > +		pr_err("pse: wrong pairset-names value %s\n", name);
+> > +		return -EINVAL; =20
+>=20
+> Maybe include the node path in the error message? For a 24 port
+> switch, it will help find a typo in one of the ports. I would do this
+> for all error messages in this code.
 
-Best regards,
--- 
-Jens Axboe
+Ok, I will.
+Thanks for your review!
 
-
-
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
