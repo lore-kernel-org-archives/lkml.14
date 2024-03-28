@@ -1,127 +1,198 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA29B135A4D
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF766136E13
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711643807; cv=none; b=F+S3SCNRiL/vbtx/aFjGAtOBERSG1/DC2lugevkOf/kK8OX+UmairQW5wiJbQbTDB0Jy0PkPVB9zHSD40tZ5YvWAvJgEv04kXmNhHQR2K6wZz7FmEGlauc1Le0SbKkPjVcdAXxm0WXftlAvFHvL+MOEOVZiqzedh2+CaY4qIaVU=
+	t=1711643810; cv=none; b=ZWtKXaGWPIX3HCzl7ifoD79UbuhkSC9h2SnLWBT+rzPcL/Luk8i3COcS2rCIspQjxP2bK7f1D2njjgnUGNyfcJp6Td1FmKPw6of6uCLjlIbtRk9EjMymIHgKDm3qM7YCnaO4l3/CvAnN583Go4T0VH1G8poQQMMGFDFkBFuufJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711643807; c=relaxed/simple;
-	bh=cEtyH6tzCXZpqAEUrIjkkPnv3RHdmfl3sgSQefQ/eQQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o0wgQILh/DTuTz5rBthDdehZllhWMl9Qkf4f9wVSSZKLr+hhY3lYrNFcoLAaBKaAhwP5s/NFTsqVstf8wn89gUhvUMmo1vuitK+juC24CR40oMkcz/Suz4117PoVR5oU+R9vKgIz7/T/MnSYnk6nGQ87InMVpqSMBVBaWu/K4sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M5G0B3zZ; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1711643810; c=relaxed/simple;
+	bh=WnncWnxxgP9sLHcDQXDUZGQwIjBqKphDXHD0PeS3QKQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=La3sKbqJGyKKlcusK3lsgJUvA/pvilTZkP6gc621phySu932pWo9PhyCXp365Ok/TfY/39ZJTYx+wgDq5d/p/+bQbQSgGV9delhEVWtG1fcEUCy0eMNgCshFKcg89GiLIB6xejAaPb2T4bDftFEJI21hksMN7N0HUH/EEPw7638=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KPtFJ/m2; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M5G0B3zZ"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-431347c6c99so3841cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 09:36:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711643805; x=1712248605; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JyYiyB+19yl+3Mab3HR7ROG9FFYrqYxnBsEAwzAS+Xg=;
-        b=M5G0B3zZED1wx3GFt33wAVHvNh4RNTYQOZuS48LLzu8pSwMuOI5/G0isI+Ae2s7uJ3
-         UmboGTHEcmDqnRtoSRTH+5y6uta5PkSCT9mSySCfBbMfP5+kkNFoQBqmxG2y5AY7ZxFo
-         zr1ZPrZdhYGMNVidzVe30QaCcA1N7Ff10Fd4hLQJ+9JSAkZJRt1kd74G3dGMKuYM6uL5
-         QyyiT/ziN3TLDKry4BO1ISeizz8JY82OMAEXIMC4Q1Olm3nyIY037ixWZTXPmg97TQj6
-         v/DAC1fZrtVx1aJraZN9YlbQX5tKFe6T5mrGzzcIwqV2egJ7dyIkjOKn/ZHpEEqi8WIL
-         JFNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711643805; x=1712248605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JyYiyB+19yl+3Mab3HR7ROG9FFYrqYxnBsEAwzAS+Xg=;
-        b=BLkeOVF/gH1UuAHaZFrjQ25oIwWYdHZ6yKZ97TBlfjMbIDmlDhG9gXPnRoQg9BLc4m
-         8mMrnBJ9Tto0mWtOWTVbBMvHhFPcUi0npI5awk1X7S+UzPrsc5BUTqpUUQtmRS7kzKDo
-         LUqxfHP81RdBQa0OPDitzeXdTqJWi29fbi2+lKd8KYU68xMO3G/jeiBnbyixuUsUKtSQ
-         5vQGuPRM9vEQsZJZf2ZKFfY7q+5g+xKmWI8wJNte7EZEuTM7p1PzOpw4U8U0j70NMJkm
-         92U60t47+vgOpDB7bo2S49pzWzhw3GcjVfqVNR3r9yg+s7jNhZloCJh8qWho52FiIeKq
-         e1Cw==
-X-Forwarded-Encrypted: i=1; AJvYcCURDVQB6K3hv8Jcr4/A5t60BkAs2BvlK8vZde61dt0nO+A/kffJtK8J1LN4emwlaxb/rr3Gukr9GtyIGdxBzwk5CONmtR6NMV8/uGp4
-X-Gm-Message-State: AOJu0Yx98Pnd8RHRSvNQ/UJegMSy/CmLadKO+LwBtPSYd+0y445WN42v
-	t+bFXmClZwuc+MPwyspXosXo235YLB1phR3NbVsnRRskmTL14U9vJ6mjOJKEbUoTFyKmT2m8SNd
-	vnSrZ0Ozs3pFThCgWODjk3kKsH05UEFByKn71Lc68vP9Ta5bcx2MD
-X-Google-Smtp-Source: AGHT+IHlZ9eO6WHEgYjS5TA/7zKzm6r7go+pnsDTXXfO5LZSesL0xptxLsIlxVDFf0RndXT9MS/+lYUHPWVESSFQ2iE=
-X-Received: by 2002:a05:622a:6182:b0:432:b6a9:9015 with SMTP id
- hh2-20020a05622a618200b00432b6a99015mr182897qtb.2.1711643804568; Thu, 28 Mar
- 2024 09:36:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KPtFJ/m2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711643808;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lykrnbha/6S87zBZnY0wz/f7lqvJK6Se2csvQWUZWMQ=;
+	b=KPtFJ/m2pobOt281cGMM0JaIgH7AxjVRQpX02IJYPYJIqx2KepeBqsn19W6ZPE4834quYB
+	R0zvVhqwIVq3ziFsxWdHSK6xlf3y8nf8oXBGLTSfGMSCP6v6mfM0w4Eoq8+R6sOjPRTu5N
+	u+UrIdo9flc/yhuKRbqRMcL3BlFaLCY=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-616-zNPlVeWXO8uUH_TirPk-BA-1; Thu,
+ 28 Mar 2024 12:36:44 -0400
+X-MC-Unique: zNPlVeWXO8uUH_TirPk-BA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 37CBF1C05147;
+	Thu, 28 Mar 2024 16:36:43 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.146])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id F2813C37A87;
+	Thu, 28 Mar 2024 16:36:38 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>,
+	Jeff Layton <jlayton@kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Dominique Martinet <asmadeus@codewreck.org>
+Cc: David Howells <dhowells@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Steve French <smfrench@gmail.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	netfs@lists.linux.dev,
+	linux-cachefs@redhat.com,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Christoph Hellwig <hch@lst.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	devel@lists.orangefs.org
+Subject: [PATCH 09/26] mm: Provide a means of invalidation without using launder_folio
+Date: Thu, 28 Mar 2024 16:34:01 +0000
+Message-ID: <20240328163424.2781320-10-dhowells@redhat.com>
+In-Reply-To: <20240328163424.2781320-1-dhowells@redhat.com>
+References: <20240328163424.2781320-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326202859.960577-1-weilin.wang@intel.com>
-In-Reply-To: <20240326202859.960577-1-weilin.wang@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 28 Mar 2024 09:36:30 -0700
-Message-ID: <CAP-5=fVAKRa7LsvyuNhjQpQuQyY5hvQ7yBnaWjeAJFYtS648Xg@mail.gmail.com>
-Subject: Re: [RFC PATCH v5 0/6] TPEBS counting mode support
-To: weilin.wang@intel.com, Namhyung Kim <namhyung@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-On Tue, Mar 26, 2024 at 1:29=E2=80=AFPM <weilin.wang@intel.com> wrote:
->
-> From: Weilin Wang <weilin.wang@intel.com>
->
-> Changes in v5:
-> - Update code and add comments for better code quality [Ian]
->
-> v4: https://lore.kernel.org/all/20240312234921.812685-1-weilin.wang@intel=
-.com/
->
-> Weilin Wang (6):
->   perf stat: Parse and find tpebs events when parsing metrics to prepare
->     for perf record sampling
->   perf stat: Fork and launch perf record when perf stat needs to get
->     retire latency value for a metric.
->   perf stat: Add retire latency values into the expr_parse_ctx to
->     prepare for final metric calculation
->   perf stat: Create another thread for sample data processing
->   perf stat: Add retire latency print functions to print out at the very
->     end of print out
->   perf vendor events intel: Add MTL metric json files
->
->  tools/perf/builtin-stat.c                     |  211 +-
->  .../arch/x86/meteorlake/metricgroups.json     |  127 +
->  .../arch/x86/meteorlake/mtl-metrics.json      | 2551 +++++++++++++++++
->  tools/perf/util/data.c                        |    3 +
->  tools/perf/util/data.h                        |    5 +
->  tools/perf/util/metricgroup.c                 |   88 +-
->  tools/perf/util/metricgroup.h                 |   22 +-
->  tools/perf/util/stat-display.c                |   65 +
->  tools/perf/util/stat-shadow.c                 |   19 +
->  tools/perf/util/stat.h                        |    4 +
->  10 files changed, 3076 insertions(+), 19 deletions(-)
->  create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/metricgroup=
-s.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/mtl-metrics=
-.json
+Implement a replacement for launder_folio.  The key feature of
+invalidate_inode_pages2() is that it locks each folio individually, unmaps
+it to prevent mmap'd accesses interfering and calls the ->launder_folio()
+address_space op to flush it.  This has problems: firstly, each folio is
+written individually as one or more small writes; secondly, adjacent folios
+cannot be added so easily into the laundry; thirdly, it's yet another op to
+implement.
 
-Thanks Weilin,
+Instead, use the invalidate lock to cause anyone wanting to add a folio to
+the inode to wait, then unmap all the folios if we have mmaps, then,
+conditionally, use ->writepages() to flush any dirty data back and then
+discard all pages.
 
-I'm happy with this series, my Reviewed-by is on all the patches.
-Arnaldo/Namhyung, could we land this for the sake of Meteorlake metric
-enablement? For the sake of tools, for the series:
+The invalidate lock prevents ->read_iter(), ->write_iter() and faulting
+through mmap all from adding pages for the duration.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Matthew Wilcox <willy@infradead.org>
+cc: Miklos Szeredi <miklos@szeredi.hu>
+cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+cc: Christoph Hellwig <hch@lst.de>
+cc: Andrew Morton <akpm@linux-foundation.org>
+cc: Alexander Viro <viro@zeniv.linux.org.uk>
+cc: Christian Brauner <brauner@kernel.org>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: linux-mm@kvack.org
+cc: linux-fsdevel@vger.kernel.org
+cc: netfs@lists.linux.dev
+cc: v9fs@lists.linux.dev
+cc: linux-afs@lists.infradead.org
+cc: ceph-devel@vger.kernel.org
+cc: linux-cifs@vger.kernel.org
+cc: linux-nfs@vger.kernel.org
+cc: devel@lists.orangefs.org
+---
+ include/linux/pagemap.h |  1 +
+ mm/filemap.c            | 46 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 47 insertions(+)
 
-Thanks,
-Ian
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 2df35e65557d..4eb3d4177a53 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -40,6 +40,7 @@ int filemap_fdatawait_keep_errors(struct address_space *mapping);
+ int filemap_fdatawait_range(struct address_space *, loff_t lstart, loff_t lend);
+ int filemap_fdatawait_range_keep_errors(struct address_space *mapping,
+ 		loff_t start_byte, loff_t end_byte);
++int filemap_invalidate_inode(struct inode *inode, bool flush);
+ 
+ static inline int filemap_fdatawait(struct address_space *mapping)
+ {
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 25983f0f96e3..087f685107a5 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -4134,6 +4134,52 @@ bool filemap_release_folio(struct folio *folio, gfp_t gfp)
+ }
+ EXPORT_SYMBOL(filemap_release_folio);
+ 
++/**
++ * filemap_invalidate_inode - Invalidate/forcibly write back an inode's pagecache
++ * @inode: The inode to flush
++ * @flush: Set to write back rather than simply invalidate.
++ *
++ * Invalidate all the folios on an inode, possibly writing them back first.
++ * Whilst the operation is undertaken, the invalidate lock is held to prevent
++ * new folios from being installed.
++ */
++int filemap_invalidate_inode(struct inode *inode, bool flush)
++{
++	struct address_space *mapping = inode->i_mapping;
++
++	if (!mapping || !mapping->nrpages)
++		goto out;
++
++	/* Prevent new folios from being added to the inode. */
++	filemap_invalidate_lock(mapping);
++
++	if (!mapping->nrpages)
++		goto unlock;
++
++	unmap_mapping_pages(mapping, 0, ULONG_MAX, false);
++
++	/* Write back the data if we're asked to. */
++	if (flush) {
++		struct writeback_control wbc = {
++			.sync_mode	= WB_SYNC_ALL,
++			.nr_to_write	= LONG_MAX,
++			.range_start	= 0,
++			.range_end	= LLONG_MAX,
++		};
++
++		filemap_fdatawrite_wbc(mapping, &wbc);
++	}
++
++	/* Wait for writeback to complete on all folios and discard. */
++	truncate_inode_pages_range(mapping, 0, LLONG_MAX);
++
++unlock:
++	filemap_invalidate_unlock(mapping);
++out:
++	return filemap_check_errors(mapping);
++}
++EXPORT_SYMBOL(filemap_invalidate_inode);
++
+ #ifdef CONFIG_CACHESTAT_SYSCALL
+ /**
+  * filemap_cachestat() - compute the page cache statistics of a mapping
 
-> --
-> 2.43.0
->
