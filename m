@@ -1,105 +1,111 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540F846549;
-	Thu, 28 Mar 2024 18:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB3C130E4F;
+	Thu, 28 Mar 2024 18:03:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711648986; cv=none; b=LwUKf3H/+2NZQdTTfkVlLTMIRhemQcBmds12Nwgmez9D7RB1Vb5d/rouRUxN+dGsTJjnpTThsfeWOw4St1qAmqMP0WGfCOrgCx0YEF57u/4in98Dczqm3+7luG3PdyedSSItnn3/LuwlRpEuU5FMD9RKtSlmdUZiiTtuHH4MPnI=
+	t=1711649008; cv=none; b=dyU/VtFhpOR92I+0KQCg0Wd0yrLoGh2OZ2Lh00BbRBDRqACe/k59VwlWrynUaPg4SnDoUD1tikfow0TEBMWka4EjP02Vy7OVsmtpoGqxker0EpIr5b6mUeg+ycnzxkIKLeVMqKp95SxELjQoK1+H7EDwo6+mjny2i4QuRp3cLaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711648986; c=relaxed/simple;
-	bh=DTbZ+Y9jaC0uz8dR80S7Tj5E5VmybpfliaYZJV2ojCo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NUcHRrq86fOo4oKPnzfmOzHK16Fuii+5fHTHrt5yMivVHcJKxkgJFECT4L1/7JFIrakOoJLen4nHK3RKlIEopWidB5YkpKxK3X9Y+SBHWnouYDi4GW0+FoFVIreG46i2dxX4QTdsqZMlnIWQ+hjfx8PbvsO43e8PDEAdZb4h9kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=NnpMOJux; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+	s=arc-20240116; t=1711649008; c=relaxed/simple;
+	bh=vB1K3UeOU2FvgT3cwFX6bIQzHZMdAnkhCLXgIqkAx/8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FbOw8XRr/uUoq1XyqT92TUGozdvUVjvrI5qDf8CSs/PkJstqeMw8gbiLTUn17hUIN02+6QKPlxBInFaumPLuEGpynWD4XGzWn2eedcUdjhsjoh3/NcQQ+mkiQWONBiTQaqkN4yBOHP6PFJORKq5BHeSIOp6OMFuxxF/qLu3Uki8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KBYe1IuR; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="NnpMOJux"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id 376DE100002;
-	Thu, 28 Mar 2024 21:02:43 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1711648963; bh=SSfky+uq2rYnJ57PyR2zDM3Rz0HLw3/XFkx0D1YEnb8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=NnpMOJuxSPu9KTqSrqj10q37r83Yv9mDdyfg+KRAVcOY9lG93hF3y11nRxRxIG1eY
-	 0jcsE0Nn2+VxZG5nq15GE59cmm3AULNYty0cTLznSiCnhn0x2B9Ytn2CexeMRJThFO
-	 I5rPtQrDlOQcqyRYNQp1C5dljaEmvcm1kabkZp4CC4TKC15sKgq0knQtLVkmglttDn
-	 DDuAthOjId3w0A1OJH5sXZdXHPHgBqKZioicDkSYKc5WEkE7OkYuDlkMeRhKuDKyMp
-	 XAx21hpqL0lj8yhqABznj8wg/WW10ovU01fR3ISQNf8VYRzjsF/8QZflyUa1mhYDd6
-	 lFrqEeZLeDMhA==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Thu, 28 Mar 2024 21:01:54 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.6) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 28 Mar
- 2024 21:01:34 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Jonathan Chocron <jonnyc@amazon.com>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=
-	<kw@linux.com>, Rob Herring <robh@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-Subject: [PATCH] PCI: dwc: Fix potential NULL dereference
-Date: Thu, 28 Mar 2024 21:01:26 +0300
-Message-ID: <20240328180126.23574-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KBYe1IuR"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1e0189323b4so8952565ad.1;
+        Thu, 28 Mar 2024 11:03:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711649007; x=1712253807; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=olSW0jWLIrC4vxY5yG21bb3i0NkpMQDJhW3rhvvrLzQ=;
+        b=KBYe1IuROmE5QJaTzVoQaJKqamXjGV+ZoaZINvIedkFJbRxlJ/mqbvTh1ZCwQBq6J1
+         eKgQi72FgBtA+MbOS8NsYACPBaML3XrszURM3eL0UO5e/wdMVGt08t3GlpbuAOeOZWf0
+         tDGJRAJ2AVVIXJRaEiXZSr84rInmQxtYktX3PwhcB/JZBtcdFbtvpo3T6jRGxibfvlhK
+         cFKiNTiS6OPpNAnwdgx3MXVP8CSCGlmr3HV16Tklx/ta0wHX3bs5h0xkYPkYVsY0tTOa
+         1ebnNtjiXgUf47ieun1IFa8/11CCqgQphZaj1ixRo7tCtCxQ7JdUWJ+Z9CxDe8A2PFDX
+         NnGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711649007; x=1712253807;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=olSW0jWLIrC4vxY5yG21bb3i0NkpMQDJhW3rhvvrLzQ=;
+        b=Q8eoUXFNkIT4je707nOq0ez1AeV82JMetCUtwr6XaE3onEdyS3/+oZq6VOn/Kj2YWQ
+         xzNkRLBc5i2uKjtY/VcdXnWlFgfdPlSiWSXFFbSxZNFsJZuLCIyfDCIkyd79D1Stbe2d
+         VMcxSSSE9stv3Pz0kGh29B31l63G6HPjkxcNT8JhCwN/lcpihg32fPe5UNl07dcU+7km
+         mgWqqcJh2X079ppDFEjdEgLU97UH/qAjSQsOIni0wuVLACbDl7WhaaQID8NGSWcO7Jc4
+         eUtv0uYYbGAd2TJI5ehIgxOoC6soAAkLyL+aMHdpObWQHVBXr8VSUUctUJzuLsCzL1g8
+         Ez2g==
+X-Forwarded-Encrypted: i=1; AJvYcCXbzyQaPcO3Lp3AuGE2/093BgYKWEpochKA3214kbHkafMshD4X211+Hgfzssu96/UGsLvulQbPrmJe7vcHvqlhbTUAo3sq8E+THOOFIP6gcARjyT778rs3iISrKiZjerTXlkLQ3R5RBZG3nqFDULBhMXzQ5LLsa4z00mgqSGXlRGV7xnek4ijsGPOwnJnpsQiANsiBDI3L7NsS7ATIqb9oyWAwYB8F0Eh+0O0D9jNpjj+KiCp/vXVLGIZAug==
+X-Gm-Message-State: AOJu0Yz26g/twb8fwv3x9KV41Zi/J4WF6cgovgebK6LknKetP8h/rbrM
+	t/u9bUMTv93778apXMkl56rwXYISdKOK0402OzNrcxhmCnOLW8ZY
+X-Google-Smtp-Source: AGHT+IEkQsFT2CQ41glFYLpP1d3wFQ1n1mHU48V+X330fVWYW26kggF6SGZ6JUFwxozMX9FKu+ROTw==
+X-Received: by 2002:a17:902:ef48:b0:1e0:e2b1:7395 with SMTP id e8-20020a170902ef4800b001e0e2b17395mr283743plx.14.1711649006562;
+        Thu, 28 Mar 2024 11:03:26 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:493e:82a3:49f9:d88])
+        by smtp.gmail.com with ESMTPSA id mm8-20020a1709030a0800b001e12013ae07sm1901205plb.231.2024.03.28.11.03.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 11:03:26 -0700 (PDT)
+Date: Thu, 28 Mar 2024 11:03:23 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Support Opensource <support.opensource@diasemi.com>,
+	Cosmin Tanislav <cosmin.tanislav@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Antoniu Miclaus <antoniu.miclaus@analog.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+	linux-staging@lists.linux.dev, linux-input@vger.kernel.org
+Subject: Re: [PATCH RFC 1/7] regulator: devres: add APIs for reference
+ supplies
+Message-ID: <ZgWw66OpLnLPdCn-@google.com>
+References: <20240327-regulator-get-enable-get-votlage-v1-0-5f4517faa059@baylibre.com>
+ <20240327-regulator-get-enable-get-votlage-v1-1-5f4517faa059@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184474 [Mar 28 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 14 0.3.14 5a0c43d8a1c3c0e5b0916cc02a90d4b950c01f96, {Tracking_from_domain_doesnt_match_to}, mx1.t-argos.ru.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;t-argos.ru:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/03/28 17:08:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/03/28 16:46:00 #24495495
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240327-regulator-get-enable-get-votlage-v1-1-5f4517faa059@baylibre.com>
 
-In al_pcie_config_prepare() resource_list_first_type() may return
-NULL which is later dereferenced. Fix this bug by adding NULL check.
+On Wed, Mar 27, 2024 at 06:18:50PM -0500, David Lechner wrote:
+> A common use case for regulators is to supply a reference voltage to an
+> analog input or output device. This adds two new devres APIs to get,
+> enable, and get the voltage in a single call. This allows eliminating
+> boilerplate code in drivers that use reference supplies in this way.
+> 
+> devm_regulator_get_enable_get_voltage() is intended for cases where the
+> supply is required to provide an external reference voltage.
+> 
+> devm_regulator_get_optional_enable_get_voltage() is intended for cases
+> where the supply is optional and device typically uses an internal
+> reference voltage if the supply is not available.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+So because we decided that we could not have devm_regulator_enable()
+because of (IMO) contrived example of someone totally mixing up the devm
+and non-devm APIs we now have to make more and more devm- variants
+simply because we do not have access to the regulator structure with
+devm_regulator_get_enable() and so all normal APIs are not available.
 
-Fixes: 0f71c60ffd26 ("PCI: dwc: Remove storing of PCI resources")
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
----
- drivers/pci/controller/dwc/pcie-al.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+This is quite bad honestly. Mark, could we please reverse this
+shortsighted decision and have normal devm_regulator_enable() operating
+on a regulator?
 
-diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
-index 6dfdda59f328..29bc99d48295 100644
---- a/drivers/pci/controller/dwc/pcie-al.c
-+++ b/drivers/pci/controller/dwc/pcie-al.c
-@@ -252,7 +252,12 @@ static void al_pcie_config_prepare(struct al_pcie *pcie)
- 	u8 secondary_bus;
- 	u32 cfg_control;
- 	u32 reg;
--	struct resource *bus = resource_list_first_type(&pp->bridge->windows, IORESOURCE_BUS)->res;
-+
-+	struct resource_entry *ft = resource_list_first_type(&pp->bridge->windows, IORESOURCE_BUS); 
-+	if (!ft)
-+		return;
-+
-+	struct resource *bus = ft->res;
- 
- 	target_bus_cfg = &pcie->target_bus_cfg;
- 
+Thanks.
+
 -- 
-2.30.2
-
+Dmitry
