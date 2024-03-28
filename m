@@ -1,330 +1,293 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01olkn2097.outbound.protection.outlook.com [40.92.52.97])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF0C4EB4E
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 05:59:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711605558; cv=none; b=caeWQPT4d1ESgh7Jm1E8ltuWvlvShR1Td698xK6nmr+wR1W8p+lZvD6D6/O7qwvPNYYYCthHwA1Mj2pfx8H5gTDUsZmSOqJjiMTLamRcZ57sqFM1XtLFytk3ULr2QYmK1aXGjZDBV/vZbzBzCkm7TOHw5Z84PopPEjethZBeYhM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711605558; c=relaxed/simple;
-	bh=EWZfbU+atOauhnn6eeT76S7ghdEOEJqps5k8nRkOICc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Wic1Qm0thBcT1Dv7v6gpK8dzx3fuPtgyTadBxe9opUakYtgOkNWGGWUWk8tGIPjuA6wYlUM6y3+sCCIwRW4Y9nQItYbdN1RKZrtYbnrIsY7mrrceja0YZeimowB8+O/JwSAWqZ9aTFRu6c7Mz3fJ+TVUHlkUz7wV4C4cIwgfyWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=TYs5yBS8; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90461CAAC;
+	Thu, 28 Mar 2024 06:05:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.52.97
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711605939; cv=fail; b=V+YLmhbyleHcc6d1K7Tk4jlVZoefBndY2xOPfmHMpqf0+N8rPrZcR3XUjsLvDOTazgow6jw8YzndiIxIr4VxI7RDetYn7m5PAZGChGhmFXU81Oa8qjQqscKkRTDwDt7iVWZaaf6R0fA4wDTt3uLiGegvCjpIc2xg1G+JKzA+LxE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711605939; c=relaxed/simple;
+	bh=/YeUnquGaMAIezS+FT16JsdSrziiYPsFcpfTc8DkkQ4=;
+	h=References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:MIME-Version; b=Ij0jM+vQYCMDZUPjCHh292Llqvm12lFtmuESTbXFPOHzhZ/DC1bxhqod1O5W62SzpPVBhH4FMukUJlCKlkXI097zpqixG3Kx9m29vIhWhxaqTgDW4U4/Pu4H4z9JufMgake8lWvsfvBd+hdlFYcrjtIrRpBMFHr777cCcJvVjcM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=L/Jizirf; arc=fail smtp.client-ip=40.92.52.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="TYs5yBS8"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1df01161b39so5256455ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 22:59:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1711605554; x=1712210354; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=irQLRsi22SkraHK4lMxqFBwPYj6fd+go4MNyv3pAG9Y=;
-        b=TYs5yBS8XJKFeTDn+0HELCB9zGvagMTmJWaUKYLXcGUJWZRFuh6FemLHD/uAO4LvcD
-         I2Fo9VTKqVPFahvw4nsYsryjZQ0qxU3uI/WDlnEOfufuxDd/2iy02uAalpIJ0SsC+r3j
-         L1Ak88eH1AM3KLc/aLaPo9uCKhdDMNzt+k5n3YPkP+9IFdrMZOgpdZBrBA7u2/LNYxAu
-         xDO9rhdf2t8Yfsw1lu0BpGRJ3rOFaTjVGZTo4ppVEdu8JXjvV3Lmk9vE8a9+p3v5V6Hj
-         /+tDZkYc7HfzvCueMJpoOBVJmYYWgu4n5xEwA6f4ugOfzX4E6Hb2KWETaqtZqacZGWuY
-         M+6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711605554; x=1712210354;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=irQLRsi22SkraHK4lMxqFBwPYj6fd+go4MNyv3pAG9Y=;
-        b=eXsS6QpU8u1pcYxkieyppYFOupBlG66iB6g9krn2AUQJuHqZ+E8aw4tmzRM2nUQvb0
-         ZP7xwq9hbJJFW9kMZj5w2QiTHqkbVtORN5ZmmOj1s8/Qy9kKw05qV7RWjbApdRK7ENCl
-         /sP8n6kap1Js3R4+j1Ngepu9IkrtyT69BQlNdN5Idqd1XNL66F/br407SZf0VzWgx93j
-         CS9ERLSJsLUUsGIW8cxL6XPblu+/l36WPbCmrM9HYzrhp9FBL7bNDC3NHc0ryT1YO5oU
-         wqVFR5qV+xW/hc6SiRYhCluLjE1lcu6mH5+tBksZZ+KhS+brzPMe1cLuORdZLxBxtopH
-         O1xA==
-X-Forwarded-Encrypted: i=1; AJvYcCXpVeWuG3Q7yK5YPerx4ejWgKP3HILpMB14rylg2/1x683eK0QQGwWWxTkHGIA/Kb8WpXFcrbnk1obig50of2h+zZQ3JGhhfn4Deyr4
-X-Gm-Message-State: AOJu0YxpxqG47PPeQbDuycuLklvYkzXgw4wpFCscrEs3ihWpD7+slIKt
-	Q2cwbMpn8n0OYCC36yj8l3OsOLkoBy0mEwIyBJvBvN+gCDwdTU19AkWltEVN+TQ=
-X-Google-Smtp-Source: AGHT+IGxL8g/d32e19PrXxu6Kp/faCdNfJNa6+6FITTlKuZg+NQhRbIo6OP8iZKzSLZu0zLul61+cg==
-X-Received: by 2002:a17:902:e884:b0:1e0:2c80:2aaf with SMTP id w4-20020a170902e88400b001e02c802aafmr2348711plg.44.1711605554542;
-        Wed, 27 Mar 2024 22:59:14 -0700 (PDT)
-Received: from ubuntu20.04 ([203.208.189.8])
-        by smtp.gmail.com with ESMTPSA id l9-20020a170902d34900b001e0b461d104sm595984plk.67.2024.03.27.22.59.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 22:59:14 -0700 (PDT)
-From: Yang Jihong <yangjihong@bytedance.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	james.clark@arm.com,
-	linux-perf-users@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="L/Jizirf"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VZV8yd/Vn17+x4RFewqC8RUnoy8lFrSjJd5xQ5rfRe0VZm9ctQkrgF55orz4m6qwP7yjjQl6VqKDm1H6FnULk8IFB1m/xef6Yb7QuqYkC8Qm/ZviiD/4ofB3R0j71On/tPniwhETLyuL7kEmDH1oaELh+gfZ0apR9IRCnIAAylNsA8pDKukf/sLJAjop87Xy4WFJkNinin8xiRL6AcgDKJu3a62VHhrsv8ltTsRHTNOGxC4QFbUe0t3gnPardMK+VDNwoQsZbxjH7OQQPlorplIt4ATT307Sd7NadPvTKqoaWOrOPWr2YEHktr8qijlBbBjkAyBDZZrAPA2SPx5jvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9cDzX+FUpEtAoBJ8ECzcWnoOqnrbqMIk88OXWcm4kbM=;
+ b=UsCTJalsse4cUsbrjhh78Js8q/P+WvgabKZPN50MzG3Z04dIb9PjffYGVqp7xam/wcKl+TYZL7SUAIz/rAytIz4WSweLMUN9Tm9NVAtdLqL3+MKgXv+8eu3v/bNmQbrHUzz5ulC3t6kZKSR0ivJk3u6nxlv9rHeLuWuKWJogQGydL191M5dVFZebu5OJOjvygWhR+Ul+5mj6UfMcy20nYNS4tSFfvrfJadIBpmvJMxx7WD4CnwQfK2PUKnEAKaO0oocBy2HutdCuQR2kjp3V9Jndo8ZDwllvX775pDKmZJhOil5BtvByCJs5x8g2CtYybavSSqEg2CCzZU++qKJhAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9cDzX+FUpEtAoBJ8ECzcWnoOqnrbqMIk88OXWcm4kbM=;
+ b=L/JizirfeGCa5mRTJhs47TsM+XkCG2nTxb8MVh2QSmPD2wjcdHMOsMneEUMn8WRsk6oh0DVcLjuR8D1B5816bt5PtifKdpQGlMK6mVUomDu0Bz50rRKy3oSNaArP0cCWwyh3hDAzUx/UPBzX5a06XRehO+WzxpIvbLQ1idCv6ajLkshjT+u1fDbBDLOlWgO9ii7ijusrCd8GasVyrG7MQ/K92YxR0hLL7TwavtYPm5Fr14qdNQa7tsN98+m6K/5Dd/1g+0sGNiq+UUnlvrVmnbZskikh7DQGs8bdcHa7ecCXq8os7aZLWrddOTpCSu7fZWwETHPZn3aK++w4vgKu5A==
+Received: from TY0PR06MB5611.apcprd06.prod.outlook.com (2603:1096:400:31e::8)
+ by TYSPR06MB7453.apcprd06.prod.outlook.com (2603:1096:405:9e::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.30; Thu, 28 Mar
+ 2024 06:05:33 +0000
+Received: from TY0PR06MB5611.apcprd06.prod.outlook.com
+ ([fe80::d57a:9f0e:1ee7:85bf]) by TY0PR06MB5611.apcprd06.prod.outlook.com
+ ([fe80::d57a:9f0e:1ee7:85bf%5]) with mapi id 15.20.7409.031; Thu, 28 Mar 2024
+ 06:05:33 +0000
+X-Forwarded-Encrypted: i=1; AJvYcCUl3sMOzD4mrOFHxqpi4hphYlK+pU7W+KgExeRWmi6/RIL03yFjx5T9Z00eYMrGnpc3fsCZtfgi75N9V99Zv0Tmur1/u7EZJTSik0xphpHMJR7/d8+Kd9KGt1p7rCQOQkBEYxTDhR4NKVlju+UUTqlBFslJtDfXgybHX6mETPbqy+/a6XV5
+X-Gm-Message-State: AOJu0YxmX8LitoauBe+vtotT6hebAZzQWTiNLeYB9eqY/lWohw2l7dmC
+	/g2JJHIn9J+rY5DzyVLvWTALYA6zeU4MFipVzdbWxf9naMb5FEoSl7zlMelp/cdcri374Jckr5w
+	DJ2IhwJmswXWig3BubEZ2pPfT2HQ=
+X-Google-Smtp-Source: AGHT+IHJzGJq1gpsKqxscRnX2H8Kri93hWCNDLwCxVuTScAC00nsfZtQKDaprNSez/FJV9PyGIl7JKO1OIL84KeEFKc=
+X-Received: by 2002:a17:906:4f17:b0:a47:5171:8d61 with SMTP id
+ t23-20020a1709064f1700b00a4751718d61mr952990eju.60.1711605929041; Wed, 27 Mar
+ 2024 23:05:29 -0700 (PDT)
+References: <20240322085606.993896-1-allencl_lin@hotmail.com>
+ <TY0PR06MB56116F0902017225C78EDDDD9E312@TY0PR06MB5611.apcprd06.prod.outlook.com>
+ <20240322-mammary-boil-f9a4c347fba1@spud> <20240322183009.GA1227164-robh@kernel.org>
+ <20240322-rectified-udder-fef9102f58da@spud> <TY0PR06MB56110ADEA805B68BE2B887069E352@TY0PR06MB5611.apcprd06.prod.outlook.com>
+ <20240326-whoever-spotter-1fe7ace35428@wendy> <TY0PR06MB561197578717990F4BEA93D29E352@TY0PR06MB5611.apcprd06.prod.outlook.com>
+ <20240326-granite-snipping-7c8b04480b2e@spud> <TY0PR06MB5611AE812B72B349E85118D59E342@TY0PR06MB5611.apcprd06.prod.outlook.com>
+ <20240327-pegboard-deodorize-17d8b0f1e31c@spud>
+In-Reply-To: <20240327-pegboard-deodorize-17d8b0f1e31c@spud>
+From: Allen Lin <allencl_lin@hotmail.com>
+Date: Thu, 28 Mar 2024 14:05:17 +0800
+X-Gmail-Original-Message-ID: <CAEr79DWGTC7LQUH+LqaeKxYs=qHyHqsRDLaEqJV0VHn1rs6kjA@mail.gmail.com>
+Message-ID:
+ <TY0PR06MB5611F7123B22C4FDEE319C049E3B2@TY0PR06MB5611.apcprd06.prod.outlook.com>
+Subject: Re: [PATCH v1 1/4] dt-bindings: input: Add Himax HX83102J touchscreen
+To: Conor Dooley <conor@kernel.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>, Rob Herring <robh@kernel.org>, 
+	dmitry.torokhov@gmail.com, krzysztof.kozlowski+dt@linaro.org, 
+	conor+dt@kernel.org, jikos@kernel.org, benjamin.tissoires@redhat.com, 
+	linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
-Cc: yangjihong@bytedance.com
-Subject: [PATCH 2/2] perf evsel: Use evsel__name_is() helper
-Date: Thu, 28 Mar 2024 13:58:57 +0800
-Message-Id: <20240328055857.383180-2-yangjihong@bytedance.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240328055857.383180-1-yangjihong@bytedance.com>
-References: <20240328055857.383180-1-yangjihong@bytedance.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-TMN: [PBbt5lyzFf46YvQERM0D1XeBILpmzFki]
+X-ClientProxiedBy: AM0PR06CA0100.eurprd06.prod.outlook.com
+ (2603:10a6:208:fa::41) To TY0PR06MB5611.apcprd06.prod.outlook.com
+ (2603:1096:400:31e::8)
+X-Microsoft-Original-Message-ID:
+ <CAEr79DWGTC7LQUH+LqaeKxYs=qHyHqsRDLaEqJV0VHn1rs6kjA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY0PR06MB5611:EE_|TYSPR06MB7453:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9135e4b0-1317-4d51-7f45-08dc4eed13fa
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	ivJPNZxv3QhkC40zxnXC+JfTVrp3MLjocr9rRF3VpBQJISYXivBIfa3ZtKBpKSzowZhoSKAN9fdMWJilSY5JYADI0fi5cW8A+GlqaTtmiUOKaJg/K3EMyGHQ7Cxb3ILO7q+WBDP9hqOPsz0b2lxuix89IbJA90NxXdXuU4OsuifMTKQXvs/YTnFOD2/JKxV9agNvr7arvNS2YDfKYESAD+yWBjCi6wSIR6UfrB6eAmunKDYTV6+n2/6AJdhHccSdOJNpVczAw1uGrA763lRYSkEj1uSIf0m/+K4COJyEDuMkV7Xbkyvj8pNAYlPkezVny5W7s3wmaL3JvHImfsuLS9uCMjFs60e8wOG3tfpZI/ZfkL0NjM4RIZKfy/gBO3W5iYoRXxqC5s6niWAjzyn6dxYB6BMzeJsHMe+GsgaT50pVwKmmYlpl9RiSg8n5jreqmyEAFk41BpZG1TRt0hOzfs6KdKCfDldmlyELhPBvckw8Om/JROGYcILRlog9SopY3BvZTNe557Ke98YdUBtqjhX/AgmckkJIYuagXjWE7e9WiBa6G5jrkL92LPW4ql8LbeL4NdR/Rkwyh49JKJreiiR/KSQm4n4NGgu3TA861DW8j+ZTA+kXsu22Y1j3aprFgEzwvvOhX466U0b4KZ4dQRzhGJR7FO6KxhJ2f13yZCw=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?N3VqeUdITXdCOXAraFdidS9EZHMybjJtYXhaTFVMb1FLVmxkVmttNlpTMXNv?=
+ =?utf-8?B?V2I4SE1DNGhCc2lwMXJZNnF3ZklDMVRyQklLVGZWUTBZS2JVUHF3QW43NkpC?=
+ =?utf-8?B?cDNyeWE0ektneWNlYUk1dWswZVV5Qk54cGplZWRNTGF5ODdQSmpBbmpwLy90?=
+ =?utf-8?B?cFd6SDBHbGlxc0x4NElDSGQwV011OExCdHh4aC9Nd1FleDFSN09MRnhJcVhY?=
+ =?utf-8?B?NTNTYUNFKzVNS01helhFbVhNT0JwSjJubEtFejdybFJuSE16Q2xuN05TM3c4?=
+ =?utf-8?B?emNDc045R3pKcUQ5cnQrSUU2czdnNmdWVXpSNE9IekNMU1Z5SWx2S2VlVGwr?=
+ =?utf-8?B?Y0ZDNW9mNjhXVE9lb3hob1FtTm1TcEV0WGtpMS8yRWwwdHlEaXBJZFBFeXoy?=
+ =?utf-8?B?SmdqdWREU3ZQeVdMUzFpS1hPYTFuR0Z6aHl0SHVMVGtXVFphU0ozb1N6NXV1?=
+ =?utf-8?B?elV4WEdQMFFxK0w2SFY4R05JdTFJdXhXNnNhM3lYZzhVT09GUDBZMThwUmhr?=
+ =?utf-8?B?UnBrOElEbFNpTE9nc1BxRWdmejBSRFlRUGJMOE54amErS1dwMVdIQXNnQ0RO?=
+ =?utf-8?B?RkZjaHE2NW9ibVlOOXNEd2VOT081MWdiTnhHSU0wSHd4Q01nVWFaR3Y3NENW?=
+ =?utf-8?B?VVRNNkUySEVGZlJYelZIYmdVQ1dyWFVnMzJtUnVHQjcvTTk4K3hudkV0UTBa?=
+ =?utf-8?B?RGJralJwSzVrRGJSR3U2U3k4STZ6N1Z6TWhndjZuS0ptM2RFSDJGN1hWR2Ju?=
+ =?utf-8?B?YkR6Y0FFcit0b2xiaCtPa2ZOaXVWU1hhWTJLQi9uNUhEeUxsYjlRK3NORkhM?=
+ =?utf-8?B?LzN6RDAzbE1oSG1yUWQzQXN0bU9wMWNSVEluK2QwNzZ2OHFMdWpBd3ZiRjJR?=
+ =?utf-8?B?Q1A4OGhnYkdIY3NSTkptTlYzZXNOc0EveDhiaEFYQjRUNi93bFd5bG9KV1Fi?=
+ =?utf-8?B?UUtzNUJKcDk0a1BTdEt0L3N1VHJlY0RSdk9wTGJrcHgwSzJaVW51L0V3V3dI?=
+ =?utf-8?B?QWtNQnVacHdKQ0lGcW9IcGFSNmc0eDVJUFVZbGl6cHI0SjNZc0tmdnNtVGh4?=
+ =?utf-8?B?ak5SdE9pQXlwT2RzNExZNVJtNXFaSU43N2tXVzJkQXNFWXUvYUNiQ1VJT1B6?=
+ =?utf-8?B?bU9GTWsvQmpZMDh0U3hOaStONzcrS2V6TUtPeTFTdWxwa3E4dlBueGZYUEhm?=
+ =?utf-8?B?WkthMlpwV1FrRS9mUnF2OFlIR0FHbE1tS2QyS1NUaTJjbkdRS0w3TFVSbzEv?=
+ =?utf-8?B?azVtK1R5YmZjNW9IU2RrSEtseXV6QXpoTU9iK1F1TzBqcVB1d3RXWDhpS05n?=
+ =?utf-8?B?ZjBMdm9NMmpaczZmN0gzWjZUMWJ5SU1WNVFIZmlLRWwvb2RGdHU1Z3VtbTJh?=
+ =?utf-8?B?SURzOWplN081Y0VRZHVkTWVNK3NoK2tMRjJvdytFQlIrNzlUYXlJK1JCa1BG?=
+ =?utf-8?B?M3ljU2F0Mkx4REZXM3NnR0prTlh2YSszaDBXanpXYXJJTmQvVTR6aGlYbXpv?=
+ =?utf-8?B?ZmlDMHBlRloySEFxT3pzQ1A0QXRoUmlId29DRmtXMHVTWDVQWExhQ0I5UXRk?=
+ =?utf-8?B?dE5Rbm5OeUJmWm8vRWxsc2VKQmo3MXpmNGppcFJVamZMTmlCbFgwaFR5anBR?=
+ =?utf-8?B?elZqcUdQb3B4anJOelU1eUNuWlQvTVo2bHI2WnNsUFFmZHI3b0llTSswa2tz?=
+ =?utf-8?Q?DpmkkIWWIYPWhMsqFeAk?=
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-3208f.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9135e4b0-1317-4d51-7f45-08dc4eed13fa
+X-MS-Exchange-CrossTenant-AuthSource: TY0PR06MB5611.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2024 06:05:33.0481
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR06MB7453
 
-Code cleanup, replace strcmp(evsel__name(evsel, {NAME})) with
-evsel__name_is() helper.
+Conor Dooley <conor@kernel.org> =E6=96=BC 2024=E5=B9=B43=E6=9C=8828=E6=97=
+=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=8812:44=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Wed, Mar 27, 2024 at 03:48:48PM +0800, Allen Lin wrote:
+> > Conor Dooley <conor@kernel.org> =E6=96=BC 2024=E5=B9=B43=E6=9C=8827=E6=
+=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=883:28=E5=AF=AB=E9=81=93=EF=BC=9A
+> > >
+> > > On Tue, Mar 26, 2024 at 06:40:28PM +0800, Allen Lin wrote:
+> > > > Conor Dooley <conor.dooley@microchip.com> =E6=96=BC 2024=E5=B9=B43=
+=E6=9C=8826=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=884:48=E5=AF=AB=E9=
+=81=93=EF=BC=9A
+> > > > >
+> > > > > On Tue, Mar 26, 2024 at 01:46:56PM +0800, Allen Lin wrote:
+> > > > > > Conor Dooley <conor@kernel.org> =E6=96=BC 2024=E5=B9=B43=E6=9C=
+=8823=E6=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=882:34=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+> > > > > > >
+> > > > > > > On Fri, Mar 22, 2024 at 01:30:09PM -0500, Rob Herring wrote:
+> > > > > > > > On Fri, Mar 22, 2024 at 05:54:08PM +0000, Conor Dooley wrot=
+e:
+> > > > > > > > > On Fri, Mar 22, 2024 at 04:56:03PM +0800, Allen_Lin wrote=
+:
+> > > > > > > > > > Add the HX83102j touchscreen device tree bindings docum=
+ents.
+> > > > > > > > > > HX83102j is a Himax TDDI touchscreen controller.
+> > > > > > > > > > It's power sequence should be bound with a lcm driver, =
+thus it
+> > > > > > > > > > needs to be a panel follower. Others are the same as no=
+rmal SPI
+> > > > > > > > > > touchscreen controller.
+> > > > > > > > > >
+> > > > > > > > > > Signed-off-by: Allen_Lin <allencl_lin@hotmail.com>
+> > > > > > > > >
+> > > > > > > > > note to self/Krzysztof/Rob:
+> > > > > > > > > There was a previous attempt at this kind of device. This=
+ version looks
+> > > > > > > > > better but might be incomplete given there's a bunch more=
+ properties in
+> > > > > > > > > that patchset:
+> > > > > > > > > https://lore.kernel.org/all/20231017091900.801989-1-tylor=
+_yang@himax.corp-partner.google.com/
+> > > > > > > >
+> > > > > > > > Those don't look like properties we want coming back.
+> > > > > > >
+> > > > > > > Oh, I don't want most of them coming back either. There are s=
+ome
+> > > > > > > supplies in there though that I think we would like to come b=
+ack, no?
+> > > > > > > Maybe this particular device doesn't have any supplies, but t=
+hat doesn't
+> > > > > > > really seem credible.
+> > > > > >
+> > > > > > We will use Firmware-name in Device Tree.
+> > > > >
+> > > > > > For power supply settings, because there may be other device us=
+ing
+> > > > > > same regulator.
+> > > > >
+> > > > > If there are other devices using the same regulator is it more
+> > > > > important that you document it so that it doesn't get disabled by=
+ the
+> > > > > other users.
+> > > > >
+> > > > > > We plan to define it as an optional property for user to contro=
+l in
+> > > > > > next release.
+> > > > >
+> > > > > I don't see how the regulator would not be required, the device d=
+oesn't
+> > > > > function without power.
+> > > > >
+> > > > > Thanks,
+> > > > > Conor.
+> > > >
+> > > > I will set power supply as required.
+> > > > The description of power supply as below,
+> > > >
+> > > > properties:
+> > > >   vccd-supply:
+> > > >     description: A phandle for the regualtor supplying IO power. Sh=
+ould be own
+> > > >                  by TPIC only.
+> > >
+> > > What does "owned by TPIC" only mean? Why would the vccd supply not be
+> > > allowed to be shared with another device?
+> > >
+> > > > This works for TP digital IO only, main power is
+> > > >                  given by display part VSP/VSN power source which i=
+s controlled
+> > > >                  by lcm driver.
+> > >
+> > > What drivers control things doesn't really matter here, we're just
+> > > describing the hardware. If there's another supply to the controller,
+> > > then document it too please.
+> > >
+> >
+> > Below is IC power sequence introduction.
+> > https://github.com/HimaxSoftware/Doc/tree/main/Himax_Chipset_Power_Sequ=
+ence
+> >
+> > TDDI IC, which means Touch and Display Driver is integrated in one IC,
+> > So some power supplies will be controlled by Display driver.
+>
+> If someone was to turn off the supplies, would the touch component stop
+> working? The document says that these supplies must be turned on before
+> the touch supplies, so I'm going to assume that both are needed for the
+> device to function.
+>
+> > In yaml Document, can we just list power supplies controlled by touch d=
+river?
+>
+> If the touch part of this device needs the supplies to function, then
+> you need to mention them, regardless of where they're controlled. All we
+> are doing in the binding is describing the hardware. What drivers do
+> what depends entirely on what software you're using.
+>
 
-No functional change.
+OK, I will list all supplies required by the driver in the Yaml
+document as shown below,
 
-Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
----
- tools/perf/builtin-kmem.c               |  2 +-
- tools/perf/builtin-sched.c              |  4 +--
- tools/perf/builtin-script.c             |  2 +-
- tools/perf/builtin-trace.c              |  4 +--
- tools/perf/tests/evsel-roundtrip-name.c |  4 +--
- tools/perf/tests/parse-events.c         | 39 +++++++++----------------
- 6 files changed, 22 insertions(+), 33 deletions(-)
+properties:
+  compatible:
+    const: himax,hx83102j
 
-diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-index 9714327fd0ea..6fd95be5032b 100644
---- a/tools/perf/builtin-kmem.c
-+++ b/tools/perf/builtin-kmem.c
-@@ -1408,7 +1408,7 @@ static int __cmd_kmem(struct perf_session *session)
- 	}
- 
- 	evlist__for_each_entry(session->evlist, evsel) {
--		if (!strcmp(evsel__name(evsel), "kmem:mm_page_alloc") &&
-+		if (evsel__name_is(evsel, "kmem:mm_page_alloc") &&
- 		    evsel__field(evsel, "pfn")) {
- 			use_pfn = true;
- 			break;
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 1bfb22347371..0fce7d8986c0 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -2148,7 +2148,7 @@ static bool is_idle_sample(struct perf_sample *sample,
- 			   struct evsel *evsel)
- {
- 	/* pid 0 == swapper == idle task */
--	if (strcmp(evsel__name(evsel), "sched:sched_switch") == 0)
-+	if (evsel__name_is(evsel, "sched:sched_switch"))
- 		return evsel__intval(evsel, sample, "prev_pid") == 0;
- 
- 	return sample->pid == 0;
-@@ -2375,7 +2375,7 @@ static bool timehist_skip_sample(struct perf_sched *sched,
- 	}
- 
- 	if (sched->idle_hist) {
--		if (strcmp(evsel__name(evsel), "sched:sched_switch"))
-+		if (!evsel__name_is(evsel, "sched:sched_switch"))
- 			rc = true;
- 		else if (evsel__intval(evsel, sample, "prev_pid") != 0 &&
- 			 evsel__intval(evsel, sample, "next_pid") != 0)
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 37088cc0ff1b..cc981531ec00 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3471,7 +3471,7 @@ static int check_ev_match(char *dir_name, char *scriptname,
- 
- 			match = 0;
- 			evlist__for_each_entry(session->evlist, pos) {
--				if (!strcmp(evsel__name(pos), evname)) {
-+				if (evsel__name_is(pos, evname)) {
- 					match = 1;
- 					break;
- 				}
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 90eaff8c0f6e..9b93807a1906 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -4902,7 +4902,7 @@ int cmd_trace(int argc, const char **argv)
- 		goto out;
- 	}
- 	trace.syscalls.events.bpf_output = evlist__last(trace.evlist);
--	assert(!strcmp(evsel__name(trace.syscalls.events.bpf_output), "__augmented_syscalls__"));
-+	assert(evsel__name_is(trace.syscalls.events.bpf_output), "__augmented_syscalls__");
- skip_augmentation:
- #endif
- 	err = -1;
-@@ -4959,7 +4959,7 @@ int cmd_trace(int argc, const char **argv)
- 	 */
- 	if (trace.syscalls.events.bpf_output) {
- 		evlist__for_each_entry(trace.evlist, evsel) {
--			bool raw_syscalls_sys_exit = strcmp(evsel__name(evsel), "raw_syscalls:sys_exit") == 0;
-+			bool raw_syscalls_sys_exit = evsel__name_is(evsel, "raw_syscalls:sys_exit");
- 
- 			if (raw_syscalls_sys_exit) {
- 				trace.raw_augmented_syscalls = true;
-diff --git a/tools/perf/tests/evsel-roundtrip-name.c b/tools/perf/tests/evsel-roundtrip-name.c
-index 15ff86f9da0b..1922cac13a24 100644
---- a/tools/perf/tests/evsel-roundtrip-name.c
-+++ b/tools/perf/tests/evsel-roundtrip-name.c
-@@ -37,7 +37,7 @@ static int perf_evsel__roundtrip_cache_name_test(void)
- 					continue;
- 				}
- 				evlist__for_each_entry(evlist, evsel) {
--					if (strcmp(evsel__name(evsel), name)) {
-+					if (!evsel__name_is(evsel, name)) {
- 						pr_debug("%s != %s\n", evsel__name(evsel), name);
- 						ret = TEST_FAIL;
- 					}
-@@ -71,7 +71,7 @@ static int perf_evsel__name_array_test(const char *const names[], int nr_names)
- 			continue;
- 		}
- 		evlist__for_each_entry(evlist, evsel) {
--			if (strcmp(evsel__name(evsel), names[i])) {
-+			if (!evsel__name_is(evsel, names[i])) {
- 				pr_debug("%s != %s\n", evsel__name(evsel), names[i]);
- 				ret = TEST_FAIL;
- 			}
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index feb5727584d1..0b70451451b3 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -470,8 +470,7 @@ static int test__checkevent_breakpoint_modifier(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "mem:0:u"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:u"));
- 
- 	return test__checkevent_breakpoint(evlist);
- }
-@@ -484,8 +483,7 @@ static int test__checkevent_breakpoint_x_modifier(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "mem:0:x:k"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:x:k"));
- 
- 	return test__checkevent_breakpoint_x(evlist);
- }
-@@ -498,8 +496,7 @@ static int test__checkevent_breakpoint_r_modifier(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "mem:0:r:hp"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:r:hp"));
- 
- 	return test__checkevent_breakpoint_r(evlist);
- }
-@@ -512,8 +509,7 @@ static int test__checkevent_breakpoint_w_modifier(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "mem:0:w:up"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:w:up"));
- 
- 	return test__checkevent_breakpoint_w(evlist);
- }
-@@ -526,8 +522,7 @@ static int test__checkevent_breakpoint_rw_modifier(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "mem:0:rw:kp"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:rw:kp"));
- 
- 	return test__checkevent_breakpoint_rw(evlist);
- }
-@@ -540,8 +535,7 @@ static int test__checkevent_breakpoint_modifier_name(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "breakpoint"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint"));
- 
- 	return test__checkevent_breakpoint(evlist);
- }
-@@ -554,8 +548,7 @@ static int test__checkevent_breakpoint_x_modifier_name(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "breakpoint"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint"));
- 
- 	return test__checkevent_breakpoint_x(evlist);
- }
-@@ -568,8 +561,7 @@ static int test__checkevent_breakpoint_r_modifier_name(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "breakpoint"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint"));
- 
- 	return test__checkevent_breakpoint_r(evlist);
- }
-@@ -582,8 +574,7 @@ static int test__checkevent_breakpoint_w_modifier_name(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "breakpoint"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint"));
- 
- 	return test__checkevent_breakpoint_w(evlist);
- }
-@@ -596,8 +587,7 @@ static int test__checkevent_breakpoint_rw_modifier_name(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "breakpoint"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint"));
- 
- 	return test__checkevent_breakpoint_rw(evlist);
- }
-@@ -609,12 +599,12 @@ static int test__checkevent_breakpoint_2_events(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_BREAKPOINT == evsel->core.attr.type);
--	TEST_ASSERT_VAL("wrong name", !strcmp(evsel__name(evsel), "breakpoint1"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint1"));
- 
- 	evsel = evsel__next(evsel);
- 
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_BREAKPOINT == evsel->core.attr.type);
--	TEST_ASSERT_VAL("wrong name", !strcmp(evsel__name(evsel), "breakpoint2"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint2"));
- 
- 	return TEST_OK;
- }
-@@ -691,15 +681,14 @@ static int test__checkevent_pmu_name(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
- 	TEST_ASSERT_VAL("wrong config", test_config(evsel, 1));
--	TEST_ASSERT_VAL("wrong name", !strcmp(evsel__name(evsel), "krava"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "krava"));
- 
- 	/* cpu/config=2/u" */
- 	evsel = evsel__next(evsel);
- 	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
- 	TEST_ASSERT_VAL("wrong config", test_config(evsel, 2));
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "cpu/config=2/u"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "cpu/config=2/u"));
- 
- 	return TEST_OK;
- }
--- 
-2.25.1
+  reg:
+    maxItems: 1
 
+  interrupts:
+    maxItems: 1
+
+  reset-gpios:
+    maxItems: 1
+
+  vccd-supply:
+    description: A phandle for the regualtor supplying IO power.
+
+  vsn-supply:
+    description: Negative supply regulator.
+
+  vsp-supply:
+    description: Positive supply regulator.
+
+  ddreset-gpios:
+    description: A phandle of gpio for display reset controlled by the
+LCD driver.
+
+required:
+  - compatible
+  - reg
+  - interrupts
+  - reset-gpios
+  - panel
+  - vccd-supply
+  - vsn-supply
+  - vsp-supply
+  - ddreset-gpios
+
+
+Thanks,
+Allen
