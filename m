@@ -1,132 +1,137 @@
-Received: from mail-108-mta37.mxroute.com (mail-108-mta37.mxroute.com [136.175.108.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from buffalo.tulip.relay.mailchannels.net (buffalo.tulip.relay.mailchannels.net [23.83.218.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C4C657C6
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 19:21:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.37
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711653701; cv=none; b=jEgQL764HgQ7/F5B83mUdS4G20G3k42tlSROt7zMp3vmE9A3WIdL/V9E4Oqnn22i4TL2dx2rk7ycUereqw15mqOn30ryhkypzbTOwZcZy2gIlMKZz34YIe5Y5VGNCP1BPksMoB8yFTtjYWe+L6YQniqaCzEx+CpnqN4kXESh64c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711653701; c=relaxed/simple;
-	bh=+P6JDdjJ1Ex7kuwioyIjjSETZSNuTHoLH51U4FVMcjg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u0e6jvtewsS/oPQab6o+xPS0+vTPw18xgzlCB9NuUYCCblZ5hoBG+uVSy+U/2+1IxnrlVxJdy9g6qWRjM0O9E0DPdUQt1LVH6Qf/Jj8q6nh6jrE14jdVJbbUohGI5Sf/WCofozmlT9/uhjFxDoRTwBxQePLovHLBVQ1l/xJQSWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=qwCXm9BF; arc=none smtp.client-ip=136.175.108.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C5F80BE0
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 19:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.24
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711653708; cv=pass; b=Gr5I28Z82PUk693N7vBOvp3+aB8g1GGKIWqmhuDwnPXO2jvZWhARskhawcVTzFowiBBB1ZwWK0lhR+7d/BbQFKexUcGZRsCgNE7BVDn2PZ+/GjBYkEzUzrQoxg75r7IrJI/gata378i3s7GgCPPe3P9RagRFrPMjOs880C6Iylo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711653708; c=relaxed/simple;
+	bh=qTPJImufvV5ASN7LhY3I4AeFqA1N1hCnHDloI+wmFfY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=V/SwNAatFwmBl7tz3cqP2aAHFoAOOCHfTF8sUoNek3tiF0P6Ka7eDjdYlFXVsPjxzzQNcEFOm7nAQ1dCd1tAdFCSH6X6v0Ma4ReCPrddYEgg8HtY7iTiUNldRCboQKwamTgOW30CCb/iR2/WiWK7cREORNTuSl/BVe4oXOYCHKw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com; spf=pass smtp.mailfrom=templeofstupid.com; dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b=WnHXoDHX; arc=pass smtp.client-ip=23.83.218.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=templeofstupid.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="qwCXm9BF"
-Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta37.mxroute.com (ZoneMTA) with ESMTPSA id 18e867e00920003bea.00f
- for <linux-kernel@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Thu, 28 Mar 2024 19:16:28 +0000
-X-Zone-Loop: a9895551fbf5b6096aa45139c742d6e239e08287b159
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=luigi311.com; s=x; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-	From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=tQJb1jl0+k5VWPtDnFdvdOzbEiK5LWRoPsu+EFTE44M=; b=qwCXm9BF5B/BKG1LMbYhN94yUV
-	rAc3/t4oTkVHcORDV9B8HrlemSm+v5kD/t39rjI6ws/L1XXVKQc+i7KbjwCBB3NAAxMyt6oXQ1EfD
-	IlhlxeC1iAParASXRSIBb+oE/zna2MuWrkPKPO3l9gROf39Fs21jOlpBJqFu10PqisHRKMl6kjNEs
-	Jahj+QjNfU9EwqGze4OsIvNSOts0YMcTLDSyvubePtWWK2F9R9GVJI0nuN0jtfVHViTaIo6lOu3qn
-	aRtavdTKoklJWGZYZx6JUB9w2wB3k9wPEXoOAViWsskP1Jok9Yibg6Z30Qwhewbeb2ybGBRRe9khs
-	pEyvc0EQ==;
-Message-ID: <76f999a7-55e0-4676-aa75-8fcd466e046b@luigi311.com>
-Date: Thu, 28 Mar 2024 13:16:22 -0600
+	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="WnHXoDHX"
+X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 1E4972C278A
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 19:04:44 +0000 (UTC)
+Received: from pdx1-sub0-mail-a310.dreamhost.com (unknown [127.0.0.6])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id AD2862C1CCC
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 19:04:43 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1711652683; a=rsa-sha256;
+	cv=none;
+	b=aLBi5T86flY2pOvuFvje/oHcIRq+P4iypHemUWLw0OhxfJ9PA5xAFKLcmlTJsbPJXiL2qq
+	1cE9+uGyqiyUy1lAy6js+G4oN6H496DoEtVkF3kT9m10Ouf1D3gGZsXLAEVI3JXliIm1Gl
+	eJ65MEPHKtHTFCXd/DsTW//mKAKktcpJAfkat1nIT0qivjQesJ1EKo/gv3sLdhQ54JbB9k
+	rR9bZIbCHXURwelGUG1N/t2NYxMCozTwtXHZnHN91DupSFMUqpS3JjWPrqL1b/6iO7q4zb
+	Xt96aqQo04y+I9xTH0qacijGxZ9cJUqv6bRHYL6X46fuRbttvH4pWH7ytmcoeA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1711652683;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 dkim-signature; bh=M4mKD0+XXr3iAcqde4xMt3RYAlgHRmBZwIlXckXewGA=;
+	b=DVkSjQrkVvMy20UgW1BqGG0CMyQdxf/MC+qKj0WP6se+FSMRP50lsnTktOv4SXOmpwNe96
+	R3CXpdUUax1kBdlll/xsitgtuhbtB9+ZiKKugLlv9ClROd1I0x9qBrtxrxgxqW5e2EvQa0
+	uvAZfFpcSyoFUQKTS8FH7qNFvP9RCuYiwIrBdqgyB/4kWqJwHTN4ismYKidHXlH0RfrWyh
+	K1/i3T57redu0+hw2I+X7LczaDEx06vc9fCF8B8q/4AmqT44X2diKlTX9b1jXo7x5tEnEG
+	ZQwjfBSIf00el+VP1F2BwTOazy0GKJ81FuOqSTNS4eymxIz1zyJO87VVhi422A==
+ARC-Authentication-Results: i=1;
+	rspamd-699949c56f-gmpvn;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=kjlx@templeofstupid.com
+X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
+X-MailChannels-Auth-Id: dreamhost
+X-Befitting-Drop: 6099396338a483bb_1711652683931_1959291487
+X-MC-Loop-Signature: 1711652683931:1342331129
+X-MC-Ingress-Time: 1711652683931
+Received: from pdx1-sub0-mail-a310.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.103.168.172 (trex/6.9.2);
+	Thu, 28 Mar 2024 19:04:43 +0000
+Received: from kmjvbox.templeofstupid.com (c-73-222-159-162.hsd1.ca.comcast.net [73.222.159.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kjlx@templeofstupid.com)
+	by pdx1-sub0-mail-a310.dreamhost.com (Postfix) with ESMTPSA id 4V5Cdl2sM8z110
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 12:04:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
+	s=dreamhost; t=1711652683;
+	bh=M4mKD0+XXr3iAcqde4xMt3RYAlgHRmBZwIlXckXewGA=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=WnHXoDHXUZidboTfj3roSTDzbx78PWzOsLwhc476sRls+4jUuF4xDVB2Ayod4B7Fd
+	 aD8mm4lyqEjaUBeiRPkQ3KHx5Tg50DouCuB8HCuEXLrVvej7FmNMM9+AGexD4bouMI
+	 f+TyZuORVetGCIVJglKsPSr2yamNSFamqULjS5JQzk7Z9M9LgZtZ1Mm7Q2wdusvJlG
+	 +7JCQwN26yRX06tPWH8pTrulbL6Dv2q6YNruPKx2Tn7DHLd+MAjR2R276UUY4OqfDJ
+	 Unh6y0n4LxRAsxZNGHyhJi2MsRTPxOgCQ190Zqp7eTWs1v+t2nizF/0AzO7q6rlHwI
+	 qRhR1P3SH9uDw==
+Received: from johansen (uid 1000)
+	(envelope-from kjlx@templeofstupid.com)
+	id e004a
+	by kmjvbox.templeofstupid.com (DragonFly Mail Agent v0.12);
+	Thu, 28 Mar 2024 12:04:34 -0700
+Date: Thu, 28 Mar 2024 12:04:34 -0700
+From: Krister Johansen <kjlx@templeofstupid.com>
+To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>
+Cc: James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Ali Saidi <alisaidi@amazon.com>,
+	David Reaver <me@davidreaver.com>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [RFC] KVM: arm64: improving IO performance during unmap?
+Message-ID: <cover.1711649501.git.kjlx@templeofstupid.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 18/23] dt-bindings: media: imx258: Add alternate
- compatible strings
-Content-Language: en-US
-To: Rob Herring <robh@kernel.org>
-Cc: linux-media@vger.kernel.org, dave.stevenson@raspberrypi.com,
- jacopo.mondi@ideasonboard.com, mchehab@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, shawnguo@kernel.org,
- s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
- sakari.ailus@linux.intel.com, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240327231710.53188-1-git@luigi311.com>
- <20240327231710.53188-19-git@luigi311.com>
- <20240328185526.GA88354-robh@kernel.org>
-From: Luigi311 <git@luigi311.com>
-In-Reply-To: <20240328185526.GA88354-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Id: git@luigi311.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 3/28/24 12:55, Rob Herring wrote:
-> On Wed, Mar 27, 2024 at 05:17:04PM -0600, git@luigi311.com wrote:
->> From: Dave Stevenson <dave.stevenson@raspberrypi.com>
->>
->> There are a number of variants of the imx258 modules that can not
->> be differentiated at runtime, so add compatible strings for them.
->> But you are only adding 1 variant.
+Hi,
+Ali and I have been looking into ways to reduce the impact a unmap_stage2_range
+operation has on IO performance when a device interrupt shares the cpu where the
+unmap operation is occurring.
 
-I can not speak for Dave but as to why this was added here but looking
-at the imx296 yaml that has something similar where there are multiple
-variants that may not be detectable at run time but does not include
-similar verbiage in the main description. Should I drop this from the
-description so it matches the imx296?
+This came to our attention after porting a container VM / hardware virtualized
+containers workload to arm64 from x86_64.  On ARM64, the unmap operations took
+longer. kvm_tlb_flush_vmid_ipa runs with interrupts disabled.  Unmaps that don't
+check for reschedule promptly may delay the IO.
 
-> 
->>
->> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
->> Signed-off-by: Luigi311 <git@luigi311.com>
->> ---
->>  .../devicetree/bindings/media/i2c/sony,imx258.yaml          | 6 +++++-
->>  1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
->> index bee61a443b23..c7856de15ba3 100644
->> --- a/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
->> +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
->> @@ -14,10 +14,14 @@ description: |-
->>    type stacked image sensor with a square pixel array of size 4208 x 3120. It
->>    is programmable through I2C interface.  Image data is sent through MIPI
->>    CSI-2.
->> +  There are a number of variants of the sensor which cannot be detected at
->> +  runtime, so multiple compatible strings are required to differentiate these.
-> 
-> That's more reasoning/why for the patch than description of the h/w.
-> 
->>  properties:
->>    compatible:
->> -    const: sony,imx258
->> +    - enum:
->> +        - sony,imx258
->> +        - sony,imx258-pdaf
-> 
-> How do I know which one to use? Please define what PDAF means somewhere 
-> as well as perhaps what the original/default variant is or isn't.
+One approach that we investigated was to modify the deferred TLBI code to run
+even if range based operations were not supported.  (Provided FWB is enabled).
+If range based operations were supported, the code would use them.  However, if
+the CPU didn't support FEAT_TLBIRANGE or the unmap was larger than a certain
+size, we'd fall back to vmalls12e1is instead.  This reduced the performance
+impact of the unmap operation to less than 5% impact on IO performance.
+However, with Will's recent patches[1] to fix cases where free'd PTEs may still
+be referenced, we were concerned this might not be a viable approach.
 
-Would it make sense to change the properties to include a description like so
+As a follow-up to this e-mail, I'm sending a patch for a different approach.  It
+shrinks the stage2_apply_range batch size to the minimum block size instead of
+the maximum block size.  This eliminates the IO performance regressions, but
+increases the overall map / unmap operation times when the CPU is receiving IO
+interrupts.  I'm unsure if this is the optimal solution, however, since it may
+generate extra unmap walks on 1gb hugepages. I'm also unclear if this creates
+problems for any of the other users of stage2_apply_range().
 
-properties:
-  compatible:
-    enum:
-      - sony,imx258
-      - sony,imx258-pdaf
-    description:
-      The IMX258 sensor exists in two different models, a standard variant
-      (IMX258) and a variant with phase detection autofocus (IMX258-PDAF).
-      The camera module does not expose the model through registers, so the
-      exact model needs to be specified.
+I'd love to get some feedback on the best way to proceed here.
 
-> 
->>  
->>    assigned-clocks: true
->>    assigned-clock-parents: true
->> -- 
->> 2.42.0
->>
+Thanks,
 
+-K
+
+[1] https://lore.kernel.org/kvmarm/20240325185158.8565-1-will@kernel.org/
