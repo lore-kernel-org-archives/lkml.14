@@ -1,49 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF7713AD18;
-	Thu, 28 Mar 2024 21:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0894B52F62;
+	Thu, 28 Mar 2024 21:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711660140; cv=none; b=pLjgTcxIxtcz9ETUvCxPMhmYNCoDBep+/FgJoNxcOBtxcMJwepyNF5i/YK772bLidY0+kaJM+QLy0DIMK4xsTdzayCS74JaB6tx3XRZAmLkQkT6fSPdQD8hlqiRh4YcbMn38GkEM3If0aNkZQfokhvYHeEjsTCm0OtbtpHSuk0U=
+	t=1711660240; cv=none; b=BDceeqXebqQbDXPBKvZ1Y8vem3UmZZZsgBnJEpb0W7vN5H+BpnfPG2OHRKvFgCDp9GTQLgzXLEXImFWW2sNkkEIi9hPmcALxDplnMmQBxQh92PJVkPTlidk417eAeG1BOZEkqjFPkVM+3mXSIv7gcn0sMvG4jFhWEceL60U5NZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711660140; c=relaxed/simple;
-	bh=52261gAZIeWIOI8uQ0q9VIbpFohHJgL7wuuVXjbzEd0=;
-	h=From:Subject:Date:Message-ID:To; b=rZqfSod4SQNchOdMuQZo8fZw+deUahelGxQtCSFqoKlqYOyvDu5uQaQXXLHyC/m7rXLGhkggsO4FWbEhxGscBJEAmsZHxbrCEruRFKrGmBiXNLrBH1O2dzQWyZAH6SriDI6DW5gLBuLZM38RuDVUvAmCrjOcNz9vTl9YUmz4Rys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E08DC433F1;
-	Thu, 28 Mar 2024 21:09:00 +0000 (UTC)
-From: Clark Williams <williams@redhat.com>
-Subject: [ANNOUNCE] 6.1.83-rt28
-Date: Thu, 28 Mar 2024 21:08:27 -0000
-Message-ID: <171166010706.1375217.11208818212116841475@demetrius>
-To: LKML <linux-kernel@vger.kernel.org>,linux-rt-users <linux-rt-users@vger.kernel.org>,Steven Rostedt <rostedt@goodmis.org>,Thomas Gleixner <tglx@linutronix.de>,Carsten Emde <C.Emde@osadl.org>,John Kacur <jkacur@redhat.com>,Sebastian Andrzej Siewior <bigeasy@linutronix.de>,Daniel Wagner <daniel.wagner@suse.com>,Tom Zanussi <tom.zanussi@linux.intel.com>,Clark Williams <williams@redhat.com>,Pavel Machek <pavel@denx.de>,Joseph Salisbury <joseph.salisbury@canonical.com>
+	s=arc-20240116; t=1711660240; c=relaxed/simple;
+	bh=GR+8vhdZaMF0jMh5JD8q+n8JbP3PzmlEhT9CqXSNA70=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HuYUeb/3rdE9eXEEAw0VzGqee1fOXQqPiJQCh/0zQzmlJgPOUDQYgBa9eZAeesdHddUtzwW+5FQTTMDQvHZ8ByQucB6bF3ZtZAPa8aInVkKeQB2cjSTRXryll7rYsH8iu1252N2vRgb7NzOYebBCbk1+3+76cclG8RZevBXV8vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gt8adpfT; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gt8adpfT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711660238; x=1743196238;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GR+8vhdZaMF0jMh5JD8q+n8JbP3PzmlEhT9CqXSNA70=;
+  b=Gt8adpfThIuDKUzLWYmz0pj5cTq+D0mMwFD7vxmNd/1O8AJd/mgG1rs9
+   1XQL2vxh3/jTMiNT47ju0WI2kVrOdVF1nRQcL0WNBw47soy4Z0ujcTubh
+   yDlLKRI3zkvac/QvEV8zirmVRP4AvShabdFC0oeGetU1WfASb9IRjjUXF
+   w/+Qzy4nyzPa4KqFOsmpkvg7+bJOhJ1k82Qkhtsn746gMnlw/sNubVKPm
+   15otbGuVTFFU1I2txFkhqIQQQYgvdHtO4X6qAXDG4e8IkS/WhVoMHt3Fb
+   7q78ShxrxC4sddjc8CfsjEAOmgWHL1jGjBw88E/CDZtoX4bSCXdIxoGtZ
+   w==;
+X-CSE-ConnectionGUID: a6FstP4gSNmV1iT1kg7uDQ==
+X-CSE-MsgGUID: KBNOV1JLTYiy0CIBGCkCbQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="6956294"
+X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
+   d="scan'208";a="6956294"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 14:10:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
+   d="scan'208";a="16824858"
+Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 14:10:37 -0700
+Date: Thu, 28 Mar 2024 14:10:36 -0700
+From: Isaku Yamahata <isaku.yamahata@intel.com>
+To: Chao Gao <chao.gao@intel.com>
+Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
+	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com,
+	Sean Christopherson <seanjc@google.com>,
+	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
+	chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
+	isaku.yamahata@linux.intel.com
+Subject: Re: [PATCH v19 091/130] KVM: TDX: remove use of struct vcpu_vmx from
+ posted_interrupt.c
+Message-ID: <20240328211036.GS2444378@ls.amr.corp.intel.com>
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <6c7774a44515d6787c9512cb05c3b305e9b5855c.1708933498.git.isaku.yamahata@intel.com>
+ <ZgUmdIM67dybDTCn@chao-email>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZgUmdIM67dybDTCn@chao-email>
 
-Hello RT-list!
+On Thu, Mar 28, 2024 at 04:12:36PM +0800,
+Chao Gao <chao.gao@intel.com> wrote:
 
-I'm pleased to announce the 6.1.83-rt28 stable release.
+> On Mon, Feb 26, 2024 at 12:26:33AM -0800, isaku.yamahata@intel.com wrote:
+> >@@ -190,7 +211,8 @@ static bool vmx_needs_pi_wakeup(struct kvm_vcpu *vcpu)
+> > 	 * notification vector is switched to the one that calls
+> > 	 * back to the pi_wakeup_handler() function.
+> > 	 */
+> >-	return vmx_can_use_ipiv(vcpu) || vmx_can_use_vtd_pi(vcpu->kvm);
+> >+	return (vmx_can_use_ipiv(vcpu) && !is_td_vcpu(vcpu)) ||
+> >+		vmx_can_use_vtd_pi(vcpu->kvm);
+> 
+> It is better to separate this functional change from the code refactoring.
 
-You can get this release via the git tree at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-
-  branch: v6.1-rt
-  Head SHA1: c88639fef1f2a6e8da6d4c5b6a9b07a3bd0a6cc7
-
-Or to build 6.1.83-rt28 directly, the following patches should be applied:
-
-  https://www.kernel.org/pub/linux/kernel/v6.x/linux-6.1.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v6.x/patch-6.1.83.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/6.1/patch-6.1.83-rt28.patch.xz
+Agreed. Let's split this patch.
 
 
-Enjoy!
-Clark
+> > }
+> > 
+> > void vmx_vcpu_pi_put(struct kvm_vcpu *vcpu)
+> >@@ -200,7 +222,8 @@ void vmx_vcpu_pi_put(struct kvm_vcpu *vcpu)
+> > 	if (!vmx_needs_pi_wakeup(vcpu))
+> > 		return;
+> > 
+> >-	if (kvm_vcpu_is_blocking(vcpu) && !vmx_interrupt_blocked(vcpu))
+> >+	if (kvm_vcpu_is_blocking(vcpu) &&
+> >+	    (is_td_vcpu(vcpu) || !vmx_interrupt_blocked(vcpu)))
+> 
+> Ditto.
+> 
+> This looks incorrect to me. here we assume interrupt is always enabled for TD.
+> But on TDVMCALL(HLT), the guest tells KVM if hlt is called with interrupt
+> disabled. KVM can just check that interrupt status passed from the guest.
 
+That's true.  We can complicate this function and HLT emulation.  But I don't
+think it's worthwhile because HLT with interrupt masked is rare.  Only for
+CPU online.
+-- 
+Isaku Yamahata <isaku.yamahata@intel.com>
