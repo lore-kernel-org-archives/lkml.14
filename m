@@ -1,125 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE2AD304
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 05:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5313D304;
+	Thu, 28 Mar 2024 05:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711603436; cv=none; b=UzYALGjIrtFkb3eCvJYUiFGMLr1tAsWNws7r3nV/g2oBY317soXYk0oLYDPqY8LnWZOLzMsiYs2cjrUO13wxW2xcFS4A95A8z8R+Mp514xWyyqtzNUAi6W2GJKJTwpkKAPblyX/8Fm2akDU/FndMJ/XmqkArfK/KbjBf3uUGS9E=
+	t=1711603477; cv=none; b=HIKzsOJxeRrvk3PilAHtHzRNHcloKJYXvr8umThhATsI4NadZ0MXmMfVbG0JlpWk1dJU7/Su1K3TmMLjSWSH+OYJxamsYNvhl+lolMucHdEpYpW/ulXQk2+cCoqfEnJpmumP2jR082GixlmwjtiTN9dlzZcScBxPM+UFthQduAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711603436; c=relaxed/simple;
-	bh=lr3vnsOJwKQS0Kkh+w8aXgTiGji+fdCT1durYgzHSYg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=eedqYf5mHj4J9aHeoM+NUYqMy1Afiz6/wa2gWo90rf3dwHtw9GFXrKZtZ1pNnVn4x/cV3HJlk4yVyGEIaWKnqWIrzaev+fiDjqlZH3skHpnow3OwGG5n7tNFsxo/l+uwtQJHopLPFpAFf2YjC9WRbP555+IaqEzbfKuNrrpCSIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TjCBogZL; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711603477; c=relaxed/simple;
+	bh=yw8GtftqZAvBx8gq5uIPgpQrdVhodSjj57djQ9gazmw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LRmJiN0eSlAWXOGzfXg1/wAjFjBCbCdfwha3VUvZQ7PHz2gKDRYTEGp2UVkyBSb+jZnGQYcEoNKkynnZW30+R2GyDPEj9KXsAco58gtm9TSC77YsIgpNgBdlR3NrzWZi+ytkOvO648JFKibp22S79R01roatmfTDQ62KkxmhXJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aej5HGLk; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TjCBogZL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aej5HGLk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711603434; x=1743139434;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=lr3vnsOJwKQS0Kkh+w8aXgTiGji+fdCT1durYgzHSYg=;
-  b=TjCBogZLTeHQi5X2REf3ZywBhSFsZcTRsLSxMyCCyN6uLCiOHKheYLPu
-   tse7owqGoI+RaYs1wHn5FOJgoVNagWB00PNwrdXuKHV1T8CU6T/ktU8sO
-   5U31YWLQn9x5gKHfHB7ajKSW+rRHBr4cb9lF5YJ8by19hHT0w7oAjcdF2
-   zvtes0HSJgpwVL9Pof+ki8rmGTtT+v8Gw9GYR8b7qP9AarYNljHiJY8QF
-   aUqUKL5woI1jQEY6Qpp2Vzas2L/steN2cDcngQoaEooD6M6SeqMhPHWVI
-   xnto5oSA8fEDOjEu3pILkvsjbEKoG3c4QCM2HxkFi6alRWf5OjmZLS8HE
-   A==;
-X-CSE-ConnectionGUID: ulDs/qFtQ+uqyk3l6j9NfA==
-X-CSE-MsgGUID: uA8G5ohYQXygjZZa/EIpYQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="6868370"
+  t=1711603475; x=1743139475;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=yw8GtftqZAvBx8gq5uIPgpQrdVhodSjj57djQ9gazmw=;
+  b=aej5HGLkC7WNktrTgwapzJ25tmYqLhx/oekmXP2Y6p/GU0GRcNG0VmDs
+   QAy1toxoH9qhN4JfbRBDEcBGiqda/vWoP8fK+YI86dlWBBfZxF4neIQDy
+   P7ZKLv9QzLFVqb6RqEcSAeB7LcaOlVI3eiGw8qYLOed1TFVolqOqFKuhU
+   b+ye1/2KO3CYBVwZEOmCKlN9PrvchyIyQU5sGCP/ITDU4Msor1rAFHMs5
+   ny1smJuF7WoBOLTVf21zGWZNXLKAzNF/2iLTXAemg9o+fsTy8aE2BUlt5
+   mlTCTDgqQsrmi1cWKlXXVdiM/dwYZ2d2QU7SLJ4l8WMR+j5ZAXGcC7ZZo
+   w==;
+X-CSE-ConnectionGUID: +AvnARNfRDCEr4oVfXFxYw==
+X-CSE-MsgGUID: qnhfdNPxTLa47TH7sQHCSA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="6602122"
 X-IronPort-AV: E=Sophos;i="6.07,160,1708416000"; 
-   d="scan'208";a="6868370"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 22:23:54 -0700
+   d="scan'208";a="6602122"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 22:24:33 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,160,1708416000"; 
-   d="scan'208";a="21247737"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 22:23:52 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Bharata B Rao <bharata@amd.com>
-Cc: <linux-mm@kvack.org>,  <linux-kernel@vger.kernel.org>,
-  <akpm@linux-foundation.org>,  <mingo@redhat.com>,
-  <peterz@infradead.org>,  <mgorman@techsingularity.net>,
-  <raghavendra.kt@amd.com>,  <dave.hansen@linux.intel.com>,
-  <hannes@cmpxchg.org>
-Subject: Re: [RFC PATCH 1/2] sched/numa: Fault count based NUMA hint fault
- latency
-In-Reply-To: <e059df52-48fc-4e65-9eb0-c0d197625e6e@amd.com> (Bharata B. Rao's
-	message of "Thu, 28 Mar 2024 10:09:50 +0530")
-References: <20240327160237.2355-1-bharata@amd.com>
-	<20240327160237.2355-2-bharata@amd.com>
-	<87r0fvktkn.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<e059df52-48fc-4e65-9eb0-c0d197625e6e@amd.com>
-Date: Thu, 28 Mar 2024 13:21:58 +0800
-Message-ID: <87msqjkk21.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+   d="scan'208";a="21179122"
+Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.238.10.225]) ([10.238.10.225])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 22:24:30 -0700
+Message-ID: <94fb2094-d8ee-4bcc-a65d-489dc777b024@linux.intel.com>
+Date: Thu, 28 Mar 2024 13:24:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 069/130] KVM: TDX: Require TDP MMU and mmio caching
+ for TDX
+To: isaku.yamahata@intel.com
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
+ erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
+ Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
+ chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <f6a80dd212e8c3fd14b40049eed33187008cf35a.1708933498.git.isaku.yamahata@intel.com>
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <f6a80dd212e8c3fd14b40049eed33187008cf35a.1708933498.git.isaku.yamahata@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Bharata B Rao <bharata@amd.com> writes:
 
-> On 28-Mar-24 7:26 AM, Huang, Ying wrote:
->> Bharata B Rao <bharata@amd.com> writes:
->> 
->> [snip]
->> 
->>> @@ -1750,25 +1753,20 @@ static bool pgdat_free_space_enough(struct pglist_data *pgdat)
->>>  }
->>>  
->>>  /*
->>> - * For memory tiering mode, when page tables are scanned, the scan
->>> - * time will be recorded in struct page in addition to make page
->>> - * PROT_NONE for slow memory page.  So when the page is accessed, in
->>> - * hint page fault handler, the hint page fault latency is calculated
->>> - * via,
->>> + * For memory tiering mode, when page tables are scanned, the current
->>> + * hint fault count will be recorded in struct page in addition to
->>> + * make page PROT_NONE for slow memory page.  So when the page is
->>> + * accessed, in hint page fault handler, the hint page fault latency is
->>> + * calculated via,
->>>   *
->>> - *	hint page fault latency = hint page fault time - scan time
->>> + * hint page fault latency = current hint fault count - fault count at scan time
->>>   *
->>>   * The smaller the hint page fault latency, the higher the possibility
->>>   * for the page to be hot.
->>>   */
->>> -static int numa_hint_fault_latency(struct folio *folio)
->>> +static inline int numa_hint_fault_latency(struct folio *folio, int count)
->>>  {
->>> -	int last_time, time;
->>> -
->>> -	time = jiffies_to_msecs(jiffies);
->>> -	last_time = folio_xchg_access_time(folio, time);
->>> -
->>> -	return (time - last_time) & PAGE_ACCESS_TIME_MASK;
->>> +	return count - folio_xchg_fault_count(folio, count);
->>>  }
->> 
->> I found count is task->mm->hint_faults.  That is a process wide
->> counting.  How do you connect the hotness of a folio with the count of
->> hint page fault in the process?  How do you compare the hotness of
->> folios among different processes?
+
+On 2/26/2024 4:26 PM, isaku.yamahata@intel.com wrote:
+> From: Isaku Yamahata <isaku.yamahata@intel.com>
 >
-> The global hint fault count that we already maintain could
-> be used instead of per-task fault. That should take care
-> of the concern you mention right?
+> As TDP MMU is becoming main stream than the legacy MMU, the legacy MMU
+> support for TDX isn't implemented.  TDX requires KVM mmio caching.
 
-I have plotted the total number of hint faults per second before, and it
-changes a lot along the time.  So I don't think it is a good
-measurement.
+Can you add some description about why TDX requires mmio caching in the 
+changelog?
 
---
-Best Regards,
-Huang, Ying
+
+>   Disable
+> TDX support when TDP MMU or mmio caching aren't supported.
+>
+> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+> ---
+>   arch/x86/kvm/mmu/mmu.c  |  1 +
+>   arch/x86/kvm/vmx/main.c | 13 +++++++++++++
+>   2 files changed, 14 insertions(+)
+>
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 0e0321ad9ca2..b8d6ce02e66d 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -104,6 +104,7 @@ module_param_named(flush_on_reuse, force_flush_and_sync_on_reuse, bool, 0644);
+>    * If the hardware supports that we don't need to do shadow paging.
+>    */
+>   bool tdp_enabled = false;
+> +EXPORT_SYMBOL_GPL(tdp_enabled);
+>   
+>   static bool __ro_after_init tdp_mmu_allowed;
+>   
+> diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
+> index 076a471d9aea..54df6653193e 100644
+> --- a/arch/x86/kvm/vmx/main.c
+> +++ b/arch/x86/kvm/vmx/main.c
+> @@ -3,6 +3,7 @@
+>   
+>   #include "x86_ops.h"
+>   #include "vmx.h"
+> +#include "mmu.h"
+>   #include "nested.h"
+>   #include "pmu.h"
+>   #include "tdx.h"
+> @@ -36,6 +37,18 @@ static __init int vt_hardware_setup(void)
+>   	if (ret)
+>   		return ret;
+>   
+> +	/* TDX requires KVM TDP MMU. */
+> +	if (enable_tdx && !tdp_enabled) {
+> +		enable_tdx = false;
+> +		pr_warn_ratelimited("TDX requires TDP MMU.  Please enable TDP MMU for TDX.\n");
+> +	}
+> +
+> +	/* TDX requires MMIO caching. */
+> +	if (enable_tdx && !enable_mmio_caching) {
+> +		enable_tdx = false;
+> +		pr_warn_ratelimited("TDX requires mmio caching.  Please enable mmio caching for TDX.\n");
+> +	}
+> +
+>   	enable_tdx = enable_tdx && !tdx_hardware_setup(&vt_x86_ops);
+>   	if (enable_tdx)
+>   		vt_x86_ops.vm_size = max_t(unsigned int, vt_x86_ops.vm_size,
+
