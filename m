@@ -1,144 +1,108 @@
-Received: from mail-108-mta247.mxroute.com (mail-108-mta247.mxroute.com [136.175.108.247])
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB6613AD09
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 21:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.247
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2109A13AD37
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 21:07:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711660048; cv=none; b=qz+/Cta8XWtD5FjCSIct9K8lfCRukuUasai9/HkMl510yAjqKhoI1tCk9WAJX4ZLmkcTFryivQHG1/AcLj3nw8VFVv/MBQYUJqEuFmw2eZGLEtBmFRk2gDZOUJvVcZG+UeyH/3qHbX2NU3WmEhzKO4s2EBPVmlYwroqYt7xWN8M=
+	t=1711660053; cv=none; b=WTRIUqOIj2kke6aOA0B7bStqkg1IGGSLOS44xrmLIaW5wiVPh1ukwFxsqp/Z4ce9wRnIzlgmqsc8qP0RFUUayt2PfZJxvRX0EW4mZb1TEMx1+CjpZfxKlk9flzIESP+goWC09RrVLuKJ+81+5R4kSDHRDvqNgbDIAwgAxf9W9Jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711660048; c=relaxed/simple;
-	bh=r0EcBPQ3qmpeCX4m58ZcZEDwZXCeT1PRpsmqW991s+0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LCRxA72tOv6D1b2/LxotRAxtr1MxEFoxXYIWhxQy29z1YmmW3QBFrI3t9f1tHfqE3VQWIsPteUQzrVwqYsX02yYlWOpMmsz4xtGDzekCQ7iuaBbAuUxMmLTOMlBmpENl4oz8wD+ey6U4PxNb7mvbQH/BzJJGeQb8dGvWq0AYzkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=h8XynL+L; arc=none smtp.client-ip=136.175.108.247
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
+	s=arc-20240116; t=1711660053; c=relaxed/simple;
+	bh=x20Z9wO4XWd6/hqsTvUJ9C5xuiCT/PGoUlQnMNRKhnA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rpiFGvkTGxeSpyjL2dulXwnms0CTz8O+9o3ana6xWWo6dwUYDRJ9KfBKy28t3I9t1O60l6cBZmZ2ymwNZn2pdL/4u7/XXfUX2sa+qTk+ihXQlxl2AmYJCBLDi8U+PekUGjthY2bnCpcUspyf0UWRFC8nRsyRAGjyX3fdvkeJrf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iEyYmbUE; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="h8XynL+L"
-Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta247.mxroute.com (ZoneMTA) with ESMTPSA id 18e86dee3df0003bea.00f
- for <linux-kernel@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Thu, 28 Mar 2024 21:02:18 +0000
-X-Zone-Loop: 1f5b0abd1513aa85b7eae87ebd2b27b7e0522eb1d293
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=luigi311.com; s=x; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-	From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=n0BJjZfxDNb/uyF3bBh2pp0ckq9viE9E1DscdmPJyFc=; b=h8XynL+LgJCxtIBV8QoxL5mr/m
-	ev7KBLRvh1FI44Uu/Nw6Gc9q5HYuzaORe8rm19V2oFqd5dbEjW7JUE+4+ewSexyZrmHpJF0AN2IIg
-	pKUexC3rVtTJNgN9njahSH9UbTXDwti85J8R2TiTnWvA+j4M2PbDcVJSlUdLZZlEH8BqWFI2+o8OR
-	NinPlMA4xScARG2ZZaWVJfvu+sy+0ZtNEA5lDuXMqls5/t4Y4S8BWe84VKcVCVk1bezjOAoIxcBh/
-	vNE5NchcJTfHxXpKHkXkQ9Ds9q2+FFMaFYeB6+cj05AkMYqnuW0XSjbsnqWKSYnF4WZRE0S+uf8Kv
-	VTD5pPvQ==;
-Message-ID: <0b6fe14e-c990-4084-bc54-57872aa9ae21@luigi311.com>
-Date: Thu, 28 Mar 2024 15:02:13 -0600
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iEyYmbUE"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dbed0710c74so1289035276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 14:07:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711660049; x=1712264849; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x20Z9wO4XWd6/hqsTvUJ9C5xuiCT/PGoUlQnMNRKhnA=;
+        b=iEyYmbUEKVoEMLSfm+1dgqqjW6ZSjsrKhnwEgQhuqVelEQdeGl+DinyIFq09FvZxsc
+         icO69KX7mM0OQMgX+nUaflyBQNaEhqo4tIgCtqWh9nf0Z6M/a2GEuOOgtKDonzgxoDIt
+         mK04J3Y/5BcUoV9owDicNq5Ty8wxETWzZNsz4USadunTA7W4uhginvNOklE9YF34bX/v
+         HS3wUdPaMudoWNlzBrOv5AgAI//49/9nGrfOroUnKzEajzVfO4OeiXgLh7vb9zIvBAC8
+         B6LunEHMRIMgVXBENEfOEncCnEIYXkkfpYu5fnNsLhCF/n8XwOthAQ/VUuCNIEU3pa86
+         9mIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711660049; x=1712264849;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x20Z9wO4XWd6/hqsTvUJ9C5xuiCT/PGoUlQnMNRKhnA=;
+        b=YaDcBmn5Snnh/mVkoQWKDNCIpMrTjbCDlG7bVGxTKTy82R+yjLVgXBVOP5MBrGjrX5
+         LIC9eqGwZw7PNC0jclLuH9JZbeQEoyZZF+Fez8VqCVU2sz4xW8RX2ErCkvhW67PulTiI
+         htH6/HGvjsZRfuPypL750RY+Bv7NVKSYu/KuG8f5U3LoX2psyWPUbtZJz4kwifxvXd6g
+         snD/L1cm+29ksb0Ip5b6RvwEyNRn9aqVtFjSOhM6kNG4XF1YUITjihOImaZH+IoyCk8X
+         TCPAe2g1VqyZq/CysL0z1i5g1SWys8WFvVOUmbBBslbikIof39cuYyW03xAKQBQ5KRc3
+         /Q5w==
+X-Forwarded-Encrypted: i=1; AJvYcCXqJnHkVuUAbNnCRkPWzxOTeZlC0Sf0i2+LDcF5nqsjkFkI+d+HxI2Nr5nZ+bf1vprDBcVlmxCP8h5hMkg9IrJgACursPgGibDGudjB
+X-Gm-Message-State: AOJu0YwN8YBBVm5PnGrXvFBTZ1n1jDgdU/QBRRZfb60DMQ6ToMCqCCwp
+	6z4MFjpa4nbatn+5xvGHNs2En4uxmfRLMdUVt9J1JSpuMkznnWvxGqOMvjVdm5QvQoKmbjgapeF
+	y1VjYu8rYanVnUlGS5rsIyES/4SFyM6l+BX1B9Q==
+X-Google-Smtp-Source: AGHT+IEZ00FIAL54100s1/gTVa8Y+4TfoCNoj6CJTr4a+YUNR3bthOuQhK7OnCvzxoRuhI+9C1J8CAiCPfUv2a7d2bw=
+X-Received: by 2002:a25:9e83:0:b0:dc6:bbbd:d4f4 with SMTP id
+ p3-20020a259e83000000b00dc6bbbdd4f4mr470298ybq.33.1711660049195; Thu, 28 Mar
+ 2024 14:07:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 18/23] dt-bindings: media: imx258: Add alternate
- compatible strings
-Content-Language: en-US
-To: Rob Herring <robh@kernel.org>
-Cc: linux-media@vger.kernel.org, dave.stevenson@raspberrypi.com,
- jacopo.mondi@ideasonboard.com, mchehab@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, shawnguo@kernel.org,
- s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
- sakari.ailus@linux.intel.com, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240327231710.53188-1-git@luigi311.com>
- <20240327231710.53188-19-git@luigi311.com>
- <20240328185526.GA88354-robh@kernel.org>
- <76f999a7-55e0-4676-aa75-8fcd466e046b@luigi311.com>
- <20240328204657.GA314523-robh@kernel.org>
-From: Luigi311 <git@luigi311.com>
-In-Reply-To: <20240328204657.GA314523-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Id: git@luigi311.com
+References: <20240102-j7200-pcie-s2r-v4-0-6f1f53390c85@bootlin.com> <20240102-j7200-pcie-s2r-v4-2-6f1f53390c85@bootlin.com>
+In-Reply-To: <20240102-j7200-pcie-s2r-v4-2-6f1f53390c85@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 28 Mar 2024 22:07:18 +0100
+Message-ID: <CACRpkdYemzkVW4fjBtHtFPaa-Uy969j5Ti2zmRgjFiZK+jGS7g@mail.gmail.com>
+Subject: Re: [PATCH v4 02/18] pinctrl: pinctrl-single: move suspend()/resume()
+ callbacks to noirq
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>, 
+	Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
+	Aaro Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org, 
+	gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
+	thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
+	Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/28/24 14:46, Rob Herring wrote:
-> On Thu, Mar 28, 2024 at 01:16:22PM -0600, Luigi311 wrote:
->> On 3/28/24 12:55, Rob Herring wrote:
->>> On Wed, Mar 27, 2024 at 05:17:04PM -0600, git@luigi311.com wrote:
->>>> From: Dave Stevenson <dave.stevenson@raspberrypi.com>
->>>>
->>>> There are a number of variants of the imx258 modules that can not
->>>> be differentiated at runtime, so add compatible strings for them.
->>>> But you are only adding 1 variant.
->>
->> I can not speak for Dave but as to why this was added here but looking
->> at the imx296 yaml that has something similar where there are multiple
->> variants that may not be detectable at run time but does not include
->> similar verbiage in the main description. Should I drop this from the
->> description so it matches the imx296?
-> 
-> Just change "add compatible strings for them" to "add compatible string 
-> for the PDAF variant" or something.
-> 
+On Mon, Mar 4, 2024 at 4:36=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
 
-Ohh i see what you mean now, this is in reference to the commit message,
-it was throwing me off because the imx258 description had almost the
-exact same wording. Yes that makes sense, ill change the commit
-message to specify PDAF.
 
->>
->>>
->>>>
->>>> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
->>>> Signed-off-by: Luigi311 <git@luigi311.com>
->>>> ---
->>>>  .../devicetree/bindings/media/i2c/sony,imx258.yaml          | 6 +++++-
->>>>  1 file changed, 5 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
->>>> index bee61a443b23..c7856de15ba3 100644
->>>> --- a/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
->>>> +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
->>>> @@ -14,10 +14,14 @@ description: |-
->>>>    type stacked image sensor with a square pixel array of size 4208 x 3120. It
->>>>    is programmable through I2C interface.  Image data is sent through MIPI
->>>>    CSI-2.
->>>> +  There are a number of variants of the sensor which cannot be detected at
->>>> +  runtime, so multiple compatible strings are required to differentiate these.
->>>
->>> That's more reasoning/why for the patch than description of the h/w.
->>>
->>>>  properties:
->>>>    compatible:
->>>> -    const: sony,imx258
->>>> +    - enum:
->>>> +        - sony,imx258
->>>> +        - sony,imx258-pdaf
->>>
->>> How do I know which one to use? Please define what PDAF means somewhere 
->>> as well as perhaps what the original/default variant is or isn't.
->>
->> Would it make sense to change the properties to include a description like so
->>
->> properties:
->>   compatible:
->>     enum:
->>       - sony,imx258
->>       - sony,imx258-pdaf
->>     description:
->>       The IMX258 sensor exists in two different models, a standard variant
->>       (IMX258) and a variant with phase detection autofocus (IMX258-PDAF).
->>       The camera module does not expose the model through registers, so the
->>       exact model needs to be specified.
-> 
-> Looks fine, but I'd move this to the top-level 'description'.
-> 
-> Rob
+> The goal is to extend the active period of pinctrl.
+> Some devices may need active pinctrl after suspend() and/or before
+> resume().
+> So move suspend()/resume() to suspend_noirq()/resume_noirq() in order to
+> have active pinctrl until suspend_noirq() (included), and from
+> resume_noirq() (included).
+>
+> The deprecated API has been removed to use the new one (dev_pm_ops struct=
+).
+>
+> No need to check the pointer returned by dev_get_drvdata(), as
+> platform_set_drvdata() is called during the probe.
+>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 
-Perfect ill move this to the top level description and remove that small section
-that Dave added
+Since this patch looks independent from the rest I ripped it out of the
+patch series and applied it to the pinctrl tree for kernel v6.10.
+
+Yours,
+Linus Walleij
