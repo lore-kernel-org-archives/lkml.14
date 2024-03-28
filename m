@@ -1,175 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25606849C;
-	Thu, 28 Mar 2024 07:22:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311C223765;
+	Thu, 28 Mar 2024 07:23:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711610550; cv=none; b=Esm4oQ6bxDjQAo/AwghyDz7QpVAFPxw15AtDAwCxKxd12MsboUgCUcW8BOfgyIFDDMlG56sjTaYuLyZ5mRPjpDf2Odrrjb3pm3scg9eVdJpqGtcCle3gu0wdk7mI1Vr7J+k4gRkeYS32ebtT+LJMudTPmYkJ5mJe0EgC44MS5ug=
+	t=1711610606; cv=none; b=C/FTcnYIzyiYCMblDUQjd/H5xah2ojUTdyZG3mtWTE/NcdOJSmnzz4e9QtamRHBptUfk1oY4A8E0kpcqJCp1UAVk7pQUde9O/cdWeW95IkuZFFZfCfV+RrTBWLEMIOWqHxmPwCVANj/t6LyF1RsyU8sk7L+Pz6axPBmJ0nc1Vow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711610550; c=relaxed/simple;
-	bh=hiuS5t2lQWNJFOtvJipQHkQ+4rNrV1yVGvL5Ol0zhKw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fpak4TIKK3Bo5YFZYom7TjepyAnt0dCeEB3CbgkytOWkbgpjukuWfSwASxGb2AR+SalpPWRMAy/c9Rf1AvMIQIWoW95kVBkRnh142LUEHSpfgcYp1poQSB8AIEObeSIUNhEbSL7vVk4LpXGiDge/qnBqWmvR5P5OR7Tz3tDB43E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gyEAHABQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711610606; c=relaxed/simple;
+	bh=/DBxafWugaS+NBr6xZbPt8hjTlXm4/2YAaTmuUh1cZo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CIHcCASN1s2R22WjbbCTVytXh5NgenUvfXCinLB0r0zdSvwUJeA7rzcXFt3QOUsZfb9GEqKbZajZFcTjCQ3cPE9nyYQn+Gu+mJiEeRUU5mL0gV8mDTmtypTrDcBulHwoZG0QzgHsNN84pmW0XlrvxXCitnhC3YKXdApVyUALGdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pFqhem1N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gyEAHABQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08251C433C7;
-	Thu, 28 Mar 2024 07:22:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1711610549;
-	bh=hiuS5t2lQWNJFOtvJipQHkQ+4rNrV1yVGvL5Ol0zhKw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gyEAHABQAOXEaDE2eUHd+AvzyH/aWOHeeO+fh5qBiDREXjVngZB5Adj0TtNccYEM7
-	 KHjq51WVF199wxpVIpQMwmGmLfW3bNGFRXx05M5FIeYdh/7qkyxd7dBQk4Kg3YKTZA
-	 hDp/xaz5XlV1gcGT7c3uUo/pN46cC+jlohAHmAxc=
-Date: Thu, 28 Mar 2024 08:22:26 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Dhruva Gole <d-gole@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Jiri Slaby <jirislaby@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Johan Hovold <johan@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v7 4/7] serial: core: Add support for DEVNAME:0.0 style
- naming for kernel console
-Message-ID: <2024032859-subscript-marshy-7508@gregkh>
-References: <20240327110021.59793-1-tony@atomide.com>
- <20240327110021.59793-5-tony@atomide.com>
- <20240328063152.bjkdtdsu42cqbgf3@dhruva>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pFqhem1N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3783C433F1;
+	Thu, 28 Mar 2024 07:23:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711610605;
+	bh=/DBxafWugaS+NBr6xZbPt8hjTlXm4/2YAaTmuUh1cZo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pFqhem1NuQqwdqGi1ZzFQJiSsiRlvCNmU7jGrMuOnW9hR5gpfucNViiQE7H4oyTtm
+	 x+YScXd4cWxvazuXIQaniANGZThfNtaPKLbtMCNo118Tov7oPCe8GHU3D7kBCwsfZJ
+	 vuKVAQPKh341NX+txC7FmOMTqMU2uImO8v9YYodrnLZW2gqH3JjTar3XBGG9U+X70W
+	 ABZk1qWqRBtmbhfJzpVZkyQ6xNzCXWy94XPWA115HyrHYxaoZlWTyDE3xRtd5cz66i
+	 0MDHN2OOk+7AwtACuayYVnUhvBdjbcu/7d2gxbUgwk8upmPdf9ygJznfYUDj4nf7nx
+	 QY76hjhcSRvBg==
+Message-ID: <03ed6449-eb57-4a55-b2bf-ecbb9787feca@kernel.org>
+Date: Thu, 28 Mar 2024 16:23:22 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240328063152.bjkdtdsu42cqbgf3@dhruva>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] scsi: libsas: Allocation SMP request is aligned to
+ ARCH_DMA_MINALIGN
+To: Yihang Li <liyihang9@huawei.com>, Christoph Hellwig <hch@infradead.org>,
+ John Garry <john.g.garry@oracle.com>
+Cc: yanaijie@huawei.com, jejb@linux.ibm.com, martin.petersen@oracle.com,
+ chenxiang66@hisilicon.com, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxarm@huawei.com, prime.zeng@huawei.com,
+ yangxingui@huawei.com
+References: <20240326124358.2466259-1-liyihang9@huawei.com>
+ <5b5b9392-7fd2-4c87-8e41-5e54adf20003@kernel.org>
+ <0ba9914d-7060-498a-beac-2b19770e1963@oracle.com>
+ <ZgUPpwhkE9bRwHec@infradead.org>
+ <75df3e2d-10c3-5370-3cd8-fe2fb0ff2acc@huawei.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <75df3e2d-10c3-5370-3cd8-fe2fb0ff2acc@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 28, 2024 at 12:01:52PM +0530, Dhruva Gole wrote:
-> Hi,
+On 3/28/24 15:59, Yihang Li wrote:
 > 
-> On Mar 27, 2024 at 12:59:38 +0200, Tony Lindgren wrote:
-> > We can now add hardware based addressing for serial ports. Starting with
-> > commit 84a9582fd203 ("serial: core: Start managing serial controllers to
-> > enable runtime PM"), and all the related fixes to this commit, the serial
-> > core now knows to which serial port controller the ports are connected.
-> > 
-> > The serial ports can be addressed with DEVNAME:0.0 style naming. The names
-> > are something like 00:04:0.0 for a serial port on qemu, and something like
-> > 2800000.serial:0.0 on platform device using systems like ARM64 for example.
-> > 
-> > The DEVNAME is the unique serial port hardware controller device name, AKA
-> > the name for port->dev. The 0.0 are the serial core controller id and port
-> > id.
-> > 
-> > Typically 0.0 are used for each controller and port instance unless the
-> > serial port hardware controller has multiple controllers or ports.
-> > 
-> > Using DEVNAME:0.0 style naming actually solves two long term issues for
-> > addressing the serial ports:
-> > 
-> > 1. According to Andy Shevchenko, using DEVNAME:0.0 style naming fixes an
-> >    issue where depending on the BIOS settings, the kernel serial port ttyS
-> >    instance number may change if HSUART is enabled
-> > 
-> > 2. Device tree using architectures no longer necessarily need to specify
-> >    aliases to find a specific serial port, and we can just allocate the
 > 
-> This is GOOD!
+> On 2024/3/28 14:35, Christoph Hellwig wrote:
+>> On Tue, Mar 26, 2024 at 01:32:09PM +0000, John Garry wrote:
+>>>>> +	u8 *p;
+>>>>> +
+>>>>> +	size = ALIGN(size, ARCH_DMA_MINALIGN);
+>>>
+>>>
+>>> If this is a hisi_sas requirement, then why use ARCH_DMA_MINALIGN and not
+>>> 16B as minimum alignment?
+>>>
+>>> Or are we really talking about an arch requirement?
+>>
+>> One thing is that we should never allocate unaligned memory for
+>> anything DMA mapped, or data will be corrupted by non-coherent DMA.
+>> So ARCH_DMA_MINALIGN needs to be here.  If specific hardware has
+>> further requirements we'll need to communicated it through a field
+>> or op vector.
 > 
-> >    ttyS instance numbers dynamically in whatever probe order
-> > 
-> > To do this, let's match the hardware addressing style console name to
-> > the character device name used, and add a preferred console using the
-> > character device name.
-> > 
-> > Note that when using console=DEVNAME:0.0 style kernel command line, the
-> > 8250 serial console gets enabled later compared to using console=ttyS
-> > naming for ISA ports. This is because the serial port DEVNAME to character
-> > device mapping is not known until the serial driver probe time. If used
-> > together with earlycon, this issue is avoided.
-> > 
-> > Signed-off-by: Tony Lindgren <tony@atomide.com>
-> > ---
-> >  drivers/tty/serial/serial_base.h     | 16 +++++++
-> >  drivers/tty/serial/serial_base_bus.c | 66 ++++++++++++++++++++++++++++
-> >  drivers/tty/serial/serial_core.c     |  4 ++
-> >  3 files changed, 86 insertions(+)
-> > 
-> > diff --git a/drivers/tty/serial/serial_base.h b/drivers/tty/serial/serial_base.h
-> > --- a/drivers/tty/serial/serial_base.h
-> > +++ b/drivers/tty/serial/serial_base.h
-> > @@ -45,3 +45,19 @@ void serial_ctrl_unregister_port(struct uart_driver *drv, struct uart_port *port
-> >  
-> >  int serial_core_register_port(struct uart_driver *drv, struct uart_port *port);
-> >  void serial_core_unregister_port(struct uart_driver *drv, struct uart_port *port);
-> > +
-> > +#ifdef CONFIG_SERIAL_CORE_CONSOLE
-> > +
-> > +int serial_base_add_preferred_console(struct uart_driver *drv,
-> > +				      struct uart_port *port);
-> > +
-> > +#else
-> > +
-> > +static inline
-> > +int serial_base_add_preferred_console(struct uart_driver *drv,
-> > +				      struct uart_port *port)
-> > +{
-> > +	return 0;
-> > +}
-> > +
-> > +#endif
-> > diff --git a/drivers/tty/serial/serial_base_bus.c b/drivers/tty/serial/serial_base_bus.c
-> > --- a/drivers/tty/serial/serial_base_bus.c
-> > +++ b/drivers/tty/serial/serial_base_bus.c
-> > @@ -8,6 +8,7 @@
-> >   * The serial core bus manages the serial core controller instances.
-> >   */
-> >  
-> > +#include <linux/cleanup.h>
-> >  #include <linux/container_of.h>
-> >  #include <linux/device.h>
-> >  #include <linux/idr.h>
-> > @@ -204,6 +205,71 @@ void serial_base_port_device_remove(struct serial_port_device *port_dev)
-> >  	put_device(&port_dev->dev);
-> >  }
-> >  
-> > +#ifdef CONFIG_SERIAL_CORE_CONSOLE
-> > +
-> > +static int serial_base_add_one_prefcon(const char *match, const char *dev_name,
-> > +				       int port_id)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = add_preferred_console_match(match, dev_name, port_id);
-> > +	if (ret == -ENOENT)
-> > +		return 0;
-> > +
-> > +	return ret;
+> Got it. Looks like it's still going to be aligned to ARCH_DMA_MINALIGN.
+
+But I thought that the original issue was that some arch have ARCH_DMA_MINALIGN
+down to 8B but hisi driver needs at least 16 ?
+
+So in the end, you need something like:
+
+	size = ALIGN(size, max(16, ARCH_DMA_MINALIGN));
+
+no ?
+
+And define a macro for the "16" value to document it.
+Something like:
+
+#define SAS_SMP_REQ_ALIGN	16
+
+Not sure about the name... Naming is hard :)
+
 > 
-> Can we do this instead?
-> return (ret == -ENOENT ? 0 : ret);
+> Thanks,
+> Yihang
+> 
+>>
+>>
+>> .
+>>
 
-No, please no.
+-- 
+Damien Le Moal
+Western Digital Research
 
-Just spell it out, like was done here, dealing with ? : is a pain to
-read and follow and the generated code should be identical.
-
-Only use ? : in places where it's the only way to do it (i.e. as
-function parameters or in printk-like lines.)
-
-Write for people first, compilers second.
-
-thanks,
-
-greg k-h
