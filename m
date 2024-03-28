@@ -1,57 +1,57 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1167F7F481
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 12:12:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9A17F7C9
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 12:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711627979; cv=none; b=tnYe47wgdITbbEBKnHtOWR917CrZE7EBl4LsCdEb+CxgTEd97QCPb2kDxostFbUcajBw4ip4nO8APOHR5jXXj3Y47rscO+BlY5dIr4l5lZ6KFHm4GYX2bZsM1VGHzy3Io6jGxt/WZPjX9rlszktKMEuxRk2+lJFTnU+0UbrrkFM=
+	t=1711627980; cv=none; b=jjjT+PPsmjYnDDntht0qc3A/p2A3XSsClgIsQsqzUPUxpGSAlYPJzSmvgaAT/AZ/5AwA+K3C3JV4JsFa9XMQEaJ+VjlekZAfFxR19ySIN7XvvZRTeEqRYMVbCRsRcYHdDwnchkEkdd7obQ7G/n9exFDzSVcepJwNm94kycpAVfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711627979; c=relaxed/simple;
-	bh=jK+AFaPuB4QJkOlQSpapYzjziTfiCfCCfo7UWLC+ajY=;
+	s=arc-20240116; t=1711627980; c=relaxed/simple;
+	bh=HjRvMGXjDbwDSvM16WAhK4wPegt0yyIWO/1j4Z95mjo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kbpUunSu1Qk0KffwyDTsvEHOPvrEv5R3q/S5Qek6V1vv8+92fjFH+btAew6bbvmt00fMCCaSsbruwFcfk63/na7LkWIuY5LQ9dXfR4SLnIdpf2O7KLIMK7ny+PVASR5AhywwVEqqAONQ0gugImN231BEQ+ImHWlRUt1BJrUblfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ag+mZcnQ; arc=none smtp.client-ip=209.85.128.42
+	 MIME-Version; b=jqOYeEWUgyFvmO1BW8MwjqmoS+cpEUZVKqs0bTXc3IlZH3va/3KLtS0S45x2RAZJU5RIJEf3jWHUPVAAFH7kfkStYcBQABvwM2vHLz/RKYy8WXV7iIpM0oqjTMGtWUUo/idRg69ABMw6i3Oz6nhDI4TJcpvvO4NxHXJaEDsD1ZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aK+ihdK6; arc=none smtp.client-ip=209.85.208.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ag+mZcnQ"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4154614b47eso2445875e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 05:12:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aK+ihdK6"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d68cf90ec4so12378711fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 05:12:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711627974; x=1712232774; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1711627977; x=1712232777; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bF9nmGQgrbBBKoEODSqmsdf3m34vi7We9f5KYGrq5eQ=;
-        b=Ag+mZcnQac2wITZSvoFkZTbi5Lz/Xwb/3KsLC3524wIGGF/zMhhcqAzZ45l28B+boC
-         svC1XzXVC6nbOAvVY9NTNxUOIhJoWYjjjaIZu4EWdrtsVN6PAe+mmwDNMblFzeBkSHRH
-         UernIO9ZKNpoUual0OUXsfduksryKjYQyqpJTPxMb0RhkJ/6ipaPIhlmTaR/HEBzwWPZ
-         kJsw/7uNku5eoR/QYc0A+OU3icgi/24bnXLEbvXBliItcHIbeulKKwHtR4cH+NTJps/1
-         0u27uKcZYMJqMvug5GDPVdrOQrt93oKazaKpFjcEES1q3aHY/a3rVJMGLGeTCjweNijU
-         6WSQ==
+        bh=YJrpsii5KxAd/+yN0rzfHDl19GAcoZcZzgV5GRtFABE=;
+        b=aK+ihdK62WQ4eoPmO3inUqzsuBDDAS9Vjj/leAv1+8nXiV+nbwkmopf3nbIDtyAl6i
+         YNVD5vhQwKhh08SRDb+67zCbMi3g+8JgLVjudejemzle4i7uQ0TjNa8FlU74Ef6Ib/QK
+         Ax7Tk7qCEgLI51kZhzwEG1pKtXT3SoCTJdBbyiFh/5CpCinK6RI0v1ewfzqhKYZ/vxtk
+         Mo7WK56f9Xb8R+p0Tig39bH2OiQpEttcTRsKXElw1BfjfNcr7mWZym2nY9uRvGIczNbM
+         y62etIpCdpOy67NERi0iqKF9exEae7uLnQ9UBM8iw5SuKOFfSL79ZQa+PRxv+tgnBcQH
+         yu4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711627974; x=1712232774;
+        d=1e100.net; s=20230601; t=1711627977; x=1712232777;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bF9nmGQgrbBBKoEODSqmsdf3m34vi7We9f5KYGrq5eQ=;
-        b=u8YRF0Itud3wkgaWjqCrrruE6FVKububGsQ+DhXKwmFadbNn7QhgbAunuOjI9evWH1
-         EUgXCMfM+ZDEQpOcKMRV2wM8KOaAItohDBDOVbDgv3k76xZoh25ypiMBP73gCGnlcTUe
-         MFT97WHOvw37SNrBRx5FwQbK+auM07+nd3pjcuu0o4uMp+8fUJmmaAAM/Wv86o8/9hKm
-         Gm0m1xGApxBixb5IST7Ll1fXdLd7sNlIOHtZO0sG0BxrUuG4bZMTAz9D0TpS05YFoMGJ
-         avnCl6QPwkbezCoVRRwsvb+hbX2KOxdTlBu78ko1fOdYUFpwrKmmZs2JN5Ei7KdCn6Wa
-         iqsw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUBg3PWAbbXeT4NpLwows+FCqvPl6hAOOb3S5XNBN81CJbGiDNatO1ZBuLVVE2HeHAsRob96nd/WYJUMhGdhtzhi27mmcR88+7e6cy
-X-Gm-Message-State: AOJu0YxWi47jFpYs53gqM5M8/L+u/0ltk6Nr6n/QEQRmqYu4PPbW96kt
-	+/6ooHBpW0fyME2dzisfKdgNrjqchhNeC441o76clUs5alZkMfbC
-X-Google-Smtp-Source: AGHT+IF+IokEdEflEHk8FkCNBzqgYdy/CilxTJ3PWNYmSf1TJrLbjG9XI/v7yg25G0/pAzlMPoQCUQ==
-X-Received: by 2002:a05:600c:4f89:b0:414:87f7:993 with SMTP id n9-20020a05600c4f8900b0041487f70993mr1727393wmq.18.1711627974155;
-        Thu, 28 Mar 2024 05:12:54 -0700 (PDT)
+        bh=YJrpsii5KxAd/+yN0rzfHDl19GAcoZcZzgV5GRtFABE=;
+        b=qRrnp6XxrFC0mR0vfaqnIcOL7Ozb85UM0XXTr6lwJatHUs9HY3K7n0IhR/NC3DLNaC
+         itentpfFjpcVpUsHgFXVk5r5/bmPoPKr2P0ST+PCD+4vkZ9gbBJClUySHkyniPS2WDDG
+         jtOFOPtQQ8OADPX9JX6kZyZNzTqAhjplBWAix4rrAW6Gr+04LRsb6IP00/dvGQzGtYLa
+         yUVD/z4yXqm6oHiWfdhKVqj0t9HbkfkC55wkWc6SvpgBioKoa16lSYzNHtb0Dh4rxwXm
+         gaJKyGuBFGUt84Ufu1A7vSLJjh4BYkaBTTMXLNpmHUt0EHkZkx1UOvFcxR8QaOY5I9iB
+         0QkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVsyu0+wblMoq3Ll5bAc0Z7xFoH/SLpPp3FmB4PZWm2vYSK39EI3i8Uk1Mwt24wQFe2qa//oOTJN7KKnejdZcywtpcam64Rg4h5XA0q
+X-Gm-Message-State: AOJu0YwRK88tPO0Js9KTN3kEIlpkGcbK/rpvndg6C9Jr4Mgwkpz9dPNy
+	0PSQPoMv+2uBprZnOUy1C8Km8i3P/4jKbsxh5+Qtwxq7P8XT1MsD
+X-Google-Smtp-Source: AGHT+IFn/MiTHHRnQAcKDrcHrGTaSrb+CJwCaYVf1XK0ugL/wrsGsugJZad0dPF/R2zRCJqERrTo0w==
+X-Received: by 2002:a2e:990a:0:b0:2d7:fbb:8276 with SMTP id v10-20020a2e990a000000b002d70fbb8276mr223321lji.44.1711627976886;
+        Thu, 28 Mar 2024 05:12:56 -0700 (PDT)
 Received: from YOGA.local ([2a06:c701:736b:f200:125e:963c:4e4b:b7c5])
-        by smtp.gmail.com with ESMTPSA id bd11-20020a05600c1f0b00b00415460a63ebsm1416456wmb.29.2024.03.28.05.12.52
+        by smtp.gmail.com with ESMTPSA id bd11-20020a05600c1f0b00b00415460a63ebsm1416456wmb.29.2024.03.28.05.12.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 05:12:53 -0700 (PDT)
+        Thu, 28 Mar 2024 05:12:56 -0700 (PDT)
 From: Shahar Avidar <ikobh7@gmail.com>
 To: gregkh@linuxfoundation.org,
 	hverkuil-cisco@xs4all.nl,
@@ -60,9 +60,9 @@ To: gregkh@linuxfoundation.org,
 	felixkimbu1@gmail.com
 Cc: linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] staging: pi433: Replace pi433_receive param void type to struct pi433_device.
-Date: Thu, 28 Mar 2024 14:12:41 +0200
-Message-Id: <20240328121244.1244719-4-ikobh7@gmail.com>
+Subject: [PATCH 4/5] staging: pi433: Rename "pi433_dev" of type "dev_t" to "pi433_devt"
+Date: Thu, 28 Mar 2024 14:12:43 +0200
+Message-Id: <20240328121244.1244719-6-ikobh7@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240328121244.1244719-1-ikobh7@gmail.com>
 References: <20240328121244.1244719-1-ikobh7@gmail.com>
@@ -74,30 +74,79 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-pi433_receive is only called once.
-It immediately assigns the data param to a struct pi433_device.
-Rename param name to pi433.
+Distinguish struct device type instances from dev_t instances
+to enhance readability.
 
 Signed-off-by: Shahar Avidar <ikobh7@gmail.com>
 ---
- drivers/staging/pi433/pi433_if.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/staging/pi433/pi433_if.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/staging/pi433/pi433_if.c b/drivers/staging/pi433/pi433_if.c
-index 7efe6b8501e3..208c0c6d3649 100644
+index 208c0c6d3649..62ce75b07bf0 100644
 --- a/drivers/staging/pi433/pi433_if.c
 +++ b/drivers/staging/pi433/pi433_if.c
-@@ -409,9 +409,8 @@ static int pi433_start_rx(struct pi433_device *pi433)
+@@ -53,7 +53,7 @@
+ #define FIFO_THRESHOLD	15		/* bytes */
+ #define NUM_DIO			2
  
- /*-------------------------------------------------------------------------*/
+-static dev_t pi433_dev;
++static dev_t pi433_devt;
+ static DEFINE_IDR(pi433_idr);
+ static DEFINE_MUTEX(minor_lock); /* Protect idr accesses */
+ static struct dentry *root_dir;	/* debugfs root directory for the driver */
+@@ -1262,7 +1262,7 @@ static int pi433_probe(struct spi_device *spi)
+ 	}
  
--static int pi433_receive(void *data)
-+static int pi433_receive(struct pi433_device *pi433)
+ 	/* create device */
+-	pi433->devt = MKDEV(MAJOR(pi433_dev), pi433->minor);
++	pi433->devt = MKDEV(MAJOR(pi433_devt), pi433->minor);
+ 	pi433->dev = device_create(&pi433_class,
+ 				   &spi->dev,
+ 				   pi433->devt,
+@@ -1276,7 +1276,7 @@ static int pi433_probe(struct spi_device *spi)
+ 	} else {
+ 		dev_dbg(pi433->dev,
+ 			"created device for major %d, minor %d\n",
+-			MAJOR(pi433_dev),
++			MAJOR(pi433_devt),
+ 			pi433->minor);
+ 	}
+ 
+@@ -1398,13 +1398,13 @@ static int __init pi433_init(void)
+ 	 * that will key udev/mdev to add/remove /dev nodes.
+ 	 * Last, register the driver which manages those device numbers.
+ 	 */
+-	status = alloc_chrdev_region(&pi433_dev, 0, N_PI433_MINORS, "pi433");
++	status = alloc_chrdev_region(&pi433_devt, 0, N_PI433_MINORS, "pi433");
+ 	if (status < 0)
+ 		return status;
+ 
+ 	status = class_register(&pi433_class);
+ 	if (status) {
+-		unregister_chrdev(MAJOR(pi433_dev),
++		unregister_chrdev(MAJOR(pi433_devt),
+ 				  pi433_spi_driver.driver.name);
+ 		return status;
+ 	}
+@@ -1414,7 +1414,7 @@ static int __init pi433_init(void)
+ 	status = spi_register_driver(&pi433_spi_driver);
+ 	if (status < 0) {
+ 		class_unregister(&pi433_class);
+-		unregister_chrdev(MAJOR(pi433_dev),
++		unregister_chrdev(MAJOR(pi433_devt),
+ 				  pi433_spi_driver.driver.name);
+ 	}
+ 
+@@ -1427,7 +1427,7 @@ static void __exit pi433_exit(void)
  {
--	struct pi433_device *pi433 = data;
- 	struct spi_device *spi = pi433->spi;
- 	int bytes_to_read, bytes_total;
- 	int retval;
+ 	spi_unregister_driver(&pi433_spi_driver);
+ 	class_unregister(&pi433_class);
+-	unregister_chrdev(MAJOR(pi433_dev), pi433_spi_driver.driver.name);
++	unregister_chrdev(MAJOR(pi433_devt), pi433_spi_driver.driver.name);
+ 	debugfs_remove(root_dir);
+ }
+ module_exit(pi433_exit);
 -- 
 2.34.1
 
