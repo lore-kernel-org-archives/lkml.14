@@ -1,122 +1,223 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB4B7EF02
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 11:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1C7374F9;
+	Thu, 28 Mar 2024 11:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711625789; cv=none; b=bNsa7l3Pbv8VgDJ1aVm0vTZ8U0pSbnWdv3ZDw7OVCYio0g306th8KVZ/kXe/eSrwwqy5Bh/tF6KutPIQB8oZ6MYORvf+zP30EmbYOxiwqdQZUw/ChTtkdD5nFMzO0SbGaY4pkTajlXBkX0g7dw4+eUd/xVyrT2nXFOYG5ElOEqU=
+	t=1711625852; cv=none; b=CRWn6pskGkRZugffrCI+9a6dQMNkh6xDlZpybe+t31xly7Sy7vQDLKvCjEOUDfTC34kk2CwB3wcB9+IVrItkkZUWjmP9Qmxro5tl8IVKbIEmxwhX+EZ0nVYYq6Am84OhoQmn/tp5O6PomhSPakgM4WXcsgVoMtQPNKcrei5p+3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711625789; c=relaxed/simple;
-	bh=ilFiE9F2pbJK4CUMlqxrCeQ1cVjq7bZKPhWVwfSrj9I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VoJW4sqXWjpYHJkvtCBqqvDszTztrU3ibEBbkuYrxFmaWyHJgaL0kvneTqgM02NU1LeI13/oqpUWvduUl2l6XzNJGbxvMlBJZjDsbazaanLTWQ123kNiqONxzYXpS9EMf+NiNYN5+Tdt/uvLmoWiY/d9aw06pU0W9gJnItkA91Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tdAUr0hF; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711625852; c=relaxed/simple;
+	bh=PVbCQcBD9CWn/gNAbIGipQTz8wnyniImrlBgL0zkhjw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IfFrn9ZK28RrjQ/fWbiWPbnlLCrRnOiRzoWhS9kqkatJKuvxnSbcZKlBzJYcSaHIHlLcGsGNEcH75x038S8E2mdmSc29iZRH4k8VED5sIM/xyJ694PjWW5kk9QJlGfLWxrjo+cjhEVHuzVfsbRDX8m8IirCdnQ8/5vdjhjm++fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J7uMJjyR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tdAUr0hF"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-690c43c5b5aso4481406d6.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 04:36:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711625786; x=1712230586; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/prkjkwBayqxMQUYRG7IzJfpOCSd/2k5XXEN/lDQzgY=;
-        b=tdAUr0hFkCKJHDI8qlWl6HmDvuVsRGRbk+cOnoNM0xtRJVUo8vnVMWnTq1YHS/Qnek
-         0SKBtiPBIvk2jnoDiRajZAp/6IUnu9CLE613IGXZuuPOaYpdHRWnNlH2umhL+w4zUYeR
-         npz7YouK6t2Us/FuWqUH4JeTDyyTPyyu9fxi4sOLpm4sZDsOAz33u8R9lFarj/qnwsg9
-         yZh5EBQogMSxmQZt2kogAd40HzvtCo+ePt4wTd4CZqqh5FRx2VdqWv9gF3MPRzwuo8Up
-         yVKUuDx+hgsuPaEr8FHyw76hUqhGOMgGsBITP+yTOJGJx+tZkb0IH+mAQGz5andLHwuG
-         +YMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711625786; x=1712230586;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/prkjkwBayqxMQUYRG7IzJfpOCSd/2k5XXEN/lDQzgY=;
-        b=IphJWT23v1G/Jexr2kB5Yn1WDwNzIpyPIWn2JkyPjOTUUlXq4gkWCf/AczksgH6jdp
-         ejs4ThFgPkQb/E60Tb4U1XM6QP6MMxJnR11ZNoQGzADLVXjF+Ia4DXLQ4kz+lkmTk9O7
-         iNwXayWkz02lyQLifSHF9N0/hNXYLuNAiNuy2nr1PepdPoK4nVrzEZ3iiPGBsWyoCALp
-         Ry62n9tQwAuz79ap3rrJjuHqGWw2/aanXC6Ss4s/DZWmBuPH9UPPT9K01VyWtIJ7l6W7
-         6md5aRUhgq/x/pPDl4+Tc1zuIMCV6CXZKJgkB/6DhQIwWu/Hs+venmhhMvt7JYHlII4a
-         HQLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVGfRJWN6OQvvdgWwygXRqWIGRzzQMEd6v2UoZB4STYbS9+Xw0NQJXUWbPB8tE3vPpI/FG3DtFIG5kcy2FPqrA7M6Kp9XQfJZziItsQ
-X-Gm-Message-State: AOJu0Yxhi075OBWBmLjBuRynOXHc04zhmCeNqxmZU/6zvcc+qDYvZF5S
-	16qaHuKN7qPFpTR0O3fRRhTP4dbEo00AsTq/DJHCbfnAAjt70mhTXMH1a8G635m33P8gR3Mt0NN
-	6omm2kl4ntWOjtFZ/emh7eLwTuaO9KImzSNMJOw==
-X-Google-Smtp-Source: AGHT+IECGMP91OnvJpnEQBoQ4ZvbqvFkvhcH6wJdMgASlS9vR/dFRa/h/ehJAtH5CkKObHpqEYR5kJ/+W/XF3z8Eh9c=
-X-Received: by 2002:a05:6214:14a3:b0:696:3704:712c with SMTP id
- bo3-20020a05621414a300b006963704712cmr1853382qvb.63.1711625786555; Thu, 28
- Mar 2024 04:36:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J7uMJjyR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2206EC433C7;
+	Thu, 28 Mar 2024 11:37:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711625851;
+	bh=PVbCQcBD9CWn/gNAbIGipQTz8wnyniImrlBgL0zkhjw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J7uMJjyRckdKZmMRdYNjQ7wUziTu9fqjJYx9lm0PzzjjqYb3/imPJtrkbwmxHidrs
+	 2pqpPaAvH/1mJ22XEtyQxLKt/GJyZd+tuOHleveFBqrp5wUEdZVpYfnTt9iXDkUBBj
+	 P+WXZaWVYJOlR0qVK5RZPP1KH3SY8dAzLpZxROH9gRFr0ZqPf7yBj43v6qoAyqU5Pw
+	 K8TXc6il04eknWpAT7jnwaYHAi3qTXBEnAOWIyzzUGHK3I7w0bVKU93UVzNU82DPKu
+	 yizSp53bq538s9z6mUtDCFCuk/83Tu7T8qeVzN73hYU5B9jvFgvtHRQAeUW9uIeGVz
+	 DV+8ZifBpt+DQ==
+Date: Thu, 28 Mar 2024 11:37:25 +0000
+From: Lee Jones <lee@kernel.org>
+To: Bhargav Raviprakash <bhargav.r@ltts.com>
+Cc: linux-kernel@vger.kernel.org, m.nirmaladevi@ltts.com,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, jpanis@baylibre.com,
+	devicetree@vger.kernel.org, arnd@arndb.de,
+	gregkh@linuxfoundation.org, lgirdwood@gmail.com, broonie@kernel.org,
+	linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, nm@ti.com, vigneshr@ti.com,
+	kristo@kernel.org, eblanc@baylibre.com
+Subject: Re: [PATCH v4 03/11] mfd: tps6594: add regmap config in match data
+Message-ID: <20240328113725.GA13211@google.com>
+References: <20240320102559.464981-1-bhargav.r@ltts.com>
+ <20240320102559.464981-4-bhargav.r@ltts.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326172813.801470-1-tudor.ambarus@linaro.org> <20240326172813.801470-4-tudor.ambarus@linaro.org>
-In-Reply-To: <20240326172813.801470-4-tudor.ambarus@linaro.org>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Thu, 28 Mar 2024 11:36:15 +0000
-Message-ID: <CADrjBPpjK15MDTcSdOhiC6FnJcofDGArEvrkhdz+CHoFzpFheA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] clk: samsung: gs101: propagate PERIC0 USI SPI
- clock rate
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, andre.draszik@linaro.org, 
-	willmcvicker@google.com, kernel-team@android.com, s.nawrocki@samsung.com, 
-	cw00.choi@samsung.com, mturquette@baylibre.com, sboyd@kernel.org, 
-	semen.protsenko@linaro.org, linux-clk@vger.kernel.org, 
-	jaewon02.kim@samsung.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240320102559.464981-4-bhargav.r@ltts.com>
 
-Hi Tudor,
+On Wed, 20 Mar 2024, Bhargav Raviprakash wrote:
 
-On Tue, 26 Mar 2024 at 17:28, Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
->
-> When SPI transfer is being prepared, the spi-s3c64xx driver will call
-> clk_set_rate() to change the rate of SPI source clock (IPCLK). But IPCLK
-> is a gate (leaf) clock, so it must propagate the rate change up the
-> clock tree, so that corresponding MUX/DIV clocks can actually change
-> their values. Add CLK_SET_RATE_PARENT flag to corresponding clocks for
-> all USI instances in GS101 PERIC0: USI{1-8, 14}. This change involves the
-> following clocks:
->
-> PERIC0 USI*:
->
->     Clock                              Div range    MUX Selection
->     -------------------------------------------------------------------
->     gout_peric0_peric0_top0_ipclk_*    -            -
->     dout_peric0_usi*_usi               /1..16       -
->     mout_peric0_usi*_usi_user          -            {24.5 MHz, 400 MHz}
->
-> With input clock of 400 MHz this scheme provides the following IPCLK
-> rate range, for each USI block:
->
->     PERIC0 USI*:       1.5 MHz ... 400 MHz
->
-> Accounting for internal /4 divider in SPI blocks, and because the max
-> SPI frequency is limited at 50 MHz, it gives us next SPI SCK rates:
->
->     PERIC0 USI_SPI*:   384 KHz ... 49.9 MHz
->
-> Which shall be fine for the applications of the SPI bus.
->
-> Note that with this we allow the reparenting of the MUX_USIx clocks to
-> OSCCLK. Each instance of the USI IP has its own MUX_USI clock, thus the
-> reparenting of a MUX_USI clock corresponds to a single instance of the
-> USI IP. The datasheet mentions OSCCLK just in the low-power mode
-> context, but the downstream driver reparents too the MUX_USI clocks to
-> OSCCLK. Follow the downstream driver and do the same.
->
-> Fixes: 893f133a040b ("clk: samsung: gs101: add support for cmu_peric0")
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+> Introduces a new struct tps6594_match_data. This struct holds fields for
+> chip id and regmap config. Using this struct in of_device_id data field.
+> This helps in adding support for TPS65224 PMIC.
+> 
+> Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+> Acked-by: Julien Panis <jpanis@baylibre.com>
 > ---
+>  drivers/mfd/tps6594-i2c.c   | 24 ++++++++++++++++--------
+>  drivers/mfd/tps6594-spi.c   | 24 ++++++++++++++++--------
+>  include/linux/mfd/tps6594.h | 11 +++++++++++
+>  3 files changed, 43 insertions(+), 16 deletions(-)
 
-Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
+Mostly fine, just a couple of nits.
 
-regards,
+Firstly the subject lines for the entire set are inconsistent.
 
-Peter
+Please use the style set by the subsystem:
+
+  `git log --oneline -- <subsystem>` is your friend.
+
+> diff --git a/drivers/mfd/tps6594-i2c.c b/drivers/mfd/tps6594-i2c.c
+> index c125b474b..9e2ed48b7 100644
+> --- a/drivers/mfd/tps6594-i2c.c
+> +++ b/drivers/mfd/tps6594-i2c.c
+> @@ -192,10 +192,16 @@ static const struct regmap_config tps6594_i2c_regmap_config = {
+>  	.write = tps6594_i2c_write,
+>  };
+>  
+> +static const struct tps6594_match_data match_data[] = {
+> +	[TPS6594] = {TPS6594, &tps6594_i2c_regmap_config},
+> +	[TPS6593] = {TPS6593, &tps6594_i2c_regmap_config},
+> +	[LP8764] = {LP8764, &tps6594_i2c_regmap_config},
+
+Spaces after the '{' and before the '}' please.
+> +};
+> +
+>  static const struct of_device_id tps6594_i2c_of_match_table[] = {
+> -	{ .compatible = "ti,tps6594-q1", .data = (void *)TPS6594, },
+> -	{ .compatible = "ti,tps6593-q1", .data = (void *)TPS6593, },
+> -	{ .compatible = "ti,lp8764-q1",  .data = (void *)LP8764,  },
+> +	{ .compatible = "ti,tps6594-q1", .data = &match_data[TPS6594], },
+> +	{ .compatible = "ti,tps6593-q1", .data = &match_data[TPS6593], },
+> +	{ .compatible = "ti,lp8764-q1",  .data = &match_data[LP8764], },
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, tps6594_i2c_of_match_table);
+> @@ -205,6 +211,7 @@ static int tps6594_i2c_probe(struct i2c_client *client)
+>  	struct device *dev = &client->dev;
+>  	struct tps6594 *tps;
+>  	const struct of_device_id *match;
+> +	const struct tps6594_match_data *mdata;
+>  
+>  	tps = devm_kzalloc(dev, sizeof(*tps), GFP_KERNEL);
+>  	if (!tps)
+> @@ -216,14 +223,15 @@ static int tps6594_i2c_probe(struct i2c_client *client)
+>  	tps->reg = client->addr;
+>  	tps->irq = client->irq;
+>  
+> -	tps->regmap = devm_regmap_init(dev, NULL, client, &tps6594_i2c_regmap_config);
+> -	if (IS_ERR(tps->regmap))
+> -		return dev_err_probe(dev, PTR_ERR(tps->regmap), "Failed to init regmap\n");
+> -
+>  	match = of_match_device(tps6594_i2c_of_match_table, dev);
+>  	if (!match)
+>  		return dev_err_probe(dev, -EINVAL, "Failed to find matching chip ID\n");
+> -	tps->chip_id = (unsigned long)match->data;
+> +	mdata = (struct tps6594_match_data *)match->data;
+
+What happens when you drop this case?
+
+I was under the impression this was not required when casting from (void *)
+
+> +	tps->chip_id = mdata->chip_id;
+> +
+> +	tps->regmap = devm_regmap_init(dev, NULL, client, mdata->config);
+> +	if (IS_ERR(tps->regmap))
+> +		return dev_err_probe(dev, PTR_ERR(tps->regmap), "Failed to init regmap\n");
+
+"initialise"
+
+>  
+>  	crc8_populate_msb(tps6594_i2c_crc_table, TPS6594_CRC8_POLYNOMIAL);
+>  
+> diff --git a/drivers/mfd/tps6594-spi.c b/drivers/mfd/tps6594-spi.c
+> index 5afb1736f..82a1c02e3 100644
+> --- a/drivers/mfd/tps6594-spi.c
+> +++ b/drivers/mfd/tps6594-spi.c
+> @@ -77,10 +77,16 @@ static const struct regmap_config tps6594_spi_regmap_config = {
+>  	.use_single_write = true,
+>  };
+>  
+> +static const struct tps6594_match_data match_data[] = {
+> +	[TPS6594] = {TPS6594, &tps6594_spi_regmap_config},
+> +	[TPS6593] = {TPS6593, &tps6594_spi_regmap_config},
+> +	[LP8764] = {LP8764, &tps6594_spi_regmap_config},
+
+As above.
+
+> +};
+> +
+>  static const struct of_device_id tps6594_spi_of_match_table[] = {
+> -	{ .compatible = "ti,tps6594-q1", .data = (void *)TPS6594, },
+> -	{ .compatible = "ti,tps6593-q1", .data = (void *)TPS6593, },
+> -	{ .compatible = "ti,lp8764-q1",  .data = (void *)LP8764,  },
+> +	{ .compatible = "ti,tps6594-q1", .data = &match_data[TPS6594], },
+> +	{ .compatible = "ti,tps6593-q1", .data = &match_data[TPS6593], },
+> +	{ .compatible = "ti,lp8764-q1",  .data = &match_data[LP8764], },
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, tps6594_spi_of_match_table);
+> @@ -90,6 +96,7 @@ static int tps6594_spi_probe(struct spi_device *spi)
+>  	struct device *dev = &spi->dev;
+>  	struct tps6594 *tps;
+>  	const struct of_device_id *match;
+> +	const struct tps6594_match_data *mdata;
+>  
+>  	tps = devm_kzalloc(dev, sizeof(*tps), GFP_KERNEL);
+>  	if (!tps)
+> @@ -101,14 +108,15 @@ static int tps6594_spi_probe(struct spi_device *spi)
+>  	tps->reg = spi_get_chipselect(spi, 0);
+>  	tps->irq = spi->irq;
+>  
+> -	tps->regmap = devm_regmap_init(dev, NULL, spi, &tps6594_spi_regmap_config);
+> -	if (IS_ERR(tps->regmap))
+> -		return dev_err_probe(dev, PTR_ERR(tps->regmap), "Failed to init regmap\n");
+> -
+>  	match = of_match_device(tps6594_spi_of_match_table, dev);
+>  	if (!match)
+>  		return dev_err_probe(dev, -EINVAL, "Failed to find matching chip ID\n");
+> -	tps->chip_id = (unsigned long)match->data;
+> +	mdata = (struct tps6594_match_data *)match->data;
+> +	tps->chip_id = mdata->chip_id;
+> +
+> +	tps->regmap = devm_regmap_init(dev, NULL, spi, mdata->config);
+> +	if (IS_ERR(tps->regmap))
+> +		return dev_err_probe(dev, PTR_ERR(tps->regmap), "Failed to init regmap\n");
+>  
+>  	crc8_populate_msb(tps6594_spi_crc_table, TPS6594_CRC8_POLYNOMIAL);
+>  
+> diff --git a/include/linux/mfd/tps6594.h b/include/linux/mfd/tps6594.h
+> index 16543fd4d..d781e0fe3 100644
+> --- a/include/linux/mfd/tps6594.h
+> +++ b/include/linux/mfd/tps6594.h
+> @@ -1337,6 +1337,17 @@ struct tps6594 {
+>  	struct regmap_irq_chip_data *irq_data;
+>  };
+>  
+> +/**
+> + * struct tps6594_match_data - of match data of PMIC
+> + *
+> + * @chip_id: chip ID of PMIC
+> + * @config: regmap config of PMIC
+> + */
+> +struct tps6594_match_data {
+> +	unsigned long chip_id;
+> +	const struct regmap_config *config;
+> +};
+> +
+>  extern const struct regmap_access_table tps6594_volatile_table;
+>  extern const struct regmap_access_table tps65224_volatile_table;
+>  
+> -- 
+> 2.25.1
+> 
+
+-- 
+Lee Jones [李琼斯]
