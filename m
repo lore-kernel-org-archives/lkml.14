@@ -1,77 +1,56 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB2D13A415
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED9213AA36
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711643876; cv=none; b=PAmTL+E7Xex7HrpHmG4Ni3m0FshZFn2icM0uFt+2iYNfat7Idy/YhKc22h40L8sbie8bVYVw6iHNHj7woVQg2N73ptlR4Qxi4clLo5OcSJ1hU6TSE54hueMnY+0gilevttOhrsziomr+nsHNBkUbfdXPR6uTbs5+f3rqXMgOUdk=
+	t=1711643878; cv=none; b=WItnEeGFphAGXvyJplUsBhu8AM4DqlvYeNmmY4rVyJJhxam5BNg8Z+3tqajuoIQ9MDjVOGgbGHzqTS7LNNe3GPo/3NwFv6s/P2Ton98xo2CJ3Xp2xpJSnHAHiq/9fblyPXBeumQkynPz+H2uO+SEoCv982HS4D8HcvsoCSXc5GM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711643876; c=relaxed/simple;
-	bh=PJPhYD4IoFcUNGLano5TA/KsCENTb0bp1WXbMhgQneM=;
+	s=arc-20240116; t=1711643878; c=relaxed/simple;
+	bh=mZGFxWlbLBmgwu26X3jwNzUAW5GWgk+GnRQDUpPlM/Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jRHGxWnSfA2EboTw9QYn6LShv0gEPwFIIewFlzBQ4VcqV94gXViJTrp/xFpcACGYGfGpbm7RRxqMccfdOuGXt7WlDnkKTAOHDE91W2M3iXdhscR8m0jbM/JNQAZSpNxNCIuCE8/OkY1sWPm2Tx356gu6Yu7RykLN1NgpCCe9UDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BJN/bAgF; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 MIME-Version; b=Co3pUZlZHh686zm7ybwwGuG7oPJ8AMKVyFLYAeEa7VkfECToGfJHKybVeiC7k3oUd9091c4vkcZ7FyjPwKQnceV/A6aP3J6pJF1GtDZSKJ9f+PfiTTgdVkccnKX6TA0AGwTW8DYVOf3hnfbrOUxPXvOC0MjJ18uDwcI07MfyuXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CeCgHmKA; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BJN/bAgF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711643873;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ioxjNilBuiqs0KYw5lDY5ynz4cuTib2XAYQ79MimHtU=;
-	b=BJN/bAgF1y+e1ThKt7/8NwMBcVG5lID2RwaxAKK/IkfLguHSAUrz2WEmew5caxziN2aO2y
-	HiC3iOrJddg0/7XVwBh1aCuU/RRQiNLUGR5psyquGJdb3rx8ydEKTxLhdkZCBaG637vwV3
-	wg4flIyHdwYWkNEva9xUkYmBhrpo/vI=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-615-PNBhpr21Omuq3Za9H6GKVg-1; Thu,
- 28 Mar 2024 12:37:47 -0400
-X-MC-Unique: PNBhpr21Omuq3Za9H6GKVg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EED79282477E;
-	Thu, 28 Mar 2024 16:37:45 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.146])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id EE4B41121312;
-	Thu, 28 Mar 2024 16:37:42 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-	Jeff Layton <jlayton@kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Dominique Martinet <asmadeus@codewreck.org>
-Cc: David Howells <dhowells@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Steve French <smfrench@gmail.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Tom Talpey <tom@talpey.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	netfs@lists.linux.dev,
-	linux-cachefs@redhat.com,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 15/26] mm: Export writeback_iter()
-Date: Thu, 28 Mar 2024 16:34:07 +0000
-Message-ID: <20240328163424.2781320-16-dhowells@redhat.com>
-In-Reply-To: <20240328163424.2781320-1-dhowells@redhat.com>
-References: <20240328163424.2781320-1-dhowells@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CeCgHmKA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711643875; x=1743179875;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=mZGFxWlbLBmgwu26X3jwNzUAW5GWgk+GnRQDUpPlM/Q=;
+  b=CeCgHmKA1soWBCe+MlnWamyB9Q5oidMmgAAOw0GRdLZqzOTmyIxFkv/O
+   uL681Qi0o8Ww1CyLsmXEVf9IUSXsaqdXUCh0ZHokGC8LxPlhyO4WvRBfj
+   k47XatzDZQLRwc0msZ4o6vdPPDMeMlWZF6pozC8B8yw3kAT+T9kEi6Ykg
+   gVOjCKasmSSO41Ld2rm226JMJ/1K42bCbNVnvxXVGMlpoydW0smweV8uP
+   u7PaCiLiIkubEIfftvMmKUdoG8EmC7Wj5VzeocJ3xntx+/wFLZkG1cB18
+   IVscQkvGaOyXHHKW0svt3J6oQf5wIs+l2CH/rmc0TipA388kZhiYAioVv
+   g==;
+X-CSE-ConnectionGUID: RU9/t4oMQjKl/O0wlT58Aw==
+X-CSE-MsgGUID: bMV7PNtlTUmcMJMsZ0b/BQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="24296529"
+X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
+   d="scan'208";a="24296529"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 09:37:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
+   d="scan'208";a="39852825"
+Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 09:37:52 -0700
+From: Tony Luck <tony.luck@intel.com>
+To: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Tony Luck <tony.luck@intel.com>
+Subject: [PATCH 02/74] x86/cpu/vfm: Add new macros to work with (vendor/family/model) values
+Date: Thu, 28 Mar 2024 09:37:45 -0700
+Message-ID: <20240328163746.243023-3-tony.luck@intel.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240328163746.243023-1-tony.luck@intel.com>
+References: <20240328163746.243023-1-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,28 +58,134 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-Export writeback_iter() so that it can be used by netfslib as a module.
+To avoid adding a slew of new macros for each new Intel CPU family
+switch over from providing CPU model number #defines to a new
+scheme that encodes vendor, family, and model in a single number.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-cc: Christoph Hellwig <hch@lst.de>
-cc: linux-mm@kvack.org
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- mm/page-writeback.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/include/asm/cpu_device_id.h | 93 ++++++++++++++++++++++++++++
+ 1 file changed, 93 insertions(+)
 
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index 3e19b87049db..9df160a1cf9e 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -2546,6 +2546,7 @@ struct folio *writeback_iter(struct address_space *mapping,
- 	folio_batch_release(&wbc->fbatch);
- 	return NULL;
- }
-+EXPORT_SYMBOL(writeback_iter);
+diff --git a/arch/x86/include/asm/cpu_device_id.h b/arch/x86/include/asm/cpu_device_id.h
+index eb8fcede9e3b..0e98d3fd0d38 100644
+--- a/arch/x86/include/asm/cpu_device_id.h
++++ b/arch/x86/include/asm/cpu_device_id.h
+@@ -2,6 +2,39 @@
+ #ifndef _ASM_X86_CPU_DEVICE_ID
+ #define _ASM_X86_CPU_DEVICE_ID
  
++/*
++ * Can't use <linux/bitfield.h> because it generates expressions that
++ * cannot be used in structure initializers. Bitfield construction
++ * here must match the union in struct cpuinfo_86:
++ *	union {
++ *		struct {
++ *			__u8	x86_vendor;
++ *			__u8	x86;
++ *			__u8	x86_model;
++ *			__u8	x86_reserved;
++ *		};
++ *		__u32		x86_vfm;
++ *	};
++ */
++#define VFM_VENDOR_BIT	0
++#define VFM_FAMILY_BIT	8
++#define VFM_MODEL_BIT	16
++#define VFM_RSVD_BIT	24
++
++#define	VFM_VENDOR_MASK	GENMASK(VFM_FAMILY_BIT - 1, VFM_VENDOR_BIT)
++#define	VFM_FAMILY_MASK	GENMASK(VFM_MODEL_BIT - 1, VFM_FAMILY_BIT)
++#define	VFM_MODEL_MASK	GENMASK(VFM_RSVD_BIT - 1, VFM_MODEL_BIT)
++
++#define VFM_VENDOR(vfm)	(((vfm) & VFM_VENDOR_MASK) >> VFM_VENDOR_BIT)
++#define VFM_FAMILY(vfm)	(((vfm) & VFM_FAMILY_MASK) >> VFM_FAMILY_BIT)
++#define VFM_MODEL(vfm)	(((vfm) & VFM_MODEL_MASK) >> VFM_MODEL_BIT)
++
++#define	VFM_MAKE(_vendor, _family, _model) (	\
++	((_vendor) << VFM_VENDOR_BIT) |		\
++	((_family) << VFM_FAMILY_BIT) |		\
++	((_model) << VFM_MODEL_BIT)		\
++)
++
+ /*
+  * Declare drivers belonging to specific x86 CPUs
+  * Similar in spirit to pci_device_id and related PCI functions
+@@ -49,6 +82,16 @@
+ 	.driver_data	= (unsigned long) _data				\
+ }
+ 
++#define X86_MATCH_VENDORID_FAM_MODEL_STEPPINGS_FEATURE(_vendor, _family, _model, \
++						    _steppings, _feature, _data) { \
++	.vendor		= _vendor,					\
++	.family		= _family,					\
++	.model		= _model,					\
++	.steppings	= _steppings,					\
++	.feature	= _feature,					\
++	.driver_data	= (unsigned long) _data				\
++}
++
  /**
-  * write_cache_pages - walk the list of dirty pages of the given address space and write all of them.
+  * X86_MATCH_VENDOR_FAM_MODEL_FEATURE - Macro for CPU matching
+  * @_vendor:	The vendor name, e.g. INTEL, AMD, HYGON, ..., ANY
+@@ -164,6 +207,56 @@
+ 	X86_MATCH_VENDOR_FAM_MODEL_STEPPINGS_FEATURE(INTEL, 6, INTEL_FAM6_##model, \
+ 						     steppings, X86_FEATURE_ANY, data)
+ 
++/**
++ * X86_MATCH_VFM - Match encoded vendor/family/model
++ * @vfm:	Encoded 8-bits each for vendor, family, model
++ * @data:	Driver specific data or NULL. The internal storage
++ *		format is unsigned long. The supplied value, pointer
++ *		etc. is casted to unsigned long internally.
++ *
++ * Stepping and feature are set to wildcards
++ */
++#define X86_MATCH_VFM(vfm, data)			\
++	X86_MATCH_VENDORID_FAM_MODEL_STEPPINGS_FEATURE(	\
++		VFM_VENDOR(vfm),			\
++		VFM_FAMILY(vfm),			\
++		VFM_MODEL(vfm),				\
++		X86_STEPPING_ANY, X86_FEATURE_ANY, data)
++
++/**
++ * X86_MATCH_VFM_STEPPINGS - Match encoded vendor/family/model/stepping
++ * @vfm:	Encoded 8-bits each for vendor, family, model
++ * @steppings:	Bitmask of steppings to match
++ * @data:	Driver specific data or NULL. The internal storage
++ *		format is unsigned long. The supplied value, pointer
++ *		etc. is casted to unsigned long internally.
++ *
++ * feature is set to wildcard
++ */
++#define X86_MATCH_VFM_STEPPINGS(vfm, steppings, data)	\
++	X86_MATCH_VENDORID_FAM_MODEL_STEPPINGS_FEATURE(	\
++		VFM_VENDOR(vfm),			\
++		VFM_FAMILY(vfm),			\
++		VFM_MODEL(vfm),				\
++		steppings, X86_FEATURE_ANY, data)
++
++/**
++ * X86_MATCH_VFM_FEATURE - Match encoded vendor/family/model/feature
++ * @vfm:	Encoded 8-bits each for vendor, family, model
++ * @feature:	A X86_FEATURE bit
++ * @data:	Driver specific data or NULL. The internal storage
++ *		format is unsigned long. The supplied value, pointer
++ *		etc. is casted to unsigned long internally.
++ *
++ * Steppings is set to wildcard
++ */
++#define X86_MATCH_VFM_FEATURE(vfm, feature, data)	\
++	X86_MATCH_VENDORID_FAM_MODEL_STEPPINGS_FEATURE(	\
++		VFM_VENDOR(vfm),			\
++		VFM_FAMILY(vfm),			\
++		VFM_MODEL(vfm),				\
++		X86_STEPPING_ANY, feature, data)
++
+ /*
+  * Match specific microcode revisions.
+  *
+-- 
+2.44.0
 
