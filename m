@@ -1,86 +1,157 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA76F57885;
-	Thu, 28 Mar 2024 08:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9390964CD0
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 08:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711615940; cv=none; b=C++Wt4Nt5zugBFZ5osAQsH8Ajv8sx4slN6uwHhvo1clI1Cyke5+pU0Go5r5FqDoYpLyi2f5flEJRfC5Uu9scjaPexTlqxHAWGL+0sy/+yk036URK9hUiRoLiTnzrbUxviFLpkd8lkLQYPU8zb+BtqLEu7nOd+xZrfy+urzsBFAU=
+	t=1711615945; cv=none; b=U2oVP5QjFrWTxu6jiclGEykO6Vnj1iGK+Jux95GwZvcEC6k1ULeHDpTQWyr+YfLE6xfYug6JMd+hGv0PKJGKna4kCGBSY706ZxLJut48w3pf7vJUMVfCY5LE+Ijlq16Y/NOUzPuVbLy7RzRHjYkR379H3MSZnBv2bZkn98TLLvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711615940; c=relaxed/simple;
-	bh=uRSq3PbyalaTRAGpYMw/AwJImnqaUQvuvimLCkGiocM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dfMvslhv054AjYfT2iw1dq9A347wQyoMgGctDP92UTMvCXYTs7v/mDzuEYK6l/q7aKFtKDSpfg00zZsq48bVfzwlOdFYneZ7C917m2ScBO63InsWqQ/womZnO8KZAHkS5hnLCxEwNfFio01WXUT68BEFOakL0EVB6zRYCVsi80Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h4OWZmKZ; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711615945; c=relaxed/simple;
+	bh=ChxjiAPwIJAoMLWvSyvtBLUuuJR3I+RKCIHsWyF8tDk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=thiuK19sFWVZAOilyU2Exn1zCr+mJKC+wZDiIbVBkdRfNmOqhKVAZFV6hN694ellCEO1XEt3XexLbxHB/34tLdWvZRJtiVGd6NwrQ78UmuxcD9EUZMB6KZ2y6hdqRaIynhiz7rNOx15A6Or6uE7NO5heUYuvPxcpXzM3kMSPE+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rj/mWA8p; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h4OWZmKZ"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-56845954ffeso998381a12.2;
-        Thu, 28 Mar 2024 01:52:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rj/mWA8p"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-33edbc5932bso461617f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 01:52:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711615937; x=1712220737; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uRSq3PbyalaTRAGpYMw/AwJImnqaUQvuvimLCkGiocM=;
-        b=h4OWZmKZB2SC2fCyJSXLX94lgiKjUtxgq9GV8R2kdsVpraDEVgmyoedKyoO3uoLhyn
-         vo5buAzCjo0ffHMIOq3noT4UgsWK6kg5Qaxy6EERLoBV5HsZw9uDSBj0UfBB9JaE2rnx
-         kI/EUUNPh1gV1E0I3mIsuWkhOEnkcV3FNCONTd+XtvPY9t+HKU33EGu/vOV3p/t9ARW9
-         pgpa48Eu0r8sdpN8832d1xyF2AaFm/Tzxba0ncDB5udPja879Bu0BKL1aJD6fTiAMpqB
-         dNixPBuziDxxXt+jhr3gqvRGnFve/GYV95oCBAS2dneULqh/5vMy/y3YLNuQ3dYjSgfV
-         yE2A==
+        d=linaro.org; s=google; t=1711615942; x=1712220742; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=zPYjukiTakqXaBTdtaepVTDOm2SsVNFnM6RyH2/1aQ0=;
+        b=rj/mWA8piQ9hR8B1HhwNb7jshD5tWjcER8vUkrz08dUW2JmdOD4Hg1rMTeRcyBIYjY
+         Q8Q1zwsn9AALbaDPYqXCleuq8iGxj5EhyaEXRNrvMgtdv+QfACf7onTq9qo+/3FRBqc6
+         66q897PQqiFm0nq7ICtqH+z/MWNOf5kdctLfqS05ZkmKhwK4KHsMc2MgK/ASP3Z91TpE
+         smrysuHZsavq3yVpjcMVW1yLq+KMl+RT5aE8bQZE3zpzsmdtFKg18H8/pbe439o9qG53
+         1L7wqVLlzGnVzGN1Ba3KBa2Q5PzL+Zu8il1XJ60Hx293vZcMTY9R1DoWFEP9MDNXHi5d
+         cL+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711615937; x=1712220737;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uRSq3PbyalaTRAGpYMw/AwJImnqaUQvuvimLCkGiocM=;
-        b=fHqjTXWwAPK39N9cJkvZ7Omgti9FcxauWHI+OTSW7nDgT70w1J/GejdLs16lSrXGOA
-         6rcqnJ4kg/L/jJIkLLb91xHCAdzj8zn2gSJjibZkWkceWo2+7sQPYDTBlqOzuEDsJvYo
-         2NUUrGFtOnUazTGY8Isb8iRlP8WBmi51CjOy2jLCxPXXw0wFmLbgXk2/S8dOzxDOr+O9
-         8IHkhDTjcpkp1tLVuAS5X+FMkt/wNpegZpkkP4JIBSWia/5aOmjb4pTDBQsR1PaOibKz
-         M2Ufe8H+mZy64gUWyXNjklY/1XOgDQp8wDvkZYkUu2iDlWMGmNIheCG0FtkmsQnq/Raz
-         wb1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVCxhgpLPj9u6DJ9eEjU81M4h/Q24Eg6HTSmRCErZXgkcEEiqWA2EzoOIJmGNlNtCg7jCrizh5WX97tSE+z6ETsbt2o33xkjEvA
-X-Gm-Message-State: AOJu0YzheyF+EX7Ste7+XX9WOluYfj99YHTvGTC89jpz4wZIjdeozMZw
-	854X8qwnWxtp6WX8zrmGpZpa8D18A3iukvOE7UC4+kbL/0YLnN8KXDzBE2S9TyK/+lFrZD8BHlb
-	aal3fl9YqOady5LnksJEtcuIyb+U=
-X-Google-Smtp-Source: AGHT+IFr/exgRid+KISKPp1ZiaO6K73n659l0UMEZy7HRh4PJu6XIFnywV6qsNDZyBakDlwIDQZngpp370BOOWbZqiU=
-X-Received: by 2002:a17:906:fb12:b0:a4e:289c:6dae with SMTP id
- lz18-20020a170906fb1200b00a4e289c6daemr8828ejb.50.1711615936912; Thu, 28 Mar
- 2024 01:52:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711615942; x=1712220742;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zPYjukiTakqXaBTdtaepVTDOm2SsVNFnM6RyH2/1aQ0=;
+        b=fh67lU8bsa/H2i5fglmwzB5DyI4wx5+woH5le7NVuePDFcveRtVlm3omupuDydeM15
+         og/jQNR3W6IOditPcRn5n1pbmBqsr0FllN6qh+vHia1TFW4rGKk5nfGLGixzHCuAjhsi
+         BqQiv38VNGz+wmKUsAa7aSTeYfLyflozaPKpkU9lK/O3hxB/SSf5nxZRRrsmb46j+1AS
+         pQZLmFdHg7W0rAcwedAgghGPP2L/3gAXZ+scmpSO5Mjk1ghmSpH8JtJ+rey25UPcXW+2
+         NMesOFaFcN5zbYa3fIkCMOjTqkrgU1eQoDB3cjE7JgaOTf079b9mXlTkFNeLRSIxj9kX
+         oK8w==
+X-Forwarded-Encrypted: i=1; AJvYcCXok5Z5WmR/aHmIsFY6r+BNdCBbkrmCLiD8yZVKpYIMDggF3a3xzorR7AFydzc6aNnGfn50DQIsTrvYMPxKOXh/EEY+jg4cCj9UkzBl
+X-Gm-Message-State: AOJu0YzQ3wnocet8DpO3OSz8W7F3TOmc1MvRJ6l2/sct8qz/nOVFvcn0
+	ePiLCu83AL/K6KchSP6tTfi5c8yJPFsnFO81ePAiL4d7mjwIAjJbeO+J68tiKGU=
+X-Google-Smtp-Source: AGHT+IHzq/DkX1mQgyKwyLbrkwPXY9N1nuYOMcKmFgvdM0fybQQIm4ZFa6cnU75qQRsOsahfuax9Vw==
+X-Received: by 2002:a5d:5043:0:b0:341:bf1e:45a5 with SMTP id h3-20020a5d5043000000b00341bf1e45a5mr1247456wrt.46.1711615941979;
+        Thu, 28 Mar 2024 01:52:21 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.148])
+        by smtp.gmail.com with ESMTPSA id dz16-20020a0560000e9000b0033dedd63382sm1148785wrb.101.2024.03.28.01.52.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Mar 2024 01:52:21 -0700 (PDT)
+Message-ID: <4937df72-9efb-45c5-9c46-2a9d3ec8887f@linaro.org>
+Date: Thu, 28 Mar 2024 09:52:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240328043845.28882-1-rdunlap@infradead.org>
-In-Reply-To: <20240328043845.28882-1-rdunlap@infradead.org>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 28 Mar 2024 10:51:40 +0200
-Message-ID: <CAHp75VfuoYoAm-QcVhx3bJcvsGarU88ZdNGwz=mW8sq-mt5pmQ@mail.gmail.com>
-Subject: Re: [PATCH] spi: spi.h: add missing kernel-doc for @last_cs_index_mask
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-spi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] dt-bindings: ufs: qcom: document SC7180 UFS
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>,
+ Bart Van Assche <bvanassche@acm.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+ linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240326174632.209745-1-krzysztof.kozlowski@linaro.org>
+ <20240326174632.209745-2-krzysztof.kozlowski@linaro.org>
+ <20240328035909.GB3212@thinkpad>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240328035909.GB3212@thinkpad>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 28, 2024 at 6:38=E2=80=AFAM Randy Dunlap <rdunlap@infradead.org=
-> wrote:
->
-> kernel-doc complains about last_cs_index_mask not described, so add its
-> decscription.
+On 28/03/2024 04:59, Manivannan Sadhasivam wrote:
+>>    - if:
+>>        properties:
+>>          compatible:
+>> @@ -250,7 +276,7 @@ allOf:
+>>          reg:
+>>            maxItems: 1
+>>          clocks:
+>> -          minItems: 8
+>> +          minItems: 7
+>>            maxItems: 8
+>>      else:
+>>        properties:
+>> @@ -258,7 +284,7 @@ allOf:
+>>            minItems: 1
+>>            maxItems: 2
+>>          clocks:
+>> -          minItems: 8
+>> +          minItems: 7
+> 
+> I'm getting confused by the clock requirements for qcom,ice. Why does specifying
+> the qcom,ice phandle require these clocks? These are the UFSHC clocks and
+> already defined above.
 
-description
+I am also confused, but I did not change that logic. I don't think that
+it is anyway useful, but that separate topic from this patch.
 
-> spi.h:778: warning: Function parameter or struct member 'last_cs_index_ma=
-sk' not described in 'spi_controller'
+Best regards,
+Krzysztof
 
-Do we need a Fixes tag?
-
---=20
-With Best Regards,
-Andy Shevchenko
