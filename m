@@ -1,114 +1,93 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B18481737
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 13:42:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E67681AB1
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 13:43:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711633361; cv=none; b=k5TzMlTjSvS9YrdHKa1d7cYkJqnjrec8vAaeghNXlNmdmr8dXaUAME2JbcX6dXO7m4OcA2cgaFEdOxZv5NMhKIyxabEjuquE4j8OsAKiImjU9xHP0cr2EphSHxOKQldQhXG5x0TzQXWn2nm6uFSV23kdqvSmYJ3EFVekOJwNcVc=
+	t=1711633439; cv=none; b=NrvaS8oP0TqPVFqNLJAZOiEJm4cLQOurYX7HJyYIo59/tgGu/C69Zv9aNaSyJzVFFxO23X8lHVrbCW6SZJ7BgjfUxYiSm3x1fDqPqXDAW29yUUD1E1tnT8aAOLsUNLHMWiy+wTw2SMFuRbrERG8rObkMKeeHEuDqaGeuTPj84B8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711633361; c=relaxed/simple;
-	bh=hhRlYplAngPEQbPQPZoDSxo+OkYmG1EWXwIVdXRC3Vs=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ixJaPlJQB4WlVDTAtKiqdZoQsG2k4nTzEo/utiqMw4eBDDDEkLNX0lCQ8q9Xx4yIGdVx6lsDyCV3/XKN7G6H2WaPbGKDC9EwONPaAAFZ+8Cy70oxMkb7Xw/9fAQejpdPPAgZkB5iHi0YJcUx8HI6fHV2zxmsdkxUV+f79zm4c6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jxeZb6LB; arc=none smtp.client-ip=209.85.221.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711633439; c=relaxed/simple;
+	bh=qxebtBwnyGPsO2kNr2fwFrTYCj37epzSvHLje1owcyI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Y7wrTnPybJImZoA+HFOXbjGLEOz4LduqwY8oPRO4anQPTIuENkGV03Hpcz8aE4QHnC1b9U5QrR5neZX1MMAK5dRL1HV7+v7pbY1lfHUh22k/9NP4Sr9MJhbjw7NDc8y/APJJPSiUKUYGzSqs4421auOferLJHR7xNHddZHfP4pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=eALxJRbv; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jxeZb6LB"
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-4d42ea640f0so340338e0c.3
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 06:42:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="eALxJRbv"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1e21e09abbcso215175ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 06:43:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711633358; x=1712238158; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5CeNIBGwaVDgfO73ZfAkhp4Wwo/FpVfC31xG4w3suuo=;
-        b=jxeZb6LBmRnKlbpHuqQPEDQ0UjwfC0L6iud0Q7S06oIvGCd28la3R5+5ApzUAlsgQb
-         UIzNCpc4CxeScUd20nxgscW0tGWkXKrHW+RcEEPzw+I2l90nc98w0dfCM3FrTbSICQfv
-         uzwOqOMVhsO/LpAscs+C+yZsXaujWE01ebnimA4e3HbDemkjIaR+AVl3wilbzQ+m2VqZ
-         FOknYdUvW7TfWl+2/1uA5YJNCv+UBt9vVNttRvh6eHG3g0x763CrsTNVbuf5ODIKd5st
-         RLKxnd8DR3vP6k2vmX0Qfg4bkEvLjU/7lWScyEH7fNdSvueR1tZp28zu2P7Ql4gFQWqc
-         t3Mg==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1711633436; x=1712238236; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J0z5YahbsAjIT5061DUG7My51zSMHhvhSzF4hs3eYCc=;
+        b=eALxJRbvLkcPw68Yc2Y728cC8WX2NkckD+ZZwmNG9obp9VoogGGjlsB+WtRiUD76AH
+         i5UnV4yNLme7WlmEvtWSY6FPbsLggSgSm7oGktcloHCk0ZrTQZrQB2a3snmMxhkPZmXl
+         KCS1/hhtaHlqWZDXF5k4Nvmzjsw/2AcCrMpAbn2HwrvXHXPbkhdOTgmf57f04U4SE8Zy
+         lCmJWTknH9xsXN9QCagdiZr9n8BtrGdWY/hJ6gwCbIfMcU/YUtzxceeoD/OtRP+76TfW
+         2hB++xk3IkL51YPpPandKgzcKEFbBHWHvJ0XcIbLFhmdDH5CA0Zy0lyl1pSSLjRM8BKA
+         xEOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711633358; x=1712238158;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5CeNIBGwaVDgfO73ZfAkhp4Wwo/FpVfC31xG4w3suuo=;
-        b=IPVM80zJUeSlGhAFINI5Ypyql98y6eB0/PsV+/Oq+2q8sYOrMMZgsaNiYopboaihgE
-         a9hMm34fVGImv8ffRJufA4rU83uWaKquXmuPCgiSP2/q647FcKBZchJmzCCcQSvD/tHD
-         YzkF0lJzESwOKTIT4/o5X9WZrmGcHnadTJgcONxPPa42z5KmgpGN3F0x3HV6jpCHcJj3
-         i1//3ukKt97dps4P3C8OP1AG7nS0bmsbRpo8TbvKtQHN7O99bTHRssj9wMzzUVkmrP7G
-         EeLQ1rwCLzinw3we3cA9z3Y6KE6XNBUXyLTtRqty7BUvva6iORXeD8fLidUOsF0lOp/9
-         jcNw==
-X-Gm-Message-State: AOJu0Yxrm0kyPQDAdtRxcPdUs4kVQYn0iIiBtgqPWFt1+aSzopY8BQTe
-	F0bAV39Hympgwi/+dmZFaak0VgRsorKBsz8jnRtdruIcW6ec3AsTSuVIWS/P1loWyWy0EDynS0S
-	TtRP7/4LN50+RcB3Q7tttuO54RmCHjbY6Hzl/ORFoA6MulJUTH4w=
-X-Google-Smtp-Source: AGHT+IGCQwVFe0hrVaXjlFER1xvXN0uGdEjUdmEts8/9uJnSVwOGSKAOOHh35Vp2giMo7mQCITi+xEA2fQUNpHq1clk=
-X-Received: by 2002:a05:6122:d9f:b0:4d4:19e9:db0 with SMTP id
- bc31-20020a0561220d9f00b004d419e90db0mr3400240vkb.0.1711633357669; Thu, 28
- Mar 2024 06:42:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711633436; x=1712238236;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J0z5YahbsAjIT5061DUG7My51zSMHhvhSzF4hs3eYCc=;
+        b=UkSCCCzk0Ta0PQk7KrKhQtAC/bS/vNNOAJNqIPzQr7TuBGi1raIov2cn9j+Om9j/fs
+         fdgnBTs60a1sR33PDwG8BongJ3ps75Cv9vr9w1bwg6hqxUJJllZGDzgkv2TfUw+ikb8C
+         cly3xiZ+tD1qIcw0zsi1J1tEWVEoSFOz/dp5fZ7kaPtmTQuWLs9pbUxwcyrG5ppRLCaN
+         hHg8ogUkN4iMO52MVFLTd3x0N1VZbWZZTZGxTgTbrdlzvlexsys6ACRJlwi0nsLEXzsQ
+         dH5q9+2dyAknG3d9bCqR443C0KEZ9pW8yNL7nKxhMEbp8RjeKiiebXgeUGMbHj0LyzIM
+         q4Aw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQPOfgu/mptcSTtFBNO6u2cVYEmvhE9HD5cX8BEPe/s42TYXh8H+U46us2JDxNJ0fGMpmbFQbQuxw7E9SqbZo899CvZyIs0EXnwzHt
+X-Gm-Message-State: AOJu0YxR3Bx5WeAw4cbgGc0hCNX0+JiFaoTgmtCcxq4l4F876ONCRv8Q
+	Q5VKpdp2zGXh6g06qaGfayTPicezIylW6xgCo1Cnbg9vtL3dpjGal8TMxM4J92w=
+X-Google-Smtp-Source: AGHT+IFnQRsHsmxK4vwmS9Tg55Qe1iLFntXEoAK8JTSx6l+VP7TfB+ycddefH0KZHVT5td0CkdLzTw==
+X-Received: by 2002:a17:902:7b87:b0:1dd:e128:16b1 with SMTP id w7-20020a1709027b8700b001dde12816b1mr2739817pll.6.1711633435683;
+        Thu, 28 Mar 2024 06:43:55 -0700 (PDT)
+Received: from [127.0.0.1] ([50.234.116.5])
+        by smtp.gmail.com with ESMTPSA id y4-20020a170902ed4400b001e0abeb8fb5sm1564522plb.271.2024.03.28.06.43.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 06:43:55 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Cc: asml.silence@gmail.com, io-uring@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
+In-Reply-To: <20240328022324.78029-1-jiapeng.chong@linux.alibaba.com>
+References: <20240328022324.78029-1-jiapeng.chong@linux.alibaba.com>
+Subject: Re: [PATCH] io_uring: Remove unused function
+Message-Id: <171163343470.657312.11623417523875571291.b4-ty@kernel.dk>
+Date: Thu, 28 Mar 2024 07:43:54 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 28 Mar 2024 19:12:26 +0530
-Message-ID: <CA+G9fYvB6unkhzFomVcg+M14Cc7xSKkzhMuXaWqZQbDej_aduQ@mail.gmail.com>
-Subject: next: sh: mm/cache-sh4.c:250:51: error: too few arguments to function 'folio_flags'
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	linux-mm <linux-mm@kvack.org>, Linux Regressions <regressions@lists.linux.dev>
-Cc: willy@infradead.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-
-While building sh defconfig with gcc-11 the following build warnings /
-errors noticed on Linux next-20240328 tag.
-
-sh:
-  build:
-    * gcc-11-shx3_defconfig  - Failed
-    * gcc-11-dreamcast_defconfig - Failed
-    * gcc-11-defconfig - Failed
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-Build error:
----------
-arch/sh/kernel/cpu/sh4/fpu.c:389:6: warning: no previous prototype for
-'float_raise' [-Wmissing-prototypes]
-  389 | void float_raise(unsigned int flags)
-      |      ^~~~~~~~~~~
-arch/sh/kernel/cpu/sh4/fpu.c:394:5: warning: no previous prototype for
-'float_rounding_mode' [-Wmissing-prototypes]
-  394 | int float_rounding_mode(void)
-      |     ^~~~~~~~~~~~~~~~~~~
-In file included from include/linux/thread_info.h:27,
-                 from include/asm-generic/preempt.h:5,
-                 from ./arch/sh/include/generated/asm/preempt.h:1,
-                 from include/linux/preempt.h:79,
-                 from include/linux/spinlock.h:56,
-                 from include/linux/mmzone.h:8,
-                 from include/linux/gfp.h:7,
-                 from include/linux/mm.h:7,
-                 from arch/sh/mm/cache-sh4.c:14:
-arch/sh/mm/cache-sh4.c: In function 'sh4_flush_cache_page':
-arch/sh/mm/cache-sh4.c:250:51: error: too few arguments to function
-'folio_flags'
-  250 |                         test_bit(PG_dcache_clean, folio_flags(folio)) &&
-      |                                                   ^~~~~~~~~~~
-
-steps to reproduce:
-----------
-# tuxmake --runtime podman --target-arch sh --toolchain gcc-11
---kconfig defconfig
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.5-dev-2aabd
 
 
-Links:
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240328/testrun/23229659/suite/build/test/gcc-11-defconfig/log
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240328/testrun/23229659/suite/build/test/gcc-11-defconfig/history/
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240328/testrun/23229659/suite/build/test/gcc-11-defconfig/details/
+On Thu, 28 Mar 2024 10:23:24 +0800, Jiapeng Chong wrote:
+> The function are defined in the io_uring.c file, but not called
+> elsewhere, so delete the unused function.
+> 
+> io_uring/io_uring.c:646:20: warning: unused function '__io_cq_unlock'.
+> 
+> 
 
---
-Linaro LKFT
-https://lkft.linaro.org
+Applied, thanks!
+
+[1/1] io_uring: Remove unused function
+      commit: 976a421d86422abb554b4544ddcad31f1cade3a4
+
+Best regards,
+-- 
+Jens Axboe
+
+
+
