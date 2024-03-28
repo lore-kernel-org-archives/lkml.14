@@ -1,150 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-108-mta247.mxroute.com (mail-108-mta247.mxroute.com [136.175.108.247])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C26D13AA54
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 21:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB6613AD09
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 21:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.247
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711660046; cv=none; b=pDWDccneBKljrT355zz8yYnPumM1mKjVmsiphmGc0vJZWQ6ULDhDJeWz2tvkgr3kMQpuNUD9xUyd7V7iAyC5QiLgxnb10z/hArnyevTK0zmIUglOegbFRcP2vcTh2lTYGU0WJlDnVonpMebw51nq6ZxD+LNtXwTPvD1lJf97daE=
+	t=1711660048; cv=none; b=qz+/Cta8XWtD5FjCSIct9K8lfCRukuUasai9/HkMl510yAjqKhoI1tCk9WAJX4ZLmkcTFryivQHG1/AcLj3nw8VFVv/MBQYUJqEuFmw2eZGLEtBmFRk2gDZOUJvVcZG+UeyH/3qHbX2NU3WmEhzKO4s2EBPVmlYwroqYt7xWN8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711660046; c=relaxed/simple;
-	bh=WakwZuSdLqzld89orUC502TIto80jRQf9jd2N0l/Uig=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=IeC1QIJppJmJ9FimqrvznupDOOcBieDR4mBE9yByI6Oa9Mwr5fpD+eAzb/dV6E5vSPzT91uSMRnZa7f3XASloAyPTxM31AE+c48nfR7TMtFKro3ijKTHTyTKLjHaiyWuFq+hqUjD4CNgCFYWBhV8h691gm1IIkV6bRcKUbuyymM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R5HFRot5; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711660048; c=relaxed/simple;
+	bh=r0EcBPQ3qmpeCX4m58ZcZEDwZXCeT1PRpsmqW991s+0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LCRxA72tOv6D1b2/LxotRAxtr1MxEFoxXYIWhxQy29z1YmmW3QBFrI3t9f1tHfqE3VQWIsPteUQzrVwqYsX02yYlWOpMmsz4xtGDzekCQ7iuaBbAuUxMmLTOMlBmpENl4oz8wD+ey6U4PxNb7mvbQH/BzJJGeQb8dGvWq0AYzkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=h8XynL+L; arc=none smtp.client-ip=136.175.108.247
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R5HFRot5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711660044; x=1743196044;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=WakwZuSdLqzld89orUC502TIto80jRQf9jd2N0l/Uig=;
-  b=R5HFRot5wrHpSxyvCiWXHMrtCI6v+10sBi0fa4F1zPN1y78+0RFtf+mk
-   btslJZctw7yhE0vT7cVMNJgdryDhrwj2XXNjA3MgxTeDxZqpRpKbDMPB2
-   O3F/MkxHiaqtJLuBT/fKPpdeMOoGl7pd5m5oYX+LuxAD7Q+QssGnJ4tWZ
-   KogGK9iP5Uc5GmYaPgjfgscRNR5NGrjem1IuoNP544f/WPEavplMzg5YB
-   du71X0H7tvmQv4Plamdw5IlTKClGgOY2Ux+v1f2IiT9lvxmSPO5HLcWm8
-   /tqL6fvmhppnvE+KGyYJNU9calyGjzr81lsMVjPTu07It3Ygg3aEOE9xv
-   w==;
-X-CSE-ConnectionGUID: 2Y+JqVrcR12gvYJ67J2F3w==
-X-CSE-MsgGUID: Y3EuuazLRf2kJplFLrIKog==
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="17566370"
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="17566370"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 14:07:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="16647031"
-Received: from lkp-server01.sh.intel.com (HELO be39aa325d23) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 28 Mar 2024 14:07:22 -0700
-Received: from kbuild by be39aa325d23 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rpwxz-0002WY-2y;
-	Thu, 28 Mar 2024 21:07:19 +0000
-Date: Fri, 29 Mar 2024 05:06:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Dave Chinner <dchinner@redhat.com>
-Subject: fs/xfs/./scrub/trace.h:748:3: warning: 'strncpy' specified bound 256
- equals destination size
-Message-ID: <202403290419.HPcyvqZu-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="h8XynL+L"
+Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by mail-108-mta247.mxroute.com (ZoneMTA) with ESMTPSA id 18e86dee3df0003bea.00f
+ for <linux-kernel@vger.kernel.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Thu, 28 Mar 2024 21:02:18 +0000
+X-Zone-Loop: 1f5b0abd1513aa85b7eae87ebd2b27b7e0522eb1d293
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=luigi311.com; s=x; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+	From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=n0BJjZfxDNb/uyF3bBh2pp0ckq9viE9E1DscdmPJyFc=; b=h8XynL+LgJCxtIBV8QoxL5mr/m
+	ev7KBLRvh1FI44Uu/Nw6Gc9q5HYuzaORe8rm19V2oFqd5dbEjW7JUE+4+ewSexyZrmHpJF0AN2IIg
+	pKUexC3rVtTJNgN9njahSH9UbTXDwti85J8R2TiTnWvA+j4M2PbDcVJSlUdLZZlEH8BqWFI2+o8OR
+	NinPlMA4xScARG2ZZaWVJfvu+sy+0ZtNEA5lDuXMqls5/t4Y4S8BWe84VKcVCVk1bezjOAoIxcBh/
+	vNE5NchcJTfHxXpKHkXkQ9Ds9q2+FFMaFYeB6+cj05AkMYqnuW0XSjbsnqWKSYnF4WZRE0S+uf8Kv
+	VTD5pPvQ==;
+Message-ID: <0b6fe14e-c990-4084-bc54-57872aa9ae21@luigi311.com>
+Date: Thu, 28 Mar 2024 15:02:13 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 18/23] dt-bindings: media: imx258: Add alternate
+ compatible strings
+Content-Language: en-US
+To: Rob Herring <robh@kernel.org>
+Cc: linux-media@vger.kernel.org, dave.stevenson@raspberrypi.com,
+ jacopo.mondi@ideasonboard.com, mchehab@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, shawnguo@kernel.org,
+ s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+ sakari.ailus@linux.intel.com, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240327231710.53188-1-git@luigi311.com>
+ <20240327231710.53188-19-git@luigi311.com>
+ <20240328185526.GA88354-robh@kernel.org>
+ <76f999a7-55e0-4676-aa75-8fcd466e046b@luigi311.com>
+ <20240328204657.GA314523-robh@kernel.org>
+From: Luigi311 <git@luigi311.com>
+In-Reply-To: <20240328204657.GA314523-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Id: git@luigi311.com
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   8d025e2092e29bfd13e56c78e22af25fac83c8ec
-commit: 3934e8ebb7cc6e5f1ade35d586ed3eb79b88eb95 xfs: create a big array data structure
-date:   8 months ago
-config: x86_64-buildonly-randconfig-005-20240328 (https://download.01.org/0day-ci/archive/20240329/202403290419.HPcyvqZu-lkp@intel.com/config)
-compiler: gcc-8 (Ubuntu 8.4.0-3ubuntu2) 8.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240329/202403290419.HPcyvqZu-lkp@intel.com/reproduce)
+On 3/28/24 14:46, Rob Herring wrote:
+> On Thu, Mar 28, 2024 at 01:16:22PM -0600, Luigi311 wrote:
+>> On 3/28/24 12:55, Rob Herring wrote:
+>>> On Wed, Mar 27, 2024 at 05:17:04PM -0600, git@luigi311.com wrote:
+>>>> From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+>>>>
+>>>> There are a number of variants of the imx258 modules that can not
+>>>> be differentiated at runtime, so add compatible strings for them.
+>>>> But you are only adding 1 variant.
+>>
+>> I can not speak for Dave but as to why this was added here but looking
+>> at the imx296 yaml that has something similar where there are multiple
+>> variants that may not be detectable at run time but does not include
+>> similar verbiage in the main description. Should I drop this from the
+>> description so it matches the imx296?
+> 
+> Just change "add compatible strings for them" to "add compatible string 
+> for the PDAF variant" or something.
+> 
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403290419.HPcyvqZu-lkp@intel.com/
+Ohh i see what you mean now, this is in reference to the commit message,
+it was throwing me off because the imx258 description had almost the
+exact same wording. Yes that makes sense, ill change the commit
+message to specify PDAF.
 
-All warnings (new ones prefixed by >>):
+>>
+>>>
+>>>>
+>>>> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+>>>> Signed-off-by: Luigi311 <git@luigi311.com>
+>>>> ---
+>>>>  .../devicetree/bindings/media/i2c/sony,imx258.yaml          | 6 +++++-
+>>>>  1 file changed, 5 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
+>>>> index bee61a443b23..c7856de15ba3 100644
+>>>> --- a/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
+>>>> +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
+>>>> @@ -14,10 +14,14 @@ description: |-
+>>>>    type stacked image sensor with a square pixel array of size 4208 x 3120. It
+>>>>    is programmable through I2C interface.  Image data is sent through MIPI
+>>>>    CSI-2.
+>>>> +  There are a number of variants of the sensor which cannot be detected at
+>>>> +  runtime, so multiple compatible strings are required to differentiate these.
+>>>
+>>> That's more reasoning/why for the patch than description of the h/w.
+>>>
+>>>>  properties:
+>>>>    compatible:
+>>>> -    const: sony,imx258
+>>>> +    - enum:
+>>>> +        - sony,imx258
+>>>> +        - sony,imx258-pdaf
+>>>
+>>> How do I know which one to use? Please define what PDAF means somewhere 
+>>> as well as perhaps what the original/default variant is or isn't.
+>>
+>> Would it make sense to change the properties to include a description like so
+>>
+>> properties:
+>>   compatible:
+>>     enum:
+>>       - sony,imx258
+>>       - sony,imx258-pdaf
+>>     description:
+>>       The IMX258 sensor exists in two different models, a standard variant
+>>       (IMX258) and a variant with phase detection autofocus (IMX258-PDAF).
+>>       The camera module does not expose the model through registers, so the
+>>       exact model needs to be specified.
+> 
+> Looks fine, but I'd move this to the top-level 'description'.
+> 
+> Rob
 
-   In file included from include/trace/define_trace.h:103,
-                    from fs/xfs/scrub/trace.h:1119,
-                    from fs/xfs/scrub/trace.c:42:
-   fs/xfs/./scrub/trace.h: In function 'perf_trace_xfile_create':
->> fs/xfs/./scrub/trace.h:748:3: warning: 'strncpy' specified bound 256 equals destination size [-Wstringop-truncation]
-      strncpy(__entry->pathname, path, sizeof(__entry->pathname));
-      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/trace/perf.h:51:4: note: in definition of macro 'DECLARE_EVENT_CLASS'
-     { assign; }       \
-       ^~~~~~
-   include/trace/trace_events.h:44:9: note: in expansion of macro 'PARAMS'
-            PARAMS(assign),         \
-            ^~~~~~
-   fs/xfs/./scrub/trace.h:731:1: note: in expansion of macro 'TRACE_EVENT'
-    TRACE_EVENT(xfile_create,
-    ^~~~~~~~~~~
-   fs/xfs/./scrub/trace.h:739:2: note: in expansion of macro 'TP_fast_assign'
-     TP_fast_assign(
-     ^~~~~~~~~~~~~~
-   In file included from include/trace/define_trace.h:102,
-                    from fs/xfs/scrub/trace.h:1119,
-                    from fs/xfs/scrub/trace.c:42:
-   fs/xfs/./scrub/trace.h: In function 'trace_event_raw_event_xfile_create':
->> fs/xfs/./scrub/trace.h:748:3: warning: 'strncpy' specified bound 256 equals destination size [-Wstringop-truncation]
-      strncpy(__entry->pathname, path, sizeof(__entry->pathname));
-      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/trace/trace_events.h:402:4: note: in definition of macro 'DECLARE_EVENT_CLASS'
-     { assign; }       \
-       ^~~~~~
-   include/trace/trace_events.h:44:9: note: in expansion of macro 'PARAMS'
-            PARAMS(assign),         \
-            ^~~~~~
-   fs/xfs/./scrub/trace.h:731:1: note: in expansion of macro 'TRACE_EVENT'
-    TRACE_EVENT(xfile_create,
-    ^~~~~~~~~~~
-   fs/xfs/./scrub/trace.h:739:2: note: in expansion of macro 'TP_fast_assign'
-     TP_fast_assign(
-     ^~~~~~~~~~~~~~
-
-
-vim +/strncpy +748 fs/xfs/./scrub/trace.h
-
-   730	
-   731	TRACE_EVENT(xfile_create,
-   732		TP_PROTO(struct xfile *xf),
-   733		TP_ARGS(xf),
-   734		TP_STRUCT__entry(
-   735			__field(dev_t, dev)
-   736			__field(unsigned long, ino)
-   737			__array(char, pathname, 256)
-   738		),
-   739		TP_fast_assign(
-   740			char		pathname[257];
-   741			char		*path;
-   742	
-   743			__entry->ino = file_inode(xf->file)->i_ino;
-   744			memset(pathname, 0, sizeof(pathname));
-   745			path = file_path(xf->file, pathname, sizeof(pathname) - 1);
-   746			if (IS_ERR(path))
-   747				path = "(unknown)";
- > 748			strncpy(__entry->pathname, path, sizeof(__entry->pathname));
-   749		),
-   750		TP_printk("xfino 0x%lx path '%s'",
-   751			  __entry->ino,
-   752			  __entry->pathname)
-   753	);
-   754	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Perfect ill move this to the top level description and remove that small section
+that Dave added
