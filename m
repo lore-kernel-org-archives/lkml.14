@@ -1,109 +1,122 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A3B537E0;
-	Thu, 28 Mar 2024 08:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629D257879
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 08:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711612935; cv=none; b=Rs8yndrGt44WJNcQ3P2lJOrcecc3Pp0N+Gd0xJJqdiilfzi8YiV0LSrjzGBHoG8A+t0aWPv+U0AAjvvJk1FLqe9oTxdEzlLkPWUp5yAwWMhU3yChxy8RkdmGU4EvHPio3AHkJaohhBvWLGeivLUqIrAj4Sg2cN41aCJxHP9HgHQ=
+	t=1711612974; cv=none; b=gzEvX9cQtPow40hCltSpeEq9aHYvLu14/L46rmXcHeRlacMI7ElpxQ/MBsV/vjXngYMyGfNJZ0dQm8N38eBFqi5v4wctfFLEBTCY80LP49frXMsBe5IVz6cydsFvO+EFry5+4ct5U+4v2t/5nSgXjh3O3iRexOfmykYvzjcoRio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711612935; c=relaxed/simple;
-	bh=SrdpeFjSHn0LCnvMBJIKDdbpLNAKMxwnnZuXs0WPO/w=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nMxaZfdJY7/Wh/KlaXfFxPj0E+cg7ksK5h5dtxoLXRF1GL1Zo9V5tiQ50osoZcdP5NPU4WmIQ6oS8UnajkCNi6oMZrsTu279yMa3+TsWnG22wQE1MlmiU2kVEdxRhEDJLxEaBPqKsblbB8KbVzA4NnEHlp0NJGBKjmbiDQYzB1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=fUZYtRXW; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1711612974; c=relaxed/simple;
+	bh=nGY94ctV99RKSBmKBzu+ogs72YCJk1Ocz9yUA3kt8vQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Pjmjy3IEC3EVCuzkHP8zxjuH0TSjCI7waB6pJMnSggkrecig56g3kScCRfK112+lFJo3VQw1DVHwd9iMDK3PoU6K9cnb4u0MD8h1be/6NUVVHB+UtTEZYnUB5S/SG43DrJFH/0z1alez1XBENnO+SuU/RRsdtv3FYrW+qhyPbjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=NGK7V3cu; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="fUZYtRXW"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42S20cbJ007927;
-	Thu, 28 Mar 2024 09:01:40 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=selector1; bh=B3k9NYQ
-	+W0JovX05lxSOFMRWz6YTKcx+T4goM/utJYs=; b=fUZYtRXWdHKLTsnBLtLfC41
-	A9d0Z0pqU+WM2pMGPSPYfObG2u0azWHtiu9+Wx+1t2YjW776IKo3CRM5i6msA6aZ
-	RWxncsIv76TmXIqnPMB+lpC6C/8VcIzvp4Qkyi0M/CUuoJGYswEgzc+bNP+R6xqj
-	wgSe02V9961lRcB8VTHXQZbEI/oDkBafNxHu4Hb2m64s6mR7WaF2ePUGU5KAGNKR
-	rtqCap8RKiCExXxXeG83oQS4Jwr19KxNbYOvYwJiWByDkEIV89BAPeGtNOW2Kyh8
-	sLrToKtVrmEp4DqB8LRfaVKu5F7Qz1PYDe17+Ima4dGF2nvPpbiAafGtykBPocA=
-	=
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3x1pugrc0b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 28 Mar 2024 09:01:40 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4E9E440044;
-	Thu, 28 Mar 2024 09:01:36 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 238F0210743;
-	Thu, 28 Mar 2024 09:01:11 +0100 (CET)
-Received: from localhost (10.201.20.71) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 28 Mar
- 2024 09:01:10 +0100
-From: <patrice.chotard@foss.st.com>
-To: <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        <alexandre.torgue@foss.st.com>
-CC: <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Patrice Chotard <patrice.chotard@foss.st.com>
-Subject: [PATCH v1] ARM: dts: stm32: Update button on stm32mp135f-dk
-Date: Thu, 28 Mar 2024 09:01:05 +0100
-Message-ID: <20240328080105.3910099-1-patrice.chotard@foss.st.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="NGK7V3cu"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-56c147205b9so1172040a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 01:02:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1711612969; x=1712217769; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5mODnViOF43Qf7BlbaL1yV7bCzvxW2J00s0tf+KV++c=;
+        b=NGK7V3cu1N3eCHO7pKGFeXE2/+iBgqPFGDgdQHHmx9BOhZz7y41ZMJIJEPQhTZYbRH
+         aGU9jhn4IYYGh/5fR2hkxRweWs03Qk0gRc97LwvRbYaAOpdqsb8lkM2q4N3bqxd/WVPf
+         JuRBPRxS7R2dptVwHCjhBTskzfOI3+W6csCnal4lfGGGgzcON7vjP6rzcq8utYFcKSwD
+         x9BezZo0owHo9f37QG+wlMIz9RAP0Ls7jslqr3xgwxBXVq8lr5b/0cJyJMrx4DcngDgh
+         j9HXbxo0L+PuJCbv31raxkLLQd8m7/ZQbUadMdWxMW5qvkFcTvBr2kjJ3GuP26fFpIni
+         ZspA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711612969; x=1712217769;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5mODnViOF43Qf7BlbaL1yV7bCzvxW2J00s0tf+KV++c=;
+        b=Ah0U0dojsK+doZOFYWkr3/ETFelQWTX+Y+aKlrUTIH/+wtqoIBRyn024fxMZOQ4IYL
+         AMt8SZXJ3qfXIVTzralrAljJ8MYzNAw9bFTD4KLXuoHUE+CS2Iv0OXc6GpSFzcivUxAd
+         p1ZYUzKK/DIOo+eaxToeNR3XlJnRug80lJfCkerNhaDqFw3qVq7Gwh6MT0akoVaursFM
+         dsmgYT3+4yZr3L+RuwicH58vIwshK+iQBnAIJ9cJHD00uRE7ZixZi07iGuRDwf+Dh1iD
+         MXB+nIShoMowS1P8IKgUF30xV2NYlkI83in63zY7Oegwv9VEwPFy52yOb+puy7rhOyMO
+         TuAA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkeZFf+f3Nr09muSv8ner9+fS7Sbgrj5VK1rpCagAvHYdjUxR0rbi2BiTATEjNmk3qF9X/3ayrCX7j6jaS9u4gnISaH56QyUjq3RYz
+X-Gm-Message-State: AOJu0YxpkOGEtKhgM8eH612B1Ttqq/mJJBSB8PN1e0WzcNzqSxEXc6UU
+	O1+eFyUJU91Bjq8ZNU93ltNHUKbRuSepeu570ZeVqyUyW/9n0sv0GaYAT5cadzg=
+X-Google-Smtp-Source: AGHT+IGvGtijoBb4YavjO3REnAE+9JEFT1LLiQTDvEwJxSta1iXIKu06X+xRwMugSsM6ImuZbjFbHw==
+X-Received: by 2002:a50:9519:0:b0:568:a226:6685 with SMTP id u25-20020a509519000000b00568a2266685mr1455890eda.8.1711612968600;
+        Thu, 28 Mar 2024 01:02:48 -0700 (PDT)
+Received: from otso.luca.vpn.lucaweiss.eu (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id k7-20020aa7c047000000b0056c443ce781sm522618edo.85.2024.03.28.01.02.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 01:02:48 -0700 (PDT)
+From: Luca Weiss <luca.weiss@fairphone.com>
+Date: Thu, 28 Mar 2024 09:02:45 +0100
+Subject: [PATCH] drm/msm/adreno: Set highest_bank_bit for A619
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SAFCAS1NODE2.st.com (10.75.90.13) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-28_07,2024-03-27_01,2023-05-22_02
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240328-a619-hbb-v1-1-cd135e2d22a7@fairphone.com>
+X-B4-Tracking: v=1; b=H4sIACUkBWYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDYyML3UQzQ0vdjKQk3UTjJLOklETLVJNEcyWg8oKi1LTMCrBR0bG1tQC
+ NjGDnWgAAAA==
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Akhil P Oommen <quic_akhilpo@quicinc.com>, 
+ Konrad Dybcio <konrad.dybcio@somainline.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ Rob Clark <robdclark@chromium.org>, linux-arm-msm@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org, Luca Weiss <luca.weiss@fairphone.com>
+X-Mailer: b4 0.13.0
 
-From: Patrice Chotard <patrice.chotard@foss.st.com>
+The default highest_bank_bit of 15 didn't seem to cause issues so far
+but downstream defines it to be 14. But similar to [0] leaving it on 14
+(or 15 for that matter) causes some corruption issues with some
+resolutions with DisplayPort, like 1920x1200.
 
-On schematics, 2 buttons are available on stm32mp135-dk board:
-  _ button "user1" connected to GPIOA14
-  _ button "user2" connected to GPIOA13
+So set it to 13 for now so that there's no screen corruption.
 
-Reflect that on device tree.
+[0] commit 6a0dbcd20ef2 ("drm/msm/a6xx: set highest_bank_bit to 13 for a610")
 
-Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
+Fixes: b7616b5c69e6 ("drm/msm/adreno: Add A619 support")
+Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
 ---
- arch/arm/boot/dts/st/stm32mp135f-dk.dts | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+@Akhil: Dmitry & Abhinav said I should ping you specifically to take a
+look if you have an idea why HBB=13 works but HBB=14 causes issues.
+---
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/st/stm32mp135f-dk.dts b/arch/arm/boot/dts/st/stm32mp135f-dk.dts
-index 52171214a308..f7e03bc7eccb 100644
---- a/arch/arm/boot/dts/st/stm32mp135f-dk.dts
-+++ b/arch/arm/boot/dts/st/stm32mp135f-dk.dts
-@@ -48,9 +48,15 @@ optee@dd000000 {
- 	gpio-keys {
- 		compatible = "gpio-keys";
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+index 0674aca0f8a3..cf0b1de1c071 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+@@ -1377,6 +1377,10 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+ 	if (adreno_is_a618(gpu))
+ 		gpu->ubwc_config.highest_bank_bit = 14;
  
--		button-user {
--			label = "User-PA13";
-+		button-user-1 {
-+			label = "User-1";
- 			linux,code = <BTN_1>;
-+			gpios = <&gpioa 14 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-+		};
++	if (adreno_is_a619(gpu))
++		/* TODO: Should be 14 but causes corruption at e.g. 1920x1200 on DP */
++		gpu->ubwc_config.highest_bank_bit = 13;
 +
-+		button-user-2 {
-+			label = "User-2";
-+			linux,code = <BTN_2>;
- 			gpios = <&gpioa 13 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
- 		};
- 	};
+ 	if (adreno_is_a619_holi(gpu))
+ 		gpu->ubwc_config.highest_bank_bit = 13;
+ 
+
+---
+base-commit: d5a436a7b5958caa6fc0dcda6c842f9d951be73b
+change-id: 20240328-a619-hbb-a3b6bda9e4a7
+
+Best regards,
 -- 
-2.25.1
+Luca Weiss <luca.weiss@fairphone.com>
 
