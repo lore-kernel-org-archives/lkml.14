@@ -1,744 +1,167 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6757712F397
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 17:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711645261; cv=none; b=NSbr/hjrMGH1KxVAJw5dYjbkcw8PMAIwSQLI8oVxvXugN/dD4ScpsS8H4nL8uYK2idAaFpUGuB65NtdB+5naOXhfHD5CIP9+LrYM6Su2TMdqSPl6HDaGcDbDl0mf8meYeHxiz5avaivrkR6/bpdao02C2IWl+RvwnkD4c+yyhTw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711645261; c=relaxed/simple;
-	bh=XFDza5oM3WqDd2pWmoZL1oJgsBI07i6RvS39pePp1hM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OPTeTA7LMy7EGQSiim51xvvYfgrMi7+o3hY9H8RjzgDVNfbHV6vpKg704PFLDD9n48CdU2zCHJ3vLbnnkgF/CUf6EyRLLIka7mnN+HpPJpaQY5G1dFLxcX4FaAOVawixVxcZRWFhq6T1VgkFSF8jg1cvf2wSZyIQGdBWlI0wsC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Np5NPjJZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E14C139571
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 17:01:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711645264; cv=fail; b=P84oSSeRnuQen64OD/gc7wNiPflk1rAQsySWsi2s5TjQjZtg2kqGFn2nv2VWH7/Fkke9tbyk1+SlxPFzD2q9Ny63A1G+AXXsZFqtkmtDCzwFqhHyyqwC4CSY8eQESt/yl6BgvD0hWerXHr2VZLdESOkixOj97rQtIgEfTtY+SvI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711645264; c=relaxed/simple;
+	bh=9T8NTr6I/1x8k97XkDu0NRZ+9NF90oZdG0h5ewcDRck=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=L6Ocw+swc5cVS9/gS99qo4f9jySh2CkfrV6ABVwKwQ6Rsqbtqvv4jX3SW0FDcW9+r/rG4UlZ0X+GyJFmwtcGhv7N2Fk0n26JEkzzUjWtTISAHi3WFeWfUqjnHdCcYlNlOxIef6eTroE0e8bkbHGyYRSXnkOpeZwFk/uWp7jmPRM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Oi9hbCqw; arc=fail smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Np5NPjJZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711645258;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RZ3qln56R8gz/TyHMxIA9wp5yFVEOQhmfIt5qbtPW8s=;
-	b=Np5NPjJZc1o/pJTHbhq5gMSa+WtCFnyQ/1Mdp4luaAeDJpC+0jsgZfr483J53nWlG9lQPz
-	lFBbnN1AkrOIjDSxbjTlmva4B4AehskaQRRPJjnOY/m0PckAIgHtxPpQwtEW2o+Pwh68K5
-	XpBB2vdCQ7rjXTAxdIiBdXAyPVDv6kE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-671-XwmHA-YGNhOtYolac14NJQ-1; Thu, 28 Mar 2024 13:00:56 -0400
-X-MC-Unique: XwmHA-YGNhOtYolac14NJQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 667E2101CC6D;
-	Thu, 28 Mar 2024 17:00:55 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.146])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 69129200A384;
-	Thu, 28 Mar 2024 17:00:53 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Steve French <smfrench@gmail.com>
-Cc: David Howells <dhowells@redhat.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Tom Talpey <tom@talpey.com>,
-	Christian Brauner <christian@brauner.io>,
-	netfs@lists.linux.dev,
-	linux-cifs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Steve French <sfrench@samba.org>,
-	Shyam Prasad N <nspmangalore@gmail.com>,
-	Rohith Surabattula <rohiths.msft@gmail.com>
-Subject: [PATCH v6 14/15] cifs: Remove some code that's no longer used, part 2
-Date: Thu, 28 Mar 2024 16:58:05 +0000
-Message-ID: <20240328165845.2782259-15-dhowells@redhat.com>
-In-Reply-To: <20240328165845.2782259-1-dhowells@redhat.com>
-References: <20240328165845.2782259-1-dhowells@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Oi9hbCqw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711645263; x=1743181263;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=9T8NTr6I/1x8k97XkDu0NRZ+9NF90oZdG0h5ewcDRck=;
+  b=Oi9hbCqw5VH1quYiUE5iQDVBspXqBtpYFuKTGQw0xESqBhTIGPqvEWwW
+   nrlnQfbXSQIElsDqJb8bZ5yXDaGJowMGME0QHZ9hOJm7iFdom5mAa4LDE
+   1yBtyvhvsd4IvSUWakKDJrzG8JDEeFMk4mPTtf4GOJ0B6thFDLobcifgP
+   twGjn/tbwTvymP/3/MShRTxHeWsdLBBBSKKvoYZQEbYwTfdRE+mst48Np
+   +t814tYmoUN6g44wjYpv6FdAE8CVKVsO5M403Oly526IYr7KgCw7LVQmn
+   oQc75JMjdwr4SxpDvsgCLOPEBIRy0QaFj4+qfqtcK0H5JqmjXg5e7f2Nr
+   Q==;
+X-CSE-ConnectionGUID: BfeiIkClRoySw/MQn2w1KA==
+X-CSE-MsgGUID: 67eaDOViRiKWjKmAmGhc5A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="29297564"
+X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
+   d="scan'208";a="29297564"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 10:01:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
+   d="scan'208";a="17102132"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orviesa007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 28 Mar 2024 10:01:03 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 28 Mar 2024 10:01:02 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Thu, 28 Mar 2024 10:01:02 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 28 Mar 2024 10:01:01 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=h8ahAZoCLLHUIllWg9STraYHEl/eGfpfZpO26ir60dvSx5d6m75ZoDjQKetijF1xSF+xzwtHyV9afC9wt1lcN6zXziYdR/K01YbKDlQbf37v1faYoAjCRF7HTL77C5CvWba5n0WoKINLTcjsgdcqqzTAVgi5ECwi7NX2w0JUIb2PpxPPsoWvQcdmKgTyR/vsKGbq1neUJHj1SvbptbLrbcFfH2DR9xaxOTyP00OL7Yol38tHWINDLmD1IvHxMUv6MhyUR51kh+Hda5SsdL6cZgANDilXmLe22Eg6SNywVsWnPxWxOy2ajkclMVnrx83fpE6ScV7ay6oVuz1/Z74BJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9T8NTr6I/1x8k97XkDu0NRZ+9NF90oZdG0h5ewcDRck=;
+ b=hAUaVQyp0xt2yFJ6AzsWa8oVWMf3K5lyig/pBoj2oiHlXoa6/luVRXwhP0NtfXsuswzmuxNQC+DnPPvqdGhv6GQjxb7Hxy7WS3tAJbwcShMTeu2BtfDeFNQQ0CQU6pgG/IkMXWmmlgcKb+MbxT1RIZacwnJKUHn9yE72fJmx/8MXUyEL3IP2lFEWJq65k2+ib8hbp91aXXSl7TOnjxd7lrZ2dWQP2VlSW7GyPnwx4EUEDrs2y3zFkx+Yb0S0qbFXZg/G62EdbJdycbftINxrW8k8LC92aoejwIX4kOGpd85Y85iq+tsBXeCwE4r7lBD8+2An56le4KLfnxfUtHcQVQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SJ1PR11MB6083.namprd11.prod.outlook.com (2603:10b6:a03:48a::9)
+ by BL1PR11MB5270.namprd11.prod.outlook.com (2603:10b6:208:313::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.39; Thu, 28 Mar
+ 2024 17:00:59 +0000
+Received: from SJ1PR11MB6083.namprd11.prod.outlook.com
+ ([fe80::fca9:7c00:b6d0:1d62]) by SJ1PR11MB6083.namprd11.prod.outlook.com
+ ([fe80::fca9:7c00:b6d0:1d62%5]) with mapi id 15.20.7409.031; Thu, 28 Mar 2024
+ 17:00:59 +0000
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Borislav Petkov <bp@alien8.de>
+CC: "x86@kernel.org" <x86@kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 01/74] x86/cpu/vfm: Add/initialize x86_vfm field to struct
+ cpuinfo_x86
+Thread-Topic: [PATCH 01/74] x86/cpu/vfm: Add/initialize x86_vfm field to
+ struct cpuinfo_x86
+Thread-Index: AQHagS5KoaFl1e6FLU2YPMaZiCLmO7FNXROAgAABToCAAAEjsA==
+Date: Thu, 28 Mar 2024 17:00:59 +0000
+Message-ID: <SJ1PR11MB6083AADC97E50462C1137D71FC3B2@SJ1PR11MB6083.namprd11.prod.outlook.com>
+References: <20240328163746.243023-1-tony.luck@intel.com>
+ <20240328163746.243023-2-tony.luck@intel.com>
+ <20240328164811.GDZgWfSzAWZXO7dUky@fat_crate.local>
+ <20240328165251.GEZgWgY1Clb9z4t3VX@fat_crate.local>
+In-Reply-To: <20240328165251.GEZgWgY1Clb9z4t3VX@fat_crate.local>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ1PR11MB6083:EE_|BL1PR11MB5270:EE_
+x-ms-office365-filtering-correlation-id: 4dd21a96-110d-4235-f3ce-08dc4f48a499
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: hB/SChNQgRRSUBmZCEqTB0/XRpFcuBR2hpKeINkzfjJvdbHEmd+CxHTsclLXXJN5MroqS7j0DTa/X9Y1cBAo7sbvv2YOjCkzg9qQynzRxwE2YBSnLBLU2OVGG8PshAOho+qNfEC0y36BPtWyfpUs5qr7HL0vwRWeBDBs9IZaqrTzhCgNCN4nzRJ9hCTx8e64gw02H/uvfLGapIB43aOKVfroTPc38bV4vClBzEU9ZJU7moGmXlGmErWcHkLi4pHgknzFXiVgmFufOJHKuIcIzmVt9MTEL/xWnMMImftc2h48K675MSGiRJRwjn6ZNQIlQysEzIdX/+tjEBHd42NGauZKJQ++VJqPCX4SaNJc+/+oYeCLk88EdaBOt0YLCpNhjd2rNk6L6VvegZ866ZbnfP/dUa9oW/wB/sCX0arGXpG/AnJiP1vFMeLIZAIQHAnS/NzJ+NXt/QEZgAm9NnGbLZbktC8uVxafGAB6HZIBolXg/pHUZaeMVjczYyp7mNeZdUFEFTnwj+J0iai10WI51EFHNw/NtySfuhfCauoXTC5eDVN2SR9PrVLU+lUtTOe88s4LrdDmtPHM/AkfqIhFM1gYwl0ZDHRJcyhyxV235f4NoJcu6N2T1sHmL5iWnBIVQ4HbZSOuE45pi0uMMrUK4Jtcgbs6/VI51idelQA8UKJZ7uc9tuYMaYN/H/5JdU/ylvSYU6mtpDuB6EoijnOuRww5SYQz6XtZRG9ID9CdqvQ=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR11MB6083.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?NlNWUFEzZXNpNUJGNFhEQkN5ZjMrU0hIN1I1V045eDdsaWIrQUlsRkgrYitp?=
+ =?utf-8?B?a0s0OWhqaFVSQWZhQ3VkTVQwMENYbWVIam8zU000aFdYLzVUd0pYRmtUTGkr?=
+ =?utf-8?B?Ylg0S0ZwazdjczRvSTBLc3IwdUtmSW9NMXVpQ0JOd0I1WDE1YlJmcEVIRGFS?=
+ =?utf-8?B?RXZldnNTWE5kNm9DaHpFSVduUVpWbWZyRzVWaWxreWtPbkQxUjcwd0xGR3o5?=
+ =?utf-8?B?U1E4dWx1ZzJGOHVWTW1TdG1ySmgvUk16VVk3NUJtVERvM1NHRndyQXI1eXJZ?=
+ =?utf-8?B?d2NGRkZ5WlNPQ2cySHkrNkRYU1JqK0lKUUlBeUFoVkZYMFNDVWI0QlgwQ1U5?=
+ =?utf-8?B?Slg5WlpNdHFCZllGVGhIWUdLZjhsVzVZWXJRRXJPZ0RvQlpXSXdEaWlLZU9C?=
+ =?utf-8?B?VEwrc0FPQ2NkRmd2bEg4Z0kyL2ZTL0hWeWRhVjBSU3h3djlNWWxiTFRMZXgy?=
+ =?utf-8?B?V0d3cURNaTZTUXIrN3pJVTJ6RTh6eCtyZUk5elRDRSs3RVhrK2ROYXpiY3FZ?=
+ =?utf-8?B?d0ZpaEs2RUR5UmxnVFNZSVFzSXJ0Q3lycmc1RTZ6dXQ2NXBYWC9GN25sbHgr?=
+ =?utf-8?B?dUF2cktPRzFHL3NHMUFxR0JDdEM2VkplRHFHeS95NSt3UDVOcFV4eTd4M0tY?=
+ =?utf-8?B?dHMwRGszY3NpWW11SDRySk1wTm9RL1ZlWExwTnI1WDV4M2lqYXFzZFRJZmNX?=
+ =?utf-8?B?cCtKY1I2OUJ4ODRndXJUZVk5ckl4OE0waWNmekFSbG1lUWpHUTFzdFU2TWNw?=
+ =?utf-8?B?ajEvUWUxcVZ5OFVPZXZvQ0duNnBDWEkzT3BPQUt6N0VQSVhKamlSRjZWWXk2?=
+ =?utf-8?B?RTNvZDR3YmVJTjg2ZXBYeE9qM0tKT2R4REhYQ0ZXK2xmbTRic29sZHdTdWRZ?=
+ =?utf-8?B?WGRBMWJhTURVRmMzVDFWN3FuZkdRcUpRN25NYVpuL2NZQXBDN2lNNzJWSWFt?=
+ =?utf-8?B?RGtmbHJUOERSY3R5dG1vSG1GeVJKd2g1Y05OYkdFWk9WcGJaeFljMSswaFo1?=
+ =?utf-8?B?cjZVeXgveTBadDhzLzdXbDVpVmtLbDFhOXBZNVQ5ZE95eHN3bEhWNjdBSWlZ?=
+ =?utf-8?B?WHQrWUJ3T3NydWp2R3hqR09PMVAvL3VsTXMzOVJiZWR5QjZrQXF4ZHpuaVBW?=
+ =?utf-8?B?T3VQK2RCejF6TGVUbVY3aGRIbElQcEZEa0VFMGFBdWhIVzIyZGhGTHI4VFlT?=
+ =?utf-8?B?M2l5NmFvK2hqNS84MXdyT3pUb2JGMFo3REw0L3FyUHFNWDNzSkREa1dlM2VB?=
+ =?utf-8?B?aUhYSmJ6NitNVDJsVWcxaVFZa056TFZPL0lJeHlCYmxkbGdLZzdIMWZ6R3Vz?=
+ =?utf-8?B?TDVwR2hKY1lCQUxYS3VPM0JvczVXejlBTk93cXVLOVBEV0txNStxaWZpNVdB?=
+ =?utf-8?B?aURmU1BCdStMOEFxQnRMUVZqNFNZTDg2UDFYd1ZWUXV0YlhocktJV0NSSitR?=
+ =?utf-8?B?MVE2UHZaaFo4VE1hNG9KTUh4ZGJwNS9YMkIxcXBqa2QxUnNRaFJwZ3huKzFX?=
+ =?utf-8?B?eE5IQkVySjJKREhtVitDM0pUSy9Kd2FwSkE0Z3B6a1hFdEg5bGkzd1pwOGUv?=
+ =?utf-8?B?cW5WUURMMDNRKzc4Y3NJeTl6dEtZUE5zSDFaVFFKOHltbU5TTjJ2SmtWUVpu?=
+ =?utf-8?B?MkhCSk81bTBWT2UvZFphbCtjVlA4T1pmTSttQkJvMXQyTWRvdERhcVpCTXIx?=
+ =?utf-8?B?aG5YdmNwYnllUVpuMVhnVnpiVUtSRHRveGVlNHJod0pFeFd0ZElkNE44R2tU?=
+ =?utf-8?B?TGRqTnpQejliZitpZDhPc0srRTFzT2ptaUtBaUtyZU9tSWo3WjdyOSttendV?=
+ =?utf-8?B?djhXUjExWXJiOHNTTzc3ZThDbXpEQ0t0QmdCbVNFcDc3VXF2YnRRUTRuS1Vs?=
+ =?utf-8?B?K25laEUvMFo3a1FORkhsSDYyaStlSGlNYTdsQjhYOGU2Q2RPMWZhZnBTZjhK?=
+ =?utf-8?B?NitaU201U2NBMXRxMmtpVlBWRkxOWk5SR25VODNjOXc3VDhqczV4NjREbGZH?=
+ =?utf-8?B?eVhZR3pCL3dXVUR0QmVrSDNJZzNpcUhWNnBWTFMwa2ZLTEtWSlRaVkpHa2to?=
+ =?utf-8?B?VWkxeFduSS9GdTNhZ1NLZ1Y3TlhRYWh5NXoyZlFlWHJnR090aHlNVDR3YlVp?=
+ =?utf-8?Q?fMjPAY3ne+yiwzJzuWS97odMe?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ1PR11MB6083.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4dd21a96-110d-4235-f3ce-08dc4f48a499
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2024 17:00:59.7003
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JjYt47FfNVmQ5tu5Nuec/E5TVfNTKW8fMwlPjoVasjdyPXrkQWlgc/Z7O05uyk1wPItwRju+v+4tz0DWQhEvNA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5270
+X-OriginatorOrg: intel.com
 
-Remove some code that was #if'd out with the netfslib conversion.  This is
-split into parts for file.c as the diff generator otherwise produces a hard
-to read diff for part of it where a big chunk is cut out.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Steve French <sfrench@samba.org>
-cc: Shyam Prasad N <nspmangalore@gmail.com>
-cc: Rohith Surabattula <rohiths.msft@gmail.com>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: linux-cifs@vger.kernel.org
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
-cc: linux-mm@kvack.org
----
- fs/smb/client/file.c | 634 +------------------------------------------
- 1 file changed, 1 insertion(+), 633 deletions(-)
-
-diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
-index 265d96f663d7..f45a830154d5 100644
---- a/fs/smb/client/file.c
-+++ b/fs/smb/client/file.c
-@@ -2569,639 +2569,6 @@ cifs_get_readable_path(struct cifs_tcon *tcon, const char *name,
- 	return -ENOENT;
- }
- 
--#if 0 // TODO remove 2773
--void
--cifs_writedata_release(struct cifs_io_subrequest *wdata)
--{
--	if (wdata->uncached)
--		kref_put(&wdata->ctx->refcount, cifs_aio_ctx_release);
--#ifdef CONFIG_CIFS_SMB_DIRECT
--	if (wdata->mr) {
--		smbd_deregister_mr(wdata->mr);
--		wdata->mr = NULL;
--	}
--#endif
--
--	if (wdata->cfile)
--		cifsFileInfo_put(wdata->cfile);
--
--	kfree(wdata);
--}
--
--/*
-- * Write failed with a retryable error. Resend the write request. It's also
-- * possible that the page was redirtied so re-clean the page.
-- */
--static void
--cifs_writev_requeue(struct cifs_io_subrequest *wdata)
--{
--	int rc = 0;
--	struct inode *inode = d_inode(wdata->cfile->dentry);
--	struct TCP_Server_Info *server;
--	unsigned int rest_len = wdata->subreq.len;
--	loff_t fpos = wdata->subreq.start;
--
--	server = tlink_tcon(wdata->cfile->tlink)->ses->server;
--	do {
--		struct cifs_io_subrequest *wdata2;
--		unsigned int wsize, cur_len;
--
--		wsize = server->ops->wp_retry_size(inode);
--		if (wsize < rest_len) {
--			if (wsize < PAGE_SIZE) {
--				rc = -EOPNOTSUPP;
--				break;
--			}
--			cur_len = min(round_down(wsize, PAGE_SIZE), rest_len);
--		} else {
--			cur_len = rest_len;
--		}
--
--		wdata2 = cifs_writedata_alloc(cifs_writev_complete);
--		if (!wdata2) {
--			rc = -ENOMEM;
--			break;
--		}
--
--		wdata2->sync_mode = wdata->sync_mode;
--		wdata2->subreq.start	= fpos;
--		wdata2->subreq.len	= cur_len;
--		wdata2->subreq.io_iter = wdata->subreq.io_iter;
--
--		iov_iter_advance(&wdata2->subreq.io_iter, fpos - wdata->subreq.start);
--		iov_iter_truncate(&wdata2->subreq.io_iter, wdata2->subreq.len);
--
--		if (iov_iter_is_xarray(&wdata2->subreq.io_iter))
--			/* Check for pages having been redirtied and clean
--			 * them.  We can do this by walking the xarray.  If
--			 * it's not an xarray, then it's a DIO and we shouldn't
--			 * be mucking around with the page bits.
--			 */
--			cifs_undirty_folios(inode, fpos, cur_len);
--
--		rc = cifs_get_writable_file(CIFS_I(inode), FIND_WR_ANY,
--					    &wdata2->cfile);
--		if (!wdata2->cfile) {
--			cifs_dbg(VFS, "No writable handle to retry writepages rc=%d\n",
--				 rc);
--			if (!is_retryable_error(rc))
--				rc = -EBADF;
--		} else {
--			wdata2->pid = wdata2->cfile->pid;
--			rc = server->ops->async_writev(wdata2);
--		}
--
--		cifs_put_writedata(wdata2);
--		if (rc) {
--			if (is_retryable_error(rc))
--				continue;
--			fpos += cur_len;
--			rest_len -= cur_len;
--			break;
--		}
--
--		fpos += cur_len;
--		rest_len -= cur_len;
--	} while (rest_len > 0);
--
--	/* Clean up remaining pages from the original wdata */
--	if (iov_iter_is_xarray(&wdata->subreq.io_iter))
--		cifs_pages_write_failed(inode, fpos, rest_len);
--
--	if (rc != 0 && !is_retryable_error(rc))
--		mapping_set_error(inode->i_mapping, rc);
--	cifs_put_writedata(wdata);
--}
--
--void
--cifs_writev_complete(struct work_struct *work)
--{
--	struct cifs_io_subrequest *wdata = container_of(work,
--						struct cifs_io_subrequest, work);
--	struct inode *inode = d_inode(wdata->cfile->dentry);
--
--	if (wdata->result == 0) {
--		spin_lock(&inode->i_lock);
--		cifs_update_eof(CIFS_I(inode), wdata->subreq.start, wdata->subreq.len);
--		spin_unlock(&inode->i_lock);
--		cifs_stats_bytes_written(tlink_tcon(wdata->cfile->tlink),
--					 wdata->subreq.len);
--	} else if (wdata->sync_mode == WB_SYNC_ALL && wdata->result == -EAGAIN)
--		return cifs_writev_requeue(wdata);
--
--	if (wdata->result == -EAGAIN)
--		cifs_pages_write_redirty(inode, wdata->subreq.start, wdata->subreq.len);
--	else if (wdata->result < 0)
--		cifs_pages_write_failed(inode, wdata->subreq.start, wdata->subreq.len);
--	else
--		cifs_pages_written_back(inode, wdata->subreq.start, wdata->subreq.len);
--
--	if (wdata->result != -EAGAIN)
--		mapping_set_error(inode->i_mapping, wdata->result);
--	cifs_put_writedata(wdata);
--}
--
--struct cifs_io_subrequest *cifs_writedata_alloc(work_func_t complete)
--{
--	struct cifs_io_subrequest *wdata;
--
--	wdata = kzalloc(sizeof(*wdata), GFP_NOFS);
--	if (wdata != NULL) {
--		refcount_set(&wdata->subreq.ref, 1);
--		INIT_LIST_HEAD(&wdata->list);
--		init_completion(&wdata->done);
--		INIT_WORK(&wdata->work, complete);
--	}
--	return wdata;
--}
--
--/*
-- * Extend the region to be written back to include subsequent contiguously
-- * dirty pages if possible, but don't sleep while doing so.
-- */
--static void cifs_extend_writeback(struct address_space *mapping,
--				  struct xa_state *xas,
--				  long *_count,
--				  loff_t start,
--				  int max_pages,
--				  loff_t max_len,
--				  size_t *_len)
--{
--	struct folio_batch batch;
--	struct folio *folio;
--	unsigned int nr_pages;
--	pgoff_t index = (start + *_len) / PAGE_SIZE;
--	size_t len;
--	bool stop = true;
--	unsigned int i;
--
--	folio_batch_init(&batch);
--
--	do {
--		/* Firstly, we gather up a batch of contiguous dirty pages
--		 * under the RCU read lock - but we can't clear the dirty flags
--		 * there if any of those pages are mapped.
--		 */
--		rcu_read_lock();
--
--		xas_for_each(xas, folio, ULONG_MAX) {
--			stop = true;
--			if (xas_retry(xas, folio))
--				continue;
--			if (xa_is_value(folio))
--				break;
--			if (folio->index != index) {
--				xas_reset(xas);
--				break;
--			}
--
--			if (!folio_try_get_rcu(folio)) {
--				xas_reset(xas);
--				continue;
--			}
--			nr_pages = folio_nr_pages(folio);
--			if (nr_pages > max_pages) {
--				xas_reset(xas);
--				break;
--			}
--
--			/* Has the page moved or been split? */
--			if (unlikely(folio != xas_reload(xas))) {
--				folio_put(folio);
--				xas_reset(xas);
--				break;
--			}
--
--			if (!folio_trylock(folio)) {
--				folio_put(folio);
--				xas_reset(xas);
--				break;
--			}
--			if (!folio_test_dirty(folio) ||
--			    folio_test_writeback(folio)) {
--				folio_unlock(folio);
--				folio_put(folio);
--				xas_reset(xas);
--				break;
--			}
--
--			max_pages -= nr_pages;
--			len = folio_size(folio);
--			stop = false;
--
--			index += nr_pages;
--			*_count -= nr_pages;
--			*_len += len;
--			if (max_pages <= 0 || *_len >= max_len || *_count <= 0)
--				stop = true;
--
--			if (!folio_batch_add(&batch, folio))
--				break;
--			if (stop)
--				break;
--		}
--
--		xas_pause(xas);
--		rcu_read_unlock();
--
--		/* Now, if we obtained any pages, we can shift them to being
--		 * writable and mark them for caching.
--		 */
--		if (!folio_batch_count(&batch))
--			break;
--
--		for (i = 0; i < folio_batch_count(&batch); i++) {
--			folio = batch.folios[i];
--			/* The folio should be locked, dirty and not undergoing
--			 * writeback from the loop above.
--			 */
--			if (!folio_clear_dirty_for_io(folio))
--				WARN_ON(1);
--			folio_start_writeback(folio);
--			folio_unlock(folio);
--		}
--
--		folio_batch_release(&batch);
--		cond_resched();
--	} while (!stop);
--}
--
--/*
-- * Write back the locked page and any subsequent non-locked dirty pages.
-- */
--static ssize_t cifs_write_back_from_locked_folio(struct address_space *mapping,
--						 struct writeback_control *wbc,
--						 struct xa_state *xas,
--						 struct folio *folio,
--						 unsigned long long start,
--						 unsigned long long end)
--{
--	struct inode *inode = mapping->host;
--	struct TCP_Server_Info *server;
--	struct cifs_io_subrequest *wdata;
--	struct cifs_sb_info *cifs_sb = CIFS_SB(inode->i_sb);
--	struct cifs_credits credits_on_stack;
--	struct cifs_credits *credits = &credits_on_stack;
--	struct cifsFileInfo *cfile = NULL;
--	unsigned long long i_size = i_size_read(inode), max_len;
--	unsigned int xid;
--	size_t wsize;
--	size_t len = folio_size(folio);
--	long count = wbc->nr_to_write;
--	int rc;
--
--	/* The folio should be locked, dirty and not undergoing writeback. */
--	if (!folio_clear_dirty_for_io(folio))
--		WARN_ON_ONCE(1);
--	folio_start_writeback(folio);
--
--	count -= folio_nr_pages(folio);
--
--	xid = get_xid();
--	server = cifs_pick_channel(cifs_sb_master_tcon(cifs_sb)->ses);
--
--	rc = cifs_get_writable_file(CIFS_I(inode), FIND_WR_ANY, &cfile);
--	if (rc) {
--		cifs_dbg(VFS, "No writable handle in writepages rc=%d\n", rc);
--		goto err_xid;
--	}
--
--	rc = server->ops->wait_mtu_credits(server, cifs_sb->ctx->wsize,
--					   &wsize, credits);
--	if (rc != 0)
--		goto err_close;
--
--	wdata = cifs_writedata_alloc(cifs_writev_complete);
--	if (!wdata) {
--		rc = -ENOMEM;
--		goto err_uncredit;
--	}
--
--	wdata->sync_mode = wbc->sync_mode;
--	wdata->subreq.start = folio_pos(folio);
--	wdata->pid = cfile->pid;
--	wdata->credits = credits_on_stack;
--	wdata->cfile = cfile;
--	wdata->server = server;
--	cfile = NULL;
--
--	/* Find all consecutive lockable dirty pages that have contiguous
--	 * written regions, stopping when we find a page that is not
--	 * immediately lockable, is not dirty or is missing, or we reach the
--	 * end of the range.
--	 */
--	if (start < i_size) {
--		/* Trim the write to the EOF; the extra data is ignored.  Also
--		 * put an upper limit on the size of a single storedata op.
--		 */
--		max_len = wsize;
--		max_len = min_t(unsigned long long, max_len, end - start + 1);
--		max_len = min_t(unsigned long long, max_len, i_size - start);
--
--		if (len < max_len) {
--			int max_pages = INT_MAX;
--
--#ifdef CONFIG_CIFS_SMB_DIRECT
--			if (server->smbd_conn)
--				max_pages = server->smbd_conn->max_frmr_depth;
--#endif
--			max_pages -= folio_nr_pages(folio);
--
--			if (max_pages > 0)
--				cifs_extend_writeback(mapping, xas, &count, start,
--						      max_pages, max_len, &len);
--		}
--	}
--	len = min_t(unsigned long long, len, i_size - start);
--
--	/* We now have a contiguous set of dirty pages, each with writeback
--	 * set; the first page is still locked at this point, but all the rest
--	 * have been unlocked.
--	 */
--	folio_unlock(folio);
--	wdata->subreq.len = len;
--
--	if (start < i_size) {
--		iov_iter_xarray(&wdata->subreq.io_iter, ITER_SOURCE, &mapping->i_pages,
--				start, len);
--
--		rc = adjust_credits(wdata->server, &wdata->credits, wdata->subreq.len);
--		if (rc)
--			goto err_wdata;
--
--		if (wdata->cfile->invalidHandle)
--			rc = -EAGAIN;
--		else
--			rc = wdata->server->ops->async_writev(wdata);
--		if (rc >= 0) {
--			cifs_put_writedata(wdata);
--			goto err_close;
--		}
--	} else {
--		/* The dirty region was entirely beyond the EOF. */
--		cifs_pages_written_back(inode, start, len);
--		rc = 0;
--	}
--
--err_wdata:
--	cifs_put_writedata(wdata);
--err_uncredit:
--	add_credits_and_wake_if(server, credits, 0);
--err_close:
--	if (cfile)
--		cifsFileInfo_put(cfile);
--err_xid:
--	free_xid(xid);
--	if (rc == 0) {
--		wbc->nr_to_write = count;
--		rc = len;
--	} else if (is_retryable_error(rc)) {
--		cifs_pages_write_redirty(inode, start, len);
--	} else {
--		cifs_pages_write_failed(inode, start, len);
--		mapping_set_error(mapping, rc);
--	}
--	/* Indication to update ctime and mtime as close is deferred */
--	set_bit(CIFS_INO_MODIFIED_ATTR, &CIFS_I(inode)->flags);
--	return rc;
--}
--
--/*
-- * write a region of pages back to the server
-- */
--static ssize_t cifs_writepages_begin(struct address_space *mapping,
--				     struct writeback_control *wbc,
--				     struct xa_state *xas,
--				     unsigned long long *_start,
--				     unsigned long long end)
--{
--	struct folio *folio;
--	unsigned long long start = *_start;
--	ssize_t ret;
--	int skips = 0;
--
--search_again:
--	/* Find the first dirty page. */
--	rcu_read_lock();
--
--	for (;;) {
--		folio = xas_find_marked(xas, end / PAGE_SIZE, PAGECACHE_TAG_DIRTY);
--		if (xas_retry(xas, folio) || xa_is_value(folio))
--			continue;
--		if (!folio)
--			break;
--
--		if (!folio_try_get_rcu(folio)) {
--			xas_reset(xas);
--			continue;
--		}
--
--		if (unlikely(folio != xas_reload(xas))) {
--			folio_put(folio);
--			xas_reset(xas);
--			continue;
--		}
--
--		xas_pause(xas);
--		break;
--	}
--	rcu_read_unlock();
--	if (!folio)
--		return 0;
--
--	start = folio_pos(folio); /* May regress with THPs */
--
--	/* At this point we hold neither the i_pages lock nor the page lock:
--	 * the page may be truncated or invalidated (changing page->mapping to
--	 * NULL), or even swizzled back from swapper_space to tmpfs file
--	 * mapping
--	 */
--lock_again:
--	if (wbc->sync_mode != WB_SYNC_NONE) {
--		ret = folio_lock_killable(folio);
--		if (ret < 0)
--			return ret;
--	} else {
--		if (!folio_trylock(folio))
--			goto search_again;
--	}
--
--	if (folio->mapping != mapping ||
--	    !folio_test_dirty(folio)) {
--		start += folio_size(folio);
--		folio_unlock(folio);
--		goto search_again;
--	}
--
--	if (folio_test_writeback(folio) ||
--	    folio_test_private_2(folio)) { /* [DEPRECATED] */
--		folio_unlock(folio);
--		if (wbc->sync_mode != WB_SYNC_NONE) {
--			folio_wait_writeback(folio);
--#ifdef CONFIG_CIFS_FSCACHE
--			folio_wait_private_2(folio);
--#endif
--			goto lock_again;
--		}
--
--		start += folio_size(folio);
--		if (wbc->sync_mode == WB_SYNC_NONE) {
--			if (skips >= 5 || need_resched()) {
--				ret = 0;
--				goto out;
--			}
--			skips++;
--		}
--		goto search_again;
--	}
--
--	ret = cifs_write_back_from_locked_folio(mapping, wbc, xas, folio, start, end);
--out:
--	if (ret > 0)
--		*_start = start + ret;
--	return ret;
--}
--
--/*
-- * Write a region of pages back to the server
-- */
--static int cifs_writepages_region(struct address_space *mapping,
--				  struct writeback_control *wbc,
--				  unsigned long long *_start,
--				  unsigned long long end)
--{
--	ssize_t ret;
--
--	XA_STATE(xas, &mapping->i_pages, *_start / PAGE_SIZE);
--
--	do {
--		ret = cifs_writepages_begin(mapping, wbc, &xas, _start, end);
--		if (ret > 0 && wbc->nr_to_write > 0)
--			cond_resched();
--	} while (ret > 0 && wbc->nr_to_write > 0);
--
--	return ret > 0 ? 0 : ret;
--}
--
--/*
-- * Write some of the pending data back to the server
-- */
--static int cifs_writepages(struct address_space *mapping,
--			   struct writeback_control *wbc)
--{
--	loff_t start, end;
--	int ret;
--
--	/* We have to be careful as we can end up racing with setattr()
--	 * truncating the pagecache since the caller doesn't take a lock here
--	 * to prevent it.
--	 */
--
--	if (wbc->range_cyclic && mapping->writeback_index) {
--		start = mapping->writeback_index * PAGE_SIZE;
--		ret = cifs_writepages_region(mapping, wbc, &start, LLONG_MAX);
--		if (ret < 0)
--			goto out;
--
--		if (wbc->nr_to_write <= 0) {
--			mapping->writeback_index = start / PAGE_SIZE;
--			goto out;
--		}
--
--		start = 0;
--		end = mapping->writeback_index * PAGE_SIZE;
--		mapping->writeback_index = 0;
--		ret = cifs_writepages_region(mapping, wbc, &start, end);
--		if (ret == 0)
--			mapping->writeback_index = start / PAGE_SIZE;
--	} else if (wbc->range_start == 0 && wbc->range_end == LLONG_MAX) {
--		start = 0;
--		ret = cifs_writepages_region(mapping, wbc, &start, LLONG_MAX);
--		if (wbc->nr_to_write > 0 && ret == 0)
--			mapping->writeback_index = start / PAGE_SIZE;
--	} else {
--		start = wbc->range_start;
--		ret = cifs_writepages_region(mapping, wbc, &start, wbc->range_end);
--	}
--
--out:
--	return ret;
--}
--
--static int cifs_write_end(struct file *file, struct address_space *mapping,
--			loff_t pos, unsigned len, unsigned copied,
--			struct page *page, void *fsdata)
--{
--	int rc;
--	struct inode *inode = mapping->host;
--	struct cifsFileInfo *cfile = file->private_data;
--	struct cifs_sb_info *cifs_sb = CIFS_SB(cfile->dentry->d_sb);
--	struct folio *folio = page_folio(page);
--	__u32 pid;
--
--	if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_RWPIDFORWARD)
--		pid = cfile->pid;
--	else
--		pid = current->tgid;
--
--	cifs_dbg(FYI, "write_end for page %p from pos %lld with %d bytes\n",
--		 page, pos, copied);
--
--	if (folio_test_checked(folio)) {
--		if (copied == len)
--			folio_mark_uptodate(folio);
--		folio_clear_checked(folio);
--	} else if (!folio_test_uptodate(folio) && copied == PAGE_SIZE)
--		folio_mark_uptodate(folio);
--
--	if (!folio_test_uptodate(folio)) {
--		char *page_data;
--		unsigned offset = pos & (PAGE_SIZE - 1);
--		unsigned int xid;
--
--		xid = get_xid();
--		/* this is probably better than directly calling
--		   partialpage_write since in this function the file handle is
--		   known which we might as well	leverage */
--		/* BB check if anything else missing out of ppw
--		   such as updating last write time */
--		page_data = kmap(page);
--		rc = cifs_write(cfile, pid, page_data + offset, copied, &pos);
--		/* if (rc < 0) should we set writebehind rc? */
--		kunmap(page);
--
--		free_xid(xid);
--	} else {
--		rc = copied;
--		pos += copied;
--		set_page_dirty(page);
--	}
--
--	if (rc > 0) {
--		spin_lock(&inode->i_lock);
--		if (pos > inode->i_size) {
--			loff_t additional_blocks = (512 - 1 + copied) >> 9;
--
--			i_size_write(inode, pos);
--			/*
--			 * Estimate new allocation size based on the amount written.
--			 * This will be updated from server on close (and on queryinfo)
--			 */
--			inode->i_blocks = min_t(blkcnt_t, (512 - 1 + pos) >> 9,
--						inode->i_blocks + additional_blocks);
--		}
--		spin_unlock(&inode->i_lock);
--	}
--
--	unlock_page(page);
--	put_page(page);
--	/* Indication to update ctime and mtime as close is deferred */
--	set_bit(CIFS_INO_MODIFIED_ATTR, &CIFS_I(inode)->flags);
--
--	return rc;
--}
--#endif // End netfs removal 2773
--
- /*
-  * Flush data on a strict file.
-  */
-@@ -4517,6 +3884,7 @@ cifs_read(struct file *file, char *read_data, size_t read_size, loff_t *offset)
- }
- #endif // end netfslib remove 4633
- 
-+
- static vm_fault_t cifs_page_mkwrite(struct vm_fault *vmf)
- {
- 	return netfs_page_mkwrite(vmf, NULL);
-
+PiBMb29raW5nIGF0IHRoaXMgbW9yZSAtIHlvdSBkb24ndCByZWFsbHkgbmVlZCB0aGUgdmVuZG9y
+IHRvIGJlIHBhcnQgb2YNCj4gdGhpcyBhcyB0aGUgQ1BVSUQgbGVhZiByYW5nZXMgc2hvdWxkICph
+Y3R1YWxseSogYmUgZGlzanVuY3QuIEFjdHVhbGx5Li4uDQoNCkl0J3MgZXNzZW50aWFsbHkgZnJl
+ZSB0byBkbyB0aGlzLCBhbmQgaXQgbWFrZXMgdGhlIGNvZGUgbW9yZSByb2J1c3QuIEl0DQpiZWNv
+bWVzIGltcG9zc2libGUgdG8gY2hlY2sgbW9kZWwgd2l0aG91dCBhbHNvIGNoZWNraW5nIHZlbmRv
+cg0KYW5kIGZhbWlseSBhdCB0aGUgc2FtZSB0aW1lLg0KDQotVG9ueQ0K
