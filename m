@@ -1,69 +1,71 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764C57F489;
-	Thu, 28 Mar 2024 12:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773227EF16
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 12:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711627978; cv=none; b=oVHf0zBjd4tsZko4UG6KOCA4kK/w7skwmTX8x7vOnssgqDkcFSvCjgnb74a2VQrW9hHVw+xyRDwgx239URcumIhJu84falwzZKPuAy4Q5xDrGu+JXkITlL55r4M/QAnmpYJMgyNiAYseYpagB5IClWoEops++a029JVkhT5Rt5Y=
+	t=1711627977; cv=none; b=sPaU431CYdfTjfOREH65NL0xa8owJbnTM65h6dInOlWEQal72Ih9LbLu8L/iHhvJOZyT/iZcfgpknXWwX5Pyii+uizQlqzRX3t1T4+Wqu3OuzXEiiLRwMshmqWK/6UyqHs+o+VNPd44stb0EThfB2X+J9HNnYhauoEZpfiH0O8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711627978; c=relaxed/simple;
-	bh=Q5YE1aPumt7JFmbvdJ7I7wcFxejCrBTx7WoifZdGz8g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Bw0m3I9It/RSMqeNipL3Z+NBsJhW5SacI5LGCyzGJ4Q9tvOEsVzWtQNuNe5DQ0r1pSEHCFT1JSV1SALZBV3gDqCr1JqpHdmB0afXbV+NHNXJz2Snl+SdWi5RN9Dcv13G064KcauaIrfKiC4/XV0k+zT9fzsY/F3+96QWVRZNrcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QFqublWS; arc=none smtp.client-ip=209.85.219.177
+	s=arc-20240116; t=1711627977; c=relaxed/simple;
+	bh=WfR3fzgOc+lYO6U7TgwGQD81mZqIEEtqO9tFKn6iuM4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=f4AyIq9x2C74DC+SCD/uEeDkl9EVfII45o/4vKE5W7OIt/dGr+pjmJh+wtgGigowrekWPmrLEzlyH0lxbETh/CmFqaXcEQFu/q2jnhibHTcClogpvWRYwU59GtNtnPgpKnR3M7KUDyuLZlVYFbTz1R+DVyJQb8UxHkVRm7ZFQ7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FAiS6c6n; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QFqublWS"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-db4364ecd6aso726812276.2;
-        Thu, 28 Mar 2024 05:12:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FAiS6c6n"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-415482308f8so2137265e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 05:12:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711627975; x=1712232775; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7crQtx+2AtaDeT/4OM+Ua6ongtYXTGemk9bKab2fDbI=;
-        b=QFqublWShPkwDkJn7aPy7DAKRQGiLwAExCGplPvFJYEx9SV5y6H0+QP4TjCFkA5Zvq
-         7M9VniFzKKNIQzsqaeblUFEou42+WpfR/ci+hjy7EMdG3ZfqtoSFcW5DMkfJ/y/wYv7P
-         GblhxNgS6HQdMqaF9XEsa//Rnitxmk9HDLA+QQTtTDw8zXefYGqc6fQ0Ne5IqvAMYOUq
-         /PVHNxxc0z+fOvz+pZcVRNNZiE+aBZ1s4Mkg2O5iiZIXqF3Cybs/iPALLsHKRPbMOKya
-         HIEfBXQqinDoyfDmLR3jYnqNOEveo5OkPFAVsjNLhzSbpInNx0aqwz9frrKCWDqCH6SZ
-         fsxQ==
+        d=gmail.com; s=20230601; t=1711627973; x=1712232773; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9LP7LwhNxKs9alceF3MwlRSStgVkDK9Wscv2B2RIGfw=;
+        b=FAiS6c6nKDiH6o8M6tf/TOKeTFqpovwdJiwLCA6+Yf4tKD+5G5JoCb/H9+83m6rVp8
+         XSFVWLbOF1v9xXvGdri63LdF5C78n/vuhwY/JXcEGAyk/wpiWefoNR9iNH8yzCtrUq9H
+         NXtLTGSN+bwywb9A+RUWIExFZwLDcGEoc5PG9zJs+ejOIeIyNbvmdVT3vxcvd2Ey9oYH
+         5HUQ6vWiwuSsQbmsLg6rC1JKAmP+4feTp/CYg8q8zwxuUYTC+H8s6X2r8+i2EBtyNNza
+         ORjuGst5zHC3bfILw4Y7lLNa50B7i+TO12ERihCHfvQV0rnTn4YPNTdTOt/5zGlu5bRR
+         PEJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711627975; x=1712232775;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7crQtx+2AtaDeT/4OM+Ua6ongtYXTGemk9bKab2fDbI=;
-        b=jOt7FT2Xtfjnkef/omJS+DhUT9bFip5BinE2t1mOTKrChMSHIan8JDUCdUTTGJ/LMI
-         6bzmcRi+Kf+DTzSM0RL/tbjPkzTNheNuhX+5pV+MpwFbceFvZeKRve/4Vhq+XFqq2APv
-         KITjK7kdrf6ftawMUyUgvlEn703EZ7z3zhVXgA0mMg+q2sJr+rcPXuJZnzkic6Nt9jqT
-         NPqZGevYIStVwJx9vtSqj71hCXPb9Pcjw6aLmBCKJ1DbwxRy2fT6w1Uvkf4xY0kXKWeu
-         RpEM9MI4nHPGidf1cDN1+CNgOjMe0iCa1EoauMUWGG4h4br1kMD9NAbTTXN63B+2FxG5
-         kGJg==
-X-Forwarded-Encrypted: i=1; AJvYcCVQv3oWkBDIqcJaGmA0KUqTQ7mJAu0czlBcnX0FrQZga1qjTKTav32QvvoCW8sm3Zfo1j6NKixdhtN5K98UZvtupHsC4sSDaJ1yuBsn
-X-Gm-Message-State: AOJu0YwNr3Xb2u5mancFYYrF/9g1pdhfdtRbzhIRdq7pq+dlavRKFZum
-	XOmC/UnOo3TAq6R77EFxah6mhk57YUx9iZctT0JkBT6EO2bz9FSEtXFPSvh7v/w=
-X-Google-Smtp-Source: AGHT+IGvl9aRUTYIptBImWsQQQ44LqiFxVxpW0TSFyEyPkxa2LaoUY5qT2kshHQbSZ78gSlfIRrnIg==
-X-Received: by 2002:a25:b104:0:b0:dc2:421e:c943 with SMTP id g4-20020a25b104000000b00dc2421ec943mr2768353ybj.42.1711627975192;
-        Thu, 28 Mar 2024 05:12:55 -0700 (PDT)
-Received: from z-Lenovo-Product.lan ([2605:59c8:6241:1610:f66b:8cff:fe8c:91ce])
-        by smtp.gmail.com with ESMTPSA id 193-20020a250cca000000b00dc701e0bdbcsm268859ybm.44.2024.03.28.05.12.54
+        d=1e100.net; s=20230601; t=1711627973; x=1712232773;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9LP7LwhNxKs9alceF3MwlRSStgVkDK9Wscv2B2RIGfw=;
+        b=lL5fztzsp35l3B8a4aGXcmQI0yoA0XpXiXBaPCKCBnQV6XrnwyEzM3aZLzO+SBZxGI
+         wrFEfyQfXVPSxuJgcRq/G2aDgIGKadKpwNpk31YqvAnbra+9bt78x+abrRjb0Zugzoij
+         Wz1I9loLcCtVHPHqCNBHMIRu8sPHf9k503S0jOlRz7nM7bC1PXuhSxzKsu4YlhEi5zlX
+         ztEdR7rZ6rW226afJugRn9mL5RwFcd3U8yvs6lOfM1yBhDQKUJESE6AC9vb3VZwW0PC0
+         0cScoQcWkfMaADqv1cF5IUMD68BHEDpWnZg4L5pZk+0OsNc3kD1Pr412FasUJafaYrQk
+         PtOA==
+X-Forwarded-Encrypted: i=1; AJvYcCW3sRo21lN4pOAMciIJNT+YL/kKPO8H/Oo2KIFe1p74w1cAPcIa926xJ/vD2ndzZiBmx10A/28BC9H3lScFt3SvCnDHOboNg3mJQy+s
+X-Gm-Message-State: AOJu0YztiDQtYl0+i6MQBAfrESB4V6Qr3z6/uvPSYffLCxioZjLBMNvJ
+	uiWjA9dMhJPB4rYQREDtd1lrUZeQFU0rp+WYWK/zJ+cfBmjXbgqv
+X-Google-Smtp-Source: AGHT+IFeSgatKUgor7KYQX1DQeEUnNehC9VQbJ+N+wPhlx4V09Lqjq5yJBhLrCmtV8Nes5RO2g5GnQ==
+X-Received: by 2002:a05:600c:4688:b0:414:69ae:bcfc with SMTP id p8-20020a05600c468800b0041469aebcfcmr1844704wmo.24.1711627972367;
+        Thu, 28 Mar 2024 05:12:52 -0700 (PDT)
+Received: from YOGA.local ([2a06:c701:736b:f200:125e:963c:4e4b:b7c5])
+        by smtp.gmail.com with ESMTPSA id bd11-20020a05600c1f0b00b00415460a63ebsm1416456wmb.29.2024.03.28.05.12.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 05:12:54 -0700 (PDT)
-From: David Ober <dober6023@gmail.com>
-To: linux-hwmon@vger.kernel.org
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jdelvare@suse.com,
-	linux@roeck-us.net,
-	corbet@lwn.net,
-	dober@lenovo.com,
-	mpearson@lenovo.com,
-	David Ober <dober6023@gmail.com>
-Subject: [PATCH v5] hwmon:Add EC Chip driver for Lenovo ThinkStation motherboards
-Date: Thu, 28 Mar 2024 08:12:50 -0400
-Message-Id: <20240328121250.331146-1-dober6023@gmail.com>
+        Thu, 28 Mar 2024 05:12:51 -0700 (PDT)
+From: Shahar Avidar <ikobh7@gmail.com>
+To: gregkh@linuxfoundation.org,
+	hverkuil-cisco@xs4all.nl,
+	andriy.shevchenko@linux.intel.com,
+	robh@kernel.org,
+	felixkimbu1@gmail.com
+Cc: linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 2/5] staging: pi433: Rename struct pi433_device instances to pi433.
+Date: Thu, 28 Mar 2024 14:12:40 +0200
+Message-Id: <20240328121244.1244719-3-ikobh7@gmail.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240328121244.1244719-1-ikobh7@gmail.com>
+References: <20240328121244.1244719-1-ikobh7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,673 +74,1426 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This addition adds in the ability for the system to scan
-the EC chip in the Lenovo ThinkStation systems to get the
-current fan RPM speeds the Maximum speed value for each
-fan also provides the CPU, DIMM other thermal statuses
+Just as other devices use specific names for instantiation,
+struct_pi433 should also have a distinct name.
+Moreover, some other structs use the "dev" or "device" in their naming
+conventions for members, which can be confusing.
 
-Signed-off-by: David Ober <dober6023@gmail.com>
+Signed-off-by: Shahar Avidar <ikobh7@gmail.com>
+---
+ drivers/staging/pi433/pi433_if.c | 654 +++++++++++++++----------------
+ 1 file changed, 327 insertions(+), 327 deletions(-)
 
----
-Changes in V5
-added FMT for err messages
-removed macros as suggested
-used GENMASK as suggested
-moved request region after memory allocation for local data
-updated includes list
-changed byte read/wrtie to word where applicable
----
----
- drivers/hwmon/Kconfig             |  10 +
- drivers/hwmon/Makefile            |   1 +
- drivers/hwmon/lenovo-ec-sensors.c | 605 ++++++++++++++++++++++++++++++
- 3 files changed, 616 insertions(+)
- create mode 100644 drivers/hwmon/lenovo-ec-sensors.c
-
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index ec38c8892158..a4bb403bd4ad 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -862,6 +862,16 @@ config SENSORS_LAN966X
- 	  This driver can also be built as a module. If so, the module
- 	  will be called lan966x-hwmon.
+diff --git a/drivers/staging/pi433/pi433_if.c b/drivers/staging/pi433/pi433_if.c
+index 13b464ab7db8..7efe6b8501e3 100644
+--- a/drivers/staging/pi433/pi433_if.c
++++ b/drivers/staging/pi433/pi433_if.c
+@@ -113,7 +113,7 @@ struct pi433_device {
+ };
  
-+config SENSORS_LENOVO_EC
-+        tristate "Sensor reader for Lenovo ThinkStations"
-+        depends on X86
-+        help
-+          If you say yes here you get support for LENOVO
-+          EC Sensor data on newer ThinkStation systems
+ struct pi433_instance {
+-	struct pi433_device	*device;
++	struct pi433_device	*pi433;
+ 	struct pi433_tx_cfg	tx_cfg;
+ 
+ 	/* control flags */
+@@ -125,19 +125,19 @@ struct pi433_instance {
+ /* GPIO interrupt handlers */
+ static irqreturn_t DIO0_irq_handler(int irq, void *dev_id)
+ {
+-	struct pi433_device *device = dev_id;
+-
+-	if (device->irq_state[DIO0] == DIO_PACKET_SENT) {
+-		device->free_in_fifo = FIFO_SIZE;
+-		dev_dbg(device->dev, "DIO0 irq: Packet sent\n");
+-		wake_up_interruptible(&device->fifo_wait_queue);
+-	} else if (device->irq_state[DIO0] == DIO_RSSI_DIO0) {
+-		dev_dbg(device->dev, "DIO0 irq: RSSI level over threshold\n");
+-		wake_up_interruptible(&device->rx_wait_queue);
+-	} else if (device->irq_state[DIO0] == DIO_PAYLOAD_READY) {
+-		dev_dbg(device->dev, "DIO0 irq: Payload ready\n");
+-		device->free_in_fifo = 0;
+-		wake_up_interruptible(&device->fifo_wait_queue);
++	struct pi433_device *pi433 = dev_id;
 +
-+          This driver can also be built as a module. If so, the module
-+          will be called lenovo_ec_sensors.
-+
- config SENSORS_LINEAGE
- 	tristate "Lineage Compact Power Line Power Entry Module"
- 	depends on I2C
-diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-index 4ac9452b5430..aa3c2dc390ec 100644
---- a/drivers/hwmon/Makefile
-+++ b/drivers/hwmon/Makefile
-@@ -104,6 +104,7 @@ obj-$(CONFIG_SENSORS_JC42)	+= jc42.o
- obj-$(CONFIG_SENSORS_K8TEMP)	+= k8temp.o
- obj-$(CONFIG_SENSORS_K10TEMP)	+= k10temp.o
- obj-$(CONFIG_SENSORS_LAN966X)	+= lan966x-hwmon.o
-+obj-$(CONFIG_SENSORS_LENOVO_EC)	+= lenovo-ec-sensors.o
- obj-$(CONFIG_SENSORS_LINEAGE)	+= lineage-pem.o
- obj-$(CONFIG_SENSORS_LOCHNAGAR)	+= lochnagar-hwmon.o
- obj-$(CONFIG_SENSORS_LM63)	+= lm63.o
-diff --git a/drivers/hwmon/lenovo-ec-sensors.c b/drivers/hwmon/lenovo-ec-sensors.c
-new file mode 100644
-index 000000000000..8571b983c726
---- /dev/null
-+++ b/drivers/hwmon/lenovo-ec-sensors.c
-@@ -0,0 +1,605 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * HWMON driver for Lenovo ThinkStation based workstations
-+ * via the embedded controller registers
-+ *
-+ * Copyright (C) 2024 David Ober (Lenovo) <dober@lenovo.com>
-+ *
-+ * EC provides:
-+ * - CPU temperature
-+ * - DIMM temperature
-+ * - Chassis zone temperatures
-+ * - CPU fan RPM
-+ * - DIMM fan RPM
-+ * - Chassis fans RPM
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/acpi.h>
-+#include <linux/bits.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/dmi.h>
-+#include <linux/err.h>
-+#include <linux/hwmon.h>
-+#include <linux/io.h>
-+#include <linux/ioport.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/platform_device.h>
-+#include <linux/types.h>
-+#include <linux/units.h>
-+
-+#define MCHP_SING_IDX			0x0000
-+#define MCHP_EMI0_APPLICATION_ID	0x090C
-+#define MCHP_EMI0_EC_ADDRESS		0x0902
-+#define MCHP_EMI0_EC_DATA_BYTE0		0x0904
-+#define MCHP_EMI0_EC_DATA_BYTE1		0x0905
-+#define MCHP_EMI0_EC_DATA_BYTE2		0x0906
-+#define MCHP_EMI0_EC_DATA_BYTE3		0x0907
-+#define IO_REGION_START			0x0900
-+#define IO_REGION_LENGTH		0xD
-+
-+static inline u8
-+get_ec_reg(unsigned char page, unsigned char index)
-+{
-+	u8 onebyte;
-+	unsigned short m_index;
-+	unsigned short phy_index = page * 256 + index;
-+
-+	outb_p(0x01, MCHP_EMI0_APPLICATION_ID);
-+
-+	m_index = phy_index & GENMASK(14, 2);
-+	outw_p(m_index, MCHP_EMI0_EC_ADDRESS);
-+
-+	onebyte = inb_p(MCHP_EMI0_EC_DATA_BYTE0 + (phy_index & GENMASK(1, 0)));
-+
-+	outb_p(0x01, MCHP_EMI0_APPLICATION_ID);  /* write 0x01 again to clean */
-+	return onebyte;
-+}
-+
-+enum systems {
-+	LENOVO_PX,
-+	LENOVO_P7,
-+	LENOVO_P5,
-+	LENOVO_P8,
-+};
-+
-+static int px_temp_map[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-+
-+static const char * const lenovo_px_ec_temp_label[] = {
-+	"CPU1",
-+	"CPU2",
-+	"R_DIMM1",
-+	"L_DIMM1",
-+	"R_DIMM2",
-+	"L_DIMM2",
-+	"PCH",
-+	"M2_R",
-+	"M2_Z1R",
-+	"M2_Z2R",
-+	"PCI_Z1",
-+	"PCI_Z2",
-+	"PCI_Z3",
-+	"PCI_Z4",
-+	"AMB",
-+};
-+
-+static int gen_temp_map[] = {0, 2, 3, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-+
-+static const char * const lenovo_gen_ec_temp_label[] = {
-+	"CPU1",
-+	"R_DIMM",
-+	"L_DIMM",
-+	"PCH",
-+	"M2_R",
-+	"M2_Z1R",
-+	"M2_Z2R",
-+	"PCI_Z1",
-+	"PCI_Z2",
-+	"PCI_Z3",
-+	"PCI_Z4",
-+	"AMB",
-+};
-+
-+static int px_fan_map[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-+
-+static const char * const px_ec_fan_label[] = {
-+	"CPU1_Fan",
-+	"CPU2_Fan",
-+	"Front_Fan1-1",
-+	"Front_Fan1-2",
-+	"Front_Fan2",
-+	"Front_Fan3",
-+	"MEM_Fan1",
-+	"MEM_Fan2",
-+	"Rear_Fan1",
-+	"Rear_Fan2",
-+	"Flex_Bay_Fan1",
-+	"Flex_Bay_Fan2",
-+	"Flex_Bay_Fan2",
-+	"PSU_HDD_Fan",
-+	"PSU1_Fan",
-+	"PSU2_Fan",
-+};
-+
-+static int p7_fan_map[] = {0, 2, 3, 4, 5, 6, 7, 8, 10, 11, 14};
-+
-+static const char * const p7_ec_fan_label[] = {
-+	"CPU1_Fan",
-+	"HP_CPU_Fan1",
-+	"HP_CPU_Fan2",
-+	"PCIE1_4_Fan",
-+	"PCIE5_7_Fan",
-+	"MEM_Fan1",
-+	"MEM_Fan2",
-+	"Rear_Fan1",
-+	"BCB_Fan",
-+	"Flex_Bay_Fan",
-+	"PSU_Fan",
-+};
-+
-+static int p5_fan_map[] = {0, 5, 6, 7, 8, 10, 11, 14};
-+
-+static const char * const p5_ec_fan_label[] = {
-+	"CPU_Fan",
-+	"HDD_Fan",
-+	"Duct_Fan1",
-+	"MEM_Fan",
-+	"Rear_Fan",
-+	"Front_Fan",
-+	"Flex_Bay_Fan",
-+	"PSU_Fan",
-+};
-+
-+static int p8_fan_map[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14};
-+
-+static const char * const p8_ec_fan_label[] = {
-+	"CPU1_Fan",
-+	"CPU2_Fan",
-+	"HP_CPU_Fan1",
-+	"HP_CPU_Fan2",
-+	"PCIE1_4_Fan",
-+	"PCIE5_7_Fan",
-+	"DIMM1_Fan1",
-+	"DIMM1_Fan2",
-+	"DIMM2_Fan1",
-+	"DIMM2_Fan2",
-+	"Rear_Fan",
-+	"HDD_Bay_Fan",
-+	"Flex_Bay_Fan",
-+	"PSU_Fan",
-+};
-+
-+struct ec_sensors_data {
-+	struct mutex mec_mutex; /* lock for sensor data access */
-+	const char *const *fan_labels;
-+	const char *const *temp_labels;
-+	const int *fan_map;
-+	const int *temp_map;
-+};
-+
-+static int
-+lenovo_ec_do_read_temp(struct ec_sensors_data *data, u32 attr, int channel, long *val)
-+{
-+	u8 lsb;
-+
-+	switch (attr) {
-+	case hwmon_temp_input:
-+		mutex_lock(&data->mec_mutex);
-+		lsb = get_ec_reg(2, 0x81 + channel);
-+		mutex_unlock(&data->mec_mutex);
-+		if (lsb <= 0x40)
-+			return -ENODATA;
-+		*val = (lsb - 0x40) * 1000;
-+		return 0;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static int
-+lenovo_ec_do_read_fan(struct ec_sensors_data *data, u32 attr, int channel, long *val)
-+{
-+	u8 lsb, msb;
-+
-+	channel *= 2;
-+	switch (attr) {
-+	case hwmon_fan_input:
-+		mutex_lock(&data->mec_mutex);
-+		lsb = get_ec_reg(4, 0x20 + channel);
-+		msb = get_ec_reg(4, 0x21 + channel);
-+		mutex_unlock(&data->mec_mutex);
-+		*val = (msb << 8) + lsb;
-+		return 0;
-+	case hwmon_fan_max:
-+		mutex_lock(&data->mec_mutex);
-+		lsb = get_ec_reg(4, 0x40 + channel);
-+		msb = get_ec_reg(4, 0x41 + channel);
-+		mutex_unlock(&data->mec_mutex);
-+		*val = (msb << 8) + lsb;
-+		return 0;
-+	case hwmon_fan_min:
-+	case hwmon_fan_div:
-+	case hwmon_fan_alarm:
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static int
-+lenovo_ec_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type,
-+			    u32 attr, int channel, const char **str)
-+{
-+	struct ec_sensors_data *state = dev_get_drvdata(dev);
-+
-+	switch (type) {
-+	case hwmon_temp:
-+		*str = state->temp_labels[channel];
-+		return 0;
-+	case hwmon_fan:
-+		*str = state->fan_labels[channel];
-+		return 0;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static int
-+lenovo_ec_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-+		     u32 attr, int channel, long *val)
-+{
-+	struct ec_sensors_data *data = dev_get_drvdata(dev);
-+
-+	switch (type) {
-+	case hwmon_temp:
-+		return lenovo_ec_do_read_temp(data, attr, data->temp_map[channel], val);
-+	case hwmon_fan:
-+		return lenovo_ec_do_read_fan(data, attr, data->fan_map[channel], val);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static umode_t
-+lenovo_ec_hwmon_is_visible(const void *data, enum hwmon_sensor_types type,
-+			   u32 attr, int channel)
-+{
-+	switch (type) {
-+	case hwmon_temp:
-+		if (attr == hwmon_temp_input || attr == hwmon_temp_label)
-+			return 0444;
-+		return 0;
-+	case hwmon_fan:
-+		if (attr == hwmon_fan_input || attr == hwmon_fan_max || attr == hwmon_fan_label)
-+			return 0444;
-+		return 0;
-+	default:
-+		return 0;
-+	}
-+}
-+
-+static const struct hwmon_channel_info *lenovo_ec_hwmon_info_px[] = {
-+	HWMON_CHANNEL_INFO(temp,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL),
-+	HWMON_CHANNEL_INFO(fan,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX),
-+	NULL
-+};
-+
-+static const struct hwmon_channel_info *lenovo_ec_hwmon_info_p8[] = {
-+	HWMON_CHANNEL_INFO(temp,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL),
-+	HWMON_CHANNEL_INFO(fan,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX),
-+	NULL
-+};
-+
-+static const struct hwmon_channel_info *lenovo_ec_hwmon_info_p7[] = {
-+	HWMON_CHANNEL_INFO(temp,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL),
-+	HWMON_CHANNEL_INFO(fan,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX),
-+	NULL
-+};
-+
-+static const struct hwmon_channel_info *lenovo_ec_hwmon_info_p5[] = {
-+	HWMON_CHANNEL_INFO(temp,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL),
-+	HWMON_CHANNEL_INFO(fan,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX,
-+			   HWMON_F_INPUT | HWMON_F_LABEL | HWMON_F_MAX),
-+	NULL
-+};
-+
-+static const struct hwmon_ops lenovo_ec_hwmon_ops = {
-+	.is_visible = lenovo_ec_hwmon_is_visible,
-+	.read = lenovo_ec_hwmon_read,
-+	.read_string = lenovo_ec_hwmon_read_string,
-+};
-+
-+static struct hwmon_chip_info lenovo_ec_chip_info = {
-+	.ops = &lenovo_ec_hwmon_ops,
-+};
-+
-+static const struct dmi_system_id thinkstation_dmi_table[] = {
-+	{
-+		.ident = "LENOVO_PX",
-+		.driver_data = (void *)(long)LENOVO_PX,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "30EU"),
-+		},
-+	},
-+	{
-+		.ident = "LENOVO_PX",
-+		.driver_data = (void *)(long)LENOVO_PX,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "30EV"),
-+		},
-+	},
-+	{
-+		.ident = "LENOVO_P7",
-+		.driver_data = (void *)(long)LENOVO_P7,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "30F2"),
-+		},
-+	},
-+	{
-+		.ident = "LENOVO_P7",
-+		.driver_data = (void *)(long)LENOVO_P7,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "30F3"),
-+		},
-+	},
-+	{
-+		.ident = "LENOVO_P5",
-+		.driver_data = (void *)(long)LENOVO_P5,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "30G9"),
-+		},
-+	},
-+	{
-+		.ident = "LENOVO_P5",
-+		.driver_data = (void *)(long)LENOVO_P5,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "30GA"),
-+		},
-+	},
-+	{
-+		.ident = "LENOVO_P8",
-+		.driver_data = (void *)(long)LENOVO_P8,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "30HH"),
-+		},
-+	},
-+	{
-+		.ident = "LENOVO_P8",
-+		.driver_data = (void *)(long)LENOVO_P8,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "30HJ"),
-+		},
-+	},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(dmi, thinkstation_dmi_table);
-+
-+static int lenovo_ec_probe(struct platform_device *pdev)
-+{
-+	struct device *hwdev;
-+	struct ec_sensors_data *ec_data;
-+	const struct hwmon_chip_info *chip_info;
-+	struct device *dev = &pdev->dev;
-+	const struct dmi_system_id *dmi_id;
-+	int app_id;
-+
-+	ec_data = devm_kzalloc(dev, sizeof(struct ec_sensors_data), GFP_KERNEL);
-+	if (!ec_data)
-+		return -ENOMEM;
-+
-+	if (!request_region(IO_REGION_START, IO_REGION_LENGTH, "LNV-WKS")) {
-+		pr_err(":request fail\n");
-+		return -EIO;
-+	}
-+
-+	dev_set_drvdata(dev, ec_data);
-+
-+	chip_info = &lenovo_ec_chip_info;
-+
-+	mutex_init(&ec_data->mec_mutex);
-+
-+	mutex_lock(&ec_data->mec_mutex);
-+	app_id = inb_p(MCHP_EMI0_APPLICATION_ID);
-+	if (app_id) /* check EMI Application ID Value */
-+		outb_p(app_id, MCHP_EMI0_APPLICATION_ID); /* set EMI Application ID to 0 */
-+	outw_p(MCHP_SING_IDX, MCHP_EMI0_EC_ADDRESS);
-+	mutex_unlock(&ec_data->mec_mutex);
-+
-+	if ((inb_p(MCHP_EMI0_EC_DATA_BYTE0) != 'M') &&
-+	    (inb_p(MCHP_EMI0_EC_DATA_BYTE1) != 'C') &&
-+	    (inb_p(MCHP_EMI0_EC_DATA_BYTE2) != 'H') &&
-+	    (inb_p(MCHP_EMI0_EC_DATA_BYTE3) != 'P')) {
-+		release_region(IO_REGION_START, IO_REGION_LENGTH);
-+		return -ENODEV;
-+	}
-+
-+	dmi_id = dmi_first_match(thinkstation_dmi_table);
-+
-+	switch ((long)dmi_id->driver_data) {
-+	case 0:
-+		ec_data->fan_labels = px_ec_fan_label;
-+		ec_data->temp_labels = lenovo_px_ec_temp_label;
-+		ec_data->fan_map = px_fan_map;
-+		ec_data->temp_map = px_temp_map;
-+		lenovo_ec_chip_info.info = lenovo_ec_hwmon_info_px;
-+		break;
-+	case 1:
-+		ec_data->fan_labels = p7_ec_fan_label;
-+		ec_data->temp_labels = lenovo_gen_ec_temp_label;
-+		ec_data->fan_map = p7_fan_map;
-+		ec_data->temp_map = gen_temp_map;
-+		lenovo_ec_chip_info.info = lenovo_ec_hwmon_info_p7;
-+		break;
-+	case 2:
-+		ec_data->fan_labels = p5_ec_fan_label;
-+		ec_data->temp_labels = lenovo_gen_ec_temp_label;
-+		ec_data->fan_map = p5_fan_map;
-+		ec_data->temp_map = gen_temp_map;
-+		lenovo_ec_chip_info.info = lenovo_ec_hwmon_info_p5;
-+		break;
-+	case 3:
-+		ec_data->fan_labels = p8_ec_fan_label;
-+		ec_data->temp_labels = lenovo_gen_ec_temp_label;
-+		ec_data->fan_map = p8_fan_map;
-+		ec_data->temp_map = gen_temp_map;
-+		lenovo_ec_chip_info.info = lenovo_ec_hwmon_info_p8;
-+		break;
-+	default:
-+		release_region(IO_REGION_START, IO_REGION_LENGTH);
-+		return -ENODEV;
-+	}
-+
-+	hwdev = devm_hwmon_device_register_with_info(dev, "lenovo_ec",
-+						     ec_data,
-+						     chip_info, NULL);
-+
-+	return PTR_ERR_OR_ZERO(hwdev);
-+}
-+
-+static struct platform_driver lenovo_ec_sensors_platform_driver = {
-+	.driver = {
-+		.name	= "lenovo-ec-sensors",
-+	},
-+	.probe = lenovo_ec_probe,
-+};
-+
-+static struct platform_device *lenovo_ec_sensors_platform_device;
-+
-+static int __init lenovo_ec_init(void)
-+{
-+	if (!dmi_check_system(thinkstation_dmi_table))
-+		return -ENODEV;
-+
-+	lenovo_ec_sensors_platform_device =
-+		platform_create_bundle(&lenovo_ec_sensors_platform_driver,
-+				       lenovo_ec_probe, NULL, 0, NULL, 0);
-+
-+	if (IS_ERR(lenovo_ec_sensors_platform_device)) {
-+		release_region(IO_REGION_START, IO_REGION_LENGTH);
-+		return PTR_ERR(lenovo_ec_sensors_platform_device);
-+	}
-+
-+	return 0;
-+}
-+module_init(lenovo_ec_init);
-+
-+static void __exit lenovo_ec_exit(void)
-+{
-+	release_region(IO_REGION_START, IO_REGION_LENGTH);
-+	platform_device_unregister(lenovo_ec_sensors_platform_device);
-+	platform_driver_unregister(&lenovo_ec_sensors_platform_driver);
-+}
-+module_exit(lenovo_ec_exit);
-+
-+MODULE_AUTHOR("David Ober <dober@lenovo.com>");
-+MODULE_DESCRIPTION("HWMON driver for sensors accesssible via EC in LENOVO motherboards");
-+MODULE_LICENSE("GPL");
++	if (pi433->irq_state[DIO0] == DIO_PACKET_SENT) {
++		pi433->free_in_fifo = FIFO_SIZE;
++		dev_dbg(pi433->dev, "DIO0 irq: Packet sent\n");
++		wake_up_interruptible(&pi433->fifo_wait_queue);
++	} else if (pi433->irq_state[DIO0] == DIO_RSSI_DIO0) {
++		dev_dbg(pi433->dev, "DIO0 irq: RSSI level over threshold\n");
++		wake_up_interruptible(&pi433->rx_wait_queue);
++	} else if (pi433->irq_state[DIO0] == DIO_PAYLOAD_READY) {
++		dev_dbg(pi433->dev, "DIO0 irq: Payload ready\n");
++		pi433->free_in_fifo = 0;
++		wake_up_interruptible(&pi433->fifo_wait_queue);
+ 	}
+ 
+ 	return IRQ_HANDLED;
+@@ -145,19 +145,19 @@ static irqreturn_t DIO0_irq_handler(int irq, void *dev_id)
+ 
+ static irqreturn_t DIO1_irq_handler(int irq, void *dev_id)
+ {
+-	struct pi433_device *device = dev_id;
++	struct pi433_device *pi433 = dev_id;
+ 
+-	if (device->irq_state[DIO1] == DIO_FIFO_NOT_EMPTY_DIO1) {
+-		device->free_in_fifo = FIFO_SIZE;
+-	} else if (device->irq_state[DIO1] == DIO_FIFO_LEVEL) {
+-		if (device->rx_active)
+-			device->free_in_fifo = FIFO_THRESHOLD - 1;
++	if (pi433->irq_state[DIO1] == DIO_FIFO_NOT_EMPTY_DIO1) {
++		pi433->free_in_fifo = FIFO_SIZE;
++	} else if (pi433->irq_state[DIO1] == DIO_FIFO_LEVEL) {
++		if (pi433->rx_active)
++			pi433->free_in_fifo = FIFO_THRESHOLD - 1;
+ 		else
+-			device->free_in_fifo = FIFO_SIZE - FIFO_THRESHOLD - 1;
++			pi433->free_in_fifo = FIFO_SIZE - FIFO_THRESHOLD - 1;
+ 	}
+-	dev_dbg(device->dev,
+-		"DIO1 irq: %d bytes free in fifo\n", device->free_in_fifo);
+-	wake_up_interruptible(&device->fifo_wait_queue);
++	dev_dbg(pi433->dev,
++		"DIO1 irq: %d bytes free in fifo\n", pi433->free_in_fifo);
++	wake_up_interruptible(&pi433->fifo_wait_queue);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -165,94 +165,94 @@ static irqreturn_t DIO1_irq_handler(int irq, void *dev_id)
+ /*-------------------------------------------------------------------------*/
+ 
+ static int
+-rf69_set_rx_cfg(struct pi433_device *dev, struct pi433_rx_cfg *rx_cfg)
++rf69_set_rx_cfg(struct pi433_device *pi433, struct pi433_rx_cfg *rx_cfg)
+ {
+ 	int ret;
+ 	int payload_length;
+ 
+ 	/* receiver config */
+-	ret = rf69_set_frequency(dev->spi, rx_cfg->frequency);
++	ret = rf69_set_frequency(pi433->spi, rx_cfg->frequency);
+ 	if (ret < 0)
+ 		return ret;
+-	ret = rf69_set_modulation(dev->spi, rx_cfg->modulation);
++	ret = rf69_set_modulation(pi433->spi, rx_cfg->modulation);
+ 	if (ret < 0)
+ 		return ret;
+-	ret = rf69_set_bit_rate(dev->spi, rx_cfg->bit_rate);
++	ret = rf69_set_bit_rate(pi433->spi, rx_cfg->bit_rate);
+ 	if (ret < 0)
+ 		return ret;
+-	ret = rf69_set_antenna_impedance(dev->spi, rx_cfg->antenna_impedance);
++	ret = rf69_set_antenna_impedance(pi433->spi, rx_cfg->antenna_impedance);
+ 	if (ret < 0)
+ 		return ret;
+-	ret = rf69_set_rssi_threshold(dev->spi, rx_cfg->rssi_threshold);
++	ret = rf69_set_rssi_threshold(pi433->spi, rx_cfg->rssi_threshold);
+ 	if (ret < 0)
+ 		return ret;
+-	ret = rf69_set_ook_threshold_dec(dev->spi, rx_cfg->threshold_decrement);
++	ret = rf69_set_ook_threshold_dec(pi433->spi, rx_cfg->threshold_decrement);
+ 	if (ret < 0)
+ 		return ret;
+-	ret = rf69_set_bandwidth(dev->spi, rx_cfg->bw_mantisse,
++	ret = rf69_set_bandwidth(pi433->spi, rx_cfg->bw_mantisse,
+ 				 rx_cfg->bw_exponent);
+ 	if (ret < 0)
+ 		return ret;
+-	ret = rf69_set_bandwidth_during_afc(dev->spi, rx_cfg->bw_mantisse,
++	ret = rf69_set_bandwidth_during_afc(pi433->spi, rx_cfg->bw_mantisse,
+ 					    rx_cfg->bw_exponent);
+ 	if (ret < 0)
+ 		return ret;
+-	ret = rf69_set_dagc(dev->spi, rx_cfg->dagc);
++	ret = rf69_set_dagc(pi433->spi, rx_cfg->dagc);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	dev->rx_bytes_to_drop = rx_cfg->bytes_to_drop;
++	pi433->rx_bytes_to_drop = rx_cfg->bytes_to_drop;
+ 
+ 	/* packet config */
+ 	/* enable */
+ 	if (rx_cfg->enable_sync == OPTION_ON) {
+-		ret = rf69_enable_sync(dev->spi);
++		ret = rf69_enable_sync(pi433->spi);
+ 		if (ret < 0)
+ 			return ret;
+ 
+-		ret = rf69_set_fifo_fill_condition(dev->spi,
++		ret = rf69_set_fifo_fill_condition(pi433->spi,
+ 						   after_sync_interrupt);
+ 		if (ret < 0)
+ 			return ret;
+ 	} else {
+-		ret = rf69_disable_sync(dev->spi);
++		ret = rf69_disable_sync(pi433->spi);
+ 		if (ret < 0)
+ 			return ret;
+ 
+-		ret = rf69_set_fifo_fill_condition(dev->spi, always);
++		ret = rf69_set_fifo_fill_condition(pi433->spi, always);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+ 	if (rx_cfg->enable_length_byte == OPTION_ON) {
+-		ret = rf69_set_packet_format(dev->spi, packet_length_var);
++		ret = rf69_set_packet_format(pi433->spi, packet_length_var);
+ 		if (ret < 0)
+ 			return ret;
+ 	} else {
+-		ret = rf69_set_packet_format(dev->spi, packet_length_fix);
++		ret = rf69_set_packet_format(pi433->spi, packet_length_fix);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+-	ret = rf69_set_address_filtering(dev->spi,
++	ret = rf69_set_address_filtering(pi433->spi,
+ 					 rx_cfg->enable_address_filtering);
+ 	if (ret < 0)
+ 		return ret;
+ 
+ 	if (rx_cfg->enable_crc == OPTION_ON) {
+-		ret = rf69_enable_crc(dev->spi);
++		ret = rf69_enable_crc(pi433->spi);
+ 		if (ret < 0)
+ 			return ret;
+ 	} else {
+-		ret = rf69_disable_crc(dev->spi);
++		ret = rf69_disable_crc(pi433->spi);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+ 
+ 	/* lengths */
+-	ret = rf69_set_sync_size(dev->spi, rx_cfg->sync_length);
++	ret = rf69_set_sync_size(pi433->spi, rx_cfg->sync_length);
+ 	if (ret < 0)
+ 		return ret;
+ 	if (rx_cfg->enable_length_byte == OPTION_ON) {
+-		ret = rf69_set_payload_length(dev->spi, 0xff);
++		ret = rf69_set_payload_length(pi433->spi, 0xff);
+ 		if (ret < 0)
+ 			return ret;
+ 	} else if (rx_cfg->fixed_message_length != 0) {
+@@ -261,26 +261,26 @@ rf69_set_rx_cfg(struct pi433_device *dev, struct pi433_rx_cfg *rx_cfg)
+ 			payload_length++;
+ 		if (rx_cfg->enable_address_filtering != filtering_off)
+ 			payload_length++;
+-		ret = rf69_set_payload_length(dev->spi, payload_length);
++		ret = rf69_set_payload_length(pi433->spi, payload_length);
+ 		if (ret < 0)
+ 			return ret;
+ 	} else {
+-		ret = rf69_set_payload_length(dev->spi, 0);
++		ret = rf69_set_payload_length(pi433->spi, 0);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+ 
+ 	/* values */
+ 	if (rx_cfg->enable_sync == OPTION_ON) {
+-		ret = rf69_set_sync_values(dev->spi, rx_cfg->sync_pattern);
++		ret = rf69_set_sync_values(pi433->spi, rx_cfg->sync_pattern);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+ 	if (rx_cfg->enable_address_filtering != filtering_off) {
+-		ret = rf69_set_node_address(dev->spi, rx_cfg->node_address);
++		ret = rf69_set_node_address(pi433->spi, rx_cfg->node_address);
+ 		if (ret < 0)
+ 			return ret;
+-		ret = rf69_set_broadcast_address(dev->spi,
++		ret = rf69_set_broadcast_address(pi433->spi,
+ 						 rx_cfg->broadcast_address);
+ 		if (ret < 0)
+ 			return ret;
+@@ -290,76 +290,76 @@ rf69_set_rx_cfg(struct pi433_device *dev, struct pi433_rx_cfg *rx_cfg)
+ }
+ 
+ static int
+-rf69_set_tx_cfg(struct pi433_device *dev, struct pi433_tx_cfg *tx_cfg)
++rf69_set_tx_cfg(struct pi433_device *pi433, struct pi433_tx_cfg *tx_cfg)
+ {
+ 	int ret;
+ 
+-	ret = rf69_set_frequency(dev->spi, tx_cfg->frequency);
++	ret = rf69_set_frequency(pi433->spi, tx_cfg->frequency);
+ 	if (ret < 0)
+ 		return ret;
+-	ret = rf69_set_modulation(dev->spi, tx_cfg->modulation);
++	ret = rf69_set_modulation(pi433->spi, tx_cfg->modulation);
+ 	if (ret < 0)
+ 		return ret;
+-	ret = rf69_set_bit_rate(dev->spi, tx_cfg->bit_rate);
++	ret = rf69_set_bit_rate(pi433->spi, tx_cfg->bit_rate);
+ 	if (ret < 0)
+ 		return ret;
+-	ret = rf69_set_deviation(dev->spi, tx_cfg->dev_frequency);
++	ret = rf69_set_deviation(pi433->spi, tx_cfg->dev_frequency);
+ 	if (ret < 0)
+ 		return ret;
+-	ret = rf69_set_pa_ramp(dev->spi, tx_cfg->pa_ramp);
++	ret = rf69_set_pa_ramp(pi433->spi, tx_cfg->pa_ramp);
+ 	if (ret < 0)
+ 		return ret;
+-	ret = rf69_set_modulation_shaping(dev->spi, tx_cfg->mod_shaping);
++	ret = rf69_set_modulation_shaping(pi433->spi, tx_cfg->mod_shaping);
+ 	if (ret < 0)
+ 		return ret;
+-	ret = rf69_set_tx_start_condition(dev->spi, tx_cfg->tx_start_condition);
++	ret = rf69_set_tx_start_condition(pi433->spi, tx_cfg->tx_start_condition);
+ 	if (ret < 0)
+ 		return ret;
+ 
+ 	/* packet format enable */
+ 	if (tx_cfg->enable_preamble == OPTION_ON) {
+-		ret = rf69_set_preamble_length(dev->spi,
++		ret = rf69_set_preamble_length(pi433->spi,
+ 					       tx_cfg->preamble_length);
+ 		if (ret < 0)
+ 			return ret;
+ 	} else {
+-		ret = rf69_set_preamble_length(dev->spi, 0);
++		ret = rf69_set_preamble_length(pi433->spi, 0);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+ 
+ 	if (tx_cfg->enable_sync == OPTION_ON) {
+-		ret = rf69_set_sync_size(dev->spi, tx_cfg->sync_length);
++		ret = rf69_set_sync_size(pi433->spi, tx_cfg->sync_length);
+ 		if (ret < 0)
+ 			return ret;
+-		ret = rf69_set_sync_values(dev->spi, tx_cfg->sync_pattern);
++		ret = rf69_set_sync_values(pi433->spi, tx_cfg->sync_pattern);
+ 		if (ret < 0)
+ 			return ret;
+-		ret = rf69_enable_sync(dev->spi);
++		ret = rf69_enable_sync(pi433->spi);
+ 		if (ret < 0)
+ 			return ret;
+ 	} else {
+-		ret = rf69_disable_sync(dev->spi);
++		ret = rf69_disable_sync(pi433->spi);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+ 
+ 	if (tx_cfg->enable_length_byte == OPTION_ON) {
+-		ret = rf69_set_packet_format(dev->spi, packet_length_var);
++		ret = rf69_set_packet_format(pi433->spi, packet_length_var);
+ 		if (ret < 0)
+ 			return ret;
+ 	} else {
+-		ret = rf69_set_packet_format(dev->spi, packet_length_fix);
++		ret = rf69_set_packet_format(pi433->spi, packet_length_fix);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+ 
+ 	if (tx_cfg->enable_crc == OPTION_ON) {
+-		ret = rf69_enable_crc(dev->spi);
++		ret = rf69_enable_crc(pi433->spi);
+ 		if (ret < 0)
+ 			return ret;
+ 	} else {
+-		ret = rf69_disable_crc(dev->spi);
++		ret = rf69_disable_crc(pi433->spi);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+@@ -369,38 +369,38 @@ rf69_set_tx_cfg(struct pi433_device *dev, struct pi433_tx_cfg *tx_cfg)
+ 
+ /*-------------------------------------------------------------------------*/
+ 
+-static int pi433_start_rx(struct pi433_device *dev)
++static int pi433_start_rx(struct pi433_device *pi433)
+ {
+ 	int retval;
+ 
+ 	/* return without action, if no pending read request */
+-	if (!dev->rx_active)
++	if (!pi433->rx_active)
+ 		return 0;
+ 
+ 	/* setup for receiving */
+-	retval = rf69_set_rx_cfg(dev, &dev->rx_cfg);
++	retval = rf69_set_rx_cfg(pi433, &pi433->rx_cfg);
+ 	if (retval)
+ 		return retval;
+ 
+ 	/* setup rssi irq */
+-	retval = rf69_set_dio_mapping(dev->spi, DIO0, DIO_RSSI_DIO0);
++	retval = rf69_set_dio_mapping(pi433->spi, DIO0, DIO_RSSI_DIO0);
+ 	if (retval < 0)
+ 		return retval;
+-	dev->irq_state[DIO0] = DIO_RSSI_DIO0;
+-	irq_set_irq_type(dev->irq_num[DIO0], IRQ_TYPE_EDGE_RISING);
++	pi433->irq_state[DIO0] = DIO_RSSI_DIO0;
++	irq_set_irq_type(pi433->irq_num[DIO0], IRQ_TYPE_EDGE_RISING);
+ 
+ 	/* setup fifo level interrupt */
+-	retval = rf69_set_fifo_threshold(dev->spi, FIFO_SIZE - FIFO_THRESHOLD);
++	retval = rf69_set_fifo_threshold(pi433->spi, FIFO_SIZE - FIFO_THRESHOLD);
+ 	if (retval < 0)
+ 		return retval;
+-	retval = rf69_set_dio_mapping(dev->spi, DIO1, DIO_FIFO_LEVEL);
++	retval = rf69_set_dio_mapping(pi433->spi, DIO1, DIO_FIFO_LEVEL);
+ 	if (retval < 0)
+ 		return retval;
+-	dev->irq_state[DIO1] = DIO_FIFO_LEVEL;
+-	irq_set_irq_type(dev->irq_num[DIO1], IRQ_TYPE_EDGE_RISING);
++	pi433->irq_state[DIO1] = DIO_FIFO_LEVEL;
++	irq_set_irq_type(pi433->irq_num[DIO1], IRQ_TYPE_EDGE_RISING);
+ 
+ 	/* set module to receiving mode */
+-	retval = rf69_set_mode(dev->spi, receive);
++	retval = rf69_set_mode(pi433->spi, receive);
+ 	if (retval < 0)
+ 		return retval;
+ 
+@@ -411,50 +411,50 @@ static int pi433_start_rx(struct pi433_device *dev)
+ 
+ static int pi433_receive(void *data)
+ {
+-	struct pi433_device *dev = data;
+-	struct spi_device *spi = dev->spi;
++	struct pi433_device *pi433 = data;
++	struct spi_device *spi = pi433->spi;
+ 	int bytes_to_read, bytes_total;
+ 	int retval;
+ 
+-	dev->interrupt_rx_allowed = false;
++	pi433->interrupt_rx_allowed = false;
+ 
+ 	/* wait for any tx to finish */
+-	dev_dbg(dev->dev, "rx: going to wait for any tx to finish\n");
+-	retval = wait_event_interruptible(dev->rx_wait_queue, !dev->tx_active);
++	dev_dbg(pi433->dev, "rx: going to wait for any tx to finish\n");
++	retval = wait_event_interruptible(pi433->rx_wait_queue, !pi433->tx_active);
+ 	if (retval) {
+ 		/* wait was interrupted */
+-		dev->interrupt_rx_allowed = true;
+-		wake_up_interruptible(&dev->tx_wait_queue);
++		pi433->interrupt_rx_allowed = true;
++		wake_up_interruptible(&pi433->tx_wait_queue);
+ 		return retval;
+ 	}
+ 
+ 	/* prepare status vars */
+-	dev->free_in_fifo = FIFO_SIZE;
+-	dev->rx_position = 0;
+-	dev->rx_bytes_dropped = 0;
++	pi433->free_in_fifo = FIFO_SIZE;
++	pi433->rx_position = 0;
++	pi433->rx_bytes_dropped = 0;
+ 
+ 	/* setup radio module to listen for something "in the air" */
+-	retval = pi433_start_rx(dev);
++	retval = pi433_start_rx(pi433);
+ 	if (retval)
+ 		return retval;
+ 
+ 	/* now check RSSI, if low wait for getting high (RSSI interrupt) */
+ 	while (!(rf69_read_reg(spi, REG_IRQFLAGS1) & MASK_IRQFLAGS1_RSSI)) {
+ 		/* allow tx to interrupt us while waiting for high RSSI */
+-		dev->interrupt_rx_allowed = true;
+-		wake_up_interruptible(&dev->tx_wait_queue);
++		pi433->interrupt_rx_allowed = true;
++		wake_up_interruptible(&pi433->tx_wait_queue);
+ 
+ 		/* wait for RSSI level to become high */
+-		dev_dbg(dev->dev, "rx: going to wait for high RSSI level\n");
+-		retval = wait_event_interruptible(dev->rx_wait_queue,
++		dev_dbg(pi433->dev, "rx: going to wait for high RSSI level\n");
++		retval = wait_event_interruptible(pi433->rx_wait_queue,
+ 						  rf69_read_reg(spi, REG_IRQFLAGS1) &
+ 						  MASK_IRQFLAGS1_RSSI);
+ 		if (retval) /* wait was interrupted */
+ 			goto abort;
+-		dev->interrupt_rx_allowed = false;
++		pi433->interrupt_rx_allowed = false;
+ 
+ 		/* cross check for ongoing tx */
+-		if (!dev->tx_active)
++		if (!pi433->tx_active)
+ 			break;
+ 	}
+ 
+@@ -462,97 +462,97 @@ static int pi433_receive(void *data)
+ 	retval = rf69_set_dio_mapping(spi, DIO0, DIO_PAYLOAD_READY);
+ 	if (retval < 0)
+ 		goto abort;
+-	dev->irq_state[DIO0] = DIO_PAYLOAD_READY;
+-	irq_set_irq_type(dev->irq_num[DIO0], IRQ_TYPE_EDGE_RISING);
++	pi433->irq_state[DIO0] = DIO_PAYLOAD_READY;
++	irq_set_irq_type(pi433->irq_num[DIO0], IRQ_TYPE_EDGE_RISING);
+ 
+ 	/* fixed or unlimited length? */
+-	if (dev->rx_cfg.fixed_message_length != 0) {
+-		if (dev->rx_cfg.fixed_message_length > dev->rx_buffer_size) {
++	if (pi433->rx_cfg.fixed_message_length != 0) {
++		if (pi433->rx_cfg.fixed_message_length > pi433->rx_buffer_size) {
+ 			retval = -1;
+ 			goto abort;
+ 		}
+-		bytes_total = dev->rx_cfg.fixed_message_length;
+-		dev_dbg(dev->dev, "rx: msg len set to %d by fixed length\n",
++		bytes_total = pi433->rx_cfg.fixed_message_length;
++		dev_dbg(pi433->dev, "rx: msg len set to %d by fixed length\n",
+ 			bytes_total);
+ 	} else {
+-		bytes_total = dev->rx_buffer_size;
+-		dev_dbg(dev->dev, "rx: msg len set to %d as requested by read\n",
++		bytes_total = pi433->rx_buffer_size;
++		dev_dbg(pi433->dev, "rx: msg len set to %d as requested by read\n",
+ 			bytes_total);
+ 	}
+ 
+ 	/* length byte enabled? */
+-	if (dev->rx_cfg.enable_length_byte == OPTION_ON) {
+-		retval = wait_event_interruptible(dev->fifo_wait_queue,
+-						  dev->free_in_fifo < FIFO_SIZE);
++	if (pi433->rx_cfg.enable_length_byte == OPTION_ON) {
++		retval = wait_event_interruptible(pi433->fifo_wait_queue,
++						  pi433->free_in_fifo < FIFO_SIZE);
+ 		if (retval) /* wait was interrupted */
+ 			goto abort;
+ 
+ 		rf69_read_fifo(spi, (u8 *)&bytes_total, 1);
+-		if (bytes_total > dev->rx_buffer_size) {
++		if (bytes_total > pi433->rx_buffer_size) {
+ 			retval = -1;
+ 			goto abort;
+ 		}
+-		dev->free_in_fifo++;
+-		dev_dbg(dev->dev, "rx: msg len reset to %d due to length byte\n",
++		pi433->free_in_fifo++;
++		dev_dbg(pi433->dev, "rx: msg len reset to %d due to length byte\n",
+ 			bytes_total);
+ 	}
+ 
+ 	/* address byte enabled? */
+-	if (dev->rx_cfg.enable_address_filtering != filtering_off) {
++	if (pi433->rx_cfg.enable_address_filtering != filtering_off) {
+ 		u8 dummy;
+ 
+ 		bytes_total--;
+ 
+-		retval = wait_event_interruptible(dev->fifo_wait_queue,
+-						  dev->free_in_fifo < FIFO_SIZE);
++		retval = wait_event_interruptible(pi433->fifo_wait_queue,
++						  pi433->free_in_fifo < FIFO_SIZE);
+ 		if (retval) /* wait was interrupted */
+ 			goto abort;
+ 
+ 		rf69_read_fifo(spi, &dummy, 1);
+-		dev->free_in_fifo++;
+-		dev_dbg(dev->dev, "rx: address byte stripped off\n");
++		pi433->free_in_fifo++;
++		dev_dbg(pi433->dev, "rx: address byte stripped off\n");
+ 	}
+ 
+ 	/* get payload */
+-	while (dev->rx_position < bytes_total) {
++	while (pi433->rx_position < bytes_total) {
+ 		if (!(rf69_read_reg(spi, REG_IRQFLAGS2) & MASK_IRQFLAGS2_PAYLOAD_READY)) {
+-			retval = wait_event_interruptible(dev->fifo_wait_queue,
+-							  dev->free_in_fifo < FIFO_SIZE);
++			retval = wait_event_interruptible(pi433->fifo_wait_queue,
++							  pi433->free_in_fifo < FIFO_SIZE);
+ 			if (retval) /* wait was interrupted */
+ 				goto abort;
+ 		}
+ 
+ 		/* need to drop bytes or acquire? */
+-		if (dev->rx_bytes_to_drop > dev->rx_bytes_dropped)
+-			bytes_to_read = dev->rx_bytes_to_drop -
+-					dev->rx_bytes_dropped;
++		if (pi433->rx_bytes_to_drop > pi433->rx_bytes_dropped)
++			bytes_to_read = pi433->rx_bytes_to_drop -
++					pi433->rx_bytes_dropped;
+ 		else
+-			bytes_to_read = bytes_total - dev->rx_position;
++			bytes_to_read = bytes_total - pi433->rx_position;
+ 
+ 		/* access the fifo */
+-		if (bytes_to_read > FIFO_SIZE - dev->free_in_fifo)
+-			bytes_to_read = FIFO_SIZE - dev->free_in_fifo;
++		if (bytes_to_read > FIFO_SIZE - pi433->free_in_fifo)
++			bytes_to_read = FIFO_SIZE - pi433->free_in_fifo;
+ 		retval = rf69_read_fifo(spi,
+-					&dev->rx_buffer[dev->rx_position],
++					&pi433->rx_buffer[pi433->rx_position],
+ 					bytes_to_read);
+ 		if (retval) /* read failed */
+ 			goto abort;
+ 
+-		dev->free_in_fifo += bytes_to_read;
++		pi433->free_in_fifo += bytes_to_read;
+ 
+ 		/* adjust status vars */
+-		if (dev->rx_bytes_to_drop > dev->rx_bytes_dropped)
+-			dev->rx_bytes_dropped += bytes_to_read;
++		if (pi433->rx_bytes_to_drop > pi433->rx_bytes_dropped)
++			pi433->rx_bytes_dropped += bytes_to_read;
+ 		else
+-			dev->rx_position += bytes_to_read;
++			pi433->rx_position += bytes_to_read;
+ 	}
+ 
+ 	/* rx done, wait was interrupted or error occurred */
+ abort:
+-	dev->interrupt_rx_allowed = true;
+-	if (rf69_set_mode(dev->spi, standby))
++	pi433->interrupt_rx_allowed = true;
++	if (rf69_set_mode(pi433->spi, standby))
+ 		pr_err("rf69_set_mode(): radio module failed to go standby\n");
+-	wake_up_interruptible(&dev->tx_wait_queue);
++	wake_up_interruptible(&pi433->tx_wait_queue);
+ 
+ 	if (retval)
+ 		return retval;
+@@ -562,8 +562,8 @@ static int pi433_receive(void *data)
+ 
+ static int pi433_tx_thread(void *data)
+ {
+-	struct pi433_device *device = data;
+-	struct spi_device *spi = device->spi;
++	struct pi433_device *pi433 = data;
++	struct spi_device *spi = pi433->spi;
+ 	struct pi433_tx_cfg tx_cfg;
+ 	size_t size;
+ 	bool   rx_interrupted = false;
+@@ -572,9 +572,9 @@ static int pi433_tx_thread(void *data)
+ 
+ 	while (1) {
+ 		/* wait for fifo to be populated or for request to terminate*/
+-		dev_dbg(device->dev, "thread: going to wait for new messages\n");
+-		wait_event_interruptible(device->tx_wait_queue,
+-					 (!kfifo_is_empty(&device->tx_fifo) ||
++		dev_dbg(pi433->dev, "thread: going to wait for new messages\n");
++		wait_event_interruptible(pi433->tx_wait_queue,
++					 (!kfifo_is_empty(&pi433->tx_fifo) ||
+ 					  kthread_should_stop()));
+ 		if (kthread_should_stop())
+ 			return 0;
+@@ -585,17 +585,17 @@ static int pi433_tx_thread(void *data)
+ 		 * - size of message
+ 		 * - message
+ 		 */
+-		retval = kfifo_out(&device->tx_fifo, &tx_cfg, sizeof(tx_cfg));
++		retval = kfifo_out(&pi433->tx_fifo, &tx_cfg, sizeof(tx_cfg));
+ 		if (retval != sizeof(tx_cfg)) {
+-			dev_dbg(device->dev,
++			dev_dbg(pi433->dev,
+ 				"reading tx_cfg from fifo failed: got %d byte(s), expected %d\n",
+ 				retval, (unsigned int)sizeof(tx_cfg));
+ 			continue;
+ 		}
+ 
+-		retval = kfifo_out(&device->tx_fifo, &size, sizeof(size_t));
++		retval = kfifo_out(&pi433->tx_fifo, &size, sizeof(size_t));
+ 		if (retval != sizeof(size_t)) {
+-			dev_dbg(device->dev,
++			dev_dbg(pi433->dev,
+ 				"reading msg size from fifo failed: got %d, expected %d\n",
+ 				retval, (unsigned int)sizeof(size_t));
+ 			continue;
+@@ -614,7 +614,7 @@ static int pi433_tx_thread(void *data)
+ 			size++;
+ 
+ 		/* prime tx_buffer */
+-		memset(device->tx_buffer, 0, size);
++		memset(pi433->tx_buffer, 0, size);
+ 		position = 0;
+ 
+ 		/* add length byte, if requested */
+@@ -623,16 +623,16 @@ static int pi433_tx_thread(void *data)
+ 			 * according to spec, length byte itself must be
+ 			 * excluded from the length calculation
+ 			 */
+-			device->tx_buffer[position++] = size - 1;
++			pi433->tx_buffer[position++] = size - 1;
+ 
+ 		/* add adr byte, if requested */
+ 		if (tx_cfg.enable_address_byte == OPTION_ON)
+-			device->tx_buffer[position++] = tx_cfg.address_byte;
++			pi433->tx_buffer[position++] = tx_cfg.address_byte;
+ 
+ 		/* finally get message data from fifo */
+-		retval = kfifo_out(&device->tx_fifo, &device->tx_buffer[position],
+-				   sizeof(device->tx_buffer) - position);
+-		dev_dbg(device->dev,
++		retval = kfifo_out(&pi433->tx_fifo, &pi433->tx_buffer[position],
++				   sizeof(pi433->tx_buffer) - position);
++		dev_dbg(pi433->dev,
+ 			"read %d message byte(s) from fifo queue.\n", retval);
+ 
+ 		/*
+@@ -642,23 +642,23 @@ static int pi433_tx_thread(void *data)
+ 		 * place otherwise we need to  wait for the incoming telegram
+ 		 * to finish
+ 		 */
+-		wait_event_interruptible(device->tx_wait_queue,
+-					 !device->rx_active ||
+-					  device->interrupt_rx_allowed);
++		wait_event_interruptible(pi433->tx_wait_queue,
++					 !pi433->rx_active ||
++					  pi433->interrupt_rx_allowed);
+ 
+ 		/*
+ 		 * prevent race conditions
+ 		 * irq will be re-enabled after tx config is set
+ 		 */
+-		disable_irq(device->irq_num[DIO0]);
+-		device->tx_active = true;
++		disable_irq(pi433->irq_num[DIO0]);
++		pi433->tx_active = true;
+ 
+ 		/* clear fifo, set fifo threshold, set payload length */
+ 		retval = rf69_set_mode(spi, standby); /* this clears the fifo */
+ 		if (retval < 0)
+ 			goto abort;
+ 
+-		if (device->rx_active && !rx_interrupted) {
++		if (pi433->rx_active && !rx_interrupted) {
+ 			/*
+ 			 * rx is currently waiting for a telegram;
+ 			 * we need to set the radio module to standby
+@@ -680,7 +680,7 @@ static int pi433_tx_thread(void *data)
+ 		}
+ 
+ 		/* configure the rf chip */
+-		retval = rf69_set_tx_cfg(device, &tx_cfg);
++		retval = rf69_set_tx_cfg(pi433, &tx_cfg);
+ 		if (retval < 0)
+ 			goto abort;
+ 
+@@ -688,16 +688,16 @@ static int pi433_tx_thread(void *data)
+ 		retval = rf69_set_dio_mapping(spi, DIO1, DIO_FIFO_LEVEL);
+ 		if (retval < 0)
+ 			goto abort;
+-		device->irq_state[DIO1] = DIO_FIFO_LEVEL;
+-		irq_set_irq_type(device->irq_num[DIO1], IRQ_TYPE_EDGE_FALLING);
++		pi433->irq_state[DIO1] = DIO_FIFO_LEVEL;
++		irq_set_irq_type(pi433->irq_num[DIO1], IRQ_TYPE_EDGE_FALLING);
+ 
+ 		/* enable packet sent interrupt */
+ 		retval = rf69_set_dio_mapping(spi, DIO0, DIO_PACKET_SENT);
+ 		if (retval < 0)
+ 			goto abort;
+-		device->irq_state[DIO0] = DIO_PACKET_SENT;
+-		irq_set_irq_type(device->irq_num[DIO0], IRQ_TYPE_EDGE_RISING);
+-		enable_irq(device->irq_num[DIO0]); /* was disabled by rx active check */
++		pi433->irq_state[DIO0] = DIO_PACKET_SENT;
++		irq_set_irq_type(pi433->irq_num[DIO0], IRQ_TYPE_EDGE_RISING);
++		enable_irq(pi433->irq_num[DIO0]); /* was disabled by rx active check */
+ 
+ 		/* enable transmission */
+ 		retval = rf69_set_mode(spi, transmit);
+@@ -705,61 +705,61 @@ static int pi433_tx_thread(void *data)
+ 			goto abort;
+ 
+ 		/* transfer this msg (and repetitions) to chip fifo */
+-		device->free_in_fifo = FIFO_SIZE;
++		pi433->free_in_fifo = FIFO_SIZE;
+ 		position = 0;
+ 		repetitions = tx_cfg.repetitions;
+ 		while ((repetitions > 0) && (size > position)) {
+-			if ((size - position) > device->free_in_fifo) {
++			if ((size - position) > pi433->free_in_fifo) {
+ 				/* msg to big for fifo - take a part */
+-				int write_size = device->free_in_fifo;
++				int write_size = pi433->free_in_fifo;
+ 
+-				device->free_in_fifo = 0;
++				pi433->free_in_fifo = 0;
+ 				rf69_write_fifo(spi,
+-						&device->tx_buffer[position],
++						&pi433->tx_buffer[position],
+ 						write_size);
+ 				position += write_size;
+ 			} else {
+ 				/* msg fits into fifo - take all */
+-				device->free_in_fifo -= size;
++				pi433->free_in_fifo -= size;
+ 				repetitions--;
+ 				rf69_write_fifo(spi,
+-						&device->tx_buffer[position],
++						&pi433->tx_buffer[position],
+ 						(size - position));
+ 				position = 0; /* reset for next repetition */
+ 			}
+ 
+-			retval = wait_event_interruptible(device->fifo_wait_queue,
+-							  device->free_in_fifo > 0);
++			retval = wait_event_interruptible(pi433->fifo_wait_queue,
++							  pi433->free_in_fifo > 0);
+ 			if (retval) {
+-				dev_dbg(device->dev, "ABORT\n");
++				dev_dbg(pi433->dev, "ABORT\n");
+ 				goto abort;
+ 			}
+ 		}
+ 
+ 		/* we are done. Wait for packet to get sent */
+-		dev_dbg(device->dev,
++		dev_dbg(pi433->dev,
+ 			"thread: wait for packet to get sent/fifo to be empty\n");
+-		wait_event_interruptible(device->fifo_wait_queue,
+-					 device->free_in_fifo == FIFO_SIZE ||
++		wait_event_interruptible(pi433->fifo_wait_queue,
++					 pi433->free_in_fifo == FIFO_SIZE ||
+ 					 kthread_should_stop());
+ 		if (kthread_should_stop())
+ 			return 0;
+ 
+ 		/* STOP_TRANSMISSION */
+-		dev_dbg(device->dev, "thread: Packet sent. Set mode to stby.\n");
++		dev_dbg(pi433->dev, "thread: Packet sent. Set mode to stby.\n");
+ 		retval = rf69_set_mode(spi, standby);
+ 		if (retval < 0)
+ 			goto abort;
+ 
+ 		/* everything sent? */
+-		if (kfifo_is_empty(&device->tx_fifo)) {
++		if (kfifo_is_empty(&pi433->tx_fifo)) {
+ abort:
+ 			if (rx_interrupted) {
+ 				rx_interrupted = false;
+-				pi433_start_rx(device);
++				pi433_start_rx(pi433);
+ 			}
+-			device->tx_active = false;
+-			wake_up_interruptible(&device->rx_wait_queue);
++			pi433->tx_active = false;
++			wake_up_interruptible(&pi433->rx_wait_queue);
+ 		}
+ 	}
+ }
+@@ -770,7 +770,7 @@ static ssize_t
+ pi433_read(struct file *filp, char __user *buf, size_t size, loff_t *f_pos)
+ {
+ 	struct pi433_instance	*instance;
+-	struct pi433_device	*device;
++	struct pi433_device	*pi433;
+ 	int			bytes_received;
+ 	ssize_t			retval;
+ 
+@@ -779,31 +779,31 @@ pi433_read(struct file *filp, char __user *buf, size_t size, loff_t *f_pos)
+ 		return -EMSGSIZE;
+ 
+ 	instance = filp->private_data;
+-	device = instance->device;
++	pi433 = instance->pi433;
+ 
+ 	/* just one read request at a time */
+-	mutex_lock(&device->rx_lock);
+-	if (device->rx_active) {
+-		mutex_unlock(&device->rx_lock);
++	mutex_lock(&pi433->rx_lock);
++	if (pi433->rx_active) {
++		mutex_unlock(&pi433->rx_lock);
+ 		return -EAGAIN;
+ 	}
+ 
+-	device->rx_active = true;
+-	mutex_unlock(&device->rx_lock);
++	pi433->rx_active = true;
++	mutex_unlock(&pi433->rx_lock);
+ 
+ 	/* start receiving */
+ 	/* will block until something was received*/
+-	device->rx_buffer_size = size;
+-	bytes_received = pi433_receive(device);
++	pi433->rx_buffer_size = size;
++	bytes_received = pi433_receive(pi433);
+ 
+ 	/* release rx */
+-	mutex_lock(&device->rx_lock);
+-	device->rx_active = false;
+-	mutex_unlock(&device->rx_lock);
++	mutex_lock(&pi433->rx_lock);
++	pi433->rx_active = false;
++	mutex_unlock(&pi433->rx_lock);
+ 
+ 	/* if read was successful copy to user space*/
+ 	if (bytes_received > 0) {
+-		retval = copy_to_user(buf, device->rx_buffer, bytes_received);
++		retval = copy_to_user(buf, pi433->rx_buffer, bytes_received);
+ 		if (retval)
+ 			return -EFAULT;
+ 	}
+@@ -816,12 +816,12 @@ pi433_write(struct file *filp, const char __user *buf,
+ 	    size_t count, loff_t *f_pos)
+ {
+ 	struct pi433_instance	*instance;
+-	struct pi433_device	*device;
++	struct pi433_device	*pi433;
+ 	int                     retval;
+ 	unsigned int		required, available, copied;
+ 
+ 	instance = filp->private_data;
+-	device = instance->device;
++	pi433 = instance->pi433;
+ 
+ 	/*
+ 	 * check, whether internal buffer (tx thread) is big enough
+@@ -835,7 +835,7 @@ pi433_write(struct file *filp, const char __user *buf,
+ 	 * config the RF trasmitter correctly due to invalid settings
+ 	 */
+ 	if (!instance->tx_cfg_initialized) {
+-		dev_notice_once(device->dev,
++		dev_notice_once(pi433->dev,
+ 				"write: failed due to unconfigured tx_cfg (see PI433_IOC_WR_TX_CFG)\n");
+ 		return -EINVAL;
+ 	}
+@@ -846,49 +846,49 @@ pi433_write(struct file *filp, const char __user *buf,
+ 	 * - size of message
+ 	 * - message
+ 	 */
+-	mutex_lock(&device->tx_fifo_lock);
++	mutex_lock(&pi433->tx_fifo_lock);
+ 
+ 	required = sizeof(instance->tx_cfg) + sizeof(size_t) + count;
+-	available = kfifo_avail(&device->tx_fifo);
++	available = kfifo_avail(&pi433->tx_fifo);
+ 	if (required > available) {
+-		dev_dbg(device->dev, "write to fifo failed: %d bytes required but %d available\n",
++		dev_dbg(pi433->dev, "write to fifo failed: %d bytes required but %d available\n",
+ 			required, available);
+-		mutex_unlock(&device->tx_fifo_lock);
++		mutex_unlock(&pi433->tx_fifo_lock);
+ 		return -EAGAIN;
+ 	}
+ 
+-	retval = kfifo_in(&device->tx_fifo, &instance->tx_cfg,
++	retval = kfifo_in(&pi433->tx_fifo, &instance->tx_cfg,
+ 			  sizeof(instance->tx_cfg));
+ 	if (retval != sizeof(instance->tx_cfg))
+ 		goto abort;
+ 
+-	retval = kfifo_in(&device->tx_fifo, &count, sizeof(size_t));
++	retval = kfifo_in(&pi433->tx_fifo, &count, sizeof(size_t));
+ 	if (retval != sizeof(size_t))
+ 		goto abort;
+ 
+-	retval = kfifo_from_user(&device->tx_fifo, buf, count, &copied);
++	retval = kfifo_from_user(&pi433->tx_fifo, buf, count, &copied);
+ 	if (retval || copied != count)
+ 		goto abort;
+ 
+-	mutex_unlock(&device->tx_fifo_lock);
++	mutex_unlock(&pi433->tx_fifo_lock);
+ 
+ 	/* start transfer */
+-	wake_up_interruptible(&device->tx_wait_queue);
+-	dev_dbg(device->dev, "write: generated new msg with %d bytes.\n", copied);
++	wake_up_interruptible(&pi433->tx_wait_queue);
++	dev_dbg(pi433->dev, "write: generated new msg with %d bytes.\n", copied);
+ 
+ 	return copied;
+ 
+ abort:
+-	dev_warn(device->dev,
++	dev_warn(pi433->dev,
+ 		 "write to fifo failed, non recoverable: 0x%x\n", retval);
+-	mutex_unlock(&device->tx_fifo_lock);
++	mutex_unlock(&pi433->tx_fifo_lock);
+ 	return -EAGAIN;
+ }
+ 
+ static long pi433_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ {
+ 	struct pi433_instance	*instance;
+-	struct pi433_device	*device;
++	struct pi433_device	*pi433;
+ 	struct pi433_tx_cfg	tx_cfg;
+ 	void __user *argp = (void __user *)arg;
+ 
+@@ -897,9 +897,9 @@ static long pi433_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 		return -ENOTTY;
+ 
+ 	instance = filp->private_data;
+-	device = instance->device;
++	pi433 = instance->pi433;
+ 
+-	if (!device)
++	if (!pi433)
+ 		return -ESHUTDOWN;
+ 
+ 	switch (cmd) {
+@@ -911,32 +911,32 @@ static long pi433_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 	case PI433_IOC_WR_TX_CFG:
+ 		if (copy_from_user(&tx_cfg, argp, sizeof(struct pi433_tx_cfg)))
+ 			return -EFAULT;
+-		mutex_lock(&device->tx_fifo_lock);
++		mutex_lock(&pi433->tx_fifo_lock);
+ 		memcpy(&instance->tx_cfg, &tx_cfg, sizeof(struct pi433_tx_cfg));
+ 		instance->tx_cfg_initialized = true;
+-		mutex_unlock(&device->tx_fifo_lock);
++		mutex_unlock(&pi433->tx_fifo_lock);
+ 		break;
+ 	case PI433_IOC_RD_RX_CFG:
+-		if (copy_to_user(argp, &device->rx_cfg,
++		if (copy_to_user(argp, &pi433->rx_cfg,
+ 				 sizeof(struct pi433_rx_cfg)))
+ 			return -EFAULT;
+ 		break;
+ 	case PI433_IOC_WR_RX_CFG:
+-		mutex_lock(&device->rx_lock);
++		mutex_lock(&pi433->rx_lock);
+ 
+ 		/* during pending read request, change of config not allowed */
+-		if (device->rx_active) {
+-			mutex_unlock(&device->rx_lock);
++		if (pi433->rx_active) {
++			mutex_unlock(&pi433->rx_lock);
+ 			return -EAGAIN;
+ 		}
+ 
+-		if (copy_from_user(&device->rx_cfg, argp,
++		if (copy_from_user(&pi433->rx_cfg, argp,
+ 				   sizeof(struct pi433_rx_cfg))) {
+-			mutex_unlock(&device->rx_lock);
++			mutex_unlock(&pi433->rx_lock);
+ 			return -EFAULT;
+ 		}
+ 
+-		mutex_unlock(&device->rx_lock);
++		mutex_unlock(&pi433->rx_lock);
+ 		break;
+ 	default:
+ 		return -EINVAL;
+@@ -949,13 +949,13 @@ static long pi433_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 
+ static int pi433_open(struct inode *inode, struct file *filp)
+ {
+-	struct pi433_device	*device;
++	struct pi433_device	*pi433;
+ 	struct pi433_instance	*instance;
+ 
+ 	mutex_lock(&minor_lock);
+-	device = idr_find(&pi433_idr, iminor(inode));
++	pi433 = idr_find(&pi433_idr, iminor(inode));
+ 	mutex_unlock(&minor_lock);
+-	if (!device) {
++	if (!pi433) {
+ 		pr_debug("device: minor %d unknown.\n", iminor(inode));
+ 		return -ENODEV;
+ 	}
+@@ -965,7 +965,7 @@ static int pi433_open(struct inode *inode, struct file *filp)
+ 		return -ENOMEM;
+ 
+ 	/* setup instance data*/
+-	instance->device = device;
++	instance->pi433 = pi433;
+ 
+ 	/* instance data as context */
+ 	filp->private_data = instance;
+@@ -987,7 +987,7 @@ static int pi433_release(struct inode *inode, struct file *filp)
+ 
+ /*-------------------------------------------------------------------------*/
+ 
+-static int setup_gpio(struct pi433_device *device)
++static int setup_gpio(struct pi433_device *pi433)
+ {
+ 	char	name[5];
+ 	int	retval;
+@@ -1000,89 +1000,89 @@ static int setup_gpio(struct pi433_device *device)
+ 	for (i = 0; i < NUM_DIO; i++) {
+ 		/* "construct" name and get the gpio descriptor */
+ 		snprintf(name, sizeof(name), "DIO%d", i);
+-		device->gpiod[i] = gpiod_get(&device->spi->dev, name,
+-					     0 /*GPIOD_IN*/);
++		pi433->gpiod[i] = gpiod_get(&pi433->spi->dev, name,
++					    0 /*GPIOD_IN*/);
+ 
+-		if (device->gpiod[i] == ERR_PTR(-ENOENT)) {
+-			dev_dbg(&device->spi->dev,
++		if (pi433->gpiod[i] == ERR_PTR(-ENOENT)) {
++			dev_dbg(&pi433->spi->dev,
+ 				"Could not find entry for %s. Ignoring.\n", name);
+ 			continue;
+ 		}
+ 
+-		if (device->gpiod[i] == ERR_PTR(-EBUSY))
+-			dev_dbg(&device->spi->dev, "%s is busy.\n", name);
++		if (pi433->gpiod[i] == ERR_PTR(-EBUSY))
++			dev_dbg(&pi433->spi->dev, "%s is busy.\n", name);
+ 
+-		if (IS_ERR(device->gpiod[i])) {
+-			retval = PTR_ERR(device->gpiod[i]);
++		if (IS_ERR(pi433->gpiod[i])) {
++			retval = PTR_ERR(pi433->gpiod[i]);
+ 			/* release already allocated gpios */
+ 			for (i--; i >= 0; i--) {
+-				free_irq(device->irq_num[i], device);
+-				gpiod_put(device->gpiod[i]);
++				free_irq(pi433->irq_num[i], pi433);
++				gpiod_put(pi433->gpiod[i]);
+ 			}
+ 			return retval;
+ 		}
+ 
+ 		/* configure the pin */
+-		retval = gpiod_direction_input(device->gpiod[i]);
++		retval = gpiod_direction_input(pi433->gpiod[i]);
+ 		if (retval)
+ 			return retval;
+ 
+ 		/* configure irq */
+-		device->irq_num[i] = gpiod_to_irq(device->gpiod[i]);
+-		if (device->irq_num[i] < 0) {
+-			device->gpiod[i] = ERR_PTR(-EINVAL);
+-			return device->irq_num[i];
++		pi433->irq_num[i] = gpiod_to_irq(pi433->gpiod[i]);
++		if (pi433->irq_num[i] < 0) {
++			pi433->gpiod[i] = ERR_PTR(-EINVAL);
++			return pi433->irq_num[i];
+ 		}
+-		retval = request_irq(device->irq_num[i],
++		retval = request_irq(pi433->irq_num[i],
+ 				     DIO_irq_handler[i],
+ 				     0, /* flags */
+ 				     name,
+-				     device);
++				     pi433);
+ 
+ 		if (retval)
+ 			return retval;
+ 
+-		dev_dbg(&device->spi->dev, "%s successfully configured\n", name);
++		dev_dbg(&pi433->spi->dev, "%s successfully configured\n", name);
+ 	}
+ 
+ 	return 0;
+ }
+ 
+-static void free_gpio(struct pi433_device *device)
++static void free_gpio(struct pi433_device *pi433)
+ {
+ 	int i;
+ 
+ 	for (i = 0; i < NUM_DIO; i++) {
+ 		/* check if gpiod is valid */
+-		if (IS_ERR(device->gpiod[i]))
++		if (IS_ERR(pi433->gpiod[i]))
+ 			continue;
+ 
+-		free_irq(device->irq_num[i], device);
+-		gpiod_put(device->gpiod[i]);
++		free_irq(pi433->irq_num[i], pi433);
++		gpiod_put(pi433->gpiod[i]);
+ 	}
+ }
+ 
+-static int pi433_get_minor(struct pi433_device *device)
++static int pi433_get_minor(struct pi433_device *pi433)
+ {
+ 	int retval = -ENOMEM;
+ 
+ 	mutex_lock(&minor_lock);
+-	retval = idr_alloc(&pi433_idr, device, 0, N_PI433_MINORS, GFP_KERNEL);
++	retval = idr_alloc(&pi433_idr, pi433, 0, N_PI433_MINORS, GFP_KERNEL);
+ 	if (retval >= 0) {
+-		device->minor = retval;
++		pi433->minor = retval;
+ 		retval = 0;
+ 	} else if (retval == -ENOSPC) {
+-		dev_err(&device->spi->dev, "too many pi433 devices\n");
++		dev_err(&pi433->spi->dev, "too many pi433 devices\n");
+ 		retval = -EINVAL;
+ 	}
+ 	mutex_unlock(&minor_lock);
+ 	return retval;
+ }
+ 
+-static void pi433_free_minor(struct pi433_device *dev)
++static void pi433_free_minor(struct pi433_device *pi433)
+ {
+ 	mutex_lock(&minor_lock);
+-	idr_remove(&pi433_idr, dev->minor);
++	idr_remove(&pi433_idr, pi433->minor);
+ 	mutex_unlock(&minor_lock);
+ }
+ 
+@@ -1106,35 +1106,35 @@ static const struct file_operations pi433_fops = {
+ 
+ static int pi433_debugfs_regs_show(struct seq_file *m, void *p)
+ {
+-	struct pi433_device *dev;
++	struct pi433_device *pi433;
+ 	u8 reg_data[114];
+ 	int i;
+ 	char *fmt = "0x%02x, 0x%02x\n";
+ 	int ret;
+ 
+-	dev = m->private;
++	pi433 = m->private;
+ 
+-	mutex_lock(&dev->tx_fifo_lock);
+-	mutex_lock(&dev->rx_lock);
++	mutex_lock(&pi433->tx_fifo_lock);
++	mutex_lock(&pi433->rx_lock);
+ 
+ 	// wait for on-going operations to finish
+-	ret = wait_event_interruptible(dev->rx_wait_queue, !dev->tx_active);
++	ret = wait_event_interruptible(pi433->rx_wait_queue, !pi433->tx_active);
+ 	if (ret)
+ 		goto out_unlock;
+ 
+-	ret = wait_event_interruptible(dev->tx_wait_queue, !dev->rx_active);
++	ret = wait_event_interruptible(pi433->tx_wait_queue, !pi433->rx_active);
+ 	if (ret)
+ 		goto out_unlock;
+ 
+ 	// skip FIFO register (0x0) otherwise this can affect some of uC ops
+ 	for (i = 1; i < 0x50; i++)
+-		reg_data[i] = rf69_read_reg(dev->spi, i);
++		reg_data[i] = rf69_read_reg(pi433->spi, i);
+ 
+-	reg_data[REG_TESTLNA] = rf69_read_reg(dev->spi, REG_TESTLNA);
+-	reg_data[REG_TESTPA1] = rf69_read_reg(dev->spi, REG_TESTPA1);
+-	reg_data[REG_TESTPA2] = rf69_read_reg(dev->spi, REG_TESTPA2);
+-	reg_data[REG_TESTDAGC] = rf69_read_reg(dev->spi, REG_TESTDAGC);
+-	reg_data[REG_TESTAFC] = rf69_read_reg(dev->spi, REG_TESTAFC);
++	reg_data[REG_TESTLNA] = rf69_read_reg(pi433->spi, REG_TESTLNA);
++	reg_data[REG_TESTPA1] = rf69_read_reg(pi433->spi, REG_TESTPA1);
++	reg_data[REG_TESTPA2] = rf69_read_reg(pi433->spi, REG_TESTPA2);
++	reg_data[REG_TESTDAGC] = rf69_read_reg(pi433->spi, REG_TESTDAGC);
++	reg_data[REG_TESTAFC] = rf69_read_reg(pi433->spi, REG_TESTAFC);
+ 
+ 	seq_puts(m, "# reg, val\n");
+ 
+@@ -1148,8 +1148,8 @@ static int pi433_debugfs_regs_show(struct seq_file *m, void *p)
+ 	seq_printf(m, fmt, REG_TESTAFC, reg_data[REG_TESTAFC]);
+ 
+ out_unlock:
+-	mutex_unlock(&dev->rx_lock);
+-	mutex_unlock(&dev->tx_fifo_lock);
++	mutex_unlock(&pi433->rx_lock);
++	mutex_unlock(&pi433->tx_fifo_lock);
+ 
+ 	return ret;
+ }
+@@ -1159,7 +1159,7 @@ DEFINE_SHOW_ATTRIBUTE(pi433_debugfs_regs);
+ 
+ static int pi433_probe(struct spi_device *spi)
+ {
+-	struct pi433_device	*device;
++	struct pi433_device	*pi433;
+ 	int			retval;
+ 	struct dentry		*entry;
+ 
+@@ -1196,37 +1196,37 @@ static int pi433_probe(struct spi_device *spi)
+ 	}
+ 
+ 	/* Allocate driver data */
+-	device = kzalloc(sizeof(*device), GFP_KERNEL);
+-	if (!device)
++	pi433 = kzalloc(sizeof(*pi433), GFP_KERNEL);
++	if (!pi433)
+ 		return -ENOMEM;
+ 
+ 	/* Initialize the driver data */
+-	device->spi = spi;
+-	device->rx_active = false;
+-	device->tx_active = false;
+-	device->interrupt_rx_allowed = false;
++	pi433->spi = spi;
++	pi433->rx_active = false;
++	pi433->tx_active = false;
++	pi433->interrupt_rx_allowed = false;
+ 
+ 	/* init rx buffer */
+-	device->rx_buffer = kmalloc(MAX_MSG_SIZE, GFP_KERNEL);
+-	if (!device->rx_buffer) {
++	pi433->rx_buffer = kmalloc(MAX_MSG_SIZE, GFP_KERNEL);
++	if (!pi433->rx_buffer) {
+ 		retval = -ENOMEM;
+ 		goto RX_failed;
+ 	}
+ 
+ 	/* init wait queues */
+-	init_waitqueue_head(&device->tx_wait_queue);
+-	init_waitqueue_head(&device->rx_wait_queue);
+-	init_waitqueue_head(&device->fifo_wait_queue);
++	init_waitqueue_head(&pi433->tx_wait_queue);
++	init_waitqueue_head(&pi433->rx_wait_queue);
++	init_waitqueue_head(&pi433->fifo_wait_queue);
+ 
+ 	/* init fifo */
+-	INIT_KFIFO(device->tx_fifo);
++	INIT_KFIFO(pi433->tx_fifo);
+ 
+ 	/* init mutexes and locks */
+-	mutex_init(&device->tx_fifo_lock);
+-	mutex_init(&device->rx_lock);
++	mutex_init(&pi433->tx_fifo_lock);
++	mutex_init(&pi433->rx_lock);
+ 
+ 	/* setup GPIO (including irq_handler) for the different DIOs */
+-	retval = setup_gpio(device);
++	retval = setup_gpio(pi433);
+ 	if (retval) {
+ 		dev_dbg(&spi->dev, "setup of GPIOs failed\n");
+ 		goto GPIO_failed;
+@@ -1256,105 +1256,105 @@ static int pi433_probe(struct spi_device *spi)
+ 		goto minor_failed;
+ 
+ 	/* determ minor number */
+-	retval = pi433_get_minor(device);
++	retval = pi433_get_minor(pi433);
+ 	if (retval) {
+ 		dev_dbg(&spi->dev, "get of minor number failed\n");
+ 		goto minor_failed;
+ 	}
+ 
+ 	/* create device */
+-	device->devt = MKDEV(MAJOR(pi433_dev), device->minor);
+-	device->dev = device_create(&pi433_class,
+-				    &spi->dev,
+-				    device->devt,
+-				    device,
+-				    "pi433.%d",
+-				    device->minor);
+-	if (IS_ERR(device->dev)) {
++	pi433->devt = MKDEV(MAJOR(pi433_dev), pi433->minor);
++	pi433->dev = device_create(&pi433_class,
++				   &spi->dev,
++				   pi433->devt,
++				   pi433,
++				   "pi433.%d",
++				   pi433->minor);
++	if (IS_ERR(pi433->dev)) {
+ 		pr_err("pi433: device register failed\n");
+-		retval = PTR_ERR(device->dev);
++		retval = PTR_ERR(pi433->dev);
+ 		goto device_create_failed;
+ 	} else {
+-		dev_dbg(device->dev,
++		dev_dbg(pi433->dev,
+ 			"created device for major %d, minor %d\n",
+ 			MAJOR(pi433_dev),
+-			device->minor);
++			pi433->minor);
+ 	}
+ 
+ 	/* start tx thread */
+-	device->tx_task_struct = kthread_run(pi433_tx_thread,
+-					     device,
+-					     "pi433.%d_tx_task",
+-					     device->minor);
+-	if (IS_ERR(device->tx_task_struct)) {
+-		dev_dbg(device->dev, "start of send thread failed\n");
+-		retval = PTR_ERR(device->tx_task_struct);
++	pi433->tx_task_struct = kthread_run(pi433_tx_thread,
++					    pi433,
++					    "pi433.%d_tx_task",
++					    pi433->minor);
++	if (IS_ERR(pi433->tx_task_struct)) {
++		dev_dbg(pi433->dev, "start of send thread failed\n");
++		retval = PTR_ERR(pi433->tx_task_struct);
+ 		goto send_thread_failed;
+ 	}
+ 
+ 	/* create cdev */
+-	device->cdev = cdev_alloc();
+-	if (!device->cdev) {
+-		dev_dbg(device->dev, "allocation of cdev failed\n");
++	pi433->cdev = cdev_alloc();
++	if (!pi433->cdev) {
++		dev_dbg(pi433->dev, "allocation of cdev failed\n");
+ 		retval = -ENOMEM;
+ 		goto cdev_failed;
+ 	}
+-	device->cdev->owner = THIS_MODULE;
+-	cdev_init(device->cdev, &pi433_fops);
+-	retval = cdev_add(device->cdev, device->devt, 1);
++	pi433->cdev->owner = THIS_MODULE;
++	cdev_init(pi433->cdev, &pi433_fops);
++	retval = cdev_add(pi433->cdev, pi433->devt, 1);
+ 	if (retval) {
+-		dev_dbg(device->dev, "register of cdev failed\n");
++		dev_dbg(pi433->dev, "register of cdev failed\n");
+ 		goto del_cdev;
+ 	}
+ 
+ 	/* spi setup */
+-	spi_set_drvdata(spi, device);
++	spi_set_drvdata(spi, pi433);
+ 
+-	entry = debugfs_create_dir(dev_name(device->dev), root_dir);
+-	debugfs_create_file("regs", 0400, entry, device, &pi433_debugfs_regs_fops);
++	entry = debugfs_create_dir(dev_name(pi433->dev), root_dir);
++	debugfs_create_file("regs", 0400, entry, pi433, &pi433_debugfs_regs_fops);
+ 
+ 	return 0;
+ 
+ del_cdev:
+-	cdev_del(device->cdev);
++	cdev_del(pi433->cdev);
+ cdev_failed:
+-	kthread_stop(device->tx_task_struct);
++	kthread_stop(pi433->tx_task_struct);
+ send_thread_failed:
+-	device_destroy(&pi433_class, device->devt);
++	device_destroy(&pi433_class, pi433->devt);
+ device_create_failed:
+-	pi433_free_minor(device);
++	pi433_free_minor(pi433);
+ minor_failed:
+-	free_gpio(device);
++	free_gpio(pi433);
+ GPIO_failed:
+-	kfree(device->rx_buffer);
++	kfree(pi433->rx_buffer);
+ RX_failed:
+-	kfree(device);
++	kfree(pi433);
+ 
+ 	return retval;
+ }
+ 
+ static void pi433_remove(struct spi_device *spi)
+ {
+-	struct pi433_device	*device = spi_get_drvdata(spi);
++	struct pi433_device	*pi433 = spi_get_drvdata(spi);
+ 
+-	debugfs_lookup_and_remove(dev_name(device->dev), root_dir);
++	debugfs_lookup_and_remove(dev_name(pi433->dev), root_dir);
+ 
+ 	/* free GPIOs */
+-	free_gpio(device);
++	free_gpio(pi433);
+ 
+ 	/* make sure ops on existing fds can abort cleanly */
+-	device->spi = NULL;
++	pi433->spi = NULL;
+ 
+-	kthread_stop(device->tx_task_struct);
++	kthread_stop(pi433->tx_task_struct);
+ 
+-	device_destroy(&pi433_class, device->devt);
++	device_destroy(&pi433_class, pi433->devt);
+ 
+-	cdev_del(device->cdev);
++	cdev_del(pi433->cdev);
+ 
+-	pi433_free_minor(device);
++	pi433_free_minor(pi433);
+ 
+-	kfree(device->rx_buffer);
+-	kfree(device);
++	kfree(pi433->rx_buffer);
++	kfree(pi433);
+ }
+ 
+ static const struct of_device_id pi433_dt_ids[] = {
 -- 
 2.34.1
 
