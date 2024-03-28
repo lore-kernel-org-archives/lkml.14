@@ -1,77 +1,71 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA372561F;
-	Thu, 28 Mar 2024 02:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026AE15EA2
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 02:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711592622; cv=none; b=BHTHCndWmF29YrsAooNSe8Va5Wv4PElym9nCa8nnnXFHo981rzzIv7u17EYy6GnG3HYWZbVMvMldbbKfKlKoX4Pk5AAU3KhxNPsSvKA0+y5vn7btZRpAArF+HhqsRg6F9rtTI8nrZEanDxBS74MuAWiZCtDCTEviLCQntkWLspA=
+	t=1711592732; cv=none; b=OgjNCw8letcdvIFNYKI6Oaxi6j0CmZROeS5zu1PazMflRABhR35X6uSdh8Y2jFRTfGhE2oeDMekUgISp0hw4t7pulGX5MTeQS1vk42KgZAQhUcxglp8Nb/qzT3DHwe1IeROWj6i1rFtwV61BScJXXZHM96iWq7qE5ZMSogxM45c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711592622; c=relaxed/simple;
-	bh=fE7UPGjpW4ybjCuZPI6M+/ZGKQlUOPJ/ZkNBj3Ns0rk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=C3F4F4+vDI47/1jLdPod83CrIDn62Hsfc+2MeHP9lnjF8S2ojj0vRJ7FW1A8hI4wTJQb0KWbrz1GQv1lFAb5x+BxleAD3Z2G37+8Lq+WXfhNunXZWUH416AR6mwT7xoZPcUQWEgqkpkYGTblx93QJY3W0Al1Ot7wpEjDs/XxrJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=vJHub0yp; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1711592732; c=relaxed/simple;
+	bh=F+2PBUITY1EMreS647dj+r5aRdhFyJY4oSvc7+Zjjm0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R3HRn7ogMI88MfAAhBHLtVSzRKwQtyxr0xKBFgwBPsWiAim36VcOcCNfJHYk8xeqnFe/ZmtFfBDuPSk6x0I3AsOHJx3DASEwFpCY3HlUMAlPigUmGNNFMneoi+IFjv2N58qoPAJJMIboXMkEodDWHJW8w8VybDQBMc7FRH+M/ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org; spf=none smtp.mailfrom=jookia.org; dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b=G2OD3wfV; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=jookia.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="vJHub0yp"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1711592616; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=BPeX+Hl7QxuesHJ3WXDWWRziotoRu2s0MYI3HBPg72Q=;
-	b=vJHub0ypFcgKeyHwF9fU0hmfJuEcxHtXJ/HvURIxjiD5wyvhAS6LBlFmja4sZwqbWVrISGb00G2//Y7dstNUEDe8EjOs8rDmo9SqOrvd0NNayQT1VvmvQnjh45FXnfCYAl0SVaDRMbOUYdPGdzDB6lIYbsE1qmb4xP4o456/oF4=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R691e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W3QPvpR_1711592606;
-Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0W3QPvpR_1711592606)
-          by smtp.aliyun-inc.com;
-          Thu, 28 Mar 2024 10:23:36 +0800
-From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To: axboe@kernel.dk
-Cc: asml.silence@gmail.com,
-	io-uring@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH] io_uring: Remove unused function
-Date: Thu, 28 Mar 2024 10:23:24 +0800
-Message-Id: <20240328022324.78029-1-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+	dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b="G2OD3wfV"
+Date: Thu, 28 Mar 2024 13:21:21 +1100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jookia.org; s=key1;
+	t=1711592727;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dVrUwsE3K2gkHszUejGPBHKGdhDZo6IS90T9be1UVRk=;
+	b=G2OD3wfVYM0ss3YS0/hftkRoFZurKH//5tklL8kaS1+kbz7cV9JwDJQEkjafN9YyOYVga7
+	iAtKt0h33dl4cqSGD9SpSVTKa5a2HZFKJDwhvXdHdu1Yg7PgnU5u12HM9DNO8jaFkGLDZ/
+	l9XiKSjm9JUd8hL3hHyG4+jDBX2AueMmetrPawbPGyroTIuOvJ57QrH3B6qjM0jWZT8sQI
+	YPCpwn8je+YSB8wN/v/oXVTFgKH7oL468NXorJ23NSdPiuRDKz32jVPRoh6x2/wi9MavwN
+	1doruKSlm1g2UntpnxUDvOn5+QJWriuYDpi/056MOyPWY/gjhSTeMT/JE5WaMg==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: John Watts <contact@jookia.org>
+To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Chen-Yu Tsai <wens@csie.org>, Samuel Holland <samuel@sholland.org>,
+	linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: sunxi: sun4i-i2s: Enable 32-bit audio formats
+Message-ID: <ZgTUIWh8qXH_7oxQ@titan>
+References: <20240326-sunxi_s32-v1-1-899f71dcb1e6@jookia.org>
+ <23447395.6Emhk5qWAg@jernej-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <23447395.6Emhk5qWAg@jernej-laptop>
+X-Migadu-Flow: FLOW_OUT
 
-The function are defined in the io_uring.c file, but not called
-elsewhere, so delete the unused function.
+On Wed, Mar 27, 2024 at 08:53:32PM +0100, Jernej Škrabec wrote:
+> I wish it would be that simple. SUN4I_FORMATS is cross section of all I2S
+> variants that are supported by this driver. If you check A10, you'll see that
+> it doesn't support S32.
+> 
+> If you want to add support for S32, you'll have to add new quirk for each
+> variant.
 
-io_uring/io_uring.c:646:20: warning: unused function '__io_cq_unlock'.
+Yes, A10 doesn't support it. But it should error out in hw_params due to
+get_sr not supporting 32-bit, no?
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8660
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
----
- io_uring/io_uring.c | 6 ------
- 1 file changed, 6 deletions(-)
+> 
+> Best regards,
+> Jernej
 
-diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-index 585fbc363eaf..8a9584c5c8ce 100644
---- a/io_uring/io_uring.c
-+++ b/io_uring/io_uring.c
-@@ -643,12 +643,6 @@ static inline void __io_cq_lock(struct io_ring_ctx *ctx)
- 		spin_lock(&ctx->completion_lock);
- }
- 
--static inline void __io_cq_unlock(struct io_ring_ctx *ctx)
--{
--	if (!ctx->lockless_cq)
--		spin_unlock(&ctx->completion_lock);
--}
--
- static inline void io_cq_lock(struct io_ring_ctx *ctx)
- 	__acquires(ctx->completion_lock)
- {
--- 
-2.20.1.7.g153144c
-
+John.
