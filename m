@@ -1,70 +1,72 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F42072BAE9;
-	Thu, 28 Mar 2024 02:22:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E9A32C92;
+	Thu, 28 Mar 2024 02:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711592555; cv=none; b=lXsxODaZjtzqItSfk/rJ7WTG1SySmVRIcxhS6V+r3PBDgDIf4wPDl4lwXJAIGNp4MoTEUq0YiqxND7bS0oTg8e7e0mhdVvqPp5d+99o6uSZgxm4g0Sz1oDSvPJbUBzmPxTix9X76I4h+6wVsDuQiBXXIZbA83dyUCXbn28N7XLA=
+	t=1711592559; cv=none; b=umnggHkugWaQpwihmb0njdzRAMT5RoGr+AHOwTNwDUSyQNk7jE37rhaZbC71FigHqzoaZnOdkNk3IFU+DwJsDS4yqchSMHSGWkBXQ/WrNiID2pDKghEh/UBM0ag9ve5bHSoGshCGtLhA6ZlyovPCLBWrZirWik6xEsUef2Lw2TM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711592555; c=relaxed/simple;
-	bh=hlV16x9s1VgpN3rneCt58Bz2nH8s6XYCByPKSUcnHsM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Yz43BJtHxyOcri5O+MqMPjQw8bb0Z4LRTmSjINPqJYm9K4BxzZRkJdGoB6o9VatwUHyeZuCFeWiXo/w3omKUcSwls/P/OdhdsAzG5MSlZqnOKd4fCWYQomBGBYlf2JJdHx0RlSVrZYmgF4xkUfJ4R7QFud40Yd4U3sBNkuhHHNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=db/WrUVc; arc=none smtp.client-ip=209.85.221.50
+	s=arc-20240116; t=1711592559; c=relaxed/simple;
+	bh=OVpo1ra63qCtsbXIsud4GWQ+pj1esg4FLbiAQKE0ba8=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=G8KSoJZlV1xvB7gEoe/2w1cP3orlqMuwxg6mCbKzt01F+TKoARtfDSR4e5JcgEu3AmxT2o39txrjMlu/Jtczcb2k9L/4vG91My6ua8f7ZxPGzSIugRGlxKua0kYqhEzETASi2znNEsEAO1cvVYYQ40YSltabJ/qYV5lVYtwxR8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JmR6t64N; arc=none smtp.client-ip=209.85.167.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="db/WrUVc"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3417a3151c5so258246f8f.1;
-        Wed, 27 Mar 2024 19:22:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JmR6t64N"
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3c3d3710018so369306b6e.0;
+        Wed, 27 Mar 2024 19:22:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711592552; x=1712197352; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vz8/eKL4Qc16uyUzocMqz1eYlvRo+Wlh+LXhdKk42Vk=;
-        b=db/WrUVcA1NMh2XmT1FSWSzSBF66AcM/e/fSXtGjkMeac+oJA7t2cJI1HwkitqQw+k
-         L0G9KWIpiwnm5MpBgqWDhKncKNE0lfjHhcEF5Qke/DStshq4hbq+QC+cyjN4OcYQZIv0
-         5G6w9YWitF5fg+CPzFTHF4eukCNiYp3xBKMhNeLRcwfENp4DEHXdbq8BsgbLANKaor3T
-         bsamR6dnFrYHKdTp+L8k+CVkoWR/fJPOXXoncDikN6+tSnE5TUsACyHgQvsjV3le50E3
-         a1255JF9woKg2Oh99nyqOvd9tF9BZjCzwgefdJem82/ToBRYDj3uB9l6nAjxKgEBZtaV
-         mpSg==
+        d=gmail.com; s=20230601; t=1711592557; x=1712197357; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zj+WYWAhqjw7xLvVT8giLYQdLcc7zs4jwkGM88zeFSU=;
+        b=JmR6t64NjMj1UkFzpuKll411OitV02XpM4UJNbS2+JNwrWv2xmii1a8czOvQXjPflB
+         bC97qSYarvynxfzd6l42SMr0F8v03peeWUbSHPXAwKagRHNlrQ840BoKvm8TDmPDtERN
+         iNuMGO+rAb0gubNDCYtTOQIzyQ+o0waFGFhHqTj9PTYp6vur7XDcxg6YkBsZ4mMqV45F
+         7Csq8D9lkYp4ggRtw0QepTWRnRNOmfjlICTeZBzoJ9/c5cO6oJnlh6qIvxGTtzASlugG
+         53WtrDqRLuWTsjwJ4U+F4udPGP9HF0MgkqPhl94Qnf8nIS33Yayb6cTejJWZygFA1bFe
+         yfmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711592552; x=1712197352;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vz8/eKL4Qc16uyUzocMqz1eYlvRo+Wlh+LXhdKk42Vk=;
-        b=gAG/q8MT5Oe9WFsbIaPXVU9Z2A0Jl2VMBlbrm+58gSsvr0Nh+ZOjzozckhi9yfNK+C
-         PqHl0meECpjqmxjl6A/rInMuZrojAsS2g1e0sjpeNuFMMNbNO0HJyhs8z+SMD5kBfWey
-         W6px0GAVmfZq7z36T7fxKPvInqNnEJ2wkjPlJNVbLGenN0c6DKHYDXw4esuRDOcNrBPu
-         E24iSQygfaQFJTFOJoEkcwnjWesPvktFVHKCMsyR5p5U3ICvFUeNoq/IVLlw4pDfAfM+
-         GBhnGPN6n2fUP5ylGp7m64ykN8qNXlyP4aGQSzh53Opq30LzPJB6Ec6VlVwIbHksW4NO
-         Zsgg==
-X-Forwarded-Encrypted: i=1; AJvYcCUWioAEDnCAM7y/eozJQpvT7jeemYXBoGT8JOiVh9B88MNuQ6QkyNPAKF14rs3TIhjgUsP0ijN4zZLCaRDvk8r1OCbfec1t5xoKgmefxGEEnciFJxZdxzvVA4DGjYylkAPJetOxuxcLQp2ZGWsNXezVs26JnA4BK5T7hJRowC4VRCDfbQ+ay30=
-X-Gm-Message-State: AOJu0YwJy7QV5AnPUkQxOX/NHz7bvxjj4s+M8bjLrheXEt+dJeN0U2Ks
-	eZdPRkAVVJF9FM481cTLIUBLYEuQaC9ruxOl7iwvyjtHYdE6QhM1
-X-Google-Smtp-Source: AGHT+IG/kQ7HgIB7yny3Sgwvv+yRvE90Rwt2hW959iJeqgdjeLR3S7GS5kp2cH1vRpnqdCYNwFbWzQ==
-X-Received: by 2002:adf:cd10:0:b0:33e:bfb8:7320 with SMTP id w16-20020adfcd10000000b0033ebfb87320mr1366619wrm.7.1711592551977;
-        Wed, 27 Mar 2024 19:22:31 -0700 (PDT)
-Received: from xws.fritz.box ([2a02:8071:b783:140:927c:82ba:d32d:99c1])
-        by smtp.gmail.com with ESMTPSA id y13-20020adfe6cd000000b00341cfa5f16fsm448961wrm.30.2024.03.27.19.22.30
+        d=1e100.net; s=20230601; t=1711592557; x=1712197357;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zj+WYWAhqjw7xLvVT8giLYQdLcc7zs4jwkGM88zeFSU=;
+        b=e/Io6AOJ/pdjCIEXJJBtm3/s6oySfCAdyJvbTZOKG5FJW/7lotKF2+lBUDyurRaWCI
+         mqoLF85ab+aSEHKgD34b/8hjunRrQNuwUmRSO+Z+D1QB+PLuSFNc1ZtHJnll+V6i+NPX
+         Gv8DjB1I6LTHZkiD/k06lyfHlhGsSKNeBm/j0IZkepu1QrrRl/99aCdZ7b0L9o0O1uTD
+         3J12qwT4hvgEXwDjOgjAPa0AfCNxvi16Ta1KTIiCxlSlF8uLPzp262oFQOZTeIHCbjPV
+         b8/LwG2HXv2KNKQtcvNHLtHHtNs6j7qp9yQRZ9WucZs5RHrZcnABMBxvEIu8ENAt8I9d
+         DLoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5HqredlpBI2t7+FLCpUutVsL8S1f+evQxBbPmqoVzcxiLa8rANnZNxvaQnmPjN5RxyHEeD5x/ZNKsis9bsNvqPxvqUfi9TFMgUZ9KX0GP6lNgoXw4wBnD3sJa8EK6tWuZBtM8ErTxtxQar5vDGoo2XlXFOhT4Scsx+Oms3oFpXY3vGAQ2WtHw
+X-Gm-Message-State: AOJu0YycBI92trxohc7EmKhfV1HeiLLv9TiiA9RqeRrd5vPlbmrIYmo3
+	Py1IYy2EV9vRVqL8RBAcA7W8WuoGc7aXwogoQ0tYq4kjJH51brBq
+X-Google-Smtp-Source: AGHT+IE8ZzQ2gr87ufaZX9Ve6iQlcEly34B9ZC4/VnAKww459oP0Tv9uUglaABvQbe7WYWRki2abqQ==
+X-Received: by 2002:a05:6808:1706:b0:3c3:e78d:f1be with SMTP id bc6-20020a056808170600b003c3e78df1bemr147151oib.57.1711592557102;
+        Wed, 27 Mar 2024 19:22:37 -0700 (PDT)
+Received: from peter-bmc.dhcpserver.bu9bmc.local (2001-b400-e355-7eb0-17c6-c47d-d4ee-f9e8.emome-ip6.hinet.net. [2001:b400:e355:7eb0:17c6:c47d:d4ee:f9e8])
+        by smtp.gmail.com with ESMTPSA id d25-20020aa78699000000b006ea858ea901sm229256pfo.210.2024.03.27.19.22.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 19:22:31 -0700 (PDT)
-From: Maximilian Luz <luzmaximilian@gmail.com>
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Maximilian Luz <luzmaximilian@gmail.com>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Wed, 27 Mar 2024 19:22:36 -0700 (PDT)
+From: Peter Yin <peteryin.openbmc@gmail.com>
+To: patrick@stwcx.xyz,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
 	Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	linux-watchdog@vger.kernel.org,
 	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: qcom: sc8180x: Fix ss_phy_irq for secondary USB controller
-Date: Thu, 28 Mar 2024 03:21:57 +0100
-Message-ID: <20240328022224.336938-1-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.44.0
+Subject: [PATCH v6 0/4] drivers: watchdog: ast2500 and ast2600 support bootstatus
+Date: Thu, 28 Mar 2024 10:22:27 +0800
+Message-Id: <20240328022231.3649741-1-peteryin.openbmc@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,62 +75,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The ACPI DSDT of the Surface Pro X (SQ2) specifies the interrupts for
-the secondary UBS controller as
+Add WDIOF_EXTERN1 and WDIOF_CARDRESET bootstatus in ast2500/ast2600
 
-    Name (_CRS, ResourceTemplate ()
-    {
-        Interrupt (ResourceConsumer, Level, ActiveHigh, Shared, ,, )
-        {
-            0x000000AA,
-        }
-        Interrupt (ResourceConsumer, Level, ActiveHigh, SharedAndWake, ,, )
-        {
-            0x000000A7,     // hs_phy_irq: &intc GIC_SPI 136
-        }
-        Interrupt (ResourceConsumer, Level, ActiveHigh, SharedAndWake, ,, )
-        {
-            0x00000228,     // ss_phy_irq: &pdc 40
-        }
-        Interrupt (ResourceConsumer, Edge, ActiveHigh, SharedAndWake, ,, )
-        {
-            0x0000020A,     // dm_hs_phy_irq: &pdc 10
-        }
-        Interrupt (ResourceConsumer, Edge, ActiveHigh, SharedAndWake, ,, )
-        {
-            0x0000020B,     // dp_hs_phy_irq: &pdc 11
-        }
-    })
+Regarding the AST2600 specification, the WDTn Timeout Status Register
+(WDT10) has bit 1 reserved. Bit 1 of the status register indicates
+on ast2500 if the boot was from the second boot source.
+It does not indicate that the most recent reset was triggered by
+the watchdog. The code should just be changed to set WDIOF_CARDRESET
+if bit 0 of the status register is set.
 
-Generally, the interrupts above 0x200 map to the PDC interrupts (as used
-in the devicetree) as ACPI_NUMBER - 0x200. Note that this lines up with
-dm_hs_phy_irq and dp_hs_phy_irq (as well as the interrupts for the
-primary USB controller).
+Include SCU register to veriy WDIOF_EXTERN1 in ast2600 SCU74 or
+ast2500 SCU3C when bit1 is set.
 
-Based on the snippet above, ss_phy_irq should therefore be PDC 40 (=
-0x28) and not PDC 7. The latter is according to ACPI instead used as
-ss_phy_irq for port 0 of the multiport USB controller). Fix this by
-setting ss_phy_irq to '&pdc 40'.
+Change Log:
 
-Fixes: b080f53a8f44 ("arm64: dts: qcom: sc8180x: Add remoteprocs, wifi and usb nodes")
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+v5 -> v6
+  - Fixed missing WDT_TIMEOUT_STATUS_EVENT.
+
+v4 -> v5
+  - Revert indentation. 
+
+v3 -> v4
+  - Add error handling for syscon_regmap_lookup_by_phandle and
+  regmap_read.
+
+v2 -> v3
+  - Fixed WDIOF_CARDRESET status bit check and added support
+  for WDIOF_EXTERN1 on ast2500 and ast2600.
+
+v1 -> v2
+  - Add comment and support WDIOF_CARDRESET in ast2600
+
+v1
+  - Patch 0001 - Add WDIOF_EXTERN1 bootstatus
 ---
- arch/arm64/boot/dts/qcom/sc8180x.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc8180x.dtsi b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
-index 32afc78d5b769..053f7861c3cec 100644
---- a/arch/arm64/boot/dts/qcom/sc8180x.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
-@@ -2701,7 +2701,7 @@ usb_sec: usb@a8f8800 {
- 			resets = <&gcc GCC_USB30_SEC_BCR>;
- 			power-domains = <&gcc USB30_SEC_GDSC>;
- 			interrupts-extended = <&intc GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>,
--					      <&pdc 7 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&pdc 40 IRQ_TYPE_LEVEL_HIGH>,
- 					      <&pdc 10 IRQ_TYPE_EDGE_BOTH>,
- 					      <&pdc 11 IRQ_TYPE_EDGE_BOTH>;
- 			interrupt-names = "hs_phy_irq", "ss_phy_irq",
+Peter Yin (4):
+  ARM: dts: aspeed: Add the AST2500 WDT with SCU register
+  ARM: dts: aspeed: Add the AST2600 WDT with SCU register
+  dt-bindings: watchdog: aspeed-wdt: Add aspeed,scu
+  drivers: watchdog: ast2500 and ast2600 support bootstatus
+
+ .../bindings/watchdog/aspeed-wdt.txt          |  4 +++
+ arch/arm/boot/dts/aspeed/aspeed-g5.dtsi       |  3 ++
+ arch/arm/boot/dts/aspeed/aspeed-g6.dtsi       |  4 +++
+ drivers/watchdog/aspeed_wdt.c                 | 35 ++++++++++++++++---
+ 4 files changed, 42 insertions(+), 4 deletions(-)
+
 -- 
-2.44.0
+2.25.1
 
