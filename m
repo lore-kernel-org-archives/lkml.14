@@ -1,56 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 004FB13A3FA
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:37:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB2D13A415
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711643874; cv=none; b=rm0yVfD09hLtVZAua32cOYRRjonVrFQA6GBJufSsyucKHTThfb8pNyQL/8CNjNpdugFxgRhii4bKYr6w4Ca1am/tLV7PZZdADRLkl396niGyIK0oNYM9+ywptr7hi76FWerx/MSHNQ7m8XHvw4wwwoyaHfkyY0EDG0i4UxiHX9I=
+	t=1711643876; cv=none; b=PAmTL+E7Xex7HrpHmG4Ni3m0FshZFn2icM0uFt+2iYNfat7Idy/YhKc22h40L8sbie8bVYVw6iHNHj7woVQg2N73ptlR4Qxi4clLo5OcSJ1hU6TSE54hueMnY+0gilevttOhrsziomr+nsHNBkUbfdXPR6uTbs5+f3rqXMgOUdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711643874; c=relaxed/simple;
-	bh=KWBh8g5qezvg7G7Awmc1JPz7LX3fEPmblNlcvDU1Zbw=;
+	s=arc-20240116; t=1711643876; c=relaxed/simple;
+	bh=PJPhYD4IoFcUNGLano5TA/KsCENTb0bp1WXbMhgQneM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ghd05VCZYAD95RQbXV42WcZVC2PDhrrAprvexEE8YKr3+hY+K1mR55OwRnFbzHhXdAlHgaIXUyJ7GN3qO508TKNbZTkUBP3ZMi6MFVgFlwplfn3W5jkihU64XsbkJd4EmBTzUv6OoNsYBwBvzethmYx0F9Zlpm0vwN2EltQ9jzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=McmXbZHx; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 MIME-Version; b=jRHGxWnSfA2EboTw9QYn6LShv0gEPwFIIewFlzBQ4VcqV94gXViJTrp/xFpcACGYGfGpbm7RRxqMccfdOuGXt7WlDnkKTAOHDE91W2M3iXdhscR8m0jbM/JNQAZSpNxNCIuCE8/OkY1sWPm2Tx356gu6Yu7RykLN1NgpCCe9UDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BJN/bAgF; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="McmXbZHx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711643871; x=1743179871;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=KWBh8g5qezvg7G7Awmc1JPz7LX3fEPmblNlcvDU1Zbw=;
-  b=McmXbZHxeeF3hxMTXp1kZKiWl1TNKvoMe7ZNffqa+mZXsHGughm6hvP7
-   o8llkftAYpJUMEQGeORwbU2t7+rTD2vx4Ggk+6YXMOsKL5xzgb/s9t6IW
-   7t6qQSprQdJ3+cExUPCy+g4wmqwx+wcO2PlcjbolNBtcXYfBpIpnjEEs2
-   RZUX3n8wORy8luUveX2ehIjkfwmeh5ME9VPVitcxhP8TOd3+d9McJdcvh
-   OLxfmRskkEKdfBzsrJjAJQSd8bEGW+w2frQsb2T8hyFSI+bIvJI4nEIas
-   hf+6StVI3Not5gJo47o8XS7tLxqvGTEJQJkQYt6M+iCxTN2qg6DoLC2QW
-   Q==;
-X-CSE-ConnectionGUID: wz+17/afT4GI4lU6uq0q/Q==
-X-CSE-MsgGUID: dEdJjj4/QMKXZMoo54JD1Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="24296527"
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="24296527"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 09:37:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="39852822"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 09:37:52 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH 01/74] x86/cpu/vfm: Add/initialize x86_vfm field to struct cpuinfo_x86
-Date: Thu, 28 Mar 2024 09:37:44 -0700
-Message-ID: <20240328163746.243023-2-tony.luck@intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240328163746.243023-1-tony.luck@intel.com>
-References: <20240328163746.243023-1-tony.luck@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BJN/bAgF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711643873;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ioxjNilBuiqs0KYw5lDY5ynz4cuTib2XAYQ79MimHtU=;
+	b=BJN/bAgF1y+e1ThKt7/8NwMBcVG5lID2RwaxAKK/IkfLguHSAUrz2WEmew5caxziN2aO2y
+	HiC3iOrJddg0/7XVwBh1aCuU/RRQiNLUGR5psyquGJdb3rx8ydEKTxLhdkZCBaG637vwV3
+	wg4flIyHdwYWkNEva9xUkYmBhrpo/vI=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-615-PNBhpr21Omuq3Za9H6GKVg-1; Thu,
+ 28 Mar 2024 12:37:47 -0400
+X-MC-Unique: PNBhpr21Omuq3Za9H6GKVg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EED79282477E;
+	Thu, 28 Mar 2024 16:37:45 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.146])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id EE4B41121312;
+	Thu, 28 Mar 2024 16:37:42 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>,
+	Jeff Layton <jlayton@kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Dominique Martinet <asmadeus@codewreck.org>
+Cc: David Howells <dhowells@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Steve French <smfrench@gmail.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	netfs@lists.linux.dev,
+	linux-cachefs@redhat.com,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 15/26] mm: Export writeback_iter()
+Date: Thu, 28 Mar 2024 16:34:07 +0000
+Message-ID: <20240328163424.2781320-16-dhowells@redhat.com>
+In-Reply-To: <20240328163424.2781320-1-dhowells@redhat.com>
+References: <20240328163424.2781320-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,43 +79,28 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-Refactor struct cpuinfo_x86 so that the vendor, family, and model
-fields are overlayed in a union with a 32-bit field that combines
-all three (together with a one byte reserved field in the upper
-byte).
+Export writeback_iter() so that it can be used by netfslib as a module.
 
-This will make it easy, cheap, and reliable to check all three
-values at once.
-
-Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+cc: Christoph Hellwig <hch@lst.de>
+cc: linux-mm@kvack.org
 ---
- arch/x86/include/asm/processor.h | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ mm/page-writeback.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 811548f131f4..87115e5d884f 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -108,9 +108,15 @@ struct cpuinfo_topology {
- };
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index 3e19b87049db..9df160a1cf9e 100644
+--- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -2546,6 +2546,7 @@ struct folio *writeback_iter(struct address_space *mapping,
+ 	folio_batch_release(&wbc->fbatch);
+ 	return NULL;
+ }
++EXPORT_SYMBOL(writeback_iter);
  
- struct cpuinfo_x86 {
--	__u8			x86;		/* CPU family */
--	__u8			x86_vendor;	/* CPU vendor */
--	__u8			x86_model;
-+	union {
-+		struct {
-+			__u8	x86_vendor;	/* CPU vendor */
-+			__u8	x86;		/* CPU family */
-+			__u8	x86_model;
-+			__u8	x86_reserved;
-+		};
-+		__u32		x86_vfm;	/* combined vendor, family, model */
-+	};
- 	__u8			x86_stepping;
- #ifdef CONFIG_X86_64
- 	/* Number of 4K pages in DTLB/ITLB combined(in pages): */
--- 
-2.44.0
+ /**
+  * write_cache_pages - walk the list of dirty pages of the given address space and write all of them.
 
