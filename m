@@ -1,65 +1,39 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FFF146BF;
-	Thu, 28 Mar 2024 20:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03AD641A80;
+	Thu, 28 Mar 2024 20:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711658243; cv=none; b=GX5yWC9YYLpztbKxf5+5P8SNvdpsx24FPeFhKBhSm9Yz5FMOc0ikBue3pNPKKgR09DcEDBHTgkWa6pUaQJIoWrHVVDsbTczMmO8kjMoMGVnP9T20+NMsnhw2YYUBgXJd6BZfZxS+oudzAKiF30tLrBUt5DPaKNSAcUIPUCYzTX0=
+	t=1711658299; cv=none; b=oo8w4CQcQRKeuUJlblo6WfBC/jC3nkC85zeNzuz2m+4rXx6dB853bwLvLw7jqJkSAz9FOawMnMdzJ9/L3PVRf0J1E0icCgiDJ8AVUTcKnwYgoJphw6TOT3KIykKjvRRyIbthl/gYoZeTDat8GdgyCmN+cegGzumUoOAnftKr1Ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711658243; c=relaxed/simple;
-	bh=vnHYx314qwSCkOWwj1tKTXE0ChWHnu2vxdHGmjAP+YM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JXqOfzplRUcS7bjlAj5x5Rybk60hOKrT4kNAo3/PBk/n82HLPFOw73nq8YszNQRm8dATTNq4G7fNLVGhWrtqeQXqFNf2UDxocDxQTX7wFT1c7rbv64QojTUtL9umftT/XOPFNmZy82xkbwadoqIA5lCEVqxrix0G+R/DA26/rdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=igUckRLN; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711658299; c=relaxed/simple;
+	bh=qyRYNMsv/h6baYTAYBDleiNK6goIRySEnDBg7VBFA/A=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=XQuagr28nMgyotut6puM0zVXWP0bpONuXLGMVa2zHWgm/rFHPr8Wq9TI38CY11ZBOQhit+W1kZgzz5/7jrT9H/82E5yX9/Dw245Ub79CsMwPP6kqeEJK31iw+lalswrDDLCnUYE4tWpGJM53hynQmW9kqmoaZ5yYRNu3iED3nLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RySmZsPQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="igUckRLN"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6e46dcd8feaso894188b3a.2;
-        Thu, 28 Mar 2024 13:37:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711658241; x=1712263041; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3mekUCLeBEm209UcyPPjf4dbkIOApvmlN6pXh76P0Gc=;
-        b=igUckRLNm2C5Z6YmvRvxiZ6+Czme64sF/LHC45XEVf5/EvZs5kDmmFKkldpAsS5u9T
-         UkME44AtCRoBbr/7PMudAxOYMHF+pTHmFSkWOqoHQqA/SZTAMvKcN/cwuZgnyQhyJUm8
-         8P1KR7ZXhzco1YT7hnFM3foJwGrOTozvDy7ATV0fjoId4kfjzk7e+E9OzRbJmdFYL/Q9
-         WYcj4xa9FUZcBLfdrgZtdXrdZj98ZMnUAb11vWmrZiUDaqPbyhT7rEIckvz5x849wFh1
-         C4LZ2TQxc465fvwy6IwCtjZQLiU4GwFxG10ELhRQ+eVlEbTsGek06yYUyiMArV0j7hLF
-         IAlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711658241; x=1712263041;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3mekUCLeBEm209UcyPPjf4dbkIOApvmlN6pXh76P0Gc=;
-        b=i8N0BC/dWUdQF9AoGjgJ4bDUSRolvoxGYimL27v5YoYTuVncI4p8BaQ0M1aWhO9dik
-         TZCriUonmpUPu4ArA2fayULQyQnaZF/0mm1cN1E1U8TReKRX8Qibn4reyMD2xqXG02cR
-         PJNOVYoiuXLJpqZ8LbQDR2VcE5Ii9+DmnQPzpX1zVaprFgSqC5luVM2sWf21bowyYquL
-         Qdvmcqs8TZBV3nRpfCvwRBUYM6nqN2CgZ2PgijrHyWRL0kpxhkPvchcxo6w6LIuMKe0i
-         2QTbV7rvfFVXogf516vukGmmhu1WSyzZChqyWQKP2c9AZs30F03WK2PhaCgajRd0zzyJ
-         Y4kA==
-X-Forwarded-Encrypted: i=1; AJvYcCVJpWGzw1Q9fpRNg86oklrHqgAIVPpd8Ch9ztZ0Y4fH84NA5MyNC+x65wKKl8jCDDqnrlDCb9fjHquK9wm1a86BxWtft1vEqReCpAJi0Q3N8oMPgUrg6y47XeIEMA2SJ6R3fnjv4RhTgbk=
-X-Gm-Message-State: AOJu0YyZ0CCA0XfPBQgqyPsmoV+2dStpAuujkoHtePfeZyMRSeFZLR0t
-	aoPUFmltMnIlZNsk1FpNrLp9gxIXyoAJtOMvkRXh3qxpSjhALIM77uf/V9ejOfw=
-X-Google-Smtp-Source: AGHT+IElNpwrorBm8kulfC0t9Ae1oILrqeaxMakhHrW9s5jS4jQAyEOdezW1rFDRTcVk7uHfQV9yWg==
-X-Received: by 2002:a05:6a20:914e:b0:1a3:9566:2784 with SMTP id x14-20020a056a20914e00b001a395662784mr303483pzc.16.1711658241486;
-        Thu, 28 Mar 2024 13:37:21 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:493e:82a3:49f9:d88])
-        by smtp.gmail.com with ESMTPSA id o20-20020a63e354000000b005dc36279d6dsm1736090pgj.73.2024.03.28.13.37.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 13:37:20 -0700 (PDT)
-Date: Thu, 28 Mar 2024 13:37:18 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Anshul Dalal <anshulusr@gmail.com>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: adafruit-seesaw - only report buttons that
- changed state
-Message-ID: <ZgXU_tYvR22zgSdQ@google.com>
-References: <ZZ-U_bmZpIdoYA6c@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RySmZsPQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D398C433C7;
+	Thu, 28 Mar 2024 20:38:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711658298;
+	bh=qyRYNMsv/h6baYTAYBDleiNK6goIRySEnDBg7VBFA/A=;
+	h=Date:From:To:Cc:Subject:From;
+	b=RySmZsPQzQSJ89+tOE3+KgyYuyTefXoliI0/kIV1ELS/alz21crFUVlTCwrOs3sVa
+	 HtCne4KlRZuRTgz540+35GEoSMwzpCW2U3e5ma8ZJT8sfb7BaIlDSiB7M5hwvFqoXo
+	 OE8kh8ArYNy8AljoKTA4MKPuuCDB+wlJQfK2qzbToE28/JwxPDBltL/76GyvSmjzA7
+	 Gzu3pwdmjdIuKkJ0UuUHmDQFe4owAa17hoLcmcuVz5EHibvUAUBhi2QnZDVerNRFxQ
+	 03LCQC0rMCsyR1NE8gtJwy+sE+dGD2X86BKdEf52MKWMXWLzS/aooCEXzf+O+r/Hd2
+	 9NtKcqHleuF1A==
+Date: Thu, 28 Mar 2024 21:38:15 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Wolfram Sang <wsa@kernel.org>
+Cc: linux-i2c <linux-i2c@vger.kernel.org>, 
+	lkml <linux-kernel@vger.kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>, 
+	Andi Shyti <andi.shyti@kernel.org>
+Subject: [GIT PULL] i2c-host-fixes for v6.9-rc2
+Message-ID: <66u5tce25yh2zq26qclsn7to7kqp7muw5tbe4uuw7elb5daebw@6jvkpuy5yrm6>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,19 +42,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZZ-U_bmZpIdoYA6c@google.com>
 
-On Wed, Jan 10, 2024 at 11:13:01PM -0800, Dmitry Torokhov wrote:
-> If a button has not changed its state when we poll the device the
-> driver does not need to report it. While duplicate events will be
-> filtered out by the input core anyway we can do it very cheaply
-> directly in the driver.
-> 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Hi Wolfram,
 
-I guess there's no objections so I am applying it.
+a very quiet rc1 week with only one fix from Maxim.
 
-Thanks.
+Thanks,
+Andi
 
--- 
-Dmitry
+The following changes since commit 4cece764965020c22cff7665b18a012006359095:
+
+  Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git tags/i2c-host-fixes-6.9-rc2
+
+for you to fetch changes up to d1ef7a9ca867ab5c161d1647b2a8ec93a2ea155d:
+
+  i2c: i801: Fix a refactoring that broke a touchpad on Lenovo P1 (2024-03-26 00:47:08 +0100)
+
+----------------------------------------------------------------
+One fix in the i801 driver where a bug caused touchpad
+malfunctions on some Lenovo P1 models by incorrectly overwriting
+a status variable during successful SMBUS transactions.
+
+----------------------------------------------------------------
+Maxim Levitsky (1):
+      i2c: i801: Fix a refactoring that broke a touchpad on Lenovo P1
+
+ drivers/i2c/busses/i2c-i801.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
