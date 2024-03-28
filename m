@@ -1,222 +1,324 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AD31BC49
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 00:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0DE849C;
+	Thu, 28 Mar 2024 00:22:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711585347; cv=none; b=EeXVbjuNBcFA4ASBiFIf7mxD4d6h19bVHSNMc+UzTQGgfs0NrFkU2zIFOML1UTzBqnh7pPc7OduVXNEPbYPOHvHI7u/yYJwQH2JLeeU7sco8hUrpRrEh9IVeF0tOojSq8+mVkkJgVJ5ku8jnOuKxFo53YsX+hi5mXAgpXY+X3JI=
+	t=1711585365; cv=none; b=QBg70/lM2gD8AQxrs+QH3L2ZOB7N80sGvJ0F3Uce/7dje+73Bdwo5uGxSBp1MUFxzH9Uhp6rUOQQW0r7kjH5F8k49f/MoBVH2vD4Y1psy22avy0mbAic+toB10ZZR2h/ERInrwHzs2GxOWIL+lE7GhEMbqPhkuTNPhVzjOGYhes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711585347; c=relaxed/simple;
-	bh=NEWB7Jyx6ZTqoQYpQmN8i2qbWCNLe6BWjFi5j4OmaIg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J99R0m7qrWLxHXcD/dap0XqaBh+K6fDmX4LzV6YqCNy4uH5OXhJvK2xFlqO4W6F2Ix4ViZzCANTRrlbuheCJs9Wpra1Pt1wMMvss4L8m8glWu7nnAQB5Svys3UAONKcQn2lYMFAGU3ebdPhdtIl70UVXEkteK60naYKc4gfaQFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IR59b+Wo; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711585365; c=relaxed/simple;
+	bh=2NsXXS1IglHTc/4i5RAQAp0FaekWGfcYS95VA4IdygI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=m+SRw0ZEb96Ts8qT70Kxna8EhgvoIf6CSXNxm8N6N5wjAO+FplleiRlP8ygTT0ziSffDhWNOWTD8dtTeUtGniQJFKoq29luefjJ13aKpGajizcndV9ooDfvEGHfONMHJmBay+yxATZjTXoOc9GZUbFqSrqB+46RThIvGt9Hzguo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GrEPQRCP; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IR59b+Wo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711585344;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4ak0Cq/D1N2M9Qn2X1+lt/FpcfjVoz3V3sPZ0fz5NBc=;
-	b=IR59b+WozRgzp90VLsFGZzIBvACvL8X4ihIead5eUtVLH7vFHp9W0brA3RoWa93JunNUjL
-	O8zYgfS+yf/lUyHt7Fw/HXN4julc9/bNCcDxpTj4GpW7b333dfAW1ILqtIEwV1givsQHEW
-	dLT7Z+ZeSHJyk/UZJyqXE6it0RepPIw=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-526-Wz9J29WXMTaRPc9LhpVekA-1; Wed, 27 Mar 2024 20:22:21 -0400
-X-MC-Unique: Wz9J29WXMTaRPc9LhpVekA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B388B800265;
-	Thu, 28 Mar 2024 00:22:19 +0000 (UTC)
-Received: from gshan-thinkpadx1nanogen2.remote.csb (unknown [10.64.136.81])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id BBCDE2166B31;
-	Thu, 28 Mar 2024 00:22:15 +0000 (UTC)
-From: Gavin Shan <gshan@redhat.com>
-To: virtualization@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org,
-	mst@redhat.com,
-	jasowang@redhat.com,
-	will@kernel.org,
-	davem@davemloft.net,
-	stefanha@redhat.com,
-	sgarzare@redhat.com,
-	keirf@google.com,
-	yihyu@redhat.com,
-	shan.gavin@gmail.com
-Subject: [PATCH v3 3/3] vhost: Improve vhost_get_avail_idx() with smp_rmb()
-Date: Thu, 28 Mar 2024 10:21:49 +1000
-Message-ID: <20240328002149.1141302-4-gshan@redhat.com>
-In-Reply-To: <20240328002149.1141302-1-gshan@redhat.com>
-References: <20240328002149.1141302-1-gshan@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GrEPQRCP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711585363; x=1743121363;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=2NsXXS1IglHTc/4i5RAQAp0FaekWGfcYS95VA4IdygI=;
+  b=GrEPQRCPkV2sE1QYkcS0wH+88u4XcVcWE7lN0L7jh0hcPXXUPKLvFhYM
+   ppXCXDz2GHvwQf/o4UUhuDWPXYh6vYVHvbdboBoAjCGjcppGQmTY/ieZS
+   3i35rdJpVp22aIG6D5h+0phSx9u6J4NruFNxCz5i5r69M01yTdHfM2uPl
+   jfLIv6jeK9ND+lMFvhF00kRm5nF5z7E4taWBlHwY3HHMWdeygDBeZlfmR
+   g2WSpeYG0AnE1spGAM+3ZeBAvz1yyZvFh9MjLON+PzbICsSaoKZsrFZGZ
+   B83AzVr6+yV4/ctxj4+rJ56efJtC3w3kvPPZPmQWDLt16wrcX46aKDrbm
+   Q==;
+X-CSE-ConnectionGUID: 6ei4ew68S36uIXo9YOJCCQ==
+X-CSE-MsgGUID: rfV5htXhRE2/VVhFsnQImA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="6580633"
+X-IronPort-AV: E=Sophos;i="6.07,160,1708416000"; 
+   d="scan'208";a="6580633"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 17:22:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,160,1708416000"; 
+   d="scan'208";a="16411781"
+Received: from b4969161e530.jf.intel.com ([10.165.56.46])
+  by orviesa009.jf.intel.com with ESMTP; 27 Mar 2024 17:22:30 -0700
+From: Haitao Huang <haitao.huang@linux.intel.com>
+To: jarkko@kernel.org,
+	dave.hansen@linux.intel.com,
+	kai.huang@intel.com,
+	tj@kernel.org,
+	mkoutny@suse.com,
+	linux-kernel@vger.kernel.org,
+	linux-sgx@vger.kernel.org,
+	x86@kernel.org,
+	cgroups@vger.kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	hpa@zytor.com,
+	sohil.mehta@intel.com,
+	tim.c.chen@linux.intel.com
+Cc: zhiquan1.li@intel.com,
+	kristen@linux.intel.com,
+	seanjc@google.com,
+	zhanb@microsoft.com,
+	anakrish@microsoft.com,
+	mikko.ylinen@linux.intel.com,
+	yangjie@microsoft.com,
+	chrisyan@microsoft.com
+Subject: [PATCH v10 01/14] x86/sgx: Replace boolean parameters with enums
+Date: Wed, 27 Mar 2024 17:22:16 -0700
+Message-Id: <20240328002229.30264-2-haitao.huang@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240328002229.30264-1-haitao.huang@linux.intel.com>
+References: <20240328002229.30264-1-haitao.huang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-All the callers of vhost_get_avail_idx() are concerned to the memory
-barrier, imposed by smp_rmb() to ensure the order of the available
-ring entry read and avail_idx read.
+Replace boolean parameters for 'reclaim' in the function
+sgx_alloc_epc_page() and its callers with an enum.
 
-Improve vhost_get_avail_idx() so that smp_rmb() is executed when
-the avail_idx is advanced. With it, the callers needn't to worry
-about the memory barrier.
+Also opportunistically remove non-static declaration of
+__sgx_alloc_epc_page() and a typo
 
-Suggested-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Gavin Shan <gshan@redhat.com>
+Signed-off-by: Haitao Huang <haitao.huang@linux.intel.com>
+Suggested-by: Jarkko Sakkinen <jarkko@kernel.org>
+Suggested-by: Dave Hansen <dave.hansen@intel.com>
 ---
- drivers/vhost/vhost.c | 75 +++++++++++++++----------------------------
- 1 file changed, 26 insertions(+), 49 deletions(-)
+ arch/x86/kernel/cpu/sgx/encl.c  | 12 ++++++------
+ arch/x86/kernel/cpu/sgx/encl.h  |  4 ++--
+ arch/x86/kernel/cpu/sgx/ioctl.c | 10 +++++-----
+ arch/x86/kernel/cpu/sgx/main.c  | 14 +++++++-------
+ arch/x86/kernel/cpu/sgx/sgx.h   | 13 +++++++++++--
+ arch/x86/kernel/cpu/sgx/virt.c  |  2 +-
+ 6 files changed, 32 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index 32686c79c41d..e6882f4f6ce2 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -1290,10 +1290,28 @@ static void vhost_dev_unlock_vqs(struct vhost_dev *d)
- 		mutex_unlock(&d->vqs[i]->mutex);
- }
+diff --git a/arch/x86/kernel/cpu/sgx/encl.c b/arch/x86/kernel/cpu/sgx/encl.c
+index 279148e72459..f474179b6f77 100644
+--- a/arch/x86/kernel/cpu/sgx/encl.c
++++ b/arch/x86/kernel/cpu/sgx/encl.c
+@@ -217,7 +217,7 @@ static struct sgx_epc_page *sgx_encl_eldu(struct sgx_encl_page *encl_page,
+ 	struct sgx_epc_page *epc_page;
+ 	int ret;
  
--static inline int vhost_get_avail_idx(struct vhost_virtqueue *vq,
--				      __virtio16 *idx)
-+static inline int vhost_get_avail_idx(struct vhost_virtqueue *vq)
- {
--	return vhost_get_avail(vq, *idx, &vq->avail->idx);
-+	__virtio16 avail_idx;
-+	int r;
-+
-+	r = vhost_get_avail(vq, avail_idx, &vq->avail->idx);
-+	if (unlikely(r)) {
-+		vq_err(vq, "Failed to access avail idx at %p\n",
-+		       &vq->avail->idx);
-+		return r;
-+	}
-+
-+	vq->avail_idx = vhost16_to_cpu(vq, avail_idx);
-+	if (vq->avail_idx != vq->last_avail_idx) {
-+		/* Ensure the available ring entry read happens
-+		 * before the avail_idx read when the avail_idx
-+		 * is advanced.
-+		 */
-+		smp_rmb();
-+	}
-+
-+	return 0;
- }
+-	epc_page = sgx_alloc_epc_page(encl_page, false);
++	epc_page = sgx_alloc_epc_page(encl_page, SGX_NO_RECLAIM);
+ 	if (IS_ERR(epc_page))
+ 		return epc_page;
  
- static inline int vhost_get_avail_head(struct vhost_virtqueue *vq,
-@@ -2499,7 +2517,6 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
- 	struct vring_desc desc;
- 	unsigned int i, head, found = 0;
- 	u16 last_avail_idx;
--	__virtio16 avail_idx;
- 	__virtio16 ring_head;
- 	int ret, access;
- 
-@@ -2507,12 +2524,8 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
- 	last_avail_idx = vq->last_avail_idx;
- 
- 	if (vq->avail_idx == vq->last_avail_idx) {
--		if (unlikely(vhost_get_avail_idx(vq, &avail_idx))) {
--			vq_err(vq, "Failed to access avail idx at %p\n",
--				&vq->avail->idx);
-+		if (unlikely(vhost_get_avail_idx(vq)))
- 			return -EFAULT;
--		}
--		vq->avail_idx = vhost16_to_cpu(vq, avail_idx);
- 
- 		if (unlikely((u16)(vq->avail_idx - last_avail_idx) > vq->num)) {
- 			vq_err(vq, "Guest moved used index from %u to %u",
-@@ -2525,11 +2538,6 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
- 		 */
- 		if (vq->avail_idx == last_avail_idx)
- 			return vq->num;
--
--		/* Only get avail ring entries after they have been
--		 * exposed by guest.
--		 */
--		smp_rmb();
+@@ -359,14 +359,14 @@ static vm_fault_t sgx_encl_eaug_page(struct vm_area_struct *vma,
+ 		goto err_out_unlock;
  	}
  
- 	/* Grab the next descriptor number they're advertising, and increment
-@@ -2790,35 +2798,19 @@ EXPORT_SYMBOL_GPL(vhost_add_used_and_signal_n);
- /* return true if we're sure that avaiable ring is empty */
- bool vhost_vq_avail_empty(struct vhost_dev *dev, struct vhost_virtqueue *vq)
+-	epc_page = sgx_alloc_epc_page(encl_page, false);
++	epc_page = sgx_alloc_epc_page(encl_page, SGX_NO_RECLAIM);
+ 	if (IS_ERR(epc_page)) {
+ 		if (PTR_ERR(epc_page) == -EBUSY)
+ 			vmret =  VM_FAULT_NOPAGE;
+ 		goto err_out_unlock;
+ 	}
+ 
+-	va_page = sgx_encl_grow(encl, false);
++	va_page = sgx_encl_grow(encl, SGX_NO_RECLAIM);
+ 	if (IS_ERR(va_page)) {
+ 		if (PTR_ERR(va_page) == -EBUSY)
+ 			vmret = VM_FAULT_NOPAGE;
+@@ -1232,8 +1232,8 @@ void sgx_zap_enclave_ptes(struct sgx_encl *encl, unsigned long addr)
+ 
+ /**
+  * sgx_alloc_va_page() - Allocate a Version Array (VA) page
+- * @reclaim: Reclaim EPC pages directly if none available. Enclave
+- *           mutex should not be held if this is set.
++ * @reclaim: Whether reclaim EPC pages directly if none available. Enclave
++ *           mutex should not be held for SGX_DO_RECLAIM.
+  *
+  * Allocate a free EPC page and convert it to a Version Array (VA) page.
+  *
+@@ -1241,7 +1241,7 @@ void sgx_zap_enclave_ptes(struct sgx_encl *encl, unsigned long addr)
+  *   a VA page,
+  *   -errno otherwise
+  */
+-struct sgx_epc_page *sgx_alloc_va_page(bool reclaim)
++struct sgx_epc_page *sgx_alloc_va_page(enum sgx_reclaim reclaim)
  {
--	__virtio16 avail_idx;
--	int r;
--
- 	if (vq->avail_idx != vq->last_avail_idx)
- 		return false;
+ 	struct sgx_epc_page *epc_page;
+ 	int ret;
+diff --git a/arch/x86/kernel/cpu/sgx/encl.h b/arch/x86/kernel/cpu/sgx/encl.h
+index f94ff14c9486..fe15ade02ca1 100644
+--- a/arch/x86/kernel/cpu/sgx/encl.h
++++ b/arch/x86/kernel/cpu/sgx/encl.h
+@@ -116,14 +116,14 @@ struct sgx_encl_page *sgx_encl_page_alloc(struct sgx_encl *encl,
+ 					  unsigned long offset,
+ 					  u64 secinfo_flags);
+ void sgx_zap_enclave_ptes(struct sgx_encl *encl, unsigned long addr);
+-struct sgx_epc_page *sgx_alloc_va_page(bool reclaim);
++struct sgx_epc_page *sgx_alloc_va_page(enum sgx_reclaim reclaim);
+ unsigned int sgx_alloc_va_slot(struct sgx_va_page *va_page);
+ void sgx_free_va_slot(struct sgx_va_page *va_page, unsigned int offset);
+ bool sgx_va_page_full(struct sgx_va_page *va_page);
+ void sgx_encl_free_epc_page(struct sgx_epc_page *page);
+ struct sgx_encl_page *sgx_encl_load_page(struct sgx_encl *encl,
+ 					 unsigned long addr);
+-struct sgx_va_page *sgx_encl_grow(struct sgx_encl *encl, bool reclaim);
++struct sgx_va_page *sgx_encl_grow(struct sgx_encl *encl, enum sgx_reclaim reclaim);
+ void sgx_encl_shrink(struct sgx_encl *encl, struct sgx_va_page *va_page);
  
--	r = vhost_get_avail_idx(vq, &avail_idx);
--	if (unlikely(r))
--		return false;
--
--	vq->avail_idx = vhost16_to_cpu(vq, avail_idx);
--	if (vq->avail_idx != vq->last_avail_idx) {
--		/* Since we have updated avail_idx, the following
--		 * call to vhost_get_vq_desc() will read available
--		 * ring entries. Make sure that read happens after
--		 * the avail_idx read.
--		 */
--		smp_rmb();
-+	if (unlikely(vhost_get_avail_idx(vq)))
- 		return false;
--	}
+ #endif /* _X86_ENCL_H */
+diff --git a/arch/x86/kernel/cpu/sgx/ioctl.c b/arch/x86/kernel/cpu/sgx/ioctl.c
+index b65ab214bdf5..793a0ba2cb16 100644
+--- a/arch/x86/kernel/cpu/sgx/ioctl.c
++++ b/arch/x86/kernel/cpu/sgx/ioctl.c
+@@ -17,7 +17,7 @@
+ #include "encl.h"
+ #include "encls.h"
  
--	return true;
-+	return vq->avail_idx == vq->last_avail_idx;
- }
- EXPORT_SYMBOL_GPL(vhost_vq_avail_empty);
- 
- /* OK, now we need to know about added descriptors. */
- bool vhost_enable_notify(struct vhost_dev *dev, struct vhost_virtqueue *vq)
+-struct sgx_va_page *sgx_encl_grow(struct sgx_encl *encl, bool reclaim)
++struct sgx_va_page *sgx_encl_grow(struct sgx_encl *encl, enum sgx_reclaim reclaim)
  {
--	__virtio16 avail_idx;
- 	int r;
+ 	struct sgx_va_page *va_page = NULL;
+ 	void *err;
+@@ -64,7 +64,7 @@ static int sgx_encl_create(struct sgx_encl *encl, struct sgx_secs *secs)
+ 	struct file *backing;
+ 	long ret;
  
- 	if (!(vq->used_flags & VRING_USED_F_NO_NOTIFY))
-@@ -2842,25 +2834,10 @@ bool vhost_enable_notify(struct vhost_dev *dev, struct vhost_virtqueue *vq)
- 	/* They could have slipped one in as we were doing that: make
- 	 * sure it's written, then check again. */
- 	smp_mb();
--	r = vhost_get_avail_idx(vq, &avail_idx);
--	if (r) {
--		vq_err(vq, "Failed to check avail idx at %p: %d\n",
--		       &vq->avail->idx, r);
-+	if (unlikely(vhost_get_avail_idx(vq)))
- 		return false;
--	}
--
--	vq->avail_idx = vhost16_to_cpu(vq, avail_idx);
--	if (vq->avail_idx != vq->last_avail_idx) {
--		/* Since we have updated avail_idx, the following
--		 * call to vhost_get_vq_desc() will read available
--		 * ring entries. Make sure that read happens after
--		 * the avail_idx read.
--		 */
--		smp_rmb();
--		return true;
--	}
+-	va_page = sgx_encl_grow(encl, true);
++	va_page = sgx_encl_grow(encl, SGX_DO_RECLAIM);
+ 	if (IS_ERR(va_page))
+ 		return PTR_ERR(va_page);
+ 	else if (va_page)
+@@ -83,7 +83,7 @@ static int sgx_encl_create(struct sgx_encl *encl, struct sgx_secs *secs)
  
--	return false;
-+	return vq->avail_idx != vq->last_avail_idx;
+ 	encl->backing = backing;
+ 
+-	secs_epc = sgx_alloc_epc_page(&encl->secs, true);
++	secs_epc = sgx_alloc_epc_page(&encl->secs, SGX_DO_RECLAIM);
+ 	if (IS_ERR(secs_epc)) {
+ 		ret = PTR_ERR(secs_epc);
+ 		goto err_out_backing;
+@@ -269,13 +269,13 @@ static int sgx_encl_add_page(struct sgx_encl *encl, unsigned long src,
+ 	if (IS_ERR(encl_page))
+ 		return PTR_ERR(encl_page);
+ 
+-	epc_page = sgx_alloc_epc_page(encl_page, true);
++	epc_page = sgx_alloc_epc_page(encl_page, SGX_DO_RECLAIM);
+ 	if (IS_ERR(epc_page)) {
+ 		kfree(encl_page);
+ 		return PTR_ERR(epc_page);
+ 	}
+ 
+-	va_page = sgx_encl_grow(encl, true);
++	va_page = sgx_encl_grow(encl, SGX_DO_RECLAIM);
+ 	if (IS_ERR(va_page)) {
+ 		ret = PTR_ERR(va_page);
+ 		goto err_out_free;
+diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
+index 166692f2d501..d219f14365d4 100644
+--- a/arch/x86/kernel/cpu/sgx/main.c
++++ b/arch/x86/kernel/cpu/sgx/main.c
+@@ -463,14 +463,14 @@ static struct sgx_epc_page *__sgx_alloc_epc_page_from_node(int nid)
+ /**
+  * __sgx_alloc_epc_page() - Allocate an EPC page
+  *
+- * Iterate through NUMA nodes and reserve ia free EPC page to the caller. Start
++ * Iterate through NUMA nodes and reserve a free EPC page to the caller. Start
+  * from the NUMA node, where the caller is executing.
+  *
+  * Return:
+  * - an EPC page:	A borrowed EPC pages were available.
+  * - NULL:		Out of EPC pages.
+  */
+-struct sgx_epc_page *__sgx_alloc_epc_page(void)
++static struct sgx_epc_page *__sgx_alloc_epc_page(void)
+ {
+ 	struct sgx_epc_page *page;
+ 	int nid_of_current = numa_node_id();
+@@ -542,12 +542,12 @@ int sgx_unmark_page_reclaimable(struct sgx_epc_page *page)
+ /**
+  * sgx_alloc_epc_page() - Allocate an EPC page
+  * @owner:	the owner of the EPC page
+- * @reclaim:	reclaim pages if necessary
++ * @reclaim:	whether reclaim pages if necessary
+  *
+  * Iterate through EPC sections and borrow a free EPC page to the caller. When a
+  * page is no longer needed it must be released with sgx_free_epc_page(). If
+- * @reclaim is set to true, directly reclaim pages when we are out of pages. No
+- * mm's can be locked when @reclaim is set to true.
++ * @reclaim is set to SGX_DO_RECLAIM, directly reclaim pages when we are out of
++ * pages. No mm's can be locked for SGX_DO_RECLAIM.
+  *
+  * Finally, wake up ksgxd when the number of pages goes below the watermark
+  * before returning back to the caller.
+@@ -556,7 +556,7 @@ int sgx_unmark_page_reclaimable(struct sgx_epc_page *page)
+  *   an EPC page,
+  *   -errno on error
+  */
+-struct sgx_epc_page *sgx_alloc_epc_page(void *owner, bool reclaim)
++struct sgx_epc_page *sgx_alloc_epc_page(void *owner, enum sgx_reclaim reclaim)
+ {
+ 	struct sgx_epc_page *page;
+ 
+@@ -570,7 +570,7 @@ struct sgx_epc_page *sgx_alloc_epc_page(void *owner, bool reclaim)
+ 		if (list_empty(&sgx_active_page_list))
+ 			return ERR_PTR(-ENOMEM);
+ 
+-		if (!reclaim) {
++		if (reclaim == SGX_NO_RECLAIM) {
+ 			page = ERR_PTR(-EBUSY);
+ 			break;
+ 		}
+diff --git a/arch/x86/kernel/cpu/sgx/sgx.h b/arch/x86/kernel/cpu/sgx/sgx.h
+index d2dad21259a8..ca34cd4f58ac 100644
+--- a/arch/x86/kernel/cpu/sgx/sgx.h
++++ b/arch/x86/kernel/cpu/sgx/sgx.h
+@@ -29,6 +29,16 @@
+ /* Pages on free list */
+ #define SGX_EPC_PAGE_IS_FREE		BIT(1)
+ 
++/**
++ * enum sgx_reclaim - Whether EPC reclamation is allowed within a function.
++ * %SGX_NO_RECLAIM:		Do not reclaim EPC pages.
++ * %SGX_DO_RECLAIM:		Reclaim EPC pages as needed.
++ */
++enum sgx_reclaim {
++	SGX_NO_RECLAIM,
++	SGX_DO_RECLAIM
++};
++
+ struct sgx_epc_page {
+ 	unsigned int section;
+ 	u16 flags;
+@@ -83,13 +93,12 @@ static inline void *sgx_get_epc_virt_addr(struct sgx_epc_page *page)
+ 	return section->virt_addr + index * PAGE_SIZE;
  }
- EXPORT_SYMBOL_GPL(vhost_enable_notify);
+ 
+-struct sgx_epc_page *__sgx_alloc_epc_page(void);
+ void sgx_free_epc_page(struct sgx_epc_page *page);
+ 
+ void sgx_reclaim_direct(void);
+ void sgx_mark_page_reclaimable(struct sgx_epc_page *page);
+ int sgx_unmark_page_reclaimable(struct sgx_epc_page *page);
+-struct sgx_epc_page *sgx_alloc_epc_page(void *owner, bool reclaim);
++struct sgx_epc_page *sgx_alloc_epc_page(void *owner, enum sgx_reclaim reclaim);
+ 
+ void sgx_ipi_cb(void *info);
+ 
+diff --git a/arch/x86/kernel/cpu/sgx/virt.c b/arch/x86/kernel/cpu/sgx/virt.c
+index 7aaa3652e31d..e7fdc3a9abae 100644
+--- a/arch/x86/kernel/cpu/sgx/virt.c
++++ b/arch/x86/kernel/cpu/sgx/virt.c
+@@ -46,7 +46,7 @@ static int __sgx_vepc_fault(struct sgx_vepc *vepc,
+ 	if (epc_page)
+ 		return 0;
+ 
+-	epc_page = sgx_alloc_epc_page(vepc, false);
++	epc_page = sgx_alloc_epc_page(vepc, SGX_NO_RECLAIM);
+ 	if (IS_ERR(epc_page))
+ 		return PTR_ERR(epc_page);
  
 -- 
-2.44.0
+2.25.1
 
