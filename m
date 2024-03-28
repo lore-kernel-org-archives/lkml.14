@@ -1,190 +1,128 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11FD028383;
-	Thu, 28 Mar 2024 01:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05505286AD;
+	Thu, 28 Mar 2024 01:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711589788; cv=none; b=HkGBcWuyoLqh6tUxSKW7QSzUoNJZruVqK3lSwndX5txi033y4q+C+1c3CMKnbesXqY6+uk5bZBVHaRHjjqmMf8whqU8/OHLtqMipr2TEzzTRrSPNvJcqZPs3ugAogBdiCG4LFSILmDFa9xjag2LBg9KcbZBE+Znt3cWfq0VUlNg=
+	t=1711589789; cv=none; b=IuaMjEHrMnCDgN8fzZdONzEICVArbh+uZ0crlOAV3isqUuAYElHh6VwDPmmWYEoki7tHcC5wIvmPHOeabZsm9c/Rq3AR+RmYpzxnMr7hvVAkKJhfOVOha+b3SzBu1Wndg/R9TsnM7v3ifWewd1Z7FEuaHIhu1OpDNYVqZRihv14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711589788; c=relaxed/simple;
-	bh=9bY/01nQfujhnAw6vfZnReH+IS6tLJy+9q2+XvoORMY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hdrrEdrf/+iIso3gY+LQhuekXtMAYuLV8DVt0D7CpH5D/w5kTVR/HAcsevoFCp43ZEvLJKKqGS/xg1WjtEJjGBnTi5DESjysXeJ+4st6iFfhd+sTLuVlHT4U+FG2w7Co+2xmuMqhduatbXzFl33tds1IBJSclEzLCbC0AClYdwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BK+fOvGB; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711589789; c=relaxed/simple;
+	bh=lhvQ3bL3zEzra6sPz4mYh3SCJYXmuoBa5F3CVmZ09oY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fM+guDBdeXQyODTAm2u29ZhHiyNt3E/msywpkrX0IQvMpIJDgxTRRGLXp/RpG9P07EG8gwonSuQbmyfwktlfptM4NONCJiht3dd8gl2q1EAiEZIpvh1jinUjfx+OqQMoimesXmI4vYJNWH6yw3QHcX6gc3quj59a3n9rNeOYmDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g7zdxgAN; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BK+fOvGB"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5dca1efad59so273079a12.2;
-        Wed, 27 Mar 2024 18:36:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711589785; x=1712194585; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IDegCott8ZWfk5B0pwuSaRcFQkCebYjnesGjrc5E3fo=;
-        b=BK+fOvGB4N1osEzAnwfNj99y+3yNQ3gA5AwjA2ZhraNF3iARWFi+f8h2dL/DQYPrgA
-         c+aM5gBd5FmUbXxcvHrd389rfjvjIreJiPKSMxdYdsI8QraoGGDM92CvY4DlQtkKPe64
-         61xBovhuA9JQy1SgTUo5hdEtDUGx7KzXMG0bLoBkpjITm403GKDCJl8vRZXi1iF1mXI0
-         fQN5W5yxPt/ruwXHVjv24TikEItjUVFJ8SYtr6wk4lDZd7ZBGdlknaRk6Ph8kSbqy3fF
-         tLVjGsEVWaT7wODh2BfvUI0AXpyRNSR9lDP5zFStsKWwGTMcvGoM1pGpqFQi5mfV8gyY
-         u+8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711589785; x=1712194585;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IDegCott8ZWfk5B0pwuSaRcFQkCebYjnesGjrc5E3fo=;
-        b=clRHmYaSZ8XAecFyYdNhGqv5+Z+N7+qAVartLZyOPAWZB83Kf+2Pg3tBL1cfK/H4u6
-         0XpSBtmY4K2hgS754nN/zr4VCxah7MnwGahmSd90K/tf2K4voVErz0PRrjx8BsWVT1aC
-         LiveDx1CCYahKcc/H/xxA25NoqDsvLPKv3KI9AyiZ3mBrL3qleCsE/Yhn3+Hw3E4eMyL
-         DVTSdCgsz90TNP9bjM8xxVg22CxY8IpWR0jfUMcG7RbElJfou86FS65DR1MBOnkCPGtU
-         Atdp+S5lgxjsW3QkD7KWEabYXhHPy43sj0LOz28PXBaQeLJrtdERj67O0E3mTXbksHDF
-         r+oQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXPsldttfXKR94TH4ETQdhtB1AWusrrPONrnEwR3eHlgAuS96Ma7HMGMx4CzxQGOENQzYQCqwko8CBWbVPy7bv5OvLTOGxPpp8Lpys
-X-Gm-Message-State: AOJu0YxlpX2iMs9SG3dVCi/8K2QdVg/FPCUJ4ZjMwrwDP7M+wLQ2eF7H
-	PLX/ifkJbRFl5Mq7HvXsGWawsnOQtqG2gz4dhmMZ6PijUVLko0PD8EbE7qnX
-X-Google-Smtp-Source: AGHT+IGd6zq9Pu+z9klnJTs/yi/Jf50lCX4vDpWvAlY4ITK5iPH9FVD+wv4Vq9LasjatG2e13J9QcA==
-X-Received: by 2002:a17:902:e751:b0:1e0:b60e:1a33 with SMTP id p17-20020a170902e75100b001e0b60e1a33mr1483092plf.31.1711589785290;
-        Wed, 27 Mar 2024 18:36:25 -0700 (PDT)
-Received: from wedsonaf-dev.home.lan ([189.124.190.154])
-        by smtp.googlemail.com with ESMTPSA id p16-20020a170902e75000b001dd7a97a266sm189144plf.282.2024.03.27.18.36.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 18:36:25 -0700 (PDT)
-From: Wedson Almeida Filho <wedsonaf@gmail.com>
-To: rust-for-linux@vger.kernel.org
-Cc: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	linux-kernel@vger.kernel.org,
-	Wedson Almeida Filho <walmeida@microsoft.com>
-Subject: [PATCH v3 02/10] rust: alloc: introduce the `VecExt` trait
-Date: Wed, 27 Mar 2024 22:35:55 -0300
-Message-Id: <20240328013603.206764-3-wedsonaf@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240328013603.206764-1-wedsonaf@gmail.com>
-References: <20240328013603.206764-1-wedsonaf@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g7zdxgAN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711589788; x=1743125788;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=lhvQ3bL3zEzra6sPz4mYh3SCJYXmuoBa5F3CVmZ09oY=;
+  b=g7zdxgANnSweXA7Yt+5AvoDFy7DzpYSVF8yf0v+co1fuxTPnrS331CFA
+   sn3AQT8KYGzsO8pZCGB5GWHE1Fj8PTlpO7DarFqSSvAH3UhYylGOmmHtm
+   6CkH4XliCgcXK5y4ajkI1tfgIXSaC5GGj8NvobDnWW9XGiVoIwU1m70Pb
+   1aBNtjLMLMDGG+KvvcqnwVezsXKez33of64R9tu/ihM2wXUudylKKEe6I
+   5iQ0S8OnaR3yDtQeaqj7+kNWbZsLeUksG5r4gb2qJLJw2hbKge5OMrLMC
+   UShIVCA3wL9Qau0xkoN0b0QDgWPD4LEqfWkFz9sFCT/Csg/3GdDH/g7B9
+   g==;
+X-CSE-ConnectionGUID: LFX268AtRvewW9KbKX3XbA==
+X-CSE-MsgGUID: bhA4xmoFTRSYbywfoxBkMA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="7325620"
+X-IronPort-AV: E=Sophos;i="6.07,160,1708416000"; 
+   d="scan'208";a="7325620"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 18:36:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,160,1708416000"; 
+   d="scan'208";a="20999108"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.224.7]) ([10.124.224.7])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 18:36:24 -0700
+Message-ID: <b065cf99-74bc-42d1-95a3-8a0b018218ee@intel.com>
+Date: Thu, 28 Mar 2024 09:36:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 039/130] KVM: TDX: initialize VM with TDX specific
+ parameters
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+ "Gao, Chao" <chao.gao@intel.com>, "Yamahata, Isaku"
+ <isaku.yamahata@intel.com>
+Cc: "Zhang, Tina" <tina.zhang@intel.com>,
+ "isaku.yamahata@linux.intel.com" <isaku.yamahata@linux.intel.com>,
+ "seanjc@google.com" <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>,
+ "sagis@google.com" <sagis@google.com>, "Chen, Bo2" <chen.bo@intel.com>,
+ "isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>,
+ "Aktas, Erdem" <erdemaktas@google.com>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "pbonzini@redhat.com" <pbonzini@redhat.com>, "Yuan, Hang"
+ <hang.yuan@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <5eca97e6a3978cf4dcf1cff21be6ec8b639a66b9.1708933498.git.isaku.yamahata@intel.com>
+ <Zfp+YWzHV0DxVf1+@chao-email>
+ <20240321155513.GL1994522@ls.amr.corp.intel.com>
+ <5470570d804b52dcf24b454d5fdfc2320f735e80.camel@intel.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <5470570d804b52dcf24b454d5fdfc2320f735e80.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Wedson Almeida Filho <walmeida@microsoft.com>
+On 3/28/2024 9:12 AM, Edgecombe, Rick P wrote:
+> On Thu, 2024-03-21 at 08:55 -0700, Isaku Yamahata wrote:
+>> On Wed, Mar 20, 2024 at 02:12:49PM +0800,
+>> Chao Gao <chao.gao@intel.com> wrote:
+>>
+>>>> +static void setup_tdparams_cpuids(struct kvm_cpuid2 *cpuid,
+>>>> +                                 struct td_params *td_params)
+>>>> +{
+>>>> +       int i;
+>>>> +
+>>>> +       /*
+>>>> +        * td_params.cpuid_values: The number and the order of cpuid_value must
+>>>> +        * be same to the one of struct tdsysinfo.{num_cpuid_config, cpuid_configs}
+>>>> +        * It's assumed that td_params was zeroed.
+>>>> +        */
+>>>> +       for (i = 0; i < tdx_info->num_cpuid_config; i++) {
+>>>> +               const struct kvm_tdx_cpuid_config *c = &tdx_info->cpuid_configs[i];
+>>>> +               /* KVM_TDX_CPUID_NO_SUBLEAF means index = 0. */
+>>>> +               u32 index = c->sub_leaf == KVM_TDX_CPUID_NO_SUBLEAF ? 0 : c->sub_leaf;
+>>>> +               const struct kvm_cpuid_entry2 *entry =
+>>>> +                       kvm_find_cpuid_entry2(cpuid->entries, cpuid->nent,
+>>>> +                                             c->leaf, index);
+>>>> +               struct tdx_cpuid_value *value = &td_params->cpuid_values[i];
+>>>> +
+>>>> +               if (!entry)
+>>>> +                       continue;
+>>>> +
+>>>> +               /*
+>>>> +                * tdsysinfo.cpuid_configs[].{eax, ebx, ecx, edx}
+>>>> +                * bit 1 means it can be configured to zero or one.
+>>>> +                * bit 0 means it must be zero.
+>>>> +                * Mask out non-configurable bits.
+>>>> +                */
+>>>> +               value->eax = entry->eax & c->eax;
+>>>> +               value->ebx = entry->ebx & c->ebx;
+>>>> +               value->ecx = entry->ecx & c->ecx;
+>>>> +               value->edx = entry->edx & c->edx;
+>>>
+>>> Any reason to mask off non-configurable bits rather than return an error? this
+>>> is misleading to userspace because guest sees the values emulated by TDX module
+>>> instead of the values passed from userspace (i.e., the request from userspace
+>>> isn't done but there is no indication of that to userspace).
+>>
+>> Ok, I'll eliminate them.  If user space passes wrong cpuids, TDX module will
+>> return error. I'll leave the error check to the TDX module.
+> 
+> I was just looking at this. Agreed. It breaks the selftests though.
 
-Make `try_with_capacity`, `try_push`, and `try_extend_from_slice`
-methods available in `Vec` even though it doesn't implement them. It is
-implemented with `try_reserve` and `push_within_capacity`.
-
-This is in preparation for switching to the upstream `alloc` crate.
-
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-Suggested-by: Gary Guo <gary@garyguo.net>
-Signed-off-by: Wedson Almeida Filho <walmeida@microsoft.com>
----
- rust/kernel/alloc.rs         |  1 +
- rust/kernel/alloc/vec_ext.rs | 48 ++++++++++++++++++++++++++++++++++++
- rust/kernel/lib.rs           |  1 +
- rust/kernel/prelude.rs       |  2 ++
- 4 files changed, 52 insertions(+)
- create mode 100644 rust/kernel/alloc/vec_ext.rs
-
-diff --git a/rust/kernel/alloc.rs b/rust/kernel/alloc.rs
-index 9aa5077d4a4c..2c99635f9fd3 100644
---- a/rust/kernel/alloc.rs
-+++ b/rust/kernel/alloc.rs
-@@ -5,3 +5,4 @@
- #[cfg(not(test))]
- #[cfg(not(testlib))]
- mod allocator;
-+pub mod vec_ext;
-diff --git a/rust/kernel/alloc/vec_ext.rs b/rust/kernel/alloc/vec_ext.rs
-new file mode 100644
-index 000000000000..311e62cc5784
---- /dev/null
-+++ b/rust/kernel/alloc/vec_ext.rs
-@@ -0,0 +1,48 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Extensions to [`Vec`] for fallible allocations.
-+
-+use alloc::{collections::TryReserveError, vec::Vec};
-+use core::result::Result;
-+
-+/// Extensions to [`Vec`].
-+pub trait VecExt<T>: Sized {
-+    /// Creates a new [`Vec`] instance with at least the given capacity.
-+    fn try_with_capacity(capacity: usize) -> Result<Self, TryReserveError>;
-+
-+    /// Appends an element to the back of the [`Vec`] instance.
-+    fn try_push(&mut self, v: T) -> Result<(), TryReserveError>;
-+
-+    /// Pushes clones of the elements of slice into the [`Vec`] instance.
-+    fn try_extend_from_slice(&mut self, other: &[T]) -> Result<(), TryReserveError>
-+    where
-+        T: Clone;
-+}
-+
-+impl<T> VecExt<T> for Vec<T> {
-+    fn try_with_capacity(capacity: usize) -> Result<Self, TryReserveError> {
-+        let mut v = Vec::new();
-+        v.try_reserve(capacity)?;
-+        Ok(v)
-+    }
-+
-+    fn try_push(&mut self, v: T) -> Result<(), TryReserveError> {
-+        if let Err(retry) = self.push_within_capacity(v) {
-+            self.try_reserve(1)?;
-+            let _ = self.push_within_capacity(retry);
-+        }
-+        Ok(())
-+    }
-+
-+    fn try_extend_from_slice(&mut self, other: &[T]) -> Result<(), TryReserveError>
-+    where
-+        T: Clone,
-+    {
-+        self.try_reserve(other.len())?;
-+        for item in other {
-+            self.try_push(item.clone())?;
-+        }
-+
-+        Ok(())
-+    }
-+}
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 51f30e55bd00..7f2841a18d05 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -19,6 +19,7 @@
- #![feature(offset_of)]
- #![feature(receiver_trait)]
- #![feature(unsize)]
-+#![feature(vec_push_within_capacity)]
- 
- // Ensure conditional compilation based on the kernel configuration works;
- // otherwise we may silently break things like initcall handling.
-diff --git a/rust/kernel/prelude.rs b/rust/kernel/prelude.rs
-index ae21600970b3..c85b5972c0d3 100644
---- a/rust/kernel/prelude.rs
-+++ b/rust/kernel/prelude.rs
-@@ -14,6 +14,8 @@
- #[doc(no_inline)]
- pub use core::pin::Pin;
- 
-+pub use crate::alloc::vec_ext::VecExt;
-+
- #[doc(no_inline)]
- pub use alloc::{boxed::Box, vec::Vec};
- 
--- 
-2.34.1
-
+If all you prefer to go this direction, then please update the error 
+handling of this specific SEAMCALL.
