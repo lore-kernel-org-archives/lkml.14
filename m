@@ -1,71 +1,202 @@
-Received: from 2.mo576.mail-out.ovh.net (2.mo576.mail-out.ovh.net [178.33.251.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A405F537FA
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 07:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.33.251.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636A739FC6
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 07:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711611411; cv=none; b=C0xxQPbQ3PTbRAD4V29muhF7rARqwn1HzK8AX1OSfNDtMMhcGk3BBolANrzftT1rqa3aWBC3HFU5MCDInZl5+bq0NP8pWcnCpLlZIXqlNZf6cexPZCSpYWD8Q88Av8NJ7c2e7nHWXCVbx8Eaq1TxkZMQT/x13ah26CqPDBP+Ogo=
+	t=1711611526; cv=none; b=TmZF4m1RDe3EQHESnx/VjOZphrtiBhtTlnaOFex25b4qiecdj5d+zaPIH7kVRzBL0Rn/Ye9womYfVp4Hcm2hhTqIuRs4mlpxBK/TEKxnvWIZzIXHAIE6xPPUgmMSTYLGBkk3eUvAaHCKIJULIDcZ34wB99DGWFcMKMdn71R1pPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711611411; c=relaxed/simple;
-	bh=5jdL0NZakDKqF9gplUSDQhdeYmYZL6yIF2/zBxh1+kM=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=kyyk47J8zrHZCzKg4U1WES5u9HTveASTIAD7hF8t4hY7pdDnOjUWYbfcyW3Um9m90jCcTVPIjiyLfyYBmC349ROjTou2HWl+t8dGk0bL6KlCzWZcBNzokjr9mR2ku+ZWAss0BO9reX64cMSYdRucGeWQfIaPC+3tEgY02s2Hq9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=178.33.251.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
-Received: from director5.ghost.mail-out.ovh.net (unknown [10.109.148.79])
-	by mo576.mail-out.ovh.net (Postfix) with ESMTP id 4V4wMs1RNTz1WF7
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 07:36:41 +0000 (UTC)
-Received: from ghost-submission-6684bf9d7b-t7l5r (unknown [10.108.42.33])
-	by director5.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 665B41FEC4;
-	Thu, 28 Mar 2024 07:36:40 +0000 (UTC)
-Received: from etezian.org ([37.59.142.98])
-	by ghost-submission-6684bf9d7b-t7l5r with ESMTPSA
-	id 5CxFEAgeBWYTJAAAWKMMFQ
-	(envelope-from <andi@etezian.org>); Thu, 28 Mar 2024 07:36:40 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-98R002260416bf-d1f0-4904-9a61-cd2b2c3983f5,
-                    6D693167F0AB1D8A9C15294DA3267AC24BED3ACC) smtp.auth=andi@etezian.org
-X-OVh-ClientIp:89.217.109.169
-From: Andi Shyti <andi.shyti@kernel.org>
-To: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20240327174705.519535-1-krzysztof.kozlowski@linaro.org>
-References: <20240327174705.519535-1-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH] i2c: viperboard: drop driver owner assignment
-Message-Id: <171161139848.2698925.1593259780081719609.b4-ty@kernel.org>
-Date: Thu, 28 Mar 2024 08:36:38 +0100
+	s=arc-20240116; t=1711611526; c=relaxed/simple;
+	bh=ABUfe9xcZbpulJDNDjDQZLgxK+gqUTLOAwW6dE1RhgU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=isiTCHHgWykkh42gLD0MGlVK8je8KxDjqF3NYguMk2tuB2F/+DVKBiFxVaiCoJf+gKZE/p1H1xXgfafMZI/J83SJVHhoUVcKfyV/hk7PsuHnsEmzMwYs9CPJb0SOX7sPpVkUuNazTTBi482b9/nunwEIQ9/C7QWvVdLME7qFtpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=KYSgCwiR; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="KYSgCwiR"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2d228a132acso7144861fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 00:38:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1711611521; x=1712216321; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fPLIncRw2+PuZW9Omz7FzGCNHvO8e2LeyJVag/haJag=;
+        b=KYSgCwiRMN/oOvSNxjLTPSJr9foAlxMnUYxr0KAXlstYaghhxffh1gQVVTleULUEoO
+         4Gc8c2/xPhLMC/hTYQWIxuGFiebIAKjxi1VSo0Sx4ogyqSs2hnUH4ZhoO3G2f1NKIHPg
+         ZUcQ+C2PZ/Xw/+tKfM2ayZn6Dqir8ZF0Hm+UoVgVxO3fQSPvW1/EboTnsrDGJDEx7OVL
+         IHm0V02xtq+G4yA5xPM+tgCOppiSy4GK0TBS1D9H+pkyAVMM9FI68qZ/Wqhcjwb8VwP4
+         yVto1+TcN5yUfiC7pG+WltbmHBAInRskcE7z1wGbMWMcVA8nz4/cjmKBr7bUpyGl/VzF
+         p4Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711611521; x=1712216321;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fPLIncRw2+PuZW9Omz7FzGCNHvO8e2LeyJVag/haJag=;
+        b=aerGwK9dwtLB4qqieAj4IVZebRMLEPp8Q8DHQ/Szed8GwmxyLuVVK4FY9hiGb6yIw9
+         m6DLpvpGdPj0ZFkoTR+FzbwIJ8PwD6YcqgF7yLvhF7xKf9acwgxS9PQE38hLKfFOIYwa
+         68SP7Cz2XHWKTBqunhX/wvkoX79gtWWs3zoAmph4RTzRG5uZ7QTL3/B6gTCBIujorn1P
+         XsxBA9L1rEvs9q44GB8kA6s34IzTDQUSmM4Z5flTKmgps4VRZsjEj3LQBpncdsxtNGRn
+         BQEVmIlseiHGhxAEoYATrdiFpnzlmUig3I6i6HFq4TRCfEqbpeTTLCsczg73Y5CeBdRA
+         QHmA==
+X-Forwarded-Encrypted: i=1; AJvYcCVCw2qDEPkyRef/vzAGYCvzUVy6ip2hi4FfhiV4E2X3BA1pcFPgyw3jn4oh2vDLiWWrPc3V/qdTgMyaK8xxdXs1ysDplMfpu+L+m4uh
+X-Gm-Message-State: AOJu0YzfJHSp906En/Rh/B7aKtdzs2hxc7b25Jx+L1HW9qwkg5+j+QQg
+	oKcW0Dc/KUfkHqjxVpv7Ci/0UXDCbk3YQwIhBwa+dnqyjZ1RoGyxnOR5pUDOuE8=
+X-Google-Smtp-Source: AGHT+IFd/4meCvAsnvSLu4U6ayqsOQ6K+Buq7tZPS/mDr1Y/tbxrxjDdT/lg+/xLeoD+YX8SRtIN5A==
+X-Received: by 2002:a2e:a0ca:0:b0:2d2:206a:2f2a with SMTP id f10-20020a2ea0ca000000b002d2206a2f2amr1651907ljm.17.1711611521459;
+        Thu, 28 Mar 2024 00:38:41 -0700 (PDT)
+Received: from alex-rivos.home (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id f10-20020a05600c154a00b004154596db0esm878248wmg.19.2024.03.28.00.38.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 00:38:41 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH v2] riscv: Call secondary mmu notifier when flushing the tlb
+Date: Thu, 28 Mar 2024 08:38:38 +0100
+Message-Id: <20240328073838.8776-1-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
-X-Ovh-Tracer-Id: 2164261096738392600
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledruddukedguddtlecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfgjfhfukfffgggtgffosehtjeertdertdejnecuhfhrohhmpeetnhguihcuufhhhihtihcuoegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpeelkefhieeljeejffdtvddthfffleffueekkefgieelveejjedtudettdeghfdutdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvdejrddtrddtrddupdekledrvddujedruddtledrudeiledpfeejrdehledrudegvddrleeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpegrnhguihesvghtvgiiihgrnhdrohhrghdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheejiedpmhhouggvpehsmhhtphhouhht
+Content-Transfer-Encoding: 8bit
 
-Hi
+This is required to allow the IOMMU driver to correctly flush its own
+TLB.
 
-On Wed, 27 Mar 2024 18:47:05 +0100, Krzysztof Kozlowski wrote:
-> Core in platform_driver_register() already sets the .owner, so driver
-> does not need to.
-> 
-> 
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
 
-Applied to i2c/i2c-host-next on
+Changes in v2:
+- Rebase on top of 6.9-rc1
 
-git://git.kernel.org/pub/scm/linux/kernel/git/local tree
+ arch/riscv/mm/tlbflush.c | 39 +++++++++++++++++++++++----------------
+ 1 file changed, 23 insertions(+), 16 deletions(-)
 
-Thank you,
-Andi
-
-Patches applied
-===============
-[1/1] i2c: viperboard: drop driver owner assignment
-      commit: bfced8e642d8e221a765b4d97ce7705cfa63b9a6
+diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
+index 893566e004b7..854d984deb07 100644
+--- a/arch/riscv/mm/tlbflush.c
++++ b/arch/riscv/mm/tlbflush.c
+@@ -4,6 +4,7 @@
+ #include <linux/smp.h>
+ #include <linux/sched.h>
+ #include <linux/hugetlb.h>
++#include <linux/mmu_notifier.h>
+ #include <asm/sbi.h>
+ #include <asm/mmu_context.h>
+ 
+@@ -99,11 +100,19 @@ static void __ipi_flush_tlb_range_asid(void *info)
+ 	local_flush_tlb_range_asid(d->start, d->size, d->stride, d->asid);
+ }
+ 
+-static void __flush_tlb_range(struct cpumask *cmask, unsigned long asid,
++static inline unsigned long get_mm_asid(struct mm_struct *mm)
++{
++	return (mm && static_branch_unlikely(&use_asid_allocator)) ?
++			atomic_long_read(&mm->context.id) & asid_mask : FLUSH_TLB_NO_ASID;
++}
++
++static void __flush_tlb_range(struct mm_struct *mm,
++			      struct cpumask *cmask,
+ 			      unsigned long start, unsigned long size,
+ 			      unsigned long stride)
+ {
+ 	struct flush_tlb_range_data ftd;
++	unsigned long asid = get_mm_asid(mm);
+ 	bool broadcast;
+ 
+ 	if (cpumask_empty(cmask))
+@@ -137,31 +146,26 @@ static void __flush_tlb_range(struct cpumask *cmask, unsigned long asid,
+ 
+ 	if (cmask != cpu_online_mask)
+ 		put_cpu();
+-}
+ 
+-static inline unsigned long get_mm_asid(struct mm_struct *mm)
+-{
+-	return static_branch_unlikely(&use_asid_allocator) ?
+-			atomic_long_read(&mm->context.id) & asid_mask : FLUSH_TLB_NO_ASID;
++	if (mm)
++		mmu_notifier_arch_invalidate_secondary_tlbs(mm, start, start + size);
+ }
+ 
+ void flush_tlb_mm(struct mm_struct *mm)
+ {
+-	__flush_tlb_range(mm_cpumask(mm), get_mm_asid(mm),
+-			  0, FLUSH_TLB_MAX_SIZE, PAGE_SIZE);
++	__flush_tlb_range(mm, mm_cpumask(mm), 0, FLUSH_TLB_MAX_SIZE, PAGE_SIZE);
+ }
+ 
+ void flush_tlb_mm_range(struct mm_struct *mm,
+ 			unsigned long start, unsigned long end,
+ 			unsigned int page_size)
+ {
+-	__flush_tlb_range(mm_cpumask(mm), get_mm_asid(mm),
+-			  start, end - start, page_size);
++	__flush_tlb_range(mm, mm_cpumask(mm), start, end - start, page_size);
+ }
+ 
+ void flush_tlb_page(struct vm_area_struct *vma, unsigned long addr)
+ {
+-	__flush_tlb_range(mm_cpumask(vma->vm_mm), get_mm_asid(vma->vm_mm),
++	__flush_tlb_range(vma->vm_mm, mm_cpumask(vma->vm_mm),
+ 			  addr, PAGE_SIZE, PAGE_SIZE);
+ }
+ 
+@@ -194,13 +198,13 @@ void flush_tlb_range(struct vm_area_struct *vma, unsigned long start,
+ 		}
+ 	}
+ 
+-	__flush_tlb_range(mm_cpumask(vma->vm_mm), get_mm_asid(vma->vm_mm),
++	__flush_tlb_range(vma->vm_mm, mm_cpumask(vma->vm_mm),
+ 			  start, end - start, stride_size);
+ }
+ 
+ void flush_tlb_kernel_range(unsigned long start, unsigned long end)
+ {
+-	__flush_tlb_range((struct cpumask *)cpu_online_mask, FLUSH_TLB_NO_ASID,
++	__flush_tlb_range(NULL, (struct cpumask *)cpu_online_mask,
+ 			  start, end - start, PAGE_SIZE);
+ }
+ 
+@@ -208,7 +212,7 @@ void flush_tlb_kernel_range(unsigned long start, unsigned long end)
+ void flush_pmd_tlb_range(struct vm_area_struct *vma, unsigned long start,
+ 			unsigned long end)
+ {
+-	__flush_tlb_range(mm_cpumask(vma->vm_mm), get_mm_asid(vma->vm_mm),
++	__flush_tlb_range(vma->vm_mm, mm_cpumask(vma->vm_mm),
+ 			  start, end - start, PMD_SIZE);
+ }
+ #endif
+@@ -222,7 +226,10 @@ void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
+ 			       struct mm_struct *mm,
+ 			       unsigned long uaddr)
+ {
++	unsigned long start = uaddr & PAGE_MASK;
++
+ 	cpumask_or(&batch->cpumask, &batch->cpumask, mm_cpumask(mm));
++	mmu_notifier_arch_invalidate_secondary_tlbs(mm, start, start + PAGE_SIZE);
+ }
+ 
+ void arch_flush_tlb_batched_pending(struct mm_struct *mm)
+@@ -232,7 +239,7 @@ void arch_flush_tlb_batched_pending(struct mm_struct *mm)
+ 
+ void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
+ {
+-	__flush_tlb_range(&batch->cpumask, FLUSH_TLB_NO_ASID, 0,
+-			  FLUSH_TLB_MAX_SIZE, PAGE_SIZE);
++	__flush_tlb_range(NULL, &batch->cpumask,
++			  0, FLUSH_TLB_MAX_SIZE, PAGE_SIZE);
+ 	cpumask_clear(&batch->cpumask);
+ }
+-- 
+2.39.2
 
