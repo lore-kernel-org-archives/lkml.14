@@ -1,96 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746DD2C6B1;
-	Thu, 28 Mar 2024 21:03:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 204EA2C6B1;
+	Thu, 28 Mar 2024 21:06:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711659825; cv=none; b=R7X7a147nRAAwf3UXHNtdHh7X+3gUWsrz4LGC44YCsqghijXCd+DTao4AoiU4gp/M2xoamBx8HkkMRi7MwdBXxR9RpM0NpNzMDpRYePrnuoObD98wdGw+3WNPJP7Otp4L/ahW2ABK42d0FI3/KknaAJClvafauhm66MOnEFD/jI=
+	t=1711660009; cv=none; b=YBrSvtxcTnkHa6p3mokI+0TjUQHX7cDdbvJ2qrXHCTLNFVmwQVtr8keaztyx8/+m7AIN3hCvwcYci4TpCkSTdN4ab06CffFsJS7jsdk+bQgDoykT2osGj2R0r27SsX/KlkFKE3dctA8F7VCG1rsniFLHBdG8K2mRTY8qGeLafxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711659825; c=relaxed/simple;
-	bh=qDO/Lsc7ctYZ55C9yGW6FnXjoaC1dk7OvyZr6dxE3pE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WU0/u/A02wMTX1pLhb8IhHtQ3eYtxqiWweU9xGq4WHsxohxsucseutqMwsh7em31xLlLJ63OChA1+HYLkdRzhhB8J/3fYben/jUSjSLy/YufDIFwxTID1RB03dk6eiX4+FBsqOjN3I3PHcUQ6fgP9wIaVocDhu7/VdRb62R/C3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SuEDEiXY; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711660009; c=relaxed/simple;
+	bh=uEta2BrWAKz194xIrnBwKypqhcaPd50jFm3BWsmHjQI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=CJhLgoZZ0UvzXRYUu1lI3Mgeoh9xp2HdklNhBtW5sc5Yiv0SNJ6My80W+ULZdil+2suvW0c906X3CvUoE/AGHwPalyuRA7/V1gkFxxcP5a6ZuDZiZNWtbyGqbZe6ehj+gZRcwyqLlAIkPIGVD0ty8vnu7J6keDLm4ARyNBvSiJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pbKPKWA8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SuEDEiXY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711659823; x=1743195823;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qDO/Lsc7ctYZ55C9yGW6FnXjoaC1dk7OvyZr6dxE3pE=;
-  b=SuEDEiXYimNwEpm6gO+1dKWcVmmfFlB/x7D+ULQBt+JLJqoZRh8V3tx/
-   n2WIW+9nShvdBxsFnI9gIvmh3JyMvSNnBYYl/tDP6KvKnrYvgLMi5E6VO
-   0QXqywr5heo51fjkyi/lDaQny+hgX8Nwp6w0b7eqDvG0IGhu6YVhgyGfa
-   9FQ9z2rc+2bUDSXZ4cjV//8O97xnTonODUi3OUMCNzVlwPGbrnWla+DOL
-   tRXWh4b8Wx3iAaN5pGoEZ5lw4On1YtXZwPqyc0Ik7aeMozpjbBLG6VH/a
-   AZzT5W3p2OABV8weyb3VS6N0PE7KEG9uxPpj/tUSVQNxlf5TE2q1EGs2c
-   w==;
-X-CSE-ConnectionGUID: F2lfdrbCRWO0Rttqxy0xlA==
-X-CSE-MsgGUID: /nwJawbqRoKRlsgb+U+szw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="6955395"
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="6955395"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 14:03:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="21281747"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 14:03:42 -0700
-Date: Thu, 28 Mar 2024 14:03:42 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: Binbin Wu <binbin.wu@linux.intel.com>
-Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
-	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com,
-	Sean Christopherson <seanjc@google.com>,
-	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
-	chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
-	isaku.yamahata@linux.intel.com
-Subject: Re: [PATCH v19 069/130] KVM: TDX: Require TDP MMU and mmio caching
- for TDX
-Message-ID: <20240328210342.GR2444378@ls.amr.corp.intel.com>
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <f6a80dd212e8c3fd14b40049eed33187008cf35a.1708933498.git.isaku.yamahata@intel.com>
- <94fb2094-d8ee-4bcc-a65d-489dc777b024@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pbKPKWA8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B8BAC433F1;
+	Thu, 28 Mar 2024 21:06:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711660008;
+	bh=uEta2BrWAKz194xIrnBwKypqhcaPd50jFm3BWsmHjQI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=pbKPKWA80fpWni2qqH6zOJXCN+mhBMjc1x7SXcZ3XBlogWvtHnhcwmNKbulZ/n//J
+	 hC4b0c5leZrF2UUHApujsE1XI9HTQNtM1bvWDViVvq/K+wIcl8cq7J/q1b8ACzdYjF
+	 75hlUtmiF2LWfQyWrZ4hSqdgkmdpN2QOcjhTlvyz+IfZf2J8XrYfP1VSbzTBFGOqEO
+	 nTVl883ZEIawOcTaisRdPPvbu3lr/p5tf7GHbnv1W6FxA417YXnIzhA15QYHtsJie7
+	 8qS0/qZ+mL1G/MayQakQbt6AuAULzAYVIxILr91B3E+P7YUFCh3Zg7cj35b+VsJE8F
+	 C+sn6vefotD4A==
+Date: Thu, 28 Mar 2024 16:06:46 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, edmund.raile@proton.me,
+	Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Subject: Re: [PATCH v2] PCI: Mark LSI FW643 to avoid bus reset
+Message-ID: <20240328210646.GA1581782@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <94fb2094-d8ee-4bcc-a65d-489dc777b024@linux.intel.com>
+In-Reply-To: <20240328144201.510f6d5e.alex.williamson@redhat.com>
 
-On Thu, Mar 28, 2024 at 01:24:27PM +0800,
-Binbin Wu <binbin.wu@linux.intel.com> wrote:
-
+On Thu, Mar 28, 2024 at 02:42:01PM -0600, Alex Williamson wrote:
+> On Wed, 27 Mar 2024 10:01:19 -0500
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
 > 
-> 
-> On 2/26/2024 4:26 PM, isaku.yamahata@intel.com wrote:
-> > From: Isaku Yamahata <isaku.yamahata@intel.com>
+> > On Tue, Mar 26, 2024 at 10:18:58PM +0900, Takashi Sakamoto wrote:
+> > > On Mon, Mar 25, 2024 at 09:41:49AM -0500, Bjorn Helgaas wrote:  
+> > > > So even without this patch, you are able to pass the FW643 to a VM
+> > > > with VFIO, and you don't see any issues caused by VFIO resetting the
+> > > > device?  
+> > >  
+> > > Absolutely yes, at least in my VM, for recent years to maintain Linux
+> > > FireWire subsystem and ALSA firewire stack.  
 > > 
-> > As TDP MMU is becoming main stream than the legacy MMU, the legacy MMU
-> > support for TDX isn't implemented.  TDX requires KVM mmio caching.
+> > So there must be something different between your system and Edmund's.
+> > Maybe we can refine the quirk so it avoids the SBR on Edmund's system
+> > but not yours.
+> > 
+> > Can you both collect the output of "sudo lspci -vvv" so we can try to
+> > figure out the difference?  Also a complete dmesg log would be helpful
+> > and would contain DMI information that we might need if this is
+> > firmware dependent.
 > 
-> Can you add some description about why TDX requires mmio caching in the
-> changelog?
+> The original patch proposed for this gave me the impression that this
+> was a device used on various old Mac systems, not likely applicable to
+> a general purpose plug-in card.  Given the expanded use case, I'd
+> suggest reverting the patch.
 
-Sure, will update the commit log.
+Makes sense, I'll queue up a revert for v6.9 so we can take some time
+to figure this out.
 
-As the TDX guest is protected, the guest has to issue TDG.VP.VMCALL<MMIO> on
-VE.  The VMM has to setup Shared-EPT entry to inject VE by setting the entry
-value with VE suppress bit cleared.
-
-KVM mmio caching is a feature to set the EPT entry to special value for MMIO GFN
-instead of the default value with suppress VE bit set.  So TDX KVM wants to
-utilize it.
-
-Thanks,
--- 
-Isaku Yamahata <isaku.yamahata@intel.com>
+> I think we need significantly more exhaustive testing on the afflicted
+> system to understand whether this is an issue with the endpoint, the
+> root port, the BIOS, etc.
+> 
+> In the meantime, or maybe as a permanent solution, Edmund can make use
+> of the reset_method interface in pci-syfs to restrict the available
+> reset methods for the device rather than risk removing a reset
+> mechanism identified as working by other users.  My 2 cents.  Thanks,
+> 
+> Alex
+> 
