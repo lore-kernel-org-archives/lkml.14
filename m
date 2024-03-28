@@ -1,92 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FB6146A9D;
-	Thu, 28 Mar 2024 22:07:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC52147C62;
+	Thu, 28 Mar 2024 22:07:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711663673; cv=none; b=K9UfdHWbYwAcT/7O0rGYYutGWaRCfwB03TY1H65hntoK3eDJCHBkpNiezQiaHvyKr1gf0dW6z+lvtgCVHdP44dm6wDxqRsuOc0+hKPxumzN2Jci1ziC5jmCVDAsLFEMxeKfQWp9Dh6wn69RtufYPfNTvPu+DWgQK/ztuiDqnv9E=
+	t=1711663675; cv=none; b=Dgs9Qfdkdfu7o3EExenwQflyEQOqRC2aMABeGZuStGrnbZVMQW9DReDvYdUCM9q4OJc/SXehBidXN+7yDkBv2Y7HrHUk0UjOgfnkMG6TCgdeLfmJdCs2VCcNjLyMREBokxUiNqM8UsYFRjAwRqJEtIT69e0wyM95TX/mBb9HvEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711663673; c=relaxed/simple;
-	bh=W4ByrRn+4LKetxSuLsKEBOpQVyml+dZHE4/n83TVljc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=UHv1CM/89YCdaR/PiK8E9LofDvhdJ1q8te2nSHxqG/rCCb5cHk3/ccxSOP2ZQij3kZXUOsEXxd82RGgjhomjgYOAMxeRnkLVpOgU+gLoK2q8nd6/UTLKA+Su+oI9GTv/iPxmyVXETTglw9AOuNrv0hl7Io7iOE3uGtKoVBLlaG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V4OxVoCD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V4OxVoCD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6A53C43390;
-	Thu, 28 Mar 2024 22:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711663673;
-	bh=W4ByrRn+4LKetxSuLsKEBOpQVyml+dZHE4/n83TVljc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=V4OxVoCDai/enFPnJBLQJykhNDl1EcgFkrrTcoUNMqRgYCsT3pKvCQ4pUMTw9c5EV
-	 7ps/B6RtmKls0wISTrTzJx0RlRfQcXeF2RY8SZiUL7i0ypKS1dLF7N6aZlbm0pweIC
-	 LFaO67i9Oj0i3UhJ3KHZ10ZxkwNoNG3eWgoSsLtZLbS17N4z+u64fF8VEx1yoq97/0
-	 DXM6Ed5G/l+aHVasdfhXppVn+Eekxz/UclPWyo1nU2dcbxkOitwfFqOYiBb1FSY4lh
-	 yJrHD6RSB0jUdgMYWUg5JYyO1xllzQfHIzDRgLwalJClI3LBKR5WgpTPQRC9/uy9D8
-	 EmwXkoGdDd/1w==
-Date: Thu, 28 Mar 2024 17:07:51 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>,
-	Haojian Zhuang <haojian.zhuang@linaro.org>,
-	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
-	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com,
-	u-kumar1@ti.com
-Subject: Re: [PATCH v4 18/18] PCI: j721e: Add suspend and resume support
-Message-ID: <20240328220751.GA1613553@bhelgaas>
+	s=arc-20240116; t=1711663675; c=relaxed/simple;
+	bh=knNVVDokeLkUtIiM/RNUHlIV+ElW5WuXfrWQm+3KY74=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=dZ0cVKXACW1o5EgT1VdX7qXmrOthuJ1Ykataq9QfbcPh4izy0Q9TJHhgWZ7gc1pHI+hKdJ/eQ3pdoaTPS8/dAVDnRFwB5R7B0wOKqzKSb2QPqvHkVbZFfeIOGj5pkvQXx7lPsfiiCs7NRyWX+0f5D0xEfM6KTEmcY6wne8VoL34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87E95C43390;
+	Thu, 28 Mar 2024 22:07:54 +0000 (UTC)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Date: Thu, 28 Mar 2024 23:06:18 +0100
+Subject: [PATCH 40/52] USB: serial: sierra: drop driver owner
+ initialization
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240102-j7200-pcie-s2r-v4-18-6f1f53390c85@bootlin.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240328-module-owner-usb-serial-v1-40-bc46c9ffbf56@linaro.org>
+References: <20240328-module-owner-usb-serial-v1-0-bc46c9ffbf56@linaro.org>
+In-Reply-To: <20240328-module-owner-usb-serial-v1-0-bc46c9ffbf56@linaro.org>
+To: Johan Hovold <johan@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=681;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=knNVVDokeLkUtIiM/RNUHlIV+ElW5WuXfrWQm+3KY74=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmBendl6kwG8noPA1Nu2yFnAMKge5QtE22o/iRP
+ +gmnPJ21/+JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZgXp3QAKCRDBN2bmhouD
+ 18sJD/0VCdFTPJy6poTy4fHrLeqwK6WB8ZJeBG5Q2/Hzf3vvT5Bu2PltxvfSy53bbP4oK/6XBm2
+ BDj7VNkeH1jV4GvD1pBnjFIK8/ygQHpXlTXdYTlFhuH3pgawiRnn7CIdQhk3LaOgT4Kjs4mV7iV
+ /noQSy0CMgimIccLhP2TCKa+duEKu5QbF3P8E+lrpznVgVzRF0X+SaBKNHDMS5mfMDcr8DZ/212
+ bPbrVr40yMZ7V3Q5VLng/1op7jJCW5pX7MLs0hgdqJwLdnMBZtOEi34q913EOMRjdrgTx4R5VGR
+ FMGA0ku/Bv3RnDuN/LtYrSNYlSsWw3GQPQftl/XKCyMkxZDRh+GyVBPploWAzlXAysuoqMBJVv+
+ OnSWA3BbZrhrm5H45Qk6V4bbLqMTEmS1e/0IvUMWsh1tUI37cQWv1NBqE8v/6JuNGapZlLrgbLZ
+ /dCjXau3Ikyt2IB46Kd8Fr5aHNjfG3F3aWW2maENqRNDTb/Hiq1qAMwux+0tp52K3ep6/HdIoSq
+ 0UTevYVkLd1L9+oo6aXP71aZPDp55Gxo/9pZKOg7ll9p8c7NlmNki9+h/sUtk7Wp2ksxqqGQ3tX
+ cF5svva8ZMig0G/vz+MIssGRyZM5tjTPEmOoxr/LN/WVHNqpe+m84M+N2GkuLvDicyUiG+FTit5
+ qxy77OuLL1mlcwg==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-On Mon, Mar 04, 2024 at 04:36:01PM +0100, Thomas Richard wrote:
-> From: Théo Lebrun <theo.lebrun@bootlin.com>
-> 
-> Add suspend and resume support. Only the rc mode is supported.
-> 
-> During the suspend stage PERST# is asserted, then deasserted during the
-> resume stage.
+Core in usb_serial_register_drivers() already sets the .owner, so driver
+does not need to.
 
-> +		 * "Power Sequencing and Reset Signal Timings" table in
-> +		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
-> +		 * indicates PERST# should be deasserted after minimum of 100us
-> +		 * once REFCLK is stable. The REFCLK to the connector in RC
-> +		 * mode is selected while enabling the PHY. So deassert PERST#
-> +		 * after 100 us.
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ drivers/usb/serial/sierra.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Please cite current spec (r5.1 was published August 2023), section,
-and parameter name.  I think this is T_PERST-CLK, "REFCLK stable
-before PERST# inactive", from sec 2.9.2.
+diff --git a/drivers/usb/serial/sierra.c b/drivers/usb/serial/sierra.c
+index 353b2549eaa8..64a2e0bb5723 100644
+--- a/drivers/usb/serial/sierra.c
++++ b/drivers/usb/serial/sierra.c
+@@ -1021,7 +1021,6 @@ static int sierra_resume(struct usb_serial *serial)
+ 
+ static struct usb_serial_driver sierra_device = {
+ 	.driver = {
+-		.owner =	THIS_MODULE,
+ 		.name =		"sierra",
+ 	},
+ 	.description       = "Sierra USB modem",
 
-> +		 */
-> +		if (pcie->reset_gpio) {
-> +			fsleep(100);
+-- 
+2.34.1
 
-I'd like to see a macro used here instead of a bare number.  Since
-this isn't anything specific to j721e, maybe add something like
-#define PCIE_T_PERST_CLK_US alongside PCIE_T_PVPERL_MS.
-
-> +			gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-> +		}
