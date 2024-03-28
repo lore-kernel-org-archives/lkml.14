@@ -1,95 +1,104 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD1DC1311B3
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 19:12:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C7B1311B3;
+	Thu, 28 Mar 2024 19:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711653125; cv=none; b=OShymYNDKoosbPNjlw8GAjYpSzFkhvuK5K46Y3oDtk0uQu/zvIyNnA1mamiRm9SMovITV45ZqwygD9ytA21dxlLnNqSFp6/nBlgPn8mzDv59Betg93Imj8K91zwp6HTjdnvgCcv+AsnPwBOyUONFtWnzT4YE0ElT/vfVQ9VpVxs=
+	t=1711653130; cv=none; b=heJRyEnxTGdA7eQX5trXfKXPNYD9arw1NBki5TOQkScBguJbw+38OTjJEYh/atFWqp6KvkdLqezGOp5XzUZ0urRVtHqe23MXlQ/jifsYb7LSzQoTqmTD9Gk6U72C1KJ/2LZi7w2aZ3oXwD0WZthkSbQFvmEsmJI61ImTKM6WXQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711653125; c=relaxed/simple;
-	bh=WdT850BrFUtNSdscPDHstvsJSbWJCrq+fJKOb4t3NGE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IFjCBm8gMeQCoEnpjcaf0NdgLlOOaXfsU1YY+u4oRo+zfVDBWjSXPGPjX6q+T6ggnDqYm2tWEiHoY82Y7lT27pZzmfkuqT/3nEXMKoEtw3BPptN8IkaS1i9lCBqnvp/9p30o5f9fBhyWf6DLQOMHx1vZKjRnpSxWDYSGvnClKdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=g1vJID4F; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1711653130; c=relaxed/simple;
+	bh=biYxyJhLDCyx3WdQsS5BmOjmFGFgSE1mva1PXOLzYXQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ind56j0EMlq2qEpsGbH3QempT3AzUsuMk89YFgJVf0fIYR3BsHbS3PFIgqQxp/NwLSiZbUyrmKHhZCc5zfO2Ja/u9i1ecjYZCOdv+1RhJAirI+95mafvvQBmLmaEGm6wLnVRR3G4Jjm6DHwqYZXDgwHF+CvnD2h97booHKAEkjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FgVeiVQt; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="g1vJID4F"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-56c0a249bacso1725371a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 12:12:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FgVeiVQt"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-36867dfe940so4260525ab.3;
+        Thu, 28 Mar 2024 12:12:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1711653121; x=1712257921; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1711653128; x=1712257928; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5wZ6xWGSDhVRLxzfYy01JgWDM8uMS6wBHVe0w0OdNVk=;
-        b=g1vJID4FobpWIKOwA+7AACSU3CZwgsa2k/GOFqOnhibRoTywBnEIrXfEmmJZaAN46L
-         0ARQ8IalTiwraLK9TuOM2g0K9Av/rkwJ+pH3onlDgXxEDK5L/n+IqbYhv4HZOHTWPej/
-         V0dgA3Gnsxo9n2AUetSGwgKKIJkMhxI6KHpMFeMZ6ZCTFqBsTCId4BsKgk8PJ7iVDDVy
-         0LnOei1h9XDUc9S+QUqWtfzGu6WIN9PImS+BoF7WZk78AI+fNz9y8+K7KRrbRnDXaoUb
-         FLUmc1j7wE/Y6IrdyFK2Sryioznk8opuaj8w0uHDd4+9QJX5qFiW4U1btxNeJBnfyFIi
-         qf6g==
+        bh=sJ86BPk/z7nJiBSTEphysEjHpoF9fC7TBFrMbkKS54Q=;
+        b=FgVeiVQtK0sDhn4IU22ozAt2yAhC0hadnoZ5s0U7tPXL4xBSch5l19kZeGrg8p7k6Q
+         EM9jIxjgPo3xEeNln38xgynHMwMcaa4K8zsocxgUuEItbsGro70ZrImW2ByjS/v2pknj
+         amqEvXaCamUFf/MIhzxcvDxMg70OYnvQ3HO+F5sR36MioiidcFglGXrtFY2/nS8b4g4g
+         VAhSW0R+YDXHfZ+HXNrk/meuhdNmzcJ63IziZRLN0rSwlivEwzkGYM8l9lGOoJb3vkJo
+         pc/udBU+efbIq8AzRdT+MsClkMHC2bl0hUA7soY7vxhCdxdRgHu9nHmWEcC7bnN78RHE
+         GxPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711653121; x=1712257921;
+        d=1e100.net; s=20230601; t=1711653128; x=1712257928;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5wZ6xWGSDhVRLxzfYy01JgWDM8uMS6wBHVe0w0OdNVk=;
-        b=tdsFWV23LB7VaMqLYHZwnbb7Pa1JkHtGayLf70/CEGXS+4ixLDx9J2o+rCD9Ww4WzU
-         4SPhOUxZRT4hX5uVn2NIN6malRGWigw6w9TePj5VXzYd24UOqQDOy8ZW0p2vaJCx1u/8
-         3c1bFBdZ71agFnPs0uCDyD9Y1ilVy/1Bk0FjR5L66AtGuLUqjL188MLPVk/SnIV2/KCE
-         E9d9Bl7peY+Faz8DoiPezkfGR/33+A3++dl8aQIoOqMAkAiYTLTa/aEz3Y+ook21uGyh
-         7KCdaR/S/K1F1CdNHlo9viGKlwC5l4wHIu2RqE3sHIcytE3gZaXlquyH17/WKS+L4pyd
-         HyEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVcagjtphJ5XmWS5XNGzZFL195s0GR9A7Eu7N32J6oWKuGkgtDgfGQBcAJgsOq6JNUcIep3uFEuYvhV/PfAGVF1iwceACCx6NHIzAct
-X-Gm-Message-State: AOJu0YwEzlDltXr8VzNlgcDBaHJ8d+6N9aWEUQxVH/gXv0A4r4JAwR9T
-	OSO/veW9qQJ24oHgL9xiuuK1fifJDt85+O3eRuM9jOKdvgM1FkDR0RY7VmZegJM=
-X-Google-Smtp-Source: AGHT+IFhc0Re0LenOTCoW82MfYtfd+rbj0ZdqwrNRv+4gqtnacw26OX8Olim4sk0Ad9fmd0Mg3pMiQ==
-X-Received: by 2002:a17:906:180b:b0:a47:35e5:7da0 with SMTP id v11-20020a170906180b00b00a4735e57da0mr98456eje.41.1711653121106;
-        Thu, 28 Mar 2024 12:12:01 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-82-135-80-212.dynamic.mnet-online.de. [82.135.80.212])
-        by smtp.gmail.com with ESMTPSA id n9-20020a1709062bc900b00a469d3df3c1sm1068587ejg.96.2024.03.28.12.12.00
+        bh=sJ86BPk/z7nJiBSTEphysEjHpoF9fC7TBFrMbkKS54Q=;
+        b=MKWmKqJVBqKNPi8WTfHJdQYl2OeTWK6nV5wh01SRMbI7ut/tlTU+n7jDRmURLX0w7b
+         RmEKUYISJR0gvrwbKI0cVQIJmG/YeLScfioo7ueu99O4hBM04kp9dgbDQ53LwXUt4Ml0
+         f8+x8VtWx1Tgzk4HLGsgzf7Awl2u7p0ebmlFYBrst0Dw1ZQ+RNOR0h4gOK18d4JhWF9q
+         7yfLsVZJp435eq0WGtiq22EM+OBC17aPjcG2qkjUfEMuGezJwphUlNqhRGgK8p5DWyof
+         fVZIp8KWxh237T1R2Sh2OB4GSxOU6qn0uAp+ag3FHrCswPyxCEwwgT5Yeb5if/E6yIQg
+         /iQg==
+X-Forwarded-Encrypted: i=1; AJvYcCVetZSyA0HfHx8b9sCA64SeUk5B5phBNbJjheuSTeCEGd4qvxLmLLnjv/KLMaAedZdRz/JQypHYbZ49iIuWFP1wgO8EKRnA00CxPLuXPqwV5mAOzRBE7Wq2ZawlGdDTcsp9sWV19P3C6g==
+X-Gm-Message-State: AOJu0YxJ44qAXNEnTgeCZ4JLRWSmliNNzmRoJhShHsbCWEGycb5hg17c
+	dF2G7mq7So3GwRLynLIr0DtvGLVSKC8yWyp7mReXiFJd7fSlFxff
+X-Google-Smtp-Source: AGHT+IFLfnLNW0l2diyN43Gt0EjvMYz199HCeJRag2x2dZHlLF+jJEkFP6pLmURA0QyYh12MkF30iQ==
+X-Received: by 2002:a05:6e02:1e02:b0:368:8ab3:7d9b with SMTP id g2-20020a056e021e0200b003688ab37d9bmr1123ila.15.1711653128467;
+        Thu, 28 Mar 2024 12:12:08 -0700 (PDT)
+Received: from hestia.. (208-107-161-31-dynamic.midco.net. [208.107.161.31])
+        by smtp.gmail.com with ESMTPSA id e13-20020a056e0204ad00b003685ea08fb3sm590301ils.73.2024.03.28.12.12.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 12:12:00 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>
-Cc: linux-crypto@vger.kernel.org,
+        Thu, 28 Mar 2024 12:12:08 -0700 (PDT)
+From: Robert Nelson <robertcnelson@gmail.com>
+To: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] crypto: jitter - Replace http with https
-Date: Thu, 28 Mar 2024 20:05:12 +0100
-Message-ID: <20240328190511.473822-3-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.44.0
+	devicetree@vger.kernel.org
+Cc: Robert Nelson <robertcnelson@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Nishanth Menon <nm@ti.com>,
+	Jared McArthur <j-mcarthur@ti.com>,
+	Jason Kridner <jkridner@beagleboard.org>,
+	Deepak Khatri <lorforlinux@beagleboard.org>
+Subject: [PATCH 1/2] dt-bindings: arm: ti: Add BeagleY-AI
+Date: Thu, 28 Mar 2024 14:12:04 -0500
+Message-Id: <20240328191205.82295-1-robertcnelson@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The PDF is also available via https.
+This board is based on ti,j722s
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+https://beagley-ai.org/
+https://openbeagle.org/beagley-ai/beagley-ai
+
+Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+CC: Rob Herring <robh@kernel.org>
+CC: Nishanth Menon <nm@ti.com>
+CC: Jared McArthur <j-mcarthur@ti.com>
+CC: Jason Kridner <jkridner@beagleboard.org>
+CC: Deepak Khatri <lorforlinux@beagleboard.org>
 ---
- crypto/jitterentropy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/arm/ti/k3.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/crypto/jitterentropy.c b/crypto/jitterentropy.c
-index 26a9048bc893..f2ffd6332c6c 100644
---- a/crypto/jitterentropy.c
-+++ b/crypto/jitterentropy.c
-@@ -157,8 +157,8 @@ struct rand_data {
- /*
-  * See the SP 800-90B comment #10b for the corrected cutoff for the SP 800-90B
-  * APT.
-- * http://www.untruth.org/~josh/sp80090b/UL%20SP800-90B-final%20comments%20v1.9%2020191212.pdf
-  * In in the syntax of R, this is C = 2 + qbinom(1 − 2^(−30), 511, 2^(-1/osr)).
-+ * https://www.untruth.org/~josh/sp80090b/UL%20SP800-90B-final%20comments%20v1.9%2020191212.pdf
-  * (The original formula wasn't correct because the first symbol must
-  * necessarily have been observed, so there is no chance of observing 0 of these
-  * symbols.)
+diff --git a/Documentation/devicetree/bindings/arm/ti/k3.yaml b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+index 52b51fd7044e..ca23b7e6a35e 100644
+--- a/Documentation/devicetree/bindings/arm/ti/k3.yaml
++++ b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+@@ -134,6 +134,7 @@ properties:
+       - description: K3 J722S SoC and Boards
+         items:
+           - enum:
++              - beagle,j722s-beagley-ai
+               - ti,j722s-evm
+           - const: ti,j722s
+ 
 -- 
-2.44.0
+2.39.2
 
