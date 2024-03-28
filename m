@@ -1,131 +1,133 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51E081E89C;
-	Thu, 28 Mar 2024 07:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0AD64F5F2
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 07:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711610494; cv=none; b=aqKObknfSDg+90bA/PYGqwwHaDzE4JbYuGYootUUNL/vK6wR48kca7xK7VfLhdaL/SwUb2znG0A9/4e3VWtiebVlsOg6vS1IoIJcY16GtWjjfrBL0LjO6L8o32CkUHS+jN1m9/HwakFCn6XFk9ChHAemQYRDJ6uUFS2+4B/BH6M=
+	t=1711610506; cv=none; b=ts0irAAxRClD/FIz+gT+U9dE7KvifY+UwSmlZNbhaa+LHFtLbJLLFn0Gfibdu++ROsu8CraNYlWe0bLhpNz3aSw5Zz/FG4cjTx2ssLNtjFq/AMBk3X8iwB3NNjnL+IDygwLdfRyxbpr6KkSrRgA8BFf8X6ZNvQ3oW5HYpoTz5Z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711610494; c=relaxed/simple;
-	bh=jUemk+VG3jTjLUtctuQ9btb67Jp6DBUNLMtVoqXzJv0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=q806PfolIVjTVwH9azRKfghVXJGmDZWMiFPzgCHM/1twwXM5BJ4bJ49FvzWgyba8k1vKa/jjD1hV/OUSvxxiSZEFkGaeQ/LhAbGLN01A5Mc2JcGT6LPRBmEiIXHpFEvVW1tiNvX2L7R7WhwS8NSJTffvNNr0OCZ71BfFRJ412iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F5682F4;
-	Thu, 28 Mar 2024 00:22:05 -0700 (PDT)
-Received: from [192.168.178.110] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 859E43F64C;
-	Thu, 28 Mar 2024 00:21:29 -0700 (PDT)
-Message-ID: <9f2f5c94-cc9f-4a16-9b70-f00598af8cab@arm.com>
-Date: Thu, 28 Mar 2024 08:21:28 +0100
+	s=arc-20240116; t=1711610506; c=relaxed/simple;
+	bh=+c2g+QOTgg3995dvAWPf1MaHsDGDdMPE+6RXTZkhIfU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=neEnPif2gEKHDtUkcpoHovz8z32ZiuNAB1EO9wXwtofb7AcAvFJfB9Zd6dZqhmkA7TZCJOZJFFRD+7TkNtP4p1YA+5xW9Jc1ay/1mM5Qi3KiUZ8WGgNlGS9StiPmBVsnu54ifriODBe/MdMtL6GczBxVYhDgwKK3TXFVxBat1ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lifRrg5Q; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lifRrg5Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDBE2C433F1;
+	Thu, 28 Mar 2024 07:21:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711610506;
+	bh=+c2g+QOTgg3995dvAWPf1MaHsDGDdMPE+6RXTZkhIfU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lifRrg5QafFFOULEjnABkBHqjSe3HGSscym8oS9j8noUEpXmokgf5nu5DkPvMfv1e
+	 KnSKru2ZKysI2Td1Zlj9qUtsow7d/Qtd0JD1/Idy8JteuuLfdR4TrTNCM5OAaZ8Qsa
+	 8nh6NGByrO7433qrcNrszUCD/6GZ84aeJwlaIEy3VlaN3BSOGh5xwxmLLm4cUgEZN3
+	 nLEik4Ll6Nn9ZyKPipX4MvpUyRBHHNRG9kmlpYc64k0fI0rC+BvuR6i8N+ZVUvJASQ
+	 XeAOB5QOFiTsFxLdrecXzj5ijVMNnGtm+6bqqFwroDqo6BcHLV6Z5qCiutJAdKjk0g
+	 0BWix70blxtgA==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Wenjie Qi <qwjhust@gmail.com>,
+	Chao Yu <chao@kernel.org>
+Subject: [PATCH v6] f2fs: fix zoned block device information initialization
+Date: Thu, 28 Mar 2024 15:21:36 +0800
+Message-Id: <20240328072136.3023135-1-chao@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND][PATCH v2 3/4] PM: EM: Add em_dev_update_chip_binning()
-Content-Language: en-US
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-To: Lukasz Luba <lukasz.luba@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, sboyd@kernel.org, nm@ti.com,
- linux-samsung-soc@vger.kernel.org, daniel.lezcano@linaro.org,
- rafael@kernel.org, viresh.kumar@linaro.org, krzysztof.kozlowski@linaro.org,
- alim.akhtar@samsung.com, m.szyprowski@samsung.com, mhiramat@kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20240322110850.77086-1-lukasz.luba@arm.com>
- <20240322110850.77086-4-lukasz.luba@arm.com>
- <eb9f48f6-cca8-405b-82a2-352893a79f14@arm.com>
- <30ee98e9-3d9a-4be8-8127-043f68a7dcb1@arm.com>
- <410c5da7-c79c-4607-9aa3-2e78d991d2d7@arm.com>
-In-Reply-To: <410c5da7-c79c-4607-9aa3-2e78d991d2d7@arm.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 27/03/2024 13:55, Dietmar Eggemann wrote:
-> On 26/03/2024 21:32, Lukasz Luba wrote:
->>
->>
->> On 3/26/24 10:09, Dietmar Eggemann wrote:
->>> On 22/03/2024 12:08, Lukasz Luba wrote:
-> 
-> [...]
-> 
->>>> +    return em_recalc_and_update(dev, pd, em_table);
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(em_dev_update_chip_binning);
->>>
->>> In the previous version of 'chip-binning' you were using the new EM
->>> interface em_dev_compute_costs() (1) which is now replaced by
->>> em_recalc_and_update() -> em_compute_costs().
->>>
->>> https://lkml.kernel.org/r/20231220110339.1065505-2-lukasz.luba@arm.com
->>>
->>> Which leaves (1) still unused.
->>>
->>> That was why my concern back then that we shouldn't introduce EM
->>> interfaces without a user:
->>>
->>> https://lkml.kernel.org/r/8fc499cf-fca1-4465-bff7-a93dfd36f3c8@arm.com
->>>
->>> What happens now with em_dev_compute_costs()?
->>>
->>
->> For now it's not used, but modules which will create new EMs
->> with custom power values will use it. When such a module have
->> e.g. 5 EMs for one PD and only switches on one of them, then
->> this em_dev_compute_costs() will be used at setup for those
->> 5 EMs. Later it won't be used.
->> I don't wanted to combine the registration of new EM with
->> the compute cost, because that will create overhead in the
->> switching to new EM code path. Now we have only ~3us, which
->> was the main goal.
->>
->> When our scmi-cpufreq get the support for EM update this
->> compute cost will be used there.
-> 
-> OK, I see. I checked the reloadable EM test module and
-> em_dev_compute_costs() is used there like you described it.
+From: Wenjie Qi <qwjhust@gmail.com>
 
-I had a second look and IMHO the layout is like this:
+If the max open zones of zoned devices are less than
+the active logs of F2FS, the device may error due to
+insufficient zone resources when multiple active logs
+are being written at the same time.
 
-Internal (1) and external (2,3) 'reloadable EM' use cases:
-(EM alloc and free not depicted)
+Signed-off-by: Wenjie Qi <qwjhust@gmail.com>
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+v6:
+- add check condition to avoid remount failure.
+ fs/f2fs/f2fs.h  |  1 +
+ fs/f2fs/super.c | 27 +++++++++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
 
-1. Late CPUs booting (CPU capacity adjustment)
-
- e3f1164fc9ee  PM: EM: Support late CPUs booting and capacity adjustment
-
- schedule_delayed_work(&em_update_work, ...)
-
-  em_update_workfn()
-   em_check_capacity_update()
-    em_adjust_new_capacity()
-     em_recalc_and_update()       <-- (i)
-      em_compute_costs()          <-- (ii)
-      em_dev_update_perf_domain() <-- external
-
-2. Reload EM from driver
-
- 22ea02848c07  PM: EM: Add em_dev_compute_costs()
- 977230d5d503  PM: EM: Introduce em_dev_update_perf_domain() for EM
-               updates
-
- em_dev_compute_costs()           <-- external
-  em_compute_costs()              <-- (ii)
- em_dev_update_perf_domain()      <-- external
-
-3. Chip binning
-
- this patchset  PM: EM: Add em_dev_update_chip_binning()
-
- em_dev_update_chip_binning()     <-- external
-  em_recalc_and_update()          <-- (i)
-   em_compute_costs()             <-- (ii)
-   em_dev_update_perf_domain()    <-- external
-
-
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 0550929dc6e5..694f8a52cb84 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1559,6 +1559,7 @@ struct f2fs_sb_info {
+ 
+ #ifdef CONFIG_BLK_DEV_ZONED
+ 	unsigned int blocks_per_blkz;		/* F2FS blocks per zone */
++	unsigned int max_open_zones;		/* max open zone resources of the zoned device */
+ #endif
+ 
+ 	/* for node-related operations */
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 7c45929671ad..642540782471 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -2326,6 +2326,17 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
+ 	if (err)
+ 		goto restore_opts;
+ 
++#ifdef CONFIG_BLK_DEV_ZONED
++	if (f2fs_is_multi_device(sbi) &&
++		sbi->max_open_zones < F2FS_OPTION(sbi).active_logs) {
++		f2fs_err(sbi,
++			"zoned: max open zones %u is too small, need at least %u open zones",
++				 sbi->max_open_zones, F2FS_OPTION(sbi).active_logs);
++		err = -EINVAL;
++		goto restore_opts;
++	}
++#endif
++
+ 	/* flush outstanding errors before changing fs state */
+ 	flush_work(&sbi->s_error_work);
+ 
+@@ -3868,11 +3879,24 @@ static int init_blkz_info(struct f2fs_sb_info *sbi, int devi)
+ 	sector_t nr_sectors = bdev_nr_sectors(bdev);
+ 	struct f2fs_report_zones_args rep_zone_arg;
+ 	u64 zone_sectors;
++	unsigned int max_open_zones;
+ 	int ret;
+ 
+ 	if (!f2fs_sb_has_blkzoned(sbi))
+ 		return 0;
+ 
++	if (bdev_is_zoned(FDEV(devi).bdev)) {
++		max_open_zones = bdev_max_open_zones(bdev);
++		if (max_open_zones && (max_open_zones < sbi->max_open_zones))
++			sbi->max_open_zones = max_open_zones;
++		if (sbi->max_open_zones < F2FS_OPTION(sbi).active_logs) {
++			f2fs_err(sbi,
++				"zoned: max open zones %u is too small, need at least %u open zones",
++				sbi->max_open_zones, F2FS_OPTION(sbi).active_logs);
++			return -EINVAL;
++		}
++	}
++
+ 	zone_sectors = bdev_zone_sectors(bdev);
+ 	if (sbi->blocks_per_blkz && sbi->blocks_per_blkz !=
+ 				SECTOR_TO_BLOCK(zone_sectors))
+@@ -4186,6 +4210,9 @@ static int f2fs_scan_devices(struct f2fs_sb_info *sbi)
+ 
+ 	logical_blksize = bdev_logical_block_size(sbi->sb->s_bdev);
+ 	sbi->aligned_blksize = true;
++#ifdef CONFIG_BLK_DEV_ZONED
++	sbi->max_open_zones = UINT_MAX;
++#endif
+ 
+ 	for (i = 0; i < max_devices; i++) {
+ 		if (i == 0)
+-- 
+2.40.1
 
