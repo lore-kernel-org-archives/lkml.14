@@ -1,182 +1,136 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B39F137C36
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:37:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC1F3BBF3;
+	Thu, 28 Mar 2024 16:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711643832; cv=none; b=SQr8Tnj+JBtApclLM1QalMPdUvCjKb1Bv8M74LbQbZeyJaL8QMsieFm+no3VU+nSMIyhD3RB/hj3qUiqvlsF+rqoTTquHOh3ozSgbR4NcsbOg2cZHPaojZTLXj13wEJx/kYp7kX+8n8MeTHqM0mw6fg1V7zKzcESThMzPv+YkW0=
+	t=1711643834; cv=none; b=k6CGDXCM9aMBEAi2Gm1//Kh+NdhZKZv73k87mUWe7V1zgmKFDLvObXxRI8mFQtCGfXCgIUdS8jiTqJV26JSzKeJmUou/fdiF/BoIc1sB101XdxDAUfqbKkO1giH2Dqo+ddznGqIEv1HcL+EWpzF8RxWo9CiEc1YaGUsWG6ttt4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711643832; c=relaxed/simple;
-	bh=sdVM49R5pf4iYw6+e32PlvypUiyNCnM8S4phChaUfIA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m2QEAi6XKsEqIIsIc55XzGdiktle0ZIJvzd2DONSptSGtnRq3EAsQn42K8mUHz3Pwr4idDmX0254o/a3ldcldnzwG/4YGe7eVNJt5Vxw5f4eOaHT54YLvcmB1/S7AyHMkyMnYcn9DOqYIpQCSiiByZ9JJ73nApA71Dm9UlrU7Ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WPgnir6U; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711643834; c=relaxed/simple;
+	bh=/iFXd2bzZPhj4ozZeU0FU3oFCOqJ/fd5qZILAEiheyc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IpwL5yQ3uSN5SJX010gLG3cKbxWvD3YrhUkYkPr3bPa8vB2WW3QSJNirxkRR6R8hfsQbF4K0nbT5lFXrigyQvOlAetYXL4ae5tekWucJPG+cHKzMIboHlfysdoug9q5HrlW30St4DqqSB4caYBKqdg1sf0S/oe+zf5NlUmkke0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=nwqpFkoD; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WPgnir6U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711643829;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ynxqw2O6Fn8BCqwyUG55TcbJftNzL16LOIMZCwa+6jc=;
-	b=WPgnir6UMMjjuhEmHcSRUVow363CgY4xLjtGIie1HwN1Z6syO5vGRl3zG7jMmj3OP/AteU
-	zmKkOiavoS8jsU0MISvLdvQECzeKAPdCYMp5tgT8YoV4ZOzeWRJZh4gWCcg1tbJ1VLI8I7
-	jK9BU2RIXAr8LBgvw/ZdLa2RDSTjVQc=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-502-Suy6mr8HNd28fD3IYgT4vw-1; Thu,
- 28 Mar 2024 12:37:07 -0400
-X-MC-Unique: Suy6mr8HNd28fD3IYgT4vw-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AA02B383CD7A;
-	Thu, 28 Mar 2024 16:37:06 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.146])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id BB8F0492BD0;
-	Thu, 28 Mar 2024 16:37:03 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-	Jeff Layton <jlayton@kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Dominique Martinet <asmadeus@codewreck.org>
-Cc: David Howells <dhowells@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Steve French <smfrench@gmail.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Tom Talpey <tom@talpey.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	netfs@lists.linux.dev,
-	linux-cachefs@redhat.com,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 12/26] afs: Use alternative invalidation to using launder_folio
-Date: Thu, 28 Mar 2024 16:34:04 +0000
-Message-ID: <20240328163424.2781320-13-dhowells@redhat.com>
-In-Reply-To: <20240328163424.2781320-1-dhowells@redhat.com>
-References: <20240328163424.2781320-1-dhowells@redhat.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="nwqpFkoD"
+Received: from [192.168.88.20] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3E566D20;
+	Thu, 28 Mar 2024 17:36:37 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1711643797;
+	bh=/iFXd2bzZPhj4ozZeU0FU3oFCOqJ/fd5qZILAEiheyc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nwqpFkoD5oaC+xPHjSJyuDP0OZF+tppig+7BmRgQFdX6Xgoy2qU1h4Cg2L200Y14F
+	 xwvFHVehOa7lOAaiGkEARFKZ3XtrUjvYaTE9AwOlf28aSB2PVm+l1PrFYGxAvcAyBh
+	 QMzqCzQZzkmEGmsWm6k2Ei+YODdNm7sb91OnT2VM=
+Message-ID: <4f994662-347d-4562-9108-5d7e3798fa51@ideasonboard.com>
+Date: Thu, 28 Mar 2024 18:37:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] dma: xilinx_dpdma: Remove unnecessary use of
+ irqsave/restore
+Content-Language: en-US
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Michal Simek <michal.simek@amd.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+References: <20240308210034.3634938-1-sean.anderson@linux.dev>
+ <20240308210034.3634938-3-sean.anderson@linux.dev>
+ <0652c82f-b0a2-4881-ac51-38399b180ad4@ideasonboard.com>
+ <d6a8c1c8-258a-447b-b6cd-199f33199388@linux.dev>
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ xsFNBE6ms0cBEACyizowecZqXfMZtnBniOieTuFdErHAUyxVgtmr0f5ZfIi9Z4l+uUN4Zdw2
+ wCEZjx3o0Z34diXBaMRJ3rAk9yB90UJAnLtb8A97Oq64DskLF81GCYB2P1i0qrG7UjpASgCA
+ Ru0lVvxsWyIwSfoYoLrazbT1wkWRs8YBkkXQFfL7Mn3ZMoGPcpfwYH9O7bV1NslbmyJzRCMO
+ eYV258gjCcwYlrkyIratlHCek4GrwV8Z9NQcjD5iLzrONjfafrWPwj6yn2RlL0mQEwt1lOvn
+ LnI7QRtB3zxA3yB+FLsT1hx0va6xCHpX3QO2gBsyHCyVafFMrg3c/7IIWkDLngJxFgz6DLiA
+ G4ld1QK/jsYqfP2GIMH1mFdjY+iagG4DqOsjip479HCWAptpNxSOCL6z3qxCU8MCz8iNOtZk
+ DYXQWVscM5qgYSn+fmMM2qN+eoWlnCGVURZZLDjg387S2E1jT/dNTOsM/IqQj+ZROUZuRcF7
+ 0RTtuU5q1HnbRNwy+23xeoSGuwmLQ2UsUk7Q5CnrjYfiPo3wHze8avK95JBoSd+WIRmV3uoO
+ rXCoYOIRlDhg9XJTrbnQ3Ot5zOa0Y9c4IpyAlut6mDtxtKXr4+8OzjSVFww7tIwadTK3wDQv
+ Bus4jxHjS6dz1g2ypT65qnHen6mUUH63lhzewqO9peAHJ0SLrQARAQABzTBUb21pIFZhbGtl
+ aW5lbiA8dG9taS52YWxrZWluZW5AaWRlYXNvbmJvYXJkLmNvbT7CwY4EEwEIADgWIQTEOAw+
+ ll79gQef86f6PaqMvJYe9QUCX/HruAIbAwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgAAKCRD6
+ PaqMvJYe9WmFD/99NGoD5lBJhlFDHMZvO+Op8vCwnIRZdTsyrtGl72rVh9xRfcSgYPZUvBuT
+ VDxE53mY9HaZyu1eGMccYRBaTLJSfCXl/g317CrMNdY0k40b9YeIX10feiRYEWoDIPQ3tMmA
+ 0nHDygzcnuPiPT68JYZ6tUOvAt7r6OX/litM+m2/E9mtp8xCoWOo/kYO4mOAIoMNvLB8vufi
+ uBB4e/AvAjtny4ScuNV5c5q8MkfNIiOyag9QCiQ/JfoAqzXRjVb4VZG72AKaElwipiKCWEcU
+ R4+Bu5Qbaxj7Cd36M/bI54OrbWWETJkVVSV1i0tghCd6HHyquTdFl7wYcz6cL1hn/6byVnD+
+ sR3BLvSBHYp8WSwv0TCuf6tLiNgHAO1hWiQ1pOoXyMEsxZlgPXT+wb4dbNVunckwqFjGxRbl
+ Rz7apFT/ZRwbazEzEzNyrBOfB55xdipG/2+SmFn0oMFqFOBEszXLQVslh64lI0CMJm2OYYe3
+ PxHqYaztyeXsx13Bfnq9+bUynAQ4uW1P5DJ3OIRZWKmbQd/Me3Fq6TU57LsvwRgE0Le9PFQs
+ dcP2071rMTpqTUteEgODJS4VDf4lXJfY91u32BJkiqM7/62Cqatcz5UWWHq5xeF03MIUTqdE
+ qHWk3RJEoWHWQRzQfcx6Fn2fDAUKhAddvoopfcjAHfpAWJ+ENc7BTQROprNHARAAx0aat8GU
+ hsusCLc4MIxOQwidecCTRc9Dz/7U2goUwhw2O5j9TPqLtp57VITmHILnvZf6q3QAho2QMQyE
+ DDvHubrdtEoqaaSKxKkFie1uhWNNvXPhwkKLYieyL9m2JdU+b88HaDnpzdyTTR4uH7wk0bBa
+ KbTSgIFDDe5lXInypewPO30TmYNkFSexnnM3n1PBCqiJXsJahE4ZQ+WnV5FbPUj8T2zXS2xk
+ 0LZ0+DwKmZ0ZDovvdEWRWrz3UzJ8DLHb7blPpGhmqj3ANXQXC7mb9qJ6J/VSl61GbxIO2Dwb
+ xPNkHk8fwnxlUBCOyBti/uD2uSTgKHNdabhVm2dgFNVuS1y3bBHbI/qjC3J7rWE0WiaHWEqy
+ UVPk8rsph4rqITsj2RiY70vEW0SKePrChvET7D8P1UPqmveBNNtSS7In+DdZ5kUqLV7rJnM9
+ /4cwy+uZUt8cuCZlcA5u8IsBCNJudxEqBG10GHg1B6h1RZIz9Q9XfiBdaqa5+CjyFs8ua01c
+ 9HmyfkuhXG2OLjfQuK+Ygd56mV3lq0aFdwbaX16DG22c6flkkBSjyWXYepFtHz9KsBS0DaZb
+ 4IkLmZwEXpZcIOQjQ71fqlpiXkXSIaQ6YMEs8WjBbpP81h7QxWIfWtp+VnwNGc6nq5IQDESH
+ mvQcsFS7d3eGVI6eyjCFdcAO8eMAEQEAAcLBXwQYAQIACQUCTqazRwIbDAAKCRD6PaqMvJYe
+ 9fA7EACS6exUedsBKmt4pT7nqXBcRsqm6YzT6DeCM8PWMTeaVGHiR4TnNFiT3otD5UpYQI7S
+ suYxoTdHrrrBzdlKe5rUWpzoZkVK6p0s9OIvGzLT0lrb0HC9iNDWT3JgpYDnk4Z2mFi6tTbq
+ xKMtpVFRA6FjviGDRsfkfoURZI51nf2RSAk/A8BEDDZ7lgJHskYoklSpwyrXhkp9FHGMaYII
+ m9EKuUTX9JPDG2FTthCBrdsgWYPdJQvM+zscq09vFMQ9Fykbx5N8z/oFEUy3ACyPqW2oyfvU
+ CH5WDpWBG0s5BALp1gBJPytIAd/pY/5ZdNoi0Cx3+Z7jaBFEyYJdWy1hGddpkgnMjyOfLI7B
+ CFrdecTZbR5upjNSDvQ7RG85SnpYJTIin+SAUazAeA2nS6gTZzumgtdw8XmVXZwdBfF+ICof
+ 92UkbYcYNbzWO/GHgsNT1WnM4sa9lwCSWH8Fw1o/3bX1VVPEsnESOfxkNdu+gAF5S6+I6n3a
+ ueeIlwJl5CpT5l8RpoZXEOVtXYn8zzOJ7oGZYINRV9Pf8qKGLf3Dft7zKBP832I3PQjeok7F
+ yjt+9S+KgSFSHP3Pa4E7lsSdWhSlHYNdG/czhoUkSCN09C0rEK93wxACx3vtxPLjXu6RptBw
+ 3dRq7n+mQChEB1am0BueV1JZaBboIL0AGlSJkm23kw==
+In-Reply-To: <d6a8c1c8-258a-447b-b6cd-199f33199388@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Use writepages-based flushing invalidation instead of
-invalidate_inode_pages2() and ->launder_folio().  This will allow
-->launder_folio() to be removed eventually.
+On 28/03/2024 17:00, Sean Anderson wrote:
+> On 3/27/24 08:27, Tomi Valkeinen wrote:
+>> Hi,
+>>
+>> On 08/03/2024 23:00, Sean Anderson wrote:
+>>> xilinx_dpdma_chan_done_irq and xilinx_dpdma_chan_vsync_irq are always
+>>> called with IRQs disabled from xilinx_dpdma_irq_handler. Therefore we
+>>> don't need to save/restore the IRQ flags.
+>>
+>> I think this is fine, but a few thoughts:
+>>
+>> - Is spin_lock clearly faster than the irqsave variant, or is this a pointless optimization? It's safer to just use irqsave variant, instead of making sure the code is always called from the expected contexts.
+> 
+> It's not an optimization. Technically this will save a few instructions,
+> but...
+> 
+>> - Is this style documented/recommended anywhere? Going through docs, I only found docs telling to use irqsave when mixing irq and non-irq contexts.
+> 
+> The purpose is mainly to make it clear that this is meant to be called
+> in IRQ context. With irqsave, there's an implication that this could be
+> called in non-IRQ context, which it never is.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: linux-afs@lists.infradead.org
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
----
- fs/afs/file.c       |  1 -
- fs/afs/internal.h   |  1 -
- fs/afs/validation.c |  4 ++--
- fs/afs/write.c      | 10 +++-------
- 4 files changed, 5 insertions(+), 11 deletions(-)
+Hmm, I see. Yes, I think that makes sense.
 
-diff --git a/fs/afs/file.c b/fs/afs/file.c
-index ef2cc8f565d2..dfd8f60f5e1f 100644
---- a/fs/afs/file.c
-+++ b/fs/afs/file.c
-@@ -54,7 +54,6 @@ const struct address_space_operations afs_file_aops = {
- 	.read_folio	= netfs_read_folio,
- 	.readahead	= netfs_readahead,
- 	.dirty_folio	= netfs_dirty_folio,
--	.launder_folio	= netfs_launder_folio,
- 	.release_folio	= netfs_release_folio,
- 	.invalidate_folio = netfs_invalidate_folio,
- 	.migrate_folio	= filemap_migrate_folio,
-diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index 6ce5a612937c..b93aa026daa4 100644
---- a/fs/afs/internal.h
-+++ b/fs/afs/internal.h
-@@ -916,7 +916,6 @@ struct afs_operation {
- 			loff_t	pos;
- 			loff_t	size;
- 			loff_t	i_size;
--			bool	laundering;	/* Laundering page, PG_writeback not set */
- 		} store;
- 		struct {
- 			struct iattr	*attr;
-diff --git a/fs/afs/validation.c b/fs/afs/validation.c
-index 32a53fc8dfb2..1d8bbc46f734 100644
---- a/fs/afs/validation.c
-+++ b/fs/afs/validation.c
-@@ -365,9 +365,9 @@ static void afs_zap_data(struct afs_vnode *vnode)
- 	 * written back in a regular file and completely discard the pages in a
- 	 * directory or symlink */
- 	if (S_ISREG(vnode->netfs.inode.i_mode))
--		invalidate_remote_inode(&vnode->netfs.inode);
-+		filemap_invalidate_inode(&vnode->netfs.inode, true);
- 	else
--		invalidate_inode_pages2(vnode->netfs.inode.i_mapping);
-+		filemap_invalidate_inode(&vnode->netfs.inode, false);
- }
- 
- /*
-diff --git a/fs/afs/write.c b/fs/afs/write.c
-index 74402d95a884..1bc26466eb72 100644
---- a/fs/afs/write.c
-+++ b/fs/afs/write.c
-@@ -75,8 +75,7 @@ static void afs_store_data_success(struct afs_operation *op)
- 	op->ctime = op->file[0].scb.status.mtime_client;
- 	afs_vnode_commit_status(op, &op->file[0]);
- 	if (!afs_op_error(op)) {
--		if (!op->store.laundering)
--			afs_pages_written_back(vnode, op->store.pos, op->store.size);
-+		afs_pages_written_back(vnode, op->store.pos, op->store.size);
- 		afs_stat_v(vnode, n_stores);
- 		atomic_long_add(op->store.size, &afs_v2net(vnode)->n_store_bytes);
- 	}
-@@ -91,8 +90,7 @@ static const struct afs_operation_ops afs_store_data_operation = {
- /*
-  * write to a file
-  */
--static int afs_store_data(struct afs_vnode *vnode, struct iov_iter *iter, loff_t pos,
--			  bool laundering)
-+static int afs_store_data(struct afs_vnode *vnode, struct iov_iter *iter, loff_t pos)
- {
- 	struct afs_operation *op;
- 	struct afs_wb_key *wbk = NULL;
-@@ -123,7 +121,6 @@ static int afs_store_data(struct afs_vnode *vnode, struct iov_iter *iter, loff_t
- 	op->file[0].modification = true;
- 	op->store.pos = pos;
- 	op->store.size = size;
--	op->store.laundering = laundering;
- 	op->flags |= AFS_OPERATION_UNINTR;
- 	op->ops = &afs_store_data_operation;
- 
-@@ -168,8 +165,7 @@ static void afs_upload_to_server(struct netfs_io_subrequest *subreq)
- 	       subreq->rreq->debug_id, subreq->debug_index, subreq->io_iter.count);
- 
- 	trace_netfs_sreq(subreq, netfs_sreq_trace_submit);
--	ret = afs_store_data(vnode, &subreq->io_iter, subreq->start,
--			     subreq->rreq->origin == NETFS_LAUNDER_WRITE);
-+	ret = afs_store_data(vnode, &subreq->io_iter, subreq->start);
- 	netfs_write_subrequest_terminated(subreq, ret < 0 ? ret : subreq->len,
- 					  false);
- }
+>> - Does this cause issues on PREEMPT_RT?
+> 
+> Why would it?
+
+I was reading locktypes.rst, I started wondering what it means if 
+spinlocks are changed into sleeping locks. But thinking about it again, 
+it doesn't matter, as the irq will still be masked when in irq-context.
+
+So:
+
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+
+  Tomi
+
 
