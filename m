@@ -1,743 +1,394 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A04130E58
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5734130A4D
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711641941; cv=none; b=toK1eTebQj6YCj9dI9qebb5bkWvIIUnxzwP8DMRXSk5IyKheAUbGfV7WlFkghLtnbpWkMsn8EOLGH7TOFR1sHJcZY+Fy35z9lpZdJxEWTXrvl5/dA079mGc7hWjZs2XVIJ7RPeywdmuzROvh+16cetcZWrcJ7h93J5LvgCYOCpA=
+	t=1711642001; cv=none; b=MF8AhfUt1T9s7YEsLP/ZTpQlp6r/4QxSSitJ+g/dCJMGNXND75pMYa76i3+9ngr8DLeAw9WF3R2k3xGAawMAbzSb1ZzipcoDSafd9RAn0gnY5BB3DcRcxQ0wjyXZEiB3ADALFtOOXSE6rn4dmT8Tg0SXfPtiXqQkb1CR+mm7m90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711641941; c=relaxed/simple;
-	bh=05Njym1jF2vI2C1bbk7E/NeNr46wCO7guNIAbewhYjo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=E0jKvkRbKrl9ODMtYtOBU+nV9yZTEWo7TOZlZ5RpwxkbVqQWb43Tnz6d/sQRj9I1+j+KP74c1onw6ka5qFUo4pQULxvYMOnCaN14D+z4+QyECO88b0i64P/vpbPPAypPdzCMkmJXxmwm6RlXnlIiFbmyYhdGosY8wDTXAYQUiEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rpsFm-00058l-N5; Thu, 28 Mar 2024 17:05:22 +0100
-Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rpsFj-0092JL-FU; Thu, 28 Mar 2024 17:05:19 +0100
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rpsFj-00A3Oq-1J;
-	Thu, 28 Mar 2024 17:05:19 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: "David S. Miller" <davem@davemloft.net>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	Arun Ramadoss <arun.ramadoss@microchip.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com,
-	David Ahern <dsahern@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	Willem de Bruijn <willemb@google.com>,
-	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH net-next v1 5/9] net: dsa: microchip: add support for different DCB app configurations
-Date: Thu, 28 Mar 2024 17:05:14 +0100
-Message-Id: <20240328160518.2396238-6-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240328160518.2396238-1-o.rempel@pengutronix.de>
-References: <20240328160518.2396238-1-o.rempel@pengutronix.de>
+	s=arc-20240116; t=1711642001; c=relaxed/simple;
+	bh=YNTfzZXkS2tduXOtdCnsa35rn72an0t5DimbmCwLsNw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PDiNH4ZH6oX8do97INdOXPAZvj8C+HVtt+FbLpSl50Xzx37Kl6BoAzCjZo4vs6dN43nk16L295qKbQ5eg9GSZvFZfr6RFN5fjMBj4p9ovLmkbKbSrkpraOPw3KYn5L1cJewaq8N5x7QKhjJ7NqTrxKS3L9iSEerOOLQQ1GtBR5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0X+j32pB; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0X+j32pB"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-368c8845dd0so2575ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 09:06:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711641999; x=1712246799; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ujVLH+Y4heKh4N6QqT0QfQEa56kMv090ypPqHTTSdJA=;
+        b=0X+j32pBo6R96cNotlDLcgsEgsoOqKjzs0hvgRs8nGsGX97aA6yzicEzkoVgdZ43Lz
+         To67Flr1UvAXIHWWGGlKQLKijgAum4/4NT0ILd9UEd8odtZhF8jTJnIWjkprHhfzKOkQ
+         oJ0xCEW7/FQrd8AVtjYgM336/4hRIUE5FdnnQM5VGc83nXdaZA8vMKg7VsuguK3H7Qnp
+         ecpNMsPSMy3vmuhcU/lT42Vz42mGNf5EmD/F9ih3Pp1TjUhdc7BQNVB2hwxaBOGlMBcg
+         /TjShuywDloxevXM62o5x0G4QmS3nfIYF/9WsOR3DAZjeKxXShuEHDDmBpPcC3y8H16c
+         2Hug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711641999; x=1712246799;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ujVLH+Y4heKh4N6QqT0QfQEa56kMv090ypPqHTTSdJA=;
+        b=U7sIAhSbscBzaXFD2QK8qLQi4JPBrcTpRXhhTPKked5LahZtPHbvJ3hX8pDCnkBhUy
+         qY2PdhyBgZI8JcPU8k9DzTA0u1DyhzHm7jbwL4DJ3Ywf+XZ7I1GvOJFll3CvQsxrJJwN
+         UQlcV62ObFEGnB/bb9yt8yXXd8S7m1dPN/JpSabbiD0Mm0KQxUODr0A5dTtWwY7GnTX7
+         LIfuyrLN4sdBzdgd7DTOtuBuhyjr5LLnv3XWM+0KSPR+3BCZ5knip4AUk60Q79my7tsx
+         jgbx6jwPpzG58++weG/crSTmfq3Lpfs957R78wjHuqamzoQTLLeV3Di3QoUD1njiEuvB
+         v69g==
+X-Forwarded-Encrypted: i=1; AJvYcCVc4QLZvN0/khh/1QUfnPdq0RjcU9VlFqPD8wTABjf10tkfIQ7EXA4MhmlVgSl5I78urDp2hLE/hwjHiBv1hpVqqx8Op+nWcYn2X6yD
+X-Gm-Message-State: AOJu0YwrH6wklT8VN2Hr7KLw6TiN9jU5f5mh7wC6eUtB/uDQF7JpQAVr
+	5uB631MCxlHgEAGeD+rvSrWiObQhhrRlLeVIHOHJDawzgonOQM0iX9U5hNUWbGS/LX3sICXt/IU
+	glbZ1r4h89p0VQmjfgijA8cS3DQYZGt3K/vXA
+X-Google-Smtp-Source: AGHT+IGXyb02hCuIjtAdd5mD/XhWKmGBf7L9DX4y3Ph+vjGiubBqK//IsbbdX+zKsmiF2LodL4NeS6pdMyKCdfx5Ee0=
+X-Received: by 2002:a92:ca49:0:b0:368:775b:ad1a with SMTP id
+ q9-20020a92ca49000000b00368775bad1amr258472ilo.16.1711641998501; Thu, 28 Mar
+ 2024 09:06:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20240328055857.383180-1-yangjihong@bytedance.com> <20240328055857.383180-2-yangjihong@bytedance.com>
+In-Reply-To: <20240328055857.383180-2-yangjihong@bytedance.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 28 Mar 2024 09:06:28 -0700
+Message-ID: <CAP-5=fWA0EmxfxHOL2N2j=itUu_-wPxugB1Am6zi2pRAxBSFtg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf evsel: Use evsel__name_is() helper
+To: Yang Jihong <yangjihong@bytedance.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	james.clark@arm.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add DCB support to configure app trust sources and default port priority.
+On Wed, Mar 27, 2024 at 10:59=E2=80=AFPM Yang Jihong <yangjihong@bytedance.=
+com> wrote:
+>
+> Code cleanup, replace strcmp(evsel__name(evsel, {NAME})) with
+> evsel__name_is() helper.
+>
+> No functional change.
+>
+> Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
 
-Following commands can be used for testing:
-dcb apptrust set dev lan1 order pcp dscp
-dcb app replace dev lan1 default-prio 3
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-Since it is not possible to configure DSCP-Prio mapping per port, this
-patch provide only ability to read switch global dscp-prio mapping and
-way to enable/disable app trust for DSCP.
+Thanks,
+Ian
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- drivers/net/dsa/microchip/Kconfig      |   2 +
- drivers/net/dsa/microchip/Makefile     |   2 +-
- drivers/net/dsa/microchip/ksz_common.c |  12 +-
- drivers/net/dsa/microchip/ksz_common.h |   5 +
- drivers/net/dsa/microchip/ksz_dcb.c    | 533 +++++++++++++++++++++++++
- drivers/net/dsa/microchip/ksz_dcb.h    |  21 +
- 6 files changed, 573 insertions(+), 2 deletions(-)
- create mode 100644 drivers/net/dsa/microchip/ksz_dcb.c
- create mode 100644 drivers/net/dsa/microchip/ksz_dcb.h
-
-diff --git a/drivers/net/dsa/microchip/Kconfig b/drivers/net/dsa/microchip/Kconfig
-index 394ca8678d2ba..c1b906c05a025 100644
---- a/drivers/net/dsa/microchip/Kconfig
-+++ b/drivers/net/dsa/microchip/Kconfig
-@@ -4,6 +4,8 @@ menuconfig NET_DSA_MICROCHIP_KSZ_COMMON
- 	depends on NET_DSA
- 	select NET_DSA_TAG_KSZ
- 	select NET_DSA_TAG_NONE
-+	select NET_IEEE8021Q_HELPERS
-+	select DCB
- 	help
- 	  This driver adds support for Microchip KSZ9477 series switch and
- 	  KSZ8795/KSZ88x3 switch chips.
-diff --git a/drivers/net/dsa/microchip/Makefile b/drivers/net/dsa/microchip/Makefile
-index 49459a50dbc81..1cfba1ec9355a 100644
---- a/drivers/net/dsa/microchip/Makefile
-+++ b/drivers/net/dsa/microchip/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-$(CONFIG_NET_DSA_MICROCHIP_KSZ_COMMON)	+= ksz_switch.o
--ksz_switch-objs := ksz_common.o
-+ksz_switch-objs := ksz_common.o ksz_dcb.o
- ksz_switch-objs += ksz9477.o ksz9477_acl.o ksz9477_tc_flower.o
- ksz_switch-objs += ksz8795.o
- ksz_switch-objs += lan937x_main.o
-diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
-index cf81739d91dae..ea2d6f8d381bc 100644
---- a/drivers/net/dsa/microchip/ksz_common.c
-+++ b/drivers/net/dsa/microchip/ksz_common.c
-@@ -28,6 +28,7 @@
- #include <net/switchdev.h>
- 
- #include "ksz_common.h"
-+#include "ksz_dcb.h"
- #include "ksz_ptp.h"
- #include "ksz8.h"
- #include "ksz9477.h"
-@@ -2371,6 +2372,10 @@ static int ksz_setup(struct dsa_switch *ds)
- 		goto out_ptp_clock_unregister;
- 	}
- 
-+	ret = ksz_dcb_init(dev);
-+	if (ret)
-+		goto out_ptp_clock_unregister;
-+
- 	/* start switch */
- 	regmap_update_bits(ksz_regmap_8(dev), regs[S_START_CTRL],
- 			   SW_START, SW_START);
-@@ -2698,7 +2703,7 @@ static int ksz_port_setup(struct dsa_switch *ds, int port)
- 	 * there is no need to do anything.
- 	 */
- 
--	return 0;
-+	return ksz_dcb_init_port(dev, port);
- }
- 
- void ksz_port_stp_state_set(struct dsa_switch *ds, int port, u8 state)
-@@ -3950,6 +3955,11 @@ static const struct dsa_switch_ops ksz_switch_ops = {
- 	.port_setup_tc		= ksz_setup_tc,
- 	.get_mac_eee		= ksz_get_mac_eee,
- 	.set_mac_eee		= ksz_set_mac_eee,
-+	.port_get_default_prio	= ksz_port_get_default_prio,
-+	.port_set_default_prio	= ksz_port_set_default_prio,
-+	.port_get_dscp_prio	= ksz_port_get_dscp_prio,
-+	.port_set_apptrust	= ksz_port_set_apptrust,
-+	.port_get_apptrust	= ksz_port_get_apptrust,
- };
- 
- struct ksz_device *ksz_switch_alloc(struct device *base, void *priv)
-diff --git a/drivers/net/dsa/microchip/ksz_common.h b/drivers/net/dsa/microchip/ksz_common.h
-index 1bedd240cbbe4..4f48a8347e5de 100644
---- a/drivers/net/dsa/microchip/ksz_common.h
-+++ b/drivers/net/dsa/microchip/ksz_common.h
-@@ -621,6 +621,11 @@ static inline bool ksz_is_ksz88x3(struct ksz_device *dev)
- 	return dev->chip_id == KSZ8830_CHIP_ID;
- }
- 
-+static inline bool is_ksz8(struct ksz_device *dev)
-+{
-+	return ksz_is_ksz87xx(dev) || ksz_is_ksz88x3(dev);
-+}
-+
- static inline int is_lan937x(struct ksz_device *dev)
+> ---
+>  tools/perf/builtin-kmem.c               |  2 +-
+>  tools/perf/builtin-sched.c              |  4 +--
+>  tools/perf/builtin-script.c             |  2 +-
+>  tools/perf/builtin-trace.c              |  4 +--
+>  tools/perf/tests/evsel-roundtrip-name.c |  4 +--
+>  tools/perf/tests/parse-events.c         | 39 +++++++++----------------
+>  6 files changed, 22 insertions(+), 33 deletions(-)
+>
+> diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+> index 9714327fd0ea..6fd95be5032b 100644
+> --- a/tools/perf/builtin-kmem.c
+> +++ b/tools/perf/builtin-kmem.c
+> @@ -1408,7 +1408,7 @@ static int __cmd_kmem(struct perf_session *session)
+>         }
+>
+>         evlist__for_each_entry(session->evlist, evsel) {
+> -               if (!strcmp(evsel__name(evsel), "kmem:mm_page_alloc") &&
+> +               if (evsel__name_is(evsel, "kmem:mm_page_alloc") &&
+>                     evsel__field(evsel, "pfn")) {
+>                         use_pfn =3D true;
+>                         break;
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index 1bfb22347371..0fce7d8986c0 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -2148,7 +2148,7 @@ static bool is_idle_sample(struct perf_sample *samp=
+le,
+>                            struct evsel *evsel)
+>  {
+>         /* pid 0 =3D=3D swapper =3D=3D idle task */
+> -       if (strcmp(evsel__name(evsel), "sched:sched_switch") =3D=3D 0)
+> +       if (evsel__name_is(evsel, "sched:sched_switch"))
+>                 return evsel__intval(evsel, sample, "prev_pid") =3D=3D 0;
+>
+>         return sample->pid =3D=3D 0;
+> @@ -2375,7 +2375,7 @@ static bool timehist_skip_sample(struct perf_sched =
+*sched,
+>         }
+>
+>         if (sched->idle_hist) {
+> -               if (strcmp(evsel__name(evsel), "sched:sched_switch"))
+> +               if (!evsel__name_is(evsel, "sched:sched_switch"))
+>                         rc =3D true;
+>                 else if (evsel__intval(evsel, sample, "prev_pid") !=3D 0 =
+&&
+>                          evsel__intval(evsel, sample, "next_pid") !=3D 0)
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 37088cc0ff1b..cc981531ec00 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -3471,7 +3471,7 @@ static int check_ev_match(char *dir_name, char *scr=
+iptname,
+>
+>                         match =3D 0;
+>                         evlist__for_each_entry(session->evlist, pos) {
+> -                               if (!strcmp(evsel__name(pos), evname)) {
+> +                               if (evsel__name_is(pos, evname)) {
+>                                         match =3D 1;
+>                                         break;
+>                                 }
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 90eaff8c0f6e..9b93807a1906 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -4902,7 +4902,7 @@ int cmd_trace(int argc, const char **argv)
+>                 goto out;
+>         }
+>         trace.syscalls.events.bpf_output =3D evlist__last(trace.evlist);
+> -       assert(!strcmp(evsel__name(trace.syscalls.events.bpf_output), "__=
+augmented_syscalls__"));
+> +       assert(evsel__name_is(trace.syscalls.events.bpf_output), "__augme=
+nted_syscalls__");
+>  skip_augmentation:
+>  #endif
+>         err =3D -1;
+> @@ -4959,7 +4959,7 @@ int cmd_trace(int argc, const char **argv)
+>          */
+>         if (trace.syscalls.events.bpf_output) {
+>                 evlist__for_each_entry(trace.evlist, evsel) {
+> -                       bool raw_syscalls_sys_exit =3D strcmp(evsel__name=
+(evsel), "raw_syscalls:sys_exit") =3D=3D 0;
+> +                       bool raw_syscalls_sys_exit =3D evsel__name_is(evs=
+el, "raw_syscalls:sys_exit");
+>
+>                         if (raw_syscalls_sys_exit) {
+>                                 trace.raw_augmented_syscalls =3D true;
+> diff --git a/tools/perf/tests/evsel-roundtrip-name.c b/tools/perf/tests/e=
+vsel-roundtrip-name.c
+> index 15ff86f9da0b..1922cac13a24 100644
+> --- a/tools/perf/tests/evsel-roundtrip-name.c
+> +++ b/tools/perf/tests/evsel-roundtrip-name.c
+> @@ -37,7 +37,7 @@ static int perf_evsel__roundtrip_cache_name_test(void)
+>                                         continue;
+>                                 }
+>                                 evlist__for_each_entry(evlist, evsel) {
+> -                                       if (strcmp(evsel__name(evsel), na=
+me)) {
+> +                                       if (!evsel__name_is(evsel, name))=
  {
- 	return dev->chip_id == LAN9370_CHIP_ID ||
-diff --git a/drivers/net/dsa/microchip/ksz_dcb.c b/drivers/net/dsa/microchip/ksz_dcb.c
-new file mode 100644
-index 0000000000000..527bf10d35dd3
---- /dev/null
-+++ b/drivers/net/dsa/microchip/ksz_dcb.c
-@@ -0,0 +1,533 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2024 Pengutronix, Oleksij Rempel <kernel@pengutronix.de>
-+
-+#include <linux/dsa/ksz_common.h>
-+#include <net/dsa.h>
-+#include <net/dscp.h>
-+#include <net/ieee8021q.h>
-+
-+#include "ksz_common.h"
-+#include "ksz_dcb.h"
-+#include "ksz8.h"
-+
-+#define KSZ8_REG_PORT_1_CTRL_0			0x10
-+#define KSZ8_PORT_DIFFSERV_ENABLE		BIT(6)
-+#define KSZ8_PORT_802_1P_ENABLE			BIT(5)
-+#define KSZ8_PORT_BASED_PRIO_M			GENMASK(4, 3)
-+
-+#define KSZ88X3_REG_TOS_DSCP_CTRL		0x60
-+#define KSZ8765_REG_TOS_DSCP_CTRL		0x90
-+
-+#define KSZ9477_REG_SW_MAC_TOS_CTRL		0x033e
-+#define KSZ9477_SW_TOS_DSCP_REMAP		BIT(0)
-+#define KSZ9477_SW_TOS_DSCP_DEFAULT_PRIO_M	GENMASK(5, 3)
-+
-+#define KSZ9477_REG_DIFFSERV_PRIO_MAP		0x0340
-+
-+#define KSZ9477_REG_PORT_MRI_PRIO_CTRL		0x0801
-+#define KSZ9477_PORT_HIGHEST_PRIO		BIT(7)
-+#define KSZ9477_PORT_OR_PRIO			BIT(6)
-+#define KSZ9477_PORT_MAC_PRIO_ENABLE		BIT(4)
-+#define KSZ9477_PORT_VLAN_PRIO_ENABLE		BIT(3)
-+#define KSZ9477_PORT_802_1P_PRIO_ENABLE		BIT(2)
-+#define KSZ9477_PORT_DIFFSERV_PRIO_ENABLE	BIT(1)
-+#define KSZ9477_PORT_ACL_PRIO_ENABLE		BIT(0)
-+
-+#define KSZ9477_REG_PORT_MRI_MAC_CTRL		0x0802
-+#define KSZ9477_PORT_BASED_PRIO_M		GENMASK(2, 0)
-+
-+struct ksz_apptrust_map {
-+	u8 apptrust;
-+	u8 bit;
-+};
-+
-+static const struct ksz_apptrust_map ksz8_apptrust_map_to_bit[] = {
-+	{ DCB_APP_SEL_PCP, KSZ8_PORT_802_1P_ENABLE },
-+	{ IEEE_8021QAZ_APP_SEL_DSCP, KSZ8_PORT_DIFFSERV_ENABLE },
-+};
-+
-+static const struct ksz_apptrust_map ksz9477_apptrust_map_to_bit[] = {
-+	{ DCB_APP_SEL_PCP, KSZ9477_PORT_802_1P_PRIO_ENABLE },
-+	{ IEEE_8021QAZ_APP_SEL_DSCP, KSZ9477_PORT_DIFFSERV_PRIO_ENABLE },
-+};
-+
-+/**
-+ * ksz_supported_apptrust[] - Supported apptrust selectors and Priority Order
-+ *			      of Internal Priority Value (IPV) sources.
-+ *
-+ * This array defines the apptrust selectors supported by the hardware, where
-+ * the index within the array indicates the priority of the selector - lower
-+ * indices correspond to higher priority. This fixed priority scheme is due to
-+ * the hardware's design, which does not support configurable priority among
-+ * different priority sources.
-+ *
-+ * The priority sources, including Tail Tag, ACL, VLAN PCP and DSCP are ordered
-+ * by the hardware's fixed logic, as detailed below. The order reflects a
-+ * non-configurable precedence where certain types of priority information
-+ * override others:
-+ *
-+ * 1. Tail Tag - Highest priority, overrides ACL, VLAN PCP, and DSCP priorities.
-+ * 2. ACL - Overrides VLAN PCP and DSCP priorities.
-+ * 3. VLAN PCP - Overrides DSCP priority.
-+ * 4. DSCP - Lowest priority, does not override any other priority source.
-+ *
-+ * In this context, the array's lower index (higher priority) for
-+ * 'DCB_APP_SEL_PCP' suggests its relative priority over
-+ * 'IEEE_8021QAZ_APP_SEL_DSCP' within the system's fixed priority scheme.
-+ *
-+ * DCB_APP_SEL_PCP - Priority Code Point selector
-+ * IEEE_8021QAZ_APP_SEL_DSCP - Differentiated Services Code Point selector
-+ */
-+static const u8 ksz_supported_apptrust[] = {
-+	DCB_APP_SEL_PCP,
-+	IEEE_8021QAZ_APP_SEL_DSCP,
-+};
-+
-+static const u8 ksz8_port2_supported_apptrust[] = {
-+	DCB_APP_SEL_PCP,
-+};
-+
-+static const char * const ksz_supported_apptrust_variants[] = {
-+	"empty", "dscp", "pcp", "dscp pcp"
-+};
-+
-+static void ksz_get_defult_port_prio_reg(struct ksz_device *dev, int *reg,
-+					 u8 *mask, int *shift)
-+{
-+	if (is_ksz8(dev)) {
-+		*reg = KSZ8_REG_PORT_1_CTRL_0;
-+		*mask = KSZ8_PORT_BASED_PRIO_M;
-+		*shift = __bf_shf(KSZ8_PORT_BASED_PRIO_M);
-+	} else {
-+		*reg = KSZ9477_REG_PORT_MRI_MAC_CTRL;
-+		*mask = KSZ9477_PORT_BASED_PRIO_M;
-+		*shift = __bf_shf(KSZ9477_PORT_BASED_PRIO_M);
-+	}
-+}
-+
-+/**
-+ * ksz_port_get_default_prio - Retrieves the default priority for a port on a
-+ *			       KSZ switch
-+ * @ds: Pointer to the DSA switch structure
-+ * @port: Port number from which to get the default priority
-+ *
-+ * This function fetches the default priority for the specified port on a KSZ
-+ * switch.
-+ *
-+ * Return: The default priority of the port on success, or a negative error
-+ * code on failure.
-+ */
-+int ksz_port_get_default_prio(struct dsa_switch *ds, int port)
-+{
-+	struct ksz_device *dev = ds->priv;
-+	int ret, reg, shift;
-+	u8 data, mask;
-+
-+	ksz_get_defult_port_prio_reg(dev, &reg, &mask, &shift);
-+
-+	ret = ksz_pread8(dev, port, reg, &data);
-+	if (ret)
-+		return ret;
-+
-+	return (data & mask) >> shift;
-+}
-+
-+/**
-+ * ksz_port_set_default_prio - Sets the default priority for a port on a KSZ
-+ *			       switch
-+ * @ds: Pointer to the DSA switch structure
-+ * @port: Port number for which to set the default priority
-+ * @prio: Priority value to set
-+ *
-+ * This function sets the default priority for the specified port on a KSZ
-+ * switch.
-+ *
-+ * Return: 0 on success, or a negative error code on failure.
-+ */
-+int ksz_port_set_default_prio(struct dsa_switch *ds, int port, u8 prio)
-+{
-+	struct ksz_device *dev = ds->priv;
-+	int reg, shift;
-+	u8 mask;
-+
-+	if (prio >= dev->info->num_tx_queues)
-+		return -EINVAL;
-+
-+	ksz_get_defult_port_prio_reg(dev, &reg, &mask, &shift);
-+
-+	return ksz_prmw8(dev, port, reg, mask, (prio << shift) & mask);
-+}
-+
-+/**
-+ * ksz_get_dscp_prio_reg - Retrieves the DSCP-to-priority-mapping register
-+ * @dev: Pointer to the KSZ switch device structure
-+ * @reg: Pointer to the register address to be set
-+ * @per_reg: Pointer to the number of DSCP values per register
-+ * @mask: Pointer to the mask to be set
-+ *
-+ * This function retrieves the DSCP to priority mapping register, the number of
-+ * DSCP values per register, and the mask to be set.
-+ */
-+static void ksz_get_dscp_prio_reg(struct ksz_device *dev, int *reg,
-+				  int *per_reg, u8 *mask)
-+{
-+	if (ksz_is_ksz87xx(dev)) {
-+		*reg = KSZ8765_REG_TOS_DSCP_CTRL;
-+		*per_reg = 4;
-+		*mask = GENMASK(1, 0);
-+	} else if (ksz_is_ksz88x3(dev)) {
-+		*reg = KSZ88X3_REG_TOS_DSCP_CTRL;
-+		*per_reg = 4;
-+		*mask = GENMASK(1, 0);
-+	} else {
-+		*reg = KSZ9477_REG_DIFFSERV_PRIO_MAP;
-+		*per_reg = 2;
-+		*mask = GENMASK(2, 0);
-+	}
-+}
-+
-+/**
-+ * ksz_port_get_dscp_prio - Retrieves the priority for a DSCP value on a KSZ
-+ *			    switch
-+ * @ds: Pointer to the DSA switch structure
-+ * @port: Port number for which to get the priority
-+ * @dscp: DSCP value for which to get the priority
-+ *
-+ * This function fetches the priority value from switch global DSCP-to-priorty
-+ * mapping table for the specified DSCP value.
-+ *
-+ * Return: The priority value for the DSCP on success, or a negative error
-+ * code on failure.
-+ */
-+int ksz_port_get_dscp_prio(struct dsa_switch *ds, int port, u8 dscp)
-+{
-+	struct ksz_device *dev = ds->priv;
-+	int reg, per_reg, ret, shift;
-+	u8 data, mask;
-+
-+	ksz_get_dscp_prio_reg(dev, &reg, &per_reg, &mask);
-+
-+	/* If DSCP remapping is disabled, DSCP bits 3-5 are used as Internal
-+	 * Priority Value (IPV)
-+	 */
-+	if (!is_ksz8(dev)) {
-+		ret = ksz_read8(dev, KSZ9477_REG_SW_MAC_TOS_CTRL, &data);
-+		if (ret)
-+			return ret;
-+
-+		/* If DSCP remapping is disabled, DSCP bits 3-5 are used as
-+		 * Internal Priority Value (IPV)
-+		 */
-+		if (!(data & KSZ9477_SW_TOS_DSCP_REMAP))
-+			return FIELD_GET(KSZ9477_SW_TOS_DSCP_DEFAULT_PRIO_M,
-+					 dscp);
-+	}
-+
-+	/* In case DSCP remapping is enabled, we need to write the DSCP to
-+	 * priority mapping table.
-+	 */
-+	reg += dscp / per_reg;
-+	ret = ksz_read8(dev, reg, &data);
-+	if (ret)
-+		return ret;
-+
-+	shift = (dscp % per_reg) * (8 / per_reg);
-+
-+	return (data >> shift) & mask;
-+}
-+
-+/**
-+ * ksz_init_global_dscp_map - Initializes the global DSCP-to-priority mapping
-+ * @dev: Pointer to the KSZ switch device structure
-+ *
-+ * This function initializes the global DSCP-to-priority mapping table for the
-+ * switch.
-+ *
-+ * Return: 0 on success, or a negative error code on failure
-+ */
-+static int ksz_init_global_dscp_map(struct ksz_device *dev)
-+{
-+	int reg, per_reg, ret, dscp;
-+	u8 data = 0;
-+	u8 mask;
-+
-+	/* On KSZ9xxx variants, DSCP remapping is disabled by default.
-+	 * Enable to have, predictable and reproducible behavior across
-+	 * different devices.
-+	 */
-+	if (!is_ksz8(dev)) {
-+		ret = ksz_rmw8(dev, KSZ9477_REG_SW_MAC_TOS_CTRL,
-+			       KSZ9477_SW_TOS_DSCP_REMAP,
-+			       KSZ9477_SW_TOS_DSCP_REMAP);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ksz_get_dscp_prio_reg(dev, &reg, &per_reg, &mask);
-+
-+	for (dscp = 0; dscp < DSCP_MAX; dscp++) {
-+		int ipv, shift;
-+
-+		/* Map DSCP to Traffic Type, which is corresponding to the
-+		 * Internal Priority Value (IPV) in the switch.
-+		 */
-+		if (!is_ksz8(dev)) {
-+			ipv = ietf_dscp_to_ieee8021q_tt(dscp);
-+		} else {
-+			ipv = ieee8021q_tt_to_tc(ietf_dscp_to_ieee8021q_tt(dscp),
-+						 dev->info->num_tx_queues);
-+		}
-+		shift = (dscp % per_reg) * (8 / per_reg);
-+		data |= (ipv & mask) << shift;
-+
-+		if (dscp % per_reg == per_reg - 1) {
-+			ret = ksz_write8(dev, reg + (dscp / per_reg), data);
-+			if (ret)
-+				return ret;
-+
-+			data = 0;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * ksz_apptrust_error - Prints an error message for an invalid apptrust selector
-+ * @dev: Pointer to the KSZ switch device structure
-+ *
-+ * This function prints an error message when an invalid apptrust selector is
-+ * provided.
-+ */
-+static void ksz_apptrust_error(struct ksz_device *dev)
-+{
-+	char supported_apptrust_variants[64];
-+	int i;
-+
-+	supported_apptrust_variants[0] = '\0';
-+	for (i = 0; i < ARRAY_SIZE(ksz_supported_apptrust_variants); i++) {
-+		if (i > 0)
-+			strlcat(supported_apptrust_variants, ", ",
-+				sizeof(supported_apptrust_variants));
-+		strlcat(supported_apptrust_variants,
-+			ksz_supported_apptrust_variants[i],
-+			sizeof(supported_apptrust_variants));
-+	}
-+
-+	dev_err(dev->dev, "Invalid apptrust selector or priority order. Supported: %s\n",
-+		supported_apptrust_variants);
-+}
-+
-+/**
-+ * ksz_port_set_apptrust_validate - Validates the apptrust selectors
-+ * @dev: Pointer to the KSZ switch device structure
-+ * @port: Port number for which to set the apptrust selectors
-+ * @sel: Array of apptrust selectors to validate
-+ * @nsel: Number of apptrust selectors in the array
-+ *
-+ * This function validates the apptrust selectors provided and ensures that
-+ * they are in the correct order.
-+ *
-+ * This family of switches supports two apptrust selectors: DCB_APP_SEL_PCP and
-+ * IEEE_8021QAZ_APP_SEL_DSCP. The priority order of the selectors is fixed and
-+ * cannot be changed. The order is as follows:
-+ * 1. DCB_APP_SEL_PCP - Priority Code Point selector (highest priority)
-+ * 2. IEEE_8021QAZ_APP_SEL_DSCP - Differentiated Services Code Point selector
-+ *   (lowest priority)
-+ *
-+ * Return: 0 on success, or a negative error code on failure
-+ */
-+static int ksz_port_set_apptrust_validate(struct ksz_device *dev, int port,
-+					  const u8 *sel, int nsel)
-+{
-+	int i, j, j_prev, found;
-+
-+	/* Iterate through the requested selectors */
-+	for (i = 0; i < nsel; i++) {
-+		found = 0;
-+
-+		/* Check if the current selector is supported by the hardware */
-+		for (j = 0; j < sizeof(ksz_supported_apptrust); j++) {
-+			if (sel[i] != ksz_supported_apptrust[j])
-+				continue;
-+
-+			found = 1;
-+
-+			/* Ensure that no higher priority selector (lower index)
-+			 * precedes a lower priority one
-+			 */
-+			if (i > 0 && j <= j_prev)
-+				goto invalid;
-+
-+			j_prev = j;
-+			break;
-+		}
-+
-+		if (!found)
-+			goto invalid;
-+	}
-+
-+	return 0;
-+
-+invalid:
-+	ksz_apptrust_error(dev);
-+
-+	return -EINVAL;
-+}
-+
-+/**
-+ * ksz_get_apptrus_map_and_reg - Retrieves the apptrust map and register
-+ * @dev: Pointer to the KSZ switch device structure
-+ * @map: Pointer to the apptrust map to be set
-+ * @reg: Pointer to the register address to be set
-+ * @mask: Pointer to the mask to be set
-+ *
-+ * This function retrieves the apptrust map and register address for the
-+ * apptrust configuration.
-+ */
-+static void ksz_get_apptrus_map_and_reg(struct ksz_device *dev,
-+					const struct ksz_apptrust_map **map,
-+					int *reg, u8 *mask)
-+{
-+	if (is_ksz8(dev)) {
-+		*map = ksz8_apptrust_map_to_bit;
-+		*reg = KSZ8_REG_PORT_1_CTRL_0;
-+		*mask = KSZ8_PORT_DIFFSERV_ENABLE | KSZ8_PORT_802_1P_ENABLE;
-+	} else {
-+		*map = ksz9477_apptrust_map_to_bit;
-+		*reg = KSZ9477_REG_PORT_MRI_PRIO_CTRL;
-+		*mask = KSZ9477_PORT_802_1P_PRIO_ENABLE |
-+			KSZ9477_PORT_DIFFSERV_PRIO_ENABLE;
-+	}
-+}
-+
-+/**
-+ * ksz_port_set_apptrust - Sets the apptrust selectors for a port on a KSZ
-+ *			   switch
-+ * @ds: Pointer to the DSA switch structure
-+ * @port: Port number for which to set the apptrust selectors
-+ * @sel: Array of apptrust selectors to set
-+ * @nsel: Number of apptrust selectors in the array
-+ *
-+ * This function sets the apptrust selectors for the specified port on a KSZ
-+ * switch.
-+ *
-+ * Return: 0 on success, or a negative error code on failure
-+ */
-+int ksz_port_set_apptrust(struct dsa_switch *ds, int port,
-+			  const u8 *sel, int nsel)
-+{
-+	const struct ksz_apptrust_map *map;
-+	struct ksz_device *dev = ds->priv;
-+	int reg, i, ret;
-+	u8 data = 0;
-+	u8 mask;
-+
-+	ret = ksz_port_set_apptrust_validate(dev, port, sel, nsel);
-+	if (ret)
-+		return ret;
-+
-+	ksz_get_apptrus_map_and_reg(dev, &map, &reg, &mask);
-+
-+	for (i = 0; i < nsel; i++) {
-+		int j;
-+
-+		for (j = 0; j < ARRAY_SIZE(ksz_supported_apptrust); j++) {
-+			if (sel[i] != ksz_supported_apptrust[j])
-+				continue;
-+
-+			data |= map[j].bit;
-+			break;
-+		}
-+	}
-+
-+	return ksz_prmw8(dev, port, reg, mask, data);
-+}
-+
-+/**
-+ * ksz_port_get_apptrust - Retrieves the apptrust selectors for a port on a KSZ
-+ *			   switch
-+ * @ds: Pointer to the DSA switch structure
-+ * @port: Port number for which to get the apptrust selectors
-+ * @sel: Array to store the apptrust selectors
-+ * @nsel: Number of apptrust selectors in the array
-+ *
-+ * This function fetches the apptrust selectors for the specified port on a KSZ
-+ * switch.
-+ *
-+ * Return: 0 on success, or a negative error code on failure
-+ */
-+int ksz_port_get_apptrust(struct dsa_switch *ds, int port, u8 *sel, int *nsel)
-+{
-+	const struct ksz_apptrust_map *map;
-+	struct ksz_device *dev = ds->priv;
-+	int reg, i, ret;
-+	u8 data;
-+	u8 mask;
-+
-+	ksz_get_apptrus_map_and_reg(dev, &map, &reg, &mask);
-+
-+	ret = ksz_pread8(dev, port, reg, &data);
-+	if (ret)
-+		return ret;
-+
-+	*nsel = 0;
-+	for (i = 0; i < ARRAY_SIZE(ksz_supported_apptrust); i++) {
-+		if (data & map[i].bit)
-+			sel[(*nsel)++] = ksz_supported_apptrust[i];
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * ksz_dcb_init_port - Initializes the DCB configuration for a port on a KSZ
-+ * @dev: Pointer to the KSZ switch device structure
-+ * @port: Port number for which to initialize the DCB configuration
-+ *
-+ * This function initializes the DCB configuration for the specified port on a
-+ * KSZ switch. Particular DCB configuration is set for the port, including the
-+ * default priority and apptrust selectors.
-+ * The default priority is set to Best Effort, and the apptrust selectors are
-+ * set to all supported selectors.
-+ *
-+ * Return: 0 on success, or a negative error code on failure
-+ */
-+int ksz_dcb_init_port(struct ksz_device *dev, int port)
-+{
-+	int ret, ipv;
-+
-+	if (is_ksz8(dev))
-+		ipv = ieee8021q_tt_to_tc(IEEE8021Q_TT_BE,
-+					 dev->info->num_tx_queues);
-+	else
-+		ipv = IEEE8021Q_TT_BE;
-+
-+	/* Set the default priority for the port to Best Effort */
-+	ret = ksz_port_set_default_prio(dev->ds, port, ipv);
-+	if (ret)
-+		return ret;
-+
-+	return ksz_port_set_apptrust(dev->ds, port, ksz_supported_apptrust,
-+				     ARRAY_SIZE(ksz_supported_apptrust));
-+}
-+
-+/**
-+ * ksz_dcb_init - Initializes the DCB configuration for a KSZ switch
-+ * @dev: Pointer to the KSZ switch device structure
-+ *
-+ * This function initializes the DCB configuration for a KSZ switch. The global
-+ * DSCP-to-priority mapping table is initialized.
-+ *
-+ * Return: 0 on success, or a negative error code on failure
-+ */
-+int ksz_dcb_init(struct ksz_device *dev)
-+{
-+	int ret;
-+
-+	ret = ksz_init_global_dscp_map(dev);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-diff --git a/drivers/net/dsa/microchip/ksz_dcb.h b/drivers/net/dsa/microchip/ksz_dcb.h
-new file mode 100644
-index 0000000000000..254c0e7bdafca
---- /dev/null
-+++ b/drivers/net/dsa/microchip/ksz_dcb.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) 2024 Pengutronix, Oleksij Rempel <kernel@pengutronix.de> */
-+
-+#ifndef __KSZ_DCB_H
-+#define __KSZ_DCB_H
-+
-+#include <net/dsa.h>
-+
-+#include "ksz_common.h"
-+
-+int ksz_port_get_default_prio(struct dsa_switch *ds, int port);
-+int ksz_port_set_default_prio(struct dsa_switch *ds, int port, u8 prio);
-+int ksz_port_get_dscp_prio(struct dsa_switch *ds, int port, u8 dscp);
-+int ksz_port_set_apptrust(struct dsa_switch *ds, int port,
-+			  const unsigned char *sel,
-+			  int nsel);
-+int ksz_port_get_apptrust(struct dsa_switch *ds, int port, u8 *sel, int *nsel);
-+int ksz_dcb_init_port(struct ksz_device *dev, int port);
-+int ksz_dcb_init(struct ksz_device *dev);
-+
-+#endif /* __KSZ_DCB_H */
--- 
-2.39.2
-
+>                                                 pr_debug("%s !=3D %s\n", =
+evsel__name(evsel), name);
+>                                                 ret =3D TEST_FAIL;
+>                                         }
+> @@ -71,7 +71,7 @@ static int perf_evsel__name_array_test(const char *cons=
+t names[], int nr_names)
+>                         continue;
+>                 }
+>                 evlist__for_each_entry(evlist, evsel) {
+> -                       if (strcmp(evsel__name(evsel), names[i])) {
+> +                       if (!evsel__name_is(evsel, names[i])) {
+>                                 pr_debug("%s !=3D %s\n", evsel__name(evse=
+l), names[i]);
+>                                 ret =3D TEST_FAIL;
+>                         }
+> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-eve=
+nts.c
+> index feb5727584d1..0b70451451b3 100644
+> --- a/tools/perf/tests/parse-events.c
+> +++ b/tools/perf/tests/parse-events.c
+> @@ -470,8 +470,7 @@ static int test__checkevent_breakpoint_modifier(struc=
+t evlist *evlist)
+>         TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_=
+kernel);
+>         TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+>         TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip)=
+;
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "mem:0:u"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:u"));
+>
+>         return test__checkevent_breakpoint(evlist);
+>  }
+> @@ -484,8 +483,7 @@ static int test__checkevent_breakpoint_x_modifier(str=
+uct evlist *evlist)
+>         TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude=
+_kernel);
+>         TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+>         TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip)=
+;
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "mem:0:x:k"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:x:k"))=
+;
+>
+>         return test__checkevent_breakpoint_x(evlist);
+>  }
+> @@ -498,8 +496,7 @@ static int test__checkevent_breakpoint_r_modifier(str=
+uct evlist *evlist)
+>         TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_=
+kernel);
+>         TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv)=
+;
+>         TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "mem:0:r:hp"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:r:hp")=
+);
+>
+>         return test__checkevent_breakpoint_r(evlist);
+>  }
+> @@ -512,8 +509,7 @@ static int test__checkevent_breakpoint_w_modifier(str=
+uct evlist *evlist)
+>         TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_=
+kernel);
+>         TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+>         TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "mem:0:w:up"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:w:up")=
+);
+>
+>         return test__checkevent_breakpoint_w(evlist);
+>  }
+> @@ -526,8 +522,7 @@ static int test__checkevent_breakpoint_rw_modifier(st=
+ruct evlist *evlist)
+>         TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude=
+_kernel);
+>         TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+>         TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "mem:0:rw:kp"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:rw:kp"=
+));
+>
+>         return test__checkevent_breakpoint_rw(evlist);
+>  }
+> @@ -540,8 +535,7 @@ static int test__checkevent_breakpoint_modifier_name(=
+struct evlist *evlist)
+>         TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_=
+kernel);
+>         TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+>         TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip)=
+;
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "breakpoint"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint")=
+);
+>
+>         return test__checkevent_breakpoint(evlist);
+>  }
+> @@ -554,8 +548,7 @@ static int test__checkevent_breakpoint_x_modifier_nam=
+e(struct evlist *evlist)
+>         TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude=
+_kernel);
+>         TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+>         TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip)=
+;
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "breakpoint"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint")=
+);
+>
+>         return test__checkevent_breakpoint_x(evlist);
+>  }
+> @@ -568,8 +561,7 @@ static int test__checkevent_breakpoint_r_modifier_nam=
+e(struct evlist *evlist)
+>         TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_=
+kernel);
+>         TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv)=
+;
+>         TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "breakpoint"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint")=
+);
+>
+>         return test__checkevent_breakpoint_r(evlist);
+>  }
+> @@ -582,8 +574,7 @@ static int test__checkevent_breakpoint_w_modifier_nam=
+e(struct evlist *evlist)
+>         TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_=
+kernel);
+>         TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+>         TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "breakpoint"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint")=
+);
+>
+>         return test__checkevent_breakpoint_w(evlist);
+>  }
+> @@ -596,8 +587,7 @@ static int test__checkevent_breakpoint_rw_modifier_na=
+me(struct evlist *evlist)
+>         TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude=
+_kernel);
+>         TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+>         TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "breakpoint"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint")=
+);
+>
+>         return test__checkevent_breakpoint_rw(evlist);
+>  }
+> @@ -609,12 +599,12 @@ static int test__checkevent_breakpoint_2_events(str=
+uct evlist *evlist)
+>         TEST_ASSERT_VAL("wrong number of entries", 2 =3D=3D evlist->core.=
+nr_entries);
+>
+>         TEST_ASSERT_VAL("wrong type", PERF_TYPE_BREAKPOINT =3D=3D evsel->=
+core.attr.type);
+> -       TEST_ASSERT_VAL("wrong name", !strcmp(evsel__name(evsel), "breakp=
+oint1"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint1"=
+));
+>
+>         evsel =3D evsel__next(evsel);
+>
+>         TEST_ASSERT_VAL("wrong type", PERF_TYPE_BREAKPOINT =3D=3D evsel->=
+core.attr.type);
+> -       TEST_ASSERT_VAL("wrong name", !strcmp(evsel__name(evsel), "breakp=
+oint2"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint2"=
+));
+>
+>         return TEST_OK;
+>  }
+> @@ -691,15 +681,14 @@ static int test__checkevent_pmu_name(struct evlist =
+*evlist)
+>         TEST_ASSERT_VAL("wrong number of entries", 2 =3D=3D evlist->core.=
+nr_entries);
+>         TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW =3D=3D evsel->core.at=
+tr.type);
+>         TEST_ASSERT_VAL("wrong config", test_config(evsel, 1));
+> -       TEST_ASSERT_VAL("wrong name", !strcmp(evsel__name(evsel), "krava"=
+));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "krava"));
+>
+>         /* cpu/config=3D2/u" */
+>         evsel =3D evsel__next(evsel);
+>         TEST_ASSERT_VAL("wrong number of entries", 2 =3D=3D evlist->core.=
+nr_entries);
+>         TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW =3D=3D evsel->core.at=
+tr.type);
+>         TEST_ASSERT_VAL("wrong config", test_config(evsel, 2));
+> -       TEST_ASSERT_VAL("wrong name",
+> -                       !strcmp(evsel__name(evsel), "cpu/config=3D2/u"));
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "cpu/config=
+=3D2/u"));
+>
+>         return TEST_OK;
+>  }
+> --
+> 2.25.1
+>
