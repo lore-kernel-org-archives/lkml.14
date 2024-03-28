@@ -1,95 +1,106 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C36F130A4D
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B88131187
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:05:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711641900; cv=none; b=KKB7VqLHYGT2Gkp3u+KsVV935iwbAlpcB60W4n6BRuTK1gMD38WVOVjOwprTbcWDA97htn6qbo2ZNzx6PUnCC/2U/wVRi5u1AF4kMQd9tc+uyryrl3ApW+G3G+fZIVsABluIGlm8R+56fN5ZKBxC44vGjFnk2qxFjsMz6MGDvs0=
+	t=1711641938; cv=none; b=mJV6swAHEafVAkoVPe4fpnZ/Zu2JFF/W10Z3NbHQ+t/ySNIWs2WR47vtr4Kn85GIPjTkOh7ZB8MQ9eT2HJ65bU3UknDHkaAW6s/7NfeAhSFngFJsbU/A5yC7IRcG2yTNOHqfTfCrsl/LXJdWvBHxrCGDO9IHXPGo8ZUssoTKkr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711641900; c=relaxed/simple;
-	bh=jkgQqEjhRXI9Kg5HCJwBu1K2XFo6+zfHCumlEZPCDJs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Y9s02T6XjWFsnTZOLz+5HKX/1hmcwASc1ZuapQP52EVcsvY0xwYmWvcHQpypy64GwhReNM/tufwQsYzQhI1GeCvrDHeBLhjlL9J17jhUKi76b1uVcPIPJejHTcjz03rFfSYsmASQQdJMClGsmLoibXNFGhPfEnHmu6dYFA7A6/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=c/gyCv7C; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="c/gyCv7C"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-55a179f5fa1so1421684a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 09:04:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1711641896; x=1712246696; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vI6ZoGEa9V83cdHy08Sxu7AfclgAoun/MX2DchJITXI=;
-        b=c/gyCv7Chpj+xmXlPn2peXeDHMRQ90+JLVKbjNiG4d0MDTiQdwwkqRCAhqhPfKqZEI
-         N8TwhFckxAKh6NYK9lH5s4POuyS9i4/y8iEvwKM4I7zviE2X7RJb425NBp1FaVXILE5U
-         SF0ma12p6Q3CeXlTbM1kKwsoH1A+Xp3CecxJpLqYaaW/ibWBDsoKk0NR5ACRRU8bqMiI
-         sfknNLeQRRrZasa++uEfiV0dvo1aPA4Drtny/el7CMCBI2XYWyvUTnd4GF2ZNtg/JXYp
-         hnhaFieYAKbaXN4ai6mJFuJMkUHZIBGpnSB0ot8YW+rg9k3YNK1wikUNHounDgyVVyr+
-         akJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711641896; x=1712246696;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vI6ZoGEa9V83cdHy08Sxu7AfclgAoun/MX2DchJITXI=;
-        b=Jpkn3WROQmkAsaeZCIjIpsKSVDrL0aBE7096j/eMEC/xp+CTXM61R7txX1uht2xhoO
-         144Oao+8HaRgfRhOAKP0wM/dV7NJU2yLFMFYAdC+ZnCrcn/a6AmplV4rncm96GS22cPF
-         ZUN5TS4qo6H8WV366Fc63Ebfxe1AEnsJ1AQAJK2ll4IcXvre+8sitwvJz9PSfSzgX+Pg
-         vweMa0jCaHmYl+Nk/on4aBdwonhF11NBP3Eh228YJo7mRCFE+BVzCLTPGURBskOpG8eB
-         PZRtnII4c6YoN99tJxmWmCUo9ZMdv4zZkVo5pI/8LPmJIxg86od0Wet3eweixmSVLEJp
-         Rz5w==
-X-Forwarded-Encrypted: i=1; AJvYcCW0WkhUExTVeZyMaBDa+6IlX8C9HEoK7sN2svBC7cJS0Dz3j+laP4GCOdsHY3N/NpQpfn3HK/i9E2It5SpSlZi8scYrqW767y5+a74Z
-X-Gm-Message-State: AOJu0YzBNiZH6AuBhDIxlAZIkrfovO9Wnaq2b9d6WvZFLfhSN+GYU2Jo
-	P1WYCPP20ia7NNCDNLYlXWgjqvVO3HDGjRIJhGWHZ7wVVB7wZs75avmjxnNfA9U=
-X-Google-Smtp-Source: AGHT+IEY0llE5S1AsYzABRko/je7SVUd0HjrRfskEzSp9n9Aqx94IpT8XC7p7f934G10wxckne9PCA==
-X-Received: by 2002:a50:d68d:0:b0:56b:9f91:d26b with SMTP id r13-20020a50d68d000000b0056b9f91d26bmr2950294edi.14.1711641896547;
-        Thu, 28 Mar 2024 09:04:56 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-82-135-80-212.dynamic.mnet-online.de. [82.135.80.212])
-        by smtp.gmail.com with ESMTPSA id i40-20020a0564020f2800b0056c36a36389sm986115eda.19.2024.03.28.09.04.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 09:04:56 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>
-Cc: linux-crypto@vger.kernel.org,
+	s=arc-20240116; t=1711641938; c=relaxed/simple;
+	bh=Rk4fHN5mnflp+XpEYNLRwu4Z2vn1G0HFpZaUgGNV6k4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GJkGpuxmoTBcwo7E4nkmYwvv0rAyCdFvDReUPQ6bubluJhYKfGctZLlC2mRkmLl85X0iOQ7JMUIZN+XG9Vjv9HqcsUJPWk3efAIlaCokK8Cz/Do0cZSKWlxla54SjMpWusvgYVremQVHAx1twFJDpFrBtr4vR4RNx/nfsWkzgGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rpsFm-00058n-N5; Thu, 28 Mar 2024 17:05:22 +0100
+Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rpsFj-0092JQ-IC; Thu, 28 Mar 2024 17:05:19 +0100
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rpsFj-00A3PD-1Q;
+	Thu, 28 Mar 2024 17:05:19 +0100
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: "David S. Miller" <davem@davemloft.net>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Eric Dumazet <edumazet@google.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Arun Ramadoss <arun.ramadoss@microchip.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
 	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] crypto: jitter - Remove duplicate word in comment
-Date: Thu, 28 Mar 2024 17:03:47 +0100
-Message-ID: <20240328160401.445647-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.44.0
+	netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com,
+	David Ahern <dsahern@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Willem de Bruijn <willemb@google.com>,
+	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
+Subject: [PATCH net-next v1 7/9] net: dsa: microchip: enable ETS support for KSZ989X variants
+Date: Thu, 28 Mar 2024 17:05:16 +0100
+Message-Id: <20240328160518.2396238-8-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240328160518.2396238-1-o.rempel@pengutronix.de>
+References: <20240328160518.2396238-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-s/in//
+I tested ETS support on KSZ9893, so it should work other KSZ989X
+variants too.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- crypto/jitterentropy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/dsa/microchip/ksz_common.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/crypto/jitterentropy.c b/crypto/jitterentropy.c
-index f2ffd6332c6c..d7056de8c0d7 100644
---- a/crypto/jitterentropy.c
-+++ b/crypto/jitterentropy.c
-@@ -157,8 +157,8 @@ struct rand_data {
- /*
-  * See the SP 800-90B comment #10b for the corrected cutoff for the SP 800-90B
-  * APT.
-- * In in the syntax of R, this is C = 2 + qbinom(1 − 2^(−30), 511, 2^(-1/osr)).
-  * https://www.untruth.org/~josh/sp80090b/UL%20SP800-90B-final%20comments%20v1.9%2020191212.pdf
-+ * In the syntax of R, this is C = 2 + qbinom(1 − 2^(−30), 511, 2^(-1/osr)).
-  * (The original formula wasn't correct because the first symbol must
-  * necessarily have been observed, so there is no chance of observing 0 of these
-  * symbols.)
+diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
+index ea2d6f8d381bc..08426f85f7707 100644
+--- a/drivers/net/dsa/microchip/ksz_common.c
++++ b/drivers/net/dsa/microchip/ksz_common.c
+@@ -1378,6 +1378,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.port_nirqs = 2,
+ 		.num_tx_queues = 4,
+ 		.max_ipvs = 8,
++		.tc_ets_supported = true,
+ 		.ops = &ksz9477_dev_ops,
+ 		.mib_names = ksz9477_mib_names,
+ 		.mib_cnt = ARRAY_SIZE(ksz9477_mib_names),
+@@ -1411,6 +1412,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.port_nirqs = 2,
+ 		.num_tx_queues = 4,
+ 		.max_ipvs = 8,
++		.tc_ets_supported = true,
+ 		.ops = &ksz9477_dev_ops,
+ 		.mib_names = ksz9477_mib_names,
+ 		.mib_cnt = ARRAY_SIZE(ksz9477_mib_names),
+@@ -1442,6 +1444,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.port_nirqs = 2,
+ 		.num_tx_queues = 4,
+ 		.max_ipvs = 8,
++		.tc_ets_supported = true,
+ 		.ops = &ksz9477_dev_ops,
+ 		.mib_names = ksz9477_mib_names,
+ 		.mib_cnt = ARRAY_SIZE(ksz9477_mib_names),
 -- 
-2.44.0
+2.39.2
 
