@@ -1,96 +1,126 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E3B80028
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 14:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A5C22086
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 14:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711637940; cv=none; b=ovPrWQo4Cc7g7TMVUaYTcy4J5lVw1iL3nDck5KmnkqZNdnh0+MoT+t3Nq2EAwnKxbKGCxqDoGtXAYOJDPQN+8af8OztDTLFBoV+4jT2fIH8AYDjNNHNxXKEyJ4/Se/JKVHQJ9a453NUbgUdmD1kKAqo+7GEZ572MZj6pmcjMCUQ=
+	t=1711637947; cv=none; b=q8/c3W0dvFXiOBEqYmWUYmgZJyYLqD58rpK6faBdJvpOlzcw8kD8Hx76KPpaVR3d1W3jZ+YuHgIsyLMbVTDUPQ+clMAmEVEdJMITp+L+heQxg7QHIpB66JZ1CixX4gOW+hYeKfzKZAcWN6QvOAIAsFZJDMoabP3X3RFOB+0Y0GQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711637940; c=relaxed/simple;
-	bh=S07WbAKWwFFlgqynVgWzUcXXhp61OG6T360LNk25blE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fdok6XWvojLwutba6sCzJJqeFukTeODYI0VazQFa9XWA+WR2Xiuox+pwf6Wrz81YYGexe1x65OwNCauBdIJzcI6t6rl8xPcf4/swHFZ3DEEUbeINUrf7YboVP59IPHIJvLA4ll0gtisMHOMazpAx2ttuWvdbopkESPH0EhXKsGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sLQ1kzBs; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711637947; c=relaxed/simple;
+	bh=pqcTdZsas/L2lLLi0r0tZaLc/T481Gjhve2hnITnqOg=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HTLGv3cV7B2B1UNN0+LP5vuYt10it/Q7UePKIWFvNMplrB4og0t/MFx7ZO9IdRSApeFh2E3DMQNrIfigHSZjoNy6yovMRbe1Jic8xVlsFSx/7xOn6fqWeSJMr8alv4nbhZkNEqORrkZraggKd795EfekxGE/qdlk5Hr0X6UOJGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=P7J32uYm; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sLQ1kzBs"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dc23bf7e5aaso1047007276.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 07:58:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711637938; x=1712242738; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=lVCKoZbBGmgPMba+uygt1ZNYOjbI400KcrPMv9qgScQ=;
-        b=sLQ1kzBsTmHL5IfhfKnUNn0TSOLyPnK8sKWIsbcr3wbpf9N9OOb1ZxoqQ+b13lO35T
-         HPR6ErZpFcWiPi3msAZoOtWKCkzaxK3jot9yAEFsgY8YvgFVzrZzSOmAKEQLaGnBa2gK
-         XPT9TWZ4vmCaQyvEr3CY5aGhO9e0jnBlss7ChJH/UlZ1IfkMOE+i+0Dp21O2Q+4vTrbB
-         byKMtdazigPmGuEGhWfB3AnFHSyEp9xyj1QPf/Bj333AfLfJuW/iSSGcskdE9Rf3rX+f
-         2tIcuv6ONoNAJxro5QuY7FCZauOYjErrU109LIj9CoNKaO1OlAJAxxzV7JOAKOENzDlf
-         QjMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711637938; x=1712242738;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lVCKoZbBGmgPMba+uygt1ZNYOjbI400KcrPMv9qgScQ=;
-        b=IOj8uX4gfhJewYpXrv9QJum2GR9XTFynJmlj6qm0S0mUalYQBV4YM4eiDxGWVTMo3T
-         onvLQTh+sQXqfDVTyazz+ZsOk405nJFX31l5QwAgfeTayEvVnRYlGF6wo60i5t5j2X5R
-         sNqF47gMXdqLf8CF1t0CUZVfkGzDqIU/aMehcsTtbBE8pBbpnVwIqoNcsPnnGZjtB6K4
-         HEFUShh1Mt/Nk6+sD1WO/RtM1+aHAzELRogV6j6RWqJMJyrf505yR0FK/7F8VV15Ng0t
-         Erod8/oJ6gF5PMiI8Iz9ZUwioGxjlnK+nXPdpR9q+QfjSeXYPVURvC5xTPtBJfoFG7oL
-         YGgw==
-X-Forwarded-Encrypted: i=1; AJvYcCWfTJ7DvWi9v8OtkkCjCrxFpYSe9R8xDDilT2ZHKTbSN/SDwnzCJp7Ga4u0FoPT4Fywp7bzVDpDXVXyGKS0Twol520SkN2GRD3RDlSs
-X-Gm-Message-State: AOJu0YxDnJer6voCHNY+3tKDebtgwaMwXwOQCso1cZm8rLUE4cZ/4NYx
-	hZ+yFAWNkFunCqMTgQR5Yw93cVrgmih5RdZpuoBCMOFLa0gXwvBoFDSleD5syNzbN2JFfAOrZiT
-	ZquXtgBKdNdLGJlAczJcWTHRKy1dBH1lhnSPQhQ==
-X-Google-Smtp-Source: AGHT+IF+BfSq3vmTR71It1RsEmYi9x9S3nf8WUR4Z19wo3uyG6m3RAGGX4yROeCZyzIC+VlGw62uQlxPCj6DGfxVw0Y=
-X-Received: by 2002:a25:ddc6:0:b0:dcb:38d3:3c6a with SMTP id
- u189-20020a25ddc6000000b00dcb38d33c6amr3189252ybg.46.1711637937782; Thu, 28
- Mar 2024 07:58:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="P7J32uYm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1711637945; x=1743173945;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pqcTdZsas/L2lLLi0r0tZaLc/T481Gjhve2hnITnqOg=;
+  b=P7J32uYmKLn+d2GvrhWvLtmV9erO0xdXjL5FkkON8gogFbxqum/WuR+p
+   balfZv3S1DkHyukT7Qi1pyselk9lAfwrTciDsM7mSL3JU2qX4jVKTGjjM
+   vIwX32MCW6HfsdL9R/pq3OWrw3qd59zA71aDzZaU2iLPBv8y6xAMuePPI
+   IawtDn5WyYZ55nouOvjLftsMmRyQWOhJ5QAhgqr+tXWntQRb6T1R11e+b
+   O1FX1oy3jl3cECkg1fLH90WajDGlJ3ZfWyykPHHuKrGuc6CjjszxQxxT2
+   WDRT3u8Z2UOTCJH6fbgbznw40et8nvA4ugGox8z+l5WwJUDk+fJZgBJAP
+   A==;
+X-CSE-ConnectionGUID: aoxufTLkQWq9+1EyrDTJqA==
+X-CSE-MsgGUID: owMpyAaSQPuHzpD0jAx60Q==
+X-IronPort-AV: E=Sophos;i="6.07,162,1708412400"; 
+   d="asc'?scan'208";a="19071180"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 28 Mar 2024 07:58:58 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 28 Mar 2024 07:58:45 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Thu, 28 Mar 2024 07:58:42 -0700
+Date: Thu, 28 Mar 2024 14:57:54 +0000
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Christoph =?iso-8859-1?Q?M=FCllner?= <christoph.muellner@vrull.eu>
+CC: Andrew Jones <ajones@ventanamicro.com>, Conor Dooley <conor@kernel.org>,
+	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Philipp Tomsich
+	<philipp.tomsich@vrull.eu>, =?iso-8859-1?Q?Bj=F6rn_T=F6pel?=
+	<bjorn@kernel.org>, Daniel Henrique Barboza <dbarboza@ventanamicro.com>,
+	Heiko Stuebner <heiko@sntech.de>, Cooper Qu <cooper.qu@linux.alibaba.com>,
+	Zhiwei Liu <zhiwei_liu@linux.alibaba.com>, Huang Tao
+	<eric.huang@linux.alibaba.com>, Alistair Francis <alistair.francis@wdc.com>
+Subject: Re: [PATCH 2/2] riscv: T-Head: Test availability bit before enabling
+ MAEE errata
+Message-ID: <20240328-issuing-crouton-3448aba81b64@wendy>
+References: <20240327103130.3651950-1-christoph.muellner@vrull.eu>
+ <20240327103130.3651950-3-christoph.muellner@vrull.eu>
+ <20240327-imperfect-washbowl-d95e57cef0ef@spud>
+ <20240327-77a6b64153a68452d0438999@orel>
+ <CAEg0e7jyGZV3+04HNYzgfHMGYT9wV_c0A=ekpCRi3L-5yjxK=w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240328-msm-dp-cleanup-v2-0-a5aed9798d32@quicinc.com> <20240328-msm-dp-cleanup-v2-1-a5aed9798d32@quicinc.com>
-In-Reply-To: <20240328-msm-dp-cleanup-v2-1-a5aed9798d32@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 28 Mar 2024 16:58:47 +0200
-Message-ID: <CAA8EJpqr=SE_-9JMNd+QksTkVsPJGk-F2tJcAyH95t4RAW5aoA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] drm/msm/dp: Drop unused dp_debug struct
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, Bjorn Andersson <quic_bjorande@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="DnbhxEf6LbaydUMs"
+Content-Disposition: inline
+In-Reply-To: <CAEg0e7jyGZV3+04HNYzgfHMGYT9wV_c0A=ekpCRi3L-5yjxK=w@mail.gmail.com>
 
-On Thu, 28 Mar 2024 at 16:35, Bjorn Andersson <andersson@kernel.org> wrote:
->
-> From: Bjorn Andersson <quic_bjorande@quicinc.com>
->
-> The members of struct dp_debug are no longer used, so the only purpose
-> of this struct is as a type of the return value of dp_debug_get(), to
-> signal success/error.
->
-> Drop the struct in favor of signalling the result of initialization
-> using an int, then merge dp_debug_get() with dp_debug_init() to avoid
-> the unnecessar boilerplate code.
->
-> Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
-> ---
->  drivers/gpu/drm/msm/dp/dp_debug.c   | 59 +++++++++++--------------------------
->  drivers/gpu/drm/msm/dp/dp_debug.h   | 38 +++++++-----------------
->  drivers/gpu/drm/msm/dp/dp_display.c | 10 ++-----
->  3 files changed, 31 insertions(+), 76 deletions(-)
+--DnbhxEf6LbaydUMs
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+On Thu, Mar 28, 2024 at 03:18:22PM +0100, Christoph M=FCllner wrote:
 
+> Switching from th.mxstatus to th.sxstatus should address all mentioned co=
+ncerns:
+> * no dependency on OpenSBI changes
+> * no break of functionality
+> * no need for graceful handling of CSR read failures
+> * no need to differentiate between HW and emulation (assuming QEMU
+> accepts the emulation of th.sxstatus)
 
--- 
-With best wishes
-Dmitry
+Yah, th.sxstatus seems ideal here, provided it is accepted by QEMU - but
+if they allow th.mxstatus I would hope emulating th.sxstatus would be
+okay too.
+
+> Also note that DT handling would be difficult, because we need to probe b=
+efore
+> setting up the page table.
+
+IIRC the kaslr seed is also read from DT prior to calling the early
+alternatives stuff, so while it would be a bit more annoying than usual
+I do think it is possible. My (naive) hope here though is that we don't
+actually have to deal with this scenario though, as things like the c908
+support Svpbmt as well as the maee version. For the k230 the plan is
+to use both Zicbom and Svpbmt rather than the non-standard T-Head
+alternatives:
+https://lore.kernel.org/all/tencent_DF5D7CD182AFDA188E0FB80E314A21038D08@qq=
+=2Ecom/
+
+Cheers,
+Conor.
+
+--DnbhxEf6LbaydUMs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZgWFcgAKCRB4tDGHoIJi
+0ln8AP9fysABFrgqy3Okgc9O+ecA2rywWKxbBMYuyaLnrMihuAEA6mmXJ/4phDg3
+D6YcC7uR47skvTGO9rKNLSUVk0G0bwE=
+=rLay
+-----END PGP SIGNATURE-----
+
+--DnbhxEf6LbaydUMs--
