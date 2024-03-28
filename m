@@ -1,129 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF1D46424
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 05:37:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBB53FBA7;
+	Thu, 28 Mar 2024 05:39:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711604261; cv=none; b=qh8wx8NFazzWWtDV9GEq7+/3W5anUhtFMYWi5xxiQ8nVilewCaWz4oCBKIEqW+vCyqg4Nkskpmm6FfBn91/WEXmi/CXMrmSReSM/Y9RbC65ZHLdzb9uoiMEY5PPfhH5eOZZq/dkNnNORd3Z6sv1KKEv6ITKrXRx1bDePlD3c5qk=
+	t=1711604356; cv=none; b=WKeAoMDuKl8R4P4yJialjLEIvc8POg4GbJ12zClhf+a395HDkOnKAsfvMjtF0TWd/WY+dAHvq3QFjKH3Hdj7347/HOduKdpCJejOmE6h+nONccWmPKF5377bAe+RmwRhN89X5nRlGQiFKRtNBl/yisAuYxuEBfVAd79x2hNII1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711604261; c=relaxed/simple;
-	bh=I1zV8l2wxGw1MD2JHTbYzY6hhxw7196Gef6nl+ubcWg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=XUTWaxikwSdYJn0xY3b/uIL6qU5msDlCuP6Ug0hqBaRc3EoF9O3XQ9OCRl8EmP154GWMMnvvqf1vrG9BoXNDxqQnV3Yqe/oJmlxxv7rAvf80KELQVmqpYFo+BxiQIVczMKYS3wgtbZi2EiGnrpJLKmRw0s/SHAFFIErw9rrnRoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ngQC02l1; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711604356; c=relaxed/simple;
+	bh=1TbVjwG6FjPG/Z+RHTuE5W+27StHygVuGEX2BEaRZIQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kNg0CmXVLoRshmWs2HW0vVK3SnAnjwreftxKQX0GS8rmGnKeniE5c8QjCiuJGV7/aTe2HwWkzCuBcREkMhcF13z0yWVSYPmJ/yh36oh1jVUruyqW5XeQzD7gvhiDBBHCcUzPHt1yeUuznHgt7sT1YSFQbOWpbGl8iSkRCPFbwvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AR4OYyaz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ngQC02l1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711604260; x=1743140260;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=I1zV8l2wxGw1MD2JHTbYzY6hhxw7196Gef6nl+ubcWg=;
-  b=ngQC02l1/HP1+ipq3fwjccUwlwWVLGLFoogeAIAwkUOrVrR/Dy7UqHCg
-   FYOCjV6MqjTd7z62Yuk+bGCMWYXF8fA8mp+OoZ2xQHSfNebeK7j7/E+Ny
-   6PkyEAPIiq2FVaaAwwuB+iBNo+JFJUKszgs+W1Axp4/f5YkImapQPIV9c
-   lkc5gM+beIApjsAD+blSuCL3vEe4+boPkViP9t3I3vJ/JhKUMc4tjZunA
-   qvmd3jP+Ag1o48I0rWG5NY2azd+ScRfHur9366541TgDBdzspmFArKWvP
-   7426a67YxHk7G869MgaVIPBVUOTe3RJZ0oTKPzkOfg4BzYxhxavTu9Au6
-   g==;
-X-CSE-ConnectionGUID: M6TAfwOxRnqDuI2HXuDH/A==
-X-CSE-MsgGUID: QF/2cYRuR0ONyhnyp16hQQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="18122846"
-X-IronPort-AV: E=Sophos;i="6.07,160,1708416000"; 
-   d="scan'208";a="18122846"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 22:37:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,160,1708416000"; 
-   d="scan'208";a="47732570"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 22:37:36 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Bharata B Rao <bharata@amd.com>
-Cc: <linux-mm@kvack.org>,  <linux-kernel@vger.kernel.org>,
-  <akpm@linux-foundation.org>,  <mingo@redhat.com>,
-  <peterz@infradead.org>,  <mgorman@techsingularity.net>,
-  <raghavendra.kt@amd.com>,  <dave.hansen@linux.intel.com>,
-  <hannes@cmpxchg.org>
-Subject: Re: [RFC PATCH 0/2] Hot page promotion optimization for large
- address space
-In-Reply-To: <20240327160237.2355-1-bharata@amd.com> (Bharata B. Rao's message
-	of "Wed, 27 Mar 2024 21:32:35 +0530")
-References: <20240327160237.2355-1-bharata@amd.com>
-Date: Thu, 28 Mar 2024 13:35:42 +0800
-Message-ID: <87il16lxzl.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AR4OYyaz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AF8EC433B2;
+	Thu, 28 Mar 2024 05:39:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711604356;
+	bh=1TbVjwG6FjPG/Z+RHTuE5W+27StHygVuGEX2BEaRZIQ=;
+	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
+	b=AR4OYyazeXF+nobr/ZHjH1xHqId0IihH3wDnZu58NmTUN8qUbZnULVfxduNtn4RNj
+	 A+QXAVhj/cxydxEEOjGVMngiqE5wUxh4YSnl+qj226koCR9aiVKhc+VLYBTLPk/GXw
+	 KnUt0bG/hba5VuK9cMKjdjmHpQxlwCmzYmS80xv34YeNcyhEjSabxXsJcT6f5gQV7d
+	 BoG9LB1TAYMZlQcFmUqPbgT6tTBPcxLFcYvTkLaAHV9/ftuCxQMTesUWOvksfqFJBp
+	 ce/J8F6NlhI4h4pXNGDWZ3NCCsTp6bSwJyOI6i+avQsPeBEgrmEGR0lwPHQRrEHsls
+	 3Zk6jxRbtYXVw==
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d46dd5f222so7451341fa.1;
+        Wed, 27 Mar 2024 22:39:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXw9B30hY6hDzShBkN9Usiyjm1fk/D0knLeB+M4oEjExManYscmxyw3YuSxHd55L6HFB6f87Y4Gptyf0L4RvnATwsco2x8pUII763BBMbQMXgorFXAp0WBAZhOGYZIngTsEuACwb02H9w==
+X-Gm-Message-State: AOJu0YxaKqyhxvI1nw9yCkG1J0qXtYWtQ1NnbjY3yCXTS+MWsKgsXqK7
+	kmFVYnc2kd5oGU9myIDlShKIsjG/F2v+AbPvAW8Dmg/hFmW2Xl4M+zK23sQ6KvxxGgFamNHgvBg
+	KEpcSrIgdQ2jPOrOH6hSkljooBtM=
+X-Google-Smtp-Source: AGHT+IHNSdF8hndCSvCQ2ourQ5vvSJzuTkZn1875zvnJtAV/TEo1f+17uBEMHEz4TNCvw6DWTrnRTDW1SKXSjV/JKIY=
+X-Received: by 2002:a2e:9d96:0:b0:2d4:7a3:67a7 with SMTP id
+ c22-20020a2e9d96000000b002d407a367a7mr1272069ljj.22.1711604354573; Wed, 27
+ Mar 2024 22:39:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+References: <20240327192641.14220-1-dev@folker-schwesinger.de> <20240327192641.14220-2-dev@folker-schwesinger.de>
+In-Reply-To: <20240327192641.14220-2-dev@folker-schwesinger.de>
+Reply-To: wens@kernel.org
+From: Chen-Yu Tsai <wens@kernel.org>
+Date: Thu, 28 Mar 2024 13:39:02 +0800
+X-Gmail-Original-Message-ID: <CAGb2v64cF2fuW7vKq_=AhY+ciAp8t=fxT23AFJWB1qOv1xWuNw@mail.gmail.com>
+Message-ID: <CAGb2v64cF2fuW7vKq_=AhY+ciAp8t=fxT23AFJWB1qOv1xWuNw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: rockchip: Add enable-strobe-pulldown to
+ emmc phy on ROCK Pi 4
+To: Folker Schwesinger <dev@folker-schwesinger.de>
+Cc: Vinod Koul <vkoul@kernel.org>, Yogesh Hegde <yogi.kernel@gmail.com>, 
+	Heiko Stuebner <heiko@sntech.de>, Chris Ruehl <chris.ruehl@gtsys.com.hk>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Dragan Simic <dsimic@manjaro.org>, 
+	Christopher Obbard <chris.obbard@collabora.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Bharata B Rao <bharata@amd.com> writes:
+On Thu, Mar 28, 2024 at 4:33=E2=80=AFAM Folker Schwesinger
+<dev@folker-schwesinger.de> wrote:
+>
+> Commit 8b5c2b45b8f0 disabled the internal pull-down for the strobe line
+> causing I/O errors in HS400 mode for various eMMC modules.
+>
+> Enable the internal strobe pull-down for ROCK Pi 4 boards. Also re-enable
+> HS400 mode, that was replaced with HS200 mode as a workaround for the
+> stability issues in:
+> cee572756aa2 ("arm64: dts: rockchip: Disable HS400 for eMMC on ROCK Pi 4"=
+).
+>
+> This was tested on ROCK 4SE and ROCK Pi 4B+.
+>
+> Fixes: 8b5c2b45b8f0 ("phy: rockchip: set pulldown for strobe line in dts"=
+)
+> Signed-off-by: Folker Schwesinger <dev@folker-schwesinger.de>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi b/arch/ar=
+m64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
+> index 281a12180703..b9d6284bb804 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
+> @@ -194,6 +194,7 @@ &cpu_b1 {
+>  };
+>
+>  &emmc_phy {
+> +       rockchip,enable-strobe-pulldown;
+>         status =3D "okay";
+>  };
+>
+> @@ -648,7 +649,8 @@ &saradc {
+>  &sdhci {
+>         max-frequency =3D <150000000>;
+>         bus-width =3D <8>;
+> -       mmc-hs200-1_8v;
 
-> In order to check how efficiently the existing NUMA balancing
-> based hot page promotion mechanism can detect hot regions and
-> promote pages for workloads with large memory footprints, I
-> wrote and tested a program that allocates huge amount of
-> memory but routinely touches only small parts of it.
->
-> This microbenchmark provisions memory both on DRAM node and CXL node.
-> It then divides the entire allocated memory into chunks of smaller
-> size and randomly choses a chunk for generating memory accesses.
-> Each chunk is then accessed for a fixed number of iterations to
-> create the notion of hotness. Within each chunk, the individual
-> pages at 4K granularity are again accessed in random fashion.
->
-> When a chunk is taken up for access in this manner, its pages
-> can either be residing on DRAM or CXL. In the latter case, the NUMA
-> balancing driven hot page promotion logic is expected to detect and
-> promote the hot pages that reside on CXL.
->
-> The experiment was conducted on a 2P AMD Bergamo system that has
-> CXL as the 3rd node.
->
-> $ numactl -H
-> available: 3 nodes (0-2)
-> node 0 cpus: 0-127,256-383
-> node 0 size: 128054 MB
-> node 1 cpus: 128-255,384-511
-> node 1 size: 128880 MB
-> node 2 cpus:
-> node 2 size: 129024 MB
-> node distances:
-> node   0   1   2 
->   0:  10  32  60 
->   1:  32  10  50 
->   2:  255  255  10
->
-> It is seen that number of pages that get promoted is really low and
-> the reason for it happens to be that the NUMA hint fault latency turns
-> out to be much higher than the hot threshold most of the times. Here
-> are a few latency and threshold sample values captured from
-> should_numa_migrate_memory() routine when the benchmark was run:
->
-> latency	threshold (in ms)
-> 20620	1125
-> 56185	1125
-> 98710	1250
-> 148871	1375
-> 182891	1625
-> 369415	1875
-> 630745	2000
+Shouldn't this be kept around? The node should list all supported modes,
+not just the highest one. Same for the other patch.
 
-The access latency of your workload is 20s to 630s, which appears too
-long.  Can you try to increase the range of threshold to deal with that?
-For example,
+ChenYu
 
-echo 100000 > /sys/kernel/debug/sched/numa_balancing/hot_threshold_ms
-
-[snip]
-
---
-Best Regards,
-Huang, Ying
+> +       mmc-hs400-1_8v;
+> +       mmc-hs400-enhanced-strobe;
+>         non-removable;
+>         status =3D "okay";
+>  };
+> --
+> 2.44.0
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
