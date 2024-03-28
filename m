@@ -1,56 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F8913A871
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1702013B294
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711643877; cv=none; b=cRf3O2AzsvKsUmDEfjvk9LxjQQEG0Q/9CXsK+sA/RUifc25KbNc9WqJRHaeYcdbJNX8/vcgD2RV7Vj7be0uM25pRNDIfHyOV6D/PRXKyYFEheh/+LEX/9HViAI1+XHmJA2WkP6sih4Q13xUOniveYxYdIIbJE3/PvWAwIm2OqtU=
+	t=1711643883; cv=none; b=K4rMSnKKk5O0BaCWqK7BW8DNzGzI/gBcki1cumP++nvhBlot4K+OT2ZUZ+aUFqie+puMBsT4iIIm9uMpyM5InftdScbM/YltYEirMFz3l097xJeAQw+jLZ8jyp6oACQ3VrfEIEs2C29i3u4ivizUHA78+BvydZJzrzY8O8mMZ6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711643877; c=relaxed/simple;
-	bh=kX68MTYgNPtj7Z0+mmDDLKKTD8dszAGUEdTN7EXdj1Y=;
+	s=arc-20240116; t=1711643883; c=relaxed/simple;
+	bh=rR/pxHa2zU/gZNPp6UbtKKEPdO6Ib38p44culPd5H74=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mQKcVDKC694ZkCcu47IeYpjcuKZ3iqpflGr95Ul1d5PcDA/tg3iuX+zfYgnBy8e2uaPw1JLWUo3oJcEdrKhpZ83CxUvvGemgQ+dXjxhhdDjerfulTdcDQ+NKk44ouCwh69mAQZbsQmXs22UQIVtrBWOwIdxM+KicGN4cMLiV9ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N3J1IfwI; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 MIME-Version; b=s37nW73dIn8/HpAsPPHG1Grr9d1dT4at88zblPztCgygjx/NTMAwvnz0tRuAQCIMw37GJmlEB9c76n23Gge5yxg3UJDM52+gYV3DZd2uxVKJ3ezr+nKD4lDOxCIjrIoRgZc28YseGLtEnRxX8T+tlILea/o005r1BTUItfzW3fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T34LXYol; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N3J1IfwI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711643873; x=1743179873;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=kX68MTYgNPtj7Z0+mmDDLKKTD8dszAGUEdTN7EXdj1Y=;
-  b=N3J1IfwINY6IUKBn61CmB9mLkr12iC18A+hNQ2M7ruYwRu1lIegiCvxf
-   AK/8mRI/TlbPlqjCLaXSjJcCFAVdMkAucBrXb8YmmgBb8UihWzlAQrjqT
-   ONkG+LBMExeepF2gif4tpS9uXRPQe4UGF56/EEAPmU82OXRRFeTbgPwoY
-   ALadhEl5/kfGQT2ugoU+RyYtzlDGZvw7BmCueARb5WJ5Czwpcz46x6S2G
-   kNrnpBAKQgg1/xTSqxMx9ujAwWZ2iIYvmpfD6blWD9yW5T4iuBmZKRWTW
-   txQ1ywP1j49r2pNvLeq8NDUkDPFOLzPIFknO1J5WgnChUp5VnPITgc5Ot
-   g==;
-X-CSE-ConnectionGUID: kCWffeakRLSm8+a0axhA4Q==
-X-CSE-MsgGUID: ph2s/VbTRtyE6QC3BCprbA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="24296531"
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="24296531"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 09:37:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="39852828"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 09:37:52 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH 03/74] x86/cpu/vfm: Update arch/x86/include/asm/intel-family.h
-Date: Thu, 28 Mar 2024 09:37:46 -0700
-Message-ID: <20240328163746.243023-4-tony.luck@intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240328163746.243023-1-tony.luck@intel.com>
-References: <20240328163746.243023-1-tony.luck@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T34LXYol"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711643880;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K7667ccFdpRzMigl57YVlQb0kfAbqZCsj5Cjk/duSxs=;
+	b=T34LXYolZiqh9S4EfGlRY9DksPnIMcUCbFgFNtoRlPIlhSNkAKMslrepxD+R5090VB1F6F
+	1AIlSKMS7dRVw9PMo9/fXuU2WwzF/YVR1sSdBSOo0hT1LgvF/oWzpyqps5Ykp96ikCKb5y
+	sbQ5cyZ2qzeCfQtoBAQN9EweSPqmy6A=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-274-TmRjE1B5MY27K3EnD_2QOA-1; Thu,
+ 28 Mar 2024 12:37:54 -0400
+X-MC-Unique: TmRjE1B5MY27K3EnD_2QOA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BBE8C3C02464;
+	Thu, 28 Mar 2024 16:37:53 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.146])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id A33411C05E1C;
+	Thu, 28 Mar 2024 16:37:50 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>,
+	Jeff Layton <jlayton@kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Dominique Martinet <asmadeus@codewreck.org>
+Cc: David Howells <dhowells@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Steve French <smfrench@gmail.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	netfs@lists.linux.dev,
+	linux-cachefs@redhat.com,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Xiubo Li <xiubli@redhat.com>
+Subject: [PATCH 16/26] netfs: Switch to using unsigned long long rather than loff_t
+Date: Thu, 28 Mar 2024 16:34:08 +0000
+Message-ID: <20240328163424.2781320-17-dhowells@redhat.com>
+In-Reply-To: <20240328163424.2781320-1-dhowells@redhat.com>
+References: <20240328163424.2781320-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,257 +79,231 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-New CPU #defines encode vendor and family as well as model.
+Switch to using unsigned long long rather than loff_t in netfslib to avoid
+problems with the sign flipping in the maths when we're dealing with the
+byte at position 0x7fffffffffffffff.
 
-Update the example usage comment in arch/x86/kernel/cpu/match.c
-
-Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: Ilya Dryomov <idryomov@gmail.com>
+cc: Xiubo Li <xiubli@redhat.com>
+cc: netfs@lists.linux.dev
+cc: ceph-devel@vger.kernel.org
+cc: linux-fsdevel@vger.kernel.org
 ---
- arch/x86/include/asm/intel-family.h | 84 +++++++++++++++++++++++++++++
- arch/x86/kernel/cpu/match.c         |  3 +-
- 2 files changed, 85 insertions(+), 2 deletions(-)
+ fs/cachefiles/io.c           |  2 +-
+ fs/ceph/addr.c               |  2 +-
+ fs/netfs/buffered_read.c     |  4 +++-
+ fs/netfs/buffered_write.c    |  2 +-
+ fs/netfs/io.c                |  6 +++---
+ fs/netfs/main.c              |  2 +-
+ fs/netfs/output.c            |  4 ++--
+ include/linux/netfs.h        | 16 +++++++++-------
+ include/trace/events/netfs.h |  6 +++---
+ 9 files changed, 24 insertions(+), 20 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index d0941f4c2724..f81a851c46dc 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -40,137 +40,221 @@
-  * their own names :-(
+diff --git a/fs/cachefiles/io.c b/fs/cachefiles/io.c
+index 1d685357e67f..5ba5c7814fe4 100644
+--- a/fs/cachefiles/io.c
++++ b/fs/cachefiles/io.c
+@@ -493,7 +493,7 @@ cachefiles_do_prepare_read(struct netfs_cache_resources *cres,
+  * boundary as appropriate.
   */
+ static enum netfs_io_source cachefiles_prepare_read(struct netfs_io_subrequest *subreq,
+-						    loff_t i_size)
++						    unsigned long long i_size)
+ {
+ 	return cachefiles_do_prepare_read(&subreq->rreq->cache_resources,
+ 					  subreq->start, &subreq->len, i_size,
+diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
+index 2d0f13537c85..3bd58eaea231 100644
+--- a/fs/ceph/addr.c
++++ b/fs/ceph/addr.c
+@@ -193,7 +193,7 @@ static void ceph_netfs_expand_readahead(struct netfs_io_request *rreq)
+ 	 * block, but do not exceed the file size, unless the original
+ 	 * request already exceeds it.
+ 	 */
+-	new_end = min(round_up(end, lo->stripe_unit), rreq->i_size);
++	new_end = umin(round_up(end, lo->stripe_unit), rreq->i_size);
+ 	if (new_end > end && new_end <= rreq->start + max_len)
+ 		rreq->len = new_end - rreq->start;
  
-+#define IFM(_fam, _model)	VFM_MAKE(X86_VENDOR_INTEL, _fam, _model)
-+
- /* Wildcard match for FAM6 so X86_MATCH_INTEL_FAM6_MODEL(ANY) works */
- #define INTEL_FAM6_ANY			X86_MODEL_ANY
-+/* Wildcard match for FAM6 so X86_MATCH_VFM(ANY) works */
-+#define INTEL_ANY			IFM(X86_FAMILY_ANY, X86_MODEL_ANY)
+diff --git a/fs/netfs/buffered_read.c b/fs/netfs/buffered_read.c
+index 1622cce535a3..47603f08680e 100644
+--- a/fs/netfs/buffered_read.c
++++ b/fs/netfs/buffered_read.c
+@@ -130,7 +130,9 @@ void netfs_rreq_unlock_folios(struct netfs_io_request *rreq)
+ }
  
- #define INTEL_FAM6_CORE_YONAH		0x0E
-+#define INTEL_CORE_YONAH		IFM(6, 0x0E)
+ static void netfs_cache_expand_readahead(struct netfs_io_request *rreq,
+-					 loff_t *_start, size_t *_len, loff_t i_size)
++					 unsigned long long *_start,
++					 unsigned long long *_len,
++					 unsigned long long i_size)
+ {
+ 	struct netfs_cache_resources *cres = &rreq->cache_resources;
  
- #define INTEL_FAM6_CORE2_MEROM		0x0F
-+#define INTEL_CORE2_MEROM		IFM(6, 0x0F)
- #define INTEL_FAM6_CORE2_MEROM_L	0x16
-+#define INTEL_CORE2_MEROM_L		IFM(6, 0x16)
- #define INTEL_FAM6_CORE2_PENRYN		0x17
-+#define INTEL_CORE2_PENRYN		IFM(6, 0x17)
- #define INTEL_FAM6_CORE2_DUNNINGTON	0x1D
-+#define INTEL_CORE2_DUNNINGTON		IFM(6, 0x1D)
+diff --git a/fs/netfs/buffered_write.c b/fs/netfs/buffered_write.c
+index 624d8859c2fa..8e4a3fb287e3 100644
+--- a/fs/netfs/buffered_write.c
++++ b/fs/netfs/buffered_write.c
+@@ -663,7 +663,7 @@ static void netfs_pages_written_back(struct netfs_io_request *wreq)
+ 	last = (wreq->start + wreq->len - 1) / PAGE_SIZE;
+ 	xas_for_each(&xas, folio, last) {
+ 		WARN(!folio_test_writeback(folio),
+-		     "bad %zx @%llx page %lx %lx\n",
++		     "bad %llx @%llx page %lx %lx\n",
+ 		     wreq->len, wreq->start, folio->index, last);
  
- #define INTEL_FAM6_NEHALEM		0x1E
-+#define INTEL_NEHALEM			IFM(6, 0x1E)
- #define INTEL_FAM6_NEHALEM_G		0x1F /* Auburndale / Havendale */
-+#define INTEL_NEHALEM_G			IFM(6, 0x1F) /* Auburndale / Havendale */
- #define INTEL_FAM6_NEHALEM_EP		0x1A
-+#define INTEL_NEHALEM_EP		IFM(6, 0x1A)
- #define INTEL_FAM6_NEHALEM_EX		0x2E
-+#define INTEL_NEHALEM_EX		IFM(6, 0x2E)
+ 		if ((finfo = netfs_folio_info(folio))) {
+diff --git a/fs/netfs/io.c b/fs/netfs/io.c
+index 8de581ac0cfb..6cfecfcd02e1 100644
+--- a/fs/netfs/io.c
++++ b/fs/netfs/io.c
+@@ -476,7 +476,7 @@ netfs_rreq_prepare_read(struct netfs_io_request *rreq,
  
- #define INTEL_FAM6_WESTMERE		0x25
-+#define INTEL_WESTMERE			IFM(6, 0x25)
- #define INTEL_FAM6_WESTMERE_EP		0x2C
-+#define INTEL_WESTMERE_EP		IFM(6, 0x2C)
- #define INTEL_FAM6_WESTMERE_EX		0x2F
-+#define INTEL_WESTMERE_EX		IFM(6, 0x2F)
+ set:
+ 	if (subreq->len > rreq->len)
+-		pr_warn("R=%08x[%u] SREQ>RREQ %zx > %zx\n",
++		pr_warn("R=%08x[%u] SREQ>RREQ %zx > %llx\n",
+ 			rreq->debug_id, subreq->debug_index,
+ 			subreq->len, rreq->len);
  
- #define INTEL_FAM6_SANDYBRIDGE		0x2A
-+#define INTEL_SANDYBRIDGE		IFM(6, 0x2A)
- #define INTEL_FAM6_SANDYBRIDGE_X	0x2D
-+#define INTEL_SANDYBRIDGE_X		IFM(6, 0x2D)
- #define INTEL_FAM6_IVYBRIDGE		0x3A
-+#define INTEL_IVYBRIDGE			IFM(6, 0x3A)
- #define INTEL_FAM6_IVYBRIDGE_X		0x3E
-+#define INTEL_IVYBRIDGE_X		IFM(6, 0x3E)
+@@ -513,7 +513,7 @@ static bool netfs_rreq_submit_slice(struct netfs_io_request *rreq,
+ 	subreq->start		= rreq->start + rreq->submitted;
+ 	subreq->len		= io_iter->count;
  
- #define INTEL_FAM6_HASWELL		0x3C
-+#define INTEL_HASWELL			IFM(6, 0x3C)
- #define INTEL_FAM6_HASWELL_X		0x3F
-+#define INTEL_HASWELL_X			IFM(6, 0x3F)
- #define INTEL_FAM6_HASWELL_L		0x45
-+#define INTEL_HASWELL_L			IFM(6, 0x45)
- #define INTEL_FAM6_HASWELL_G		0x46
-+#define INTEL_HASWELL_G			IFM(6, 0x46)
+-	_debug("slice %llx,%zx,%zx", subreq->start, subreq->len, rreq->submitted);
++	_debug("slice %llx,%zx,%llx", subreq->start, subreq->len, rreq->submitted);
+ 	list_add_tail(&subreq->rreq_link, &rreq->subrequests);
  
- #define INTEL_FAM6_BROADWELL		0x3D
-+#define INTEL_BROADWELL			IFM(6, 0x3D)
- #define INTEL_FAM6_BROADWELL_G		0x47
-+#define INTEL_BROADWELL_G		IFM(6, 0x47)
- #define INTEL_FAM6_BROADWELL_X		0x4F
-+#define INTEL_BROADWELL_X		IFM(6, 0x4F)
- #define INTEL_FAM6_BROADWELL_D		0x56
-+#define INTEL_BROADWELL_D		IFM(6, 0x56)
+ 	/* Call out to the cache to find out what it can do with the remaining
+@@ -588,7 +588,7 @@ int netfs_begin_read(struct netfs_io_request *rreq, bool sync)
+ 	atomic_set(&rreq->nr_outstanding, 1);
+ 	io_iter = rreq->io_iter;
+ 	do {
+-		_debug("submit %llx + %zx >= %llx",
++		_debug("submit %llx + %llx >= %llx",
+ 		       rreq->start, rreq->submitted, rreq->i_size);
+ 		if (rreq->origin == NETFS_DIO_READ &&
+ 		    rreq->start + rreq->submitted >= rreq->i_size)
+diff --git a/fs/netfs/main.c b/fs/netfs/main.c
+index 4805b9377364..5f0f438e5d21 100644
+--- a/fs/netfs/main.c
++++ b/fs/netfs/main.c
+@@ -62,7 +62,7 @@ static int netfs_requests_seq_show(struct seq_file *m, void *v)
  
- #define INTEL_FAM6_SKYLAKE_L		0x4E	/* Sky Lake             */
-+#define INTEL_SKYLAKE_L			IFM(6, 0x4E) /* Sky Lake */
- #define INTEL_FAM6_SKYLAKE		0x5E	/* Sky Lake             */
-+#define INTEL_SKYLAKE			IFM(6, 0x5E) /* Sky Lake */
- #define INTEL_FAM6_SKYLAKE_X		0x55	/* Sky Lake             */
-+#define INTEL_SKYLAKE_X			IFM(6, 0x55) /* Sky Lake */
- /*                 CASCADELAKE_X	0x55	   Sky Lake -- s: 7     */
- /*                 COOPERLAKE_X		0x55	   Sky Lake -- s: 11    */
+ 	rreq = list_entry(v, struct netfs_io_request, proc_link);
+ 	seq_printf(m,
+-		   "%08x %s %3d %2lx %4d %3d @%04llx %zx/%zx",
++		   "%08x %s %3d %2lx %4d %3d @%04llx %llx/%llx",
+ 		   rreq->debug_id,
+ 		   netfs_origins[rreq->origin],
+ 		   refcount_read(&rreq->ref),
+diff --git a/fs/netfs/output.c b/fs/netfs/output.c
+index e586396d6b72..85374322f10f 100644
+--- a/fs/netfs/output.c
++++ b/fs/netfs/output.c
+@@ -439,7 +439,7 @@ static void netfs_submit_writethrough(struct netfs_io_request *wreq, bool final)
+  */
+ int netfs_advance_writethrough(struct netfs_io_request *wreq, size_t copied, bool to_page_end)
+ {
+-	_enter("ic=%zu sb=%zu ws=%u cp=%zu tp=%u",
++	_enter("ic=%zu sb=%llu ws=%u cp=%zu tp=%u",
+ 	       wreq->iter.count, wreq->submitted, wreq->wsize, copied, to_page_end);
  
- #define INTEL_FAM6_KABYLAKE_L		0x8E	/* Sky Lake             */
-+#define INTEL_KABYLAKE_L		IFM(6, 0x8E) /* Sky Lake */
- /*                 AMBERLAKE_L		0x8E	   Sky Lake -- s: 9     */
- /*                 COFFEELAKE_L		0x8E	   Sky Lake -- s: 10    */
- /*                 WHISKEYLAKE_L	0x8E       Sky Lake -- s: 11,12 */
+ 	wreq->iter.count += copied;
+@@ -457,7 +457,7 @@ int netfs_end_writethrough(struct netfs_io_request *wreq, struct kiocb *iocb)
+ {
+ 	int ret = -EIOCBQUEUED;
  
- #define INTEL_FAM6_KABYLAKE		0x9E	/* Sky Lake             */
-+#define INTEL_KABYLAKE			IFM(6, 0x9E) /* Sky Lake */
- /*                 COFFEELAKE		0x9E	   Sky Lake -- s: 10-13 */
+-	_enter("ic=%zu sb=%zu ws=%u",
++	_enter("ic=%zu sb=%llu ws=%u",
+ 	       wreq->iter.count, wreq->submitted, wreq->wsize);
  
- #define INTEL_FAM6_COMETLAKE		0xA5	/* Sky Lake             */
-+#define INTEL_COMETLAKE			IFM(6, 0xA5) /* Sky Lake */
- #define INTEL_FAM6_COMETLAKE_L		0xA6	/* Sky Lake             */
-+#define INTEL_COMETLAKE_L		IFM(6, 0xA6) /* Sky Lake */
+ 	if (wreq->submitted < wreq->io_iter.count)
+diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+index 0b6c2c2d3c23..88269681d4fc 100644
+--- a/include/linux/netfs.h
++++ b/include/linux/netfs.h
+@@ -149,7 +149,7 @@ struct netfs_io_subrequest {
+ 	struct work_struct	work;
+ 	struct list_head	rreq_link;	/* Link in rreq->subrequests */
+ 	struct iov_iter		io_iter;	/* Iterator for this subrequest */
+-	loff_t			start;		/* Where to start the I/O */
++	unsigned long long	start;		/* Where to start the I/O */
+ 	size_t			len;		/* Size of the I/O */
+ 	size_t			transferred;	/* Amount of data transferred */
+ 	refcount_t		ref;
+@@ -205,15 +205,15 @@ struct netfs_io_request {
+ 	atomic_t		subreq_counter;	/* Next subreq->debug_index */
+ 	atomic_t		nr_outstanding;	/* Number of ops in progress */
+ 	atomic_t		nr_copy_ops;	/* Number of copy-to-cache ops in progress */
+-	size_t			submitted;	/* Amount submitted for I/O so far */
+-	size_t			len;		/* Length of the request */
+ 	size_t			upper_len;	/* Length can be extended to here */
++	unsigned long long	submitted;	/* Amount submitted for I/O so far */
++	unsigned long long	len;		/* Length of the request */
+ 	size_t			transferred;	/* Amount to be indicated as transferred */
+ 	short			error;		/* 0 or error that occurred */
+ 	enum netfs_io_origin	origin;		/* Origin of the request */
+ 	bool			direct_bv_unpin; /* T if direct_bv[] must be unpinned */
+-	loff_t			i_size;		/* Size of the file */
+-	loff_t			start;		/* Start position */
++	unsigned long long	i_size;		/* Size of the file */
++	unsigned long long	start;		/* Start position */
+ 	pgoff_t			no_unlock_folio; /* Don't unlock this folio after read */
+ 	refcount_t		ref;
+ 	unsigned long		flags;
+@@ -294,13 +294,15 @@ struct netfs_cache_ops {
  
- #define INTEL_FAM6_CANNONLAKE_L		0x66	/* Palm Cove */
-+#define INTEL_CANNONLAKE_L		IFM(6, 0x66) /* Palm Cove */
+ 	/* Expand readahead request */
+ 	void (*expand_readahead)(struct netfs_cache_resources *cres,
+-				 loff_t *_start, size_t *_len, loff_t i_size);
++				 unsigned long long *_start,
++				 unsigned long long *_len,
++				 unsigned long long i_size);
  
- #define INTEL_FAM6_ICELAKE_X		0x6A	/* Sunny Cove */
-+#define INTEL_ICELAKE_X			IFM(6, 0x6A) /* Sunny Cove */
- #define INTEL_FAM6_ICELAKE_D		0x6C	/* Sunny Cove */
-+#define INTEL_ICELAKE_D			IFM(6, 0x6C) /* Sunny Cove */
- #define INTEL_FAM6_ICELAKE		0x7D	/* Sunny Cove */
-+#define INTEL_ICELAKE			IFM(6, 0x7D) /* Sunny Cove */
- #define INTEL_FAM6_ICELAKE_L		0x7E	/* Sunny Cove */
-+#define INTEL_ICELAKE_L			IFM(6, 0x7E) /* Sunny Cove */
- #define INTEL_FAM6_ICELAKE_NNPI		0x9D	/* Sunny Cove */
-+#define INTEL_ICELAKE_NNPI		IFM(6, 0x9D) /* Sunny Cove */
+ 	/* Prepare a read operation, shortening it to a cached/uncached
+ 	 * boundary as appropriate.
+ 	 */
+ 	enum netfs_io_source (*prepare_read)(struct netfs_io_subrequest *subreq,
+-					     loff_t i_size);
++					     unsigned long long i_size);
  
- #define INTEL_FAM6_ROCKETLAKE		0xA7	/* Cypress Cove */
-+#define INTEL_ROCKETLAKE		IFM(6, 0xA7) /* Cypress Cove */
+ 	/* Prepare a write operation, working out what part of the write we can
+ 	 * actually do.
+diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
+index 30769103638f..7126d2ea459c 100644
+--- a/include/trace/events/netfs.h
++++ b/include/trace/events/netfs.h
+@@ -280,7 +280,7 @@ TRACE_EVENT(netfs_sreq,
+ 		    __entry->start	= sreq->start;
+ 			   ),
  
- #define INTEL_FAM6_TIGERLAKE_L		0x8C	/* Willow Cove */
-+#define INTEL_TIGERLAKE_L		IFM(6, 0x8C) /* Willow Cove */
- #define INTEL_FAM6_TIGERLAKE		0x8D	/* Willow Cove */
-+#define INTEL_TIGERLAKE			IFM(6, 0x8D) /* Willow Cove */
+-	    TP_printk("R=%08x[%u] %s %s f=%02x s=%llx %zx/%zx e=%d",
++	    TP_printk("R=%08x[%x] %s %s f=%02x s=%llx %zx/%zx e=%d",
+ 		      __entry->rreq, __entry->index,
+ 		      __print_symbolic(__entry->source, netfs_sreq_sources),
+ 		      __print_symbolic(__entry->what, netfs_sreq_traces),
+@@ -320,7 +320,7 @@ TRACE_EVENT(netfs_failure,
+ 		    __entry->start	= sreq ? sreq->start : 0;
+ 			   ),
  
- #define INTEL_FAM6_SAPPHIRERAPIDS_X	0x8F	/* Golden Cove */
-+#define INTEL_SAPPHIRERAPIDS_X		IFM(6, 0x8F) /* Golden Cove */
+-	    TP_printk("R=%08x[%d] %s f=%02x s=%llx %zx/%zx %s e=%d",
++	    TP_printk("R=%08x[%x] %s f=%02x s=%llx %zx/%zx %s e=%d",
+ 		      __entry->rreq, __entry->index,
+ 		      __print_symbolic(__entry->source, netfs_sreq_sources),
+ 		      __entry->flags,
+@@ -436,7 +436,7 @@ TRACE_EVENT(netfs_write,
+ 		    __field(unsigned int,		cookie		)
+ 		    __field(enum netfs_write_trace,	what		)
+ 		    __field(unsigned long long,		start		)
+-		    __field(size_t,			len		)
++		    __field(unsigned long long,		len		)
+ 			     ),
  
- #define INTEL_FAM6_EMERALDRAPIDS_X	0xCF
-+#define INTEL_EMERALDRAPIDS_X		IFM(6, 0xCF)
- 
- #define INTEL_FAM6_GRANITERAPIDS_X	0xAD
-+#define INTEL_GRANITERAPIDS_X		IFM(6, 0xAD)
- #define INTEL_FAM6_GRANITERAPIDS_D	0xAE
-+#define INTEL_GRANITERAPIDS_D		IFM(6, 0xAE)
- 
- /* "Hybrid" Processors (P-Core/E-Core) */
- 
- #define INTEL_FAM6_LAKEFIELD		0x8A	/* Sunny Cove / Tremont */
-+#define INTEL_LAKEFIELD			IFM(6, 0x8A) /* Sunny Cove / Tremont */
- 
- #define INTEL_FAM6_ALDERLAKE		0x97	/* Golden Cove / Gracemont */
-+#define INTEL_ALDERLAKE			IFM(6, 0x97) /* Golden Cove / Gracemont */
- #define INTEL_FAM6_ALDERLAKE_L		0x9A	/* Golden Cove / Gracemont */
-+#define INTEL_ALDERLAKE_L		IFM(6, 0x9A) /* Golden Cove / Gracemont */
- 
- #define INTEL_FAM6_RAPTORLAKE		0xB7	/* Raptor Cove / Enhanced Gracemont */
-+#define INTEL_RAPTORLAKE		IFM(6, 0xB7) /* Raptor Cove / Enhanced Gracemont */
- #define INTEL_FAM6_RAPTORLAKE_P		0xBA
-+#define INTEL_RAPTORLAKE_P		IFM(6, 0xBA)
- #define INTEL_FAM6_RAPTORLAKE_S		0xBF
-+#define INTEL_RAPTORLAKE_S		IFM(6, 0xBF)
- 
- #define INTEL_FAM6_METEORLAKE		0xAC
-+#define INTEL_METEORLAKE		IFM(6, 0xAC)
- #define INTEL_FAM6_METEORLAKE_L		0xAA
-+#define INTEL_METEORLAKE_L		IFM(6, 0xAA)
- 
- #define INTEL_FAM6_ARROWLAKE_H		0xC5
-+#define INTEL_ARROWLAKE_H		IFM(6, 0xC5)
- #define INTEL_FAM6_ARROWLAKE		0xC6
-+#define INTEL_ARROWLAKE			IFM(6, 0xC6)
- #define INTEL_FAM6_ARROWLAKE_U		0xB5
-+#define INTEL_ARROWLAKE_U		IFM(6, 0xB5)
- 
- #define INTEL_FAM6_LUNARLAKE_M		0xBD
-+#define INTEL_LUNARLAKE_M		IFM(6, 0xBD)
- 
- /* "Small Core" Processors (Atom/E-Core) */
- 
- #define INTEL_FAM6_ATOM_BONNELL		0x1C /* Diamondville, Pineview */
-+#define INTEL_ATOM_BONNELL		IFM(6, 0x1C) /* Diamondville, Pineview */
- #define INTEL_FAM6_ATOM_BONNELL_MID	0x26 /* Silverthorne, Lincroft */
-+#define INTEL_ATOM_BONNELL_MID		IFM(6, 0x26) /* Silverthorne, Lincroft */
- 
- #define INTEL_FAM6_ATOM_SALTWELL	0x36 /* Cedarview */
-+#define INTEL_ATOM_SALTWELL		IFM(6, 0x36) /* Cedarview */
- #define INTEL_FAM6_ATOM_SALTWELL_MID	0x27 /* Penwell */
-+#define INTEL_ATOM_SALTWELL_MID		IFM(6, 0x27) /* Penwell */
- #define INTEL_FAM6_ATOM_SALTWELL_TABLET	0x35 /* Cloverview */
-+#define INTEL_ATOM_SALTWELL_TABLET	IFM(6, 0x35) /* Cloverview */
- 
- #define INTEL_FAM6_ATOM_SILVERMONT	0x37 /* Bay Trail, Valleyview */
-+#define INTEL_ATOM_SILVERMONT		IFM(6, 0x37) /* Bay Trail, Valleyview */
- #define INTEL_FAM6_ATOM_SILVERMONT_D	0x4D /* Avaton, Rangely */
-+#define INTEL_ATOM_SILVERMONT_D		IFM(6, 0x4D) /* Avaton, Rangely */
- #define INTEL_FAM6_ATOM_SILVERMONT_MID	0x4A /* Merriefield */
-+#define INTEL_ATOM_SILVERMONT_MID	IFM(6, 0x4A) /* Merriefield */
- 
- #define INTEL_FAM6_ATOM_AIRMONT		0x4C /* Cherry Trail, Braswell */
-+#define INTEL_ATOM_AIRMONT		IFM(6, 0x4C) /* Cherry Trail, Braswell */
- #define INTEL_FAM6_ATOM_AIRMONT_MID	0x5A /* Moorefield */
-+#define INTEL_ATOM_AIRMONT_MID		IFM(6, 0x5A) /* Moorefield */
- #define INTEL_FAM6_ATOM_AIRMONT_NP	0x75 /* Lightning Mountain */
-+#define INTEL_ATOM_AIRMONT_NP		IFM(6, 0x75) /* Lightning Mountain */
- 
- #define INTEL_FAM6_ATOM_GOLDMONT	0x5C /* Apollo Lake */
-+#define INTEL_ATOM_GOLDMONT		IFM(6, 0x5C) /* Apollo Lake */
- #define INTEL_FAM6_ATOM_GOLDMONT_D	0x5F /* Denverton */
-+#define INTEL_ATOM_GOLDMONT_D		IFM(6, 0x5F) /* Denverton */
- 
- /* Note: the micro-architecture is "Goldmont Plus" */
- #define INTEL_FAM6_ATOM_GOLDMONT_PLUS	0x7A /* Gemini Lake */
-+#define INTEL_ATOM_GOLDMONT_PLUS	IFM(6, 0x7A) /* Gemini Lake */
- 
- #define INTEL_FAM6_ATOM_TREMONT_D	0x86 /* Jacobsville */
-+#define INTEL_ATOM_TREMONT_D		IFM(6, 0x86) /* Jacobsville */
- #define INTEL_FAM6_ATOM_TREMONT		0x96 /* Elkhart Lake */
-+#define INTEL_ATOM_TREMONT		IFM(6, 0x96) /* Elkhart Lake */
- #define INTEL_FAM6_ATOM_TREMONT_L	0x9C /* Jasper Lake */
-+#define INTEL_ATOM_TREMONT_L		IFM(6, 0x9C) /* Jasper Lake */
- 
- #define INTEL_FAM6_ATOM_GRACEMONT	0xBE /* Alderlake N */
-+#define INTEL_ATOM_GRACEMONT		IFM(6, 0xBE) /* Alderlake N */
- 
- #define INTEL_FAM6_ATOM_CRESTMONT_X	0xAF /* Sierra Forest */
-+#define INTEL_ATOM_CRESTMONT_X		IFM(6, 0xAF) /* Sierra Forest */
- #define INTEL_FAM6_ATOM_CRESTMONT	0xB6 /* Grand Ridge */
-+#define INTEL_ATOM_CRESTMONT		IFM(6, 0xB6) /* Grand Ridge */
- 
- #define INTEL_FAM6_ATOM_DARKMONT_X	0xDD /* Clearwater Forest */
-+#define INTEL_ATOM_DARKMONT_X		IFM(6, 0xDD) /* Clearwater Forest */
- 
- /* Xeon Phi */
- 
- #define INTEL_FAM6_XEON_PHI_KNL		0x57 /* Knights Landing */
-+#define INTEL_XEON_PHI_KNL		IFM(6, 0x57) /* Knights Landing */
- #define INTEL_FAM6_XEON_PHI_KNM		0x85 /* Knights Mill */
-+#define INTEL_XEON_PHI_KNM		IFM(6, 0x85) /* Knights Mill */
- 
- /* Family 5 */
- #define INTEL_FAM5_QUARK_X1000		0x09 /* Quark X1000 SoC */
-+#define INTEL_QUARK_X1000		IFM(5, 0x09) /* Quark X1000 SoC */
- 
- #endif /* _ASM_X86_INTEL_FAMILY_H */
-diff --git a/arch/x86/kernel/cpu/match.c b/arch/x86/kernel/cpu/match.c
-index ad6776081e60..2243083f0bc2 100644
---- a/arch/x86/kernel/cpu/match.c
-+++ b/arch/x86/kernel/cpu/match.c
-@@ -17,8 +17,7 @@
-  *
-  * A typical table entry would be to match a specific CPU
-  *
-- * X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6, INTEL_FAM6_BROADWELL,
-- *				      X86_FEATURE_ANY, NULL);
-+ * X86_MATCH_VFM_FEATURE(INTEL_BROADWELL, X86_FEATURE_ANY, NULL);
-  *
-  * Fields can be wildcarded with %X86_VENDOR_ANY, %X86_FAMILY_ANY,
-  * %X86_MODEL_ANY, %X86_FEATURE_ANY (except for vendor)
--- 
-2.44.0
+ 	    TP_fast_assign(
 
