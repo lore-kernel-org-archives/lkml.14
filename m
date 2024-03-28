@@ -1,258 +1,176 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3808E446A1
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C20139D09;
+	Thu, 28 Mar 2024 16:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711643843; cv=none; b=ffzO0J50xe9hBk+XpIth83soQ6hIYxuobuEjV1tpRVOWQh3cf0yfTsuHYB2ZK1XhZ7ty+bDF2mVIYVGdhxhOfeOqV8pyGgecceLqC0LFGurv/tLm4yatGMh38/bhh8YtTLn/qjpP1gxOHswsFZ9keeHpTX/8SJGTNkQJDkv/9G8=
+	t=1711643844; cv=none; b=KsC59SBW2QZ7yL/7zFTg0Ewq6uAg2BvJwS2WX4Eo6eUjem3r3ar/NHo12lMoGDFo7mby4hNRNW6StqaEG/1l8sihR75Jgod+myX63YeG/y1AqnCjhJkXSbwNWm+G+nGmP5ehSo+7JQ5P5SvISzR7E37sWCqG16l4bp+XUSWx96w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711643843; c=relaxed/simple;
-	bh=ac+GfpTCxYNZC3SQIAsHI4Ej2LDwFDWNL7Cm4QVLZ8U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pmic/A6JVcGUsxOUO866QVSwN1oLYa51yRX4bZwYUIo1scXGPzWfR5lBGQZWSUU/Z4CZ2/YR8alwtW6Ke3fOi8FkDeWxBtunIOD+X+4/njbkxZEiaga/FfEYVwgIQhkmec63F3oZ1bxKe/xdG7vHPqZ9Tu8oz2NcOcFjO1uf0FQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iqUTv/PQ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711643844; c=relaxed/simple;
+	bh=oKhOL3EyDx0U3wUHH2cNjQih0LgHQEhwmCUnPFJxBd4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rH5BezGhAHLS7bEPJ4c1ik2BWtHc/AqB898odhp9wAPBdUZpc1xNXAWe8SvFpZTC5Fe4GiNsfkORTaWgs+qyJUDM+Uqydrtpa6h9JNU+ShsyiTGqi6/iBdb93zPRLuifhwM7h/cNZ0siRoRROf4YBX+19gfemtBkBdzp7odJV44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AXoptmnw; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iqUTv/PQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711643840;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Mem7lNP+7V6c2t0lUM5oHWZtR8iLqSZVCInVABGeIfQ=;
-	b=iqUTv/PQ6KffXtI2c+erWIs0w0GVbZTGalSA21TrXWhG81Eeg3QDFFXmP3HlCmj3UQhBMy
-	GXIKYhNFzHVEbzBUptnWsXhu0ZRT1rvs2jDeeaMGzBb8OUHDx7/Wh1YBO/sKPCvZGJXjYf
-	fsYh1dJPyYzl3Axc2bPlHhgRiUQFiqI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-350-kZUy3AvkNlqShTvnlBvVOQ-1; Thu, 28 Mar 2024 12:37:15 -0400
-X-MC-Unique: kZUy3AvkNlqShTvnlBvVOQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 97891185A78E;
-	Thu, 28 Mar 2024 16:37:14 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.146])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 3F62F200AFFC;
-	Thu, 28 Mar 2024 16:37:11 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-	Jeff Layton <jlayton@kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Dominique Martinet <asmadeus@codewreck.org>
-Cc: David Howells <dhowells@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Steve French <smfrench@gmail.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Tom Talpey <tom@talpey.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	netfs@lists.linux.dev,
-	linux-cachefs@redhat.com,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>,
-	Steve French <sfrench@samba.org>,
-	devel@lists.orangefs.org
-Subject: [PATCH 13/26] netfs: Remove ->launder_folio() support
-Date: Thu, 28 Mar 2024 16:34:05 +0000
-Message-ID: <20240328163424.2781320-14-dhowells@redhat.com>
-In-Reply-To: <20240328163424.2781320-1-dhowells@redhat.com>
-References: <20240328163424.2781320-1-dhowells@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AXoptmnw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711643842; x=1743179842;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=oKhOL3EyDx0U3wUHH2cNjQih0LgHQEhwmCUnPFJxBd4=;
+  b=AXoptmnw4RKZTrk4Zb2mG966dcQrPuyNq62XitHXU4IjWg/oStJPm3nS
+   N7SMcFOzICYDWTS5ghffsRzeVhqyx1iQYkxG484/rqDzDs6I3OohMiy2r
+   pMOQcle0qRCwlhLLbbu8/URaNP1ngMppGgSxnIdMcw/QdPOuc8QV6pJJw
+   UHb/a2TEQeWl6P4nsTZITxOjzrMIDs3hAfpqPlImRFJOnaIgKd+tTEGqK
+   9EXS1h0DJUSvsOxYzBftrUp6kSClLXEuc9H0iquV3sWFZzUJZDi/xWXm5
+   E5U3PTe9kQJuP5QDvTl23DMCVaF29/UNbr9WzdnQ6axh0bPD6KCW41FBk
+   A==;
+X-CSE-ConnectionGUID: OPfAFhA2QiiLDAXzmyxAEA==
+X-CSE-MsgGUID: NgXiSShIQ6605nqlRqnfKw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="6705558"
+X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
+   d="scan'208";a="6705558"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 09:37:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
+   d="scan'208";a="16764511"
+Received: from lkp-server01.sh.intel.com (HELO be39aa325d23) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 28 Mar 2024 09:37:16 -0700
+Received: from kbuild by be39aa325d23 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rpskb-0002LW-13;
+	Thu, 28 Mar 2024 16:37:13 +0000
+Date: Fri, 29 Mar 2024 00:37:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Cristian Marussi <cristian.marussi@arm.com>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, sudeep.holla@arm.com,
+	cristian.marussi@arm.com, jassisinghbrar@gmail.com,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org
+Subject: Re: [PATCH 2/2] mailbox: arm_mhuv3: Add driver
+Message-ID: <202403290015.tCLXudqC-lkp@intel.com>
+References: <20240325092808.117510-3-cristian.marussi@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240325092808.117510-3-cristian.marussi@arm.com>
 
-Remove support for ->launder_folio() from netfslib and expect filesystems
-to use filemap_invalidate_inode() instead.  netfs_launder_folio() can then
-be got rid of.
+Hi Cristian,
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: Eric Van Hensbergen <ericvh@kernel.org>
-cc: Latchesar Ionkov <lucho@ionkov.net>
-cc: Dominique Martinet <asmadeus@codewreck.org>
-cc: Christian Schoenebeck <linux_oss@crudebyte.com>
-cc: David Howells <dhowells@redhat.com>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: Steve French <sfrench@samba.org>
-cc: Matthew Wilcox <willy@infradead.org>
-cc: linux-mm@kvack.org
-cc: linux-fsdevel@vger.kernel.org
-cc: netfs@lists.linux.dev
-cc: v9fs@lists.linux.dev
-cc: linux-afs@lists.infradead.org
-cc: ceph-devel@vger.kernel.org
-cc: linux-cifs@vger.kernel.org
-cc: devel@lists.orangefs.org
----
- fs/netfs/buffered_write.c    | 74 ------------------------------------
- fs/netfs/main.c              |  1 -
- include/linux/netfs.h        |  2 -
- include/trace/events/netfs.h |  3 --
- 4 files changed, 80 deletions(-)
+kernel test robot noticed the following build warnings:
 
-diff --git a/fs/netfs/buffered_write.c b/fs/netfs/buffered_write.c
-index 576a68b7887e..624d8859c2fa 100644
---- a/fs/netfs/buffered_write.c
-+++ b/fs/netfs/buffered_write.c
-@@ -1199,77 +1199,3 @@ int netfs_writepages(struct address_space *mapping,
- 	return ret;
- }
- EXPORT_SYMBOL(netfs_writepages);
--
--/*
-- * Deal with the disposition of a laundered folio.
-- */
--static void netfs_cleanup_launder_folio(struct netfs_io_request *wreq)
--{
--	if (wreq->error) {
--		pr_notice("R=%08x Laundering error %d\n", wreq->debug_id, wreq->error);
--		mapping_set_error(wreq->mapping, wreq->error);
--	}
--}
--
--/**
-- * netfs_launder_folio - Clean up a dirty folio that's being invalidated
-- * @folio: The folio to clean
-- *
-- * This is called to write back a folio that's being invalidated when an inode
-- * is getting torn down.  Ideally, writepages would be used instead.
-- */
--int netfs_launder_folio(struct folio *folio)
--{
--	struct netfs_io_request *wreq;
--	struct address_space *mapping = folio->mapping;
--	struct netfs_folio *finfo = netfs_folio_info(folio);
--	struct netfs_group *group = netfs_folio_group(folio);
--	struct bio_vec bvec;
--	unsigned long long i_size = i_size_read(mapping->host);
--	unsigned long long start = folio_pos(folio);
--	size_t offset = 0, len;
--	int ret = 0;
--
--	if (finfo) {
--		offset = finfo->dirty_offset;
--		start += offset;
--		len = finfo->dirty_len;
--	} else {
--		len = folio_size(folio);
--	}
--	len = min_t(unsigned long long, len, i_size - start);
--
--	wreq = netfs_alloc_request(mapping, NULL, start, len, NETFS_LAUNDER_WRITE);
--	if (IS_ERR(wreq)) {
--		ret = PTR_ERR(wreq);
--		goto out;
--	}
--
--	if (!folio_clear_dirty_for_io(folio))
--		goto out_put;
--
--	trace_netfs_folio(folio, netfs_folio_trace_launder);
--
--	_debug("launder %llx-%llx", start, start + len - 1);
--
--	/* Speculatively write to the cache.  We have to fix this up later if
--	 * the store fails.
--	 */
--	wreq->cleanup = netfs_cleanup_launder_folio;
--
--	bvec_set_folio(&bvec, folio, len, offset);
--	iov_iter_bvec(&wreq->iter, ITER_SOURCE, &bvec, 1, len);
--	if (group != NETFS_FOLIO_COPY_TO_CACHE)
--		__set_bit(NETFS_RREQ_UPLOAD_TO_SERVER, &wreq->flags);
--	ret = netfs_begin_write(wreq, true, netfs_write_trace_launder);
--
--out_put:
--	folio_detach_private(folio);
--	netfs_put_group(group);
--	kfree(finfo);
--	netfs_put_request(wreq, false, netfs_rreq_trace_put_return);
--out:
--	_leave(" = %d", ret);
--	return ret;
--}
--EXPORT_SYMBOL(netfs_launder_folio);
-diff --git a/fs/netfs/main.c b/fs/netfs/main.c
-index c5a73c9ed126..844efbb2e7a2 100644
---- a/fs/netfs/main.c
-+++ b/fs/netfs/main.c
-@@ -34,7 +34,6 @@ static const char *netfs_origins[nr__netfs_io_origin] = {
- 	[NETFS_COPY_TO_CACHE]		= "CC",
- 	[NETFS_WRITEBACK]		= "WB",
- 	[NETFS_WRITETHROUGH]		= "WT",
--	[NETFS_LAUNDER_WRITE]		= "LW",
- 	[NETFS_UNBUFFERED_WRITE]	= "UW",
- 	[NETFS_DIO_READ]		= "DR",
- 	[NETFS_DIO_WRITE]		= "DW",
-diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-index ddafc6ebff42..3af589dabd7f 100644
---- a/include/linux/netfs.h
-+++ b/include/linux/netfs.h
-@@ -172,7 +172,6 @@ enum netfs_io_origin {
- 	NETFS_COPY_TO_CACHE,		/* This write is to copy a read to the cache */
- 	NETFS_WRITEBACK,		/* This write was triggered by writepages */
- 	NETFS_WRITETHROUGH,		/* This write was made by netfs_perform_write() */
--	NETFS_LAUNDER_WRITE,		/* This is triggered by ->launder_folio() */
- 	NETFS_UNBUFFERED_WRITE,		/* This is an unbuffered write */
- 	NETFS_DIO_READ,			/* This is a direct I/O read */
- 	NETFS_DIO_WRITE,		/* This is a direct I/O write */
-@@ -352,7 +351,6 @@ int netfs_unpin_writeback(struct inode *inode, struct writeback_control *wbc);
- void netfs_clear_inode_writeback(struct inode *inode, const void *aux);
- void netfs_invalidate_folio(struct folio *folio, size_t offset, size_t length);
- bool netfs_release_folio(struct folio *folio, gfp_t gfp);
--int netfs_launder_folio(struct folio *folio);
- 
- /* VMA operations API. */
- vm_fault_t netfs_page_mkwrite(struct vm_fault *vmf, struct netfs_group *netfs_group);
-diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
-index e03fafb0c1e3..30769103638f 100644
---- a/include/trace/events/netfs.h
-+++ b/include/trace/events/netfs.h
-@@ -26,7 +26,6 @@
- #define netfs_write_traces					\
- 	EM(netfs_write_trace_copy_to_cache,	"COPY2CACH")	\
- 	EM(netfs_write_trace_dio_write,		"DIO-WRITE")	\
--	EM(netfs_write_trace_launder,		"LAUNDER  ")	\
- 	EM(netfs_write_trace_unbuffered_write,	"UNB-WRITE")	\
- 	EM(netfs_write_trace_writeback,		"WRITEBACK")	\
- 	E_(netfs_write_trace_writethrough,	"WRITETHRU")
-@@ -38,7 +37,6 @@
- 	EM(NETFS_COPY_TO_CACHE,			"CC")		\
- 	EM(NETFS_WRITEBACK,			"WB")		\
- 	EM(NETFS_WRITETHROUGH,			"WT")		\
--	EM(NETFS_LAUNDER_WRITE,			"LW")		\
- 	EM(NETFS_UNBUFFERED_WRITE,		"UW")		\
- 	EM(NETFS_DIO_READ,			"DR")		\
- 	E_(NETFS_DIO_WRITE,			"DW")
-@@ -135,7 +133,6 @@
- 	EM(netfs_folio_trace_end_copy,		"end-copy")	\
- 	EM(netfs_folio_trace_filled_gaps,	"filled-gaps")	\
- 	EM(netfs_folio_trace_kill,		"kill")		\
--	EM(netfs_folio_trace_launder,		"launder")	\
- 	EM(netfs_folio_trace_mkwrite,		"mkwrite")	\
- 	EM(netfs_folio_trace_mkwrite_plus,	"mkwrite+")	\
- 	EM(netfs_folio_trace_read_gaps,		"read-gaps")	\
+[auto build test WARNING on soc/for-next]
+[also build test WARNING on robh/for-next linus/master v6.9-rc1 next-20240328]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Cristian-Marussi/dt-bindings-mailbox-arm-mhuv3-Add-bindings/20240326-020048
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git for-next
+patch link:    https://lore.kernel.org/r/20240325092808.117510-3-cristian.marussi%40arm.com
+patch subject: [PATCH 2/2] mailbox: arm_mhuv3: Add driver
+config: powerpc-randconfig-r131-20240328 (https://download.01.org/0day-ci/archive/20240329/202403290015.tCLXudqC-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 23de3862dce582ce91c1aa914467d982cb1a73b4)
+reproduce: (https://download.01.org/0day-ci/archive/20240329/202403290015.tCLXudqC-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403290015.tCLXudqC-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/mailbox/arm_mhuv3.c:565:46: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct pdbcw_page *dbcw @@     got struct pdbcw_page [noderef] __iomem * @@
+   drivers/mailbox/arm_mhuv3.c:565:46: sparse:     expected struct pdbcw_page *dbcw
+   drivers/mailbox/arm_mhuv3.c:565:46: sparse:     got struct pdbcw_page [noderef] __iomem *
+>> drivers/mailbox/arm_mhuv3.c:568:25: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *addr @@     got struct pdbcw_int * @@
+   drivers/mailbox/arm_mhuv3.c:568:25: sparse:     expected void const volatile [noderef] __iomem *addr
+   drivers/mailbox/arm_mhuv3.c:568:25: sparse:     got struct pdbcw_int *
+>> drivers/mailbox/arm_mhuv3.c:568:25: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *addr @@     got struct pdbcw_int * @@
+   drivers/mailbox/arm_mhuv3.c:568:25: sparse:     expected void volatile [noderef] __iomem *addr
+   drivers/mailbox/arm_mhuv3.c:568:25: sparse:     got struct pdbcw_int *
+   drivers/mailbox/arm_mhuv3.c:569:25: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *addr @@     got struct pdbcw_int * @@
+   drivers/mailbox/arm_mhuv3.c:569:25: sparse:     expected void const volatile [noderef] __iomem *addr
+   drivers/mailbox/arm_mhuv3.c:569:25: sparse:     got struct pdbcw_int *
+   drivers/mailbox/arm_mhuv3.c:569:25: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *addr @@     got struct pdbcw_int * @@
+   drivers/mailbox/arm_mhuv3.c:569:25: sparse:     expected void volatile [noderef] __iomem *addr
+   drivers/mailbox/arm_mhuv3.c:569:25: sparse:     got struct pdbcw_int *
+>> drivers/mailbox/arm_mhuv3.c:570:25: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *addr @@     got struct xbcw_ctrl * @@
+   drivers/mailbox/arm_mhuv3.c:570:25: sparse:     expected void const volatile [noderef] __iomem *addr
+   drivers/mailbox/arm_mhuv3.c:570:25: sparse:     got struct xbcw_ctrl *
+>> drivers/mailbox/arm_mhuv3.c:570:25: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *addr @@     got struct xbcw_ctrl * @@
+   drivers/mailbox/arm_mhuv3.c:570:25: sparse:     expected void volatile [noderef] __iomem *addr
+   drivers/mailbox/arm_mhuv3.c:570:25: sparse:     got struct xbcw_ctrl *
+>> drivers/mailbox/arm_mhuv3.c:573:46: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct mdbcw_page *dbcw @@     got struct mdbcw_page [noderef] __iomem * @@
+   drivers/mailbox/arm_mhuv3.c:573:46: sparse:     expected struct mdbcw_page *dbcw
+   drivers/mailbox/arm_mhuv3.c:573:46: sparse:     got struct mdbcw_page [noderef] __iomem *
+>> drivers/mailbox/arm_mhuv3.c:576:25: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *addr @@     got unsigned int * @@
+   drivers/mailbox/arm_mhuv3.c:576:25: sparse:     expected void volatile [noderef] __iomem *addr
+   drivers/mailbox/arm_mhuv3.c:576:25: sparse:     got unsigned int *
+   drivers/mailbox/arm_mhuv3.c:577:25: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *addr @@     got unsigned int * @@
+   drivers/mailbox/arm_mhuv3.c:577:25: sparse:     expected void volatile [noderef] __iomem *addr
+   drivers/mailbox/arm_mhuv3.c:577:25: sparse:     got unsigned int *
+   drivers/mailbox/arm_mhuv3.c:578:25: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *addr @@     got struct xbcw_ctrl * @@
+   drivers/mailbox/arm_mhuv3.c:578:25: sparse:     expected void const volatile [noderef] __iomem *addr
+   drivers/mailbox/arm_mhuv3.c:578:25: sparse:     got struct xbcw_ctrl *
+   drivers/mailbox/arm_mhuv3.c:578:25: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *addr @@     got struct xbcw_ctrl * @@
+   drivers/mailbox/arm_mhuv3.c:578:25: sparse:     expected void volatile [noderef] __iomem *addr
+   drivers/mailbox/arm_mhuv3.c:578:25: sparse:     got struct xbcw_ctrl *
+>> drivers/mailbox/arm_mhuv3.c:360:9: sparse: sparse: dereference of noderef expression
+   drivers/mailbox/arm_mhuv3.c:370:9: sparse: sparse: dereference of noderef expression
+   drivers/mailbox/arm_mhuv3.c:373:9: sparse: sparse: dereference of noderef expression
+   drivers/mailbox/arm_mhuv3.c:639:30: sparse: sparse: dereference of noderef expression
+   drivers/mailbox/arm_mhuv3.c:659:33: sparse: sparse: dereference of noderef expression
+   drivers/mailbox/arm_mhuv3.c:688:14: sparse: sparse: dereference of noderef expression
+   drivers/mailbox/arm_mhuv3.c:700:17: sparse: sparse: dereference of noderef expression
+   drivers/mailbox/arm_mhuv3.c:719:14: sparse: sparse: dereference of noderef expression
+   drivers/mailbox/arm_mhuv3.c:732:14: sparse: sparse: dereference of noderef expression
+   drivers/mailbox/arm_mhuv3.c:789:22: sparse: sparse: dereference of noderef expression
+   drivers/mailbox/arm_mhuv3.c:795:22: sparse: sparse: dereference of noderef expression
+   drivers/mailbox/arm_mhuv3.c:796:22: sparse: sparse: dereference of noderef expression
+   drivers/mailbox/arm_mhuv3.c:802:31: sparse: sparse: dereference of noderef expression
+   drivers/mailbox/arm_mhuv3.c:806:17: sparse: sparse: dereference of noderef expression
+   drivers/mailbox/arm_mhuv3.c:1038:17: sparse: sparse: dereference of noderef expression
+
+vim +565 drivers/mailbox/arm_mhuv3.c
+
+   558	
+   559	static void mhuv3_dbe_combined_irq_setup(struct mhuv3 *mhu)
+   560	{
+   561		int i;
+   562		struct mhuv3_extension *e = mhu->ext[DBE_EXT];
+   563	
+   564		if (mhu->frame == PBX_FRAME) {
+ > 565			struct pdbcw_page *dbcw = mhu->pbx->dbcw;
+   566	
+   567			for (i = 0; i < e->max_chans; i++) {
+ > 568				writel_relaxed_bitfield(0x1, &dbcw[i].int_clr, tfr_ack);
+   569				writel_relaxed_bitfield(0x0, &dbcw[i].int_en, tfr_ack);
+ > 570				writel_relaxed_bitfield(0x1, &dbcw[i].ctrl, comb_en);
+   571			}
+   572		} else {
+ > 573			struct mdbcw_page *dbcw = mhu->mbx->dbcw;
+   574	
+   575			for (i = 0; i < e->max_chans; i++) {
+ > 576				writel_relaxed(0xFFFFFFFF, &dbcw[i].clr);
+   577				writel_relaxed(0xFFFFFFFF, &dbcw[i].msk_set);
+   578				writel_relaxed_bitfield(0x1, &dbcw[i].ctrl, comb_en);
+   579			}
+   580		}
+   581	}
+   582	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
