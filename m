@@ -1,131 +1,108 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB64376E5;
-	Thu, 28 Mar 2024 09:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4872B1E861;
+	Thu, 28 Mar 2024 09:57:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711619873; cv=none; b=dcpHmJuaEC4XaXHXZqub0z+3NF7dva4/btbVy3mI5Qyg+Pzqy3PMpM6qIK4fNQU5PBiZ2hyfldHqHtVG8CQ2JnuHAYmNbax4fQvZswcUMgAR71QIK8J80iaV/RzwiyrugxYnJgRovUUf4bbJEZJT0ICjKCXJZ48LczUriJ4M5xM=
+	t=1711619875; cv=none; b=Dvax0G97bfo9bb6+fqCO3Jq9rrh3fHi7dcTr6eS7bP5xHuy0tTWj7eSV8FozglJO9pwc5hclY2TRojkeU7Q5jxguvBtX9sYnO9PdawSPa9Pnjbx1A+ySQl9kcIEv9GmkPoLJEycSpE2VsBgBRHcLD1+6DR8C0IypLxFPKSYEYNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711619873; c=relaxed/simple;
-	bh=VfjOP9sNdYzTZcnGwVYgxZE+kwKdHl8h61ANJqp0Foc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=t5/47agdWp5menBmcOWJltQFNXVjcoiz6pCdNVt3CUCPiAX/MJ7uMVAVxoz46C5TNdf+Q9JkNlsf7l+MzlyCR0Xr1D+EURLnLr2lTvfLVRI5Gc4ekbxSPh9j1UpC52WU6RCL33pZolj24tCSmi3WRGoNVH7uSrpCS0Ux0PMx7XM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
-Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id C45471C1348;
-	Thu, 28 Mar 2024 09:57:42 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf04.hostedemail.com (Postfix) with ESMTPA id 734022002D;
-	Thu, 28 Mar 2024 09:57:36 +0000 (UTC)
-Message-ID: <ef2c96e40bcf777535c9ff2405e4dc5b3138b27e.camel@perches.com>
-Subject: Re: [PATCH v4 2/2] scripts: checkpatch: check unused parameters for
- function-like macro
-From: Joe Perches <joe@perches.com>
-To: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org, 
-	linux-doc@vger.kernel.org
-Cc: apw@canonical.com, broonie@kernel.org, chenhuacai@loongson.cn, 
- chris@zankel.net, corbet@lwn.net, dwaipayanray1@gmail.com, 
- herbert@gondor.apana.org.au, linux-kernel@vger.kernel.org,
- linux@roeck-us.net,  lukas.bulwahn@gmail.com, mac.xxn@outlook.com,
- sfr@canb.auug.org.au,  v-songbaohua@oppo.com, workflows@vger.kernel.org,
- Max Filippov <jcmvbkbc@gmail.com>
-Date: Thu, 28 Mar 2024 02:57:35 -0700
-In-Reply-To: <20240328022136.5789-3-21cnbao@gmail.com>
-References: <20240328022136.5789-1-21cnbao@gmail.com>
-	 <20240328022136.5789-3-21cnbao@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	s=arc-20240116; t=1711619875; c=relaxed/simple;
+	bh=gAV+gUAqBp1S3zdGcOLRkMbsJPo5TaCr0FKPbsZ46M0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dyyyZbOtVSeupijBzVhmVyrWn8qL0sMTYmq1HtyRCgVjSeW0nsME/6aK8zyq+VIBjgUj4Jtjyb2JGeP7xjutUWtETpUuIE9mD7fzHCGRTFwZWXtLKnNLSRTCQEg5nRZzXw3ZkC2q0MakOkSCMvVYBkfmvOIx/bx7MggLtu8tHew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KXgyvBwN; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KXgyvBwN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8482DC43141;
+	Thu, 28 Mar 2024 09:57:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711619875;
+	bh=gAV+gUAqBp1S3zdGcOLRkMbsJPo5TaCr0FKPbsZ46M0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KXgyvBwNntZvsvohR9Dm+YUIE+XMILsRnEWVZYQ38z496oWWeT55HpERyihmNKCeL
+	 5NkIvQB1YyeF80qtVNVneOnagDmWOiNMG/Cs9SsTLsmsWBszi65yo9Nm/msBWCZCrd
+	 pxDTFHr4wiNgpnZu/Kj17LAVwK+6nvpPZgLXodjaRRHgUEUFMCb/DijwI+Bb/8WtnE
+	 C0WfyQ/LHZ8s1PL0o1axUm+p7O+LNQwA83wlEtwhxXAvTeH072vh+OMkwmGBklJrGv
+	 MXollRy5sBRX0cMQarT9x8nGbTYZyGn8mB57RGKCUD+AFkW/ooZAcBAdYJRguW5IUl
+	 ZrW2Po7qioj3w==
+Date: Thu, 28 Mar 2024 17:57:51 +0800
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Pavan Holla <pholla@chromium.org>, abhishekpandit@chromium.org,
+	bleung@chromium.org, chrome-platform@lists.linux.dev,
+	gregkh@linuxfoundation.org, groeck@chromium.org,
+	heikki.krogerus@linux.intel.com, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] platform/chrome: cros_ec_ucsi: Implement UCSI PDC
+ driver
+Message-ID: <ZgU_H4zceFlQUz8f@google.com>
+References: <03e1941b-0c8a-450d-9b83-76260817d303@kernel.org>
+ <20240328023233.2568230-1-pholla@chromium.org>
+ <2357d78f-8879-41ca-b0e1-6593400252c8@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: 734022002D
-X-Rspamd-Server: rspamout08
-X-Stat-Signature: 7riserhy3yknb9m7sgmq6fti4q81xd8p
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1+g2gqFrn5/7Zkoo0gSWx2LTXg0VwuKnyU=
-X-HE-Tag: 1711619856-999954
-X-HE-Meta: U2FsdGVkX1/xm2Wdm2oMCUMZ0DkhhGweQNTy8N67yxZaCTWJszs1ZErjTWTfmdVB4tZImk178Kb47yNJ1X4bZ2fvC2kWIycpsMIGfvkozPOruh5kXUgNl6yZXt7Fi5QlHOXoWGgoeFXJNjfgDA9bzcCQHN1gPGbSTVvZsCiIonSzwUwrOMpBxR7MKQ2WhvJdZWVSdV144V8/jhP+0rmIlUfvaPmxV15dm9LWKY3am0ckGHPzumvDereLovNuDt87Mx6oQ0eg6U4wzT6viHNqiQUnx57GlGtqXmKIyyxnQYw6h+RJuMHqDXsl0dHBK9WoUqVURbGXq4cihhQg9LK9OnJHkxppVoF9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2357d78f-8879-41ca-b0e1-6593400252c8@kernel.org>
 
-On Thu, 2024-03-28 at 15:21 +1300, Barry Song wrote:
-> From: Xining Xu <mac.xxn@outlook.com>
->=20
-> If function-like macros do not utilize a parameter, it might result in a
-> build warning.  In our coding style guidelines, we advocate for utilizing
-> static inline functions to replace such macros.  This patch verifies
-> compliance with the new rule.
-[]
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-[]
-> @@ -6109,6 +6109,36 @@ sub process {
->  				WARN("TRAILING_SEMICOLON",
->  				     "macros should not use a trailing semicolon\n" . "$herectx");
->  			}
-> +
-> +			# match "\s*" rather than "\s+" after the balanced parens, as macro d=
-efinition with arguments
-> +			# is not required to have whitespace after arguments
-> +			if ($dstat =3D~ /^\+\s*#\s*define\s+$Ident$balanced_parens\s*(\S+.*)(=
-\/[\/*].*)?/) {
+On Thu, Mar 28, 2024 at 09:36:54AM +0100, Krzysztof Kozlowski wrote:
+> On 28/03/2024 03:32, Pavan Holla wrote:
+> > On Tue, Mar 26, 2024 at 9:59 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >>
+> >> On 27/03/2024 04:39, Pavan Holla wrote:
+> >>> Hi Krzysztof,
+> >>>
+> >>> Thanks for the review.
+> >>>
+> >>> On Tue, Mar 26, 2024 at 1:47 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >>>> Nothing improved.
+> >>>
+> >>> Yes. I only added maintainers of drivers/platform/chrome in v2. I am
+> >>> still investigating why MODULE_ALIAS() is required.
+> >>
+> >> Heh, I wrote why. You miss ID table.
+> > 
+> > This driver is going to be used by the cros_ec_dev.c MFD. The UCSI device doesn’t
+> > have an ACPI or OF entry, so I am not sure how I can use MODULE_DEVICE_TABLE
+> > here. If I don’t use MODULE_ALIAS(“platform:” DRV_NAME),
+> > https://elixir.bootlin.com/linux/latest/source/drivers/mfd/cros_ec_dev.c#L206
+> > isn’t able to automatically associate the driver with the device at boot.
+> > I haven’t upstreamed the change in cros_ec_dev.c yet, but the code is similar to
+> > existing code for drivers/platform/chrome/cros_usbpd_logger.c. There are many
+> > other occurrences of the same MODULE_ALIAS pattern:
+> 
+> Just open other platform drivers and look how it is done there. Or ask
+> colleagues. There is absolutely no one in entire Chromium/google who
+> ever wrote platform_driver? platform_driver has ID table for matching.
+> 
+> Otherwise how do you expect this to be matched? How your driver is being
+> matched and device bound? By fallback, right? So what is the primary method?
 
-I think '(\/[\/*].*)?' doesn't do what you expect
-perhaps '(\/[\/\*].*)?'
-though I don't know why this should be capture group
+Those platform devices are adding in drivers/mfd/cros_ec_dev.c via
+mfd_add_hotplug_devices().
 
-> +				my $params =3D $1 || "";
+By looking other use cases of mfd_add_hotplug_devices():
+$ grep -R --files-with-matches mfd_add_hotplug_devices drivers/mfd/
+drivers/mfd/dln2.c
+drivers/mfd/cros_ec_dev.c
+drivers/mfd/viperboard.c
 
+They also have no ID tables and need MODULE_ALIAS().
+- drivers/gpio/gpio-dln2.c
+- drivers/i2c/busses/i2c-dln2.c
+- drivers/spi/spi-dln2.c
+- drivers/iio/adc/dln2-adc.c
+- drivers/gpio/gpio-viperboard.c
+- drivers/i2c/busses/i2c-viperboard.c
+- drivers/iio/adc/viperboard_adc.c
 
-> +				my $body =3D $2 || "";
-
-Should never get the || "" as the 2nd capture group is not optional
-
-> +
-> +			    # get the individual params
-> +				$params =3D~ tr/()//d;
-> +				# remove leading and trailing whitespace
-> +				$params =3D~ s/^\s+|\s+$//g;
-> +
-> +				$ctx =3D~ s/\n*$//;
-> +				my $cnt =3D statement_rawlines($ctx);
-> +				my $herectx =3D get_stat_here($linenr, $cnt, $here);
-> +
-> +				if ($params ne "") {
-
-probably unnecessary
-
-> +					my @paramList =3D split /,\s*/, $params;
-
-please use split() with parentheses
-
-> +					foreach my $param(@paramList) {
-
-maybe
-				foreach my $param (split(/,/, $params) {
-					$param =3D trim($param);
-					next if ($param =3D~ /\.\.\.$/);
-
-> +						if ($param =3D~ /\.\.\.$/) {
-> +							# if the param name ends with "...", skip the check
-> +							next;
-> +						}
-> +						if ($body !~ /\b$param\b/) {
-> +							WARN("UNUSED_PARAM_IN_MACRO",
-> +								"Parameter '$param' is not used in function-like macro\n" . "$he=
-rectx");
-> +						}
-> +					}
-
-It seems this logic is a bit redundant to existing
-code and might be better added in the block that starts
-
-(line 6026)
-# check if any macro arguments are reused (ignore '...' and 'type')
-
-as that already does each param in a #define and
-ignores ... and type
-
+I'm not sure whether using the path results in:
+- Lack of device ID table.
+- Need MODULE_ALIAS().
+in the platform device drivers.  And perhaps it relies on the fallback match?
