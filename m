@@ -1,131 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E18D3B78D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F5E3BB25;
 	Thu, 28 Mar 2024 01:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711589844; cv=none; b=boWQJ93deih9txvM9+2L2XX8q6Q97wcG9/6GqF6GbwIqbaFdzum7VkFa2KrWE++U/uY0xks5TkBfBOtxpXMV0nD0YSYq0ui0Yvhoc/Z1eIHdzE05cFW6KS0Q7Zxkqj+m5TwDC5vZykSY63XUYW6p1pklbYaWO5L42Jmp+347x0Y=
+	t=1711589847; cv=none; b=VxpkcvS2WvFCjq2iHv6yu4frzgJVRKUYM3YprKcLx/gmHkmWFqWY2n1TVuUvKpoP2ouhJB58qp8n6mtg8wTar9KDeG6itb9jkD2YosaWNnADNInPPVvJrYmv3PkcKa0zFhHjXx0DrV9hpXwgN9lpjwZCW7tu4ioAcZslALS7DYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711589844; c=relaxed/simple;
-	bh=O1k80KbUBNPKN2Cz8jdjH7/l3Qy2e0v1DTF3Pf8/QLU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=X265d6Si8vdY6Ma9QUjTEOWS79pa1fyI1proTnXSCvwAx1hOtYtmJqZnApGItTAMMj5uJZm7IMO7Zh2asxjn6cPrM+VIaR5QahguyypUnVLIw2g/SEIjK209gNzdTBrfQDPNEGjYkraR2q2FQs89qSpb+F1OEKCQqPbLCVDBz0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T5UTL4+u; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711589847; c=relaxed/simple;
+	bh=ufJutT73Z+lUzAoxlRPNMe5+qxbNbjQJyVoWy3hjDaA=;
+	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=untORWMF28MsvLiad0BeQB37CQdC0ihaWXQSx13c6ZLKDPDWw4ql2P7rxS2R83hiJ4e5Kk2S/xQcGKVjM64HX2/jF33UTccnD4Nqu1hGM23kJp2TbSX890VLw3C5dL+dgjkI8huwAKz5OeYvvXgOmOmJQs12NS145tpofQslgIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=E5YEks9c; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T5UTL4+u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711589842; x=1743125842;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=O1k80KbUBNPKN2Cz8jdjH7/l3Qy2e0v1DTF3Pf8/QLU=;
-  b=T5UTL4+uStMhzDgcPiCs8oAn/41vs7sG+DK5YYeyjQnMhUwJlg9dgSak
-   kAH/ZTXZ434C3Kj8sea1FqoY8NWKpEahbKNA9jw9vjd7Yik5FVD0grVRW
-   fEhmRRT/Z+NF0zjGEYVRBNbtBvpeYLNS0wxbEjJG2skT/b6htDuFBwNry
-   htgLp87OcCaAbHHJt5mTP3Qp6jYabJEj8Gh6B9dxSa0+IlAyy+Tx/T2eP
-   EurNztHH3d5wtFfyZYKNiLSXJG106ZMBuIcGJq/LEzqecL8YwCo6K9ltF
-   t5BDD1eRw9quGMH7QudpfFqBcvHhf2rqhyptTftp5beVBzCl1I5VwyudX
-   w==;
-X-CSE-ConnectionGUID: hSbVUFz+SFeectUF/MTEUQ==
-X-CSE-MsgGUID: eJTocNEYTrGkvdtjEtOKhg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="17453695"
-X-IronPort-AV: E=Sophos;i="6.07,160,1708416000"; 
-   d="scan'208";a="17453695"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 18:37:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,160,1708416000"; 
-   d="scan'208";a="21131863"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 18:37:16 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
-Cc: "Gregory Price" <gourry.memverge@gmail.com>,
-  aneesh.kumar@linux.ibm.com,  mhocko@suse.com,  tj@kernel.org,
-  john@jagalactic.com,  "Eishan Mirakhur" <emirakhur@micron.com>,
-  "Vinicius Tavares Petrucci" <vtavarespetr@micron.com>,  "Ravis OpenSrc"
- <Ravis.OpenSrc@micron.com>,  "Alistair Popple" <apopple@nvidia.com>,
-  "Srinivasulu Thanneeru" <sthanneeru@micron.com>,  Dan Williams
- <dan.j.williams@intel.com>,  Vishal Verma <vishal.l.verma@intel.com>,
-  Dave Jiang <dave.jiang@intel.com>,  Andrew Morton
- <akpm@linux-foundation.org>,  nvdimm@lists.linux.dev,
-  linux-cxl@vger.kernel.org,  linux-kernel@vger.kernel.org,
-  linux-mm@kvack.org,  "Ho-Ren (Jack) Chuang" <horenc@vt.edu>,  "Ho-Ren
- (Jack) Chuang" <horenchuang@gmail.com>,  qemu-devel@nongnu.org,  Hao Xiang
- <hao.xiang@bytedance.com>
-Subject: Re: [PATCH v6 2/2] memory tier: create CPUless memory tiers after
- obtaining HMAT info
-In-Reply-To: <20240327072729.3381685-3-horenchuang@bytedance.com> (Ho-Ren
-	Chuang's message of "Wed, 27 Mar 2024 07:27:28 +0000")
-References: <20240327072729.3381685-1-horenchuang@bytedance.com>
-	<20240327072729.3381685-3-horenchuang@bytedance.com>
-Date: Thu, 28 Mar 2024 09:35:22 +0800
-Message-ID: <87v857kujp.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="E5YEks9c"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1711589840; h=Message-ID:Subject:Date:From:To;
+	bh=v7bS5t8QiDMoASYcN5lpCGZoaZnfviWiy8N1d5+w1eE=;
+	b=E5YEks9cwDFMuVnGqCgjQ7pWOGumODwyeYQOIYyaKyjMo5MrjQ+PrelyXHspCf6Q71ciTUkpqF+D7qkrthraK5WmvZk+uhIuS3oNEsP1j09x52woHK0WtE5fR1GHZSrHV4wv6ylTT+X3gRc8pt+7enOp6OEVOqmUT8kKVn5tWkM=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R641e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0W3QICuj_1711589839;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W3QICuj_1711589839)
+          by smtp.aliyun-inc.com;
+          Thu, 28 Mar 2024 09:37:20 +0800
+Message-ID: <1711589335.4973893-1-xuanzhuo@linux.alibaba.com>
+Subject: Re: [PATCH net v2 1/2] virtio_net: Do not set rss_indir if RSS is not supported
+Date: Thu, 28 Mar 2024 09:28:55 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: Breno Leitao <leitao@debian.org>
+Cc: rbc@meta.com,
+ riel@surriel.com,
+ "open list:VIRTIO CORE AND NET DRIVERS" <virtualization@lists.linux.dev>,
+ "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ hengqi@linux.alibaba.com,
+ "Michael S. Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>
+References: <20240326151911.2155689-1-leitao@debian.org>
+ <1711503463.632461-1-xuanzhuo@linux.alibaba.com>
+ <ZgQkXfMd6GIEndXm@gmail.com>
+In-Reply-To: <ZgQkXfMd6GIEndXm@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
 
-"Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> writes:
+On Wed, 27 Mar 2024 06:51:25 -0700, Breno Leitao <leitao@debian.org> wrote:
+> Hello Xuan,
+>
+> On Wed, Mar 27, 2024 at 09:37:43AM +0800, Xuan Zhuo wrote:
+> > On Tue, 26 Mar 2024 08:19:08 -0700, Breno Leitao <leitao@debian.org> wrote:
+> > > Do not set virtnet_info->rss_indir_table_size if RSS is not available
+> > > for the device.
+> > >
+> > > Currently, rss_indir_table_size is set if either has_rss or
+> > > has_rss_hash_report is available, but, it should only be set if has_rss
+> > > is set.
+> > >
+> > > On the virtnet_set_rxfh(), return an invalid command if the request has
+> > > indirection table set, but virtnet does not support RSS.
+> > >
+> > > Suggested-by: Heng Qi <hengqi@linux.alibaba.com>
+> > > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > > ---
+> > >  drivers/net/virtio_net.c | 9 +++++++--
+> > >  1 file changed, 7 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> > > index c22d1118a133..c640fdf28fc5 100644
+> > > --- a/drivers/net/virtio_net.c
+> > > +++ b/drivers/net/virtio_net.c
+> > > @@ -3813,6 +3813,9 @@ static int virtnet_set_rxfh(struct net_device *dev,
+> > >  	    rxfh->hfunc != ETH_RSS_HASH_TOP)
+> > >  		return -EOPNOTSUPP;
+> > >
+> > > +	if (rxfh->indir && !vi->has_rss)
+> > > +		return -EINVAL;
+> > > +
+> > >  	if (rxfh->indir) {
+> >
+> > Put !vi->has_rss here?
+>
+> I am not sure I understand the suggestion. Where do you suggest we have
+> !vi->has_rss?
+>
+> If we got this far, we either have:
+>
+> a) rxfh->indir set and vi->has_rss is also set
+> b) rxfh->indir not set. (vi->has_rss could be set or not).
 
-[snip]
 
-> @@ -655,6 +672,34 @@ void mt_put_memory_types(struct list_head *memory_types)
->  }
->  EXPORT_SYMBOL_GPL(mt_put_memory_types);
->  
-> +/*
-> + * This is invoked via `late_initcall()` to initialize memory tiers for
-> + * CPU-less memory nodes after driver initialization, which is
-> + * expected to provide `adistance` algorithms.
-> + */
-> +static int __init memory_tier_late_init(void)
-> +{
-> +	int nid;
-> +
-> +	mutex_lock(&memory_tier_lock);
-> +	for_each_node_state(nid, N_MEMORY)
-> +		if (!node_state(nid, N_CPU) &&
-> +			node_memory_types[nid].memtype == NULL)
+This function does two tasks.
+1. update indir table
+2. update rss key
 
-Think about this again.  It seems that it is better to check
-"node_memory_types[nid].memtype == NULL" only here.  Because for all
-node with N_CPU in memory_tier_init(), "node_memory_types[nid].memtype"
-will be !NULL.  And it's possible (in theory) that some nodes becomes
-"node_state(nid, N_CPU) == true" between memory_tier_init() and
-memory_tier_late_init().
+#1 only for has_rss
+#2 for has_rss or has_rss_hash_report
 
-Otherwise, Looks good to me.  Feel free to add
 
-Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
+So I would code:
 
-in the future version.
+	bool update = false
 
-> +			/*
-> +			 * Some device drivers may have initialized memory tiers
-> +			 * between `memory_tier_init()` and `memory_tier_late_init()`,
-> +			 * potentially bringing online memory nodes and
-> +			 * configuring memory tiers. Exclude them here.
-> +			 */
-> +			set_node_memory_tier(nid);
-> +
-> +	establish_demotion_targets();
-> +	mutex_unlock(&memory_tier_lock);
-> +
-> +	return 0;
-> +}
-> +late_initcall(memory_tier_late_init);
-> +
+	if (rxfh->indir) {
+		if (!vi->has_rss)
+			return -EINVAL;
 
-[snip]
+		for (i = 0; i < vi->rss_indir_table_size; ++i)
+			vi->ctrl->rss.indirection_table[i] = rxfh->indir[i];
 
---
-Best Regards,
-Huang, Ying
+		update = true
+	}
+
+	if (rxfh->key) {
+		if (!vi->has_rss && !vi->has_rss_hash_report)
+			return -EINVAL;
+
+		memcpy(vi->ctrl->rss.key, rxfh->key, vi->rss_key_size);
+		update = true
+	}
+
+
+	if (update)
+		virtnet_commit_rss_command(vi);
+
+Thanks.
+
+
+>
+> Thanks for the review,
+> Breno
