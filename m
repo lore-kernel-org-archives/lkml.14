@@ -1,326 +1,202 @@
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451A213A27E
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 21:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E2141A80;
+	Thu, 28 Mar 2024 21:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711660630; cv=none; b=LqN5i2TvW7HNkQkgVcMbLHTe0WsGh/W/L3e6EHRB2JqHQ4mHG4oyJVHYK9Jo9e3JD/GeYniUHId0iV/4XtXbvWWtEv9u2nM+Q3SwfOoJ4vs5T+E2qgSr4D6OsxFm4S47rVCridPwMu6COg0v1i1+SdK2v/MEI+Tm1QN7iS719Ow=
+	t=1711660666; cv=none; b=iEARIy2Tsi8+DNRXThmcTB3FxpChlgasSJfay4aTcYrXmm0g6XZ/SbluouhooPTvFWqNcEocDSEJ6ZL8VS5IwZqzoO7EoRRSDwxFMYEm8dtrcEBNIx0WR353IJeSGeTN9ONarXZrHxgDKagJRQUz6flNAWsRos6J+/qEulNUeKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711660630; c=relaxed/simple;
-	bh=R9tvs0YEbLb0IcFKPyCsYPU6XePRpPjzPOoYnJ+tx4Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TZQimgJ+JI8XHjZrJhUA4bOkLLGxEz/ykcZYNt7vZGSBL4jxtsW3mtxDyZSDqRLOpaPl15PnT7SQaokVoXtRqtQPNteXnUAPNtzGGJDMmETBmWjT8dO9GtewBrPWlCInIBKzM8cH/vVZMwmdjFx3wDTyaD4fkNAtdZLEQpLvslE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=nUdD/skX; arc=none smtp.client-ip=209.85.160.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1711660666; c=relaxed/simple;
+	bh=7Tk4v9rU4cp8O26lvJbATJhcSQxE9d5DNyvx1SOGOLE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HXosH1JjSZ9/Re6MFu6aHGAVORKiZRNVMA8A7iWNARWWfsXxRaZK4tedGYSAA0+8+Hnz6cu25l5iAwlolNMTmNzv3sLw2NvV0jJXk2hsc2U9x4HmECo/uv8s5fK3Anj5LE7GrvR+O852RKTQvtCdJZrbMdjQop7lqOSTb2qgd3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pVGmHZDG; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="nUdD/skX"
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2297d0d6013so872841fac.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 14:17:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711660627; x=1712265427; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q3A5gu7uqa4mwgO3Pcy/PGFp7hCbrmNXtdjALJmM9qE=;
-        b=nUdD/skX4uKCeVM+X3AF+uhi9nBzhS1xMbcV6/zrYddC0lLf4pv1f3RreEiWqodev0
-         sOK2kQSEzwje6mliJLQpgntOId/6fXPO8o8xWziZQah8JbTUEHyqgU/M8kYOvAHJlHoQ
-         770x34G1tAOyODyN40TOIsJnOsrc806diEqxz5UqQYglzw8yZ07L1W0j2ABPRG0BdIf9
-         +D25mA4vEUWby1GpJUjD9kzMh0QYuqyd43liLOOdg1nlaDrlpYdVFz+nNPqhyiaGvjvp
-         lPU3ABDikwIez0bELh2U6k/B4ABPUOIpUJnWylWjqFTJLkA+xY45LRo0EYO4yBi4813/
-         nYAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711660627; x=1712265427;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Q3A5gu7uqa4mwgO3Pcy/PGFp7hCbrmNXtdjALJmM9qE=;
-        b=KBT22FM3VAXfTMR5RYC+MDXmjUnSxQc1fck9ilipHZuVT0D5K9FEqVbEzTwQrBnlxR
-         YPvTGG/88AIj/wB3dNOB3HqOGj2QQf4GVxVTg71qHrWyTnQ85JGUPIJkFwcuwjKZlESM
-         IUT4uo8VO0+tRnksU/7VAcQIf5R5k+gB0A0a6yoJJatkECgJPDqxGwp88uxOW7WgAoiU
-         AotVowq5TefJdF/pGEQ5Ev598mRow2vnnlx6o4bnX+76dPc79G+87hyEXM57FxsUk10J
-         LKQvRBT/SV5S/n0sYrzv+XaENk6PiI64eGvCf3OwK34YU5uaHYl3fepuqjk62uWl2QcJ
-         3khw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxx1A2ywho5/YGuwFuHNHVAnchg4XCpOfgvyAISLnmGGfLO9Fz+Ifl+v7trbkZdbuch+65tnK89XRkqEOmzz6RIIXcWq9sRC91ujAg
-X-Gm-Message-State: AOJu0Yy4p1UmxM8aM5BJ40Dn/zDbhxRQwN1JWDKkL71cUaP52zReXTH9
-	Xe6z+nosqOC894Lj9v46F3V1k2h4D6dLM60/IV4dLPAOmbAnlnPBtJj1MS+bfwg=
-X-Google-Smtp-Source: AGHT+IEVJ8YJ4y66ExO7KPduVCi8GbCu6OnRINivNLND7nZBQCBwHlfk0bY8nUUZ8FhSx7jFoj+V1w==
-X-Received: by 2002:a05:6870:e983:b0:22d:f675:d525 with SMTP id r3-20020a056870e98300b0022df675d525mr310840oao.48.1711660627305;
-        Thu, 28 Mar 2024 14:17:07 -0700 (PDT)
-Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id ny21-20020a056871751500b00221df0eb6f9sm577360oac.28.2024.03.28.14.17.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 14:17:06 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] iio: adc: ad7944: use spi_optimize_message()
-Date: Thu, 28 Mar 2024 16:16:59 -0500
-Message-ID: <20240328-ad7944-spi-optimize-message-v2-1-a142b2576379@baylibre.com>
-X-Mailer: git-send-email 2.43.2
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pVGmHZDG"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42SIJ2KR003277;
+	Thu, 28 Mar 2024 21:16:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	qcppdkim1; bh=zvJ0vhX7wfZ6zdugc4E4PLPb1HUs3ONWnc6z4J9p1ZY=; b=pV
+	GmHZDG1mADpzP6mjW9TW14aC2Ikm38r0SAtkaiCiGc9aSkjLonitPlQOoWA5yxBL
+	I2gFEH3qZwrLnthVKH5XFNonlEAID01uX4HL2six6Q6a/+B2GyAJjZ07Zf0Z7EdY
+	BOGY6D/k+Ds2fEIEebL6B6t7o9vu4m4o65Zv2JKEPlHOjCPqyY59sH4w+LIV8hxo
+	/khQvkD+1V2bCu3XwXRQ9/0gF3Jtx+p9dIRgqUxiihEEt0qTWU35PvlGTxzOsyci
+	WK2wGPO6cpbxnA9OOLAQTgHWtMfKsR7rLGJ9SJwDG78moMh6xqV34GpXDZ3Umk7I
+	Nh3WH3r8DUmZtM4NRoGw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x53nxjg6p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 28 Mar 2024 21:16:36 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42SLGZO4012363
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 28 Mar 2024 21:16:36 GMT
+Received: from hu-obabatun-lv.qualcomm.com (10.49.16.6) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 28 Mar 2024 14:16:32 -0700
+From: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <robh+dt@kernel.org>,
+        <frowand.list@gmail.com>, <vgupta@kernel.org>, <arnd@arndb.de>,
+        <olof@lixom.net>, <soc@kernel.org>, <guoren@kernel.org>,
+        <monstr@monstr.eu>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
+        <dinguyen@kernel.org>, <chenhuacai@kernel.org>,
+        <tsbogend@alpha.franken.de>, <jonas@southpole.se>,
+        <stefan.kristiansson@saunalahti.fi>, <shorne@gmail.com>,
+        <mpe@ellerman.id.au>, <ysato@users.sourceforge.jp>, <dalias@libc.org>,
+        <glaubitz@physik.fu-berlin.de>, <richard@nod.at>,
+        <anton.ivanov@cambridgegreys.com>, <johannes@sipsolutions.net>,
+        <chris@zankel.net>, <jcmvbkbc@gmail.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <kernel@quicinc.com>, Oreoluwa Babatunde <quic_obabatun@quicinc.com>
+Subject: [PATCH v5 4/4] of: reserved_mem: Rename fdt_* functions to refelct use of unflatten_devicetree APIs
+Date: Thu, 28 Mar 2024 14:15:43 -0700
+Message-ID: <20240328211543.191876-5-quic_obabatun@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240328211543.191876-1-quic_obabatun@quicinc.com>
+References: <20240328211543.191876-1-quic_obabatun@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.12.4
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: EoxbyCpQiIhXCrV0MxNXBG7mGSeJY2OE
+X-Proofpoint-ORIG-GUID: EoxbyCpQiIhXCrV0MxNXBG7mGSeJY2OE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-28_17,2024-03-28_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=999 impostorscore=0 spamscore=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 malwarescore=0
+ adultscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403210001 definitions=main-2403280152
 
-This modifies the ad7944 driver to use spi_optimize_message() to reduce
-CPU usage and increase the max sample rate by avoiding repeating
-validation of the spi message on each transfer.
+Rename the relevant fdt_* functions to a new naming scheme, dt_*, to
+reflect the use of the unflatten_devicetree APIs to scan through the
+reserved memory regions defined in the DT.
 
-Signed-off-by: David Lechner <dlechner@baylibre.com>
+Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
 ---
-Changes in v2:
-- Fix wrong array index in ad7944_3wire_cs_mode_init_msg()
-- Fixed wrong number of xfers in ad7944_4wire_mode_init_msg()
-- Link to v1: https://lore.kernel.org/r/20240325-ad7944-spi-optimize-message-v1-1-cded69b9e27f@baylibre.com
----
- drivers/iio/adc/ad7944.c | 177 +++++++++++++++++++++++++++--------------------
- 1 file changed, 103 insertions(+), 74 deletions(-)
+ drivers/of/fdt.c             |  2 +-
+ drivers/of/of_private.h      |  2 +-
+ drivers/of/of_reserved_mem.c | 22 +++++++++++-----------
+ 3 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/iio/adc/ad7944.c b/drivers/iio/adc/ad7944.c
-index 261a3f645fd8..e09ab0c842d3 100644
---- a/drivers/iio/adc/ad7944.c
-+++ b/drivers/iio/adc/ad7944.c
-@@ -51,6 +51,8 @@ static const char * const ad7944_spi_modes[] = {
- struct ad7944_adc {
- 	struct spi_device *spi;
- 	enum ad7944_spi_mode spi_mode;
-+	struct spi_transfer xfers[3];
-+	struct spi_message msg;
- 	/* Chip-specific timing specifications. */
- 	const struct ad7944_timing_spec *timing_spec;
- 	/* GPIO connected to CNV pin. */
-@@ -130,6 +132,88 @@ AD7944_DEFINE_CHIP_INFO(ad7985, ad7944, 16, 0);
- /* fully differential */
- AD7944_DEFINE_CHIP_INFO(ad7986, ad7986, 18, 1);
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 527e6bc1c096..7e1baf443286 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -1259,7 +1259,7 @@ void __init unflatten_device_tree(void)
+ 	unittest_unflatten_overlay_base();
  
-+static void ad7944_unoptimize_msg(void *msg)
-+{
-+	spi_unoptimize_message(msg);
-+}
-+
-+static int ad7944_3wire_cs_mode_init_msg(struct device *dev, struct ad7944_adc *adc,
-+					 const struct iio_chan_spec *chan)
-+{
-+	unsigned int t_conv_ns = adc->always_turbo ? adc->timing_spec->turbo_conv_ns
-+						   : adc->timing_spec->conv_ns;
-+	struct spi_transfer *xfers = adc->xfers;
-+	int ret;
-+
-+	/*
-+	 * NB: can get better performance from some SPI controllers if we use
-+	 * the same bits_per_word in every transfer.
-+	 */
-+	xfers[0].bits_per_word = chan->scan_type.realbits;
-+	/*
-+	 * CS is tied to CNV and we need a low to high transition to start the
-+	 * conversion, so place CNV low for t_QUIET to prepare for this.
-+	 */
-+	xfers[0].delay.value = T_QUIET_NS;
-+	xfers[0].delay.unit = SPI_DELAY_UNIT_NSECS;
-+
-+	/*
-+	 * CS has to be high for full conversion time to avoid triggering the
-+	 * busy indication.
-+	 */
-+	xfers[1].cs_off = 1;
-+	xfers[1].delay.value = t_conv_ns;
-+	xfers[1].delay.unit = SPI_DELAY_UNIT_NSECS;
-+	xfers[1].bits_per_word = chan->scan_type.realbits;
-+
-+	/* Then we can read the data during the acquisition phase */
-+	xfers[2].rx_buf = &adc->sample.raw;
-+	xfers[2].len = BITS_TO_BYTES(chan->scan_type.storagebits);
-+	xfers[2].bits_per_word = chan->scan_type.realbits;
-+
-+	spi_message_init_with_transfers(&adc->msg, xfers, 3);
-+
-+	ret = spi_optimize_message(adc->spi, &adc->msg);
-+	if (ret)
-+		return ret;
-+
-+	return devm_add_action_or_reset(dev, ad7944_unoptimize_msg, &adc->msg);
-+}
-+
-+static int ad7944_4wire_mode_init_msg(struct device *dev, struct ad7944_adc *adc,
-+				      const struct iio_chan_spec *chan)
-+{
-+	unsigned int t_conv_ns = adc->always_turbo ? adc->timing_spec->turbo_conv_ns
-+						   : adc->timing_spec->conv_ns;
-+	struct spi_transfer *xfers = adc->xfers;
-+	int ret;
-+
-+	/*
-+	 * NB: can get better performance from some SPI controllers if we use
-+	 * the same bits_per_word in every transfer.
-+	 */
-+	xfers[0].bits_per_word = chan->scan_type.realbits;
-+	/*
-+	 * CS has to be high for full conversion time to avoid triggering the
-+	 * busy indication.
-+	 */
-+	xfers[0].cs_off = 1;
-+	xfers[0].delay.value = t_conv_ns;
-+	xfers[0].delay.unit = SPI_DELAY_UNIT_NSECS;
-+
-+	xfers[1].rx_buf = &adc->sample.raw;
-+	xfers[1].len = BITS_TO_BYTES(chan->scan_type.storagebits);
-+	xfers[1].bits_per_word = chan->scan_type.realbits;
-+
-+	spi_message_init_with_transfers(&adc->msg, xfers, 2);
-+
-+	ret = spi_optimize_message(adc->spi, &adc->msg);
-+	if (ret)
-+		return ret;
-+
-+	return devm_add_action_or_reset(dev, ad7944_unoptimize_msg, &adc->msg);
-+}
-+
- /*
-  * ad7944_3wire_cs_mode_conversion - Perform a 3-wire CS mode conversion and
-  *                                   acquisition
-@@ -145,48 +229,7 @@ AD7944_DEFINE_CHIP_INFO(ad7986, ad7986, 18, 1);
- static int ad7944_3wire_cs_mode_conversion(struct ad7944_adc *adc,
- 					   const struct iio_chan_spec *chan)
- {
--	unsigned int t_conv_ns = adc->always_turbo ? adc->timing_spec->turbo_conv_ns
--						   : adc->timing_spec->conv_ns;
--	struct spi_transfer xfers[] = {
--		{
--			/*
--			 * NB: can get better performance from some SPI
--			 * controllers if we use the same bits_per_word
--			 * in every transfer.
--			 */
--			.bits_per_word = chan->scan_type.realbits,
--			/*
--			 * CS is tied to CNV and we need a low to high
--			 * transition to start the conversion, so place CNV
--			 * low for t_QUIET to prepare for this.
--			 */
--			.delay = {
--				.value = T_QUIET_NS,
--				.unit = SPI_DELAY_UNIT_NSECS,
--			},
--
--		},
--		{
--			.bits_per_word = chan->scan_type.realbits,
--			/*
--			 * CS has to be high for full conversion time to avoid
--			 * triggering the busy indication.
--			 */
--			.cs_off = 1,
--			.delay = {
--				.value = t_conv_ns,
--				.unit = SPI_DELAY_UNIT_NSECS,
--			},
--		},
--		{
--			/* Then we can read the data during the acquisition phase */
--			.rx_buf = &adc->sample.raw,
--			.len = BITS_TO_BYTES(chan->scan_type.storagebits),
--			.bits_per_word = chan->scan_type.realbits,
--		},
--	};
--
--	return spi_sync_transfer(adc->spi, xfers, ARRAY_SIZE(xfers));
-+	return spi_sync(adc->spi, &adc->msg);
+ 	/* initialize the reserved memory regions */
+-	fdt_init_reserved_mem();
++	dt_init_reserved_mem();
+ }
+ 
+ /**
+diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+index 9ea250b80657..75726feac881 100644
+--- a/drivers/of/of_private.h
++++ b/drivers/of/of_private.h
+@@ -177,7 +177,7 @@ static inline struct device_node *__of_get_dma_parent(const struct device_node *
+ #endif
+ 
+ int fdt_scan_reserved_mem(void);
+-void fdt_init_reserved_mem(void);
++void dt_init_reserved_mem(void);
+ 
+ bool of_fdt_device_is_available(const void *blob, unsigned long node);
+ 
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 68d1f4cca4bb..3ae5918a0024 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -97,10 +97,10 @@ static void __init alloc_reserved_mem_array(void)
  }
  
  /*
-@@ -200,33 +243,6 @@ static int ad7944_3wire_cs_mode_conversion(struct ad7944_adc *adc,
- static int ad7944_4wire_mode_conversion(struct ad7944_adc *adc,
- 					const struct iio_chan_spec *chan)
+- * fdt_reserved_mem_save_node() - save fdt node for second pass initialization
++ * dt_reserved_mem_save_node() - save the device_node for second pass initialization
+  */
+-static void __init fdt_reserved_mem_save_node(struct device_node *node, const char *uname,
+-					      phys_addr_t base, phys_addr_t size)
++static void __init dt_reserved_mem_save_node(struct device_node *node, const char *uname,
++					     phys_addr_t base, phys_addr_t size)
  {
--	unsigned int t_conv_ns = adc->always_turbo ? adc->timing_spec->turbo_conv_ns
--						   : adc->timing_spec->conv_ns;
--	struct spi_transfer xfers[] = {
--		{
--			/*
--			 * NB: can get better performance from some SPI
--			 * controllers if we use the same bits_per_word
--			 * in every transfer.
--			 */
--			.bits_per_word = chan->scan_type.realbits,
--			/*
--			 * CS has to be high for full conversion time to avoid
--			 * triggering the busy indication.
--			 */
--			.cs_off = 1,
--			.delay = {
--				.value = t_conv_ns,
--				.unit = SPI_DELAY_UNIT_NSECS,
--			},
--
--		},
--		{
--			.rx_buf = &adc->sample.raw,
--			.len = BITS_TO_BYTES(chan->scan_type.storagebits),
--			.bits_per_word = chan->scan_type.realbits,
--		},
--	};
- 	int ret;
+ 	struct reserved_mem *rmem = &reserved_mem[reserved_mem_count];
  
- 	/*
-@@ -234,7 +250,7 @@ static int ad7944_4wire_mode_conversion(struct ad7944_adc *adc,
- 	 * and acquisition process.
- 	 */
- 	gpiod_set_value_cansleep(adc->cnv, 1);
--	ret = spi_sync_transfer(adc->spi, xfers, ARRAY_SIZE(xfers));
-+	ret = spi_sync(adc->spi, &adc->msg);
- 	gpiod_set_value_cansleep(adc->cnv, 0);
+@@ -224,16 +224,16 @@ static int __init __dt_reserved_mem_check_root(struct device_node *node)
+ }
  
- 	return ret;
-@@ -395,10 +411,6 @@ static int ad7944_probe(struct spi_device *spi)
- 		adc->spi_mode = ret;
+ /**
+- * fdt_scan_reserved_mem_reg_nodes() - Store info for the "reg" defined
++ * dt_scan_reserved_mem_reg_nodes() - Store info for the "reg" defined
+  * reserved memory regions.
+  *
+  * This function is used to scan through the DT and store the
+  * information for the reserved memory regions that are defined using
+  * the "reg" property. The region node number, name, base address, and
+  * size are all stored in the reserved_mem array by calling the
+- * fdt_reserved_mem_save_node() function.
++ * dt_reserved_mem_save_node() function.
+  */
+-static void __init fdt_scan_reserved_mem_reg_nodes(void)
++static void __init dt_scan_reserved_mem_reg_nodes(void)
+ {
+ 	int t_len = (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32);
+ 	struct device_node *node, *child;
+@@ -277,7 +277,7 @@ static void __init fdt_scan_reserved_mem_reg_nodes(void)
+ 		size = dt_mem_next_cell(dt_root_size_cells, &prop);
+ 
+ 		if (size)
+-			fdt_reserved_mem_save_node(child, uname, base, size);
++			dt_reserved_mem_save_node(child, uname, base, size);
  	}
+ }
  
--	if (adc->spi_mode == AD7944_SPI_MODE_CHAIN)
--		return dev_err_probe(dev, -EINVAL,
--				     "chain mode is not implemented\n");
--
- 	/*
- 	 * Some chips use unusual word sizes, so check now instead of waiting
- 	 * for the first xfer.
-@@ -491,6 +503,23 @@ static int ad7944_probe(struct spi_device *spi)
- 		return dev_err_probe(dev, -EINVAL,
- 			"cannot have both chain mode and always turbo\n");
+@@ -475,7 +475,7 @@ static int __init __reserved_mem_alloc_size(unsigned long node, const char *unam
+ 		       uname, (unsigned long)(size / SZ_1M));
+ 		return -ENOMEM;
+ 	}
+-	fdt_reserved_mem_save_node(NULL, uname, base, size);
++	dt_reserved_mem_save_node(NULL, uname, base, size);
+ 	return 0;
+ }
  
-+	switch (adc->spi_mode) {
-+	case AD7944_SPI_MODE_DEFAULT:
-+		ret = ad7944_4wire_mode_init_msg(dev, adc, &chip_info->channels[0]);
-+		if (ret)
-+			return ret;
-+
-+		break;
-+	case AD7944_SPI_MODE_SINGLE:
-+		ret = ad7944_3wire_cs_mode_init_msg(dev, adc, &chip_info->channels[0]);
-+		if (ret)
-+			return ret;
-+
-+		break;
-+	case AD7944_SPI_MODE_CHAIN:
-+		return dev_err_probe(dev, -EINVAL, "chain mode is not implemented\n");
-+	}
-+
- 	indio_dev->name = chip_info->name;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 	indio_dev->info = &ad7944_iio_info;
-
----
-base-commit: 526f7f17b651c78ead26fea7cea20948c00e47a5
-change-id: 20240325-ad7944-spi-optimize-message-82debaa2a5a7
-
-Best regards,
+@@ -559,15 +559,15 @@ static void __init __rmem_check_for_overlap(void)
+ }
+ 
+ /**
+- * fdt_init_reserved_mem() - allocate and init all saved reserved memory regions
++ * dt_init_reserved_mem() - allocate and init all saved reserved memory regions
+  */
+-void __init fdt_init_reserved_mem(void)
++void __init dt_init_reserved_mem(void)
+ {
+ 	int i;
+ 
+ 	alloc_reserved_mem_array();
+ 
+-	fdt_scan_reserved_mem_reg_nodes();
++	dt_scan_reserved_mem_reg_nodes();
+ 
+ 	/* check for overlapping reserved regions */
+ 	__rmem_check_for_overlap();
 -- 
-David Lechner <dlechner@baylibre.com>
+2.34.1
 
