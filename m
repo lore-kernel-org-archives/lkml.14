@@ -1,200 +1,210 @@
-Received: from smtp-8fae.mail.infomaniak.ch (smtp-8fae.mail.infomaniak.ch [83.166.143.174])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3757525763
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 14:53:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA05A7F49E;
+	Thu, 28 Mar 2024 14:53:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711637599; cv=none; b=RBwli8nTVY3CCEsDimlEyezQ+wQlezPXLYEVFb/4OAmuecWxwXb4r3zci93s0ooU9mvWw2vfweMSWNq0ZVa5spHp5fMoGZM23vKlV4qgpguYBKldC3BbNhtHvSt2OOgzNfIcJkBKzFToeyFdGy5B417OuLC3KdGLm8XqLveWktU=
+	t=1711637639; cv=none; b=IPugyFvwxGOL41c52xRGVmKpogYTBjjTjPTmpYrImgNgdfIj1vUf9zbdKFkncxKp6oqmOJq7wBjk1fkVgm9eoMEvPTL6nF2UHbyCoPSk4QkTJeq8CXy8qa50VGaUOGZtGZ8b6iiJJduUi2ZFwF/hwkuHQGw7WxRHgEMHfXg4AmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711637599; c=relaxed/simple;
-	bh=m6ExSO75re8+h+0kqgmc3taw/nhfvJpWp0RzVChKUD8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aSIyJLkQbv21Z0McJAGR0MOKt7wMoE+cgkFp6mm9IG66YQwRdaZBxNPepTi1cIyqVoq91jthRzhf3lvU3mQ+Xc+BxrHl/bg9HdhFUGo8zV5gbnTCpPkBtww4OmVi2TeC47V59yOgxVTSRSmPwH8g9qQKUby0xLx21dujBjtD1yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=0RoR5jKm; arc=none smtp.client-ip=83.166.143.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1711637639; c=relaxed/simple;
+	bh=q+l+CxYfGh8NmwrdiTXY1xVL3a2sjXtQLxyA/dT0Zoo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=s8+eLL1jM/v4+9A6HWfyvsVLaC4d0pg2DKwAVqSoMXlwKUsqEoNYsijT3C20VF8eoW9EN05UxCdD4I7VD7ZGSRAt/CV0WRWxxQmeaiQNzqeskRmchq+u4aHdJtCYIoENLJa2/nXIV5HObGUNcJjLl/z+17FLmr3u7gsz0IEBHG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=l9LeqVpT; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="0RoR5jKm"
-Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4V55tK0jHzzh88;
-	Thu, 28 Mar 2024 15:45:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1711637112;
-	bh=m6ExSO75re8+h+0kqgmc3taw/nhfvJpWp0RzVChKUD8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=0RoR5jKmSZESMEyzyyfqQCBdDMidK2YEM0S6giPp/MumsJXKnukq6p0yh+n8lBUDh
-	 +Ly2A2jkpU9UJdKMMJ6cjtSIPEwpe4ycoBks2M1+RnFT/H4YsiMgWes0h2Ema/J11K
-	 C0XwLrdz1/Cpkjimu+R6Lc8YtVwHzWf4nOEcEtsg=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4V55tJ47G7zsZc;
-	Thu, 28 Mar 2024 15:45:12 +0100 (CET)
-Date: Thu, 28 Mar 2024 15:45:12 +0100
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Ayush Tiwari <ayushtiw0110@gmail.com>
-Cc: Paul Moore <paul@paul-moore.com>, alison.schofield@intel.com, 
-	fabio.maria.de.francesco@linux.intel.com, linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	gregkh@linuxfoundation.org, outreachy@lists.linux.dev, linux-security-module@vger.kernel.org
-Subject: Re: [PATCH] LANDLOCK: use kmem_cache for landlock_object
-Message-ID: <20240328.aiPh0phaJ6ai@digikod.net>
-References: <ZgSrBVidW1U6yP+h@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
- <CAHC9VhRYDNoqkbkgdUSg-kYSHVbheD5NtezmVxyRakZ0-DzuSg@mail.gmail.com>
- <ZgUh7cIQIsOgvWpw@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="l9LeqVpT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+	Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=nkqbgG1HrRF3ejvn+5iZhShKyFwlWg+3aA2aTIsKg7Y=; b=l9LeqVpTWjHKfGQt+kKRgbPf8s
+	WDAvhfYh7NGSMUBT3eh5GC3BQi5huG4D9JB5ZBx4Mqb3+esFsPfopskhXCorPVKofm1eftxDa2j5S
+	1zLJdlHiqsf2EF/zNn7eSnMC3u1sYU1+U5Xyn5SIXUH5DXkPEZTfI1FmrDxa9xorxPgxxp5A+uewc
+	eKLRmXUhXLcxbYcNi0X/ZBMFCRR8GOVw4Ko6rZBT36YuzPkYiG+fY8x2ecMVd8MRFyFjb3WJRreUz
+	59LzJf1f8s6AhFmM8GC3eOjxHZzmVJHy3KEkD4qF9EWg6ps8XNaHIVofUMCn1JCp5qUdKpK02FS73
+	S2eNoFAg==;
+Received: from [84.65.0.132] (helo=localhost)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1rpr8Q-00GHNP-GR; Thu, 28 Mar 2024 15:53:42 +0100
+From: Tvrtko Ursulin <tursulin@igalia.com>
+To: dri-devel@lists.freedesktop.org
+Cc: Tvrtko Ursulin <tursulin@ursulin.net>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org,
+	linux-kernel@vger.kernel.org,
+	kernel-dev@igalia.com
+Subject: [PATCH] dma-buf: Do not build debugfs related code when !CONFIG_DEBUG_FS
+Date: Thu, 28 Mar 2024 14:53:23 +0000
+Message-ID: <20240328145323.68872-1-tursulin@igalia.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZgUh7cIQIsOgvWpw@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
-X-Infomaniak-Routing: alpha
 
-The subject should start with "landlock: Use" instead of "LANDLOCK: use"
+From: Tvrtko Ursulin <tursulin@ursulin.net>
 
-On Thu, Mar 28, 2024 at 01:23:17PM +0530, Ayush Tiwari wrote:
-> Hello Paul
-> Thanks a lot for the feedback. Apologies for the mistakes. Could you
-> help me in some places so that I can correct the errors, like:
-> On Wed, Mar 27, 2024 at 07:43:36PM -0400, Paul Moore wrote:
-> > On Wed, Mar 27, 2024 at 7:26 PM Ayush Tiwari <ayushtiw0110@gmail.com> wrote:
-> > >
-> > > Use kmem_cache replace kzalloc() calls with kmem_cache_zalloc() for
-> > > struct landlock_object and update the related dependencies.
-> > >
-> > > Signed-off-by: Ayush Tiwari <ayushtiw0110@gmail.com>
-> > > ---
-> > >  security/landlock/fs.c     |  2 +-
-> > >  security/landlock/object.c | 14 ++++++++++++--
-> > >  security/landlock/object.h |  4 ++++
-> > >  security/landlock/setup.c  |  2 ++
-> > >  4 files changed, 19 insertions(+), 3 deletions(-)
-> > 
-> > Hi Ayush,
-> > 
-> > Mickaël has the final say on Landlock patches, but I had a few
-> > comments that I've included below ...
-> > 
-> > > diff --git a/security/landlock/fs.c b/security/landlock/fs.c
-> > > index fc520a06f9af..227dd67dd902 100644
-> > > --- a/security/landlock/fs.c
-> > > +++ b/security/landlock/fs.c
-> > > @@ -124,7 +124,7 @@ static struct landlock_object *get_inode_object(struct inode *const inode)
-> > >         if (unlikely(rcu_access_pointer(inode_sec->object))) {
-> > >                 /* Someone else just created the object, bail out and retry. */
-> > >                 spin_unlock(&inode->i_lock);
-> > > -               kfree(new_object);
-> > > +               kmem_cache_free(landlock_object_cache, new_object);
-> > 
-> > See my comment below, but you may want to wrap this in a Landlock
-> > object API function.
-> Sure. I will definitely implement this.
-> > 
-> > >                 rcu_read_lock();
-> > >                 goto retry;
-> > > diff --git a/security/landlock/object.c b/security/landlock/object.c
-> > > index 1f50612f0185..df1354215617 100644
-> > > --- a/security/landlock/object.c
-> > > +++ b/security/landlock/object.c
-> > > @@ -17,6 +17,15 @@
-> > >
-> > >  #include "object.h"
-> > >
-> > > +struct kmem_cache *landlock_object_cache;
-> > > +
-> > > +void __init landlock_object_init(void)
-> > > +{
-> > > +       landlock_object_cache = kmem_cache_create(
-> > > +               "landlock_object_cache", sizeof(struct landlock_object), 0,
+There is no point in compiling in the list and mutex operations which are
+only used from the dma-buf debugfs code, if debugfs is not compiled in.
 
-No need for the "_cache" name suffix.
+Put the code in questions behind some kconfig guards and so save some text
+and maybe even a pointer per object at runtime when not enabled.
 
-> > > +               SLAB_PANIC, NULL);
-> > 
-> > The comments in include/linux/slab.h suggest using the KMEM_CACHE()
-> > macro, instead of kmem_cache_create(), as a best practice for creating
-> > slab caches.
-> > 
-> Sure. Apologies I didn't see that, I tried to implement it from scratch
-> using the reference from linux memory management APIs.
-> > > +}
-> > > +
-> > >  struct landlock_object *
-> > >  landlock_create_object(const struct landlock_object_underops *const underops,
-> > >                        void *const underobj)
-> > > @@ -25,7 +34,8 @@ landlock_create_object(const struct landlock_object_underops *const underops,
-> > >
-> > >         if (WARN_ON_ONCE(!underops || !underobj))
-> > >                 return ERR_PTR(-ENOENT);
-> > > -       new_object = kzalloc(sizeof(*new_object), GFP_KERNEL_ACCOUNT);
-> > > +       new_object =
-> > > +               kmem_cache_zalloc(landlock_object_cache, GFP_KERNEL_ACCOUNT);
-> > 
-> > If the line is too long, you might want to consider splitting the
-> > function parameters like this:
-> > 
-> >   new_object = kmem_cache_zalloc(landlock_object_cache,
-> >                                  GFP_KERNEL_ACCOUNT);
-> > 
-> 
-> Sure. I didn't do as it was below the 100 columns limit, but will
-> definitely implement it.
+Signed-off-by: Tvrtko Ursulin <tursulin@ursulin.net>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: linux-media@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linaro-mm-sig@lists.linaro.org
+Cc: linux-kernel@vger.kernel.org
+Cc: kernel-dev@igalia.com
+---
+ drivers/dma-buf/dma-buf.c | 56 ++++++++++++++++++++++++---------------
+ include/linux/dma-buf.h   |  2 ++
+ 2 files changed, 36 insertions(+), 22 deletions(-)
 
-Please just use clang-format.
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index 8fe5aa67b167..8892bc701a66 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -35,12 +35,35 @@
+ 
+ static inline int is_dma_buf_file(struct file *);
+ 
+-struct dma_buf_list {
+-	struct list_head head;
+-	struct mutex lock;
+-};
++#if IS_ENABLED(CONFIG_DEBUG_FS)
++static DEFINE_MUTEX(debugfs_list_mutex);
++static LIST_HEAD(debugfs_list);
+ 
+-static struct dma_buf_list db_list;
++static void __dma_buf_debugfs_list_add(struct dma_buf *dmabuf)
++{
++	mutex_lock(&debugfs_list_mutex);
++	list_add(&dmabuf->list_node, &debugfs_list);
++	mutex_unlock(&debugfs_list_mutex);
++}
++
++static void __dma_buf_debugfs_list_del(struct dma_buf *dmabuf)
++{
++	if (!dmabuf)
++		return;
++
++	mutex_lock(&debugfs_list_mutex);
++	list_del(&dmabuf->list_node);
++	mutex_unlock(&debugfs_list_mutex);
++}
++#else
++static void __dma_buf_debugfs_list_add(struct dma_buf *dmabuf)
++{
++}
++
++static void __dma_buf_debugfs_list_del(struct file *file)
++{
++}
++#endif
+ 
+ static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
+ {
+@@ -89,17 +112,10 @@ static void dma_buf_release(struct dentry *dentry)
+ 
+ static int dma_buf_file_release(struct inode *inode, struct file *file)
+ {
+-	struct dma_buf *dmabuf;
+-
+ 	if (!is_dma_buf_file(file))
+ 		return -EINVAL;
+ 
+-	dmabuf = file->private_data;
+-	if (dmabuf) {
+-		mutex_lock(&db_list.lock);
+-		list_del(&dmabuf->list_node);
+-		mutex_unlock(&db_list.lock);
+-	}
++	__dma_buf_debugfs_list_del(file->private_data);
+ 
+ 	return 0;
+ }
+@@ -672,9 +688,7 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
+ 	file->f_path.dentry->d_fsdata = dmabuf;
+ 	dmabuf->file = file;
+ 
+-	mutex_lock(&db_list.lock);
+-	list_add(&dmabuf->list_node, &db_list.head);
+-	mutex_unlock(&db_list.lock);
++	__dma_buf_debugfs_list_add(dmabuf);
+ 
+ 	return dmabuf;
+ 
+@@ -1611,7 +1625,7 @@ static int dma_buf_debug_show(struct seq_file *s, void *unused)
+ 	size_t size = 0;
+ 	int ret;
+ 
+-	ret = mutex_lock_interruptible(&db_list.lock);
++	ret = mutex_lock_interruptible(&debugfs_list_mutex);
+ 
+ 	if (ret)
+ 		return ret;
+@@ -1620,7 +1634,7 @@ static int dma_buf_debug_show(struct seq_file *s, void *unused)
+ 	seq_printf(s, "%-8s\t%-8s\t%-8s\t%-8s\texp_name\t%-8s\tname\n",
+ 		   "size", "flags", "mode", "count", "ino");
+ 
+-	list_for_each_entry(buf_obj, &db_list.head, list_node) {
++	list_for_each_entry(buf_obj, &debugfs_list, list_node) {
+ 
+ 		ret = dma_resv_lock_interruptible(buf_obj->resv, NULL);
+ 		if (ret)
+@@ -1657,11 +1671,11 @@ static int dma_buf_debug_show(struct seq_file *s, void *unused)
+ 
+ 	seq_printf(s, "\nTotal %d objects, %zu bytes\n", count, size);
+ 
+-	mutex_unlock(&db_list.lock);
++	mutex_unlock(&debugfs_list_mutex);
+ 	return 0;
+ 
+ error_unlock:
+-	mutex_unlock(&db_list.lock);
++	mutex_unlock(&debugfs_list_mutex);
+ 	return ret;
+ }
+ 
+@@ -1718,8 +1732,6 @@ static int __init dma_buf_init(void)
+ 	if (IS_ERR(dma_buf_mnt))
+ 		return PTR_ERR(dma_buf_mnt);
+ 
+-	mutex_init(&db_list.lock);
+-	INIT_LIST_HEAD(&db_list.head);
+ 	dma_buf_init_debugfs();
+ 	return 0;
+ }
+diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
+index 8ff4add71f88..36216d28d8bd 100644
+--- a/include/linux/dma-buf.h
++++ b/include/linux/dma-buf.h
+@@ -370,8 +370,10 @@ struct dma_buf {
+ 	 */
+ 	struct module *owner;
+ 
++#if IS_ENABLED(CONFIG_DEBUG_FS)
+ 	/** @list_node: node for dma_buf accounting and debugging. */
+ 	struct list_head list_node;
++#endif
+ 
+ 	/** @priv: exporter specific private data for this buffer object. */
+ 	void *priv;
+-- 
+2.44.0
 
-> > >         if (!new_object)
-> > >                 return ERR_PTR(-ENOMEM);
-> > >         refcount_set(&new_object->usage, 1);
-> > > @@ -62,6 +72,6 @@ void landlock_put_object(struct landlock_object *const object)
-> > >                  * @object->underobj to @object (if it still exists).
-> > >                  */
-> > >                 object->underops->release(object);
-> > > -               kfree_rcu(object, rcu_free);
-
-Is it safe?
-
-According to commit ae65a5211d90 ("mm/slab: document kfree() as allowed
-for kmem_cache_alloc() objects"), no change should be needed (and it
-must not be backported to kernels older than 6.4 with CONFIG_SLOB). This
-way we can avoid exporting landlock_object_cache.  Please add a note
-about this commit and the related warning in the commit message.
-
-> > > +               kmem_cache_free(landlock_object_cache, object);
-> > >         }
-> > >  }
-> > > diff --git a/security/landlock/object.h b/security/landlock/object.h
-> > > index 5f28c35e8aa8..8ba1af3ddc2e 100644
-> > > --- a/security/landlock/object.h
-> > > +++ b/security/landlock/object.h
-> > > @@ -13,6 +13,10 @@
-> > >  #include <linux/refcount.h>
-> > >  #include <linux/spinlock.h>
-> > >
-> > > +extern struct kmem_cache *landlock_object_cache;
-> > 
-> > This really is a decision for Mickaël, but you may want to make
-> > @landlock_object_cache private to object.c and create functions to
-> > manage it as needed, e.g. put/free operations.
-> > 
-> Okay. I didn't make it private as I was using it in fs.c to use
-> kmem_cache_free, but if this is supposed to be private, I can modify the
-> approach and expose it via some function, not directly exposing
-> landlock_object_cache.
-
-Yes, that would be better.
-
-> > > +void __init landlock_object_init(void);
-> > > +
-> > >  struct landlock_object;
-> > >
-> > >  /**
-> > > diff --git a/security/landlock/setup.c b/security/landlock/setup.c
-> > > index f6dd33143b7f..a5fca4582ee1 100644
-> > 
-> > -- 
-> > paul-moore.com
-> I will make all the changes you mentioned, and as you said, I will
-> wait for Mickael's say.
-
-Agree with Paul and Greg unless commented otherwise. Thanks
