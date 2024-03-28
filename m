@@ -1,126 +1,127 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A5C22086
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 14:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F30D7E78B
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 15:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711637947; cv=none; b=q8/c3W0dvFXiOBEqYmWUYmgZJyYLqD58rpK6faBdJvpOlzcw8kD8Hx76KPpaVR3d1W3jZ+YuHgIsyLMbVTDUPQ+clMAmEVEdJMITp+L+heQxg7QHIpB66JZ1CixX4gOW+hYeKfzKZAcWN6QvOAIAsFZJDMoabP3X3RFOB+0Y0GQ=
+	t=1711638033; cv=none; b=n4X4WPiUaxc4B5rSXfpUvLATbVzO6tXYSUSxS8quFL3dlAUk4aMqOuwVxfkfsg0ZDArnEg7TzJr5z0mjLvmDHBgd8PoQpRBGyaMvZpRTZg6r6FIDmkSaF9Tp/rM5a5mpLz+YO8doWstRCT2YlRSWBqk9fYMIEaY0KEJKMhpQzwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711637947; c=relaxed/simple;
-	bh=pqcTdZsas/L2lLLi0r0tZaLc/T481Gjhve2hnITnqOg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HTLGv3cV7B2B1UNN0+LP5vuYt10it/Q7UePKIWFvNMplrB4og0t/MFx7ZO9IdRSApeFh2E3DMQNrIfigHSZjoNy6yovMRbe1Jic8xVlsFSx/7xOn6fqWeSJMr8alv4nbhZkNEqORrkZraggKd795EfekxGE/qdlk5Hr0X6UOJGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=P7J32uYm; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1711638033; c=relaxed/simple;
+	bh=QcYao87vHK3QJ3Zezb5WiwzKOnj5m0Xji4J1XJL6zKE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AjGbwewhFax+s7zhHuDDMtNU8NlNLeOHccakUWi0gt/dJxc204/61bloxuYt9ymAPtuWD+4z7sw0KnkHgYdEYlgMWty3x4Xuz+y8AM81zwaHP9dEQHZaPJIfv/w1k+Oqy4UVCCGQ9Vs7/BboTdJtmPXGr8yJPC+i/mgp4/6kF+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pSI293zi; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="P7J32uYm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1711637945; x=1743173945;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pqcTdZsas/L2lLLi0r0tZaLc/T481Gjhve2hnITnqOg=;
-  b=P7J32uYmKLn+d2GvrhWvLtmV9erO0xdXjL5FkkON8gogFbxqum/WuR+p
-   balfZv3S1DkHyukT7Qi1pyselk9lAfwrTciDsM7mSL3JU2qX4jVKTGjjM
-   vIwX32MCW6HfsdL9R/pq3OWrw3qd59zA71aDzZaU2iLPBv8y6xAMuePPI
-   IawtDn5WyYZ55nouOvjLftsMmRyQWOhJ5QAhgqr+tXWntQRb6T1R11e+b
-   O1FX1oy3jl3cECkg1fLH90WajDGlJ3ZfWyykPHHuKrGuc6CjjszxQxxT2
-   WDRT3u8Z2UOTCJH6fbgbznw40et8nvA4ugGox8z+l5WwJUDk+fJZgBJAP
-   A==;
-X-CSE-ConnectionGUID: aoxufTLkQWq9+1EyrDTJqA==
-X-CSE-MsgGUID: owMpyAaSQPuHzpD0jAx60Q==
-X-IronPort-AV: E=Sophos;i="6.07,162,1708412400"; 
-   d="asc'?scan'208";a="19071180"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 28 Mar 2024 07:58:58 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 28 Mar 2024 07:58:45 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Thu, 28 Mar 2024 07:58:42 -0700
-Date: Thu, 28 Mar 2024 14:57:54 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Christoph =?iso-8859-1?Q?M=FCllner?= <christoph.muellner@vrull.eu>
-CC: Andrew Jones <ajones@ventanamicro.com>, Conor Dooley <conor@kernel.org>,
-	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>, Palmer
- Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Philipp Tomsich
-	<philipp.tomsich@vrull.eu>, =?iso-8859-1?Q?Bj=F6rn_T=F6pel?=
-	<bjorn@kernel.org>, Daniel Henrique Barboza <dbarboza@ventanamicro.com>,
-	Heiko Stuebner <heiko@sntech.de>, Cooper Qu <cooper.qu@linux.alibaba.com>,
-	Zhiwei Liu <zhiwei_liu@linux.alibaba.com>, Huang Tao
-	<eric.huang@linux.alibaba.com>, Alistair Francis <alistair.francis@wdc.com>
-Subject: Re: [PATCH 2/2] riscv: T-Head: Test availability bit before enabling
- MAEE errata
-Message-ID: <20240328-issuing-crouton-3448aba81b64@wendy>
-References: <20240327103130.3651950-1-christoph.muellner@vrull.eu>
- <20240327103130.3651950-3-christoph.muellner@vrull.eu>
- <20240327-imperfect-washbowl-d95e57cef0ef@spud>
- <20240327-77a6b64153a68452d0438999@orel>
- <CAEg0e7jyGZV3+04HNYzgfHMGYT9wV_c0A=ekpCRi3L-5yjxK=w@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pSI293zi"
+Message-ID: <d6a8c1c8-258a-447b-b6cd-199f33199388@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1711638028;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vnqQ84/rMjC+/rcGQR2+/HXsL+AxeYk9jECNf55kBHU=;
+	b=pSI293ziwMZM/xh2IUz27+6/EZ2rERRrKJz2IlDn3Ql42kY6xoKt0zIee6GNFz3GAUN66I
+	vh1yg2NdG+pSoEk3BktZGUQE+cNSoB2L5EsSOV5xH6Tz4jIXj1Cby7JYJHB+6R+G0cJaHh
+	wk2zMItRX3y+JW8JpXDmSxILAzEWIIk=
+Date: Thu, 28 Mar 2024 11:00:24 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="DnbhxEf6LbaydUMs"
-Content-Disposition: inline
-In-Reply-To: <CAEg0e7jyGZV3+04HNYzgfHMGYT9wV_c0A=ekpCRi3L-5yjxK=w@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dma: xilinx_dpdma: Remove unnecessary use of
+ irqsave/restore
+Content-Language: en-US
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: Michal Simek <michal.simek@amd.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+References: <20240308210034.3634938-1-sean.anderson@linux.dev>
+ <20240308210034.3634938-3-sean.anderson@linux.dev>
+ <0652c82f-b0a2-4881-ac51-38399b180ad4@ideasonboard.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <0652c82f-b0a2-4881-ac51-38399b180ad4@ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
---DnbhxEf6LbaydUMs
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 3/27/24 08:27, Tomi Valkeinen wrote:
+> Hi,
+> 
+> On 08/03/2024 23:00, Sean Anderson wrote:
+>> xilinx_dpdma_chan_done_irq and xilinx_dpdma_chan_vsync_irq are always
+>> called with IRQs disabled from xilinx_dpdma_irq_handler. Therefore we
+>> don't need to save/restore the IRQ flags.
+> 
+> I think this is fine, but a few thoughts:
+> 
+> - Is spin_lock clearly faster than the irqsave variant, or is this a pointless optimization? It's safer to just use irqsave variant, instead of making sure the code is always called from the expected contexts.
 
-On Thu, Mar 28, 2024 at 03:18:22PM +0100, Christoph M=FCllner wrote:
+It's not an optimization. Technically this will save a few instructions,
+but...
 
-> Switching from th.mxstatus to th.sxstatus should address all mentioned co=
-ncerns:
-> * no dependency on OpenSBI changes
-> * no break of functionality
-> * no need for graceful handling of CSR read failures
-> * no need to differentiate between HW and emulation (assuming QEMU
-> accepts the emulation of th.sxstatus)
+> - Is this style documented/recommended anywhere? Going through docs, I only found docs telling to use irqsave when mixing irq and non-irq contexts.
 
-Yah, th.sxstatus seems ideal here, provided it is accepted by QEMU - but
-if they allow th.mxstatus I would hope emulating th.sxstatus would be
-okay too.
+The purpose is mainly to make it clear that this is meant to be called
+in IRQ context. With irqsave, there's an implication that this could be
+called in non-IRQ context, which it never is.
 
-> Also note that DT handling would be difficult, because we need to probe b=
-efore
-> setting up the page table.
+> - Does this cause issues on PREEMPT_RT?
 
-IIRC the kaslr seed is also read from DT prior to calling the early
-alternatives stuff, so while it would be a bit more annoying than usual
-I do think it is possible. My (naive) hope here though is that we don't
-actually have to deal with this scenario though, as things like the c908
-support Svpbmt as well as the maee version. For the k230 the plan is
-to use both Zicbom and Svpbmt rather than the non-standard T-Head
-alternatives:
-https://lore.kernel.org/all/tencent_DF5D7CD182AFDA188E0FB80E314A21038D08@qq=
-=2Ecom/
+Why would it?
 
-Cheers,
-Conor.
+--Sean
 
---DnbhxEf6LbaydUMs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZgWFcgAKCRB4tDGHoIJi
-0ln8AP9fysABFrgqy3Okgc9O+ecA2rywWKxbBMYuyaLnrMihuAEA6mmXJ/4phDg3
-D6YcC7uR47skvTGO9rKNLSUVk0G0bwE=
-=rLay
------END PGP SIGNATURE-----
-
---DnbhxEf6LbaydUMs--
+> 
+>  Tomi
+> 
+>> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+>> ---
+>>
+>>   drivers/dma/xilinx/xilinx_dpdma.c | 10 ++++------
+>>   1 file changed, 4 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/dma/xilinx/xilinx_dpdma.c b/drivers/dma/xilinx/xilinx_dpdma.c
+>> index eb0637d90342..36bd4825d389 100644
+>> --- a/drivers/dma/xilinx/xilinx_dpdma.c
+>> +++ b/drivers/dma/xilinx/xilinx_dpdma.c
+>> @@ -1043,9 +1043,8 @@ static int xilinx_dpdma_chan_stop(struct xilinx_dpdma_chan *chan)
+>>   static void xilinx_dpdma_chan_done_irq(struct xilinx_dpdma_chan *chan)
+>>   {
+>>       struct xilinx_dpdma_tx_desc *active;
+>> -    unsigned long flags;
+>>   -    spin_lock_irqsave(&chan->lock, flags);
+>> +    spin_lock(&chan->lock);
+>>         xilinx_dpdma_debugfs_desc_done_irq(chan);
+>>   @@ -1057,7 +1056,7 @@ static void xilinx_dpdma_chan_done_irq(struct xilinx_dpdma_chan *chan)
+>>                "chan%u: DONE IRQ with no active descriptor!\n",
+>>                chan->id);
+>>   -    spin_unlock_irqrestore(&chan->lock, flags);
+>> +    spin_unlock(&chan->lock);
+>>   }
+>>     /**
+>> @@ -1072,10 +1071,9 @@ static void xilinx_dpdma_chan_vsync_irq(struct  xilinx_dpdma_chan *chan)
+>>   {
+>>       struct xilinx_dpdma_tx_desc *pending;
+>>       struct xilinx_dpdma_sw_desc *sw_desc;
+>> -    unsigned long flags;
+>>       u32 desc_id;
+>>   -    spin_lock_irqsave(&chan->lock, flags);
+>> +    spin_lock(&chan->lock);
+>>         pending = chan->desc.pending;
+>>       if (!chan->running || !pending)
+>> @@ -1108,7 +1106,7 @@ static void xilinx_dpdma_chan_vsync_irq(struct  xilinx_dpdma_chan *chan)
+>>       spin_unlock(&chan->vchan.lock);
+>>     out:
+>> -    spin_unlock_irqrestore(&chan->lock, flags);
+>> +    spin_unlock(&chan->lock);
+>>   }
+>>     /**
+> 
