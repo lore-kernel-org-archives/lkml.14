@@ -1,126 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE797E58F;
-	Thu, 28 Mar 2024 12:01:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E128B7EEF0;
+	Thu, 28 Mar 2024 12:01:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711627278; cv=none; b=NUFfEWX9r/AKf/mqcASCBR9MWxQD9KFlwATJ4gOtxs2tAvTOdXnP3f8ZAbbJk2S/ZsE3osVCK7w3DZqkSrMvp6GrSB0FHlb8IC8HPL6Crb+Uj/U2mvhWF+tjTKE7hhso1Nfzt+jFIE9HhqaWR5EModKWJUAa4tUZFt2EZXaHjHU=
+	t=1711627280; cv=none; b=JMPdL4zG2M5vhsSybtskGlh84Rd6ANqM2CyHgT1yE2Sh9l6cV24t1rxhTTWlEY7wR2+nHKZs8AqOQCND6cKEqId7zUitZrrb6wI8lcHpkbZBmp0GReuVXjF/8AgPwI6ER3l9Iwb72JREdNBZITsvPTGUS2v2DAoxjqFXZQZml4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711627278; c=relaxed/simple;
-	bh=PeT1k7HFtdibwwcfqd/4kcbln3gTsY92u2mVuYqFY74=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eKqmDVUZj3jyy3ZKdJq//auBV9/8Ok2C+wdMGBInI+aVZ3UkHSYdRwEWb87QrfRFQw5kzp0hDeytqp/ozjveIY1PepRf64qUumI1rh7gCV9593QmZdTvNVPmAEYF0OtZIHhRKjOJMIKtc1vOMHZmGiI1+QoFxP+f0sh9i4w0knc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L10tab9S; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711627280; c=relaxed/simple;
+	bh=wOB2LfjWpNF45aDOCaXSuvmmAgZ/ioyeLxdQfdTJtKw=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=JcKqVWOZbu7n+igo0ZkJ13P3RvKrw8ExA0RBcZA5kJYbqwVGyvcw+OfvqrlLsXtS+9HkeRRBu9NiOEb3V3ON2t6hXw2SjivhQuabQvEMnVRghq3c06EjtuHIKNfqjTotpknH/f4XzQ7kdjNH6gGcxu2AVYOojPT/ByJE399aLW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GZ9lnkX3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QTR7MTbK; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L10tab9S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711627276; x=1743163276;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PeT1k7HFtdibwwcfqd/4kcbln3gTsY92u2mVuYqFY74=;
-  b=L10tab9S8OyKP5W7Oim6irs6a3t5WG4z6fXzvg4V67YNZ9g/PK8tVWfo
-   /GwEDPDUEUyggIYOfsttfvm9YXS51t3wS/4Y+VQIpJhU+sh4w7WOB+ymN
-   4UWstQK4sge3rHveu5h1X/5o4VbyMRM49FNU7f4Wa6a3mdonNQLFWtIZE
-   cd3C1s8/hHLDrCWaqIZoWynzQ0vRO0xjm/OsjlVTKQEPdoBeK/QnbZ5gr
-   aBYIUVQWEUP+LkGQhVJC4uqzD2YQRRvtgIdydBzVg1R1V7twTCJYHfPSs
-   sfcEg3DKYE4gqLOZIPnYOhlFlDc8d03iVfrMNW/ptzN+OuFc3tIgrJ5RU
-   Q==;
-X-CSE-ConnectionGUID: Qsij62tdSgiYkllHeqsHUg==
-X-CSE-MsgGUID: rFRiWotlST+9mNgV1lm3sw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="17502925"
-X-IronPort-AV: E=Sophos;i="6.07,161,1708416000"; 
-   d="scan'208";a="17502925"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 05:01:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,161,1708416000"; 
-   d="scan'208";a="16556261"
-Received: from lkp-server01.sh.intel.com (HELO be39aa325d23) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 28 Mar 2024 05:01:07 -0700
-Received: from kbuild by be39aa325d23 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rpoRM-00026y-0v;
-	Thu, 28 Mar 2024 12:01:04 +0000
-Date: Thu, 28 Mar 2024 20:00:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: Richard Fitzgerald <rf@opensource.cirrus.com>, broonie@kernel.org,
-	tiwai@suse.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-sound@vger.kernel.org,
-	alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-	patches@opensource.cirrus.com,
-	Richard Fitzgerald <rf@opensource.cirrus.com>
-Subject: Re: [PATCH 3/3] ASoC: soc-card: Add KUnit test case for
- snd_soc_card_get_kcontrol
-Message-ID: <202403281952.Sz5iE5Tm-lkp@intel.com>
-References: <20240325125650.213913-4-rf@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GZ9lnkX3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QTR7MTbK"
+Date: Thu, 28 Mar 2024 12:01:08 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1711627269;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jP0p65YWOsf77wLgWYhZ/RRn5X7bXK44Gnj/lGgc71Y=;
+	b=GZ9lnkX3liD+/1xLsCpe0Wj+Jr90eH3BCCIcx1wNjDM/LG2JB3sdm7kMch1SzZjC1jKk79
+	/sBHTiMyFozrJfkRtqpJ/5zqMYS+abyJJ1qVJYxSaj5vX5/9+VuHSF8O5ELljLCTaVwbRu
+	googX4S70KjUl/2LNCG76rCUM8wDzVbTpY6Yi+h2CF2gmQwudkdm/x1FbAdCvNoVz2T9uG
+	BwZuR8YsamDU8VXEU98XxxchKDpNw0fXdXsJzOJ68VRuKmzqyDZiAZX23dP+TTopPsH/2P
+	whTNNS75zogZGdD81ObAENvNsCuFfWB5Bpw6m2SPFZ/VKqZtLlrIz1CSRG1ZSQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1711627269;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jP0p65YWOsf77wLgWYhZ/RRn5X7bXK44Gnj/lGgc71Y=;
+	b=QTR7MTbKSsNcVD31a3NHtrUVk+KmTqsrjTH9orwJCU/a3au9mc09jsE6eXaIQFs7IGHf4J
+	Yr9FiRCDtOonwHDw==
+From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] sched/fair: Rename set_rd_overutilized_status() to
+ set_rd_overutilized()
+Cc: Ingo Molnar <mingo@kernel.org>, Qais Yousef <qyousef@layalina.io>,
+ Shrikanth Hegde <sshegde@linux.ibm.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <ZgVHq65XKsOZpfgK@gmail.com>
+References: <ZgVHq65XKsOZpfgK@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240325125650.213913-4-rf@opensource.cirrus.com>
+Message-ID: <171162726870.10875.3148729818855002567.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Richard,
+The following commit has been merged into the sched/core branch of tip:
 
-kernel test robot noticed the following build errors:
+Commit-ID:     4d0a63e5b841c759c9a306aff158420421ef016f
+Gitweb:        https://git.kernel.org/tip/4d0a63e5b841c759c9a306aff158420421ef016f
+Author:        Ingo Molnar <mingo@kernel.org>
+AuthorDate:    Thu, 28 Mar 2024 11:54:42 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 28 Mar 2024 11:54:42 +01:00
 
-[auto build test ERROR on broonie-sound/for-next]
-[also build test ERROR on tiwai-sound/for-next tiwai-sound/for-linus linus/master v6.9-rc1 next-20240328]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+sched/fair: Rename set_rd_overutilized_status() to set_rd_overutilized()
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Richard-Fitzgerald/ALSA-control-Introduce-snd_ctl_find_id_mixer_locked/20240325-210026
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-patch link:    https://lore.kernel.org/r/20240325125650.213913-4-rf%40opensource.cirrus.com
-patch subject: [PATCH 3/3] ASoC: soc-card: Add KUnit test case for snd_soc_card_get_kcontrol
-config: powerpc-randconfig-r081-20240328 (https://download.01.org/0day-ci/archive/20240328/202403281952.Sz5iE5Tm-lkp@intel.com/config)
-compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project.git 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240328/202403281952.Sz5iE5Tm-lkp@intel.com/reproduce)
+The _status() postfix has no real meaning, simplify the naming
+and harmonize it with set_rd_overloaded().
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403281952.Sz5iE5Tm-lkp@intel.com/
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Qais Yousef <qyousef@layalina.io>
+Cc: Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/ZgVHq65XKsOZpfgK@gmail.com
+---
+ kernel/sched/fair.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-All errors (new ones prefixed by >>):
-
->> sound/soc/soc-card-test.c:24:13: error: initializer element is not a compile-time constant
-           SOC_SINGLE(test_control_names[0], SND_SOC_NOPM, 0, 1, 0),
-                      ^~~~~~~~~~~~~~~~~~~~~
-   include/sound/soc.h:61:48: note: expanded from macro 'SOC_SINGLE'
-   {       .iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
-                                                        ^~~~~
-   1 error generated.
-
-
-vim +24 sound/soc/soc-card-test.c
-
-    22	
-    23	static const struct snd_kcontrol_new test_card_controls[] = {
-  > 24		SOC_SINGLE(test_control_names[0], SND_SOC_NOPM, 0, 1, 0),
-    25		SOC_SINGLE(test_control_names[1], SND_SOC_NOPM, 1, 1, 0),
-    26		SOC_SINGLE(test_control_names[2], SND_SOC_NOPM, 2, 1, 0),
-    27		SOC_SINGLE(test_control_names[3], SND_SOC_NOPM, 3, 1, 0),
-    28		SOC_SINGLE(test_control_names[4], SND_SOC_NOPM, 4, 1, 0),
-    29		SOC_SINGLE(test_control_names[5], SND_SOC_NOPM, 5, 1, 0),
-    30		SOC_SINGLE(test_control_names[6], SND_SOC_NOPM, 6, 1, 0),
-    31		SOC_SINGLE(test_control_names[7], SND_SOC_NOPM, 7, 1, 0),
-    32		SOC_SINGLE(test_control_names[8], SND_SOC_NOPM, 8, 1, 0),
-    33		SOC_SINGLE(test_control_names[9], SND_SOC_NOPM, 9, 1, 0),
-    34		SOC_SINGLE(test_control_names[10], SND_SOC_NOPM, 10, 1, 0),
-    35		SOC_SINGLE(test_control_names[11], SND_SOC_NOPM, 11, 1, 0),
-    36	};
-    37	static_assert(ARRAY_SIZE(test_control_names) == ARRAY_SIZE(test_card_controls));
-    38	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 839a97a..f29efd5 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6693,7 +6693,7 @@ static inline int is_rd_overutilized(struct root_domain *rd)
+ 	return !sched_energy_enabled() || READ_ONCE(rd->overutilized);
+ }
+ 
+-static inline void set_rd_overutilized_status(struct root_domain *rd,
++static inline void set_rd_overutilized(struct root_domain *rd,
+ 					      unsigned int status)
+ {
+ 	if (!sched_energy_enabled())
+@@ -6711,7 +6711,7 @@ static inline void check_update_overutilized_status(struct rq *rq)
+ 	 */
+ 
+ 	if (!is_rd_overutilized(rq->rd) && cpu_overutilized(rq->cpu))
+-		set_rd_overutilized_status(rq->rd, SG_OVERUTILIZED);
++		set_rd_overutilized(rq->rd, SG_OVERUTILIZED);
+ }
+ #else
+ static inline void check_update_overutilized_status(struct rq *rq) { }
+@@ -10660,10 +10660,10 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
+ 		set_rd_overloaded(env->dst_rq->rd, sg_status & SG_OVERLOADED);
+ 
+ 		/* Update over-utilization (tipping point, U >= 0) indicator */
+-		set_rd_overutilized_status(env->dst_rq->rd,
++		set_rd_overutilized(env->dst_rq->rd,
+ 					   sg_status & SG_OVERUTILIZED);
+ 	} else if (sg_status & SG_OVERUTILIZED) {
+-		set_rd_overutilized_status(env->dst_rq->rd, SG_OVERUTILIZED);
++		set_rd_overutilized(env->dst_rq->rd, SG_OVERUTILIZED);
+ 	}
+ 
+ 	update_idle_cpu_scan(env, sum_util);
