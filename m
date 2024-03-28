@@ -1,53 +1,56 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B0D13A41B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F8913A871
 	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:37:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711643876; cv=none; b=hySP2QbEs1w6y7tD40lYLkHjS2BltfbbMbK+QOFhOLCQ03JpbItrcn5sVEuI1lnGAmeRVwGXWrmU7ajADMk1XDV3nuZhwCFsau9//IWTMInyh8qOOappUd5qzzBmCLuXmlVRW/45fctLtbt/Ok9GBEuTLVZacddPq3RRxsoiUG0=
+	t=1711643877; cv=none; b=cRf3O2AzsvKsUmDEfjvk9LxjQQEG0Q/9CXsK+sA/RUifc25KbNc9WqJRHaeYcdbJNX8/vcgD2RV7Vj7be0uM25pRNDIfHyOV6D/PRXKyYFEheh/+LEX/9HViAI1+XHmJA2WkP6sih4Q13xUOniveYxYdIIbJE3/PvWAwIm2OqtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711643876; c=relaxed/simple;
-	bh=0kNwVzCbfCMNGoOxBfZPY7zyoeVfnGaCcVqz433zuec=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gTjUahNWzGZShItWdXTIh1oeYDwnQ43Q5zu9wlyvPM2ZZLFuDOB3Skq9kd8SJWyJoRFcsWMLR9+7NL1LUtGTo32/OaDxLuFrjvXyuWxuDBleQaz5W/KyjIEG7FslyWRHue2sElRVGmBgu0Du+eL+KqblUPAYJbs8WyJ+czWdwP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OtvsOjQ6; arc=none smtp.client-ip=192.198.163.8
+	s=arc-20240116; t=1711643877; c=relaxed/simple;
+	bh=kX68MTYgNPtj7Z0+mmDDLKKTD8dszAGUEdTN7EXdj1Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mQKcVDKC694ZkCcu47IeYpjcuKZ3iqpflGr95Ul1d5PcDA/tg3iuX+zfYgnBy8e2uaPw1JLWUo3oJcEdrKhpZ83CxUvvGemgQ+dXjxhhdDjerfulTdcDQ+NKk44ouCwh69mAQZbsQmXs22UQIVtrBWOwIdxM+KicGN4cMLiV9ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N3J1IfwI; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OtvsOjQ6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N3J1IfwI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1711643873; x=1743179873;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=0kNwVzCbfCMNGoOxBfZPY7zyoeVfnGaCcVqz433zuec=;
-  b=OtvsOjQ66UUO3LhndydQ5qk3GrVsqK73/Jun7/3/+Nj8GOQZfcjBIZ8w
-   qH7qk0yYh5AYehL6QQCgcImbMulNhRmY8eLNusjsYxSzJNrLn/z6SH1He
-   ZbKO8k9lWNVJdKxDTj07BB00jxqJMJNHIU5b1dXi1sIazz5lrVdBMbNYO
-   Y5YrfEQCvsIohqh2OnrNb0umzcJxWzb9Ulp4ByPX05PSw5u7GLOJhrJ2j
-   1wtJXD0fzf2lh85Eo4a7qmhHqMU69DFKaIePozOWEn7qJdIzrlVOAsAAg
-   Dr+m3RRo/JFChbL76AxOiHUv98461SMf/h1VuIdhMPQKjbb9sjo+/XcrT
-   A==;
-X-CSE-ConnectionGUID: Wzn2dY5tTuSdEge/4l3DmA==
-X-CSE-MsgGUID: J5LTghV7RKqROv/Ss9/VSg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="24296525"
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=kX68MTYgNPtj7Z0+mmDDLKKTD8dszAGUEdTN7EXdj1Y=;
+  b=N3J1IfwINY6IUKBn61CmB9mLkr12iC18A+hNQ2M7ruYwRu1lIegiCvxf
+   AK/8mRI/TlbPlqjCLaXSjJcCFAVdMkAucBrXb8YmmgBb8UihWzlAQrjqT
+   ONkG+LBMExeepF2gif4tpS9uXRPQe4UGF56/EEAPmU82OXRRFeTbgPwoY
+   ALadhEl5/kfGQT2ugoU+RyYtzlDGZvw7BmCueARb5WJ5Czwpcz46x6S2G
+   kNrnpBAKQgg1/xTSqxMx9ujAwWZ2iIYvmpfD6blWD9yW5T4iuBmZKRWTW
+   txQ1ywP1j49r2pNvLeq8NDUkDPFOLzPIFknO1J5WgnChUp5VnPITgc5Ot
+   g==;
+X-CSE-ConnectionGUID: kCWffeakRLSm8+a0axhA4Q==
+X-CSE-MsgGUID: ph2s/VbTRtyE6QC3BCprbA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="24296531"
 X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="24296525"
+   d="scan'208";a="24296531"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
   by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 09:37:50 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="39852819"
+   d="scan'208";a="39852828"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
   by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 09:37:52 -0700
 From: Tony Luck <tony.luck@intel.com>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH 00/74] New Intel CPUID families
-Date: Thu, 28 Mar 2024 09:37:43 -0700
-Message-ID: <20240328163746.243023-1-tony.luck@intel.com>
+Subject: [PATCH 03/74] x86/cpu/vfm: Update arch/x86/include/asm/intel-family.h
+Date: Thu, 28 Mar 2024 09:37:46 -0700
+Message-ID: <20240328163746.243023-4-tony.luck@intel.com>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240328163746.243023-1-tony.luck@intel.com>
+References: <20240328163746.243023-1-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,250 +59,256 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Q1: Where are all the other parts of this series. I only got 1-3.
-A1: There are ~2700 subscribers to LKML. I want to get some feedback
-on the approach and naming etc. before spamming everyone with a 74
-patch series.
+New CPU #defines encode vendor and family as well as model.
 
-Q2: Can I get the other parts?
-A2: Sure. I posted them to patches@lists.linux.dev so you can get them
-with:
-$ b4 am 20240328090459.242500-tony.luck@intel.com
-or get from kernel.org with:
-$ git fetch git://git.kernel.org/pub/scm/linux/kernel/git/aegl/linux.git new_families
+Update the example usage comment in arch/x86/kernel/cpu/match.c
 
-Q3: When are CPUs using new families coming?
-A3: Soon-ish. We have some time to get the infrastructure right.
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+---
+ arch/x86/include/asm/intel-family.h | 84 +++++++++++++++++++++++++++++
+ arch/x86/kernel/cpu/match.c         |  3 +-
+ 2 files changed, 85 insertions(+), 2 deletions(-)
 
-Intel has been using family 6 almost exclusively for many
-years. As a result, Linux has built up infrastructure like
-X86_MATCH_INTEL_FAM6_MODEL() to make it easy for model specific code to
-use the #defines for each Intel CPU model.
-
-But the reign of family 6 is about to end. Intel will begin using non-zero
-values for the extended family field in CPUID(1).EAX. The minimal patch
-size approach to handle these would be to clone the FAM6 macros. But
-that will get messy as these prolifrate. This approach does not have an
-elegant solution if a switch() statement needs to choose between CPUs
-from different families.
-
-Dave Hansen suggested that a more general cleanup that provides
-CPU #defines that encode all of <vendor, family, model> would make
-existing code better, and provide infrastructure that makes it trivial
-to incorporate new families.
-
-Big picture view is that code like this:
-
-  if (c->x86_vendor == X86_VENDOR_INTEL && c->x86 == 6 && c->x86_model == INTEL_FAM6_ICELAKE_X)
-
-can become:
-
-  if (c->x86_vfm == INTEL_ICELAKE_X)
-
-which is:
-a)	Simpler
-b)	Faster
-c)	More resilient (can't forget to check vendor & family along with model)
-d)	Code style doesn't change for every new family.
-
-Note that "struct cpuinfo_x86" gains a new xf6_vfm field and the ICELAKE
-#define loses the "FAM6_" substring and will be initialized with a macro
-that does the bit shuffling to fit X86_VENDOR_INTEL and a family and
-model into a "u32":
-
-#define INTEL_ICELAKE_X                 IFM(6, 0x6A) /* Sunny Cove */
-
-New CPUs in other families might look like:
-
-#define INTEL_DOUGLASCOVE		IFM(42, 0x01) /* Adams Lake */
-#define INTEL_SHELDONMONT		IFM(73, 0x01) /* Cooper Forest */
-
-Model specific "if" statements then follow the same pattern
-regardless of family:
-
-  if (c->x86_vfm == INTEL_DOUGLASCOVE || c->x86_vfm == INTEL_SHELDONMONT) {
-  }
-
-If needed these could even appear in the same switch statement:
-
-	switch (c->x86_vfm) {
-	case INTEL_ICELAKE_X:
-		...
-	case INTEL_DOUGLASCOVE:
-		...
-	case INTEL_SHELDONMONT:
-		...
-	}
-
-The existing X86_MATCH_INTEL_FAM6_MODEL() can be replaced with a new
-X86_MATCH_VFM() macro.
-
-Update can happen in three phases:
-
-1) Add infrastructure macros, new "x86_vfm" field, new CPU #defines
-
-2) Treewide update from old to new (around 70 files at current count)
-
-3) Delete the old INTEL_FAM6 and X86_MATCH_INTEL_FAM6 macros
-
-Tony Luck (74):
-  x86/cpu/vfm: Add/initialize x86_vfm field to struct cpuinfo_x86
-  x86/cpu/vfm: Add new macros to work with (vendor/family/model) values
-  x86/cpu/vfm: Update arch/x86/include/asm/intel-family.h
-  x86/cpu/vfm: Update arch/x86/crypto/poly1305_glue.c
-  x86/cpu/vfm: Update arch/x86/crypto/twofish_glue_3way.c
-  x86/cpu/vfm: Update arch/x86/events/intel/cstate.c
-  x86/cpu/vfm: Update arch/x86/events/intel/lbr.c
-  x86/cpu/vfm: Update arch/x86/events/intel/pt.c
-  x86/cpu/vfm: Update arch/x86/events/intel/uncore.c
-  x86/cpu/vfm: Update arch/x86/events/intel/uncore_nhmex.c
-  x86/cpu/vfm: Update arch/x86/events/intel/uncore_snbep.c
-  x86/cpu/vfm: Update arch/x86/events/msr.c
-  x86/cpu/vfm: Update arch/x86/events/rapl.c
-  x86/cpu/vfm: Update arch/x86/kernel/apic/apic.c
-  x86/cpu/vfm: Update arch/x86/kernel/cpu/aperfmperf.c
-  x86/cpu/vfm: Update arch/x86/kernel/cpu/bugs.c
-  x86/cpu/vfm: Update arch/x86/kernel/cpu/common.c
-  x86/cpu/vfm: Update arch/x86/kernel/cpu/intel.c
-  x86/cpu/vfm: Update arch/x86/kernel/cpu/intel_epb.c
-  x86/cpu/vfm: Update arch/x86/kernel/cpu/match.c
-  x86/cpu/vfm: Update arch/x86/kernel/cpu/mce/core.c
-  x86/cpu/vfm: Update arch/x86/kernel/cpu/mce/intel.c
-  x86/cpu/vfm: Update arch/x86/kernel/cpu/mce/severity.c
-  x86/cpu/vfm: Update arch/x86/kernel/cpu/microcode/intel.c
-  x86/cpu/vfm: Update arch/x86/kernel/cpu/resctrl/core.c
-  x86/cpu/vfm: Update arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-  x86/cpu/vfm: Update arch/x86/kernel/smpboot.c
-  x86/cpu/vfm: Update arch/x86/kernel/tsc.c
-  x86/cpu/vfm: Update arch/x86/kernel/tsc_msr.c
-  x86/cpu/vfm: Update arch/x86/kvm/pmu.c
-  x86/cpu/vfm: Update arch/x86/kvm/vmx/vmx.c
-  x86/cpu/vfm: Update arch/x86/mm/init.c
-  x86/cpu/vfm: Update arch/x86/pci/intel_mid_pci.c
-  x86/cpu/vfm: Update arch/x86/virt/vmx/tdx/tdx.c
-  x86/cpu/vfm: Update drivers/acpi/acpi_lpss.c
-  x86/cpu/vfm: Update drivers/acpi/x86/utils.c
-  x86/cpu/vfm: Update tpm files
-  x86/cpu/vfm: Update drivers/cpufreq/intel_pstate.c
-  x86/cpu/vfm: Update drivers/cpufreq/speedstep-centrino.c
-  x86/cpu/vfm: Update drivers/edac/i10nm_base.c
-  x86/cpu/vfm: Update drivers/edac/pnd2_edac.c
-  x86/cpu/vfm: Update drivers/edac/sb_edac.c
-  x86/cpu/vfm: Update drivers/edac/skx_base.c
-  x86/cpu/vfm: Update drivers/extcon/extcon-axp288.c
-  x86/cpu/vfm: Update drivers/hwmon/peci/cputemp.c
-  x86/cpu/vfm: Update drivers/idle/intel_idle.c
-  x86/cpu/vfm: Update drivers/pci/pci-mid.c
-  x86/cpu/vfm: Update drivers/peci/cpu.c
-  x86/cpu/vfm: Update drivers/platform/x86/intel/ifs/core.c
-  x86/cpu/vfm: Update drivers/platform/x86/intel_ips.c
-  x86/cpu/vfm: Update drivers/platform/x86/intel/pmc/core.c
-  x86/cpu/vfm: Update drivers/platform/x86/intel/pmc/pltdrv.c
-  x86/cpu/vfm: Update drivers/platform/x86/intel_scu_wdt.c
-  x86/cpu/vfm: Update
-    drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-  x86/cpu/vfm: Update
-    drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c
-  x86/cpu/vfm: Update drivers/platform/x86/intel/telemetry/debugfs.c
-  x86/cpu/vfm: Update drivers/platform/x86/intel/telemetry/pltdrv.c
-  x86/cpu/vfm: Update drivers/platform/x86/intel/turbo_max_3.c
-  x86/cpu/vfm: Update
-    drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
-  x86/cpu/vfm: Update drivers/platform/x86/p2sb.c
-  x86/cpu/vfm: Update drivers/powercap/intel_rapl_common.c
-  x86/cpu/vfm: Update drivers/powercap/intel_rapl_msr.c
-  x86/cpu/vfm: Update
-    drivers/staging/media/atomisp/include/linux/atomisp_platform.h
-  x86/cpu/vfm: Update intel_soc_dts_thermal.c
-  x86/cpu/vfm: Update drivers/thermal/intel/intel_tcc_cooling.c
-  x86/cpu/vfm: Update sound/soc/intel/avs/boards/es8336.c
-  x86/cpu/vfm: Update arch/x86/events/intel/core.c
-  x86/cpu/vfm: Update arch/x86/platform/intel-mid/intel-mid.c
-  x86/cpu/vfm: Update arch/x86/platform/atom/punit_atom_debug.c
-  x86/cpu/vfm: Update arch/x86/events/intel/core.c
-  x86/cpu/vfm: Update tools/power/x86/turbostat/turbostat.c
-  x86/cpu/vfm: Update arch/x86/boot/cpucheck.c
-  x86/cpu/vfm: Delete X86_MATCH_INTEL_FAM6_MODEL[_STEPPING]() macros
-  x86/cpu/vfm: Delete all the *_FAM6_ CPU #defines
-
- .../atomisp/include/linux/atomisp_platform.h  |  26 +--
- include/linux/peci-cpu.h                      |   1 +
- include/linux/platform_data/x86/soc.h         |  12 +-
- arch/x86/include/asm/cpu_device_id.h          | 103 +++++++--
- arch/x86/include/asm/intel-family.h           | 167 +++++++-------
- arch/x86/include/asm/processor.h              |  12 +-
- drivers/char/tpm/tpm.h                        |   1 +
- drivers/char/tpm/tpm_tis_core.h               |   2 +-
- arch/x86/boot/cpucheck.c                      |   2 +-
- arch/x86/crypto/poly1305_glue.c               |   3 +-
- arch/x86/crypto/twofish_glue_3way.c           |  10 +-
- arch/x86/events/intel/core.c                  | 212 +++++++++---------
- arch/x86/events/intel/cstate.c                | 144 ++++++------
- arch/x86/events/intel/lbr.c                   |   3 +-
- arch/x86/events/intel/pt.c                    |  11 +-
- arch/x86/events/intel/uncore.c                | 100 ++++-----
- arch/x86/events/intel/uncore_nhmex.c          |   3 +-
- arch/x86/events/intel/uncore_snbep.c          |   5 +-
- arch/x86/events/msr.c                         | 131 +++++------
- arch/x86/events/rapl.c                        |  84 +++----
- arch/x86/kernel/apic/apic.c                   |  38 ++--
- arch/x86/kernel/cpu/aperfmperf.c              |  17 +-
- arch/x86/kernel/cpu/bugs.c                    |  29 +--
- arch/x86/kernel/cpu/common.c                  | 154 +++++++------
- arch/x86/kernel/cpu/intel.c                   | 115 +++++-----
- arch/x86/kernel/cpu/intel_epb.c               |  12 +-
- arch/x86/kernel/cpu/match.c                   |   5 +-
- arch/x86/kernel/cpu/mce/core.c                |   5 +-
- arch/x86/kernel/cpu/mce/intel.c               |  20 +-
- arch/x86/kernel/cpu/mce/severity.c            |   9 +-
- arch/x86/kernel/cpu/microcode/intel.c         |   4 +-
- arch/x86/kernel/cpu/resctrl/core.c            |   9 +-
- arch/x86/kernel/cpu/resctrl/pseudo_lock.c     |  21 +-
- arch/x86/kernel/smpboot.c                     |   6 +-
- arch/x86/kernel/tsc.c                         |   5 +-
- arch/x86/kernel/tsc_msr.c                     |  14 +-
- arch/x86/kvm/pmu.c                            |   8 +-
- arch/x86/kvm/vmx/vmx.c                        |  20 +-
- arch/x86/mm/init.c                            |  16 +-
- arch/x86/pci/intel_mid_pci.c                  |   4 +-
- arch/x86/platform/atom/punit_atom_debug.c     |  11 +-
- arch/x86/platform/intel-mid/intel-mid.c       |   7 +-
- arch/x86/virt/vmx/tdx/tdx.c                   |   7 +-
- drivers/acpi/acpi_lpss.c                      |   4 +-
- drivers/acpi/x86/utils.c                      |  42 ++--
- drivers/cpufreq/intel_pstate.c                |  90 ++++----
- drivers/cpufreq/speedstep-centrino.c          |   8 +-
- drivers/edac/i10nm_base.c                     |  20 +-
- drivers/edac/pnd2_edac.c                      |   4 +-
- drivers/edac/sb_edac.c                        |  14 +-
- drivers/edac/skx_base.c                       |   2 +-
- drivers/extcon/extcon-axp288.c                |   2 +-
- drivers/hwmon/peci/cputemp.c                  |   7 +-
- drivers/idle/intel_idle.c                     | 116 +++++-----
- drivers/pci/pci-mid.c                         |   4 +-
- drivers/peci/cpu.c                            |  28 +--
- drivers/platform/x86/intel/ifs/core.c         |  15 +-
- drivers/platform/x86/intel/pmc/core.c         |  46 ++--
- drivers/platform/x86/intel/pmc/pltdrv.c       |  16 +-
- .../intel/speed_select_if/isst_if_common.c    |   4 +-
- .../intel/speed_select_if/isst_if_mbox_msr.c  |   2 +-
- .../platform/x86/intel/telemetry/debugfs.c    |   4 +-
- drivers/platform/x86/intel/telemetry/pltdrv.c |   4 +-
- drivers/platform/x86/intel/turbo_max_3.c      |   4 +-
- .../intel/uncore-frequency/uncore-frequency.c |  56 ++---
- drivers/platform/x86/intel_ips.c              |   3 +-
- drivers/platform/x86/intel_scu_wdt.c          |   2 +-
- drivers/platform/x86/p2sb.c                   |   2 +-
- drivers/powercap/intel_rapl_common.c          | 118 +++++-----
- drivers/powercap/intel_rapl_msr.c             |  16 +-
- drivers/thermal/intel/intel_soc_dts_thermal.c |   2 +-
- drivers/thermal/intel/intel_tcc_cooling.c     |  30 +--
- sound/soc/intel/avs/boards/es8336.c           |   7 +-
- tools/power/x86/turbostat/turbostat.c         | 161 +++++++------
- 74 files changed, 1258 insertions(+), 1143 deletions(-)
-
-
-base-commit: 4cece764965020c22cff7665b18a012006359095
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index d0941f4c2724..f81a851c46dc 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -40,137 +40,221 @@
+  * their own names :-(
+  */
+ 
++#define IFM(_fam, _model)	VFM_MAKE(X86_VENDOR_INTEL, _fam, _model)
++
+ /* Wildcard match for FAM6 so X86_MATCH_INTEL_FAM6_MODEL(ANY) works */
+ #define INTEL_FAM6_ANY			X86_MODEL_ANY
++/* Wildcard match for FAM6 so X86_MATCH_VFM(ANY) works */
++#define INTEL_ANY			IFM(X86_FAMILY_ANY, X86_MODEL_ANY)
+ 
+ #define INTEL_FAM6_CORE_YONAH		0x0E
++#define INTEL_CORE_YONAH		IFM(6, 0x0E)
+ 
+ #define INTEL_FAM6_CORE2_MEROM		0x0F
++#define INTEL_CORE2_MEROM		IFM(6, 0x0F)
+ #define INTEL_FAM6_CORE2_MEROM_L	0x16
++#define INTEL_CORE2_MEROM_L		IFM(6, 0x16)
+ #define INTEL_FAM6_CORE2_PENRYN		0x17
++#define INTEL_CORE2_PENRYN		IFM(6, 0x17)
+ #define INTEL_FAM6_CORE2_DUNNINGTON	0x1D
++#define INTEL_CORE2_DUNNINGTON		IFM(6, 0x1D)
+ 
+ #define INTEL_FAM6_NEHALEM		0x1E
++#define INTEL_NEHALEM			IFM(6, 0x1E)
+ #define INTEL_FAM6_NEHALEM_G		0x1F /* Auburndale / Havendale */
++#define INTEL_NEHALEM_G			IFM(6, 0x1F) /* Auburndale / Havendale */
+ #define INTEL_FAM6_NEHALEM_EP		0x1A
++#define INTEL_NEHALEM_EP		IFM(6, 0x1A)
+ #define INTEL_FAM6_NEHALEM_EX		0x2E
++#define INTEL_NEHALEM_EX		IFM(6, 0x2E)
+ 
+ #define INTEL_FAM6_WESTMERE		0x25
++#define INTEL_WESTMERE			IFM(6, 0x25)
+ #define INTEL_FAM6_WESTMERE_EP		0x2C
++#define INTEL_WESTMERE_EP		IFM(6, 0x2C)
+ #define INTEL_FAM6_WESTMERE_EX		0x2F
++#define INTEL_WESTMERE_EX		IFM(6, 0x2F)
+ 
+ #define INTEL_FAM6_SANDYBRIDGE		0x2A
++#define INTEL_SANDYBRIDGE		IFM(6, 0x2A)
+ #define INTEL_FAM6_SANDYBRIDGE_X	0x2D
++#define INTEL_SANDYBRIDGE_X		IFM(6, 0x2D)
+ #define INTEL_FAM6_IVYBRIDGE		0x3A
++#define INTEL_IVYBRIDGE			IFM(6, 0x3A)
+ #define INTEL_FAM6_IVYBRIDGE_X		0x3E
++#define INTEL_IVYBRIDGE_X		IFM(6, 0x3E)
+ 
+ #define INTEL_FAM6_HASWELL		0x3C
++#define INTEL_HASWELL			IFM(6, 0x3C)
+ #define INTEL_FAM6_HASWELL_X		0x3F
++#define INTEL_HASWELL_X			IFM(6, 0x3F)
+ #define INTEL_FAM6_HASWELL_L		0x45
++#define INTEL_HASWELL_L			IFM(6, 0x45)
+ #define INTEL_FAM6_HASWELL_G		0x46
++#define INTEL_HASWELL_G			IFM(6, 0x46)
+ 
+ #define INTEL_FAM6_BROADWELL		0x3D
++#define INTEL_BROADWELL			IFM(6, 0x3D)
+ #define INTEL_FAM6_BROADWELL_G		0x47
++#define INTEL_BROADWELL_G		IFM(6, 0x47)
+ #define INTEL_FAM6_BROADWELL_X		0x4F
++#define INTEL_BROADWELL_X		IFM(6, 0x4F)
+ #define INTEL_FAM6_BROADWELL_D		0x56
++#define INTEL_BROADWELL_D		IFM(6, 0x56)
+ 
+ #define INTEL_FAM6_SKYLAKE_L		0x4E	/* Sky Lake             */
++#define INTEL_SKYLAKE_L			IFM(6, 0x4E) /* Sky Lake */
+ #define INTEL_FAM6_SKYLAKE		0x5E	/* Sky Lake             */
++#define INTEL_SKYLAKE			IFM(6, 0x5E) /* Sky Lake */
+ #define INTEL_FAM6_SKYLAKE_X		0x55	/* Sky Lake             */
++#define INTEL_SKYLAKE_X			IFM(6, 0x55) /* Sky Lake */
+ /*                 CASCADELAKE_X	0x55	   Sky Lake -- s: 7     */
+ /*                 COOPERLAKE_X		0x55	   Sky Lake -- s: 11    */
+ 
+ #define INTEL_FAM6_KABYLAKE_L		0x8E	/* Sky Lake             */
++#define INTEL_KABYLAKE_L		IFM(6, 0x8E) /* Sky Lake */
+ /*                 AMBERLAKE_L		0x8E	   Sky Lake -- s: 9     */
+ /*                 COFFEELAKE_L		0x8E	   Sky Lake -- s: 10    */
+ /*                 WHISKEYLAKE_L	0x8E       Sky Lake -- s: 11,12 */
+ 
+ #define INTEL_FAM6_KABYLAKE		0x9E	/* Sky Lake             */
++#define INTEL_KABYLAKE			IFM(6, 0x9E) /* Sky Lake */
+ /*                 COFFEELAKE		0x9E	   Sky Lake -- s: 10-13 */
+ 
+ #define INTEL_FAM6_COMETLAKE		0xA5	/* Sky Lake             */
++#define INTEL_COMETLAKE			IFM(6, 0xA5) /* Sky Lake */
+ #define INTEL_FAM6_COMETLAKE_L		0xA6	/* Sky Lake             */
++#define INTEL_COMETLAKE_L		IFM(6, 0xA6) /* Sky Lake */
+ 
+ #define INTEL_FAM6_CANNONLAKE_L		0x66	/* Palm Cove */
++#define INTEL_CANNONLAKE_L		IFM(6, 0x66) /* Palm Cove */
+ 
+ #define INTEL_FAM6_ICELAKE_X		0x6A	/* Sunny Cove */
++#define INTEL_ICELAKE_X			IFM(6, 0x6A) /* Sunny Cove */
+ #define INTEL_FAM6_ICELAKE_D		0x6C	/* Sunny Cove */
++#define INTEL_ICELAKE_D			IFM(6, 0x6C) /* Sunny Cove */
+ #define INTEL_FAM6_ICELAKE		0x7D	/* Sunny Cove */
++#define INTEL_ICELAKE			IFM(6, 0x7D) /* Sunny Cove */
+ #define INTEL_FAM6_ICELAKE_L		0x7E	/* Sunny Cove */
++#define INTEL_ICELAKE_L			IFM(6, 0x7E) /* Sunny Cove */
+ #define INTEL_FAM6_ICELAKE_NNPI		0x9D	/* Sunny Cove */
++#define INTEL_ICELAKE_NNPI		IFM(6, 0x9D) /* Sunny Cove */
+ 
+ #define INTEL_FAM6_ROCKETLAKE		0xA7	/* Cypress Cove */
++#define INTEL_ROCKETLAKE		IFM(6, 0xA7) /* Cypress Cove */
+ 
+ #define INTEL_FAM6_TIGERLAKE_L		0x8C	/* Willow Cove */
++#define INTEL_TIGERLAKE_L		IFM(6, 0x8C) /* Willow Cove */
+ #define INTEL_FAM6_TIGERLAKE		0x8D	/* Willow Cove */
++#define INTEL_TIGERLAKE			IFM(6, 0x8D) /* Willow Cove */
+ 
+ #define INTEL_FAM6_SAPPHIRERAPIDS_X	0x8F	/* Golden Cove */
++#define INTEL_SAPPHIRERAPIDS_X		IFM(6, 0x8F) /* Golden Cove */
+ 
+ #define INTEL_FAM6_EMERALDRAPIDS_X	0xCF
++#define INTEL_EMERALDRAPIDS_X		IFM(6, 0xCF)
+ 
+ #define INTEL_FAM6_GRANITERAPIDS_X	0xAD
++#define INTEL_GRANITERAPIDS_X		IFM(6, 0xAD)
+ #define INTEL_FAM6_GRANITERAPIDS_D	0xAE
++#define INTEL_GRANITERAPIDS_D		IFM(6, 0xAE)
+ 
+ /* "Hybrid" Processors (P-Core/E-Core) */
+ 
+ #define INTEL_FAM6_LAKEFIELD		0x8A	/* Sunny Cove / Tremont */
++#define INTEL_LAKEFIELD			IFM(6, 0x8A) /* Sunny Cove / Tremont */
+ 
+ #define INTEL_FAM6_ALDERLAKE		0x97	/* Golden Cove / Gracemont */
++#define INTEL_ALDERLAKE			IFM(6, 0x97) /* Golden Cove / Gracemont */
+ #define INTEL_FAM6_ALDERLAKE_L		0x9A	/* Golden Cove / Gracemont */
++#define INTEL_ALDERLAKE_L		IFM(6, 0x9A) /* Golden Cove / Gracemont */
+ 
+ #define INTEL_FAM6_RAPTORLAKE		0xB7	/* Raptor Cove / Enhanced Gracemont */
++#define INTEL_RAPTORLAKE		IFM(6, 0xB7) /* Raptor Cove / Enhanced Gracemont */
+ #define INTEL_FAM6_RAPTORLAKE_P		0xBA
++#define INTEL_RAPTORLAKE_P		IFM(6, 0xBA)
+ #define INTEL_FAM6_RAPTORLAKE_S		0xBF
++#define INTEL_RAPTORLAKE_S		IFM(6, 0xBF)
+ 
+ #define INTEL_FAM6_METEORLAKE		0xAC
++#define INTEL_METEORLAKE		IFM(6, 0xAC)
+ #define INTEL_FAM6_METEORLAKE_L		0xAA
++#define INTEL_METEORLAKE_L		IFM(6, 0xAA)
+ 
+ #define INTEL_FAM6_ARROWLAKE_H		0xC5
++#define INTEL_ARROWLAKE_H		IFM(6, 0xC5)
+ #define INTEL_FAM6_ARROWLAKE		0xC6
++#define INTEL_ARROWLAKE			IFM(6, 0xC6)
+ #define INTEL_FAM6_ARROWLAKE_U		0xB5
++#define INTEL_ARROWLAKE_U		IFM(6, 0xB5)
+ 
+ #define INTEL_FAM6_LUNARLAKE_M		0xBD
++#define INTEL_LUNARLAKE_M		IFM(6, 0xBD)
+ 
+ /* "Small Core" Processors (Atom/E-Core) */
+ 
+ #define INTEL_FAM6_ATOM_BONNELL		0x1C /* Diamondville, Pineview */
++#define INTEL_ATOM_BONNELL		IFM(6, 0x1C) /* Diamondville, Pineview */
+ #define INTEL_FAM6_ATOM_BONNELL_MID	0x26 /* Silverthorne, Lincroft */
++#define INTEL_ATOM_BONNELL_MID		IFM(6, 0x26) /* Silverthorne, Lincroft */
+ 
+ #define INTEL_FAM6_ATOM_SALTWELL	0x36 /* Cedarview */
++#define INTEL_ATOM_SALTWELL		IFM(6, 0x36) /* Cedarview */
+ #define INTEL_FAM6_ATOM_SALTWELL_MID	0x27 /* Penwell */
++#define INTEL_ATOM_SALTWELL_MID		IFM(6, 0x27) /* Penwell */
+ #define INTEL_FAM6_ATOM_SALTWELL_TABLET	0x35 /* Cloverview */
++#define INTEL_ATOM_SALTWELL_TABLET	IFM(6, 0x35) /* Cloverview */
+ 
+ #define INTEL_FAM6_ATOM_SILVERMONT	0x37 /* Bay Trail, Valleyview */
++#define INTEL_ATOM_SILVERMONT		IFM(6, 0x37) /* Bay Trail, Valleyview */
+ #define INTEL_FAM6_ATOM_SILVERMONT_D	0x4D /* Avaton, Rangely */
++#define INTEL_ATOM_SILVERMONT_D		IFM(6, 0x4D) /* Avaton, Rangely */
+ #define INTEL_FAM6_ATOM_SILVERMONT_MID	0x4A /* Merriefield */
++#define INTEL_ATOM_SILVERMONT_MID	IFM(6, 0x4A) /* Merriefield */
+ 
+ #define INTEL_FAM6_ATOM_AIRMONT		0x4C /* Cherry Trail, Braswell */
++#define INTEL_ATOM_AIRMONT		IFM(6, 0x4C) /* Cherry Trail, Braswell */
+ #define INTEL_FAM6_ATOM_AIRMONT_MID	0x5A /* Moorefield */
++#define INTEL_ATOM_AIRMONT_MID		IFM(6, 0x5A) /* Moorefield */
+ #define INTEL_FAM6_ATOM_AIRMONT_NP	0x75 /* Lightning Mountain */
++#define INTEL_ATOM_AIRMONT_NP		IFM(6, 0x75) /* Lightning Mountain */
+ 
+ #define INTEL_FAM6_ATOM_GOLDMONT	0x5C /* Apollo Lake */
++#define INTEL_ATOM_GOLDMONT		IFM(6, 0x5C) /* Apollo Lake */
+ #define INTEL_FAM6_ATOM_GOLDMONT_D	0x5F /* Denverton */
++#define INTEL_ATOM_GOLDMONT_D		IFM(6, 0x5F) /* Denverton */
+ 
+ /* Note: the micro-architecture is "Goldmont Plus" */
+ #define INTEL_FAM6_ATOM_GOLDMONT_PLUS	0x7A /* Gemini Lake */
++#define INTEL_ATOM_GOLDMONT_PLUS	IFM(6, 0x7A) /* Gemini Lake */
+ 
+ #define INTEL_FAM6_ATOM_TREMONT_D	0x86 /* Jacobsville */
++#define INTEL_ATOM_TREMONT_D		IFM(6, 0x86) /* Jacobsville */
+ #define INTEL_FAM6_ATOM_TREMONT		0x96 /* Elkhart Lake */
++#define INTEL_ATOM_TREMONT		IFM(6, 0x96) /* Elkhart Lake */
+ #define INTEL_FAM6_ATOM_TREMONT_L	0x9C /* Jasper Lake */
++#define INTEL_ATOM_TREMONT_L		IFM(6, 0x9C) /* Jasper Lake */
+ 
+ #define INTEL_FAM6_ATOM_GRACEMONT	0xBE /* Alderlake N */
++#define INTEL_ATOM_GRACEMONT		IFM(6, 0xBE) /* Alderlake N */
+ 
+ #define INTEL_FAM6_ATOM_CRESTMONT_X	0xAF /* Sierra Forest */
++#define INTEL_ATOM_CRESTMONT_X		IFM(6, 0xAF) /* Sierra Forest */
+ #define INTEL_FAM6_ATOM_CRESTMONT	0xB6 /* Grand Ridge */
++#define INTEL_ATOM_CRESTMONT		IFM(6, 0xB6) /* Grand Ridge */
+ 
+ #define INTEL_FAM6_ATOM_DARKMONT_X	0xDD /* Clearwater Forest */
++#define INTEL_ATOM_DARKMONT_X		IFM(6, 0xDD) /* Clearwater Forest */
+ 
+ /* Xeon Phi */
+ 
+ #define INTEL_FAM6_XEON_PHI_KNL		0x57 /* Knights Landing */
++#define INTEL_XEON_PHI_KNL		IFM(6, 0x57) /* Knights Landing */
+ #define INTEL_FAM6_XEON_PHI_KNM		0x85 /* Knights Mill */
++#define INTEL_XEON_PHI_KNM		IFM(6, 0x85) /* Knights Mill */
+ 
+ /* Family 5 */
+ #define INTEL_FAM5_QUARK_X1000		0x09 /* Quark X1000 SoC */
++#define INTEL_QUARK_X1000		IFM(5, 0x09) /* Quark X1000 SoC */
+ 
+ #endif /* _ASM_X86_INTEL_FAMILY_H */
+diff --git a/arch/x86/kernel/cpu/match.c b/arch/x86/kernel/cpu/match.c
+index ad6776081e60..2243083f0bc2 100644
+--- a/arch/x86/kernel/cpu/match.c
++++ b/arch/x86/kernel/cpu/match.c
+@@ -17,8 +17,7 @@
+  *
+  * A typical table entry would be to match a specific CPU
+  *
+- * X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6, INTEL_FAM6_BROADWELL,
+- *				      X86_FEATURE_ANY, NULL);
++ * X86_MATCH_VFM_FEATURE(INTEL_BROADWELL, X86_FEATURE_ANY, NULL);
+  *
+  * Fields can be wildcarded with %X86_VENDOR_ANY, %X86_FAMILY_ANY,
+  * %X86_MODEL_ANY, %X86_FEATURE_ANY (except for vendor)
 -- 
 2.44.0
 
