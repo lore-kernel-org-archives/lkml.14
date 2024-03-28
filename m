@@ -1,197 +1,155 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3061CAAC;
-	Thu, 28 Mar 2024 06:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711606221; cv=none; b=chK5rQkxyIEcanavR4KjB0Y60E5bgQsmhtbaDyzFaG2siT4rWL+XQUxPmAhL8tewoGxKqGiEuUbAY/EwoIZratKiPC/fozl83Eilmbf6Yk+IiJJCEfor8/XRQl4+AKasNSlbzsb2neLZPBoHm7M5Lu1hOCFQC9Hli6nDME561Cw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711606221; c=relaxed/simple;
-	bh=f827W552AcLk4Fd3qgu2RaZ4mLJcPreNh8vnCtreCcY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=HuTE7gERrl2tFuedWCrRLVaaiBytmCrjLJio04XS7vxlWTIcLChTO9SUVmYk2dE0UzldNC4H/HiYRw7ZnVFbSiAr4FMN8yFVXGPx4+jnHyPWMJLtaKQiSO+PsILIgXa1OPlGuw95YHo7Zlk6KzvVSMr6kqOTmZwwuH8+uQQaY9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=A+l+pys6; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13FC134CB;
+	Thu, 28 Mar 2024 06:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711606611; cv=fail; b=AyltyYAZEHFZziVQldH/PJ7Z6/kQaXZrmNBoEt1p7WP8qpjdFCOF5q9T1mO4+Zg20rnkRktynmfQs+hDedo3RTIzED57A1Ug7hpU0A/HHZN4PE46UQ+lG7awRHQ835pqURX9sHMBG0EMblXaqKgpGr8CjSUt0hf9wEjdyjIKqZw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711606611; c=relaxed/simple;
+	bh=1GRHjMbSUvnlngpaZtOatBYp7b6gKgurv9GNLS5/5tc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Aunu2zBIQ+YhLRRQC0BApEWpFBl542FjrU5GTI3VkWndYCRugr9ia7ky/keSVxIjghkyfgjD7ca6mQ56VuKbethK8bxO37Td87Ms6a0mNf85VVGytr+AFO5lgkTk22MJmCDcrz0qQC5woKZfM8moTRlpCsNcxVCGMUXditAdHh0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=w1d4nhNv; arc=fail smtp.client-ip=40.107.236.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="A+l+pys6"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42S69g9i000766;
-	Thu, 28 Mar 2024 01:09:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1711606182;
-	bh=JrzMOdxfOHPP/UN6vNlxvG+mwBhM9McFbLhDU4FrLFE=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=A+l+pys6wcMdSU+uzmQmZGuBV3PX4uct+U6yF2clBsdxOR6gyqaQkDAHTfi3brfPp
-	 DuJq36vLp+MOWOAfEtN+qvAOJ+OjgdSfyCMG+uJ/O2kvgIUmRuldjAAbummf2t/c1/
-	 QaYfV0eIqpGQNm8WAcVqvUUtCpbmzqcGJ2zAZeS8=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42S69gZn016311
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 28 Mar 2024 01:09:42 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 28
- Mar 2024 01:09:42 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 28 Mar 2024 01:09:42 -0500
-Received: from [10.24.69.25] (danish-tpc.dhcp.ti.com [10.24.69.25])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42S69YaD029568;
-	Thu, 28 Mar 2024 01:09:34 -0500
-Message-ID: <c94815f8-798a-4167-8f69-359b9b28b7ce@ti.com>
-Date: Thu, 28 Mar 2024 11:39:33 +0530
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="w1d4nhNv"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Umf+8U0sY/Nqm7xNt5R8+UyIYK6dx3WN0BDwP+kMWpfaf6Uwfm4h5jpQdvGkdBXRjJATVTu9w4zlKSKxJ7s6ihn1T/2RgyVZRjImTbpfmvDbxl1bdshAGbclSvg0+IiGlFcXCpElEsFhhZfLBHvAoDQgH2nwC65r3UIBXT3A6UspoNk/j7xlu6cOJg4553yC5iU3mTcEpFx/xRCRUnj17slmnb8wKM/1TRWAVTKsoBpNnG8RGFcaKFs1SfLyf5C4fKrbJZBpiePQVBs3FV8QZfQlIsZFHuIIhQkwKQz/D3TIgCSz1Yvd50w0IXou1NDabnCBf2bdjHm27sXs/u7MOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=M4uT/dp0PMeM4TAUgDxMs6CQ/h5cu6Yl8mbmFv2pS80=;
+ b=U7MEJwGLutpolZqNT5+8DQe7kXlOrs5FunwcTs/ZaV1mkKBFep9WkHrZIW++DixbNcvn37iQmYzldvufP34BeZANXfmMRUJWP9SPGHRYPHITRW91Om3cDBOpJ4yEiS6DYNL0swDndpOhljNL2J5DMjYGtt0FQ7eOL4N7CBlY4uiA7iIed9gFtcwwZH7ZcX4ikH3LFu23Bep4Jg6DJ2sDZhhcyK5IxHaZu8+UXuDK91EgrtGYc+4ImmbOmrGE379KAQ1m75XK2+RMFeZLpyO5UBnn42nfU54UvXYVw8A00cN350Fk0PZHMaBKGRp7IFlU1qWQlz+mNf9h4scB84dkpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M4uT/dp0PMeM4TAUgDxMs6CQ/h5cu6Yl8mbmFv2pS80=;
+ b=w1d4nhNv5cnYbei5HKIZ4tvyvP7R4QO/5uo5MXfFR7rGpVTqy3KVk7tcVoudNtTugPRsF+oc7nEkIOlzhgcobt3ttQEwVGP3bVKXosDZa/KCf6+r5VKaOM6szPuVsJQkqh3UL6P99zJi3JCWeKcyP2oVV2Iguo9g7Amzp4FcATU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB8403.namprd12.prod.outlook.com (2603:10b6:610:133::14)
+ by DS0PR12MB7581.namprd12.prod.outlook.com (2603:10b6:8:13d::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Thu, 28 Mar
+ 2024 06:16:46 +0000
+Received: from CH3PR12MB8403.namprd12.prod.outlook.com
+ ([fe80::aaa1:af99:e0e5:7f14]) by CH3PR12MB8403.namprd12.prod.outlook.com
+ ([fe80::aaa1:af99:e0e5:7f14%5]) with mapi id 15.20.7409.028; Thu, 28 Mar 2024
+ 06:16:46 +0000
+Message-ID: <870730a8-cabc-46ab-9ec9-f8e667842203@amd.com>
+Date: Thu, 28 Mar 2024 01:16:43 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] tracing: Include Microcode Revision in mce_record
+ tracepoint
+Content-Language: en-US
+To: Sohil Mehta <sohil.mehta@intel.com>, linux-trace-kernel@vger.kernel.org,
+ linux-edac@vger.kernel.org
+Cc: rostedt@goodmis.org, tony.luck@intel.com, bp@alien8.de, x86@kernel.org,
+ linux-kernel@vger.kernel.org, yazen.ghannam@amd.com,
+ Avadhut Naik <avadhut.naik@amd.com>
+References: <20240327205435.3667588-1-avadhut.naik@amd.com>
+ <20240327205435.3667588-3-avadhut.naik@amd.com>
+ <67ba2ece-6b46-4ae1-a944-a38f84360d0f@intel.com>
+From: "Naik, Avadhut" <avadnaik@amd.com>
+In-Reply-To: <67ba2ece-6b46-4ae1-a944-a38f84360d0f@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA0PR11CA0078.namprd11.prod.outlook.com
+ (2603:10b6:806:d2::23) To CH3PR12MB8403.namprd12.prod.outlook.com
+ (2603:10b6:610:133::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3 3/3] net: ti: icssg-prueth: Add support for
- ICSSG switch firmware
-Content-Language: en-US
-To: Andrew Lunn <andrew@lunn.ch>
-CC: Diogo Ivo <diogo.ivo@siemens.com>, Rob Herring <robh@kernel.org>,
-        Dan
- Carpenter <dan.carpenter@linaro.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>, Simon Horman <horms@kernel.org>,
-        Wolfram Sang
-	<wsa+renesas@sang-engineering.com>,
-        Arnd Bergmann <arnd@arndb.de>, Vignesh
- Raghavendra <vigneshr@ti.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Roger Quadros <rogerq@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-        Jakub
- Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
-        "David S.
- Miller" <davem@davemloft.net>,
-        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <srk@ti.com>, <r-gunasekaran@ti.com>
-References: <20240327114054.1907278-1-danishanwar@ti.com>
- <20240327114054.1907278-4-danishanwar@ti.com>
- <27d960ed-8e67-431b-a910-e6b2fc12e292@lunn.ch>
-From: MD Danish Anwar <danishanwar@ti.com>
-In-Reply-To: <27d960ed-8e67-431b-a910-e6b2fc12e292@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8403:EE_|DS0PR12MB7581:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1cbdbdb9-747d-40ce-c64c-08dc4eeea549
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	h59QuvtiIrMHQrFAJUPtD9FqPUBKXJWKNhDcunjzdQPSbDxgwBudM0vYkfjrXeUQCU0ujQ2abbR2AKXA1vgabmc9Pjw9MBqoYGqM32r9q79IhRmAUMtVLFW3q5OPJvSeVKRGBeSR/OsC5/trB2i0N+Esz3bsR8ciSCU1+H+9s3zFMXeGxY+Z81jk6hCf4Xw/X/wS+rmPXShemfVJEXa28kzOxwJeAgPTp375lycTFZ6heQ5F9ZRNZuc9XQPThX+PekZuN8QkR6EsZrZjTdh1uAXGg333GBAwkO92ldYHRZhgX+pjGBBdYGOnXJKbEvVz20vVIv9JPUjrH8HyjXjU+1YsfJjy2v90LluyaFMRyCQJVNzBfO/LdIw7ZiBkw5VXvANKFZ5eoh9nVKJu82sVg1BZ8CdzINfkaHRmUhnE85KP9ozz24+TV1/xqfHud5m2LypZh7xgPUiindRrZMAdlTvgC7r+30oezc/rxvclx9q5bXkQr8OFsnWnB2Xusl72DoOJ2l4c9jSmmgNzYsCZe3UTLc88m67ClyB7l5MYZzRkMP+plUivIwfvBzrKOgvr76Bvxnzy1voYYJg1z491F5ISsoJ+FSycX0cpVFBh3btMWxOsNcLPnAXG+JajbcVXpoGgX7Jh4iQ8cPlLnAdIIQUqc5pZ6JLpwdH/cic4LGo=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8403.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Q3l2NkRCV3dBODYwMGRjWTBETFZ1UUZHOHJ0M1ZYM3E2NTlkQ3FFREo3MnRH?=
+ =?utf-8?B?MWt3QmMvWVV3YTFJelhkK2xaUVkzNVo1bG5XUG5ObWU3YThjbnhteSs5dkZC?=
+ =?utf-8?B?bVJaNWFTU212YUg2dVJCWUdubzR0VGk5bnZkY3dOMHBxMkRteitadDQ3VXh2?=
+ =?utf-8?B?YnZpd2E0STAxR0tmYWt2WXk4dXFmUUpoOWhQUXZxREJLd0thaERGcjdvNEVN?=
+ =?utf-8?B?Tm1vN0lWamVBRVZDTDBUNVVMcjYxTkFjOGVFeVRkSEJmd0R1eko5SzBJRW5s?=
+ =?utf-8?B?Sk9QdVNGRWw1VXppSGo0dWgycFBFSWhDbU1acXFpWWhTQnJyNGdOeU5jSmll?=
+ =?utf-8?B?N2cxd2FPUy9jWDBNTUdDY0xadklYanlzRzhMSGZXdjBhQk8ySE5VdWFqZk1r?=
+ =?utf-8?B?enpBeDAxSURlS0w4NGpSY2lmaUNVSEdzaWhOMnEyNjJxVm1FeDBib043ajls?=
+ =?utf-8?B?cGF5ZHlZV0ZSbUZLemlCQ29kMHQydytyVUZneE1uY01ueU5GcDQxbm9iRzgz?=
+ =?utf-8?B?N25DcGFtTnFyNy9ROU9FS0JLOFJwZWFzbUtEK2Vkb2svSXl6ZzdXVnBHTEFU?=
+ =?utf-8?B?MlA2UVdMRVY1QXJKclJCNWlRUXBzbTd0bHM5dUFNcmViWkZNRWY0Si9RcEFt?=
+ =?utf-8?B?MmVsamFQNVZvMFN4ZXJCdDlnZjN2Vm9TV1Z6b0xUWVJsMXhacC8yaXJSYUJm?=
+ =?utf-8?B?ZzczZjdzT0NZaTdRdk4zM3Jxb29tMEQwcjhWSFA3Z0tWTVRLbzNqZUlTVjNw?=
+ =?utf-8?B?Q2hqUTk0eXYvRjNKQS9DeS9CS1Qzdk8xSk93aEVXUFY5K0VDLzJpazI1NHhR?=
+ =?utf-8?B?U3B2dzJuM2V0QmR6NG1lTGx2bXpTS0hmOTg0elovYTRUQTZ1bXRDMFF5Q25P?=
+ =?utf-8?B?cURpSXZVNmNkQXlZL2pyUjNic2gzQjdDMEJVcjlGaVE5dFE3aytqZzVBQm45?=
+ =?utf-8?B?QXpUZ2pqNlR1dWlqcU41Ym9CTnFERTQ1RmZvRlR2a3NlYjcyNnJjMjE1TTBD?=
+ =?utf-8?B?cnM2SzY0SGJFY1VuZnJ5MDdPWUJRSlBKZ0pLV0JtZUJ6cHlqMTdhNkxHS2dK?=
+ =?utf-8?B?N3Y3NnFOQm9ldk8xMFp6cytIdkFxZllFN3Z0UjUrTXlTYXJMYmZVQzRlUzdo?=
+ =?utf-8?B?NXdoTzJpUDlaMTlrSXdRYnp6OVp5SithRVlmZFpxdkRub1d2UUZYT3pRV3Iy?=
+ =?utf-8?B?MDJFME5sekFzKytoK29yeHY0cHV3VERiNFMyajRJdmhISDdrZnd4NDJtWUo0?=
+ =?utf-8?B?alF4RkRUTU1iMEpSRnZlVDd4M0Z3MG5zamZHWC9qaVBlaWpQTjQwQ1NzTjll?=
+ =?utf-8?B?bHY3K0I4djZpNEFETGhlTUVYOUUrVUphVTlzckdZWnp6RTlGbzVVS3JMQ3Mv?=
+ =?utf-8?B?ejY3SldxYis2NmJ0d21nMWE1ZGg5dnlWTzdUc1ptbXJFMVE3TDRKc2syS1g2?=
+ =?utf-8?B?ZnZzRy9vWGRuRmpEK2o3M2pVNFVISUdQSS94clBYVWh5TkdpcXFMQXBWVzFH?=
+ =?utf-8?B?L1V0dWpZc3IraUR4RWw0dWRWb3VlRWZNazFGcFRPclRuSy94NWJUTlVtUCtX?=
+ =?utf-8?B?a2wxbGkxamtQNHBYeWQvZG9CVit4QlZGSGUwR2N4YlQyei9oWWpSZEUyZnl0?=
+ =?utf-8?B?YW1IMnc4czVTQ2JMTXhtbDM4N3JZTG11RjVNNmVFaWxZdGdsNFU1VURQSGh3?=
+ =?utf-8?B?elErTTR0b3MyaVJXenpJVkluQzAxZUk3QWlLdnEweUN1UEdMY09TMWdQOXZ1?=
+ =?utf-8?B?UzRlNmFhYmhXSUh2Zzg1ZHF5WHdlNVpibjZPVGZlNmZ0RVNKY20zdGlRMXhW?=
+ =?utf-8?B?QStnZzJwczhPbGROQ2lURXFQMXpkbTRSYzVHVksraDhla2NZWHVUSWM1cWky?=
+ =?utf-8?B?c2ZHOTJnUDA0ay9DU25hbGlqR3E3emFCaDdxZ3RSSXNvbUZDZlBDZDk4V3Mv?=
+ =?utf-8?B?d1FkbHEyQy9QTXF6MjdINVFGVis3aHhkdm4rcWRocFBDYzdoR1lhR0hEVXgy?=
+ =?utf-8?B?dFRqT2FEa0QvN1BsUEkvOGd2SjRtQkdTNEt3Z2orU2pVS1NHWG5VL1Q2cUxz?=
+ =?utf-8?B?ajgxUkNUdHhMOGNxV1lsM3lSbldsMFFkbjd1UG5MWHJ5TE9yYjBiRE05b0c3?=
+ =?utf-8?Q?RZaZZjQSVITtk5IT9jkWc0QHK?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1cbdbdb9-747d-40ce-c64c-08dc4eeea549
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8403.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2024 06:16:46.3834
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gnEGaSGE/NJ3gROlyFbZKdS1Bm+Bd6fRluaHzCzrWm34IaTDybmJDTOSysCq3GnPp8QTh7plG+qE+GLTMQiHAQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7581
 
-Hi Andrew,
 
-On 27/03/24 6:05 pm, Andrew Lunn wrote:
-> On Wed, Mar 27, 2024 at 05:10:54PM +0530, MD Danish Anwar wrote:
->> Add support for ICSSG switch firmware using existing Dual EMAC driver
->> with switchdev.
->>
->> Limitations:
->> VLAN offloading is limited to 0-256 IDs.
->> MDB/FDB static entries are limited to 511 entries and different FDBs can
->> hash to same bucket and thus may not completely offloaded
->>
->> Switch mode requires loading of new firmware into ICSSG cores. This
->> means interfaces have to taken down and then reconfigured to switch
->> mode.
+
+On 3/27/2024 17:31, Sohil Mehta wrote:
+> On 3/27/2024 1:54 PM, Avadhut Naik wrote:
 > 
-> Patch 0/3 does not say this. It just shows the interfaces being added
-
-I will modify the cover letter to state that.
-
-> to the bridge. There should not be any need to down the interfaces.
+>> -	TP_printk("CPU: %d, MCGc/s: %llx/%llx, MC%d: %016Lx, IPID: %016Lx, ADDR/MISC/SYND: %016Lx/%016Lx/%016Lx, RIP: %02x:<%016Lx>, TSC: %llx, PPIN: %llx, PROCESSOR: %u:%x, TIME: %llu, SOCKET: %u, APIC: %x",
+>> +	TP_printk("CPU: %d, MCGc/s: %llx/%llx, MC%d: %016Lx, IPID: %016Lx, ADDR/MISC/SYND: %016Lx/%016Lx/%016Lx, RIP: %02x:<%016Lx>, TSC: %llx, PPIN: %llx, PROCESSOR: %u:%x, TIME: %llu, SOCKET: %u, APIC: %x, MICROCODE REVISION: %x",
 > 
-
-The interfaces needs to be turned down for switching between dual emac
-and switch mode.
-
-Dual Emac mode runs with ICSSG Dual Emac firmware where as Switch mode
-works with ICSSG Switch firmware. These firmware are running on the
-dedicated PRU RPROC cores (pru0, rtu0, txpru0). When switch mode is
-enabled, these pru cores need to be stopped and then Switch firmware is
-loaded on these cores and then the cores are started again.
-
-We stop the cores when interfaces are down and start the cores when
-interfaces are up.
-
-In short, Dual EMAC firmware runs on pru cores, we put down the
-interface, stop pru cores, load switch firmware on the cores, bring the
-interface up and start the pru cores and now Switch mode is enabled.
-
-
->> Example assuming ETH1 and ETH2 as ICSSG2 interfaces:
->>
->> Switch to ICSSG Switch mode:
->>  ip link set dev eth1 down
->>  ip link set dev eth2 down
->>  ip link add name br0 type bridge
->>  ip link set dev eth1 master br0
->>  ip link set dev eth2 master br0
->>  ip link set dev br0 up
->>  ip link set dev eth1 up
->>  ip link set dev eth2 up
->>  bridge vlan add dev br0 vid 1 pvid untagged self
->>
->> Going back to Dual EMAC mode:
->>
->>  ip link set dev br0 down
->>  ip link set dev eth1 nomaster
->>  ip link set dev eth2 nomaster
->>  ip link set dev eth1 down
->>  ip link set dev eth2 down
->>  ip link del name br0 type bridge
->>  ip link set dev eth1 up
->>  ip link set dev eth2 up
->>
->> By default, Dual EMAC firmware is loaded, and can be changed to switch
->> mode by above steps
+> Nit: s/MICROCODE REVISION/MICROCODE/g
 > 
-> I keep asking this, so it would be good to explain it in the commit
-> message. What configuration is preserved over a firmware reload, and
-> what is lost?
+> You could probably get rid of the word REVISION in the interest of
+> brevity similar to __print_mce().
 > 
-> Can i add VLAN in duel MAC mode and then swap into the switch firmware
-> and all the VLANs are preserved? Can i add fdb entries to a port in
-> dual MAC mode, and then swap into the swtich firmware and the FDB
-> table is preserved? What about STP port state? What about ... ?
+> 	pr_emerg(HW_ERR "PROCESSOR %u:%x TIME %llu SOCKET %u APIC %x microcode
+> %x\n",
+> 		m->cpuvendor, m->cpuid, m->time, m->socketid, m->apicid,
+> 		m->microcode);
 > 
-
-When ports are brought up (firmware reload) we do a full cleaning of all
-the shared memories i.e. SMEM (shared RAM). [1]
-
-Vlan table and FDB table are stored in SMEM so all the configuration
-done to VLAN / FDB tables will be lost.
-
-We don't clear DRAM. DRAM is used for sending r30 commands [see
-emac_r30_cmd_init()], configure half duplex [see
-icssg_config_half_duplex()] and configure link speed [see
-icssg_config_set_speed()]. r30 commands are used to set port state (stp).
-
-Now when the interfaces are brought up (firmware reload) r30 command is
-reconfigured as a result any changes done to port state (stp) will be
-lost. But the duplex and speed settings will be preserved.
-
-To summarize,
-VLAN table / FDB table and port states are lost during a firmware reload.
-
-[1]
-https://elixir.bootlin.com/linux/latest/source/drivers/net/ethernet/ti/icssg/icssg_prueth.c#L1321
-> 
->> +bool prueth_dev_check(const struct net_device *ndev)
->> +{
->> +	if (ndev->netdev_ops == &emac_netdev_ops && netif_running(ndev)) {
->> +		struct prueth_emac *emac = netdev_priv(ndev);
->> +
->> +		return emac->prueth->is_switch_mode;
->> +	}
->> +
->> +	return false;
->> +}
-> 
-> This does not appear to be used anywhere?
-> 
->      Andrew
+>
+Okay. Will remove "REVISION".
+> -Sohil
 
 -- 
-Thanks and Regards,
-Danish
+Thanks,
+Avadhut Naik
