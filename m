@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B88131187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A71130E5F
 	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:05:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711641938; cv=none; b=mJV6swAHEafVAkoVPe4fpnZ/Zu2JFF/W10Z3NbHQ+t/ySNIWs2WR47vtr4Kn85GIPjTkOh7ZB8MQ9eT2HJ65bU3UknDHkaAW6s/7NfeAhSFngFJsbU/A5yC7IRcG2yTNOHqfTfCrsl/LXJdWvBHxrCGDO9IHXPGo8ZUssoTKkr8=
+	t=1711641939; cv=none; b=rv0Gm6Sq4bFTeDFTnTXtg/nre2gklifNJshqT2G9KIUB5uI11yV6a4l3MrG/+VPzmN7vNQ3FdUgZJx7cjSOTLFvqS57fAjLXEszToyPw9LTfko9nv1tTgogwoOevk0A1N7uu8Y3N/aBw3HwithMuIOiPQTMb5NI2GvDo7us8LlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711641938; c=relaxed/simple;
-	bh=Rk4fHN5mnflp+XpEYNLRwu4Z2vn1G0HFpZaUgGNV6k4=;
+	s=arc-20240116; t=1711641939; c=relaxed/simple;
+	bh=1aC+Qty898Z7QWHKEUyYsyErbgy+fs+anDbaCZiMYpc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GJkGpuxmoTBcwo7E4nkmYwvv0rAyCdFvDReUPQ6bubluJhYKfGctZLlC2mRkmLl85X0iOQ7JMUIZN+XG9Vjv9HqcsUJPWk3efAIlaCokK8Cz/Do0cZSKWlxla54SjMpWusvgYVremQVHAx1twFJDpFrBtr4vR4RNx/nfsWkzgGQ=
+	 MIME-Version; b=R0OGdhFJozg17Wy/e8OCz/cV3gAJ7FWz0A6cJ1w8o3ibEiAisLwa39+rzNmEYCYK5k6YtAnKwN8fWCRpI+aAwnvrENylajgSy1HSXvHq6mFKsx8LK8GeMwbCwNAaqvtkMF+hvkygj/tnpM7fA9hPlYSehDqYdnCOIe0wA1PQJ2g=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,15 +18,15 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rpsFm-00058n-N5; Thu, 28 Mar 2024 17:05:22 +0100
+	id 1rpsFm-00058o-N5; Thu, 28 Mar 2024 17:05:22 +0100
 Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rpsFj-0092JQ-IC; Thu, 28 Mar 2024 17:05:19 +0100
+	id 1rpsFj-0092JU-Hw; Thu, 28 Mar 2024 17:05:19 +0100
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rpsFj-00A3PD-1Q;
+	id 1rpsFj-00A3Pb-1X;
 	Thu, 28 Mar 2024 17:05:19 +0100
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
@@ -47,9 +47,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	Simon Horman <horms@kernel.org>,
 	Willem de Bruijn <willemb@google.com>,
 	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH net-next v1 7/9] net: dsa: microchip: enable ETS support for KSZ989X variants
-Date: Thu, 28 Mar 2024 17:05:16 +0100
-Message-Id: <20240328160518.2396238-8-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v1 9/9] net: dsa: microchip: let DCB code do PCP and DSCP policy configuration
+Date: Thu, 28 Mar 2024 17:05:18 +0100
+Message-Id: <20240328160518.2396238-10-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240328160518.2396238-1-o.rempel@pengutronix.de>
 References: <20240328160518.2396238-1-o.rempel@pengutronix.de>
@@ -65,42 +65,59 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-I tested ETS support on KSZ9893, so it should work other KSZ989X
-variants too.
+802.1P (PCP) and DiffServ (DSCP) are handled now by DCB code. Let it do
+all needed initial configuration.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- drivers/net/dsa/microchip/ksz_common.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/dsa/microchip/ksz8795.c | 6 ------
+ drivers/net/dsa/microchip/ksz9477.c | 6 ------
+ 2 files changed, 12 deletions(-)
 
-diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
-index ea2d6f8d381bc..08426f85f7707 100644
---- a/drivers/net/dsa/microchip/ksz_common.c
-+++ b/drivers/net/dsa/microchip/ksz_common.c
-@@ -1378,6 +1378,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
- 		.port_nirqs = 2,
- 		.num_tx_queues = 4,
- 		.max_ipvs = 8,
-+		.tc_ets_supported = true,
- 		.ops = &ksz9477_dev_ops,
- 		.mib_names = ksz9477_mib_names,
- 		.mib_cnt = ARRAY_SIZE(ksz9477_mib_names),
-@@ -1411,6 +1412,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
- 		.port_nirqs = 2,
- 		.num_tx_queues = 4,
- 		.max_ipvs = 8,
-+		.tc_ets_supported = true,
- 		.ops = &ksz9477_dev_ops,
- 		.mib_names = ksz9477_mib_names,
- 		.mib_cnt = ARRAY_SIZE(ksz9477_mib_names),
-@@ -1442,6 +1444,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
- 		.port_nirqs = 2,
- 		.num_tx_queues = 4,
- 		.max_ipvs = 8,
-+		.tc_ets_supported = true,
- 		.ops = &ksz9477_dev_ops,
- 		.mib_names = ksz9477_mib_names,
- 		.mib_cnt = ARRAY_SIZE(ksz9477_mib_names),
+diff --git a/drivers/net/dsa/microchip/ksz8795.c b/drivers/net/dsa/microchip/ksz8795.c
+index a520352d5b93e..06dbc75aef8fd 100644
+--- a/drivers/net/dsa/microchip/ksz8795.c
++++ b/drivers/net/dsa/microchip/ksz8795.c
+@@ -1564,16 +1564,10 @@ void ksz8_port_setup(struct ksz_device *dev, int port, bool cpu_port)
+ 
+ 	ksz8_port_queue_split(dev, port, queues);
+ 
+-	/* disable DiffServ priority */
+-	ksz_port_cfg(dev, port, P_PRIO_CTRL, PORT_DIFFSERV_ENABLE, false);
+-
+ 	/* replace priority */
+ 	ksz_port_cfg(dev, port, P_802_1P_CTRL,
+ 		     masks[PORT_802_1P_REMAPPING], false);
+ 
+-	/* enable 802.1p priority */
+-	ksz_port_cfg(dev, port, P_PRIO_CTRL, PORT_802_1P_ENABLE, true);
+-
+ 	if (cpu_port)
+ 		member = dsa_user_ports(ds);
+ 	else
+diff --git a/drivers/net/dsa/microchip/ksz9477.c b/drivers/net/dsa/microchip/ksz9477.c
+index 7f745628c84d1..f8ad7833f5d9d 100644
+--- a/drivers/net/dsa/microchip/ksz9477.c
++++ b/drivers/net/dsa/microchip/ksz9477.c
+@@ -1158,18 +1158,12 @@ void ksz9477_port_setup(struct ksz_device *dev, int port, bool cpu_port)
+ 	/* enable broadcast storm limit */
+ 	ksz_port_cfg(dev, port, P_BCAST_STORM_CTRL, PORT_BROADCAST_STORM, true);
+ 
+-	/* disable DiffServ priority */
+-	ksz_port_cfg(dev, port, P_PRIO_CTRL, PORT_DIFFSERV_PRIO_ENABLE, false);
+-
+ 	/* replace priority */
+ 	ksz_port_cfg(dev, port, REG_PORT_MRI_MAC_CTRL, PORT_USER_PRIO_CEILING,
+ 		     false);
+ 	ksz9477_port_cfg32(dev, port, REG_PORT_MTI_QUEUE_CTRL_0__4,
+ 			   MTI_PVID_REPLACE, false);
+ 
+-	/* enable 802.1p priority */
+-	ksz_port_cfg(dev, port, P_PRIO_CTRL, PORT_802_1P_PRIO_ENABLE, true);
+-
+ 	/* force flow control for non-PHY ports only */
+ 	ksz_port_cfg(dev, port, REG_PORT_CTRL_0,
+ 		     PORT_FORCE_TX_FLOW_CTRL | PORT_FORCE_RX_FLOW_CTRL,
 -- 
 2.39.2
 
