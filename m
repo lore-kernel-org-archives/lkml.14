@@ -1,64 +1,63 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CEB13A86A
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 20:40:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1484A13B7A2
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 20:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711658409; cv=none; b=g835vQD41DymzmL7iraHvEOp4mINIk2F4h53R8Zw7eIgm25A5k5oWdBtsOyzCKsGRwFztqZizfu0TqrH2E+rTHnaZAH7LTv5VRqlzEQNCyucTn5ua4FhXmxYNnKzrfDaGY6XdAH651CzruMcdm/idtPFJgf8rGM8SDf98RCiiu0=
+	t=1711658413; cv=none; b=jsev/Gt8T6bncj176ZP63urSdD+Ge7+/C0bFT2ZHPXAuLlasCtpRDRqh18DZ5cSk17cXyW5XB8UDIDiG5MJfSsuANTtOPazUR4k7uAb/T87oEIShZpY1RtAipggTJFSceTBmrYiN+9ov1DCVDBxJrJc3EUy8CqoGhwmYU+/ZNe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711658409; c=relaxed/simple;
-	bh=zEWlRAVtFaEI8DxadpGvvAtmxe8dbfjOZtl4xLuLmKA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HqKfMTvcUnCjrGfD5z21miJxZOThsqYsVXcHhULkeGQOzHaTyDTwURRGooJw6RwUUCNjnZWkJBS2z2bawZPkoqm67sVNc5k3qitkwE1pAg/U4q4hc5Q0bFdv57cEV75xseX7tXLFcK+N1EZgh0OfsoV+24KuFoyuldx5COPIwE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=da+QjHq/; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711658413; c=relaxed/simple;
+	bh=5/XIIKiTB1kK6mCedHSlUjddeWaCgNaGwQ7W/dFaZPQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tMUyMX1YL3382FY8y95Iu+PVh+OFBu2Eai8+Ac9urcrrRlFMubyrch4TImSDXdjXqomCT1yVe6GfsLWuYtx11INX7oqwiWEXBRG7RKNqIDyouWjRAhqOZKSdDmafsC0QbhI9ZJZysjKmnC744vUJHXBgFQJGdtSXfjpcYPcIm58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ACB/zwf0; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="da+QjHq/"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-415482307b0so7492275e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 13:40:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711658406; x=1712263206; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VLbQp2aBj3c8Sf1EyYJHd+FXAjE39Y7t3rCCxWRWwVc=;
-        b=da+QjHq/bIUcVHRMOclxlJakNVF3864/aS4CnbxYpvKD0vqToR+kOtf2mPTDrJzsHt
-         /Lwlz7xJzu5bh7br1UpQfNQyu83iJZiO4t0jFkkawqqBsxTsXIZGB6ZKQqTFBVaHQ6Zb
-         xOKtlG7lM4fCdX5TkmDFF/lRU9GKkrNjCJtI2sZ7JfiDD+DUhpVdl8gmbX9y4yfKq5ll
-         TwbY24hYhRT5++Ww1VMHk3pY2bAqc+itIJeNk9e/rTnNR3e1ySRTVV8ouVhPEFw0RPuf
-         MPnSwhDEgbcxoyrS/3JY8UQo29ogw4JJYMQo0u3WPc2fqsTS3/9MxpgIBqnCoy01wEIU
-         HrwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711658406; x=1712263206;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VLbQp2aBj3c8Sf1EyYJHd+FXAjE39Y7t3rCCxWRWwVc=;
-        b=MPIRXbD59R1HGxr89IbhNrYdOrQvVQIUwDMkxCuUxHewROsol7Kbd+1p3bR5pNlryb
-         nDoEeDGwAzyFh0dFqPcXf9DW2gJGwY381X62lLrQFheV7gWM8hvyr2gNCoWj2xah7xwD
-         EUuvwU542crlyjC3awMOIDwLbGsBtzzbYcVQoSu2tkIpvGtjv1N32dTi0RW3F2xtXG1U
-         +CFACy6XT+EfKp65JCIBqkIzDFYK+K0uY8tmV8wNfdWpRf7w0BHkB1K5GCmDDeXJ+sak
-         Jj1I0ywRGQuohV3i1gRi3mz/qKdx3wPRb1aD1/N70LluN8hiF+y7UPBvpETGr2iuFYQc
-         dIzg==
-X-Forwarded-Encrypted: i=1; AJvYcCXXORYOJJL6z5ZaWhZqK5W7bakU+FpkdyPqUQGvORrVPxnxuHOQIJiH7gcXQSBZcTHyygqaxCKosKXE8HChzGTlhAVQfEhE2cF6wgmd
-X-Gm-Message-State: AOJu0Yw+f1QE5Kc8oTk2Zk/sACrBh9ovp9tOTRGWoCDctGeS4+0KJlYg
-	NyQB2Z2OMPnbNkzRGHc8QakkW2ucFbWAofiJGLFC/T8R3MUTPKZopZM53wghK3w=
-X-Google-Smtp-Source: AGHT+IF++QFH8AOoYnDjeOKcnQ9MoOPe8E5nq8m+tccUcRQiEMmq4UK7spHzq8R7jkKYNFuy2/G//g==
-X-Received: by 2002:a7b:c3d3:0:b0:415:45ea:9904 with SMTP id t19-20020a7bc3d3000000b0041545ea9904mr422278wmj.21.1711658406441;
-        Thu, 28 Mar 2024 13:40:06 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.223.50])
-        by smtp.gmail.com with ESMTPSA id b16-20020a5d6350000000b0033e7715bafasm2586613wrw.59.2024.03.28.13.40.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 13:40:06 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Mark Brown <broonie@kernel.org>,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] spi: docs: drop driver owner initialization
-Date: Thu, 28 Mar 2024 21:39:27 +0100
-Message-Id: <20240328203927.156184-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ACB/zwf0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711658411;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O2S5dlufkY7ji1jTEmuLexd5aljX5StH7MYrMWEnyTc=;
+	b=ACB/zwf0YJakdi7CJ3x2jk9kB4Lxv4eY6CBnWRqC6e8NBPyItRvAU5OhrzV5Uzzp69UR/7
+	xkwD+iQnwZ9bZKS835dVEhW8wSvBJ+mWBi+k00ce8z+NqsF9NgGxABwtR1dVERlB9zHG/C
+	1D8fmMsgX+VIJnsePMvQMAptr71mD04=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-582-8_4MxpuOPVm5kw_6Dhr1YQ-1; Thu, 28 Mar 2024 16:40:06 -0400
+X-MC-Unique: 8_4MxpuOPVm5kw_6Dhr1YQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C38E1185A781;
+	Thu, 28 Mar 2024 20:40:05 +0000 (UTC)
+Received: from localhost (unknown [10.39.194.117])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id D1E612166B35;
+	Thu, 28 Mar 2024 20:40:04 +0000 (UTC)
+From: Stefan Hajnoczi <stefanha@redhat.com>
+To: linux-block@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	eblake@redhat.com,
+	Alasdair Kergon <agk@redhat.com>,
+	Mikulas Patocka <mpatocka@redhat.com>,
+	dm-devel@lists.linux.dev,
+	David Teigland <teigland@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Joe Thornber <ejt@redhat.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>
+Subject: [RFC 4/9] dm: add llseek(SEEK_HOLE/SEEK_DATA) support
+Date: Thu, 28 Mar 2024 16:39:05 -0400
+Message-ID: <20240328203910.2370087-5-stefanha@redhat.com>
+In-Reply-To: <20240328203910.2370087-1-stefanha@redhat.com>
+References: <20240328203910.2370087-1-stefanha@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,27 +65,134 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-Core in spi_register_driver() already sets the .owner, so driver
-does not need to.
+Delegate SEEK_HOLE/SEEK_DATA to device-mapper targets. The new
+dm_seek_hole_data() callback allows target types to customize behavior.
+The default implementation treats the target as all data with no holes.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
 ---
- Documentation/spi/spi-summary.rst | 1 -
- 1 file changed, 1 deletion(-)
+ include/linux/device-mapper.h |  5 +++
+ drivers/md/dm.c               | 68 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 73 insertions(+)
 
-diff --git a/Documentation/spi/spi-summary.rst b/Documentation/spi/spi-summary.rst
-index 546de37d6caf..35e1970a76a9 100644
---- a/Documentation/spi/spi-summary.rst
-+++ b/Documentation/spi/spi-summary.rst
-@@ -348,7 +348,6 @@ SPI protocol drivers somewhat resemble platform device drivers::
- 	static struct spi_driver CHIP_driver = {
- 		.driver = {
- 			.name		= "CHIP",
--			.owner		= THIS_MODULE,
- 			.pm		= &CHIP_pm_ops,
- 		},
+diff --git a/include/linux/device-mapper.h b/include/linux/device-mapper.h
+index 82b2195efaca7..e89ebaab6507a 100644
+--- a/include/linux/device-mapper.h
++++ b/include/linux/device-mapper.h
+@@ -161,6 +161,10 @@ typedef int (*dm_dax_zero_page_range_fn)(struct dm_target *ti, pgoff_t pgoff,
+ typedef size_t (*dm_dax_recovery_write_fn)(struct dm_target *ti, pgoff_t pgoff,
+ 		void *addr, size_t bytes, struct iov_iter *i);
+ 
++/* Like llseek(SEEK_HOLE/SEEK_DATA) */
++typedef loff_t (*dm_seek_hole_data)(struct dm_target *ti, loff_t offset,
++		int whence);
++
+ void dm_error(const char *message);
+ 
+ struct dm_dev {
+@@ -210,6 +214,7 @@ struct target_type {
+ 	dm_dax_direct_access_fn direct_access;
+ 	dm_dax_zero_page_range_fn dax_zero_page_range;
+ 	dm_dax_recovery_write_fn dax_recovery_write;
++	dm_seek_hole_data seek_hole_data;
+ 
+ 	/* For internal device-mapper use. */
+ 	struct list_head list;
+diff --git a/drivers/md/dm.c b/drivers/md/dm.c
+index 56aa2a8b9d715..3c921bdbd17fc 100644
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -3167,6 +3167,72 @@ void dm_free_md_mempools(struct dm_md_mempools *pools)
+ 	kfree(pools);
+ }
+ 
++/* Default implementation for targets that do not implement the callback */
++static loff_t dm_blk_seek_hole_data_default(loff_t offset, int whence,
++		loff_t size)
++{
++	switch (whence) {
++	case SEEK_DATA:
++		if ((unsigned long long)offset >= size)
++			return -ENXIO;
++		return offset;
++	case SEEK_HOLE:
++		if ((unsigned long long)offset >= size)
++			return -ENXIO;
++		return size;
++	default:
++		return -EINVAL;
++	}
++}
++
++static loff_t dm_blk_do_seek_hole_data(struct dm_table *table, loff_t offset,
++		int whence)
++{
++	struct dm_target *ti;
++	loff_t end;
++
++	/* Loop when the end of a target is reached */
++	do {
++		ti = dm_table_find_target(table, offset >> SECTOR_SHIFT);
++		if (!ti)
++			return whence == SEEK_DATA ? -ENXIO : offset;
++
++		end = (ti->begin + ti->len) << SECTOR_SHIFT;
++
++		if (ti->type->seek_hole_data)
++			offset = ti->type->seek_hole_data(ti, offset, whence);
++		else
++			offset = dm_blk_seek_hole_data_default(offset, whence, end);
++
++		if (whence == SEEK_DATA && offset == -ENXIO)
++			offset = end;
++	} while (offset == end);
++
++	return offset;
++}
++
++static loff_t dm_blk_seek_hole_data(struct block_device *bdev, loff_t offset,
++		int whence)
++{
++	struct mapped_device *md = bdev->bd_disk->private_data;
++	struct dm_table *table;
++	int srcu_idx;
++	loff_t ret;
++
++	if (dm_suspended_md(md))
++		return -EAGAIN;
++
++	table = dm_get_live_table(md, &srcu_idx);
++	if (!table)
++		return -EIO;
++
++	ret = dm_blk_do_seek_hole_data(table, offset, whence);
++
++	dm_put_live_table(md, srcu_idx);
++
++	return ret;
++}
++
+ struct dm_pr {
+ 	u64	old_key;
+ 	u64	new_key;
+@@ -3493,6 +3559,7 @@ static const struct block_device_operations dm_blk_dops = {
+ 	.getgeo = dm_blk_getgeo,
+ 	.report_zones = dm_blk_report_zones,
+ 	.pr_ops = &dm_pr_ops,
++	.seek_hole_data = dm_blk_seek_hole_data,
+ 	.owner = THIS_MODULE
+ };
+ 
+@@ -3502,6 +3569,7 @@ static const struct block_device_operations dm_rq_blk_dops = {
+ 	.ioctl = dm_blk_ioctl,
+ 	.getgeo = dm_blk_getgeo,
+ 	.pr_ops = &dm_pr_ops,
++	.seek_hole_data = dm_blk_seek_hole_data,
+ 	.owner = THIS_MODULE
+ };
  
 -- 
-2.34.1
+2.44.0
 
