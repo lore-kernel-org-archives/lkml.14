@@ -1,60 +1,49 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A588004F;
-	Thu, 28 Mar 2024 15:22:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D7142061;
+	Thu, 28 Mar 2024 15:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711639345; cv=none; b=M6r263yO2sKvG7Mka8YukvFi49KhIBvILbFKTnfksml+tlZnUcxLQ3Wv3sikyt6YB3XoqLhRgLupuechnpLqqVFSg/6j8sEMTj3F43+Vl5fhW+ZB4Xsvf2vgxV/gFj8Prut+uKc5LriDO93CyBPxRZ5UP97T/ynxw5cxxbxxBmU=
+	t=1711639408; cv=none; b=s9JYj6G5pBSTQ5gYonwB4+WcFL5458gByx1rxH7notqn6AiRkt2zwPkXfQ2/8Ph/39IalWNt63H0XzF7LDK3UTb3z0vJijLbX/7aj/Izj+mIXhX18bMv39dV8sUXE7CL8JMrOawT8KDKav2XKHl4t57EoRxRcjthEqUdpwCaP50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711639345; c=relaxed/simple;
-	bh=bLg2e6mwBKjSve4OEmRJ0swgtQbc1H7j1+RXrYDfSrE=;
+	s=arc-20240116; t=1711639408; c=relaxed/simple;
+	bh=dnSbevCgnnrvCsW1rdcQnYaE9brbk1uzpAjP/6V2omQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AA/tcOkWe3HJ+3CyhvJ56qb0ADK5HtL1DXry/Mmr0STIv/ZTrhVNrX66vlEA21c71nLbN+jZoL031+vwMrjxmL/8i6n/ea70vjqeX2LQQ1zjBL7p8MMq2ddi9lBqzAvgbs4p4fzOUdSs3Em2IyBC2U13WavNwCYBYQJT3B1GQLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=cUmTmHgU; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=T+efKnXp7GBqUCzi1CiAxF3XmAbOgWoz5W8uONQtoxhZnhim8gMgZDQLCfV6Xv9ndVEXD/82e1+FnQ0uevVKjLzpyXOs/A7X6N/dMQhPVmhA6TgEBn0NGUKHh0dpVL/hJBgRuKXKdDSqeG/mdWReMn9ABdg3q0S5MfpsufihViI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RBQES8Ag; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="cUmTmHgU"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=0KikSW9ib+1cYtRn9w2uRLKS6BuW9Jey9jBSZin/1jU=; b=cUmTmHgUj+sE8DS9wRyBTtTkJ/
-	lJDbO1E6Wtrjuk7CAXb74Ve72lGwIat6hzsxeftbnWWjAXDnv9H042dx0nk7TKn/372JTknDKKxTh
-	9sI5+OituYqypJRXFELZUWuonXIf1ypJyZf4H522b+Z/nx9noHpJRzGWHfTO1kUmNIIc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rprZt-00BVng-WF; Thu, 28 Mar 2024 16:22:06 +0100
-Date: Thu, 28 Mar 2024 16:22:05 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Mark Brown <broonie@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
-	Dent Project <dentproject@linuxfoundation.org>
-Subject: Re: [PATCH net-next v6 13/17] net: pse-pd: Use regulator framework
- within PSE framework
-Message-ID: <0d91784a-48db-4e25-88e5-9994dfd3d68f@lunn.ch>
-References: <20240326-feature_poe-v6-0-c1011b6ea1cb@bootlin.com>
- <20240326-feature_poe-v6-13-c1011b6ea1cb@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RBQES8Ag"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BE24C43390;
+	Thu, 28 Mar 2024 15:23:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711639408;
+	bh=dnSbevCgnnrvCsW1rdcQnYaE9brbk1uzpAjP/6V2omQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RBQES8Ag/ugJEbXDoX5YOjZ2oB9uXUu4qWwhAWnWPsG02Xs4pBbyL2tnNgPa0oYi3
+	 pMqphA6zt0Ib3h65a2kIjWjdPJrL2dXPsbhO1fG26gbk/MT+fTp8H8FNwj/hyzsJCV
+	 YFcixzykwxEEk54AUCppxgeDpRo4PHgzCXlsSlxQ2RO5X+kFUVcZ4WN7y6tekm6bND
+	 Vtts8x0fRtlZITqtByAHEmoB/Sj1AqBx0IwsPInF20ruhlu1SX+uy1pfRklpULHN53
+	 2n65O7FEXefD5MQxdzoiBow9kC9CqAUAHO4fLWidFfiDSOsJzI+26SuD0jNbYulRFe
+	 d5SE5aOFsWvzg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rprbO-000000007oC-0ruF;
+	Thu, 28 Mar 2024 16:23:38 +0100
+Date: Thu, 28 Mar 2024 16:23:38 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Janaki Ramaiah Thota <quic_janathot@quicinc.com>
+Cc: patchwork-bot+bluetooth@kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>, luiz.dentz@gmail.com,
+	marcel@holtmann.org, linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	quic_mohamull@quicinc.com, quic_hbandi@quicinc.com
+Subject: Re: [PATCH] Revert "Bluetooth: hci_qca: Set BDA quirk bit if fwnode
+ exists in DT"
+Message-ID: <ZgWLeo5KSLurLDhK@hovoldconsulting.com>
+References: <20240314084412.1127-1-johan+linaro@kernel.org>
+ <171146704035.9961.13096206001570615153.git-patchwork-notify@kernel.org>
+ <124a7d54-5a18-4be7-9a76-a12017f6cce5@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,33 +52,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240326-feature_poe-v6-13-c1011b6ea1cb@bootlin.com>
+In-Reply-To: <124a7d54-5a18-4be7-9a76-a12017f6cce5@quicinc.com>
 
-On Tue, Mar 26, 2024 at 03:04:50PM +0100, Kory Maincent wrote:
-> From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
-> 
-> Integrate the regulator framework to the PSE framework for enhanced
-> access to features such as voltage, power measurement, and limits, which
-> are akin to regulators. Additionally, PSE features like port priorities
-> could potentially enhance the regulator framework. Note that this
-> integration introduces some implementation complexity, including wrapper
-> callbacks, but the potential benefits make it worthwhile.
-> 
-> Regulator are using enable counter with specific behavior.
-> Two calls to regulator_disable will trigger kernel warnings.
-> If the counter exceeds one, regulator_disable call won't disable the
-> PSE PI. These behavior isn't suitable for PSE control.
-> Added a boolean 'enabled' state to prevent multiple calls to
-> regulator_enable/disable. These calls will only be called from PSE
-> framework as it won't have any regulator children, therefore no mutex are
-> needed to safeguards this boolean.
-> 
-> regulator_get needs the consumer device pointer. Use PSE as regulator
-> provider and consumer device until we have RJ45 ports represented in
-> the Kernel.
-> 
-> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+[ Please wrap your emails at 72 columns or so. ]
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+On Thu, Mar 28, 2024 at 08:25:16PM +0530, Janaki Ramaiah Thota wrote:
+> We made this change to configure the device which supports persistent
+> memory for the BD-Address
 
-    Andrew
+Can you say something more about which devices support persistent
+storage for the address? Is that all or just some of the chip variants?
+
+> So to make device functional in both scenarios we are adding a new
+> property in dts file to distinguish persistent and non-persistent
+> support of BD Address and set HCI_QUIRK_USE_BDADDR_PROPERTY bit
+> accordingly
+
+Depending on the answer to my questions above, you may be able to infer
+this from the compatible string and/or you can read out the address from
+the device and only set the quirk if it's set to the default address.
+
+You should not need to add a new property for this.
+
+Johan
