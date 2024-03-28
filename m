@@ -1,170 +1,82 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 8.mo550.mail-out.ovh.net (8.mo550.mail-out.ovh.net [178.33.110.239])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F8F29CEF
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 07:55:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE83151C28
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 07:55:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.33.110.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711612510; cv=none; b=fHjFaBesIDoL1OBNAnCm7fxyE9+ISBLA1ThcZp9dniBGz4g/b0x8nUmfLtYgNAAUHoR5Z99kre3JRGKjtntph2DAVHnaXTJaJ5SmrhzfY8jY2h+85vbztvnN90gEirpJblSz3sqTfdA3x4McMWywOLPrfjkzcW9LUqZZSfbwT6E=
+	t=1711612530; cv=none; b=Cj9IABXUuKk55IsLw41tyhXUd42G7uMc/+n0HcnmHb8wqsj+BZQ4QfCHHSa+cvGw9XDQxlVYroSBB2+wio5+nMHeJDgsdykh9RRqRRLV6yqQuJl8RWZTE0ZptqKZgoNFz6OmrgyuAsE9RWnYQRKbg1afQed4sYrYsqoRYLa7cQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711612510; c=relaxed/simple;
-	bh=gZ1qyJh2Qrd3XWQIyBxd5BobVBXzD3p79JpF8h4a0So=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cqZ9jQKiyNjroKaNJ5WB1crxsFB7o7QA/7X4Z446XCCni4SAstQ+pLRiA3WfqbLLL1bfQs1YGikPxeH1rCyARuoHylaIHJ3V21CSs0t8Xzig6FI5S3q90qeqNa2067Tne3UvUjOVY8CMBu4KYoegim/zxZdgzQhVqiRZmXenASw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZqZubEzo; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZqZubEzo"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-431347c6c99so168531cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 00:55:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711612508; x=1712217308; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SmYk1ChOh2+sYhuhWKZpvOeBoBDTF/kZuwK0JAtFJW0=;
-        b=ZqZubEzo3KqxSua8J0qz0gZi9G7QfWI9cpXzhWXINjG3dPGaG9Gld7ufN4RFDv0kBV
-         0vzv9NZNYAZhhLfawEHUe2w0RcFIdhJPysFJRnlNE+jyZX7Su+9o/1USw+mjmwsVtXk9
-         krhqTxz0m81+Umtgf9SzXUupmbKMySGHhSWYO2+ye/JmupW86ryAHN2xjI2y9RHik7Bl
-         r1jWJweXj3wNR3O190cb5DG9REkWz51OxvV36PIXg2Pv6Idf1sQqF90SP/vLqos/v9Ct
-         pYPFZrew7NixNYw5ki1KTgJacyXb0x0A9oPoo+jXni7oIYogajsf40zSULLIDQWPIBd6
-         8CNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711612508; x=1712217308;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SmYk1ChOh2+sYhuhWKZpvOeBoBDTF/kZuwK0JAtFJW0=;
-        b=P1+gtUcW0xEZhufwTMrC4r57DOiUDxioletYKCt2SgxjJtKdCVFa0iETF6ZXvXYhkc
-         0lJkhhlb9JZHngQLeOv93d6devPmXSgXy71vcInAANSaxKiJ3vNpSoosiNRfz78K9Qa5
-         SqlmYRxlmxk61aHRjHen7yrkv4aK2vpveK/HB1dItDGRRe3kyzkrEll93Hy8MXE1GZ//
-         6mgk+0bs4nITKAYo8jS+tXO2TGj3JCZO837h7dxrb3tzO0OITn1NQYA1DZ8cGuJVNXbp
-         qOaDr2gQ+TYtxxDkPtftgZpaAy/rAl+OpnWw/Epe5vVQ5UsECh8iEzwyGkcO3auvOVNO
-         2xOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUN6k9FmB1U1h0px7mvBN1b37NHVANC1E48rPUBiSW6LX1tW6cSQ/ePrhH1fAoIBz6Px49QOsf0R7HFrKOz9jnEWXHlebdgZnZpJiJB
-X-Gm-Message-State: AOJu0YzhakRjdojq9mb/LPOXZjLU2r2TsHTcIG7qTwFyM61dNr6Q3+JD
-	fxvdyLI5wMcjA2hCiQH7M4chJN1fZqghl42+x6RVJajqiKja9NmV0CvhOfcvHM0Ywyf1AIEgmkC
-	N+WwGwQ4M+237TF1C1Z1z0zN0Pwk0nBsDEL4B
-X-Google-Smtp-Source: AGHT+IE7qL4ZajIWelVJF5EIJxvF4LYzspcZJp+tq9C1DskYuPv5mLz3VhFsNepq9yGLX98SN7fOKG8JtHC6UySCzwo=
-X-Received: by 2002:a05:622a:410a:b0:431:8151:e7c1 with SMTP id
- cc10-20020a05622a410a00b004318151e7c1mr239703qtb.4.1711612507578; Thu, 28 Mar
- 2024 00:55:07 -0700 (PDT)
+	s=arc-20240116; t=1711612530; c=relaxed/simple;
+	bh=FoK+TTnkZBEIxAuqwtZNUFYhYqEUw8/IIA5uwrrKnQc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=eLnc/PikTn08GUZ++hv/NFtg7azQXLPamIBjTcFp2dfeyixOKbA2PnZ2lgJ/poHxxo4hOXvmKEYIznOmPYxSOIpYdkNtqAubJ7QPRkooBiObjgFuT6G34tyxxd42Mv8pOZs0JbFUnOYq7rt3SqLSilxz+BxoO/be13ZvycyZS+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=178.33.110.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
+Received: from director10.ghost.mail-out.ovh.net (unknown [10.109.140.55])
+	by mo550.mail-out.ovh.net (Postfix) with ESMTP id 4V4wMy16r1z1MtY
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 07:36:46 +0000 (UTC)
+Received: from ghost-submission-6684bf9d7b-ldk78 (unknown [10.110.96.65])
+	by director10.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 92A881FEE9;
+	Thu, 28 Mar 2024 07:36:43 +0000 (UTC)
+Received: from etezian.org ([37.59.142.99])
+	by ghost-submission-6684bf9d7b-ldk78 with ESMTPSA
+	id irrGGgseBWbkIwAANZbBaA
+	(envelope-from <andi@etezian.org>); Thu, 28 Mar 2024 07:36:43 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-99G00369bef739-e97a-4666-95b7-831df257c96e,
+                    6D693167F0AB1D8A9C15294DA3267AC24BED3ACC) smtp.auth=andi@etezian.org
+X-OVh-ClientIp:89.217.109.169
+From: Andi Shyti <andi.shyti@kernel.org>
+To: konrad.dybcio@linaro.org, andersson@kernel.org, vkoul@kernel.org, 
+ wsa@kernel.org, linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, 
+ Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+Cc: quic_vdadhani@quicinc.com, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+In-Reply-To: <20240313052639.1747078-1-quic_msavaliy@quicinc.com>
+References: <20240313052639.1747078-1-quic_msavaliy@quicinc.com>
+Subject: Re: [PATCH v4] i2c: i2c-qcom-geni: Parse Error correctly in i2c
+ GSI mode
+Message-Id: <171161140136.2698925.4294566764047886777.b4-ty@kernel.org>
+Date: Thu, 28 Mar 2024 08:36:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240116141801.396398-1-khtsai@google.com> <02bec7b8-7754-4b9d-84ae-51621d6aa7ec@kernel.org>
- <2024012724-chirpy-google-51bb@gregkh> <CAKzKK0oEO5_-CBKvYSw4DKY4Wp5UPrrt1ehBFRd79idy7FsUuQ@mail.gmail.com>
- <CAKzKK0pmswLnGa8zabp_wo=6BcvCd9DR368FCJ5mcpZ38i4Jdw@mail.gmail.com>
-In-Reply-To: <CAKzKK0pmswLnGa8zabp_wo=6BcvCd9DR368FCJ5mcpZ38i4Jdw@mail.gmail.com>
-From: Kuen-Han Tsai <khtsai@google.com>
-Date: Thu, 28 Mar 2024 15:54:41 +0800
-Message-ID: <CAKzKK0rWPzEM8e76oY+PB3ZWUbUaQS21dLbcbTiPufbnFkxbgw@mail.gmail.com>
-Subject: Re: [PATCH] usb: gadget: u_serial: Add null pointer checks after
- RX/TX submission
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jirislaby@kernel.org>, quic_prashk@quicinc.com, 
-	stern@rowland.harvard.edu, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
+X-Ovh-Tracer-Id: 2165386998096661243
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledruddukedguddtlecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevjghfuffkffggtgfgofesthejredtredtjeenucfhrhhomheptehnughiucfuhhihthhiuceorghnughirdhshhihthhisehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnhepffetheduffdvhfdugfffudfgjeejudehheegfeeguefhieeugffhgfeuffdvgfefnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddvjedrtddrtddruddpkeelrddvudejrddutdelrdduieelpdefjedrheelrddugedvrdelleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomheprghnughisegvthgviihirghnrdhorhhgpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehhedtpdhmohguvgepshhmthhpohhuth
 
-Hi Greg and Jiri
+Hi
 
-On Fri, Mar 8, 2024 at 7:47=E2=80=AFPM Kuen-Han Tsai <khtsai@google.com> wr=
-ote:
-> On Sun, Jan 28, 2024 at 9:29=E2=80=AFAM Greg KH <gregkh@linuxfoundation.o=
-rg> wrote:
-> >
-> > On Thu, Jan 18, 2024 at 10:27:54AM +0100, Jiri Slaby wrote:
-> > > On 16. 01. 24, 15:16, Kuen-Han Tsai wrote:
-> > > > Commit ffd603f21423 ("usb: gadget: u_serial: Add null pointer check=
- in
-> > > > gs_start_io") adds null pointer checks to gs_start_io(), but it doe=
-sn't
-> > > > fully fix the potential null pointer dereference issue. While
-> > > > gserial_connect() calls gs_start_io() with port_lock held, gs_start=
-_rx()
-> > > > and gs_start_tx() release the lock during endpoint request submissi=
-on.
-> > > > This creates a window where gs_close() could set port->port_tty to =
-NULL,
-> > > > leading to a dereference when the lock is reacquired.
-> > > >
-> > > > This patch adds a null pointer check for port->port_tty after RX/TX
-> > > > submission, and removes the initial null pointer check in gs_start_=
-io()
-> > > > since the caller must hold port_lock and guarantee non-null values =
-for
-> > > > port_usb and port_tty.
-> > >
-> > > Or you switch to tty_port refcounting and need not fiddling with this=
- at all
-> > > ;).
-> >
-> > I agree, Kuen-Han, why not do that instead?
->
-> The u_serial driver has already maintained the usage count of a TTY
-> structure for open and close. While the driver tracks the usage count
-> via open/close, it doesn't fully eliminate race conditions. Below are
-> two potential scenarios:
->
-> Case 1 (Observed):
-> 1. gs_open() sets usage count to 1.
-> 2. gserial_connect(), gs_start_io(), and gs_start_rx() execute in
-> sequence (lock held).
-> 3. Lock released, usb_ep_queue() called.
-> 4. In parallel, gs_close() executes, sees count of 1, clears TTY, release=
-s lock.
-> 5. Original thread resumes in gs_start_rx(), potentially leading to
-> kernel panic on an invalid TTY.
+On Wed, 13 Mar 2024 10:56:39 +0530, Mukesh Kumar Savaliya wrote:
+> I2C driver currently reports "DMA txn failed" error even though it's
+> NACK OR BUS_PROTO OR ARB_LOST. Detect NACK error when no device ACKs
+> on the bus instead of generic transfer failure which doesn't give any
+> specific clue.
+> 
+> Make Changes inside i2c driver callback handler function
+> i2c_gpi_cb_result() to parse these errors and make sure GSI driver
+> stores the error status during error interrupt.
+> 
+> [...]
 
-The same issue happens in the f_acm function.
+Applied to i2c/i2c-host-next on
 
-[  369.926837][ T9731] Unable to handle kernel NULL pointer
-dereference at virtual address 00000000000001f8
-[  369.930098][ T9731] Call trace:
-[  369.930108][ T9731]  tty_wakeup+0x28/0x160
-[  369.930124][ T9731]  gs_start_io+0x128/0x214
-[  369.930136][ T9731]  gserial_connect+0xb8/0x158
-[  369.930150][ T9731]  acm_set_alt+0xf8/0x118
-[  369.930162][ T9731]  set_config+0x258/0x3c0
-[  369.930179][ T9731]  composite_setup+0x484/0x984
-[  369.930193][ T9731]  android_setup+0x13c/0x24c
-[  369.930206][ T9731]  dwc3_ep0_interrupt+0x8c4/0x122c
-[  369.930224][ T9731]  dwc3_thread_interrupt+0xa4/0x1918
-[  369.930238][ T9731]  irq_thread_fn+0x44/0xa4
-[  369.930260][ T9731]  irq_thread+0x2a8/0x588
-[  369.930272][ T9731]  kthread+0x1d0/0x23c
-[  369.930289][ T9731]  ret_from_fork+0x10/0x20
-[  369.930314][ T9731] Code: d5384108 aa0003f3 f9431d08 f81f83a8 (f940fc08)
+git://git.kernel.org/pub/scm/linux/kernel/git/local tree
 
-> Since both gserial_connect() and gs_open() initiate gs_start_io(),
-> there's a brief window where gs_start_rx() releases a spinlock for USB
-> submission. If gs_close() executes during this window, it could
-> acquire the lock and clear the TTY structure prematurely. This happens
-> because the lock is released and the usage count remains 1, making it
-> appear like a valid final reference, even though gs_start_io() is
-> still in progress.
+Thank you,
+Andi
 
-The f_acm function invokes gserial_connect while configuring the
-altsetting. A similar issue arises when the TTY file node is already
-opened but closed when the gs_start_io function is executing. The
-current code includes a spinlock and the usage_count is 1; however,
-the problem persists, suggesting that the existing spinlock and
-usage_count are ineffective in preventing the issue. A straightforward
-solution is to double-check the TTY status before calling the
-tty_wakeup function.
+Patches applied
+===============
+[1/1] i2c: i2c-qcom-geni: Parse Error correctly in i2c GSI mode
+      commit: 394b3e3ead0d9fdcc1ef53bb893fdbe7bf1db3ac
 
-> My only solution so far is to recheck the TTY structure after
-> gs_start_rx() or gs_start_tx(). I would greatly appreciate your
-> insights on how to address this race condition effectively.
-
-I'd like to get your perspective on this issue. Do you have any ideas
-on how we can move this solution forward?
-
-Regards,
-Kuen-Han
