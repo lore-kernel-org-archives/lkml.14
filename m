@@ -1,114 +1,124 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.237.72.81])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1496C2E630;
-	Thu, 28 Mar 2024 05:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.237.72.81
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E93B29CFB
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 05:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711604111; cv=none; b=GNjytftecE6PJ9tyLe2mgCbmCn7T7gCSnZtA5PpSgwkJ5KBmkAaRBkkAwWtM82M4URjGnTQWnw8oWWMd4Uplc3daHSdUoMUdbstl7SEdttH8Se+kwna6YPuLZcD3fsBWgJKKYhseMGjvDT6YwnMAgajurSAc92Ao0IWlCmX3Rao=
+	t=1711604172; cv=none; b=FatZyGjovbmHFVeY+DZEmDPCfUb4w0vr6rJZNz6spbY6FCOznotoAreFQaoI/GkcpQio9tFinNhZXL7P/IHijvnfuUbCkLe4hGyMM5vPiQsbST/6mj6FqsrOXK7+FSoIRd6rJELa5B3v7dNdxl2rretfFqGlN3SIZFujhb3bPYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711604111; c=relaxed/simple;
-	bh=Lgd4O19vrz5qqCNALb/TQFydB9SMVctddaeUCF0e9so=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=Mk3n9I4U2m+RwGhz/azC2R1RQvccC9UNlW0M5fT53Q+m7uvCrPAOwQq4ycpfb9lIE+iiZEmnFBCUXwm458BNpwZVMUSA6wl3EEsKb0ikzh02Q6rkV2Z4R6uOGsDVNiT+l7W9ZgIhh9ImDIJ+78Bt6AP5jFHi0LFu7UGaxtnNql8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=52.237.72.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from duoming$zju.edu.cn ( [218.12.18.152] ) by
- ajax-webmail-mail-app3 (Coremail) ; Thu, 28 Mar 2024 13:34:48 +0800
- (GMT+08:00)
-Date: Thu, 28 Mar 2024 13:34:48 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: duoming@zju.edu.cn
-To: "Simon Horman" <horms@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hams@vger.kernel.org, pabeni@redhat.com, kuba@kernel.org,
-	edumazet@google.com, davem@davemloft.net, jreuter@yaina.de
-Subject: Re: [PATCH net] ax25: fix use-after-free bugs caused by
- ax25_ds_del_timer
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2023.4-cmXT5 build
- 20231205(37e20f0e) Copyright (c) 2002-2024 www.mailtech.cn zju.edu.cn
-In-Reply-To: <20240327191025.GU403975@kernel.org>
-References: <20240326142542.118058-1-duoming@zju.edu.cn>
- <20240327191025.GU403975@kernel.org>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1711604172; c=relaxed/simple;
+	bh=3U6V+9JcBHoyWlFviROw3p+GodkWEvgG95H00we1DYg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rgmrKV9e5TAxrlQDC29eUnJuWTsZnP+Zn5yn0O9zWjbWA2Hzr6pUkc4LvpTq2EzS+vqT/BbnuSm+3qqqHASyT7aHivXTVhboU9SqOKgI9PByS7qVQUduDNqWYYBS86WE1qG+icBsFpOI70NIWmIj41is7owb3sF0ymjgq8KbMDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C6nUZoTj; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C6nUZoTj"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-61130dd21c1so6463697b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 22:36:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711604169; x=1712208969; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3U6V+9JcBHoyWlFviROw3p+GodkWEvgG95H00we1DYg=;
+        b=C6nUZoTjLYyBZE2GaOu0G7/r/Je5GhhNkNXCEOPw7zrCpwDXT8nPfmbztgql/JBaKg
+         khhZz2ZL+cNSW2+tdYx0KPllhfzNSPAN3ytxL3SpDTGCftmNn2ppoDDh4fZMIzXa25RQ
+         gVAZDRzlVl74DOwc1ILiyrN70a2YLdT47Bv4XHVrM0wT62tK4GqgqrUhJtEb5MKJQgI0
+         q8Wtw8zGBz4Z4023CmZSE7m9O0iUuHTcILfMxQ3iZDAxojomszy9p9m/aXul3F2gIxqF
+         R+ZmQ0cZO+pBBLmbwnIjSFJXHXCFdU746JZx9tgfxmJj6ombSqtbkMWTil8VUB0o9EC/
+         5wBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711604169; x=1712208969;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3U6V+9JcBHoyWlFviROw3p+GodkWEvgG95H00we1DYg=;
+        b=cIq78EjKLbq5FvF1IuN4zXy5OQfLwzQtkDyCisZ5OTLxk/c7gTARpzrvDjwHxFG1ad
+         3RQqwhOb+kaM777Rboj/MC8WsCAx3dfe74UOxhMhknWP/Zu6pmiYbUX/aomLQ6KbSaNB
+         nRcE1rqAz4sM2GRaesj4KlC8ps6cPIofWP88rENtFWg8n+zkvmePTMajyDYcBXWYE+99
+         gGgLiya34fPQVCJgAayxoEotQox7jY4AyqX1trb7i0i5sYvjFOytm44LYFafG9lDHpVm
+         XMKZl0uUt+DSlthJ8o0tgerIcM67Gf/1UlxKHrWI681R7q+MTvg4VSg1/OYi36/sn0eA
+         AHOA==
+X-Forwarded-Encrypted: i=1; AJvYcCWyvVssI+vyNyCQC0cv1rO4A+mIpMdgT6SbmjkxtRhvrNS4KXDehP+CaHh3afFglJUjo10xeVjbMEIqpamUWXo/vT/tNdgEF/0lpPbR
+X-Gm-Message-State: AOJu0YwjwddIRQ739z8xt8jO2MwVzyZ1Kegz/Rosu7/m3h+CdT9jWvKs
+	epH3FG1nIrYu5cDLg9Fn8VAXQ01eW7HhbkzRCMv7vK+a1T3wywp4eStJN1Ryto797x9q406WLMd
+	JR3yxSQhJPKbRAzuuWPECgo7vevtN13+I8mlfUjMt6GDm9ywY1FeH
+X-Google-Smtp-Source: AGHT+IF0R+uKEToWGsBY2vSnfIQ6DhGDVJippMQDcB6SunV/Q//MnqMAHSWcEjEQX9kRv3J12yg8SvnpUOUx5mVmNBo=
+X-Received: by 2002:a25:a048:0:b0:dcd:4878:1f9 with SMTP id
+ x66-20020a25a048000000b00dcd487801f9mr1868686ybh.8.1711604169102; Wed, 27 Mar
+ 2024 22:36:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <7192041a.9d52.18e838dbf1b.Coremail.duoming@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:cC_KCgCXvMd5AQVmOTZDAQ--.26395W
-X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwUOAWYEJBkNNgAAst
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+References: <20240325123603.1bdd6588@canb.auug.org.au> <CAJuCfpH4Ee00hM9+B7=mi5Dwjrhov8vUK-KwPuoO3wsD7iJSAQ@mail.gmail.com>
+ <5e1321ca-0d46-4e9d-a6e5-0560d99f65ff@infradead.org> <CAJuCfpFTOz8cNiJFiCU5tMM1u5L=wXRsXqxUhN9g-R0u77CyZw@mail.gmail.com>
+ <20240328153947.3871cfdf@canb.auug.org.au> <20240328154427.3e926d21@canb.auug.org.au>
+In-Reply-To: <20240328154427.3e926d21@canb.auug.org.au>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Wed, 27 Mar 2024 22:35:56 -0700
+Message-ID: <CAJuCfpHZGkL9urkZaVmO_o0ujpr-moDGYiBES1iRy2dh8g-t8w@mail.gmail.com>
+Subject: Re: linux-next: build warnings after merge of the mm tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Randy Dunlap <rdunlap@infradead.org>, 
+	Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Andrew Morton <akpm@linux-foundation.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-T24gV2VkLCAyNyBNYXIgMjAyNCAxOToxMDoyNSArMDAwMCBTaW1vbiBIb3JtYW4gd3JvdGU6Cj4g
-PiBXaGVuIHRoZSBheDI1IGRldmljZSBpcyBkZXRhY2hpbmcsIHRoZSBheDI1X2Rldl9kZXZpY2Vf
-ZG93bigpCj4gPiBjYWxscyBheDI1X2RzX2RlbF90aW1lcigpIHRvIGNsZWFudXAgdGhlIHNsYXZl
-X3RpbWVyLiBXaGVuCj4gPiB0aGUgdGltZXIgaGFuZGxlciBpcyBydW5uaW5nLCB0aGUgYXgyNV9k
-c19kZWxfdGltZXIoKSB0aGF0Cj4gPiBjYWxscyBkZWxfdGltZXIoKSBpbiBpdCB3aWxsIHJldHVy
-biBkaXJlY3RseS4gQXMgYSByZXN1bHQsCj4gPiB0aGUgdXNlLWFmdGVyLWZyZWUgYnVncyBjb3Vs
-ZCBoYXBwZW4sIG9uZSBvZiB0aGUgc2NlbmFyaW9zCj4gPiBpcyBzaG93biBiZWxvdzoKPiA+IAo+
-ID4gICAgICAgKFRocmVhZCAxKSAgICAgICAgICB8ICAgICAgKFRocmVhZCAyKQo+ID4gICAgICAg
-ICAgICAgICAgICAgICAgICAgICB8IGF4MjVfZHNfdGltZW91dCgpCj4gPiBheDI1X2Rldl9kZXZp
-Y2VfZG93bigpICAgIHwKPiA+ICAgYXgyNV9kc19kZWxfdGltZXIoKSAgICAgfAo+ID4gICAgIGRl
-bF90aW1lcigpICAgICAgICAgICB8Cj4gPiAgIGF4MjVfZGV2X3B1dCgpIC8vRlJFRSAgIHwKPiA+
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgYXgyNV9kZXYtPiAvL1VTRQo+ID4gCj4gPiBJ
-biBvcmRlciB0byBtaXRpZ2F0ZSBidWdzLCB3aGVuIHRoZSBkZXZpY2UgaXMgZGV0YWNoaW5nLCB1
-c2UKPiA+IHRpbWVyX3NodXRkb3duX3N5bmMoKSB0byBzdG9wIHRoZSB0aW1lci4KPiAKPiBGV0lJ
-VywgaW4gbXkgcmVhZGluZyBvZiB0aGluZ3MgdGhlcmUgaXMgYW5vdGhlciBmYWlsdXJlIG1vZGUg
-d2hlcmVieQo+IGF4MjVfZHNfdGltZW91dCBtYXkgcmVhcm0gdGhlIHRpbWVyIGFmdGVyIHRoZSBj
-YWxsIHRvIGRlbF90aW1lcigpIGJ1dAo+IGJlZm9yZSB0aGUgY2FsbCB0byBheDI1X2Rldl9wdXQo
-KS4KCkkgdGhpbmsgdXNpbmcgdGltZXJfc2h1dGRvd25fc3luYygpIG9yIGRlbF90aW1lcl9zeW5j
-KCkgdG8gcmVwbGFjZSBkZWxfdGltZXIoKQpjb3VsZCBwcmV2ZW50IHRoZSByZWFybS4KCj4gPiBG
-aXhlczogMWRhMTc3ZTRjM2Y0ICgiTGludXgtMi42LjEyLXJjMiIpCj4gPiBTaWduZWQtb2ZmLWJ5
-OiBEdW9taW5nIFpob3UgPGR1b21pbmdAemp1LmVkdS5jbj4KPiA+IC0tLQo+ID4gIG5ldC9heDI1
-L2F4MjVfZHNfdGltZXIuYyB8IDcgKysrKysrLQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2Vy
-dGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL25ldC9heDI1L2F4
-MjVfZHNfdGltZXIuYyBiL25ldC9heDI1L2F4MjVfZHNfdGltZXIuYwo+ID4gaW5kZXggYzRmOGFk
-YmY4MTQuLjU2MjRjMGQxNzRjIDEwMDY0NAo+ID4gLS0tIGEvbmV0L2F4MjUvYXgyNV9kc190aW1l
-ci5jCj4gPiArKysgYi9uZXQvYXgyNS9heDI1X2RzX3RpbWVyLmMKPiA+IEBAIC00Myw3ICs0Mywx
-MiBAQCB2b2lkIGF4MjVfZHNfc2V0dXBfdGltZXIoYXgyNV9kZXYgKmF4MjVfZGV2KQo+ID4gIAo+
-ID4gIHZvaWQgYXgyNV9kc19kZWxfdGltZXIoYXgyNV9kZXYgKmF4MjVfZGV2KQo+ID4gIHsKPiA+
-IC0JaWYgKGF4MjVfZGV2KQo+ID4gKwlpZiAoIWF4MjVfZGV2KQo+ID4gKwkJcmV0dXJuOwo+ID4g
-Kwo+ID4gKwlpZiAoIWF4MjVfZGV2LT5kZXZpY2VfdXApCj4gPiArCQl0aW1lcl9zaHV0ZG93bl9z
-eW5jKCZheDI1X2Rldi0+ZGFtYS5zbGF2ZV90aW1lcik7Cj4gPiArCWVsc2UKPiA+ICAJCWRlbF90
-aW1lcigmYXgyNV9kZXYtPmRhbWEuc2xhdmVfdGltZXIpOwo+ID4gIH0KPiAKPiBJIHRoaW5rIHRo
-YXQgYSkgaXQgaXMgYWx3YXlzIGNvcnJlY3QgdG8gY2FsbCB0aW1lcl9zaHV0ZG93bl9zeW5jLAo+
-IGFuZCBiKSBheDI1X2Rldi0+ZGV2aWNlX3VwIGlzIGFsd2F5cyB0cnVlLiBTbyBhIGNhbGwgdG8K
-PiB0aW1lcl9zaHV0ZG93bl9zeW5jIGNhbiBzaW1wbHkgcmVwbGFjZSB0aGUgY2FsbCB0byBkZWxf
-dGltZXIuCgpJIHRoaW5rIHRpbWVyX3NodXRkb3duKigpIGlzIHVzZWQgZm9yIHRoZSBjb2RlIHBh
-dGggdG8gY2xlYW4gdXAgdGhlCmRyaXZlciBvciBkZXRhY2ggdGhlIGRldmljZS4gSWYgdGltZXIg
-aXMgc2h1dCBkb3duIGJ5IHRpbWVyX3NodXRkb3duKigpLAppdCBjb3VsZCBub3QgYmUgcmUtYXJt
-ZWQgYWdhaW4gdW5sZXNzIHdlIHJlaW5pdGlhbGl6ZSB0aGUgdGltZXIuIFRoZQpzbGF2ZV90aW1l
-ciBzaG91bGQgb25seSBiZSBzaHV0IGRvd24gd2hlbiB0aGUgYXgyNSBkZXZpY2UgaXMgZGV0YWNo
-aW5nIG9yCnRoZSBkcml2ZXIgaXMgcmVtb3ZpbmcuIEFuZCBpdCBzaG91bGQgbm90IGJlIHNodXQg
-ZG93biBpbiBvdGhlciBzY2VuYXJpb3MsCnN1Y2ggYXMgY2FsbGVkIGluIGF4MjVfZHNfc3RhdGUy
-X21hY2hpbmUoKSBvciBheDI1X2RzX3N0YXRlM19tYWNoaW5lKCkuClNvIEkgdGhpbmsgY2FsbGlu
-ZyB0aW1lcl9zaHV0ZG93bl9zeW5jKCkgaXMgbm90IGFsd2F5cyBjb3JyZWN0LgoKV2hhdCdzIG1v
-cmUsIHRoZSBheDI1X2Rldi0+ZGV2aWNlX3VwIGlzIG5vdCBhbHdheXMgdHJ1ZS4gSXQgaXMgc2V0
-IHRvCmZhbHNlIGluIGF4MjVfa2lsbF9ieV9kZXZpY2UoKS4KCkluIGEgd29yZCwgdGhlIHRpbWVy
-X3NodXRkb3duX3N5bmMoKSBjb3VsZCBub3QgcmVwbGFjZSB0aGUgZGVsX3RpbWVyKCkKY29tcGxl
-dGVseS4KCj4gQWxzbywgbm90IHN0cmljdGx5IHJlbGF0ZWQsIEkgdGhpbmsgYXgyNV9kZXYgY2Fu
-bm90IGJlIE5VTEwsCj4gc28gdGhhdCBjaGVjayBjb3VsZCBiZSBkcm9wcGVkLiBCdXQgcGVyaGFw
-cyB0aGF0IGlzIGJldHRlciBsZWZ0IGFsb25lLgoKVGhlIGF4MjVfZGV2IGNhbm5vdCBub3QgYmUg
-TlVMTCwgYmVjYXVzZSB3ZSBvbmx5IHVzZSBheDI1X2Rldl9wdXQoKSB0bwpmcmVlIHRoZSBheDI1
-X2RldiBpbnN0ZWFkIG9mIHNldHRpbmcgaXMgdG8gTlVMTC4gU28gSSB0aGluayB0aGUgY2hlY2sK
-Y291bGQgYmUgZHJvcHBlZC4KCkRvIHlvdSB0aGluayB0aGUgZm9sbG93aW5nIHBsYW4gaXMgcHJv
-cGVyPwoKZGlmZiAtLWdpdCBhL25ldC9heDI1L2F4MjVfZHNfdGltZXIuYyBiL25ldC9heDI1L2F4
-MjVfZHNfdGltZXIuYwppbmRleCBjNGY4YWRiZjgxNDQuLmYxY2FiNGVmZmE0NCAxMDA2NDQKLS0t
-IGEvbmV0L2F4MjUvYXgyNV9kc190aW1lci5jCisrKyBiL25ldC9heDI1L2F4MjVfZHNfdGltZXIu
-YwpAQCAtNDMsOCArNDMsNyBAQCB2b2lkIGF4MjVfZHNfc2V0dXBfdGltZXIoYXgyNV9kZXYgKmF4
-MjVfZGV2KQoKIHZvaWQgYXgyNV9kc19kZWxfdGltZXIoYXgyNV9kZXYgKmF4MjVfZGV2KQogewot
-ICAgICAgIGlmIChheDI1X2RldikKLSAgICAgICAgICAgICAgIGRlbF90aW1lcigmYXgyNV9kZXYt
-PmRhbWEuc2xhdmVfdGltZXIpOworICAgICAgIGRlbF90aW1lcl9zeW5jKCZheDI1X2Rldi0+ZGFt
-YS5zbGF2ZV90aW1lcik7CiB9CgpUaGVyZSBpcyBubyBkZWFkbG9jayB3aWxsIGhhcHBlbi4KCj4g
-Wm9vbWluZyBvdXQgYSBiaXQsIGhhcyByZW1vdmFsIG9mIGF4MjUgYmVlbiBjb25zaWRlcmVkLgo+
-IEkgZGlkbid0IGNoZWNrIHRoZSBsb2dzIHRob3JvdWdobHksIGJ1dCBJJ20gbm90IGNvbnZpbmNl
-ZCBpdCdzIGJlZW4KPiBtYWludGFpbmVkIC0gb3RoZXIgdGhhbiBjbGVhbi11cHMgYW5kIGJ5LWlu
-c3BlY3Rpb24gYnVnIGZpeGVzIC0gc2luY2UgZ2l0Cj4gaGlzdG9yeSBiZWdhbi4KCkJlc3QgcmVn
-YXJkcywKRHVvbWluZyBaaG91
+On Wed, Mar 27, 2024 at 9:44=E2=80=AFPM Stephen Rothwell <sfr@canb.auug.org=
+.au> wrote:
+>
+> Hi all,
+>
+> On Thu, 28 Mar 2024 15:39:47 +1100 Stephen Rothwell <sfr@canb.auug.org.au=
+> wrote:
+> >
+> > On Mon, 25 Mar 2024 23:16:55 -0700 Suren Baghdasaryan <surenb@google.co=
+m> wrote:
+> > >
+> > > Thanks! I'll change back all the instances in the documentation where
+> > > we replaced original names with _noprof versions.
+> >
+> > I now have the following:
+>
+> Sorry, some of those are not relevant here, just the _noprof stuff.
+
+https://lore.kernel.org/all/20240327044649.9199-1-rdunlap@infradead.org/
+which seems to not yet been pulled into mm-unstable should fix the
+following warnings:
+
+include/linux/slab.h:730: warning: Function parameter or struct member
+'_n' not described in 'kcalloc'
+include/linux/slab.h:730: warning: Function parameter or struct member
+'_size' not described in 'kcalloc'
+include/linux/slab.h:730: warning: Function parameter or struct member
+'_flags' not described in 'kcalloc'
+include/linux/slab.h:730: warning: Excess function parameter 'n'
+description in 'kcalloc'
+include/linux/slab.h:730: warning: Excess function parameter 'size'
+description in 'kcalloc'
+include/linux/slab.h:730: warning: Excess function parameter 'flags'
+description in 'kcalloc'
+
+And https://lore.kernel.org/all/20240326054149.2121-1-rdunlap@infradead.org=
+/
+should handle the _noprof warnings. I can see this patch in
+mm-unstable and running "make htmldocs" in mm-unstable does not show
+the _noprof warnings anymore. Please let me know if I should try some
+other command to reproduce these.
+Thanks,
+Suren.
+
+
+>
+> --
+> Cheers,
+> Stephen Rothwell
