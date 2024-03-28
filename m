@@ -1,116 +1,156 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE022847C;
-	Thu, 28 Mar 2024 13:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1B17E767;
+	Thu, 28 Mar 2024 13:17:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711631741; cv=none; b=CcqGLN0yU00GaaHTFp14Fq70ZWgrPDhgUv9uy/8IBGCW8t5tcbDP3xQnUBriiDfjHJ8563JALoinOjJxp2YJ6T5Ms/nsH2jB/GXqFzbh5U8vF2XtM7sGnUC61A1DGUJ4lim8G2S+l8GQFBgAdUX5irJZd75Q+9qFHg4wz1Iq92Y=
+	t=1711631828; cv=none; b=YhbPRGkqH6rzdZuEnkRYljxE1L+Kfdh00GWfcX+d42im+7O0eQMuGzX0JBNcnW9h4XsAvFMkWldDTIwAUgNBu7COFpD8iGPqj23DThNF93WlRczs4v2zv313xYjuIc014lh42FP1+zjMss3KvxWkURJtIMblbJO4vOdopEgfl4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711631741; c=relaxed/simple;
-	bh=Xo032l06yr/hR/jwn/WjJ3wew5ThoMRYTk7U+HZZzrE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uuzU9VXyOERrk8Fd1wYfmfD6BLOZy9JUyyw3V68f9pzS92ciMgL2jUE1Fa73wKM+U+zlE4d2m3VHPPrp2aNJj1FpCaSukalSzY6wysTVIjPLaWm8vLCSn1YvP0pSZT4+7z7QntS/nLBzWAi2Gt3pO4L8hdTwVfyOV0bIl/otTzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B65ebx4A; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711631828; c=relaxed/simple;
+	bh=lFcer5cRuCHvRqbG9870yYLfTMMeSNIr8kl344emETU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V+KiKxaQKZhMGm5eNoPCU9qidhXUDDeP8UIWWsjtHjaKN0MO0+9xuzLgpsQGzmh052ez1o3Y4MuL7+41Jo6LxPRlNlAgQBRWn9SFuQ25CXHTchFNrEWYoGwAv4pVzjexV531DR/Jvet3tVRkanTYxf/Zf+gJWFJGc4Ot3KAJzMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=o6lBdpeh; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B65ebx4A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711631738; x=1743167738;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Xo032l06yr/hR/jwn/WjJ3wew5ThoMRYTk7U+HZZzrE=;
-  b=B65ebx4Af8DFjJAYY5qvSyIryiU8E3lBdcEgf0P6v6wet68gIQ9/LwfC
-   5DGnALwQqE5T9cMrnFxvy3I+CWKOK8U5YZ1avX5HMtQUQ7QmhQ8E0Fkwg
-   6BlLLYAdXnigFA0ScQQwhzTEsF/B6j89EVzUHJ2ABw519hZlnyOBP1RQv
-   /SqZ1Tgttu2motYFGY/uvcShSDPy+zGITB5odxyXdPhNbwGwYAyy2vk1/
-   2lF94vr6QGWu5qIe1hflZb39jg6DtYq9w9vq+aeGpx4Azosk1A6SpE5Uq
-   orN8hkVdiJydoG5h3vtAkNhlgpri4hJEKKttaPINnO46hecwO2ZpGtbyD
-   A==;
-X-CSE-ConnectionGUID: m2FbL++mQkiFPsSLcdrCWA==
-X-CSE-MsgGUID: zilyCxbsRcm0ErALigs3RQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="6999352"
-X-IronPort-AV: E=Sophos;i="6.07,161,1708416000"; 
-   d="scan'208";a="6999352"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 06:15:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,161,1708416000"; 
-   d="scan'208";a="16637521"
-Received: from lkp-server01.sh.intel.com (HELO be39aa325d23) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 28 Mar 2024 06:15:08 -0700
-Received: from kbuild by be39aa325d23 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rppb0-0002A6-01;
-	Thu, 28 Mar 2024 13:15:06 +0000
-Date: Thu, 28 Mar 2024 21:15:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, arnd@arndb.de,
-	javierm@redhat.com, deller@gmx.de, sui.jingfeng@linux.dev
-Cc: oe-kbuild-all@lists.linux.dev, linux-arch@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-sh@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Vineet Gupta <vgupta@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH v2 3/3] arch: Rename fbdev header and source files
-Message-ID: <202403282102.OEKoBT3H-lkp@intel.com>
-References: <20240327204450.14914-4-tzimmermann@suse.de>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="o6lBdpeh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1711631825;
+	bh=lFcer5cRuCHvRqbG9870yYLfTMMeSNIr8kl344emETU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=o6lBdpehY4+0IlVQF14iOGGVI/6vTUidQn2ngxmgZGPwYqMsSANmzdbX5tG8qUuTI
+	 nPEEhxhhVpQsrwAhFi+k6Lq7ZeUICcs/paZ66e6clYtcRw3R566RfvTuo122X/o3zH
+	 1xOdxBPtuWOzJHP4sra+M0wcdiDyj0CtJlmOQsQNG5Ec/9eFpmAkpcTQ+Fd2MQksqX
+	 J2VhQq7NgYeoBcAv4InrpKAQfN1KDp02nFoZGv5vtTHBAdvh1oNYPY3dwCZo6KgdWN
+	 wirtwe9KReNYY0gvP9mwHiSFqDz46IXnMwG7I6W9hDCBkA+NmUj2gi/5PA+ipTkI6U
+	 PR8TTUgkw05Ag==
+Received: from [100.95.196.25] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: koike)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id BE8433780629;
+	Thu, 28 Mar 2024 13:17:03 +0000 (UTC)
+Message-ID: <c0cc12e6-4f71-449c-b614-a8fbfb4aaa80@collabora.com>
+Date: Thu, 28 Mar 2024 10:17:00 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240327204450.14914-4-tzimmermann@suse.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] gitlab-ci: Let project define runner using
+ environment variables
+To: Leonardo Bras <leobras@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20240327013055.139494-2-leobras@redhat.com>
+Content-Language: en-US
+From: Helen Koike <helen.koike@collabora.com>
+In-Reply-To: <20240327013055.139494-2-leobras@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Thomas,
+Hi Leonardo,
 
-kernel test robot noticed the following build errors:
+Thanks for the patch.
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.9-rc1 next-20240328]
-[cannot apply to tip/x86/core deller-parisc/for-next arnd-asm-generic/master]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On 26/03/2024 22:30, Leonardo Bras wrote:
+> Currently it's not possible to select which runner will handle a pipeline
+> without changing the codebase.
+> 
+> Add CI_TAGS environment variable, which can be used to select a runner
+> either from a commit message, or directly from Gitlab interface.
+> 
+> Also add Documentation for this variable.
+> 
+> Signed-off-by: Leonardo Bras <leobras@redhat.com>
+> ---
+> 
+> This patch goes on top on a previous patchset sent by Helen:
+> https://lore.kernel.org/all/20240228225527.1052240-1-helen.koike@collabora.com/
+> 
+> With this patch I could run CI with gitlab.com runners, by setting
+> CI_TAGS=saas-linux-medium-amd64
+> 
+> The result of this pipeline can be seen in:
+> https://gitlab.com/linux-kernel/linux/-/pipelines/1228999646
+> 
+>   Documentation/ci/gitlab-ci/gitlab-ci.rst | 5 +++++
+>   ci/gitlab-ci/yml/gitlab-ci.yml           | 2 ++
+>   2 files changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/ci/gitlab-ci/gitlab-ci.rst b/Documentation/ci/gitlab-ci/gitlab-ci.rst
+> index 4f7ef03cca95..18360da835bd 100644
+> --- a/Documentation/ci/gitlab-ci/gitlab-ci.rst
+> +++ b/Documentation/ci/gitlab-ci/gitlab-ci.rst
+> @@ -304,20 +304,25 @@ Description of Each Variable
+>   **KCI_CHECKPATCH_OPTIONS**
+>       Used in `checkpatch.pl "$KCI_CHECKPATCH_OPTIONS"` (see checkpatch
+>       documentation). It is commonly used with the --ignore flag to suppress
+>       specific warnings generated by checkpatch.pl. It can also be defined in the
+>       commit message, since it is evaluated in run time.
+>   
+>   **KCI_PATCH_SERIES_SIZE**
+>       Used to define the size of the patch series, see `job: checkpatch` section
+>       above. It is evaluated in run time, and can be set in the commit message.
+>   
+> +**CI_TAGS**
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Thomas-Zimmermann/arch-Select-fbdev-helpers-with-CONFIG_VIDEO/20240328-044735
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240327204450.14914-4-tzimmermann%40suse.de
-patch subject: [PATCH v2 3/3] arch: Rename fbdev header and source files
-config: um-randconfig-001-20240328 (https://download.01.org/0day-ci/archive/20240328/202403282102.OEKoBT3H-lkp@intel.com/config)
-compiler: gcc-12 (Ubuntu 12.3.0-9ubuntu2) 12.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240328/202403282102.OEKoBT3H-lkp@intel.com/reproduce)
+I would just s/CI/KCI , I'm using KCI_prefix for those that are defined 
+by us, since gitlab already uses CI_ prefix.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403282102.OEKoBT3H-lkp@intel.com/
 
-All errors (new ones prefixed by >>):
+We will also need a way to specify tags per job at some point 
+KCI_TAGS_$JOB_NAME or something, but this can be added later.
 
-   /usr/bin/ld: drivers/video/fbdev/core/fb_io_fops.o: in function `fb_io_mmap':
->> fb_io_fops.c:(.text+0x251): undefined reference to `pgprot_framebuffer'
-   collect2: error: ld returned 1 exit status
+Acked-by: Helen Koike <helen.koike@collabora.com>
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I'll add on top of my tree for now, so we can prepare v2 with this change.
+
+Thanks
+Helen
+
+> +    Used to help choose which runner will deal with the current pipeline.
+> +    If using Gitlab.com runners, set saas-linux-medium-amd64 or a better runner
+> +    so there is enough resources to build & commit the base image.
+> +
+>   .. _triggering-pipelines-from-command-line:
+>   
+>   Triggering Pipelines from Command Line
+>   --------------------------------------
+>   
+>   Pipelines can be triggered from the command line with custom variables using the
+>   `GitLab CLI tool <https://docs.gitlab.com/ee/editor_extensions/gitlab_cli>`_.
+>   
+>   Example:
+>   
+> diff --git a/ci/gitlab-ci/yml/gitlab-ci.yml b/ci/gitlab-ci/yml/gitlab-ci.yml
+> index 57b9c0290471..359b7715e3ab 100644
+> --- a/ci/gitlab-ci/yml/gitlab-ci.yml
+> +++ b/ci/gitlab-ci/yml/gitlab-ci.yml
+> @@ -33,20 +33,22 @@ workflow:
+>       - if: $FORCE_CI == 'true'
+>   
+>   variables:
+>     FDO_UPSTREAM_REPO: helen.fornazier/linux   # The repo where to look for cached images
+>       # ccache builds in gitlab-runner to speed up builds
+>     SMATCH_DB_DIR: /smatch/smatch_data
+>     # exit code of bash script on `script` will be the exit code of the job
+>     FF_USE_NEW_BASH_EVAL_STRATEGY: "true"
+>   
+>   default:
+> +  tags:
+> +    - $CI_TAGS
+>     artifacts:
+>       paths:
+>         - artifacts/
+>       when: always
+>   
+>   include:
+>     - remote: 'https://gitlab.freedesktop.org/freedesktop/ci-templates/-/raw/16bc29078de5e0a067ff84a1a199a3760d3b3811/templates/ci-fairy.yml'
+>     - remote: 'https://gitlab.freedesktop.org/freedesktop/ci-templates/-/raw/16bc29078de5e0a067ff84a1a199a3760d3b3811/templates/debian.yml'
+>   
+>     - ci/gitlab-ci/yml/kernel-combinations.yml
