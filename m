@@ -1,166 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D393C08E
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12047F487
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711643726; cv=none; b=jB+eODWh83eM0N/f5lS0TmrR7h61fxRHJprIERIPriAeFXEXp4Lquht37lz56yjI1g+wTMZn8dTksAnOCB05j524kltSEHD8SKMNQiUbq73Npnos6drNsquteG/lHTbKPiUQzKkMRak4MdEDjYuCPbbXrsJeEiaFmYf3t9DRHps=
+	t=1711643735; cv=none; b=ljlLcx1044AXSJCgJqDpQl+4aEVmP5pxL6RDcIvd/NW5Tm87fTAvPlh1qep1dnZhnwXSE2BcwpHKstegt7wU8KQYbyphJhPLswa00MEn5FurF1usmZQoSV5ympT+FcflwHN+WGazNRUuu1tJGZyEI9xZzrXM2XzFYO1meagxGjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711643726; c=relaxed/simple;
-	bh=BfnW5EfhEDL95JMcPgV0yx/xbWdEtWGJsEenOfjkE/E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Xjn96BvcRqocrRpPxrHLrn3NS+dvJAMNf1jiJc/IhE0i4PdVxET1+AG+MtazRPfQqDbgY3vdVHM8hTsPvlOozJjMeSohmPOAilvTmIEsgXeTgp6n31rRuhW3u4pQoQIDKrGwbWeiVXZgNKDQ8iXg7OuJ5J/RMuCYLmAxsg6Us7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RnX0uQ78; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711643735; c=relaxed/simple;
+	bh=JWJtXJcUZY3AnWXjwt7iRcnwQ6zGkVqoL86keyxldpk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tc+eNOGXzVlN7d7E1UQhdgswxvwWP7K7mAmmym24ZvSVy9hbWGVrZGYZu26HDm1j4VapOi5LIPCJvzyZgEJReUSoq4LdpfAn3OwnFmfPs4hgbFwxHGyfVXJ4YoFni25RS8bZHSLRHhue0cGRXSQMiFwJVcFhaDabKAG/YqXMH1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AUa6c9Ye; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RnX0uQ78"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711643723;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iDQ5YQkdeqSX7Pu2NIHjg+k9McupuXq1Cg/hmfvmEVE=;
-	b=RnX0uQ78u4FytrZ8z+yXejNUYGIIIdmgG6re0/sbGIOymAndjgIF7K63AZXBSBEYzU8e/6
-	aTMw80KKkXrjjgv9Yig/nntuyRK4MOjjiOuewzb7a659AhFx44PXbG12OPgNFN6marslO5
-	USUIl+Z3L79ukf7UJHQsPPrUDAWWvzU=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-196-Sw6sTb4APMeMo8jtP39mKA-1; Thu,
- 28 Mar 2024 12:35:16 -0400
-X-MC-Unique: Sw6sTb4APMeMo8jtP39mKA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 31EB628B6AAF;
-	Thu, 28 Mar 2024 16:35:15 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.146])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id EEF1E40C6CB1;
-	Thu, 28 Mar 2024 16:35:11 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-	Jeff Layton <jlayton@kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Dominique Martinet <asmadeus@codewreck.org>
-Cc: David Howells <dhowells@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Steve French <smfrench@gmail.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Tom Talpey <tom@talpey.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	netfs@lists.linux.dev,
-	linux-cachefs@redhat.com,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Steve French <sfrench@samba.org>,
-	Shyam Prasad N <nspmangalore@gmail.com>,
-	Rohith Surabattula <rohiths.msft@gmail.com>
-Subject: [PATCH 03/26] netfs: Update i_blocks when write committed to pagecache
-Date: Thu, 28 Mar 2024 16:33:55 +0000
-Message-ID: <20240328163424.2781320-4-dhowells@redhat.com>
-In-Reply-To: <20240328163424.2781320-1-dhowells@redhat.com>
-References: <20240328163424.2781320-1-dhowells@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AUa6c9Ye"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a47385a4379so407981866b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 09:35:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711643732; x=1712248532; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RCUTxfQ4sQDe7I2H/wHmYFn/xpUZAljeyI/mp/W6HYg=;
+        b=AUa6c9YekRcEfZcIg/J5sRVL0dpS4z2T8h9ICdWQjn9RBzvfW0B0sJG9ps/JOQ6R0C
+         8KYKkX1ojKRV4ZaTUP6xDVrLb6AbzJIdkrhIDibz1lUbdAUI2tv54xCbw+L9oz+2GX9a
+         R4CeC34mwXDTqZ+/hk/oFSXrwLl07j2qypSgdc1/eQyNmlNmR/xblWOo3AhZm4kruIOU
+         S7vgp28nXa/+Vfzn3QnYftEzABn1CqD4QxYzdGP/yZrVLL+5t7m2EmqXJ8BgNbwTJ7pa
+         86sF1JV443zIu1F1K1ceQa4pcl1TKtNRbIeA0oxXFls5mrfIpmZEVMAh39T+W4gzAUi9
+         cqew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711643732; x=1712248532;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RCUTxfQ4sQDe7I2H/wHmYFn/xpUZAljeyI/mp/W6HYg=;
+        b=wV47lNyIzF2+w5oBi3jFApME2DnN7RL5YMHu02oUMxC8AH+BrmO1y1sBgTWVeHgmqv
+         03wjtCzQNuIEFtrewRuPkp9aR6tx19VVNqNHOTLSw6J/C9LhQC9nSUmgPx4YJm0HmQTR
+         IYDer+YB+jJpWw//10DHVEpCLRQXpAsxjyHJLJFPgYB6uUOlkWjjAwnO7lWqp3p0TjFE
+         GN7nuOTL5cMfCKPVeDcokj0FxT/ExP2mJRg3EEUNgco2eNvlW5jc+8YL+yzKRXpUuXMz
+         XQtlO7q/vnrhmP0+kwrCkXV93t0eEFm92yJisUWhQta4uWK13sMWEcJLaCQVd4wUADhf
+         /vpg==
+X-Gm-Message-State: AOJu0YyUiJYK4udFQAePqNh1FGb84MjpUYQXMEK85dSt1b46AiTSRzNU
+	Y0tl5OPJIFQ6Pnq8gjohbVCoioS/EbH0L+9iuuGCj15K0zHnonzLDW7vNSRXwxQ=
+X-Google-Smtp-Source: AGHT+IFTY80fk9XyBaSRDppe2um+6T7AR4MPRN+imdT7eIFfQ7qJN7VFb8w45tGYOcGd3+eFKHHHsA==
+X-Received: by 2002:a17:906:228b:b0:a4e:4d9:7ce4 with SMTP id p11-20020a170906228b00b00a4e04d97ce4mr2492742eja.30.1711643731940;
+        Thu, 28 Mar 2024 09:35:31 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id h9-20020a1709060f4900b00a472c4b9486sm937920ejj.84.2024.03.28.09.35.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 09:35:31 -0700 (PDT)
+Date: Thu, 28 Mar 2024 19:35:27 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Kees Cook <keescook@chromium.org>,
+	Daniel Micay <danielmicay@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+	linux-staging@lists.linux.dev
+Subject: Re: [PATCH 03/11] staging: replace weird strncpy() with memcpy()
+Message-ID: <695be581-548f-4e5e-a211-5f3b95568e77@moroto.mountain>
+References: <20240328140512.4148825-1-arnd@kernel.org>
+ <20240328140512.4148825-4-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240328140512.4148825-4-arnd@kernel.org>
 
-Update i_blocks when i_size is updated when we finish making a write to the
-pagecache to reflect the amount of space we think will be consumed.
+On Thu, Mar 28, 2024 at 03:04:47PM +0100, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> When -Wstringop-truncation is enabled, gcc finds a function that
+> always does a short copy:
+> 
+> In function 'inquiry',
+>     inlined from 'rtsx_scsi_handler' at drivers/staging/rts5208/rtsx_scsi.c:3210:12:
+> drivers/staging/rts5208/rtsx_scsi.c:526:17: error: 'strncpy' output truncated copying between 1 and 28 bytes from a string of length 28 [-Werror=stringop-truncation]
+>   526 |                 strncpy(buf + 8, inquiry_string, sendbytes - 8);
+>       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Since the actual size of the copy is already known at this point, just
+> copy the bytes directly and skip the length check and zero-padding.
+> 
+> This partially reverts an earlier bugfix that replaced the original
+> incorrect memcpy() with a less bad strncpy(), but it now also avoids
+> the original overflow.
+> 
+> Fixes: 88a5b39b69ab ("staging/rts5208: Fix read overflow in memcpy")
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Steve French <sfrench@samba.org>
-cc: Shyam Prasad N <nspmangalore@gmail.com>
-cc: Rohith Surabattula <rohiths.msft@gmail.com>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: linux-cifs@vger.kernel.org
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
-cc: linux-mm@kvack.org
----
- fs/netfs/buffered_write.c | 45 +++++++++++++++++++++++++++++----------
- 1 file changed, 34 insertions(+), 11 deletions(-)
+I don't see a problem with this commit.  The "sendbytes - 8" prevents
+a write overflow to buf, and the strncpy() prevents read overflow from
+inquiry_string.
 
-diff --git a/fs/netfs/buffered_write.c b/fs/netfs/buffered_write.c
-index 9a0d32e4b422..c194655a6dcf 100644
---- a/fs/netfs/buffered_write.c
-+++ b/fs/netfs/buffered_write.c
-@@ -130,6 +130,37 @@ static struct folio *netfs_grab_folio_for_write(struct address_space *mapping,
- 				   mapping_gfp_mask(mapping));
- }
- 
-+/*
-+ * Update i_size and estimate the update to i_blocks to reflect the additional
-+ * data written into the pagecache until we can find out from the server what
-+ * the values actually are.
-+ */
-+static void netfs_update_i_size(struct netfs_inode *ctx, struct inode *inode,
-+				loff_t i_size, loff_t pos, size_t copied)
-+{
-+	blkcnt_t add;
-+	size_t gap;
-+
-+	if (ctx->ops->update_i_size) {
-+		ctx->ops->update_i_size(inode, pos);
-+		return;
-+	}
-+
-+	i_size_write(inode, pos);
-+#if IS_ENABLED(CONFIG_FSCACHE)
-+	fscache_update_cookie(ctx->cache, NULL, &pos);
-+#endif
-+
-+	gap = SECTOR_SIZE - (i_size & (SECTOR_SIZE - 1));
-+	if (copied > gap) {
-+		add = DIV_ROUND_UP(copied - gap, SECTOR_SIZE);
-+
-+		inode->i_blocks = min_t(blkcnt_t,
-+					DIV_ROUND_UP(pos, SECTOR_SIZE),
-+					inode->i_blocks + add);
-+	}
-+}
-+
- /**
-  * netfs_perform_write - Copy data into the pagecache.
-  * @iocb: The operation parameters
-@@ -352,18 +383,10 @@ ssize_t netfs_perform_write(struct kiocb *iocb, struct iov_iter *iter,
- 		trace_netfs_folio(folio, trace);
- 
- 		/* Update the inode size if we moved the EOF marker */
--		i_size = i_size_read(inode);
- 		pos += copied;
--		if (pos > i_size) {
--			if (ctx->ops->update_i_size) {
--				ctx->ops->update_i_size(inode, pos);
--			} else {
--				i_size_write(inode, pos);
--#if IS_ENABLED(CONFIG_FSCACHE)
--				fscache_update_cookie(ctx->cache, NULL, &pos);
--#endif
--			}
--		}
-+		i_size = i_size_read(inode);
-+		if (pos > i_size)
-+			netfs_update_i_size(ctx, inode, i_size, pos, copied);
- 		written += copied;
- 
- 		if (likely(!wreq)) {
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/staging/rts5208/rtsx_scsi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/rts5208/rtsx_scsi.c b/drivers/staging/rts5208/rtsx_scsi.c
+> index 08bd768ad34d..a73b0959f5a9 100644
+> --- a/drivers/staging/rts5208/rtsx_scsi.c
+> +++ b/drivers/staging/rts5208/rtsx_scsi.c
+> @@ -523,7 +523,7 @@ static int inquiry(struct scsi_cmnd *srb, struct rtsx_chip *chip)
+>  
+>  	if (sendbytes > 8) {
+>  		memcpy(buf, inquiry_buf, 8);
+> -		strncpy(buf + 8, inquiry_string, sendbytes - 8);
+> +		memcpy(buf + 8, inquiry_string, min(sendbytes, 36) - 8);
+
+I think your math is off.  The string is 29 characters + NUL.  So it
+should be "min(sendbytes, 38) - 8".  You're chopping off the space and
+the NUL terminator.
+
+This only affects pro_formatter_flag code...
+
+This code is such a mess.  I'm not sure your fix is the complete fix.
+When I see code that's clearly buggy like this and it's not sure the fix
+is complete then I generally prefer to leave the static checker warning
+as is so that we are reminded of the bug occasionally.  How close are
+you to removing all these -Wstringop-truncation warnings?  Maybe we just
+add a comment or a TODO item in the drivers/staging/rts5208/TODO file.
+
+regards,
+dan carpenter
 
