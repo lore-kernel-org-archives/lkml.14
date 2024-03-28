@@ -1,16 +1,15 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A71130E5F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05E2130AF9
 	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:05:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711641939; cv=none; b=rv0Gm6Sq4bFTeDFTnTXtg/nre2gklifNJshqT2G9KIUB5uI11yV6a4l3MrG/+VPzmN7vNQ3FdUgZJx7cjSOTLFvqS57fAjLXEszToyPw9LTfko9nv1tTgogwoOevk0A1N7uu8Y3N/aBw3HwithMuIOiPQTMb5NI2GvDo7us8LlM=
+	t=1711641939; cv=none; b=r52vTsP94rofNL8Kjk/PU2/II2+RPP0QbMquEpdgsJ46MntVG68V8wWS0dbNEW+wO5FMWmPRIXQet1fYHjYm5A9kBW3VSTW4xNuitfQ2Q9ihjA3sJ/03rBCQ1JHLL+EQ5bTfBruK+/N3BHknIlnjguqazU9/I7EoiO+sV91X97Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711641939; c=relaxed/simple;
-	bh=1aC+Qty898Z7QWHKEUyYsyErbgy+fs+anDbaCZiMYpc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=R0OGdhFJozg17Wy/e8OCz/cV3gAJ7FWz0A6cJ1w8o3ibEiAisLwa39+rzNmEYCYK5k6YtAnKwN8fWCRpI+aAwnvrENylajgSy1HSXvHq6mFKsx8LK8GeMwbCwNAaqvtkMF+hvkygj/tnpM7fA9hPlYSehDqYdnCOIe0wA1PQJ2g=
+	bh=i166C4ugguMaBE/jhXf1xvZtL6qoC2/5pt0YAsHGzVw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=msavBFd4aPMPCAuC31e/FmHYwM/blgok7ev0kBDA0EAu31bFgRv/jpzqZeLGub1VXSVHFFkQxFbiCQSzaHzxDa9oEO/wggMFfJp1RR/fnJdW2xjHnnHuhcqlz7pItYMA/9qQIYUEPsFCjwIjNbAwBeBbRqfEVbE7PBqp7Dum2hg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,15 +17,15 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rpsFm-00058o-N5; Thu, 28 Mar 2024 17:05:22 +0100
+	id 1rpsFm-00058g-N5; Thu, 28 Mar 2024 17:05:22 +0100
 Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rpsFj-0092JU-Hw; Thu, 28 Mar 2024 17:05:19 +0100
+	id 1rpsFj-0092JG-CM; Thu, 28 Mar 2024 17:05:19 +0100
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rpsFj-00A3Pb-1X;
+	id 1rpsFj-00A3Nb-10;
 	Thu, 28 Mar 2024 17:05:19 +0100
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
@@ -47,12 +46,10 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	Simon Horman <horms@kernel.org>,
 	Willem de Bruijn <willemb@google.com>,
 	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH net-next v1 9/9] net: dsa: microchip: let DCB code do PCP and DSCP policy configuration
-Date: Thu, 28 Mar 2024 17:05:18 +0100
-Message-Id: <20240328160518.2396238-10-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v1 0/9] Enhanced DCB and DSCP Support for KSZ Switches
+Date: Thu, 28 Mar 2024 17:05:09 +0100
+Message-Id: <20240328160518.2396238-1-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240328160518.2396238-1-o.rempel@pengutronix.de>
-References: <20240328160518.2396238-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,59 +62,52 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-802.1P (PCP) and DiffServ (DSCP) are handled now by DCB code. Let it do
-all needed initial configuration.
+This patch series is aimed at improving support for DCB (Data Center
+Bridging) and DSCP (Differentiated Services Code Point) on KSZ switches.
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- drivers/net/dsa/microchip/ksz8795.c | 6 ------
- drivers/net/dsa/microchip/ksz9477.c | 6 ------
- 2 files changed, 12 deletions(-)
+The main goal is to introduce global DSCP and PCP (Priority Code Point)
+mapping support, addressing the limitation of KSZ switches not having
+per-port DSCP priority mapping. This involves extending the DSA
+framework with new callbacks for managing trust settings for global DSCP
+and PCP maps. Additionally, we introduce IEEE 802.1q helpers for default
+configurations, benefiting other drivers too.
 
-diff --git a/drivers/net/dsa/microchip/ksz8795.c b/drivers/net/dsa/microchip/ksz8795.c
-index a520352d5b93e..06dbc75aef8fd 100644
---- a/drivers/net/dsa/microchip/ksz8795.c
-+++ b/drivers/net/dsa/microchip/ksz8795.c
-@@ -1564,16 +1564,10 @@ void ksz8_port_setup(struct ksz_device *dev, int port, bool cpu_port)
- 
- 	ksz8_port_queue_split(dev, port, queues);
- 
--	/* disable DiffServ priority */
--	ksz_port_cfg(dev, port, P_PRIO_CTRL, PORT_DIFFSERV_ENABLE, false);
--
- 	/* replace priority */
- 	ksz_port_cfg(dev, port, P_802_1P_CTRL,
- 		     masks[PORT_802_1P_REMAPPING], false);
- 
--	/* enable 802.1p priority */
--	ksz_port_cfg(dev, port, P_PRIO_CTRL, PORT_802_1P_ENABLE, true);
--
- 	if (cpu_port)
- 		member = dsa_user_ports(ds);
- 	else
-diff --git a/drivers/net/dsa/microchip/ksz9477.c b/drivers/net/dsa/microchip/ksz9477.c
-index 7f745628c84d1..f8ad7833f5d9d 100644
---- a/drivers/net/dsa/microchip/ksz9477.c
-+++ b/drivers/net/dsa/microchip/ksz9477.c
-@@ -1158,18 +1158,12 @@ void ksz9477_port_setup(struct ksz_device *dev, int port, bool cpu_port)
- 	/* enable broadcast storm limit */
- 	ksz_port_cfg(dev, port, P_BCAST_STORM_CTRL, PORT_BROADCAST_STORM, true);
- 
--	/* disable DiffServ priority */
--	ksz_port_cfg(dev, port, P_PRIO_CTRL, PORT_DIFFSERV_PRIO_ENABLE, false);
--
- 	/* replace priority */
- 	ksz_port_cfg(dev, port, REG_PORT_MRI_MAC_CTRL, PORT_USER_PRIO_CEILING,
- 		     false);
- 	ksz9477_port_cfg32(dev, port, REG_PORT_MTI_QUEUE_CTRL_0__4,
- 			   MTI_PVID_REPLACE, false);
- 
--	/* enable 802.1p priority */
--	ksz_port_cfg(dev, port, P_PRIO_CTRL, PORT_802_1P_PRIO_ENABLE, true);
--
- 	/* force flow control for non-PHY ports only */
- 	ksz_port_cfg(dev, port, REG_PORT_CTRL_0,
- 		     PORT_FORCE_TX_FLOW_CTRL | PORT_FORCE_RX_FLOW_CTRL,
+Oleksij Rempel (9):
+  net: dsa: add support for DCB get/set apptrust configuration
+  net: dsa: microchip: add IPV information support
+  net: add IEEE 802.1q specific helpers
+  net: dsa: microchip: add multi queue support for KSZ88X3 variants
+  net: dsa: microchip: add support for different DCB app configurations
+  net: dsa: microchip: dcb: add special handling for KSZ88X3 family
+  net: dsa: microchip: enable ETS support for KSZ989X variants
+  net: dsa: microchip: init predictable IPV to queue mapping for all non
+    KSZ8xxx variants
+  net: dsa: microchip: let DCB code do PCP and DSCP policy configuration
+
+ drivers/net/dsa/microchip/Kconfig       |   2 +
+ drivers/net/dsa/microchip/Makefile      |   2 +-
+ drivers/net/dsa/microchip/ksz8.h        |   1 +
+ drivers/net/dsa/microchip/ksz8795.c     | 106 ++--
+ drivers/net/dsa/microchip/ksz8795_reg.h |   9 +-
+ drivers/net/dsa/microchip/ksz9477.c     |   6 -
+ drivers/net/dsa/microchip/ksz_common.c  |  94 +++-
+ drivers/net/dsa/microchip/ksz_common.h  |   7 +-
+ drivers/net/dsa/microchip/ksz_dcb.c     | 712 ++++++++++++++++++++++++
+ drivers/net/dsa/microchip/ksz_dcb.h     |  21 +
+ include/net/dsa.h                       |   4 +
+ include/net/dscp.h                      |  76 +++
+ include/net/ieee8021q.h                 |  34 ++
+ net/Kconfig                             |   4 +
+ net/core/Makefile                       |   1 +
+ net/core/ieee8021q_helpers.c            | 165 ++++++
+ net/dsa/user.c                          |  28 +
+ 17 files changed, 1198 insertions(+), 74 deletions(-)
+ create mode 100644 drivers/net/dsa/microchip/ksz_dcb.c
+ create mode 100644 drivers/net/dsa/microchip/ksz_dcb.h
+ create mode 100644 include/net/dscp.h
+ create mode 100644 include/net/ieee8021q.h
+ create mode 100644 net/core/ieee8021q_helpers.c
+
 -- 
 2.39.2
 
