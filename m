@@ -1,155 +1,186 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.167])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A904E1DA;
-	Thu, 28 Mar 2024 10:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.167
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711620134; cv=pass; b=oiAs+1rcRBoswlclcVMQQ+/rHd1Oj5h7JygC7aTFsJxSp2pbl+MwMSgWBSiG+dBXqfvg/pmvzVg0oUViDjmP3edak0FAj2rvq5l72VPdYdPMAzY01+cDbJ+tgdAuQe2AP0YfPbOQGdFZPX6INfKvirv+oHHECtaN7Gl0JMCxPWo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711620134; c=relaxed/simple;
-	bh=rskF7u+e2al8EJcpAKqAmcnyEEtX2PvBsVLK8SfiCkE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bIoYNQ9RxZGmG2A2MYWdR94aUGjD0xcQlkj6gmaEyAoc4n0HLrezzsvrSSEsF5aogXIh0DUlY2EQDjphpwh6LrsZ/R9CslUiigGzatHhXxqugdkQmGBAY2msTPI5pYdfqUwey6SZ8fy4GEXGe7ifEajQHwQacufyxzxL86blr0s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gerhold.net; spf=none smtp.mailfrom=gerhold.net; dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b=XQ2n2gcn; dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b=rxCmnk2t; arc=pass smtp.client-ip=81.169.146.167
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gerhold.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=gerhold.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3291DFCB
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 10:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711620198; cv=none; b=aIMGZ3VeXKLT3uN1jTTP5pJf9pEd/m4gxLfXfC2pPi4i8YG4BiKuvhmm8U92apU0QXwG9Z+u5FmdcpGpFB+MPhbV+ibgQaSMb/AhhRQgQ7q4woHx+sGJxBiroLbaSdtSG83rEt83XS/P7MgVEOQMnjgrtWefQruMT5lsMKfhXG0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711620198; c=relaxed/simple;
+	bh=ZC2c6bDSoapIdBgquvXn/MW61rcEJptcjEc3cVlABAE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LiW3Jtez3bn3k3D1m4bHSKbUv4mRJN8OCuFLchmb6DRNKn0giaUzXkQ+YYHX0CuAteMJobeXtgm1XjXdyjdti8LbZqhWSMmN7xwA/4lcYTgNQAvteTYz5E4L0PvnW4j3H20zEkx1UlYKcZNP0wPSyRE/sR29tZTp6v6p9tdc5Tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TAZ4bAQ/; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="XQ2n2gcn";
-	dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="rxCmnk2t"
-ARC-Seal: i=1; a=rsa-sha256; t=1711619943; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=Vl7gNUuAuvgu8jPJCoP8QItXVAhJ9n0IbrRbSXQ+fR3Ca90J5jAE2JUIXF5u8Tf9VT
-    p0K2Lu2zz5XjDIyneFMpeBXKsXGQ3mdqQQAqbkpzPgwVWDagvEK1k0HWAlC0ks3JDw9j
-    o3yswXzIflnc/ODmpqG/XduR+4fNcztsoxifGz8c58QA3DW64ko/8Y6iSU6Jp60o6buP
-    mdsJh/wjcER/z7R9Qzk0frLHaE3axoS/QyRBcsfpwHxc45jWKeWAiqd3pUjJTdYsWHFf
-    76IhfqhroA2Rxh13rV9Lt8JoIDNfV+QgGaF4IcpAVxv+/s8J2KUjGXc8j0I1HctgdvDv
-    d5Dw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1711619943;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=5Go0D8hd2wxVnlLgqUtglFepqhG/In7hPQmk3c2N3kM=;
-    b=frf7KO06h4E3gBHU79yBODujpThbzBIqmupIUTVnasdjyuWszr7i1BpA7sHm0GmxlQ
-    k2EjmqWV2US5jr5hUVcXaQbRH9hJjeSR7k13MpkxFuAyyDvvvqsCpkzWB/ra+Kx3kQnz
-    9PVofvJ+kC4B6bR3wXO6fA6NdNLVIGVdRPaLrTZ2/0DQRPqOrHmPsCKkEdCxpjq9eP+m
-    bvo0S81AarYQ4FbdpEwXtlqSmbDTP4ChoSM49f/AX9kMkEKkQ3hv2qgoTUKckNgES8l7
-    f52Hi57SFtNZ1SOBkPn97uHW3+pa6mXydQOQOunjCaxYOH+zmrIbGlsZuTfWgI/kTOdg
-    ntVg==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1711619943;
-    s=strato-dkim-0002; d=gerhold.net;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=5Go0D8hd2wxVnlLgqUtglFepqhG/In7hPQmk3c2N3kM=;
-    b=XQ2n2gcnGSDYVH24ZI38SJsDIa2clZga+TEwjVjP+1S4LSX2vyip+TsaPpB1mQM0Sc
-    WJ/SIJJ91k2refGyBeoFmwN7KPyZ5sz+BGJfhLZHNY4E0ZwU0yW4np1EvQE/KMJtIP3S
-    fTmzyCiQUWubI/NADQLFx3+JsLDKQdYy/lpg/POXPwtS+FGknE1PJVJs/9bN2xuKyh2R
-    LGWOo0OIy8i5cjPE9iaSTTfShhnkTRYzZQf18iW+EtMdYka278OhZfwbwGdY4sGpM4Ld
-    A1AAxRHvlp/vkzFGzpCImcl3NdN1S/sgv/To3LkrzZL5r0wmtyqlAMsgSaxKZi0u2cfA
-    fHJw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1711619942;
-    s=strato-dkim-0003; d=gerhold.net;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=5Go0D8hd2wxVnlLgqUtglFepqhG/In7hPQmk3c2N3kM=;
-    b=rxCmnk2t9eYVz3WjH9I+vkj5OlaZQAv6ZsMZwKDhYQqQWpd5k7c4r8Yp0LgiKRvPuw
-    Y100NZyHMqw/rGEDwoBw==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u261EJF5OxJD4peA8Z+P1A=="
-Received: from gerhold.net
-    by smtp.strato.de (RZmta 50.3.2 SBL|AUTH)
-    with ESMTPSA id Raf12502S9x2U4g
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Thu, 28 Mar 2024 10:59:02 +0100 (CET)
-Date: Thu, 28 Mar 2024 10:58:56 +0100
-From: Stephan Gerhold <stephan@gerhold.net>
-To: Caleb Connolly <caleb.connolly@linaro.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	"linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Rob Clark <robdclark@gmail.com>, Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH] soc: qcom: cmd-db: map shared memory as WT, not WB
-Message-ID: <ZgU_YDUhBeyS5wuh@gerhold.net>
-References: <20240327200917.2576034-1-volodymyr_babchuk@epam.com>
- <e0586d43-284c-4bef-a8be-4ffbc12bf787@linaro.org>
- <87a5mjz8s3.fsf@epam.com>
- <f4ebe819-9718-42c3-9874-037151587d0c@linaro.org>
- <cd549ee8-22dc-4bc4-af09-9c5c925ee03a@linaro.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TAZ4bAQ/"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a44f2d894b7so88070966b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 03:03:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711620194; x=1712224994; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wz9jOdEpA4W/9gLrULCqwPBnc5puv/D/qDakXsashEo=;
+        b=TAZ4bAQ/B37l/+kUDdWgHh0TQLONxS1h2/UQxmAX5EhM5/9QLKretjgNPJP1cvT9D3
+         9JA/WmtTi9K7vDNi+3oc/oP6/mbRnvt48VId3/rJ3k68vQ4Io4w3zj2FCgta+SVD4els
+         OQws2vuA7I0xvLxPeu67go2M5dRpHGBJg6+pDA+17qgilUGE3I+KxFFm3enyoBZP9F5r
+         erQXGyIM71pZrRJfio111Jc2amA/jnFXDwHUp+mUDVv9W4xRZCAuB8C2OIQ9ZTTqx9Qh
+         Ps0nHNkkturkBiZDt6N8G0tiEPaw2tcOg4E5MuqeEHGaD+TIli3SSFGRJxVBL1ZXR/TL
+         DZlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711620194; x=1712224994;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wz9jOdEpA4W/9gLrULCqwPBnc5puv/D/qDakXsashEo=;
+        b=b6Y+WvCNXNdZHNa1TyanM2n4DQ4nzvrJh/4A/WKSIEKTr/EbtSfN+OLHiRsQ5Ie/I5
+         VFN3+gY9bjC6pAO8eHsisowKxCdVxRGKlnB+Rmjaa7/m5zV/ZAfoOftzyCKml7ROOAT9
+         jkfSn14leBczcR9Lm3PsWZCL3VwgXk9QHopdgQ3D/MOkZIytcNCOPE5ROX52bjSYv8ax
+         dQkOFu++TpgjnPmW+SfjCTjxLPnQsBY9IUn9ib+30ucGcAEjRMIEm+S6jsFlHaCqFbRe
+         dlun59ewgsM+LqR7SmCmbDkl3nG7bq6R5OqfeBaQ+W5lG1S8Md15UMGbDcX9odsK6gsh
+         TIBA==
+X-Gm-Message-State: AOJu0Yx5d0/8t5GQySZo+0Jik8Ng8+A/FlkKK5uDKIJcmi7Ecq0Z6wD3
+	GxXbzkw7Uljgp66ZYcIvNY3lotgYGbdBQSswViUfcfTmgBQWZL+DF+X2ZjzMYI4GMWYbvSvfkP0
+	Eqm/pSWH5WRrDnsnuGx9aReYKKBUw91CqVyLINw==
+X-Google-Smtp-Source: AGHT+IE/1Utjgtmt3/b/cdHgTg9unxxbGb1RbOhuP2GDqmVLYvZN76y1K/k1lgnPAujiufIeEo+aDgfSACwQyGpFocM=
+X-Received: by 2002:a17:906:3c51:b0:a47:61cc:2bf with SMTP id
+ i17-20020a1709063c5100b00a4761cc02bfmr1436248ejg.1.1711620194337; Thu, 28 Mar
+ 2024 03:03:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cd549ee8-22dc-4bc4-af09-9c5c925ee03a@linaro.org>
-Content-Transfer-Encoding: 7bit
+References: <20240325035102.15245-1-adrianhuang0701@gmail.com>
+ <874jcueydh.ffs@tglx> <CAHKZfL1xq-pemEMo7m8DctEVxSG_ASQWxCC_HsN=-92UAjP_Mw@mail.gmail.com>
+ <87h6gsefae.ffs@tglx>
+In-Reply-To: <87h6gsefae.ffs@tglx>
+From: Huang Adrian <adrianhuang0701@gmail.com>
+Date: Thu, 28 Mar 2024 18:03:02 +0800
+Message-ID: <CAHKZfL1P+7FyhcYcxjgu7_R2uJAUz38bo1oh68hOYqZgtU73pw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] genirq/proc: Try to jump over the unallocated irq
+ hole whenever possible
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Jiwei Sun <sunjw10@lenovo.com>, 
+	Adrian Huang <ahuang12@lenovo.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 27, 2024 at 11:29:09PM +0000, Caleb Connolly wrote:
-> On 27/03/2024 21:06, Konrad Dybcio wrote:
-> > On 27.03.2024 10:04 PM, Volodymyr Babchuk wrote:
-> >> Konrad Dybcio <konrad.dybcio@linaro.org> writes:
-> >>> On 27.03.2024 9:09 PM, Volodymyr Babchuk wrote:
-> >>>> It appears that hardware does not like cacheable accesses to this
-> >>>> region. Trying to access this shared memory region as Normal Memory
-> >>>> leads to secure interrupt which causes an endless loop somewhere in
-> >>>> Trust Zone.
-> >>>>
-> >>>> The only reason it is working right now is because Qualcomm Hypervisor
-> >>>> maps the same region as Non-Cacheable memory in Stage 2 translation
-> >>>> tables. The issue manifests if we want to use another hypervisor (like
-> >>>> Xen or KVM), which does not know anything about those specific
-> >>>> mappings. This patch fixes the issue by mapping the shared memory as
-> >>>> Write-Through. This removes dependency on correct mappings in Stage 2
-> >>>> tables.
-> >>>>
-> >>>> I tested this on SA8155P with Xen.
-> >>>>
-> >>>> Signed-off-by: Volodymyr Babchuk <volodymyr_babchuk@epam.com>
-> >>>> ---
-> >>>
-> >>> Interesting..
-> >>>
-> >>> +Doug, Rob have you ever seen this on Chrome? (FYI, Volodymyr, chromebooks
-> >>> ship with no qcom hypervisor)
-> >>
-> >> Well, maybe I was wrong when called this thing "hypervisor". All I know
-> >> that it sits in hyp.mbn partition and all what it does is setup EL2
-> >> before switching to EL1 and running UEFI.
-> >>
-> >> In my experiments I replaced contents of hyp.mbn with U-Boot, which gave
-> >> me access to EL2 and I was able to boot Xen and then Linux as Dom0.
-> > 
-> > Yeah we're talking about the same thing. I was just curious whether
-> > the Chrome folks have heard of it, or whether they have any changes/
-> > workarounds for it.
-> 
-> Does Linux ever write to this region? Given that the Chromebooks don't
-> seem to have issues with this (we have a bunch of them in pmOS and I'd
-> be very very surprised if this was an issue there which nobody had tried
-> upstreaming before) I'd guess the significant difference here is between
-> booting Linux in EL2 (as Chromebooks do?) vs with Xen.
-> 
+On Wed, Mar 27, 2024 at 7:36=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
+> wrote:
+>
+> > @@ -19,6 +19,10 @@ static void *int_seq_next(struct seq_file *f, void
+> > *v, loff_t *pos)
+> [ 3 more citation lines. Click/Enter to show. ]
+> >         (*pos)++;
+> >         if (*pos > nr_irqs)
+> >                 return NULL;
+> > +
+> > +       if (!irq_to_desc(*pos))
+> > +               *pos =3D irq_get_next_irq(*pos);
+>
+> How is irq_get_next_irq() valid without either holding the sparse irq
+> lock or RCU read lock?
 
-FWIW: This old patch series from Stephen Boyd is closely related:
-https://lore.kernel.org/linux-arm-msm/20190910160903.65694-1-swboyd@chromium.org/
+Indeed, thanks for pointing this out. How about the patch below?
 
-> The main use case I have is to map the command-db memory region on
-> Qualcomm devices with a read-only mapping. It's already a const marked
-> pointer and the API returns const pointers as well, so this series
-> makes sure that even stray writes can't modify the memory.
+---
+diff --git a/fs/proc/interrupts.c b/fs/proc/interrupts.c
+index cb0edc7cb..111ea8a3c 100644
+--- a/fs/proc/interrupts.c
++++ b/fs/proc/interrupts.c
+@@ -19,6 +19,12 @@ static void *int_seq_next(struct seq_file *f, void
+*v, loff_t *pos)
+        (*pos)++;
+        if (*pos > nr_irqs)
+                return NULL;
++
++       rcu_read_lock();
++       if (!irq_to_desc(*pos))
++               *pos =3D irq_get_next_irq(*pos);
++       rcu_read_unlock();
++
+        return pos;
+ }
 
-Stephen, what was the end result of that patch series? Mapping the
-cmd-db read-only sounds cleaner than trying to be lucky with the right
-set of cache flags.
 
-Thanks,
-Stephan
+> But that aside you are missing a massive performance problem in the
+> generic show_interrupts() code:
+>
+>         if (desc->kstat_irqs) {
+>                 for_each_online_cpu(j)
+>                         any_count |=3D data_race(*per_cpu_ptr(desc->kstat=
+_irqs, j));
+>         }
+>
+>         if ((!desc->action || irq_desc_is_chained(desc)) && !any_count)
+>                 goto outsparse;
+>
+
+Yes, good point. The change is shown below.
+BTW, I also made the change for iterating each cpu's irq stat. (No
+need to check the percpu 'kstat_irqs' pointer for each iteration).
+
+If you're ok, I'll send out the series.
+
+---
+diff --git a/kernel/irq/proc.c b/kernel/irq/proc.c
+index 623b8136e..bfa341fac 100644
+--- a/kernel/irq/proc.c
++++ b/kernel/irq/proc.c
+@@ -461,7 +461,7 @@ int show_interrupts(struct seq_file *p, void *v)
+ {
+        static int prec;
+
+-       unsigned long flags, any_count =3D 0;
++       unsigned long flags, print_irq =3D 1;
+        int i =3D *(loff_t *) v, j;
+        struct irqaction *action;
+        struct irq_desc *desc;
+@@ -488,18 +488,28 @@ int show_interrupts(struct seq_file *p, void *v)
+        if (!desc || irq_settings_is_hidden(desc))
+                goto outsparse;
+
+-       if (desc->kstat_irqs) {
+-               for_each_online_cpu(j)
+-                       any_count |=3D
+data_race(*per_cpu_ptr(desc->kstat_irqs, j));
++       if ((!desc->action || irq_desc_is_chained(desc)) && desc->kstat_irq=
+s) {
++               print_irq =3D 0;
++               for_each_online_cpu(j) {
++                       if (data_race(*per_cpu_ptr(desc->kstat_irqs, j))) {
++                               print_irq =3D 1;
++                               break;
++                       }
++               }
+        }
+
+-       if ((!desc->action || irq_desc_is_chained(desc)) && !any_count)
++       if (!print_irq)
+                goto outsparse;
+
+        seq_printf(p, "%*d: ", prec, i);
+-       for_each_online_cpu(j)
+-               seq_printf(p, "%10u ", desc->kstat_irqs ?
+-                                       *per_cpu_ptr(desc->kstat_irqs, j) :=
+ 0);
++
++       if (desc->kstat_irqs) {
++               for_each_online_cpu(j)
++                       seq_printf(p, "%10u ",
+data_race(*per_cpu_ptr(desc->kstat_irqs, j)));
++       } else {
++               for_each_online_cpu(j)
++                       seq_printf(p, "%10u ", 0);
++       }
+
+        raw_spin_lock_irqsave(&desc->lock, flags);
+        if (desc->irq_data.chip) {
+
+
+-- Adrian
