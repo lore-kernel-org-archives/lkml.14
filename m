@@ -1,196 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA73913A407;
-	Thu, 28 Mar 2024 20:38:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD20D4436B;
+	Thu, 28 Mar 2024 20:38:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711658302; cv=none; b=hHHaFNqYuI9fyEIptO1yDSE6C2TaxhafvFDW7XVfYu0V70oeiOPIUzAPvGkp8QnpD9Jge4jlhBifd4jb9+7j2z/vQv7M5d7j3oIkb47ZVKnxYu+mDXeCBmB1P3TcpMhutuLlxdtl+R8UA3e5ZKvTLCblKI4mRuAhUYd/1rXK6Eg=
+	t=1711658315; cv=none; b=jIw5exNBeojK6fpMtwQxFHDwCBioiT3V9QRufI/NDi9UgO3VuMyQx/sLjhzngMyVRKPQ97cAOCjw8mwZTSUOXAvySdSykwS2VMafRIJSSu1ZLH/B6JrPmwf8VSU3CNxcYQF8CPy7wu+miQsrHJTUqPK/rfJS2QZ+mBZ/YVd9iOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711658302; c=relaxed/simple;
-	bh=4V4w7fC0EBbm7te+ffIKRQDvDxxoYpzMpaa3f0AoWlE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R9ZcLK3fDdjNJfw7QbQUGOnuhDgy38LU7BworcsUB7xsk6qRlaD8OuwBstohGL4I/Wg9Z3iSOAtE/ECbk5jHMVMx/vc6KyO4uoPHFcx/ObqiA3pQicp+SEQ0bsEcQR41UB+25r4A1cvT3uMDjYF118Mqfxna02nTb90zZ8bukHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dRfKVHSc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711658315; c=relaxed/simple;
+	bh=//UHZ5wlfdBrGcEXtCNieykr9XzbKv3rHPqzSEhgiFk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=Wr76bmhLhFCeWCSQVi5I5ufUw4lrzXhkVnSqtksN2ZkXx/D1nJmry3YpwYoAROCiHdsrv/BTiCbIv6tLSmMcgRxrfpOHq8ny4lMWnwyEYnErcMyG/zoThpLYqkL+xJ9YYcWLBTdBERQ2Z1zSZGMqrYk6Epca26U9nmzUlDtXQFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=isUQcFeO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dRfKVHSc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEC19C433F1;
-	Thu, 28 Mar 2024 20:38:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="isUQcFeO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0626CC433C7;
+	Thu, 28 Mar 2024 20:38:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711658301;
-	bh=4V4w7fC0EBbm7te+ffIKRQDvDxxoYpzMpaa3f0AoWlE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dRfKVHScDsH8tRE1//91CYwzd5KWuDIPzdzz4FYy70fYNQxTI4FdYsr0rnVlRlDzy
-	 bg2yy/d0f1eEfdelx5bbivx7vjt1I2XcdZlEKOdXeDikFSelU1LkYAktJZJQE5tLsR
-	 aWlyXBPbOFfiGkb1rQ9ZnTbgEL0YbJ4i2SbETO+aCf/YHhMcqNdelehX5uFfKS1xll
-	 hu+eiqfLfnMN5AkY0NodQO3KanPcw3aHDw1BYdD1SX/2LmnaHHwN/NMDk0K7Em2Psg
-	 C2FdKw3cfmIzQDuZNhqbtY1LdZDhPcphkaPSG7Rh5XQWxlmM7Qthw7AzeTMMxiHvhg
-	 jCFiIDoVfirww==
-Date: Thu, 28 Mar 2024 20:38:08 +0000
-From: Simon Horman <horms@kernel.org>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-	Matt Turner <mattst88@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	David Ahern <dsahern@kernel.org>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Yunsheng Lin <linyunsheng@huawei.com>,
-	Shailend Chand <shailend@google.com>,
-	Harshitha Ramamurthy <hramamurthy@google.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Jeroen de Borst <jeroendb@google.com>,
-	Praveen Kaligineedi <pkaligineedi@google.com>,
-	Willem de Bruijn <willemb@google.com>,
-	Kaiyuan Zhang <kaiyuanz@google.com>
-Subject: Re: [RFC PATCH net-next v7 04/14] netdev: support binding dma-buf to
- netdevice
-Message-ID: <20240328203808.GL651713@kernel.org>
-References: <20240326225048.785801-1-almasrymina@google.com>
- <20240326225048.785801-5-almasrymina@google.com>
- <20240328182812.GJ651713@kernel.org>
- <CAHS8izMZuRwQZsL7PQdoRcrgeh6rEa7n1NMhbm-aZMes2QHVzg@mail.gmail.com>
+	s=k20201202; t=1711658315;
+	bh=//UHZ5wlfdBrGcEXtCNieykr9XzbKv3rHPqzSEhgiFk=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=isUQcFeODmd1cT+v2ZNaKD1vpflYBGQ5Se9fuVidaCEfht+qiRhDtNMKFw/x3wUMg
+	 QzWyjN4zRPBUdyjD8niUMVDPdfQGEXB1RspiOL+NZsLHkkRKYalf1+zlMGuoga2UdY
+	 yoChbYqvN6EG76w2sGhRW/WgQGB5ZCKXd95RXrr1PjAVbaq3g6B8ktk2B9RuXFb4GE
+	 zXUmVY9eG97XipAfQc1jlIbVfeSjbtxOEwaVY6wawkWTm2t/JD2jeODs54RtYJGfit
+	 yJW32QAZK1zsLbQ31IKmWLBJmrptoujj8OFVzH0XUUwzaqLrgAgDcoqbYMfkMaADtj
+	 PmPM/7qsa2lMQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHS8izMZuRwQZsL7PQdoRcrgeh6rEa7n1NMhbm-aZMes2QHVzg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 28 Mar 2024 22:38:29 +0200
+Message-Id: <D05O8BUCPQL6.22850B90ITSCR@kernel.org>
+Cc: <linux-doc@vger.kernel.org>, <linux-integrity@vger.kernel.org>,
+ <linux-security-module@vger.kernel.org>, <fsverity@lists.linux.dev>,
+ <linux-block@vger.kernel.org>, <dm-devel@lists.linux.dev>,
+ <audit@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v16 00/20] Integrity Policy Enforcement LSM (IPE)
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Fan Wu"
+ <wufan@linux.microsoft.com>, <corbet@lwn.net>, <zohar@linux.ibm.com>,
+ <jmorris@namei.org>, <serge@hallyn.com>, <tytso@mit.edu>,
+ <ebiggers@kernel.org>, <axboe@kernel.dk>, <agk@redhat.com>,
+ <snitzer@kernel.org>, <eparis@redhat.com>, <paul@paul-moore.com>
+X-Mailer: aerc 0.17.0
+References: <1711657047-10526-1-git-send-email-wufan@linux.microsoft.com>
+ <D05O6JVMMZY7.5ZUBAPJH22FC@kernel.org>
+In-Reply-To: <D05O6JVMMZY7.5ZUBAPJH22FC@kernel.org>
 
-On Thu, Mar 28, 2024 at 11:55:23AM -0700, Mina Almasry wrote:
-> On Thu, Mar 28, 2024 at 11:28 AM Simon Horman <horms@kernel.org> wrote:
+On Thu Mar 28, 2024 at 10:36 PM EET, Jarkko Sakkinen wrote:
+> On Thu Mar 28, 2024 at 10:17 PM EET, Fan Wu wrote:
+> > Overview:
+> > ---------
+>
+> s/://
+>
+> It is already a heading.
+>
 > >
-> > On Tue, Mar 26, 2024 at 03:50:35PM -0700, Mina Almasry wrote:
-> > > Add a netdev_dmabuf_binding struct which represents the
-> > > dma-buf-to-netdevice binding. The netlink API will bind the dma-buf to
-> > > rx queues on the netdevice. On the binding, the dma_buf_attach
-> > > & dma_buf_map_attachment will occur. The entries in the sg_table from
-> > > mapping will be inserted into a genpool to make it ready
-> > > for allocation.
-> > >
-> > > The chunks in the genpool are owned by a dmabuf_chunk_owner struct which
-> > > holds the dma-buf offset of the base of the chunk and the dma_addr of
-> > > the chunk. Both are needed to use allocations that come from this chunk.
-> > >
-> > > We create a new type that represents an allocation from the genpool:
-> > > net_iov. We setup the net_iov allocation size in the
-> > > genpool to PAGE_SIZE for simplicity: to match the PAGE_SIZE normally
-> > > allocated by the page pool and given to the drivers.
-> > >
-> > > The user can unbind the dmabuf from the netdevice by closing the netlink
-> > > socket that established the binding. We do this so that the binding is
-> > > automatically unbound even if the userspace process crashes.
-> > >
-> > > The binding and unbinding leaves an indicator in struct netdev_rx_queue
-> > > that the given queue is bound, but the binding doesn't take effect until
-> > > the driver actually reconfigures its queues, and re-initializes its page
-> > > pool.
-> > >
-> > > The netdev_dmabuf_binding struct is refcounted, and releases its
-> > > resources only when all the refs are released.
-> > >
-> > > Signed-off-by: Willem de Bruijn <willemb@google.com>
-> > > Signed-off-by: Kaiyuan Zhang <kaiyuanz@google.com>
-> > > Signed-off-by: Mina Almasry <almasrymina@google.com>
-> >
-> > ...
-> >
-> > > +int net_devmem_bind_dmabuf_to_queue(struct net_device *dev, u32 rxq_idx,
-> > > +                                 struct net_devmem_dmabuf_binding *binding)
-> > > +{
-> > > +     struct netdev_rx_queue *rxq;
-> > > +     u32 xa_idx;
-> > > +     int err;
-> > > +
-> > > +     if (rxq_idx >= dev->num_rx_queues)
-> > > +             return -ERANGE;
-> > > +
-> > > +     rxq = __netif_get_rx_queue(dev, rxq_idx);
-> > > +     if (rxq->mp_params.mp_priv)
-> > > +             return -EEXIST;
-> > > +
-> > > +     err = xa_alloc(&binding->bound_rxq_list, &xa_idx, rxq, xa_limit_32b,
-> > > +                    GFP_KERNEL);
-> > > +     if (err)
-> > > +             return err;
-> > > +
-> > > +     /* We hold the rtnl_lock while binding/unbinding dma-buf, so we can't
-> > > +      * race with another thread that is also modifying this value. However,
-> > > +      * the driver may read this config while it's creating its * rx-queues.
-> > > +      * WRITE_ONCE() here to match the READ_ONCE() in the driver.
-> > > +      */
-> > > +     WRITE_ONCE(rxq->mp_params.mp_ops, &dmabuf_devmem_ops);
-> >
-> > Hi Mina,
-> >
-> > This causes a build failure because mabuf_devmem_ops is not added until a
-> > subsequent patch in this series.
-> >
-> 
-> My apologies. I do notice the failure in patchwork now. I'll do a
-> patch by patch build for the next iteration.
+> > IPE is a Linux Security Module which takes a complimentary approach to
+>  =20
+>   Integrity Policy Enforcement (IPE) is a ...
+>
+> > access control. Whereas existing mandatory access control mechanisms
+> > base their decisions on labels and paths, IPE instead determines
+> > whether or not an operation should be allowed based on immutable
+> > security properties of the system component the operation is being
+> > performed on.
+>
+> What is "a immutable property of the system component", or even,
+> what is "a immutable property" and what is "a system component".
+>
+> These should be defined per context of use as there is no unambiguous
+> definitions of these "properties".
+>
+> So can you add a paragraph before this defining these concepts?
+> Otherwise, it would be pretty hard to review any of this.
+>
+> I.e. I have to make my own imaginary definitions of them and possibly
+> make completely false conclusions what was meant.
 
-Thanks, much appreciated.
+This might sound like nitpicking but often in security patch sets
+people get their own ideas and that leads to useless iterations
+etc. so I think it is useful to be pretty formal with definitions
+so that we dont end up shadow boxing...
 
-> > > +     WRITE_ONCE(rxq->mp_params.mp_priv, binding);
-> > > +
-> > > +     err = net_devmem_restart_rx_queue(dev, rxq_idx);
-> > > +     if (err)
-> > > +             goto err_xa_erase;
-> > > +
-> > > +     return 0;
-> > > +
-> > > +err_xa_erase:
-> > > +     WRITE_ONCE(rxq->mp_params.mp_ops, NULL);
-> > > +     WRITE_ONCE(rxq->mp_params.mp_priv, NULL);
-> > > +     xa_erase(&binding->bound_rxq_list, xa_idx);
-> > > +
-> > > +     return err;
-> > > +}
-> >
-> > ...
-> 
-> 
-> 
-> -- 
-> Thanks,
-> Mina
-> 
+I have ton of experience with this with SGX patches in the past.
+
+BR, Jarkko
