@@ -1,146 +1,231 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A55139CF0
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 20:39:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEC313A3E4
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 20:40:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711658399; cv=none; b=ar2UZjJ0dr+S63eobTY9tiRV453sRHQ4Z8Akv+pBRg0Md1O51PuXW0TI7999SSZ8seSHNvlgxgzdwOT3ceoyQGvz6GD9sRcWykiqd3HA279UyeJP1N3ZYfpRHthLVjpIv1LAlPJNTlq0cinT3bHDxbZxfKH6PdPCWOl/WWf3yLY=
+	t=1711658404; cv=none; b=XFrsmuUfdIvZO2w90HTxs8+FVZUEJ7SJlRiIVX6Ri8L5rmF7me/ZRnaQvNgeLMeiHteVvL9qYbpmCbGC56oas+jyqmjRpk4QcscI800bQud5QDOn9849fU7to92rgwoeKByleMyuaT7V1z4WMi/Og5ld9baRcE1PooHhPTXJfsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711658399; c=relaxed/simple;
-	bh=9TzmnhsUKTbqm3MBDZcbvUahak/Gsv0zqkL0N7t7Zn8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eRsSMCWEGfudyl+SERy3xY5F77lnMNvpyFQaHMukqQvBF9THgG+wTAdmq3ZWnSzhEYCJR5HAJ+ZthNQCUVnqb3F333GDjIA5KBHrcSGO7d0nFpy6r2s4MlhC7KVAC0/V1OdjRd0ELyBY7muneYCAUsSh3HnAzOJJYmAe51kPnEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GZrLycZg; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1711658404; c=relaxed/simple;
+	bh=JtoDLKPhVjReSgPmgvFPdymak+1I9+8VDqBX0AZiGVk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=G9XCrvehrpLXKw0DAm2Os6KGZ5Fyk/7n6ncbvLOHMqskWnIRyr7BRCZChEK5X9E0DSejkLw2SLPpgNnjaPRFMSNQo2sEWNKOuv3ULVh5DCOWN88B1gkY6A2f/A9Gu1hmdMZv391p0jf57ozBN/Upso2JjSYBy5JDajJA1r0uu1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V1lRnD1T; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GZrLycZg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V1lRnD1T"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711658396;
+	s=mimecast20190719; t=1711658402;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=g4rLC5S75oEgMAlRnRiGxyXHyD4Dy8z12uj2IyMw9Nc=;
-	b=GZrLycZgopC3VBkKJcFt859BY5ABDcdB/sCycyXrwuuZZbF2Wbk3wlon+y22cySMwTeCeT
-	+R+endvlcfjoO5au1cmgHlLNhBoGKwTnS4rsoLFmYmbESWKzF6jao8aiTANlkwSlt/ExTj
-	QajDXx/lRYjiKtCReQuY1uwfX7uoV3E=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=1EkVi7s/8MlhEYExXdilpNvNL4sr92wH/0BIT7iNhyg=;
+	b=V1lRnD1TaM4k9hoY9RwGERzQz68va74Z1ikyPyhReohIMLQSrk6eJJopi3kp3lVzOo1Z4j
+	iNI10T/aOFYkBQJyu8x5nHQrgaXW2wyF1Bm5zyKqpBMcMGzvKtkOiJ5RxrKYboH6ktnqlK
+	FLXzDGWSQeEf09UGzZh7PzeQ+E0KsJ4=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-642-TPsvWD4yNkqI23cHGTHb_Q-1; Thu, 28 Mar 2024 16:39:52 -0400
-X-MC-Unique: TPsvWD4yNkqI23cHGTHb_Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5D8DF185A786;
-	Thu, 28 Mar 2024 20:39:52 +0000 (UTC)
-Received: from localhost (unknown [10.39.194.117])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id B501E1C060DC;
-	Thu, 28 Mar 2024 20:39:50 +0000 (UTC)
-From: Stefan Hajnoczi <stefanha@redhat.com>
-To: linux-block@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	eblake@redhat.com,
-	Alasdair Kergon <agk@redhat.com>,
-	Mikulas Patocka <mpatocka@redhat.com>,
-	dm-devel@lists.linux.dev,
-	David Teigland <teigland@redhat.com>,
-	Mike Snitzer <snitzer@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>,
-	Joe Thornber <ejt@redhat.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>
-Subject: [RFC 2/9] loop: add llseek(SEEK_HOLE/SEEK_DATA) support
-Date: Thu, 28 Mar 2024 16:39:03 -0400
-Message-ID: <20240328203910.2370087-3-stefanha@redhat.com>
-In-Reply-To: <20240328203910.2370087-1-stefanha@redhat.com>
-References: <20240328203910.2370087-1-stefanha@redhat.com>
+ us-mta-140-6mYjidUJOpC64qE5UykkdQ-1; Thu, 28 Mar 2024 16:39:59 -0400
+X-MC-Unique: 6mYjidUJOpC64qE5UykkdQ-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3418f237c0bso715003f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 13:39:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711658399; x=1712263199;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1EkVi7s/8MlhEYExXdilpNvNL4sr92wH/0BIT7iNhyg=;
+        b=ZSLHJtIDOdgIXP5vUa0ZhPIRvX7XBidDPb4lBQqL+m+tlx7DejD+zC+8rmrviUocRF
+         5XfipcNMKZUUtIdJsiF7+xHewsVqFiaMFPXPYPJwc4m59znekkfgcn2ixpZRkj30AFqi
+         tapiNNsH4WuDyKzyBozqHTVARqAgcrAONIKi+BFXJFvAf6jVfV3D4ZG4dQq1npiWVfJN
+         6YvvfgLhuGu8spQKKRp2KooUyhWemGQslg+4yjgY/F0fPCzix4lp63RMt79EN1QPyVCV
+         2EiT9e/dFF3eLGqwE+U0PDhqxFcDkuLv3MNLAipLT1lM+Dl2rgz00hNS5ZRABmiUwTKy
+         0dQQ==
+X-Gm-Message-State: AOJu0YzfiOna07a/18VqszlsYJtxDwP+Qqsssyva9VgDDWsxOBi4eI1V
+	8CMYZs/hKr7n0nJNPMSpFDQNbFTbyu+5AV0zjbBvb3gejJp8sA2vH11Sm5BkhWvHSxtgVJf+lTx
+	Sf3Ph9CU3d4ZVnJca/Kjn+oBZCtGWdxYA1bXNPI6vhDdXBBO7OmfSAPZ8JsbcEA==
+X-Received: by 2002:a05:6000:1ac7:b0:341:cf94:3fce with SMTP id i7-20020a0560001ac700b00341cf943fcemr122837wry.10.1711658398904;
+        Thu, 28 Mar 2024 13:39:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFlFuuGI/hmfixQO2obOOMtY2DfcdI5KoL5LgJmY6xG4aKatLKCbxQyKtFErCZiOGgQKLVWsw==
+X-Received: by 2002:a05:6000:1ac7:b0:341:cf94:3fce with SMTP id i7-20020a0560001ac700b00341cf943fcemr122818wry.10.1711658398464;
+        Thu, 28 Mar 2024 13:39:58 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id by7-20020a056000098700b0033ec94c6277sm2580126wrb.115.2024.03.28.13.39.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 13:39:58 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Frederic Weisbecker
+ <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, Alex Shi
+ <alexs@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Barry Song <song.bao.hua@hisilicon.com>,
+ Tejun Heo <tj@kernel.org>
+Subject: Re: for_each_domain()/sched_domain_span() has offline CPUs (was Re:
+ [PATCH 2/2] timers: Fix removed self-IPI on global timer's enqueue in
+ nohz_full)
+In-Reply-To: <87cyrfe7a3.ffs@tglx>
+References: <20240318230729.15497-1-frederic@kernel.org>
+ <20240318230729.15497-3-frederic@kernel.org>
+ <464f6be2-4a72-440d-be53-6a1035d56a4f@paulmck-laptop>
+ <1b5752c8-ef32-4ed4-b539-95d507ec99ce@paulmck-laptop>
+ <ZfsLtMijRrNZfqh6@localhost.localdomain>
+ <6a95b6ac-6681-4492-b155-e30c19bb3341@paulmck-laptop>
+ <ZfwdEROGFFmIbkCM@lothringen>
+ <bf8689c2-0749-47cb-9535-53cf66e34f5e@paulmck-laptop>
+ <Zf1sSv/6mQHJuJ8G@lothringen> <Zf2GDjekyemQKn7I@lothringen>
+ <xhsmhwmppaqls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <87cyrfe7a3.ffs@tglx>
+Date: Thu, 28 Mar 2024 21:39:56 +0100
+Message-ID: <xhsmhle62ay5f.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+Content-Type: text/plain
 
-Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
----
-Open issues:
-- The file offset is updated on both the blkdev file and the backing
-  file. Is there a way to avoid updating the backing file offset so the
-  file opened by userspace is not affected?
-- Should this run in the worker or use the cgroups?
----
- drivers/block/loop.c | 36 ++++++++++++++++++++++++++++++------
- 1 file changed, 30 insertions(+), 6 deletions(-)
+On 27/03/24 21:42, Thomas Gleixner wrote:
+> On Tue, Mar 26 2024 at 17:46, Valentin Schneider wrote:
+>> On 22/03/24 14:22, Frederic Weisbecker wrote:
+>>> On Fri, Mar 22, 2024 at 12:32:26PM +0100, Frederic Weisbecker wrote:
+>> Now, on top of the above, there's one more thing worth noting:
+>>   cpu_up_down_serialize_trainwrecks()
+>>
+>> This just flushes the cpuset work, so after that the sched_domain topology
+>> should be sane. However I see it's invoked at the tail end of _cpu_down(),
+>> IOW /after/ takedown_cpu() has run, which sounds too late. The comments
+>> around this vs. lock ordering aren't very reassuring however, so I need to
+>> look into this more.
+>
+> commit b22afcdf04c96ca58327784e280e10288cfd3303 has more information in
+> the change log.
+>
+> TLDR: The problem is that cpusets have the lock order cpuset_mutex ->
+> cpu_hotplug_lock in the hotplug path for whatever silly reason. So
+> trying to flush the work from within the cpu hotplug lock write held
+> region is guaranteed to dead lock.
+>
+> That's why all of this got deferred to a work queue. The flush at the
+> end of the hotplug code after dropping the hotplug lock is there to
+> prevent that user space sees the CPU hotplug uevent before the work is
+> done. But of course between bringing the CPU offline and the flush the
+> kernel internal state is inconsistent.
+>
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 28a95fd366fea..6a89375de82e8 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -750,6 +750,29 @@ static void loop_sysfs_exit(struct loop_device *lo)
- 				   &loop_attribute_group);
- }
- 
-+static loff_t lo_seek_hole_data(struct block_device *bdev, loff_t offset,
-+		int whence)
-+{
-+	/* TODO need to activate cgroups or use worker? */
-+	/* TODO locking? */
-+	struct loop_device *lo = bdev->bd_disk->private_data;
-+	struct file *file = lo->lo_backing_file;
-+
-+	if (lo->lo_offset > 0)
-+		offset += lo->lo_offset; /* TODO underflow/overflow? */
-+
-+	/* TODO backing file offset is modified! */
-+	offset = vfs_llseek(file, offset, whence);
-+	if (offset < 0)
-+		return offset;
-+
-+	if (lo->lo_offset > 0)
-+		offset -= lo->lo_offset; /* TODO underflow/overflow? */
-+	if (lo->lo_sizelimit > 0 && offset > lo->lo_sizelimit)
-+		offset = lo->lo_sizelimit;
-+	return offset;
-+}
-+
- static void loop_config_discard(struct loop_device *lo,
- 		struct queue_limits *lim)
- {
-@@ -1751,13 +1774,14 @@ static void lo_free_disk(struct gendisk *disk)
- }
- 
- static const struct block_device_operations lo_fops = {
--	.owner =	THIS_MODULE,
--	.release =	lo_release,
--	.ioctl =	lo_ioctl,
-+	.owner =		THIS_MODULE,
-+	.release =		lo_release,
-+	.ioctl =		lo_ioctl,
- #ifdef CONFIG_COMPAT
--	.compat_ioctl =	lo_compat_ioctl,
-+	.compat_ioctl =		lo_compat_ioctl,
- #endif
--	.free_disk =	lo_free_disk,
-+	.free_disk =		lo_free_disk,
-+	.seek_hole_data =	lo_seek_hole_data,
- };
- 
- /*
-@@ -2140,7 +2164,7 @@ static int loop_control_remove(int idx)
- 		pr_warn_once("deleting an unspecified loop device is not supported.\n");
- 		return -EINVAL;
- 	}
--		
-+
- 	/* Hide this loop device for serialization. */
- 	ret = mutex_lock_killable(&loop_ctl_mutex);
- 	if (ret)
--- 
-2.44.0
+Thanks for the summary!
+
+> There was an attempt to make the CPU hotplug path synchronous in commit
+> a49e4629b5ed ("cpuset: Make cpuset hotplug synchronous") which got
+> reverted with commit 2b729fe7f3 for the very wrong reason:
+>
+> https://lore.kernel.org/all/F0388D99-84D7-453B-9B6B-EEFF0E7BE4CC@lca.pw/T/#u
+>
+>  (cpu_hotplug_lock){++++}-{0:0}:
+>   lock_acquire+0xe4/0x25c
+>   cpus_read_lock+0x50/0x154
+>   static_key_slow_inc+0x18/0x30
+>   mem_cgroup_css_alloc+0x824/0x8b0
+>   cgroup_apply_control_enable+0x1d8/0x56c
+>   cgroup_apply_control+0x40/0x344
+>   cgroup_subtree_control_write+0x664/0x69c
+>   cgroup_file_write+0x130/0x2e8
+>   kernfs_fop_write+0x228/0x32c
+>   __vfs_write+0x84/0x1d8
+>   vfs_write+0x13c/0x1b4
+>   ksys_write+0xb0/0x120
+>
+> Instead of the revert this should have been fixed by doing:
+>
+> +  cpus_read_lock();
+>    mutex_lock();
+>    mem_cgroup_css_alloc();
+> -  static_key_slow_inc();
+> +  static_key_slow_inc_cpuslocked();
+>
+
+So looking at the state of things now, writing to the
+cgroup.subtree_control file looks like: 
+
+  cgroup_file_write()
+  `\
+    cgroup_subtree_control_write()
+    `\
+      cgroup_kn_lock_live()
+      `\
+      | cgroup_lock()
+      | `\
+      |   mutex_lock(&cgroup_mutex);
+      |
+      cgroup_apply_control()
+      `\
+        cgroup_apply_control_enable()
+        `\
+          css_create()
+          `\
+            ss->css_alloc() [mem_cgroup_css_alloc()]
+            `\
+              static_branch_inc()        
+
+and same with cgroup_mkdir(). So if we want to fix the ordering that caused
+the revert, we'd probably want to go for:
+
+  static inline void cgroup_lock(void)
+  {
++       cpus_read_lock();
+	mutex_lock(&cgroup_mutex);
+  }
+
+  static inline void cgroup_unlock(void)
+  {
+	mutex_unlock(&cgroup_mutex);
+-       cpus_read_unlock();        
+  }
+
++ a handful of +_cpuslocked() changes.
+
+As for cpuset, it looks like it's following this lock order:
+
+	cpus_read_lock();
+	mutex_lock(&cpuset_mutex);
+
+Which AFAICT is what we want.
+
+> Sorry that I did not notice this back then because I was too focussed on
+> fixing that uevent nonsense in a halfways sane way.
+>
+> After that revert cpuset locking became completely insane.
+>
+> cpuset_hotplug_cpus_read_trylock() is the most recent but also the most
+> advanced part of that insanity. Seriously this commit is just tasteless
+> and disgusting demonstration of how to paper over a problem which is not
+> fully understood.
+>
+> After staring at it some more (including the history which led up to
+> these insanities) I really think that the CPU hotplug path can be made
+> truly synchronous and the memory hotplug path should just get the lock
+> ordering correct.
+>
+> Can we please fix this for real and get all of this insanity out of the
+> way
+
+Yes please!
+
+> including the nonsensical comments in the cpuset code:
+>
+>  * Call with cpuset_mutex held.  Takes cpus_read_lock().
+>
+>  ...
+>
+>        lockdep_assert_cpus_held();
+>        lockdep_assert_held(&cpuset_mutex);
+>
+> Oh well...
+>
+> Thanks,
+>
+>         tglx
 
