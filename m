@@ -1,105 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C00CF535C8;
-	Thu, 28 Mar 2024 09:06:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5151A39FD8;
+	Thu, 28 Mar 2024 09:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711616765; cv=none; b=Tyq/uk8xtz6gaYO7alzx2oW/Eo4dYWGoqmO/7k60/6FZJGrj+t499V+wqLcYvhb2cHhTLngNbq4/kGnqXEKnPXPvv3eSZuPiII0K8p+NNhPkTE58ZRv0dPnSqPn5z0AxtJ020drgD2AFF3yfEdRfh+JSO2wd4DFRf7sU7gsKPL4=
+	t=1711616793; cv=none; b=qwMiK7tlE7LzHNOsv7huvciS7EN9irQJ3NcFUcXWpFXsLE4GI6iNwpJGZLL7eJcMwJ0qwSI13EcYAG++aOlhQPPDkQMOZFuMd8/VbJ5wHt38fIXgdLDjUdb7wq2HhmeT/1G+6AJaFGUasw6TFhkZNN+6A6I2ECoDvdXQW2LPcxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711616765; c=relaxed/simple;
-	bh=/aSry/tvH4Kn2+KvvLdokxm+tTIRQW4w1k0pfVZBoUA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KoIsyhbn2laLtekagNhN/yIMcMuZ6RpCQG2Pwt5XTOapugZFRgIwDk+IFDPEusnkoSmFz13+2wZS/cpmoddsyCzRpLa2gzykffv8zgTI6BLutpIGy4Qr73l8EI8qc40EHPf4fenfIOmd+qM4zSTpiS4Ooo5r2srZd3VRSbKzTWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OyARpCuB; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OyARpCuB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711616762; x=1743152762;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/aSry/tvH4Kn2+KvvLdokxm+tTIRQW4w1k0pfVZBoUA=;
-  b=OyARpCuBOUWiKEhSBRf7aQZcS+HxnTQzeF0J1AJgNa/8yPbAvaoV0BcZ
-   I3huY/UdmVh9+PBojjR0pUovGaLYT7RaViN6Exd1ODuDt49i1mtooMtmW
-   dMiRg2xLOzRxQRaBh3u9buABkgqPCeb32aCdXkNDBXP9kzIg11Mw394/y
-   oeBcYXhX+ndgMiopN3RzxgFV41N5wqnMMwfLwcFTRi3BudiWH9PHGUfbp
-   Wvrs0JxUYS3xMmwl/m++Ex6tNQCcTxHUQUwRflOB/Az9PiYV0j+gtsfAx
-   uIZO9XGJYLiGUw8DF3EqJbNnpJCAn5TCt4i5sjry0D4VjpqtxTkZedIj/
-   A==;
-X-CSE-ConnectionGUID: M2i41u7/RSW2hal4xlIKvQ==
-X-CSE-MsgGUID: oIuvPsrqT9iJ3SBYMGqemA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="7356546"
-X-IronPort-AV: E=Sophos;i="6.07,161,1708416000"; 
-   d="scan'208";a="7356546"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 02:06:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,161,1708416000"; 
-   d="scan'208";a="21079288"
-Received: from lkp-server01.sh.intel.com (HELO be39aa325d23) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 28 Mar 2024 02:06:00 -0700
-Received: from kbuild by be39aa325d23 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rplhu-0001yw-00;
-	Thu, 28 Mar 2024 09:05:58 +0000
-Date: Thu, 28 Mar 2024 17:05:19 +0800
-From: kernel test robot <lkp@intel.com>
-To: Pavan Holla <pholla@chromium.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-	Pavan Holla <pholla@chromium.org>
-Subject: Re: [PATCH 3/3] platform/chrome: cros_ec_ucsi: Implement UCSI PDC
- driver
-Message-ID: <202403281639.AVfLPAVm-lkp@intel.com>
-References: <20240325-public-ucsi-h-v1-3-7c7e888edc0a@chromium.org>
+	s=arc-20240116; t=1711616793; c=relaxed/simple;
+	bh=Lc0IotqXw2gAX1b8tilNy6g3z9IyZ4SY1RLG5vS3eQ8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Rqfj1TwkM35KB2PbtBoBPXqpMkoXip4KxzXWyp2qCfFb2rY0kMYgATplE+g8hDWNgJ0gh8Y5zV8wIzHIBcJVHs0HbSrcS9Lu51LFLG/VDg7/XVaVATKjuFj7YXYTtviakUoTziCnpz+SmiAlheeyOt92fz1LYyHLw91zfSpy9E0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4V4yLq5VfGz1GDKr;
+	Thu, 28 Mar 2024 17:05:55 +0800 (CST)
+Received: from kwepemi500008.china.huawei.com (unknown [7.221.188.139])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9ECC514011F;
+	Thu, 28 Mar 2024 17:06:27 +0800 (CST)
+Received: from localhost.huawei.com (10.50.165.33) by
+ kwepemi500008.china.huawei.com (7.221.188.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 28 Mar 2024 17:06:26 +0800
+From: Yihang Li <liyihang9@huawei.com>
+To: <john.g.garry@oracle.com>, <yanaijie@huawei.com>, <jejb@linux.ibm.com>,
+	<martin.petersen@oracle.com>, <dlemoal@kernel.org>,
+	<chenxiang66@hisilicon.com>
+CC: <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@huawei.com>, <prime.zeng@huawei.com>, <yangxingui@huawei.com>,
+	<liyihang9@huawei.com>
+Subject: [PATCH v4] scsi: libsas: Allocation SMP request is aligned to ARCH_DMA_MINALIGN
+Date: Thu, 28 Mar 2024 17:06:26 +0800
+Message-ID: <20240328090626.621147-1-liyihang9@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240325-public-ucsi-h-v1-3-7c7e888edc0a@chromium.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemi500008.china.huawei.com (7.221.188.139)
 
-Hi Pavan,
+This series [1] reducing the kmalloc() minimum alignment on arm64 to 8
+(from 128). In libsas, this will cause SMP requests to be 8-byte-aligned
+through kmalloc() allocation. However, for the hisi_sas hardware, all
+commands address must be 16-byte-aligned. Otherwise, the commands fail to
+be executed.
 
-kernel test robot noticed the following build warnings:
+ARCH_DMA_MINALIGN represents the minimum (static) alignment for safe DMA
+operations, so use ARCH_DMA_MINALIGN as the alignment for SMP request.
 
-[auto build test WARNING on 4cece764965020c22cff7665b18a012006359095]
+Link: https://lkml.kernel.org/r/20230612153201.554742-1-catalin.marinas@arm.com [1]
+Signed-off-by: Yihang Li <liyihang9@huawei.com>
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+---
+Changes since v3:
+- Still aligned to ARCH_DMA_MINALIGN for safe DMA operations.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Pavan-Holla/usb-typec-ucsi-Provide-interface-for-UCSI-transport/20240326-074003
-base:   4cece764965020c22cff7665b18a012006359095
-patch link:    https://lore.kernel.org/r/20240325-public-ucsi-h-v1-3-7c7e888edc0a%40chromium.org
-patch subject: [PATCH 3/3] platform/chrome: cros_ec_ucsi: Implement UCSI PDC driver
-config: x86_64-randconfig-123-20240328 (https://download.01.org/0day-ci/archive/20240328/202403281639.AVfLPAVm-lkp@intel.com/config)
-compiler: gcc-12 (Ubuntu 12.3.0-9ubuntu2) 12.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240328/202403281639.AVfLPAVm-lkp@intel.com/reproduce)
+Changes since v2:
+- Use 16B as alignment for SMP requests instead of ARCH_DMA_MINALIGN.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403281639.AVfLPAVm-lkp@intel.com/
+Changes since v1:
+- Directly modify alloc_smp_req() instead of using handler callback.
+---
+ drivers/scsi/libsas/sas_expander.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/platform/chrome/cros_ec_ucsi.c:119:24: sparse: sparse: symbol 'cros_ucsi_ops' was not declared. Should it be static?
-
-vim +/cros_ucsi_ops +119 drivers/platform/chrome/cros_ec_ucsi.c
-
-   118	
- > 119	struct ucsi_operations cros_ucsi_ops = {
-   120		.read = cros_ucsi_read,
-   121		.async_write = cros_ucsi_async_write,
-   122		.sync_write = cros_ucsi_sync_write,
-   123	};
-   124	
-
+diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
+index a2204674b680..c989d182fc75 100644
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -135,7 +135,7 @@ static int smp_execute_task(struct domain_device *dev, void *req, int req_size,
+ 
+ static inline void *alloc_smp_req(int size)
+ {
+-	u8 *p = kzalloc(size, GFP_KERNEL);
++	u8 *p = kzalloc(ALIGN(size, ARCH_DMA_MINALIGN), GFP_KERNEL);
+ 	if (p)
+ 		p[0] = SMP_REQUEST;
+ 	return p;
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.33.0
+
