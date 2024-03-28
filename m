@@ -1,15 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05E2130AF9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04D381AC8
 	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:05:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711641939; cv=none; b=r52vTsP94rofNL8Kjk/PU2/II2+RPP0QbMquEpdgsJ46MntVG68V8wWS0dbNEW+wO5FMWmPRIXQet1fYHjYm5A9kBW3VSTW4xNuitfQ2Q9ihjA3sJ/03rBCQ1JHLL+EQ5bTfBruK+/N3BHknIlnjguqazU9/I7EoiO+sV91X97Y=
+	t=1711641938; cv=none; b=ctdmJBsMoOZPsIt1HIofpY1DhC52jcW42vw9jUQAjYg83093ezOml4AFdAj5ISruEcqBFEUNzAyg2mOwe15JZPL69eSRLbyUgIm1DnQ89JhLEPPbG/wbosJGQtgQaNCemAZtVb86ZvisRTk1yNYIbc3Rs25BZA2UfebLfiECDHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711641939; c=relaxed/simple;
-	bh=i166C4ugguMaBE/jhXf1xvZtL6qoC2/5pt0YAsHGzVw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=msavBFd4aPMPCAuC31e/FmHYwM/blgok7ev0kBDA0EAu31bFgRv/jpzqZeLGub1VXSVHFFkQxFbiCQSzaHzxDa9oEO/wggMFfJp1RR/fnJdW2xjHnnHuhcqlz7pItYMA/9qQIYUEPsFCjwIjNbAwBeBbRqfEVbE7PBqp7Dum2hg=
+	s=arc-20240116; t=1711641938; c=relaxed/simple;
+	bh=qUN8H93zV6XQLiINHS+NXR1WVuiAclCjAl3/m1ELF84=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=cVjEa8ZtGJ/DaOajF99l8i5YK6keOxG5elJxUEUixyKAzlQ/q3vkQOZLLUEycsEaF2Og9eGmQKCC/w1382eFT/y3uR5CUyAazlO0E127PtTSJro0MrO5OGk4nUV6tdrwxXdV/YFSuVpQXrcEPg1+TM03t/xvTGEZu2hNEQ6nJT4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -17,15 +18,15 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rpsFm-00058g-N5; Thu, 28 Mar 2024 17:05:22 +0100
+	id 1rpsFm-00058i-N5; Thu, 28 Mar 2024 17:05:22 +0100
 Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rpsFj-0092JG-CM; Thu, 28 Mar 2024 17:05:19 +0100
+	id 1rpsFj-0092JI-DV; Thu, 28 Mar 2024 17:05:19 +0100
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rpsFj-00A3Nb-10;
+	id 1rpsFj-00A3Ny-18;
 	Thu, 28 Mar 2024 17:05:19 +0100
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
@@ -46,10 +47,12 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	Simon Horman <horms@kernel.org>,
 	Willem de Bruijn <willemb@google.com>,
 	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH net-next v1 0/9] Enhanced DCB and DSCP Support for KSZ Switches
-Date: Thu, 28 Mar 2024 17:05:09 +0100
-Message-Id: <20240328160518.2396238-1-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v1 2/9] net: dsa: microchip: add IPV information support
+Date: Thu, 28 Mar 2024 17:05:11 +0100
+Message-Id: <20240328160518.2396238-3-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240328160518.2396238-1-o.rempel@pengutronix.de>
+References: <20240328160518.2396238-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,52 +65,211 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-This patch series is aimed at improving support for DCB (Data Center
-Bridging) and DSCP (Differentiated Services Code Point) on KSZ switches.
+Most of Microchip KSZ switches use Internal Priority Value associated
+with every frame. For example, it is possible to map any VLAN PCP or
+DSCP value to IPV and at the end, map IPV to a queue.
 
-The main goal is to introduce global DSCP and PCP (Priority Code Point)
-mapping support, addressing the limitation of KSZ switches not having
-per-port DSCP priority mapping. This involves extending the DSA
-framework with new callbacks for managing trust settings for global DSCP
-and PCP maps. Additionally, we introduce IEEE 802.1q helpers for default
-configurations, benefiting other drivers too.
+Since amount of IPVs is not equal to amount of queues, add this
+information and make use of it in some functions.
 
-Oleksij Rempel (9):
-  net: dsa: add support for DCB get/set apptrust configuration
-  net: dsa: microchip: add IPV information support
-  net: add IEEE 802.1q specific helpers
-  net: dsa: microchip: add multi queue support for KSZ88X3 variants
-  net: dsa: microchip: add support for different DCB app configurations
-  net: dsa: microchip: dcb: add special handling for KSZ88X3 family
-  net: dsa: microchip: enable ETS support for KSZ989X variants
-  net: dsa: microchip: init predictable IPV to queue mapping for all non
-    KSZ8xxx variants
-  net: dsa: microchip: let DCB code do PCP and DSCP policy configuration
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ drivers/net/dsa/microchip/ksz_common.c | 28 ++++++++++++++++++++++++--
+ drivers/net/dsa/microchip/ksz_common.h |  2 +-
+ 2 files changed, 27 insertions(+), 3 deletions(-)
 
- drivers/net/dsa/microchip/Kconfig       |   2 +
- drivers/net/dsa/microchip/Makefile      |   2 +-
- drivers/net/dsa/microchip/ksz8.h        |   1 +
- drivers/net/dsa/microchip/ksz8795.c     | 106 ++--
- drivers/net/dsa/microchip/ksz8795_reg.h |   9 +-
- drivers/net/dsa/microchip/ksz9477.c     |   6 -
- drivers/net/dsa/microchip/ksz_common.c  |  94 +++-
- drivers/net/dsa/microchip/ksz_common.h  |   7 +-
- drivers/net/dsa/microchip/ksz_dcb.c     | 712 ++++++++++++++++++++++++
- drivers/net/dsa/microchip/ksz_dcb.h     |  21 +
- include/net/dsa.h                       |   4 +
- include/net/dscp.h                      |  76 +++
- include/net/ieee8021q.h                 |  34 ++
- net/Kconfig                             |   4 +
- net/core/Makefile                       |   1 +
- net/core/ieee8021q_helpers.c            | 165 ++++++
- net/dsa/user.c                          |  28 +
- 17 files changed, 1198 insertions(+), 74 deletions(-)
- create mode 100644 drivers/net/dsa/microchip/ksz_dcb.c
- create mode 100644 drivers/net/dsa/microchip/ksz_dcb.h
- create mode 100644 include/net/dscp.h
- create mode 100644 include/net/ieee8021q.h
- create mode 100644 net/core/ieee8021q_helpers.c
-
+diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
+index 42330e8fd26e7..cf81739d91dae 100644
+--- a/drivers/net/dsa/microchip/ksz_common.c
++++ b/drivers/net/dsa/microchip/ksz_common.c
+@@ -1194,6 +1194,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.port_cnt = 3,		/* total port count */
+ 		.port_nirqs = 3,
+ 		.num_tx_queues = 4,
++		.max_ipvs = 8,
+ 		.tc_cbs_supported = true,
+ 		.tc_ets_supported = true,
+ 		.ops = &ksz9477_dev_ops,
+@@ -1223,6 +1224,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.cpu_ports = 0x10,	/* can be configured as cpu port */
+ 		.port_cnt = 5,		/* total cpu and user ports */
+ 		.num_tx_queues = 4,
++		.max_ipvs = 4,
+ 		.ops = &ksz8_dev_ops,
+ 		.ksz87xx_eee_link_erratum = true,
+ 		.mib_names = ksz9477_mib_names,
+@@ -1262,6 +1264,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.cpu_ports = 0x10,	/* can be configured as cpu port */
+ 		.port_cnt = 5,		/* total cpu and user ports */
+ 		.num_tx_queues = 4,
++		.max_ipvs = 4,
+ 		.ops = &ksz8_dev_ops,
+ 		.ksz87xx_eee_link_erratum = true,
+ 		.mib_names = ksz9477_mib_names,
+@@ -1287,6 +1290,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.cpu_ports = 0x10,	/* can be configured as cpu port */
+ 		.port_cnt = 5,		/* total cpu and user ports */
+ 		.num_tx_queues = 4,
++		.max_ipvs = 4,
+ 		.ops = &ksz8_dev_ops,
+ 		.ksz87xx_eee_link_erratum = true,
+ 		.mib_names = ksz9477_mib_names,
+@@ -1312,6 +1316,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.cpu_ports = 0x4,	/* can be configured as cpu port */
+ 		.port_cnt = 3,
+ 		.num_tx_queues = 4,
++		.max_ipvs = 4,
+ 		.ops = &ksz8_dev_ops,
+ 		.mib_names = ksz88xx_mib_names,
+ 		.mib_cnt = ARRAY_SIZE(ksz88xx_mib_names),
+@@ -1336,6 +1341,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.port_cnt = 7,		/* total physical port count */
+ 		.port_nirqs = 4,
+ 		.num_tx_queues = 4,
++		.max_ipvs = 8,
+ 		.tc_cbs_supported = true,
+ 		.tc_ets_supported = true,
+ 		.ops = &ksz9477_dev_ops,
+@@ -1370,6 +1376,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.port_cnt = 6,		/* total physical port count */
+ 		.port_nirqs = 2,
+ 		.num_tx_queues = 4,
++		.max_ipvs = 8,
+ 		.ops = &ksz9477_dev_ops,
+ 		.mib_names = ksz9477_mib_names,
+ 		.mib_cnt = ARRAY_SIZE(ksz9477_mib_names),
+@@ -1402,6 +1409,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.port_cnt = 7,		/* total physical port count */
+ 		.port_nirqs = 2,
+ 		.num_tx_queues = 4,
++		.max_ipvs = 8,
+ 		.ops = &ksz9477_dev_ops,
+ 		.mib_names = ksz9477_mib_names,
+ 		.mib_cnt = ARRAY_SIZE(ksz9477_mib_names),
+@@ -1432,6 +1440,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.port_cnt = 3,		/* total port count */
+ 		.port_nirqs = 2,
+ 		.num_tx_queues = 4,
++		.max_ipvs = 8,
+ 		.ops = &ksz9477_dev_ops,
+ 		.mib_names = ksz9477_mib_names,
+ 		.mib_cnt = ARRAY_SIZE(ksz9477_mib_names),
+@@ -1458,6 +1467,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.port_cnt = 3,		/* total port count */
+ 		.port_nirqs = 3,
+ 		.num_tx_queues = 4,
++		.max_ipvs = 8,
+ 		.tc_cbs_supported = true,
+ 		.tc_ets_supported = true,
+ 		.ops = &ksz9477_dev_ops,
+@@ -1486,6 +1496,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.port_cnt = 7,		/* total port count */
+ 		.port_nirqs = 3,
+ 		.num_tx_queues = 4,
++		.max_ipvs = 8,
+ 		.tc_cbs_supported = true,
+ 		.tc_ets_supported = true,
+ 		.ops = &ksz9477_dev_ops,
+@@ -1519,6 +1530,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.port_cnt = 7,		/* total physical port count */
+ 		.port_nirqs = 3,
+ 		.num_tx_queues = 4,
++		.max_ipvs = 8,
+ 		.tc_cbs_supported = true,
+ 		.tc_ets_supported = true,
+ 		.ops = &ksz9477_dev_ops,
+@@ -1551,6 +1563,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.port_cnt = 5,		/* total physical port count */
+ 		.port_nirqs = 6,
+ 		.num_tx_queues = 8,
++		.max_ipvs = 8,
+ 		.tc_cbs_supported = true,
+ 		.tc_ets_supported = true,
+ 		.ops = &lan937x_dev_ops,
+@@ -1578,6 +1591,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.port_cnt = 6,		/* total physical port count */
+ 		.port_nirqs = 6,
+ 		.num_tx_queues = 8,
++		.max_ipvs = 8,
+ 		.tc_cbs_supported = true,
+ 		.tc_ets_supported = true,
+ 		.ops = &lan937x_dev_ops,
+@@ -1605,6 +1619,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.port_cnt = 8,		/* total physical port count */
+ 		.port_nirqs = 6,
+ 		.num_tx_queues = 8,
++		.max_ipvs = 8,
+ 		.tc_cbs_supported = true,
+ 		.tc_ets_supported = true,
+ 		.ops = &lan937x_dev_ops,
+@@ -1636,6 +1651,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.port_cnt = 5,		/* total physical port count */
+ 		.port_nirqs = 6,
+ 		.num_tx_queues = 8,
++		.max_ipvs = 8,
+ 		.tc_cbs_supported = true,
+ 		.tc_ets_supported = true,
+ 		.ops = &lan937x_dev_ops,
+@@ -1667,6 +1683,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.port_cnt = 8,		/* total physical port count */
+ 		.port_nirqs = 6,
+ 		.num_tx_queues = 8,
++		.max_ipvs = 8,
+ 		.tc_cbs_supported = true,
+ 		.tc_ets_supported = true,
+ 		.ops = &lan937x_dev_ops,
+@@ -2296,6 +2313,13 @@ static int ksz_setup(struct dsa_switch *ds)
+ 
+ 	dev->dev_ops->enable_stp_addr(dev);
+ 
++	/* Make sure driver provide plausible queue and IPV values */
++	if (!dev->info->num_tx_queues ||
++	    dev->info->num_tx_queues > dev->info->max_ipvs) {
++		dev_err(dev->dev, "Number of TX queues exceeds maximum supported IPVs\n");
++		return -EINVAL;
++	}
++
+ 	ds->num_tx_queues = dev->info->num_tx_queues;
+ 
+ 	regmap_update_bits(ksz_regmap_8(dev), regs[S_MULTICAST_CTRL],
+@@ -3522,7 +3546,7 @@ static int ksz_tc_ets_add(struct ksz_device *dev, int port,
+ 	for (tc_prio = 0; tc_prio < ARRAY_SIZE(p->priomap); tc_prio++) {
+ 		int queue;
+ 
+-		if (tc_prio > KSZ9477_MAX_TC_PRIO)
++		if (tc_prio >= dev->info->max_ipvs)
+ 			break;
+ 
+ 		queue = ksz_ets_band_to_queue(p, p->priomap[tc_prio]);
+@@ -3564,7 +3588,7 @@ static int ksz_tc_ets_del(struct ksz_device *dev, int port)
+ 	/* Revert the queue mapping for TC-priority to its default setting on
+ 	 * the chip.
+ 	 */
+-	for (tc_prio = 0; tc_prio <= KSZ9477_MAX_TC_PRIO; tc_prio++) {
++	for (tc_prio = 0; tc_prio < dev->info->max_ipvs; tc_prio++) {
+ 		int queue;
+ 
+ 		queue = tc_prio >> s;
+diff --git a/drivers/net/dsa/microchip/ksz_common.h b/drivers/net/dsa/microchip/ksz_common.h
+index 40c11b0d6b625..1bedd240cbbe4 100644
+--- a/drivers/net/dsa/microchip/ksz_common.h
++++ b/drivers/net/dsa/microchip/ksz_common.h
+@@ -58,6 +58,7 @@ struct ksz_chip_data {
+ 	int port_cnt;
+ 	u8 port_nirqs;
+ 	u8 num_tx_queues;
++	u8 max_ipvs; /* max number of Internal Priority Values */
+ 	bool tc_cbs_supported;
+ 	bool tc_ets_supported;
+ 	const struct ksz_dev_ops *ops;
+@@ -722,7 +723,6 @@ static inline int is_lan937x(struct ksz_device *dev)
+ #define KSZ9477_PORT_MRI_TC_MAP__4	0x0808
+ 
+ #define KSZ9477_PORT_TC_MAP_S		4
+-#define KSZ9477_MAX_TC_PRIO		7
+ 
+ /* CBS related registers */
+ #define REG_PORT_MTI_QUEUE_INDEX__4	0x0900
 -- 
 2.39.2
 
