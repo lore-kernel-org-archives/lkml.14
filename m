@@ -1,116 +1,127 @@
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41EA3CF73;
-	Thu, 28 Mar 2024 17:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60984436B;
+	Thu, 28 Mar 2024 17:19:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711645975; cv=none; b=inr1FTU7dAbj/fh7VEGyCNSrDdhXsMQePwEASDYpWD6p7bg9Sp3IeD2TxFsY94k+Pm3DHyopY5kJg/p7Y+QFKTKmsb2gbsV3XuMnJUnzuuJfoQyuG0ExQmbqqiIVJwOYYFY+NkAyxIRrMsAB4NMCN7TYxvCkTFZ6/2539C0b/yM=
+	t=1711646364; cv=none; b=iv/QRYR3H7+/tOGmtDAxYsWClNWe9FqEaDPCud4xRG1/KdujCqsPqL1zokBv2ihpunfZ/JA8vNxn+YeJ34xMRsarWS+OU9stFUUq7XgKzBc4S4WKP2QpU8rOcBUky4Ia/wiaQDodK6z3H1Gq7vKZNeWgF1E+1C9S/cHldOPo0Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711645975; c=relaxed/simple;
-	bh=NvDiTdvu1oocEd4z4WVUoGVua3pG0iHjdYEeWj5pFOw=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=S3ie5oDk+l77/eqme4++9A/jVyoUiA43vv1lahZMnNpPRUxjDZAQ0AFUcifUTOesWPUakM0G30NFeMsa1Ft2W+DOlLp6Tybz2u2I2ghPccJbkLzeICNUUga5ItJsk6cy+bdwSDjI3ngSfOOPj9W7fRP2yX4vTl+1QS1fukPWUC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=OOcmOZlV; arc=none smtp.client-ip=162.62.57.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
+	s=arc-20240116; t=1711646364; c=relaxed/simple;
+	bh=SjNBm760kIgx8JgQnDyaM+FCHFSFE+fqSaoT+RmVu3s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vj/WMk+JAdkqP6xzICepayScoY3z/erGHeGpIV1miBgL+LvXDwaTnd+xGAU+OeSet1lBMs3DWJbd+JpDgL7j2OXfLsUboSPMxBDCX2gpemVxwtKiIOCuv5PsyxUm9rAqg5gkURnkMfm1pYfPT7spfIh1f8cv8810C4rh2bPWZLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HeDLCZYi; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="OOcmOZlV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1711645960; bh=L2lkCcExhcCSZci/+XbSJe7RshMmWIbz8lRm/dAsp5U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=OOcmOZlVFdg5q1a8eyiAp4wBEg7I7HD06iWvaUsYQtaehNgmGqjFP8ZzjO61iheXf
-	 DLFg8K9wKHuSJEFzKNNHJVWtr6nT9t6i3uCmnINRwX1W1XeLdVcHp9JOCJc7tygE9g
-	 5UA3aVjl8Mu2RPagl/Ks8mLjc4XDR/lOhr+m6YoU=
-Received: from cyy-pc.lan ([240e:379:2277:8a00:7feb:196a:dd5b:c05f])
-	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
-	id 199B7A03; Fri, 29 Mar 2024 01:06:25 +0800
-X-QQ-mid: xmsmtpt1711645596tdwddzrgm
-Message-ID: <tencent_DB11214C8D0D7C48829ADA128E7BB8F13108@qq.com>
-X-QQ-XMAILINFO: NMGzQWUSIfvTNMP2jtZxLCFW1PIkrRFpEbd8CFMBnnDWS+4rcko4Wwu1VcTYYI
-	 Jv+Qii0fPVnQFco/q+0pNKeDoK+4aqtPIK78H9JnOIM07p2UpArsZk0bUPw3Ia9NKYw44Fo7YQNw
-	 D38x8y+sGFVnXgB5HwOHLQ8Gq+wmy3tlpThH+4ftr08MFZ7zM8pUBrEXsPN3bVZAA/MnzqrYQx9K
-	 qqvZQk1H1nIIxZSB4H20CEnH5O49hlUPhWmKyPSZG6xLUNWf8e/KMh05dD/NoTaPYG0RQu7BMHmf
-	 IdHWmNPvo3HUacip14GUl+jyUb/0HuFffyAszOql4ZXt7ZSYQAWwE3d+fQGwDbhRmSnVZNJWws7G
-	 GOEJ5SPh0ZULLP0fWhV27X8zLwyJLdzek4JmIq4l1kyiyfR7bvt+wSyryOMEboSoSKyJv84oHVWJ
-	 E/HVW3q2QeSaV5iqtI9QqXPGLieKYeGpaeiG9XSFFjmkO6DdILK4kZ9wd4BKPbajGCkob5zS8Skp
-	 1voYk6+8NxaxMpmzQVMtmofs9DEre+mgFK9gTel8Uzaajgt0p7GWzUCq8z0qgLtlV1YpmXkgix2b
-	 AiWCctCng0910fXjyg5ktmhiHaNyhOvigvg20dmRSBcf7k4Dbww7B0wDhemkjBTSQ7DhYDXcb+pG
-	 639LFTFVAk09vuiy16OGagFCP2UXdtIAbBTWkAN46+2uneR6L/jZJwqUw9KFCe44AkmTV69eBc7w
-	 4nYSxLkFMBPpFM+cZs1i45jAi4h+BFJrQ7gVfbPdmOMOfq6YkqRLPh8koRp8jS8lHx/NuTEfSwRV
-	 RXxzrKtosbYvffH2VxPvUS3ZA31s5MwAL1qo9cetC2EHcBwQ3L6wxtKmZIUT5C+/C5Q110Rog+9i
-	 GlsRpD6Mw7jHIW65xKdbYxf4XwpVYLrCojZASyzIapW1MTb75Z53HlzFPrFxoVhdyk/kKBAsLET3
-	 340vpJumhJgwec5gRqTLq3Hga2d1CppBT8F7EwUZ4wvH65scjd/C3d/vh9dFt/Y3xO2mS1qGJitd
-	 NwWinoYcOqg5/IPzKge/GcNhq95Zk5sVDqd0lj7x9h6/fUV1sY
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: Yangyu Chen <cyy@cyyself.name>
-To: linux-riscv@lists.infradead.org
-Cc: Conor Dooley <conor@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Guo Ren <guoren@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	linux-gpio@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yangyu Chen <cyy@cyyself.name>
-Subject: [PATCH v1 4/5] pinctrl: k210: Deprecate SOC_CANAAN and use SOC_CANAAN_K210
-Date: Fri, 29 Mar 2024 01:06:12 +0800
-X-OQ-MSGID: <20240328170613.120131-4-cyy@cyyself.name>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <tencent_2E60E33C1F88A090B6B3A332AE528C6B8806@qq.com>
-References: <tencent_2E60E33C1F88A090B6B3A332AE528C6B8806@qq.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HeDLCZYi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711646363; x=1743182363;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SjNBm760kIgx8JgQnDyaM+FCHFSFE+fqSaoT+RmVu3s=;
+  b=HeDLCZYiPgOOFq/O0fhdvcdSeVBGQXjR8+lDh6KGvNoxNqCZExhilQIX
+   sA3EyAy9rnCe/j8xeP2vHFAAt+B3U0WGJ4imY3MRbGVbfifVLlMnO97hs
+   hth/c0USk4tXV/G3OY3UUBIHknUEq+cgcY/uyvFcWirc0Izrnrw0qZ8JQ
+   4LYvn64iPpUjSwm6QYD2AyKfqsJrZYUonOLTEMxRnd5qxw7QFfDwL70Nj
+   +Up2dcRu0SzW9ZwCOlv/ACxtZYFXitryzV4ny+RxEui3kgKFtwTKKcTnb
+   NSA5BX+KPt+OF6sB6SXN+IMzkoljGfCQJp6xXsSNF+j1kIaWDmFzIr+RQ
+   g==;
+X-CSE-ConnectionGUID: kzj5ylgQTnayGTO3sJQ26A==
+X-CSE-MsgGUID: BA20fvUITAapxucO6lh2hg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="24302618"
+X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
+   d="scan'208";a="24302618"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 10:19:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
+   d="scan'208";a="21446717"
+Received: from lkp-server01.sh.intel.com (HELO be39aa325d23) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 28 Mar 2024 10:19:17 -0700
+Received: from kbuild by be39aa325d23 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rptPH-0002NY-0G;
+	Thu, 28 Mar 2024 17:19:15 +0000
+Date: Fri, 29 Mar 2024 01:18:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Mina Almasry <almasrymina@google.com>,
+	Ayush Sawal <ayush.sawal@chelsio.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Mirko Lindner <mlindner@marvell.com>,
+	Stephen Hemminger <stephen@networkplumber.org>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	David Ahern <dsahern@kernel.org>,
+	Boris Pismenny <borisp@nvidia.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Dragos Tatulea <dtatulea@nvidia.com>
+Subject: Re: [PATCH net-next v2 2/3] net: mirror skb frag ref/unref helpers
+Message-ID: <202403290103.BHENUIYW-lkp@intel.com>
+References: <20240327214523.2182174-3-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240327214523.2182174-3-almasrymina@google.com>
 
-Since SOC_FOO should be deprecated from patch [1], and cleanup for other
-SoCs is already in the mailing list [2,3,4], we remove the use of
-SOC_CANAAN and introduced SOC_CANAAN_K210 for K210-specific drivers,
+Hi Mina,
 
-Thus, we replace its drivers depends on SOC_CANAAN_K210 and default select
-when it has the symbol SOC_CANAAN_K210.
+kernel test robot noticed the following build errors:
 
-[1] https://lore.kernel.org/linux-riscv/20221121221414.109965-1-conor@kernel.org/
-[2] https://lore.kernel.org/linux-riscv/20240305-praying-clad-c4fbcaa7ed0a@spud/
-[3] https://lore.kernel.org/linux-riscv/20240305-fled-undrilled-41dc0c46bb29@spud/
-[4] https://lore.kernel.org/linux-riscv/20240305-stress-earflap-d7ddb8655a4d@spud/
+[auto build test ERROR on net-next/main]
 
-Signed-off-by: Yangyu Chen <cyy@cyyself.name>
----
- drivers/pinctrl/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Mina-Almasry/net-make-napi_frag_unref-reuse-skb_page_unref/20240328-054816
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20240327214523.2182174-3-almasrymina%40google.com
+patch subject: [PATCH net-next v2 2/3] net: mirror skb frag ref/unref helpers
+config: riscv-defconfig (https://download.01.org/0day-ci/archive/20240329/202403290103.BHENUIYW-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 23de3862dce582ce91c1aa914467d982cb1a73b4)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240329/202403290103.BHENUIYW-lkp@intel.com/reproduce)
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index d45657aa986a..1be05efccc29 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -235,13 +235,13 @@ config PINCTRL_INGENIC
- 
- config PINCTRL_K210
- 	bool "Pinctrl driver for the Canaan Kendryte K210 SoC"
--	depends on RISCV && SOC_CANAAN && OF
-+	depends on RISCV && SOC_CANAAN_K210 && OF
- 	select GENERIC_PINMUX_FUNCTIONS
- 	select GENERIC_PINCONF
- 	select GPIOLIB
- 	select OF_GPIO
- 	select REGMAP_MMIO
--	default SOC_CANAAN
-+	default SOC_CANAAN_K210
- 	help
- 	  Add support for the Canaan Kendryte K210 RISC-V SOC Field
- 	  Programmable IO Array (FPIOA) controller.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403290103.BHENUIYW-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from net/core/skbuff.c:40:
+   In file included from include/linux/mm.h:2208:
+   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> net/core/skbuff.c:1016:21: error: use of undeclared identifier 'head_page'
+    1016 |         page_pool_ref_page(head_page);
+         |                            ^
+   1 warning and 1 error generated.
+
+
+vim +/head_page +1016 net/core/skbuff.c
+
+  1010	
+  1011		page = compound_head(page);
+  1012	
+  1013		if (!is_pp_page(page))
+  1014			return false;
+  1015	
+> 1016		page_pool_ref_page(head_page);
+  1017		return true;
+  1018	}
+  1019	EXPORT_SYMBOL(napi_pp_get_page);
+  1020	
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
