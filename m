@@ -1,78 +1,120 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D33D130494;
-	Thu, 28 Mar 2024 15:59:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BFC9131BC2;
+	Thu, 28 Mar 2024 15:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711641542; cv=none; b=hJXMgHOOP+SJOv3/czMMqZ3Sp8ixfSg87Of0vwpjP/I/IoetvNHwTjFr+Al5jqQALDW7/lZnVLnZL09Dcxi7dU/GyhNPcv/SH2/jHXURNbx5pK+U1GliyDVlWL+k4B+F+oWj9X2an+6Fe1e43xwgZSgJUKM5pIW2V1+6WBNN1Yk=
+	t=1711641546; cv=none; b=dWHuj3LubXjYYehmn7/YB0cO7pk6vEkRhaIaZN232F5OS4tFax489If781uDTeJS/N+9ujG+Mk+go7jgmwttGoHVJwaNMRs4GyQTAX0ytkGXeD5uzFqwjSoFQPj84o63yIS+iAuKj46uuS9X2Yu53TdYdwO+3I6TYceH2y1mMBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711641542; c=relaxed/simple;
-	bh=GWtJFEiitlhtsVgrclj9h0xKI8Ojp/cCLUDFmZyqqcg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RhMd6Tv/pORBiORPvcxD3XWXgBfCRc9hGu/6SP7SutA8rDpBKDeEkCgHu3UHvhsJOU4y+tLIPHyeKQCb427PYoHYER2g9qvVFSrgEGi/5FTL7JwMC7jWXSC86tJX/7QWNmz9zxASjxiDqNKh+P2AZ61JA3ccZxH+wryTNqDBvgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=hGy1H9Jl; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1711641546; c=relaxed/simple;
+	bh=w/CAagCs93tnwOISaREraUes9B75EU7uQd/GrX75vJ4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=c3avkX4iUby6IwrjPt69q5/3a7nzFUaOUnPGQcdSJoh6qnQVn9rrE0AY4pIE342fYLPbzCqSpJQ4yJrB+kUmwz7bdHHXUOhZyu5y4gfLPe946MYzvAmbisK6hg2QvY9R5fFDnlrICugAa9DJWpDTZOQzn7OqyQq8FmgtCE7CYaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rC+cSWQa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="hGy1H9Jl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=a9y+egi/SnB6tqk3YaEf7Iwf2TbvjOWOgkUI0R8Vlxo=; b=hGy1H9JlS38JfZrmWnL3AFfZXZ
-	CgRq6LXqqMmFQrzY5c2MJ29apnmucU0qJAkWmewJK+2Jzrwk1J8k3x7oCrD7ic3ebilQBB5q+ICAC
-	oc8UVrI7ANFSfnbDD58IIh+CjlwTw3pC0fthRFG4wPcutfM1KZKGXs311nsq4rJO0WFQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rps9Q-00BW3c-J0; Thu, 28 Mar 2024 16:58:48 +0100
-Date: Thu, 28 Mar 2024 16:58:48 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Mark Brown <broonie@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
-	Dent Project <dentproject@linuxfoundation.org>
-Subject: Re: [PATCH net-next v6 16/17] dt-bindings: net: pse-pd: Add bindings
- for TPS23881 PSE controller
-Message-ID: <8569b8b4-68d4-4ece-be80-e28ba50522d2@lunn.ch>
-References: <20240326-feature_poe-v6-0-c1011b6ea1cb@bootlin.com>
- <20240326-feature_poe-v6-16-c1011b6ea1cb@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rC+cSWQa"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C150EC4166A;
+	Thu, 28 Mar 2024 15:59:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711641545;
+	bh=w/CAagCs93tnwOISaREraUes9B75EU7uQd/GrX75vJ4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=rC+cSWQaCVaIgFz+KeWgwqswKUa8HnduLtkqZzAPwFFb14jZuXZ9z7qBTzh7na9JS
+	 4V+5V8bkh4Zo1vtFt6wL2mdo9OwzBhkto75XnOEIzmeixScBZYPvR6DETzowMtiLV0
+	 Bom/CXB456RgDjKFiZ5VJHiLA3ZRIW2p7Tw3RPdOEaQB9vf3Bw1qOQd/OEW6BUbuBM
+	 HfMUSPdl/bztabiGFkLHcIvbKgvMacaCktlmCXi9YGgQhWi0a+5P7DPZ30NpYsAv8n
+	 sAg/FCFFpdhDZFJbUxFUp8sDopsYyyhRs1qa163ynn0i+CjZ+ujFMfHYzFlhQ8Qn9w
+	 2Gy6wKhIFR5Yg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE43CD1283;
+	Thu, 28 Mar 2024 15:59:05 +0000 (UTC)
+From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
+Date: Thu, 28 Mar 2024 16:57:50 +0100
+Subject: [PATCH 3/7] crypto: Remove the now superfluous sentinel element
+ from ctl_table array
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240326-feature_poe-v6-16-c1011b6ea1cb@bootlin.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240328-jag-sysctl_remset_misc-v1-3-47c1463b3af2@samsung.com>
+References: <20240328-jag-sysctl_remset_misc-v1-0-47c1463b3af2@samsung.com>
+In-Reply-To: <20240328-jag-sysctl_remset_misc-v1-0-47c1463b3af2@samsung.com>
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Muchun Song <muchun.song@linux.dev>, Miaohe Lin <linmiaohe@huawei.com>, 
+ Naoya Horiguchi <naoya.horiguchi@nec.com>, 
+ John Johansen <john.johansen@canonical.com>, 
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+ "Serge E. Hallyn" <serge@hallyn.com>, David Howells <dhowells@redhat.com>, 
+ Jarkko Sakkinen <jarkko@kernel.org>, Kees Cook <keescook@chromium.org>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, 
+ "David S. Miller" <davem@davemloft.net>, Jens Axboe <axboe@kernel.dk>, 
+ Pavel Begunkov <asml.silence@gmail.com>, 
+ Atish Patra <atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>, 
+ Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, linux-mm@kvack.org, 
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
+ keyrings@vger.kernel.org, linux-crypto@vger.kernel.org, 
+ io-uring@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Joel Granados <j.granados@samsung.com>
+X-Mailer: b4 0.13-dev-2d940
+X-Developer-Signature: v=1; a=openpgp-sha256; l=843;
+ i=j.granados@samsung.com; h=from:subject:message-id;
+ bh=PsRDF4iHKhFg1x0ZSp/XUca2d9GI60WeSwOtfnTJcKU=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYFk8Sn6Fir1TrXxzcrJeA20C4FmUqvYJhos
+ nJVoW2ScjI/aIkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmBZPEAAoJELqXzVK3
+ lkFPCAQL/0dpS5DBrYR+5mZqJK2pQcAA0QQqBm8y2Tq391CKvm30tew2wtkScDHoRiyul8QyzWC
+ D5/YpkG8dWaCHAkj+HOhXbtB8Rfi/cf4BchHZ0+cRj41OMxCePLa+yG5/nfgar5oc2nXN2gcrYK
+ ntIUgfJExh6PEDQXr6Xk4RK675RUtgLxch2ojMfz4S3qe9J4DmkUPtR+VQs52+lmteyOBMwdh8/
+ DgmBLGsimvyq20RbSHwzZRPUwk7y6YTCDhKz6oLyB97eOjbuarD4FwBd1nLHwpS1su80Ul8kYu4
+ OmnEs9ucp2Ne9WIybw3frLNgnmJRfjHa3nQalXpp7yFOENLnS9QK2RvrYCmjKIep2FZIA7t5Jvr
+ 0Iod9HPfrNohN1XK0AjqT+ihZTjhFd8fSHnf2YnS/oSYtZf1kJuljhIFoLNl3PKVsRUHhhUHlHC
+ dW+jquu6DydspJi9zZEyoeHoSbs1S2+5jvkBGfrXYVn8pQWjKMpvfOWKuIw6sqQuxre2VZIjR26
+ SY=
+X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
+ fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
+X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
+ auth_id=70
+X-Original-From: Joel Granados <j.granados@samsung.com>
+Reply-To: j.granados@samsung.com
 
-On Tue, Mar 26, 2024 at 03:04:53PM +0100, Kory Maincent wrote:
-> From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
-> 
-> Add the TPS23881 I2C Power Sourcing Equipment controller device tree
-> bindings documentation.
-> 
-> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+From: Joel Granados <j.granados@samsung.com>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+This commit comes at the tail end of a greater effort to remove the
+empty elements at the end of the ctl_table arrays (sentinels) which will
+reduce the overall build time size of the kernel and run time memory
+bloat by ~64 bytes per sentinel (further information Link :
+https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
 
-    Andrew
+Remove sentinel from crypto_sysctl_table
+
+Signed-off-by: Joel Granados <j.granados@samsung.com>
+---
+ crypto/fips.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/crypto/fips.c b/crypto/fips.c
+index 92fd506abb21..8a784018ebfc 100644
+--- a/crypto/fips.c
++++ b/crypto/fips.c
+@@ -63,7 +63,6 @@ static struct ctl_table crypto_sysctl_table[] = {
+ 		.mode		= 0444,
+ 		.proc_handler	= proc_dostring
+ 	},
+-	{}
+ };
+ 
+ static struct ctl_table_header *crypto_sysctls;
+
+-- 
+2.43.0
+
+
