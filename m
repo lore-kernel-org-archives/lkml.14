@@ -1,194 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14751304AB;
-	Thu, 28 Mar 2024 15:44:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9C8FC11;
+	Thu, 28 Mar 2024 15:45:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711640657; cv=none; b=b0/1X7hJ5JWmwrfESYUlvn2pwMad1Yr+qIyXbgkwW/smOeJkrfsuMl5YCv9EGa1O2+hpDy1skB0layiplj7QMCwm7LcAwSAJQJr8sct7ZItKTfpWXn5QXFC0jExxxUVPeEjEtIkxcRz+8uS8yO552g9x8ra2hr4nB9tkzAGdQa0=
+	t=1711640706; cv=none; b=mZAqct3D9/FumZ3KUEawErq/N87pp7XVOhMqjabPV4ZNsE2V8x1rMNLMhr8HjDE5D1bx+tOfSZa9+F2hcSPe/BDu0/DBIOu+xpHUMre22AkuOxSc9gt4qFgP1hoY5d+/2m7Ison5Q7BoFOyHHC+uQmVnnTgasXJgEQzw89pBkqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711640657; c=relaxed/simple;
-	bh=gVjX7kZuMI7PWnIkwvFQDdKgNrPSlsBI7m23GDAWKj8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RN+2lkL+lHyqMxIx1jYRljl6gq0KULjUTr/8BBsdJxi9wBgBnAESwVKvgK+DLPf47zwxNLRlwdo+Evx8I5gmGRTn/eOnPyzyjFq059WUDk2kl1qD5kP4Vq5oz86D//aYzjCSA6URQq2UWOY/GVgw+AnAWqtfWSiNc4CsYDBZbpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VD9M4KpR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711640706; c=relaxed/simple;
+	bh=Uw5OJopEW+p/K0FZ5wOA7vWjuMNSzi/xuCD7fzcrxAg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cQS9SiAO4J7d3qWLx/UzctLFohmMcJmCVNekrzDkJxFkpUEp8moR6DGeZkmZ7oXMn85k5byyZ18KqPOVDsfEsG+ttI49LwhrpvZ7grcXzysoghGFTno9HCm1P2xxfU4m8vauO9UCUgaVKipybLw40K/Gvjzzler4yhPmusTV1Uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Xl7jqUI+; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VD9M4KpR"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8C601C32790;
-	Thu, 28 Mar 2024 15:44:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711640657;
-	bh=gVjX7kZuMI7PWnIkwvFQDdKgNrPSlsBI7m23GDAWKj8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=VD9M4KpRgRABtXgErWUIa5WvPi+7lEpxfkfoIeX1VZ4mxRQUKk6QQjkTBW5uqmK0d
-	 +hBvwjIWMDCYtZ/SEu0kQolGCuVJFFrylBR4ocX+dD3MlW+lbH4tEcKu7vH7FI1o9R
-	 DrKg13bZQ+Wg2kTVNKlgtp9reWd3bSGbYoi0sx1X58ILgJLOl8y1Eqr00HIiMa6cSv
-	 eH9g+lOUkqBottzJ5Iq5PBSIoi1dVdFQlet01MGS3uvwm+3R8lB0JyZOd3M4+tIaQx
-	 P2j9zdse9frbejoPJsG6LrbLjKrHYgvqb6FdVHIlo4oBMbZCc/qhqA0NFofIvQxDDN
-	 yOibrbrT809eA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 817DBC54E64;
-	Thu, 28 Mar 2024 15:44:17 +0000 (UTC)
-From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Date: Thu, 28 Mar 2024 16:44:07 +0100
-Subject: [PATCH v3 06/10] scheduler: Remove the now superfluous sentinel
- elements from ctl_table array
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Xl7jqUI+"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7DA7A40E016C;
+	Thu, 28 Mar 2024 15:45:02 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id FCFFXOAxSdz5; Thu, 28 Mar 2024 15:44:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1711640699; bh=2s0TKMfc9cI/JnKa6Lhb22qwjshY12Z0TDskuNsSujs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xl7jqUI+mJCxaRjDOB3ofNmaAlLcyTgPnH+Umb9d1VM4UmZg9TfgFMuyoboahPToY
+	 KLlFq5OtMRdd9koc0dWhgO7RbDCCJ/XinL5ko2jH5zsTno3skctyA7WIk96vVrwa8A
+	 QVK2txxS10Q7cQXVqZ0odEiHEmVMBYBC8dpZUxAqp1IPk9EDptKU5nt3tIAG5B26mW
+	 ZfZsz9K+6OAePI5bDTmL7Oc0a2BPDFaWf1oz5TSq7wnxnIWgklHVHiR+rHZCI4SYa/
+	 QwbmC7xr44dStiNpvna0UWjjKG36TMOt+3kTVaM6mGWKoGgthl0LSEqe8VIPW8EEMh
+	 NHZXcICY8PTVeoZFQiwllza8T+78tpqonATuxSdjhVw5f08D17zRPQDU+KbGRxJUCA
+	 sda/NWuxJwEamMUz11qhN9rHGVerayqcQn9yFaLlO3X6Z47aK9sNN4DRDjP0471SjC
+	 CrXEPMWw8CbZFPiSeoOMJU2k+97ueeYVfooxz/K2b3tu36XpGgP53g/juYp8JTjemw
+	 xASQ/qYulkSxxrvUhOSDRrTlfHBF48Vt9WFNCxbFL8qwO2lhjxHv0nWXWHu20rhJ5S
+	 BBfkg+4F4YwJ0H1sd8a/80xjX5xqxo/wiGd9QMB7UIYRtFY/Yc3Qr0n6PzLLGoM2wP
+	 VROlYVvvAf8JpjBTMlTNNdEM=
+Received: from zn.tnic (p5de8ecf7.dip0.t-ipconnect.de [93.232.236.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C430F40E00B2;
+	Thu, 28 Mar 2024 15:44:48 +0000 (UTC)
+Date: Thu, 28 Mar 2024 16:44:47 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: "Naik, Avadhut" <avadnaik@amd.com>
+Cc: Avadhut Naik <avadhut.naik@amd.com>, linux-trace-kernel@vger.kernel.org,
+	linux-edac@vger.kernel.org, rostedt@goodmis.org,
+	tony.luck@intel.com, x86@kernel.org, linux-kernel@vger.kernel.org,
+	yazen.ghannam@amd.com, Sohil Mehta <sohil.mehta@intel.com>
+Subject: Re: [PATCH v4 2/2] tracing: Include Microcode Revision in mce_record
+ tracepoint
+Message-ID: <20240328154447.GCZgWQbx6oy4dJl0sm@fat_crate.local>
+References: <20240327205435.3667588-1-avadhut.naik@amd.com>
+ <20240327205435.3667588-3-avadhut.naik@amd.com>
+ <67ba2ece-6b46-4ae1-a944-a38f84360d0f@intel.com>
+ <20240327223522.GDZgSfKj1CVyZ0zfxs@fat_crate.local>
+ <d63a6e47-204f-44a4-8789-d4e41de39ec3@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-6-285d273912fe@samsung.com>
-References: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-0-285d273912fe@samsung.com>
-In-Reply-To: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-0-285d273912fe@samsung.com>
-To: Luis Chamberlain <mcgrof@kernel.org>, josh@joshtriplett.org, 
- Kees Cook <keescook@chromium.org>, Eric Biederman <ebiederm@xmission.com>, 
- Iurii Zaikin <yzaikin@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Thomas Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>, 
- Stephen Boyd <sboyd@kernel.org>, Andy Lutomirski <luto@amacapital.net>, 
- Will Drewry <wad@chromium.org>, Ingo Molnar <mingo@redhat.com>, 
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
- Vincent Guittot <vincent.guittot@linaro.org>, 
- Dietmar Eggemann <dietmar.eggemann@arm.com>, 
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
- Daniel Bristot de Oliveira <bristot@redhat.com>, 
- Valentin Schneider <vschneid@redhat.com>, Petr Mladek <pmladek@suse.com>, 
- John Ogness <john.ogness@linutronix.de>, 
- Sergey Senozhatsky <senozhatsky@chromium.org>, 
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
- Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- Balbir Singh <bsingharora@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, 
- John Fastabend <john.fastabend@gmail.com>, 
- Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
- linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- bpf@vger.kernel.org, Joel Granados <j.granados@samsung.com>
-X-Mailer: b4 0.13-dev-2d940
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3002;
- i=j.granados@samsung.com; h=from:subject:message-id;
- bh=TWh9TuMajQbwpEGtTF+wfs10qNacRT/Hf3NmiG1BMFM=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYFkEynYXoIAQWrn9RSkVuN1oDKcT6K7ddL9
- r175YqnwQi9PokBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmBZBMAAoJELqXzVK3
- lkFPw8YL/058ijl6P2cbK5F3qXxT46bTWrEthlZGmGZ8GJYJxt4w4xxd8ws4Wje+Aw1nnq65B80
- PgTw5N2evkT4xbVdmzguiAFOV2R1xjsSqXAsiymjn6+12byqwBZ2CL/yUesbGlhNF9ZpEYkvomR
- UFyGDVpV6/obod0u2yJq5mBZgdOauAyG669hxOqBNQPyOJ5yqK5kg9tIEJmgCjXYxhQ9fpOpVKa
- hAee3Iiqo6anJN8l+RYFDKloqMYTAtd4mZ8eNWvvdB/VRSetLQV7tB4FSJK2SvuW7rqVdjKzKgw
- RcBa68tzq10aY9o2fwzevUDqXyocoLnKC+QGKO8wFVvSsJ5qjeDwQFFMd/g7t7uLtz52CtsGGGo
- VJeEgdMZd9AIieQae0ZN5MBM6IW51BVFgsChVRzlNYdLygWCLaLEfQDVtwGEDQPeRXQhD4iz7ox
- 0ACl102QmSZ4bmC7+wBUg57bX1BYOZlkcp4j8IzzwEJHPPr4lX6HjUkbhb2mTj9INErNAkTEym3
- jI=
-X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
- fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
-X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
- auth_id=70
-X-Original-From: Joel Granados <j.granados@samsung.com>
-Reply-To: j.granados@samsung.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <d63a6e47-204f-44a4-8789-d4e41de39ec3@amd.com>
 
-From: Joel Granados <j.granados@samsung.com>
+On Thu, Mar 28, 2024 at 01:17:43AM -0500, Naik, Avadhut wrote:
+> SOCKET -> Socket
+> PROCESSOR -> Processor
+> MICROCODE -> Microcode
 
-This commit comes at the tail end of a greater effort to remove the
-empty elements at the end of the ctl_table arrays (sentinels) which
-will reduce the overall build time size of the kernel and run time
-memory bloat by ~64 bytes per sentinel (further information Link :
-https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
+SOCKET -> socket
+PROCESSOR -> processor
+MICROCODE -> microcode
 
-rm sentinel element from ctl_table arrays
+And yeah, the acronyms need to obviously stay in all caps.
 
-Acked-by: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Signed-off-by: Joel Granados <j.granados@samsung.com>
----
- kernel/sched/autogroup.c | 1 -
- kernel/sched/core.c      | 1 -
- kernel/sched/deadline.c  | 1 -
- kernel/sched/fair.c      | 1 -
- kernel/sched/rt.c        | 1 -
- kernel/sched/topology.c  | 1 -
- 6 files changed, 6 deletions(-)
-
-diff --git a/kernel/sched/autogroup.c b/kernel/sched/autogroup.c
-index 991fc9002535..db68a964e34e 100644
---- a/kernel/sched/autogroup.c
-+++ b/kernel/sched/autogroup.c
-@@ -19,7 +19,6 @@ static struct ctl_table sched_autogroup_sysctls[] = {
- 		.extra1         = SYSCTL_ZERO,
- 		.extra2         = SYSCTL_ONE,
- 	},
--	{}
- };
- 
- static void __init sched_autogroup_sysctl_init(void)
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 7019a40457a6..7ce76620a308 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4741,7 +4741,6 @@ static struct ctl_table sched_core_sysctls[] = {
- 		.extra2		= SYSCTL_FOUR,
- 	},
- #endif /* CONFIG_NUMA_BALANCING */
--	{}
- };
- static int __init sched_core_sysctl_init(void)
- {
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index a04a436af8cc..c75d1307d86d 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -43,7 +43,6 @@ static struct ctl_table sched_dl_sysctls[] = {
- 		.proc_handler   = proc_douintvec_minmax,
- 		.extra2         = (void *)&sysctl_sched_dl_period_max,
- 	},
--	{}
- };
- 
- static int __init sched_dl_sysctl_init(void)
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 03be0d1330a6..4ac2cf7a918e 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -157,7 +157,6 @@ static struct ctl_table sched_fair_sysctls[] = {
- 		.extra1		= SYSCTL_ZERO,
- 	},
- #endif /* CONFIG_NUMA_BALANCING */
--	{}
- };
- 
- static int __init sched_fair_sysctl_init(void)
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index 3261b067b67e..aa4c1c874fa4 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -56,7 +56,6 @@ static struct ctl_table sched_rt_sysctls[] = {
- 		.mode           = 0644,
- 		.proc_handler   = sched_rr_handler,
- 	},
--	{}
- };
- 
- static int __init sched_rt_sysctl_init(void)
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 99ea5986038c..42c22648d124 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -322,7 +322,6 @@ static struct ctl_table sched_energy_aware_sysctls[] = {
- 		.extra1         = SYSCTL_ZERO,
- 		.extra2         = SYSCTL_ONE,
- 	},
--	{}
- };
- 
- static int __init sched_energy_aware_sysctl_init(void)
+Thx.
 
 -- 
-2.43.0
+Regards/Gruss,
+    Boris.
 
-
+https://people.kernel.org/tglx/notes-about-netiquette
