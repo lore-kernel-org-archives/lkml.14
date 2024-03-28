@@ -1,150 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A2A5474B;
-	Thu, 28 Mar 2024 11:59:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F82B657CE;
+	Thu, 28 Mar 2024 12:00:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711627158; cv=none; b=ZCHpC5+hZ1Ed8fAxnPm/djL4jkCl/EZb6URMPC/Zqo4y/L9HvohVb0reUvs1EjKyhTHnd/7zAwJApQdv6l5p+1LSh5fXsFgTSQxvZu0i3q+Hxe784Zmugmn1IYIuz7YEQa4LnB6owfkS9rqDf/6+0Ffmy6hLYz8XmKuj4IZzYVU=
+	t=1711627217; cv=none; b=esXW35aYfMG4ihLLHw+6Mr9+oaEZash7Bkl7fK6ne2Zw/nLDg4NpMgHgpza38kw+LskACBBNKu5XWAnWA8RzEe7MXoL88wEfU8sRUtxXqg5ynZLS9sNboseAIi6jHw+hENB8OZ/5ijmovqs+Uvl7Jir4vCBDKtBSzSPMQV2S0SA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711627158; c=relaxed/simple;
-	bh=8tDAHUDVfUVkniIhz2Tjlxyx9+yhjE02ZhpIawN3e88=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gQe0mp66i1tDN4nvDnZs1Tai65z8wcSTcvh3kY3XEEYZLhtRK6UM96CXShfwTvlNFc0qVw9xjvg9/PF9PJSxIqCUZXguoFfR+TZxCDWOeg62bueBmzdlNLKEryyo1BJS+HevmxKJRzd3bpnCZnJydpr5GDq+mlpcec+s/eDZqw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=mFU4EWgf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711627217; c=relaxed/simple;
+	bh=8b7pqk930R8E8yQ2t5Oy9IoPCP561nVG0BIS05bsseY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gNhqJdwE9JlsUvIJBxq9oiffBghslEY/vGOgpugHPc9BDEhNvMU0PohPFuLzLjIM7gv9qjSPVOXkaplkBCj/mXNz9jyLoXrFy0q8stn7wIrE9v7Q3wJx7cg7SQBoSdKmdWAPUn89KlFKpEcgSNiD+S1sVY/pn8CcQoWY1cJZEiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c/GsYOkp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="mFU4EWgf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCF4FC43390;
-	Thu, 28 Mar 2024 11:59:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1711627157;
-	bh=8tDAHUDVfUVkniIhz2Tjlxyx9+yhjE02ZhpIawN3e88=;
-	h=From:To:Cc:Subject:Date:From;
-	b=mFU4EWgfLkursYUxABDp9NsVLp90HdFN3faN6m/bgMh+UFLqHeoWncr753xBJjsJ4
-	 X4d8z9pPBJng4tSxlbFZMtPQ4c+WILU9TySRjYPDSLvyu8e9bpbT4YQJedwQ3s2XEc
-	 PsO8smAb94iIYyflRDvCcmlo0iKyA8Vjpr3OX45g=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: lee@kernel.org
-Cc: dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	daniel.thompson@linaro.org,
-	jingoohan1@gmail.com,
-	deller@gmx.de,
-	"Ricardo B. Marliere" <ricardo@marliere.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v2 1/2] video: backlight: make backlight_class constant
-Date: Thu, 28 Mar 2024 12:59:06 +0100
-Message-ID: <2024032805-putdown-mushy-a0f9@gregkh>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c/GsYOkp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CED6C433F1;
+	Thu, 28 Mar 2024 12:00:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711627217;
+	bh=8b7pqk930R8E8yQ2t5Oy9IoPCP561nVG0BIS05bsseY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c/GsYOkphZyoGQZ7xarQ0Z708uvlSorqefD3ho8akQtdHOKnfrqMIGCEsFDP+cmHw
+	 NndOlszvHha0HW2O8DoMMO382nMuqkE7oLtt2jtPT/9SBv5n1FSs7eATkxYKDpV9OP
+	 m9LHXsppYV99doh0ofdFeJsMHChtji0wyFZyaO29FYlUx4bT4sBlMwwH19hnvrQbo4
+	 9yUUYUPya6lnLpM5FuRoxyEMw8rIjTjTWhlkZCWzMAOOmWFMcUFwR8JhV3LQpxoN1t
+	 nBvXFQVqXmJHU/Aad9q9UCQ2gUzZ4Uh45Voj8VHA5CfSRI5riqfmZnqYftcRb95wJv
+	 cksCMkt2KJsbQ==
+Date: Thu, 28 Mar 2024 12:00:11 +0000
+From: Lee Jones <lee@kernel.org>
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Samuel Holland <samuel@sholland.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev,
+	Ryan Walklin <ryan@testtoast.com>
+Subject: Re: [GIT PULL] Immutable branch between MFD and Regulator due for
+ the v6.9 merge window:wq
+Message-ID: <20240328120011.GE13211@google.com>
+References: <20240310010211.28653-1-andre.przywara@arm.com>
+ <20240328095631.GW13211@google.com>
+ <20240328111108.5ddfa073@minigeek.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3406; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=/aKgYyLp0Ixe4eLFmIE3xueHTfYuhhXATaHPaS0rmDA=; b=owGbwMvMwCRo6H6F97bub03G02pJDGms0Z17LUtTKjdU+utYFJ/gXeDZFML8gy2gcbVQF4P6f pacubUdsSwMgkwMsmKKLF+28RzdX3FI0cvQ9jTMHFYmkCEMXJwCMBHrRwzzvRJX//9SM8Uj8ERD xJWextUsf03dGBacODbL4ZtbYOoHf5cm9XNW5TftP28FAA==
-X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240328111108.5ddfa073@minigeek.lan>
 
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
+On Thu, 28 Mar 2024, Andre Przywara wrote:
 
-Since commit 43a7206b0963 ("driver core: class: make class_register() take
-a const *"), the driver core allows for struct class to be in read-only
-memory, so move the backlight_class structure to be declared at build time
-placing it into read-only memory, instead of having to be dynamically
-allocated at boot time.
+> On Thu, 28 Mar 2024 09:56:31 +0000
+> Lee Jones <lee@kernel.org> wrote:
+> 
+> Hi Lee,
+> 
+> many thanks for picking this up!
+> 
+> > Enjoy!
+> > 
+> > The following changes since commit 4cece764965020c22cff7665b18a012006359095:
+> > 
+> >   Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
+> > 
+> > are available in the Git repository at:
+> > 
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-regulator-v6.9
+> > 
+> > for you to fetch changes up to d2ac3df75c3a995064cfac0171e082a30d8c4c66:
+> > 
+> >   regulator: axp20x: add support for the AXP717 (2024-03-28 09:51:03 +0000)
+> > 
+> > ----------------------------------------------------------------
+> > Immutable branch between MFD and Regulator due for the v6.9 merge window
+> 
+> Did you mean v6.10 merge window? Or is there a plan to merge this into
+> 6.9 still?
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: "Ricardo B. Marliere" <ricardo@marliere.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
-v2: rebased on 6.9-rc1
+Yes - off-by-one!
 
- drivers/video/backlight/backlight.c | 29 ++++++++++++++++-------------
- 1 file changed, 16 insertions(+), 13 deletions(-)
+> Also I found some issue with the LDOs' supply voltage: there are not
+> all the same, as described right now. Fix is quite easy, how do you
+> want to take this? As a follow up patch? And would this be squashed or
+> kept separate?
+> Or do you want we to send a new version? If yes, based on what branch?
 
-diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
-index 86e1cdc8e369..d2feaebfd84a 100644
---- a/drivers/video/backlight/backlight.c
-+++ b/drivers/video/backlight/backlight.c
-@@ -317,8 +317,6 @@ static ssize_t scale_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(scale);
- 
--static struct class *backlight_class;
--
- #ifdef CONFIG_PM_SLEEP
- static int backlight_suspend(struct device *dev)
- {
-@@ -369,6 +367,12 @@ static struct attribute *bl_device_attrs[] = {
- };
- ATTRIBUTE_GROUPS(bl_device);
- 
-+static const struct class backlight_class = {
-+	.name = "backlight",
-+	.dev_groups = bl_device_groups,
-+	.pm = &backlight_class_dev_pm_ops,
-+};
-+
- /**
-  * backlight_force_update - tell the backlight subsystem that hardware state
-  *   has changed
-@@ -418,7 +422,7 @@ struct backlight_device *backlight_device_register(const char *name,
- 	mutex_init(&new_bd->update_lock);
- 	mutex_init(&new_bd->ops_lock);
- 
--	new_bd->dev.class = backlight_class;
-+	new_bd->dev.class = &backlight_class;
- 	new_bd->dev.parent = parent;
- 	new_bd->dev.release = bl_device_release;
- 	dev_set_name(&new_bd->dev, "%s", name);
-@@ -510,7 +514,7 @@ struct backlight_device *backlight_device_get_by_name(const char *name)
- {
- 	struct device *dev;
- 
--	dev = class_find_device_by_name(backlight_class, name);
-+	dev = class_find_device_by_name(&backlight_class, name);
- 
- 	return dev ? to_backlight_device(dev) : NULL;
- }
-@@ -678,7 +682,7 @@ struct backlight_device *of_find_backlight_by_node(struct device_node *node)
- {
- 	struct device *dev;
- 
--	dev = class_find_device(backlight_class, NULL, node, of_parent_match);
-+	dev = class_find_device(&backlight_class, NULL, node, of_parent_match);
- 
- 	return dev ? to_backlight_device(dev) : NULL;
- }
-@@ -746,20 +750,19 @@ EXPORT_SYMBOL(devm_of_find_backlight);
- 
- static void __exit backlight_class_exit(void)
- {
--	class_destroy(backlight_class);
-+	class_unregister(&backlight_class);
- }
- 
- static int __init backlight_class_init(void)
- {
--	backlight_class = class_create("backlight");
--	if (IS_ERR(backlight_class)) {
--		pr_warn("Unable to create backlight class; errno = %ld\n",
--			PTR_ERR(backlight_class));
--		return PTR_ERR(backlight_class);
-+	int ret;
-+
-+	ret = class_register(&backlight_class);
-+	if (ret) {
-+		pr_warn("Unable to create backlight class; errno = %d\n", ret);
-+		return ret;
- 	}
- 
--	backlight_class->dev_groups = bl_device_groups;
--	backlight_class->pm = &backlight_class_dev_pm_ops;
- 	INIT_LIST_HEAD(&backlight_dev_list);
- 	mutex_init(&backlight_dev_list_mutex);
- 	BLOCKING_INIT_NOTIFIER_HEAD(&backlight_notifier);
+Please submit a fix-up.
+
+I'll sent out a new (ib-mfd-regulator-v6.9-1) PR based on this one.
+
+> > ----------------------------------------------------------------
+> > Andre Przywara (4):
+> >       regulator: axp20x: fix typo-ed identifier
+> >       dt-bindings: mfd: x-powers,axp152: Document AXP717
+> >       mfd: axp20x: Add support for AXP717 PMIC
+> >       regulator: axp20x: add support for the AXP717
+> > 
+> >  .../devicetree/bindings/mfd/x-powers,axp152.yaml   |  2 +
+> >  drivers/mfd/axp20x-i2c.c                           |  2 +
+> >  drivers/mfd/axp20x-rsb.c                           |  1 +
+> >  drivers/mfd/axp20x.c                               | 90 ++++++++++++++++++++
+> >  drivers/regulator/axp20x-regulator.c               | 94 +++++++++++++++++++--
+> >  include/linux/mfd/axp20x.h                         | 98 ++++++++++++++++++++--
+> >  6 files changed, 277 insertions(+), 10 deletions(-)
+> > 
+> 
+
 -- 
-2.44.0
-
+Lee Jones [李琼斯]
