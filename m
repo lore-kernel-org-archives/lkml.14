@@ -1,169 +1,150 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB1D374D2;
-	Thu, 28 Mar 2024 02:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B31A32575F
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 02:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711592526; cv=none; b=By9fjua5tHn+1PDqd6uLMldYNHYkdCDM2WWoURi5dNJ9Wn9tEkZYF2wmtwpYMSigly5aampqQwaHifVEohil1qOC3yCZ6k1xwuymzXAgEugd7ScyObR8lhyi6wP5/gK/IivOYel3EGuhZbT/02L4EG2bp1i+TNDA+Tps4MINBCI=
+	t=1711592553; cv=none; b=GCdv508ubZOJmJo74IdXhN3drrSsdQLlwdUQO6bW1RC1Q5jsRBu68eeqqkRrBpCZiquCVTDDyt31LDB1GF4/otW8cZDHLBljtxJD+EHDwv+OSuXgrb3fXf6gcTqCi1aJFOLhUAIvutuq+w1XkANb0lm0dUyYxJ0KSeNVklKH++s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711592526; c=relaxed/simple;
-	bh=/eLhb9Rg4nh9yNL4iwlTn1l8Pyav0reD3p6fibEz1d8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AribWiBZA3eBz0MVeVF+QkfbNU/fb7lRMJ3Jrfec6JsVf1fxn7/66mdGxKLirIag999XqvJeZ9EJllvHHqWao6OFDiek0gMMlyQkaUeawnT0YsEKWsFYOSZti8BiTgLsZEc9UMmpLeO+CsVr+q00SqliabKZ9rh+XDo5DGsI3r8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f8iGeo+M; arc=none smtp.client-ip=209.85.160.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711592553; c=relaxed/simple;
+	bh=L5/Fmy6g7Y+ZyLIpx3EGabo/DqpRCmHgqWBb5z2Tcys=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N2gUgrzXrtcNwYv2FB66Cp0PFpLpP4yGGgihnhGj5CEwEpNNawRFy1s5brypzUHcSRm9v6IfwwuoRF96K31Qei/X7O6/ihSNiQyibk26AyeNrnFdpBUVTiEfrJGG8iTqVEkaLlwnrbs41++xlPxP5l0QHtLdtLkUe7J55ZQKKYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C883Zlp0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f8iGeo+M"
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-222ba2a19bdso267647fac.1;
-        Wed, 27 Mar 2024 19:22:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711592523; x=1712197323; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zJKFKvTWiQ1ylayITMd1pxJyaQfArgqbTI5DSxcGrbE=;
-        b=f8iGeo+MnS8W2a21vGPo96OCc+bZwI+ZmmXjd6BvjSw/Z9g8pfF8GQku4UBTywxzCR
-         eBq9j+6Y1CIIATJWDFIibRG9dfl+12eTwCNYIVnscBMFS+YVrMoSjAoGDBHIOXUXGsbh
-         OXiu5b4UQG4PBwMMXdZVC1DqWJFplhOFhEfzaRvgn/qlsXUf6oNkMAUhtNvTGLn2w6B/
-         cbcAV9e97rCmgefxkDRHJOv8C8DW+S7yaggflHK1w5kmxcdFgjode/kBnn9Xen/P91Q/
-         kUfYK2uwmkUFKujZveNZQF7Uz0RtwotWLU/SmASRMCaU01r5RDIj6NRVEf99VgF0tx3f
-         s3EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711592523; x=1712197323;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zJKFKvTWiQ1ylayITMd1pxJyaQfArgqbTI5DSxcGrbE=;
-        b=ILIqTKCn14mtPzNpktJwXulJkIgyBGMhr5uFhffsykqTYPCCjwXQcgfuWmk7iapcqV
-         ujfPClZE1chv5Atumz6G8gSkX7f4oHAVfViYP4oyDkfGSV9GnQy3XFB6V4sRTK3ZPq/k
-         4kKvI7Ykuavp0Pv41KlmykUOZrNwXjvUTWPynwrhXe5PG3tqlnOnZ54AdcofE4Cj+b+r
-         xr4rMH5v88Vj7Z/6iPcN6XHjnUU0RGL1yJPxCYlOPoaeJ+329f+iQQrSW6GIoK5rJDDA
-         UchM/v8LiHua5kSTxz180m8KotP+NSMqShucg7PvEiF2A9gAC9C7cfAGvclSLeVUtX9/
-         r6+g==
-X-Forwarded-Encrypted: i=1; AJvYcCWZUv26bg4nDgGgl2IPBPICKyj9HnizghLSqUDerXTI+oZhpPlwv/MX/cljwQesOJMKe0VzMin7uyfaVibJmnH7MK2mEWATxcETWn9IhpL828koWWbHxfS5QikB7XFTINeHuzHsNk8AXVUrCBwldeMzPlhzWk0TOE+yGqP70ePNeHl1
-X-Gm-Message-State: AOJu0Yy4ALOmK/Uoy79uV6rXNv93PA2eoNqj0n4mUbHUyZECIjv5nSNL
-	fJVM1R39tT4VEPSemXeHYKKMXNeYgQYUaotMobTqsYVDr/9xbHjv
-X-Google-Smtp-Source: AGHT+IG6vBI7mFQMTCRkMR1DgL0LU5ekXVqi3z1NUbDX1byFjVV13DxPVWJQAAHxY3Ul2lejpzlYyg==
-X-Received: by 2002:a05:6870:c0c8:b0:229:c1b3:db51 with SMTP id e8-20020a056870c0c800b00229c1b3db51mr1459496oad.47.1711592523713;
-        Wed, 27 Mar 2024 19:22:03 -0700 (PDT)
-Received: from localhost.localdomain ([2407:7000:8942:5500:aaa1:59ff:fe57:eb97])
-        by smtp.gmail.com with ESMTPSA id d26-20020aa7869a000000b006eac233f5c2sm228113pfo.127.2024.03.27.19.21.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 19:22:03 -0700 (PDT)
-From: Barry Song <21cnbao@gmail.com>
-To: akpm@linux-foundation.org,
-	linux-doc@vger.kernel.org
-Cc: apw@canonical.com,
-	broonie@kernel.org,
-	chenhuacai@loongson.cn,
-	chris@zankel.net,
-	corbet@lwn.net,
-	dwaipayanray1@gmail.com,
-	herbert@gondor.apana.org.au,
-	joe@perches.com,
-	linux-kernel@vger.kernel.org,
-	linux@roeck-us.net,
-	lukas.bulwahn@gmail.com,
-	mac.xxn@outlook.com,
-	sfr@canb.auug.org.au,
-	v-songbaohua@oppo.com,
-	workflows@vger.kernel.org,
-	Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH v4 2/2] scripts: checkpatch: check unused parameters for function-like macro
-Date: Thu, 28 Mar 2024 15:21:36 +1300
-Message-Id: <20240328022136.5789-3-21cnbao@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240328022136.5789-1-21cnbao@gmail.com>
-References: <20240328022136.5789-1-21cnbao@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C883Zlp0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711592550;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QT19hp7mBYS8iXGdAPsVB/LvOK360nzUCpzBObpsxZM=;
+	b=C883Zlp03l9PzzLetrV/O9ysrUS5PNcBr5doGvyFxfHYngr2tV+xeNyQVyWx14q3pT9ccB
+	DEJPDCoV8zlh/XZT8ff6neM/Inw54RBzvUif2mJWwknzu5pPv6ogIGjxezjyUCIua8SiHd
+	wtRjG3mOgIkl8hmxqxuB+nlpnycf2Gw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-283-xvq3fowSPHGTBGeMfoPkFw-1; Wed, 27 Mar 2024 22:22:28 -0400
+X-MC-Unique: xvq3fowSPHGTBGeMfoPkFw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 41D5C8007A1;
+	Thu, 28 Mar 2024 02:22:28 +0000 (UTC)
+Received: from [10.22.33.225] (unknown [10.22.33.225])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id E61431C060D0;
+	Thu, 28 Mar 2024 02:22:27 +0000 (UTC)
+Message-ID: <4487c1e6-7344-48d3-876f-9b55062b0417@redhat.com>
+Date: Wed, 27 Mar 2024 22:22:27 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] locking/pvqspinlock: Use try_cmpxchg() in
+ qspinlock_paravirt.h
+Content-Language: en-US
+To: Uros Bizjak <ubizjak@gmail.com>, linux-kernel@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>
+References: <20240325140943.815051-1-ubizjak@gmail.com>
+ <20240325140943.815051-2-ubizjak@gmail.com>
+From: Waiman Long <longman@redhat.com>
+In-Reply-To: <20240325140943.815051-2-ubizjak@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-From: Xining Xu <mac.xxn@outlook.com>
 
-If function-like macros do not utilize a parameter, it might result in a
-build warning.  In our coding style guidelines, we advocate for utilizing
-static inline functions to replace such macros.  This patch verifies
-compliance with the new rule.
-
-For a macro such as the one below,
-
- #define test(a) do { } while (0)
-
-The test result is as follows.
-
- ERROR: Parameter 'a' is not used in function-like macro, please use static
- inline instead
- #21: FILE: mm/init-mm.c:20:
- +#define test(a) do { } while (0)
-
- total: 1 errors, 0 warnings, 8 lines checked
-
-Signed-off-by: Xining Xu <mac.xxn@outlook.com>
-Tested-by: Barry Song <v-songbaohua@oppo.com>
-Cc: Chris Zankel <chris@zankel.net>
-Cc: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Andy Whitcroft <apw@canonical.com>
-Cc: Dwaipayan Ray <dwaipayanray1@gmail.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc: Max Filippov <jcmvbkbc@gmail.com>
----
- scripts/checkpatch.pl | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 9c4c4a61bc83..bcb886014d60 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -6109,6 +6109,36 @@ sub process {
- 				WARN("TRAILING_SEMICOLON",
- 				     "macros should not use a trailing semicolon\n" . "$herectx");
- 			}
-+
-+			# match "\s*" rather than "\s+" after the balanced parens, as macro definition with arguments
-+			# is not required to have whitespace after arguments
-+			if ($dstat =~ /^\+\s*#\s*define\s+$Ident$balanced_parens\s*(\S+.*)(\/[\/*].*)?/) {
-+				my $params = $1 || "";
-+				my $body = $2 || "";
-+
-+			    # get the individual params
-+				$params =~ tr/()//d;
-+				# remove leading and trailing whitespace
-+				$params =~ s/^\s+|\s+$//g;
-+
-+				$ctx =~ s/\n*$//;
-+				my $cnt = statement_rawlines($ctx);
-+				my $herectx = get_stat_here($linenr, $cnt, $here);
-+
-+				if ($params ne "") {
-+					my @paramList = split /,\s*/, $params;
-+					foreach my $param(@paramList) {
-+						if ($param =~ /\.\.\.$/) {
-+							# if the param name ends with "...", skip the check
-+							next;
-+						}
-+						if ($body !~ /\b$param\b/) {
-+							WARN("UNUSED_PARAM_IN_MACRO",
-+								"Parameter '$param' is not used in function-like macro\n" . "$herectx");
-+						}
-+					}
-+				}
-+			}
- 		}
- 
- # check for redundant bracing round if etc
--- 
-2.34.1
+On 3/25/24 10:09, Uros Bizjak wrote:
+> Use try_cmpxchg(*ptr, &old, new) instead of
+> cmpxchg(*ptr, old, new) == old in qspinlock_paravirt.h
+> x86 CMPXCHG instruction returns success in ZF flag, so
+> this change saves a compare after cmpxchg.
+>
+> No functional change intended.
+>
+> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Waiman Long <longman@redhat.com>
+> Cc: Boqun Feng <boqun.feng@gmail.com>
+> ---
+>   kernel/locking/qspinlock_paravirt.h | 16 ++++++++--------
+>   1 file changed, 8 insertions(+), 8 deletions(-)
+>
+> diff --git a/kernel/locking/qspinlock_paravirt.h b/kernel/locking/qspinlock_paravirt.h
+> index 77ba80bd95f9..3db5f811260f 100644
+> --- a/kernel/locking/qspinlock_paravirt.h
+> +++ b/kernel/locking/qspinlock_paravirt.h
+> @@ -86,9 +86,10 @@ static inline bool pv_hybrid_queued_unfair_trylock(struct qspinlock *lock)
+>   	 */
+>   	for (;;) {
+>   		int val = atomic_read(&lock->val);
+> +		u8 old = 0;
+>   
+>   		if (!(val & _Q_LOCKED_PENDING_MASK) &&
+> -		   (cmpxchg_acquire(&lock->locked, 0, _Q_LOCKED_VAL) == 0)) {
+> +		    try_cmpxchg_acquire(&lock->locked, &old, _Q_LOCKED_VAL)) {
+>   			lockevent_inc(pv_lock_stealing);
+>   			return true;
+>   		}
+> @@ -211,8 +212,9 @@ static struct qspinlock **pv_hash(struct qspinlock *lock, struct pv_node *node)
+>   	int hopcnt = 0;
+>   
+>   	for_each_hash_entry(he, offset, hash) {
+> +		struct qspinlock *old = NULL;
+>   		hopcnt++;
+> -		if (!cmpxchg(&he->lock, NULL, lock)) {
+> +		if (try_cmpxchg(&he->lock, &old, lock)) {
+>   			WRITE_ONCE(he->node, node);
+>   			lockevent_pv_hop(hopcnt);
+>   			return &he->lock;
+> @@ -355,7 +357,7 @@ static void pv_wait_node(struct mcs_spinlock *node, struct mcs_spinlock *prev)
+>   static void pv_kick_node(struct qspinlock *lock, struct mcs_spinlock *node)
+>   {
+>   	struct pv_node *pn = (struct pv_node *)node;
+> -
+> +	enum vcpu_state old = vcpu_halted;
+>   	/*
+>   	 * If the vCPU is indeed halted, advance its state to match that of
+>   	 * pv_wait_node(). If OTOH this fails, the vCPU was running and will
+> @@ -372,8 +374,7 @@ static void pv_kick_node(struct qspinlock *lock, struct mcs_spinlock *node)
+>   	 * subsequent writes.
+>   	 */
+>   	smp_mb__before_atomic();
+> -	if (cmpxchg_relaxed(&pn->state, vcpu_halted, vcpu_hashed)
+> -	    != vcpu_halted)
+> +	if (!try_cmpxchg_relaxed(&pn->state, &old, vcpu_hashed))
+>   		return;
+>   
+>   	/*
+> @@ -541,15 +542,14 @@ __pv_queued_spin_unlock_slowpath(struct qspinlock *lock, u8 locked)
+>   #ifndef __pv_queued_spin_unlock
+>   __visible __lockfunc void __pv_queued_spin_unlock(struct qspinlock *lock)
+>   {
+> -	u8 locked;
+> +	u8 locked = _Q_LOCKED_VAL;
+>   
+>   	/*
+>   	 * We must not unlock if SLOW, because in that case we must first
+>   	 * unhash. Otherwise it would be possible to have multiple @lock
+>   	 * entries, which would be BAD.
+>   	 */
+> -	locked = cmpxchg_release(&lock->locked, _Q_LOCKED_VAL, 0);
+> -	if (likely(locked == _Q_LOCKED_VAL))
+> +	if (try_cmpxchg_release(&lock->locked, &locked, 0);
+>   		return;
+>   
+>   	__pv_queued_spin_unlock_slowpath(lock, locked);
+Reviewed-by: Waiman Long <longman@redhat.com>
 
