@@ -1,176 +1,351 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C20139D09;
-	Thu, 28 Mar 2024 16:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5593042A9A
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711643844; cv=none; b=KsC59SBW2QZ7yL/7zFTg0Ewq6uAg2BvJwS2WX4Eo6eUjem3r3ar/NHo12lMoGDFo7mby4hNRNW6StqaEG/1l8sihR75Jgod+myX63YeG/y1AqnCjhJkXSbwNWm+G+nGmP5ehSo+7JQ5P5SvISzR7E37sWCqG16l4bp+XUSWx96w=
+	t=1711643866; cv=none; b=gGF+JhELi6nXrkf8SFb6gvjye9HSr0ocKZIOmOgEAnc9t6pYcT4zhjampCOOEIVisLTeX2v2QkXSPLWkZ0E303g7kSCKh0BdJS5HurU/MOFASA0T7MXKm2BBE+8xHj4ms8aUk1Aipm1n5J8VKGT+363xBO0pQZtDWp7/H/WaRa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711643844; c=relaxed/simple;
-	bh=oKhOL3EyDx0U3wUHH2cNjQih0LgHQEhwmCUnPFJxBd4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rH5BezGhAHLS7bEPJ4c1ik2BWtHc/AqB898odhp9wAPBdUZpc1xNXAWe8SvFpZTC5Fe4GiNsfkORTaWgs+qyJUDM+Uqydrtpa6h9JNU+ShsyiTGqi6/iBdb93zPRLuifhwM7h/cNZ0siRoRROf4YBX+19gfemtBkBdzp7odJV44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AXoptmnw; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711643866; c=relaxed/simple;
+	bh=Yud/SqK60w36+ZiKUPNBoKLBlBi9Da312E4fzea2Wnk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JKEBdaBfH1wezZY6R1vv9E1cGQl+H4kFxeS9MBZokLIWQ3WY27yFGE0goe1nZ+KETkOiFZxyqdPhyuENyLTuaTCm78b1N5vfN1D/5eBdDyoHmbhbF7sxaU/LD5HOYGn31QTLexsfDLa89qd3xduCqboTeuj+r0TuR4AUgrbD1Gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RWiK5v4q; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AXoptmnw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711643842; x=1743179842;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=oKhOL3EyDx0U3wUHH2cNjQih0LgHQEhwmCUnPFJxBd4=;
-  b=AXoptmnw4RKZTrk4Zb2mG966dcQrPuyNq62XitHXU4IjWg/oStJPm3nS
-   N7SMcFOzICYDWTS5ghffsRzeVhqyx1iQYkxG484/rqDzDs6I3OohMiy2r
-   pMOQcle0qRCwlhLLbbu8/URaNP1ngMppGgSxnIdMcw/QdPOuc8QV6pJJw
-   UHb/a2TEQeWl6P4nsTZITxOjzrMIDs3hAfpqPlImRFJOnaIgKd+tTEGqK
-   9EXS1h0DJUSvsOxYzBftrUp6kSClLXEuc9H0iquV3sWFZzUJZDi/xWXm5
-   E5U3PTe9kQJuP5QDvTl23DMCVaF29/UNbr9WzdnQ6axh0bPD6KCW41FBk
-   A==;
-X-CSE-ConnectionGUID: OPfAFhA2QiiLDAXzmyxAEA==
-X-CSE-MsgGUID: NgXiSShIQ6605nqlRqnfKw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="6705558"
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="6705558"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 09:37:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="16764511"
-Received: from lkp-server01.sh.intel.com (HELO be39aa325d23) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 28 Mar 2024 09:37:16 -0700
-Received: from kbuild by be39aa325d23 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rpskb-0002LW-13;
-	Thu, 28 Mar 2024 16:37:13 +0000
-Date: Fri, 29 Mar 2024 00:37:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Cristian Marussi <cristian.marussi@arm.com>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, sudeep.holla@arm.com,
-	cristian.marussi@arm.com, jassisinghbrar@gmail.com,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org
-Subject: Re: [PATCH 2/2] mailbox: arm_mhuv3: Add driver
-Message-ID: <202403290015.tCLXudqC-lkp@intel.com>
-References: <20240325092808.117510-3-cristian.marussi@arm.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RWiK5v4q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711643863;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UDqhr06HS33V6vFM7dYIX30CATG7yaNP9QU79jSdPNo=;
+	b=RWiK5v4q0Ivqk6pAx8538Svwfz4+erVWV8sdnjnGZ+RRGu33AbEK+MeIHDczjBl3J23H3/
+	oI4goK9uwRQkMiAD6/9IaHyJRUzQYF8/HH01udl3yIYbd7164lFwDFMZjOSaP21L+F3nvp
+	Og9UHvSFEUoUZkBRlFtOPFHkRHnRELQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-418-u7tjA_N8McG-eKGjvAI-3w-1; Thu, 28 Mar 2024 12:37:39 -0400
+X-MC-Unique: u7tjA_N8McG-eKGjvAI-3w-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3DEAA88F2EB;
+	Thu, 28 Mar 2024 16:37:38 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.146])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 509B03C20;
+	Thu, 28 Mar 2024 16:37:35 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>,
+	Jeff Layton <jlayton@kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Dominique Martinet <asmadeus@codewreck.org>
+Cc: David Howells <dhowells@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Steve French <smfrench@gmail.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	netfs@lists.linux.dev,
+	linux-cachefs@redhat.com,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 14/26] netfs: Use mempools for allocating requests and subrequests
+Date: Thu, 28 Mar 2024 16:34:06 +0000
+Message-ID: <20240328163424.2781320-15-dhowells@redhat.com>
+In-Reply-To: <20240328163424.2781320-1-dhowells@redhat.com>
+References: <20240328163424.2781320-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240325092808.117510-3-cristian.marussi@arm.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-Hi Cristian,
+Use mempools for allocating requests and subrequests in an effort to make
+sure that allocation always succeeds so that when performing writeback we
+can always make progress.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: netfs@lists.linux.dev
+cc: linux-fsdevel@vger.kernel.org
+cc: linux-mm@kvack.org
+---
+ fs/netfs/internal.h   |  2 ++
+ fs/netfs/main.c       | 51 ++++++++++++++++++++++++++++++++-----
+ fs/netfs/objects.c    | 59 ++++++++++++++++++++++++++++---------------
+ include/linux/netfs.h |  5 ++--
+ 4 files changed, 89 insertions(+), 28 deletions(-)
 
-[auto build test WARNING on soc/for-next]
-[also build test WARNING on robh/for-next linus/master v6.9-rc1 next-20240328]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+diff --git a/fs/netfs/internal.h b/fs/netfs/internal.h
+index 156ab138e224..c67da478cd2b 100644
+--- a/fs/netfs/internal.h
++++ b/fs/netfs/internal.h
+@@ -37,6 +37,8 @@ int netfs_begin_read(struct netfs_io_request *rreq, bool sync);
+ extern unsigned int netfs_debug;
+ extern struct list_head netfs_io_requests;
+ extern spinlock_t netfs_proc_lock;
++extern mempool_t netfs_request_pool;
++extern mempool_t netfs_subrequest_pool;
+ 
+ #ifdef CONFIG_PROC_FS
+ static inline void netfs_proc_add_rreq(struct netfs_io_request *rreq)
+diff --git a/fs/netfs/main.c b/fs/netfs/main.c
+index 844efbb2e7a2..4805b9377364 100644
+--- a/fs/netfs/main.c
++++ b/fs/netfs/main.c
+@@ -7,6 +7,7 @@
+ 
+ #include <linux/module.h>
+ #include <linux/export.h>
++#include <linux/mempool.h>
+ #include <linux/proc_fs.h>
+ #include <linux/seq_file.h>
+ #include "internal.h"
+@@ -23,6 +24,11 @@ unsigned netfs_debug;
+ module_param_named(debug, netfs_debug, uint, S_IWUSR | S_IRUGO);
+ MODULE_PARM_DESC(netfs_debug, "Netfs support debugging mask");
+ 
++static struct kmem_cache *netfs_request_slab;
++static struct kmem_cache *netfs_subrequest_slab;
++mempool_t netfs_request_pool;
++mempool_t netfs_subrequest_pool;
++
+ #ifdef CONFIG_PROC_FS
+ LIST_HEAD(netfs_io_requests);
+ DEFINE_SPINLOCK(netfs_proc_lock);
+@@ -98,25 +104,54 @@ static int __init netfs_init(void)
+ {
+ 	int ret = -ENOMEM;
+ 
++	netfs_request_slab = kmem_cache_create("netfs_request",
++					       sizeof(struct netfs_io_request), 0,
++					       SLAB_HWCACHE_ALIGN | SLAB_ACCOUNT,
++					       NULL);
++	if (!netfs_request_slab)
++		goto error_req;
++
++	if (mempool_init_slab_pool(&netfs_request_pool, 100, netfs_request_slab) < 0)
++		goto error_reqpool;
++
++	netfs_subrequest_slab = kmem_cache_create("netfs_subrequest",
++						  sizeof(struct netfs_io_subrequest), 0,
++						  SLAB_HWCACHE_ALIGN | SLAB_ACCOUNT,
++						  NULL);
++	if (!netfs_subrequest_slab)
++		goto error_subreq;
++
++	if (mempool_init_slab_pool(&netfs_subrequest_pool, 100, netfs_subrequest_slab) < 0)
++		goto error_subreqpool;
++
+ 	if (!proc_mkdir("fs/netfs", NULL))
+-		goto error;
++		goto error_proc;
+ 	if (!proc_create_seq("fs/netfs/requests", S_IFREG | 0444, NULL,
+ 			     &netfs_requests_seq_ops))
+-		goto error_proc;
++		goto error_procfile;
+ #ifdef CONFIG_FSCACHE_STATS
+ 	if (!proc_create_single("fs/netfs/stats", S_IFREG | 0444, NULL,
+ 				netfs_stats_show))
+-		goto error_proc;
++		goto error_procfile;
+ #endif
+ 
+ 	ret = fscache_init();
+ 	if (ret < 0)
+-		goto error_proc;
++		goto error_fscache;
+ 	return 0;
+ 
+-error_proc:
++error_fscache:
++error_procfile:
+ 	remove_proc_entry("fs/netfs", NULL);
+-error:
++error_proc:
++	mempool_exit(&netfs_subrequest_pool);
++error_subreqpool:
++	kmem_cache_destroy(netfs_subrequest_slab);
++error_subreq:
++	mempool_exit(&netfs_request_pool);
++error_reqpool:
++	kmem_cache_destroy(netfs_request_slab);
++error_req:
+ 	return ret;
+ }
+ fs_initcall(netfs_init);
+@@ -125,5 +160,9 @@ static void __exit netfs_exit(void)
+ {
+ 	fscache_exit();
+ 	remove_proc_entry("fs/netfs", NULL);
++	mempool_exit(&netfs_subrequest_pool);
++	kmem_cache_destroy(netfs_subrequest_slab);
++	mempool_exit(&netfs_request_pool);
++	kmem_cache_destroy(netfs_request_slab);
+ }
+ module_exit(netfs_exit);
+diff --git a/fs/netfs/objects.c b/fs/netfs/objects.c
+index 8acc03a64059..1a4e2ce735ce 100644
+--- a/fs/netfs/objects.c
++++ b/fs/netfs/objects.c
+@@ -6,6 +6,8 @@
+  */
+ 
+ #include <linux/slab.h>
++#include <linux/mempool.h>
++#include <linux/delay.h>
+ #include "internal.h"
+ 
+ /*
+@@ -20,17 +22,22 @@ struct netfs_io_request *netfs_alloc_request(struct address_space *mapping,
+ 	struct inode *inode = file ? file_inode(file) : mapping->host;
+ 	struct netfs_inode *ctx = netfs_inode(inode);
+ 	struct netfs_io_request *rreq;
++	mempool_t *mempool = ctx->ops->request_pool ?: &netfs_request_pool;
++	struct kmem_cache *cache = mempool->pool_data;
+ 	bool is_unbuffered = (origin == NETFS_UNBUFFERED_WRITE ||
+ 			      origin == NETFS_DIO_READ ||
+ 			      origin == NETFS_DIO_WRITE);
+ 	bool cached = !is_unbuffered && netfs_is_cache_enabled(ctx);
+ 	int ret;
+ 
+-	rreq = kzalloc(ctx->ops->io_request_size ?: sizeof(struct netfs_io_request),
+-		       GFP_KERNEL);
+-	if (!rreq)
+-		return ERR_PTR(-ENOMEM);
++	for (;;) {
++		rreq = mempool_alloc(mempool, GFP_KERNEL);
++		if (rreq)
++			break;
++		msleep(10);
++	}
+ 
++	memset(rreq, 0, kmem_cache_size(cache));
+ 	rreq->start	= start;
+ 	rreq->len	= len;
+ 	rreq->upper_len	= len;
+@@ -56,7 +63,7 @@ struct netfs_io_request *netfs_alloc_request(struct address_space *mapping,
+ 	if (rreq->netfs_ops->init_request) {
+ 		ret = rreq->netfs_ops->init_request(rreq, file);
+ 		if (ret < 0) {
+-			kfree(rreq);
++			mempool_free(rreq, rreq->netfs_ops->request_pool ?: &netfs_request_pool);
+ 			return ERR_PTR(ret);
+ 		}
+ 	}
+@@ -88,6 +95,14 @@ void netfs_clear_subrequests(struct netfs_io_request *rreq, bool was_async)
+ 	}
+ }
+ 
++static void netfs_free_request_rcu(struct rcu_head *rcu)
++{
++	struct netfs_io_request *rreq = container_of(rcu, struct netfs_io_request, rcu);
++
++	mempool_free(rreq, rreq->netfs_ops->request_pool ?: &netfs_request_pool);
++	netfs_stat_d(&netfs_n_rh_rreq);
++}
++
+ static void netfs_free_request(struct work_struct *work)
+ {
+ 	struct netfs_io_request *rreq =
+@@ -110,8 +125,7 @@ static void netfs_free_request(struct work_struct *work)
+ 		}
+ 		kvfree(rreq->direct_bv);
+ 	}
+-	kfree_rcu(rreq, rcu);
+-	netfs_stat_d(&netfs_n_rh_rreq);
++	call_rcu(&rreq->rcu, netfs_free_request_rcu);
+ }
+ 
+ void netfs_put_request(struct netfs_io_request *rreq, bool was_async,
+@@ -143,20 +157,25 @@ void netfs_put_request(struct netfs_io_request *rreq, bool was_async,
+ struct netfs_io_subrequest *netfs_alloc_subrequest(struct netfs_io_request *rreq)
+ {
+ 	struct netfs_io_subrequest *subreq;
+-
+-	subreq = kzalloc(rreq->netfs_ops->io_subrequest_size ?:
+-			 sizeof(struct netfs_io_subrequest),
+-			 GFP_KERNEL);
+-	if (subreq) {
+-		INIT_WORK(&subreq->work, NULL);
+-		INIT_LIST_HEAD(&subreq->rreq_link);
+-		refcount_set(&subreq->ref, 2);
+-		subreq->rreq = rreq;
+-		subreq->debug_index = atomic_inc_return(&rreq->subreq_counter);
+-		netfs_get_request(rreq, netfs_rreq_trace_get_subreq);
+-		netfs_stat(&netfs_n_rh_sreq);
++	mempool_t *mempool = rreq->netfs_ops->subrequest_pool ?: &netfs_subrequest_pool;
++	struct kmem_cache *cache = mempool->pool_data;
++
++	for (;;) {
++		subreq = mempool_alloc(rreq->netfs_ops->subrequest_pool ?: &netfs_subrequest_pool,
++				       GFP_KERNEL);
++		if (subreq)
++			break;
++		msleep(10);
+ 	}
+ 
++	memset(subreq, 0, kmem_cache_size(cache));
++	INIT_WORK(&subreq->work, NULL);
++	INIT_LIST_HEAD(&subreq->rreq_link);
++	refcount_set(&subreq->ref, 2);
++	subreq->rreq = rreq;
++	subreq->debug_index = atomic_inc_return(&rreq->subreq_counter);
++	netfs_get_request(rreq, netfs_rreq_trace_get_subreq);
++	netfs_stat(&netfs_n_rh_sreq);
+ 	return subreq;
+ }
+ 
+@@ -178,7 +197,7 @@ static void netfs_free_subrequest(struct netfs_io_subrequest *subreq,
+ 	trace_netfs_sreq(subreq, netfs_sreq_trace_free);
+ 	if (rreq->netfs_ops->free_subrequest)
+ 		rreq->netfs_ops->free_subrequest(subreq);
+-	kfree(subreq);
++	mempool_free(subreq, rreq->netfs_ops->subrequest_pool ?: &netfs_subrequest_pool);
+ 	netfs_stat_d(&netfs_n_rh_sreq);
+ 	netfs_put_request(rreq, was_async, netfs_rreq_trace_put_subreq);
+ }
+diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+index 3af589dabd7f..0b6c2c2d3c23 100644
+--- a/include/linux/netfs.h
++++ b/include/linux/netfs.h
+@@ -20,6 +20,7 @@
+ #include <linux/uio.h>
+ 
+ enum netfs_sreq_ref_trace;
++typedef struct mempool_s mempool_t;
+ 
+ /**
+  * folio_start_private_2 - Start an fscache write on a folio.  [DEPRECATED]
+@@ -236,8 +237,8 @@ struct netfs_io_request {
+  * Operations the network filesystem can/must provide to the helpers.
+  */
+ struct netfs_request_ops {
+-	unsigned int	io_request_size;	/* Alloc size for netfs_io_request struct */
+-	unsigned int	io_subrequest_size;	/* Alloc size for netfs_io_subrequest struct */
++	mempool_t *request_pool;
++	mempool_t *subrequest_pool;
+ 	int (*init_request)(struct netfs_io_request *rreq, struct file *file);
+ 	void (*free_request)(struct netfs_io_request *rreq);
+ 	void (*free_subrequest)(struct netfs_io_subrequest *rreq);
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Cristian-Marussi/dt-bindings-mailbox-arm-mhuv3-Add-bindings/20240326-020048
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git for-next
-patch link:    https://lore.kernel.org/r/20240325092808.117510-3-cristian.marussi%40arm.com
-patch subject: [PATCH 2/2] mailbox: arm_mhuv3: Add driver
-config: powerpc-randconfig-r131-20240328 (https://download.01.org/0day-ci/archive/20240329/202403290015.tCLXudqC-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 23de3862dce582ce91c1aa914467d982cb1a73b4)
-reproduce: (https://download.01.org/0day-ci/archive/20240329/202403290015.tCLXudqC-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403290015.tCLXudqC-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/mailbox/arm_mhuv3.c:565:46: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct pdbcw_page *dbcw @@     got struct pdbcw_page [noderef] __iomem * @@
-   drivers/mailbox/arm_mhuv3.c:565:46: sparse:     expected struct pdbcw_page *dbcw
-   drivers/mailbox/arm_mhuv3.c:565:46: sparse:     got struct pdbcw_page [noderef] __iomem *
->> drivers/mailbox/arm_mhuv3.c:568:25: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *addr @@     got struct pdbcw_int * @@
-   drivers/mailbox/arm_mhuv3.c:568:25: sparse:     expected void const volatile [noderef] __iomem *addr
-   drivers/mailbox/arm_mhuv3.c:568:25: sparse:     got struct pdbcw_int *
->> drivers/mailbox/arm_mhuv3.c:568:25: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *addr @@     got struct pdbcw_int * @@
-   drivers/mailbox/arm_mhuv3.c:568:25: sparse:     expected void volatile [noderef] __iomem *addr
-   drivers/mailbox/arm_mhuv3.c:568:25: sparse:     got struct pdbcw_int *
-   drivers/mailbox/arm_mhuv3.c:569:25: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *addr @@     got struct pdbcw_int * @@
-   drivers/mailbox/arm_mhuv3.c:569:25: sparse:     expected void const volatile [noderef] __iomem *addr
-   drivers/mailbox/arm_mhuv3.c:569:25: sparse:     got struct pdbcw_int *
-   drivers/mailbox/arm_mhuv3.c:569:25: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *addr @@     got struct pdbcw_int * @@
-   drivers/mailbox/arm_mhuv3.c:569:25: sparse:     expected void volatile [noderef] __iomem *addr
-   drivers/mailbox/arm_mhuv3.c:569:25: sparse:     got struct pdbcw_int *
->> drivers/mailbox/arm_mhuv3.c:570:25: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *addr @@     got struct xbcw_ctrl * @@
-   drivers/mailbox/arm_mhuv3.c:570:25: sparse:     expected void const volatile [noderef] __iomem *addr
-   drivers/mailbox/arm_mhuv3.c:570:25: sparse:     got struct xbcw_ctrl *
->> drivers/mailbox/arm_mhuv3.c:570:25: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *addr @@     got struct xbcw_ctrl * @@
-   drivers/mailbox/arm_mhuv3.c:570:25: sparse:     expected void volatile [noderef] __iomem *addr
-   drivers/mailbox/arm_mhuv3.c:570:25: sparse:     got struct xbcw_ctrl *
->> drivers/mailbox/arm_mhuv3.c:573:46: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct mdbcw_page *dbcw @@     got struct mdbcw_page [noderef] __iomem * @@
-   drivers/mailbox/arm_mhuv3.c:573:46: sparse:     expected struct mdbcw_page *dbcw
-   drivers/mailbox/arm_mhuv3.c:573:46: sparse:     got struct mdbcw_page [noderef] __iomem *
->> drivers/mailbox/arm_mhuv3.c:576:25: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *addr @@     got unsigned int * @@
-   drivers/mailbox/arm_mhuv3.c:576:25: sparse:     expected void volatile [noderef] __iomem *addr
-   drivers/mailbox/arm_mhuv3.c:576:25: sparse:     got unsigned int *
-   drivers/mailbox/arm_mhuv3.c:577:25: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *addr @@     got unsigned int * @@
-   drivers/mailbox/arm_mhuv3.c:577:25: sparse:     expected void volatile [noderef] __iomem *addr
-   drivers/mailbox/arm_mhuv3.c:577:25: sparse:     got unsigned int *
-   drivers/mailbox/arm_mhuv3.c:578:25: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile [noderef] __iomem *addr @@     got struct xbcw_ctrl * @@
-   drivers/mailbox/arm_mhuv3.c:578:25: sparse:     expected void const volatile [noderef] __iomem *addr
-   drivers/mailbox/arm_mhuv3.c:578:25: sparse:     got struct xbcw_ctrl *
-   drivers/mailbox/arm_mhuv3.c:578:25: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void volatile [noderef] __iomem *addr @@     got struct xbcw_ctrl * @@
-   drivers/mailbox/arm_mhuv3.c:578:25: sparse:     expected void volatile [noderef] __iomem *addr
-   drivers/mailbox/arm_mhuv3.c:578:25: sparse:     got struct xbcw_ctrl *
->> drivers/mailbox/arm_mhuv3.c:360:9: sparse: sparse: dereference of noderef expression
-   drivers/mailbox/arm_mhuv3.c:370:9: sparse: sparse: dereference of noderef expression
-   drivers/mailbox/arm_mhuv3.c:373:9: sparse: sparse: dereference of noderef expression
-   drivers/mailbox/arm_mhuv3.c:639:30: sparse: sparse: dereference of noderef expression
-   drivers/mailbox/arm_mhuv3.c:659:33: sparse: sparse: dereference of noderef expression
-   drivers/mailbox/arm_mhuv3.c:688:14: sparse: sparse: dereference of noderef expression
-   drivers/mailbox/arm_mhuv3.c:700:17: sparse: sparse: dereference of noderef expression
-   drivers/mailbox/arm_mhuv3.c:719:14: sparse: sparse: dereference of noderef expression
-   drivers/mailbox/arm_mhuv3.c:732:14: sparse: sparse: dereference of noderef expression
-   drivers/mailbox/arm_mhuv3.c:789:22: sparse: sparse: dereference of noderef expression
-   drivers/mailbox/arm_mhuv3.c:795:22: sparse: sparse: dereference of noderef expression
-   drivers/mailbox/arm_mhuv3.c:796:22: sparse: sparse: dereference of noderef expression
-   drivers/mailbox/arm_mhuv3.c:802:31: sparse: sparse: dereference of noderef expression
-   drivers/mailbox/arm_mhuv3.c:806:17: sparse: sparse: dereference of noderef expression
-   drivers/mailbox/arm_mhuv3.c:1038:17: sparse: sparse: dereference of noderef expression
-
-vim +565 drivers/mailbox/arm_mhuv3.c
-
-   558	
-   559	static void mhuv3_dbe_combined_irq_setup(struct mhuv3 *mhu)
-   560	{
-   561		int i;
-   562		struct mhuv3_extension *e = mhu->ext[DBE_EXT];
-   563	
-   564		if (mhu->frame == PBX_FRAME) {
- > 565			struct pdbcw_page *dbcw = mhu->pbx->dbcw;
-   566	
-   567			for (i = 0; i < e->max_chans; i++) {
- > 568				writel_relaxed_bitfield(0x1, &dbcw[i].int_clr, tfr_ack);
-   569				writel_relaxed_bitfield(0x0, &dbcw[i].int_en, tfr_ack);
- > 570				writel_relaxed_bitfield(0x1, &dbcw[i].ctrl, comb_en);
-   571			}
-   572		} else {
- > 573			struct mdbcw_page *dbcw = mhu->mbx->dbcw;
-   574	
-   575			for (i = 0; i < e->max_chans; i++) {
- > 576				writel_relaxed(0xFFFFFFFF, &dbcw[i].clr);
-   577				writel_relaxed(0xFFFFFFFF, &dbcw[i].msk_set);
-   578				writel_relaxed_bitfield(0x1, &dbcw[i].ctrl, comb_en);
-   579			}
-   580		}
-   581	}
-   582	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
