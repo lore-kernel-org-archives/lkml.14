@@ -1,104 +1,93 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDFC48003F
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 13:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CCE93032A
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 13:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711631323; cv=none; b=HkapcVFwUmNdw5zmtR+gAmg0wylCiK0h6mlsoHDADt4FO3g40XPGXLSCxFJJJk340LK4CCkopcEP0mH7Yw6yU2GenCYwLVLdf6BdsWDIfU5ybsWXfNuBF+iCbPRO5mRu/5wevD6Cs4j1FT6uckLpbvuYNuOJpxf5EnjOSFQoF+U=
+	t=1711631376; cv=none; b=JyPBzLkc0IJBdPfRnYccyzXhcjfDpn2NGcaSW+Uo7W6JwghbPOJ7Pp5nubhLdctXj64+vh5Tck7d+FkMPOJMaHC/3z64BiRuO5vRFMjU/Dpp13+6B309Cc3OtdsUjZa0FL34wdivG4M4ukVidFvpb2wlJZrM5MNQYq9HakOdUbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711631323; c=relaxed/simple;
-	bh=/v25aVlglUHoHuDjsbcA6yqQWdPZbaxN1dpDDF2mhtg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=IjVMcPbuKlE8BaNYi0vpfEqs/IsiePXVs7IxjZe2137X1KK3UM8YyXUyqbiRVEp7fqDUyLF1wM5x03r2Rm6n9Xm6H9XwI+wgxnv/cBiD9tMvCPb9NnWF6mlZp7zZXEC/ZO/gIJZ+DZ4rKd1ZhEh9eJATUILLLILFEpSePpR5n8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 080FA240004;
-	Thu, 28 Mar 2024 13:08:30 +0000 (UTC)
-Message-ID: <271f4b9c-f879-4933-b1e9-1e7481a809eb@ghiti.fr>
-Date: Thu, 28 Mar 2024 14:08:30 +0100
+	s=arc-20240116; t=1711631376; c=relaxed/simple;
+	bh=w7lYAZ5uk7kchtoYBrDdTDqy2vNU3oFxqkAuhLzk0mk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DRD9sKixbfJ0kMPbrriCihVtOUrFPnv5xNUjj0UrYZPHsXEWQX401tmaE2Ba/W0+UtbV2LJx3bQ+X6QtF5cRMGN9D7h7DcTa2TEp+KoPXeMfG6gEWi/r0jHEatoxRPT7KlL09kPrjfYbqMD9ZGv24Qdz2iTnTV7BbN2Vm2IA0/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=NCeGZUnO; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="NCeGZUnO"
+Received: from wse.fritz.box (pd9e59192.dip0.t-ipconnect.de [217.229.145.146])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 1F10F2FC0063;
+	Thu, 28 Mar 2024 14:09:27 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1711631369;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ojbSBuW9t8NkBbxB8HzsJZUa41zS6xae7K3rNwVDPtU=;
+	b=NCeGZUnOUJFjf1bi7Pk2p2TSLikWJsotk0+c/Evf0+v5kTl2j/2h4zg80WC88XBDWtC3Nl
+	p2p+RB0olc/EM5KzyOxSxsdY4LqRcUgoxYgFIWf9iN91Js9E/DEV/he0+HUuYDyzDmEf7n
+	KwDI9URxv5om54idg6aMh8/orQIRDrU=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+From: Werner Sembach <wse@tuxedocomputers.com>
+To: Keith Busch <kbusch@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>
+Cc: Georg Gottleuber <ggo@tuxedocomputers.com>,
+	Werner Sembach <wse@tuxedocomputers.com>,
+	linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] nvme-pci: Add sleep quirk for Samsung 990 Evo
+Date: Thu, 28 Mar 2024 14:09:22 +0100
+Message-Id: <20240328130923.61752-1-wse@tuxedocomputers.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] riscv/fixes boot error: can't ssh into the instance (3)
-Content-Language: en-US
-To: syzbot <syzbot+620209d95a0e9fde702f@syzkaller.appspotmail.com>,
- aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, palmer@dabbelt.com,
- paul.walmsley@sifive.com, syzkaller-bugs@googlegroups.com
-References: <0000000000008a75510614b44af1@google.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <0000000000008a75510614b44af1@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: alex@ghiti.fr
+Content-Transfer-Encoding: 8bit
 
-On 28/03/2024 09:27, syzbot wrote:
-> Hello,
->
-> syzbot found the following issue on:
->
-> HEAD commit:    653650c468be riscv: Mark __se_sys_* functions __used
-> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git fixes
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1110f1e6180000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=88360569be845301
-> dashboard link: https://syzkaller.appspot.com/bug?extid=620209d95a0e9fde702f
-> compiler:       riscv64-linux-gnu-gcc (Debian 12.2.0-13) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> userspace arch: riscv64
->
-> Downloadable assets:
-> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/a741b348759c/non_bootable_disk-653650c4.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/2701bf6276c4/vmlinux-653650c4.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/aed54fe6b3d5/Image-653650c4.xz
->
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+620209d95a0e9fde702f@syzkaller.appspotmail.com
->
->
->
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
->
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
->
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
->
-> If you want to undo deduplication, reply with:
-> #syz undup
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv	
+From: Georg Gottleuber <ggo@tuxedocomputers.com>
 
+On some TUXEDO platforms, a Samsung 990 Evo NVMe leads to a high
+power consumption in s2idle sleep (2-3 watts).
 
-So this is fixed by 
-https://lore.kernel.org/all/20240326063036.6242-1-osalvador@suse.de/
+This patch applies 'Force No Simple Suspend' quirk to achieve a
+sleep with a lower power consumption, typically around 0.5 watts.
 
-Here are the relevant syzbot tags (hopefully I get them right):
+Signed-off-by: Georg Gottleuber <ggo@tuxedocomputers.com>
+Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+Cc: <stable@vger.kernel.org>
+---
+ drivers/nvme/host/pci.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-#syz dup: [syzbot] [mm?] upstream boot error: WARNING: refcount bug in 
-__reset_page_owner
-
-#syz fix: mm,page_owner: Fix refcount imbalance
-
-Thanks,
-
-Alex
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index e6267a6aa3801..63f4947c960f9 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -2917,6 +2917,17 @@ static unsigned long check_vendor_combination_bug(struct pci_dev *pdev)
+ 		    dmi_match(DMI_BOARD_NAME, "NS5x_7xPU") ||
+ 		    dmi_match(DMI_BOARD_NAME, "PH4PRX1_PH6PRX1"))
+ 			return NVME_QUIRK_FORCE_NO_SIMPLE_SUSPEND;
++	} else if (pdev->vendor == 0x144d && pdev->device == 0xa80d) {
++		/*
++		 * Exclude Samsung 990 Evo from NVME_QUIRK_SIMPLE_SUSPEND
++		 * because of high power consumption (> 2 Watt) in s2idle
++		 * sleep. Only some boards with Intel CPU are affected.
++		 */
++		if (dmi_match(DMI_BOARD_NAME, "GMxPXxx") ||
++		    dmi_match(DMI_BOARD_NAME, "PH4PG31") ||
++		    dmi_match(DMI_BOARD_NAME, "PH4PRX1_PH6PRX1") ||
++		    dmi_match(DMI_BOARD_NAME, "PH6PG01_PH6PG71"))
++			return NVME_QUIRK_FORCE_NO_SIMPLE_SUSPEND;
+ 	}
+ 
+ 	return 0;
+-- 
+2.34.1
 
