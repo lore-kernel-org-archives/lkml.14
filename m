@@ -1,192 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic314-20.consmr.mail.ne1.yahoo.com (sonic314-20.consmr.mail.ne1.yahoo.com [66.163.189.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747E45FB90
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637EC5FB90
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.189.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711642226; cv=none; b=kPltdE2pWkh1D3i+O3hpSEFR+KdI0dljhz8V+BOyHj20XsGru7FjRjNRvDu5MY6GjZUrD3phmWCJuwml0Mm9uYvRAh6PHkNOf6RlJor8C0aUfgqLcwrpuUkVidagfJGWs6E6N8j+zEEG1MWMfim4J4XvGyUaFSaNs3dkM8wU+V0=
+	t=1711642274; cv=none; b=QTH0ys4U6KJcfqheOu29iM43HIEYr6+lE8RwEAwz01KZY+bWVW+ak8UqXe6sRMQLRdFUdvK4kBn3+BnCV9XkKMZba/vKw6O8EK9/gwcAah+uLHcXxVBQlO5zhkYLCnpq2iD6B366klwg1aqYKw334Vi6F69NOz/9a93EowmO7m0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711642226; c=relaxed/simple;
-	bh=aKCQ5vxu2dVNPk1Ajh31NOatnxvir20tZSXl26pgxNE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z+Cx6oooz7tdRDRRHeXoLkjQ3RFgC7Pix2OyyGPPB/dg2BWowZE5Crc4Wc0w2N/w7Ol0YNe9dBXYTdTIwF8QJGfubwlqOebzoVGu6w/f4tpzZHeEResN04d4xqWS3ZsS9T+9acgqc4kQIu1dqT94NhLVbj3WS0+jBANND3BRaw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PQ2k1FCd; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1711642274; c=relaxed/simple;
+	bh=+SXbMRKRsCNWCSmZsgX8DUXaV0Hzxq1hPjnU34rmag0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eC0hnbHdF04AZAC9CtAVhRikZi6Zmm0lVA+5VjCaLUHESmHPUV6TNVYPNn3W4uo6aagS3tLmQpojfNj5m8xnRRvQpS9mSpS3kRmWg9wVdfXy8IEO62keIyH0C0uYsLqx5QcOP9YRZ0A2g6flLCueNlJQFGVl/x5DTYO79lauIeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=oi4kXTTF; arc=none smtp.client-ip=66.163.189.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PQ2k1FCd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711642224; x=1743178224;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=aKCQ5vxu2dVNPk1Ajh31NOatnxvir20tZSXl26pgxNE=;
-  b=PQ2k1FCdqWrQSEeTd0j+L7jeCWQumnr88D6bpcLIwHcVdTr1YOW+rnBx
-   xj5QpnMrIqsdR4cre4vxmqMNlkAvLk4h2b3ULHTSDM3WUaxscsUwOm73z
-   PpUoiKvX5kOuDaDjavXhKWAfA4rVxCnqwfxJLuLhtMcohkhNTYaH8kE/Y
-   Yb4C6EftbnGeuUI3sTjFiJ58lwmLeugYJmQh5hBzVoRmD79y0DA45vNiw
-   AnJOwtyzUTtKnykZW/ztyaG2rIvO7+It11O493hKH0uUf6TwdXy/6DG7v
-   ccyUhCDC213gbJ1eRty7LkuOgTmT9nWlmmnD1GRxo6zjVT9PZyS68FMmk
-   g==;
-X-CSE-ConnectionGUID: U6eOTm3pTt6QvA8tdt1Qug==
-X-CSE-MsgGUID: mCn7s7GzRfm91+FrExpJJw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="6921471"
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="6921471"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 09:10:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="937076541"
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="937076541"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 28 Mar 2024 09:10:18 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id AC427288; Thu, 28 Mar 2024 18:10:17 +0200 (EET)
-Date: Thu, 28 Mar 2024 18:10:17 +0200
-From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
-To: "Huang, Kai" <kai.huang@intel.com>
-Cc: "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
-	"luto@kernel.org" <luto@kernel.org>, "ashish.kalra@amd.com" <ashish.kalra@amd.com>, 
-	"Hansen, Dave" <dave.hansen@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"mingo@redhat.com" <mingo@redhat.com>, "seanjc@google.com" <seanjc@google.com>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>, 
-	"tglx@linutronix.de" <tglx@linutronix.de>, "nik.borisov@suse.com" <nik.borisov@suse.com>, 
-	"hpa@zytor.com" <hpa@zytor.com>, "peterz@infradead.org" <peterz@infradead.org>, 
-	"Gao, Chao" <chao.gao@intel.com>, "bp@alien8.de" <bp@alien8.de>, 
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH v2 2/5] x86/kexec: do unconditional WBINVD in
- relocate_kernel()
-Message-ID: <unsk2vaqeyh4a3zckf3vd3vxuv7rgtjq7dzv2kfdqrjjy6tvkl@rg5p46djnhmy>
-References: <tvembdwwh4immxytlfzlhpvd42dlfsz7sddb7msk23kdduhu3t@ogpc66hklorv>
- <38fca2fa-11b2-4eb7-9e59-dc5d524d172e@amd.com>
- <689bbd29-aaf0-452e-a97f-41b8e3aa6224@intel.com>
- <5a2441a3-4d7e-4fee-bfa7-65b53376b0ab@amd.com>
- <e677ab03-8b25-46cd-90ac-cacae6ba5027@intel.com>
- <bbtfbfkg6frhpvf34gqnml7mdgqtyt5khaiqi657nd2kbnlbib@yarqgrrszf4v>
- <8f449fbb-c6c0-e864-befd-a3f95a89e85e@amd.com>
- <glorzobyf42wylp57izgiukbe33c6ez5mgiwxepgn6pt2h4lr3@aqdas5q75mcb>
- <9679cc44-fb90-d1ca-7c9a-10d0f6f5d3c2@amd.com>
- <144a6a5bb6f78966611b42a526e587c3daf4fd9f.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="oi4kXTTF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1711642271; bh=ZyHtBIaVYtkvRDAmKUG8A/GLUqVWzwrSG+X1nkrtras=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=oi4kXTTFt6+/qwQJradjETgMez2tQVn+Fx1CFC07xNos5hfrn06jXonkExSd0SaJ67q+plfqYuw3SwZvqSt6qBQcevY8FFfqwyIyJNS9KFReWesuwEjHzhHXNBeryw2452Tjodnwkffx391nI9Lzl7mTBcUd/QX+Zu8Sj1AYKodluWOqi1Z60hh2aqCxccggewT6eQU+ip07xuiYfARsTiHCS93kEehRY7apd6V03cdNgZlXYWsS/LDM2UvP5l6pu7CVC9LDb9FY0w3GESaq0ccMEoK1FKUEvqclQgL9ctqJn8sLYMAvk+P3mVxx/6qVtqjccRoPUUfschp7WvJ6Bw==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1711642271; bh=3GKnXVS84+NQxTlqsExWBA1hC7gkiCblOeRrNtdCgRU=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=pqLAotZOLyAY4lKQBFng+UCn2J7HeKasGb9Y0RFbfLAmcGvjwOe4683bdFagA83eEUgiUDcy2NAspy9cRelw9MkZ9/848Eyffr+SLteRVEwAmYSXSdD7efHrK1NQnq1q73eGU0EhaYGIqf0f9ENrPocPqmI7xpaDWTZ5a/rpOxRgGYByi1PbEwwbKvGBGtYND4O6oXCDnit/fQZFNQOeZgmNYIrobmxvpKyxiq2EoxfXq1svnDbYT3K/pAgYygRZI1WhQwR5dJafahI557uke2WZAo86MNcgoDYWKE5H4fPz1S7bc858pcEKT0MSLvv9TbjuDpGNLUZ8fxWyByxELA==
+X-YMail-OSG: pVr5U_IVM1mohR3UFTJqDGDDf8fV5.clqO22L.9aRddV5JOBhBoeHBC.FxhOd39
+ pJrU_RYOmuOGLa2dY5CoY7mX6cROr3smFAiJpPPXsY6avV.wCLnysdAGFtHVMkE43vBwqS8Fb5G1
+ AhdPSbEVpEgDBR8yt2scsaU9FH3vY6qI8GtsraCLj2.fGQjxsHhJww9ospjRzjlCaWkzxiOFm6Ot
+ NB2qExQL48muf_FyuT76nCDW4sk2E2vO4Wz4yauyfgryBYlWSzd2G_.2CbzPsgIyMsw0UZ.koWh1
+ dRqVarS0Vdm.jL4AXTze0J2hdYznajy7W7omhX3HUBpvPOYemyZvCmtX2XHY1yY_laKnUBo3p2K5
+ xmB8zOQFL3S7bkse62lREJZCu_eWfcd3vpEGw2z9gGorQ.yG.0uGgqvnoAI2_EyMQcGtm6xk.KTR
+ MmQTUTIfH_t20i4o6972npYV7aYeIIyY4OYs6WfeXBGuNDAWA57cMCNzwwiKHTbtacFrS.0poB3D
+ whS4_daXf3s2F62lZozOwDo6r0xKdLiykvL3H8hRU9MpLHYfBrzdOZId3tyxRWVoUNq_mI4Q3w.q
+ GFW0HuLix7b0S3cYyVNJa8U_c_SGp3s7.Z5bW7ggyO0ZkHNtuKu730cRKyuBoQvQno9gjOZ3c.Pn
+ h7ZhZo5DhvgsEx2kv8hWbZv8vQxcmnUp7ogY1nHUnKUm70QFPQ1HI_IqsDeiX22Yis6Ud8BCrJqf
+ glDJ4KlGsMyIbPk.KcZJmalZGyjhrTPq51NWB8nfYTJflT3fNqObV_XIjaQyBhr3g62NDp6xJrQ.
+ yzfBDLeKu7s1Hh5pHssABDq.1iGZoRDG4yMpoYpR93j9u5RgMQCWV9EznHkfHkZL8RV4GElA7Got
+ .DwwGDBvuWWFdexgHHLCBh46vtwXSY16qN1HTlmPfvlcVrKqLVJBiXpiZ6IRFrP83ykZPuXM78SD
+ fSdfeAjox5QnxYs6wdb2YsAIoYno1D7bH3xYmZIDIQUyjLfWvC_YBux50W77WgRVMkS1EcZvpNL5
+ TPjjB4K8fup.EohBpr63fqi.mzymzd3HOQQhq2.LdGaf19LsCiTQ.ho7krpE4jqrr6.I_c8Hq3zP
+ Uqti0y3CPUMd.UcPcFikLDcYNPexv_i.7599Phx0Ab4IyERFk1qNQ6HgbB9PDy3H8tq3gLH9qu3N
+ XROMdd8tzSR1L_fq5XP4NY_66ew1G8De8wQ2bMy_mzjXtNVGcYzDKvUHt.AlmF7elzle1_3_3z6_
+ 6WhzBaj.xOkgYidN8AVrGATSt2EO.ypp559pxeVOtL6SkLth7.4jYZC2n2nOBs8pZ001Fj1xTUCL
+ 5aTtgM6Z8iwWyU0DJjR2li0cfxkpdtT6tH4DgFX2mvSO6gb5uxS2b9jXlZtOv7s4QFrH17zAStDT
+ FhpCESN7PcIzQfflxlJSujYIJSk22tiN7d_y55vSshcAGiiuhLuObZIMXemJbPUzDe_FlwOVt6dz
+ M0u6Fy19A.YCd1b9vIYWRCVbBoaTTxVcPA4SOkrQZkdRL91lZwt7MTWI56RlV.Vl4KNJ7n.dS67j
+ _7WIr4IRquGofe67R6noU5d3p4rAPWP37bewV3_rX3ZpeL8i2D2TFH05_snF4qaDD11_i2NSsJvB
+ xVmoLvIXekDLfJVuptm1mGM3Jm2WokEwIwNddUWyImxtLUNA6cFVgpumuPMp5EQb.Xk1lNjOmFTU
+ EdeBUihtnLav7c9vsYL5IkodT1GCGnuUhMoPiX4O7LkLNOZ4e5Mb4X0k63gdcXZBFvd8sk_jCTMG
+ c4dfr8m0iOIhkcaaddW7JAHST3zqnEfRbIaPlZS60RghxRdrXG4rJkaOZw0gqa1y5KKn7Qb9rirs
+ DxA5odIrEX3EfmZ8Av7sdf7P2iUTfwNN3lWpsKq89xJFh577i5KfXwCwv3nkqNp_7aXgeTiHeCrV
+ RyYMK5zzXQsnjezefcJL9AeVwBXsUShz3FIxWXGBIlSiFwxiXZIQ6sdAL_R9Y3q0BethABZQJEoF
+ A78jWwqkhN9s4B6V6yPdimqPhLp0d_Z1HwRa1MoA3EdxFLaZ5gz6xHNLjqcIGLl05ypic7FmI27t
+ 5efSr_28SMi4Q96ojIY5P4iwU0MYjIKuEYB5JEV.iyWJDhAbUDrqZpLHeA2MoNeNBSQQ69ltVrnr
+ FFwq3kuFuICZPkp.6BdwQFmBMVvDmf0OLoDpW5GAeKIlC53jEBbQ_edhyOf_6qsNOh8Ybj6RG1u9
+ zphZyXE43xGFXx0WBpmsohCZihSvE74wLRROPYIxII29uqr.TU1x4CQj3pmN1AzibdA--
+X-Sonic-MF: <serdeliuk@yahoo.com>
+X-Sonic-ID: 8d8f7e58-1489-4d00-9537-0710dceb30a8
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.ne1.yahoo.com with HTTP; Thu, 28 Mar 2024 16:11:11 +0000
+Received: by hermes--production-ir2-7bc88bfc75-8kqvj (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID fbcf4bd0dc641f57c690cc16c33a48f7;
+          Thu, 28 Mar 2024 15:10:27 +0000 (UTC)
+Message-ID: <20620ab0-5024-439e-943b-ab12d35a60d8@yahoo.com>
+Date: Thu, 28 Mar 2024 16:10:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: arm: qcom: Add Samsung Galaxy Z Fold5
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240328-dt-bindings-arm-qcom-add-support-for-samsung-galaxy-zfold5-v1-1-cb612e3ade18@yahoo.com>
+ <ca4ed5e3-32ea-451a-82ca-25fba07877dc@linaro.org>
+ <33e23d1c-5b6f-4111-9631-0f8db1100d0c@yahoo.com>
+ <8e09b779-a18f-46b4-926c-40e2a5782d85@linaro.org>
+Content-Language: en-US
+From: Alexandru Serdeliuc <serdeliuk@yahoo.com>
+In-Reply-To: <8e09b779-a18f-46b4-926c-40e2a5782d85@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <144a6a5bb6f78966611b42a526e587c3daf4fd9f.camel@intel.com>
+X-Mailer: WebService/1.1.22205 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-On Mon, Mar 25, 2024 at 01:04:47PM +0000, Huang, Kai wrote:
-> On Fri, 2024-03-22 at 09:50 -0500, Tom Lendacky wrote:
-> > On 3/22/24 05:40, Kirill A. Shutemov wrote:
-> > > On Thu, Mar 21, 2024 at 04:02:11PM -0500, Tom Lendacky wrote:
-> > > > On 3/20/24 18:10, Kirill A. Shutemov wrote:
-> > > > > On Thu, Mar 21, 2024 at 09:48:28AM +1300, Huang, Kai wrote:
-> > > > > > 
-> > > > > > > > Hi Tom,
-> > > > > > > > 
-> > > > > > > > I am not aware of kexec() support status for SEV-ES/SEV-SNP guests.
-> > > > > > > > Does patch 1 break them?
-> > > > > > > 
-> > > > > > > SNP guests can kexec with some patches that are currently in process
-> > > > > > > around shared to private memory conversions. ES guests can only kexec
-> > > > > > > with a single vCPU. There was a recent patch series to add support for
-> > > > > > > multiple vCPUs.
-> > > > > > > 
-> > > > > > > Patch #1 doesn't break either ES or SNP because we still have an IDT and
-> > > > > > > traditional kernel addressing in place, so the #VC can be handled.
-> > > > > > 
-> > > > > > How about plain SEV guest?
-> > > > > > 
-> > > > > > > 
-> > > > > > > Whereas patch #2 has switched to identity mapping and removed the IDT,
-> > > > > > > so a #VC causes a triple fault.
-> > > > > > 
-> > > > > > That makes sense.  Thanks.
-> > > > > > 
-> > > > > > Hi Kirill,
-> > > > > > 
-> > > > > > Does TDX guest have similar behaviour -- that WBINVD in stop_this_cpu() can
-> > > > > > be handled although it causes #VE, while WBINVD in relocate_kernel() will
-> > > > > > just triple fault the guest?
-> > > > > 
-> > > > > No. We never handle WBINVD #VE. Guest cannot handle WBINVD itself and the
-> > > > > only option is to ask host to do this. We cannot guarantee host will do
-> > > > 
-> > > > Is the WBINVD performed or ignored in that case?
-> > > 
-> > > We crash the guest if it tries to use WBINVD. There's no legitimate reason
-> > > for it.
-> > > 
-> > > > > anything useful with the request. I guess it can be potential attack
-> > > > > vector if host strategically ignores WBINVD to induce bad guest behaviour.
-> > > > 
-> > > > With SNP, memory is coherent so there isn't a need for a WBINVD within a
-> > > > guest and so issuing it should not be an issue whether the hypervisor
-> > > > performs the operation or not. I don't know what can happen in the case
-> > > > where, say, you have a non-coherent TDISP device attached or such, but that
-> > > > would be very unusual/unlikely.
-> > > 
-> > > Looks like SNP is in the same position as TDX.
-> > > 
-> > > > > And it is not good from host PoV either. If it does WBINVD on every guest
-> > > > > request we get guest->host DoS attack possibility.
-> > > > 
-> > > > Yeah, that can happen today, regardless of the type of VM running.
-> > > > 
-> > > > > 
-> > > > > Tom, I am curious, how do you deal with these problems?
-> > > > 
-> > > > If the WBINVD is being intercepted, then it will generate a #VC and we use
-> > > > the GHCB protocol to communicate that back to the hypervisor to handle.
-> > > 
-> > > I would argue that forwarding it to hypervisor is worse than crashing. It
-> > > gives false sense of doing something. Hypervisor is outside TCB and
-> > > considered hostile.
-> > 
-> > Since the memory is coherent, it really doesn't matter what the hypervisor 
-> > does in regards to WBINVD (ignore it or perform it). And the hypervisor 
-> > can do anything it wants on any exit, regardless of this intercept.
-> > 
-> 
-> I guess it makes sense to not handle #VE due to WBINVD in the sense that guest
-> shouldn't do WBINVD when memory is coherent from guest's view, although it is
-> harmless to make the WBINVD and let hypervisor handle it.
+Hi Konrad,
+
+Thanks, I unfortunately sent the patch 2 prior seeing your reply.
+
+The warning was this one which says that i need to send the mods 
+separately in two patches:
+
+ >>>
+
+ >>>WARNING: DT binding docs and includes should be a separate patch. 
+See: Documentation/devicetree/bindings/submitting-patches.rst
+
+ >>>
 
 
-> 
-> Anyway, the current TDX guest doesn't handle #VE due to WBINVD, so I think for
-> simplicity we just don't do WBINVD in stop_this_cpu() and relocate_kernel() for
-> both TDX and SNP/SEV-ES guests.
-> 
-> As mentioned in my earlier reply, we can achieve this by skipping WBINVD when
-> the CC_ATTR_GUEST_MEM_ENCRYPT is true:
-> 
-> 	if (!cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
-> 		native_wbinvd(); �
-> 
-> (This skips WBINVD for plain SEV guest too, but this exactly is the current
-> behaviour of the upstream code, so I don't see any problem.)
-> 
-> Alternatively, we can have a dedicated CPU feature flag such as
-> X86_FEATURE_NO_WBINVD,
-> 
-> 	if (!boot_cpu_has(X86_FEATURE_NO_WBINVD))
-> 		native_wbinvd();
-> 
-> Or, we can just change to our mindset to "do unconditional WBINVD, but not in
-> virtualized environment":
-> 
-> 	if (!boot_cpu_has(X86_FEATURE_HYPERVISOR))
-> 		native_wbinvd();
-
-ACPI_FLUSH_CPU_CACHE() uses cpu_feature_enabled(X86_FEATURE_HYPERVISOR)
-check.
+I suppose that me sending two separate patches was not good, how i can 
+fix this?
 
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Best regards,
+
+Marc
+
+
+On 28/3/24 15:47, Konrad Dybcio wrote:
+> On 28.03.2024 3:42 PM, Alexandru Serdeliuc wrote:
+>> Hi Konrad,
+>>
+>>
+>> Thanks, yes, I am new to b4 and sending patches, in a few minutes I will add the second patch.
+>>
+>> That actually add the device tree, but  without the previous patch it showed me a warning, and with both patches provided another  warning that i need to split them in two.
+> Oh no, you should send them together! Could you please paste the warning so that
+> we can work out the issue?
+>
+> Konrad
