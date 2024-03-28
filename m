@@ -1,119 +1,83 @@
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB9E29CEF
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 06:46:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
+Received: from mail-177132.yeah.net (mail-177132.yeah.net [123.58.177.132])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28473386;
+	Thu, 28 Mar 2024 06:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711608376; cv=none; b=r53u+kkEQESZbE+cPY1x1NmMzviJQPVS8dp4MAqeOz56wIxI0PDP8tQwFDSuqO8qfyE45T4rQlC5T0ACoX6G+yfaw0wYiVI3dz4+SgxXpmPKY/tZ36sKIEsICsILzSgALHqdzyZeiIkbO6MK2zpAg9/u6cSZoaAmYQCSdr6Gwyc=
+	t=1711608614; cv=none; b=IYzwVQNBNa4wYurWXLN2k6pDnDSOj/NeKqmLsZNV9bs9ssS9aOBP+yjVJpuLQoN3DZpZPAjJ/kUmxuhv/sAzYoGyuwBnIMVbWieaKbNNLg1aJtjgxYQOIZZkOnWt01/JsnqWJBB/wncjIvTlRPE48U5JPw6656R0xzmfMtf7W0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711608376; c=relaxed/simple;
-	bh=A0eqZc2Idq8YoVPpTu2o6tJ994aWXVyAWN+lD2sX1Fg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HTndsJIU/hDTFFF3T5dCXpcsuBcsOPoWvzB34vMZxz1GZLmcttIumnIhd41LiCoxiNyQGhbTgufAY4kH5ozI3METsDweu/BmNLG1ZYRhYLy8K/qtBB4779PFeUwAmrF2ECWujvrhUiYmk4yq6qsw0NMietohr+M3Rp4ofTtzbD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AGEG+uJG; arc=none smtp.client-ip=209.85.161.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711608614; c=relaxed/simple;
+	bh=RN8R+2Bx93C58W1vJP5YX6XlUXPug8ucJerzaITw4BU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JHfq+nPk6t4vyXkdqs6zTsHMoRnu5pmuAaZhBiJYZzO7G/DmuYE4yegMx0vpeQMVQBN6YaQud5R/bzzkAHhfe/8my98PwSLUIfhip/s4KoeHklRJsDxcALk07cVMO/IICR9SuRrjzRVZnXwMbj9FfRrRqJuLYJKwp9nDA3OrSyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=UeAbq32Q; arc=none smtp.client-ip=123.58.177.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AGEG+uJG"
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5a48320f0f3so151761eaf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 23:46:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711608374; x=1712213174; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CdajnQBU4jDnyCtQCC669gXeD7BjwrpkfYPJe3b08SU=;
-        b=AGEG+uJGy9QXmsVXybA6ArKZIo8Iwh+PiXDSBYfOFlhKffXiwSTyUV2Jiex2oC4lPl
-         pHXpS3yJid2vwj5OWmeY/qSeVvhm9mFM75LPO4mahrOKOsNw2bzS0zJH52h7G/owS7HS
-         mTLGI0SQmSvRut1qjYzcSngfFRf541fF/aLHw4lxcypjqYqNI2WJqGZrqzrMk8RQWNYH
-         ok+w6jIS9Wq7jtOApDBn1ECIeEEFGhL8Om9IaqIPqhFS3RY0WZ7JCdTF6+nvPQKLm85O
-         XrNKIdpaJwYzN47xkwE59TJxyZrkWJJynme0ywrFJNvOdqLNavkDgookQNCBsvr1d24L
-         2gpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711608374; x=1712213174;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CdajnQBU4jDnyCtQCC669gXeD7BjwrpkfYPJe3b08SU=;
-        b=oUuDUQLfaETIxrncVvNCIH7ZlDkdyWLWw2q9zZVxPik3eAtSeFCdVGFlYDbfdn/a8V
-         C8Rk65//2aA2xniV1PpkSqA6Ew44Wxr5gFIY2+LgF+T4mR+Cxsu98Xng4r1Xc7TfHF6r
-         xMRZdAxT9WYC08+YCvFCCUNXWALQpJLqd9AdN9LrW4peKeiiQQKKoilTbQfOLd91MYOc
-         olnAMnlPxHUkPcngRitJ92PQAGODRUzD3M3ytqOoueksGQH3DU6+Jh3u3d44MxGVCh2z
-         KyMxFPUdb5qsqxupjFj/gQq5w/cnMFJbDXhFszG5SfvIBIeCzwji3ZhGKHq/w8XrBlwa
-         sIiw==
-X-Gm-Message-State: AOJu0YyXSrIx6gtAKXXu1eOiBhWwiBWTieJ159WQPaLQ4IDRsBUJ+yyJ
-	pKUTK+DO0l0cIdxkUOOknrcKPsOa0MPq1ZlesR0CVpFDzCFX7w4j
-X-Google-Smtp-Source: AGHT+IFegp8DMhCskJJfBONUhKvJscDzs4jPfvx4ybQq1Y6D1vPon/xwZFbkG9T5qmfrTTDbkJ4HFQ==
-X-Received: by 2002:a05:6808:1829:b0:3c3:c913:2709 with SMTP id bh41-20020a056808182900b003c3c9132709mr2378923oib.2.1711608374146;
-        Wed, 27 Mar 2024 23:46:14 -0700 (PDT)
-Received: from vaxr-BM6660-BM6360.. ([2001:288:7001:2703:7dc2:a884:7fe:b8b5])
-        by smtp.gmail.com with ESMTPSA id p43-20020a056a0026eb00b006e6b12d650asm636734pfw.31.2024.03.27.23.46.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 23:46:13 -0700 (PDT)
-From: I Hsin Cheng <richard120310@gmail.com>
-To: akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	I Hsin Cheng <richard120310@gmail.com>
-Subject: [PATCH] rbtree: Introduce rb_remove()
-Date: Thu, 28 Mar 2024 14:45:39 +0800
-Message-Id: <20240328064539.95795-1-richard120310@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="UeAbq32Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=tSkiYsm4pDu47eWsaJ3ZWcRIMjz3TMoXclE8uV647yk=;
+	b=UeAbq32Qtqwkg3fMxSNUclzzR6l2ob3VQJrNgRefoPY292PlVbWh7CJdRaaQVF
+	iippjvr6nigu/D7jaAQEW8Ogu5hNVweLYnGgZ2rV4TXi3H975ChhrIyNhzuzIcWV
+	rn3f3LUTLkubbfhwlJa/mwIqJ2PNoQWhGGP9Cm/cNs7pU=
+Received: from dragon (unknown [183.213.196.225])
+	by smtp2 (Coremail) with SMTP id C1UQrAD3H1BBEAVmnM1UAg--.36602S3;
+	Thu, 28 Mar 2024 14:37:56 +0800 (CST)
+Date: Thu, 28 Mar 2024 14:37:53 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
+Cc: Chester Lin <chester62515@gmail.com>, Andreas Farber <afaerber@suse.de>,
+	Matthias Brugger <mbrugger@suse.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, NXP S32 Linux Team <s32@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+	Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+Subject: Re: [PATCH v2 0/2] add uSDHC and SCMI nodes to the S32G2 SoC
+Message-ID: <ZgUQQVGJGtQnFT5p@dragon>
+References: <20240122140602.1006813-1-ghennadi.procopciuc@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240122140602.1006813-1-ghennadi.procopciuc@oss.nxp.com>
+X-CM-TRANSID:C1UQrAD3H1BBEAVmnM1UAg--.36602S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWruF4fKr45Gr1fXw48Ar4fZrb_yoWxCFg_ur
+	W8K3yrC348JFZ7J3ZYka1DAF4UGFW09r18KrZ7Ww4Iqr9xtFs5tFs8K3yrXrWYk3WfKF9a
+	yF15tr4DZr43ujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUnYhF7UUUUU==
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiDQSvZVszXW7RXgAAsX
 
-Implement the function "rb_remove()", which can perform the removal of a
-certain key from the tree. Once the node with the searched key is found,
-we call "rb_erase()" to perform the removal of the node, otherwise the
-key doesn't exists in the tree then we return NULL.
+On Mon, Jan 22, 2024 at 04:05:59PM +0200, Ghennadi Procopciuc wrote:
+> From: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+> 
+> This patchset adds device tree support for S32G2 SCMI firmware and uSDHC
+> node. The SCMI clock IDs are based on a downstream version of the TF-A
+> stored on GitHub [0].
+> 
+> I can send the patches individually if you prefer that instead of
+> submitting them all at once.??
+> 
+> [0] https://github.com/nxp-auto-linux/arm-trusted-firmware
+> 
+> Changes in v2:
+>  - The SCMI clock bindings header has been removed.
+> 
+> Ghennadi Procopciuc (2):
+>   arm64: dts: s32g: add SCMI firmware node
+>   arm64: dts: s32g: add uSDHC node
 
-Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
----
- include/linux/rbtree.h | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-diff --git a/include/linux/rbtree.h b/include/linux/rbtree.h
-index f7edca369..1958be66f 100644
---- a/include/linux/rbtree.h
-+++ b/include/linux/rbtree.h
-@@ -302,6 +302,34 @@ rb_find_first(const void *key, const struct rb_root *tree,
- 	return match;
- }
- 
-+/**
-+ * rb_remove() - remove @key in tree @tree
-+ * @key: key to remove
-+ * @tree: tree to modify
-+ * @less: operator defining the (partial) node order
-+ */
-+static __always_inline struct rb_node *
-+rb_remove(const void *key, const struct rb_root *tree,
-+	  int (*cmp)(const void *key, const struct rb_node *))
-+{
-+	struct rb_node *node = tree->rb_node;
-+
-+	while (node) {
-+		int c = cmp(key, node);
-+
-+		if (c < 0)
-+			node = node->rb_left;
-+		else if (c > 0)
-+			node = node->rb_right;
-+		else {
-+			rb_erase(node, tree->rb_node);
-+			return node;
-+		}
-+	}
-+
-+	return NULL;
-+}
-+
- /**
-  * rb_next_match() - find the next @key in @tree
-  * @key: key to match
--- 
-2.34.1
+Applied both, thanks!
 
