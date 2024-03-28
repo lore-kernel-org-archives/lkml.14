@@ -1,362 +1,139 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+Received: from sonic309-20.consmr.mail.ne1.yahoo.com (sonic309-20.consmr.mail.ne1.yahoo.com [66.163.184.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A0C130A5C;
-	Thu, 28 Mar 2024 15:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCABC1311B3
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 15:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.184.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711640468; cv=none; b=REsawGB2FxrsudO9fju1+mixqtEeh2E8er8MJPn6lMt/0+5xWUl4DDreVGmcmdKEcW6dZvBmHNVuFrhPLTS6YuZ396c1QkkZT262va/h4nD9R8baSIAqE/KZRUUaYu69vQx1exD9/u5ruhZvnUl7chFs4fPxSZNi915WRMmRPkk=
+	t=1711640546; cv=none; b=ixiByQ3AKGQFSyPnnRALT29Bzx1326B+DQjeRZameNgcsRpdVWjb1a5dTrefn+8kr6/u5uBUBwSNSqBhwePfqQVvqCe9Zle2BwS8rO8AxIUbYHv4wHcJSBPjvN69Wp4uwbQLSXQAwnqi/wVZFtVIKzDVidLJ35VR+L4jlgB23fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711640468; c=relaxed/simple;
-	bh=EuCg3+PcgJnTD+UezIkX4/T1HGq2rvFDtjUJ26Pbhs8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hIInkHx09Be1WizwFTruKDCXlm3wq3IluA4iZqitqc7St1cjH1cSvUSvdLz3pPuOyfZvK5fidwJuHntI4TeqYxdrTdwGdpFNlTykSwzo/3/UcjdHg6WTWUoW33uPZzL0j+kYF8b8GxUZTOa6OmKBu3hvf3s3B4KzqrAS+Crxm7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NQ7lCrn+; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711640546; c=relaxed/simple;
+	bh=MbvAGUiXSvOGQ3dOWrP2pyz/s+XjyL3psabKCvzg9bk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WGpxFanQNKI/RO7I72NXUFNPB5RO5bx+PDPiCBvTYEeAU2gqk+CAUDw3S3axL3MMa7ZNogSy5XYufSl/KGfS6BVC20KQI3GBeTGZoHCoDtHuaM+kzBnzUxKPkRFPmhXCeocqICliCjdSTflPD3sii+r8PB/ILJiZ5hcbXgsbS9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=pF4/p4E3; arc=none smtp.client-ip=66.163.184.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NQ7lCrn+"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dcd9e34430cso1183883276.1;
-        Thu, 28 Mar 2024 08:41:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711640465; x=1712245265; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e+pR6EQUAULWyh2EPVyYWrT1tT1N65cI99EtZRHb/9o=;
-        b=NQ7lCrn+bLWYvxiPpogsYtIbyNaIzjTUcsZIrnSEdUO724stbDFu2DaLlsLvqhsMdy
-         lslQCcrZYa4ydFisrEweDMylUqbu+texVOCRl+1fMDd5TJOGljjIp3i/69oahNYhSZHi
-         WnEWMgBl/IB3qh7HERF67BNzFyYI+PRo3UyCDescYbxaLMW4kwEZi8KQf3MoH6uBtRp/
-         GtWHfKk/db574LGWAt7sxQlWM/6RgQ9jaALqyzWAuAG4mgHlzC/ykesFlD71eIIMrntm
-         hDipBzjeUpEhuRSvJGODK6+eLLV0HOCA5BqXPv5xDQG/Bge62PW8fhfzLsSpOClKmUAy
-         12gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711640465; x=1712245265;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e+pR6EQUAULWyh2EPVyYWrT1tT1N65cI99EtZRHb/9o=;
-        b=roSc5ONiiNUjTK/ttjY1iBTg+M8r4Io4NFKbXF5y7P2fu1VitRzSqJF/vMNRuVAG7N
-         ZSBB9FtOBYPO1jM2knYGNaIvmjD1PItMLwrAfZkJ8OgnfkGxIpjhN37cTP6mfjCoXNBt
-         cOaWL1KPLyJMgfuUvozdDTusdEmCnPqbbiXJRNj0IJjf6LX7VnFNNSwbJSk/cY2KjOUn
-         DNaPWk4+ALWdTTWtcn5dRjZ6wDPS4k41xf0zsYXIu7WxK3TWAe1VqZRCHtQkk9iLrnHN
-         J13uqkzcbnIIW16i8cssFLG+wW5PusNvuNTWAo4WFuN1QDrCTdQBps/V7OUnEkevNLHr
-         zyZw==
-X-Forwarded-Encrypted: i=1; AJvYcCWsrJRXIfIIrzuuzxn8Ydkvc42sxrkO7RGFzBIBkg8vA0GKEY/U7P/mbDc9wuyZggxd+JeeilpQpRCmmgt5tT8NbxaroP2cgwmMLWDjD3P9KOzdYTEnUxuuo9rnOaK+c4WZbRk8i/qDQTG1IFpzp5lCt93hPe5UgwkHvRuztaLOt5uiuKTySxcmrGIZDatsiDycdr3dPC2anHdXhw==
-X-Gm-Message-State: AOJu0YwOYwl6NWoOkCRBJ5OE90hr21W/FlUVHzSU0O7/6gNTk67367R4
-	4/hP39GNLlniyMePlohr3g6o7RRqEWfwLVo1esH1OqSz2iN7nE551h2qwSoI3CZP2pKXZOSseiL
-	nXtAAFclWB167eGSAPXcgJOjLfD8=
-X-Google-Smtp-Source: AGHT+IF1P921LdGAo5vhp3eYNIrTlOhgIF9Se8AxxFqDicdehOqenusuzF+qSXs5veXyVNb4XB1vf+bij+0dIsPcEjI=
-X-Received: by 2002:a25:b117:0:b0:dc2:4397:6ad3 with SMTP id
- g23-20020a25b117000000b00dc243976ad3mr3522832ybj.44.1711640464920; Thu, 28
- Mar 2024 08:41:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="pF4/p4E3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1711640544; bh=8KAmCtUE8gnQ2PyujWn9R/x/xEPLjt7lw5xVuWHClLs=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=pF4/p4E3Gu9tZnZfK0FrsJu9yXkZGQ41MgMh/9+PJhLGeKy+sA/W37+ynGxr2F43BBp36XgpmwX0gTfhv7aAL7cJDwm6AURtOK2yWnC2rYm+LKbwcL6QDMd/kUuKK+NGDMJMRZkVFur6sVPnTF/Gs1NWzHv7y+nkf4TAT5X1P1XizF3ou+vg/1EL6d2KbGaB2QxCFTuNPm9+ibxaqTXsITQbK4ifpnx8j+t1IgpEY3dnl0CTB3pmqsm6RIJEACQ6mmWcL9eL/wbUW1fM0YEWr2ayJW6SImKhX4RlsT0ydxaihqiu37U1xtV7ndBoE1mgwqg3cw/z5Qw/K7UxR3QW7Q==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1711640544; bh=d/Rr+FpnJGDwk1EXAVSf9Rf0yIQZ/Ypxjn2HaBBsUie=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=UwpFLJcHOog4V1RZC5j3Ha36WjRVgch9ryS6qUNNdZeV+RSftGJcvH8/l3BD5y1r9y4i3/0OOkWvYquFELo0efi/Dh0cxW70OO2Tmb6Sxr5cWD9UqltkZ4K15psLcodRXazGE/Aw1rT/S7KQpt5cxSIcitVDT9IPmEQCjqkvFK7n0V93XDND+d4YTXBPSEfqne4hXSt+2PHqy25JFY5ZlPt1V7QKM6CU0z7OfUlh0w5JpxrnI944iJ+8LWhZ7Lqs5fRI02rUPzU/0MZwmaJxrXhfXL2BDfpUnQKjsz+frsu0j/eTM4FwS3IcGckBUyHKBe+KMGcnuVFJDqgG7AE82A==
+X-YMail-OSG: 3DXuDaoVM1n0o3ZKO95C1_zSwKdScpHpCUz9x38raS.NOvRK2JB_FIhqAXydzCc
+ b2qNe2ajJWRKjxZjvKqtaRnY7Zbb6.KoHxF_VfjbtzAvZBXBwrw0v4JZtSYa1hn3t9UgBvviou3v
+ ZELplXYpFH3qyvuXK7w2BCO7sl2do8_eTiMpXdFHta2oWq.shjQ1NL.j56gOuij5HVbAo2nSiwDZ
+ c_FohEXpNyOzEjbe44eUhTZY_fZ9PLc6SaQVvBwYgl01pgY9TqZEWOvojB2xyLuxhwvjD8MprL1L
+ i6D4iOTHBxU0_0hvldX5VmmWectUy3gPbn6vSpR4_3HPaw_IzU5VG0jiT57DZIeKTijFrnlQPDPZ
+ l_wPHsxZnavW6.xqbhAB4WaWVPOL.CUQjNCsqO8g9GA7ecKaPGwt68m6EodN1qD3tHXmGKKelpnq
+ b464CIEUF7zV.Cqbo4FhoChlB.60Z3thrvw8pA6UVaOSIAghseiEju4zNaqgIq_fVLyATebtQ.8V
+ 8v._cCQX5O0Ucxlazsg7aJcNMRqj9i7tLYCxIX6YmhBi47VQZa58NS90oCx163cij7zhF2TccP_k
+ E_QeiHCnBNhxzYd6LrtJ60HXuW56iLaFVuU15Mlt4ynSJjf4qhIVHfBwkcnIRVKSHUT.ewFHbdeC
+ PQWoYbrAE..qmvqCmElg5Fz9F1jgnRvcJnlOIWQgFkqdJoRnrULEL19jXRKiq2gNyBeJBAs48Imp
+ ng7Ry2xWlYDhUaLj91OVtBNiC3VSyYpjXS_3syHRt3f8cRl9cHDd1RHOtDLBWeDotVdi8W9RDqkx
+ PPIUGPOT26MGNM23H7nDOX87vZff.LzFeaqO3ZmNKjGCkNWoXAIICIBbvrSVuLMEfLdWDKbzQQJ9
+ f7.7Wc8cJsew1YKFTOrM5yqeFDtZ5fscMD2dFJ50i3m2lxwnYfHtLs6D7lHJHNMO35wFtBbrzPlN
+ y5Eomsh373O86D56fff1VC4w3iYxyN1JUhhatVQtAOVFoqOlBE.7t14wz17LhOlmMnfZzFlQ1SNA
+ B1oGTINZOzZYb.m3Wij_sVeHwi41aq9Vx0KdW4WSskOxZtp.HfY1lJlsJRU8hoU5mfcFHsMngqt3
+ ZUDDI37kuuxYIgLLy3XZdr2diFZ8PxK0qA3_2r2oSUeQ1XB9x5MHDbojy7mtmBU7NlqGTao9Hg4O
+ .kFe3OOeNPOUAJD0BSqLuf_kIEADZE0iUuzQHpgyj_3QBOKDqjFz_MLgLdVIUlK60WiJy0PBPaBj
+ 2lwJKDlFTMz0INlaoxhMiIEzv0qebdwMJs4NANo68_9.tMuUimQQ.XHpMIur1pHKSnBXI7jeh10a
+ 5G3CF7jpcgrWvt7hQ_aDrZ_akfT2hWCingRs_k6GAapHVbS_.Oo2Zmbaw_J8WC2oTmHoKxOudF6r
+ fKkjYrI4NMBqySTWgv1Qunm0VhVv2gwDYndoQmmVkOrEZGpq9G0RgUT_GoczbswbOGCEfaU5cJko
+ 4hSZJQ4TM0ri8K3gd2l_h.A9cwHHe5SLa6SPj2erM.v7xvrDKIRaspm49jDT4PCNm3lZyjzNie.b
+ 1.phU4Q2IbrfcxrNI5NGePY0WlLmo8BUXeWMRdUoFURdKtzbae_ZUHUHhg7KX64U20henhS27ECI
+ VVzPaI5xYwzNaiQcaSyS5_iYFSqyESYkRE0IcLkthEtU2B97mmsr19ZvRNwwRnLwjvT3lOhE99fG
+ AIFilJYaO3nYgJwRxS6jqiv6Lm8_KaXCkincLSUnl8b5nWrABmqUVeiNZf9E4O20_RnsqVNPIjN0
+ uT7C_lfdOPAj0sjsW_uDDH8BtbDEvi4mBla_kiDyzVT5hR.zRqywyUA5X1dt9C2WW1YHIxYZvgbK
+ __J9YkSD.FjV372tmZZ4hjNg9Bi5IZDJwYLIAuv4Kt7nqHrMgPBgg72dbKnO2ncrq_EtU0TLOMnB
+ lebgkUIYoB.p5k6_GrjENa5aJ4r8ZsBoRPTvW0CqjKrh6Q_jbknrr3zjJlZMHXoOUN93MzTH0_yE
+ Yxf5_QU_NjL6HAxC7Tek3XWZCXJ1k92NGJ_JaMoP1vwXzMt1pcpdaFga9Fj6tNyPah_3TVF8G1aJ
+ An._F4of3q2SmJa73UkX1LBsUz1cdrTXuKIn6lykAfwFfUacXqfS97pATGE5nBAXgEHc1mybEEZ_
+ bOjza_iZp5VuvRyVkTqUzHI58AcqDd.3p0xIt4PCDHOGoD6FfynBNniFwLeRnoLmqhaJyo59zrx2
+ lQd1lvLHfWOHE3ZknjtQsc5sEq2U8q19tPPwx9PUcS_.E7Jejhuugx1BIpmh4UIAS0RBsDeM-
+X-Sonic-MF: <serdeliuk@yahoo.com>
+X-Sonic-ID: 0bef8a4c-a425-4fd8-8c27-cbb2ff12f9ce
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.ne1.yahoo.com with HTTP; Thu, 28 Mar 2024 15:42:24 +0000
+Received: by hermes--production-ir2-7bc88bfc75-6cqn4 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 236232f6d2287374960a372f2be4808b;
+          Thu, 28 Mar 2024 15:42:19 +0000 (UTC)
+Message-ID: <2795b3b7-5eea-489b-8bbd-9e2ad406f67c@yahoo.com>
+Date: Thu, 28 Mar 2024 16:42:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMuE1bHBky9NGP22PVHKdi2+WniwxiLSmMnwRM6wm36sU8W4jA@mail.gmail.com>
- <878r29hjds.ffs@tglx>
-In-Reply-To: <878r29hjds.ffs@tglx>
-From: Sagi Maimon <maimon.sagi@gmail.com>
-Date: Thu, 28 Mar 2024 17:40:53 +0200
-Message-ID: <CAMuE1bF9ioo39_08Eh26X4WOtnvJ1geJ=WRVt5DhU8gEbYJNdA@mail.gmail.com>
-Subject: Re: [PATCH v7] posix-timers: add clock_compare system call
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: richardcochran@gmail.com, luto@kernel.org, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, arnd@arndb.de, 
-	geert@linux-m68k.org, peterz@infradead.org, hannes@cmpxchg.org, 
-	sohil.mehta@intel.com, rick.p.edgecombe@intel.com, nphamcs@gmail.com, 
-	palmer@sifive.com, keescook@chromium.org, legion@kernel.org, 
-	mark.rutland@arm.com, mszeredi@redhat.com, casey@schaufler-ca.com, 
-	reibax@gmail.com, davem@davemloft.net, brauner@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, 
-	linux-arch@vger.kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: arm: qcom: Add Samsung Galaxy Z Fold5
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240328-dt-bindings-arm-qcom-add-support-for-samsung-galaxy-zfold5-v1-1-cb612e3ade18@yahoo.com>
+ <ca4ed5e3-32ea-451a-82ca-25fba07877dc@linaro.org>
+ <33e23d1c-5b6f-4111-9631-0f8db1100d0c@yahoo.com>
+ <8e09b779-a18f-46b4-926c-40e2a5782d85@linaro.org>
+ <20620ab0-5024-439e-943b-ab12d35a60d8@yahoo.com>
+ <6b77633e-c501-4488-9b10-1881cfbf6f2c@linaro.org>
+Content-Language: en-US
+From: Alexandru Serdeliuc <serdeliuk@yahoo.com>
+In-Reply-To: <6b77633e-c501-4488-9b10-1881cfbf6f2c@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Mailer: WebService/1.1.22205 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-Hi Thomas
+Is there anything I need to do to sent them as a series? Or only modify 
+all 3 files on a new branch and send them as a new patch?
 
-On Sat, Mar 23, 2024 at 2:38=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
-> wrote:
->
-> Sagi!
->
-> On Wed, Mar 20 2024 at 16:42, Sagi Maimon wrote:
-> > On Thu, Mar 14, 2024 at 8:08=E2=80=AFPM Thomas Gleixner <tglx@linutroni=
-x.de> wrote:
-> >> Which is maximaly precise under the assumption that in the time betwee=
-n
-> >> the sample points a1 and a2 neither the system clock nor the PCH clock=
-s
-> >> are changing their frequency significantly. That is a valid assumption
-> >> when you put a reasonable upper bound on d2.
-> >>
-> >
-> > You are right.
-> > In fact, we are running this calculation on a user space application.
-> > We use the new system call to get pairs of mono and PHC and then run
-> > that calculation in user space.
-> > That is why the system call returns pairs of clock samples and not the
-> > diff between them.
->
-> Please stop claiming things which are fundamentally wrong:
->
->   The proposed system call returns the PHC sample and the midpoint of
->   two CLOCK_WHATEVER samples which have been sampled before and after
->   the PHC sample.
->
->   That is fundamentally different from a pair of samples as I explained
->   to you in great length more than once by now.
->
-> I understand that you can't rely on the PTP_SYS_OFFSET_PRECISE IOCTL
-> alone because there is not much hardware support, but what you are
-> proposing is way worse than the other two PTP_SYS_OFFSET variants.
->
-> PTP_SYS_OFFSET at least gives the caller a choice of analysis of the
-> interleaving system timestamps.
->
-> PTP_SYS_OFFSET_EXTENDED moves the outer sample points as close as
-> possible to the actual PCH read and provides both outer samples to user
-> space for analysis. It was introduced for a reason, no?
->
-> Your proposed system call is just declaring arbitrarily that the
-> CLOCK_WHATEVER sample is exactly the midpoint of the two outer samples
-> and is therefore superior and correct.
->
-> It is neither superior nor correct because the midpoint is an
-> ill-defined assumption as I explained to you multiple times now.
->
-> Aside of that the approach loses the extended information of
-> PTP_SYS_OFFSET and PTP_SYS_OFFSET_EXTENDED including the more precise
-> sampling behaviour of the latter. IOW, it is ignoring and throwing away
-> the effort of people who cared about making the best out of the
-> limitations of hardware including the already existing algorithms to
-> make sense out of it.
->
-> The P at the beginning of PTP does not mean 'Potentially precise' and
-> the lack of C in PTP does not mean that Correctness is overrated.
->
-> The problem is that these non hardware assisted IOCTL variants sample
-> only CLOCK_REALTIME and not CLOCK_MONOTONIC_RAW, which is all you need
-> to solve your problem at hand, no?
->
-> That's absolutely not rocket science to solve. The below sketch does
-> exactly that without creating an ill-defined syscall monstrosity, at the
-> same time it is fully preserving the benefits of the existing IOCTL
-> variants and therefore allows to apply already existing algorithms to
-> analyse that data. That's too simple and too obviously correct, right?
->
-> The thing is a sketch and it's neither compiled nor tested. It's just
-> for illustration and you can keep all bugs you might find in it.
->
-> On top this needs an analyis whether any of the gettimex64()
-> implementations does something special instead of invoking the
-> ptp_read_system_prets() and ptp_read_system_postts() helpers as close as
-> possible to the PCH readout, but that's not rocket science either. It's
-> just 21 callbacks to look at.
->
-I like your suggestion, thanks!
-it is what our user space needs from the kernel and with minimum kernel cha=
-nges.
-I will write it, test it and upload it with your permission (it is you
-idea after all).
-> It might also require a new set of variant '3' IOTCLS to make that flag
-> field work, but that's not going to make the change more complex and
-> it's an exercise left to the experts of that IOCTL interface.
->
-I think that I understand your meaning.
-There is a backward compatibility problem here.
-Existing user space application using PTP_SYS_OFFSET_EXTENDED ioctl
-won't have any problems
-because of the "extoff->rsv[0] || extoff->rsv[1] || extoff->rsv[2]"
-test,  but what about all
-old user space applications using: PTP_SYS_OFFSET ?
-How can it be solved?
-Can you explain what you meant above regarding the IOCTL?
+The situation can be replicated easy, modify the  following  two files
 
-Thanks,
-Sagi
+Documentation/devicetree/bindings/arm/qcom.yaml
+arch/arm64/boot/dts/qcom/Makefile
+
+
+Then  generate the pach and check, will show this
+$ ./scripts/checkpatch.pl 
+/tmp/tosend2/0001-arm64-dts-qcom-add-support-for-samsung-galaxy-z-fold5.eml
+WARNING: Missing commit description - Add an appropriate one
+
+WARNING: DT binding docs and includes should be a separate patch. See: 
+Documentation/devicetree/bindings/submitting-patches.rst
+
+WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
+#59:
+new file mode 100644
+
+total: 0 errors, 3 warnings, 630 lines checked
+
+NOTE: For some of the reported defects, checkpatch may be able to
+       mechanically convert to the typical style using --fix or 
+--fix-inplace.
+
+/tmp/tosend2/0001-arm64-dts-qcom-add-support-for-samsung-galaxy-z-fold5.eml 
+has style problems, please review.
+
+NOTE: If any of the errors are false positives, please report
+       them to the maintainer, see CHECKPATCH in MAINTAINERS.
 
 
 
-> Thanks,
+On 28/3/24 16:34, Konrad Dybcio wrote:
+> On 28.03.2024 4:10 PM, Alexandru Serdeliuc wrote:
+>> Hi Konrad,
+>>
+>> Thanks, I unfortunately sent the patch 2 prior seeing your reply.
+>>
+>> The warning was this one which says that i need to send the mods separately in two patches:
+>>
+>>>>> WARNING: DT binding docs and includes should be a separate patch. See: Documentation/devicetree/bindings/submitting-patches.rst
+> Hm, if they were two separate patches, this is a false-positive. Could you
+> push the branch somewhere, so that we can report it to checkpatch maintainers?
 >
->         tglx
-> ---
->  drivers/ptp/ptp_chardev.c        |   36 ++++++++++++++++++++++----------=
-----
->  include/linux/ptp_clock_kernel.h |   28 +++++++++++++++++++---------
->  include/uapi/linux/ptp_clock.h   |   10 ++++++++--
->  3 files changed, 49 insertions(+), 25 deletions(-)
+>>
+>> I suppose that me sending two separate patches was not good, how i can fix this?
+> Please pick them both onto a single branch and send together as a series,
+> with a revision bump (v2) and mention that you made no changes other than
+> combining the two in the cover letter.
 >
-> --- a/drivers/ptp/ptp_chardev.c
-> +++ b/drivers/ptp/ptp_chardev.c
-> @@ -164,9 +164,9 @@ long ptp_ioctl(struct posix_clock_contex
->         struct ptp_sys_offset_precise precise_offset;
->         struct system_device_crosststamp xtstamp;
->         struct ptp_clock_info *ops =3D ptp->info;
-> +       struct ptp_system_timestamp sts =3D { };
->         struct ptp_sys_offset *sysoff =3D NULL;
->         struct timestamp_event_queue *tsevq;
-> -       struct ptp_system_timestamp sts;
->         struct ptp_clock_request req;
->         struct ptp_clock_caps caps;
->         struct ptp_clock_time *pct;
-> @@ -358,11 +358,13 @@ long ptp_ioctl(struct posix_clock_contex
->                         extoff =3D NULL;
->                         break;
->                 }
-> -               if (extoff->n_samples > PTP_MAX_SAMPLES
-> -                   || extoff->rsv[0] || extoff->rsv[1] || extoff->rsv[2]=
-) {
-> +               if (!extoff->n_samples || extoff->n_samples > PTP_MAX_SAM=
-PLES ||
-> +                   (extoff->flags & ~PTP_SYS_OFFSET_VALID_FLAGS) ||
-> +                   extoff->rsv[0] || extoff->rsv[1]) {
->                         err =3D -EINVAL;
->                         break;
->                 }
-> +               sts.flags =3D extoff->flags;
->                 for (i =3D 0; i < extoff->n_samples; i++) {
->                         err =3D ptp->info->gettimex64(ptp->info, &ts, &st=
-s);
->                         if (err)
-> @@ -386,29 +388,35 @@ long ptp_ioctl(struct posix_clock_contex
->                         sysoff =3D NULL;
->                         break;
->                 }
-> -               if (sysoff->n_samples > PTP_MAX_SAMPLES) {
-> +               if (!sysoff->n_samples || sysoff->n_samples > PTP_MAX_SAM=
-PLES ||
-> +                   (sysoff->flags & ~PTP_SYS_OFFSET_VALID_FLAGS) ||
-> +                   sysoff->rsv[0] || sysoff->rsv[1]) {
->                         err =3D -EINVAL;
->                         break;
->                 }
-> +               sts.flags =3D sysoff->flags;
->                 pct =3D &sysoff->ts[0];
->                 for (i =3D 0; i < sysoff->n_samples; i++) {
-> -                       ktime_get_real_ts64(&ts);
-> -                       pct->sec =3D ts.tv_sec;
-> -                       pct->nsec =3D ts.tv_nsec;
-> -                       pct++;
-> -                       if (ops->gettimex64)
-> -                               err =3D ops->gettimex64(ops, &ts, NULL);
-> -                       else
-> +                       if (ops->gettimex64) {
-> +                               err =3D ops->gettimex64(ops, &ts, &sts);
-> +                       } else {
-> +                               ptp_read_system_prets(&sts);
->                                 err =3D ops->gettime64(ops, &ts);
-> +                       }
->                         if (err)
->                                 goto out;
-> +
-> +                       pct->sec =3D sts.pre_ts.tv_sec;
-> +                       pct->nsec =3D sts.pre_ts.tv_nsec;
-> +                       pct++;
->                         pct->sec =3D ts.tv_sec;
->                         pct->nsec =3D ts.tv_nsec;
->                         pct++;
->                 }
-> -               ktime_get_real_ts64(&ts);
-> -               pct->sec =3D ts.tv_sec;
-> -               pct->nsec =3D ts.tv_nsec;
-> +               if (!ops->gettimex64)
-> +                       ptp_read_system_postts(&sts);
-> +               pct->sec =3D sts.post_ts.tv_sec;
-> +               pct->nsec =3D sts.post_ts.tv_nsec;
->                 if (copy_to_user((void __user *)arg, sysoff, sizeof(*syso=
-ff)))
->                         err =3D -EFAULT;
->                 break;
-> --- a/include/linux/ptp_clock_kernel.h
-> +++ b/include/linux/ptp_clock_kernel.h
-> @@ -44,13 +44,15 @@ struct ptp_clock_request {
->  struct system_device_crosststamp;
->
->  /**
-> - * struct ptp_system_timestamp - system time corresponding to a PHC time=
-stamp
-> - * @pre_ts: system timestamp before capturing PHC
-> - * @post_ts: system timestamp after capturing PHC
-> + * struct ptp_system_timestamp - System time corresponding to a PHC time=
-stamp
-> + * @flags:     Flags to select the system clock to sample
-> + * @pre_ts:    System timestamp before capturing PHC
-> + * @post_ts:   System timestamp after capturing PHC
->   */
->  struct ptp_system_timestamp {
-> -       struct timespec64 pre_ts;
-> -       struct timespec64 post_ts;
-> +       unsigned int            flags;
-> +       struct timespec64       pre_ts;
-> +       struct timespec64       post_ts;
->  };
->
->  /**
-> @@ -457,14 +459,22 @@ static inline ktime_t ptp_convert_timest
->
->  static inline void ptp_read_system_prets(struct ptp_system_timestamp *st=
-s)
->  {
-> -       if (sts)
-> -               ktime_get_real_ts64(&sts->pre_ts);
-> +       if (sts) {
-> +               if (sts->flags & PTP_SYS_OFFSET_MONO_RAW)
-> +                       ktime_get_raw_ts64(&sts->pre_ts);
-> +               else
-> +                       ktime_get_real_ts64(&sts->pre_ts);
-> +       }
->  }
->
->  static inline void ptp_read_system_postts(struct ptp_system_timestamp *s=
-ts)
->  {
-> -       if (sts)
-> -               ktime_get_real_ts64(&sts->post_ts);
-> +       if (sts) {
-> +               if (sts->flags & PTP_SYS_OFFSET_MONO_RAW)
-> +                       ktime_get_raw_ts64(&sts->post_ts);
-> +               else
-> +                       ktime_get_real_ts64(&sts->post_ts);
-> +       }
->  }
->
->  #endif
-> --- a/include/uapi/linux/ptp_clock.h
-> +++ b/include/uapi/linux/ptp_clock.h
-> @@ -76,6 +76,10 @@
->   */
->  #define PTP_PEROUT_V1_VALID_FLAGS      (0)
->
-> +/* Bits for PTP_SYS_OFFSET and PTP_SYS_OFFSET_EXTENDED */
-> +#define PTP_SYS_OFFSET_MONO_RAW                (1U << 0)
-> +#define PTP_SYS_OFFSET_VALID_FLAGS     (PTP_SYS_OFFSET_MONO_RAW)
-> +
->  /*
->   * struct ptp_clock_time - represents a time value
->   *
-> @@ -146,7 +150,8 @@ struct ptp_perout_request {
->
->  struct ptp_sys_offset {
->         unsigned int n_samples; /* Desired number of measurements. */
-> -       unsigned int rsv[3];    /* Reserved for future use. */
-> +       unsigned int flags;
-> +       unsigned int rsv[2];    /* Reserved for future use. */
->         /*
->          * Array of interleaved system/phc time stamps. The kernel
->          * will provide 2*n_samples + 1 time stamps, with the last
-> @@ -157,7 +162,8 @@ struct ptp_sys_offset {
->
->  struct ptp_sys_offset_extended {
->         unsigned int n_samples; /* Desired number of measurements. */
-> -       unsigned int rsv[3];    /* Reserved for future use. */
-> +       unsigned int flags;
-> +       unsigned int rsv[2];    /* Reserved for future use. */
->         /*
->          * Array of [system, phc, system] time stamps. The kernel will pr=
-ovide
->          * 3*n_samples time stamps.
+> Konrad
