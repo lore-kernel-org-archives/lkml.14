@@ -1,123 +1,165 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F2F7F485;
-	Thu, 28 Mar 2024 12:24:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80DFA65BAD
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 12:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711628659; cv=none; b=HMinkxwEPBcXU1gVL0bi9eo6o64hrA51Fc2WOT3easX0c+Gd3l60t9oGPufXcB3fa5swCy2bao7fjF1sGGsmx3u9Xru1N7MNH0L+BETiXYPfTXlcpE15QKtaPpMzpnEJSXZR0BgZVVdTaXyBO8nfWVcTAGAu+6wEcRWrl18U3nM=
+	t=1711628711; cv=none; b=fPYSpsgYF8YRiELoS527nKWzBMfhsMslxaz/+bD4nGczM2YqGFNG05ArXGDsks758bP4Vny2/+8YHoylRdAqOzhleCqtktfU3cqJPMIYUnS3bLzPtZlaorSHB+MFjn/DmovIqPFVuhwsa6jdsimqYss7hL57DaP4deW9Mf1Hd2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711628659; c=relaxed/simple;
-	bh=+KCpP6QH6INCKmhY3rhkXinCYArDLnJgU17pzm7N1sM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VNpbRZhDoQ6LcwddvRm++hGPNBTDwn0Ct9l91p75f6K1SaRN34V844ato4/h+BpagLPd2JxBeuKlwo6p+bTnFTTyiSOc3svdZEXgINMo0U6vs0T99IAOjZfVtQtSr7LC/TSrrBRHgpSdhEHWb4qeu/ycVvxBLglJ8/nkq9GkSIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=cgii5U/Z; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1711628711; c=relaxed/simple;
+	bh=kl8IcrnOMDGYWHFT4YyXQ1c32kS1mgZgGduhm9pKJ3Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qu/JUEibIBWOQuAH7ELauv5N0RlXULlO5vtQhNqf1fzYWjCYqOHxOud8sWgAMudDPDWM5IbOvPnKSmpKBvfpjiOOT1rNylHBdYK5zFUVKGLsnCkippgM4lKCQMWJhU2yo2m7akiUjMKnihL/xy1TrcsIissZX/35r6Rws4Gdmww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=BsPqoS+A; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="cgii5U/Z"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=8unRPUJ/5NLXOy2GV/8QQoMtBxlZYcDA0JkZRYJPSXM=; b=cgii5U/Zdj30Vfz4+zeTdE+LAO
-	Wceqxp0Y0bklH/H+HFEbAhSOhK2yWdOTmvX32t8UmGpSJt1/nccyQcBHCZ5/PtoRNu2W0zBDiFgBS
-	uZ6w8TsaVbd2TYRFQVJeVLfxqWZ9cohtpMU1DECoc1qdqcn2V7Lkq74uvf9RJ7ltp+f4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rponY-00BUi7-46; Thu, 28 Mar 2024 13:24:00 +0100
-Date: Thu, 28 Mar 2024 13:24:00 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Mark Brown <broonie@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
-	Dent Project <dentproject@linuxfoundation.org>
-Subject: Re: [PATCH net-next v6 10/17] net: pse-pd: Add support for PSE PIs
-Message-ID: <f3bafb50-406b-444a-8411-5ddae8d84c31@lunn.ch>
-References: <20240326-feature_poe-v6-0-c1011b6ea1cb@bootlin.com>
- <20240326-feature_poe-v6-10-c1011b6ea1cb@bootlin.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="BsPqoS+A"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-415482307b0so3122365e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 05:25:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711628707; x=1712233507; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IewWu8lmxt6/0HVEI36CNBq5rN/g2F+PxaVTBG2h/iU=;
+        b=BsPqoS+AjhXtUn7SSz4UVY2MWTJjdK1P5bvk66k/N8Bvl4Hc4nHFNkgkO23N8xqPXs
+         jcOa5Zmmq4pqM94T9lQ/eQIS2RGCT+5jy4oi6W1orQUly7m2qNDjNjRV0qvjhtLAk9mh
+         UXZfGf5UmmMzQKVSuZDO8DxaAAss3Pj0wV/YPH9XQl0VtZeCYMao+Di7qKcjAIVKPY3B
+         9qyW8U5FEedwcSWfVbFiKknKX68Bj7xfriPTQoUzjKkdDqosUp6WTFz/S3ZwMaxCUIV8
+         kRtJ0OI81Pv0OeBuumprkeLV6FfOmgiogBaw5e9sDHQ5TL0VbYVgWqC3Q/1mMC/aAvT/
+         5dpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711628707; x=1712233507;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IewWu8lmxt6/0HVEI36CNBq5rN/g2F+PxaVTBG2h/iU=;
+        b=LK/3HKyqDiXU1BbDN7bF4MMiYApiipYfikQwZ8JlughMzzSvWdES7KdXY93NMBOp/s
+         MvTPij1NyNIMGhVNQ7Wo8UYRI5PCYjygf2FBmX2aALBxnhlPQmOTut3KNHlDsbDQshrh
+         18PGYXllzRpmV1fGLP1ZasY8LMXL/lOKndlj5HajBPzEK0HheMOIAVUiFOTceOpYudWr
+         MVy0YDGjjy412j6r+4AVYTF3qgKT3c9+qykgponD8dABNbnFSzJZtBPxr1zFKpY59G5q
+         n5fvohZHs+GXIPNyRERgVToAW5xXcD8Bxkr27ym+T5xo4oYdTw97o2OUb23roToj9j7+
+         IY0g==
+X-Forwarded-Encrypted: i=1; AJvYcCWYxIWruo/4nIvFhnO4RfRPZgo8LzogQPYrpsWUdwguCj1JXuNZGdRR3TVfvHmH8j4oRfxFn/LtGk1yWUuc2KjNvvNM6v3TbjEDfgsr
+X-Gm-Message-State: AOJu0YxUOvuFjPJRk/5F2TwB/K9uBiHA1p+2ZyxAcfWzmReaTwZTH60+
+	oO0+AixGsK6pfNU6CmRbdttH4PkuFS36VysFw3UMwzyV5N8K5WDM49TNxTMHDk4=
+X-Google-Smtp-Source: AGHT+IH0y2fo2UTEGk+nQ03ttrhLqd3C0Z1OT03HbenKppy5AOYESKIChnTRGuAmLfyXp7UsaXIgVA==
+X-Received: by 2002:a05:600c:1c8d:b0:413:feed:b309 with SMTP id k13-20020a05600c1c8d00b00413feedb309mr2723847wms.6.1711628706870;
+        Thu, 28 Mar 2024 05:25:06 -0700 (PDT)
+Received: from [10.1.5.112] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id fb7-20020a05600c520700b00414969894a1sm4030818wmb.13.2024.03.28.05.25.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Mar 2024 05:25:06 -0700 (PDT)
+Message-ID: <342cdc02-22e7-4caf-b00e-b46cbcdf36fa@baylibre.com>
+Date: Thu, 28 Mar 2024 13:25:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240326-feature_poe-v6-10-c1011b6ea1cb@bootlin.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v5 1/3] net: ethernet: ti: Add accessors for
+ struct k3_cppi_desc_pool members
+To: Naveen Mamindlapalli <naveenm@marvell.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Russell King <linux@armlinux.org.uk>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+ Ratheesh Kannoth <rkannoth@marvell.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+ "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>
+References: <20240223-am65-cpsw-xdp-basic-v5-0-bc1739170bc6@baylibre.com>
+ <20240223-am65-cpsw-xdp-basic-v5-1-bc1739170bc6@baylibre.com>
+ <SJ2PR18MB5635B9F20BB6CE1CC945F3B2A23B2@SJ2PR18MB5635.namprd18.prod.outlook.com>
+Content-Language: en-US
+From: Julien Panis <jpanis@baylibre.com>
+In-Reply-To: <SJ2PR18MB5635B9F20BB6CE1CC945F3B2A23B2@SJ2PR18MB5635.namprd18.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-> +.. code-block::
-> +
-> +         +-------------+
-> +         |    PSE PI   |
-> + 8  -----+                             +-------------+
-> + 7  -----+                    Rail 1   |
-> + 6  -----+------+----------------------+
-> + 5  -----+      |                      |
-> + 4  -----+     /              Rail 2   |  PSE 1
-> + 3  -----+----?          +-------------+
-> + 2  -----+----+---------?              |
-> + 1  -----+---?                         +-------------+
-> +         |
-> +         +-------------+
+On 3/28/24 13:06, Naveen Mamindlapalli wrote:
+>> -----Original Message-----
+>> From: Julien Panis <jpanis@baylibre.com>
+>> Sent: Thursday, March 28, 2024 2:57 PM
+>> To: David S. Miller <davem@davemloft.net>; Eric Dumazet
+>> <edumazet@google.com>; Jakub Kicinski <kuba@kernel.org>; Paolo Abeni
+>> <pabeni@redhat.com>; Russell King <linux@armlinux.org.uk>; Alexei Starovoitov
+>> <ast@kernel.org>; Daniel Borkmann <daniel@iogearbox.net>; Jesper Dangaard
+>> Brouer <hawk@kernel.org>; John Fastabend <john.fastabend@gmail.com>;
+>> Sumit Semwal <sumit.semwal@linaro.org>; Christian König
+>> <christian.koenig@amd.com>; Simon Horman <horms@kernel.org>; Andrew
+>> Lunn <andrew@lunn.ch>; Ratheesh Kannoth <rkannoth@marvell.com>
+>> Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org; bpf@vger.kernel.org;
+>> linux-media@vger.kernel.org; dri-devel@lists.freedesktop.org; linaro-mm-
+>> sig@lists.linaro.org; Julien Panis <jpanis@baylibre.com>
+>> Subject: [PATCH net-next v5 1/3] net: ethernet: ti: Add accessors
+>> for struct k3_cppi_desc_pool members
+>>
+>> This patch adds accessors for desc_size and cpumem members. They may be
+>> used, for instance, to compute a descriptor index.
+>>
+>> Signed-off-by: Julien Panis <jpanis@baylibre.com>
+>> ---
+>>   drivers/net/ethernet/ti/k3-cppi-desc-pool.c | 12 ++++++++++++
+>> drivers/net/ethernet/ti/k3-cppi-desc-pool.h |  2 ++
+>>   2 files changed, 14 insertions(+)
+>>
+>> diff --git a/drivers/net/ethernet/ti/k3-cppi-desc-pool.c b/drivers/net/ethernet/ti/k3-
+>> cppi-desc-pool.c
+>> index 05cc7aab1ec8..fe8203c05731 100644
+>> --- a/drivers/net/ethernet/ti/k3-cppi-desc-pool.c
+>> +++ b/drivers/net/ethernet/ti/k3-cppi-desc-pool.c
+>> @@ -132,5 +132,17 @@ size_t k3_cppi_desc_pool_avail(struct
+>> k3_cppi_desc_pool *pool)  }  EXPORT_SYMBOL_GPL(k3_cppi_desc_pool_avail);
+>>
+>> +size_t k3_cppi_desc_pool_desc_size(struct k3_cppi_desc_pool *pool) {
+>> +	return pool->desc_size;
+> Don't you need to add NULL check on pool ptr since this function is exported?
 
-Is ? a standard markup character? I don't remember seeing it used like
-this before.
+Thanks for the review.
+Absolutely, you're right.
 
-Maybe offset the connection for pins 1 and 2 from that of 3. I mean:
+>
+>> +}
+>> +EXPORT_SYMBOL_GPL(k3_cppi_desc_pool_desc_size);
+>> +
+>> +void *k3_cppi_desc_pool_cpuaddr(struct k3_cppi_desc_pool *pool) {
+>> +	return pool->cpumem;
+> Same here.
+>
+>> +}
+>> +EXPORT_SYMBOL_GPL(k3_cppi_desc_pool_cpuaddr);
+>> +
+>>   MODULE_LICENSE("GPL");
+>>   MODULE_DESCRIPTION("TI K3 CPPI5 descriptors pool API"); diff --git
+>> a/drivers/net/ethernet/ti/k3-cppi-desc-pool.h b/drivers/net/ethernet/ti/k3-cppi-desc-
+>> pool.h
+>> index a7e3fa5e7b62..149d5579a5e2 100644
+>> --- a/drivers/net/ethernet/ti/k3-cppi-desc-pool.h
+>> +++ b/drivers/net/ethernet/ti/k3-cppi-desc-pool.h
+>> @@ -26,5 +26,7 @@ k3_cppi_desc_pool_dma2virt(struct k3_cppi_desc_pool
+>> *pool, dma_addr_t dma);  void *k3_cppi_desc_pool_alloc(struct
+>> k3_cppi_desc_pool *pool);  void k3_cppi_desc_pool_free(struct
+>> k3_cppi_desc_pool *pool, void *addr);  size_t k3_cppi_desc_pool_avail(struct
+>> k3_cppi_desc_pool *pool);
+>> +size_t k3_cppi_desc_pool_desc_size(struct k3_cppi_desc_pool *pool);
+>> +void *k3_cppi_desc_pool_cpuaddr(struct k3_cppi_desc_pool *pool);
+>>
+>>   #endif /* K3_CPPI_DESC_POOL_H_ */
+>>
+>> --
+>> 2.37.3
+>>
 
-> + 4  -----+     /              Rail 2   |  PSE 1
-> + 3  -----+----?          +-------------+
-> + 2  -----+--------+-----?              |
-> + 1  -----+-------?                     +-------------+
-
-You version is a little ambiguous, pins 1, 2 & 3 could be
-interconnected at the +.  The text does however make it clear they are
-not, but i don't see any harm in making the diagram clearer.
-
-> +static int of_load_single_pse_pi_pairset(struct device_node *node,
-> +					 struct pse_pi *pi,
-> +					 int pairset_num)
-> +{
-> +	struct device_node *pairset_np;
-> +	const char *name;
-> +	int ret;
-> +
-> +	ret = of_property_read_string_index(node, "pairset-names",
-> +					    pairset_num, &name);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!strcmp(name, "alternative-a")) {
-> +		pi->pairset[pairset_num].pinout = ALTERNATIVE_A;
-> +	} else if (!strcmp(name, "alternative-b")) {
-> +		pi->pairset[pairset_num].pinout = ALTERNATIVE_B;
-> +	} else {
-> +		pr_err("pse: wrong pairset-names value %s\n", name);
-> +		return -EINVAL;
-
-Maybe include the node path in the error message? For a 24 port
-switch, it will help find a typo in one of the ports. I would do this
-for all error messages in this code.
-
-Please add my Reviewed-by on the next version.
-
-       Andrew
