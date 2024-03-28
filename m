@@ -1,26 +1,26 @@
 Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2136.outbound.protection.partner.outlook.cn [139.219.146.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD837F480;
-	Thu, 28 Mar 2024 09:19:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 607EB64CD1;
+	Thu, 28 Mar 2024 09:19:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.136
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711617556; cv=fail; b=D5uxSQ39svhzHB5/M/71KI5jR2rg4ojitaRHOVUNykKowTVwmt6YThnOgGwSrv4i8do0dbOQoc91mCQTvIXRKht0qTzDfsl3007Sdq4n5eHFXW0iHKJ2pdjhr3a4MsTaBx/EjkcGVjpoA47pD+WpX0jJ+xbokwwfHn7HRCZzvOo=
+	t=1711617558; cv=fail; b=mpqD7Lebc/uT8U7KuKzBGD3Ec5Fkz/dQUivsITuQfF6haWmAi5Mu4q6pvMJ6Hhb9YyHscQ6L3buPh8zmoTnWrVtvRhGCIUFZwoSOHy6eWQtP+gP+u6cGRJ1qk3zsHx/aR5h1cx3zafJKXoz9L3/bkIVn7qcW2Wyn2xxjkXt7TxY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711617556; c=relaxed/simple;
-	bh=4PvAHjWntMoBOFhRfRhHPiK+FmKDVaOOAV6t0L+67Hk=;
+	s=arc-20240116; t=1711617558; c=relaxed/simple;
+	bh=S25O1HoWNeWNiqFDZO63Zv/uRdgCr6uWNHaRg5r2qqI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aa0V33+jSZ5CDGUtkoLSIzoEZD24CZuNJ/gUL4Pa5YBgAbDxREe12EmRvJrIqEfqND1x+rTASe2z+5K7eOjYhqUL5ruQCe3AOWtCHiTYv1TCvW9s1fPEh7NQFkG+jQq22HnVOb93eMyvYc0YwhShV7lbrDuz8jEdiU4x+jc+TfE=
+	 Content-Type:MIME-Version; b=ZTC3LIMtp32EiWLcTPFOewm3AhE63viX4dvEo9J7y7cac2IjFDbHWdZi7pL4wuKJKvY+dRxE3SYsWvi5PLjVYocKDvZHAtrqn8EVZk46+V2MaazvlREfkXE0Rez3GtrI3qsKLjlOyskAAUZlu54g3B6ie8iGFEBSdfYEA4Ns8nc=
 ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QO7388Tx/8AWBjlPwDNb3P0t2Fcq2Hv4VA4W43hO+Olczp79yR494P9k0iA8yIlMZyJdxRH1QUVMiaF4q+a7EIyZMLknbTfSBRbzxGXzovP/ITNlDIKafsENHZXzr5bD+kzrztICCqrtrL5eaduP2TDOnrf3BghtJ6eAVwUGU8k7oOsRaIwADk/TGEgZeJ+KgQP9Uic7IJU7f15RFrP6AcN7ckpSXOt8Ga8jEbqkTPXMIqbmMJhOEVb4Z2mj6YuFUP3hicjZl1PwVtgCZhXMHUvm69Jscyi8IbVqIxrB6LyfGwJyHK75g9GEXwVMoOJBOZsTRaK238g7Nu9J7lqOvw==
+ b=EoxRkjCvIu1n9KtB2/RqjhZECcEICUKX3eNjL2RY4yCJR+9+3xJe3A8OdogUFe2WYN4MkQ+rJaX/dWIgObCJuegXHxlrhZ7cAQO+5D3BCdqUAvh4QqKt9PYvAVv7WXF8BiZ93MeEPFud3Lqw/txPQDIp2P8Glhz66jl1FePJBj9OzgCBH/GWsKJPWJEWOt3mMZNjzoLNb8clLPFIWiy27V3tedLk+npzMGgJLT9fc+MQ8ul+xCwz8VTtiOa1VwCCzNQ5gynIRyGU+MhYZ2KvimTwc9Pob/z4WmL+vVoXp1Dk1q8070k+6RPhs6k2V8nrHpSt3GohmNYl6/DvfR4vLA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ncDs6jP9pGy8jGxNbXXrSMdY1MZC4+bmB0C9FDghPh0=;
- b=lfaFWmgJyG2lg8zy+DuKMev9hV+xGwxSHXmwKGnEwgBfDlRLBmVkREn+6ryZ6A8xll6Du7MFU0SEbXSkOvG4um64GwllXr7Ht7Rzls26zPORy9GAT6yOT9r1DqC6x6op0gtS/zeBFIlwhNxz6TZe3IXwXQwd9xzBrHAfb8ok/V5dKOzVQZlTrtivE+KqUpDV5vC1oeloYkMY1m4U2bsDOymlRvO77oYlqb2DrDfo+3lSwxrz3CaOWEtg0BGUjgkbdOjdjbTvUv6rRhF8bIqnRWv703U51sVM7iN3ZEq+6u/Vz2HEh9nB/5B+QBvg/E4gFF0y8WZChPQ2azaAKjXwEg==
+ bh=mQuC3rsd+2sb++ex1jnAa+/IUKOgIbgvPVL0ck2ZXgc=;
+ b=cv1/Ecr4Sv2Xhm5qnc9f5RUPPKSwSM0qp1g3B2d25o3rXdCNgGjMIFO+ZM9zbnGXPgv3n9aj9QVlMSSt5rrbgUvIhKml6QIO7HJe+p7pbgysUnr+mufbr9mZKc4mg/h08MyiAKLfjOUxcYxnIW9cOKgbHt7LT8QTIvQ8xRG/AlpO3/TFevm80i3/QBQPa2nlaSAznrE83tVHYnpxK4u/o3KwGai9am+ImiCqGLUUoODJvl4QPUfJXpNHnn06lctLx/CZpnerNKSm8fguaYxAL5mVZ/Qz+Vsj80cgWi6n6LtoTmmFYqvoq++0X7ktWH8jAltMKkGItVAgBNYcJpWrBg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=starfivetech.com; dmarc=pass action=none
  header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
@@ -30,11 +30,11 @@ Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c311:25::15) by SHXPR01MB0559.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c311:1d::22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Thu, 28 Mar
- 2024 09:19:02 +0000
+ 2024 09:19:04 +0000
 Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
  ([fe80::c738:9e6b:f92e:8bb9]) by
  SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn ([fe80::c738:9e6b:f92e:8bb9%6])
- with mapi id 15.20.7409.031; Thu, 28 Mar 2024 09:19:02 +0000
+ with mapi id 15.20.7409.031; Thu, 28 Mar 2024 09:19:04 +0000
 From: Minda Chen <minda.chen@starfivetech.com>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Conor Dooley <conor@kernel.org>,
@@ -57,9 +57,9 @@ Cc: devicetree@vger.kernel.org,
 	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
 	Kevin Xie <kevin.xie@starfivetech.com>,
 	Minda Chen <minda.chen@starfivetech.com>
-Subject: [PATCH v16 18/22] PCI: plda: Add host init/deinit and map bus functions
-Date: Thu, 28 Mar 2024 17:18:31 +0800
-Message-Id: <20240328091835.14797-19-minda.chen@starfivetech.com>
+Subject: [PATCH v16 20/22] PCI: Add PCIE_RESET_CONFIG_DEVICE_WAIT_MS waiting time value
+Date: Thu, 28 Mar 2024 17:18:33 +0800
+Message-Id: <20240328091835.14797-21-minda.chen@starfivetech.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240328091835.14797-1-minda.chen@starfivetech.com>
 References: <20240328091835.14797-1-minda.chen@starfivetech.com>
@@ -75,310 +75,108 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: SHXPR01MB0863:EE_|SHXPR01MB0559:EE_
-X-MS-Office365-Filtering-Correlation-Id: d7da7d95-9afe-4239-7ab1-08dc4f081b7f
+X-MS-Office365-Filtering-Correlation-Id: fa28561d-cd0b-4b65-0e69-08dc4f081cae
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	B3G1EKcr8VSaCv6hSy8kNA0wGDd9amSBukaIbZ1QZJYrnCTLDrIbV1Z9a8izb2aN8Bwh9Ywm4ztsucuwtFDlXvxh2dqIpcm52DIbV/O9ABaNemHgk/xvGRW22JHv9dWoXDtWoKd0+B+Y5U6VsjBcMmh7Q/XvYiP0C6XamcxT+ooOnP6N+QsKUzDb2ZnVEd2/6Rr8igwGvyQTyMP6CyBUt00fj6XvqweGO2LqjhBzoXWlrDTHR9gpS9DCPSLJji0H7xUNremTQPz+UfVg81UgHHW/rtNg1zDJmab0HJ7voUpfhngawZETVsX29GH+YeD8jTi1GEMRFQ52NmWSG6mGyY8sphV0L+lR8BlcyYTJIpYK54uA8uPAOcjARb+cQW2A2zXhnPpFCR+n5CEg5Shl2NGLOlCEUdyPJTT9N3+fjndgZqEKlJrBfF+cY6QbDkBjkc5+586Yf1HAKTktIWNENxmPBwzJI/BmRxEufXxeShbafXiHNal1CXtZYHeVXqc4SRExqygDYuqGSZNGrfn6LtXgJPUaJJNnCF79XTs1tVAxVquW20PmyDKFXbc5C4MJ3fB1ZOl/7JPlkKpHSeT2inHP6n56dBkKWzX9NRESjrSzKgBCLMHZW/uOGlT51UZR
+	2gUd2/SzxeuUgHbloQBpwODNL/SgQE+ChvkFZlQZxkW0+kzjb5w91Msx9Cs6Q23wManAfg2VdT7ysK5ojR4YdcB1fNFuvuDSPM+Tlt8fkfLjvrrWKCxaFRvpgvZxZeKjCBjaeXMuj0wpR4rYYnfECQwsvrM36ko9o0gxX9ip3J/7HBVDnCpX+azTzI2Clegd3AC+I76jCWqH/Zb+sO0DP5KefMWQEoL0UDqS/caWhkyynCSx1MoFSHDQ9vTe750TO+XJ953TvobBH3hJm1/Q5g526fXCxJqFRLqtbOPh/LT0wOTzCvLYDBM9eO6lsAW+oq7oUMnVZw53vqcMQrTT+IpdKHu1hOvaEk74Pb1gW44cpU0QG3DEM//Yr0vEqigM9KF/gND0y/icqfTjRCrUX7ndxhhV4/SLGUlQyOA3B9HVTFFwOp5fPvVZxLPSxbkEXW1csyTjyj0oFGVLX5ZkvYUE96hUsUO0vWhPcCItS7w9M2fvQ2PsS65YIN3LtwjvqEckF84rqYB1qJO19tPNNKE/6nEhT97TQMoZ0nTvZIcLX4TfcGkR6lmN5JQgmJE5biHuRl51K6SgzPoEhlHbG1mEauJLNKEF5K3mzA0djQPhMahz6U/ELBsoaquhnDE3
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(52116005)(7416005)(41320700004)(366007)(38350700005);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?7NJQfKq9jLscQxaZjnE8LbDdIFEt6a3okjdqCYLWJ8e1z1b1ybKYrLQgsKdx?=
- =?us-ascii?Q?ZmPSlSffIFM1XFDwHzj+Dn8tNGONqf9taeme0wJFeSa76pYN4064cbdvIUjb?=
- =?us-ascii?Q?L/gGs0j+F/Wg1Smcipsk+xuj6ze00hzAQJELE9Wso1Q/wQQFQvYkByk6irnf?=
- =?us-ascii?Q?S2yO+vLVVf6O+NqUx4ibknbqBu28lR58VTJV34PKdL3sVrFwgLWXvRMKXQ2V?=
- =?us-ascii?Q?+lWlCxGgTcLHn5l+b7jVGvMI92T7exYl9jvVfL13hjNy4+DuhfySOOeOCh5G?=
- =?us-ascii?Q?w7JauHGvlda61GoD1J/iekfBXq+Iv9gE+hfrjE5g7jgEATcrZk+2wgSNRAus?=
- =?us-ascii?Q?XP07oPqk06A5W90wRzrUA09STsVbXdVACLUPBrYhVDbXVh7tEcoeTdtDIa4F?=
- =?us-ascii?Q?7sjFiFF4PHKm0zrDX64JrpogsYo2L4mYhoB7tIWLLfUrHuwrEZrg36vXECJN?=
- =?us-ascii?Q?midxh+Nzye+ahHNZ+xUVk5EGYQ7qBD/+jwZgxO247EefpNhXioCHj8AhCzkK?=
- =?us-ascii?Q?zcpHcefHK/yMm/oVGsQpDXHjz6JHYzXVYolFvyDO3/QyQ7I458Nl7xKWclvt?=
- =?us-ascii?Q?PQ234lZt5m9v/5jpntS5x/bCe9BrZu0ES+PgBAcbqrkayj6vmd58SsTUu3KW?=
- =?us-ascii?Q?1vo9BLD0GHHHxrbG6ZFYp9YwCB+LvIr0Xl4XzkNUMeWk9ROq/BdIJw4Cw3yO?=
- =?us-ascii?Q?aXo2+WpV4Uvvf8gOew/hLN8anfK67mCcIHX7g3Ol+5kSGrOqVKoCCYa/XHiW?=
- =?us-ascii?Q?TTm5vOZ1B+FW9kRryGN83pKCKHDQ7yczhaDd8Kfl/eYukzhoBi9uE7xEhQ9j?=
- =?us-ascii?Q?WRax98A+qPMrIBBaJ69orrEx8XJSrvKEkxaBiaDNjiYwME6xib9VRzeLgfXK?=
- =?us-ascii?Q?ZKgnZlnlzVNe2w4cL5v/GeW3SwZB0IOhoKb+4D5q4K0G+SerUW7axYkjat2b?=
- =?us-ascii?Q?sEfqMN8hNdiuz9tb8gxorm+BAg9CRz8iJM0QlZUo0tvWSlfFeeSuc6Efbo5H?=
- =?us-ascii?Q?nhdBOi47F7GsEGhki6/l6dzhcXiU29Jq6bluvKYSFviC9AwT1+hM3b+Tyrpc?=
- =?us-ascii?Q?n4JyAGK9lVaUvhoYc39THt2ruI8K+t6E+F0zMBVaCta8eeO2tSSYnHnSaLD/?=
- =?us-ascii?Q?k29PThdTZmH3QCcECFk7uyhWivqrgFevNqkllTO9nfNvt8H4jnZEkyfY3WK/?=
- =?us-ascii?Q?I7mKDFUeWxKTkrepQEUGCnlVZ/FudvwCdllp55orwWuDlPPt8PUjdaezac/C?=
- =?us-ascii?Q?3ioATBWmfEZUPlXW2Ca0zZFqGOHmUYIWzP9Wlb5SjavzP0nGHvn0BQL64/cX?=
- =?us-ascii?Q?dojS7epRnYPldFKJCVHH0aw10bhwgOjl9EzfEOUenySbm0gHUzkNvZZX9TZy?=
- =?us-ascii?Q?sZ+nzeEG/zHXeGi/t6qIaC2pZDPPRZqHbKuudbT1zVopdJ7ueEtKQ5daX3Au?=
- =?us-ascii?Q?pTdPTbWiizRQWXLCUZ9PkeNYm8OJRJwSAxjqsDp4cJUirCNXPKIpaEWx4Vpo?=
- =?us-ascii?Q?xlRr+iAHp5IURSBBO5wwqIHQOqnCwEfpQiLNCIbO9jqrGZGL5MUab5XZ6YXD?=
- =?us-ascii?Q?/a/kGJQ9NJryKDzgPOdV1N2pPHeDpWxirVHqRFS9Pxpp0H9VtJss4MOfj307?=
- =?us-ascii?Q?1g=3D=3D?=
+	=?us-ascii?Q?Xyt6Q+zsPBrJvS6qSArb1hSxxbfY5CUcgTIOir+yKzdatiBWr8r3k78iIg+c?=
+ =?us-ascii?Q?IF3NIKrocq7ApI98FsfJtG3rRhNXappq5alwkmLBnCLkQ5u2xfApezXxN45k?=
+ =?us-ascii?Q?1GV2RtA5v2bont0wbnu5TiRbwCBKg+wDygqKwoy1w3Ngr90IbuWlEOG/2ZaV?=
+ =?us-ascii?Q?+MPeUE/H9chB03llcxJFNJ+1z2unYOrq9/YllNZCUHIXz17uqcazB5mqh/0j?=
+ =?us-ascii?Q?/acCR9tZhq2OPniHK2wbIKQ7Gx4b8p96DZkISvfoI+woUIKbqWMdQKWi3YS8?=
+ =?us-ascii?Q?YI3we+POWkphN1EUuwf0j4OypkZia0vd7kdYNGZ18gYxtwkBHuS0CbmHuTE7?=
+ =?us-ascii?Q?/zEPGgmR+wV5bVzdhFSTTOPgCkzE4+kK6kDcg9NKFlg0dpConuyLOIPlMnQa?=
+ =?us-ascii?Q?E4BazEro7bJAoARShmxWQtfRPCFkATXI3Ff/9dmPLtNfKvLuh+xTONshgTvl?=
+ =?us-ascii?Q?4OqZzIw+qv/SMxmJyRiOg2iF5ks4KmP06whHq1W2ypLNYmYjFlfQnrB1m0M7?=
+ =?us-ascii?Q?wTagA4yVWvo8TDzCXQRcQx7OPaEfo30W83ha8mWXhJs5VrA9q0P3OKY/9C1d?=
+ =?us-ascii?Q?KllmqN9SvBUOi/woOg38wLjE+9OZEtk3N0Lm3Rqtu/PF0ulBkrWhgBnyHeMR?=
+ =?us-ascii?Q?FpIdW1GIxTjg7ZC3VLErSg/by7ei9NTj3KXV3GWmAQpTEZtdXJl9ovem70wp?=
+ =?us-ascii?Q?0klAoYOc6smBOzqdzAtQcTf9cTogwSNa0MueHURiVSzRp+z+FqStoqtWnF9b?=
+ =?us-ascii?Q?HV38oBZmXOQhcY2a4jbSkb5YS9go9ZUQgJuY0lwYe6O7UXqi8toH6e9zJ/hJ?=
+ =?us-ascii?Q?VvPiEMFQ3g177qPdRRhNcAkS3RdSeH5Gf26nx+6woHej8jRTJshQkRZSBafj?=
+ =?us-ascii?Q?X6C54irAa//CU0xMTasciSbk4sXx5KzMYo6tkOteHWC+zjO6z+2I2fTjy5HY?=
+ =?us-ascii?Q?Nb6Z7p8TSZUhtCHvJrB/SyrtU24YEVwUgvjTjOUL8r75wpA2sypb6s+cLBva?=
+ =?us-ascii?Q?n4RS+eT/mJwXrQRrzXTiie0ue2XkqKaNmc3E8qqlmU5G6RhVFkj0FnBbN1xP?=
+ =?us-ascii?Q?thNI5DeG5ko+6jNgORVfnZZ0CfRAXZAL9eeRyQpllVCN/TIuA8Kr/heecJ9u?=
+ =?us-ascii?Q?5nuCtTrl0ctfvKo0ZkXuL0WQ+m5I8+9P2YYNYFGKHab+4EKWyIkXMLrmbfY8?=
+ =?us-ascii?Q?E3QhZpKLLPFV4ODGxxOA+v85s8KwmdKF3Lz011Eeg1iNAIAwMIFu/RgSJoXO?=
+ =?us-ascii?Q?YmWvvxISXz0PlmlcH/hxXGiZ+VHBI4yyZQVzmISP6ZBbmE8wDG2UEz+K9kNs?=
+ =?us-ascii?Q?w+nce4m3M2KXuL29yabgRyVCaE5ab67rE8hHSEUB7jkpFhZ/GWSWLOuROUEI?=
+ =?us-ascii?Q?hC93xEsUDbl5RiIau3ML+VQFsP5wPes7rlP5ZOyYSEgKZyCQXl249BeCLTW6?=
+ =?us-ascii?Q?QgEKRG6jp3i9vZi/T9+kZUso9leke9I0XFCOLj5MRDsGwtcWGAuEC6cgsZ4W?=
+ =?us-ascii?Q?5mtHhMng9MPkKt73IOsPnmIR7sN4tdUaJQEIGfw/KNPcNB1TFDDh4UZKyd2/?=
+ =?us-ascii?Q?lKa1J7hha1rdXsVDvc/Ijynt0dQ6PQN6wWzQSxmlFwCw2sycTCYT45j977yh?=
+ =?us-ascii?Q?ug=3D=3D?=
 X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d7da7d95-9afe-4239-7ab1-08dc4f081b7f
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa28561d-cd0b-4b65-0e69-08dc4f081cae
 X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2024 09:19:02.0429
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2024 09:19:04.0399
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 49e1BovqeCOzyg8RkRI1BRrtGRyfNR51YwfHWPMnzEJvbJoNR8R9o+NCl2vYnY/UcVxhT1QX88JWWUjbqjNZtZPAeAkgCp1jpAMDMLW8UHU=
+X-MS-Exchange-CrossTenant-UserPrincipalName: mT4IaNHihzqZr0YFm7I6Ika7qeEmUX436O01daXl8Gp2CfWjkcuftyDn4T131NAc2yCrrJGB9Pt0sFC1cV872YXiRJNroRpOJne4u0A2JC8=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0559
 
-Add PLDA host plda_pcie_host_init()/plda_pcie_host_deinit() and map bus
-function. So vendor can use it to init PLDA PCIe host core.
+From: Kevin Xie <kevin.xie@starfivetech.com>
 
-Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+Add the PCIE_RESET_CONFIG_DEVICE_WAIT_MS macro to define the minimum
+waiting time between exit from a conventional reset and sending the
+first configuration request to the device.
+
+As described in PCI base specification r6.0, section 6.6.1 <Conventional
+Reset>, there are two different use cases of the value:
+
+   - "With a Downstream Port that does not support Link speeds greater
+     than 5.0 GT/s, software must wait a minimum of 100 ms following exit
+     from a Conventional Reset before sending a Configuration Request to
+     the device immediately below that Port."
+
+   - "With a Downstream Port that supports Link speeds greater than
+     5.0 GT/s, software must wait a minimum of 100 ms after Link training
+     completes before sending a Configuration Request to the device
+     immediately below that Port."
+
+Signed-off-by: Kevin Xie <kevin.xie@starfivetech.com>
 Reviewed-by: Mason Huo <mason.huo@starfivetech.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/controller/plda/pcie-plda-host.c | 131 +++++++++++++++++--
- drivers/pci/controller/plda/pcie-plda.h      |  22 ++++
- 2 files changed, 139 insertions(+), 14 deletions(-)
+ drivers/pci/pci.h | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/pci/controller/plda/pcie-plda-host.c b/drivers/pci/controller/plda/pcie-plda-host.c
-index a040e7e5492f..a18923d7cea6 100644
---- a/drivers/pci/controller/plda/pcie-plda-host.c
-+++ b/drivers/pci/controller/plda/pcie-plda-host.c
-@@ -3,6 +3,7 @@
-  * PLDA PCIe XpressRich host controller driver
-  *
-  * Copyright (C) 2023 Microchip Co. Ltd
-+ *		      StarFive Co. Ltd
-  *
-  * Author: Daire McNamara <daire.mcnamara@microchip.com>
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 17fed1846847..6fa59d6aa063 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -22,6 +22,22 @@
   */
-@@ -15,6 +16,15 @@
+ #define PCIE_PME_TO_L2_TIMEOUT_US	10000
  
- #include "pcie-plda.h"
++/*
++ * As described in PCI base specification r6.0, section 6.6.1 <Conventional
++ * Reset>, there are two different use cases of the value:
++ *
++ * - "With a Downstream Port that does not support Link speeds greater
++ *    than 5.0 GT/s, software must wait a minimum of 100 ms following exit
++ *    from a Conventional Reset before sending a Configuration Request to
++ *    the device immediately below that Port."
++ *
++ * - "With a Downstream Port that supports Link speeds greater than
++ *    5.0 GT/s, software must wait a minimum of 100 ms after Link training
++ *    completes before sending a Configuration Request to the device
++ *    immediately below that Port."
++ */
++#define PCIE_RESET_CONFIG_DEVICE_WAIT_MS	100
++
+ extern const unsigned char pcie_link_speed[];
+ extern bool pci_early_dump;
  
-+void __iomem *plda_pcie_map_bus(struct pci_bus *bus, unsigned int devfn,
-+				int where)
-+{
-+	struct plda_pcie_rp *pcie = bus->sysdata;
-+
-+	return pcie->config_base + PCIE_ECAM_OFFSET(bus->number, devfn, where);
-+}
-+EXPORT_SYMBOL_GPL(plda_pcie_map_bus);
-+
- static void plda_handle_msi(struct irq_desc *desc)
- {
- 	struct plda_pcie_rp *port = irq_desc_get_handler_data(desc);
-@@ -420,9 +430,7 @@ int plda_init_interrupts(struct platform_device *pdev,
- 			 const struct plda_event *event)
- {
- 	struct device *dev = &pdev->dev;
--	int irq;
--	int intx_irq, msi_irq, event_irq;
--	int ret;
-+	int event_irq, ret;
- 	u32 i;
- 
- 	if (!port->event_ops)
-@@ -437,8 +445,8 @@ int plda_init_interrupts(struct platform_device *pdev,
- 		return ret;
- 	}
- 
--	irq = platform_get_irq(pdev, 0);
--	if (irq < 0)
-+	port->irq = platform_get_irq(pdev, 0);
-+	if (port->irq < 0)
- 		return -ENODEV;
- 
- 	for_each_set_bit(i, &port->events_bitmap, port->num_events) {
-@@ -461,26 +469,26 @@ int plda_init_interrupts(struct platform_device *pdev,
- 		}
- 	}
- 
--	intx_irq = irq_create_mapping(port->event_domain,
--				      event->intx_event);
--	if (!intx_irq) {
-+	port->intx_irq = irq_create_mapping(port->event_domain,
-+					    event->intx_event);
-+	if (!port->intx_irq) {
- 		dev_err(dev, "failed to map INTx interrupt\n");
- 		return -ENXIO;
- 	}
- 
- 	/* Plug the INTx chained handler */
--	irq_set_chained_handler_and_data(intx_irq, plda_handle_intx, port);
-+	irq_set_chained_handler_and_data(port->intx_irq, plda_handle_intx, port);
- 
--	msi_irq = irq_create_mapping(port->event_domain,
--				     event->msi_event);
--	if (!msi_irq)
-+	port->msi_irq = irq_create_mapping(port->event_domain,
-+					   event->msi_event);
-+	if (!port->msi_irq)
- 		return -ENXIO;
- 
- 	/* Plug the MSI chained handler */
--	irq_set_chained_handler_and_data(msi_irq, plda_handle_msi, port);
-+	irq_set_chained_handler_and_data(port->msi_irq, plda_handle_msi, port);
- 
- 	/* Plug the main event chained handler */
--	irq_set_chained_handler_and_data(irq, plda_handle_event, port);
-+	irq_set_chained_handler_and_data(port->irq, plda_handle_event, port);
- 
- 	return 0;
- }
-@@ -546,3 +554,98 @@ int plda_pcie_setup_iomems(struct pci_host_bridge *bridge,
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(plda_pcie_setup_iomems);
-+
-+static void plda_pcie_irq_domain_deinit(struct plda_pcie_rp *pcie)
-+{
-+	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
-+	irq_set_chained_handler_and_data(pcie->msi_irq, NULL, NULL);
-+	irq_set_chained_handler_and_data(pcie->intx_irq, NULL, NULL);
-+
-+	irq_domain_remove(pcie->msi.msi_domain);
-+	irq_domain_remove(pcie->msi.dev_domain);
-+
-+	irq_domain_remove(pcie->intx_domain);
-+	irq_domain_remove(pcie->event_domain);
-+}
-+
-+int plda_pcie_host_init(struct plda_pcie_rp *port, struct pci_ops *ops,
-+			const struct plda_event *plda_event)
-+{
-+	struct device *dev = port->dev;
-+	struct pci_host_bridge *bridge;
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct resource *cfg_res;
-+	int ret;
-+
-+	pdev = to_platform_device(dev);
-+
-+	port->bridge_addr =
-+		devm_platform_ioremap_resource_byname(pdev, "apb");
-+
-+	if (IS_ERR(port->bridge_addr))
-+		return dev_err_probe(dev, PTR_ERR(port->bridge_addr),
-+				     "failed to map reg memory\n");
-+
-+	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
-+	if (!cfg_res)
-+		return dev_err_probe(dev, -ENODEV,
-+				     "failed to get config memory\n");
-+
-+	port->config_base = devm_ioremap_resource(dev, cfg_res);
-+	if (IS_ERR(port->config_base))
-+		return dev_err_probe(dev, PTR_ERR(port->config_base),
-+				     "failed to map config memory\n");
-+
-+	bridge = devm_pci_alloc_host_bridge(dev, 0);
-+	if (!bridge)
-+		return dev_err_probe(dev, -ENOMEM,
-+				     "failed to alloc bridge\n");
-+
-+	if (port->host_ops && port->host_ops->host_init) {
-+		ret = port->host_ops->host_init(port);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	port->bridge = bridge;
-+	plda_pcie_setup_window(port->bridge_addr, 0, cfg_res->start, 0,
-+			       resource_size(cfg_res));
-+	plda_pcie_setup_iomems(bridge, port);
-+	plda_set_default_msi(&port->msi);
-+	ret = plda_init_interrupts(pdev, port, plda_event);
-+	if (ret)
-+		goto err_host;
-+
-+	/* Set default bus ops */
-+	bridge->ops = ops;
-+	bridge->sysdata = port;
-+
-+	ret = pci_host_probe(bridge);
-+	if (ret < 0) {
-+		dev_err_probe(dev, ret, "failed to probe pci host\n");
-+		goto err_probe;
-+	}
-+
-+	return ret;
-+
-+err_probe:
-+	plda_pcie_irq_domain_deinit(port);
-+err_host:
-+	if (port->host_ops && port->host_ops->host_deinit)
-+		port->host_ops->host_deinit(port);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(plda_pcie_host_init);
-+
-+void plda_pcie_host_deinit(struct plda_pcie_rp *port)
-+{
-+	pci_stop_root_bus(port->bridge->bus);
-+	pci_remove_root_bus(port->bridge->bus);
-+
-+	plda_pcie_irq_domain_deinit(port);
-+
-+	if (port->host_ops && port->host_ops->host_deinit)
-+		port->host_ops->host_deinit(port);
-+}
-+EXPORT_SYMBOL_GPL(plda_pcie_host_deinit);
-diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/controller/plda/pcie-plda.h
-index c3d8c141e44d..52f4cacf7917 100644
---- a/drivers/pci/controller/plda/pcie-plda.h
-+++ b/drivers/pci/controller/plda/pcie-plda.h
-@@ -142,6 +142,11 @@ struct plda_event_ops {
- 	u32 (*get_events)(struct plda_pcie_rp *pcie);
- };
- 
-+struct plda_pcie_host_ops {
-+	int (*host_init)(struct plda_pcie_rp *pcie);
-+	void (*host_deinit)(struct plda_pcie_rp *pcie);
-+};
-+
- struct plda_msi {
- 	struct mutex lock;		/* Protect used bitmap */
- 	struct irq_domain *msi_domain;
-@@ -153,14 +158,20 @@ struct plda_msi {
- 
- struct plda_pcie_rp {
- 	struct device *dev;
-+	struct pci_host_bridge *bridge;
- 	struct irq_domain *intx_domain;
- 	struct irq_domain *event_domain;
- 	raw_spinlock_t lock;
- 	struct plda_msi msi;
- 	const struct plda_event_ops *event_ops;
- 	const struct irq_chip *event_irq_chip;
-+	const struct plda_pcie_host_ops *host_ops;
- 	void __iomem *bridge_addr;
-+	void __iomem *config_base;
- 	unsigned long events_bitmap;
-+	int irq;
-+	int msi_irq;
-+	int intx_irq;
- 	int num_events;
- };
- 
-@@ -171,6 +182,8 @@ struct plda_event {
- 	int msi_event;
- };
- 
-+void __iomem *plda_pcie_map_bus(struct pci_bus *bus, unsigned int devfn,
-+				int where);
- int plda_init_interrupts(struct platform_device *pdev,
- 			 struct plda_pcie_rp *port,
- 			 const struct plda_event *event);
-@@ -179,4 +192,13 @@ void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
- 			    size_t size);
- int plda_pcie_setup_iomems(struct pci_host_bridge *bridge,
- 			   struct plda_pcie_rp *port);
-+int plda_pcie_host_init(struct plda_pcie_rp *port, struct pci_ops *ops,
-+			const struct plda_event *plda_event);
-+void plda_pcie_host_deinit(struct plda_pcie_rp *pcie);
-+
-+static inline void plda_set_default_msi(struct plda_msi *msi)
-+{
-+	msi->vector_phy = IMSI_ADDR;
-+	msi->num_vectors = PLDA_MAX_NUM_MSI_IRQS;
-+}
- #endif
 -- 
 2.17.1
 
