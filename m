@@ -1,62 +1,92 @@
-Received: from mail-177132.yeah.net (mail-177132.yeah.net [123.58.177.132])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06DB065BAD;
-	Thu, 28 Mar 2024 12:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.132
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BA97D3F5
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 12:49:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711630160; cv=none; b=obgYZqTha1yniy0PivOgcU0/VGY9Q7rczmPatso7FJXwBTia/UtVgV0ZB7U0JSolZ1gtQAaVIw/9/t78iyM5kSfpHkrA9xCfB/RDzX88hE3nORlWMoZpAUMRQRMJqZiNzbyACTsR0ziGK/6+EJs/S0mUUWoFH47LnCmszVtOVYc=
+	t=1711630198; cv=none; b=Ivd87zYJkdUxoQNXWbptv8zDKv2EjUOfZcUrqZVufxS6kL7i35Z2eSG4ugahm0Jr13cDIFuuU24B/yaX7aHPFWDG/WNXRTwiuuVPlLk7Cghgun9uNLsrSGvNgIGd6I9PcDHhldagpukTXc/m9aDMVxHAruH2JcnMER2Ix+37Mp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711630160; c=relaxed/simple;
-	bh=R5BfQ+x6QG4BIHt6F7DsPp94Zw24AxagCQdjFgQ3hDc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sc0IZvd3bJXDZU72O6ZGrjE7kOCnyNSi8X2R5wu9gXfp5QnwpFFDfB6Pc9TnVOsoS0hBV9BU2ecGEZJaRxzsypy7Mm6+Z3a2G4ml1szRdZ5DmJOwcFTO3n/OzXGODG0rAzut4fLURugTUS479JLY3SN2IrqRtUANJoVmi1WKlXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=GHIn1TOp; arc=none smtp.client-ip=123.58.177.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1711630198; c=relaxed/simple;
+	bh=AUx/FZ/RU76mHzg4qaAQoDkIORYPJrAzMVU1E7OcnBU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=XIM9y6OlF/CTUoHN8/YGojU16gYieMuS+AFtnm+NeAdPO5mC5j79UAMmMD+cAjhpQyIkbf6qGgDdvjePxoEak7dl3Lp1T96i4JkdgCD6HkLRjxfTMl6QJmMvb04gshzAD5ZzhiBeSwTKLaUtfgGHStUb+o5sv9NSIKdTP16cFDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IHs8Oi6B; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="GHIn1TOp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=QyrTRg0Emt1k1i/xXDJd/PDVGiHySINFxWmGwEzJxXw=;
-	b=GHIn1TOp8fCUZoSZSNsPJbz5oz6Nu7q8knu26C2SS1Hash/gRkd4+goJTEccc/
-	iCHyZzuUzjTgK82cHl7FrSNGr2XujTaA26BkLr88pSrTuNXcxP8avQXTP+O8YERo
-	T3muZJYgecZ0SGYbxettfd2ID+Iahjs2rSS3r9PcD+fQ8=
-Received: from dragon (unknown [183.213.196.225])
-	by smtp2 (Coremail) with SMTP id C1UQrAD3H3z+ZgVm3JFZAg--.35373S3;
-	Thu, 28 Mar 2024 20:48:00 +0800 (CST)
-Date: Thu, 28 Mar 2024 20:47:58 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: haibo.chen@nxp.com, jic23@kernel.org, lars@metafoo.de, robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, linux-imx@nxp.com, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 2/2] arm64: dts: imx93: drop the 4th interrupt for ADC
-Message-ID: <ZgVm/g04jK+hTNAV@dragon>
-References: <20240226130826.3824251-1-peng.fan@oss.nxp.com>
- <20240226130826.3824251-2-peng.fan@oss.nxp.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IHs8Oi6B"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dd169dd4183so1072535276.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 05:49:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711630196; x=1712234996; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=V2hEdvFPOs3Q7MZ/48YeLwC2rbA6kByg8D1e17fzf9U=;
+        b=IHs8Oi6B5QCHM6FNUqya6j7pwke6Ag5l+vVzVNNCrhxekP6JUqlMsiYzZrlA0ZTyK+
+         iRaEZwWQuhoLyC124o0qVcf1agOsMmnSYSXDNTtyBKRFDU9QG10MxqI/MSmFBIYeicxL
+         ffiDFtghmyeyRD+p/Iu7YvmZMQJf2CORds7nSmnVk+pRXOmRXERrqIDMaQKFNRibMUn/
+         0VoZasTSkSCEDyTyEhM4Zvcbj0a/8cFwH5LArGUQsAbXLHBI0Tk5qdApcVYtxIJ6AA/8
+         aNoFEA5FHmGV3DmqKvlctugDKQlYtckEX0nZqyn2WPv/D69PBXiM6KJC5WOAFQo1Xi8m
+         7kpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711630196; x=1712234996;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=V2hEdvFPOs3Q7MZ/48YeLwC2rbA6kByg8D1e17fzf9U=;
+        b=wVHVZWnGu0BdBYk29nfMFFsgGKZy7DiiBo6SI/CPuoETGtpGVPcCkf+0VW6KoRR5s3
+         jwNRypt3hVYEXdhYkJZ4ODgl5x6SaxSZUW0iWM7kkDM/QKKiIiJCkWoqCF42Fa7qd1wG
+         +PpJO/A1vPsKhIQQzsAS3ab3Hm8WfDG6SJEhToRHRbBvxhEX+Q+hb/dc8atyOMX79B/a
+         4NTvA+ltHt3FSwAN2f8k7BcUfMKx+6xjMzVrcJcqI6k6PZIRMZKzDVh3sdDrJEdYR8Qz
+         +gl2xDiroeQdKjx/LY+8wlKS4llgL6MOx/eZAxCuLd0IpSRbR8BzmbhtbiLTQzAyfPCA
+         AlFg==
+X-Forwarded-Encrypted: i=1; AJvYcCUHM52pl5GIzU9/+xgmE3tJ4w0zKl4/FDCoGpVN9jROwlpJsfyjTBWN9W3GlFqKdLAh5oljl1NByEAW0AulwQWN6Z+J02kHeCekqIaU
+X-Gm-Message-State: AOJu0YxaduI+dM5yOFU9MK4RcV1nXP1urTaKKFtuC+TeCfOKpB1K0y4b
+	I0nxfYma1ro+q6veCNu3tmwP5Wg2LcdWYowaAEnTsTBH1GTopgAJ2P48cpflJSaomk9m0fUqhaP
+	Qew+diZMc6Q==
+X-Google-Smtp-Source: AGHT+IGt2ygy/VPmzIkHQmiuHIvV0t44t+pVY/Hqx3xUuS/Nkorst0byXe/yT544CQP9wTy7G5WPltAJjbM2lA==
+X-Received: from beeg.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:11db])
+ (user=jackmanb job=sendgmr) by 2002:a05:6902:727:b0:dc7:4af0:8c6c with SMTP
+ id l7-20020a056902072700b00dc74af08c6cmr195564ybt.6.1711630196104; Thu, 28
+ Mar 2024 05:49:56 -0700 (PDT)
+Date: Thu, 28 Mar 2024 12:49:47 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240226130826.3824251-2-peng.fan@oss.nxp.com>
-X-CM-TRANSID:C1UQrAD3H3z+ZgVm3JFZAg--.35373S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUVf-BDUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiGBCvZV6NnpnNkwABsJ
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
+Message-ID: <20240328124947.2107524-1-jackmanb@google.com>
+Subject: [PATCH] Documentation: dev-tools: Add link to RV docs
+From: Brendan Jackman <jackmanb@google.com>
+To: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: corbet@lwn.net, jackmanb@google.com, bristot@kernel.org, 
+	rostedt@goodmis.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Feb 26, 2024 at 09:08:26PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> Per i.MX93 Reference Mannual Rev.4, 12/2023, there is no interrupt 268,
-> drop it.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+I could not remember the name of this system and it's pretty hard to
+find without the right keywords. I had to ask an LLM!
 
-Applied, thanks!
+Drop a breadcrumb to help people find it in the future.
+
+Signed-off-by: Brendan Jackman <jackmanb@google.com>
+---
+ Documentation/dev-tools/testing-overview.rst | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/dev-tools/testing-overview.rst b/Documentation/dev-tools/testing-overview.rst
+index 0aaf6ea53608f..1619e5e5cc9c4 100644
+--- a/Documentation/dev-tools/testing-overview.rst
++++ b/Documentation/dev-tools/testing-overview.rst
+@@ -104,6 +104,8 @@ Some of these tools are listed below:
+   KASAN and can be used in production. See Documentation/dev-tools/kfence.rst
+ * lockdep is a locking correctness validator. See
+   Documentation/locking/lockdep-design.rst
++* Runtime Verification (RV) supports checking specific behaviours for a given
++  subsystem. See Documentation/trace/rv/runtime-verification.rst
+ * There are several other pieces of debug instrumentation in the kernel, many
+   of which can be found in lib/Kconfig.debug
+ 
+-- 
+2.44.0.396.g6e790dbe36-goog
 
