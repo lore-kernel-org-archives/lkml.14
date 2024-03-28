@@ -1,157 +1,113 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851B54CDEB
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 05:49:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B7148CC6;
+	Thu, 28 Mar 2024 05:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711604999; cv=none; b=ge2oceog5Tx9YGr85kKMGcCLk8NgGPpFvpMGtxHv8GmTtQKxBtugETDUZgmoKlIosfVopbwuc7x8jZtoffPckbVT8jvhupjadJDby/HWmts3JbOiRmz6DUpvOby3G7zCzwQbjElkKk5jHrH8sbC+ukeZPVmy7iXQPmnBSHLYTNU=
+	t=1711605103; cv=none; b=n/qhojtqt9T1tFG2mBCeaorzfYth/UYcI5ya1A5KqtQro6crj1ap/vomDRKKxVCEIXzlhV2PLMK9wZ4CqT7d7/n6HtUqCnFVRKfDbt14n/YMauZD8H6koDzExYbiGqsOkjDVMx0z1Xn3qYwTFl1n/EoeHTCCmUpeX0GxoUKbnlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711604999; c=relaxed/simple;
-	bh=cn31nvUNUjuzpJBbAgPyDFbqbILk+7I0RyNp0AFjRSE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n1yEjqESFZKKl3pTUyy0+HJq8dajM+4RmwKmEB8Ues57bufOnWw54vPaEZdfkPKRLeMfCjgrsnK/gdkSc2s0vNvsvkw7K9AX3dNgoxDuMfLA/9hyC8cDSIrsk+l+txjCi88Sck0dT09KX+IsuRNSV0YghD4MyBW4y1guvS1DkL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EqO1qpxd; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1711605103; c=relaxed/simple;
+	bh=6kv4U+OlSY+qlQflghGbIVo8TBSoBTX2u5cN0RYYRzs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gs6SOL0529s/ol5mbkqkgdEB5weEkFfmJGoRqKvgZJ6pwKndy7UUl3f9r2HhvqrQAIF04QkWjIR4zOshLzUWtqWY1TmQC02enmEh6GtfFas0z/nzuaGRhitN/knhnHdBkTTWUNdHYF/vd8/KpsHizcx+zLAjpG6nB/y0wcpDmj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tttGRj5y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EqO1qpxd"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-513d247e3c4so582736e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2024 22:49:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711604996; x=1712209796; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cn31nvUNUjuzpJBbAgPyDFbqbILk+7I0RyNp0AFjRSE=;
-        b=EqO1qpxdgMVAy4qt4wi/S7W10sSAb99s7msAvI4h8uz8vL1JW1DivGxFbJKCO2CmVi
-         uhno3Jc4F4VV312ZgktGxCVAHbFv3g4lC2Zs3yj0YSrA4l0ABpAZAqtVfub7B9yiEOn1
-         qxc2TOsTmOGR94M9neC4O67OAtULhJNcHnWm8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711604996; x=1712209796;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cn31nvUNUjuzpJBbAgPyDFbqbILk+7I0RyNp0AFjRSE=;
-        b=dYnzWbHOMRp/07Nch9SW1eaaGm7HUBIuQjO2IBW2UYavYi4z4pwyk0iR7AkXE8YuMH
-         6p8w6YR1fQcZECQxYJ24+uJymZJkqleNQK/03DNP6iW5olxsWyC+vAbGibWcATDmrS6A
-         tOCBxmfAhQshcuM7MlwVGBkU8XXM+VIRLs/zDbeEWNxo+godxOroG97aCEvbL8OtPpoW
-         +GTljYMh27xH/wCrxIVALlimH7twxG7/EkT0YtmbQ78Rbi2CPxJRzoKYp1vEPuBrSIjD
-         dd1npE0Q6pZn/sfFsHdxGizNWohssRctlRca/EdCnNxxg0lMK1127pFpIGZB4PMQfPas
-         4/nw==
-X-Forwarded-Encrypted: i=1; AJvYcCV11S9/JHSNqyXh6aKnD+hVvYSvdLItlO/SxoQ9XDyvpG1tyhlpflM0ewpX1dlyTFnq+VfV27OtdypKyMrMYe9i92pMT45ndEKX78Qg
-X-Gm-Message-State: AOJu0Ywdt614GZOEeMB/HrY4yWYokllE0KQhieg5cR+aUfmF6vc/9Xyl
-	HOB69qLttj4v6eZIUzSgL/kdYSyvv5NygkETMCDDwFyFMFL5NhgSfpM5CCiF96gtl8CPV9UP6/D
-	4wwlJzRIBfzEojHPGQpeUudw9NZKznb+BgNtS
-X-Google-Smtp-Source: AGHT+IE9E7br29oy9RDRD35SwQNl2vwFiBtmvYXASR4vX3jKO04LtgAi9c4oMgaAsLskFkIEeHikqvJMsXTcDn6BjM0=
-X-Received: by 2002:a05:6512:32bb:b0:513:dfac:b29e with SMTP id
- q27-20020a05651232bb00b00513dfacb29emr414742lfe.26.1711604995631; Wed, 27 Mar
- 2024 22:49:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tttGRj5y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4998EC43390;
+	Thu, 28 Mar 2024 05:51:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711605102;
+	bh=6kv4U+OlSY+qlQflghGbIVo8TBSoBTX2u5cN0RYYRzs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tttGRj5ylh9xVO642wPR1F2Asn5IsF3J1IDJ9pqvnIh1qj6XQgGrpl4six+k1HHRf
+	 aoU7KuEjvUv5Ii9zuOT+mH6BtpmkaBTz4FcZS6L0LCZTPajk2hXlbfy/k1hVU+NZ28
+	 Wg4db9y1MDaDrXtFBBEgTQekHUKH7dUpja3VbrZJgu7ADxfru+YZW5u7cB9IMMs8zC
+	 mrubWP/EDVcMLefx6YTk6HA9erGzEt7LjzHG8vGbMoVsnZ2OEqqw0kIfJszeXgBiPy
+	 1PPy5iqTnZAlh9yVfb4I75n6QCxgZoMfaqW4bU26A3LhUrFRRN7YufRgRneeNEP5Gc
+	 5Xn0oSBC206dA==
+Message-ID: <3360dba8-0fac-4126-b72b-abc036957d6a@kernel.org>
+Date: Wed, 27 Mar 2024 22:51:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1710418312-6559-1-git-send-email-quic_amrianan@quicinc.com>
- <1710418312-6559-3-git-send-email-quic_amrianan@quicinc.com>
- <f6f317d9-830d-4c38-998f-b229b3d9f95a@linaro.org> <20240316-germinate-browsing-6865db3a44d7@spud>
- <20240316-herring-skies-6ee1d4a9c0d2@spud> <CAD=FV=VZB9Dqsw6+2WBdWxaQVA9NgK_W2n0okBOU0haDMSogPw@mail.gmail.com>
-In-Reply-To: <CAD=FV=VZB9Dqsw6+2WBdWxaQVA9NgK_W2n0okBOU0haDMSogPw@mail.gmail.com>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Thu, 28 Mar 2024 13:49:44 +0800
-Message-ID: <CAGXv+5HchqvT=J7_qsJMB7OthX-gtGp0E64Xfk3i3=DDX6o1=g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: qcom: Update DT bindings for multiple DT
-To: Doug Anderson <dianders@chromium.org>, Amrit Anand <quic_amrianan@quicinc.com>
-Cc: Conor Dooley <conor@kernel.org>, Caleb Connolly <caleb.connolly@linaro.org>, robh@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, agross@kernel.org, 
-	andersson@kernel.org, konrad.dybcio@linaro.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	kernel@quicinc.com, peter.griffin@linaro.org, linux-riscv@lists.infradead.org, 
-	chrome-platform@lists.linux.dev, linux-mediatek@lists.infradead.org, 
-	Simon Glass <sjg@chromium.org>, Julius Werner <jwerner@chromium.org>, 
-	Elliot Berman <quic_eberman@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 0/3] mm/gup: consistently call it GUP-fast
+To: Arnd Bergmann <arnd@arndb.de>, David Hildenbrand <david@redhat.com>,
+ peterx <peterx@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Mike Rapoport <rppt@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
+ John Hubbard <jhubbard@nvidia.com>, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, linux-mm@kvack.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ x86@kernel.org, Ryan Roberts <ryan.roberts@arm.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, Matt Turner <mattst88@gmail.com>,
+ Vineet Gupta <vgupta@kernel.org>, Alexey Brodkin <abrodkin@synopsys.com>
+References: <20240327130538.680256-1-david@redhat.com> <ZgQ5hNltQ2DHQXps@x1n>
+ <3922460a-4d01-4ecb-b8c5-7c57fd46f3fd@redhat.com>
+ <dc1433ea-4e59-4ab7-83fb-23b393020980@app.fastmail.com>
+Content-Language: en-US
+From: Vineet Gupta <vgupta@kernel.org>
+In-Reply-To: <dc1433ea-4e59-4ab7-83fb-23b393020980@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 19, 2024 at 5:36=E2=80=AFAM Doug Anderson <dianders@chromium.or=
-g> wrote:
++CC Alexey
+
+On 3/27/24 09:22, Arnd Bergmann wrote:
+> On Wed, Mar 27, 2024, at 16:39, David Hildenbrand wrote:
+>> On 27.03.24 16:21, Peter Xu wrote:
+>>> On Wed, Mar 27, 2024 at 02:05:35PM +0100, David Hildenbrand wrote:
+>>>
+>>> I'm not sure what config you tried there; as I am doing some build tests
+>>> recently, I found turning off CONFIG_SAMPLES + CONFIG_GCC_PLUGINS could
+>>> avoid a lot of issues, I think it's due to libc missing.  But maybe not the
+>>> case there.
+>> CCin Arnd; I use some of his compiler chains, others from Fedora directly. For
+>> example for alpha and arc, the Fedora gcc is "13.2.1".
+>> But there is other stuff like (arc):
+>>
+>> ./arch/arc/include/asm/mmu-arcv2.h: In function 'mmu_setup_asid':
+>> ./arch/arc/include/asm/mmu-arcv2.h:82:9: error: implicit declaration of 
+>> function 'write_aux_reg' [-Werro
+>> r=implicit-function-declaration]
+>>     82 |         write_aux_reg(ARC_REG_PID, asid | MMU_ENABLE);
+>>        |         ^~~~~~~~~~~~~
+> Seems to be missing an #include of soc/arc/aux.h, but I can't
+> tell when this first broke without bisecting.
+
+Weird I don't see this one but I only have gcc 12 handy ATM.
+
+    gcc version 12.2.1 20230306 (ARC HS GNU/Linux glibc toolchain -
+build 1360)
+
+I even tried W=1 (which according to scripts/Makefile.extrawarn) should
+include -Werror=implicit-function-declaration but don't see this still.
+
+Tomorrow I'll try building a gcc 13.2.1 for ARC.
+
+
 >
-> Hi,
->
-> On Sat, Mar 16, 2024 at 9:51=E2=80=AFAM Conor Dooley <conor@kernel.org> w=
-rote:
-> >
-> > On Sat, Mar 16, 2024 at 04:20:03PM +0000, Conor Dooley wrote:
-> > > On Thu, Mar 14, 2024 at 02:20:38PM +0000, Caleb Connolly wrote:
-> > > > On 14/03/2024 12:11, Amrit Anand wrote:
-> > > > 2. A top level board-id property that isn't namespaced implies that=
- it
-> > > > isn't vendor specific, but the proposed implementation doesn't even
-> > > > pretend to be vendor agnostic.
-> > >
-> > > I pointed out previously that the Chromebook guys had some similar
-> > > issues with dtb selection when the OEM varies parts but there does no=
-t
-> > > seem to be any of them on CC here.
-> >
-> > That's maybe a bit harsh of me actually, I see that there's a
-> > chrome-platform address on CC, but I don't know if that's gonna reach
-> > the guys that work on these devices (Chen-Yu Tsai and Doug Anderson in
-> > particular).
->
-> Thanks for the CC. Yeah, I don't watch the "chrome-platform" list
-> myself, though maybe I should...
->
-> The Chromebook boot flow and how we've handled this so far is
-> documented in the kernel [1]. This method is what we've been using
-> (with slight modifications over the years) since the earlier ARM
-> Chromebooks and is, I believe, supported in both the depthcharge
-> loader (used in Chromebooks) and also in U-Boot, though it's possible
-> (?) that the U-Boot rules might vary ever so slightly. I haven't tried
-> using U-Boot to boot a Chromebook in years.
->
-> The current way things work for Chromebooks involves a heavy amount of
-> duplication. We bundle an entire "DTB" for every relevant
-> board/rev/sku combination even though many of those DTBs are 99% the
-> same as the other ones. The DTBs have been relatively small and we
-> compress them so this hasn't been a massive deal, but it's always been
-> on the TODO list to come up with a scheme to use DT overlays. We've
-> also talked about bundling a device tree that has the superset of
-> components and then using an in-kernel driver to set the status of
-> some components to okay and there is some overlap there in the
-> possible way to represent board variants. I think Chen-Yu is going to
-> talk about a few of these topics next month at EOSS [2].
+>> or (alpha)
+>>
+>> WARNING: modpost: "saved_config" [vmlinux] is COMMON symbol
+>> ERROR: modpost: "memcpy" [fs/reiserfs/reiserfs.ko] undefined!
+>> ERROR: modpost: "memcpy" [fs/nfs/nfs.ko] undefined!
+>> ERROR: modpost: "memcpy" [fs/nfs/nfsv3.ko] undefined!
+>> ERROR: modpost: "memcpy" [fs/nfsd/nfsd.ko] undefined!
+>> ERROR: modpost: "memcpy" [fs/lockd/lockd.ko] undefined!
+>> ERROR: modpost: "memcpy" [crypto/crypto.ko] undefined!
+>> ERROR: modpost: "memcpy" [crypto/crypto_algapi.ko] undefined!
+>> ERROR: modpost: "memcpy" [crypto/aead.ko] undefined!
+>> ERROR: modpost: "memcpy" [crypto/crypto_skcipher.ko] undefined!
+>> ERROR: modpost: "memcpy" [crypto/seqiv.ko] undefined!
 
-That's right. It's the last talk before the closing game on the last day.
+Are these from ARC build or otherwise ?
 
-Elliot is also presenting the board-id proposal at EOSS [3], which is the
-last talk of day 2.
-
-> In terms of looking at your specific proposal, it's definitely trying
-> to factor in a lot more things than the current one that Chromebooks
-> use. The Chromebook model was "simple" enough that we could just
-> leverage the compatible string, though the way we leverage it has
-> ended up controversial over the years. Yours is definitely too
-> complicated to work the same way. It seems like device tree overlays
-> would be a better fit? I'm not an expert so maybe this is already
-> solved somewhere, but I'd imagine the hard part is getting everyone to
-> agree on how to specify stuff in the DT overlay that allows the
-> bootloader to know whether to overlay it or not...
-
-I think qcom,board-id + qcom,oem-id maps to our board name + SKU ID + revis=
-ion.
-The difference is probably because we make our device codenames public? We
-don't actually have integer identifiers for each board family, though I do
-see the appeal of it.
-
-So it looks like this proposal is more about identifying boards without
-polluting (?) the compatible namespace with all sorts of combinations
-and hacks like we have.
-
-> [1] https://docs.kernel.org/arch/arm/google/chromebook-boot-flow.html
-> [2] https://eoss24.sched.com/event/1aBGe/second-source-component-probing-=
-on-device-tree-platforms-chen-yu-tsai-google-llc
-
-[3] https://eoss24.sched.com/event/1aBFy/shipping-multiple-devicetrees-how-=
-to-identify-which-dtb-is-for-my-board-elliot-berman-qualcomm
+Thx,
+-Vineet
