@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2AE131196;
-	Thu, 28 Mar 2024 15:44:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC67E130AC8;
+	Thu, 28 Mar 2024 15:44:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711640658; cv=none; b=ndUoJKcSEJokfXulbLSRTqnv07K2gP+A8efoowq4yvpGSmVd7EQV+ZXtHLtHzJB43K7MpfpgWPMveSd6sRd72eMEVvzCmJ3fVKvvMq7esOQ440SdIfMlzIQs3itvA6qLn91xj26wYKEVwmePrrO5I4lLNxtXabEt//stQRUx37I=
+	t=1711640658; cv=none; b=ODFI156aimm8o9j2Z2qTz9ihDrBZ+GWY2DeTk6vTaf4V4Ez3yC3+Qi1A2b0bvu7mZu5eJ7XP+HGvPw38INjCEsJgk5h4WCe5OC8r3dAh3ve0uXmbSoyuXNwcZHDsq4wXQYogYn6cBZwMOr/a7E8WCWv7JPkiTcwG/H7IQuv+ka4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711640658; c=relaxed/simple;
-	bh=MHDLw01aV7Y2y8q4FVOlVqqv1r/NUfwe173AEwvrpiQ=;
+	bh=1Xslj0bX+o+qcDYU8onEa8pSqJ8mESqy3GAr/e912mw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AHR2dbKUbXV6N46pxQ10qkeZ29wNxut0Kdg5uB1ZB+5U+AdakjwpbRg7lNpiQcbcM8pITUYXqiT1r//ra0axPYYfSJE+KfUQgd0o7QEHD3/qJBLkjh9OBcxuyk1D+ydqORZ7gYvndoeayrviOSjcNRE/OBwdsAFTO3hPLYqH/NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dKPD2wS4; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=dWAPhE+MEl4m4i6z3rLOVodLNt+lqwJks9MCGiVcdgRO8DqIZ95Qo3T7q5Cq4kFGlw8jtydxrZPX8kHh76Naiw9+d11rNyde6dN4ITb4rK3Grf/IUm4BOtxYV/26DfuWW/Lguv9EaYeQhP64Cgy0f4g1w0A+R7WZ6I0hDOJPGR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BIL5/EU4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dKPD2wS4"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 06321C4E66A;
-	Thu, 28 Mar 2024 15:44:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BIL5/EU4"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C379DC32795;
+	Thu, 28 Mar 2024 15:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711640658;
-	bh=MHDLw01aV7Y2y8q4FVOlVqqv1r/NUfwe173AEwvrpiQ=;
+	s=k20201202; t=1711640657;
+	bh=1Xslj0bX+o+qcDYU8onEa8pSqJ8mESqy3GAr/e912mw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=dKPD2wS418NUIbqJZhZ08bU1j9gcAOSF+5V8WUweINfFYLrG796kBAdHGPno8ouFE
-	 cfg24Z9mXJ4mMIMNgO8ptj6Bs31eL4WdrAlLq79VvMQkyDbGokebYEivh6+U7hgz+O
-	 lIgOraJK97jRcAkwbE0TQg2/DZ5tmtDQIYiutkDEgAGumoSAunQQsm0kNazW6mIHCu
-	 Qyn78HeyB3+aN6GcZbukSEEdRLmtZnjTx82OpkUxA0Bnzf+amJOOL7QEeZX23WU0dK
-	 llOxfI/qQ3r3tmo4wOcYVa2SqwdBtA4BPLXM5Jm2hxMKM0AI85vAEBwc6teCx4TZR3
-	 9goN7McNdwdsA==
+	b=BIL5/EU4crSIA+hN8ZBW3uB6/An+v9CpA4pRL+5bJxzh8fqIlDhbwPpVI+8dFW4It
+	 t0Nuf6FE6eVHfuzGpZGUQmKLbOrrwL+HaWmyuG9SqdtR532MYEL7tuFssiVtXjpLel
+	 wu80FmMxkVdEd4To7zzHYGohvCICq4OlvRAGRIz0xb2/2NfoxKW7kEhLXSEi06B/u1
+	 76cuf+jau+dyv0fm46kBT2ykBh2u+1osu6yZR+YiBL3uMO/h+/aLKW6Z2kLXxqB9g9
+	 K367J1KukI8v8wj/hDsXbx3AQ9T3wypfISSDg383nD7yRDxAMsbsPPdf537tFFG+bR
+	 Iy4rNTq2DIU5A==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1065CD1284;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C3ECD1284;
 	Thu, 28 Mar 2024 15:44:17 +0000 (UTC)
 From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Date: Thu, 28 Mar 2024 16:44:11 +0100
-Subject: [PATCH v3 10/10] bpf: Remove the now superfluous sentinel elements
- from ctl_table array
+Date: Thu, 28 Mar 2024 16:44:09 +0100
+Subject: [PATCH v3 08/10] kprobes: Remove the now superfluous sentinel
+ elements from ctl_table array
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-10-285d273912fe@samsung.com>
+Message-Id: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-8-285d273912fe@samsung.com>
 References: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-0-285d273912fe@samsung.com>
 In-Reply-To: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-0-285d273912fe@samsung.com>
 To: Luis Chamberlain <mcgrof@kernel.org>, josh@joshtriplett.org, 
@@ -74,19 +74,19 @@ Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
  linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
  bpf@vger.kernel.org, Joel Granados <j.granados@samsung.com>
 X-Mailer: b4 0.13-dev-2d940
-X-Developer-Signature: v=1; a=openpgp-sha256; l=940;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=918;
  i=j.granados@samsung.com; h=from:subject:message-id;
- bh=EHedMAAx8mJbivlU9QHUO7qJGc32TBFT3ByM4xDoG9I=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYFkE408xMhw90vhF81FOWcLfCE8LWhQfflT
- 61/EIF6yCrZ3okBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmBZBOAAoJELqXzVK3
- lkFPfZQL/3zdbAgEIU2dcwe2erodBotsa3e1HOBR1lR9Kv1mef/Eai0SkALWcSc5dDfORlh8Bpq
- PH8ootjUW/DunAVLKXTQn4VMu6CLt820UZOwAAUShG8wiPlD4fPaiCI3bJT2Gmei+/UblaMVCdT
- 7zSXlcmiXsNQpLq8wzHqy1pX7aghk8yJqVPHjwRh/RQdcVvFeabeB6ftt/HC5jB4xRGKOC2oRuT
- t1YyA9E3vlnRld0l3Uz4poLLs6b+/Hl1CYRdcR90Vamvfh2vrhHNkhSZalYTcUe6Zt35Kda6JmY
- h+Bn9Q93xvC9r8Ehl48JR/4OnKrelkTK5nibpYdaTr+qdGNmJMIlGTaIfwjxFPnT9wQwxHgSore
- qY5gbsjMkHcpBf/cSrodl7fYS+2m8r1N6uxoFO+qx6jK8BEHEkPUSly2nhgOStdKvBxcMqJo15Y
- /UHtNHyB50pyHMxZlSDGfg/qGcL5XYwLqrGyHpObIk+F5IXwU2yUuRmWXIZcFjiMMdWAeEM4C85
- rE=
+ bh=W9k8f49EwG/feirGtDw1FHGcG6plJdUzpOL5hpVCueM=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYFkE0ZcrBDVAp4O3SfOrgyc8WUlGwe1ykjS
+ ABM/79ogIBhtIkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmBZBNAAoJELqXzVK3
+ lkFPIp4L/2jEVev1Ry+FHuhUOpPE5D5ElBE2orb/y33yGm7mtGXFzKAMW8bq+PtlQw5Pu4SBw3g
+ ujwQmB3s4n3ZRJ2YfYwPdHaPKJNFYvJbf24y9Aa58BDtW92sRNapggll7sLkDoWHaUehAMmC3ht
+ LV89vSfFhng6Bzrz/MoTAtl8qyy1IM1RF7ASwOu1Q1jgEgyMw5/xpYlDksNUd/HP3GEjOl27I/U
+ IfF77tqPAX4oGhcI5ZI8l/2Js13SrNFOspXDoD3ctfuVJQ8mD5E4+uUrSaWyIqlMOMVCzvcSM8L
+ 7kkRm8s1XoX/pwKolO2w0dr2q3M5Wzm7L/ycTsrKH0sAqSS5DAXZ3aFwUmg0Xbs25N7LMsVNQ4/
+ l1BPYwsVLL7928+A+Ly/vfxMheOUkkSS5fiMY7kMh1cdoU4JqjjruiM0SeFQFjXwmSl7mVBt2GV
+ /b/2YR1FuOR2ptrzCF46iDCBOkpZZ4CyiuHZE1kNBenIZZDgZgZQ5alrbrswjTB0PEIzApN/2I4
+ BQ=
 X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
  fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
 X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
@@ -102,26 +102,26 @@ will reduce the overall build time size of the kernel and run time
 memory bloat by ~64 bytes per sentinel (further information Link :
 https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
 
-Remove sentinel element from bpf_syscall_table.
+Remove sentinel element from kprobe_sysclts
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Acked-by: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Signed-off-by: Joel Granados <j.granados@samsung.com>
 ---
- kernel/bpf/syscall.c | 1 -
+ kernel/kprobes.c | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index ae2ff73bde7e..c7e805087b06 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -5979,7 +5979,6 @@ static struct ctl_table bpf_syscall_table[] = {
- 		.mode		= 0644,
- 		.proc_handler	= bpf_stats_handler,
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 9d9095e81792..85af0e05a38f 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -968,7 +968,6 @@ static struct ctl_table kprobe_sysctls[] = {
+ 		.extra1		= SYSCTL_ZERO,
+ 		.extra2		= SYSCTL_ONE,
  	},
--	{ }
+-	{}
  };
  
- static int __init bpf_syscall_sysctl_init(void)
+ static void __init kprobe_sysctls_init(void)
 
 -- 
 2.43.0
