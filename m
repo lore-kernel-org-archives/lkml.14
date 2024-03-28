@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C555753E01;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F09130AF7;
 	Thu, 28 Mar 2024 15:44:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711640657; cv=none; b=oojjxZIsGkPfvXWK88H7xTynNdgr9m0go0lfMUlfMmEe7MrwXAmX6qNdy2zeJOtfn0t0PLXpVBMMg/eJmZh8O1+BgJ3W04i1Xc78LysSnhyJHXXpkbfb66KqypPVBBIbDF9j720lN1nK3z41y2ohkcJ6SXfD++mkkTKYqxh5orI=
+	t=1711640658; cv=none; b=tAHbxDhQoQa6TsjvCMuv28KJlFTrqjX5SFq8udDxDV4o8DAAbrIzZSt77jpUMsBzlCeaTDB3MkrSsXr7kOHyZa7Bf985V8XzLXm9SmZFUfJTqcsG+nR1Ccx3Vcg8xypKKHuC0MW1ZI2AfEicgX5lbCRnCJJPzmP9crqVqnN3IfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711640657; c=relaxed/simple;
-	bh=Vmrqd4VYI97OX3UoCRBO0aGzHn3DZ65T4UmGRZ9kf5s=;
+	s=arc-20240116; t=1711640658; c=relaxed/simple;
+	bh=OXbTyJl1vxc5TRrI32eYdOeapjZ52ijf4K6v5tuEd7I=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jsOHsH74KmZXM5KPKL65BzGlATrRj81iC1c7Z6pgPgdcwOmOgPpih1+X5YqQT+Go/Z7c78AD/gLNZUs+gmWtO5ZVMWmVzNvdfB6gYigwNaMhl+9/jQbJbm75oqr0m+PSChWs3kexxClgnpMuBa+HEzGHiqeRpIJCa4Tu5vnhqJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JCVwTnQ+; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=doYuGS1XFtYUQi9/AL02FSOsVi8H8HZiXUMMdVSgKmrdEWjB1aEi6vCEWZQ8K6WK/MDAhv1cTbGPEBFUmZYH89VaLU7/rZB9kjgSXKgXmWjnwpiPCfbRmMfnYUjkGO8im7/ZQylRV+Uz5Vx9xIVT7flcOj37EVSgOHZ5E+sIM+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PHjHtUB/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JCVwTnQ+"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7374CC32789;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PHjHtUB/"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B0B07C43399;
 	Thu, 28 Mar 2024 15:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1711640657;
-	bh=Vmrqd4VYI97OX3UoCRBO0aGzHn3DZ65T4UmGRZ9kf5s=;
+	bh=OXbTyJl1vxc5TRrI32eYdOeapjZ52ijf4K6v5tuEd7I=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=JCVwTnQ+x7gybO4HcOo69NZ4FlqWk4zA3JdUdqZDX0g8e4t5lS1pSfnnOtljB7lbZ
-	 4uZ4qBh3wMZTIjxqZdo7aoKzj5Bc/RliVaWhWz/YuQs2vjfXPG++EeQmgSvos57t5G
-	 3/6W7MS/J8Hw8BkLc24wAWOvIWqmFtlsI5fbgJ/ZAexYRUVqqYPktqArS0OXeWMGMd
-	 W+mSGYs//YQt73CcooHjN2l9P3FQDHg3Hyy7J+P704G5/6cPM1e2PPFiNWF68/s8d2
-	 z8UWN/MkH3D6cfPLZu2PlIKTk3+uGLNVzRsY3kmkUnuDJRJvT5MrnyRtr/RBrGsRGe
-	 IqA9E1nAN97cA==
+	b=PHjHtUB/CL+hgc6AU4LraLMdcpGt7+AWeVSexEK3/rodPd6YNAVXSjAkP+Yh76B0P
+	 IacIso8zESjrg3Kdi8KPWUOQSzLQRr6F4vKVzeBuRGIheNyXslnvt3iPl0y55YC4Gm
+	 OSDLdS9oazkN8/BcHrDPh1nfTkCFzQ0KFE07Jz4FGC46SaHJ6MvJe/AcmRIog3fAWQ
+	 zuVe3SpvIITQN0ARO3msWdaPNLDjWoxDKiQcINA2rMETyEnzBNHi6e1CeBKWV+4p0o
+	 fnVV1+na6klELlIxTqAu38AdcdcUZIHfC10oM349nj4lh3rH8MnqN+i2tfXzzVfYM4
+	 zNvaFuZBBr3Uw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65602CD1283;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A98CD1288;
 	Thu, 28 Mar 2024 15:44:17 +0000 (UTC)
 From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Date: Thu, 28 Mar 2024 16:44:06 +0100
-Subject: [PATCH v3 05/10] seccomp: Remove the now superfluous sentinel
+Date: Thu, 28 Mar 2024 16:44:08 +0100
+Subject: [PATCH v3 07/10] printk: Remove the now superfluous sentinel
  elements from ctl_table array
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-5-285d273912fe@samsung.com>
+Message-Id: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-7-285d273912fe@samsung.com>
 References: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-0-285d273912fe@samsung.com>
 In-Reply-To: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-0-285d273912fe@samsung.com>
 To: Luis Chamberlain <mcgrof@kernel.org>, josh@joshtriplett.org, 
@@ -74,19 +74,19 @@ Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
  linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
  bpf@vger.kernel.org, Joel Granados <j.granados@samsung.com>
 X-Mailer: b4 0.13-dev-2d940
-X-Developer-Signature: v=1; a=openpgp-sha256; l=933;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=918;
  i=j.granados@samsung.com; h=from:subject:message-id;
- bh=a55RZNGRyCcB6UX1xGlETtlXB9b6LmLpywnhMBEQ5pU=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYFkEsh4Mgom4fbM//0WTCWMwTNRwVc+hUKT
- bWZpFJoow2pAokBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmBZBLAAoJELqXzVK3
- lkFPn+UL/3RnBt3ZmbhogGz7i5z9kb5DzhirswdhfPwdZKJcT+COv1HuJLrH3qwxMuZZTmz1PA7
- mIeYXNNDG1/pPSZJJ6LgIp7SX+zGrTIF/9dTN/LZWZ14CvacGSErEAPf+4BI3dk5s0wQ4oPPkwx
- wEDzqfAv6Qi8Sx2/8PNIdVIkayEp0VCoR7oYAEH9EPhp2z+mvAo/IIsWE++pFR5w60EZ2yhUXzt
- PbrUIE55/dlkiEkv0uHHNJgBS6IB/a94tRe5C50He/6nfRvpRLt+yNlY+/xQms4LwBseWOtm9Q/
- qStfIDZCT9L9++Ccz4RnqTxPW/+O3DTkc/jenpOYzZdcwsm1rXMh8/6l6h7iEktJA0G2EWfRhR5
- o8Xijj9xK4Z/KTTbtkK9HL7BU555npI0wKswG5B9vAAUIDkC194D9+/XYYLZGUyrwYPF3bQmlLP
- yp+QgLvZs8R5uVRGCsWxhRdttwnfxF2iqNNE3cMVLgOFTkb3p8c5Efs8fHOvcvBHFPm1cJdfPw7
- kY=
+ bh=dEvSs5Sk09Mr38w6TQjFck2BDsVi8Y4KzQNb8dQHQ2k=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYFkE1nrrtIzi/mbTRBEt4ncdh/MX4YK+/zN
+ V1PrbBTKAfDkokBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmBZBNAAoJELqXzVK3
+ lkFPNWsL/3Vy959WXECEg0VHaMhwRrdeyk3YtyYiGM7YxZsqt43CPCmlwvOEGQSSNRe1pS5OSMs
+ as4xeTTv4VMjZ8J2nmraoc0S/8dF5jnJUIt36P+mLuUuANd4o6Vj5TtZACS2XscOBqTR1cAn5fW
+ fMOpEQ1Qibjc3TKzJa4nWCI1s2sQZdd5pmM6Z6bTS6xkoEC0M+mOj3xt/S+8Xt4QCjBqSZsXkMR
+ 7Er9xP7PA6naseg7YghqEaY5h/1ELMr+jA+csTHCkKXTtwzySlij4bwqhgZQz1iLXfik70NXeeQ
+ Stj2pa/YCAGbF9OIHb6NTcbeiwGBweGC2BsLkn9+pE0Gh+OmOfGbkApG5e9Ugcf8deJxVCBIPGN
+ pJXIl3EVZHAKah/Gw2pcPZJsStYJ23zXwRNG5yc8db2L2ivpaMfUlVk8Hj8MN/nJ47F8MFJVlp0
+ VMmcsLlYqBx/9NDO/CcWbF6+c2zvD5PSszPypQOR7kOGo6DboCX7ux3FMIrrDqgjTGoEtK6hqh5
+ +4=
 X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
  fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
 X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
@@ -102,26 +102,26 @@ will reduce the overall build time size of the kernel and run time
 memory bloat by ~64 bytes per sentinel (further information Link :
 https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
 
-Remove sentinel element from seccomp_sysctl_table.
+rm sentinel element from printk_sysctls
 
-Acked-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Joel Granados <j.granados@samsung.com>
 ---
- kernel/seccomp.c | 1 -
+ kernel/printk/sysctl.c | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-index aca7b437882e..7ed72723fb8a 100644
---- a/kernel/seccomp.c
-+++ b/kernel/seccomp.c
-@@ -2445,7 +2445,6 @@ static struct ctl_table seccomp_sysctl_table[] = {
- 		.mode		= 0644,
- 		.proc_handler	= seccomp_actions_logged_handler,
+diff --git a/kernel/printk/sysctl.c b/kernel/printk/sysctl.c
+index c228343eeb97..3e47dedce9e5 100644
+--- a/kernel/printk/sysctl.c
++++ b/kernel/printk/sysctl.c
+@@ -76,7 +76,6 @@ static struct ctl_table printk_sysctls[] = {
+ 		.extra1		= SYSCTL_ZERO,
+ 		.extra2		= SYSCTL_TWO,
  	},
--	{ }
+-	{}
  };
  
- static int __init seccomp_sysctl_init(void)
+ void __init printk_sysctl_init(void)
 
 -- 
 2.43.0
