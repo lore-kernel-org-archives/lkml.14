@@ -1,128 +1,75 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111F47D071
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 14:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id BB9508121F
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 14:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711637232; cv=none; b=cF4W8D4/tWTGFEm1OLKgZMXsXlK2XY+LMiw3QdakPjsAiIsBryqJBKxPRLVkAkikaTSgvk001xeor3lXEnQYQXj1lIm9TMzs3CS/cJeLqpxIZqhDeTu/8m5czjkQ4ugPktGnQpoVh34QoT8E3ykFPV9pfKCK8CR0cZ1y0E0HJls=
+	t=1711637520; cv=none; b=u/ffLIQGHjYAhgPQOxD+jCRwllGx9qSiPcJq166DWL9buh8rtedOB+s3tDTfdJcaUj/22DOSJDc5a1SSqw/ELz6BOQIYPerfLcyAFfnMGJVLkLLOI0sYFM/CrJIR29tFZFsSzkdSCQTM1PKFk2UBvAanMMnElPkzRKsqMzOeNMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711637232; c=relaxed/simple;
-	bh=n1HQmUHKBroyBMQujO5c42Joq0+GVgze8L6DxO1rOxo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BoJz5zokHP7HL+bsScjviFR+QCbPM+GB2HGMdJxXTnaBsZbu44rVu3JbYwENfPGKqfCNqqPWDDAnVdDtOKeWOGBpC+/sqPUpS8YuF6ONHIu8zFflC3zYmpleOVS+eQwpH3qMilIhkoBzq/YiTPtgNPUi9PsxsZyZgONlcrltIMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JTq25Hrs; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JTq25Hrs"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a472f8c6a55so138143066b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 07:47:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711637229; x=1712242029; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=NNfnpvUaxIjqgept1H9JPNTektamoKYhe963ZSnN0sA=;
-        b=JTq25HrsN10vPk37dRcd0gbm0gnXNWCraKme9BVBd/h9uUer/TSWwk7DIovGnY0xSb
-         4eaGG0eOZkZheGwI/iFL6rVDHCdnzu9gLxO7PE9Ns5poZ6vJZfCIhFGGWv++1HPmSjv+
-         WAjuvsgmQACNZbAnSMnRvDw8NB2NYFAcWu57v7gz+V2kSYL3isT0uWxqTc/YLsoNkv/f
-         pvF4bzQXVPBbg2dceoQqhNgybGTa25nyAwSQx9tqDuOmRrdIQH+PhLSG4JfG8cK8O+Y0
-         zBT1eBQXPDxuP9mPxo+BAWs2h0bxQ8BPHsyB5uOXA0RasUSLmyNfnbEpaGMgaTLM9CDI
-         T42A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711637229; x=1712242029;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NNfnpvUaxIjqgept1H9JPNTektamoKYhe963ZSnN0sA=;
-        b=qmWsEc41XM6g8ufWZpn/QHYrsj4lP+fcVr5lRpbhsaehjLz5ohnh8sIngIop7cvsqD
-         mksLENpR1iZ5kGcoG0jcFMiNhS5w31W1vM73elwseHIm3Ciq56qnhEcDocis43gQX84a
-         h1AN/JgbZO66tvaWjHBCywGeKoSL1hgbYZveZIvtR6Sg8wIIHXAIkKbhueLVTwAWqLo0
-         hZFal3goT4NVOWQrlgeQd9BOZ0+X2RgbhS/ob4JOmT11LDnNFdAybpmQTzeWlR1RthVO
-         Ank90Y+q6hBVJXe+Yak1+J+uTHq1HWUqQU5YAoFuBRGi7HjgqOc9gpToViRaXhMopwOI
-         Ps3w==
-X-Forwarded-Encrypted: i=1; AJvYcCWD9dlLSLP4LvHjYSEfU9aMWke/8Y3sBx7jExp+oU+Ve+LmZKeg6syITPofjp4cI+B0gNwxZoDHEQuQxj4zr+2dhBF8JDd5XPHTkf8V
-X-Gm-Message-State: AOJu0Yx/8UxeESjzq0T1dUL3AjOLxS8VYodFZhfEu2IyBqGsTS+/og9C
-	mXI4DVyQyEOta3fGik5EQwnG0fqIsTLQwvNq8nJvY97+30HmPEfrx795YMbNJM9EW++HA14NO4u
-	j
-X-Google-Smtp-Source: AGHT+IFg5oo8KN4OdRQm06Vbk0P3S3xRqgJbhzWurMvglwATXbwqfiNl5OCap2pbOV3Zy/uJY0t09A==
-X-Received: by 2002:a17:906:f888:b0:a47:535e:1dc2 with SMTP id lg8-20020a170906f88800b00a47535e1dc2mr1999654ejb.40.1711637229373;
-        Thu, 28 Mar 2024 07:47:09 -0700 (PDT)
-Received: from [192.168.92.47] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
-        by smtp.gmail.com with ESMTPSA id f6-20020a170906ef0600b00a46af0fbf5dsm821413ejs.103.2024.03.28.07.47.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Mar 2024 07:47:08 -0700 (PDT)
-Message-ID: <8e09b779-a18f-46b4-926c-40e2a5782d85@linaro.org>
-Date: Thu, 28 Mar 2024 15:47:05 +0100
+	s=arc-20240116; t=1711637520; c=relaxed/simple;
+	bh=fDPLCIyTGAjC+KUo0nZjfOc6qxfhbVrcbWZOLvzn1+E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SaEJ+yEwYQxjk2nNgTHp654GHdW0muacc1Ml+1VitsP+LDFrq+DSxws21+V8yv7cvfB7cJRUSifKEpRCwyTeYz11FtuOLoO73bMioZmtKZI5QFwiEWJRYWC1ybg75dn4tF/RdbtH9VPxzpXjB07ldenGFW55UeM9WBS+Q3yQPXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 961409 invoked by uid 1000); 28 Mar 2024 10:51:51 -0400
+Date: Thu, 28 Mar 2024 10:51:51 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Norihiko Hama <norihiko.hama@alpsalpine.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+  "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+  "usb-storage@lists.one-eyed-alien.net" <usb-storage@lists.one-eyed-alien.net>,
+  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] usb-storage: Optimize scan delay more precisely
+Message-ID: <0c99daaf-c727-467f-b8c1-ba8846d8a9ab@rowland.harvard.edu>
+References: <20240327055130.43206-1-Norihiko.Hama@alpsalpine.com>
+ <2024032757-surcharge-grime-d3dd@gregkh>
+ <TYVPR01MB107814D7A583CB986884AD4B290342@TYVPR01MB10781.jpnprd01.prod.outlook.com>
+ <a446cdf4-3a9b-43d8-b22b-78c20cce2b4f@rowland.harvard.edu>
+ <TYVPR01MB10781AA8B37E147E318597B46903B2@TYVPR01MB10781.jpnprd01.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: arm: qcom: Add Samsung Galaxy Z Fold5
-To: Alexandru Serdeliuc <serdeliuk@yahoo.com>,
- Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240328-dt-bindings-arm-qcom-add-support-for-samsung-galaxy-zfold5-v1-1-cb612e3ade18@yahoo.com>
- <ca4ed5e3-32ea-451a-82ca-25fba07877dc@linaro.org>
- <33e23d1c-5b6f-4111-9631-0f8db1100d0c@yahoo.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <33e23d1c-5b6f-4111-9631-0f8db1100d0c@yahoo.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TYVPR01MB10781AA8B37E147E318597B46903B2@TYVPR01MB10781.jpnprd01.prod.outlook.com>
 
-On 28.03.2024 3:42 PM, Alexandru Serdeliuc wrote:
-> Hi Konrad,
+On Thu, Mar 28, 2024 at 03:04:47AM +0000, Norihiko Hama wrote:
+> > On Wed, Mar 27, 2024 at 07:39:55AM +0000, Norihiko Hama wrote:
+> > > > Sorry, but module parameters are from the 1990's, we will not go back to that if at all possible as it's not easy to maintain and will not work properly for multiple devices.
+> > > >
+> > > > I can understand wanting something between 1 and 0 seconds, but adding yet-another-option isn't probably the best way, sorry.
+> > > 1 second does not meet with performance requirement.
+> > > I have no good idea except module parameter so that we can maintain backward compatibility but be configurable out of module.
+> > > Do you have any other better solution?
+> >
+> > Can you accomplish what you want with a quirk flag?
 > 
+> I think that it's hard to do that because 'quirk' is specified for a device
+> but it's difficult to identify the devices to make quirk, especially for future introduced devices.
 > 
-> Thanks, yes, I am new to b4 and sending patches, in a few minutes I will add the second patch.
-> 
-> That actually add the device tree, but  without the previous patch it showed me a warning, and with both patches provided another  warning that i need to split them in two.
+> Can we change the design of existing 'delay_use' ?
+> For example, 'delay_use' is 32-bit value and the value "1000 secs" does not make sense to set it,
+> So if it's set to '1100', it's treated as "100 / 1000 = 0.1 sec". Is this possible?
 
-Oh no, you should send them together! Could you please paste the warning so that
-we can work out the issue?
+Here's an approach that Greg might accept.
 
-Konrad
+Since we already have a delay_use module parameter, we could add a 
+delay_use_ms parameter.  The two module parameters would display the 
+same value, but delay_use_ms would be in milliseconds instead of in 
+seconds.  (This is similar to what we did for the autosuspend and 
+autosuspend_delay_ms sysfs attributes.)
+
+To make it work, you would have to add the new module parameter and 
+store its value in milliseconds.  You would also have to change the 
+existing module_param() definition for delay_use to module_param_cb() so 
+that the get/set routines could divide/multiply the 
+delay_use_ms/user-specified value by 1000 to convert to/from seconds.
+
+When you write the patch, don't forget to update
+Documentation/admin-guide/kernel-parameters.txt.
+
+Alan Stern
