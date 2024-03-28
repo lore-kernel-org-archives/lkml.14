@@ -1,190 +1,291 @@
-Received: from hedgehog.birch.relay.mailchannels.net (hedgehog.birch.relay.mailchannels.net [23.83.209.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D537E80BE0
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 19:21:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711653714; cv=pass; b=ON1BxCRsJlX9OLUDw2Ind9maGKLoSDKX9e6SSaI3FxnkEOwEvy6m1YF+pe7NpbyGbB84MRzfOX9kM68mhl7UktD4gi+1kgPX2jIL/1v2SMDoZAh1szq8eLyrkP+nxf0f84NJcnWdAoyruEzDeeTQ/Aehzxna+NpSDLDTpTacSfI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711653714; c=relaxed/simple;
-	bh=gx9qPOOQKHzVmVAf8SKh3hRmJgVS3K5xbQ++1OuXNYA=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3410E41757;
+	Thu, 28 Mar 2024 19:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711653794; cv=none; b=bu//DYiCGmuj2alEfr45xIJM6tF7LAYMaUM7tXZ/5oljd0miADsZ8aDaEXxJSt/BFT8T7im4qF2kiriOI3Y81rbEGHpI78J7nfEHFWRouT8OLz9FoZ07JiB7wkuzOuv1TzeInj7IudhBmizlqfNr7Sv6Kj71zZfLN5kvgOzStcs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711653794; c=relaxed/simple;
+	bh=Qkh+5aM9AgMrPiE9S446jPnPgfztZdsPallUAN8x3Xc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jdxgf4ndLYZRo+d76+hIS4qwTSW7yxHlydddCr7j7Zz4E3X7EjqMd1ioxxfXkS68vPU7yt0jxQPbxt56sEOBKxaoNwx5/yFJHT7+jZp1/NR9Z6c18xvFs3hODmOTWyEuZYwSGA0aOMSA4dxip0Opaoj+JAawXPhN0W5zZkJlvHM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com; spf=pass smtp.mailfrom=templeofstupid.com; dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b=jqJ3pmAW; arc=pass smtp.client-ip=23.83.209.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=templeofstupid.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=SZGaWBu54moYyOZ7U1PWnh9z9YLyAHoYL105+GzRNOFXm6w1P00r86E5tJCMDdyb6VMMPp0ECHWkEEM4H0/vbuwaVxSi7cZTv0dD9/Ljre1sw+x2khR4N/g6OmrY8lFeiYUJGx5guFDRvrETepl1sOwB2MTAkwcoak8dtklnyfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WBGRgtAY; arc=none smtp.client-ip=209.85.167.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="jqJ3pmAW"
-X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 79B5E100558
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 19:05:18 +0000 (UTC)
-Received: from pdx1-sub0-mail-a310.dreamhost.com (unknown [127.0.0.6])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 09C29102BC9
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 19:05:18 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1711652718; a=rsa-sha256;
-	cv=none;
-	b=okEpkO9FUBqnbY70r+DkpqAXjbFwPosF5kpb0QXy4iXQJkvXzY8gfkh5mBzyxbRTNmrarI
-	A97DqNQenzhvVJu2troA3yWzm80vjJQyX4D7E86TFT9qT/f0FBFizLuxTqT2Zhq88rxfmQ
-	KRvL5kz/EEDZFXtuWL4Hc/sXfCPrnDE2ize+REdry1LlrW3As9+5sVOlWg+MPIhLh+8G3J
-	90IcZmyyxRsRGI3eQ3OA2Sb4ahIEmyi2QwnhW97CcEYbL5R/BXi5+03NX2B5JQyOjvSiUI
-	/AFQzgr0a8FJllHleBZLkQNwVv0THigvgk0dUTI2zIOPNipbmZ5XDE2A5pC1ag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1711652718;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=CyPAt3OCMyMrdjD1IpXOFJVGM6jxVVGih0kVtDn4WME=;
-	b=31cNtM3Eron7yzovJ9U4jYIpK3lKBw11acGASqL2K4EkD9Dxm2iPVQsV4zX19RmQakkJ+u
-	+seTag6T6MhOZE9NkyetHAnmx6iuVJ8H25oKUJB/1EFfwjqbULBO1U5OsIRu4tAxkUvWJS
-	rC6jgqlNa1tDmeLUvnWIiVmWc9n9e2y/ylrxSRdQ+LnSfi2gM1gtl9AihECBuTD1hylzxk
-	YGX5hsAJ/NNCAXT8VAekYBPvf4a5xuIjGWKRONywYVdWle6rctn8BKzD7WY+uJLCFJCNUW
-	v4gR4cw407rj3ZkNR9ppVab5xxlNCUAn7LKr8FYpcNMZA+d/zq4aX6gVNNOdCw==
-ARC-Authentication-Results: i=1;
-	rspamd-699949c56f-t4wlw;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=kjlx@templeofstupid.com
-X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
-X-MailChannels-Auth-Id: dreamhost
-X-Tangy-Rock: 79566ced6cd99ec4_1711652718388_787268094
-X-MC-Loop-Signature: 1711652718388:871828371
-X-MC-Ingress-Time: 1711652718388
-Received: from pdx1-sub0-mail-a310.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.126.216.122 (trex/6.9.2);
-	Thu, 28 Mar 2024 19:05:18 +0000
-Received: from kmjvbox.templeofstupid.com (c-73-222-159-162.hsd1.ca.comcast.net [73.222.159.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kjlx@templeofstupid.com)
-	by pdx1-sub0-mail-a310.dreamhost.com (Postfix) with ESMTPSA id 4V5CfP2dB6z1Q0
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 12:05:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
-	s=dreamhost; t=1711652717;
-	bh=CyPAt3OCMyMrdjD1IpXOFJVGM6jxVVGih0kVtDn4WME=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=jqJ3pmAW3waag/++QEaE8tUYDpx3YpdCdmhNqEwcrk8aSXEAiJLSlXveFT9+4R+cx
-	 getQ3q2UTJ53OK06i3DARckFWw7yC3nxYDvWB6s9bM0UgszOYia8maTBtvhQmirmQR
-	 ID9VjsHHQj71u8OJ8dceCBvSkjsy/2613Gm9tujlQXJCRZ/oH1poe2PIdLoxdKZp0R
-	 P2JJtHncKWq4DJwPSMfLnHGK7pnVozMgC43fgR38tW0xl/Hw1Nvjtu2yjNWzZC5WzA
-	 R1Jlas3KePcId4VF+rGvNLMb0AaU08i4TxZKUsMXB3sX7RHbA/2ahiLfpiSNEdTYBH
-	 TzsyIrmNh7pVA==
-Received: from johansen (uid 1000)
-	(envelope-from kjlx@templeofstupid.com)
-	id e004a
-	by kmjvbox.templeofstupid.com (DragonFly Mail Agent v0.12);
-	Thu, 28 Mar 2024 12:05:08 -0700
-Date: Thu, 28 Mar 2024 12:05:08 -0700
-From: Krister Johansen <kjlx@templeofstupid.com>
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>
-Cc: James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Ali Saidi <alisaidi@amazon.com>,
-	David Reaver <me@davidreaver.com>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: arm64: Limit stage2_apply_range() batch size to
- smallest block
-Message-ID: <ebf0fac84cb1d19bdc6e73576e3cc40a9cab0635.1711649501.git.kjlx@templeofstupid.com>
-References: <cover.1711649501.git.kjlx@templeofstupid.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WBGRgtAY"
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3c3ab85050cso901644b6e.1;
+        Thu, 28 Mar 2024 12:23:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711653790; x=1712258590; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=GyFGSwdDS+8X5fWOjo2s+K1AMkRQoOt7S254R+rI76g=;
+        b=WBGRgtAYY1ul09qAQP15jHMyDDv17c6U7/Ep4/YYWw35GKpQHLjwAwuQSHdloWIIeA
+         gW9Jt7Q5sV2fVwkj9HapX68tvUyfaQsiZnWp8m7SLVErSzrowhkaNAlk56e0IN/GzyjG
+         PC5mhNeEoemZdnaWUg9v14+ihNarMnOAdJG8DWJ+lQd6jK3un4VImm3KnUV/XwYRoc1h
+         IXDBTINXMKmckjTOs1lJalMm1jPYjpvd+AF1IYu3DfwmClF9h8wEt8bSwWWZQIJFiwLK
+         EVRzw/49hHDKOsXMYFnH4v7sh2FKwO2xspmYv3kvxsgIKKiGB6r5O6PiupWfNXLWMtaM
+         7FfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711653790; x=1712258590;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GyFGSwdDS+8X5fWOjo2s+K1AMkRQoOt7S254R+rI76g=;
+        b=mk1wel8mvvt4cwLLAIyFMeaKgtXNLdN1CKLxowQ2Sr6xBw4BftjDunmovdCaQm/ZaW
+         Lk5O33PepRMxRqznla05KIoAdJ+GwwwtIlHiGOgfM+MFers74i0vLRCt6gvWktpXf9kr
+         SAFafc/BRl+l1kaP4Ph7LXChkLjCE7OAwoi6bjZ25vqkXDSyXbrUXBs6kf6mGULB81Py
+         aofehRa2i2ajWT4Q9hol6O/GAuZuRDGAlAogHOfxyvEhMBi0HLFNO+/XOKNN/kl9zVt7
+         cIE/NKkCjy/SGzIr0lf6fnXxkH1g8QFCO4nvFki13sLdmk12bi+OYwD14a1P/8IWne/S
+         VeuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWFEBTGVkl2TFh0G/95wWsR/AauuxWXhM/EiMOjvDLCnn7LMV7IW1jBQTQoqvyAZ4EbfPEIIU8Ob7mA4nT2YU5cKMUuCDvVL2T3YCW0URz6UN6RkNCLnWGSwQ2KTJI0pQGFfIQ2tDUGcNvJf9EaHo/t7yaQvvsSNgkg4H0BnPXwzpMCv5XVFaNHSsPya6gJ011OUvYnpO1SsKRSfBtNFFaWz9Ma1wIl2B7n0MryyUZ4RDVgNjtknKIAEHqJYOvpXU0ZOeakzs6Z0RV/lHpl+CmXYjeZDsmyXXhIDDVi8CxH7S6pWw4X5ChOr37S49gQ2WWTTH1ol67tCl892485svaYBlW3cZnG/BpgE3IAfPPHc+1Op3ymevp98T/L/uwkhVknQXIRSvtv2Br8qM0S0ROBtPSGK6Ute9aRR+/M6IuQPQr37TpOZOYE3ErxUrp+PFgr0i2x8x0dQN/ANrCJYeD++EcyF/vOCoRWn7z1o2FtTX8dK/p/ji3FjMtAh/KVRQjZzIZ/ZE5cS6e+b9L+p81EyHRpN9XUWlZd6kB+kIW60ze4K/lPyWJljypNFRvLmNYt6BVDgzctVjEpQgDouFc=
+X-Gm-Message-State: AOJu0YwN+MOo5THiv+pYxZuUCeqtwbCA32SxJJXdQy4hFBY7Y+y3c/uE
+	dQaAQyJCe/fdxMwlVGGubf3TyiWWF0e46C0rwXfda2mlAyT2D0E=
+X-Google-Smtp-Source: AGHT+IFK1zqNOwufMazqscK9oHIt3Gnza7CUH20lAptPqfXk7u6zVWm/s/9LmWvz7C9QCTeD+gjnYA==
+X-Received: by 2002:a05:6808:3087:b0:3c3:d324:33e5 with SMTP id bl7-20020a056808308700b003c3d32433e5mr320267oib.15.1711653790263;
+        Thu, 28 Mar 2024 12:23:10 -0700 (PDT)
+Received: from serve.minyard.net ([47.184.181.2])
+        by smtp.gmail.com with ESMTPSA id v12-20020a9d7d0c000000b006e67ac8b8a2sm346096otn.78.2024.03.28.12.23.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 12:23:09 -0700 (PDT)
+Sender: Corey Minyard <tcminyard@gmail.com>
+Received: from mail.minyard.net (unknown [IPv6:2001:470:b8f6:1b:b987:69e:202a:697a])
+	by serve.minyard.net (Postfix) with ESMTPSA id A60B1180011;
+	Thu, 28 Mar 2024 19:23:08 +0000 (UTC)
+Date: Thu, 28 Mar 2024 14:23:07 -0500
+From: Corey Minyard <minyard@acm.org>
+To: Allen <allen.lkml@gmail.com>
+Cc: Allen Pais <apais@linux.microsoft.com>, linux-kernel@vger.kernel.org,
+	tj@kernel.org, keescook@chromium.org, vkoul@kernel.org,
+	marcan@marcan.st, sven@svenpeter.dev, florian.fainelli@broadcom.com,
+	rjui@broadcom.com, sbranden@broadcom.com, paul@crapouillou.net,
+	Eugeniy.Paltsev@synopsys.com, manivannan.sadhasivam@linaro.org,
+	vireshk@kernel.org, Frank.Li@nxp.com, leoyang.li@nxp.com,
+	zw@zh-kernel.org, wangzhou1@hisilicon.com, haijie1@huawei.com,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, sean.wang@mediatek.com,
+	matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
+	afaerber@suse.de, logang@deltatee.com, daniel@zonque.org,
+	haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
+	andersson@kernel.org, konrad.dybcio@linaro.org, orsonzhai@gmail.com,
+	baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com,
+	patrice.chotard@foss.st.com, linus.walleij@linaro.org,
+	wens@csie.org, jernej.skrabec@gmail.com, peter.ujfalusi@gmail.com,
+	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, jassisinghbrar@gmail.com, mchehab@kernel.org,
+	maintainers@bluecherrydvr.com, aubin.constans@microchip.com,
+	ulf.hansson@linaro.org, manuel.lauss@gmail.com,
+	mirq-linux@rere.qmqm.pl, jh80.chung@samsung.com, oakad@yahoo.com,
+	hayashi.kunihiko@socionext.com, mhiramat@kernel.org,
+	brucechang@via.com.tw, HaraldWelte@viatech.com, pierre@ossman.eu,
+	duncan.sands@free.fr, stern@rowland.harvard.edu, oneukum@suse.com,
+	openipmi-developer@lists.sourceforge.net, dmaengine@vger.kernel.org,
+	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-mediatek@lists.infradead.org,
+	linux-actions@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-tegra@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-s390@vger.kernel.org,
+	netdev@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 6/9] ipmi: Convert from tasklet to BH workqueue
+Message-ID: <ZgXDmx1HvujsMYAR@mail.minyard.net>
+Reply-To: minyard@acm.org
+References: <20240327160314.9982-1-apais@linux.microsoft.com>
+ <20240327160314.9982-7-apais@linux.microsoft.com>
+ <ZgRePyo2zC4A1Fp4@mail.minyard.net>
+ <CAOMdWS+1AFxEqmACiBYzPHc+q0Ut6hp15tdV50JHvfVeUNCGQw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <cover.1711649501.git.kjlx@templeofstupid.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOMdWS+1AFxEqmACiBYzPHc+q0Ut6hp15tdV50JHvfVeUNCGQw@mail.gmail.com>
 
-stage2_apply_range() for unmap operations can interfere with the
-performance of IO if the device's interrupts share the CPU where the
-unmap operation is occurring.  commit 5994bc9e05c2 ("KVM: arm64: Limit
-stage2_apply_range() batch size to largest block") improved this.  Prior
-to that commit, workloads that were unfortunate enough to have their IO
-interrupts pinned to the same CPU as the unmap operation would observe a
-complete stall.  With the switch to using the largest block size, it is
-possible for IO to make progress, albeit at a reduced speed.
+On Thu, Mar 28, 2024 at 10:52:16AM -0700, Allen wrote:
+> On Wed, Mar 27, 2024 at 11:05 AM Corey Minyard <minyard@acm.org> wrote:
+> >
+> > I believe that work queues items are execute single-threaded for a work
+> > queue, so this should be good.  I need to test this, though.  It may be
+> > that an IPMI device can have its own work queue; it may not be important
+> > to run it in bh context.
+> 
+>   Fair point. Could you please let me know once you have had a chance to test
+> these changes. Meanwhile, I will work on RFC wherein IPMI will have its own
+> workqueue.
+> 
+>  Thanks for taking time out to review.
 
-This author tested network and storage where the interrupts were pinned
-to the same CPU where an unmap was occurring and found that throughput
-was reduced about 4.75-5.8x for networking, and 65.5x-500x for storage.
+After looking and thinking about it a bit, a BH context is still
+probably the best for this.
 
-The use-case where this has been especially painful is with hardware
-virtualized containers.  Many containers have a short lifetime and may
-be run on systems where the host is intentionally oversubscribed. This
-limits the options for pinning and prefaulting.  Although NIC interrupts
-allow their CPU affinity to be altered, some NVMe devices do not permit
-it.  Some cloud-block storage devices have only a few queues, which
-means unlucky placement can have high performance impact.
+I have tested this patch under load and various scenarios and it seems
+to work ok.  So:
 
-Further reducing the stage2_apply_range() batch size has substantial
-performance improvements for IO that share a CPU performing an unmap
-operation.  By switching to a 2mb chunk, IO performance regressions were
-no longer observed in this author's tests.  E.g. it was possible to
-obtain the advertised device throughput despite an unmap operation
-occurring on the CPU where the interrupt was running.  There is a
-tradeoff, however.  No changes were observed in per-operation timings
-when running the kvm_pagetable_test without an interrupt load.  However,
-with a 64gb VM, 1 vcpu, and 4k pages and a IO load, map times increased
-by about 15% and unmap times increased by about 58%.  In essence, this
-trades slower map/unmap times for improved IO throughput.
+Tested-by: Corey Minyard <cminyard@mvista.com>
+Acked-by: Corey Minyard <cminyard@mvista.com>
 
-This introduces KVM_PGTABLE_MAX_BLOCK_LEVEL, and then uses it to limit
-the size of stage2_apply_range() chunks to the smallest size that's
-addressable via a block mapping -- 2mb on a 4k granule size.
+Or I can take this into my tree.
 
-Cc: <stable@vger.kernel.org> # 5.15.x: 3b5c082bbfa2: KVM: arm64: Work out supported block level at compile time
-Cc: <stable@vger.kernel.org> # 5.15.x: 5994bc9e05c2: KVM: arm64: Limit stage2_apply_range() batch size to largest block
-Cc: <stable@vger.kernel.org> # 5.15.x
-Suggested-by: Ali Saidi <alisaidi@amazon.com>
-Signed-off-by: Krister Johansen <kjlx@templeofstupid.com>
----
- arch/arm64/include/asm/kvm_pgtable.h | 4 ++++
- arch/arm64/kvm/mmu.c                 | 2 +-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+-corey
 
-diff --git a/arch/arm64/include/asm/kvm_pgtable.h b/arch/arm64/include/asm/kvm_pgtable.h
-index 19278dfe7978..b0c4651a4d9a 100644
---- a/arch/arm64/include/asm/kvm_pgtable.h
-+++ b/arch/arm64/include/asm/kvm_pgtable.h
-@@ -19,11 +19,15 @@
-  *  - 4K (level 1):	1GB
-  *  - 16K (level 2):	32MB
-  *  - 64K (level 2):	512MB
-+ *
-+ *  The max block level is the _smallest_ supported block size for KVM.
-  */
- #ifdef CONFIG_ARM64_4K_PAGES
- #define KVM_PGTABLE_MIN_BLOCK_LEVEL	1
-+#define KVM_PGTABLE_MAX_BLOCK_LEVEL	2
- #else
- #define KVM_PGTABLE_MIN_BLOCK_LEVEL	2
-+#define KVM_PGTABLE_MAX_BLOCK_LEVEL	KVM_PGTABLE_MIN_BLOCK_LEVEL
- #endif
- 
- #define kvm_lpa2_is_enabled()		system_supports_lpa2()
-diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-index dc04bc767865..1e927b306aee 100644
---- a/arch/arm64/kvm/mmu.c
-+++ b/arch/arm64/kvm/mmu.c
-@@ -41,7 +41,7 @@ static phys_addr_t __stage2_range_addr_end(phys_addr_t addr, phys_addr_t end,
- 
- static phys_addr_t stage2_range_addr_end(phys_addr_t addr, phys_addr_t end)
- {
--	phys_addr_t size = kvm_granule_size(KVM_PGTABLE_MIN_BLOCK_LEVEL);
-+	phys_addr_t size = kvm_granule_size(KVM_PGTABLE_MAX_BLOCK_LEVEL);
- 
- 	return __stage2_range_addr_end(addr, end, size);
- }
--- 
-2.25.1
-
+> 
+> - Allen
+> 
+> >
+> > -corey
+> >
+> > >
+> > > Based on the work done by Tejun Heo <tj@kernel.org>
+> > > Branch: https://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git for-610
+> > >
+> > > Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+> > > ---
+> > >  drivers/char/ipmi/ipmi_msghandler.c | 30 ++++++++++++++---------------
+> > >  1 file changed, 15 insertions(+), 15 deletions(-)
+> > >
+> > > diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+> > > index b0eedc4595b3..fce2a2dbdc82 100644
+> > > --- a/drivers/char/ipmi/ipmi_msghandler.c
+> > > +++ b/drivers/char/ipmi/ipmi_msghandler.c
+> > > @@ -36,12 +36,13 @@
+> > >  #include <linux/nospec.h>
+> > >  #include <linux/vmalloc.h>
+> > >  #include <linux/delay.h>
+> > > +#include <linux/workqueue.h>
+> > >
+> > >  #define IPMI_DRIVER_VERSION "39.2"
+> > >
+> > >  static struct ipmi_recv_msg *ipmi_alloc_recv_msg(void);
+> > >  static int ipmi_init_msghandler(void);
+> > > -static void smi_recv_tasklet(struct tasklet_struct *t);
+> > > +static void smi_recv_work(struct work_struct *t);
+> > >  static void handle_new_recv_msgs(struct ipmi_smi *intf);
+> > >  static void need_waiter(struct ipmi_smi *intf);
+> > >  static int handle_one_recv_msg(struct ipmi_smi *intf,
+> > > @@ -498,13 +499,13 @@ struct ipmi_smi {
+> > >       /*
+> > >        * Messages queued for delivery.  If delivery fails (out of memory
+> > >        * for instance), They will stay in here to be processed later in a
+> > > -      * periodic timer interrupt.  The tasklet is for handling received
+> > > +      * periodic timer interrupt.  The work is for handling received
+> > >        * messages directly from the handler.
+> > >        */
+> > >       spinlock_t       waiting_rcv_msgs_lock;
+> > >       struct list_head waiting_rcv_msgs;
+> > >       atomic_t         watchdog_pretimeouts_to_deliver;
+> > > -     struct tasklet_struct recv_tasklet;
+> > > +     struct work_struct recv_work;
+> > >
+> > >       spinlock_t             xmit_msgs_lock;
+> > >       struct list_head       xmit_msgs;
+> > > @@ -704,7 +705,7 @@ static void clean_up_interface_data(struct ipmi_smi *intf)
+> > >       struct cmd_rcvr  *rcvr, *rcvr2;
+> > >       struct list_head list;
+> > >
+> > > -     tasklet_kill(&intf->recv_tasklet);
+> > > +     cancel_work_sync(&intf->recv_work);
+> > >
+> > >       free_smi_msg_list(&intf->waiting_rcv_msgs);
+> > >       free_recv_msg_list(&intf->waiting_events);
+> > > @@ -1319,7 +1320,7 @@ static void free_user(struct kref *ref)
+> > >  {
+> > >       struct ipmi_user *user = container_of(ref, struct ipmi_user, refcount);
+> > >
+> > > -     /* SRCU cleanup must happen in task context. */
+> > > +     /* SRCU cleanup must happen in work context. */
+> > >       queue_work(remove_work_wq, &user->remove_work);
+> > >  }
+> > >
+> > > @@ -3605,8 +3606,7 @@ int ipmi_add_smi(struct module         *owner,
+> > >       intf->curr_seq = 0;
+> > >       spin_lock_init(&intf->waiting_rcv_msgs_lock);
+> > >       INIT_LIST_HEAD(&intf->waiting_rcv_msgs);
+> > > -     tasklet_setup(&intf->recv_tasklet,
+> > > -                  smi_recv_tasklet);
+> > > +     INIT_WORK(&intf->recv_work, smi_recv_work);
+> > >       atomic_set(&intf->watchdog_pretimeouts_to_deliver, 0);
+> > >       spin_lock_init(&intf->xmit_msgs_lock);
+> > >       INIT_LIST_HEAD(&intf->xmit_msgs);
+> > > @@ -4779,7 +4779,7 @@ static void handle_new_recv_msgs(struct ipmi_smi *intf)
+> > >                        * To preserve message order, quit if we
+> > >                        * can't handle a message.  Add the message
+> > >                        * back at the head, this is safe because this
+> > > -                      * tasklet is the only thing that pulls the
+> > > +                      * work is the only thing that pulls the
+> > >                        * messages.
+> > >                        */
+> > >                       list_add(&smi_msg->link, &intf->waiting_rcv_msgs);
+> > > @@ -4812,10 +4812,10 @@ static void handle_new_recv_msgs(struct ipmi_smi *intf)
+> > >       }
+> > >  }
+> > >
+> > > -static void smi_recv_tasklet(struct tasklet_struct *t)
+> > > +static void smi_recv_work(struct work_struct *t)
+> > >  {
+> > >       unsigned long flags = 0; /* keep us warning-free. */
+> > > -     struct ipmi_smi *intf = from_tasklet(intf, t, recv_tasklet);
+> > > +     struct ipmi_smi *intf = from_work(intf, t, recv_work);
+> > >       int run_to_completion = intf->run_to_completion;
+> > >       struct ipmi_smi_msg *newmsg = NULL;
+> > >
+> > > @@ -4866,7 +4866,7 @@ void ipmi_smi_msg_received(struct ipmi_smi *intf,
+> > >
+> > >       /*
+> > >        * To preserve message order, we keep a queue and deliver from
+> > > -      * a tasklet.
+> > > +      * a work.
+> > >        */
+> > >       if (!run_to_completion)
+> > >               spin_lock_irqsave(&intf->waiting_rcv_msgs_lock, flags);
+> > > @@ -4887,9 +4887,9 @@ void ipmi_smi_msg_received(struct ipmi_smi *intf,
+> > >               spin_unlock_irqrestore(&intf->xmit_msgs_lock, flags);
+> > >
+> > >       if (run_to_completion)
+> > > -             smi_recv_tasklet(&intf->recv_tasklet);
+> > > +             smi_recv_work(&intf->recv_work);
+> > >       else
+> > > -             tasklet_schedule(&intf->recv_tasklet);
+> > > +             queue_work(system_bh_wq, &intf->recv_work);
+> > >  }
+> > >  EXPORT_SYMBOL(ipmi_smi_msg_received);
+> > >
+> > > @@ -4899,7 +4899,7 @@ void ipmi_smi_watchdog_pretimeout(struct ipmi_smi *intf)
+> > >               return;
+> > >
+> > >       atomic_set(&intf->watchdog_pretimeouts_to_deliver, 1);
+> > > -     tasklet_schedule(&intf->recv_tasklet);
+> > > +     queue_work(system_bh_wq, &intf->recv_work);
+> > >  }
+> > >  EXPORT_SYMBOL(ipmi_smi_watchdog_pretimeout);
+> > >
+> > > @@ -5068,7 +5068,7 @@ static bool ipmi_timeout_handler(struct ipmi_smi *intf,
+> > >                                      flags);
+> > >       }
+> > >
+> > > -     tasklet_schedule(&intf->recv_tasklet);
+> > > +     queue_work(system_bh_wq, &intf->recv_work);
+> > >
+> > >       return need_timer;
+> > >  }
+> > > --
+> > > 2.17.1
+> > >
+> > >
+> >
+> 
+> 
+> -- 
+>        - Allen
+> 
