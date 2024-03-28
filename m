@@ -1,55 +1,67 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD7A81751
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 13:46:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1012D56B77
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 13:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711633608; cv=none; b=Ge+h/YbaqGDPueqnDO+zmSQZFmkNWvu4Cz7WlDoAyvVizC7Mz42t2hKwHo3WUGVbSIEpHCk5zIV62h0Lw04QqWEI3zrBmtspGHXqNUekb9lqIYCLqhNZR2HwPAdWL/dowtZDhi/CWFFa0Mz5R5FQZea6DA9dG6vY5epN+ohVX/0=
+	t=1711633661; cv=none; b=pdfzI06WTy9CbTk3axlVmLO6EcUHldxUDaF79hO1npDMwRnHDSSOdDlfXX4anMYq2UpdUQE6oCLi0ZZf+VFDElr1tACxZxHD36R19c0fVzQrzERPwHD8UsxJciVaqus6acizxKR6t5xoR7V+0OAX22vHbrynh9PJ9t0JDohNGQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711633608; c=relaxed/simple;
-	bh=m+4RMEyF1XG5sdloerFWFTsyYJRbW+BicofL6yYpx6I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QuB0Xe5jaF81srF3BnWsyULdkNzsCelmF4pvoOumqyxDG7CH476lTcYf2zuUr6yL6F/KN3T165IJn2Z3JCeVys6XHkt0jCsJ4qQwO/QVWjqGDEexAIUUIttkfTURhfjZVQX+9nRGhtaxoCBcXlQIFicGJWN34YohCkb4ApqLi0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=F91xG6sN; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1711633661; c=relaxed/simple;
+	bh=urpF+uhnagsRIlmCvAoqVf0cSl1JhJfWoktomJ+ip1k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lDEQQB33Osc83bvJ1SxEYOHBrGng1/vwFTXjkKjo3ByuJ2HSL5EWvQ6YSMHmF6ZE7rK3PywHIZ88LVXYxsJU2zTTny6fdVnP+o+Po/iERDCQsNjOVb1UBhmbD7WcEXPb9lhiLWM2mFvUSw7cA2y5kRvq0mjKinfijHk+h299IYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=Fzrq1x3N; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="F91xG6sN"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42SCevRR024100;
-	Thu, 28 Mar 2024 13:46:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2023-11-20; bh=t2ZVAs8unsBSfF4LkjybvlbVRB0r0ywHzZpUsLk4GpE=;
- b=F91xG6sNeuepgwOcFnOCjb6q3uBC+RUlbDXxtvRxx+0RbrlQq7A0a3nvMkQMnJtO6hDC
- 3Nd1W1+eXjjAL6w+hZIWKrDafpDThGRV4y6D/9oEAFAroySl5Db33iCEKm5fnNN1DpPd
- Gyc9MRhuSqDubGyqXymzc2PHi0QUYKQFrUE2Fd44U4kgOUaWtr0qF7Fghb8o6GDaKTy/
- cF61hOQ1qrJ1EvQaMKwcVQcO0AYkISE486D76AdpJMxN4uLAzd+CMu1e7sVPFB5CV/sQ
- eu3/x5yrcl8qIiFSHVnXu0dIvnyxX56DZAqb4GABmzdWgkPNEUbJkRzfNKt5j5Zq/WE0 Cg== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3x2s9h06cq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 28 Mar 2024 13:46:37 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42SDV0jx018186;
-	Thu, 28 Mar 2024 13:46:36 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3x1nha79f7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 28 Mar 2024 13:46:36 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42SDkZKP013877;
-	Thu, 28 Mar 2024 13:46:36 GMT
-Received: from laptop-dell-latitude7430.nl.oracle.com (dhcp-10-175-57-99.vpn.oracle.com [10.175.57.99])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3x1nha79eh-1;
-	Thu, 28 Mar 2024 13:46:35 +0000
-From: Alexandre Chartre <alexandre.chartre@oracle.com>
-To: linux-kernel@vger.kernel.org, jpoimboe@kernel.org, peterz@infradead.org
-Cc: alexandre.chartre@oracle.com
-Subject: [PATCH] objtool/x86: objtool can confuse memory and stack access
-Date: Thu, 28 Mar 2024 14:46:34 +0100
-Message-Id: <20240328134634.350592-1-alexandre.chartre@oracle.com>
-X-Mailer: git-send-email 2.39.3
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="Fzrq1x3N"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a466fc8fcccso128249366b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 06:47:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1711633657; x=1712238457; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GxzVOZoRlwbh3BCja72w8JfT19aYOorMwhFDDTCvDh0=;
+        b=Fzrq1x3N2q/eu7jyvo5orUU6iNcfIjp9NlWREakYVLy1qIQOdQ1KOLUwAlLTw8iUSS
+         Qqv2VzYmgTupchTiG0nfFPsvDTMMrdg6xEpqL0ZgnC8JVZGl559X/+PyleRlP45XdZZ9
+         CkraUi8hNO5np1RAJVXfRQuNkUwZt/9FxGro3qOepFQ4YOFlFACF2PdBLifj48lqi2cT
+         h9e9sTMeweB+AabLRGi+tRFT+yAqTBuC1vfIhA982l1xnb1hOSHCnNd1/ma2lGoRnixc
+         nihDBWPU+nOCeT1ewZGwuHTC61cZ2YJE98LscYtlzLdc1w+4u9YER62Gi+uupXuFLbo2
+         NeIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711633657; x=1712238457;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GxzVOZoRlwbh3BCja72w8JfT19aYOorMwhFDDTCvDh0=;
+        b=mAxyUkct13Hp4iJr3LPIFmB+YYI0p1NwDD99WV3dNLS1HwhvR+6RVZ94saibLc5xEb
+         5SLHuWLNSJU/hJTUGSkYpNhmM5UsqZnIlGGk013W8YKxJrmfF+bhiOF3goWp0CT6W+9g
+         VtyjLXRVmsXzH7i/47Q1YA4y+S6FivampDCCJzHPGNVRcjWFXTYL5pRHnygYxacPA+2m
+         rjrpEHg7IQWpcyfywnIfotBwqdea/QAJ2AitCWnMuG66Mo/ORf1s6QdIcYF+kzqaeJyF
+         bCnIyW+6HjDFdFsiYnk1IG++irrNjiKrq+GWcYW9S+DFxOwTDfhlUq6T0T+bRZRHtHI0
+         J/xg==
+X-Forwarded-Encrypted: i=1; AJvYcCXRp50WR+fXr0T439qJX6yYoyRTQCmub7kTDEBboJQRA5Jt0bdVALySSVqeKh2B/sfihjdhSa81rmZhHA0ubVHuqSlkmYQ4A2yW5JLA
+X-Gm-Message-State: AOJu0Yyb1/6CTGs1ibXpXibAxgDdtErlzw/h1mKKrbTIl6kDJ2jCpWpV
+	zBixFDfKYzVZxh20ZYyBWiwWMwGf6CrZ+CoK7i7ukvsbmi3pMt3UXa50Ndj7CJ6IiZcHd+KGR+P
+	0k+g=
+X-Google-Smtp-Source: AGHT+IGpawLg28p3E5615Qyo+gXkEKgAfaMlSgEerS9cHHYKKRGks+Jt2ipv8BUlRar8DJhPLu6AUg==
+X-Received: by 2002:a17:906:c14c:b0:a4e:19f4:8452 with SMTP id dp12-20020a170906c14c00b00a4e19f48452mr1831832ejc.11.1711633657415;
+        Thu, 28 Mar 2024 06:47:37 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-82-135-80-212.dynamic.mnet-online.de. [82.135.80.212])
+        by smtp.gmail.com with ESMTPSA id gy16-20020a170906f25000b00a45f2dc6795sm765908ejb.137.2024.03.28.06.47.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 06:47:37 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: Dan Williams <dan.j.williams@intel.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>
+Cc: linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] raid6test: Use str_plural() to fix Coccinelle warning
+Date: Thu, 28 Mar 2024 14:15:22 +0100
+Message-ID: <20240328131519.372381-4-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,71 +69,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-28_13,2024-03-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=999 mlxscore=0 adultscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2403280093
-X-Proofpoint-GUID: mz6WTB0k2_3qKTzpcqyFXgU5lxWmqXe3
-X-Proofpoint-ORIG-GUID: mz6WTB0k2_3qKTzpcqyFXgU5lxWmqXe3
 
-The encoding of an x86 instruction can include a ModR/M and a SIB
-(Scale-Index-Base) byte to describe the addressing mode of the
-instruction.
+Fixes the following Coccinelle/coccicheck warning reported by
+string_choices.cocci:
 
-objtool processes all addressing mode with a SIB base of 5 as having
-%rbp as the base register. However, a SIB base of 5 means that the
-effective address has either no base (if ModR/M mod is zero) or %rbp
-as the base (if ModR/M mod is 1 or 2). This can cause objtool to confuse
-an absolute address access with a stack operation.
+	opportunity for str_plural(err)
 
-For example, objtool will see the following instruction:
-
- 4c 8b 24 25 e0 ff ff    mov    0xffffffffffffffe0,%r12
-
-as a stack operation (i.e. similar to: mov -0x20(%rbp), %r12).
-
-[Note that this kind of weird absolute address access is added by the
- compiler when using KASAN.]
-
-If this perceived stack operation happens to reference the location
-where %r12 was pushed on the stack then the objtool validation will
-think that %r12 is being restored and this can cause a stack state
-mismatch.
-
-This kind behavior was seen on xfs code, after a minor change (convert
-kmem_alloc() to kmalloc()):
-
->> fs/xfs/xfs.o: warning: objtool: xfs_da_grow_inode_int+0x6c1: stack state mismatch: reg1[12]=-2-48 reg2[12]=-1+0
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202402220435.MGN0EV6l-lkp@intel.com/
-Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
 ---
- tools/objtool/arch/x86/decode.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ crypto/async_tx/raid6test.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
-index 3a1d80a7878d3..18a9140173326 100644
---- a/tools/objtool/arch/x86/decode.c
-+++ b/tools/objtool/arch/x86/decode.c
-@@ -412,6 +412,14 @@ int arch_decode_instruction(struct objtool_file *file, const struct section *sec
- 		if (!rex_w)
- 			break;
+diff --git a/crypto/async_tx/raid6test.c b/crypto/async_tx/raid6test.c
+index d3fbee1e03e5..3826ccf0b9cc 100644
+--- a/crypto/async_tx/raid6test.c
++++ b/crypto/async_tx/raid6test.c
+@@ -11,6 +11,7 @@
+ #include <linux/mm.h>
+ #include <linux/random.h>
+ #include <linux/module.h>
++#include <linux/string_choices.h>
  
-+		/*
-+		 * If the SIB base is 5, and ModRM mod is 0 then there
-+		 * is no base. But SIB decoding will set sib_base to
-+		 * CFI_BP (register 5).
-+		 */
-+		if (have_SIB() && sib_base == CFI_BP && modrm_mod == 0)
-+			break;
-+
- 		if (rm_is_mem(CFI_BP)) {
+ #undef pr
+ #define pr(fmt, args...) pr_info("raid6test: " fmt, ##args)
+@@ -228,7 +229,7 @@ static int __init raid6_test(void)
  
- 			/* mov disp(%rbp), reg */
+ 	pr("\n");
+ 	pr("complete (%d tests, %d failure%s)\n",
+-	   tests, err, err == 1 ? "" : "s");
++	   tests, err, str_plural(err));
+ 
+ 	for (i = 0; i < NDISKS+3; i++)
+ 		put_page(data[i]);
 -- 
-2.39.3
+2.44.0
 
