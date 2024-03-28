@@ -1,58 +1,42 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F45750A97;
-	Thu, 28 Mar 2024 08:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B33C164CCC;
+	Thu, 28 Mar 2024 08:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711615873; cv=none; b=JMnnzVE3nARL/x5r279wMXk0TlFY6BfNgcN0hJsbWk+mQm+WGOIOh+4dTDCn3pXJUC6l+w5J14+dO/xaSmIC9r6hXC4y9IB5sBKiEiuGP783fZz3Ki6P2c+tyUNVjdaKBMNjgBJkA16S1mdJfwxrWJKWHcEoPw7xX8l6hxxdTMk=
+	t=1711615882; cv=none; b=YQEJSyY594IobBRoUpMpOKsNv1NMkrwCR4/U6mZjIsPztR9adSazeHkjHKteJa6lBj6OwE/6QYy2cQW01z35CgscR/Di9gpuc1GcOVsp8C0oTSvw9csKrvY23bKalOp9RmgbrNxybpbI7N/DbRWe7XO9NhPfzejkSTXTBR4tpg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711615873; c=relaxed/simple;
-	bh=QcfFIfnoXJ39ZOQl9Kq+tID15GTEFiWOpgi2L8iB1Og=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=i64ogSxQ5uxFfKaOMhg02aFRk1tZiTVDUgcpbJ+CoUTWfWaYF6uJt4W4130tp+1CDYV1ubDZLGPzVsunVbsyx5GH91X1dENllrQEiraHm5+tfu0tOU5picYvkABozO8oMVjbERLWlXNsfogHOF06MegVQCnVYOnGYuH2D0On8hU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=B6PoaNGY; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B6PoaNGY"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42S8olmd090450;
-	Thu, 28 Mar 2024 03:50:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1711615847;
-	bh=Cacsn4bkQffC1LUgUwIOS+voeU8rwMJR+qK/aUFmy3g=;
-	h=From:To:CC:Subject:Date;
-	b=B6PoaNGYgdqP6IytfDdlSaF6P+8/ooSlT9W7JMOOhdO/ih+j7r2Xpqr5VZd9lqCAU
-	 iMDbGmaS5WONMdK21tRtgL8IvT8MuxsEi6jhRIaVX9tSi4cjIl3TutKpuOXYJTdpPn
-	 l2A7OqmpiQErdvt7QGZfNhE2QC42NFaWzQYc19/M=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42S8olDb031604
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 28 Mar 2024 03:50:47 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 28
- Mar 2024 03:50:46 -0500
-Received: from fllvsmtp8.itg.ti.com (10.64.41.158) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 28 Mar 2024 03:50:46 -0500
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
-	by fllvsmtp8.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42S8ofoQ006765;
-	Thu, 28 Mar 2024 03:50:42 -0500
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <manivannan.sadhasivam@linaro.org>,
-        <fancer.lancer@gmail.com>, <u.kleine-koenig@pengutronix.de>,
-        <cassel@kernel.org>, <dlemoal@kernel.org>,
-        <yoshihiro.shimoda.uh@renesas.com>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
-        <s-vadapalli@ti.com>
-Subject: [PATCH v7 0/2] PCI: keystone: Fix pci_ops for AM654x SoC
-Date: Thu, 28 Mar 2024 14:20:39 +0530
-Message-ID: <20240328085041.2916899-1-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1711615882; c=relaxed/simple;
+	bh=VjTZgK/Qn0DOsZybfTiGOpl86fNw/oP4YfAinPR5uJc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GvnzxZww5oYxMeio/ZTnL+65oOHsInk29an1zEUaRhNvaW2nyxWrzQ6UPL/hR8LcN3v+4j8gy2DT3SqIwXFepys82hOG9ATc0EmuGlCtIakQN4LVSSPeU8BlCx4n0CwldnT7X3H04CnfFcDVk5ZuxVAUZ/p8OHI6wUoPHu5D1PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F016D2F4;
+	Thu, 28 Mar 2024 01:51:53 -0700 (PDT)
+Received: from e129166.arm.com (unknown [10.57.73.83])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 932A03F7BD;
+	Thu, 28 Mar 2024 01:51:17 -0700 (PDT)
+From: Lukasz Luba <lukasz.luba@arm.com>
+To: linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	rafael@kernel.org
+Cc: lukasz.luba@arm.com,
+	dietmar.eggemann@arm.com,
+	linux-arm-kernel@lists.infradead.org,
+	sboyd@kernel.org,
+	nm@ti.com,
+	linux-samsung-soc@vger.kernel.org,
+	daniel.lezcano@linaro.org,
+	viresh.kumar@linaro.org,
+	krzysztof.kozlowski@linaro.org,
+	alim.akhtar@samsung.com,
+	m.szyprowski@samsung.com,
+	mhiramat@kernel.org
+Subject: [PATCH v3 0/4] Update Energy Model after chip binning adjusted voltages
+Date: Thu, 28 Mar 2024 08:51:08 +0000
+Message-Id: <20240328085112.3873050-1-lukasz.luba@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,30 +44,56 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hello,
+Hi all,
 
-This series is based on linux-next tagged next-20240328.
+This is a follow-up patch aiming to add EM modification due to chip binning.
+The first RFC and the discussion can be found here [1].
 
-v6:
-https://lore.kernel.org/r/20240326144258.2404433-1-s-vadapalli@ti.com/
-Changes since v6:
-- The v6 patch has been split into two patches based on Bjorn's
-  suggestion at:
-  https://lore.kernel.org/r/20240326232403.GA1502764@bhelgaas/
+It uses Exynos chip driver code as a 1st user. The EM framework has been
+extended to handle this use case easily, when the voltage has been changed
+after setup. On my Odroid-xu4 in some OPPs I can observe ~20% power difference.
+According to that data in driver tables it could be up to ~29%.
+
+This chip binning is applicable to a lot of SoCs, so the EM framework should
+make it easy to update. It uses the existing OPP and DT information to
+re-calculate the new power values.
+
+It has dependency on Exynos SoC driver.
+
+
+Changes:
+v3:
+- updated header description patch 2/4 (Dietmar)
+- removed 2 sentences from comment and adjusted in patch 3/4 (Dietmar)
+- patch 4/4 re-phrased code comment (Dietmar)
+- collected tags (Krzysztof, Viresh)
+v2:
+- removed 'ret' from error message which wasn't initialized (Christian)
+v1:
+- exported the OPP calculation function from the OPP/OF so it can be
+  used from EM fwk (Viresh)
+- refactored EM updating function to re-use common code
+- added new EM function which can be used by chip device drivers which
+  modify the voltage in OPPs
+RFC is at [1]
 
 Regards,
-Siddharth.
+Lukasz Luba
 
-Siddharth Vadapalli (2):
-  PCI: keystone: Relocate ks_pcie_set/clear_dbi_mode()
-  PCI: keystone: Fix pci_ops for AM654x SoC
+Lukasz Luba (4):
+  OPP: OF: Export dev_opp_pm_calc_power() for usage from EM
+  PM: EM: Change the em_adjust_new_capacity() to re-use code
+  PM: EM: Add em_dev_update_chip_binning()
+  soc: samsung: exynos-asv: Update Energy Model after adjusting voltage
 
- drivers/pci/controller/dwc/pci-keystone.c | 136 ++++++++++------------
- 1 file changed, 60 insertions(+), 76 deletions(-)
+ drivers/opp/of.c                 |  17 +++--
+ drivers/soc/samsung/exynos-asv.c |  11 +++-
+ include/linux/energy_model.h     |   5 ++
+ include/linux/pm_opp.h           |   8 +++
+ kernel/power/energy_model.c      | 106 +++++++++++++++++++++++++------
+ 5 files changed, 122 insertions(+), 25 deletions(-)
 
 -- 
-2.40.1
+2.25.1
 
