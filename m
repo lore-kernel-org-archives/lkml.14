@@ -1,108 +1,97 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1D957889;
-	Thu, 28 Mar 2024 18:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4816137908;
+	Thu, 28 Mar 2024 18:55:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711652128; cv=none; b=VBY6/8aJoK6yDhHHpjMpySfAx55UOlofrzC120TUvGpLm+l2NTyQ+foPpEGLxeEAhdNFAlK1Dka1a3aixd1AxoMma1R0Py/hvY+U69rxlNYvkBOFx7luseJAD0wslmeLDDNA2E1JHmrEBhnzf4H6lb+1SrMIari9qt5hsdaErKk=
+	t=1711652129; cv=none; b=tYfsZEs0fvQlSU0zyUKXftG9sDOjX9L1mQiUZIujRTJYb1LdfBYW5NEXFmCtJzLc99WBWki0acuIbrmMyjeiKOG79zKpx2zipfq+FvbmqWcU77koa+8MaHs61/yx8gYYGUoNw4fiLFyBzj2vz3/KEa+zPxyC+XHHMBhvXxsoXZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711652128; c=relaxed/simple;
-	bh=nYiT+PnFbwTb/z8tOHzQIRLo88but/GStXQy1ynO7pk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qWEvZv7o2Dfw32ZMojxvZLrqk8YGefeQgD5D4oHAeMp4KRauZjwnanBta3LianpHEa81JGLDS0wKhltHVBDDaCx1NbPEXfgu1DBKaCQ5QVw7AmMSpIb10VzpHD0CS/Pn2Nm7UhPDoiUqfimDLSnu179pMGd4VTdgga/T0Hm5v9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Q26cDUnx; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1711652129; c=relaxed/simple;
+	bh=O6RUd0FiuATOUi3p2Fr6EOtVM8/VxTL6vhWICc/xTtE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hAhlguzQ4pNbykAHftW19X/Rvj6WgzATmqbD+McapbIUhxoquMGI4DmOAADDE9V7wBdL36YD0XenDTuOEb2xClA7Jk9Nky/LmPzbuW3TdfkKerZgJFQKCyMz9Xlrx6TW7lK8if5q+MQbdyg9GrF15OlyYFqUiEUeovSIslznmZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rMVJ+HLg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Q26cDUnx"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42SEaJUs030709;
-	Thu, 28 Mar 2024 19:55:03 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=selector1; bh=FVETmF+
-	qlTGkl2AVbfmzdk4WvyjKz5a+vliTNTjgj1w=; b=Q26cDUnxJCn1s9TvEurVVVO
-	m+9bWnkMiyFF8Xq7aRBmDXQNs0Ks8LqcPhcjNIlAEotK3m+hyj8cbgCRVppBheR9
-	jdRfCjC/nXSEbmgzg7iPFRhXeBaYBip2FGyACrUwJ3k9D1hwPG1vJ4TosCJDkUqS
-	j74TlnHB9un9pSiCi+W607tXm0Qwh2YZQ7R6oHNQXZgWBHv6cRjdFzUKvEc/h4iZ
-	oX6cKYs+jUo+2BLnMU5xU2/J05B0o8cXyuSnfL2ElS0mUToYgu/JH1EMLxnTNcuH
-	dvDXlOy0tl12dgPykORxnrVY8uWuelMspQLZbwzskdPP/B3/sig1zKkZjm3ZN8g=
-	=
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3x1qa3knc5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 28 Mar 2024 19:55:03 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 7309B40044;
-	Thu, 28 Mar 2024 19:54:57 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7324022D16E;
-	Thu, 28 Mar 2024 19:53:43 +0100 (CET)
-Received: from localhost (10.252.8.203) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 28 Mar
- 2024 19:53:43 +0100
-From: Christophe Roullier <christophe.roullier@foss.st.com>
-To: "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni
-	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark
- Brown <broonie@kernel.org>,
-        Christophe Roullier
-	<christophe.roullier@foss.st.com>,
-        Marek Vasut <marex@denx.de>
-CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 0/1] Add property in dwmac-stm32 documentation
-Date: Thu, 28 Mar 2024 19:53:36 +0100
-Message-ID: <20240328185337.332703-1-christophe.roullier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rMVJ+HLg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 285F8C433F1;
+	Thu, 28 Mar 2024 18:55:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711652128;
+	bh=O6RUd0FiuATOUi3p2Fr6EOtVM8/VxTL6vhWICc/xTtE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rMVJ+HLghR8zyz+qCC2JJP7kQGIEGPxr5Ml98x4dA7YSvWIuBNBkAKz5BVNnt1cKC
+	 U4X26lSPrv66WvoaSs7HO7Wjv4vJagUioEMbZYr1bzr4fbuCXEYXLEBlrzMCUfI9oK
+	 7Q8cOeQUyi5lfFD2idby9yZOvPuqWB7rhehfUD0c5e1jbcPeMeCUWGyKB7TWceDNYH
+	 NiCdtRDgKp5SrrIGkWBPfkU55FKLpe/A0hGW9al8izHQTEQemTRp611vGqDyI+9lvW
+	 uC+e9g+wberfvYWj6IomFhK8s2kj1mbgF965VRhIRBkGAHahwkwi0j++Am1kna3fJ5
+	 EFVYHhWqdN2Nw==
+Date: Thu, 28 Mar 2024 13:55:26 -0500
+From: Rob Herring <robh@kernel.org>
+To: git@luigi311.com
+Cc: linux-media@vger.kernel.org, dave.stevenson@raspberrypi.com,
+	jacopo.mondi@ideasonboard.com, mchehab@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, sakari.ailus@linux.intel.com,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 18/23] dt-bindings: media: imx258: Add alternate
+ compatible strings
+Message-ID: <20240328185526.GA88354-robh@kernel.org>
+References: <20240327231710.53188-1-git@luigi311.com>
+ <20240327231710.53188-19-git@luigi311.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-28_17,2024-03-28_01,2023-05-22_02
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240327231710.53188-19-git@luigi311.com>
 
-Introduce property in dwmac-stm32 documentation
+On Wed, Mar 27, 2024 at 05:17:04PM -0600, git@luigi311.com wrote:
+> From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+> 
+> There are a number of variants of the imx258 modules that can not
+> be differentiated at runtime, so add compatible strings for them.
 
- - st,ext-phyclk: is present since 2020 in driver so need to explain
-   it and avoid dtbs check issue : views/kernel/upstream/net-next/arch/arm/boot/dts/st/stm32mp157c-dk2.dtb: 
-ethernet@5800a000: Unevaluated properties are not allowed 
-('st,ext-phyclk' was unexpected)
-   Furthermore this property will be use in upstream of MP13 dwmac glue. (next step)
+But you are only adding 1 variant.
 
-V2: - Drop deprecated: property for st,eth-clk-sel and st,eth-ref-clk-sel
-V3: - Rework commit message
-V4: - Fix syntax issue in commit message
-V5: - Remark from Andrew Lunn (remove documentation of PHY regulator, it will come in next step (with 
-      implementation))
-V6: - Fix indentation
+> 
+> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+> Signed-off-by: Luigi311 <git@luigi311.com>
+> ---
+>  .../devicetree/bindings/media/i2c/sony,imx258.yaml          | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
+> index bee61a443b23..c7856de15ba3 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
+> +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
+> @@ -14,10 +14,14 @@ description: |-
+>    type stacked image sensor with a square pixel array of size 4208 x 3120. It
+>    is programmable through I2C interface.  Image data is sent through MIPI
+>    CSI-2.
+> +  There are a number of variants of the sensor which cannot be detected at
+> +  runtime, so multiple compatible strings are required to differentiate these.
 
-Christophe Roullier (1):
-  dt-bindings: net: dwmac: Document STM32 property st,ext-phyclk
+That's more reasoning/why for the patch than description of the h/w.
 
- Documentation/devicetree/bindings/net/stm32-dwmac.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
+>  properties:
+>    compatible:
+> -    const: sony,imx258
+> +    - enum:
+> +        - sony,imx258
+> +        - sony,imx258-pdaf
 
--- 
-2.25.1
+How do I know which one to use? Please define what PDAF means somewhere 
+as well as perhaps what the original/default variant is or isn't.
 
+>  
+>    assigned-clocks: true
+>    assigned-clock-parents: true
+> -- 
+> 2.42.0
+> 
