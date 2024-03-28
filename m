@@ -1,128 +1,135 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA12D59B7A
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 09:19:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F84E56B77
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 09:22:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711617584; cv=none; b=Mmv1yHVlW+87EkhlKZ68a4VkKWnWTey3l5M+xLcE8PJEzq6KIXIxkyEnVT1S2JH2fo4wiKoNIA7rt6ealKDDMrzntZitXlC43J43BRubzhRlYMtMRyKp0kRN1njPkqqQ+Bpowv0oPgF5PYmd/JZa7jQz0cbkvkaE1LCqmVTTQZo=
+	t=1711617726; cv=none; b=gdz+XCkFATtB+14Li4XpzQBhYNveQHrNXo2Uie4O8T2N+RDe6q2LgyjTvYrxD3wCxxQL8YZtnzHsx74vOTDBK01Jct3AKI+jnLEbsj40/C11wcu7mvPjDzGKHKCsvNjPTkXvyJlydFmSwI7Y2DSAtEgGQbTTo3wSx81LSH1ZiXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711617584; c=relaxed/simple;
-	bh=CT42nVx0KJiYgUvifXk3RG3r4PtdscMZCrK5HYFET0w=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ZWElIH/Gk6k4SENcisSccvHW7dvp3k47d9JZsBF+S5wXfjd2M1i2312JYI9VltC05k7I8/0djaIP5fbua6vk0xILSnpvPEyvhbSRuJ7FH9SbnBIfy2P578V+bmnxESbp8HsyxoeKdIyCkmWBLc/aUJdF7kfj8jRzJJOqQYBN2JM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lq1NRdOE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Dzcrld9B; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=h9iW08zh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=whEj5fn7; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1711617726; c=relaxed/simple;
+	bh=PWuxq/2CwP5hxfBNCaTdeZ56jw8z5y3o69HmqmrMyh0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Bx9RTys10QlL7/BPlyiQ+KUil9emKsz2ixbmQh7pg1h7xmd8OdzivV9RMAtDEErCWUboIyQn7p1H/3xTdiUvxfc/l2lyrtcOL6dOYkbwkJZ4LjQH/K5UpKLpkxjLk9wv/c2+OsvmHnQ9hvtjG0ogdPVCELfmg3cQUeqz3OiPwrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NFVXROwB; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lq1NRdOE";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Dzcrld9B";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="h9iW08zh";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="whEj5fn7"
-Received: from hawking.nue2.suse.org (unknown [10.168.4.11])
-	by smtp-out1.suse.de (Postfix) with ESMTP id E844F33C90;
-	Thu, 28 Mar 2024 09:19:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1711617581; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LCUD+Fm+27N2UlU9YzPKCx9HxP70bveIrJEb1pJ2WgE=;
-	b=lq1NRdOEqAcuyWJNOxAcsqTZYt56wvs4Oa7sisjDWgvuUjJ3V7A9wXvxyYZcKxeSQYCpbJ
-	4xE5rzqBfzMZux5RQs7ZuXIOA5yJwe2nmazhVlLM20Yok1Xel+52NkWWsI351kFYgwxEbW
-	MnKN7IZgPtp5exDsB3XWiqEe/MKJyOU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1711617581;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LCUD+Fm+27N2UlU9YzPKCx9HxP70bveIrJEb1pJ2WgE=;
-	b=Dzcrld9BscW+BIGThR36jlBbZ6JLpEd+5TIy+PkJzY3T7cwmWua7HHJg2SAmyhNGtffMni
-	7smBvuLH7ripKqBA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1711617580; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LCUD+Fm+27N2UlU9YzPKCx9HxP70bveIrJEb1pJ2WgE=;
-	b=h9iW08zhQpcFKFcUzo7Air3WTrg3U7WYMvnU5TWAbv9FiWkZCLUo6fgNQii45vFtAej1EJ
-	MrLyiCRECilRdkWyM/r8tqupLrCd+fQbJyjQfbdd+wPEa3z+fSpU06VGhY112wS6bWotmY
-	TzNYuDeiBwmNvE+Z6MMqCjhuxjsd2D8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1711617580;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LCUD+Fm+27N2UlU9YzPKCx9HxP70bveIrJEb1pJ2WgE=;
-	b=whEj5fn7a/34PhtWFfAELCRu0atKNUoNfBgNWASV7r8bUKZZl7K6iGRE6NDloz8Tm0t1jH
-	9e/unmnO669lpiCQ==
-Received: by hawking.nue2.suse.org (Postfix, from userid 17005)
-	id CF2F64AACE2; Thu, 28 Mar 2024 10:19:40 +0100 (CET)
-From: Andreas Schwab <schwab@suse.de>
-To: Samuel Holland <samuel.holland@sifive.com>
-Cc: linux-riscv@lists.infradead.org,  linux-kernel@vger.kernel.org
-Subject: Re: 6.9-rc1 regression: irq: no irq domain found for
- interrupt-controller@c000000
-In-Reply-To: <b929afe5-c148-499a-906d-fcf208b02fcc@sifive.com> (Samuel
-	Holland's message of "Wed, 27 Mar 2024 07:56:20 -0500")
-References: <mvmplvfg90v.fsf@suse.de>
-	<b929afe5-c148-499a-906d-fcf208b02fcc@sifive.com>
-X-Yow: Yow!  Is my fallout shelter termite proof?
-Date: Thu, 28 Mar 2024 10:19:40 +0100
-Message-ID: <mvmil16g1cj.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NFVXROwB"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d4360ab3daso7630501fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 02:22:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711617722; x=1712222522; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=3VeJGr89MvdJCsKrJ8qPyuwdAbnPV1JKLjknnd6gQow=;
+        b=NFVXROwBmCyZeakPlS+e5JEuY34x2CZwhJpjy/ecyl2zci5DvcIDc9jFIMb9ZhYErI
+         IFS/34gj7msKPBJJHzhtSb8VgUAtmBWNcqC6b9mpRpaQog/70eYXVr9Yvuz2Nq+ox32d
+         ZZCqAIqL0ANrN6cYzBlP1vSY5msGxIownUytlNHRM6+Qymameeez785bakdKd1Jmulet
+         VPkwqmDOuKGWDRq8bgvG4dSKeQg948S+xi1t/u3zrCHtJB/0YHaQFhuFDijmlqRJKKNo
+         U2yn1/qnsa9MYwOaqZLDCNcBEb6bWJ49BjmKklK1f+QwhL4jwrQYc/firREVsGOzYpzc
+         n/8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711617722; x=1712222522;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3VeJGr89MvdJCsKrJ8qPyuwdAbnPV1JKLjknnd6gQow=;
+        b=Q9NmzcwtGVRALl5YxPgWvOYscy47lvfU7AYRfDJipOgPSlYjAUzHceJ+l/h5xypIFA
+         jHygmt4JJnjYac/Orr6sUlKBRbQkFV0S4Nj5HZLeIJRdTU1YPz+KFp4GPvK646vn47A8
+         Fdz27MRDEmg/paxyfZw7aXNopgy/32YxriPlV34OhI6YfNWhGqFYVLrd2o3LwVAZA0Q6
+         dJix+qviGWGreDlq59wMzpJVkdEC+pNGcMEi0W9QM+IBga8I8gTmkrb8MctJIjcJ/QxO
+         rm6PkZ3ebtOcTgqx3Bij7lPEOi2iFX3BBU4xOVPjZ9xtEdeTIpj3NeYq6AvaLSZj0cuI
+         0TiA==
+X-Forwarded-Encrypted: i=1; AJvYcCXBPy/CxSA82+xx4QmuDgeQ7geQhF/1fs5XYtHK0ABCUWfWyuBHRk3P4cutZy1ubqkO2DDVog7pGv9Unwi46jpK13Z66zNBf2jnSoJo
+X-Gm-Message-State: AOJu0YxT07yIarOj36l8Wwel0pmZ/LkDj5GBczgr0K7grSY3tqllL+R6
+	d07NICFvvCXXjJyxvByrLRYdCGkn/yptRap5si814X4/AB9TpMBF53QChC/EA2hVe/OIoPSyplk
+	w
+X-Google-Smtp-Source: AGHT+IEByn/Uj2jLharZ5hJEyo1dPkVvQOyE3ocYG8KWTDMwI0bxSgFNh0HMP8KyA55NcUIHStpeDg==
+X-Received: by 2002:a2e:b613:0:b0:2d2:6193:6d53 with SMTP id r19-20020a2eb613000000b002d261936d53mr1449773ljn.13.1711617722472;
+        Thu, 28 Mar 2024 02:22:02 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.148])
+        by smtp.gmail.com with ESMTPSA id f15-20020a05600c4e8f00b004147c8dd13fsm1678429wmq.30.2024.03.28.02.22.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Mar 2024 02:22:01 -0700 (PDT)
+Message-ID: <9ab1fc70-fd01-437b-9020-49618924ab30@linaro.org>
+Date: Thu, 28 Mar 2024 10:22:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -4.28
-X-Spamd-Result: default: False [-4.28 / 50.00];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 RCPT_COUNT_THREE(0.00)[3];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 RCVD_COUNT_ZERO(0.00)[0];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 BAYES_HAM(-2.98)[99.91%]
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 4/7] dt-bindings: iio: accel: adxl345: Add spi-3wire
+To: Lothar Rubusch <l.rubusch@gmail.com>, lars@metafoo.de,
+ Michael.Hennerich@analog.com, jic23@kernel.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, eraretuya@gmail.com
+References: <20240327220320.15509-1-l.rubusch@gmail.com>
+ <20240327220320.15509-5-l.rubusch@gmail.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240327220320.15509-5-l.rubusch@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mär 27 2024, Samuel Holland wrote:
+On 27/03/2024 23:03, Lothar Rubusch wrote:
+> Add spi-3wire because the device allows to be configured for spi 3-wire
+> communication.
+> 
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
 
-> Hi Andreas,
->
-> On 2024-03-27 7:21 AM, Andreas Schwab wrote:
->> The SiFive ccache driver fails to look up its irqs:
->> 
->> [    0.762329] irq: no irq domain found for interrupt-controller@c000000 !
->> [    0.769358] CCACHE: Could not request IRQ 0
->> 
->> This is fatal for the JH7100 based boards, since they depend on it for
->> their DMA noncoherence.
->
-> I have posted a fix at
-> https://lore.kernel.org/linux-riscv/20240327054537.424980-1-samuel.holland@sifive.com/
+I don't understand why after my last message you still ignore my
+feedback, but fine. I'll ignore this patchset.
 
-Thanks, I can confirm that this fixes the issue.
+Best regards,
+Krzysztof
 
--- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
