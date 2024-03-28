@@ -1,101 +1,116 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD6B3CF58
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 17:12:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41EA3CF73;
+	Thu, 28 Mar 2024 17:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711645936; cv=none; b=O3UWTvLjn0rvoiCPlvZgg7hUgN2X7OinDv4SKAf5s872YUnGhlwyPSdmiM7ECyLKu3iJveOwnhgxXr9MYpLkVoeFyp6A4s0/IrwTgBeFnDBCz8nHLQ66QLTZrzp0457fO9LUqsNayUsDCuAgpNvcKRrGpo0YIK3j7hTaydMyadk=
+	t=1711645975; cv=none; b=inr1FTU7dAbj/fh7VEGyCNSrDdhXsMQePwEASDYpWD6p7bg9Sp3IeD2TxFsY94k+Pm3DHyopY5kJg/p7Y+QFKTKmsb2gbsV3XuMnJUnzuuJfoQyuG0ExQmbqqiIVJwOYYFY+NkAyxIRrMsAB4NMCN7TYxvCkTFZ6/2539C0b/yM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711645936; c=relaxed/simple;
-	bh=Hja3vS9thXGLKLww3PEJRfT0NndQJhzm8qU4nnPcckM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h9Ft+ttRdiysGd4PRxsbVNNJecwjuQVxEfT16IRz54FR8ckaYA3d6v2q+w8d7cYoKxJPSbdkdFG4stjfK9/EH7iC6kn6JlWamFVbnfrf40bUmCH6yULA3aIlMWC5IsQso5Ij3M7t/ctPWOYY1dQx8YNbdUCl5vcHr4WyXqmWI88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=fspmrUkF; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1711645975; c=relaxed/simple;
+	bh=NvDiTdvu1oocEd4z4WVUoGVua3pG0iHjdYEeWj5pFOw=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=S3ie5oDk+l77/eqme4++9A/jVyoUiA43vv1lahZMnNpPRUxjDZAQ0AFUcifUTOesWPUakM0G30NFeMsa1Ft2W+DOlLp6Tybz2u2I2ghPccJbkLzeICNUUga5ItJsk6cy+bdwSDjI3ngSfOOPj9W7fRP2yX4vTl+1QS1fukPWUC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=OOcmOZlV; arc=none smtp.client-ip=162.62.57.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="fspmrUkF"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2F68D40E016C;
-	Thu, 28 Mar 2024 17:12:13 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id yWgCufbJBk8l; Thu, 28 Mar 2024 17:12:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1711645928; bh=Luztintl3VI4viG+hHFnCoG31Xw06cMSvxb1/x6Ek5s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fspmrUkFNWKeYONhOmlTwuBXeH8WlHc7ja0t+GF0Axve3WHZ9ymx6jR5SGIWT8cA/
-	 r/2SuhTwW2VHXswsG1MPPwDLIvtCpFFt81g8VL8305+Zadp5pOaOMDDUOn1hIKN0Z9
-	 7SRgbTVH+Wkrinblkj3FILy5qVdyO/0vTDdKj635y9vlf6EZQQd/l2CqXyaW8tjDcE
-	 qd7L+kyz1BOs0A/sUrh/d9YsROIEExCItrFTyXEnjzxbircMr7DVqvNfqge8HFNaTM
-	 t5ID26FzgM/wMGlcwWH5Dc75dJVsQVDRIg8G8vyezktlw7zqKaq/S1u1ZlWyxGw3/x
-	 waeQDrKZ9fhHOtQvea2scqFpnk3DSZqISc9urEJatmchBhPcgStLCpqKX6G7ZgA77e
-	 A8+3RCJOcbV+x4nhY8Llry64HPVltpPdZkLktBsduv5IAMlZs5/b7eZjAzsl02V9YT
-	 1aKST/oJvgWgYA/4Pln8pT4flfDnaKF8uC9IaW7pPtYn9d0nx0Xm88QfXXUTZWZAYR
-	 Fv9Su4Ou/y0uHzuy9F3MjUDAkTPTMU+ruv4+0aqj7i37Y7nbkXCUWP2+I+PDnB1RhC
-	 IP1QBTA1ZUH7+VpdF6JTwVVZqSVqSt1dKGwps1k1D8eSmbJOzogtz83EzQw9Rvr8T8
-	 e4HJ6oXXHJSjHbnT42Z16vHs=
-Received: from zn.tnic (p5de8ecf7.dip0.t-ipconnect.de [93.232.236.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A161A40E016B;
-	Thu, 28 Mar 2024 17:12:05 +0000 (UTC)
-Date: Thu, 28 Mar 2024 18:12:04 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: "Luck, Tony" <tony.luck@intel.com>
-Cc: "x86@kernel.org" <x86@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 01/74] x86/cpu/vfm: Add/initialize x86_vfm field to
- struct cpuinfo_x86
-Message-ID: <20240328171204.GGZgWk5JNOzQzoaEql@fat_crate.local>
-References: <20240328163746.243023-1-tony.luck@intel.com>
- <20240328163746.243023-2-tony.luck@intel.com>
- <20240328164811.GDZgWfSzAWZXO7dUky@fat_crate.local>
- <20240328165251.GEZgWgY1Clb9z4t3VX@fat_crate.local>
- <SJ1PR11MB6083AADC97E50462C1137D71FC3B2@SJ1PR11MB6083.namprd11.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="OOcmOZlV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1711645960; bh=L2lkCcExhcCSZci/+XbSJe7RshMmWIbz8lRm/dAsp5U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=OOcmOZlVFdg5q1a8eyiAp4wBEg7I7HD06iWvaUsYQtaehNgmGqjFP8ZzjO61iheXf
+	 DLFg8K9wKHuSJEFzKNNHJVWtr6nT9t6i3uCmnINRwX1W1XeLdVcHp9JOCJc7tygE9g
+	 5UA3aVjl8Mu2RPagl/Ks8mLjc4XDR/lOhr+m6YoU=
+Received: from cyy-pc.lan ([240e:379:2277:8a00:7feb:196a:dd5b:c05f])
+	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
+	id 199B7A03; Fri, 29 Mar 2024 01:06:25 +0800
+X-QQ-mid: xmsmtpt1711645596tdwddzrgm
+Message-ID: <tencent_DB11214C8D0D7C48829ADA128E7BB8F13108@qq.com>
+X-QQ-XMAILINFO: NMGzQWUSIfvTNMP2jtZxLCFW1PIkrRFpEbd8CFMBnnDWS+4rcko4Wwu1VcTYYI
+	 Jv+Qii0fPVnQFco/q+0pNKeDoK+4aqtPIK78H9JnOIM07p2UpArsZk0bUPw3Ia9NKYw44Fo7YQNw
+	 D38x8y+sGFVnXgB5HwOHLQ8Gq+wmy3tlpThH+4ftr08MFZ7zM8pUBrEXsPN3bVZAA/MnzqrYQx9K
+	 qqvZQk1H1nIIxZSB4H20CEnH5O49hlUPhWmKyPSZG6xLUNWf8e/KMh05dD/NoTaPYG0RQu7BMHmf
+	 IdHWmNPvo3HUacip14GUl+jyUb/0HuFffyAszOql4ZXt7ZSYQAWwE3d+fQGwDbhRmSnVZNJWws7G
+	 GOEJ5SPh0ZULLP0fWhV27X8zLwyJLdzek4JmIq4l1kyiyfR7bvt+wSyryOMEboSoSKyJv84oHVWJ
+	 E/HVW3q2QeSaV5iqtI9QqXPGLieKYeGpaeiG9XSFFjmkO6DdILK4kZ9wd4BKPbajGCkob5zS8Skp
+	 1voYk6+8NxaxMpmzQVMtmofs9DEre+mgFK9gTel8Uzaajgt0p7GWzUCq8z0qgLtlV1YpmXkgix2b
+	 AiWCctCng0910fXjyg5ktmhiHaNyhOvigvg20dmRSBcf7k4Dbww7B0wDhemkjBTSQ7DhYDXcb+pG
+	 639LFTFVAk09vuiy16OGagFCP2UXdtIAbBTWkAN46+2uneR6L/jZJwqUw9KFCe44AkmTV69eBc7w
+	 4nYSxLkFMBPpFM+cZs1i45jAi4h+BFJrQ7gVfbPdmOMOfq6YkqRLPh8koRp8jS8lHx/NuTEfSwRV
+	 RXxzrKtosbYvffH2VxPvUS3ZA31s5MwAL1qo9cetC2EHcBwQ3L6wxtKmZIUT5C+/C5Q110Rog+9i
+	 GlsRpD6Mw7jHIW65xKdbYxf4XwpVYLrCojZASyzIapW1MTb75Z53HlzFPrFxoVhdyk/kKBAsLET3
+	 340vpJumhJgwec5gRqTLq3Hga2d1CppBT8F7EwUZ4wvH65scjd/C3d/vh9dFt/Y3xO2mS1qGJitd
+	 NwWinoYcOqg5/IPzKge/GcNhq95Zk5sVDqd0lj7x9h6/fUV1sY
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+From: Yangyu Chen <cyy@cyyself.name>
+To: linux-riscv@lists.infradead.org
+Cc: Conor Dooley <conor@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Guo Ren <guoren@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	linux-gpio@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yangyu Chen <cyy@cyyself.name>
+Subject: [PATCH v1 4/5] pinctrl: k210: Deprecate SOC_CANAAN and use SOC_CANAAN_K210
+Date: Fri, 29 Mar 2024 01:06:12 +0800
+X-OQ-MSGID: <20240328170613.120131-4-cyy@cyyself.name>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <tencent_2E60E33C1F88A090B6B3A332AE528C6B8806@qq.com>
+References: <tencent_2E60E33C1F88A090B6B3A332AE528C6B8806@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <SJ1PR11MB6083AADC97E50462C1137D71FC3B2@SJ1PR11MB6083.namprd11.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 28, 2024 at 05:00:59PM +0000, Luck, Tony wrote:
-> It's essentially free to do this, and it makes the code more robust. It
-> becomes impossible to check model without also checking vendor
-> and family at the same time.
+Since SOC_FOO should be deprecated from patch [1], and cleanup for other
+SoCs is already in the mailing list [2,3,4], we remove the use of
+SOC_CANAAN and introduced SOC_CANAAN_K210 for K210-specific drivers,
 
-I see that but if we want to use CPUID(1).EAX, there's no vendor in
-there.
+Thus, we replace its drivers depends on SOC_CANAAN_K210 and default select
+when it has the symbol SOC_CANAAN_K210.
 
-And frankly, the x86 vendor is a Linux thing so I wouldn't mind if
-checks are
+[1] https://lore.kernel.org/linux-riscv/20221121221414.109965-1-conor@kernel.org/
+[2] https://lore.kernel.org/linux-riscv/20240305-praying-clad-c4fbcaa7ed0a@spud/
+[3] https://lore.kernel.org/linux-riscv/20240305-fled-undrilled-41dc0c46bb29@spud/
+[4] https://lore.kernel.org/linux-riscv/20240305-stress-earflap-d7ddb8655a4d@spud/
 
-	if (c->x86_vendor  == X86_VENDOR... &&
-	    c->cpuid_1_eax == MACRO_BUILD_CPUID_1_EAX(fam, model, stepping))
+Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+---
+ drivers/pinctrl/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Anyway, using CPUID(1).EAX is just a suggestion so that we don't have to
-invent our own format and convert to and fro.
-
-And that would be advantageous when we convert to dealing with
-CPUID(1).EAX values everywhere and we compare them straightaway. We'd
-need macros only when we need only some data elements from that leaf.
-
-And since that leaf's layout is commonly known, the conversion errors
-should be at a minimum...
-
-I'd say.
-
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index d45657aa986a..1be05efccc29 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -235,13 +235,13 @@ config PINCTRL_INGENIC
+ 
+ config PINCTRL_K210
+ 	bool "Pinctrl driver for the Canaan Kendryte K210 SoC"
+-	depends on RISCV && SOC_CANAAN && OF
++	depends on RISCV && SOC_CANAAN_K210 && OF
+ 	select GENERIC_PINMUX_FUNCTIONS
+ 	select GENERIC_PINCONF
+ 	select GPIOLIB
+ 	select OF_GPIO
+ 	select REGMAP_MMIO
+-	default SOC_CANAAN
++	default SOC_CANAAN_K210
+ 	help
+ 	  Add support for the Canaan Kendryte K210 RISC-V SOC Field
+ 	  Programmable IO Array (FPIOA) controller.
 -- 
-Regards/Gruss,
-    Boris.
+2.43.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
