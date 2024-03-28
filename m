@@ -1,133 +1,243 @@
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC29137C26;
-	Thu, 28 Mar 2024 19:59:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0F71EA6E
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 20:01:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711655943; cv=none; b=pZmjU6ZkqXVOf//CxLy/6nqh0c/7AeXxNHl9VhCxFPUubtpawB8B2XospJqNFWy6Kp7HxxrDv1Kvt7U17u5hNVG6l8xLwkN/XX6zedkb8ThQEKtMrwYpfmUnyJcssJhUuoXJSKjCKy32yIBD8vbArHgNKGJRsgL7bvUY5EJazvY=
+	t=1711656113; cv=none; b=rbPj2ElfHdtmc0gZCWZ/Mhy5hh6WsdxG+sgr3Y/y79XxrQHafrF5FLdW0W9MDYjPHro98lfb+tbrrIZcL0DQAtHgA/Q+J0Y+nH4ZjcRKaOZcDwqTiQo++ESR/+PLSezHigzJhZmRSXYOE5CrkZ1M+oNW+c+H6oiFyblPzY7ozmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711655943; c=relaxed/simple;
-	bh=ZJAY5ItgPFNW0LMb5RnANZBqjmUyKGO9ruTQ3rdhYns=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=abfveTTXjwSRWjJUr+Lo11Kpq6tFXn5GNOxhI/yHvChv+yXpJhGOU1T9LZK1AblxQzda+SLD1idv+hhhn07yG+vYCbOU5JE0s4cH18uqYgS2R4v4GrzFZnh0x3BIv1ztP2MselkYsUHTkRIdr4BKMeHHfwqqH0BoBITpqoLcp2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i/hBLy32; arc=none smtp.client-ip=209.85.222.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711656113; c=relaxed/simple;
+	bh=P8jZccudYkqES945q0Ut1Lb+avcA1ifhBKmqB9AvAko=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:References; b=uV+H/u0ZF1cZzmFYvhJYhT3t2BkJUATBbaRcItSGHzGoEOmnda5xP1jXWcJoY+ViFWzNP/BBYqMKOUb9CobXCSDCaJjo7LUDKd/RDxwIzgWcGwzLl+kSg+2WQinMiNXhdqaG1QtQ1dS1ZIbm8PtGRrVsGsGdljGNThsXsPEqpL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=bW8CmYKO; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/hBLy32"
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-7e0425e5aa8so396526241.3;
-        Thu, 28 Mar 2024 12:59:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711655940; x=1712260740; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=vnKBKhBKsmsJMY/bC4lZDp0UO96Fq//Yoyy126bkPGI=;
-        b=i/hBLy32YYW/o8j3jlyT+58N73XWr4B7nEUysc6HQGvHX/dXUUf9BrlAekuhzfeCpX
-         OvvCSJrGdFgHBFHmzE5U84AhiSl2pfojaS40NgbQugrYHm0z20LUq4Ewv9RNV3pDuLHQ
-         zuBPLjn9y0+Cf/ARg2ussYnyELP22NkypxWVYl24RlmHKFpbHhYYqDzwJ2Xq+A9TxAGe
-         ucSWRgOMxDU90tsotlsQ6iW/2+pm5dxix7jkl6GSfclY2iG1IbaRFdKLtHsmstq3sHaO
-         mfQU844pkCEw8CnS1c9f9Ma+W+I4ZeGLcdOa5G5j5urWobzqiZBgjYWl9ctwB5B95LZZ
-         96DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711655940; x=1712260740;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vnKBKhBKsmsJMY/bC4lZDp0UO96Fq//Yoyy126bkPGI=;
-        b=j1Nfg/elcADLj8v9Rfa1f8MY3Bg8dCs8vvXnwKihxiwznCN8ntr9B+b6BoPd3cbWZQ
-         SxazB+FMzP4bROJnYL2N65+v+YHAcywwg6zZC0aHDkQ4NHxlmg0NARNrqJgyi7uCQB1Q
-         lUlHwUhR7pWAXod58qgvox0ygBz4xgYXycKh1mCN8Mg68dL2kw/+jnDyYv+zPjrvKj1X
-         jeBmAHMv7QIx98rR8UQ1xphHEeeCg8oQY5Qcg8FqUZQW2e6EAvkZrUtdoFdt9nOFrKAV
-         8kC2RMLKNaZXbi57sxq6mLi4jPlIbjhqNeUSRUbdgdLpXx8bm69n9/NLdaxSF09D5nBJ
-         n86w==
-X-Forwarded-Encrypted: i=1; AJvYcCU/5nSbr5ngakMEsCsYdcLYd69F+RxWN1k0X17193zxtZvSKXcNU37ePENQVUwzR9JX57ubYnL83GmOPMDcvjr+1sEFzky1L02TT7A5gP+OF0v0IFU4aBEb4msHu9AEOtq7Flle8Un0goMzFekKxiDs34Nc4Go1n2Q4g8t8JJM0QnJD3OUhhxwq0FjiAP4b5akZamLB+meyJpG95a7Zf8zIARo8itSz5WCJibjv88Ww5fZMu934l3JMjEc18EZtmxbJSghLZxf+wY610IziqyX3/PGzkC/Sbm7dddFLUS5YrtiLAyuiLJysKvha7cG7X8kyJUjHTxFmyou8D/6it3n+be/XrVQAcdP6X5wfwwaYNHv7gdLGsc4cPAOkJYipeY+T2d9+dgI/Aj+fvFr0pDRt2h60IbHDvK4JdeDQFmOob9puQCyfnao3dtv0IN26BcTta8yI7nxgeUT9t6bXu3VGVzSxk+rH/Ob+LQMbt6SWprby3SRayDzqjXtV6sbAUMfXg7gOdBt4uV6c1ALEkw6d5yCdrKJx98a56QyPaK+XgKZOlemc+IH+TUBNyiQpQAjUs3UvAV9Z7Hir0Z9SJhk=
-X-Gm-Message-State: AOJu0Yy/VcUJSpofnXO/IqOfIdWHC4xhGlkhm1fqBNHfw8iG3a9kL9gJ
-	W/91jjuRRU1ayHwki3FsghQJyFFhoQYVUqg3AGtZ0OtDwtvHgZS/KfSrB9FMsqaoVjySTImChu1
-	XPB6iTimdOT3ab4DOWy6pvRPNr23TrbbqUJEj5w==
-X-Google-Smtp-Source: AGHT+IEsqiTQ+RuhLXyb/Y+jV0DgOZDtp/0zVM9owKFV3xn7f9aoxOYdP+JeSKGOIKqBlapOYOkCUtaaLw32MikZSqo=
-X-Received: by 2002:a05:6102:2a65:b0:476:cf52:e1b7 with SMTP id
- hp5-20020a0561022a6500b00476cf52e1b7mr141814vsb.28.1711655940207; Thu, 28 Mar
- 2024 12:59:00 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bW8CmYKO"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240328200142euoutp023a41cb17ab6dc2fca591e4d337c23501~BBif-pFE82272322723euoutp02z;
+	Thu, 28 Mar 2024 20:01:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240328200142euoutp023a41cb17ab6dc2fca591e4d337c23501~BBif-pFE82272322723euoutp02z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1711656102;
+	bh=FUHAmFE1jPsyGY3FGfhuWJKOZo6nqnOFwAUmyJ4+EqA=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=bW8CmYKOxd6yFp+xzPDfzaxIkYhYOmyuMz0Ss9ggagFf3lwZBuRYhLsV2SCEVTo+t
+	 vPsHOkaPkwVHGdUSr7xkQWuCgZuEJ4dPQCNxkRNLnz/oQLXZCCy2RRUou5LlPXU/e2
+	 rTyrwXX0ZAvX1hrgpe6GiLmi5RVBDAzEuEQcpVsg=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20240328200141eucas1p2b144a36d6e3d9e37af6be159a6c76c00~BBifsSxo40307803078eucas1p2x;
+	Thu, 28 Mar 2024 20:01:41 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id 35.4C.09539.5ACC5066; Thu, 28
+	Mar 2024 20:01:41 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240328200141eucas1p2f85de76e86cb8cc192b0d495279af934~BBifZQt_t0306403064eucas1p2o;
+	Thu, 28 Mar 2024 20:01:41 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240328200141eusmtrp1a6a835c9571e235918655c002e49daad~BBifYvtSX2279422794eusmtrp1I;
+	Thu, 28 Mar 2024 20:01:41 +0000 (GMT)
+X-AuditID: cbfec7f2-515ff70000002543-c5-6605cca5d2ab
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 79.39.10702.5ACC5066; Thu, 28
+	Mar 2024 20:01:41 +0000 (GMT)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240328200141eusmtip155b8fac5558877af60a9ccb98b044aa7~BBifPuWQF0094500945eusmtip1N;
+	Thu, 28 Mar 2024 20:01:41 +0000 (GMT)
+Received: from localhost (106.210.248.208) by CAMSVWEXC02.scsc.local
+	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Thu, 28 Mar 2024 20:01:40 +0000
+Date: Thu, 28 Mar 2024 17:53:41 +0100
+From: Joel Granados <j.granados@samsung.com>
+To: <wenyang.linux@foxmail.com>
+CC: Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>,
+	Christian Brauner <brauner@kernel.org>, "Eric W . Biederman"
+	<ebiederm@xmission.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] sysctl: move the extra1/2 boundary check of u8 to
+ sysctl_check_table_array
+Message-ID: <20240328165341.3ov54gwjymghtp2g@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240327160314.9982-1-apais@linux.microsoft.com>
- <20240327160314.9982-7-apais@linux.microsoft.com> <ZgRePyo2zC4A1Fp4@mail.minyard.net>
- <CAOMdWS+1AFxEqmACiBYzPHc+q0Ut6hp15tdV50JHvfVeUNCGQw@mail.gmail.com>
- <ZgXDmx1HvujsMYAR@mail.minyard.net> <CAOMdWS+nB5EENp_Vb=k1j77nrch5JgbZP2XYPJ2ieTja14zB0w@mail.gmail.com>
- <ZgXKeL36ckOyNpI/@mail.minyard.net>
-In-Reply-To: <ZgXKeL36ckOyNpI/@mail.minyard.net>
-From: Allen <allen.lkml@gmail.com>
-Date: Thu, 28 Mar 2024 12:58:49 -0700
-Message-ID: <CAOMdWS+KrT2dK0XiEkZJT0aHnre1sr6gMMSkdxuXZaUh5e2e8Q@mail.gmail.com>
-Subject: Re: [PATCH 6/9] ipmi: Convert from tasklet to BH workqueue
-To: minyard@acm.org
-Cc: Allen Pais <apais@linux.microsoft.com>, linux-kernel@vger.kernel.org, tj@kernel.org, 
-	keescook@chromium.org, vkoul@kernel.org, marcan@marcan.st, sven@svenpeter.dev, 
-	florian.fainelli@broadcom.com, rjui@broadcom.com, sbranden@broadcom.com, 
-	paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com, 
-	manivannan.sadhasivam@linaro.org, vireshk@kernel.org, Frank.Li@nxp.com, 
-	leoyang.li@nxp.com, zw@zh-kernel.org, wangzhou1@hisilicon.com, 
-	haijie1@huawei.com, shawnguo@kernel.org, s.hauer@pengutronix.de, 
-	sean.wang@mediatek.com, matthias.bgg@gmail.com, 
-	angelogioacchino.delregno@collabora.com, afaerber@suse.de, 
-	logang@deltatee.com, daniel@zonque.org, haojian.zhuang@gmail.com, 
-	robert.jarzmik@free.fr, andersson@kernel.org, konrad.dybcio@linaro.org, 
-	orsonzhai@gmail.com, baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com, 
-	patrice.chotard@foss.st.com, linus.walleij@linaro.org, wens@csie.org, 
-	jernej.skrabec@gmail.com, peter.ujfalusi@gmail.com, kys@microsoft.com, 
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, 
-	jassisinghbrar@gmail.com, mchehab@kernel.org, maintainers@bluecherrydvr.com, 
-	aubin.constans@microchip.com, ulf.hansson@linaro.org, manuel.lauss@gmail.com, 
-	mirq-linux@rere.qmqm.pl, jh80.chung@samsung.com, oakad@yahoo.com, 
-	hayashi.kunihiko@socionext.com, mhiramat@kernel.org, brucechang@via.com.tw, 
-	HaraldWelte@viatech.com, pierre@ossman.eu, duncan.sands@free.fr, 
-	stern@rowland.harvard.edu, oneukum@suse.com, 
-	openipmi-developer@lists.sourceforge.net, dmaengine@vger.kernel.org, 
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-rpi-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
-	imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	linux-mediatek@lists.infradead.org, linux-actions@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-mmc@vger.kernel.org, 
-	linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-s390@vger.kernel.org, netdev@vger.kernel.org, linux-usb@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="o5jgyvl67e7knwjj"
+Content-Disposition: inline
+In-Reply-To: <tencent_8599CCEFED19AF4A8A5A358862B226FD8A05@qq.com>
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
+X-Brightmail-Tracker: H4sIAAAAAAAAA2VSe0hTYRzl2+69uxutblfBX5pZS1eo2Utx1YoMs1FBEVSwXq68Tm2bsfmq
+	KCyGqUmNLGxmZVFamy0bNdRepkwrLR+9lmkvVomzLM3oISu3aw/ov/M7j49z4CO59G3cn0zW
+	pDFajUIlIgSYreFby7SzzXjijHbbLImrvh9Jftr0PEnzfrXkQU0JIXEY3iCJ3lyDLyRkx7Lb
+	MFlpQQtXZjXlEbIB6wTZ4bp92EpcLpAmMKrkDEY7fUG8IOnpUyNn25WJWef1ViwbnQzIR3wS
+	qEiov9eN5yMBSVPnEJxwtHPY4zOCD4NG3OOiqQEE7mr574ThrmEkUY7A7mrk/jHVGsWscAXB
+	7WeXeR4Bo0LgR57F+xJBhUNLb6c34EsFwX2niecJcCk7gl69yyv4UAnQnjPkxUJqIRSU5xAs
+	Hgt3jE7Mg7lUFlQd6Rj2kMM4AMrdpIfmU4ugtKQGY5tOhq7cJoLFu+Du5Q7vNKAO8qG27zHO
+	CrFQUfWWw2If6GlkSwM1HpoKCzA2UIjgpvsjjz3MCMr2DI4k5oH+oXMkEQPVlW5vI6BGg+P9
+	WLboaDhkKxqhhZCbQ7NuMZif92IGNLn4n2nF/0wr/juNpcOh9Go/8R8dBmWnXFwWzweLpQ8r
+	RTwT8mPSdWolo5upYTIjdAq1Ll2jjNiSqrai4Q/W5G7sr0LHez5F1CEOiepQ8HD4daW5Fflj
+	mlQNI/IVVtuxRFqYoNi+g9GmbtKmqxhdHQogMZGfMCQhiKEppSKN2cow2xjtb5VD8v2zOfLB
+	qPzZW+j1p98Gi7+ve555adXXwFFTvlw/OibSKc2LexTUrMQqcnOmZkpvRvNmCQoMHYeGxNtT
+	pN/Pvfu6wTEwd/cinwuXKlsDAw2OdvGCi4uTna+i56OMUZtvKQ/0uyw/O+c+CB+jrhcl7m0s
+	e7IyJjw0ffWK0Iy0ljZBJY1POkZfVQUs1WZUHI0xMSp0Nq52hnmJyogPFJ3ZsTWsJ96KLtq7
+	ThEO2rfnQ9vGkrjCssK1G5alxO+MPY3Ld/Gla8xZD2OJE3OUncFdWVHfIqNmJ8lNK7qdhuii
+	himfnA194qLm5WG2dS9TxiXZW19MHUqx+En9IuO7r01fHHgg5AZXJMJ0SYqZoVytTvEL3YbG
+	Q9sDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMIsWRmVeSWpSXmKPExsVy+t/xu7pLz7CmGZzuVbR4ffgTo8X/bS3s
+	Fme6cy0u75rDZnFjwlNGi5bVu1gd2DxmN1xk8VjQc57ZY9OqTjaPz5vkPKYcamcJYI3SsynK
+	Ly1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy3i7/BV7wWaF
+	iq/PRBsY50p3MXJySAiYSEw4NYG1i5GLQ0hgKaPEs6l/GCESMhIbv1xlhbCFJf5c62KDKPrI
+	KHHj+H5mCGcro8TjuStYQKpYBFQlfneuA+tgE9CROP/mDjOILSIgL3HuySp2kAZmgaOMEm9a
+	XoMlhAVSJC61/QGzeQUcJHqWt0GtmMoocXXvFEaIhKDEyZlPgDZwAHWXSRxezglhSkss/8cB
+	UsEp4CSxYM4uFohLlSXudpxmg7BrJT7/fcY4gVF4FpJBsxAGzUIYBFLBLKAlcePfSyYMYW2J
+	ZQtfM0PYthLr1r1nWcDIvopRJLW0ODc9t9hIrzgxt7g0L10vOT93EyMwhrcd+7llB+PKVx/1
+	DjEycTAeYlQB6ny0YfUFRimWvPy8VCUR3p1HWdKEeFMSK6tSi/Lji0pzUosPMZoCA3Eis5Ro
+	cj4wueSVxBuaGZgamphZGphamhkrifN6FnQkCgmkJ5akZqemFqQWwfQxcXBKNTCleb6z1r6x
+	Ie9wts783dd6j8yp9Hp/vsnslU2Xm55j26PrWyastFZWWv6ZuUhX+4KuvdAM+6hnW97kzNP/
+	3L4h74n6ffOjaU/n7Mo6EfPkxN+rRZpaCnPnBiQr/XzD/tDiYO3JJo9stm0+7DcXb926sW5m
+	+NoZX/fJVTyRDNBnT3GTif6eLH764I85jOmrS60XJehW7nhVdjhXk3NFy/1c8VN3JIpjgju8
+	P5dUHmHoZZ2+1GFNMN8LC4cUUcV7x454Cx5nUfQK4qwO+8t+QPKBTfj/U89NHY8FWTIfuMqZ
+	uFjkn7b2uqxJb9v6pCs3n/edHnzm6D+On7zRxWdEf/otvx1Yy/5S+PKSn0cmhPkosRRnJBpq
+	MRcVJwIAwITzbXYDAAA=
+X-CMS-MailID: 20240328200141eucas1p2f85de76e86cb8cc192b0d495279af934
+X-Msg-Generator: CA
+X-RootMTR: 20240302152805eucas1p22ac49edeee0be22bcf5562daeba11716
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240302152805eucas1p22ac49edeee0be22bcf5562daeba11716
+References: <CGME20240302152805eucas1p22ac49edeee0be22bcf5562daeba11716@eucas1p2.samsung.com>
+	<tencent_8599CCEFED19AF4A8A5A358862B226FD8A05@qq.com>
 
-> > > >
-> > > >   Fair point. Could you please let me know once you have had a chance to test
-> > > > these changes. Meanwhile, I will work on RFC wherein IPMI will have its own
-> > > > workqueue.
-> > > >
-> > > >  Thanks for taking time out to review.
-> > >
-> > > After looking and thinking about it a bit, a BH context is still
-> > > probably the best for this.
-> > >
-> > > I have tested this patch under load and various scenarios and it seems
-> > > to work ok.  So:
-> > >
-> > > Tested-by: Corey Minyard <cminyard@mvista.com>
-> > > Acked-by: Corey Minyard <cminyard@mvista.com>
-> > >
-> > > Or I can take this into my tree.
-> > >
-> > > -corey
-> >
-> >  Thank you very much. I think it should be okay for you to carry it into
-> > your tree.
->
-> Ok, it's in my for-next tree.  I fixed the directory reference, and I
-> changed all the comments where you changed "tasklet" to "work" to
-> instead say "workqueue".
->
+--o5jgyvl67e7knwjj
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- Thank you very much for fixing it.
+On Sat, Mar 02, 2024 at 11:27:45PM +0800, wenyang.linux@foxmail.com wrote:
+> From: Wen Yang <wenyang.linux@foxmail.com>
+>=20
 
-- Allen
+<--- snip --->
+
+> diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
+> index 6ef887c19c48..84e759a8328f 100644
+> --- a/kernel/sysctl-test.c
+> +++ b/kernel/sysctl-test.c
+> @@ -367,6 +367,35 @@ static void sysctl_test_api_dointvec_write_single_gr=
+eater_int_max(
+>  	KUNIT_EXPECT_EQ(test, 0, *((int *)table.data));
+>  }
+> =20
+> +/*
+> + * Test that registering an invalid extra value is not allowed.
+> + */
+> +static void sysctl_test_register_sysctl_sz_invalid_extra_value(
+> +		struct kunit *test)
+> +{
+> +	unsigned char data =3D 0;
+> +	struct ctl_table table[] =3D {
+I'm pretty sure that this is going to clash with the constification that
+Thomas is working on. Please re-work this patch knowing that these
+ctl_tables are going to have to change to const at some point.
+
+> +		{
+> +			.procname	=3D "foo",
+> +			.data		=3D &data,
+> +			.maxlen		=3D sizeof(u8),
+> +			.mode		=3D 0644,
+> +			.proc_handler	=3D proc_dou8vec_minmax,
+> +			.extra1		=3D SYSCTL_ZERO,
+> +			.extra2		=3D SYSCTL_ONE_THOUSAND,
+> +		},
+> +		{}
+Don't use the sentinel here. We are removing them and all new sysctl
+tables (even the test ones) should be created without them
+
+> +	};
+> +	unsigned int size =3D ARRAY_SIZE(table);
+You do not need size here. When you use register_sysctl, the size will
+be automatically calculated for you.
+
+> +
+> +	KUNIT_EXPECT_NULL(test, register_sysctl_sz("foo", table, size));
+> +	table[0].extra1 =3D SYSCTL_ONE_THOUSAND;
+> +	KUNIT_EXPECT_NULL(test, register_sysctl_sz("foo", table, size));
+> +	table[0].extra1 =3D SYSCTL_ONE_HUNDRED;
+> +	table[0].extra2 =3D SYSCTL_TWO_HUNDRED;
+> +	KUNIT_EXPECT_NOT_NULL(test, register_sysctl_sz("foo", table, size));
+Replace all these by register_sysctl please.
+
+> +}
+> +
+>  static struct kunit_case sysctl_test_cases[] =3D {
+>  	KUNIT_CASE(sysctl_test_api_dointvec_null_tbl_data),
+>  	KUNIT_CASE(sysctl_test_api_dointvec_table_maxlen_unset),
+> @@ -378,6 +407,7 @@ static struct kunit_case sysctl_test_cases[] =3D {
+>  	KUNIT_CASE(sysctl_test_dointvec_write_happy_single_negative),
+>  	KUNIT_CASE(sysctl_test_api_dointvec_write_single_less_int_min),
+>  	KUNIT_CASE(sysctl_test_api_dointvec_write_single_greater_int_max),
+> +	KUNIT_CASE(sysctl_test_register_sysctl_sz_invalid_extra_value),
+>  	{}
+>  };
+> =20
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index f67b39d3d6e5..28888744626a 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -977,16 +977,10 @@ int proc_dou8vec_minmax(struct ctl_table *table, in=
+t write,
+>  	if (table->maxlen !=3D sizeof(u8))
+>  		return -EINVAL;
+> =20
+> -	if (table->extra1) {
+> -		min =3D *(unsigned int *) table->extra1;
+> -		if (min > 255U)
+> -			return -EINVAL;
+> -	}
+> -	if (table->extra2) {
+> -		max =3D *(unsigned int *) table->extra2;
+> -		if (max > 255U)
+> -			return -EINVAL;
+> -	}
+> +	if (table->extra1)
+> +		min =3D *(unsigned char *) table->extra1;
+> +	if (table->extra2)
+> +		max =3D *(unsigned char *) table->extra2;
+> =20
+>  	tmp =3D *table;
+> =20
+> --=20
+> 2.25.1
+>=20
+
+--=20
+
+Joel Granados
+
+--o5jgyvl67e7knwjj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmYFoJUACgkQupfNUreW
+QU8CjQv+Pgocvz4Gd33upP9+RQKbhhX72UVKZFRIIwEViy/M93mkHVAH/OzSwA6x
+TMht01qmi2ZtFJjUM4N6WdHnzLtflrDKLqUasdOjvF5ufrBKxa0dj548Xfqg4xHi
+06vRchhZbfaRK3Sj5F3E4X3gNAkgY0sfz/ugRw7ZUAx0logTh8lxk/7Yz7kyY/fN
+AZGL/3ITwopK/7hb8csHFLndg94LGXTgpvj9yZtql+cKfgRng2AU2MGISUkSJpz1
+QBkLDP1Njp48t+YeY5oN4qyeFihD6v/ZaIpGBUFsluVCThMy5I0OEg27O3s++nZX
+PTdjkxOR57S1cvn6vlTXgjDgUy8AS5QlxzP2gKPcuhdMdIyGFHFliftG70GnFmk2
+05JIeM1HEGxEM+UMgxSsnsEilZoegTZ/KrYMdLJ62fIYdlcaZucCVZhf/BHVoRtA
+yTWvNlY3mu0t5uTJwkdDMdPnmnJC1oAtLqGp7PXSY/7s4y3c9M5hG4DPjpK+FPsR
+6kWYpr5x
+=kGut
+-----END PGP SIGNATURE-----
+
+--o5jgyvl67e7knwjj--
