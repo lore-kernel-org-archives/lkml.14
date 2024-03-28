@@ -1,148 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from sender-of-o58.zoho.eu (sender-of-o58.zoho.eu [136.143.169.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3384438A
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:35:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711643702; cv=none; b=nHdUypBrJdoNY01E+lhEPwi23VNeVYUByExa0P6K2RpspIfcoBQqRdTLwqjAut94qrbRajcIvejrZ6HbVx/aPOxLxtaW8N8XbRSB2TZPinv6uQ4wZD+NdG1UZMGom6kmYl9Bz+L8SyNuXjUp4d4TS6J1M+Q87dFoJxp2W5uQJP0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711643702; c=relaxed/simple;
-	bh=jdfIqeGx7iuHgqcMFhxtu5WAhVw5xPnhsJo7b6P/XKc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WVmSEvUzIBXai1sNu2L8Qju5C65hLyV6bbuE1++ffwKiJfiM4u+BLBQ6v0wY7ItMKruf5aisXjZVFHvHaS1kYGihs0HAiPoenOdeLagfgeIlmLZd4G1XO6LKgH4RWbYFQuPwXuhpNaye64uZhCTzIn60gbBFdfQed1dYsC8ff8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fuAnMgkC; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE923A1C4
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 16:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711643722; cv=pass; b=bV+havZLQ8WVpjEE0cpQkFY9mGt5Ai7OqdqDPsD8AZYkEzexRsGr2cPFpLCf8H8D7asBaghtxrfkawQ77HtzDgIs0xhV/JO4QaxeuH+3ebldchBVlLHwBTUGlslLI5obmozcGf3Ivqm6xPlVbRSmtjoxN74Obt3/5dq5A7HrzDg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711643722; c=relaxed/simple;
+	bh=jWm9h4bEyRjCM9yo1TuiTy0WnYH+mWXWfvuJwWCVK+k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lqtAlLddSMmNLEOKuB2tM3o3t6hSPkXMjXaCQHM9FiMhxxzR2+ulaybu1ZZ0YUdu81jQlrzmjVDmkjpzXSnxoz2C0OU1aalcpJlBTEBwzxJUzIKXDnZfNxDbEhEIlwDMUIB/lCvpCfAFeDJZN51zU6Im5/vWuAOCDvNC/Ml61ww=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bursov.com; spf=pass smtp.mailfrom=bursov.com; dkim=pass (1024-bit key) header.d=bursov.com header.i=vitaly@bursov.com header.b=J1KF93Iy; arc=pass smtp.client-ip=136.143.169.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bursov.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bursov.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fuAnMgkC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711643699;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hDfAk4YAlKNdLmSwUMxTH3zTc83Y1JZRxoVOBJSESsg=;
-	b=fuAnMgkCAwwTWzoeaFIorqjIIc2gLpSIF782b/V24CXBfgSPn6Ca7pMw0uRT6XYOBNEbqU
-	S+Z/ZeijMYBoc+TDwSAc6SyZi5OHy7+ayrqSj3ui2903ihsKqg6jpQhlLs5/5YdE4EaPCi
-	JStfcKq02rcrv7xlqmoJwqBAtc/kLL8=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-696-HdMk_3MKM8CSF0IznLHt6w-1; Thu,
- 28 Mar 2024 12:34:53 -0400
-X-MC-Unique: HdMk_3MKM8CSF0IznLHt6w-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1060F3C0BE45;
-	Thu, 28 Mar 2024 16:34:51 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.146])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id BA9EB492BC6;
-	Thu, 28 Mar 2024 16:34:47 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-	Jeff Layton <jlayton@kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Dominique Martinet <asmadeus@codewreck.org>
-Cc: David Howells <dhowells@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Steve French <smfrench@gmail.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Tom Talpey <tom@talpey.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	netfs@lists.linux.dev,
-	linux-cachefs@redhat.com,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>
-Subject: [PATCH 02/26] 9p: Clean up some kdoc and unused var warnings.
-Date: Thu, 28 Mar 2024 16:33:54 +0000
-Message-ID: <20240328163424.2781320-3-dhowells@redhat.com>
-In-Reply-To: <20240328163424.2781320-1-dhowells@redhat.com>
-References: <20240328163424.2781320-1-dhowells@redhat.com>
+	dkim=pass (1024-bit key) header.d=bursov.com header.i=vitaly@bursov.com header.b="J1KF93Iy"
+ARC-Seal: i=1; a=rsa-sha256; t=1711642777; cv=none; 
+	d=zohomail.eu; s=zohoarc; 
+	b=Vg2MDAWErE3CnQQcUPVvzZSCgDcKi02Xk5ejr8GnC5+5yABp70FOO2Tv1qaOxVYx+El8xebnVXaPHd7nijvAaYkCcDaeWWUT7MXeuVLRC8rb8PQonnIdw2IqIk2VMMnrgekGhFtZpJV7uNpgTDGoPWTPB8oWN2+/P3Or18PmIdU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+	t=1711642777; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=cED9Awhfc1vCla8jeiZzKgUEOIEF9249yC2TVR3tHtI=; 
+	b=Vr5wc3KYzC6MMBpSmSxyJ0DpwwephWIL5hUEmP8oSyMAklXIP4W8mxmAdx3PRXeIjN7FAr2J8tuaNhPCkDvJ08e7A3kF3dsquyvHnmcOt1E84GSj/Di8olPu59zHNJP/IjZU2NXpgA5SStoFOraeSxnf4qgjNuGxC0zOqJ03d14=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+	dkim=pass  header.i=bursov.com;
+	spf=pass  smtp.mailfrom=vitaly@bursov.com;
+	dmarc=pass header.from=<vitaly@bursov.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1711642777;
+	s=zoho; d=bursov.com; i=vitaly@bursov.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=cED9Awhfc1vCla8jeiZzKgUEOIEF9249yC2TVR3tHtI=;
+	b=J1KF93IyyzirxQiTaeSUuqLKfj7mYD45CQ1qBCfMcvZYVSOt6TQ1DuFtu0Gzs86r
+	dVfsxfQfX3N2kCK7xfjID8cvwv3zLvyIbXq0MxKSKtcF50U4ES35QSsUU/JJESOnoMp
+	Y9I3YzkWfdxQIqVycYapVYu+S0RwTo6l8CqUwU48=
+Received: from [192.168.11.99] (217.20.170.230 [217.20.170.230]) by mx.zoho.eu
+	with SMTPS id 1711642776065691.1973913101963; Thu, 28 Mar 2024 17:19:36 +0100 (CET)
+Message-ID: <9a27094a-bcde-4226-8559-86bfae290895@bursov.com>
+Date: Thu, 28 Mar 2024 18:19:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] sched/fair: allow disabling newidle_balance with
+ sched_relax_domain_level
+To: Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira
+ <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>,
+ linux-kernel@vger.kernel.org
+References: <cover.1711584739.git.vitaly@bursov.com>
+ <da4454bf368e51369c74e4574d22e8f0bfd9d368.1711584739.git.vitaly@bursov.com>
+ <f6bd6617-b8fb-4760-a90b-ceeca6d4e415@linux.ibm.com>
+Content-Language: en-US, ru-RU, uk-UA
+From: Vitalii Bursov <vitaly@bursov.com>
+In-Reply-To: <f6bd6617-b8fb-4760-a90b-ceeca6d4e415@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-Remove the kdoc for the removed 'req' member of the 9p_conn struct.
 
-Remove a pair of set-but-not-used v9ses variables.
+On 28.03.24 07:51, Shrikanth Hegde wrote:
+> 
+> 
+> On 3/28/24 6:00 AM, Vitalii Bursov wrote:
+>> Change relax_domain_level checks so that it would be possible
+>> to exclude all domains from newidle balancing.
+>>
+>> This matches the behavior described in the documentation:
+>>   -1   no request. use system default or follow request of others.
+>>    0   no search.
+>>    1   search siblings (hyperthreads in a core).
+>>
+>> "2" enables levels 0 and 1, level_max excludes the last (level_max)
+>> level, and level_max+1 includes all levels.
+>>
+>> Signed-off-by: Vitalii Bursov <vitaly@bursov.com>
+>> ---
+>>  kernel/cgroup/cpuset.c  | 2 +-
+>>  kernel/sched/debug.c    | 1 +
+>>  kernel/sched/topology.c | 2 +-
+>>  3 files changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+>> index 4237c874871..da24187c4e0 100644
+>> --- a/kernel/cgroup/cpuset.c
+>> +++ b/kernel/cgroup/cpuset.c
+>> @@ -2948,7 +2948,7 @@ bool current_cpuset_is_being_rebound(void)
+>>  static int update_relax_domain_level(struct cpuset *cs, s64 val)
+>>  {
+>>  #ifdef CONFIG_SMP
+>> -	if (val < -1 || val >= sched_domain_level_max)
+>> +	if (val < -1 || val > sched_domain_level_max + 1)
+>>  		return -EINVAL;
+>>  #endif
+>>  
+>> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+>> index 8d5d98a5834..8454cd4e5e1 100644
+>> --- a/kernel/sched/debug.c
+>> +++ b/kernel/sched/debug.c
+>> @@ -423,6 +423,7 @@ static void register_sd(struct sched_domain *sd, struct dentry *parent)
+>>  
+>>  #undef SDM
+>>  
+>> +	debugfs_create_u32("level", 0444, parent, (u32 *)&sd->level);
+> 
+> It would be better if the level can be after group_flags since its a new addition?
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Eric Van Hensbergen <ericvh@kernel.org>
-cc: Latchesar Ionkov <lucho@ionkov.net>
-cc: Dominique Martinet <asmadeus@codewreck.org>
-cc: Christian Schoenebeck <linux_oss@crudebyte.com>
-cc: v9fs@lists.linux.dev
----
- fs/9p/vfs_inode_dotl.c | 4 ----
- net/9p/trans_fd.c      | 1 -
- 2 files changed, 5 deletions(-)
+I'll change the order.
+Thanks
 
-diff --git a/fs/9p/vfs_inode_dotl.c b/fs/9p/vfs_inode_dotl.c
-index ef9db3e03506..7af27ba1c25d 100644
---- a/fs/9p/vfs_inode_dotl.c
-+++ b/fs/9p/vfs_inode_dotl.c
-@@ -297,7 +297,6 @@ static int v9fs_vfs_mkdir_dotl(struct mnt_idmap *idmap,
- 			       umode_t omode)
- {
- 	int err;
--	struct v9fs_session_info *v9ses;
- 	struct p9_fid *fid = NULL, *dfid = NULL;
- 	kgid_t gid;
- 	const unsigned char *name;
-@@ -307,7 +306,6 @@ static int v9fs_vfs_mkdir_dotl(struct mnt_idmap *idmap,
- 	struct posix_acl *dacl = NULL, *pacl = NULL;
- 
- 	p9_debug(P9_DEBUG_VFS, "name %pd\n", dentry);
--	v9ses = v9fs_inode2v9ses(dir);
- 
- 	omode |= S_IFDIR;
- 	if (dir->i_mode & S_ISGID)
-@@ -739,7 +737,6 @@ v9fs_vfs_mknod_dotl(struct mnt_idmap *idmap, struct inode *dir,
- 	kgid_t gid;
- 	const unsigned char *name;
- 	umode_t mode;
--	struct v9fs_session_info *v9ses;
- 	struct p9_fid *fid = NULL, *dfid = NULL;
- 	struct inode *inode;
- 	struct p9_qid qid;
-@@ -749,7 +746,6 @@ v9fs_vfs_mknod_dotl(struct mnt_idmap *idmap, struct inode *dir,
- 		 dir->i_ino, dentry, omode,
- 		 MAJOR(rdev), MINOR(rdev));
- 
--	v9ses = v9fs_inode2v9ses(dir);
- 	dfid = v9fs_parent_fid(dentry);
- 	if (IS_ERR(dfid)) {
- 		err = PTR_ERR(dfid);
-diff --git a/net/9p/trans_fd.c b/net/9p/trans_fd.c
-index 1a3948b8c493..196060dc6138 100644
---- a/net/9p/trans_fd.c
-+++ b/net/9p/trans_fd.c
-@@ -95,7 +95,6 @@ struct p9_poll_wait {
-  * @unsent_req_list: accounting for requests that haven't been sent
-  * @rreq: read request
-  * @wreq: write request
-- * @req: current request being processed (if any)
-  * @tmp_buf: temporary buffer to read in header
-  * @rc: temporary fcall for reading current frame
-  * @wpos: write position for current frame
-
+>>  	debugfs_create_file("flags", 0444, parent, &sd->flags, &sd_flags_fops);
+>>  	debugfs_create_file("groups_flags", 0444, parent, &sd->groups->flags, &sd_flags_fops);
+>>  }
+>> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+>> index 99ea5986038..3127c9b30af 100644
+>> --- a/kernel/sched/topology.c
+>> +++ b/kernel/sched/topology.c
+>> @@ -1468,7 +1468,7 @@ static void set_domain_attribute(struct sched_domain *sd,
+>>  	} else
+>>  		request = attr->relax_domain_level;
+>>  
+>> -	if (sd->level > request) {
+>> +	if (sd->level >= request) {
+>>  		/* Turn off idle balance on this domain: */
+>>  		sd->flags &= ~(SD_BALANCE_WAKE|SD_BALANCE_NEWIDLE);
+>>  	}
+> 
+> Other than the above change looks good. 
