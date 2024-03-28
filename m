@@ -1,92 +1,117 @@
-Received: from mailrelay5-1.pub.mailoutpod3-cph3.one.com (mailrelay5-1.pub.mailoutpod3-cph3.one.com [46.30.211.244])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA134CB38
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 07:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.244
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369A413ACC;
+	Thu, 28 Mar 2024 07:27:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711610722; cv=none; b=ZUcEHdfhalGZgTzvsUWEOYPXd5Mb5RJCXhSzZyukPnixXu3x+6SOwDDWiYyiK/Or5sdjn7QvCcKIUn+viIp6+9fnjuYIg5YQ4CcvJm1yvw8YO/BdQME8PMCIO142m1zihgLE51OvBRFzkrokdPwSAedVZQCST6g2tot64a9GtNo=
+	t=1711610869; cv=none; b=FhadZ13hDmMdHNNU5KXy6SIkErIlidNfEZ/vADSqJI7HnnEGgfpvdfU5Hy0Ozw5+AJsOuPhcod8nUxdBu/Yk7CKMKQ/Wqo956wTQG/3OPy6OhqCpOGHtuNbYHpyqZVnnLXNOF7Gp4iDIwqd62j7ORTKlJlBt5uHRedq8NE3rylw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711610722; c=relaxed/simple;
-	bh=5ouWhom1WgEvr+UIkAhFMpNB+A6ib/M6M2/Q60VF/0Y=;
+	s=arc-20240116; t=1711610869; c=relaxed/simple;
+	bh=nEcoLKbWbbnmmhagJLDz5mxJHGXM7Y7imMxfavzWVFY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iC++rYA34EEpV5jhZqa9kAaE5m+xSduvDtA9T4NiUKG+GFP2UVJVfBEECKx5RdGvXvb8I1FwjkU3mHI5JRWtb7PZazrrjwqicqrREYQSRgBpHXc3LuGFZIAtGLXWU9VrCFkP0kvU24J7uCmob+bNEFJt86MYysLlpheV3eCSXrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=FO3avDbt; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=tWmWJ3ND; arc=none smtp.client-ip=46.30.211.244
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=IwmXvukmimi9hXXNE7lt9NRsbBnYpQ6Kji7CJAZHIZrguA/BH4tbD9t3+UqH0CK6BRU7PHJTsfap4M7WwUuMwd0JBXKUin/WLjwb4EcpodHxKBCQ9MupMSn3Fd7FD0MqUP+9xKpfqD8ntHIHUAMjuFto+mYtu2Ff3LHwv1PRXi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bOOytuCo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="FO3avDbt";
-	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="tWmWJ3ND"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=rsa2;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=dyKv5n7Yl7LRdH+1tEzFGNQHD1DRdGd99PJrS6/p+zs=;
-	b=FO3avDbtCVJhZmbtPb25Z7M92okwL42Lwzwk0Xt1eFKNFfW85ebYPD1a4Iz7nbfQa1BVxuB2fck3t
-	 dV01QiC6wivs5sf4FR4Dwcj/7zxIoo8LiqS5TizyDmf/zwISEz8XHoo+q0YBAqS+W/jFG4FUQ44kvh
-	 t0uaYwTBtz7fuc9aKHnSrFR3GY32xONVYLJIM0g3hDiXwbLR9BD/o3eEuUuj3l3UwYm6F6muVvvj3L
-	 eaFcKcGJK55ShMf9yqSyFAGh9is77eUJyw3RtIOaPW++JhkBvC7HK4Ge1s3CMNfQOfP48o4EmSO883
-	 mKHiYwbBSpWF7oBq3uTpz9wEoyMQoiA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=ed2;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=dyKv5n7Yl7LRdH+1tEzFGNQHD1DRdGd99PJrS6/p+zs=;
-	b=tWmWJ3NDZTn8BTwQyoXUT6BJQOWPfdg24c2VPAtEdn8oRObE4JrU9XMtFz3jWr/w4xs53mowsZ7/3
-	 oWNGr4OCg==
-X-HalOne-ID: 4ddcab29-ecd4-11ee-9a1b-9fce02cdf4bb
-Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
-	by mailrelay5.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
-	id 4ddcab29-ecd4-11ee-9a1b-9fce02cdf4bb;
-	Thu, 28 Mar 2024 07:25:09 +0000 (UTC)
-Date: Thu, 28 Mar 2024 08:25:07 +0100
-From: Sam Ravnborg <sam@ravnborg.org>
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: arnd@arndb.de, javierm@redhat.com, deller@gmx.de,
-	sui.jingfeng@linux.dev, linux-arch@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-sh@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v2 2/3] arch: Remove struct fb_info from video helpers
-Message-ID: <20240328072507.GC1573630@ravnborg.org>
-References: <20240327204450.14914-1-tzimmermann@suse.de>
- <20240327204450.14914-3-tzimmermann@suse.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bOOytuCo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EA1AC433F1;
+	Thu, 28 Mar 2024 07:27:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711610869;
+	bh=nEcoLKbWbbnmmhagJLDz5mxJHGXM7Y7imMxfavzWVFY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bOOytuCo32SXKvu9CCqI+7WhrAn2GjGLDKCkhHBsc/+K9K6bQfvSmDOyxmt0SpL1z
+	 RV7KMOXCBbORlNujIal2rut2yUo9+0IOMtLV2mCVYiWTz0pjISqu2MjWyKaUzoFpzn
+	 9uhBm/ZeoOJh2jsWhG58+lZgcByTjkiECcty95nVDDVhCYFFpLvtcXlAi62ynhRiLI
+	 wlA3n9FFGheMjLsW18lxQgYE9pFzJAKEPsbuJN2VlnbCvIj6MbJG85x1g2e6lEvjpn
+	 BCPIekYGrm3BwT0Q+Ek7p3BDmVgYhoRtAH6Scw71YALKcTzFltY7V0doAXdkXx6yxF
+	 d/95lCjhtV7Ug==
+Date: Thu, 28 Mar 2024 12:57:44 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Cc: nikita.shubin@maquefel.me, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v9 09/38] dma: cirrus: Convert to DT for Cirrus EP93xx
+Message-ID: <ZgUb8JKn3nXmhkGn@matsya>
+References: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
+ <20240326-ep93xx-v9-9-156e2ae5dfc8@maquefel.me>
+ <ZgTytMtgvqcHlEsO@matsya>
+ <d620c37f58b303260096f73e04dfff6bb65ed1ef.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240327204450.14914-3-tzimmermann@suse.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d620c37f58b303260096f73e04dfff6bb65ed1ef.camel@gmail.com>
 
-Hi Thomas,
-On Wed, Mar 27, 2024 at 09:41:30PM +0100, Thomas Zimmermann wrote:
-> The per-architecture video helpers do not depend on struct fb_info
-> or anything else from fbdev. Remove it from the interface and replace
-> fb_is_primary_device() with video_is_primary_device(). The new helper
-> is similar in functionality, but can operate on non-fbdev devices.
+On 28-03-24, 08:21, Alexander Sverdlin wrote:
+> Hello Vinod!
 > 
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Andreas Larsson <andreas@gaisler.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: x86@kernel.org
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> On Thu, 2024-03-28 at 10:01 +0530, Vinod Koul wrote:
+> > On 26-03-24, 12:18, Nikita Shubin via B4 Relay wrote:
+> > > From: Nikita Shubin <nikita.shubin@maquefel.me>
+> > > 
+> > > Convert Cirrus EP93xx DMA to device tree usage:
+> > 
+> > Subsytem is dmaengine: pls fix that
+> > 
+> > > 
+> > > - add OF ID match table with data
+> > > - add of_probe for device tree
+> > > - add xlate for m2m/m2p
+> > > - drop subsys_initcall code
+> > > - drop platform probe
+> > > - drop platform structs usage
+> > > 
+> > > > From now on it only supports device tree probing.
+> > > 
+> > > Co-developed-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+> > > Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+> > > Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
+> > > ---
+> > >   drivers/dma/ep93xx_dma.c                 | 239 ++++++++++++++++++++++++-------
+> > >   include/linux/platform_data/dma-ep93xx.h |   6 +
+> > >   2 files changed, 191 insertions(+), 54 deletions(-)
+> > > 
+> > > diff --git a/drivers/dma/ep93xx_dma.c b/drivers/dma/ep93xx_dma.c
+> > > index d6c60635e90d..17c8e2badee2 100644
+> > > --- a/drivers/dma/ep93xx_dma.c
+> > > +++ b/drivers/dma/ep93xx_dma.c
+> 
+> [...]
+> 
+> > >   
+> > > @@ -104,6 +106,11 @@
+> > >   #define DMA_MAX_CHAN_BYTES		0xffff
+> > >   #define DMA_MAX_CHAN_DESCRIPTORS	32
+> > >   
+> > > +enum ep93xx_dma_type {
+> > > +	M2P_DMA,
+> > 
+> > Is this missing P2M?
+> 
+> Not really. It's not the most obvious one, but anyway a way to enumerate
+> two types of DMA engines:
+> 
+> "7.1.1 DMA Features List
+> DMA specific features are:
+> • Ten fully independent, programmable DMA controller internal M2P/P2M
+> channels (5 Tx and 5 Rx).
+> • Two dedicated channels for Memory-to-Memory (M2M) and
+> Memory-to-External Peripheral Transfers (external M2P/P2M)."
+> 
+> Now the confusing part is that this "M2M" engine is actually used
+> to transfer to and from *some* devices, like SPI and IDE.
+> So both engines are capable of M2P and P2M, maybe Cirrus has named
+> two engines in a sub-optimal way decades ago and this is now a bit
+> historical naming.
+
+Okay, thanks for clarifying (might be worthwhile to mention this in
+comments)
+
+-- 
+~Vinod
