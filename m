@@ -1,72 +1,78 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4797657A9;
-	Thu, 28 Mar 2024 10:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5270E2B9C4;
+	Thu, 28 Mar 2024 11:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711623452; cv=none; b=jmeIJy9CqxTIx8KHB39bcNMcFGUbN9d03RW1LOwg9Fe8YpOhQntHHTvDN0KSAeFVAFd5b29fegWw9O+PfDxQMeLFn4B0R+7PQZ9Rx/4KC1ij80BjwtDxw7P+qy5A38wgpyojZFeIlzn8B4Gzq0yZlgJPVG5aKdaX7y8ttK2bW3Q=
+	t=1711623629; cv=none; b=hbE/an0bZcvcEqHXjfQVa/ltcPW2VKRHJdonM2bf33tL/sstqqvJsW6TAQwNtyRY2bLkohp30C/AS5IQhuIu00x6HIbnW7OqMsrxCVeqLg5ftF1EwcGr9x48/dw6+F5T1KOAI6zj89mnYHeZH86OuAwE3p7G/7Y4Cg3ny+9Sh7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711623452; c=relaxed/simple;
-	bh=JFenx0tH3EH5g8x7Z2+LGn7i7pluO4hbZ0l7YkDg+eY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oXZUJtYHEiiztO/lVytC72xgr0KuQTqmrn/ZBeSd7njVFvMydpphme1AciC9ohgPc6FjgLTBjFkIS2xo2XkT/2dWUrK1saC24Mq5WUlpBZ1/ttyUikMrvFcbG2AfMyjZnY8xcGV/iZ2EG+VXxEOc8x2Bxh33m9JLUuWoBuz0t4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-	id 1rpnRm-00C8W9-Jf; Thu, 28 Mar 2024 18:57:27 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 28 Mar 2024 18:57:43 +0800
-Date: Thu, 28 Mar 2024 18:57:43 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: "Chang S. Bae" <chang.seok.bae@intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	davem@davemloft.net, ebiggers@kernel.org, ardb@kernel.org,
-	x86@kernel.org
-Subject: Re: [PATCH v2 0/2] crypto: x86/aesni - Simplify AES key expansion
- code
-Message-ID: <ZgVNJ+YASurGz1sB@gondor.apana.org.au>
-References: <20240311213232.128240-1-chang.seok.bae@intel.com>
- <20240322230459.456606-1-chang.seok.bae@intel.com>
+	s=arc-20240116; t=1711623629; c=relaxed/simple;
+	bh=0lxXx362Dut5xedsJ1jHvviSrwVWwdV1VnDSTkexTe0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=jLXGZYoZVAJ8Q2KJ1ThCfg76P93hJ7nee3E2TtQmdWLNPoIsXDJyxpN5L22HaNRbf9ZvMRaJoq0yl5GKex1UeGsgm1/2N9SvUawdXi3ymVtEnit4Vo+mS3LyQwT5GvoP6jRJyNqr3dQEn6KY/KCKsu3n3ZadU0ClFWlmAbknbwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hEFHdQXS; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hEFHdQXS"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D096DC43390;
+	Thu, 28 Mar 2024 11:00:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711623628;
+	bh=0lxXx362Dut5xedsJ1jHvviSrwVWwdV1VnDSTkexTe0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=hEFHdQXSH4d+JFaPP5z0Xg4cg79BTl2xtrsoiNphqZ8IewRhkaVzNqwD85wfSWBUU
+	 ER4LlV/4kVFgh9OTMxfiY1BCVun/xXer8PqFIhGFJ/uVSjN6B8ir3Sgt4geCiCYyLZ
+	 nfB5I/x9fj2BibNNXErSXRYyWg0mShriyCpLqF/w0H7ExiEQI/WNCnGFX7+i9EATKa
+	 tijgBPQJ+JjG4flqsFJRKW/VO5DDHl9KPSiqcdnCLeHcyb+TYaCAAJE4OW1B2w++N+
+	 ZcRCcukpS2Mt3M2K4CPvSleoWIYOXedpSUxHA+LytG+DBh2exFAJ6QKcDOw7YLs7ai
+	 m2kewna5G7GaA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id BF4CDD8C965;
+	Thu, 28 Mar 2024 11:00:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240322230459.456606-1-chang.seok.bae@intel.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net V2] net: lan743x: Add set RFE read fifo threshold for
+ PCI1x1x chips
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171162362877.25241.2855018810326891961.git-patchwork-notify@kernel.org>
+Date: Thu, 28 Mar 2024 11:00:28 +0000
+References: <20240326065805.686128-1-Raju.Lakkaraju@microchip.com>
+In-Reply-To: <20240326065805.686128-1-Raju.Lakkaraju@microchip.com>
+To: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, edumazet@google.com, linux-kernel@vger.kernel.org,
+ bryan.whitehead@microchip.com, horms@kernel.org, UNGLinuxDriver@microchip.com
 
-On Fri, Mar 22, 2024 at 04:04:57PM -0700, Chang S. Bae wrote:
-> Previously, V1 [1] was posted to update the aesni_set_key() prototype to
-> remove an unnecessary error code return type.
-> 
-> During the review process, it was discovered that both aes_expandkey()
-> and the AES-NI glue code redundantly check the key size. V2 includes a
-> cleanup to invoke aes_expandkey() immediately if AES-NI is unusable.
-> 
-> Thanks,
-> Chang
-> 
-> [1]: https://lore.kernel.org/lkml/20240311213232.128240-1-chang.seok.bae@intel.com/
-> 
-> Chang S. Bae (2):
->   crypto: x86/aesni - Rearrange AES key size check
->   crypto: x86/aesni - Update aesni_set_key() to return void
-> 
->  arch/x86/crypto/aesni-intel_asm.S  |  5 ++---
->  arch/x86/crypto/aesni-intel_glue.c | 24 +++++++++++-------------
->  2 files changed, 13 insertions(+), 16 deletions(-)
-> 
-> 
-> base-commit: e8f897f4afef0031fe618a8e94127a0934896aba
-> -- 
-> 2.34.1
+Hello:
 
-All applied.  Thanks.
+This patch was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Tue, 26 Mar 2024 12:28:05 +0530 you wrote:
+> PCI11x1x Rev B0 devices might drop packets when receiving back to back frames
+> at 2.5G link speed. Change the B0 Rev device's Receive filtering Engine FIFO
+> threshold parameter from its hardware default of 4 to 3 dwords to prevent the
+> problem. Rev C0 and later hardware already defaults to 3 dwords.
+> 
+> Fixes: bb4f6bffe33c ("net: lan743x: Add PCI11010 / PCI11414 device IDs")
+> Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
+> 
+> [...]
+
+Here is the summary with links:
+  - [net,V2] net: lan743x: Add set RFE read fifo threshold for PCI1x1x chips
+    https://git.kernel.org/netdev/net/c/e4a58989f5c8
+
+You are awesome, thank you!
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
