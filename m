@@ -1,83 +1,124 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4807855C07
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 08:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DAF24E1C3
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 08:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711615490; cv=none; b=BFYdjTHuIjcONEmqGbl/cVFmdnORxR5QY/xe5FXXXr/8suXsaqTub/mpSNRbja6B4z72qPjan5+6FM6dy7/mq7XGX58/u4QM0yA67I1KNK3Fo6r2LrWSNhXr450efm2uei31BBMUbo6etPITm63ljKicMrjBuXN/db0n3on+jw4=
+	t=1711615522; cv=none; b=Z+oidHmXJc4ZxFk3QaUj41Tf2dDtgBtecScum8cnHeiSn/5wG8eG8/JFgEfylOjcnfL0gEZ/DrBX1TS2Mjlpu8M8CaFZqiQxorOG+PxS9yY9aVEQJKt3cYocr9Q/mro5gFmXCqnOGv0OoU4mVykS7x2RoOfSwq7Oy+ibfbPAiLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711615490; c=relaxed/simple;
-	bh=Pxg6IUYzsoTznUX7vcw9sN15lB0Uu/xj7gWnXvLPPT8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eZroIWELYqJBNe77Pbq/qoXkSh5uL+36+xzbb9TTf2zWSgvLdopAmQKJv9Vx0Rt4uJ0Ah05pOnL0Gie6wnl0GhFOw1C2wxP50908sfOl3TlHYx9dqlTMAJXOM43MdByP2ZNOPEKgOqsk4hKvuOlSGbUTvgA+5v+9TtZ5t5lO3Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=F9RIgOAC; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F9RIgOAC"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dd045349d42so627692276.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 01:44:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711615488; x=1712220288; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pxg6IUYzsoTznUX7vcw9sN15lB0Uu/xj7gWnXvLPPT8=;
-        b=F9RIgOACtY7Ln9zFuT++EpEfI7ABqSy2aS7LN8+7xvHfdAr9VtxD9FdQJCed9PmnbA
-         S2W8NB1ZTxzZ0D81aSDuNWLvqPJ1gcIH1ct8rRjuAhFFbfYTBIbvezwOeVJEltGmX3GJ
-         6xWaCNAZDSa7UfuPSkbS753t+D/Xz27NeJc53RSEsIvbeY4+/lvOegEAvLLjatw5APy0
-         5MUM8NpcoSXVl3eC64u4j/9uJcoqyOPdT4vp0lvDXxp/ExGOmskdpq2ZGtCTqmHqCpLp
-         FxiOdStw5EJcFJhomUHjp6j3EGAwspuO21BKpKXo9DoFmQPQqV0vrnsPzmnsjJgEqG04
-         pAPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711615488; x=1712220288;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Pxg6IUYzsoTznUX7vcw9sN15lB0Uu/xj7gWnXvLPPT8=;
-        b=R/fwHxhdx3fvxh2xWYSW1mnVJWP0dhhgLlx7KEiW9tkc864XQtju8C9V7bD46EIgjt
-         qK5kLLQLfdW9RYBca0zvRaj4ShAi1Uo3oimx+IJZe1Mr931mhU0bpZSY+JKAS4Xk0gca
-         U+nDoC9/OLMC3tWi1sq7bR4NsQKZGbG+jnl2SmWsb2h3zRUakRT+5RMDEqTBBHjxn77L
-         WuhB7Rn6JRyl6dqouN4b/YFy0CsSBbQ81Evz9jLr2wVOHq6WpshdHRtntX4hve9dufX2
-         4iG3DvVCLf5dPyLZJTdnds0BO1kV53vVceWpidMH62mLmZD67KneW7su5mXfn5yOGnDl
-         RZ6w==
-X-Forwarded-Encrypted: i=1; AJvYcCVpn3Gojq5kz+z+BK85yrwDb2XkotyQiICTWAW/jQHWTyaKO9KKxDJS0H2kQmf8dY605ew0DbOKTfTBajBqcHDfv+a2iCBn7Q6RoOk/
-X-Gm-Message-State: AOJu0Yx1y/dkZAtpSDeDBLHFgYaxxtbqPZpOCHoAtvp6STgmX417lZHF
-	rsMQI4lv5oQCyopSi+ZdvcACdf4jPVY/hFykWCb0wJ/0lFIPIF4B+L8o51qIUJJZ34buH+cix9r
-	te9ELbJrQfswDseeY+fkWIH+B9rkaFmbuAk76HYWQB/ahqgNX/ZA=
-X-Google-Smtp-Source: AGHT+IGcAn0RWps9oXY9GZljw77ZRlGO3gv6r4U3YqCqjwkkeOy4XucBWwQWIwNFeapvqv4z7ByXHzgjLqMMVEeXcLQ=
-X-Received: by 2002:a25:6a03:0:b0:dc6:a8c6:c9e5 with SMTP id
- f3-20020a256a03000000b00dc6a8c6c9e5mr2140753ybc.26.1711615488453; Thu, 28 Mar
- 2024 01:44:48 -0700 (PDT)
+	s=arc-20240116; t=1711615522; c=relaxed/simple;
+	bh=Y5Xd8Q2+cKEbaBnX1DP+dwC6AhteJyqc2e+mytwPLN4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MS5jTl0hH8RThgPhw4BWM60Ll7Bmzs0PiR+sjlwpzpGmb939OwcrEqvkVPU2Lk35j0d4aun4JJ52Z+IMW8SrNiighTjRbgxRjbTzc6eli1Sm+fBBPYNbvbWexVuUYjI8d7wOs2xMDS2VgsjLYPTTWiAAcEbkjRN1AqrqDTOnOqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C36612F4;
+	Thu, 28 Mar 2024 01:45:52 -0700 (PDT)
+Received: from [10.57.72.121] (unknown [10.57.72.121])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA03A3F64C;
+	Thu, 28 Mar 2024 01:45:16 -0700 (PDT)
+Message-ID: <a6da59d1-28b5-4cc0-aae9-fca1286be577@arm.com>
+Date: Thu, 28 Mar 2024 08:45:14 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240311142346.1261203-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20240311142346.1261203-1-andriy.shevchenko@linux.intel.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 28 Mar 2024 09:44:37 +0100
-Message-ID: <CACRpkdZ-FrLBzu=nV-PjwMaS2BL3TDeKB3m9BhUfWJhmkoP7OA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] pinctrl: pxa2xx: Make use of struct pingroup
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Daniel Mack <daniel@zonque.org>, 
-	Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] arm64: mm: Batch dsb and isb when populating pgtables
+Content-Language: en-GB
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, David Hildenbrand <david@redhat.com>,
+ Donald Dutile <ddutile@redhat.com>, Eric Chanudet <echanude@redhat.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240326101448.3453626-1-ryan.roberts@arm.com>
+ <20240327190723.185232-1-ryan.roberts@arm.com>
+ <CAMj1kXF68MH0HUH8FHpHAoSs_tPbMGek5mY2U4BL-i_RWoZ+5Q@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CAMj1kXF68MH0HUH8FHpHAoSs_tPbMGek5mY2U4BL-i_RWoZ+5Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 11, 2024 at 3:23=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On 28/03/2024 07:23, Ard Biesheuvel wrote:
+> On Wed, 27 Mar 2024 at 21:07, Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>
+>> After removing uneccessary TLBIs, the next bottleneck when creating the
+>> page tables for the linear map is DSB and ISB, which were previously
+>> issued per-pte in __set_pte(). Since we are writing multiple ptes in a
+>> given pte table, we can elide these barriers and insert them once we
+>> have finished writing to the table.
+>>
+> 
+> Nice!
+> 
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>> ---
+>>  arch/arm64/include/asm/pgtable.h |  7 ++++++-
+>>  arch/arm64/mm/mmu.c              | 13 ++++++++++++-
+>>  2 files changed, 18 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+>> index bd5d02f3f0a3..81e427b23b3f 100644
+>> --- a/arch/arm64/include/asm/pgtable.h
+>> +++ b/arch/arm64/include/asm/pgtable.h
+>> @@ -271,9 +271,14 @@ static inline pte_t pte_mkdevmap(pte_t pte)
+>>         return set_pte_bit(pte, __pgprot(PTE_DEVMAP | PTE_SPECIAL));
+>>  }
+>>
+>> -static inline void __set_pte(pte_t *ptep, pte_t pte)
+>> +static inline void ___set_pte(pte_t *ptep, pte_t pte)
+> 
+> IMHO, we should either use WRITE_ONCE() directly in the caller, or
+> find a better name.
 
-> Since pin control provides a generic data type for the pin group,
-> use it in the driver.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+How about __set_pte_nosync() ?
 
-Patch applied!
+> 
+>>  {
+>>         WRITE_ONCE(*ptep, pte);
+>> +}
+>> +
+>> +static inline void __set_pte(pte_t *ptep, pte_t pte)
+>> +{
+>> +       ___set_pte(ptep, pte);
+>>
+>>         /*
+>>          * Only if the new pte is valid and kernel, otherwise TLB maintenance
+>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>> index 1b2a2a2d09b7..c6d5a76732d4 100644
+>> --- a/arch/arm64/mm/mmu.c
+>> +++ b/arch/arm64/mm/mmu.c
+>> @@ -301,7 +301,11 @@ static pte_t *init_pte(pte_t *ptep, unsigned long addr, unsigned long end,
+>>         do {
+>>                 pte_t old_pte = __ptep_get(ptep);
+>>
+>> -               __set_pte(ptep, pfn_pte(__phys_to_pfn(phys), prot));
+>> +               /*
+>> +                * Required barriers to make this visible to the table walker
+>> +                * are deferred to the end of alloc_init_cont_pte().
+>> +                */
+>> +               ___set_pte(ptep, pfn_pte(__phys_to_pfn(phys), prot));
+>>
+>>                 /*
+>>                  * After the PTE entry has been populated once, we
+>> @@ -358,6 +362,13 @@ static void alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
+>>         } while (addr = next, addr != end);
+>>
+>>         ops->unmap(TYPE_PTE);
+>> +
+>> +       /*
+>> +        * Ensure all previous pgtable writes are visible to the table walker.
+>> +        * See init_pte().
+>> +        */
+>> +       dsb(ishst);
+>> +       isb();
+>>  }
+>>
+>>  static pmd_t *init_pmd(pmd_t *pmdp, unsigned long addr, unsigned long end,
+>> --
+>> 2.25.1
+>>
 
-Yours,
-Linus Walleij
