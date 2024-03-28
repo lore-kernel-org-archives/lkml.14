@@ -1,135 +1,211 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7EF7C6E9
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 10:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210124E1C3
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 10:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711620578; cv=none; b=qQYCLixqg0Aj+68Ze8Zl6yOFR5KNi9PpQMyP7H7MNJ0oeO7BYTLFIQOX1f4BH1YfXfZ2QkYuDCPrS1MkAzM3FeT6az9PVtyulmt05NLkXEHzGhAO5mAQMZi6mtKtsM6KTlufYatHUv+IUhn6+ApzPPMb4Lz8yBZ+z4jam9TfdMI=
+	t=1711620592; cv=none; b=lJm9Ebu3P2x55HKLn6uJi3nqNsneBYJeocNMOAlcGX+vrjzCmZKJVp+2B3t8coQrIo12zD/5AQOqKQJ9c457Er2DXRph/goCbUDKw+AehO/AHnE198pHp2xbpU+JwwN/XRFgPXEizHmU34phOcjpH4ZaOqhRtukxr9mN1GOkwvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711620578; c=relaxed/simple;
-	bh=FrsEbllgu5nSWbKKPqP082m+wmXkceS/8bSVAZaHeLY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ccNIgj5OV2eiyupAOWR3SlBs6RhaOaIVRWLZiSTP6LHK5K/TwGYDAqViOlYg4GFQ2bhF/sHeHmGTEbzax3MBdkqxIfMQ7zTPDRjG5zcAmuuq867F/PSYSfbgQLQ+7LU8xk7epXoPiY59V40cy98xDBLBAUYu+aux9npvrOlT1v8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=2FiZjsn4; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1711620592; c=relaxed/simple;
+	bh=Q1TGbULYu7TuYaZNobqACeoh02W86om05wel0i2BsIA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MqVWbFoFIbpnaRkWPabC7KXxTsgNLvAkPENIXRMrtWi806G+n2KHbP4pHOX404NT3BDmQq8SZdfC95OVru9ceMdgflFR+U0rJ4ywKm5OLr3Kfo4jsHOctF46QjD+MsNEtv1IdYRkPN9hZ/ufpMTJ1QTOoFUoyhK8+CcrKogO8RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=chfLHFAz; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="2FiZjsn4"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-34175878e3cso532368f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 03:09:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="chfLHFAz"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2a20a9df742so143481a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 03:09:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711620574; x=1712225374; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=f5wMiw22c5vII85IvPgCG/zbOc7PIefhra+kZ3K8oIE=;
-        b=2FiZjsn4MJ87jzjepIbZmu/mDB5NHlpk2J0DU7pHikoV+lccS1VkhpjkI7om9XLyNb
-         ABJXpsAVquGp8pePCVL+OmGITO7+Pb67E8pbxLMronhgcKIW3e0SBiSDI36C8Je9twMI
-         ZPPX/zuSakN1NlvEciPnMHdTqgLNJCzosn7ed1AJtyfloX8ITMOz46QgePwTbwxHBLfT
-         7T2ccdCx9Ep0WUoIA3vLBoAhN326whA11b5MnqZkKh/saq/tSI8P93myCbqimgXb5BAj
-         1UbBM3Ox4gjLZoOBG3ZJtIfwg8WcDRtg8HyYKjA6zh1kHdfbQAF4+eBL/PFHIe5Qtk0p
-         e1Ig==
+        d=linaro.org; s=google; t=1711620590; x=1712225390; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=imitBWhKj5fRHkMDVQXkTQSjFX/+sLYMwaDPJCxrtck=;
+        b=chfLHFAzHA7TsEUJ91Ruk9OVaXppiy3mf9EdScXz98gMuPdfTBJvpO7UVeQXnz+oRH
+         a+tMQiKOE064qYPrKdPyQztFaFhpNsY20IaPCScOhKKqyZan00lGT81pYL1YqHVKm98+
+         a8LwTpZr4uBF+ZtTXHgLRp7J4WWo/taU8hgJaDyGH1Gmu+HJQGn24uVtNV0fiNCp8sc2
+         5WviyXjH8iR7E43keqbpzKSDpVAsPcyv66C8oGhJ9hSWHKSOEgEX5pIeGb8dM4v8E2pC
+         c674nRcKTHDwEPTit3S9x+Tc7GaQkgYJnkFZmOl21piNKLDo3qMZnRpoKQykXKPjxl4E
+         ZyyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711620574; x=1712225374;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f5wMiw22c5vII85IvPgCG/zbOc7PIefhra+kZ3K8oIE=;
-        b=A1/6y6fC4zko0Mbvn/yq52TFTEPoNcHxncmEtLX5IDCh7LOcrZmQp70xWxzoMb7fi5
-         g1pC3Q7VB1Ltg5fg4k3Z8CG+YqzuDH1fgEYZ7R2QXseoPDlwACQYZ6O4x/b6TeVs4UMu
-         gwUly1d6fx7nOcPytQif11E0ZRBh6r/6jxc8X44ZRaDK0mf4qhCJNvEASo+VUnJT4R9X
-         uyPxS/Q2TijW7f1jgFaJnX/sbC2vwKj7AuTT8YFmlwt1Sk7pRjQU1HPkQ+2xPoWDtXmd
-         6RnSQRCA8b/uDSwpC5WR3U1e2jewYrMWgtnIXFucKW0zSh5PH5GBhzuSR2hUstOP1TDQ
-         AAzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUU9R4pSsAEYc8s+L669636W/BDhVxuyVgwLhl6sFskg1H5huo1L8xMIlwTULyNaYUrzzn293NoTXm1W72JWUGnvT50xCTEX6XZqsX/
-X-Gm-Message-State: AOJu0YzhOGtsS24NDC5IvMcu632E43+WLPQjgV1wRQADTkQbhauvpXbz
-	VHOIhN3MDa7qSDcmx6D5fhXqxg5ODuXIZk9Tq/Twwy6nMjI96DFXBAef8vyVnRc=
-X-Google-Smtp-Source: AGHT+IFGHWYadDJCgABhwjbgmr/G/9ahD5CWJZRFUjAkHe014xq2ZOOYv0q270M74EFrQt4il5g9rw==
-X-Received: by 2002:a5d:6d82:0:b0:33e:9292:b194 with SMTP id l2-20020a5d6d82000000b0033e9292b194mr2493550wrs.14.1711620574475;
-        Thu, 28 Mar 2024 03:09:34 -0700 (PDT)
-Received: from [10.1.5.127] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id ea2-20020a0560000ec200b003432d79876esm1316197wrb.97.2024.03.28.03.09.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Mar 2024 03:09:34 -0700 (PDT)
-Message-ID: <4dba5a65-d1dc-4a80-bcaa-fe9ba02c5082@baylibre.com>
-Date: Thu, 28 Mar 2024 11:09:32 +0100
+        d=1e100.net; s=20230601; t=1711620590; x=1712225390;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=imitBWhKj5fRHkMDVQXkTQSjFX/+sLYMwaDPJCxrtck=;
+        b=RePqFORygBUMPz7KEI39sftHZ0U5npYnb+Xkmv/k3BrgiC5xAbMM3UypHIw74Sojt5
+         XuHsZkONz5A9fPhEBlWQnCrHpLmdPkAntnzzvN0LKl8iLjT7IeE4+93UtQUgVPveuG0r
+         p5FgRici2oioC8I1RTPD4foVixUHS0GWgTCcVdXrH6C4iSVL3BegroNYqNObtMNjazbR
+         VEmMRCVrKyFL0/4ig1uhEVuwZc5yclbCkQlitowk31wPPNj4gAqjRCB7SDRhk+eNljO3
+         2ztMoKrdpDf8xznAmHoJCU/9VumNxMpHDtV9ajc9ttlmlHpodTPmtCLO8PnMiMMtn98D
+         Oqow==
+X-Gm-Message-State: AOJu0YyUXEFsaQ1XLf8Y5K3V33yvh4mtpRanES2vBTvicFpIz40eUgUZ
+	MzucdTehp7L7NFt/FurUFF+98qkZ0qQEebXyWgcedhUoAGUn2jJZTHWKKPDNncYSCT7HcM3TE/w
+	QJHzoDKfdt/1OrdySwvekdFmQLohOtIvHYsMqBA==
+X-Google-Smtp-Source: AGHT+IGpKoND8Hj5asHhR1IyrNPyxjDoX5kHnPXJ6xOWXzDm76r5mfJyHm4FG7YdV4pX6SG8iYswIqPcbn2QxDOdpe0=
+X-Received: by 2002:a17:90a:c78f:b0:29b:33eb:1070 with SMTP id
+ gn15-20020a17090ac78f00b0029b33eb1070mr1940134pjb.14.1711620590360; Thu, 28
+ Mar 2024 03:09:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/18] Add audio support for the MediaTek Genio 350-evk
- board
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- Lee Jones <lee@kernel.org>, Mark Brown <broonie@kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>,
- Matthias Brugger <matthias.bgg@gmail.com>, Conor Dooley
- <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
- Catalin Marinas <catalin.marinas@arm.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- linux-arm-kernel@lists.infradead.org, Takashi Iwai <tiwai@suse.com>,
- Jaroslav Kysela <perex@perex.cz>, Flora Fu <flora.fu@mediatek.com>,
- linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
- Nicolas Belin <nbelin@baylibre.com>, Fabien Parent <fparent@baylibre.com>,
- Sumit Semwal <sumit.semwal@linaro.org>, Will Deacon <will@kernel.org>
-References: <20240226-audio-i350-v1-0-4fa1cea1667f@baylibre.com>
- <53671deb-9c11-43c1-8deb-93fe4708651a@collabora.com>
-Content-Language: en-US
-From: Alexandre Mergnat <amergnat@baylibre.com>
-In-Reply-To: <53671deb-9c11-43c1-8deb-93fe4708651a@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240304201625.100619-1-christian.loehle@arm.com>
+ <CAKfTPtDcTXBosFpu6vYW_cXLGwnqJqYCUW19XyxRmAc233irqA@mail.gmail.com> <92ecab7f-6e35-4e23-a8b7-097a9c26f551@arm.com>
+In-Reply-To: <92ecab7f-6e35-4e23-a8b7-097a9c26f551@arm.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Thu, 28 Mar 2024 11:09:39 +0100
+Message-ID: <CAKfTPtDXnAHLhdT267roPugGkvNm6VtfqZt-d7d86bznBQKhpg@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] Introduce per-task io utilization boost
+To: Christian Loehle <christian.loehle@arm.com>
+Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, juri.lelli@redhat.com, 
+	mingo@redhat.com, rafael@kernel.org, dietmar.eggemann@arm.com, 
+	vschneid@redhat.com, Johannes.Thumshirn@wdc.com, adrian.hunter@intel.com, 
+	ulf.hansson@linaro.org, andres@anarazel.de, asml.silence@gmail.com, 
+	linux-pm@vger.kernel.org, linux-block@vger.kernel.org, 
+	io-uring@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Angelo
+On Mon, 25 Mar 2024 at 13:24, Christian Loehle <christian.loehle@arm.com> wrote:
+>
+> On 22/03/2024 18:08, Vincent Guittot wrote:
+> > Hi Christian,
+> Hi Vincent,
+> thanks for taking a look.
+>
+> >
+> > On Mon, 4 Mar 2024 at 21:17, Christian Loehle <christian.loehle@arm.com> wrote:
+> >>
+> >> There is a feature inside of both schedutil and intel_pstate called
+> >> iowait boosting which tries to prevent selecting a low frequency
+> >> during IO workloads when it impacts throughput.
+> >> The feature is implemented by checking for task wakeups that have
+> >> the in_iowait flag set and boost the CPU of the rq accordingly
+> >> (implemented through cpufreq_update_util(rq, SCHED_CPUFREQ_IOWAIT)).
+> >>
+> >> The necessity of the feature is argued with the potentially low
+> >> utilization of a task being frequently in_iowait (i.e. most of the
+> >> time not enqueued on any rq and cannot build up utilization).
+> >>
+> >> The RFC focuses on the schedutil implementation.
+> >> intel_pstate frequency selection isn't touched for now, suggestions are
+> >> very welcome.
+> >> Current schedutil iowait boosting has several issues:
+> >> 1. Boosting happens even in scenarios where it doesn't improve
+> >> throughput. [1]
+> >> 2. The boost is not accounted for in EAS: a) feec() will only consider
+> >>  the actual utilization for task placement, but another CPU might be
+> >>  more energy-efficient at that capacity than the boosted one.)
+> >>  b) When placing a non-IO task while a CPU is boosted compute_energy()
+> >>  will not consider the (potentially 'free') boosted capacity, but the
+> >>  one it would have without the boost (since the boost is only applied
+> >>  in sugov).
+> >> 3. Actual IO heavy workloads are hardly distinguished from infrequent
+> >> in_iowait wakeups.
+> >> 4. The boost isn't associated with a task, it therefore isn't considered
+> >> for task placement, potentially missing out on higher capacity CPUs on
+> >> heterogeneous CPU topologies.
+> >> 5. The boost isn't associated with a task, it therefore lingers on the
+> >> rq even after the responsible task has migrated / stopped.
+> >> 6. The boost isn't associated with a task, it therefore needs to ramp
+> >> up again when migrated.
+> >> 7. Since schedutil doesn't know which task is getting woken up,
+> >> multiple unrelated in_iowait tasks might lead to boosting.
+> >>
+> >> We attempt to mitigate all of the above by reworking the way the
+> >> iowait boosting (io boosting from here on) works in two major ways:
+> >> - Carry the boost in task_struct, so it is a per-task attribute and
+> >> behaves similar to utilization of the task in some ways.
+> >> - Employ a counting-based tracking strategy that only boosts as long
+> >> as it sees benefits and returns to no boosting dynamically.
+> >
+> > Thanks for working on improving IO boosting. I have started to read
+> > your patchset and have few comments about your proposal:
+> >
+> > The main one is that the io boosting decision should remain a cpufreq
+> > governor decision and so the io boosting value should be applied by
+> > the governor like in sugov_effective_cpu_perf() as an example instead
+> > of everywhere in the scheduler code
+> Having it move into the scheduler is to enable it for EAS (e.g. boosting
+> a LITTLE to it's highest OPP often being much less energy-efficient than
+> having a higher cap CPU at a lower OPP) and to enable higher capacities
+> reachable on other CPUs, too.
 
-On 26/02/2024 15:54, AngeloGioacchino Del Regno wrote:
-> Il 26/02/24 15:01, Alexandre Mergnat ha scritto:
->> This serie aim to add the following audio support for the Genio 350-evk:
->> - Playback
->>    - 2ch Headset Jack (Earphone)
->>    - 1ch Line-out Jack (Speaker)
->>    - 8ch HDMI Tx
->> - Capture
->>    - 1ch DMIC (On-board Digital Microphone)
->>    - 1ch AMIC (On-board Analogic Microphone)
->>    - 1ch Headset Jack (External Analogic Microphone)
->>
->> Of course, HDMI playback need the MT8365 display patches [1] and a DTS
->> change documented in "mediatek,mt8365-mt6357.yaml".
->>
->> [1]: 
->> https://lore.kernel.org/all/20231023-display-support-v1-0-5c860ed5c33b@baylibre.com/
->>
->> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
-> 
-> Actually, I am cooking a series (I'm finishing the testing....) that 
-> brings quite
-> a bit of cleanups in MTK ASoC, including the commonization of the 
-> machine driver
-> probe, with the dai-link DT nodes, and which also modernizes most of the 
-> existing
-> drivers to use that instead.
-> 
-> If you wait for a day or two, your mt8365-mt6357.c driver's probe 
-> function can be
-> shrunk to ~3 lines or something like that.. very easily :-)
+sugov_effective_cpu_perf() is used by EAS when finding the final OPP
+and computing the energy so I don't see a problem of moving the policy
+(converting some iowait boost information into some performance level)
+into the cpufreq governor. EAS should be able to select the more
+efficient CPU for the waking task.
+Furthermore, you add it into the utilization whereas iowait boost is
+not a capacity that will be used by the task but like a minimum
+bandwidth requirement to speedup its execution; This could be seen
+like uclamp_min especially if you also want to use the iowait boosting
+to migrate tasks. But I don't think that this is exactly the same.
+Uclamp_min helps when a task has always the same amount of small work
+to do periodically. Whatever the frequency, its utilization remains
+(almost) the same and is not really expected to impact its period. In
+the case of iowait boost, when you increase the frequency, the task
+will do more work and its utilization will decrease (because the
+overall periods will decrease). This increase of the utilization
+should be the trigger for migrating the task on another CPU.
 
-Just to inform you. I'm aware of your serie. Currently, I've fixed my 
-patches according to the comments. The next step will be to rebase my 
-serie over yours and do the changes to be aligned with your new 
-implementation.
+> I guess for you the first one is the more interesting one.
+>
+> >
+> > Then, the algorithm to track the right interval bucket and the mapping
+> > of intervals into utilization really looks like a policy which has
+> > been defined with heuristics and as a result further seems to be a
+> > governor decision
+>
+> I did have a comparable thing as a governor decision, but the entire
+> "Test if util boost increases iowaits seen per interval and only boost
+> accordingly" really only works if the interval is long enough, my proposed
+> starting length of 25ms really being the lower limit for the storage devices
+> we want to cover (IO latency not being constant and therefore iowaits per
+> interval being somewhat noisy).
 
-I've planned to review your serie during my last task, but it seems 
-already approved and already (partially) merged into linux-next, sorry.
+Your explanation above confirms that it's a policy for your storage devices.
+
+> Given that the IO tasks will be enqueued/dequeued very frequently it just
+> isn't credible to expect them to land on the same CPU for many intervals,
+> unless your system is very bare-bones and idle, but even on an idle Android
+> I see any interval above 50ms to be unusable and not provide any throughput
+> improvement.
+> The idea of tracking the iowaits I do find the best option in this vague and
+> noisy environment of "iowait wakeups" and definitely worth having, so that's
+> why I opted for it being in the scheduler code, but I'd love to hear your
+> thoughts/alternatives.
+
+There is 3 parts in your proposal
+1- tracking per task iowait statistics
+2- translate that into a capacity more than an utilization
+3- use this value in EAS
+
+Having 1- in the scheduler seems ok but 2- and 3- should not be
+injected directly into the scheduler
 
 
--- 
-Regards,
-Alexandre
+
+> I'd also like an improvement on the definition of iowait or some more separate
+> flag for boostable IO, the entire "boost on any iowait wakeup" is groping in
+> the dark which I'm trying to combat, but it's somewhat out of scope here.
+>
+> >
+> > Finally adding some atomic operation in the fast path is not really desirable
+> Agreed, I'll look into it, for now I wanted as much feedback on the two major
+> changes:
+> - iowait boost now per-task
+> - boosting based upon iowaits seen per interval
+>
+> >
+> > I will continue to review your patchset
+>
+> Thank you, looking forward to seeing your review.
+>
+> >>[snip]
+> Kind Regards,
+> Christian
