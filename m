@@ -1,115 +1,154 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44C814294;
-	Thu, 28 Mar 2024 14:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D36F8172F
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 14:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711635253; cv=none; b=gbCbA+fOBmw0aApEBzHRANuLeVHe745R16Qvw4gFLKmY0Jhw0JeWIrHwxskDdC1sK9q42ZwMHXtP44Q8v42dsZK7pytvfstOpYc8vaqjG51dhSaMJmRps+6+6vf42rljiwx+4gEt5ZIcX0tgpasfipyabuXTIz6MNKjGqnnunso=
+	t=1711635282; cv=none; b=A3FBST7HWDCaiKWrHVHwK3Cx7Fdmw9D5K5ypN1+kFhyWFKx0eLIkxh3MbvBQRTv6JOnwAOQzhusyepjp2leapNRwZX3MdjrsgT8bWs8hspMFUFHLKeeSF8YNtS0QtFh7ROlCARkI9k6YmceZwu3gWXXiK4O2K0bR5sx+QHVwPh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711635253; c=relaxed/simple;
-	bh=aHiAHQZ4NABASJrYqh8ebkIampi71CgvClYUPY03YUQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AiCh8qTyKvN7YHUztruo22jr3og+g1TCaVTVrguhSCv4Q2Oam7EljPmLcAfJbgzoNOM4KC8VSUCvpKySTi/951ycThhVufvskAf1yt3PfGhN9YQ+bIfMV6PgSnENTEvhncor/qEQ7NQtnadNy4blyr1Q3koniX1wsxw8Ir6ivaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dcd7c526cc0so969315276.1;
-        Thu, 28 Mar 2024 07:14:11 -0700 (PDT)
+	s=arc-20240116; t=1711635282; c=relaxed/simple;
+	bh=qrYc08EP6AFDenl97miAzK1JrtIi1dnIodt4yH8JsYw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ILZdUBbXyl5vjkbIIAueevR2goU8hPfuQJBc8WgKsphLvgnWA+B2CPVKLnB85dMqrVApCugNgG7oAIcTgM16xYmCT4mKS6bIFq3WbNHcWGftKTaS96BjOU5Z3M7QbF989xI92Oxb9iEB2LEn5hviKbTWbCWNvNHvCt/1yXQoYnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GlV48aIO; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GlV48aIO"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d700beb60bso20333621fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 07:14:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711635277; x=1712240077; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6oWYRVINerjym6vzjXH/2h5b9vyRctc2Bdq5lqck3tg=;
+        b=GlV48aIOa/Kn/Ma6HdTowpp6vF92UIXaf8BA4uwQTvnXXWVhcsYA9h+2bcXKcCJ9Wi
+         2ywOkRv+Sv+nOw49ydAjcTYmnXBiPHHE/Q+xsDXg9Kg7AZ+Qe5cz+kAQoP233sQvPk57
+         LfZN4jkjMeF3qcTQJKGto0VP2uPUjr/RtGhYArbMrSNZNibqm+0V7crMpnQWXtqluxKT
+         euBhouYNGjhy0TDDxZaIHqpiTgdtXvSnOn6f6RlvTQyXXertGjFTVhzIgCVOeqkebFo5
+         GBOZG2KoXEZ2sLI9acDa5srbUoBV9V687uKTifdsNPfvUS9AhNvhwWqoXmVmXMLaX5cv
+         bmiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711635250; x=1712240050;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4NefUZqr+Yfj8Qez7QQphPqdSKucudQKpoHbpjj/G5I=;
-        b=pQ91T2CR07oeEsCc9BdxYATtIcoUrUsbgH2N9S+cRpHoymRXhIuzcgXgHOpiIvUuXR
-         5I0crJGQNYv9FIuPB34FfiCd2cqOqsjEXLP0O4hu1IOyOzaNf8IRS2bVBDrqVymvD5cj
-         eaScmUPIXm4Zx+I1nctvVNqNR9e0Ep/Kr1onvtAosWUXg5T0Y72M1f+NWtxI5cBx4Gav
-         bKK4DFeS1PZ0DHatrJLRquBmETct2f84NpDgmtM9q+Xh35eRTMa8/sxVxxCPvCMVj9ZX
-         DFW22oRtCSOi8D3KaVL8ixes9bhO0f7GuPQ07bCXh9H7Bos18xTmyD8Y7FFistNrbOq5
-         h0jg==
-X-Forwarded-Encrypted: i=1; AJvYcCU/THNq4a9naDxLR0OxrKjeQc6VV/iN+uddXlT5t14ZMhg2ZxHcb7+bxKFcBF1vwoZv5N0fvncNIoLnS3K584VQWfJ6T9UnkBplmz8rZrnlK/PqOYGwI+9Pjm+bWGbkihEA7Qjbayd18qQBxkR7UpgDO4r7evYWqQObCtJauqmMGuf87BLZMJSLj24jEBvyqiisQJM7jo3mI559K7S3ClcKgi7VTOirXA==
-X-Gm-Message-State: AOJu0YwF1vhlBbFUdRrJzEejMEqosNtBRuHEeLjxb2VqdMzQwonE57rm
-	pg8DNP/n9SnRjKILVgQCyiJwxc/jUdln+agL64G5kl3b7fukspVBhKlS4zw6tNw=
-X-Google-Smtp-Source: AGHT+IEM3zssbWOSnDMrjyNKrON0pNmD2juCMJCOs6F4V4C3Sl2CLvlLZkgK76K0PWAovpQeiWOy8Q==
-X-Received: by 2002:a25:a290:0:b0:dcc:a446:553 with SMTP id c16-20020a25a290000000b00dcca4460553mr2759135ybi.57.1711635249889;
-        Thu, 28 Mar 2024 07:14:09 -0700 (PDT)
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com. [209.85.219.180])
-        by smtp.gmail.com with ESMTPSA id p15-20020a25818f000000b00dce0a67ac8bsm304046ybk.23.2024.03.28.07.14.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Mar 2024 07:14:09 -0700 (PDT)
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dcc4de7d901so915906276.0;
-        Thu, 28 Mar 2024 07:14:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW7xbfqe46XVmSa/BltuNY40XqQVNM5lrIWhcQ8iJWq5jkPxsZx8Om/aL0O2Ojqnoq3zUQsJw8o+6IJQ8ZY5ee0xazn+yrZ8wKLna8WtXF4Y14GngOHeAi2VK7RekV7xuuJNPd0+Why/kVu/4jjmAjctS/fL9L4Mhxj4pX8d4plOS78SEvYBg+eORehxnJsPfxUn22kMadu+zShP8Pi1DrXHn4FgWJ5qw==
-X-Received: by 2002:a25:bc49:0:b0:dcd:5e5d:4584 with SMTP id
- d9-20020a25bc49000000b00dcd5e5d4584mr3267859ybk.34.1711635249059; Thu, 28 Mar
- 2024 07:14:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711635277; x=1712240077;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6oWYRVINerjym6vzjXH/2h5b9vyRctc2Bdq5lqck3tg=;
+        b=dkLfgHTMTAqAY0RG5FRvvYGYXQmpoUsP5duhauPuhhJcN1KSxYnw3B98iTeUM7NuGM
+         KHZe8DqdqhpcEm6j+Yvsx5B3/DN9H6APSfALFSV7ke1CzJx1n9mOzVTnt5cqP6+BbGZV
+         IW1eXkxXQHKtaLIPbytL5vUG3BYqUnABZhQgHCY9l6N9WnJp05ihC+4wyQCUl5b+g19u
+         xDYw6WpR2WBINNFLz0+mSBzqXXiuIKR6ARq0KzoI58LYxSsg2VWX/4yuHrif/GJiGDEr
+         w5rsscLjvmPu7TCF+ttsEq5WB7a2O3GsqeBqlEVGaM5Szrkq1uPfF8vKt8get/JDKtpY
+         BLHA==
+X-Forwarded-Encrypted: i=1; AJvYcCXEsnbOvxnsA5wK6E27H5SafWDGDRNOFaRJh/kAmzNRVQVrO9rueIt+MUfurcfszZ+XK7yPSDrRC9X6ZB6IqRzx3Eeuhqb3N0RU3S8S
+X-Gm-Message-State: AOJu0Yx9oDyqpVZWusEN8NGrWQc9LBOeMwX9Dks/mW5d00Vb5EABBc+x
+	eIER5sLK5N1507hkrGdOTclDjERHQGnwMQivXtZDPWJzRrA6ZsC6km54MUtNyKM=
+X-Google-Smtp-Source: AGHT+IE3br1OhO1/0SPJPwkg2myEiiviYtyqBnpxzvQ+t1dUHLWgpGeIq7RDtQXfcR5zXgo+wJaZ8w==
+X-Received: by 2002:a19:910f:0:b0:513:e0b8:563a with SMTP id t15-20020a19910f000000b00513e0b8563amr2582312lfd.62.1711635276475;
+        Thu, 28 Mar 2024 07:14:36 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id w27-20020a170906131b00b00a4df7d02395sm793978ejb.86.2024.03.28.07.14.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 07:14:36 -0700 (PDT)
+Date: Thu, 28 Mar 2024 17:14:32 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+Cc: Colin Ian King <colin.i.king@gmail.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Cosmin Tanislav <cosmin.tanislav@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] iio: addac: ad74115: remove redundant if statement
+Message-ID: <2b3d418d-55ee-4ca4-b6ae-bab441a76adf@moroto.mountain>
+References: <20240328112211.761618-1-colin.i.king@gmail.com>
+ <3db9a68c6f71a67d95d25886fdc708de6269adc2.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326222844.1422948-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240326222844.1422948-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240326222844.1422948-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 28 Mar 2024 15:13:56 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWdaiSer10agMytpv9h_gb4bEpEHjThDwRkMShXkKMxzA@mail.gmail.com>
-Message-ID: <CAMuHMdWdaiSer10agMytpv9h_gb4bEpEHjThDwRkMShXkKMxzA@mail.gmail.com>
-Subject: Re: [RFC PATCH 06/13] pinctrl: renesas: pinctrl-rzg2l: Make cfg to
- u64 in struct rzg2l_variable_pin_cfg
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3db9a68c6f71a67d95d25886fdc708de6269adc2.camel@gmail.com>
 
-Hi Prabhakar,
+On Thu, Mar 28, 2024 at 02:52:43PM +0100, Nuno Sá wrote:
+> Hi Colin,
+> 
+> Thanks for your patch...
+> 
+> On Thu, 2024-03-28 at 11:22 +0000, Colin Ian King wrote:
+> > The if statement is redundant because the variable i being
+> > assigned in the statement is never read afterwards. Remove it.
+> > 
+> > Cleans up clang scan build warning:
+> > drivers/iio/addac/ad74115.c:570:3: warning: Value stored to 'i'
+> > is never read [deadcode.DeadStores]
+> > 
+> > Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> > ---
+> >  drivers/iio/addac/ad74115.c | 3 ---
+> >  1 file changed, 3 deletions(-)
+> > 
+> > diff --git a/drivers/iio/addac/ad74115.c b/drivers/iio/addac/ad74115.c
+> > index e6bc5eb3788d..d31d4adb017e 100644
+> > --- a/drivers/iio/addac/ad74115.c
+> > +++ b/drivers/iio/addac/ad74115.c
+> > @@ -566,9 +566,6 @@ static int ad74115_set_comp_debounce(struct ad74115_state *st,
+> > unsigned int val)
+> >  		if (val <= ad74115_debounce_tbl[i])
+> >  			break;
+> >  
+> > -	if (i == len)
+> > -		i = len - 1;
+> > -
+> 
+> Hmm, this change is clearly good but I think we're actually missing the proper fix in
+> here. I'm being lazy and not checking the datasheet and Cosmin can further comment.
+> But I'm fairly sure that the intent of the code is actually to use i in the call to
+> regmap_update_bits(). I mean if we look at the mask AD74115_DIN_DEBOUNCE_MASK and the
+> possible values of val...
 
-On Tue, Mar 26, 2024 at 11:30=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.=
-com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Now that we have updated the macro PIN_CFG_MASK to allow for the maximum
-> configuration bits, update the size of 'cfg' to 'u64' in the
-> 'struct rzg2l_variable_pin_cfg'.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Good eye.  I haven't looked at the datasheet either, but logically I
+would think you go until you hit something that is too high and then
+step back to the valid valies.  In other words the <= should be < and
+the i = len - 1 should just be i--.
 
-Thanks for your patch!
+(The first element in the ad74115_debounce_tbl[] array is zero btw, so
+it's never going to break with i == 0).
 
-> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> @@ -241,7 +241,7 @@ struct rzg2l_dedicated_configs {
->   * @pin: port pin
->   */
->  struct rzg2l_variable_pin_cfg {
-> -       u32 cfg:20;
-> +       u64 cfg:46;
->         u32 port:5;
->         u32 pin:3;
+regards,
+dan carpenter
 
-Doesn't this store the 46 cfg bits in a 64-bit word, and the 8 port
-and pin bits in a different 32-bit word?  Worse, you'll get 4 bytes
-of padding at the end of the structure.
-Changing the port and pin to u64 should make sure everything is
-stored together in a single 64-bit word.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+diff --git a/drivers/iio/addac/ad74115.c b/drivers/iio/addac/ad74115.c
+index e6bc5eb3788d..8d484cefe5ff 100644
+--- a/drivers/iio/addac/ad74115.c
++++ b/drivers/iio/addac/ad74115.c
+@@ -559,19 +559,16 @@ static void ad74115_gpio_set(struct gpio_chip *gc, unsigned int offset, int valu
+ 
+ static int ad74115_set_comp_debounce(struct ad74115_state *st, unsigned int val)
+ {
+-	unsigned int len = ARRAY_SIZE(ad74115_debounce_tbl);
+ 	unsigned int i;
+ 
+-	for (i = 0; i < len; i++)
+-		if (val <= ad74115_debounce_tbl[i])
++	for (i = 0; i < ARRAY_SIZE(ad74115_debounce_tbl); i++)
++		if (ad74115_debounce_tbl[i] > val)
+ 			break;
+-
+-	if (i == len)
+-		i = len - 1;
++	i--;
+ 
+ 	return regmap_update_bits(st->regmap, AD74115_DIN_CONFIG1_REG,
+ 				  AD74115_DIN_DEBOUNCE_MASK,
+-				  FIELD_PREP(AD74115_DIN_DEBOUNCE_MASK, val));
++				  FIELD_PREP(AD74115_DIN_DEBOUNCE_MASK, ad74115_debounce_tbl[i]));
+ }
+ 
+ static int ad74115_comp_gpio_get_direction(struct gpio_chip *chip,
