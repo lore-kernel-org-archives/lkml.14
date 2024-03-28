@@ -1,49 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134435FB8B;
-	Thu, 28 Mar 2024 10:22:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C114654B
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 10:24:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711621336; cv=none; b=rYqMWzbp4OzUZplsxER526DqLnc9ljRwfEmA7UpCoUw7U01+0AJLlhXg6E+qtGyswBmbs/FOJPUmkqOJHiApRCViPLkWhHZ4ZXwftWo970XRz4W0D293VpX/gZXIzM8z80UDB2Vd7wNsRUbptrS2DNJqYBHWtKq5nOYqlMrXGdA=
+	t=1711621497; cv=none; b=jJ043T9uiH2QpOtJRM4iAxicnP50Vui36QL5DfJdjyjaAjIYagPntVic/df7jt6SjBMDgS4KREsEW9gHU5aPxjPMkw2QpdSmy2cOR4IcLWKOfl5pyxqHSXkPvb4KrQtJBExYEF4q7Ha7QZ9gTxqWXqfs+v0uAsrEsENONtCY87Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711621336; c=relaxed/simple;
-	bh=SKKICtTKjPR9yyFA9IuYbQmFcXbc8Pa5AvB15RTwNp4=;
+	s=arc-20240116; t=1711621497; c=relaxed/simple;
+	bh=1cx1Xifn9yhAxfZ5u2l/0D09nOJTgLrcayVsJ8qGHPQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vCZ8DwEe74IFG5P/IM9kzm9de1DdJq3O6vbpyjVWrwUL/bO22qd5DLTH3iyKgNhmxBGHIrH40+MDUEB/3dfLHUquGB6gxMC8J9+c5zkRCc8yLgXqgt4/VqxNvpwX16guDr3HZhtOlzFj/UCPoGD1nnstYSvp6VSQ9Zi44OXrLXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DmT/LzuK; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=H0g35GBHV4g0Q4BSmXcM6eLdlQrpQgx5bqtw1xDqOjKZ9q2TOHwzEKAxEjohW/+lMxRb1EBuBj8zrZUTDw4P8yRoPbQB0NR6QRezXS2HMaALgB1+jl1zH8gNjdgam7IO5LyXi63S/3xCybRZgDVQwabz/mpQ1BvFHfWq69/PkCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bQK7GBDe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DmT/LzuK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71B0EC433F1;
-	Thu, 28 Mar 2024 10:22:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bQK7GBDe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09B64C433C7;
+	Thu, 28 Mar 2024 10:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711621335;
-	bh=SKKICtTKjPR9yyFA9IuYbQmFcXbc8Pa5AvB15RTwNp4=;
+	s=k20201202; t=1711621496;
+	bh=1cx1Xifn9yhAxfZ5u2l/0D09nOJTgLrcayVsJ8qGHPQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DmT/LzuK8Fhxhn89z1WozrQ/vfZaBQGm57L9S0wsjaPNyYz6AQO3EqPfXp8TuADjJ
-	 KnCLjXcivr/1Hr8aM3VmUtioJMSoavC1Nube1XBSrhmISzzMJg30vz7+iqmWvHBC8X
-	 sxKFI1uxKzbv6cqT9PpjkYWl8Pqb1L1Uw256dz0SgFReghmPCs/XV5sBs2P1dtah75
-	 GeAWD+sPu0cPRAVKf2kCsjqWBlVZtmUgDQ7ONtaa8mA10usHQd8zOIuz0HMY9Omtou
-	 83F2BWfm4T2roHfl/obPuBRkV3dq3WjYeRaoBNRT5+gf47zl6zlQhf96tBmLF1t3Kz
-	 QuG1Vm4/TF4Hg==
-Date: Thu, 28 Mar 2024 18:08:58 +0800
+	b=bQK7GBDe1wsZlOAAMHiYgXEi6nC6ZSDIE6GsMksCXpsOEpueKiDPu5ma+SruGSoG4
+	 KNMXCq9vhjZxFpBvLiUb5jo4C/VoUsNzUxxG/WyH2EueJBJCfhm4iStVss2jpxgxQm
+	 1JKVnc+QMLCG9HnxTccidaDLw6C8XpFTf9hx8aKXCMyAPbI2kmybqdd5xsbZnzKmHf
+	 Vs+nQrtEbfk4sUxsTJ8IfmF0AGLdmxDhUEgVhK2NQ2NL004wgjOAbyf61BHvtyfd2p
+	 OLHoBf5AvQ29YSeymdVlGwpxcJKBIS1xdg/kkGsmatLvyja00DlrNZnIV0PupaMFIl
+	 9PhTfVXgLKj7A==
+Date: Thu, 28 Mar 2024 18:11:32 +0800
 From: Jisheng Zhang <jszhang@kernel.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
 	Albert Ou <aou@eecs.berkeley.edu>,
-	Emil Renner Berthing <kernel@esmil.dk>,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 6/6] riscv: dts: starfive: add Milkv Mars board device
- tree
-Message-ID: <ZgVBurohYRDzFjgb@xhacker>
-References: <20240131132600.4067-1-jszhang@kernel.org>
- <20240131132600.4067-7-jszhang@kernel.org>
- <20240206-magma-deem-2c88e45a545a@spud>
- <20240327-cotton-fang-37f6d8fde0e5@spud>
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] riscv: nommu: use CSR_TIME* for get_cycles*
+ implementation
+Message-ID: <ZgVCVKu5YaBDUULB@xhacker>
+References: <20240325164021.3229-1-jszhang@kernel.org>
+ <20240325164021.3229-3-jszhang@kernel.org>
+ <b063df9b-90b6-4f06-8be5-5a8c267e6c8d@sifive.com>
+ <ZgL31BFWvaLwYQrN@xhacker>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,55 +50,119 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240327-cotton-fang-37f6d8fde0e5@spud>
+In-Reply-To: <ZgL31BFWvaLwYQrN@xhacker>
 
-On Wed, Mar 27, 2024 at 06:06:58PM +0000, Conor Dooley wrote:
-> Yo,
+On Wed, Mar 27, 2024 at 12:29:13AM +0800, Jisheng Zhang wrote:
+> On Mon, Mar 25, 2024 at 09:39:26PM -0500, Samuel Holland wrote:
+> > Hi Jisheng,
+> > 
+> > On 2024-03-25 11:40 AM, Jisheng Zhang wrote:
+> > > Per riscv privileged spec, "The time CSR is a read-only shadow of the
+> > > memory-mapped mtime register", "On RV32I the timeh CSR is a read-only
+> > > shadow of the upper 32 bits of the memory-mapped mtime register, while
+> > > time shadows only the lower 32 bits of mtime." Since get_cycles() only
+> > > reads the timer, it's fine to use CSR_TIME to implement get_cycles().
+> > 
+> > Unfortunately there are various implementations (e.g. FU740/Unmatched, probably
+> > K210 which this code was originally used for) which do not implement the time
+> > CSR, relying on M-mode software to emulate the CSR so S-mode software doesn't
+> > notice. So this code is needed to support those platforms when running Linux in
+> > M-mode.
 > 
-> On Tue, Feb 06, 2024 at 07:13:48PM +0000, Conor Dooley wrote:
-> > On Wed, Jan 31, 2024 at 09:26:00PM +0800, Jisheng Zhang wrote:
-> > > The Milkv Mars is a development board based on the Starfive JH7110 SoC.
-> > > The board features:
-> > > 
-> > > - JH7110 SoC
-> > > - 1/2/4/8 GiB LPDDR4 DRAM
-> > > - AXP15060 PMIC
-> > > - 40 pin GPIO header
-> > > - 3x USB 3.0 host port
-> > > - 1x USB 2.0 host port
-> > > - 1x M.2 E-Key
-> > > - 1x eMMC slot
-> > > - 1x MicroSD slot
-> > > - 1x QSPI Flash
-> > > - 1x 1Gbps Ethernet port
-> > > - 1x HDMI port
-> > > - 1x 2-lane DSI and 1x 4-lane DSI
-> > > - 1x 2-lane CSI
-> > > 
-> > > Add the devicetree file describing the currently supported features,
-> > > namely PMIC, UART, I2C, GPIO, SD card, QSPI Flash, eMMC and Ethernet.
-> > > 
+> OOPS, I knew this for the first time there are such implementations
+> which doesn't implement the TIME CSR :(
+> 
+> > 
+> > Maybe there should be an option to assume the time CSR is/is not implemented,
+> > like there is for misaligned access?
+> 
+> Yep, this seems the only solution. Then which should be the default
+> choice? I.E
+> 
+> Assume all NOMMU goes through TIME CSR, and provide an option for
+> platform lacking of TIME CSR. This prefers TIME CSR.
+
+Hi all,
+
+v2 will prefer TIME CSR.
+
+Thanks
+
+> 
+> VS.
+> 
+> By default, MTIME is used, and provide one Kconfig option for TIME CSR
+> usage. This prefers MTIME
+> 
+> which choice is better? Any suggestion?
+> 
+> Thanks in advance
+> 
+> > 
+> > Regards,
+> > Samuel
+> > 
 > > > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> > > ---
+> > >  arch/riscv/include/asm/timex.h | 40 ----------------------------------
+> > >  1 file changed, 40 deletions(-)
+> > > 
+> > > diff --git a/arch/riscv/include/asm/timex.h b/arch/riscv/include/asm/timex.h
+> > > index a06697846e69..a3fb85d505d4 100644
+> > > --- a/arch/riscv/include/asm/timex.h
+> > > +++ b/arch/riscv/include/asm/timex.h
+> > > @@ -10,44 +10,6 @@
+> > >  
+> > >  typedef unsigned long cycles_t;
+> > >  
+> > > -#ifdef CONFIG_RISCV_M_MODE
+> > > -
+> > > -#include <asm/clint.h>
+> > > -
+> > > -#ifdef CONFIG_64BIT
+> > > -static inline cycles_t get_cycles(void)
+> > > -{
+> > > -	return readq_relaxed(clint_time_val);
+> > > -}
+> > > -#else /* !CONFIG_64BIT */
+> > > -static inline u32 get_cycles(void)
+> > > -{
+> > > -	return readl_relaxed(((u32 *)clint_time_val));
+> > > -}
+> > > -#define get_cycles get_cycles
+> > > -
+> > > -static inline u32 get_cycles_hi(void)
+> > > -{
+> > > -	return readl_relaxed(((u32 *)clint_time_val) + 1);
+> > > -}
+> > > -#define get_cycles_hi get_cycles_hi
+> > > -#endif /* CONFIG_64BIT */
+> > > -
+> > > -/*
+> > > - * Much like MIPS, we may not have a viable counter to use at an early point
+> > > - * in the boot process. Unfortunately we don't have a fallback, so instead
+> > > - * we just return 0.
+> > > - */
+> > > -static inline unsigned long random_get_entropy(void)
+> > > -{
+> > > -	if (unlikely(clint_time_val == NULL))
+> > > -		return random_get_entropy_fallback();
+> > > -	return get_cycles();
+> > > -}
+> > > -#define random_get_entropy()	random_get_entropy()
+> > > -
+> > > -#else /* CONFIG_RISCV_M_MODE */
+> > > -
+> > >  static inline cycles_t get_cycles(void)
+> > >  {
+> > >  	return csr_read(CSR_TIME);
+> > > @@ -60,8 +22,6 @@ static inline u32 get_cycles_hi(void)
+> > >  }
+> > >  #define get_cycles_hi get_cycles_hi
+> > >  
+> > > -#endif /* !CONFIG_RISCV_M_MODE */
+> > > -
+> > >  #ifdef CONFIG_64BIT
+> > >  static inline u64 get_cycles64(void)
+> > >  {
 > > 
-> > Got a dtbs_check issue in the patchwork CI:
-> > 
-> >   +arch/riscv/boot/dts/starfive/jh7110-milkv-mars.dtb: gmac1-rgmii-rxin-clock: 'clock-frequency' is a required property
-> >   +	from schema $id: http://devicetree.org/schemas/clock/fixed-clock.yaml#
-> >   +arch/riscv/boot/dts/starfive/jh7110-milkv-mars.dtb: gmac1-rmii-refin-clock: 'clock-frequency' is a required property
-> >   +	from schema $id: http://devicetree.org/schemas/clock/fixed-clock.yaml#
-> > 
-> > Can you fix that please? Also, I applied some patches the other day that
-> > seem to conflict quite a bit with the common board dts patch. Would you
-> > please do a rebase on top of that please?
-> 
-> Been going through stuff on my todo list now that the merge window is
-> closed. Could you please resend this with the rebase done?
-
-Thanks for the reminding, I will rebase on 6.9-rc1 then send out the
-patches.
-
-> 
-> Thanks,
-> Conor.
-
-
