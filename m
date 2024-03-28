@@ -1,108 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0894B52F62;
-	Thu, 28 Mar 2024 21:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218956519D;
+	Thu, 28 Mar 2024 21:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711660240; cv=none; b=BDceeqXebqQbDXPBKvZ1Y8vem3UmZZZsgBnJEpb0W7vN5H+BpnfPG2OHRKvFgCDp9GTQLgzXLEXImFWW2sNkkEIi9hPmcALxDplnMmQBxQh92PJVkPTlidk417eAeG1BOZEkqjFPkVM+3mXSIv7gcn0sMvG4jFhWEceL60U5NZo=
+	t=1711660272; cv=none; b=sypmk18oLE4xGU7kabU0dfnwVVrcs+QMeZOvxjzCW6nHseh8zcvlNrqn4BdbPn8J1+PB1Fhng9wup4M0uPZsjFs7NTF5h61a+yVma5MzGsQatuI0IcEhg0GgmsrBSOIMQSCWltOl2d9902WqM7oU5xOsZ901nCtPeV07QNHihGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711660240; c=relaxed/simple;
-	bh=GR+8vhdZaMF0jMh5JD8q+n8JbP3PzmlEhT9CqXSNA70=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HuYUeb/3rdE9eXEEAw0VzGqee1fOXQqPiJQCh/0zQzmlJgPOUDQYgBa9eZAeesdHddUtzwW+5FQTTMDQvHZ8ByQucB6bF3ZtZAPa8aInVkKeQB2cjSTRXryll7rYsH8iu1252N2vRgb7NzOYebBCbk1+3+76cclG8RZevBXV8vE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gt8adpfT; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711660272; c=relaxed/simple;
+	bh=z/Cuj9LA0Xa+ZmEp2IaF0jg2a2SqBYyo+Qx1gEBlZ4Q=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=nzUQbve3uGbYIL4bH9lt3vAeoZmpUQbTwh4MJNWrznL9PRFvLD3QQz2OrTgCS44YRa9LcGO1QAkdgKYUiWMdX2lQFDsauPehEZXKSv2+TOyOQH0A5m85rba6bCL7zwm2MYX5Lz9jS7dM5a+OJUjUCOGQajy8gmd3Nj1yQAEaDNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dJb/PbFk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gt8adpfT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711660238; x=1743196238;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GR+8vhdZaMF0jMh5JD8q+n8JbP3PzmlEhT9CqXSNA70=;
-  b=Gt8adpfThIuDKUzLWYmz0pj5cTq+D0mMwFD7vxmNd/1O8AJd/mgG1rs9
-   1XQL2vxh3/jTMiNT47ju0WI2kVrOdVF1nRQcL0WNBw47soy4Z0ujcTubh
-   yDlLKRI3zkvac/QvEV8zirmVRP4AvShabdFC0oeGetU1WfASb9IRjjUXF
-   w/+Qzy4nyzPa4KqFOsmpkvg7+bJOhJ1k82Qkhtsn746gMnlw/sNubVKPm
-   15otbGuVTFFU1I2txFkhqIQQQYgvdHtO4X6qAXDG4e8IkS/WhVoMHt3Fb
-   7q78ShxrxC4sddjc8CfsjEAOmgWHL1jGjBw88E/CDZtoX4bSCXdIxoGtZ
-   w==;
-X-CSE-ConnectionGUID: a6FstP4gSNmV1iT1kg7uDQ==
-X-CSE-MsgGUID: KBNOV1JLTYiy0CIBGCkCbQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="6956294"
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="6956294"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 14:10:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="16824858"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 14:10:37 -0700
-Date: Thu, 28 Mar 2024 14:10:36 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: Chao Gao <chao.gao@intel.com>
-Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
-	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com,
-	Sean Christopherson <seanjc@google.com>,
-	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
-	chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
-	isaku.yamahata@linux.intel.com
-Subject: Re: [PATCH v19 091/130] KVM: TDX: remove use of struct vcpu_vmx from
- posted_interrupt.c
-Message-ID: <20240328211036.GS2444378@ls.amr.corp.intel.com>
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <6c7774a44515d6787c9512cb05c3b305e9b5855c.1708933498.git.isaku.yamahata@intel.com>
- <ZgUmdIM67dybDTCn@chao-email>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dJb/PbFk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B615C433C7;
+	Thu, 28 Mar 2024 21:11:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711660271;
+	bh=z/Cuj9LA0Xa+ZmEp2IaF0jg2a2SqBYyo+Qx1gEBlZ4Q=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=dJb/PbFkhKeWQW3nrlKB/eUsLXiqQAybCDxyo6QVeBaJWG9uZ3Gk8JdHO0bx0EqWC
+	 JV4qreNyeLwvbrnJOvvQiSiUIPLUTFv7hq4KLCH2eRI1x2VmXdrKQgx5DhqwatvvD4
+	 RNFyc3NtRGHy4CA3LRYjIVkynsunONgoX0/VOuVdj/cCnJGHIldR8PUAe1rdk20Bns
+	 vxrbhVmpMm8n0fCy6dQyuHD4HyY43518l1bW4/yCYgXD+sryj2m9MzByL2mQiKLgoH
+	 98A3hzSQEPqpwBlAvltDkCxFQ4Dr8qVpxRFy34euNzdtVPK3ZkPPf+8Cx4YBvVlhP3
+	 RsX/RW9+mBlug==
+Message-ID: <8615090f3ccdfc6c7d8e3e0dc7f55e32.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZgUmdIM67dybDTCn@chao-email>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <tencent_4FC67CBE4B41306D52C71C5CEC989690FF07@qq.com>
+References: <tencent_2E60E33C1F88A090B6B3A332AE528C6B8806@qq.com> <tencent_4FC67CBE4B41306D52C71C5CEC989690FF07@qq.com>
+Subject: Re: [PATCH v1 3/5] clk: k210: Deprecate SOC_CANAAN and use SOC_CANAAN_K210
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Conor Dooley <conor@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Yangyu Chen <cyy@cyyself.name>
+To: Yangyu Chen <cyy@cyyself.name>, linux-riscv@lists.infradead.org
+Date: Thu, 28 Mar 2024 14:11:09 -0700
+User-Agent: alot/0.10
 
-On Thu, Mar 28, 2024 at 04:12:36PM +0800,
-Chao Gao <chao.gao@intel.com> wrote:
+Quoting Yangyu Chen (2024-03-28 10:06:11)
+> Since SOC_FOO should be deprecated from patch [1], and cleanup for other
+> SoCs is already in the mailing list [2,3,4], we remove the use of
+> SOC_CANAAN and introduced SOC_CANAAN_K210 for K210-specific drivers,
+>=20
+> Thus, we replace its drivers depends on SOC_CANAAN_K210 and default select
+> when it has the symbol SOC_CANAAN_K210.
+>=20
+> [1] https://lore.kernel.org/linux-riscv/20221121221414.109965-1-conor@ker=
+nel.org/
+> [2] https://lore.kernel.org/linux-riscv/20240305-praying-clad-c4fbcaa7ed0=
+a@spud/
+> [3] https://lore.kernel.org/linux-riscv/20240305-fled-undrilled-41dc0c46b=
+b29@spud/
+> [4] https://lore.kernel.org/linux-riscv/20240305-stress-earflap-d7ddb8655=
+a4d@spud/
+>=20
+> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+> ---
 
-> On Mon, Feb 26, 2024 at 12:26:33AM -0800, isaku.yamahata@intel.com wrote:
-> >@@ -190,7 +211,8 @@ static bool vmx_needs_pi_wakeup(struct kvm_vcpu *vcpu)
-> > 	 * notification vector is switched to the one that calls
-> > 	 * back to the pi_wakeup_handler() function.
-> > 	 */
-> >-	return vmx_can_use_ipiv(vcpu) || vmx_can_use_vtd_pi(vcpu->kvm);
-> >+	return (vmx_can_use_ipiv(vcpu) && !is_td_vcpu(vcpu)) ||
-> >+		vmx_can_use_vtd_pi(vcpu->kvm);
-> 
-> It is better to separate this functional change from the code refactoring.
-
-Agreed. Let's split this patch.
-
-
-> > }
-> > 
-> > void vmx_vcpu_pi_put(struct kvm_vcpu *vcpu)
-> >@@ -200,7 +222,8 @@ void vmx_vcpu_pi_put(struct kvm_vcpu *vcpu)
-> > 	if (!vmx_needs_pi_wakeup(vcpu))
-> > 		return;
-> > 
-> >-	if (kvm_vcpu_is_blocking(vcpu) && !vmx_interrupt_blocked(vcpu))
-> >+	if (kvm_vcpu_is_blocking(vcpu) &&
-> >+	    (is_td_vcpu(vcpu) || !vmx_interrupt_blocked(vcpu)))
-> 
-> Ditto.
-> 
-> This looks incorrect to me. here we assume interrupt is always enabled for TD.
-> But on TDVMCALL(HLT), the guest tells KVM if hlt is called with interrupt
-> disabled. KVM can just check that interrupt status passed from the guest.
-
-That's true.  We can complicate this function and HLT emulation.  But I don't
-think it's worthwhile because HLT with interrupt masked is rare.  Only for
-CPU online.
--- 
-Isaku Yamahata <isaku.yamahata@intel.com>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
