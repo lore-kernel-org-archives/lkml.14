@@ -1,150 +1,165 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA02754664
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 09:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B763465189
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 09:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711617272; cv=none; b=JLk62QMV8QoJ2nMO+AOWYONC07cGLWCF361GwNV/OCUYDARXwGURW5eiY5fqOF/heFg9fpeBC7mJwu5OrCwufKkdiiBw6gU+l9XgOc5HoLz3lifvTulGgpfbWslAf0ymhBxps2QuHQbpedr841W8blx0ElQX4ZgqlexcEZe+tlE=
+	t=1711617280; cv=none; b=FI4O0h3zIV2I/t6nCQUw1716bfvx9Q6Km7TOaSkZ5C9txR9Qmlh4GxXztB59os9P31sK+eoKRIIDmJJA26ZLFiNidlreHBM77sACjV9eiWWZy8SJhedai/4WR2Dz/fXxhptzR4ZrrVPCG0blKB3u4pfdkl75ZsYJQR/7vBzq7GQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711617272; c=relaxed/simple;
-	bh=NvRgnweRNx8jfh9jFYr4kyG4aZ6/vwkHqoAX75g9yjI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
-	 References; b=pEZDk9+D0EVfUshz5LZ/Upx0NYNDRHWrjB++h4GWvGIGHthjScQFMAS77ooGiZR6+P9o0WKrTt7IJ88ZG8g0oGRpE3/SQ9Yz+VhCDupGuTtwjdIkUoAkZLevz3+haIwehOconZqnUQ66Nked8X6/S3EUCRXy7VlL/qELUnfwHOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Tm5tMuo+; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1711617280; c=relaxed/simple;
+	bh=UzP6CMkk2ZXCDOwotQD/gmS6TjH0e7Di7zY0YNpZw5s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R914xhIFcDw4BpP7Uo7T5zjJVdVHj0qCENiyq51kmyBAc/kjknj7eC+lrxvziJfv1jxze0DzgVm7hAzHHqSiwGQ/62cTcEhVa85OyqshpHIzCZndtfnmqTkwozAvipd6u3UqKGzeI3seYZEwNdlbBQR7tIPAcyyrRoPXiGoPTj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LY0KLUfK; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Tm5tMuo+"
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240328091427epoutp0297df3d12962725cf92c0029c529bcc93~A4tYb6nBZ0939909399epoutp02o
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 09:14:27 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240328091427epoutp0297df3d12962725cf92c0029c529bcc93~A4tYb6nBZ0939909399epoutp02o
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1711617267;
-	bh=XZNLfrC7sORfa/3+gXDEZEzLM/IoNByBCHeH72dhZic=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=Tm5tMuo+FJY5rsB83ByZrrMx+VImEmgMRCjIPNAPeAXuFJ0SUtIHt+HULf6glOQjf
-	 hRfkzhZstprXle+QJOclOCle6zzt71YjJU/TLr7dGcptE21k9APD4sR3RARVtbi4mJ
-	 X81PbJf3yI4fEHwjjYRN77oAuo41K2CrehFmO8b0=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-	20240328091426epcas2p208bab96ab52db40fb58d0091188f5057~A4tX1gJge3121631216epcas2p2B;
-	Thu, 28 Mar 2024 09:14:26 +0000 (GMT)
-Received: from epsmges2p3.samsung.com (unknown [182.195.36.99]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4V4yXf4q51z4x9Q1; Thu, 28 Mar
-	2024 09:14:26 +0000 (GMT)
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-	epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-	BC.F0.09665.2F435066; Thu, 28 Mar 2024 18:14:26 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240328091426epcas2p4f227abb6cd7e710f49f4e61aa022f74f~A4tXDFxY13276532765epcas2p47;
-	Thu, 28 Mar 2024 09:14:26 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240328091426epsmtrp113175e5df09bfaf7961f2a532f0f0bfb~A4tXCUtKk0853508535epsmtrp1F;
-	Thu, 28 Mar 2024 09:14:26 +0000 (GMT)
-X-AuditID: b6c32a47-b9bfa700000025c1-d5-660534f247a8
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	48.8E.08390.1F435066; Thu, 28 Mar 2024 18:14:25 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.229.9.55]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240328091425epsmtip22419b86997fe6f36ca040526125ccc0d~A4tWyT-0B2411324113epsmtip2h;
-	Thu, 28 Mar 2024 09:14:25 +0000 (GMT)
-From: Jaewon Kim <jaewon02.kim@samsung.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Sylwester Nawrocki
-	<s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar
-	<alim.akhtar@samsung.com>, Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jaewon
-	Kim <jaewon02.kim@samsung.com>
-Subject: [PATCH] clk: samsung: exynosautov9: fix wrong pll clock id value
-Date: Thu, 28 Mar 2024 18:10:00 +0900
-Message-ID: <20240328091000.17660-1-jaewon02.kim@samsung.com>
-X-Mailer: git-send-email 2.43.2
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LY0KLUfK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711617277;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LCPrvGXYWJ8By52IhH6oFnCB7CwZOeHwWNu18OjqJ8k=;
+	b=LY0KLUfKjayczPuZx81XXL0MDeiZ88Qqf3+YEYgkUU/MhK8uA1jsGhi8Vm0EVDzTpZXdyh
+	rW41Lte3TUUNi7rpvadXJ98z02b+SdP+qNlGSyRz5d1ui098KTvZ/94/cjQA0fBt99/kNW
+	qhYuatN7HL1wTyjCmfWavCKV5cLpfYM=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-99-N01DTK-mOpuehnin1_c68w-1; Thu, 28 Mar 2024 05:14:34 -0400
+X-MC-Unique: N01DTK-mOpuehnin1_c68w-1
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2a1fa1a83aeso637346a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 02:14:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711617273; x=1712222073;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LCPrvGXYWJ8By52IhH6oFnCB7CwZOeHwWNu18OjqJ8k=;
+        b=GZPcN+JAIl32bD5XAA86QPGsgBNQC7QEFSYEE2f5qvpch6U/GCW7j46siUCDKGrTwE
+         h3CuKVc770mha1e806j2gn/OfguiVAi4yAidXaOyiNP8eW9hdomhGptLFr3ab/5ZHf8X
+         nzsaXJIH/zCnQVCrKHRbmErKR913HLbsRVfTo5bYgAMbxEF7Nt8f/69ctrlR6UKWb+7v
+         cFlfKrsazVFJ4AnCtyCpjW5ihiuyWIFvoCIa5wSKjMlyVfi2OJOv1W3V42uhcVCxs6tA
+         /UjVaQm6UDxFRDBzXQsqRFkRxvpysIP58J4Fe+nRR0zce76jHAXuJAMa9wP+2Cx01QPm
+         FFhw==
+X-Forwarded-Encrypted: i=1; AJvYcCW+/TXtVjWzqqzQJ5a5mxG5gIBeEa2pMJ4cpmQ4K/MuFYgocdCgs6Sw65tuYF0H4nJdgRQ1pmbaZxz1+InWhmVlJ5WhLUoWtaY+vQRB
+X-Gm-Message-State: AOJu0YzCTma0jhR/ejs+VFW5hnyZ0I9g7lWQ5/lMe62WIM2MSNgV4Peh
+	JVahWp1CIC//GU2nTgvNCxf+3qv/1rR8qBDJdcSeNWXhKhQqrW+BCyi/0s1VH8bUw5M53s5E7tR
+	mjUY2sTlvl0oz0E0rae3zcmTKt41b0NjsY+jH2ppNcLfvq1zFdfNF+4iG/dNfUsPpallogAxDdZ
+	l7VgkBA6Zgtk+2xzbWrsntqea3pHDO3RrNxdR0
+X-Received: by 2002:a17:90b:4b8e:b0:2a1:fa61:c36f with SMTP id lr14-20020a17090b4b8e00b002a1fa61c36fmr2296337pjb.6.1711617273116;
+        Thu, 28 Mar 2024 02:14:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFi3BKQN7KjYtiTy0xPe3Kaj+iV31sWFRGS6rMfhFKO/KB1x141HXgNSJIkZ/MeZctX/AQnyjyJUk1BCb2Qnx0=
+X-Received: by 2002:a17:90b:4b8e:b0:2a1:fa61:c36f with SMTP id
+ lr14-20020a17090b4b8e00b002a1fa61c36fmr2296315pjb.6.1711617272743; Thu, 28
+ Mar 2024 02:14:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOJsWRmVeSWpSXmKPExsWy7bCmhe4nE9Y0g/u/FS0ezNvGZnH9y3NW
-	ix0NR1gt9r7eym6x6fE1VouPPfdYLS7vmsNmMeP8PiaLi6dcLQ6/aWe1+HdtI4sDt8f7G63s
-	HptWdbJ53Lm2h81j85J6j74tqxg9Pm+SC2CLyrbJSE1MSS1SSM1Lzk/JzEu3VfIOjneONzUz
-	MNQ1tLQwV1LIS8xNtVVy8QnQdcvMAbpOSaEsMacUKBSQWFyspG9nU5RfWpKqkJFfXGKrlFqQ
-	klNgXqBXnJhbXJqXrpeXWmJlaGBgZApUmJCd0TvvDnvBO56KxXP/sjQwzuDuYuTkkBAwkXjU
-	18MIYgsJ7GCUmNBo18XIBWR/YpR49mwWK4TzjVFiY99iVpiOww0zGSESe4GqWr4wQTgfGSVO
-	969mBqliE9CW+L5+MVi7iEAbk8TTU9/BHGaB9YwS1x+cAKsSFvCUuL9tD5jNIqAqsf7CGTCb
-	V8BW4sWPo4wQ++Ql7p6ZBRUXlDg58wkLiM0MFG/eOpsZZKiEwEd2iXk9X9khGlwkzkzrgDpW
-	WOLV8S1QcSmJl/1tUHa+RNuVM1B2jcTGBZegltlLLDrzEyjOAbRAU2L9Ln0QU0JAWeLILai1
-	fBIdh/+yQ4R5JTrahCAa1STuTz3HBmHLSEw6spIJwvaQmLpoJTR8YyWOv/vPPoFRfhaSZ2Yh
-	eWYWwt4FjMyrGMVSC4pz01OLjQqM4bGanJ+7iRGcQrXcdzDOePtB7xAjEwfjIUYJDmYlEd6d
-	R1nShHhTEiurUovy44tKc1KLDzGaAoN3IrOUaHI+MInnlcQbmlgamJiZGZobmRqYK4nz3mud
-	myIkkJ5YkpqdmlqQWgTTx8TBKdXA1Ji8aUPLzrI3xp822E/KWZ+zeqbYoYX2AdfVVr/03nbB
-	IDv3pWG3m4PInv1tO7UO73/otHffOXWBB0pX3rkbbmkrrMl5przuz0auqcsP65Wuf8y2YBqb
-	+qyfy758f9RvxB04S+uKUmuWQfv6rdtXpTe+rT2TWxj99vhZpp8WDJa/jt1NjpEtk5nsd8/W
-	6Gjpxl0/lYuibk7kb1uiY73YNordylvih7Oiy+rU5KMXM4tTesK3vRAOuun1vOayHdune+fO
-	/bMP4b7WL2t+p/fc6vDiDMkrrld7mbp9XRx/1Eya+fbn5I+NzYe79x7p472vsSbx6Se+WMu7
-	B1je7/4esYcrgq36eRSDr/qf3xb3HymxFGckGmoxFxUnAgC56IwbKgQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBLMWRmVeSWpSXmKPExsWy7bCSvO5HE9Y0g22frCwezNvGZnH9y3NW
-	ix0NR1gt9r7eym6x6fE1VouPPfdYLS7vmsNmMeP8PiaLi6dcLQ6/aWe1+HdtI4sDt8f7G63s
-	HptWdbJ53Lm2h81j85J6j74tqxg9Pm+SC2CL4rJJSc3JLEst0rdL4MronXeHveAdT8XiuX9Z
-	GhhncHcxcnJICJhIHG6YydjFyMUhJLCbUeLUu15WiISMxPJnfWwQtrDE/ZYjrBBF7xklJj4+
-	xgKSYBPQlvi+fjFYQkSgi0liypE/bCAOs8BmRolHHw8zgVQJC3hK3N+2hxnEZhFQlVh/4QyY
-	zStgK/Hix1FGiBXyEnfPzIKKC0qcnPkEbAMzULx562zmCYx8s5CkZiFJLWBkWsUomVpQnJue
-	W2xYYJSXWq5XnJhbXJqXrpecn7uJERzYWlo7GPes+qB3iJGJg/EQowQHs5II786jLGlCvCmJ
-	lVWpRfnxRaU5qcWHGKU5WJTEeb+97k0REkhPLEnNTk0tSC2CyTJxcEo1MHU+/b9ynuxE/9ln
-	9Kc2HI9ceKZoTi+nnZG9sJqMuO9eh6yyvVOcZQ59z1h8Pl1E1UT8rc4f6YPlAdz/1LX+W6tc
-	4PZZ5X/LVeBMeEdtvsT0QsGTvU1vCzfkcbycvv/dnpnrJi2uCX4d8C9S4UpNSfmOcwZ1t3li
-	VBY77ZvwT13/t7Xlh+rsdb+inltdOr7niQx/ccQfCblyl0cuR6/8sCt04iwOTnn3OMXONLTi
-	d3LExGypjgeL/P/rPVE87Ndl5ZDzWY/rOlPuv8IDrCbrdpxd3azx6XJfx+YDqsA4nDontub1
-	x1Ctw/NPn3vOvHrltbxD6znaIhxSfbM/ant8exGz6r70r5Wnd202itdyUGIpzkg01GIuKk4E
-	AL+axcXbAgAA
-X-CMS-MailID: 20240328091426epcas2p4f227abb6cd7e710f49f4e61aa022f74f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240328091426epcas2p4f227abb6cd7e710f49f4e61aa022f74f
-References: <CGME20240328091426epcas2p4f227abb6cd7e710f49f4e61aa022f74f@epcas2p4.samsung.com>
+References: <20240324150107.976025-1-hpa@redhat.com> <20240324150107.976025-2-hpa@redhat.com>
+ <CAHp75Ve5201KNdjvDZYq_unHTKp9wZXPWZXDgStP8y+XjtnWWg@mail.gmail.com>
+ <CAEth8oG7_qFuUrL+kX3ezNatWqKPqT-qiaO5NGY-N3F3ufQL9w@mail.gmail.com> <CAHp75VdQtmT0G1dFhdY7TrcBj2W6GhOaVv90_T1e3MdEtiduQQ@mail.gmail.com>
+In-Reply-To: <CAHp75VdQtmT0G1dFhdY7TrcBj2W6GhOaVv90_T1e3MdEtiduQQ@mail.gmail.com>
+From: Kate Hsuan <hpa@redhat.com>
+Date: Thu, 28 Mar 2024 17:14:21 +0800
+Message-ID: <CAEth8oH9iDm1fN1LyPRtvHt=w7z72kunpRssxg3-nPNAgOyoXg@mail.gmail.com>
+Subject: Re: [PATCH v5 RESEND 1/6] platform: x86-android-tablets: other: Add
+ swnode for Xiaomi pad2 indicator LED
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	=?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
+	linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-All PLL id values of CMU_TOP were incorrectly set to FOUT_SHARED0_PLL.
-It modified to the correct PLL clock id value.
+On Wed, Mar 27, 2024 at 7:06=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Wed, Mar 27, 2024 at 9:58=E2=80=AFAM Kate Hsuan <hpa@redhat.com> wrote=
+:
+> > On Mon, Mar 25, 2024 at 3:30=E2=80=AFAM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Sun, Mar 24, 2024 at 5:02=E2=80=AFPM Kate Hsuan <hpa@redhat.com> w=
+rote:
+>
+> ...
+>
+> > > > +/* main fwnode for ktd2026 */
+> > > > +static const struct software_node ktd2026_node =3D {
+> > > > +       .name =3D "ktd2026"
+> > >
+> > > Leave a comma, this is not a terminator.
+> > >
+> > > > +};
+> > >
+> > > When I asked about the name I relied on the fact that you have an ide=
+a
+> > > how it works. So, assuming my understanding is correct, this platform
+> > > may not have more than a single LED of this type. Dunno if we need a
+> > > comment about this.
+> >
+> > I'll make a comment to describe the configuration.
+> > This LED controller can be configured to an RGB LED like this. Also,
+> > it can be configured as three single-color (RGB) LEDs to show red,
+> > green, and blue only.
+> > I think the name can be "ktd2026-multi-color". Is it good for you?
+>
+> My point here is that the name is static and if you have more than one
+> LED in the system, the second one won't be registered due to sysfs
+> name collisions. Question here is how many of these types of LEDs are
+> possible on the platform? If more than one, the name has to be
+> dropped. Writing this I think a comment would be good to have in any
+> case.
 
-Fixes: 6587c62f69dc ("clk: samsung: add top clock support for Exynos Auto v9 SoC")
-Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
----
- drivers/clk/samsung/clk-exynosautov9.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Only one RGB LED controller on this platform so we can name it. I also
+tested the LED with and without the name and the LED worked properly.
+I think the name can be dropped and put a comment there to describe
+the usage and configuration of the LED controller.
 
-diff --git a/drivers/clk/samsung/clk-exynosautov9.c b/drivers/clk/samsung/clk-exynosautov9.c
-index e9c06eb93e66..f04bacacab2c 100644
---- a/drivers/clk/samsung/clk-exynosautov9.c
-+++ b/drivers/clk/samsung/clk-exynosautov9.c
-@@ -352,13 +352,13 @@ static const struct samsung_pll_clock top_pll_clks[] __initconst = {
- 	/* CMU_TOP_PURECLKCOMP */
- 	PLL(pll_0822x, FOUT_SHARED0_PLL, "fout_shared0_pll", "oscclk",
- 	    PLL_LOCKTIME_PLL_SHARED0, PLL_CON3_PLL_SHARED0, NULL),
--	PLL(pll_0822x, FOUT_SHARED0_PLL, "fout_shared1_pll", "oscclk",
-+	PLL(pll_0822x, FOUT_SHARED1_PLL, "fout_shared1_pll", "oscclk",
- 	    PLL_LOCKTIME_PLL_SHARED1, PLL_CON3_PLL_SHARED1, NULL),
--	PLL(pll_0822x, FOUT_SHARED0_PLL, "fout_shared2_pll", "oscclk",
-+	PLL(pll_0822x, FOUT_SHARED2_PLL, "fout_shared2_pll", "oscclk",
- 	    PLL_LOCKTIME_PLL_SHARED2, PLL_CON3_PLL_SHARED2, NULL),
--	PLL(pll_0822x, FOUT_SHARED0_PLL, "fout_shared3_pll", "oscclk",
-+	PLL(pll_0822x, FOUT_SHARED3_PLL, "fout_shared3_pll", "oscclk",
- 	    PLL_LOCKTIME_PLL_SHARED3, PLL_CON3_PLL_SHARED3, NULL),
--	PLL(pll_0822x, FOUT_SHARED0_PLL, "fout_shared4_pll", "oscclk",
-+	PLL(pll_0822x, FOUT_SHARED4_PLL, "fout_shared4_pll", "oscclk",
- 	    PLL_LOCKTIME_PLL_SHARED4, PLL_CON3_PLL_SHARED4, NULL),
- };
- 
--- 
-2.43.2
+Thank you :)
+>
+> ...
+>
+> > > > +static int __init xiaomi_mipad2_init(void)
+> > > > +{
+> > > > +       return software_node_register_node_group(ktd2026_node_group=
+);
+> > > > +}
+> > > > +
+> > > > +static void xiaomi_mipad2_exit(void)
+> > >
+> > > __exit ?
+> > No need.
+> > x86-andriod-tablet is based on platform_driver and platform_device so
+> > it doesn't need __exit.
+> >
+> > I put __exit and the compiler complained about the warning.
+> > =3D=3D=3D
+> > WARNING: modpost:
+> > drivers/platform/x86/x86-android-tablets/x86-android-tablets: section
+> > mismatch in reference: xiaomi_mipad2_info+0x50 (section: .init.rodata)
+> > -> xiaomi_mipad2_exit (section: .exit.text)
+> > =3D=3D=3D
+>
+> This is interesting. Why then do we call them symmetrically?
+>
+> Hans, do we need to have anything here been amended?
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+
+
+--=20
+BR,
+Kate
 
