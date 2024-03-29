@@ -1,228 +1,129 @@
-Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974EA3B78E;
-	Fri, 29 Mar 2024 07:58:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABA645BEA
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 08:02:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711699135; cv=none; b=MkovHR/X4byqRCurghL970pc/5M3e4bu0KzR3ZIxulps34PwYaWY96Cag10mV9Nkd7aqUe+PoBzEi91EecWEEYYFv1jt8jpHYmkxPlhLbrLuq/428y2IAfnUsPhMW9TmGMpcnh3hqkx2z44ROmNbRw++aoYvwdubZrZkh6sg6yI=
+	t=1711699344; cv=none; b=sYKjwrA/Hit4V2kofA5qHszIMIyLKEFdeVcE2WI46OR61dB1KSRpbDUdqLoBbmBF/MgdwQXZ1oD0j6e4wCBbda3hYF9kge2sUsA+CljonjCtTW5o+8rRHQStSwpZFi4YNPoVWqAqc6GIwwIsUvqtx0xhtVN+iOKj2JJ3KBbRlbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711699135; c=relaxed/simple;
-	bh=yBqdFYWJ7meNuEn1L+kQXqFNRWSolH3SOPxtgfU/HK8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uEeliS1vbSc9qhFXoZFUH47Il+JsyRDEHvBykRLbDPawxgSQMOD9671IRIYnjycZGLsF8P7GwhRSPYZq4MHNk7Oq53/TVoxOL08uI6hHj8k4gFtTEO64aLwyiBs4IORfhZPWdL1GbwP1WwNK5Jdrjip/N5HfZd+inEtFlDrNZsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=cvhrZWSP; arc=none smtp.client-ip=46.19.9.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="cvhrZWSP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=VB+uYV6z1osfsY3qvVmgNrhkcULtGFhdn5kc4Qzej/U=; b=cvhrZWSPR+Yv98T3SACOGJoTbj
-	/92sDiJPAIdKFqbQpQFDxMGds6Uuaeq2/bq2G7ogYz0lhvXlUFmMJYmVfB24YK2oxkIoBS7oGwP6H
-	f3SuFIA1xiz8tK2pps/Xz9w3rPTyNkw2YAbbCzeQ8vOaQ7ZX10a5GJmpvcPmkmExS522ncxG91xoJ
-	6ztsz0ABBW+TDQ/u4xJw9f+6TjnMnq8uEmQ87toUtLjaes0+PPk9H0of8LUj1k2xnDYqVQKh41Ojh
-	ykIg9heBPjNsW++47JxBTJmOqRwi/aXWC3zLxoe10Zr/eWzPhKJuxbmCypAq/3ojpIWAypOqgLykp
-	28fVe3nQ==;
-Received: from 89-212-21-243.static.t-2.net ([89.212.21.243]:57518 helo=[192.168.69.116])
-	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <primoz.fiser@norik.com>)
-	id 1rq78Q-009wAj-2G;
-	Fri, 29 Mar 2024 08:58:46 +0100
-Message-ID: <d9a233d6-95cd-4901-9c06-d8319f2eb3b4@norik.com>
-Date: Fri, 29 Mar 2024 08:58:42 +0100
+	s=arc-20240116; t=1711699344; c=relaxed/simple;
+	bh=l6+5c+ADTS89MXMV2bdFTOT5+OH+d8SoaktMkRZq+r4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Y0RyV+RjudwvOOhT17spjBrnZ9hCMZSMz/Uju5AfkONbmBGvAcOE5IHBXk4sHZ5bEJcKAomZ4S9KR9Y8FsBiY/R2BYkxh4XMbHMEWzoZqyXHRYHOR/oDJ/6vrX65ATAr4bhNpNF/fZqhUCoDZ/0pge7Lz07o7njGk+HNk4RV2f8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7cc74ea8606so182716139f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 01:02:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711699342; x=1712304142;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MnePw+Iu4UT8Cim0LGo0H/yVtv3O4p0fZOyd3SdKm1M=;
+        b=Nisxj5DJvWFEosypzF+bo+agi36sHotYzz4/PEhr6JoXqFAlemWHeRgxOMmKW0Pf7u
+         Dz2Xki11Tk+9YGxE2GOvkQWp45ZSRPd7SZMgT1cqYo/Bi3JRy9uOKzCUM54ZGxUSSwqC
+         yL0kxE6mKLdvsrmzOWANBi1ktpbiEjvyOOcqcXjprlR9+9E1azXVWX8y/cDL6O95s73Q
+         Sp3lZR++dBPLgzNPLZjJcHKZns8GGrTUjzlkqy0tcDY8hFOabYoNDvmbaqxv+y3/vDMv
+         SCr227yH3PzneD3fduUrRoMTqliqjNb6Y/b4t1rnn8BYdLDz7uvwmH/eopdFsz4+7Nf6
+         unsg==
+X-Forwarded-Encrypted: i=1; AJvYcCV02TF/grqIYWi68HGsWAusrol13TFK4pkZh5UtR5Qf9XHuvIb1AUGx51E+Y7eMt8tlvmyHQn3/tcheYonN6Z3xdz8qCWRYwmUxujgg
+X-Gm-Message-State: AOJu0YxDN8JnAE1PlBNuzQSM+WoQXgOu3F344kXsUU+2tgPrnemkOJHf
+	0ZvxfMjfUhUGAtgrJlpJdDOG5V1af5V4+EXYMI2X1vjGmEZALiM2z8Z7zTHK+r3ImFWaU1VH2xw
+	Q1/vCVmEICwnl/6RsW4m2m+s+wsPynjJ/TKaDE5V/wA0QVppMd8KX+44=
+X-Google-Smtp-Source: AGHT+IFyuKG80G6WX3fY2i0icB9vjrfJPmTP+AtBeZjcqurwzNhHBAzVe9lR59GfzFiAd5wBqMYCmVMksqbz4SdS+I/sRr9xFCsk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Upstream] [PATCH 0/2] i.MX93 ADC calibration settings
-Content-Language: en-US
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: Andrej Picej <andrej.picej@norik.com>, Jonathan Cameron
- <jic23@kernel.org>, devicetree@vger.kernel.org, conor+dt@kernel.org,
- lars@metafoo.de, krzysztof.kozlowski+dt@linaro.org, imx@lists.linux.dev,
- linux-iio@vger.kernel.org, festevam@gmail.com, s.hauer@pengutronix.de,
- upstream@lists.phytec.de, linux-kernel@vger.kernel.org, haibo.chen@nxp.com,
- kernel@pengutronix.de, shawnguo@kernel.org, robh@kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20240320100407.1639082-1-andrej.picej@norik.com>
- <20240324135559.1640551d@jic23-huawei>
- <3423ea96-859d-4c4b-a9a7-e0d9c3c00727@norik.com>
- <44ac8977-cf98-46a5-be15-1bec330c6a2e@norik.com>
- <20240325144555.00002d16@Huawei.com>
-From: Primoz Fiser <primoz.fiser@norik.com>
-Organization: Norik systems d.o.o.
-In-Reply-To: <20240325144555.00002d16@Huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel.siel.si
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - norik.com
-X-Get-Message-Sender-Via: cpanel.siel.si: authenticated_id: primoz.fiser@norik.com
-X-Authenticated-Sender: cpanel.siel.si: primoz.fiser@norik.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+X-Received: by 2002:a05:6638:3488:b0:47c:1788:e23 with SMTP id
+ t8-20020a056638348800b0047c17880e23mr47052jal.4.1711699342534; Fri, 29 Mar
+ 2024 01:02:22 -0700 (PDT)
+Date: Fri, 29 Mar 2024 01:02:22 -0700
+In-Reply-To: <0000000000001c59010612fd7c60@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004676d00614c80fab@google.com>
+Subject: Re: [syzbot] [hfs?] KMSAN: uninit-value in hfsplus_strcasecmp
+From: syzbot <syzbot+e126b819d8187b282d44@syzkaller.appspotmail.com>
+To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Jonathan,
+syzbot has found a reproducer for the following issue on:
 
-On 25. 03. 24 15:45, Jonathan Cameron wrote:
-> On Mon, 25 Mar 2024 09:55:23 +0100
-> Primoz Fiser <primoz.fiser@norik.com> wrote:
-> 
->> Hi Jonathan,
->>
->> On 25. 03. 24 09:32, Andrej Picej wrote:
->>> Hi Jonathan,
->>>
->>> On 24. 03. 24 14:55, Jonathan Cameron wrote:  
->>>> On Wed, 20 Mar 2024 11:04:04 +0100
->>>> Andrej Picej <andrej.picej@norik.com> wrote:
->>>>  
->>>>> Hi all,
->>>>>
->>>>> we had some problems with failing ADC calibration on the i.MX93 boards.
->>>>> Changing default calibration settings fixed this. The board where this
->>>>> patches are useful is not yet upstream but will be soon (hopefully).  
->>>>
->>>> Tell us more.  My initial instinct is that this shouldn't be board
->>>> specific.
->>>> What's the trade off we are making here?  Time vs precision of
->>>> calibration or
->>>> something else?  If these are set to a level by default that doesn't work
->>>> for our board, maybe we should just change them for all devices?
->>>>  
->>
->> The imx93_adc driver is quite new.
->>
->> If you look at line #162, you will find a comment by the original author:
->>
->>> 	/*
->>> 	 * TODO: we use the default TSAMP/NRSMPL/AVGEN in MCR,
->>> 	 * can add the setting of these bit if need in future.
->>> 	 */  
->>
->> URL:
->> https://github.com/torvalds/linux/blob/master/drivers/iio/adc/imx93_adc.c#L162
->>
->> So, for most use-cases the default setting should work, but why not make
->> them configurable?
->>
->> So this patch-series just implement what was missing from the beginning
->> / was planned for later.
-> Hi Primoz,
-> 
-> I doubt anyone reviewed the comment closely enough to say if what it was
-> suggesting was sensible or not, so the fact it was listed as a todo
-> doesn't directly impact this discussion.
+HEAD commit:    8d025e2092e2 Merge tag 'erofs-for-6.9-rc2-fixes' of git://..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=14fa8019180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e2599baf258ef795
+dashboard link: https://syzkaller.appspot.com/bug?extid=e126b819d8187b282d44
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=105065c6180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1034025e180000
 
-I agree.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/5ccde1a19e22/disk-8d025e20.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/45420817e7d9/vmlinux-8d025e20.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/354bdafd8c8f/bzImage-8d025e20.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/417a5560bbaa/mount_0.gz
 
-However on the other hand, since we stumbled upon a use-case that
-requires adjusting the driver provided default settings of the i.MX93
-ADC, this TODO to us is and was a clear indication from the original
-author that the driver needs little TLC.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+e126b819d8187b282d44@syzkaller.appspotmail.com
 
-Anyhow, a stance from the author/NXP would be highly welcoming in this
-situation.
+loop0: detected capacity change from 0 to 1024
+=====================================================
+BUG: KMSAN: uninit-value in case_fold fs/hfsplus/unicode.c:23 [inline]
+BUG: KMSAN: uninit-value in hfsplus_strcasecmp+0x1ca/0x770 fs/hfsplus/unicode.c:47
+ case_fold fs/hfsplus/unicode.c:23 [inline]
+ hfsplus_strcasecmp+0x1ca/0x770 fs/hfsplus/unicode.c:47
+ hfsplus_cat_case_cmp_key+0xde/0x190 fs/hfsplus/catalog.c:26
+ hfs_find_rec_by_key+0xb1/0x240 fs/hfsplus/bfind.c:100
+ __hfsplus_brec_find+0x26f/0x7b0 fs/hfsplus/bfind.c:135
+ hfsplus_brec_find+0x445/0x970 fs/hfsplus/bfind.c:195
+ hfsplus_brec_read+0x46/0x1a0 fs/hfsplus/bfind.c:222
+ hfsplus_fill_super+0x199e/0x2700 fs/hfsplus/super.c:531
+ mount_bdev+0x397/0x520 fs/super.c:1676
+ hfsplus_mount+0x4d/0x60 fs/hfsplus/super.c:647
+ legacy_get_tree+0x114/0x290 fs/fs_context.c:662
+ vfs_get_tree+0xa7/0x570 fs/super.c:1797
+ do_new_mount+0x71f/0x15e0 fs/namespace.c:3352
+ path_mount+0x742/0x1f20 fs/namespace.c:3679
+ do_mount fs/namespace.c:3692 [inline]
+ __do_sys_mount fs/namespace.c:3898 [inline]
+ __se_sys_mount+0x725/0x810 fs/namespace.c:3875
+ __x64_sys_mount+0xe4/0x150 fs/namespace.c:3875
+ do_syscall_64+0xd5/0x1f0
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
 
-BR,
-Primoz
+Uninit was created at:
+ slab_post_alloc_hook mm/slub.c:3804 [inline]
+ slab_alloc_node mm/slub.c:3845 [inline]
+ __do_kmalloc_node mm/slub.c:3965 [inline]
+ __kmalloc+0x6e4/0x1000 mm/slub.c:3979
+ kmalloc include/linux/slab.h:632 [inline]
+ hfsplus_find_init+0x91/0x250 fs/hfsplus/bfind.c:21
+ hfsplus_fill_super+0x1688/0x2700 fs/hfsplus/super.c:525
+ mount_bdev+0x397/0x520 fs/super.c:1676
+ hfsplus_mount+0x4d/0x60 fs/hfsplus/super.c:647
+ legacy_get_tree+0x114/0x290 fs/fs_context.c:662
+ vfs_get_tree+0xa7/0x570 fs/super.c:1797
+ do_new_mount+0x71f/0x15e0 fs/namespace.c:3352
+ path_mount+0x742/0x1f20 fs/namespace.c:3679
+ do_mount fs/namespace.c:3692 [inline]
+ __do_sys_mount fs/namespace.c:3898 [inline]
+ __se_sys_mount+0x725/0x810 fs/namespace.c:3875
+ __x64_sys_mount+0xe4/0x150 fs/namespace.c:3875
+ do_syscall_64+0xd5/0x1f0
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+
+CPU: 1 PID: 5017 Comm: syz-executor416 Not tainted 6.9.0-rc1-syzkaller-00061-g8d025e2092e2 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+=====================================================
 
 
-> 
->>
->> BR,
->> Primoz
->>
->>
->>>
->>> So we have two different boards with the same SoC. On one, the
->>> calibration works with the default values, on the second one the
->>> calibration fails, which makes the ADC unusable. What the ADC lines
->>> measure differ between the boards though. But the implementation is
->>> nothing out of the ordinary.
->>>
->>> We tried different things but the only thing that helped is to use
->>> different calibration properties. We tried deferring the probe and
->>> calibration until later boot and after boot, but it did not help.
->>>
->>> In the Reference Manual [1] (chapter 72.5.1) it is written:
->>>   
->>>> 4. Configure desired calibration settings (default values kept for
->>>> highest accuracy maximum time).  
->>>
->>> So your assumption is correct, longer calibration time (more averaging
->>> samples) -> higher precision. The default values go for a high accuracy.
->>> And since we use a NRSMPL (Number of Averaging Samples) of 32 instead of
->>> default 512, we reduce the accuracy so the calibration values pass the
->>> internal defined limits.
-> 
-> Ouch.  Let me try to dig into this. Is this effectively relaxing the
-> constraints? I guess because a value that is perhaps always biased one way
-> is considered within bounds if those acceptable bounds are wider because
-> of lower precision?
-> 
-> I was assuming it was the other way around and the device had fixed constraint
-> limits and you needed to take more samples due to higher noise. Seems the
-> opposite is true here and that worries me.
-> 
-> I'll definitely need input from NXP on this as a workaround and their
-> strong support to consider it.
-> 
->>>
->>> I'm not sure that changing default values is the right solution here. We
->>> saw default values work with one of the boards. And since the NXP kept
->>> these values adjustable I think there is a reason behind it.
-> 
-> I'd assume trade off between time and calibration precision, not the
-> sort of use I think you are describing.
-> 
->>>
->>> Note: When I say one of the boards I mean one board form. So same board
->>> version, but different HW.
-> 
-> Superficially I'm struggling to not see this as broken hardware that it
-> is out of expected tolerances in some fashion.  Maybe I misunderstood
-> the issue.
-> 
-> Jonathan
-> 
->>>
->>> Best regards,
->>> Andrej
->>>
->>> [1] i.MX 93 Applications Processor Reference Manual, Rev. 4, 12/2023
->>> _______________________________________________
->>> upstream mailing list
->>> upstream@lists.phytec.de
->>> http://lists.phytec.de/cgi-bin/mailman/listinfo/upstream  
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-
--- 
-Primoz Fiser                    | phone: +386-41-390-545
-<tel:+386-41-390-545> |
----------------------------------------------------------|
-Norik systems d.o.o.            | https://www.norik.com
-<https://www.norik.com>  |
-Your embedded software partner  | email: info@norik.com
-<mailto:info@norik.com> |
-Slovenia, EU                    | phone: +386-41-540-545
-<tel:+386-41-540-545> |
-
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
