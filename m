@@ -1,123 +1,140 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A760051028
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 09:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D1C54BFD;
+	Fri, 29 Mar 2024 09:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711704859; cv=none; b=ncvsvmZVmaGCPzBGK/FshICV+mWpq/DPOrV7XkEmrcz3NifAHTSrlaTEV7SaF1PiOC5bgX1bLG1pk/I0vmGtFXd+mLMy0i8hi9ka3nKTEs+nw1eLre9j0wGeCfMGB2O88N2MDzWSxnLil0/45K5rMYugg7QDBRLW7qbUNvw4lOk=
+	t=1711704890; cv=none; b=mf6Gn7zD8fdfRplhYGeuGFc14pCaLyhjAdmYvKl/25CPIItDosaVg5xyNpTsDjRWah5Hnk6yUR0sl7yHg60Mc0lQNw38gDKXFGq+ZR0IL1LbcY2hzrV/g4wnP7Wntkhe7jUgnX9S7f0dvybHAxilwBOY4CYjZnnlAZufyD6Y8ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711704859; c=relaxed/simple;
-	bh=KUC09wtYmay5oVx7+9C+OUpDt1KQS0U9lKvW1u+lUzg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mwjmX8HhaIMs7y8rhtnnJR2f/2TtGcNCBRFwS59Q708/cYUc03NBKzh2E0VqE3jK97ZDFrkU9CCit6IyOyexZ1U7N687XOHTldM/Xs4c9N3huYMgNoelxZ5OPdlKXd8IW/wWfqmYfHwyz362lA8TMAs2AaFSG5fT9qMLLR1RWXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hrTEbWLx; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+	s=arc-20240116; t=1711704890; c=relaxed/simple;
+	bh=+jbgbe5pBrLwtZqA7hktd0h74TkPF8qjqW9vO9EiFr8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wdi0hCVeaI6ES3M2tw4pA4TLoWNWXric1qFxQtRQkhp1582KMcasohTu1ICHPYmn/Bhfgf/jNCBZIKjtffGpNg+mAW81g/gJXHn6OdtervqwccQ4JxDG6KCJiAVtWeM6fl3LDIA0pctROMIaVUL+rAWm4TgRsBypCF6h6Zb7/LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H02v7eSD; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hrTEbWLx"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60cd041665bso34122257b3.0
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 02:34:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711704857; x=1712309657; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dw09Gs88ogil/diQ6Vr0EqHQANsVVhIyP+7ZdKbyIx8=;
-        b=hrTEbWLxtEqFbiUq7dXs2Ij2MbDHo9jxMNEXhcM33fZCV6SANtjf9/OdUyJt+HCk7B
-         XOzjuQSEPLKUZTTMKuRQVNvH9lnmgJSzevBo1s1Pv/yheReNYz+rZyAsDaSh+mX3p/Lf
-         +KMyvL8hmFqI8GLUScCj5UReuS95++Qs7OT0TRm+GHhB3zPqi75m0G0mG0rk+y84cmDT
-         3NpmH45Mw9DvIb00R8jFVHuayV/HnsfjZ+c6TOAYiT+rfAYCnGDyg7c69djn5gOW5Y4g
-         6RaRmY4GnYX1mqz6SipPYu7Bu6DhY3tJgSPg4u9i/NUXaviVU20Y8W5OCTDYOXWxsxIJ
-         dx3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711704857; x=1712309657;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dw09Gs88ogil/diQ6Vr0EqHQANsVVhIyP+7ZdKbyIx8=;
-        b=d88OtSt3JnvG9yKX/dtrDIzHAu6e0+Rm6T4Z4bXiLMjjk86SZ2dbTP0nsMvSjVlOvf
-         udj2eMHqCBeibNHnZ1n4iWFJQigghKBUMUI4j8HIWiDaauF/nhYfo3+Cvy0ADksGUm6x
-         XZ8QPqpJxkVbzXhrIhGeVDNDzQ2Mfbbt/cis80j6U3M3stp8fUgt+fX5zRJzDy93XC70
-         yyrD1g1JoxMxwq525VMMlWvTqXZ7CqJ2IkWS8npH8XbmWatoeijpLZy4XbBlwCu1eAL3
-         WvALUMqTAM56ibEkEeVs1jy0HZngmXQCKmQ6D9EAmCrsXmLPOJFPgJz2N3moMPP8qbC/
-         Zqjg==
-X-Gm-Message-State: AOJu0Yy1GaPS9e/dok9eKIK5hcu36EkaTozZI03UvS9rHdlM7jF/okKn
-	atSM1LpNS7wJaW2uWw7bLt41Hx3dCYEKHL/wfx7BB5E+whT/zbm8U7D4iR0cYS2OcMi8KgvjyM5
-	HR6hqwEtnhPUEcE15xYleaTk+W7LGzNipz0YKYbjX5alu064xUpSP0I0hswlvBAuUzeY1E0aux1
-	nzsdbfC1OoUI+dQoN45Tjw8RVTun2bRA==
-X-Google-Smtp-Source: AGHT+IHww5cAwsi1pr9pBu+czX3UmFai9nj7XcxpaVhRpi1LgYQNcAUBxrSuXEicaf9NQtedota600ow
-X-Received: from palermo.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:118a])
- (user=ardb job=sendgmr) by 2002:a0d:dd03:0:b0:611:7573:72b9 with SMTP id
- g3-20020a0ddd03000000b00611757372b9mr538832ywe.5.1711704856741; Fri, 29 Mar
- 2024 02:34:16 -0700 (PDT)
-Date: Fri, 29 Mar 2024 10:34:00 +0100
-In-Reply-To: <20240329093356.276289-5-ardb+git@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H02v7eSD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711704889; x=1743240889;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+jbgbe5pBrLwtZqA7hktd0h74TkPF8qjqW9vO9EiFr8=;
+  b=H02v7eSDjCB7LztP0j42GBD336glKtolcuimITSqLNMWyoHYdw7cZGaH
+   T5yL//Pwojb3jkBLsq7neCKP+El9sReyW5VKCLBFsj4/bvn0Ig1nvaIfa
+   nZsbZG+y/9o2urJZjITYKBaIKUCm3mpYTh7oktaMoDOGPqLybu7fvE+Ci
+   mXBUvbdKzzeEkUlqe56V8ejh2OxQzrcH9QPlhwtq5oRF9H6/0zNWWdl55
+   KUi6Wczg1k1Q2hxHOzd39ekV/YqaOYPZ+dYy7dZy0vgUvz/4IKnm0OzQj
+   N74LVpnXaOmkHUuzqIMuVQwMgAjqY+XENYb0vti/bkcdVGcqoTWlqnBxB
+   g==;
+X-CSE-ConnectionGUID: kTOQ7aHCQjKAHYGC+Zv0Dw==
+X-CSE-MsgGUID: 6k/R5WTDT6mLucZW/KSnGw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="7000614"
+X-IronPort-AV: E=Sophos;i="6.07,164,1708416000"; 
+   d="scan'208";a="7000614"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 02:34:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,164,1708416000"; 
+   d="scan'208";a="21666322"
+Received: from lkp-server01.sh.intel.com (HELO be39aa325d23) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 29 Mar 2024 02:34:44 -0700
+Received: from kbuild by be39aa325d23 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rq8dF-000340-0w;
+	Fri, 29 Mar 2024 09:34:41 +0000
+Date: Fri, 29 Mar 2024 17:33:58 +0800
+From: kernel test robot <lkp@intel.com>
+To: Oleksij Rempel <o.rempel@pengutronix.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andrew Lunn <andrew@lunn.ch>, Eric Dumazet <edumazet@google.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Arun Ramadoss <arun.ramadoss@microchip.com>
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
+	Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org, UNGLinuxDriver@microchip.com,
+	David Ahern <dsahern@kernel.org>, Simon Horman <horms@kernel.org>,
+	Willem de Bruijn <willemb@google.com>,
+	=?iso-8859-1?Q?S=F8ren?= Andersen <san@skov.dk>
+Subject: Re: [PATCH net-next v1 5/9] net: dsa: microchip: add support for
+ different DCB app configurations
+Message-ID: <202403291727.iblGz7u1-lkp@intel.com>
+References: <20240328160518.2396238-6-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240329093356.276289-5-ardb+git@google.com>
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1581; i=ardb@kernel.org;
- h=from:subject; bh=q5UGicb35M6dvlAOCgO0axQESJYA1rUn+GPk9ZrI1w0=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIY2tm2OlVN6iHxUr9jYWMgmymJk94z0V9u5k6qIdE5rSD
- 26LOdPVUcrCIMbBICumyCIw+++7nacnStU6z5KFmcPKBDKEgYtTACbSb8fwPzp8VsaB3SU2Br47
- 13TyqzMf+HazQXOCcIe1VeufXy6Jrxn+Cj68+VHg2BXetLa8nEmMt64kzV5teF7ibP27fVkbfDK XsQEA
-X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Message-ID: <20240329093356.276289-8-ardb+git@google.com>
-Subject: [PATCH 3/3] btf: Avoid weak external references
-From: Ard Biesheuvel <ardb+git@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, linux-arch@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240328160518.2396238-6-o.rempel@pengutronix.de>
 
-From: Ard Biesheuvel <ardb@kernel.org>
+Hi Oleksij,
 
-If the BTF code is enabled in the build configuration, the start/stop
-BTF markers are guaranteed to exist in the final link but not during the
-first linker pass.
+kernel test robot noticed the following build warnings:
 
-Avoid GOT based relocations to these markers in the final executable by
-providing preliminary definitions that will be used by the first linker
-pass, and superseded by the actual definitions in the subsequent ones.
+[auto build test WARNING on net-next/main]
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- include/asm-generic/vmlinux.lds.h | 2 ++
- kernel/bpf/btf.c                  | 4 ++--
- 2 files changed, 4 insertions(+), 2 deletions(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Oleksij-Rempel/net-dsa-add-support-for-DCB-get-set-apptrust-configuration/20240329-000847
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20240328160518.2396238-6-o.rempel%40pengutronix.de
+patch subject: [PATCH net-next v1 5/9] net: dsa: microchip: add support for different DCB app configurations
+config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20240329/202403291727.iblGz7u1-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240329/202403291727.iblGz7u1-lkp@intel.com/reproduce)
 
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index e8449be62058..141bddb511ee 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -456,6 +456,8 @@
-  * independent code.
-  */
- #define PRELIMINARY_SYMBOL_DEFINITIONS					\
-+	PROVIDE(__start_BTF = .);					\
-+	PROVIDE(__stop_BTF = .);					\
- 	PROVIDE(kallsyms_addresses = .);				\
- 	PROVIDE(kallsyms_offsets = .);					\
- 	PROVIDE(kallsyms_names = .);					\
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index 90c4a32d89ff..46a56bf067a8 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -5642,8 +5642,8 @@ static struct btf *btf_parse(const union bpf_attr *attr, bpfptr_t uattr, u32 uat
- 	return ERR_PTR(err);
- }
- 
--extern char __weak __start_BTF[];
--extern char __weak __stop_BTF[];
-+extern char __start_BTF[];
-+extern char __stop_BTF[];
- extern struct btf *btf_vmlinux;
- 
- #define BPF_MAP_TYPE(_id, _ops)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403291727.iblGz7u1-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/net/dsa/microchip/ksz_dcb.c:81: warning: cannot understand function prototype: 'const u8 ksz_supported_apptrust[] = '
+
+
+vim +81 drivers/net/dsa/microchip/ksz_dcb.c
+
+    53	
+    54	/**
+    55	 * ksz_supported_apptrust[] - Supported apptrust selectors and Priority Order
+    56	 *			      of Internal Priority Value (IPV) sources.
+    57	 *
+    58	 * This array defines the apptrust selectors supported by the hardware, where
+    59	 * the index within the array indicates the priority of the selector - lower
+    60	 * indices correspond to higher priority. This fixed priority scheme is due to
+    61	 * the hardware's design, which does not support configurable priority among
+    62	 * different priority sources.
+    63	 *
+    64	 * The priority sources, including Tail Tag, ACL, VLAN PCP and DSCP are ordered
+    65	 * by the hardware's fixed logic, as detailed below. The order reflects a
+    66	 * non-configurable precedence where certain types of priority information
+    67	 * override others:
+    68	 *
+    69	 * 1. Tail Tag - Highest priority, overrides ACL, VLAN PCP, and DSCP priorities.
+    70	 * 2. ACL - Overrides VLAN PCP and DSCP priorities.
+    71	 * 3. VLAN PCP - Overrides DSCP priority.
+    72	 * 4. DSCP - Lowest priority, does not override any other priority source.
+    73	 *
+    74	 * In this context, the array's lower index (higher priority) for
+    75	 * 'DCB_APP_SEL_PCP' suggests its relative priority over
+    76	 * 'IEEE_8021QAZ_APP_SEL_DSCP' within the system's fixed priority scheme.
+    77	 *
+    78	 * DCB_APP_SEL_PCP - Priority Code Point selector
+    79	 * IEEE_8021QAZ_APP_SEL_DSCP - Differentiated Services Code Point selector
+    80	 */
+  > 81	static const u8 ksz_supported_apptrust[] = {
+    82		DCB_APP_SEL_PCP,
+    83		IEEE_8021QAZ_APP_SEL_DSCP,
+    84	};
+    85	
+
 -- 
-2.44.0.478.gd926399ef9-goog
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
