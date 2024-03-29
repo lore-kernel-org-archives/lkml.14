@@ -1,147 +1,165 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BC0364BA;
-	Fri, 29 Mar 2024 10:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94CB364BA;
+	Fri, 29 Mar 2024 10:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711709736; cv=none; b=hN3pVS59bK3dBdw6WZGG/h+rz/oczmd+SUiXe5bZx/hqW2hQtEkkZkvmFXXRqgtoY4t1j/V2Q2rP8Up8TkE20G0uQrXdO8784JV5Hz/HekCCUzx5RBajVCZXw6nNg8NNotDT6BggjIlumxn7cj+IHvWh8lE3UzDPhyxE8Rl+AdU=
+	t=1711709801; cv=none; b=s47UREUfTFlby6+5DDPDBItpERALFg+ethFOmdHQ3O3SJk5Ze8+rw9rAbIlrxpgChflWTkbLfEz2YUSDyHMbg89Skb6wINDg+uhiZySNKm1EzLeCzeasNxT4rxhfJhNU1wQIHLXvN7W8rvjls0zMh3D9zN4v4ZBoiE7qBcO2Cog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711709736; c=relaxed/simple;
-	bh=1pSOXma/n4d8FmXGex5jo01/Q0vLf66OpukJQyybll4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=stwa1YHThEsud3otNQorZdWNsCPCNSwr50SY4csvcWKVkxgLl2mbRnTUFd7O45DEWf2lpCqN/0EJTcuPw6XhAf3WdDrSOChWS/Agn9ijTCUg75NRfLiPRbmSXLP/3jvoTdcdEowOACaTH8AcK7w7dRH8XIue77VzNfgmUhhr13Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NmmpRATo; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NmmpRATo"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42T6Y1go013592;
-	Fri, 29 Mar 2024 10:55:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=qcppdkim1; bh=FeDDBdkCPt1+HBPH/VoaH
-	2ybUO6SoYLovOae22/h6ao=; b=NmmpRAToqyj+2AAcIew4TXOQiUjAAgIRqJrvK
-	snI8Mcp2kASjE5AnlodjXyHAuqjx6ujmbUb5O06AQd4ujcTENEsY+pdhK961G9F2
-	5uMYTtcTtCl4ee3rh6HxuyxAp4Vjg2WFP/hsidPU1sSm00nF03qeDQ7AcUVYCjS6
-	hEjiKsENsvb1gckGS6IqafDEUnE152BM4BRGZ7E1Z5GQfUresBhUCnHxn/MSfgVo
-	dvUGbZhwCSVjWCH5pvi+8rVDuYdGVZ0QGRKpkawNJVJIXMJ2jc/vY1LKz6e30l0k
-	PJ4aat4LYq+G41PgvsIKaWT8KNDNrvGxXhcsPkQ4TgwqNgOXA==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x5hskhkge-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Mar 2024 10:55:30 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42TAtTbj031112
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Mar 2024 10:55:29 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 29 Mar 2024 03:55:24 -0700
-Date: Fri, 29 Mar 2024 16:25:21 +0530
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: Stephen Boyd <sboyd@kernel.org>
-CC: <andersson@kernel.org>, <conor+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <djakov@kernel.org>,
-        <dmitry.baryshkov@linaro.org>, <konrad.dybcio@linaro.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <mturquette@baylibre.com>,
-        <quic_anusha@quicinc.com>, <robh@kernel.org>
-Subject: Re: [PATCH v5 4/5] clk: qcom: ipq9574: Use icc-clk for enabling NoC
- related clocks
-Message-ID: <ZgaeGZL7QXh75aSA@hu-varada-blr.qualcomm.com>
-References: <20240328075936.223461-1-quic_varada@quicinc.com>
- <20240328075936.223461-5-quic_varada@quicinc.com>
- <95f4e99a60cc97770fc3cee850b62faf.sboyd@kernel.org>
+	s=arc-20240116; t=1711709801; c=relaxed/simple;
+	bh=wXmD/wTPLUziOZNHo17aLeyr2LXTHIbWqldBHooT3mA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oAY78pFPdDUQ44pwFyD+Yuwk8AFkBbB776IM8U0dKW6E7Z5amMz57ReuqKHcdYnu85n7zt/k3muab/d9IodGWui9GNiajK6q4FPjxcpisfS/kBxd2Z0T3/gftTKl//oXgboef13/3x97pd53g5k19GonpzZbynScu80Ou3+4naE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.29])
+	by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4V5cPL1clGz9y0km;
+	Fri, 29 Mar 2024 18:40:22 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.27])
+	by mail.maildlp.com (Postfix) with ESMTP id 79883140556;
+	Fri, 29 Mar 2024 18:56:23 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.204.63.22])
+	by APP2 (Coremail) with SMTP id GxC2BwDnISZMngZmVsAqBQ--.12203S2;
+	Fri, 29 Mar 2024 11:56:22 +0100 (CET)
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: zohar@linux.ibm.com,
+	dmitry.kasatkin@gmail.com,
+	eric.snowberg@oracle.com,
+	paul@paul-moore.com,
+	jmorris@namei.org,
+	serge@hallyn.com
+Cc: linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-cifs@vger.kernel.org,
+	viro@zeniv.linux.org.uk,
+	pc@manguebit.com,
+	christian@brauner.io,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	stable@vger.kernel.org,
+	Steve French <smfrench@gmail.com>
+Subject: [PATCH 1/2] security: Handle dentries without inode in security_path_post_mknod()
+Date: Fri, 29 Mar 2024 11:56:08 +0100
+Message-Id: <20240329105609.1566309-1-roberto.sassu@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <95f4e99a60cc97770fc3cee850b62faf.sboyd@kernel.org>
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: jjW6UuSHfZeUqTUEMLdErOzDLRtEXDih
-X-Proofpoint-ORIG-GUID: jjW6UuSHfZeUqTUEMLdErOzDLRtEXDih
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-29_09,2024-03-28_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
- clxscore=1015 bulkscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
- impostorscore=0 adultscore=0 mlxscore=0 spamscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2403210001
- definitions=main-2403290094
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:GxC2BwDnISZMngZmVsAqBQ--.12203S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxXrWrAFWkCw4fWw45ury8Krg_yoWrXryUpF
+	4rt3WkJr95XFy8Wr18AFy7u3WSkay5WFWUWan5Wa1ayFnxXr1jqrs2vryY9rW5tr4UGryx
+	twnFyrsxAa1qyF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvab4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0E
+	n4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8
+	ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+	CY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv
+	67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
+	uYvjxUxo7KDUUUU
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQARBF1jj5vtpQABs3
 
-On Thu, Mar 28, 2024 at 02:51:09PM -0700, Stephen Boyd wrote:
-> Quoting Varadarajan Narayanan (2024-03-28 00:59:35)
-> > diff --git a/drivers/clk/qcom/gcc-ipq9574.c b/drivers/clk/qcom/gcc-ipq9574.c
-> > index 0a3f846695b8..187fd9dcdf49 100644
-> > --- a/drivers/clk/qcom/gcc-ipq9574.c
-> > +++ b/drivers/clk/qcom/gcc-ipq9574.c
-> > @@ -4301,6 +4302,56 @@ static const struct qcom_reset_map gcc_ipq9574_resets[] = {
-> >         [GCC_WCSS_Q6_TBU_BCR] = { 0x12054, 0 },
-> >  };
-> >
-> > +#define IPQ_APPS_ID                    9574    /* some unique value */
->
-> How is this supposed to stay unique?
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
-The icc-clk driver expects some number that wouldn't interfere
-with the existing nodes. So just used the SoC id itself.
+Commit 08abce60d63fi ("security: Introduce path_post_mknod hook")
+introduced security_path_post_mknod(), to replace the IMA-specific call to
+ima_post_path_mknod().
 
-> I don't understand icc_node_create() API quite honestly. Why
-> can't icc_clk_register() maintain some ida of allocated
-> numbers? Or is there some global number space that we can
-> "reserve" from? I'm quite amazed this is how things are
-> connected in interconnect framework.
->
-> > +
-> > +enum {
-> > +       ICC_ANOC_PCIE0,
-> > +       ICC_SNOC_PCIE0,
-> > +       ICC_ANOC_PCIE1,
-> > +       ICC_SNOC_PCIE1,
-> > +       ICC_ANOC_PCIE2,
-> > +       ICC_SNOC_PCIE2,
-> > +       ICC_ANOC_PCIE3,
-> > +       ICC_SNOC_PCIE3,
-> > +       ICC_SNOC_USB,
-> > +       ICC_ANOC_USB_AXI,
-> > +       ICC_NSSNOC_NSSCC,
-> > +       ICC_NSSNOC_SNOC_0,
-> > +       ICC_NSSNOC_SNOC_1,
-> > +       ICC_NSSNOC_PCNOC_1,
-> > +       ICC_NSSNOC_QOSGEN_REF,
-> > +       ICC_NSSNOC_TIMEOUT_REF,
-> > +       ICC_NSSNOC_XO_DCD,
-> > +       ICC_NSSNOC_ATB,
-> > +       ICC_MEM_NOC_NSSNOC,
-> > +       ICC_NSSNOC_MEMNOC,
-> > +       ICC_NSSNOC_MEM_NOC_1,
-> > +};
->
-> Are these supposed to be in a dt-binding header?
+For symmetry with security_path_mknod(), security_path_post_mknod() is
+called after a successful mknod operation, for any file type, rather than
+only for regular files at the time there was the IMA call.
 
-Since these don't directly relate to the ids in the dt-bindings
-not sure if they will be permitted there. Will move and post a
-new version and get feedback.
+However, as reported by VFS maintainers, successful mknod operation does
+not mean that the dentry always has an inode attached to it (for example,
+not for FIFOs on a SAMBA mount).
 
-Thanks
-Varada
+If that condition happens, the kernel crashes when
+security_path_post_mknod() attempts to verify if the inode associated to
+the dentry is private.
 
-> > +
-> > +static struct clk_hw *icc_ipq9574_hws[] = {
-> > +       [ICC_ANOC_PCIE0] = &gcc_anoc_pcie0_1lane_m_clk.clkr.hw,
-> > +       [ICC_SNOC_PCIE0] = &gcc_anoc_pcie1_1lane_m_clk.clkr.hw,
-> > +       [ICC_ANOC_PCIE1] = &gcc_anoc_pcie2_2lane_m_clk.clkr.hw,
-> > +       [ICC_SNOC_PCIE1] = &gcc_anoc_pcie3_2lane_m_clk.clkr.hw,
-> > +       [ICC_ANOC_PCIE2] = &gcc_snoc_pcie0_1lane_s_clk.clkr.hw,
-> > +       [ICC_SNOC_PCIE2] = &gcc_snoc_pcie1_1lane_s_clk.clkr.hw,
+Add an extra check to first verify if there is an inode attached to the
+dentry, before checking if the inode is private. Also add the same check to
+the current users of the path_post_mknod hook, ima_post_path_mknod() and
+evm_post_path_mknod().
+
+Finally, use the proper helper, d_backing_inode(), to retrieve the inode
+from the dentry in ima_post_path_mknod().
+
+Cc: stable@vger.kernel.org # 6.8.x
+Reported-by: Steve French <smfrench@gmail.com>
+Closes: https://lore.kernel.org/linux-kernel/CAH2r5msAVzxCUHHG8VKrMPUKQHmBpE6K9_vjhgDa1uAvwx4ppw@mail.gmail.com/
+Fixes: 08abce60d63fi ("security: Introduce path_post_mknod hook")
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+---
+ security/integrity/evm/evm_main.c | 6 ++++--
+ security/integrity/ima/ima_main.c | 5 +++--
+ security/security.c               | 4 +++-
+ 3 files changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/evm_main.c
+index 81dbade5b9b3..ec1659273fcf 100644
+--- a/security/integrity/evm/evm_main.c
++++ b/security/integrity/evm/evm_main.c
+@@ -1037,11 +1037,13 @@ static void evm_file_release(struct file *file)
+ static void evm_post_path_mknod(struct mnt_idmap *idmap, struct dentry *dentry)
+ {
+ 	struct inode *inode = d_backing_inode(dentry);
+-	struct evm_iint_cache *iint = evm_iint_inode(inode);
++	struct evm_iint_cache *iint;
+ 
+-	if (!S_ISREG(inode->i_mode))
++	/* path_post_mknod hook might pass dentries without attached inode. */
++	if (!inode || !S_ISREG(inode->i_mode))
+ 		return;
+ 
++	iint = evm_iint_inode(inode);
+ 	if (iint)
+ 		iint->flags |= EVM_NEW_FILE;
+ }
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index c84e8c55333d..afc883e60cf3 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -719,10 +719,11 @@ static void ima_post_create_tmpfile(struct mnt_idmap *idmap,
+ static void ima_post_path_mknod(struct mnt_idmap *idmap, struct dentry *dentry)
+ {
+ 	struct ima_iint_cache *iint;
+-	struct inode *inode = dentry->d_inode;
++	struct inode *inode = d_backing_inode(dentry);
+ 	int must_appraise;
+ 
+-	if (!ima_policy_flag || !S_ISREG(inode->i_mode))
++	/* path_post_mknod hook might pass dentries without attached inode. */
++	if (!ima_policy_flag || !inode || !S_ISREG(inode->i_mode))
+ 		return;
+ 
+ 	must_appraise = ima_must_appraise(idmap, inode, MAY_ACCESS,
+diff --git a/security/security.c b/security/security.c
+index 7e118858b545..455f0749e1b0 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -1801,7 +1801,9 @@ EXPORT_SYMBOL(security_path_mknod);
+  */
+ void security_path_post_mknod(struct mnt_idmap *idmap, struct dentry *dentry)
+ {
+-	if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
++	/* Not all dentries have an inode attached after mknod. */
++	if (d_backing_inode(dentry) &&
++	    unlikely(IS_PRIVATE(d_backing_inode(dentry))))
+ 		return;
+ 	call_void_hook(path_post_mknod, idmap, dentry);
+ }
+-- 
+2.34.1
+
