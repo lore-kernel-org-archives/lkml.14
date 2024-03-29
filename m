@@ -1,78 +1,55 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E891F2566
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 18:29:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE4B4137903;
+	Fri, 29 Mar 2024 18:29:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711736955; cv=none; b=G1a7KApMe7P9X5Lrij5D1VFY7GTv/72MZ4aky3NnXjjGn0/aeqJRNuvxaHzAA3rzClGetz4JMUCg1Q7EI14nr6JvwHdHnMyiktnhnWadC72i3WfIl2SnFwGGVS4YJRPOrfKwf9zAKuyGgfnG/Fjx5V6jzz0RmScZEg/c/h2DybE=
+	t=1711736961; cv=none; b=DfXU/k+4U5g3msx6KVbVhkDCjds+pZq68S0rkYRykpRy4/YEz7PITmMAOwx6ObHhECYrK3a9XVhaD64kz18HZ1TOLtu9lkOZp2CO5y4x8cAWWBLvQgGBNNdObPMPhctbvdY6Y2ICOhLDqZxA/lyx3Y4PhWDa5Rcq6u/L91U6zdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711736955; c=relaxed/simple;
-	bh=EVV3QmuuKNiguLSsuKsSiVzu5NC4P5bKVI5myK0rG0k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m7ItiElTJJTE86EIA+19+x5pqkyOe0CVAHvyMphz2PSZ/bqOxb34B0syaNS6/1LnqKYZPg7GYOgJIJRmkfnphJYuetK1Bzh0E+2igEvyF8txaR/dj+vqM79WLrEhWCEf6ZBHvRJbsEcgji6ZinrB9KH+RoQb6lui1qtcgSYR+g8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lfvwEG0K; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lfvwEG0K"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=u6ZgpvkaaGDYHEOzQJsHwpOK9QGPOGeHiXkxrVeGdKA=; b=lfvwEG0KzcGtCxf/xMPkfizHMU
-	IEO8Jvj4pryuyTbBN3MjGVPsnhwf7psjuXFoQl/DD1fq7VmnQZud2Am2tU3jyMuZo1dHJDl0hi1b+
-	TrejreAGAvGi/D42fVWZF75jMC7PYYCt82PFVN64R+YDXuLT/MD+QyDK2iRjvwko3/lwOAOdZP8Io
-	zUn17F3ZDzu8MYfdVo2gJPlDC0Sjfyf7aRsKnpGv641E4TiABILWIczQY9LllHRHSf5wTRTRdLzIH
-	ZYO6YBOOB1zKVvEjbSiK6nf7X8FVvxGkZfW8kFDHgTLtDYSYP104MB413JIUfvAQhnrFGpqjHZs89
-	kJDm//9Q==;
-Received: from [50.53.2.121] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rqGyV-00000001bcv-1nOu;
-	Fri, 29 Mar 2024 18:29:11 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Iwona Winiarska <iwona.winiarska@intel.com>,
-	openbmc@lists.ozlabs.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v2] peci: linux/peci.h: fix Excess kernel-doc description warning
-Date: Fri, 29 Mar 2024 11:29:10 -0700
-Message-ID: <20240329182910.29495-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1711736961; c=relaxed/simple;
+	bh=SPUg+tRH5xvHEVcSWTYPv64Mi0EH+GD/KVONAzkIv9k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CIr384VPq1zQUSEOLuQBdcd/63Ywpnhef0KkvL8FAOxVfJtrpv/q6waxqqJT5Mq17sD0+ojVOX1Xv1Z0ffbi+hd9DExOJMGBB18lHT+3W98q8fjodkyncQ2znZ+6qld+KW9MQ4JJFuYkV2jJm/UnGzZBCNbj/02TAw94OldhTrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0999DC433F1;
+	Fri, 29 Mar 2024 18:29:19 +0000 (UTC)
+Date: Fri, 29 Mar 2024 14:32:05 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Nikita Kiryushin <kiryushin@ancud.ru>
+Cc: paulmck@kernel.org, Frederic Weisbecker <frederic@kernel.org>, Neeraj
+ Upadhyay <quic_neeraju@quicinc.com>, Joel Fernandes
+ <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, Boqun Feng
+ <boqun.feng@gmail.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>,
+ rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+ lvc-project@linuxtesting.org
+Subject: Re: [PATCH] rcu: Fix buffer overlow in print_cpu_stall_info()
+Message-ID: <20240329143205.66c35f5f@gandalf.local.home>
+In-Reply-To: <a6e236f3-60a4-48da-840f-c38d7ba02475@ancud.ru>
+References: <20240328181914.869332-1-kiryushin@ancud.ru>
+	<e3d3a612-4751-48ac-82c1-8bf61e8f3cd1@paulmck-laptop>
+	<a6e236f3-60a4-48da-840f-c38d7ba02475@ancud.ru>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Remove the @controller: line to prevent the kernel-doc warning:
+On Fri, 29 Mar 2024 20:56:16 +0300
+Nikita Kiryushin <kiryushin@ancud.ru> wrote:
 
-include/linux/peci.h:84: warning: Excess struct member 'controller' description in 'peci_device'
+> Maybe, it would be a good idea for me to add a comment with intent
+> clarification, to reduce possibility of the same confusion in the future,
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Iwona Winiarska <iwona.winiarska@intel.com>
-Cc: openbmc@lists.ozlabs.org
-Reviewed-by: Iwona Winiarska <iwona.winiarska@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
-v2: add Rev-by, add gregkh email
+Yes please do.
 
-Would it make sense to add Greg as M: in the MAINTAINERS file?
-How does someone know to Cc: Greg on PECI patches?
+> while I am at it? If so, should I do it in the same patch, or make a separate one?
 
- include/linux/peci.h |    1 -
- 1 file changed, 1 deletion(-)
+I would keep it the same patch, but it really is Paul's decision.
 
-diff -- a/include/linux/peci.h b/include/linux/peci.h
---- a/include/linux/peci.h
-+++ b/include/linux/peci.h
-@@ -58,7 +58,6 @@ static inline struct peci_controller *to
- /**
-  * struct peci_device - PECI device
-  * @dev: device object to register PECI device to the device model
-- * @controller: manages the bus segment hosting this PECI device
-  * @info: PECI device characteristics
-  * @info.family: device family
-  * @info.model: device model
+-- Steve
