@@ -1,45 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2AC3C120;
-	Fri, 29 Mar 2024 16:55:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B981F4D110;
+	Fri, 29 Mar 2024 16:56:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711731358; cv=none; b=hIeZMx//3Zh3n1R55J6wJxkPAtqFBjFuxNgskxZ0LIlrU+UY2nIkKgxP/aHw9tTXzpzwNEdE5ejR1MD960lJBcbOAl/AmzzJZE8NfLFzRBhWOaWfQUQQJXr+XCu9w8MS7m0EY/3Lrg5Lpn97byKCo28B9gBK+S64AYJVI2Y8nMM=
+	t=1711731365; cv=none; b=M1rocGSlddX2FsHTCiqwZjoUq1DjOdwE8dHY9Mdx1byAkKsaKzOD+syKxjISzhI4eOYrYUKoVDOgz4/NgOg0DPZugvEve80OPKwogViPfO0E5WlYlpggi6X12PWQp9gV6aHif19VKn1ihLMV2bmZTZySeQwyneMGw3cl9ybzyzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711731358; c=relaxed/simple;
-	bh=RV3VRFSxY52XIFyp4YJivtHZiq5gbFXa9jWiDKfQaI4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qWEPPCQAo6fGTapJQcdUynzztZwTT/81cQQhZ26wOt7JZCxMqiO8oDnIuHaXc/DtznH3Wgv2HilNXfuMxXe2QZed+k5c9ggNnK7PwSNM/C6sLXQf0+MuOMRLx8wlVDexCW/QEUrcDxJCgDjdr0jCeiL584cc1dXlvQ+wUYuWA4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S2NyHfSc; arc=none smtp.client-ip=198.175.65.13
+	s=arc-20240116; t=1711731365; c=relaxed/simple;
+	bh=VxARxmxYM3GO7DLsPsyLQsRNQnRnEuKjwENsIJuOWpU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fovNP9SLOl9OkXgiAl8Yox6+/tVnLp9hX/NoYa21d7XCJWXlD7mm/qLhUtx4VqT57wZ6bpUbYWFy+a6zvWMpdzYp3QOJSWR/psH4vQWbnTnlnGrk6QD5qonJnjfoj9SPEK/7K8oR69izZuq9hTdf6YZbj6nAiN/Cc4jggo5pAGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cghGEWlR; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S2NyHfSc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cghGEWlR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711731356; x=1743267356;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=RV3VRFSxY52XIFyp4YJivtHZiq5gbFXa9jWiDKfQaI4=;
-  b=S2NyHfScMD9xphw4hOcvqzBYMn+nEyEm39mNMaIH/XHPW1XQVeNvEiOL
-   v563e73Ljhd3GC/vO2/yiseEg6K8YLYDCOh2wBfB2FMxtVscI8q6zj2SH
-   jHV8T81CPiU6kBSoC6zDrXoS5DSrMwlmvHQZKlK0hIxFLBAelIccde3hu
-   d55vPzNLXkyFeg9PaHJjKTvCJSnkm3W8/n0dhhddpjCA72O8wqgYgv9ke
-   7y5EYrl3CSkMfOM5626Z/TDm+Obup7vaJxA0vJN1l2Y/9w0o0WQe6giUV
-   2YrAAcgsVrP3t4jmjsbYCUNXru3f/+kTLpTM65EbZvj4+h7Np+YCa0v/m
-   Q==;
-X-CSE-ConnectionGUID: ZvOZmYCPSRScSTzfAImb3w==
-X-CSE-MsgGUID: PHL6ekUSQIKhsOdDXpE2Wg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11028"; a="18072461"
+  t=1711731363; x=1743267363;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=VxARxmxYM3GO7DLsPsyLQsRNQnRnEuKjwENsIJuOWpU=;
+  b=cghGEWlRQEypXobcRDQHQotx8FyupUqaYmD2+neAB9zbBDmSAVklsJZT
+   mGMzeLco2qDCvsj9P7iNcz3xQEPBP4Cqjz6+b+3Wedamd8ctCyf5kpXb2
+   VDj3cx738JHnjZN27XFeIWy6Mh12MsSzgLC6FUCD6/d4gw148xLCanTW8
+   00LyxzFQR2E6IfnzWA9DKT8IkaKsfmRj8/rK0yjOxYDi1V4z82u4l3UD6
+   wRDtcYWDLq9kjx4GlSYhtfgafsnWuWqrEnufFUjAyDJU0PmaHu7WFHB0U
+   5jsY/EeY622OdunAxq7c3J7YSv+NgqzhLSae9BYLaU+xYOahWCpFoFPYS
+   A==;
+X-CSE-ConnectionGUID: UYi93YssSbOi7bEB55ufVw==
+X-CSE-MsgGUID: vgVxRWh1QMSgQFeTW9IXWQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11028"; a="18072481"
 X-IronPort-AV: E=Sophos;i="6.07,165,1708416000"; 
-   d="scan'208";a="18072461"
+   d="scan'208";a="18072481"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 09:55:55 -0700
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 09:55:59 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,165,1708416000"; 
-   d="scan'208";a="17100373"
+   d="scan'208";a="17100401"
 Received: from newjersey.igk.intel.com ([10.102.20.203])
-  by fmviesa008.fm.intel.com with ESMTP; 29 Mar 2024 09:55:53 -0700
+  by fmviesa008.fm.intel.com with ESMTP; 29 Mar 2024 09:55:58 -0700
 From: Alexander Lobakin <aleksander.lobakin@intel.com>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -51,10 +52,12 @@ Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
 	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 0/2] page_pool: allow direct bulk recycling
-Date: Fri, 29 Mar 2024 17:55:05 +0100
-Message-ID: <20240329165507.3240110-1-aleksander.lobakin@intel.com>
+Subject: [PATCH net-next 2/2] page_pool: try direct bulk recycling
+Date: Fri, 29 Mar 2024 17:55:07 +0100
+Message-ID: <20240329165507.3240110-3-aleksander.lobakin@intel.com>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240329165507.3240110-1-aleksander.lobakin@intel.com>
+References: <20240329165507.3240110-1-aleksander.lobakin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,31 +66,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Previously, there was no reliable way to check whether it's safe to use
-direct PP cache. The drivers were passing @allow_direct to the PP
-recycling functions and that was it. Bulk recycling is used by
-xdp_return_frame_bulk() on .ndo_xdp_xmit() frames completion where
-the page origin is unknown, thus the direct recycling has never been
-tried.
-Now that we have at least 2 ways of checking if we're allowed to perform
-direct recycling -- pool->p.napi (Jakub) and pool->cpuid (Lorenzo), we
-can use them when doing bulk recycling as well. Just move that logic
-from the skb core to the PP core and call it before
-__page_pool_put_page() every time @allow_direct is false.
+Now that the checks for direct recycling possibility live inside the
+Page Pool core, reuse them when performing bulk recycling.
+page_pool_put_page_bulk() can be called from process context as well,
+page_pool_napi_local() takes care of this at the very beginning.
 Under high .ndo_xdp_xmit() traffic load, the win is 2-3% Pps assuming
 the sending driver uses xdp_return_frame_bulk() on Tx completion.
 
-Alexander Lobakin (2):
-  page_pool: check for PP direct cache locality later
-  page_pool: try direct bulk recycling
+Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+---
+ net/core/page_pool.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
- include/linux/skbuff.h | 12 ++++----
- net/core/page_pool.c   | 38 ++++++++++++++++++++---
- net/core/skbuff.c      | 70 +++++++++++++-----------------------------
- net/ipv4/esp4.c        |  2 +-
- net/ipv6/esp6.c        |  2 +-
- 5 files changed, 63 insertions(+), 61 deletions(-)
-
+diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+index 9d56257e444b..4c175091fc0a 100644
+--- a/net/core/page_pool.c
++++ b/net/core/page_pool.c
+@@ -772,8 +772,11 @@ void page_pool_put_page_bulk(struct page_pool *pool, void **data,
+ 			     int count)
+ {
+ 	int i, bulk_len = 0;
++	bool allow_direct;
+ 	bool in_softirq;
+ 
++	allow_direct = page_pool_napi_local(pool);
++
+ 	for (i = 0; i < count; i++) {
+ 		struct page *page = virt_to_head_page(data[i]);
+ 
+@@ -781,13 +784,13 @@ void page_pool_put_page_bulk(struct page_pool *pool, void **data,
+ 		if (!page_pool_is_last_ref(page))
+ 			continue;
+ 
+-		page = __page_pool_put_page(pool, page, -1, false);
++		page = __page_pool_put_page(pool, page, -1, allow_direct);
+ 		/* Approved for bulk recycling in ptr_ring cache */
+ 		if (page)
+ 			data[bulk_len++] = page;
+ 	}
+ 
+-	if (unlikely(!bulk_len))
++	if (!bulk_len)
+ 		return;
+ 
+ 	/* Bulk producer into ptr_ring page_pool cache */
 -- 
 2.44.0
 
