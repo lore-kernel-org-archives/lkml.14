@@ -1,125 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 908F91411FB;
-	Fri, 29 Mar 2024 12:34:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EF916F0FF;
+	Fri, 29 Mar 2024 12:34:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711715659; cv=none; b=rp4rq1aMouNHUR/5hCfAU8FpvmVPrAzQe1HFLvR3A1rd3ayzMnHs2mC9DOJmXLiKUmIdC5mbNbFxTcQ+y/MWoCUy1t02t4ud7q/rxpOlAjnrf9aWuWPJaXJLlMkoZVxZ5/w74GcxFOIaK9bkribyVztPrPhf0bA0kEkXEKz/dpE=
+	t=1711715661; cv=none; b=H+JtD5Y3Rire78tN1RLMF9Si94hToKzsFqf+gbtn2KE7qQ+oT66OsEOezuQinQMPm7WreRLbbGtmco1Gmscoe/Piuk4SwWO1zC1uGyXTKaaZBLNrRGEOcI9N5OJdXGT7jnv6SZWm4G+ZW1uPU3dcy/GizoHNhJezTcX+LyPGhVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711715659; c=relaxed/simple;
-	bh=mnvBdOWr2dTaO6J2yotkR/heUcAFjGhxaYEUT9or5M4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hsyKzlYqFZ7Fku7MweAQQrXhEBGL90mSXrHZPHgINUhvsdCQLcWG9yFGvejCKBGDTLeI9tG1WLK1DZGhSQTL8qsTU3dyDtcZ/K4HLk0BTbFw1EJFSs4PcanCKfb2vdOEmjYt7VFmv9KZ4IQRlJFnlZ3Vd9bB6HBZQSTWCN471Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I39JAF9G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711715661; c=relaxed/simple;
+	bh=MZQ3qOHSd8N8zCilE9VhLvAhy0edj/JTTJ8t/X1AVKA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=rFs3xMcBLIaFhaEXk8n0KLQL49gT7th7XP13E++cjHL8tXPPYs1NIQMIqyGG+OHT6XJROvSi7CjWAMlAYMTYbKFJp8u1jFQMhM8mF7dpH9iu7y+rMFmNXuaKtoKKgB/sNpxkmnRKf07re3NPIfMAK09IFFmuiEhe/QxlfDSRLNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uoXgVs5/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I39JAF9G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 803BDC43399;
-	Fri, 29 Mar 2024 12:34:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uoXgVs5/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5798EC433A6;
+	Fri, 29 Mar 2024 12:34:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711715659;
-	bh=mnvBdOWr2dTaO6J2yotkR/heUcAFjGhxaYEUT9or5M4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=I39JAF9G6ibyD6+BycrgzDFzfO7tkW1FA/wByUo+qkz0iR8HnzeFBsHTmwz5s5Zht
-	 8vi4zpazSC6k1YqyVKphxhREIe8kWQDuUYUpqgwpG5X5aBf+k+QoorvmocWF/aRrRg
-	 wyPdhf77jYd/VMxsj9GGCfWgBJiUfuESZf22/nzHW39gt3EIgfAPRRz3eSYRz6hoH3
-	 9UDM97as58J0XzWCV+asOlQyKjEEYyIksxC0C5EbZm3Exthle2GYALfrYCk8zwbv0b
-	 cSrxqyEfr484QJelNoBRxQfka9EGn5wT6vzZviHIEERLo44u1opB/mgZMoiX8WWSb3
-	 Nz+rLSluMNk/w==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Johan Jonker <jbx6244@gmail.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Sasha Levin <sashal@kernel.org>,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	dsimic@manjaro.org,
-	quentin.schulz@theobroma-systems.com,
-	jonas@kwiboo.se,
-	lukasz.luba@arm.com,
-	rick.wertenbroek@gmail.com,
-	s.hauer@pengutronix.de,
-	chris.obbard@collabora.com,
-	knaerzche@gmail.com,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.10 07/17] arm64: dts: rockchip: fix rk3399 hdmi ports node
-Date: Fri, 29 Mar 2024 08:33:46 -0400
-Message-ID: <20240329123405.3086155-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240329123405.3086155-1-sashal@kernel.org>
-References: <20240329123405.3086155-1-sashal@kernel.org>
+	s=k20201202; t=1711715660;
+	bh=MZQ3qOHSd8N8zCilE9VhLvAhy0edj/JTTJ8t/X1AVKA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=uoXgVs5/fyVnsoBtpZ6mRPaYJ0eyGNnLSvl9PTmKfbOQmAR84Kw02esHna1nBd4Rd
+	 ekCg7dgtEY45JWjj/EvZOcu0YeCL9X+fvbukaN0sTTOdC+SkXfLWQ1YW2BrXTMPw54
+	 5vTIJqRDsFixPxKIEL51rH9Btxu8mhkHaLBfit7dqhP/lH7T5cmN5TRvoKHHg/OxBb
+	 1xYX9+v8xiHp7HYxpovz2zMZ15QOWyGBtlr/tCBrDh10/KL7HpSPdaPfq532d6wx9N
+	 dZmtkS8Fch5cg8+0SNwrvnm1yRbyF3Zvitfj6UMh45QrMF0+zLwE49/8gJjtSws6nk
+	 cmFzja8x1alxg==
+From: Mark Brown <broonie@kernel.org>
+To: Louis Chauvet <louis.chauvet@bootlin.com>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ thomas.petazzoni@bootlin.com, Miquel Raynal <miquel.raynal@bootlin.com>, 
+ yen-mei.goh@keysight.com, koon-kee.lie@keysight.com, 
+ jeremie.dautheribes@bootlin.com
+In-Reply-To: <20240327-spi-omap2-mcspi-multi-mode-v3-0-c4ac329dd5a2@bootlin.com>
+References: <20240327-spi-omap2-mcspi-multi-mode-v3-0-c4ac329dd5a2@bootlin.com>
+Subject: Re: [PATCH v3 0/3] Add multi mode support for omap-mcspi
+Message-Id: <171171565909.8069.14365505303739525487.b4-ty@kernel.org>
+Date: Fri, 29 Mar 2024 12:34:19 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.214
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14-dev
 
-From: Johan Jonker <jbx6244@gmail.com>
+On Wed, 27 Mar 2024 09:43:35 +0100, Louis Chauvet wrote:
+> This series adds the support for the omap-mcspi multi mode which allows
+> sending SPI messages with a shorter delay between CS and the message.
+> 
+> One drawback of the multi-mode is that the CS is raised between each word,
+> so it can only be used with messages containing 1 word transfers and
+> asking for cs_change. Few devices, like FPGAs, may easily workaround this
+> limitation.
+> 
+> [...]
 
-[ Upstream commit f051b6ace7ffcc48d6d1017191f167c0a85799f6 ]
+Applied to
 
-Fix rk3399 hdmi ports node so that it matches the
-rockchip,dw-hdmi.yaml binding.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/a6ab6f75-3b80-40b1-bd30-3113e14becdd@gmail.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+Thanks!
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 3180f576ed02e..e2515218ff734 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1769,6 +1769,7 @@ simple-audio-card,codec {
- 	hdmi: hdmi@ff940000 {
- 		compatible = "rockchip,rk3399-dw-hdmi";
- 		reg = <0x0 0xff940000 0x0 0x20000>;
-+		reg-io-width = <4>;
- 		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH 0>;
- 		clocks = <&cru PCLK_HDMI_CTRL>,
- 			 <&cru SCLK_HDMI_SFR>,
-@@ -1777,13 +1778,16 @@ hdmi: hdmi@ff940000 {
- 			 <&cru PLL_VPLL>;
- 		clock-names = "iahb", "isfr", "cec", "grf", "vpll";
- 		power-domains = <&power RK3399_PD_HDCP>;
--		reg-io-width = <4>;
- 		rockchip,grf = <&grf>;
- 		#sound-dai-cells = <0>;
- 		status = "disabled";
- 
- 		ports {
--			hdmi_in: port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			hdmi_in: port@0 {
-+				reg = <0>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 
-@@ -1796,6 +1800,10 @@ hdmi_in_vopl: endpoint@1 {
- 					remote-endpoint = <&vopl_out_hdmi>;
- 				};
- 			};
-+
-+			hdmi_out: port@1 {
-+				reg = <1>;
-+			};
- 		};
- 	};
- 
--- 
-2.43.0
+[1/3] spi: spi-omap2-mcspi.c: revert "Toggle CS after each word"
+      commit: 67bb37c05a6b56e0e1f804706145a52f655af3f1
+[2/3] spi: omap2-mcspi: Add support for MULTI-mode
+      commit: d153ff4056cb346fd6182a8a1bea6e12b714b64f
+[3/3] spi: omap2-mcpsi: Enable MULTI-mode in more situations
+      commit: e64d3b6fc9a388d7dc516668651cf4404bffec9b
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
