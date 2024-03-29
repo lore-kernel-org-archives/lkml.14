@@ -1,85 +1,204 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899693A1D8;
-	Fri, 29 Mar 2024 10:45:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B551869DF4;
+	Fri, 29 Mar 2024 10:48:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711709159; cv=none; b=jDu2z+Pn7TO37pomCEyPQmT5AEOxup7be2yiP4/jfJfyNR62OccwNiHcIMSmZF1TJPAIiYHpZpe+v05WqdaYalcYGvW0CsqS5c5GcIzpKwsjQZxgxex+VJRMSP/PPAmDIbhhKuhFON2KQqJv/P8wNJh7reVF4wFe3ZHkyH+aW90=
+	t=1711709321; cv=none; b=kfS4zVTdY/WK3LIB/FUY+goFuwpqvDx8CJFgBWZlbqqix90zdDZboci7sPSTXlSvaKROak/kMZDF6b30Z70xUzZx4gBEcr8JVWKFcK7mHa1mQecklPJbdNVUt9AtMxYjDEKzDUphVQG8DdBVFQk0+mFweVAxyjei7BsBRa+Nsb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711709159; c=relaxed/simple;
-	bh=3p1MnAvTvbM0t3kjcikAq7feZV2SysEDS5m4MAhUerI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MRkgf+0q7yqF1e8NwhbWWnlG4jjtLPdkRX9SN4UWmKCGuV/S8aMcst1SqhzMCIFq4duBMgg7uFy32/bM7cHC62l5Ly6Le5O2Yryr5uaXSNhfcw4F+uClLltFMwOPAxX3OEs2tnRVcFkqie6HmvQKjfhVjiphbVjN0giAMgtUOSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NnT9uR2g; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711709321; c=relaxed/simple;
+	bh=BezfkLUIoQfVoMQnu64WTtKfJYFHwMBtnDPgDuHAb50=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sfi2YF6/bzFu6IMAa5CS7Td1t1JjxLK45JGVGLDRgvPFYp6OY1d9WKaJU334GcGBa0kDG3QnxWV7pyagqGlmaZzNtAvcMJyVuAVPnJthZk6W53nbk1l6l5u+ltRRB2sr4VEsoelEmN8PBb7aHU0KMyPjbaM84HVq/VTS9mgjfZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=VSNS8107; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NnT9uR2g"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-56c197d042fso2246263a12.0;
-        Fri, 29 Mar 2024 03:45:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711709156; x=1712313956; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3p1MnAvTvbM0t3kjcikAq7feZV2SysEDS5m4MAhUerI=;
-        b=NnT9uR2g9ag8S1M0lbmKde9HfxpwtiGfjr+DvEU0Mxbbc39Xl4+L5cSBjThsuVzcBd
-         wDUPRUe7xEZjlE1r2ME2HFtiXxM0ZELo+YVIHl6pP7yNnN7ojC61w/NErrMvnvmmxs/W
-         AvjBata9Dru0zV6u7/kvQX+KKA3JtsleTY2EbW9dPqDWW7ZFdjoflF75ebSi8WzQmcAZ
-         7l82z5hCCIbVJdLa5NF7c0CA4bMp2QFthEFHvj36ktEiBDfRCCT1XdLpP3OBJwsvdytd
-         lwAFqn3KcolHQGWSka7ZQOqLuszf6bgj8kWzKlgrbqm7zqxzDrifVsmKkGDF7CZ+3IWZ
-         WsYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711709156; x=1712313956;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3p1MnAvTvbM0t3kjcikAq7feZV2SysEDS5m4MAhUerI=;
-        b=euEPVoFO/HcoynO4FcpByiExUxAnPdwCYIrLTRDTxeMfzpDROSA4wwEHDyWlDtprAN
-         342t3Kr5CAZzc3xE+Ftf1ozkSzrksgRjDIDVJ98hIG/EBN/1V73O68v9mcdTkwWS2cvN
-         EOr+TxmMJZRwsg94pRaP4hv2aGsZKWBBOhiWKGsdP8oROhsCUVfFdKFhbQdgP0p0g3e7
-         u/eH/VzLwwcPiwXcZRVJMULYvP0mq46IpSap6zRqUFdeed6g0JPA6D9IMiOPoouaWM/P
-         M1qfqnENnxKHpDpbcwpTtf1qXFu38Hbkmqe2UJ1XoLSWHfeBZy2At7WuRO4kdiKO3T46
-         loYA==
-X-Forwarded-Encrypted: i=1; AJvYcCWcLaYMwwO6pLOUNkH9xMaENF7Y5Q3IBxYUa4qwJ9Mjht9HSvAx29CHEj0h+xzplfo2Pbf6BvHeOipffNDUWvN2DUh7U1CdLhXM
-X-Gm-Message-State: AOJu0YyUmwkVAZOTIwk4i2fToLcZOGFUzmST0fT901yboPugi+Rz4u5k
-	7EIgzMp0ohS+DZ8V/K2r7GilyfLqmhvjjSLyhX58pb8BxApZ4F8hZ23rKdZIin1ReaGjA9o3bQe
-	bzfgi13vsY6mWm8WrBSHSZMhwZsY=
-X-Google-Smtp-Source: AGHT+IFwjWkTX5l976yERom21AWME+K47YnamJar2gcG1I0yD4/rFL4n0j8/DKk0Uqo/6BEuQnqD5hAWZ7fTL6KOLgc=
-X-Received: by 2002:a17:907:1115:b0:a46:ed72:6bb4 with SMTP id
- qu21-20020a170907111500b00a46ed726bb4mr1157215ejb.72.1711709155656; Fri, 29
- Mar 2024 03:45:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VSNS8107"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42T7pCUO008287;
+	Fri, 29 Mar 2024 10:48:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=qcppdkim1; bh=AOcFCVlQixidLBpUiZJsE
+	HbwIXHHYvnLMJmcdbFLxII=; b=VSNS8107vcFw66O20qqghVaz0kE5kJJHCjQfy
+	6a3cQYqr44+/bV6ZghbvzUfuGxbHK7aFT1L08nkRQgm2ib3UlmXlLpRcTqjoZ3he
+	f73fEUy2ovNbifz9k6Qu60dzxT4bof7UYjqPFSMYM8PPJDJrG/HLMRQ1LrDgI50y
+	HQp6g6+THybePPOK9mMIu8sCAUKc4+SLSHveU5BLdpZeJQi807nXd5O9t7LtjzBs
+	jiljWNMzCGGKJkEClZs8GLwnhmw6nqf+E/YSpEQ99kpjy68dGXn7Gf17AzkD0tMx
+	oRB6E5iVMBZAKn2QV4iNRkpaVi+QWXnPwj3ih7kO1WUT4MWGg==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x5sm6gf64-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 29 Mar 2024 10:48:34 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42TAmWJI016710
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 29 Mar 2024 10:48:32 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 29 Mar 2024 03:48:28 -0700
+Date: Fri, 29 Mar 2024 16:18:24 +0530
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: Stephen Boyd <sboyd@kernel.org>
+CC: <andersson@kernel.org>, <conor+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <djakov@kernel.org>,
+        <dmitry.baryshkov@linaro.org>, <konrad.dybcio@linaro.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <mturquette@baylibre.com>,
+        <quic_anusha@quicinc.com>, <robh@kernel.org>
+Subject: Re: [PATCH v5 3/5] clk: qcom: common: Add interconnect clocks support
+Message-ID: <ZgaceJT2FMsQVoPa@hu-varada-blr.qualcomm.com>
+References: <20240328075936.223461-1-quic_varada@quicinc.com>
+ <20240328075936.223461-4-quic_varada@quicinc.com>
+ <80131262978e6e4799864cdfd0784fdf.sboyd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240328223340.17159-1-rdunlap@infradead.org>
-In-Reply-To: <20240328223340.17159-1-rdunlap@infradead.org>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 29 Mar 2024 12:45:19 +0200
-Message-ID: <CAHp75Vcpi6BMqxw8A0TaatvZNbecrPmEmKdD5MVj0dPrkmhiGg@mail.gmail.com>
-Subject: Re: [PATCH v2] spi: spi.h: add missing kernel-doc for @last_cs_index_mask
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-spi@vger.kernel.org, 
-	Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <80131262978e6e4799864cdfd0784fdf.sboyd@kernel.org>
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: HQybzIkZ1Aavu6sA6qT7jMBWnIMsifQm
+X-Proofpoint-GUID: HQybzIkZ1Aavu6sA6qT7jMBWnIMsifQm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-29_09,2024-03-28_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ priorityscore=1501 adultscore=0 mlxlogscore=999 suspectscore=0
+ impostorscore=0 spamscore=0 lowpriorityscore=0 bulkscore=0 clxscore=1015
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403210001 definitions=main-2403290094
 
-On Fri, Mar 29, 2024 at 12:33=E2=80=AFAM Randy Dunlap <rdunlap@infradead.or=
-g> wrote:
+On Thu, Mar 28, 2024 at 02:54:52PM -0700, Stephen Boyd wrote:
+> Quoting Varadarajan Narayanan (2024-03-28 00:59:34)
+> > diff --git a/drivers/clk/qcom/common.c b/drivers/clk/qcom/common.c
+> > index 75f09e6e057e..9fa271812373 100644
+> > --- a/drivers/clk/qcom/common.c
+> > +++ b/drivers/clk/qcom/common.c
+> > @@ -8,6 +8,8 @@
+> >  #include <linux/regmap.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/clk-provider.h>
+> > +#include <linux/interconnect-clk.h>
+> > +#include <linux/interconnect-provider.h>
 >
-> kernel-doc complains about last_cs_index_mask not described, so add its
-> description.
+> Do we need the second include?
+
+Will remove.
+
+> >  #include <linux/reset-controller.h>
+> >  #include <linux/of.h>
+> >
+> > @@ -234,6 +236,41 @@ static struct clk_hw *qcom_cc_clk_hw_get(struct of_phandle_args *clkspec,
+> >         return cc->rclks[idx] ? &cc->rclks[idx]->hw : NULL;
+> >  }
+> >
+> > +#if IS_ENABLED(CONFIG_INTERCONNECT_CLK)
+> > +static int qcom_cc_icc_register(struct device *dev,
+> > +                               const struct qcom_cc_desc *desc)
+> > +{
+> > +       struct icc_clk_data *icd;
+> > +       int i;
+> > +
+> > +       if (!desc->icc_hws)
+> > +               return 0;
+> > +
+> > +       icd = devm_kcalloc(dev, desc->num_icc_hws, sizeof(*icd), GFP_KERNEL);
+> > +       if (!icd)
+> > +               return -ENOMEM;
+> > +
+> > +       for (i = 0; i < desc->num_icc_hws; i++) {
+> > +               icd[i].clk = devm_clk_hw_get_clk(dev, desc->icc_hws[i], "qcom");
 >
-> spi.h:778: warning: Function parameter or struct member 'last_cs_index_ma=
-sk' not described in 'spi_controller'
+> Make the con_id "icc" instead please, so we know the consumer is
+> icc_clk.
 
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+Ok.
 
---=20
-With Best Regards,
-Andy Shevchenko
+> Even better would be for the icc_clk device itself to be the
+> one requesting with devm_clk_hw_get_clk() so that we associate the clk
+> handle with the consumer device. It would also help us make it so that
+> drivers defer probe until their clk isn't an orphan.
+
+Not sure if I understand the comments correctly.
+
+In one of the previous patches, had
+	icd[i].clk = clks[noc_clks[i]]->hw.clk;
+
+This was said to be error prone since the clock would not be
+ref counted. Hence used devm_clk_hw_get_clk before doing
+icc_clk_register.
+
+Now, are you suggesting to use the direct clock pointer
+and do a devm_clk_hw_get_clk from the consumer driver?
+This will take care of the refcounting. However, we will
+have to add these clock entries to the consumer DT node.
+Is this ok?
+
+> > +               if (IS_ERR(icd[i].clk))
+> > +                       return dev_err_probe(dev, PTR_ERR(icd[i].clk),
+> > +                                            "get clock failed (%ld)\n",
+> > +                                            PTR_ERR(icd[i].clk));
+> > +
+> > +               icd[i].name = clk_hw_get_name(desc->icc_hws[i]);
+> > +       }
+> > +
+> > +       return PTR_ERR_OR_ZERO(devm_icc_clk_register(dev, desc->first_id,
+> > +                                                    desc->num_icc_hws, icd));
+> > +}
+> > +#else
+> > +static int qcom_cc_icc_register(struct device *dev,
+> > +                               const struct qcom_cc_desc *desc)
+> > +{
+> > +       return 0;
+> > +}
+>
+> Instead of this please have an
+>
+> 	if (!IS_ENABLED(CONFIG_INTERCONNECT_CLK))
+> 		return 0;
+
+Ok.
+
+> > +#endif
+> > +
+> >  int qcom_cc_really_probe(struct platform_device *pdev,
+> >                          const struct qcom_cc_desc *desc, struct regmap *regmap)
+> >  {
+> > @@ -303,7 +340,7 @@ int qcom_cc_really_probe(struct platform_device *pdev,
+> >         if (ret)
+> >                 return ret;
+> >
+> > -       return 0;
+> > +       return qcom_cc_icc_register(dev, desc);
+> >  }
+> >  EXPORT_SYMBOL_GPL(qcom_cc_really_probe);
+> >
+> > diff --git a/drivers/clk/qcom/common.h b/drivers/clk/qcom/common.h
+> > index 9c8f7b798d9f..d8ac26d83f3c 100644
+> > --- a/drivers/clk/qcom/common.h
+> > +++ b/drivers/clk/qcom/common.h
+> > @@ -29,6 +29,9 @@ struct qcom_cc_desc {
+> >         size_t num_gdscs;
+> >         struct clk_hw **clk_hws;
+> >         size_t num_clk_hws;
+> > +       struct clk_hw **icc_hws;
+> > +       size_t num_icc_hws;
+> > +       unsigned int first_id;
+>
+> 'first_id' is gross.
+
+will change it to 'icc_id'.
+
+Thanks
+Varada
