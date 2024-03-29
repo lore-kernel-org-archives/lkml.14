@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D4B517B500;
-	Fri, 29 Mar 2024 12:41:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D061917BB03;
+	Fri, 29 Mar 2024 12:41:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711716071; cv=none; b=kCUjwUpdD3073yCKcLb5ORlB4wKG38w2CfBSYX9rJVSTS/WIEu2rm2iBrbABILuLBBskey1grO2DCrh1fL75cJoRdToIt/0NWn2ERN0r4LEmdpguRh7e3BXRnTP5x0rFUm8Ij5qaeVuwOUGQYjwBjCcq4/9PAz+JBwPNju3kv74=
+	t=1711716072; cv=none; b=aMOZB9ZjgV4Pa8s5nf12ET0ctnl/CuwcuWAHXevibT8gfM1QYnHHdJ2n4vleg49duwKN0+V9P4wP89/fTHCDNG/LYGjI2f+alyS7wwMpKc7io6f0vqzVJb/M6OQfCANF4Aw6QtRIRxBM53XjN/1jdoxDJwc577su9dhXE9bAGiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711716071; c=relaxed/simple;
-	bh=Kps7FkLHl15XxPJabm+dtUCA7YF7PfDf7FI2VXBD8Ps=;
+	s=arc-20240116; t=1711716072; c=relaxed/simple;
+	bh=PAFtxqD5hRat6aq2EUIy/ncAxJJmKTypFk4j+jhW128=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hwXusfBrdIR3zoV+9u33uozT+OYOK7fPWIvlqbswduWypBkkPhSPJHx4Ha+10mhy19GCpfSwc1zN+lRAounUI2hClGOjJbe/N5R+Wgk87IGSU2K6NlbWtGoSKEeh3eMdPUzluI7NtpPG5vknHT/4LfZ6QN7C8YK1lOL8L2jjPUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oB3bzVxR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Fykd7l5VefGwJiwTWVvEUnGm/DKVLOFm0W440WLA73PsRHu4/4ilQ3YT8d9WQ2wVsNtwDQJy7fBcdv4/7J9q39kc3mZ4l3mvdyGx2I49Q1M32EQRKXbUNj37jXcbVddzNUmVXi7jqaQtMRoukoCTK+4xODe/aEAFxxTxSupzOsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VxwSfVqi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oB3bzVxR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5CBBC433C7;
-	Fri, 29 Mar 2024 12:41:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VxwSfVqi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6184CC43601;
+	Fri, 29 Mar 2024 12:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711716071;
-	bh=Kps7FkLHl15XxPJabm+dtUCA7YF7PfDf7FI2VXBD8Ps=;
+	s=k20201202; t=1711716072;
+	bh=PAFtxqD5hRat6aq2EUIy/ncAxJJmKTypFk4j+jhW128=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oB3bzVxRbJcsRStqM9IW5TBvu/o5Sqd+0hjKL4IZydGNjwmxg2ExSnlA26Aimdd4y
-	 Ed/xTw242rGvcR86Gmf1MsCL4XgpUeJenO1PQZYhY+/XPA/mKCM+y3y2NUxQfE6MG7
-	 5LlATcOYnBXfdm952Lexigbxt9LJhndEAdmPMj953G0u2CvMsg+WQKFu2qYo1xXb3R
-	 U7BYUl8xZ3fBoraxaxHqv3zZQZpTo9GtFcxhiy+c83wlZmPFRJrM0yEZw3KG/zEj/s
-	 evNvXq0N0kFSkbJ9yTGqE4MosfB6rie6yZbhC4upAzXY0Ya5nvDVHKWsv3IQpbm2/X
-	 6Qkw7OlFkectw==
+	b=VxwSfVqiEPoFcqNPHaTCOtsgDjvzuAePQgXc3vNHGAu9+EWI9yEMWVSKOGQutsCFG
+	 WFyDJ3/5MrBsrGcMZ320Ub4MifDCJ5Chyt+ef3zjW0qEWjw2uCTA6q2jZb1YFKdQre
+	 8MrRavgziLX6Q4pMSxy7+PXIad39/1g05o/nKxwM8/X6fShFVjbpzjZ5xta/4wlqnG
+	 d0X7s2i9nDlOYFGuAXuKa911Q1hyutor+dswrHe8SV/y7ZfkhLLN7JytniwYSg1iDZ
+	 G3CsBj4BQ7fxK9unwCRlvVN/rF7fNqk3swruZ1JvtWcgb2bfgu//WZxIWWSHQfi46n
+	 VGmHUzdXC943g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -39,9 +39,9 @@ Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	conor+dt@kernel.org,
 	linux-arm-msm@vger.kernel.org,
 	devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.8 38/98] arm64: dts: sm8550: correct DMIC2 and DMIC3 pin config node names
-Date: Fri, 29 Mar 2024 08:37:09 -0400
-Message-ID: <20240329123919.3087149-38-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.8 39/98] arm64: dts: sm8650: correct DMIC2 and DMIC3 pin config node names
+Date: Fri, 29 Mar 2024 08:37:10 -0400
+Message-ID: <20240329123919.3087149-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240329123919.3087149-1-sashal@kernel.org>
 References: <20240329123919.3087149-1-sashal@kernel.org>
@@ -58,7 +58,7 @@ Content-Transfer-Encoding: 8bit
 
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-[ Upstream commit c6e5bf9278749eaa094dc944add747f10a15dceb ]
+[ Upstream commit 94c312767160f0d527da035b9080ff5675d17f4c ]
 
 Correct the TLMM pin configuration and muxing node names used for DMIC2
 and DMIC3 (dmic01 -> dmic23).  This has no functional impact, but
@@ -66,18 +66,18 @@ improves code readability and avoids any confusion when reading the DTS.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-Link: https://lore.kernel.org/r/20240212172335.124845-3-krzysztof.kozlowski@linaro.org
+Link: https://lore.kernel.org/r/20240212172335.124845-4-krzysztof.kozlowski@linaro.org
 Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sm8550.dtsi | 2 +-
+ arch/arm64/boot/dts/qcom/sm8650.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-index ee1ba5a8c8fc2..a6663eefd3a30 100644
---- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-@@ -2507,7 +2507,7 @@ data-pins {
+diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+index 2df77123a8c7b..27b3917c13277 100644
+--- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+@@ -2919,7 +2919,7 @@ data-pins {
  				};
  			};
  
