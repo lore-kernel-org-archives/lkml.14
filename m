@@ -1,176 +1,201 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from sonic312-23.consmr.mail.ne1.yahoo.com (sonic312-23.consmr.mail.ne1.yahoo.com [66.163.191.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB09B3BBC6
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 09:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD383EA8A
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 09:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.191.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711705258; cv=none; b=eMvRlU7oQK2m4ZBkt/oN0jJwCjCQBtbBFCIkqerJgP5/B4sQwHlB5nzFOpAp0LQ/nxopPNlBAv8NYZ28yQKORd04fGcEvZYfgTZnqh6x7zZ8aAZ8xwM88O3wXk65/leTV3jC8lxLA2qYQTX82eZ4mNaW4XhUpfIL4D0377BdtaE=
+	t=1711705352; cv=none; b=A3/JOtTbSME4PAQ7WjsHzm5ebiNRA3/QihggzEen3T6sJ3OUjD49C/RQVbcOeOWTlBiDEBRAsbhJTEpx0FA9Mo/ouXsRB5vR/1cyTCzG2TPXkSVaSa8FgyCoG2UxcGeXgWJYVgAvCmbCTLHPG1guwuBDrkWjDYOdOF/9kf/GYJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711705258; c=relaxed/simple;
-	bh=2HdMA2GVi4vvBuZqc7GAV19/6biZzG2XxYPUOtB9kRc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kJbqnKb9nU85QtteXFyiJUo0SVyxbJ5bLmkN2RejvihTHVpPQRQWK3celwVGThWknIdT1po10upXfywUww5iIB2jHJnC8tLnpw0SBmJCFMXmh1LCMKbn9FN4ZRRBOaKAWE5D6X0t5BiTsIhZimyKSMgFo3lQ/5ejl1yyfjZqTXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JWhPEvOl; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1711705352; c=relaxed/simple;
+	bh=9bhZAagYnhyc0XJ059rEA+DZruPfYX0CNjIi1zz95xQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G+wkrGDlYh/pZbmgnFiA7M+QV0JWgTSejU6Wgq+qdyX//Ssfh3Nla1k8VnMVTZ9AD49MdFtuhYifp5WQKVslTJA1jZhnNL0wRli/3NSp1SoOjaaGTbTcQJ2XlfTnYHTYW/vXCkz/9mLCqq91iL/52QqDYkg1CdBJrviiYlAA4aA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=qP0Osn8N; arc=none smtp.client-ip=66.163.191.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JWhPEvOl"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e0025ef1efso13669265ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 02:40:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711705256; x=1712310056; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PzKyNHk5YN39zEK5kgu7WDIZLg9yL65BlTGSnWRCjJs=;
-        b=JWhPEvOlCw6tOH5y/YiJBXkikpaAB3Ng4uf/eBDyu4l6G2BmFV4uP6w+DmGxpMOnHx
-         hBD9t7qjM4N+ggnUnBUCgdR7cMuocAyyzk/5KzaUmaF0tJ5F6ELLuyuBA8V7SrVlaI4V
-         3lf5DDdhH+gQRZP0CEMtv/cK3o6NKeOlD7SN4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711705256; x=1712310056;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PzKyNHk5YN39zEK5kgu7WDIZLg9yL65BlTGSnWRCjJs=;
-        b=RSbqQYyIatekxPdRRRetgGuDZw6czyltgzBzEVR1QcC8cG0mzT4NEadrigrAIvxQSB
-         c/EeEbyUGRsO9pKESTvHaB7yzxpUQ/6nWDrrMZXDSBVY6l7wQ0keEI3cDjVBVnN5e5Vw
-         dnsJdpActjJShavIjWNHID0ccqpYmaahIhEtDjZnvdZLwnfB4DbSrdHUJ82eVy3SQsHI
-         FEGFKsgWKqp0yafjLxm9OSd3d5HHDFw/K6iZzr9JFzaDUsgQ0l7psg2Lw1zd5O98HgQj
-         ZP74fUzBeaGe9ZpMV2GFrJAuRKG0Smj11Wr0rqDueQ8gSi6UVOOppV5IYDhRRjSGpIm7
-         BuMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUxEyG0Dg1Arz5+fe81mq5p6RQ8okLc8dW2Xa6gqEEna1prrfLjE7uRP+DYdYSv1zWEgbBJRm6WUHeBdMNgKHIRfqrJeHWN99Ka9hTp
-X-Gm-Message-State: AOJu0YxkG6bkFay6W2Ds005cVK0y4r4poym4TMekFRd/tnELpbhqqzRe
-	kvpTlm/om/LPi0KNJkKevb4WRzmsLCDtZwODLthlHLU0H2v9nB3A49DOyXTjoQ==
-X-Google-Smtp-Source: AGHT+IEAoJmQJQFXz2QVZ4UibB4fev1lwxr2gnC9WVva0sEsNWFbD9aC5yO424w2M93S6TXMTV31ZA==
-X-Received: by 2002:a17:902:9a0c:b0:1e0:342b:af6f with SMTP id v12-20020a1709029a0c00b001e0342baf6fmr1818929plp.16.1711705256212;
-        Fri, 29 Mar 2024 02:40:56 -0700 (PDT)
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:91ca:ac62:b18d:2b7])
-        by smtp.gmail.com with ESMTPSA id d4-20020a170902cec400b001e0c5be4e2esm3065460plg.48.2024.03.29.02.40.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Mar 2024 02:40:55 -0700 (PDT)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Minchan Kim <minchan@kernel.org>
-Cc: Brian Geffon <bgeffon@google.com>,
-	linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCHv2] zram: add max_pages param to recompression
-Date: Fri, 29 Mar 2024 18:39:41 +0900
-Message-ID: <20240329094050.2815699-1-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="qP0Osn8N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1711705349; bh=90ky2frqnuFOvlqQMi/ghKyPwofOOLJUR1qU/c20GSE=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=qP0Osn8NI+2sycsfgk9wKm3lIhTFhZnu1imhOf6y6JlBeSugwOxj6AIJPvsENjr3Ddlk6g9QrFHyBziSd6RvBusE6A1N/lUbRNpFAI9WAux5QNbW8IypmQXjbNclS5S8ftoEw2nG24KcvtCV9cS2e7QdIUcttBEEaV7gIjfQvdZTQXWH/iAFq+8x29wi9gHmttiA4vuY/Jw28zMMKEE1h0AqQnMts7J1UssSHvc4b5QT68k6PvknJ0SrsV4RA6Ae5SZgo9H75X5oVBqIHOQX//pekxOwTsjr+LuQ6mCARR740HKeRwweUC36N9zvmEVfTK4P/tTtTGO/VERQFrIx1g==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1711705349; bh=5Lz6CX0NgTLEJzx4JHl/oxvYgMuqGaWM6umP7DpA9Yc=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=GPn07lx6jzm6Yrk/6j84RzLaq1x1lxcPYtu+DHRCqO7xpaRLbgD/0TEXmuBPUHhz8N6wp7dkfl6kV4oP/C0dx8k4+HcVFBmpVIJg/beLw5jKX2TjE8qMOUZGqoLlluSadCioxRnmMFRsiKX+54nzu3gTOyms2OYZO8DlPc3kOhxUNYAxkRyT916iwTwAv9I4k+qWnzgGdn938TEe0Wac4gRaa7l7kuct0xc76ZG57RpJreQE83t6hapYJbI/ao8wdpyGYuUGVAx9oOmYcA+FJK4eTXT3u5HjUyjWSgCZDnTsL0zssXaHFnCky7lqN4q7XmkYXOTi2lSFNmLwOz9YYg==
+X-YMail-OSG: yh4cmsgVM1lWs90KRm6irab9JP05KYEFKFuQqcAN9KfI6ERvehjKJ30CGUB_.kf
+ 9qJLr.IZhIdZ20DHigny60OIfUi_XunjFqtvqw8J08WWi1wGxuDvMYcYcTIFeaWTNkYR5CoIXvya
+ RAzFhQYB3h08kDv7DmXoyfX5808z5ULy0Lvxr.yaO0JTbTEkckjCVIJAE2czjQMWvjU2LkCAdXHV
+ 3D6xcym3CGp7oXw448o_o_ztbR.MOVHqkFLB71mYhgsSkP7tFjymGqokFkkAcuc9J7JMXhK3A1IQ
+ qEaNzY03KVZNrsQfAOsWiOPYAPhtVL0EkOyvIZF7o9klHRIVg16NOFief4uT3Nr6xc93i5wY8sIb
+ .dG2WzQideH1b0utr.ChCVB019U6D8AGbIZKwYFBK8pq8dI2iH.jF2xUu4oLcaxZawmhhsa1IO0h
+ jwwtj43cBh_H.5zBVhAUK63ewVJQQoW6PnhTol5s2YbACi.u51Lksq7Nu9RwGCq.JSSitmWgNzLh
+ kcR6nX6LY73wbOrMsHWacVIWYsvH4yANgEeeucHM1FsbmFE85gthm6p299fM8Vt9nz1QDQJnbwkl
+ cSM.up1hJ5gVIJzJtZBRcIgLw2ncZP3.cl7otIy00p1oPjsXmgO9OLuQ0GtFw0XIRac08191WOu6
+ 9Qts3B3gL0IZHEJH0AQwEIlp4oPCORWA.eOtxsl82fU5wfCXcX000uOyydmHXEaeezIbPh0vsnDy
+ iC_eBVJR6xaunn0Q2D18jtcvcjDzRgJakCqnRR3JFRm9npO945BpNVmcGYEHonWXK8iQBqhtuvi.
+ Q_W9kveyE0g2XJDKTGAv95r4xKUs6C1XO9usnrvjmu0od5EWJI6ABS482N_Vk2GAyDk3T99V1mlU
+ lh14ZaF4EdcPUcaFSuO8rQFq9ClzN5E3aUzF9kmZkuM8FffTfv9jwX3tOikmFsf1dmretYs.iY5D
+ eWWEII0glEqo5cQMumGXyzcBXpiJp1dTfB.r3TQ7u5Ajze2n5pPPl.r0wtQqQ58uqyFZ5n3Bzr4v
+ J4A0Z62oK1y9i4QuI9NpSRd0don.qGOKoMaa78CiDM0TkluSE_OyU1.YEvl..CyHcRevtBbzEB14
+ RpyTE0pw1qE9XhgaiGkfxkSsZJn0pYdxqfnCWHM0fVwb4ASbMAs.sYCwi4q6Wi63YB5642ypeVbx
+ rKsZS0f3PBJ4EcjC4Ruv3V5iECqlOvdLltgHmgWjDPcGnXWp1U05Oeut.Q8pGGF61.ba_D5RCCCt
+ PD2m7a7FJu4lJ9a1gS5lR4SHgOrssTW4qxSjweugbYBklJ.FQVsD7YW6lBxGvCblFu2KbJs0Uhyw
+ a5LW..91Nr4MzStkcyx2kBkwlNTJ2nUDalg2iVp0aj4XR_u_Nqsg1AcK_8ofYGIekEFU_.4fu78a
+ mu.TaWMhLtLIkm5i4L_PLVdWNUxlNgX2_9Z9pxoJmSDty8SUy9YMv7e67rhKAonr2mJWxW7okiQy
+ NwAbbdzivcsWNZFApkrBSbOeIHklLwFd6TPleGAH.YGFDEekbCKIdGnJR1u3R7LKwFy6s0OAEFWL
+ 6um9XeuxS.AzKLYCKTb.WfWmJVIlT35KKHVVjm4TdCeYp2CsDyYLsEzjzvlPrCIHiupYJ3P.Wv6A
+ K7wpIg7Q2UhRK49yKiuj5eDb.EwNFItbopASgmwnxlBRkp99i22vQ7Z8pyTmpdWGmSXn0xCT2T8u
+ zE2cjIHAWdDCl4.TD_sQPP866rQSSQBY46o2MpgJmLACcctpnOn4FlrlMvGn4swPiJ2Plmx2VBWb
+ G2ppgVDzKqGAC.T80gGw0loIiFAj_F2EvrmA0EGHHwF0KgKvoObCj.AemNmxzrclB5ACVOnblKx3
+ z1F6X6Sk8Scm7oSezNvXFHS9.6j_HsNxnDfQ2F6lPQkR3AG.Lw5a6YLFV49oNZOIluQdGKwXQ49m
+ mt_9LLfT2uQUg_sydCCg8EFKzRC.U8UlWCH5Hn_5vZL8M45BIJowqr0Klxz8ohHBcofY9WM6Z8F1
+ ZksSuLQR9g3Dsh5nmTdGLA37SX3tP8h.LvZyT3G5MrHr30p6X2XRBFGMg5J.P8bdiQFFuS7fIreT
+ hCzHSq7otEpSSMhXvR9lij3vih58GM839p4we9g1jtxz7ioLdKbKNBWe2liJoScN1RuWXYgluEHV
+ arvmz0ser5QYaydCr9dWiTOu2Jz.X.i6pWxjZPLVgDQ7gNGNu8ZIiIPizoNyl.H64TBgF_.1DTMa
+ VrhFhBys.Ly9PB_bLoM2F.7J6y3f7BUKrEn_NqCIBI_Y9cgVY4bmC4vBMoW2YWgmoWXM-
+X-Sonic-MF: <serdeliuk@yahoo.com>
+X-Sonic-ID: f2927a9f-48fc-4dd1-a7d5-c578f13d313c
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.ne1.yahoo.com with HTTP; Fri, 29 Mar 2024 09:42:29 +0000
+Received: by hermes--production-ir2-7bc88bfc75-9nfhm (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 765ec3141b99f80c289d78adc4080c41;
+          Fri, 29 Mar 2024 09:42:24 +0000 (UTC)
+Message-ID: <5c9523db-0cbd-44b7-ab49-4ef0ee48dd80@yahoo.com>
+Date: Fri, 29 Mar 2024 10:42:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] V2 arm64: dts: qcom: Add support for Samsung Galaxy Z
+ Fold5
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240329-v2-dts-add-support-for-samsung-galaxy-zfold5-v1-0-9a91e635cacc@yahoo.com>
+ <20240329-v2-dts-add-support-for-samsung-galaxy-zfold5-v1-1-9a91e635cacc@yahoo.com>
+ <1cdbd387-e937-4d5c-bedb-b4275fdf84cc@linaro.org>
+Content-Language: en-US
+From: Alexandru Serdeliuc <serdeliuk@yahoo.com>
+In-Reply-To: <1cdbd387-e937-4d5c-bedb-b4275fdf84cc@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Mailer: WebService/1.1.22205 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-Introduce "max_pages" param to recompress device attribute
-which sets an upper limit on the number of entries (pages)
-zram attempts to recompress (in this particular recompression
-call). S/W recompression can be quite expensive so limiting
-the number of pages recompress touches can be quite helpful.
+Thanks, i added some notes inline as I do not know how to proceed with 
+some if the requirements.
 
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
----
- Documentation/admin-guide/blockdev/zram.rst |  5 ++++
- drivers/block/zram/zram_drv.c               | 31 +++++++++++++++++++--
- 2 files changed, 33 insertions(+), 3 deletions(-)
+Just to be noted, the sm8550-samsung-q5q.dts it is based on 
+sm8550-mtp.dts so most of the stuff is from there
 
-diff --git a/Documentation/admin-guide/blockdev/zram.rst b/Documentation/admin-guide/blockdev/zram.rst
-index ee2b0030d416..091e8bb38887 100644
---- a/Documentation/admin-guide/blockdev/zram.rst
-+++ b/Documentation/admin-guide/blockdev/zram.rst
-@@ -466,6 +466,11 @@ of equal or greater size:::
- 	#recompress idle pages larger than 2000 bytes
- 	echo "type=idle threshold=2000" > /sys/block/zramX/recompress
- 
-+It is also possible to limit the number of pages zram re-compression will
-+attempt to recompress:::
-+
-+	echo "type=huge_idle max_pages=42" > /sys/block/zramX/recompress
-+
- Recompression of idle pages requires memory tracking.
- 
- During re-compression for every page, that matches re-compression criteria,
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index f0639df6cd18..4cf38f7d3e0a 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -1568,7 +1568,8 @@ static int zram_bvec_write(struct zram *zram, struct bio_vec *bvec,
-  * Corresponding ZRAM slot should be locked.
-  */
- static int zram_recompress(struct zram *zram, u32 index, struct page *page,
--			   u32 threshold, u32 prio, u32 prio_max)
-+			   u64 *num_recomp_pages, u32 threshold, u32 prio,
-+			   u32 prio_max)
- {
- 	struct zcomp_strm *zstrm = NULL;
- 	unsigned long handle_old;
-@@ -1645,6 +1646,15 @@ static int zram_recompress(struct zram *zram, u32 index, struct page *page,
- 	if (!zstrm)
- 		return 0;
- 
-+	/*
-+	 * Decrement the limit (if set) on pages we can recompress, even
-+	 * when current recompression was unsuccessful or did not compress
-+	 * the page below the threshold, because we still spent resources
-+	 * on it.
-+	 */
-+	if (*num_recomp_pages)
-+		*num_recomp_pages -= 1;
-+
- 	if (class_index_new >= class_index_old) {
- 		/*
- 		 * Secondary algorithms failed to re-compress the page
-@@ -1710,6 +1720,7 @@ static ssize_t recompress_store(struct device *dev,
- 	struct zram *zram = dev_to_zram(dev);
- 	unsigned long nr_pages = zram->disksize >> PAGE_SHIFT;
- 	char *args, *param, *val, *algo = NULL;
-+	u64 num_recomp_pages = ULLONG_MAX;
- 	u32 mode = 0, threshold = 0;
- 	unsigned long index;
- 	struct page *page;
-@@ -1732,6 +1743,17 @@ static ssize_t recompress_store(struct device *dev,
- 			continue;
- 		}
- 
-+		if (!strcmp(param, "max_pages")) {
-+			/*
-+			 * Limit the number of entries (pages) we attempt to
-+			 * recompress.
-+			 */
-+			ret = kstrtoull(val, 10, &num_recomp_pages);
-+			if (ret)
-+				return ret;
-+			continue;
-+		}
-+
- 		if (!strcmp(param, "threshold")) {
- 			/*
- 			 * We will re-compress only idle objects equal or
-@@ -1788,6 +1810,9 @@ static ssize_t recompress_store(struct device *dev,
- 	for (index = 0; index < nr_pages; index++) {
- 		int err = 0;
- 
-+		if (!num_recomp_pages)
-+			break;
-+
- 		zram_slot_lock(zram, index);
- 
- 		if (!zram_allocated(zram, index))
-@@ -1807,8 +1832,8 @@ static ssize_t recompress_store(struct device *dev,
- 		    zram_test_flag(zram, index, ZRAM_INCOMPRESSIBLE))
- 			goto next;
- 
--		err = zram_recompress(zram, index, page, threshold,
--				      prio, prio_max);
-+		err = zram_recompress(zram, index, page, &num_recomp_pages,
-+				      threshold, prio, prio_max);
- next:
- 		zram_slot_unlock(zram, index);
- 		if (err) {
--- 
-2.44.0.478.gd926399ef9-goog
 
+On 29/3/24 1:52, Konrad Dybcio wrote:
+> On 29.03.2024 12:08 AM, Alexandru Marc Serdeliuc via B4 Relay wrote:
+>> From: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
+>>
+>> Add support for Samsung Galaxy Z Fold5 (q5q) foldable phone
+>>
+>> Currently working features:
+>> - Framebuffer
+>> - UFS
+>> - i2c
+>> - Buttons
+>>
+>> Signed-off-by: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
+>> ---
+The [PATCH] string is added automatically to the subject by b4, I don't 
+know how to add/insert custom text in there, I am going to read the b4 
+docs and see if i can spot how to do it.
+> Your commit title now includes "V2". Move it inside the square braces the
+> next time around, so it's like [PATCH v3 1/2]. With b4, this should be done
+> automagically, though..
+>
+> [...]
+>
+>> +/ {
+>> +	model = "Samsung Galaxy Z Fold5";
+>> +	compatible = "samsung,q5q", "qcom,sm8550";
+>> +	#address-cells = <0x02>;
+>> +	#size-cells = <0x02>;
+
+thanks, going to remove them
+
+> These two can go
+>
+> [...]
+>
+>> +	reserved-memory {
+>> +		/*
+>> +		 * The bootloader will only keep display hardware enabled
+>> +		 * if this memory region is named exactly 'splash_region'
+>> +		 */
+this is a reality, without it the framebuffer do not work, due to abl
+
+https://git.codelinaro.org/clo/la/abl/tianocore/edk2/-/blob/LA.VENDOR.1.0.r2-09400-WAIPIO.QSSI14.0/QcomModulePkg/Library/BootLib/UpdateDeviceTree.c?ref_type=tags#L220
+
+How to proceed?
+
+> Ouch.
+>
+> [...]
+>
+>> +		vreg_l15b_1p8: ldo15 {
+>> +			regulator-name = "vreg_l15b_1p8";
+>> +			regulator-min-microvolt = <1800000>;
+>> +			regulator-max-microvolt = <1800000>;
+>> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>> +			regulator-allow-set-load;
+>> +			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
+>> +						   RPMH_REGULATOR_MODE_HPM>;
+>> +			regulator-always-on;
+
+I have removed the nodes that uses this as the driver for "Texas 
+Instruments i2c eUSB2" is not yet submitted by the porter, however, 
+those are took from the existing sm8550-mtp.dts
+
+How to proceed?
+
+> Any particular reason as to why?
+>
+> [...]
+>
+>> +&remoteproc_adsp {
+>> +	firmware-name = "qcom/sm8550/adsp.mbn",
+>> +			"qcom/sm8550/adsp_dtb.mbn";
+>> +	status = "okay";
+>> +};
+>> +
+>> +&remoteproc_cdsp {
+>> +	firmware-name = "qcom/sm8550/cdsp.mbn",
+>> +			"qcom/sm8550/cdsp_dtb.mbn";
+>> +	status = "okay";
+>> +};
+>> +
+>> +&remoteproc_mpss {
+>> +	firmware-name = "qcom/sm8550/modem.mbn",
+>> +			"qcom/sm8550/modem_dtb.mbn";
+>> +	status = "okay";
+
+Those are took from the device's running Android /firmware and load 
+without error, I used this kind of firmware loaded on other devices as 
+well and seems to do the job, the lines are as well on existing 
+sm8550-mtp.dts
+
+How to proceed?
+
+> Unless you stole one from the factory, these firmwares will not
+> load on your phone..
+>
+>> +};
+>> +
+>> +&sleep_clk {
+>> +	clock-frequency = <32000>;
+>> +};
+>> +
+>> +&tlmm {
+>> +	gpio-reserved-ranges = <36 4>, <50 2>;
+I have no idea, i took the ranges from  the running Android FDT, without 
+those ranges the kernel do not boot, i can dig more into these ranges if 
+required
+> Would you have an idea what these GPIOs are used for?
+>
+> Konrad
