@@ -1,38 +1,38 @@
 Received: from mail.rnplus.nl (mail.rnplus.nl [178.251.25.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8E013D8AE
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 13:02:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA4D13DDB8
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 13:02:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.251.25.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711717351; cv=none; b=rhT7l/W+s/zpG01kiDHIsKz2MnrwmL+ZdS+2n1Q/SwY4TxWMDbjQtWC2k3XMEVRpMaoDy3/41AuByjgndELzgVl649bPMn4Qc8ydHcXN4FptA6oi9E3jBaHnV9ETO465S6AQEWhMmvye/QpEPaps+RfjAQJFBcYagXQKzQ4qJrs=
+	t=1711717352; cv=none; b=Kb6/PtoF4QwbQnaSPMlstjqQaTRnvB3bxoKvbcEKsdxt+iUHGzHDmQWo8CDDujlhP6YPWEPp1HREZE7OjJaqYvK4XeAfPaI+e+cnbc+v6jBg3DiBqJN1OgNnOIck404wjqOsWtEIjcBkMn4PYlt20wwC5h7GFTRfiRNqXc2g/GM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711717351; c=relaxed/simple;
-	bh=fAvAnvABUo7HyKuMjevhf/jv5qC2EXV4aai6G+pLpAA=;
+	s=arc-20240116; t=1711717352; c=relaxed/simple;
+	bh=4G+G6BuM+cMP6rEZ/uaw8UHoFG85g2A3tKcOaMLiEvY=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dnTUcVnEG+joDmv9WDmRkzi2Fs3de9H7VsBoGWVVYb6ty0lerQUfPMbLIREE//3B6Kh7woy85D4go5m/qDZmz59wijQGbfnGKTuwx3LoOMmpElm3iz78TajcBNGgyIjxwpLhZ2jBZqfwVskuyrzOtsiJeat/fCpsDx3INy2X+cY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rnplus.nl; spf=pass smtp.mailfrom=rnplus.nl; dkim=pass (1024-bit key) header.d=rnplus.nl header.i=@rnplus.nl header.b=zujQAt4V; arc=none smtp.client-ip=178.251.25.70
+	 MIME-Version; b=eLTxvbdVQnntasBzA+TVvnlRbmOnmgmTPsCkm3vppuMpSaO9/5gylgjtoxqi/EcjYKbk6227LASPq95dfQrxDrORLg0NOOxXlp/LNAdRhLyqB+6heSwY8yIwp2u6qupIrRLDG91e2NT0IqtKctf/BkPAS1vHAI5hvOj81HPbKIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rnplus.nl; spf=pass smtp.mailfrom=rnplus.nl; dkim=pass (1024-bit key) header.d=rnplus.nl header.i=@rnplus.nl header.b=p5XN+y9z; arc=none smtp.client-ip=178.251.25.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rnplus.nl
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rnplus.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rnplus.nl header.i=@rnplus.nl header.b="zujQAt4V"
+	dkim=pass (1024-bit key) header.d=rnplus.nl header.i=@rnplus.nl header.b="p5XN+y9z"
 Received: from localhost (unknown [127.0.0.1])
-	by mail.rnplus.nl (Postfix) with ESMTP id 1995C37948C
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 13:05:50 +0000 (UTC)
+	by mail.rnplus.nl (Postfix) with ESMTP id 809B2379488
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 13:05:45 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at rnplus.nl
 Received: from mail.rnplus.nl ([127.0.0.1])
 	by localhost (mail.rnplus.nl [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id xpcy1SOSgici for <linux-kernel@vger.kernel.org>;
-	Fri, 29 Mar 2024 14:05:48 +0100 (CET)
+	with ESMTP id rqvzPpLHAdhp for <linux-kernel@vger.kernel.org>;
+	Fri, 29 Mar 2024 14:05:43 +0100 (CET)
 Received: from localhost.localdomain (184-179-179-143.ftth.glasoperator.nl [143.179.179.184])
-	by mail.rnplus.nl (Postfix) with ESMTPSA id F015C37947B;
-	Fri, 29 Mar 2024 14:05:26 +0100 (CET)
+	by mail.rnplus.nl (Postfix) with ESMTPSA id 973463793D7;
+	Fri, 29 Mar 2024 14:05:24 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=rnplus.nl; s=dkim;
-	t=1711717527; bh=fAvAnvABUo7HyKuMjevhf/jv5qC2EXV4aai6G+pLpAA=;
+	t=1711717525; bh=4G+G6BuM+cMP6rEZ/uaw8UHoFG85g2A3tKcOaMLiEvY=;
 	h=From:To:Subject:Date:In-Reply-To:References;
-	b=zujQAt4VCctGPhyNc7BqplQeCWC4PHXqkNF1G8Bp1BgJrkLCm78UrJpy3qm7nXQ6q
-	 ytsDDNWm9eQolzBUvRxMfFbd1CzWPMwEJj26tzsegM3jbO0JGB6/0p0ZWh7ycoixvC
-	 21bFBmKbEFVoFxZZpz8WMrWmyf7GuIAOteC3T6vA=
+	b=p5XN+y9z9I88hiQ3MEw1lqBDxoGJmvKX6uSVIi2OFwnC9lkaTMyjSFhCkMcC5LMct
+	 DFnvhpI0EiaxtGx5oecuoGkg5W2zT62KRg1gh3zW+5NWzbpIEcSJNZ9LK4M2VBeWw+
+	 lOsD2AWixC3PcL/5CHSH0g5GB22Mb3frtKO7c9wk=
 From: Renze Nicolai <renze@rnplus.nl>
 To: linux-arm-kernel@lists.infradead.org,
 	devicetree@vger.kernel.org,
@@ -46,9 +46,9 @@ To: linux-arm-kernel@lists.infradead.org,
 	joel@jms.id.au,
 	andrew@aj.id.au,
 	renze@rnplus.nl
-Subject: [PATCH 3/3] ARM: dts: Modify I2C bus configuration
-Date: Fri, 29 Mar 2024 14:01:41 +0100
-Message-ID: <20240329130152.878944-4-renze@rnplus.nl>
+Subject: [PATCH 1/3] ARM: dts: Modify GPIO table for Asrock X570D4U BMC
+Date: Fri, 29 Mar 2024 14:01:39 +0100
+Message-ID: <20240329130152.878944-2-renze@rnplus.nl>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240329130152.878944-1-renze@rnplus.nl>
 References: <20240329130152.878944-1-renze@rnplus.nl>
@@ -60,46 +60,144 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This commit enables I2C bus 8 which is exposed on the IPMB_1 connector on the X570D4U mainboard.
-Additionally it adds a descriptive comment to I2C busses 1 and 5.
+This commit removes button-nmi-n, this board does not have support for an NMI button.
+Input status-locatorled-n has been renamed to input-locatorled-n to better indicate the signal type.
+The suffix -n has been appended to the name of control-locatorbutton, button-power, control-power, button-reset, control-reset, input-id0, input-id1, input-id2, output-bmc-ready to reflect the inverted signal polarity.
+GPIO output-rtc-battery-voltage-read-enable has been renamed to output-hwm-vbat-enable, input-alert1-n to input-aux-smb-alert-n, input-alert3-n to input-psu-smb-alert-n, input-mfg to input-mfg-mode-n and input-caseopen to input-case-open-n.
+And GPIOs input-bmc-smb-present-n, input-pcie-wake-n, input-sleep-s3-n, input-sleep-s5-n and input-power-good have been added.
 
 Signed-off-by: Renze Nicolai <renze@rnplus.nl>
 ---
- arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-x570d4u.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+ .../dts/aspeed/aspeed-bmc-asrock-x570d4u.dts  | 116 +++++++++---------
+ 1 file changed, 58 insertions(+), 58 deletions(-)
 
 diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-x570d4u.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-x570d4u.dts
-index e93c2f0b8414..3b1c77a12605 100644
+index 3c975bc41ae7..34bc382bf492 100644
 --- a/arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-x570d4u.dts
 +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-x570d4u.dts
-@@ -183,6 +183,7 @@ &i2c0 {
- };
- 
- &i2c1 {
-+	/* Hardware monitoring SMBus */
+@@ -79,64 +79,64 @@ iio-hwmon {
+ &gpio {
  	status = "okay";
- 
- 	w83773g@4c {
-@@ -240,6 +241,7 @@ i2c4mux0ch3: i2c@3 {
+ 	gpio-line-names =
+-	/*A0-A3*/       "status-locatorled-n",                    "",                      "button-nmi-n",          "",
+-	/*A4-A7*/       "",                                       "",                      "",                      "",
+-	/*B0-B3*/       "input-bios-post-cmplt-n",                "",                      "",                      "",
+-	/*B4-B7*/       "",                                       "",                      "",                      "",
+-	/*C0-C3*/       "",                                       "",                      "",                      "",
+-	/*C4-C7*/       "",                                       "",                      "control-locatorbutton", "",
+-	/*D0-D3*/       "button-power",                           "control-power",         "button-reset",          "control-reset",
+-	/*D4-D7*/       "",                                       "",                      "",                      "",
+-	/*E0-E3*/       "",                                       "",                      "",                      "",
+-	/*E4-E7*/       "",                                       "",                      "",                      "",
+-	/*F0-F3*/       "",                                       "",                      "",                      "",
+-	/*F4-F7*/       "",                                       "",                      "",                      "",
+-	/*G0-G3*/       "output-rtc-battery-voltage-read-enable", "input-id0",             "input-id1",             "input-id2",
+-	/*G4-G7*/       "input-alert1-n",                         "input-alert2-n",        "input-alert3-n",        "",
+-	/*H0-H3*/       "",                                       "",                      "",                      "",
+-	/*H4-H7*/       "input-mfg",                              "",                      "led-heartbeat-n",       "input-caseopen",
+-	/*I0-I3*/       "",                                       "",                      "",                      "",
+-	/*I4-I7*/       "",                                       "",                      "",                      "",
+-	/*J0-J3*/       "output-bmc-ready",                       "",                      "",                      "",
+-	/*J4-J7*/       "",                                       "",                      "",                      "",
+-	/*K0-K3*/       "",                                       "",                      "",                      "",
+-	/*K4-K7*/       "",                                       "",                      "",                      "",
+-	/*L0-L3*/       "",                                       "",                      "",                      "",
+-	/*L4-L7*/       "",                                       "",                      "",                      "",
+-	/*M0-M3*/       "",                                       "",                      "",                      "",
+-	/*M4-M7*/       "",                                       "",                      "",                      "",
+-	/*N0-N3*/       "",                                       "",                      "",                      "",
+-	/*N4-N7*/       "",                                       "",                      "",                      "",
+-	/*O0-O3*/       "",                                       "",                      "",                      "",
+-	/*O4-O7*/       "",                                       "",                      "",                      "",
+-	/*P0-P3*/       "",                                       "",                      "",                      "",
+-	/*P4-P7*/       "",                                       "",                      "",                      "",
+-	/*Q0-Q3*/       "",                                       "",                      "",                      "",
+-	/*Q4-Q7*/       "",                                       "",                      "",                      "",
+-	/*R0-R3*/       "",                                       "",                      "",                      "",
+-	/*R4-R7*/       "",                                       "",                      "",                      "",
+-	/*S0-S3*/       "input-bmc-pchhot-n",                     "",                      "",                      "",
+-	/*S4-S7*/       "",                                       "",                      "",                      "",
+-	/*T0-T3*/       "",                                       "",                      "",                      "",
+-	/*T4-T7*/       "",                                       "",                      "",                      "",
+-	/*U0-U3*/       "",                                       "",                      "",                      "",
+-	/*U4-U7*/       "",                                       "",                      "",                      "",
+-	/*V0-V3*/       "",                                       "",                      "",                      "",
+-	/*V4-V7*/       "",                                       "",                      "",                      "",
+-	/*W0-W3*/       "",                                       "",                      "",                      "",
+-	/*W4-W7*/       "",                                       "",                      "",                      "",
+-	/*X0-X3*/       "",                                       "",                      "",                      "",
+-	/*X4-X7*/       "",                                       "",                      "",                      "",
+-	/*Y0-Y3*/       "",                                       "",                      "",                      "",
+-	/*Y4-Y7*/       "",                                       "",                      "",                      "",
+-	/*Z0-Z3*/       "",                                       "",                      "led-fault-n",           "output-bmc-throttle-n",
+-	/*Z4-Z7*/       "",                                       "",                      "",                      "",
+-	/*AA0-AA3*/     "input-cpu1-thermtrip-latch-n",           "",                      "input-cpu1-prochot-n",  "",
+-	/*AA4-AC7*/     "",                                       "",                      "",                      "",
+-	/*AB0-AB3*/     "",                                       "",                      "",                      "",
+-	/*AB4-AC7*/     "",                                       "",                      "",                      "",
+-	/*AC0-AC3*/     "",                                       "",                      "",                      "",
+-	/*AC4-AC7*/     "",                                       "",                      "",                      "";
++	/*A0-A3*/       "input-locatorled-n",                     "",                      "",                        "",
++	/*A4-A7*/       "",                                       "",                      "",                        "",
++	/*B0-B3*/       "input-bios-post-cmplt-n",                "",                      "",                        "",
++	/*B4-B7*/       "",                                       "",                      "",                        "",
++	/*C0-C3*/       "",                                       "",                      "",                        "",
++	/*C4-C7*/       "",                                       "",                      "control-locatorbutton-n", "",
++	/*D0-D3*/       "button-power-n",                         "control-power-n",       "button-reset-n",          "control-reset-n",
++	/*D4-D7*/       "",                                       "",                      "",                        "",
++	/*E0-E3*/       "",                                       "",                      "",                        "",
++	/*E4-E7*/       "",                                       "",                      "",                        "",
++	/*F0-F3*/       "",                                       "",                      "",                        "",
++	/*F4-F7*/       "",                                       "",                      "",                        "",
++	/*G0-G3*/       "output-hwm-vbat-enable",                 "input-id0-n",           "input-id1-n",             "input-id2-n",
++	/*G4-G7*/       "input-aux-smb-alert-n",                  "",                      "input-psu-smb-alert-n",   "",
++	/*H0-H3*/       "",                                       "",                      "",                        "",
++	/*H4-H7*/       "input-mfg-mode-n",                       "",                      "led-heartbeat-n",         "input-case-open-n",
++	/*I0-I3*/       "",                                       "",                      "",                        "",
++	/*I4-I7*/       "",                                       "",                      "",                        "",
++	/*J0-J3*/       "output-bmc-ready-n",                     "",                      "",                        "",
++	/*J4-J7*/       "",                                       "",                      "",                        "",
++	/*K0-K3*/       "",                                       "",                      "",                        "",
++	/*K4-K7*/       "",                                       "",                      "",                        "",
++	/*L0-L3*/       "",                                       "",                      "",                        "",
++	/*L4-L7*/       "",                                       "",                      "",                        "",
++	/*M0-M3*/       "",                                       "",                      "",                        "",
++	/*M4-M7*/       "",                                       "",                      "",                        "",
++	/*N0-N3*/       "",                                       "",                      "",                        "",
++	/*N4-N7*/       "",                                       "",                      "",                        "",
++	/*O0-O3*/       "",                                       "",                      "",                        "",
++	/*O4-O7*/       "",                                       "",                      "",                        "",
++	/*P0-P3*/       "",                                       "",                      "",                        "",
++	/*P4-P7*/       "",                                       "",                      "",                        "",
++	/*Q0-Q3*/       "",                                       "",                      "",                        "",
++	/*Q4-Q7*/       "input-bmc-smb-present-n",                "",                      "",                        "input-pcie-wake-n",
++	/*R0-R3*/       "",                                       "",                      "",                        "",
++	/*R4-R7*/       "",                                       "",                      "",                        "",
++	/*S0-S3*/       "input-bmc-pchhot-n",                     "",                      "",                        "",
++	/*S4-S7*/       "",                                       "",                      "",                        "",
++	/*T0-T3*/       "",                                       "",                      "",                        "",
++	/*T4-T7*/       "",                                       "",                      "",                        "",
++	/*U0-U3*/       "",                                       "",                      "",                        "",
++	/*U4-U7*/       "",                                       "",                      "",                        "",
++	/*V0-V3*/       "",                                       "",                      "",                        "",
++	/*V4-V7*/       "",                                       "",                      "",                        "",
++	/*W0-W3*/       "",                                       "",                      "",                        "",
++	/*W4-W7*/       "",                                       "",                      "",                        "",
++	/*X0-X3*/       "",                                       "",                      "",                        "",
++	/*X4-X7*/       "",                                       "",                      "",                        "",
++	/*Y0-Y3*/       "input-sleep-s3-n",                       "input-sleep-s5-n",      "",                        "",
++	/*Y4-Y7*/       "",                                       "",                      "",                        "",
++	/*Z0-Z3*/       "",                                       "",                      "led-fault-n",             "output-bmc-throttle-n",
++	/*Z4-Z7*/       "",                                       "",                      "",                        "",
++	/*AA0-AA3*/     "input-cpu1-thermtrip-latch-n",           "",                      "input-cpu1-prochot-n",    "",
++	/*AA4-AC7*/     "",                                       "",                      "",                        "",
++	/*AB0-AB3*/     "",                                       "input-power-good",      "",                        "",
++	/*AB4-AC7*/     "",                                       "",                      "",                        "",
++	/*AC0-AC3*/     "",                                       "",                      "",                        "",
++	/*AC4-AC7*/     "",                                       "",                      "",                        "";
  };
  
- &i2c5 {
-+	/* SMBus on BMC connector (BMC_SMB_1) */
- 	status = "okay";
- };
- 
-@@ -264,6 +266,11 @@ eth1_macaddress: macaddress@3f88 {
- 	};
- };
- 
-+&i2c8 {
-+	/* SMBus on intelligent platform management bus header (IPMB_1) */
-+	status = "okay";
-+};
-+
- &gfx {
- 	status = "okay";
- };
+ &fmc {
 -- 
 2.44.0
 
