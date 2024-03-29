@@ -1,60 +1,63 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4B013AD1E;
-	Fri, 29 Mar 2024 21:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50DEC2BB0D;
+	Fri, 29 Mar 2024 21:07:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711746306; cv=none; b=qIsA6lXUgqZJebWl/Gl4tlLxfvYekeJDzrNfk+b6fXnMkf1BHv+83TwSJAw03iBVty1kiRyscskrKmw0Y5EOPtdfKJg3mGmEXpRGOheaxFAUS16DC9HPlara+eJTc7+ifato3RR0ZVgo+thBBdCBf9j291RT1TToo/0bf44Q36g=
+	t=1711746441; cv=none; b=WO2DFYUWD7WygisTCybNO99hSHxfmQEI67RHT5rmP7ZyRCuPfMjIQPQbXQ+6K2vIjsHwNBQVIoCn1kPqSu1FHuft2DjFh6MQ2qnlb2L6nRUTb/FbAMrR2pfsdeHdUyUZLajfFsD6KgtyMyAO8Hd0CwiU5LlRiQO21W0bHas3f6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711746306; c=relaxed/simple;
-	bh=pXYEYgKZ3Uofr33TNsjVz/KOqp3itzo08YoqXY3ebkI=;
+	s=arc-20240116; t=1711746441; c=relaxed/simple;
+	bh=ndoVGcEPZTeW65Jpuo0QNLQhBOiAh4hrgmZGAAZ/Um0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hrR6SxubRXkANAhxvgAyimc04nhqr/11+vqzbuTwMSkNwnN6wzAYactPH5zIs/RLVoHYhkZx1hz9C3PKKTn55nCvgqFxXX3x56z8MNV6rKZMCWy4temjgAGDldAuN57Tj7+T5O7/h8E3W3PdsZulLnTHFpO/oFw0GD13u1o1MPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=n75yb7nR; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	 MIME-Version:Content-Type; b=RcuoZwoBHe8mlokV9quu2N+h+dtlxfIzdJF/RlD/Pku3n0jMiB4fE7RUSvP0XdLsF3HN+KFsaxOCEH3ACbETqGd4s0L4xT98J6/NLetB2k05t8LJ9bNPglLm41PVYjNklUMzL5Jn2AKtBlFQw9JEd+RaicMVBBu4zP35KG2zen4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ASAZPkgP; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="n75yb7nR"
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 2DA06120019;
-	Sat, 30 Mar 2024 00:05:03 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 2DA06120019
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1711746303;
-	bh=v6iv2cWxrh0L5w2lrSwq07tbyW+/upAYliG0TyxpP3o=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=n75yb7nRtRwdTAS4wjIRKlbscogi02NEL+0ey+lQnVTTtp+mOcfI6HrJoGn8lHuN2
-	 A6YTD4LlJN8gBo18oOk8l+1ShZ+WMF4e2E2PwasVdNXcyNn3fS9Ildt3OhoJ990rkK
-	 b4LlXrrGUxkyBj6llNF85gYS8YCdE0847XOfAjPs6DmOgAzlM1w1A741E2A1yPyKKv
-	 4hKrdy9Ptcm28W5Y8OGQHNRU27BO8FKvCjhlHwqbnByq3myO4eK3g/n8bvCXZeCUHa
-	 F/jr/rjzAbpXaBqaoMb1DBETLarMCkSG5+4QdGI71xh5Ru9NiZfzWoSHNDaBQY9956
-	 /2LSX6gzbqK0Q==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Sat, 30 Mar 2024 00:05:02 +0300 (MSK)
-Received: from CAB-WSD-L081021.sberdevices.ru (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ASAZPkgP"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42TKKAuM004397;
+	Fri, 29 Mar 2024 21:07:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	qcppdkim1; bh=jqzwN1vuCFLLJR0ky4qG5pZmihPpcc82QgRh0kKcLxI=; b=AS
+	AZPkgPFB6PbbawradyCxpFMbQYF6EZiZ0KNjhqrgGsVAf1XPyaZcKI6jfeejscMS
+	gQ1aBug5eq4OPcfQF7wkd6f0vi26CnKW1Sk7Tj2Tvidv85OOlzb/Dje4LQN076qG
+	umtmmqxlMYoRRTgXKSTR8KzhS4ssC9aBLY1wHmPCbWZiMmNEggDepZer4QDX+jTM
+	h7VxzWUhKcol2WbIMLW9sEEpe4hOu9KAJ0ZeHEeb2ZA5o3Xj+EM9F7Nrwwl2Ifia
+	zkTc/nn9Eb8F6pJuafLvcsG73uaAO463bPyLuBmkKwcd7bYG6klk2AYlNEh1qisr
+	Oj27pEAIxgTN/uWKkuMQ==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x60wd8nht-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 29 Mar 2024 21:07:10 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42TL79WM023843
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 29 Mar 2024 21:07:09 GMT
+Received: from hu-c-gdjako-lv.qualcomm.com (10.49.16.6) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Sat, 30 Mar 2024 00:05:02 +0300
-From: Dmitry Rokosov <ddrokosov@salutedevices.com>
-To: <neil.armstrong@linaro.org>, <jbrunet@baylibre.com>,
-	<mturquette@baylibre.com>, <sboyd@kernel.org>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <khilman@baylibre.com>,
-	<martin.blumenstingl@googlemail.com>
-CC: <kernel@salutedevices.com>, <rockosov@gmail.com>,
-	<linux-amlogic@lists.infradead.org>, <linux-clk@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, Dmitry Rokosov
-	<ddrokosov@salutedevices.com>
-Subject: [PATCH v1 4/4] arm64: dts: amlogic: a1: setup CPU power management
-Date: Sat, 30 Mar 2024 00:04:42 +0300
-Message-ID: <20240329210453.27530-5-ddrokosov@salutedevices.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240329210453.27530-1-ddrokosov@salutedevices.com>
-References: <20240329210453.27530-1-ddrokosov@salutedevices.com>
+ 15.2.1118.40; Fri, 29 Mar 2024 14:07:08 -0700
+From: Georgi Djakov <quic_c_gdjako@quicinc.com>
+To: <will@kernel.org>, <robin.murphy@arm.com>, <joro@8bytes.org>,
+        <iommu@lists.linux.dev>
+CC: <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <robdclark@gmail.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <quic_cgoldswo@quicinc.com>, <quic_sukadev@quicinc.com>,
+        <quic_pdaly@quicinc.com>, <quic_sudaraja@quicinc.com>,
+        <djakov@kernel.org>
+Subject: [PATCH v7 6/7] iommu/arm-smmu-qcom: Use the custom fault handler on more platforms
+Date: Fri, 29 Mar 2024 14:06:37 -0700
+Message-ID: <20240329210638.3647523-7-quic_c_gdjako@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240329210638.3647523-1-quic_c_gdjako@quicinc.com>
+References: <20240329210638.3647523-1-quic_c_gdjako@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,109 +66,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184500 [Mar 29 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: ddrokosov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 14 0.3.14 5a0c43d8a1c3c0e5b0916cc02a90d4b950c01f96, {Tracking_from_domain_doesnt_match_to}, 100.64.160.123:7.1.2;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;smtp.sberdevices.ru:7.1.1,5.0.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/03/29 16:52:00 #24511844
-X-KSMG-AntiVirus-Status: Clean, skipped
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: WEMYc9oo_6QkfLAWvhOI3NeHbWu4GY63
+X-Proofpoint-ORIG-GUID: WEMYc9oo_6QkfLAWvhOI3NeHbWu4GY63
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-29_13,2024-03-28_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ malwarescore=0 spamscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ phishscore=0 clxscore=1015 bulkscore=0 suspectscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2403210001
+ definitions=main-2403290188
 
-The Amlogic A1 SoC family utilizes static operating points and a
-PWM-controlled core voltage regulator, which is specific to the board.
-As the main CPU clock input, the SoC uses CLKID_CPU_CLK from the CPU
-clock controller, which can be inherited from the system PLL (syspll) or
-a fixed CPU clock.
+The TBU support is now available, so let's allow it to be used on other
+platforms that have the Qualcomm SMMU-500 implementation with TBUs. This
+will allow the context fault handler to query the TBUs when a context
+fault occurs.
 
-Currently, the stable operating points at all frequencies are set to
-800mV. This value is obtained from the vendor setup of several A1
-boards.
-
-Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
+Signed-off-by: Georgi Djakov <quic_c_gdjako@quicinc.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 44 +++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-index 0de809f4d42c..c57c7c1cd5f8 100644
---- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -33,6 +33,13 @@ cpu0: cpu@0 {
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
- 			next-level-cache = <&l2>;
-+			clocks = <&clkc_cpu CLKID_CPU_CLK>;
-+			clock-names = "core_clk";
-+			operating-points-v2 = <&cpu_opp_table0>;
-+			voltage-tolerance = <0>;
-+			clock-latency = <50000>;
-+			capacity-dmips-mhz = <400>;
-+			dynamic-power-coefficient = <80>;
- 			#cooling-cells = <2>;
- 		};
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+index 7a58b1b96bca..08e0ad325bab 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+@@ -413,6 +413,10 @@ static const struct arm_smmu_impl qcom_smmu_500_impl = {
+ 	.reset = arm_mmu500_reset,
+ 	.write_s2cr = qcom_smmu_write_s2cr,
+ 	.tlb_sync = qcom_smmu_tlb_sync,
++#ifdef CONFIG_ARM_SMMU_QCOM_TBU
++	.context_fault = qcom_smmu_context_fault,
++	.context_fault_needs_threaded_irq = true,
++#endif
+ };
  
-@@ -42,6 +49,13 @@ cpu1: cpu@1 {
- 			reg = <0x0 0x1>;
- 			enable-method = "psci";
- 			next-level-cache = <&l2>;
-+			clocks = <&clkc_cpu CLKID_CPU_CLK>;
-+			clock-names = "core_clk";
-+			operating-points-v2 = <&cpu_opp_table0>;
-+			voltage-tolerance = <0>;
-+			clock-latency = <50000>;
-+			capacity-dmips-mhz = <400>;
-+			dynamic-power-coefficient = <80>;
- 			#cooling-cells = <2>;
- 		};
- 
-@@ -52,6 +66,36 @@ l2: l2-cache0 {
- 		};
- 	};
- 
-+	cpu_opp_table0: cpu_opp_table0 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp00 {
-+			opp-hz = /bits/ 64 <128000000>;
-+			opp-microvolt = <800000>;
-+		};
-+		opp01 {
-+			opp-hz = /bits/ 64 <256000000>;
-+			opp-microvolt = <800000>;
-+		};
-+		opp02 {
-+			opp-hz = /bits/ 64 <512000000>;
-+			opp-microvolt = <800000>;
-+		};
-+		opp03 {
-+			opp-hz = /bits/ 64 <768000000>;
-+			opp-microvolt = <800000>;
-+		};
-+		opp04 {
-+			opp-hz = /bits/ 64 <1008000000>;
-+			opp-microvolt = <800000>;
-+		};
-+		opp05 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			opp-microvolt = <800000>;
-+		};
-+	};
-+
- 	efuse: efuse {
- 		compatible = "amlogic,meson-gxbb-efuse";
- 		clocks = <&clkc_periphs CLKID_OTP>;
--- 
-2.43.0
-
+ static const struct arm_smmu_impl sdm845_smmu_500_impl = {
