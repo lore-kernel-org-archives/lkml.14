@@ -1,64 +1,83 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964FF3FB3E;
-	Fri, 29 Mar 2024 05:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC8A3C082
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 05:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711690341; cv=none; b=XaE6vifesJFdeImDqzcpss4dNWD5uBaKFhrRpydiwm27l4NRp57pQyObXNuApo17gjmm4Ocm0GIF387L5icqr4M6Zx0AwdXDeUzvf5wEotZBEgIhV69seuH6Nwom0wWcPwO6cCNaOoKEFEyFgO/JDIbGlJc6sYuiHjtT7T8ek5A=
+	t=1711690444; cv=none; b=L8VqsEaTY6jFkwXoktCCUyJQLmM+2fVcdZZzhHrGTkkLgT7tSD5VblZQof4AKHlH35uxaplq3hP13ff2B0Ua2Ff1NkvhiMpAXMtc1bw3NT/qgBiEPZPpQeDvXQn8gR/xpUIjj4n7Buy6X+ploem1JLl1r7dbA9cXZLfHwfQFXIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711690341; c=relaxed/simple;
-	bh=Z7XnIRvj6BZN3JC4yog/6vZFCfS/zxqiBBiUIpBfzxg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sol0dd5qh7VhJv4DOoE2to6omgGH/6qGZrF82R9T81K3qXqoeBl3Np+GleEPW90YpGtCNMOBJNjEP36xoSgBfzH1M27T+PIV/bJGZGASVnXnnSdWpO9GX+x2b9b/EAKyMxSLIf9cvVYZ3FsBVwrqT+2JCCUljXY78kZfkvrfnJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=uu3JhR/5; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1711690444; c=relaxed/simple;
+	bh=ImreSG/HUgwp6aJbvn8E9oQAkoz2niDIQh3XRiMc0II=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TSIJlIyetQjp6H4iIIKMYLRCUA+K5ZE7fYfEuJJNzdm52SWlig23MAXwLDIBgjwPZXcGWv1AaIez0jgY98xQnPlDC8SdY9Fd7KzgECXjShOraBaHeBekaYGHLaFnMPTe+K9nPJRerqI9awRpA8ZHofjKTvj4atRCdFj6l+SS3hY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=EqTcYTM0; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uu3JhR/5"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42T5W2XY045054;
-	Fri, 29 Mar 2024 00:32:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1711690322;
-	bh=UJZuyuMAS4yHscUWJc3IOMfyaa+XA7CfXXH+WdaZegc=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=uu3JhR/57T5Fu1tgXcSuqNFUSIYQTmVsAV12me5CxyzPd5cw3YlWLX8z8IFdoP2hq
-	 qxobi6XfEyNkEZgyDN6DXN/lN6hvC0cYJaXhAKwWKJf0u675o6hNZwIArJpn1CEseO
-	 IemHTY6gGktT3QSARq5SMFINmL410ezqYeEnab04=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42T5W2vj027972
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 29 Mar 2024 00:32:02 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 29
- Mar 2024 00:32:01 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 29 Mar 2024 00:32:01 -0500
-Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42T5W1F0028092;
-	Fri, 29 Mar 2024 00:32:01 -0500
-From: Chintan Vankar <c-vankar@ti.com>
-To: Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh@kernel.org>, Tero
- Kristo <kristo@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, Nishanth
- Menon <nm@ti.com>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <s-vadapalli@ti.com>,
-        Chintan Vankar
-	<c-vankar@ti.com>
-Subject: [PATCH v6 4/5] arm64: dts: ti: k3-j784s4: Add overlay to enable QSGMII mode with CPSW9G
-Date: Fri, 29 Mar 2024 11:01:29 +0530
-Message-ID: <20240329053130.2822129-5-c-vankar@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240329053130.2822129-1-c-vankar@ti.com>
-References: <20240329053130.2822129-1-c-vankar@ti.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="EqTcYTM0"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-430a0d6c876so10415361cf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 22:34:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1711690440; x=1712295240; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kzD9bp4lfPKjq881EZTr8X35H33UpZ0U2oJTGnZVwgs=;
+        b=EqTcYTM00C/gUsn3XF2WJs1zcEhTVUJTRDacCzOOvnuGy84VQTaGKAWCo6q9cRzoOP
+         fhnbjvTdPEo5XeecRjMv004VizxrCVRdVQ2KSW9P2mI70Fy9qjjDX0F9SQFeW5sPJRJ4
+         CJjonR+ngB42q/K5SRVoHuXYyt51MJOXQtTYLDSRU3hiziXHsAZssk3f3eSuLRy7MG8q
+         ZesBt57o48Z763QvQtqqDoLbh/wsBpmR47xRSbVDSCyzuXcV2IdewMwAYEjCMoMGeKtH
+         /ruNv8kW+ZtHsJjSExd2Wb6NgEmkKVa//0okKd5HSnqbe+q6F2Zcqc1QjXFwj7ZTeCn6
+         CaNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711690440; x=1712295240;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kzD9bp4lfPKjq881EZTr8X35H33UpZ0U2oJTGnZVwgs=;
+        b=OF1KoMeRFnmXKPvI03g9kumg63cpKoYOS32+rb93qlPRPES4uQEV8TZp1r2O6fpmkc
+         As3alHBIgy01XtcSro/7R3UioAI6u7/l8ruHTeEe+xIgyzaFB6HFMzYSyxnldki7XBE4
+         nJ9rKgv8Srl6mlYYmd7iVkk7fuc3jgBz1Y0N3VGK1D3i5TQT5JgRRF5NzQbPjaAwVo40
+         dwf/6u930Iru81kL+Xx94uS2B5pvWOZf5K8zS/FfMG2UKOYUXiqkLLRHYO7pUCWaooaR
+         ++jMgthSjIHQEEt8FA2p8wUeUaI0XIIhxOGGP6G3SISTDde8Snn9V55AW2IcTJRlfs9l
+         g88w==
+X-Forwarded-Encrypted: i=1; AJvYcCVSlXA4fRSVJPU3pa3uyjVpyavDcxefi2P+44S/gZfMZxxna+gzrfZ6ru/S2KWJ0WEmq9Nbx9zRCHuIpEb5zDWIjuZm17eA6ARHh40o
+X-Gm-Message-State: AOJu0YyFKNWKkKQSurzdsOpqMjJPvcjrBveLdV15Q3UVr9uzuPisdig+
+	lg7Yo4Jr9t7ZDLBM4PqYMRHmDSeBdLHpybLzIuwVtwIV0nHo+n+YLuIpb1+2NNk=
+X-Google-Smtp-Source: AGHT+IEPCB5hxd4bBd3zlijyd5nzuuMHJJeNzrT0TX98AmIg0/OG0kaxC+8voIkqbdWtPzxYHjpC/A==
+X-Received: by 2002:a05:622a:40e:b0:432:c50a:3d65 with SMTP id n14-20020a05622a040e00b00432c50a3d65mr152679qtx.36.1711690440563;
+        Thu, 28 Mar 2024 22:34:00 -0700 (PDT)
+Received: from n231-228-171.byted.org ([147.160.184.85])
+        by smtp.gmail.com with ESMTPSA id jd25-20020a05622a719900b00430bf59ebccsm1293700qtb.11.2024.03.28.22.33.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 22:34:00 -0700 (PDT)
+From: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
+To: "Huang, Ying" <ying.huang@intel.com>,
+	"Gregory Price" <gourry.memverge@gmail.com>,
+	aneesh.kumar@linux.ibm.com,
+	mhocko@suse.com,
+	tj@kernel.org,
+	john@jagalactic.com,
+	"Eishan Mirakhur" <emirakhur@micron.com>,
+	"Vinicius Tavares Petrucci" <vtavarespetr@micron.com>,
+	"Ravis OpenSrc" <Ravis.OpenSrc@micron.com>,
+	"Alistair Popple" <apopple@nvidia.com>,
+	"Srinivasulu Thanneeru" <sthanneeru@micron.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Cc: "Ho-Ren (Jack) Chuang" <horenc@vt.edu>,
+	"Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>,
+	"Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>,
+	qemu-devel@nongnu.org
+Subject: [PATCH v9 0/2] Improved Memory Tier Creation for CPUless NUMA Nodes
+Date: Fri, 29 Mar 2024 05:33:51 +0000
+Message-Id: <20240329053353.309557-1-horenchuang@bytedance.com>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,227 +85,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
+When a memory device, such as CXL1.1 type3 memory, is emulated as
+normal memory (E820_TYPE_RAM), the memory device is indistinguishable
+from normal DRAM in terms of memory tiering with the current implementation.
+The current memory tiering assigns all detected normal memory nodes
+to the same DRAM tier. This results in normal memory devices with
+different attributions being unable to be assigned to the correct memory tier,
+leading to the inability to migrate pages between different types of memory.
+https://lore.kernel.org/linux-mm/PH0PR08MB7955E9F08CCB64F23963B5C3A860A@PH0PR08MB7955.namprd08.prod.outlook.com/T/
 
-The J7 Quad Port Add-On Ethernet Card for J784S4 EVM supports
-QSGMII mode. Use the overlay to configure CPSW9G ports in QSGMII
-mode with the Add-On Ethernet Card connected to the ENET Expansion
-1 slot on the EVM.
+This patchset automatically resolves the issues. It delays the initialization
+of memory tiers for CPUless NUMA nodes until they obtain HMAT information
+and after all devices are initialized at boot time, eliminating the need
+for user intervention. If no HMAT is specified, it falls back to
+using `default_dram_type`.
 
-Add support to reset the PHY from kernel by using gpio-hog and
-gpio-reset.
+Example usecase:
+We have CXL memory on the host, and we create VMs with a new system memory
+device backed by host CXL memory. We inject CXL memory performance attributes
+through QEMU, and the guest now sees memory nodes with performance attributes
+in HMAT. With this change, we enable the guest kernel to construct
+the correct memory tiering for the memory nodes.
 
-Add aliases for CPSW9G ports to enable kernel to fetch MAC Addresses
-directly from U-Boot.
+-v9:
+ * Address corner cases in `memory_tier_late_init`. Thank Ying's comments.
+-v8:
+ * Fix email format
+ * https://lore.kernel.org/lkml/20240329004815.195476-1-horenchuang@bytedance.com/T/#u
+-v7:
+ * Add Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
+-v6:
+ Thanks to Ying's comments,
+ * Move `default_dram_perf_lock` to the function's beginning for clarity
+ * Fix double unlocking at v5
+ * https://lore.kernel.org/lkml/20240327072729.3381685-1-horenchuang@bytedance.com/T/#u
+-v5:
+ Thanks to Ying's comments,
+ * Add comments about what is protected by `default_dram_perf_lock`
+ * Fix an uninitialized pointer mtype
+ * Slightly shorten the time holding `default_dram_perf_lock`
+ * Fix a deadlock bug in `mt_perf_to_adistance`
+ * https://lore.kernel.org/lkml/20240327041646.3258110-1-horenchuang@bytedance.com/T/#u
+-v4:
+ Thanks to Ying's comments,
+ * Remove redundant code
+ * Reorganize patches accordingly
+ * https://lore.kernel.org/lkml/20240322070356.315922-1-horenchuang@bytedance.com/T/#u
+-v3:
+ Thanks to Ying's comments,
+ * Make the newly added code independent of HMAT
+ * Upgrade set_node_memory_tier to support more cases
+ * Put all non-driver-initialized memory types into default_memory_types
+   instead of using hmat_memory_types
+ * find_alloc_memory_type -> mt_find_alloc_memory_type
+ * https://lore.kernel.org/lkml/20240320061041.3246828-1-horenchuang@bytedance.com/T/#u
+-v2:
+ Thanks to Ying's comments,
+ * Rewrite cover letter & patch description
+ * Rename functions, don't use _hmat
+ * Abstract common functions into find_alloc_memory_type()
+ * Use the expected way to use set_node_memory_tier instead of modifying it
+ * https://lore.kernel.org/lkml/20240312061729.1997111-1-horenchuang@bytedance.com/T/#u
+-v1:
+ * https://lore.kernel.org/lkml/20240301082248.3456086-1-horenchuang@bytedance.com/T/#u
 
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-Signed-off-by: Chintan Vankar <c-vankar@ti.com>
----
+Ho-Ren (Jack) Chuang (2):
+  memory tier: dax/kmem: introduce an abstract layer for finding,
+    allocating, and putting memory types
+  memory tier: create CPUless memory tiers after obtaining HMAT info
 
-Link to v5:
-https://lore.kernel.org/r/20240314072129.1520475-5-c-vankar@ti.com/
+ drivers/dax/kmem.c           |  20 +-----
+ include/linux/memory-tiers.h |  13 ++++
+ mm/memory-tiers.c            | 125 ++++++++++++++++++++++++++++++-----
+ 3 files changed, 124 insertions(+), 34 deletions(-)
 
-Changes from v5 to v6:
-- Updated order of properties in Device Nodes based on
-  https://docs.kernel.org/devicetree/bindings/dts-coding-style.html#order-of-properties-in-device-node
-
- arch/arm64/boot/dts/ti/Makefile               |   7 +-
- .../ti/k3-j784s4-evm-quad-port-eth-exp1.dtso  | 147 ++++++++++++++++++
- 2 files changed, 153 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm-quad-port-eth-exp1.dtso
-
-diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-index 9a722c2473fb..f8e47278df43 100644
---- a/arch/arm64/boot/dts/ti/Makefile
-+++ b/arch/arm64/boot/dts/ti/Makefile
-@@ -100,6 +100,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-j722s-evm.dtb
- # Boards with J784s4 SoC
- dtb-$(CONFIG_ARCH_K3) += k3-am69-sk.dtb
- dtb-$(CONFIG_ARCH_K3) += k3-j784s4-evm.dtb
-+dtb-$(CONFIG_ARCH_K3) += k3-j784s4-evm-quad-port-eth-exp1.dtbo
- 
- # Build time test only, enabled by CONFIG_OF_ALL_DTBS
- k3-am625-beagleplay-csi2-ov5640-dtbs := k3-am625-beagleplay.dtb \
-@@ -145,6 +146,8 @@ k3-j721e-sk-csi2-dual-imx219-dtbs := k3-j721e-sk.dtb \
- 	k3-j721e-sk-csi2-dual-imx219.dtbo
- k3-j721s2-evm-pcie1-ep-dtbs := k3-j721s2-common-proc-board.dtb \
- 	k3-j721s2-evm-pcie1-ep.dtbo
-+k3-j784s4-evm-quad-port-eth-exp1-dtbs := k3-j784s4-evm.dtb \
-+	k3-j784s4-evm-quad-port-eth-exp1.dtbo
- dtb- += k3-am625-beagleplay-csi2-ov5640.dtb \
- 	k3-am625-beagleplay-csi2-tevi-ov5640.dtb \
- 	k3-am625-sk-csi2-imx219.dtb \
-@@ -165,7 +168,8 @@ dtb- += k3-am625-beagleplay-csi2-ov5640.dtb \
- 	k3-am69-sk-csi2-dual-imx219-dtbs \
- 	k3-j721e-evm-pcie0-ep.dtb \
- 	k3-j721e-sk-csi2-dual-imx219-dtbs \
--	k3-j721s2-evm-pcie1-ep.dtb
-+	k3-j721s2-evm-pcie1-ep.dtb \
-+	k3-j784s4-evm-quad-port-eth-exp1.dtb
- 
- # Enable support for device-tree overlays
- DTC_FLAGS_k3-am625-beagleplay += -@
-@@ -181,3 +185,4 @@ DTC_FLAGS_k3-am69-sk += -@
- DTC_FLAGS_k3-j721e-common-proc-board += -@
- DTC_FLAGS_k3-j721e-sk += -@
- DTC_FLAGS_k3-j721s2-common-proc-board += -@
-+DTC_FLAGS_k3-j784s4-evm += -@
-diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm-quad-port-eth-exp1.dtso b/arch/arm64/boot/dts/ti/k3-j784s4-evm-quad-port-eth-exp1.dtso
-new file mode 100644
-index 000000000000..dcd2c7c39ec3
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm-quad-port-eth-exp1.dtso
-@@ -0,0 +1,147 @@
-+/* SPDX-License-Identifier: GPL-2.0-only OR MIT */
-+/**
-+ * DT Overlay for CPSW9G in QSGMII mode using J7 Quad Port ETH EXP Add-On Ethernet Card with
-+ * J784S4 EVM. The Add-On Ethernet Card has to be connected to ENET Expansion 1 slot on the
-+ * board.
-+ *
-+ * Product Datasheet: https://www.ti.com/lit/ug/spruj74/spruj74.pdf
-+ *
-+ * Link to QSGMII Daughtercard: https://www.ti.com/tool/J721EXENETXPANEVM
-+ *
-+ * Copyright (C) 2024 Texas Instruments Incorporated - https://www.ti.com/
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/phy/phy-cadence.h>
-+#include <dt-bindings/phy/phy.h>
-+
-+#include "k3-pinctrl.h"
-+#include "k3-serdes.h"
-+
-+&{/} {
-+	aliases {
-+		ethernet1 = "/bus@100000/ethernet@c000000/ethernet-ports/port@5";
-+		ethernet2 = "/bus@100000/ethernet@c000000/ethernet-ports/port@6";
-+		ethernet3 = "/bus@100000/ethernet@c000000/ethernet-ports/port@7";
-+		ethernet4 = "/bus@100000/ethernet@c000000/ethernet-ports/port@8";
-+		ethernet5 = "/bus@100000/ethernet@c200000/ethernet-ports/port@1";
-+	};
-+};
-+
-+&main_cpsw0 {
-+	status = "okay";
-+};
-+
-+&main_cpsw0_port5 {
-+	phy-handle = <&cpsw9g_phy1>;
-+	phy-mode = "qsgmii";
-+	mac-address = [00 00 00 00 00 00];
-+	phys = <&cpsw0_phy_gmii_sel 5>, <&serdes2_qsgmii_link>;
-+	phy-names = "mac", "serdes";
-+	status = "okay";
-+};
-+
-+&main_cpsw0_port6 {
-+	phy-handle = <&cpsw9g_phy2>;
-+	phy-mode = "qsgmii";
-+	mac-address = [00 00 00 00 00 00];
-+	phys = <&cpsw0_phy_gmii_sel 6>, <&serdes2_qsgmii_link>;
-+	phy-names = "mac", "serdes";
-+	status = "okay";
-+};
-+
-+&main_cpsw0_port7 {
-+	phy-handle = <&cpsw9g_phy0>;
-+	phy-mode = "qsgmii";
-+	mac-address = [00 00 00 00 00 00];
-+	phys = <&cpsw0_phy_gmii_sel 7>, <&serdes2_qsgmii_link>;
-+	phy-names = "mac", "serdes";
-+	status = "okay";
-+};
-+
-+&main_cpsw0_port8 {
-+	phy-handle = <&cpsw9g_phy3>;
-+	phy-mode = "qsgmii";
-+	mac-address = [00 00 00 00 00 00];
-+	phys = <&cpsw0_phy_gmii_sel 8>, <&serdes2_qsgmii_link>;
-+	phy-names = "mac", "serdes";
-+	status = "okay";
-+};
-+
-+&main_cpsw0_mdio {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mdio0_default_pins>;
-+	bus_freq = <1000000>;
-+	reset-gpios = <&exp2 17 GPIO_ACTIVE_LOW>;
-+	reset-post-delay-us = <120000>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	cpsw9g_phy0: ethernet-phy@16 {
-+		reg = <16>;
-+	};
-+	cpsw9g_phy1: ethernet-phy@17 {
-+		reg = <17>;
-+	};
-+	cpsw9g_phy2: ethernet-phy@18 {
-+		reg = <18>;
-+	};
-+	cpsw9g_phy3: ethernet-phy@19 {
-+		reg = <19>;
-+	};
-+};
-+
-+&exp2 {
-+	/* Power-up ENET1 EXPANDER PHY. */
-+	qsgmii-line-hog {
-+		gpio-hog;
-+		gpios = <16 GPIO_ACTIVE_HIGH>;
-+		output-low;
-+	};
-+
-+	/* Toggle MUX2 for MDIO lines */
-+	mux-sel-hog {
-+		gpio-hog;
-+		gpios = <13 GPIO_ACTIVE_HIGH>, <14 GPIO_ACTIVE_HIGH>, <15 GPIO_ACTIVE_HIGH>;
-+		output-high;
-+	};
-+};
-+
-+&main_pmx0 {
-+	mdio0_default_pins: mdio0-default-pins {
-+		pinctrl-single,pins = <
-+			J784S4_IOPAD(0x05c, PIN_INPUT, 4) /* (AC36) MCASP2_AXR0.MDIO1_MDIO */
-+			J784S4_IOPAD(0x058, PIN_INPUT, 4) /* (AE37) MCASP2_AFSX.MDIO1_MDC */
-+		>;
-+	};
-+};
-+
-+&serdes_ln_ctrl {
-+	idle-states = <J784S4_SERDES0_LANE0_PCIE1_LANE0>, <J784S4_SERDES0_LANE1_PCIE1_LANE1>,
-+		      <J784S4_SERDES0_LANE2_IP3_UNUSED>, <J784S4_SERDES0_LANE3_USB>,
-+		      <J784S4_SERDES1_LANE0_PCIE0_LANE0>, <J784S4_SERDES1_LANE1_PCIE0_LANE1>,
-+		      <J784S4_SERDES1_LANE2_PCIE0_LANE2>, <J784S4_SERDES1_LANE3_PCIE0_LANE3>,
-+		      <J784S4_SERDES2_LANE0_QSGMII_LANE5>, <J784S4_SERDES2_LANE1_QSGMII_LANE6>,
-+		      <J784S4_SERDES2_LANE2_QSGMII_LANE7>, <J784S4_SERDES2_LANE3_QSGMII_LANE8>;
-+};
-+
-+&serdes_wiz2 {
-+	status = "okay";
-+};
-+
-+&serdes2 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+	serdes2_qsgmii_link: phy@0 {
-+		reg = <2>;
-+		cdns,num-lanes = <1>;
-+		#phy-cells = <0>;
-+		cdns,phy-type = <PHY_TYPE_QSGMII>;
-+		resets = <&serdes_wiz2 3>;
-+	};
-+};
 -- 
-2.34.1
+Ho-Ren (Jack) Chuang
 
