@@ -1,219 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from gw2.atmark-techno.com (gw2.atmark-techno.com [35.74.137.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675A121100
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 04:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711688147; cv=fail; b=tXYcE9wiXYuJ9ZD/2CWiXsgzrFa/nXLLLf5gPNSSFHwwT06vS77D/ILnRz6jVStbknJIeFvfjau5N7HM36N93m4A+ynSp2Tk9CnqYhFi5ZICXm+TW1+StyNK9UcKpUt1ys84qrbvcba1FCmUMOqdI9uQT5notf+HzcYKtnHkGYY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711688147; c=relaxed/simple;
-	bh=Sq7L3HcSl1yXe/nTzkfJ4AgZAwGG1fwXDm3+xPlj4pg=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=fsEfc5EoflKa7xTgE6GCabui9X/1FG2X7bTFcXd0wcI6hlnsRT6hgQEPZzp5BWrPSRBpvjTFTQdfz92e6Qx2eY5SUmjmbJu8jy4eGBc5XFceGl2JTuv4vTZ5j+UK5c4shm2wtq7F93XbSASGpkcIQciS0xc598+FyxQ1JBbtNeE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jNmjYPuG; arc=fail smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929EE28EF
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 05:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.74.137.57
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711688982; cv=none; b=jlt6co9LCUNW3M+CPNPZo4gi/fMzQJAUFc+R8PJ5cofiPni3fpol4mEckY2r66EFNz6rQWErUmuAQoB3h9UYZze7MpJBTimUqvktYXXa2miIXbJ/cwDYhSstP8KVbhKgU/XWtPeLLC4Cnna1pcUm5SVzLsr5i5t8JQf3DY7DAx4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711688982; c=relaxed/simple;
+	bh=DppCwssZ4xsiZHArTL5mMdedI3W5aqxLYayWzYibPmg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rv/7bhXs+1Sjk+VvgzXQpkkBCfCJJ0mmMJ+af8VkqoS9s8eMAKXBWjfISAQrOPI+rPIO6/qbvbVc/QNczXruuOe0GpVNZ+Z1f0WlJAUZ0KzZ0Lhwo7BnREA4PIFGAI4JWtSclydnsLDtk0TXXyr+BflAgK7ujo/LogpaPTVfOws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atmark-techno.com; spf=pass smtp.mailfrom=atmark-techno.com; dkim=pass (2048-bit key) header.d=atmark-techno.com header.i=@atmark-techno.com header.b=fYCQx0m7; arc=none smtp.client-ip=35.74.137.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atmark-techno.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atmark-techno.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jNmjYPuG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711688146; x=1743224146;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Sq7L3HcSl1yXe/nTzkfJ4AgZAwGG1fwXDm3+xPlj4pg=;
-  b=jNmjYPuGdjQmzc9Y3hsEdprBY3cWmk0hiu/p2ickT41wJ37+52kZ2p4K
-   vDQkD2/aEEnnfGQjB6jPi37d4cyGuBy+tH5GlxI59s26CBtvF6iKvvJK0
-   +OmaNucJl+4FxIwvi1WHfG7ZMPADM9Zq2/iIglO1ReodvH9EgVw+rsJ9M
-   pp9YhskyPrGxxA87nBTU7au1+w0L8wzA46q9xLuJO5aj8D5SfgEGvU+q0
-   vgjalSDC8fi03PMD/OjaOpOhl7fFwrAlEkUZrudI+M8Mm8VE+SZHFW2z2
-   Gnq3I2ifoc3DnuU7SYeSgCnfL/Zy1ykFdvCUJQdcpS8QlgGj1huLAODTN
-   w==;
-X-CSE-ConnectionGUID: AAOSwKkeRBubXWrbz/KS/g==
-X-CSE-MsgGUID: Q8zqhHk1Q928QD/Dh4/knw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="7471466"
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="7471466"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 21:55:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="16904751"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 28 Mar 2024 21:55:40 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 28 Mar 2024 21:55:39 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 28 Mar 2024 21:55:39 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 28 Mar 2024 21:55:39 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 28 Mar 2024 21:55:31 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CsLCZjxTFembYzTRCm19mjLVP5QszYZt/Kh2R9vzEz4KGElT8so31rKRFlzrfYcgaW3VFsiQ3WTkPadl2k/zbQehTbyr/jx9t5LUOuL0Jydbe+s5n4dk8f66lQCb2pWp0HbRvWoU8Aqz1HNwQE98HEWA5w6euJ+EGeBWHBU+krIv9MYFetVsvy1CRsJMfhTbX7g4Y7wz8/igVukrxkj00SWH+00Iu4pqWtWMDIjERyh66fZ1UVOXWFnocMp6ZhOG8XCWOgASNz0sCcSbt/+hMuqyPctxM27QD2F8BUaBcIcw4LQ347med6lCxWmqNaLfClVZYrZZyEBGDVGhT5Qgbg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MmDFqgHCaF3uLygu4hwJqcPQP4DyrU0GvYRahsOOnBA=;
- b=RWKJYh55f7LexPBHKUMI4OYGLn6PASFkbUOIFOComXu98Nr18k3g7G0kec2AjJ+6LP2KTNXvlNXa0LFvTumA6dm4l2RSk4rGNh8RSpMP4dxzMIXXJU0bUOZ2tcugewb5Kxo2GM1SSY8chDSxO/fFiuQCr1wIn3G/1xTKTjCQ8sa6fZmFyfeb65BtG9Gko+urnqMyJeE0ZaFSXpFmJ/+vZqY8MTyLF/Tn9Q/B2XeJIvF0q5fUZneP5PsHYLKoQAyNvhDlgDXm7kuknhtyPAsc+xM8LKdOfdwxJ081degliTd7plQu+GmOETwENiwzGwoqFncQGWMXLcK/bp3qePVR6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by IA1PR11MB6419.namprd11.prod.outlook.com (2603:10b6:208:3a9::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Fri, 29 Mar
- 2024 04:55:24 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::d610:9c43:6085:9e68]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::d610:9c43:6085:9e68%7]) with mapi id 15.20.7409.031; Fri, 29 Mar 2024
- 04:55:24 +0000
-Message-ID: <91c0b375-55db-434e-aa3a-7ead0d714d40@intel.com>
-Date: Thu, 28 Mar 2024 21:55:21 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/2] x86/resctrl: Pass domain to target CPU
-To: Borislav Petkov <bp@alien8.de>
-CC: Thomas Gleixner <tglx@linutronix.de>, <x86@kernel.org>,
-	<linux-kernel@vger.kernel.org>, "Yu, Fenghua" <fenghua.yu@intel.com>, "Ingo
- Molnar" <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>, Babu Moger
-	<Babu.Moger@amd.com>, <shameerali.kolothum.thodi@huawei.com>, "D Scott
- Phillips OS" <scott@os.amperecomputing.com>, <carl@os.amperecomputing.com>,
-	<lcherian@marvell.com>, <bobo.shaobowang@huawei.com>,
-	<tan.shaopeng@fujitsu.com>, <baolin.wang@linux.alibaba.com>, Jamie Iles
-	<quic_jiles@quicinc.com>, Xin Hao <xhao@linux.alibaba.com>,
-	<peternewman@google.com>, <dfustini@baylibre.com>, <amitsinght@marvell.com>,
-	David Hildenbrand <david@redhat.com>, James Morse <james.morse@arm.com>, Tony
- Luck <tony.luck@intel.com>
-References: <ZdZPht8hY4J9uIOz@agluck-desk3>
- <20240308213846.77075-1-tony.luck@intel.com>
-Content-Language: en-US
-From: Reinette Chatre <reinette.chatre@intel.com>
-In-Reply-To: <20240308213846.77075-1-tony.luck@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR03CA0199.namprd03.prod.outlook.com
- (2603:10b6:303:b8::24) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (2048-bit key) header.d=atmark-techno.com header.i=@atmark-techno.com header.b="fYCQx0m7"
+Authentication-Results: gw2.atmark-techno.com;
+	dkim=pass (2048-bit key; unprotected) header.d=atmark-techno.com header.i=@atmark-techno.com header.a=rsa-sha256 header.s=google header.b=fYCQx0m7;
+	dkim-atps=neutral
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
+	by gw2.atmark-techno.com (Postfix) with ESMTPS id 5BA7F99F
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 14:09:33 +0900 (JST)
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-5d8bdadc79cso1352867a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 22:09:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atmark-techno.com; s=google; t=1711688972; x=1712293772; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9U5x4MU5MsogFGv+KFAc9+mPRl8v6vrTZs+bcwccjek=;
+        b=fYCQx0m7GzvmdnxUQsv0bjfcoR98NamQAHdRWCmfWSN4IjkAqXSUqfywsgwJh/uhgk
+         FCeMVKdppy0+L1jRqtKfcICEdANEIzkDEaeaCsgZJ13NDLUP8fOou+ZieLFt0ixk+EV/
+         vZ1DD2UDSQ89qBwBU7caMjLlTlaV+y/eQ5+kLye2y50LsrGn6dT1iIUUyK84DJOAbq2U
+         v3bV2rzsSwuA8vtj9kFA5sFx+ezmQUUt7M0zJVGUE9AVEihS5voSWaBpgZ+cG7R+Nonl
+         nm2Cnev0alYouTPGxSbARP2THFXxpoDdV5jq2pPoSoAsGJOXWo1+eK1lkYAAOeyHa/ii
+         LaPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711688972; x=1712293772;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9U5x4MU5MsogFGv+KFAc9+mPRl8v6vrTZs+bcwccjek=;
+        b=Scoq5vFKMp3hCrFDVljA0BnxZ4noGA+Z0a+BOFFlCbP0yLo7oj2hkkW1q3ME8nH8fV
+         WVUWuNfmoH5pI09uZO5ueMf3NyHLSGHAY64emxcU7tq8Dx3DebGBY7VvzwDiKDDm6BaR
+         elt8+cWlgBrPUUCJgbbOPCNoPm5Td7i4XeGxMhFIYjaH0LkyXrhRNy+wtVRQZ6gH7PLL
+         pyBhV45MSoZNrmFvuAk/V/9sq3iCt4pPR4MhFXT+gx/+WVQzleEx9s5x5uMYVJa3iwa0
+         zQ8U06NP/VrGJ37d6Xog4PLghRlcgVkIEHpTUJuxMrUYY8hR2WNn++nwcP4grOlh/84j
+         0Low==
+X-Forwarded-Encrypted: i=1; AJvYcCVffBsOjrfkkJf1B3KAeoxB2DQD3+KqfCfmaw/fiWT+Nl1v3lD9UtajmBaMrjUEasXsMiOpas1AnImCNaBvWbW/slGAuBHe/kjgsehs
+X-Gm-Message-State: AOJu0Yxh3b2iH+y3R6g/Sb4xCSzhLGVn8aZRNwb7W4f/KgThnGuUyzGA
+	+fTs1ikn4hzO076QV+hhnhg4RSBxH2swwp/ehVQONlAuVpIGijAZhSpoVsQyBy/6vRBpM3+UwvS
+	DpHiyWUxAf75QzNuYvpSALZlBoipXYHy69W0Dh60bwWoTKUYq+o89VXBLnQnYbLs=
+X-Received: by 2002:a17:90a:b791:b0:29d:e004:f8ce with SMTP id m17-20020a17090ab79100b0029de004f8cemr1518759pjr.6.1711688972268;
+        Thu, 28 Mar 2024 22:09:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IExYO+5uHJg+n48X3gcmpJ1EncBTwV76hj18e0OyLzjNe4emEQ/I+2H3cr8B2bBt0bB2pVpiA==
+X-Received: by 2002:a17:90a:b791:b0:29d:e004:f8ce with SMTP id m17-20020a17090ab79100b0029de004f8cemr1518742pjr.6.1711688971844;
+        Thu, 28 Mar 2024 22:09:31 -0700 (PDT)
+Received: from pc-0182.atmarktech (35.112.198.104.bc.googleusercontent.com. [104.198.112.35])
+        by smtp.gmail.com with ESMTPSA id v11-20020a17090a0c8b00b002a203bd94bfsm2354390pja.51.2024.03.28.22.09.31
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Mar 2024 22:09:31 -0700 (PDT)
+Received: from martinet by pc-0182.atmarktech with local (Exim 4.96)
+	(envelope-from <martinet@pc-zest>)
+	id 1rq4Uc-009wii-0U;
+	Fri, 29 Mar 2024 14:09:30 +0900
+Date: Fri, 29 Mar 2024 14:09:20 +0900
+From: Dominique Martinet <dominique.martinet@atmark-techno.com>
+To: mhklinux@outlook.com
+Cc: hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com,
+	konrad.wilk@oracle.com, bumyong.lee@samsung.com,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	will@kernel.org, petr@tesarici.cz, roberto.sassu@huaweicloud.com,
+	lukas@mntmn.com
+Subject: Re: [PATCH 1/1] swiotlb: Fix swiotlb_bounce() to do partial sync's
+ correctly
+Message-ID: <ZgZNAM337-UEY1DH@atmark-techno.com>
+References: <20240327034548.1959-1-mhklinux@outlook.com>
+ <ZgO3HlYWo6qXaGs8@atmark-techno.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|IA1PR11MB6419:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RKp5pWfB3Ss54dRGVNHqnmTVfJUXGgPQuco44NgPTILitTTtF6aw1KQvOUgxrG+Rb8mOjycltLz6XGCWY0W/nUoy+4H0Hip13uqWrFFCIbvfdKW9YXbOgv9QWo5vwIrv4Qjv5KE+n45X0XUlFFrogXN0LBSMuMiKYpK6jLz+B9rQlunD2Mj03QtUPEPZuXwOEYMFxFVSmZP0ZsGp3s0vFyGQwdntQXgxPl83kPOYbXqrLW1i4+aNqi7ybzShPur5ideAMLdcsnmbFp5VutfiquIsHAPYqg5gMaNX6Zk/9zhsmliaadgMxDnETWbTppTiwJ9YSam1tiKQ2kSq8sOAxRa76y4TkkOSzPeGcL5X0oK/7AvIhHAX1hiU1NPDa3kEEW+zHckPyorXozvK6Ie6RpmaXtX3OfWEHmWV7heMi4FlN6ppQkf13XwhR66X+kKQ8Tjf0Wv9YWAIQkHn+reK/BfgoA9C0+A5Y+R+mmQ4OyRcYv4yGTayFRG8dDXIzdVhaxjF1wWhq3Q4MVf5wl89Hx/w5cqlG1I2CYhzxswgcwVZzBEgAvNOxJlrD7JLvQMkMhjZ0nRiDIL5pBUwNuu2O3C9Endt5+RdDQl7BBKWSTs=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007)(7416005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZjRKbTFxaUJjOW1IcFBXYnZiTWt2Y1JrNngxSUgreTVKSCtMNEZRQkRZWUxC?=
- =?utf-8?B?UGFRUVN0QXdVSUI3MDQrdmNXVlVobnVzZy9PSmUreFJZZ1d3S0ZSOFBJNkJ0?=
- =?utf-8?B?NUU5U3ZGM2orczhBaVJLS0ZjSVBMV3FMZkZ2Wnl5b2w3OElFNG9WQTNUeXJU?=
- =?utf-8?B?U20xaGozNVZUckJVL2x1NUM0K3JnNFNhK1dSbHBxRXJvUnpqRnJ4dGMyRVhM?=
- =?utf-8?B?NE53K0ZCWWZQTnoyOGx4SkZTaGdQeFgxbGNFTjN1Y000d1NUY0FoSUJxNVI1?=
- =?utf-8?B?dUtxa1Z4VmY3czFwelg1cHJuYm1Ia0pWNVgrcFVWbS9JeHV3SEdMUlVlRUpx?=
- =?utf-8?B?akk2cjlnWUNnUzRteXBXSUJXT1VRajlpUDM5eFFWRDFVSzdrYUFObitEcXRw?=
- =?utf-8?B?VERXangrOUtaMk9sQWhGYlhlcnoyc21tcFlXQjl6ajk1U0RmS3BBckozUmVP?=
- =?utf-8?B?dGkvR3I4Ykcyc2VGTDZyS3lpdHUrc0p3UGRPeE9zT0xURHR5MW9CQkhsWVlK?=
- =?utf-8?B?R3hvTzVPT0Qyc25FVUwwZ1dhRmVSUGkrZEhWcVhEaGRQMzI1cEF1MjNNQXBM?=
- =?utf-8?B?eGFOYys5UHliVi91Uys3WFVuMGoxbnRuUnFzTU9hU0hDbUhocmtQdmx5aWp1?=
- =?utf-8?B?R1dDd0J0NFM4T0o1YW5oLzg0TDZLUjBTdVBTSUxaQ21WZUZrV2R5YkczZjc1?=
- =?utf-8?B?RUNpV2VobXF6VS9YT1N6c25BR0d4aFFqL1JBS2JPSHFtVW1zVEJadEdpU21T?=
- =?utf-8?B?WWZxOWhqbWJTQUUycHlEbHRHZWkrbFRQZFIya3RVaGhDb2hwREVBWlhwNVRS?=
- =?utf-8?B?aXBHSEp2eU9kaGxwMkpnN3NkZUNoR0NlU05BZEdVQ1gyY3RDb1ZZM0VaVmVt?=
- =?utf-8?B?WmNmZHRQQmwzdkhJZUhzeVJvRlZva2ZnNWMxR0JaWTFaNHRwR3BHT0EzaUJp?=
- =?utf-8?B?NERRREdyQ2MzMWxiMEZNR3ZQYStFamhyVWZ6dVZMVERuVlhTWC9WWnhJZCtC?=
- =?utf-8?B?TURQVDlvY1ZaQkJFZXlsb295U2NjekF0b3d2YWE4U0pPWVR5Rkptc3JMRy9W?=
- =?utf-8?B?RGdsTCtmRnRPTy9DV3VKdG1abGRiSzBRN2NJM1FPejBqQ0pTZmxhRCtJUXcy?=
- =?utf-8?B?Sjk3dnMzYXJhTzNDMlM3MzFXU25paG1PdDJIenNXY0x3L2FpQ0tteHZaUmIv?=
- =?utf-8?B?OU1nS01qbzFiVU5SMmZ3V3Y1czNmMFNjY25LMTBPdE9xWnk4NGVVcWxxcXF4?=
- =?utf-8?B?RGlDTWRUNGF0bjVxNUxKS2hHZlRzZHNPd05WU3ZDRk1hK1VkbFhpNVRYMjB3?=
- =?utf-8?B?NmNoTWlBSHE3ZVUwOVk5am0vbVZnaTM4L1ZWbVkvSDlhSlh6ckdoTXNwTXZ0?=
- =?utf-8?B?MHA5eVFxUlUyVGVEeTNDTWN6Skt3RHl2bFovVCtYV3J3R1FwT01PbGdhaW1F?=
- =?utf-8?B?b1U0RW9YenhyMVNNVUZDdkhtbGlzbXJZcnpIK1F1NmFPWlRadUFwMVVtcWwy?=
- =?utf-8?B?U3FkWEwrWldaUTd3QzNrNTdQVy9hdXhucWpDZlEwaytrS0ZFZzhUd1dFRE1V?=
- =?utf-8?B?cGVieEZDME1tTkZsTlEwZGtYLzVJUFJyZkxOMEhUeFNrUDB2VU9ZSExCTXZy?=
- =?utf-8?B?Sk1YT1FKNDBGOVlvNTR6clZiZ0xnSjUxQnRRUmdERXNTZnh3RytIZGpIQ2hN?=
- =?utf-8?B?NEowWlFKY20wQmZ6SWNIbVptd1YvVkVCWkxreG1vSmlQcFV3THVTSkZwOFEw?=
- =?utf-8?B?TXBKWDIvVEhJVVRQRjhWU0hqS1V0Y1Ntbi9OcEZKUXZ4Z004b3dmRWFSSkV2?=
- =?utf-8?B?ellZVDdJZGlack9Ud0NHMkVtb0xRM2hyU2ZGZXZpYTI5Zm5yWENRNUJuQnhL?=
- =?utf-8?B?QnlrWUwvdTg1eGRVKzJGMlZsTnhUMzAwejhxTzZYTllCbU5QSVJmcVpCOW9F?=
- =?utf-8?B?SFpmTVlxTVdBYWpnUlh6S2w5YkN3ekhnR24ySmlPMHZhbTN4MTJGWjFpMnll?=
- =?utf-8?B?NFlrdEdWd2JyU2RjVXpnb1BVQWlsMGpyYXY4dSsvMkRwSHdTMjBzK05qTE8v?=
- =?utf-8?B?c0RseUFxZFFOcHU3Z1JWN3pOelQ3QkhmODlrYlU2VWE3K1lLRG1kMTZocUZ4?=
- =?utf-8?B?d0lmcndQMXNWMWhvSzZrQWNqSDl5eDl6bSsvckVFbFp4S1FiaU1CcmpVaXVO?=
- =?utf-8?B?L3c9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 136e0b86-4e59-4e7e-ca39-08dc4fac7205
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2024 04:55:24.7272
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KUh6Gt8geNTzvtpSlDg6GvrpsL015ZSXKGNvlzRdS5QjF5Y40ELXbgZeZYIgOlm/ntjrncP9dNqW+V+h3uSNWlL3GKJbk+QNwY06TDyEtUo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6419
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZgO3HlYWo6qXaGs8@atmark-techno.com>
 
-Hi Boris,
+Dominique Martinet wrote on Wed, Mar 27, 2024 at 03:05:18PM +0900:
+> Unfortunately that was ages ago so I don't really remember exactly on
+> which device that was reproduced.. Given the Cc I'm sure Lukas had hit
+> it on the MNT reform (i.MX8MQ), but I did say I tested it so I probably
+> could reproduce on my i.MX8MP?
+> I'll try to give a try at reproducing the old bug, and if I do test your
+> fix over next week.
 
-Could you please consider this series for inclusion?
+grmbl, sorry I cannot reproduce the problem on devices I have readily
+accessible, and don't have time to dig out my reform to test there in
+the forseeable future, so cannot confirm if that also fixes the problem
+we reported two years ago.
+However I had misunderstood your patch, I thought you were also
+reverting commit 5f89468e2f06 ("swiotlb: manipulate orig_addr when
+tlb_addr has offset") but you're keeping it and just making it signed --
+this should cause no problem for the use case I was concerned about as
+it fell within the bounds I had defined, so this is basically a no-op
+patch for my usecase and I don't expect this particular failure to pop
+back up here.
 
-Thank you very much.
 
-Reinette
+Code-wise, I agree the checks I added in commit 868c9ddc182b ("swiotlb:
+add overflow checks to swiotlb_bounce") are too strict - I failed to
+consider the device minimum alignment part of swiotlb_align_offset, and
+thinking this through this can get weird.
+... And now I'm looking again even with a big minimum alignment it's
+also too strict, so, right, let's work through an example.
 
-On 3/8/2024 1:38 PM, Tony Luck wrote:
-> reset_all_ctrls() and resctrl_arch_update_domains() use on_each_cpu_mask()
-> to call rdt_ctrl_update() on potentially one CPU from each domain.
-> 
-> But this means rdt_ctrl_update() needs to figure out which domain to
-> apply changes to. Doing so requires a search of all domains in a resource,
-> which can only be done safely if cpus_lock is held. Both callers do hold
-> this lock, but there isn't a way for a function called on another CPU
-> via IPI to verify this.
-> 
-> Commit c0d848fcb09d ("x86/resctrl: Remove lockdep annotation that triggers
-> false positive") removed the incorrect assertions.
-> 
-> Add the target domain to the msr_param structure and
-> call rdt_ctrl_update() for each domain separately using
-> smp_call_function_single(). This means that rdt_ctrl_update() doesn't
-> need to search for the domain and get_domain_from_cpu() can safely assert
-> that the cpus_lock is held since the remaining callers do not use IPI.
-> 
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
-> 
-> ---
-> Changes since V4: Link: https://lore.kernel.org/all/20240228193717.8170-1-tony.luck@intel.com/
-> 
-> Reinette: Only assign "cpu" once in resctrl_arch_update_domains() [but
-> see change from James below]
-> 
-> James: Use smp_call_function_any() instead of cpumask_any() +
-> smp_call_function_single() to avoid unnecessary IPI in both
-> resctrl_arch_update_domains() and reset_all_ctrls(). This
-> eliminates a need for the "cpu" local variable.
-> 
-> Tony Luck (2):
->   x86/resctrl: Pass domain to target CPU
->   x86/resctrl: Simplify call convention for MSR update functions
-> 
->  arch/x86/kernel/cpu/resctrl/internal.h    |  5 ++-
->  arch/x86/kernel/cpu/resctrl/core.c        | 55 +++++++++--------------
->  arch/x86/kernel/cpu/resctrl/ctrlmondata.c | 40 ++++-------------
->  arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 12 +----
->  4 files changed, 34 insertions(+), 78 deletions(-)
-> 
-> 
-> base-commit: c0d848fcb09d80a5f48b99f85e448185125ef59f
+
+From my understanding of how orig_addr is computed, in the multi-block
+case we have something like this:
+
+(+ represent device's minimum alignment, bigger blocks with | are
+IO_TLB_SIZE blocks)
+
+         10        20        30        40        50        60
+01234567890123456789012345678901234567890123456789012345678901234...
+|---+---+---+-block1+---+---+---|---+---+---+-block2+---+---+---|...
+       ^                               ^                          
+       mem->slots[n].orig_addr         mem->slots[n+1].orig_addr
+       (=7)                            (=32+7=39)
+
+(memo of the code with your patch:
+  index = (tlb_addr - mem->start) >> IO_TLB_SHIFT;
+  orig_addr = mem->slots[index].orig_addr;
+  swiotlb_align_offset(dev, orig_addr) = orig_addr & dev min align mask & (IO_TLB_SIZE-1)
+  tlb_offset = (tlb_addr & (IO_TLB_SIZE - 1)) - swiotlb_align_offset(dev, orig_addr);
+  orig_addr += tlb_offset;
+  alloc_size -= tlb_offset;
+  vaddr = mem->vaddr + tlb_addr - mem->start
+)
+
+So for this example we have IO_TLB_SIZE=32, dev min alignment=4,
+orig_addr's align value would be 7%4=3.
+Given say tlb_addr at 33, we'd find slot n, and compute
+tlb_offset = 1 - 3 = -2
+
+... And then I just don't follow anymore?
+
+Computing the rest mechanically, for the example's sake let's say n=0
+so mem->start=7, index=0, and also set size to 4 bytes, vaddr to 0x1000.
+
+vaddr = 0x1000 + 33 - 7 = 0x1000 + 26
+orig_addr = 7 + -2 = 5
+size = 4 - -2 = 6
+
+then we'd proceed to memcpy either (vaddr, p2v(orig_addr), size) or the
+other way around, but this cannot be right:
+ - size is bigger than what was requested, I fail to see how that can be
+allowed. I'd understand a smaller size assuming swiotlb_bounce gets
+called for each interval, but not a bigger size.
+ - orig_addr is nowhere near 33.
+
+
+I thought this didn't make sense because of the minimum device
+alignment, but even with device alignment >= io tlb's with the very same
+example we would get 
+tld_offset = 1 - 7 = -6
+now that one could make sense if we had used the following slot e.g.
+orig_addr being slot[1].orig_addr and we'd get back to 31, but that's
+not the case, and the size calculation is still off.
+
+
+So, long story short it took me half a day to get back into this code
+and the only thing I understand about it is that I don't understand it.
+
+I'm sure it works most of the case because everything is nicely aligned
+(since nobody complained about my checks before, and if there's no
+warning with these the code works), but I'd require some convincing to
+give a reviewed-by tag to this patch.
+
+Thanks for working on this though, I'll be happy to be pointed out at
+flaws in my logic or to look at another attempt...!!
+-- 
+Dominique
