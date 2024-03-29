@@ -1,120 +1,136 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808AB111AA;
-	Fri, 29 Mar 2024 07:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1B8405C6
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 07:38:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711697893; cv=none; b=V5NWl8edMg/DV4k7TUbtF8k08dMOug8a9rUdalFD8LddJFhgnhTDCyaL6KdkoNwRZ1/mJWVcTk2PbX4jiD6XgMxPHkVaJiU6B/sv81K6yFLQe3+qzDPki5pB1lLrkn+H+m+JpE7GTLFuuhmvyrw5L3XMk8NvgzQ0W7irNwfo/2M=
+	t=1711697894; cv=none; b=iryFtbKJKZ36xbuee027JopvXRCKhSsNP+rGvk5/aQew+bFx3BvkdfStYUHFDJOAD2sOkEDdx6JqH/c7WrZ8jxkB3rtGCZJ6kZ1mj8fsTMzdsczqq2QudDdmffgPFgVS9ctct70haEyItNvQTy2cTBMGpS7nSXQ0iI/Nlrxosq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711697893; c=relaxed/simple;
-	bh=opYRELNRgzeZW7E1JHSDPHg/xw4e1gMY1XsmC5fZYNE=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XL5bioR9FOoSBLvZsk/PQ3QTamSLZtkpzYUwIitmxwkFwhItASrz02LXxJPAgyvzV5hbPD675j2B5HFty2A6LoxC7sguO932Uq4OZwqU06Lh/ODOlr4KrBDlg0fkMz3Zrl/fTgyzg4N+KfqR1VDDWMtvxje6qO/siVmXWydfsk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ezeeq575; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=9ZZ1kCM3; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1711697894; c=relaxed/simple;
+	bh=FUlOMVV+kz2YMNGT63W3yd2gzTWaCE9vrvtG+jeCVEA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=A3GHlXmo81KYtOa0kFar3effNCeRTVnXyz7T03Xt0AUlbxead8xgGGVsCVMPDzHvyK76PSd95kvoqNAk73w7AmxJr6+zd43SBke5IhnmbxFnXirDdG8MmB8wV4A87sHprXiqTR02+SnTXf5pWtJHFDnJWolDFznRFMjkg2v1KsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MKCxx4XL; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ezeeq575";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9ZZ1kCM3"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 05FA733D86;
-	Fri, 29 Mar 2024 07:38:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1711697889; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qr/NlwU4Fj7vdoto26TFYwaxntfyHuHSAx6yQeeZ3q0=;
-	b=ezeeq575IMEZ6eYt6/e9VyQIvmrAn8iS8VLRUgA33MmZW+XmtII98nzwkLzzMJc7S92rMe
-	VaW6BUIY90WNw77mWVQSSNq3IW5L9etnMLjCRLJMA6vAUQqZ857/AJxxM6gc9PjF9+UnrK
-	baMTGPlKKWgDtutoLbKRmlplDe1QoKY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1711697889;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qr/NlwU4Fj7vdoto26TFYwaxntfyHuHSAx6yQeeZ3q0=;
-	b=9ZZ1kCM3/Zop7VbM3rcDJMXmFX2tPKOIHVoXFCm9Bogl2kFypo1WSjS2J+trs6yh4LzcFg
-	hE5eIcWemm9fdRBA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id AC93113A9F;
-	Fri, 29 Mar 2024 07:38:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id 4WqrKOBvBmaEcwAAn2gu4w
-	(envelope-from <tiwai@suse.de>); Fri, 29 Mar 2024 07:38:08 +0000
-Date: Fri, 29 Mar 2024 08:38:11 +0100
-Message-ID: <87o7ax8p3w.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Gergo Koteles <soyer@irl.hu>
-Cc: Shenghao Ding <shenghao-ding@ti.com>,
-	Kevin Lu <kevin-lu@ti.com>,
-	Baojun Xu <baojun.xu@ti.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	alsa-devel@alsa-project.org,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] ASoC: tas2781: mark dvc_tlv with __maybe_unused
-In-Reply-To: <0e461545a2a6e9b6152985143e50526322e5f76b.1711665731.git.soyer@irl.hu>
-References: <0e461545a2a6e9b6152985143e50526322e5f76b.1711665731.git.soyer@irl.hu>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MKCxx4XL"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1e0bec01232so15430285ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 00:38:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711697892; x=1712302692; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UH6LjJfXkA91u7B+LxuK1VjYI0jSAUD0s0KZGUYpa9s=;
+        b=MKCxx4XLK8W5kJuZ7i2UBXqUzb3sk6xRwzuhZ8kgqZCGJXyaajPQiTYMewkAgYD+zT
+         EIpeDyGsR5FS8n8IHFgyRpNqq0SKfj3hjuNETvFm0V2LJay2cC7X9j4abuANzJF9yl07
+         lgvTeY3nBFtJZFQQVsvAqYwhmXoEC/qxNu/zZsy+QSgNZeqFwicbusx48iZQ8hnj1Lh4
+         tSZsnDXySGj3ae7tQry06vNP79y0xSdEV/VFfgIirnf5Dys13BC4ozKoPOD8wlkitBUk
+         bg6heR09KM9gvCN0pL24KpeWpQOD54n/IUOHSKy3zT/3sPHbBMVmeo+wwQDCU0h+eBR6
+         qMcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711697892; x=1712302692;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UH6LjJfXkA91u7B+LxuK1VjYI0jSAUD0s0KZGUYpa9s=;
+        b=ZHdS6F6l9NUeL+IvTsqarXlmjQ/AQwkLu2XMpM58yTvqZVd1N8dKcxCeZQUTGJb07W
+         KR/fDoz1lUb0GdZ7vYMAzWNhcjvuy6dwqOsRSk+drYjr5HFV5s4RFE/iEim3/zdaJIbA
+         KIJWub+ZWo/Z2CtljVDgN6Ow5Vk/22TPwhCU3ggjAfW1X5NFgQ6x1KkIjc9pqBOCp9ue
+         qsCkhQ6dPUHKyhol382kQrLIHO0vl5Y6tclPOcndIR48RKkJxWNpZ3SSn4TUEVKv3bzw
+         zpPULOlavDzvsYT7ksYsBqmhBp1aVcXVUkGSuqaUOZ9mxe4OuXvdQQuQeKzzP/HR9ScR
+         y8Ww==
+X-Gm-Message-State: AOJu0YwHH2utqJDplh3leJWLnJxdVUABdYv/IgxrSSkTMjA4Yse6cs8/
+	NvfXwTMpUQsggXG5O47Zf435EfDmObw9yZp6DSItucw72Dt1Ctep44uCDEwWCpo=
+X-Google-Smtp-Source: AGHT+IEHulJckipKHW1jh4cvk4Vt+Pdv4pdpJpi4h6lIXpXVb/IaR9agZUhqfR979Q95p2x2DSl7ug==
+X-Received: by 2002:a17:902:f790:b0:1e0:93a:e681 with SMTP id q16-20020a170902f79000b001e0093ae681mr1833427pln.58.1711697892361;
+        Fri, 29 Mar 2024 00:38:12 -0700 (PDT)
+Received: from localhost.localdomain ([2407:7000:8942:5500:aaa1:59ff:fe57:eb97])
+        by smtp.gmail.com with ESMTPSA id h6-20020a170902f7c600b001e0b60dfe1bsm2844821plw.197.2024.03.29.00.38.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Mar 2024 00:38:12 -0700 (PDT)
+From: Barry Song <21cnbao@gmail.com>
+To: akpm@linux-foundation.org,
+	linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	Barry Song <v-songbaohua@oppo.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	David Hildenbrand <david@redhat.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	David Rientjes <rientjes@google.com>,
+	"Huang, Ying" <ying.huang@intel.com>,
+	Hugh Dickins <hughd@google.com>,
+	Itaru Kitayama <itaru.kitayama@gmail.com>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Yang Shi <shy828301@gmail.com>,
+	Yin Fengwei <fengwei.yin@intel.com>,
+	Yu Zhao <yuzhao@google.com>,
+	Zi Yan <ziy@nvidia.com>
+Subject: [PATCH] mm: alloc_anon_folio: avoid doing vma_thp_gfp_mask in fallback cases
+Date: Fri, 29 Mar 2024 20:37:50 +1300
+Message-Id: <20240329073750.20012-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Score: -0.49
-X-Spamd-Result: default: False [-0.49 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_SEVEN(0.00)[10];
-	 MID_CONTAINS_FROM(1.00)[];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.19)[70.84%]
-X-Spam-Level: 
-X-Spam-Flag: NO
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 28 Mar 2024 23:47:37 +0100,
-Gergo Koteles wrote:
-> 
-> Since we put dvc_tlv static variable to a header file it's copied to
-> each module that includes the header. But not all of them are actually
-> used it.
-> 
-> Fix this W=1 build warning:
-> 
-> include/sound/tas2781-tlv.h:18:35: warning: 'dvc_tlv' defined but not
-> used [-Wunused-const-variable=]
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202403290354.v0StnRpc-lkp@intel.com/
-> Fixes: ae065d0ce9e3 ("ALSA: hda/tas2781: remove digital gain kcontrol")
-> Signed-off-by: Gergo Koteles <soyer@irl.hu>
+From: Barry Song <v-songbaohua@oppo.com>
 
-Thanks, applied now.
+Fallback rates surpassing 90% have been observed on phones utilizing 64KiB
+CONT-PTE mTHP. In these scenarios, when one out of every 16 PTEs fails
+to allocate large folios, the remaining 15 PTEs fallback. Consequently,
+invoking vma_thp_gfp_mask seems redundant in such cases. Furthermore,
+abstaining from its use can also contribute to improved code readability.
 
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Alistair Popple <apopple@nvidia.com>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: "Huang, Ying" <ying.huang@intel.com>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Itaru Kitayama <itaru.kitayama@gmail.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Yang Shi <shy828301@gmail.com>
+Cc: Yin Fengwei <fengwei.yin@intel.com>
+Cc: Yu Zhao <yuzhao@google.com>
+Cc: Zi Yan <ziy@nvidia.com>
+Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+---
+ mm/memory.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Takashi
+diff --git a/mm/memory.c b/mm/memory.c
+index c9c1031c2ecb..010e7bb20d2b 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4353,6 +4353,9 @@ static struct folio *alloc_anon_folio(struct vm_fault *vmf)
+ 
+ 	pte_unmap(pte);
+ 
++	if (!orders)
++		goto fallback;
++
+ 	/* Try allocating the highest of the remaining orders. */
+ 	gfp = vma_thp_gfp_mask(vma);
+ 	while (orders) {
+-- 
+2.34.1
+
