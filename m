@@ -1,110 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C08135A50;
-	Fri, 29 Mar 2024 12:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail-177132.yeah.net (mail-177132.yeah.net [123.58.177.132])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CD2113A3E7;
+	Fri, 29 Mar 2024 12:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711715339; cv=none; b=fEHSTY3xKq/pXHhrQKo/oVgiLgCDymmVJ9ttTy84zY5SpF/HI/zacF/8DsqFWYNCGPWJZG78LFM4CAMMGh2+aMH5xiVilBVewJmFtyS7T1UGQSIuE6Nj9DuH51WO91LjbHDlDxRjwhsNiZPvHxxzhwMCxX8BBT1+COY3fPLKASo=
+	t=1711715340; cv=none; b=FFbzmp+pPyTOKEF7mR4tpNuuDO8Ax1GmbgJnBXsZ/SfIbH4UkrgvocWMXEdYRueZdit+jUsy6FEZiJg2SUYeRkTSRkKWazJ329vihhRV4kRVzqcdGa0p8YxJiG2JqzLVg4F9r+Rz5gHVNlehmZ8NBmtDnX2K0bdaVV7LqEJ7D6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711715339; c=relaxed/simple;
-	bh=2blYHZzTgc/Bt86ve41KFu0JQMEdKOXO3SMGTZkGYg8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B24HromVRlf1/W7ndpZshPiFpvzLDpaO62ivnpFoOCwYiu8yoy+77lOKY2LS+OMHnyr+2bgd7XyuUu89LHDxPt9w8sqqDlkEHxih5sC1yVoPWgbvrZicyx07YP4pvF1VH2c2K2I3tOY5Gc5CFC5XBMrbZVqM7kr3DA7akFfTuSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YqbPdho2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711715340; c=relaxed/simple;
+	bh=764c3pjO6u5CEwXzE5Ddk/WTGKPMneIjFGs1pBnqEVI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FtB3g/JDmYtx0ksyjTRa4UKgIew5DKeUAzKbFAwh6OPs8Aj84Juc7FlXtWCt5YwmIJpAUiQRQZ4xnH/wU1T4O9wbAVnNb/SUFNx9G9UMcsCRwzi3z6lH8ajLeFFlJVJLj23W42oy8hYFs8SD6hXrwNkoo4qvp51WlaNNoUzybgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=A6JWQORY; arc=none smtp.client-ip=123.58.177.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YqbPdho2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99188C433C7;
-	Fri, 29 Mar 2024 12:28:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711715339;
-	bh=2blYHZzTgc/Bt86ve41KFu0JQMEdKOXO3SMGTZkGYg8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YqbPdho2P8BTGlG8b+CDlKQDPldse6c/L583JImTyRD7NafIBBoklJAiBWWdcX4o5
-	 Fd6przGtyLFALm0v1hK5wjqOr8W2Z1TRgMTD42YroC5xwVMBQ2YwNP3PHjg20+Ab+e
-	 cCwpBzLW718KK282VHDNUSFzt0QW1K919Ijlbi5KK+sW4USEcfHks6A+ZYIk+Tan0E
-	 NS2Wh2dcDny/QAK5wT/HlDnAGFdYwXn8MhiYhlIslmulYmFNaRPhh/RDnlWPBCJ03R
-	 M+xH0pC5jqTU4Fwz+9mAf1PndSdCUlsRG7ZLVW8+mkSgb7MPPIogVVS53pBGkdIhpd
-	 mH7CTachJ8z/g==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Takashi Iwai <tiwai@suse.de>,
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Sasha Levin <sashal@kernel.org>,
-	kvalo@kernel.org,
-	gregory.greenman@intel.com,
-	mukesh.sisodiya@intel.com,
-	linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.8 57/68] wifi: iwlwifi: Add missing MODULE_FIRMWARE() for *.pnvm
-Date: Fri, 29 Mar 2024 08:25:53 -0400
-Message-ID: <20240329122652.3082296-57-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240329122652.3082296-1-sashal@kernel.org>
-References: <20240329122652.3082296-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="A6JWQORY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=LGyBgMV35yeeHHBEgeXzXGS0G5EIZCLqefBgjneqAWo=;
+	b=A6JWQORY4YFGFIHy0WRDX4l8vTe1JOogRDHRkDWgOCnDR8y6QWGLvIadIP+i3q
+	ptuJRgXdOB2KqYThCcXIWl1EosjQdxZMvXaOSoTb9I9mDT/D37TtQJwhBlLvIsLT
+	M8ijXCsi2q5OlXuZoyjWQYMpGYDOno9avUW7n+z3e6lmA=
+Received: from dragon (unknown [183.213.196.225])
+	by smtp2 (Coremail) with SMTP id C1UQrADnTxnOswZmO0ZqAg--.19469S3;
+	Fri, 29 Mar 2024 20:27:59 +0800 (CST)
+Date: Fri, 29 Mar 2024 20:27:58 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] arm64: dts: imx8dxl: update cm40 irq number
+ informaiton
+Message-ID: <ZgazzrWidHHn6eg4@dragon>
+References: <20240305-m4_lpuart-v3-0-592463ef1d22@nxp.com>
+ <20240305-m4_lpuart-v3-3-592463ef1d22@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.8.2
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240305-m4_lpuart-v3-3-592463ef1d22@nxp.com>
+X-CM-TRANSID:C1UQrADnTxnOswZmO0ZqAg--.19469S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZF43Aw4xCr47GF1rCFy5XFb_yoWkXFgEy3
+	WxWw15Ja4rAFZYyas5Krs5XryUK3yxGr95Xw1kWF4DWa4vvF909Fs7Jan5Jay3WFWjkryD
+	Ca1rXr48A34agjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU0I38UUUUUU==
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiBRGwZVsVCawBUQAAs6
 
-From: Takashi Iwai <tiwai@suse.de>
+On Tue, Mar 05, 2024 at 10:54:57AM -0500, Frank Li wrote:
+> Update cm40 irq number for imx8dxl chip.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-[ Upstream commit 4223675d2b5912060a85e48fd8fee51207e00957 ]
+s/informaiton/information in subject.
 
-A few models require *.pnvm files while we don't declare them via
-MODULE_FIRMWARE().  This resulted in the breakage of WiFi on the
-system that relies on the information from modinfo (e.g. openSUSE
-installer image).
+Shawn
 
-This patch adds those missing MODULE_FIRMWARE() entries for *.pnvm
-files.
-
-type=feature
-ticket=none
-
-Link: https://bugzilla.opensuse.org/show_bug.cgi?id=1207553
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Link: https://msgid.link/20240228163837.4320-1-tiwai@suse.de
-[move to appropriate files]
-Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/intel/iwlwifi/cfg/ax210.c | 6 ++++++
- drivers/net/wireless/intel/iwlwifi/cfg/bz.c    | 2 ++
- 2 files changed, 8 insertions(+)
-
-diff --git a/drivers/net/wireless/intel/iwlwifi/cfg/ax210.c b/drivers/net/wireless/intel/iwlwifi/cfg/ax210.c
-index 134635c70ce85..73cbb120a49b4 100644
---- a/drivers/net/wireless/intel/iwlwifi/cfg/ax210.c
-+++ b/drivers/net/wireless/intel/iwlwifi/cfg/ax210.c
-@@ -299,3 +299,9 @@ MODULE_FIRMWARE(IWL_MA_B_HR_B_FW_MODULE_FIRMWARE(IWL_AX210_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_MA_B_GF_A_FW_MODULE_FIRMWARE(IWL_AX210_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_MA_B_GF4_A_FW_MODULE_FIRMWARE(IWL_AX210_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_MA_B_MR_A_FW_MODULE_FIRMWARE(IWL_AX210_UCODE_API_MAX));
-+
-+MODULE_FIRMWARE("iwlwifi-so-a0-gf-a0.pnvm");
-+MODULE_FIRMWARE("iwlwifi-so-a0-gf4-a0.pnvm");
-+MODULE_FIRMWARE("iwlwifi-ty-a0-gf-a0.pnvm");
-+MODULE_FIRMWARE("iwlwifi-ma-b0-gf-a0.pnvm");
-+MODULE_FIRMWARE("iwlwifi-ma-b0-gf4-a0.pnvm");
-diff --git a/drivers/net/wireless/intel/iwlwifi/cfg/bz.c b/drivers/net/wireless/intel/iwlwifi/cfg/bz.c
-index 82da957adcf6e..1b6249561cd58 100644
---- a/drivers/net/wireless/intel/iwlwifi/cfg/bz.c
-+++ b/drivers/net/wireless/intel/iwlwifi/cfg/bz.c
-@@ -179,3 +179,5 @@ MODULE_FIRMWARE(IWL_BZ_A_FM_C_MODULE_FIRMWARE(IWL_BZ_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_BZ_A_FM4_B_MODULE_FIRMWARE(IWL_BZ_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_GL_B_FM_B_MODULE_FIRMWARE(IWL_BZ_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_GL_C_FM_C_MODULE_FIRMWARE(IWL_BZ_UCODE_API_MAX));
-+
-+MODULE_FIRMWARE("iwlwifi-gl-c0-fm-c0.pnvm");
--- 
-2.43.0
+> ---
+>  arch/arm64/boot/dts/freescale/imx8dxl.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8dxl.dtsi b/arch/arm64/boot/dts/freescale/imx8dxl.dtsi
+> index 9d49c75a26222..b9d137d69f5a7 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8dxl.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8dxl.dtsi
+> @@ -243,3 +243,14 @@ xtal24m: clock-xtal24m {
+>  #include "imx8dxl-ss-conn.dtsi"
+>  #include "imx8dxl-ss-lsio.dtsi"
+>  #include "imx8dxl-ss-ddr.dtsi"
+> +
+> +&cm40_intmux {
+> +	interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+> +};
+> 
+> -- 
+> 2.34.1
+> 
 
