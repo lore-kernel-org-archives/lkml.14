@@ -1,102 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E16922093;
-	Fri, 29 Mar 2024 09:39:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74AD92D622
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 09:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711705170; cv=none; b=CrybszGNuGB8nbSMBDVQ5RCMj0SDBRWiiXe89AnPYuvMY2ife+jSpkjcMFT9J5Xo09Lw0x6MrM2ByoBs1qWrey6Fb2HyvFt0lqy4HtKbY3SAMF7uMESl7iL78w+3EPNnNa+PpO/KBfr3OAtzvAFiZcn20Aa58jxqo4WcvdT1KYA=
+	t=1711705230; cv=none; b=uAn2YXmT0DbmOUvOGEQj/pw+4HUgeVWcUHaK4WmO/NjXqEjn4F6wD7pj5bshU2rd6vLCxZrXHsGrOjDUA4WX2wIc/oWG8UNTgVmDeApG+GVJgaiDIETERDsDI9XBPL3g7+luyMZ5+6v5Zr6AOUxk0GsotzvjIvO00ukqRSq5W7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711705170; c=relaxed/simple;
-	bh=Mm4Dxsw/XnK0vryR0/b2qb6rSQjEXbXIgtBX3y9Pv8w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FmQAW5QYmXT3DG9vBFytNXlqrr04muUr2W930oGuk9cKVKxQ/VMYAQHtthAYI8VT8efK6NZJN4rN0HJ7uDKF7vp0HXuquP2iCE4qJtyHNwseDMnBMioJeN/TUG5xHuWfnIpjCFPcU6g4LerL0aUWFpPEhiy60ppQDSdUy3xA1gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gHj38MRq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711705230; c=relaxed/simple;
+	bh=IlTVpUHVnbFvNddzhPvo8GZp772CDt/oDefqMRPIkU4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qrk4ICm8IWOsjtg4XpbBir5fHpub7tIsNc/2ZAS9E81nVzIjcMXJKGpQOhPCH03iU8Xf/0MGXu10KBNnzW59GljnPu3BX6YyEU1UqYC//B5JeK9vX98ee3Sf2cyJDGjjqut7nQGCqRezywk8AkBo0muVDtX/gjVj+E/yD8PvIFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linumiz.com; spf=pass smtp.mailfrom=linumiz.com; dkim=pass (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b=eULRZUXM; arc=none smtp.client-ip=35.89.44.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linumiz.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linumiz.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gHj38MRq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37E6CC433F1;
-	Fri, 29 Mar 2024 09:39:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1711705169;
-	bh=Mm4Dxsw/XnK0vryR0/b2qb6rSQjEXbXIgtBX3y9Pv8w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gHj38MRqOFrlrs/UQEVC1HqBIFcQZRYGOVE+Pn8dnmkAHeNzuUIN05iVFRqaxqsEs
-	 l9gKszHqzlim1EGWBE8MQM5PIEOK4Fc7ha12O5Iz3ltYTbWAE6gc/8DB2j+1oRGE+Z
-	 k//RKUPiaAix+xzEN7+mN1+4Z6j9xK4sWhXLYg8I=
-Date: Fri, 29 Mar 2024 10:39:21 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Gong Ruiqi <gongruiqi1@huawei.com>
-Cc: Jiri Slaby <jirislaby@kernel.org>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Jon Ringle <jringle@gridpoint.com>, linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wang Weiyang <wangweiyang2@huawei.com>, stable@vger.kernel.org
-Subject: Re: [PATCH stable 5.10] serial: sc16is7xx: convert from _raw_ to
- _noinc_ regmap functions for FIFO
-Message-ID: <2024032926-wielder-recreate-be4a@gregkh>
-References: <20240318025259.1412353-1-gongruiqi1@huawei.com>
- <07a3c30d-5a81-4b99-8090-38753b650432@huawei.com>
+	dkim=pass (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b="eULRZUXM"
+Received: from eig-obgw-5005a.ext.cloudfilter.net ([10.0.29.234])
+	by cmsmtp with ESMTPS
+	id pglCrcLYkPM1hq8ijrD9AO; Fri, 29 Mar 2024 09:40:22 +0000
+Received: from md-in-79.webhostbox.net ([43.225.55.182])
+	by cmsmtp with ESMTPS
+	id q8igr0U7IYakKq8ihr3wQm; Fri, 29 Mar 2024 09:40:20 +0000
+X-Authority-Analysis: v=2.4 cv=a4T79lSF c=1 sm=1 tr=0 ts=66068c84
+ a=LfuyaZh/8e9VOkaVZk0aRw==:117 a=kofhyyBXuK/oEhdxNjf66Q==:17
+ a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=oz0wMknONp8A:10 a=vU9dKmh3AAAA:8
+ a=CkiI2OoxxAuuNGj3sd8A:9 a=QEXdDO2ut3YA:10 a=rsP06fVo5MYu2ilr0aT5:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=linumiz.com
+	; s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=kULNzBIMUoeRMVOdp6S7pdnsbj6mCT91q7TkSpxtW7A=; b=eULRZUXMIiGeI5Ei5c3ID1tga0
+	JNMrbsAGbwKaegMaZQCvwmDytzpJ1DomZq5QU/WMFbAzqVop2rSHr06kVigqgv3b270TuK8F0Zjhf
+	Dhxcp67b4qt3rUqACq71Gt4gkeBO4Hz/JH1L6HSnU0+quXXQ5NuCFtDxhaG6GX6RA6OxcCJ7ryCQm
+	Va7yEmRjy889FMWcNImUjFyYbRmmJMo7ZjBo3n/vi05a6RzTn3coOUL737UaL9K8jilL9OK5ndL33
+	HsB4DSagFlSpSs3+b+NsSM7MHsKlO6j6q+TwkS528pdx1l+cR6zbwDANqFP7P+H5/TnXiQB45ZDe4
+	TlW2Mg8w==;
+Received: from [122.165.245.213] (port=58934 helo=[192.168.1.4])
+	by md-in-79.webhostbox.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <parthiban@linumiz.com>)
+	id 1rq8ib-004Dis-2W;
+	Fri, 29 Mar 2024 15:10:13 +0530
+Message-ID: <454e1850-87e3-44ac-aa90-03d628a97f1a@linumiz.com>
+Date: Fri, 29 Mar 2024 15:10:10 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <07a3c30d-5a81-4b99-8090-38753b650432@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] ARM: dts: imx6ull: add seeed studio NPi dev board
+To: Shawn Guo <shawnguo2@yeah.net>
+Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ conor+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+ kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Parthiban <parthiban@linumiz.com>
+References: <20240229082337.3090778-1-parthiban@linumiz.com>
+ <20240229082337.3090778-2-parthiban@linumiz.com> <ZgY82LADJS9FuvY6@dragon>
+Content-Language: en-US
+From: Parthiban <parthiban@linumiz.com>
+Organization: Linumiz
+In-Reply-To: <ZgY82LADJS9FuvY6@dragon>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - md-in-79.webhostbox.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - linumiz.com
+X-BWhitelist: no
+X-Source-IP: 122.165.245.213
+X-Source-L: No
+X-Exim-ID: 1rq8ib-004Dis-2W
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.4]) [122.165.245.213]:58934
+X-Source-Auth: parthiban@linumiz.com
+X-Email-Count: 2
+X-Org: HG=dishared_whb_net_legacy;ORG=directi;
+X-Source-Cap: bGludW1jbWM7aG9zdGdhdG9yO21kLWluLTc5LndlYmhvc3Rib3gubmV0
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfPADPYP4FFbS+ToD1ONqIHaLCB68NQTsiRPGHHnE/yhqNnZPLrZ4NwbLjLYEOtz6dNegOQmbQb6U0OJp47XA7UWd98XhaGB/WtYbDZXMOEYsgekml5Bf
+ P0qYAX/pTpZeAE4mjUyRDNGmAt0qAHVWUKllwQjUjqfIcgNHhEB9v72XYjxjRMK1IPNNpTZ6vvk+fzBHvQdT6Nd7TYIWWqi6Coc=
 
-On Mon, Mar 18, 2024 at 11:14:13AM +0800, Gong Ruiqi wrote:
-> Oops. + Cc stable@vger.kernel.org
+Dear Shawn,
+
+On 3/29/24 09:30, Shawn Guo wrote:
+> On Thu, Feb 29, 2024 at 01:53:37PM +0530, Parthiban Nallathambi wrote:
+>> Add support for Seed Stuidos NPi i.MX6ULL SoM equipped with
+>> 512MB RAM and 8GB eMMC or 512MB NAND flash. Development
+>> board comes with either eMMC or NAND based SoM with peripheral
+>> interfaces like 2 x ethernet, 2 x USB, LCD, CSI and more.
+>>
+>> Signed-off-by: Parthiban Nallathambi <parthiban@linumiz.com>
+>> ---
+>>  arch/arm/boot/dts/nxp/imx/Makefile            |   2 +
+>>  .../imx/imx6ull-seeed-npi-dev-board-emmc.dts  |  19 +
+>>  .../imx/imx6ull-seeed-npi-dev-board-nand.dts  |  19 +
+>>  .../nxp/imx/imx6ull-seeed-npi-dev-board.dtsi  | 424 ++++++++++++++++++
+>>  .../boot/dts/nxp/imx/imx6ull-seeed-npi.dtsi   | 155 +++++++
+>>  5 files changed, 619 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/nxp/imx/imx6ull-seeed-npi-dev-board-emmc.dts
+>>  create mode 100644 arch/arm/boot/dts/nxp/imx/imx6ull-seeed-npi-dev-board-nand.dts
+>>  create mode 100644 arch/arm/boot/dts/nxp/imx/imx6ull-seeed-npi-dev-board.dtsi
+>>  create mode 100644 arch/arm/boot/dts/nxp/imx/imx6ull-seeed-npi.dtsi
 > 
-> On 2024/03/18 10:52, GONG, Ruiqi wrote:
-> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > 
-> > commit dbf4ab821804df071c8b566d9813083125e6d97b upstream.
-> > 
-> > The SC16IS7XX IC supports a burst mode to access the FIFOs where the
-> > initial register address is sent ($00), followed by all the FIFO data
-> > without having to resend the register address each time. In this mode, the
-> > IC doesn't increment the register address for each R/W byte.
-> > 
-> > The regmap_raw_read() and regmap_raw_write() are functions which can
-> > perform IO over multiple registers. They are currently used to read/write
-> > from/to the FIFO, and although they operate correctly in this burst mode on
-> > the SPI bus, they would corrupt the regmap cache if it was not disabled
-> > manually. The reason is that when the R/W size is more than 1 byte, these
-> > functions assume that the register address is incremented and handle the
-> > cache accordingly.
-> > 
-> > Convert FIFO R/W functions to use the regmap _noinc_ versions in order to
-> > remove the manual cache control which was a workaround when using the
-> > _raw_ versions. FIFO registers are properly declared as volatile so
-> > cache will not be used/updated for FIFO accesses.
-> > 
-> > Fixes: dfeae619d781 ("serial: sc16is7xx")
-> > Cc:  <stable@vger.kernel.org>
-> > Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > Link: https://lore.kernel.org/r/20231211171353.2901416-6-hugo@hugovil.com
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
-> > ---
-> > 
-> > The mainline commit dbf4ab821804 ("serial: sc16is7xx: convert from _raw_
-> > to _noinc_ regmap functions for FIFO") by Hugo has been assigned to be
-> > CVE-2023-52488, but for stable branches lower than 6.1 there's no
-> > official backport.
-> > 
-> > I made up this backport patch for 5.10, and its correctness has been
-> > confirmed in previous communication with Hugo. Let's publicize it and
-> > merge it into upstream.
+> Could you elaborate a bit the point of splitting imx6ull-seeed-npi.dtsi
+> and imx6ull-seeed-npi-dev-board.dtsi?  Why cannot they be a single file?
+imx6ull-seeed-npi.dtsi is for the npi SoM and -dev-board is for the board which uses the SoM.
 
-I can not take this only in 5.10, it needs to also go into 5.15.y first,
-right?
+Thanks,
+Parthiban N
 
-Please resend a 5.15.y and this 5.10.y version when you have both of
-them (the 5.10.y version wasn't sent to stable@k.o so it's hard to track
-down), and we will be glad to take them both.
 
-thanks,
-
-greg k-h
+> 
+> Shawn
+> 
