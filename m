@@ -1,102 +1,53 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724B0A92F;
-	Fri, 29 Mar 2024 01:02:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A94FF9F5;
+	Fri, 29 Mar 2024 01:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711674179; cv=none; b=NbVLEteT8D2ty2HSDS8bgAzmLk/kMcobUeLsf4B5Mp96V5QtricgOmKgD0UaLE7jjOlEZYiOWzpDc+GLwGu/QLKsRGobJPyimtTlVrstzpSQno7MuvgSOTDexdW9/s/Gie/5hNCxTaIva89pKiHx8p21Melywrj1ug6NI43sbJ8=
+	t=1711674406; cv=none; b=Z0HqfjAlUWlM77iT4vC+sfYhMZeqB733XpuTzS7q7VRkKV2VgbjQbz7M6lnSCWNnscEfABjmHQPzeoXChENReBl38y9DNJGptEP3B2Lu0UREQek3XruTK6j7LDvo5C/Kuc1wCWUdd43iG7VPSOSEG+2ObQX11RzgTsZQS1odqUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711674179; c=relaxed/simple;
-	bh=Dr1VlokoSKaC9y28ynylm4SEPgQMTWxh85ITtu46N1g=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XkVfctbHYwUmGxJ06EL6Rj90TXTh2JQbucP1T6bV9THET2i++hhptbwDP0GzuSPRIZJoniuuiSkw7u355sZqQzSnmnYdcjTVhZjx681qBsao2qjrze0UTWGGCdCububSBueDKIC8BMpqxAkM+Fn8NLzWhz/dxTqvqSEzTG0JzpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SF1hv1YA; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1711674406; c=relaxed/simple;
+	bh=DMYOlN+V/xU+7yMkSGCmldEtFZxBdXtHIsaBi1vE/bI=;
+	h=Message-ID:Content-Type:MIME-Version:From:To:Cc:Subject:Date; b=UiyIzZJvGi40/yewNC00ovMi2aGembFrtdvTftlkNvYcY6x/jz6e7VlLHBl6vAe7H+zocScEbARKL2qjDWJxXdPwIFELNyPx84Y+Xv8nEivV+iuWsyZfXgvPyF/17xLnP3y43fpP19vBOKemgiqWVz5Z7DGJ/69Lc/bfflm2OiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DiNjuOuf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SF1hv1YA"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42SN55oe011440;
-	Fri, 29 Mar 2024 01:02:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=0dY3d4JiA2sDHJ3WMxYQw6Z9eBfTuUH6pqj6z2iebXo=;
- b=SF1hv1YAOIAAAdmL9eYanM4UCYDfi2rpGwOEQiz/g3Y51utt3NpEhxShlMPrbpVrlyUX
- qZgjdeEobiEVbk7khfOQ+7G3mpjFgcpJ52SeQi5tEpN44p0VOqYJ3zaaxylV6viDixIz
- 92KObcOmeq0tKNWQb+FA7++JDLNIJ9oBlLx/8dus6/F4V1M/EQOQa1VkCJwZg8KFB/7/
- FkJm3iUBYP+DT1SxKTmG88FSsKlm4W8ZMQ7hQtzp2X4GVF4vXPF1uC6Nnb7DkuJjpBJs
- YAJa88ntno+vINPjKo9mp6a1ZSPRn48H3C15M35ardusysqBiYHAZUKialJnbUVuEpag 1A== 
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x5h9h87ku-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Mar 2024 01:02:43 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42SNFbwg025458;
-	Fri, 29 Mar 2024 01:02:41 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3x2awn8wek-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Mar 2024 01:02:41 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42T12c4f63373678
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 29 Mar 2024 01:02:41 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AE75958068;
-	Fri, 29 Mar 2024 01:02:38 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 46C7B58061;
-	Fri, 29 Mar 2024 01:02:38 +0000 (GMT)
-Received: from li-5cd3c5cc-21f9-11b2-a85c-a4381f30c2f3.ibm.com (unknown [9.61.90.219])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 29 Mar 2024 01:02:38 +0000 (GMT)
-Message-ID: <36fa018559b8d68ac9d41826148e7d36c1ecf1ab.camel@linux.ibm.com>
-Subject: Re: [PATCH] ima: Fix use-after-free on a dentry's dname.name
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Stefan Berger <stefanb@linux.ibm.com>, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, roberto.sassu@huawei.com,
-        Al Viro
-	 <viro@zeniv.linux.org.uk>
-Date: Thu, 28 Mar 2024 21:02:37 -0400
-In-Reply-To: <20240322140312.1804404-1-stefanb@linux.ibm.com>
-References: <20240322140312.1804404-1-stefanb@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-23.el8_9) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 1Xy32qb6LKaXx8FmWrzWbFao4CU4K2kd
-X-Proofpoint-ORIG-GUID: 1Xy32qb6LKaXx8FmWrzWbFao4CU4K2kd
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DiNjuOuf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74D63C433F1;
+	Fri, 29 Mar 2024 01:06:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711674405;
+	bh=DMYOlN+V/xU+7yMkSGCmldEtFZxBdXtHIsaBi1vE/bI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DiNjuOufITECihQO2wQ8Of6yEnAq+KqQh/g99p4Aq6lQSSsqg09Vefj7Y29aivse/
+	 NepX+2rlQl7DBzpYAAY10KiDE6zp4vcJXXh0ZkXBtdNKu+6h6SSzX01zN3cPa4pifp
+	 7TCmgTnSdLtNnplwsTjJG3Apyyvjy9G1WdZF/khTuUSK1EJn3arCxwjW4iQyZaF5/Z
+	 PwpPu/5WtdrkTUzjxhwtiLhMmH5/2qjzrXQyiCEBkokbH3jZSqBCDhL+lAkF96bgjH
+	 jCDoFRrhShKEl24POzeWnYq+AUvRwmgOKErgjpY5PSoMGH3uxqjtlO+N2GtWbyccJo
+	 pGJhF6wDLFd3w==
+Message-ID: <9ddf393a481f2caf3cdcb7b1a9e5c80c.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-28_19,2024-03-28_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- impostorscore=0 suspectscore=0 spamscore=0 phishscore=0 lowpriorityscore=0
- clxscore=1015 bulkscore=0 mlxlogscore=837 priorityscore=1501 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2403210000
- definitions=main-2403290007
+Content-Transfer-Encoding: quoted-printable
+From: Stephen Boyd <sboyd@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: <linux-kernel@vger.kernel.org>, <linux-next@vger.kernel.org>, <linux-clk@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Add clk-fixes branch to pending-fixes
+Date: Thu, 28 Mar 2024 18:06:43 -0700
+User-Agent: alot/0.10
 
-On Fri, 2024-03-22 at 10:03 -0400, Stefan Berger wrote:
-> ->d_name.name can change on rename and the earlier value can be freed;
-> there are conditions sufficient to stabilize it (->d_lock on dentry,
-> ->d_lock on its parent, ->i_rwsem exclusive on the parent's inode,
-> rename_lock), but none of those are met at any of the sites. Take a stable
-> snapshot of the name instead.
-> 
-> Link: https://lore.kernel.org/all/20240202182732.GE2087318@ZenIV/
-> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+Hi Stephen,
 
-Thanks, Al, Stefan.
+Can you add the clk-fixes branch to linux-next's pending-fixes branch?
+Krzysztof mentioned that it wasn't in there and some CI uses that. The
+clk-fixes branch is always merged into the clk-next branch of clk.git
+and usually it is fully merged into Linus' tree before the next release.
+I accumulate clk framework and driver fixes on this branch and send code
+from here after the merge window closes.
 
-Mimi
-
+  git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git#clk-fixes
