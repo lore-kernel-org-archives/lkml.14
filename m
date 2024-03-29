@@ -1,152 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD467D079
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 10:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D195E6A034;
+	Fri, 29 Mar 2024 10:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711709893; cv=none; b=Oi2FyEOwYXnwFcWw9oOJ4B/Af9M+9Qjxnl01aH5Qppm7d1KqSCEBLqhVtjKgqE6F99jianSapMB9KiwXOOpcv3TrL3q+gZx8ps4Hk3WCi1Id8scD5Q7WMWqO6CGhR1jbLa12BsGWgyVgh96To5o5TBQZP9WBEvry+5okX74IBX8=
+	t=1711709956; cv=none; b=Rioe8QRGYcwlwQk4+bCwRvmshfXuDpUzo0+r+W/i2UT0RHgIEQkStE20rzOgQ6GUpcjrp902b6zKk6xekGYUKzm4H6/IqVSair5dOvstRsQq3pGnpHfWZ7bmny8AVb+K4CGYOOhZ+3AhVleJA3K1pnqZSmms9KdS68m6GXRLQ18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711709893; c=relaxed/simple;
-	bh=g8OQfrHBwhFx8ET7d7s7wkLQtKO+Fbki+HGAG42ZO84=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B04p4NaVgbeVexEU1UN26RJFL9FGr09TYmPP97WvlyQOd74MJD+1OvsEw6d+AOdlyQM0rZNraEtwjNdR6z87JxhzKFa/UdM/ZNXIF0WmYwmc5weU87Ai8PxuetoK+D4URuEZkaqcZ8YZgNjZHjhJRzO2KCsD+WlOoIEIbDfujAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QbLejqej; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QbLejqej"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711709889;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ObmCChwbxI4fnx/oMY/3duoto3dJqKFQjwXK6r0ebbk=;
-	b=QbLejqejcTXYnpi6v7P/hoStHyYIo+wo9scz/Tc21eZlzdurPz0hDHn0u7VKd+9Qp0eSEF
-	m62Hk0k8EnkFDeazd8L6AH5Qina9/+ibheUyOUNdXuW//tJ7croU+Hbw0j3p2AjtmDyqBg
-	ad+MedvinPyTUtcIQ53sR+lJuC914dU=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-623-YJK1PNaVN4ujNDLsv-AKoA-1; Fri, 29 Mar 2024 06:58:08 -0400
-X-MC-Unique: YJK1PNaVN4ujNDLsv-AKoA-1
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-515bbb9a73aso1515210e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 03:58:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711709887; x=1712314687;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ObmCChwbxI4fnx/oMY/3duoto3dJqKFQjwXK6r0ebbk=;
-        b=dOQeMTsDwoORoPzNG2obR5yDbu3QaRSVxlMMNpUlwamePJuBoZFhao278+Clv49L9K
-         ZSKV2k5GR8jqwZJJ8WyUi3AGqCKknVNauqz6JsRjraOka88m3149WUnQ73+QUmCPsdmD
-         gekJ7AlXPqw7PeIAF/o2BXcor5p9LAIfMKaRgBVafEQaNkV0apWFSbxbgyg50YKsqJO2
-         llQ9x0qtf1hQ3DBVgyumpHit3jkew8oOmaFHNGlEGbbA9wdPtg5tXMGt4GQCkYXHteXC
-         jeWmpn4y57SYx3zgY5tNZ5wobsMAOSo1eBP6s2tXP0NFKGQ3ZGUwGO2ybcakMxfGpI/V
-         MwXg==
-X-Forwarded-Encrypted: i=1; AJvYcCUOnST3gd/cckXI3tUXUHIi9dhlIrNRRdwapa4pDwmJl062PNQc+ZVbQmFJ2Q4HFeS6N07hTaR9QPUpRIlCIDTl12bnCkUl0+CptKQ+
-X-Gm-Message-State: AOJu0Yxo/LjXp7FudtO3qi51uHIdWgWbG4GJvFTlVFmX3x2MaeUUhGJH
-	1+oH/hOnUzBwd04pOPfn2xGZCKLhyEDSvoKuqYItVRqenOzr3PiKjsQp/MKxBdMZYp9mSpKWob5
-	WmReg/1oG3wrSn84W3Ylhcia4CFK52fRLgQcQ+ptsfMwY49Yjal1Q+7D8XNzuVg==
-X-Received: by 2002:ac2:4197:0:b0:513:d3c0:f66 with SMTP id z23-20020ac24197000000b00513d3c00f66mr1298043lfh.51.1711709886792;
-        Fri, 29 Mar 2024 03:58:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG29WemiigJFVRUgtZdZmONK+lboYNHffuMAIXm6vtZQPUrBU42pJdYIugnsyliFC3CMebqVw==
-X-Received: by 2002:ac2:4197:0:b0:513:d3c0:f66 with SMTP id z23-20020ac24197000000b00513d3c00f66mr1297956lfh.51.1711709886231;
-        Fri, 29 Mar 2024 03:58:06 -0700 (PDT)
-Received: from sgarzare-redhat (host-87-12-25-33.business.telecomitalia.it. [87.12.25.33])
-        by smtp.gmail.com with ESMTPSA id f4-20020a056402194400b0056c4cdc987esm1879596edz.8.2024.03.29.03.58.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Mar 2024 03:58:05 -0700 (PDT)
-Date: Fri, 29 Mar 2024 11:58:00 +0100
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, 
-	Jens Axboe <axboe@kernel.dk>, Marcel Holtmann <marcel@holtmann.org>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Olivia Mackall <olivia@selenic.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, Amit Shah <amit@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gonglei <arei.gonglei@huawei.com>, 
-	"David S. Miller" <davem@davemloft.net>, Viresh Kumar <vireshk@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, David Airlie <airlied@redhat.com>, 
-	Gerd Hoffmann <kraxel@redhat.com>, Gurchetan Singh <gurchetansingh@chromium.org>, 
-	Chia-I Wu <olvaffe@gmail.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>, 
-	Joerg Roedel <joro@8bytes.org>, Alexander Graf <graf@amazon.com>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Eric Van Hensbergen <ericvh@kernel.org>, 
-	Latchesar Ionkov <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Christian Schoenebeck <linux_oss@crudebyte.com>, Kalle Valo <kvalo@kernel.org>, 
-	Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Pankaj Gupta <pankaj.gupta.linux@gmail.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Mathieu Poirier <mathieu.poirier@linaro.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
-	Vivek Goyal <vgoyal@redhat.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Anton Yakovlev <anton.yakovlev@opensynergy.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	virtualization@lists.linux.dev, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-um@lists.infradead.org, linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, iommu@lists.linux.dev, netdev@vger.kernel.org, 
-	v9fs@lists.linux.dev, kvm@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	nvdimm@lists.linux.dev, linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH 09/22] gpio: virtio: drop owner assignment
-Message-ID: <wevexb25pa4cwa73tmmlpqyf527drjyfr56j46ddrglofh2mew@sv5hxdqpiu73>
-References: <20240327-module-owner-virtio-v1-0-0feffab77d99@linaro.org>
- <20240327-module-owner-virtio-v1-9-0feffab77d99@linaro.org>
- <CAMRc=McY6PJj7fmLkNv07ogcYq=8fUb2o6w2uA1=D9cbzyoRoA@mail.gmail.com>
+	s=arc-20240116; t=1711709956; c=relaxed/simple;
+	bh=nxx+6xNwnVOmWpIQMEjVW/rRZuWaUlN8c6YVrXlsBh0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=UUkZ8XgYsON73kfruYhcZ4jTE9dS9qEKdhcM543GUOgNUkOBW0QcqLKeYfnj4z0tK2UEnckQNk9wlX3JiaTHoiz0hYQ/SemXjTXiiYfRG9s/7qXSz9vrQvkXdZcpNu+N8lVKE5lq241GoXLyiHJOIErPp100DXcntzYKcoL6fwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.254.200.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
+X-QQ-mid: bizesmtp78t1711709854t315a8p1
+X-QQ-Originating-IP: H8w4LcerRMqb3ebuPNSs3LfNThRRyFFZSFHvYx23/XE=
+Received: from localhost ( [112.0.147.175])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 29 Mar 2024 18:57:32 +0800 (CST)
+X-QQ-SSF: 01400000000000704000000A0000000
+X-QQ-FEAT: 3M0okmaRx3i4lw8jCv5pRXp7qaLjIhH0Nom7X39gKEaZDUM6z97qAS+K1xyiV
+	uPemEmElYeZZ9MUIMSmYEYFWjkUfeioSa/IBg8MTJgqd5mJTURBXQkRogmBUVfa0DjxpoHT
+	/ct1PrtM9lkrVLQEXtIVpFge1a0v1UwWuAEAkcE6ylNn/zRf5ZZ5DHHc+c2uN4RUKu15lJ9
+	fQqIU0EpHK4oYC8Ury5lbzEOO5wdG3fgWm4LjJyOSbUpP+dDW4/+iFemu+VY178tutQ133a
+	XrCMHstzq/eYYgILgAj4Oe3+U14R3IEbJEg/fqmbsCkFxNWNwbVhKBXH6H4Ug0H2PonnIbA
+	u0f1zayFQkLzJK6Hr+sf6XBpYTpE9W8E6OaHFChg5v/COuEruju3laTNc6ky9N1Y6NB0dkZ
+	AeybAHcHGbw=
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 6166159861030876298
+From: Dawei Li <dawei.li@shingroup.cn>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	ioana.ciornei@nxp.com,
+	wintera@linux.ibm.com,
+	twinkler@linux.ibm.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	Dawei Li <dawei.li@shingroup.cn>
+Subject: [PATCH net-next 2/2] net/dpaa2: Avoid explicit cpumask var allocation on stack
+Date: Fri, 29 Mar 2024 18:56:10 +0800
+Message-Id: <20240329105610.922675-3-dawei.li@shingroup.cn>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20240329105610.922675-1-dawei.li@shingroup.cn>
+References: <20240329105610.922675-1-dawei.li@shingroup.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=McY6PJj7fmLkNv07ogcYq=8fUb2o6w2uA1=D9cbzyoRoA@mail.gmail.com>
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
 
-On Fri, Mar 29, 2024 at 11:27:19AM +0100, Bartosz Golaszewski wrote:
->On Wed, Mar 27, 2024 at 1:45 PM Krzysztof Kozlowski
-><krzysztof.kozlowski@linaro.org> wrote:
->>
->> virtio core already sets the .owner, so driver does not need to.
->>
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>
->> ---
->>
->> Depends on the first patch.
->> ---
->>  drivers/gpio/gpio-virtio.c | 1 -
->>  1 file changed, 1 deletion(-)
->>
->> diff --git a/drivers/gpio/gpio-virtio.c b/drivers/gpio/gpio-virtio.c
->> index fcc5e8c08973..9fae8e396c58 100644
->> --- a/drivers/gpio/gpio-virtio.c
->> +++ b/drivers/gpio/gpio-virtio.c
->> @@ -653,7 +653,6 @@ static struct virtio_driver virtio_gpio_driver = {
->>         .remove                 = virtio_gpio_remove,
->>         .driver                 = {
->>                 .name           = KBUILD_MODNAME,
->> -               .owner          = THIS_MODULE,
->>         },
->>  };
->>  module_virtio_driver(virtio_gpio_driver);
->>
->> --
->> 2.34.1
->>
->
->Applied, thanks!
+For CONFIG_CPUMASK_OFFSTACK=y kernel, explicit allocation of cpumask
+variable on stack is not recommended since it can cause potential stack
+overflow.
 
-Did you also applied the first patch of this series?
+Instead, kernel code should always use *cpumask_var API(s) to allocate
+cpumask var in config-neutral way, leaving allocation strategy to
+CONFIG_CPUMASK_OFFSTACK.
 
-Without that I'm not sure it's a good idea to apply this patch as also
-Krzysztof mentioned after ---.
+Use *cpumask_var API(s) to address it.
 
-Thanks,
-Stefano
+Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
+---
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+index 888509cf1f21..40e881829595 100644
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+@@ -2896,11 +2896,14 @@ static int dpaa2_eth_xdp_xmit(struct net_device *net_dev, int n,
+ static int update_xps(struct dpaa2_eth_priv *priv)
+ {
+ 	struct net_device *net_dev = priv->net_dev;
+-	struct cpumask xps_mask;
+-	struct dpaa2_eth_fq *fq;
+ 	int i, num_queues, netdev_queues;
++	struct dpaa2_eth_fq *fq;
++	cpumask_var_t xps_mask;
+ 	int err = 0;
+ 
++	if (!alloc_cpumask_var(&xps_mask, GFP_KERNEL))
++		return -ENOMEM;
++
+ 	num_queues = dpaa2_eth_queue_count(priv);
+ 	netdev_queues = (net_dev->num_tc ? : 1) * num_queues;
+ 
+@@ -2910,16 +2913,17 @@ static int update_xps(struct dpaa2_eth_priv *priv)
+ 	for (i = 0; i < netdev_queues; i++) {
+ 		fq = &priv->fq[i % num_queues];
+ 
+-		cpumask_clear(&xps_mask);
+-		cpumask_set_cpu(fq->target_cpu, &xps_mask);
++		cpumask_clear(xps_mask);
++		cpumask_set_cpu(fq->target_cpu, xps_mask);
+ 
+-		err = netif_set_xps_queue(net_dev, &xps_mask, i);
++		err = netif_set_xps_queue(net_dev, xps_mask, i);
+ 		if (err) {
+ 			netdev_warn_once(net_dev, "Error setting XPS queue\n");
+ 			break;
+ 		}
+ 	}
+ 
++	free_cpumask_var(xps_mask);
+ 	return err;
+ }
+ 
+-- 
+2.27.0
 
