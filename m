@@ -1,162 +1,178 @@
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08CC964B;
-	Fri, 29 Mar 2024 23:24:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEAE5347B6;
+	Fri, 29 Mar 2024 23:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711754670; cv=none; b=IO+5Rt3m9b16ItoeMHHKMLKLNLdssKvw9wFDscopqOpCRGlo0jp93dVk69H945BbmmsI4HseLyPlg7ASLxA1UP2ILfuk0Xzzw7Zp/szhcKEAjqRwl8ZRVIxWjAJC4aD+rQIh4nZBZC2oXbS4j2dM04w2Uh28QBS6dN3V8ETl7RI=
+	t=1711754928; cv=none; b=BiF0sOPYXhrbjY9cOS6Nmj4VXF++Yx8MtZjBDxanMefli+BulHO4QXKn7qwpW3i+7uN65u5cLGhThPJZ2akcLjIgY9UcOJfH9j6D484gs+N5O8HXdnQzg8eZ93GRBeBoDesuvP5WyVY1RlteRQZLbYRhS27z9mKgIzxIt2bJ+Zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711754670; c=relaxed/simple;
-	bh=QSssbFjXz+eZ/ZgUMwkgKn6RmNuNwQ2PoDMrtj4r644=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fm7hBwypm2j1uall27qfA/aPd7m0VFJcqqLnIyJGEHXzG9ze71MEu/c783B9Ur8BPWIvfwFjyIqoHcHy3C+lKnF+Zr0INEZJlA0hzbgw8waIQAhHT0Z9gJKa9RiVLPjk7Vb/TSk1dYZLwNVTyNUkvqR9L9N0mnzoao7BFe7Vvxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=anfaUUvk; arc=none smtp.client-ip=209.85.167.179
+	s=arc-20240116; t=1711754928; c=relaxed/simple;
+	bh=M+CkTC/9QOPKjcAq26pJFK75aD0g4y2+LXJsB0P1JY0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lu4xUrtWjk3J0kbVbPD5XAlV9JEyhRuyqvveB8mIxkffhtOM1Y7m4+o5XzftYMKn592GD5CBw41tS2CCKYzMtaJurKzqjxkWsFCCe3ELmR9AEyVvEBDa4PpVwvE2aS0et1z2P9rOIk0ldc7OMYPnDpWEu3jfzLxb8Y4CGi6sJbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fm8qb98v; arc=none smtp.client-ip=209.85.215.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="anfaUUvk"
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3c36f882372so1436434b6e.2;
-        Fri, 29 Mar 2024 16:24:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fm8qb98v"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5d3907ff128so1860607a12.3;
+        Fri, 29 Mar 2024 16:28:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711754668; x=1712359468; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1711754926; x=1712359726; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nAqT/PkO4I/dSKZYMDvK1XHcQqT1AvW4NQ1vVEVf7/Y=;
-        b=anfaUUvkhzysZ+thkc0mCGm1rxPJBEoSHIEf1Em2gOmsKNu0vGJkiWxwZMi06m76Hb
-         6lHapMX7KhWVob9TUclyO4pYFLejJi6wiRLIyeT5h7buerdyiYS9Oxgj2/mY0X70vn5Y
-         hu1n1ssRm6C+pDQaYeueeOaRrGgDbG8T4X5wYBLtueR8vJz1q6RRqUHTro+L4YumTaRX
-         IElEZZw6Rynv95ePX0dSjTAh0s7c1/vfTP1QC6Npj16vRsOu+d1baQyUf2oBq/SrFm3i
-         ZPM/mzUkPy3nvX76yKCstgbIwr0FqKf3PK/4IiJ65G1DUQC81p4Ed3RnstrRUuTbBLnP
-         Y5FA==
+        bh=rvV1tZGanDBSafK6edOdycvbQYDEdHbTCxngJvsvk3c=;
+        b=Fm8qb98vO+2rZQDr4ACVbzWOOBhMbNP973of56VDx+7dzKarS23b4VDs0QCZjE/zey
+         IJ/g2gwkTlDZp557gqFy6HVirUKvvI/RhzQOrPjsYmqnt0OS+LXZWxBGcD9ooJmS1u1N
+         Wdq60dFcb/ee3JYL5bUFYzr07cJmwvvmIZoI/b1KQpo+K6ftMzexzXAN8iXh1nJo1QdC
+         4CFMaxfeoUIzc6fyg2ScGW/5rPdZFOXPIXIjGrA7V7Ij1KqAkHvKfDNzy1QS7jMz6z0E
+         /W8l0QAzZuWpon/+MGFe6iPNG81xSsUfka4lIyvOK31ZY63E/sqixJRnh7RpDV18WsJY
+         CtMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711754668; x=1712359468;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1711754926; x=1712359726;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nAqT/PkO4I/dSKZYMDvK1XHcQqT1AvW4NQ1vVEVf7/Y=;
-        b=pjHl5ZVnKNxwTX8g3+M5GDz0BcQXbEnk0crzjVtdgKpMY2Xe0MQchP4AkTikZ3yX9h
-         SD3COMclnRK3pmhymRDMq/3/S9CA3leGuj4QGfN7c0kJ9ZO3Xw9y7WaYsCSQQ0bx1UTe
-         jbl9awxf5oIwManmf7TYnUcVbEDmJJqYDIZ2lzFdTp6SMQSJu66gLEAENulbaEEiTfm/
-         BXCB2BVBWxb/5K/kN/pj2Z9sA0tXqgc1zLXFeuKBXrEYdf/P3bw3+A0AY4THPRFj/VJq
-         T08xnPRYX5LYjGQaE3ykbzy4wfHzm1decSQNtCXjtY2D7AWH9GSjr1iMa/HF8OHSWw6v
-         CpkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+jEncGaVRz8WAx63aeYwOgLhNdQ0RZXfrcRth8OJYNP1RjLHHY/m0ku+4c80mVlEhAY7XKp9LRuPtXR/rTZZxQZtymIGTpJCJDCBM
-X-Gm-Message-State: AOJu0YzOweFi3Ghz9AJPU/sXFPH7GsPcSLFFt0ZzV35/T/+8VPjurein
-	hWAgEM1ov1lbL1Kc2XGLgNdfjDHnwk+Ox4lNUcX2Njprng8n6jX5
-X-Google-Smtp-Source: AGHT+IFdNmK0xPtWYygNA8XuQeAr5sygQ6mRUco/hHSJpmhhK4b8eowehgfXoBh3zEyqRvQPLz0CyA==
-X-Received: by 2002:a05:6808:13c9:b0:3c3:d65e:f6d with SMTP id d9-20020a05680813c900b003c3d65e0f6dmr3760249oiw.57.1711754668015;
-        Fri, 29 Mar 2024 16:24:28 -0700 (PDT)
-Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6-20020ad45ba6000000b0069694dab3f8sm2093422qvq.39.2024.03.29.16.24.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Mar 2024 16:24:27 -0700 (PDT)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id 650DC1200032;
-	Fri, 29 Mar 2024 19:24:26 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 29 Mar 2024 19:24:26 -0400
-X-ME-Sender: <xms:qU0HZq_m6l5ETvaRE3DctkpbRfLAsG-wTZc_gxjKTdof6JwqVz3qog>
-    <xme:qU0HZquOjyhNQ_D0AGQ6T8aL7ZulcJzwfe0DhOreHCYYW4zYEDeWjRhW3SCWcj9GY
-    KZhIEYzHnC-wD4Ocg>
-X-ME-Received: <xmr:qU0HZgC5UQY3JphX0Z3yZEZ32b9khPRMB0P6iYnlyuhyRJrMmnswpoZBX4I>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddvfedguddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtrodttddtvdenucfhrhhomhepuehoqhhu
-    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
-    htthgvrhhnpefgieegkeelgfekheetudeiiedvlefghfeffefffefgudejvefgtdfhhfet
-    hfegjeenucffohhmrghinhepghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhh
-    phgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunh
-    drfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:qU0HZicx5e3dMWD-YdgwVwHgM-U3adzoEceJw5X7snvZbpx7GggeMA>
-    <xmx:qU0HZvO79pKZp5UVTah8IROqEFukIipr8ZMcnCBLzA-pjxbeRkxUSw>
-    <xmx:qU0HZsn01L4HydhzTSwVZ2Ywsl2S11VxVT1wwGKoLbTjyIb-20Phwg>
-    <xmx:qU0HZhthgv4R27lSphyc6jLBqSuHc5u36Rz-_A6SgHpNc4gIzE2o9A>
-    <xmx:qk0HZjnexGrV8j9NniSTNboCO4IuGbRjJOA6-KtJs3T6u21neDG9bIUVgbE>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 29 Mar 2024 19:24:25 -0400 (EDT)
-Date: Fri, 29 Mar 2024 16:23:42 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Wedson Almeida Filho <wedsonaf@gmail.com>
-Cc: rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>, linux-kernel@vger.kernel.org,
-	Wedson Almeida Filho <walmeida@microsoft.com>
-Subject: Re: [PATCH v3 00/10] Allocation APIs
-Message-ID: <ZgdNfvLWXhHIpWUf@boqun-archlinux>
-References: <20240328013603.206764-1-wedsonaf@gmail.com>
- <ZgcHfG5Hdhv39SLU@boqun-archlinux>
+        bh=rvV1tZGanDBSafK6edOdycvbQYDEdHbTCxngJvsvk3c=;
+        b=RU6CYGdij3I8SMDFuLcEkXFxxuMDLhpfo6RmyHf+rD3z+RBxrsmoJ1YligUcYT3VoL
+         YtUHguMvFF7xT9YjyGrK4ujkEA13NT+X1hwUNhKsWaXhpLBG2Wyh4eNaw4zkHN28eYkq
+         dj4reqkSxtXQvjpns3NtubA0ld6+woHqICxMQVR26maDt91aYEPooASIjOoCRnxMnIpI
+         KqBMby8F8aarmJfc6c16rp9hDJK1Cr34usuvnIOrnJ2bdp2qTCOMpl6ARzTAtPA9p7n7
+         9p9R345kssoRHOmDzo2WcF/0oG4wRjb+owNVpsCTExoqfee0d+FSjcyFxitgRQvMQzcC
+         9Pqw==
+X-Forwarded-Encrypted: i=1; AJvYcCVlnHyNUDZ0fbOQSV0NEVvOtJTaOmaxwPgZy047hqztaIz7SMsnLeomStI1EizImJzlky/xJNYIS4RJsXEX2rbQoVyo7MFG2+RfwxWnjGonfBHU0k5JSlRGPFtF8Te8neu3qxCi25AWVXDje1k1qkzJLjDnQ+s4R4WJmDmbw/KdNN4l/EBnMx0Wq+GOvmC+DkjFlyebAZoKGfgwdw8BgI1xISF1T+wxXijKToVLbwSSua486L4tXm8nE4lXExEMG+QxE02AxDYDKshvWmyLqPiNewg+cXpbihxLyg==
+X-Gm-Message-State: AOJu0YwCezoL4rml44Ulwt5kaSYk47W3cr0evd5PMAYC8La4m9gnILHN
+	FRelRR6zMz1Bz2qJo3eFKeNyq28N5Yo0kJIQ72rv0EkZFGKfSnjbac0fnT9zQAwbNl/tFnTmfuG
+	Y3REKAMgIbWmVvmHWWGOk0v3R69U=
+X-Google-Smtp-Source: AGHT+IFNbTnA2C1UowyvpIWfWMecar3RYOVPJRlOoVy5NMmPOOKB6ZhvqfzCxbpKkf/w3Z3THbX/GA+A1iwjf07EvPY=
+X-Received: by 2002:a17:90a:be04:b0:2a2:1415:723d with SMTP id
+ a4-20020a17090abe0400b002a21415723dmr3177860pjs.42.1711754926271; Fri, 29 Mar
+ 2024 16:28:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZgcHfG5Hdhv39SLU@boqun-archlinux>
+References: <20240311093526.1010158-1-dongmenglong.8@bytedance.com>
+ <20240311093526.1010158-2-dongmenglong.8@bytedance.com> <CAADnVQKQPS5NcvEouH4JqZ2fKgQAC+LtcwhX9iXYoiEkF_M94Q@mail.gmail.com>
+ <CALz3k9i5G5wWi+rtvHPwVLOUAXVMCiU_8QUZs87TEYgR_0wpPA@mail.gmail.com>
+ <CAADnVQJ_ZCzMmT1aBsNXEBFfYNSVBdBXmLocjR0PPEWtYQrQFw@mail.gmail.com>
+ <CALz3k9icPePb0c4FE67q=u1U0hrePorN9gDpQrKTR_sXbLMfDA@mail.gmail.com>
+ <CAADnVQLwgw8bQ7OHBbqLhcPJ2QpxiGw3fkMFur+2cjZpM_78oA@mail.gmail.com>
+ <CALz3k9g9k7fEwdTZVLhrmGoXp8CE47Q+83r-AZDXrzzuR+CjVA@mail.gmail.com>
+ <CAADnVQLHpi3J6cBJ0QBgCQ2aY6fWGnVvNGdfi3W-jmoa9d1eVQ@mail.gmail.com>
+ <CALz3k9g-U8ih=ycJPRbyU9x_9cp00fNkU3PGQ6jP0WJ+=uKmqQ@mail.gmail.com>
+ <CALz3k9jG5Jrqw=BGjt05yMkEF-1u909GbBYrV-02W0dQtm6KQQ@mail.gmail.com> <20240328111330.194dcbe5@gandalf.local.home>
+In-Reply-To: <20240328111330.194dcbe5@gandalf.local.home>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 29 Mar 2024 16:28:33 -0700
+Message-ID: <CAEf4BzYgzOti+Hfdn3SUCjuofGedXRSGApVDD+K2TdG6oNE-pw@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH bpf-next v2 1/9] bpf: tracing: add support
+ to record and check the accessed args
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: =?UTF-8?B?5qKm6b6Z6JGj?= <dongmenglong.8@bytedance.com>, 
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	X86 ML <x86@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Quentin Monnet <quentin@isovalent.com>, bpf <bpf@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, 
+	Network Development <netdev@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 29, 2024 at 11:25:00AM -0700, Boqun Feng wrote:
-> On Wed, Mar 27, 2024 at 10:35:53PM -0300, Wedson Almeida Filho wrote:
-> > From: Wedson Almeida Filho <walmeida@microsoft.com>
-> > 
-> > Revamp how we use the `alloc` crate.
-> > 
-> > We currently have a fork of the crate with changes to `Vec`; other
-> > changes have been upstreamed (to the Rust project). This series removes
-> > the fork and exposes all the functionality as extension traits.
-> > 
-> > Additionally, it also introduces allocation flag parameters to all
-> > functions that may result in allocations (e.g., `Box::new`, `Arc::new`,
-> > `Vec::push`, etc.) without the `try_` prefix -- the names are available
-> > because we build `alloc` with `no_global_oom_handling`.
-> > 
-> > Lastly, the series also removes our reliance on the `allocator_api`
-> > unstable feature.
-> > 
-> > Long term, we still want to make such functionality available in
-> > upstream Rust, but this allows us to make progress now and reduces our
-> > maintainance burden.
-> > 
-> > In summary:
-> > 1. Removes `alloc` fork
-> > 2. Removes use of `allocator_api` unstable feature
-> > 3. Introduces flags (e.g., GFP_KERNEL, GFP_ATOMIC) when allocating
-> > 
-> > ---
-> > 
-> 
-> FWIW, I've put this into rust-dev:
-> 
-> 	https://github.com/Rust-for-Linux/linux rust-dev
-> 
-> a few adjustments are needed to work with other commits that have been
-> queued in rust-dev, so I add an commit on the top for everyone's
-> reference. (Besides this commit, I also removed all updates to our own
-> alloc in Miguel's 1.77.0 compiler version bump patch)
-> 
-> Regards,
-> Boqun
+On Thu, Mar 28, 2024 at 8:10=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> On Thu, 28 Mar 2024 22:43:46 +0800
+> =E6=A2=A6=E9=BE=99=E8=91=A3 <dongmenglong.8@bytedance.com> wrote:
+>
+> > I have done a simple benchmark on creating 1000
+> > trampolines. It is slow, quite slow, which consume up to
+> > 60s. We can't do it this way.
+> >
+> > Now, I have a bad idea. How about we introduce
+> > a "dynamic trampoline"? The basic logic of it can be:
+> >
+> > """
+> > save regs
+> > bpfs =3D trampoline_lookup_ip(ip)
+> > fentry =3D bpfs->fentries
+> > while fentry:
+> >   fentry(ctx)
+> >   fentry =3D fentry->next
+> >
+> > call origin
+> > save return value
+> >
+> > fexit =3D bpfs->fexits
+> > while fexit:
+> >   fexit(ctx)
+> >   fexit =3D fexit->next
+> >
+> > xxxxxx
+> > """
+> >
+> > And we lookup the "bpfs" by the function ip in a hash map
+> > in trampoline_lookup_ip. The type of "bpfs" is:
+> >
+> > struct bpf_array {
+> >   struct bpf_prog *fentries;
+> >  struct bpf_prog *fexits;
+> >   struct bpf_prog *modify_returns;
+> > }
+> >
+> > When we need to attach the bpf progA to function A/B/C,
+> > we only need to create the bpf_arrayA, bpf_arrayB, bpf_arrayC
+> > and add the progA to them, and insert them to the hash map
+> > "direct_call_bpfs", and attach the "dynamic trampoline" to
+> > A/B/C. If bpf_arrayA exist, just add progA to the tail of
+> > bpf_arrayA->fentries. When we need to attach progB to
+> > B/C, just add progB to bpf_arrayB->fentries and
+> > bpf_arrayB->fentries.
+> >
+> > Compared to the trampoline, extra overhead is introduced
+> > by the hash lookuping.
+> >
+> > I have not begun to code yet, and I am not sure the overhead is
+> > acceptable. Considering that we also need to do hash lookup
+> > by the function in kprobe_multi, maybe the overhead is
+> > acceptable?
+>
+> Sounds like you are just recreating the function management that ftrace
+> has. It also can add thousands of trampolines very quickly, because it do=
+es
+> it in batches. It takes special synchronization steps to attach to fentry=
+.
+> ftrace (and I believe multi-kprobes) updates all the attachments for each
+> step, so the synchronization needed is only done once.
+>
+> If you really want to have thousands of functions, why not just register =
+it
+> with ftrace itself. It will give you the arguments via the ftrace_regs
+> structure. Can't you just register a program as the callback?
+>
+> It will probably make your accounting much easier, and just let ftrace
+> handle the fentry logic. That's what it was made to do.
+>
 
-As Miguel pointed out offline, the following is also needed:
+I thought I'll just ask instead of digging through code, sorry for
+being lazy :) Is there any way to pass pt_regs/ftrace_regs captured
+before function execution to a return probe (fexit/kretprobe)? I.e.,
+how hard is it to pass input function arguments to a kretprobe? That's
+the biggest advantage of fexit over kretprobe, and if we can make
+these original pt_regs/ftrace_regs available to kretprobe, then
+multi-kretprobe will effectively be this multi-fexit.
 
-diff --git a/rust/kernel/file.rs b/rust/kernel/file.rs
-index a5930f0f2bc5..bf68a0ce9f14 100644
---- a/rust/kernel/file.rs
-+++ b/rust/kernel/file.rs
-@@ -350,7 +350,7 @@ impl DeferredFdCloser {
-     pub fn new() -> Result<Self, AllocError> {
-         Ok(Self {
-             // INVARIANT: The `file` pointer is null, so the type invariant does not apply.
--            inner: Box::new(
-+            inner: <Box<_> as BoxExt<_>>::new(
-                 DeferredFdCloserInner {
-                     twork: mem::MaybeUninit::uninit(),
-                     file: core::ptr::null_mut(),
+> -- Steve
