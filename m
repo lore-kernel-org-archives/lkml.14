@@ -1,206 +1,138 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2096.outbound.protection.outlook.com [40.107.220.96])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4247E137755;
-	Fri, 29 Mar 2024 17:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.96
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711733304; cv=fail; b=KzNC3Qd9T4iz9jB9C/yXmVljOHZWYfbBxTvjdoavDC29sSHNqhM/goVNKD1t3rCPrSgDeLcMZRRWXhbvUF4SvonSzU1qMDnROk8Z3IfiEW+32oP5b/X9uNnJX/lX6CrtY5WrqfGzdMEHVZE73IzTgFC/UJfA2fCJuDD8MSWUr0c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711733304; c=relaxed/simple;
-	bh=Rv2zBxkafJWHjq9GslKeDMxiLeU57/dM4wJtE63niiA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=R7oCnCoy5hwqKDAzZbrksgSM4ENIXdrYUjYS9dcShJvdjqXMJsWYoIFqTztFR4MieOWPiEWtKnD52LAVP3Ghy0I/6cZkvJKNhzD+Q4g/uUut/iK9FJWhkYk3ZqcGbcwc5aCGHSn1zhnEQ+Aj1tXKASoj9T3X6qnWoUEVzOzO1cI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com; spf=pass smtp.mailfrom=memverge.com; dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b=mSIt+BXW; arc=fail smtp.client-ip=40.107.220.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=memverge.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5503485925;
+	Fri, 29 Mar 2024 17:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711733327; cv=none; b=Vi3GGI/nXlDXCV1D2qqUA1JlzeBAGQqiksdYUYoKqG4q/tA7HfC4cqSBj3k4lymTnT8v8vLnRZYOzo2CEE/FPYKV73Cv2oPjjrLN7krOqEc8PIX5g2zlao9UGcN8MFOkBnDmEg63rfnVr0siTl5YJhcbQhJJ8IWD604tJU+K8M4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711733327; c=relaxed/simple;
+	bh=yFDVjGYfjWII0t1wE88WD1st8TP3w0lvfG9W2m2CZOE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WcW6c3Ao1+e3iA+naMeh3HVBsY6BvHZZjyNNXJ4ELs6jvpC4hBsdkURsy2SqzU9MX4MGbtdS3zQ6IOC4AmMmB/Z27kR24t1fP+aQI35V7P6CijfGWe9aWDmGISiGrb7oVdBzahd0A2IRN7ipQbYRfX/yB74qvZLfkJSwKBdN0og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QVFN7BIf; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="mSIt+BXW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YEvSK0jIhcwrjKLKyJ3CnWZ9eAAoLf8QUiod4PP5VJR+QGv7qhUDqCahDTuBiTipE5Bqmw502i3Gy3cqJcOH/PuqG7j7UuQbVvCYANmbnDotXuepWTHVCnZxSbd97ig8qT0N/cMG9NEi7GydnEG9tToSoYv7uGN8EiNWMK7IcilFuAVJrxf1k/e52XolPHWt0TFPzeE53oFeVel8Khq4G3Wi1+ds+0VMMP/ewIPIyflDtYym3v8HzBlTjAk1mQS5LigkAzJ4v5WFzj5DQ73iz8tvVt4LKoYIpNZFz+3axk7hU8uCt57qUM3jPKay8QkIqXJrV7GxmDk5bwHdAmJ4IQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5FmNv599+nh86396q8j8OJAB8UeEzwCNMcoM6fgFtX0=;
- b=YX+NqJ7kiBcgCU4WG3SLeukDxphuMq+ZOBSFnkyLxFmLOYnU1pdmPUsJsR9ohGEuBErTSZkpMd7lGA5Vkysgh/Oe4mIWsrmht2b5m613jdokpVya1T2sW09kW1PLzrUBhbxaw78b+HZZLURZ7op2IXwgRbd+HACvIE8pLanhs7BeTfhAYEGVhKQFX0Cm1foGPC1xDNigeaEf3zdzqrcZ2PvOsRZlMaqWd5C3pT4sPMY5dWcIe64F+qKOVJBuO1sEbQdEzAsxPFpTB4Q6vDdNy97a524pj0e4Kzy3o5E8cqBpU1Ub2f9BtdXimuxJeuDXlfw7gT/7mMVCe6HS7E1gOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5FmNv599+nh86396q8j8OJAB8UeEzwCNMcoM6fgFtX0=;
- b=mSIt+BXWj8HqoMUvd1NgeHHb3Bl7+CLmIV6e87qSW7W0vMi8WRWyQxatEItKFUizZs/AOP0WjLxbsHG9mF8YLycpUcJN5S65lSLL6NvPZ6vlTjHo4A2hgtwmcKpCVFj4NWJ1nuP9fZOpaAqZD19jl85/vt9fhsPaHjRryTh5ksc=
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by IA1PR17MB6213.namprd17.prod.outlook.com (2603:10b6:208:41b::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.37; Fri, 29 Mar
- 2024 17:28:18 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::6657:814f:5df0:bb5b]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::6657:814f:5df0:bb5b%5]) with mapi id 15.20.7409.039; Fri, 29 Mar 2024
- 17:28:18 +0000
-Date: Fri, 29 Mar 2024 13:28:13 -0400
-From: Gregory Price <gregory.price@memverge.com>
-To: Yuanchu Xie <yuanchu@google.com>
-Cc: David Hildenbrand <david@redhat.com>,
-	"Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-	Khalid Aziz <khalid.aziz@oracle.com>,
-	Henry Huang <henry.hj@antgroup.com>, Yu Zhao <yuzhao@google.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Huang Ying <ying.huang@intel.com>, Wei Xu <weixugc@google.com>,
-	David Rientjes <rientjes@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>, Shuah Khan <shuah@kernel.org>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Sudarshan Rajagopalan <quic_sudaraja@quicinc.com>,
-	Kairui Song <kasong@tencent.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Vasily Averin <vasily.averin@linux.dev>,
-	Nhat Pham <nphamcs@gmail.com>, Miaohe Lin <linmiaohe@huawei.com>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Abel Wu <wuyun.abel@bytedance.com>,
-	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	cgroups@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [RFC PATCH v3 0/8] mm: workingset reporting
-Message-ID: <Zgb6LQndjoFVu4pv@memverge.com>
-References: <20240327213108.2384666-1-yuanchu@google.com>
- <ZgSTNCP5f+T5VtBI@memverge.com>
- <CAJj2-QEg3+Ztg3rK6FpVVCxSG4DaDPWsO_bha5v5GrJazc5DVQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJj2-QEg3+Ztg3rK6FpVVCxSG4DaDPWsO_bha5v5GrJazc5DVQ@mail.gmail.com>
-X-ClientProxiedBy: BY3PR03CA0013.namprd03.prod.outlook.com
- (2603:10b6:a03:39a::18) To SJ0PR17MB5512.namprd17.prod.outlook.com
- (2603:10b6:a03:394::19)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QVFN7BIf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711733326; x=1743269326;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=yFDVjGYfjWII0t1wE88WD1st8TP3w0lvfG9W2m2CZOE=;
+  b=QVFN7BIfnn4x8y7CpO+mo+KH7FiVqfbhR6OvfgL/VD24ZsFFxuIJLG++
+   wcZX+p57CZig7RkmU/l1z7i1CInY+mFguaalyrPK5iKWO81E0W9gycLCb
+   RM9XV8TOoyjdHTL+lRLHOaWd1uzJ8ADSP1SWjElfllugUJNzd2MDrlA4p
+   Wu0fkcPYmAzQmW89dY7wU4Sy60hW4kbBR5hzCIF5yBmKwyJImjBTxn+0j
+   9bzVf6AEhhsNfgxGVgSfsQLIxYdz+yUQk5W8dwKnxea7xXc+M+hamd19H
+   N65mTUuF/k+G+rL9msFsgsMoVNo665fmKsKmNAmgUPEgGq401/PBB/6iX
+   g==;
+X-CSE-ConnectionGUID: 7cYnQ/HkRS2eXCJq+KMszw==
+X-CSE-MsgGUID: qu73ez8KSIi+Kg22f2Z7eA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11028"; a="9882635"
+X-IronPort-AV: E=Sophos;i="6.07,165,1708416000"; 
+   d="scan'208";a="9882635"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 10:28:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,165,1708416000"; 
+   d="scan'208";a="40178285"
+Received: from sergeyko-mobl.amr.corp.intel.com (HELO [10.212.56.129]) ([10.212.56.129])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 10:28:45 -0700
+Message-ID: <d2c3cd78-cdc6-4a39-9804-4f30402751b1@intel.com>
+Date: Fri, 29 Mar 2024 10:28:44 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|IA1PR17MB6213:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	d8BDYxitSD2of22mrgkzudUDRsPsi3J4QRIX1aN6Hn47flVUu6/IEo8vXlu0VHBkIbZ8ZZwn4cEsn16gqx6qC24jYJoF/0lNLtz0HT8OAhnW93ZTS/5ykL3gvFn+Iwr6vR6mFuZPegtgUUM7vfrvJ8R8HhOSQJ7adpSbsha0gRnxNdiYbbZRp6F0qNMfW9IH6jEddIlPePMErn7j+H8l4HpdODZqhVq/+FVigrd3dl3txx0EszWm5MD8ql/Xpo4crUn7OHq6d/rnGKX6Qal3iJOeOh43ignbXv7LF8ErhkGlX4ygha8NZ+c0YuE30EAGjtU68ZftoVw/3hn0k9BHXf1fyHQcta5FB5r253BNO6SEZ1A+IxFSDwtpNSTMQXBTO+gGFrsPeo3jSraPARnDaOLUV1x0KJX385UKYAiohQjtYqQu4gpLlK+KnAnF0Mpk/+jA5YBtU3UgOgZVb7HFz2W6B6g0+/JjRaZNpMAefL4ntlLg+LlIGLmSNjrsvhI46/qp0ih2Pbk0orodHs7pymuwMU1dNHvEkNoavtX1JRjRPwd1xRId8UJ51Vrmu7jHNkbVRn3usVRoU8hJtPXnUenIKqogU1YflJXlH8kj6AeSiNBEj08O/YlUvnszHK5J3nkXaLvamXb6u7sdHGAeNYzStHO6OzOVt8v2+Ix3xos=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(7416005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?alY5QzNYOUFSOUNXUTVrVzYrNElGeGZJZVFKVURNdkpHZUdURnd4Q2dzK2N1?=
- =?utf-8?B?QnlvMG41aXJQcnlCTjNIMkdvbVZoNkVQY2QzNmNVQTk1YkRsekFIYTMvSjlY?=
- =?utf-8?B?dmpQVzQ2RWFsOXMxTERYWTdOaGlNNHBSSkZMc0lNSmUwbS9HdENtRGFIMi90?=
- =?utf-8?B?QVN3ekZsaG51QlljeUsxNk9pSG9ucVpYM3R5SFJFNWtsWGloUW9zSnZhWE5m?=
- =?utf-8?B?Y0VZaHAwTENQemJiUGRZWmN5b1oyaDZSU1hWK3I2VjNRWG1aTm5CelpuaG1s?=
- =?utf-8?B?T3lobXpDQ0xJYUtlSEt5a04xVzZ3WWNLZjZSZUp6MUlvVDBtTlVmbVZET1c4?=
- =?utf-8?B?NDdmZ3BXdjJRNTBLakJ3N2R4SERuUDJjR0RwUGkwS1BzL0U0SjhDU1Z2d2ZX?=
- =?utf-8?B?RXN0akdxeWFtS3A4M3FUbHhqQ1IvNXR0aTNQSk9qcU9ud25CZjIyOVlHVVlp?=
- =?utf-8?B?emhXcW5zK3pWMWZqSzFYNXYvUmJvTkFIK2tjUmY2UTJsV2hNb1FvUkdXNEQ4?=
- =?utf-8?B?RUtvZ0VGK1NtL2tBdzNobnk5ak92NTVBL1RZeWVWcFlSUTNKK3FMREFqWnBC?=
- =?utf-8?B?UEdlMFIvZ3RqWWhZd3ZMMk9acDFMTWtBaExvc3AreGRSRTIvMDM3RUI5OHhI?=
- =?utf-8?B?NTEvNyt4VkxhWlV3THRoM0dGVlVzVCt5cW4wNSsrL3lMTUszTmF3M0oyNGpk?=
- =?utf-8?B?eUFhMlNtZGF1bUFPcWZETHZOeG5iS0YvUHlDWGtuS2NQSHltSG8zUGlqdG5B?=
- =?utf-8?B?SXVQM2R1dHhSa2w5RW4rZWdrMDY1S1FjS0h0ZFNBbVN4dGtMbWdNTXJTSDhs?=
- =?utf-8?B?WUVmUkd2Y3FXaDRCRldBT0lPZEhXUVRmemtUT1BJdnpCWnVqQ2JqTitROTRr?=
- =?utf-8?B?SEVXenMxTzdDaVVNdTBNN1N3NWprSVZnZ25DYW1YQWpzVDNSZW5xcFVINDNH?=
- =?utf-8?B?NHVvTVdXbDl1UEt6Zm50U09nSGRXcFVtbVd1L0k0QjEyMFgzd0dXTGdNdkt5?=
- =?utf-8?B?RU45YUo2TkZPOVpocnA2ZFhTUjVNZGRDNGJhUEcvUlhtNmNnTmNJeTRFam1M?=
- =?utf-8?B?a2Zpblh5TmhxSVV0NUxRbDdxcElydDMwMnVpSWFLRjN1b3VqKzJ5RjhvaFF5?=
- =?utf-8?B?Y0h2dGNPUUduMXRpRUxJUit1ZEtIMnRTZXNsWW0zZVRYUEdzd1RGSzl3Rkpv?=
- =?utf-8?B?Vjl4empISWJISDNibmN3Qnlpem5ydWVIRUVlYjhGV2lpMDNyUEJ6eVcrMkNF?=
- =?utf-8?B?alBUSjZZbmR0aDBqVFRsS1hjUytVU3JCQnY2U1NJR1J5RmozTWdoaWdZQXZR?=
- =?utf-8?B?OVFzbUg4dkNFZDVOREErK0ovR29BS0hjK2ZmRXNCZVEvQUY3QzJKM0pXM0VK?=
- =?utf-8?B?eFR4eWRpYWVDZ2VPalVxN1JUUzg1cG1DN1FKTXRXanhNdlVpQW9LcWxoUVkw?=
- =?utf-8?B?b3BsekZXeXRBanlUQkpIWS9zbWFQOVBET0hnZ25IcURKS1h2T25rcHg4bEx4?=
- =?utf-8?B?LzR5UERNNUxSa0FMM1hBWnJUcXJxWWpFcG9EWHNYZEJrc3lnS09uSHNKbkZj?=
- =?utf-8?B?RmJocVp4ODRIN2liSlBoSU9NSVJuZHdncnhrSDdUUjc5aDZnRlJTRXplVFla?=
- =?utf-8?B?eUxDWjBsem5ncEM2THBKcUZXb2VzbEladzZFakJZbFBXbDRmcWFaelFWL2Nw?=
- =?utf-8?B?WERwNjRpaHQybTM1cU9CQmRpSTlkTUcwZkliMlVmamNpK2xMMGZ4RDdLSjNZ?=
- =?utf-8?B?Wk5tbWhrQWpabFF0STVmR05zUTdSN1RsM1h6SGFHYUQ1ZGtSYlRib09HRk5T?=
- =?utf-8?B?SjRRbXhvVTVxTXhuTGxEcnVPVmFGeGFCUnZOUlBKL2VrbkFoNkUrdEhFK2tS?=
- =?utf-8?B?RXFiR2hmWnVUdFFaZFoxWVcwcnVHUzRqcTRjM1djdWxhQ3VJcU9RaWNwbG40?=
- =?utf-8?B?d2dodkRtbEZFdkZtZE83N2dNOTNoRUhGbEVHK21KeFBEY25YazBaK2djV1BI?=
- =?utf-8?B?Snpza2pHdkNodUNQVXpXekFzeHhXbTN5OXlHNWlZQmUzZnpyZk1wR2RsYjVl?=
- =?utf-8?B?T3VaUG9IL005UFFzTzBSTGRhQmJXaWh2b1pVR1NvRlJwTkVLemR6QjRIR3lY?=
- =?utf-8?B?Ui9XcWprZEowZFRXbnQxM3QwOEpxbm0yZ0VVY0tuWldYbnRxc2M5dncyZjFa?=
- =?utf-8?B?aXc9PQ==?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f767b94f-d74b-4396-d193-08dc50159f9c
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2024 17:28:18.3368
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: P3vWrgl5ZKYm1c/aLqaIIdgVn6LkhTeVw2POOIzyQ+jtfNALeW/4EVp613jBNaTQCUKwNhYCoh1YrMdheUoCg3vxP00bGz+m1Hb9RfWwIUU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR17MB6213
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 10/15] x86: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+To: Samuel Holland <samuel.holland@sifive.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ linux-arm-kernel@lists.infradead.org, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ Christoph Hellwig <hch@lst.de>, loongarch@lists.linux.dev,
+ amd-gfx@lists.freedesktop.org, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
+ Thomas Gleixner <tglx@linutronix.de>
+References: <20240329072441.591471-1-samuel.holland@sifive.com>
+ <20240329072441.591471-11-samuel.holland@sifive.com>
+Content-Language: en-US
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20240329072441.591471-11-samuel.holland@sifive.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 27, 2024 at 03:53:39PM -0700, Yuanchu Xie wrote:
-> On Wed, Mar 27, 2024 at 2:44 PM Gregory Price
-> <gregory.price@memverge.com> wrote:
-> >
-> > Please note that this proposed interface (move_phys_pages) is very
-> > unlikely to be received upstream due to side channel concerns. Instead,
-> > it's more likely that the tiering component will expose a "promote X
-> > pages from tier A to tier B", and the kernel component would then
-> > use/consume hotness information to determine which pages to promote.
-> 
-> I see that mm/memory-tiers.c only has support for demotion. What kind
-> of hotness information do devices typically provide? The OCP proposal
-> is not very specific about this.
-> A list of hot pages with configurable threshold?
-> Access frequency for all pages at configured granularity?
-> Is there a way to tell which NUMA node is accessing them, for page promotion?
+On 3/29/24 00:18, Samuel Holland wrote:
+> +#
+> +# CFLAGS for compiling floating point code inside the kernel.
+> +#
+> +CC_FLAGS_FPU := -msse -msse2
+> +ifdef CONFIG_CC_IS_GCC
+> +# Stack alignment mismatch, proceed with caution.
+> +# GCC < 7.1 cannot compile code using `double` and -mpreferred-stack-boundary=3
+> +# (8B stack alignment).
+> +# See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53383
+> +#
+> +# The "-msse" in the first argument is there so that the
+> +# -mpreferred-stack-boundary=3 build error:
+> +#
+> +#  -mpreferred-stack-boundary=3 is not between 4 and 12
+> +#
+> +# can be triggered. Otherwise gcc doesn't complain.
+> +CC_FLAGS_FPU += -mhard-float
+> +CC_FLAGS_FPU += $(call cc-option,-msse -mpreferred-stack-boundary=3,-mpreferred-stack-boundary=4)
+> +endif
 
-(caveat: i'm not a memory-tiers maintainer, you may want to poke at them
-directly for more information, this is simply spitballing an idea)
+I was expecting to see this (now duplicate) hunk come _out_ of
+lib/Makefile somewhere in the series.
 
-I don't know of any public proposals of explicit hotness information
-provided by hardware yet, just the general proposal.
-
-For the sake of simplicity, I would make the assumption that you have
-the least information possible - a simple list of "hot addresses" in
-Host Physcal Address format.
-
-I.e. there's some driver function that amounts to:
-
-uint32_t device_get_hot_addresses(uint64_t *addresses, uint32_t buf_max);
-
-Where the return value is number of addresses the device returned, and
-the buf_max is the number of addresses that can be read.
-
-Drives providing this functionality would then register this as a
-callback when its memory becomes a member of some numa node.
-
-
-Re: source node -
-Devices have no real way of determining upstream source information.
-
-> >
-> > (Just as one example, there are many more realistic designs)
-> >
-> > So if there is a way to expose workingset data to the mm/memory_tiers.c
-> > component instead of via sysfs/cgroup - that is preferable.
-> 
-> Appreciate the feedback. The data in its current form might be useful
-> to inform demotion decisions, but for promotion, are you aware of any
-> recent developments? I would like to encode hotness as workingset data
-> as well.
-
-There were some recent patches to DAMON about promotion/demotion.  You
-might look there.
-
-~Gregory
+Did I miss that, or is there something keeping the duplicate there?
