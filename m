@@ -1,170 +1,464 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10olkn2016.outbound.protection.outlook.com [40.92.40.16])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2041.outbound.protection.outlook.com [40.107.244.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C7213E401;
-	Fri, 29 Mar 2024 22:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.40.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A03713CF91;
+	Fri, 29 Mar 2024 23:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.41
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711753192; cv=fail; b=Tc/AvNuVi9yGggJ3FxqMXyoI/x0J4lyBmOPhmY069tMEX+rI7sgLw6DBZTHZzdCEI5Q1lQL5W6FH0/ipW1ZivDSmzTPqpl5Qu5O2y12L63Fb439UHLzjV6gkijim1/b/qTVqNJysS55T2wH+c2vENtGqyi6rOcqmNculuf6jO8M=
+	t=1711753215; cv=fail; b=fjdA/KPuC/sIeqaVY0oi6TFRyIES80fOAdBPMtaMQ9A82xaK722jPMpDP5uRpw1TDRnbpyFznjP9/Wx21YefB827hdm3kEvIx74zjcXiunSTLqHcgzJwIztYjf1ofsZc2kKi6AWLKfuspBDhUx8scQLyGT8+MjjyUfS7WXaUfwc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711753192; c=relaxed/simple;
-	bh=M4G/CWBx2Oa8+fRgMukMy7+6TsKN1RSiWCrndu3BkzE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=EhxTE8SANHyczUTKPtiwklNbccJlXz4vouoocrfLfwuXYES6E2W+TZhCEUon7lxerGweaKvUck1oB1WM/xg7orORSjNTwmXXSHiE3aF5G49Jldyin1XpEka5UlMJlKpcNkNX0dhkzgaHbkXe8tvS+dheS6v2wRbGrW9pY6Nwd74=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=jLCwKO0b; arc=fail smtp.client-ip=40.92.40.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	s=arc-20240116; t=1711753215; c=relaxed/simple;
+	bh=GxarBB3QQXDtAmxKX8+rgDQfQVE3hghOjKcRWraa+k4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HsE8q9F6LYfYnMlfLKuLnv9O+oEuUbw9RNotxN5x8lROSKV36F8erowkx3T8A7TuDXzr6O+kU4CrCEBqJ710cdP0htYrMyVI1mRWa6lOwWkBhSGSmyBwm2ctHe9IpUAvbJoSHIn4mjehfry30ZOKzrAsZESfAH+1dlC89lUeS94=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=nc26yfw6; arc=fail smtp.client-ip=40.107.244.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="jLCwKO0b"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nc26yfw6"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MKKne8PNcq2fjY5igm0MaXcDWKiT7x7yRfRjUxv5lAKCmQ9AXWgcVPTPY0aIYlzLE3FNi/Ir2ccmElLyh1v+SzUEtvDKUAptRLMo0tNbVHFQ47JnpNLb8bmUaVYxq0t58pqqx2pp4kzssBjeoKYuc4Cb8grUCncMD4AOJQ6D6v8yc4urqyvwv3AEzOrKxDFEjvoxaxO1KyeIlOs5DIKLRm9NzEp6bPnqBImbqGJ2l8qwbs0RE9O69JZ4sL7SVvvLdf5BlLfz29vjKt64fUmyAjePrnWVVtCs/QMIjMmDeTqjwO4mez9kgmuYzimQj0SmHOWtpE0DiQww64x6yOiDOQ==
+ b=BElzFv0DBW0MUfZQD8UJs5q9+EA6fwy/roXbmEq+TK27HwkmLuLGaSnZEaC4z7LizwxFP+9CcgtZSYe3Ii/x3Qmyx2+qpZC8UzOKYuThs/JgABKZIcsDlHgXuf91vyYHD+eNeDFavLFzfMdZo2aHfXt6nbKGXqbANG1fHpmqqa/XuV/gj8KYH5rwG+G2KsejSM58/o+SoRJo4tf0r7lMElBZNkVB7ERvDWxQuuE+2+oUQLMCIXrnckx38ToRkbf0LSv3pwmBSoITpf9FxRved2imYa055K8dViM8qFqfybVrwd9UIQYfHaZdKZ1RO+Q8fGV/oNpLYiqpqYBgwaOOtg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IaxmU7YLrhJYdoWV2NktOvWHZ/acTZwL0PV5wnksq9A=;
- b=dYgUhwZDK2lCEMhbd5MDOhXApEJmiPSSlsOByiMMLkoxCVyaHo3UPK8i4NvCgG1S5E1+4wafVc96Kcg+tnVensRnYAs5ccXehAYh1LU4EsAuRsUtzEpU8OqSyfXgd3X7SsL62/Sewnx7yrej8m2fsZi4JnC1krgkNqId+PRmh/xRXt6+8unsz3TIGR4Skq8XTksTNMaUNkVaKjjo48m28LlLXyUIU/WuW1Xusf0t7hHk0dlJ7n70QLZKUPQoTMAyDCx+XNP+jNPSxVRqZA9LwPq9LBocQlMP0xvoF8dvXthmApiz9RXYduh1YsXcuMF3dsIEVigXxjWGOg0AwJuiCQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
+ bh=RRM0X1XPmrPHJ/xejsVZHGx/fhXzSZlUOWEIzd5vxwg=;
+ b=napnASBwyJG2prTZxam5z33xxl91ON59wzWY5AlObaNMOHV0cnd5AXmXzslMwl1QfB6IKjCNbGRvKeaSztlCXq1EJmJRKNxP/QGz33VOQxT6Ba77MSmZ9Gvharo7064GKpA8UYIMK8cOKZHtCpeZ7KJoUep/ZNRgl6SMVToBBAzcZaOe+6QjxVtGP0/o8HuSAW/+wy96FFUxfFexc0D6205fpRzXzn5uVuIzoZMwGPSHuh88nLjcONk5HXY29Ev4ytXUbmwKtvwDnx/Q0QAqKpocUh5NtX8894m8J5EScyJE5OVIw+bypKeljQQaBmiv3JPmTl+HzucpKl9Fw5SmNw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IaxmU7YLrhJYdoWV2NktOvWHZ/acTZwL0PV5wnksq9A=;
- b=jLCwKO0bAhVXx7YMnSmVDZPud0iOqhZ5O3NYCIaFaoJjIzG6pDZaam4yzUTwmK51pUFZTtgoNE0wPinjhtC3mTqMbzidvnNxhLm2Blm3GNpnl6aLgM8Kr3iLGPgz2Clz9mhlj5iHEopkr0YEbldpZdvzXEFWTPSsnG/5X60q0Jkuvi3Ym9xu2L5e6QQ0MwSBb6WVswdtmqM1rErUyyD1E6kzRymJplYiETqWXcVNM6B+46CZLugFbMaeyi/A2fJ8zt2cpG2haszZ5tUUtXf7ECqlfSVcBMFFhG7dVdJeAQqH7VIhGmntkTC4yQ77kzS4izwHxOMJIRTFplW6x7A0rw==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by SA1PR02MB8478.namprd02.prod.outlook.com (2603:10b6:806:1f9::16) with
+ bh=RRM0X1XPmrPHJ/xejsVZHGx/fhXzSZlUOWEIzd5vxwg=;
+ b=nc26yfw6BEddsMoLxmBknQWv7NoJVdW5TsUPbDB5WD56lIuKOC7ktJ7shNNMaS3nlkqYjDppMlO0nis5MV9UNDgd2MVhA+tVr1V4K8Zjyb8ngbfZX76ombAOPObrwYT1QJa3l86MicBWrhhigVCjwXVrKkwqgm6WOguSMG1TIU0=
+Received: from BYAPR02CA0060.namprd02.prod.outlook.com (2603:10b6:a03:54::37)
+ by DM6PR12MB4106.namprd12.prod.outlook.com (2603:10b6:5:221::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.33; Fri, 29 Mar
- 2024 22:59:47 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::1276:e87b:ae1:a596]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::1276:e87b:ae1:a596%5]) with mapi id 15.20.7409.039; Fri, 29 Mar 2024
- 22:59:47 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Dexuan Cui <decui@microsoft.com>, "hch@lst.de" <hch@lst.de>,
-	"m.szyprowski@samsung.com" <m.szyprowski@samsung.com>, "robin.murphy@arm.com"
-	<robin.murphy@arm.com>, "zhangpeng362@huawei.com" <zhangpeng362@huawei.com>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] swiotlb: Do not set total_used to 0 in
- swiotlb_create_debugfs_files()
-Thread-Topic: [PATCH] swiotlb: Do not set total_used to 0 in
- swiotlb_create_debugfs_files()
-Thread-Index: AQHagg9QlWq1924eoUuMlxAYgr9iE7FPVPfw
-Date: Fri, 29 Mar 2024 22:59:46 +0000
-Message-ID:
- <SN6PR02MB4157D73B5BF7161B3A5596EED43A2@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20240329192809.17318-1-decui@microsoft.com>
-In-Reply-To: <20240329192809.17318-1-decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tmn: [sM8PSIUmV3Ftfvtd6WphV0zEkwbBQy8p]
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SA1PR02MB8478:EE_
-x-ms-office365-filtering-correlation-id: 8bcf783c-101e-4725-7693-08dc5043ee46
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- ocalrKaLRSVt53m0tY5i/5898HbhBWr8iKOUKclpn5UaGiGk7SGeolOdBBnj+4x5Tb0uraKqpeZ2Ld25tD2uISczggqp2cGXMiBa8160DEI1Jqec/nzd+tedLIF0RJ8GXGuiNs1HtXLb/gOxCLlqKiIHjxoMJi+lkKchgB8cclovSwPK5hccVywO0wB/R546fPYW5BbWGKcrFx3sRceEYVqwr2dXDix8quk8S5ic0/d60s1TT4X5RRGYtHP5tNnTpCfZqkBbMRy7zSQSMT35qPn4Bxdaw50XNgTndupVKdV0zTJfBFj7sBZEvdxAexzowU3yYwCVZW2AxzSRqOGjlzhj33te7LSDNWhjzkU+VMZr9ftVZigXAhSV9fKi8ZMCAHiQw+vWJXqiimUdNMdjd254RNjLM0pTEba92BYYUyHXcUXAGKlajl3tO17S8Yu2zNw4a8i9gEPbkNPpLICOHPFPI5W6RIwY/nc4Cy3xacMT1XeC+GFGBvROAba8xeWObwAjf4z9EwPGGrGvEA+bQ3ujbG9eBH2mukDJw7W24Hyon03+A/TGqHWlMv6SbAyi
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?soFo4xEkaj08zqSj2hsC6ivZNirTPoISk3LtBbNJ14SMTXxCSkRNR8HHhiHV?=
- =?us-ascii?Q?aOlAza5EJd7niEXQwO53TcFDt9Rm0J3cGRoEaSJ3XucqhSYX7lFA+XNAn5gc?=
- =?us-ascii?Q?Cb4/tVFC+H//ydp4TTVF7Ib0g3vMLghCAf23amDZk3lZl4aadd+Axz0+hXcH?=
- =?us-ascii?Q?7mQ20hgZ9Go5sY6X89QrgwUF/QnlDAIW22kqHNPUgLwgCd8fcHV3W8PrJHyx?=
- =?us-ascii?Q?zwvPfhkjK+mwEDJgtt9KtKkWOUusFekvvyjmWGc592f4sv73JqYHez78XfOb?=
- =?us-ascii?Q?vCEQYxcqcReGVWNZQYR+JCurRT6hCxkeJj/kP8eZ2inYtnWWhO3tpH1/JJuy?=
- =?us-ascii?Q?dwNoQf7E0XNE4ZHPqiUGBs75iaX7Li0jvd6cSSfT2zTWUw/UEsXI22kd88XM?=
- =?us-ascii?Q?H0q545jhmwRolsHRzdwydI8j5ZzaxT5uEU7hB5yz+0oDnnOdl9UsYkJpwZdC?=
- =?us-ascii?Q?aZKJShtphm54SUYqJuE36S8w4PhoE8TOwtsEhkmToh8/hb5WVkAJ4AWpxRX8?=
- =?us-ascii?Q?f7CdiUn8LVRgrTxhdJnstTCrWs5B1omGNF/K5ayFc5jzkzivhxXitfP7n3FZ?=
- =?us-ascii?Q?ysevv+uLtlGtbFjuP0Se03xTZS1B6wJIV03xYO4+8kei1s05lA+T5duNH058?=
- =?us-ascii?Q?emIsMFvFNLYfTaF2NL0eVo4Eaz6OKOhLZn/y9MXtCI/0OY6P5wf2iE88hxp0?=
- =?us-ascii?Q?x6Vk2q+nheF/OjFu3WCUmPeRUF2Gjcj3HpkuM04JF89RSPL5tTfeafDOduOj?=
- =?us-ascii?Q?vGjLz2oiGFJ+gstmfyv8SoNYcw8PWX8/hW2CgXRoNV4aAusr9aQSP9UwYC+g?=
- =?us-ascii?Q?ia5n1Iru1vWzAFssXyS6+PQ3lZ8mBrYf+SMydvyAelxG0w7oUl0lYDz2C6JY?=
- =?us-ascii?Q?hw6WDElvZw4PWHib8M9xYT8Fqz1pIKOQeXzUmiCK2anJgtvXNqGMNXf2wE1c?=
- =?us-ascii?Q?M5SO9vj0m6voJnNsSXLEukdxWBWS89+vOBy2R5uS3pJgs+ltXjDZwP6Kfoh+?=
- =?us-ascii?Q?/a63byZ/gL1ogI1AAFQw7E3bddIRAFhAk61HVh1ehTtCylsbcJUkNB1WhR+j?=
- =?us-ascii?Q?pJPqOYU2pMavqBkgVYnc670mnjxafnj8B9R23Vu9zzU+PBftCnHC4S5x1vzc?=
- =?us-ascii?Q?ThQx6+AffuOUVhkIF1341H4QZdNig5ncd6CQOAP0yZx9ImPm3rm7B8+p5Wtv?=
- =?us-ascii?Q?Ks2Xz0+Qu7Bb2Lr0fGbS5ysurl5/D/6u6zi8+w=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.41; Fri, 29 Mar
+ 2024 23:00:10 +0000
+Received: from SJ1PEPF00001CDC.namprd05.prod.outlook.com
+ (2603:10b6:a03:54:cafe::66) by BYAPR02CA0060.outlook.office365.com
+ (2603:10b6:a03:54::37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.40 via Frontend
+ Transport; Fri, 29 Mar 2024 23:00:10 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF00001CDC.mail.protection.outlook.com (10.167.242.4) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7409.10 via Frontend Transport; Fri, 29 Mar 2024 23:00:10 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 29 Mar
+ 2024 18:00:03 -0500
+From: Michael Roth <michael.roth@amd.com>
+To: <kvm@vger.kernel.org>
+CC: <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
+	<linux-crypto@vger.kernel.org>, <x86@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<jroedel@suse.de>, <thomas.lendacky@amd.com>, <hpa@zytor.com>,
+	<ardb@kernel.org>, <pbonzini@redhat.com>, <seanjc@google.com>,
+	<vkuznets@redhat.com>, <jmattson@google.com>, <luto@kernel.org>,
+	<dave.hansen@linux.intel.com>, <slp@redhat.com>, <pgonda@google.com>,
+	<peterz@infradead.org>, <srinivas.pandruvada@linux.intel.com>,
+	<rientjes@google.com>, <dovmurik@linux.ibm.com>, <tobin@ibm.com>,
+	<bp@alien8.de>, <vbabka@suse.cz>, <kirill@shutemov.name>,
+	<ak@linux.intel.com>, <tony.luck@intel.com>,
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, <alpergun@google.com>,
+	<jarkko@kernel.org>, <ashish.kalra@amd.com>, <nikunj.dadhania@amd.com>,
+	<pankaj.gupta@amd.com>, <liam.merwick@oracle.com>, Brijesh Singh
+	<brijesh.singh@amd.com>
+Subject: [PATCH v12 11/29] KVM: SEV: Add KVM_SEV_SNP_LAUNCH_UPDATE command
+Date: Fri, 29 Mar 2024 17:58:17 -0500
+Message-ID: <20240329225835.400662-12-michael.roth@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240329225835.400662-1-michael.roth@amd.com>
+References: <20240329225835.400662-1-michael.roth@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8bcf783c-101e-4725-7693-08dc5043ee46
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Mar 2024 22:59:46.9799
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CDC:EE_|DM6PR12MB4106:EE_
+X-MS-Office365-Filtering-Correlation-Id: c27c7199-0608-4e58-824a-08dc5043fc68
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	3CPhwmHFRTbcoEsG1eJurOstXAgzf72Ze7qRd5sd1y6H95KtLVWAy00ly7s0y7UOv9/Fa0d8LCHeobZEAV2wMHMBwvDPt5XAgtaP9QWZ+6Pr3bZziTFcZgcMbr04m8pJ+cA9GwKvf6S/OMzrLt1uriEl9sVG2Bf4VpxzIMljD40wtDfDmpx31u8s23d/bIMGv6jQFVj3JsuuUr7+HOjkJs/H2mEbB7cC3VTL0Er3ZMCNT6/L4bqA37k9zeBppe0b5nePPH2UflxHzfh4xMNZ6ttcvsy6mHWLMBExEFEIQhgQ1TOSYMs8niYK+J7Io8C7NWgJtTPqSs9KwMJTb6+9bCVfzJj/ZLfHIJofmlifP5hfGvMx93ymUl3BiC9gNvHQiHNEoEJzJao3IpwR3tvvhnaU3WR7e+uryr7q7iOu9+JcYiXmTkCvbv2nJKeo8lbfwacgdTl6AOMDpdHAitMLR2yKnrPiwH9iJqUttjiJRr0tl6Nw0MUpWYJdQmvO2WKorsDgqWLh1Kh7yCTmsLHo3/F5EQ95LrJUpo/oDYlT4Y8rCFA8M/0cQ/BoREHUAEIJf31yyt0jDtOkCL3L4IuUvAGqIRGTU2nEaPf0gSnJ2SZa7+lm1s/2tb6l75eI+PLBLm7LdN75fg4zFqX9400AtenkM7z03+WcUgV0uQT6QARZn2e8eElJMYIpPr3dLb7aqYFKckjQdmJgdLdQvqbbyTfg7fdW4eBNPlSyVZ81qEcbrDLftDw463QUQ57VRGBO
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(1800799015)(7416005)(376005)(36860700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2024 23:00:10.6256
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR02MB8478
+X-MS-Exchange-CrossTenant-Network-Message-Id: c27c7199-0608-4e58-824a-08dc5043fc68
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CDC.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4106
 
-From: Dexuan Cui <decui@microsoft.com> Sent: Friday, March 29, 2024 12:28 P=
-M
->=20
-> Sometimes the readout of /sys/kernel/debug/swiotlb/io_tlb_used and
-> io_tlb_used_hiwater can be a huge number (e.g. 18446744073709551615),
-> which is actually a negative number if we use "%ld" to print the number.
->=20
-> When swiotlb_create_default_debugfs() is running from late_initcall,
-> mem->total_used may already be non-zero, because the storage driver
-> may have already started to perform I/O operations: if the storage
-> driver is built-in, its probe() callback is called before late_initcall.
->=20
-> swiotlb_create_debugfs_files() should not blindly set mem->total_used
-> and mem->used_hiwater to 0; actually it doesn't have to initialize the
-> fields at all, because the fields, as part of the global struct
-> io_tlb_default_mem, have been implicitly initialized to zero.
->=20
-> Also don't explicitly set mem->transient_nslabs to 0.
->=20
-> Fixes: 8b0977ecc8b3 ("swiotlb: track and report io_tlb_used high water ma=
-rks in debugfs")
-> Fixes: 02e765697038 ("swiotlb: add debugfs to track swiotlb transient poo=
-l usage")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->  kernel/dma/swiotlb.c | 4 ----
->  1 file changed, 4 deletions(-)
->=20
-> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-> index 86fe172b5958..4a9f02c13da6 100644
-> --- a/kernel/dma/swiotlb.c
-> +++ b/kernel/dma/swiotlb.c
-> @@ -1647,9 +1647,6 @@
-> DEFINE_DEBUGFS_ATTRIBUTE(fops_io_tlb_hiwater, io_tlb_hiwater_get,
->  static void swiotlb_create_debugfs_files(struct io_tlb_mem *mem,
->  					 const char *dirname)
->  {
-> -	atomic_long_set(&mem->total_used, 0);
-> -	atomic_long_set(&mem->used_hiwater, 0);
-> -
->  	mem->debugfs =3D debugfs_create_dir(dirname, io_tlb_default_mem.debugfs=
-);
->  	if (!mem->nslabs)
->  		return;
-> @@ -1660,7 +1657,6 @@ static void swiotlb_create_debugfs_files(struct io_=
-tlb_mem *mem,
->  	debugfs_create_file("io_tlb_used_hiwater", 0600, mem->debugfs, mem,
->  			&fops_io_tlb_hiwater);
->  #ifdef CONFIG_SWIOTLB_DYNAMIC
-> -	atomic_long_set(&mem->transient_nslabs, 0);
->  	debugfs_create_file("io_tlb_transient_nslabs", 0400, mem->debugfs,
->  			    mem, &fops_io_tlb_transient_used);
->  #endif
-> --
-> 2.34.1
+From: Brijesh Singh <brijesh.singh@amd.com>
 
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+A key aspect of a launching an SNP guest is initializing it with a
+known/measured payload which is then encrypted into guest memory as
+pre-validated private pages and then measured into the cryptographic
+launch context created with KVM_SEV_SNP_LAUNCH_START so that the guest
+can attest itself after booting.
+
+Since all private pages are provided by guest_memfd, make use of the
+kvm_gmem_populate() interface to handle this. The general flow is that
+guest_memfd will handle allocating the pages associated with the GPA
+ranges being initialized by each particular call of
+KVM_SEV_SNP_LAUNCH_UPDATE, copying data from userspace into those pages,
+and then the post_populate callback will do the work of setting the
+RMP entries for these pages to private and issuing the SNP firmware
+calls to encrypt/measure them.
+
+For more information see the SEV-SNP specification.
+
+Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+Co-developed-by: Michael Roth <michael.roth@amd.com>
+Signed-off-by: Michael Roth <michael.roth@amd.com>
+Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+---
+ .../virt/kvm/x86/amd-memory-encryption.rst    |  39 ++++
+ arch/x86/include/uapi/asm/kvm.h               |  15 ++
+ arch/x86/kvm/svm/sev.c                        | 211 ++++++++++++++++++
+ 3 files changed, 265 insertions(+)
+
+diff --git a/Documentation/virt/kvm/x86/amd-memory-encryption.rst b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
+index a10b817c162d..4268aa5c380e 100644
+--- a/Documentation/virt/kvm/x86/amd-memory-encryption.rst
++++ b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
+@@ -478,6 +478,45 @@ Returns: 0 on success, -negative on error
+ 
+ See the SEV-SNP spec [snp-fw-abi]_ for further detail on the launch input.
+ 
++19. KVM_SEV_SNP_LAUNCH_UPDATE
++-----------------------------
++
++The KVM_SEV_SNP_LAUNCH_UPDATE command is used for loading userspace-provided
++data into a guest GPA range, measuring the contents into the SNP guest context
++created by KVM_SEV_SNP_LAUNCH_START, and then encrypting/validating that GPA
++range so that it will be immediately readable using the encryption key
++associated with the guest context once it is booted, after which point it can
++attest the measurement associated with its context before unlocking any
++secrets.
++
++It is required that the GPA ranges initialized by this command have had the
++KVM_MEMORY_ATTRIBUTE_PRIVATE attribute set in advance. See the documentation
++for KVM_SET_MEMORY_ATTRIBUTES for more details on this aspect.
++
++Parameters (in): struct  kvm_sev_snp_launch_update
++
++Returns: 0 on success, -negative on error
++
++::
++
++        struct kvm_sev_snp_launch_update {
++                __u64 gfn_start;        /* Guest page number to load/encrypt data into. */
++                __u64 uaddr;            /* Userspace address of data to be loaded/encrypted. */
++                __u32 len;              /* 4k-aligned length in bytes to copy into guest memory.*/
++                __u8 type;              /* The type of the guest pages being initialized. */
++        };
++
++where the allowed values for page_type are #define'd as::
++
++	KVM_SEV_SNP_PAGE_TYPE_NORMAL
++	KVM_SEV_SNP_PAGE_TYPE_ZERO
++	KVM_SEV_SNP_PAGE_TYPE_UNMEASURED
++	KVM_SEV_SNP_PAGE_TYPE_SECRETS
++	KVM_SEV_SNP_PAGE_TYPE_CPUID
++
++See the SEV-SNP spec [snp-fw-abi]_ for further details on how each page type is
++used/measured.
++
+ Device attribute API
+ ====================
+ 
+diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
+index 350ddd5264ea..956eb548c08e 100644
+--- a/arch/x86/include/uapi/asm/kvm.h
++++ b/arch/x86/include/uapi/asm/kvm.h
+@@ -695,6 +695,7 @@ enum sev_cmd_id {
+ 
+ 	/* SNP-specific commands */
+ 	KVM_SEV_SNP_LAUNCH_START,
++	KVM_SEV_SNP_LAUNCH_UPDATE,
+ 
+ 	KVM_SEV_NR_MAX,
+ };
+@@ -826,6 +827,20 @@ struct kvm_sev_snp_launch_start {
+ 	__u8 gosvw[16];
+ };
+ 
++/* Kept in sync with firmware values for simplicity. */
++#define KVM_SEV_SNP_PAGE_TYPE_NORMAL		0x1
++#define KVM_SEV_SNP_PAGE_TYPE_ZERO		0x3
++#define KVM_SEV_SNP_PAGE_TYPE_UNMEASURED	0x4
++#define KVM_SEV_SNP_PAGE_TYPE_SECRETS		0x5
++#define KVM_SEV_SNP_PAGE_TYPE_CPUID		0x6
++
++struct kvm_sev_snp_launch_update {
++	__u64 gfn_start;
++	__u64 uaddr;
++	__u32 len;
++	__u8 type;
++};
++
+ #define KVM_X2APIC_API_USE_32BIT_IDS            (1ULL << 0)
+ #define KVM_X2APIC_API_DISABLE_BROADCAST_QUIRK  (1ULL << 1)
+ 
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index 6c7c77e33e62..a8a8a285b4a4 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -247,6 +247,35 @@ static void sev_decommission(unsigned int handle)
+ 	sev_guest_decommission(&decommission, NULL);
+ }
+ 
++static int snp_page_reclaim(u64 pfn)
++{
++	struct sev_data_snp_page_reclaim data = {0};
++	int err, rc;
++
++	data.paddr = __sme_set(pfn << PAGE_SHIFT);
++	rc = sev_do_cmd(SEV_CMD_SNP_PAGE_RECLAIM, &data, &err);
++	if (WARN_ON_ONCE(rc)) {
++		/*
++		 * This shouldn't happen under normal circumstances, but if the
++		 * reclaim failed, then the page is no longer safe to use.
++		 */
++		snp_leak_pages(pfn, 1);
++	}
++
++	return rc;
++}
++
++static int host_rmp_make_shared(u64 pfn, enum pg_level level, bool leak)
++{
++	int rc;
++
++	rc = rmp_make_shared(pfn, level);
++	if (rc && leak)
++		snp_leak_pages(pfn, page_level_size(level) >> PAGE_SHIFT);
++
++	return rc;
++}
++
+ static void sev_unbind_asid(struct kvm *kvm, unsigned int handle)
+ {
+ 	struct sev_data_deactivate deactivate;
+@@ -2075,6 +2104,185 @@ static int snp_launch_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ 	return rc;
+ }
+ 
++struct sev_gmem_populate_args {
++	__u8 type;
++	int sev_fd;
++	int fw_error;
++};
++
++static int sev_gmem_post_populate(struct kvm *kvm, struct kvm_memory_slot *slot,
++				  gfn_t gfn_start, kvm_pfn_t pfn, void __user *src,
++				  int order, void *opaque)
++{
++	struct sev_gmem_populate_args *sev_populate_args = opaque;
++	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
++	int npages = (1 << order);
++	int n_private = 0;
++	int ret, i;
++	gfn_t gfn;
++
++	pr_debug("%s: gfn_start %llx pfn_start %llx npages %d\n",
++		 __func__, gfn_start, pfn, npages);
++
++	for (gfn = gfn_start, i = 0; gfn < gfn_start + npages; gfn++, i++) {
++		struct sev_data_snp_launch_update fw_args = {0};
++		bool assigned;
++		int level;
++
++		if (!kvm_mem_is_private(kvm, gfn)) {
++			pr_debug("%s: Failed to ensure GFN 0x%llx has private memory attribute set\n",
++				 __func__, gfn);
++			ret = -EINVAL;
++			break;
++		}
++
++		ret = snp_lookup_rmpentry((u64)pfn + i, &assigned, &level);
++		if (ret || assigned) {
++			pr_debug("%s: Failed to ensure GFN 0x%llx RMP entry is initial shared state, ret: %d assigned: %d\n",
++				 __func__, gfn, ret, assigned);
++			break;
++		}
++
++		ret = rmp_make_private(pfn + i, gfn << PAGE_SHIFT, PG_LEVEL_4K,
++				       sev_get_asid(kvm), true);
++		if (ret) {
++			pr_debug("%s: Failed to convert GFN 0x%llx to private, ret: %d\n",
++				 __func__, gfn, ret);
++			break;
++		}
++
++		n_private++;
++
++		fw_args.gctx_paddr = __psp_pa(sev->snp_context);
++		fw_args.address = __sme_set(pfn_to_hpa(pfn + i));
++		fw_args.page_size = PG_LEVEL_TO_RMP(PG_LEVEL_4K);
++		fw_args.page_type = sev_populate_args->type;
++		ret = __sev_issue_cmd(sev_populate_args->sev_fd, SEV_CMD_SNP_LAUNCH_UPDATE,
++				      &fw_args, &sev_populate_args->fw_error);
++		if (ret) {
++			pr_debug("%s: SEV-SNP launch update failed, ret: 0x%x, fw_error: 0x%x\n",
++				 __func__, ret, sev_populate_args->fw_error);
++
++			if (snp_page_reclaim(pfn + i))
++				break;
++
++			/*
++			 * When invalid CPUID function entries are detected,
++			 * firmware writes the expected values into the page and
++			 * leaves it unencrypted so it can be used for debugging
++			 * and error-reporting.
++			 *
++			 * Copy this page back into the source buffer so
++			 * userspace can use this information to provide
++			 * information on which CPUID leaves/fields failed CPUID
++			 * validation.
++			 */
++			if (sev_populate_args->type == KVM_SEV_SNP_PAGE_TYPE_CPUID &&
++			    sev_populate_args->fw_error == SEV_RET_INVALID_PARAM) {
++				void *vaddr;
++
++				host_rmp_make_shared(pfn + i, PG_LEVEL_4K, true);
++				vaddr = kmap_local_pfn(pfn + i);
++
++				if (copy_to_user(src + i * PAGE_SIZE,
++						 vaddr, PAGE_SIZE))
++					pr_debug("Failed to write CPUID page back to userspace\n");
++
++				kunmap_local(vaddr);
++			}
++
++			break;
++		}
++	}
++
++	if (ret) {
++		pr_debug("%s: exiting with error ret %d, undoing %d populated gmem pages.\n",
++			 __func__, ret, n_private);
++		for (i = 0; i < n_private; i++)
++			host_rmp_make_shared(pfn + i, PG_LEVEL_4K, true);
++	}
++
++	return ret;
++}
++
++static int snp_launch_update(struct kvm *kvm, struct kvm_sev_cmd *argp)
++{
++	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
++	struct sev_gmem_populate_args sev_populate_args = {0};
++	struct kvm_gmem_populate_args populate_args = {0};
++	struct kvm_sev_snp_launch_update params;
++	struct kvm_memory_slot *memslot;
++	unsigned int npages;
++	int ret = 0;
++
++	if (!sev_snp_guest(kvm) || !sev->snp_context)
++		return -EINVAL;
++
++	if (copy_from_user(&params, u64_to_user_ptr(argp->data), sizeof(params)))
++		return -EFAULT;
++
++	if (!IS_ALIGNED(params.len, PAGE_SIZE) ||
++	    (params.type != KVM_SEV_SNP_PAGE_TYPE_NORMAL &&
++	     params.type != KVM_SEV_SNP_PAGE_TYPE_ZERO &&
++	     params.type != KVM_SEV_SNP_PAGE_TYPE_UNMEASURED &&
++	     params.type != KVM_SEV_SNP_PAGE_TYPE_SECRETS &&
++	     params.type != KVM_SEV_SNP_PAGE_TYPE_CPUID))
++		return -EINVAL;
++
++	npages = params.len / PAGE_SIZE;
++
++	pr_debug("%s: GFN range 0x%llx-0x%llx type %d\n", __func__,
++		 params.gfn_start, params.gfn_start + npages, params.type);
++
++	/*
++	 * For each GFN that's being prepared as part of the initial guest
++	 * state, the following pre-conditions are verified:
++	 *
++	 *   1) The backing memslot is a valid private memslot.
++	 *   2) The GFN has been set to private via KVM_SET_MEMORY_ATTRIBUTES
++	 *      beforehand.
++	 *   3) The PFN of the guest_memfd has not already been set to private
++	 *      in the RMP table.
++	 *
++	 * The KVM MMU relies on kvm->mmu_invalidate_seq to retry nested page
++	 * faults if there's a race between a fault and an attribute update via
++	 * KVM_SET_MEMORY_ATTRIBUTES, and a similar approach could be utilized
++	 * here. However, kvm->slots_lock guards against both this as well as
++	 * concurrent memslot updates occurring while these checks are being
++	 * performed, so use that here to make it easier to reason about the
++	 * initial expected state and better guard against unexpected
++	 * situations.
++	 */
++	mutex_lock(&kvm->slots_lock);
++
++	memslot = gfn_to_memslot(kvm, params.gfn_start);
++	if (!kvm_slot_can_be_private(memslot)) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	sev_populate_args.sev_fd = argp->sev_fd;
++	sev_populate_args.type = params.type;
++
++	populate_args.opaque = &sev_populate_args;
++	populate_args.gfn = params.gfn_start;
++	populate_args.src = u64_to_user_ptr(params.uaddr);
++	populate_args.npages = npages;
++	populate_args.do_memcpy = params.type != KVM_SEV_SNP_PAGE_TYPE_ZERO;
++	populate_args.post_populate = sev_gmem_post_populate;
++
++	ret = kvm_gmem_populate(kvm, memslot, &populate_args);
++	if (ret) {
++		argp->error = sev_populate_args.fw_error;
++		pr_debug("%s: kvm_gmem_populate failed, ret %d\n", __func__, ret);
++	}
++
++out:
++	mutex_unlock(&kvm->slots_lock);
++
++	return ret;
++}
++
+ int sev_mem_enc_ioctl(struct kvm *kvm, void __user *argp)
+ {
+ 	struct kvm_sev_cmd sev_cmd;
+@@ -2165,6 +2373,9 @@ int sev_mem_enc_ioctl(struct kvm *kvm, void __user *argp)
+ 	case KVM_SEV_SNP_LAUNCH_START:
+ 		r = snp_launch_start(kvm, &sev_cmd);
+ 		break;
++	case KVM_SEV_SNP_LAUNCH_UPDATE:
++		r = snp_launch_update(kvm, &sev_cmd);
++		break;
+ 	default:
+ 		r = -EINVAL;
+ 		goto out;
+-- 
+2.25.1
+
