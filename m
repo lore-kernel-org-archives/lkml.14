@@ -1,77 +1,77 @@
 Received: from a.mx.secunet.com (a.mx.secunet.com [62.96.220.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5CB154422;
-	Sun, 31 Mar 2024 16:40:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18FFF153BF0;
+	Sun, 31 Mar 2024 16:40:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=62.96.220.36
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711903206; cv=fail; b=S7MqymfmvQGLPRNyVUFbk2jGUfzEXGCyi0mPSxcjqhPsluGx33GVz5LiX+8rDsFal09cn7NJ3RpkcjrSvn1TPeABcKvFWEFKwlqeNuloMxt7XAdb+tCkzI8xNruHggypaVu1JHILLrP6tqUTxeb3WMhqcNjz9c318EXwqBV7oec=
+	t=1711903206; cv=fail; b=dO5ahdtkzf5v6GJg+qoybxUSDoT6h1+YX4xrCBUwZNdM9fOB72v6COdIx3GlUPV/ecnJzzBf0WL9rjWRAJa48WoRMX/7IdwwOjrUJc/G9D/mU9RePFXCbzk3e1gWRjqfvPCUesWt4/MuVoVledmNReiILbfaTIZuGlSm5OsmXFA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711903206; c=relaxed/simple;
-	bh=8G+9T43jI3yvjQOfIREuD3iIzpxYF2FzcY1pUJg5BKE=;
+	bh=q6HS111PEBa7tF3V71XZ0vYqzeHxvJu9qsnYiIbRG3g=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GJagrkQJZepshpKemeoj6BqTa10KkQA0UDB8OQdktFjoNtUAAQzF0L9H/+eZs+WEDqsFqzoVImGbVWb0CcquUGW9P48wMPWy/rTSIO0tBTzEkm07Qc1wh8oiFpU/bLbt4lBL0arEc3bIHm5pH8mdWfJxlzRzgkZ7yKv1b7eROMU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; dkim=fail (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nt5XZQ8A reason="signature verification failed"; arc=none smtp.client-ip=10.30.226.201; arc=fail smtp.client-ip=62.96.220.36
+	 MIME-Version:Content-Type; b=kLAmbrRwCF7R7PRrQ2gifLyurRghWSTugEbv/DCzD7nh0B3cB8s9agDdd7bcbupyJAhl111G6q0V84K8eVtsK8NOc2Wt+nsHmXJrff/17mijMW5J/YR8EQzt7+d1z3W8P0CXkQmwOuckB/Vs4G3pS9yxLBgQ9e3jNTzy0tyNlk0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; dkim=fail (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mmn7bK5p reason="signature verification failed"; arc=none smtp.client-ip=10.30.226.201; arc=fail smtp.client-ip=62.96.220.36
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nt5XZQ8A"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mmn7bK5p"
 Received: from localhost (localhost [127.0.0.1])
-	by a.mx.secunet.com (Postfix) with ESMTP id 879AC208B4;
+	by a.mx.secunet.com (Postfix) with ESMTP id BC87D20842;
 	Sun, 31 Mar 2024 18:40:01 +0200 (CEST)
 X-Virus-Scanned: by secunet
 Received: from a.mx.secunet.com ([127.0.0.1])
 	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id hpjrUeRVGx0e; Sun, 31 Mar 2024 18:40:00 +0200 (CEST)
-Received: from mailout1.secunet.com (mailout1.secunet.com [62.96.220.44])
+	with ESMTP id p6LCCy1uUMHV; Sun, 31 Mar 2024 18:40:00 +0200 (CEST)
+Received: from mailout2.secunet.com (mailout2.secunet.com [62.96.220.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by a.mx.secunet.com (Postfix) with ESMTPS id D10F02087B;
-	Sun, 31 Mar 2024 18:39:59 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com D10F02087B
+	by a.mx.secunet.com (Postfix) with ESMTPS id 00A1A20882;
+	Sun, 31 Mar 2024 18:40:00 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 00A1A20882
 Received: from cas-essen-01.secunet.de (unknown [10.53.40.201])
-	by mailout1.secunet.com (Postfix) with ESMTP id C440480004A;
+	by mailout2.secunet.com (Postfix) with ESMTP id E71B8800050;
 	Sun, 31 Mar 2024 18:39:59 +0200 (CEST)
 Received: from mbx-essen-01.secunet.de (10.53.40.197) by
  cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
  15.1.2507.35; Sun, 31 Mar 2024 18:39:59 +0200
 Received: from Pickup by mbx-essen-01.secunet.de with Microsoft SMTP Server id
- 15.1.2507.17; Sun, 31 Mar 2024 16:36:16 +0000
-X-sender: <netdev+bounces-83461-peter.schumann=secunet.com@vger.kernel.org>
+ 15.1.2507.17; Sun, 31 Mar 2024 16:36:15 +0000
+X-sender: <netdev+bounces-83456-peter.schumann=secunet.com@vger.kernel.org>
 X-Receiver: <peter.schumann@secunet.com>
  ORCPT=rfc822;peter.schumann@secunet.com NOTIFY=NEVER;
  X-ExtendedProps=BQAVABYAAgAAAAUAFAARAJ05ab4WgQhHsqdZ7WUjHykPADUAAABNaWNyb3NvZnQuRXhjaGFuZ2UuVHJhbnNwb3J0LkRpcmVjdG9yeURhdGEuSXNSZXNvdXJjZQIAAAUAagAJAAEAAAAAAAAABQAWAAIAAAUAQwACAAAFAEYABwADAAAABQBHAAIAAAUAEgAPAGAAAAAvbz1zZWN1bmV0L291PUV4Y2hhbmdlIEFkbWluaXN0cmF0aXZlIEdyb3VwIChGWURJQk9IRjIzU1BETFQpL2NuPVJlY2lwaWVudHMvY249UGV0ZXIgU2NodW1hbm41ZTcFAAsAFwC+AAAAQ5IZ35DtBUiRVnd98bETxENOPURCNCxDTj1EYXRhYmFzZXMsQ049RXhjaGFuZ2UgQWRtaW5pc3RyYXRpdmUgR3JvdXAgKEZZRElCT0hGMjNTUERMVCksQ049QWRtaW5pc3RyYXRpdmUgR3JvdXBzLENOPXNlY3VuZXQsQ049TWljcm9zb2Z0IEV4Y2hhbmdlLENOPVNlcnZpY2VzLENOPUNvbmZpZ3VyYXRpb24sREM9c2VjdW5ldCxEQz1kZQUADgARAC7JU/le071Fhs0mWv1VtVsFAB0ADwAMAAAAbWJ4LWVzc2VuLTAxBQA8AAIAAA8ANgAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5EaXNwbGF5TmFtZQ8ADwAAAFNjaHVtYW5uLCBQZXRlcgUADAACAAAFAGwAAgAABQBYABcASAAAAJ05ab4WgQhHsqdZ7WUjHylDTj1TY2h1bWFubiBQZXRlcixPVT1Vc2VycyxPVT1NaWdyYXRpb24sREM9c2VjdW5ldCxEQz1kZQUAJgACAAEFACIADwAxAAAAQXV0b1Jlc3BvbnNlU3VwcHJlc3M6IDANClRyYW5zbWl0SGlzdG9yeTogRmFsc
 	2UNCg8ALwAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuRXhwYW5zaW9uR3JvdXBUeXBlDwAVAAAATWVtYmVyc0dyb3VwRXhwYW5zaW9uBQAjAAIAAQ==
 X-CreatedBy: MSExchange15
 X-HeloDomain: a.mx.secunet.com
-X-ExtendedProps: BQBjAAoAbUamlidQ3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5Pcmdhbml6YXRpb25TY29wZREAAAAAAAAAAAAAAAAAAAAAAAUASQACAAEFAAQAFCABAAAAGgAAAHBldGVyLnNjaHVtYW5uQHNlY3VuZXQuY29tBQAGAAIAAQUAKQACAAEPAAkAAABDSUF1ZGl0ZWQCAAEFAAIABwABAAAABQADAAcAAAAAAAUABQACAAEFAGIACgDKAAAAy4oAAAUAZAAPAAMAAABIdWI=
+X-ExtendedProps: BQBjAAoAfUWmlidQ3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5Pcmdhbml6YXRpb25TY29wZREAAAAAAAAAAAAAAAAAAAAAAAUASQACAAEFAAQAFCABAAAAGgAAAHBldGVyLnNjaHVtYW5uQHNlY3VuZXQuY29tBQAGAAIAAQUAKQACAAEPAAkAAABDSUF1ZGl0ZWQCAAEFAAIABwABAAAABQADAAcAAAAAAAUABQACAAEFAGIACgA+AAAAy4oAAAUAZAAPAAMAAABIdWI=
 X-Source: SMTP:Default MBX-ESSEN-02
 X-SourceIPAddress: 62.96.220.36
-X-EndOfInjectedXHeaders: 11175
+X-EndOfInjectedXHeaders: 10813
 X-Virus-Scanned: by secunet
-Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=147.75.199.223; helo=ny.mirrors.kernel.org; envelope-from=netdev+bounces-83461-peter.schumann=secunet.com@vger.kernel.org; receiver=peter.schumann@secunet.com 
-DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 58E0D20885
+Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=147.75.48.161; helo=sy.mirrors.kernel.org; envelope-from=netdev+bounces-83456-peter.schumann=secunet.com@vger.kernel.org; receiver=peter.schumann@secunet.com 
+DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com ADACB2087B
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711745626; cv=none; b=CVPCGk9LD0NbPjQV8T2NNphifh6hmBZaegACNK3HaX/lTWENaRN6Fdlf4knmT1jZjTtE/cxgVHj9nX5tC5bpS5XTf8CDbYoJ8g3k8LTz7UeL48U8g6RJk1nD/BJIk/d7y/S9r0GuQb3dVmwVSdggts92/Fgf7pXeAN/MxmrFpa4=
+	t=1711743539; cv=none; b=qkg7bZWXnaWDqWm9OMTUKldCzr+aNi+EkgMvCd0cCOINFWNv90wOE+ERbfY0DBPTauBHBaZ9F5mNf6Oxz3hsUD/Wnqcq1irchTYluVZNbYEQfBfNjMl3RXI06FFyQURD+G7Ueun+7E3NgP0JwLeziiZASuexXNS0dP6vHnpObQI=
 ARC-Message-Signature: i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711745626; c=relaxed/simple;
-	bh=DPU/cpMX8JgPzOh54Wy5Z1joAaXrPLw4+pp0/2XrYwo=;
+	s=arc-20240116; t=1711743539; c=relaxed/simple;
+	bh=XtVImmmSugd7Y+fhFyNSmTR6NDHudXo4Ksas1gA4z/s=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p/YgEleA7dhqMltk+cpaDAI5CB6Lxj8GtF3ftBqkh9p0yRW9z2he+RRe91fZHBJ+LqVhIsvHLMH0FT77gqRr4dYhRzsYZMFuBhQLc59ydGn2GoVeT3YNhGEpWwsNRFQlNo3N0K05H4mJRNmROttjq61J8Xwbz+5tyOFWqpx1HK4=
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nt5XZQ8A; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Qqu4zCBTiJqgGnFdGLm/XtOGp4Us/lbdid0E7apFgBNq55apYx3ut6lCEtpoylX8bJ46arI5BqiniTPLcyz6+ZXWHLs3DnCqKNHsi8EkPv89ErnAleQGgT47rA5XApiBVz9a6chCtJtPcLnjFZbwyX4bGxsfvhhj1nWKqcr171M=
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mmn7bK5p; arc=none smtp.client-ip=10.30.226.201
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711745625;
-	bh=DPU/cpMX8JgPzOh54Wy5Z1joAaXrPLw4+pp0/2XrYwo=;
+	s=k20201202; t=1711743538;
+	bh=XtVImmmSugd7Y+fhFyNSmTR6NDHudXo4Ksas1gA4z/s=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nt5XZQ8AuFdzkpc2dRk4glfwOAVOcm1EdgvmJH132ePhRwjx5yZG7K5MDJf7XEaXf
-	 DNUmTCxPOgEyg82a0x+w/HjPxm0ksMkeaCOMP/vZCOd9Xzx3wgYHLnO9JCshz15SQT
-	 rMXaDnaBpPXSvZDu8fKKgkDjwpyBmbuvSAJQVLwDGgLMXs4WbAgKj4Swf1TEL7R6BY
-	 7WPgwSohXsmR/Hlvjyyvl3pMa00trccpz/7FsrFsTzXSAyPZ+F+H/We6eRrIqvKQTE
-	 Nt2XqeSYRkKbZraS9gxLxNtOsHaK4zygIPknpsWEa2Jr/9wVwM+l4r1fJB94AFXUB9
-	 5iFtrKKt4p58Q==
-Date: Fri, 29 Mar 2024 13:53:44 -0700
+	b=mmn7bK5praEFKZSEsXD1U0+/BhIiMgbRjlqzURm8mJyxcKdG1u7nFhvjWn6vjh45L
+	 4fMwTQz5BgPAhQhwxhdzDjswpLr9tfxyAozEWodJ9d27CxJ4UL4UFY8Hf3KdPpUow8
+	 E8A+MEP24fcOZoxGi8rhDy8xtbiVoeUdXbHP4PlO33ntnqxcbRNqN9U47LzjpdNssC
+	 YPsQGwM2m4yyhH+9eEUxcjM4Ffzgd6RloWxtSrDibmFc5c1SFjvFY0/UkKocjbZRfB
+	 tH6Rp6GsCq/VsJXLXe3LZL+Iv2yl9gsZmI2qe8RWHTL8tXGuYUE5J+9mVzpCC1gcYY
+	 0Sa+AbTpHn+oA==
+Date: Fri, 29 Mar 2024 13:18:57 -0700
 From: Jakub Kicinski <kuba@kernel.org>
 To: Alexander Lobakin <aleksander.lobakin@intel.com>
 Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
@@ -81,11 +81,10 @@ Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
  linux-kernel@vger.kernel.org
 Subject: Re: [PATCH net-next 2/2] netdev_queues: fix -Wshadow / Sparse
  shadow warnings throughout the file
-Message-ID: <20240329135344.1a310f31@kernel.org>
-In-Reply-To: <20240329131857.730c6528@kernel.org>
+Message-ID: <20240329131857.730c6528@kernel.org>
+In-Reply-To: <20240329170000.3241460-3-aleksander.lobakin@intel.com>
 References: <20240329170000.3241460-1-aleksander.lobakin@intel.com>
 	<20240329170000.3241460-3-aleksander.lobakin@intel.com>
-	<20240329131857.730c6528@kernel.org>
 Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -96,56 +95,45 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: quoted-printable
 X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
-Message-ID: <20240329205344.I96tRSinxHOWW9u4Jgn7PTgrsLb6WvEvIbWiBes5yE8@z>
+Message-ID: <20240329201857.bjaaKWdZ6uIASe7jkK-IC0sOnNXdm3CzBw0n0vPKoaI@z>
 
-On Fri, 29 Mar 2024 13:18:57 -0700 Jakub Kicinski wrote:
-> > Sparse:
-> >=20
-> > drivers/net/ethernet/intel/idpf/idpf_txrx.c:1992:16: warning: symbol '_=
-res' shadows an earlier one
-> > drivers/net/ethernet/intel/idpf/idpf_txrx.c:1992:16: originally declare=
-d here =20
+On Fri, 29 Mar 2024 18:00:00 +0100 Alexander Lobakin wrote:
+> drivers/net/ethernet/intel/idpf/idpf_txrx.c:1992:9: warning: declaration =
+shadows a local variable [-Wshadow]
+>  1992 |         return netif_txq_maybe_stop(nq, IDPF_DESC_UNUSED(tx_q), s=
+ize, size);
+>       |                ^
+> ./include/net/netdev_queues.h:137:11: note: expanded from macro 'netif_tx=
+q_maybe_stop'
+>   137 |                         _res =3D netif_txq_try_stop(txq, get_desc=
+, start_thrs); \
+>       |                                ^
+> ./include/net/netdev_queues.h:92:7: note: expanded from macro 'netif_txq_=
+try_stop'
+>    92 |                 int _res;                                        =
+       \
+>       |                     ^
+> drivers/net/ethernet/intel/idpf/idpf_txrx.c:1992:9: note: previous declar=
+ation is here
+> ./include/net/netdev_queues.h:133:7: note: expanded from macro 'netif_txq=
+_maybe_stop'
+>   133 |                 int _res;                                        =
+       \
+>       |                     ^
 >=20
-> I don't see these building with LLVM=3D1 W=3D12 C=3D1
-> and I really don't like complicating the code because the compiler
-> is stupid. Can't you solve this with some renames? Add another
-> underscore or something?
+> Sparse:
+>=20
+> drivers/net/ethernet/intel/idpf/idpf_txrx.c:1992:16: warning: symbol '_re=
+s' shadows an earlier one
+> drivers/net/ethernet/intel/idpf/idpf_txrx.c:1992:16: originally declared =
+here
 
-I'm stupid I tried on the test branch which already had your fix..
+I don't see these building with LLVM=3D1 W=3D12 C=3D1
+and I really don't like complicating the code because the compiler
+is stupid. Can't you solve this with some renames? Add another
+underscore or something?
 
-This is enough:
-
-diff --git a/include/net/netdev_queues.h b/include/net/netdev_queues.h
-index 1ec408585373..2270fbb99cf7 100644
---- a/include/net/netdev_queues.h
-+++ b/include/net/netdev_queues.h
-@@ -89,7 +89,7 @@ struct netdev_stat_ops {
-=20
- #define netif_txq_try_stop(txq, get_desc, start_thrs)			\
- 	({								\
--		int _res;						\
-+		int __res;						\
- 									\
- 		netif_tx_stop_queue(txq);				\
- 		/* Producer index and stop bit must be visible		\
-@@ -101,12 +101,12 @@ struct netdev_stat_ops {
- 		/* We need to check again in a case another		\
- 		 * CPU has just made room available.			\
- 		 */							\
--		_res =3D 0;						\
-+		__res =3D 0;						\
- 		if (unlikely(get_desc >=3D start_thrs)) {			\
- 			netif_tx_start_queue(txq);			\
--			_res =3D -1;					\
-+			__res =3D -1;					\
- 		}							\
--		_res;							\
-+		__res;							\
- 	})								\
-=20
- /**
-
-X-sender: <netdev+bounces-83461-steffen.klassert=3Dsecunet.com@vger.kernel.=
+X-sender: <netdev+bounces-83456-steffen.klassert=3Dsecunet.com@vger.kernel.=
 org>
 X-Receiver: <steffen.klassert@secunet.com> ORCPT=3Drfc822;steffen.klassert@=
 secunet.com NOTIFY=3DNEVER; X-ExtendedProps=3DBQAVABYAAgAAAAUAFAARAPDFCS25B=
@@ -166,103 +154,103 @@ Y3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuRXhwYW5zaW9uR3JvdXBUeXBlDwAVAAAATWVtYmV=
 yc0dyb3VwRXhwYW5zaW9uBQAjAAIAAQ=3D=3D
 X-CreatedBy: MSExchange15
 X-HeloDomain: b.mx.secunet.com
-X-ExtendedProps: BQBjAAoAbUamlidQ3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc2=
+X-ExtendedProps: BQBjAAoAdEWmlidQ3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc2=
 9mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5Pcmdhbml6YXRpb25TY29wZREAA=
 AAAAAAAAAAAAAAAAAAAAAUASQACAAEFAAQAFCABAAAAHAAAAHN0ZWZmZW4ua2xhc3NlcnRAc2Vj=
 dW5ldC5jb20FAAYAAgABBQApAAIAAQ8ACQAAAENJQXVkaXRlZAIAAQUAAgAHAAEAAAAFAAMABwA=
-AAAAABQAFAAIAAQUAYgAKAMsAAADLigAABQBkAA8AAwAAAEh1Yg=3D=3D
+AAAAABQAFAAIAAQUAYgAKAD8AAADLigAABQBkAA8AAwAAAEh1Yg=3D=3D
 X-Source: SMTP:Default MBX-ESSEN-02
 X-SourceIPAddress: 62.96.220.37
-X-EndOfInjectedXHeaders: 11324
-Received: from cas-essen-02.secunet.de (10.53.40.202) by
+X-EndOfInjectedXHeaders: 10852
+Received: from cas-essen-01.secunet.de (10.53.40.201) by
  mbx-essen-02.secunet.de (10.53.40.198) with Microsoft SMTP Server
  (version=3DTLS1_2, cipher=3DTLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.37; Fri, 29 Mar 2024 21:53:57 +0100
-Received: from b.mx.secunet.com (62.96.220.37) by cas-essen-02.secunet.de
- (10.53.40.202) with Microsoft SMTP Server (version=3DTLS1_2,
+ 15.1.2507.37; Fri, 29 Mar 2024 21:19:11 +0100
+Received: from b.mx.secunet.com (62.96.220.37) by cas-essen-01.secunet.de
+ (10.53.40.201) with Microsoft SMTP Server (version=3DTLS1_2,
  cipher=3DTLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Fronte=
 nd
- Transport; Fri, 29 Mar 2024 21:53:57 +0100
+ Transport; Fri, 29 Mar 2024 21:19:11 +0100
 Received: from localhost (localhost [127.0.0.1])
-	by b.mx.secunet.com (Postfix) with ESMTP id EF6BB2032C
-	for <steffen.klassert@secunet.com>; Fri, 29 Mar 2024 21:53:56 +0100 (CET)
+	by b.mx.secunet.com (Postfix) with ESMTP id 231DC202E4
+	for <steffen.klassert@secunet.com>; Fri, 29 Mar 2024 21:19:11 +0100 (CET)
 X-Virus-Scanned: by secunet
 X-Spam-Flag: NO
-X-Spam-Score: -5.399
+X-Spam-Score: -3.099
 X-Spam-Level:
-X-Spam-Status: No, score=3D-5.399 tagged_above=3D-999 required=3D2.1
+X-Spam-Status: No, score=3D-3.099 tagged_above=3D-999 required=3D2.1
 	tests=3D[BAYES_00=3D-1.9, DKIMWL_WL_HIGH=3D-0.099, DKIM_SIGNED=3D0.1,
 	DKIM_VALID=3D-0.1, DKIM_VALID_AU=3D-0.1, MAILING_LIST_MULTI=3D-1,
-	RCVD_IN_DNSWL_MED=3D-2.3, SPF_HELO_NONE=3D0.001, SPF_PASS=3D-0.001]
+	RCVD_IN_DNSWL_NONE=3D-0.0001, SPF_HELO_NONE=3D0.001, SPF_PASS=3D-0.001]
 	autolearn=3Dham autolearn_force=3Dno
 Authentication-Results: a.mx.secunet.com (amavisd-new);
 	dkim=3Dpass (2048-bit key) header.d=3Dkernel.org
 Received: from b.mx.secunet.com ([127.0.0.1])
 	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id uqhsOYZd3Ue1 for <steffen.klassert@secunet.com>;
-	Fri, 29 Mar 2024 21:53:56 +0100 (CET)
+	with ESMTP id aF1NBVBoN0ru for <steffen.klassert@secunet.com>;
+	Fri, 29 Mar 2024 21:19:10 +0100 (CET)
 Received-SPF: Pass (sender SPF authorized) identity=3Dmailfrom; client-ip=
-=3D139.178.88.99; helo=3Dsv.mirrors.kernel.org; envelope-from=3Dnetdev+boun=
-ces-83461-steffen.klassert=3Dsecunet.com@vger.kernel.org; receiver=3Dsteffe=
+=3D147.75.80.249; helo=3Dam.mirrors.kernel.org; envelope-from=3Dnetdev+boun=
+ces-83456-steffen.klassert=3Dsecunet.com@vger.kernel.org; receiver=3Dsteffe=
 n.klassert@secunet.com=20
-DKIM-Filter: OpenDKIM Filter v2.11.0 b.mx.secunet.com 18C0E20270
+DKIM-Filter: OpenDKIM Filter v2.11.0 b.mx.secunet.com 82B0520270
 Authentication-Results: b.mx.secunet.com;
 	dkim=3Dpass (2048-bit key) header.d=3Dkernel.org header.i=3D@kernel.org he=
-ader.b=3D"nt5XZQ8A"
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99]=
+ader.b=3D"mmn7bK5p"
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249]=
 )
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by b.mx.secunet.com (Postfix) with ESMTPS id 18C0E20270
-	for <steffen.klassert@secunet.com>; Fri, 29 Mar 2024 21:53:56 +0100 (CET)
+	by b.mx.secunet.com (Postfix) with ESMTPS id 82B0520270
+	for <steffen.klassert@secunet.com>; Fri, 29 Mar 2024 21:19:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.2=
 5.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AEF532847D8
-	for <steffen.klassert@secunet.com>; Fri, 29 Mar 2024 20:53:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 37E431F22E43
+	for <steffen.klassert@secunet.com>; Fri, 29 Mar 2024 20:19:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 634AF86130;
-	Fri, 29 Mar 2024 20:53:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62E3C13BC31;
+	Fri, 29 Mar 2024 20:19:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
 	dkim=3Dpass (2048-bit key) header.d=3Dkernel.org header.i=3D@kernel.org he=
-ader.b=3D"nt5XZQ8A"
+ader.b=3D"mmn7bK5p"
 X-Original-To: netdev@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.or=
 g [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB043FBB4;
-	Fri, 29 Mar 2024 20:53:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850C532C89;
+	Fri, 29 Mar 2024 20:18:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=3Dnone smtp.client-ip=
 =3D10.30.226.201
 ARC-Seal: i=3D1; a=3Drsa-sha256; d=3Dsubspace.kernel.org; s=3Darc-20240116;
-	t=3D1711745626; cv=3Dnone; b=3DCVPCGk9LD0NbPjQV8T2NNphifh6hmBZaegACNK3HaX/=
-lTWENaRN6Fdlf4knmT1jZjTtE/cxgVHj9nX5tC5bpS5XTf8CDbYoJ8g3k8LTz7UeL48U8g6RJk1=
-nD/BJIk/d7y/S9r0GuQb3dVmwVSdggts92/Fgf7pXeAN/MxmrFpa4=3D
+	t=3D1711743539; cv=3Dnone; b=3Dqkg7bZWXnaWDqWm9OMTUKldCzr+aNi+EkgMvCd0cCOI=
+NFWNv90wOE+ERbfY0DBPTauBHBaZ9F5mNf6Oxz3hsUD/Wnqcq1irchTYluVZNbYEQfBfNjMl3RX=
+I06FFyQURD+G7Ueun+7E3NgP0JwLeziiZASuexXNS0dP6vHnpObQI=3D
 ARC-Message-Signature: i=3D1; a=3Drsa-sha256; d=3Dsubspace.kernel.org;
-	s=3Darc-20240116; t=3D1711745626; c=3Drelaxed/simple;
-	bh=3DDPU/cpMX8JgPzOh54Wy5Z1joAaXrPLw4+pp0/2XrYwo=3D;
+	s=3Darc-20240116; t=3D1711743539; c=3Drelaxed/simple;
+	bh=3DXtVImmmSugd7Y+fhFyNSmTR6NDHudXo4Ksas1gA4z/s=3D;
 	h=3DDate:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=3Dp/YgEleA7dhqMltk+cpaDAI5CB6Lxj8GtF3ftBqkh9=
-p0yRW9z2he+RRe91fZHBJ+LqVhIsvHLMH0FT77gqRr4dYhRzsYZMFuBhQLc59ydGn2GoVeT3YNh=
-GEpWwsNRFQlNo3N0K05H4mJRNmROttjq61J8Xwbz+5tyOFWqpx1HK4=3D
+	 MIME-Version:Content-Type; b=3DQqu4zCBTiJqgGnFdGLm/XtOGp4Us/lbdid0E7apFgB=
+Nq55apYx3ut6lCEtpoylX8bJ46arI5BqiniTPLcyz6+ZXWHLs3DnCqKNHsi8EkPv89ErnAleQGg=
+T47rA5XApiBVz9a6chCtJtPcLnjFZbwyX4bGxsfvhhj1nWKqcr171M=3D
 ARC-Authentication-Results: i=3D1; smtp.subspace.kernel.org; dkim=3Dpass (2=
-048-bit key) header.d=3Dkernel.org header.i=3D@kernel.org header.b=3Dnt5XZQ=
-8A; arc=3Dnone smtp.client-ip=3D10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75A95C433C7;
-	Fri, 29 Mar 2024 20:53:45 +0000 (UTC)
+048-bit key) header.d=3Dkernel.org header.i=3D@kernel.org header.b=3Dmmn7bK=
+5p; arc=3Dnone smtp.client-ip=3D10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57D45C433C7;
+	Fri, 29 Mar 2024 20:18:58 +0000 (UTC)
 DKIM-Signature: v=3D1; a=3Drsa-sha256; c=3Drelaxed/simple; d=3Dkernel.org;
-	s=3Dk20201202; t=3D1711745625;
-	bh=3DDPU/cpMX8JgPzOh54Wy5Z1joAaXrPLw4+pp0/2XrYwo=3D;
+	s=3Dk20201202; t=3D1711743538;
+	bh=3DXtVImmmSugd7Y+fhFyNSmTR6NDHudXo4Ksas1gA4z/s=3D;
 	h=3DDate:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=3Dnt5XZQ8AuFdzkpc2dRk4glfwOAVOcm1EdgvmJH132ePhRwjx5yZG7K5MDJf7XEaXf
-	 DNUmTCxPOgEyg82a0x+w/HjPxm0ksMkeaCOMP/vZCOd9Xzx3wgYHLnO9JCshz15SQT
-	 rMXaDnaBpPXSvZDu8fKKgkDjwpyBmbuvSAJQVLwDGgLMXs4WbAgKj4Swf1TEL7R6BY
-	 7WPgwSohXsmR/Hlvjyyvl3pMa00trccpz/7FsrFsTzXSAyPZ+F+H/We6eRrIqvKQTE
-	 Nt2XqeSYRkKbZraS9gxLxNtOsHaK4zygIPknpsWEa2Jr/9wVwM+l4r1fJB94AFXUB9
-	 5iFtrKKt4p58Q=3D=3D
-Date: Fri, 29 Mar 2024 13:53:44 -0700
+	b=3Dmmn7bK5praEFKZSEsXD1U0+/BhIiMgbRjlqzURm8mJyxcKdG1u7nFhvjWn6vjh45L
+	 4fMwTQz5BgPAhQhwxhdzDjswpLr9tfxyAozEWodJ9d27CxJ4UL4UFY8Hf3KdPpUow8
+	 E8A+MEP24fcOZoxGi8rhDy8xtbiVoeUdXbHP4PlO33ntnqxcbRNqN9U47LzjpdNssC
+	 YPsQGwM2m4yyhH+9eEUxcjM4Ffzgd6RloWxtSrDibmFc5c1SFjvFY0/UkKocjbZRfB
+	 tH6Rp6GsCq/VsJXLXe3LZL+Iv2yl9gsZmI2qe8RWHTL8tXGuYUE5J+9mVzpCC1gcYY
+	 0Sa+AbTpHn+oA=3D=3D
+Date: Fri, 29 Mar 2024 13:18:57 -0700
 From: Jakub Kicinski <kuba@kernel.org>
 To: Alexander Lobakin <aleksander.lobakin@intel.com>
 Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
@@ -272,11 +260,10 @@ Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
  linux-kernel@vger.kernel.org
 Subject: Re: [PATCH net-next 2/2] netdev_queues: fix -Wshadow / Sparse
  shadow warnings throughout the file
-Message-ID: <20240329135344.1a310f31@kernel.org>
-In-Reply-To: <20240329131857.730c6528@kernel.org>
+Message-ID: <20240329131857.730c6528@kernel.org>
+In-Reply-To: <20240329170000.3241460-3-aleksander.lobakin@intel.com>
 References: <20240329170000.3241460-1-aleksander.lobakin@intel.com>
 	<20240329170000.3241460-3-aleksander.lobakin@intel.com>
-	<20240329131857.730c6528@kernel.org>
 Precedence: bulk
 X-Mailing-List: netdev@vger.kernel.org
 List-Id: <netdev.vger.kernel.org>
@@ -285,32 +272,30 @@ List-Unsubscribe: <mailto:netdev+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=3D"US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-Path: netdev+bounces-83461-steffen.klassert=3Dsecunet.com@vger.kerne=
+Return-Path: netdev+bounces-83456-steffen.klassert=3Dsecunet.com@vger.kerne=
 l.org
-X-MS-Exchange-Organization-OriginalArrivalTime: 29 Mar 2024 20:53:57.0213
+X-MS-Exchange-Organization-OriginalArrivalTime: 29 Mar 2024 20:19:11.1805
  (UTC)
-X-MS-Exchange-Organization-Network-Message-Id: adfa49c9-4e8d-4796-70e9-08dc=
-50325a1d
+X-MS-Exchange-Organization-Network-Message-Id: ac983536-0487-46b2-3f43-08dc=
+502d7edb
 X-MS-Exchange-Organization-OriginalClientIPAddress: 62.96.220.37
-X-MS-Exchange-Organization-OriginalServerIPAddress: 10.53.40.202
-X-MS-Exchange-Organization-Cross-Premises-Headers-Processed: cas-essen-02.s=
+X-MS-Exchange-Organization-OriginalServerIPAddress: 10.53.40.201
+X-MS-Exchange-Organization-Cross-Premises-Headers-Processed: cas-essen-01.s=
 ecunet.de
 X-MS-Exchange-Organization-OrderedPrecisionLatencyInProgress: LSRV=3Dmbx-es=
-sen-02.secunet.de:TOTAL-HUB=3D0.369|SMR=3D0.323(SMRDE=3D0.004|SMRC=3D0.318(=
-SMRCL=3D0.104|X-SMRCR=3D0.317))|CAT=3D0.045(CATOS=3D0.001
- |CATRESL=3D0.010(CATRESLP2R=3D0.005)|CATORES=3D0.029(CATRS=3D0.029(CATRS-T=
-ransport
- Rule Agent=3D0.001 |CATRS-Index Routing
- Agent=3D0.027))|CATORT=3D0.001(CATRT=3D0.001));2024-03-29T20:53:57.405Z
+sen-02.secunet.de:TOTAL-HUB=3D0.188|SMR=3D0.134(SMRDE=3D0.005|SMRC=3D0.129(=
+SMRCL=3D0.102|X-SMRCR=3D0.128))|CAT=3D0.053(CATRESL=3D0.022
+ (CATRESLP2R=3D0.001)|CATORES=3D0.028(CATRS=3D0.027(CATRS-Index Routing
+ Agent=3D0.025)));2024-03-29T20:19:11.388Z
 X-MS-Exchange-Forest-ArrivalHubServer: mbx-essen-02.secunet.de
-X-MS-Exchange-Organization-AuthSource: cas-essen-02.secunet.de
+X-MS-Exchange-Organization-AuthSource: cas-essen-01.secunet.de
 X-MS-Exchange-Organization-AuthAs: Anonymous
 X-MS-Exchange-Organization-FromEntityHeader: Internet
-X-MS-Exchange-Organization-OriginalSize: 7888
+X-MS-Exchange-Organization-OriginalSize: 7867
 X-MS-Exchange-Organization-HygienePolicy: Standard
-X-MS-Exchange-Organization-MessageLatency: SRV=3Dcas-essen-02.secunet.de:TO=
-TAL-FE=3D0.014|SMR=3D0.004(SMRPI=3D0.002(SMRPI-FrontendProxyAgent=3D0.002))=
-|SMS=3D0.009
+X-MS-Exchange-Organization-MessageLatency: SRV=3Dcas-essen-01.secunet.de:TO=
+TAL-FE=3D0.020|SMR=3D0.008(SMRPI=3D0.006(SMRPI-FrontendProxyAgent=3D0.006))=
+|SMS=3D0.012
 X-MS-Exchange-Organization-Recipient-Limit-Verified: True
 X-MS-Exchange-Organization-TotalRecipientCount: 1
 X-MS-Exchange-Organization-Rules-Execution-History: 0b0cf904-14ac-4724-8bdf=
@@ -319,94 +304,76 @@ X-MS-Exchange-Organization-Rules-Execution-History: 0b0cf904-14ac-4724-8bdf=
 6-8c5d-b3d6ddbb3d55%%%16355082-c50b-4214-9c7d-d39575f9f79b
 X-MS-Exchange-Forest-RulesExecuted: mbx-essen-02
 X-MS-Exchange-Organization-RulesExecuted: mbx-essen-02
-X-MS-Exchange-Forest-IndexAgent-0: AQ0CZW4AAXEEAAAPAAADH4sIAAAAAAAEAK1UW2/b=
-NhSmLFm+xO6AtM
- CAPR1gD0ns+CLHqWMPSTsECNAtxQrs0pcCBi3RNhdZcknKjlHkea/7
- N/t7O6TsNF2E3DpClqnDc77zfYeH/Gf7lwjOBN+HTh/eUgGddqcL3s
- HAOxoc9qDR7rXb8BO9SEbwM/d5JC84LEWs2KBaPoET+HVOhVx/pJZA
- 8AUTshUx1WJqyoSe8EixsMWD+di8hupSXDb9gdfvdwbeywEsqYh4NB
- mAXM1GcQg7Q8HkDsgpDeKlBBoBoyLkTEAcsa/IEws+4RENwxUEzA+p
- YAFgqIbUqG8giKMdBZIxQEjJYJTwMEBmsORqCufnf7w99uD9sdeB02
- NPh9AowDDBUkwTHfILBn48m4fcp0oHIxYaAoRjPk0kWxtmcx4yoVG4
- BKmSOQ+acEo1xipOQMbhQrviosku4xnDTBGdMfkKfgwCTB5r5RohiQ
- Kshh8LhiKNKwZGk1fVcrX8Zme2hkeqSnAUHUeGg2JSwUjQyJ/Ccsrx
- TUPUEqwAK69JCBjzy2ZTo/ymieDDojiZTAfaFPDxGBqNCVdAsfZ+mA
- TMbAj+ArYYfkxYwmRzCqO7VqtljuQvwWN+t310eHR40DtoNjudXns8
- GvX7/rgHXrv9stutlhuNxt2ZquV6vX5futevoXHU3+9B3bzxUyqR+A
- rWnlJRNYznEj5pkfB9wMY8YnqV65b6OFRihU7xfBc/9mHC1DBg0t9H
- GCrUUE2F3INb4wNCrcfup9vLjxkI1fiPCTsf9KH54fFQ9SyoJ2DdEP
- i1IwNqU31T+HQzdfn37iOZAdWqwTsRB4mP90naevoUa1wYYSvPEn0o
- GCy45KOQfQGlW8dre/t4AdTX/3e2T0bq97qT8AiqGPwp8y+ATiiPkA
- hQ8CleDutTfZ8KqMHpu9/xoEr4UzOeUbxgRBzPgC4oDylSbz6wIFBr
- 3VPF7JHRh7pv4Bja/0MfDp+IlSGQj2E3ifTFHK52N+cVTo5vntg9uH
- 0q72jpG/2oIe5tyIxabcZaZ8N7oNCMWl1DPRIrQ+DVw0hkQWU1w2Mb
- YQ2V2QxPwLoh8CrjUn4kFIK1ajX9T0iO2DbJ5yyyhY+eO46VLxJStE
- p5QvLExadIcF5xyXaBFNHBfLoOyTsWKeGb5C0r5xCCgTkN6BRIySUl
- hEV/xDdRpQfGlskW+jiaTg49MSQlYELyFiFoxxDjbOPEWPLohnaXFF
- LwCqlqIYaASVpBZ5cUrwEdk9o4IE8kvIV50adEnuEn4qTZc2lBSD5F
- TtEcnU7zMZhbDimk2dNV1yJVUkgRsow24lTIs4pVdQlxSSXLp5BhtJ
- A5Cna0Xiv3eW64ods3pGCIbWmqFtk2Sjds87ZFinru4lJZy0+0kZzZ
- 2u1vXdfnRi16mxoN0n3axDup2oL17eetsuwb2+Z+SeK7FCpn1KZ1RE
- mm3LVrWulTIle25RolZ5vJac40yoZ0cUO6i5MXBi2FtUkPQwyBs83k
- L8sm5/a/2OuiUhEMAAABDs8BUmV0cmlldmVyT3BlcmF0b3IsMTAsMT
- tSZXRyaWV2ZXJPcGVyYXRvciwxMSwxO1Bvc3REb2NQYXJzZXJPcGVy
- YXRvciwxMCwwO1Bvc3REb2NQYXJzZXJPcGVyYXRvciwxMSwwO1Bvc3
- RXb3JkQnJlYWtlckRpYWdub3N0aWNPcGVyYXRvciwxMCwxO1Bvc3RX
- b3JkQnJlYWtlckRpYWdub3N0aWNPcGVyYXRvciwxMSwwO1RyYW5zcG
- 9ydFdyaXRlclByb2R1Y2VyLDIwLDE2
-X-MS-Exchange-Forest-IndexAgent: 1 1359
-X-MS-Exchange-Forest-EmailMessageHash: 5D566706
+X-MS-Exchange-Forest-IndexAgent-0: AQ0CZW4AAWYDAAAPAAADH4sIAAAAAAAEAL1UUW/b=
+RgymZEu25Xgtin
+ av45sTLEsip2gbBVlRJC0QIG0HBF0xrK1wltj4UFnn3EmOPexX7BeP
+ J9lLm2SLkYcd5IN8JL+PH8nTX923Ob7SchMHe/haaBzsDB5j+Cza2e
+ EHf9wJeX+R0UzkKWk8UUPxReZ4oVVBUS/4GVMtp6TNdk7FNhUj0vZF
+ 5gVl2zKdfK62uJjp2VYShXt7g2gvwguhc5mfRZhSkgktCqlyNCORqg
+ uDAjOViAynQksxzAh//+l9bfto+dCC4J+4XJqKUufIrNLynMdjMR9S
+ bAo1Wc/PN/H46JdX8dHL08P43Zt3py+P1otZfL6xiUb+QfW+sV/hVu
+ sSd7E+WdsWC0qyMqVKJf9SmsbnJZVktkZRuPs0CsMIc1sSpNnElirF
+ z1qNcSwSrbB/U3b9mpWjr7P+s2JNBg++Ulfoea2N/2ziGRVxSiZhIY
+ XQRVyMtNnYxw//IegOArlpT1eUt0xvIQ6/adVy8XRUwvZvy+3KulXW
+ p7sOZK1tomkqVWm+GUtpkDFolTHYXblMN0zB7v9dKOtzOhHaVPf4Tp
+ ULn3x1l818PFQZ9m3C/cvbnCMJnUn+dqic7syitDyTuciy+aI5XNq6
+ Lb3gGFOV9ws0RMh4hnBYyizlpPBCFiM8Ofn19UGI7w/CAR4ehL2AO4
+ PH/OGo4arYTH4hTNR4ksmE+86hjMQHKYNRIkpDi4PxRGakewGPhSnK
+ iUy38FBYhLkq0ahsah3ZWDEbNSbmycWYzHN8kaZcDmUl94LSfk5Noj
+ SxtsqRw/Kz51YQgAuNBniuA11+7Huz6XhtgLbT8QA88DsQtKDtVTtb
+ 28DnfhO8pgMd3sFzHLcJwFEOgAONFnS6sMbODrjs2YZuy+lZB7jnQ4
+ udHoLPODWIa+ngfoXDVk6jCQ3emta6XjP6DvSgxVYmagCbm65N2/pw
+ MhzoXYF1utYNfmiAz+cPqnOrCzxWyujtKpZNgWWJrrNYfKdRy7nCco
+ nmrFVpPLKY8NuKxanRuD6ufQ/+TeCN1NcEfl9Rf/Dhu1vZ64pxa3zo
+ cBT7u7ZTHNVaMTaAbpXMoq11JnV6S3XuonSswHFrCezG57bvFfga9O
+ pGLEkDdvbtdF2ORP20bJ42YeZln87fEYsguz0IAAABDs8BUmV0cmll
+ dmVyT3BlcmF0b3IsMTAsMDtSZXRyaWV2ZXJPcGVyYXRvciwxMSwxO1
+ Bvc3REb2NQYXJzZXJPcGVyYXRvciwxMCwwO1Bvc3REb2NQYXJzZXJP
+ cGVyYXRvciwxMSwwO1Bvc3RXb3JkQnJlYWtlckRpYWdub3N0aWNPcG
+ VyYXRvciwxMCwxO1Bvc3RXb3JkQnJlYWtlckRpYWdub3N0aWNPcGVy
+ YXRvciwxMSwwO1RyYW5zcG9ydFdyaXRlclByb2R1Y2VyLDIwLDE1
+X-MS-Exchange-Forest-IndexAgent: 1 1092
+X-MS-Exchange-Forest-EmailMessageHash: 7E5A4F6D
 X-MS-Exchange-Forest-Language: en
 X-MS-Exchange-Organization-Processed-By-Journaling: Journal Agent
 
-On Fri, 29 Mar 2024 13:18:57 -0700 Jakub Kicinski wrote:
-> > Sparse:
-> >=20
-> > drivers/net/ethernet/intel/idpf/idpf_txrx.c:1992:16: warning: symbol '_=
-res' shadows an earlier one
-> > drivers/net/ethernet/intel/idpf/idpf_txrx.c:1992:16: originally declare=
-d here =20
+On Fri, 29 Mar 2024 18:00:00 +0100 Alexander Lobakin wrote:
+> drivers/net/ethernet/intel/idpf/idpf_txrx.c:1992:9: warning: declaration =
+shadows a local variable [-Wshadow]
+>  1992 |         return netif_txq_maybe_stop(nq, IDPF_DESC_UNUSED(tx_q), s=
+ize, size);
+>       |                ^
+> ./include/net/netdev_queues.h:137:11: note: expanded from macro 'netif_tx=
+q_maybe_stop'
+>   137 |                         _res =3D netif_txq_try_stop(txq, get_desc=
+, start_thrs); \
+>       |                                ^
+> ./include/net/netdev_queues.h:92:7: note: expanded from macro 'netif_txq_=
+try_stop'
+>    92 |                 int _res;                                        =
+       \
+>       |                     ^
+> drivers/net/ethernet/intel/idpf/idpf_txrx.c:1992:9: note: previous declar=
+ation is here
+> ./include/net/netdev_queues.h:133:7: note: expanded from macro 'netif_txq=
+_maybe_stop'
+>   133 |                 int _res;                                        =
+       \
+>       |                     ^
 >=20
-> I don't see these building with LLVM=3D1 W=3D12 C=3D1
-> and I really don't like complicating the code because the compiler
-> is stupid. Can't you solve this with some renames? Add another
-> underscore or something?
+> Sparse:
+>=20
+> drivers/net/ethernet/intel/idpf/idpf_txrx.c:1992:16: warning: symbol '_re=
+s' shadows an earlier one
+> drivers/net/ethernet/intel/idpf/idpf_txrx.c:1992:16: originally declared =
+here
 
-I'm stupid I tried on the test branch which already had your fix..
+I don't see these building with LLVM=3D1 W=3D12 C=3D1
+and I really don't like complicating the code because the compiler
+is stupid. Can't you solve this with some renames? Add another
+underscore or something?
 
-This is enough:
-
-diff --git a/include/net/netdev_queues.h b/include/net/netdev_queues.h
-index 1ec408585373..2270fbb99cf7 100644
---- a/include/net/netdev_queues.h
-+++ b/include/net/netdev_queues.h
-@@ -89,7 +89,7 @@ struct netdev_stat_ops {
-=20
- #define netif_txq_try_stop(txq, get_desc, start_thrs)			\
- 	({								\
--		int _res;						\
-+		int __res;						\
- 									\
- 		netif_tx_stop_queue(txq);				\
- 		/* Producer index and stop bit must be visible		\
-@@ -101,12 +101,12 @@ struct netdev_stat_ops {
- 		/* We need to check again in a case another		\
- 		 * CPU has just made room available.			\
- 		 */							\
--		_res =3D 0;						\
-+		__res =3D 0;						\
- 		if (unlikely(get_desc >=3D start_thrs)) {			\
- 			netif_tx_start_queue(txq);			\
--			_res =3D -1;					\
-+			__res =3D -1;					\
- 		}							\
--		_res;							\
-+		__res;							\
- 	})								\
-=20
- /**
-
-X-sender: <linux-kernel+bounces-125414-steffen.klassert=3Dsecunet.com@vger.=
+X-sender: <linux-kernel+bounces-125384-steffen.klassert=3Dsecunet.com@vger.=
 kernel.org>
 X-Receiver: <steffen.klassert@secunet.com> ORCPT=3Drfc822;steffen.klassert@=
 secunet.com NOTIFY=3DNEVER; X-ExtendedProps=3DBQAVABYAAgAAAAUAFAARAPDFCS25B=
@@ -427,102 +394,102 @@ Y3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuRXhwYW5zaW9uR3JvdXBUeXBlDwAVAAAATWVtYmV=
 yc0dyb3VwRXhwYW5zaW9uBQAjAAIAAQ=3D=3D
 X-CreatedBy: MSExchange15
 X-HeloDomain: b.mx.secunet.com
-X-ExtendedProps: BQBjAAoAbUamlidQ3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc2=
+X-ExtendedProps: BQBjAAoAdEWmlidQ3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc2=
 9mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5Pcmdhbml6YXRpb25TY29wZREAA=
 AAAAAAAAAAAAAAAAAAAAAUASQACAAEFAAQAFCABAAAAHAAAAHN0ZWZmZW4ua2xhc3NlcnRAc2Vj=
 dW5ldC5jb20FAAYAAgABBQApAAIAAQ8ACQAAAENJQXVkaXRlZAIAAQUAAgAHAAEAAAAFAAMABwA=
-AAAAABQAFAAIAAQUAYgAKAM0AAADLigAABQBkAA8AAwAAAEh1Yg=3D=3D
+AAAAABQAFAAIAAQUAYgAKAEAAAADLigAABQBkAA8AAwAAAEh1Yg=3D=3D
 X-Source: SMTP:Default MBX-ESSEN-02
 X-SourceIPAddress: 62.96.220.37
-X-EndOfInjectedXHeaders: 11325
-Received: from cas-essen-02.secunet.de (10.53.40.202) by
+X-EndOfInjectedXHeaders: 10906
+Received: from cas-essen-01.secunet.de (10.53.40.201) by
  mbx-essen-02.secunet.de (10.53.40.198) with Microsoft SMTP Server
  (version=3DTLS1_2, cipher=3DTLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.37; Fri, 29 Mar 2024 21:54:14 +0100
-Received: from b.mx.secunet.com (62.96.220.37) by cas-essen-02.secunet.de
- (10.53.40.202) with Microsoft SMTP Server (version=3DTLS1_2,
+ 15.1.2507.37; Fri, 29 Mar 2024 21:19:25 +0100
+Received: from b.mx.secunet.com (62.96.220.37) by cas-essen-01.secunet.de
+ (10.53.40.201) with Microsoft SMTP Server (version=3DTLS1_2,
  cipher=3DTLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Fronte=
 nd
- Transport; Fri, 29 Mar 2024 21:54:14 +0100
+ Transport; Fri, 29 Mar 2024 21:19:25 +0100
 Received: from localhost (localhost [127.0.0.1])
-	by b.mx.secunet.com (Postfix) with ESMTP id 5E26F2032C
-	for <steffen.klassert@secunet.com>; Fri, 29 Mar 2024 21:54:14 +0100 (CET)
+	by b.mx.secunet.com (Postfix) with ESMTP id D198D20315
+	for <steffen.klassert@secunet.com>; Fri, 29 Mar 2024 21:19:25 +0100 (CET)
 X-Virus-Scanned: by secunet
 X-Spam-Flag: NO
-X-Spam-Score: -3.099
+X-Spam-Score: -5.399
 X-Spam-Level:
-X-Spam-Status: No, score=3D-3.099 tagged_above=3D-999 required=3D2.1
+X-Spam-Status: No, score=3D-5.399 tagged_above=3D-999 required=3D2.1
 	tests=3D[BAYES_00=3D-1.9, DKIMWL_WL_HIGH=3D-0.099, DKIM_SIGNED=3D0.1,
 	DKIM_VALID=3D-0.1, DKIM_VALID_AU=3D-0.1, MAILING_LIST_MULTI=3D-1,
-	RCVD_IN_DNSWL_NONE=3D-0.0001, SPF_HELO_NONE=3D0.001, SPF_PASS=3D-0.001]
+	RCVD_IN_DNSWL_MED=3D-2.3, SPF_HELO_NONE=3D0.001, SPF_PASS=3D-0.001]
 	autolearn=3Dunavailable autolearn_force=3Dno
 Authentication-Results: a.mx.secunet.com (amavisd-new);
 	dkim=3Dpass (2048-bit key) header.d=3Dkernel.org
 Received: from b.mx.secunet.com ([127.0.0.1])
 	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id mtnP-P3F68RA for <steffen.klassert@secunet.com>;
-	Fri, 29 Mar 2024 21:54:09 +0100 (CET)
+	with ESMTP id 04wgTj6sZHGR for <steffen.klassert@secunet.com>;
+	Fri, 29 Mar 2024 21:19:25 +0100 (CET)
 Received-SPF: Pass (sender SPF authorized) identity=3Dmailfrom; client-ip=
-=3D147.75.48.161; helo=3Dsy.mirrors.kernel.org; envelope-from=3Dlinux-kerne=
-l+bounces-125414-steffen.klassert=3Dsecunet.com@vger.kernel.org; receiver=
+=3D139.178.88.99; helo=3Dsv.mirrors.kernel.org; envelope-from=3Dlinux-kerne=
+l+bounces-125384-steffen.klassert=3Dsecunet.com@vger.kernel.org; receiver=
 =3Dsteffen.klassert@secunet.com=20
-DKIM-Filter: OpenDKIM Filter v2.11.0 b.mx.secunet.com 49DBA20270
+DKIM-Filter: OpenDKIM Filter v2.11.0 b.mx.secunet.com 0140A202E4
 Authentication-Results: b.mx.secunet.com;
 	dkim=3Dpass (2048-bit key) header.d=3Dkernel.org header.i=3D@kernel.org he=
-ader.b=3D"nt5XZQ8A"
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161]=
+ader.b=3D"mmn7bK5p"
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99]=
 )
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by b.mx.secunet.com (Postfix) with ESMTPS id 49DBA20270
-	for <steffen.klassert@secunet.com>; Fri, 29 Mar 2024 21:54:09 +0100 (CET)
+	by b.mx.secunet.com (Postfix) with ESMTPS id 0140A202E4
+	for <steffen.klassert@secunet.com>; Fri, 29 Mar 2024 21:19:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.2=
 5.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D8C98B21EC3
-	for <steffen.klassert@secunet.com>; Fri, 29 Mar 2024 20:54:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 11885287903
+	for <steffen.klassert@secunet.com>; Fri, 29 Mar 2024 20:19:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1910013B59A;
-	Fri, 29 Mar 2024 20:53:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A657D13BAFC;
+	Fri, 29 Mar 2024 20:19:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
 	dkim=3Dpass (2048-bit key) header.d=3Dkernel.org header.i=3D@kernel.org he=
-ader.b=3D"nt5XZQ8A"
+ader.b=3D"mmn7bK5p"
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.or=
 g [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB043FBB4;
-	Fri, 29 Mar 2024 20:53:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850C532C89;
+	Fri, 29 Mar 2024 20:18:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=3Dnone smtp.client-ip=
 =3D10.30.226.201
 ARC-Seal: i=3D1; a=3Drsa-sha256; d=3Dsubspace.kernel.org; s=3Darc-20240116;
-	t=3D1711745626; cv=3Dnone; b=3DCVPCGk9LD0NbPjQV8T2NNphifh6hmBZaegACNK3HaX/=
-lTWENaRN6Fdlf4knmT1jZjTtE/cxgVHj9nX5tC5bpS5XTf8CDbYoJ8g3k8LTz7UeL48U8g6RJk1=
-nD/BJIk/d7y/S9r0GuQb3dVmwVSdggts92/Fgf7pXeAN/MxmrFpa4=3D
+	t=3D1711743539; cv=3Dnone; b=3Dqkg7bZWXnaWDqWm9OMTUKldCzr+aNi+EkgMvCd0cCOI=
+NFWNv90wOE+ERbfY0DBPTauBHBaZ9F5mNf6Oxz3hsUD/Wnqcq1irchTYluVZNbYEQfBfNjMl3RX=
+I06FFyQURD+G7Ueun+7E3NgP0JwLeziiZASuexXNS0dP6vHnpObQI=3D
 ARC-Message-Signature: i=3D1; a=3Drsa-sha256; d=3Dsubspace.kernel.org;
-	s=3Darc-20240116; t=3D1711745626; c=3Drelaxed/simple;
-	bh=3DDPU/cpMX8JgPzOh54Wy5Z1joAaXrPLw4+pp0/2XrYwo=3D;
+	s=3Darc-20240116; t=3D1711743539; c=3Drelaxed/simple;
+	bh=3DXtVImmmSugd7Y+fhFyNSmTR6NDHudXo4Ksas1gA4z/s=3D;
 	h=3DDate:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=3Dp/YgEleA7dhqMltk+cpaDAI5CB6Lxj8GtF3ftBqkh9=
-p0yRW9z2he+RRe91fZHBJ+LqVhIsvHLMH0FT77gqRr4dYhRzsYZMFuBhQLc59ydGn2GoVeT3YNh=
-GEpWwsNRFQlNo3N0K05H4mJRNmROttjq61J8Xwbz+5tyOFWqpx1HK4=3D
+	 MIME-Version:Content-Type; b=3DQqu4zCBTiJqgGnFdGLm/XtOGp4Us/lbdid0E7apFgB=
+Nq55apYx3ut6lCEtpoylX8bJ46arI5BqiniTPLcyz6+ZXWHLs3DnCqKNHsi8EkPv89ErnAleQGg=
+T47rA5XApiBVz9a6chCtJtPcLnjFZbwyX4bGxsfvhhj1nWKqcr171M=3D
 ARC-Authentication-Results: i=3D1; smtp.subspace.kernel.org; dkim=3Dpass (2=
-048-bit key) header.d=3Dkernel.org header.i=3D@kernel.org header.b=3Dnt5XZQ=
-8A; arc=3Dnone smtp.client-ip=3D10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75A95C433C7;
-	Fri, 29 Mar 2024 20:53:45 +0000 (UTC)
+048-bit key) header.d=3Dkernel.org header.i=3D@kernel.org header.b=3Dmmn7bK=
+5p; arc=3Dnone smtp.client-ip=3D10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57D45C433C7;
+	Fri, 29 Mar 2024 20:18:58 +0000 (UTC)
 DKIM-Signature: v=3D1; a=3Drsa-sha256; c=3Drelaxed/simple; d=3Dkernel.org;
-	s=3Dk20201202; t=3D1711745625;
-	bh=3DDPU/cpMX8JgPzOh54Wy5Z1joAaXrPLw4+pp0/2XrYwo=3D;
+	s=3Dk20201202; t=3D1711743538;
+	bh=3DXtVImmmSugd7Y+fhFyNSmTR6NDHudXo4Ksas1gA4z/s=3D;
 	h=3DDate:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=3Dnt5XZQ8AuFdzkpc2dRk4glfwOAVOcm1EdgvmJH132ePhRwjx5yZG7K5MDJf7XEaXf
-	 DNUmTCxPOgEyg82a0x+w/HjPxm0ksMkeaCOMP/vZCOd9Xzx3wgYHLnO9JCshz15SQT
-	 rMXaDnaBpPXSvZDu8fKKgkDjwpyBmbuvSAJQVLwDGgLMXs4WbAgKj4Swf1TEL7R6BY
-	 7WPgwSohXsmR/Hlvjyyvl3pMa00trccpz/7FsrFsTzXSAyPZ+F+H/We6eRrIqvKQTE
-	 Nt2XqeSYRkKbZraS9gxLxNtOsHaK4zygIPknpsWEa2Jr/9wVwM+l4r1fJB94AFXUB9
-	 5iFtrKKt4p58Q=3D=3D
-Date: Fri, 29 Mar 2024 13:53:44 -0700
+	b=3Dmmn7bK5praEFKZSEsXD1U0+/BhIiMgbRjlqzURm8mJyxcKdG1u7nFhvjWn6vjh45L
+	 4fMwTQz5BgPAhQhwxhdzDjswpLr9tfxyAozEWodJ9d27CxJ4UL4UFY8Hf3KdPpUow8
+	 E8A+MEP24fcOZoxGi8rhDy8xtbiVoeUdXbHP4PlO33ntnqxcbRNqN9U47LzjpdNssC
+	 YPsQGwM2m4yyhH+9eEUxcjM4Ffzgd6RloWxtSrDibmFc5c1SFjvFY0/UkKocjbZRfB
+	 tH6Rp6GsCq/VsJXLXe3LZL+Iv2yl9gsZmI2qe8RWHTL8tXGuYUE5J+9mVzpCC1gcYY
+	 0Sa+AbTpHn+oA=3D=3D
+Date: Fri, 29 Mar 2024 13:18:57 -0700
 From: Jakub Kicinski <kuba@kernel.org>
 To: Alexander Lobakin <aleksander.lobakin@intel.com>
 Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
@@ -532,11 +499,10 @@ Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
  linux-kernel@vger.kernel.org
 Subject: Re: [PATCH net-next 2/2] netdev_queues: fix -Wshadow / Sparse
  shadow warnings throughout the file
-Message-ID: <20240329135344.1a310f31@kernel.org>
-In-Reply-To: <20240329131857.730c6528@kernel.org>
+Message-ID: <20240329131857.730c6528@kernel.org>
+In-Reply-To: <20240329170000.3241460-3-aleksander.lobakin@intel.com>
 References: <20240329170000.3241460-1-aleksander.lobakin@intel.com>
 	<20240329170000.3241460-3-aleksander.lobakin@intel.com>
-	<20240329131857.730c6528@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -545,32 +511,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=3D"US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-Path: linux-kernel+bounces-125414-steffen.klassert=3Dsecunet.com@vge=
+Return-Path: linux-kernel+bounces-125384-steffen.klassert=3Dsecunet.com@vge=
 r.kernel.org
-X-MS-Exchange-Organization-OriginalArrivalTime: 29 Mar 2024 20:54:14.4167
+X-MS-Exchange-Organization-OriginalArrivalTime: 29 Mar 2024 20:19:25.8902
  (UTC)
-X-MS-Exchange-Organization-Network-Message-Id: 7b3221dc-8701-4ced-c3c0-08dc=
-5032647b
+X-MS-Exchange-Organization-Network-Message-Id: d20bea01-e9bc-4d2c-c411-08dc=
+502d879f
 X-MS-Exchange-Organization-OriginalClientIPAddress: 62.96.220.37
-X-MS-Exchange-Organization-OriginalServerIPAddress: 10.53.40.202
-X-MS-Exchange-Organization-Cross-Premises-Headers-Processed: cas-essen-02.s=
+X-MS-Exchange-Organization-OriginalServerIPAddress: 10.53.40.201
+X-MS-Exchange-Organization-Cross-Premises-Headers-Processed: cas-essen-01.s=
 ecunet.de
 X-MS-Exchange-Organization-OrderedPrecisionLatencyInProgress: LSRV=3Dmbx-es=
-sen-02.secunet.de:TOTAL-HUB=3D0.374|SMR=3D0.322(SMRDE=3D0.004|SMRC=3D0.317(=
-SMRCL=3D0.102|X-SMRCR=3D0.316))|CAT=3D0.050(CATOS=3D0.001
- |CATRESL=3D0.008(CATRESLP2R=3D0.003)|CATORES=3D0.037(CATRS=3D0.037(CATRS-T=
-ransport
- Rule Agent=3D0.002 (X-ETREX=3D0.001)|CATRS-Index Routing
- Agent=3D0.033)));2024-03-29T20:54:14.813Z
+sen-02.secunet.de:TOTAL-HUB=3D0.393|SMR=3D0.326(SMRDE=3D0.004|SMRC=3D0.321(=
+SMRCL=3D0.102|X-SMRCR=3D0.321))|CAT=3D0.065(CATOS=3D0.001
+ (CATSM=3D0.001)|CATRESL=3D0.026(CATRESLP2R=3D0.017)|CATORES=3D0.033(CATRS=
+=3D0.033(CATRS-Index
+ Routing Agent=3D0.031 ))|CATORT=3D0.001(CATRT=3D0.001));2024-03-29T20:19:2=
+6.301Z
 X-MS-Exchange-Forest-ArrivalHubServer: mbx-essen-02.secunet.de
-X-MS-Exchange-Organization-AuthSource: cas-essen-02.secunet.de
+X-MS-Exchange-Organization-AuthSource: cas-essen-01.secunet.de
 X-MS-Exchange-Organization-AuthAs: Anonymous
 X-MS-Exchange-Organization-FromEntityHeader: Internet
-X-MS-Exchange-Organization-OriginalSize: 7902
+X-MS-Exchange-Organization-OriginalSize: 7871
 X-MS-Exchange-Organization-HygienePolicy: Standard
-X-MS-Exchange-Organization-MessageLatency: SRV=3Dcas-essen-02.secunet.de:TO=
-TAL-FE=3D0.023|SMR=3D0.012(SMRPI=3D0.009(SMRPI-FrontendProxyAgent=3D0.009))=
-|SMS=3D0.011
+X-MS-Exchange-Organization-MessageLatency: SRV=3Dcas-essen-01.secunet.de:TO=
+TAL-FE=3D0.017|SMR=3D0.008(SMRPI=3D0.006(SMRPI-FrontendProxyAgent=3D0.006))=
+|SMS=3D0.010
 X-MS-Exchange-Organization-Recipient-Limit-Verified: True
 X-MS-Exchange-Organization-TotalRecipientCount: 1
 X-MS-Exchange-Organization-Rules-Execution-History: 0b0cf904-14ac-4724-8bdf=
@@ -579,90 +545,72 @@ X-MS-Exchange-Organization-Rules-Execution-History: 0b0cf904-14ac-4724-8bdf=
 6-8c5d-b3d6ddbb3d55%%%16355082-c50b-4214-9c7d-d39575f9f79b
 X-MS-Exchange-Forest-RulesExecuted: mbx-essen-02
 X-MS-Exchange-Organization-RulesExecuted: mbx-essen-02
-X-MS-Exchange-Forest-IndexAgent-0: AQ0CZW4AAXEEAAAPAAADH4sIAAAAAAAEAK1UW2/b=
-NhSmLFm+xO6AtM
- CAPR1gD0ns+CLHqWMPSTsECNAtxQrs0pcCBi3RNhdZcknKjlHkea/7
- N/t7O6TsNF2E3DpClqnDc77zfYeH/Gf7lwjOBN+HTh/eUgGddqcL3s
- HAOxoc9qDR7rXb8BO9SEbwM/d5JC84LEWs2KBaPoET+HVOhVx/pJZA
- 8AUTshUx1WJqyoSe8EixsMWD+di8hupSXDb9gdfvdwbeywEsqYh4NB
- mAXM1GcQg7Q8HkDsgpDeKlBBoBoyLkTEAcsa/IEws+4RENwxUEzA+p
- YAFgqIbUqG8giKMdBZIxQEjJYJTwMEBmsORqCufnf7w99uD9sdeB02
- NPh9AowDDBUkwTHfILBn48m4fcp0oHIxYaAoRjPk0kWxtmcx4yoVG4
- BKmSOQ+acEo1xipOQMbhQrviosku4xnDTBGdMfkKfgwCTB5r5RohiQ
- Kshh8LhiKNKwZGk1fVcrX8Zme2hkeqSnAUHUeGg2JSwUjQyJ/Ccsrx
- TUPUEqwAK69JCBjzy2ZTo/ymieDDojiZTAfaFPDxGBqNCVdAsfZ+mA
- TMbAj+ArYYfkxYwmRzCqO7VqtljuQvwWN+t310eHR40DtoNjudXns8
- GvX7/rgHXrv9stutlhuNxt2ZquV6vX5futevoXHU3+9B3bzxUyqR+A
- rWnlJRNYznEj5pkfB9wMY8YnqV65b6OFRihU7xfBc/9mHC1DBg0t9H
- GCrUUE2F3INb4wNCrcfup9vLjxkI1fiPCTsf9KH54fFQ9SyoJ2DdEP
- i1IwNqU31T+HQzdfn37iOZAdWqwTsRB4mP90naevoUa1wYYSvPEn0o
- GCy45KOQfQGlW8dre/t4AdTX/3e2T0bq97qT8AiqGPwp8y+ATiiPkA
- hQ8CleDutTfZ8KqMHpu9/xoEr4UzOeUbxgRBzPgC4oDylSbz6wIFBr
- 3VPF7JHRh7pv4Bja/0MfDp+IlSGQj2E3ifTFHK52N+cVTo5vntg9uH
- 0q72jpG/2oIe5tyIxabcZaZ8N7oNCMWl1DPRIrQ+DVw0hkQWU1w2Mb
- YQ2V2QxPwLoh8CrjUn4kFIK1ajX9T0iO2DbJ5yyyhY+eO46VLxJStE
- p5QvLExadIcF5xyXaBFNHBfLoOyTsWKeGb5C0r5xCCgTkN6BRIySUl
- hEV/xDdRpQfGlskW+jiaTg49MSQlYELyFiFoxxDjbOPEWPLohnaXFF
- LwCqlqIYaASVpBZ5cUrwEdk9o4IE8kvIV50adEnuEn4qTZc2lBSD5F
- TtEcnU7zMZhbDimk2dNV1yJVUkgRsow24lTIs4pVdQlxSSXLp5BhtJ
- A5Cna0Xiv3eW64ods3pGCIbWmqFtk2Sjds87ZFinru4lJZy0+0kZzZ
- 2u1vXdfnRi16mxoN0n3axDup2oL17eetsuwb2+Z+SeK7FCpn1KZ1RE
- mm3LVrWulTIle25RolZ5vJac40yoZ0cUO6i5MXBi2FtUkPQwyBs83k
- L8sm5/a/2OuiUhEMAAABDs8BUmV0cmlldmVyT3BlcmF0b3IsMTAsMT
- tSZXRyaWV2ZXJPcGVyYXRvciwxMSwzO1Bvc3REb2NQYXJzZXJPcGVy
- YXRvciwxMCwxO1Bvc3REb2NQYXJzZXJPcGVyYXRvciwxMSwwO1Bvc3
- RXb3JkQnJlYWtlckRpYWdub3N0aWNPcGVyYXRvciwxMCwxO1Bvc3RX
- b3JkQnJlYWtlckRpYWdub3N0aWNPcGVyYXRvciwxMSwwO1RyYW5zcG
- 9ydFdyaXRlclByb2R1Y2VyLDIwLDE4
-X-MS-Exchange-Forest-IndexAgent: 1 1359
-X-MS-Exchange-Forest-EmailMessageHash: 5D566706
+X-MS-Exchange-Forest-IndexAgent-0: AQ0CZW4AAWYDAAAPAAADH4sIAAAAAAAEAL1UUW/b=
+RgymZEu25Xgtin
+ av45sTLEsip2gbBVlRJC0QIG0HBF0xrK1wltj4UFnn3EmOPexX7BeP
+ J9lLm2SLkYcd5IN8JL+PH8nTX923Ob7SchMHe/haaBzsDB5j+Cza2e
+ EHf9wJeX+R0UzkKWk8UUPxReZ4oVVBUS/4GVMtp6TNdk7FNhUj0vZF
+ 5gVl2zKdfK62uJjp2VYShXt7g2gvwguhc5mfRZhSkgktCqlyNCORqg
+ uDAjOViAynQksxzAh//+l9bfto+dCC4J+4XJqKUufIrNLynMdjMR9S
+ bAo1Wc/PN/H46JdX8dHL08P43Zt3py+P1otZfL6xiUb+QfW+sV/hVu
+ sSd7E+WdsWC0qyMqVKJf9SmsbnJZVktkZRuPs0CsMIc1sSpNnElirF
+ z1qNcSwSrbB/U3b9mpWjr7P+s2JNBg++Ulfoea2N/2ziGRVxSiZhIY
+ XQRVyMtNnYxw//IegOArlpT1eUt0xvIQ6/adVy8XRUwvZvy+3KulXW
+ p7sOZK1tomkqVWm+GUtpkDFolTHYXblMN0zB7v9dKOtzOhHaVPf4Tp
+ ULn3x1l818PFQZ9m3C/cvbnCMJnUn+dqic7syitDyTuciy+aI5XNq6
+ Lb3gGFOV9ws0RMh4hnBYyizlpPBCFiM8Ofn19UGI7w/CAR4ehL2AO4
+ PH/OGo4arYTH4hTNR4ksmE+86hjMQHKYNRIkpDi4PxRGakewGPhSnK
+ iUy38FBYhLkq0ahsah3ZWDEbNSbmycWYzHN8kaZcDmUl94LSfk5Noj
+ SxtsqRw/Kz51YQgAuNBniuA11+7Huz6XhtgLbT8QA88DsQtKDtVTtb
+ 28DnfhO8pgMd3sFzHLcJwFEOgAONFnS6sMbODrjs2YZuy+lZB7jnQ4
+ udHoLPODWIa+ngfoXDVk6jCQ3emta6XjP6DvSgxVYmagCbm65N2/pw
+ MhzoXYF1utYNfmiAz+cPqnOrCzxWyujtKpZNgWWJrrNYfKdRy7nCco
+ nmrFVpPLKY8NuKxanRuD6ufQ/+TeCN1NcEfl9Rf/Dhu1vZ64pxa3zo
+ cBT7u7ZTHNVaMTaAbpXMoq11JnV6S3XuonSswHFrCezG57bvFfga9O
+ pGLEkDdvbtdF2ORP20bJ42YeZln87fEYsguz0IAAABDs8BUmV0cmll
+ dmVyT3BlcmF0b3IsMTAsMTtSZXRyaWV2ZXJPcGVyYXRvciwxMSwyO1
+ Bvc3REb2NQYXJzZXJPcGVyYXRvciwxMCwyO1Bvc3REb2NQYXJzZXJP
+ cGVyYXRvciwxMSwwO1Bvc3RXb3JkQnJlYWtlckRpYWdub3N0aWNPcG
+ VyYXRvciwxMCwyO1Bvc3RXb3JkQnJlYWtlckRpYWdub3N0aWNPcGVy
+ YXRvciwxMSwwO1RyYW5zcG9ydFdyaXRlclByb2R1Y2VyLDIwLDE3
+X-MS-Exchange-Forest-IndexAgent: 1 1092
+X-MS-Exchange-Forest-EmailMessageHash: 7E5A4F6D
 X-MS-Exchange-Forest-Language: en
 X-MS-Exchange-Organization-Processed-By-Journaling: Journal Agent
 
-On Fri, 29 Mar 2024 13:18:57 -0700 Jakub Kicinski wrote:
-> > Sparse:
-> >=20
-> > drivers/net/ethernet/intel/idpf/idpf_txrx.c:1992:16: warning: symbol '_=
-res' shadows an earlier one
-> > drivers/net/ethernet/intel/idpf/idpf_txrx.c:1992:16: originally declare=
-d here =20
+On Fri, 29 Mar 2024 18:00:00 +0100 Alexander Lobakin wrote:
+> drivers/net/ethernet/intel/idpf/idpf_txrx.c:1992:9: warning: declaration =
+shadows a local variable [-Wshadow]
+>  1992 |         return netif_txq_maybe_stop(nq, IDPF_DESC_UNUSED(tx_q), s=
+ize, size);
+>       |                ^
+> ./include/net/netdev_queues.h:137:11: note: expanded from macro 'netif_tx=
+q_maybe_stop'
+>   137 |                         _res =3D netif_txq_try_stop(txq, get_desc=
+, start_thrs); \
+>       |                                ^
+> ./include/net/netdev_queues.h:92:7: note: expanded from macro 'netif_txq_=
+try_stop'
+>    92 |                 int _res;                                        =
+       \
+>       |                     ^
+> drivers/net/ethernet/intel/idpf/idpf_txrx.c:1992:9: note: previous declar=
+ation is here
+> ./include/net/netdev_queues.h:133:7: note: expanded from macro 'netif_txq=
+_maybe_stop'
+>   133 |                 int _res;                                        =
+       \
+>       |                     ^
 >=20
-> I don't see these building with LLVM=3D1 W=3D12 C=3D1
-> and I really don't like complicating the code because the compiler
-> is stupid. Can't you solve this with some renames? Add another
-> underscore or something?
+> Sparse:
+>=20
+> drivers/net/ethernet/intel/idpf/idpf_txrx.c:1992:16: warning: symbol '_re=
+s' shadows an earlier one
+> drivers/net/ethernet/intel/idpf/idpf_txrx.c:1992:16: originally declared =
+here
 
-I'm stupid I tried on the test branch which already had your fix..
-
-This is enough:
-
-diff --git a/include/net/netdev_queues.h b/include/net/netdev_queues.h
-index 1ec408585373..2270fbb99cf7 100644
---- a/include/net/netdev_queues.h
-+++ b/include/net/netdev_queues.h
-@@ -89,7 +89,7 @@ struct netdev_stat_ops {
-=20
- #define netif_txq_try_stop(txq, get_desc, start_thrs)			\
- 	({								\
--		int _res;						\
-+		int __res;						\
- 									\
- 		netif_tx_stop_queue(txq);				\
- 		/* Producer index and stop bit must be visible		\
-@@ -101,12 +101,12 @@ struct netdev_stat_ops {
- 		/* We need to check again in a case another		\
- 		 * CPU has just made room available.			\
- 		 */							\
--		_res =3D 0;						\
-+		__res =3D 0;						\
- 		if (unlikely(get_desc >=3D start_thrs)) {			\
- 			netif_tx_start_queue(txq);			\
--			_res =3D -1;					\
-+			__res =3D -1;					\
- 		}							\
--		_res;							\
-+		__res;							\
- 	})								\
-=20
- /**
+I don't see these building with LLVM=3D1 W=3D12 C=3D1
+and I really don't like complicating the code because the compiler
+is stupid. Can't you solve this with some renames? Add another
+underscore or something?
 
