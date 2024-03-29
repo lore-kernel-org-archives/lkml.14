@@ -1,90 +1,125 @@
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564134B5DA
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 23:19:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFBC4B5DA;
+	Fri, 29 Mar 2024 23:22:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711754344; cv=none; b=tHyxyXpXaE4bK2EpJ9udiazpp8th3VjiBIispNEFdsPGqDgWRdtn1YOvOp220Wlq3m6OcodW0vd+9cr96i6KOS6qrCaQ1Vu03+9vjtQbG45vmEZbadafTg4GGvZVuNbf3MOo+6crw2g0qHPrsHZUPX8urEF6CAwdYeOxjzVxF6c=
+	t=1711754574; cv=none; b=T8ZiMItxzllVnhMN7mKBttTO8VbRcQ5pwVgMkXJuNEACK0+e4inNcZ8iN90okGdVpf/4XMLGqFrAlvzID0wRVqp0hiOWB9i6gZyLgefqExMxVOrYhOiW51hqIUCFSHUDVNq7MA8oNkaOynnbYpgCRYf3+yRvcxU4wI24CcCNGdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711754344; c=relaxed/simple;
-	bh=vnGFST8g/D2/54qEF94dGguSEUSHy9NC6zJgvdLnJag=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YIpphg1Z2snGdpl6X9GooneIaKaSOQlV4E4RhZzYo16mMXsApb/mIYTFXkG7Jd3XSveUOh+Bymg8sYK2rNnWoMf52Ym1xPmt8SFFUQoIL3usd7dDmqkW5wxodRQsSeF2mh7/nXwP6sjIp3YGs/lEw23D6VBawnat2iA4wFsr18k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GW17gx2d; arc=none smtp.client-ip=209.85.161.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711754574; c=relaxed/simple;
+	bh=0Bgz3dygYfsN6NPG3lTjxdOt5S268zJki5K2RHRufYU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=VeMYwD+5F7IspitGWxwFCcYDOallyaNt0PUOkIM0AbsFxilqxi/WxMoHMe4PcLRTfSM007ctA6zwN8m1JsxjNwd5SSh2Rp24WTxwRblZx1MLcZHYASy+CnVYxIX6IF4bKR4e5mO9khUMwcVm8dqKFqEhyNbW8adFypnqbwJflIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=mTcIVgYm; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GW17gx2d"
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5a47680a806so563791eaf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 16:19:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711754342; x=1712359142; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vnGFST8g/D2/54qEF94dGguSEUSHy9NC6zJgvdLnJag=;
-        b=GW17gx2d44+c/9GSHNRM0Z+fNJZ3xweh95mTonLAIrZN1PUObIPrwuZtLCDxrTWUFy
-         Te0hq754oOXEmF2wD2bJwlzaoDYPN/3VXbYogeJLP/UeqTL8TTCgeAccGtIceCVfyBHn
-         7R074c3OXUVIhrNFbSX/JFvW56puOi1Wqzum6EgzZ/wnaQQOoXAu4EuxKDgTcLWv58D1
-         97lAYwMa3oYVexf+1sXKBR2tkNJayoxnJuK5MUae22VldT+NtxkoobBFsZbmmnPYkQ/J
-         1GAfyKyF60enIRsM3qwhGkbztUHju89Ix5dyey70sjRZ54OLp8Oyu3LKmdrai1APDe3u
-         nHuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711754342; x=1712359142;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vnGFST8g/D2/54qEF94dGguSEUSHy9NC6zJgvdLnJag=;
-        b=Uyu1uc7S9b7Yb/gSfac+O4Jk3Gpe7JPZUVGd1ubvvuoT3UW7lxQzbnP2otBhdq/bJY
-         kNX30m/M0cvK6bTu9++O9FzoTN4itiETeSdz/3DySnNzFhqIJx7Hqeeb2aIYuGCQE2YE
-         KacxaQULsAsk5iK9fJvGuzJ9kmOMN31lwhim978FIVUWz8SHLZpRVXn/UHe2dUk4tpO7
-         WVPAP5/dFWXngnGLvI3rpKyAZY7IZmwNN41iLmwfPVva5tnf2Zr13r2XuyyezYV4t2Bd
-         GCzsJW4e2LzX+QCXRqqyxrIjeJD/oCmU+A7maD3PM2HwEoko2AOatFMk82WClx3P5zI+
-         TtHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWA8KnbJvt+krcN3z+7Jqy36PBvUinHeCCOWSTRoKS4s/8u1eGoqNNLPewAKoCQTRUOV7mxbhTNnw203KTUg7UrHfi5ypUa4Ub4xQc4
-X-Gm-Message-State: AOJu0Yx/A2MbMNZOfT+Yb7F8UV0xg4aShv0EZr5DqtaCijEkdHfmbOcl
-	d06IyZQFqdZVaCS9T1O2NDrFcx7uuj5wJyN3Onerl0RuqOcugHGF
-X-Google-Smtp-Source: AGHT+IE2db2L9WUF+xM4vQcDoAeeD6O2XDyv0ZurcW/IrEcP8yVCzcBmxiAcZhOdkPb1TwQajv5big==
-X-Received: by 2002:a05:6870:9a05:b0:22e:dce:39bc with SMTP id fo5-20020a0568709a0500b0022e0dce39bcmr1557265oab.3.1711754342219;
-        Fri, 29 Mar 2024 16:19:02 -0700 (PDT)
-Received: from SDF-ThinkCentre-M93p.localdomain (c-76-17-255-148.hsd1.mn.comcast.net. [76.17.255.148])
-        by smtp.googlemail.com with ESMTPSA id cm9-20020a05622a250900b004317485a4e9sm2044266qtb.66.2024.03.29.16.19.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Mar 2024 16:19:01 -0700 (PDT)
-From: Shimrra Shai <shimmyshai00@gmail.com>
-To: jonathan.cameron@huawei.com
-Cc: heiko@sntech.de,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	max.schwarz@online.de,
-	niyas.sait@huawei.com,
-	shimmyshai00@gmail.com
-Subject: Re: Re: [PATCH 0/0] (proposed?) Add ACPI binding to Rockchip RK3xxx I2C bus
-Date: Fri, 29 Mar 2024 18:25:28 -0500
-Message-Id: <20240329232528.79332-1-shimmyshai00@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240322103521.00001a12@Huawei.com>
-References: <20240322103521.00001a12@Huawei.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mTcIVgYm"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42TLQSj5013426;
+	Fri, 29 Mar 2024 23:22:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=7UwDx5OuW8FtPG7iPK+HFKmVAJuPi5oZKhU7vXS9aS4=; b=mT
+	cIVgYmE4vn+1WKdCBKVvcGY9JpVQgjzMVAqLZ+1qHySgkRDqdScgPph+XSqVvOgd
+	l6yggGX8sisnfUgUXH3Vj3/QyHyb3K8MOhCeRdayW5pgmekSkoXU4zi1mbJ1Jzxt
+	P+1U3mgoKCWPZaNbEBuzLTNyMLkiig0x1jc88aMmEpmJryuvkz6L8ain01FN2Uvc
+	IgaLKzmraIvOv6LxShxYk3V2qayP/Qv67DdjsjrDazoQjgWkUfadtWc+FVqKYhjo
+	kvLGgLc4o9NJoLlPPLAeAl6yLaZfHNUpl6zcfwh/G7H/jMDaYO1lZ/DjIOMntWa8
+	Lpg6rNlqt9WCbM4SY2tg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x5sm6j50r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 29 Mar 2024 23:22:35 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42TNMYfx000427
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 29 Mar 2024 23:22:34 GMT
+Received: from [10.110.124.221] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 29 Mar
+ 2024 16:22:33 -0700
+Message-ID: <8ba398c9-b71c-4447-a1d0-bd560e41f39f@quicinc.com>
+Date: Fri, 29 Mar 2024 16:22:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/7] wifi: ath10k: sdio: drop driver owner initialization
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Ulf Hansson
+	<ulf.hansson@linaro.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Luiz Augusto
+ von Dentz <luiz.dentz@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+        Kalle
+ Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
+        Arend van Spriel
+	<arend.vanspriel@broadcom.com>,
+        Brian Norris <briannorris@chromium.org>,
+        =?UTF-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <jerome.pouiller@silabs.com>
+CC: <linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-bluetooth@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        <ath10k@lists.infradead.org>, <brcm80211@lists.linux.dev>,
+        <brcm80211-dev-list.pdl@broadcom.com>
+References: <20240329-module-owner-sdio-v1-0-e4010b11ccaa@linaro.org>
+ <20240329-module-owner-sdio-v1-4-e4010b11ccaa@linaro.org>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <20240329-module-owner-sdio-v1-4-e4010b11ccaa@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: pj5BXDPNqd-BazKf3WC1xlwtDGjZg8-7
+X-Proofpoint-GUID: pj5BXDPNqd-BazKf3WC1xlwtDGjZg8-7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-29_13,2024-03-28_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ priorityscore=1501 adultscore=0 mlxlogscore=928 suspectscore=0
+ impostorscore=0 spamscore=0 lowpriorityscore=0 bulkscore=0 clxscore=1011
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403210001 definitions=main-2403290208
 
-Hey Jonathan,
+On 3/29/2024 10:24 AM, Krzysztof Kozlowski wrote:
+> Core in sdio_register_driver() already sets the .owner, so driver does
+> not need to.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-I just heard back from the firmware team. Apparently, there is rationale
-behind including the clock bindings as part of the _DSD_ - it is because
-apparently MS Windows can also run on this platform and it expects those
-bindings to be there to configure the clocks on this platform. If they are
-changed, it will break that capability, rendering it kind of moot to use
-the ACPI boot which is intended to be universal across OSes. (I also wonder
-if NetBSD uses the same bindings as well; that OS can boot via ACPI boot
-without much issue on this platform.)
+Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 
-Shimrra
+> 
+> ---
+> 
+> Depends on the first patch.
+> ---
+>  drivers/net/wireless/ath/ath10k/sdio.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/net/wireless/ath/ath10k/sdio.c b/drivers/net/wireless/ath/ath10k/sdio.c
+> index 1acb9fba9a8e..cddd9e3010ee 100644
+> --- a/drivers/net/wireless/ath/ath10k/sdio.c
+> +++ b/drivers/net/wireless/ath/ath10k/sdio.c
+> @@ -2667,7 +2667,6 @@ static struct sdio_driver ath10k_sdio_driver = {
+>  	.probe = ath10k_sdio_probe,
+>  	.remove = ath10k_sdio_remove,
+>  	.drv = {
+> -		.owner = THIS_MODULE,
+>  		.pm = ATH10K_SDIO_PM_OPS,
+>  	},
+>  };
+> 
 
