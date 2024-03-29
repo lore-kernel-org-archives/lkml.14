@@ -1,174 +1,202 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F991096F;
-	Fri, 29 Mar 2024 11:34:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACDF56A323
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 11:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711712066; cv=none; b=JZhpcIZbtEusdP6RS2+Wm/DL+P3LJ2qPYMN5wxOsHjBiT4NQv4ToumXKAgk12gPCqJRPlf5wTurtbBlf48OY9VfYeCjYTW9DvZefwS263T0E7fgoSV9jtFwmt99OyGxF5WXSMZIwvlKh8DbUYhxuaKs8gU0XjOWDv6O4ciZayNU=
+	t=1711712143; cv=none; b=QHHKySrydRCHWoX07V8KEsI5bJh6zeYgw4gdlfmZap4aCgf1r0ZkfOK3f5CEsA4IGsEejTCuyh/mYW848OuRkv6MA6Kp8n5oLneEXSVr8GRkugIkGI6TC/nmDrZFBOcKHOy8Y3vpsUOwbm3p/Txsgv+Q7ZHoQ9W4AgNQToG+US0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711712066; c=relaxed/simple;
-	bh=CD+U/4SMvslHllsXoojsThdlHsrwenDb0wNTOqeQPjU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=W0xtjAeyrMPSP1oLtahu1aNjqTv8BgmRpdr8gzgJKdJVkzYdUf6YaZLExX9ySN9plNc5p6xm/Wc/QHinJowe49B9U0umYfK3krZIEhhNhyy/bg5vKS4H1AEbgjxDCCd9IB9MQTXLymN2rTljxQLoSplHV0wPi/Nbbb0HBQXC87o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de; spf=pass smtp.mailfrom=valentinobst.de; dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b=15ofR0A7; arc=none smtp.client-ip=212.227.126.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valentinobst.de
+	s=arc-20240116; t=1711712143; c=relaxed/simple;
+	bh=rTBkgbqY6fJlg+R5mG7/nmv3uvnCknOKMRSsuyxn8xk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NBTp9XcZGkdNLCP6adlcOVTxHE+sQX5qRIcKgWdGbN/GRUUOaprjIfRCpIRNa8R8H3Su0R9kpSCzQfEBTxRlObcYPQnfmTYvKr9KCkPE7seGUYHRqBhqYSFcHWsjJpVGmmyhchF3l26iGVcEKaeKOZXNnCRofjC8VmGmeU0rlrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l1P5UfsW; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b="15ofR0A7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valentinobst.de;
-	s=s1-ionos; t=1711711998; x=1712316798; i=kernel@valentinobst.de;
-	bh=kiemghf0V/GSK2wbZLm1KTLUSSgc/ODkFkc449G7fSI=;
-	h=X-UI-Sender-Class:From:Date:Subject:To:Cc;
-	b=15ofR0A76otzeI/sIVKoaC8Qv2gy7vxHim2Ymh1CY7FWbG+DWtRahTZw6V+CoZPM
-	 sgAAJccwjr3jXRsVI72swtSHjdLD09Tjckr8f+c0IIbGHTfEzvdwb9FR9i9FnCwPW
-	 hF/zg05P8SMCIJcE6ViA7FOT+OrS6vG9Lg2z+0HKgbwtSYJnmKygP6q19B5wVfXnb
-	 q84NlE/zJCPZi96h/eQ9glpGb9Zq8qvfaSY41uATCybsQ+wLUCiXETdqJE2Z/EM5U
-	 sg34+2aXk+z4G2rl6bwQQFzVYQz3JTfosFWQEawD+gr5U/gKUWC8mgSuLblGdHdQ/
-	 bqQYw+6lVQhP1ZJ58w==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from [10.77.77.61] ([217.249.70.154]) by mrelayeu.kundenserver.de
- (mreue011 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1N4hex-1soHPN2Wxj-011hm9; Fri, 29 Mar 2024 12:33:18 +0100
-From: Valentin Obst <kernel@valentinobst.de>
-Date: Fri, 29 Mar 2024 12:31:58 +0100
-Subject: [PATCH v3] x86/tools: fix line number reported for malformed lines
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l1P5UfsW"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3416df43cabso1316750f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 04:35:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711712138; x=1712316938; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=SHWnqVWhESCF28jPQj1jqSBG2HWFvDAYH4hNZmw67to=;
+        b=l1P5UfsWMaios8DSGcOK8XZrmJuIEnLGt6X7D2d3UWqXtlTP+XL2xL5C9ZgtMn7rpZ
+         7g2GJbf6pYruEQg0BTU+Mtwih+gnwZXrTGvfQDyIyB1R4WsMBkfiDPKY4e/IKmaXDSKU
+         vdENM/+GlnbXAYIABxSp5NwQ9lthejVc0mBv4eWhSD8CjNk7B9vnyANEx+1oEcWLwuVP
+         W6Gexkx1lA6q1QBbKUoA77sSUEgk4IQRMQqQZGv3z0Vy+IkqALptS6w0twCjT0oFlFKv
+         oPE7SmnrtJHGUtFbTPHMie0paPQeb0YBrQ/R5ZPQNmh9T+aW8Ls/tKhZXHF7/BAK/+6K
+         yyvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711712138; x=1712316938;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SHWnqVWhESCF28jPQj1jqSBG2HWFvDAYH4hNZmw67to=;
+        b=bPyoUhZmkwD+werHAiRWoNlbg05QnAdSGWpJROts8q9pf/ILlLrBE0vEoliBbBoKS3
+         aRcDvzbjXe+Ezj/0/q7/eKANHJ2Lys6Im2EEm08gIqB4qhgVpJr5aHHLmHgSej9hRtL+
+         bN11ed89ILhjVDTEhy/yatCKOyZnyKfG6Nr93nAsa0ySBgoLgqgc/qwVsBNWnABXDqKf
+         enR7cGXWqhKKT4KjwzmQUkNHcrgfvFXyXj6XmUEZDedvOQZaMQstXT038kx122av0gIu
+         BqDzasVeath8yr1QGAQMdVm5usV35tLpxCpfisi2g0PP6DeooSm1vW+j2aRDt20qYaNI
+         AIAw==
+X-Forwarded-Encrypted: i=1; AJvYcCVraOGbpg7Wo3Nnwx6Hn7HfIlDLP9u5ds3w7UmPRUROZflkABSlsqXWp0onOXEb53r7atDLFPq/vVelVXEn9HbW4Oi9r01dOF0IM03L
+X-Gm-Message-State: AOJu0YxfuxW+tQyWLKokdIvnGQ/uI/0ZvI3hYGY8XOJxM27y4EhrMnHr
+	wvvH9orOnjHL426O5mLyuZ27zAeAo0jEe5eGrWIh5lkIeTbzIVz1d+JCVnU5f7M=
+X-Google-Smtp-Source: AGHT+IErTnUou0HaGnzrNWoIoQAUN1hmJepx7dgqCCJjDop9Ee4NvMHttnyDMc4spmgneYx5tVGNiw==
+X-Received: by 2002:a5d:63c4:0:b0:341:d912:1fec with SMTP id c4-20020a5d63c4000000b00341d9121fecmr1210632wrw.49.1711712138011;
+        Fri, 29 Mar 2024 04:35:38 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.50])
+        by smtp.gmail.com with ESMTPSA id bq24-20020a5d5a18000000b0033e45930f35sm4026809wrb.6.2024.03.29.04.35.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 Mar 2024 04:35:37 -0700 (PDT)
+Message-ID: <1303b572-719e-410d-a11a-3f17a5bb3b63@linaro.org>
+Date: Fri, 29 Mar 2024 12:35:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <20240329-x86-insn-decoder-line-fix-v3-1-ec97e21d63bf@valentinobst.de>
-X-B4-Tracking: v=1; b=H4sIAK2mBmYC/43NQQqDMBAF0KtI1p1iRmtsV71H6UKTSR2QpCQSL
- OLdG10VCqXL/5n/ZhGRAlMUl2IRgRJH9i6H6lAIPXTuQcAmZ4El1iWihLltgF10YEh7QwFGdgS
- WZ1C9tEhSVWityPtnoFzv9u2e88Bx8uG1v0pya/9RkwQJtdLm1EklW91cUzeSm9j5Pk5HQ2KzE
- 3561S8Ps6cN1WfdnG2+/vbWdX0DnP7P+xgBAAA=
-To: Borislav Petkov <bp@alien8.de>, 
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
- Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
- Thomas Gleixner <tglx@linutronix.de>
-Cc: Andreas Hindborg <a.hindborg@samsung.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- John Baublitz <john.m.baublitz@gmail.com>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Peter Zijlstra <peterz@infradead.org>, 
- =?utf-8?q?Sergio_Gonz=C3=A1lez_Collado?= <sergio.collado@gmail.com>, 
- linux-kernel@vger.kernel.org, x86@kernel.org, stable@vger.kernel.org, 
- Valentin Obst <kernel@valentinobst.de>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711711993; l=3102;
- i=kernel@valentinobst.de; s=20240131; h=from:subject:message-id;
- bh=2yrFMY5+SkggOHssX479kJtPf1H7LqZLVDyny3osaw8=;
- b=/Nn//02Z2oCL5gr446bWK3XQ8O4GS/oo2j5cCI9ik9RCoNR8lTuw66hxInDLN48SptcHnrqzR
- Ky+lvc0vuIMBIAeR3hJ98InwVMWPPLtnydzMN19YC4Qx44LQeWOnzxC
-X-Developer-Key: i=kernel@valentinobst.de; a=ed25519;
- pk=3s7U8y0mqkaiurgHSQQTYWOo2tw5HgzCg5vnJVfw37Y=
-X-Provags-ID: V03:K1:Dw8Wc4f3SmNQdchz8rSOTpOoyWdA1Zrbv/NisIdmEkpeigaiwaZ
- Hntcz/jWJi56Mt3VO+ElFiDob1y0ULkKfnQwo4E3eC0dSngn9kpi4jVawtOVjfba4oYCrKl
- VPzTgVmtZJ4lW8/ROZAUuWT41HSQIdxj0OQck8BzXEEPdAgsfMDMUeSxlAr0O9FaTR3n5VU
- 1b+BMQHsFnyHNSJNg/m7Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:7io/rqjPaZQ=;olFbZPdz3zE1etpUCGrzuB58KL8
- PLVp5bABWX65KousaqgreXUxCV5GtNsM+SdTI+kA9goxjenIa2HOpFHFpc6EcEPmixJxTmvkY
- Q7wZpGT6osuw0ChUvNN6lhL81oTeN/i2vJNGAozFIFGLXMbMihzunjSwLqcjQxb63eKXOdXKU
- mkLxbvM+qFl7BArjIMl/j6qSjuzWv1roybzEZUinMU5xCqXIZVFwk60eOvtfN5NGg1xIsRvmy
- SpuGPgRlvveUoQ3gHPwrVirEFzC78yezhr/0plSY9mglqM3NcsSZ2pUynIGAkfXOzLEXNSEjm
- 1VfuRNIUgO+dAiWjNiuMrQylEmtJ0DWPE7ziosRkRESLNVnAfIH+dqMiOhHucKpcMc/FLgZ6i
- mrwQdQaxUksrhmscHAd4TjtQqJQ2GquVey9qvemPH04q6iicbZLGxYE1hImxZpyiTZCW2XdlZ
- ygHHgralNdARXxJLspGMlQ3vNpoHt3gEDOsIKBniuzjKbS90shQQp3wAPoD0pvItsCTHd884j
- uoDl0l4qoMD6hNcOJGTmouKcZnPjVjJNFZMUCr1dyHIzJDq519buQ68Xoc1kQT0pAC+HrXike
- eRo+xLmN3fecC9r9h+9yAminvFu95nt2dWhDEZLpOK/NSon0Fxel1YQdemvltl4AbrmldRRO2
- QKn0pjdELTMcElLvpg1qhgC+9NUd5K4kienmuvyz1h5NVxaF0NHp2eUcCr1eM7iJ0qAkBmFT5
- unIXxEkwQ9bpECDIakWz35cN523+Qjosb+4RoX64A+tPbdPf//CdRI=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 09/22] gpio: virtio: drop owner assignment
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Paolo Bonzini <pbonzini@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>,
+ Jens Axboe <axboe@kernel.dk>, Marcel Holtmann <marcel@holtmann.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Olivia Mackall <olivia@selenic.com>, Herbert Xu
+ <herbert@gondor.apana.org.au>, Amit Shah <amit@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Gonglei <arei.gonglei@huawei.com>, "David S. Miller" <davem@davemloft.net>,
+ Viresh Kumar <vireshk@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>,
+ Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
+ <olvaffe@gmail.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
+ Joerg Roedel <joro@8bytes.org>, Alexander Graf <graf@amazon.com>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Eric Van Hensbergen <ericvh@kernel.org>,
+ Latchesar Ionkov <lucho@ionkov.net>,
+ Dominique Martinet <asmadeus@codewreck.org>,
+ Christian Schoenebeck <linux_oss@crudebyte.com>,
+ Stefano Garzarella <sgarzare@redhat.com>, Kalle Valo <kvalo@kernel.org>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, Pankaj Gupta
+ <pankaj.gupta.linux@gmail.com>, Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Vivek Goyal <vgoyal@redhat.com>, Miklos Szeredi <miklos@szeredi.hu>,
+ Anton Yakovlev <anton.yakovlev@opensynergy.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ virtualization@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+ linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ iommu@lists.linux.dev, netdev@vger.kernel.org, v9fs@lists.linux.dev,
+ kvm@vger.kernel.org, linux-wireless@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, alsa-devel@alsa-project.org,
+ linux-sound@vger.kernel.org
+References: <20240327-module-owner-virtio-v1-0-0feffab77d99@linaro.org>
+ <20240327-module-owner-virtio-v1-9-0feffab77d99@linaro.org>
+ <CAMRc=McY6PJj7fmLkNv07ogcYq=8fUb2o6w2uA1=D9cbzyoRoA@mail.gmail.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <CAMRc=McY6PJj7fmLkNv07ogcYq=8fUb2o6w2uA1=D9cbzyoRoA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Commit 35039eb6b199 ("x86: Show symbol name if insn decoder test failed")
-included symbol lines in the post-processed objdump output consumed by
-the insn decoder test. This broke the `instuction lines =3D=3D total lines=
-`
-property that `insn_decoder_test.c` relied upon to print the offending
-line's number in error messages. This has the consequence that the line
-number reported on a test failure is unreated to, and much smaller than,
-the line that actually caused the problem.
+On 29/03/2024 11:27, Bartosz Golaszewski wrote:
+> On Wed, Mar 27, 2024 at 1:45 PM Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
+>>
+>> virtio core already sets the .owner, so driver does not need to.
+>>
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>
+>> ---
+>>
+>> Depends on the first patch.
+>> ---
+>>  drivers/gpio/gpio-virtio.c | 1 -
+>>  1 file changed, 1 deletion(-)
+>>
+>> diff --git a/drivers/gpio/gpio-virtio.c b/drivers/gpio/gpio-virtio.c
+>> index fcc5e8c08973..9fae8e396c58 100644
+>> --- a/drivers/gpio/gpio-virtio.c
+>> +++ b/drivers/gpio/gpio-virtio.c
+>> @@ -653,7 +653,6 @@ static struct virtio_driver virtio_gpio_driver = {
+>>         .remove                 = virtio_gpio_remove,
+>>         .driver                 = {
+>>                 .name           = KBUILD_MODNAME,
+>> -               .owner          = THIS_MODULE,
+>>         },
+>>  };
+>>  module_virtio_driver(virtio_gpio_driver);
+>>
+>> --
+>> 2.34.1
+>>
+> 
+> Applied, thanks!
 
-Add a new variable that counts the combined (insn+symbol) line count and
-report this in the error message.
-
-Fixes: 35039eb6b199 ("x86: Show symbol name if insn decoder test failed")
-Cc: stable@vger.kernel.org
-Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
-Tested-by: Miguel Ojeda <ojeda@kernel.org>
-Reported-by: John Baublitz <john.m.baublitz@gmail.com>
-Debugged-by: John Baublitz <john.m.baublitz@gmail.com>
-Signed-off-by: Valentin Obst <kernel@valentinobst.de>
-=2D--
-See v2's commit message and [1] for context why this bug made debugging a
-test failure harder than necessary.
-
-[1]: https://rust-for-linux.zulipchat.com/#narrow/stream/291565-Help/topic=
-/insn_decoder_test.20failure/near/421075039
-
-Changes in v3:
-- Add Cc stable tag in sign-off area.
-- Make commit message less verbose.
-- Link to v2: https://lore.kernel.org/r/20240223-x86-insn-decoder-line-fix=
--v2-1-cde49c69f402@valentinobst.de
-
-Changes in v2:
-- Added tags 'Reviewed-by', 'Tested-by', 'Reported-by', 'Debugged-by',
-  'Link', and 'Fixes'.
-- Explain why this patch fixes the commit mentioned in the 'Fixes' tag.
-- CCed the stable list and sent to all x86 maintainers.
-- Link to v1: https://lore.kernel.org/r/20240221-x86-insn-decoder-line-fix=
--v1-1-47cd5a1718c6@valentinobst.de
-=2D--
- arch/x86/tools/insn_decoder_test.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/tools/insn_decoder_test.c b/arch/x86/tools/insn_deco=
-der_test.c
-index 472540aeabc2..727017a3c3c7 100644
-=2D-- a/arch/x86/tools/insn_decoder_test.c
-+++ b/arch/x86/tools/insn_decoder_test.c
-@@ -114,6 +114,7 @@ int main(int argc, char **argv)
- 	unsigned char insn_buff[16];
- 	struct insn insn;
- 	int insns =3D 0;
-+	int lines =3D 0;
- 	int warnings =3D 0;
-
- 	parse_args(argc, argv);
-@@ -123,6 +124,8 @@ int main(int argc, char **argv)
- 		int nb =3D 0, ret;
- 		unsigned int b;
-
-+		lines++;
-+
- 		if (line[0] =3D=3D '<') {
- 			/* Symbol line */
- 			strcpy(sym, line);
-@@ -134,12 +137,12 @@ int main(int argc, char **argv)
- 		strcpy(copy, line);
- 		tab1 =3D strchr(copy, '\t');
- 		if (!tab1)
--			malformed_line(line, insns);
-+			malformed_line(line, lines);
- 		s =3D tab1 + 1;
- 		s +=3D strspn(s, " ");
- 		tab2 =3D strchr(s, '\t');
- 		if (!tab2)
--			malformed_line(line, insns);
-+			malformed_line(line, lines);
- 		*tab2 =3D '\0';	/* Characters beyond tab2 aren't examined */
- 		while (s < tab2) {
- 			if (sscanf(s, "%x", &b) =3D=3D 1) {
-
-=2D--
-base-commit: 4cece764965020c22cff7665b18a012006359095
-change-id: 20240221-x86-insn-decoder-line-fix-7b1f2e1732ff
+I expressed dependency in two places: cover letter and this patch.
+Please drop it, because without dependency this won't work. Patch could
+go with the dependency and with your ack or next cycle.
 
 Best regards,
-=2D-
-Valentin Obst <kernel@valentinobst.de>
+Krzysztof
 
