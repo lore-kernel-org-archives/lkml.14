@@ -1,94 +1,144 @@
-Received: from mail-177132.yeah.net (mail-177132.yeah.net [123.58.177.132])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CD2113A3E7;
-	Fri, 29 Mar 2024 12:28:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.132
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7359E1494DA;
+	Fri, 29 Mar 2024 12:29:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711715340; cv=none; b=FFbzmp+pPyTOKEF7mR4tpNuuDO8Ax1GmbgJnBXsZ/SfIbH4UkrgvocWMXEdYRueZdit+jUsy6FEZiJg2SUYeRkTSRkKWazJ329vihhRV4kRVzqcdGa0p8YxJiG2JqzLVg4F9r+Rz5gHVNlehmZ8NBmtDnX2K0bdaVV7LqEJ7D6g=
+	t=1711715341; cv=none; b=PgAKlW6dBdNn/AnOneGnG+CnsTMCciP47QvGt1PNUeXdOoe8b/eUYpnLiwo1jWtB+LmSMZaohkwXnX+2ylkqEFC9+JTn5LLRJAKaxulRcCmSEnefCF+OIk0K9CCWP9aRfXTJa1lA25vMoYyRbpBM1FSeh4y0Qt5YVWq+LW19pA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711715340; c=relaxed/simple;
-	bh=764c3pjO6u5CEwXzE5Ddk/WTGKPMneIjFGs1pBnqEVI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FtB3g/JDmYtx0ksyjTRa4UKgIew5DKeUAzKbFAwh6OPs8Aj84Juc7FlXtWCt5YwmIJpAUiQRQZ4xnH/wU1T4O9wbAVnNb/SUFNx9G9UMcsCRwzi3z6lH8ajLeFFlJVJLj23W42oy8hYFs8SD6hXrwNkoo4qvp51WlaNNoUzybgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=A6JWQORY; arc=none smtp.client-ip=123.58.177.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1711715341; c=relaxed/simple;
+	bh=VBbr5zV+DGiCnpCpxIGYBmWTVXJfvphyBATaBXAmY8w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YiJNsYADNvd/QmYdBfvohMZqrCuW4lFTKr5sTMKetUvWSvK/q3uhxtYBqfVYByN4tyK39wyZVQHdtxpd9+wqomkh8Z7CFBvsaueT/QLWfn7scb3ZOAIXxPur9Dbf3YIp+W/EmH4c2HfgSMX/ILcYluWDJvpmoHdaykm5DYL5/Gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nA1ttXm9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="A6JWQORY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=LGyBgMV35yeeHHBEgeXzXGS0G5EIZCLqefBgjneqAWo=;
-	b=A6JWQORY4YFGFIHy0WRDX4l8vTe1JOogRDHRkDWgOCnDR8y6QWGLvIadIP+i3q
-	ptuJRgXdOB2KqYThCcXIWl1EosjQdxZMvXaOSoTb9I9mDT/D37TtQJwhBlLvIsLT
-	M8ijXCsi2q5OlXuZoyjWQYMpGYDOno9avUW7n+z3e6lmA=
-Received: from dragon (unknown [183.213.196.225])
-	by smtp2 (Coremail) with SMTP id C1UQrADnTxnOswZmO0ZqAg--.19469S3;
-	Fri, 29 Mar 2024 20:27:59 +0800 (CST)
-Date: Fri, 29 Mar 2024 20:27:58 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] arm64: dts: imx8dxl: update cm40 irq number
- informaiton
-Message-ID: <ZgazzrWidHHn6eg4@dragon>
-References: <20240305-m4_lpuart-v3-0-592463ef1d22@nxp.com>
- <20240305-m4_lpuart-v3-3-592463ef1d22@nxp.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nA1ttXm9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19BA0C433A6;
+	Fri, 29 Mar 2024 12:29:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711715341;
+	bh=VBbr5zV+DGiCnpCpxIGYBmWTVXJfvphyBATaBXAmY8w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=nA1ttXm9PKt3XZj729XZD22+k9T98SG4dFAnpAo9Iey9W72Ip38tn5P7f3PjEUwAp
+	 Pkid58TI2m2FKLxK1lwH/HFU1eZqEY9NSVWN2FOqlDriA/tm3Y+z8X1IemCLW07XZt
+	 7QdXTEtSokD9Qf1HcPFt8Pj3pDCK7lcEqCt/xo2idkDUynIg7SqzOTRnWnn6auv9wc
+	 qYMVZXuSTMkAS6WVFi7Eeni8n2WsIPgc91+Mcgj86ANrVsMXn6KoCadYd3c5ffxm1v
+	 GSyHZ5f0/M+byGTr+CQ0nbuINpQBbvk6nd15hWuPbL3mJ275J/tdo803sWs/5pd7ws
+	 BvEs6h/XaVfAw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Johannes Berg <johannes.berg@intel.com>,
+	syzbot+d050d437fe47d479d210@syzkaller.appspotmail.com,
+	Sasha Levin <sashal@kernel.org>,
+	johannes@sipsolutions.net,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linux-wireless@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.8 58/68] wifi: cfg80211: check A-MSDU format more carefully
+Date: Fri, 29 Mar 2024 08:25:54 -0400
+Message-ID: <20240329122652.3082296-58-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240329122652.3082296-1-sashal@kernel.org>
+References: <20240329122652.3082296-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240305-m4_lpuart-v3-3-592463ef1d22@nxp.com>
-X-CM-TRANSID:C1UQrADnTxnOswZmO0ZqAg--.19469S3
-X-Coremail-Antispam: 1Uf129KBjvdXoWrZF43Aw4xCr47GF1rCFy5XFb_yoWkXFgEy3
-	WxWw15Ja4rAFZYyas5Krs5XryUK3yxGr95Xw1kWF4DWa4vvF909Fs7Jan5Jay3WFWjkryD
-	Ca1rXr48A34agjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU0I38UUUUUU==
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiBRGwZVsVCawBUQAAs6
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.8.2
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 05, 2024 at 10:54:57AM -0500, Frank Li wrote:
-> Update cm40 irq number for imx8dxl chip.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-s/informaiton/information in subject.
+[ Upstream commit 9ad7974856926129f190ffbe3beea78460b3b7cc ]
 
-Shawn
+If it looks like there's another subframe in the A-MSDU
+but the header isn't fully there, we can end up reading
+data out of bounds, only to discard later. Make this a
+bit more careful and check if the subframe header can
+even be present.
 
-> ---
->  arch/arm64/boot/dts/freescale/imx8dxl.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8dxl.dtsi b/arch/arm64/boot/dts/freescale/imx8dxl.dtsi
-> index 9d49c75a26222..b9d137d69f5a7 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8dxl.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8dxl.dtsi
-> @@ -243,3 +243,14 @@ xtal24m: clock-xtal24m {
->  #include "imx8dxl-ss-conn.dtsi"
->  #include "imx8dxl-ss-lsio.dtsi"
->  #include "imx8dxl-ss-ddr.dtsi"
-> +
-> +&cm40_intmux {
-> +	interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-> +};
-> 
-> -- 
-> 2.34.1
-> 
+Reported-by: syzbot+d050d437fe47d479d210@syzkaller.appspotmail.com
+Link: https://msgid.link/20240226203405.a731e2c95e38.I82ce7d8c0cc8970ce29d0a39fdc07f1ffc425be4@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/wireless/util.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/net/wireless/util.c b/net/wireless/util.c
+index d1ce3bee27973..b9d15f369378b 100644
+--- a/net/wireless/util.c
++++ b/net/wireless/util.c
+@@ -791,15 +791,19 @@ ieee80211_amsdu_subframe_length(void *field, u8 mesh_flags, u8 hdr_type)
+ 
+ bool ieee80211_is_valid_amsdu(struct sk_buff *skb, u8 mesh_hdr)
+ {
+-	int offset = 0, remaining, subframe_len, padding;
++	int offset = 0, subframe_len, padding;
+ 
+ 	for (offset = 0; offset < skb->len; offset += subframe_len + padding) {
++		int remaining = skb->len - offset;
+ 		struct {
+ 		    __be16 len;
+ 		    u8 mesh_flags;
+ 		} hdr;
+ 		u16 len;
+ 
++		if (sizeof(hdr) > remaining)
++			return false;
++
+ 		if (skb_copy_bits(skb, offset + 2 * ETH_ALEN, &hdr, sizeof(hdr)) < 0)
+ 			return false;
+ 
+@@ -807,7 +811,6 @@ bool ieee80211_is_valid_amsdu(struct sk_buff *skb, u8 mesh_hdr)
+ 						      mesh_hdr);
+ 		subframe_len = sizeof(struct ethhdr) + len;
+ 		padding = (4 - subframe_len) & 0x3;
+-		remaining = skb->len - offset;
+ 
+ 		if (subframe_len > remaining)
+ 			return false;
+@@ -825,7 +828,7 @@ void ieee80211_amsdu_to_8023s(struct sk_buff *skb, struct sk_buff_head *list,
+ {
+ 	unsigned int hlen = ALIGN(extra_headroom, 4);
+ 	struct sk_buff *frame = NULL;
+-	int offset = 0, remaining;
++	int offset = 0;
+ 	struct {
+ 		struct ethhdr eth;
+ 		uint8_t flags;
+@@ -839,10 +842,14 @@ void ieee80211_amsdu_to_8023s(struct sk_buff *skb, struct sk_buff_head *list,
+ 		copy_len = sizeof(hdr);
+ 
+ 	while (!last) {
++		int remaining = skb->len - offset;
+ 		unsigned int subframe_len;
+ 		int len, mesh_len = 0;
+ 		u8 padding;
+ 
++		if (copy_len > remaining)
++			goto purge;
++
+ 		skb_copy_bits(skb, offset, &hdr, copy_len);
+ 		if (iftype == NL80211_IFTYPE_MESH_POINT)
+ 			mesh_len = __ieee80211_get_mesh_hdrlen(hdr.flags);
+@@ -852,7 +859,6 @@ void ieee80211_amsdu_to_8023s(struct sk_buff *skb, struct sk_buff_head *list,
+ 		padding = (4 - subframe_len) & 0x3;
+ 
+ 		/* the last MSDU has no padding */
+-		remaining = skb->len - offset;
+ 		if (subframe_len > remaining)
+ 			goto purge;
+ 		/* mitigate A-MSDU aggregation injection attacks */
+-- 
+2.43.0
 
