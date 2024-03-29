@@ -1,78 +1,118 @@
-Received: from mail-177132.yeah.net (mail-177132.yeah.net [123.58.177.132])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E0B964C;
-	Fri, 29 Mar 2024 12:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.132
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166F969E1E
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 12:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711714667; cv=none; b=Oq00uSkR0o5keH30le2GhJAsfAR5ts7Ky/8PIzO6ljp1nM/n4GIkj7Bc3yL5U7s6efqEetE6PCVhUf0d/VBur+eXoVGcwPzkD6utM349SdX25HgpgQ9JSyLQ6FZG3vqEdPEGzpyD9C00AjXbgxE5yMx3xb+nVMYf5stO9uX2JCY=
+	t=1711714796; cv=none; b=Qcm8q+uatTgJ5sSsISJZbMCq/HATC+g4DCDfIe0ejiOFL7mbd5MXsvWDCx2FdelYKoZ/yn+Ab0HMGDQIV1MBeTDmZd5OjRhiLJ5J9LfSKWtFMIT+5tXMUcZvZxnAXQSfH5UX3B1qQ9u/ozj/U5Bjn7b2vJ10MaFFZa2nghxDxoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711714667; c=relaxed/simple;
-	bh=BwzJ4F77ijdSPim6oxVFzaz9GKvT5/g2jWD6+edV0FA=;
+	s=arc-20240116; t=1711714796; c=relaxed/simple;
+	bh=tORNmA0pcr5kmfPGn86vAvHUqiKTcOTMsK8JNl9m2yE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ta729VhRcnG3Qo6mL33qY4KbOFLEZVbU2/oiMtPhqdosx+zdxE+3fqa2yxTjzZZyhSI4R0xVY+wL2uTA+Veqo1rjKQU26zjN5GU/hLKlb9gMVtEo3NLUuDwtazvH4Iid695ZGN4kH5QNauWnhGwWQO8JRRL7esrEIie/DqziZRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=VcMXxBw2; arc=none smtp.client-ip=123.58.177.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=R/uK3Y1aQzS/tXHv6g5SaRT9oJNPokWNObOUEKBOgpQcPZMta15GgX5hhYjMUboeMx/dMeS1C2b0g41lcg6vevClLHT7106jXWYNmrtk5r5RxtFJix7hWPdHpwxdaaXd7rYrgBhn5QOpMZ2RtRdZfTD1mED/q/I0LfDzF0qGXfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GA83YCFC; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="VcMXxBw2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=nJmPfGmdfks9ilRd/z75AIMlDh+qABTjjHAxxNVBALI=;
-	b=VcMXxBw2miwVNfMrHTN43yl2vOugSzqDVTtu6r4jN6wmRJGRlJPvp4SsFbG7uE
-	JS8YGytJ+bhGJIBRRQaR0GnJ4GOD+dFMCPmnBEvt19D52pzA6W/PchHtDGKMMNaw
-	iJbeZOIgz8uY7XFpWNNNWbi81gpnJDbSg5nOT7rKigKIo=
-Received: from dragon (unknown [183.213.196.225])
-	by smtp2 (Coremail) with SMTP id C1UQrAD3f0wasQZmyCNqAg--.46157S3;
-	Fri, 29 Mar 2024 20:16:27 +0800 (CST)
-Date: Fri, 29 Mar 2024 20:16:26 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux@ew.tq-group.com
-Subject: Re: [PATCH 0/5] i.MX8M add DSI output endpoint
-Message-ID: <ZgaxGkSEg7+m8dGf@dragon>
-References: <20240301091413.3050689-1-alexander.stein@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GA83YCFC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=MrTY9njKVMkKTePqZ/9p2zVzye3piYo5llqsJ8WWYhM=; b=GA83YCFCLDvB8oIpV8GkCXMHG7
+	L2DMDsP3NONzY46zE1idx2BzwKua0tdu5BCoLWAI8CSofxTCOB/XF7M4Swb0ZpShQ1Me2r7E4RVjg
+	dR7KL2SPkg5nK/HwwRilvPC7buX4UysUSW2NWQy813gnylO3D8kHtjrLkfLycopf7gU+YrMDCyKV0
+	Ko7Qif287kdeMDm6Q6jvxh7v4TH1fG+/Uu6xSHC2JoVWCMJYTPmthprfUs6RTSYLTJR6btg4W+CsN
+	OxXAWLArSdNAOtzjgpKoxiDi8mJoQ/aR/H8WqEeYIYaaG8Q+duomq/ehv7ubjGK6gIvR4MaaoAzRC
+	qPjwC22g==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rqBCu-000000098jD-3qYS;
+	Fri, 29 Mar 2024 12:19:40 +0000
+Date: Fri, 29 Mar 2024 12:19:40 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Zhaoyang Huang <huangzhaoyang@gmail.com>
+Cc: =?utf-8?B?6buE5pyd6ZizIChaaGFveWFuZyBIdWFuZyk=?= <zhaoyang.huang@unisoc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	=?utf-8?B?5bq357qq5ruoIChTdGV2ZSBLYW5nKQ==?= <Steve.Kang@unisoc.com>
+Subject: Re: summarize all information again at bottom//reply: reply: [PATCH]
+ mm: fix a race scenario in folio_isolate_lru
+Message-ID: <Zgax3EQUiWx4DpC7@casper.infradead.org>
+References: <ZgDt9mwN-Py5Y-xr@casper.infradead.org>
+ <CAGWkznHO27EpVVpFyKnv-SX-JTYCXQxb0MG+EW07gaupocR4RQ@mail.gmail.com>
+ <ZgK91II_eSYY6D2F@casper.infradead.org>
+ <CAGWkznGLySzLE17+rCe=UoA26vx=iM375o2zkruKM9ssG05QzA@mail.gmail.com>
+ <ZgQRtQ60mrvOUKXo@casper.infradead.org>
+ <CAGWkznF3GfCs8odhR-Hue5H8MZ=eXb82V20ZoCCjeoSjAPQ9cw@mail.gmail.com>
+ <ZgThg-pzQzRl3ckF@casper.infradead.org>
+ <CAGWkznEMCXQSe10E-pbdxk2uFgQO038wH6g=iojtSU6-N+GJdg@mail.gmail.com>
+ <ZgV65ercduTnVWCA@casper.infradead.org>
+ <CAGWkznG7oyh9D-ozN7zQrpJz3s+N_ra1P=Yw3Nd3B0X=thCAxg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240301091413.3050689-1-alexander.stein@ew.tq-group.com>
-X-CM-TRANSID:C1UQrAD3f0wasQZmyCNqAg--.46157S3
-X-Coremail-Antispam: 1Uf129KBjvdXoWruw1ftr1kZF1kGF15uFWruFg_yoW3KwbE9a
-	s3uF4kWw4DWrsYkwn8CF9FvryYk34avFyUXr4jgwsIvw1fX3W3Cr95tayfAw18AF1rWFyq
-	yFn0yws5Zrn0gjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUndMaUUUUUU==
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiGB6wZV6Nnp38owAAsc
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGWkznG7oyh9D-ozN7zQrpJz3s+N_ra1P=Yw3Nd3B0X=thCAxg@mail.gmail.com>
 
-On Fri, Mar 01, 2024 at 10:14:08AM +0100, Alexander Stein wrote:
-> Hi,
+On Fri, Mar 29, 2024 at 01:49:05PM +0800, Zhaoyang Huang wrote:
+> On Thu, Mar 28, 2024 at 10:12 PM Matthew Wilcox <willy@infradead.org> wrote:
+> key steps in brief:
+> Thread_truncate get folio to its local fbatch by find_get_entry in step 2
+> The refcnt is deducted to 1 which is not as expect as from alloc_pages
+> but from thread_truncate's local fbatch in step 7
+> Thread_reclaim succeed to isolate the folio by the wrong refcnt(not
+> the value but meaning) in step 8
+> Thread_truncate hit the VM_BUG_ON in step 9
 > 
-> this series was initially triggered by dtbs_check warnings. Despite [1]
-> rendering them invalid, this series still simplifies the DSI OF graphs on all
-> i.MX8M variants by adding an empty output endpoint.
-> Each board enabling DSI connection can simply reference the label.
-> Patch 5 uses applies this to MBa8Mx board.
+> all steps:
+> Thread_readahead:
+> 0. folio = filemap_alloc_folio(gfp_mask, 0);
+>        (folio has refcount 1)
+> 1. ret = filemap_add_folio(mapping, folio, index + i, gfp_mask);
+>        (folio has refcount 2)
+> 2. thread_truncate hold one refcnt and add this folio to fbatch_truncate
+>        (folio has refcount 3(alloc, page cache, fbatch_truncate), PG_lru)
+> 3. Then we call read_pages()
+>        First we call ->readahead() which for some reason stops early.
+> 4. Then we call readahead_folio() which calls folio_put()
+>        (folio has refcount 2)
+> 5. Then we call folio_get()
+>        (folio has refcount 3)
+> 6. Then we call filemap_remove_folio()
+>        (folio has refcount 2)
+> 7. Then we call folio_unlock()
+>        Then we call folio_put()
+>        (folio has refcount 1(fbatch_truncate))
+> 8. thread_reclaim call shrink_inactive_list->isolate_lru_folios
+>         shrink_inactive_list
+>             isolate_lru_folios
+>                if (!folio_test_lru(folio))
+>                if (!folio_try_get(folio))
+>                if (!folio_test_clear_lru(folio))
+>                list_move(folio, dst)
+>        (folio has refcount 2)
 > 
-> Best regards,
-> Alexander
+> 8.1. thread_reclaim call shrink_folio_list->__remove_mapping
+>     shrink_folio_list()
+>         __remove_mapping()
+>              (refcount = 2)
+>             if (!folio_ref_freeze(2)) //true
+>          list_add(folio, free_folios);
+>        (folio has refcount 0)
 > 
-> [1] https://lore.kernel.org/linux-samsung-soc/20231122-dtc-warnings-v2-1-bd4087325392@kernel.org/
-> 
-> Alexander Stein (5):
->   arm64: dts: imx8mm: Add empty DSI output endpoint
->   arm64: dts: imx8mn: Add empty DSI output endpoint
->   arm64: dts: imx8mq: Add empty DSI output endpoint
->   arm64: dts: imx8mp: Add empty DSI output endpoint
->   arm64: dts: mba8mx: Simplify DSI connection
+> 9. thread_truncate will hit the refcnt VM_BUG_ON(refcnt == 0) in
+> folio_put_testzero
 
-Applied all, thanks!
+But now you're talking about something _entirely different_ that isn't
+the bug you hit.  isolate_lru_folios is not isolate_lru_folio.
 
+I am disinclined to pick through this example to find out why you're
+wrong again.  I'm also disinclined to continue this correspondance.
+We're not making any progress here.
