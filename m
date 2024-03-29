@@ -1,65 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.rnplus.nl (mail.rnplus.nl [178.251.25.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288B185C62;
-	Fri, 29 Mar 2024 13:17:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00944219E1
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 13:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.251.25.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711718243; cv=none; b=sVUMU+E5EQWGlVZoAXgxp2mU3ClibGCi7I+/MrLbr8xYSwMS52zzsfQVYxAaqTL02CFZaAPDEstfEloiNorCDmKOmhiTpmzKa6vZ8T+WWtPxHRspqnVHFjt0mnuQmumKGJ/VspyM1Jgh2fzWlZz2FzJanLfaTJeImXv+YkyT7RY=
+	t=1711718432; cv=none; b=uYtcoOoH1PaG5XFDj35dFuz4GGfHrgMOCTgSnYXblY96GZr4alaHCQI6tUzU4dFnvJJAApbiDf1oLS59zXcsnbbVGfUq+1gSRdGtWcvG74edaQ5XMePLAiHFIInAFoZ6z3ptLi9niFJn9BQCYILnIdE1MH4DGeRV5cNfMTFCaPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711718243; c=relaxed/simple;
-	bh=RPa9dMNYyA+KCy+cdAl56vwS+FL89emEjUPN4t52wlk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YtSPuUNJAA1lPcxMC1oIQWwQ+bfyXQL9h2JtSWLlqtJz8EUXplAH3uwRpmOiAZcjMfSw9e80790IwDkAfTHr5yUvmgs0aFUOW2QtU3VXlXULdv3xjbqXpboQL5NPBKcaL2CMaAliDjcRErwb4nkG+KzOQGHPTOM8ZIcfxjHsZY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=qqdRo9+f; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711718432; c=relaxed/simple;
+	bh=l8mCvlJVZrar8f+bwi8D1Jsz6VsyqIEPsPow82A7rHw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=pCI05hELIzOBySZlgx08h39wWqxY7qOE7We16OQRWE/5bNAcOzcwLIR3CSQuSsiD4pDnwnZiT348hQTkZsDZkyMcEO/EosTM4Z/UNCQiUBvoc4NwKxztfTRUYiHaHQ3l2TfGcESdlyNTGHCqB6G2b3HVgwcE3S0jv5vlwODOQZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rnplus.nl; spf=pass smtp.mailfrom=rnplus.nl; dkim=pass (1024-bit key) header.d=rnplus.nl header.i=@rnplus.nl header.b=NNZS4nqI; arc=none smtp.client-ip=178.251.25.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rnplus.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rnplus.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="qqdRo9+f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 419D5C433C7;
-	Fri, 29 Mar 2024 13:17:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1711718242;
-	bh=RPa9dMNYyA+KCy+cdAl56vwS+FL89emEjUPN4t52wlk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qqdRo9+f5u+15nFt0NUMNJ8ee6H9q4Y7cVMe6NtmkRImXRc44vNtyH9lVqP8Xgp81
-	 i8POScFdpsjS13+ATrNG3l0eYSeaGk6jOJRA7svxJvzcc1EzbwiSqQ8rlkGfHhVOeV
-	 Gv9mMvc8RcfpaFZKWJ+Y1f7M8R1b52BA04BRjseA=
-Date: Fri, 29 Mar 2024 14:17:19 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Tony Battersby <tonyb@cybernetics.com>
-Cc: Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org,
-	Greg Edwards <gedwards@ddn.com>, Jens Axboe <axboe@kernel.dk>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: FAILED: Patch "block: Fix page refcounts for unaligned buffers
- in __bio_release_pages()" failed to apply to 6.1-stable tree
-Message-ID: <2024032913-yoyo-residue-ba22@gregkh>
-References: <20240327121329.2830355-1-sashal@kernel.org>
- <45ea3c6a-18d3-469a-b368-d657b739edd2@cybernetics.com>
+	dkim=pass (1024-bit key) header.d=rnplus.nl header.i=@rnplus.nl header.b="NNZS4nqI"
+Received: from localhost (unknown [127.0.0.1])
+	by mail.rnplus.nl (Postfix) with ESMTP id 32E6137947D
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 13:05:36 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at rnplus.nl
+Received: from mail.rnplus.nl ([127.0.0.1])
+	by localhost (mail.rnplus.nl [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id MXLnyqwwDtZC for <linux-kernel@vger.kernel.org>;
+	Fri, 29 Mar 2024 14:05:35 +0100 (CET)
+Received: from localhost.localdomain (184-179-179-143.ftth.glasoperator.nl [143.179.179.184])
+	by mail.rnplus.nl (Postfix) with ESMTPSA id 4D0C3379192;
+	Fri, 29 Mar 2024 14:05:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=rnplus.nl; s=dkim;
+	t=1711717524; bh=l8mCvlJVZrar8f+bwi8D1Jsz6VsyqIEPsPow82A7rHw=;
+	h=From:To:Subject:Date;
+	b=NNZS4nqIzaD2hCfu8CA8gTwt99O9g00IswvSMQLre+7+i4h5LYupSeCU5p93fzP9W
+	 WWdY1u+D30lLuArKURoztIIMP+dcvzvAhLCU0JWLysSGgcMTByFbyZW5NwCVPc/13J
+	 n6hTZvPbIcEEEv2vvnV64ld5LtvO5LTdvL65Alv8=
+From: Renze Nicolai <renze@rnplus.nl>
+To: linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-aspeed@lists.ozlabs.org,
+	arnd@arndb.de,
+	olof@lixom.net,
+	soc@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	joel@jms.id.au,
+	andrew@aj.id.au,
+	renze@rnplus.nl
+Subject: [PATCH 0/3] ARM: dts: Update devicetree of Asrock X570D4U BMC
+Date: Fri, 29 Mar 2024 14:01:38 +0100
+Message-ID: <20240329130152.878944-1-renze@rnplus.nl>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <45ea3c6a-18d3-469a-b368-d657b739edd2@cybernetics.com>
 
-On Wed, Mar 27, 2024 at 09:54:01AM -0400, Tony Battersby wrote:
-> On 3/27/24 08:13, Sasha Levin wrote:
-> > The patch below does not apply to the 6.1-stable tree.
-> > If someone wants it applied there, or to any other stable or longterm
-> > tree, then please email the backport, including the original git commit
-> > id to <stable@vger.kernel.org>.
-> >
-> > Thanks,
-> > Sasha
-> 
-> I already sent a backport for 6.1 on March 13.  5.15 and older kernels
-> do not need the patch.
-> 
-> https://lore.kernel.org/stable/a764cc80-5b7c-4186-a66d-5957de5beee4@cybernetics.com/
+Hello,
 
-Thanks, now queued up.
+These patches change the GPIO table, ADC channel configuration and
+I2C bus configuration of the devicetree for the X570D4U BMC as part of
+ongoing efforts to support OpenBMC on this platform.
 
-greg k-h
+Best regards,
+Renze Nicolai
+
+Renze Nicolai (3):
+  ARM: dts: Modify GPIO table for Asrock X570D4U BMC
+  ARM: dts: Disable unused ADC channels for Asrock X570D4U BMC
+  ARM: dts: Modify I2C bus configuration
+
+ .../dts/aspeed/aspeed-bmc-asrock-x570d4u.dts  | 152 +++++++++---------
+ 1 file changed, 78 insertions(+), 74 deletions(-)
+
+-- 
+2.44.0
+
