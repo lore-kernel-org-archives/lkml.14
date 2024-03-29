@@ -1,129 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E602562E
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 15:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1F6A920;
+	Fri, 29 Mar 2024 15:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711725703; cv=none; b=oyA6Il1qbPsFv7uCrk4/Pr6TnyL2kl2+0j2wLweMqkYCCW3VZNoig5F1V78Hxl0k96TZg3COlN3UeHz7M05QcAkRAg2RXlAOsofLZxaBzH0v+xlf82TV5FH6UgnoSlUqO3cv3k6XndZ8HWZAfcX+9d5YdsM9F7f3LUgY0NUO9Ic=
+	t=1711725739; cv=none; b=ArJYJVuHHa7is3iy73vfmJZN2L6Gnqb5L4Dqc21eD8BgjFiigTU9jlPy+8qzLSwxPRdJxxTjLepwDAa6wQplLtaYOZFkPDj8pzp1cloJ2baHe2B8H0vowV7SDkDoR7VzvcgC4ir/2MK/QGAhqKo3ecdLW2kStDcVfn5cCP2jexA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711725703; c=relaxed/simple;
-	bh=xIhz1fc0gd8bUoWk1Yba/XGwSpCgbpumuPmPXecDCog=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vAl3DJidDHkQB+U4yKFlg60kafpCihyOBtOgFrZVtYEaLnuwKqYGXaccWJ9QIRRkG5QDP2ZQFtgEGqeDP/cW81xUJJUkJKBWPjCrh+/nudnqENBDfDKUyrMDyqA4s3CwJanx8EtzugUUOuRVFFAQNZfGdsaSaeATJE9eJkZ5UhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZJKtspY0; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711725739; c=relaxed/simple;
+	bh=CXMBFR6yIFRgGKwBITt5t4/bcbldoEWbfxctiGz6kas=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=ZJu68InarZhpDALV/CWRRvTbkg81A3xwYt19QSzeGL0cZY/BqGNhP1VIJhIFLSFn6Z+N4eclisvWrTaHqyCDaUZ4S7aNcbCW9xlOiqkv7fT7ID2rf8fBbE/qv0ZRsSlHBUwrOYKoYUqllmo1+o9ACaDerwEaXnHOLc1wIiJhl38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SwXz0Wzt; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZJKtspY0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711725702; x=1743261702;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=xIhz1fc0gd8bUoWk1Yba/XGwSpCgbpumuPmPXecDCog=;
-  b=ZJKtspY0jsFuTnIcc6aqcoRMvX4hnpNMkAHa5QnXVSPxFrU2xUe//mUN
-   hPzYbvxgu2NUyV4XP5JArSs4yuSM0ERKdwcEyprikmgz0swbmV9wz4mS+
-   XIjqWkYXyC9zekGb4Vd1YEgKQRg20DtwbovEfwHUBn+v2GEC2+APKRcdi
-   G5M7AzgQr0tZoa6ty6lgxXeE5mDCm/JM8m/n8aMFIJs/yU74dOpgJcjjr
-   AJJj7vsVCKNbSuyQhu0ytbdvf1eYFV4Yc7C+W3lCCwTsdvtcWVFwus49l
-   LzBsCvWV9PHcLziiOrO2G4JjCJv157ckdYjL9RIwcycHttjXxZiQoWhm9
-   Q==;
-X-CSE-ConnectionGUID: zXcaCzcLQSaw+aqEoGUcUg==
-X-CSE-MsgGUID: a84RurfVTjOLC2+EqkxsTg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11028"; a="17472611"
-X-IronPort-AV: E=Sophos;i="6.07,165,1708416000"; 
-   d="scan'208";a="17472611"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 08:21:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,165,1708416000"; 
-   d="scan'208";a="17636665"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.224.7]) ([10.124.224.7])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 08:21:36 -0700
-Message-ID: <b94c81ef-50f2-4e66-9533-461791777d10@intel.com>
-Date: Fri, 29 Mar 2024 23:21:32 +0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SwXz0Wzt"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42TDKElC024290;
+	Fri, 29 Mar 2024 15:22:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references; s=
+	qcppdkim1; bh=E0PRzq7jKcYIMPcut/hL+D0oR8zsx7YZGt1LtACSfZU=; b=Sw
+	Xz0Wzt4uMk1WbzPyzh+agnjyg0E1CkQhA9Emdm/smUeUt0FKwR/HOHP0tucVSDkk
+	zHQTrQIHmH2OpInXc1V3OsmuKF4MgQTkDwWNXc4do0pRQ8TwF+NiOfddbsmZLK/b
+	jK7eQCydiSHLBJqVB2w4fyvegtkS34dhp46PaHmvn+kUCpXfvi59uHExFYtMJCmj
+	ClZqxYdboRrQz9CEEj2mdIvitoX0Jjxw7mcg3u5X2yr1CXIaebgHj4xnlftAiXyt
+	uv2ZLDy96pI4pnnYZwGvtk79lE5K2F6ySIbPSuj4dCbT3FtEGVRTIBrJ6xfwAuds
+	h9GVIMGjs45XdVx7ZM0w==
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x5w6g0e4c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 29 Mar 2024 15:22:10 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 42TFM6ee008937;
+	Fri, 29 Mar 2024 15:22:06 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 3x1r5mk6j4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Fri, 29 Mar 2024 15:22:06 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42TFM6cV008923;
+	Fri, 29 Mar 2024 15:22:06 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-msarkar-hyd.qualcomm.com [10.213.111.194])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 42TFM6SZ008920;
+	Fri, 29 Mar 2024 15:22:06 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3891782)
+	id 51AA33C31; Fri, 29 Mar 2024 20:52:05 +0530 (+0530)
+From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+To: andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, konrad.dybcio@linaro.org,
+        manivannan.sadhasivam@linaro.org
+Cc: quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
+        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+        quic_schintav@quicinc.com, Mrinmay Sarkar <quic_msarkar@quicinc.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v10 2/3] PCI: qcom-ep: Add support for SA8775P SOC
+Date: Fri, 29 Mar 2024 20:51:56 +0530
+Message-Id: <1711725718-6362-3-git-send-email-quic_msarkar@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1711725718-6362-1-git-send-email-quic_msarkar@quicinc.com>
+References: <1711725718-6362-1-git-send-email-quic_msarkar@quicinc.com>
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: kKu2-EobSPQaDHKGf9WjhJW2hPBFSG7Y
+X-Proofpoint-ORIG-GUID: kKu2-EobSPQaDHKGf9WjhJW2hPBFSG7Y
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-29_13,2024-03-28_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ malwarescore=0 adultscore=0 spamscore=0 lowpriorityscore=0 mlxlogscore=999
+ impostorscore=0 priorityscore=1501 bulkscore=0 mlxscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2403210001
+ definitions=main-2403290135
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv9 05/17] x86/kexec: Keep CR4.MCE set during kexec for TDX
- guest
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- Elena Reshetova <elena.reshetova@intel.com>,
- Jun Nakajima <jun.nakajima@intel.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish"
- <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>,
- "Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
- kexec@lists.infradead.org, linux-coco@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20240325103911.2651793-1-kirill.shutemov@linux.intel.com>
- <20240325103911.2651793-6-kirill.shutemov@linux.intel.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20240325103911.2651793-6-kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 3/25/2024 6:38 PM, Kirill A. Shutemov wrote:
-> TDX guests are not allowed to clear CR4.MCE. Attempt to clear it leads
-> to #VE.
+Add support for SA8775P SoC to the Qualcomm PCIe Endpoint Controller
+driver. Adding new compatible string as it has different set of clocks
+compared to other SoCs.
 
-Will we consider making it more safe and compatible for future to guard 
-against X86_FEATURE_MCE as well?
+Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/pci/controller/dwc/pcie-qcom-ep.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-If in the future, MCE becomes configurable for TD guest, then CR4.MCE 
-might not be fixed1.
-
-> Use alternatives to keep the flag during kexec for TDX guests.
-> 
-> The change doesn't affect non-TDX-guest environments.
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Reviewed-by: Kai Huang <kai.huang@intel.com>
-> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->   arch/x86/kernel/relocate_kernel_64.S | 5 +++++
->   1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-> index 56cab1bb25f5..e144bcf60cbe 100644
-> --- a/arch/x86/kernel/relocate_kernel_64.S
-> +++ b/arch/x86/kernel/relocate_kernel_64.S
-> @@ -5,6 +5,8 @@
->    */
->   
->   #include <linux/linkage.h>
-> +#include <linux/stringify.h>
-> +#include <asm/alternative.h>
->   #include <asm/page_types.h>
->   #include <asm/kexec.h>
->   #include <asm/processor-flags.h>
-> @@ -145,12 +147,15 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
->   	 * Set cr4 to a known state:
->   	 *  - physical address extension enabled
->   	 *  - 5-level paging, if it was enabled before
-> +	 *  - Machine check exception on TDX guest. Clearing MCE is not allowed
-> +	 *    in TDX guests.
->   	 */
->   	movl	$X86_CR4_PAE, %eax
->   	testq	$X86_CR4_LA57, %r13
->   	jz	1f
->   	orl	$X86_CR4_LA57, %eax
->   1:
-> +	ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %eax), X86_FEATURE_TDX_GUEST
->   	movq	%rax, %cr4
->   
->   	jmp 1f
+diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+index 36e5e80..45008e0 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
++++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+@@ -875,6 +875,7 @@ static void qcom_pcie_ep_remove(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id qcom_pcie_ep_match[] = {
++	{ .compatible = "qcom,sa8775p-pcie-ep", },
+ 	{ .compatible = "qcom,sdx55-pcie-ep", },
+ 	{ .compatible = "qcom,sm8450-pcie-ep", },
+ 	{ }
+-- 
+2.7.4
 
