@@ -1,99 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5CF4C63F;
-	Fri, 29 Mar 2024 15:25:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34ABF1C0DC6
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 15:29:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711725949; cv=none; b=m2JbW6gGmxK3p87YkkdLDhtrSVbKo36RyLyXciOQK3AKFwSQRXgE6btIBfw9fnF30+LQxY5SuOsJStfQhUuvpGJH2V0I1pdrphAr9f82zEDXTTfsdqzKdzY1vVZsVUuTaERtuUR3dUOPFCLTWpTlN4XYyibmsaqMgphc9rkpIew=
+	t=1711726198; cv=none; b=glyUTMquu6UIXbHdsM/yF5TgSfaNS+9Sl5UoVm8wvt931hE9fkXwo0bbD57KxRlEOlLy6MQ3RFxaVvaSsXGmF+ErbXnkVJ/NLCULtpFkdit0dE6CpEw7GRXjw6GhCa6ehz+sFHflsLKCRUVqvFDKm9Q3YZ6aGrxL6ubLWoHQ3FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711725949; c=relaxed/simple;
-	bh=Osf1Z2q3n8yY4dhROiRx8gO9B7djKPb1ZMYZa1eyIWE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bm33Q4SUwDc5tASEVehREwuxRoKTkXwAumYUw1SY0bEZ9muWIJQhM+PpPLx9MNCltMOc8hq4LUyL4gOWsd7EjI7evpqKlV5yEPi08CjhrVobq0FIOKICHX5L3Cg70CVvJIfhF0teIrnLzATxOG0Nd0xcDyYw6Ra/XZhX4Xs9Foc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IShpZdoJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711726198; c=relaxed/simple;
+	bh=H/eGfiCoPpDQTvPeEIon83ZcTYLiotzPPecPoDgU+tQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dCbquuOV+46LFlw3Ppiisz13SvrsAXCA/im3+1uolTnR7bsCAZ2xXpYdlRAu52DEXkyljxE4FrHm8Q72JmL3PjLYBbAbH0klBKLKJRSODdQDna6x48qI7gCl0hazj3LlaLtPSy62LzD6efBCq2Zo0PMCRv3rNBCdvsrQN0/c36Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Z8Ryn5eB; arc=none smtp.client-ip=209.85.210.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IShpZdoJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F37CFC433C7;
-	Fri, 29 Mar 2024 15:25:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711725949;
-	bh=Osf1Z2q3n8yY4dhROiRx8gO9B7djKPb1ZMYZa1eyIWE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=IShpZdoJ8MbvXVXROFDDBAFKTqasTyW7bdupmBM+DziqzyMhLLN6y2ol20Ad2KG8v
-	 M0ss/Rm77UTSFimcoG8WZBHSlqp1eahc/PUFbHLQh0RY9df+vjCHdfIzHuq92xfw42
-	 fiBoUSvpFJ/04vbGEUsv++BJWyex79DorMvuJOYL0/qjV+dgN97TxN1sF0lO8cydLs
-	 NPCNOcc59rtrXTr/uFUk382lt56MMTLmgc7Jl8D9VeoZaWelHa5zihl4PzxAlbMWQ1
-	 NH6+oIn3jMMSYAAdz8C3ZP9FQlPZd6EVxsF1vnqrX7fuzfsWZJK/3H8H83gkTBrs5Q
-	 P7Rniy03qgV1Q==
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d476d7972aso30353991fa.1;
-        Fri, 29 Mar 2024 08:25:48 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXLw3+RJmjCF7Z/+88fshC+5YW6iPrB2Iddj6P0ZGIwt4dxM0JmvchAjuzEha2p9mOHtVsaq84wOaOuvvFVBzNeqEjjMWusC8gi70hH2dqcY2xCBZ+Wyb4/wSNn887gGojyrqP4
-X-Gm-Message-State: AOJu0YzxGBe0eZMfLVI6QjZNMs3XwHoE5994a7JZcPked7kJrLAqCyV7
-	YOIilHBI6LK3gn38d9C1b0hJxvgT9Ms7BOXPW4N+z3eUu1+8PSlo6csnZ5pDtCYN9sYLFJtVBiz
-	R90bq9tpwHJX+eviocaRKP04YRqo=
-X-Google-Smtp-Source: AGHT+IHGFQreuRdKf10WxAH8Qs+v5kOr5+Flsdu3WUfPItjOx0uNzWjfZ7HwxQf10gDfw4XYZGENtUoFrnHla+hOqlw=
-X-Received: by 2002:a2e:aa14:0:b0:2d4:68ef:c711 with SMTP id
- bf20-20020a2eaa14000000b002d468efc711mr1689753ljb.25.1711725947373; Fri, 29
- Mar 2024 08:25:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Z8Ryn5eB"
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6dc8b280155so1280028a34.0
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 08:29:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711726195; x=1712330995; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tzNSZ6G1qWiFUQSQyVJPr7JWiuaZBzmUWG+3hwZo+Pk=;
+        b=Z8Ryn5eBpINZnhhRqMNTW8m7RO9oWGQNSP67gljQ7JlSO9/I1XFtfQAcu5GZMTurAn
+         sGjP7FdWof1blfj1SVJxBbWkIz8NuxAbFkd5VK++NmrGbhIXRsG4rktUfAfxSL/uH0p2
+         aK0rWRvrI5PEslQtp4aAz8C0TH5fDUUvq0p8XobcVaIZhWRtbEaImMWGVEmvcRjws662
+         tuaY2tPj0TwX47aCw/5UCrmvDZqG2wMK7KPqV15zp7hxsccD8YKiOvkCBir4BWxBT4+1
+         IooQmabP8aITSTmOTYNp6N2/5r1vAvX43TP5KjnPTX/D71KBZ1+X4rJfq8mbqh27x3tB
+         BZwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711726195; x=1712330995;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tzNSZ6G1qWiFUQSQyVJPr7JWiuaZBzmUWG+3hwZo+Pk=;
+        b=kvqbg+VxN44EtiIiz+c7XWuNQ8LuWLcEmR9J3RuBUvnzce2ooWmnNMVQo74zg0uzs3
+         GuKkvoK4LgkogPahwrTEhJa3hzETmg+IJ2KeXbWvyX3SLJZTejWoqa1FN2c/2lzR9H1R
+         PHLgXqg/guH2xHjXsmTMgpKA5Jtbc2EIhq2PrQ0N/x+iUBHH76RDi1IRX+p+gkUZfykq
+         YW6h8DculCF95G3BLJiFodxK12QDxIk42LCJ4YMY781j6gV9WQhLy9A71mmHDW7KutzC
+         +OJQzMIX/kBkO2AomX0AEDeDxoEl+spGuTJm4s7gLb/XJtWkG/V+gNwT2uw19q1tvPWq
+         yx7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVHkxu3PQwEGbIQnESCth2Y0shERSG6UbMWHQ0+SywiVAVXpr30Ceg5ZqjgTl8VuQxtEPwfAaFkreWc6SXN/lVrry/dZGbwxhyFFgjG
+X-Gm-Message-State: AOJu0YzAVMTfi2xkaYc+t05qiLmDyj5Bx3MuJAQXhfwfUrkSauPPrPRW
+	wjdNe7S+YJzPHTlccmD0NXVaHMu1nGSB1CfGBBTPOKSc5w2mrfK4lKGmLr4dAzw=
+X-Google-Smtp-Source: AGHT+IFR2fMOFIk1UfXLrPnEC1CztADEvHc1ABiWkLvqjwKnCTR2YYBFRmBwhz7IIBv/kRjlDulqlg==
+X-Received: by 2002:a05:6808:11cf:b0:3c3:84c5:173e with SMTP id p15-20020a05680811cf00b003c384c5173emr2529550oiv.50.1711726195157;
+        Fri, 29 Mar 2024 08:29:55 -0700 (PDT)
+Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id cr4-20020a056808368400b003c1e577140asm602225oib.25.2024.03.29.08.29.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Mar 2024 08:29:54 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+To: bpf@vger.kernel.org
+Cc: David Lechner <dlechner@baylibre.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] bpf: fix typo in uapi doc comments
+Date: Fri, 29 Mar 2024 10:28:46 -0500
+Message-ID: <20240329152900.398260-2-dlechner@baylibre.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240327120810.2825990-1-sashal@kernel.org> <CAMj1kXGNneD2E=iGM18DMrAqKySi6JdDF-f-Sd+Vs036-_RL2g@mail.gmail.com>
- <2024032916-statue-skyrocket-af59@gregkh>
-In-Reply-To: <2024032916-statue-skyrocket-af59@gregkh>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 29 Mar 2024 17:25:35 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEtH5NdRL2Ya3+h0wJqsLwQudNmfxepsw5x4hcS2K1T-Q@mail.gmail.com>
-Message-ID: <CAMj1kXEtH5NdRL2Ya3+h0wJqsLwQudNmfxepsw5x4hcS2K1T-Q@mail.gmail.com>
-Subject: Re: FAILED: Patch "x86/sev: Fix position dependent variable
- references in startup code" failed to apply to 6.8-stable tree
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org, 
-	Kevin Loughlin <kevinloughlin@google.com>, Borislav Petkov <bp@alien8.de>, stable@kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, 29 Mar 2024 at 13:56, Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Mar 27, 2024 at 04:39:20PM +0200, Ard Biesheuvel wrote:
-> > On Wed, 27 Mar 2024 at 14:08, Sasha Levin <sashal@kernel.org> wrote:
-> > >
-> > > The patch below does not apply to the 6.8-stable tree.
-> > > If someone wants it applied there, or to any other stable or longterm
-> > > tree, then please email the backport, including the original git commit
-> > > id to <stable@vger.kernel.org>.
-> > >
-> >
-> > I will send the v6.8 backport separately right away.
-> >
-> > v6.7 and v6.6 can take this patch unmodified but will need to take
-> > 29956748339aa8757a7e2f927a8679dd08f24bb6 as a prerequisite first.
->
-> Now done, thanks.
->
-> > (v6.8 no longer applies because of the way Linus fixed up a merge
-> > conflict in the 6.8 cycle)
->
-> I fixed this up by hand, hopefully got it right :)
->
+In a few places in the bpf uapi headers, EOPNOTSUPP is missing a "P" in
+the doc comments. This adds the missing "P".
 
-Thanks - I will double check once the patches are sent out.
+Signed-off-by: David Lechner <dlechner@baylibre.com>
+---
+ include/uapi/linux/bpf.h       | 4 ++--
+ tools/include/uapi/linux/bpf.h | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-> > v6.1 and older need separate backports so i will send those out later.
->
-> Wonderful, thanks!
->
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index 3c42b9f1bada..f83a4de0ac30 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -5020,7 +5020,7 @@ union bpf_attr {
+  *		bytes will be copied to *dst*
+  *	Return
+  *		The **hash_algo** is returned on success,
+- *		**-EOPNOTSUP** if IMA is disabled or **-EINVAL** if
++ *		**-EOPNOTSUPP** if IMA is disabled or **-EINVAL** if
+  *		invalid arguments are passed.
+  *
+  * struct socket *bpf_sock_from_file(struct file *file)
+@@ -5506,7 +5506,7 @@ union bpf_attr {
+  *		bytes will be copied to *dst*
+  *	Return
+  *		The **hash_algo** is returned on success,
+- *		**-EOPNOTSUP** if the hash calculation failed or **-EINVAL** if
++ *		**-EOPNOTSUPP** if the hash calculation failed or **-EINVAL** if
+  *		invalid arguments are passed.
+  *
+  * void *bpf_kptr_xchg(void *map_value, void *ptr)
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index 3c42b9f1bada..f83a4de0ac30 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -5020,7 +5020,7 @@ union bpf_attr {
+  *		bytes will be copied to *dst*
+  *	Return
+  *		The **hash_algo** is returned on success,
+- *		**-EOPNOTSUP** if IMA is disabled or **-EINVAL** if
++ *		**-EOPNOTSUPP** if IMA is disabled or **-EINVAL** if
+  *		invalid arguments are passed.
+  *
+  * struct socket *bpf_sock_from_file(struct file *file)
+@@ -5506,7 +5506,7 @@ union bpf_attr {
+  *		bytes will be copied to *dst*
+  *	Return
+  *		The **hash_algo** is returned on success,
+- *		**-EOPNOTSUP** if the hash calculation failed or **-EINVAL** if
++ *		**-EOPNOTSUPP** if the hash calculation failed or **-EINVAL** if
+  *		invalid arguments are passed.
+  *
+  * void *bpf_kptr_xchg(void *map_value, void *ptr)
+-- 
+2.43.2
 
-I sent this out on Wednesday but I don't see them in lore. Please let
-me know if I should resend these.
-
-[PATCH -stable-6.1 1/4] x86/coco: Export cc_vendor
-[PATCH -stable-6.1 2/4] x86/coco: Get rid of accessor functions
-[PATCH -stable-6.1 3/4] x86/Kconfig: Remove
-CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT
-[PATCH -stable-6.1 4/4] x86/sev: Fix position dependent variable
-references in startup code
