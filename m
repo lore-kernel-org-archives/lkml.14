@@ -1,238 +1,307 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from a.mx.secunet.com (a.mx.secunet.com [62.96.220.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8F4144D1A
-	for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2024 15:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9150145B09;
+	Sun, 31 Mar 2024 16:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=62.96.220.36
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711900798; cv=fail; b=YzNapG7JLsGuTa1J9U4FLp96/1AmjtYxrIaBus+J5TuraDKxHOLK6tytLUgqVNLEXWcDsdMOhnQddBq/9O9bRy4C7fPxVEuweYX7AeMo8O02Yci0vNk3jVn2vXMrTjlhsykDXdtjaMFw5fUX1CP/sKaJp/2vFTba3tCRBoutGsU=
+	t=1711900923; cv=fail; b=DcN/mb9Iveqjz8J4uaWYiywTf05UFpnSluEDyCWeOdZVUQYLkGo+rqgYUES9yqX5alc8doxdniGSjvoRQgd0j1Ncu+YfPoCnqBEei3KbFhbT8EPpbCl9HwnDS/tk4E7yrcTjo4+LkPSlhNegIV7qkcKhl2DeePjj/bkpwwwh1a8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711900798; c=relaxed/simple;
-	bh=rlyB35T/vu2j+RDrpD36oktrNn/zarcbUHuHd1QeBr4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=TGmhbCzHJyqpEvK9C+Gg2Sk+Crfh/Jk5YZjdIcaePp13PGcpSMVO0bQ+JlacwCzgCd9IM8fdhaE1gVEMtmax9HRawQg8CD1OEfZFfS0KiZmno5R2P0Fu2IqrKqXO7lYfpT2f60eaAafP2UaAueQgotfrGFceWedMpqBq7mnmvbw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=na8k+o5C; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711900923; c=relaxed/simple;
+	bh=FsoBp1MCh5EYkQo9TQVIgBH7tRFAGLmidfsHYr5sz+0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HwJDLqvxQj+qk4b9JC9F8EBbNx5SZVP+A9XxFoJH296qL8JD6k3Q5fKw63xf3WRnMfjGu+yoYprQbbmPV1/xUInYev00fHxAj69H0dvkdj+j9C4FYRWzfU14oiefzakpD66kOj3rCdGfrqpPu/rDpHRBkkmaOJ2lAfXVwHdC0X4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; dkim=fail (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i+8dykE3 reason="signature verification failed"; arc=none smtp.client-ip=10.30.226.201; arc=fail smtp.client-ip=62.96.220.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="na8k+o5C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711900796; x=1743436796;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=rlyB35T/vu2j+RDrpD36oktrNn/zarcbUHuHd1QeBr4=;
-  b=na8k+o5C/oVqMU5Ox+4rcADORqwIhqUHs6hO3EnD4NBYiUZ00hjneQbz
-   UgQhV5F0vliOPhHy/sOIusBaGxQKtI3Yf4bLLOQDZ8wBRNZx+PO5YQYoQ
-   WFnZ7IzTtDes4dlZdj8oNQBiTbSpyckyysP9cETVNO+WLDmILSvytpgB9
-   sii/8kI4dNROPuNpu7SsWfKhw0uhW7w8SkkXU3WDJ1Iz6iIlda9DKakxS
-   iKgdzUwLj1S77sZ0CCM7pyEjMpfK5rwTAsE3SR5oRdRcpjs1mJd4PjeDk
-   PPKHw3ZUm3L6Eo7DubQ4K6FSaJZeBFATnMoFg0+Untp14hk/J10dJjatn
-   g==;
-X-CSE-ConnectionGUID: Rcb11PF/QJakunEeMn0JQg==
-X-CSE-MsgGUID: ntOW6+oUQByjsuMIptk/jg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11030"; a="17656459"
-X-IronPort-AV: E=Sophos;i="6.07,170,1708416000"; 
-   d="scan'208";a="17656459"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2024 08:59:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,170,1708416000"; 
-   d="scan'208";a="17546296"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 31 Mar 2024 08:59:55 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i+8dykE3"
+Received: from localhost (localhost [127.0.0.1])
+	by a.mx.secunet.com (Postfix) with ESMTP id 00E342067F;
+	Sun, 31 Mar 2024 18:01:59 +0200 (CEST)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id pGRPaYipPao9; Sun, 31 Mar 2024 18:01:57 +0200 (CEST)
+Received: from mailout2.secunet.com (mailout2.secunet.com [62.96.220.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by a.mx.secunet.com (Postfix) with ESMTPS id B75E220612;
+	Sun, 31 Mar 2024 18:01:57 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com B75E220612
+Received: from cas-essen-01.secunet.de (unknown [10.53.40.201])
+	by mailout2.secunet.com (Postfix) with ESMTP id A9E6280004A;
+	Sun, 31 Mar 2024 18:01:57 +0200 (CEST)
+Received: from mbx-essen-01.secunet.de (10.53.40.197) by
+ cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Sun, 31 Mar 2024 08:59:55 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Sun, 31 Mar 2024 08:59:55 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.168)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Sun, 31 Mar 2024 08:59:54 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SBQ3RueznAhES1TZgHUTVU2kQ3rqDAJQ27i8hlDMYl+bOw2KUE/R9es6pQR9oMztPFCYIguEn5MrjMqAFolRPZ1Z+HVuWnXlVZVzfu3B2Df9LUq5nDRTS66aF8hyIcVGuFOWwfbmeu8qY+a1cF5pocg9yY4dBeUay4XuF3ws55PcnabMgXMqokCaxIaEZCKspWIdwnmC/ryXAOz4s9ZIq6+dInhgh+0QK1MrQTbbnGABFxr9QfgTf5yGSOhPoTT6qr49Z6ijeox8WBTzKzr9xXnrninwIqqal6KLn7i56+K9X3/L4ztDSw7Am5LZyY0fM5MRdwnL6N8/juLsqQpg7Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YINJUj3XMneMXLQPvicozO6Bwp+NxscUlScjtGOGkE8=;
- b=jL8mUkgjqlARk2zCj4tbRpo48QCazZogSftw6pSIKmDZo2CYdC6mMg1TcyKKOjcsRVNMaFRSbo8NwcTd17nGvW1ZPpk/Kp5LFolaPi3NJzI8xI3mPkIcSpk2UIs99Vl9FuksVEMCxVAMzldKcvl9FoA/yj/Ta38fb1lfZxI2tkQ2EP0cCjl+oLMFS5aPCtuDkM81KOOShlkJMXjqxg/2H2UQFrj9eu1RhwErrlRXhNzgs3zlij52+ETNBohYAWMeJx5855enYLMBJUnH/hpQS8kDBNHnY6cZAIiepY3YjzChzdN+puKvZZlJFJS9dyq9TA9g6iQg7IyWPnItnh7kDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from CY5PR11MB6392.namprd11.prod.outlook.com (2603:10b6:930:37::15)
- by MN2PR11MB4677.namprd11.prod.outlook.com (2603:10b6:208:24e::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.24; Sun, 31 Mar
- 2024 15:59:52 +0000
-Received: from CY5PR11MB6392.namprd11.prod.outlook.com
- ([fe80::7118:c3d4:7001:cf9d]) by CY5PR11MB6392.namprd11.prod.outlook.com
- ([fe80::7118:c3d4:7001:cf9d%6]) with mapi id 15.20.7452.017; Sun, 31 Mar 2024
- 15:59:52 +0000
-Date: Sun, 31 Mar 2024 23:53:12 +0800
-From: Yujie Liu <yujie.liu@intel.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-CC: kernel test robot <lkp@intel.com>, <oe-kbuild-all@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [paulmck-rcu:dev.2024.03.27b 64/69]
- arch/xtensa/include/asm/cmpxchg.h:77:25: error: implicit declaration of
- function 'cmpxchg_emu_u8'
-Message-ID: <ZgmG6BR6TtejfQcC@yujie-X299>
-References: <202403292321.T55etywH-lkp@intel.com>
- <0303151f-c12e-4350-804a-11e3b734df91@paulmck-laptop>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <0303151f-c12e-4350-804a-11e3b734df91@paulmck-laptop>
-X-ClientProxiedBy: SI2PR04CA0005.apcprd04.prod.outlook.com
- (2603:1096:4:197::16) To CY5PR11MB6392.namprd11.prod.outlook.com
- (2603:10b6:930:37::15)
+ 15.1.2507.35; Sun, 31 Mar 2024 18:01:57 +0200
+Received: from Pickup by mbx-essen-01.secunet.de with Microsoft SMTP Server id
+ 15.1.2507.17; Sun, 31 Mar 2024 15:52:41 +0000
+X-sender: <netdev+bounces-83469-peter.schumann=secunet.com@vger.kernel.org>
+X-Receiver: <peter.schumann@secunet.com>
+ ORCPT=rfc822;peter.schumann@secunet.com NOTIFY=NEVER;
+ X-ExtendedProps=BQAVABYAAgAAAAUAFAARAJ05ab4WgQhHsqdZ7WUjHykPADUAAABNaWNyb3NvZnQuRXhjaGFuZ2UuVHJhbnNwb3J0LkRpcmVjdG9yeURhdGEuSXNSZXNvdXJjZQIAAAUAagAJAAEAAAAAAAAABQAWAAIAAAUAQwACAAAFAEYABwADAAAABQBHAAIAAAUAEgAPAGAAAAAvbz1zZWN1bmV0L291PUV4Y2hhbmdlIEFkbWluaXN0cmF0aXZlIEdyb3VwIChGWURJQk9IRjIzU1BETFQpL2NuPVJlY2lwaWVudHMvY249UGV0ZXIgU2NodW1hbm41ZTcFAAsAFwC+AAAAQ5IZ35DtBUiRVnd98bETxENOPURCNCxDTj1EYXRhYmFzZXMsQ049RXhjaGFuZ2UgQWRtaW5pc3RyYXRpdmUgR3JvdXAgKEZZRElCT0hGMjNTUERMVCksQ049QWRtaW5pc3RyYXRpdmUgR3JvdXBzLENOPXNlY3VuZXQsQ049TWljcm9zb2Z0IEV4Y2hhbmdlLENOPVNlcnZpY2VzLENOPUNvbmZpZ3VyYXRpb24sREM9c2VjdW5ldCxEQz1kZQUADgARAC7JU/le071Fhs0mWv1VtVsFAB0ADwAMAAAAbWJ4LWVzc2VuLTAxBQA8AAIAAA8ANgAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5EaXNwbGF5TmFtZQ8ADwAAAFNjaHVtYW5uLCBQZXRlcgUADAACAAAFAGwAAgAABQBYABcASAAAAJ05ab4WgQhHsqdZ7WUjHylDTj1TY2h1bWFubiBQZXRlcixPVT1Vc2VycyxPVT1NaWdyYXRpb24sREM9c2VjdW5ldCxEQz1kZQUAJgACAAEFACIADwAxAAAAQXV0b1Jlc3BvbnNlU3VwcHJlc3M6IDANClRyYW5zbWl0SGlzdG9yeTogRmFsc
+	2UNCg8ALwAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuRXhwYW5zaW9uR3JvdXBUeXBlDwAVAAAATWVtYmVyc0dyb3VwRXhwYW5zaW9uBQAjAAIAAQ==
+X-CreatedBy: MSExchange15
+X-HeloDomain: a.mx.secunet.com
+X-ExtendedProps: BQBjAAoAvgxrGbMv3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5Pcmdhbml6YXRpb25TY29wZREAAAAAAAAAAAAAAAAAAAAAAAUASQACAAEFAAQAFCABAAAAGgAAAHBldGVyLnNjaHVtYW5uQHNlY3VuZXQuY29tBQAGAAIAAQUAKQACAAEPAAkAAABDSUF1ZGl0ZWQCAAEFAAIABwABAAAABQADAAcAAAAAAAUABQACAAEFAGIACgCxAAAAy4oAAAUAZAAPAAMAAABIdWI=
+X-Source: SMTP:Default MBX-ESSEN-01
+X-SourceIPAddress: 62.96.220.36
+X-EndOfInjectedXHeaders: 8873
+X-Virus-Scanned: by secunet
+Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=147.75.80.249; helo=am.mirrors.kernel.org; envelope-from=netdev+bounces-83469-peter.schumann=secunet.com@vger.kernel.org; receiver=peter.schumann@secunet.com 
+DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com ED91620883
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711749319; cv=none; b=XVQFfHeE9c0xnyYx07Syowd5TeLXf3pto5rmG1SsHR7H+7AOzfy4pspo9LNKbgLlZFu9KQybTmplG3h69Cegz7JISgOhrER2TsLV7W3vzMOiXj2onDyVxSLJsB/Qki+wTDKdSxSYjsLsMCEiRZOGxrKZplOoqofXF/YJUuJMwiY=
+ARC-Message-Signature: i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711749319; c=relaxed/simple;
+	bh=+poyNpseyrz9Eoa77T92yhDQwuECGmxB30jUzIAKH98=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OIQ99dvb6UMV/aWTov9pUyTkMiTogmsGmcvwczu67NkrjPWL8dg5sp9t1PCUVSj5xTeqZ7n4cIap9pbON1zNasJv3lQ0K72dJFPSLEOA5XhVLMjRS30kIGcFqD5niDdQ4EzDBrWDioiwpKdq1Sr9iUGnZUWvslbiA8ACObaUw1Y=
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i+8dykE3; arc=none smtp.client-ip=10.30.226.201
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711749319;
+	bh=+poyNpseyrz9Eoa77T92yhDQwuECGmxB30jUzIAKH98=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=i+8dykE3YQdY+53+8POC4U17NyrlajsaBHru/9ULCn8ZmHHgjv6YhubjUAVssnGn7
+	 9gdfmdlrdeqSQsdEs+TqJXpADkQZZWLiOO7dIaOZAI7dbu8yKWvYHv6WrRT6ZFQrHx
+	 D/I4ma82Tn/VN/p7+hO9u5INnF4+b8tIolpHEl+k6HT9IOMlPWENg0c8cYK4L74bN1
+	 22isDn6kmwlgOHnzWF08arFawoiHlUdA+oSLOonYtrVg5dFp6q4KgleAb+oSYoBcyL
+	 DbMiAYDpwjVwkCZeC4eL0eUpVpoM7rVsfxekupwlZuXqR+EUguXEzifK4bFgeg2yRW
+	 Scvby6W1H5WyA==
+Date: Fri, 29 Mar 2024 14:55:17 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Chintan Vankar <c-vankar@ti.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, Siddharth Vadapalli
+ <s-vadapalli@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, "Heiner
+ Kallweit" <hkallweit1@gmail.com>, Vladimir Oltean
+ <vladimir.oltean@nxp.com>, Andrew Lunn <andrew@lunn.ch>, Roger Quadros
+ <rogerq@kernel.org>, Richard Cochran <richardcochran@gmail.com>, Paolo
+ Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "David S.
+ Miller" <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
+ <netdev@vger.kernel.org>
+Subject: Re: [PATCH net-next v4 3/3] net: ethernet: ti: am65-cpsw-ethtool:
+ Update rx_filters for CPSW's timestamping capability
+Message-ID: <20240329145517.7b46a15a@kernel.org>
+In-Reply-To: <20240327054234.1906957-3-c-vankar@ti.com>
+References: <20240327054234.1906957-1-c-vankar@ti.com>
+	<20240327054234.1906957-3-c-vankar@ti.com>
+Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6392:EE_|MN2PR11MB4677:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QrXYLvcI/ney2EjH7cNF3Bi/2kagN4APvWbjZK5ZdQFb5LYnyZ/j4zceK551ttkl8PJB2N3ri6Sm9Y6xgat9uDNhvDl+JskSk9h8YAEwZ8Y/0XBPHVum5VXO0XW8w+piTEe8frYAnitwRJoRok/PndWX5HUn8/jCOsRGUDBKjhDLLOz3sOhbhw0msD/PCID1X/Tz8F+vAymdnLZzXbxSiE79FXAt7nCLfT3g1qrjgZ0pmzS0bN+jr8+UZTDqhTgWfZhud73/4E5Ehx/csxrcAkpJKnfqnGuA/xP7Tq5cdwDuxbpTBebHZa4QnHTlwkAz2qXWa5TSx+p97UG29GUUfgcgnJLIqGWk6p2kJV19TM5dYdr7R66mRj+Kc0ObfzPXea282z1gfWelE/joGhymBNLphdDoI72dPViA1qLk/ICp6Xk3ZOfgOeeUfjW5GVmAEFTfC5rZvu7+eVtjrjyNY7DCRJ+dqrmJzT0z4uLQI1TJ1GGPQD7woO4YCzRxFPZ7QJa0Oa/pnrANSZcamKdHNASYsPNDj/XPVq3QbXH7IYaGVL8kDt3cZj9ZpKoB23bEJCuzkK998pS0XzLbl3/EzNX6G5xt4OdcQuBM31B1Ce63mfDFySmV5rpiwKryBLrG
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6392.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?j+zWunrOjWW0diaC7z7xokloZ6vLh+xSMPr1sWkZHaPDofISB5W9udjFJ9H7?=
- =?us-ascii?Q?vBQTrbD5XLgkF54WUNE8EH6d7uI9A5dUcAcSr7RpoAo3M1GxHtldz40vCW9N?=
- =?us-ascii?Q?T5XHMF8gkhfaX/2Ye0node+MOMlaz4T40cM3Jgd9Q1PPOmEX4cEu3ednYF0F?=
- =?us-ascii?Q?SyoDN3bMFgAGfEZmhDEbiS9aFCtFwTr7IyphA2oxtkWF4LKgZizLCk1Ppj2T?=
- =?us-ascii?Q?b5J3YKl0Q0rtMLR3k5ybq3US42UJCCZ6Py8YG2l6IWPga9roTJPvvNr6MQFO?=
- =?us-ascii?Q?qoXflJGtqBy7jCrkOaYSe8r57TgYvM+GwTw4DhhyBY2RZeTPyIrud76l5BOy?=
- =?us-ascii?Q?a7zkKnZI9a/B9nzlPIaDhJerIGQ4BMlA8wIj2QElNrjoonPotQMBDWyh0eJh?=
- =?us-ascii?Q?zRomchNoQRUh9j9hXEPuEkmhTbFGRbtNCT27C7aNHsyJqUSCXwd3NpzyYRyK?=
- =?us-ascii?Q?EjRsGAgiNdJcB+s08ghzFaa3flKQ/WR5+tsHPHV2agFriw3gEo6hsRAXV7tu?=
- =?us-ascii?Q?bcz4g0OE+3E53fZvyrkGZHwxfROsBj0VIPm2Fwt1l5jWv7MhCTZUWdLYTPZ6?=
- =?us-ascii?Q?ahmRFjZf867zMo2V3z8z+Z0gKYfKguGKen7sWIbyjFhMwhikmecCY7/iUnjR?=
- =?us-ascii?Q?sHBf7n6pTtohFTc25fqpERzK/OilRlGuqzObLNkwVlfVVm/esymaSh/I1dxO?=
- =?us-ascii?Q?cEg623Tnc0j5fxuLinOjGopLKDMHYNPTBqUNGvWKgTOcQBbTcG8KPSSFhcnW?=
- =?us-ascii?Q?IUFKL1LBaX7Svn/t9T/QwBbEkzvcEiJcdl12VkXn7I4oPVrC9hyRuuk8Da+l?=
- =?us-ascii?Q?cod2AKGK8FtOjDrqnbN9Qx8Q9lZJw2Eq6b8QuVrEKgEAnftbA5BZNlmdxKJ9?=
- =?us-ascii?Q?6CaNRvV8+I48tF//cUyBkYa4K4H5+48p/pJEfPQOehCFQHns5sOe/FiQ5q34?=
- =?us-ascii?Q?NcyIJHWGIi/KdBMuRlLu/LN9H8M0FAwuuHKX4mE1TzyHetYnIBN7q1kOeNgG?=
- =?us-ascii?Q?cpAM7oYEwChASCpCcmIAasjnPXrsYhP0Ofb+Ff74vdsalgVm8W4kFoQpb6R1?=
- =?us-ascii?Q?BMg7n8LVC+vP9hsGBXfzV/g84yPPFB95zt8LDTLKd8zyD17jEsI8kY7r6ls2?=
- =?us-ascii?Q?gqQTbxBgmyuYaxM/H5M60pgc58AiSCmWUNbnpxgKSxRlPEwxG6h+IBMZ0DlB?=
- =?us-ascii?Q?zJsmhSVWPKPPcvwBAHNrFtuKjIUGn2LHX7bsEnRvNRyBe4y4+NoNNW1t2YvX?=
- =?us-ascii?Q?0N+HH1PdKOrFBKDGHSRvmVLUeRiTGQlYYTCXUY6u7cM1T8l7lpEsnwKD0aQZ?=
- =?us-ascii?Q?b87qDQ4dA/zwnpkQCgY0OQ9dCMK0tfPLCRgSFOMOHtjsg2nQlUzvWOz7Gn0E?=
- =?us-ascii?Q?jU6C16G5m6zZUhnq4ewWukhHdqy7ydfDJyEBkY0mB53oY841R1dcx8MRFT0w?=
- =?us-ascii?Q?uP0kJSujZyNM2b8YF3Ltc/ho17CEUaqbxVHqPtoP5+ccuNn4QXu/34VwD87n?=
- =?us-ascii?Q?IohPlMqOh5Npfd8RfMnHgkd0Jfc7oaEP8CbntiwaGFkRGoITypfGPfBYbwO0?=
- =?us-ascii?Q?hbqFBsn83vI3DPZDelmZ0JZrxy7eOxiAzXATRcUZ?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a004cdd-acec-413e-105c-08dc519b9982
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6392.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2024 15:59:52.0947
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+Message-ID: <20240329215517.w_7Vmc9hnnileW_u-W4LfAWPDj7NuZN0ddGy-fhlfww@z>
+
+On Wed, 27 Mar 2024 11:12:34 +0530 Chintan Vankar wrote:
+> Update supported hwtstamp_rx_filters values for CPSW's timestamping
+> capability.
+
+Is there a reason this is not part of the previous patch?
+
+X-sender: <linux-kernel+bounces-125463-steffen.klassert=3Dsecunet.com@vger.=
+kernel.org>
+X-Receiver: <steffen.klassert@secunet.com> ORCPT=3Drfc822;steffen.klassert@=
+secunet.com NOTIFY=3DNEVER; X-ExtendedProps=3DBQAVABYAAgAAAAUAFAARAPDFCS25B=
+AlDktII2g02frgPADUAAABNaWNyb3NvZnQuRXhjaGFuZ2UuVHJhbnNwb3J0LkRpcmVjdG9yeURh=
+dGEuSXNSZXNvdXJjZQIAAAUAagAJAAEAAAAAAAAABQAWAAIAAAUAQwACAAAFAEYABwADAAAABQB=
+HAAIAAAUAEgAPAGIAAAAvbz1zZWN1bmV0L291PUV4Y2hhbmdlIEFkbWluaXN0cmF0aXZlIEdyb3=
+VwIChGWURJQk9IRjIzU1BETFQpL2NuPVJlY2lwaWVudHMvY249U3RlZmZlbiBLbGFzc2VydDY4Y=
+wUACwAXAL4AAACheZxkHSGBRqAcAp3ukbifQ049REI2LENOPURhdGFiYXNlcyxDTj1FeGNoYW5n=
+ZSBBZG1pbmlzdHJhdGl2ZSBHcm91cCAoRllESUJPSEYyM1NQRExUKSxDTj1BZG1pbmlzdHJhdGl=
+2ZSBHcm91cHMsQ049c2VjdW5ldCxDTj1NaWNyb3NvZnQgRXhjaGFuZ2UsQ049U2VydmljZXMsQ0=
+49Q29uZmlndXJhdGlvbixEQz1zZWN1bmV0LERDPWRlBQAOABEABiAS9uuMOkqzwmEZDvWNNQUAH=
+QAPAAwAAABtYngtZXNzZW4tMDIFADwAAgAADwA2AAAATWljcm9zb2Z0LkV4Y2hhbmdlLlRyYW5z=
+cG9ydC5NYWlsUmVjaXBpZW50LkRpc3BsYXlOYW1lDwARAAAAS2xhc3NlcnQsIFN0ZWZmZW4FAAw=
+AAgAABQBsAAIAAAUAWAAXAEoAAADwxQktuQQJQ5LSCNoNNn64Q049S2xhc3NlcnQgU3RlZmZlbi=
+xPVT1Vc2VycyxPVT1NaWdyYXRpb24sREM9c2VjdW5ldCxEQz1kZQUAJgACAAEFACIADwAxAAAAQ=
+XV0b1Jlc3BvbnNlU3VwcHJlc3M6IDANClRyYW5zbWl0SGlzdG9yeTogRmFsc2UNCg8ALwAAAE1p=
+Y3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuRXhwYW5zaW9uR3JvdXBUeXBlDwAVAAAATWVtYmV=
+yc0dyb3VwRXhwYW5zaW9uBQAjAAIAAQ=3D=3D
+X-CreatedBy: MSExchange15
+X-HeloDomain: b.mx.secunet.com
+X-ExtendedProps: BQBjAAoAvgxrGbMv3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc2=
+9mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5Pcmdhbml6YXRpb25TY29wZREAA=
+AAAAAAAAAAAAAAAAAAAAAUASQACAAEFAAQAFCABAAAAHAAAAHN0ZWZmZW4ua2xhc3NlcnRAc2Vj=
+dW5ldC5jb20FAAYAAgABBQApAAIAAQ8ACQAAAENJQXVkaXRlZAIAAQUAAgAHAAEAAAAFAAMABwA=
+AAAAABQAFAAIAAQUAYgAKALMAAADLigAABQBkAA8AAwAAAEh1Yg=3D=3D
+X-Source: SMTP:Default MBX-ESSEN-01
+X-SourceIPAddress: 62.96.220.37
+X-EndOfInjectedXHeaders: 8966
+Received: from cas-essen-01.secunet.de (10.53.40.201) by
+ mbx-essen-01.secunet.de (10.53.40.197) with Microsoft SMTP Server
+ (version=3DTLS1_2, cipher=3DTLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 29 Mar 2024 22:56:35 +0100
+Received: from b.mx.secunet.com (62.96.220.37) by cas-essen-01.secunet.de
+ (10.53.40.201) with Microsoft SMTP Server (version=3DTLS1_2,
+ cipher=3DTLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Fronte=
+nd
+ Transport; Fri, 29 Mar 2024 22:56:35 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by b.mx.secunet.com (Postfix) with ESMTP id 22BFC2032C
+	for <steffen.klassert@secunet.com>; Fri, 29 Mar 2024 22:56:35 +0100 (CET)
+X-Virus-Scanned: by secunet
+X-Spam-Flag: NO
+X-Spam-Score: -5.399
+X-Spam-Level:
+X-Spam-Status: No, score=3D-5.399 tagged_above=3D-999 required=3D2.1
+	tests=3D[BAYES_00=3D-1.9, DKIMWL_WL_HIGH=3D-0.099, DKIM_SIGNED=3D0.1,
+	DKIM_VALID=3D-0.1, DKIM_VALID_AU=3D-0.1, MAILING_LIST_MULTI=3D-1,
+	RCVD_IN_DNSWL_MED=3D-2.3, SPF_HELO_NONE=3D0.001, SPF_PASS=3D-0.001]
+	autolearn=3Dham autolearn_force=3Dno
+Authentication-Results: a.mx.secunet.com (amavisd-new);
+	dkim=3Dpass (2048-bit key) header.d=3Dkernel.org
+Received: from b.mx.secunet.com ([127.0.0.1])
+	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 4CSTfgpjVr81 for <steffen.klassert@secunet.com>;
+	Fri, 29 Mar 2024 22:56:34 +0100 (CET)
+Received-SPF: Pass (sender SPF authorized) identity=3Dmailfrom; client-ip=
+=3D139.178.88.99; helo=3Dsv.mirrors.kernel.org; envelope-from=3Dlinux-kerne=
+l+bounces-125463-steffen.klassert=3Dsecunet.com@vger.kernel.org; receiver=
+=3Dsteffen.klassert@secunet.com=20
+DKIM-Filter: OpenDKIM Filter v2.11.0 b.mx.secunet.com 53C7A200BB
+Authentication-Results: b.mx.secunet.com;
+	dkim=3Dpass (2048-bit key) header.d=3Dkernel.org header.i=3D@kernel.org he=
+ader.b=3D"i+8dykE3"
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99]=
+)
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by b.mx.secunet.com (Postfix) with ESMTPS id 53C7A200BB
+	for <steffen.klassert@secunet.com>; Fri, 29 Mar 2024 22:56:34 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.2=
+5.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE8DE283430
+	for <steffen.klassert@secunet.com>; Fri, 29 Mar 2024 21:56:32 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDA6513E3E6;
+	Fri, 29 Mar 2024 21:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=3Dpass (2048-bit key) header.d=3Dkernel.org header.i=3D@kernel.org he=
+ader.b=3D"i+8dykE3"
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.or=
+g [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3AC28DCA;
+	Fri, 29 Mar 2024 21:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=3Dnone smtp.client-ip=
+=3D10.30.226.201
+ARC-Seal: i=3D1; a=3Drsa-sha256; d=3Dsubspace.kernel.org; s=3Darc-20240116;
+	t=3D1711749319; cv=3Dnone; b=3DXVQFfHeE9c0xnyYx07Syowd5TeLXf3pto5rmG1SsHR7=
+H+7AOzfy4pspo9LNKbgLlZFu9KQybTmplG3h69Cegz7JISgOhrER2TsLV7W3vzMOiXj2onDyVxS=
+LJsB/Qki+wTDKdSxSYjsLsMCEiRZOGxrKZplOoqofXF/YJUuJMwiY=3D
+ARC-Message-Signature: i=3D1; a=3Drsa-sha256; d=3Dsubspace.kernel.org;
+	s=3Darc-20240116; t=3D1711749319; c=3Drelaxed/simple;
+	bh=3D+poyNpseyrz9Eoa77T92yhDQwuECGmxB30jUzIAKH98=3D;
+	h=3DDate:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=3DOIQ99dvb6UMV/aWTov9pUyTkMiTogmsGmcvwczu67N=
+krjPWL8dg5sp9t1PCUVSj5xTeqZ7n4cIap9pbON1zNasJv3lQ0K72dJFPSLEOA5XhVLMjRS30kI=
+GcFqD5niDdQ4EzDBrWDioiwpKdq1Sr9iUGnZUWvslbiA8ACObaUw1Y=3D
+ARC-Authentication-Results: i=3D1; smtp.subspace.kernel.org; dkim=3Dpass (2=
+048-bit key) header.d=3Dkernel.org header.i=3D@kernel.org header.b=3Di+8dyk=
+E3; arc=3Dnone smtp.client-ip=3D10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A6F4C433C7;
+	Fri, 29 Mar 2024 21:55:18 +0000 (UTC)
+DKIM-Signature: v=3D1; a=3Drsa-sha256; c=3Drelaxed/simple; d=3Dkernel.org;
+	s=3Dk20201202; t=3D1711749319;
+	bh=3D+poyNpseyrz9Eoa77T92yhDQwuECGmxB30jUzIAKH98=3D;
+	h=3DDate:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=3Di+8dykE3YQdY+53+8POC4U17NyrlajsaBHru/9ULCn8ZmHHgjv6YhubjUAVssnGn7
+	 9gdfmdlrdeqSQsdEs+TqJXpADkQZZWLiOO7dIaOZAI7dbu8yKWvYHv6WrRT6ZFQrHx
+	 D/I4ma82Tn/VN/p7+hO9u5INnF4+b8tIolpHEl+k6HT9IOMlPWENg0c8cYK4L74bN1
+	 22isDn6kmwlgOHnzWF08arFawoiHlUdA+oSLOonYtrVg5dFp6q4KgleAb+oSYoBcyL
+	 DbMiAYDpwjVwkCZeC4eL0eUpVpoM7rVsfxekupwlZuXqR+EUguXEzifK4bFgeg2yRW
+	 Scvby6W1H5WyA=3D=3D
+Date: Fri, 29 Mar 2024 14:55:17 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Chintan Vankar <c-vankar@ti.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, Siddharth Vadapalli
+ <s-vadapalli@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, "Heine=
+r
+ Kallweit" <hkallweit1@gmail.com>, Vladimir Oltean
+ <vladimir.oltean@nxp.com>, Andrew Lunn <andrew@lunn.ch>, Roger Quadros
+ <rogerq@kernel.org>, Richard Cochran <richardcochran@gmail.com>, Paolo
+ Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "David S.
+ Miller" <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
+ <netdev@vger.kernel.org>
+Subject: Re: [PATCH net-next v4 3/3] net: ethernet: ti: am65-cpsw-ethtool:
+ Update rx_filters for CPSW's timestamping capability
+Message-ID: <20240329145517.7b46a15a@kernel.org>
+In-Reply-To: <20240327054234.1906957-3-c-vankar@ti.com>
+References: <20240327054234.1906957-1-c-vankar@ti.com>
+	<20240327054234.1906957-3-c-vankar@ti.com>
+Precedence: bulk
+X-Mailing-List: linux-kernel@vger.kernel.org
+List-Id: <linux-kernel.vger.kernel.org>
+List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=3D"US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-Path: linux-kernel+bounces-125463-steffen.klassert=3Dsecunet.com@vge=
+r.kernel.org
+X-MS-Exchange-Organization-OriginalArrivalTime: 29 Mar 2024 21:56:35.2063
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3GxpdaDxVorGvrLWFyvJOsd8Y8n1Xt817xox0H6jMItY0IO1IMz0Gt6flgyMDaABOEPSfIzcn0GJtCFqdBMJdw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4677
-X-OriginatorOrg: intel.com
+X-MS-Exchange-Organization-Network-Message-Id: c2c7b326-bc0f-40b8-bb46-08dc=
+503b1a2b
+X-MS-Exchange-Organization-OriginalClientIPAddress: 62.96.220.37
+X-MS-Exchange-Organization-OriginalServerIPAddress: 10.53.40.201
+X-MS-Exchange-Organization-Cross-Premises-Headers-Processed: cas-essen-01.s=
+ecunet.de
+X-MS-Exchange-Organization-OrderedPrecisionLatencyInProgress: LSRV=3Dmbx-es=
+sen-01.secunet.de:TOTAL-HUB=3D0.369|SMR=3D0.326(SMRDE=3D0.004|SMRC=3D0.321(=
+SMRCL=3D0.104|X-SMRCR=3D0.322))|CAT=3D0.041(CATRESL=3D0.023
+ (CATRESLP2R=3D0.018)|CATORES=3D0.015(CATRS=3D0.015(CATRS-Index Routing
+ Agent=3D0.014)));2024-03-29T21:56:35.594Z
+X-MS-Exchange-Forest-ArrivalHubServer: mbx-essen-01.secunet.de
+X-MS-Exchange-Organization-AuthSource: cas-essen-01.secunet.de
+X-MS-Exchange-Organization-AuthAs: Anonymous
+X-MS-Exchange-Organization-FromEntityHeader: Internet
+X-MS-Exchange-Organization-OriginalSize: 6819
+X-MS-Exchange-Organization-HygienePolicy: Standard
+X-MS-Exchange-Organization-MessageLatency: SRV=3Dcas-essen-01.secunet.de:TO=
+TAL-FE=3D16.003|SMR=3D0.015(SMRPI=3D0.008(SMRPI-FrontendProxyAgent=3D0.008)=
+)|SMS=3D0.003
+X-MS-Exchange-Organization-Recipient-Limit-Verified: True
+X-MS-Exchange-Organization-TotalRecipientCount: 1
+X-MS-Exchange-Organization-Rules-Execution-History: 0b0cf904-14ac-4724-8bdf=
+-482ee6223cf2%%%fd34672d-751c-45ae-a963-ed177fcabe23%%%d8080257-b0c3-47b4-b=
+0db-23bc0c8ddb3c%%%95e591a2-5d7d-4afa-b1d0-7573d6c0a5d9%%%f7d0f6bc-4dcc-487=
+6-8c5d-b3d6ddbb3d55%%%16355082-c50b-4214-9c7d-d39575f9f79b
+X-MS-Exchange-Forest-RulesExecuted: mbx-essen-01
+X-MS-Exchange-Organization-RulesExecuted: mbx-essen-01
+X-MS-Exchange-Forest-IndexAgent-0: AQ0CZW4AARMBAAAPAAADH4sIAAAAAAAEADWMQUvD=
+QBCFZ9Nsm0SDgn
+ 9gbh4USdKKkIM99ORBFER7LGuzMYvp7rK7afVX+pecWIThMfPme++H
+ PWlcy+Yaqzt8FA6rolpgWdZlVc8XeFXczgtcdUoHofFN6E9CDs4EWe
+ fZPb7aRgSJfrDWuCAb7A7BB7GzG/e1aVUfpPO4F/0gPbbG4er5ZX3p
+ Maid/MOU/hhrtsKKd9Wr8H2TZ3n2QEQnnUSBTgpvNJ3KI402Aa1wAU
+ 07Imid3CszeDLDtluOYYAIJhPgEYMTmnGPY8YTBglAwlIOwGE6g2QK
+ Mw4ZaQoZfS8gpeDRpwjpKZxncEYm8QwicmKqPRb+Lwmk/BdckThUQw
+ EAAAEOzgFSZXRyaWV2ZXJPcGVyYXRvciwxMCwyO1JldHJpZXZlck9w
+ ZXJhdG9yLDExLDI7UG9zdERvY1BhcnNlck9wZXJhdG9yLDEwLDA7UG
+ 9zdERvY1BhcnNlck9wZXJhdG9yLDExLDA7UG9zdFdvcmRCcmVha2Vy
+ RGlhZ25vc3RpY09wZXJhdG9yLDEwLDA7UG9zdFdvcmRCcmVha2VyRG
+ lhZ25vc3RpY09wZXJhdG9yLDExLDA7VHJhbnNwb3J0V3JpdGVyUHJv ZHVjZXIsMjAsNQ=3D=
+=3D
+X-MS-Exchange-Forest-IndexAgent: 1 496
+X-MS-Exchange-Forest-EmailMessageHash: CE720195
+X-MS-Exchange-Forest-Language: en
+X-MS-Exchange-Organization-Processed-By-Journaling: Journal Agent
 
-On Fri, Mar 29, 2024 at 11:48:37AM -0700, Paul E. McKenney wrote:
-> On Fri, Mar 29, 2024 at 11:08:04PM +0800, kernel test robot wrote:
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2024.03.27b
-> > head:   786fab3085d764055a78edb54023420920344333
-> > commit: b3b1a154281fc97efc4c1d5818a83c29c228dbd5 [64/69] xtensa: Emulate one-byte and two-byte cmpxchg
-> > config: xtensa-allnoconfig (https://download.01.org/0day-ci/archive/20240329/202403292321.T55etywH-lkp@intel.com/config)
-> > compiler: xtensa-linux-gcc (GCC) 13.2.0
-> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240329/202403292321.T55etywH-lkp@intel.com/reproduce)
-> > 
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202403292321.T55etywH-lkp@intel.com/
-> > 
-> > All errors (new ones prefixed by >>):
-> > 
-> >    In file included from arch/xtensa/include/asm/atomic.h:19,
-> >                     from include/linux/atomic.h:7,
-> >                     from include/asm-generic/bitops/atomic.h:5,
-> >                     from arch/xtensa/include/asm/bitops.h:192,
-> >                     from include/linux/bitops.h:68,
-> >                     from include/linux/log2.h:12,
-> >                     from kernel/bounds.c:13:
-> >    arch/xtensa/include/asm/cmpxchg.h: In function '__cmpxchg':
-> > >> arch/xtensa/include/asm/cmpxchg.h:77:25: error: implicit declaration of function 'cmpxchg_emu_u8' [-Werror=implicit-function-declaration]
-> >       77 |         case 1:  return cmpxchg_emu_u8((volatile u8 *)ptr, old, new);
-> >          |                         ^~~~~~~~~~~~~~
-> 
-> Good catch!  Does the diff at the end fix this?
+On Wed, 27 Mar 2024 11:12:34 +0530 Chintan Vankar wrote:
+> Update supported hwtstamp_rx_filters values for CPSW's timestamping
+> capability.
 
-The error is fixed by the diff at the end.
+Is there a reason this is not part of the previous patch?
 
-Tested-by: Yujie Liu <yujie.liu@intel.com>
-
-> 
-> 							Thanx, Paul
-> 
-> > >> arch/xtensa/include/asm/cmpxchg.h:78:25: error: implicit declaration of function 'cmpxchg_emu_u16' [-Werror=implicit-function-declaration]
-> >       78 |         case 2:  return cmpxchg_emu_u16((volatile u16 *)ptr, old, new);
-> >          |                         ^~~~~~~~~~~~~~~
-> >    cc1: some warnings being treated as errors
-> >    make[3]: *** [scripts/Makefile.build:117: kernel/bounds.s] Error 1
-> >    make[3]: Target 'prepare' not remade because of errors.
-> >    make[2]: *** [Makefile:1197: prepare0] Error 2
-> >    make[2]: Target 'prepare' not remade because of errors.
-> >    make[1]: *** [Makefile:240: __sub-make] Error 2
-> >    make[1]: Target 'prepare' not remade because of errors.
-> >    make: *** [Makefile:240: __sub-make] Error 2
-> >    make: Target 'prepare' not remade because of errors.
-> > 
-> > 
-> > vim +/cmpxchg_emu_u8 +77 arch/xtensa/include/asm/cmpxchg.h
-> > 
-> >     72	
-> >     73	static __inline__ unsigned long
-> >     74	__cmpxchg(volatile void *ptr, unsigned long old, unsigned long new, int size)
-> >     75	{
-> >     76		switch (size) {
-> >   > 77		case 1:  return cmpxchg_emu_u8((volatile u8 *)ptr, old, new);
-> >   > 78		case 2:  return cmpxchg_emu_u16((volatile u16 *)ptr, old, new);
-> >     79		case 4:  return __cmpxchg_u32(ptr, old, new);
-> >     80		default: __cmpxchg_called_with_bad_pointer();
-> >     81			 return old;
-> >     82		}
-> >     83	}
-> >     84	
-> > 
-> > -- 
-> > 0-DAY CI Kernel Test Service
-> > https://github.com/intel/lkp-tests/wiki
-> 
-> commit 663161aaa5c3286dcfc9ba2cd9e12170f9354ea7
-> Author: Paul E. McKenney <paulmck@kernel.org>
-> Date:   Fri Mar 29 11:47:13 2024 -0700
-> 
->     squash! xtensa: Emulate one-byte and two-byte cmpxchg
->     
->     [ paulmck: Apply kernel test robot feedback. ]
->     
->     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> 
-> diff --git a/arch/xtensa/include/asm/cmpxchg.h b/arch/xtensa/include/asm/cmpxchg.h
-> index bcce915a98e21..a0f9a2070209b 100644
-> --- a/arch/xtensa/include/asm/cmpxchg.h
-> +++ b/arch/xtensa/include/asm/cmpxchg.h
-> @@ -15,6 +15,7 @@
->  
->  #include <linux/bits.h>
->  #include <linux/stringify.h>
-> +#include <linux/cmpxchg-emu.h>
->  
->  /*
->   * cmpxchg
-> 
