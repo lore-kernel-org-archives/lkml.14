@@ -1,126 +1,193 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0C441233;
-	Fri, 29 Mar 2024 07:29:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963833C6BA;
+	Fri, 29 Mar 2024 07:32:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711697348; cv=none; b=e4Jj11/YqQYFQ/L6YBQdOge29fpDoE3ig9qDGavTkThBkaPtLcCUHiT3LENirpJ1oIESzF3trKvE0hmOn3nQmsrGtIy88FK+fDAABNcgPYgygDC3jYB06ProhJrwFQVV2b14PHmwbCdPh+jN3R2FNeSqf9xDSk6cEQoWHzfZxx0=
+	t=1711697530; cv=none; b=UE6UD6a/ZjA9Wc6Vb9QA4Endw3OeuE5Xei5vq08UOwaoJCsvNJeqMlaJt25gVOUgyG5TuiUajpZMfGfDALt21KwfXjeqhH7hvtfBtZdApwplkLR9tVQ6Q8wCxjmdydCK1EUbimrW76K110vMdamw9jXpOSWXlK23Lz6obD+3i2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711697348; c=relaxed/simple;
-	bh=1cmDBy8dYrXEta4fjcrphoU72ogCv98mdd+8+tvN7TU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IqWcDbk84PCxf9aqzHuIHbW8tNeuEaRP7F1tJby5RxDxG9+3RApq6HwfO8cReav3BLugB+Qxwb2ys0LmwiVDHb/uVJWMMo33tg/qtdecUVdRRZQI9AaQOErI2+fq5QDxDdUB5ULKGWweij2/fG7tSEB13CM6z/TFiFZ6MIR9wD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=yZ2NEKlu; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1711697530; c=relaxed/simple;
+	bh=3M6OWiyX2jCszgbg+gKZllism2OVuQShgvdmfShoSr8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZXAuZSEjWc2ZRMpwrn8uRxRfS5fA3tIcv8lSspDie3wOpGAPA3ubEdcZ9JNikmPay0h/giiISDaDITshPyL1I/ItuwO/c7S9jW3l9PYayXBeSECcMuuyKKBhBLixK5M70/4To6n8afRHJxyziEgvQQAxWyPirc5UAUo31eOZItk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NZlFXF9r; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="yZ2NEKlu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NZlFXF9r"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1711697346; x=1743233346;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1cmDBy8dYrXEta4fjcrphoU72ogCv98mdd+8+tvN7TU=;
-  b=yZ2NEKlu7UJfrtHOePY42sQoTVZ9srk/ol8WSAjGE+TCHxRIjp0Faamv
-   KI1y7EYkFTIwa7PWLr65G0ZaDO1W1ghM9aYCxcr3meFUOQ1SD9BwHZX0B
-   AkFCpU8etOPF2AoWTKeeE6JahbLwRTqlxVKxSZlSmuA154MVqVMcXkc8G
-   pomqP3xuITEtL9o45ZsBSU3qX6R+rW8a8EdmOJfiye9TcgtqSC1XVk9ub
-   uSch6BBbEYyEY1q3NFZKNLK4mQegmWT3UKOmb7c55VBwMjLzjuy7pLrC6
-   rHI4yXl6oOzZv1zqLXxu/cJmLABUM0Ndouzke8W6fd3MAk3e+ghjop7Uy
-   A==;
-X-CSE-ConnectionGUID: dIC902tiRuyKClhJh9dfVQ==
-X-CSE-MsgGUID: GdK04AE1QKylRlLI485iMw==
-X-IronPort-AV: E=Sophos;i="6.07,164,1708412400"; 
-   d="asc'?scan'208";a="185882733"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 29 Mar 2024 00:29:05 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 29 Mar 2024 00:28:47 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex03.mchp-main.com (10.10.85.151)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Fri, 29 Mar 2024 00:28:45 -0700
-Date: Fri, 29 Mar 2024 07:27:57 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-CC: Conor Dooley <conor@kernel.org>, =?iso-8859-1?Q?Bj=F6rn_T=F6pel?=
-	<bjorn@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
-	<palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Emil Renner Berthing
-	<kernel@esmil.dk>, Samuel Holland <samuel.holland@sifive.com>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	<linux-riscv@lists.infradead.org>, Andy Chiu <andy.chiu@sifive.com>, Jakub
- Kicinski <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>
-Subject: Re: RISC-V for-next/fixes (cont'd from PW sync)
-Message-ID: <20240329-fanning-woven-7dbb6cfdde9b@wendy>
-References: <87ttkro3b5.fsf@all.your.base.are.belong.to.us>
- <20240327-irrigate-unread-d9de28174437@spud>
- <CAHVXubgMTe83sYaNO+SG=90=k5scaQrpApveTCO163MhUc1tdA@mail.gmail.com>
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711697529; x=1743233529;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3M6OWiyX2jCszgbg+gKZllism2OVuQShgvdmfShoSr8=;
+  b=NZlFXF9rHVWYWPPKRop1GhOBIIEM+a71uzw6TYQYj93oiPyocNg7r5GZ
+   0uHKuFJjrvuxqOKEth+yYdDpKbwHGsbMPlodY6Hx35vHL8AJAWAgxENaQ
+   Mz1lpOk3rvryKi8wkAAATZaF2bIFGUFFem0AJsXCSn7rW6AcBdNxv686F
+   Vsnbfy9zz0DGYNon3bLdCmRRZXHmgfcmYDBqs3Z9O42AjgPk0RPEF4IjY
+   LcdXxNr9o6bZgCmIMA2+wnxuAJN58s4YMzf8TdbiFTOoDWl4h5b1BctjP
+   UsYvnzYT/+Jr8MPvuAxcBWvtx2mnJz/RCOVa+wNTHfiw6XJ8FcZFIaox6
+   Q==;
+X-CSE-ConnectionGUID: zq+nTeguTAG32jgwWLQCrw==
+X-CSE-MsgGUID: SGBPKhkXTsCltO/FUCHoHg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="17605218"
+X-IronPort-AV: E=Sophos;i="6.07,164,1708416000"; 
+   d="scan'208";a="17605218"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 00:32:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,164,1708416000"; 
+   d="scan'208";a="16785904"
+Received: from zengguan-mobl1.ccr.corp.intel.com (HELO [10.238.3.174]) ([10.238.3.174])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 00:32:03 -0700
+Message-ID: <a4f169fa-663d-4a94-878b-d783f67d48c9@intel.com>
+Date: Fri, 29 Mar 2024 15:32:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Y/2CbQmcronQVXbs"
-Content-Disposition: inline
-In-Reply-To: <CAHVXubgMTe83sYaNO+SG=90=k5scaQrpApveTCO163MhUc1tdA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 09/15] x86/irq: Install posted MSI notification handler
+Content-Language: en-US
+To: Jacob Pan <jacob.jun.pan@linux.intel.com>,
+ LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ Thomas Gleixner <tglx@linutronix.de>, Lu Baolu <baolu.lu@linux.intel.com>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "Hansen, Dave" <dave.hansen@intel.com>, Joerg Roedel <joro@8bytes.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+ Ingo Molnar <mingo@redhat.com>
+Cc: "Luse, Paul E" <paul.e.luse@intel.com>,
+ "Williams, Dan J" <dan.j.williams@intel.com>, Jens Axboe <axboe@kernel.dk>,
+ "Raj, Ashok" <ashok.raj@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+ "maz@kernel.org" <maz@kernel.org>, "seanjc@google.com" <seanjc@google.com>,
+ Robin Murphy <robin.murphy@arm.com>
+References: <20240126234237.547278-1-jacob.jun.pan@linux.intel.com>
+ <20240126234237.547278-10-jacob.jun.pan@linux.intel.com>
+From: Zeng Guang <guang.zeng@intel.com>
+In-Reply-To: <20240126234237.547278-10-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---Y/2CbQmcronQVXbs
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 29, 2024 at 07:46:38AM +0100, Alexandre Ghiti wrote:
-> On Wed, Mar 27, 2024 at 9:32=E2=80=AFPM Conor Dooley <conor@kernel.org> w=
-rote:
-> >
-> > On Wed, Mar 27, 2024 at 08:57:50PM +0100, Bj=C3=B6rn T=C3=B6pel wrote:
-> > > Hi,
-> > >
-> > > I figured I'd put some words on the "how to update the RISC-V
-> > > for-next/fixes branches [1]" that came up on the patchwork call today.
-> > >
-> > > In RISC-V land, the for-next branch is used for features, and typical=
-ly
-> > > sent as a couple of PRs to Linus when the merge window is open. The
-> > > fixes branch is sent as PR(s) between the RCs of a release.
-> > >
-> > > Today, the baseline for for-next/fixes is the CURRENT_RELEASE-rc1, and
-> > > features/fixes are based on that.
-> > >
-> > > This has IMO a couple of issues:
-> > >
-> > > 1. fixes is missing the non-RISC-V fixes from releases later than
-> > >    -rc1, which makes it harder for contributors.
->=20
-> The syzbot report [1] requires fixes in mm [2], if we don't update
-> fixes on top of the latest -rcX, we'll keep hitting this bug, so
-> rebasing -fixes on top of the latest -rcX is necessary to me.
+On 1/27/2024 7:42 AM, Jacob Pan wrote:
+> @@ -353,6 +360,111 @@ void intel_posted_msi_init(void)
+>   	pid->nv = POSTED_MSI_NOTIFICATION_VECTOR;
+>   	pid->ndst = this_cpu_read(x86_cpu_to_apicid);
+>   }
+> +
+> +/*
+> + * De-multiplexing posted interrupts is on the performance path, the code
+> + * below is written to optimize the cache performance based on the following
+> + * considerations:
+> + * 1.Posted interrupt descriptor (PID) fits in a cache line that is frequently
+> + *   accessed by both CPU and IOMMU.
+> + * 2.During posted MSI processing, the CPU needs to do 64-bit read and xchg
+> + *   for checking and clearing posted interrupt request (PIR), a 256 bit field
+> + *   within the PID.
+> + * 3.On the other side, the IOMMU does atomic swaps of the entire PID cache
+> + *   line when posting interrupts and setting control bits.
+> + * 4.The CPU can access the cache line a magnitude faster than the IOMMU.
+> + * 5.Each time the IOMMU does interrupt posting to the PIR will evict the PID
+> + *   cache line. The cache line states after each operation are as follows:
+> + *   CPU		IOMMU			PID Cache line state
+> + *   ---------------------------------------------------------------
+> + *...read64					exclusive
+> + *...lock xchg64				modified
+> + *...			post/atomic swap	invalid
+> + *...-------------------------------------------------------------
+> + *
+> + * To reduce L1 data cache miss, it is important to avoid contention with
+> + * IOMMU's interrupt posting/atomic swap. Therefore, a copy of PIR is used
+> + * to dispatch interrupt handlers.
+> + *
+> + * In addition, the code is trying to keep the cache line state consistent
+> + * as much as possible. e.g. when making a copy and clearing the PIR
+> + * (assuming non-zero PIR bits are present in the entire PIR), it does:
+> + *		read, read, read, read, xchg, xchg, xchg, xchg
+> + * instead of:
+> + *		read, xchg, read, xchg, read, xchg, read, xchg
+> + */
+> +static __always_inline inline bool handle_pending_pir(u64 *pir, struct pt_regs *regs)
+> +{
+> +	int i, vec = FIRST_EXTERNAL_VECTOR;
+> +	unsigned long pir_copy[4];
+> +	bool handled = false;
+> +
+> +	for (i = 0; i < 4; i++)
+> +		pir_copy[i] = pir[i];
+> +
+> +	for (i = 0; i < 4; i++) {
+> +		if (!pir_copy[i])
+> +			continue;
+> +
+> +		pir_copy[i] = arch_xchg(pir, 0);
 
-No non-ff rebasing of branches unless its 101% required, please. This
-seems like a justifiable reason to merge the rc it appears in into the
-riscv branches though.
+Here is a problem that pir_copy[i] will always be written as pir[0]. 
+This leads to handle spurious posted MSIs later.
 
-> [1] https://lore.kernel.org/linux-riscv/00000000000070a2660614b83885@goog=
-le.com/T/#t
-> [2] https://lore.kernel.org/all/20240326063036.6242-1-osalvador@suse.de/
-
---Y/2CbQmcronQVXbs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZgZtfQAKCRB4tDGHoIJi
-0tiOAP4xrV2ls9KTOiepY1R3DQ4qiVounWXxYFc7g1IeQp60DQEA4pgF02ZVfCYK
-LekKEkPD/qHka7u0tB7awW+UGsTp0gs=
-=wq1B
------END PGP SIGNATURE-----
-
---Y/2CbQmcronQVXbs--
+> +		handled = true;
+> +	}
+> +
+> +	if (handled) {
+> +		for_each_set_bit_from(vec, pir_copy, FIRST_SYSTEM_VECTOR)
+> +			call_irq_handler(vec, regs);
+> +	}
+> +
+> +	return handled;
+> +}
+> +
+> +/*
+> + * Performance data shows that 3 is good enough to harvest 90+% of the benefit
+> + * on high IRQ rate workload.
+> + */
+> +#define MAX_POSTED_MSI_COALESCING_LOOP 3
+> +
+> +/*
+> + * For MSIs that are delivered as posted interrupts, the CPU notifications
+> + * can be coalesced if the MSIs arrive in high frequency bursts.
+> + */
+> +DEFINE_IDTENTRY_SYSVEC(sysvec_posted_msi_notification)
+> +{
+> +	struct pt_regs *old_regs = set_irq_regs(regs);
+> +	struct pi_desc *pid;
+> +	int i = 0;
+> +
+> +	pid = this_cpu_ptr(&posted_interrupt_desc);
+> +
+> +	inc_irq_stat(posted_msi_notification_count);
+> +	irq_enter();
+> +
+> +	/*
+> +	 * Max coalescing count includes the extra round of handle_pending_pir
+> +	 * after clearing the outstanding notification bit. Hence, at most
+> +	 * MAX_POSTED_MSI_COALESCING_LOOP - 1 loops are executed here.
+> +	 */
+> +	while (++i < MAX_POSTED_MSI_COALESCING_LOOP) {
+> +		if (!handle_pending_pir(pid->pir64, regs))
+> +			break;
+> +	}
+> +
+> +	/*
+> +	 * Clear outstanding notification bit to allow new IRQ notifications,
+> +	 * do this last to maximize the window of interrupt coalescing.
+> +	 */
+> +	pi_clear_on(pid);
+> +
+> +	/*
+> +	 * There could be a race of PI notification and the clearing of ON bit,
+> +	 * process PIR bits one last time such that handling the new interrupts
+> +	 * are not delayed until the next IRQ.
+> +	 */
+> +	handle_pending_pir(pid->pir64, regs);
+> +
+> +	apic_eoi();
+> +	irq_exit();
+> +	set_irq_regs(old_regs);
+>   }
+>   #endif /* X86_POSTED_MSI */
+>   
