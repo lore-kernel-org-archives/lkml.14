@@ -1,82 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76EA0364D4;
-	Fri, 29 Mar 2024 02:11:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC67A1DA4E;
+	Fri, 29 Mar 2024 02:14:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711678292; cv=none; b=bWY6NwG1Ck+Iuk4PyaSkU/m59kbfgvPNoHSMufBRltbgImr4zfYgITwdQslcDrgzSal0M9gm7l5VkKq3WDnUEAIorIGa6LZ3pkmXAnBu1FMwP2dKM09kAObg7SdW6ulqWG3SOyXhIqLAjVeCS7VR40WjQOoVD9ckp4M/NDbhvAY=
+	t=1711678494; cv=none; b=sr3k9zXa9k6xeWXq64eFC0D0rXXZYYIeqY2OXqBlVW+tVUFfakdVVoPJMtldFib9rOmX3FmTfSv7g33QXYMPCeUxdpkXM1bvWcomjYezm4fJtEnDjJp+G2JPNgxn9MtCOXUQg0Axh6lyeSYUQe+HU5S55WhmtwmxD5xh0oX0kRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711678292; c=relaxed/simple;
-	bh=wiI8l6P+7khO2WSmx7RdBmkoeftWtC5/LdFSc3a+f2g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZOnn3F49Mh8roiqTce4cSm2PAMEaRSp9y2NvibloM3q88tbTEy6dtg1MTXsMGQaWFnpu1sM3+vU13c7tBim1m8Jz/ywnqTEyqV/xwVQXqPgQPu9X2CjoWoet1GTvIx63Mckr+ItxDElG17QhRK8SwDi9pgaFmVRRVrz6+GS1zTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bC4mL/G8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711678494; c=relaxed/simple;
+	bh=DhZdQ2iI7Zs+BqDVOGl/HOsjIT1jvsMP+tqZq0VoEFI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TC6Fb2P/+Qm2dt5CGRrtaMBwc5Q4xiRx6lKR0TPahHrAqhPR1Lgm4efb4ZTQdAyXZL8lZJ6EoGHLaYuWj06Nm0y2XscFRlbPxvpZomh+JMu8Ggu5hs3+bJKeIxXaikIdSOZ0atSEU/wmgC2aZO5mH39BlG2zi3wKz78OwBMtAf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LWvtN2Nc; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bC4mL/G8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F371C433C7;
-	Fri, 29 Mar 2024 02:11:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711678292;
-	bh=wiI8l6P+7khO2WSmx7RdBmkoeftWtC5/LdFSc3a+f2g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bC4mL/G8N8W3xmsPmhYd+hXIg9o6jIChDaoLSVIrIAqpWpMERjBw7zFz2aLi5b+VA
-	 FbGBLdHwNItDrHjWojTW4cKxW2M0rl7rnCDQwX6JK5lczqYU82yTTnLeuBFYUDD82N
-	 1gQFz/6A9+qhvqsPkHut16b3b+/Uom5ZEKifEeX3Jo0M7cMPWz+tp56tlWozVk2NF2
-	 0wtlLsimkRUCZBr/9AVUvQ0YPvTJfN9wwaDvqZRG84BY3gG6Z0qCFE1v80J6DQYFrU
-	 K1EMekTmh+WG5hRKdQE10R+fJ0M4K3dDKrjVx9oOJIEloC1NVuvueqgZtF16iOVQ/O
-	 fDoAj1jfNz5Gw==
-Date: Thu, 28 Mar 2024 19:11:30 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jijie Shao <shaojijie@huawei.com>
-Cc: <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
- <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
- <jiri@resnulli.us>, <horms@kernel.org>, <rkannoth@marvell.com>,
- <shenjian15@huawei.com>, <wangjie125@huawei.com>, <liuyonglong@huawei.com>,
- <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V6 net-next 3/4] net: hns3: dump more reg info based on
- ras mod
-Message-ID: <20240328191130.47242c8f@kernel.org>
-In-Reply-To: <20240327114330.1826631-4-shaojijie@huawei.com>
-References: <20240327114330.1826631-1-shaojijie@huawei.com>
-	<20240327114330.1826631-4-shaojijie@huawei.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LWvtN2Nc"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1def2a1aafaso12171355ad.3;
+        Thu, 28 Mar 2024 19:14:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711678492; x=1712283292; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eHKg/7V7Pl/oLudfM0ileqdKuhPljGzHIMYbgvPiGiA=;
+        b=LWvtN2NcWKtQpPb59VF/GBak8NrRXRB8C2vS40r0fcXG4ktaM6BvoEfA8/DbI8kUVh
+         2BPFAW7hFDf/ZrpR5aTKkrvN9j0WjKis4wM+kF8YJjD+RLdg47OlTeHa++SqOIT6f3z9
+         5Cwum59JJmbxuV80yNR597Kdp6CH8sg2uKWqLCZc+2dfRd7S7mDM1e4T+rVd9DdCM3D1
+         +pCJyKrRQk4Csj7im4SnVHQqxS2RhkOnpUQ0tBu7pW155sB3LqSkbgWbDGxh8JPYgxv/
+         vpS6zqdo1FJc+Y9Wesi+OXNtTPAyRRu3zmj7L1Qa+k3Uce8PuGMwj9vW5wWAtLSbiZ6y
+         AA3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711678492; x=1712283292;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eHKg/7V7Pl/oLudfM0ileqdKuhPljGzHIMYbgvPiGiA=;
+        b=CLNvWdgVfs/Tak/m2IdgfAWRIkvQVQ6mWdxpW38/82dYyq8Qdenc/yV86OPtvr6sRR
+         GMMFmuk4T13AamneyhGQjH5fdWOUT7KN9MGw8tbxreQuQnGuDFIlXseP8+8yawIwAcJk
+         NEMQe92xq8K92oAOnHwhWnYyMr8r17FLfp82lxWyTeCBl2TXz4wb48PWfsRtd8MABzGd
+         jCfBQ5O48KlRyRYmK+I9CPqljlmKP08r4u6uy9h2PpyfMr0LgxM3TiDYjz+XAgHDiNMk
+         eRhT9ZEyzxOFeVxh3lJBBD5aSvdEnO1Y5xIWrP6RIKZfF0yRV5eHYPtzKYgZUYnSl3fR
+         xcWA==
+X-Forwarded-Encrypted: i=1; AJvYcCWHHYpVyZ1lMcBzspN16x96gDDNqNcVYvCq9+rCwTUS5BZnUO2gOgW7Hngz1Yaz0OTozleJfxMxVGGvQLg7GxG0M/yK9pu+pq+BVKBsF7eDxfR8PY/86AJROenky+IsxHjjqk3zV8+t1NnmOFJLMVhWVhlG
+X-Gm-Message-State: AOJu0YwI0R2rYHntmZR1uRVp7vwF3Q5AdB4vW+FwoSevIhGAeTMEXwCT
+	EGpbqSLsD09K9Q5/eWnfn68OcKa/1nSa+s8Iy5gwZ++jTr6IkB0R/pfpfccObpo=
+X-Google-Smtp-Source: AGHT+IFvOpFFrQkbmzDEFb/cGsaj4nEqoC3f0kHNWirc2xKMaRHRNGExfwgCVpA/5A/dRRUx2hFrMw==
+X-Received: by 2002:a17:903:1210:b0:1e0:27c8:5c7e with SMTP id l16-20020a170903121000b001e027c85c7emr1375866plh.25.1711678491960;
+        Thu, 28 Mar 2024 19:14:51 -0700 (PDT)
+Received: from ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx ([2401:4900:4e59:88b8:f462:3eea:57c6:a15a])
+        by smtp.gmail.com with ESMTPSA id u2-20020a170902e80200b001e0b5fd3c95sm2342659plg.259.2024.03.28.19.14.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 19:14:51 -0700 (PDT)
+Date: Fri, 29 Mar 2024 07:44:42 +0530
+From: Ayush Tiwari <ayushtiw0110@gmail.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: alison.schofield@intel.com, paul@paul-moore.com, mic@digikod.net,
+	fabio.maria.de.francesco@linux.intel.com,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	gregkh@linuxfoundation.org, outreachy@lists.linux.dev,
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH] LANDLOCK: use kmem_cache for landlock_object
+Message-ID: <ZgYkEghv7lFK4K4+@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
+References: <ZgSrBVidW1U6yP+h@ayush-HP-Pavilion-Gaming-Laptop-15-ec0xxx>
+ <dfa6ddcb-9a2d-49ac-90b7-bb30b23e32c4@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dfa6ddcb-9a2d-49ac-90b7-bb30b23e32c4@moroto.mountain>
 
-On Wed, 27 Mar 2024 19:43:29 +0800 Jijie Shao wrote:
-> +	}, {
-> +		.reg_name = "MIB_TX/RX_BAD_PKTS",
-> +		.reg_offset_group = {19, 18, 29, 28},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "MIB_TX/RX_GOOD_PKTS",
-> +		.reg_offset_group = {21, 20, 31, 30},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "MIB_TX/RX_TOTAL_PKTS",
-> +		.reg_offset_group = {23, 22, 33, 32},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "MIB_TX/RX_PAUSE_PKTS",
-> +		.reg_offset_group = {25, 24, 35, 34},
-> +		.group_size = 4
-> +	}, {
-> +		.reg_name = "MIB_TX_ERR_ALL_PKTS",
-> +		.reg_offset_group = {27, 26},
-> +		.group_size = 2
-> +	}, {
-> +		.reg_name = "MIB_RX_FCS_ERR_PKTS",
-> +		.reg_offset_group = {37, 36},
-> +		.group_size = 2
+On Thu, Mar 28, 2024 at 09:39:14AM +0300, Dan Carpenter wrote:
+> On Thu, Mar 28, 2024 at 04:55:57AM +0530, Ayush Tiwari wrote:
+> > Use kmem_cache replace kzalloc() calls with kmem_cache_zalloc() for
+> > struct landlock_object and update the related dependencies.
+> > 
+> > Signed-off-by: Ayush Tiwari <ayushtiw0110@gmail.com>
+> 
+> Is there some advantage to doing this?  You need to re-write the commit
+> message to give us some clue why you are doing this.
+> 
+> regards,
+> dan carpenter
+> 
 
-These seem to be duplicating standard stats from rtnl_link_stats64,
-ethtool_pause_stats, ethtool_eth_mac_stats, etc.
+Hello
+Apologies for the errors. I am working on a newer version, instilling
+all the corrections. Thanks for the feedback.
 
-You can add device specific stats, but please don't duplicate 
-stats for which we have standard APIs.
