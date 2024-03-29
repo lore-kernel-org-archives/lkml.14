@@ -1,65 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79664631
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 00:05:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B8015B3
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 00:06:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711670739; cv=none; b=OyF78RnuJiEKBhMSwZgpF5zuhnDBg3EqPdiOETU7LQbWBTmN6Vjk73sahe2J1CGuZqHOpDNfxu9UWXum3M9W1rx6SolML3Q46f8fZyb4aI7vHuc2dubK5PxmFXbkCfEBL5JjIoMefCEtninOX2DeoQ5UW8BMvKU1MNPCf7XmXw8=
+	t=1711670785; cv=none; b=TT4tqeRtXCQ0CzoafROKxn3kI1gRFx+2FyrlUP8XkOdessJvSA6bWgXUTLc+kr/s+8Q35ny/dg1b+UuoyMt6WQIKcc2f2JRNRiyraN8dnFygtdyTB4mXKfXYtd6ZnPJvWChl6+e750t7juMmVL/8VUAlw9to9tXBb2y/I/1j5Kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711670739; c=relaxed/simple;
-	bh=cjxm1Ryfb5Z9F4sbSdTRXRhffmjVd0tmVnxtg9IiFvg=;
+	s=arc-20240116; t=1711670785; c=relaxed/simple;
+	bh=ClE3qOreK042iesHi7S+MXYd37c2sBr/poszq9VUVhk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l+ymQwZeezIjWi5TkzIZLtrQ8WiLEsE/5zhTZYpN2/RJt8PKkvozojuJWWVk6Vhl+zlpVAwZCwjcmWM5cyEXm7Pa0KAsbwXe2lcNOCjpVXJ2qfLrOEbvq3Q5DG+85nWbJcnvehLlRthBWBvEZBMUKAA48u7jpsQvLIU20jzgaeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i3bTekP7; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=rmiWOltfsTQerfFrvG13SrFjlioSCGnIKMBFmp8WwRrKk/pStkJpYyf1yECvKGpgmU7YE2iBVefEo/uGzW85ankEJv32BdSarNPO/7Gwh0lbdewhD7odZOi2fpmFpA/6zSQbpEYZT0Qk/7vwrRNyw6L+SMyW9pjoXr8j4FmwAxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AY+brTgf; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i3bTekP7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AY+brTgf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711670736;
+	s=mimecast20190719; t=1711670783;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oquIsO/B8A2Gk2EwI1tx+d6zNaq8dTKXgOE1D72BOIw=;
-	b=i3bTekP7uHuTkj6ouHBfEKGr8LYAO9pNQDW0BfyP/03t49V2PPgG25WWQDROoKbNz9xbCm
-	DFBCsbYVKXopkWbFIIX1TaJ9JlwHkX1X/KXZR3qDwUvmcQwl+LaU+X+ruTLu0AWzRq3jr6
-	U45UX+ggdQjXbK+mH5JLW4dYeW+8fAs=
-Received: from mail-oa1-f70.google.com (mail-oa1-f70.google.com
- [209.85.160.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=VHY9uei06JjqVWX+k0rhW6PoeFL+iq7Oo89Epwh8fro=;
+	b=AY+brTgfuF7Y1dW7zFpuW7AB0W6iUXf2NfQ+ieb6EfjjeVoYKQT7B3qb0iqnaWBLORWV1X
+	WXRRM9IBCvXb7HW6kZRDTRto8+y49gSKsqoM/7HiD8W+Ax5YCi/TLpbhtfMyB/01Guxk3K
+	Uo/oUY75ibE3mvgLNAK9JfS2buCCRMQ=
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
+ [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-612-gF8KtyG4OnqzehyTtglIlA-1; Thu, 28 Mar 2024 20:05:34 -0400
-X-MC-Unique: gF8KtyG4OnqzehyTtglIlA-1
-Received: by mail-oa1-f70.google.com with SMTP id 586e51a60fabf-22a050166efso1610881fac.3
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 17:05:34 -0700 (PDT)
+ us-mta-524-tHpiYcTwMSeJnIPVEnkGgA-1; Thu, 28 Mar 2024 20:06:21 -0400
+X-MC-Unique: tHpiYcTwMSeJnIPVEnkGgA-1
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-6e356790f94so1160387b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 17:06:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711670734; x=1712275534;
+        d=1e100.net; s=20230601; t=1711670780; x=1712275580;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oquIsO/B8A2Gk2EwI1tx+d6zNaq8dTKXgOE1D72BOIw=;
-        b=azMZEHH3HdUVE2dBVzmSUHRbYLutC67jG6T15IuISVEEDpQWlklWF/MpdbzB9Dj4QB
-         08qnwlDE8UzTiWw+aM6S1ccm9JH/fMThew41X++3u4KmGsg2+w0AnrJ7jFbzrZfISG6u
-         cFFUO5dQvWjwYnbLMZyBapdhuZqPjIuIF3QWSJCnfv3IOHNJwrZuxxoyPvrYpCF/gN5/
-         5HZv7a6RekfhNVOt4zUUZlnsHfy+gFh94nZqTpnNIA0BSU/2c0EkUJuQI3LKRElhxseB
-         wM2TqRA2d43IKx0UDbWyHRT0kcTXF7d1hbXepH7molKA1ozT54O3VNVFJNLJ+8kOuZE/
-         H/uA==
-X-Forwarded-Encrypted: i=1; AJvYcCXGgDmQtXpXAomkyzv7Z+10WwXg2CcDXQOhhaSZqwFZ7XmykqG5QiK+v59oHvpAUcxOll+SMFIO4eDr95ks4vL4lm8opt/K9yXlwhip
-X-Gm-Message-State: AOJu0YxLPbD+TDsAoDSmCvO/zVUcN0wThYuCVzBXgA5lygf4oR8HBBXJ
-	4dAvy4X7fhKGkcwcVhUuLEHL3RigMMsQ3YeOlBau2jZwxSeVvMs9Vymf5K/2z1tZGLnmgamqbqa
-	Ev8bAVGncPm9nFSJZ0+cWMx3/0vGkOvJbPFbTuVugs2NoecbetOEwwZtpjoAxVg==
-X-Received: by 2002:a05:6870:9213:b0:22a:e91:2d9c with SMTP id e19-20020a056870921300b0022a0e912d9cmr744887oaf.56.1711670733964;
-        Thu, 28 Mar 2024 17:05:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGnEoQrZF39Z3vBtcbSJQo0k22y/TmSjLE13uEQmcKttgsZxV4Si5B4aokUcJRse8C4U5UT1g==
-X-Received: by 2002:a05:6870:9213:b0:22a:e91:2d9c with SMTP id e19-20020a056870921300b0022a0e912d9cmr744867oaf.56.1711670733707;
-        Thu, 28 Mar 2024 17:05:33 -0700 (PDT)
+        bh=VHY9uei06JjqVWX+k0rhW6PoeFL+iq7Oo89Epwh8fro=;
+        b=FX9AXgqUx3oTPlWOmqBUTtzsJRHI9E641E4+PpoYtDWCMn5ySHVr82iwCzR2MsNL4+
+         5cE227Qd8pgVyft4jek+GWUKNaq1WNjqxpWrwvzGIuLyy7xmoFC/N2PCiPR2U4tXaA8r
+         Q+nL8mC6ZlVf/Adap8GGxEcC5jzxJe8DluggyWRgjBfFZNzYxMUFIKcSwTvlvDjId72t
+         BACY76KOq/t1H/+41CMqF4EXkNU5SXrHDhdyHqYwPG4A1jfQq8z7upuOksj9ho1sP/I1
+         5mj3cBYWtqhY9tVKYSa6ZXxKw2ZYFV5J6R7t+7pAkmPAUPj5yWvdEnvztFHEP3P6DAiN
+         s0cw==
+X-Forwarded-Encrypted: i=1; AJvYcCVHmoWwuP2kE6JGvFLM6QIDmmBtIMGjQ0vUo8JGqAIamIzfFN6PRiC6eB8RR40TryO2SyqR+NvDLUYIUnHc+0n8maVoUHQFj1aAcjft
+X-Gm-Message-State: AOJu0YyGgvl/jqKsBXxiVBkbZI87j13nlDIxhLY3TsJSackC/zqDhWhF
+	HCG5gF7x5DKUgO4HMBUyyg0rlhEma4drlsdKDA24p5aUgU3jkvbS97NBgypjXVoI5oJvvEQgoum
+	+zJE0YqiGmFXEnNWLKRjASpiCJFBohWUncQmSUq1zKH8T1JGdW5fIz4J5uULwlA==
+X-Received: by 2002:a05:6a00:1d91:b0:6ea:7b62:8e6a with SMTP id z17-20020a056a001d9100b006ea7b628e6amr890208pfw.3.1711670780679;
+        Thu, 28 Mar 2024 17:06:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG28zfJ9JzCjVEKSbcw6s9d1QtV/vjfv4wjAj8ag9KiEynxNesL1GOjadgj+xrHyH8SWoSU3A==
+X-Received: by 2002:a05:6a00:1d91:b0:6ea:7b62:8e6a with SMTP id z17-20020a056a001d9100b006ea7b628e6amr890185pfw.3.1711670780355;
+        Thu, 28 Mar 2024 17:06:20 -0700 (PDT)
 Received: from [10.72.112.41] ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id j23-20020aa78d17000000b006e681769ee0sm2020583pfe.145.2024.03.28.17.05.25
+        by smtp.gmail.com with ESMTPSA id j23-20020aa78d17000000b006e681769ee0sm2020583pfe.145.2024.03.28.17.06.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Mar 2024 17:05:33 -0700 (PDT)
-Message-ID: <93fc9138-7498-4268-9bd2-d5b87f215963@redhat.com>
-Date: Fri, 29 Mar 2024 08:05:20 +0800
+        Thu, 28 Mar 2024 17:06:20 -0700 (PDT)
+Message-ID: <a305940d-723a-4f7e-a54e-cbd84ef8354a@redhat.com>
+Date: Fri, 29 Mar 2024 08:06:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,85 +67,89 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/9] rbd: avoid out-of-range warning
+Subject: Re: [PATCH 2/9] libceph: avoid clang out-of-range warning
 Content-Language: en-US
-To: Alex Elder <elder@ieee.org>, Arnd Bergmann <arnd@kernel.org>,
- linux-kernel@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
- Jens Axboe <axboe@kernel.dk>, Nathan Chancellor <nathan@kernel.org>,
- Alex Elder <elder@inktank.com>, Josh Durgin <josh.durgin@inktank.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
- Dongsheng Yang <dongsheng.yang@easystack.cn>,
+To: Arnd Bergmann <arnd@kernel.org>, linux-kernel@vger.kernel.org,
+ Ilya Dryomov <idryomov@gmail.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Nathan Chancellor <nathan@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Jeff Layton <jlayton@kernel.org>,
  Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
  <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Hannes Reinecke <hare@suse.de>, Christian Brauner <brauner@kernel.org>,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- "Ricardo B. Marliere" <ricardo@marliere.net>,
- Jinjie Ruan <ruanjinjie@huawei.com>, Alex Elder <elder@linaro.org>,
- ceph-devel@vger.kernel.org, linux-block@vger.kernel.org, llvm@lists.linux.dev
+ Milind Changire <mchangir@redhat.com>, Patrick Donnelly
+ <pdonnell@redhat.com>, Christian Brauner <brauner@kernel.org>,
+ ceph-devel@vger.kernel.org, netdev@vger.kernel.org, llvm@lists.linux.dev
 References: <20240328143051.1069575-1-arnd@kernel.org>
- <20240328143051.1069575-4-arnd@kernel.org>
- <b8e848fe-96d8-4f75-a2e9-2ed5c11a2fd7@ieee.org>
+ <20240328143051.1069575-3-arnd@kernel.org>
 From: Xiubo Li <xiubli@redhat.com>
-In-Reply-To: <b8e848fe-96d8-4f75-a2e9-2ed5c11a2fd7@ieee.org>
+In-Reply-To: <20240328143051.1069575-3-arnd@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
-On 3/28/24 22:53, Alex Elder wrote:
-> On 3/28/24 9:30 AM, Arnd Bergmann wrote:
->> From: Arnd Bergmann <arnd@arndb.de>
->>
->> clang-14 points out that the range check is always true on 64-bit
->> architectures since a u32 is not greater than the allowed size:
->>
->> drivers/block/rbd.c:6079:17: error: result of comparison of constant 
->> 2305843009213693948 with expression of type 'u32' (aka 'unsigned 
->> int') is always false 
->> [-Werror,-Wtautological-constant-out-of-range-compare]
-> w
->>              ~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>
->> This is harmless, so just change the type of the temporary to size_t
->> to shut up that warning.
+On 3/28/24 22:30, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 >
-> This fixes the warning, but then the now size_t value is passed
-> to ceph_decode_32_safe(), which implies a different type conversion.
-> That too is not harmful, but...
+> clang-14 points out that on 64-bit architectures, a u32
+> is never larger than constant based on SIZE_MAX:
 >
-> Could we just cast the value in the comparison instead?
+> net/ceph/osdmap.c:1425:10: error: result of comparison of constant 4611686018427387891 with expression of type 'u32' (aka 'unsigned int') is always false [-Werror,-Wtautological-constant-out-of-range-compare]
+>          if (len > (SIZE_MAX - sizeof(*pg)) / sizeof(u32))
+>              ~~~ ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> net/ceph/osdmap.c:1608:10: error: result of comparison of constant 2305843009213693945 with expression of type 'u32' (aka 'unsigned int') is always false [-Werror,-Wtautological-constant-out-of-range-compare]
+>          if (len > (SIZE_MAX - sizeof(*pg)) / (2 * sizeof(u32)))
+>              ~~~ ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 >
->   if ((size_t)snap_count > (SIZE_MAX - sizeof (struct ceph_snap_context))
+> The code is correct anyway, so just shut up that warning.
 >
-> You could drop the space between sizeof and ( while
-> you're at it (I always used the space back then).
+> Fixes: 6f428df47dae ("libceph: pg_upmap[_items] infrastructure")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>   fs/ceph/snap.c    | 2 +-
+>   net/ceph/osdmap.c | 4 ++--
+>   2 files changed, 3 insertions(+), 3 deletions(-)
 >
-Agree.
+> diff --git a/fs/ceph/snap.c b/fs/ceph/snap.c
+> index c65f2b202b2b..521507ea8260 100644
+> --- a/fs/ceph/snap.c
+> +++ b/fs/ceph/snap.c
+> @@ -374,7 +374,7 @@ static int build_snap_context(struct ceph_mds_client *mdsc,
+>   
+>   	/* alloc new snap context */
+>   	err = -ENOMEM;
+> -	if (num > (SIZE_MAX - sizeof(*snapc)) / sizeof(u64))
+> +	if ((size_t)num > (SIZE_MAX - sizeof(*snapc)) / sizeof(u64))
+>   		goto fail;
+>   	snapc = ceph_create_snap_context(num, GFP_NOFS);
+>   	if (!snapc)
+> diff --git a/net/ceph/osdmap.c b/net/ceph/osdmap.c
+> index 295098873861..8e7cb2fde6f1 100644
+> --- a/net/ceph/osdmap.c
+> +++ b/net/ceph/osdmap.c
+> @@ -1438,7 +1438,7 @@ static struct ceph_pg_mapping *__decode_pg_temp(void **p, void *end,
+>   	ceph_decode_32_safe(p, end, len, e_inval);
+>   	if (len == 0 && incremental)
+>   		return NULL;	/* new_pg_temp: [] to remove */
+> -	if (len > (SIZE_MAX - sizeof(*pg)) / sizeof(u32))
+> +	if ((size_t)len > (SIZE_MAX - sizeof(*pg)) / sizeof(u32))
+>   		return ERR_PTR(-EINVAL);
+>   
+>   	ceph_decode_need(p, end, len * sizeof(u32), e_inval);
+> @@ -1621,7 +1621,7 @@ static struct ceph_pg_mapping *__decode_pg_upmap_items(void **p, void *end,
+>   	u32 len, i;
+>   
+>   	ceph_decode_32_safe(p, end, len, e_inval);
+> -	if (len > (SIZE_MAX - sizeof(*pg)) / (2 * sizeof(u32)))
+> +	if ((size_t)len > (SIZE_MAX - sizeof(*pg)) / (2 * sizeof(u32)))
+>   		return ERR_PTR(-EINVAL);
+>   
+>   	ceph_decode_need(p, end, 2 * len * sizeof(u32), e_inval);
+
+
+Reviewed-by: Xiubo Li <xiubli@redhat.com>
+
+Thanks
 
 - Xiubo
 
-
-> -Alex
->
->>
->> Fixes: bb23e37acb2a ("rbd: refactor rbd_header_from_disk()")
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->> ---
->>   drivers/block/rbd.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
->> index 26ff5cd2bf0a..cb25ee513ada 100644
->> --- a/drivers/block/rbd.c
->> +++ b/drivers/block/rbd.c
->> @@ -6062,7 +6062,7 @@ static int rbd_dev_v2_snap_context(struct 
->> rbd_device *rbd_dev,
->>       void *p;
->>       void *end;
->>       u64 seq;
->> -    u32 snap_count;
->> +    size_t snap_count;
->>       struct ceph_snap_context *snapc;
->>       u32 i;
->
->
 
