@@ -1,230 +1,210 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14AE61E516
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 02:08:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122B52C68C;
+	Fri, 29 Mar 2024 02:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711678100; cv=none; b=KIyxc9srX1kuq6O5JY/W1v0sO/P/DE9uG1y0oQDHwMbzNdn0iWQ2x1AG6RzXWag4/JHUdGEX5ZGJ5lkjBb3ePzYdjvRavlzwfMSsOqL9HjDWZwYLB49Wxug0A+47qyl3kerCAnIgLISt6Kiy0VcBPzslIap87ZWioSbx32B79zM=
+	t=1711678178; cv=none; b=RDdMbRO3MABg4zzNIVbfMNVvm7fAI24g8AuHZVAMRSNQyI/MiKbjcMTqApLuQoUEd4THM1zDbuhWQGdDYfgLT9ofOKUUQtlnAKi0nJ/tAtXS2uMHl89Le9RjPLaI8fYJKCkaUt9IFGPmuoHBUgZNjhEi5fGscIB8I1+dQ01ueOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711678100; c=relaxed/simple;
-	bh=dKZD1mCUX8lAyUbGN2qUjdW4OBAkBdD2j0gBbpJsO/8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lyIy58lzqQXJIeedv98PjmV01t4eB6+k4qe8oPjscQbDL65b07GvlKR3XKX6q2kJNiMcS9Ix6817OOCp4yLSYpbvIvVhgOy2pXhrQfhaBPCRSjy/z99AQx1AP6SgqFTgUkmjyfB6YPFZzPacsW4p0CIqb60do/1wE2/Bdu79NJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aDIDpJ0O; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711678178; c=relaxed/simple;
+	bh=FSsoc2bilwBnLscLx6U4GiKDrWPS92uMLAaFdcmDj7k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=h9V9bqNfxUhPAzPS0IVL+Aw1QSJlxyf6iLOKVsth1H8oTHM8qSwOe+20KYlJ18CjEvCuogxcFg+96pfmvDDI2jliiYVAYl6dHqQPZVIQfqjVWqkXoVwmigNB46vXZITZVywV6jFt24wykjN4Oo+qn+JuTdKqqiGNtLPCn60dvyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kTxu05Wi; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aDIDpJ0O"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2a02c4dffd2so1357794a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 19:08:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711678098; x=1712282898; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pX+xlgHnVO0ivx09FP8o5h5//8YYHu0/1HElauId9Hc=;
-        b=aDIDpJ0O4AeTAPY5V4YeZumnf9Ld3Pb/99Hvgb1TiE1bUtpul+6lf3WSQMLaDxc6ph
-         LnfxoKSfAv7BDc46lXbwa6jBu5JvhmRhsEodvI56lEbhA0V4XCczic+kf4jtZffn3DUB
-         ELOhZdJL0etOkD8MyWvFlf55xYuvvhYCm/RRu6/90LtQtXym+lYn2kQxBDeTIIkH9jaF
-         +EIHvIK8HrwGHGMoaJ1v3XxMjYDXHjmYRlhALIlMPNmxSxAN85Yb/0O5D02uXrDu4Jbz
-         DtWUMZGiJ/nlVRVd3nzJqu9w8FrIcVrb1fx2zFyOI9flUFFPtPljzRnSsxkHe8W9sY+E
-         SUMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711678098; x=1712282898;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pX+xlgHnVO0ivx09FP8o5h5//8YYHu0/1HElauId9Hc=;
-        b=D8OGZ0f7R5xFsIqI9/6yUqB0kgYVEKwuS/IVE33SYU/YJ2GAL0vE54gqWHDBiFIYsK
-         l5NTL3ralufpSsEk8jfErL43QiTD8wmF0vpuGRCsdP4P3WQzU1QgCRRzcgL4k8M5rpDb
-         I9t6y8sXSosEbiwWZ8WQDT+3yH9JTFniSddWBjE0xZ7xCEpXqv9eYAmRjx4RQxckJjG6
-         wT1FtCPOn37HiF06PzdCYkNGnVOYHmr97CPNFiWcjbnwmbKxyJI2wYw8VSaKkrGIXqf9
-         wxe8k+AzsAcA67Mz1HoY23nrlSDsZhWigxE8c9OwG+Z2wv8SeLTR10dJoZKUUUUjvqIh
-         5G4w==
-X-Forwarded-Encrypted: i=1; AJvYcCXZO6UcVuKTWNXV0LVlIeqgyO9T+tHFzd2DwogNmSfp3DnbKoAMhl8zxmJ49FibGzq9MeNyKaZDzCZi9cWhx3jWcEehpqlxxYSgdvBf
-X-Gm-Message-State: AOJu0YxIIMzSEAlH3+Lgy0krOm7bLiL0+eIvpSDqM+sONh6Z8qmVbnh5
-	r/4NA5NU1l0aM3oaJlAwDSYr+QFggzLu8cMh55iPf71fLtZK7Erq
-X-Google-Smtp-Source: AGHT+IE7IqJneESPBHa+urV0DUyTJuu7Hvj39VAciEXrUZR4Z+cDeodTKTkbmTfLnIKtMFA+cOXLDQ==
-X-Received: by 2002:a17:90a:1116:b0:2a0:3d59:4632 with SMTP id d22-20020a17090a111600b002a03d594632mr1250548pja.15.1711678098273;
-        Thu, 28 Mar 2024 19:08:18 -0700 (PDT)
-Received: from localhost (dhcp-141-239-158-86.hawaiiantel.net. [141.239.158.86])
-        by smtp.gmail.com with ESMTPSA id 3-20020a17090a0cc300b002a20c0dcebbsm1317772pjt.31.2024.03.28.19.08.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 19:08:17 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Thu, 28 Mar 2024 16:08:16 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Alex Shi <alexs@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Barry Song <song.bao.hua@hisilicon.com>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: for_each_domain()/sched_domain_span() has offline CPUs (was Re:
- [PATCH 2/2] timers: Fix removed self-IPI on global timer's enqueue in
- nohz_full)
-Message-ID: <ZgYikMb5kZ7rxPp6@slm.duckdns.org>
-References: <1b5752c8-ef32-4ed4-b539-95d507ec99ce@paulmck-laptop>
- <ZfsLtMijRrNZfqh6@localhost.localdomain>
- <6a95b6ac-6681-4492-b155-e30c19bb3341@paulmck-laptop>
- <ZfwdEROGFFmIbkCM@lothringen>
- <bf8689c2-0749-47cb-9535-53cf66e34f5e@paulmck-laptop>
- <Zf1sSv/6mQHJuJ8G@lothringen>
- <Zf2GDjekyemQKn7I@lothringen>
- <xhsmhwmppaqls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <87cyrfe7a3.ffs@tglx>
- <xhsmhle62ay5f.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kTxu05Wi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711678176; x=1743214176;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=FSsoc2bilwBnLscLx6U4GiKDrWPS92uMLAaFdcmDj7k=;
+  b=kTxu05WihevV2ekoa9ehtieAgJVBXLf9PC3nTfzUQZkywYhRbVkWCFd5
+   m9lLRjz35/eh+fbkYpD5RY/NfL1dDDBRY9lc2DJGEY77z4vhFwTmi/Wfc
+   29G9lzsWoBY4TGFrX7ovtkRihUcoZSCmib43qdUgxv64h4P0s3sDUhyKK
+   3a+Y46pFEwmTV9qSaNDDjETgSU6yZqqFiD1JsFB42ZDghPPZeOVbhxd0d
+   q2M+aaJ2dJWsqPU3lzITFLgTcgOuddeHfdTlxG6bC6NI9gBq00uLbXPJt
+   tYE1eBpgsJdB+JSrJLaGJhRBKcAz3M2e+RDWIJfiThv2bD1AimhaQvOJ5
+   Q==;
+X-CSE-ConnectionGUID: GaWborRxRRqH+K5VqPwN/A==
+X-CSE-MsgGUID: 6ftjLkmGRYWujFrMuMJ0Rg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="6700009"
+X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
+   d="scan'208";a="6700009"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 19:09:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
+   d="scan'208";a="17301369"
+Received: from chang-linux-3.sc.intel.com ([172.25.66.175])
+  by orviesa006.jf.intel.com with ESMTP; 28 Mar 2024 19:09:34 -0700
+From: "Chang S. Bae" <chang.seok.bae@intel.com>
+To: linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	dm-devel@redhat.com
+Cc: ebiggers@kernel.org,
+	luto@kernel.org,
+	dave.hansen@linux.intel.com,
+	tglx@linutronix.de,
+	bp@alien8.de,
+	mingo@kernel.org,
+	x86@kernel.org,
+	herbert@gondor.apana.org.au,
+	ardb@kernel.org,
+	elliott@hpe.com,
+	dan.j.williams@intel.com,
+	bernie.keany@intel.com,
+	charishma1.gairuboyina@intel.com,
+	chang.seok.bae@intel.com
+Subject: [PATCH v9 00/14] x86: Support Key Locker
+Date: Thu, 28 Mar 2024 18:53:32 -0700
+Message-Id: <20240329015346.635933-1-chang.seok.bae@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230603152227.12335-1-chang.seok.bae@intel.com>
+References: <20230603152227.12335-1-chang.seok.bae@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <xhsmhle62ay5f.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+Content-Transfer-Encoding: 8bit
 
-(cc'ing Waiman and quoting whole body)
+Hi all,
 
-Hello,
+As posting this version, I wanted to make sure these code changes were
+acknowledgeable at first:
 
-On Thu, Mar 28, 2024 at 09:39:56PM +0100, Valentin Schneider wrote:
-> On 27/03/24 21:42, Thomas Gleixner wrote:
-> > On Tue, Mar 26 2024 at 17:46, Valentin Schneider wrote:
-> >> On 22/03/24 14:22, Frederic Weisbecker wrote:
-> >>> On Fri, Mar 22, 2024 at 12:32:26PM +0100, Frederic Weisbecker wrote:
-> >> Now, on top of the above, there's one more thing worth noting:
-> >>   cpu_up_down_serialize_trainwrecks()
-> >>
-> >> This just flushes the cpuset work, so after that the sched_domain topology
-> >> should be sane. However I see it's invoked at the tail end of _cpu_down(),
-> >> IOW /after/ takedown_cpu() has run, which sounds too late. The comments
-> >> around this vs. lock ordering aren't very reassuring however, so I need to
-> >> look into this more.
-> >
-> > commit b22afcdf04c96ca58327784e280e10288cfd3303 has more information in
-> > the change log.
-> >
-> > TLDR: The problem is that cpusets have the lock order cpuset_mutex ->
-> > cpu_hotplug_lock in the hotplug path for whatever silly reason. So
-> > trying to flush the work from within the cpu hotplug lock write held
-> > region is guaranteed to dead lock.
-> >
-> > That's why all of this got deferred to a work queue. The flush at the
-> > end of the hotplug code after dropping the hotplug lock is there to
-> > prevent that user space sees the CPU hotplug uevent before the work is
-> > done. But of course between bringing the CPU offline and the flush the
-> > kernel internal state is inconsistent.
-> >
-> 
-> Thanks for the summary!
-> 
-> > There was an attempt to make the CPU hotplug path synchronous in commit
-> > a49e4629b5ed ("cpuset: Make cpuset hotplug synchronous") which got
-> > reverted with commit 2b729fe7f3 for the very wrong reason:
-> >
-> > https://lore.kernel.org/all/F0388D99-84D7-453B-9B6B-EEFF0E7BE4CC@lca.pw/T/#u
-> >
-> >  (cpu_hotplug_lock){++++}-{0:0}:
-> >   lock_acquire+0xe4/0x25c
-> >   cpus_read_lock+0x50/0x154
-> >   static_key_slow_inc+0x18/0x30
-> >   mem_cgroup_css_alloc+0x824/0x8b0
-> >   cgroup_apply_control_enable+0x1d8/0x56c
-> >   cgroup_apply_control+0x40/0x344
-> >   cgroup_subtree_control_write+0x664/0x69c
-> >   cgroup_file_write+0x130/0x2e8
-> >   kernfs_fop_write+0x228/0x32c
-> >   __vfs_write+0x84/0x1d8
-> >   vfs_write+0x13c/0x1b4
-> >   ksys_write+0xb0/0x120
-> >
-> > Instead of the revert this should have been fixed by doing:
-> >
-> > +  cpus_read_lock();
-> >    mutex_lock();
-> >    mem_cgroup_css_alloc();
-> > -  static_key_slow_inc();
-> > +  static_key_slow_inc_cpuslocked();
-> >
-> 
-> So looking at the state of things now, writing to the
-> cgroup.subtree_control file looks like: 
-> 
->   cgroup_file_write()
->   `\
->     cgroup_subtree_control_write()
->     `\
->       cgroup_kn_lock_live()
->       `\
->       | cgroup_lock()
->       | `\
->       |   mutex_lock(&cgroup_mutex);
->       |
->       cgroup_apply_control()
->       `\
->         cgroup_apply_control_enable()
->         `\
->           css_create()
->           `\
->             ss->css_alloc() [mem_cgroup_css_alloc()]
->             `\
->               static_branch_inc()        
-> 
-> and same with cgroup_mkdir(). So if we want to fix the ordering that caused
-> the revert, we'd probably want to go for:
-> 
->   static inline void cgroup_lock(void)
->   {
-> +       cpus_read_lock();
-> 	mutex_lock(&cgroup_mutex);
->   }
-> 
->   static inline void cgroup_unlock(void)
->   {
-> 	mutex_unlock(&cgroup_mutex);
-> -       cpus_read_unlock();        
->   }
-> 
-> + a handful of +_cpuslocked() changes.
-> 
-> As for cpuset, it looks like it's following this lock order:
-> 
-> 	cpus_read_lock();
-> 	mutex_lock(&cpuset_mutex);
-> 
-> Which AFAICT is what we want.
-> 
-> > Sorry that I did not notice this back then because I was too focussed on
-> > fixing that uevent nonsense in a halfways sane way.
-> >
-> > After that revert cpuset locking became completely insane.
-> >
-> > cpuset_hotplug_cpus_read_trylock() is the most recent but also the most
-> > advanced part of that insanity. Seriously this commit is just tasteless
-> > and disgusting demonstration of how to paper over a problem which is not
-> > fully understood.
-> >
-> > After staring at it some more (including the history which led up to
-> > these insanities) I really think that the CPU hotplug path can be made
-> > truly synchronous and the memory hotplug path should just get the lock
-> > ordering correct.
-> >
-> > Can we please fix this for real and get all of this insanity out of the
-> > way
-> 
-> Yes please!
+The previous enabling process has been paused to address vulnerabilities
+[1][2] that could compromise Key Locker's ability to protect AES keys.
+Now, with the mainlining of mitigations [3][4], patches (Patch 10-11)
+were added to ensure the application of these mitigations.
 
-Yeah, making that operation synchronous would be nice. Waiman, you're a lot
-more familiar with this part than I am. Can you please take a look and see
-whether we can turn the sched domain updates synchronous?
+During this period, there was a significant change in the mainline commit
+b81fac906a8f ("x86/fpu: Move FPU initialization into
+arch_cpu_finalize_init()"). This affected Key Locker's initialization
+code, which clobbers XMM registers for loading a wrapping key, as it
+depends on FPU initialization.
 
-Thanks.
+In this revision, the setup code was adjusted to separate the
+initialization part to be invoked during arch_initcall(). The remaining
+code for copying the wrapping key from the backup resides in the
+identify_cpu() -> setup_keylocker() path. This separation simplifies the
+code and resolves an issue with hotplug.
 
+The remaining changes mainly focus on the AES crypto driver, addressing
+feedback from Eric. Notably, while doing so, it was realized better to
+disallow a module build. Key Locker's AES instructions do not support
+192-bit keys. Supporting a module build would require exporting some
+AES-NI functions, leading to performance-impacting indirect calls. I
+think we can revisit module support later if necessary.
+
+Then, the following is a summary of changes per patch since v8 [6]:
+
+PATCH7-8:
+* Invoke the setup code via arch_initcall() due to upstream changes
+  delaying the FPU setup.
+
+PATCH9-11:
+* Add new patches for security and hotplug support clarification
+
+PATCH12:
+* Drop the "nokeylocker" option. (Borislav Petkov)
+
+PATCH13:
+* Introduce 'union x86_aes_ctx'. (Eric Biggers)
+* Ensure 'inline' for wrapper functions.
+
+PATCH14:
+* Combine the XTS enc/dec assembly code in a macro.  (Eric Biggers)
+* Define setkey() as void instead of returning 'int'.  (Eric Biggers)
+* Rearrange the assembly code to reduce jumps, especially for success
+  cases.  (Eric Biggers)
+* Update the changelog for clarification. (Eric Biggers)
+* Exclude module build.
+
+This series is based on my AES-NI setkey() cleanup [7], which has been
+recently merged into the crypto repository [8], and I thought it was
+better to go first. You can also find this series here:
+    git://github.com/intel-staging/keylocker.git kl-v9
+
+Thanks,
+Chang
+
+[1] Gather Data Sampling (GDS)
+    https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/technical-documentation/gather-data-sampling.html
+[2] Register File Data Sampling (RFDS)
+    https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/advisory-guidance/register-file-data-sampling.html
+[3] Mainlining of GDS mitigation
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=64094e7e3118aff4b0be8ff713c242303e139834
+[4] Mainlining of RFDS Mitigation
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0e33cf955f07e3991e45109cb3e29fbc9ca51d06
+[5]  Initialize FPU late
+    https://lore.kernel.org/lkml/168778151512.3634408.11432553576702911909.tglx@vps.praguecc.cz/
+[6] V8: https://lore.kernel.org/lkml/20230603152227.12335-1-chang.seok.bae@intel.com/
+[7] https://lore.kernel.org/lkml/20240322230459.456606-1-chang.seok.bae@intel.com/
+[8] git://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git
+
+Chang S. Bae (14):
+  Documentation/x86: Document Key Locker
+  x86/cpufeature: Enumerate Key Locker feature
+  x86/insn: Add Key Locker instructions to the opcode map
+  x86/asm: Add a wrapper function for the LOADIWKEY instruction
+  x86/msr-index: Add MSRs for Key Locker wrapping key
+  x86/keylocker: Define Key Locker CPUID leaf
+  x86/cpu/keylocker: Load a wrapping key at boot time
+  x86/PM/keylocker: Restore the wrapping key on the resume from ACPI
+    S3/4
+  x86/hotplug/keylocker: Ensure wrapping key backup capability
+  x86/cpu/keylocker: Check Gather Data Sampling mitigation
+  x86/cpu/keylocker: Check Register File Data Sampling mitigation
+  x86/Kconfig: Add a configuration for Key Locker
+  crypto: x86/aes - Prepare for new AES-XTS implementation
+  crypto: x86/aes-kl - Implement the AES-XTS algorithm
+
+ Documentation/arch/x86/index.rst            |   1 +
+ Documentation/arch/x86/keylocker.rst        |  96 +++++
+ arch/x86/Kconfig                            |   3 +
+ arch/x86/Kconfig.assembler                  |   5 +
+ arch/x86/crypto/Kconfig                     |  17 +
+ arch/x86/crypto/Makefile                    |   3 +
+ arch/x86/crypto/aes-helper_asm.S            |  22 ++
+ arch/x86/crypto/aes-helper_glue.h           | 168 ++++++++
+ arch/x86/crypto/aeskl-intel_asm.S           | 412 ++++++++++++++++++++
+ arch/x86/crypto/aeskl-intel_glue.c          | 187 +++++++++
+ arch/x86/crypto/aeskl-intel_glue.h          |  35 ++
+ arch/x86/crypto/aesni-intel_asm.S           |  47 +--
+ arch/x86/crypto/aesni-intel_glue.c          | 193 ++-------
+ arch/x86/crypto/aesni-intel_glue.h          |  40 ++
+ arch/x86/include/asm/cpufeatures.h          |   1 +
+ arch/x86/include/asm/disabled-features.h    |   8 +-
+ arch/x86/include/asm/keylocker.h            |  42 ++
+ arch/x86/include/asm/msr-index.h            |   6 +
+ arch/x86/include/asm/special_insns.h        |  28 ++
+ arch/x86/include/uapi/asm/processor-flags.h |   2 +
+ arch/x86/kernel/Makefile                    |   1 +
+ arch/x86/kernel/cpu/common.c                |   4 +-
+ arch/x86/kernel/cpu/cpuid-deps.c            |   1 +
+ arch/x86/kernel/keylocker.c                 | 219 +++++++++++
+ arch/x86/lib/x86-opcode-map.txt             |  11 +-
+ arch/x86/power/cpu.c                        |   2 +
+ tools/arch/x86/lib/x86-opcode-map.txt       |  11 +-
+ 27 files changed, 1363 insertions(+), 202 deletions(-)
+ create mode 100644 Documentation/arch/x86/keylocker.rst
+ create mode 100644 arch/x86/crypto/aes-helper_asm.S
+ create mode 100644 arch/x86/crypto/aes-helper_glue.h
+ create mode 100644 arch/x86/crypto/aeskl-intel_asm.S
+ create mode 100644 arch/x86/crypto/aeskl-intel_glue.c
+ create mode 100644 arch/x86/crypto/aeskl-intel_glue.h
+ create mode 100644 arch/x86/crypto/aesni-intel_glue.h
+ create mode 100644 arch/x86/include/asm/keylocker.h
+ create mode 100644 arch/x86/kernel/keylocker.c
+
+
+base-commit: 3a447c31d337bdec7fbc605a7a1e00aff4c492d0
 -- 
-tejun
+2.34.1
+
