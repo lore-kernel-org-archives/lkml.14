@@ -1,142 +1,220 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EBA8564C;
-	Fri, 29 Mar 2024 12:56:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BE91C0DEE
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 13:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711716979; cv=none; b=i8F1IsfBWq+B7xjFCJq3mIapxFXnGLhuFitnHiJlUjDpoCwrAOiLOV1l49YXyQmesx5tTni8d/w5oPv3hBOaanKWxavoAs9Pbds6qGP8OihIeVPYjEvGLMCo/l+CagtMBKzfmfd1Vr3hfDPvrbP4hy8msKc10bh78TK4P5xpbbA=
+	t=1711717342; cv=none; b=XHFzsSt15pnEr/O6duspZfsXam7JS/w89ubbk2z8bD1fAncWTCseWklYAugjrloTSJtYg5xIA14lQTAXqJOXepPRyNj2H6g1E6BFBNo3MOjNw0EzMAsd2gCxabG45zJQzNioAarUawMXJaXkW26acuzbqQONNrplyHl8zePdma0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711716979; c=relaxed/simple;
-	bh=giiR5PK117e80LYqQREc6Pn73ncvElpx/Bps6tfm1ho=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SuyiPfEl2lqcqFcWKTieczZg5wTISqqS+FoT3PWGid1KJ9xuG5kYQCwhYwJL+IcfvQhWmBGfQu3v15IWcqpoKau7AjLoPbuAX9rHdFLqdGCKmuoARGM+3U44NQPAnOBbJ7QNoRQQ6Jq856e8HT5VOsgdF5jusqAAEHNi8GMJBxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jSKZFmf3; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711717342; c=relaxed/simple;
+	bh=c+1ZeFaaDmnKz5Vjo8G1Iz7uVJGxgmB2tDVp7hqd8mw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vCzY93Xru/JDajD33HUs0Sa+5mw1oZtfqaXfMnpVI0x6LaHnxMppAfG6UfQnAcvkyP1c1iah7/t7xF+FAdqEq3Ra5yJt5wJrjvO2KnPT3/x5iFJ/+oVjdmEnxre7BJi0u3enM+oQVe9Ujwc5XXEc/xiTlKsD+10Qo2Zkk1J1eas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jI628nSq; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jSKZFmf3"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-56c441e66a5so2579533a12.0;
-        Fri, 29 Mar 2024 05:56:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711716976; x=1712321776; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jhb/ZNVtFOVdFjvoqvyjgcThge4E4KdOyihLh4rO7KA=;
-        b=jSKZFmf31y/X6uPdyGVth2KstcFd+zd92rkDJxWjOvucWf5RVlZv/WJGRIjic90V/z
-         LPR1sVI8et9iBwaHxv+2LbInAi3MtjutUehiUJMCbG4hBiwmnnvcelYUqSlbPs5EvAIA
-         Acs0ZnTt5GP+85fLYJ5hC4izNKkesxlPkx3LMNHmBJg7DKnwLwcWEPjqbYlKQxZ9YZ2F
-         6uww1C1ko93mQz81gJC9Uo52icbDqtKlB2u0J43P+SjCZJvdaZpAxtW1aGTNXEAx8ruP
-         Pn1ekzC7zN2mt9bNZCckGJZWK0jNMXIU4askJfIKuaT/Nsmd7aieTIX6fRrMeYMletWK
-         2R4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711716976; x=1712321776;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jhb/ZNVtFOVdFjvoqvyjgcThge4E4KdOyihLh4rO7KA=;
-        b=vtSqTkJgmYn/N3cG32kNXUfWoOD7hPDhkUPjx6GLpW+DNYDETtpY0rP8tu2zxQPtSU
-         W7GUM9E9jsYOVv5sh9sYEf6C2+mqZQMuCCkwq/hDpPxAey5asOi9ikObJarT+p2TtwyV
-         jV+wi11HSso+pbsSyM5vIa+mEnaNXIy1fdMzvvZLhk9iWHEqmJyVmOHFr/V0uI2Tp8E7
-         Rh5xqDb0xGjByNJwMt9mlMqtPFYUhHDgeXYcH6AY2TaM1z14DAFEfv96k/EKFxz8Dhdf
-         iYqf4wijkiwWPg1kplZWd5+DYowi/osVYvMePkCLmZJAyJ8fqrYtWLF+2+WHUUMhX4En
-         9+XA==
-X-Forwarded-Encrypted: i=1; AJvYcCV3FlUTz6d3TCtcTJUUUxb58WGpblIMLt5ktnMzyAlOb9fpGvKXe+9NKw69QsqVN/o5A2BOeEnsFVC7RU5tbGb3+6jeXvK1FDMHzmLWMv6GbRsHIE0G7hWLLNBWQfZ/B4n6GZ6u/LvYyL4xgK0=
-X-Gm-Message-State: AOJu0YwuRO2Y923+s9H47itvK1PMt0zQLKp1ALqYe7gtDGMnhslGPp0d
-	gx3QacBZ/fh2/tfRkuD9BTkEsaB8lYuUxKa19BjIDIsoG175HiqV
-X-Google-Smtp-Source: AGHT+IHGPWvOGzQDAj+fZIR/IrGdh825/Sa8pgKD31+sRZhZp4d9wY2dHrBfikuf39Ic1r/fig0JGw==
-X-Received: by 2002:a17:906:a3d6:b0:a4e:360:c979 with SMTP id ca22-20020a170906a3d600b00a4e0360c979mr1425731ejb.48.1711716976038;
-        Fri, 29 Mar 2024 05:56:16 -0700 (PDT)
-Received: from shift.daheim (p200300d5ff0d9a0050f496fffe46beef.dip0.t-ipconnect.de. [2003:d5:ff0d:9a00:50f4:96ff:fe46:beef])
-        by smtp.gmail.com with ESMTPSA id wr1-20020a170907700100b00a473a0f3384sm1916914ejb.16.2024.03.29.05.56.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Mar 2024 05:56:15 -0700 (PDT)
-Received: from localhost.daheim ([127.0.0.1])
-	by shift.daheim with esmtp (Exim 4.97)
-	(envelope-from <chunkeey@gmail.com>)
-	id 1rqBgA-0000000023J-2lZ6;
-	Fri, 29 Mar 2024 13:56:15 +0100
-Message-ID: <74f9afdc-6227-4daa-b501-640b701e2c8b@gmail.com>
-Date: Fri, 29 Mar 2024 13:56:15 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jI628nSq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711717339;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yN1Le78gH2spFQsvHwZ2DbTI7S30kof/5Z3400NZP38=;
+	b=jI628nSq5RS4UunOwBWakCx3i0K0W1KK5PGfvrE1iWT9V60HAn86qnQuW3aVj1N0s4DjPc
+	fREazcdRM2QB5EHVbaMVVD6L/JWYyThyDmWzI5qkRsfG3ivOA+ii5316dZ+rXTUV2eUwF2
+	NqLJQL1cZq6s2yvh3kS4FCiqrptpHO0=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-226-Kgz-TJJCPN2MsAeuWC5f0w-1; Fri,
+ 29 Mar 2024 09:02:12 -0400
+X-MC-Unique: Kgz-TJJCPN2MsAeuWC5f0w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4504C3C02788;
+	Fri, 29 Mar 2024 13:02:12 +0000 (UTC)
+Received: from bfoster (unknown [10.22.16.57])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E09040C6CB4;
+	Fri, 29 Mar 2024 13:02:11 +0000 (UTC)
+Date: Fri, 29 Mar 2024 09:04:09 -0400
+From: Brian Foster <bfoster@redhat.com>
+To: Kemeng Shi <shikemeng@huaweicloud.com>
+Cc: akpm@linux-foundation.org, willy@infradead.org, jack@suse.cz,
+	tj@kernel.org, dsterba@suse.com, mjguzik@gmail.com,
+	dhowells@redhat.com, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] writeback: collect stats of all wb of bdi in
+ bdi_debug_stats_show
+Message-ID: <Zga8Sf1DIxMevdcw@bfoster>
+References: <20240327155751.3536-1-shikemeng@huaweicloud.com>
+ <20240327155751.3536-3-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] [RESEND] wifi: carl9170: re-fix fortified-memset
- warning
-To: Arnd Bergmann <arnd@kernel.org>, Kees Cook <keescook@chromium.org>,
- Kalle Valo <kvalo@kernel.org>, Johannes Berg <johannes.berg@intel.com>
-Cc: linux-hardening@vger.kernel.org, =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vu?=
- =?UTF-8?Q?sen?= <toke@toke.dk>, linux-wireless@vger.kernel.org,
- Arnd Bergmann <arnd@arndb.de>, Colin Ian King <colin.i.king@gmail.com>,
- linux-kernel@vger.kernel.org
-References: <20240328135509.3755090-1-arnd@kernel.org>
- <20240328135509.3755090-2-arnd@kernel.org>
-Content-Language: de-DE
-From: Christian Lamparter <chunkeey@gmail.com>
-In-Reply-To: <20240328135509.3755090-2-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240327155751.3536-3-shikemeng@huaweicloud.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-On 3/28/24 2:55 PM, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Wed, Mar 27, 2024 at 11:57:47PM +0800, Kemeng Shi wrote:
+> /sys/kernel/debug/bdi/xxx/stats is supposed to show writeback information
+> of whole bdi, but only writeback information of bdi in root cgroup is
+> collected. So writeback information in non-root cgroup are missing now.
+> To be more specific, considering following case:
 > 
-> The carl9170_tx_release() function sometimes triggers a fortified-memset
-> warning in my randconfig builds:
+> /* create writeback cgroup */
+> cd /sys/fs/cgroup
+> echo "+memory +io" > cgroup.subtree_control
+> mkdir group1
+> cd group1
+> echo $$ > cgroup.procs
+> /* do writeback in cgroup */
+> fio -name test -filename=/dev/vdb ...
+> /* get writeback info of bdi */
+> cat /sys/kernel/debug/bdi/xxx/stats
+> The cat result unexpectedly implies that there is no writeback on target
+> bdi.
 > 
-> In file included from include/linux/string.h:254,
->                   from drivers/net/wireless/ath/carl9170/tx.c:40:
-> In function 'fortify_memset_chk',
->      inlined from 'carl9170_tx_release' at drivers/net/wireless/ath/carl9170/tx.c:283:2,
->      inlined from 'kref_put' at include/linux/kref.h:65:3,
->      inlined from 'carl9170_tx_put_skb' at drivers/net/wireless/ath/carl9170/tx.c:342:9:
-> include/linux/fortify-string.h:493:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
->    493 |                         __write_overflow_field(p_size_field, size);
+> Fix this by collecting stats of all wb in bdi instead of only wb in
+> root cgroup.
 > 
-> Kees previously tried to avoid this by using memset_after(), but it seems
-> this does not fully address the problem. I noticed that the memset_after()
-> here is done on a different part of the union (status) than the original
-> cast was from (rate_driver_data), which may confuse the compiler.
+> Following domain hierarchy is tested:
+>                 global domain (320G)
+>                 /                 \
+>         cgroup domain1(10G)     cgroup domain2(10G)
+>                 |                 |
+> bdi            wb1               wb2
 > 
-> Unfortunately, the memset_after() trick does not work on driver_rates[]
-> because that is part of an anonymous struct, and I could not get
-> struct_group() to do this either. Using two separate memset() calls
-> on the two members does address the warning though.
+> /* all writeback info of bdi is successfully collected */
+> cat stats
+> BdiWriteback:             2912 kB
+> BdiReclaimable:        1598464 kB
+> BdiDirtyThresh:      167479028 kB
+> DirtyThresh:         195038532 kB
+> BackgroundThresh:     32466728 kB
+> BdiDirtied:           19141696 kB
+> BdiWritten:           17543456 kB
+> BdiWriteBandwidth:     1136172 kBps
+> b_dirty:                     2
+> b_io:                        0
+> b_more_io:                   1
+> b_dirty_time:                0
+> bdi_list:                    1
+> state:                       1
 > 
-> Fixes: fb5f6a0e8063b ("mac80211: Use memset_after() to clear tx status")
-> Link: https://lore.kernel.org/lkml/20230623152443.2296825-1-arnd@kernel.org/
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-Sure... though I think AI-supported compilers will in the future nag about
-this again. Oh well!
-
-Acked-by: Christian Lamparter <chunkeey@gmail.com>
-
-
+> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
 > ---
-> I found this while testing randconfig builds, a .config that shows this
-> for me is at https://pastebin.com/yWFKvZYu
+>  mm/backing-dev.c | 100 +++++++++++++++++++++++++++++++++--------------
+>  1 file changed, 71 insertions(+), 29 deletions(-)
 > 
-> Sorry I failed to follow up to Kees' request for a reproducer when
-> I posted this last year.
-> ---
->   drivers/net/wireless/ath/carl9170/tx.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wireless/ath/carl9170/tx.c b/drivers/net/wireless/ath/carl9170/tx.c
-> index e902ca80eba7..0226c31a6cae 100644
-> --- a/drivers/net/wireless/ath/carl9170/tx.c
-> +++ b/drivers/net/wireless/ath/carl9170/tx.c
-> @@ -280,7 +280,8 @@ static void carl9170_tx_release(struct kref *ref)
->   	 * carl9170_tx_fill_rateinfo() has filled the rate information
->   	 * before we get to this point.
->   	 */
-> -	memset_after(&txinfo->status, 0, rates);
-> +	memset(&txinfo->pad, 0, sizeof(txinfo->pad));
-> +	memset(&txinfo->rate_driver_data, 0, sizeof(txinfo->rate_driver_data));
+> diff --git a/mm/backing-dev.c b/mm/backing-dev.c
+> index 70f02959f3bd..8daf950e6855 100644
+> --- a/mm/backing-dev.c
+> +++ b/mm/backing-dev.c
+...
+> @@ -65,16 +78,54 @@ static struct backing_dev_info *lookup_bdi(struct seq_file *m)
+>  	return NULL;
+>  }
+>  
+> +static void collect_wb_stats(struct wb_stats *stats,
+> +			     struct bdi_writeback *wb)
+> +{
+> +	struct inode *inode;
+> +
+> +	spin_lock(&wb->list_lock);
+> +	list_for_each_entry(inode, &wb->b_dirty, i_io_list)
+> +		stats->nr_dirty++;
+> +	list_for_each_entry(inode, &wb->b_io, i_io_list)
+> +		stats->nr_io++;
+> +	list_for_each_entry(inode, &wb->b_more_io, i_io_list)
+> +		stats->nr_more_io++;
+> +	list_for_each_entry(inode, &wb->b_dirty_time, i_io_list)
+> +		if (inode->i_state & I_DIRTY_TIME)
+> +			stats->nr_dirty_time++;
+> +	spin_unlock(&wb->list_lock);
+> +
+> +	stats->nr_writeback += wb_stat(wb, WB_WRITEBACK);
+> +	stats->nr_reclaimable += wb_stat(wb, WB_RECLAIMABLE);
+> +	stats->nr_dirtied += wb_stat(wb, WB_DIRTIED);
+> +	stats->nr_written += wb_stat(wb, WB_WRITTEN);
+> +	stats->wb_thresh += wb_calc_thresh(wb, stats->dirty_thresh);
 
+Kinda nitty question, but is this a sum of per-wb writeback thresholds?
+If so, do you consider that useful information vs. the per-wb threshold
+data presumably exposed in the next patch?
+
+I'm not really that worried about what debug data we expose, it just
+seems a little odd. How would you document this value in a sentence or
+two, for example?
+
+> +}
+> +
+> +#ifdef CONFIG_CGROUP_WRITEBACK
+> +static void bdi_collect_stats(struct backing_dev_info *bdi,
+> +			      struct wb_stats *stats)
+> +{
+> +	struct bdi_writeback *wb;
+> +
+> +	list_for_each_entry_rcu(wb, &bdi->wb_list, bdi_node)
+> +		collect_wb_stats(stats, wb);
+
+Depending on discussion on the previous patch and whether the higher
+level rcu protection in bdi_debug_stats_show() is really necessary, it
+might make more sense to move it here.
+
+I'm also wondering if you'd want to check the state of the individual wb
+(i.e. WB_registered?) before reading it..?
+
+> +}
+> +#else
+> +static void bdi_collect_stats(struct backing_dev_info *bdi,
+> +			      struct wb_stats *stats)
+> +{
+> +	collect_wb_stats(stats, &bdi->wb);
+> +}
+> +#endif
+...
+> @@ -115,18 +157,18 @@ static int bdi_debug_stats_show(struct seq_file *m, void *v)
+>  		   "b_dirty_time:       %10lu\n"
+>  		   "bdi_list:           %10u\n"
+>  		   "state:              %10lx\n",
+> -		   (unsigned long) K(wb_stat(wb, WB_WRITEBACK)),
+> -		   (unsigned long) K(wb_stat(wb, WB_RECLAIMABLE)),
+> -		   K(wb_thresh),
+> +		   K(stats.nr_writeback),
+> +		   K(stats.nr_reclaimable),
+> +		   K(stats.wb_thresh),
+>  		   K(dirty_thresh),
+>  		   K(background_thresh),
+> -		   (unsigned long) K(wb_stat(wb, WB_DIRTIED)),
+> -		   (unsigned long) K(wb_stat(wb, WB_WRITTEN)),
+> -		   (unsigned long) K(wb->write_bandwidth),
+> -		   nr_dirty,
+> -		   nr_io,
+> -		   nr_more_io,
+> -		   nr_dirty_time,
+> +		   K(stats.nr_dirtied),
+> +		   K(stats.nr_written),
+> +		   K(tot_bw),
+> +		   stats.nr_dirty,
+> +		   stats.nr_io,
+> +		   stats.nr_more_io,
+> +		   stats.nr_dirty_time,
+>  		   !list_empty(&bdi->bdi_list), bdi->wb.state);
+
+Is it worth showing a list count here rather than list_empty() state?
+
+Brian
+
+>  
+>  	rcu_read_unlock();
+> -- 
+> 2.30.0
+> 
 
