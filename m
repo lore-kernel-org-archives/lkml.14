@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6C418925D;
-	Fri, 29 Mar 2024 12:42:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF23189A36;
+	Fri, 29 Mar 2024 12:42:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711716144; cv=none; b=pJOHjGPS17IFGfAVVSoBS0vcns10ST3i167H8PtlL6OLKFdOEOyNkxgdcIXy+1iYpVQey4tuH8au4O/NZ7QWd+13E29rVgArmfDp077KYoU3Pu/yP2kcK//soS4Xd4U9zHJX89L54QhG1amjWALFVHLghQNzhdntaM91y/6+RYE=
+	t=1711716146; cv=none; b=cOYyZgjkLfwIFt+fQDWcXXiUb85cqAvolZcsAgP06ay5otfxl91G2sv4OxCeXFbkm9VpwYw1WhQWBJRWP38MfvgTY1EnEdeCkEseQzAODCJR7XZut71oHitTNaeDIEeQFEKPOVVbQp6aiAWGkjcOHdpzgZFA1NBuJh36kvjrO8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711716144; c=relaxed/simple;
-	bh=D5Ui/gp8sF9f1UzEJQ3vaUwkLLb4ponSFyCgCJx7zIA=;
+	s=arc-20240116; t=1711716146; c=relaxed/simple;
+	bh=1LkM0DVVSxHRFqCqUyibA4ChmpR37hD2y9C2DhaWz7A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pZeuWLakFvdodeTMx9xVb/tIsvLErLIH9rQWvpAHaxkDdzkka4N/E6HaGoJDt8rGoiq6ofiXvh2OYThTNfDTS7U7fYPVgn/vy8+KGNawVb+Wp8J4oksPecaEkz11mtqowgVIlhDzAY8zTjFRfWIndfttgrUeERAAKuiv/KJ8By4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WW1fqsRU; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=HZdneCl1Ewr7JOxNVK83+IWBlHDH3aWmbb9ZgpmVpfg8vmEK9Vb73Z9FRY1fzSrFsw4hk5t1+6hiYF76SBUF2f2DqoU5EWuQu0DZvMNjK+nrl4nPSPulGAcR/vCvQYhS7vBYAFmdLS09yCJxTQQ9gj2KsRbukS2Epg2OCb9hQa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O08lhoOF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WW1fqsRU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83220C433F1;
-	Fri, 29 Mar 2024 12:42:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O08lhoOF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6742EC43399;
+	Fri, 29 Mar 2024 12:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711716143;
-	bh=D5Ui/gp8sF9f1UzEJQ3vaUwkLLb4ponSFyCgCJx7zIA=;
+	s=k20201202; t=1711716146;
+	bh=1LkM0DVVSxHRFqCqUyibA4ChmpR37hD2y9C2DhaWz7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WW1fqsRUhs5+0bZvOwFSPNgUjgUdh02C5tk9h7nJGGXTrtE0d1VOX0dMASRxQYBBj
-	 u4NJL7GtIsW45nE7cfjKrZ/XEosFgpATl5r1M7qgIw1j9VIMwqlNxBmmxwZ2M7OrHU
-	 Yd95jOm220dwoLWF4P/Wnpr78iRHFbd0xlSIv+OvIh9+JQjTwAGuN3qqPE+t5KYLTB
-	 UF/dk0xms+R56zWpvQ0i8VaZqhnvj0tTS6FeFxALQW+D4pB3lTCP8qu44zdHLEw9i5
-	 USTNGuLmDhlAf8lsDOjd3rgnNCDz8EXNtYX98uq0TrXTEhubFvRi+QHA5/2VECnU6/
-	 KTvahVRGfA+IQ==
+	b=O08lhoOF1XFiorhLYkHXS7DME+Q/DyB4zuCjjnWiUoGmsAepTx2us3b77wXfDD31C
+	 djLHhCMdjSOyeJFbqnnX430scPWbmDS3JesPmqoUQW/gfK63GTLukUCOoWrwNJPc66
+	 KmpVQXsNoAGrKbBE2c77AF1n6+Yo0v01RQGL20e86H+1xhQauciqaRIQ1Knmm6EZSL
+	 pO+Rx13uaNZdDtIlaLDAs0I4WnGyC71nq5SkiUenWrhMmzEMh3rge2zZQKeXPtmN2d
+	 PnSii0tlX80WAPoFqiYHuGGxsUTL7g6tRSDfFR4bLTqPMJEraamOGeWztS4ZpV2R+O
+	 Okc6rBBSuohZQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Junhao He <hejunhao3@huawei.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Will Deacon <will@kernel.org>,
+Cc: David Sterba <dsterba@suse.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Anand Jain <anand.jain@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
-	jonathan.cameron@huawei.com,
-	mark.rutland@arm.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.8 79/98] drivers/perf: hisi: Enable HiSilicon Erratum 162700402 quirk for HIP09
-Date: Fri, 29 Mar 2024 08:37:50 -0400
-Message-ID: <20240329123919.3087149-79-sashal@kernel.org>
+	clm@fb.com,
+	linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.8 81/98] btrfs: handle chunk tree lookup error in btrfs_relocate_sys_chunks()
+Date: Fri, 29 Mar 2024 08:37:52 -0400
+Message-ID: <20240329123919.3087149-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240329123919.3087149-1-sashal@kernel.org>
 References: <20240329123919.3087149-1-sashal@kernel.org>
@@ -53,86 +52,54 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.8.2
 Content-Transfer-Encoding: 8bit
 
-From: Junhao He <hejunhao3@huawei.com>
+From: David Sterba <dsterba@suse.com>
 
-[ Upstream commit e10b6976f6b9afdf3564f88c851e42d139bb19c0 ]
+[ Upstream commit 7411055db5ce64f836aaffd422396af0075fdc99 ]
 
-HiSilicon UC PMU v2 suffers the erratum 162700402 that the PMU counter
-cannot be set due to the lack of clock under power saving mode. This will
-lead to error or inaccurate counts. The clock can be enabled by the PMU
-global enabling control.
+The unhandled case in btrfs_relocate_sys_chunks() loop is a corruption,
+as it could be caused only by two impossible conditions:
 
-This patch tries to fix this by set the UC PMU enable before set event
-period to turn on the clock, and then restore the UC PMU configuration.
-The counter register can hold its value without a clock.
+- at first the search key is set up to look for a chunk tree item, with
+  offset -1, this is an inexact search and the key->offset will contain
+  the correct offset upon a successful search, a valid chunk tree item
+  cannot have an offset -1
 
-Signed-off-by: Junhao He <hejunhao3@huawei.com>
-Reviewed-by: Yicong Yang <yangyicong@hisilicon.com>
-Link: https://lore.kernel.org/r/20240227125231.53127-1-hejunhao3@huawei.com
-Signed-off-by: Will Deacon <will@kernel.org>
+- after first successful search, the found_key corresponds to a chunk
+  item, the offset is decremented by 1 before the next loop, it's
+  impossible to find a chunk item there due to alignment and size
+  constraints
+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Anand Jain <anand.jain@oracle.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/hisilicon/hisi_uncore_uc_pmu.c | 42 ++++++++++++++++++++-
- 1 file changed, 41 insertions(+), 1 deletion(-)
+ fs/btrfs/volumes.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/perf/hisilicon/hisi_uncore_uc_pmu.c b/drivers/perf/hisilicon/hisi_uncore_uc_pmu.c
-index 636fb79647c8c..481dcc9e8fbf8 100644
---- a/drivers/perf/hisilicon/hisi_uncore_uc_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_uc_pmu.c
-@@ -287,12 +287,52 @@ static u64 hisi_uc_pmu_read_counter(struct hisi_pmu *uc_pmu,
- 	return readq(uc_pmu->base + HISI_UC_CNTR_REGn(hwc->idx));
- }
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index d67785be2c778..6aae92e4b4240 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -3393,7 +3393,17 @@ static int btrfs_relocate_sys_chunks(struct btrfs_fs_info *fs_info)
+ 			mutex_unlock(&fs_info->reclaim_bgs_lock);
+ 			goto error;
+ 		}
+-		BUG_ON(ret == 0); /* Corruption */
++		if (ret == 0) {
++			/*
++			 * On the first search we would find chunk tree with
++			 * offset -1, which is not possible. On subsequent
++			 * loops this would find an existing item on an invalid
++			 * offset (one less than the previous one, wrong
++			 * alignment and size).
++			 */
++			ret = -EUCLEAN;
++			goto error;
++		}
  
--static void hisi_uc_pmu_write_counter(struct hisi_pmu *uc_pmu,
-+static bool hisi_uc_pmu_get_glb_en_state(struct hisi_pmu *uc_pmu)
-+{
-+	u32 val;
-+
-+	val = readl(uc_pmu->base + HISI_UC_EVENT_CTRL_REG);
-+	return !!FIELD_GET(HISI_UC_EVENT_GLB_EN, val);
-+}
-+
-+static void hisi_uc_pmu_write_counter_normal(struct hisi_pmu *uc_pmu,
- 				      struct hw_perf_event *hwc, u64 val)
- {
- 	writeq(val, uc_pmu->base + HISI_UC_CNTR_REGn(hwc->idx));
- }
- 
-+static void hisi_uc_pmu_write_counter_quirk_v2(struct hisi_pmu *uc_pmu,
-+				      struct hw_perf_event *hwc, u64 val)
-+{
-+	hisi_uc_pmu_start_counters(uc_pmu);
-+	hisi_uc_pmu_write_counter_normal(uc_pmu, hwc, val);
-+	hisi_uc_pmu_stop_counters(uc_pmu);
-+}
-+
-+static void hisi_uc_pmu_write_counter(struct hisi_pmu *uc_pmu,
-+				      struct hw_perf_event *hwc, u64 val)
-+{
-+	bool enable = hisi_uc_pmu_get_glb_en_state(uc_pmu);
-+	bool erratum = uc_pmu->identifier == HISI_PMU_V2;
-+
-+	/*
-+	 * HiSilicon UC PMU v2 suffers the erratum 162700402 that the
-+	 * PMU counter cannot be set due to the lack of clock under power
-+	 * saving mode. This will lead to error or inaccurate counts.
-+	 * The clock can be enabled by the PMU global enabling control.
-+	 * The irq handler and pmu_start() will call the function to set
-+	 * period. If the function under irq context, the PMU has been
-+	 * enabled therefore we set counter directly. Other situations
-+	 * the PMU is disabled, we need to enable it to turn on the
-+	 * counter clock to set period, and then restore PMU enable
-+	 * status, the counter can hold its value without a clock.
-+	 */
-+	if (enable || !erratum)
-+		hisi_uc_pmu_write_counter_normal(uc_pmu, hwc, val);
-+	else
-+		hisi_uc_pmu_write_counter_quirk_v2(uc_pmu, hwc, val);
-+}
-+
- static void hisi_uc_pmu_enable_counter_int(struct hisi_pmu *uc_pmu,
- 					   struct hw_perf_event *hwc)
- {
+ 		ret = btrfs_previous_item(chunk_root, path, key.objectid,
+ 					  key.type);
 -- 
 2.43.0
 
