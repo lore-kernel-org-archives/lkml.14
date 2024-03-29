@@ -1,83 +1,82 @@
 Received: from a.mx.secunet.com (a.mx.secunet.com [62.96.220.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D2C14901B
-	for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2024 16:02:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6616146A79;
+	Sun, 31 Mar 2024 16:03:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=62.96.220.36
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711900960; cv=fail; b=XW2Jm2ICSkaTsK1VbqquE3EAhrcn6bbEV6g6dSG1mZqH9LURpP/IOZ+Za5ceewQBSHXAoXg6lFJrNkDlD/ZmKm2Hp9/Db5HoneLqtEI4tzpk5uA8/jNkSbV06We+HhCbpXeumhJI2l5ztSWTlIY6g/smgXeJkJxIZ35vfO6DiC8=
+	t=1711901006; cv=fail; b=IisEmO/z/ShC21fvvkIFVAhS27wW4+Mjb92wrFmzwjq4/TTrPci2PeHfyH2MTTBXLHq3ZDzd3UyEG1kV0IpnQ7xaZ7Wv4p2hblxsNiNAVSf+ASBjZlkkQTHDtB2mq9cmHKoNrSLLFzhdDEuiAYRqo43j0VuM8/dYVz5QOjghNE0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711900960; c=relaxed/simple;
-	bh=LkcPu3aiN8+Pp7SgssHAmiDSJJkhOmSWWOszD6D8tLE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h3W/jhLxOTm4bKs9/2JBj5IrbLcIE7pSow4YrXprUw6dJ3d9jL96b36pe/QBIXfgSW2L6/yKKEKF8qrL1RYVOpKg0sR2lzZr9TpWE7cgVTIp9jYfoxxr9EPu3lgfrSupTdl1WwfQKF8a6bdGHmxPjqZCiCXnw+8AitS0gVry1sI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=fail smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.114.240; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=fail smtp.client-ip=62.96.220.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=sina.com
+	s=arc-20240116; t=1711901006; c=relaxed/simple;
+	bh=FRIggP1YvWWV3rj+5WU1Cj2nMoZrQOSbDSPE/2jMC40=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=dAMhML4pQIVa5dHULjmFUZQOBSzJFd2Q18IHSecV3IARRiZ8FuPqvLSv6CJ5uEw5p/ee3TH01cNUZLepqymji5jnffYw6+P9ZxAts69umLyIqEJMSmQqB7xG8fDWdZwMDLbkjPu/3IH/9DXxtMqD9bdKrjLppqhDnrbhKrf/0wg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org; spf=fail smtp.mailfrom=acm.org; dkim=fail (2048-bit key) header.d=acm.org header.i=@acm.org header.b=NvrFdpa8 reason="signature verification failed"; arc=none smtp.client-ip=199.89.1.12; dmarc=pass (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; arc=fail smtp.client-ip=62.96.220.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=acm.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=acm.org header.i=@acm.org header.b="NvrFdpa8"
 Received: from localhost (localhost [127.0.0.1])
-	by a.mx.secunet.com (Postfix) with ESMTP id 66D872082B;
-	Sun, 31 Mar 2024 18:02:31 +0200 (CEST)
+	by a.mx.secunet.com (Postfix) with ESMTP id 7CEE0208D1;
+	Sun, 31 Mar 2024 18:03:23 +0200 (CEST)
 X-Virus-Scanned: by secunet
 Received: from a.mx.secunet.com ([127.0.0.1])
 	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 1bdceBOp1M4D; Sun, 31 Mar 2024 18:02:27 +0200 (CEST)
-Received: from mailout2.secunet.com (mailout2.secunet.com [62.96.220.49])
+	with ESMTP id 0VvftS3fp1pd; Sun, 31 Mar 2024 18:03:23 +0200 (CEST)
+Received: from mailout1.secunet.com (mailout1.secunet.com [62.96.220.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by a.mx.secunet.com (Postfix) with ESMTPS id CAA7120826;
-	Sun, 31 Mar 2024 18:02:27 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com CAA7120826
+	by a.mx.secunet.com (Postfix) with ESMTPS id AE068207B2;
+	Sun, 31 Mar 2024 18:03:22 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com AE068207B2
 Received: from cas-essen-01.secunet.de (unknown [10.53.40.201])
-	by mailout2.secunet.com (Postfix) with ESMTP id BDA29800057;
-	Sun, 31 Mar 2024 18:02:27 +0200 (CEST)
+	by mailout1.secunet.com (Postfix) with ESMTP id A0605800055;
+	Sun, 31 Mar 2024 18:03:22 +0200 (CEST)
 Received: from mbx-essen-01.secunet.de (10.53.40.197) by
  cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Sun, 31 Mar 2024 18:02:27 +0200
+ 15.1.2507.35; Sun, 31 Mar 2024 18:03:22 +0200
 Received: from Pickup by mbx-essen-01.secunet.de with Microsoft SMTP Server id
- 15.1.2507.17; Sun, 31 Mar 2024 15:52:46 +0000
-X-sender: <linux-kernel+bounces-125908-steffen.klassert=secunet.com@vger.kernel.org>
+ 15.1.2507.17; Sun, 31 Mar 2024 15:52:40 +0000
+X-sender: <linux-kernel+bounces-125453-steffen.klassert=secunet.com@vger.kernel.org>
 X-Receiver: <steffen.klassert@secunet.com>
  ORCPT=rfc822;steffen.klassert@secunet.com NOTIFY=NEVER;
  X-ExtendedProps=BQAVABYAAgAAAAUAFAARAPDFCS25BAlDktII2g02frgPADUAAABNaWNyb3NvZnQuRXhjaGFuZ2UuVHJhbnNwb3J0LkRpcmVjdG9yeURhdGEuSXNSZXNvdXJjZQIAAAUAagAJAAEAAAAAAAAABQAWAAIAAAUAQwACAAAFAEYABwADAAAABQBHAAIAAAUAEgAPAGIAAAAvbz1zZWN1bmV0L291PUV4Y2hhbmdlIEFkbWluaXN0cmF0aXZlIEdyb3VwIChGWURJQk9IRjIzU1BETFQpL2NuPVJlY2lwaWVudHMvY249U3RlZmZlbiBLbGFzc2VydDY4YwUACwAXAL4AAACheZxkHSGBRqAcAp3ukbifQ049REI2LENOPURhdGFiYXNlcyxDTj1FeGNoYW5nZSBBZG1pbmlzdHJhdGl2ZSBHcm91cCAoRllESUJPSEYyM1NQRExUKSxDTj1BZG1pbmlzdHJhdGl2ZSBHcm91cHMsQ049c2VjdW5ldCxDTj1NaWNyb3NvZnQgRXhjaGFuZ2UsQ049U2VydmljZXMsQ049Q29uZmlndXJhdGlvbixEQz1zZWN1bmV0LERDPWRlBQAOABEABiAS9uuMOkqzwmEZDvWNNQUAHQAPAAwAAABtYngtZXNzZW4tMDIFADwAAgAADwA2AAAATWljcm9zb2Z0LkV4Y2hhbmdlLlRyYW5zcG9ydC5NYWlsUmVjaXBpZW50LkRpc3BsYXlOYW1lDwARAAAAS2xhc3NlcnQsIFN0ZWZmZW4FAAwAAgAABQBsAAIAAAUAWAAXAEoAAADwxQktuQQJQ5LSCNoNNn64Q049S2xhc3NlcnQgU3RlZmZlbixPVT1Vc2VycyxPVT1NaWdyYXRpb24sREM9c2VjdW5ldCxEQz1kZQUAJgACAAEFACIADwAxAAAAQXV0b1Jlc3BvbnNlU3VwcHJlc3M6IDANClRyYW5zbWl0SGlzdG9ye
 	TogRmFsc2UNCg8ALwAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuRXhwYW5zaW9uR3JvdXBUeXBlDwAVAAAATWVtYmVyc0dyb3VwRXhwYW5zaW9uBQAjAAIAAQ==
 X-CreatedBy: MSExchange15
 X-HeloDomain: a.mx.secunet.com
-X-ExtendedProps: BQBjAAoALl9rGbMv3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5Pcmdhbml6YXRpb25TY29wZREAAAAAAAAAAAAAAAAAAAAAAAUASQACAAEFAAQAFCABAAAAHAAAAHN0ZWZmZW4ua2xhc3NlcnRAc2VjdW5ldC5jb20FAAYAAgABBQApAAIAAQ8ACQAAAENJQXVkaXRlZAIAAQUAAgAHAAEAAAAFAAMABwAAAAAABQAFAAIAAQUAYgAKAK0AAADligAABQBkAA8AAwAAAEh1Yg==
+X-ExtendedProps: BQBjAAoAeAxrGbMv3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5Pcmdhbml6YXRpb25TY29wZREAAAAAAAAAAAAAAAAAAAAAAAUASQACAAEFAAQAFCABAAAAHAAAAHN0ZWZmZW4ua2xhc3NlcnRAc2VjdW5ldC5jb20FAAYAAgABBQApAAIAAQ8ACQAAAENJQXVkaXRlZAIAAQUAAgAHAAEAAAAFAAMABwAAAAAABQAFAAIAAQUAYgAKAJMAAADLigAABQBkAA8AAwAAAEh1Yg==
 X-Source: SMTP:Default MBX-ESSEN-01
 X-SourceIPAddress: 62.96.220.36
-X-EndOfInjectedXHeaders: 9856
+X-EndOfInjectedXHeaders: 10959
 X-Virus-Scanned: by secunet
-Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=147.75.48.161; helo=sy.mirrors.kernel.org; envelope-from=linux-kernel+bounces-125908-steffen.klassert=secunet.com@vger.kernel.org; receiver=steffen.klassert@secunet.com 
-DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 4F25B20764
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.114.240
+Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=147.75.48.161; helo=sy.mirrors.kernel.org; envelope-from=linux-kernel+bounces-125453-steffen.klassert=secunet.com@vger.kernel.org; receiver=steffen.klassert@secunet.com 
+DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 2E8C020561
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711842165; cv=none; b=a0aFpyuINsvc2+3sz8d3pSzaGca9anXaM9CaAhr5uWcQMfCTQcbX85T7iM/9TxSDijsSnFOOyVP3nSKMaEGT52bZeG+aH2j9S3tCjjr5nR+1O1kqne51anYdhCyJ0SOeczluC/hxG94i0SJzJ7qe9O4UyjZF7/0GVHNM+hnAEgI=
+	t=1711748972; cv=none; b=imRoeGH5xl/m3DLOY7eCKUi7sprzA+ulAK+xbNkaFo1euIRtzYwvf3H4dlb7hLHe045/baQJ6cSZTbqo4R0pL5Iq5tUuITKZmKpTYKmEOpE+WR28JBkuvtdReqGO578erBnsayEER+gE0FpTbm2ORQ89kva6JAlO77OMhce+VuA=
 ARC-Message-Signature: i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711842165; c=relaxed/simple;
-	bh=LkcPu3aiN8+Pp7SgssHAmiDSJJkhOmSWWOszD6D8tLE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jNcn5ynCPPk3y55UtdcRBz2O5cKLTox/Sr4c3yZbZYIH0+0ckbnDKQh06IB6pfm3nf7HfrYLPHgTIg4HDy93nxW1U/6fsO0ro9AqUTZsBkoIowjKuKys8cKDUgMxKdNt/su+rJYqFUYBIhLdmgyVhIGgZcaXSco2Kq6TB9Ev98c=
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.114.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 14092045089264
-X-SMAIL-UIID: 77F8267D54D24F6CBA4FD1B63BC82AA7-20240331-074230-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+1fa663a2100308ab6eab@syzkaller.appspotmail.com>
-CC: <linux-kernel@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>
-Subject: Re: [syzbot] [bpf?] possible deadlock in kvfree_call_rcu
-Date: Sun, 31 Mar 2024 07:42:17 +0800
-Message-ID: <20240330234217.3169-1-hdanton@sina.com>
-In-Reply-To: <000000000000716bb60614acbf37@google.com>
-References:
+	s=arc-20240116; t=1711748972; c=relaxed/simple;
+	bh=FRIggP1YvWWV3rj+5WU1Cj2nMoZrQOSbDSPE/2jMC40=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aJ5QcVIvIx+WnKyttgMHvYUQSlytXOS/S8mBHQM9Hu5SDmV6w8EaoneOQybOr2ia90h2pcCFuJ1qFgW2XHSKtq+rRo65+VyKB6HL7YMvKRvWoAljPnBIY1gT3eXWaHgGvBhyjfxIlHgqm5rqfVcUscZbRMZfQIZ/pKdrt3mA6mw=
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=NvrFdpa8; arc=none smtp.client-ip=199.89.1.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1711748967; x=1714340968; bh=FRIggP1YvWWV3rj+5WU1Cj2n
+	MoZrQOSbDSPE/2jMC40=; b=NvrFdpa8pcA9cG+NIiJnuoeRqa/nPyhvnOtdKtLd
+	WqtQBmfv5Xxa/dgMQibjBYWpMQXU99b6524nnJyI8pR/Q1lbHWv1wXDr0wGHEsNl
+	MnIwbJxL0DpSjF8SNG2GSqM2pNOxYN5q/Qkk1lddJBYelx8ypgvgvClefq1Mhl24
+	H0gUpQPwbjzLn0glITC1tXYRk/I87LnqCSGaNh3fPf4IJnFVILDFulxZED+xaII6
+	iBr5thFOG0UqWCqaTUezS8lMnQIdJZ40OgJlZMfMAGoHuNfec/Jn1agU0vb5QT1L
+	9pHLevDlEg286EulZVVF/0rInaBlREIxgEGvUz37Avt+XA==
+X-Virus-Scanned: by MailRoute
+Message-ID: <ecd24b64-0f27-486b-a7aa-b4b51b7b16de@acm.org>
+Date: Fri, 29 Mar 2024 14:49:21 -0700
 Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -85,31 +84,28 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 11/11] scsi: ufs: core: Remove unnecessary wmb() prior
+ to writing run/stop regs
+To: Andrew Halaney <ahalaney@redhat.com>, Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio
+	<konrad.dybcio@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, "James
+ E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen"
+	<martin.petersen@oracle.com>, Hannes Reinecke <hare@suse.de>, Janek Kotas
+	<jank@cadence.com>, Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman
+	<avri.altman@wdc.com>, Can Guo <quic_cang@quicinc.com>, Anjana Hari
+	<quic_ahari@quicinc.com>
+CC: Will Deacon <will@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+	<linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240329-ufs-reset-ensure-effect-before-delay-v5-0-181252004586@redhat.com>
+ <20240329-ufs-reset-ensure-effect-before-delay-v5-11-181252004586@redhat.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20240329-ufs-reset-ensure-effect-before-delay-v5-11-181252004586@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
-Message-ID: <20240330234217.gyiq9WplBmhSyJHqNnhypF0sGB0hNcGxTwNeagRqCo0@z>
+Message-ID: <20240329214921.Q4Iv91OIO9-4SntoUGbLhW7yp7C-RnRirXxR9ORTm04@z>
 
-On Wed, 27 Mar 2024 16:27:19 -0700
-> syzbot has found a reproducer for the following issue on:
-> 
-> HEAD commit:    443574b03387 riscv, bpf: Fix kfunc parameters incompatibil..
-> git tree:       bpf
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16ca53c9180000
-
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  fe46a7dd189e
-
---- x/kernel/rcu/tree.c
-+++ y/kernel/rcu/tree.c
-@@ -2957,7 +2957,8 @@ krc_this_cpu_lock(unsigned long *flags)
- 
- 	local_irq_save(*flags);	// For safely calling this_cpu_ptr().
- 	krcp = this_cpu_ptr(&krc);
--	raw_spin_lock(&krcp->lock);
-+	while (!raw_spin_trylock(&krcp->lock))
-+		;
- 
- 	return krcp;
- }
---
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 
