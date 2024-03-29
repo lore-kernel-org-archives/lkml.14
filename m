@@ -1,53 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822C2154C1A;
-	Fri, 29 Mar 2024 12:30:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F2212FF8C;
+	Fri, 29 Mar 2024 12:30:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711715428; cv=none; b=tqWKMMWTNKBNlPmqaWCss1GIoO1tEmEovoDytv8ttZVUBtHiaOZac8jP67tY7HG6TQuTY6jDGeTx2N4LS/ke6YNPJMwbYLieMPNPLPLvpR9bK9lXN2QwiVbAab9OT/CE2ZM83HPTF2sX0OJO1xv60iuuIu8qpzAKPqH7WcpNgMQ=
+	t=1711715433; cv=none; b=TMC57yTeyfT4nJYG+3UH7U71wzOK8iJQuXCh9bPJRIhz27FaDmMLIJ2i98265m/09T2nmI+FIqSMZRZTvkOy67qIeEEUOlcpb9Q+WmMjBYNd5LKTj5FFnYtKXK4/5wc2B9iAT8WQu38okFBNwtyJODv/9/7mi5O0RJpQclrEd+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711715428; c=relaxed/simple;
-	bh=7c9SL6HaFtqcj1ILppO2zgC9RFH/L+E/p3c7nIcweV0=;
+	s=arc-20240116; t=1711715433; c=relaxed/simple;
+	bh=yEd0TIh/lRZcOAMIPybsRJxzmRYTgRG5NAGV2GK4dAk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jYLMvSlW3yHlDYqaEBvWxpOuH5ZQMnvUU6NlQtwxd4SB0c0qpkj6l4QIhUvjpWofUzk3uk8uOZRS6eBFcBuKJzrZxBQPsI1c6eHKd6u77OwpsSYbGySteIK3HbUGIjqNvBrKFp0LQv3rq3v+UoeCxJDQoAVZZ5VGTksn2PvQ4Xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DeVxHDTh; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=q4ZpVoiDbHihNnx6msvPYw4zQ0wm/OX8CTJbJOQq0hxPvbrGjZBNmp7wSm4BMVWnR15GFfVWf3s3DszxasKQte9Aze61OfurrZW0Cwr8gvBDtcc97kxoql5GhLcRsZn5ytE0LeNEMr4drrmjfan4tcHX23wCWAtmC/TlX881z+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zaju6J5F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DeVxHDTh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C099C433C7;
-	Fri, 29 Mar 2024 12:30:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zaju6J5F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67E0EC433B1;
+	Fri, 29 Mar 2024 12:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711715428;
-	bh=7c9SL6HaFtqcj1ILppO2zgC9RFH/L+E/p3c7nIcweV0=;
+	s=k20201202; t=1711715433;
+	bh=yEd0TIh/lRZcOAMIPybsRJxzmRYTgRG5NAGV2GK4dAk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DeVxHDThPTgMe3cHHVSxNJEVIPnfXcNJVJocjJlBntLLZS9DiaizNhRHkuBMLAXQu
-	 QvvR1JKLNuY6a13JErY4mnvtXMZLqsxJwJ840eWNmgOsA57hLXVpbLl1OZb1oLsIGQ
-	 Ndo0KNwHsH2NlmYPYhKIxGvajk9ABbFVQ0izb63Lp9QC9hjJ5K8YPDSBYsAYiuvV/h
-	 2OcU8uzKtsGycgEmW6qgWaqUq5u4sjXZfx6011uGEBDOd8WUya03TPXEZhBmNTOzgC
-	 YB9NAK8mLZX/zS+lA043moIfGLsQAoIe/eTXaN9ox/KAzX+NzQHj28VwY2ZE8RTEz6
-	 nFhVk+qxj9zaw==
+	b=Zaju6J5FMtT/Dj2yR4S5oqNFvQs3xkRs/MIShE9Pht8R8U9c2C+q26sjXpRNoC/yY
+	 bK3iHaRakXo5AjOmVlo/lf7mYb14rxIFAsVI3UamPLZImW761sa7JvrL3QbqRDrF7h
+	 hA0NucgLm51qem8sj4VSo5axD/g9EmYdCb7p35Tt1JcCrngD3meQbF4nfg9ixV3Vzo
+	 crDsUJuD5fEc1rESzkXUhnl7pQgwa51lPDNWbqLRrybZHxJm8Alq0VjeEP3oe5ruPc
+	 zCk2FW2ToR81x/wNCW3QLV3MB7iy7tSnjFkz7+yiB1MiORBNDlI1qwv1AZU5R4Va8D
+	 +FpgY+Sd/XUkg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Johan Jonker <jbx6244@gmail.com>,
-	Heiko Stuebner <heiko@sntech.de>,
+Cc: Kunwu Chan <chentao@kylinos.cn>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	dsimic@manjaro.org,
-	jonas@kwiboo.se,
-	lukasz.luba@arm.com,
-	chris.obbard@collabora.com,
-	rick.wertenbroek@gmail.com,
-	s.hauer@pengutronix.de,
-	knaerzche@gmail.com,
-	devicetree@vger.kernel.org,
+	nm@ti.com,
 	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.6 18/52] arm64: dts: rockchip: fix rk3399 hdmi ports node
-Date: Fri, 29 Mar 2024 08:28:48 -0400
-Message-ID: <20240329122956.3083859-18-sashal@kernel.org>
+	linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 20/52] pmdomain: ti: Add a null pointer check to the omap_prm_domain_init
+Date: Fri, 29 Mar 2024 08:28:50 -0400
+Message-ID: <20240329122956.3083859-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240329122956.3083859-1-sashal@kernel.org>
 References: <20240329122956.3083859-1-sashal@kernel.org>
@@ -62,63 +52,35 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.23
 Content-Transfer-Encoding: 8bit
 
-From: Johan Jonker <jbx6244@gmail.com>
+From: Kunwu Chan <chentao@kylinos.cn>
 
-[ Upstream commit f051b6ace7ffcc48d6d1017191f167c0a85799f6 ]
+[ Upstream commit 5d7f58ee08434a33340f75ac7ac5071eea9673b3 ]
 
-Fix rk3399 hdmi ports node so that it matches the
-rockchip,dw-hdmi.yaml binding.
+devm_kasprintf() returns a pointer to dynamically allocated memory
+which can be NULL upon failure. Ensure the allocation was successful
+by checking the pointer validity.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/a6ab6f75-3b80-40b1-bd30-3113e14becdd@gmail.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+Link: https://lore.kernel.org/r/20240118054257.200814-1-chentao@kylinos.cn
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/pmdomain/ti/omap_prm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 4a3d0af5ecfe2..fb1ea84c2b14f 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1953,6 +1953,7 @@ simple-audio-card,codec {
- 	hdmi: hdmi@ff940000 {
- 		compatible = "rockchip,rk3399-dw-hdmi";
- 		reg = <0x0 0xff940000 0x0 0x20000>;
-+		reg-io-width = <4>;
- 		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH 0>;
- 		clocks = <&cru PCLK_HDMI_CTRL>,
- 			 <&cru SCLK_HDMI_SFR>,
-@@ -1961,13 +1962,16 @@ hdmi: hdmi@ff940000 {
- 			 <&cru PLL_VPLL>;
- 		clock-names = "iahb", "isfr", "cec", "grf", "ref";
- 		power-domains = <&power RK3399_PD_HDCP>;
--		reg-io-width = <4>;
- 		rockchip,grf = <&grf>;
- 		#sound-dai-cells = <0>;
- 		status = "disabled";
+diff --git a/drivers/pmdomain/ti/omap_prm.c b/drivers/pmdomain/ti/omap_prm.c
+index c2feae3a634ca..b8ceb3c2b81c2 100644
+--- a/drivers/pmdomain/ti/omap_prm.c
++++ b/drivers/pmdomain/ti/omap_prm.c
+@@ -695,6 +695,8 @@ static int omap_prm_domain_init(struct device *dev, struct omap_prm *prm)
+ 	data = prm->data;
+ 	name = devm_kasprintf(dev, GFP_KERNEL, "prm_%s",
+ 			      data->name);
++	if (!name)
++		return -ENOMEM;
  
- 		ports {
--			hdmi_in: port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			hdmi_in: port@0 {
-+				reg = <0>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 
-@@ -1980,6 +1984,10 @@ hdmi_in_vopl: endpoint@1 {
- 					remote-endpoint = <&vopl_out_hdmi>;
- 				};
- 			};
-+
-+			hdmi_out: port@1 {
-+				reg = <1>;
-+			};
- 		};
- 	};
- 
+ 	prmd->dev = dev;
+ 	prmd->prm = prm;
 -- 
 2.43.0
 
