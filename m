@@ -1,128 +1,177 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED90269DF7;
-	Fri, 29 Mar 2024 11:02:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B79364BA;
+	Fri, 29 Mar 2024 11:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711710169; cv=none; b=GBkmPMSBA/Wcz7V3CmP/IeoFEwH/u/TNGmHP72TgLjAa2UWcZHuYLKDdHsLJWj7WoK1zBC2MikaFJPStywj5M55xIPMw4wZ+a+tZVgY7XmnUcem9ZuGMjHtKGxx8YFQQ2ymdbMbzM7G6tbgYJpx9yIrViDeWg647q1+c/Viqa0E=
+	t=1711710884; cv=none; b=tL+dh3/GGXwlSs/Wle6konSi1KnL2w3eEEQ301MPBf8xzs7uxSB5RIlVJ/ZCA2Bb/XXMcnvEQgkhi/wgeH3HdEI/mvfKvTaI9/7MD1c3yR3SDStyoK67R5ACkveZH6SK9YiW9WxPhLwE01MlO4bQuFoQMNQ0S//FNPkEn4guixY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711710169; c=relaxed/simple;
-	bh=GoCaekO/19UT8HrRm+Nme7XMHifqCOmq4ykhULwCrVU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ei/vDg5KzYlkBly07xJHwF3g77cVLByoR579C3HfdjZOuHoQ0ZALZi35DzW/BDJPgAnkk9dD0PPpxPmfrQjQHqCIBIOf0amERwqFRhxZblaQhp2qPVSj/egzhZVxnBzL+w6loqVKwJ8QQ1Zw1gmvVSrfOHQAZHxLqYAz7UgHvxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=N2PeXwpO; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1711710884; c=relaxed/simple;
+	bh=z6p08nGmnn5rR1/CMeOGPwFv//6ITv/V2s6q+dQt9Dg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=pnKszxWWNRIggb4W1Yt7d5zeXk/rF0VAVcziCHiAdReG2hr5HKZVgWslehhvZ55PXckrrz3DlZZYeb1t+olGDAhaML+xoBQu7wRU3BW5WKu0LS18dECjMK49dJHAikcSqoVa+ItGpN2b0oGXzUqCb4ISuJ1W1tgqANxO+mgPKkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=WKjL+cp6; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="N2PeXwpO"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42T9RgFN020121;
-	Fri, 29 Mar 2024 11:02:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=bJ3pIo5rQ0zAm0yJhgdX2lzFSSi5b0T18UtJsKBRNpY=; b=N2
-	PeXwpO6NMIct/ZFap856FZRbbM7LXiP5JG2j4pvxIac+mxWJfXbmAXDIs3fiihdw
-	pfVWOuLpWeQ0skjnqsHnthD45bjQYWzjRP+0glOoxx0wRMKvzd35/UWBuCCdr0eB
-	o4Fr3X1tEpbvETi4SS/W2L245gd1zHswzijVknNh0zNO1CgycnCWnkhEhAdoT3JF
-	AcqPppa3AP/GhHKs4dV8fmkKIsdjDxBqJZfk7AVBviS52XsaJUnMjO1oeFpkBvTL
-	CBKMs9jIL78Iy35p2X3G3UIJ/SymRi0yHFKmZclB0smceZ9yG5c2dRkbqhBED2iX
-	Oeg6HEt8EvH6+8ZeVADA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x5np29440-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Mar 2024 11:02:29 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42TB2SPp000309
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Mar 2024 11:02:28 GMT
-Received: from [10.214.67.128] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 29 Mar
- 2024 04:02:23 -0700
-Message-ID: <a04f9185-af77-55c2-db52-bbb3bde50836@quicinc.com>
-Date: Fri, 29 Mar 2024 16:32:07 +0530
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="WKjL+cp6"
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id A777510001B;
+	Fri, 29 Mar 2024 14:14:30 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru A777510001B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1711710870;
+	bh=lFNNpWUo5GpWFV+9AKZ9Cfm8NfVqj08JFZwNdFWkc2I=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version:From;
+	b=WKjL+cp6zqFDN/D6whRQUAVUpp/FDIit+CaMjN0kz1d5zAIPPdxXNyS1P2mCOKAO+
+	 NXgvBjHQ+S6JtVkha3w9clLOQaN0BdzYV1iJevPPQrECJ4vo91NQ9mawoNS95juTAY
+	 1xnxZf/yb2w56JZNiExZrDNMqk8jYs+iVoSwpq0/0EDY6M79zOPmW47e5Hy8HpU6Jj
+	 As6WSS1vmMGNqX/MiF0nwqRYA+ur/8SDn4hxh8HCrUFJjpjlGD8Rg+tcVocZVqoXZ4
+	 MDs8Tvc1ePQPgd5h8Qm1pPjEyVKJL5d7YnB0MjKZDVlEI0+QUmp/GCdKcErFqR+eXz
+	 o+2Le3qA6CscA==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Fri, 29 Mar 2024 14:14:30 +0300 (MSK)
+Received: from p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 29 Mar 2024 14:14:30 +0300
+Received: from p-i-exch-sc-m02.sberdevices.ru ([fe80::10c3:6e04:fd07:c511]) by
+ p-i-exch-sc-m02.sberdevices.ru ([fe80::10c3:6e04:fd07:c511%9]) with mapi id
+ 15.02.1118.040; Fri, 29 Mar 2024 14:14:30 +0300
+From: Alexey Romanov <avromanov@salutedevices.com>
+To: Conor Dooley <conor@kernel.org>
+CC: "neil.armstrong@linaro.org" <neil.armstrong@linaro.org>,
+	"clabbe@baylibre.com" <clabbe@baylibre.com>, "herbert@gondor.apana.org.au"
+	<herbert@gondor.apana.org.au>, "davem@davemloft.net" <davem@davemloft.net>,
+	"robh+dt@kernel.org" <robh+dt@kernel.org>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "khilman@baylibre.com"
+	<khilman@baylibre.com>, "jbrunet@baylibre.com" <jbrunet@baylibre.com>,
+	"martin.blumenstingl@googlemail.com" <martin.blumenstingl@googlemail.com>,
+	"vadim.fedorenko@linux.dev" <vadim.fedorenko@linux.dev>,
+	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+	"linux-amlogic@lists.infradead.org" <linux-amlogic@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, kernel <kernel@sberdevices.ru>
+Subject: Re: [PATCH v6 17/23] dt-bindings: crypto: meson: remove clk and
+ second interrupt line for GXL
+Thread-Topic: [PATCH v6 17/23] dt-bindings: crypto: meson: remove clk and
+ second interrupt line for GXL
+Thread-Index: AQHaf5LgFGLoYbivnUaU5PLAkeGrbrFKIBaAgARC/AA=
+Date: Fri, 29 Mar 2024 11:14:29 +0000
+Message-ID: <20240329111424.i2zp2coznqpnibk4@cab-wsm-0029881>
+References: <20240326153219.2915080-1-avromanov@salutedevices.com>
+ <20240326153219.2915080-18-avromanov@salutedevices.com>
+ <20240326-obscurity-angriness-d7bb48bc9eaa@spud>
+In-Reply-To: <20240326-obscurity-angriness-d7bb48bc9eaa@spud>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <CEBAC2ABE34F8A4AB4996A1D926E8A4F@sberdevices.ru>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH 0/4] Add USB Support on Qualcomm's QDU/QRU1000 Platform
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        "Kishon Vijay
- Abraham I" <kishon@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wesley Cheng <quic_wcheng@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>
-References: <20240319090729.14674-1-quic_kbajaj@quicinc.com>
- <CAA8EJpojQg2BHvR5kZtRxyXWRKy6zV=88_bdcuMH+QE-n4k73A@mail.gmail.com>
-Content-Language: en-US
-From: Komal Bajaj <quic_kbajaj@quicinc.com>
-In-Reply-To: <CAA8EJpojQg2BHvR5kZtRxyXWRKy6zV=88_bdcuMH+QE-n4k73A@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: NbMObZ7yG2ZEikEosG1W_jCoZQAo9DzO
-X-Proofpoint-GUID: NbMObZ7yG2ZEikEosG1W_jCoZQAo9DzO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-29_11,2024-03-28_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 impostorscore=0 priorityscore=1501 spamscore=0
- bulkscore=0 mlxscore=0 malwarescore=0 clxscore=1015 suspectscore=0
- mlxlogscore=805 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2403210001 definitions=main-2403290097
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184489 [Mar 29 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: avromanov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 14 0.3.14 5a0c43d8a1c3c0e5b0916cc02a90d4b950c01f96, {Track_E25351}, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;smtp.sberdevices.ru:7.1.1,5.0.1;127.0.0.199:7.1.2, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/03/29 06:35:00 #24505095
+X-KSMG-AntiVirus-Status: Clean, skipped
+
+Hi Conor,
+
+On Tue, Mar 26, 2024 at 06:09:37PM +0000, Conor Dooley wrote:
+> On Tue, Mar 26, 2024 at 06:32:13PM +0300, Alexey Romanov wrote:
+> > GXL crypto IP uses DMA engine, which doesn't require clk input
+> > and second interrupt line.
+> >=20
+> > Fixes: c4a0457eb858 ("ARM64: dts: amlogic: adds crypto hardware node")
+>=20
+> How does this fix a commit that only modifies a dts? The commit cited
+> here should be a dt-bindings commit.
+
+Yep, my bad. Will fix it in next series.
+
+>=20
+> However, your commit message says "require" but you do more than remove
+> these as required, you remove them entirely. What am I missing?
+
+Crypto HW isn't connected to clk / 2nd interrput line, so we must remove
+them from dt. I will reformulate commit message.
+
+>=20
+> Thanks,
+> Conor.
+>=20
+> > Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
+> > ---
+> >  .../bindings/crypto/amlogic,gxl-crypto.yaml         | 13 +------------
+> >  1 file changed, 1 insertion(+), 12 deletions(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypt=
+o.yaml b/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
+> > index 948e11ebe4ee..d3af7b4d5f39 100644
+> > --- a/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
+> > +++ b/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
+> > @@ -20,20 +20,11 @@ properties:
+> >    interrupts:
+> >      items:
+> >        - description: Interrupt for flow 0
+> > -      - description: Interrupt for flow 1
+> > -
+> > -  clocks:
+> > -    maxItems: 1
+> > -
+> > -  clock-names:
+> > -    const: blkmv
+> > =20
+> >  required:
+> >    - compatible
+> >    - reg
+> >    - interrupts
+> > -  - clocks
+> > -  - clock-names
+> > =20
+> >  additionalProperties: false
+> > =20
+> > @@ -46,7 +37,5 @@ examples:
+> >      crypto: crypto-engine@c883e000 {
+> >          compatible =3D "amlogic,gxl-crypto";
+> >          reg =3D <0xc883e000 0x36>;
+> > -        interrupts =3D <GIC_SPI 188 IRQ_TYPE_EDGE_RISING>, <GIC_SPI 18=
+9 IRQ_TYPE_EDGE_RISING>;
+> > -        clocks =3D <&clkc CLKID_BLKMV>;
+> > -        clock-names =3D "blkmv";
+> > +        interrupts =3D <GIC_SPI 188 IRQ_TYPE_EDGE_RISING>;
+> >      };
+> > --=20
+> > 2.34.1
+> >=20
 
 
 
-On 3/19/2024 3:05 PM, Dmitry Baryshkov wrote:
-> On Tue, 19 Mar 2024 at 11:08, Komal Bajaj <quic_kbajaj@quicinc.com> wrote:
->>
->> This series adds support of USB3 PHY support for Qualcomm's QDU/QRU1000 Platform.
->>
->> ---------
->> Changes in v2:
->> * Dropped extra lines
->> * Sorted the tables alphabetically
->> * Link to v1: https://lore.kernel.org/linux-arm-msm/20240311120215.16845-1-quic_kbajaj@quicinc.com/
-> 
-> So, this is v2, but you didn't mark patches as v2. Please use b4 for
-> sending patches. It can handle patch revisions automatically.
-
-Apologies for this, forgot to mark patches as v2.
-I will be careful next time.
-
-> 
->>
->> Komal Bajaj (4):
->>    dt-bindings: phy: qcom,usb-snps-femto-v2: Add bindings for QDU1000
->>    dt-bindings: phy: qcom,qmp-usb: Add QDU1000 USB3 PHY
->>    dt-bindings: usb: dwc3: Add QDU1000 compatible
->>    phy: qcpm-qmp-usb: Add support for QDU1000/QRU1000
->>
->>   .../phy/qcom,sc8280xp-qmp-usb3-uni-phy.yaml   |  2 +
->>   .../bindings/phy/qcom,usb-snps-femto-v2.yaml  |  1 +
->>   .../devicetree/bindings/usb/qcom,dwc3.yaml    |  3 ++
->>   drivers/phy/qualcomm/phy-qcom-qmp-usb.c       | 49 +++++++++++++++++++
->>   4 files changed, 55 insertions(+)
-> 
-> 
-> 
+--=20
+Thank you,
+Alexey=
