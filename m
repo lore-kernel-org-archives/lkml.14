@@ -1,220 +1,110 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.rnplus.nl (mail.rnplus.nl [178.251.25.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BE91C0DEE
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 13:02:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FB513D8AF
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 13:02:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.251.25.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711717342; cv=none; b=XHFzsSt15pnEr/O6duspZfsXam7JS/w89ubbk2z8bD1fAncWTCseWklYAugjrloTSJtYg5xIA14lQTAXqJOXepPRyNj2H6g1E6BFBNo3MOjNw0EzMAsd2gCxabG45zJQzNioAarUawMXJaXkW26acuzbqQONNrplyHl8zePdma0=
+	t=1711717349; cv=none; b=ukU2JOZTEHb7LCYshF7dM2q9If/Vn1Cq7A3aB8l2h9OySDs8oYXM1me0QENgYNa2XhYsSwpU87Zblan/OH+jWZnNuaxtBsZuF02aMHdRRE4EyN7M2fQ3d6GOH9aqhD3Zz/eKYUT6BqiNMnaV/a80dYlegEkKMCmOCiztuGv72uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711717342; c=relaxed/simple;
-	bh=c+1ZeFaaDmnKz5Vjo8G1Iz7uVJGxgmB2tDVp7hqd8mw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vCzY93Xru/JDajD33HUs0Sa+5mw1oZtfqaXfMnpVI0x6LaHnxMppAfG6UfQnAcvkyP1c1iah7/t7xF+FAdqEq3Ra5yJt5wJrjvO2KnPT3/x5iFJ/+oVjdmEnxre7BJi0u3enM+oQVe9Ujwc5XXEc/xiTlKsD+10Qo2Zkk1J1eas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jI628nSq; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711717349; c=relaxed/simple;
+	bh=5PYPUmi19U+0jj9vdpCCTkSTJgKRWQ8R0dIQUA2UZbQ=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FlP6RgxRklZcJyoPfStzyqlJ9TzS7pPrdGUdDWu8pzj2B8CXdcByJ4RBMAKJ9TQZOMg7912a2DtkpYEcIfZOYneEGXdrGgH8ViFeyT2yR7skJasmObvrqA9aiLM4zxeU50pVlMKb7Gxn2vqPY0nCmKTjFI2kv91cpMuhYCEE6sY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rnplus.nl; spf=pass smtp.mailfrom=rnplus.nl; dkim=pass (1024-bit key) header.d=rnplus.nl header.i=@rnplus.nl header.b=fBVHIO8h; arc=none smtp.client-ip=178.251.25.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rnplus.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rnplus.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jI628nSq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711717339;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yN1Le78gH2spFQsvHwZ2DbTI7S30kof/5Z3400NZP38=;
-	b=jI628nSq5RS4UunOwBWakCx3i0K0W1KK5PGfvrE1iWT9V60HAn86qnQuW3aVj1N0s4DjPc
-	fREazcdRM2QB5EHVbaMVVD6L/JWYyThyDmWzI5qkRsfG3ivOA+ii5316dZ+rXTUV2eUwF2
-	NqLJQL1cZq6s2yvh3kS4FCiqrptpHO0=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-226-Kgz-TJJCPN2MsAeuWC5f0w-1; Fri,
- 29 Mar 2024 09:02:12 -0400
-X-MC-Unique: Kgz-TJJCPN2MsAeuWC5f0w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4504C3C02788;
-	Fri, 29 Mar 2024 13:02:12 +0000 (UTC)
-Received: from bfoster (unknown [10.22.16.57])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E09040C6CB4;
-	Fri, 29 Mar 2024 13:02:11 +0000 (UTC)
-Date: Fri, 29 Mar 2024 09:04:09 -0400
-From: Brian Foster <bfoster@redhat.com>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: akpm@linux-foundation.org, willy@infradead.org, jack@suse.cz,
-	tj@kernel.org, dsterba@suse.com, mjguzik@gmail.com,
-	dhowells@redhat.com, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] writeback: collect stats of all wb of bdi in
- bdi_debug_stats_show
-Message-ID: <Zga8Sf1DIxMevdcw@bfoster>
-References: <20240327155751.3536-1-shikemeng@huaweicloud.com>
- <20240327155751.3536-3-shikemeng@huaweicloud.com>
+	dkim=pass (1024-bit key) header.d=rnplus.nl header.i=@rnplus.nl header.b="fBVHIO8h"
+Received: from localhost (unknown [127.0.0.1])
+	by mail.rnplus.nl (Postfix) with ESMTP id 25736379494
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 13:05:47 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at rnplus.nl
+Received: from mail.rnplus.nl ([127.0.0.1])
+	by localhost (mail.rnplus.nl [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id J6VXY4_AXJKG for <linux-kernel@vger.kernel.org>;
+	Fri, 29 Mar 2024 14:05:47 +0100 (CET)
+Received: from localhost.localdomain (184-179-179-143.ftth.glasoperator.nl [143.179.179.184])
+	by mail.rnplus.nl (Postfix) with ESMTPSA id 0672237947A;
+	Fri, 29 Mar 2024 14:05:25 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=rnplus.nl; s=dkim;
+	t=1711717526; bh=5PYPUmi19U+0jj9vdpCCTkSTJgKRWQ8R0dIQUA2UZbQ=;
+	h=From:To:Subject:Date:In-Reply-To:References;
+	b=fBVHIO8hCb0A1p99N4Btml3jm86eC3uivf3DR0owUhSW/RIz4SyzKyclEFfEIRA9N
+	 e4bGLksiqZcXJvb1IK9ksr7jtCAnTY7rp5VYUzdcER72DPzZimAZz46tVqaI5MTp/Y
+	 Ug/v3hWNqdjOfWBLFEBcORdoxnLk+ecl5Kk3gwto=
+From: Renze Nicolai <renze@rnplus.nl>
+To: linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-aspeed@lists.ozlabs.org,
+	arnd@arndb.de,
+	olof@lixom.net,
+	soc@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	joel@jms.id.au,
+	andrew@aj.id.au,
+	renze@rnplus.nl
+Subject: [PATCH 2/3] ARM: dts: Disable unused ADC channels for Asrock X570D4U BMC
+Date: Fri, 29 Mar 2024 14:01:40 +0100
+Message-ID: <20240329130152.878944-3-renze@rnplus.nl>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240329130152.878944-1-renze@rnplus.nl>
+References: <20240329130152.878944-1-renze@rnplus.nl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240327155751.3536-3-shikemeng@huaweicloud.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 27, 2024 at 11:57:47PM +0800, Kemeng Shi wrote:
-> /sys/kernel/debug/bdi/xxx/stats is supposed to show writeback information
-> of whole bdi, but only writeback information of bdi in root cgroup is
-> collected. So writeback information in non-root cgroup are missing now.
-> To be more specific, considering following case:
-> 
-> /* create writeback cgroup */
-> cd /sys/fs/cgroup
-> echo "+memory +io" > cgroup.subtree_control
-> mkdir group1
-> cd group1
-> echo $$ > cgroup.procs
-> /* do writeback in cgroup */
-> fio -name test -filename=/dev/vdb ...
-> /* get writeback info of bdi */
-> cat /sys/kernel/debug/bdi/xxx/stats
-> The cat result unexpectedly implies that there is no writeback on target
-> bdi.
-> 
-> Fix this by collecting stats of all wb in bdi instead of only wb in
-> root cgroup.
-> 
-> Following domain hierarchy is tested:
->                 global domain (320G)
->                 /                 \
->         cgroup domain1(10G)     cgroup domain2(10G)
->                 |                 |
-> bdi            wb1               wb2
-> 
-> /* all writeback info of bdi is successfully collected */
-> cat stats
-> BdiWriteback:             2912 kB
-> BdiReclaimable:        1598464 kB
-> BdiDirtyThresh:      167479028 kB
-> DirtyThresh:         195038532 kB
-> BackgroundThresh:     32466728 kB
-> BdiDirtied:           19141696 kB
-> BdiWritten:           17543456 kB
-> BdiWriteBandwidth:     1136172 kBps
-> b_dirty:                     2
-> b_io:                        0
-> b_more_io:                   1
-> b_dirty_time:                0
-> bdi_list:                    1
-> state:                       1
-> 
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-> ---
->  mm/backing-dev.c | 100 +++++++++++++++++++++++++++++++++--------------
->  1 file changed, 71 insertions(+), 29 deletions(-)
-> 
-> diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-> index 70f02959f3bd..8daf950e6855 100644
-> --- a/mm/backing-dev.c
-> +++ b/mm/backing-dev.c
-...
-> @@ -65,16 +78,54 @@ static struct backing_dev_info *lookup_bdi(struct seq_file *m)
->  	return NULL;
->  }
->  
-> +static void collect_wb_stats(struct wb_stats *stats,
-> +			     struct bdi_writeback *wb)
-> +{
-> +	struct inode *inode;
-> +
-> +	spin_lock(&wb->list_lock);
-> +	list_for_each_entry(inode, &wb->b_dirty, i_io_list)
-> +		stats->nr_dirty++;
-> +	list_for_each_entry(inode, &wb->b_io, i_io_list)
-> +		stats->nr_io++;
-> +	list_for_each_entry(inode, &wb->b_more_io, i_io_list)
-> +		stats->nr_more_io++;
-> +	list_for_each_entry(inode, &wb->b_dirty_time, i_io_list)
-> +		if (inode->i_state & I_DIRTY_TIME)
-> +			stats->nr_dirty_time++;
-> +	spin_unlock(&wb->list_lock);
-> +
-> +	stats->nr_writeback += wb_stat(wb, WB_WRITEBACK);
-> +	stats->nr_reclaimable += wb_stat(wb, WB_RECLAIMABLE);
-> +	stats->nr_dirtied += wb_stat(wb, WB_DIRTIED);
-> +	stats->nr_written += wb_stat(wb, WB_WRITTEN);
-> +	stats->wb_thresh += wb_calc_thresh(wb, stats->dirty_thresh);
+This commit disables unused ADC channels and labels the ADC channels used with their function.
 
-Kinda nitty question, but is this a sum of per-wb writeback thresholds?
-If so, do you consider that useful information vs. the per-wb threshold
-data presumably exposed in the next patch?
+Signed-off-by: Renze Nicolai <renze@rnplus.nl>
+---
+ .../dts/aspeed/aspeed-bmc-asrock-x570d4u.dts  | 29 +++++++++----------
+ 1 file changed, 13 insertions(+), 16 deletions(-)
 
-I'm not really that worried about what debug data we expose, it just
-seems a little odd. How would you document this value in a sentence or
-two, for example?
-
-> +}
-> +
-> +#ifdef CONFIG_CGROUP_WRITEBACK
-> +static void bdi_collect_stats(struct backing_dev_info *bdi,
-> +			      struct wb_stats *stats)
-> +{
-> +	struct bdi_writeback *wb;
-> +
-> +	list_for_each_entry_rcu(wb, &bdi->wb_list, bdi_node)
-> +		collect_wb_stats(stats, wb);
-
-Depending on discussion on the previous patch and whether the higher
-level rcu protection in bdi_debug_stats_show() is really necessary, it
-might make more sense to move it here.
-
-I'm also wondering if you'd want to check the state of the individual wb
-(i.e. WB_registered?) before reading it..?
-
-> +}
-> +#else
-> +static void bdi_collect_stats(struct backing_dev_info *bdi,
-> +			      struct wb_stats *stats)
-> +{
-> +	collect_wb_stats(stats, &bdi->wb);
-> +}
-> +#endif
-...
-> @@ -115,18 +157,18 @@ static int bdi_debug_stats_show(struct seq_file *m, void *v)
->  		   "b_dirty_time:       %10lu\n"
->  		   "bdi_list:           %10u\n"
->  		   "state:              %10lx\n",
-> -		   (unsigned long) K(wb_stat(wb, WB_WRITEBACK)),
-> -		   (unsigned long) K(wb_stat(wb, WB_RECLAIMABLE)),
-> -		   K(wb_thresh),
-> +		   K(stats.nr_writeback),
-> +		   K(stats.nr_reclaimable),
-> +		   K(stats.wb_thresh),
->  		   K(dirty_thresh),
->  		   K(background_thresh),
-> -		   (unsigned long) K(wb_stat(wb, WB_DIRTIED)),
-> -		   (unsigned long) K(wb_stat(wb, WB_WRITTEN)),
-> -		   (unsigned long) K(wb->write_bandwidth),
-> -		   nr_dirty,
-> -		   nr_io,
-> -		   nr_more_io,
-> -		   nr_dirty_time,
-> +		   K(stats.nr_dirtied),
-> +		   K(stats.nr_written),
-> +		   K(tot_bw),
-> +		   stats.nr_dirty,
-> +		   stats.nr_io,
-> +		   stats.nr_more_io,
-> +		   stats.nr_dirty_time,
->  		   !list_empty(&bdi->bdi_list), bdi->wb.state);
-
-Is it worth showing a list count here rather than list_empty() state?
-
-Brian
-
->  
->  	rcu_read_unlock();
-> -- 
-> 2.30.0
-> 
+diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-x570d4u.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-x570d4u.dts
+index 34bc382bf492..e93c2f0b8414 100644
+--- a/arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-x570d4u.dts
++++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-x570d4u.dts
+@@ -358,20 +358,17 @@ fan@5 {
+ &adc {
+ 	status = "okay";
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_adc0_default
+-				&pinctrl_adc1_default
+-				&pinctrl_adc2_default
+-				&pinctrl_adc3_default
+-				&pinctrl_adc4_default
+-				&pinctrl_adc5_default
+-				&pinctrl_adc6_default
+-				&pinctrl_adc7_default
+-				&pinctrl_adc8_default
+-				&pinctrl_adc9_default
+-				&pinctrl_adc10_default
+-				&pinctrl_adc11_default
+-				&pinctrl_adc12_default
+-				&pinctrl_adc13_default
+-				&pinctrl_adc14_default
+-				&pinctrl_adc15_default>;
++	pinctrl-0 = <&pinctrl_adc0_default       /* 3VSB */
++			&pinctrl_adc1_default    /* 5VSB */
++			&pinctrl_adc2_default    /* VCPU */
++			&pinctrl_adc3_default    /* VSOC */
++			&pinctrl_adc4_default    /* VCCM */
++			&pinctrl_adc5_default    /* APU-VDDP */
++			&pinctrl_adc6_default    /* PM-VDD-CLDO */
++			&pinctrl_adc7_default    /* PM-VDDCR-S5 */
++			&pinctrl_adc8_default    /* PM-VDDCR */
++			&pinctrl_adc9_default    /* VBAT */
++			&pinctrl_adc10_default   /* 3V */
++			&pinctrl_adc11_default   /* 5V */
++			&pinctrl_adc12_default>; /* 12V */
+ };
+-- 
+2.44.0
 
