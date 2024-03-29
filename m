@@ -1,103 +1,83 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C7227471;
-	Fri, 29 Mar 2024 10:34:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE9E2D783
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 10:35:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711708455; cv=none; b=nmAFwJ9UlLoobmhNT/p74Jb5I29Qn3dxh4gmGa1/biKyRvZQzJlKFboybhA+ruiY6aobMVJ+YRyTmwChOMc4CqTixwMZQDs/ochGnevTnMpb/6FJ1N0pkbQ/mxRkiAqYYuJkPtUR2N9az/v82FxP/Mg3oU+eWQN95WAexolPwbs=
+	t=1711708556; cv=none; b=pwj0McGKnAcNj/oJ4MRccDqGLOFrDoypcoYSUbapt55OzyXXeu0oEj/47dgyqH361PQ2ryxFw4dTAx4i0LhN/kWRhSm2r8hgzcqVkXMU22uUIoKGdygl3bMdGEDfpLgyVS3hJZv8D5rThQnJ3TimolgwSfzxoX7D5K3/5m21CdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711708455; c=relaxed/simple;
-	bh=KG92pe3DBAHh2WhqPReKxHjjE5aM10J77GB1apHyhss=;
-	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=NbWkYSB8A+6h00DlhUxoaVl0BB4oZ1L96qrGuqdW7phonrMSuNC3NF57+uMPYLYB2anhUBYlFu32XAe75V/U1ZfWmPbA15Q5AURC73e9fCGqZCURhLknkmmylLCXAlFmLBIeXILGURCRb8o/BRmL6Phyoz6JweNm3oUUqJA5Wqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4V5cCh4rz0zNmlF;
-	Fri, 29 Mar 2024 18:32:00 +0800 (CST)
-Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
-	by mail.maildlp.com (Postfix) with ESMTPS id B3863140259;
-	Fri, 29 Mar 2024 18:34:03 +0800 (CST)
-Received: from [10.67.120.192] (10.67.120.192) by
- kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 29 Mar 2024 18:34:02 +0800
-Message-ID: <d6c779a5-e4b1-4f21-b4f0-6b37b212890f@huawei.com>
-Date: Fri, 29 Mar 2024 18:34:02 +0800
+	s=arc-20240116; t=1711708556; c=relaxed/simple;
+	bh=6P4ij8pT/jNEACKbrUbJM3jRpTlCNw9gLFxqsaz9cV8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Spx9+VOXXoAEiWMX+yFphndLrRQZSmNrGuYPgyr2ZGJkJyaSGSdBHNJ94+8rOhvoU7GxWauMlVZe2+HTAhmr4oIAKpK6ANjcdLr8Z2jEgs4mc4oUnZJQrw58fPAazqSbec0Bdt4tz6whX8P/MnHlX/GRIJ+t9P8jyOtcz2TwDB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rq9aQ-0004f2-TX; Fri, 29 Mar 2024 11:35:50 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rq9aQ-009Asp-3Y; Fri, 29 Mar 2024 11:35:50 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rq9aQ-00DP36-05;
+	Fri, 29 Mar 2024 11:35:50 +0100
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Karel Balej <balejk@matfyz.cz>
+Cc: regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org
+Subject: [PATCH] pwm: Fix setting period with #pwm-cells = <1> and of_pwm_single_xlate()
+Date: Fri, 29 Mar 2024 11:35:40 +0100
+Message-ID: <20240329103544.545290-2-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <D05IVTPYH35N.2CLDG6LSILRSN@matfyz.cz>
+References: <D05IVTPYH35N.2CLDG6LSILRSN@matfyz.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: <shaojijie@huawei.com>, <yisen.zhuang@huawei.com>,
-	<salil.mehta@huawei.com>, <davem@davemloft.net>, <edumazet@google.com>,
-	<pabeni@redhat.com>, <jiri@resnulli.us>, <horms@kernel.org>,
-	<rkannoth@marvell.com>, <shenjian15@huawei.com>, <wangjie125@huawei.com>,
-	<liuyonglong@huawei.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V6 net-next 3/4] net: hns3: dump more reg info based on
- ras mod
-To: Jakub Kicinski <kuba@kernel.org>
-References: <20240327114330.1826631-1-shaojijie@huawei.com>
- <20240327114330.1826631-4-shaojijie@huawei.com>
- <20240328191130.47242c8f@kernel.org>
-From: Jijie Shao <shaojijie@huawei.com>
-In-Reply-To: <20240328191130.47242c8f@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600007.china.huawei.com (7.193.23.208)
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=938; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=6P4ij8pT/jNEACKbrUbJM3jRpTlCNw9gLFxqsaz9cV8=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmBpmBCEoSmv3VGGugvF7Gd5MBYCphgMHVAzK7z yVJOvs/9lqJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZgaZgQAKCRCPgPtYfRL+ TgoZB/9Wc2chrVBgffMrFoojo//TTLQpy82n2mlMdKpvfBXEHPmMInm59WGWzalK92If3Wu7DHx F8ybG6Th4PtWK6zoQ3IhzMgDlYsybKkt3CLOMUoTZXhPI2ci9CV6kTtm/6Yxp6RxAZfN7n/fteE mEZZz7k82CMJHlsr/tumXJhzkuEULm/gJnMgiRke+u+jmbE07CTjx0cRiz+oHIL8nKa3TEeTM2Z 4J9jVd9UUPRUTzqDkAo9P5f4J4GXkg4fKPKuvH4K6QZU+6oczy525RY76qRvYPLHSKErhSuWg2s VgBHA+Ao65Y/xwx98bHgt3A0E7TiZXBJT+x4qnOEWj+A2GqU
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+For drivers making use of of_pwm_single_xlate() (i.e. those that don't
+pass a hwpwm index) and also don't pass flags, setting period was
+wrongly skipped. This affects the pwm-pxa and ti-sn65dsi86 drivers.
 
-on 2024/3/29 10:11, Jakub Kicinski wrote:
-> On Wed, 27 Mar 2024 19:43:29 +0800 Jijie Shao wrote:
->> +	}, {
->> +		.reg_name = "MIB_TX/RX_BAD_PKTS",
->> +		.reg_offset_group = {19, 18, 29, 28},
->> +		.group_size = 4
->> +	}, {
->> +		.reg_name = "MIB_TX/RX_GOOD_PKTS",
->> +		.reg_offset_group = {21, 20, 31, 30},
->> +		.group_size = 4
->> +	}, {
->> +		.reg_name = "MIB_TX/RX_TOTAL_PKTS",
->> +		.reg_offset_group = {23, 22, 33, 32},
->> +		.group_size = 4
->> +	}, {
->> +		.reg_name = "MIB_TX/RX_PAUSE_PKTS",
->> +		.reg_offset_group = {25, 24, 35, 34},
->> +		.group_size = 4
->> +	}, {
->> +		.reg_name = "MIB_TX_ERR_ALL_PKTS",
->> +		.reg_offset_group = {27, 26},
->> +		.group_size = 2
->> +	}, {
->> +		.reg_name = "MIB_RX_FCS_ERR_PKTS",
->> +		.reg_offset_group = {37, 36},
->> +		.group_size = 2
-> These seem to be duplicating standard stats from rtnl_link_stats64,
-> ethtool_pause_stats, ethtool_eth_mac_stats, etc.
->
-> You can add device specific stats, but please don't duplicate
-> stats for which we have standard APIs.
+Reported-by: Karel Balej <balejk@matfyz.cz>
+Fixes: 40ade0c2e794 ("pwm: Let the of_xlate callbacks accept references without period")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/pwm/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yeah, but these are not duplicate stats for ethtool or debugfs.
-
-Generally, driver will reset to restore the normal state.
-After the reset, many registers are cleared. Therefore,
-it is difficult to analyze the reason of RAS.
-
-We wang to add this information only when RAS is occurring, And
-these information will help to analyze the reason of RAS.
-
-these information does not appear in any new API.
-
-Therefore, we hope that we can add this information to
-reduce the difficulty of analyzing certain issues.
-
-Jijie
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index 54a62879fffa..ee3ef3f44bc5 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -512,7 +512,7 @@ of_pwm_single_xlate(struct pwm_chip *chip, const struct of_phandle_args *args)
+ 	if (IS_ERR(pwm))
+ 		return pwm;
+ 
+-	if (args->args_count > 1)
++	if (args->args_count > 0)
+ 		pwm->args.period = args->args[0];
+ 
+ 	pwm->args.polarity = PWM_POLARITY_NORMAL;
+-- 
+2.43.0
 
