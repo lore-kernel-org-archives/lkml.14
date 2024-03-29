@@ -1,45 +1,46 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 695B53BBE8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56538494;
 	Fri, 29 Mar 2024 05:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711690330; cv=none; b=BvoO7qGasAz/n+n40KNWCnfxtcRKlfQ8F9uOVKalahXMbx8LJNFh9kj16asJcZuSQwoqwx6QUwW0WPqanZEjcDBe65f8lZFjW29Syo/ocVQA5/3MLDLkn4jlb/ufHuskOrp6BfdfozmLLFX4ABVcObHFsM1ra7fh+sE/cKAaq5Q=
+	t=1711690330; cv=none; b=labxcLdD+bXISNxMh1MwzsNbhX+pIh8SkX/8LuFmTmo+C9xx817PTmNs2N/TQ49bbN7vaJbAI/iUFSM+7C5PwMGzE27q0WoDLqnAfTCunGgz/Et/nYgg5XnmdBDxoSeBN9xNA+KPaR2njAKu+Io+muNo4OwfU0/XzV3b1LQ9cWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711690330; c=relaxed/simple;
-	bh=UgAzys+A3Ct9KXhz17x1cUouk22XzMXeBwW0gKTCSVg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PMBtPJSQWck8ajjQCn/Ocp/ArZ1awLlw9FUtXt7HMKQ+mfCR12gf3mC1YvPF56sR4j0/W75P/oWPTWj8dHxBZcSXC8dk2F1kDAD18Z4lxaaAN+3T/IZMNcvs/8kE+QngdJYC/NtTqi/OWR/mAFQxxaeG0ZT+XcGpZQDREOojbxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=e0JUcaSR; arc=none smtp.client-ip=198.47.23.249
+	bh=iwZ7XlpgGAiHCYKvCILLLUkkpUPwYVKiIne5ZYGzUiI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eQ7CqYen+M0CiLutP76jwaIjLaRXyZuyp98crivd5ffKAN0r5mencUcCWeiwy/r7tPIQXDKEcPtb7qsMy3cUcK+IJxsLztfTXWwN6OZ+M2VZgfxXJcumLMLddI5Wem61TTX6QZjx+WCcs61txQ8860tzoqu9rSnNHRZOXLoMLKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Tr0+KTI0; arc=none smtp.client-ip=198.47.23.248
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="e0JUcaSR"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42T5VueI026879;
-	Fri, 29 Mar 2024 00:31:56 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Tr0+KTI0"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42T5W0F4085225;
+	Fri, 29 Mar 2024 00:32:00 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1711690316;
-	bh=5lksTCQRb+IpwWrjwgj+d/p3OjVbx/lb5zxF1JmKpyk=;
-	h=From:To:CC:Subject:Date;
-	b=e0JUcaSR8Cb7F2KhZVnyTpxOFfcq2c932h74cPCliQ/9uDy6xdTIiB+ayNnO6JuCI
-	 JRx5o8uNAEBL2cmbm1RlzVcYq66nYHITeNqYhDvLYRekiAw5gHHHQ4K5UEKpFRCGZu
-	 k2UFcb9XPAIx9WjiYTdLMuBZegFneEsW3h2bLw98=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42T5VuBj082193
+	s=ti-com-17Q1; t=1711690320;
+	bh=Gep6ZlMCV1MuvJRowBdZmIjw9g/6y0plhY5O6rrOiHw=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=Tr0+KTI0SCwr96O030D0gb8TohUot59sTI7IFdjsyyqISWip6OsWDEj/KSFdAyBog
+	 LukCQsXm+EFsCMWGILmWTSmq8mRL3BxsnBiU2jXPJDbM942kzwg9KIQD+oWCJdCMIO
+	 jiiE9Z1ihuwfWrjl7oITHhReNNnCeXwA8Lq27Z8E=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42T5W0HR033937
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 29 Mar 2024 00:31:56 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+	Fri, 29 Mar 2024 00:32:00 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 29
- Mar 2024 00:31:55 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2024 00:31:59 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 29 Mar 2024 00:31:55 -0500
+ Frontend Transport; Fri, 29 Mar 2024 00:31:58 -0500
 Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42T5Vsf0028006;
-	Fri, 29 Mar 2024 00:31:55 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42T5Vw7K108679;
+	Fri, 29 Mar 2024 00:31:58 -0500
 From: Chintan Vankar <c-vankar@ti.com>
 To: Conor Dooley <conor+dt@kernel.org>,
         Krzysztof Kozlowski
@@ -52,10 +53,12 @@ CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <s-vadapalli@ti.com>,
         Chintan Vankar
 	<c-vankar@ti.com>
-Subject: [PATCH v6 0/5] Add CPSW2G and CPSW9G nodes for J784S4
-Date: Fri, 29 Mar 2024 11:01:25 +0530
-Message-ID: <20240329053130.2822129-1-c-vankar@ti.com>
+Subject: [PATCH v6 2/5] arm64: dts: ti: k3-j784s4-main: Add CPSW2G and CPSW9G nodes
+Date: Fri, 29 Mar 2024 11:01:27 +0530
+Message-ID: <20240329053130.2822129-3-c-vankar@ti.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240329053130.2822129-1-c-vankar@ti.com>
+References: <20240329053130.2822129-1-c-vankar@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,42 +69,235 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-This series adds device-tree nodes for CPSW2G and CPSW9G instance
-of the CPSW Ethernet Switch on TI's J784S4 SoC. Additionally,
-two device-tree overlays are also added:
-1. QSGMII mode with the CPSW9G instance via the ENET EXPANSION 1
-   connector.
-2. USXGMII mode with MAC Ports 1 and 2 of the CPSW9G instance via
-   ENET EXPANSION 1 and 2 connectors, configured in fixed-link
-   mode of operation at 5Gbps link speed.
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+
+J784S4 SoC has MAIN CPSW2G and CPSW9G instances of the CPSW
+Ethernet Switch. CPSW2G has 1 external port and 1 host port
+while CPSW9G has 8 external ports and 1 host port.
+
+Add device-tree nodes for MAIN CPSW2G and CPSW9G and disable
+them by default. MAIN CPSW2G will be enabled in the board file
+while device-tree overlays will be used to enable CPSW9G.
+
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+Signed-off-by: Chintan Vankar <c-vankar@ti.com>
+---
 
 Link to v5:
-https://lore.kernel.org/r/20240314072129.1520475-1-c-vankar@ti.com/
+https://lore.kernel.org/r/20240314072129.1520475-3-c-vankar@ti.com/
 
 Changes from v5 to v6:
 - Updated order of properties in Device Nodes based on
   https://docs.kernel.org/devicetree/bindings/dts-coding-style.html#order-of-properties-in-device-node
 
-Chintan Vankar (1):
-  arm64: dts: ti: k3-j784s4-evm: Add alias for MCU CPSW2G
+ arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi | 187 +++++++++++++++++++++
+ 1 file changed, 187 insertions(+)
 
-Siddharth Vadapalli (4):
-  arm64: dts: ti: k3-j784s4-main: Add CPSW2G and CPSW9G nodes
-  arm64: dts: ti: k3-j784s4-evm: Enable Main CPSW2G node and add aliases
-    for it
-  arm64: dts: ti: k3-j784s4: Add overlay to enable QSGMII mode with
-    CPSW9G
-  arm64: dts: ti: k3-j784s4: Add overlay for dual port USXGMII mode
-
- arch/arm64/boot/dts/ti/Makefile               |  11 +-
- .../ti/k3-j784s4-evm-quad-port-eth-exp1.dtso  | 147 ++++++++++++++
- .../ti/k3-j784s4-evm-usxgmii-exp1-exp2.dtso   |  81 ++++++++
- arch/arm64/boot/dts/ti/k3-j784s4-evm.dts      |  51 +++++
- arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi    | 187 ++++++++++++++++++
- 5 files changed, 476 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm-quad-port-eth-exp1.dtso
- create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm-usxgmii-exp1-exp2.dtso
-
+diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
+index b67c37460a73..7dfa43d25d38 100644
+--- a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
+@@ -48,6 +48,19 @@ scm_conf: bus@100000 {
+ 		#size-cells = <1>;
+ 		ranges = <0x00 0x00 0x00100000 0x1c000>;
+ 
++		cpsw1_phy_gmii_sel: phy@4034 {
++			compatible = "ti,am654-phy-gmii-sel";
++			reg = <0x4034 0x4>;
++			#phy-cells = <1>;
++		};
++
++		cpsw0_phy_gmii_sel: phy@4044 {
++			compatible = "ti,j784s4-cpsw9g-phy-gmii-sel";
++			reg = <0x4044 0x20>;
++			#phy-cells = <1>;
++			ti,qsgmii-main-ports = <7>, <7>;
++		};
++
+ 		serdes_ln_ctrl: mux-controller@4080 {
+ 			compatible = "reg-mux";
+ 			reg = <0x00004080 0x30>;
+@@ -1439,6 +1452,180 @@ cpts@310d0000 {
+ 		};
+ 	};
+ 
++	main_cpsw0: ethernet@c000000 {
++		compatible = "ti,j784s4-cpswxg-nuss";
++		reg = <0x00 0xc000000 0x00 0x200000>;
++		reg-names = "cpsw_nuss";
++		ranges = <0x00 0x00 0x00 0xc000000 0x00 0x200000>;
++		#address-cells = <2>;
++		#size-cells = <2>;
++		dma-coherent;
++		clocks = <&k3_clks 64 0>;
++		clock-names = "fck";
++		power-domains = <&k3_pds 64 TI_SCI_PD_EXCLUSIVE>;
++
++		dmas = <&main_udmap 0xca00>,
++		       <&main_udmap 0xca01>,
++		       <&main_udmap 0xca02>,
++		       <&main_udmap 0xca03>,
++		       <&main_udmap 0xca04>,
++		       <&main_udmap 0xca05>,
++		       <&main_udmap 0xca06>,
++		       <&main_udmap 0xca07>,
++		       <&main_udmap 0x4a00>;
++		dma-names = "tx0", "tx1", "tx2", "tx3",
++			    "tx4", "tx5", "tx6", "tx7",
++			    "rx";
++
++		status = "disabled";
++
++		ethernet-ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			main_cpsw0_port1: port@1 {
++				reg = <1>;
++				label = "port1";
++				ti,mac-only;
++				status = "disabled";
++			};
++
++			main_cpsw0_port2: port@2 {
++				reg = <2>;
++				label = "port2";
++				ti,mac-only;
++				status = "disabled";
++			};
++
++			main_cpsw0_port3: port@3 {
++				reg = <3>;
++				label = "port3";
++				ti,mac-only;
++				status = "disabled";
++			};
++
++			main_cpsw0_port4: port@4 {
++				reg = <4>;
++				label = "port4";
++				ti,mac-only;
++				status = "disabled";
++			};
++
++			main_cpsw0_port5: port@5 {
++				reg = <5>;
++				label = "port5";
++				ti,mac-only;
++				status = "disabled";
++			};
++
++			main_cpsw0_port6: port@6 {
++				reg = <6>;
++				label = "port6";
++				ti,mac-only;
++				status = "disabled";
++			};
++
++			main_cpsw0_port7: port@7 {
++				reg = <7>;
++				label = "port7";
++				ti,mac-only;
++				status = "disabled";
++			};
++
++			main_cpsw0_port8: port@8 {
++				reg = <8>;
++				label = "port8";
++				ti,mac-only;
++				status = "disabled";
++			};
++		};
++
++		main_cpsw0_mdio: mdio@f00 {
++			compatible = "ti,cpsw-mdio","ti,davinci_mdio";
++			reg = <0x00 0xf00 0x00 0x100>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			clocks = <&k3_clks 64 0>;
++			clock-names = "fck";
++			bus_freq = <1000000>;
++			status = "disabled";
++		};
++
++		cpts@3d000 {
++			compatible = "ti,am65-cpts";
++			reg = <0x00 0x3d000 0x00 0x400>;
++			clocks = <&k3_clks 64 3>;
++			clock-names = "cpts";
++			interrupts-extended = <&gic500 GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "cpts";
++			ti,cpts-ext-ts-inputs = <4>;
++			ti,cpts-periodic-outputs = <2>;
++		};
++	};
++
++	main_cpsw1: ethernet@c200000 {
++		compatible = "ti,j721e-cpsw-nuss";
++		reg = <0x00 0xc200000 0x00 0x200000>;
++		reg-names = "cpsw_nuss";
++		ranges = <0x00 0x00 0x00 0xc200000 0x00 0x200000>;
++		#address-cells = <2>;
++		#size-cells = <2>;
++		dma-coherent;
++		clocks = <&k3_clks 62 0>;
++		clock-names = "fck";
++		power-domains = <&k3_pds 62 TI_SCI_PD_EXCLUSIVE>;
++
++		dmas = <&main_udmap 0xc640>,
++			<&main_udmap 0xc641>,
++			<&main_udmap 0xc642>,
++			<&main_udmap 0xc643>,
++			<&main_udmap 0xc644>,
++			<&main_udmap 0xc645>,
++			<&main_udmap 0xc646>,
++			<&main_udmap 0xc647>,
++			<&main_udmap 0x4640>;
++		dma-names = "tx0", "tx1", "tx2", "tx3",
++				"tx4", "tx5", "tx6", "tx7",
++				"rx";
++
++		status = "disabled";
++
++		ethernet-ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			main_cpsw1_port1: port@1 {
++				reg = <1>;
++				label = "port1";
++				phys = <&cpsw1_phy_gmii_sel 1>;
++				ti,mac-only;
++				status = "disabled";
++			};
++		};
++
++		main_cpsw1_mdio: mdio@f00 {
++			compatible = "ti,cpsw-mdio", "ti,davinci_mdio";
++			reg = <0x00 0xf00 0x00 0x100>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			clocks = <&k3_clks 62 0>;
++			clock-names = "fck";
++			bus_freq = <1000000>;
++			status = "disabled";
++		};
++
++		cpts@3d000 {
++			compatible = "ti,am65-cpts";
++			reg = <0x00 0x3d000 0x00 0x400>;
++			clocks = <&k3_clks 62 3>;
++			clock-names = "cpts";
++			interrupts-extended = <&gic500 GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "cpts";
++			ti,cpts-ext-ts-inputs = <4>;
++			ti,cpts-periodic-outputs = <2>;
++		};
++	};
++
+ 	main_mcan0: can@2701000 {
+ 		compatible = "bosch,m_can";
+ 		reg = <0x00 0x02701000 0x00 0x200>,
 -- 
 2.34.1
 
