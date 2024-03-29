@@ -1,160 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6DF23A8;
-	Fri, 29 Mar 2024 15:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD321C06
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 15:49:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711727226; cv=none; b=PDr8msmx4wWh3KviFJi62+MZ6Z3PWDcBAtxbD12Wl8ZL8RbNSvr9t1n7jeNCucnw+jH4C/BpQrPJ/kxANpjYMUtvnkvClh4qb1j5cbvIt4GEA94TBM/19YcVwfcYtRrmwUCXaSTdEo43f19fl9sjwqA+PFxskmDT1agicrqMl9k=
+	t=1711727359; cv=none; b=XbtBpuRVN1E7Sm9qKDgULht2onMAJuXjyo9wtDbxT7ZJpG8qKD/oh+UgoRXgUFBaVhR+pySONrLXzieO+PKkiqft4sDuYt3NFAPOXBinU+9wNSpNHuDi5i52PsXCRWU/ccLcX2quJ+PGzGM545xnukdayuD1Lp4MBjgVPnkXPME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711727226; c=relaxed/simple;
-	bh=mGMCbTudpO//dsMmAJuxrfDrUsM2TLQi58qOzKNQl9k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hStMZGmU6Vzss5Gz9xmdPYXs6/hcoQZTvtUJq811XWRz79TK4240lTBDXmxIJcVKntqbVG9icvhOJfDWEdSoKiB2wV9JzX6OW1KaRxtzSq5hnpy7OlQ4WZqi/BDe/34Gg0GS1iz1mNWhXKIK9PxiQcqmPyhJ1MQcFuZOJ9aZ2v8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jOUaZZNd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711727359; c=relaxed/simple;
+	bh=lnooIcnRm+Tj9mcyOfrRGjNu8vfwrgz8A/shrwBRbbw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NFCs2Ienn8ysRcpYEtYR78eAUnyRzJLzwtB2YR5Jb3Mg/sxSJSdEc34SSoff9OSB3jCECa/0vCtWNpbYKBGwO3zXoQSJnInNRRMdXrxTt1khoSwoIANqQ+SuVj9DDAdDMFX1OVkfzjs13FnfLlzaUTBEPZ/Yh+irPEpAle6uYnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=fMQo+Z7A; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jOUaZZNd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65400C433F1;
-	Fri, 29 Mar 2024 15:47:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711727225;
-	bh=mGMCbTudpO//dsMmAJuxrfDrUsM2TLQi58qOzKNQl9k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jOUaZZNdtIIh47EJVI810yivxPhgr04bdCv5G8syQ9pIqc96Lk1QfVhs1Zg2F3MZ+
-	 8ycCTwvcR7dRIz5PyImHowSY7nGzeP1Fa1weOpI4PXdyLUvxXVh2YM77J4ZnnPZcDJ
-	 eme6BIklM4Cr/HfOfALdVa6oRCZCmeBZtrBoRBVZbsLPBXivn+VE/geDCnH5fo9Zke
-	 OVY0GzrZctB+LLGPa0koCkG1wtWO4ZbrbHmwwCiqDN2QTp9OtB5D5a66J9WoH2fQFT
-	 yLAjAKn/xV6lVUfPEsNTYspoy5GK+5rfK+JLddPBFkJwE2U4/eMbfV7x4pwxuS5A2z
-	 x59T2XaUWyIDA==
-Date: Fri, 29 Mar 2024 15:46:59 +0000
-From: Conor Dooley <conor@kernel.org>
-To: "Klymenko, Anatoliy" <Anatoliy.Klymenko@amd.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	"Simek, Michal" <michal.simek@amd.com>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
-Subject: Re: [PATCH v3 8/9] dt-bindings: xlnx: Add VTC and TPG bindings
-Message-ID: <20240329-overture-tank-d20888f2cb6e@spud>
-References: <20240321-dp-live-fmt-v3-0-d5090d796b7e@amd.com>
- <20240321-dp-live-fmt-v3-8-d5090d796b7e@amd.com>
- <a82d525c-737a-4ac4-9d71-e88f4ba69ea1@linaro.org>
- <MW4PR12MB7165889CE7F27A3F0B29DC7EE6312@MW4PR12MB7165.namprd12.prod.outlook.com>
- <c0d70ba9-34ef-4121-834d-4d107f03d7f0@linaro.org>
- <MW4PR12MB716570A3676218F0C6375E37E63A2@MW4PR12MB7165.namprd12.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="fMQo+Z7A"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56bc8cfc19fso2374577a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 08:49:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1711727356; x=1712332156; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xl4g7kNwbZSWPZHN5jBx2cvEXqgu3O7G1Se4DzXl3uE=;
+        b=fMQo+Z7AL8tM9cuYXErnx7hO9gy514ZVipjF13lMr+GvGtE4v+lrJWKI3X8uT+rbZs
+         QpbytKBsloff8/EsV8zd/13KYoU1rthfRTg67nKHk3GKCbHaj6AW4pqtca4LEnmQxPtY
+         dSwL3Pjt9SAJ91SoLqZYzc69eVKEhbqyefHBEIA7tc0UgCp/ZHZhCURlRS/Ml0LXxq9t
+         YCu1EN/W/B2hByHflGuC/QXpGGSWWf7mqwuVwDC6swbMlxbLwe6489v2c7oUKdWSLr9S
+         fvyn0JSPkkcWAQxg6oST42poH/n802O4xS2kptY+5UmZ2Y0tWM5tBjcEA+dzdq3q4Lo5
+         tOkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711727356; x=1712332156;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Xl4g7kNwbZSWPZHN5jBx2cvEXqgu3O7G1Se4DzXl3uE=;
+        b=e48JubleSJ5GFqc/MwuaDxlsjpvXUSi4v5G6BFk98vLHj09hdnCNRu0xnOY7HjYMZc
+         JoawsCPSd8rU7yTv7ZSwthxWCfBgwffeGjvhF4dvzAuiym8sX8Eh0ZmBPUs3sAeh8sbp
+         W1GIyTrDzIpm72/YtJHs1gINtZBKXzS+pTH3MajWYmXuZNVJOaWYWdOEfooQeECfAqr+
+         t2KNIi/tNV7oNbJQR+AIgCW/0/uRIIWt/qQvWJPpr5UQOfIy1Idl3vp/sWBblLycSQPR
+         HPzsi0TDW1WizOO4crSUW2UvEOOospf0i334yL10RTRbNz5prYZB5dpBBwWXX+G8JfPM
+         UCdw==
+X-Forwarded-Encrypted: i=1; AJvYcCV8l4sccNOSnG0SThPYr+Wp6MHS/DeUQhisdn14Q/bYTk+CpZFwwjFZRaR05h/rxHxCwvbaDSGTxA/+kluaIjb63cQCY+zHFIiRLWN0
+X-Gm-Message-State: AOJu0YwjA8qLtwzsKd8TsY7eYR3bcopstPlJgzz0+6i4ufr4JiPANgN0
+	8GpzGwCkJlOXPciKcWdHxjuyObtq7ynMPuLbCO5/QT2mTpuLL8P6gLAiXfpuY4FGaIwi3URcKDB
+	S
+X-Google-Smtp-Source: AGHT+IEoTDNuKniQKyvP1LcAKCmnmgTPpoKnq+nHfUNUTmyJXKTX+6p6o2lqqh+la6T6vBc+BWJu3g==
+X-Received: by 2002:a17:907:7e9c:b0:a46:ec44:477c with SMTP id qb28-20020a1709077e9c00b00a46ec44477cmr2119729ejc.41.1711727356324;
+        Fri, 29 Mar 2024 08:49:16 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-82-135-80-212.dynamic.mnet-online.de. [82.135.80.212])
+        by smtp.gmail.com with ESMTPSA id bw17-20020a170906c1d100b00a46b4544da2sm2038962ejb.125.2024.03.29.08.49.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Mar 2024 08:49:15 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: thorsten.blum@toblux.com
+Cc: davem@davemloft.net,
+	herbert@gondor.apana.org.au,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] crypto: jitter - Remove duplicate word in comment
+Date: Fri, 29 Mar 2024 16:44:54 +0100
+Message-ID: <20240329154455.1733-3-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240328160401.445647-2-thorsten.blum@toblux.com>
+References: <20240328160401.445647-2-thorsten.blum@toblux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Aig4naILjr3w2J70"
-Content-Disposition: inline
-In-Reply-To: <MW4PR12MB716570A3676218F0C6375E37E63A2@MW4PR12MB7165.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+s/in//
 
---Aig4naILjr3w2J70
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+Changes in v2:
+- Fix the commit diff because I made a mistake when breaking up changes
+  into individual patches
+---
+ crypto/jitterentropy.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Fri, Mar 29, 2024 at 12:38:33AM +0000, Klymenko, Anatoliy wrote:
-> Thank you for the feedback.
-> > From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> > Subject: Re: [PATCH v3 8/9] dt-bindings: xlnx: Add VTC and TPG bindings
-> > On 22/03/2024 20:12, Klymenko, Anatoliy wrote:
-> > >> From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> > >> On 21/03/2024 21:43, Anatoliy Klymenko wrote:
-> > >>> diff --git a/include/dt-bindings/media/media-bus-format.h
-> > >>> b/include/dt-
-> > >> bindings/media/media-bus-format.h
-> > >>> new file mode 100644
-> > >>> index 000000000000..60fc6e11dabc
-> > >>> --- /dev/null
-> > >>> +++ b/include/dt-bindings/media/media-bus-format.h
-> > >>> @@ -0,0 +1,177 @@
-> > >>> +/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
-> > >>> +/*
-> > >>> + * Media Bus API header
-> > >>> + *
-> > >>> + * Copyright (C) 2009, Guennadi Liakhovetski
-> > >>> +<g.liakhovetski@gmx.de>
-> > >>> + *
-> > >>> + * This program is free software; you can redistribute it and/or
-> > >>> +modify
-> > >>> + * it under the terms of the GNU General Public License version 2
-> > >>> +as
-> > >>> + * published by the Free Software Foundation.
-> > >>
-> > >> That's not true. Your SPDX tells something entirely different.
-> > >>
-> > >
-> > > Thank you - I'll see how to fix it.
-> > >
-> > >> Anyway, you did not explain why you need to copy anything anywhere.
-> > >>
-> > >> Specifically, random hex values *are not bindings*.
-> > >>
-> > >
-> > > The same media bus format values are being used by the reference
-> > > driver in patch #9. And, as far as I know, we cannot use headers from
-> > > Linux API headers directly (at least I
-> >=20
-> > I don't understand what does it mean. You can use in your driver whatev=
-er
-> > headers you wish, I don't care about them.
-> >=20
-> >=20
-> > noticed the same pattern in ../dt-bindings/sdtv-standarts.h for instanc=
-e).
-> > What would be the best approach to reusing the same defines on DT and
-> > driver sides from your point of view? Symlink maybe?
-> > >
-> >=20
-> > Wrap your messages to match mailing list discussion style. There are no
-> > defines used in DT. If there are, show me them in *THIS* or other
-> > *upstreamed* (being upstreamed) patchset.
-> >=20
->=20
-> Sorry, I didn't explain properly what I'm trying to achieve. I need to
-> create a DT node property that represents video signal format, one of
-> MEDIA_BUS_FMT_* from include/uapi/linux/media-bus-format.h. It would be
-> nice to reuse the same symbolic values in the device tree. What is the
-> best approach here? Should I create a separate header in
-> include/dt-bindings with the same or similar (to avoid multiple
-> definition errors) defines, or is it better to create a symlink to
-> media-bus-format.h like include/dt-bindings/linux-event-codes.h?
+diff --git a/crypto/jitterentropy.c b/crypto/jitterentropy.c
+index 26a9048bc893..ee2aa0b7aa9e 100644
+--- a/crypto/jitterentropy.c
++++ b/crypto/jitterentropy.c
+@@ -158,7 +158,7 @@ struct rand_data {
+  * See the SP 800-90B comment #10b for the corrected cutoff for the SP 800-90B
+  * APT.
+  * http://www.untruth.org/~josh/sp80090b/UL%20SP800-90B-final%20comments%20v1.9%2020191212.pdf
+- * In in the syntax of R, this is C = 2 + qbinom(1 − 2^(−30), 511, 2^(-1/osr)).
++ * In the syntax of R, this is C = 2 + qbinom(1 − 2^(−30), 511, 2^(-1/osr)).
+  * (The original formula wasn't correct because the first symbol must
+  * necessarily have been observed, so there is no chance of observing 0 of these
+  * symbols.)
+-- 
+2.44.0
 
-Isn't there already a property for this, described in
-Documentation/devicetree/bindings/media/xilinx/video.txt
-?
-
---Aig4naILjr3w2J70
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZgbicwAKCRB4tDGHoIJi
-0vIxAQDTGIb39pZ2GgViTifY62vMB8y8nobcQ16j//LjfSv8+AD/di6X30rcf2qm
-aucSKfOlVRUnjE+ZOb0HLGjnjVZzFQ4=
-=0Xod
------END PGP SIGNATURE-----
-
---Aig4naILjr3w2J70--
