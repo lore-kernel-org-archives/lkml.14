@@ -1,32 +1,32 @@
-Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF926A8CA
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 10:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 569AC83A1C
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 10:56:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711709812; cv=none; b=gafVGeUjH/TIBWyFwZZi2KYj6lSplE/UeCePu5sumVmm23J6g/cUtreQmxIILCcbtO/G+NwgvLgV2u1gVp3UXtOGWiXnMaESqoHMA7BxyW4ItZvg1JmMZzajhvKDW/f/Wmb2ok942yiTV+r4ciqjOcgj/YaFZ0veUPWCLW+Dl6E=
+	t=1711709813; cv=none; b=p2w4eHhVz/TV9RIrwSPkkS/U5sb9RZkXVB3cy+WUhC5Rl/HXEUnQt2yzlEA40YMN/t5ebqMkTYtvAC1jKsligU41RAqKADytfeVJdMop3Rz1TNud2yPBZrhhYlIaSPVKN81tUNWRRkw62RoTHEPuHd7qCcE7WjkcSCmAHg/fLFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711709812; c=relaxed/simple;
-	bh=f4f/kh0PmFJ42uACJgiRQ6RY/91nQkYiihrMsW88gGg=;
+	s=arc-20240116; t=1711709813; c=relaxed/simple;
+	bh=MntR2VoWY9d1UM+GLc/rVG7Vv1KYkGV3SbVUjUoYChA=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lkUF5qkeIpiiLojuZ1siSXn9i3YC5NzxcXjC2ctEJ5chR1ZuxdaWShVSUKhOMzSTAEGvwS977JHZKfuy+SOJm/XhfWrYbi9XDi0mAQMPAiZwlw8G8KxCfk28bS9nhA3epoOp5wyQPHU3HCFMyJUD7hHpYify53885LoIg6cN3FQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.83
+	 MIME-Version; b=nEAEegulpRGIFdrDURGTPFNvoM3BsoD+n2bvevN6c8ulDdw6O5iaBX7uyFPucZuxoLcpwFYOWRuktyxFTTGcw0pPD4QMR5IZi1DQ7B5IODdssvNGkTLN59EME8XfCuj3dw2SWLOpsGMSJDiPRUk50vjwURYmXqL5yrfoy/jCB84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
 Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
-	by fgw22.mail.saunalahti.fi (Halon) with ESMTP
-	id 06bb802c-edbb-11ee-a9de-005056bdf889;
-	Fri, 29 Mar 2024 12:56:42 +0200 (EET)
+	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+	id 080b5b1f-edbb-11ee-b3cf-005056bd6ce9;
+	Fri, 29 Mar 2024 12:56:44 +0200 (EET)
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Andy Shevchenko <andy.shevchenko@gmail.com>,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 06/11] pinctrl: aw9523: Get rid of redundant ' & U8_MAX' pieces
-Date: Fri, 29 Mar 2024 12:55:20 +0200
-Message-ID: <20240329105634.712457-7-andy.shevchenko@gmail.com>
+Subject: [PATCH v2 09/11] pinctrl: aw9523: Sort headers and group pinctrl/*
+Date: Fri, 29 Mar 2024 12:55:23 +0200
+Message-ID: <20240329105634.712457-10-andy.shevchenko@gmail.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240329105634.712457-1-andy.shevchenko@gmail.com>
 References: <20240329105634.712457-1-andy.shevchenko@gmail.com>
@@ -38,62 +38,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When the variable is declared as u8, no need to perform ' & U8_MAX'
-as it's implied anyway.
+One header was misplaced and group pinctrl/* ones to show the relation
+with the pin control subsystem.
 
 Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/pinctrl/pinctrl-aw9523.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/pinctrl/pinctrl-aw9523.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/pinctrl/pinctrl-aw9523.c b/drivers/pinctrl/pinctrl-aw9523.c
-index 0f3361fa9ed88..8c615adb3d578 100644
+index fe398c59c2d11..49d5035899227 100644
 --- a/drivers/pinctrl/pinctrl-aw9523.c
 +++ b/drivers/pinctrl/pinctrl-aw9523.c
-@@ -603,7 +603,7 @@ static int aw9523_gpio_get_multiple(struct gpio_chip *chip,
- 	mutex_lock(&awi->i2c_lock);
+@@ -13,17 +13,18 @@
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+-#include <linux/mutex.h>
+ #include <linux/module.h>
+-#include <linux/pinctrl/pinconf.h>
+-#include <linux/pinctrl/pinctrl.h>
+-#include <linux/pinctrl/pinmux.h>
+-#include <linux/pinctrl/pinconf-generic.h>
++#include <linux/mutex.h>
+ #include <linux/property.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/slab.h>
  
- 	/* Port 0 (gpio 0-7) */
--	m = *mask & U8_MAX;
-+	m = *mask;
- 	if (m) {
- 		ret = _aw9523_gpio_get_multiple(awi, 0, &state, m);
- 		if (ret)
-@@ -612,7 +612,7 @@ static int aw9523_gpio_get_multiple(struct gpio_chip *chip,
- 	*bits = state;
- 
- 	/* Port 1 (gpio 8-15) */
--	m = (*mask >> 8) & U8_MAX;
-+	m = *mask >> 8;
- 	if (m) {
- 		ret = _aw9523_gpio_get_multiple(awi, AW9523_PINS_PER_PORT,
- 						&state, m);
-@@ -635,20 +635,20 @@ static void aw9523_gpio_set_multiple(struct gpio_chip *chip,
- 	unsigned int reg;
- 	int ret;
- 
--	mask_lo = *mask & U8_MAX;
--	mask_hi = (*mask >> 8) & U8_MAX;
-+	mask_lo = *mask;
-+	mask_hi = *mask >> 8;
-+	bits_lo = *bits;
-+	bits_hi = *bits >> 8;
++#include <linux/pinctrl/pinconf-generic.h>
++#include <linux/pinctrl/pinconf.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/pinctrl/pinmux.h>
 +
- 	mutex_lock(&awi->i2c_lock);
- 	if (mask_hi) {
- 		reg = AW9523_REG_OUT_STATE(AW9523_PINS_PER_PORT);
--		bits_hi = (*bits >> 8) & U8_MAX;
--
- 		ret = regmap_write_bits(awi->regmap, reg, mask_hi, bits_hi);
- 		if (ret)
- 			dev_warn(awi->dev, "Cannot write port1 out level\n");
- 	}
- 	if (mask_lo) {
- 		reg = AW9523_REG_OUT_STATE(0);
--		bits_lo = *bits & U8_MAX;
- 		ret = regmap_write_bits(awi->regmap, reg, mask_lo, bits_lo);
- 		if (ret)
- 			dev_warn(awi->dev, "Cannot write port0 out level\n");
+ #define AW9523_MAX_FUNCS		2
+ #define AW9523_NUM_PORTS		2
+ #define AW9523_PINS_PER_PORT		8
 -- 
 2.44.0
 
