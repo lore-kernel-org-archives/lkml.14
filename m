@@ -1,211 +1,104 @@
-Received: from mail.codeweavers.com (mail.codeweavers.com [4.36.192.163])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8ED3B78E;
-	Fri, 29 Mar 2024 00:24:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.36.192.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032083BBC6
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 00:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711671847; cv=none; b=UeA393Hga1ccOYuyoGIHZiXtW+5OkHdMNMxTR2aegDfkqEaqvaxJsPLP4mm3OrnVtIUh2v/+o7+UUHlZaHFZe+PIYUVUro0ScggGxAk5Tx+CG8LUIqerSK2OXcfQ/kAFpT4/6kn9TegvrYPmjmu4QlrbNOBmXRW/uB/pSKRWoxg=
+	t=1711671850; cv=none; b=P3bup6iWce5r4iL1sp/Rvok5w0LkOQp2blpvjrsMWTy4JYXinR1go4A2lyzJiESdXOCpX/TEw1ef2XeheukJvUYvvl56isgWY/LHYlZiE9hk96lu0TXGQQJQzQQo0h9Wmi3LWFataYTg15gvRKOZsNM60MTLa0tMDeM2H2UM1lQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711671847; c=relaxed/simple;
-	bh=fdEV6NvWPOr3H9DhWoCHZa8j5eufVwiEJHht5U0PHvE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=feUyKqjplYKLQDIW51sMJDNlPeFJLxVyMee+ss0v68w2EYZRkIblMJh4KxqpfxhNqCsDnPLSN/KXlOt6UiFMFa2zCOr4f+AZg4/PfS5jbUuKXmSrm68RcYICk3qlQRl8Jw8++P+b/XFLzes1Jai6ugwLiiXBdK8St/yIu3cnCpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=qR6fjy46; arc=none smtp.client-ip=4.36.192.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeweavers.com
+	s=arc-20240116; t=1711671850; c=relaxed/simple;
+	bh=Kktgyk1Ne8683zhhNl+w7gx+1BUZgoefIm93sHMKkzw=;
+	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZAWoGVVBPx+rbJDCTaDL1FmLqjHsuJnrPLSUW2LCBWV5u6WDewojRduE8NApWFRQdVel4Y3cdyZvpsOSG89PXUg7Geq3Y74lJ0rKHr0GhfWHvpyKCbM5tn/klT79PJBSnLQ4OIHy6cU8Ugzj2H2VaxJD0YNzVgRxr5igx1etwUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ANq6cHAS; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="qR6fjy46"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=codeweavers.com; s=s1; h=Message-ID:Date:Subject:Cc:To:From:Sender;
-	bh=Nr8IOHHYhllR3HYtyEHbvyYMxtrQLzWrxlWMFjNl1S0=; b=qR6fjy46cf/YnVyMqxsjI0ltja
-	h+DRm+jCJXCT36aXMK7rLi05zzJBov02iVS64RLO4o7GyQtpbDEtX4+2vVKB1/1vHECzXdowN2H4K
-	Foq3Wgzl8RwYtG27806hUYAWkuk32kerObWIvhCg6ncGgefA2gANaiHI/4OGNlP0ZyKUAYxfvuCIk
-	iU2ilLLQslFqSXJw6eawW6cgiQq+apWWOErzRQLw8ygQbHKNfyBMlab2QbKnJNec3u3DmTraqBBbw
-	Wcr6m+sDNUwe2TJBe4rl98FOjCEB6xlVydmwu/W6cQXV4vsj5dc/Vs1HLKST6PzpGgVih2jO3dy2l
-	IxvDXM3w==;
-Received: from cw137ip160.mn.codeweavers.com ([10.69.137.160] helo=camazotz.mn.codeweavers.com)
-	by mail.codeweavers.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <zfigura@codeweavers.com>)
-	id 1rpzlM-000iik-0l;
-	Thu, 28 Mar 2024 19:06:28 -0500
-From: Elizabeth Figura <zfigura@codeweavers.com>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	wine-devel@winehq.org,
-	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Arkadiusz Hiler <ahiler@codeweavers.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	linux-doc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Elizabeth Figura <zfigura@codeweavers.com>
-Subject: [PATCH v3 03/30] ntsync: Introduce NTSYNC_IOC_SEM_POST.
-Date: Thu, 28 Mar 2024 19:05:54 -0500
-Message-ID: <20240329000621.148791-4-zfigura@codeweavers.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240329000621.148791-1-zfigura@codeweavers.com>
-References: <20240329000621.148791-1-zfigura@codeweavers.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ANq6cHAS"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-515c3eeea5dso1544497e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 17:24:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711671847; x=1712276647; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OKKadjbl+IjaVrgNtNEvMRJkka5H/Sf6yJutNvR12Xw=;
+        b=ANq6cHASvm/NJdTch6gipbsN5Pt4ushCkcOyPoaGEcJ05ojjA5gyI+n8ts8ATJ47kA
+         N+2JUQ2AtLNxW22E6vXq5WstYRoIXuSEvRFQZr4TkyhSTWziXboRXTALWmbuQaSzRMg2
+         xS703ZXE8HesOeTeuHsFE6cm5Mt52YpZCq2Hs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711671847; x=1712276647;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OKKadjbl+IjaVrgNtNEvMRJkka5H/Sf6yJutNvR12Xw=;
+        b=tKeBruHrsQ1H1s8D4sbfpzi9Rk74+JuvHUORHpmQBUvwAyp26Gg2s4MxISHxCeSHhZ
+         qC6ZazkCfGMlCKYIfKXeUhVQntb2yZiGy0zSfT26XENf5UDAhmig0zCgU0/XfTFfFX/G
+         yq4byVAyg4Ms2s3IPKSW0e4f7gUBix7pNfy8qb6eysnMhE2EZJ8Q0uStMCkih2awdpAc
+         SK5jehX44ld8RqlkaVjASv5DNUKFyK5OxOBUrDC1b6+NxavG2/iDoU4eq/tOinwfptIA
+         SIsJuWFmn+7zGky4TAdc+vd3wtHO3dcTO6fLayVmfoGIIPYGsqfHVabaH/FVBr7eHo5G
+         AcEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU9Cx6/71X1ZbnoikT0mPlGZe7X0HfWjS5soYa9PK3AqaG9h4xH+XQ/UMDvpzDORzZKHBT3iM+XpkSKvCqOjvzHBoliZD0TjqitdS9b
+X-Gm-Message-State: AOJu0YyaJe/hoQrKJzleQre8+CNNNe74wvlqMd1Jfum9oTlia5HKfy2t
+	yxwPGsyx9vDKJnor8kLAuybtlGpNBIc+1igw5rQ8mn6aPTjuxYq7eUBmEpvgGyOXQI74rrGs3mN
+	vtW6e2as5CKM+17uBnf64TL9HFlEQUxte6Am6QhE9DQ3YWl8=
+X-Google-Smtp-Source: AGHT+IF7eR7SuZccKDbAejbaIA8l1qTeJc8Wrv2nofENrr5u/5niJzZ5bWpbyfr44eBl9K4WwSe8VpOjvVq6kooxSmU=
+X-Received: by 2002:ac2:465e:0:b0:515:d100:1650 with SMTP id
+ s30-20020ac2465e000000b00515d1001650mr177609lfo.57.1711671846981; Thu, 28 Mar
+ 2024 17:24:06 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 28 Mar 2024 19:24:06 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1711660035-9656-1-git-send-email-quic_khsieh@quicinc.com>
+References: <1711660035-9656-1-git-send-email-quic_khsieh@quicinc.com>
+From: Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.10
+Date: Thu, 28 Mar 2024 19:24:06 -0500
+Message-ID: <CAE-0n53qdRk0LRFambwRB=xiV4ak3Odoqhs4rOJg3x77c4MrTQ@mail.gmail.com>
+Subject: Re: [PATCH v1] phy/qcom-qmp-combo: propagate correct return value at phy_power_on()
+To: Kuogee Hsieh <quic_khsieh@quicinc.com>, abel.vesa@linaro.org, agross@kernel.org, 
+	airlied@gmail.com, andersson@kernel.org, daniel@ffwll.ch, 
+	dianders@chromium.org, dmitry.baryshkov@linaro.org, 
+	dri-devel@lists.freedesktop.org, robdclark@gmail.com, sean@poorly.run, 
+	vkoul@kernel.org
+Cc: quic_abhinavk@quicinc.com, quic_jesszhan@quicinc.com, 
+	quic_sbillaka@quicinc.com, marijn.suijten@somainline.org, 
+	freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-This corresponds to the NT syscall NtReleaseSemaphore().
+Quoting Kuogee Hsieh (2024-03-28 14:07:15)
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
+> index 36632fa..884973a 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
+> @@ -2754,6 +2754,7 @@ static int qmp_combo_dp_power_on(struct phy *phy)
+>         const struct qmp_phy_cfg *cfg = qmp->cfg;
+>         void __iomem *tx = qmp->dp_tx;
+>         void __iomem *tx2 = qmp->dp_tx2;
+> +       int ret = 0;
 
-This increases the semaphore's internal counter by the given value, and returns
-the previous value. If the counter would overflow the defined maximum, the
-function instead fails and returns -EOVERFLOW.
+Please don't initialize locals that are unused before being assigned
+unconditionally.
 
-Signed-off-by: Elizabeth Figura <zfigura@codeweavers.com>
----
- drivers/misc/ntsync.c       | 72 +++++++++++++++++++++++++++++++++++--
- include/uapi/linux/ntsync.h |  2 ++
- 2 files changed, 71 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/misc/ntsync.c b/drivers/misc/ntsync.c
-index 20158ec148bc..3c2f743c58b0 100644
---- a/drivers/misc/ntsync.c
-+++ b/drivers/misc/ntsync.c
-@@ -10,7 +10,9 @@
- #include <linux/fs.h>
- #include <linux/miscdevice.h>
- #include <linux/module.h>
-+#include <linux/overflow.h>
- #include <linux/slab.h>
-+#include <linux/spinlock.h>
- #include <uapi/linux/ntsync.h>
- 
- #define NTSYNC_NAME	"ntsync"
-@@ -31,23 +33,70 @@ enum ntsync_type {
-  */
- 
- struct ntsync_obj {
-+	spinlock_t lock;
-+
- 	enum ntsync_type type;
- 
-+	struct file *file;
-+	struct ntsync_device *dev;
-+
-+	/* The following fields are protected by the object lock. */
- 	union {
- 		struct {
- 			__u32 count;
- 			__u32 max;
- 		} sem;
- 	} u;
--
--	struct file *file;
--	struct ntsync_device *dev;
- };
- 
- struct ntsync_device {
- 	struct file *file;
- };
- 
-+/*
-+ * Actually change the semaphore state, returning -EOVERFLOW if it is made
-+ * invalid.
-+ */
-+static int post_sem_state(struct ntsync_obj *sem, __u32 count)
-+{
-+	__u32 sum;
-+
-+	lockdep_assert_held(&sem->lock);
-+
-+	if (check_add_overflow(sem->u.sem.count, count, &sum) ||
-+	    sum > sem->u.sem.max)
-+		return -EOVERFLOW;
-+
-+	sem->u.sem.count = sum;
-+	return 0;
-+}
-+
-+static int ntsync_sem_post(struct ntsync_obj *sem, void __user *argp)
-+{
-+	__u32 __user *user_args = argp;
-+	__u32 prev_count;
-+	__u32 args;
-+	int ret;
-+
-+	if (copy_from_user(&args, argp, sizeof(args)))
-+		return -EFAULT;
-+
-+	if (sem->type != NTSYNC_TYPE_SEM)
-+		return -EINVAL;
-+
-+	spin_lock(&sem->lock);
-+
-+	prev_count = sem->u.sem.count;
-+	ret = post_sem_state(sem, args);
-+
-+	spin_unlock(&sem->lock);
-+
-+	if (!ret && put_user(prev_count, user_args))
-+		ret = -EFAULT;
-+
-+	return ret;
-+}
-+
- static int ntsync_obj_release(struct inode *inode, struct file *file)
- {
- 	struct ntsync_obj *obj = file->private_data;
-@@ -58,9 +107,25 @@ static int ntsync_obj_release(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
-+static long ntsync_obj_ioctl(struct file *file, unsigned int cmd,
-+			     unsigned long parm)
-+{
-+	struct ntsync_obj *obj = file->private_data;
-+	void __user *argp = (void __user *)parm;
-+
-+	switch (cmd) {
-+	case NTSYNC_IOC_SEM_POST:
-+		return ntsync_sem_post(obj, argp);
-+	default:
-+		return -ENOIOCTLCMD;
-+	}
-+}
-+
- static const struct file_operations ntsync_obj_fops = {
- 	.owner		= THIS_MODULE,
- 	.release	= ntsync_obj_release,
-+	.unlocked_ioctl	= ntsync_obj_ioctl,
-+	.compat_ioctl	= compat_ptr_ioctl,
- 	.llseek		= no_llseek,
- };
- 
-@@ -75,6 +140,7 @@ static struct ntsync_obj *ntsync_alloc_obj(struct ntsync_device *dev,
- 	obj->type = type;
- 	obj->dev = dev;
- 	get_file(dev->file);
-+	spin_lock_init(&obj->lock);
- 
- 	return obj;
- }
-diff --git a/include/uapi/linux/ntsync.h b/include/uapi/linux/ntsync.h
-index 6a4867a6c97b..dcfa38fdc93c 100644
---- a/include/uapi/linux/ntsync.h
-+++ b/include/uapi/linux/ntsync.h
-@@ -18,4 +18,6 @@ struct ntsync_sem_args {
- 
- #define NTSYNC_IOC_CREATE_SEM		_IOWR('N', 0x80, struct ntsync_sem_args)
- 
-+#define NTSYNC_IOC_SEM_POST		_IOWR('N', 0x81, __u32)
-+
- #endif
--- 
-2.43.0
-
+>
+>         mutex_lock(&qmp->phy_mutex);
+>
+> @@ -2766,11 +2767,11 @@ static int qmp_combo_dp_power_on(struct phy *phy)
+>         cfg->configure_dp_tx(qmp);
+>
+>         /* Configure link rate, swing, etc. */
+> -       cfg->configure_dp_phy(qmp);
+> +       ret = cfg->configure_dp_phy(qmp);
+>
+>         mutex_unlock(&qmp->phy_mutex);
+>
+> -       return 0;
+> +       return ret;
+>  }
