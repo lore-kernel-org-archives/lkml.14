@@ -1,193 +1,113 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A4E7F49E
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 09:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4E1823D9;
+	Fri, 29 Mar 2024 09:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711704502; cv=none; b=QqctE067MxVFKdGr6d+UCieCGFY1c0/GkFIg0Ue2W7WdemsgE6bLEXlY8VNrYPVmsoT6vUXKHdYIQAQ5RYp4jjz/u6boruTE7MLy7xK7y7AU+CbEjvjOjCnMAjbeqQZCpNWRXA5p39tFPfHf5jDQeTnCVmbeCinzCqoR7eraxc8=
+	t=1711704503; cv=none; b=V4wuiCd+mIozBcpRc4104MeFG91mw9u9kxTLLkKwdUj78bLKvZum4G3sXeueWimfYxV01b8g8uaNyta3HYqbZXeNy9U9bkLVwiHQj5YHDc5cFBMZw+zaVa2jPk4Vt7YTOWiybaQsdQxH+8NeOKfDpIac74e5QSJ195vBaDeONIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711704502; c=relaxed/simple;
-	bh=wCFKSKMKTlZBWK3ZXaR4BvVSeSCHMmEnNsjJo8lvTyY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=da7rh150cxPwS73LUuwo13/Scye4bvllkT/5PdEyrEzlm5weIpq81kgR9h59bjl2v59s9vG1P07ylKJHhq3IaT2Qx3rDbHm4YLOIY+2JCHvl+w9hP/Rv95yz6rt48txtQT8BTcC8QnxO7xXKWFy1OXcK7r8ME3iHpT36nL2r95c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=Z8YTS1mX; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1711704503; c=relaxed/simple;
+	bh=SHFdYTplvlOn+ggiMzH/HZZS8PzXy1ho54FtpQJcLFo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=B7J7n9uwHw9AW42vdXXjaa95cP8o5tbnKyzy8YuEAyOblyEo0qdYaqDO3iYLm2Ks4zvxIadOttI1VGFmeFAVrgO/vl8PZesUpPnkv8Zv8T6HMzkqf4L0Ex1gayiJFsXrUxtrwQFlP9tcZRu1rDj+NUMW3H+bCKlWHgjKIi71W94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CAUUEsHo; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Z8YTS1mX"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-29de4c33441so1437392a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 02:28:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CAUUEsHo"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d700beb60bso33890131fa.1;
+        Fri, 29 Mar 2024 02:28:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1711704500; x=1712309300; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PDqUNVfVcL5Rx2dx6lOA54ZEoR9Eohs4e4oftX2EMwM=;
-        b=Z8YTS1mXlorb4QJ+VKgpjh1j737YZEyXRBcxuYkfsv+qaXxJpKTIyvzJfVZ667X5sb
-         Dfv68oz+XWbhqUqPo2xOON/WfvfwXXlyIS6A8bsPD2l3f1ws6/S/JyCTY+Dwl3QMI9L3
-         4X2tfogzJb1Mmw3qWnYQnQBZ3ByTp9K7RHH1HRiqS+0aC5Rkc8HMNtrPox+Uev0HV3be
-         YRag0tagInmGSKgX9Qx+GzmdRBssG2sUn0ce5X1We9K9j9tHrxcX+bRXY8tf87XaVqgM
-         RgPiBH5JHeb/y+cr9IprPEjqF5PIQ2KNg29Qen7oEiKgdDaU69oLlmxoFIPr4fkC7Hj+
-         YtCg==
+        d=gmail.com; s=20230601; t=1711704499; x=1712309299; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=066JbWD6+sdeM8NUEow4XI6o/PIAb6Ac0ifLv3nJ9F8=;
+        b=CAUUEsHon4rYsygy+KY+mdr9LtfJHgfVNHJCFicPwQxq0O7G63v9fQGYSkr137QlLG
+         kuAPh+F6PnI6m/94HjaTgkmUXrGjY8TYHOtx+52MKVI/2UdFxGZLzpIwfWs5EikATc6R
+         6vUVZB18OvrGKQFGQZcBq6jN9OoSYQXb5NxyTJyRSeAv+CMZjP43lYrR5CsKcVaCUnk8
+         YLSMmrs6b/6pVIJZ7PXVWvPm+uNhJTzX66/kcU+oBRoONEjxoxR+/KGmYCrUYRsCcRxo
+         jf74gAAOpSvjUivG9zd6wc5tsDIP2Ohd7HTYwYl7+lrsQi3Yi5QjFNmNNO8YE5UmzTr2
+         MGcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711704500; x=1712309300;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1711704499; x=1712309299;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PDqUNVfVcL5Rx2dx6lOA54ZEoR9Eohs4e4oftX2EMwM=;
-        b=MV9VZ+4KFUsM6+n3dnYIwvZjGXnHkoKu8CizlNRlLhWg347qDAdX8rqtKM4hWJlMiR
-         /RQf/PkbtuLGXQpBpcb1oYq6uLtYirp8T55vUtGsH8U4B5Zuf4h5vmeG4cg/Jf5QbXA2
-         5l1zbCIbSnBv57XBhoyFpguDcCz/4+IOEUIoeIZJkz+6kGgjniPpfKkeFLw4TqFVt4RC
-         xg+qCwKk/EWI90wEN3thwg6EeLD1ETdCohn1sv1pzeEdb2jvq3KA2XsWgf6P66zpqn4G
-         2TGlCjjOtVdGrZWd+O3HhNk7r7Hw1Yw9x7elZddKy8/GPk8uRlTOONstNazpZzDNxK3e
-         Jprw==
-X-Forwarded-Encrypted: i=1; AJvYcCXvThSIin8ThaxV0WICjowjnzSGefkrWZ8F0viLqF0ku3Wsbh9Y3p+PlwLdSY9EFFD6XINYcG38yMgJfjtIPl/UKBzHjU/qbJ+Ay76M
-X-Gm-Message-State: AOJu0YxijsK/HkYS4jHniuQnruW7YHhbAzA2c1FPUzksFezCVoyj/76k
-	NpDOES+yO59mhgDzY/dqnhO0UnnJZtffwvvXbNmVgk6TqRHw8rD46h7bEgvOjFM=
-X-Google-Smtp-Source: AGHT+IEFn6lnpp94KNj8bwQ5NgWC2ILdPrLL6jG7Xd8BF08mkXal/x6HNlt14p0P0bkYq09hEnt/mA==
-X-Received: by 2002:a17:90a:ea06:b0:2a0:310b:2cac with SMTP id w6-20020a17090aea0600b002a0310b2cacmr1663501pjy.25.1711704499969;
-        Fri, 29 Mar 2024 02:28:19 -0700 (PDT)
-Received: from [127.0.1.1] (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
-        by smtp.gmail.com with ESMTPSA id cv17-20020a17090afd1100b002a02f8d350fsm2628830pjb.53.2024.03.29.02.28.16
+        bh=066JbWD6+sdeM8NUEow4XI6o/PIAb6Ac0ifLv3nJ9F8=;
+        b=nGGkwx4hRmCocx4Co/LNYgTwMkAYn9Nz+Y3/oJvXbLx94BjrZohzJuP3MOB7u3t1Ef
+         59DcHbUWq+HP4e3YXpN4Yp3CD2LGn8db4AqmhPJIWdZ4omO5DxXmdH70A2keKbAp83ef
+         nF+3TT5SBeCXrn6N69gtgAf3dHk/sX6mKH8UZaB4g8WFt02dwENlrxfa26Aj3D3QIPQR
+         YDwYWjwxyROFgq13+hg8wVcvy7D6TBuINCuaRkx1RX8OnykJ0hinAOGDUJctdBWkrM7s
+         NGeDIS/f9hlwaeQyxBg8JJImXZt3UsrOAh8Uqr4ZvDQxtzslj7KWDUaA2aVrzelU/aiO
+         TMRg==
+X-Forwarded-Encrypted: i=1; AJvYcCVKl1+CySu2yS8fv4+LF0d/17UAh0FjGo01ryD+3mwQx9FoMxoMOo2GVNvqsJHDk8Z6A8P1iSmM0fgbK9qWyQ4RLHSVJ37oWQLdWDn5
+X-Gm-Message-State: AOJu0YwEZk7UQZz+0EWx1GG3V95k6hExkbSLxxpzFXJ0Ns4eOKoFeYg2
+	/BqL1pWv1PKE1s+WPdyQjsA80BxPC/YQqSBp2A0LEHM1bNyuh4+jty3asB5/5J0=
+X-Google-Smtp-Source: AGHT+IExo88sD1Ktl8GpwspwucY0XOL5dUgi85yDVTbfTXiKdQAclrTQKjIeWxCOiwra/nqNxYhoaA==
+X-Received: by 2002:a2e:a0d3:0:b0:2d4:8d75:7a64 with SMTP id f19-20020a2ea0d3000000b002d48d757a64mr1207885ljm.13.1711704498858;
+        Fri, 29 Mar 2024 02:28:18 -0700 (PDT)
+Received: from fedora.iskraemeco.si ([193.77.86.250])
+        by smtp.gmail.com with ESMTPSA id jx24-20020a170906ca5800b00a47152e6d10sm1700975ejb.134.2024.03.29.02.28.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Mar 2024 02:28:19 -0700 (PDT)
-From: Max Hsu <max.hsu@sifive.com>
-Date: Fri, 29 Mar 2024 17:26:27 +0800
-Subject: [PATCH RFC 11/11] KVM: riscv: selftests: Add Sdtrig Extension to
- get-reg-list test
+        Fri, 29 Mar 2024 02:28:18 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: bpf@vger.kernel.org,
+	x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Joan=20Bruguera=20Mic=C3=B3?= <joanbrugueram@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH bpf 1/2] x86/bpf: Fix IP after emitting call depth accounting
+Date: Fri, 29 Mar 2024 10:25:07 +0100
+Message-ID: <20240329092723.17435-2-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240329092723.17435-1-ubizjak@gmail.com>
+References: <20240329092723.17435-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240329-dev-maxh-lin-452-6-9-v1-11-1534f93b94a7@sifive.com>
-References: <20240329-dev-maxh-lin-452-6-9-v1-0-1534f93b94a7@sifive.com>
-In-Reply-To: <20240329-dev-maxh-lin-452-6-9-v1-0-1534f93b94a7@sifive.com>
-To: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>, 
- Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
- Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>
-Cc: Palmer Dabbelt <palmer@sifive.com>, linux-riscv@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pm@vger.kernel.org, kvm@vger.kernel.org, 
- kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org, 
- Max Hsu <max.hsu@sifive.com>, Yong-Xuan Wang <yongxuan.wang@sifive.com>
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Yong-Xuan Wang <yongxuan.wang@sifive.com>
+From: Joan Bruguera Micó <joanbrugueram@gmail.com>
 
-Update the get-reg-list test to test the Sdtrig Extension is available
-for guest OS.
+From: Joan Bruguera Micó <joanbrugueram@gmail.com>
 
-Signed-off-by: Yong-Xuan Wang <yongxuan.wang@sifive.com>
-Co-developed-by: Max Hsu <max.hsu@sifive.com>
-Signed-off-by: Max Hsu <max.hsu@sifive.com>
+Adjust the IP passed to `emit_patch` so it calculates the correct offset
+for the CALL instruction if `x86_call_depth_emit_accounting` emits code.
+Otherwise we will skip some instructions and most likely crash.
+
+Fixes: b2e9dfe54be4 ("x86/bpf: Emit call depth accounting if required")
+Link: https://lore.kernel.org/lkml/20230105214922.250473-1-joanbrugueram@gmail.com/
+Signed-off-by: Joan Bruguera Micó <joanbrugueram@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
 ---
- tools/testing/selftests/kvm/riscv/get-reg-list.c | 27 ++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ arch/x86/net/bpf_jit_comp.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/riscv/get-reg-list.c b/tools/testing/selftests/kvm/riscv/get-reg-list.c
-index b882b7b9b785..f2696e308509 100644
---- a/tools/testing/selftests/kvm/riscv/get-reg-list.c
-+++ b/tools/testing/selftests/kvm/riscv/get-reg-list.c
-@@ -41,6 +41,7 @@ bool filter_reg(__u64 reg)
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_I:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_M:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_V:
-+	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_SDTRIG:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_SMSTATEEN:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_SSAIA:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_SSTC:
-@@ -247,6 +248,8 @@ static const char *core_id_to_str(const char *prefix, __u64 id)
- 	"KVM_REG_RISCV_CSR_AIA | KVM_REG_RISCV_CSR_REG(" #csr ")"
- #define RISCV_CSR_SMSTATEEN(csr) \
- 	"KVM_REG_RISCV_CSR_SMSTATEEN | KVM_REG_RISCV_CSR_REG(" #csr ")"
-+#define RISCV_CSR_SDTRIG(csr) \
-+	"KVM_REG_RISCV_CSR_SDTRIG | KVM_REG_RISCV_CSR_REG(" #csr ")"
+diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+index a7ba8e178645..09f7dc9d4d65 100644
+--- a/arch/x86/net/bpf_jit_comp.c
++++ b/arch/x86/net/bpf_jit_comp.c
+@@ -479,9 +479,10 @@ static int emit_call(u8 **pprog, void *func, void *ip)
  
- static const char *general_csr_id_to_str(__u64 reg_off)
+ static int emit_rsb_call(u8 **pprog, void *func, void *ip)
  {
-@@ -314,6 +317,18 @@ static const char *smstateen_csr_id_to_str(__u64 reg_off)
- 	return NULL;
++	void *adjusted_ip;
+ 	OPTIMIZER_HIDE_VAR(func);
+-	x86_call_depth_emit_accounting(pprog, func);
+-	return emit_patch(pprog, func, ip, 0xE8);
++	adjusted_ip = ip + x86_call_depth_emit_accounting(pprog, func);
++	return emit_patch(pprog, func, adjusted_ip, 0xE8);
  }
  
-+static const char *sdtrig_csr_id_to_str(__u64 reg_off)
-+{
-+	/* reg_off is the offset into struct kvm_riscv_smstateen_csr */
-+	switch (reg_off) {
-+	case KVM_REG_RISCV_CSR_SDTRIG_REG(scontext):
-+		return RISCV_CSR_SDTRIG(scontext);
-+	}
-+
-+	TEST_FAIL("Unknown sdtrig csr reg: 0x%llx", reg_off);
-+	return NULL;
-+}
-+
- static const char *csr_id_to_str(const char *prefix, __u64 id)
- {
- 	__u64 reg_off = id & ~(REG_MASK | KVM_REG_RISCV_CSR);
-@@ -330,6 +345,8 @@ static const char *csr_id_to_str(const char *prefix, __u64 id)
- 		return aia_csr_id_to_str(reg_off);
- 	case KVM_REG_RISCV_CSR_SMSTATEEN:
- 		return smstateen_csr_id_to_str(reg_off);
-+	case KVM_REG_RISCV_CSR_SDTRIG:
-+		return sdtrig_csr_id_to_str(reg_off);
- 	}
- 
- 	return strdup_printf("%lld | %lld /* UNKNOWN */", reg_subtype, reg_off);
-@@ -406,6 +423,7 @@ static const char *isa_ext_single_id_to_str(__u64 reg_off)
- 		KVM_ISA_EXT_ARR(I),
- 		KVM_ISA_EXT_ARR(M),
- 		KVM_ISA_EXT_ARR(V),
-+		KVM_ISA_EXT_ARR(SDTRIG),
- 		KVM_ISA_EXT_ARR(SMSTATEEN),
- 		KVM_ISA_EXT_ARR(SSAIA),
- 		KVM_ISA_EXT_ARR(SSTC),
-@@ -764,6 +782,11 @@ static __u64 smstateen_regs[] = {
- 	KVM_REG_RISCV | KVM_REG_SIZE_ULONG | KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_SMSTATEEN,
- };
- 
-+static __u64 sdtrig_regs[] = {
-+	KVM_REG_RISCV | KVM_REG_SIZE_ULONG | KVM_REG_RISCV_CSR | KVM_REG_RISCV_CSR_SDTRIG | KVM_REG_RISCV_CSR_SDTRIG_REG(scontext),
-+	KVM_REG_RISCV | KVM_REG_SIZE_ULONG | KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_SDTRIG,
-+};
-+
- static __u64 fp_f_regs[] = {
- 	KVM_REG_RISCV | KVM_REG_SIZE_U32 | KVM_REG_RISCV_FP_F | KVM_REG_RISCV_FP_F_REG(f[0]),
- 	KVM_REG_RISCV | KVM_REG_SIZE_U32 | KVM_REG_RISCV_FP_F | KVM_REG_RISCV_FP_F_REG(f[1]),
-@@ -853,6 +876,8 @@ static __u64 fp_d_regs[] = {
- 	{"zicboz", .feature = KVM_RISCV_ISA_EXT_ZICBOZ, .regs = zicboz_regs, .regs_n = ARRAY_SIZE(zicboz_regs),}
- #define SUBLIST_AIA \
- 	{"aia", .feature = KVM_RISCV_ISA_EXT_SSAIA, .regs = aia_regs, .regs_n = ARRAY_SIZE(aia_regs),}
-+#define SUBLIST_SDTRIG \
-+	{"sdtrig", .feature = KVM_RISCV_ISA_EXT_SDTRIG, .regs = sdtrig_regs, .regs_n = ARRAY_SIZE(sdtrig_regs),}
- #define SUBLIST_SMSTATEEN \
- 	{"smstateen", .feature = KVM_RISCV_ISA_EXT_SMSTATEEN, .regs = smstateen_regs, .regs_n = ARRAY_SIZE(smstateen_regs),}
- #define SUBLIST_FP_F \
-@@ -930,6 +955,7 @@ KVM_ISA_EXT_SUBLIST_CONFIG(aia, AIA);
- KVM_ISA_EXT_SUBLIST_CONFIG(fp_f, FP_F);
- KVM_ISA_EXT_SUBLIST_CONFIG(fp_d, FP_D);
- KVM_ISA_EXT_SIMPLE_CONFIG(h, H);
-+KVM_ISA_EXT_SUBLIST_CONFIG(sdtrig, SDTRIG);
- KVM_ISA_EXT_SUBLIST_CONFIG(smstateen, SMSTATEEN);
- KVM_ISA_EXT_SIMPLE_CONFIG(sstc, SSTC);
- KVM_ISA_EXT_SIMPLE_CONFIG(svinval, SVINVAL);
-@@ -985,6 +1011,7 @@ struct vcpu_reg_list *vcpu_configs[] = {
- 	&config_fp_f,
- 	&config_fp_d,
- 	&config_h,
-+	&config_sdtrig,
- 	&config_smstateen,
- 	&config_sstc,
- 	&config_svinval,
-
+ static int emit_jump(u8 **pprog, void *func, void *ip)
 -- 
-2.43.2
+2.44.0
 
