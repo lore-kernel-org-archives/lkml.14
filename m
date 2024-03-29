@@ -1,93 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2124.outbound.protection.outlook.com [40.107.117.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE1F7490;
-	Fri, 29 Mar 2024 02:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983231E51F;
+	Fri, 29 Mar 2024 02:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.124
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711679099; cv=fail; b=aUargHx/O22AEno02OP3An2nXQvKp/5Wux0LA7pVONJCbQzVcX0m7ZCuKvnEKRyyjOaHZE3GPpfKzYYsMlaC+G6FBAdwFa1RfmPgBMGLtjkQj2YPW8vccolxMKVsz7ww61v+x4Ltkud/NdpOmDqsbOziPj+FGGfjcvZDBM3qT40=
+	t=1711679680; cv=fail; b=FGHjFPF8gHuirgY9vaFx7/pIAj3mBJwBd0j51dfVcrxuA4HD2sPRXpKbdISb6uC/nxicjJPcfX8SYE5Dc7vhupNIMQKXtufpwxH2cgoRziZBMNmQpYQsTat/y1RVAAjlIqjGFQbkuhDq+O3y7p4UWrS7nZ+mc62HB/ZpMcUH0/g=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711679099; c=relaxed/simple;
-	bh=FUCTxdMglq/EfDLNShiBREHOGXOUb44wg4C/C8X7vDw=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=A4XP+Rf4oYh3HKLsweNTO7TVZ6rca/OzxuxqTipNCpKm91mk/TYgWsWIwkd10NGlPi8rv7+jSyQN0HHjYp6Yqz1qjf5XmSZ3wiqyAwJQonFm75XLSpxgJe1V7XLpPWzdxdnh0ZwMpl8RBne1hRgwcUPV1u/VL/P1qhlG5102f6Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PwIyDdyG; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711679680; c=relaxed/simple;
+	bh=OIePndvSyyprYb17dia4uTH5+8p6EuSdGwRB/xrsmY0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=CcKJGBfS5qdSJyeq0hiQVLiZqaSD6NX/Ib7qYLjYemL+ceD/hHClOQil2jKw9lh/TQHPzQksGcc026EMhfyMddrE3j9O9LqfeBLsZ6IOD6EUFLKsQOBfpDdPEjt/eBqP/Y8f7zO5CBG5hDrWXZTvZOjw4pquK93chKvlHwlpZZo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nuvoton.com; spf=pass smtp.mailfrom=nuvoton.com; dkim=pass (1024-bit key) header.d=nuvoton.com header.i=@nuvoton.com header.b=SN24QFMi; arc=fail smtp.client-ip=40.107.117.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nuvoton.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nuvoton.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PwIyDdyG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711679097; x=1743215097;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=FUCTxdMglq/EfDLNShiBREHOGXOUb44wg4C/C8X7vDw=;
-  b=PwIyDdyGvOGHhPbg989N9wFpAFHRfAGxzCnRcoNQCCStkkibQCG3oS5L
-   F6ykCrtDmElp7ur4FS4DwT0AoCuCLIknDOA6JRqzCZsCQkE64gFH8doXI
-   6rC5TVawahn8HJOZ0GCZXwHX5GpFwvmTtXdkX9OB6jAdJJE9/apVMU8Fh
-   zzC0pB/vsaPd93VNyWCHl7EN8e8bDlQ57dhzHNMhliTGRgNcJ7H6BgtlF
-   oUSEjJDA76Ld5RhJzPtDGSOgNfVE6DgjTj0w1PDgpyJpvD8mNp8mHYSX2
-   Q2jowF5fquwGIrguLwTLx88/rsDexFRIqvTSd2gOxVMpr/vY/Mz5U7Znx
-   w==;
-X-CSE-ConnectionGUID: zviu3T5ET06qekXZm+f0BA==
-X-CSE-MsgGUID: vn+kokW7SBuZb5xKL+gHvA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="17419270"
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="17419270"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 19:24:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="17483550"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 28 Mar 2024 19:24:56 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 28 Mar 2024 19:24:55 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 28 Mar 2024 19:24:55 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 28 Mar 2024 19:24:55 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 28 Mar 2024 19:24:54 -0700
+	dkim=pass (1024-bit key) header.d=nuvoton.com header.i=@nuvoton.com header.b="SN24QFMi"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iTjqgQ7Brs/gehzrlglZSrPEGBV+i91M+xaCpro2pf4tIQ4thZjSAf4zO+0RJ0zzXDAlcHTzWjjmTLFGU5HSqiY1fETNSaFq0z7ljeOvKwwkzqKk5VbRt++lB6M5f/N9fnAQa9Dn89K3oaZlcUFcq17Xix4jnhp1xxB/e3xngjRNgRtAnzCp1m1EhAOGlZ6cSO2UZbL99HQQgbJkgEDepfeoTfk0q7VgV4GA1nO8/MVQ7yJgEklG+wKLVcWNoojriHvNZ7O3DGCaH0UJp0IRg/jjD368lzuX/7nRsgPgH1duNGG/6fXdBgayZI8zz40L+AlLkcy9ev4ILQcBbmAI+Q==
+ b=Z98HniK+wTjQbSUd6jKjO/ZPgqM6EPcTStv+XRkqOfWjw+6vAiJcumHg1U7xu1tnK0FnNKOngW0mmZ6Bl37VsNwoeERVoPpiu5K0PpYWIbxk5mg/VCaDvYLnejFSIz+oKmExAj6CtSLAR/fVKuyVrDzWuRtyMZ5GVmjjJeP4sG0k8pfAB98iRlv4jtVBtFNcjWBHFPkWnHkEw8XZBb/WtR2MkChJT2cqSo9VZuGSWjgzSvDEp/7MeNQGxFKl1CLwQ6ir8ZecoCB/3SKYcb6yr6Vd6ZfmGHc+NP3ScWbRvLjrVhL5TpUqenpEyJgo9U0rAOIjf/F4yS83NED7ME8U3A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=d3xpJv/1/K8Qss0ohFCUe18p1tmior5RH4EDGcrd0M4=;
- b=PCYb9OqVwq3XRt/oV7eUpWeLsh+k1ZmAKUHGteM7y0dQKiK5MOC5I/UD0JA2Hy3wEzAAOtvXeNezW2oAMGgYRjzprjAVIrJnr2S6GnQU2SCwSIA/t2tycypWSSbHLfHP6fySGGOe0bBXcBUIGX02CYXlOgQUhji/BALVOXCjdygf8hCEoxWvDwD+4Jz9//Ej3NnHhYB1oQvz84PnOMJOfM4V+a5uyKI/h/XJdHYTtDqnfUbW1PlBK9dmbOoV6Ldrhc7SmvfO1H/GpG37MNe1YJRTuDAmRs+1oFYu0fjCvIyhbhyiq1fOku4BlyHZI3B/w3AVKZryM8UAdb8Z8ViTyA==
+ bh=nrE0fmxFheNCBGQ8Uz0ltSf+krGZM3MnDHd0IlYqHoc=;
+ b=H1wMixhttSseTCluvqcpHAM2eQeuHIqcwLNYUvvtqwieBEfe+SbmVk6yOl6dCNJE5/rdk8U9aHQreGSAj57onSih2G12yAVuvXy1+d3raDgdfD+2TRfb4CL1Yp7ZTLRr5p11LhCxdg1Rjeumd1w7wVGmYWX/evS1XlrEsVf4PsJ5o4FlNh6dgNtiycCWtZkGYi/VvgVrP7e/sZ8RdKQJuHUu3d1kyHw/rjEPBVqelhZBSJa855yUsrlQ69oNXYCaycPyXYsgFNtXCai6gUykou2v5ZCUa0ww8UDmNR/wpRZ105ZMgAIp3fcqwElFhBqp96xSUYaG8YhgAwhk18Jpjg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
- by SJ0PR11MB6575.namprd11.prod.outlook.com (2603:10b6:a03:477::8) with
+ smtp.mailfrom=nuvoton.com; dmarc=pass action=none header.from=nuvoton.com;
+ dkim=pass header.d=nuvoton.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nuvoton.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nrE0fmxFheNCBGQ8Uz0ltSf+krGZM3MnDHd0IlYqHoc=;
+ b=SN24QFMi3ESdv8JPNP0iN9MX+Ep49FS/GcRbMCtcca+Z00AVpLiE8lTDKRv3CBZq0SWM9P1b4tEE9hvwwOL3VBgP3i7DBqz6YN04xunqJRgNWIF8kWze75nUhMm9bPsNLm/zv75riiFeZyeLKrGq9MmWqUcYqWA9y8+YWhuP/Uo=
+Received: from SI6PR03MB8987.apcprd03.prod.outlook.com (2603:1096:4:235::7) by
+ SEZPR03MB7657.apcprd03.prod.outlook.com (2603:1096:101:130::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.24; Fri, 29 Mar
- 2024 02:24:52 +0000
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::58dd:99ca:74a6:2e3e]) by LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::58dd:99ca:74a6:2e3e%3]) with mapi id 15.20.7409.031; Fri, 29 Mar 2024
- 02:24:52 +0000
-Date: Fri, 29 Mar 2024 10:24:43 +0800
-From: kernel test robot <oliver.sang@intel.com>
-To: Johannes Berg <johannes.berg@intel.com>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
-	Ilan Peer <ilan.peer@intel.com>, Miriam Rachel Korenblit
-	<miriam.rachel.korenblit@intel.com>, <linux-wireless@vger.kernel.org>,
-	<oliver.sang@intel.com>
-Subject: [linus:master] [wifi]  310c8387c6: hwsim.autogo_chan_switch.fail
-Message-ID: <202403291042.d9211733-oliver.sang@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-X-ClientProxiedBy: SGBP274CA0001.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::13)
- To LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.40; Fri, 29 Mar
+ 2024 02:34:31 +0000
+Received: from SI6PR03MB8987.apcprd03.prod.outlook.com
+ ([fe80::13be:c406:46ab:8d0e]) by SI6PR03MB8987.apcprd03.prod.outlook.com
+ ([fe80::13be:c406:46ab:8d0e%5]) with mapi id 15.20.7409.031; Fri, 29 Mar 2024
+ 02:34:31 +0000
+Message-ID: <779c7084-e4a2-4100-b9ff-f7f6a37d9039@nuvoton.com>
+Date: Fri, 29 Mar 2024 10:33:02 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/2] ASoC: nau8325: new driver
+Content-Language: en-US
+To: Mark Brown <broonie@kernel.org>
+Cc: lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+ devicetree@vger.kernel.org, linux-sound@vger.kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, linux-kernel@vger.kernel.org,
+ robh+dt@kernel.org, conor+dt@kernel.org, perex@perex.cz, tiwai@suse.com,
+ YHCHuang@nuvoton.com, KCHSU0@nuvoton.com, CTLIN0@nuvoton.com,
+ SJLIN0@nuvoton.com, scott6986@gmail.com, supercraig0719@gmail.com,
+ dardar923@gmail.com
+References: <20240327075755.3410381-1-wtli@nuvoton.com>
+ <20240327075755.3410381-3-wtli@nuvoton.com>
+ <8278611a-a46f-4d5e-9861-67ff1084db50@sirena.org.uk>
+From: WTLI <wtli@nuvoton.com>
+In-Reply-To: <8278611a-a46f-4d5e-9861-67ff1084db50@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: TYCP286CA0185.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:382::20) To SI6PR03MB8987.apcprd03.prod.outlook.com
+ (2603:1096:4:235::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -95,177 +70,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|SJ0PR11MB6575:EE_
+X-MS-TrafficTypeDiagnostic: SI6PR03MB8987:EE_|SEZPR03MB7657:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: E+XXp22ZBZe/EuSN7es90uOTvemRruUpxARmSMIOpD3gZL8wSla139iSqy1uKB8T+r7Tm/Xxj4uPG4sIWEUt9Z++N3fdZ6a8i/FdTVeb65E5uSLlDGxPnCwsE6yqntCatlnnW5iTb/WCxy6DC036pcK09vTLjufkm8UGEfsMVF/Vd8Dgtbz+hL+OL1F4+f27II9q7U7b7OrbuH8JSAK+B7671uqGJnr5YpPVpSDCbX9boGVfAjqCFJwiPi7pEYx/dNeVcOWL67SL+pIn9ZE57ULScAZwvkbhidPXFhwCl0HrM0b8B+kJHzPRNDmQsfqPQtQXTgSbpc2BmnMmg+wRskHSbGGswkJ3xsGYTT4NsEf7CNurQEzxu3fXCSiU+Ph56QikXces52N0WneI1oGSHTCADL+0Julxh/VXFECaZrsIRNRKGIRYIMC/rwlOYNjbKNQsqfnuZhss67JUwyC+bl/sbtvuAm1ST09iCIOsGPuQh6rg4wHvi6WzOB4jkPiaWcJAR4CUSXdGdiCuW+XNIcMBAopi5COIYQnv5QrgyX1aLdDfqBAiyTmQW4knW6y4PXjdVvwVOLkyqFEGNZiEc+xOZ5mF9Z+Q7Jajiz49ngVPo/U9nUpXzLIw05jK/UCI
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info:
+	bjSmlmvgdl/rlkTcZfutrgFYRui+te3Lbvojkn2R5fIl73ocCWDIlffypItp/TyZFLkPU10v5FwKcHv869S9YWpbt6DL6kwRD+9L3+2DVs8BrqRM8W4JHukoKAJlpL6PPohyE3Mdb41VqdeJUfEofYEcTv5eOFtdv/uIV0KIINI353ne8aH039uZ0VQ5JKSf2Ib10XOnE+QaWPIZnNxPBizru9SmhxCwJCYtVtm9Q5X9Q0rjsHrcBGOdUGr7LsVZUKgrOUo7qcuOqvPrKMzRxZlZpDa72PQRDtM+0p2fehG2WVAzY/YL5brbH2sILWxbTrXxX7tI/xFlthC8q1Mn9rj3PF0ffe6tSJBw4kEQtFAE0eUTfBdGIST7Tmu8guHRgD0dvmESpFtyt1Hc0TWR8QbkUGrqY9Oe1QI91lWh02OhPZy8TFDHtkzaTGjguhbx0AJa/0OK40to296zZFtIAqsqLwUJe1pAzqbDzd6T5MjGQNBu7wBPXo8LR/3C15UHQ2/MbIgbt/M1OBpyHawLqEzOXTgEKwTAYRf4er4mImqEvVvA8BYp3SMhUJ7CC4a8rySSdWHlUmDsT2++r4JAYUPdWVLWoeHpbDA+hFJk1pgb26iB0eml4VSS0yvwv0PcjaMRo7ABxP09KuguQD7NyA==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SI6PR03MB8987.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(366007);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?stfjbQj2d78jRaVpzGF41Ws+s7IUSwCHNUVfEAmcfVQvE5YP6nnHwz7RfQeS?=
- =?us-ascii?Q?j1DWZWNNbvtYJsjV0rmH981PmPOHsdgiwwjnYexfOuHDVQlc/UnnI65jQpvo?=
- =?us-ascii?Q?XnUZpC799qpXEQ/ATdPfGpev0iXXMginHB1Hg1c0OMyopW4tyfbitpJ0cVtG?=
- =?us-ascii?Q?QBeYTL7HVYX2bx9qa2IGqUn/8J+fIxlB1+jU9U3txE/FyF/syrGtpNFGHqPX?=
- =?us-ascii?Q?0+btzg8b6zvWb5yZ7g4A8Rwwsti2shR78JVAZ+6UCY+rBT09z08hPwadftNO?=
- =?us-ascii?Q?Y/z0sAfpDqjsje2zMyDcSzG1uiwF3ZPuJYcgpR/PutzG1okuLdFcpnEZN1Kx?=
- =?us-ascii?Q?gkFZM19o2hzIKZI4jAtLCIodN5BuG8RcIGuiHSnAEUhyBL9WO5iOPK8/AYbV?=
- =?us-ascii?Q?SR6kfHw3/CrT/1apV2tCp2VxZ2xuaYHaMaKFVZGEFRJQohVrfXciZLQOe86+?=
- =?us-ascii?Q?Zd6g5PEJFPvZNpagmSKl58QqGnWcy/guimhaWMtvG3x+axdE1Sq0uyydk2pq?=
- =?us-ascii?Q?39EQPxCoQFKUn3SbBuMgi4xDVNs1pNUl/DabytHd/XNa0w+t56F4v0TI7JyL?=
- =?us-ascii?Q?Tn4iZaBFTLLdGc1Ex0BT6j1LUXHLIX2mB5LAU8H2tin21O7UAOSx1f+qycH4?=
- =?us-ascii?Q?0kdXJm87SXcjlO96/szMrpqzt04klmu7hje6XbfBXvMkT7U3ens+4JVhzCK5?=
- =?us-ascii?Q?jE6rw9bj1J+8HY4F9+K1+ij/4x7xmXtX8lzxWYu87mLPKJXgV2dpW9jpFaxa?=
- =?us-ascii?Q?oJpdkuVa3Xxe/hu0+nCAujcJxH7VEmWTO1UIU6SdI8JOjD+c4FpHwGZLh4Dz?=
- =?us-ascii?Q?XNlEtZToB6Vbo9ZRavc85bp20GU/1D7J/TJ8EcwWAWKJ+wTLTHhc6ELDvfLw?=
- =?us-ascii?Q?De7Nxkoq+7exS8lwlRKWv0gD9ktiUl6xdseu5pNC3/Y5Nga4qwuqM+qr2APH?=
- =?us-ascii?Q?d1Z3SehVZr3K3gVU6us09tAhpuFOZQWRR8MlYsTd3DsELC6rImDoq8ysl0eD?=
- =?us-ascii?Q?NUOdGV5jVpf3KgpamdJNw21VzNrwCjV4Q3N/gXV9m+TF8+Tmuz7TvQPa7uTB?=
- =?us-ascii?Q?PxfkecVIP5UV1fuaZoR6PQCl6TPCsYTOy6Xd3JB0CExhA+vk+Vl6JfKnp2xS?=
- =?us-ascii?Q?AaQ+YpE4vm4F6ph3oW4LioZwDKz09YISyTCVxedrHvllfZk8qDAhSMZOgLYT?=
- =?us-ascii?Q?Vkur2ag/tHh6q4BNvdZDkQNGJDJa1LhpTvMaa7qbv71qesrSIJGxLX5P0F5N?=
- =?us-ascii?Q?OAN/mdT6kYMWpOZQhVhgMFwVlnokU4KeW9jv/PflHqmoDInvbbJh7QyQ0Nm6?=
- =?us-ascii?Q?DD5scXETBicN0JlD4jyW9E4XMoemlJisvbUuYWPwX7m6FWju2Onnuy0qTUyW?=
- =?us-ascii?Q?Rsk9WJ6XorsJFrfzSaRC8RuVrv7HVQLUv4JVbPf9u4NNr/BvLG+xWHxlJXsx?=
- =?us-ascii?Q?SsG7k9MN9/QlOdOMJvE37xiY3w9IwV5ThiaiJRsLlJgh+4KMLDBT5pTddUh6?=
- =?us-ascii?Q?NHD13mgZrzS6R0RILIMD6xGFTNgf+XEN/htcYh6Q0vl5pLEUV682AkeinkOy?=
- =?us-ascii?Q?8+WPpmG/xSPWkUyZyzPhTJPooVG1IxuY+T0dIGsbbG+5pqJoO0dVp5LyYWi6?=
- =?us-ascii?Q?Ow=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: cfd313d2-d796-4415-296d-08dc4f976a04
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?d0pnYU1RMGdmZjFpLy9ROFNoUlZNamVlVmdQY0kwNHhySlpPN1B6cUUvMTZo?=
+ =?utf-8?B?Z05TYklpK05tOGw5VWRvYUp5U0xYa3A4b2h4anRKclduU280SEVXbGZXS2M2?=
+ =?utf-8?B?dG9EYTAzYVVRSm1xZTY2MzBhdXFJVDZaMnF0NC9rWWZrMHF2RGMwMEd1NVJI?=
+ =?utf-8?B?cGJab3RiSldSMER0SThZQjV0bHdTVjBrR1ZoakpHTm5TL0VjWE5lb1loZW43?=
+ =?utf-8?B?bzQ2aDc1KzFIckMzQ2pEUS9qQWlKQkdjbmtwNTZxTm13R0ttN0JSbTRHYml0?=
+ =?utf-8?B?Y0I3Z1IxMDFtcmRSQWNxb2hGYWt6SE9wNDI2K1F0SUhKUnRmbnQrWnVZZFpH?=
+ =?utf-8?B?cGlvSjVSU0txbjhvaUNaMTJiVmhaUFFVSmJlak9ESU1ESW1CMEsvT1FLWlVy?=
+ =?utf-8?B?ZXVyb21hc21SSjVjalZFcE5rNTEvMjJzYnkwdDJMQm8wdTh1UmdIb3BlY0Ew?=
+ =?utf-8?B?ZXk5WXpTaW9XRVZpQ3F5KzhzK0pXYisxVXNYc1ZudUVMM1VKRUk1dlJsYUhW?=
+ =?utf-8?B?dmJ6QzM3UFFSYW4yNTAwa0JQdW82V284SEhtSzZ5ZHNra1NTL01BcENoclA2?=
+ =?utf-8?B?a1ltTkkxRnlXdE42UWpBODZ1R1lzQUN3dkFOU3U4MWxld3pncXcvRGhOZXFT?=
+ =?utf-8?B?OWNPQXdXWXhETENxQVgyWU5SQ0llY1ZSU0tyRFhIWkZFcU9QLy9YMjZKTW0z?=
+ =?utf-8?B?amZCeExqLzBNSHZDM1h2K09wd2xCdTZ6ZmxrS25oVFUwM09EcUJ1YVkybUgz?=
+ =?utf-8?B?Y3IxTGZwQUVYVEZJeWlYbWR0dy96c0NEWTQ4ZUdjUEFiQnJ1ekpMSDZSRFFy?=
+ =?utf-8?B?dXZaS2VDZlo0NTVlWEdxTjBKdG5WMGtJQTlkTDNwbVl5SFMxYTc2ZVpvc0xr?=
+ =?utf-8?B?WVErZ3RyTDVWbmdKY1ZEWHdhV2xYWjlGbUdxVVdVUGRsN2gzYUlBbm5iQUVG?=
+ =?utf-8?B?VnNodlR0Zy81REp3OG1DemhQRlRob2U5ZnNmb3g2dWFnejlZREpwTCs4SUZo?=
+ =?utf-8?B?V2hkRFBzMUYwbWMzSFFRVGNrdXZ3VmcvVXJCZTNZSkpPdXVibFJ5RTE5aFht?=
+ =?utf-8?B?dzVqWjlsMXBUS2lodG9QR1E3Y0RhcEFaWXg1bGplU0VmeExxNEkzVllJb094?=
+ =?utf-8?B?aVI5OEN6ZWhKMUtrRkZvZ0prL3g2bUJLL1hHRXhsWnhFMWhadEp4RE5TeGs3?=
+ =?utf-8?B?QXU1blp2OWlPbHB2RUV0S1MyWWtBbCtQV1o0U3VSVkZrWUFMcm1CRVoxTG5L?=
+ =?utf-8?B?WTJBNVFlYUp3Ukdra1lQQ3hLenRpVjRaNkN1QjRGNi8yTmtvV05oVUZ5SFAw?=
+ =?utf-8?B?Vkc2MDFqZldkVFZwMFJSQkQ1YXIrU3N3amJodkgrbWNCZjFjRXQ0K1FxVGJh?=
+ =?utf-8?B?R0NJU3FJNnpKMGk2Qzl3UmM0L0FEWFBnL2w3TGtHdkV3bVpKVEd0bXpLZVg3?=
+ =?utf-8?B?aW02VlFJMDRnaHlGYUcvUlA0YXEzb01BVjZyNFZ6V09mblRLYkJNTENJNnBY?=
+ =?utf-8?B?ejFnQTh1YUp0d2hEUjBhMW5EMVNvN2ROa0UwU24xWmhWMGEyUTlXVjlvdmhH?=
+ =?utf-8?B?QllQbDN2dWZWdCs2MjlWbWVObWlHSXVQRmpQV2ZsdENEU1NLdjJJbFVuTE1m?=
+ =?utf-8?B?UHI4VWtxMjBrcWllaUExVlBnNFVBbklndytjcVBkckNDQjRwSU5wQU9DR0xs?=
+ =?utf-8?B?YjR6NDFKb3dxek9XbG5vR2d5b1pRUzVOUStvVnFzZ1phS1BMMTczL01PS2xs?=
+ =?utf-8?B?eHlOUTFKZWo2UTlFaGdSWUhuVXdXV0JCV0hnS3VwSDVnQjhLWEhNOTlXVEpw?=
+ =?utf-8?B?Ti9UT21YZURrcHBObGNERHgwdWxzTjhUMFpwZC8zWGxEL1U5b3ZoNWM5V3FV?=
+ =?utf-8?B?clFLajBqcVh0VG11Wml4cG1PbjBQOHExakx4ZCtnK1NPUUorNEhwQnVvQlpB?=
+ =?utf-8?B?MkFzYndDcFpnOFdnM2tKeTNKdTFBeGJhY1lubGlKMDVCU2ZSWVZ1c252K0J1?=
+ =?utf-8?B?V0tpMDFOdXBTUWRqdFN3ZldNYk5pa3pUNEtuYkJCeFpKZDd3SVdSUlEraDcr?=
+ =?utf-8?B?TEd6Z1pvNStLQlMzL2NKTU9aY0E3V2xpL2pyVFFJZGh2V3NFNnNtTk96a2N0?=
+ =?utf-8?Q?EBAPsb/cwlZpgY5bgtRIofrdY?=
+X-OriginatorOrg: nuvoton.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0615bce6-614e-4297-7ef0-08dc4f98c330
+X-MS-Exchange-CrossTenant-AuthSource: SI6PR03MB8987.apcprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2024 02:24:52.0143
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2024 02:34:30.9776
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oflyZxvJMiV+O00fKTpun065jULhLCTh4a10DpmNToLBN2DsgeTOG+uSMLUqdHPEhyWsZ4FSlGs+0zTqdnmiDQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB6575
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: vU0bdMYtAyt5hpbk/T35QHdIHFh45XxsdK5RA0962gryjEqG3T5MTqTjMEPLIhD1X5FPM7ib34lDstZPBJb9MQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR03MB7657
 
 
+Mark Brown =E6=96=BC 3/28/2024 11:22 PM =E5=AF=AB=E9=81=93:
+> On Wed, Mar 27, 2024 at 03:57:55PM +0800, Seven Lee wrote:
+>
+>> +static const char * const nau8325_dac_oversampl[] =3D {
+>> +    "64", "256", "128", "", "32" };
+>> +
+>> +static const struct soc_enum nau8325_dac_oversampl_enum =3D
+>> +    SOC_ENUM_SINGLE(NAU8325_R29_DAC_CTRL1, NAU8325_DAC_OVERSAMPLE_SFT,
+>> +                    ARRAY_SIZE(nau8325_dac_oversampl),
+>> +                    nau8325_dac_oversampl);
+> This should really be a SOC_VALUE_ENUM so you can just hide the fourth
+> value rather than having the empty (presumably invalid) option.  Please
+> send an incremental patch doing this.
 
-Hello,
+okay, thanks for reminding.
 
-kernel test robot noticed "hwsim.autogo_chan_switch.fail" on:
-
-commit: 310c8387c63830bc375827242e0f9fa689f82e21 ("wifi: mac80211: clean up connection process")
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-
-[test failed on linus/master 7033999ecd7b8cf9ea59265035a0150961e023ee]
-[test failed on linux-next/master 26074e1be23143b2388cacb36166766c235feb7c]
-
-in testcase: hwsim
-version: hwsim-x86_64-717e5d7-1_20240320
-with following parameters:
-
-	test: autogo_chan_switch
-
-
-
-compiler: gcc-12
-test machine: 8 threads 1 sockets Intel(R) Core(TM) i7-4790 v3 @ 3.60GHz (Haswell) with 6G memory
-
-(please refer to attached dmesg/kmsg for entire log/backtrace)
-
-
-
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <oliver.sang@intel.com>
-| Closes: https://lore.kernel.org/oe-lkp/202403291042.d9211733-oliver.sang@intel.com
-
-group: group-20, test: autogo_chan_switch
-2024-03-22 18:48:55 export USER=root
-2024-03-22 18:48:55 ./build.sh
-Building TNC testing tools
-Building wlantest
-Building hs20-osu-client
-Building hostapd
-Building wpa_supplicant
-2024-03-22 18:49:57 ./start.sh
-2024-03-22 18:49:59 ./run-tests.py autogo_chan_switch
-DEV: wlan0: 02:00:00:00:00:00
-DEV: wlan1: 02:00:00:00:01:00
-DEV: wlan2: 02:00:00:00:02:00
-APDEV: wlan3
-APDEV: wlan4
-START autogo_chan_switch 1/1
-Test: P2P autonomous GO switching channels
-Start autonomous GO wlan0
-Try to connect the client to the GO
-wlan1: Trying to discover peer 02:00:00:00:00:00
-Client connected
-sending data without carrier won't work
-Traceback (most recent call last):
-  File "/lkp/benchmarks/hwsim/tests/hwsim/./run-tests.py", line 593, in main
-    t(dev)
-  File "/lkp/benchmarks/hwsim/tests/hwsim/test_p2p_autogo.py", line 357, in test_autogo_chan_switch
-    run_autogo_chan_switch(dev)
-  File "/lkp/benchmarks/hwsim/tests/hwsim/test_p2p_autogo.py", line 375, in run_autogo_chan_switch
-    hwsim_utils.test_connectivity_p2p(dev[0], dev[1])
-  File "/lkp/benchmarks/hwsim/tests/hwsim/hwsim_utils.py", line 227, in test_connectivity_p2p
-    test_connectivity(dev1, dev2, dscp, tos, dev1group=True, dev2group=True)
-  File "/lkp/benchmarks/hwsim/tests/hwsim/hwsim_utils.py", line 217, in test_connectivity
-    raise Exception(last_err)
-Exception: sending data without carrier won't work
-FAIL autogo_chan_switch 15.072969 2024-03-22 18:50:26.967705
-passed 0 test case(s)
-skipped 0 test case(s)
-failed tests: autogo_chan_switch
-2024-03-22 18:50:27 ./run-tests.py autogo_chan_switch_group_iface
-DEV: wlan0: 02:00:00:00:00:00
-DEV: wlan1: 02:00:00:00:01:00
-DEV: wlan2: 02:00:00:00:02:00
-APDEV: wlan3
-APDEV: wlan4
-START autogo_chan_switch_group_iface 1/1
-Test: P2P autonomous GO switching channels (separate group interface)
-Start autonomous GO wlan0
-Try to connect the client to the GO
-wlan1: Trying to discover peer 02:00:00:00:00:00
-Client connected
-sending data without carrier won't work
-Traceback (most recent call last):
-  File "/lkp/benchmarks/hwsim/tests/hwsim/./run-tests.py", line 593, in main
-    t(dev)
-  File "/lkp/benchmarks/hwsim/tests/hwsim/test_p2p_autogo.py", line 383, in test_autogo_chan_switch_group_iface
-    run_autogo_chan_switch(dev)
-  File "/lkp/benchmarks/hwsim/tests/hwsim/test_p2p_autogo.py", line 375, in run_autogo_chan_switch
-    hwsim_utils.test_connectivity_p2p(dev[0], dev[1])
-  File "/lkp/benchmarks/hwsim/tests/hwsim/hwsim_utils.py", line 227, in test_connectivity_p2p
-    test_connectivity(dev1, dev2, dscp, tos, dev1group=True, dev2group=True)
-  File "/lkp/benchmarks/hwsim/tests/hwsim/hwsim_utils.py", line 217, in test_connectivity
-    raise Exception(last_err)
-Exception: sending data without carrier won't work
-FAIL autogo_chan_switch_group_iface 18.357236 2024-03-22 18:50:57.293385
-passed 0 test case(s)
-skipped 0 test case(s)
-failed tests: autogo_chan_switch_group_iface
-2024-03-22 18:50:57 ./run-tests.py p2p_device_autogo_chan_switch
-DEV: wlan0: 02:00:00:00:00:00
-DEV: wlan1: 02:00:00:00:01:00
-DEV: wlan2: 02:00:00:00:02:00
-APDEV: wlan3
-APDEV: wlan4
-START p2p_device_autogo_chan_switch 1/1
-Test: P2P autonomous GO switching channels with cfg80211 P2P Device
-Start autonomous GO wlan7
-Try to connect the client to the GO
-wlan1: Trying to discover peer 42:00:00:00:07:00
-Client connected
-PASS p2p_device_autogo_chan_switch 25.252863 2024-03-22 18:51:34.497093
-passed all 1 test case(s)
-2024-03-22 18:51:34 ./stop.sh
-
-
-
-The kernel config and materials to reproduce are available at:
-https://download.01.org/0day-ci/archive/20240329/202403291042.d9211733-oliver.sang@intel.com
-
-
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+________________________________
+________________________________
+ The privileged confidential information contained in this email is intende=
+d for use only by the addressees as indicated by the original sender of thi=
+s email. If you are not the addressee indicated in this email or are not re=
+sponsible for delivery of the email to such a person, please kindly reply t=
+o the sender indicating this fact and delete all copies of it from your com=
+puter and network server immediately. Your cooperation is highly appreciate=
+d. It is advised that any unauthorized use of confidential information of N=
+uvoton is strictly prohibited; and any information in this email irrelevant=
+ to the official business of Nuvoton shall be deemed as neither given nor e=
+ndorsed by Nuvoton.
