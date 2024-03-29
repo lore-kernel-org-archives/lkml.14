@@ -1,90 +1,90 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F245E139CFF;
-	Fri, 29 Mar 2024 19:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F7B320B;
+	Fri, 29 Mar 2024 19:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711741746; cv=none; b=AQWhmFEFSceKYikUKcFiZuxjyxpG5lag41PD/N+kWR1giVTntAupPbGIou1C1J7tolZ9/ElUshmBwWs6ypXCrpJD+A6rAsyCKDtrliv76z/o1tejlHPmuuiqiCcYq0nws5JivCeBxuSPG3GzMnrB1aPII02sKxAd7kSuc1EzZqU=
+	t=1711741747; cv=none; b=ekqpB93QUxDP+/j8XVLsEtbien47yLsWHy+E8l/nHT8K77nJyoGGZyZk+bskmb+Ysd2jTz1UBoYFbdj02PU2Fby0E3N46E2U5y+kJpRiXJiXw1BQWDe7D4+aZM8XUoUMIOgFY7f7siDT3wipc/lP7BaY/KG2uX7R33S4EZwPdbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711741746; c=relaxed/simple;
-	bh=W3HYFvglRKdilk96vaAk5kw+aBWJdgn/FMqCTcLa4R8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AM6DnlWYweWxt9kYSq3ekQ3XD3SxCJdst9I48DIFr93AWuThHSjswoPodUO9e5fBe6+3IUT19ZCuTdCNbP2m6lpH6Cdykeo434XoDgePAyQANI8l4Y9AJcJqM6IHnVX6LWY/pM/nQltd2kUpY6L7cRP9SByAaLV7F8g48ua3OnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KJG2iTV+; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711741747; c=relaxed/simple;
+	bh=jUOc3STXmxZAYuCEU6pzgbs0cfdWm5uqQzFxzImd+I4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EzoXq48GNw1U6FYC0qYzXy+3db4ciWndneXfx9YgUKzvAEkwOdrXzJAHH2WsG4uM8YMXUXQ/jhziY0jWbbpxyBM5iXG+spfVdksN9DP0cdJMGrwyeUxQYQTCkRmgC/LrlYSwbCAwcelgAs+HpTf581NZSgnLvOyKuK90G/mIEWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=hKyZjr2W; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KJG2iTV+"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5c6bd3100fcso1529232a12.3;
-        Fri, 29 Mar 2024 12:49:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711741744; x=1712346544; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W3HYFvglRKdilk96vaAk5kw+aBWJdgn/FMqCTcLa4R8=;
-        b=KJG2iTV+wJKLFtRUw5JcF/nOgHJRm98Z30itaXpKgacvvYghp4a4o40SoPfxcQQfuT
-         5yKtP6VtzB+15qaWmP8rXLkMoJbL8MhNAbKLJWTRJD2Hxmr4jhj/MB7w/8oyo4qkCuYG
-         lR0Rt6smvX61y1QwY56YwXMg2uSPZeRhamF83pX4mlikxhkaVf23XJOf1v0StqQlIQO8
-         aJxnwrmSzUgbh1ILPxUfKuc8HU/1vLvTd0k2+YaHFxFl9QZo0sE/g0iytU7697ev7c5q
-         iCfHjaHMuo77ReSULOB4cY7lHNbi+ZRHofSjSFx/swsygMERvOuAvcJr+Eq/DgeD7w8c
-         IUIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711741744; x=1712346544;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W3HYFvglRKdilk96vaAk5kw+aBWJdgn/FMqCTcLa4R8=;
-        b=S5zvSXnDXmWDHRjHBhgY4SxLxrl5x63HyzRo0Tm7smzqGbAfoO7xLqaLAmhkQuATcF
-         iGO7GOkYzY/AIIpNBAKz8rW6fVhgNUT6eiT0HjsjpTxi3ovWdJuxLwSVkj4cshRIWZeO
-         KWsuNZYUIwC8JnyeaJKzEQZM97VeAZI9T1PNaxIeRCbVl8Xy3JcpUFoM2QiLv6T+YrWx
-         LEsM7M+0ab7o89C5fkE9ieGLVwQftncNqx7LR2ka25RduUIHbYUuqKPeE9UNd9gjkzGj
-         4BtVzCKenmoPqgk9ZMLxgY8kRxEVWnFg8y2hV/P/RZKRKt0oB4oAKvwdVrHV22yZQKEM
-         I+jw==
-X-Forwarded-Encrypted: i=1; AJvYcCX6UfonKDhIkCws/xFoFTbeMMWlH6fcTzfWVjtbEumJq0bjeIAIkUuByBVF7GrgANyuVcdZQmyr5yViRhafOVra2MeBcvHBaCAqCrueYEMnFww2kpIQwMeijR98Yy/lW4DIKUMDZQRICUZeqwL7XxrwWfoZHqcumRhcLJ3OpQq/P/b8lKb+8q8zYhQ=
-X-Gm-Message-State: AOJu0YxleNkqCz7cWUngbQV4V7NtpmAo+wL6CsDXR3sqP+6adJveCBP8
-	bQhdRiXrKzjyGGka+RdOChO7YTMqkvzc00zscJVl2OHJW6Mvb9cbX3aww6npx+yS/K87WNa+Dpr
-	PZ8f/cXNxh4DIbBhbOKEvG1lRZuo=
-X-Google-Smtp-Source: AGHT+IGEy6+3uxyFBSJbr3Fn4p72c4+8xBi7LoZEISiKilxJyP7xbAbgAPG4swR5ei++MiSvRWyZIl812IgvpWiaf6I=
-X-Received: by 2002:a17:90a:3ee6:b0:2a0:3a16:7489 with SMTP id
- k93-20020a17090a3ee600b002a03a167489mr2889022pjc.44.1711741744273; Fri, 29
- Mar 2024 12:49:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="hKyZjr2W"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42TE0VOj014325;
+	Fri, 29 Mar 2024 12:49:01 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=pfpt0220; bh=H7/O3IWe
+	4xilIhLlEZ6vLeDVNbQaXzvMHEPQKrsnLLE=; b=hKyZjr2WAO9CAdHka+Ys6A+s
+	mmvDoX+F3SkE0GoeqVazWuu4+KVPOtyOaR694T1ov76iWhffsR5vAjVhw27LYj9t
+	F6fOcwHGHaQr9zFsiWwf1BEA9mUNEhgAlAGPDTbK6CpW3oI/DZGhjW5kRagHX6HA
+	Xt/AXebYAq6iHzDNkzkpBWua7SZ1Oet9CrKCpbyneCTTVWwLHpkIaMq2SqMzF0OD
+	h/voIGoxwY+0BDIYu+AgG8jPg+ViI6erBeWwX0yF6nUQjOnVA/RLohkUEz8Pu7rb
+	wYuTXWkUTvC9bh3bpnlLHf/mD474f7sFcKnVut9b7wb2z1B4v5Ww/uphNCLjDA==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3x5gm3krpu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 29 Mar 2024 12:49:01 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Fri, 29 Mar 2024 12:48:59 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Fri, 29 Mar 2024 12:48:59 -0700
+Received: from localhost.localdomain (unknown [10.110.150.170])
+	by maili.marvell.com (Postfix) with ESMTP id 8CFD63F707F;
+	Fri, 29 Mar 2024 12:48:59 -0700 (PDT)
+From: Witold Sadowski <wsadowski@marvell.com>
+To: <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC: <broonie@kernel.org>, <robh@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <pthombar@cadence.com>, Witold Sadowski <wsadowski@marvell.com>
+Subject: [PATCH 0/5] Support for Cadence xSPI Marvell modifications
+Date: Fri, 29 Mar 2024 12:48:44 -0700
+Message-ID: <20240329194849.25554-1-wsadowski@marvell.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240217002602.57270-1-ojeda@kernel.org>
-In-Reply-To: <20240217002602.57270-1-ojeda@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 29 Mar 2024 20:48:30 +0100
-Message-ID: <CANiq72kuaEtsf2i=wE3H9sEzDAa9864DXQN7nJuO3nPs8fFSJg@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: rust: use `-Zdwarf-version` to support DWARFv5
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Wedson Almeida Filho <wedsonaf@gmail.com>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	linux-kbuild@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: b2YHB22n1qoQQ1wcJob260CoXSDPlRxB
+X-Proofpoint-ORIG-GUID: b2YHB22n1qoQQ1wcJob260CoXSDPlRxB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-29_13,2024-03-28_01,2023-05-22_02
 
-On Sat, Feb 17, 2024 at 1:26=E2=80=AFAM Miguel Ojeda <ojeda@kernel.org> wro=
-te:
->
-> Rust 1.64.0 introduced (unstable) support for the `-Zdwarf-version`
-> flag, which allows to select DWARFv5, thus use it.
->
-> Link: https://github.com/rust-lang/rust/issues/103057
-> Link: https://github.com/rust-lang/rust/pull/98350
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+This patch series is adding support for additional
+Marvell HW overlay build on top of Cadence xSPI IP
+It includes:
+- Clock and PHY configuration
+- ACPI support
+- Additional MRVL HW overlay to support tranfer operations
 
-Applied to `rust-next` -- please feel free to still send reviews or
-tested-bys for this one!
+Piyush Malgujar (1):
+  driver: spi: cadence: Add ACPI support
 
-Cheers,
-Miguel
+Witold Sadowski (4):
+  spi: cadence: Add new bindings documentation for Cadence XSPI
+  spi: cadence: Add Marvell IP modification changes
+  spi: cadence: Force single modebyte
+  cadence-xspi: Add xfer capabilities
+
+ .../devicetree/bindings/spi/cdns,xspi.yaml    |  84 ++-
+ drivers/spi/spi-cadence-xspi.c                | 675 +++++++++++++++++-
+ 2 files changed, 738 insertions(+), 21 deletions(-)
+
+-- 
+2.17.1
+
