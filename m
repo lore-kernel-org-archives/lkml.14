@@ -1,47 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F091C16E358;
-	Fri, 29 Mar 2024 12:50:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F03DFBF3;
+	Fri, 29 Mar 2024 12:50:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711716615; cv=none; b=k8ygEUB/REkFfAo3EEJBmy3dkikEfLdrWOMq3twVva/ghVOivHfSHc24BEpTzODb0tWjPzab0SVTboCY6iXccZR1cNVvYon19Hmuiz9aNL3rDKIyvdbBWGwBxpCZzeCrqU8veTs0CIvPIMD3RxCPKVwA7qLM/YqZTlrhDxriNWA=
+	t=1711716617; cv=none; b=dpDKtXUa9x9aN+Ictvd1p0V+nrYmg7BTFKf+A9vMCOEhOoTJP+OjlEHWD/1+QvExeid4ML2dq1/lUIXjBNVe1p68sP6Vr4uvaap/dhcMjsK7ALSfJSfO8fcm0iy/+swwEhnN4vhAjEgwQfrqia/TQPwZONvyRJIOTt1GC0P8Wuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711716615; c=relaxed/simple;
-	bh=OZQ4Lo4rGUbUFWDL0awqpQo9qWXB55m9RTiiqyDQ5s0=;
+	s=arc-20240116; t=1711716617; c=relaxed/simple;
+	bh=RjwteC0Nxfpz34RGHKSiWhHY5QMrYVvsPuLjeFuD2W4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SbIRqcC+Wbck1DwgYN6s8XLDceA+xYnFZRppcmY40yB7WEa0hM9fWBsvFjMrgeXqfQlGcKQZWzS8vhgIWuwnFXWUz8ldIV3pNEjGT1zP3tyErHvlPTJ97LKrhhpPI3Mk0uo9BpPl2fXooFtG1IRo0d40rQN5uCGOxeb7YyLIkLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QzN1+UPF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BIwiD5CxeRA0OFWgVlG/yD/7u+MDZd0c0rNfkXv4NtIsgdgycqN8tKn/HSOSlgUsljxj0nfDuZvYr5p129aQGZlL2CXIupFUt2PasGtubCX5Ewgz88fxrQ84rBJK4IMjWSzL8bcpnmuXXZNKp9SnaTmehTfDUb675kHeIDTcZo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQ9fdp5E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QzN1+UPF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53D04C433F1;
-	Fri, 29 Mar 2024 12:50:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQ9fdp5E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30DE8C433C7;
+	Fri, 29 Mar 2024 12:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711716614;
-	bh=OZQ4Lo4rGUbUFWDL0awqpQo9qWXB55m9RTiiqyDQ5s0=;
+	s=k20201202; t=1711716617;
+	bh=RjwteC0Nxfpz34RGHKSiWhHY5QMrYVvsPuLjeFuD2W4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QzN1+UPFI66QPTmphE5UQRiuMxerEsWi8TSevzyzwwTDsdcBVyGimsLppIqpTaSmu
-	 3WwC7yU2vfJt0iUh2DBRE8FJ+H3Jz3NQAakQmn/mBMYW/TZ8q4ln1scptasc0PgmKM
-	 rtD1JUMug4SaN0BOk19cy8C15nPdcs9NXVgfENLgxLQvYVQWDd8NXbgQiJHXxTNuOa
-	 R5fwPoQ7+iVavQ91bY6LbGVWg5CH36ftcOD8+I9gwebTeCyKOCADbu4HRfxnxiKxTe
-	 Wwft7l8PDvYOO6T8hrQTkr3ZaBvKaiBLidrLweArcNAr36GHNxISnZEfFVJ7RwWe1I
-	 jWUw1nnuXRQcw==
+	b=XQ9fdp5EueqXSWMBKfbJk10GGOPE1Kki7N3K8YZk8dcNl0m1vPiRckr9oxxHW/Wqq
+	 tDexYrbzhaYN3MzNrqMIcNU0oKyfOcGe1uN8wG4z3+UvyV6jWpI7ubZugMjijdf/db
+	 TTzW4e9iKGl1MBSPNfoKVxi7fnq5k8cFgBVv8JuNvwcAoCZfcbw4m7wNfGKTCpRkDW
+	 pYYZo2hGnUhB+sQIKjWYkR0JwEmAN8F128cT9/Ugvyz24FBRgcYnbznNoJWaCa02B9
+	 Ka/ugEhE9bAlKW3sVFapX9HDOEqg2xgT+m29C2g766eM7b5fIbGs/GLvFcJ7YkFxnU
+	 0hb6Wth8U97WA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-	syzbot <syzbot+69b40dc5fd40f32c199f@syzkaller.appspotmail.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
+Cc: Justin Tee <justin.tee@broadcom.com>,
+	Himanshu Madhani <himanshu.madhani@oracle.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
-	jlayton@kernel.org,
-	jack@suse.cz,
-	xiubli@redhat.com,
-	princekumarmaurya06@gmail.com,
-	willy@infradead.org
-Subject: [PATCH AUTOSEL 5.4 03/23] sysv: don't call sb_bread() with pointers_lock held
-Date: Fri, 29 Mar 2024 08:49:36 -0400
-Message-ID: <20240329125009.3093845-3-sashal@kernel.org>
+	james.smart@broadcom.com,
+	dick.kennedy@broadcom.com,
+	jejb@linux.ibm.com,
+	linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 05/23] scsi: lpfc: Fix possible memory leak in lpfc_rcv_padisc()
+Date: Fri, 29 Mar 2024 08:49:38 -0400
+Message-ID: <20240329125009.3093845-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240329125009.3093845-1-sashal@kernel.org>
 References: <20240329125009.3093845-1-sashal@kernel.org>
@@ -56,92 +54,43 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.4.273
 Content-Transfer-Encoding: 8bit
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Justin Tee <justin.tee@broadcom.com>
 
-[ Upstream commit f123dc86388cb669c3d6322702dc441abc35c31e ]
+[ Upstream commit 2ae917d4bcab80ab304b774d492e2fcd6c52c06b ]
 
-syzbot is reporting sleep in atomic context in SysV filesystem [1], for
-sb_bread() is called with rw_spinlock held.
+The call to lpfc_sli4_resume_rpi() in lpfc_rcv_padisc() may return an
+unsuccessful status.  In such cases, the elsiocb is not issued, the
+completion is not called, and thus the elsiocb resource is leaked.
 
-A "write_lock(&pointers_lock) => read_lock(&pointers_lock) deadlock" bug
-and a "sb_bread() with write_lock(&pointers_lock)" bug were introduced by
-"Replace BKL for chain locking with sysvfs-private rwlock" in Linux 2.5.12.
+Check return value after calling lpfc_sli4_resume_rpi() and conditionally
+release the elsiocb resource.
 
-Then, "[PATCH] err1-40: sysvfs locking fix" in Linux 2.6.8 fixed the
-former bug by moving pointers_lock lock to the callers, but instead
-introduced a "sb_bread() with read_lock(&pointers_lock)" bug (which made
-this problem easier to hit).
-
-Al Viro suggested that why not to do like get_branch()/get_block()/
-find_shared() in Minix filesystem does. And doing like that is almost a
-revert of "[PATCH] err1-40: sysvfs locking fix" except that get_branch()
- from with find_shared() is called without write_lock(&pointers_lock).
-
-Reported-by: syzbot <syzbot+69b40dc5fd40f32c199f@syzkaller.appspotmail.com>
-Link: https://syzkaller.appspot.com/bug?extid=69b40dc5fd40f32c199f
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Link: https://lore.kernel.org/r/0d195f93-a22a-49a2-0020-103534d6f7f6@I-love.SAKURA.ne.jp
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Justin Tee <justin.tee@broadcom.com>
+Link: https://lore.kernel.org/r/20240131185112.149731-3-justintee8345@gmail.com
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/sysv/itree.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/scsi/lpfc/lpfc_nportdisc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/sysv/itree.c b/fs/sysv/itree.c
-index e3d1673b8ec97..ef9bcfeec21ad 100644
---- a/fs/sysv/itree.c
-+++ b/fs/sysv/itree.c
-@@ -82,9 +82,6 @@ static inline sysv_zone_t *block_end(struct buffer_head *bh)
- 	return (sysv_zone_t*)((char*)bh->b_data + bh->b_size);
- }
+diff --git a/drivers/scsi/lpfc/lpfc_nportdisc.c b/drivers/scsi/lpfc/lpfc_nportdisc.c
+index e6a94f550a572..1ca3179444d23 100644
+--- a/drivers/scsi/lpfc/lpfc_nportdisc.c
++++ b/drivers/scsi/lpfc/lpfc_nportdisc.c
+@@ -781,8 +781,10 @@ lpfc_rcv_padisc(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp,
+ 				/* Save the ELS cmd */
+ 				elsiocb->drvrTimeout = cmd;
  
--/*
-- * Requires read_lock(&pointers_lock) or write_lock(&pointers_lock)
-- */
- static Indirect *get_branch(struct inode *inode,
- 			    int depth,
- 			    int offsets[],
-@@ -104,15 +101,18 @@ static Indirect *get_branch(struct inode *inode,
- 		bh = sb_bread(sb, block);
- 		if (!bh)
- 			goto failure;
-+		read_lock(&pointers_lock);
- 		if (!verify_chain(chain, p))
- 			goto changed;
- 		add_chain(++p, bh, (sysv_zone_t*)bh->b_data + *++offsets);
-+		read_unlock(&pointers_lock);
- 		if (!p->key)
- 			goto no_block;
- 	}
- 	return NULL;
- 
- changed:
-+	read_unlock(&pointers_lock);
- 	brelse(bh);
- 	*err = -EAGAIN;
- 	goto no_block;
-@@ -218,9 +218,7 @@ static int get_block(struct inode *inode, sector_t iblock, struct buffer_head *b
- 		goto out;
- 
- reread:
--	read_lock(&pointers_lock);
- 	partial = get_branch(inode, depth, offsets, chain, &err);
--	read_unlock(&pointers_lock);
- 
- 	/* Simplest case - block found, no allocation needed */
- 	if (!partial) {
-@@ -290,9 +288,9 @@ static Indirect *find_shared(struct inode *inode,
- 	*top = 0;
- 	for (k = depth; k > 1 && !offsets[k-1]; k--)
- 		;
-+	partial = get_branch(inode, k, offsets, chain, &err);
- 
- 	write_lock(&pointers_lock);
--	partial = get_branch(inode, k, offsets, chain, &err);
- 	if (!partial)
- 		partial = chain + k-1;
- 	/*
+-				lpfc_sli4_resume_rpi(ndlp,
+-					lpfc_mbx_cmpl_resume_rpi, elsiocb);
++				if (lpfc_sli4_resume_rpi(ndlp,
++						lpfc_mbx_cmpl_resume_rpi,
++						elsiocb))
++					kfree(elsiocb);
+ 				goto out;
+ 			}
+ 		}
 -- 
 2.43.0
 
