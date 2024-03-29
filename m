@@ -1,35 +1,41 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD1AA1755C;
-	Fri, 29 Mar 2024 01:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468AF17576;
+	Fri, 29 Mar 2024 01:31:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711675833; cv=none; b=Y/hyJMUenWnTUTuX7+2RBuX2zHLgyXwiFE4gWjo01tO6Ht3xn9DFykpIDCIbCUD1jzJDCNw+/LTAoPPyP3vNsf9gtS9gd2Jzhw/RSfWq68k0JjG95Bk4XWco84M70tqXRnk36A9vdHrco0rzRYYss/sIrBkSOKFwFrsYdSnCv0Q=
+	t=1711675876; cv=none; b=Zv8Xzcx5Q0JKzYdIDu2IgXuCuZedHExrwLe/NdWV+IvKZmL42gQMtWsrKKkuDFL5Mh76iwbYuBJtwURE/BzSmc9V5pq/64ghxY6ONnWhGClMk1c+b4cOOJxBW54W8m8iJ80HuPoBumqr8+hKLq6izfW08B718icuP6UGVgfgbzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711675833; c=relaxed/simple;
-	bh=eBjlW0K96wcTvRKhkZN5uyozDovWwaLiajHg/TN/CFw=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=cqlgbzRHGpA9KqGIFCpOWG+9+Ik+rBdJfOIJ7jIVIBZr41rV2KsO810GNiqfYIn9Lt8l458WvVZXVz80bAblZx8m66HqY4q3aUF/BhdWpce1qiDOCs+DZiZn50p08gpF8KY26skF24sCvs7BZPWB7WB2NebWNUVPuHojZfXGbEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ahj6Sh0x; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ahj6Sh0x"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8AC31C433C7;
-	Fri, 29 Mar 2024 01:30:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711675832;
-	bh=eBjlW0K96wcTvRKhkZN5uyozDovWwaLiajHg/TN/CFw=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ahj6Sh0xrl5V3WSegy5w1BIBmYGNv/8Y8g3LFyOnCFifm9f4SoU1VNFx6HWRpH0kB
-	 kWg8ntItwy4hmEV5HakojPhvVAdOd6E3Kt6E4kJC9gmL+zwh4XVgJt2Fh3wYRfgXke
-	 Xn7P3BnsizEw1yWwx5ya3gIDDLdJXtISism06l0rVHJp7cUKK0yMB5ByTMc++Ispjd
-	 VQsbDJ+Al//9aqgVQd9nn69SYGO6jI9X3VwNL1HCcl+cHZusDebrM8VzNGqx6zGgh+
-	 jfrsRyJ0R1AuRQfF3bYhItirPjv5HKs/8FgBH2GnecTVbBqrDttjkxVYZcevZgVRvo
-	 dRrwZO4TIfvlA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7D768D95054;
-	Fri, 29 Mar 2024 01:30:32 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1711675876; c=relaxed/simple;
+	bh=dUzneKDmKI2/ZqHcy7SUm51OUjy4WueE8rOc8uA+kn8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aHaVQTtPabRh65fR59s0SZPfX/v6ersH6g9bx6G4FTE4RG39MKXXBPJblSOdVYGSeRFrs6YGQJFmE6YrVDH2EvQATizC5JbE6mNWFw9UsuHhOBSOMtLoBsetv0PeVTq/Z7w1YRXKopsipoDJbrrzGCIRumGsk+gpDnLz4biKfGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4V5NCX2pmWz4f3kKj;
+	Fri, 29 Mar 2024 09:31:04 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 7459B1A0232;
+	Fri, 29 Mar 2024 09:31:08 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgAn+RHSGQZm1waRIQ--.26612S4;
+	Fri, 29 Mar 2024 09:31:00 +0800 (CST)
+From: linan666@huaweicloud.com
+To: axboe@kernel.dk
+Cc: hch@lst.de,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linan666@huaweicloud.com,
+	yukuai3@huawei.com,
+	yi.zhang@huawei.com,
+	houtao1@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH] block: fix overflow in blk_ioctl_discard()
+Date: Fri, 29 Mar 2024 09:23:19 +0800
+Message-Id: <20240329012319.2034550-1-linan666@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,41 +43,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] ptp: MAINTAINERS: drop Jeff Sipek
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171167583250.32458.9139932821919314899.git-patchwork-notify@kernel.org>
-Date: Fri, 29 Mar 2024 01:30:32 +0000
-References: <20240327081413.306054-1-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20240327081413.306054-1-krzysztof.kozlowski@linaro.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: akaher@vmware.com, amakhalov@vmware.com, pv-drivers@vmware.com,
- richardcochran@gmail.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
+X-CM-TRANSID:cCh0CgAn+RHSGQZm1waRIQ--.26612S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrZw18WryUXF4xtr15ZFWxXrb_yoWkJFX_Wr
+	yFvrykKrWrAF93Crs0kF15XrnY9rs7Cr1Ikr1rGry2qF47JF1rAryxXFnrZr4DXFW8uay3
+	ZFsxXF4vvr1S9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbsAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
+	rcIFxwAKzVCY07xG64k0F24l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
+	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
+	14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
+	IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvE
+	x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnU
+	UI43ZEXa7VUbSApUUUUUU==
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-Hello:
+From: Li Nan <linan122@huawei.com>
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+There is no check for overflow of 'start + len' in blk_ioctl_discard().
+Hung task occurs if submit an discard ioctl with the following param:
+  start = 0x80000000000ff000, len = 0x8000000000fff000;
+Add the overflow validation now.
 
-On Wed, 27 Mar 2024 09:14:13 +0100 you wrote:
-> Emails to Jeff Sipek bounce:
-> 
->   Your message to jsipek@vmware.com couldn't be delivered.
->   Recipient is not authorized to accept external mail
->   Status code: 550 5.7.1_ETR
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> [...]
+Signed-off-by: Li Nan <linan122@huawei.com>
+---
+ block/ioctl.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Here is the summary with links:
-  - ptp: MAINTAINERS: drop Jeff Sipek
-    https://git.kernel.org/netdev/net/c/fa84513997e9
-
-You are awesome, thank you!
+diff --git a/block/ioctl.c b/block/ioctl.c
+index 0c76137adcaa..a9028a2c2db5 100644
+--- a/block/ioctl.c
++++ b/block/ioctl.c
+@@ -96,7 +96,7 @@ static int blk_ioctl_discard(struct block_device *bdev, blk_mode_t mode,
+ 		unsigned long arg)
+ {
+ 	uint64_t range[2];
+-	uint64_t start, len;
++	uint64_t start, len, end;
+ 	struct inode *inode = bdev->bd_inode;
+ 	int err;
+ 
+@@ -117,7 +117,8 @@ static int blk_ioctl_discard(struct block_device *bdev, blk_mode_t mode,
+ 	if (len & 511)
+ 		return -EINVAL;
+ 
+-	if (start + len > bdev_nr_bytes(bdev))
++	if (check_add_overflow(start, len, &end) ||
++	    end > bdev_nr_bytes(bdev))
+ 		return -EINVAL;
+ 
+ 	filemap_invalidate_lock(inode->i_mapping);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.39.2
 
