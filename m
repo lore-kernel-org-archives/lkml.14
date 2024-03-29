@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD48225A8;
-	Fri, 29 Mar 2024 19:12:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48780137928;
+	Fri, 29 Mar 2024 19:12:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711739571; cv=none; b=Ek/Ly/6yQc+lgGjCs4riMYSoOn3b88A83/AQYg52XPMjFA1eRhT7Ug07UW3eWnAgSbtRu7Wx32j7hzsuhSCBwVWNaPlaB22udPW4w2ZdIIdH5uQUrfZHMA/AFwuyxCEWd2ciEDlf7Wt7xYVdp+/CF/LV7ev3SVu8QnagAKKbujI=
+	t=1711739573; cv=none; b=lbmDiA5fG3mq8sWVFJdoYpkpF4tGRljWxStjDMwD3BnjiEv4TvpstunN5m0LgF+hEC8PeQrI4ilrjudyuJU4GV7MN7QASivClGMF0ll497b7u4dpkc0KfR40wg14lvN6jKOWJczdt670BwlwIdPnV3UCtAe5l152egYUCmtk6TE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711739571; c=relaxed/simple;
-	bh=FokolN3UQvKbVpaapMDPaw4D61pLSGDmq/87Sq2rP6I=;
+	s=arc-20240116; t=1711739573; c=relaxed/simple;
+	bh=J9fUAQZWkixjtehQmnGr1yigtsctKtXiiA3rek8znyk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wz/8S7iqsUXhdnT4jAWbKpR3dHL6mrumuyWcGkx1IiSwnaqgNmeVZYLnHfemJXoFPA5EmlgVPlMmqA+sLsglYj7OoexAKpxIW579pYvyMnsvRjoUpXc2E9kxtsOrNqJhxNSXAn8x0+TcM4Uv+WVEb8LYV+Wc4Ot8kHvM9rGPL6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E8u29jhU; arc=none smtp.client-ip=192.198.163.16
+	 MIME-Version; b=dNachbhVhqG+wfK/EJBGIAXC3DKWpr5Z4F2o+7Iix4gGHdUSvgfmWN4v07daEyaXv6oj+Tg3NZeHf3GY0aaaH8ndNojeBTRR/bkXKUCHCaxYJKUOm1oWuZBLd5k2U29/EhmyaXajo6YTHVFuvQxd0+Vt0qQkiA+uAzgNf7J8WMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ICirVCke; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E8u29jhU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ICirVCke"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711739569; x=1743275569;
+  t=1711739571; x=1743275571;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=FokolN3UQvKbVpaapMDPaw4D61pLSGDmq/87Sq2rP6I=;
-  b=E8u29jhUqumg/BT+8X14NCE6PRAPyCiOLNj8EzaxJgzWQUceVjT6ZSyj
-   39lCy/81Ztsf+2SO7+qNYiCQ/eLItPpBMIALbGogTM3TXpILx04Nv5jVH
-   RooKRPujnQtGa2h6Zkm5o5KSYkLWBUoN1s6RJfVkNUgpIQEiCQ1bKzWWF
-   nice0Vy+ErPzYc9+UWYWVf3lzE8W8Z29eNmhp9AnoGIANKfAXgh2YMJvi
-   x7svMiFakOV8mw3SqNfziffhS2GDkvdlAhZ3jK0ztY07yFQvNTSnfSqSC
-   EuWYPvHnMwzu4+lwCDYBb7YSseScc9Xk6MMnoA7A5D5hHHjBVVBkJJwTY
-   w==;
-X-CSE-ConnectionGUID: hecE4idCT760f+5i9/a8BQ==
-X-CSE-MsgGUID: ZGeowDptSWODtnO9LQWs4w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11028"; a="7531722"
+  bh=J9fUAQZWkixjtehQmnGr1yigtsctKtXiiA3rek8znyk=;
+  b=ICirVCkerIR0Bv5c1P0bixoJTuEBek9r6PYNsJGZtH+jMksZH4l/7Dw2
+   uh7QMkNfastdbzsbEruTHQe81XMNiXHmo4c/up1wBN8hcKvwiEQjGCi7n
+   jtqvWhZNX5tpotQ9uozQXDpKdXGsoIx3k6FzuW0Q+AwB3Lc2/MpQNkwYX
+   pMreffM45X7JNXDUsDPahwHEAJspBhMf4J/IdJxSIsVvDW1uj7t+Fa2d2
+   Dc44J9W8qddxrplZvnYSLHj7OR4Ng2Z5PHJNcnX4kXaGn0MeuNH1YXHwq
+   iFECFos/ip+q387XToaURWA9tmhPOTdvnzv61kTAR2NquKoTJUO77wsHt
+   A==;
+X-CSE-ConnectionGUID: D4cJGdG5QbmUKKrjGc1/jA==
+X-CSE-MsgGUID: OEmQoRIxTletT2avIY3O0w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11028"; a="7531732"
 X-IronPort-AV: E=Sophos;i="6.07,165,1708416000"; 
-   d="scan'208";a="7531722"
+   d="scan'208";a="7531732"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
   by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 12:12:46 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,165,1708416000"; 
-   d="scan'208";a="54506856"
+   d="scan'208";a="54506862"
 Received: from fl31ca102ks0602.deacluster.intel.com (HELO gnr-bkc.deacluster.intel.com) ([10.75.133.163])
   by orviesa001.jf.intel.com with ESMTP; 29 Mar 2024 12:12:46 -0700
 From: weilin.wang@intel.com
@@ -57,9 +57,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	Perry Taylor <perry.taylor@intel.com>,
 	Samantha Alt <samantha.alt@intel.com>,
 	Caleb Biggers <caleb.biggers@intel.com>
-Subject: [RFC PATCH v6 2/5] perf stat: Fork and launch perf record when perf stat needs to get retire latency value for a metric.
-Date: Fri, 29 Mar 2024 15:12:21 -0400
-Message-ID: <20240329191224.1046866-3-weilin.wang@intel.com>
+Subject: [RFC PATCH v6 4/5] perf stat: Add retire latency print functions to print out at the very end of print out
+Date: Fri, 29 Mar 2024 15:12:23 -0400
+Message-ID: <20240329191224.1046866-5-weilin.wang@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240329191224.1046866-1-weilin.wang@intel.com>
 References: <20240329191224.1046866-1-weilin.wang@intel.com>
@@ -73,341 +73,133 @@ Content-Transfer-Encoding: 8bit
 
 From: Weilin Wang <weilin.wang@intel.com>
 
-When retire_latency value is used in a metric formula, perf stat would fork a
-perf record process with "-e" and "-W" options. Perf record will collect
-required retire_latency values in parallel while perf stat is collecting
-counting values.
+Add print out functions so that users could read retire latency values.
 
-At the point of time that perf stat stops counting, it would send sigterm signal
-to perf record process and receiving sampling data back from perf record from a
-pipe. Perf stat will then process the received data to get retire latency data
-and calculate metric result.
+Example output:
+In this simple example, there is no MEM_INST_RETIRED.STLB_HIT_STORES sample.
+Therefore, the MEM_INST_RETIRED.STLB_HIT_STORES:p retire_latency value, count
+and sum are all 0.
 
-Another thread is required to synchronize between perf stat and perf record
-when we pass data through pipe.
+ Performance counter stats for 'system wide':
+
+       181,047,168      cpu_core/TOPDOWN.SLOTS/          #      0.6 %  tma_dtlb_store
+         3,195,608      cpu_core/topdown-retiring/
+        40,156,649      cpu_core/topdown-mem-bound/
+         3,550,925      cpu_core/topdown-bad-spec/
+       117,571,818      cpu_core/topdown-fe-bound/
+        57,118,087      cpu_core/topdown-be-bound/
+            69,179      cpu_core/EXE_ACTIVITY.BOUND_ON_STORES/
+             4,582      cpu_core/MEM_INST_RETIRED.STLB_HIT_STORES/
+        30,183,104      cpu_core/CPU_CLK_UNHALTED.DISTRIBUTED/
+        30,556,790      cpu_core/CPU_CLK_UNHALTED.THREAD/
+           168,486      cpu_core/DTLB_STORE_MISSES.WALK_ACTIVE/
+              0.00 MEM_INST_RETIRED.STLB_HIT_STORES:p       0        0
+
+       1.003105924 seconds time elapsed
 
 Signed-off-by: Weilin Wang <weilin.wang@intel.com>
 Reviewed-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c     | 190 +++++++++++++++++++++++++++++++++-
- tools/perf/util/data.c        |   6 +-
- tools/perf/util/metricgroup.h |   8 ++
- tools/perf/util/stat.h        |   2 +
- 4 files changed, 203 insertions(+), 3 deletions(-)
+ tools/perf/util/stat-display.c | 65 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 6291e1e24535..7fbe47b0c44c 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -94,8 +94,13 @@
- #include <perf/evlist.h>
- #include <internal/threadmap.h>
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index bfc1d705f437..6c043d9c9f81 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -21,6 +21,7 @@
+ #include "iostat.h"
+ #include "pmu.h"
+ #include "pmus.h"
++#include "metricgroup.h"
  
-+#include "util/sample.h"
-+#include <sys/param.h>
-+#include <subcmd/run-command.h>
-+
- #define DEFAULT_SEPARATOR	" "
- #define FREEZE_ON_SMI_PATH	"devices/cpu/freeze_on_smi"
-+#define PERF_DATA		"-"
+ #define CNTR_NOT_SUPPORTED	"<not supported>"
+ #define CNTR_NOT_COUNTED	"<not counted>"
+@@ -34,6 +35,7 @@
+ #define COMM_LEN     16
+ #define PID_LEN       7
+ #define CPUS_LEN      4
++#define RETIRE_LEN    8
  
- static void print_counters(struct timespec *ts, int argc, const char **argv);
- 
-@@ -163,6 +168,8 @@ static struct perf_stat_config stat_config = {
- 	.ctl_fd_ack		= -1,
- 	.iostat_run		= false,
- 	.tpebs_events		= LIST_HEAD_INIT(stat_config.tpebs_events),
-+	.tpebs_results		= LIST_HEAD_INIT(stat_config.tpebs_results),
-+	.tpebs_pid              = -1,
- };
- 
- static bool cpus_map_matched(struct evsel *a, struct evsel *b)
-@@ -684,15 +691,155 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
- 
- 	if (child_pid != -1)
- 		kill(child_pid, SIGTERM);
-+	if (stat_config.tpebs_pid != -1)
-+		kill(stat_config.tpebs_pid, SIGTERM);
- 	return COUNTER_FATAL;
+ static int aggr_header_lens[] = {
+ 	[AGGR_CORE] 	= 18,
+@@ -426,6 +428,67 @@ static void print_metric_std(struct perf_stat_config *config,
+ 	fprintf(out, " %-*s", METRIC_LEN - n - 1, unit);
  }
  
--static int __run_perf_record(void)
-+static int __run_perf_record(const char **record_argv)
- {
-+	int i = 0;
-+	struct tpebs_event *e;
-+
- 	pr_debug("Prepare perf record for retire_latency\n");
-+
-+	record_argv[i++] = "perf";
-+	record_argv[i++] = "record";
-+	record_argv[i++] = "-W";
-+	record_argv[i++] = "--synth=no";
-+
-+	if (stat_config.user_requested_cpu_list) {
-+		record_argv[i++] = "-C";
-+		record_argv[i++] = stat_config.user_requested_cpu_list;
-+	}
-+
-+	if (stat_config.system_wide)
-+		record_argv[i++] = "-a";
-+
-+	if (!stat_config.system_wide && !stat_config.user_requested_cpu_list) {
-+		pr_err("Require -a or -C option to run sampling.\n");
-+		return -ECANCELED;
-+	}
-+
-+	list_for_each_entry(e, &stat_config.tpebs_events, nd) {
-+		record_argv[i++] = "-e";
-+		record_argv[i++] = e->name;
-+	}
-+
-+	record_argv[i++] = "-o";
-+	record_argv[i++] = PERF_DATA;
-+
- 	return 0;
- }
- 
-+static void prepare_run_command(struct child_process *cmd,
-+			       const char **argv)
++static void print_retire_lat_std(struct perf_stat_config *config,
++				 struct outstate *os)
 +{
-+	memset(cmd, 0, sizeof(*cmd));
-+	cmd->argv = argv;
-+	cmd->out = -1;
-+}
-+
-+static int prepare_perf_record(struct child_process *cmd)
-+{
-+	const char **record_argv;
-+	int ret;
-+
-+	record_argv = calloc(10 + 2 * stat_config.tpebs_event_size, sizeof(char *));
-+	if (!record_argv)
-+		return -1;
-+
-+	ret = __run_perf_record(record_argv);
-+	if (ret)
-+		return ret;
-+
-+	prepare_run_command(cmd, record_argv);
-+	return start_command(cmd);
-+}
-+
-+struct perf_script {
-+	struct perf_tool	tool;
-+	struct perf_session	*session;
-+};
-+
-+static void tpebs_data__delete(void)
-+{
-+	struct tpebs_retire_lat *r, *rtmp;
-+	struct tpebs_event *e, *etmp;
-+
-+	list_for_each_entry_safe(r, rtmp, &stat_config.tpebs_results, event.nd) {
-+		list_del_init(&r->event.nd);
-+		free(r);
-+	}
-+	list_for_each_entry_safe(e, etmp, &stat_config.tpebs_events, nd) {
-+		list_del_init(&e->nd);
-+		free(e);
-+	}
-+}
-+
-+static int process_sample_event(struct perf_tool *tool __maybe_unused,
-+				union perf_event *event __maybe_unused,
-+				struct perf_sample *sample,
-+				struct evsel *evsel,
-+				struct machine *machine __maybe_unused)
-+{
-+	int ret = 0;
-+	const char *evname;
++	FILE *out = os->fh;
++	bool newline = os->newline;
 +	struct tpebs_retire_lat *t;
++	struct list_head *retire_lats = &config->tpebs_results;
 +
-+	evname = evsel__name(evsel);
-+
-+	/*
-+	 * Need to handle per core results? We are assuming average retire
-+	 * latency value will be used. Save the number of samples and the sum of
-+	 * retire latency value for each event.
-+	 */
-+	list_for_each_entry(t, &stat_config.tpebs_results, event.nd) {
-+		if (!strcmp(evname, t->event.name)) {
-+			t->count += 1;
-+			t->sum += sample->retire_lat;
-+			break;
-+		}
++	list_for_each_entry(t, retire_lats, event.nd) {
++		if (newline)
++			do_new_line_std(config, os);
++		fprintf(out, "%'*.2f %-*s", COUNTS_LEN, t->val, EVNAME_LEN, t->event.name);
++		fprintf(out, "%*ld %*d\n", RETIRE_LEN, t->count,
++			 RETIRE_LEN, t->sum);
 +	}
-+
-+	return ret;
 +}
 +
-+static int process_feature_event(struct perf_session *session,
-+				 union perf_event *event)
++static void print_retire_lat_csv(struct perf_stat_config *config,
++				 struct outstate *os)
 +{
-+	if (event->feat.feat_id < HEADER_LAST_FEATURE)
-+		return perf_event__process_feature(session, event);
-+	return 0;
++	FILE *out = os->fh;
++	struct tpebs_retire_lat *t;
++	struct list_head *retire_lats = &config->tpebs_results;
++	const char *sep = config->csv_sep;
++
++	list_for_each_entry(t, retire_lats, event.nd) {
++		fprintf(out, "%f%s%s%s%s%ld%s%d\n", t->val, sep, sep, t->event.name, sep,
++			t->count, sep, t->sum);
++	}
 +}
 +
-+static void *__cmd_script(void *arg __maybe_unused)
++static void print_retire_lat_json(struct perf_stat_config *config,
++				  struct outstate *os)
 +{
-+	struct child_process *cmd = arg;
-+	struct perf_session *session;
-+	struct perf_data data = {
-+		.mode = PERF_DATA_MODE_READ,
-+		.path = PERF_DATA,
-+		.file.fd = cmd->out,
-+	};
-+	struct perf_script script = {
-+		.tool = {
-+		.sample		 = process_sample_event,
-+		.feature	 = process_feature_event,
-+		.attr		 = perf_event__process_attr,
-+		},
-+	};
++	FILE *out = os->fh;
++	struct tpebs_retire_lat *t;
++	struct list_head *retire_lats = &config->tpebs_results;
 +
-+	session = perf_session__new(&data, &script.tool);
-+	if (IS_ERR(session))
-+		return NULL;
-+	script.session = session;
-+	perf_session__process_events(session);
-+	perf_session__delete(session);
-+
-+	return NULL;
++	fprintf(out, "{");
++	list_for_each_entry(t, retire_lats, event.nd) {
++		fprintf(out, "\"retire_latency-value\" : \"%f\", ", t->val);
++		fprintf(out, "\"event-name\" : \"%s\"", t->event.name);
++		fprintf(out, "\"sample-counts\" : \"%ld\"", t->count);
++		fprintf(out, "\"retire_latency-sum\" : \"%d\"", t->sum);
++	}
++	fprintf(out, "}");
 +}
 +
- static int __run_perf_stat(int argc, const char **argv, int run_idx)
++static void print_retire_lat(struct perf_stat_config *config,
++			     struct outstate *os)
++{
++	if (!&config->tpebs_results)
++		return;
++	if (config->json_output)
++		print_retire_lat_json(config, os);
++	else if (config->csv_output)
++		print_retire_lat_csv(config, os);
++	else
++		print_retire_lat_std(config, os);
++}
++
+ static void new_line_csv(struct perf_stat_config *config, void *ctx)
  {
- 	int interval = stat_config.interval;
-@@ -709,15 +856,38 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 	struct affinity saved_affinity, *affinity = NULL;
- 	int err;
- 	bool second_pass = false;
-+	struct child_process cmd;
-+	pthread_t thread_script;
- 
- 	/* Prepare perf record for sampling event retire_latency before fork and
- 	 * prepare workload */
- 	if (stat_config.tpebs_event_size > 0) {
- 		int ret;
-+		struct tpebs_event *e;
- 
--		ret = __run_perf_record();
-+		pr_debug("perf stat pid = %d\n", getpid());
-+		list_for_each_entry(e, &stat_config.tpebs_events, nd) {
-+			struct tpebs_retire_lat *new = malloc(sizeof(struct tpebs_retire_lat));
-+
-+			if (!new)
-+				return -1;
-+			new->event.name = strdup(e->name);
-+			new->event.tpebs_name = strdup(e->tpebs_name);
-+			new->count = 0;
-+			new->sum = 0;
-+			list_add_tail(&new->event.nd, &stat_config.tpebs_results);
-+		}
-+		ret = prepare_perf_record(&cmd);
- 		if (ret)
- 			return ret;
-+		if (pthread_create(&thread_script, NULL, __cmd_script, &cmd)) {
-+			kill(cmd.pid, SIGTERM);
-+			close(cmd.out);
-+			pr_err("Could not create thread to process sample data.\n");
-+			return -1;
-+		}
-+		/* Wait for perf record initialization a little bit.*/
-+		sleep(2);
+ 	struct outstate *os = ctx;
+@@ -1609,6 +1672,8 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
+ 		break;
  	}
  
- 	if (forks) {
-@@ -925,6 +1095,17 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 
- 	t1 = rdclock();
- 
-+	if (stat_config.tpebs_event_size > 0) {
-+		int ret;
++	print_retire_lat(config, &os);
 +
-+		kill(cmd.pid, SIGTERM);
-+		pthread_join(thread_script, NULL);
-+		close(cmd.out);
-+		ret = finish_command(&cmd);
-+		if (ret != -ERR_RUN_COMMAND_WAITPID_SIGNAL)
-+			return ret;
-+	}
-+
- 	if (stat_config.walltime_run_table)
- 		stat_config.walltime_run[run_idx] = t1 - t0;
+ 	print_footer(config);
  
-@@ -1032,6 +1213,9 @@ static void sig_atexit(void)
- 	if (child_pid != -1)
- 		kill(child_pid, SIGTERM);
- 
-+	if (stat_config.tpebs_pid != -1)
-+		kill(stat_config.tpebs_pid, SIGTERM);
-+
- 	sigprocmask(SIG_SETMASK, &oset, NULL);
- 
- 	if (signr == -1)
-@@ -2972,5 +3156,7 @@ int cmd_stat(int argc, const char **argv)
- 	metricgroup__rblist_exit(&stat_config.metric_events);
- 	evlist__close_control(stat_config.ctl_fd, stat_config.ctl_fd_ack, &stat_config.ctl_fd_close);
- 
-+	tpebs_data__delete();
-+
- 	return status;
- }
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index 08c4bfbd817f..98e3014c0aef 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
-@@ -204,7 +204,11 @@ static bool check_pipe(struct perf_data *data)
- 				data->file.fd = fd;
- 				data->use_stdio = false;
- 			}
--		} else {
-+		/*
-+		 * When is_pipe and data->file.fd is given, use given fd
-+		 * instead of STDIN_FILENO or STDOUT_FILENO
-+		 */
-+		} else if (data->file.fd <= 0) {
- 			data->file.fd = fd;
- 		}
- 	}
-diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
-index 7c24ed768ff3..ae788edef30f 100644
---- a/tools/perf/util/metricgroup.h
-+++ b/tools/perf/util/metricgroup.h
-@@ -68,10 +68,18 @@ struct metric_expr {
- 
- struct tpebs_event {
- 	struct list_head nd;
-+	/* Event name */
- 	const char *name;
-+	/* Event name with the TPEBS modifier R */
- 	const char *tpebs_name;
- };
- 
-+struct tpebs_retire_lat {
-+	struct tpebs_event event;
-+	size_t count;
-+	int sum;
-+};
-+
- struct metric_event *metricgroup__lookup(struct rblist *metric_events,
- 					 struct evsel *evsel,
- 					 bool create);
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index b987960df3c5..0726bdc06681 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -111,6 +111,8 @@ struct perf_stat_config {
- 	struct rblist		 metric_events;
- 	struct list_head	 tpebs_events;
- 	size_t			 tpebs_event_size;
-+	struct list_head	 tpebs_results;
-+	pid_t			 tpebs_pid;
- 	int			 ctl_fd;
- 	int			 ctl_fd_ack;
- 	bool			 ctl_fd_close;
+ 	fflush(config->output);
 -- 
 2.43.0
 
