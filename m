@@ -1,97 +1,82 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9EE320B;
-	Fri, 29 Mar 2024 19:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7B5F139D04;
+	Fri, 29 Mar 2024 19:46:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711741574; cv=none; b=sUs/WpITxzfp1VrMFm47wELRC6bKX84bGOxVSCAg0Y832+waO3R8yN29xVHuSJIwxSk7YHfYALmOV+q2BPPRxeeR27tRyEceDJtEtREjb57TQLeeMLf/CGV05hI6DGb3slfowbOOTZxhYYHnPAW4w9kwtARXvJIIX3m034FyYqg=
+	t=1711741594; cv=none; b=Yz6gHTW4S7ayAmn8404riFyNenqYo01C0qFhr1ESNGehOesNsq+Hw8eg83qroGzv4OD3UHIk5DDmZO5hszJq+sgZRm/5Ljkrx4sg6olgfK5CUz9LOyVzEFSAtlkjJJTFuEvD3XCIu5eO7yAdeJBuQSFOX4suwYHHfZ9WXCYcdTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711741574; c=relaxed/simple;
-	bh=8d0sab0BqgsFQw++CvUb36xP5swzUsNaNhoSwe5Jo/w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hRxvp3qq4scvsvyl2EfXlw5DhrNt5pUrd19x3Lajk83tj1WyxR+EwAeNoGD5REzch9BkXCfcCasuNx5u1QLtF2Wgq8pnVS3iir4UBIoUSDIKFhP345bKOI09uPhlL9vlxVzL7WC+J62RNhWboCU3EjmCc59SCd3xvebSDBMdpKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U+oYY6P8; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711741594; c=relaxed/simple;
+	bh=zYYB0UTSbRLws4DW2xNoeDK8WItj9tGsyvCKAM5E+ls=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sIuSx6SKkUZPvEaVGrtvx7vKNpjyFZPKB7B1fvl/krjvkMSFN9PB0O6nx1ZXqFsUUxrKYV9cibrzCaE29ol8zxZXHM1KNqInb5X+XopTw1C9QR27SCDE+WjlO64a1wrDHlih+Mtx+cX6jlNgqexYKEwDV4+M5v6uxZeVi4s4uqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=LsJqFqP0; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U+oYY6P8"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-29ddfd859eeso1880122a91.1;
-        Fri, 29 Mar 2024 12:46:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711741572; x=1712346372; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8d0sab0BqgsFQw++CvUb36xP5swzUsNaNhoSwe5Jo/w=;
-        b=U+oYY6P8grXhI/ShZLQQD8le6o03xy4L+b1iJ8osk8nXzUQMQkx/gxCihSzv6L6zV4
-         +5LiXc1yzzIAugs33GAxDs5dh543ldGH1nQsV28Y4V1aWms8BAA9iTxVeWx3wg3yI2tc
-         mvo1B0adsCooz86LrEjjIP+oWyKiTOnakU9Xx+xqTbBNnvYaj31b4t/P2editBLJ+f3N
-         wOYiwCR+J8aELiFMA5/A5tKAYoGNE+VbTJORtsg2xp8ZsyuoMj+Em2fsjWmbbuGTXgbl
-         YmlFyimdc2x130rexU9ieamuRUjvenFvfKpk4NUs1cTnETAsHHNToFDk19FRK7xk5VMQ
-         uBuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711741572; x=1712346372;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8d0sab0BqgsFQw++CvUb36xP5swzUsNaNhoSwe5Jo/w=;
-        b=ojWEcc/gRAcFJam0DfsrjGwlreHgIOdXKHWuSV9GTJDokYSAElWnmUUTsYW6duIYUl
-         c3ORMMwLMtu8gfcC058WUQQ0XE99MFOC8ctjIt732k0DHAQ0wmdvdNoLgTA+wj+CvAUm
-         zGWkM9qVVtj3txC8//31Cb0HKQw2iLU0aKSS3QK/5s89ktwYac8DhQKLGUl/XRdipCnj
-         dfPOgPgWzWSmlDq2jXWuaLlgKFt5LrKiQLEvs9d5UOLlFqUkVP1SiFo945eROAymV/pa
-         iTpI0JkqRYw0JBzIncXrgib5PP0aDw6kMmZy6CmYeP434F56XS77BR86z7THtWk8tOwI
-         u9lg==
-X-Forwarded-Encrypted: i=1; AJvYcCXLiqVH3NtcSAN0V5g5riSCa6jIibwr3+GootHnBGwRzfh+Me8i3jC8a9TYhZRsBSFt1bU27R9dDelOUsuoImukfkzcoMsm02mpnWxvSJW++iRlcISkn6pCa2CI5QvgVh8/5MuQ5HcQ1sRfil4=
-X-Gm-Message-State: AOJu0Ywns8Vc5yR3H8rQ3Fv4X6z5gE1PjEw5lqmaOWnIprpQqy9PL/bU
-	Nv+qkVYVCEUAaZmVqz1hspS5DRUBY+7RqD9qRPRRxQQkXNA9PikC6EraUTa4o0+jUpI84Aa02da
-	DOt6AG9gMKjbYSFV6X1jeRUCoebI=
-X-Google-Smtp-Source: AGHT+IGZC+i6f8lxTrzjWMWDRWWtkMpdofdcuUMGrShdwfuZlvo+4lYDbyD3Ya//GwAHR09AjajC7y0QqUjktcP2qMs=
-X-Received: by 2002:a17:90a:3fcf:b0:2a0:390e:f032 with SMTP id
- u15-20020a17090a3fcf00b002a0390ef032mr2910188pjm.32.1711741572386; Fri, 29
- Mar 2024 12:46:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="LsJqFqP0"
+Received: from [100.64.65.59] (unknown [20.29.225.195])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 020AB20E6F42;
+	Fri, 29 Mar 2024 12:46:31 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 020AB20E6F42
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1711741592;
+	bh=cyTA2cENb6Yp33jOnm7DNF77XO+4wSIz79NQQoBF7v0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LsJqFqP02CUKkfUhLZjuUQr1pQ0xb9+ApnC1krA/TWB9Lz5UFhdI7zPFqztKo2pqG
+	 7/gwAEzIUcbObSW9ZBpgKl6t7sB0LDeSXzbIjWEQsk/aYlz4DcpboWya7uegZW7AdH
+	 mIoWV9PzU/6HQlPtqK6yGo32BtA93gQ9TLv/HSCk=
+Message-ID: <07ed50c1-75a9-494c-8a6a-5edcc2d6f932@linux.microsoft.com>
+Date: Fri, 29 Mar 2024 12:46:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240226-module-as-ptr-v1-1-83bc89213113@google.com>
-In-Reply-To: <20240226-module-as-ptr-v1-1-83bc89213113@google.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 29 Mar 2024 20:45:37 +0100
-Message-ID: <CANiq72nYx=ZKB1_Qj9O2+oKBHWL5MVifKHSvgt9MbfLZQ4WWHA@mail.gmail.com>
-Subject: Re: [PATCH] rust: add `Module::as_ptr`
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] swiotlb: Do not set total_used to 0 in
+ swiotlb_create_debugfs_files()
+To: Dexuan Cui <decui@microsoft.com>, hch@lst.de, m.szyprowski@samsung.com,
+ robin.murphy@arm.com, zhangpeng362@huawei.com, iommu@lists.linux.dev,
+ mhklinux@outlook.com
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20240329192809.17318-1-decui@microsoft.com>
+Content-Language: en-CA
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+In-Reply-To: <20240329192809.17318-1-decui@microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 26, 2024 at 10:44=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> =
-wrote:
->
-> This allows you to get a raw pointer to THIS_MODULE for use in unsafe
-> code. The Rust Binder RFC uses it when defining fops for the binderfs
-> component [1].
->
-> This doesn't really need to go in now - it could go in together with
-> Rust Binder like how it is sent in the Rust Binder RFC. However, the
-> upcoming 1.77.0 release of the Rust compiler introduces a new warning,
-> and applying this patch now will silence that warning. That allows us to
-> avoid adding the #[allow(dead_code)] annotation seen in [2].
->
-> Link: https://lore.kernel.org/rust-for-linux/20231101-rust-binder-v1-2-08=
-ba9197f637@google.com/ [1]
-> Link: https://lore.kernel.org/all/20240217002717.57507-1-ojeda@kernel.org=
-/ [2]
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+On 3/29/2024 12:28 PM, Dexuan Cui wrote:
+> Sometimes the readout of /sys/kernel/debug/swiotlb/io_tlb_used and
+> io_tlb_used_hiwater can be a huge number (e.g. 18446744073709551615),
+> which is actually a negative number if we use "%ld" to print the number.
+> 
+> When swiotlb_create_default_debugfs() is running from late_initcall,
+> mem->total_used may already be non-zero, because the storage driver
+> may have already started to perform I/O operations: if the storage
+> driver is built-in, its probe() callback is called before late_initcall.
+> 
+> swiotlb_create_debugfs_files() should not blindly set mem->total_used
+> and mem->used_hiwater to 0; actually it doesn't have to initialize the
+> fields at all, because the fields, as part of the global struct
+> io_tlb_default_mem, have been implicitly initialized to zero.
+> 
+> Also don't explicitly set mem->transient_nslabs to 0.
+> 
+> Fixes: 8b0977ecc8b3 ("swiotlb: track and report io_tlb_used high water marks in debugfs")
+> Fixes: 02e765697038 ("swiotlb: add debugfs to track swiotlb transient pool usage")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> ---
+>  kernel/dma/swiotlb.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
 
-Applied to `rust-next` (before the Rust version upgrade) -- thanks everyone=
-!
+Sorry, I'm missing a why in this commit message. Can you say what happens if the
+total_used and used_hiwater IS blindly set to 0? Is the only effect the change in
+the readout of the swiotlb debugfs files?
 
-Cheers,
-Miguel
+Thanks,
+Easwar
+
