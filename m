@@ -1,185 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD772554B;
-	Fri, 29 Mar 2024 09:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DA139FD3
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 09:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711703000; cv=none; b=pkqnBM7NignsdOkTOvRXKZbza4HANHJMZS+VncXqdf/B5g1obVp5dUQBWdK31FEEqqxZsdHn9bluT6l1FdLro762BblzZVRSrRW4GoKvyF0temDujoDjhCxbcfSn/VlfA8e7jG0IoLmF334dlxr6cgI/Jc0HvNZLuhK35WoLR+0=
+	t=1711703005; cv=none; b=s1BytJYd26ywTaagtrw15Y3Rs/RaJvp1CcoGxg7KwsgYkgmiU4LqkNVy6eKNvFwovo8DpjFG2JM9yRq/rgZJURarigk0dOGi/m2s6jtcscbFbWOOZZeb43T5EpFzMbcBQkr6spCqLOpEB9FhLrWbOdj7zWpkQct18mYJ2VR///8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711703000; c=relaxed/simple;
-	bh=9+XxVWlnVEGD6Kgr0GSGU5MeBsUU3Gt2QSEOy7liNpo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mvhygaqj/i0gFjJcCMalWAWC7QTlruDV5umi1JGWYM3vdxruJnPRGwP2N1isfaKMTW4K1PwmlohI+0+vFS+N7l87L+/RqoQpuIyDZgKcgpeWvihOb//CmcQjKHoHci1ZakUmDZnVOUcXVRNpJeYCWzr3l+Ns+wMRJ1hhVeQmd3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s/GSuVGj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711703005; c=relaxed/simple;
+	bh=AQuJ033viRpyXGzTdTzEU/QH6Pra8YYbR6Z3AwJAiig=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
+	 References; b=uJGaRrIJgoH250Qe+lg/5XpWcLX7WuS/6fhYKbEILeXcjMfJDShya6dI8Ao5lmICCGQepYsKFJQp+EMZkoa54u4L7unQPP8h58Ig1kXdyNmgRVkpvKdPzQ1gx4mTfgpyPlR6+UrpIYUUc92ZzdgSr1+9f7giXT4m/ZrDm04bGgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=SrVxiFGa; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s/GSuVGj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 276E7C433C7;
-	Fri, 29 Mar 2024 09:03:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711703000;
-	bh=9+XxVWlnVEGD6Kgr0GSGU5MeBsUU3Gt2QSEOy7liNpo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=s/GSuVGjyKWXBQXEJEukGgl6lfAyaQuQbdVdbltFjUfdjZBDvdj1CYrBj3x4lE/RI
-	 PGJFmxI70SH7YccdP8gd6nJAJRDjUBiU+ZUcjL9KjNY7k0MjlTYKz5YZiNEKiMkYcB
-	 aYzBF0GOrjxppZNslwQNsiSEsUEjx4PiNaIXxjShK0ClvQW5n8Qx+1jSHUua3BMtzP
-	 auhpOlwENkoSoymAn1PVEOizJs4ZegFlibOtOMkTNri4sYLg2onSZ4HIWPtbfiWbda
-	 Lk0wpGmu3tt49jwS5HN8/sgdhMZL3LHFsWxfojC6M+RXEQTRwUiWo8bUjsO21ZRFCJ
-	 i8YMWoXFKHGpg==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-515c3eeea5dso1840095e87.1;
-        Fri, 29 Mar 2024 02:03:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUgAWwVos3nUtU2Y+Cq2nsJ34oJOxYZ2J4m+w+qpBZjro4Evzy+WYCysxx4pdmkyRIiKm2yCvgOxQoEnEQZqTqJEQLVYiOxsGluGjEN
-X-Gm-Message-State: AOJu0Yzkd5sm6s9TqnHJj9OUNxTSTLyXkiVEYF52YGkpHxcvgEqVh6UR
-	rQSX63zC0vtfQYohkVgXMpBkH3GzqtkbGTb9l11QMUphgU/TMm9wrCFr3Rxy836LgcYVmRR6ASD
-	t9lszTuALPKgp1/NzpTNMGwcrZ5E=
-X-Google-Smtp-Source: AGHT+IGy3Yn/+h8SR2x5X5rKl+0pk4khdVWMdTeWMdjmcHsyPPT4Zwby1ei1AAVW2/CwgoNDZ0FBLpXRAfRqY97qh4M=
-X-Received: by 2002:ac2:4d0f:0:b0:515:bf51:a533 with SMTP id
- r15-20020ac24d0f000000b00515bf51a533mr973506lfi.23.1711702998438; Fri, 29 Mar
- 2024 02:03:18 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SrVxiFGa"
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240329090315epoutp014bcbe2c3c875bbd1e9dbcef5c5e02a34~BMM4kgpJZ0787807878epoutp01J
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 09:03:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240329090315epoutp014bcbe2c3c875bbd1e9dbcef5c5e02a34~BMM4kgpJZ0787807878epoutp01J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1711702995;
+	bh=vX1ZmIy4KsaTHCPGAztg5Vs9WgV9OgxLWHoj1r1oYXE=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=SrVxiFGa8akfytfIz1yX+Vho8vmNwqB50uFqAvfjKvw4ayqzZ9e8uxCca1NahfFz2
+	 nPwseYyuXsx413l4nf0iJWvSm/0Vk9br4ofRpT35RaaYeZfQ9PZutPQ97Gw2AaPEZQ
+	 Sq/LLbnXiQivn83o04dFgnAXpfITAB3bgbYRDuxI=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+	20240329090314epcas2p1f06d978f384f00afcbfe9ddb00f5cc31~BMM4QeIJb1882218822epcas2p11;
+	Fri, 29 Mar 2024 09:03:14 +0000 (GMT)
+Received: from epsmgec2p1.samsung.com (unknown [182.195.36.100]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4V5ZFG25fhz4x9Q7; Fri, 29 Mar
+	2024 09:03:14 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+	epsmgec2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	9F.60.08666.1D386066; Fri, 29 Mar 2024 18:03:13 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240329090313epcas2p2cf95d22e44b6b1c120021622da68aeb8~BMM2hPQd40316503165epcas2p2i;
+	Fri, 29 Mar 2024 09:03:13 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240329090313epsmtrp15c7e69f53459f0207025c0c8d795eab3~BMM2gPMyD3021330213epsmtrp1W;
+	Fri, 29 Mar 2024 09:03:13 +0000 (GMT)
+X-AuditID: b6c32a43-84dff700000021da-c7-660683d14aee
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	05.C2.19234.0D386066; Fri, 29 Mar 2024 18:03:12 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.229.9.55]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240329090312epsmtip1629a5d6fd45db15e32ae9f22f7fede5d~BMM2SSe5u0799507995epsmtip1Z;
+	Fri, 29 Mar 2024 09:03:12 +0000 (GMT)
+From: Jaewon Kim <jaewon02.kim@samsung.com>
+To: Andi Shyti <andi.shyti@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Alim Akhtar
+	<alim.akhtar@samsung.com>, Sam Protsenko <semen.protsenko@linaro.org>
+Cc: linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jaewon
+	Kim <jaewon02.kim@samsung.com>
+Subject: [PATCH] spi: s3c64xx: Use DMA mode from fifo size
+Date: Fri, 29 Mar 2024 17:58:40 +0900
+Message-ID: <20240329085840.65856-1-jaewon02.kim@samsung.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240329080355.2871-1-ebiggers@kernel.org>
-In-Reply-To: <20240329080355.2871-1-ebiggers@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 29 Mar 2024 11:03:07 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEupfkpe98PdtbxQbtx1z5J_fZFPzT7wJ2tsJnCT9uaxA@mail.gmail.com>
-Message-ID: <CAMj1kXEupfkpe98PdtbxQbtx1z5J_fZFPzT7wJ2tsJnCT9uaxA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/6] Faster AES-XTS on modern x86_64 CPUs
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-crypto@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Andy Lutomirski <luto@kernel.org>, "Chang S . Bae" <chang.seok.bae@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjk+LIzCtJLcpLzFFi42LZdljTTPdiM1uawdtj4hYP5m1js7j/tYPR
+	YurDJ2wWOxqOsFrsfb2V3WLT42usFpd3zWGzmHF+H5NF48eb7BbP+/YxOXB5bFrVyeZx59oe
+	No/NS+o9+rasYvT4vEkugDUq2yYjNTEltUghNS85PyUzL91WyTs43jne1MzAUNfQ0sJcSSEv
+	MTfVVsnFJ0DXLTMH6CglhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFKToF5gV5xYm5x
+	aV66Xl5qiZWhgYGRKVBhQnbGmZbl7AXXuSv2nF/C1sC4n7OLkZNDQsBEYv6Ju8xdjFwcQgI7
+	GCWe/nzOBOF8YpRoezCdGc55MH0NE0zL1PubWCESOxklVsxfxgjhfGSU2NTSyAhSxSagLfF9
+	/WKwKhGBK0BV31aDzWIWWM8ose7CF7BZwgJWEt8WL2AFsVkEVCU23/kOFucVsJU4sL6PDWKf
+	vMTdM7OYIeKCEidnPmEBsZmB4s1bZ4MNlRC4xS4xd9l1qANdJJ5Of8EKYQtLvDq+hR3ClpJ4
+	2d8GZedLtF05A2XXSGxccIkRwraXWHTmJ1CcA2iBpsT6XfogpoSAssSRW1Br+SQ6Dv9lhwjz
+	SnS0CUE0qkncn3oO6mIZiUlHVjJBlHhIvF4dBhIWEoiV+P9mAvMERvlZSH6ZheSXWQhrFzAy
+	r2IUSy0ozk1PTTYqMITHanJ+7iZGcMLUct7BeGX+P71DjEwcjIcYJTiYlUR4dx5lSRPiTUms
+	rEotyo8vKs1JLT7EaAoM3YnMUqLJ+cCUnVcSb2hiaWBiZmZobmRqYK4kznuvdW6KkEB6Yklq
+	dmpqQWoRTB8TB6dUA5Pu3PWTRb72zncolf/b4Hj9bdqm1htdNo7ijxMdajXXsWc99pDUC1J9
+	eFBdps9nyZq/VvL7X5qn1xv/nlbyJtG1YeH8xg9sqUoT5d9XnIrcLL1n5WZGt9Bw7yt5Cpbr
+	dJxEsvoKOBmvn12TuKhri0XM/0qTSUtCL7byKglPDn2zLd39yLk9fhdNg1M8v7tKrndw+52l
+	2svzo6R8Q9DigtXrXPK2sLWt493cmLm29MJingcLdYpMNN+K1USLhRkLt9/+413m/MMrcp38
+	bImNn3e8Fw4/6ZLTWLtoa77u4nONEwxme39U7o5UZmN3MzH+WsT2u2StxhK7sJk/bsy3qzNf
+	bvGIjWfi4lSRNbOOKLEUZyQaajEXFScCALUXSdEhBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFLMWRmVeSWpSXmKPExsWy7bCSnO6FZrY0g51zrS0ezNvGZnH/awej
+	xdSHT9gsdjQcYbXY+3oru8Wmx9dYLS7vmsNmMeP8PiaLxo832S2e9+1jcuDy2LSqk83jzrU9
+	bB6bl9R79G1ZxejxeZNcAGsUl01Kak5mWWqRvl0CV8aZluXsBde5K/acX8LWwLifs4uRk0NC
+	wERi6v1NrCC2kMB2RoknXxMg4jISy5/1sUHYwhL3W44A1XAB1bxnlHj3fi4jSIJNQFvi+/rF
+	YAkRgRuMEquXP2IBcZgFNjNKtJ8/BzZWWMBK4tviBWA2i4CqxOY735lAbF4BW4kD62FWyEvc
+	PTOLGSIuKHFy5hMWEJsZKN68dTbzBEa+WUhSs5CkFjAyrWIUTS0ozk3PTS4w1CtOzC0uzUvX
+	S87P3cQIDl6toB2My9b/1TvEyMTBeIhRgoNZSYR351GWNCHelMTKqtSi/Pii0pzU4kOM0hws
+	SuK8yjmdKUIC6YklqdmpqQWpRTBZJg5OqQamvRGZl30bTj//qXKGRdXPsJPvhquSbT1bo4iO
+	6+vP1U92X74u4FfY/IxBOD1M6YZm2bqHc4rYlfYf/f/z07ElVvbnfnZaSBoGKR3zu5U6gWGJ
+	r2+ZmsihV8fVpmzKP+uw9O3vomlN235Kujd6msb1Bf5XSJxf+vZ+dlT4nmt13LnO+2JKz70R
+	3v9o6TbWtco5yQrxvN3x36s3/N292GTajNeHv1xdXML7ZzP3oj8XD9ZtrmtaaBD+X5j5Yr26
+	5PM/z56sKtKTvXJeOKfewM5C0FzkbY2vamxvgLnydY87kc832W4zeROtbl56+fyvfSo9rzL6
+	NhvwXfkz4etV9cuJAlnnX6gvWPFbbpXp+g2nlViKMxINtZiLihMBwF8Dms0CAAA=
+X-CMS-MailID: 20240329090313epcas2p2cf95d22e44b6b1c120021622da68aeb8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240329090313epcas2p2cf95d22e44b6b1c120021622da68aeb8
+References: <CGME20240329090313epcas2p2cf95d22e44b6b1c120021622da68aeb8@epcas2p2.samsung.com>
 
-On Fri, 29 Mar 2024 at 10:06, Eric Biggers <ebiggers@kernel.org> wrote:
->
-> This patchset adds new AES-XTS implementations that accelerate disk and
-> file encryption on modern x86_64 CPUs.
->
-> The largest improvements are seen on CPUs that support the VAES
-> extension: Intel Ice Lake (2019) and later, and AMD Zen 3 (2020) and
-> later.  However, an implementation using plain AESNI + AVX is also added
-> and provides a boost on older CPUs too.
->
-> To try to handle the mess that is x86 SIMD, the code for all the new
-> AES-XTS implementations is generated from an assembly macro.  This makes
-> it so that we e.g. don't have to have entirely different source code
-> just for different vector lengths (xmm, ymm, zmm).
->
-> To avoid downclocking effects, zmm registers aren't used on certain
-> Intel CPU models such as Ice Lake.  These CPU models default to an
-> implementation using ymm registers instead.
->
-> To make testing easier, all four new AES-XTS implementations are
-> registered separately with the crypto API.  They are prioritized
-> appropriately so that the best one for the CPU is used by default.
->
-> There's no separate kconfig option for the new implementations, as they
-> are included in the existing option CONFIG_CRYPTO_AES_NI_INTEL.
->
-> This patchset increases the throughput of AES-256-XTS by the following
-> amounts on the following CPUs:
->
->                           | 4096-byte messages | 512-byte messages |
->     ----------------------+--------------------+-------------------+
->     Intel Skylake         |        6%          |       31%         |
->     Intel Cascade Lake    |        4%          |       26%         |
->     Intel Ice Lake        |       127%         |      120%         |
->     Intel Sapphire Rapids |       151%         |      112%         |
->     AMD Zen 1             |        61%         |       73%         |
->     AMD Zen 2             |        36%         |       59%         |
->     AMD Zen 3             |       138%         |       99%         |
->     AMD Zen 4             |       155%         |      117%         |
->
-> To summarize how the XTS implementations perform in general, here are
-> benchmarks of all of them on AMD Zen 4, with 4096-byte messages.  (Of
-> course, in practice only the best one for the CPU actually gets used.)
->
->     xts-aes-aesni                  4247 MB/s
->     xts-aes-aesni-avx              5669 MB/s
->     xts-aes-vaes-avx2              9588 MB/s
->     xts-aes-vaes-avx10_256         9631 MB/s
->     xts-aes-vaes-avx10_512         10868 MB/s
->
-> ... and on Intel Sapphire Rapids:
->
->     xts-aes-aesni                  4848 MB/s
->     xts-aes-aesni-avx              5287 MB/s
->     xts-aes-vaes-avx2              11685 MB/s
->     xts-aes-vaes-avx10_256         11938 MB/s
->     xts-aes-vaes-avx10_512         12176 MB/s
->
-> Notes about benchmarking methods:
->
-> - All my benchmarks were done using a custom kernel module that invokes
->   the crypto_skcipher API.  Note that benchmarking the crypto API from
->   userspace using AF_ALG, e.g. as 'cryptsetup benchmark' does, is bad at
->   measuring fast algorithms due to the syscall overhead of AF_ALG.  I
->   don't recommend that method.  Instead, I measured the crypto
->   performance directly, as that's what this patchset focuses on.
->
-> - All numbers I give are for decryption.  However, on all the CPUs I
->   tested, encryption performs almost identically to decryption.
->
-> Open questions:
->
-> - Is the policy that I implemented for preferring ymm registers to zmm
->   registers the right one?  arch/x86/crypto/poly1305_glue.c thinks that
->   only Skylake has the bad downclocking.  My current proposal is a bit
->   more conservative; it also excludes Ice Lake and Tiger Lake.  Those
->   CPUs supposedly still have some downclocking, though not as much.
->
-> - Should the policy on the use of zmm registers be in a centralized
->   place?  It probably doesn't make sense to have random different
->   policies for different crypto algorithms (AES, Poly1305, ARIA, etc.).
->
-> - Are there any other known issues with using AVX512 in kernel mode?  It
->   seems to work, and technically it's not new because Poly1305 and ARIA
->   already use AVX512, including the mask registers and zmm registers up
->   to 31.  So if there was a major issue, like the new registers not
->   being properly saved and restored, it probably would have already been
->   found.  But AES-XTS support would introduce a wider use of it.
->
-> - Should we perhaps not even bother with AVX512 / AVX10 at all for now,
->   given that on current CPUs most of the improvement is achieved by
->   going to VAES + AVX2?  I.e. should we skip the last two patches?  I'm
->   hoping the improvement will be greater on future CPUs, though.
->
-> Changed in v2:
->   - Additional optimizations:
->       - Interleaved the tweak computation with AES en/decryption.  This
->         helps significantly on some CPUs, especially those without VAES.
->       - Further optimized for single-page sources and destinations.
->       - Used fewer instructions to update tweaks in VPCLMULQDQ case.
->       - Improved handling of "round 0".
->       - Eliminated a jump instruction from the main loop.
->   - Other
->       - Fixed zmm_exclusion_list[] to be null-terminated.
->       - Added missing #ifdef to unregister_xts_algs().
->       - Added some more comments.
->       - Improved cover letter and some commit messages.
->       - Now that the next tweak is always computed anyways, made it be
->         returned unconditionally.
->       - Moved the IV encryption to a separate function.
->
-> Eric Biggers (6):
->   x86: add kconfig symbols for assembler VAES and VPCLMULQDQ support
->   crypto: x86/aes-xts - add AES-XTS assembly macro for modern CPUs
->   crypto: x86/aes-xts - wire up AESNI + AVX implementation
->   crypto: x86/aes-xts - wire up VAES + AVX2 implementation
->   crypto: x86/aes-xts - wire up VAES + AVX10/256 implementation
->   crypto: x86/aes-xts - wire up VAES + AVX10/512 implementation
->
+If the SPI data size is smaller than FIFO, it operates in PIO mode,
+and if it is larger than FIFO size, it oerates in DMA mode.
 
-Retested this v2:
+If the SPI data size is equal to fifo, it operates in PIO mode and it is
+separated to 2 transfers. To prevent it, it must operate in DMA mode
+from the case where the data size and the fifo size are the same.
 
-Tested-by: Ard Biesheuvel <ardb@kernel.org>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Fixes: 1ee806718d5e ("spi: s3c64xx: support interrupt based pio mode")
+Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
+Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+---
+ drivers/spi/spi-s3c64xx.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Hopefully, the AES-KL keylocker implementation can be based on this
-template as well. I wouldn't mind retiring the existing xts(aesni)
-code entirely, and using the xts() wrapper around ecb-aes-aesni on
-32-bit and on non-AVX uarchs with AES-NI.
+diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+index 9fcbe040cb2f..f726d8670428 100644
+--- a/drivers/spi/spi-s3c64xx.c
++++ b/drivers/spi/spi-s3c64xx.c
+@@ -430,7 +430,7 @@ static bool s3c64xx_spi_can_dma(struct spi_controller *host,
+ 	struct s3c64xx_spi_driver_data *sdd = spi_controller_get_devdata(host);
+ 
+ 	if (sdd->rx_dma.ch && sdd->tx_dma.ch)
+-		return xfer->len > sdd->fifo_depth;
++		return xfer->len >= sdd->fifo_depth;
+ 
+ 	return false;
+ }
+@@ -826,10 +826,9 @@ static int s3c64xx_spi_transfer_one(struct spi_controller *host,
+ 			return status;
+ 	}
+ 
+-	if (!is_polling(sdd) && (xfer->len > fifo_len) &&
++	if (!is_polling(sdd) && xfer->len >= fifo_len &&
+ 	    sdd->rx_dma.ch && sdd->tx_dma.ch) {
+ 		use_dma = 1;
+-
+ 	} else if (xfer->len >= fifo_len) {
+ 		tx_buf = xfer->tx_buf;
+ 		rx_buf = xfer->rx_buf;
+-- 
+2.43.2
+
