@@ -1,55 +1,55 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2407BAEC
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 01:54:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB22A85635
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 01:55:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711677300; cv=none; b=QTvRRd8POtrR2m2M2lvuusQQN/D+Nwkkv56x5cNAhwbSIB8F2fg6pdWcZpFoCoMMngZBBOiGRCcFBgSpz1/FsIANUediY0xz9rso1BHc7Q0uTI3UEynCxt1h89rGGx61jr+tlx20q+xuFwcN2IYXr1JPXh8YupjvIWDLY4iaov8=
+	t=1711677304; cv=none; b=XZnSQw6Z+Awkpw64qSho8Xph3da9oMcKOOUTfvg4IGNud07okcvRc9FckG+8Xf+uuzhKINvFjNqGhuxodBr92TcdHWF9YdlQi8sxWz6A56Mz5XjGSI2XtCa+OdAfq2gelwyeAALaDb2Q9IQZojSB/sVMFI1b3bk/dUBSg1Uz700=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711677300; c=relaxed/simple;
-	bh=9iXCNP+EW0+2+JC2nl2OoNy89uZqvybM8NUQJ2K/ih4=;
+	s=arc-20240116; t=1711677304; c=relaxed/simple;
+	bh=KCoIZNUHcwv2RV9ZRbHBJii4HaQ9xYYtK2VIovQhTY4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=KTUKf+DMyN0JZf6yAL50qjarz8Yo2MEoy694zRRtWps6EbmEduy0eryT1b96lWvGbgCEA1NvEi1KrIPkoHBcA58m37kKq1G1Wlppuvd7vxjYpJoexjbbcbDPLKaxAU9V8Fx2GzPw0Hd8GeRV8qXb6YRkjGXMEf5LX2IZ2fM1jvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--drosen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RH0NkW3B; arc=none smtp.client-ip=209.85.219.201
+	 To:Cc:Content-Type; b=OiI32WfVeZHzQpcxjF7Wa5kpK/RAsffHUsBWqTIR6Wi5x2rAlb2MvmlB9lyjqEzSc6VfJTJA6a7rSyX5Z1xpu1kaUP1MY0PW4DGi7hYeh7xjVPhNhhg2ZJEM/d8ILt9FJ5RnfWGDCqBLol6WvxI9u+sqHf1SiLbXho8UpQFzemw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--drosen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cGvlUFtl; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--drosen.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RH0NkW3B"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dd0ae66422fso2959483276.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 18:54:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cGvlUFtl"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60a2386e932so29402037b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 18:55:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711677297; x=1712282097; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1711677301; x=1712282101; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RmiND9fJytE7hp4aS6EZvp2Qf4FYwUyLzLHSobY4D+U=;
-        b=RH0NkW3B64RQtwllzuYjxkJLeWIXvju90EGmkhpDAz0nu27JSAa8QfHI3qW91Vqow+
-         eRXrh0VfoR/RqJXz9uPpOW9nnkwroxtdVxgvB4pEoRVZdrKSJ/BaFrWhT8nhwXouMuE7
-         DuVQbnWdIAXCWUWT4cEr9RUtloHYA0IxI7huyL16H040Xc5u8FQg7bGz53WOyIGrEjgS
-         zJS2In2dshIrjarZ0Y6nr8UbNEn9WON+ce0oQnx0RKdEoIjFOCbiLF6Cth/OKtBVlIeq
-         LBEdaDwUPogsXUH6HIvcXNM472ZnUFGwQENthMc1Bc1hsSGKCE27Y7oR0gYUmYXWeaER
-         4x8g==
+        bh=/G940zvh+KpSLBvufKEbVa5uESG7TAs31JyWujh5JiA=;
+        b=cGvlUFtlWGRTPkcyYNCMwvSxvP8qlwrZr3JOFvlMOAHhswasUvQzmPZLlH01AY8Kke
+         CDnQgoMEJhPRIKJsyS04oYc8Uuu55Dzdh5jmQyxNhfsUDMZZEkM1xiv1h5HuuzYlN6zl
+         PODUMjxw8QyB8/DxnT+YoKR3DI/rJSNob2BNPMMEmg+Bogh048li815kIsg18b85Utld
+         Iymm98q4jMGrSCjfKBjmefZPnJZpcMtoplmG+B4yi7PxdPAoPOD9gEgZgZCkQSQESDHb
+         zNE7xCcmRxlLfrm4sMPXWZKy3jJxhIq7sq9SCl2/E0a/qS5mSG6DsrzM9EQEaQppU9Hb
+         4vfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711677297; x=1712282097;
+        d=1e100.net; s=20230601; t=1711677301; x=1712282101;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RmiND9fJytE7hp4aS6EZvp2Qf4FYwUyLzLHSobY4D+U=;
-        b=mfAmldtEof39E0pOmFtvpp8HF45QJNxobTKqD6cc0qKHq/lgDKZX9IYo5lED48Bswc
-         h9NMqiQrM6RXhC7jPc4mDcS0b3yw1hNTIUS3oxRUHRPqWYebjoSC6SKfvBn3OTLwtsWW
-         38eF/NhQsFw+4Elx0vhB0fDZhvKvBAY5nXXZ2SUQgY2AqAvMeO39gCAwVIsoN7CXmwOg
-         Eu/ITJFkpiKM1vNHN2joAd7IXXSdUJmaE+Xau/zZy68f9UKW5II6Wtp8z8gef41dPMGb
-         s13OrrHXE1VkdquVb75tvOONIkZQh2p7nL6aayQ2XJCz71BwHntF78HsVmiPDC4pg/hY
-         tXCg==
-X-Forwarded-Encrypted: i=1; AJvYcCWv6oaxklWSlmC7zACTQwj//JPfduGewrgK5nH3PHbfTGVrUKnmq+z+0WQicpDKXni9/FNulKt3zgM5j7lwt4Ws1cWMrV3lI4QRUORq
-X-Gm-Message-State: AOJu0YwB0HkGtK3pjeBpRNV+TTfpA0SFyi8Tr/Y04pyKpYR39YEFpfF1
-	QSFMJ8XA2UvPb2JaRIdAC5hCm/chRw6AG/hbhafTYlK38sQsB+y+WvZezjxdgAGgSma7+iaueYj
-	x7Q==
-X-Google-Smtp-Source: AGHT+IHeiHkMKp379qbywYMCr+diDVdq9JP2CxLadyp3LUxzIJLjH2ayb4pU1zwCCzZ0jFp6BgvxfUk/s6M=
+        bh=/G940zvh+KpSLBvufKEbVa5uESG7TAs31JyWujh5JiA=;
+        b=dYe3NNlzFH504VyqRSdzNtZo1e1R4ePyCakZI5Pldaq69DMNPAGhYUxMUzyeQ+pFZk
+         EV9fJd5CM8/dyBjw2ep5MnrkNfUDUQlBkB9WL+HGpW3v1HHKam/kzoupYADaN6rUNun0
+         /V8Ahbgw3c1c+HXuFw8aWQ+zRBVMHPNUtfCr7nJ7AS2b1zcDO8j0l3ovxKBaqS/hKrKn
+         Z+LPLT9f07Ex/nVVaFhgBIw/Bzks+jwFIdOdvX7BCbKVo+BmOH+/N5CZ6OcRyCFu8tAK
+         5qWCy3t+NGG9KZTgwoazoD3kjwij1d3g0AyoUkMBLXS6ilwZlYgCcJZ5Jm9EWD0AiUqI
+         Bnsw==
+X-Forwarded-Encrypted: i=1; AJvYcCVhGqzG+R7CnwS0KgO5umf8XJlTLjxwZkOtOJbanr5z35rsN+eDNQ765oczoAWRTEvokuxhhiaxdsGIDR6AB+sUf/jTqGENU3IerOh5
+X-Gm-Message-State: AOJu0Yy/C0Lm3RRQaPPRYXicyuJ5VJmL9A9YhKEjuyW4mWFXy7Nc6kB5
+	z05zbVPEbo0saPX9sviEumGx7KyiylZkvw/ctyjYoJpINkvcrfrmackj99X3OaJ+unkX4jC4kX9
+	MSA==
+X-Google-Smtp-Source: AGHT+IGsCzOtwN105f/bltaErVUfpSBRC3F9RkDjk/0Wfd4wmn+phWiKkcXdiSoxa6ZQkSCXtl1Jd331NFw=
 X-Received: from drosen.mtv.corp.google.com ([2620:15c:211:201:fcce:d6ab:804c:b94b])
- (user=drosen job=sendgmr) by 2002:a05:6902:1004:b0:dda:c4ec:7db5 with SMTP id
- w4-20020a056902100400b00ddac4ec7db5mr365495ybt.4.1711677296744; Thu, 28 Mar
- 2024 18:54:56 -0700 (PDT)
-Date: Thu, 28 Mar 2024 18:53:40 -0700
+ (user=drosen job=sendgmr) by 2002:a0d:d8c5:0:b0:614:4c1:c8d with SMTP id
+ a188-20020a0dd8c5000000b0061404c10c8dmr308593ywe.6.1711677300998; Thu, 28 Mar
+ 2024 18:55:00 -0700 (PDT)
+Date: Thu, 28 Mar 2024 18:53:42 -0700
 In-Reply-To: <20240329015351.624249-1-drosen@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240329015351.624249-1-drosen@google.com>
 X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Message-ID: <20240329015351.624249-26-drosen@google.com>
-Subject: [RFC PATCH v4 25/36] bpf: Increase struct_op max members
+Message-ID: <20240329015351.624249-28-drosen@google.com>
+Subject: [RFC PATCH v4 27/36] fuse-bpf: Export Functions
 From: Daniel Rosenberg <drosen@google.com>
 To: Miklos Szeredi <miklos@szeredi.hu>, bpf@vger.kernel.org, 
 	Alexei Starovoitov <ast@kernel.org>
@@ -76,27 +76,33 @@ Cc: Amir Goldstein <amir73il@gmail.com>, linux-kernel@vger.kernel.org,
 	Daniel Rosenberg <drosen@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Fuse bpf goes a bit past the '64' limit here.
-This doubles the limit, although fuse-bpf currently uses 66.
+These functions needed to be exported to build fuse as a module
 
 Signed-off-by: Daniel Rosenberg <drosen@google.com>
 ---
- include/linux/bpf.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/bpf/bpf_struct_ops.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 785660810e6a..7a5a806e97ad 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -1636,7 +1636,7 @@ struct bpf_token {
- struct bpf_struct_ops_value;
- struct btf_member;
+diff --git a/kernel/bpf/bpf_struct_ops.c b/kernel/bpf/bpf_struct_ops.c
+index 43356faaa057..ae76b99c07c1 100644
+--- a/kernel/bpf/bpf_struct_ops.c
++++ b/kernel/bpf/bpf_struct_ops.c
+@@ -1024,6 +1024,7 @@ bool bpf_struct_ops_get(const void *kdata)
+ 	map = __bpf_map_inc_not_zero(&st_map->map, false);
+ 	return !IS_ERR(map);
+ }
++EXPORT_SYMBOL_GPL(bpf_struct_ops_get);
  
--#define BPF_STRUCT_OPS_MAX_NR_MEMBERS 64
-+#define BPF_STRUCT_OPS_MAX_NR_MEMBERS 128
- /**
-  * struct bpf_struct_ops - A structure of callbacks allowing a subsystem to
-  *			   define a BPF_MAP_TYPE_STRUCT_OPS map type composed
+ void bpf_struct_ops_put(const void *kdata)
+ {
+@@ -1035,6 +1036,7 @@ void bpf_struct_ops_put(const void *kdata)
+ 
+ 	bpf_map_put(&st_map->map);
+ }
++EXPORT_SYMBOL_GPL(bpf_struct_ops_put);
+ 
+ static bool bpf_struct_ops_valid_to_reg(struct bpf_map *map)
+ {
 -- 
 2.44.0.478.gd926399ef9-goog
 
