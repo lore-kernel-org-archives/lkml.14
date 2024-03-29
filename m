@@ -1,225 +1,136 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2129.outbound.protection.outlook.com [40.107.237.129])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941D237165;
-	Fri, 29 Mar 2024 03:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.129
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711683088; cv=fail; b=OdYkRy8uaZGx4SIdYNxOeX3IbnIslgcAGDOkz+8sA0mkr6CSGjqp3AAUD0znwTyk0OYA8C5suddZaEFXonK9NWwbsxzD0WFHBiavvSuRpi2whJ1vUH4nfXBVbVvOEH/8SA8jhxjpTIx2/ZlqA70bU9a5mdSxmHLGq8wXsYyzitQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711683088; c=relaxed/simple;
-	bh=rnFUIX65BMVyEcv1gZCjFL5uqQ/2+6f/tW7b09/Jzb4=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=ZtOngrk5j0RkAOy0JrZ5ce5sJgFoHH7gLPda947hMDO1yB223lDZSG9sUj4wTTWH4rJZutmV+FWft94l4cle8hit+g3vxpCdlvmtunxyHrIg8DWxgzj0eaiXQh/9ZjlGGCY06/jS24g7q9MgDcIM2YcvyYVeL3h5hjd6wNcuguw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=CSm9vbmL; arc=fail smtp.client-ip=40.107.237.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F7239ACB;
+	Fri, 29 Mar 2024 03:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711683620; cv=none; b=pa9pKdIgDK790MYpvefACd+3Zq2riwVxkI/xoF27CJy+iepADV4bQO2KcKcBOE5LZ16FJxc30h/OijahH29uj37VTpUfPfgpaNp7GYazVsnUl/CTb/BY2nL0bgnf/E51kDpf1bzWdJW8F8kCYwbs4Xx9tjXcAkqFdz/LCINvGNE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711683620; c=relaxed/simple;
+	bh=VjplwX6hMoT5EHNf7FxrGidV3KTgtmAptECcYXSYM6A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SIWdw+v1Nx+nEUjUCJn0/K/aFJEOOt5GcKVOjmP2YcbhJFY6DUdxOsldgnakINa5eXK/vKoRCoTgJCD8RaFtrqJ/ozbXmdvgtljBd9o/zEpfSkXi07auN0PctwVpx6oHVc9mmfS0St3MkSOK8xgQaSNydB2q70C9PbsCp9X92zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rp83LCqO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="CSm9vbmL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BolObwgcral9mB/kH798prJhLRfnSLITYhf/Tu0XTuEOioiXeJsJWWVYTYQr1Wt7LlMcm5iCmOpNt/mihTyuLI6lOa5p3jIa4bhAYp7eKKr4VXgz4R8alF5cyEuqohVtGa9hx8LvQYaCY2Lbqm8LvX7WaprU23AHhZcro5dplVp1UNE62JrHSetGDX0QaV48jT6BC/BB5N+diYC1dJyC4lbUFvQYlmPsRT/B74wT9f1F9AtQz1Fr2kfMmwr6tv/4AJ+itD8zoS1tfHusbnoH3knhq0FsurGsLDpCC06M/ktCn3en49gC/pmyV7oYyL3nO/TNfnBbboAqPZ1z7ZTR/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rnFUIX65BMVyEcv1gZCjFL5uqQ/2+6f/tW7b09/Jzb4=;
- b=XC6XT9fheWvr6PD65HNumL9Ast+IG3yuD51axgZpFR/siPCVqpcfAO0OY20d90B97pGwsgTl9kbTQw7P4X+bgaUwixlfgAmSfMDljmHOou8nWBprPvohupIEdDdrwxTHllL1j/HrzZ+3ceBiWXA218YRR1+pdz90lt+zKrsN6c2A/4DaSynVELEDiRsCCfaRjy8Wz30/e9NVf6m6d9NLoio82oFhH25I4gg+2yIRhVFALOJmZIM2Aw7FpZknI0PtFew12IxNvjD6WLICmezbEO7fwE1F8/rp16Htw/9yclqZGg1E52ZTXnhgWP8Iijv+FjDeewQUMbkA5Oz8wfCVhw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rnFUIX65BMVyEcv1gZCjFL5uqQ/2+6f/tW7b09/Jzb4=;
- b=CSm9vbmLsPIpvhk7+PusIIL0SN+zppsBIja30c1mGjGKAs8HHSheU/hc7qAAGe2+8OoSehWe8FTOoZlP5DsIGyow8SFJo/KAyrrPXErP1ws9olGOmk8wjB4uyrVS3qaKvjiAsHIUZ93XAPPl8vXNTLQAYfSGGD4LRUxMRPK8j5c=
-Received: from DM4PR12MB5086.namprd12.prod.outlook.com (2603:10b6:5:389::9) by
- MW4PR12MB6826.namprd12.prod.outlook.com (2603:10b6:303:20c::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7409.33; Fri, 29 Mar 2024 03:31:23 +0000
-Received: from DM4PR12MB5086.namprd12.prod.outlook.com
- ([fe80::225b:b65:a5c8:b069]) by DM4PR12MB5086.namprd12.prod.outlook.com
- ([fe80::225b:b65:a5c8:b069%7]) with mapi id 15.20.7409.039; Fri, 29 Mar 2024
- 03:31:23 +0000
-From: "V, Narasimhan" <Narasimhan.V@amd.com>
-To: "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, Linux Kernel Mailing List
-	<linux-kernel@vger.kernel.org>
-CC: "Petkov, Borislav" <Borislav.Petkov@amd.com>
-Subject: Soft Lockup on running fsstress with next-20240327
-Thread-Topic: Soft Lockup on running fsstress with next-20240327
-Thread-Index: AQHagYfYCSZyrOHQ6UyDn6OIojPZ8g==
-Date: Fri, 29 Mar 2024 03:31:23 +0000
-Message-ID:
- <DM4PR12MB508625859AF5FAC947815C02893A2@DM4PR12MB5086.namprd12.prod.outlook.com>
-Accept-Language: en-US, en-IN
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_Enabled=True;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_SetDate=2024-03-29T03:31:22.818Z;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_Name=General;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_ContentBits=0;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_Method=Standard;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM4PR12MB5086:EE_|MW4PR12MB6826:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- tfIg8lkc86Yj0uI3eDTvVi42NjaNes/bWnm+xM371bg55dxWCZ/ZZmrmqZQegWiFlmWOV4Ge14mtjWVAfRaKGRPYYnukKyEBPoBBbulgaH/pwcxKA1YAyMzZCYCZuVr5sW+mNiXBj0FwnszfqhJ516nNL7gkT6hyvpxl9WlUuMLoqKSJ+AThrr0IZZjAPxAg56shhFls01q8lX87/SDlKUq0ma3zGLbUM+5VzhuxoBTaFhkE++PIGC6m5yVa2Q8HyGEQbZ09c2s8FEalCidGxZA9tZoBU8BCJKD45Sm4cUy6n5sgfZBtF3DD1+gVrUIuxlSUReopUxBjq0tlwok89nXZ8HhdF2ZeEgiaL9f3nW3d3oVVpSr3OjdWl7IIrkbSljEezOw/67FYFyGSNaiHTKmsmNrscCwKB7SDyZkaik6vDueDFw8Ytp+q5k7fSgJ9DnsW8HEZsZ3vMXLjKIKTg9YSFBEyzQqoAMycYC0NZUdKY9Vwn+6pb/cMr5mTy1yZ/YeiNxFdY60YPtHQtXR0JoLPRwIuo80WpHJ7kY6oXaWZIbHo8/7gtdb1K6YOpr1BygFiQ5QI6vKzFbmQt//09Ey4L4zpi9N+M28r4uCtC64=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5086.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?dFFBRnhwMXAvZFUxdlA0QkM2eEwyM3JwVzljNHBWS2p5QU83VVhycEZudjlw?=
- =?utf-8?B?Z01SS3drMUV0b1l1bFhwYWpXZ2FzOHFJL1l4MFVOSkFQeE9DTmxSRHdWTzI4?=
- =?utf-8?B?SUp4WVlRSWcyc1NZNFdFbE5saTVVd0JQaTQ0Tmw3eUkybkFEZCt1eGtEQ0hX?=
- =?utf-8?B?eTRsdWQ3c0x0WWx3U3N1eVRMU3NmTG0xTkJJc1VPUGF4SXVaMlBwR2ROWWgy?=
- =?utf-8?B?bW50bW1ub2RmWDdzQnBFRFljcjBOZmZTaUhUa0hHOEI1cmNVOXlLZ1BNWHZV?=
- =?utf-8?B?ZUIxUW41d1V2WDRWRHUzZ3pjZ3NJcHA4eTIvMlVwemZXd2NmL1h4MCt2akc2?=
- =?utf-8?B?MFk3ZVNPVDlvSnZiSzN5NTNiRldHN0ErOVE2T2VNQ2R2ZlZNL3dvWjNsVi9Z?=
- =?utf-8?B?a0pMZGQ4M0JDTjZwMjZvQk5jQXN3ellGLzJlQTZpUFo4Y1QybER0SHA0bEJ0?=
- =?utf-8?B?aHdOdXlRdGhUaHMrMnpDeUtMV0J2UllLcFJwc3FzWW1SNmRVanE5V1VDRStn?=
- =?utf-8?B?OU5UcHNTNWpYeUUydUlFdmE1QUJXaVlVY2lTaXozUEZHZ0M1MGRtVzdCYytD?=
- =?utf-8?B?a1c5WktJUHhLZDFiaEQ2ZFVwT0tRTFJrNDJKTVFtRE0yQ01zenNwYmZnLzM1?=
- =?utf-8?B?dFZNcGtpV09ORTVEM2NIdWpnZm5EaWluWkJVMTJ3MzBrODg5Y1AzdnBLaEhB?=
- =?utf-8?B?dlp5eUJXRDZYT0ZFMzhaSERwTndtdzNkVWROSFpTVkYrSFREUENVekNnMkdy?=
- =?utf-8?B?YXkyTXZySVRHN3Rpa0FCb09FMHMzTmt2ZmdrR2lBeVNzcUZjbHYzREJhVGpj?=
- =?utf-8?B?MVdsbVI5NzlweVoyK1BkWDBCWTlsM0h5bGIwNWxMU3BDWW5nbHFvN3g3a2ZE?=
- =?utf-8?B?eU4ycTR6N0xoZTN4NURVdndiUlJyVHJqazJMUVJ1V1MzRE1CY1Rhb2tNc1Ux?=
- =?utf-8?B?OUJ0aHcza0c1RG1zMVBzTFBuKyt5TTNFYU5xaGsxTXVjNUV4WFNXMHdRWVM3?=
- =?utf-8?B?R2NQYzNjbmNWS0RNT01laytBOEZ2N2pMdkRuYU8wdEpOOHR1clZlaG1VMVBO?=
- =?utf-8?B?eGM4NHEzN3QzTHk5aWMxTTJpVkpFVVd0cjJkTFI2cjk2empoVzlBbEFPR2ls?=
- =?utf-8?B?eWhqeXhERjdReTlycGNJRDkydWRCaUFJY2dpUk82ZG16anNuYlM1WXRpNzJo?=
- =?utf-8?B?YWZ0N1ZIc2Zya2pBbVBWVzd3cm9Ld1NGbXVBd25GMlhRMnhaUUMyNEoyYytF?=
- =?utf-8?B?U0ErZGQ4dFdUWk83QXB2Zm1EY2tkenFrbm1QSHE5YjhSaW84SVBtTHNHZE5N?=
- =?utf-8?B?VUZkWTBkSmJBY004VlRBcW5Oc2k5ZjFDSk1SMzY5dVBTeVZGSEFndk1ybURy?=
- =?utf-8?B?dXJhMExMNnJwWHM5MkROT1Nieis3Y3g1NjZkNFlVajBHOE5JRkwrWld1UURL?=
- =?utf-8?B?WnY4dU5RQ24wY3V1ZWxPdGFXeFliKzI3L2liTy9IUld3Q1UwUmNXNFd0L1ow?=
- =?utf-8?B?c3U3UCtwK1hDZVpGWE5WWnF0ZE5VOGRWK0N3d0gzUXd2RUpUL0RMWnhqK2Va?=
- =?utf-8?B?b2lxS0NSZU5VS2ZObDJkUldUSWtadEtzR0JMRWUybW13VnhPRER4d3RDRG0r?=
- =?utf-8?B?WkZuTFVMWWpRUlNVUk45ZVZ5bVNsYkRLVkdUYk9WSmN1eXFVS0RORWNycmtN?=
- =?utf-8?B?QW1uL1NvNlAvT3ZCUHhhQzR1eTR4dFVVZUV0TEJ2SVBraWQza3gyN3A4U2pZ?=
- =?utf-8?B?aTZwQ3JPNTcwUjdaZVIyZmd1YnA2bXU4U2hseEgwSExPTzlpYTQ2NDVhUlBX?=
- =?utf-8?B?REwycHdlam1RN3FPek13cE9jU0NYUTcwMHVGMVdUdlFMa3dxOWt2UGpESStq?=
- =?utf-8?B?Z0RwYUR2ZWJrK1lNSm5SZHlaOHZaSmkwNGFWNUR1RzNmTk1NcHVaOVhZaEk2?=
- =?utf-8?B?Y0FJSjQ5dWRoMS9SdjZQN1Y2cEFNd2taTzF5bko5TkhHZUZNNndlM3pMVFE2?=
- =?utf-8?B?MVhwSzRCZzZaU052MU9yWDVkcVBuVlVBMWF6T3BMLy93N2UySlNMRWhRai9X?=
- =?utf-8?B?empSYTh6dnd3WGQrdlc2OTVMTXh0c1FJenllSHZYS3YxUVdNck5aSjZDMlZP?=
- =?utf-8?Q?UyvA=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rp83LCqO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 870ECC43390;
+	Fri, 29 Mar 2024 03:40:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711683619;
+	bh=VjplwX6hMoT5EHNf7FxrGidV3KTgtmAptECcYXSYM6A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=rp83LCqOWrsM6+79aowcJ2Vv+0pSuPshoBz28JZ1/OAKc5g1DS/niolqPGO6rMRdw
+	 81YEpmJ+5h57vkk7uDK8lhg0Z08gLctTRudexjrfEw2YcPnBgaZj3nKPqBSfJrO8Bd
+	 8FsdnK2rQmVsmLRTneVp9fHUQY5fn2AKwLQeU4Nn9uockIKQ4zYMeNSVjyMXeI1MR5
+	 /FCbaRdW4f5NohfwbYMlj71oJyOh7TtQCrTXNggsEHmPn+PBp84WwLT3vzMVHVnqNr
+	 1NloecWdqdO+DKUhRGaOpqq1nHM0gA7UrBlxD13Po4g87xAmDBg8nFzNC2vzNXRshd
+	 kSAADNrd1ihDA==
+Message-ID: <5e10988d-5652-4e03-b866-7f0daccafcad@kernel.org>
+Date: Fri, 29 Mar 2024 12:40:17 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5086.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 129e95f5-12b1-41cb-9545-08dc4fa0b524
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Mar 2024 03:31:23.1640
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: V4p1dvGuvanXDg+4dN5YKcAcz9dFr5V6baHp41h+Wsb4tVXO/OyPmY6ZA8wYILaidEq4/wu9lJ4ETZ5LT7HLkg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6826
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] block/mq-deadline: Fix WARN when set async_depth by sysfs
+To: Zhiguo Niu <zhiguo.niu@unisoc.com>, axboe@kernel.dk
+Cc: linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+ niuzhiguo84@gmail.com, ke.wang@unisoc.com, hongyu.jin@unisoc.com
+References: <1711680261-5789-1-git-send-email-zhiguo.niu@unisoc.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <1711680261-5789-1-git-send-email-zhiguo.niu@unisoc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-W0FNRCBPZmZpY2lhbCBVc2UgT25seSAtIEdlbmVyYWxdDQoNCkhpLA0KDQpXaXRoIG5leHQtMjAy
-NDAzMjcsIHdlIHNlZSBzb2Z0IGxvY2t1cCBvbiBydW5uaW5nIGZzdHJlc3Mgb24gZXh0NCBmaWxl
-c3lzdGVtLg0KSSBoYXZlIGEgbG9vcCBkZXZpY2UgY3JlYXRlZCBhbmQgcnVubmluZyBmc3N0cmVz
-cyBmcm9tIExUUC4NClRoZSBMVFAgZnNzdHJlc3MgcnVucyBvbiB0aGUgbG9vcCBkZXZpY2Ugb24g
-YSBjb21iaW5hdGlvbiBvZiByYWlkIG9yIG5vIHJhaWQsIGx2IGFuZCB3aXRob3V0IGx2LCBleHQ0
-IGZzLg0KDQooMDIvMjApIGF2b2NhZG8tbWlzYy10ZXN0cy9pby9kaXNrL2x0cF9mc3N0cmVzcy5w
-eTpMdHBGcy50ZXN0X2Zzc3RyZXNzX3J1bjtydW4tZnMtZXh0NC1sdi1sdi1yYWlkLW5vX3JhaWQt
-YzJjMDogU1RBUlRFRA0KTWFyIDI3IDExOjQ3OjQyIHN5c3RlbV9uYW1lIGtlcm5lbDogWzEzODAz
-LjM5OTQ3OV0gQ1BVOiA3MyBQSUQ6IDM0MTI4MyBDb21tOiBrd29ya2VyL3U1MTQ6MiBOb3QgdGFp
-bnRlZCA2LjkuMC1yYzEtbmV4dC0yMDI0MDMyNy0xNzExNTI0NjIwMjYwICMxDQpNYXIgMjcgMTE6
-NDc6NDIgc3lzdGVtX25hbWUga2VybmVsOiBbMTM4MDMuMzk5NDgyXSBIYXJkd2FyZSBuYW1lOiBE
-ZWxsIEluYy4gUG93ZXJFZGdlIFI2NTE1LzA3UFhQWSwgQklPUyAyLjEzLjMgMDkvMTIvMjAyMw0K
-TWFyIDI3IDExOjQ3OjQyIHN5c3RlbV9uYW1lIGtlcm5lbDogWzEzODAzLjM5OTQ4NF0gV29ya3F1
-ZXVlOiBsb29wNiBsb29wX3Jvb3RjZ193b3JrZm4NCk1hciAyNyAxMTo0Nzo0MiBzeXN0ZW1fbmFt
-ZSBrZXJuZWw6IFsxMzgwMy4zOTk0OTFdIFJJUDogMDAxMDpuYXRpdmVfcXVldWVkX3NwaW5fbG9j
-a19zbG93cGF0aCsweDg2LzB4MzAwDQpNYXIgMjcgMTE6NDc6NDIgc3lzdGVtX25hbWUga2VybmVs
-OiBbMTM4MDMuMzk5NDk3XSBDb2RlOiA5MiBjMiA0MSA4YiAwNCAyNCAwZiBiNiBkMiBjMSBlMiAw
-OCAzMCBlNCAwOSBkMCBhOSAwMCAwMSBmZiBmZiAwZiA4NSBmMiAwMSAwMCAwMCA4NSBjMCA3NCAx
-NCA0MSAwZiBiNiAwNCAyNCA4NCBjMCA3NCAwYiBmMyA5MCA8NDE+IDBmIGI2IDA0IDI0IDg0IGMw
-IDc1IGY1IGI4IDAxIDAwIDAwIDAwIDY2IDQxIDg5IDA0IDI0IDViIDQxIDVjDQpNYXIgMjcgMTE6
-NDc6NDIgc3lzdGVtX25hbWUga2VybmVsOiBbMTM4MDMuMzk5NDk5XSBSU1A6IDAwMTg6ZmZmZmI1
-ZWIwMzdiZjliOCBFRkxBR1M6IDAwMDAwMjAyDQpNYXIgMjcgMTE6NDc6NDIgc3lzdGVtX25hbWUg
-a2VybmVsOiBbMTM4MDMuMzk5NTAxXSBSQVg6IDAwMDAwMDAwMDAwMDAwMDEgUkJYOiBmZmZmOTBm
-YzEyM2NlMDY4IFJDWDogMDAwMDAwMDAwMDAwMDAwMA0KTWFyIDI3IDExOjQ3OjQyIHN5c3RlbV9u
-YW1lIGtlcm5lbDogWzEzODAzLjM5OTUwM10gUkRYOiAwMDAwMDAwMDAwMDAwMDAwIFJTSTogMDAw
-MDAwMDAwMDAwMDAwMCBSREk6IGZmZmY5MGZjMTIzY2UwYzANCk1hciAyNyAxMTo0Nzo0MiBzeXN0
-ZW1fbmFtZSBrZXJuZWw6IFsxMzgwMy4zOTk1MDRdIFJCUDogZmZmZmI1ZWIwMzdiZjllMCBSMDg6
-IDAwMDAwMDAwMDAwMDAwMDAgUjA5OiBmZmZmYjVlYWUwNzA0NTAwDQpNYXIgMjcgMTE6NDc6NDIg
-c3lzdGVtX25hbWUga2VybmVsOiBbMTM4MDMuMzk5NTA2XSBSMTA6IDAwMDAwMDAwMDAwMDAwMDAg
-UjExOiBmZmZmYjVlYWUwNzA0NTAwIFIxMjogZmZmZjkwZmMxMjNjZTBjMA0KTWFyIDI3IDExOjQ3
-OjQyIHN5c3RlbV9uYW1lIGtlcm5lbDogWzEzODAzLjM5OTUwN10gUjEzOiBmZmZmOTBmYzE2YTc1
-MTQwIFIxNDogMDAwMDAwMDEwMDMzNjgyYSBSMTU6IGZmZmY5MGZjMTIzY2UwYzANCk1hciAyNyAx
-MTo0Nzo0MiBzeXN0ZW1fbmFtZSBrZXJuZWw6IFsxMzgwMy4zOTk1MDldIEZTOiAgMDAwMDAwMDAw
-MDAwMDAwMCgwMDAwKSBHUzpmZmZmOTEwYjVmYTgwMDAwKDAwMDApIGtubEdTOjAwMDAwMDAwMDAw
-MDAwMDANCk1hciAyNyAxMTo0Nzo0MiBzeXN0ZW1fbmFtZSBrZXJuZWw6IFsxMzgwMy4zOTk1MTFd
-IENTOiAgMDAxMCBEUzogMDAwMCBFUzogMDAwMCBDUjA6IDAwMDAwMDAwODAwNTAwMzMNCk1hciAy
-NyAxMTo0Nzo0MiBzeXN0ZW1fbmFtZSBrZXJuZWw6IFsxMzgwMy4zOTk1MTJdIENSMjogMDAwMDdm
-ZDZhZGE2MWVhMCBDUjM6IDAwMDAwMDEwYjQ3MjQwMDMgQ1I0OiAwMDAwMDAwMDAwNzcwZWYwDQpN
-YXIgMjcgMTE6NDc6NDIgc3lzdGVtX25hbWUga2VybmVsOiBbMTM4MDMuMzk5NTE0XSBQS1JVOiA1
-NTU1NTU1NA0KTWFyIDI3IDExOjQ3OjQyIHN5c3RlbV9uYW1lIGtlcm5lbDogWzEzODAzLjM5OTUx
-NV0gQ2FsbCBUcmFjZToNCk1hciAyNyAxMTo0Nzo0MiBzeXN0ZW1fbmFtZSBrZXJuZWw6IFsxMzgw
-My4zOTk1MTddICA8SVJRPg0KTWFyIDI3IDExOjQ3OjQyIHN5c3RlbV9uYW1lIGtlcm5lbDogWzEz
-ODAzLjM5OTUyMV0gID8gc2hvd19yZWdzKzB4NmQvMHg4MA0KTWFyIDI3IDExOjQ3OjQyIHN5c3Rl
-bV9uYW1lIGtlcm5lbDogWzEzODAzLjM5OTUyNl0gID8gd2F0Y2hkb2dfdGltZXJfZm4rMHgyMGUv
-MHgyOTANCk1hciAyNyAxMTo0Nzo0MiBzeXN0ZW1fbmFtZSBrZXJuZWw6IFsxMzgwMy4zOTk1MzBd
-ICA/IF9fcGZ4X3dhdGNoZG9nX3RpbWVyX2ZuKzB4MTAvMHgxMA0KTWFyIDI3IDExOjQ3OjQyIHN5
-c3RlbV9uYW1lIGtlcm5lbDogWzEzODAzLjM5OTUzM10gID8gX19ocnRpbWVyX3J1bl9xdWV1ZXMr
-MHgxMTEvMHgyOTANCk1hciAyNyAxMTo0Nzo0MiBzeXN0ZW1fbmFtZSBrZXJuZWw6IFsxMzgwMy4z
-OTk1MzZdICA/IHNyc29fYWxpYXNfcmV0dXJuX3RodW5rKzB4NS8weGZiZWY1DQpNYXIgMjcgMTE6
-NDc6NDIgc3lzdGVtX25hbWUga2VybmVsOiBbMTM4MDMuMzk5NTQxXSAgPyBocnRpbWVyX2ludGVy
-cnVwdCsweDEwOC8weDI0MA0KTWFyIDI3IDExOjQ3OjQyIHN5c3RlbV9uYW1lIGtlcm5lbDogWzEz
-ODAzLjM5OTU0Nl0gID8gX19zeXN2ZWNfYXBpY190aW1lcl9pbnRlcnJ1cHQrMHg1ZC8weDE1MA0K
-TWFyIDI3IDExOjQ3OjQyIHN5c3RlbV9uYW1lIGtlcm5lbDogWzEzODAzLjM5OTU0OV0gID8gc3lz
-dmVjX2FwaWNfdGltZXJfaW50ZXJydXB0KzB4ODAvMHhiMA0KTWFyIDI3IDExOjQ3OjQyIHN5c3Rl
-bV9uYW1lIGtlcm5lbDogWzEzODAzLjM5OTU1NF0gIDwvSVJRPg0KTWFyIDI3IDExOjQ3OjQyIHN5
-c3RlbV9uYW1lIGtlcm5lbDogWzEzODAzLjM5OTU1NV0gIDxUQVNLPg0KTWFyIDI3IDExOjQ3OjQy
-IHN5c3RlbV9uYW1lIGtlcm5lbDogWzEzODAzLjM5OTU1Nl0gID8gYXNtX3N5c3ZlY19hcGljX3Rp
-bWVyX2ludGVycnVwdCsweDFmLzB4MzANCk1hciAyNyAxMTo0Nzo0MiBzeXN0ZW1fbmFtZSBrZXJu
-ZWw6IFsxMzgwMy4zOTk1NjJdICA/IG5hdGl2ZV9xdWV1ZWRfc3Bpbl9sb2NrX3Nsb3dwYXRoKzB4
-ODYvMHgzMDANCk1hciAyNyAxMTo0Nzo0MiBzeXN0ZW1fbmFtZSBrZXJuZWw6IFsxMzgwMy4zOTk1
-NjZdICBfcmF3X3NwaW5fbG9jaysweDJkLzB4NDANCk1hciAyNyAxMTo0Nzo0MiBzeXN0ZW1fbmFt
-ZSBrZXJuZWw6IFsxMzgwMy4zOTk1NjldICBfX3diX3VwZGF0ZV9iYW5kd2lkdGgrMHgzOC8weDFl
-MA0KTWFyIDI3IDExOjQ3OjQyIHN5c3RlbV9uYW1lIGtlcm5lbDogWzEzODAzLjM5OTU3NF0gIGRv
-X3dyaXRlcGFnZXMrMHgyNTYvMHgyODANCk1hciAyNyAxMTo0Nzo0MiBzeXN0ZW1fbmFtZSBrZXJu
-ZWw6IFsxMzgwMy4zOTk1NzldICBmaWxlbWFwX2ZkYXRhd3JpdGVfd2JjKzB4NzkvMHhiMA0KTWFy
-IDI3IDExOjQ3OjQyIHN5c3RlbV9uYW1lIGtlcm5lbDogWzEzODAzLjM5OTU4M10gID8gaW5vdGlm
-eV9mcmVlX2V2ZW50KzB4MTUvMHgyMA0KTWFyIDI3IDExOjQ3OjQyIHN5c3RlbV9uYW1lIGtlcm5l
-bDogWzEzODAzLjM5OTU4Nl0gIF9fZmlsZW1hcF9mZGF0YXdyaXRlX3JhbmdlKzB4NmQvMHg5MA0K
-TWFyIDI3IDExOjQ3OjQyIHN5c3RlbV9uYW1lIGtlcm5lbDogWzEzODAzLjM5OTU5NV0gIGZpbGVf
-d3JpdGVfYW5kX3dhaXRfcmFuZ2UrMHg1Yy8weGIwDQpNYXIgMjcgMTE6NDc6NDIgc3lzdGVtX25h
-bWUga2VybmVsOiBbMTM4MDMuMzk5NTk4XSAgZXh0NF9zeW5jX2ZpbGUrMHg4Zi8weDQ0MA0KTWFy
-IDI3IDExOjQ3OjQyIHN5c3RlbV9uYW1lIGtlcm5lbDogWzEzODAzLjM5OTYwMl0gID8gc3Jzb19h
-bGlhc19yZXR1cm5fdGh1bmsrMHg1LzB4ZmJlZjUNCk1hciAyNyAxMTo0Nzo0MiBzeXN0ZW1fbmFt
-ZSBrZXJuZWw6IFsxMzgwMy4zOTk2MDVdICB2ZnNfZnN5bmMrMHg1Ni8weDkwDQpNYXIgMjcgMTE6
-NDc6NDIgc3lzdGVtX25hbWUga2VybmVsOiBbMTM4MDMuMzk5NjA4XSAgPyBibGtfbXFfY29tcGxl
-dGVfcmVxdWVzdCsweDU4LzB4ODANCk1hciAyNyAxMTo0Nzo0MiBzeXN0ZW1fbmFtZSBrZXJuZWw6
-IFsxMzgwMy4zOTk2MTNdICBsb29wX3Byb2Nlc3Nfd29yaysweDNjNC8weDhhMA0KTWFyIDI3IDEx
-OjQ3OjQyIHN5c3RlbV9uYW1lIGtlcm5lbDogWzEzODAzLjM5OTYxNl0gID8gc3Jzb19hbGlhc19y
-ZXR1cm5fdGh1bmsrMHg1LzB4ZmJlZjUNCk1hciAyNyAxMTo0Nzo0MiBzeXN0ZW1fbmFtZSBrZXJu
-ZWw6IFsxMzgwMy4zOTk2MjJdICBsb29wX3Jvb3RjZ193b3JrZm4rMHgxZi8weDMwDQpNYXIgMjcg
-MTE6NDc6NDIgc3lzdGVtX25hbWUga2VybmVsOiBbMTM4MDMuMzk5NjI0XSAgcHJvY2Vzc19vbmVf
-d29yaysweDE4OC8weDNkMA0KTWFyIDI3IDExOjQ3OjQyIHN5c3RlbV9uYW1lIGtlcm5lbDogWzEz
-ODAzLjM5OTYyOV0gID8gX19wZnhfd29ya2VyX3RocmVhZCsweDEwLzB4MTANCk1hciAyNyAxMTo0
-Nzo0MiBzeXN0ZW1fbmFtZSBrZXJuZWw6IFsxMzgwMy4zOTk2MzFdICB3b3JrZXJfdGhyZWFkKzB4
-MmNlLzB4M2UwDQpNYXIgMjcgMTE6NDc6NDIgc3lzdGVtX25hbWUga2VybmVsOiBbMTM4MDMuMzk5
-NjM0XSAgPyBfX3BmeF93b3JrZXJfdGhyZWFkKzB4MTAvMHgxMA0KTWFyIDI3IDExOjQ3OjQyIHN5
-c3RlbV9uYW1lIGtlcm5lbDogWzEzODAzLjM5OTYzN10gIGt0aHJlYWQrMHhlOC8weDEyMA0KTWFy
-IDI3IDExOjQ3OjQyIHN5c3RlbV9uYW1lIGtlcm5lbDogWzEzODAzLjM5OTYzOV0gID8gX19wZnhf
-a3RocmVhZCsweDEwLzB4MTANCk1hciAyNyAxMTo0Nzo0MiBzeXN0ZW1fbmFtZSBrZXJuZWw6IFsx
-MzgwMy4zOTk2NDJdICByZXRfZnJvbV9mb3JrKzB4NDAvMHg2MA0KTWFyIDI3IDExOjQ3OjQyIHN5
-c3RlbV9uYW1lIGtlcm5lbDogWzEzODAzLjM5OTY0NV0gID8gX19wZnhfa3RocmVhZCsweDEwLzB4
-MTANCk1hciAyNyAxMTo0Nzo0MiBzeXN0ZW1fbmFtZSBrZXJuZWw6IFsxMzgwMy4zOTk2NDddICBy
-ZXRfZnJvbV9mb3JrX2FzbSsweDFhLzB4MzANCk1hciAyNyAxMTo0Nzo0MiBzeXN0ZW1fbmFtZSBr
-ZXJuZWw6IFsxMzgwMy4zOTk2NTRdICA8L1RBU0s+DQoNCkhhcHBlbnMgd2l0aCBuZXh0LTIwMjQw
-MzI4IGFzIHdlbGwNCg0KDQpTdGVwcyB0byByZXByb2R1Y2U6DQoxLiBDbG9uZSBhbmQgaW5zdGFs
-bCBodHRwczovL2dpdGh1Yi5jb20vbGludXgtdGVzdC1wcm9qZWN0L2x0cA0KMi4gR2V0IGEgZGlz
-ayByZWFkeSBvciBjcmVhdGUgbG9vcCBkZXZpY2UgdG8gYmUgdHJlYXRlZCBhcyBkaXNrLg0KMy4g
-UnVuIGZzc3RyZXNzIGZyb20gdGVzdGNhc2VzL2tlcm5lbC9mcy9mc3N0cmVzcyAtIC4vZnNzdHJl
-c3MgLWQgZGlza19uYW1lIC1uIDI1MCAtcCAyNTAgLXIgLWwgMQ0KDQpUaGUgZGlzayBjYW4gYmUg
-cmF3IC8gcmFpZCBjcmVhdGVkIG9uIGl0IC8gbHYgY3JlYXRlZCBvbiBpdCAvIG1vdW50ZWQgYXMg
-ZXh0NCBmcy4NCg0KDQrvu78tLQ0KUmVnYXJkcw0KTmFyYXNpbWhhbiBWDQo=
+On 3/29/24 11:44, Zhiguo Niu wrote:
+> A WARN may occur when async_depth is set from user by sysfs,
+> the warning log is as following:
+> 
+> [  623.848659] WARNING: CPU: 0 PID: 7798 at lib/sbitmap.c:537 sbitmap_queue_get_shallow+0x2c/0x38
+> [  623.878550] CPU: 0 PID: 7798 Comm: kworker/u16:2 Tainted: G        W  OE      6.6.0-mainline-g8d9254e6f4a0-dirty-ab000013 #1
+> [  623.880091] Hardware name: Unisoc UMS9621-base Board (DT)
+> [  623.880906] Workqueue: writeback wb_workfn (flush-254:48)
+> [  623.881748] pstate: 20400005 (nzCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [  623.882763] pc : sbitmap_queue_get_shallow+0x2c/0x38
+> [  623.883525] lr : __blk_mq_get_tag+0x50/0xd4
+> [  623.884198] sp : ffffffc08a073230
+> [  623.884745] x29: ffffffc08a073230 x28: ffffffc0821445e0 x27: 0000000000000000
+> [  623.885799] x26: ffffff8087de8000 x25: 0000000000000000 x24: 0000000000000002
+> [  623.886849] x23: ffffffc0820f2008 x22: ffffff8088ac3918 x21: ffffff808c358f10
+> [  623.887897] x20: ffffff808c358f00 x19: ffffffc08a073360 x18: ffffffc08bde70a8
+> [  623.888946] x17: 000000007e57c819 x16: 000000007e57c819 x15: fffffffdfe000000
+> [  623.889993] x14: 0000000000000001 x13: 0000000000000004 x12: 00000003c6c931ed
+> [  623.891038] x11: ffffff80939a3800 x10: ffffffc0801ac88c x9 : 0000000000000000
+> [  623.892086] x8 : 0000000000000006 x7 : 0000000000000000 x6 : ffffffc080765204
+> [  623.893131] x5 : 0000000000000000 x4 : 0000000000000001 x3 : 0000000000000000
+> [  623.894174] x2 : ffffffc080765224 x1 : 0000000000000005 x0 : ffffff808c358f10
+> [  623.895221] Call trace:
+> [  623.895660] sbitmap_queue_get_shallow+0x2c/0x38
+> [  623.896379] blk_mq_get_tag+0xa0/0x350
+> [  623.896992] __blk_mq_alloc_requests+0x218/0x300
+> [  623.897715] blk_mq_submit_bio+0x314/0x774
+> [  623.898369] __submit_bio+0xb4/0xe0
+> [  623.898950] submit_bio_noacct_nocheck+0x110/0x324
+> [  623.899692] submit_bio_noacct+0x278/0x3f8
+> [  623.900344] submit_bio+0xcc/0xe8
+> [  623.900900] f2fs_submit_write_bio+0x100/0x428
+> [  623.901605] __submit_merged_bio+0x74/0x1ac
+> [  623.902269] __submit_merged_write_cond+0x188/0x1f4
+> [  623.903022] f2fs_write_data_pages+0xb10/0xc2c
+> [  623.903727] do_writepages+0xf4/0x618
+> [  623.904332] __writeback_single_inode+0x78/0x60c
+> [  623.905055] writeback_sb_inodes+0x294/0x520
+> [  623.905734] __writeback_inodes_wb+0xa0/0xf4
+> [  623.906413] wb_writeback+0x188/0x4e8
+> [  623.907014] wb_workfn+0x420/0x608
+> [  623.907582] process_one_work+0x23c/0x55c
+> [  623.908227] worker_thread+0x2ac/0x3e4
+> [  623.908838] kthread+0x108/0x12c
+> [  623.909389] ret_from_fork+0x10/0x20
+> 
+> The rootcause is user may set async_depth to a value which is less
+> than its initial value from dd_init_hctx->dd_depth_updated, and this
+> initial value is set to sbq->min_shallow_depth, when async_depth is
+> modified by user from sysfs, sbq->min_shallow_depth will not be changed
+> simultaneously, and it is also not easy to obtain tag sbitmap information
+> in deadline_async_depth_store.
+> 
+> So a suitable value should be set to min_shallow_depth in dd_depth_updated.
+> 
+> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+> ---
+>  block/mq-deadline.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/block/mq-deadline.c b/block/mq-deadline.c
+> index 02a916b..89c516e 100644
+> --- a/block/mq-deadline.c
+> +++ b/block/mq-deadline.c
+> @@ -646,10 +646,12 @@ static void dd_depth_updated(struct blk_mq_hw_ctx *hctx)
+>  	struct request_queue *q = hctx->queue;
+>  	struct deadline_data *dd = q->elevator->elevator_data;
+>  	struct blk_mq_tags *tags = hctx->sched_tags;
+> +	unsigned int shift = tags->bitmap_tags.sb.shift;
+> +	unsigned int dd_min_depth = max(1U, 3 * (1U << shift)  / 4);
+
+Extra blank space before "/".
+That division could also be replaced with ">> 2".
+
+>  
+>  	dd->async_depth = max(1UL, 3 * q->nr_requests / 4);
+>  
+> -	sbitmap_queue_min_shallow_depth(&tags->bitmap_tags, dd->async_depth);
+> +	sbitmap_queue_min_shallow_depth(&tags->bitmap_tags, dd_min_depth);
+>  }
+>  
+>  /* Called by blk_mq_init_hctx() and blk_mq_init_sched(). */
+
+-- 
+Damien Le Moal
+Western Digital Research
+
