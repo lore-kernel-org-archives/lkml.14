@@ -1,48 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic310-23.consmr.mail.ne1.yahoo.com (sonic310-23.consmr.mail.ne1.yahoo.com [66.163.186.204])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963833C6BA;
-	Fri, 29 Mar 2024 07:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CDB38FA1
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 07:33:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.186.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711697530; cv=none; b=UE6UD6a/ZjA9Wc6Vb9QA4Endw3OeuE5Xei5vq08UOwaoJCsvNJeqMlaJt25gVOUgyG5TuiUajpZMfGfDALt21KwfXjeqhH7hvtfBtZdApwplkLR9tVQ6Q8wCxjmdydCK1EUbimrW76K110vMdamw9jXpOSWXlK23Lz6obD+3i2k=
+	t=1711697619; cv=none; b=rEfk+ReUNFE23fky13+5w7OezqCVPgDGOzReEtie5U+MxtyzrX4C2BjX0oUzGeLVLrIZCzcCIOv4zEWoU6n/cp5day3D1pkgh8jtfPNSldazyPi27H8btzitA9nfA2d4YBNKnIE1DkGj5XqLBdJ3cWr7Q9J+aNxf2fXnBnHpxHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711697530; c=relaxed/simple;
-	bh=3M6OWiyX2jCszgbg+gKZllism2OVuQShgvdmfShoSr8=;
+	s=arc-20240116; t=1711697619; c=relaxed/simple;
+	bh=3zB3Gcc8KXNMcKPXSSPa0Bhb4MhzReR+4gGltLBn2+I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZXAuZSEjWc2ZRMpwrn8uRxRfS5fA3tIcv8lSspDie3wOpGAPA3ubEdcZ9JNikmPay0h/giiISDaDITshPyL1I/ItuwO/c7S9jW3l9PYayXBeSECcMuuyKKBhBLixK5M70/4To6n8afRHJxyziEgvQQAxWyPirc5UAUo31eOZItk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NZlFXF9r; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=dAdYbTi/vU7A9uxuogLmlCRmdZMLAgThVcF37JRD4wPZf3tINH/niTBc5VCCsLpzK2mE4Gt0cuR/dC3c5gB2a2LKa/HAYBhQf7KpbiFPznNyOgaEjW0nj+jVGUzQFwRSA9JAEoB/lUDFayLGmv6kpKHPoUpv+1kx6dYi02bZKA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=CWVV+xYa; arc=none smtp.client-ip=66.163.186.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NZlFXF9r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711697529; x=1743233529;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=3M6OWiyX2jCszgbg+gKZllism2OVuQShgvdmfShoSr8=;
-  b=NZlFXF9rHVWYWPPKRop1GhOBIIEM+a71uzw6TYQYj93oiPyocNg7r5GZ
-   0uHKuFJjrvuxqOKEth+yYdDpKbwHGsbMPlodY6Hx35vHL8AJAWAgxENaQ
-   Mz1lpOk3rvryKi8wkAAATZaF2bIFGUFFem0AJsXCSn7rW6AcBdNxv686F
-   Vsnbfy9zz0DGYNon3bLdCmRRZXHmgfcmYDBqs3Z9O42AjgPk0RPEF4IjY
-   LcdXxNr9o6bZgCmIMA2+wnxuAJN58s4YMzf8TdbiFTOoDWl4h5b1BctjP
-   UsYvnzYT/+Jr8MPvuAxcBWvtx2mnJz/RCOVa+wNTHfiw6XJ8FcZFIaox6
-   Q==;
-X-CSE-ConnectionGUID: zq+nTeguTAG32jgwWLQCrw==
-X-CSE-MsgGUID: SGBPKhkXTsCltO/FUCHoHg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="17605218"
-X-IronPort-AV: E=Sophos;i="6.07,164,1708416000"; 
-   d="scan'208";a="17605218"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 00:32:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,164,1708416000"; 
-   d="scan'208";a="16785904"
-Received: from zengguan-mobl1.ccr.corp.intel.com (HELO [10.238.3.174]) ([10.238.3.174])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 00:32:03 -0700
-Message-ID: <a4f169fa-663d-4a94-878b-d783f67d48c9@intel.com>
-Date: Fri, 29 Mar 2024 15:32:00 +0800
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="CWVV+xYa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1711697617; bh=3zB3Gcc8KXNMcKPXSSPa0Bhb4MhzReR+4gGltLBn2+I=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=CWVV+xYaR0CRiuVU+yE08GWC0E8l3Tz7suUbw55kS488uMu681ndYmTGZzjsMS8mCgegYQ522Bzi0505qlP2UKIclVo7PPB2xg0zRlh/oSnE1eNo/2feWN57HOxI5a3a0BSk2lkmJwVAcZ4IXGroSrlM3BXsz8cdEtR5Pfo+7WaCSMiOxclhgtCuqNriPACsBXcMHf6/4tC90HDUlKV9jVDcBiv+k9PId7mJ67oOnOABEXc/SW+XPmcjrvu88xVzovfmUiFaUbQrvHSyQBLzvQjgDh6SHryTXqmurqqcPnow1n8LKk3nZjnD4XEZX/ioe1R3hf3Oqnoracy6aCjiBg==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1711697617; bh=dzq2eqPh514hNZevCH4BZZExeTG45I3TBOE4/qQ0Z+x=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=Wj+WkgOt6+uOiN6fNM7Yfngn+mCxDmRLa24hevq7P9IBJqtPINoiArOrcyR2CkPLcxG4rx59vEhrIZhmdFqgRl8kFtymFdz+WhLcBCTQCI5wxFN4oEtjUl/zTolGgWmQe34pSob8qamo40glHIrwXM5VV/sOgpCzmgsmoas50XaBhq09Jo/ddxENTGsVHec3NygZBUjWHKLyjoHyoWouu3WUrTcZGBGy31/CeiFOhAwfUWG9iZHEYwkfoWx8EQzgTjc18OWfWon/La+nTVAy1gBkhsW5T2+jQVQmfu0ZgCQRfK7KWIdi1MGoV8M1QFb61tyqqqYFd2XFXDfMgjUaHQ==
+X-YMail-OSG: D8Yl0X8VM1kyGkdFxhlOEuA2MLGab6rZvotUhS7KDnrSEQ8A1W5fY8EtiW06WqZ
+ 3rdmDdZ5uNQAdJqglpZAXxooRnA00F8w3pGErHj1QR2gbL2h2tET49_Iag0svDhfnebeOiawU4PY
+ P4bLHyfisuxkDzGvnfKMoLz2q1gYsf4M4zvaD.txgKoct4dMIkaEERsRZi8eV51xER_c01AAMkXA
+ OiF1m6xNVgL_EyzKYwkkXy4De75ECRsrQGDb9UaNxEI0qizhsY7gGHAMldggYH5Ca8pXqVoMaV.T
+ WyG8rt59SpAcdV3ea345koxqWFeRj6BSe8KIWs68NZFyYl2C_.eBLIGbSPPJhrSQ7xdB37anu.Ac
+ eKZHN5LczITHBQXrsRLhb3yB11LCIOegRan3hqiWiGN96TdE4Dk37EKpn9nOaVp.t6yEd7FpJcsW
+ NnHk6oxRW9_YUL9T0SPRw.9kdzR77n440EO_7hh_BqT0UEoB0x3AhP.zbIVHh6NO2WQUjM6DAxV3
+ fxqY6L1uvR4p0wxLFBmtwk4I2MFGmWQIuCF8Qofhk9YpGMvRzzCZpfrqtt1apyhpwi.mINnEeg4d
+ D7gvaBEJPoVSAzYmls4sieWaBrqGqWhLaIIjG42xJ567EjrknICyQq0ZmiT2Z94Xxna36A3cFM1z
+ mNUl4kUuJVpPKC4aKcx1hXuT.Op925C87oKOFK7QOLpd0W8Wf5RfOeuen8r0hDFQZBLNql2jP6Qf
+ Hr4LY56aowGSIS_JOcFOU5VrjV6IpS0sGH8hCc3RfUv0wyjhL.vLHiKzqn9O7BLQARs5Ciw4AQhQ
+ g67dO8FHYsYOJqbs.KFHlGVlndxR.Zuayp5f3oNkfYdPygzNCl0lwMNrtZAHPVwFrkfPYyqPgaUY
+ V0H5FrtXtSdhjs0vkKrTZ1slfaOblqj96Er9gAuyYna_hAAZDLvfiaS2slETc5Q7cB_MpAX77KCD
+ ORoq9UiWRXtFEHuYG6PUXt0xblbWo6NWKnhvMDLByEE_LlrJUyvcEoIZYyJViSaZXJmiJVxABxWb
+ MDmfUDsEdHrPejY93quQ7YdtBefwDz8iavlH2MvVHkl2D6_Dl_8.9c8_HIIP2i.n0WrAP_MYgt4X
+ HEPd0mqqikfQ6Zt6ukucwEEJzTwy9wGc6Kg2Kfd8.Oink3OJXZHSBkD4FbIlV9oLQYRyG8debQlr
+ Xyq.A62RUemZt3ztFMyQKlDetxKBLte7diDOuWK954M8raLpXXJ_EiRJG1qOcK.c2Q7ibV_PZLwx
+ 6hUe5o3e4ryNotdaRQhtLOoM3slpVU7Xt2N44PFz8p9dk9wcaSps_0Z7imoAKvcol5bPoAsBzz.z
+ AqEmHpttqescCRTWUvH1Y.6VLpGciICzfZYxp.o9xFgnB6BPPqZLibFkuhWZWERJKY_C23uBpSQC
+ .9BGv2aKoQ5can0rAz3V.11a8NXslCkW9vUra.T4iV.xebOFdIjG0rutZC6elyUp2wlG6OGq7ar0
+ 4BaDoE5tMO7RBgwrmNRmCYVaH6bmuBFA961bWoVAaWK1dDxuxEvSGc_GhUeZa_9eyMQwp67wHpRH
+ 3_xyp_tlWvP7g0GY8ifMC5Fs4bF9t1mUw403NElvafFR9W9_5yRzlt7hyCKDfpxke3O1bK9SDjGy
+ h5.hzu4oVWzBptTfGo4aXMfU5jGD_ss.EOsKGpiLczE8_BxNeD4RHIk4g.gAUg6FkM43DO8i1BOZ
+ 2gIKRBXXQ3_o_SEhzQZWjbf7Ay2vrOitExzSd6mnXfrksWYZvXZNy7EwZpLA8ZISLXWvFgDv1iUk
+ e..EoE35qwVAyWRV1Qw8sH0oYuhxS78eQ0OYLJdQmMYXRR7Spu0HapGKZhGMzrFi3zgN5X1vR6GK
+ x0virE9PpyTmkScfcJhuLA8wbnKFZxEATCidi6wSuQBZ3To6apcjlJCRJ9iPkKjSPCK5wDa4FVm3
+ vGVK1RDP2RsIbvy1kt.uoyPnj_nVfqbp._xMKH.5tMSTBB5Ambra83m_cpraxQzx_xKOBAvYdccY
+ symCd3qf5qq_lDy8zDb36l0zuCSPSzAT.8ryPHGUcDuCBl7GZIjtkKYqPUuVIYETbcrEx54u5eZf
+ cZqzkuZvlG9OfnEyQ4Wkf87H3x_6J4bEvruK.9e3TCpGcV0JYMm6UmBV_bmnaH4A03kEwkhE2jHI
+ baD1cFlE3PFzHeFe3rVhAkLZI5xYWpOVF0yXtMWdRSoeftpuOdz8mlq9mPgRAHSrFC5WSEpDNG0r
+ qz0lO4WSX6jIzm9V8H5_0CYqT.hhhizcsHDBxMg5Y2j82MT8owj9x0C0Vy.HMu7GpmRQ-
+X-Sonic-MF: <serdeliuk@yahoo.com>
+X-Sonic-ID: 6c97460c-e784-4241-8f28-8e2d8036dd0f
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.ne1.yahoo.com with HTTP; Fri, 29 Mar 2024 07:33:37 +0000
+Received: by hermes--production-ir2-7bc88bfc75-7f2jw (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 7d954246ec0744b9efc2d2bb63deca80;
+          Fri, 29 Mar 2024 07:23:27 +0000 (UTC)
+Message-ID: <673ce5e1-edcd-414f-9346-ae50bccd88a5@yahoo.com>
+Date: Fri, 29 Mar 2024 08:23:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,144 +63,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/15] x86/irq: Install posted MSI notification handler
+Subject: Re: [PATCH 2/2] v2 arm64: dts: qcom: Add support for Samsung Galaxy Z
+ Fold5
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240329-v2-dts-add-support-for-samsung-galaxy-zfold5-v1-0-9a91e635cacc@yahoo.com>
+ <20240329-v2-dts-add-support-for-samsung-galaxy-zfold5-v1-2-9a91e635cacc@yahoo.com>
+ <4e1c225f-9b9a-4300-b4d3-2fc38c9b573c@linaro.org>
 Content-Language: en-US
-To: Jacob Pan <jacob.jun.pan@linux.intel.com>,
- LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- Thomas Gleixner <tglx@linutronix.de>, Lu Baolu <baolu.lu@linux.intel.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "Hansen, Dave" <dave.hansen@intel.com>, Joerg Roedel <joro@8bytes.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
- Ingo Molnar <mingo@redhat.com>
-Cc: "Luse, Paul E" <paul.e.luse@intel.com>,
- "Williams, Dan J" <dan.j.williams@intel.com>, Jens Axboe <axboe@kernel.dk>,
- "Raj, Ashok" <ashok.raj@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
- "maz@kernel.org" <maz@kernel.org>, "seanjc@google.com" <seanjc@google.com>,
- Robin Murphy <robin.murphy@arm.com>
-References: <20240126234237.547278-1-jacob.jun.pan@linux.intel.com>
- <20240126234237.547278-10-jacob.jun.pan@linux.intel.com>
-From: Zeng Guang <guang.zeng@intel.com>
-In-Reply-To: <20240126234237.547278-10-jacob.jun.pan@linux.intel.com>
+From: Alexandru Serdeliuc <serdeliuk@yahoo.com>
+In-Reply-To: <4e1c225f-9b9a-4300-b4d3-2fc38c9b573c@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Mailer: WebService/1.1.22205 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
+Thanks, indeed, v3 will contain the right messages
 
-On 1/27/2024 7:42 AM, Jacob Pan wrote:
-> @@ -353,6 +360,111 @@ void intel_posted_msi_init(void)
->   	pid->nv = POSTED_MSI_NOTIFICATION_VECTOR;
->   	pid->ndst = this_cpu_read(x86_cpu_to_apicid);
->   }
-> +
-> +/*
-> + * De-multiplexing posted interrupts is on the performance path, the code
-> + * below is written to optimize the cache performance based on the following
-> + * considerations:
-> + * 1.Posted interrupt descriptor (PID) fits in a cache line that is frequently
-> + *   accessed by both CPU and IOMMU.
-> + * 2.During posted MSI processing, the CPU needs to do 64-bit read and xchg
-> + *   for checking and clearing posted interrupt request (PIR), a 256 bit field
-> + *   within the PID.
-> + * 3.On the other side, the IOMMU does atomic swaps of the entire PID cache
-> + *   line when posting interrupts and setting control bits.
-> + * 4.The CPU can access the cache line a magnitude faster than the IOMMU.
-> + * 5.Each time the IOMMU does interrupt posting to the PIR will evict the PID
-> + *   cache line. The cache line states after each operation are as follows:
-> + *   CPU		IOMMU			PID Cache line state
-> + *   ---------------------------------------------------------------
-> + *...read64					exclusive
-> + *...lock xchg64				modified
-> + *...			post/atomic swap	invalid
-> + *...-------------------------------------------------------------
-> + *
-> + * To reduce L1 data cache miss, it is important to avoid contention with
-> + * IOMMU's interrupt posting/atomic swap. Therefore, a copy of PIR is used
-> + * to dispatch interrupt handlers.
-> + *
-> + * In addition, the code is trying to keep the cache line state consistent
-> + * as much as possible. e.g. when making a copy and clearing the PIR
-> + * (assuming non-zero PIR bits are present in the entire PIR), it does:
-> + *		read, read, read, read, xchg, xchg, xchg, xchg
-> + * instead of:
-> + *		read, xchg, read, xchg, read, xchg, read, xchg
-> + */
-> +static __always_inline inline bool handle_pending_pir(u64 *pir, struct pt_regs *regs)
-> +{
-> +	int i, vec = FIRST_EXTERNAL_VECTOR;
-> +	unsigned long pir_copy[4];
-> +	bool handled = false;
-> +
-> +	for (i = 0; i < 4; i++)
-> +		pir_copy[i] = pir[i];
-> +
-> +	for (i = 0; i < 4; i++) {
-> +		if (!pir_copy[i])
-> +			continue;
-> +
-> +		pir_copy[i] = arch_xchg(pir, 0);
-
-Here is a problem that pir_copy[i] will always be written as pir[0]. 
-This leads to handle spurious posted MSIs later.
-
-> +		handled = true;
-> +	}
-> +
-> +	if (handled) {
-> +		for_each_set_bit_from(vec, pir_copy, FIRST_SYSTEM_VECTOR)
-> +			call_irq_handler(vec, regs);
-> +	}
-> +
-> +	return handled;
-> +}
-> +
-> +/*
-> + * Performance data shows that 3 is good enough to harvest 90+% of the benefit
-> + * on high IRQ rate workload.
-> + */
-> +#define MAX_POSTED_MSI_COALESCING_LOOP 3
-> +
-> +/*
-> + * For MSIs that are delivered as posted interrupts, the CPU notifications
-> + * can be coalesced if the MSIs arrive in high frequency bursts.
-> + */
-> +DEFINE_IDTENTRY_SYSVEC(sysvec_posted_msi_notification)
-> +{
-> +	struct pt_regs *old_regs = set_irq_regs(regs);
-> +	struct pi_desc *pid;
-> +	int i = 0;
-> +
-> +	pid = this_cpu_ptr(&posted_interrupt_desc);
-> +
-> +	inc_irq_stat(posted_msi_notification_count);
-> +	irq_enter();
-> +
-> +	/*
-> +	 * Max coalescing count includes the extra round of handle_pending_pir
-> +	 * after clearing the outstanding notification bit. Hence, at most
-> +	 * MAX_POSTED_MSI_COALESCING_LOOP - 1 loops are executed here.
-> +	 */
-> +	while (++i < MAX_POSTED_MSI_COALESCING_LOOP) {
-> +		if (!handle_pending_pir(pid->pir64, regs))
-> +			break;
-> +	}
-> +
-> +	/*
-> +	 * Clear outstanding notification bit to allow new IRQ notifications,
-> +	 * do this last to maximize the window of interrupt coalescing.
-> +	 */
-> +	pi_clear_on(pid);
-> +
-> +	/*
-> +	 * There could be a race of PI notification and the clearing of ON bit,
-> +	 * process PIR bits one last time such that handling the new interrupts
-> +	 * are not delayed until the next IRQ.
-> +	 */
-> +	handle_pending_pir(pid->pir64, regs);
-> +
-> +	apic_eoi();
-> +	irq_exit();
-> +	set_irq_regs(old_regs);
->   }
->   #endif /* X86_POSTED_MSI */
->   
+On 29/3/24 1:54, Konrad Dybcio wrote:
+> On 29.03.2024 12:08 AM, Alexandru Marc Serdeliuc via B4 Relay wrote:
+>> From: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
+>>
+>> Add support for Samsung Galaxy Z Fold5 (q5q) foldable phone
+>>
+>> Currently working features:
+>> - Framebuffer
+>> - UFS
+>> - i2c
+>> - Buttons
+>>
+>> Signed-off-by: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
+>> ---
+> Looks like the commit message and contents got mixed up!
+>
+> Konrad
