@@ -1,23 +1,23 @@
-Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC807BB0D
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 10:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A037D416
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 10:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711709810; cv=none; b=h47ycFb53JCGm/ednXaPw81vZ6F/+bi4o5ItdidHEBkqgopziBZ/2HSc7vvwHEj6LIU37nFOhmjabG2m5N07rem8wnRuuvLpfh9jsan4JdnDL/I5MR0vqrr45fm1yEoF6qHilyiLVX5q403nijuPOvSIWSiFHnBgGUJQblNyFoU=
+	t=1711709811; cv=none; b=XOvOGxVQjI6xm7vGMw1y0PZb27c2adA8Yce1qbBpQQbCE0nj9CD2FlUtzs+rppi++Q6tGuQJ6ZsX6Y1zR5OgKDI5SYoP3KyS3gxN+EF+wMUTb+rETVbxVspSqpOSQ/lVPMkYtPR3lxdj3apbAW5PN+D7EjZuYWppdhSwW4QVy2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711709810; c=relaxed/simple;
-	bh=GrV47NT5vn8t81Ahr/eNUVMeiZ6ilTSttqyQGbii5b0=;
+	s=arc-20240116; t=1711709811; c=relaxed/simple;
+	bh=76IT1a2GUz6XBzbVi4WyO5trFZFO8WMfWnONPgI9AQY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SJy67qikKSmDhUnTV+nl2F42zx8hqVNx6Rv8ANC8ewRPnpDSo//wemZqJ/8aQaD2bvWfOxu0Ud9KutxZER1OMPTdmgDnak/Hj/s/YBsogpMmRFW6PiK7/sagYJhF863PIMVlbkadL4GvU073IwhtsnnBt2Ee9041V5LbtrmYaRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
+	 MIME-Version; b=huF7rJl4SWtusmPNUbPkChJP62TWZl3nSL0Mh+SSOxS9CAXwA26wCDQjbF5nLQSE6YAiCq3QH6crWw8/i00tp1SQr1fGXoIVfv7NX7Mubqmx/S9EvKsAlDSiGnvTXf88u28uRt8GUjvkItAvGh6WptMWuDTNqJbHTPId7b4M8t0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
 Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
-	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
-	id 0791ead8-edbb-11ee-b3cf-005056bd6ce9;
-	Fri, 29 Mar 2024 12:56:43 +0200 (EET)
+	by fgw22.mail.saunalahti.fi (Halon) with ESMTP
+	id 058b1d91-edbb-11ee-a9de-005056bdf889;
+	Fri, 29 Mar 2024 12:56:41 +0200 (EET)
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Andy Shevchenko <andy.shevchenko@gmail.com>,
@@ -25,9 +25,9 @@ To: Linus Walleij <linus.walleij@linaro.org>,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 08/11] pinctrl: aw9523: Make use of dev_err_probe()
-Date: Fri, 29 Mar 2024 12:55:22 +0200
-Message-ID: <20240329105634.712457-9-andy.shevchenko@gmail.com>
+Subject: [PATCH v2 04/11] pinctrl: aw9523: Make use of struct pinfunction and PINCTRL_PINFUNCTION()
+Date: Fri, 29 Mar 2024 12:55:18 +0200
+Message-ID: <20240329105634.712457-5-andy.shevchenko@gmail.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240329105634.712457-1-andy.shevchenko@gmail.com>
 References: <20240329105634.712457-1-andy.shevchenko@gmail.com>
@@ -41,40 +41,71 @@ Content-Transfer-Encoding: 8bit
 
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Simplify the error handling in probe function by switching from
-dev_err() to dev_err_probe().
+Since pin control provides a generic data type and a macro for
+the pin function definition, use them in the driver.
 
 Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/pinctrl/pinctrl-aw9523.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ drivers/pinctrl/pinctrl-aw9523.c | 32 ++++++--------------------------
+ 1 file changed, 6 insertions(+), 26 deletions(-)
 
 diff --git a/drivers/pinctrl/pinctrl-aw9523.c b/drivers/pinctrl/pinctrl-aw9523.c
-index f084dad5c88f9..fe398c59c2d11 100644
+index d93640a02d1d3..7db901216a94c 100644
 --- a/drivers/pinctrl/pinctrl-aw9523.c
 +++ b/drivers/pinctrl/pinctrl-aw9523.c
-@@ -816,10 +816,8 @@ static int aw9523_init_irq(struct aw9523 *awi, int irq)
+@@ -66,18 +66,6 @@ struct aw9523_irq {
+ 	u16 cached_gpio;
+ };
  
- 	ret = devm_request_threaded_irq(dev, irq, NULL, aw9523_irq_thread_func,
- 					IRQF_ONESHOT, dev_name(dev), awi);
--	if (ret) {
--		dev_err(dev, "Failed to request irq %d\n", irq);
--		return ret;
--	}
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to request irq %d\n", irq);
+-/*
+- * struct aw9523_pinmux - Pin mux params
+- * @name: Name of the mux
+- * @grps: Groups of the mux
+- * @num_grps: Number of groups (sizeof array grps)
+- */
+-struct aw9523_pinmux {
+-	const char *name;
+-	const char * const *grps;
+-	const u8 num_grps;
+-};
+-
+ /*
+  * struct aw9523 - Main driver structure
+  * @dev: device handle
+@@ -158,17 +146,9 @@ static const char * const gpio_pwm_groups[] = {
+ };
  
- 	girq = &awi->gpio.irq;
- 	gpio_irq_chip_set_chip(girq, &aw9523_irq_chip);
-@@ -1016,8 +1014,7 @@ static int aw9523_probe(struct i2c_client *client)
+ /* Warning: Do NOT reorder this array */
+-static const struct aw9523_pinmux aw9523_pmx[] = {
+-	{
+-		.name = "pwm",
+-		.grps = gpio_pwm_groups,
+-		.num_grps = ARRAY_SIZE(gpio_pwm_groups),
+-	},
+-	{
+-		.name = "gpio",
+-		.grps = gpio_pwm_groups,
+-		.num_grps = ARRAY_SIZE(gpio_pwm_groups),
+-	},
++static const struct pinfunction aw9523_pmx[] = {
++	PINCTRL_PINFUNCTION("pwm", gpio_pwm_groups, ARRAY_SIZE(gpio_pwm_groups)),
++	PINCTRL_PINFUNCTION("gpio", gpio_pwm_groups, ARRAY_SIZE(gpio_pwm_groups)),
+ };
  
- 	awi->pctl = devm_pinctrl_register(dev, pdesc, awi);
- 	if (IS_ERR(awi->pctl)) {
--		ret = PTR_ERR(awi->pctl);
--		dev_err(dev, "Cannot register pinctrl: %d", ret);
-+		ret = dev_err_probe(dev, PTR_ERR(awi->pctl), "Cannot register pinctrl");
- 		goto err_disable_vregs;
- 	}
+ static int aw9523_pmx_get_funcs_count(struct pinctrl_dev *pctl)
+@@ -184,10 +164,10 @@ static const char *aw9523_pmx_get_fname(struct pinctrl_dev *pctl,
+ 
+ static int aw9523_pmx_get_groups(struct pinctrl_dev *pctl, unsigned int sel,
+ 				 const char * const **groups,
+-				 unsigned int * const num_groups)
++				 unsigned int * const ngroups)
+ {
+-	*groups = aw9523_pmx[sel].grps;
+-	*num_groups = aw9523_pmx[sel].num_grps;
++	*groups = aw9523_pmx[sel].groups;
++	*ngroups = aw9523_pmx[sel].ngroups;
+ 	return 0;
+ }
  
 -- 
 2.44.0
