@@ -1,296 +1,166 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11022011.outbound.protection.outlook.com [52.101.51.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E56C1386B4
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 19:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711740472; cv=none; b=J82fgT7BkszU67GnyXkw/+Egf96lwxD36IquUxUyTo4utQWmJ55UZP6QpT6kp0mamZEPAkfSdfl1F+KmkCdHVjGp0m0+WpFZrfhBUAfvu+6fLxHtmeFa8EsmFSl/6hsoE1elMaY7/LwmOhbYABP6hpnrDwq1bwgJQIJdzbOwNYM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711740472; c=relaxed/simple;
-	bh=HQu5RRVz47jUdl+Bxn7MiN5S9bgEl42EXv8NwJt6Wow=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=E5rfSninHtitEjGAOBfJw8J/yoNwylOlNzTOryKmVZYOqs+hiw/oua3u36yyznjqB7JBwJEd6yWVYzvIKHYRz9nWlOH0116Ulqu+ZAujW51JHqAUDlQyA5AA5sNBR/JOhKy/Zrz8GIipUq8Nc9fVDP9WiwMyqc8r+ohBWp0VQLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kxcmKyo8; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D467413341C;
+	Fri, 29 Mar 2024 19:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.51.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711740524; cv=fail; b=my2PZkvLubNQjRvU0Q1koW01OOVUjR1lSrVuAXxEi7AnCi3+ucMO5u5F9W3dLY87lXf4X5LTnRM7OW3d8WCYIkjqF63gGmEA58tBnGmuI5R4wZoIRmlvr3Smy40sXzym7v/GaenLvAqC5OS83k63/mN587igVF4OVjNAe9b8IY8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711740524; c=relaxed/simple;
+	bh=cIBz7W5o1CZDJeRt7wrn3QOaRx8Id1dxgRxxQWMfawk=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=EoenZ7Xw4/JUq3ySBWFSPrjmXFA6mpIGSZZylTL6HWThv3yEB6b67LpZ8IWK6zC4pTY3TFMl0RGQCoEKOUww+X1YR4lB1hWJFtE41QsGMGyCdtvCraRjH5cwg69ddXT/09+fPCv7gWX0tIjjATx2PXy5BzD0H+L69ICBJBF+nUQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=Z+BLPzDK; arc=fail smtp.client-ip=52.101.51.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kxcmKyo8"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4149746f80aso15561005e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 12:27:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711740468; x=1712345268; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ypH1YCAf8GB4uY1YvbslKIBvLhcq3mEbEzkW3A0+meY=;
-        b=kxcmKyo83US51szYlhKSYPQmbwbLWaLBbEuB6Fy+sbILF1zuIgHx36v+F4kQGfeVwg
-         IV4HzCfdCQAIurHS9ZGrIV5SqOg/ze7GAB0gTq6SWj2VEqhK4zm9lMubdEu1mpkAheqd
-         v24gpHhFAHlTjPlyW5xPviZg/EZAxGmDjka6wFzvswB9FvX7XR/c/h9M8boWqBdRWW+X
-         QUpxKHxfmahnXqcdkQA7dNUdPWdlLJ6ZrZV4OA1UyglZbZYpzexJSvBzFs1KBRbjGTkK
-         BI1oYF4/oNf+pl/KMBi0rIGgF91rlah29fOdV5n0nRY8h2V0IKe+/fQS9M34SQXUJVej
-         a1PQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711740468; x=1712345268;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ypH1YCAf8GB4uY1YvbslKIBvLhcq3mEbEzkW3A0+meY=;
-        b=o5pLWX3q+GoRvsNg7KevqhsBzgenFek9dequw+FCWpT+i5NKZul4gJ5w81PCBjojRv
-         sKeVLtJBCTIVc9kzy1Mv2EY2Q3SJ6cjs9MnWySmvQ61D9kqFmyIXBsej9v6BgmkpklXv
-         txO6y38HsEFIAXKVjv0tJEu8F7o6X3cutNz5qptV9bI30AZnlwHIPXpPbR8wSjTVlGht
-         /GeNiTZllitpDTIA0qSNez8E0Cr3s9/oI4FJzhJ6FBTp7jggrbDI1/3jyFb3Q5czIeaU
-         ToAR/dd+H0s5PaCSVSb/hKSwz2EaUBnB8meBI9OGGiarPGNeiNr1AfGs1ZWKxhiCZoH0
-         RVmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWNxqpYvbhwJ9PgbmUOyOCNeFEZcPU11HlbQIv4TqOW3YZdLT46SCN+S4WpY3H9cCv5ibc9gOQM75NGNd5HRh9cdyZ/XyqRELA/eKdG
-X-Gm-Message-State: AOJu0YzjJudrsLYoKkoHKWO2Ly6dHA+CCUFtBaCXqWu0CKBLklZYGBB6
-	5SotKb66wjJLVZPaVjQwxpRNQJUfRB7agendWcQ4JCaaxE0IALFEe66QegNp+uo=
-X-Google-Smtp-Source: AGHT+IFU5eq/3/POHnnKuPASTFQW+rfsPzR0soL9KpW9Y3B6mgDpecIBRzjTWMbYFtBtQZDBXZtEfA==
-X-Received: by 2002:a05:600c:470e:b0:414:9141:14ba with SMTP id v14-20020a05600c470e00b00414914114bamr2490718wmo.22.1711740467493;
-        Fri, 29 Mar 2024 12:27:47 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id l6-20020a05600c4f0600b0041469869d11sm9342245wmq.47.2024.03.29.12.27.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Mar 2024 12:27:46 -0700 (PDT)
-Message-ID: <bfa6150b-e27e-41c3-a1a7-41e46f52f6ea@linaro.org>
-Date: Fri, 29 Mar 2024 20:27:44 +0100
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Z+BLPzDK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CMAuzSh7ZiLzrQhY+/hhE291TbF8/boIaHyEEPwRrw7Kdtqt8aTbFhWDocUPR8S3q/GkmdPcFPvTC89jpoYMlb35G9sblmYYD1+shJIftglceCjFMF+gXNi07kEUs82SjFJXhvvvzKJ6zb0GdhjK5lz7c5BFhN59jAOqbz16gKL3ZZ4G3Lc4zIZG7Pa0Qro97wtHpbM9+0XkAvjkWf3J8It11lzh58zKuulAp0S/mK7n0+KtSu9z+CA1s6g3rLrRDbTpL7T9HIRy+ax8mW2k8zlkI8GGhXaWhIIoeWL3ZkSP8rGqbRzyLG2dyQ4+IAWPXrdImCbL/MTv8goHcgcZPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WfgHic0BwJD+Xl5p9SUjRrjUsJ52eadoeUtUppsGN4s=;
+ b=b9x2Q9aFJzeopff2IF13N5fBO3zDUSD4oOK61RFWcxihkhi7oZBoRN6IddyVbao3OCChpABb8xHNejD+JUBGm6V8/rKorJDzoxRsOAJ+f0S1EwRPY9q0awdG5dAQTxEodQl1IZ+Lyg0aO6avxNzxSn52AdX+OWItMVF2t9/Rw8uzMGPDKme03tEh0ShCnoyuoCXOup0QH0zodNgF4BuQlMElnarAYM7OcNd2IoXdFttNrIB3+sVldCITuVfVTK+RxbU4KF3japhEJ2OBjq1oz8Kn4YF8lr95TG4kM9ZR1eQNXByHj3gsYPM0tQdEYvcT6+fW+XuG6SqgefA7fg9+7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WfgHic0BwJD+Xl5p9SUjRrjUsJ52eadoeUtUppsGN4s=;
+ b=Z+BLPzDKRN76BaLh50pHJeWlQAw6fbWXWggSsgccc3wvG4aavFQ/UGD8vp1SqdWzGSd4T+FWEnsNJhL6tBHu4mKIwR984hl5FNr/KePUm2gQFLqDh0s7leFd395cNaFgWI3oLMjOY21pVoAVatazyAENQhUrgfPZEMkr5sLd4co=
+Received: from SA3PR21MB3915.namprd21.prod.outlook.com (2603:10b6:806:300::22)
+ by SN7PR21MB3937.namprd21.prod.outlook.com (2603:10b6:806:2e9::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.17; Fri, 29 Mar
+ 2024 19:28:39 +0000
+Received: from SA3PR21MB3915.namprd21.prod.outlook.com
+ ([fe80::7ecb:6139:8f1:fb7c]) by SA3PR21MB3915.namprd21.prod.outlook.com
+ ([fe80::7ecb:6139:8f1:fb7c%7]) with mapi id 15.20.7452.015; Fri, 29 Mar 2024
+ 19:28:39 +0000
+From: Dexuan Cui <decui@microsoft.com>
+To: hch@lst.de,
+	m.szyprowski@samsung.com,
+	robin.murphy@arm.com,
+	zhangpeng362@huawei.com,
+	iommu@lists.linux.dev,
+	mhklinux@outlook.com
+Cc: linux-kernel@vger.kernel.org,
+	Dexuan Cui <decui@microsoft.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] swiotlb: Do not set total_used to 0 in swiotlb_create_debugfs_files()
+Date: Fri, 29 Mar 2024 12:28:09 -0700
+Message-Id: <20240329192809.17318-1-decui@microsoft.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: CY5PR16CA0016.namprd16.prod.outlook.com
+ (2603:10b6:930:10::26) To SA3PR21MB3915.namprd21.prod.outlook.com
+ (2603:10b6:806:300::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: pci: altera: covert to yaml
-To: matthew.gerlach@linux.intel.com, joyce.ooi@intel.com,
- bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240329170031.3379524-1-matthew.gerlach@linux.intel.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240329170031.3379524-1-matthew.gerlach@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA3PR21MB3915:EE_|SN7PR21MB3937:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	+0Ruw7LmJYx7VHhQJ8eX65wvdVu720279FH7kG0/dN+qEmeSMczQqTQRblFcqjeflC1Yz7tecFeZf9p0PjsdfzipAh7OwfM2vwzoHu0xy3O5IUUUkAHYjU4NJrG2Sry53/DaME7v4W5Hl7BdrlkN676mUp2a98WOiOgIKop4rot2elZ8UJLZQkaDmGDzpq1mM9IO5WZmyfxFA6GiNoRmA8LTuChNtmD1OFZh1lZgvkJ0xs99RazlOBKaQKsqXDqMbh4kMRMQY5XjaogoLEnM2Psn8xyhqt7EEb5PVGmXSSW62pRQw91Vizr4vlLvCiovXHo+CIQ1l3SlkEzUQ+AI+j4N5dR1I69F7MSadcFcp6wbv5chIWIHNNcBGl0ct7JVk+xsDklWlrX6rlrRTkioSPhShnz2oo5sQQSyWOEwf7bKv2xXjaQls2XEOppbzZkkwESEgqcaar/CiveAFh6Jj5/O62OZw9W29Irz4ntVmU56XthAz33a/On1+EUJsjlKlkX+76v/aJ5ei66DtyQWjGaYTwOovvN2jyr4KGVQDN+Y/xjSom16qGDhmayE+FjkDBcjhFWP3W0kqLClq6GhgOYBKMRBd4GIFRVkZyekN0PY6z10m8javhLOhuu8lWhIs/1Ju9+mhjQrNsaNG0qjttdn6lbZ3BWcQIUjHjnwzME=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR21MB3915.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(52116005)(1800799015)(366007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ATrlUO8UR5PCb22221JBNknSHNiLoUqlR0oH3JoYwCoEpft3tT0/2VNMLi59?=
+ =?us-ascii?Q?J0ca89Ipg12MkbJ+fxOsq+6Cb0uj/X3RQodJNo/Bvq09cU/mjgJxQ4JbUJY1?=
+ =?us-ascii?Q?vugKIZZVIG2R8CULrOfEpGBnhamGimaQAZOylSKszYG5fhKig63XBMc88ShS?=
+ =?us-ascii?Q?Q8GriY9nXYNxZy8DFiaL8brCtiD2bpMCnq4E/afYr1kYQ4EMW1Ie11mgdio2?=
+ =?us-ascii?Q?ZDADZhIVs90nQF70njmnvnulihyTUhXe29MujbVO+mxpscIo23+N7RHqULqW?=
+ =?us-ascii?Q?BjJ5IViNYcDE1Iu8Kd4HvWMO5HCCrCRE5zNH0SuXGGlIz3wlbmyBRteeT+Vm?=
+ =?us-ascii?Q?263hrv6oB6bBHDDyXTIdy7fipAwcGEnRN1W5dflZOqGazOSireG5UPOIrVlS?=
+ =?us-ascii?Q?lO/oVTRJ8guMNa6l7lOBCaVB+nUzaNzFT4a2T7KGmQnnTizQkZcuzF7g+AQm?=
+ =?us-ascii?Q?QUb+LPw2gHKt/OjkEAnNqBcF7G0CReMVphoro/UGoep98ATTKNP28gHdhypr?=
+ =?us-ascii?Q?XINsJCYT+diPy4xAz+PJ9NsI+3D4oUzKf34BkzU+RjZyJ4VWGltC2cfpniZN?=
+ =?us-ascii?Q?10CQ/zlBNl6xYRpuD5pe+GsPgxt4UmeAq1PAF9uyHBNu+ApzZqLl7VikxG2O?=
+ =?us-ascii?Q?Y4IHFH09WH/fo0C4o0CZp71fWT5kI889n/rGb5tL8rOpTjmUqZE+4d5KEI91?=
+ =?us-ascii?Q?jNyVTR3q3NUg36H3pjwsoQOYuqgRxLue2nhZ5JVuYWbh3WgWg6zbgZl32P61?=
+ =?us-ascii?Q?Y+0oKeOj+nIoj90Rln9OCQx/PguqYoA+RrHUkb3MGLCqnhgikTATtGdPrV2F?=
+ =?us-ascii?Q?hV3B2Ozp0BZrEq0C3YDos/fDjHa5+Lz895XSQCRn6nSGktC3E/+u3TgiISiM?=
+ =?us-ascii?Q?60sTpehNF99/7hW3ioFWx8u5/Ea/I17piEv7IaNnxxPwxM3Ac7f9t/CyY7SB?=
+ =?us-ascii?Q?WXd3Tyhri/PEoux3G39uBPWzNy+80aN6vhQ8nJdlbQ6uAIWejJmwhHygCMM9?=
+ =?us-ascii?Q?nOquv3c1lbCNz4UqLtaBal8eff0qfUePM2uk4/dIPpQOFw8Qe4D1LxgvQvBT?=
+ =?us-ascii?Q?Ms5NabCP8wTqQx6T9f966eTAdT6z7dXM9Fxiu+IIG+TedDcJXbyTIYo9t1FV?=
+ =?us-ascii?Q?8QQVdvPRUPZ/ersV/TAMIP3iTiSMhUivnpw9hpW09RKDICT+R3oynpO68gM2?=
+ =?us-ascii?Q?tkm8SvkbhPqdhIYKGP9Dk6SSzrPtDxYsxlxTekfF1zZd/mqvA6pTzAFiKeyl?=
+ =?us-ascii?Q?wVFoNWbjX710r5GEwecJMuZFugxvuq3JQfYz3iXBMdmJ1VSu12njtfO6M549?=
+ =?us-ascii?Q?Tz44d8SqlpP5j3R8CkeQuLIIllZtw4VkaK4nL/s/kVYEfo8y0RETDRJjS3vx?=
+ =?us-ascii?Q?4khil76iqO7vrYBEtzHVxdj2KaMwTLXdfiDxUdMOueXRL7NPpCGEXJAlRWEY?=
+ =?us-ascii?Q?9AxBTd7OdaeWSQhpHsC4qp6t/fj5hDPjpanmRERuxFjGQxXwET57htvMx6Sf?=
+ =?us-ascii?Q?9PB/E6K3q6dOQYO3X3Z8uCtVVZPh1TeOZfEGiabbeMRPRL8WIgTBC5KgPisP?=
+ =?us-ascii?Q?MXEuHZYtP603lxJ4D78vWZSMrokGLl834rQU2qRLo36im6OJbRzQOp6MjlUW?=
+ =?us-ascii?Q?/unJbmcWI30/VrXB1oC59OtWoEYeLZSk2W5CaN9WxwYb?=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ebaa8205-6460-4a4f-757b-08dc50266fa5
+X-MS-Exchange-CrossTenant-AuthSource: SA3PR21MB3915.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2024 19:28:39.7101
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Wse6Y018XX2Ym6yLlTAF5y+pqVyvbbtaN/0g9T1GVIIA6jP9DRKuJtiAuN0qYBaN4EMJ8RrlRSRAZ1/yWmuMAg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR21MB3937
 
-On 29/03/2024 18:00, matthew.gerlach@linux.intel.com wrote:
-> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-> 
-> Covert the device tree bindings for the Altera Root
-> Port controller from text to yaml.
-> 
-> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-> ---
+Sometimes the readout of /sys/kernel/debug/swiotlb/io_tlb_used and
+io_tlb_used_hiwater can be a huge number (e.g. 18446744073709551615),
+which is actually a negative number if we use "%ld" to print the number.
 
-...
+When swiotlb_create_default_debugfs() is running from late_initcall,
+mem->total_used may already be non-zero, because the storage driver
+may have already started to perform I/O operations: if the storage
+driver is built-in, its probe() callback is called before late_initcall.
 
-> diff --git a/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
-> new file mode 100644
-> index 000000000000..8f1ad1362ad1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
-> @@ -0,0 +1,106 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright (C) 2024, Intel Corporation
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/altr,pcie-root-port.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Altera PCIe Root Port
-> +
-> +maintainers:
-> +  - Matthew Gerlach <matthew.gerlach@linux.intel.com>
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-bus.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - altr,pcie-root-port-1.0
-> +          - altr,pcie-root-port-2.0
-> +
-> +  reg:
-> +    minItems: 2
-> +    maxItems: 3
-> +
-> +  reg-names:
-> +    description:
-> +      TX slave port region (Txs)
-> +      Control register access region (Cra)
-> +      Hard IP region if altr,pcie-root-port-2.0 (Hip)
+swiotlb_create_debugfs_files() should not blindly set mem->total_used
+and mem->used_hiwater to 0; actually it doesn't have to initialize the
+fields at all, because the fields, as part of the global struct
+io_tlb_default_mem, have been implicitly initialized to zero.
 
-All these go to reg as description of items.
+Also don't explicitly set mem->transient_nslabs to 0.
 
-Both - reg and reg-names - need constraints per variant in
-allOf:if:then:. Move allOf: to bottom of file, just like example-schema
-is showing.
+Fixes: 8b0977ecc8b3 ("swiotlb: track and report io_tlb_used high water marks in debugfs")
+Fixes: 02e765697038 ("swiotlb: add debugfs to track swiotlb transient pool usage")
+Cc: stable@vger.kernel.org
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+ kernel/dma/swiotlb.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-
-> + 
-> +    items:
-> +      - const: Txs
-> +      - const: Cra
-> +      - const: Hip
-> +    minItems: 2
-> +
-> +  device_type:
-> +    const: pci
-
-I don't think you need it.
-
-> +
-> +  "#address-cells":
-> +    const: 3
-
-Drop
-
-> +
-> +  "#size-cells":
-> +    const: 2
-
-Drop
-
-> +
-> +  interrupts:
-> +    minItems: 1
-
-This should be maxItems.
-
-> +
-> +  interrupt-map-mask:
-> +    items:
-> +      - const: 0
-> +      - const: 0
-> +      - const: 0
-> +      - const: 7
-
-I guess as well.
-
-> +
-> +  interrupt-map:
-> +    maxItems: 4
-> +
-> +  "#interrupt-cells":
-> +    const: 1
-
-Drop
-
-> +
-> +  msi-parent:
-> +    description: Link to the hardware entity that serves as the MSI controller.
-
-Just true.
-
-Please open existing, recent PCI bindings and look how it is done.
-
-> +
-> +  bus-range:
-> +    description: PCI bus numbers covered.
-
-Drop
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - device_type
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - interrupts
-> +  - interrupt-map
-> +  - interrupt-map-mask
-> +  - "#interrupt-cells"
-
-This also needs cleaning.
-
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    pcie_0: pcie@c00000000 {
-> +        compatible = "altr,pcie-root-port-1.0";
-> +        reg = <0xc0000000 0x20000000>,
-> +            <0xff220000 0x00004000>;
-
-Misaligned.
-
-> +        reg-names = "Txs", "Cra";
-> +        interrupt-parent = <&hps_0_arm_gic_0>;
-> +        interrupts = <0 40 4>;
-
-Use defines for common constnats.
-
-> +        #interrupt-cells = <1>;
-> +        bus-range = <0x0 0xFF>;
-
-Lowercase hex
-
-> +        device_type = "pci";
-> +        msi-parent = <&msi_to_gic_gen_0>;
-> +        #address-cells = <3>;
-> +        #size-cells = <2>;
-> +        interrupt-map-mask = <0 0 0 7>;
-> +        interrupt-map = <0 0 0 1 &pcie_intc 1>,
-> +                        <0 0 0 2 &pcie_intc 2>,
-> +                        <0 0 0 3 &pcie_intc 3>,
-> +                        <0 0 0 4 &pcie_intc 4>;
-> +        ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000
-> +              0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
-
-Misaligned.
-
-
-Best regards,
-Krzysztof
+diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+index 86fe172b5958..4a9f02c13da6 100644
+--- a/kernel/dma/swiotlb.c
++++ b/kernel/dma/swiotlb.c
+@@ -1647,9 +1647,6 @@ DEFINE_DEBUGFS_ATTRIBUTE(fops_io_tlb_hiwater, io_tlb_hiwater_get,
+ static void swiotlb_create_debugfs_files(struct io_tlb_mem *mem,
+ 					 const char *dirname)
+ {
+-	atomic_long_set(&mem->total_used, 0);
+-	atomic_long_set(&mem->used_hiwater, 0);
+-
+ 	mem->debugfs = debugfs_create_dir(dirname, io_tlb_default_mem.debugfs);
+ 	if (!mem->nslabs)
+ 		return;
+@@ -1660,7 +1657,6 @@ static void swiotlb_create_debugfs_files(struct io_tlb_mem *mem,
+ 	debugfs_create_file("io_tlb_used_hiwater", 0600, mem->debugfs, mem,
+ 			&fops_io_tlb_hiwater);
+ #ifdef CONFIG_SWIOTLB_DYNAMIC
+-	atomic_long_set(&mem->transient_nslabs, 0);
+ 	debugfs_create_file("io_tlb_transient_nslabs", 0400, mem->debugfs,
+ 			    mem, &fops_io_tlb_transient_used);
+ #endif
+-- 
+2.34.1
 
