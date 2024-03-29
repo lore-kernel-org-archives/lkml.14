@@ -1,152 +1,91 @@
-Received: from mail-177131.yeah.net (mail-177131.yeah.net [123.58.177.131])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 033BC16F8E0;
-	Fri, 29 Mar 2024 12:34:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.131
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A29EB16F918;
+	Fri, 29 Mar 2024 12:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711715667; cv=none; b=OwB7uyn2mbG5+NNJ26qKd3kJnC1m9wF42YebV1lvihp3sbrN5Hn3UR1PDdH/mILj+soGFHnBrkYKSJ3DKazpOYm6o3DlsSXz6w651Kqz5vDTDRx1c6E4PDQjAnRU+HA8Fp6hrJ4Sgx84nWNIM8PvAXA6P+FuigWBYMmDF+JJUOQ=
+	t=1711715667; cv=none; b=ITUbw3GLnYfjt22NZhsAqHdAwfRYFXSvMgrYX/5SNOJHsFXuc/qEDtjPiE59Vpi2Pg8dN6UrcB/iP1Q9jVRNEbHZoHQ+bk/QrnsXtzf4nkEVEM8QimLriv7FAV1rQuRQNnurGXY0o1CtEwz1YlJdU6n43SHNROtCp/JjeHo7Qlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711715667; c=relaxed/simple;
-	bh=6O6Y3EAVNfVUZZVE7YNho1XRSttKnwFyPtlgwub02tU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eWSjjdH9f1ofm0qWJIV28OR4m7P2GwRUzM17yp8Odc8c/pqomPufkKGT0HZRIe53l6ynUsYhjbNsam6xIE7nYzbDV91zznq6mJFD6k/xVPQZJjshiHQCG+xKyXvNtFyYvxomIq7p2XKO0Dr0H2vHapzIE4YMXFJqCWQ6tGbT/0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=GMnsHEV8; arc=none smtp.client-ip=123.58.177.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	bh=z3XiLMh0cK+G0ZnTWiXCzpuT2OM6i7XU0zkUIoZQdhc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EeV8Ja3dQH1glaR8BdAiD76edKVidyMxKeDWrnEHgqn8l8rYjQWuwBGQz/6DSDOKUD9SfzhzEfscA8cLqB0Gj33Z7cLDm498Gn+wTvMITne801AtIoniz6eteCiwn59xwing7d7MPf1PwfRO7Gf3XOcTLV8PQoOwRmA7e7H/Vtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F8dhTjE3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="GMnsHEV8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=wI/Amv+RPJQvoX1/bZKyPoE67fMI/bfxn2JETr9yooI=;
-	b=GMnsHEV85i18nXqtnctK+aBOGvJSHHdh/Q6wqIWzMUjwo+PhL4Rzq3GeEWCVNk
-	ULA1eifGYHc2ZvbvDDMUp36z67QOGv7OHDfb5fGBfjh2i3ZbIt4pPdbgP9LYzgGc
-	h3eUp5/GqAzaCx7qYvkehX/e6tt1IqAR8RRFoUDyuQpkU=
-Received: from dragon (unknown [183.213.196.225])
-	by smtp1 (Coremail) with SMTP id ClUQrADHz0MRtQZmCxhkAQ--.16042S3;
-	Fri, 29 Mar 2024 20:33:22 +0800 (CST)
-Date: Fri, 29 Mar 2024 20:33:21 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] dts: arm64: imx8dxl-evk: add lpuart1 and cm40 uart
-Message-ID: <Zga1Eb+46Uua/jJi@dragon>
-References: <20240305-m4_lpuart-v3-0-592463ef1d22@nxp.com>
- <20240305-m4_lpuart-v3-4-592463ef1d22@nxp.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F8dhTjE3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07478C433C7;
+	Fri, 29 Mar 2024 12:34:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711715667;
+	bh=z3XiLMh0cK+G0ZnTWiXCzpuT2OM6i7XU0zkUIoZQdhc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=F8dhTjE3PbiAd+OmOt9wtpvePBEek+dsgnK7IJX6YuBVqUpFsGI/n1ig3YmaI4hDO
+	 EMqhjJL7Gv3M7B2RtAJLX63RpGxpctbFW0Cre6FN9RDjHKlj4+rYjRsNOjvSHvsodq
+	 9AsJoniN5VUIs2Nh/T/F6x70Qsq7McQ1oxoo7QhCWJ6Bb4Eq9RJqQs2Vy3Mqqex3qU
+	 TWjAtBlDmFVx1nc3ULBEHmxFVi3rRjgsHiZrUEYNlToPi5pbzZ1aRiK4LmPJfDw+JS
+	 XswuNfzdOiNh2dudgVLLD/vqbcfZqNFZtphvINaoG//Tz70sflYp9qK7bhYGR9H8oE
+	 j7mgq4pagi6yQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Sasha Levin <sashal@kernel.org>,
+	davem@davemloft.net,
+	andreas@gaisler.com,
+	masahiroy@kernel.org,
+	catalin.marinas@arm.com,
+	guoren@kernel.org,
+	rmk+kernel@armlinux.org.uk,
+	sparclinux@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 11/17] sparc: vdso: Disable UBSAN instrumentation
+Date: Fri, 29 Mar 2024 08:33:50 -0400
+Message-ID: <20240329123405.3086155-11-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240329123405.3086155-1-sashal@kernel.org>
+References: <20240329123405.3086155-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240305-m4_lpuart-v3-4-592463ef1d22@nxp.com>
-X-CM-TRANSID:ClUQrADHz0MRtQZmCxhkAQ--.16042S3
-X-Coremail-Antispam: 1Uf129KBjvJXoW7CF1rCrW8tr4xZrykXFyDAwb_yoW8Kry5p3
-	Z3ZFZ5Wr1fJF17AasxGr1xKF45Wan5KayDurnrWrWrCrW5uasFqrsxKr1rGr1vqr13Xw4Y
-	yF1DCr1293ZFg3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j7txhUUUUU=
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiDxOwZVnxclwFagAAsg
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.10.214
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 05, 2024 at 10:54:58AM -0500, Frank Li wrote:
-> Add lpuart1 and cm40 uart.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8dxl-evk.dts | 37 +++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8dxl-evk.dts b/arch/arm64/boot/dts/freescale/imx8dxl-evk.dts
-> index 2123d431e0613..737bacacc2da1 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8dxl-evk.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8dxl-evk.dts
-> @@ -16,6 +16,8 @@ aliases {
->  		mmc0 = &usdhc1;
->  		mmc1 = &usdhc2;
->  		serial0 = &lpuart0;
-> +		serial1 = &lpuart1;
-> +		serial6 = &cm40_lpuart;
->  	};
->  
->  	chosen {
-> @@ -51,6 +53,16 @@ linux,cma {
->  		};
->  	};
->  
-> +	m2_uart1_sel: fixedregulator-101 {
+From: Kees Cook <keescook@chromium.org>
 
-Why do we not name the node regulator-xxx just like other fixed
-regulators?  Also not sure what suffix -101 means.  Can we name it like
-regulator-m2uart1sel or something?
+[ Upstream commit d4be85d068b4418c341f79b654399f7f0891069a ]
 
-Shawn
+The UBSAN instrumentation cannot work in the vDSO since it is executing
+in userspace, so disable it in the Makefile. Fixes the build failures
+such as:
 
-> +		compatible = "regulator-fixed";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-name = "m2_uart1_sel";
-> +		gpio = <&pca6416_1 6 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +		regulator-always-on;
-> +	};
-> +
->  	mux3_en: regulator-0 {
->  		compatible = "regulator-fixed";
->  		regulator-min-microvolt = <3300000>;
-> @@ -340,6 +352,12 @@ &lpuart0 {
->  	status = "okay";
->  };
->  
-> +&lpuart1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_lpuart1>;
-> +	status = "okay";
-> +};
-> +
->  &flexcan2 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_flexcan2>;
-> @@ -354,6 +372,16 @@ &flexcan3 {
->  	status = "okay";
->  };
->  
-> +&cm40_intmux {
-> +	status = "disabled";
-> +};
-> +
-> +&cm40_lpuart {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_cm40_lpuart>;
-> +	status = "disabled";
-> +};
-> +
->  &lsio_gpio4 {
->  	status = "okay";
->  };
-> @@ -595,6 +623,15 @@ IMX8DXL_UART0_TX_ADMA_UART0_TX		0x06000020
->  		>;
->  	};
->  
-> +	pinctrl_lpuart1: lpuart1grp {
-> +		fsl,pins = <
-> +			IMX8DXL_UART1_TX_ADMA_UART1_TX          0x06000020
-> +			IMX8DXL_UART1_RX_ADMA_UART1_RX          0x06000020
-> +			IMX8DXL_UART1_RTS_B_ADMA_UART1_RTS_B    0x06000020
-> +			IMX8DXL_UART1_CTS_B_ADMA_UART1_CTS_B    0x06000020
-> +		>;
-> +	};
-> +
->  	pinctrl_usdhc1: usdhc1grp {
->  		fsl,pins = <
->  			IMX8DXL_EMMC0_CLK_CONN_EMMC0_CLK	0x06000041
-> 
-> -- 
-> 2.34.1
-> 
+arch/sparc/vdso/vclock_gettime.c:217: undefined reference to `__ubsan_handle_shift_out_of_bounds'
+
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://lore.kernel.org/all/20240224073617.GA2959352@ravnborg.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/sparc/vdso/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/sparc/vdso/Makefile b/arch/sparc/vdso/Makefile
+index c5e1545bc5cf9..d0f6487d1e790 100644
+--- a/arch/sparc/vdso/Makefile
++++ b/arch/sparc/vdso/Makefile
+@@ -2,6 +2,7 @@
+ #
+ # Building vDSO images for sparc.
+ #
++UBSAN_SANITIZE := n
+ 
+ VDSO64-$(CONFIG_SPARC64)	:= y
+ VDSOCOMPAT-$(CONFIG_COMPAT)	:= y
+-- 
+2.43.0
 
