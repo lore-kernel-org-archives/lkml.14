@@ -1,142 +1,128 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B234640852;
-	Fri, 29 Mar 2024 07:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBEBB40863;
+	Fri, 29 Mar 2024 07:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711697187; cv=none; b=hw6Eis9ddJb9IwD2cv+WrzkxEgnn3ggAGYt54NetTIUX2no+Qrv0lhTaC+E5WVBzbiJIvjMpiaLQysG1JxwHd770r0LyUJHdm1b/q8aDwKBYYlSxZoRZslPS3kXXSgQ5MgGh57+kr4yI6ZvJX+kDedmgKjv3cgW5fKfFcadPR2I=
+	t=1711697265; cv=none; b=mhgmxgElQWfVwfwGcq1e7x1VrYRyc/PCOPKfu95dpZO9kdGB/8jT66j6QtPjmkwsN3oM5+RHvD+hC/mtB9l6raMsS9PeTWovg5Mo3rVJCDWYEW1L5kGrb8gV5XSPG+MXw/QoWqAny5HHsXQJ9vXsapIyWGTi7jeV5fflAk+cME4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711697187; c=relaxed/simple;
-	bh=bInZpQe27T+FP7otvnqd8TxPV4Zh13QdnbFoeMPgJnc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eENRMVkbYq0Ozk126qilqOn8vnqfbV0JoR/eKYpsdKXVETtdecyS5UKOqPO2VsixeRY8cHbpY3eohIsJcaUAL0650rRGo3ZD6Ky4pa1pBOc1DO8djG6pkN3YaZLCtmRqcOv45EDzuuHsmkBVbYlLSmYaXF/XLFhSY51t1mbEMJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=q9KYzPmV; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1711697265; c=relaxed/simple;
+	bh=gA68YKZWnmU308KH7pbZZOpx5P0ZYUuWUuzDeWNs53Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pc6jPxgf60Jamf+txga1AdEtwHb7QIaTIvPiq0Boy+G9SCOKptOdeO/CRrpa4FRIVtiVZrgU49h2437+Qg/WVuo9ReqIq3OV8mXNXUq2mYQIw1f1qCShWpBrqOZubUB/IqsoHheKwbocASK7MHT4Zm8kBCPadXETToZMu0N3eZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mIaO5oMs; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="q9KYzPmV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mIaO5oMs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1711697184; x=1743233184;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711697263; x=1743233263;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=bInZpQe27T+FP7otvnqd8TxPV4Zh13QdnbFoeMPgJnc=;
-  b=q9KYzPmVJjrJ6tgXYfLM0nykx+0MF85Rv9lRi5SK4IlswgbmhkfvpkU1
-   McZnx1IyjywhW5dOhKUiDz/GYTG5lhKOpC8z/eLroZ2E3dNbOdE4dc0Sx
-   CoQYB1SdH2Uud/yTiymvOP7RFYNJkYnOWMq9kpmSTTTz1obfHZI/eeWhL
-   kndenZr2p7+q6SLDRTRiSav3rYwG2B8fTT8xWvhCQfj9Yr5NrRZORoGDm
-   axA2QjRMetVFd7MbTexiRrdvy3hwf5j8IFtHXTN5d8Fnz1CaJaKV+OGOD
-   kLrwA7mokw6PLG5tkRX9l5VAMPE8t22/nfeLGPiJZsp6kDMAQZ5Lv2HUh
-   Q==;
-X-CSE-ConnectionGUID: 15IXURycT2uyFkZ6j12usw==
-X-CSE-MsgGUID: 3NX0TeF6T2SxAshBbDmoVA==
-X-IronPort-AV: E=Sophos;i="6.07,164,1708412400"; 
-   d="asc'?scan'208";a="18569006"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 29 Mar 2024 00:26:21 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 29 Mar 2024 00:25:57 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex03.mchp-main.com (10.10.85.151)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Fri, 29 Mar 2024 00:25:45 -0700
-Date: Fri, 29 Mar 2024 07:24:57 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Deepak Gupta <debug@rivosinc.com>
-CC: <paul.walmsley@sifive.com>, <rick.p.edgecombe@intel.com>,
-	<broonie@kernel.org>, <Szabolcs.Nagy@arm.com>, <kito.cheng@sifive.com>,
-	<keescook@chromium.org>, <ajones@ventanamicro.com>, <cleger@rivosinc.com>,
-	<atishp@atishpatra.org>, <alex@ghiti.fr>, <bjorn@rivosinc.com>,
-	<alexghiti@rivosinc.com>, <samuel.holland@sifive.com>, <palmer@sifive.com>,
-	<conor@kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-arch@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<corbet@lwn.net>, <tech-j-ext@lists.risc-v.org>, <palmer@dabbelt.com>,
-	<aou@eecs.berkeley.edu>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <oleg@redhat.com>,
-	<akpm@linux-foundation.org>, <arnd@arndb.de>, <ebiederm@xmission.com>,
-	<Liam.Howlett@oracle.com>, <vbabka@suse.cz>, <lstoakes@gmail.com>,
-	<shuah@kernel.org>, <brauner@kernel.org>, <andy.chiu@sifive.com>,
-	<jerry.shih@sifive.com>, <hankuan.chen@sifive.com>,
-	<greentime.hu@sifive.com>, <evan@rivosinc.com>, <xiao.w.wang@intel.com>,
-	<charlie@rivosinc.com>, <apatel@ventanamicro.com>,
-	<mchitale@ventanamicro.com>, <dbarboza@ventanamicro.com>,
-	<sameo@rivosinc.com>, <shikemeng@huaweicloud.com>, <willy@infradead.org>,
-	<vincent.chen@sifive.com>, <guoren@kernel.org>, <samitolvanen@google.com>,
-	<songshuaishuai@tinylab.org>, <gerg@kernel.org>, <heiko@sntech.de>,
-	<bhe@redhat.com>, <jeeheng.sia@starfivetech.com>, <cyy@cyyself.name>,
-	<maskray@google.com>, <ancientmodern4@gmail.com>, <mathis.salmen@matsal.de>,
-	<cuiyunhui@bytedance.com>, <bgray@linux.ibm.com>, <mpe@ellerman.id.au>,
-	<baruch@tkos.co.il>, <alx@kernel.org>, <david@redhat.com>,
-	<catalin.marinas@arm.com>, <revest@chromium.org>, <josh@joshtriplett.org>,
-	<shr@devkernel.io>, <deller@gmx.de>, <omosnace@redhat.com>,
-	<ojeda@kernel.org>, <jhubbard@nvidia.com>
-Subject: Re: [PATCH v2 04/27] riscv: zicfiss/zicfilp enumeration
-Message-ID: <20240329-condition-morse-c3d02720853a@wendy>
-References: <20240329044459.3990638-1-debug@rivosinc.com>
- <20240329044459.3990638-5-debug@rivosinc.com>
+  bh=gA68YKZWnmU308KH7pbZZOpx5P0ZYUuWUuzDeWNs53Y=;
+  b=mIaO5oMsKHSi7IguAcUXQDKVLeDTr+GPcdtmD7/i2qhex1H0x8Cjq5Xt
+   G8PIsAGEXYFvk+XkLsP3xdInfAgZoAxTFBccCZCoF+W31Th9Aqf9/TjVX
+   5jU/52hiAtjzyQJ2zxYO0fQzPUZ+XXJl7WK/C4fe3G5kjRPpe6PZFNtoT
+   Qdee9jP64tEqoWPh6kPkQmFJ1mch7zJ79CgXn1CM9pEf5ejsvwpRbgAaZ
+   06waAYhTgk1vK7leUYsMM3fE3jxBwA2urWM3rqt8M4KINp5JpCzckxqxc
+   W6r+t36gLAZvXjhexImklBCM6FSTIHF3wNkf3yfpkjIN3uwOQT/PCAFj2
+   A==;
+X-CSE-ConnectionGUID: G12mf7JfRXOM7NtiHSsXjw==
+X-CSE-MsgGUID: c40ehaqYQA+moPWuDZVvGQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="17604806"
+X-IronPort-AV: E=Sophos;i="6.07,164,1708416000"; 
+   d="scan'208";a="17604806"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 00:27:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,164,1708416000"; 
+   d="scan'208";a="40053301"
+Received: from lkp-server01.sh.intel.com (HELO be39aa325d23) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 29 Mar 2024 00:27:40 -0700
+Received: from kbuild by be39aa325d23 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rq6eH-0002x0-0z;
+	Fri, 29 Mar 2024 07:27:37 +0000
+Date: Fri, 29 Mar 2024 15:26:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kemeng Shi <shikemeng@huaweicloud.com>, tytso@mit.edu,
+	adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, jack@suse.cz, ojaswin@linux.ibm.com,
+	ritesh.list@gmail.com
+Subject: Re: [PATCH 2/5] ext4: add test_mb_mark_used_cost to estimate cost of
+ mb_mark_used
+Message-ID: <202403291544.lxme27eF-lkp@intel.com>
+References: <20240326213823.528302-3-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kiXl0dlDZ9ZIiu8P"
-Content-Disposition: inline
-In-Reply-To: <20240329044459.3990638-5-debug@rivosinc.com>
-
---kiXl0dlDZ9ZIiu8P
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240326213823.528302-3-shikemeng@huaweicloud.com>
 
-On Thu, Mar 28, 2024 at 09:44:36PM -0700, Deepak Gupta wrote:
-> Adds description in dt-bindings (extensions.yaml)
->=20
-> This patch adds support for detecting zicfiss and zicfilp. zicfiss and zi=
-cfilp
-> stands for unprivleged integer spec extension for shadow stack and branch
-> tracking on indirect branches, respectively.
->=20
-> This patch looks for zicfiss and zicfilp in device tree and accordinlgy l=
-ights
-> up bit in cpu feature bitmap. Furthermore this patch adds detection utili=
-ty
-> functions to return whether shadow stack or landing pads are supported by
-> cpu.
->=20
-> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
-> ---
+Hi Kemeng,
 
->  .../devicetree/bindings/riscv/extensions.yaml       | 10 ++++++++++
+kernel test robot noticed the following build errors:
 
-Checkpatch should have told you that bindings changes need to be in
-separate patches.
+[auto build test ERROR on tytso-ext4/dev]
+[also build test ERROR on linus/master v6.9-rc1 next-20240328]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Thanks,
-Conor.
+url:    https://github.com/intel-lab-lkp/linux/commits/Kemeng-Shi/ext4-keep-prefetch_grp-and-nr-consistent/20240326-214754
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git dev
+patch link:    https://lore.kernel.org/r/20240326213823.528302-3-shikemeng%40huaweicloud.com
+patch subject: [PATCH 2/5] ext4: add test_mb_mark_used_cost to estimate cost of mb_mark_used
+config: x86_64-randconfig-072-20240329 (https://download.01.org/0day-ci/archive/20240329/202403291544.lxme27eF-lkp@intel.com/config)
+compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240329/202403291544.lxme27eF-lkp@intel.com/reproduce)
 
->  arch/riscv/include/asm/cpufeature.h                 | 13 +++++++++++++
->  arch/riscv/include/asm/hwcap.h                      |  2 ++
->  arch/riscv/include/asm/processor.h                  |  1 +
->  arch/riscv/kernel/cpufeature.c                      |  2 ++
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403291544.lxme27eF-lkp@intel.com/
 
---kiXl0dlDZ9ZIiu8P
-Content-Type: application/pgp-signature; name="signature.asc"
+All errors (new ones prefixed by >>):
 
------BEGIN PGP SIGNATURE-----
+   In file included from include/kunit/static_stub.h:18:0,
+                    from fs/ext4/mballoc.c:21:
+>> fs/ext4/mballoc-test.c:959:10: error: initializer element is not constant
+             slow_attr),
+             ^
+   include/kunit/test.h:218:13: note: in definition of macro 'KUNIT_CASE_PARAM_ATTR'
+        .attr = attributes, .module_name = KBUILD_MODNAME}
+                ^~~~~~~~~~
+   fs/ext4/mballoc-test.c:959:10: note: (near initialization for 'mbt_test_cases[6].attr')
+             slow_attr),
+             ^
+   include/kunit/test.h:218:13: note: in definition of macro 'KUNIT_CASE_PARAM_ATTR'
+        .attr = attributes, .module_name = KBUILD_MODNAME}
+                ^~~~~~~~~~
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZgZsvgAKCRB4tDGHoIJi
-0iYTAQD/x2jCSMw3PvwFsNJ6v7adg+YdWitg5NvBburVYvIikAEA0Qu7dWdDtcJk
-H0K8lWXiWqqumgSgXhcWgk/Gp2U1igQ=
-=0twh
------END PGP SIGNATURE-----
 
---kiXl0dlDZ9ZIiu8P--
+vim +959 fs/ext4/mballoc-test.c
+
+   950	
+   951	static struct kunit_case mbt_test_cases[] = {
+   952		KUNIT_CASE_PARAM(test_new_blocks_simple, mbt_layouts_gen_params),
+   953		KUNIT_CASE_PARAM(test_free_blocks_simple, mbt_layouts_gen_params),
+   954		KUNIT_CASE_PARAM(test_mb_generate_buddy, mbt_layouts_gen_params),
+   955		KUNIT_CASE_PARAM(test_mb_mark_used, mbt_layouts_gen_params),
+   956		KUNIT_CASE_PARAM(test_mb_free_blocks, mbt_layouts_gen_params),
+   957		KUNIT_CASE_PARAM(test_mark_diskspace_used, mbt_layouts_gen_params),
+   958		KUNIT_CASE_PARAM_ATTR(test_mb_mark_used_cost, mbt_layouts_gen_params,
+ > 959				      slow_attr),
+   960		{}
+   961	};
+   962	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
