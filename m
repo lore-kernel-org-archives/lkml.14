@@ -1,91 +1,76 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0ACF1369A7
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 13:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AAA952F72;
+	Fri, 29 Mar 2024 13:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711719091; cv=none; b=smJcb27ENIAeRAMqSizIh8AhrupOMZ9J8TYMu9c2KzOSpXNIPDkMD8ld31xpCXf7mt0/0F7i8GvCJXiPal+5fFZn8QUkh8kfpuV5ULimkzTAUQ42Kn4dgkny1oVsLgipkcplrYsERrkzYTPIOMUft2xdrVTXfNk/mDR2vBI7vBo=
+	t=1711719287; cv=none; b=ZXD7SXZe2bnoV91nc5VUbigv5N+q4PHRno92rZY+ax/3sJv4HGXVSGHuOilRLL2MIWQgk3bfsJABiDdhudovmMqEreZG+oWc0IkMdSWaBv6fkZWu6LOO8hT881sdjWTwuPPpu8+dHBT3xLwojlCZ1XyE6FbS0rruJ+tgPmmWL3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711719091; c=relaxed/simple;
-	bh=6QyiqZgx66IrMCmeiZhxZQ2qj79CFNrO3JaiQuSARUw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oaYgn8ORYw0ztHAyVIh+95cfmCLinkNCBg41CVriwILX1HYqlDUpzHHuzgsHrHn34CwtdQBg48b9XKCWEcwRjeOJYwj0pQnBup5xSsTUqIG3TXAR2hDYeQs4BB39livADqWhOTMCavkTTQ/XkFUbi28pgczJF/ylIQ3tOTKZKuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=Zl/ML22h; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1711719287; c=relaxed/simple;
+	bh=VzDig2CeGY5nSO715kS9xRpG3Tj08hHyWl+GKUj84U0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V7DR9nUl5o823ngU3dBR/Qi2lgZXyHsYfgRWbvgkiSQ/F24nxambaFD1iqmiqPQ3bazMlj5i585ReprKAJnDP1WAUufwIgBlaUuRetod0IDR0sbqoAsnNsnIDN+QO9muHlT9PfC/34MPAGwZ+Utda+PEaLVlh3Vd/OrJCdJFeGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rieQ2LMl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="Zl/ML22h"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d700beb60bso37844081fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 06:31:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1711719087; x=1712323887; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6QyiqZgx66IrMCmeiZhxZQ2qj79CFNrO3JaiQuSARUw=;
-        b=Zl/ML22hf24LEZO9lqnzyNb8yPD51XTIjAaHWsw885Ngx41KXsYAoOL+FX7SAqMTYl
-         6xI3NUvnFWV6rnF0Ul84MTF6VkmuDhaGahA9WT6De+0KaMXdgHQqqXHzGn1ND3Qw5OaM
-         hHh3azGpKZCUGvp9/KUd2vAI2ckE/nJrmdc3QfclkHw/3SqAmT7r9JxqM9lJBCAXpO82
-         lez1Lc59YK8chw47MX0xVd95l0XHjP0KdQLf3zXn9yJzxeR8OJprDIPJ6Fi9xjfAncZH
-         3+g2ci54TGpbjkg8V13iUF96Ca2dA0p/9ST/Gm5j6k26/OaRZ0omUFEKpOt7Od253l0n
-         9MTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711719087; x=1712323887;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6QyiqZgx66IrMCmeiZhxZQ2qj79CFNrO3JaiQuSARUw=;
-        b=si4gejDnpm9ZfJ/xR+mWKbGmWYJNVKBXDzlbC1GM7CX0d/MabO0Rira2ztUnu1XQkP
-         Im9hto6dHrFd61cYsvka2zx4ndL9uHzab43n56NhavQG31ro2aep4t5X1hOQiEexgKy9
-         rj9pNZ8nt90aRrlZAkZoMzqzVDYzLIXw8wQxTSvy7WzZvKapfHpyMlPzpU9nuvPFiU22
-         CgCsCfjNhDAHA4kbNTSJLMxOTvsyBsamakJO12zjJ5YEpgmhvBVHGjn7QIx/bqYyAiRT
-         X/MCEKNnJCrSN4Q/Sl4zGLP/y4AYJgOJZKHE/amUSun+4g/VE8G2SAETq75zPFoj/Ztb
-         k8ZQ==
-X-Gm-Message-State: AOJu0YycsmDhlRMw+G2Paqn13ebFnQbZ2zG272QHobUlgU0gIbFqfvNM
-	RdhtF8TDWE5FZ8tMT2MLTW4RLgUQ04P3kmP5LzxOISrsdP+V2sx4avKpsguMOInJQ5sKhmiup/J
-	VZHNXp+pgm2h8ZQJ5zm6JipkWtNnWJcbmwz42iGOkyvCR1kUV/vk=
-X-Google-Smtp-Source: AGHT+IEF+GUPuQs76kFHWRkmcmlohYaQ6VJUUNnnv0bjAes+xMpnyh+kY/5o+1Koz+D9PiH8l9q1s3u2TalIzAnBK00=
-X-Received: by 2002:a2e:7a04:0:b0:2d2:d35f:4ec4 with SMTP id
- v4-20020a2e7a04000000b002d2d35f4ec4mr1666882ljc.14.1711719086962; Fri, 29 Mar
- 2024 06:31:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rieQ2LMl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 475A2C433C7;
+	Fri, 29 Mar 2024 13:34:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1711719286;
+	bh=VzDig2CeGY5nSO715kS9xRpG3Tj08hHyWl+GKUj84U0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rieQ2LMlNClsq7evBz4+YZTgI3gWaqKAc5GWL+fVq1OZVKfwl+CsHx57f5JGTWxhV
+	 NLGGQ9eej6CEB0+BzQj9RzY0dDh7UerDdX4LgdP83OJJfEq7iv+xoOTgm7SwJUUXuV
+	 fCNdY459Ms2fPmJTG5DuMk2Q4UqsoFZp3GUaGs+w=
+Date: Fri, 29 Mar 2024 14:34:43 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org,
+	Rik van Riel <riel@surriel.com>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: FAILED: Patch "bounds: support non-power-of-two CONFIG_NR_CPUS"
+ failed to apply to 5.4-stable tree
+Message-ID: <2024032935-antsy-imitation-1453@gregkh>
+References: <20240327122125.2836828-1-sashal@kernel.org>
+ <ZgQowqqGf-E7Cpcz@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240209164027.2582906-1-max.kellermann@ionos.com> <ZgF2khndC_QTu5Bw@smile.fi.intel.com>
-In-Reply-To: <ZgF2khndC_QTu5Bw@smile.fi.intel.com>
-From: Max Kellermann <max.kellermann@ionos.com>
-Date: Fri, 29 Mar 2024 14:31:13 +0100
-Message-ID: <CAKPOu+_TDeMoEze6-yfm2Aqam6E02hpEXX2gUAdt8hxQ5bwttQ@mail.gmail.com>
-Subject: Re: [PATCH v2 00/35] Fast kernel headers: reduce header dependencies
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZgQowqqGf-E7Cpcz@casper.infradead.org>
 
-On Mon, Mar 25, 2024 at 2:06=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
-> Are you going to pursue this (with probably refined kernel.h approach
-> as we have Ingo's patches and an additional split that is already in
-> the upstream)?
+On Wed, Mar 27, 2024 at 02:10:10PM +0000, Matthew Wilcox wrote:
+> On Wed, Mar 27, 2024 at 08:21:25AM -0400, Sasha Levin wrote:
+> > The patch below does not apply to the 5.4-stable tree.
+> > If someone wants it applied there, or to any other stable or longterm
+> > tree, then please email the backport, including the original git commit
+> > id to <stable@vger.kernel.org>.
+> 
+> Looks like you just need a little more fuzz on the patch.
+> 
+> diff --git a/kernel/bounds.c b/kernel/bounds.c
+> index 9795d75b09b2..a94e3769347e 100644
+> --- a/kernel/bounds.c
+> +++ b/kernel/bounds.c
+> @@ -19,7 +19,7 @@ int main(void)
+>  	DEFINE(NR_PAGEFLAGS, __NR_PAGEFLAGS);
+>  	DEFINE(MAX_NR_ZONES, __MAX_NR_ZONES);
+>  #ifdef CONFIG_SMP
+> -	DEFINE(NR_CPUS_BITS, ilog2(CONFIG_NR_CPUS));
+> +	DEFINE(NR_CPUS_BITS, bits_per(CONFIG_NR_CPUS));
+>  #endif
+>  	DEFINE(SPINLOCK_SIZE, sizeof(spinlock_t));
+>  	/* End of constants */
 
-Yes, but after some feedback on this patch set, I decided to limit the
-scope and only clean up mm.h for now; this is the latest post of the
-mm.h patch set:
-https://lore.kernel.org/lkml/20240312094133.2084996-1-max.kellermann@ionos.=
-com/
-v5 will follow soon (with better explanations after suggestions from
-David Hildenbrand).
+Now fuzzed, thanks.
 
-I have already a branch that cleans up kernel.h, and I'll post it once
-my mm.h have been merged. After that, I'll rip out more parts of this
-old patch set and resubmit them in more smaller patch sets.
-
-Unfortunately, feedback on the mm.h patch set has been scarce so far,
-and it doesn't look like there's enough interest in merging it. But
-I'm not giving up yet.
-
-Max
+greg k-h
