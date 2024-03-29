@@ -1,32 +1,32 @@
-Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FBD85659
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 10:56:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9205D69E0D
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 10:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711709814; cv=none; b=KtVBqFUkc6VPOGztUdBAQQrGO+3x6frZwSS4FxGUbd1lz8FMg9LgAr+ZNPvfqjYcDmd9ef3mBT3KnhllBX8rpP7xoh13JviyQhIlogU5kTbbDpPCpD31pliJlU9xuSoeOTZdmTzDSE+2JxUpk0zlMwNVhHvV2k9M3ppCApzWgQE=
+	t=1711709870; cv=none; b=DUr6fcvhqt2qDwIkgM4HFiJmi2xPfv96hcg6qRO6XWAH+94oytXM86T5AYBu756cZb4YygNx3dE56v9qDYG2k88Bhj1R/uOWSbPqTxWP0ni5qYG+DBCb5nABkjC6PO+hJ4mOLVvtmDykFyzG+BThuGesfWWhQqMFB+vVlzVGtPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711709814; c=relaxed/simple;
-	bh=Nu9sYchMYtdoAcYQDRWy92zX8RGluRxWCKF8EUIbUns=;
+	s=arc-20240116; t=1711709870; c=relaxed/simple;
+	bh=4haKc0BWmXZv48XAJVDKU0krU0tVfIaoXXWWf/W8YnQ=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LVjIffOhxXkUr3uDzFrqccHfhRxx1qoIgthRaTGerZ8uc702QMsF95ryjxy+M8jxFRNn5QaqaQ4xfCqU7FSX3S/b3bGBRTqXSh0ZMA7iBE2fd9wIzDuYmft9NwC7YjXU31DOHkFj0yXwX7qViOfd97hTAjREJi3xB2J9u4szpVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.83
+	 MIME-Version; b=T/XXIHKXmPHphBkZ3PreHulCy5SVVprKBQ2VyJ8WrqArS7oIiOiW2zAj1fmYfYMhKEvYhwCzIDZ6rQ7SXFPB69uE6Ag2svzrNvIy/P3M60r0PZF+ZGgdO/aMqayvbu7I1rFephm3tigm2wR4lYeRi0qjXATkXtigjlm4Al9z1PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
 Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
-	by fgw22.mail.saunalahti.fi (Halon) with ESMTP
-	id 08e01b89-edbb-11ee-a9de-005056bdf889;
-	Fri, 29 Mar 2024 12:56:46 +0200 (EET)
+	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+	id 04261c89-edbb-11ee-b3cf-005056bd6ce9;
+	Fri, 29 Mar 2024 12:56:38 +0200 (EET)
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Andy Shevchenko <andy.shevchenko@gmail.com>,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 11/11] pinctrl: aw9523: Remove redundant dependency to OF
-Date: Fri, 29 Mar 2024 12:55:25 +0200
-Message-ID: <20240329105634.712457-12-andy.shevchenko@gmail.com>
+Subject: [PATCH v2 01/11] pinctrl: aw9523: Destroy mutex on ->remove()
+Date: Fri, 29 Mar 2024 12:55:15 +0200
+Message-ID: <20240329105634.712457-2-andy.shevchenko@gmail.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240329105634.712457-1-andy.shevchenko@gmail.com>
 References: <20240329105634.712457-1-andy.shevchenko@gmail.com>
@@ -38,40 +38,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Driver does not dependent on OF, remove it.
-While here, add missing mod_devicetable.h.
+If aw9523_hw_init() fails on ->remove() the mutex left alive.
+Destroy it in that case as well. While at it, remove never
+true check at the beginning of the function.
 
 Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/pinctrl/Kconfig          | 2 +-
- drivers/pinctrl/pinctrl-aw9523.c | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-aw9523.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index d45657aa986ae..c413109b1173b 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -129,7 +129,7 @@ config PINCTRL_AXP209
- 
- config PINCTRL_AW9523
- 	tristate "Awinic AW9523/AW9523B I2C GPIO expander pinctrl driver"
--	depends on OF && I2C
-+	depends on I2C
- 	select PINMUX
- 	select PINCONF
- 	select GENERIC_PINCONF
 diff --git a/drivers/pinctrl/pinctrl-aw9523.c b/drivers/pinctrl/pinctrl-aw9523.c
-index b5e1c467625ba..1d0ce78115da7 100644
+index 4edd371c469fb..66629af0b88b4 100644
 --- a/drivers/pinctrl/pinctrl-aw9523.c
 +++ b/drivers/pinctrl/pinctrl-aw9523.c
-@@ -12,6 +12,7 @@
- #include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
-+#include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/property.h>
+@@ -1067,10 +1067,6 @@ static int aw9523_probe(struct i2c_client *client)
+ static void aw9523_remove(struct i2c_client *client)
+ {
+ 	struct aw9523 *awi = i2c_get_clientdata(client);
+-	int ret;
+-
+-	if (!awi)
+-		return;
+ 
+ 	/*
+ 	 * If the chip VIO is connected to a regulator that we can turn
+@@ -1082,10 +1078,8 @@ static void aw9523_remove(struct i2c_client *client)
+ 		regulator_disable(awi->vio_vreg);
+ 	} else {
+ 		mutex_lock(&awi->i2c_lock);
+-		ret = aw9523_hw_init(awi);
++		aw9523_hw_init(awi);
+ 		mutex_unlock(&awi->i2c_lock);
+-		if (ret)
+-			return;
+ 	}
+ 
+ 	mutex_destroy(&awi->i2c_lock);
 -- 
 2.44.0
 
