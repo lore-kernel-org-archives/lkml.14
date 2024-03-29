@@ -1,141 +1,113 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2105.outbound.protection.outlook.com [40.107.223.105])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3BC14287;
-	Fri, 29 Mar 2024 14:46:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.105
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711723612; cv=fail; b=bGeDh0xxveirsWjNrjqJzpm8OEg4gNImK1/u3/ElrjTyZwi9uBeGZxyGMggMed1DXIYF9wFO90UtchdCqN+jfOtbDFbDDTckGtyJtIQLBcaIlTjXi64kxqAQASIonMVoi9bv/22eNcXkRinIrrVTtZFoz0XRWICX90DLFJlIubc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711723612; c=relaxed/simple;
-	bh=oj11SLw3B4LIgevLJVAARGDjhGA4wBTXt14yPFf3xHs=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=rZcFoWeNSsZlmeSOann+dhoEBZPbd+oL/kxshKeNCUJIvxyI4LEeKgvVDVbsNLfp+vIc31E114j4xS0jk8Ngbknbn+IxiRTPsrTKS/jJB9tN7TwSRI4ixm3kouAck30mg/Nl9RTYuJk1kKCt0Dt7xMijlCN018rOW5YqDsItZ4w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=p1YZGCxV; arc=fail smtp.client-ip=40.107.223.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A1814A4F7;
+	Fri, 29 Mar 2024 14:46:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711723620; cv=none; b=Qf9VgavmVsJQH2fAuzOIbxYAk48GHeU5k9QkHwBQoog+zmresAzfbbCOFNWV7YLtfKelwYVN0s6+j1DNnXFN5sM2mePJ0Azm1s9pn2a05c0M0Flc1qpFmWynE2oTu7JLBGXiyVYtqecJi5nxtK2xPoVxKQlsOi2NAf2LxNXulKQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711723620; c=relaxed/simple;
+	bh=LGMJXyDZTVCuXPUZLYQj+Fw5Q8AJgz3+78O0ba93CKE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U4++TXEMUBYt9Y73LkkHmdPpKRVI2xwzCarHaNBUUMjPozrBFUN+tMzRqEfAEbRsE+TCGSucOqUZQWMzAAs+WpW1fDfRrVXwqUJNQ5l+6zmFinRi31/YEIWq+UVFIWCC73AI3l3t/HawOyjyR6omIL/xVTWihlrX07f1fnEpX1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GFyceD+d; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="p1YZGCxV"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ndvioJhqHx9W4tjbLVZ0PCIgSCc8nfMvCzE42eMgBE1QCJKXChhrBSDMct+QSwmirL8E6/p+eEZnDztP3SrZ/pybqaqvNB+Nj+5v59KLJ7Z9qmF7LohJHmhzJNvPOpAm9CpGErGBqw4bnVsxtVugjsRVYTFDCuX0bpdiACGZjkrbEYX1vM+SEan/ScNnL3rk22ikehq6GCsRsFoD9BEit0jajSML5ynjYQXnJOkKwjDbo4340fEYruHBVWBORitatu6PIaHNLRZJmhYkBW9iDjP99yysrCj0sKVbupW5vCRlZSK2o5FE397TAyMINyNodDmGvNyoUcW61pgnqNTWyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SnbrFp13lSVa9OvaVkW1HJ2rewQM3fsvj4vQ/XacME4=;
- b=kPF613Qp+GmigaVT6F0S8hEbdRg0hfl06G5DmiP3yWHUckeSbAMQ8uNcoobdJMwhEcCM/5yxkTjHvucoNZpXLfB/cpAWCJPS/hv8025eshP18uuV60raWYFeKVfeMTy08ShbY5lMDtVX6oX1k1lSkN9cFCEniRwuNJgZbf2vlrSbYoZgGLUJgO86w8SX3mcmpaAtqiXwUwJk7kaagTvlz7q0Fc+Yh1zuekp6up2KYw35GZ6wtNgxm2BpxfuRYHPC6odczFnh8YrIec24gLCugNesbEV2X4mh3WFzqM2yyg7LroSWE9e7Gkk32DD35bqJh+F2vHMk5DZvbC9aVvKggA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SnbrFp13lSVa9OvaVkW1HJ2rewQM3fsvj4vQ/XacME4=;
- b=p1YZGCxVocRDMLqbPs6tJ8dlacZvh2AYccWXGqAnlUqXJcQuL87kYi5OQUnQQ4xIn8xiKkRUD96kTZ+4l1Du+x2/6sJ/ThjM1EdJUtMt5/oTkNPDsgztP0vJYJMHNXRQ1G1M/LohQcpfUWCgxRIwIfrNg8euMGsrDUE5Y0pVzPc=
-Received: from BL1PR12MB5732.namprd12.prod.outlook.com (2603:10b6:208:387::17)
- by SA3PR12MB8047.namprd12.prod.outlook.com (2603:10b6:806:31b::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.40; Fri, 29 Mar
- 2024 14:46:48 +0000
-Received: from BL1PR12MB5732.namprd12.prod.outlook.com
- ([fe80::1032:4da5:7572:508]) by BL1PR12MB5732.namprd12.prod.outlook.com
- ([fe80::1032:4da5:7572:508%6]) with mapi id 15.20.7409.031; Fri, 29 Mar 2024
- 14:46:48 +0000
-Message-ID: <cd45feb9-20c0-5efa-5844-39a2a4b31678@amd.com>
-Date: Fri, 29 Mar 2024 09:46:45 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 4/5] x86/cc: Add cc_platform_set/_clear() helpers
-Content-Language: en-US
-To: Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, KVM <kvm@vger.kernel.org>,
- Ashish Kalra <ashish.kalra@amd.com>, Joerg Roedel <joro@8bytes.org>,
- Michael Roth <michael.roth@amd.com>
-References: <20240327154317.29909-1-bp@alien8.de>
- <20240327154317.29909-5-bp@alien8.de>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-In-Reply-To: <20240327154317.29909-5-bp@alien8.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR13CA0090.namprd13.prod.outlook.com
- (2603:10b6:806:23::35) To BL1PR12MB5732.namprd12.prod.outlook.com
- (2603:10b6:208:387::17)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GFyceD+d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711723618; x=1743259618;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LGMJXyDZTVCuXPUZLYQj+Fw5Q8AJgz3+78O0ba93CKE=;
+  b=GFyceD+deTNXirmfkO8hgTy8hjAyxstAovt/QEBTw7zTqV4FafIT1i6o
+   Mn080mVcvEIXnxG1BLEan2bUbj8XAXetOAmqfF1gDLkPIhdzlZpUbGPI0
+   xHhjpDDbNowwF75wrqz0tDHaJuVja9msdoi7pM7oQ2uabEe6rogPhTLgm
+   fuBd+5sCIHlSqLUfulz3WsUmJB5gomS37BXU2HScGU8spG7gZFjIJ1jQw
+   j16Gz/1Qp4ung590nosZpeDSwJr3Rb7eK5f6E2pnqIX7yMz0+OqlhdEJS
+   TSh82U81nmsggu6CdPkbhFKGimpmR3l6BZpwxr2gMmObT2PrnkDpkFvQf
+   g==;
+X-CSE-ConnectionGUID: IdxaVO6RTwaSTeoZY+xXgg==
+X-CSE-MsgGUID: 29rkbP8LTTCxDsFY4piyIg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11028"; a="32315449"
+X-IronPort-AV: E=Sophos;i="6.07,165,1708416000"; 
+   d="scan'208";a="32315449"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 07:46:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,165,1708416000"; 
+   d="scan'208";a="21729837"
+Received: from lkp-server01.sh.intel.com (HELO be39aa325d23) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 29 Mar 2024 07:46:53 -0700
+Received: from kbuild by be39aa325d23 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rqDVK-0003HC-1t;
+	Fri, 29 Mar 2024 14:46:50 +0000
+Date: Fri, 29 Mar 2024 22:46:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Lai Jiangshan <jiangshanlai@gmail.com>, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, rcu@vger.kernel.org, x86@kernel.org,
+	Lai Jiangshan <jiangshan.ljs@antgroup.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH 10/10] x86/rcu: Add THUNK rcu_read_unlock_special_thunk
+Message-ID: <202403292233.1m5tWJY5-lkp@intel.com>
+References: <20240328075318.83039-11-jiangshanlai@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5732:EE_|SA3PR12MB8047:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	S+ykUA6p68Oo641VwaRQNdtw/lO7HqbndEbc7PaKTz7LNhcdbksC7ue7/scdexzXOzpOFuEEVdoWTkLmhrhs3F+GK9WEZgA7y6JhtFSj6gDdZvxOrrzfXjrBN7ps5mgkPDlQJpEymtNXVEbv+sVLrzO612qUS1KMhoJ1MCNAoCre/Y0OGMrhpqB7/Bp1MXEqn3pmyOaAZ211Tnc1/ZAOtZxzt+sIpnTEatiL52KdJy3iduHr4xtyaeYxKly8n9B1XLOsmkblU9AYcut7PuNJSDBe2VoJaAo7HqKKJFI6Up8U5AxJk+uRaLUfkhFpk13roQlenDbov/ockXsSBgCbVLRJqPlLUZUEcOrkwN+Im5Xp6QTA8rGT7XUsqurDgVvXTQM1PV6CFsNUg9uMaLjajgpISIq1Ajm1rAxGi4uvuZlNBltUPjETVXlR527djTdaILcg+I1CIgzH8BDU6L36RWHEK45/CfCWl0fy3odd/6LiBrg0nk87KFoBSRIcvWoC8S9/VDKc+U2fGQcRSVm0JYMVyrRDY4T72U2rvUjUwnNzqQro0LYHULs9HARY2zJSI7PRqb3FWv6gNvy7T+BkrXWYoABrQybA3VqdLpItfBL/vW42Z8Fp67npTQg+xIx0lizU+9HwUmAOVjsNGZ7Ca744f3AF8WOfvD6GoVshd1w=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5732.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QVE4cFRNbkNkbU8xbXVlMWMzdVVBK2FTRCtjL3VzaFJIVHpNcjJCbkJHUDhu?=
- =?utf-8?B?ejE5NncyYndvN2k4aUpuSGlqTm5SdnlNWjIrYVhJUWg3UlFHUTR2amZ3ZG9Z?=
- =?utf-8?B?eCs2R01KblBuWkxyU0tmTEplbnQxcDB3d3ZYWDNtWU9FREdENng5RXA5aVFF?=
- =?utf-8?B?TUYzQ3FQQlVEK2FrZGtiRG9qckVoUmdlMzhyaTd6dUxzcm5LQzNyRDFRbWo3?=
- =?utf-8?B?MmRyR0QrdFZoRWUyZXEweFo2bythRG52Ny9EbDZpN1BXTWhxVG5wVXhlTkxa?=
- =?utf-8?B?VndlTlExQ1NSK1RjK0lGRGJlbGNsT2NZMDU0T1dYZEE4L0h5NGphZ0YvRk40?=
- =?utf-8?B?dWQxdzZobGg2cXMvelIvVjgrTnRsQ0pMRTlBaFh6UTZHSlk4YzE2cVFnMDNh?=
- =?utf-8?B?cmhvYVRENGZxTHhTbU1TM0paNjJLdVlVTlZTeDNCSzZ1aHo1VG9Rek9TaEdv?=
- =?utf-8?B?RzlkbGRSbCtZN0VPd3l4YU5NUFFtbFkvWUpXR3FicUFPLzFRYS9vQ0tsM3dC?=
- =?utf-8?B?MVVUelc3WXl1U3k1ZjZBMmJ3MmI5bFNGZHU3RzJ1TEhzeUEwQmN2eDJVR0Ru?=
- =?utf-8?B?bFpMc1pOWnUwZEFCL3hjdnNlUEFoNElNNW9UWk5wSVJGTDg5QWNmV1N3bkhW?=
- =?utf-8?B?enVLMHFEUDJQYWYwMzBDRFErS3pKdUxwRDB5bldSUVo5SXRMbEtuek9vbjV4?=
- =?utf-8?B?Q3NoTS9ObVRPMUZzdVpSVW5QUnlFK0kyeUoxZEVJbXZ2YlpMTUtFSkR6NURL?=
- =?utf-8?B?Tk9EcXRreE5hNHZ3cUdueWJHSUgwU2ZNTVoyMkFnWFB0aC9CVzFhUndGdU1x?=
- =?utf-8?B?S0E2cXZvRkNrKzRsRXJKVlBPVWxubkNPb2lEdU40L3B4dnU3dHJSdnM0Y1lN?=
- =?utf-8?B?NFlwbU1YRU12TTlNWnhhdFNRTnljUUFOUjVBeW1xZ0dWNDRWN21nVzM4bjND?=
- =?utf-8?B?WFJjbmI3ZWVTRS9UYmhadkN6WUlha2ZkNXlZMHNwWkd6ZEU1elZOallHRFQ1?=
- =?utf-8?B?RmRmclRoanZ0cXJHdTVvcE9KKzRtaDNhZ3N5Q0tuSWhZWUpBQlNHczljSi9V?=
- =?utf-8?B?bVRKS3RVdFArdHVlSmwwQzgwVFB3SzljeG5sS3JPbTIveXRJUDRCaVRqVVVm?=
- =?utf-8?B?RW53Umt4bjBzSnZ5YnhHbGdDTU1OZW1RUEVrL3VuM1dWTGc2L0dpa2M5T0l5?=
- =?utf-8?B?TzJQWWxBLytIWDdwcUZlaUJIaDM5b290bmljcnd6c21qaDlTSzJqeHZ0YmlI?=
- =?utf-8?B?b2xxMjB0SGdsRUlNTkFORjJReGY2Z2tCc2czdzdwcmRLNnZ5OVVFNXQySEVE?=
- =?utf-8?B?bmRYT0x1aTBiQUNMTjNZY250RmZ5eC9SdFlhS2I3NG1Makh2TkZOSkpCRkpV?=
- =?utf-8?B?a3V2ckN3dVhMNWlpYlZBT0hSajVoT3lyRjkrUFFsOWRVZ2djcXpaU2FJUEZu?=
- =?utf-8?B?aC8xQysrUXdTaTUwR2ZJdmVwL3VGRXo4Y21VYXZWM2RYUWxFZlZCeGIzZGhr?=
- =?utf-8?B?OTBkNXJCS2xUc0MvTmJCZ1dRMnl0WXFNeDU0SERVd3l4MEtyeDN5ajdGcGFE?=
- =?utf-8?B?TnN0cVEzQ1gxSEdZREd5MEhlOHlRRkI2MEU5WVRwWTE0TWErSUgwbXNJeldq?=
- =?utf-8?B?Mm95MEEvakdzam1ENWtNVzNQL0JXcFlvcTlSSlJsRFZzZHJpNFBBRE9XVTBk?=
- =?utf-8?B?RUphQVBiZTdJd1BOemRtYWQzbU5nY01WVGpMYlR4aWVWQTRRMDE5UVpCYUly?=
- =?utf-8?B?SDhtbEMxbEI0eXlWNVUzUU8zdVIyRFRKNTlseklwak44blg5R1VaUFZWcFRo?=
- =?utf-8?B?UjZHWTN6WWtJRldLTkg2dEZQMDRoMXpPK3kzck5oc1lTOXo3M25EYU15MnQ4?=
- =?utf-8?B?ejJIQXhES1JIMy9KMDhBdjFUUFNpOGMyQ0R2bHcrbEFEMjdVRG5JSFNQN1Bw?=
- =?utf-8?B?ZU5XUW1vSzErM2NCQklOaG5PUW9OdUhhZHB3SzE4NnNoWThWdkdaR3VUMUtW?=
- =?utf-8?B?OXdmOU5DZ0NpMnA0Ukx6VStTSVA2L0hZZW9YK296V05menF2UjdlSmZQaksw?=
- =?utf-8?B?b0hqMmp5aGV6ejNxckxQS0RyMWpycEgzeit2Uy9zeUVoYytWSzVDN1piZmVR?=
- =?utf-8?Q?26yle1yLzQYTcxWfI/moFAWuC?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78727ced-d7fb-41b2-e846-08dc4fff1012
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5732.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2024 14:46:48.5880
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RvzoNZ2GZSIJMzJNf7ppn9P4Def7M6nh2o8ybxv0Xx+A4KESuIpM5Q7jRrWyJNjH8isjQjVhb1HFMz+NCUIbJQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8047
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240328075318.83039-11-jiangshanlai@gmail.com>
 
-On 3/27/24 10:43, Borislav Petkov wrote:
-> From: "Borislav Petkov (AMD)" <bp@alien8.de>
-> 
-> Add functionality to set and/or clear different attributes of the
-> machine as a confidential computing platform. Add the first one too:
-> whether the machine is running as a host for SEV-SNP guests.
-> 
-> Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Hi Lai,
 
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+kernel test robot noticed the following build errors:
 
-> ---
->   arch/x86/coco/core.c        | 52 +++++++++++++++++++++++++++++++++++++
->   include/linux/cc_platform.h | 12 +++++++++
->   2 files changed, 64 insertions(+)
-> 
+[auto build test ERROR on paulmck-rcu/dev]
+[also build test ERROR on tip/locking/core tip/sched/core tip/x86/asm tip/master linus/master v6.9-rc1 next-20240328]
+[cannot apply to tip/x86/core tip/auto-latest]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Lai-Jiangshan/lib-Use-rcu_preempt_depth-to-replace-current-rcu_read_lock_nesting/20240328-155513
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev
+patch link:    https://lore.kernel.org/r/20240328075318.83039-11-jiangshanlai%40gmail.com
+patch subject: [PATCH 10/10] x86/rcu: Add THUNK rcu_read_unlock_special_thunk
+config: i386-alldefconfig (https://download.01.org/0day-ci/archive/20240329/202403292233.1m5tWJY5-lkp@intel.com/config)
+compiler: gcc-12 (Ubuntu 12.3.0-9ubuntu2) 12.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240329/202403292233.1m5tWJY5-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403292233.1m5tWJY5-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   ld: init/main.o: in function `rest_init':
+>> main.c:(.ref.text+0x96): undefined reference to `rcu_read_unlock_special_thunk'
+>> ld: main.c:(.ref.text+0x9d): undefined reference to `rcu_read_unlock_special_thunk'
+   ld: arch/x86/events/intel/ds.o: in function `intel_pmu_drain_bts_buffer':
+>> ds.c:(.text+0x2cd9): undefined reference to `rcu_read_unlock_special_thunk'
+   ld: arch/x86/kernel/nmi.o: in function `nmi_handle':
+>> nmi.c:(.text+0x2e9): undefined reference to `rcu_read_unlock_special_thunk'
+   ld: arch/x86/kernel/alternative.o: in function `__text_poke':
+>> alternative.c:(.text+0x531): undefined reference to `rcu_read_unlock_special_thunk'
+   ld: arch/x86/mm/init.o:init.c:(.init.text+0xf1): more undefined references to `rcu_read_unlock_special_thunk' follow
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
