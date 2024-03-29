@@ -1,134 +1,69 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69F740866;
-	Fri, 29 Mar 2024 07:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90BF040852;
+	Fri, 29 Mar 2024 07:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711697927; cv=none; b=qISOp775fgOP9BBlPqmBG1rJvr0TvxNaICkSwfEXdd2DXMuQ1z7YLpq6/g4Dr0D7cPI3W3IHsYGiRXurbi7/TOT7azu3Mo+V863dTQ5QqnCRf3tesEs2ZdrVSrcNIYVb8e150Gm2Qb5dsEhn5qs8B05aF64aSfZt6uv2s6y0OR8=
+	t=1711697971; cv=none; b=jyiDOXVzovP/3ZOX1dB5UgsujYvE0LBw2Olw3ZYMVBt3RQvh5dTuLwfHjllEV3KkRPVYc7GajSDkn9VNuCMdXbB1atDifxDWpMeesEiQtEAjjLnL0YSbKp0m1VZZ8/aLMs5Y6Xov+f4abd3dq97CQY+5VP++OiuLCTnfn+rdQxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711697927; c=relaxed/simple;
-	bh=OtiL7hYIGDS1cNsv/IDRa43LiaIOTcDvq0KTA6y72sA=;
+	s=arc-20240116; t=1711697971; c=relaxed/simple;
+	bh=4hxZn17jwTDW1j8EEbdmdBYX6Vcgvx8JwxaOFGf6h7M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DaD49fRh+ndr2+G6AtZGRrMEJ2/vSxpXK+EnX/B7MuI2IFlUOZ5f4LH+ibboNkU86dpTELUb2yleFtC2JRV5HaxDaOuQrCO/lH9ifuAawFyd8XjHvPnvpSYY52LuB8YVeTw4xgBbuovzykZppLlDesqG3mvUaxhnQGrcAs4lAOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eyGqzBo4; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=eClygHeOJ90vdk8i+vkK5Gcv2mO31RUR+QB4Ueresf/YB4Wse6HhiVzbdJlKG2Gw/lkGYMAYcyoymUNEjyCwNT9Kv6CVcztuK3/RlGYCzjLhZSh5o93HJYcDlPzo6DqIYFHuzVswKhKxAY/5f9Z61ir0AkvxuiIWAWl2/YsVkRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=APauY79q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eyGqzBo4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711697926; x=1743233926;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OtiL7hYIGDS1cNsv/IDRa43LiaIOTcDvq0KTA6y72sA=;
-  b=eyGqzBo4R9dvGgIgaVEzuCralb+Ma5RM9R7Y/TyET5lC33mm1pAxQyjr
-   PXpvYguMyq7USpOmWL/PbqHNQANQp4pqPgHh5MzkjWSVHV4H1RUvX+H/+
-   Qp9lSv0B2O9rxClL0FTxO84UcLiXB5IL81zaTAFHoaeH11H+m/eYy6Rlo
-   e1XCKDI1OM3+zJ3jSSUMwOpBBLv7eNLREJZooeRiVKZ53L3LXxVM+51QX
-   MHHd5iimEjIoeXKMhZlbhoSOlVb3FZ/l+5eRengVCMb4qEHGsSjmIZ9uD
-   GeMfZMGNMnm+yq2lFm3+WiO51FOFaGGBk8Aj/cK3JYpDh7YHLPbHWmjCH
-   g==;
-X-CSE-ConnectionGUID: uAo9vU6hRWWawPkJQozE+Q==
-X-CSE-MsgGUID: zSSfN6EEQCOoGJitWggWYg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="9837902"
-X-IronPort-AV: E=Sophos;i="6.07,164,1708416000"; 
-   d="scan'208";a="9837902"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 00:38:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,164,1708416000"; 
-   d="scan'208";a="16962746"
-Received: from lkp-server01.sh.intel.com (HELO be39aa325d23) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 29 Mar 2024 00:38:40 -0700
-Received: from kbuild by be39aa325d23 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rq6ov-0002xC-1I;
-	Fri, 29 Mar 2024 07:38:37 +0000
-Date: Fri, 29 Mar 2024 15:37:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: Lai Jiangshan <jiangshanlai@gmail.com>, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, rcu@vger.kernel.org, x86@kernel.org,
-	Lai Jiangshan <jiangshan.ljs@antgroup.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Uros Bizjak <ubizjak@gmail.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>, Nadav Amit <namit@vmware.com>,
-	Breno Leitao <leitao@debian.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Vegard Nossum <vegard.nossum@oracle.com>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>
-Subject: Re: [PATCH 09/10] x86/rcu: Add rcu_preempt_count
-Message-ID: <202403291422.SOVYexxO-lkp@intel.com>
-References: <20240328075318.83039-10-jiangshanlai@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="APauY79q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39A8EC433F1;
+	Fri, 29 Mar 2024 07:39:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711697970;
+	bh=4hxZn17jwTDW1j8EEbdmdBYX6Vcgvx8JwxaOFGf6h7M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=APauY79qIdzSDljHN+Bp4ugzsbbNsX+Fu39fqd4DA3ZHz6GG8a5f1J+jVY1+YVffU
+	 Bhw8H2xwxVIPF97xDc0q7x5/nIIpe8rQNOqgZ285jHctrKnC6H8Gd4BThOTHzSO1O/
+	 q1YhwoqevVIEr1i5Ne/pZ8IRKgMXZEID+QCDC5ytg2ecWl1SdKIL77gefCt2DQuaUF
+	 sVbksM6MyinNp17Sy+PY7ICOgsL+D/j3NlYxOLPCObzI/rbHVEr5/RJ4p3nLHkrncZ
+	 1oiOyGmFLEKbEtL//Tr7jEF09umajnLal3hczu2kYvJsh/7cYbDHfklJ2JqTgkIF4S
+	 wDBEUBRlRiPnA==
+Date: Fri, 29 Mar 2024 08:39:26 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: syzbot <syzbot+9c0a93c676799fdf466c@syzkaller.appspotmail.com>
+Cc: jack@suse.cz, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Subject: Re: [syzbot] [fs?] WARNING: ODEBUG bug in bdev_super_lock
+Message-ID: <20240329-girlanden-futsch-7bcd27d91f17@brauner>
+References: <000000000000aacdcb0614b939ad@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240328075318.83039-10-jiangshanlai@gmail.com>
+In-Reply-To: <000000000000aacdcb0614b939ad@google.com>
 
-Hi Lai,
+On Thu, Mar 28, 2024 at 07:20:29AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    fe46a7dd189e Merge tag 'sound-6.9-rc1' of git://git.kernel..
+> git tree:       upstream
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=17d1c4f9180000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=fe78468a74fdc3b7
+> dashboard link: https://syzkaller.appspot.com/bug?extid=9c0a93c676799fdf466c
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16577eb1180000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=106fa941180000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/0f7abe4afac7/disk-fe46a7dd.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/82598d09246c/vmlinux-fe46a7dd.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/efa23788c875/bzImage-fe46a7dd.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+9c0a93c676799fdf466c@syzkaller.appspotmail.com
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on paulmck-rcu/dev]
-[also build test ERROR on tip/locking/core tip/sched/core tip/x86/asm tip/master linus/master v6.9-rc1 next-20240328]
-[cannot apply to tip/x86/core tip/auto-latest]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Lai-Jiangshan/lib-Use-rcu_preempt_depth-to-replace-current-rcu_read_lock_nesting/20240328-155513
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev
-patch link:    https://lore.kernel.org/r/20240328075318.83039-10-jiangshanlai%40gmail.com
-patch subject: [PATCH 09/10] x86/rcu: Add rcu_preempt_count
-config: x86_64-randconfig-161-20240328 (https://download.01.org/0day-ci/archive/20240329/202403291422.SOVYexxO-lkp@intel.com/config)
-compiler: gcc-10 (Ubuntu 10.5.0-1ubuntu1) 10.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240329/202403291422.SOVYexxO-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403291422.SOVYexxO-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
->> arch/x86/kernel/cpu/common.c:1998:3: error: 'struct pcpu_hot' has no member named 'rcu_preempt_count'; did you mean 'preempt_count'?
-    1998 |  .rcu_preempt_count = RCU_PREEMPT_INIT,
-         |   ^~~~~~~~~~~~~~~~~
-         |   preempt_count
->> arch/x86/kernel/cpu/common.c:1998:23: error: 'RCU_PREEMPT_INIT' undeclared here (not in a function); did you mean 'RCUREF_INIT'?
-    1998 |  .rcu_preempt_count = RCU_PREEMPT_INIT,
-         |                       ^~~~~~~~~~~~~~~~
-         |                       RCUREF_INIT
->> arch/x86/kernel/cpu/common.c:1998:23: warning: excess elements in struct initializer
-   arch/x86/kernel/cpu/common.c:1998:23: note: (near initialization for 'pcpu_hot')
-
-
-vim +1998 arch/x86/kernel/cpu/common.c
-
-  1993	
-  1994	DEFINE_PER_CPU_ALIGNED(struct pcpu_hot, pcpu_hot) = {
-  1995		.current_task		= &init_task,
-  1996		.preempt_count		= INIT_PREEMPT_COUNT,
-  1997		.top_of_stack		= TOP_OF_INIT_STACK,
-> 1998		.rcu_preempt_count	= RCU_PREEMPT_INIT,
-  1999	};
-  2000	EXPORT_PER_CPU_SYMBOL(pcpu_hot);
-  2001	EXPORT_PER_CPU_SYMBOL(const_pcpu_hot);
-  2002	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+#syz fix: fs,block: get holder during claim
