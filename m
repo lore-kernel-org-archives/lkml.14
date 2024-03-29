@@ -1,116 +1,102 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433CB39FFE;
-	Fri, 29 Mar 2024 18:39:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5FD39FEB;
+	Fri, 29 Mar 2024 18:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711737569; cv=none; b=ZFZ997cpmPM16jqFEBdwK4szwJOn/lt/StfFl5VvjK760St8maBGjfcRRS9vSRAPL43KLwAvjdpZ0G9PrixvOxwFRGd9ye11iZBsDUw+4hvBuaqQSezWAQdC+qj6Gj/xxSyxURkUZ1T/2z80hnCkq3Wsk+0yBxgv9BlXrlwtU9Q=
+	t=1711737845; cv=none; b=jvyiv3pNgt0izDJ9CWuvTf9bHpmcx/soBXtkmdJ0UPuCaFxZc1ASIyjFJ/xBHqD9gVcbffAnr4svtvzBBUqmiyx2zcrvY09SAQNh69EMNklnZHupP3meALKvKKBSzMifG1FM8PMAC4gvz+T8Bi60DHqYbbeUmYdzn/bsa6231x4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711737569; c=relaxed/simple;
-	bh=0wmSmgoOywQrbyPUt9U489p4pzF17Ln+ybkakmRaWic=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mYPtZoA0F0i/SnmpIVMuU6FKFtuA+j/g0w/s6DJVAMqhohXvTXmWsn4PdfgC9f4f2jtZwLZoO3PIqr6qLhR4bia+9KvZ6OIQjNvhdNSaEqfzvxM7QZzJ8d0jLHWN058z0qljWORljEZ6dynRzJl7ilOUtqlBUKYUCkOosXJpjRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aHCraI5U; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1711737845; c=relaxed/simple;
+	bh=ZCOrHPZQEY/ZxoW8xV3nSUzQw+HtbRBeSSDPIpMAlzY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V24Nd2QTUkdHLHyjnMuduJWmrw6OHOxKTW5968eMpnbdLVx49PXSYeb3EO66IBATavx0k014Tz3lZiNFuLQ8Adw/gK5Wz/EegJunMntA8EbaV4IocbmBiA3qzcGbXWXkpmUixNjHGHHQuAYOZTPrjjkYEiSLkFzyLwN+7YeCxAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q6EIrmYL; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aHCraI5U"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42THvciQ015978;
-	Fri, 29 Mar 2024 18:39:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=yRTwX+qHIYV9yXVJsqfoQZk6JWIEWiuhlYjrIn5+DXs=; b=aH
-	CraI5USeigX/vwtHYajXj9vCMHNSl452e2ql/1xW7eEDwgkwhmWqQK+ytMx9J8r1
-	uZywaiYb32zK3GSPsX2hyPMNIpK0szHL3JCryQb1/JGC9zXnsYIqnZwc1deFZppM
-	1Edusrnr0QfgTSIFifCZT/xW3mefb2xQkBO7BrFbaTRL+ved2SpDiDaf76HMWdpY
-	d3t0ooM0KFWHjtUavM5nMDcO4BVayvK4blCVf/HZwlP9O1dyrOp121Vr8Tc6flrB
-	IVQFf3gbA3sC+AG9sx49KVveHHmwwZd4v3fZt/7bitMtKiWveg5nPZPE8YplBuZq
-	ME6V/eWhm/cU+l7kiZSA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x5w6g0tbq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Mar 2024 18:39:17 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42TIdGoU005391
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Mar 2024 18:39:16 GMT
-Received: from [10.110.118.161] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 29 Mar
- 2024 11:39:13 -0700
-Message-ID: <da9dcd58-41c1-089c-2061-be3bad6349a7@quicinc.com>
-Date: Fri, 29 Mar 2024 11:39:11 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q6EIrmYL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711737844; x=1743273844;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ZCOrHPZQEY/ZxoW8xV3nSUzQw+HtbRBeSSDPIpMAlzY=;
+  b=Q6EIrmYL41wfF4mXq8PvOI7wq2OhStNDCuxuAXeWYET1R0JR2rmy24i+
+   I8U6XKuXM3gdxUpcMB+rJ3CESselHKX5gN2swxq6Bk+bLBG74agyLHY8Y
+   ouLJ+Itk1NXrriZ0010BxGrI3YZX6mqM/Za3/brxqVpKn/DLh7jgWdNQi
+   R6TtRymBM6F852l6d1IroiuNKsucFZALBFbQ+hG4RV21rUgbdSsf1luXj
+   Fj5oSn3L+XT2Xfyjxb2v82Qh4jvayGh0P9Aj0P7UYCtdjAhoZUryzgAU6
+   oGmC0BAbsvUTxr0QyY3L+UONjOPmR15Q577G4HXdlfNAVAzvkgBv8oRDr
+   A==;
+X-CSE-ConnectionGUID: npl/EPFrQJ6GrTP6UtKj2g==
+X-CSE-MsgGUID: TReNy+fSRKK8ZMb73XKXBw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11028"; a="6789481"
+X-IronPort-AV: E=Sophos;i="6.07,165,1708416000"; 
+   d="scan'208";a="6789481"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 11:44:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,165,1708416000"; 
+   d="scan'208";a="21506818"
+Received: from hkannan-mobl.amr.corp.intel.com (HELO [10.209.48.27]) ([10.209.48.27])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 11:44:02 -0700
+Message-ID: <dd57b239-6270-42be-ae74-5e364fa46aed@linux.intel.com>
+Date: Fri, 29 Mar 2024 11:44:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] drm/msm: fix the `CRASHDUMP_READ` target of
- `a6xx_get_shader_block()`
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: panasonic-laptop: fix NULL dereference
+To: Maxim Korotkov <korotkov.maxim.s@gmail.com>, Armin Wolf <W_Armin@gmx.de>,
+ Kenneth Chan <kenneth.t.chan@gmail.com>
+Cc: Len Brown <len.brown@intel.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+ Harald Welte <laforge@gnumonks.org>, Matthew Garrett <mjg@redhat.com>,
+ Ivan Kapranov <i.kapranov@securitycode.ru>, lvc-project@linuxtesting.org,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240328103518.169604-1-korotkov.maxim.s@gmail.com>
+ <da442a04-9db8-4951-98b4-3e149ea06415@gmx.de>
+ <9c4cfaf8-7738-4ba8-951e-5b91a3414f37@gmail.com>
 Content-Language: en-US
-To: Miguel Ojeda <ojeda@kernel.org>, Rob Clark <robdclark@gmail.com>,
-        Dmitry
- Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Daniel
- Vetter <daniel@ffwll.ch>,
-        Connor Abbott <cwabbott0@gmail.com>, <linux-arm-msm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20240326212324.185832-1-ojeda@kernel.org>
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <20240326212324.185832-1-ojeda@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <9c4cfaf8-7738-4ba8-951e-5b91a3414f37@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: P0GcQC4Y0AiUXacx71zjBPF3HBkp2tqH
-X-Proofpoint-ORIG-GUID: P0GcQC4Y0AiUXacx71zjBPF3HBkp2tqH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-29_13,2024-03-28_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
- malwarescore=0 adultscore=0 spamscore=0 lowpriorityscore=0 mlxlogscore=948
- impostorscore=0 priorityscore=1501 bulkscore=0 mlxscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2403210001
- definitions=main-2403290165
 
 
+On 3/29/24 1:20 AM, Maxim Korotkov wrote:
+> Hi,
+> On 29.03.2024 03:21, Armin Wolf wrote:
+>>> Added a pointer check to ensure that it is valid
+>>> before using it for pcc initialization.
+>>
+>> Hi,
+>>
+>> is this check even needed? I think the ACPI driver core takes care
+>> of passing a valid ACPI device pointer to acpi_pcc_hotkey_remove().
+>>
+>> Thanks,
+>> Armin Wolf
+>
+> I proceeded from the assumption that the current check was not redundant.
+> Kuppuswamy correctly noted in the message that the device would most likely be valid for the function of removal.
+>
+> However, in my opinion, checking for NULL is a good coding practice, and has now been implemented incorrectly in this case.
+>
+> Eliminating NULL checks could potentially cause bugs in this context.
 
-On 3/26/2024 2:23 PM, Miguel Ojeda wrote:
-> Clang 14 in an (essentially) defconfig arm64 build for next-20240326
-> reports [1]:
-> 
->      drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c:843:6: error:
->      variable 'out' set but not used [-Werror,-Wunused-but-set-variable]
-> 
-> The variable `out` in these functions is meant to compute the `target` of
-> `CRASHDUMP_READ()`, but in this case only the initial value (`dumper->iova
-> + A6XX_CD_DATA_OFFSET`) was being passed.
-> 
-> Thus use `out` as it was intended by Connor [2].
-> 
-> There was an alternative patch at [3] that removed the variable
-> altogether, but that would only use the initial value.
-> 
-> Fixes: 64d6255650d4 ("drm/msm: More fully implement devcoredump for a7xx")
-> Closes: https://lore.kernel.org/lkml/CANiq72mjc5t4n25SQvYSrOEhxxpXYPZ4pPzneSJHEnc3qApu2Q@mail.gmail.com/ [1]
-> Link: https://lore.kernel.org/lkml/CACu1E7HhCKMJd6fixZSPiNAz6ekoZnkMTHTcLFVmbZ-9VoLxKg@mail.gmail.com/ [2]
-> Link: https://lore.kernel.org/lkml/20240307093727.1978126-1-colin.i.king@gmail.com/ [3]
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
-> ---
+Usually such checks are added when dealing with input that can change dynamically (like user input).
 
+Since, as per the current usage, there is no chance for this device to be NULL, I don't think we need it.
 
-LGTM,
+>
+> Best regards, Max
 
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
