@@ -1,477 +1,484 @@
 Received: from a.mx.secunet.com (a.mx.secunet.com [62.96.220.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3BA163087;
-	Sun, 31 Mar 2024 16:42:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3693C149C76;
+	Sun, 31 Mar 2024 16:43:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=62.96.220.36
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711903371; cv=fail; b=SwI5by1+QxMzYPWxL/mcJgXCKmcwt0GQMxiJr9nlI4IuOBCs+J3SQ2j5ypfJsZ6BIpt3cahJeBeoTE9GFpnDOXPaGcDh//ssZuYD3zlZozGiF90I4qsKZIXDOYYSVFrrLlh5MSJWQ5l4DepPSa1/PXOKWgAc1kdkg/szj05kGRE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711903371; c=relaxed/simple;
-	bh=N6u+CsXFjkW0UlfT+FcahFVFKJvPjZuvjC2ZqwEpeig=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=PYEnnv6hAQhbB0jld8N+UrHoEeEFhospT3TH1ZFIpUpnSPomwziY/SkkfYw6Ha3d8i+fYND8ZlWfHot+IZ0JdmmF5biAI4sLxpLMbr9mTI6bJ3x1CilMPPNgnhwxx7d1Dhk5mhTJnKVLFWyXmJO159KnT8MfEnoNatzawsl99FE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=quicinc.com; spf=fail smtp.mailfrom=quicinc.com; dkim=fail (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Dr+wzPEV reason="signature verification failed"; arc=none smtp.client-ip=205.220.180.131; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; arc=fail smtp.client-ip=62.96.220.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=quicinc.com
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711903384; cv=fail; b=q5veqYFzcCe53F1j8mfknbnGbzwh/6JkXIDOuqwp5eZmlxiCKf+hJU3D1UgyhmdVLWapRGgjV9rcGeG4JDixY2Tf0R28Kv83Icsa/a7M9PknOfQzrJGyEIvKsdS8itqNmm+DbH7kxI941qf4u2JoFRmLiqeF4l0TfhP6zvuCGXI=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711903384; c=relaxed/simple;
+	bh=+qwRVQtAUFwc+mzfaMAXarOygq0dR3IZtuet68K/Fyc=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=uLrgf27e7yJ/U50ZLEDBFtSOWeJ9cm4cyPu6TMaVzKbK1HDVu6IRE7PPY1YzgMQPy+Qy5lOM2TwvkauYlumsX4eDJlNnKIT327UqLUDB7Y5O6G7uenEVVZSVLZUj2lGNSS3GvYpMNCjQXaBVsU2erD8zi2Q8r6S44RNxRBlMvhA=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=QMl5bUwl; arc=fail smtp.client-ip=40.107.237.95; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; arc=fail smtp.client-ip=62.96.220.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Dr+wzPEV"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="QMl5bUwl"
 Received: from localhost (localhost [127.0.0.1])
-	by a.mx.secunet.com (Postfix) with ESMTP id A4C0620184;
-	Sun, 31 Mar 2024 18:42:47 +0200 (CEST)
+	by a.mx.secunet.com (Postfix) with ESMTP id DFBCD208B2;
+	Sun, 31 Mar 2024 18:43:00 +0200 (CEST)
 X-Virus-Scanned: by secunet
 Received: from a.mx.secunet.com ([127.0.0.1])
 	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id MNFUPMJA_BgV; Sun, 31 Mar 2024 18:42:46 +0200 (CEST)
-Received: from mailout1.secunet.com (mailout1.secunet.com [62.96.220.44])
+	with ESMTP id 98DUCs2OV7rM; Sun, 31 Mar 2024 18:43:00 +0200 (CEST)
+Received: from mailout2.secunet.com (mailout2.secunet.com [62.96.220.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by a.mx.secunet.com (Postfix) with ESMTPS id 97C7D208B7;
-	Sun, 31 Mar 2024 18:42:44 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 97C7D208B7
+	by a.mx.secunet.com (Postfix) with ESMTPS id C692F20847;
+	Sun, 31 Mar 2024 18:42:59 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com C692F20847
 Received: from cas-essen-01.secunet.de (unknown [10.53.40.201])
-	by mailout1.secunet.com (Postfix) with ESMTP id 8A9B180005E;
-	Sun, 31 Mar 2024 18:42:44 +0200 (CEST)
+	by mailout2.secunet.com (Postfix) with ESMTP id B911D800060;
+	Sun, 31 Mar 2024 18:42:59 +0200 (CEST)
 Received: from mbx-essen-01.secunet.de (10.53.40.197) by
  cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Sun, 31 Mar 2024 18:42:44 +0200
+ 15.1.2507.35; Sun, 31 Mar 2024 18:42:59 +0200
 Received: from Pickup by mbx-essen-01.secunet.de with Microsoft SMTP Server id
- 15.1.2507.17; Sun, 31 Mar 2024 16:36:21 +0000
-X-sender: <linux-usb+bounces-8666-peter.schumann=secunet.com@vger.kernel.org>
-X-Receiver: <peter.schumann@secunet.com>
- ORCPT=rfc822;peter.schumann@secunet.com NOTIFY=NEVER;
- X-ExtendedProps=BQAVABYAAgAAAAUAFAARAJ05ab4WgQhHsqdZ7WUjHykPADUAAABNaWNyb3NvZnQuRXhjaGFuZ2UuVHJhbnNwb3J0LkRpcmVjdG9yeURhdGEuSXNSZXNvdXJjZQIAAAUAagAJAAEAAAAAAAAABQAWAAIAAAUAQwACAAAFAEYABwADAAAABQBHAAIAAAUAEgAPAGAAAAAvbz1zZWN1bmV0L291PUV4Y2hhbmdlIEFkbWluaXN0cmF0aXZlIEdyb3VwIChGWURJQk9IRjIzU1BETFQpL2NuPVJlY2lwaWVudHMvY249UGV0ZXIgU2NodW1hbm41ZTcFAAsAFwC+AAAAQ5IZ35DtBUiRVnd98bETxENOPURCNCxDTj1EYXRhYmFzZXMsQ049RXhjaGFuZ2UgQWRtaW5pc3RyYXRpdmUgR3JvdXAgKEZZRElCT0hGMjNTUERMVCksQ049QWRtaW5pc3RyYXRpdmUgR3JvdXBzLENOPXNlY3VuZXQsQ049TWljcm9zb2Z0IEV4Y2hhbmdlLENOPVNlcnZpY2VzLENOPUNvbmZpZ3VyYXRpb24sREM9c2VjdW5ldCxEQz1kZQUADgARAC7JU/le071Fhs0mWv1VtVsFAB0ADwAMAAAAbWJ4LWVzc2VuLTAxBQA8AAIAAA8ANgAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5EaXNwbGF5TmFtZQ8ADwAAAFNjaHVtYW5uLCBQZXRlcgUADAACAAAFAGwAAgAABQBYABcASAAAAJ05ab4WgQhHsqdZ7WUjHylDTj1TY2h1bWFubiBQZXRlcixPVT1Vc2VycyxPVT1NaWdyYXRpb24sREM9c2VjdW5ldCxEQz1kZQUAJgACAAEFACIADwAxAAAAQXV0b1Jlc3BvbnNlU3VwcHJlc3M6IDANClRyYW5zbWl0SGlzdG9yeTogRmFsc
-	2UNCg8ALwAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuRXhwYW5zaW9uR3JvdXBUeXBlDwAVAAAATWVtYmVyc0dyb3VwRXhwYW5zaW9uBQAjAAIAAQ==
-X-CreatedBy: MSExchange15
-X-HeloDomain: b.mx.secunet.com
-X-ExtendedProps: BQBjAAoAq4OmlidQ3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5Pcmdhbml6YXRpb25TY29wZREAAAAAAAAAAAAAAAAAAAAAAAUASQACAAEFAAQAFCABAAAAGgAAAHBldGVyLnNjaHVtYW5uQHNlY3VuZXQuY29tBQAGAAIAAQUAKQACAAEPAAkAAABDSUF1ZGl0ZWQCAAEFAAIABwABAAAABQADAAcAAAAAAAUABQACAAEFAGIACgBFAAAA2IoAAAUAZAAPAAMAAABIdWI=
-X-Source: SMTP:Default MBX-ESSEN-02
-X-SourceIPAddress: 62.96.220.37
-X-EndOfInjectedXHeaders: 19666
-X-Virus-Scanned: by secunet
-Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=147.75.199.223; helo=ny.mirrors.kernel.org; envelope-from=linux-usb+bounces-8666-peter.schumann=secunet.com@vger.kernel.org; receiver=peter.schumann@secunet.com 
-DKIM-Filter: OpenDKIM Filter v2.11.0 b.mx.secunet.com 8F24A2025D
-Authentication-Results: b.mx.secunet.com;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Dr+wzPEV"
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711790030; cv=none; b=lXU7Ekz5ncEDY/O9Boxjk5W+HMOOIeuSlYhhKi0CBZ/qUPspQ6Olg6S1qxV01F6VpVfqpKXOjrPe2Z8z7TFdsQlZXBRmwUkDtFdBlBvmasbPLpNDSdZ2YaeSuLkpWruig/HewhILtxGlhwVA3FWgdXK+pKVdSaek6zpCLqFzqhM=
-ARC-Message-Signature: i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711790030; c=relaxed/simple;
-	bh=zZiTRe3m3NLbb+/Qp3yvgOHwujhfgKPzWdst81UulPs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=AMVPkQvKsvsggWlW2CXCR3/fJ8JDxZVGvlQ+uI3gMzYJx0cgJieHXKtCyJhx8DIgKz2I6NJcfqSkXX/cLd+lNtKDc0ulcDcP7hKb8701hkd1v3sYeB2zC3pOuZjAs8SXPxjDDCR5nl2cCijUt/VrjzdrY8Pu+y6/5LfYcG5zJ4c=
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Dr+wzPEV; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=FhEb9K/BxdRk2okMHgeAtJuKVJhrSJebpoCQp1OmvdQ=; b=Dr
-	+wzPEVwH7l3fpu5u9f0GQkCoTKNTSvm9ud24uR2CqFOkLT4jY/d1iNvdwK/gfikA
-	MVhUZA/vXCcPd4tqHknfRWldfxOHAqyiz5eHDY6o9ua2iLkpneM0VwUkFef4KtIy
-	U76UI5UQbdeDzKGxOMkDfKlOTNJF+2pAlDraJK+JPGlm7wz72lr+WCKpAiJnevvd
-	AsZZeF9BI0+wrycErZrjVIPFubolxEwYTO2hFV1YfbVds5kmhSLIc/DAHr3IEz6o
-	OvuEROLpFpa9K8qKLd1ckvoNCx3cPtZcgvR3dija5av+XnoW/vg93pm/vQbx4a36
-	JZq1TgXVwPzht7KwoTIw==
-Message-ID: <6f2df222-36d4-468e-99a7-9c48fae85aa9@quicinc.com>
-Date: Sat, 30 Mar 2024 14:43:07 +0530
-Precedence: bulk
-Precedence: bulk
-X-Mailing-List: linux-kernel@vger.kernel.org
-List-Id: <linux-kernel.vger.kernel.org>
-List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/2] Add gpio-usb-c-connector compatible
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Miquel
- Raynal" <miquel.raynal@bootlin.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "Bjorn Helgaas" <bhelgaas@google.com>, Kyle Tso <kyletso@google.com>,
-        Fabrice
- Gasnier <fabrice.gasnier@foss.st.com>,
-        Heikki Krogerus
-	<heikki.krogerus@linux.intel.com>,
-        <u.kleine-koenig@pengutronix.de>,
-        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-        <devicetree@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_ppratap@quicinc.com>,
-        <quic_jackp@quicinc.com>
-References: <20240329071948.3101882-1-quic_kriskura@quicinc.com>
- <CAA8EJpqx+VFW8z6oG=+pnhPN97Q3R6z+ygf85Uspve-9syQsUw@mail.gmail.com>
-Content-Language: en-US
-From: Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>
-In-Reply-To: <CAA8EJpqx+VFW8z6oG=+pnhPN97Q3R6z+ygf85Uspve-9syQsUw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: w9l_gJ3vqg3mZzBvIWmjhsf3kITwbXlG
-X-Proofpoint-ORIG-GUID: w9l_gJ3vqg3mZzBvIWmjhsf3kITwbXlG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-30_05,2024-03-28_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 adultscore=0 impostorscore=0 spamscore=0 suspectscore=0
- lowpriorityscore=0 mlxlogscore=999 clxscore=1015 phishscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2403210001 definitions=main-2403300075
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
-Message-ID: <20240330091307.q08E9tTu0hJF2tVExdPeSd2BHnvbz8u_zB4uD8ONp2c@z>
-
-
-
-On 3/29/2024 6:23 PM, Dmitry Baryshkov wrote:
-> On Fri, 29 Mar 2024 at 09:20, Krishna Kurapati
-> <quic_kriskura@quicinc.com> wrote:
->>
->> QDU1000 IDP [1] has a Type-c connector and supports USB 3.0.
->> However it relies on usb-conn-gpio driver to read the vbus and id
->> gpio's and provide role switch. However the driver currently has
->> only gpio-b-connector compatible present in ID table. Adding that
->> in DT would mean that the device supports Type-B connector and not
->> Type-c connector. Thanks to Dmitry Baryshkov for pointing it out [2].
-> 
-> USB-B connector is pretty simple, it really has just an ID pin and
-> VBUS input, which translates to two GPIOs being routed from the
-> _connector_ itself.
-> 
-> USB-C is much more complicated, it has two CC pins and a VBus power
-> pin. It is not enough just to measure CC pin levels. Moreover,
-> properly handling USB 3.0 inside a USB-C connector requires a separate
-> 'orientation' signal to tell the host which two lanes must be used for
-> the USB SS signals. Thus it is no longer possible to route just two
-> pins from the connector to the SoC.
-> 
-> Having all that in mind, I suspect that you are not describing your
-> hardware properly. I suppose that you have a Type-C port controller /
-> redriver / switch, which handles CC lines communication and then
-> provides ID / VBUS signals to the host. In such a case, please
-> describe this TCPC in the DT file and use its compatible string
-> instead of "gpio-c-connector".
-> 
-
-Hi Dmitry,
-
-  My bad. I must have provided more details of the HW.
-
-  I presume you are referring to addition of a connector node, type-c 
-switch, pmic-glink and other remote endpoints like in other SoC's like 
-SM8450/ SM8550/ SM8650.
-
-  This HW is slightly different. It has a Uni Phy for Super speed and 
-hence no DP.
-
-  For orientation switching, on mobile SoC's, there is a provision for 
-orientation gpio given in pmic-glink node and is handled in ucsi_glink 
-driver. But on this version of HW, there is a USB-C Switch with its own 
-firmware taking care of orientation switching. It takes 8 SS Lines and 2 
-CC lines coming from connector as input and gives out 4 SS Lines (SS 
-TX1/TX2 RX1/RX2) as output which go to the SoC. So orientation switch is 
-done by the USB-C-switch in between and it automatically routes 
-appropriate active SS Lane from connector to the SoC.
-
-  As usual like in other targets, the DP and DM lines from type-c 
-connector go to the SoC directly.
-
-  To handle role switch, the VBUS and ID Pin connections are given to 
-SoC as well. There is a vbus controller regulator present to provide 
-vbus to connected peripherals in host mode.
-
-  There is no PPM entity (ADSP in mobile SoC's) and no UCSI involved 
-here. Hence we rely on usb-conn-gpio to read the vbus/id and switch 
-roles accordingly.
-
-  Hope this answers the query as to why we wanted to use usb-conn-gpio 
-and why we were trying to add a new compatible.
-
-Regards,
-Krishna,
-
->>
->> This series intends to add that compatible in driver and bindings
->> so that it can be used in QDU1000 IDP DT.
->>
->> [1]: https://lore.kernel.org/all/20240319091020.15137-3-quic_kbajaj@quicinc.com/
->> [2]: https://lore.kernel.org/all/CAA8EJprXPvji8TgZu1idH7y4GtHtD4VmQABFBcRt-9BQaCberg@mail.gmail.com/
->>
->> Krishna Kurapati (2):
->>    dt-bindings: connector: Add gpio-usb-c-connector compatible
->>    usb: common: usb-conn-gpio: Update ID table to add usb-c connector
->>
->>   Documentation/devicetree/bindings/connector/usb-connector.yaml | 3 +++
->>   drivers/usb/common/usb-conn-gpio.c                             | 1 +
->>   2 files changed, 4 insertions(+)
->>
->> --
->> 2.34.1
->>
-> 
-> 
-> --
-> With best wishes
-> Dmitry
-
-X-sender: <linux-kernel+bounces-125641-steffen.klassert=secunet.com@vger.kernel.org>
+ 15.1.2507.17; Sun, 31 Mar 2024 16:36:43 +0000
+X-sender: <linux-kernel+bounces-125479-steffen.klassert=secunet.com@vger.kernel.org>
 X-Receiver: <steffen.klassert@secunet.com> ORCPT=rfc822;steffen.klassert@secunet.com
 X-CreatedBy: MSExchange15
-X-HeloDomain: mbx-essen-01.secunet.de
-X-ExtendedProps: BQBjAAoAv4OmlidQ3AgFADcAAgAADwA8AAAATWljcm9zb2Z0LkV4Y2hhbmdlLlRyYW5zcG9ydC5NYWlsUmVjaXBpZW50Lk9yZ2FuaXphdGlvblNjb3BlEQAAAAAAAAAAAAAAAAAAAAAADwA/AAAATWljcm9zb2Z0LkV4Y2hhbmdlLlRyYW5zcG9ydC5EaXJlY3RvcnlEYXRhLk1haWxEZWxpdmVyeVByaW9yaXR5DwADAAAATG93
+X-HeloDomain: mbx-dresden-01.secunet.de
+X-ExtendedProps: BQBjAAoALkmmlidQ3AgFADcAAgAADwA8AAAATWljcm9zb2Z0LkV4Y2hhbmdlLlRyYW5zcG9ydC5NYWlsUmVjaXBpZW50Lk9yZ2FuaXphdGlvblNjb3BlEQAAAAAAAAAAAAAAAAAAAAAADwA/AAAATWljcm9zb2Z0LkV4Y2hhbmdlLlRyYW5zcG9ydC5EaXJlY3RvcnlEYXRhLk1haWxEZWxpdmVyeVByaW9yaXR5DwADAAAATG93
 X-Source: SMTP:Default MBX-ESSEN-02
-X-SourceIPAddress: 10.53.40.197
-X-EndOfInjectedXHeaders: 13255
-Received: from mbx-essen-01.secunet.de (10.53.40.197) by
- mbx-essen-02.secunet.de (10.53.40.198) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.37; Sat, 30 Mar 2024 10:14:29 +0100
-Received: from a.mx.secunet.com (62.96.220.36) by cas-essen-01.secunet.de
- (10.53.40.201) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Sat, 30 Mar 2024 10:14:28 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by a.mx.secunet.com (Postfix) with ESMTP id E63DC205ED
-	for <steffen.klassert@secunet.com>; Sat, 30 Mar 2024 10:14:28 +0100 (CET)
+X-SourceIPAddress: 10.53.40.199
+X-EndOfInjectedXHeaders: 21628
 X-Virus-Scanned: by secunet
-X-Spam-Flag: NO
-X-Spam-Score: -2.751
-X-Spam-Level:
-X-Spam-Status: No, score=-2.751 tagged_above=-999 required=2.1
-	tests=[BAYES_00=-1.9, DKIM_SIGNED=0.1, DKIM_VALID=-0.1,
-	DKIM_VALID_AU=-0.1, HEADER_FROM_DIFFERENT_DOMAINS=0.249,
-	MAILING_LIST_MULTI=-1, RCVD_IN_DNSWL_NONE=-0.0001,
-	SPF_HELO_NONE=0.001, SPF_PASS=-0.001] autolearn=ham autolearn_force=no
-Authentication-Results: a.mx.secunet.com (amavisd-new);
-	dkim=pass (2048-bit key) header.d=quicinc.com
-Received: from a.mx.secunet.com ([127.0.0.1])
-	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id QTXNbJLHTTqf for <steffen.klassert@secunet.com>;
-	Sat, 30 Mar 2024 10:14:25 +0100 (CET)
-Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=147.75.48.161; helo=sy.mirrors.kernel.org; envelope-from=linux-kernel+bounces-125641-steffen.klassert=secunet.com@vger.kernel.org; receiver=steffen.klassert@secunet.com 
-DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 7EFFC200BC
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by a.mx.secunet.com (Postfix) with ESMTPS id 7EFFC200BC
-	for <steffen.klassert@secunet.com>; Sat, 30 Mar 2024 10:14:24 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2E047B21C48
-	for <steffen.klassert@secunet.com>; Sat, 30 Mar 2024 09:14:21 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2115610782;
-	Sat, 30 Mar 2024 09:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Dr+wzPEV"
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F04F9FF;
-	Sat, 30 Mar 2024 09:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711790030; cv=none; b=lXU7Ekz5ncEDY/O9Boxjk5W+HMOOIeuSlYhhKi0CBZ/qUPspQ6Olg6S1qxV01F6VpVfqpKXOjrPe2Z8z7TFdsQlZXBRmwUkDtFdBlBvmasbPLpNDSdZ2YaeSuLkpWruig/HewhILtxGlhwVA3FWgdXK+pKVdSaek6zpCLqFzqhM=
-ARC-Message-Signature: i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711790030; c=relaxed/simple;
-	bh=zZiTRe3m3NLbb+/Qp3yvgOHwujhfgKPzWdst81UulPs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=AMVPkQvKsvsggWlW2CXCR3/fJ8JDxZVGvlQ+uI3gMzYJx0cgJieHXKtCyJhx8DIgKz2I6NJcfqSkXX/cLd+lNtKDc0ulcDcP7hKb8701hkd1v3sYeB2zC3pOuZjAs8SXPxjDDCR5nl2cCijUt/VrjzdrY8Pu+y6/5LfYcG5zJ4c=
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Dr+wzPEV; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42U8lmLF013098;
-	Sat, 30 Mar 2024 09:13:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=FhEb9K/BxdRk2okMHgeAtJuKVJhrSJebpoCQp1OmvdQ=; b=Dr
-	+wzPEVwH7l3fpu5u9f0GQkCoTKNTSvm9ud24uR2CqFOkLT4jY/d1iNvdwK/gfikA
-	MVhUZA/vXCcPd4tqHknfRWldfxOHAqyiz5eHDY6o9ua2iLkpneM0VwUkFef4KtIy
-	U76UI5UQbdeDzKGxOMkDfKlOTNJF+2pAlDraJK+JPGlm7wz72lr+WCKpAiJnevvd
-	AsZZeF9BI0+wrycErZrjVIPFubolxEwYTO2hFV1YfbVds5kmhSLIc/DAHr3IEz6o
-	OvuEROLpFpa9K8qKLd1ckvoNCx3cPtZcgvR3dija5av+XnoW/vg93pm/vQbx4a36
-	JZq1TgXVwPzht7KwoTIw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x683s0vc1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 30 Mar 2024 09:13:18 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42U9DHR2016503
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 30 Mar 2024 09:13:17 GMT
-Received: from [10.216.59.24] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Sat, 30 Mar
- 2024 02:13:11 -0700
-Message-ID: <6f2df222-36d4-468e-99a7-9c48fae85aa9@quicinc.com>
-Date: Sat, 30 Mar 2024 14:43:07 +0530
+Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=147.75.48.161; helo=sy.mirrors.kernel.org; envelope-from=linux-kernel+bounces-125479-steffen.klassert=secunet.com@vger.kernel.org; receiver=steffen.klassert@secunet.com 
+DKIM-Filter: OpenDKIM Filter v2.11.0 b.mx.secunet.com D68E5200BB
+Authentication-Results: b.mx.secunet.com;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="QMl5bUwl"
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.95
+ARC-Seal: i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711752070; cv=fail; b=iT73yaJATXPF6TexZMUEAV2/sxEWzNiLK5TUnvPX0Cy2E14qbaNwPyBNeqaglJ//Jx+6uFKjnxeQq+z+nMgdQg7F1U37PDX1ZUB+DIlOCzOGWxC06t1YWT90Ew/eW+Rh3ApI8I72qztLjrFodKVarmzb+wwckGDk0XXy7Qh/CJs=
+ARC-Message-Signature: i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711752070; c=relaxed/simple;
+	bh=+qwRVQtAUFwc+mzfaMAXarOygq0dR3IZtuet68K/Fyc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=G29ZIU+yv38ZuTtXNi+N8C9Zhwjmp44eIvzsKJgCft7KwIkeThqwQKY9NS8L4PwEr46ODNkpxKhj/5OKv8BT1YCNoJfs/awO/a9KJkRV+vJZaAlNqOJlgGXBdjfLBdz3f3I2QS98P/ZBr6R+qHJydYb7baxyGFy6LT11pI9R0o0=
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=QMl5bUwl; arc=fail smtp.client-ip=40.107.237.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BkkM76oyZTz2Q2LpBR6pBvhemX3+VK0fBLimXRngfvWCLdPfuoYo/vDDc9RbYD4UJCpFX6s1jEACDTyMlHtRFRtONzRJPjfA5pmccOwplO8CEa6s0ovxM9Hl35Er48H48WBDOpZd1uPtQB3DDta7kBsPc3EIceVFUm/Gm1wTOx55QotP37QBX1KD8mX4WMa0LZynfQjnkStLhLnWXcdQwsSPer6kiUjqteQovSGXfh7YMRVKbeMRw21NQro0Qy+gQ/LA6DPgby5/cQICN4eDyYN95UrX4YKucYI2oBsPICG3c8q8kvw9fCtKbZwnr1grISQQtUC1KNVzYdiMagOGFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lm2yVCaf9RoiDruxpEx206c6phucY5FX3RMdmFeXZ9k=;
+ b=RDOAGF7+Ik4xDCrKfFjYUaCEgFCp8rPLEoyGEJGfpLOXNIa7YWeEWzZ1VotCI/ZUgTSOVN6QiqcPcDBe5GBx9DmXLKN4YMa19/hFyoPmXJz6oq65UWNMaTUYLl0AXj/clPXTRfxyopcl4hYjwIcO71g4dftgFJvWksN77W1OGtqxvf8pbLNnC0Zgx3QmEOw2m5F4R8LYVLl/bBFar8vjgNGERX4KUT1jJPql2hneEZv8TzpArkgEtYh2C0+YAbEHtbkVjmyx76VGDNFvy3BkIlL1Pl871ZsykDD0NONy0TJd+zaD5o2zx4yCgWb8Y8juLnwrKvehR4dlgdslxCuzqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lm2yVCaf9RoiDruxpEx206c6phucY5FX3RMdmFeXZ9k=;
+ b=QMl5bUwlMCq6WdH4tCDHxZVKXNBku4/gXeVQ0tOLa0L6+pc48BPHNHT7qZrod8KvPGtXue3FRb7oTQXlMpourqiZouj8qHTvXYQHCn2cmmywW2ROkv52VRi3CV/u471+HApu4l8pEYs1PhJ1Ycjjvse/PRcpKPKO/VLPR5Dq27w=
+Message-ID: <8d543a15-af62-4403-b2e0-3b395edfe9e4@amd.com>
+Date: Fri, 29 Mar 2024 17:38:52 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 04/15] x86: Secure Launch Resource Table header file
+To: Ross Philipson <ross.philipson@oracle.com>,
+	<linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+	<linux-integrity@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-crypto@vger.kernel.org>, <kexec@lists.infradead.org>,
+	<linux-efi@vger.kernel.org>
+CC: <dpsmith@apertussolutions.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<bp@alien8.de>, <hpa@zytor.com>, <dave.hansen@linux.intel.com>,
+	<ardb@kernel.org>, <mjg59@srcf.ucam.org>,
+	<James.Bottomley@hansenpartnership.com>, <peterhuewe@gmx.de>,
+	<jarkko@kernel.org>, <jgg@ziepe.ca>, <luto@amacapital.net>,
+	<nivedita@alum.mit.edu>, <herbert@gondor.apana.org.au>,
+	<davem@davemloft.net>, <kanth.ghatraju@oracle.com>,
+	<trenchboot-devel@googlegroups.com>
+References: <20240214221847.2066632-1-ross.philipson@oracle.com>
+ <20240214221847.2066632-5-ross.philipson@oracle.com>
+Content-Language: en-US
+From: Kim Phillips <kim.phillips@amd.com>
+Organization: AMD
+In-Reply-To: <20240214221847.2066632-5-ross.philipson@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN1PR12CA0079.namprd12.prod.outlook.com
+ (2603:10b6:802:21::14) To DS7PR12MB6263.namprd12.prod.outlook.com
+ (2603:10b6:8:95::17)
+Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/2] Add gpio-usb-c-connector compatible
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Miquel
- Raynal" <miquel.raynal@bootlin.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "Bjorn Helgaas" <bhelgaas@google.com>, Kyle Tso <kyletso@google.com>,
-        Fabrice
- Gasnier <fabrice.gasnier@foss.st.com>,
-        Heikki Krogerus
-	<heikki.krogerus@linux.intel.com>,
-        <u.kleine-koenig@pengutronix.de>,
-        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-        <devicetree@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_ppratap@quicinc.com>,
-        <quic_jackp@quicinc.com>
-References: <20240329071948.3101882-1-quic_kriskura@quicinc.com>
- <CAA8EJpqx+VFW8z6oG=+pnhPN97Q3R6z+ygf85Uspve-9syQsUw@mail.gmail.com>
-Content-Language: en-US
-From: Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>
-In-Reply-To: <CAA8EJpqx+VFW8z6oG=+pnhPN97Q3R6z+ygf85Uspve-9syQsUw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: w9l_gJ3vqg3mZzBvIWmjhsf3kITwbXlG
-X-Proofpoint-ORIG-GUID: w9l_gJ3vqg3mZzBvIWmjhsf3kITwbXlG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-30_05,2024-03-28_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 adultscore=0 impostorscore=0 spamscore=0 suspectscore=0
- lowpriorityscore=0 mlxlogscore=999 clxscore=1015 phishscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2403210001 definitions=main-2403300075
-Return-Path: linux-kernel+bounces-125641-steffen.klassert=secunet.com@vger.kernel.org
-X-MS-Exchange-Organization-OriginalArrivalTime: 30 Mar 2024 09:14:28.9673
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB6263:EE_|SJ1PR12MB6217:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Hkl8K+NUU2xWpYzCX8iWlZCRIWfimJSM5pZ+gyjCjEOSL9P3Rn9yyjmZPpvXl3BxjwRv/Cuh5ARzlvVKIDJQNknQ+d9K98CwpJ6AG1WgKw8W/W1P4HYReUgaauK+aeb3mU2y61lAnHTQ3UutFp9RR5La01iCOkdNx7tX7tHj64Xn2m0lZdu4aahAw7jDi8kiVarGCtHi1SYN93JWcJeGfur9hrKFPBXEq5qyZe2qrUjzW1RBkE0EU1dA20+IEQacqFdX2s9hq/KatEZz5elGbJ2HvS67b239PYcUDEuXxQD7QK3UMILH8ejMlh2k2rRZmnLykNRbEuw7fCSlAT1OwinM80debtnCjVK+99ISveNjFJ0rqFqcc7Z1SKr49EbuiI/pSO2qOrPXjIoMi0LOM38OU4IDG+QzFFHpfVfu85RQg4dvDdMW2HpVnpQzwlwK5OAJhZ/ox3f/OhAizj7rmhbmSY527shjIkG3d6wbLA7LKaUdzB/8JZPGalCjvDkLwH1OmNE8fsgsIy/RSZpf127efi7ROacRLZCh6SJPGWdyuT4UkObzNajAtVe7PDGRWLhPpXCpCYFawvQEJIX0VT3//a/59t0c7N7YZghjEOrjaxif3qE6/rjtvCOKfdwGKU9p5gNTL1MSzSYO/V1ZmMdyRHtgaN+HY7oYjlH9QKA=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6263.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(376005)(1800799015);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WHlDbnV5TnB2SlVNYjVRbUlLRUh0eEVBZkkxMlg5dmMvRDJLRGZ6cXV3Qngr?=
+ =?utf-8?B?aWhIdTNkVHUwQThydWlDU081WGd5TUF5U2ZoamVIcWx4UHJxTVJzLzNXd0xw?=
+ =?utf-8?B?MmdVUkx4OFJRNW9TUllwOXY1WlZIcDdubEwzWmY5WlZ6WUpOK0RlRE9ocjhD?=
+ =?utf-8?B?K0RhWll1eHlLOE0vMVhHNU5pVTlDUkZCK04xemlheFZGbDVONlVodmZvVjg4?=
+ =?utf-8?B?UEZRS09TYkUzN0hIL0hidVBjdjV6RWYwZE1oT1VPVGJmd2Q2bGZmaHMzdUlx?=
+ =?utf-8?B?V1d2UUxYNzRlTkliMTVqd3B1VldjOGJVTDZxZG5KNC9yUk5KSXFYSGlXSUNH?=
+ =?utf-8?B?anFvN21Xam5zYjZqeEZlc2NaQkJZV0hWOTVzT1ZMaUppejdNYlErNWlyM00y?=
+ =?utf-8?B?dE9BU0x6dUpycWUxUERQTTA0cEF4bzEwczIyYzFaT05GV3NHS1d3SHo4aExQ?=
+ =?utf-8?B?TG5CSkNJTS9URC94YlAxbHRkRW5oSXRpZENrQnJ6V0RrbTBBU0RDSmY4N2dm?=
+ =?utf-8?B?RkQwN3dtK3M4V3JYdlFVM2RSdFJja3NEVFQ4ZTMvTFZvMm9KcisxZk83QVJU?=
+ =?utf-8?B?b1NQOG5naURkeWNjeFlwaWtObytydytpT0xpMDlZd2V4cnpVNHR0OVlETmtn?=
+ =?utf-8?B?TDhETUxicVJSTW1OdUpiQ1BCZ2FMUVczUFhDSW1UeXNZbnR6ZDVBS0NtM0JH?=
+ =?utf-8?B?MzFUeGt5SUM2YnRwOXp2WDI2WW93TEdoMytIS1RyN2N1QXk0RitHaWtIZXZw?=
+ =?utf-8?B?QTRLcVZzUlFtRG1JSE56VFhjY2dFZEhuUDUvK0pOeC9vYVpVaUN0YTh5Nm9E?=
+ =?utf-8?B?RUs5TDQyWTc2RmlDM0NkTks2ZTZIU1ZWMFNER05XOGh0amxYbTRZUjhlWlcy?=
+ =?utf-8?B?aWh4eDZlMGNETTRSVFF4dU5BMDJZMW9hdk9NZzhVdDNtck9ncWdGYWNyaDJl?=
+ =?utf-8?B?ZXlIY0V0V05ibHBBTnAwOTVNQmFrai9KNDFyUlA5bzhPQ1ptT2UyL3dIUk4w?=
+ =?utf-8?B?WWhxa01Mb21pTk5iQ3NvMmxvSHBqald4dng2WXdkTUZEenptUTNVenV6VFVa?=
+ =?utf-8?B?M3NkM2RTRS9tTEFEZFVxdHpQMVc5RlpncnhZRnB0SXJNUmlLRTFZQlA3Z1BQ?=
+ =?utf-8?B?ZnF3UDN0Um1NR0h2cVZGdWIwUTEvdjkyVEUrSCswL01PdTZWSEhpeG1EKzBt?=
+ =?utf-8?B?UGtBY1lhckVQaWhRK0dZSVpuMXlnMmtxSHAyZ0p0bzdyakJHQzlWNjVyalY4?=
+ =?utf-8?B?Nk1rUzc2Z0cydFl4elJnOEJreEhKY1dYd2h2R1R1djJzc0FEUVU2U05UYzhM?=
+ =?utf-8?B?UG1pKzRiK2RLNHIzbFA1aGJGaDlRanVZZlFIVkViVzZlMWFpcFUvZ0t5UVlO?=
+ =?utf-8?B?ZnBwcW1qQ0RRK0tHcTdFQjM2d2t6MWxYajJtYkNjSlQwODFHSWhTcUhwOENP?=
+ =?utf-8?B?Q1VGc2VvNWd0cjYwd0p5VXl4bmFsRFBrOTYrellCOG4yWkNrTi9YdkNlVUpp?=
+ =?utf-8?B?ZS9Dekp2KzB4ak4rQktURzNpT0FkaC82bFlxK1F1VjV4QTdyajh4Qlp3UGd0?=
+ =?utf-8?B?MWIvUEtydWhzS0VBMExSY1AvZDkvYzNyOGVudUNITExPcHI4RERSUHh0RHBT?=
+ =?utf-8?B?Y2MvSjBBclFXNnNDZ0g5QjhSRTJTb1gvOUxkRFczRWpMc29iQWF3QzN0Rzcv?=
+ =?utf-8?B?OXdFa2N2OEFaOU84eXZMZ1pOTUljM0tpbDJKOWxsR1h1OE1pRWpTeTMxVU42?=
+ =?utf-8?B?RmRwRnhydzVCTEl6a2ZIWmxkTzBSUjBnbDRtbXZVSTVKT0crK1huN1dLMTFu?=
+ =?utf-8?B?ZEo4UzlaRmErOFRDUVNTWVQybUhGelhhNjdwZTM0c0NGeDF0ZVdBZmgrWDd5?=
+ =?utf-8?B?ZnRKNXpsSTR0NkdZZkxPTWRRTmFJRGRyc0oxT1hOVWJpR3hRM0FzSS8vS0Fi?=
+ =?utf-8?B?RzJiZ2xCUTM4dmcrWWJ5NG1xZCtTOXRKNVFXWm1GREZGdlJYbkh4M3c2ckk5?=
+ =?utf-8?B?MGxIQnJuYXJpbmQ5THFCTjZqUzkyTEtpbjF0K3hvdk5teWVNMXJJbHNoLzdN?=
+ =?utf-8?B?ZnFvU0t0YVlnUnJuUzBDVUVWZ3JKWFZGQVFUQVF3NFAyeVlyaEFNRTdxcll4?=
+ =?utf-8?Q?zvdhYQzh59VITtzKjJgRMSRq2?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5fcf4d61-e37a-4595-254c-08dc50414fbf
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6263.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2024 22:41:02.2410
  (UTC)
-X-MS-Exchange-Organization-Network-Message-Id: 6663fb99-680d-4c2f-5ad7-08dc5099cd9e
-X-MS-Exchange-Organization-OriginalClientIPAddress: 62.96.220.36
-X-MS-Exchange-Organization-OriginalServerIPAddress: 10.53.40.201
-X-MS-Exchange-Organization-Cross-Premises-Headers-Processed: cas-essen-01.secunet.de
-X-MS-Exchange-Organization-OrderedPrecisionLatencyInProgress: LSRV=cas-essen-01.secunet.de:TOTAL-FE=0.010|SMR=0.010(SMRPI=0.007(SMRPI-FrontendProxyAgent=0.007));2024-03-30T09:14:28.977Z
-X-MS-Exchange-Forest-ArrivalHubServer: mbx-essen-02.secunet.de
-X-MS-Exchange-Organization-AuthSource: cas-essen-01.secunet.de
-X-MS-Exchange-Organization-AuthAs: Anonymous
-X-MS-Exchange-Organization-OriginalSize: 12710
-X-MS-Exchange-Organization-Transport-Properties: DeliveryPriority=Low
-X-MS-Exchange-Organization-Prioritization: 2:ShadowRedundancy
-X-MS-Exchange-Organization-IncludeInSla: False:ShadowRedundancy
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ilGgkrAbN/QGxCRDsFAVzxGCrnuii09s15bGN/0TY5T4fJ/decyRW+CsMzueQ3DxrQoL7F9fC4wqSyBOwuyPuw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6217
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+Message-ID: <20240329223852.ps00pHsYVjQR9XKZ-t5ue0_FvCAGwYfNFyHpKucgyN8@z>
 
+Hi Ross,
 
-
-On 3/29/2024 6:23 PM, Dmitry Baryshkov wrote:
-> On Fri, 29 Mar 2024 at 09:20, Krishna Kurapati
-> <quic_kriskura@quicinc.com> wrote:
->>
->> QDU1000 IDP [1] has a Type-c connector and supports USB 3.0.
->> However it relies on usb-conn-gpio driver to read the vbus and id
->> gpio's and provide role switch. However the driver currently has
->> only gpio-b-connector compatible present in ID table. Adding that
->> in DT would mean that the device supports Type-B connector and not
->> Type-c connector. Thanks to Dmitry Baryshkov for pointing it out [2].
+On 2/14/24 4:18 PM, Ross Philipson wrote:
+> Introduce the Secure Launch Resource Table which forms the formal
+> interface between the pre and post launch code.
 > 
-> USB-B connector is pretty simple, it really has just an ID pin and
-> VBUS input, which translates to two GPIOs being routed from the
-> _connector_ itself.
-> 
-> USB-C is much more complicated, it has two CC pins and a VBus power
-> pin. It is not enough just to measure CC pin levels. Moreover,
-> properly handling USB 3.0 inside a USB-C connector requires a separate
-> 'orientation' signal to tell the host which two lanes must be used for
-> the USB SS signals. Thus it is no longer possible to route just two
-> pins from the connector to the SoC.
-> 
-> Having all that in mind, I suspect that you are not describing your
-> hardware properly. I suppose that you have a Type-C port controller /
-> redriver / switch, which handles CC lines communication and then
-> provides ID / VBUS signals to the host. In such a case, please
-> describe this TCPC in the DT file and use its compatible string
-> instead of "gpio-c-connector".
-> 
+> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+> ---
+>   include/linux/slr_table.h | 270 ++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 270 insertions(+)
+>   create mode 100644 include/linux/slr_table.h
 
-Hi Dmitry,
+> diff --git a/include/linux/slr_table.h b/include/linux/slr_table.h
+> new file mode 100644
+> index 000000000000..42020988233a
+> --- /dev/null
+> +++ b/include/linux/slr_table.h
+> @@ -0,0 +1,270 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Secure Launch Resource Table
+> + *
+> + * Copyright (c) 2023, Oracle and/or its affiliates.
+> + */
+> +
+> +#ifndef _LINUX_SLR_TABLE_H
+> +#define _LINUX_SLR_TABLE_H
+> +
+> +/* Put this in efi.h if it becomes a standard */
+> +#define SLR_TABLE_GUID				EFI_GUID(0x877a9b2a, 0x0385, 0x45d1, 0xa0, 0x34, 0x9d, 0xac, 0x9c, 0x9e, 0x56, 0x5f)
+> +
+> +/* SLR table header values */
+> +#define SLR_TABLE_MAGIC		0x4452544d
+> +#define SLR_TABLE_REVISION	1
+> +
+> +/* Current revisions for the policy and UEFI config */
+> +#define SLR_POLICY_REVISION		1
+> +#define SLR_UEFI_CONFIG_REVISION	1
+> +
+> +/* SLR defined architectures */
+> +#define SLR_INTEL_TXT		1
+> +#define SLR_AMD_SKINIT		2
+> +
+> +/* SLR defined bootloaders */
+> +#define SLR_BOOTLOADER_INVALID	0
+> +#define SLR_BOOTLOADER_GRUB	1
+> +
+> +/* Log formats */
+> +#define SLR_DRTM_TPM12_LOG	1
+> +#define SLR_DRTM_TPM20_LOG	2
+> +
+> +/* DRTM Policy Entry Flags */
+> +#define SLR_POLICY_FLAG_MEASURED	0x1
+> +#define SLR_POLICY_IMPLICIT_SIZE	0x2
+> +
+> +/* Array Lengths */
+> +#define TPM_EVENT_INFO_LENGTH		32
+> +#define TXT_VARIABLE_MTRRS_LENGTH	32
+> +
+> +/* Tags */
+> +#define SLR_ENTRY_INVALID	0x0000
+> +#define SLR_ENTRY_DL_INFO	0x0001
+> +#define SLR_ENTRY_LOG_INFO	0x0002
+> +#define SLR_ENTRY_ENTRY_POLICY	0x0003
+> +#define SLR_ENTRY_INTEL_INFO	0x0004
+> +#define SLR_ENTRY_AMD_INFO	0x0005
+> +#define SLR_ENTRY_ARM_INFO	0x0006
+> +#define SLR_ENTRY_UEFI_INFO	0x0007
+> +#define SLR_ENTRY_UEFI_CONFIG	0x0008
+> +#define SLR_ENTRY_END		0xffff
+> +
+> +/* Entity Types */
+> +#define SLR_ET_UNSPECIFIED	0x0000
+> +#define SLR_ET_SLRT		0x0001
+> +#define SLR_ET_BOOT_PARAMS	0x0002
+> +#define SLR_ET_SETUP_DATA	0x0003
+> +#define SLR_ET_CMDLINE		0x0004
+> +#define SLR_ET_UEFI_MEMMAP	0x0005
+> +#define SLR_ET_RAMDISK		0x0006
+> +#define SLR_ET_TXT_OS2MLE	0x0010
+> +#define SLR_ET_UNUSED		0xffff
+> +
+> +#ifndef __ASSEMBLY__
+> +
+> +/*
+> + * Primary SLR Table Header
+> + */
+> +struct slr_table {
+> +	u32 magic;
+> +	u16 revision;
+> +	u16 architecture;
+> +	u32 size;
+> +	u32 max_size;
 
-  My bad. I must have provided more details of the HW.
+Do these need to have their endianness specified with, e.g., __le32?
 
-  I presume you are referring to addition of a connector node, type-c 
-switch, pmic-glink and other remote endpoints like in other SoC's like 
-SM8450/ SM8550/ SM8650.
+> +	/* entries[] */
 
-  This HW is slightly different. It has a Uni Phy for Super speed and 
-hence no DP.
+Instead of the above line, a legit 'entries' can be enabled using:
 
-  For orientation switching, on mobile SoC's, there is a provision for 
-orientation gpio given in pmic-glink node and is handled in ucsi_glink 
-driver. But on this version of HW, there is a USB-C Switch with its own 
-firmware taking care of orientation switching. It takes 8 SS Lines and 2 
-CC lines coming from connector as input and gives out 4 SS Lines (SS 
-TX1/TX2 RX1/RX2) as output which go to the SoC. So orientation switch is 
-done by the USB-C-switch in between and it automatically routes 
-appropriate active SS Lane from connector to the SoC.
+DECLARE_FLEX_ARRAY(struct slr_entry_hdr, entries);
 
-  As usual like in other targets, the DP and DM lines from type-c 
-connector go to the SoC directly.
+> +} __packed;
 
-  To handle role switch, the VBUS and ID Pin connections are given to 
-SoC as well. There is a vbus controller regulator present to provide 
-vbus to connected peripherals in host mode.
+You'd have to move this above struct slr_table which would need it:
 
-  There is no PPM entity (ADSP in mobile SoC's) and no UCSI involved 
-here. Hence we rely on usb-conn-gpio to read the vbus/id and switch 
-roles accordingly.
+> +/*
+> + * Common SLRT Table Header
+> + */
+> +struct slr_entry_hdr {
+> +	u16 tag;
+> +	u16 size;
+> +} __packed;
+> +
+> +/*
+> + * Boot loader context
+> + */
+> +struct slr_bl_context {
+> +	u16 bootloader;
+> +	u16 reserved;
+> +	u64 context;
+> +} __packed;
+> +
+> +/*
+> + * DRTM Dynamic Launch Configuration
+> + */
+> +struct slr_entry_dl_info {
+> +	struct slr_entry_hdr hdr;
+> +	struct slr_bl_context bl_context;
+> +	u64 dl_handler;
+> +	u64 dce_base;
+> +	u32 dce_size;
+> +	u64 dlme_entry;
+> +} __packed;
+> +
+> +/*
+> + * TPM Log Information
+> + */
+> +struct slr_entry_log_info {
+> +	struct slr_entry_hdr hdr;
+> +	u16 format;
+> +	u16 reserved;
+> +	u64 addr;
+> +	u32 size;
+> +} __packed;
+> +
+> +/*
+> + * DRTM Measurement Policy
+> + */
+> +struct slr_entry_policy {
+> +	struct slr_entry_hdr hdr;
+> +	u16 revision;
+> +	u16 nr_entries;
+> +	/* policy_entries[] */
+> +} __packed;
+> +
+> +/*
+> + * DRTM Measurement Entry
+> + */
+> +struct slr_policy_entry {
+> +	u16 pcr;
+> +	u16 entity_type;
+> +	u16 flags;
+> +	u16 reserved;
+> +	u64 entity;
+> +	u64 size;
+> +	char evt_info[TPM_EVENT_INFO_LENGTH];
+> +} __packed;
+> +
+> +/*
+> + * Secure Launch defined MTRR saving structures
+> + */
+> +struct slr_txt_mtrr_pair {
+> +	u64 mtrr_physbase;
+> +	u64 mtrr_physmask;
+> +} __packed;
+> +
+> +struct slr_txt_mtrr_state {
+> +	u64 default_mem_type;
+> +	u64 mtrr_vcnt;
+> +	struct slr_txt_mtrr_pair mtrr_pair[TXT_VARIABLE_MTRRS_LENGTH];
+> +} __packed;
+> +
+> +/*
+> + * Intel TXT Info table
+> + */
+> +struct slr_entry_intel_info {
+> +	struct slr_entry_hdr hdr;
+> +	u64 saved_misc_enable_msr;
+> +	struct slr_txt_mtrr_state saved_bsp_mtrrs;
+> +} __packed;
+> +
+> +/*
+> + * AMD SKINIT Info table
+> + */
+> +struct slr_entry_amd_info {
+> +	struct slr_entry_hdr hdr;
+> +} __packed;
+> +
+> +/*
+> + * ARM DRTM Info table
+> + */
+> +struct slr_entry_arm_info {
+> +	struct slr_entry_hdr hdr;
+> +} __packed;
 
-  Hope this answers the query as to why we wanted to use usb-conn-gpio 
-and why we were trying to add a new compatible.
+Shouldn't these three structs be added as part of their
+separate per-vendor enablement patches?
 
-Regards,
-Krishna,
+> +struct slr_entry_uefi_config {
+> +	struct slr_entry_hdr hdr;
+> +	u16 revision;
+> +	u16 nr_entries;
+> +	/* uefi_cfg_entries[] */
+> +} __packed;
+> +
+> +struct slr_uefi_cfg_entry {
+> +	u16 pcr;
+> +	u16 reserved;
+> +	u64 cfg; /* address or value */
+> +	u32 size;
+> +	char evt_info[TPM_EVENT_INFO_LENGTH];
+> +} __packed;
+> +
+> +static inline void *slr_end_of_entrys(struct slr_table *table)
+> +{
+> +	return (((void *)table) + table->size);
+> +}
+> +
+> +static inline struct slr_entry_hdr *
+> +slr_next_entry(struct slr_table *table,
+> +	       struct slr_entry_hdr *curr)
+> +{
+> +	struct slr_entry_hdr *next = (struct slr_entry_hdr *)
+> +				((u8 *)curr + curr->size);
+> +
+> +	if ((void *)next >= slr_end_of_entrys(table))
+> +		return NULL;
+> +	if (next->tag == SLR_ENTRY_END)
+> +		return NULL;
+> +
+> +	return next;
+> +}
+> +
+> +static inline struct slr_entry_hdr *
+> +slr_next_entry_by_tag(struct slr_table *table,
+> +		      struct slr_entry_hdr *entry,
+> +		      u16 tag)
+> +{
+> +	if (!entry) /* Start from the beginning */
+> +		entry = (struct slr_entry_hdr *)(((u8 *)table) + sizeof(*table));
 
->>
->> This series intends to add that compatible in driver and bindings
->> so that it can be used in QDU1000 IDP DT.
->>
->> [1]: https://lore.kernel.org/all/20240319091020.15137-3-quic_kbajaj@quicinc.com/
->> [2]: https://lore.kernel.org/all/CAA8EJprXPvji8TgZu1idH7y4GtHtD4VmQABFBcRt-9BQaCberg@mail.gmail.com/
->>
->> Krishna Kurapati (2):
->>    dt-bindings: connector: Add gpio-usb-c-connector compatible
->>    usb: common: usb-conn-gpio: Update ID table to add usb-c connector
->>
->>   Documentation/devicetree/bindings/connector/usb-connector.yaml | 3 +++
->>   drivers/usb/common/usb-conn-gpio.c                             | 1 +
->>   2 files changed, 4 insertions(+)
->>
->> --
->> 2.34.1
->>
-> 
-> 
-> --
-> With best wishes
-> Dmitry
+Back to the 'entries', the above line can now be made more readable:
+
+entry = table->entries;
+
+That's just one example, this flex array simplification can be made
+in other structs in this series, too.
+
+Cheers,
+
+Kim
+
+> +
+> +	for ( ; ; ) {
+> +		if (entry->tag == tag)
+> +			return entry;
+> +
+> +		entry = slr_next_entry(table, entry);
+> +		if (!entry)
+> +			return NULL;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +static inline int
+> +slr_add_entry(struct slr_table *table,
+> +	      struct slr_entry_hdr *entry)
+> +{
+> +	struct slr_entry_hdr *end;
+> +
+> +	if ((table->size + entry->size) > table->max_size)
+> +		return -1;
+> +
+> +	memcpy((u8 *)table + table->size - sizeof(*end), entry, entry->size);
+> +	table->size += entry->size;
+> +
+> +	end  = (struct slr_entry_hdr *)((u8 *)table + table->size - sizeof(*end));
+> +	end->tag = SLR_ENTRY_END;
+> +	end->size = sizeof(*end);
+> +
+> +	return 0;
+> +}
+> +
+> +static inline void
+> +slr_init_table(struct slr_table *slrt, u16 architecture, u32 max_size)
+> +{
+> +	struct slr_entry_hdr *end;
+> +
+> +	slrt->magic = SLR_TABLE_MAGIC;
+> +	slrt->revision = SLR_TABLE_REVISION;
+> +	slrt->architecture = architecture;
+> +	slrt->size = sizeof(*slrt) + sizeof(*end);
+> +	slrt->max_size = max_size;
+> +	end = (struct slr_entry_hdr *)((u8 *)slrt + sizeof(*slrt));
+> +	end->tag = SLR_ENTRY_END;
+> +	end->size = sizeof(*end);
+> +}
+> +
+> +#endif /* !__ASSEMBLY */
+> +
+> +#endif /* _LINUX_SLR_TABLE_H */
 
