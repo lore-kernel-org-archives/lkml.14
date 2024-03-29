@@ -1,91 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830AA85644;
-	Fri, 29 Mar 2024 23:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B189196
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 23:57:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711756500; cv=none; b=Sn5EsEj6iku1JlPCEJgWPKiSXqYwTQSllmrdpUCOXpiAJodvqrW7N2FXCYwH5t5y1QXIVJLgQ4SFTNUo3cTKgdbmLpj1rTcFBbmx6zsKW7pumm6KtEfWbj3Q3IYoNTPIlmA4/rICrmEi9QkkemSy/z/rodYPPKSAkaU4GtdYUTY=
+	t=1711756627; cv=none; b=Yhko3qz4CtzsJLab2KeUcFmot0gNh20+haguAzXemj/3y4092cwhqJUfHbzXtNnN9PNcY1TI1VMwUu3YIrQh0RhAwIdln0zaiqEQbBMaNFvM+ePjlErvh3po3QJ76e896AsErWePttlUVKgngFQeLc058qo+x9llgtUNyN4JxD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711756500; c=relaxed/simple;
-	bh=qeoez9ZPUzTd3Q2NKfA2e2k8lx5b8TFJ7Z/BE/D0yCE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DeIsdWQYI1iIS2yeLTK1iZCH25/D0bttRCqaLl406QMz4kJAS552he+Y+WNUELyU77wrOlzif81bcDX4Mr+DP+bhc60wrnvIyHGOXmwXyyJJlEyRc95FLeMjoQW6DYJgRqHc6gSyhIp93nr0McXRH+fhaDVshrrKyqpKLdSZGfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dRBBhENU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711756627; c=relaxed/simple;
+	bh=QQoLyPTSu4GTKIPi2mx8qV2xviu/j5AVh7cDGqQcRf4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=rBovZsukcC6L0PTAtw4BmsdTvMa+BjnX8//tTn2fezughMZ0PGMDzfsGIK+6wkAkr7HqhMIrMhRnyX+wLd717B6EqsbNGJpYiPJUiROGYtmTpux/ot0qS34G3trn2E6dQ9avobbgjep5PpxjDmeK9eopwwVwmFjN5Vv4zJt64Wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BMMFkQnJ; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dRBBhENU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99D6BC433C7;
-	Fri, 29 Mar 2024 23:54:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711756500;
-	bh=qeoez9ZPUzTd3Q2NKfA2e2k8lx5b8TFJ7Z/BE/D0yCE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dRBBhENUyWeK+c09cMAQRqguYXZ1dBOm/LTKAqwzBcauccPYHPByg+R1fipX9gmPh
-	 nWzfgMy/zyKclpTbZJxJBNhipDPNdGozdiS1m+eupU54SnYaq2HJxnwNuKK/1otZXZ
-	 Q7mr7SXYLnPFzLLX9yS3VD7IjHSEIaPqTbscerPbABf2T5WvvWMNsj1zZKHbmp+lwJ
-	 Z22idm+2ThIfkJ1wqVcRd1AY71BJyUJsDPFavEYF4HzNBX4u0PTl97Fl4RSIZ4k37t
-	 JfbGJ5+h1PG//0YTiA7Aal/RKqtxyiEzk6hLUO5auhEB7/4ebbozJsqjm5mQrTFGct
-	 K1FdDXDePepcA==
-Date: Sat, 30 Mar 2024 00:54:56 +0100
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Vinod Koul <vkoul@kernel.org>
-Cc: konrad.dybcio@linaro.org, andersson@kernel.org, wsa@kernel.org, 
-	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>, 
-	quic_vdadhani@quicinc.com, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: Re: [PATCH v4] i2c: i2c-qcom-geni: Parse Error correctly in i2c GSI
- mode
-Message-ID: <mo7d5ayw4gy2lqb6e5o4ijegodx6a5naytatwmoblujftwdjfg@sc4amlo3va7g>
-References: <20240313052639.1747078-1-quic_msavaliy@quicinc.com>
- <171161140136.2698925.4294566764047886777.b4-ty@kernel.org>
- <ZgbwJAb7Ffktf554@matsya>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BMMFkQnJ"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-430bf84977dso13781881cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 16:57:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711756625; x=1712361425; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QQoLyPTSu4GTKIPi2mx8qV2xviu/j5AVh7cDGqQcRf4=;
+        b=BMMFkQnJZyeFcYpgxPDGKet2EXNSaU0GKOvOGecDTEKUTxF0xdLaddN4YxIgPSGn1x
+         x/8ZNAhoHQ8EhZRNf3YFx3yf2HgP9ryh/gciuzmbzGwgxtjcZYouF3LW3jrP+TFzvpCg
+         tW/WA2+zCQFIvqR6LyxDYkwudkVKhjrqCx5Y5RrHdi36Lm4zecZ6NZmxW1QzjiD3qE/C
+         xfNXWSffuQpmlBOXiHJCTFoOaz9C1ItiznSVri9DRv99ITUKz7HrtVYrPFbf2eknrFuY
+         Olu2f8mH8m4FiLWHdWIzJHTVO5x5Tw0iu9ZKUZpGEirhrMvqU8VL6mFJqIaERJxRv9P7
+         T82w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711756625; x=1712361425;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QQoLyPTSu4GTKIPi2mx8qV2xviu/j5AVh7cDGqQcRf4=;
+        b=dcdi91yjzGzv4Zr06RxRRhhy41KjXizENTg9rgzkOfCa/Wlv6C4DNpofS2KIpLJmpp
+         od+uodeAFwF8nnOykVo05aGXTYETdcLpsMtjDuA+3o1Kt1c7ZTvhBW6SAN6Bc6AhmvTd
+         Ntf6QXJRHzmzemcGZOFDdJcC64yHJPia/ihFUiAKk8fEB8fDiq9XV3gY6YALEtewrkoh
+         nxiJC7np3V5uWzouZyhcMVcy7Vyf7IzmJo25tv3ih8TIfxRdWojhTROVmEoZ0u9UBpy/
+         HPm5Jtnc8Ace9gjeF/un6nHxWWVUSc8jFuLvcA0QX0O+hvkUtkz5+MqpTTMiabWJl/As
+         rGrA==
+X-Forwarded-Encrypted: i=1; AJvYcCWbGTPNe0XGY5DIaBwMxuqpjxWPZX+OLes/x41Af2OAlN801vjco88lbUsAxJfZx5UgbN9VP5mSgMCijde17suElkspxZRI0QUw/6m2
+X-Gm-Message-State: AOJu0Yyeq7xzv9VcRsmJc+0h0TlaadXWOPhqCQDZjEULZ1RDa4abG/VZ
+	98WbGS8vxUxK7P95b5IpeaQRYgzFS5eA9r52iQByLetppTI342jDJh/9CF9GdWMbBfkAh6d1uVX
+	L0nNEckgRXFD74HA5IiAsbzJTv1A=
+X-Google-Smtp-Source: AGHT+IHiMMcHdHcmNb0+QRGBXPjiDBSzWOAtrHWyPjOBUgA11i0OJSDjXZ/p+6bAo0f5q5lVLmCOLsPD/z/bai+cP2E=
+X-Received: by 2002:a05:622a:1044:b0:432:c44d:8912 with SMTP id
+ f4-20020a05622a104400b00432c44d8912mr2859042qte.18.1711756625103; Fri, 29 Mar
+ 2024 16:57:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZgbwJAb7Ffktf554@matsya>
+From: Charlemagne Lasse <charlemagnelasse@gmail.com>
+Date: Sat, 30 Mar 2024 00:56:54 +0100
+Message-ID: <CAFGhKbzev7W4aHwhFPWwMZQEHenVgZUj7=aunFieVqZg3mt14A@mail.gmail.com>
+Subject: warning: cast removes address space '__percpu' of expression
+To: x86@kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	Luc Van Oostenryck <lucvoo@kernel.org>
+Cc: Uros Bizjak <ubizjak@gmail.com>, Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Nadav Amit <namit@vmware.com>, Brian Gerst <brgerst@gmail.com>, 
+	Denys Vlasenko <dvlasenk@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Josh Poimboeuf <jpoimboe@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Vinod,
+After switching to linux 6.9-rc1, I get a lot of these errors (when
+compiling with cgcc/sparse):
 
-On Fri, Mar 29, 2024 at 10:15:24PM +0530, Vinod Koul wrote:
-> On 28-03-24, 08:36, Andi Shyti wrote:
-> > On Wed, 13 Mar 2024 10:56:39 +0530, Mukesh Kumar Savaliya wrote:
-> > > I2C driver currently reports "DMA txn failed" error even though it's
-> > > NACK OR BUS_PROTO OR ARB_LOST. Detect NACK error when no device ACKs
-> > > on the bus instead of generic transfer failure which doesn't give any
-> > > specific clue.
-> > > 
-> > > Make Changes inside i2c driver callback handler function
-> > > i2c_gpi_cb_result() to parse these errors and make sure GSI driver
-> > > stores the error status during error interrupt.
-> > > 
-> > > [...]
-> > 
-> > Applied to i2c/i2c-host-next on
-> > 
-> > git://git.kernel.org/pub/scm/linux/kernel/git/local tree
-> 
-> You applied changes to dmaengine driver without my ack! I dont agree to
-> the approach here, we could do better
+./include/linux/netdevice.h:4033:17: warning: cast removes address
+space '__percpu' of expression
 
-This patch has been around for quite some time and there has been
-time to review it. Altrady two people have approved it.
+This is around code which wasn't changed and which correctly uses the
+per cpu helper. Sparse flags were -Wsparse-all for sparse 0.6.4
+(latest release). Sparse was enabled via C=1 parameter and sparse was
+configured using CHECK="sparse -Wsparse-all"
 
-This patch has already been merged once via the i2c with the
-agreement of everyone, but reverted for a trivial failure.
+Problem was introduced between commit 8ae292c66dcb ("x86/lib: Address
+kernel-doc warnings") and 3a1d3829e193 ("x86/percpu: Avoid sparse
+warning with cast to named address space").
 
-Your review come after I have merged the patch (I did merge it
-even earlier, but forgot to send the notification, which was
-anyway sent before your review).
-
-Above all, I appreciate your review, but it wouldn't be fair to
-revert it now. If Mukesh is OK, I can do it, otherwise we can
-send subsequent patches.
-
-Mukesh, please let me know what's your preference.
-
-Andi
+I would even go as far as saying that 1ca3683cc6d2 ("x86/percpu:
+Enable named address spaces with known compiler version") together
+with 3a1d3829e193 ("x86/percpu: Avoid sparse warning with cast to
+named address space") triggered this problem
