@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E231C0899;
-	Fri, 29 Mar 2024 12:51:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 627161C089A;
+	Fri, 29 Mar 2024 12:51:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711716693; cv=none; b=GJ0sRZSBEya1T82UdwVkb6jNDq1z8PegerhMzlcjJO1z8hDJEM0/JO6MXELSz9r9VF3Zt/z1pXvgBmlqk30XJQJiM/Etl2lKartYNIe/3CNvM35UE2YfXEHw8UcFPr9ko1HHWgaEVf66FvtCtv6n4Zfsp1ObkB35PobVitSUYFs=
+	t=1711716693; cv=none; b=p/t2YvnvgRMS1x1AIso2yYKiezrXWrLgIeSCCt48yvW2oJhdepGMiRAJQgggUyRk7Qx5WStGF51RK8NVXATmlhAXE9rDBk/VhqlpxvWCpbLCNGlknE4kbeAjtttzDQx3hoTPKO0Mtd0YK3XP2zoIXqeh9ErcdPuIjg7q3L/tOhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711716693; c=relaxed/simple;
-	bh=U/P8vKJnazg2oxa4NPelkRvHtpu1iu5HDEqWvTOKclo=;
+	bh=fwh2m7sCn29cG90OCu3PIuTxTxnWk5RXZjAseQsIl/Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ID/J+9emMyWgK5s5nLH1cyP135YPQ5eOLe+SOPwKqdmUo40QcVpIQ7EWAixsNWhB47uD8RHIQUowljAGYffinKHafMtpW4H1Qbt3bZUmysBVdWlFMkvro+ngbZKjTMX8lSv0aVmkx0AYMn5j6kMhrDOxYg/a/zv6f2NQLQFQWTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BFjjWaJT; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AoEIwo/+rMmXhQfJ/8tePJHea7jfYRzQwIZ+fWEKF4Gq1uhvShEUNlDvm0BX+h1Bxittj5TZDpVNVUqLsrwIzhbf1jz2ihhuA8ZIDXUCY1kDRJbeWa320Pg1z6AeGWTS3z0IBa754sUGIoXcRqGctG8rSfENgE4BQ3ZLxYa2R3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c7h5Kl4q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BFjjWaJT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88B2AC43399;
-	Fri, 29 Mar 2024 12:51:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c7h5Kl4q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24F54C433A6;
+	Fri, 29 Mar 2024 12:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711716693;
-	bh=U/P8vKJnazg2oxa4NPelkRvHtpu1iu5HDEqWvTOKclo=;
+	s=k20201202; t=1711716691;
+	bh=fwh2m7sCn29cG90OCu3PIuTxTxnWk5RXZjAseQsIl/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BFjjWaJTn6pLJY72VmL/sIKqJrLox7g7RvcXFlJh55xOSA81PmoNlL6VErB82z1Bx
-	 U4utenU6+KwoQXN0u1Y34NGGqCQXe0nMwuQcpnmbkVryrCiOT/b3HLv/4gKNRbTBjh
-	 Ax1UvRiysbhySH+nEE10Dcy7HaSXm+HYmhV+g0qzG4YamCM2G1AJYJQ9AYKEdF45VX
-	 TJWzQA7C1weNZVhVZIG4vdNRAF/1N/7CZBbsohx0a2q/rMmqr0uKgz4ajPuOOxO3S7
-	 I7gJ5vJ1pBqsb8ITBdjozSTKGwwfbRPF88lTSkHvD7HvNoHvqmCou4TiB2GW9su3qs
-	 AKrGPrUx4snzw==
+	b=c7h5Kl4qBrNDYVTaB0Ibj+/j+0dQ4P1n4IwVG0qmlAMSct0tmtwpzTRfGf+tzZvVD
+	 lykhtgRvL50OypiFYH6l4P40uHIIXXUT8M4AxiFLnKn6r7xWjYp46wFNFpfMS+s4q6
+	 G2AvtxDP/uvFtB/QJbTBVUtWqC4C44Hw2AUca0c7vIwN+BgT6XVjruLeXJIzzaAUKx
+	 ZSlLoz2XF61Zz5NaIrM+K+ovNk4USkk9FSM1QZSUa4l7csYSMdyI039egry0IN0Mza
+	 Zu5/hcVaVkq9Hx+gqe6bKNr9VOZRMsMqkbbAKvcHOQYdbp79NjWI2wbuF7gw5q8eIZ
+	 Sdap+MnmqCMvQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: "Ricardo B. Marliere" <ricardo@marliere.net>,
-	John Hawley <warthog9@eaglescrag.net>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 19/19] ktest: force $buildonly = 1 for 'make_warnings_file' test type
-Date: Fri, 29 Mar 2024 08:50:51 -0400
-Message-ID: <20240329125100.3094358-19-sashal@kernel.org>
+Cc: Roman Smirnov <r.smirnov@omp.ru>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>,
+	Jens Axboe <axboe@kernel.dk>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 17/19] block: prevent division by zero in blk_rq_stat_sum()
+Date: Fri, 29 Mar 2024 08:50:49 -0400
+Message-ID: <20240329125100.3094358-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240329125100.3094358-1-sashal@kernel.org>
 References: <20240329125100.3094358-1-sashal@kernel.org>
@@ -50,39 +51,38 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 4.19.311
 Content-Transfer-Encoding: 8bit
 
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
+From: Roman Smirnov <r.smirnov@omp.ru>
 
-[ Upstream commit 07283c1873a4d0eaa0e822536881bfdaea853910 ]
+[ Upstream commit 93f52fbeaf4b676b21acfe42a5152620e6770d02 ]
 
-The test type "make_warnings_file" should have no mandatory configuration
-parameters other than the ones required by the "build" test type, because
-its purpose is to create a file with build warnings that may or may not be
-used by other subsequent tests. Currently, the only way to use it as a
-stand-alone test is by setting POWER_CYCLE, CONSOLE, SSH_USER,
-BUILD_TARGET, TARGET_IMAGE, REBOOT_TYPE and GRUB_MENU.
+The expression dst->nr_samples + src->nr_samples may
+have zero value on overflow. It is necessary to add
+a check to avoid division by zero.
 
-Link: https://lkml.kernel.org/r/20240315-ktest-v2-1-c5c20a75f6a3@marliere.net
+Found by Linux Verification Center (linuxtesting.org) with Svace.
 
-Cc: John Hawley <warthog9@eaglescrag.net>
-Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
+Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+Link: https://lore.kernel.org/r/20240305134509.23108-1-r.smirnov@omp.ru
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/ktest/ktest.pl | 1 +
- 1 file changed, 1 insertion(+)
+ block/blk-stat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
-index 128a7fe45a1e3..a29d9e125b00b 100755
---- a/tools/testing/ktest/ktest.pl
-+++ b/tools/testing/ktest/ktest.pl
-@@ -765,6 +765,7 @@ sub set_value {
-     if ($lvalue =~ /^(TEST|BISECT|CONFIG_BISECT)_TYPE(\[.*\])?$/ &&
- 	$prvalue !~ /^(config_|)bisect$/ &&
- 	$prvalue !~ /^build$/ &&
-+	$prvalue !~ /^make_warnings_file$/ &&
- 	$buildonly) {
+diff --git a/block/blk-stat.c b/block/blk-stat.c
+index 7587b1c3caaf5..507ac714423bd 100644
+--- a/block/blk-stat.c
++++ b/block/blk-stat.c
+@@ -27,7 +27,7 @@ void blk_rq_stat_init(struct blk_rq_stat *stat)
+ /* src is a per-cpu stat, mean isn't initialized */
+ void blk_rq_stat_sum(struct blk_rq_stat *dst, struct blk_rq_stat *src)
+ {
+-	if (!src->nr_samples)
++	if (dst->nr_samples + src->nr_samples <= dst->nr_samples)
+ 		return;
  
- 	# Note if a test is something other than build, then we
+ 	dst->min = min(dst->min, src->min);
 -- 
 2.43.0
 
