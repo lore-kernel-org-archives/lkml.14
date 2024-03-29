@@ -1,90 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AFC137165;
-	Fri, 29 Mar 2024 03:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3129538F87
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 03:29:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711682844; cv=none; b=qVWo3iTDAhoQvF3Fcvwx4FZ3mz9cT9ZsCiUkOI99zJ5ugfEOQd0TynKZRgQWlmdDA+WptZwqv1o/cNt8LPjGpiIRNcOm5L2H6/ZAVzDTa0cmbbMan6xLTjyQ151K+NdpUEYkBGS/ZPCdi8Am5/7ZMg6xRkXxHXVuaNwChHhNOK4=
+	t=1711682946; cv=none; b=kUf6LqaFLX6v2/KcSDtD8sbaUN8l/DA/Y+X0ODV68uvwWFT20gTPGonnnmepCwsdFptsUbopgdD7E5LDZfqNaDE2p0uFDMPysWPBPsige9meOIp2QXz+aHx3JohGLYlU/E7E97nQcC2LL9ZquWcJa3nhqBa/irCt0lWBHb1hmt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711682844; c=relaxed/simple;
-	bh=XBq7FAybfYroiUaOkqQ3iC8DyKkn51xgtrLSf+qdjHA=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=e9oS7Snp7bR4hn7x0VAsK5B4Lhohcn9dsuPy0JMBSVbvAFXs2+GGMoDhQcyiM54qYMFU5/ls6igFj33hVPm5oORCkomnBubOgaEvLqZrUBvt9hodtqQMe6SWxzGjh+eMWK6jzlINBsKHBWY20wYVbHuA/H3R9puXKE9L+eAFUD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZdA+CtW4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711682946; c=relaxed/simple;
+	bh=zxKmzxnSx9PjVgeDbZCPKKdWSiAMc87p77knFPKdQWI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Vp2KO88mEYpeh95+JfvDxLYtgp77y7fce2tquoaNwVIh+QrFzk0UgFVL8pPa3KLKtubjCmtj/ocGVStpXR1Wx2H0cf398yqCeEd/1ahkDVE8WMXZFvrYnjSL5ltmGE0G6l+rGqnJvru/Pky2Ufhih36qFdNn5lq7Urcs4Y3H3B8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=DXQHNkM9; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZdA+CtW4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 411BBC433C7;
-	Fri, 29 Mar 2024 03:27:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711682843;
-	bh=XBq7FAybfYroiUaOkqQ3iC8DyKkn51xgtrLSf+qdjHA=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=ZdA+CtW4oY+yEwX6Dm9kleIytrg9GiQhcUWg7JwWD4ChR05odzEMLEqbtMU6N9iPU
-	 +KU+8FrfGcVnw+jsZEHJOprtzaSmRSmG/3Ug4iiG+8KFs7b41e0gRMkwjK0U8rJYdh
-	 jgTJYTknlff0yujt1Ljv0T8nl7Iufr/ACtIlrwdv1CMHqsmRpIKjTLjiRKaSkIkXKL
-	 SYf/6A1l2rMp/I1GzTp89uf7FLLQxH70IfhjSCQl0dtGZQLqELvJ92695MhkGedZ7u
-	 eR6aqA3IT4/V1No8i7lCLkyF9wpZowAOjRg9VHaa8YxtcTmk5KOnzR6lDMZRWLF4cJ
-	 aNJ6gHyEtTM8g==
-Date: Thu, 28 Mar 2024 22:27:22 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DXQHNkM9"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-36867dfe940so5477405ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2024 20:29:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711682944; x=1712287744; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=s4UbQsk5JfCEGbuiJGPYChkxKlb06kKR5FuZVR4mueQ=;
+        b=DXQHNkM9AUszNS/1MVcK8YGOP3Zhw73zLOzXEUeo7VACaMxrGFpzC/lJ48sd3omrz1
+         8VtuPn6orqM1fYmFav0pk1ElipPcSOVUZYMCggIcGg1U2IcrStt3HR7J/F67qOMN5u8i
+         t4jrvFOIPOHp0ruEahD5sALok3NtXxvu1A17w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711682944; x=1712287744;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=s4UbQsk5JfCEGbuiJGPYChkxKlb06kKR5FuZVR4mueQ=;
+        b=NvJ/WU5EeAoB4dXQbPFFic0rDkZxyexXFQ1WFWIPfHyQJF8yGAied3uI7fIinEp01y
+         QWt+rslGsIORXvAvQlp6mgWSDoQlS1kLS/92Lzuhd2DfU2yqrKnWq0IVMn/D3fClKp+s
+         ZKqa49wxsJxeG3X4/D8NQ/DfPXPoWY2dzRsniUCfExsKeojzRENof88RoVKX7yK+5HAZ
+         sBVybGimE/yWlYj82zuGB3rYI7GRPgv0cSMq8ACJJAXjYiSnDdjvgzoWekJO4n1Z1KjX
+         NpiKCxI28stSrEyV8it/V59DJxvqjvSOkhowW7jLh8bvXJs+eDbjd0QCx1hqNjhsHjEJ
+         WyxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX8Cvla9MICcL3dkxFSmNCuTqukudHK7HV79ocIr25EjGi6QvAuUNfEUuad+Zj1p3Vg2RAvKUO2fJroO8fyNblBkegVCYdXEQRhXunc
+X-Gm-Message-State: AOJu0Yy/uEifPyuuxnuT5/RTo3fcPn15UdN3HER68nxyKKrLMv73Qa/d
+	xW0PAUUANeeLv0misb3ztz+kNK0LyTAwKF6kh7j9wX+t+m6FrkuKYmAix66TZHKYqud2M0Ylp/4
+	=
+X-Google-Smtp-Source: AGHT+IGqWxBBoE3CxFg/cl5Fd1n0LDcdDA7ZaQ+Cun7xZlmWrNgimznfOIOY+KlqexqgjDjjC38tDg==
+X-Received: by 2002:a92:ca4e:0:b0:366:ab6f:f6a with SMTP id q14-20020a92ca4e000000b00366ab6f0f6amr1050509ilo.24.1711682944447;
+        Thu, 28 Mar 2024 20:29:04 -0700 (PDT)
+Received: from chromium.org ([75.104.105.200])
+        by smtp.gmail.com with ESMTPSA id l7-20020a056e021aa700b003685b574968sm815717ilv.51.2024.03.28.20.28.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 20:29:04 -0700 (PDT)
+From: Simon Glass <sjg@chromium.org>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Ahmad Fatoum <a.fatoum@pengutronix.de>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Simon Glass <sjg@chromium.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Terrell <terrelln@fb.com>,
+	Will Deacon <will@kernel.org>,
+	linux-doc@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	workflows@vger.kernel.org
+Subject: [PATCH v12 0/2] arm64: Add a build target for Flat Image Tree
+Date: Fri, 29 Mar 2024 16:28:34 +1300
+Message-Id: <20240329032836.141899-1-sjg@chromium.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Qingfang Deng <dqfext@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
- linux-spi@vger.kernel.org, Qingfang Deng <qingfang.deng@siflower.com.cn>
-In-Reply-To: <20240329015147.1481349-1-dqfext@gmail.com>
-References: <20240329015147.1481349-1-dqfext@gmail.com>
-Message-Id: <171168284116.1622438.12291948892971487712.robh@kernel.org>
-Subject: Re: [RFC PATCH 1/2] spi: dt-bindings: add Siflower Quad SPI
- controller
+Content-Transfer-Encoding: 8bit
 
+Flat Image Tree (FIT) is a widely used file format for packaging a
+kernel and associated devicetree files[1]. It is not specific to any
+one bootloader, as it is supported by U-Boot, coreboot, Linuxboot,
+Tianocore and Barebox.
 
-On Fri, 29 Mar 2024 09:51:46 +0800, Qingfang Deng wrote:
-> From: Qingfang Deng <qingfang.deng@siflower.com.cn>
-> 
-> Add YAML devicetree bindings for Siflower Quad SPI controller.
-> 
-> Signed-off-by: Qingfang Deng <qingfang.deng@siflower.com.cn>
-> ---
->  .../bindings/spi/siflower,qspi.yaml           | 54 +++++++++++++++++++
->  1 file changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/siflower,qspi.yaml
-> 
+This series adds support for building a FIT as part of the kernel
+build. This makes it easy to try out the kernel - just load the FIT
+onto your tftp server and it will run automatically on any supported
+arm64 board.
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+The script is written in Python, since it is easy to build a FIT using
+the Python libfdt bindings. For now, no attempt is made to compress
+files in parallel, so building the 900-odd files takes a while, about
+6 seconds with my testing.
 
-yamllint warnings/errors:
+The series also includes a minor clean-up patch.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/spi/siflower,qspi.example.dtb: spi@c200000: reg: [[0, 203423744], [0, 4096]] is too long
-	from schema $id: http://devicetree.org/schemas/spi/siflower,qspi.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/spi/siflower,qspi.example.dtb: spi@c200000: Unevaluated properties are not allowed ('reg' was unexpected)
-	from schema $id: http://devicetree.org/schemas/spi/siflower,qspi.yaml#
+[1] https://github.com/open-source-firmware/flat-image-tree
 
-doc reference errors (make refcheckdocs):
+Changes in v12:
+- Avoid showing FIT message if V=0
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240329015147.1481349-1-dqfext@gmail.com
+Changes in v11:
+- Use dtbslist file in image.fit rule
+- Update cmd_fit rule as per Masahiro
+- Don't mention ignoring files without a .dtb prefix
+- Use argparse fromfile_prefix_chars feature
+- Add a -v option and use it for output (with make V=1)
+- rename srcdir to dtbs
+- Use -o for the output file instead of -f
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+Changes in v10:
+- Make use of dtbs-list file
+- Mention dtbs-list and FIT_COMPRESSION
+- Update copyright year
+- Update cover letter to take account of an applied patch
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+Changes in v9:
+- Move the compression control into Makefile.lib
 
-pip3 install dtschema --upgrade
+Changes in v8:
+- Drop compatible string in FDT node
+- Correct sorting of MAINTAINERS to before ARM64 PORT
+- Turn compress part of the make_fit.py comment in to a sentence
+- Add two blank lines before parse_args() and setup_fit()
+- Use 'image.fit: dtbs' instead of BUILD_DTBS var
+- Use '$(<D)/dts' instead of '$(dir $<)dts'
+- Add 'mkimage' details Documentation/process/changes.rst
+- Allow changing the compression used
+- Tweak cover letter since there is only one clean-up patch
 
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+Changes in v7:
+- Drop the kbuild tag
+- Add Image as a dependency of image.fit
+- Drop kbuild tag
+- Add dependency on dtbs
+- Drop unnecessary path separator for dtbs
+- Rebase to -next
+
+Changes in v6:
+- Drop the unwanted .gz suffix
+
+Changes in v5:
+- Drop patch previously applied
+- Correct compression rule which was broken in v4
+
+Changes in v4:
+- Use single quotes for UIMAGE_NAME
+
+Changes in v3:
+- Drop temporary file image.itk
+- Drop patch 'Use double quotes for image name'
+- Drop double quotes in use of UIMAGE_NAME
+- Drop unnecessary CONFIG_EFI_ZBOOT condition for help
+- Avoid hard-coding "arm64" for the DT architecture
+
+Changes in v2:
+- Drop patch previously applied
+- Add .gitignore file
+- Move fit rule to Makefile.lib using an intermediate file
+- Drop dependency on CONFIG_EFI_ZBOOT
+- Pick up .dtb files separately from the kernel
+- Correct pylint too-many-args warning for write_kernel()
+- Include the kernel image in the file count
+- Add a pointer to the FIT spec and mention of its wide industry usage
+- Mention the kernel version in the FIT description
+
+Simon Glass (2):
+  arm64: Add BOOT_TARGETS variable
+  arm64: boot: Support Flat Image Tree
+
+ Documentation/process/changes.rst |   9 +
+ MAINTAINERS                       |   7 +
+ arch/arm64/Makefile               |  11 +-
+ arch/arm64/boot/.gitignore        |   1 +
+ arch/arm64/boot/Makefile          |   6 +-
+ scripts/Makefile.lib              |  16 ++
+ scripts/make_fit.py               | 290 ++++++++++++++++++++++++++++++
+ 7 files changed, 337 insertions(+), 3 deletions(-)
+ create mode 100755 scripts/make_fit.py
+
+-- 
+2.34.1
 
