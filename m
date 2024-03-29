@@ -1,145 +1,65 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6AC2EAF9;
-	Fri, 29 Mar 2024 07:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0637839AF2;
+	Fri, 29 Mar 2024 07:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711698751; cv=none; b=XzyXanEGF4d6vmZ4k8xosboMGr5HnSp/BY+OZotofka7jBwqFjwPt2ny5LY/wmWJaoglBvFKXT/DFpFt++28Plk0Dlrt/CuCJQudy4NmagpLwfWC9ejr/WT9THWXNZNH8w2fTYkTVBP/2utldgpDtAY1H8k9GmXOMZD26/RZ31Q=
+	t=1711698936; cv=none; b=jH7Du7kWcuFjdR9tGDhVKY/tyLYPySMXbQSoj0E3b6SvF5DWGzqlSC+nuHs67PJJa0YZq7TtYu/HkjKSZvToOA4Q8STQYH9omToNZuLd9+wl7AQcSkqQyImIoEERu7e9JYiM7v9E+c6PzAyvwapZLZj1GCOXSid06SnQPc08T4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711698751; c=relaxed/simple;
-	bh=DP0txUzbQyK/PqLwVMgW1WySUT6g1lZEa7gy7+IFFNg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f9WDF8MryRdowczkGG0o001r0opQ4WxeixRyGvlk7hCbmqSXHbCuuN3rd5JXIpaGr+Ug7TYdr09CHJ6eZ1E2OSm+RXl7z34a3BP9C56s3Rn5yCyDKTGRXAESwNuOPH+RBY9R9IkIwDmnrXPJu0nWPqpv/sp3VO4vWXyFzTXFRAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hi9PrpEa; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hi9PrpEa"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42T7baIF018670;
-	Fri, 29 Mar 2024 07:52:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=c9uLL3Nz015u/tWWf9Y1TexpOcWRcE20CZEZwSdzBZs=;
- b=hi9PrpEaiH5mLKCMgI5+Xn5vE9oshlxRycwVKRy2sC5m3PcDZu+xEMw6hRSBh2ZofFlF
- vh6UAYIJ7G4wWaOnqnc9odxnmlXHqKOl4Y5wtShrau8EQwERQbPuNo7r5qpHo44QUoJP
- KtcRgtmbtzXhi6q//Pfy4LDqjUPdWNKnz/z1jsNOfUgWW/RDyrQGWsvWx/uIweUtsylK
- t5y5JF7M9cZ3868lbNWaJCeut/B09LVv9W8wi82kgh9K8+im1eDj9v/a/i+BhgnXH+GJ
- uiK0zbG0h858b1HXuE5hx3laKbPmwKw1SmvUl5UTkWJaGu9+I1u+zPPQfXah0P1bSTof WQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x5sdp80ta-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Mar 2024 07:52:18 +0000
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42T7qIGe010152;
-	Fri, 29 Mar 2024 07:52:18 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x5sdp80t8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Mar 2024 07:52:18 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42T5om2w028675;
-	Fri, 29 Mar 2024 07:52:17 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3x2adpts9t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Mar 2024 07:52:16 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42T7qCKJ43975152
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 29 Mar 2024 07:52:15 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DD14B2006A;
-	Fri, 29 Mar 2024 07:52:12 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0759C2004F;
-	Fri, 29 Mar 2024 07:52:11 +0000 (GMT)
-Received: from li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com (unknown [9.43.115.153])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 29 Mar 2024 07:52:10 +0000 (GMT)
-Date: Fri, 29 Mar 2024 13:22:08 +0530
-From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: tytso@mit.edu, adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jack@suse.cz, ritesh.list@gmail.com
-Subject: Re: [PATCH 1/5] ext4: keep "prefetch_grp" and "nr" consistent
-Message-ID: <ZgZzKILKOki1CCml@li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com>
-References: <20240326213823.528302-1-shikemeng@huaweicloud.com>
- <20240326213823.528302-2-shikemeng@huaweicloud.com>
+	s=arc-20240116; t=1711698936; c=relaxed/simple;
+	bh=9RbpFOmZNtG+oc8wrHRkcj9NkTXvGKOwACb0jmOWopY=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=VIGy8T09bY6+rYi52diQlhDZ4xw4Y5wesAGK8iltwABwKtVlCOTpazzCfmQWa7eUOI/swbRChAbeOlNhUJW/4EOf5X3CdL5V7y4D80L6NHTbsHjPkQgivyqTFJ2v5doUoca7b+5P4y7KFC0KoVgV9zFOo8UN9a2jCnL5Yvx0jQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 01E5F1A0923;
+	Fri, 29 Mar 2024 08:48:32 +0100 (CET)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id ABF8E1A02BF;
+	Fri, 29 Mar 2024 08:48:31 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id BBCE2183ACAC;
+	Fri, 29 Mar 2024 15:48:29 +0800 (+08)
+From: Richard Zhu <hongxing.zhu@nxp.com>
+To: vkoul@kernel.org,
+	kishon@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	frank.li@nxp.com
+Cc: hongxing.zhu@nxp.com,
+	linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de,
+	linux-imx@nxp.com
+Subject: [RFC 0/3] Add i.MX8Q HSIO PHY driver support
+Date: Fri, 29 Mar 2024 15:31:30 +0800
+Message-Id: <1711697493-16151-1-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240326213823.528302-2-shikemeng@huaweicloud.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: hnDzXkGczGIxLjcxUVqZRvXPa4OOlc0d
-X-Proofpoint-ORIG-GUID: RjRud5sOD-5ALraTjwBcSLh-0IwSQd43
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-29_06,2024-03-28_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- adultscore=0 suspectscore=0 spamscore=0 lowpriorityscore=0 impostorscore=0
- mlxlogscore=999 malwarescore=0 priorityscore=1501 clxscore=1015
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2403290066
 
-On Wed, Mar 27, 2024 at 05:38:19AM +0800, Kemeng Shi wrote:
-> Keep "prefetch_grp" and "nr" consistent to avoid to call
-> ext4_mb_prefetch_fini with non-prefetched groups.
-> When we step into next criteria, "prefetch_grp" is set to prefetch start
-> of new criteria while "nr" is number of the prefetched group in previous
-> criteria. If previous criteria and next criteria are both inexpensive
-> (< CR_GOAL_LEN_SLOW) and prefetch_ios reachs sbi->s_mb_prefetch_limit
-> in previous criteria, "prefetch_grp" and "nr" will be inconsistent and
-> may introduce unexpected cost to do ext4_mb_init_group for non-prefetched
-> groups.
-> Reset "nr" to 0 when we reset "prefetch_grp" to start of prefech in next
-> criteria to ensure "prefetch_grp" and "nr" are consistent.
-> 
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-> ---
->  fs/ext4/mballoc.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-> index 12b3f196010b..a61fc52956b2 100644
-> --- a/fs/ext4/mballoc.c
-> +++ b/fs/ext4/mballoc.c
-> @@ -2856,6 +2856,7 @@ ext4_mb_regular_allocator(struct ext4_allocation_context *ac)
->  		group = ac->ac_g_ex.fe_group;
->  		ac->ac_groups_linear_remaining = sbi->s_mb_max_linear_groups;
->  		prefetch_grp = group;
-> +		nr = 0;
+i.MX8Q HSIO module has PHY and mix control regions.
+This patch-set adds i.MX8Q HSIO PHY driver support, and provides
+standard PHY phandles that can be used by i.MX8Q PCIe or
+SATA driver later.
 
-Looks good, feel free to add:
+[RFC 1/3] dt-bindings: phy: Add i.MX8Q HSIO SerDes PHY binding
+[RFC 2/3] dt-bindings: phy: phy-imx8-pcie: Add binding for i.MX8Q
+[RFC 3/3] phy: freescale: imx8q-hsio: Add i.MX8Q HSIO PHY driver
 
-Reviewed-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+Documentation/devicetree/bindings/phy/fsl,imx8q-hsio.yaml | 143 ++++++++++++++++++++++++
+drivers/phy/freescale/Kconfig                             |   8 ++
+drivers/phy/freescale/Makefile                            |   1 +
+drivers/phy/freescale/phy-fsl-imx8q-hsio.c                | 518 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+include/dt-bindings/phy/phy-imx8-pcie.h                   |  26 +++++
+5 files changed, 696 insertions(+)
 
-To add some thoughts, I think the way we depend on group and nr being in
-sync for prefetch and prefetch_fini to work is very fragile and I've
-seen some issues there in the past as well. I believe a better approach
-would be to use some kind of list which is populated with group nos by
-prefetch() and then looked up by prefetch_fini() to initialize the buddy
-and other data structures.
-
-As the comment on ext4_mb_prefetch_fini() suggests, we can also look
-into eliminating this function completely by using a bg worker queue
-kick off when prefetch of the bitmap is complete although we'll also
-need to take care of the other caller of these functions ie the 
-lazy initialization thread that prefetches block bitmaps in BG
-(ext4_lazyinit_thread())
-
-Regards,
-ojaswin
-
->  
->  		for (i = 0, new_cr = cr; i < ngroups; i++,
->  		     ext4_mb_choose_next_group(ac, &new_cr, &group, ngroups)) {
-> -- 
-> 2.30.0
-> 
