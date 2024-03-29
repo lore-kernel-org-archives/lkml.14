@@ -1,74 +1,132 @@
-Received: from michel.telenet-ops.be (michel.telenet-ops.be [195.130.137.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3811327F5
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 12:37:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C5813664E
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 12:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711715842; cv=none; b=OvwZSgCUEQGh1O2oSQacjZr6mNIgmB3DaxfCYBtQnLncqtssCoQ9qaWfhYFNgUo6rjKJafNLCTIYeifhDhKkYVK1FgQsVdumj940RMa8vw1RdvfEZpTjOnPYmiwf9j1gSGA1CDgyNMkYRgguWgT17hd9axX9iS/kJ9SheX7E1xA=
+	t=1711715910; cv=none; b=BbuWyDXmo5g9oED/5OXX5C5aSbayQjIGR6qzbhooB+7YAn2NfRJZwFt/b9zM5iP3p4mf3f8Q/YA1LjK07nQnmNUg75YPnmc3OE83w6nHgafeyB2/PKzHHi/bdJ+OBZUcCxAc5iZ+7yMmYByfod+dAjWol9ClXX7YbB7xNWd/qJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711715842; c=relaxed/simple;
-	bh=KCJvnCwUDRGfWB9FH7JYbuxRgM1DzU8NcIyMaiBlqy8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=r4O0Mpo4N9SUVm37n7j/KWnyZ+KNoXZCGn4yNJXiIjtGlArkyDRiYmTQcu+er2X/gVel9fTrVEwU5hyV4xAPLKaIF4ymF6YUqlX/CPHoLeAUgZqE9OBzdhURnK8PWsmqfP2Fum/Dm5IowsNMnYQvWRHfvMQEVqZifkbnLIVe8NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:76d0:2bff:fec8:549])
-	by michel.telenet-ops.be with bizsmtp
-	id 4cdB2C00J0SSLxL06cdB8d; Fri, 29 Mar 2024 13:37:11 +0100
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rqBTS-005D9O-AO;
-	Fri, 29 Mar 2024 13:37:11 +0100
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rqBTr-0020aZ-CG;
-	Fri, 29 Mar 2024 13:37:11 +0100
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] dt-bindings: timer: renesas,tmu: Make interrupt-names required
-Date: Fri, 29 Mar 2024 13:37:09 +0100
-Message-Id: <137c184267faacdc3024f0b88e53889571165a84.1711715780.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1711715910; c=relaxed/simple;
+	bh=/Vcs98eIwBfAVmQudxzEl/D2HfXg0h5pd/qnhUjw8Bw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fmHiqiZ6Gt9V/Kd9C/KlepDuywSUcfs5c443nHNk33B834F6FroaiF1fd9JvALpZLlSaIdM4RYhcYAdpI5lwHb/Wog4gIoD2rDs+ZvXrNNlxP3krxdFnuBAiD39RCeUN0GPFXp0Zm8c7piqsHGrU/h1pTNYKV295ZlHqCDYKC2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hfKZNYdl; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hfKZNYdl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711715908;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N1h/sI7lud1TUTbC3pqJNKCflJ35bQiddXm8poucTAE=;
+	b=hfKZNYdlLphaCTkvHxNg2pdVcwd/IDFfmxgIKKXCFWZfi7KB6K2NiwR3ARNGmW7PUmkYJ4
+	mtsFG3qSlzrr3PMhWm+sCSQ7K3qrNJ4Gk63slI4hPmRvpYCprDYqQIlApXKsy3sFdPn4HQ
+	SlJo8/nSz7P0MMAk5r7F+zKh5blJLtI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-647-jud4lLB8PvKF1NeK86-r7w-1; Fri, 29 Mar 2024 08:38:26 -0400
+X-MC-Unique: jud4lLB8PvKF1NeK86-r7w-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9AA7B85A58C;
+	Fri, 29 Mar 2024 12:38:25 +0000 (UTC)
+Received: from redhat.com (unknown [10.2.16.33])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id ADE19111E3F3;
+	Fri, 29 Mar 2024 12:38:22 +0000 (UTC)
+Date: Fri, 29 Mar 2024 07:38:17 -0500
+From: Eric Blake <eblake@redhat.com>
+To: Stefan Hajnoczi <stefanha@redhat.com>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Alasdair Kergon <agk@redhat.com>, Mikulas Patocka <mpatocka@redhat.com>, dm-devel@lists.linux.dev, 
+	David Teigland <teigland@redhat.com>, Mike Snitzer <snitzer@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+	Christoph Hellwig <hch@lst.de>, Joe Thornber <ejt@redhat.com>
+Subject: Re: [RFC 3/9] selftests: block_seek_hole: add loop block driver tests
+Message-ID: <6mssvnoq4bpaf53kkla45np5lijptyh4c2orayqx4mqacj572u@6s4y6bhdtcpm>
+References: <20240328203910.2370087-1-stefanha@redhat.com>
+ <20240328203910.2370087-4-stefanha@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240328203910.2370087-4-stefanha@redhat.com>
+User-Agent: NeoMutt/20240201
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-Now all in-tree users have been updated with interrupt-names properties
-according to commit 0076a37a426b6c85 ("dt-bindings: timer: renesas,tmu:
-Document input capture interrupt"), make interrupt-names required.
+On Thu, Mar 28, 2024 at 04:39:04PM -0400, Stefan Hajnoczi wrote:
+> Run the tests with:
+> 
+>   $ make TARGETS=block_seek_hole -C tools/selftests run_tests
+> 
+> Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
+> ---
+>  tools/testing/selftests/Makefile              |   1 +
+>  .../selftests/block_seek_hole/Makefile        |  17 +++
+>  .../testing/selftests/block_seek_hole/config  |   1 +
+>  .../selftests/block_seek_hole/map_holes.py    |  37 +++++++
+>  .../testing/selftests/block_seek_hole/test.py | 103 ++++++++++++++++++
+>  5 files changed, 159 insertions(+)
+>  create mode 100644 tools/testing/selftests/block_seek_hole/Makefile
+>  create mode 100644 tools/testing/selftests/block_seek_hole/config
+>  create mode 100755 tools/testing/selftests/block_seek_hole/map_holes.py
+>  create mode 100755 tools/testing/selftests/block_seek_hole/test.py
+> 
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/devicetree/bindings/timer/renesas,tmu.yaml | 1 +
- 1 file changed, 1 insertion(+)
+> +
+> +def map_holes(fd):
+> +    end = os.lseek(fd, 0, os.SEEK_END)
+> +    offset = 0
+> +
+> +    print('TYPE START END SIZE')
+> +
+> +    while offset < end:
+> +        contents = 'DATA'
+> +        new_offset = os.lseek(fd, offset, os.SEEK_HOLE)
+> +        if new_offset == offset:
+> +            contents = 'HOLE'
+> +            try:
+> +              new_offset = os.lseek(fd, offset, os.SEEK_DATA)
+> +            except OSError as err:
+> +                if err.errno == errno.ENXIO:
+> +                    new_offset = end
+> +                else:
+> +                    raise err
+> +            assert new_offset != offset
+> +        print(f'{contents} {offset} {new_offset} {new_offset - offset}')
+> +        offset = new_offset
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-index fde72eec7cb3cc8d..50b5225ceb10b64c 100644
---- a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-+++ b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-@@ -94,6 +94,7 @@ required:
-   - compatible
-   - reg
-   - interrupts
-+  - interrupt-names
-   - clocks
-   - clock-names
-   - power-domains
+Over the years, I've seen various SEEK_HOLE implementation bugs where
+things work great on the initial boundary, but fail when requested on
+an offset not aligned to the start of the extent boundary.  It would
+probably be worth enhancing the test to prove that:
+
+if lseek(fd, offset, SEEK_HOLE) == offset:
+  new_offset = lseek(fd, offset, SEEK_DATA)
+  assert new_offset > offset
+  assert lseek(fd, new_offset - 1, SEEK_HOLE) == new_offset - 1
+else:
+  assert lseek(fd, offset, SEEK_DATA) == offset
+  new_offset = lseek(fd, offset, SEEK_HOLE)
+  assert new_offset > offset
+  assert lseek(fd, new_offset - 1, SEEK_DATA) == new_offset - 1
+
+Among other things, this would prove that even though block devices
+generally operate on a minimum granularity of a sector, lseek() still
+gives byte-accurate results for a random offset that falls in the
+middle of a sector, and doesn't accidentally round down reporting an
+offset less than the value passed in to the request.
+
 -- 
-2.34.1
+Eric Blake, Principal Software Engineer
+Red Hat, Inc.
+Virtualization:  qemu.org | libguestfs.org
 
