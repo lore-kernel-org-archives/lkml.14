@@ -1,203 +1,104 @@
-Received: from mail.rnplus.nl (mail.rnplus.nl [178.251.25.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA4D13DDB8
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 13:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.251.25.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCF55B1E6;
+	Fri, 29 Mar 2024 13:04:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711717352; cv=none; b=Kb6/PtoF4QwbQnaSPMlstjqQaTRnvB3bxoKvbcEKsdxt+iUHGzHDmQWo8CDDujlhP6YPWEPp1HREZE7OjJaqYvK4XeAfPaI+e+cnbc+v6jBg3DiBqJN1OgNnOIck404wjqOsWtEIjcBkMn4PYlt20wwC5h7GFTRfiRNqXc2g/GM=
+	t=1711717456; cv=none; b=DOWZk0Cmp0iT1BhBHVSQoZQGoQAjQl1/oIGVUE5Mqv+pCkLitgVkZT9b+uojBIM7wLdMDH+AjmKEHnof6LkJM13V5KNZvs5u/eVJ3GmwSrulmMx96VFPRBe5MeSYV+8cqRpLereiGf0YzIQ/Rqf8DJX40YVcdif4ytEoJ1STbIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711717352; c=relaxed/simple;
-	bh=4G+G6BuM+cMP6rEZ/uaw8UHoFG85g2A3tKcOaMLiEvY=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eLTxvbdVQnntasBzA+TVvnlRbmOnmgmTPsCkm3vppuMpSaO9/5gylgjtoxqi/EcjYKbk6227LASPq95dfQrxDrORLg0NOOxXlp/LNAdRhLyqB+6heSwY8yIwp2u6qupIrRLDG91e2NT0IqtKctf/BkPAS1vHAI5hvOj81HPbKIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rnplus.nl; spf=pass smtp.mailfrom=rnplus.nl; dkim=pass (1024-bit key) header.d=rnplus.nl header.i=@rnplus.nl header.b=p5XN+y9z; arc=none smtp.client-ip=178.251.25.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rnplus.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rnplus.nl
+	s=arc-20240116; t=1711717456; c=relaxed/simple;
+	bh=HK+pW1Lv5cKPG7rzuoUit2Wj63jl66zbNwCyYBCxG3Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hMPtijCeK2Am3ydp20eGFc2wtJNvsFdwUE5uiyMOvXzi35sG/mgM/xYmODoKA90j/G+cEgZyeqKeaZLUSJpee7AGFiabmDb6vg1o+fRSVuzaVwaRPiAkjx8uOK1sVZhY9Dyq5VO2P69gwkLQDUUrQbs7CfNZDC/oPUa3k//4Qgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lhU5rtPP; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rnplus.nl header.i=@rnplus.nl header.b="p5XN+y9z"
-Received: from localhost (unknown [127.0.0.1])
-	by mail.rnplus.nl (Postfix) with ESMTP id 809B2379488
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 13:05:45 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at rnplus.nl
-Received: from mail.rnplus.nl ([127.0.0.1])
-	by localhost (mail.rnplus.nl [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id rqvzPpLHAdhp for <linux-kernel@vger.kernel.org>;
-	Fri, 29 Mar 2024 14:05:43 +0100 (CET)
-Received: from localhost.localdomain (184-179-179-143.ftth.glasoperator.nl [143.179.179.184])
-	by mail.rnplus.nl (Postfix) with ESMTPSA id 973463793D7;
-	Fri, 29 Mar 2024 14:05:24 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=rnplus.nl; s=dkim;
-	t=1711717525; bh=4G+G6BuM+cMP6rEZ/uaw8UHoFG85g2A3tKcOaMLiEvY=;
-	h=From:To:Subject:Date:In-Reply-To:References;
-	b=p5XN+y9z9I88hiQ3MEw1lqBDxoGJmvKX6uSVIi2OFwnC9lkaTMyjSFhCkMcC5LMct
-	 DFnvhpI0EiaxtGx5oecuoGkg5W2zT62KRg1gh3zW+5NWzbpIEcSJNZ9LK4M2VBeWw+
-	 lOsD2AWixC3PcL/5CHSH0g5GB22Mb3frtKO7c9wk=
-From: Renze Nicolai <renze@rnplus.nl>
-To: linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-aspeed@lists.ozlabs.org,
-	arnd@arndb.de,
-	olof@lixom.net,
-	soc@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	joel@jms.id.au,
-	andrew@aj.id.au,
-	renze@rnplus.nl
-Subject: [PATCH 1/3] ARM: dts: Modify GPIO table for Asrock X570D4U BMC
-Date: Fri, 29 Mar 2024 14:01:39 +0100
-Message-ID: <20240329130152.878944-2-renze@rnplus.nl>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240329130152.878944-1-renze@rnplus.nl>
-References: <20240329130152.878944-1-renze@rnplus.nl>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lhU5rtPP"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2a07b092c4fso1548614a91.0;
+        Fri, 29 Mar 2024 06:04:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711717454; x=1712322254; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ENCOr2sA1qbshksM0GrDXVMpVc6dVoIzN1WRClTF0qw=;
+        b=lhU5rtPPjppdj/CnvUmHEJBRy6uw0Z0Hfzgb9+IQjP+N+VeCGb9EeuV9i8Cac4AvwQ
+         4Zof98r6BoPRAczgax4/QfCDNURGRK/8rZ7ckcnqno4OiA40d78iH21tuzDiRZVfkg1B
+         1c2LhwcS5X28wQ60N8EmqzxKaKA817jsXcSsqhvSV5J/tD0sLeK2jOx2Y6UQjSuiP5sB
+         WPyKpS58x9EuQX9h6jiD/xdCUAJK9/RczQfW79S9G0+GwmzvitqwH9zsNOJRoto+7zxc
+         r/WR1/jbjeOwQ8NhBwU6h8HY9SXZGA9k33qABk1ds8NGeUE3A39biCLYPuZHY6UKmRL3
+         wGbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711717454; x=1712322254;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ENCOr2sA1qbshksM0GrDXVMpVc6dVoIzN1WRClTF0qw=;
+        b=ZUVC6W9mcOEZ4F2Bv0t4vrVlzykK3cHKqjOCIru4n57kQWEe4iHmKktSRDlVQBjxET
+         lvnz/W2sSTz3DaoEhYYIyRYEiA0RngTVGHQyR/MKu/3ZBM9hQudVUtwq2rPgQLrsBc8k
+         m27fI67nJHM1s3B0OgZ7YcQWNQLUrMpsAoi9GNVY4QPXis4zzYMBb5UuuGfWh0sk+cqk
+         STG83pPzyZSKSSdORo1W5vPjbWz23KAtVMnEMSN6Jq9sGg5u4ZVa917B7drqESx9DsY7
+         pLBq/ijoULn4YVqCLyfurlj/grZm+18PtZdneWl9Xez0rnyoOuEf6yZ4rUHl1mdod4Rr
+         +NAg==
+X-Forwarded-Encrypted: i=1; AJvYcCXMLQEOZSvObMipzLE8luxKMHQER3wyG5p7i8BjHc8ygm3UxdWP6jeq+xh+/YBHqodHM1TdUXXR63dUyPxZ3e5+3Q11nePNapG92utVn/G67++VLqCcAfayVVtRipUxKgsrEdD6J5HfY2hUtZ8=
+X-Gm-Message-State: AOJu0YzF/aQnzmsbGh64DqDgpzoKYyePP7tQtBeFLbxEDQD8g+QeRsq7
+	Qby9Iez/JUr0cHvSCBh25kWzJM0Lu+BU/WP3GQKoTGw1xjbowbaw2r18TAHiJiiUFpM1jCFresS
+	gvCR5d/Yv2XOVU1cgZjNXmeFcbmU=
+X-Google-Smtp-Source: AGHT+IGbsz/GfbSim5fxK+qHD5P3CZN6CHz4jdK38k7IiMbNqgQTqHeSVSATZ+6GtAVQqObA3FZjqKl+K0pYO5bt840=
+X-Received: by 2002:a17:90a:dc05:b0:2a0:4de8:875f with SMTP id
+ i5-20020a17090adc0500b002a04de8875fmr2303229pjv.8.1711717454485; Fri, 29 Mar
+ 2024 06:04:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240328195457.225001-1-wedsonaf@gmail.com> <20240329121033.401403-1-kernel@valentinobst.de>
+In-Reply-To: <20240329121033.401403-1-kernel@valentinobst.de>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 29 Mar 2024 14:03:40 +0100
+Message-ID: <CANiq72mkHM3qfq66oDZyZMCuLK8Y1tJxEqFhSYpFWg7ihfcvEA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] In-place module initialisation
+To: Valentin Obst <kernel@valentinobst.de>
+Cc: wedsonaf@gmail.com, a.hindborg@samsung.com, alex.gaynor@gmail.com, 
+	aliceryhl@google.com, benno.lossin@proton.me, bjorn3_gh@protonmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, linux-kernel@vger.kernel.org, 
+	ojeda@kernel.org, rust-for-linux@vger.kernel.org, walmeida@microsoft.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This commit removes button-nmi-n, this board does not have support for an NMI button.
-Input status-locatorled-n has been renamed to input-locatorled-n to better indicate the signal type.
-The suffix -n has been appended to the name of control-locatorbutton, button-power, control-power, button-reset, control-reset, input-id0, input-id1, input-id2, output-bmc-ready to reflect the inverted signal polarity.
-GPIO output-rtc-battery-voltage-read-enable has been renamed to output-hwm-vbat-enable, input-alert1-n to input-aux-smb-alert-n, input-alert3-n to input-psu-smb-alert-n, input-mfg to input-mfg-mode-n and input-caseopen to input-case-open-n.
-And GPIOs input-bmc-smb-present-n, input-pcie-wake-n, input-sleep-s3-n, input-sleep-s5-n and input-power-good have been added.
+On Fri, Mar 29, 2024 at 1:11=E2=80=AFPM Valentin Obst <kernel@valentinobst.=
+de> wrote:
+>
+> I think the idea in [1] was to have this patch being included in the
+> stable trees. I got little experience with stable trees but wouldn't the
+> easiest way be that you add:
+>
+>         Cc: stable@vger.kernel.org # 6.8.x: 715dd8950d4e rust: phy: imple=
+ment `Send` for `Registration`
+>         Cc: stable@vger.kernel.org
+>         Fixes: 247b365dc8dc ("rust: add `kernel` crate")
+>
+> in the sign-off section for this patch? (Or mark the first one for stable
+> inclusion as well, [2] has more information on that).
 
-Signed-off-by: Renze Nicolai <renze@rnplus.nl>
----
- .../dts/aspeed/aspeed-bmc-asrock-x570d4u.dts  | 116 +++++++++---------
- 1 file changed, 58 insertions(+), 58 deletions(-)
+715dd8950d4e is your local hash for 1/5, right? So I would drop the
+hash, because it may be confusing.
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-x570d4u.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-x570d4u.dts
-index 3c975bc41ae7..34bc382bf492 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-x570d4u.dts
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-x570d4u.dts
-@@ -79,64 +79,64 @@ iio-hwmon {
- &gpio {
- 	status = "okay";
- 	gpio-line-names =
--	/*A0-A3*/       "status-locatorled-n",                    "",                      "button-nmi-n",          "",
--	/*A4-A7*/       "",                                       "",                      "",                      "",
--	/*B0-B3*/       "input-bios-post-cmplt-n",                "",                      "",                      "",
--	/*B4-B7*/       "",                                       "",                      "",                      "",
--	/*C0-C3*/       "",                                       "",                      "",                      "",
--	/*C4-C7*/       "",                                       "",                      "control-locatorbutton", "",
--	/*D0-D3*/       "button-power",                           "control-power",         "button-reset",          "control-reset",
--	/*D4-D7*/       "",                                       "",                      "",                      "",
--	/*E0-E3*/       "",                                       "",                      "",                      "",
--	/*E4-E7*/       "",                                       "",                      "",                      "",
--	/*F0-F3*/       "",                                       "",                      "",                      "",
--	/*F4-F7*/       "",                                       "",                      "",                      "",
--	/*G0-G3*/       "output-rtc-battery-voltage-read-enable", "input-id0",             "input-id1",             "input-id2",
--	/*G4-G7*/       "input-alert1-n",                         "input-alert2-n",        "input-alert3-n",        "",
--	/*H0-H3*/       "",                                       "",                      "",                      "",
--	/*H4-H7*/       "input-mfg",                              "",                      "led-heartbeat-n",       "input-caseopen",
--	/*I0-I3*/       "",                                       "",                      "",                      "",
--	/*I4-I7*/       "",                                       "",                      "",                      "",
--	/*J0-J3*/       "output-bmc-ready",                       "",                      "",                      "",
--	/*J4-J7*/       "",                                       "",                      "",                      "",
--	/*K0-K3*/       "",                                       "",                      "",                      "",
--	/*K4-K7*/       "",                                       "",                      "",                      "",
--	/*L0-L3*/       "",                                       "",                      "",                      "",
--	/*L4-L7*/       "",                                       "",                      "",                      "",
--	/*M0-M3*/       "",                                       "",                      "",                      "",
--	/*M4-M7*/       "",                                       "",                      "",                      "",
--	/*N0-N3*/       "",                                       "",                      "",                      "",
--	/*N4-N7*/       "",                                       "",                      "",                      "",
--	/*O0-O3*/       "",                                       "",                      "",                      "",
--	/*O4-O7*/       "",                                       "",                      "",                      "",
--	/*P0-P3*/       "",                                       "",                      "",                      "",
--	/*P4-P7*/       "",                                       "",                      "",                      "",
--	/*Q0-Q3*/       "",                                       "",                      "",                      "",
--	/*Q4-Q7*/       "",                                       "",                      "",                      "",
--	/*R0-R3*/       "",                                       "",                      "",                      "",
--	/*R4-R7*/       "",                                       "",                      "",                      "",
--	/*S0-S3*/       "input-bmc-pchhot-n",                     "",                      "",                      "",
--	/*S4-S7*/       "",                                       "",                      "",                      "",
--	/*T0-T3*/       "",                                       "",                      "",                      "",
--	/*T4-T7*/       "",                                       "",                      "",                      "",
--	/*U0-U3*/       "",                                       "",                      "",                      "",
--	/*U4-U7*/       "",                                       "",                      "",                      "",
--	/*V0-V3*/       "",                                       "",                      "",                      "",
--	/*V4-V7*/       "",                                       "",                      "",                      "",
--	/*W0-W3*/       "",                                       "",                      "",                      "",
--	/*W4-W7*/       "",                                       "",                      "",                      "",
--	/*X0-X3*/       "",                                       "",                      "",                      "",
--	/*X4-X7*/       "",                                       "",                      "",                      "",
--	/*Y0-Y3*/       "",                                       "",                      "",                      "",
--	/*Y4-Y7*/       "",                                       "",                      "",                      "",
--	/*Z0-Z3*/       "",                                       "",                      "led-fault-n",           "output-bmc-throttle-n",
--	/*Z4-Z7*/       "",                                       "",                      "",                      "",
--	/*AA0-AA3*/     "input-cpu1-thermtrip-latch-n",           "",                      "input-cpu1-prochot-n",  "",
--	/*AA4-AC7*/     "",                                       "",                      "",                      "",
--	/*AB0-AB3*/     "",                                       "",                      "",                      "",
--	/*AB4-AC7*/     "",                                       "",                      "",                      "",
--	/*AC0-AC3*/     "",                                       "",                      "",                      "",
--	/*AC4-AC7*/     "",                                       "",                      "",                      "";
-+	/*A0-A3*/       "input-locatorled-n",                     "",                      "",                        "",
-+	/*A4-A7*/       "",                                       "",                      "",                        "",
-+	/*B0-B3*/       "input-bios-post-cmplt-n",                "",                      "",                        "",
-+	/*B4-B7*/       "",                                       "",                      "",                        "",
-+	/*C0-C3*/       "",                                       "",                      "",                        "",
-+	/*C4-C7*/       "",                                       "",                      "control-locatorbutton-n", "",
-+	/*D0-D3*/       "button-power-n",                         "control-power-n",       "button-reset-n",          "control-reset-n",
-+	/*D4-D7*/       "",                                       "",                      "",                        "",
-+	/*E0-E3*/       "",                                       "",                      "",                        "",
-+	/*E4-E7*/       "",                                       "",                      "",                        "",
-+	/*F0-F3*/       "",                                       "",                      "",                        "",
-+	/*F4-F7*/       "",                                       "",                      "",                        "",
-+	/*G0-G3*/       "output-hwm-vbat-enable",                 "input-id0-n",           "input-id1-n",             "input-id2-n",
-+	/*G4-G7*/       "input-aux-smb-alert-n",                  "",                      "input-psu-smb-alert-n",   "",
-+	/*H0-H3*/       "",                                       "",                      "",                        "",
-+	/*H4-H7*/       "input-mfg-mode-n",                       "",                      "led-heartbeat-n",         "input-case-open-n",
-+	/*I0-I3*/       "",                                       "",                      "",                        "",
-+	/*I4-I7*/       "",                                       "",                      "",                        "",
-+	/*J0-J3*/       "output-bmc-ready-n",                     "",                      "",                        "",
-+	/*J4-J7*/       "",                                       "",                      "",                        "",
-+	/*K0-K3*/       "",                                       "",                      "",                        "",
-+	/*K4-K7*/       "",                                       "",                      "",                        "",
-+	/*L0-L3*/       "",                                       "",                      "",                        "",
-+	/*L4-L7*/       "",                                       "",                      "",                        "",
-+	/*M0-M3*/       "",                                       "",                      "",                        "",
-+	/*M4-M7*/       "",                                       "",                      "",                        "",
-+	/*N0-N3*/       "",                                       "",                      "",                        "",
-+	/*N4-N7*/       "",                                       "",                      "",                        "",
-+	/*O0-O3*/       "",                                       "",                      "",                        "",
-+	/*O4-O7*/       "",                                       "",                      "",                        "",
-+	/*P0-P3*/       "",                                       "",                      "",                        "",
-+	/*P4-P7*/       "",                                       "",                      "",                        "",
-+	/*Q0-Q3*/       "",                                       "",                      "",                        "",
-+	/*Q4-Q7*/       "input-bmc-smb-present-n",                "",                      "",                        "input-pcie-wake-n",
-+	/*R0-R3*/       "",                                       "",                      "",                        "",
-+	/*R4-R7*/       "",                                       "",                      "",                        "",
-+	/*S0-S3*/       "input-bmc-pchhot-n",                     "",                      "",                        "",
-+	/*S4-S7*/       "",                                       "",                      "",                        "",
-+	/*T0-T3*/       "",                                       "",                      "",                        "",
-+	/*T4-T7*/       "",                                       "",                      "",                        "",
-+	/*U0-U3*/       "",                                       "",                      "",                        "",
-+	/*U4-U7*/       "",                                       "",                      "",                        "",
-+	/*V0-V3*/       "",                                       "",                      "",                        "",
-+	/*V4-V7*/       "",                                       "",                      "",                        "",
-+	/*W0-W3*/       "",                                       "",                      "",                        "",
-+	/*W4-W7*/       "",                                       "",                      "",                        "",
-+	/*X0-X3*/       "",                                       "",                      "",                        "",
-+	/*X4-X7*/       "",                                       "",                      "",                        "",
-+	/*Y0-Y3*/       "input-sleep-s3-n",                       "input-sleep-s5-n",      "",                        "",
-+	/*Y4-Y7*/       "",                                       "",                      "",                        "",
-+	/*Z0-Z3*/       "",                                       "",                      "led-fault-n",             "output-bmc-throttle-n",
-+	/*Z4-Z7*/       "",                                       "",                      "",                        "",
-+	/*AA0-AA3*/     "input-cpu1-thermtrip-latch-n",           "",                      "input-cpu1-prochot-n",    "",
-+	/*AA4-AC7*/     "",                                       "",                      "",                        "",
-+	/*AB0-AB3*/     "",                                       "input-power-good",      "",                        "",
-+	/*AB4-AC7*/     "",                                       "",                      "",                        "",
-+	/*AC0-AC3*/     "",                                       "",                      "",                        "",
-+	/*AC4-AC7*/     "",                                       "",                      "",                        "";
- };
- 
- &fmc {
--- 
-2.44.0
+It may be possible to remove the first line (since 1/5 will only apply
+to 6.8.x and it is already the previous patch in the series, while the
+`Fixes` tag here may make it clear that 2/5 should still go everywhere
+regardless of 1/5), but I guess it does not hurt to be extra clear.
 
+What about:
+
+    Cc: stable@vger.kernel.org # 6.8.x: rust: phy: implement `Send`
+for `Registration`
+    Cc: stable@vger.kernel.org # 6.1+
+    Fixes: 247b365dc8dc ("rust: add `kernel` crate")
+
+Cheers,
+Miguel
