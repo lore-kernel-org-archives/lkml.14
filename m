@@ -1,349 +1,97 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B626172BB5
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 12:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D73173D81;
+	Fri, 29 Mar 2024 12:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711715706; cv=none; b=dwTVjGwdXM8aR+4jb0MbmId5ZbdVV9S+z0CdjObw3qi6A7s+SbSeMH6hEu6euNN4+cqLuihmm3TOISM6pkhJMcbCnUxrDVaknmYEOEQcxL1gWzB+dZG3N/MctD7pHm4k495JWOP/z7cY2qeiQCxWSI62gd/rj/idGMb4Yoskycg=
+	t=1711715710; cv=none; b=PkevIAsAPliVQmukltn9A9PO8upYah1Rnn6lkHbAMwze1IKZKNF7pDEQZ2p/0Ws0hU/sMMTwLxvm7ORqaBIwwj64aDAo7duiUpok82bNfsm5HNI6ef/B9WPEBEvlHJv59LC2JbZhlbJZfJc+RKRKsBPqoP8R8J8lvCzuK4IT1iI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711715706; c=relaxed/simple;
-	bh=hUw1tSgUbQaguTUaxWEiY6TD60rXliiQVrxgiTsIXvQ=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=XXxf9UUxM7czUviQDlImJqKK7pIj15Ls2cDvUWPxwEVt6I/D+SDf1KZBH4JmhRt48d620ZTkB0zWQvQdVZfXbFOCJVUA8eD6PoEiQdlsZJXZxbQGD2Zv1x8i6I3n/HFORUhr0Gpx9A+VoAMUPeg06EJeEBlDErvUShokYMt32hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=H8nDv2zX; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1711715710; c=relaxed/simple;
+	bh=BwONR/zqN+f1kbGae3Kf+DFaoALpqNV58n1AullloRk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tRjIaV1XtJB2tEyZwIAgXAnmj31hMcZLeeeyRg61D3cCfobm1TqmQlS7K6PQBKX80WPDnmxyIIAnYpCNuWPmAxWqZlV4Tdml/BWHpFU33QA0TIh3rIabvttvr3uI5mgXtZ4IWchKeMFdPaTCh+p2DxGn8aJ14jf8Y9YTls18gYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XF9khGBO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="H8nDv2zX"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d6fd3cfaa6so27277541fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 05:35:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711715701; x=1712320501; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=KC8w3+NJEoEp4iFjjEQ7VsL+cucprnwnTVjKhg4Pdoo=;
-        b=H8nDv2zXcYrw3rEJzPbHS3LuORhRLleeIMfk6mZl9oWGnkhFrAVNp5sImqDsE7HUJ0
-         zl9qxZEc9uUJfJpblZfLcFx2sCODhCGdeM8D0T97tnMgIRL+bO1R0M4yoGO3w/YPJPNM
-         jxKRPkyKLNGac1iIbREcEGDrjWLXuBiwxe1pbZhNv3vq13sxMVa2cOPfl9mtjMTasAj3
-         3hwYET7EvIdYfaWrjraBDPfnXdT6qwHwVFustrRLNQC6hSZDLpgzIHK5zlDLApEK+7Xr
-         inkqIdQhF/eTbkSXANBZGTohKlR9A8M4Lffsn8I5w1Np2IWo69GKg5B+6QRWh4FVaplt
-         CXpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711715701; x=1712320501;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KC8w3+NJEoEp4iFjjEQ7VsL+cucprnwnTVjKhg4Pdoo=;
-        b=Vyys+6RDqrdYwQSP2xUr6UNcujE9PzBp15sbGqWWUkKX3EhWtEF23fUMKkZu+myoG1
-         LX8UJzvVFmwUkA+15VZtnYcJGb2wv5q0U9Fz3juz0cWzfZhp77Q/ZIcoja/YxDkGVq62
-         xtizXUCQ+5HQzlhxAJ9UzsPT2MXjPrzO3DONV4TgLA6cSOZwhYjjZ36VHhgFXnoAIfIj
-         XNJLaMiC4NHGNrNzbtu7Fjon62Sl0ctspWiAqFCPGxI2wI4lNjcxK+L6WrDHRFDcPife
-         z4NfGVSrMzRI3Hv2ax4VI8lAhLLCQAOHJKrHzl2CqLB+23HQnVWGW0/YDldYfT1nnkS/
-         cXvA==
-X-Forwarded-Encrypted: i=1; AJvYcCX3kkip1O7syo6wHPepYl9T/TaVqdm9Or7UwTSJ6NWkg2cZ7BH9oQYX6rGucq4YvS47OHCkNlMkauhEg0tEa/8hDh+UlC+t5s2+Pddu
-X-Gm-Message-State: AOJu0Yw0asJyC0yOS9mCoZzjK3ppSS5PxYYmKT62DLLpIsq+KsvX/yrg
-	NolQy6+lGqV9Wkh2WWHtwRdm86VVD348Uw/t1MG+Kj4TVNGaJWw7wn6St6GNyME=
-X-Google-Smtp-Source: AGHT+IEqnZmZnd/1sz5qvYox5md+LW+1OE5EJ48R6LS63eh6sEQiAaI25oj7fuUOQA3dlUi+U7wpjA==
-X-Received: by 2002:a2e:7e12:0:b0:2d7:2ba:525 with SMTP id z18-20020a2e7e12000000b002d702ba0525mr1339873ljc.18.1711715701308;
-        Fri, 29 Mar 2024 05:35:01 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:f8f5:63d4:de5b:e4de])
-        by smtp.gmail.com with ESMTPSA id jb2-20020a05600c54e200b004155387c08esm525835wmb.27.2024.03.29.05.35.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Mar 2024 05:35:00 -0700 (PDT)
-References: <20240325-amlogic-v6-4-upstream-dsi-ccf-vim3-v11-0-04f55de44604@linaro.org>
- <20240325-amlogic-v6-4-upstream-dsi-ccf-vim3-v11-2-04f55de44604@linaro.org>
-User-agent: mu4e 1.10.8; emacs 29.2
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Martin Blumenstingl
- <martin.blumenstingl@googlemail.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Nicolas Belin <nbelin@baylibre.com>,
- Jagan Teki <jagan@amarulasolutions.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v11 2/7] clk: meson: add vclk driver
-Date: Fri, 29 Mar 2024 13:33:29 +0100
-In-reply-to: <20240325-amlogic-v6-4-upstream-dsi-ccf-vim3-v11-2-04f55de44604@linaro.org>
-Message-ID: <1jzfuh8bd7.fsf@starbuckisacylon.baylibre.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XF9khGBO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9860DC433C7;
+	Fri, 29 Mar 2024 12:35:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711715709;
+	bh=BwONR/zqN+f1kbGae3Kf+DFaoALpqNV58n1AullloRk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=XF9khGBO3mvBZOnEbYDLV2CCZAN+1Ve2o9kZHRn9/ZGSsF5FraqGjZyLwIcb0t0wn
+	 UpAKkcve8ucVpx1SDYdrJgUFvlGNK9WqhELA7trYSkVwMu+d27zsnfIMMEqw10rVui
+	 9HHxH3V6m2NnmW0VbLXjdtDy0TWnKiEylFNxCASv8EKmGKPvFN5pDkjU1YyqJ0OjKe
+	 9dqvAi3tGg6yGnyeS/MzuyJtqQouw4apamZCW+tAdOQ6Wvwwsz91OcbY+KwsL8/YBh
+	 OV2xC+i8yXJ1HPrir/K7dHYNLNf2ZviEToZAuBePPbV7St3Df1k+9VihNclxDiIjMn
+	 FpVQyZVBeKUlA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>,
+	kernel test robot <lkp@intel.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <n.schier@avm.de>,
+	linux-sh@vger.kernel.org,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 11/15] sh: Fix build with CONFIG_UBSAN=y
+Date: Fri, 29 Mar 2024 08:34:34 -0400
+Message-ID: <20240329123445.3086536-11-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240329123445.3086536-1-sashal@kernel.org>
+References: <20240329123445.3086536-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.4.273
+Content-Transfer-Encoding: 8bit
 
+From: Kees Cook <keescook@chromium.org>
 
-On Mon 25 Mar 2024 at 12:09, Neil Armstrong <neil.armstrong@linaro.org> wrote:
+[ Upstream commit e36b70fb8c707a0688960184380bc151390d671b ]
 
-> The VCLK and VCLK_DIV clocks have supplementary bits.
->
-> The VCLK gate has a "SOFT RESET" bit to toggle after the whole
-> VCLK sub-tree rate has been set, this is implemented in
-> the gate enable callback.
->
-> The VCLK_DIV clocks as enable and reset bits used to disable
-> and reset the divider, associated with CLK_SET_RATE_GATE it ensures
-> the rate is set while the divider is disabled and in reset mode.
->
-> The VCLK_DIV enable bit isn't implemented as a gate since it's part
-> of the divider logic and vendor does this exact sequence to ensure
-> the divider is correctly set.
+The early boot stub for sh had UBSan instrumentation present where it is
+not supported. Disable it for this part of the build.
 
-checkpatch reports a few easy CHECKs and one WARNING.
-Could you please fix these ?
+  sh4-linux-ld: arch/sh/boot/compressed/misc.o: in function `zlib_inflate_table':
+  misc.c:(.text+0x670): undefined reference to `__ubsan_handle_shift_out_of_bounds'
 
-Other than that, It looks OK.
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202401310416.s8HLiLnC-lkp@intel.com/
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nicolas Schier <n.schier@avm.de>
+Cc:  <linux-sh@vger.kernel.org>
+Link: https://lore.kernel.org/r/20240130232717.work.088-kees@kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/sh/boot/compressed/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
->
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
->  drivers/clk/meson/Kconfig  |   4 ++
->  drivers/clk/meson/Makefile |   1 +
->  drivers/clk/meson/vclk.c   | 141 +++++++++++++++++++++++++++++++++++++++++++++
->  drivers/clk/meson/vclk.h   |  51 ++++++++++++++++
->  4 files changed, 197 insertions(+)
->
-> diff --git a/drivers/clk/meson/Kconfig b/drivers/clk/meson/Kconfig
-> index 29ffd14d267b..8a9823789fa3 100644
-> --- a/drivers/clk/meson/Kconfig
-> +++ b/drivers/clk/meson/Kconfig
-> @@ -30,6 +30,10 @@ config COMMON_CLK_MESON_VID_PLL_DIV
->  	tristate
->  	select COMMON_CLK_MESON_REGMAP
->  
-> +config COMMON_CLK_MESON_VCLK
-> +	tristate
-> +	select COMMON_CLK_MESON_REGMAP
-> +
->  config COMMON_CLK_MESON_CLKC_UTILS
->  	tristate
->  
-> diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
-> index 9ee4b954c896..9ba43fe7a07a 100644
-> --- a/drivers/clk/meson/Makefile
-> +++ b/drivers/clk/meson/Makefile
-> @@ -12,6 +12,7 @@ obj-$(CONFIG_COMMON_CLK_MESON_PLL) += clk-pll.o
->  obj-$(CONFIG_COMMON_CLK_MESON_REGMAP) += clk-regmap.o
->  obj-$(CONFIG_COMMON_CLK_MESON_SCLK_DIV) += sclk-div.o
->  obj-$(CONFIG_COMMON_CLK_MESON_VID_PLL_DIV) += vid-pll-div.o
-> +obj-$(CONFIG_COMMON_CLK_MESON_VCLK) += vclk.o
->  
->  # Amlogic Clock controllers
->  
-> diff --git a/drivers/clk/meson/vclk.c b/drivers/clk/meson/vclk.c
-> new file mode 100644
-> index 000000000000..3ea813a0a995
-> --- /dev/null
-> +++ b/drivers/clk/meson/vclk.c
-> @@ -0,0 +1,141 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2024 Neil Armstrong <neil.armstrong@linaro.org>
-> + */
-> +
-> +#include <linux/module.h>
-> +#include "vclk.h"
-> +
-> +/* The VCLK gate has a supplementary reset bit to pulse after ungating */
-> +
-> +static inline struct meson_vclk_gate_data *
-> +clk_get_meson_vclk_gate_data(struct clk_regmap *clk)
-> +{
-> +	return (struct meson_vclk_gate_data *)clk->data;
-> +}
-> +
-> +static int meson_vclk_gate_enable(struct clk_hw *hw)
-> +{
-> +	struct clk_regmap *clk = to_clk_regmap(hw);
-> +	struct meson_vclk_gate_data *vclk = clk_get_meson_vclk_gate_data(clk);
-> +
-> +	meson_parm_write(clk->map, &vclk->enable, 1);
-> +
-> +	/* Do a reset pulse */
-> +	meson_parm_write(clk->map, &vclk->reset, 1);
-> +	meson_parm_write(clk->map, &vclk->reset, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static void meson_vclk_gate_disable(struct clk_hw *hw)
-> +{
-> +	struct clk_regmap *clk = to_clk_regmap(hw);
-> +	struct meson_vclk_gate_data *vclk = clk_get_meson_vclk_gate_data(clk);
-> +
-> +	meson_parm_write(clk->map, &vclk->enable, 0);
-> +}
-> +
-> +static int meson_vclk_gate_is_enabled(struct clk_hw *hw)
-> +{
-> +	struct clk_regmap *clk = to_clk_regmap(hw);
-> +	struct meson_vclk_gate_data *vclk = clk_get_meson_vclk_gate_data(clk);
-> +
-> +	return meson_parm_read(clk->map, &vclk->enable);
-> +}
-> +
-> +const struct clk_ops meson_vclk_gate_ops = {
-> +	.enable = meson_vclk_gate_enable,
-> +	.disable = meson_vclk_gate_disable,
-> +	.is_enabled = meson_vclk_gate_is_enabled,
-> +};
-> +EXPORT_SYMBOL_GPL(meson_vclk_gate_ops);
-> +
-> +/* The VCLK Divider has supplementary reset & enable bits */
-> +
-> +static inline struct meson_vclk_div_data *
-> +clk_get_meson_vclk_div_data(struct clk_regmap *clk)
-> +{
-> +	return (struct meson_vclk_div_data *)clk->data;
-> +}
-> +
-> +static unsigned long meson_vclk_div_recalc_rate(struct clk_hw *hw,
-> +						     unsigned long prate)
-> +{
-> +	struct clk_regmap *clk = to_clk_regmap(hw);
-> +	struct meson_vclk_div_data *vclk = clk_get_meson_vclk_div_data(clk);
-> +
-> +	return divider_recalc_rate(hw, prate, meson_parm_read(clk->map, &vclk->div),
-> +				   vclk->table, vclk->flags, vclk->div.width);
-> +}
-> +
-> +static int meson_vclk_div_determine_rate(struct clk_hw *hw,
-> +					      struct clk_rate_request *req)
-> +{
-> +	struct clk_regmap *clk = to_clk_regmap(hw);
-> +	struct meson_vclk_div_data *vclk = clk_get_meson_vclk_div_data(clk);
-> +
-> +	return divider_determine_rate(hw, req, vclk->table, vclk->div.width,
-> +				      vclk->flags);
-> +}
-> +
-> +static int meson_vclk_div_set_rate(struct clk_hw *hw, unsigned long rate,
-> +					unsigned long parent_rate)
-> +{
-> +	struct clk_regmap *clk = to_clk_regmap(hw);
-> +	struct meson_vclk_div_data *vclk = clk_get_meson_vclk_div_data(clk);
-> +	int ret;
-> +
-> +	ret = divider_get_val(rate, parent_rate, vclk->table, vclk->div.width,
-> +			      vclk->flags);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	meson_parm_write(clk->map, &vclk->div, ret);
-> +
-> +	return 0;
-> +};
-> +
-> +static int meson_vclk_div_enable(struct clk_hw *hw)
-> +{
-> +	struct clk_regmap *clk = to_clk_regmap(hw);
-> +	struct meson_vclk_div_data *vclk = clk_get_meson_vclk_div_data(clk);
-> +
-> +	/* Unreset the divider when ungating */
-> +	meson_parm_write(clk->map, &vclk->reset, 0);
-> +	meson_parm_write(clk->map, &vclk->enable, 1);
-> +
-> +	return 0;
-> +}
-> +
-> +static void meson_vclk_div_disable(struct clk_hw *hw)
-> +{
-> +	struct clk_regmap *clk = to_clk_regmap(hw);
-> +	struct meson_vclk_div_data *vclk = clk_get_meson_vclk_div_data(clk);
-> +
-> +	/* Reset the divider when gating */
-> +	meson_parm_write(clk->map, &vclk->enable, 0);
-> +	meson_parm_write(clk->map, &vclk->reset, 1);
-> +}
-> +
-> +static int meson_vclk_div_is_enabled(struct clk_hw *hw)
-> +{
-> +	struct clk_regmap *clk = to_clk_regmap(hw);
-> +	struct meson_vclk_div_data *vclk = clk_get_meson_vclk_div_data(clk);
-> +
-> +	return meson_parm_read(clk->map, &vclk->enable);
-> +}
-> +
-> +const struct clk_ops meson_vclk_div_ops = {
-> +	.recalc_rate = meson_vclk_div_recalc_rate,
-> +	.determine_rate = meson_vclk_div_determine_rate,
-> +	.set_rate = meson_vclk_div_set_rate,
-> +	.enable = meson_vclk_div_enable,
-> +	.disable = meson_vclk_div_disable,
-> +	.is_enabled = meson_vclk_div_is_enabled,
-> +};
-> +EXPORT_SYMBOL_GPL(meson_vclk_div_ops);
-> +
-> +MODULE_DESCRIPTION("Amlogic vclk clock driver");
-> +MODULE_AUTHOR("Neil Armstrong <neil.armstrong@linaro.org>");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/clk/meson/vclk.h b/drivers/clk/meson/vclk.h
-> new file mode 100644
-> index 000000000000..20b0b181db09
-> --- /dev/null
-> +++ b/drivers/clk/meson/vclk.h
-> @@ -0,0 +1,51 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2024 Neil Armstrong <neil.armstrong@linaro.org>
-> + */
-> +
-> +#ifndef __VCLK_H
-> +#define __VCLK_H
-> +
-> +#include "clk-regmap.h"
-> +#include "parm.h"
-> +
-> +/**
-> + * struct meson_vclk_gate_data - vclk_gate regmap backed specific data
-> + *
-> + * @enable:	vclk enable field
-> + * @reset:	vclk reset field
-> + * @flags:	hardware-specific flags
-> + *
-> + * Flags:
-> + * Same as clk_gate except CLK_GATE_HIWORD_MASK which is ignored
-> + */
-> +struct meson_vclk_gate_data {
-> +	struct parm enable;
-> +	struct parm reset;
-> +	u8 flags;
-> +};
-> +
-> +extern const struct clk_ops meson_vclk_gate_ops;
-> +
-> +/**
-> + * struct meson_vclk_div_data - vclk_div regmap back specific data
-> + *
-> + * @div:	divider field
-> + * @enable:	vclk divider enable field
-> + * @reset:	vclk divider reset field
-> + * @table:	array of value/divider pairs, last entry should have div = 0
-> + *
-> + * Flags:
-> + * Same as clk_divider except CLK_DIVIDER_HIWORD_MASK which is ignored
-> + */
-> +struct meson_vclk_div_data {
-> +	struct parm div;
-> +	struct parm enable;
-> +	struct parm reset;
-> +	const struct clk_div_table *table;
-> +	u8 flags;
-> +};
-> +
-> +extern const struct clk_ops meson_vclk_div_ops;
-> +
-> +#endif /* __VCLK_H */
-
-
+diff --git a/arch/sh/boot/compressed/Makefile b/arch/sh/boot/compressed/Makefile
+index f5e1bd7797892..362f2c9f9f7fc 100644
+--- a/arch/sh/boot/compressed/Makefile
++++ b/arch/sh/boot/compressed/Makefile
+@@ -13,6 +13,7 @@ targets		:= vmlinux vmlinux.bin vmlinux.bin.gz \
+ OBJECTS = $(obj)/head_$(BITS).o $(obj)/misc.o $(obj)/cache.o
+ 
+ GCOV_PROFILE := n
++UBSAN_SANITIZE := n
+ 
+ #
+ # IMAGE_OFFSET is the load offset of the compression loader
 -- 
-Jerome
+2.43.0
+
