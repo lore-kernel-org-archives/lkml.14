@@ -1,40 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137D11A9715;
-	Fri, 29 Mar 2024 12:48:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443451A972E;
+	Fri, 29 Mar 2024 12:48:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711716503; cv=none; b=qIlfGadwvXEQDskggS5+UZcvSkTsVArf0MgABXkinAeH3a5A0qGAb+WJvFucbWadNjAZFJiCl1zJJump4yOgs/q+8RDOPCr83OPpjAsCktLoaaDD/MB9Sxc/K4qCUCuJXUIPc4dHfiOdXxZgq0CbcM+vdqG0em139HKLhEfS4BE=
+	t=1711716504; cv=none; b=qup/0UCcbmdyK4thNarv4CTLMYAm4QIiu+usmkDt6+G75eKQT4EQRaUqKIYE389jFI9LRdqSnuXKUEhTHKuJL0Bv3XYZZt3kP8PPVEE/3RBl4p2wmlFzR7P33mC52wkH408mkhG9cO2UPggzPUGEi8nSNJy+rmmVYhi9vU6QIb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711716503; c=relaxed/simple;
-	bh=Kdyszlwq5JIK92eTlec4mtX/vVJlwIS0I5GaYJWP4a0=;
+	s=arc-20240116; t=1711716504; c=relaxed/simple;
+	bh=QxAspnF+Q/762ofMmENnwvPkf4tzEDzjKXMF/otpWVs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g9AIA/ZHiE0fTY+PrEiQXqcu3DQjeGcc2dxHhpUzl7+97pggrMD+3p0ZxRzWpq+rWC27sgjxyfQicvERP7HS36c+UWdHctQkPhBbIoej05yc9iEr2Wb6+Fuqqm6KQHLy5BBz0/9Cu7Sj+6wuDGSLUz5kthFQjE1/lqtBVLJOXLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KZiflXBB; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=CBRICLj5ZWqDYMUwwNMw5jkE1Y39ce70BMwkA2Pb+2EqXzU55sQOVt37wzbEwRLCjdIaONIMZzbBxtR5o+vXFlpuTLc0bZLsIV1U4S07DEHWaniyNLP/DRx/yCecWZlG4d9TOcSnAAjD2+46W/H4CcH+6wUcgW4sqs6vNtZXx7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i4JLQLSd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KZiflXBB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 219E4C433F1;
-	Fri, 29 Mar 2024 12:48:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i4JLQLSd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26F73C433C7;
+	Fri, 29 Mar 2024 12:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711716502;
-	bh=Kdyszlwq5JIK92eTlec4mtX/vVJlwIS0I5GaYJWP4a0=;
+	s=k20201202; t=1711716504;
+	bh=QxAspnF+Q/762ofMmENnwvPkf4tzEDzjKXMF/otpWVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KZiflXBBy5Cy4IekttU+qg2e3rmOt190v6Tx5zft0gdjcvdaNs7GPRA0goB7aS3h8
-	 5byfKrDY4NqJYkegv8D8kTcj+dPaD/rtB23Ol9o4fDxRRIG2jRpynbTGyFKfl2MDbd
-	 fgqzVH6LiP0R8bgLD/yqrmEdlEfchG8cJhiZj9T2+fj2bp13pwcu23ZvZx23Z1wTR5
-	 FluHV64KOa5yZwcA+Hkh2UalTjP8l96hBLeVLD8Nx1sy8YCRVrLh6PVi1lEPGkqhnP
-	 ic6GEJ5e4t8uJqZuddUH9g7Me6CJhdOC8CvbcythUkH3edV8bejWmurWBEheFaFM8Z
-	 6HW6FLGwSwsmQ==
+	b=i4JLQLSdIAQlr+Lyk8qNXyKwcQVQ5GuGFnBwYDJvHqdCT/eGQFqcTLkcFQrM9LlSk
+	 HbIh9tM1PRxZj6UhjpoGm5Hm5rklAQ2opCo8TwAey+4/IHyXqxWR2Wc8/VHa/+Er1H
+	 I2c701Vf2WUxxjY7OoJkW3jyzszYybJJytRtOdqxQHi4ZJRwpnzVTbAaQPxnNXInRg
+	 fpn/4AceeHYfrQRR4zHGtA6f4wJ0PSk2Ad1UxQ5tv2EICC+W6IBum6qRcxWnhmSJ9E
+	 6apKusDXYEIbY0h6SmOdfNU3HBYA7S2qMeo5GwOnXQk5cAgdkb0y3xVmqvaX3G4fm8
+	 RPKp6SlMIq0bQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.15 18/34] tools/power x86_energy_perf_policy: Fix file leak in get_pkg_num()
-Date: Fri, 29 Mar 2024 08:47:19 -0400
-Message-ID: <20240329124750.3092394-18-sashal@kernel.org>
+Cc: Dai Ngo <dai.ngo@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Sasha Levin <sashal@kernel.org>,
+	anna@kernel.org,
+	chuck.lever@oracle.com,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 19/34] SUNRPC: increase size of rpc_wait_queue.qlen from unsigned short to unsigned int
+Date: Fri, 29 Mar 2024 08:47:20 -0400
+Message-ID: <20240329124750.3092394-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240329124750.3092394-1-sashal@kernel.org>
 References: <20240329124750.3092394-1-sashal@kernel.org>
@@ -49,33 +53,84 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.153
 Content-Transfer-Encoding: 8bit
 
-From: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
+From: Dai Ngo <dai.ngo@oracle.com>
 
-[ Upstream commit f85450f134f0b4ca7e042dc3dc89155656a2299d ]
+[ Upstream commit 2c35f43b5a4b9cdfaa6fdd946f5a212615dac8eb ]
 
-In function get_pkg_num() if fopen_or_die() succeeds it returns a file
-pointer to be used. But fclose() is never called before returning from
-the function.
+When the NFS client is under extreme load the rpc_wait_queue.qlen counter
+can be overflowed. Here is an instant of the backlog queue overflow in a
+real world environment shown by drgn helper:
 
-Signed-off-by: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+rpc_task_stats(rpc_clnt):
+-------------------------
+rpc_clnt: 0xffff92b65d2bae00
+rpc_xprt: 0xffff9275db64f000
+  Queue:  sending[64887] pending[524] backlog[30441] binding[0]
+XMIT task: 0xffff925c6b1d8e98
+     WRITE: 750654
+        __dta_call_status_580: 65463
+        __dta_call_transmit_status_579: 1
+        call_reserveresult: 685189
+        nfs_client_init_is_complete: 1
+    COMMIT: 584
+        call_reserveresult: 573
+        __dta_call_status_580: 11
+    ACCESS: 1
+        __dta_call_status_580: 1
+   GETATTR: 10
+        __dta_call_status_580: 4
+        call_reserveresult: 6
+751249 tasks for server 111.222.333.444
+Total tasks: 751249
+
+count_rpc_wait_queues(xprt):
+----------------------------
+**** rpc_xprt: 0xffff9275db64f000 num_reqs: 65511
+wait_queue: xprt_binding[0] cnt: 0
+wait_queue: xprt_binding[1] cnt: 0
+wait_queue: xprt_binding[2] cnt: 0
+wait_queue: xprt_binding[3] cnt: 0
+rpc_wait_queue[xprt_binding].qlen: 0 maxpriority: 0
+wait_queue: xprt_sending[0] cnt: 0
+wait_queue: xprt_sending[1] cnt: 64887
+wait_queue: xprt_sending[2] cnt: 0
+wait_queue: xprt_sending[3] cnt: 0
+rpc_wait_queue[xprt_sending].qlen: 64887 maxpriority: 3
+wait_queue: xprt_pending[0] cnt: 524
+wait_queue: xprt_pending[1] cnt: 0
+wait_queue: xprt_pending[2] cnt: 0
+wait_queue: xprt_pending[3] cnt: 0
+rpc_wait_queue[xprt_pending].qlen: 524 maxpriority: 0
+wait_queue: xprt_backlog[0] cnt: 0
+wait_queue: xprt_backlog[1] cnt: 685801
+wait_queue: xprt_backlog[2] cnt: 0
+wait_queue: xprt_backlog[3] cnt: 0
+rpc_wait_queue[xprt_backlog].qlen: 30441 maxpriority: 3 [task cnt mismatch]
+
+There is no effect on operations when this overflow occurs. However
+it causes confusion when trying to diagnose the performance problem.
+
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/sunrpc/sched.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
-index 5fd9e594079cf..ebda9c366b2ba 100644
---- a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
-+++ b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
-@@ -1241,6 +1241,7 @@ unsigned int get_pkg_num(int cpu)
- 	retval = fscanf(fp, "%d\n", &pkg);
- 	if (retval != 1)
- 		errx(1, "%s: failed to parse", pathname);
-+	fclose(fp);
- 	return pkg;
- }
- 
+diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
+index ba047a145e092..f5fe330e4f4da 100644
+--- a/include/linux/sunrpc/sched.h
++++ b/include/linux/sunrpc/sched.h
+@@ -199,7 +199,7 @@ struct rpc_wait_queue {
+ 	unsigned char		maxpriority;		/* maximum priority (0 if queue is not a priority queue) */
+ 	unsigned char		priority;		/* current priority */
+ 	unsigned char		nr;			/* # tasks remaining for cookie */
+-	unsigned short		qlen;			/* total # tasks waiting in queue */
++	unsigned int		qlen;			/* total # tasks waiting in queue */
+ 	struct rpc_timer	timer_list;
+ #if IS_ENABLED(CONFIG_SUNRPC_DEBUG) || IS_ENABLED(CONFIG_TRACEPOINTS)
+ 	const char *		name;
 -- 
 2.43.0
 
