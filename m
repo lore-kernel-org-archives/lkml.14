@@ -1,32 +1,32 @@
-Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 569AC83A1C
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 10:56:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FBD85659
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 10:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711709813; cv=none; b=p2w4eHhVz/TV9RIrwSPkkS/U5sb9RZkXVB3cy+WUhC5Rl/HXEUnQt2yzlEA40YMN/t5ebqMkTYtvAC1jKsligU41RAqKADytfeVJdMop3Rz1TNud2yPBZrhhYlIaSPVKN81tUNWRRkw62RoTHEPuHd7qCcE7WjkcSCmAHg/fLFQ=
+	t=1711709814; cv=none; b=KtVBqFUkc6VPOGztUdBAQQrGO+3x6frZwSS4FxGUbd1lz8FMg9LgAr+ZNPvfqjYcDmd9ef3mBT3KnhllBX8rpP7xoh13JviyQhIlogU5kTbbDpPCpD31pliJlU9xuSoeOTZdmTzDSE+2JxUpk0zlMwNVhHvV2k9M3ppCApzWgQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711709813; c=relaxed/simple;
-	bh=MntR2VoWY9d1UM+GLc/rVG7Vv1KYkGV3SbVUjUoYChA=;
+	s=arc-20240116; t=1711709814; c=relaxed/simple;
+	bh=Nu9sYchMYtdoAcYQDRWy92zX8RGluRxWCKF8EUIbUns=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nEAEegulpRGIFdrDURGTPFNvoM3BsoD+n2bvevN6c8ulDdw6O5iaBX7uyFPucZuxoLcpwFYOWRuktyxFTTGcw0pPD4QMR5IZi1DQ7B5IODdssvNGkTLN59EME8XfCuj3dw2SWLOpsGMSJDiPRUk50vjwURYmXqL5yrfoy/jCB84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
+	 MIME-Version; b=LVjIffOhxXkUr3uDzFrqccHfhRxx1qoIgthRaTGerZ8uc702QMsF95ryjxy+M8jxFRNn5QaqaQ4xfCqU7FSX3S/b3bGBRTqXSh0ZMA7iBE2fd9wIzDuYmft9NwC7YjXU31DOHkFj0yXwX7qViOfd97hTAjREJi3xB2J9u4szpVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.83
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
 Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
-	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
-	id 080b5b1f-edbb-11ee-b3cf-005056bd6ce9;
-	Fri, 29 Mar 2024 12:56:44 +0200 (EET)
+	by fgw22.mail.saunalahti.fi (Halon) with ESMTP
+	id 08e01b89-edbb-11ee-a9de-005056bdf889;
+	Fri, 29 Mar 2024 12:56:46 +0200 (EET)
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Andy Shevchenko <andy.shevchenko@gmail.com>,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 09/11] pinctrl: aw9523: Sort headers and group pinctrl/*
-Date: Fri, 29 Mar 2024 12:55:23 +0200
-Message-ID: <20240329105634.712457-10-andy.shevchenko@gmail.com>
+Subject: [PATCH v2 11/11] pinctrl: aw9523: Remove redundant dependency to OF
+Date: Fri, 29 Mar 2024 12:55:25 +0200
+Message-ID: <20240329105634.712457-12-andy.shevchenko@gmail.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240329105634.712457-1-andy.shevchenko@gmail.com>
 References: <20240329105634.712457-1-andy.shevchenko@gmail.com>
@@ -38,42 +38,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-One header was misplaced and group pinctrl/* ones to show the relation
-with the pin control subsystem.
+Driver does not dependent on OF, remove it.
+While here, add missing mod_devicetable.h.
 
 Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/pinctrl/pinctrl-aw9523.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/pinctrl/Kconfig          | 2 +-
+ drivers/pinctrl/pinctrl-aw9523.c | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index d45657aa986ae..c413109b1173b 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -129,7 +129,7 @@ config PINCTRL_AXP209
+ 
+ config PINCTRL_AW9523
+ 	tristate "Awinic AW9523/AW9523B I2C GPIO expander pinctrl driver"
+-	depends on OF && I2C
++	depends on I2C
+ 	select PINMUX
+ 	select PINCONF
+ 	select GENERIC_PINCONF
 diff --git a/drivers/pinctrl/pinctrl-aw9523.c b/drivers/pinctrl/pinctrl-aw9523.c
-index fe398c59c2d11..49d5035899227 100644
+index b5e1c467625ba..1d0ce78115da7 100644
 --- a/drivers/pinctrl/pinctrl-aw9523.c
 +++ b/drivers/pinctrl/pinctrl-aw9523.c
-@@ -13,17 +13,18 @@
+@@ -12,6 +12,7 @@
  #include <linux/init.h>
  #include <linux/interrupt.h>
  #include <linux/irq.h>
--#include <linux/mutex.h>
++#include <linux/mod_devicetable.h>
  #include <linux/module.h>
--#include <linux/pinctrl/pinconf.h>
--#include <linux/pinctrl/pinctrl.h>
--#include <linux/pinctrl/pinmux.h>
--#include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/mutex.h>
+ #include <linux/mutex.h>
  #include <linux/property.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
- #include <linux/slab.h>
- 
-+#include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinmux.h>
-+
- #define AW9523_MAX_FUNCS		2
- #define AW9523_NUM_PORTS		2
- #define AW9523_PINS_PER_PORT		8
 -- 
 2.44.0
 
