@@ -1,47 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7359E1494DA;
-	Fri, 29 Mar 2024 12:29:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E47149E16;
+	Fri, 29 Mar 2024 12:29:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711715341; cv=none; b=PgAKlW6dBdNn/AnOneGnG+CnsTMCciP47QvGt1PNUeXdOoe8b/eUYpnLiwo1jWtB+LmSMZaohkwXnX+2ylkqEFC9+JTn5LLRJAKaxulRcCmSEnefCF+OIk0K9CCWP9aRfXTJa1lA25vMoYyRbpBM1FSeh4y0Qt5YVWq+LW19pA8=
+	t=1711715344; cv=none; b=BxFmA/s+YbdEbMzSqcmmfVfz/QhxTAH3BroxSn3FK9C1Z5X5iRhuMaC8JvxyF4/wHgHiCmW4/Tzuscg8W23CwlRZMD3DQOTc1Y8tTqP/6fIw/j/bF1XjDIp62WO1b/3hnpw3RAsq6pn+pMOPUwhblwk8lbBwBexLfZSULtR37X4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711715341; c=relaxed/simple;
-	bh=VBbr5zV+DGiCnpCpxIGYBmWTVXJfvphyBATaBXAmY8w=;
+	s=arc-20240116; t=1711715344; c=relaxed/simple;
+	bh=1LkM0DVVSxHRFqCqUyibA4ChmpR37hD2y9C2DhaWz7A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YiJNsYADNvd/QmYdBfvohMZqrCuW4lFTKr5sTMKetUvWSvK/q3uhxtYBqfVYByN4tyK39wyZVQHdtxpd9+wqomkh8Z7CFBvsaueT/QLWfn7scb3ZOAIXxPur9Dbf3YIp+W/EmH4c2HfgSMX/ILcYluWDJvpmoHdaykm5DYL5/Gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nA1ttXm9; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=aP3kQWuy20Ibo44TUQ2iprIN3zigYZFEYt8rVSPnWayDHRkXh52OLkTUosOIbrkU5AGy17uu0FhMTWYFgXf5phgBB2aXtaI8M6ehsJ7mwwuTJETPcgI9mOxXuqtKS2hpf+ptz21Tr0u9xsyLAz4UeY9fZiaa4liUmxerr9UdItY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mq4jnvvI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nA1ttXm9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19BA0C433A6;
-	Fri, 29 Mar 2024 12:29:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mq4jnvvI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3921DC433C7;
+	Fri, 29 Mar 2024 12:29:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711715341;
-	bh=VBbr5zV+DGiCnpCpxIGYBmWTVXJfvphyBATaBXAmY8w=;
+	s=k20201202; t=1711715344;
+	bh=1LkM0DVVSxHRFqCqUyibA4ChmpR37hD2y9C2DhaWz7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nA1ttXm9PKt3XZj729XZD22+k9T98SG4dFAnpAo9Iey9W72Ip38tn5P7f3PjEUwAp
-	 Pkid58TI2m2FKLxK1lwH/HFU1eZqEY9NSVWN2FOqlDriA/tm3Y+z8X1IemCLW07XZt
-	 7QdXTEtSokD9Qf1HcPFt8Pj3pDCK7lcEqCt/xo2idkDUynIg7SqzOTRnWnn6auv9wc
-	 qYMVZXuSTMkAS6WVFi7Eeni8n2WsIPgc91+Mcgj86ANrVsMXn6KoCadYd3c5ffxm1v
-	 GSyHZ5f0/M+byGTr+CQ0nbuINpQBbvk6nd15hWuPbL3mJ275J/tdo803sWs/5pd7ws
-	 BvEs6h/XaVfAw==
+	b=Mq4jnvvIynNy7PVk6Zqm3UGiAxeRP38crRwM/YUD+//rfP0XzDT6c3KCvhXswDbtX
+	 4n1F00i1Onzv4ugsiG8+sh1TR2j+Qm9M5F6k9xsRwwi41mwHHamTvOp6bKQ4zGK/5l
+	 4jeRbgDmdacffQ6iJ0KPbDV5Fo1o+4AtCQM4fjLQq0ZCAHAKyz/0Q/E2SQH+1UEn8V
+	 SwlzILh9EH3Ve8cffvLY+AUo7+fOcJaCz7F73x+yyNry75OVIK/C7WfoeTyD81kc3i
+	 EVx54Q0IOlfsCICfbKqvSTV+4U2fdEPIgwoKwK75PIZIA8ZhBVU1zDTPdT48PeVz/m
+	 7vEmDhPVOVFsw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Johannes Berg <johannes.berg@intel.com>,
-	syzbot+d050d437fe47d479d210@syzkaller.appspotmail.com,
+Cc: David Sterba <dsterba@suse.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Anand Jain <anand.jain@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
-	johannes@sipsolutions.net,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-wireless@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.8 58/68] wifi: cfg80211: check A-MSDU format more carefully
-Date: Fri, 29 Mar 2024 08:25:54 -0400
-Message-ID: <20240329122652.3082296-58-sashal@kernel.org>
+	clm@fb.com,
+	linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.8 60/68] btrfs: handle chunk tree lookup error in btrfs_relocate_sys_chunks()
+Date: Fri, 29 Mar 2024 08:25:56 -0400
+Message-ID: <20240329122652.3082296-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240329122652.3082296-1-sashal@kernel.org>
 References: <20240329122652.3082296-1-sashal@kernel.org>
@@ -56,89 +52,54 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.8.2
 Content-Transfer-Encoding: 8bit
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: David Sterba <dsterba@suse.com>
 
-[ Upstream commit 9ad7974856926129f190ffbe3beea78460b3b7cc ]
+[ Upstream commit 7411055db5ce64f836aaffd422396af0075fdc99 ]
 
-If it looks like there's another subframe in the A-MSDU
-but the header isn't fully there, we can end up reading
-data out of bounds, only to discard later. Make this a
-bit more careful and check if the subframe header can
-even be present.
+The unhandled case in btrfs_relocate_sys_chunks() loop is a corruption,
+as it could be caused only by two impossible conditions:
 
-Reported-by: syzbot+d050d437fe47d479d210@syzkaller.appspotmail.com
-Link: https://msgid.link/20240226203405.a731e2c95e38.I82ce7d8c0cc8970ce29d0a39fdc07f1ffc425be4@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+- at first the search key is set up to look for a chunk tree item, with
+  offset -1, this is an inexact search and the key->offset will contain
+  the correct offset upon a successful search, a valid chunk tree item
+  cannot have an offset -1
+
+- after first successful search, the found_key corresponds to a chunk
+  item, the offset is decremented by 1 before the next loop, it's
+  impossible to find a chunk item there due to alignment and size
+  constraints
+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Anand Jain <anand.jain@oracle.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/util.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ fs/btrfs/volumes.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/net/wireless/util.c b/net/wireless/util.c
-index d1ce3bee27973..b9d15f369378b 100644
---- a/net/wireless/util.c
-+++ b/net/wireless/util.c
-@@ -791,15 +791,19 @@ ieee80211_amsdu_subframe_length(void *field, u8 mesh_flags, u8 hdr_type)
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index d67785be2c778..6aae92e4b4240 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -3393,7 +3393,17 @@ static int btrfs_relocate_sys_chunks(struct btrfs_fs_info *fs_info)
+ 			mutex_unlock(&fs_info->reclaim_bgs_lock);
+ 			goto error;
+ 		}
+-		BUG_ON(ret == 0); /* Corruption */
++		if (ret == 0) {
++			/*
++			 * On the first search we would find chunk tree with
++			 * offset -1, which is not possible. On subsequent
++			 * loops this would find an existing item on an invalid
++			 * offset (one less than the previous one, wrong
++			 * alignment and size).
++			 */
++			ret = -EUCLEAN;
++			goto error;
++		}
  
- bool ieee80211_is_valid_amsdu(struct sk_buff *skb, u8 mesh_hdr)
- {
--	int offset = 0, remaining, subframe_len, padding;
-+	int offset = 0, subframe_len, padding;
- 
- 	for (offset = 0; offset < skb->len; offset += subframe_len + padding) {
-+		int remaining = skb->len - offset;
- 		struct {
- 		    __be16 len;
- 		    u8 mesh_flags;
- 		} hdr;
- 		u16 len;
- 
-+		if (sizeof(hdr) > remaining)
-+			return false;
-+
- 		if (skb_copy_bits(skb, offset + 2 * ETH_ALEN, &hdr, sizeof(hdr)) < 0)
- 			return false;
- 
-@@ -807,7 +811,6 @@ bool ieee80211_is_valid_amsdu(struct sk_buff *skb, u8 mesh_hdr)
- 						      mesh_hdr);
- 		subframe_len = sizeof(struct ethhdr) + len;
- 		padding = (4 - subframe_len) & 0x3;
--		remaining = skb->len - offset;
- 
- 		if (subframe_len > remaining)
- 			return false;
-@@ -825,7 +828,7 @@ void ieee80211_amsdu_to_8023s(struct sk_buff *skb, struct sk_buff_head *list,
- {
- 	unsigned int hlen = ALIGN(extra_headroom, 4);
- 	struct sk_buff *frame = NULL;
--	int offset = 0, remaining;
-+	int offset = 0;
- 	struct {
- 		struct ethhdr eth;
- 		uint8_t flags;
-@@ -839,10 +842,14 @@ void ieee80211_amsdu_to_8023s(struct sk_buff *skb, struct sk_buff_head *list,
- 		copy_len = sizeof(hdr);
- 
- 	while (!last) {
-+		int remaining = skb->len - offset;
- 		unsigned int subframe_len;
- 		int len, mesh_len = 0;
- 		u8 padding;
- 
-+		if (copy_len > remaining)
-+			goto purge;
-+
- 		skb_copy_bits(skb, offset, &hdr, copy_len);
- 		if (iftype == NL80211_IFTYPE_MESH_POINT)
- 			mesh_len = __ieee80211_get_mesh_hdrlen(hdr.flags);
-@@ -852,7 +859,6 @@ void ieee80211_amsdu_to_8023s(struct sk_buff *skb, struct sk_buff_head *list,
- 		padding = (4 - subframe_len) & 0x3;
- 
- 		/* the last MSDU has no padding */
--		remaining = skb->len - offset;
- 		if (subframe_len > remaining)
- 			goto purge;
- 		/* mitigate A-MSDU aggregation injection attacks */
+ 		ret = btrfs_previous_item(chunk_root, path, key.objectid,
+ 					  key.type);
 -- 
 2.43.0
 
