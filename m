@@ -1,104 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CFCD16E895;
-	Fri, 29 Mar 2024 12:34:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E8416EC16;
+	Fri, 29 Mar 2024 12:34:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711715656; cv=none; b=ARO/rMsBCCv9rE5rxl8bU/YLzQ8DFcMnvrxD3hf7yawjoHBdMic1cSKnVDAuwEx7FKTthw6QLOs1Nw2PGfyeyPcRTIGFW8fhSCErbkhWZOrKeYoGQBlC+4GocUGPOrfSAprNTrkqukaRxrd5flqJDdvYwG3F7S7268J+KiCr6ZQ=
+	t=1711715659; cv=none; b=gM+B7SevJg9khiIdsfDR8pKSmYEIo3Ifj12T802TGj33H00GQTiI1Il4akcRG1H/pJwjV0XRF2zaQQu2av6b3D2ze4h0sBSQ7OrFKXH/NaQmoiqFFlc/MYjOlYMz+8lal4MkNvH1NR7tGrx5Er+ZaHfdKh6r78qDmFb7wB53NRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711715656; c=relaxed/simple;
-	bh=jwu9FsJbtbfHk1QsMJaENO9ehk3wZUqqexLs6ekxb6I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QG5KoIf7IFF6O0jwJCAAwVPt6u5sJoAaZSflPPXCYt3z1f4/nkcILyt3xds76o62NirXoY47SgxDhXdqnIcEkID+jal97IrCJzbjWUZ4NKHUPfi46NrZaYDyoksEDMkJ95stlib2kTLOMzliJ2JhefzCYV8lpc+O2FufdgOfiWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dn4EqPLv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711715659; c=relaxed/simple;
+	bh=Ff+zqhtmUWqAGNSwKyOPavq5Ele1ON8FhCxX2fbAZR8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=UXJMeCZTg2MeEQAoqsT6joJRqhkdcBce9GjVEQl3sqDk2BG1d76JQnGqK//6qoiytOM9Q0lzcy72yCrMEUqMXwYN5Gp1UBq1C+ASSZeOYIVgpJI/hqHhkj8S27z6VLD4kkmI2Sia6LCMH0XyzIh8CiwG+It6GazowZs/EkEQaDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FXatLA2W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dn4EqPLv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9C01C433F1;
-	Fri, 29 Mar 2024 12:34:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FXatLA2W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62B35C43394;
+	Fri, 29 Mar 2024 12:34:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711715656;
-	bh=jwu9FsJbtbfHk1QsMJaENO9ehk3wZUqqexLs6ekxb6I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Dn4EqPLvz6EzccRqrRAOSe7983Ai4iux96beVsXb5tLXgv24nN8G/MKdpgOWFPPho
-	 yfgrKbk7M6EU+mLM8MddVOC4gEqCdxD4tGJA2udTGpVLvZuqzywLipWU5TH1Fw8bRT
-	 y6/c/UvkF3dcB9avPi+MTGwzXRuexOuzGXe1nT2GNdAhPv/jFBNqzcqI5iceMZa/hx
-	 pokF4TgDpvpMVirn/lo/f0n6aMMzVHeqwDpSKagiytE7fv6Lnv2DtJ8MXo87WU+DVe
-	 TIf9scCyRvb1qX185KUJZkJZNSYgNqN5NrpvVq6KtElbivNlwpVvrs6iUe8VUDaWe9
-	 ZVjgtz3/1w6BQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Johan Jonker <jbx6244@gmail.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Sasha Levin <sashal@kernel.org>,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	dsimic@manjaro.org,
-	jonas@kwiboo.se,
-	shironeko@tesaguri.club,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.10 06/17] arm64: dts: rockchip: fix rk3328 hdmi ports node
-Date: Fri, 29 Mar 2024 08:33:45 -0400
-Message-ID: <20240329123405.3086155-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240329123405.3086155-1-sashal@kernel.org>
-References: <20240329123405.3086155-1-sashal@kernel.org>
+	s=k20201202; t=1711715658;
+	bh=Ff+zqhtmUWqAGNSwKyOPavq5Ele1ON8FhCxX2fbAZR8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=FXatLA2WgaNyAp7ER7eTVV7MUgJWaOA0QhoDm/2k3kQDB23b2ehvwWPPtHI94Vr3+
+	 SNyaoEqIgf6kCHjmh5AcwRdji4w+f9TpnRoGp+RVkrJ2X2O50SFn+jZaNE3pVgG4Am
+	 xau1AcUvJcDliMUS9ADjyTJ1E/IcIxizXi5HI9jKwfVALip0v65vnfGUJdFJU+CC7y
+	 IkM/gos5WA9EepFqsrRPQaQJTpPJoQVWRssXXXR4qZYCGXExusV8gaG5+dM86P7nvf
+	 3lvF0dBRHrXp6vPzRvE5X4bjomF2rYOXYeGVpfYEuFg6yG5D0d95TlWqzN1jSQYjXO
+	 bUKvtkIfZNRdQ==
+From: Mark Brown <broonie@kernel.org>
+To: Louis Chauvet <louis.chauvet@bootlin.com>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ thomas.petazzoni@bootlin.com, Miquel Raynal <miquel.raynal@bootlin.com>, 
+ yen-mei.goh@keysight.com, koon-kee.lie@keysight.com, 
+ jeremie.dautheribes@bootlin.com
+In-Reply-To: <20240223-spi-omap2-mcspi-multi-mode-v2-0-afe94476b9c3@bootlin.com>
+References: <20240223-spi-omap2-mcspi-multi-mode-v2-0-afe94476b9c3@bootlin.com>
+Subject: Re: [PATCH v2 0/3] Add multi mode support for omap-mcspi
+Message-Id: <171171565713.8069.1119556185211827014.b4-ty@kernel.org>
+Date: Fri, 29 Mar 2024 12:34:17 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.214
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14-dev
 
-From: Johan Jonker <jbx6244@gmail.com>
+On Fri, 23 Feb 2024 10:32:10 +0100, Louis Chauvet wrote:
+> This series adds the support for the omap-mcspi multi mode which allows
+> sending SPI messages with a shorter delay between CS and the message.
+> 
+> One drawback of the multi-mode is that the CS is raised between each word,
+> so it can only be used with messages containing 1 word transfers and
+> asking for cs_change. Few devices, like FPGAs, may easily workaround this
+> limitation.
+> 
+> [...]
 
-[ Upstream commit 1d00ba4700d1e0f88ae70d028d2e17e39078fa1c ]
+Applied to
 
-Fix rk3328 hdmi ports node so that it matches the
-rockchip,dw-hdmi.yaml binding.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/e5dea3b7-bf84-4474-9530-cc2da3c41104@gmail.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+Thanks!
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index 72112fe05a5c4..10df6636a6b6c 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -732,11 +732,20 @@ hdmi: hdmi@ff3c0000 {
- 		status = "disabled";
- 
- 		ports {
--			hdmi_in: port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			hdmi_in: port@0 {
-+				reg = <0>;
-+
- 				hdmi_in_vop: endpoint {
- 					remote-endpoint = <&vop_out_hdmi>;
- 				};
- 			};
-+
-+			hdmi_out: port@1 {
-+				reg = <1>;
-+			};
- 		};
- 	};
- 
--- 
-2.43.0
+[1/3] spi: spi-omap2-mcspi.c: revert "Toggle CS after each word"
+      commit: 67bb37c05a6b56e0e1f804706145a52f655af3f1
+[2/3] spi: omap2-mcspi: Add support for MULTI-mode
+      commit: d153ff4056cb346fd6182a8a1bea6e12b714b64f
+[3/3] spi: omap2-mcpsi: Enable MULTI-mode in more situations
+      commit: e64d3b6fc9a388d7dc516668651cf4404bffec9b
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
