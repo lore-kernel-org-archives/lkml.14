@@ -1,107 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34DE1420C4;
-	Fri, 29 Mar 2024 12:34:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B14316D9C8;
+	Fri, 29 Mar 2024 12:34:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711715647; cv=none; b=F/88jDu6xxzZDTKCS4BjNXReQmJgtWPwdZ7wSATyk9/KAwD02ep/k9kbUVTnpHF3XsDvwAWs91E1WUGGxPTpb04tTZSfs9kLchD6OIGGTQPhyicJOve1yazhflfyyKGB77p+n/s3gCTf/GMV9noA+mpd8NrQ+tJmx3R5t09msQI=
+	t=1711715649; cv=none; b=kYyWKSKUGOOMsTlFtGRLXP8oLkOWDSdMXHaq/qS3tnwcsZEiBiUINKg/VtCXNL+kzcoYBlBrtXfKD7s+ImhbiZiy9mBamK9uPAK4EJ4FAWBWQr908PqSTAvDlWgh7PQg9y6xmkPF0fu9acPuRMRjiaAKvPioTV2WpnnSmrgUn1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711715647; c=relaxed/simple;
-	bh=WXr6Pj9tx3rS/dc47u7x06zimCghNHXN33j+WnQrsX4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Wr90zMjNRcNmy0I46c1wUbRnTipqfor9EtCiIqqRIeeIw/XYweKPJa5tDeYRa+1ABW+TzlVpib3H8GhLpl2r+40uPVem2ZAGFP+2DFxCICsi1Jn36Af97dl0SRxbyQ2BHx25lmC79VhGYLfcaRSZxuOXYJy3G/8WTA36jnBBCC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ot06NQDM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711715649; c=relaxed/simple;
+	bh=07Im89H4tHbl47gQN4Y6CAqTRo++fE4Q9rVsVsY1nW0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=fwZK8er058khVV0NKHFef38aQdFeK76s0dGwjnMCktApwsD5a0TJL5qrY79RVcQJMY5OWVssKal0msuFP/VnuTeN3uwcoywcT75AjmI5jX7bnDQ7vQXPM24/ExYZgOsrpmHnxoOcjxig+e1JyaOpBsXaSD0YGkAeTxv06/3T++o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dJcORa8/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ot06NQDM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 490A2C433C7;
-	Fri, 29 Mar 2024 12:34:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dJcORa8/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C8C9C43399;
+	Fri, 29 Mar 2024 12:34:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711715647;
-	bh=WXr6Pj9tx3rS/dc47u7x06zimCghNHXN33j+WnQrsX4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ot06NQDMzmi3vqtLMyGBH5K2rladNJqwNGG9eiypg5FLZcHBiX4TuEsf6yyRV/rmD
-	 J5+I7BdnJFOao82nMfU3iJ9Oo8idp5DlbKP2wp9ib6AeiC1C8A+Tocg0E4TANxodeI
-	 w0zAfjDp2f/RbVSepm6F5wdrezxcFAvSvma2/8LCr5+FPIZOVFNh3FbNJleMN8+1Rg
-	 kfXoVE4TaWiPwXQl0JK52B89gohlfvdvhDP3t4XLQfgcnSYmX9uo+Bx4UT64f6t/uv
-	 yR9I1OrcQeGK8WE0NAzcO7A6nmV13cn+O36j6Nn7K8N7KHJeHLtqcYAX8NgV+F9EyA
-	 aJuoYjWNeaI7Q==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Markus Elfring <elfring@users.sourceforge.net>,
-	Sven Eckelmann <sven@narfation.org>,
-	Simon Wunderlich <sw@simonwunderlich.de>,
-	Sasha Levin <sashal@kernel.org>,
-	mareklindner@neomailbox.ch,
-	a@unstable.cc,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	b.a.t.m.a.n@lists.open-mesh.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 02/17] batman-adv: Return directly after a failed batadv_dat_select_candidates() in batadv_dat_forward_data()
-Date: Fri, 29 Mar 2024 08:33:41 -0400
-Message-ID: <20240329123405.3086155-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240329123405.3086155-1-sashal@kernel.org>
-References: <20240329123405.3086155-1-sashal@kernel.org>
+	s=k20201202; t=1711715648;
+	bh=07Im89H4tHbl47gQN4Y6CAqTRo++fE4Q9rVsVsY1nW0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=dJcORa8/SPhfnx6Lc3PvgaxYPdxcahiymbXYW8+no8GI9tFomloDoADyDaB/3TL8K
+	 K3SK86xefwZBHTqooPYhwX6cYjyBDmJvTp97/6xKAqBtxmf8p9RmOZ8qrEDE44DB7H
+	 MoOCuEqIFmsPQfDzskIC012ryHj6U4JXg6s49go8rWEX4OW16glDYTEO4rMwZH1EsP
+	 xLqHPaV12qWaYiACWEU0z0ZmGNfQXxONScEi5oRmPawLDHAbLjyih22ft5d2iXoeQa
+	 rAlxMfOmAdF3+8Cij5+mp6eS8WUefto0A2Hl1oDaQobq8paRpuAhfx0wjz6h/2uImD
+	 iefApBXfd9V4A==
+From: Mark Brown <broonie@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Shengjiu Wang <shengjiu.wang@nxp.com>, 
+ Frank Li <Frank.Li@nxp.com>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
+In-Reply-To: <20240328-asrc_8qxp-v8-0-801cd6bb5be2@nxp.com>
+References: <20240328-asrc_8qxp-v8-0-801cd6bb5be2@nxp.com>
+Subject: Re: (subset) [PATCH v8 0/5] arm64: dts: imx8qxp add asrc and sai
+Message-Id: <171171564576.7557.13075267418118502846.b4-ty@kernel.org>
+Date: Fri, 29 Mar 2024 12:34:05 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.214
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14-dev
 
-From: Markus Elfring <elfring@users.sourceforge.net>
+On Thu, 28 Mar 2024 10:51:32 -0400, Frank Li wrote:
+> Update binding doc to avoid warning.
+> Change from v1 to v2
+> - Fixed dts DTB_CHECK warning
+> 
+> 
 
-[ Upstream commit ffc15626c861f811f9778914be004fcf43810a91 ]
+Applied to
 
-The kfree() function was called in one case by
-the batadv_dat_forward_data() function during error handling
-even if the passed variable contained a null pointer.
-This issue was detected by using the Coccinelle software.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-* Thus return directly after a batadv_dat_select_candidates() call failed
-  at the beginning.
+Thanks!
 
-* Delete the label “out” which became unnecessary with this refactoring.
+[1/5] ASoC: dt-bindings: fsl,imx-asrc/spdif: Add power-domains property
+      commit: 9b21531866fced634bcc7fca33667c7ef258433f
+[2/5] ASoC: dt-bindings: fsl,imx-asrc: update max interrupt numbers
+      commit: 82330327ce03889f20072cef5167499d51cdf260
+[3/5] ASoC: dt-bindings: fsl-sai: allow only one dma-names
+      commit: 7b5f2072657a9041cbaf4ba139f672be11694ca3
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-Acked-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/batman-adv/distributed-arp-table.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-diff --git a/net/batman-adv/distributed-arp-table.c b/net/batman-adv/distributed-arp-table.c
-index ddd3b4c70a516..b1cb6ecffceb9 100644
---- a/net/batman-adv/distributed-arp-table.c
-+++ b/net/batman-adv/distributed-arp-table.c
-@@ -687,7 +687,7 @@ static bool batadv_dat_forward_data(struct batadv_priv *bat_priv,
- 
- 	cand = batadv_dat_select_candidates(bat_priv, ip, vid);
- 	if (!cand)
--		goto out;
-+		return ret;
- 
- 	batadv_dbg(BATADV_DBG_DAT, bat_priv, "DHT_SEND for %pI4\n", &ip);
- 
-@@ -731,7 +731,6 @@ static bool batadv_dat_forward_data(struct batadv_priv *bat_priv,
- 		batadv_orig_node_put(cand[i].orig_node);
- 	}
- 
--out:
- 	kfree(cand);
- 	return ret;
- }
--- 
-2.43.0
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
