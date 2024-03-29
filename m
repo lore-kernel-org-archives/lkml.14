@@ -1,190 +1,118 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D8913BAFC
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 21:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910E138FAD;
+	Fri, 29 Mar 2024 21:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711747077; cv=none; b=WL/NB9eFKMX+sM3GUhw6WICBnaRhsoKwq2tQyUYLDQXcr89OyeJSSrOxe9qQ/rEms5AS+R1wE4f64KxEjJQp46sBC35fPcHh6lyVEqXdNR5iGmBUYM+F7Nwf3SbAD9ra3Q4wwuTEaUa/ldczkkCDQMz20dYLKeWm3Sn4gsxHV9w=
+	t=1711747613; cv=none; b=o3hT6rBlhYRPp3nILeYSgLH5jgw3/ahNcI+sDsQW7a6Oq02j3c5prNzS0n5vJx9TVbZQcqIgvdV9HTstLuoPtW/jT0vcYIvofBPyJUl7qtv3N1ZcCALaUGLdrgZBAPv1JUH+kyrmT9ybQHjLzeMASpgNwI0hFSXpPucdmpDSanw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711747077; c=relaxed/simple;
-	bh=GWfvSVS/hkE5sYsgLJPyS7fXPJHvPS5cV8zCY2dLcog=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jkCqH6BPNy26ub5OYWCVITHOcfNfXCp4nVc+HNBoZ5W6oDhX1N6RuggidmRFTbd3gX40qMUvbNerqWqPJBOoSIFJ3TkSYDpfIQKfDs7SjtIuxg5Z/+CNRrysYY5pJY8YrJRkkRrAsNCG1t0r6v3kZ0Nd1IoYX3IgzNon6LilKzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=xsOWBEQ3; arc=none smtp.client-ip=209.85.167.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1711747613; c=relaxed/simple;
+	bh=GY2kYFst4z/jzDluAZKuRs3VnNLG/lJw8nm0VcFYikM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bvWQ2A0CseIsL9FgYjN6zPufVIpQqiRzxpxfWWir2S2bRrkalHeIYKni2SW9MnB9+iKThkvwKO+Zn5Zssl7qqHveQk51ff9EJpUn5NhPHVmY4QJ0TF4i9BP87FJsd1aA9g47SAdGsUrEEJEsLIDX4ANMZG8S1Gjnd1qw8tZdsRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h02OONrK; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="xsOWBEQ3"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3c35c4d8878so1030637b6e.1
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 14:17:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h02OONrK"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-341c9926f98so1441462f8f.1;
+        Fri, 29 Mar 2024 14:26:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1711747072; x=1712351872; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nu980NuM6xd/O+4Xhask+LOSmTDfo5VWq/XJqRRyMbI=;
-        b=xsOWBEQ3wSpsdb1tcmUPFv87tfm212Uat9BAInthTYxrIDLxqSKpD5PbCokhngV02v
-         Qz57JY6vX/0Rp+Ecxnfg31X18x9Jjwwwhr9YwRre9c4p377hGvqbtKewF0nAQFXhrCfz
-         aTewJAIgSILKjXfcGE8OUTukdEzfC1SkuCmwK8hNQ1fSEqqEGvDJ9ys2HonPDe49EJew
-         mlG5iUul+3m8MfVLRFFuZd36IEzZImqlHkhQne1PumCP6QeZortC7BkuQsymiP7toSJw
-         uHu8DH20W29gen/fOCzD9lWCDSGfuLVJlytLp+1zsSnTVxnQ08wzaCBcNNY+uNTINN8j
-         xhYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711747072; x=1712351872;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1711747610; x=1712352410; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nu980NuM6xd/O+4Xhask+LOSmTDfo5VWq/XJqRRyMbI=;
-        b=r8hVFealN5/sEx0qZdOLEMkCgtZxD6iOUP6vJQt6+77uuHU6YzAW1FzME/BEn54JJj
-         1uwrs8phQhOI4aCljBrKDya9L9tT2Qg5NEWuuSSuOEn0fLr9O/jQpSj+Qoc6CUQDhhbl
-         9p6p1EnX7nz/ZZqoUu7BOvymEuE6O9j9wJXPIi6gfGW/vbLLEze1vTtQGBp3QtE0bnju
-         dLZUiewc+TPLLAyRtaqboTDn7+yqIhI4bFngSryxLFNkYP/scfIfOnFUqEOEDIpvUGyN
-         X+WxyTzu1VvsF6U0yPiQqkNsWEUwATU0aCJRN/VYAwk39mg1PXIh5G27UdaO6NITn0e2
-         KA0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUyyo3eGZUDl6pDQl+mSnkpuHHo+DUqozoXBB7zHF1KG+ZDKTVD4Z7aRyRO6+gXggK1r/kRHVEAyc7lKmbaWWtQ+iClRIFvm1dVlsJ3
-X-Gm-Message-State: AOJu0Yzs2kU1N6JKdb+R5YXIszKcxEgV6yDNIdWMHiMp07MhCz+8BVW6
-	1lJ71O7E3eexcmqsBo8/h+SWPwSPCE6h5q3TiAuBJt1/YLHZH0uSSOdZFyuySh0=
-X-Google-Smtp-Source: AGHT+IGi8PJJ3d9mjlRW2QnLvDkHwpMO55X1puE02BIM4yVgk/Fr9cUW3IRrrGdJkbM5sn/jVNcM0w==
-X-Received: by 2002:a05:6808:208c:b0:3c3:a294:5bc9 with SMTP id s12-20020a056808208c00b003c3a2945bc9mr3777594oiw.9.1711747072549;
-        Fri, 29 Mar 2024 14:17:52 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:400::5:bb1f])
-        by smtp.gmail.com with ESMTPSA id hb12-20020a05622a2b4c00b00431604af3c1sm1982361qtb.20.2024.03.29.14.17.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Mar 2024 14:17:51 -0700 (PDT)
-Date: Fri, 29 Mar 2024 17:17:23 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: Nhat Pham <nphamcs@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Chengming Zhou <chengming.zhou@linux.dev>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Srividya Desireddy <srividya.desireddy@gmail.com>
-Subject: Re: [RFC PATCH 6/9] mm: zswap: drop support for non-zero same-filled
- pages handling
-Message-ID: <20240329211723.GA882964@cmpxchg.org>
-References: <20240325235018.2028408-1-yosryahmed@google.com>
- <20240325235018.2028408-7-yosryahmed@google.com>
- <20240328193149.GF7597@cmpxchg.org>
- <CAJD7tkaFmbnt4YNWvgGZHo=-JRu-AsUWvCYCRXVZxOPvcSJRDw@mail.gmail.com>
- <20240328210709.GH7597@cmpxchg.org>
- <CAKEwX=OPDLxH-0-3F+xOc2SL5Ouj-R-HEC5QQrW+Q9Fn8pyeRg@mail.gmail.com>
- <CAJD7tkaGBofWm1eGBffEtpuKUDBVB_6RfHbYKQSKOX3fKn2jeg@mail.gmail.com>
- <CAJD7tkbKY0T6jd5v_GhNFyCO0578SNqfMgs1ZrZiCckY05hzZA@mail.gmail.com>
- <20240329173759.GI7597@cmpxchg.org>
- <CAJD7tkaySFP2hBQw4pnZHJJwe3bMdjJ1t9VC2VJd=khn1_TXvA@mail.gmail.com>
+        bh=Kvv9NiziDyCYu9Ssy1MqwcYz3Obg+5qR7kJAYV5rLhc=;
+        b=h02OONrKn+4k88m3UEDllV8o8JUuB2NguuTGHZzCXHNiOAa9yBQIiaGmfQsGVV86q3
+         vwTm5pN9qCEJWhO3/1dihonK9iCD1MV6zVd13EikzldfB4dxhYg+3Wg6vO0czEsr1HAc
+         Xnut8+4zSVKD/nOdEua3WuEO6t2FYuiIILMfvrA145eDAhyL+bLHHiztPM0IEukc3eMT
+         QwkIybVK8O22yg5D4IKFhCt9QnTfLrqtSCdTICpGqqxHghVj4Ift5u/IfjSrR2EkEVNe
+         CwHVBQEan1clULUfxVR4imy+rZpP4IILFDkrBGL8rfHg7ZbgGF/FY9ZH05/vNFFyN9i4
+         L+ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711747610; x=1712352410;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Kvv9NiziDyCYu9Ssy1MqwcYz3Obg+5qR7kJAYV5rLhc=;
+        b=AZml1tLtFlyP9+6qzsr/Y/Kp5igFrK2oUC/WIz//Zmu/5fSRzhVpw37aRWeKK6hdX/
+         FxsJBUEiOwP7rnH9cVh0eWtHbz2qaashwfXDE6sVeXzEDIGZGpGu23nNdVQXdmSsPoym
+         +exTdbi8fY0pCW6bB8Bl9QHeCnAfsqlPKJyaAjnrOHw5Qw9qdI1S9gC2eq0WbnVy6iHQ
+         7tLKPnU50UXa4ii7btWPm2rqB3S45MtzAeOOLaaKgubovEhMNhC+usRZ5ijfKdVYpIhu
+         bTcuciA022kGsoViz3poqnsJ0p8W9ojwHusnFV0FwDvrqrw9MTAV+LH+DM//g3kcbyjr
+         T4ig==
+X-Forwarded-Encrypted: i=1; AJvYcCUms6Y8mQXobn6Doc4LggzSXZfoQDIm/IKPAkO+/bgLih/BXEZjjKJJx2V38SsUeCaJy1R/1BisLsDktGAF092Q8+cQmdOHd3i65roTYjtnFDPo2/M4ZlO8bb6wJr5fOR5UJWeLxlciGCxFLtE/mIj3WRxJMuCKajUX
+X-Gm-Message-State: AOJu0YwDLEfVDuSKNNImIfCehbMu01XecTBUg/BxEe3Dr2BLV02Sld8L
+	HnQdjTLXkZXA3IHu11Z7n/x+G0xL6V5UIl2p3WAyQ6nodkCzPQbShE13cVc4xK07Mw0KAcUpPfT
+	hd4UbQzqEaNrmK52fddVQ5NxZI1I=
+X-Google-Smtp-Source: AGHT+IEhPG1B/8mDvGNpkDj4PWCUpLjQ708pGc8G6bha6o2gM1Lwf8UNLZI5EJ57kTgt1wZPIajCKtTg1SeDSsMj41A=
+X-Received: by 2002:a05:6000:24a:b0:33e:4238:8615 with SMTP id
+ m10-20020a056000024a00b0033e42388615mr1774070wrz.40.1711747609718; Fri, 29
+ Mar 2024 14:26:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJD7tkaySFP2hBQw4pnZHJJwe3bMdjJ1t9VC2VJd=khn1_TXvA@mail.gmail.com>
+References: <20240329094906.18147-1-ubizjak@gmail.com> <20240329094906.18147-2-ubizjak@gmail.com>
+In-Reply-To: <20240329094906.18147-2-ubizjak@gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 29 Mar 2024 14:26:38 -0700
+Message-ID: <CAADnVQLZnkm8psPvmUOS1FDacXdJPxQ79rQJ33F00dkS9czw1Q@mail.gmail.com>
+Subject: Re: [PATCH RESEND bpf 1/2] x86/bpf: Fix IP after emitting call depth accounting
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: X86 ML <x86@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Network Development <netdev@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	=?UTF-8?Q?Joan_Bruguera_Mic=C3=B3?= <joanbrugueram@gmail.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 29, 2024 at 11:56:46AM -0700, Yosry Ahmed wrote:
-> > I perf'd zswapping out data that is 10% same-filled and 90% data that
-> > always needs compression. It does nothing but madvise(MADV_PAGEOUT),
-> > and the zswap_store() stack is already only ~60% of the cycles.
-> >
-> > Using zsmalloc + zstd, this is the diff between vanilla and my patch:
-> >
-> > # Baseline  Delta Abs  Shared Object         Symbol
-> > # ........  .........  ....................  .....................................................
-> > #
-> >      4.34%     -3.02%  [kernel.kallsyms]     [k] zswap_store
-> >     11.07%     +1.41%  [kernel.kallsyms]     [k] ZSTD_compressBlock_doubleFast
-> >     15.55%     +0.91%  [kernel.kallsyms]     [k] FSE_buildCTable_wksp
-> >
-> > As expected, we have to compress a bit more; on the other hand we're
-> > removing the content scan for same-filled for 90% of the pages that
-> > don't benefit from it. They almost amortize each other. Let's round it
-> > up and the remaining difference is ~1%.
-> 
-> Thanks for the data, this is very useful.
-> 
-> There is also the load path. The original patch that introduced
-> same-filled pages reports more gains on the load side, which also
-> happens to be more latency-sensitive. Of course, the data could be
-> outdated -- but it's a different type of workload than what will be
-> running in a data center fleet AFAICT.
-> 
-> Is there also no noticeable difference on the load side in your data?
+On Fri, Mar 29, 2024 at 2:49=E2=80=AFAM Uros Bizjak <ubizjak@gmail.com> wro=
+te:
+>
+> From: Joan Bruguera Mic=C3=B3 <joanbrugueram@gmail.com>
+>
+> Adjust the IP passed to `emit_patch` so it calculates the correct offset
+> for the CALL instruction if `x86_call_depth_emit_accounting` emits code.
+> Otherwise we will skip some instructions and most likely crash.
+>
+> Fixes: b2e9dfe54be4 ("x86/bpf: Emit call depth accounting if required")
+> Link: https://lore.kernel.org/lkml/20230105214922.250473-1-joanbrugueram@=
+gmail.com/
+> Signed-off-by: Joan Bruguera Mic=C3=B3 <joanbrugueram@gmail.com>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> ---
+>  arch/x86/net/bpf_jit_comp.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+> index a7ba8e178645..09f7dc9d4d65 100644
+> --- a/arch/x86/net/bpf_jit_comp.c
+> +++ b/arch/x86/net/bpf_jit_comp.c
+> @@ -479,9 +479,10 @@ static int emit_call(u8 **pprog, void *func, void *i=
+p)
+>
+>  static int emit_rsb_call(u8 **pprog, void *func, void *ip)
+>  {
+> +       void *adjusted_ip;
+>         OPTIMIZER_HIDE_VAR(func);
+> -       x86_call_depth_emit_accounting(pprog, func);
+> -       return emit_patch(pprog, func, ip, 0xE8);
+> +       adjusted_ip =3D ip + x86_call_depth_emit_accounting(pprog, func);
 
-     9.40%     +2.51%  [kernel.kallsyms]  [k] ZSTD_safecopy
-     0.76%     -0.48%  [kernel.kallsyms]  [k] zswap_load
+Why not just
+ip +=3D x86_call_depth_emit_accounting(pprog, func);
 
-About 2% net.
+?
 
-Checking other compression algorithms, lzo eats 27.58%, and lz4
-13.82%. The variance between these alone makes our "try to be smarter
-than an actual compression algorithm" code look even sillier.
-
-> Also, how much increase did you observe in the size of compressed data
-> with your patch? Just curious about how zstd ended up handling those
-> pages.
-
-Checking zsmalloc stats, it did pack the same-filled ones down into 32
-byte objects. So 0.7% of their original size. That's negligible, even
-for workloads that have an unusually high share of them.
-
-> > It's difficult to make the case that this matters to any real
-> > workloads with actual think time in between paging.
-> 
-> If the difference in performance is 1%, I surely agree.
-> 
-> The patch reported 19-32% improvement in store time for same-filled
-> pages depending on the workload and platform. For 10% same-filled
-> pages, this should roughly correspond to 2-3% overall improvement,
-> which is not too far from the 1% you observed.
-
-Right.
-
-> The patch reported much larger improvement for load times (which
-> matters more), 49-85% for same-filled pages. If this corresponds to
-> 5-8% overall improvement in zswap load time for a workload with 10%
-> same-filled pages, that would be very significant. I don't expect to
-> see such improvements tbh, but we should check.
-
-No, I'm seeing around 2% net.
-
-> > But let's say you do make the case that zero-filled pages are worth
-> > optimizing for.
-> 
-> I am not saying they are for sure, but removing the same-filled
-> checking didn't seem to improve performance much in my testing, so the
-> cost seems to be mostly in maintenance. This makes it seem to me that
-> it *could* be a good tradeoff to only handle zero-filled pages. We can
-> make them slightly faster and we can trim the complexity -- as shown
-> by this patch.
-
-In the original numbers, there was a certain percentage of non-zero
-same-filled pages. You still first have to find that number for real
-production loads to determine what the tradeoff actually is.
-
-And I disagree that the code is less complex. There are fewer lines to
-the memchr_inv() than to the open-coded word-scan, but that scan is
-dead simple, self-contained and out of the way.
-
-So call that a wash in terms of maintenance burden, but for a
-reduction in functionality and a regression risk (however small).
-
-The next patch to store them as special xarray entries is also a wash
-at best. It trades the entry having an implicit subtype for no type at
-all. zswap_load_zero_filled() looks like it's the fast path, and
-decompression the fallback; the entry destructor is now called
-"zswap_tree_free_element" and takes a void pointer. It also re-adds
-most of the lines deleted by the zero-only patch.
-
-I think this is actually a bit worse than the status quo.
-
-But my point is, this all seems like a lot of opportunity cost in
-terms of engineering time, review bandwidth, regression risk, and
-readability, hackability, reliability, predictability of the code -
-for gains that are still not shown to actually matter in practice.
-
-https://lore.kernel.org/all/20240328122352.a001a56aed97b01ac5931998@linux-foundation.org/
-
-This needs numbers to show not just that your patches are fine, but
-that any version of this optimization actually matters for real
-workloads. Without that, my vote would be NAK.
+> +       return emit_patch(pprog, func, adjusted_ip, 0xE8);
+>  }
+>
+>  static int emit_jump(u8 **pprog, void *func, void *ip)
+> --
+> 2.44.0
+>
