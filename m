@@ -1,157 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2C4482E9;
-	Fri, 29 Mar 2024 17:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1697133D2
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 17:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711733930; cv=none; b=h2ZHJdUuGdc39B6we9Zw8B7FNi/6cpDCVFeJqqYk52UyBMwG8E1JAzgqrkWB7dtieI97hBbJnEJGYHKrBKSBv2hSlknr//IcY/1kQdPdqkWsMhycWehyr80+IctOaIuu1jpEMGMghhFZ9S3rgLIYi9UNDvXm4Fwfg76gviV+OdU=
+	t=1711734174; cv=none; b=Rk/y/+mkCeVekbwO8ckbEm5YOYAnO8eMs8b+iEgnzLPP3eRNWmQTDW9zf9dAdz489j744VFJsjVzBr5qO2eXK+5TrKSlIkFKyF+0Djuc4/kwHzFNbKJwHTZ0oN5ZrseZDTu24Uoy2SNJvzDW5OIjPBskwAllkShzmVeXXWErozc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711733930; c=relaxed/simple;
-	bh=2hBaQawS2DQq+hSZa4nEoohpdH7i4ouzg4+WFmp/jBs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CkwuwiYsSixuJYyWP3vguB3gq4R1RqXbbpz4MFoz30U/QskRkG3AMowPniXou23jrfr2k0XOwvpRe8Rzm3xdam8Lyyj/oxH1F77DNBBI3U9SuQ34hM7jR4w88i5gDb7iMC7bIFss8sP5R8f/H84LnQpHyBz4QI31vdBf3hhiyFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A0Vm1RuA; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1711734174; c=relaxed/simple;
+	bh=cFkq+g1hFoPtjDAp4fri/ZRBHccgXatpCB3Ylgkw7Lw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MFC91U/DMmz0LThHix5yUM6RjiILrWl2hk9LUlixziO1ZTJpXFn3f9MhEKT2laX83moeS4BqmrrruSulwM+KUoJdY8bnmug/5TmfVScKfbT4Sk3bePodXBxsIrNZJQK1baBGcfLiqLySmSDHiudrThljJrNycZdIKQsrfNzmXHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lQsdOnZM; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A0Vm1RuA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711733928; x=1743269928;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2hBaQawS2DQq+hSZa4nEoohpdH7i4ouzg4+WFmp/jBs=;
-  b=A0Vm1RuAXVl54LN1ZL8oFxlb/7vpKFUXh4MDWJbH7vfbckXCtqwCrQoO
-   MGeoMPhMGXPhpeN9xYt9IrtkR6zzDRjzLPLMgv0ixtw0WNFvssH5ex0Eu
-   cLMuKhQ/lpRpYuN6AqN2G/x0lvSp0bnXzrNuiGMWG0JXd3x6pJzhGi3QJ
-   CzuC6pnm+/nscvaqJOYZi+5ZtAdOTp5EIbwXmmtwat5ohJQ+utIyTY3JB
-   8c434NwiHhOYVcYthw9Q1qZIMA8DHUcFK1fu5ex5ffHgKsCEPto0cFx6v
-   gDSO76vuVB8uYy83RBZDtg65f7RX+WySYydQ+Q+QXoouXpxvo0alqLseM
-   g==;
-X-CSE-ConnectionGUID: 387IWgCGQoKErZwxn70UxA==
-X-CSE-MsgGUID: OEt/rMpWSTqXsnUrNUUn2w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11028"; a="29413577"
-X-IronPort-AV: E=Sophos;i="6.07,165,1708416000"; 
-   d="scan'208";a="29413577"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 10:38:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,165,1708416000"; 
-   d="scan'208";a="17669687"
-Received: from unknown (HELO intel.com) ([10.247.118.231])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 10:38:17 -0700
-Date: Fri, 29 Mar 2024 18:38:10 +0100
-From: Andi Shyti <andi.shyti@linux.intel.com>
-To: Easwar Hariharan <eahariha@linux.microsoft.com>
-Cc: Andi Shyti <andi.shyti@linux.intel.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-15?Q?K=F6nig?= <christian.koenig@amd.com>,
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Harry Wentland <harry.wentland@amd.com>,
-	Leo Li <sunpeng.li@amd.com>,
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-	Evan Quan <evan.quan@amd.com>,
-	Hawking Zhang <Hawking.Zhang@amd.com>,
-	Candice Li <candice.li@amd.com>, Ran Sun <sunran001@208suo.com>,
-	Alexander Richards <electrodeyt@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Hamza Mahfooz <hamza.mahfooz@amd.com>,
-	Ruan Jinjie <ruanjinjie@huawei.com>, Alan Liu <haoping.liu@amd.com>,
-	Aurabindo Pillai <aurabindo.pillai@amd.com>,
-	Wayne Lin <wayne.lin@amd.com>, Samson Tam <samson.tam@amd.com>,
-	Alvin Lee <alvin.lee2@amd.com>, Charlene Liu <charlene.liu@amd.com>,
-	Sohaib Nadeem <sohaib.nadeem@amd.com>,
-	Lewis Huang <lewis.huang@amd.com>,
-	Tom Chung <chiahsuan.chung@amd.com>,
-	Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-	Meenakshikumar Somasundaram <meenakshikumar.somasundaram@amd.com>,
-	George Shen <george.shen@amd.com>, Aric Cyr <aric.cyr@amd.com>,
-	Jun Lei <jun.lei@amd.com>,
-	Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-	Qingqing Zhuo <Qingqing.Zhuo@amd.com>,
-	Dillon Varone <dillon.varone@amd.com>, Le Ma <Le.Ma@amd.com>,
-	Lijo Lazar <lijo.lazar@amd.com>, Asad kamal <asad.kamal@amd.com>,
-	Kenneth Feng <kenneth.feng@amd.com>, Ma Jun <Jun.Ma2@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Yang Wang <kevinyang.wang@amd.com>,
-	Darren Powell <darren.powell@amd.com>,
-	Yifan Zhang <yifan1.zhang@amd.com>,
-	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	"open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS" <intel-gfx@lists.freedesktop.org>,
-	"open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS" <intel-xe@lists.freedesktop.org>,
-	"open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" <nouveau@lists.freedesktop.org>,
-	"open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
-	"open list:BTTV VIDEO4LINUX DRIVER" <linux-media@vger.kernel.org>,
-	"open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>
-Subject: Re: [PATCH v0 02/14] drm/amdgpu,drm/radeon: Make I2C terminology
- more inclusive
-Message-ID: <Zgb8gieDzZtZmg2q@ashyti-mobl2.lan>
-References: <20240329170038.3863998-1-eahariha@linux.microsoft.com>
- <20240329170038.3863998-3-eahariha@linux.microsoft.com>
- <Zgb3VYsgLjhJ2HKs@ashyti-mobl2.lan>
- <ceeaafe1-49d5-4602-8251-eed63a1be2b6@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lQsdOnZM"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2d6a1af9c07so25116351fa.3
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 10:42:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711734171; x=1712338971; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zoq32VlThZF4K3uGGysmE5czVxur4PSomOKn92DKYNg=;
+        b=lQsdOnZMLeUe5V8DRBTLdD2Nn7XWKagMJPLw91wLnXFRTadnPK6Ai9aqNkMqSP0akI
+         htsveL812XD6gqhGy57CvXjrFaGI1HY1j88aNARNU5lu/b/9+pbUOKbHe0z3kd1enE4Z
+         +mZV0PeGSGiXPXMreb7ZYTTT//2/8IKC6Y/x4vPaa47BBs3BxGW452eGv+2LBSNIcNO7
+         9oFesl4OgY7ycsB4PPw0ko0S3lE5q84/3vAMxRL9Jr2NgeSp9f5sClwMTMDR8h34MFES
+         0X17TzMfJvRLzQVZTJgFr3oaj83yXXayTtRxZxd4cegnrJbyEepejkKo6FtkYSFdK3Lf
+         Lh/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711734171; x=1712338971;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Zoq32VlThZF4K3uGGysmE5czVxur4PSomOKn92DKYNg=;
+        b=ZxE2NjxwJL7pcl59ANqSkQVhLM1YTiEwvYty1eVb0T4lHzO5e0ul2IvXeWvuD83ZAj
+         VUsx1J9/bEpjufH8628qzOcG9wguQkgkx3vLx7t8PFjE8eZ6w/RvPvxGKFWKeyOUKNUg
+         e+Yd4SFRDKwUU1lb4Lif+0eRImeQaKRqhAGT07baP33THp6EvcPQ6hAiXuF2CWwFvA4B
+         75rNWu3oLabod2mrpzSxCocfnBqKWQAXQ4e5FwQJFegjD/TxTD1ifosGJ/qDQpSMKlzh
+         fBATo1lSBECj5lf7S7vKEk6mQNTxn/BozgoA8e8Y3G05GuiJ74pqZTRWyZzEW9iaA/jx
+         ZQnw==
+X-Forwarded-Encrypted: i=1; AJvYcCWUcQPd1fiXxzSvVAd18NpbnGfnbujM4BSFRmVxS4Z0hLKlbXyFD0A0pDCo3Qd9SF/rH3SXCarkhxW2xzwl05LcgzjsR/wOiZUV1Ggm
+X-Gm-Message-State: AOJu0YxUf2dQ+ByPCI7utD6xsQWHb9ofgtB+kfeSCWa/O61J+ySMpWLP
+	O5D0QYjBDJoSjiUwHHQvw9E340aQBbDoPXRmsyupGLd0YTTDFufVzSoVFHbGvMg=
+X-Google-Smtp-Source: AGHT+IEgTS+UokAunkKVR85pH5TuhdSOhqrDt8jy9GJVGByh7S3J6wLkWCcwgcU6fO3R+mtKtP0mjg==
+X-Received: by 2002:a2e:a990:0:b0:2d2:44df:b112 with SMTP id x16-20020a2ea990000000b002d244dfb112mr1977011ljq.41.1711734171269;
+        Fri, 29 Mar 2024 10:42:51 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id q17-20020a05600c46d100b0041409db0349sm6050301wmo.48.2024.03.29.10.42.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 Mar 2024 10:42:50 -0700 (PDT)
+Message-ID: <4ef1eb4e-b1f8-4b5c-9280-5834f946fcde@linaro.org>
+Date: Fri, 29 Mar 2024 18:42:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ceeaafe1-49d5-4602-8251-eed63a1be2b6@linux.microsoft.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: timer: renesas,tmu: Make interrupt-names
+ required
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <137c184267faacdc3024f0b88e53889571165a84.1711715780.git.geert+renesas@glider.be>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <137c184267faacdc3024f0b88e53889571165a84.1711715780.git.geert+renesas@glider.be>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 29/03/2024 13:37, Geert Uytterhoeven wrote:
+> Now all in-tree users have been updated with interrupt-names properties
+> according to commit 0076a37a426b6c85 ("dt-bindings: timer: renesas,tmu:
+> Document input capture interrupt"), make interrupt-names required.
 
-On Fri, Mar 29, 2024 at 10:28:14AM -0700, Easwar Hariharan wrote:
-> On 3/29/2024 10:16 AM, Andi Shyti wrote:
-> > Hi Easwar,
-> > 
-> > On Fri, Mar 29, 2024 at 05:00:26PM +0000, Easwar Hariharan wrote:
-> >> I2C v7, SMBus 3.2, and I3C specifications have replaced "master/slave"
-> > 
-> > I don't understand why we forget that i3c is 1.1.1 :-)
+Would be nice to see here *why* they should be required, e.g. "Linux
+driver needs them since commit foobar").
+
 > 
-> That's because it's a copy-paste error from Wolfram's cover letter. :) I'll update
-> next go-around.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  Documentation/devicetree/bindings/timer/renesas,tmu.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
-not a binding comment, though. Just for completeness, because we
-are giving the version to the i2c and smbus, but not i3c.
+Anyway:
 
-> >> with more appropriate terms. Inspired by and following on to Wolfram's
-> >> series to fix drivers/i2c/[1], fix the terminology for users of
-> >> I2C_ALGOBIT bitbanging interface, now that the approved verbiage exists
-> >> in the specification.
-> > 
-> > The specification talks about:
-> > 
-> >  - master -> controller
-> >  - slave -> target (and not client)
-> > 
-> > But both you and Wolfram have used client. I'd like to reach
-> > some more consistency here.
-> 
-> I had the impression that remote targets (i.e external to the device) were to be called clients,
-> e.g. the QSFP FRUs in drivers/infiniband, and internal ones targets.
-> I chose the terminology according to that understanding, but now I can't find where I got that
-> information.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-The word "client" does not even appear in the documentation (only
-one instance in the i3c document), so that the change is not
-related to the document as stated in the commit log. Unless, of
-course, I am missing something.
+Best regards,
+Krzysztof
 
-I'm OK with choosing a "customized" naming, but we need to reach
-an agreement.
-
-I raised the same question to Wolfram.
-
-Thanks,
-Andi
