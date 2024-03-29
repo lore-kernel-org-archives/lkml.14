@@ -1,136 +1,91 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 185E85FB88
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 10:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7914B53E01;
+	Fri, 29 Mar 2024 10:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711708055; cv=none; b=MXSfNArpm7s2D9HYCUOhkrJtdwHfM4bGHWSaeLxAfxybDA5WfDJQqBrsdkmsHfnZRKkbkMRagrbvZcUfFSYPiu4Ey2NLlN1WrCZu+82cR74yfW6grxuS+N+3fA8o4RgKJPMVQmoKreBSSue2IgvMGrRYJBs+DpkN+sZMPPyYgTw=
+	t=1711708132; cv=none; b=N0Ugqg88vnr+yFO2Fmt+U4vnZA4Av7xTT6zNWTvAdxual5VD5Sl2Uk0MAme+ZqzItuuz6RtBb0Y+7ijWKCV+dX7050ujF4Idc922+6LhL2urKaWm6ERzMxa1QQ11rLsln5B5qOl8wuUCB72UJzI+I+4Uc/GlDdOluk5Lugr3ugM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711708055; c=relaxed/simple;
-	bh=n8h0843dN8D5vA/PkugrZHKUYOVTJ3ipk22+mvTL/rQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NRZW6bI5bEVb1FoBiEqBo4Ri+zz4QvZziSYzIg5avc87Rh5cpSW2z1RvKiEVXRMQ4veOW+KScCnUqRFu/a7jKLkQNSzBzBPcusMkQtzq6IKu6qKGytCMPz+bBz9xGjOyRxE9uV58XVix3p74QBpdoGoKIK4USOjbqdeOMH4mP+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=dyuwjWZU; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1711708132; c=relaxed/simple;
+	bh=INoHp/pa5mQKkPJSEnhdMRcocNB4PmSJWa7zs42M1lA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YN3pIqu23tvGzPfaiGQtr4V+Gea8dJJKXfhVulyClkxLPy+R1i4SOJYwDnp2881HiKrrIWtZ+asCkyYQzfaAjBXi6X1EsPbWsOQ0wt4KioADXSxXp04ehZpJNDqJ4EMZj/IMn51H9E7b95cH2zGyPuGHlxf6OuvNIuu7fjP+C7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gEtLObBZ; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="dyuwjWZU"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-513d717269fso2122514e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 03:27:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1711708050; x=1712312850; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uPUqPHiAYDsvF7c6mpbUarOnTLvyyWG07eUiOIJt2gQ=;
-        b=dyuwjWZUfGWzJVysscD30kfuI2gyGOnYyqbGUlDCiWGyqIwspDyRcAC9eFt55TQL4N
-         WILwNtOpVmkAH6RhWJ5Env6RPZV06CR7mPyYYVYbhe3cH5Lkf2lHDRGq8DvyUcF8mDZK
-         RY4O9ESRZG2Von8kNqG99fYZs1oYfSfZ6QPfSiXa0Whm+GooCBUofQDP8KzW+V2gl/Ks
-         m4V83+ciic4KyZm5qF+aYKpJ6koSYpKheZAUuqpjyqFKfTpxRWd+WM0zyf54/DaM9Cfu
-         hEIMEmDg629P+tLfaGcJ5JJkJPLzByeLVH5rL9j0QQUHqoxyFDOj2qrT845zjvviERic
-         cYOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711708050; x=1712312850;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uPUqPHiAYDsvF7c6mpbUarOnTLvyyWG07eUiOIJt2gQ=;
-        b=gGwVp2DObzfKtYmhJTbgwlev3Mdo9dI1gpcxG2v1f9iDBHAQs0BEQ7910H3jKcoNNQ
-         5pJYoW9xTzPI48XKOSaq1YF70ePoYLySQzQAF9SQKQkOMOjVlhCZvFWIsLfOnxg41Irf
-         NxliUSDDBDibniPaP5jp5dHjedfkt8HXZE36YW7+ACHxKfV6Vu2amvHeD7nvTdxw1yDl
-         /9s9gPjIBBspAIbuPiXMNoQeXcAXeXtSCjlMa2/8xm94E7N1112BXhOfx92UBKISpEEY
-         zotwGDXuj1wwqsgAX43SS0DK+jlnegyRXsmlrGOzy5L4q5yI5tI/UTuaU8g7oozlLBxu
-         7nHA==
-X-Forwarded-Encrypted: i=1; AJvYcCVmzrL9LiCsdJ7G34LuKscAD9oY11AT6CxQVqqGQoK//q7ROc8y+CBHg+9lQuUwJ7K7CJjk51toPuuBHks9VX5mOAdwKKENlXzV0tJx
-X-Gm-Message-State: AOJu0YwcqqzL9OhflnejztlEqjtApSN6Tlkv8StQmMXJfECeTRTRwZvn
-	5raDmYAwJS83uP5imG+y15WC5P/ZwGDAAvtRLM7NSPlp/4c96H+Im5r1FN4RkvlpqMFFkHG4KSD
-	HQNw+dumnJ02xAIbDFXg5Q0EH7nmwQlG1Tc/7Pw==
-X-Google-Smtp-Source: AGHT+IGkJetMoIDH9w2TQurNFFXLK7XsHfl+lPbtCC+0MeMFYTkyF7Alb8el7pzIkiwo9JvBX9h3ULKBGoxrg4XKpUU=
-X-Received: by 2002:a05:6512:33ce:b0:513:af27:df1c with SMTP id
- d14-20020a05651233ce00b00513af27df1cmr1559870lfg.11.1711708050041; Fri, 29
- Mar 2024 03:27:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gEtLObBZ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7FFDCC0008;
+	Fri, 29 Mar 2024 10:28:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1711708127;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8jLCIWTLVye4PXFQW3QnPZ9wsvlBJeU7UwVpsnvSw6w=;
+	b=gEtLObBZI40GFMjxYbApcxXhhVxY5fE+ZOFuVqKBUMGvGuOlEp31hsm7VbS68RsPeNtB8j
+	aILG2nfC/+K9O5qN2cie/1aci9+MURBK5ocDj2a5KwX3Xv9qKYFl5ZaoEBo6MUIMBBkvkP
+	dccQ8+5O0qOns3cGRL9f2vOnfTCPJYjvZZ61f/Y4hhmlhcA5O6jV2GIem6eFgW3Eu01+sI
+	+l3+TDAiExWUoG0ckblTrfpl9e8L1RLbk1Cw9rdqn3pSgyjIBGfGrOkijADVHSvSaS1fPb
+	a6bcl82HPQIEBHn/LQcHiTgIl6238ZbumelOOSZTtm/g0qNWfimrr5b3IL2OdQ==
+Date: Fri, 29 Mar 2024 11:28:47 +0100
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Karthikeyan Krishnasamy <karthikeyan@linumiz.com>
+Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	parthiban@linumiz.com, saravanan@linumiz.com
+Subject: Re: [PATCH] drivers: rtc: rv3028: check and update PORF flag during
+ probe
+Message-ID: <20240329102847fcdca1cf@mail.local>
+References: <20240329101940.1424643-1-karthikeyan@linumiz.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240327-module-owner-virtio-v1-0-0feffab77d99@linaro.org> <20240327-module-owner-virtio-v1-9-0feffab77d99@linaro.org>
-In-Reply-To: <20240327-module-owner-virtio-v1-9-0feffab77d99@linaro.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 29 Mar 2024 11:27:19 +0100
-Message-ID: <CAMRc=McY6PJj7fmLkNv07ogcYq=8fUb2o6w2uA1=D9cbzyoRoA@mail.gmail.com>
-Subject: Re: [PATCH 09/22] gpio: virtio: drop owner assignment
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, Jens Axboe <axboe@kernel.dk>, 
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Olivia Mackall <olivia@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Amit Shah <amit@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gonglei <arei.gonglei@huawei.com>, 
-	"David S. Miller" <davem@davemloft.net>, Viresh Kumar <vireshk@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, David Airlie <airlied@redhat.com>, 
-	Gerd Hoffmann <kraxel@redhat.com>, Gurchetan Singh <gurchetansingh@chromium.org>, 
-	Chia-I Wu <olvaffe@gmail.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>, 
-	Joerg Roedel <joro@8bytes.org>, Alexander Graf <graf@amazon.com>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, 
-	Stefano Garzarella <sgarzare@redhat.com>, Kalle Valo <kvalo@kernel.org>, 
-	Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Pankaj Gupta <pankaj.gupta.linux@gmail.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Mathieu Poirier <mathieu.poirier@linaro.org>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Vivek Goyal <vgoyal@redhat.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Anton Yakovlev <anton.yakovlev@opensynergy.com>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, virtualization@lists.linux.dev, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-um@lists.infradead.org, linux-block@vger.kernel.org, 
-	linux-bluetooth@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, iommu@lists.linux.dev, 
-	netdev@vger.kernel.org, v9fs@lists.linux.dev, kvm@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, alsa-devel@alsa-project.org, 
-	linux-sound@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240329101940.1424643-1-karthikeyan@linumiz.com>
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
-On Wed, Mar 27, 2024 at 1:45=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> virtio core already sets the .owner, so driver does not need to.
->
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->
+On 29/03/2024 15:49:40+0530, Karthikeyan Krishnasamy wrote:
+> PORF flag is set during power reset and voltage drop below Vpor
+> data in rtc device is no longer valid if PORF flag is set
+> and software must reset to 0, in order to perform sanity
+> check on rtc data
+> 
+> Signed-off-by: Karthikeyan Krishnasamy <karthikeyan@linumiz.com>
 > ---
->
-> Depends on the first patch.
-> ---
->  drivers/gpio/gpio-virtio.c | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-virtio.c b/drivers/gpio/gpio-virtio.c
-> index fcc5e8c08973..9fae8e396c58 100644
-> --- a/drivers/gpio/gpio-virtio.c
-> +++ b/drivers/gpio/gpio-virtio.c
-> @@ -653,7 +653,6 @@ static struct virtio_driver virtio_gpio_driver =3D {
->         .remove                 =3D virtio_gpio_remove,
->         .driver                 =3D {
->                 .name           =3D KBUILD_MODNAME,
-> -               .owner          =3D THIS_MODULE,
->         },
->  };
->  module_virtio_driver(virtio_gpio_driver);
->
-> --
+>  drivers/rtc/rtc-rv3028.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/rtc/rtc-rv3028.c b/drivers/rtc/rtc-rv3028.c
+> index 2f001c59c61d..e9699ff0c4e8 100644
+> --- a/drivers/rtc/rtc-rv3028.c
+> +++ b/drivers/rtc/rtc-rv3028.c
+> @@ -951,6 +951,13 @@ static int rv3028_probe(struct i2c_client *client)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> +	if (status & RV3028_STATUS_PORF) {
+> +		ret = regmap_update_bits(rv3028->regmap, RV3028_STATUS,
+> +					 RV3028_STATUS_PORF, 0);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+
+This breaks the workflow, you must set the time to reset PORF.
+
+>  	if (status & RV3028_STATUS_AF)
+>  		dev_warn(&client->dev, "An alarm may have been missed.\n");
+>  
+> -- 
 > 2.34.1
->
+> 
 
-Applied, thanks!
-
-Bart
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
