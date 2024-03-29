@@ -1,144 +1,89 @@
-Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBDC542079;
-	Fri, 29 Mar 2024 08:05:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F1745016;
+	Fri, 29 Mar 2024 08:06:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711699527; cv=none; b=W1erBZvRh1Dh/AiN4xBb64j/sFjRFdzmFd9bbp/RUWpvPFVLYCsXWTz7IcYSJ7wzOWe4YzdW8AmCa8sc5ePpMYH6JCvCiCDvkxABjn1YhiTg9dW8E8icXSv+LWi1c7kVFyr6S47iTXBz2iXx+Pn2bbkWEMerSVgaSHJq2Kuw6ps=
+	t=1711699560; cv=none; b=ikkIlxm8IA5DC76VwwWodXST10KRwOx3k3OjXYqWRO+gcBqOxbuziC/wCWE6jMsfYUzi2PxQDuv+b9zHIvabQeK5p4rvUZ1Efoz5BnNduEfUHTk6h8VAws94FxSCtvy2KOO2D09rKFEV8hkDqevw2FYxugvqoj8tUq049Z3b33o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711699527; c=relaxed/simple;
-	bh=eYtxuEbsiza1jWjD8sK8LFfazqJBSKLzQPw4+NsDBGg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BiZMxYvGGxXu3Y8mty2mZyBuuP/L946JsMGb0NaJbgeLMSKXjwk7JIEujL7yQbIVp/wPJcJodj1J4GUMeNrFaKswnXcO6dTpo7gJyZeekqX9JuW9foFZM2sggQsuAKrHQy9DmxWUVv1g/VaBpidbxBJitf2gCfDAt3yhCswkPcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=jf6EHeuD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=xlPP9nEd; arc=none smtp.client-ip=64.147.123.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
+	s=arc-20240116; t=1711699560; c=relaxed/simple;
+	bh=XX+VRU77adYKl58Xf5SH3Psy1Aivalng4w2owP5PZaM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=UauHUXgV5ed66seL5BShnnjnYLRPjUqOp+onFJU/xoTvw6aF0Fp0CU6hT7xzok70Pcva8MUEDemRsS90+yp0W5vjf2Ml6DSynaHfFm0Ik/RQvarWYLmmxcKSvd/dYZ6Uy9TzVy7S8UWtnICoMqfDLC28+jKliYoj6bbG9Gp+8G4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pGWTgk/H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="jf6EHeuD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xlPP9nEd"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.west.internal (Postfix) with ESMTP id 9444932009FD;
-	Fri, 29 Mar 2024 04:05:24 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Fri, 29 Mar 2024 04:05:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1711699524; x=
-	1711785924; bh=aKqCS9RJnx7MtsbbEZJJesa57vTOLC1+PYxUbAXMVZs=; b=j
-	f6EHeuDErAZ4ZHulFf9KjXpvNXD9RjFm+NedskzdHwz3158mqE33iIbo+PRPPGe9
-	aon329whOHCFBLOrJyqVTqX4V1JJxPBkHSN+JNwCHRXglCNiS9VucXMugBFz7B4p
-	Hnl/mU7gVYQDxhu3b8sbOQoVZBcD5xmDLrKAErogxLzfjoSJPckVozto3EEOQSF6
-	Z3rohS4bWwvNt349Emf5rwXX6mTpkSixZL2Ez8KWdzh9uXkWMrJZJgI3HLZn4xkC
-	FnwGcoa9/wqjFKkrtBzhluZQFrYUKRkNXnUFxDjATQrF8dm+4vaLbitCNFGJ07nP
-	SE0Rm/zYudyjhbXOMItnQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1711699524; x=1711785924; bh=aKqCS9RJnx7MtsbbEZJJesa57vTO
-	LC1+PYxUbAXMVZs=; b=xlPP9nEdFDBrfgDB7WhHaVVzrhuCXHEIqVxzUbRLi/Qe
-	MVoSfZRnrNJB6RNqp5Ar5rTq7I2sCc3Jrrt0AartLl1PzP11u8zyj1qnd3eMojCo
-	SgBe8adup1TtfvPHK3610g5cobS3Lm2m6wGoW1Q9IKlxtfHHdbBSnFgaQepQDJDP
-	dHU8ixw9v9kmBohYug49IvBqMgHam4W3UfJVTsHXWIkvST4UPQytP8eMi/zOBQ6B
-	yGJSXdEELD0VT296NOH4s5V41A+x0XijoINEhuGEhd0wtHqhSvwELusbC/jqIKHp
-	GJHrOb8LiDwtLyNFprxgFjKBeGBYJispNhOEJAs4+g==
-X-ME-Sender: <xms:Q3YGZt-Xa4lBvf7byTuTbQbol8-RRsEy3sR1y3TKdQo3GdYXplzIrA>
-    <xme:Q3YGZhsgzNhdtKeeeUtkaqVF_YM4SCnxAXOPQuV28ci8vU73fOk-tRrFpLUAwA2wH
-    zZudFDkIzRRcJd2lg4>
-X-ME-Received: <xmr:Q3YGZrBFBq6uQv6fY_2B-QjfTVqlJjpqxBCQm_ZhnK7R3VjSRuGvOq-zJSK1c8_6mkiXvcq5MI0y0bZTW9ppD7VGfDz62tZQWA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddvtddgieefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvvefukfhfgggtuggjsehttd
-    ertddttddvnecuhfhrohhmpefvrghkrghshhhiucfurghkrghmohhtohcuoehoqdhtrghk
-    rghshhhisehsrghkrghmohgttghhihdrjhhpqeenucggtffrrghtthgvrhhnpeehhffhte
-    etgfekvdeiueffveevueeftdelhfejieeitedvleeftdfgfeeuudekueenucevlhhushht
-    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghshhhise
-    hsrghkrghmohgttghhihdrjhhp
-X-ME-Proxy: <xmx:Q3YGZhc4a94vMZywKJNNvTb9CTzdH6G3zwzIToPc9yPonkKDhKu5aQ>
-    <xmx:Q3YGZiNQg-uGqzCDzPVA1uc3XNV5w4vQM8Es6hCPiz_O0wIgkPEWRw>
-    <xmx:Q3YGZjktE_yNzVBBOJxTRz1VCwH0X9HED5dHiXF2AlJbcOeoJiDfug>
-    <xmx:Q3YGZssI9R-YZ7KFRdnc2rrj6WHqCp5tdtVYaFGfg7iXL19959jnYQ>
-    <xmx:RHYGZp3dt_awJ8NVUMWCUZCc4t2IOd0I-eYTNKpBv4S-j4XCgZFS7A>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 29 Mar 2024 04:05:22 -0400 (EDT)
-Date: Fri, 29 Mar 2024 17:05:20 +0900
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: "edmund.raile" <edmund.raile@proton.me>
-Cc: helgaas@kernel.org, linux1394-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: Mark LSI FW643 to avoid bus reset
-Message-ID: <20240329080520.GB231329@workstation.local>
-Mail-Followup-To: "edmund.raile" <edmund.raile@proton.me>,
-	helgaas@kernel.org, linux1394-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20240325012135.36861-1-o-takashi@sakamocchi.jp>
- <20240325144149.GA1432902@bhelgaas>
- <20240326131858.GA140624@workstation.local>
- <kodgse5nq6gqor6iaf5s4qo2h7mfykbor34ewtkjvcgh4iraq5@7fxn3rdch2sl>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pGWTgk/H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB36DC433C7;
+	Fri, 29 Mar 2024 08:05:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711699560;
+	bh=XX+VRU77adYKl58Xf5SH3Psy1Aivalng4w2owP5PZaM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=pGWTgk/HOt2BEKHYJrtDMwiPg7uV/Rq5N/hvnbapV1svXV7MqGHAG/zdfJxfwPfLx
+	 cpJB1vtpZFiBaKhsCUQ0+ySb4idOjLg//OMzEoTWdqIg/ZZLa2c3rLpFx8LcQ4k14o
+	 SwY2hZnZ/VGoT037asg0u5THFYPZOya/PVG84itX25eq4i8UVTBoCoUVk+keN6vfWd
+	 8fyMbYjH2fRkyl5SPI/FWhA7ozrQXvzeGsBzTDhAw4E/+mPG+nFcOpKXGWox3+uwyK
+	 1tvNOgxWaggTq4kGclnN0GlXOO9Q9ZKIPtg4PDeCTrToWVwK4jG3Wf6MVwSYXEiZ6H
+	 45OLpA1qvm9pA==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-crypto@vger.kernel.org,
+	x86@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	"Chang S . Bae" <chang.seok.bae@intel.com>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH v2 1/6] x86: add kconfig symbols for assembler VAES and VPCLMULQDQ support
+Date: Fri, 29 Mar 2024 01:03:49 -0700
+Message-ID: <20240329080355.2871-2-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240329080355.2871-1-ebiggers@kernel.org>
+References: <20240329080355.2871-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <kodgse5nq6gqor6iaf5s4qo2h7mfykbor34ewtkjvcgh4iraq5@7fxn3rdch2sl>
+Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Eric Biggers <ebiggers@google.com>
 
-On Thu, Mar 28, 2024 at 06:35:29PM +0000, edmund.raile wrote:
-> So instead I ran this:
-> ```
-> su -c 'echo 1 > /sys/devices/pci0000\:00/0000\:00\:1c.1/0000\:03\:00.0/reset'
-> ```
-> Playback stopped immediately and could not be resumed.
-> 
-> Then I received this trace:
-> 
-> INFO: task alsa-sink-Firef:4110 blocked for more than 245 seconds.
->       Tainted: G        W  OE      6.6.10-1-MANJARO #1
-> task:alsa-sink-Firef state:D stack:0     pid:4110  ppid:2657   flags:0x00000002
-> Call Trace:
->  <TASK>
->  __schedule+0x3e7/0x1410
->  ? tlb_batch_pages_flush+0x3d/0x70
->  schedule+0x5e/0xd0
->  schedule_timeout+0x151/0x160
->  wait_for_completion+0x8a/0x160
->  fw_run_transaction+0xe5/0x120 [firewire_core d9ff4eaf1ffb23a203d413e851f405323b49fec7]
->  ? __pfx_split_transaction_timeout_callback+0x10/0x10 [firewire_core d9ff4eaf1ffb23a203d413e851f405323b49fec7]
->  ? __pfx_transmit_complete_callback+0x10/0x10 [firewire_core d9ff4eaf1ffb23a203d413e851f405323b49fec7]
->  ? __pfx_transaction_callback+0x10/0x10 [firewire_core d9ff4eaf1ffb23a203d413e851f405323b49fec7]
->  snd_fw_transaction+0x70/0x110 [snd_firewire_lib 30b43a591db389bbc6be51459cb243ba1fe1e662]
->  ff800_finish_session+0x43/0x70 [snd_fireface 5f7f3f556960f4838886792be8e9c18aa5089b0a]
->  snd_ff_stream_stop_duplex+0x39/0x70 [snd_fireface 5f7f3f556960f4838886792be8e9c18aa5089b0a]
->  pcm_hw_free+0x3c/0x50 [snd_fireface 5f7f3f556960f4838886792be8e9c18aa5089b0a]
->  snd_pcm_common_ioctl+0xe28/0x12b0 [snd_pcm 24933227879438b755ef98bc4844113025f38cdf]
->  ? __seccomp_filter+0x32c/0x510
->  ? __vm_munmap+0xbb/0x150
->  snd_pcm_ioctl+0x2e/0x50 [snd_pcm 24933227879438b755ef98bc4844113025f38cdf]
->  __x64_sys_ioctl+0x94/0xd0
->  do_syscall_64+0x5d/0x90
->  ? syscall_exit_to_user_mode+0x2b/0x40
->  ? do_syscall_64+0x6c/0x90
->  ? do_syscall_64+0x6c/0x90
->  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+Add config symbols AS_VAES and AS_VPCLMULQDQ that expose whether the
+assembler supports the vector AES and carryless multiplication
+cryptographic extensions.
 
-Please mind that current software stack to operate your device does not
-support this kind of operation, as I've already sent to you several times.
-Users should cancel any type of communication on IEEE 1394 bus, then
-unplug devices from the bus (or power them off), finally operate
-suspending.
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ arch/x86/Kconfig.assembler | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-By the way, it is apart from PCI subsystem. Your change is now going to
-be reverted for v6.9.
+diff --git a/arch/x86/Kconfig.assembler b/arch/x86/Kconfig.assembler
+index 8ad41da301e5..59aedf32c4ea 100644
+--- a/arch/x86/Kconfig.assembler
++++ b/arch/x86/Kconfig.assembler
+@@ -23,9 +23,19 @@ config AS_TPAUSE
+ config AS_GFNI
+ 	def_bool $(as-instr,vgf2p8mulb %xmm0$(comma)%xmm1$(comma)%xmm2)
+ 	help
+ 	  Supported by binutils >= 2.30 and LLVM integrated assembler
+ 
++config AS_VAES
++	def_bool $(as-instr,vaesenc %ymm0$(comma)%ymm1$(comma)%ymm2)
++	help
++	  Supported by binutils >= 2.30 and LLVM integrated assembler
++
++config AS_VPCLMULQDQ
++	def_bool $(as-instr,vpclmulqdq \$0x10$(comma)%ymm0$(comma)%ymm1$(comma)%ymm2)
++	help
++	  Supported by binutils >= 2.30 and LLVM integrated assembler
++
+ config AS_WRUSS
+ 	def_bool $(as-instr,wrussq %rax$(comma)(%rbx))
+ 	help
+ 	  Supported by binutils >= 2.31 and LLVM integrated assembler
+-- 
+2.44.0
 
-
-Regards
-
-Takashi Sakamoto
