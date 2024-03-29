@@ -1,131 +1,142 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C676812B7D
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 18:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD3E1DA4C;
+	Fri, 29 Mar 2024 18:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711736601; cv=none; b=ScdoTImEJwuVOQgef+8Mr+C095yfulEiBKgjvHYkYHYa0W+ZfemhkTGo+izMXpmfrTVipSIvoV3AqizZZYgq+xXB0YJkEfUtwPFdvI0FCS15PdgKagRQILLpc+cwLJIXhBDvq/iFhaeZtX9Q2ULO1795t84CJApHlHIOQo1Ys+Q=
+	t=1711736674; cv=none; b=FHwXcSIoqOWT/jA4+3M7W0prkk273mJI1XOBicapBRVBdzE2kAiWoB16hGgMzWlaxJwNUjRsvr9Qr/RLtzjzyxbT6nvo3UwmzpI/whB0fxInjjfja3ajxb+MuhBU2diTyfaCu5WL/hDNL2ft6I5L0EUT6srxxL9MVKVmyF+59/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711736601; c=relaxed/simple;
-	bh=Ri886Lw8jukx1prPJ32EUubdstdqvHgl3TtWW0FFYq8=;
+	s=arc-20240116; t=1711736674; c=relaxed/simple;
+	bh=Vuh15MQ64+WP/qmGDOm7OXDGS1/VqD57AMvXjy6gqFk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uiQGzoCq79eW59PKD36tQ1yaYLZcAGV5WQxyLgMnLusdz7dsHGHRCp8QJPY0QyUVz6yXFnQOtZqHkDr3Ocs2eBqP7+5quUAvAImMv00hkW3d9kgclG9tFfY5AB/qoMaJGfGREPoBOVoRly3Z+xWpJq/UdbCgJUQns2SToZo5spY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KtW2BC8H; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=SWboHDYutd8rU2Dk/NdvC4Oif0gCxrTMLdEz+xaT3iNooZOxEYPzngwirSC+dru6ECsOWQjodmLg8jmjKDbrDyO4s9JdUQIgQef17LMQ1nF+ajk/no5RTeIa/91I3xQpKid5imxWddA18pDC4DsKFdOflSrySNCxXWV/1VsKjSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aJxG6mya; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KtW2BC8H"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-515c198e835so2471244e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 11:23:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJxG6mya"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5cf2d73a183so2283780a12.1;
+        Fri, 29 Mar 2024 11:24:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711736598; x=1712341398; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1711736670; x=1712341470; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ri886Lw8jukx1prPJ32EUubdstdqvHgl3TtWW0FFYq8=;
-        b=KtW2BC8H249s1oOQzzxpKgavGGUINGaAZclGSOG0RPDd38baiMo7yTTVa/+1yrUwAj
-         Ly7JvTj3M1nmEYt0kRWrmRZ8ruP8Zv2eVBoGTBUqA4xZvNejM45Z8xMLq0jrYfRCKnON
-         QBd8NaLP+Ypiwjn/U8x54ExP3AhufatSSninvgyhrrvIZ9WSa9hbNeQaEkH5CAOkj4iV
-         4kI6MkJ0XosbsyaLuI7FVjFX9LazsonZiUOH6LGNhXzRS7/NFkMy5hZnQ1Wr4uQSuQHn
-         +hVxZJUZ+yxtUuOczIxHqw7k/Maxs3p0tH7KWu6XJ3l9E4LehYIJ9e4EvBU0MztRKkT/
-         2GTA==
+        bh=BTcT6FpmZPDdNNZs+4hv9a25uOfPmQTokoJd2Ybvc8w=;
+        b=aJxG6myatJabBXke68OBs551dl8SxYWJABiCN8VqpNGapPd9TKtDIobWzcf7NCxi9W
+         aZAKmnlbaXlQ4iaJLJrTpD/RGrzGYti6a4y5mMoJAbbkQXuSQG0q/LaRuXJRU1afJRsG
+         30ZgDmguBIXHp/ELpNTIJrZN2m51G6nrdsTM+nQjuCUrfByH3gnxUPb4ZB0MfbjoSSLT
+         +nKxmgyBrs2jJyL2XmD1LSigKVdDKicgdDJlgc0ey2Ip6a/hHvOsl33ZpTPfKJqfUQws
+         cMVouFv0Ae2qII5W/9giPPx0MYDmXCsazSMVFbMjKcrfeXLbNlnI4sJsZ5SGCQ/amehk
+         EZWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711736598; x=1712341398;
+        d=1e100.net; s=20230601; t=1711736670; x=1712341470;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ri886Lw8jukx1prPJ32EUubdstdqvHgl3TtWW0FFYq8=;
-        b=QdnN5gnjD16G7Bv9cG/NVA60jCj2TkUAQzhGW0YyZIeVkIRZlQOXycIohVDnWVfznP
-         2CefSxXJVipRV7rj7FgvM8hEYrUxQZDQWhCp2nEjtvaH4MOGdGF4RhNuT7u+LMFBrcDd
-         YyqX1RvF3q07JF775NU3JqMEWbaKbxLWeju30wKeHqpVdEZZmP8aUJn9wXDzh3ukIMrl
-         ppo6GkKGsVFnGjxoX+ETQ7BskFUfGDr6n82Q/wvglWlriODXYDHsOdB3SjlmgmvToB1w
-         /Wqwku76Og/LxYdtjDIuAEM2AycJGKzDnragDcAXqoN0wRQYrVNinw1sSSHNelY725cZ
-         UuQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWmVsuhGvRhmAx3eLj2WYQAhUwVl9cjvBjM+QrEpX3cwb9dHFbAW6IMDANL7qwZ2wPWKRIU0ajsD8NZBT22R0gmK2N51RYk+cNw+DG6
-X-Gm-Message-State: AOJu0Yw8zAOGv9EazWwaf0pO0Vzde9wuR0Hxpgzz9u4CrFTnYzxmWWXr
-	zwJBSkf+u9or/FJqgoy5dg3U4CFpH/nkoV51Yy6TSoqzx1PzRGHGRz4mR2AdMYGqDDhzdQUiQS8
-	K/Zi5XuUZ33cPBlzH9IXYuEDcTVRTDMQvlgbzjSmdqELHc8tCbfKZ
-X-Google-Smtp-Source: AGHT+IHDOJqPMLXcyCbIlwaancqWKBwZDloy959OYM9mZhvLf8RyPOrb+rJYSzvZz/bwaIPa0lPnoCZbtii+fl/4ow8=
-X-Received: by 2002:a05:6512:2213:b0:514:e5a7:110f with SMTP id
- h19-20020a056512221300b00514e5a7110fmr2342410lfu.54.1711736597606; Fri, 29
- Mar 2024 11:23:17 -0700 (PDT)
+        bh=BTcT6FpmZPDdNNZs+4hv9a25uOfPmQTokoJd2Ybvc8w=;
+        b=dip9HWllPg0kK4FYxwJPZeVdS/6vBkxb75H4qsKSvrh2B0knUVJsxSR1T6G20lKQnH
+         FyLqi5LW1QcVaImH0ESBrJ3QrQV+hfP0H32bslBX2L+IIEl6cd8DfEcKf9wzR7dML/cI
+         KdMUexiaKczwb+UbjPUZYBh+jRUWmTgja1s+/stieMUS11uGqO3v2/6ygyfPgGRFRn8k
+         WRPq8I/sFaeYt4BRYaDnqv3FavCX4bSR5X+I9hrHgRbBhz9WT1oGKHvWq5/hfskq+422
+         U7QI8uyZvJsn8Vm1iGVwzCTx071fo4JOwZ21CjQUlx4UhUK/BgaGKNXtmMCcTy4aFF0P
+         Pp0A==
+X-Forwarded-Encrypted: i=1; AJvYcCV8Vg1/ZeLEsqdvnLtf6zbWdRk6C35Zq9lykG6KvQvcUhAVDwXyY48+S2GdLRHxbsyreUGUZhpLfybKiETFA0Ll4YkVjv+y0yEvJMbmul0U/RJbwMN9FsFVVyZi/dIVSXGiCTOZHJx6M7eUcjiYSrLoPrGFq0IBU4BOkETrvg==
+X-Gm-Message-State: AOJu0YwDDAJV2i3tqgL27p5B3OUeA3Q+usdmgp6SgVYZaykYJe24Augb
+	Ck3tlTE1cXx8Zo3vrzOMtPIDv02u2hwbIvdTuBkqj9925Y4Q2qCvQ8pUgM2wqSS+wCZvbXqMklY
+	a3dxRG36pWzqobJipEXbU8fZBsCs=
+X-Google-Smtp-Source: AGHT+IFsDflBbt8eyH8AA5Ww8LHUaL9BgK2B3vWkAUWBTMPDlWZRocD2cQm01IS8ipOY7tuShkuhGvMJvLn3CtHeZF0=
+X-Received: by 2002:a17:90a:b78b:b0:29f:76d4:306a with SMTP id
+ m11-20020a17090ab78b00b0029f76d4306amr3867934pjr.24.1711736670529; Fri, 29
+ Mar 2024 11:24:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240325235018.2028408-1-yosryahmed@google.com>
- <20240325235018.2028408-6-yosryahmed@google.com> <20240328191109.GE7597@cmpxchg.org>
- <CAJD7tka4iKD0=MOkj7iBCXvG6Jmq6WQgvRNV3mY+YRWPnYWmAg@mail.gmail.com>
- <CAJD7tkYo90ynKfBcWyMZLu7r-GJj3egnnJyGiJ5T2SN-Tn3d9A@mail.gmail.com>
- <19d5cdee-2868-41bd-83d5-6da75d72e940@maciej.szmigiero.name> <20240329174457.GJ7597@cmpxchg.org>
-In-Reply-To: <20240329174457.GJ7597@cmpxchg.org>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Fri, 29 Mar 2024 11:22:39 -0700
-Message-ID: <CAJD7tkaXtbM6_6+Oe08_xorMRrU94nvEeDj4_R78nKdZZWqAMw@mail.gmail.com>
-Subject: Re: [RFC PATCH 5/9] mm: zswap: remove zswap_same_filled_pages_enabled
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>, Andrew Morton <akpm@linux-foundation.org>, 
-	Nhat Pham <nphamcs@gmail.com>, Chengming Zhou <chengming.zhou@linux.dev>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
+References: <20240329093356.276289-5-ardb+git@google.com> <20240329093356.276289-8-ardb+git@google.com>
+In-Reply-To: <20240329093356.276289-8-ardb+git@google.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 29 Mar 2024 11:24:18 -0700
+Message-ID: <CAEf4BzYyTjb9MKAD8nP52+9Nx=eNyWxAwfWDBEO881+YuH_XTQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] btf: Avoid weak external references
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, linux-arch@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 29, 2024 at 10:45=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.or=
-g> wrote:
+On Fri, Mar 29, 2024 at 2:35=E2=80=AFAM Ard Biesheuvel <ardb+git@google.com=
+> wrote:
 >
-> On Fri, Mar 29, 2024 at 03:02:10PM +0100, Maciej S. Szmigiero wrote:
-> > On 29.03.2024 03:14, Yosry Ahmed wrote:
-> > > On Thu, Mar 28, 2024 at 1:06=E2=80=AFPM Yosry Ahmed <yosryahmed@googl=
-e.com> wrote:
-> > >>
-> > >> On Thu, Mar 28, 2024 at 12:11=E2=80=AFPM Johannes Weiner <hannes@cmp=
-xchg.org> wrote:
-> > >>>
-> > >>> On Mon, Mar 25, 2024 at 11:50:13PM +0000, Yosry Ahmed wrote:
-> > >>>> There is no logical reason to refuse storing same-filled pages mor=
-e
-> > >>>> efficiently and opt for compression. Remove the userspace knob.
-> > >>>>
-> > >>>> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
-> > >>>
-> > >>> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> > >>>
-> > >>> I also think the non_same_filled_pages_enabled option should go
-> > >>> away. Both of these tunables are pretty bizarre.
-> > >>
-> > >> Happy to remove both in the next version :)
-> > >
-> > > I thought non_same_filled_pages_enabled was introduced with the
-> > > initial support for same-filled pages, but it was introduced
-> > > separately (and much more recently):
-> > > https://lore.kernel.org/all/7dbafa963e8bab43608189abbe2067f4b9287831.=
-1641247624.git.maciej.szmigiero@oracle.com/
-> > >
-> > > I am CCing Maciej to hear more about the use case for this.
-> >
-> > Thanks for CCing me.
-> >
-> > I introduced "non_same_filled_pages_enabled" a few years ago to
-> > enable using zswap in a lightweight mode where it is only used for
-> > its ability to store same-filled pages effectively.
+> From: Ard Biesheuvel <ardb@kernel.org>
 >
-> But all the pages it rejects go to disk swap instead, which is much
-> slower than compression...
+> If the BTF code is enabled in the build configuration, the start/stop
+> BTF markers are guaranteed to exist in the final link but not during the
+> first linker pass.
 >
-> > As far as I remember, there were some interactions between full
-> > zswap and the cgroup memory controller - like, it made it easier
-> > for an aggressive workload to exceed its cgroup memory.high limits.
+> Avoid GOT based relocations to these markers in the final executable by
+> providing preliminary definitions that will be used by the first linker
+> pass, and superseded by the actual definitions in the subsequent ones.
 >
-> Ok, that makes sense! A container fairness measure, rather than a
-> performance optimization.
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  include/asm-generic/vmlinux.lds.h | 2 ++
+>  kernel/bpf/btf.c                  | 4 ++--
+>  2 files changed, 4 insertions(+), 2 deletions(-)
 >
-> Fair enough, but that's moot then with cgroup accounting of the
-> backing memory, f4840ccfca25 ("zswap: memcg accounting").
+> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmli=
+nux.lds.h
+> index e8449be62058..141bddb511ee 100644
+> --- a/include/asm-generic/vmlinux.lds.h
+> +++ b/include/asm-generic/vmlinux.lds.h
+> @@ -456,6 +456,8 @@
+>   * independent code.
+>   */
+>  #define PRELIMINARY_SYMBOL_DEFINITIONS                                 \
+> +       PROVIDE(__start_BTF =3D .);                                      =
+ \
+> +       PROVIDE(__stop_BTF =3D .);                                       =
+ \
 
-Right, this should no longer be needed with the zswap charging.
+should this be guarded by CONFIG_DEBUG_INFO_BTF condition?
 
-Maciej, is this still being used on kernels with f4840ccfca25 (5.19+)?
-Any objections to removing it now?
+>         PROVIDE(kallsyms_addresses =3D .);                               =
+ \
+>         PROVIDE(kallsyms_offsets =3D .);                                 =
+ \
+>         PROVIDE(kallsyms_names =3D .);                                   =
+ \
+> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+> index 90c4a32d89ff..46a56bf067a8 100644
+> --- a/kernel/bpf/btf.c
+> +++ b/kernel/bpf/btf.c
+> @@ -5642,8 +5642,8 @@ static struct btf *btf_parse(const union bpf_attr *=
+attr, bpfptr_t uattr, u32 uat
+>         return ERR_PTR(err);
+>  }
+>
+> -extern char __weak __start_BTF[];
+> -extern char __weak __stop_BTF[];
+> +extern char __start_BTF[];
+> +extern char __stop_BTF[];
+
+kernel/bpf/sysfs_btf.c also defines __weak externs for these symbols,
+you probably need to adjust that as well?
+
+Other than that looks good to me:
+
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+
+
+>  extern struct btf *btf_vmlinux;
+>
+>  #define BPF_MAP_TYPE(_id, _ops)
+> --
+> 2.44.0.478.gd926399ef9-goog
+>
+>
