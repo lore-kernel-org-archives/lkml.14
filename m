@@ -1,171 +1,280 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8A613B595
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 20:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEA12D603;
+	Fri, 29 Mar 2024 20:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711742731; cv=none; b=Mu8N3kBpIcTLV5LeqvoTrW6DsNNEnBU4bHaojvhRgBUUXODfGloszRNDKTwt/ONoX0fu9RFkUZMS5XaDUtABW2hT8BY+xmxLLdu80uqWSyOoJx+kj5pBXoPvpCh7f9geLKyWxNhNfwHPLO79Wd/AapT1x9HU9A/hwIJBwgA08Ko=
+	t=1711742807; cv=none; b=XDZJspkiURZoHDF+KQkbtsgTde/hEio5937E5L31u9Qb4NeFKASHbwl+QjT6q3YRWLMxzX7tpzJ13BOBtSDFxifDKjA7HhbSU2yKMNALfMbEIEbfv6qM+FSY+huKW8oFk8uE8OuvzQtJyQMBoivtT9X9OYh1sxUUaPCoi/vRfsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711742731; c=relaxed/simple;
-	bh=x17cpD0ssTnsMTSeMcB6KMh78X6RtLqdVZUufL1mCUM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PaPdfBXBfF5ikjyIN/WTSxnIgWWAIgva5/fqdsoD4isF2wgQU2hAMup8qMsOpymxM1bLWrN21izHMonl26Zwl/Mcz4xXSAdDy5o61+z0lUukztEJw4x3yn9GXlcGuoollu7JxV6W+W7zEB4kn6Hi/nQHDLRfeqBGkUgksAlvNtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X4newtaO; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711742807; c=relaxed/simple;
+	bh=IpR8t9TlCO6dA+NNoYBZAT4Y1SQ8QTNF0MuQmcy6ew8=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ANQyL0fmTVAnXTpfmHaayweuX9OYFa9Um/6UFGaCrJL6ZXEkchlIrdX7tNdXs72i7ex3dM+NbawsBMz976ZfxQtVN9ziCmnlw+zulaZY259d4TUu/QVUw/eQnbWc6oX0Hb/I/exwc7xGvLNEb/s9aPbT0xd/9dZR52y9ClFg10k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=el4MOXz8; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X4newtaO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711742728;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pnNZnWrnFQuL9z8tKMfOjE6Als92KSQE2PBtCEWHcNY=;
-	b=X4newtaO5wX0WCZiCkajXyReisASnGYCCWHrr4KXksMxc3D5RfGkldxM2LIRx5IlRJVOeT
-	efqhMJkvrNKOSB1g5CY/BmzRCW7pB9R1elcW+0hoEEvIJrAFjdlcLRq8r6PSi7OP0laE0Y
-	cQ6JUUxFuGjH0+mPwNOiFr5kRLigp7w=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-646-J8MkeLLgOUy3QXRXavBaJQ-1; Fri, 29 Mar 2024 16:05:27 -0400
-X-MC-Unique: J8MkeLLgOUy3QXRXavBaJQ-1
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2a039b47c5fso2556225a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 13:05:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711742726; x=1712347526;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pnNZnWrnFQuL9z8tKMfOjE6Als92KSQE2PBtCEWHcNY=;
-        b=Y9Lx8kxgCooYoRCI3eKu5dpaXDNF+U7BKzDvmj5X/LbR8Z27qmKujQLC5lg7DDLwIN
-         UvJ771ZYTO52UF2KRdSGsdDAdRD2wcLfp9uyZvqbmhpUtAyqg9+PPJh3+6uTWUGf+9L7
-         +ZNM/kViFymkMAyA/iIBaWOisaxzJudi3Rgf7Ai/GsW5TPFGsXib6KodNj4fP9rTozag
-         TbCGu0IK5lPhs/GsqiOFeed75VB2UQkjQkaKPVNvfAvgcjAp9tvp3vAbEn2aDjyhKQq2
-         bCIqoKtORATre6e9QC/MYTErWlJ30VsgxMno6xHFGXLMgpeqCHpMCtHjQmKY0fDFtp+J
-         igjA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9zc2cCgzAqQ8/3H/mshKHYAzhjWtEtdVWHk2C4jplglkNG8USYBlRppt6HALrJ4EhTeslIlg0eSHg1Pl3r81XUtrpI0xpG+KmwLui
-X-Gm-Message-State: AOJu0Yy+9tm3miUBku+99O+YGFDG8smyY+VKsod0fZYDQkPJO2XzghvI
-	CPEWAh7No93q9rza0ZFOxMLcNmRONfzjcvXnIddP5TVIfLSDdasII6vfWODyUJT35NSYmYSPvme
-	zBVkgGuOUj96ypVmhS9gPgFX0NMqGPmdqsXRHXwLcdidYMgXmR0UMhBWEvux2tA==
-X-Received: by 2002:a17:902:d511:b0:1dd:8ed:997d with SMTP id b17-20020a170902d51100b001dd08ed997dmr9174628plg.3.1711742726530;
-        Fri, 29 Mar 2024 13:05:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEJYw4jR0YEnb8pmE90nAgE4U0L687WOcBXmCkEU8q6jh3nVskf4AhRBUJH/lIDQYZgDuFnCA==
-X-Received: by 2002:a17:902:d511:b0:1dd:8ed:997d with SMTP id b17-20020a170902d51100b001dd08ed997dmr9174602plg.3.1711742726167;
-        Fri, 29 Mar 2024 13:05:26 -0700 (PDT)
-Received: from localhost.localdomain ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id e4-20020a17090301c400b001dd6ebd88b0sm3830017plh.198.2024.03.29.13.05.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Mar 2024 13:05:25 -0700 (PDT)
-From: wefu@redhat.com
-To: jszhang@kernel.org,
-	guoren@kernel.org,
-	conor@kernel.org,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	jic23@kernel.org,
-	lars@metafoo.de,
-	andriy.shevchenko@linux.intel.com,
-	nuno.sa@analog.com,
-	marcelo.schmitt@analog.com,
-	bigunclemax@gmail.com,
-	marius.cristea@microchip.com,
-	fr0st61te@gmail.com,
-	okan.sahin@analog.com,
-	marcus.folkesson@gmail.com,
-	schnelle@linux.ibm.com,
-	lee@kernel.org,
-	mike.looijmans@topic.nl
-Cc: linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	Wei Fu <wefu@redhat.com>
-Subject: [PATCH 3/3] dt-bindings: adc: Document XuanTie TH1520 ADC
-Date: Sat, 30 Mar 2024 04:01:26 +0800
-Message-ID: <20240329200241.4122000-4-wefu@redhat.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240329200241.4122000-1-wefu@redhat.com>
-References: <20240329200241.4122000-1-wefu@redhat.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="el4MOXz8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1711742803;
+	bh=IpR8t9TlCO6dA+NNoYBZAT4Y1SQ8QTNF0MuQmcy6ew8=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=el4MOXz80U1jbiT/qhNxjT5/5A3rUR5erGlcL7dZWo1O4eLq6SQeeHZTFkZiTz9t4
+	 YdBruf9i/J5nwtqQ6p57zn1iK59M4LrLbeCzJ94N+cdvdpL7+vRhR9bpUs7hRAOIRe
+	 XoZn6SqkqWeSwaOeXYV+36WfhF1bY9Ylk0vSVp91GUV7Hi7l74eDJ2fknMlZfDbdjW
+	 ZTSYsmSvpR0XD9+qpJJIycTM2otVzRCJmWWHfJ/BdJ649o9ioAlRt6bMaI0WW8LWbp
+	 x35wmoNL2AQ13jxstCMIuAGcIZtBJHD+pQqJ5Ld5sD2gLklmWCRBHk2DHejnBsZfg+
+	 lPG1xH2Y/IPXg==
+Received: from [100.113.15.66] (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 633C33780C22;
+	Fri, 29 Mar 2024 20:06:38 +0000 (UTC)
+Message-ID: <a3176f4c-1b03-4537-9217-c90678509611@collabora.com>
+Date: Sat, 30 Mar 2024 01:07:08 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+ wine-devel@winehq.org, =?UTF-8?Q?Andr=C3=A9_Almeida?=
+ <andrealmeid@igalia.com>, Wolfram Sang <wsa@kernel.org>,
+ Arkadiusz Hiler <ahiler@codeweavers.com>,
+ Peter Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>,
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v3 17/30] selftests: ntsync: Add some tests for semaphore
+ state.
+To: Elizabeth Figura <zfigura@codeweavers.com>, Arnd Bergmann
+ <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>
+References: <20240329000621.148791-1-zfigura@codeweavers.com>
+ <20240329000621.148791-18-zfigura@codeweavers.com>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20240329000621.148791-18-zfigura@codeweavers.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Wei Fu <wefu@redhat.com>
+On 3/29/24 5:06 AM, Elizabeth Figura wrote:
+> Wine has tests for its synchronization primitives, but these are more accessible
+> to kernel developers, and also allow us to test some edge cases that Wine does
+> not care about.
+> 
+> This patch adds tests for semaphore-specific ioctls NTSYNC_IOC_SEM_POST and
+> NTSYNC_IOC_SEM_READ, and waiting on semaphores.
+> 
+> Signed-off-by: Elizabeth Figura <zfigura@codeweavers.com>
+> ---
+>  tools/testing/selftests/Makefile              |   1 +
+>  .../testing/selftests/drivers/ntsync/Makefile |   8 +
+>  tools/testing/selftests/drivers/ntsync/config |   1 +
+>  .../testing/selftests/drivers/ntsync/ntsync.c | 149 ++++++++++++++++++
+Please add generated binary objects in .gitignore file.
 
-Document devicetree bindings for the XuanTie TH1520 AP sub-system ADC.
+>  4 files changed, 159 insertions(+)
+>  create mode 100644 tools/testing/selftests/drivers/ntsync/Makefile
+>  create mode 100644 tools/testing/selftests/drivers/ntsync/config
+>  create mode 100644 tools/testing/selftests/drivers/ntsync/ntsync.c
+> 
+> diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+> index e1504833654d..6f95206325e1 100644
+> --- a/tools/testing/selftests/Makefile
+> +++ b/tools/testing/selftests/Makefile
+> @@ -16,6 +16,7 @@ TARGETS += damon
+>  TARGETS += devices
+>  TARGETS += dmabuf-heaps
+>  TARGETS += drivers/dma-buf
+> +TARGETS += drivers/ntsync
+>  TARGETS += drivers/s390x/uvdevice
+>  TARGETS += drivers/net/bonding
+>  TARGETS += drivers/net/team
+> diff --git a/tools/testing/selftests/drivers/ntsync/Makefile b/tools/testing/selftests/drivers/ntsync/Makefile
+> new file mode 100644
+> index 000000000000..a34da5ccacf0
+> --- /dev/null
+> +++ b/tools/testing/selftests/drivers/ntsync/Makefile
+> @@ -0,0 +1,8 @@
+> +# SPDX-LICENSE-IDENTIFIER: GPL-2.0-only
+> +TEST_GEN_PROGS := ntsync
+> +
+> +top_srcdir =../../../../..
+> +CFLAGS += -I$(top_srcdir)/usr/include
+Please use KHDR_INCLUDES instead of specifying include path.
 
-Signed-off-by: Wei Fu <wefu@redhat.com>
----
- .../bindings/iio/adc/thead,th1520.yaml        | 52 +++++++++++++++++++
- 1 file changed, 52 insertions(+)
+> +LDLIBS += -lpthread
+> +
+> +include ../../lib.mk
+> diff --git a/tools/testing/selftests/drivers/ntsync/config b/tools/testing/selftests/drivers/ntsync/config
+> new file mode 100644
+> index 000000000000..60539c826d06
+> --- /dev/null
+> +++ b/tools/testing/selftests/drivers/ntsync/config
+> @@ -0,0 +1 @@
+> +CONFIG_WINESYNC=y
+> diff --git a/tools/testing/selftests/drivers/ntsync/ntsync.c b/tools/testing/selftests/drivers/ntsync/ntsync.c
+> new file mode 100644
+> index 000000000000..1e145c6dfded
+> --- /dev/null
+> +++ b/tools/testing/selftests/drivers/ntsync/ntsync.c
+> @@ -0,0 +1,149 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Various unit tests for the "ntsync" synchronization primitive driver.
+> + *
+> + * Copyright (C) 2021-2022 Elizabeth Figura <zfigura@codeweavers.com>
+> + */
+> +
+> +#define _GNU_SOURCE
+> +#include <sys/ioctl.h>
+> +#include <sys/stat.h>
+> +#include <fcntl.h>
+> +#include <time.h>
+> +#include <pthread.h>
+> +#include <linux/ntsync.h>
+> +#include "../../kselftest_harness.h"
+> +
+> +static int read_sem_state(int sem, __u32 *count, __u32 *max)
+> +{
+> +	struct ntsync_sem_args args;
+> +	int ret;
+> +
+> +	memset(&args, 0xcc, sizeof(args));
+> +	ret = ioctl(sem, NTSYNC_IOC_SEM_READ, &args);
+> +	*count = args.count;
+> +	*max = args.max;
+> +	return ret;
+> +}
+> +
+> +#define check_sem_state(sem, count, max) \
+> +	({ \
+> +		__u32 __count, __max; \
+> +		int ret = read_sem_state((sem), &__count, &__max); \
+> +		EXPECT_EQ(0, ret); \
+> +		EXPECT_EQ((count), __count); \
+> +		EXPECT_EQ((max), __max); \
+> +	})
+> +
+> +static int post_sem(int sem, __u32 *count)
+> +{
+> +	return ioctl(sem, NTSYNC_IOC_SEM_POST, count);
+> +}
+> +
+> +static int wait_any(int fd, __u32 count, const int *objs, __u32 owner, __u32 *index)
+> +{
+> +	struct ntsync_wait_args args = {0};
+> +	struct timespec timeout;
+> +	int ret;
+> +
+> +	clock_gettime(CLOCK_MONOTONIC, &timeout);
+> +
+> +	args.timeout = timeout.tv_sec * 1000000000 + timeout.tv_nsec;
+> +	args.count = count;
+> +	args.objs = (uintptr_t)objs;
+> +	args.owner = owner;
+> +	args.index = 0xdeadbeef;
+> +	ret = ioctl(fd, NTSYNC_IOC_WAIT_ANY, &args);
+> +	*index = args.index;
+> +	return ret;
+> +}
+> +
+> +TEST(semaphore_state)
+> +{
+> +	struct ntsync_sem_args sem_args;
+> +	struct timespec timeout;
+> +	__u32 count, index;
+> +	int fd, ret, sem;
+> +
+> +	clock_gettime(CLOCK_MONOTONIC, &timeout);
+> +
+> +	fd = open("/dev/ntsync", O_CLOEXEC | O_RDONLY);
+> +	ASSERT_LE(0, fd);
+> +
+> +	sem_args.count = 3;
+> +	sem_args.max = 2;
+> +	sem_args.sem = 0xdeadbeef;
+> +	ret = ioctl(fd, NTSYNC_IOC_CREATE_SEM, &sem_args);
+> +	EXPECT_EQ(-1, ret);
+> +	EXPECT_EQ(EINVAL, errno);
+> +
+> +	sem_args.count = 2;
+> +	sem_args.max = 2;
+> +	sem_args.sem = 0xdeadbeef;
+> +	ret = ioctl(fd, NTSYNC_IOC_CREATE_SEM, &sem_args);
+> +	EXPECT_EQ(0, ret);
+> +	EXPECT_NE(0xdeadbeef, sem_args.sem);
+> +	sem = sem_args.sem;
+> +	check_sem_state(sem, 2, 2);
+> +
+> +	count = 0;
+> +	ret = post_sem(sem, &count);
+> +	EXPECT_EQ(0, ret);
+> +	EXPECT_EQ(2, count);
+> +	check_sem_state(sem, 2, 2);
+> +
+> +	count = 1;
+> +	ret = post_sem(sem, &count);
+> +	EXPECT_EQ(-1, ret);
+> +	EXPECT_EQ(EOVERFLOW, errno);
+> +	check_sem_state(sem, 2, 2);
+> +
+> +	ret = wait_any(fd, 1, &sem, 123, &index);
+> +	EXPECT_EQ(0, ret);
+> +	EXPECT_EQ(0, index);
+> +	check_sem_state(sem, 1, 2);
+> +
+> +	ret = wait_any(fd, 1, &sem, 123, &index);
+> +	EXPECT_EQ(0, ret);
+> +	EXPECT_EQ(0, index);
+> +	check_sem_state(sem, 0, 2);
+> +
+> +	ret = wait_any(fd, 1, &sem, 123, &index);
+> +	EXPECT_EQ(-1, ret);
+> +	EXPECT_EQ(ETIMEDOUT, errno);
+> +
+> +	count = 3;
+> +	ret = post_sem(sem, &count);
+> +	EXPECT_EQ(-1, ret);
+> +	EXPECT_EQ(EOVERFLOW, errno);
+> +	check_sem_state(sem, 0, 2);
+> +
+> +	count = 2;
+> +	ret = post_sem(sem, &count);
+> +	EXPECT_EQ(0, ret);
+> +	EXPECT_EQ(0, count);
+> +	check_sem_state(sem, 2, 2);
+> +
+> +	ret = wait_any(fd, 1, &sem, 123, &index);
+> +	EXPECT_EQ(0, ret);
+> +	ret = wait_any(fd, 1, &sem, 123, &index);
+> +	EXPECT_EQ(0, ret);
+> +
+> +	count = 1;
+> +	ret = post_sem(sem, &count);
+> +	EXPECT_EQ(0, ret);
+> +	EXPECT_EQ(0, count);
+> +	check_sem_state(sem, 1, 2);
+> +
+> +	count = ~0u;
+> +	ret = post_sem(sem, &count);
+> +	EXPECT_EQ(-1, ret);
+> +	EXPECT_EQ(EOVERFLOW, errno);
+> +	check_sem_state(sem, 1, 2);
+> +
+> +	close(sem);
+> +
+> +	close(fd);
+> +}
+> +
+> +TEST_HARNESS_MAIN
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/thead,th1520.yaml b/Documentation/devicetree/bindings/iio/adc/thead,th1520.yaml
-new file mode 100644
-index 000000000000..80890ce62810
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/thead,th1520.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/adc/thead,th1520.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: XuanTie TH1520 Analog to Digital Converter (ADC)
-+
-+maintainers:
-+  - Fugang Duan <duanfugang.dfg@linux.alibaba.com>
-+  - Wei Fu <wefu@redhat.com>
-+
-+description: |
-+  12-Bit Analog to Digital Converter (ADC) on XuanTie TH1520
-+
-+properties:
-+  compatible:
-+    const: thead,th1520
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: adc
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - status
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    adc: adc@0xfffff51000 {
-+	compatible = "thead,th1520-adc";
-+	reg = <0xff 0xfff51000 0x0 0x1000>;
-+	interrupts = <61 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&aonsys_clk>;
-+	clock-names = "adc";
-+	/* ADC pin is proprietary,no need to config pinctrl */
-+	status = "disabled";
-+    };
 -- 
-2.44.0
-
+BR,
+Muhammad Usama Anjum
