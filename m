@@ -1,42 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9671C2308;
-	Fri, 29 Mar 2024 12:44:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883D31C233F;
+	Fri, 29 Mar 2024 12:44:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711716296; cv=none; b=fNSO5snjldTEIjkFOZKR9YbeOBw5K/6/oOmXUOhNo+b0dVbioPCeOzu56VvdKBtIXyfTrfdrsJE46akmRczBzQE/KbV8AOz17L8+LWegzbLlRu4T1+k5/3zQsS41ncT5pO3wDQbtVciJbd94N1ceGb92l0hb6qw2uZxR8DmMJfw=
+	t=1711716299; cv=none; b=AafpUNJEWGUfixwDK9gT3ZnsTl2BFi4JSN+GUg10p/7z4AEoQNv9j3FwXMGPpVjYchPrX8FY23XgjCicvPkAtN4KtJXsHF3diNimaaSMoYil4zB+NMckpfG9IcC/aRj+LQyfZWBf1khR0lkAxbPfccHAL1/ZOd1LUbtK8Dy1KlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711716296; c=relaxed/simple;
-	bh=k3zuf16/TCQid4I2XHlZ7Fg+DXFG1/Fja7b3voOoAZM=;
+	s=arc-20240116; t=1711716299; c=relaxed/simple;
+	bh=pV5mzniew1zYM9E246i2ItBSD2EbYzBdf1agjXSTLLE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dNqrXkk447EYsD5M/mcV26BL+L233UgOzevtHzwPs1NUgYJ8ZhmbRG6skL4F7GVM9GOx//q0Hp7virtllaERW8KLPUun2N2DtKeb8d0EZkd5MOKTczSDTZ9+uTyOYKt1UHu/l99RWUyXPCmXr9maKB0Aggu4hRS2sxTIBLc6hqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JU90wOeu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ufMhxYqdzdirsQu18CpITeOVneVqUNg32TbhdsK9X3XRNpcLGcJ+5h0Z7Bk8XSvv00k/NI9eheJL8NjC+bkcBAl1yaUINdBN0dsvY67rttD3BiOh8ylYmJzKU6zzlHyud+TwoGNvH3nR9PenVP4RLT5/Vq9ELjQJPqlzlc6+6BY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TPJHw0+x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JU90wOeu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92903C43390;
-	Fri, 29 Mar 2024 12:44:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TPJHw0+x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64EB9C43399;
+	Fri, 29 Mar 2024 12:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711716296;
-	bh=k3zuf16/TCQid4I2XHlZ7Fg+DXFG1/Fja7b3voOoAZM=;
+	s=k20201202; t=1711716299;
+	bh=pV5mzniew1zYM9E246i2ItBSD2EbYzBdf1agjXSTLLE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JU90wOeukIlADuZoBi8IeFA/LEWtYfeWiaKD9WdQGlbPbqaV4u6Y0rOHUKJNK8kXn
-	 JBX4KFUPuj7tCAcQ0Qgf+F674EMdRRpNQMQAkeylKpPltvW3/I5ikOoTW8nygNOVjl
-	 sm4+zP35tNiEHzQGPLSnd40jfQdDOF1XbYR2DyVQOY41W/nFD5jGsJfmRqzzk21am8
-	 7+ItJ2cTKTro8rDJ/OIckqC6JS9DQofem/NFHM7ANY43dV8MrMfgwEZIgQZxaaz8MI
-	 vjDHUyMts2SbHeC4dNeEII3oEIgwVzA64N6M5k3aLEEhjW4GaQG/T3XzpH5IK1gmZW
-	 m/DYKLWTlezeg==
+	b=TPJHw0+xX1Ue5yZW5cFf3iITO8RkDnquy9lKVx7RNWqjAMcMS7r1W0DdJYvOBgR0C
+	 DASvTVATh0odHf0/kIIpPFdL8e+zo1WjF42JzDguIvfL+lQlDonPXEPhN3MzAGfA2A
+	 v93fzZTQrUpMmXKTdxkH5W4Tsd9b7I6V/Wc0Hrt+SIsXAO00f2kwidGp5hXzluohDu
+	 a73nkqjsVJ/NKygFSr4Yo0FeKRYTkbrk/uMvh/t4OLW3szBjdRf5Ygstw7k+IYOu4x
+	 4CHqAhaOK42eivA1lJazOlD97WhR0/p9Gs37iqHkl4pxcFO3ZY/b6WgiH3cK7RFh49
+	 Aj/hq2nT6Cd+g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Christoph Hellwig <hch@lst.de>,
+Cc: Dai Ngo <dai.ngo@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Sasha Levin <sashal@kernel.org>,
-	m.szyprowski@samsung.com,
-	iommu@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.6 45/75] dma-direct: Leak pages on dma_set_decrypted() failure
-Date: Fri, 29 Mar 2024 08:42:26 -0400
-Message-ID: <20240329124330.3089520-45-sashal@kernel.org>
+	chuck.lever@oracle.com,
+	anna@kernel.org,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 47/75] SUNRPC: increase size of rpc_wait_queue.qlen from unsigned short to unsigned int
+Date: Fri, 29 Mar 2024 08:42:28 -0400
+Message-ID: <20240329124330.3089520-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240329124330.3089520-1-sashal@kernel.org>
 References: <20240329124330.3089520-1-sashal@kernel.org>
@@ -51,65 +53,84 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.23
 Content-Transfer-Encoding: 8bit
 
-From: Rick Edgecombe <rick.p.edgecombe@intel.com>
+From: Dai Ngo <dai.ngo@oracle.com>
 
-[ Upstream commit b9fa16949d18e06bdf728a560f5c8af56d2bdcaf ]
+[ Upstream commit 2c35f43b5a4b9cdfaa6fdd946f5a212615dac8eb ]
 
-On TDX it is possible for the untrusted host to cause
-set_memory_encrypted() or set_memory_decrypted() to fail such that an
-error is returned and the resulting memory is shared. Callers need to
-take care to handle these errors to avoid returning decrypted (shared)
-memory to the page allocator, which could lead to functional or security
-issues.
+When the NFS client is under extreme load the rpc_wait_queue.qlen counter
+can be overflowed. Here is an instant of the backlog queue overflow in a
+real world environment shown by drgn helper:
 
-DMA could free decrypted/shared pages if dma_set_decrypted() fails. This
-should be a rare case. Just leak the pages in this case instead of
-freeing them.
+rpc_task_stats(rpc_clnt):
+-------------------------
+rpc_clnt: 0xffff92b65d2bae00
+rpc_xprt: 0xffff9275db64f000
+  Queue:  sending[64887] pending[524] backlog[30441] binding[0]
+XMIT task: 0xffff925c6b1d8e98
+     WRITE: 750654
+        __dta_call_status_580: 65463
+        __dta_call_transmit_status_579: 1
+        call_reserveresult: 685189
+        nfs_client_init_is_complete: 1
+    COMMIT: 584
+        call_reserveresult: 573
+        __dta_call_status_580: 11
+    ACCESS: 1
+        __dta_call_status_580: 1
+   GETATTR: 10
+        __dta_call_status_580: 4
+        call_reserveresult: 6
+751249 tasks for server 111.222.333.444
+Total tasks: 751249
 
-Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+count_rpc_wait_queues(xprt):
+----------------------------
+**** rpc_xprt: 0xffff9275db64f000 num_reqs: 65511
+wait_queue: xprt_binding[0] cnt: 0
+wait_queue: xprt_binding[1] cnt: 0
+wait_queue: xprt_binding[2] cnt: 0
+wait_queue: xprt_binding[3] cnt: 0
+rpc_wait_queue[xprt_binding].qlen: 0 maxpriority: 0
+wait_queue: xprt_sending[0] cnt: 0
+wait_queue: xprt_sending[1] cnt: 64887
+wait_queue: xprt_sending[2] cnt: 0
+wait_queue: xprt_sending[3] cnt: 0
+rpc_wait_queue[xprt_sending].qlen: 64887 maxpriority: 3
+wait_queue: xprt_pending[0] cnt: 524
+wait_queue: xprt_pending[1] cnt: 0
+wait_queue: xprt_pending[2] cnt: 0
+wait_queue: xprt_pending[3] cnt: 0
+rpc_wait_queue[xprt_pending].qlen: 524 maxpriority: 0
+wait_queue: xprt_backlog[0] cnt: 0
+wait_queue: xprt_backlog[1] cnt: 685801
+wait_queue: xprt_backlog[2] cnt: 0
+wait_queue: xprt_backlog[3] cnt: 0
+rpc_wait_queue[xprt_backlog].qlen: 30441 maxpriority: 3 [task cnt mismatch]
+
+There is no effect on operations when this overflow occurs. However
+it causes confusion when trying to diagnose the performance problem.
+
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/dma/direct.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ include/linux/sunrpc/sched.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 9596ae1aa0dac..fc2d10b2aca6f 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -295,7 +295,7 @@ void *dma_direct_alloc(struct device *dev, size_t size,
- 	} else {
- 		ret = page_address(page);
- 		if (dma_set_decrypted(dev, ret, size))
--			goto out_free_pages;
-+			goto out_leak_pages;
- 	}
- 
- 	memset(ret, 0, size);
-@@ -316,6 +316,8 @@ void *dma_direct_alloc(struct device *dev, size_t size,
- out_free_pages:
- 	__dma_direct_free_pages(dev, page, size);
- 	return NULL;
-+out_leak_pages:
-+	return NULL;
- }
- 
- void dma_direct_free(struct device *dev, size_t size,
-@@ -378,12 +380,11 @@ struct page *dma_direct_alloc_pages(struct device *dev, size_t size,
- 
- 	ret = page_address(page);
- 	if (dma_set_decrypted(dev, ret, size))
--		goto out_free_pages;
-+		goto out_leak_pages;
- 	memset(ret, 0, size);
- 	*dma_handle = phys_to_dma_direct(dev, page_to_phys(page));
- 	return page;
--out_free_pages:
--	__dma_direct_free_pages(dev, page, size);
-+out_leak_pages:
- 	return NULL;
- }
- 
+diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
+index 8ada7dc802d30..8f9bee0e21c3b 100644
+--- a/include/linux/sunrpc/sched.h
++++ b/include/linux/sunrpc/sched.h
+@@ -186,7 +186,7 @@ struct rpc_wait_queue {
+ 	unsigned char		maxpriority;		/* maximum priority (0 if queue is not a priority queue) */
+ 	unsigned char		priority;		/* current priority */
+ 	unsigned char		nr;			/* # tasks remaining for cookie */
+-	unsigned short		qlen;			/* total # tasks waiting in queue */
++	unsigned int		qlen;			/* total # tasks waiting in queue */
+ 	struct rpc_timer	timer_list;
+ #if IS_ENABLED(CONFIG_SUNRPC_DEBUG) || IS_ENABLED(CONFIG_TRACEPOINTS)
+ 	const char *		name;
 -- 
 2.43.0
 
