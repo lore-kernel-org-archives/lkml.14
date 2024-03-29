@@ -1,184 +1,114 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335D93FB8C;
-	Fri, 29 Mar 2024 07:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1866739FD8;
+	Fri, 29 Mar 2024 07:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711696592; cv=none; b=r4Bg52aMAcAx6FgWHSKkzr46znvdJrNieDBSoFmtH6u+iGLHFbVQeJavTcpQ7KYQLi2g1QuImCm95w99Tr2C8Y3qxZQGzQ1L3QwrA+6HDWqDpuZ/DLy1Pd/+hIH7ZCzenfpYk8PgD4RV/JpopSdHtJGLQJpBbFpUiS71CE/gadQ=
+	t=1711696837; cv=none; b=XOqw0K2OviNyHkNYBtrHWr+MCGYWSIUcyzKQ9NJYfENUz1YS08W2xfA2sAfxP99OhWSd/mqL8vkrmPK3GHFa0wzcgSgAcijF+DeW49gISQxGMlLrTssx6sB4eBvPGT7Q8DWlxqSrMYYrrFk13tSYrjFeEDB+1ddWrQkykR1LsuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711696592; c=relaxed/simple;
-	bh=Ev98fKmh39oX3GTREoTUTFF4eGgbYjmzC28MTusAFPc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T4D3Lx2ejVa2/KXTbpYoMl8DoevEb1dG9J9fTqy0xzp4kY9cdgiyFToxnqoZ6AW+d9GZ2qdaVFj5M8GNgQ993HewbijHEc0BXE+qSxh/iyUkcU52NXX/Qd3lTP02O2UMkYsextfkz4xKiOZdlWxc/KToXieVsosPZJS8eKx6hcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iksif7ri; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1711696837; c=relaxed/simple;
+	bh=vzmPmJeJUxq5/BxD3bs1AX/uEs3Ldk2UfdR7q7RIaqM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gJ0L6OXSRrHsABe8tvIdE2J4KunnnQ+lWn6FVOCc2HWeVoLmPNb0PuRnfz9kC5AO8Of+X7RiqNRemt9ljy7TkhZ8l5km9FgRNIFjwImOSQJRVs2A92ozkIjgAIVcrGSNzFwi4EsLJ52GiwhF2T+ydCTJWHVj/hsvFxP+Pm20Ua8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Qdb8I3mt; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iksif7ri"
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42T73UBi006567;
-	Fri, 29 Mar 2024 07:16:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=2CYgJP3ojhBQiLW0Of7Q2BULE3M0/2ey8CU7au28ncs=;
- b=iksif7riljXLMSTt8QcJdasM6guPku1YJdaVYKKbPOUvaxQsw6RGo7PWEQUAHvfkV8Lm
- bQTqlpBz+8CfwRUg6ipKVw8TVP3IE0vw1derFmIRSzjHj4m7dhOL7o/wKkQiBcEtsxTn
- LYcCZ6Bt/slzMkmDUZPmNVsu5wQxTWVWBeZ+HbAOSdDHYExFvixIxgbiM7XFa1AwZjSJ
- td/eVl1Fd6Atn+dg5u/01JCchCvqMK03D7o8lXliNXsltB2nUY7QY4zeyQaep6ORJ0og
- Ftl7p6klw94K7ek/s1ZVhqNyFj+aBAhlcKNHSx5UcWThBjBeZkgyWM+PyWjOTw88qDAF tw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x5rw880t7-1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Qdb8I3mt"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42T1xp1V019589;
+	Fri, 29 Mar 2024 07:20:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=3rUcGkP
+	kSK5xD+ct0f6cwMGcLbiakbm2DQyntW9fjKI=; b=Qdb8I3mtxP427P+750jSECI
+	SnbnwLwBSBtT8wWxwQK0h0uYVa04TuXEN4cfWqXEwIp+Vj52nH+sc1YVr6TK0Vmq
+	h077NuOTEsb/WLYwKPbMCu1yXcQzCyZTUrhWgUm8LjJxCEz72Wr8feFtRGruTszP
+	WP9PvDiGC3LgR/JTNnKrIc1splGW0O+lFOPbrYmI7lo2yVgd57KjPM/OgSPJkL6V
+	ah36JrrI3LUoyKqjTyDlFH/IelkBPU/yX9a04mk0SLsbrR4Lc6g94rQBnQ3dhZw8
+	8tPbnL1ZpRNwN/TRUb7yLLV5Sf5jM6H07qLEvYsoKlaZUH4Xt6SPN3AZgwMxe8Q=
+	=
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x5fs895pq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Mar 2024 07:16:19 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42T7GIkB026855;
-	Fri, 29 Mar 2024 07:16:18 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x5rw880sn-1
+	Fri, 29 Mar 2024 07:20:04 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42T7K3jK018851
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Mar 2024 07:16:18 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42T5UEi1016605;
-	Fri, 29 Mar 2024 07:16:06 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x29dujxsn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Mar 2024 07:16:06 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42T7G2VW49086788
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 29 Mar 2024 07:16:04 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6B13D20040;
-	Fri, 29 Mar 2024 07:16:02 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A4D8320043;
-	Fri, 29 Mar 2024 07:16:00 +0000 (GMT)
-Received: from li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com (unknown [9.43.115.153])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 29 Mar 2024 07:16:00 +0000 (GMT)
-Date: Fri, 29 Mar 2024 12:45:58 +0530
-From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: tytso@mit.edu, adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jack@suse.cz, ritesh.list@gmail.com
-Subject: Re: [PATCH 4/5] ext4: use correct criteria name instead stale
- integer number in comment
-Message-ID: <ZgZqrhinpCfwd2ub@li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com>
-References: <20240326213823.528302-1-shikemeng@huaweicloud.com>
- <20240326213823.528302-5-shikemeng@huaweicloud.com>
+	Fri, 29 Mar 2024 07:20:03 GMT
+Received: from hu-kriskura-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 29 Mar 2024 00:19:58 -0700
+From: Krishna Kurapati <quic_kriskura@quicinc.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring
+	<robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Conor
+ Dooley" <conor+dt@kernel.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, Kyle
+ Tso <kyletso@google.com>,
+        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+        "Heikki Krogerus" <heikki.krogerus@linux.intel.com>,
+        <u.kleine-koenig@pengutronix.de>,
+        AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: <devicetree@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_ppratap@quicinc.com>,
+        <quic_jackp@quicinc.com>, Krishna Kurapati <quic_kriskura@quicinc.com>
+Subject: [RFC PATCH 0/2] Add gpio-usb-c-connector compatible
+Date: Fri, 29 Mar 2024 12:49:46 +0530
+Message-ID: <20240329071948.3101882-1-quic_kriskura@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240326213823.528302-5-shikemeng@huaweicloud.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Bl-tQONuqMiGmvyE7YhDkAf6TAoBfqFZ
-X-Proofpoint-GUID: -bYbZpkKX7zPc2DSlEq2cuohaYKqDWVT
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: BtrgVd0-GHri3_cLMixRc9KjVDQY6PPq
+X-Proofpoint-ORIG-GUID: BtrgVd0-GHri3_cLMixRc9KjVDQY6PPq
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-03-29_06,2024-03-28_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- clxscore=1015 phishscore=0 adultscore=0 mlxlogscore=999 malwarescore=0
- priorityscore=1501 impostorscore=0 bulkscore=0 suspectscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2403210000
- definitions=main-2403290061
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 phishscore=0 mlxlogscore=408 spamscore=0 suspectscore=0
+ mlxscore=0 adultscore=0 malwarescore=0 impostorscore=0 clxscore=1011
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403210001 definitions=main-2403290061
 
-On Wed, Mar 27, 2024 at 05:38:22AM +0800, Kemeng Shi wrote:
-> Use correct criteria name instead stale integer number in comment
-> 
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-> ---
->  fs/ext4/ext4.h    | 15 ++++++++++++---
->  fs/ext4/mballoc.c | 14 ++++++++------
->  fs/ext4/mballoc.h |  4 ++--
->  3 files changed, 22 insertions(+), 11 deletions(-)
-> 
+QDU1000 IDP [1] has a Type-c connector and supports USB 3.0.
+However it relies on usb-conn-gpio driver to read the vbus and id
+gpio's and provide role switch. However the driver currently has
+only gpio-b-connector compatible present in ID table. Adding that
+in DT would mean that the device supports Type-B connector and not
+Type-c connector. Thanks to Dmitry Baryshkov for pointing it out [2].
 
-Thanks for the cleanup! Feel free to add:
+This series intends to add that compatible in driver and bindings
+so that it can be used in QDU1000 IDP DT.
 
-Reviewed-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+[1]: https://lore.kernel.org/all/20240319091020.15137-3-quic_kbajaj@quicinc.com/
+[2]: https://lore.kernel.org/all/CAA8EJprXPvji8TgZu1idH7y4GtHtD4VmQABFBcRt-9BQaCberg@mail.gmail.com/
 
-> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> index 023571f8dd1b..9b90013c59a3 100644
-> --- a/fs/ext4/ext4.h
-> +++ b/fs/ext4/ext4.h
-> @@ -213,11 +213,20 @@ enum criteria {
->  #define EXT4_MB_USE_RESERVED		0x2000
->  /* Do strict check for free blocks while retrying block allocation */
->  #define EXT4_MB_STRICT_CHECK		0x4000
-> -/* Large fragment size list lookup succeeded at least once for cr = 0 */
-> +/*
-> + * Large fragment size list lookup succeeded at least once for cr =
-> + * CR_POWER2_ALIGNED
-> + */
->  #define EXT4_MB_CR_POWER2_ALIGNED_OPTIMIZED		0x8000
-> -/* Avg fragment size rb tree lookup succeeded at least once for cr = 1 */
-> +/*
-> + * Avg fragment size rb tree lookup succeeded at least once for cr =
-> + * CR_GOAL_LEN_FAST
-> + */
->  #define EXT4_MB_CR_GOAL_LEN_FAST_OPTIMIZED		0x00010000
-> -/* Avg fragment size rb tree lookup succeeded at least once for cr = 1.5 */
-> +/*
-> + * Avg fragment size rb tree lookup succeeded at least once for cr =
-> + * CR_BEST_AVAIL_LEN
-> + */
->  #define EXT4_MB_CR_BEST_AVAIL_LEN_OPTIMIZED		0x00020000
->  
->  struct ext4_allocation_request {
-> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-> index 62d468379722..0f8a34513bf6 100644
-> --- a/fs/ext4/mballoc.c
-> +++ b/fs/ext4/mballoc.c
-> @@ -1131,8 +1131,9 @@ static void ext4_mb_choose_next_group(struct ext4_allocation_context *ac,
->  		ext4_mb_choose_next_group_best_avail(ac, new_cr, group);
->  	} else {
->  		/*
-> -		 * TODO: For CR=2, we can arrange groups in an rb tree sorted by
-> -		 * bb_free. But until that happens, we should never come here.
-> +		 * TODO: For CR=CR_GOAL_LEN_SLOW, we can arrange groups in an
-> +		 * rb tree sorted by bb_free. But until that happens, we should
-> +		 * never come here.
->  		 */
->  		WARN_ON(1);
->  	}
-> @@ -3444,10 +3445,11 @@ static int ext4_mb_init_backend(struct super_block *sb)
->  	}
->  	if (sbi->s_mb_prefetch > ext4_get_groups_count(sb))
->  		sbi->s_mb_prefetch = ext4_get_groups_count(sb);
-> -	/* now many real IOs to prefetch within a single allocation at cr=0
-> -	 * given cr=0 is an CPU-related optimization we shouldn't try to
-> -	 * load too many groups, at some point we should start to use what
-> -	 * we've got in memory.
-> +	/*
-> +	 * now many real IOs to prefetch within a single allocation at
-> +	 * cr=CR_POWER2_ALIGNED. Given cr=CR_POWER2_ALIGNED is an CPU-related
-> +	 * optimization we shouldn't try to load too many groups, at some point
-> +	 * we should start to use what we've got in memory.
->  	 * with an average random access time 5ms, it'd take a second to get
->  	 * 200 groups (* N with flex_bg), so let's make this limit 4
->  	 */
-> diff --git a/fs/ext4/mballoc.h b/fs/ext4/mballoc.h
-> index 56938532b4ce..042437d8860f 100644
-> --- a/fs/ext4/mballoc.h
-> +++ b/fs/ext4/mballoc.h
-> @@ -187,8 +187,8 @@ struct ext4_allocation_context {
->  	struct ext4_free_extent ac_f_ex;
->  
->  	/*
-> -	 * goal len can change in CR1.5, so save the original len. This is
-> -	 * used while adjusting the PA window and for accounting.
-> +	 * goal len can change in CR_BEST_AVAIL_LEN, so save the original len.
-> +	 * This is used while adjusting the PA window and for accounting.
->  	 */
->  	ext4_grpblk_t	ac_orig_goal_len;
->  
-> -- 
-> 2.30.0
-> 
+Krishna Kurapati (2):
+  dt-bindings: connector: Add gpio-usb-c-connector compatible
+  usb: common: usb-conn-gpio: Update ID table to add usb-c connector
+
+ Documentation/devicetree/bindings/connector/usb-connector.yaml | 3 +++
+ drivers/usb/common/usb-conn-gpio.c                             | 1 +
+ 2 files changed, 4 insertions(+)
+
+-- 
+2.34.1
+
