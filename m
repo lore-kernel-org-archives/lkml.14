@@ -1,96 +1,294 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5AA22075
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 18:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCBC9225A8;
+	Fri, 29 Mar 2024 18:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711737452; cv=none; b=BpSsxApzFcdERSNO8MkfM+TpB2TjHKaxJ5x38+0mE+221HuPMF+kOY5YtsLrnAAEGMji3Owq7q4z5POXHZz9JILHSyx/cOOaUuJUi53T+tL6uZPF7v2+CSoVLIDM+G+dZyH/eJ8yFzpLQ+ZHoIUjXkIaWJBCAeLVBGbz4jMmC7c=
+	t=1711737490; cv=none; b=lzaK2sgEjR79kX/f7TMnuYbFLVzQkf9Cly0/oFqJCiVFC3DS/tTyaRaehT+qEwMHDbt3xPJXvqNlvZiFK2E3fRQK5hhDczS8Ra0x//zPexR178MiYVRUEBGdsCfnaMQcADkMtvXh7a4iXkqCBoYPZB4LOne+Q7d+kWfsNlFTApM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711737452; c=relaxed/simple;
-	bh=F2gfhsww7XTA3P50A1RX32InMlF8Q/9z+ZW7DdeTxgM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=qmGl26BHCWX8kZUgRqnlvOJQogEHx79OC/kor4CDeymctE5U58mFvQfX5rB1JS94z0Ti25efL6iISUpBU47HfdT8FbN84vofg7i3DS9PBfJn5vv6LWhyio4X2d33LOPvQF2FHFnbSM0mbTLV3AZnyt7/U3IsFtaLN5dGbYsLl8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7cc764c885bso239412639f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 11:37:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711737450; x=1712342250;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DLH3G/wi97DU/DtrnW/ODIbuNOVKTyxl862AdQPOt0k=;
-        b=XRt8ku/MJXlhJLEGCue999n0oaJKVZIrAIuelQRDuCpbTZCez2IaQeVxwVxnYAV3Y/
-         s5WM22HmYIBpY+2gjSG+77MGheSpACFF8QQkn8sTJvwMFOZaVT0H37B53456E3KhUCQP
-         1k7/lMhKWUXa7DlCQJATNpl53Xec1ffawwjXcD3eBBJ5l+p8i34CUtwUFZBAc4BiSBOu
-         HPUzt6WsZsJmFlmDXReVbnU2NMXM10WnBpqTYfmo9ewRgF/LuUVResqaHVKwEDG7jIk7
-         sbhmpzWyDQL84yefDU9vzTw8NoNLOkoneqRqYlp8E32YnbmLTlLYdFdgbrwFfZmzSR39
-         In4A==
-X-Gm-Message-State: AOJu0YzsA+XtERetQEHZBnrgzS9KufTogrgBevd9RilguiuficPce5+S
-	p2dZrgCegPKdHSWaniTbXBp+rdBEcOKuQyL9EXNSAnLmC+prFSXnEwxm7ayNWjSCSH3yYeaK3Db
-	mzGuYhc20LOuglWw+RgknaZ/HzIhrEDFXUDTHhZZeRuTX2N9bvjPh0ZZzEQ==
-X-Google-Smtp-Source: AGHT+IFRfpXx1VnfI0V7Zv8tfOUmGGmfvDvfktxzjg0GMDbH6xeORJdCTMoNoHwSU1EO7q6fta4nRuojWuGCc7GjOPpRVjDT3z+b
+	s=arc-20240116; t=1711737490; c=relaxed/simple;
+	bh=OG2bRo9kq/BnN8MwsBV8qP90ekyyndS4iDqRH1lNo1s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sjUuc/t9tem+2x7qZ3fvvyJSk3UTkGPDopHZkaSsDTKEdjvee4XyD+FSOlRALkAJCRmv2Hla+rC1tNfOC0vY+6djzl4rESxwIU3FxklgX1kCjuSRDX96mkaIYFvFPxGl7z/4DZP3gtWAk7e7rj2pOMCKD8cr5XGJPd8xnJiqrSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FF8EC433F1;
+	Fri, 29 Mar 2024 18:38:09 +0000 (UTC)
+Date: Fri, 29 Mar 2024 14:40:55 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ kernel-team@android.com, linux-mm@kvack.org
+Subject: Re: [PATCH v19 RESEND 3/5] tracing: Allow user-space mapping of the
+ ring-buffer
+Message-ID: <20240329144055.0ae2dd4b@gandalf.local.home>
+In-Reply-To: <20240326100830.1326610-4-vdonnefort@google.com>
+References: <20240326100830.1326610-1-vdonnefort@google.com>
+	<20240326100830.1326610-4-vdonnefort@google.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c267:0:b0:368:9839:d232 with SMTP id
- h7-20020a92c267000000b003689839d232mr182469ild.4.1711737449863; Fri, 29 Mar
- 2024 11:37:29 -0700 (PDT)
-Date: Fri, 29 Mar 2024 11:37:29 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a5ee120614d0eef8@google.com>
-Subject: [syzbot] Monthly net report (Mar 2024)
-From: syzbot <syzbot+liste7bfc894f5476da05e96@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello net maintainers/developers,
+On Tue, 26 Mar 2024 10:08:28 +0000
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-This is a 31-day syzbot report for the net subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/net
+> Currently, user-space extracts data from the ring-buffer via splice,
+> which is handy for storage or network sharing. However, due to splice
+> limitations, it is imposible to do real-time analysis without a copy.
+> 
+> A solution for that problem is to let the user-space map the ring-buffer
+> directly.
+> 
+> The mapping is exposed via the per-CPU file trace_pipe_raw. The first
+> element of the mapping is the meta-page. It is followed by each
+> subbuffer constituting the ring-buffer, ordered by their unique page ID:
+> 
+>   * Meta-page -- include/uapi/linux/trace_mmap.h for a description
+>   * Subbuf ID 0
+>   * Subbuf ID 1
+>      ...
+> 
+> It is therefore easy to translate a subbuf ID into an offset in the
+> mapping:
+> 
+>   reader_id = meta->reader->id;
+>   reader_offset = meta->meta_page_size + reader_id * meta->subbuf_size;
+> 
+> When new data is available, the mapper must call a newly introduced ioctl:
+> TRACE_MMAP_IOCTL_GET_READER. This will update the Meta-page reader ID to
+> point to the next reader containing unread data.
+> 
 
-During the period, 25 new issues were detected and 14 were fixed.
-In total, 83 issues are still open and 1401 have been fixed so far.
+Thanks for the update Vincent!
 
-Some of the still happening issues:
+> Mapping will prevent snapshot and buffer size modifications.
+> 
+> CC: <linux-mm@kvack.org>
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> 
+> diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
+> index ffcd8dfcaa4f..d25b9d504a7c 100644
+> --- a/include/uapi/linux/trace_mmap.h
+> +++ b/include/uapi/linux/trace_mmap.h
+> @@ -43,4 +43,6 @@ struct trace_buffer_meta {
+>  	__u64	Reserved2;
+>  };
+>  
+> +#define TRACE_MMAP_IOCTL_GET_READER		_IO('T', 0x1)
+> +
+>  #endif /* _TRACE_MMAP_H_ */
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 233d1af39fff..0f37aa9860fd 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -1191,6 +1191,12 @@ static void tracing_snapshot_instance_cond(struct trace_array *tr,
+>  		return;
+>  	}
+>  
+> +	if (tr->mapped) {
+> +		trace_array_puts(tr, "*** BUFFER MEMORY MAPPED ***\n");
+> +		trace_array_puts(tr, "*** Can not use snapshot (sorry) ***\n");
+> +		return;
+> +	}
+> +
+>  	local_irq_save(flags);
+>  	update_max_tr(tr, current, smp_processor_id(), cond_data);
+>  	local_irq_restore(flags);
+> @@ -1323,7 +1329,7 @@ static int tracing_arm_snapshot_locked(struct trace_array *tr)
+>  	lockdep_assert_held(&trace_types_lock);
+>  
+>  	spin_lock(&tr->snapshot_trigger_lock);
+> -	if (tr->snapshot == UINT_MAX) {
+> +	if (tr->snapshot == UINT_MAX || tr->mapped) {
+>  		spin_unlock(&tr->snapshot_trigger_lock);
+>  		return -EBUSY;
+>  	}
+> @@ -6068,7 +6074,7 @@ static void tracing_set_nop(struct trace_array *tr)
+>  {
+>  	if (tr->current_trace == &nop_trace)
+>  		return;
+> -	
+> +
+>  	tr->current_trace->enabled--;
+>  
+>  	if (tr->current_trace->reset)
+> @@ -8194,15 +8200,32 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
+>  	return ret;
+>  }
+>  
+> -/* An ioctl call with cmd 0 to the ring buffer file will wake up all waiters */
+>  static long tracing_buffers_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+>  {
+>  	struct ftrace_buffer_info *info = file->private_data;
+>  	struct trace_iterator *iter = &info->iter;
+> +	int err;
+> +
+> +	if (cmd == TRACE_MMAP_IOCTL_GET_READER) {
+> +		if (!(file->f_flags & O_NONBLOCK)) {
+> +			err = ring_buffer_wait(iter->array_buffer->buffer,
+> +					       iter->cpu_file,
+> +					       iter->tr->buffer_percent,
+> +					       NULL, NULL);
+> +			if (err)
+> +				return err;
+> +		}
+>  
+> -	if (cmd)
+> -		return -ENOIOCTLCMD;
+> +		return ring_buffer_map_get_reader(iter->array_buffer->buffer,
+> +						  iter->cpu_file);
+> +	} else if (cmd) {
+> +		return -ENOTTY;
+> +	}
+>  
+> +	/*
+> +	 * An ioctl call with cmd 0 to the ring buffer file will wake up all
+> +	 * waiters
+> +	 */
+>  	mutex_lock(&trace_types_lock);
+>  
+>  	/* Make sure the waiters see the new wait_index */
+> @@ -8214,6 +8237,94 @@ static long tracing_buffers_ioctl(struct file *file, unsigned int cmd, unsigned
+>  	return 0;
+>  }
+>  
+> +static vm_fault_t tracing_buffers_mmap_fault(struct vm_fault *vmf)
+> +{
+> +	return VM_FAULT_SIGBUS;
+> +}
 
-Ref  Crashes Repro Title
-<1>  5716    Yes   WARNING in rxrpc_alloc_data_txbuf
-                   https://syzkaller.appspot.com/bug?extid=150fa730f40bce72aa05
-<2>  4782    Yes   WARNING in sock_map_delete_elem
-                   https://syzkaller.appspot.com/bug?extid=2f4f478b78801c186d39
-<3>  4300    Yes   KMSAN: uninit-value in eth_type_trans (2)
-                   https://syzkaller.appspot.com/bug?extid=0901d0cc75c3d716a3a3
-<4>  3586    Yes   WARNING in sock_hash_delete_elem
-                   https://syzkaller.appspot.com/bug?extid=1c04a1e4ae355870dc7a
-<5>  981     Yes   possible deadlock in __dev_queue_xmit (3)
-                   https://syzkaller.appspot.com/bug?extid=3b165dac15094065651e
-<6>  896     Yes   INFO: task hung in rfkill_global_led_trigger_worker (2)
-                   https://syzkaller.appspot.com/bug?extid=2e39bc6569d281acbcfb
-<7>  684     Yes   unregister_netdevice: waiting for DEV to become free (8)
-                   https://syzkaller.appspot.com/bug?extid=881d65229ca4f9ae8c84
-<8>  509     No    possible deadlock in __lock_task_sighand (2)
-                   https://syzkaller.appspot.com/bug?extid=34267210261c2cbba2da
-<9>  378     Yes   KMSAN: uninit-value in nci_rx_work
-                   https://syzkaller.appspot.com/bug?extid=d7b4dc6cd50410152534
-<10> 323     Yes   INFO: rcu detected stall in tc_modify_qdisc
-                   https://syzkaller.appspot.com/bug?extid=9f78d5c664a8c33f4cce
+If this is all it does, I don't believe it's needed.
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> +
+> +#ifdef CONFIG_TRACER_MAX_TRACE
+> +static int get_snapshot_map(struct trace_array *tr)
+> +{
+> +	int err = 0;
+> +
+> +	/*
+> +	 * Called with mmap_lock held. lockdep would be unhappy if we would now
+> +	 * take trace_types_lock. Instead use the specific
+> +	 * snapshot_trigger_lock.
+> +	 */
+> +	spin_lock(&tr->snapshot_trigger_lock);
+> +
+> +	if (tr->snapshot || tr->mapped == UINT_MAX)
+> +		err = -EBUSY;
+> +	else
+> +		tr->mapped++;
+> +
+> +	spin_unlock(&tr->snapshot_trigger_lock);
+> +
+> +	/* Wait for update_max_tr() to observe iter->tr->mapped */
+> +	if (tr->mapped == 1)
+> +		synchronize_rcu();
+> +
+> +	return err;
+> +
+> +}
+> +static void put_snapshot_map(struct trace_array *tr)
+> +{
+> +	spin_lock(&tr->snapshot_trigger_lock);
+> +	if (!WARN_ON(!tr->mapped))
+> +		tr->mapped--;
+> +	spin_unlock(&tr->snapshot_trigger_lock);
+> +}
+> +#else
+> +static inline int get_snapshot_map(struct trace_array *tr) { return 0; }
+> +static inline void put_snapshot_map(struct trace_array *tr) { }
+> +#endif
+> +
+> +static void tracing_buffers_mmap_close(struct vm_area_struct *vma)
+> +{
+> +	struct ftrace_buffer_info *info = vma->vm_file->private_data;
+> +	struct trace_iterator *iter = &info->iter;
+> +
+> +	WARN_ON(ring_buffer_unmap(iter->array_buffer->buffer, iter->cpu_file));
+> +	put_snapshot_map(iter->tr);
+> +}
+> +
+> +static void tracing_buffers_mmap_open(struct vm_area_struct *vma) { }
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+Same for the open.
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
 
-You may send multiple commands in a single email message.
+> +
+> +static const struct vm_operations_struct tracing_buffers_vmops = {
+> +	.open		= tracing_buffers_mmap_open,
+> +	.close		= tracing_buffers_mmap_close,
+> +	.fault		= tracing_buffers_mmap_fault,
+> +};
+
+I replaced this with:
+
+static const struct vm_operations_struct tracing_buffers_vmops = {
+	.close		= tracing_buffers_mmap_close,
+};
+
+And it appears to work just fine. The mm code handles the NULL cases for
+.open and .fault.
+
+Is there any reason to do something different than the mm defaults?
+
+-- Steve
+
+> +
+> +static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
+> +{
+> +	struct ftrace_buffer_info *info = filp->private_data;
+> +	struct trace_iterator *iter = &info->iter;
+> +	int ret = 0;
+> +
+> +	if (vma->vm_flags & VM_WRITE || vma->vm_flags & VM_EXEC ||
+> +	    !(vma->vm_flags & VM_MAYSHARE))
+> +		return -EPERM;
+> +
+> +	vm_flags_mod(vma,
+> +		     VM_MIXEDMAP | VM_PFNMAP |
+> +		     VM_DONTCOPY | VM_DONTDUMP | VM_DONTEXPAND | VM_IO,
+> +		     VM_MAYWRITE);
+> +
+> +	vma->vm_ops = &tracing_buffers_vmops;
+> +
+> +	ret = get_snapshot_map(iter->tr);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file, vma);
+> +	if (ret)
+> +		put_snapshot_map(iter->tr);
+> +
+> +	return ret;
+> +}
+> +
+>  static const struct file_operations tracing_buffers_fops = {
+>  	.open		= tracing_buffers_open,
+>  	.read		= tracing_buffers_read,
+> @@ -8223,6 +8334,7 @@ static const struct file_operations tracing_buffers_fops = {
+>  	.splice_read	= tracing_buffers_splice_read,
+>  	.unlocked_ioctl = tracing_buffers_ioctl,
+>  	.llseek		= no_llseek,
+> +	.mmap		= tracing_buffers_mmap,
+>  };
+>  
+>  static ssize_t
+> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> index 64450615ca0c..749a182dab48 100644
+> --- a/kernel/trace/trace.h
+> +++ b/kernel/trace/trace.h
+> @@ -336,6 +336,7 @@ struct trace_array {
+>  	bool			allocated_snapshot;
+>  	spinlock_t		snapshot_trigger_lock;
+>  	unsigned int		snapshot;
+> +	unsigned int		mapped;
+>  	unsigned long		max_latency;
+>  #ifdef CONFIG_FSNOTIFY
+>  	struct dentry		*d_max_latency;
+
