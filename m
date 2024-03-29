@@ -1,62 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317B92562E
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 16:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3031A2C19F
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 16:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711730788; cv=none; b=KQJAbC6gMhRdnA39k9Dp0hORh20jCfGDXdF3bYnbhtXHp8rJ5gtHKvmiGnGG4csI8jM0M8VqKTBoKmYcEBgD0Y6B3NUso1M9A9vvhWiIZ9tpQVA5PnGa1ZKrrWz4aq+pneyDDYSsFUfnZZFkC5Ml0SAsdZwLPdR915V6lyJkUr4=
+	t=1711730909; cv=none; b=gbRG1j141ljUedRcDFT0h1jvidDaTCzhsOfj7FG9LijQc7kMwoZI+aXALnetxW/3Qc/Kiamtuia+9UDntS+gOcRDZZWGrBTidKY/OT1HxkUkzY571F14jJCdPMTk2rcZzYM6Ol1ql2ruTTbNCLtjeMbrjYxkUaidVQvHhTNGA38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711730788; c=relaxed/simple;
-	bh=9J9/SVQoxobDsgFffjqeuaYTm5tfTP8Boo3RqpviRwc=;
+	s=arc-20240116; t=1711730909; c=relaxed/simple;
+	bh=VHSFCeLmDsuoG8JZu78Wui4erUPAkz/n1mlCxxF71tE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sfHKLa07FZEHpGvmXzjcycu9WvZZe1Zhmi3Kb9Gd78S/AwdiPwtgq+zeQtuYrBzgI6/wLV8kY6SjitzVhKh2TP0eK41Pvw4evRjZJEvP2pu5Y4fIxFGZ5eXZWXUILtMm1bKRn7lKH1EeRd6IbDWN0KkJ0aEos0lxGfZKCHEuQTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZPV+4gn/; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=HbzXTioIBMA57IqLm4h6FgaDKkTeu1IBnJd/F3NAfBv9Xjgs0VX6HejiFgpj+0+wmz6F2M+kqoRncOXR+aT4sQZ4qAFtEzA17yxnG/eqYBLLnEgoI8BxkyD+btbALVve28rYlo6Mj2DscfsHGtoBZzrLadXFqyj7gliNw65WNHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k7sGzsX5; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZPV+4gn/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k7sGzsX5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711730787; x=1743266787;
+  t=1711730908; x=1743266908;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=9J9/SVQoxobDsgFffjqeuaYTm5tfTP8Boo3RqpviRwc=;
-  b=ZPV+4gn/ZfoMuQEeC3jjoKYsAhtg5NTIRic4qQIoj5dfuoE3F+XnZoPQ
-   y9r3lxh5kCwFRKXtb1hg3OKeE5Wv6SzddpP4wMIhjbNMLHOjqrQ0je1/6
-   syQ1gZT7hxM8v/O/NpAG29zI4bb7tEndDr+3a4JkqIc6TU3R4IxVx94CF
-   HRIAuWxdFHtT72vUOCE8MU2FqevBpNJZI8XNL64zXSjxUhXmbvFE1SWrb
-   hi27Z2Rjcs0DdPFHKEx/RblcttxvYPRB6y2Uz+G/Xq51oySXpV57WbgJD
-   Joh0xJHQoalaNHFwmOIp8hAdwZehWiIKv/y29d+dDFIeAb6XyMYvct4QP
+  bh=VHSFCeLmDsuoG8JZu78Wui4erUPAkz/n1mlCxxF71tE=;
+  b=k7sGzsX5crwd+fw9ENSYhKlFKR+2dnE/EnsRycLASfz6Zr+Pb6lrrDH/
+   3neB3JkfjlXG0O1DCT1zO2w8PZzd1UmLm6LHxle8oiltHCmKC3lBMGdoA
+   rMD3a8OhN5r1Ol7sDrXmonOfDuP2D4VjGnKKNlCbICFaLGVkxL+lEhOp1
+   5kYzxWAEsc4qtGpPBY7uPjWAM6hwnSjn/JmJXNzeSmuhXC5VJBgwc2pPN
+   D3V6EcPDxEGIIrABBTVKvxllPx1zINq6Dv1g4b7tZwRSUcMOVry5aAWbp
+   fEsggD3irfk99LM/gWU1ZvV+LI7ybHhkEfkRlaCd/Lxgipwsxip891M2/
    w==;
-X-CSE-ConnectionGUID: WlHTzRu2SPipae7NpORK7Q==
-X-CSE-MsgGUID: L4cfAz5KRUyrDK+Vu9d+NQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11028"; a="10707776"
+X-CSE-ConnectionGUID: L0IqpdhXQ7K3hpdc4HngjQ==
+X-CSE-MsgGUID: n9VN2X5UQHqVSCPmtJs8Wg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11028"; a="24385638"
 X-IronPort-AV: E=Sophos;i="6.07,165,1708416000"; 
-   d="scan'208";a="10707776"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 09:46:27 -0700
+   d="scan'208";a="24385638"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 09:48:27 -0700
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11028"; a="937078212"
 X-IronPort-AV: E=Sophos;i="6.07,165,1708416000"; 
-   d="scan'208";a="17062236"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.105])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 09:46:26 -0700
-Date: Fri, 29 Mar 2024 09:46:25 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: "x86@kernel.org" <x86@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 01/74] x86/cpu/vfm: Add/initialize x86_vfm field to
- struct cpuinfo_x86
-Message-ID: <ZgbwYb3D3tBtXZ8y@agluck-desk3>
-References: <20240328163746.243023-1-tony.luck@intel.com>
- <20240328163746.243023-2-tony.luck@intel.com>
- <20240328164811.GDZgWfSzAWZXO7dUky@fat_crate.local>
- <20240328165251.GEZgWgY1Clb9z4t3VX@fat_crate.local>
- <SJ1PR11MB6083AADC97E50462C1137D71FC3B2@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <20240328171204.GGZgWk5JNOzQzoaEql@fat_crate.local>
- <SJ1PR11MB6083D8BB65748452B204ED8AFC3B2@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <20240329114007.GAZgaolwSFtjHStiuL@fat_crate.local>
+   d="scan'208";a="937078212"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 29 Mar 2024 09:48:22 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 59EA818F; Fri, 29 Mar 2024 18:48:21 +0200 (EET)
+Date: Fri, 29 Mar 2024 18:48:21 +0200
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
+	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
+	Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>, 
+	kexec@lists.infradead.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv9 05/17] x86/kexec: Keep CR4.MCE set during kexec for TDX
+ guest
+Message-ID: <dlixf7bld4efdh5goir5nreabkgtcwfbvv2rovjqrvjttplqss@auuqnt4h2llj>
+References: <20240325103911.2651793-1-kirill.shutemov@linux.intel.com>
+ <20240325103911.2651793-6-kirill.shutemov@linux.intel.com>
+ <b94c81ef-50f2-4e66-9533-461791777d10@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,77 +70,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240329114007.GAZgaolwSFtjHStiuL@fat_crate.local>
+In-Reply-To: <b94c81ef-50f2-4e66-9533-461791777d10@intel.com>
 
-On Fri, Mar 29, 2024 at 12:40:07PM +0100, Borislav Petkov wrote:
-> On Thu, Mar 28, 2024 at 06:32:35PM +0000, Luck, Tony wrote:
-> > I don't think the format is really that big an issue. Including stepping in the
-> > format adds complexity to a thousand places these checks are made while
-> > only being useful in a few dozen.
+On Fri, Mar 29, 2024 at 11:21:32PM +0800, Xiaoyao Li wrote:
+> On 3/25/2024 6:38 PM, Kirill A. Shutemov wrote:
+> > TDX guests are not allowed to clear CR4.MCE. Attempt to clear it leads
+> > to #VE.
 > 
-> I've figured out what the problem is with steppings - ranges. If you
-> have a range of steppings which all belong to the same model, then you
-> have to complicate the checks by either masking out the stepping or use
-> the X86_STEPPING_ANY thing which forces you to use x86_match_cpu()
-> instead of a simple integer comparison.
-
-I think you are talking about a range of models that all belong to
-the same family (rather than steppings in the same model).
-
-> And you should talk to your folks what their plan is for the new
-> families because if they do a range of model numbers which all belong to
-> the same CPU model like AMD does, then your simple comparison scheme
-> goes out the window because it can't really deal with ranges.
-
-History of Intel model number allocations apparently looks like
-we just throw a dart in the general area of a block of unused
-model numbers :-)  I will check with the relevent folks, but this
-seems unlikely. There's more push (from the Linux community!) to
-assign CPUID feature bits for stuff that goes more than 2-3
-CPU generations. That leaves the stuff that is different almost
-every time (perfomaance counters, power management, EDAC, etc.).
-
-> Because from looking at your set, I don't see a slick way to check
-> whether a concrete f/m/s tuple belongs to a range without involved
-> checking.
+> Will we consider making it more safe and compatible for future to guard
+> against X86_FEATURE_MCE as well?
 > 
-> For example, models:
-> 
->                 case 0x30 ... 0x4f:
->                 case 0x60 ... 0x7f:
->                 case 0x90 ... 0x91:
->                 case 0xa0 ... 0xaf:
-> 
-> are all Zen2. I could do a X86_MATCH_VF_MODEL_RANGE and we even had
+> If in the future, MCE becomes configurable for TD guest, then CR4.MCE might
+> not be fixed1.
 
-I'm glad I don't have to keep track of groups of hex numbers like that.
+Good point.
 
-> a patch like that at some point but it didn't go in. But even if I did
-> that, I'd still need to do x86_match_cpu() instead of the current
-> X86_FEATURE_ZEN* checks we're doing.
+I guess we can leave it clear if it was clear. This should be easy
+enough. But we might want to clear even if was set if clearing is allowed.
 
-My patch doesn't help with this, but doesn't prevent you from doing
-a switch (c->x86_model).  If that list of model number ranges shows
-up more than twice you could add a helper that converts that list to
-a #define AMD_ZEN2 to make the code clearer.
+It would require some kind of indication that clearing MCE is fine. We
+don't have such indication yet. Not sure we can reasonably future-proof
+the code at this point.
 
-> So I don't think I can switch AMD to use that. It looks like the 'V' in
-> "VFM" could just as well turn into "I".
+But let me think more.
 
-Patch 3 includes:
-
-#define IFM(_fam, _model)      VFM_MAKE(X86_VENDOR_INTEL, _fam, _model)
-
-as a helper to build model numbers in <asm/intel-family.h>
-> 
-> :-)
-> 
-> I'd say.
-
-So keep the "V" in the common code. Maybe one of the other x86
-vendors will want to have #define names for their CPU models
-some day.
-
-Thanks for digging into this.
-
--Tony
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
