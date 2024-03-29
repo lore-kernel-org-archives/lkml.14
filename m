@@ -1,147 +1,435 @@
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2114.outbound.protection.outlook.com [40.107.117.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA13120319
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 06:42:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.114
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711694579; cv=fail; b=cEBowPLJeLLprHYWSHXiTYZRN4Yuvs82JnMchTEZdTgQkcw/5MS8+0LGuvXnRQT/XlI2vikHFqRyg0i67yiKegjXiSFpL66SBCLpQAyu56xLGcWNXcMxLdjpKxhZgq3Gx/y1VHesEsqGFW6aJSLfFMy8fZXeW1oPPWDGNmPrX5I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711694579; c=relaxed/simple;
-	bh=+699KWO2r30Jp7z9BnB3mHfFT7G1vVENTubVktTWVUE=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=UCPi6v4k652fejyiWcLixYwy9WL+3/EKh4dogAqAykn+ziU+ZA+IL0solSM9ZEaMFOq2aqzBa8oJlyDXqk7K1+LVAX2WnYOfm+A4oOTMQJJ3yb7oIsOIBt9LbYouIhMiXAgjn0fjTkrQ2VYNeUY3vHADFZ1zFP/pkMBKjKgS+Qg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=dlsUyKhp; arc=fail smtp.client-ip=40.107.117.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="dlsUyKhp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JM6UIzVGVAvMnEQOmOHal11VlNwnWclrPczZ2qa8ckd1b55guLro6o4Xzw/qNNeXlO+Q8mm3464Wh25xPcHGecfchuX1yfHkfBbpvquPGjVWu3LmQgQfXBV5OWDF7QCtB2G+Dx/qpICTjoJlhIgEIC+5+EZpHMItZUbnfmoUzaeU3Jv8M+TaC5XaTDQUb1eepA9Ro27pYwnYZK4alVnasfkC1FFjFqn4jT8LDPigIrR7gVZ7qb5WEI0fsJ3er3pPWufcRd/8WwuJ07R8n9Ug5B8DAHlmXdVBnoykRSZwIWl7uIOL3jvAwmL79fBqKeGgCvXHQvNKlRfsdnj0FsP70A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pKyXRhn60POlCyZ0o3zdTcg55ZMiH0OAcfx133JR1T4=;
- b=We9TWUWmRoxQgADIDtv39oYg1gRU4ocizlSqoPKt6ZunIkvVC3wa9CPDni7DSs+r8OSVSNV9S7qJIqDup4j5TbSoDGLf7rS5L3X3jZy8lp9lxzBnAWQ6APlvVtK635K64DJtnl0JzrUsWsUWgY+RoGVm79AjlatGF7TwsfObhmiZZKm5xDQjSi+bvoLr2fNBVnWfuEcFqtaICpRucO3AVcLsUcMUR30icJji1POhZAIx2csUPbbsdmCCnRMDMm4ddPYRt+lY59iCMc6PsnLf/c5+jkZCX981ojKUEQz+XclktCyhYoSn76R6i6waTYpNH/DFMNTLl3UWbhXKe0GXhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pKyXRhn60POlCyZ0o3zdTcg55ZMiH0OAcfx133JR1T4=;
- b=dlsUyKhpYZu6IIXWATsOLU0M688us72orek3sminInRZqWsDqGYDl9da52AzB4C4LAVr8ksL7ij0ynukef9iBNEiJdKU6OVq3kyr9NbB8a9v2J5UHDqW8pY9r3dCyCOQCrkAxKFA+AVG31IxQiUqxnR2DKVN0+IP/P93FkBQwmDAa8djKCsTe2+vQPJycFHC6iP/LJTZV/x+Fp7oDRfGAFf6tyObahiWq6Mk4rxTEsqdQDnmf6apxxsSmg4krtPVaC8p0uyg0EMJ6a5dBAbqbN/tXzeRBxnSFiU8TyHii0S6v/nxoCgMXkpa0VdkoRf1+sAOBiGSOlOidUHFraNJfA==
-Received: from PSAPR06MB4486.apcprd06.prod.outlook.com (2603:1096:301:89::11)
- by OS8PR06MB7466.apcprd06.prod.outlook.com (2603:1096:604:288::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Fri, 29 Mar
- 2024 06:42:52 +0000
-Received: from PSAPR06MB4486.apcprd06.prod.outlook.com
- ([fe80::45e1:65db:1bb:70d4]) by PSAPR06MB4486.apcprd06.prod.outlook.com
- ([fe80::45e1:65db:1bb:70d4%6]) with mapi id 15.20.7409.031; Fri, 29 Mar 2024
- 06:42:51 +0000
-From: Wu Bo <bo.wu@vivo.com>
-To: Jaegeuk Kim <jaegeuk@kernel.org>,
-	Chao Yu <chao@kernel.org>
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Wu Bo <wubo.oduw@gmail.com>,
-	Wu Bo <bo.wu@vivo.com>
-Subject: [PATCH] f2fs: fix 0 addr of multi devices when dio mapping
-Date: Fri, 29 Mar 2024 00:55:08 -0600
-Message-Id: <20240329065508.2398202-1-bo.wu@vivo.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0121.apcprd02.prod.outlook.com
- (2603:1096:4:188::21) To PSAPR06MB4486.apcprd06.prod.outlook.com
- (2603:1096:301:89::11)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8DB38394;
+	Fri, 29 Mar 2024 06:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711694616; cv=none; b=UJ5QUw1fKsiXjJVBFpIZ0TNWoYGUAel+sNW3PElRVAMEwLbeMH6oBkRo/N/Q8fozzLqkM7JCEN++sc38KZkisN8e6sytiWON7Jw9yn9ld2GAADwOnMe8cstPoc5hDLvnjbS9bCxnQEeEU+dJoYydIp4G0ud1EwmOCsBUEPbbxSg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711694616; c=relaxed/simple;
+	bh=nTe2ae6ryb7DMVdUv6s28IYex7zFMHWWM7DT8kpyr5Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BpERPrChgX76uU9XEdFpn17oSZMBIbOJkQTfyr6m5DI8aEoRI2C0B8u9E14liGKG+p397Fw+0GwaaF87BqLXk/uw2e2fQlybOOlrAzwHxm52uqlzpFzDO+e7LvPmRgoPdYHGRa6KOQbFaN5yPifF1c9TnQKRqZ3ynAOhNY1EghU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6e6f69e850bso1949634b3a.0;
+        Thu, 28 Mar 2024 23:43:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711694614; x=1712299414;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A0iqtjLTn3RtrA+1pAaR6jp/a2hnomPjHFJffryilm8=;
+        b=L4zyxgTRmcrO5KyQmmPbhjZdXoeDfVe03PBny4WNaKb8gRdvS+8sv9iaHFexvrVCot
+         97sNZKEsn8OFlOMiIGapLuIGWvqe+tau8mJmXQsbTu1RKFQObZP/Fwe+3ObMcZdT7NY8
+         oivSxWtef3NHyqFS+J+qzqvJoEoeCvOF8YSYsuOX3uSs5KjbdBj2fS4vyOGItdnRr5un
+         wUVpnfXfAT//jxgDozAGFRLPgYzAh5H6tAJMz1hh3Ro5eKW23mO7Dr4RaV3XkFXODaCz
+         cFVBMM4oeF/3Q8kvfNcFPeAKT9W+mIIukB3rEP6OkFUO+Lkuim6sAXMzYjk3x7OAPfEA
+         kJrw==
+X-Forwarded-Encrypted: i=1; AJvYcCVIOYTS8HIvqF7KJM3TFuIxWa77C9B2mMLwz6EBAFM2N0E4/7pe0urkkCsICIoFbAiyKXXor0xste/EFFCF43WKRLrtogUQ3KnTeK3LQQlYucFocbBtKeFRWLH9n33WA0emF2yEV6Xan+5xpDZFZg==
+X-Gm-Message-State: AOJu0YxgiswRpYd7moAyxfZE3yAqCri0I48oS6lSYkm7dvWC+Vx9/b4W
+	5wmxw++m71aWQR0ljSk/Ol28aNT2Of4OMXiF1VTzzJOMBOR3JnZ4kqyUHkAmYuN+Y8v3ZBPKfqY
+	4E4HDyLlTsBhCFRN2tl5S51BHekA=
+X-Google-Smtp-Source: AGHT+IF4I7IO3pD0s7VxjxLAp6lM/NN2SlFgntjpDZ1QPPemBTANT5Jwx4Axli2JsWrKlYXZUIt8BJ+QZi86znLCeRU=
+X-Received: by 2002:a05:6a20:be18:b0:1a3:5fb7:42ab with SMTP id
+ ge24-20020a056a20be1800b001a35fb742abmr1146154pzb.59.1711694614501; Thu, 28
+ Mar 2024 23:43:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PSAPR06MB4486:EE_|OS8PR06MB7466:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	M3X1slR6IDaekK6e0oNbGBL6g+BMRhH+5jYYYTJj2O8TkcaJxiBO8IYsSp7Cok6aiB7KfmuBrcfyESt80PkLE2VT+3hWbKGFpjHxO5QBPOvPq/5b5whYcdWsVc9URLK3Rk0uXfJ2y4CpFBs0qLYg1e/hUcGXOpRyRi5zWQZj/TAW+qleE7SEC9PBlszdZjsjQwdVGD2TnUL+ZxQMKR+O5lCFaAkb9yBNaFTde549Cm5vasDlFJ7q2lkugV/sbiHmGJ1bbvT4kVZ/P/m+sGDFEQLjVh24cuXeL0Xcu0M31qx+qgsSMJ39gcRhPz7r9u/x85GzSQRUvRvYZcO4IINYCjE31Oet3c5qAgmR+guukc04fCLl69tkUcI7PlkIGoWQ7f2P/VEg/KCq3J+bJkJlTxX+S6bWsRFdtstfMn3409Ok4xKy/ipdPrGHpfjZYmI4LUeVZKAyImM9gMN279jAdHAoyU8EL3g9COlAI1dl5aff7fOzVqF3KQNvQxmCIewJe3iUw3LOP1hypm/BIH862zw3RgVoIIzd/2A+kBlnw00h5t9dZvaB+rPeCP1vDVmCmKcO85vQmqbVHxbR1pu4jzLYWiWPgp0T4fb7KWxY1/fmJ6RSASo3epAPg4PH67ug1lcl0msOWXGJ5Xgop1XBoiUhV4mgz8rStwDQnA+S2eDkhRyt6DwvLmLYQ8jw5AP26s1Xs5bZqnTUvgsXvA5UzdeEGlRtRGCaIk22b99dHQk=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PSAPR06MB4486.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(52116005)(1800799015)(366007)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?FnHEEaAoa7+SqxWpEDZQiX1pQK7abpNOly3MySgj/gQWxQ7TuVqSq1AVrXKw?=
- =?us-ascii?Q?guEuBO4StMuOWTOmGLM+HK5yorc3ZpLicaIssOpSrgeiALq9r/8bZYgtmOGh?=
- =?us-ascii?Q?zgVnAvg6N1GLKvXWYlE8wQq48qSYiJhC/1DdAilSMGgbb11kKi9qJ5oTlXCv?=
- =?us-ascii?Q?ycCp1zV9XHYSTltkMnjHM0kYLnOn/0F7LCl3gkZQtlbuB6JgZmW67jbwI+en?=
- =?us-ascii?Q?3JfhSAAhx4cbYYQ+BuS8kaS3uinIeDb9v3Qzb3b43+oyQ2NjfzUzTt/xaCG7?=
- =?us-ascii?Q?ptf3ycJFblQU69CqloFx7Xsngx9b6tZcdLQt3SeiFgLXxDyv2Rm7Z+5Wf2Cg?=
- =?us-ascii?Q?pj2xiz/QDYNRjnIKYudfhTMO3fdaBi0MyvfbR7c1jW94WqwIQwtj9wlBZ31A?=
- =?us-ascii?Q?UfDic42H0gW2D58/okVlNOYK//utbgLwNzpcKumWquDSOR4PGK584/dNnDLF?=
- =?us-ascii?Q?cOpTPMoXb7NcW05qv837BFWQvCXUfCUF5gKrHJ/DuUTEx8pdDoZuMeSeWoHX?=
- =?us-ascii?Q?9AkzcQVLUVNDig/ydaMCWXawxKzbpS70eVjZ0k+VDHeRP4I6OjRbLiUZXDvv?=
- =?us-ascii?Q?KzWLVwMUjuV46lNULkxBHolCIL9wIW0Gjl+F0LmeZhiLF8QH4NvJTNykg6RM?=
- =?us-ascii?Q?kOLd80kbJHo8P7VB/29z4hh+PGGpa6ilWrXqCWiS7EAbAXkrsOteDY8P2T3G?=
- =?us-ascii?Q?qtGQZQf/hRfuR/OwQ0RHAGio7iDMmxA3sGGa+6O6FsUlFxc7S/T3Cf2M2HAx?=
- =?us-ascii?Q?PrDektI5HazZMwGqLrl6u5PQM7JfBJ4MI7OJ9FeHAMIIyKjLjCkg9LCgNObx?=
- =?us-ascii?Q?hUxbTSXaQwmipHqIpePIcXuPBRjWHeidDVHaYpaL2OKFE09K4xMNX0SN14rr?=
- =?us-ascii?Q?pSpNY03HZw3W0NmCLTgzudyFsbPgaNBQ8nQNM66qDNGR5IO4FzxjiWZtwaKE?=
- =?us-ascii?Q?kahfV3NaX82u1G29tpskXQjyaEs1xUNQANqoFWh/TjRdtpY/0GVt49P1bXCq?=
- =?us-ascii?Q?wvbbCMlziCgjCzIowaFQrqAwLxoApymGxQaP197t6m9SnJ9sSAgH6CTj8qqD?=
- =?us-ascii?Q?qAyLtTZWG8VeLG69Kr+9dvfWZx/8JOPxC5aGXn+NQAdk/QJ/vFIpM0pQcGI1?=
- =?us-ascii?Q?lI8IBNe4UKhWa3uzUwYLPdoZi9w/ZDEDu57IJL2cPrrIORAiKXAL3ISitec9?=
- =?us-ascii?Q?Zg28E30hpNyaKbAKoG18/I2aIcRMeyvi9iL3WXY59csJClPapjVMuHBwmny2?=
- =?us-ascii?Q?r8mx2EbnuBpz3M/8sCw8NghfpFTAV1BVDgkwmZQb4uHvIvSbAJkCyYLkPuyO?=
- =?us-ascii?Q?kgJAUygA1zBJQzeIa4+9V6TzTGTFzSyNWE33j6xKF0L96bO+wgwGlYmAaYu3?=
- =?us-ascii?Q?d2YwLbxwZXRwRNoRLZEEAg52BVD/yGvhILwsMQfgem25J8fUeu7msO3SOlO4?=
- =?us-ascii?Q?9IrjDvSgORemPPBKcdn8B6dH0aDu1g3vh2C4We9CRB4FZ6vdZfel4h2Vig7d?=
- =?us-ascii?Q?0xDsS0IHGDr+ItES+eP5KZeDo8WHrH6WUrtek9i1nRWR7tjgr1gLakXotVsk?=
- =?us-ascii?Q?Q9wIDooAw85/l66SlCVgPmUzydv03luyToDErDjf?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3afa1f57-006f-4476-babf-08dc4fbb743a
-X-MS-Exchange-CrossTenant-AuthSource: PSAPR06MB4486.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2024 06:42:51.0069
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mDXRMn2f7Kvh4HGPA9YAymmX4p1C2LHckevlHvZCsDIofJ9hdei+duFR87fOC4P+ojFCbDDGux/wXMT9FtYT1w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS8PR06MB7466
+References: <20240326202859.960577-1-weilin.wang@intel.com> <20240326202859.960577-3-weilin.wang@intel.com>
+In-Reply-To: <20240326202859.960577-3-weilin.wang@intel.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 28 Mar 2024 23:43:22 -0700
+Message-ID: <CAM9d7cjXE_XgZAGnr9byL17KbgKrum+kyozR5yTVkKvcUd8wow@mail.gmail.com>
+Subject: Re: [RFC PATCH v5 2/6] perf stat: Fork and launch perf record when
+ perf stat needs to get retire latency value for a metric.
+To: weilin.wang@intel.com
+Cc: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Consider of a f2fs system with 2 devices:
-Info: Device[0] : /dev/block/dm-46 blkaddr = 0--3fffff
-Info: Device[1] : /dev/block/dm-47 blkaddr = 400000--67fffff
+On Tue, Mar 26, 2024 at 1:29=E2=80=AFPM <weilin.wang@intel.com> wrote:
+>
+> From: Weilin Wang <weilin.wang@intel.com>
+>
+> When retire_latency value is used in a metric formula, perf stat would fo=
+rk a
+> perf record process with "-e" and "-W" options. Perf record will collect
+> required retire_latency values in parallel while perf stat is collecting
+> counting values.
+>
+> At the point of time that perf stat stops counting, it would send sigterm=
+ signal
+> to perf record process and receiving sampling data back from perf record =
+from a
+> pipe. Perf stat will then process the received data to get retire latency=
+ data
+> and calculate metric result.
 
-f2fs_map_blocks will return logical addr of fs when doing buffered io:
-f2fs_map_blocks: dev = (254,46), ino = 40020, file offset = 462865, start blkaddr = 0x400000
+I'm afraid this requirement is too Intel specific.  Maybe we need to move
+the code to somewhere under the arch directory.
 
-While dio mapping will return the addr of device:
-f2fs_map_blocks: dev = (254,47), ino = 40020, file offset = 462865, start blkaddr = 0x0
+>
+> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-stat.c     | 165 +++++++++++++++++++++++++++++++++-
+>  tools/perf/util/data.c        |   3 +
+>  tools/perf/util/data.h        |   5 ++
+>  tools/perf/util/metricgroup.h |   8 ++
+>  tools/perf/util/stat.h        |   2 +
+>  5 files changed, 181 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 6291e1e24535..fb08cef42d95 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -94,8 +94,13 @@
+>  #include <perf/evlist.h>
+>  #include <internal/threadmap.h>
+>
+> +#include "util/sample.h"
+> +#include <sys/param.h>
+> +#include <subcmd/run-command.h>
+> +
+>  #define DEFAULT_SEPARATOR      " "
+>  #define FREEZE_ON_SMI_PATH     "devices/cpu/freeze_on_smi"
+> +#define PERF_DATA              "-"
+>
+>  static void print_counters(struct timespec *ts, int argc, const char **a=
+rgv);
+>
+> @@ -163,6 +168,8 @@ static struct perf_stat_config stat_config =3D {
+>         .ctl_fd_ack             =3D -1,
+>         .iostat_run             =3D false,
+>         .tpebs_events           =3D LIST_HEAD_INIT(stat_config.tpebs_even=
+ts),
+> +       .tpebs_results          =3D LIST_HEAD_INIT(stat_config.tpebs_resu=
+lts),
+> +       .tpebs_pid              =3D -1,
+>  };
+>
+>  static bool cpus_map_matched(struct evsel *a, struct evsel *b)
+> @@ -687,12 +694,155 @@ static enum counter_recovery stat_handle_error(str=
+uct evsel *counter)
+>         return COUNTER_FATAL;
+>  }
+>
+> -static int __run_perf_record(void)
+> +static int __run_perf_record(const char **record_argv)
+>  {
+> +       int i =3D 0;
+> +       struct tpebs_event *e;
+> +
+>         pr_debug("Prepare perf record for retire_latency\n");
+> +
+> +       record_argv[i++] =3D "perf";
+> +       record_argv[i++] =3D "record";
+> +       record_argv[i++] =3D "-W";
+> +       record_argv[i++] =3D "--synth=3Dno";
+> +
+> +       if (stat_config.user_requested_cpu_list) {
+> +               record_argv[i++] =3D "-C";
+> +               record_argv[i++] =3D stat_config.user_requested_cpu_list;
+> +       }
+> +
+> +       if (stat_config.system_wide)
+> +               record_argv[i++] =3D "-a";
 
-So the addr=0 is valid when the map.m_bdev is not s_bdev.
+What do you want to do if neither of -a nor -C is used?
+Maybe you can disable perf record in background.
 
-Fixes: 8d3c1fa3fa5e ("f2fs: don't rely on F2FS_MAP_* in f2fs_iomap_begin")
-Signed-off-by: Wu Bo <bo.wu@vivo.com>
----
- fs/f2fs/data.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> +
+> +       list_for_each_entry(e, &stat_config.tpebs_events, nd) {
+> +               record_argv[i++] =3D "-e";
+> +               record_argv[i++] =3D e->name;
+> +       }
+> +
+> +       record_argv[i++] =3D "-o";
+> +       record_argv[i++] =3D PERF_DATA;
+> +
+>         return 0;
+>  }
+>
+> +static void prepare_run_command(struct child_process *cmd,
+> +                              const char **argv)
+> +{
+> +       memset(cmd, 0, sizeof(*cmd));
+> +       cmd->argv =3D argv;
+> +       cmd->out =3D -1;
+> +}
+> +
+> +static int prepare_perf_record(struct child_process *cmd)
+> +{
+> +       const char **record_argv;
+> +
+> +       record_argv =3D calloc(10 + 2 * stat_config.tpebs_event_size, siz=
+eof(char *));
+> +       if (!record_argv)
+> +               return -1;
+> +       __run_perf_record(record_argv);
+> +
+> +       prepare_run_command(cmd, record_argv);
+> +       return start_command(cmd);
+> +}
+> +
+> +struct perf_script {
+> +       struct perf_tool        tool;
+> +       struct perf_session     *session;
+> +};
+> +
+> +static void tpebs_data__delete(void)
+> +{
+> +       struct tpebs_retire_lat *r, *rtmp;
+> +       struct tpebs_event *e, *etmp;
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index d9494b5fc7c1..dca3628932c7 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -4185,7 +4185,8 @@ static int f2fs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 	if (WARN_ON_ONCE(map.m_pblk == COMPRESS_ADDR))
- 		return -EINVAL;
- 
--	if (map.m_pblk != NULL_ADDR) {
-+	if (map.m_pblk != NULL_ADDR ||
-+		(map.m_multidev_dio && map.m_bdev != inode->i_sb->s_bdev)) {
- 		iomap->length = blks_to_bytes(inode, map.m_len);
- 		iomap->type = IOMAP_MAPPED;
- 		iomap->flags |= IOMAP_F_MERGED;
--- 
-2.25.1
+A blank line please.
 
+> +       list_for_each_entry_safe(r, rtmp, &stat_config.tpebs_results, eve=
+nt.nd) {
+> +               list_del_init(&r->event.nd);
+> +               free(r);
+> +       }
+> +       list_for_each_entry_safe(e, etmp, &stat_config.tpebs_events, nd) =
+{
+> +               list_del_init(&e->nd);
+> +               free(e);
+> +       }
+> +}
+> +
+> +static int process_sample_event(struct perf_tool *tool __maybe_unused,
+> +                               union perf_event *event __maybe_unused,
+> +                               struct perf_sample *sample,
+> +                               struct evsel *evsel,
+> +                               struct machine *machine __maybe_unused)
+> +{
+> +       int ret =3D 0;
+> +       const char *evname;
+> +       struct tpebs_retire_lat *t;
+> +
+> +       evname =3D evsel__name(evsel);
+> +
+> +       /*
+> +        * Need to handle per core results? We are assuming average retir=
+e
+> +        * latency value will be used. Save the number of samples and the=
+ sum of
+> +        * retire latency value for each event.
+> +        */
+> +       list_for_each_entry(t, &stat_config.tpebs_results, event.nd) {
+> +               if (!strcmp(evname, t->event.name)) {
+> +                       t->count +=3D 1;
+> +                       t->sum +=3D sample->retire_lat;
+> +                       break;
+> +               }
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +static int process_feature_event(struct perf_session *session,
+> +                                union perf_event *event)
+> +{
+> +       if (event->feat.feat_id < HEADER_LAST_FEATURE)
+> +               return perf_event__process_feature(session, event);
+> +       return 0;
+> +}
+> +
+> +static int __cmd_script(struct child_process *cmd __maybe_unused)
+> +{
+> +       int err =3D 0;
+> +       struct perf_session *session;
+> +       struct perf_data data =3D {
+> +               .mode =3D PERF_DATA_MODE_READ,
+> +               .path =3D PERF_DATA,
+> +               .fd   =3D cmd->out,
+
+I don't like this part as it added the fd field unnecessarily.
+I think we need a new session API that can pass a fd directly.
+
+
+> +       };
+> +       struct perf_script script =3D {
+> +               .tool =3D {
+> +               .sample          =3D process_sample_event,
+> +               .ordering_requires_timestamps =3D true,
+
+Is this really needed?  I don't think it needs ordering.
+
+
+> +               .feature         =3D process_feature_event,
+> +               .attr            =3D perf_event__process_attr,
+> +               },
+> +       };
+> +       struct tpebs_event *e;
+> +
+> +       list_for_each_entry(e, &stat_config.tpebs_events, nd) {
+> +               struct tpebs_retire_lat *new =3D malloc(sizeof(struct tpe=
+bs_retire_lat));
+> +
+> +               if (!new)
+> +                       return -1;
+> +               new->event.name =3D strdup(e->name);
+> +               new->event.tpebs_name =3D strdup(e->tpebs_name);
+> +               new->count =3D 0;
+> +               new->sum =3D 0;
+> +               list_add_tail(&new->event.nd, &stat_config.tpebs_results)=
+;
+> +       }
+> +
+> +       kill(cmd->pid, SIGTERM);
+
+Is this the only place to stop the perf record?
+What if perf stat exits before calling this function?
+
+
+> +       session =3D perf_session__new(&data, &script.tool);
+> +       if (IS_ERR(session))
+> +               return PTR_ERR(session);
+> +       script.session =3D session;
+> +       err =3D perf_session__process_events(session);
+> +       perf_session__delete(session);
+> +
+> +       return err;
+> +}
+> +
+>  static int __run_perf_stat(int argc, const char **argv, int run_idx)
+>  {
+>         int interval =3D stat_config.interval;
+> @@ -709,13 +859,15 @@ static int __run_perf_stat(int argc, const char **a=
+rgv, int run_idx)
+>         struct affinity saved_affinity, *affinity =3D NULL;
+>         int err;
+>         bool second_pass =3D false;
+> +       struct child_process cmd;
+>
+>         /* Prepare perf record for sampling event retire_latency before f=
+ork and
+>          * prepare workload */
+>         if (stat_config.tpebs_event_size > 0) {
+>                 int ret;
+>
+> -               ret =3D __run_perf_record();
+> +               pr_debug("perf stat pid =3D %d\n", getpid());
+> +               ret =3D prepare_perf_record(&cmd);
+>                 if (ret)
+>                         return ret;
+>         }
+> @@ -925,6 +1077,13 @@ static int __run_perf_stat(int argc, const char **a=
+rgv, int run_idx)
+>
+>         t1 =3D rdclock();
+>
+> +       if (stat_config.tpebs_event_size > 0) {
+> +               int ret;
+> +
+> +               ret =3D __cmd_script(&cmd);
+> +               close(cmd.out);
+> +       }
+> +
+>         if (stat_config.walltime_run_table)
+>                 stat_config.walltime_run[run_idx] =3D t1 - t0;
+>
+> @@ -2972,5 +3131,7 @@ int cmd_stat(int argc, const char **argv)
+>         metricgroup__rblist_exit(&stat_config.metric_events);
+>         evlist__close_control(stat_config.ctl_fd, stat_config.ctl_fd_ack,=
+ &stat_config.ctl_fd_close);
+>
+> +       tpebs_data__delete();
+> +
+>         return status;
+>  }
+> diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+> index 08c4bfbd817f..f6cc0ccdec5e 100644
+> --- a/tools/perf/util/data.c
+> +++ b/tools/perf/util/data.c
+> @@ -185,6 +185,9 @@ static bool check_pipe(struct perf_data *data)
+>         int fd =3D perf_data__is_read(data) ?
+>                  STDIN_FILENO : STDOUT_FILENO;
+>
+> +       if (data->fd > 0)
+> +               fd =3D data->fd;
+> +
+>         if (!data->path) {
+>                 if (!fstat(fd, &st) && S_ISFIFO(st.st_mode))
+>                         is_pipe =3D true;
+> diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
+> index 110f3ebde30f..f5e7479f1892 100644
+> --- a/tools/perf/util/data.h
+> +++ b/tools/perf/util/data.h
+> @@ -28,6 +28,11 @@ struct perf_data_file {
+>
+>  struct perf_data {
+>         const char              *path;
+> +       /*
+> +        * When fd is given, use PIPE instead of file, use given fd inste=
+ad of
+> +        * STDIN_FILENO or STDOUT_FILENO
+> +        */
+> +       int                      fd;
+
+Maybe users can set data.file.fd directly instead of this.
+
+
+>         struct perf_data_file    file;
+>         bool                     is_pipe;
+>         bool                     is_dir;
+> diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.=
+h
+> index 7c24ed768ff3..e5bafb45d4d9 100644
+> --- a/tools/perf/util/metricgroup.h
+> +++ b/tools/perf/util/metricgroup.h
+> @@ -68,10 +68,18 @@ struct metric_expr {
+>
+>  struct tpebs_event {
+>         struct list_head nd;
+> +       /* Event name */
+>         const char *name;
+> +       /* Event name with TPEBS modifier */
+
+What is the TPEBS modifier?
+
+Thanks,
+Namhyung
+
+
+>         const char *tpebs_name;
+>  };
+>
+> +struct tpebs_retire_lat {
+> +       struct tpebs_event event;
+> +       size_t count;
+> +       int sum;
+> +};
+> +
+>  struct metric_event *metricgroup__lookup(struct rblist *metric_events,
+>                                          struct evsel *evsel,
+>                                          bool create);
+> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+> index b987960df3c5..0726bdc06681 100644
+> --- a/tools/perf/util/stat.h
+> +++ b/tools/perf/util/stat.h
+> @@ -111,6 +111,8 @@ struct perf_stat_config {
+>         struct rblist            metric_events;
+>         struct list_head         tpebs_events;
+>         size_t                   tpebs_event_size;
+> +       struct list_head         tpebs_results;
+> +       pid_t                    tpebs_pid;
+>         int                      ctl_fd;
+>         int                      ctl_fd_ack;
+>         bool                     ctl_fd_close;
+> --
+> 2.43.0
+>
