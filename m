@@ -1,139 +1,122 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CAB31386DC
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 20:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD241DDEA
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 20:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711742537; cv=none; b=hQouZWX/lU6V+CS3rHDM37GQ0M/2trj+hWxCZUT9PBg39WzWjLhOcHaoQt+bJH9aCBPSPsCrTt4e+PpHTIEsciQ0wWQJLUVHsrhgR/D0BDn1Qv4aqHuo0vC1n+R7KFzXqcKwJjQjAW3l6U7hW9C3RX3UmJfMzmAVj67A+Wy0hfU=
+	t=1711742710; cv=none; b=ZuEbSFR5I5RlJe/hV+0+Hb2WmnpUsA5UYmBUCMZK4Ep95k3gEEgONmxrEjclALbnGTzOPzJIlEP3MK5r74MEEW9Ivc6NxO/AkSLi3MnT4PLIKbAZiBzLojYuL7qjdkQeB8uG0lcPM5wZNzBNUss6GowdUdWc/wgvQLeWQfCydn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711742537; c=relaxed/simple;
-	bh=4s7FSUVD/FVF5uIwuXZCch5XKC36897y0OwJwUbVkWU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DouRZLsaEyvL+nvEE2Q1BDA40rC5sMBdmWE1ywdjZ+vxpAXL3VoRfbJ8ds2/H2/fD5ubnwTOweWmT60atRdDjCP0tfv8U1puSLVzYuaSG7EKSw976y3pdrY+8mB/uw/OXGDVSsNGOAe0TY6Rt3fSjvDAckEAsgmGUV5CApmxFcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=PpdbJ3dL; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1711742710; c=relaxed/simple;
+	bh=cIbe2NRCQP7djfpbM+11L+WlZLa/v/ScA4ZubIQlJek=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IH/bfwocBNr/EWFjYA4rQ+zq6qjRLAu1EWzLNx/nYms25eaJ+HVRn6xOkPIi4bAUx6rFbtx499kaCqoN9RXsTTvs96Tt2koSuYaGBgjKuqA8DLkyd1x+1DJ1pg7fA4TCP7Qh/by3UJSxB//9dY12XtplAq/1xB7EXfXKEescjUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WNKyaeJq; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="PpdbJ3dL"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dc25e12cc63so3015184276.0
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 13:02:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1711742534; x=1712347334; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t40h4ZVVyU3YcHuS3ADegeoOz9PnpHCj92mWxUgwXKE=;
-        b=PpdbJ3dLERUkITJYMoM+a1cy/96JymF+wE1D1yJKQX5faXTDoD72D6WoH0axtT/aSs
-         Yz/BoJn7V8VbfqVkGpvBGRA+tAP/tOHT8chsRJ682qF6ZbPVud3ICpQAs/RhzGMdi43F
-         IwKLEhFhZpo48O/UbPyEolSn8HVhWo2fHAzMZenHzcYFXxgwE3iKO2XLjTlRSHjfRj9+
-         340BsyUD6TQCaikIUq/1pc/GuyEyw4xOWRkXnGOGw+gd9kxQNwUbzQ+rmWiNgxf9lKl4
-         zpUZona16fJXAtqbsRG65WeSQpklE2v1ubUdzBXVoIDFbkLAsfzspl5VW77VM9K48Awi
-         FqVw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WNKyaeJq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711742707;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=SnHjQH48YnJt749mCO2kgMTpPbKk2F0bzExQRDPnK30=;
+	b=WNKyaeJqRyi2lqcR7sTPNbSobvGMHN8VaOMFTEQqYCryC+uqEgT2hxWQEUHoOQZQPK6JIT
+	w1/WLX4JgP+P52YnUyAtiIv9NxmWhsTfbcIpg5oUkc3dGuKsmQsS2T00cz6mAqeVFlHuJW
+	G2253EgETwG3I9ue0Mueoq+mcJj8Or0=
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
+ [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-26-xBaRD8gjNtaNR0CT0P6bPw-1; Fri, 29 Mar 2024 16:05:05 -0400
+X-MC-Unique: xBaRD8gjNtaNR0CT0P6bPw-1
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-6ea81ca3883so1578167b3a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 13:05:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711742534; x=1712347334;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t40h4ZVVyU3YcHuS3ADegeoOz9PnpHCj92mWxUgwXKE=;
-        b=Bv05bgei5Hn6043bmVYcwrJnvAqqXVIxbcK7yAIFUXJ1l/9imfLVVe7DUHh7M/m6ed
-         Si/h8yL0VrMqf0EdnV6wDWRNaWaJDAtqwCUHiDUvD3n8jGLm6E6JIZEgYHqXgFPKZYEQ
-         zb7dWZIklFmBtwUfHPMoCY8vCCmZbjuT7bje7Q+/vjC8uYsSvj6UXUzAXim9WukD6fEG
-         lQYKgDOSNBpyz89dgVYr160LKWu4WCtZaczANLj1ubCswpUEnkmFKnT7MUl7q6UmUUyy
-         uXM5U5uvl9qhFU6DAa4x2RuU7zz9ES8JPs1KYQJD2k8j6Ue0MlF2fbjqF1LuOaNLOSjf
-         0JIA==
-X-Forwarded-Encrypted: i=1; AJvYcCU5evBOfkAQgiWT/jFNb0+RLAFCFpfHY2YpFVM2Wv/AUH9PaZ8aPCIxdkmdqlcWk8DxDab3GhXZBB7VTzQP2WxH3hVhYvp1k7PCY7DB
-X-Gm-Message-State: AOJu0YxmZDYLrqoagaWE4tJFj3F+EP9ThWUFGP+tsT0RNv/YfNNMCNYj
-	kUUHQIxn+ZdwcZ09UfPR72jZsyVLzoqVyvavXnrHyCz3ZWB12LHGz8iNsVSMAho72Fwo3IYTyq8
-	ye/NX2V07f8/qou4ujwmuFXz/ahYS4ZqTo3aaJw==
-X-Google-Smtp-Source: AGHT+IGtnKg+yyXhs907Pora7J+RzD45KJQ+UfSqQQ1XkC5eECGLQ66rb6PRiDq9m4/5ND7CCb26prI4BwPY/uB5eaA=
-X-Received: by 2002:a25:f912:0:b0:dc7:494e:ff33 with SMTP id
- q18-20020a25f912000000b00dc7494eff33mr2270811ybe.7.1711742534274; Fri, 29 Mar
- 2024 13:02:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711742705; x=1712347505;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SnHjQH48YnJt749mCO2kgMTpPbKk2F0bzExQRDPnK30=;
+        b=eK1pnwZVG/uIdcgdmcZJeqbEv7DYNH+JWKhOFnLsTbUJFvaPmQYV5Hn8LjK2HbUJvd
+         On192iAEQjDk+PAw8e6QZpIdDXy9tQpQxuOmZ4pit5uA5nhwoNAABAj8usqW1i87NJDr
+         ZgIyZZD8yQcmt2hxl9np3vPb7R22CDrPyOrpZLwlkWUoHtoy0u8jYB3LzXqNPaUk22LA
+         rJxsH/F8FeeqcxdlhDksnVjJluUs0nzhX8/UZMM87/IKMB4SR6k/KCG/cH2GWiFygIyD
+         Ew5Y/0mF7AGl+Jw2kzYhOxqbP9CKM7Cm+1EXE0ksJ95SnhKKBxSEYyfoaS3CmbcExm9T
+         HCKw==
+X-Forwarded-Encrypted: i=1; AJvYcCWE9NkfHC6bU4yOhsx4MKKZjWFoaw5CG1JEZ557IHEI4X8w4SSvyQOFgP4fjcYqWNaeqY66yTSBfQT6ln++YZGBqNXlxoxBXrziJzjV
+X-Gm-Message-State: AOJu0Yxkk1sMShRtVnyMp8O3/zjfIg/emiOrrYWtjaznvRWWQQjvHVJm
+	PIkA202OSceHn5HcG8tjEPLBQ50RG7dScoz3NpUK7sgLnvR/ce7SsddEmGaG6eydAvY/NFjdsPG
+	HiUcnus8G1R0QSK5P1JJ23K460Rl8YCxoRauq0T8J3G0VN6CRJJzImMbkQxzv2w==
+X-Received: by 2002:a05:6a21:193:b0:1a3:c8d5:707a with SMTP id le19-20020a056a21019300b001a3c8d5707amr3325554pzb.7.1711742704859;
+        Fri, 29 Mar 2024 13:05:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHzus5TYmyBQIJzw2X4oGKdRnzm+fHezhgpcMAHRkbhzjBiVvj5MPNNZHf4gEN4NnQQtcePCw==
+X-Received: by 2002:a05:6a21:193:b0:1a3:c8d5:707a with SMTP id le19-20020a056a21019300b001a3c8d5707amr3325536pzb.7.1711742704523;
+        Fri, 29 Mar 2024 13:05:04 -0700 (PDT)
+Received: from localhost.localdomain ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id e4-20020a17090301c400b001dd6ebd88b0sm3830017plh.198.2024.03.29.13.04.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Mar 2024 13:05:04 -0700 (PDT)
+From: wefu@redhat.com
+To: jszhang@kernel.org,
+	guoren@kernel.org,
+	conor@kernel.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	jic23@kernel.org,
+	lars@metafoo.de,
+	andriy.shevchenko@linux.intel.com,
+	nuno.sa@analog.com,
+	marcelo.schmitt@analog.com,
+	bigunclemax@gmail.com,
+	marius.cristea@microchip.com,
+	fr0st61te@gmail.com,
+	okan.sahin@analog.com,
+	marcus.folkesson@gmail.com,
+	schnelle@linux.ibm.com,
+	lee@kernel.org,
+	mike.looijmans@topic.nl
+Cc: linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	Wei Fu <wefu@redhat.com>
+Subject: [PATCH 0/3] iio: adc: add ADC driver for XuanTie TH1520 SoC
+Date: Sat, 30 Mar 2024 04:01:23 +0800
+Message-ID: <20240329200241.4122000-1-wefu@redhat.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240329044459.3990638-1-debug@rivosinc.com> <20240329044459.3990638-28-debug@rivosinc.com>
- <4b38393a-f69d-4a77-a896-b6cd42c7edcf@collabora.com>
-In-Reply-To: <4b38393a-f69d-4a77-a896-b6cd42c7edcf@collabora.com>
-From: Deepak Gupta <debug@rivosinc.com>
-Date: Fri, 29 Mar 2024 13:02:03 -0700
-Message-ID: <CAKC1njQ_RU=uHhrna=MFVdjAMjjQNqZWnkjPoJvO7CxtPMeNuQ@mail.gmail.com>
-Subject: Re: [PATCH v2 27/27] kselftest/riscv: kselftest for user mode cfi
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: paul.walmsley@sifive.com, rick.p.edgecombe@intel.com, broonie@kernel.org, 
-	Szabolcs.Nagy@arm.com, kito.cheng@sifive.com, keescook@chromium.org, 
-	ajones@ventanamicro.com, conor.dooley@microchip.com, cleger@rivosinc.com, 
-	atishp@atishpatra.org, alex@ghiti.fr, bjorn@rivosinc.com, 
-	alexghiti@rivosinc.com, samuel.holland@sifive.com, palmer@sifive.com, 
-	conor@kernel.org, linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mm@kvack.org, 
-	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org, corbet@lwn.net, 
-	tech-j-ext@lists.risc-v.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, oleg@redhat.com, 
-	akpm@linux-foundation.org, arnd@arndb.de, ebiederm@xmission.com, 
-	Liam.Howlett@oracle.com, vbabka@suse.cz, lstoakes@gmail.com, shuah@kernel.org, 
-	brauner@kernel.org, andy.chiu@sifive.com, jerry.shih@sifive.com, 
-	hankuan.chen@sifive.com, greentime.hu@sifive.com, evan@rivosinc.com, 
-	xiao.w.wang@intel.com, charlie@rivosinc.com, apatel@ventanamicro.com, 
-	mchitale@ventanamicro.com, dbarboza@ventanamicro.com, sameo@rivosinc.com, 
-	shikemeng@huaweicloud.com, willy@infradead.org, vincent.chen@sifive.com, 
-	guoren@kernel.org, samitolvanen@google.com, songshuaishuai@tinylab.org, 
-	gerg@kernel.org, heiko@sntech.de, bhe@redhat.com, 
-	jeeheng.sia@starfivetech.com, cyy@cyyself.name, maskray@google.com, 
-	ancientmodern4@gmail.com, mathis.salmen@matsal.de, cuiyunhui@bytedance.com, 
-	bgray@linux.ibm.com, mpe@ellerman.id.au, baruch@tkos.co.il, alx@kernel.org, 
-	david@redhat.com, catalin.marinas@arm.com, revest@chromium.org, 
-	josh@joshtriplett.org, shr@devkernel.io, deller@gmx.de, omosnace@redhat.com, 
-	ojeda@kernel.org, jhubbard@nvidia.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 29, 2024 at 12:50=E2=80=AFPM Muhammad Usama Anjum
-<usama.anjum@collabora.com> wrote:
->
-> On 3/29/24 9:44 AM, Deepak Gupta wrote:
-> > Adds kselftest for RISC-V control flow integrity implementation for use=
-r
-> > mode. There is not a lot going on in kernel for enabling landing pad fo=
-r
-> > user mode. Thus kselftest simply enables landing pad for the binary and
-> > a signal handler is registered for SIGSEGV. Any control flow violation =
-are
-> > reported as SIGSEGV with si_code =3D SEGV_CPERR. Test will fail on reci=
-eving
-> > any SEGV_CPERR. Shadow stack part has more changes in kernel and thus t=
-here
-> > are separate tests for that
-> >       - enable and disable
-> >       - Exercise `map_shadow_stack` syscall
-> >       - `fork` test to make sure COW works for shadow stack pages
-> >       - gup tests
-> >         As of today kernel uses FOLL_FORCE when access happens to memor=
-y via
-> >         /proc/<pid>/mem. Not breaking that for shadow stack
-> >       - signal test. Make sure signal delivery results in token creatio=
-n on
-> >       shadow stack and consumes (and verifies) token on sigreturn
-> >     - shadow stack protection test. attempts to write using regular sto=
-re
-> >         instruction on shadow stack memory must result in access faults
-> >
-> > Signed-off-by: Deepak Gupta <debug@rivosinc.com>
-> > ---
-> >  tools/testing/selftests/riscv/Makefile        |   2 +-
-> >  tools/testing/selftests/riscv/cfi/Makefile    |  10 +
-> >  .../testing/selftests/riscv/cfi/cfi_rv_test.h |  85 ++++
-> >  .../selftests/riscv/cfi/riscv_cfi_test.c      |  91 +++++
-> >  .../testing/selftests/riscv/cfi/shadowstack.c | 376 ++++++++++++++++++
-> >  .../testing/selftests/riscv/cfi/shadowstack.h |  39 ++
-> Please add generated binaries in the .gitignore files.
+From: Wei Fu <wefu@redhat.com>
 
-hmm...
-I don't see binary as part of the patch. Which file are you referring
-to here being binary?
+This patchset adds initial support for XuanTie TH1520 ADC driver.
+This is modified from XuanTie TH1520 Linux_SDK_V1.4.2(linux v5.10.113)
+The original author is Fugang Duan <duanfugang.dfg@linux.alibaba.com>
 
->
+Wei Fu (3):
+  drivers/iio/adc: Add XuanTie TH1520 ADC driver
+  riscv: dts: thead: Add XuanTie TH1520 ADC device node
+  dt-bindings: adc: Document XuanTie TH1520 ADC
+
+ .../bindings/iio/adc/thead,th1520.yaml        |  52 ++
+ arch/riscv/boot/dts/thead/th1520.dtsi         |  10 +
+ drivers/iio/adc/Kconfig                       |  13 +
+ drivers/iio/adc/Makefile                      |   1 +
+ drivers/iio/adc/xuantie-th1520-adc.c          | 572 ++++++++++++++++++
+ drivers/iio/adc/xuantie-th1520-adc.h          | 193 ++++++
+ 6 files changed, 841 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/thead,th1520.yaml
+ create mode 100644 drivers/iio/adc/xuantie-th1520-adc.c
+ create mode 100644 drivers/iio/adc/xuantie-th1520-adc.h
+
+-- 
+2.44.0
+
