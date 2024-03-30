@@ -1,90 +1,84 @@
 Received: from a.mx.secunet.com (a.mx.secunet.com [62.96.220.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7325214EC57;
-	Sun, 31 Mar 2024 16:27:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA7B757FB;
+	Sun, 31 Mar 2024 16:27:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=62.96.220.36
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711902463; cv=fail; b=SiFbLfUuVwhhkK9eQ2Zn2dfAsOOLNZOndaOzJHxAuFpq/txKyFGJFqBnmvc/0+k39MppgEJbr9GkdblkopaH55vHZxOQ47uRCTAmioFsrkvr5nuyZT3rMxAv4t6oX924iqLSSfdFx91htNf2/p+grEjEfpAIs97vaAeqJ+piZcQ=
+	t=1711902465; cv=fail; b=qAxd4YWghS+7NS6tb367vx6XEevnE4MI2Bp5Bs4XBXlI99n3UDc01T/3Wc+FPmamN2TJNjXYq+5zYsGXiIt3LLM1uNqjz0Bo2QyfKQM/BFa+kbt+ilv8cuihCYIdir/o8wAHUHmaULCTmBntBSrqr1RiI3g1wFY2UDPkdSjKFlQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711902463; c=relaxed/simple;
-	bh=g4lYfwETIOu+M8/pMzPJsYcFQwPd+aO++vxQ/K6ghTw=;
+	s=arc-20240116; t=1711902465; c=relaxed/simple;
+	bh=c8N08nzajbS7Tgl5ZlzhtT3eqkrPtdhcztfed5kdWJU=;
 	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ByDAFv2jlRWE73eW7nZkH53/OEFb0aihFImML6Yr2KPXUmHrG8YSRBZKAuzH4KYNDt8/KTrlbC1O0ZFcdBvDG8HCQd0GZzV8GZvpzdHniubUrDKpwfQt/5ndDdVcaBh0x61pWtWxi4oOnUpxFrbAlJvOwXD3IO52OFL36okaH8M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=shingroup.cn; spf=fail smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=114.132.65.219; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=fail smtp.client-ip=62.96.220.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=shingroup.cn
+	 Content-Type:Content-Disposition:In-Reply-To; b=fqc3c/Hwt59hNIvr05BBLhoaNqW2oUVOyVP0asc2yb6I90uUaDo7OIslYlOftHvIY389JbOBtbUvHehD9+DRBKWOCR2vCtdLMGzjiuV/k+cpKVzciA+UoZjSq4IhDqQ9xq/I71kMBTM7r/OgIZ/9RTcQmEkwecI5T5lhSO/+5DQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=fail smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.170; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=fail smtp.client-ip=62.96.220.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=somainline.org
 Received: from localhost (localhost [127.0.0.1])
-	by a.mx.secunet.com (Postfix) with ESMTP id C9842208C1;
-	Sun, 31 Mar 2024 18:27:37 +0200 (CEST)
+	by a.mx.secunet.com (Postfix) with ESMTP id 9E1E4208B5;
+	Sun, 31 Mar 2024 18:27:38 +0200 (CEST)
 X-Virus-Scanned: by secunet
 Received: from a.mx.secunet.com ([127.0.0.1])
 	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id LMUQsmKzwcG9; Sun, 31 Mar 2024 18:27:31 +0200 (CEST)
+	with ESMTP id 0ur-zwHDFpd9; Sun, 31 Mar 2024 18:27:37 +0200 (CEST)
 Received: from mailout2.secunet.com (mailout2.secunet.com [62.96.220.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by a.mx.secunet.com (Postfix) with ESMTPS id 9C293208C2;
-	Sun, 31 Mar 2024 18:27:30 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 9C293208C2
+	by a.mx.secunet.com (Postfix) with ESMTPS id 0D1E4208C5;
+	Sun, 31 Mar 2024 18:27:35 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 0D1E4208C5
 Received: from cas-essen-01.secunet.de (unknown [10.53.40.201])
-	by mailout2.secunet.com (Postfix) with ESMTP id 8F4C9800051;
-	Sun, 31 Mar 2024 18:27:30 +0200 (CEST)
+	by mailout2.secunet.com (Postfix) with ESMTP id F34E5800051;
+	Sun, 31 Mar 2024 18:27:34 +0200 (CEST)
 Received: from mbx-essen-01.secunet.de (10.53.40.197) by
  cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Sun, 31 Mar 2024 18:27:30 +0200
+ 15.1.2507.35; Sun, 31 Mar 2024 18:27:34 +0200
 Received: from Pickup by mbx-essen-01.secunet.de with Microsoft SMTP Server id
- 15.1.2507.17; Sun, 31 Mar 2024 16:23:44 +0000
-X-sender: <netdev+bounces-83494-peter.schumann=secunet.com@vger.kernel.org>
-X-Receiver: <peter.schumann@secunet.com>
- ORCPT=rfc822;peter.schumann@secunet.com NOTIFY=NEVER;
- X-ExtendedProps=BQBYABcASAAAAJ05ab4WgQhHsqdZ7WUjHylDTj1TY2h1bWFubiBQZXRlcixPVT1Vc2VycyxPVT1NaWdyYXRpb24sREM9c2VjdW5ldCxEQz1kZQUAbAACAAAFAAwAAgAADwA2AAAATWljcm9zb2Z0LkV4Y2hhbmdlLlRyYW5zcG9ydC5NYWlsUmVjaXBpZW50LkRpc3BsYXlOYW1lDwAPAAAAU2NodW1hbm4sIFBldGVyBQA8AAIAAAUAHQAPAAwAAABtYngtZXNzZW4tMDEFAA4AEQAuyVP5XtO9RYbNJlr9VbVbBQALABcAvgAAAEOSGd+Q7QVIkVZ3ffGxE8RDTj1EQjQsQ049RGF0YWJhc2VzLENOPUV4Y2hhbmdlIEFkbWluaXN0cmF0aXZlIEdyb3VwIChGWURJQk9IRjIzU1BETFQpLENOPUFkbWluaXN0cmF0aXZlIEdyb3VwcyxDTj1zZWN1bmV0LENOPU1pY3Jvc29mdCBFeGNoYW5nZSxDTj1TZXJ2aWNlcyxDTj1Db25maWd1cmF0aW9uLERDPXNlY3VuZXQsREM9ZGUFABIADwBgAAAAL289c2VjdW5ldC9vdT1FeGNoYW5nZSBBZG1pbmlzdHJhdGl2ZSBHcm91cCAoRllESUJPSEYyM1NQRExUKS9jbj1SZWNpcGllbnRzL2NuPVBldGVyIFNjaHVtYW5uNWU3BQBHAAIAAAUARgAHAAMAAAAFAEMAAgAABQAWAAIAAAUAagAJAAEAAAAAAAAABQAUABEAnTlpvhaBCEeyp1ntZSMfKQUAFQAWAAIAAAAPADUAAABNaWNyb3NvZnQuRXhjaGFuZ2UuVHJhbnNwb3J0LkRpcmVjdG9yeURhdGEuSXNSZXNvdXJjZQIAAAUAIwACAAEFACIADwAxAAAAQXV0b1Jlc3BvbnNlU3VwcHJlc3M6IDANClRyYW5zbWl0SGlzdG9yeTogRmFsc
-	2UNCg8ALwAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuRXhwYW5zaW9uR3JvdXBUeXBlDwAVAAAATWVtYmVyc0dyb3VwRXhwYW5zaW9uBQAmAAIAAQ==
+ 15.1.2507.17; Sun, 31 Mar 2024 16:23:48 +0000
+X-sender: <linux-kernel+bounces-125674-steffen.klassert=secunet.com@vger.kernel.org>
+X-Receiver: <steffen.klassert@secunet.com>
+ ORCPT=rfc822;steffen.klassert@secunet.com NOTIFY=NEVER;
+ X-ExtendedProps=BQAVABYAAgAAAAUAFAARAPDFCS25BAlDktII2g02frgPADUAAABNaWNyb3NvZnQuRXhjaGFuZ2UuVHJhbnNwb3J0LkRpcmVjdG9yeURhdGEuSXNSZXNvdXJjZQIAAAUAagAJAAEAAAAAAAAABQAWAAIAAAUAQwACAAAFAEYABwADAAAABQBHAAIAAAUAEgAPAGIAAAAvbz1zZWN1bmV0L291PUV4Y2hhbmdlIEFkbWluaXN0cmF0aXZlIEdyb3VwIChGWURJQk9IRjIzU1BETFQpL2NuPVJlY2lwaWVudHMvY249U3RlZmZlbiBLbGFzc2VydDY4YwUACwAXAL4AAACheZxkHSGBRqAcAp3ukbifQ049REI2LENOPURhdGFiYXNlcyxDTj1FeGNoYW5nZSBBZG1pbmlzdHJhdGl2ZSBHcm91cCAoRllESUJPSEYyM1NQRExUKSxDTj1BZG1pbmlzdHJhdGl2ZSBHcm91cHMsQ049c2VjdW5ldCxDTj1NaWNyb3NvZnQgRXhjaGFuZ2UsQ049U2VydmljZXMsQ049Q29uZmlndXJhdGlvbixEQz1zZWN1bmV0LERDPWRlBQAOABEABiAS9uuMOkqzwmEZDvWNNQUAHQAPAAwAAABtYngtZXNzZW4tMDIFADwAAgAADwA2AAAATWljcm9zb2Z0LkV4Y2hhbmdlLlRyYW5zcG9ydC5NYWlsUmVjaXBpZW50LkRpc3BsYXlOYW1lDwARAAAAS2xhc3NlcnQsIFN0ZWZmZW4FAAwAAgAABQBsAAIAAAUAWAAXAEoAAADwxQktuQQJQ5LSCNoNNn64Q049S2xhc3NlcnQgU3RlZmZlbixPVT1Vc2VycyxPVT1NaWdyYXRpb24sREM9c2VjdW5ldCxEQz1kZQUAJgACAAEFACIADwAxAAAAQXV0b1Jlc3BvbnNlU3VwcHJlc3M6IDANClRyYW5zbWl0SGlzdG9ye
+	TogRmFsc2UNCg8ALwAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuRXhwYW5zaW9uR3JvdXBUeXBlDwAVAAAATWVtYmVyc0dyb3VwRXhwYW5zaW9uBQAjAAIAAQ==
 X-CreatedBy: MSExchange15
-X-HeloDomain: a.mx.secunet.com
-X-ExtendedProps: BQBjAAoAFZ7p8x1Q3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5Pcmdhbml6YXRpb25TY29wZREAAAAAAAAAAAAAAAAAAAAAAAUASQACAAEFAGIACgAqAAAAk4oAAAUABAAUIAEAAAAaAAAAcGV0ZXIuc2NodW1hbm5Ac2VjdW5ldC5jb20FAAYAAgABDwAqAAAATWljcm9zb2Z0LkV4Y2hhbmdlLlRyYW5zcG9ydC5SZXN1Ym1pdENvdW50BwABAAAADwAJAAAAQ0lBdWRpdGVkAgABBQACAAcAAQAAAAUAAwAHAAAAAAAFAAUAAgABBQBkAA8AAwAAAEh1YgUAKQACAAE=
+X-HeloDomain: b.mx.secunet.com
+X-ExtendedProps: BQBjAAoAxdLp8x1Q3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5Pcmdhbml6YXRpb25TY29wZREAAAAAAAAAAAAAAAAAAAAAAAUASQACAAEFAGIACgBqAAAAmIoAAAUABAAUIAEAAAAcAAAAc3RlZmZlbi5rbGFzc2VydEBzZWN1bmV0LmNvbQUABgACAAEFACkAAgABDwAJAAAAQ0lBdWRpdGVkAgABBQACAAcAAQAAAAUAAwAHAAAAAAAFAAUAAgABBQBkAA8AAwAAAEh1Yg==
 X-Source: SMTP:Default MBX-DRESDEN-01
-X-SourceIPAddress: 62.96.220.36
-X-EndOfInjectedXHeaders: 14315
+X-SourceIPAddress: 62.96.220.37
+X-EndOfInjectedXHeaders: 34865
 X-Virus-Scanned: by secunet
-Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=147.75.80.249; helo=am.mirrors.kernel.org; envelope-from=netdev+bounces-83494-peter.schumann=secunet.com@vger.kernel.org; receiver=peter.schumann@secunet.com 
-DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com C43A3208B4
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.65.219
+Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=147.75.80.249; helo=am.mirrors.kernel.org; envelope-from=linux-kernel+bounces-125674-steffen.klassert=secunet.com@vger.kernel.org; receiver=steffen.klassert@secunet.com 
+DKIM-Filter: OpenDKIM Filter v2.11.0 b.mx.secunet.com C40402025D
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.170
 ARC-Seal: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711775345; cv=none; b=gfLWY1ioFi9jl1ZBFjmxmFW2tHmdP96al/rViDheOnyYsGPNiY/6rojsa6KuCViu6ospo8JqIPmrQ5kYhXxI4fWTd13oBUM7loEJ816ctuoV5AIOJRDqdy8LJMFGF588bEGNcNoJZnlMJ+26z+gcXZ2kaQlCf0QR+U0nKFsVYlw=
+	t=1711795520; cv=none; b=WcugkkU6tb5csh4PX9OZdgHVsr1P4062beHTLdN5WXB4kD/XBuDzqhxqy0iPmBbIFbPCyI6lcPyITUvT50HGxQDPT1t4m9LzKkIuyIeqyPbVQRVtKvjEJ/H0b/0feN0wwD/W+lvqG0yLI98RVsDtld8hdF0n9V1Z7vVYBVdTfDY=
 ARC-Message-Signature: i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711775345; c=relaxed/simple;
-	bh=nYsJpAvl6D6Ldufd73Rjy7YF1XYSzElH1fykgREgPxY=;
+	s=arc-20240116; t=1711795520; c=relaxed/simple;
+	bh=c8N08nzajbS7Tgl5ZlzhtT3eqkrPtdhcztfed5kdWJU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nPDDajRC5sef6WYcCenUzFrJabkj3nFiAaNM8jxBguQE+fYD0jUXLYNwIYYdx/DfR8ex7tUilcegtdOsom4YdWhROAmwHDAxg4AfPonb2M1mMwD3xYUyVNldguOl29V8JvaRRyAAWjRH+cUhqKQq6qdlYHWWn1MFfLqI2qghuRo=
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=114.132.65.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtpsz13t1711775229tdi4p2
-X-QQ-Originating-IP: RfTYRleHqifmaUL5vg3HHBAADHtyt3J2efZxDgCsTa0=
-X-QQ-SSF: 01400000000000704000000A0000000
-X-QQ-FEAT: OtIeQkg1QQHVkELNGhnn3Ao/OxN3u837g2WY2miXs+dKwNICeHodGDXYI+XIN
-	MLiksvoY6OK484p/H1Pd7HcbM0rICeev22amIC6/BI2BPXdj7hZR/NjRgIzO0ujc7AJYyuh
-	hSs4kN6XesHATJzk7YtHOv0oscVKSJDG1YcCID61KeNwB//v/SP6Vco5Zi0zVzK2CryiHy7
-	MDlcbxtiVcvQbWgHR9uJniyBUgkXuWUpSRm9PGge+rsWbj+CoXH7KA5p92J+1tMYPfc3pMS
-	a2+D1HW1CQDyFXgH/iGbdQU2wmJ3Udzd7Q8BgYnuoVkISFF2Z3cH4G9BqZDzzOAp62v8M7U
-	2sZsZTz6rWN4NWIO+LXnMPEd2Ftx/MDN8OxPXGUXp3ZrWXMIP1dg4Nut1Jfsg==
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 10889329762490604258
-Date: Sat, 30 Mar 2024 13:07:06 +0800
-From: Dawei Li <dawei.li@shingroup.cn>
-To: Eric Dumazet <edumazet@google.com>
-CC: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<ioana.ciornei@nxp.com>, <wintera@linux.ibm.com>, <twinkler@linux.ibm.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-s390@vger.kernel.org>
-Subject: Re: [PATCH net-next 1/2] net/iucv: Avoid explicit cpumask var
- allocation on stack
-Message-ID: <4E49057A4198779C+Zged+hXhxE4GksiL@centos8>
-References: <20240329105610.922675-1-dawei.li@shingroup.cn>
- <20240329105610.922675-2-dawei.li@shingroup.cn>
- <CANn89iJzuw8_ti4P4tJ_A3Fd0QCjHTBjasbm_J3N8up=gK8Aow@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=NK4Nroftp0nAZ1N8etIzlc+Bzwmo2WUAU5ePSJ34UYbs2HxcXa8TBGYkys7N96wg9sPeBxdUseOW2a5YYxTlqHbISoTl1o5AjDVmx+uhWUX93252zAd53PUO7/eiKPka0k8bi/08qkV5GS71Fw8n6i6MUV9KV4l0YGr9kg7UvL0=
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
+Date: Sat, 30 Mar 2024 11:27:32 +0100
+From: Marijn Suijten <marijn.suijten@somainline.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: Sumit Semwal <sumit.semwal@linaro.org>, Caleb Connolly
+	<caleb.connolly@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, "Maarten
+ Lankhorst" <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, <dri-devel@lists.freedesktop.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-msm@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>, "Caleb
+ Connolly" <caleb@connolly.tech>
+Subject: Re: [PATCH 3/3] drm: panel: Add LG sw43408 panel driver
+Message-ID: <554zkisebym7gbbom3657ws7kqvyidggfmcvetjm6vrnwts3gl@l53hejt72b5q>
+References: <20240330-lg-sw43408-panel-v1-0-f5580fc9f2da@linaro.org>
+ <20240330-lg-sw43408-panel-v1-3-f5580fc9f2da@linaro.org>
 Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -92,78 +86,454 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CANn89iJzuw8_ti4P4tJ_A3Fd0QCjHTBjasbm_J3N8up=gK8Aow@mail.gmail.com>
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
+In-Reply-To: <20240330-lg-sw43408-panel-v1-3-f5580fc9f2da@linaro.org>
 X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
-Message-ID: <20240330050706.s_RIPrZB7UccQyc0yBgBPe4uM-ExUzcK_5K6tv_DzJI@z>
+Message-ID: <20240330102732.PaVuLl840f912jrOjHsoWDZ6bV_za03owxx-Wq2x6aM@z>
 
-Hi Eric,
+On 2024-03-30 05:59:30, Dmitry Baryshkov wrote:
+> From: Sumit Semwal <sumit.semwal@linaro.org>
+> 
+> LG SW43408 is 1080x2160, 4-lane MIPI-DSI panel, used in some Pixel3
+> phones.
+> 
+> Whatever init sequence we have for this panel isn't capable of
+> initialising it completely, toggling the reset gpio ever causes the
+> panel to die. Until this is resolved we avoid resetting the panel. The
 
-On Fri, Mar 29, 2024 at 02:21:28PM +0100, Eric Dumazet wrote:
-> On Fri, Mar 29, 2024 at 11:57=E2=80=AFAM Dawei Li <dawei.li@shingroup.cn>=
- wrote:
-> >
-> > For CONFIG_CPUMASK_OFFSTACK=3Dy kernel, explicit allocation of cpumask
-> > variable on stack is not recommended since it can cause potential stack
-> > overflow.
-> >
-> > Instead, kernel code should always use *cpumask_var API(s) to allocate
-> > cpumask var in config-neutral way, leaving allocation strategy to
-> > CONFIG_CPUMASK_OFFSTACK.
-> >
-> > Use *cpumask_var API(s) to address it.
-> >
-> > Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
-> > ---
-> >  net/iucv/iucv.c | 37 ++++++++++++++++++++++++++-----------
-> >  1 file changed, 26 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/net/iucv/iucv.c b/net/iucv/iucv.c
-> > index a4ab615ca3e3..b51f46ec32f9 100644
-> > --- a/net/iucv/iucv.c
-> > +++ b/net/iucv/iucv.c
-> > @@ -520,14 +520,19 @@ static void iucv_setmask_mp(void)
-> >   */
-> >  static void iucv_setmask_up(void)
-> >  {
-> > -       cpumask_t cpumask;
-> > +       cpumask_var_t cpumask;
-> >         int cpu;
-> >
-> > +       if (!alloc_cpumask_var(&cpumask, GFP_KERNEL))
-> > +               return;
->=20
-> This can not be right. iucv_setmask_up() is not supposed to fail.
->=20
-> Since iucv_setmask_up() is only called with iucv_register_mutex held,
-> you could simply add a 'static' for @cpumask variable.
+Are you sure it is avoided?  This patch seems to be toggling reset_gpio in
+sw43408_prepare()?
 
-Correct, iucv_register_mutex is a global lock and can serialize access
-on static cpumask var.
+> disable/unprepare functions only put the panel to sleep mode and
+> disable the backlight.
+> 
+> Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+> [vinod: Add DSC support]
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> [caleb: cleanup and support turning off the panel]
+> Signed-off-by: Caleb Connolly <caleb@connolly.tech>
+> [DB: partially rewrote the driver and fixed DSC programming]
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>  MAINTAINERS                              |   8 +
+>  drivers/gpu/drm/panel/Kconfig            |  11 ++
+>  drivers/gpu/drm/panel/Makefile           |   1 +
+>  drivers/gpu/drm/panel/panel-lg-sw43408.c | 322 +++++++++++++++++++++++++++++++
+>  4 files changed, 342 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 4b511a55101c..f4cf7ee97376 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6755,6 +6755,14 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/display/panel/jadard,jd9365da-h3.yaml
+>  F:	drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c
+>  
+> +DRM DRIVER FOR LG SW43408 PANELS
+> +M:	Sumit Semwal <sumit.semwal@linaro.org>
+> +M:	Caleb Connolly <caleb.connolly@linaro.org>
+> +S:	Maintained
+> +T:	git git://anongit.freedesktop.org/drm/drm-misc
+> +F:	Documentation/devicetree/bindings/display/panel/lg,sw43408.yaml
+> +F:	drivers/gpu/drm/panel/panel-lg-sw43408.c
+> +
+>  DRM DRIVER FOR LOGICVC DISPLAY CONTROLLER
+>  M:	Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+>  S:	Supported
+> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> index d037b3b8b999..f94c702735cb 100644
+> --- a/drivers/gpu/drm/panel/Kconfig
+> +++ b/drivers/gpu/drm/panel/Kconfig
+> @@ -335,6 +335,17 @@ config DRM_PANEL_LG_LG4573
+>  	  Say Y here if you want to enable support for LG4573 RGB panel.
+>  	  To compile this driver as a module, choose M here.
+>  
+> +config DRM_PANEL_LG_SW43408
+> +	tristate "LG SW43408 panel"
+> +	depends on OF
+> +	depends on DRM_MIPI_DSI
+> +	depends on BACKLIGHT_CLASS_DEVICE
+> +	help
+> +	  Say Y here if you want to enable support for LG sw43408 panel.
+> +	  The panel has a 1080x2160 resolution and uses
+> +	  24 bit RGB per pixel. It provides a MIPI DSI interface to
+> +	  the host and has a built-in LED backlight.
+> +
+>  config DRM_PANEL_MAGNACHIP_D53E6EA8966
+>  	tristate "Magnachip D53E6EA8966 DSI panel"
+>  	depends on OF && SPI
+> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+> index f156d7fa0bcc..a75687d13caf 100644
+> --- a/drivers/gpu/drm/panel/Makefile
+> +++ b/drivers/gpu/drm/panel/Makefile
+> @@ -34,6 +34,7 @@ obj-$(CONFIG_DRM_PANEL_LEADTEK_LTK050H3146W) += panel-leadtek-ltk050h3146w.o
+>  obj-$(CONFIG_DRM_PANEL_LEADTEK_LTK500HD1829) += panel-leadtek-ltk500hd1829.o
+>  obj-$(CONFIG_DRM_PANEL_LG_LB035Q02) += panel-lg-lb035q02.o
+>  obj-$(CONFIG_DRM_PANEL_LG_LG4573) += panel-lg-lg4573.o
+> +obj-$(CONFIG_DRM_PANEL_LG_SW43408) += panel-lg-sw43408.o
+>  obj-$(CONFIG_DRM_PANEL_MAGNACHIP_D53E6EA8966) += panel-magnachip-d53e6ea8966.o
+>  obj-$(CONFIG_DRM_PANEL_NEC_NL8048HL11) += panel-nec-nl8048hl11.o
+>  obj-$(CONFIG_DRM_PANEL_NEWVISION_NV3051D) += panel-newvision-nv3051d.o
+> diff --git a/drivers/gpu/drm/panel/panel-lg-sw43408.c b/drivers/gpu/drm/panel/panel-lg-sw43408.c
+> new file mode 100644
+> index 000000000000..365d25e14d54
+> --- /dev/null
+> +++ b/drivers/gpu/drm/panel/panel-lg-sw43408.c
+> @@ -0,0 +1,322 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (C) 2019-2024 Linaro Ltd
+> + * Author: Sumit Semwal <sumit.semwal@linaro.org>
+> + *	 Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> + */
+> +
+> +#include <linux/backlight.h>
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +#include <video/mipi_display.h>
+> +
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_panel.h>
+> +#include <drm/drm_probe_helper.h>
+> +#include <drm/display/drm_dsc.h>
+> +#include <drm/display/drm_dsc_helper.h>
+> +
+> +#define NUM_SUPPLIES 2
+> +
+> +struct sw43408_panel {
+> +	struct drm_panel base;
+> +	struct mipi_dsi_device *link;
+> +
+> +	const struct drm_display_mode *mode;
+> +
+> +	struct regulator_bulk_data supplies[NUM_SUPPLIES];
+> +
+> +	struct gpio_desc *reset_gpio;
+> +};
+> +
+> +static inline struct sw43408_panel *to_panel_info(struct drm_panel *panel)
+> +{
+> +	return container_of(panel, struct sw43408_panel, base);
+> +}
+> +
+> +static int sw43408_unprepare(struct drm_panel *panel)
+> +{
+> +	struct sw43408_panel *ctx = to_panel_info(panel);
+> +	int ret;
+> +
+> +	ret = mipi_dsi_dcs_set_display_off(ctx->link);
+> +	if (ret < 0)
+> +		dev_err(panel->dev, "set_display_off cmd failed ret = %d\n", ret);
+> +
+> +	ret = mipi_dsi_dcs_enter_sleep_mode(ctx->link);
+> +	if (ret < 0)
+> +		dev_err(panel->dev, "enter_sleep cmd failed ret = %d\n", ret);
+> +
+> +	msleep(100);
+> +
+> +	gpiod_set_value(ctx->reset_gpio, 1);
+> +
+> +	return regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
+> +}
+> +
+> +static int sw43408_program(struct drm_panel *panel)
+> +{
+> +	struct sw43408_panel *ctx = to_panel_info(panel);
+> +	struct drm_dsc_picture_parameter_set pps;
+> +	u8 dsc_en = 0x11;
 
-I will respin V2 as you suggested.
+Yeah, this is completely strange. Bit 0, 0x1, is to enable DSC which is
+normal. 0x10 however, which is bit 4, selects PPS table 2.  Do you ever set
+pps_identifier in struct drm_dsc_picture_parameter_set to 2?  Or is the table
+that you send below bogus and/or not used?  Maybe the Driver IC on the other
+end of the DSI link has a default PPS table with identifier 2 that works out of
+the box?
 
-Thanks,
+> +	mipi_dsi_dcs_write_seq(ctx->link, MIPI_DCS_SET_GAMMA_CURVE, 0x02);
+> +
+> +	mipi_dsi_dcs_set_tear_on(ctx->link, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
+> +
+> +	mipi_dsi_dcs_write_seq(ctx->link, 0x53, 0x0c, 0x30);
+> +	mipi_dsi_dcs_write_seq(ctx->link, 0x55, 0x00, 0x70, 0xdf, 0x00, 0x70, 0xdf);
+> +	mipi_dsi_dcs_write_seq(ctx->link, 0xf7, 0x01, 0x49, 0x0c);
+> +
+> +	mipi_dsi_dcs_exit_sleep_mode(ctx->link);
+> +
+> +	msleep(135);
+> +
+> +	mipi_dsi_compression_mode_raw(ctx->link, &dsc_en, 1);
 
-    Dawei
->=20
->=20
->=20
-> > +
-> >         /* Disable all cpu but the first in cpu_irq_cpumask. */
-> > -       cpumask_copy(&cpumask, &iucv_irq_cpumask);
-> > -       cpumask_clear_cpu(cpumask_first(&iucv_irq_cpumask), &cpumask);
-> > -       for_each_cpu(cpu, &cpumask)
-> > +       cpumask_copy(cpumask, &iucv_irq_cpumask);
-> > +       cpumask_clear_cpu(cpumask_first(&iucv_irq_cpumask), cpumask);
-> > +       for_each_cpu(cpu, cpumask)
-> >                 smp_call_function_single(cpu, iucv_block_cpu, NULL, 1);
-> > +
-> > +       free_cpumask_var(cpumask);
-> >  }
->=20
+Even though I think we should change this function to describe the known
+bit layout of command 0x7 per the VESA DSI spec, for now replace 1 with
+sizeof(dsc_en)?
+
+> +
+> +	mipi_dsi_dcs_write_seq(ctx->link, 0xb0, 0xac);
+> +	mipi_dsi_dcs_write_seq(ctx->link, 0xe5,
+> +			       0x00, 0x3a, 0x00, 0x3a, 0x00, 0x0e, 0x10);
+> +	mipi_dsi_dcs_write_seq(ctx->link, 0xb5,
+> +			       0x75, 0x60, 0x2d, 0x5d, 0x80, 0x00, 0x0a, 0x0b,
+> +			       0x00, 0x05, 0x0b, 0x00, 0x80, 0x0d, 0x0e, 0x40,
+> +			       0x00, 0x0c, 0x00, 0x16, 0x00, 0xb8, 0x00, 0x80,
+> +			       0x0d, 0x0e, 0x40, 0x00, 0x0c, 0x00, 0x16, 0x00,
+> +			       0xb8, 0x00, 0x81, 0x00, 0x03, 0x03, 0x03, 0x01,
+> +			       0x01);
+> +	msleep(85);
+> +	mipi_dsi_dcs_write_seq(ctx->link, 0xcd,
+> +			       0x00, 0x00, 0x00, 0x19, 0x19, 0x19, 0x19, 0x19,
+> +			       0x19, 0x19, 0x19, 0x19, 0x19, 0x19, 0x19, 0x19,
+> +			       0x16, 0x16);
+> +	mipi_dsi_dcs_write_seq(ctx->link, 0xcb, 0x80, 0x5c, 0x07, 0x03, 0x28);
+> +	mipi_dsi_dcs_write_seq(ctx->link, 0xc0, 0x02, 0x02, 0x0f);
+> +	mipi_dsi_dcs_write_seq(ctx->link, 0x55, 0x04, 0x61, 0xdb, 0x04, 0x70, 0xdb);
+> +	mipi_dsi_dcs_write_seq(ctx->link, 0xb0, 0xca);
+> +
+> +	mipi_dsi_dcs_set_display_on(ctx->link);
+
+Any specific reason to not have the (un)blanking sequence in the enable/disable
+callbacks and leaving display configuration in (un)prepare?
+
+> +	msleep(50);
+> +
+> +	ctx->link->mode_flags &= ~MIPI_DSI_MODE_LPM;
+> +
+> +	drm_dsc_pps_payload_pack(&pps, ctx->link->dsc);
+> +	mipi_dsi_picture_parameter_set(ctx->link, &pps);
+
+I'm always surprised why this is sent _after_ turning the display on (unblanking
+it).  Wouldn't that cause unnecessary corruption?
+
+> +
+> +	ctx->link->mode_flags |= MIPI_DSI_MODE_LPM;
+> +
+> +	return 0;
+> +}
+> +
+> +static int sw43408_prepare(struct drm_panel *panel)
+> +{
+> +	struct sw43408_panel *ctx = to_panel_info(panel);
+> +	int ret;
+> +
+> +	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	usleep_range(5000, 6000);
+> +
+> +	gpiod_set_value(ctx->reset_gpio, 0);
+> +	usleep_range(9000, 10000);
+> +	gpiod_set_value(ctx->reset_gpio, 1);
+> +	usleep_range(1000, 2000);
+> +	gpiod_set_value(ctx->reset_gpio, 0);
+> +	usleep_range(9000, 10000);
+> +
+> +	ret = sw43408_program(panel);
+> +	if (ret)
+> +		goto poweroff;
+> +
+> +	return 0;
+> +
+> +poweroff:
+> +	gpiod_set_value(ctx->reset_gpio, 1);
+> +	regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
+> +	return ret;
+> +}
+> +
+> +static int sw43408_get_modes(struct drm_panel *panel,
+> +			      struct drm_connector *connector)
+> +{
+> +	struct sw43408_panel *ctx = to_panel_info(panel);
+> +
+> +	return drm_connector_helper_get_modes_fixed(connector, ctx->mode);
+> +}
+> +
+> +static int sw43408_backlight_update_status(struct backlight_device *bl)
+> +{
+> +	struct mipi_dsi_device *dsi = bl_get_data(bl);
+> +	uint16_t brightness = backlight_get_brightness(bl);
+> +
+> +	return mipi_dsi_dcs_set_display_brightness_large(dsi, brightness);
+> +}
+> +
+> +const struct backlight_ops sw43408_backlight_ops = {
+> +	.update_status = sw43408_backlight_update_status,
+> +};
+> +
+> +static int sw43408_backlight_init(struct sw43408_panel *ctx)
+> +{
+> +	struct device *dev = &ctx->link->dev;
+> +	const struct backlight_properties props = {
+> +		.type = BACKLIGHT_PLATFORM,
+> +		.brightness = 255,
+> +		.max_brightness = 255,
+> +	};
+> +
+> +	ctx->base.backlight = devm_backlight_device_register(dev, dev_name(dev), dev,
+> +							ctx->link,
+> +							&sw43408_backlight_ops,
+> +							&props);
+> +
+> +	if (IS_ERR(ctx->base.backlight))
+> +		return dev_err_probe(dev, PTR_ERR(ctx->base.backlight),
+> +				     "Failed to create backlight\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct drm_panel_funcs sw43408_funcs = {
+> +	.unprepare = sw43408_unprepare,
+> +	.prepare = sw43408_prepare,
+> +	.get_modes = sw43408_get_modes,
+> +};
+> +
+> +static const struct drm_display_mode sw43408_default_mode = {
+> +	.clock = 152340,
+> +
+> +	.hdisplay = 1080,
+> +	.hsync_start = 1080 + 20,
+> +	.hsync_end = 1080 + 20 + 32,
+> +	.htotal = 1080 + 20 + 32 + 20,
+> +
+> +	.vdisplay = 2160,
+> +	.vsync_start = 2160 + 20,
+> +	.vsync_end = 2160 + 20 + 4,
+> +	.vtotal = 2160 + 20 + 4 + 20,
+> +
+> +	.width_mm = 62,
+> +	.height_mm = 124,
+> +
+> +	.type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
+> +};
+> +
+> +static const struct of_device_id sw43408_of_match[] = {
+> +	{ .compatible = "lg,sw43408", .data = &sw43408_default_mode },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, sw43408_of_match);
+> +
+> +static int sw43408_add(struct sw43408_panel *ctx)
+> +{
+> +	struct device *dev = &ctx->link->dev;
+> +	int ret;
+> +
+> +	ctx->supplies[0].supply = "vddi"; /* 1.88 V */
+> +	ctx->supplies[0].init_load_uA = 62000;
+> +	ctx->supplies[1].supply = "vpnl"; /* 3.0 V */
+> +	ctx->supplies[1].init_load_uA = 857000;
+> +
+> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
+> +				      ctx->supplies);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> +	if (IS_ERR(ctx->reset_gpio)) {
+> +		dev_err(dev, "cannot get reset gpio %ld\n",
+> +			      PTR_ERR(ctx->reset_gpio));
+> +		return PTR_ERR(ctx->reset_gpio);
+> +	}
+> +
+> +	ret = sw43408_backlight_init(ctx);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ctx->base.prepare_prev_first = true;
+> +
+> +	drm_panel_init(&ctx->base, dev, &sw43408_funcs, DRM_MODE_CONNECTOR_DSI);
+> +
+> +	drm_panel_add(&ctx->base);
+> +	return ret;
+> +}
+> +
+> +static int sw43408_probe(struct mipi_dsi_device *dsi)
+> +{
+> +	struct sw43408_panel *ctx;
+> +	struct drm_dsc_config *dsc;
+> +	int ret;
+> +
+> +	ctx = devm_kzalloc(&dsi->dev, sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx)
+> +		return -ENOMEM;
+> +
+> +	ctx->mode = of_device_get_match_data(&dsi->dev);
+> +	dsi->mode_flags = MIPI_DSI_MODE_LPM;
+> +	dsi->format = MIPI_DSI_FMT_RGB888;
+> +	dsi->lanes = 4;
+> +
+> +	ctx->link = dsi;
+> +	mipi_dsi_set_drvdata(dsi, ctx);
+> +
+> +	ret = sw43408_add(ctx);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* The panel is DSC panel only, set the dsc params */
+> +	dsc = devm_kzalloc(&dsi->dev, sizeof(*dsc), GFP_KERNEL);
+
+We've recently decided to store struct drm_dsc_config in struct sw43408_panel
+and save on an extra allocation.
+
+> +	if (!dsc)
+> +		return -ENOMEM;
+> +
+> +	dsc->dsc_version_major = 0x1;
+> +	dsc->dsc_version_minor = 0x1;
+> +
+> +	dsc->slice_height = 16;
+> +	dsc->slice_width = 540;
+> +	dsc->slice_count = 2;
+
+Maybe incorporate with a comment that slice_count * slice_width == the width of
+the mode?
+
+- Marijn
+
+> +	dsc->bits_per_component = 8;
+> +	dsc->bits_per_pixel = 8 << 4;
+> +	dsc->block_pred_enable = true;
+> +
+> +	dsi->dsc = dsc;
+> +
+> +	return mipi_dsi_attach(dsi);
+> +}
+> +
+> +static void sw43408_remove(struct mipi_dsi_device *dsi)
+> +{
+> +	struct sw43408_panel *ctx = mipi_dsi_get_drvdata(dsi);
+> +	int ret;
+> +
+> +	ret = sw43408_unprepare(&ctx->base);
+> +	if (ret < 0)
+> +		dev_err(&dsi->dev, "failed to unprepare panel: %d\n",
+> +			      ret);
+> +
+> +	ret = mipi_dsi_detach(dsi);
+> +	if (ret < 0)
+> +		dev_err(&dsi->dev, "failed to detach from DSI host: %d\n", ret);
+> +
+> +	drm_panel_remove(&ctx->base);
+> +}
+> +
+> +static struct mipi_dsi_driver sw43408_driver = {
+> +	.driver = {
+> +		.name = "panel-lg-sw43408",
+> +		.of_match_table = sw43408_of_match,
+> +	},
+> +	.probe = sw43408_probe,
+> +	.remove = sw43408_remove,
+> +};
+> +module_mipi_dsi_driver(sw43408_driver);
+> +
+> +MODULE_AUTHOR("Sumit Semwal <sumit.semwal@linaro.org>");
+> +MODULE_DESCRIPTION("LG SW436408 MIPI-DSI LED panel");
+> +MODULE_LICENSE("GPL");
+> 
+> -- 
+> 2.39.2
+> 
 
