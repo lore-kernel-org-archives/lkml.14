@@ -1,67 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25033BBC7
-	for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2024 21:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B3E43144;
+	Sat, 30 Mar 2024 21:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711833066; cv=none; b=P5Ge58vDGLPzQt+LmQWdqUQS8SV1fIgE5BlXjnkm0GmhfD5fKwvvasYnD2p4Iqr5QswBtFY83QCF5MZzgM1bdijVJT2fnZHCg2ikPixPA3a4lCePkse/wS3D+FMSj5ywVUJskdoxiLzP669yIBO3+gpZq8gw0Rlkc4qeyt99PWw=
+	t=1711833089; cv=none; b=Fc4WTDiN3fafyRFs4xubbxt2hTvFHTPjZbEo8aMhrIA67SjR200TI+09y7xLxICqzb9vXl2/ZX0WTtFXr6kGuGjj3HINgYSdEfLxPod6TgyHXyf/rlUvg0IDgvhvcPU8nHr14vzG+KXDMW9G6J1y25n4q5wnEZI4wiB8AbtqjDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711833066; c=relaxed/simple;
-	bh=rZCjSb/aqvGXzcCl3egT0ZAGXC2c6CWNxUC7glICW5o=;
+	s=arc-20240116; t=1711833089; c=relaxed/simple;
+	bh=CHcXrxf2ENpQddGykj9rk3TKmc0vJHsnIQfhoa/d1sw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b15kFg973B6B0AT6JdyQqjZifV029vxRRXiQuS2JxXHzC9gVvVWBZRRRF1NuyvTMfP12ZkRC4UQM3ofKFFqxIJYcuhK/186hvHdZkMhIuCvx8YvLgSoqzk7dbXVmbGHs76SNjs1OxfeV0E5qZ7WM8v+umhb0QeQ86KT53iLy39M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CEItG4nl; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=bDGMJgbw7uUTNcNvsRUJHkbGwVXrjcm3akhXq1A1xoQNkEifMCRhpiMmmub9EPrq13C8sxRMXBErgJmUM0GU0cBb/YBWPwpbxFyzuiH/h/wTXcvMaBA24NVXRdhh5PpfjDUCGCrsKkdWI7upcjSWjNPgz0Ch36q1dTsXZKzcFgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nYp7vNrP; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CEItG4nl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711833065; x=1743369065;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rZCjSb/aqvGXzcCl3egT0ZAGXC2c6CWNxUC7glICW5o=;
-  b=CEItG4nlwWAkUUSi3ytzNGID0V72pmv9/erv9xEx0BusA0L2ge9s1Uh2
-   dFtU6ee6Ginc2K8zyZynKhXP0lDRJ11OHndVuwYgwE+W65F2X9f0QB/ik
-   A3ZYZLtEmi76ToGVcxuGz0YM3aNjItwdIqE8lqwOvgZYJ/JOTMVh9F+AE
-   EwwA3G4uAL6d2p+LVMDsaGB4qCdI/uayD/naUxjmb5KhIviErswSidvjL
-   CKKfK983KNxB2ezS1dOdcj1Gq3AgSrAHhhhmcScLcOZoXkgVbN28tm18u
-   oiWNkxDRW2cVYigWgI5zRvhM3JlG1uxG5nObh7CkxFFO90vEHRA63jAYE
-   g==;
-X-CSE-ConnectionGUID: ZffOf7pMRVeynlBO9o3wiQ==
-X-CSE-MsgGUID: Zif/ZVJHQqG3vtOebAoFRQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11029"; a="6840529"
-X-IronPort-AV: E=Sophos;i="6.07,168,1708416000"; 
-   d="scan'208";a="6840529"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2024 14:11:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,168,1708416000"; 
-   d="scan'208";a="21806939"
-Received: from lkp-server01.sh.intel.com (HELO 3d808bfd2502) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 30 Mar 2024 14:11:00 -0700
-Received: from kbuild by 3d808bfd2502 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rqfyc-0000Pi-0y;
-	Sat, 30 Mar 2024 21:10:58 +0000
-Date: Sun, 31 Mar 2024 05:10:20 +0800
-From: kernel test robot <lkp@intel.com>
-To: Frederic Weisbecker <frederic@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nYp7vNrP"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-56c0bd07e7bso3198910a12.1;
+        Sat, 30 Mar 2024 14:11:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711833086; x=1712437886; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6FfCXTwbIMZ0/LT2fPdhGW3nMXxEswf6TerbPzBdQ6o=;
+        b=nYp7vNrP4H6zxpt+VWqWiLxFuhvnUn9PhikSF+Qd+wu/XbGaVHX+zgk5bAK2paJCSY
+         dOdYpNkm1AGS4d4Tpho22pJoWmOvKkkNJ5PXVoegiClRps/KLCCUok8FUJdMXDRT1zbb
+         nGQrMRIa0FETxYrGP9bDwXl83ukC1B+wCFduUhI/1eauVrH3GO/ggMZOoCrafy4o+M/7
+         REV38wFjl/6dBlMO8VgS6gDdl0071CQ4SclNRbbZtS+7plD2Gc8srVdXLBU16VXRUKpV
+         gk4FQ5689wtStLlKlsCA7TYk6g2zMKkyWMIj0b8qV/wMpGOD21rizhMCm/30pajQuh/r
+         H6oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711833086; x=1712437886;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6FfCXTwbIMZ0/LT2fPdhGW3nMXxEswf6TerbPzBdQ6o=;
+        b=SsP4hsVgfU+L7txdZ6IfDh/h4AGfKCJ67EXJ92vTdC74U0DlwicS2r+Ol5wC7X1oDc
+         r0qq/3HSSuxToUoqwMC0gbVHgW5qYIbfxMsoVQ4WyfRh+77cLCW0HpeoaJJIIwoHG+Cr
+         zkDCNjQIiOCg/+xJ5MMDECCAjfRIcRaXQNZWAKxxceyFelMBtexh+8mI/xQXeiDWBNgH
+         ohG1hruVb++72ckz2XGmtE4OdUr5QpTh1tVEQF5FvHTV1WYcLJqi3kCrO2GQO6/8OBVW
+         07pZ+xwl2xrVFuuPND7kJfDaUXz+z/HQOXeAUJr39IJ4BRCp7i/OnSLiQsFEIKRk1D5o
+         cNjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXnBrSOYtl/MJ1PE+Gp6dEqlXYvZ+pQ4g0fNTuOdWvHWI2P/o1emDoRT5a1PSoNCVHHTLKI7/4BTM85IQVAOeLeCG0R37cuOmu1nl1wwRQqkQ0dVUL63Rzu76YEwID/ekSEa4LICkuw0Y5k6ORSchQRcOs8iXGHXX+GSdMw1+G/iNrnss0w6X9QIdWGwuZ2mg==
+X-Gm-Message-State: AOJu0YxW7mTqLTZN2dMZLnw7G8df9ZtDhAqUzePPbK18LkJ8d45kSIPG
+	F5Bm8gHx7QRnNlOW7iMzgya9p1Q/vjgerVUVouDPVXsZVQy4lUU3
+X-Google-Smtp-Source: AGHT+IF9fQng7glW1xiinlWjLAuPQJtBuNkRL7PDVj0cI0LwYsHs5I0gGvhlMWzwySRIuCzhsGUoUA==
+X-Received: by 2002:a17:907:78d7:b0:a4e:5a23:24d with SMTP id kv23-20020a17090778d700b00a4e5a23024dmr470387ejc.38.1711833085563;
+        Sat, 30 Mar 2024 14:11:25 -0700 (PDT)
+Received: from gmail.com (84-236-113-97.pool.digikabel.hu. [84.236.113.97])
+        by smtp.gmail.com with ESMTPSA id xc4-20020a170907074400b00a4e5ab88803sm314414ejb.183.2024.03.30.14.11.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 30 Mar 2024 14:11:25 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Sat, 30 Mar 2024 22:11:23 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Erick Archer <erick.archer@outlook.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 2/4] task_work: Introduce task_work_cancel() again
-Message-ID: <202403310406.TPrIela8-lkp@intel.com>
-References: <20240329235812.18917-3-frederic@kernel.org>
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] perf/x86/amd/uncore: Use kcalloc*() instead of
+ kzalloc*()
+Message-ID: <Zgh/+xSyOil37H1F@gmail.com>
+References: <AS8PR02MB7237A07D73D6D15EBF72FD8D8B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,60 +82,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240329235812.18917-3-frederic@kernel.org>
-
-Hi Frederic,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on perf-tools-next/perf-tools-next]
-[also build test WARNING on tip/perf/core perf-tools/perf-tools linus/master acme/perf/core v6.9-rc1 next-20240328]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Frederic-Weisbecker/task_work-s-task_work_cancel-task_work_cancel_func/20240330-080207
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
-patch link:    https://lore.kernel.org/r/20240329235812.18917-3-frederic%40kernel.org
-patch subject: [PATCH 2/4] task_work: Introduce task_work_cancel() again
-config: nios2-randconfig-r071-20240330 (https://download.01.org/0day-ci/archive/20240331/202403310406.TPrIela8-lkp@intel.com/config)
-compiler: nios2-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240331/202403310406.TPrIela8-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403310406.TPrIela8-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> kernel/task_work.c:155: warning: Function parameter or struct member 'cb' not described in 'task_work_cancel'
->> kernel/task_work.c:155: warning: Excess function parameter 'func' description in 'task_work_cancel'
+In-Reply-To: <AS8PR02MB7237A07D73D6D15EBF72FD8D8B392@AS8PR02MB7237.eurprd02.prod.outlook.com>
 
 
-vim +155 kernel/task_work.c
+* Erick Archer <erick.archer@outlook.com> wrote:
 
-   143	
-   144	/**
-   145	 * task_work_cancel - cancel a pending work added by task_work_add()
-   146	 * @task: the task which should execute the work
-   147	 * @func: the work to remove if queued
-   148	 *
-   149	 * Remove a callback from a task's queue if queued.
-   150	 *
-   151	 * RETURNS:
-   152	 * True if the callback was queued and got cancelled, false otherwise.
-   153	 */
-   154	bool task_work_cancel(struct task_struct *task, struct callback_head *cb)
- > 155	{
-   156		struct callback_head *ret;
-   157	
-   158		ret = task_work_cancel_match(task, task_work_match, cb);
-   159	
-   160		return ret == cb;
-   161	}
-   162	
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
+> 
+> So, use the purpose specific kcalloc*() function instead of the argument
+> size * count in the kzalloc*() function.
+> 
+> [1] https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+> 
+> Link: https://github.com/KSPP/linux/issues/162
+> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+> ---
+> Changes in v2:
+> - Add the "Reviewed-by:" tag.
+> - Rebase against linux-next.
+> 
+> Previous versions:
+> v1 -> https://lore.kernel.org/linux-hardening/20240116125813.3754-1-erick.archer@gmx.com/
+> 
+> Hi everyone,
+> 
+> This patch seems to be lost. Gustavo reviewed it on January 16, 2024
+> but the patch has not been applied since.
+> 
+> Thanks,
+> Erick
+> ---
+>  arch/x86/events/amd/uncore.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+> index 4ccb8fa483e6..61c0a2114183 100644
+> --- a/arch/x86/events/amd/uncore.c
+> +++ b/arch/x86/events/amd/uncore.c
+> @@ -479,8 +479,8 @@ static int amd_uncore_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+>  				goto fail;
+>  
+>  			curr->cpu = cpu;
+> -			curr->events = kzalloc_node(sizeof(*curr->events) *
+> -						    pmu->num_counters,
+> +			curr->events = kcalloc_node(pmu->num_counters,
+> +						    sizeof(*curr->events),
+>  						    GFP_KERNEL, node);
+>  			if (!curr->events) {
+>  				kfree(curr);
+> @@ -928,7 +928,7 @@ int amd_uncore_umc_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+>  		uncore->num_pmus += group_num_pmus[gid];
+>  	}
+>  
+> -	uncore->pmus = kzalloc(sizeof(*uncore->pmus) * uncore->num_pmus,
+> +	uncore->pmus = kcalloc(uncore->num_pmus, sizeof(*uncore->pmus),
+>  			       GFP_KERNEL);
+>  	if (!uncore->pmus) {
+>  		uncore->num_pmus = 0;
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+This change is nonsense, kzalloc() is a perfectly usable interface, and 
+none of the arguments are user-controlled, so I don't see how there 
+could be a real overflow bug here.
+
+Thanks,
+
+	Ingo
