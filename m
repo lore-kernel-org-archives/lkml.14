@@ -1,60 +1,84 @@
-Received: from sender-of-o51.zoho.eu (sender-of-o51.zoho.eu [136.143.169.51])
+Received: from a.mx.secunet.com (a.mx.secunet.com [62.96.220.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F8B148FF5
-	for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2024 16:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D2C14901B
+	for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2024 16:02:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=62.96.220.36
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711900954; cv=pass; b=T9FamtZOJXTiAliY59sR5XIAOa5QNwaXlDWuu99P4JbxXBXrjYAj9H8qXypuMIhVpngBlLvP63xDQGoR2QQE4U2sNXzZiLD/iu3q92EsBadESxU4EyDs6XLn3rEodPFuCi7jSZO5/4ZBoQYHUbq4OqTi544k8Sh9g4OjzemNHoE=
+	t=1711900960; cv=fail; b=XW2Jm2ICSkaTsK1VbqquE3EAhrcn6bbEV6g6dSG1mZqH9LURpP/IOZ+Za5ceewQBSHXAoXg6lFJrNkDlD/ZmKm2Hp9/Db5HoneLqtEI4tzpk5uA8/jNkSbV06We+HhCbpXeumhJI2l5ztSWTlIY6g/smgXeJkJxIZ35vfO6DiC8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711900954; c=relaxed/simple;
-	bh=avuhYgLWVdEz3QPjIiNeZFxgxLHoyXJgRiOZcBkekdw=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jtPdSNpfA82MVn2HKdC/11tNo8r3jglt8FZmlKZZZqqjqolLaBi7tuIUdFvLK9P8mhBOjQ2WE50EPT2aj0YFfNMuJzy4H7oU5FwPe5Tc8TygQAezVXsuGMjebmMp7jnTyFCcpVCO55ETn+BLOXxSbgb3sy8u9JGyTIa14F49u+8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bursov.com; spf=pass smtp.mailfrom=bursov.com; dkim=pass (1024-bit key) header.d=bursov.com header.i=vitaly@bursov.com header.b=uchmRoTk; arc=pass smtp.client-ip=136.143.169.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bursov.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bursov.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bursov.com header.i=vitaly@bursov.com header.b="uchmRoTk"
-ARC-Seal: i=1; a=rsa-sha256; t=1711900922; cv=none; 
-	d=zohomail.eu; s=zohoarc; 
-	b=PsvDzgAZjqv/CGOdUo7+sNE76xXHYRqnRVS2yZF/m5tTlKa0ZDz1nEQl4ikI7hvfixnXO3zg13zcp+twDOgw1fpmpbjFhDpz3TcFjFQj/b7EDSfLzj6/Ed7lf7+MnfjRL8BcSWbbizkOrN9Okb5GbN/p7nlXIHVvrI8Xa0Ng7N0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1711900922; h=Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
-	bh=dFZ+Th39mFALLRRNFXdhDn/IaGd1DyCaJm+9g0YLcTE=; 
-	b=ATRz63owEmLA2j5An83ZBB8Ie2qE+YpTEJZ2rxuyN1RjLM/VIjtyIiSF3jBJIq8GDe49Rl2JKkw1AqAR8Q1asLfuEtIkXeZNdho94piVknOz2rOE2B4GOYMuGjurT6qgeiaFq1kTARwckIOSYTU3JKb7JKQ2MjncYrWlj2ZHc1U=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-	dkim=pass  header.i=bursov.com;
-	spf=pass  smtp.mailfrom=vitaly@bursov.com;
-	dmarc=pass header.from=<vitaly@bursov.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1711900922;
-	s=zoho; d=bursov.com; i=vitaly@bursov.com;
-	h=From:From:To:To:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To:Cc;
-	bh=dFZ+Th39mFALLRRNFXdhDn/IaGd1DyCaJm+9g0YLcTE=;
-	b=uchmRoTkP9LYdMA/S+sP/onU+WdnM2ASKLPkH5aCJgTmaiui0CWY7OsjXVPEW52u
-	8fnogrOj15IRRfNUNX102nsqYKTu35wHyglaQgjiOTgqa5XpA1hvhdaFUqI2jmPCBEz
-	0YSWeBn3XLNdK3gTa0OfUTvGM9Hs06qk/u2AFKlI=
-Received: from localhost.localdomain (217.20.170.230 [217.20.170.230]) by mx.zoho.eu
-	with SMTPS id 1711900922174361.44191369435737; Sun, 31 Mar 2024 18:02:02 +0200 (CEST)
-From: Vitalii Bursov <vitaly@bursov.com>
-To: Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	Vitalii Bursov <vitaly@bursov.com>
-Subject: [PATCH v2 3/3] docs: cgroup-v1: clarify that domain levels are system-specific
-Date: Sun, 31 Mar 2024 19:01:49 +0300
-Message-Id: <af9562aac2e9208029aef1dd19c3b0e096dd42c7.1711900396.git.vitaly@bursov.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1711900396.git.vitaly@bursov.com>
-References: <cover.1711900396.git.vitaly@bursov.com>
+	s=arc-20240116; t=1711900960; c=relaxed/simple;
+	bh=LkcPu3aiN8+Pp7SgssHAmiDSJJkhOmSWWOszD6D8tLE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h3W/jhLxOTm4bKs9/2JBj5IrbLcIE7pSow4YrXprUw6dJ3d9jL96b36pe/QBIXfgSW2L6/yKKEKF8qrL1RYVOpKg0sR2lzZr9TpWE7cgVTIp9jYfoxxr9EPu3lgfrSupTdl1WwfQKF8a6bdGHmxPjqZCiCXnw+8AitS0gVry1sI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=fail smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.114.240; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=fail smtp.client-ip=62.96.220.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=sina.com
+Received: from localhost (localhost [127.0.0.1])
+	by a.mx.secunet.com (Postfix) with ESMTP id 66D872082B;
+	Sun, 31 Mar 2024 18:02:31 +0200 (CEST)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 1bdceBOp1M4D; Sun, 31 Mar 2024 18:02:27 +0200 (CEST)
+Received: from mailout2.secunet.com (mailout2.secunet.com [62.96.220.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by a.mx.secunet.com (Postfix) with ESMTPS id CAA7120826;
+	Sun, 31 Mar 2024 18:02:27 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com CAA7120826
+Received: from cas-essen-01.secunet.de (unknown [10.53.40.201])
+	by mailout2.secunet.com (Postfix) with ESMTP id BDA29800057;
+	Sun, 31 Mar 2024 18:02:27 +0200 (CEST)
+Received: from mbx-essen-01.secunet.de (10.53.40.197) by
+ cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 31 Mar 2024 18:02:27 +0200
+Received: from Pickup by mbx-essen-01.secunet.de with Microsoft SMTP Server id
+ 15.1.2507.17; Sun, 31 Mar 2024 15:52:46 +0000
+X-sender: <linux-kernel+bounces-125908-steffen.klassert=secunet.com@vger.kernel.org>
+X-Receiver: <steffen.klassert@secunet.com>
+ ORCPT=rfc822;steffen.klassert@secunet.com NOTIFY=NEVER;
+ X-ExtendedProps=BQAVABYAAgAAAAUAFAARAPDFCS25BAlDktII2g02frgPADUAAABNaWNyb3NvZnQuRXhjaGFuZ2UuVHJhbnNwb3J0LkRpcmVjdG9yeURhdGEuSXNSZXNvdXJjZQIAAAUAagAJAAEAAAAAAAAABQAWAAIAAAUAQwACAAAFAEYABwADAAAABQBHAAIAAAUAEgAPAGIAAAAvbz1zZWN1bmV0L291PUV4Y2hhbmdlIEFkbWluaXN0cmF0aXZlIEdyb3VwIChGWURJQk9IRjIzU1BETFQpL2NuPVJlY2lwaWVudHMvY249U3RlZmZlbiBLbGFzc2VydDY4YwUACwAXAL4AAACheZxkHSGBRqAcAp3ukbifQ049REI2LENOPURhdGFiYXNlcyxDTj1FeGNoYW5nZSBBZG1pbmlzdHJhdGl2ZSBHcm91cCAoRllESUJPSEYyM1NQRExUKSxDTj1BZG1pbmlzdHJhdGl2ZSBHcm91cHMsQ049c2VjdW5ldCxDTj1NaWNyb3NvZnQgRXhjaGFuZ2UsQ049U2VydmljZXMsQ049Q29uZmlndXJhdGlvbixEQz1zZWN1bmV0LERDPWRlBQAOABEABiAS9uuMOkqzwmEZDvWNNQUAHQAPAAwAAABtYngtZXNzZW4tMDIFADwAAgAADwA2AAAATWljcm9zb2Z0LkV4Y2hhbmdlLlRyYW5zcG9ydC5NYWlsUmVjaXBpZW50LkRpc3BsYXlOYW1lDwARAAAAS2xhc3NlcnQsIFN0ZWZmZW4FAAwAAgAABQBsAAIAAAUAWAAXAEoAAADwxQktuQQJQ5LSCNoNNn64Q049S2xhc3NlcnQgU3RlZmZlbixPVT1Vc2VycyxPVT1NaWdyYXRpb24sREM9c2VjdW5ldCxEQz1kZQUAJgACAAEFACIADwAxAAAAQXV0b1Jlc3BvbnNlU3VwcHJlc3M6IDANClRyYW5zbWl0SGlzdG9ye
+	TogRmFsc2UNCg8ALwAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuRXhwYW5zaW9uR3JvdXBUeXBlDwAVAAAATWVtYmVyc0dyb3VwRXhwYW5zaW9uBQAjAAIAAQ==
+X-CreatedBy: MSExchange15
+X-HeloDomain: a.mx.secunet.com
+X-ExtendedProps: BQBjAAoALl9rGbMv3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5Pcmdhbml6YXRpb25TY29wZREAAAAAAAAAAAAAAAAAAAAAAAUASQACAAEFAAQAFCABAAAAHAAAAHN0ZWZmZW4ua2xhc3NlcnRAc2VjdW5ldC5jb20FAAYAAgABBQApAAIAAQ8ACQAAAENJQXVkaXRlZAIAAQUAAgAHAAEAAAAFAAMABwAAAAAABQAFAAIAAQUAYgAKAK0AAADligAABQBkAA8AAwAAAEh1Yg==
+X-Source: SMTP:Default MBX-ESSEN-01
+X-SourceIPAddress: 62.96.220.36
+X-EndOfInjectedXHeaders: 9856
+X-Virus-Scanned: by secunet
+Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=147.75.48.161; helo=sy.mirrors.kernel.org; envelope-from=linux-kernel+bounces-125908-steffen.klassert=secunet.com@vger.kernel.org; receiver=steffen.klassert@secunet.com 
+DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 4F25B20764
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.114.240
+ARC-Seal: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711842165; cv=none; b=a0aFpyuINsvc2+3sz8d3pSzaGca9anXaM9CaAhr5uWcQMfCTQcbX85T7iM/9TxSDijsSnFOOyVP3nSKMaEGT52bZeG+aH2j9S3tCjjr5nR+1O1kqne51anYdhCyJ0SOeczluC/hxG94i0SJzJ7qe9O4UyjZF7/0GVHNM+hnAEgI=
+ARC-Message-Signature: i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711842165; c=relaxed/simple;
+	bh=LkcPu3aiN8+Pp7SgssHAmiDSJJkhOmSWWOszD6D8tLE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=jNcn5ynCPPk3y55UtdcRBz2O5cKLTox/Sr4c3yZbZYIH0+0ckbnDKQh06IB6pfm3nf7HfrYLPHgTIg4HDy93nxW1U/6fsO0ro9AqUTZsBkoIowjKuKys8cKDUgMxKdNt/su+rJYqFUYBIhLdmgyVhIGgZcaXSco2Kq6TB9Ev98c=
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.114.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 14092045089264
+X-SMAIL-UIID: 77F8267D54D24F6CBA4FD1B63BC82AA7-20240331-074230-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+1fa663a2100308ab6eab@syzkaller.appspotmail.com>
+CC: <linux-kernel@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>
+Subject: Re: [syzbot] [bpf?] possible deadlock in kvfree_call_rcu
+Date: Sun, 31 Mar 2024 07:42:17 +0800
+Message-ID: <20240330234217.3169-1-hdanton@sina.com>
+In-Reply-To: <000000000000716bb60614acbf37@google.com>
+References:
+Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,53 +86,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+Message-ID: <20240330234217.gyiq9WplBmhSyJHqNnhypF0sGB0hNcGxTwNeagRqCo0@z>
 
-Add a clarification that domain levels are system-specific
-and where to check for system details.
+On Wed, 27 Mar 2024 16:27:19 -0700
+> syzbot has found a reproducer for the following issue on:
+> 
+> HEAD commit:    443574b03387 riscv, bpf: Fix kfunc parameters incompatibil..
+> git tree:       bpf
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16ca53c9180000
 
-Add CPU clusters to the scheduler domain levels table.
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  fe46a7dd189e
 
-Signed-off-by: Vitalii Bursov <vitaly@bursov.com>
----
- Documentation/admin-guide/cgroup-v1/cpusets.rst | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/admin-guide/cgroup-v1/cpusets.rst b/Documentation/admin-guide/cgroup-v1/cpusets.rst
-index 7d3415eea..d16a3967d 100644
---- a/Documentation/admin-guide/cgroup-v1/cpusets.rst
-+++ b/Documentation/admin-guide/cgroup-v1/cpusets.rst
-@@ -568,19 +568,25 @@ on the next tick.  For some applications in special situation, waiting
+--- x/kernel/rcu/tree.c
++++ y/kernel/rcu/tree.c
+@@ -2957,7 +2957,8 @@ krc_this_cpu_lock(unsigned long *flags)
  
- The 'cpuset.sched_relax_domain_level' file allows you to request changing
- this searching range as you like.  This file takes int value which
--indicates size of searching range in levels ideally as follows,
-+indicates size of searching range in levels approximately as follows,
- otherwise initial value -1 that indicates the cpuset has no request.
+ 	local_irq_save(*flags);	// For safely calling this_cpu_ptr().
+ 	krcp = this_cpu_ptr(&krc);
+-	raw_spin_lock(&krcp->lock);
++	while (!raw_spin_trylock(&krcp->lock))
++		;
  
- ====== ===========================================================
-   -1   no request. use system default or follow request of others.
-    0   no search.
-    1   search siblings (hyperthreads in a core).
--   2   search cores in a package.
--   3   search cpus in a node [= system wide on non-NUMA system]
--   4   search nodes in a chunk of node [on NUMA system]
--   5   search system wide [on NUMA system]
-+   2   search cpu clusters
-+   3   search cores in a package.
-+   4   search cpus in a node [= system wide on non-NUMA system]
-+   5   search nodes in a chunk of node [on NUMA system]
-+   6   search system wide [on NUMA system]
- ====== ===========================================================
- 
-+Not all levels can be present and values can change depending on the
-+system architecture and kernel configuration. Check
-+/sys/kernel/debug/sched/domains/cpu*/domain*/ for system-specific
-+details.
-+
- The system default is architecture dependent.  The system default
- can be changed using the relax_domain_level= boot parameter.
- 
--- 
-2.20.1
+ 	return krcp;
+ }
+--
 
