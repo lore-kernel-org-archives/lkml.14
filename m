@@ -1,816 +1,414 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68E199479;
-	Sat, 30 Mar 2024 08:52:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 273E2881F
+	for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2024 08:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711788733; cv=none; b=chWB/zIcADsfx5Qw3rOurGIC8c6lwGVeUqc6gTegk3TF62GQneW/dnyGjDEyVEyYuztASDgJevRjye1gQHhIODliEgkSUBoq711Lmkpidk0zv+VcMvw5jMYIUOJlotGrGZqovqZHXQ/RfJt2S8LMCFr8hgqoIA4evZCt1gS6oPY=
+	t=1711789087; cv=none; b=AK+qM2UtIX1Fep8KgX5yerPioUZmzBrRnNajJ8ZY8PhDNHW/fgaToVLTqaEUTGx1mx5JFwj8Vf23Qb9bmUVSVGtqCMUu8DrQjjJR+WxnMWYjTKrDhP5/JsdH9zAJgPUTWjT8TJ3IbXrVCNpTKW9avKhISq+DPmlf/QR+hZfJ/gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711788733; c=relaxed/simple;
-	bh=JkrcuQxp+R6P8Ax5OswGJdTXT4zGltuGevtq/9LMThE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=n5rcuGXqlcdRvtASCL6Zc4XVCg/A6NCa5BLBw17Eu7+ZU1jGcfEidR20prIxFVCp2IbdryLc6R+tJLPSdnQr7j6Fa9KkodMv7vhmCgHVyF7tBsWUtq32WZCz+V3Q6kBeXmJ1VTz4aJILvHqX3dHRhZiDx8I4EM5DwjixyM392ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=EgDolOXv; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EgDolOXv"
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id BF18D20E7047;
-	Sat, 30 Mar 2024 01:52:08 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BF18D20E7047
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1711788728;
-	bh=GZwlvox7fxMHY0eN6xxnKrmAEKpXL6Xi9iTNKRTzuBM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EgDolOXvKoIGrqN0Y5sxQXJfUWOdw2EmqeD/GmVFPqTcKMvojqr5Ub0pmYAxn71qy
-	 IOJuqaXUGGXeO99UVBpsPiqK/1M2EBIOvEw8vkMRTyNZ1N7R1lZy/dC+Fkqv/ZTy2R
-	 lqrjewERcqBP0BHOOIZZ3I7frDII0J/2xl2BHcPo=
-From: Saurabh Sengar <ssengar@linux.microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org
-Cc: longli@microsoft.com,
-	ssengar@microsoft.com
-Subject: [PATCH v3 6/7] Drivers: hv: Remove fcopy driver
-Date: Sat, 30 Mar 2024 01:52:02 -0700
-Message-Id: <1711788723-8593-7-git-send-email-ssengar@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1711788723-8593-1-git-send-email-ssengar@linux.microsoft.com>
-References: <1711788723-8593-1-git-send-email-ssengar@linux.microsoft.com>
+	s=arc-20240116; t=1711789087; c=relaxed/simple;
+	bh=h9CPE8vlxHNbIG5ZG2JCd77Amdhd8Fio7AeqbnRH13g=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=JLzkhYq8LYoVF8y5bs/PsSBfagMpjSLZSZPk4n0BSeSRlsWMsLcyltuuICuhiU9ANE7jqnqntU8mD9QNQ1/FXBnRrdHg0UAVQtHIbKNJMmxsfj7jFu5IFvuVAGBNU/GIpzvXIhlmMJj1XLHmNpP0FKW2pCAZucC8BPebS0vwZpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7cef80a1e5bso251124539f.2
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2024 01:58:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711789084; x=1712393884;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0TpT1glQ+V3RK5vUTFqi50S7xiXmH1yno0yMMbvGLhQ=;
+        b=DDjsgxwHnKRu5+wwd9OihQdvjh/LGTeczrGPPiG0VZPOfTSHxWLs2v1Qli7Q/VxF7D
+         MgXKCWtOMpmnP/0lAx4pLlXUpAnOQOZMHMuJHG47JQiZEdi1NdoMY4uv5RtCM1doP9sn
+         SUfq2z0LhrFtvHw2jLD2F3sarkwDhbhOrfYxCmuYr+oNhE0e0ElRsaTLhanOMg/jeOZ+
+         XYZQgwECDkycQVomutnUk4XxKdkOOCPR2HjQb+oWbaq2ujp1G3zPp+EYbASLcwgRl66v
+         iwFSi0PBMzAxbztH/6axMDkZeLKFOGOLcEMEU6c/7+Jq4C/TR/E6QTJ8Px1NAIt731DS
+         Jb5w==
+X-Forwarded-Encrypted: i=1; AJvYcCUkHq6C852AtWujTteTWCW6t11BpMF0iy/Zc6x3P2GUlQSeB/yIC5kH5syve8cWP9BwWE+cF3XR+u6a7SkLxRVmJf9cq+tKM2ZWHH8t
+X-Gm-Message-State: AOJu0YyXdh4NZ9CGByYlIjy3Dgt431KPBO0PCvCz3yII/udwGW4eoLn0
+	oRhKvLeCKMLKPIiFa4A4sYdxQOdguNYWxVfZzFqXwFnZOYkt500DirKCocP22tDdBPUFSL+n3Lt
+	kP9mAf344x1qFLWvXprwSKGZJ7FlZmrz8F40GHjldn9Gcznjh0Ae3fBw=
+X-Google-Smtp-Source: AGHT+IEXvL99AGanDp7vWZkL8quLqHc8AoCR46N1Odt0A6yBPeR7yHtdu4STQbu3nWBi1Ag01Lco9P4SrffQwrwLLrmiBsgNRe16
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:218f:b0:369:9361:5b6a with SMTP id
+ j15-20020a056e02218f00b0036993615b6amr41740ila.5.1711789084277; Sat, 30 Mar
+ 2024 01:58:04 -0700 (PDT)
+Date: Sat, 30 Mar 2024 01:58:04 -0700
+In-Reply-To: <tencent_F85DE45D93995ACF9C8DD7A5FD0DC0921A07@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004c8d570614dcf412@google.com>
+Subject: Re: [syzbot] [bpf?] [net?] possible deadlock in tick_setup_sched_timer
+From: syzbot <syzbot+e4374f6c021d422de3d1@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-As the new fcopy driver using uio is introduced, remove obsolete driver
-and application.
+Hello,
 
-Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-Reviewed-by: Long Li <longli@microsoft.com>
----
-[V2]
-- Added Reviewed-by form Long Li
+syzbot tried to test the proposed patch but the build/boot failed:
 
- drivers/hv/Makefile        |   2 +-
- drivers/hv/hv_fcopy.c      | 427 -------------------------------------
- drivers/hv/hv_util.c       |  12 --
- tools/hv/hv_fcopy_daemon.c | 266 -----------------------
- 4 files changed, 1 insertion(+), 706 deletions(-)
- delete mode 100644 drivers/hv/hv_fcopy.c
- delete mode 100644 tools/hv/hv_fcopy_daemon.c
+drm_connector registered
+[   11.107844][    T1] [drm] Initialized vgem 1.0.0 20120112 for vgem on mi=
+nor 0
+[   11.126768][    T1] [drm] Initialized vkms 1.0.0 20180514 for vkms on mi=
+nor 1
+[   11.235459][    T1] Console: switching to colour frame buffer device 128=
+x48
+[   11.259808][    T1] platform vkms: [drm] fb0: vkmsdrmfb frame buffer dev=
+ice
+[   11.267554][    T1] usbcore: registered new interface driver udl
+[   11.374239][    T1] brd: module loaded
+[   11.501139][    T1] loop: module loaded
+[   11.677668][    T1] zram: Added device: zram0
+[   11.695347][    T1] null_blk: disk nullb0 created
+[   11.700275][    T1] null_blk: module loaded
+[   11.706181][    T1] Guest personality initialized and is inactive
+[   11.713576][    T1] VMCI host device registered (name=3Dvmci, major=3D10=
+, minor=3D118)
+[   11.721442][    T1] Initialized host personality
+[   11.726520][    T1] usbcore: registered new interface driver rtsx_usb
+[   11.734397][    T1] usbcore: registered new interface driver viperboard
+[   11.742268][    T1] usbcore: registered new interface driver dln2
+[   11.749350][    T1] usbcore: registered new interface driver pn533_usb
+[   11.763332][    T1] nfcsim 0.2 initialized
+[   11.767821][    T1] usbcore: registered new interface driver port100
+[   11.775500][    T1] usbcore: registered new interface driver nfcmrvl
+[   11.790533][    T1] Loading iSCSI transport class v2.0-870.
+[   11.814992][    T1] virtio_scsi virtio0: 1/0/0 default/read/poll queues
+[   11.834309][    T1] ------------[ cut here ]------------
+[   11.840069][    T1] refcount_t: decrement hit 0; leaking memory.
+[   11.846833][    T1] WARNING: CPU: 1 PID: 1 at lib/refcount.c:31 refcount=
+_warn_saturate+0x1ed/0x210
+[   11.856073][    T1] Modules linked in:
+[   11.860032][    T1] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 6.9.0-rc1-=
+syzkaller-g486291a0e624-dirty #0
+[   11.869766][    T1] Hardware name: Google Google Compute Engine/Google C=
+ompute Engine, BIOS Google 03/27/2024
+[   11.879854][    T1] RIP: 0010:refcount_warn_saturate+0x1ed/0x210
+[   11.886039][    T1] Code: 8b e8 67 29 d2 fc 90 0f 0b 90 90 e9 c3 fe ff f=
+f e8 58 bb 0f fd c6 05 0d eb 4c 0b 01 90 48 c7 c7 80 e5 8e 8b e8 44 29 d2 f=
+c 90 <0f> 0b 90 90 e9 a0 fe ff ff 48 89 ef e8 72 e7 6a fd e9 44 fe ff ff
+[   11.905771][    T1] RSP: 0000:ffffc900000673c0 EFLAGS: 00010286
+[   11.912115][    T1] RAX: 0000000000000000 RBX: 0000000000000000 RCX: fff=
+fffff814fe149
+[   11.920354][    T1] RDX: ffff888016ec0000 RSI: ffffffff814fe156 RDI: 000=
+0000000000001
+[   11.928321][    T1] RBP: ffff888020fac3bc R08: 0000000000000001 R09: 000=
+0000000000000
+[   11.936315][    T1] R10: 0000000000000000 R11: 0000000000000001 R12: fff=
+f888020fac3bc
+[   11.944311][    T1] R13: 0000000000000000 R14: 00000000007400b9 R15: fff=
+f888016853988
+[   11.952567][    T1] FS:  0000000000000000(0000) GS:ffff8880b9300000(0000=
+) knlGS:0000000000000000
+[   11.961512][    T1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   11.968083][    T1] CR2: 0000000000000000 CR3: 000000000d97a000 CR4: 000=
+00000003506f0
+[   11.976181][    T1] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 000=
+0000000000000
+[   11.984211][    T1] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 000=
+0000000000400
+[   11.992239][    T1] Call Trace:
+[   11.995530][    T1]  <TASK>
+[   11.998452][    T1]  ? show_regs+0x8c/0xa0
+[   12.002745][    T1]  ? __warn+0xe5/0x3c0
+[   12.006810][    T1]  ? __wake_up_klogd.part.0+0x99/0xf0
+[   12.012328][    T1]  ? refcount_warn_saturate+0x1ed/0x210
+[   12.017871][    T1]  ? report_bug+0x3c0/0x580
+[   12.022448][    T1]  ? handle_bug+0x3d/0x70
+[   12.026794][    T1]  ? exc_invalid_op+0x17/0x50
+[   12.031602][    T1]  ? asm_exc_invalid_op+0x1a/0x20
+[   12.036639][    T1]  ? __warn_printk+0x199/0x350
+[   12.041521][    T1]  ? __warn_printk+0x1a6/0x350
+[   12.046283][    T1]  ? refcount_warn_saturate+0x1ed/0x210
+[   12.051884][    T1]  __reset_page_owner+0x2ea/0x370
+[   12.057140][    T1]  __free_pages_ok+0x5a9/0xbf0
+[   12.061993][    T1]  ? __split_page_owner+0xdd/0x120
+[   12.067111][    T1]  make_alloc_exact+0x165/0x260
+[   12.072448][    T1]  vring_alloc_queue+0xc1/0x110
+[   12.077349][    T1]  vring_alloc_queue_split+0x186/0x510
+[   12.082874][    T1]  ? __pfx_vring_alloc_queue_split+0x10/0x10
+[   12.088882][    T1]  ? kasan_save_stack+0x42/0x60
+[   12.093828][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[   12.099615][    T1]  vring_create_virtqueue_split+0xe8/0x280
+[   12.105518][    T1]  ? __pfx_vp_notify+0x10/0x10
+[   12.110328][    T1]  ? __pfx_vring_create_virtqueue_split+0x10/0x10
+[   12.116731][    T1]  ? virtio_scsi_init+0x75/0x100
+[   12.121740][    T1]  ? do_one_initcall+0x128/0x700
+[   12.126695][    T1]  ? kernel_init_freeable+0x69d/0xca0
+[   12.132157][    T1]  vring_create_virtqueue+0xd7/0x140
+[   12.137433][    T1]  ? __pfx_vp_notify+0x10/0x10
+[   12.142247][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[   12.148576][    T1]  setup_vq+0x123/0x2f0
+[   12.152766][    T1]  ? __pfx_vp_notify+0x10/0x10
+[   12.157544][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[   12.163473][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[   12.169167][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[   12.174836][    T1]  vp_setup_vq+0xb1/0x380
+[   12.179545][    T1]  ? iowrite16+0x55/0x80
+[   12.183910][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[   12.189632][    T1]  vp_find_vqs_msix+0x661/0xe30
+[   12.194484][    T1]  vp_find_vqs+0x58/0x560
+[   12.198919][    T1]  virtscsi_init+0x459/0x9f0
+[   12.203694][    T1]  ? __pfx_virtscsi_init+0x10/0x10
+[   12.209111][    T1]  ? __pfx_default_calc_sets+0x10/0x10
+[   12.214606][    T1]  ? ioread8+0x4e/0xa0
+[   12.218920][    T1]  ? vp_get+0xf6/0x140
+[   12.223023][    T1]  virtscsi_probe+0x3b2/0xdd0
+[   12.227732][    T1]  ? __pfx_virtscsi_probe+0x10/0x10
+[   12.233079][    T1]  ? trace_raw_output_sched_pi_setprio+0xad/0x150
+[   12.239751][    T1]  ? vring_transport_features+0x49/0xb0
+[   12.245404][    T1]  virtio_dev_probe+0x5ff/0x9b0
+[   12.250546][    T1]  ? __pfx_virtio_dev_probe+0x10/0x10
+[   12.255937][    T1]  really_probe+0x23e/0xa90
+[   12.260516][    T1]  __driver_probe_device+0x1de/0x440
+[   12.265804][    T1]  ? _raw_spin_unlock_irqrestore+0x52/0x80
+[   12.271660][    T1]  driver_probe_device+0x4c/0x1b0
+[   12.276686][    T1]  __driver_attach+0x283/0x580
+[   12.281478][    T1]  ? __pfx___driver_attach+0x10/0x10
+[   12.286756][    T1]  bus_for_each_dev+0x13c/0x1d0
+[   12.291626][    T1]  ? __pfx_bus_for_each_dev+0x10/0x10
+[   12.297077][    T1]  bus_add_driver+0x2ed/0x640
+[   12.301781][    T1]  driver_register+0x15c/0x4b0
+[   12.306529][    T1]  ? __pfx_virtio_scsi_init+0x10/0x10
+[   12.311922][    T1]  ? __pfx_virtio_scsi_init+0x10/0x10
+[   12.317285][    T1]  virtio_scsi_init+0x75/0x100
+[   12.322232][    T1]  do_one_initcall+0x128/0x700
+[   12.327308][    T1]  ? __pfx_do_one_initcall+0x10/0x10
+[   12.332699][    T1]  ? trace_kmalloc+0x2d/0xe0
+[   12.337296][    T1]  ? __kmalloc+0x218/0x440
+[   12.341776][    T1]  kernel_init_freeable+0x69d/0xca0
+[   12.346990][    T1]  ? __pfx_kernel_init+0x10/0x10
+[   12.351965][    T1]  kernel_init+0x1c/0x2b0
+[   12.356292][    T1]  ? __pfx_kernel_init+0x10/0x10
+[   12.361247][    T1]  ret_from_fork+0x45/0x80
+[   12.365684][    T1]  ? __pfx_kernel_init+0x10/0x10
+[   12.370654][    T1]  ret_from_fork_asm+0x1a/0x30
+[   12.375521][    T1]  </TASK>
+[   12.378535][    T1] Kernel panic - not syncing: kernel: panic_on_warn se=
+t ...
+[   12.380634][    T1] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 6.9.0-rc1-=
+syzkaller-g486291a0e624-dirty #0
+[   12.380634][    T1] Hardware name: Google Google Compute Engine/Google C=
+ompute Engine, BIOS Google 03/27/2024
+[   12.380634][    T1] Call Trace:
+[   12.380634][    T1]  <TASK>
+[   12.380634][    T1]  dump_stack_lvl+0x3d/0x1f0
+[   12.380634][    T1]  panic+0x6f5/0x7a0
+[   12.380634][    T1]  ? __pfx_panic+0x10/0x10
+[   12.380634][    T1]  ? show_trace_log_lvl+0x363/0x500
+[   12.428930][    T1]  ? check_panic_on_warn+0x1f/0xb0
+[   12.428930][    T1]  ? refcount_warn_saturate+0x1ed/0x210
+[   12.428930][    T1]  check_panic_on_warn+0xab/0xb0
+[   12.428930][    T1]  __warn+0xf1/0x3c0
+[   12.428930][    T1]  ? __wake_up_klogd.part.0+0x99/0xf0
+[   12.428930][    T1]  ? refcount_warn_saturate+0x1ed/0x210
+[   12.428930][    T1]  report_bug+0x3c0/0x580
+[   12.428930][    T1]  handle_bug+0x3d/0x70
+[   12.428930][    T1]  exc_invalid_op+0x17/0x50
+[   12.428930][    T1]  asm_exc_invalid_op+0x1a/0x20
+[   12.478917][    T1] RIP: 0010:refcount_warn_saturate+0x1ed/0x210
+[   12.478917][    T1] Code: 8b e8 67 29 d2 fc 90 0f 0b 90 90 e9 c3 fe ff f=
+f e8 58 bb 0f fd c6 05 0d eb 4c 0b 01 90 48 c7 c7 80 e5 8e 8b e8 44 29 d2 f=
+c 90 <0f> 0b 90 90 e9 a0 fe ff ff 48 89 ef e8 72 e7 6a fd e9 44 fe ff ff
+[   12.478917][    T1] RSP: 0000:ffffc900000673c0 EFLAGS: 00010286
+[   12.478917][    T1] RAX: 0000000000000000 RBX: 0000000000000000 RCX: fff=
+fffff814fe149
+[   12.478917][    T1] RDX: ffff888016ec0000 RSI: ffffffff814fe156 RDI: 000=
+0000000000001
+[   12.478917][    T1] RBP: ffff888020fac3bc R08: 0000000000000001 R09: 000=
+0000000000000
+[   12.528953][    T1] R10: 0000000000000000 R11: 0000000000000001 R12: fff=
+f888020fac3bc
+[   12.528953][    T1] R13: 0000000000000000 R14: 00000000007400b9 R15: fff=
+f888016853988
+[   12.528953][    T1]  ? __warn_printk+0x199/0x350
+[   12.528953][    T1]  ? __warn_printk+0x1a6/0x350
+[   12.528953][    T1]  __reset_page_owner+0x2ea/0x370
+[   12.528953][    T1]  __free_pages_ok+0x5a9/0xbf0
+[   12.528953][    T1]  ? __split_page_owner+0xdd/0x120
+[   12.528953][    T1]  make_alloc_exact+0x165/0x260
+[   12.579003][    T1]  vring_alloc_queue+0xc1/0x110
+[   12.579003][    T1]  vring_alloc_queue_split+0x186/0x510
+[   12.579003][    T1]  ? __pfx_vring_alloc_queue_split+0x10/0x10
+[   12.579003][    T1]  ? kasan_save_stack+0x42/0x60
+[   12.579003][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[   12.579003][    T1]  vring_create_virtqueue_split+0xe8/0x280
+[   12.579003][    T1]  ? __pfx_vp_notify+0x10/0x10
+[   12.579003][    T1]  ? __pfx_vring_create_virtqueue_split+0x10/0x10
+[   12.579003][    T1]  ? virtio_scsi_init+0x75/0x100
+[   12.628847][    T1]  ? do_one_initcall+0x128/0x700
+[   12.628847][    T1]  ? kernel_init_freeable+0x69d/0xca0
+[   12.628847][    T1]  vring_create_virtqueue+0xd7/0x140
+[   12.628847][    T1]  ? __pfx_vp_notify+0x10/0x10
+[   12.628847][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[   12.628847][    T1]  setup_vq+0x123/0x2f0
+[   12.628847][    T1]  ? __pfx_vp_notify+0x10/0x10
+[   12.628847][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[   12.628847][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[   12.628847][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[   12.678924][    T1]  vp_setup_vq+0xb1/0x380
+[   12.678924][    T1]  ? iowrite16+0x55/0x80
+[   12.678924][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[   12.678924][    T1]  vp_find_vqs_msix+0x661/0xe30
+[   12.678924][    T1]  vp_find_vqs+0x58/0x560
+[   12.678924][    T1]  virtscsi_init+0x459/0x9f0
+[   12.678924][    T1]  ? __pfx_virtscsi_init+0x10/0x10
+[   12.678924][    T1]  ? __pfx_default_calc_sets+0x10/0x10
+[   12.678924][    T1]  ? ioread8+0x4e/0xa0
+[   12.678924][    T1]  ? vp_get+0xf6/0x140
+[   12.728908][    T1]  virtscsi_probe+0x3b2/0xdd0
+[   12.728908][    T1]  ? __pfx_virtscsi_probe+0x10/0x10
+[   12.728908][    T1]  ? trace_raw_output_sched_pi_setprio+0xad/0x150
+[   12.728908][    T1]  ? vring_transport_features+0x49/0xb0
+[   12.728908][    T1]  virtio_dev_probe+0x5ff/0x9b0
+[   12.728908][    T1]  ? __pfx_virtio_dev_probe+0x10/0x10
+[   12.728908][    T1]  really_probe+0x23e/0xa90
+[   12.728908][    T1]  __driver_probe_device+0x1de/0x440
+[   12.728908][    T1]  ? _raw_spin_unlock_irqrestore+0x52/0x80
+[   12.778943][    T1]  driver_probe_device+0x4c/0x1b0
+[   12.778943][    T1]  __driver_attach+0x283/0x580
+[   12.778943][    T1]  ? __pfx___driver_attach+0x10/0x10
+[   12.778943][    T1]  bus_for_each_dev+0x13c/0x1d0
+[   12.778943][    T1]  ? __pfx_bus_for_each_dev+0x10/0x10
+[   12.778943][    T1]  bus_add_driver+0x2ed/0x640
+[   12.778943][    T1]  driver_register+0x15c/0x4b0
+[   12.778943][    T1]  ? __pfx_virtio_scsi_init+0x10/0x10
+[   12.778943][    T1]  ? __pfx_virtio_scsi_init+0x10/0x10
+[   12.778943][    T1]  virtio_scsi_init+0x75/0x100
+[   12.828878][    T1]  do_one_initcall+0x128/0x700
+[   12.828878][    T1]  ? __pfx_do_one_initcall+0x10/0x10
+[   12.828878][    T1]  ? trace_kmalloc+0x2d/0xe0
+[   12.828878][    T1]  ? __kmalloc+0x218/0x440
+[   12.828878][    T1]  kernel_init_freeable+0x69d/0xca0
+[   12.828878][    T1]  ? __pfx_kernel_init+0x10/0x10
+[   12.828878][    T1]  kernel_init+0x1c/0x2b0
+[   12.828878][    T1]  ? __pfx_kernel_init+0x10/0x10
+[   12.828878][    T1]  ret_from_fork+0x45/0x80
+[   12.828878][    T1]  ? __pfx_kernel_init+0x10/0x10
+[   12.878911][    T1]  ret_from_fork_asm+0x1a/0x30
+[   12.878911][    T1]  </TASK>
+[   12.878911][    T1] Kernel Offset: disabled
+[   12.878911][    T1] Rebooting in 86400 seconds..
 
-diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
-index d76df5c8c2a9..b992c0ed182b 100644
---- a/drivers/hv/Makefile
-+++ b/drivers/hv/Makefile
-@@ -10,7 +10,7 @@ hv_vmbus-y := vmbus_drv.o \
- 		 hv.o connection.o channel.o \
- 		 channel_mgmt.o ring_buffer.o hv_trace.o
- hv_vmbus-$(CONFIG_HYPERV_TESTING)	+= hv_debugfs.o
--hv_utils-y := hv_util.o hv_kvp.o hv_snapshot.o hv_fcopy.o hv_utils_transport.o
-+hv_utils-y := hv_util.o hv_kvp.o hv_snapshot.o hv_utils_transport.o
- 
- # Code that must be built-in
- obj-$(subst m,y,$(CONFIG_HYPERV)) += hv_common.o
-diff --git a/drivers/hv/hv_fcopy.c b/drivers/hv/hv_fcopy.c
-deleted file mode 100644
-index 922d83eb7ddf..000000000000
---- a/drivers/hv/hv_fcopy.c
-+++ /dev/null
-@@ -1,427 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * An implementation of file copy service.
-- *
-- * Copyright (C) 2014, Microsoft, Inc.
-- *
-- * Author : K. Y. Srinivasan <ksrinivasan@novell.com>
-- */
--
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
--#include <linux/nls.h>
--#include <linux/workqueue.h>
--#include <linux/hyperv.h>
--#include <linux/sched.h>
--#include <asm/hyperv-tlfs.h>
--
--#include "hyperv_vmbus.h"
--#include "hv_utils_transport.h"
--
--#define WIN8_SRV_MAJOR		1
--#define WIN8_SRV_MINOR		1
--#define WIN8_SRV_VERSION	(WIN8_SRV_MAJOR << 16 | WIN8_SRV_MINOR)
--
--#define FCOPY_VER_COUNT 1
--static const int fcopy_versions[] = {
--	WIN8_SRV_VERSION
--};
--
--#define FW_VER_COUNT 1
--static const int fw_versions[] = {
--	UTIL_FW_VERSION
--};
--
--/*
-- * Global state maintained for transaction that is being processed.
-- * For a class of integration services, including the "file copy service",
-- * the specified protocol is a "request/response" protocol which means that
-- * there can only be single outstanding transaction from the host at any
-- * given point in time. We use this to simplify memory management in this
-- * driver - we cache and process only one message at a time.
-- *
-- * While the request/response protocol is guaranteed by the host, we further
-- * ensure this by serializing packet processing in this driver - we do not
-- * read additional packets from the VMBUs until the current packet is fully
-- * handled.
-- */
--
--static struct {
--	int state;   /* hvutil_device_state */
--	int recv_len; /* number of bytes received. */
--	struct hv_fcopy_hdr  *fcopy_msg; /* current message */
--	struct vmbus_channel *recv_channel; /* chn we got the request */
--	u64 recv_req_id; /* request ID. */
--} fcopy_transaction;
--
--static void fcopy_respond_to_host(int error);
--static void fcopy_send_data(struct work_struct *dummy);
--static void fcopy_timeout_func(struct work_struct *dummy);
--static DECLARE_DELAYED_WORK(fcopy_timeout_work, fcopy_timeout_func);
--static DECLARE_WORK(fcopy_send_work, fcopy_send_data);
--static const char fcopy_devname[] = "vmbus/hv_fcopy";
--static u8 *recv_buffer;
--static struct hvutil_transport *hvt;
--/*
-- * This state maintains the version number registered by the daemon.
-- */
--static int dm_reg_value;
--
--static void fcopy_poll_wrapper(void *channel)
--{
--	/* Transaction is finished, reset the state here to avoid races. */
--	fcopy_transaction.state = HVUTIL_READY;
--	tasklet_schedule(&((struct vmbus_channel *)channel)->callback_event);
--}
--
--static void fcopy_timeout_func(struct work_struct *dummy)
--{
--	/*
--	 * If the timer fires, the user-mode component has not responded;
--	 * process the pending transaction.
--	 */
--	fcopy_respond_to_host(HV_E_FAIL);
--	hv_poll_channel(fcopy_transaction.recv_channel, fcopy_poll_wrapper);
--}
--
--static void fcopy_register_done(void)
--{
--	pr_debug("FCP: userspace daemon registered\n");
--	hv_poll_channel(fcopy_transaction.recv_channel, fcopy_poll_wrapper);
--}
--
--static int fcopy_handle_handshake(u32 version)
--{
--	u32 our_ver = FCOPY_CURRENT_VERSION;
--
--	switch (version) {
--	case FCOPY_VERSION_0:
--		/* Daemon doesn't expect us to reply */
--		dm_reg_value = version;
--		break;
--	case FCOPY_VERSION_1:
--		/* Daemon expects us to reply with our own version */
--		if (hvutil_transport_send(hvt, &our_ver, sizeof(our_ver),
--		    fcopy_register_done))
--			return -EFAULT;
--		dm_reg_value = version;
--		break;
--	default:
--		/*
--		 * For now we will fail the registration.
--		 * If and when we have multiple versions to
--		 * deal with, we will be backward compatible.
--		 * We will add this code when needed.
--		 */
--		return -EINVAL;
--	}
--	pr_debug("FCP: userspace daemon ver. %d connected\n", version);
--	return 0;
--}
--
--static void fcopy_send_data(struct work_struct *dummy)
--{
--	struct hv_start_fcopy *smsg_out = NULL;
--	int operation = fcopy_transaction.fcopy_msg->operation;
--	struct hv_start_fcopy *smsg_in;
--	void *out_src;
--	int rc, out_len;
--
--	/*
--	 * The  strings sent from the host are encoded in
--	 * utf16; convert it to utf8 strings.
--	 * The host assures us that the utf16 strings will not exceed
--	 * the max lengths specified. We will however, reserve room
--	 * for the string terminating character - in the utf16s_utf8s()
--	 * function we limit the size of the buffer where the converted
--	 * string is placed to W_MAX_PATH -1 to guarantee
--	 * that the strings can be properly terminated!
--	 */
--
--	switch (operation) {
--	case START_FILE_COPY:
--		out_len = sizeof(struct hv_start_fcopy);
--		smsg_out = kzalloc(sizeof(*smsg_out), GFP_KERNEL);
--		if (!smsg_out)
--			return;
--
--		smsg_out->hdr.operation = operation;
--		smsg_in = (struct hv_start_fcopy *)fcopy_transaction.fcopy_msg;
--
--		utf16s_to_utf8s((wchar_t *)smsg_in->file_name, W_MAX_PATH,
--				UTF16_LITTLE_ENDIAN,
--				(__u8 *)&smsg_out->file_name, W_MAX_PATH - 1);
--
--		utf16s_to_utf8s((wchar_t *)smsg_in->path_name, W_MAX_PATH,
--				UTF16_LITTLE_ENDIAN,
--				(__u8 *)&smsg_out->path_name, W_MAX_PATH - 1);
--
--		smsg_out->copy_flags = smsg_in->copy_flags;
--		smsg_out->file_size = smsg_in->file_size;
--		out_src = smsg_out;
--		break;
--
--	case WRITE_TO_FILE:
--		out_src = fcopy_transaction.fcopy_msg;
--		out_len = sizeof(struct hv_do_fcopy);
--		break;
--	default:
--		out_src = fcopy_transaction.fcopy_msg;
--		out_len = fcopy_transaction.recv_len;
--		break;
--	}
--
--	fcopy_transaction.state = HVUTIL_USERSPACE_REQ;
--	rc = hvutil_transport_send(hvt, out_src, out_len, NULL);
--	if (rc) {
--		pr_debug("FCP: failed to communicate to the daemon: %d\n", rc);
--		if (cancel_delayed_work_sync(&fcopy_timeout_work)) {
--			fcopy_respond_to_host(HV_E_FAIL);
--			fcopy_transaction.state = HVUTIL_READY;
--		}
--	}
--	kfree(smsg_out);
--}
--
--/*
-- * Send a response back to the host.
-- */
--
--static void
--fcopy_respond_to_host(int error)
--{
--	struct icmsg_hdr *icmsghdr;
--	u32 buf_len;
--	struct vmbus_channel *channel;
--	u64 req_id;
--
--	/*
--	 * Copy the global state for completing the transaction. Note that
--	 * only one transaction can be active at a time. This is guaranteed
--	 * by the file copy protocol implemented by the host. Furthermore,
--	 * the "transaction active" state we maintain ensures that there can
--	 * only be one active transaction at a time.
--	 */
--
--	buf_len = fcopy_transaction.recv_len;
--	channel = fcopy_transaction.recv_channel;
--	req_id = fcopy_transaction.recv_req_id;
--
--	icmsghdr = (struct icmsg_hdr *)
--			&recv_buffer[sizeof(struct vmbuspipe_hdr)];
--
--	if (channel->onchannel_callback == NULL)
--		/*
--		 * We have raced with util driver being unloaded;
--		 * silently return.
--		 */
--		return;
--
--	icmsghdr->status = error;
--	icmsghdr->icflags = ICMSGHDRFLAG_TRANSACTION | ICMSGHDRFLAG_RESPONSE;
--	vmbus_sendpacket(channel, recv_buffer, buf_len, req_id,
--				VM_PKT_DATA_INBAND, 0);
--}
--
--void hv_fcopy_onchannelcallback(void *context)
--{
--	struct vmbus_channel *channel = context;
--	u32 recvlen;
--	u64 requestid;
--	struct hv_fcopy_hdr *fcopy_msg;
--	struct icmsg_hdr *icmsghdr;
--	int fcopy_srv_version;
--
--	if (fcopy_transaction.state > HVUTIL_READY)
--		return;
--
--	if (vmbus_recvpacket(channel, recv_buffer, HV_HYP_PAGE_SIZE * 2, &recvlen, &requestid)) {
--		pr_err_ratelimited("Fcopy request received. Could not read into recv buf\n");
--		return;
--	}
--
--	if (!recvlen)
--		return;
--
--	/* Ensure recvlen is big enough to read header data */
--	if (recvlen < ICMSG_HDR) {
--		pr_err_ratelimited("Fcopy request received. Packet length too small: %d\n",
--				   recvlen);
--		return;
--	}
--
--	icmsghdr = (struct icmsg_hdr *)&recv_buffer[
--			sizeof(struct vmbuspipe_hdr)];
--
--	if (icmsghdr->icmsgtype == ICMSGTYPE_NEGOTIATE) {
--		if (vmbus_prep_negotiate_resp(icmsghdr,
--				recv_buffer, recvlen,
--				fw_versions, FW_VER_COUNT,
--				fcopy_versions, FCOPY_VER_COUNT,
--				NULL, &fcopy_srv_version)) {
--
--			pr_info("FCopy IC version %d.%d\n",
--				fcopy_srv_version >> 16,
--				fcopy_srv_version & 0xFFFF);
--		}
--	} else if (icmsghdr->icmsgtype == ICMSGTYPE_FCOPY) {
--		/* Ensure recvlen is big enough to contain hv_fcopy_hdr */
--		if (recvlen < ICMSG_HDR + sizeof(struct hv_fcopy_hdr)) {
--			pr_err_ratelimited("Invalid Fcopy hdr. Packet length too small: %u\n",
--					   recvlen);
--			return;
--		}
--		fcopy_msg = (struct hv_fcopy_hdr *)&recv_buffer[ICMSG_HDR];
--
--		/*
--		 * Stash away this global state for completing the
--		 * transaction; note transactions are serialized.
--		 */
--
--		fcopy_transaction.recv_len = recvlen;
--		fcopy_transaction.recv_req_id = requestid;
--		fcopy_transaction.fcopy_msg = fcopy_msg;
--
--		if (fcopy_transaction.state < HVUTIL_READY) {
--			/* Userspace is not registered yet */
--			fcopy_respond_to_host(HV_E_FAIL);
--			return;
--		}
--		fcopy_transaction.state = HVUTIL_HOSTMSG_RECEIVED;
--
--		/*
--		 * Send the information to the user-level daemon.
--		 */
--		schedule_work(&fcopy_send_work);
--		schedule_delayed_work(&fcopy_timeout_work,
--				      HV_UTIL_TIMEOUT * HZ);
--		return;
--	} else {
--		pr_err_ratelimited("Fcopy request received. Invalid msg type: %d\n",
--				   icmsghdr->icmsgtype);
--		return;
--	}
--	icmsghdr->icflags = ICMSGHDRFLAG_TRANSACTION | ICMSGHDRFLAG_RESPONSE;
--	vmbus_sendpacket(channel, recv_buffer, recvlen, requestid,
--			VM_PKT_DATA_INBAND, 0);
--}
--
--/* Callback when data is received from userspace */
--static int fcopy_on_msg(void *msg, int len)
--{
--	int *val = (int *)msg;
--
--	if (len != sizeof(int))
--		return -EINVAL;
--
--	if (fcopy_transaction.state == HVUTIL_DEVICE_INIT)
--		return fcopy_handle_handshake(*val);
--
--	if (fcopy_transaction.state != HVUTIL_USERSPACE_REQ)
--		return -EINVAL;
--
--	/*
--	 * Complete the transaction by forwarding the result
--	 * to the host. But first, cancel the timeout.
--	 */
--	if (cancel_delayed_work_sync(&fcopy_timeout_work)) {
--		fcopy_transaction.state = HVUTIL_USERSPACE_RECV;
--		fcopy_respond_to_host(*val);
--		hv_poll_channel(fcopy_transaction.recv_channel,
--				fcopy_poll_wrapper);
--	}
--
--	return 0;
--}
--
--static void fcopy_on_reset(void)
--{
--	/*
--	 * The daemon has exited; reset the state.
--	 */
--	fcopy_transaction.state = HVUTIL_DEVICE_INIT;
--
--	if (cancel_delayed_work_sync(&fcopy_timeout_work))
--		fcopy_respond_to_host(HV_E_FAIL);
--}
--
--int hv_fcopy_init(struct hv_util_service *srv)
--{
--	recv_buffer = srv->recv_buffer;
--	fcopy_transaction.recv_channel = srv->channel;
--	fcopy_transaction.recv_channel->max_pkt_size = HV_HYP_PAGE_SIZE * 2;
--
--	/*
--	 * When this driver loads, the user level daemon that
--	 * processes the host requests may not yet be running.
--	 * Defer processing channel callbacks until the daemon
--	 * has registered.
--	 */
--	fcopy_transaction.state = HVUTIL_DEVICE_INIT;
--
--	hvt = hvutil_transport_init(fcopy_devname, 0, 0,
--				    fcopy_on_msg, fcopy_on_reset);
--	if (!hvt)
--		return -EFAULT;
--
--	return 0;
--}
--
--static void hv_fcopy_cancel_work(void)
--{
--	cancel_delayed_work_sync(&fcopy_timeout_work);
--	cancel_work_sync(&fcopy_send_work);
--}
--
--int hv_fcopy_pre_suspend(void)
--{
--	struct vmbus_channel *channel = fcopy_transaction.recv_channel;
--	struct hv_fcopy_hdr *fcopy_msg;
--
--	/*
--	 * Fake a CANCEL_FCOPY message for the user space daemon in case the
--	 * daemon is in the middle of copying some file. It doesn't matter if
--	 * there is already a message pending to be delivered to the user
--	 * space since we force fcopy_transaction.state to be HVUTIL_READY, so
--	 * the user space daemon's write() will fail with EINVAL (see
--	 * fcopy_on_msg()), and the daemon will reset the device by closing
--	 * and re-opening it.
--	 */
--	fcopy_msg = kzalloc(sizeof(*fcopy_msg), GFP_KERNEL);
--	if (!fcopy_msg)
--		return -ENOMEM;
--
--	tasklet_disable(&channel->callback_event);
--
--	fcopy_msg->operation = CANCEL_FCOPY;
--
--	hv_fcopy_cancel_work();
--
--	/* We don't care about the return value. */
--	hvutil_transport_send(hvt, fcopy_msg, sizeof(*fcopy_msg), NULL);
--
--	kfree(fcopy_msg);
--
--	fcopy_transaction.state = HVUTIL_READY;
--
--	/* tasklet_enable() will be called in hv_fcopy_pre_resume(). */
--	return 0;
--}
--
--int hv_fcopy_pre_resume(void)
--{
--	struct vmbus_channel *channel = fcopy_transaction.recv_channel;
--
--	tasklet_enable(&channel->callback_event);
--
--	return 0;
--}
--
--void hv_fcopy_deinit(void)
--{
--	fcopy_transaction.state = HVUTIL_DEVICE_DYING;
--
--	hv_fcopy_cancel_work();
--
--	hvutil_transport_destroy(hvt);
--}
-diff --git a/drivers/hv/hv_util.c b/drivers/hv/hv_util.c
-index 9c97c4065fe7..c4f525325790 100644
---- a/drivers/hv/hv_util.c
-+++ b/drivers/hv/hv_util.c
-@@ -154,14 +154,6 @@ static struct hv_util_service util_vss = {
- 	.util_deinit = hv_vss_deinit,
- };
- 
--static struct hv_util_service util_fcopy = {
--	.util_cb = hv_fcopy_onchannelcallback,
--	.util_init = hv_fcopy_init,
--	.util_pre_suspend = hv_fcopy_pre_suspend,
--	.util_pre_resume = hv_fcopy_pre_resume,
--	.util_deinit = hv_fcopy_deinit,
--};
--
- static void perform_shutdown(struct work_struct *dummy)
- {
- 	orderly_poweroff(true);
-@@ -700,10 +692,6 @@ static const struct hv_vmbus_device_id id_table[] = {
- 	{ HV_VSS_GUID,
- 	  .driver_data = (unsigned long)&util_vss
- 	},
--	/* File copy GUID */
--	{ HV_FCOPY_GUID,
--	  .driver_data = (unsigned long)&util_fcopy
--	},
- 	{ },
- };
- 
-diff --git a/tools/hv/hv_fcopy_daemon.c b/tools/hv/hv_fcopy_daemon.c
-deleted file mode 100644
-index 16d629b22c25..000000000000
---- a/tools/hv/hv_fcopy_daemon.c
-+++ /dev/null
-@@ -1,266 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * An implementation of host to guest copy functionality for Linux.
-- *
-- * Copyright (C) 2014, Microsoft, Inc.
-- *
-- * Author : K. Y. Srinivasan <kys@microsoft.com>
-- */
--
--
--#include <sys/types.h>
--#include <stdio.h>
--#include <stdlib.h>
--#include <unistd.h>
--#include <string.h>
--#include <errno.h>
--#include <linux/hyperv.h>
--#include <linux/limits.h>
--#include <syslog.h>
--#include <sys/stat.h>
--#include <fcntl.h>
--#include <getopt.h>
--
--static int target_fd;
--static char target_fname[PATH_MAX];
--static unsigned long long filesize;
--
--static int hv_start_fcopy(struct hv_start_fcopy *smsg)
--{
--	int error = HV_E_FAIL;
--	char *q, *p;
--
--	filesize = 0;
--	p = (char *)smsg->path_name;
--	snprintf(target_fname, sizeof(target_fname), "%s/%s",
--		 (char *)smsg->path_name, (char *)smsg->file_name);
--
--	syslog(LOG_INFO, "Target file name: %s", target_fname);
--	/*
--	 * Check to see if the path is already in place; if not,
--	 * create if required.
--	 */
--	while ((q = strchr(p, '/')) != NULL) {
--		if (q == p) {
--			p++;
--			continue;
--		}
--		*q = '\0';
--		if (access((char *)smsg->path_name, F_OK)) {
--			if (smsg->copy_flags & CREATE_PATH) {
--				if (mkdir((char *)smsg->path_name, 0755)) {
--					syslog(LOG_ERR, "Failed to create %s",
--						(char *)smsg->path_name);
--					goto done;
--				}
--			} else {
--				syslog(LOG_ERR, "Invalid path: %s",
--					(char *)smsg->path_name);
--				goto done;
--			}
--		}
--		p = q + 1;
--		*q = '/';
--	}
--
--	if (!access(target_fname, F_OK)) {
--		syslog(LOG_INFO, "File: %s exists", target_fname);
--		if (!(smsg->copy_flags & OVER_WRITE)) {
--			error = HV_ERROR_ALREADY_EXISTS;
--			goto done;
--		}
--	}
--
--	target_fd = open(target_fname,
--			 O_RDWR | O_CREAT | O_TRUNC | O_CLOEXEC, 0744);
--	if (target_fd == -1) {
--		syslog(LOG_INFO, "Open Failed: %s", strerror(errno));
--		goto done;
--	}
--
--	error = 0;
--done:
--	if (error)
--		target_fname[0] = '\0';
--	return error;
--}
--
--static int hv_copy_data(struct hv_do_fcopy *cpmsg)
--{
--	ssize_t bytes_written;
--	int ret = 0;
--
--	bytes_written = pwrite(target_fd, cpmsg->data, cpmsg->size,
--				cpmsg->offset);
--
--	filesize += cpmsg->size;
--	if (bytes_written != cpmsg->size) {
--		switch (errno) {
--		case ENOSPC:
--			ret = HV_ERROR_DISK_FULL;
--			break;
--		default:
--			ret = HV_E_FAIL;
--			break;
--		}
--		syslog(LOG_ERR, "pwrite failed to write %llu bytes: %ld (%s)",
--		       filesize, (long)bytes_written, strerror(errno));
--	}
--
--	return ret;
--}
--
--/*
-- * Reset target_fname to "" in the two below functions for hibernation: if
-- * the fcopy operation is aborted by hibernation, the daemon should remove the
-- * partially-copied file; to achieve this, the hv_utils driver always fakes a
-- * CANCEL_FCOPY message upon suspend, and later when the VM resumes back,
-- * the daemon calls hv_copy_cancel() to remove the file; if a file is copied
-- * successfully before suspend, hv_copy_finished() must reset target_fname to
-- * avoid that the file can be incorrectly removed upon resume, since the faked
-- * CANCEL_FCOPY message is spurious in this case.
-- */
--static int hv_copy_finished(void)
--{
--	close(target_fd);
--	target_fname[0] = '\0';
--	return 0;
--}
--static int hv_copy_cancel(void)
--{
--	close(target_fd);
--	if (strlen(target_fname) > 0) {
--		unlink(target_fname);
--		target_fname[0] = '\0';
--	}
--	return 0;
--
--}
--
--void print_usage(char *argv[])
--{
--	fprintf(stderr, "Usage: %s [options]\n"
--		"Options are:\n"
--		"  -n, --no-daemon        stay in foreground, don't daemonize\n"
--		"  -h, --help             print this help\n", argv[0]);
--}
--
--int main(int argc, char *argv[])
--{
--	int fcopy_fd = -1;
--	int error;
--	int daemonize = 1, long_index = 0, opt;
--	int version = FCOPY_CURRENT_VERSION;
--	union {
--		struct hv_fcopy_hdr hdr;
--		struct hv_start_fcopy start;
--		struct hv_do_fcopy copy;
--		__u32 kernel_modver;
--	} buffer = { };
--	int in_handshake;
--
--	static struct option long_options[] = {
--		{"help",	no_argument,	   0,  'h' },
--		{"no-daemon",	no_argument,	   0,  'n' },
--		{0,		0,		   0,  0   }
--	};
--
--	while ((opt = getopt_long(argc, argv, "hn", long_options,
--				  &long_index)) != -1) {
--		switch (opt) {
--		case 'n':
--			daemonize = 0;
--			break;
--		case 'h':
--		default:
--			print_usage(argv);
--			exit(EXIT_FAILURE);
--		}
--	}
--
--	if (daemonize && daemon(1, 0)) {
--		syslog(LOG_ERR, "daemon() failed; error: %s", strerror(errno));
--		exit(EXIT_FAILURE);
--	}
--
--	openlog("HV_FCOPY", 0, LOG_USER);
--	syslog(LOG_INFO, "starting; pid is:%d", getpid());
--
--reopen_fcopy_fd:
--	if (fcopy_fd != -1)
--		close(fcopy_fd);
--	/* Remove any possible partially-copied file on error */
--	hv_copy_cancel();
--	in_handshake = 1;
--	fcopy_fd = open("/dev/vmbus/hv_fcopy", O_RDWR);
--
--	if (fcopy_fd < 0) {
--		syslog(LOG_ERR, "open /dev/vmbus/hv_fcopy failed; error: %d %s",
--			errno, strerror(errno));
--		exit(EXIT_FAILURE);
--	}
--
--	/*
--	 * Register with the kernel.
--	 */
--	if ((write(fcopy_fd, &version, sizeof(int))) != sizeof(int)) {
--		syslog(LOG_ERR, "Registration failed: %s", strerror(errno));
--		exit(EXIT_FAILURE);
--	}
--
--	while (1) {
--		/*
--		 * In this loop we process fcopy messages after the
--		 * handshake is complete.
--		 */
--		ssize_t len;
--
--		len = pread(fcopy_fd, &buffer, sizeof(buffer), 0);
--		if (len < 0) {
--			syslog(LOG_ERR, "pread failed: %s", strerror(errno));
--			goto reopen_fcopy_fd;
--		}
--
--		if (in_handshake) {
--			if (len != sizeof(buffer.kernel_modver)) {
--				syslog(LOG_ERR, "invalid version negotiation");
--				exit(EXIT_FAILURE);
--			}
--			in_handshake = 0;
--			syslog(LOG_INFO, "kernel module version: %u",
--			       buffer.kernel_modver);
--			continue;
--		}
--
--		switch (buffer.hdr.operation) {
--		case START_FILE_COPY:
--			error = hv_start_fcopy(&buffer.start);
--			break;
--		case WRITE_TO_FILE:
--			error = hv_copy_data(&buffer.copy);
--			break;
--		case COMPLETE_FCOPY:
--			error = hv_copy_finished();
--			break;
--		case CANCEL_FCOPY:
--			error = hv_copy_cancel();
--			break;
--
--		default:
--			error = HV_E_FAIL;
--			syslog(LOG_ERR, "Unknown operation: %d",
--				buffer.hdr.operation);
--
--		}
--
--		/*
--		 * pwrite() may return an error due to the faked CANCEL_FCOPY
--		 * message upon hibernation. Ignore the error by resetting the
--		 * dev file, i.e. closing and re-opening it.
--		 */
--		if (pwrite(fcopy_fd, &error, sizeof(int), 0) != sizeof(int)) {
--			syslog(LOG_ERR, "pwrite failed: %s", strerror(errno));
--			goto reopen_fcopy_fd;
--		}
--	}
--}
--- 
-2.34.1
+
+syzkaller build log:
+go env (err=3D<nil>)
+GO111MODULE=3D'auto'
+GOARCH=3D'amd64'
+GOBIN=3D''
+GOCACHE=3D'/syzkaller/.cache/go-build'
+GOENV=3D'/syzkaller/.config/go/env'
+GOEXE=3D''
+GOEXPERIMENT=3D''
+GOFLAGS=3D''
+GOHOSTARCH=3D'amd64'
+GOHOSTOS=3D'linux'
+GOINSECURE=3D''
+GOMODCACHE=3D'/syzkaller/jobs-2/linux/gopath/pkg/mod'
+GONOPROXY=3D''
+GONOSUMDB=3D''
+GOOS=3D'linux'
+GOPATH=3D'/syzkaller/jobs-2/linux/gopath'
+GOPRIVATE=3D''
+GOPROXY=3D'https://proxy.golang.org,direct'
+GOROOT=3D'/usr/local/go'
+GOSUMDB=3D'sum.golang.org'
+GOTMPDIR=3D''
+GOTOOLCHAIN=3D'auto'
+GOTOOLDIR=3D'/usr/local/go/pkg/tool/linux_amd64'
+GOVCS=3D''
+GOVERSION=3D'go1.21.4'
+GCCGO=3D'gccgo'
+GOAMD64=3D'v1'
+AR=3D'ar'
+CC=3D'gcc'
+CXX=3D'g++'
+CGO_ENABLED=3D'1'
+GOMOD=3D'/syzkaller/jobs-2/linux/gopath/src/github.com/google/syzkaller/go.=
+mod'
+GOWORK=3D''
+CGO_CFLAGS=3D'-O2 -g'
+CGO_CPPFLAGS=3D''
+CGO_CXXFLAGS=3D'-O2 -g'
+CGO_FFLAGS=3D'-O2 -g'
+CGO_LDFLAGS=3D'-O2 -g'
+PKG_CONFIG=3D'pkg-config'
+GOGCCFLAGS=3D'-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=3D0=
+ -ffile-prefix-map=3D/tmp/go-build3952729973=3D/tmp/go-build -gno-record-gc=
+c-switches'
+
+git status (err=3D<nil>)
+HEAD detached at 120789fd6
+nothing to commit, working tree clean
+
+
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+go list -f '{{.Stale}}' ./sys/syz-sysgen | grep -q false || go install ./sy=
+s/syz-sysgen
+make .descriptions
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+bin/syz-sysgen
+touch .descriptions
+GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
+/syzkaller/prog.GitRevision=3D120789fd6691dd038dbe206ceeed95be5c006364 -X '=
+github.com/google/syzkaller/prog.gitRevisionDate=3D20240327-181839'" "-tags=
+=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-fuzzer=
+ github.com/google/syzkaller/syz-fuzzer
+GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
+/syzkaller/prog.GitRevision=3D120789fd6691dd038dbe206ceeed95be5c006364 -X '=
+github.com/google/syzkaller/prog.gitRevisionDate=3D20240327-181839'" "-tags=
+=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-execpr=
+og github.com/google/syzkaller/tools/syz-execprog
+GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
+/syzkaller/prog.GitRevision=3D120789fd6691dd038dbe206ceeed95be5c006364 -X '=
+github.com/google/syzkaller/prog.gitRevisionDate=3D20240327-181839'" "-tags=
+=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-stress=
+ github.com/google/syzkaller/tools/syz-stress
+mkdir -p ./bin/linux_amd64
+gcc -o ./bin/linux_amd64/syz-executor executor/executor.cc \
+	-m64 -O2 -pthread -Wall -Werror -Wparentheses -Wunused-const-variable -Wfr=
+ame-larger-than=3D16384 -Wno-stringop-overflow -Wno-array-bounds -Wno-forma=
+t-overflow -Wno-unused-but-set-variable -Wno-unused-command-line-argument -=
+static-pie -fpermissive -w -DGOOS_linux=3D1 -DGOARCH_amd64=3D1 \
+	-DHOSTGOOS_linux=3D1 -DGIT_REVISION=3D\"120789fd6691dd038dbe206ceeed95be5c=
+006364\"
+
+
+Error text is too large and was truncated, full error text is at:
+https://syzkaller.appspot.com/x/error.txt?x=3D1464b30d180000
+
+
+Tested on:
+
+commit:         486291a0 Merge tag 'drm-fixes-2024-03-30' of https://g..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/li=
+nux.git master
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3Df64ec427e98bccd=
+7
+dashboard link: https://syzkaller.appspot.com/bug?extid=3De4374f6c021d422de=
+3d1
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Deb=
+ian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D16783ae51800=
+00
 
