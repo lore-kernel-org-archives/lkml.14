@@ -1,100 +1,94 @@
-Received: from mailrelay1-1.pub.mailoutpod2-cph3.one.com (mailrelay1-1.pub.mailoutpod2-cph3.one.com [46.30.211.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4455A1FB2
-	for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2024 18:40:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675BE22093;
+	Sat, 30 Mar 2024 18:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711824052; cv=none; b=oJxJYf694GOjFeoLvAVQlyL9hKQDY6tr/6NhQKkgWYzXKvLz/OdfUfhin+cILjkKrSulvZ72f6WbII7Un6nN0tH/fQazYlaH1NARSuuEtzO/4fnvd3/r11pe3NQ+VaJKrcAguJh9nK6j7/suKkQJSzQkFy/kPbQXmTP3htvkXCQ=
+	t=1711824088; cv=none; b=EL88rkLOf99TIqCmuF175D7x+dPrOOecbRW/QP2mmvDWTdXSA5BGCYceNxbUQM4RZbc9yxnuGMKstrLO+HP+0Adefv3N3Y01y74RYWQQ/M0dKpdJ0+AtDgDMwxclsTaHL8am0NCETvNwQib9QM/kKuFWSjSRbGMAbG/dfSV01pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711824052; c=relaxed/simple;
-	bh=+fKm55pvJInq7E1oiY4SA54W6AbzUuuzHvH9tWxJRYU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hk/j8kqgVlB0B8B6PLwx0jUKtTLo5s0jazK0JQbpm1Oi7UmlXv5O2XfMKaPhrUgs0zn4zrjv94iZ+7GE8moBWHVLB1GKjp9YXfQhp/W+IzfK87pwNv4Y0pcLFq2kWIFNfCdchBZUISF/nsEwCcaxe3fIG4Y06meEdQUIlPOaPqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=W1nqs/H5; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=f4Dkfc8k; arc=none smtp.client-ip=46.30.211.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="W1nqs/H5";
-	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="f4Dkfc8k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=rsa2;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=Xeeh2dg6zdnZbEZ/lUmV7A/JWt00HE94jarkf2OAKXw=;
-	b=W1nqs/H5MmWtsVize4yOqv5zdPv5BOIEbvoB7e+mMiiTmOTMjUevbBzHBATpsEk5ypP+S0gb07Ea7
-	 lYIwTt7rTRjGJK04mnHWquqc4RfbS/2FdyNOapO2cDBM8jHPt0DFb5p9FXWM2pgCHkwS1hJhLmm1hb
-	 UfgPQjbXjjvGpXKSXisIHKdtWrR57wFf6vKW1JCLfjzl6UQqwNwFZx6uG3hiQYtNnURydBl82WqyL8
-	 8Khl7QCX0SIKmVe8XhdZ4fT1A0rPLgPU1jE0jyE9ebkJeZQHjRcHGsAk6sfww+GqU5zrpR+v0Qv8fJ
-	 gDl3Zsjg/AQUE4+cLwF1EYXMacoW2Pg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=ed2;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=Xeeh2dg6zdnZbEZ/lUmV7A/JWt00HE94jarkf2OAKXw=;
-	b=f4Dkfc8kcLussvHSfDwqYMUW8E8Ke7ibwfhSRoadQwiTSPL1XpNhGZ4TBp+VxxwEsa4367kFop+2M
-	 kmnjvaFCg==
-X-HalOne-ID: dba5c148-eec4-11ee-9dce-516168859393
-Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
-	by mailrelay1.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
-	id dba5c148-eec4-11ee-9dce-516168859393;
-	Sat, 30 Mar 2024 18:39:39 +0000 (UTC)
-Date: Sat, 30 Mar 2024 19:39:37 +0100
-From: Sam Ravnborg <sam@ravnborg.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Andreas Larsson <andreas@gaisler.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	sparclinux@vger.kernel.org, Nick Bowler <nbowler@draconx.ca>,
-	linux-kernel@vger.kernel.org, Atish Patra <atish.patra@oracle.com>,
-	stable@vger.kernel.org, Bob Picco <bob.picco@oracle.com>,
-	Vijay Kumar <vijay.ac.kumar@oracle.com>
-Subject: Re: [PATCH 00/10] sparc64: Fix CPU online bug and warning fixes
-Message-ID: <20240330183937.GA191882@ravnborg.org>
-References: <20240330-sparc64-warnings-v1-0-37201023ee2f@ravnborg.org>
- <4e57929b-1539-4a25-ab05-a2a9e04ecc1d@app.fastmail.com>
+	s=arc-20240116; t=1711824088; c=relaxed/simple;
+	bh=a0TJZoH9QyqE52H2Bq488jfPcOZuj7Ya8OYwWGibDRM=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=mUm7oSkurLP5NEQTBtyDuIrydrTCRTqZYMdx0PdqTQVcYFDM2J7wyc92qxvtoSH8JmvLyuSEOyKlZtwwvpeLTG4XmcO+H0KVI+dUYjGyTUfjjxb8HwL4p1QOnxfAYTeMkJZm8d0TOymB1rwWtyJuv1oEMVQ6HQt087TofjA8JcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.1.105] (178.176.75.214) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Sat, 30 Mar
+ 2024 21:41:13 +0300
+Subject: Re: [PATCH v9 21/38] ata: pata_ep93xx: add device tree support
+To: <nikita.shubin@maquefel.me>, Damien Le Moal <dlemoal@kernel.org>, Niklas
+ Cassel <cassel@kernel.org>
+CC: <linux-ide@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Arnd Bergmann
+	<arnd@arndb.de>
+References: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
+ <20240326-ep93xx-v9-21-156e2ae5dfc8@maquefel.me>
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <bebf7c70-bd40-0382-211f-6ee9bd9f72b9@omp.ru>
+Date: Sat, 30 Mar 2024 21:41:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4e57929b-1539-4a25-ab05-a2a9e04ecc1d@app.fastmail.com>
+In-Reply-To: <20240326-ep93xx-v9-21-156e2ae5dfc8@maquefel.me>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 03/30/2024 18:24:56
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 0
+X-KSE-AntiSpam-Info: Lua profiles 184500 [Mar 29 2024]
+X-KSE-AntiSpam-Info: Version: 6.1.0.4
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 14 0.3.14
+ 5a0c43d8a1c3c0e5b0916cc02a90d4b950c01f96
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info:
+	omp.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
+X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.75.214
+X-KSE-AntiSpam-Info: Rate: 0
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 03/30/2024 18:32:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 3/30/2024 4:36:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-Hi Arnd,
+On 3/26/24 12:18 PM, Nikita Shubin via B4 Relay wrote:
 
-On Sat, Mar 30, 2024 at 11:19:37AM +0100, Arnd Bergmann wrote:
-> On Sat, Mar 30, 2024, at 10:57, Sam Ravnborg via B4 Relay wrote:
-> > Nick Bowler reported that sparc64 failed to bring all his CPU's online,
-> > and that turned out to be an easy fix.
-> >
-> > The sparc64 build was rather noisy with a lot of warnings which had
-> > irritated me enough to go ahead and fix them.
-> > With this set of patches my arch/sparc/ is almost warning free for
-> > all{no,yes,mod}config + defconfig builds.
+> From: Nikita Shubin <nikita.shubin@maquefel.me>
 > 
-> Patches 1-9 look good to me,
+> - add OF ID match table
+> - drop platform DMA and filters
+> - change DMA setup to OF, so we can defer probe
 > 
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-Thanks!
+> Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+> Acked-by: Damien Le Moal <dlemoal@kernel.org>
+> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
 
-> 
-> > There is one warning about "clone3 not implemented", which I have ignored.
-> >
-> > The warning fixes hides the fact that sparc64 is not yet y2038 prepared,
-> > and it would be preferable if someone knowledgeable would fix this
-> > poperly.
-> 
-> The clone3 bug has been around for ages, it's probably not even that
-> hard to fix and just needs a little bit of testing.
-I looked briefly and it involves a better understanding of the window
-register manipulation than what I have today.
+   You normally add the R-b and A-b tags after your signoff, not before.
+I know b4 gets it wrong... :-/
 
-> 
-> If anyone wants to work on the time64 support for the vdso, I can
-> explain the details for how it's done.
-I am happy to type the patches but need to rely on others for testing.
-Anything to help me get started would be super.
+[...]
 
-	Sam
+MBR, Sergey
