@@ -1,71 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D718BE4A;
-	Sat, 30 Mar 2024 09:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D6B2919
+	for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2024 09:13:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711789955; cv=none; b=FRiMn/ar1OErN/TwHlrM3T5RgZUpCHmoC4o3wppsC4byr9zfTQgJc9ARIvUD4cXa5t6OxczCI7dcD4XEFkQHRsaJTfoqfhojLLo7y3SpoIQdFJ9k//3UX1iYdnP7l7L8mP+e7Yzg+iJTo8N9a7G44YL94tROIHW26Vwn/mXs/Qk=
+	t=1711790001; cv=none; b=o2zMv5vDjt7IHq08irUspjM8xOLez/RbYvWrx8e2FSP5T1a2Nt5Thw3s0NfeUlA6iu23ubSdiNldDx+gDYoQ2YYF7jcBnl4IXnVifEAOTGePPmfAncY+3NzERJ0rWqiJgHlAfpbAyN3piKxAEfSWkY20fKygqf5aoLgsMc3uYV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711789955; c=relaxed/simple;
-	bh=jzqu+nCzBGkiGSJEi1GM4Qmn/uIbNiavD6zRP6mXd0s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U/epib2+C8mHKK8ot3mlRNkPdpBZKyoZxKb1KdT10xY6etu/3Yvtd785ztb1owJHeD+MkUyKzoMBHpcjuu+/2BW1HcC1jM43ekUNzYQ05OsSRJSR2JnnxrU4ZXlkFVq31JuUY0kn+repTUfyn4Eb7XKrmF55dP+I3ImTdtcKzww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Jc93oTzQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711790001; c=relaxed/simple;
+	bh=Pd61hkxq0jQRKuAepCysIm0E2ZXvmOgEfKC7Zg70avM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IOQjFlJgBDioLwpNXguRzu0NEoLUlcio/I6v+j9cwpjLo2UAhFi0ScH2RheREqoFAJ5vQp4pKxJpIEOJ4PZUmv/3n4EcE3hQf3abrFz+Dzqgq4sbHbF8ZH8Sp6aZIkvT8nj6qtD+c+rJlEmitzQF92enlb0EG0BcaivG2V9HMuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nKh2BVHH; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Jc93oTzQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48152C433F1;
-	Sat, 30 Mar 2024 09:12:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1711789955;
-	bh=jzqu+nCzBGkiGSJEi1GM4Qmn/uIbNiavD6zRP6mXd0s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Jc93oTzQHnf/tqm8pAbU1d2/OQCtTzW4NWl1J7Oic+lZpNUfbKPSU9GgH560Q82Ec
-	 7pZxeySC88QxynAxXjqdbbaH7iYjLncIuMgWKOoy/NlTeDhiZXX72B6/EuBDJ/n5mB
-	 hA2kyNsZ5wjA7ZdDWPe6Mcu69GxoX0YfmKZwtAmg=
-Date: Sat, 30 Mar 2024 10:12:31 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Liu Shixin <liushixin2@huawei.com>, stable@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH stable-5.10] mm/memory-failure: fix an incorrect use of
- tail pages
-Message-ID: <2024033024-unusable-secret-6872@gregkh>
-References: <20240307124841.2838010-1-liushixin2@huawei.com>
- <026db58d-feea-8191-616a-3e6dca592786@huawei.com>
- <ZgD2EvkzS1Uz5wy6@casper.infradead.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nKh2BVHH"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-513e134f73aso3358820e87.2
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2024 02:13:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711789997; x=1712394797; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=n/ahHhuh0l5k5iEy47fRvRUIFY5jJwWirUcq7Vi4bcI=;
+        b=nKh2BVHH7qFeO715HmLEmFFhndp5dUL5gxhobj3LMdJWBeX32CJX9Ix5XzIBdDucXG
+         NpjgLc2sQBgB9bz9/mzFcvxajiohQ02XZ4SOvR99htMLbSnpENxaWL7tcNakEAJOJvHS
+         LzP4yjhDK954YIP8kuc4dJIAilzePjrU+5qsB2X0tQ4zlZG42tZHT1wOqAleanO3okju
+         +qcjYKhwDJ2ZZkIK88sEG2nCaa971MxyAISOrDN+XQ7FPADmffDIPBzRU9+z2Gyy6eEe
+         pS71RjzNE2TG9J19wMTNSfRJBJWv79yJOnIc9G5ANpXgVWa3WpxGZOsoKjnqEc87mboJ
+         e7kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711789997; x=1712394797;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=n/ahHhuh0l5k5iEy47fRvRUIFY5jJwWirUcq7Vi4bcI=;
+        b=wrHrJJfgTjQYVV7KHK4B0gDQQTS4aVPqosDFmBqsDERe4HlDemr8clGV0i5iJoZmd8
+         Gfc6tAGCZJdyfFPDo+50eyoTqP9VWqC/VuStOH7/GKH6pfKIpQhO75KOZD9iPCv5Em6t
+         s/WmuM2PmC1TNMlJ/3FruZp3aBunusfF25eLQWKfBFKgiVr6o+UOm2LzAvT+94SSMbyH
+         VaRAI3/K4KETcnGmwNEILsEfow+AAoBhF2gGUhbMlxdZWZpRx8HEjaI5+6eyQNaH39wx
+         aCBDg7+crpNQOf63NnSkPwUflD8QRN61m7Dn1400hBzzS9pHzENtc9UzaYP77VHavuJI
+         LlFg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJqZU1+kfbhHOd9cIlAlmanEGMHjSIzeMtYvx4FCFCLoUjYzTQ1XtalqMsL0/+dRsJ0mBdUoXZggpUdYRxdZ763b7cHkoD3/Pknyvp
+X-Gm-Message-State: AOJu0YyfqOBBA32Yb6lbpK4KyUna0yOjuJkrLisvZr9uhuHohxGTkzUE
+	IUn1TEQEbTrma6VH3seTy98mV4SLMHRpyMYyaQcmnD8l4Shgu8i0UzeKUsAunicXkHmFxYZvaiF
+	E
+X-Google-Smtp-Source: AGHT+IH/4O8sS4VNtDSD98CNJBK78k1IeHbJpO+5na8hAgvlTBSKhJTlTsjQF+7s/5YHfYpe8r0j2g==
+X-Received: by 2002:a05:6512:3ba0:b0:515:d12c:8464 with SMTP id g32-20020a0565123ba000b00515d12c8464mr3562774lfv.31.1711789997306;
+        Sat, 30 Mar 2024 02:13:17 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id az15-20020adfe18f000000b0034335f13570sm3984261wrb.116.2024.03.30.02.13.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 30 Mar 2024 02:13:16 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danila Tikhonov <danila@jiaxyga.com>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 1/2] arm64: dts: qcom: pm6150: correct Type-C compatible
+Date: Sat, 30 Mar 2024 10:13:10 +0100
+Message-Id: <20240330091311.6224-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZgD2EvkzS1Uz5wy6@casper.infradead.org>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 25, 2024 at 03:57:06AM +0000, Matthew Wilcox wrote:
-> On Mon, Mar 25, 2024 at 11:36:49AM +0800, Liu Shixin wrote:
-> > Hi,
-> > 
-> > After backport commit c79c5a0a00a9 ("mm/memory-failure: check the mapcount of the precise page"),
-> > 
-> > I got an error message as written on the patch. The problem can be fixed by the patch or just revert.
-> > 
-> > Now I prefer to revert because I think it is related to folio and no impact in stable, or maybe I'm wrong.
-> 
-> I checked out what is going wrong here, and Liu Shixin is correct.
-> 
-> Commit c79c5a0a00a9 was incorrectly backported to v5.10 and
-> commit 70168fdc743b changees the page passed to try_to_unmap().
-> It now passes the tail page, and should always have passed hpage.
-> Please apply the patch below to v5.10 (and any other trees that
-> c79c5a0a00a9 got backported to).
+The first part of the compatible of Type-C node misses ending quote,
+thus we have one long compatible consisting of two compatible strings
+leading to dtbs_check warnings:
 
-All now queued up,t hanks.
+  sc7180-acer-aspire1.dtb: pmic@0: typec@1500:compatible: 'oneOf' conditional failed, one must be fixed
+  sc7180-acer-aspire1.dtb: typec@1500: compatible:0: 'qcom,pm6150-typec,\n qcom,pm8150b-typec' does not match '^[a-zA-Z0-9][a-zA-Z0-9,+\\-._/]+$'
 
-greg k-h
+Reported-by: Rob Herring <robh@kernel.org>
+Fixes: f81c2f01cad6 ("arm64: dts: qcom: pm6150: define USB-C related blocks")
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+---
+
+Changes in v2:
+1. Correct warning msg
+---
+ arch/arm64/boot/dts/qcom/pm6150.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/pm6150.dtsi b/arch/arm64/boot/dts/qcom/pm6150.dtsi
+index 11158c2bd524..b20a639cddf3 100644
+--- a/arch/arm64/boot/dts/qcom/pm6150.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm6150.dtsi
+@@ -71,8 +71,8 @@ pm6150_vbus: usb-vbus-regulator@1100 {
+ 		};
+ 
+ 		pm6150_typec: typec@1500 {
+-			compatible = "qcom,pm6150-typec,
+-				      qcom,pm8150b-typec";
++			compatible = "qcom,pm6150-typec",
++				     "qcom,pm8150b-typec";
+ 			reg = <0x1500>, <0x1700>;
+ 			interrupts = <0x0 0x15 0x00 IRQ_TYPE_EDGE_RISING>,
+ 				     <0x0 0x15 0x01 IRQ_TYPE_EDGE_BOTH>,
+-- 
+2.34.1
+
