@@ -1,101 +1,136 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C745137714;
-	Sat, 30 Mar 2024 14:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72711C0DEF
+	for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2024 15:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711810768; cv=none; b=hr6ZVuT1mPRz6gQKoxXHnZdRsMtQmTEkYIKYrAVpNFqp+vEDiW/84rYmUOPk+McH82MGs6gJYBSrCPnr3nQ4UxuczHPGMYp6y1AczUB8rljxzTp+D5KITbBgGm4hS9KD7AHtJQnO0MDKdw5shfvSnbjooilxQ4e5dEDN0T20KAA=
+	t=1711810851; cv=none; b=cckkP70YXNhh1mX3uZIqfl69G5/sWilauHRpkjwam57BBMQHl/w0MruYLLuchFOXs7dAQjYIeZIGaTrzMOj4jLaIfwAKMSY3Q1IUt6mhVXfL8y2DYMIqHT5F9TKcurRhnsveNurpKDoIKXPIgchQ5BXewYBtlg8Y60SXAAeHOmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711810768; c=relaxed/simple;
-	bh=rZ8tdPh1C+hRTf8PLer5uxXElPXls2N8CqlXiFribAc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i/yOWNo99Y8phvLoG13KqSPAG1kIz5nPGvS6aOzc50w0FgDqqWc90y5LhF1k6pCfur87YDZW3P9LshAU0F3jhY03nIar9b+NWPwyG9d8MF2ghQqrtyybHs8z6gOx/VPUteOMqpsRIVlbjfF7AcATDGCWPBm68q59mSHmIGTswfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=iAh+n0oQ; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1711810851; c=relaxed/simple;
+	bh=TbTHOui9nRbzInfWv54rG7ybH2YP9w+pNQe9Uik8Gy0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OsViVWVHiarDSIGRXSSGOY2yh8zIJiezq1ZUfNnT6FXY6TD25BdZ5qnjzjaM2Su5/lrMriKzKFbE5q3ApxXw5vwVFGWYl4Prgn8nNBp9KxCMIb65su8tJIjMMXLb8PnQuQwqxDf5vyUJoyCYuH8YcO5COGIvzXxOOLdmOzj7B4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QfeLH+E/; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="iAh+n0oQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=ZkD5ajmB6EjozrfKJAzN2VG60x9g0fXxfM+nKI7AEdo=;
-	t=1711810765; x=1712242765; b=iAh+n0oQcXBg7bwAUUS/CsjAaMIrT3XpLCgS+D1Pxiqsk9W
-	8brHSJjjf7ETVnAPwqxb1daxFaAY1R6fmJZtcxFwILzFuSFKv+sY6qR7X36zitq2ZuO23auRWDpCk
-	RnmtR9Iyl/G6PZvm37+M1bwxZRp7t191z52k+eoXm74Tr9gGwmM6oM7mY5HuHRqFsjoxft6HIwXll
-	ryng6/qv26fua9Ad3ryI4dGNEwmznYQE/TYHDwQQ44AM7Qnje6NCkI5OogQGJwGrkGSpL/s7GrrBN
-	+XUi+A4xXmkHDOu25m6QVa0nwku24MzIra49BUGppBkqDpz2bIQ+aLrkjpS/Nmtw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rqaB0-0001NX-O7; Sat, 30 Mar 2024 15:59:22 +0100
-Message-ID: <bf267566-c18c-4ad9-9263-8642ecfdef1f@leemhuis.info>
-Date: Sat, 30 Mar 2024 15:59:22 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QfeLH+E/"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-513d212f818so3047166e87.2
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2024 08:00:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711810848; x=1712415648; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qeFUNYhrsBvDmXfNh3GP5CFwWeV+2KjCY5GUTF19i58=;
+        b=QfeLH+E/0W3Tz09xNlq+WsZ7hpSn9HaIJZ8eXtmZmIGN+QXZHOISiboi/4GVrpUF7p
+         NOW+IRhqs8glaas/mEw4NapMALdBKPC3s7ikjak08WIJlzzs2YB+GypK3bgCFrcO2oPy
+         ANANNN2AYVubRy8P6XmrxEz6E+ZX4Bajl/Xif8tPVizRQY68kXPfbY7Uycte8K621bTJ
+         5j58wcs1xKM7tj3D7SkBKdmm3737Y+N1V+yyF+YIKP/qRqSo2CaG4H1NOEkBT5olzK2t
+         VLodHMAKIrLIHeM/dj3cApcPoOV9sxWB8dnKEJLkWGRtp2oiLr7o9w3P8HJA1FBBWGhW
+         QDQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711810848; x=1712415648;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qeFUNYhrsBvDmXfNh3GP5CFwWeV+2KjCY5GUTF19i58=;
+        b=SRgKtv9azZmNUIo15k+sY6uqoqczWXTNVOZHbB4cwuwnfBy+bxdpH0FapoR+erpbAn
+         Pos2s4bYeYinjuQbzpRR5ZzDuxJ07y77EyqkevpmNw0OXHwikBzGmkdsfGEEaSJx8y16
+         XHThqyZlad4ZP9TOrw9KTbGvO+58iR9EGczNl3ELfOgs110J/63MhaVdMJOIcjH78Zha
+         BHPGSraVPCT2RyPn56c2VrjPmsKeIz7KtDjCW+v81eoCMQPSM0GzLkVZplCEVUsjZUU0
+         CEXJ2p7Afhz4E72D+5AJ5dl1xGFcdgOkCmhTlATpNSoLcTfLm/smj+wKtUozlvYHKpEs
+         6vVw==
+X-Forwarded-Encrypted: i=1; AJvYcCUoQmTLz3/IMgcteZUoxpcfaU5TarOdg5yKtT6eGc+gwgfng5kEW++27jm9q9OITJfrC0SfDWfAF38/8Ie/Qx3+mPk3EiqvdHBvt2lm
+X-Gm-Message-State: AOJu0YxA/UgGS8JbCcRMUBpH9MT4Xvg5l6I7Dx91LXS+Cy8Btx8oe2Th
+	iwaKrryuK4RGyLbHAgrPQWXF9ifxb7aPwAKNukgnPCdvOWJNK3ViCN8Q3sMRUCD908sVx8KOHdo
+	f
+X-Google-Smtp-Source: AGHT+IHN7f4UYparBiAGyFZQsvMsLXikA/nW80TyS4l4HLUhBjxfSbN21Vqi/NPZ7qlAf4/qE6rLmQ==
+X-Received: by 2002:ac2:58f2:0:b0:513:3d26:7cc6 with SMTP id v18-20020ac258f2000000b005133d267cc6mr2848569lfo.15.1711810847829;
+        Sat, 30 Mar 2024 08:00:47 -0700 (PDT)
+Received: from umbar.lan ([192.130.178.91])
+        by smtp.gmail.com with ESMTPSA id j5-20020a056512344500b00515d205a6f0sm496199lfr.29.2024.03.30.08.00.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 30 Mar 2024 08:00:47 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: [PATCH v2 0/3] drm/panel: add support for LG SW43408 panel
+Date: Sat, 30 Mar 2024 17:00:45 +0200
+Message-Id: <20240330-lg-sw43408-panel-v2-0-293a58717b38@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Bluetooth broken for some people with 6.8.2 [Was: [PATCH 6.8 308/715]
- Bluetooth: hci_core: Cancel request on command timeout]
-To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
-Cc: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
- Jakub Kicinski <kuba@kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240324223455.1342824-1-sashal@kernel.org>
- <20240324223455.1342824-309-sashal@kernel.org>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <20240324223455.1342824-309-sashal@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711810765;f882f0bc;
-X-HE-SMSGID: 1rqaB0-0001NX-O7
+X-B4-Tracking: v=1; b=H4sIAB0pCGYC/32NTQrCMBBGr1Jm7Uh+obryHtJFbCfpQElKIlEpv
+ buxB3D5Hnzv26BQZipw7TbIVLlwig3UqYNxdjEQ8tQYlFBGaC1wCVheRhvR4+oiLfiwVnkj5Wg
+ 1QZutmTy/j+R9aDxzeab8OR6q/Nk/sSpRoLe2F368eDW528LR5XROOcCw7/sXkSIEILEAAAA=
+To: Sumit Semwal <sumit.semwal@linaro.org>, 
+ Caleb Connolly <caleb.connolly@linaro.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Vinod Koul <vkoul@kernel.org>, Caleb Connolly <caleb@connolly.tech>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1736;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=TbTHOui9nRbzInfWv54rG7ybH2YP9w+pNQe9Uik8Gy0=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmCCkeW9RMtkNd3jg/F4YF3+7GbRlOaHo4dt3gG
+ f5lWmdi9/uJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZggpHgAKCRCLPIo+Aiko
+ 1aABCACVd6NQSpXlyfAImYk+V5+sCXVWy/Cu78jlO/LPhB1OjoR5DQ/YwVOttpOAg7b5pZ5dd3I
+ faWpAQ32mUBBtU091NXtPFmAZVmbrjplgCg8HQ3CSuAq266/Y7b5NpwEPLe2u8sGL0sB+EjyDeu
+ Jj9uD9DMDDmAS8ju3jFcWEkehWec1SHrJe97vzFWa9iDp3I8uDC80MXXYSAjdZbzL7fud6GPbcC
+ LRMfhO7q38gMBkBys2rirGZhoH5gaxbRzel22HcaIXCGGRSnw1ZtiFFZtvfLvrpTNIsVeGLY+Q/
+ q/ccLjijPHfpvLswPPiYTttJM7pdyO1DVcrICuq1NRTZFqQy
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-On 24.03.24 23:28, Sasha Levin wrote:
-> From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-> 
-> [ Upstream commit 63298d6e752fc0ec7f5093860af8bc9f047b30c8 ]
-> 
-> If command has timed out call __hci_cmd_sync_cancel to notify the
-> hci_req since it will inevitably cause a timeout.
-> 
-> This also rework the code around __hci_cmd_sync_cancel since it was
-> wrongly assuming it needs to cancel timer as well, but sometimes the
-> timers have not been started or in fact they already had timed out in
-> which case they don't need to be cancel yet again.
-> 
-> Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-> Stable-dep-of: 2615fd9a7c25 ("Bluetooth: hci_sync: Fix overwriting request callback")
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+The LG SW43408 panel is used on Google Pixel3 devices. For a long time
+we could not submit the driver, as the panel was not coming up from the
+reset. The panel seems to be picky about some of the delays during init
+and it also uses non-standard payload for MIPI_DSI_COMPRESSION_MODE.
 
-Hey stable team, I wonder if it might be wise to pick up 1c3366abdbe884
-("Bluetooth: hci_sync: Fix not checking error on
-hci_cmd_sync_cancel_sync") from next
-(https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=1c3366abdbe884)
-for the next releases of all series that a few days ago received
-63298d6e752fc0 ("Bluetooth: hci_core: Cancel request on command timeout").
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+Changes in v2:
+- Removed formatting char from schema (Krzysztof)
+- Moved additionalProperties after required (Krzysztof)
+- Added example to the schema (Krzysztof)
+- Removed obsolete comment in the commit message (Marijn)
+- Moved DSC params to the panel struct (Marijn)
+- Changed dsc_en to be an array (Marijn)
+- Added comment regiarding slice_width and slice_count (Marijn)
+- Link to v1: https://lore.kernel.org/r/20240330-lg-sw43408-panel-v1-0-f5580fc9f2da@linaro.org
 
-The latter patch sadly on quite a few systems causes a Oops due to a
-NULL pointer dereference and breaks Bluetooth. This was reported for
-mainline here (yes, coincidentally it was reported by yours truly):
-https://lore.kernel.org/all/08275279-7462-4f4a-a0ee-8aa015f829bc@leemhuis.info/
+---
+Dmitry Baryshkov (1):
+      drm/mipi-dsi: add mipi_dsi_compression_mode_raw()
 
-Now that the patch landed in 6.8.2 it seems to happen there as well
-(guess in 6.7 and others, too), as can be seen from this bug report
-where multiple people already joined:
-https://bugzilla.kernel.org/show_bug.cgi?id=218651
+Sumit Semwal (2):
+      dt-bindings: panel: Add LG SW43408 MIPI-DSI panel
+      drm: panel: Add LG sw43408 panel driver
 
-The fix mentioned above is on the way to Linus, but due to unlucky
-timing missed this weeks network pull, hence will likely only reach
-mainline next Thursday. But the fix afaics has a stable commit id, so
-might be worth picking up soon for the stable releases to fix the
-regression quickly.
+ .../bindings/display/panel/lg,sw43408.yaml         |  62 ++++
+ MAINTAINERS                                        |   8 +
+ drivers/gpu/drm/drm_mipi_dsi.c                     |  34 ++-
+ drivers/gpu/drm/panel/Kconfig                      |  11 +
+ drivers/gpu/drm/panel/Makefile                     |   1 +
+ drivers/gpu/drm/panel/panel-lg-sw43408.c           | 321 +++++++++++++++++++++
+ include/drm/drm_mipi_dsi.h                         |   1 +
+ 7 files changed, 430 insertions(+), 8 deletions(-)
+---
+base-commit: 13ee4a7161b6fd938aef6688ff43b163f6d83e37
+change-id: 20240330-lg-sw43408-panel-b552f411c53e
 
-Ciao, Thorsten
+Best regards,
+-- 
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+
