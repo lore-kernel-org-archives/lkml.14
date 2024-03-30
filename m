@@ -1,145 +1,227 @@
-Received: from out203-205-221-236.mail.qq.com (out203-205-221-236.mail.qq.com [203.205.221.236])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFAA917F7
-	for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2024 02:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.236
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF454690
+	for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2024 03:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711767485; cv=none; b=gKK/HC1phNW/6ITVpHE1Hu7qbVOMXUna3sskBrx9aBtbkgCcMXFlt5Jio3eIdW2QAo/qyhX81meQuEYcn8BtdCOyOZz/OCqPawmtTv+WccWw5OfqIC7v0gAHNzQHT05M8KYxPX+pIETQr32UkkXIa9ijAicgisCjrQ71/9kmfwo=
+	t=1711768630; cv=none; b=K2SBLv6PlTq8dCXzbRtPVYqqMcrgvhpYfoUlOIWbQw7NS5Z7nCWMiYCkNKmQ/oH/LfeVt5Qp8C/MmalRyKg3BBt8Vj3z5tmvZM5K7OnNVld6TbRFcH3KUSoVICqphRHg0mG8ERtyweyGgOMU5qO8+tRAgGAkyQZFD2XCLr1XL50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711767485; c=relaxed/simple;
-	bh=yyAknnVqKxohGK+KrJ3yOl5wmEkvrLxbcEXMSH+FrfY=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=sRMwFYoZlxhZKiAfCFalKqqxqdTZ9P9g172BXeosrIhdq/FvvFwpVKxzACbxDmDH76y4wjXV5UxT2awrViHeho7/apZ8bpCj0IPQU5COQ2VMzE2rBzeYnYGurtHGsIfvg7Kv4KCAoYuXjwyiatZVG10vlZE589IeYMWN7dP1nTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=XihWC/Ge; arc=none smtp.client-ip=203.205.221.236
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1711768630; c=relaxed/simple;
+	bh=VmRd6vdqQ/4kj1fNz8tXb6dpWXuQ22GvcuAxWJLw2Uc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HHG/uNMYN22N49LJOpnILpP9AZYT+nDtYOLrVOinEHxgzgfksVP6g/YjGK3xSQYsTc8e1pLZERNuXzwGwitYhyzcXT7oQHfi5NMxr6H+W6Q+8vsTFMrtdLKK5YxL+FoOM2J+HcP1bYUOMLCBPAnE042wUnWzf58f8jd9zchvXKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=NJ9zwf18; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="XihWC/Ge"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1711767172;
-	bh=EXPUwh1d3Voi90zGxvN8KSRJq65yqe9XRz36Pr3b6U0=;
-	h=From:To:Cc:Subject:Date;
-	b=XihWC/GeXTugN/JDkeKtflwBI5lvGA9gpDZzUzZz7VPYRgINFehUsmHRCXUg1hs0l
-	 GBeVCMxxDzsBc4gzJn4JnX0cxkzNUJz9nA7qsS11tXsR7hJ9MYr4HI5wOUl/njjKs1
-	 pGHSqRIuAcRW/N5+NhkIsJe56Ky+wuLmF1PYkkcU=
-Received: from localhost.localdomain ([2409:8a60:2a60:b160:2bc5:23:a538:a92d])
-	by newxmesmtplogicsvrszc5-1.qq.com (NewEsmtp) with SMTP
-	id D30B74EA; Sat, 30 Mar 2024 10:52:48 +0800
-X-QQ-mid: xmsmtpt1711767168t49z78gv4
-Message-ID: <tencent_F5D82FE0B9A0CA9C3A29C866F225FD915905@qq.com>
-X-QQ-XMAILINFO: MQ+wLuVvI2LQx/vARoscgH4fTTbuGuf0i6FMa1PYcFwwoXfwOY1EGnDYsiVMbR
-	 jbMjeqUjO9LitptjUOMh54ruvgYTiSttk6wF6vrekHVdKxeYm+9CaK8SGjCgYDbZ2/czqRoO6IpQ
-	 R7UlUkS2BxPwEAuImYiq5/u8voAB3a7yG6JyxXGE5tijertZPS8GiCrtz+Pspn1Mcn81arwMDG1N
-	 ROCLmlQeTr9Wdn2jaEbydo+wgXFUPogx9SxVdVSeAUfoiTJFV/1WpkFcR3/PHN08GDrPM0LOVSFn
-	 GiEIpf88LcAfoBzzxKUKCxLb+dfZVsnHc4IWzCqOL/HolzqDI49ophrEVHE9/yFk5EcnKjm8hZdb
-	 2IZ4NsvEInfjOAvLgUtLBQMbCN3TQfvk7BEgpZ5F8p49TcQxbVLKMmz+gR8NDelMrwQP6owhPvud
-	 YDOa0jbANovwY16oAIJlPY1EZkx5xJ/tFaYuIHFQ6b6H65Ivc5b31fwi6dIp2kCNi3afz/TlxPI/
-	 C9BRoYMCjnyJ5+mEaB+7fu+l4851bjRjYjAcMlPmMv1n5gnvtDwS1B0Te5l8sSgpSAxcazYxn67p
-	 PG0XISHY075gTNDIhl3B0ZU3M+9yVz0977SCmJdxe7SBYytvhBX286EsnhZ9LojonJ+YGI4sZCJ/
-	 r+0b9VkncQw8WCnwB7TCa72ump+HRcbZ+uoXMGQ1MYVZus5+NKY1o0LQHlSXzrTd8lumPKGFmpB/
-	 q2lh8D7fcWYwGt5cJvzQ+MGqGAovvtC72Ci8Ic7JxvTpbTYE+VclwbMExyF9IrMPzFlprX7DOJnr
-	 pDR0ttpk613DGCUDsaGpRH4LwNrSwXuIe3HHBqsqxor/a9NbqgBp4t5cBt9l7mUlCyv4/lFCuPO5
-	 LWhml432qHq6gZ1uxMWUay5xWqc19oPHRPEnqRPwz76PozM8n97qiliS8ZJ1WtDi+npzm2Hb37/E
-	 gjGVmuM2Eu5fjsTmSgmyF3F2Akg5JbMuCXuRHC72iqHIM5kBPrBgswWU3PVxaPEBMp6znq4v9mzG
-	 N0oHqhcgr2E83qFJv1Qo/e7QU3PO0=
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-From: wenyang.linux@foxmail.com
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ingo Molnar <mingo@kernel.org>
-Cc: Wen Yang <wenyang.linux@foxmail.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Mel Gorman <mgorman@techsingularity.net>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH v3] exit: move trace_sched_process_exit earlier in do_exit()
-Date: Sat, 30 Mar 2024 10:52:38 +0800
-X-OQ-MSGID: <20240330025238.7102-1-wenyang.linux@foxmail.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="NJ9zwf18"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-53fa455cd94so1814158a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 20:17:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1711768628; x=1712373428; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W+7nrVQkSe14hYl8Q/RTZav7B+/IIz7y9mWl0h4nHVI=;
+        b=NJ9zwf18p7aCeardjmlLPL/ya6ehQ2UR0n73FuJd3VldOc2h/iS/gdTC5rr76kLorV
+         jk9frrEBYFm+FAVyBilKWExgAlTri5cWDU5cvVrSZFW04n8jqm3ZSTfqYRy7AAkwFstX
+         EiIM0t4XC5dFOJ3IHBB3cq+jezLRmcfFGnX0q0dPRsVG1r8zIg/v01mQv2JjQlO/XTMi
+         2ry0wzMjopaa9ovGqDnrz87SfuzD1l6GTbNOF4u9mvBxDWR7RLIAGf3CpORGegtRDtvl
+         tfxveM1hHblM4xnRgn1yH4NgaHzqA8tHGZNnmAWGxlGju2kll9wGHsHh8k6eqhiVgjQp
+         pGpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711768628; x=1712373428;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W+7nrVQkSe14hYl8Q/RTZav7B+/IIz7y9mWl0h4nHVI=;
+        b=Bdw5KkdyvdUQIpwV5X8AA6iaOX6tJnr1F6/L4W3rovqyK0EzB5svlbrUxDCC9jcXov
+         7PdYmr+moG/xd6XsUeLfLPgjvfDVag4Vpux+YSFSBK0uoiU7wtJnQNaniIV28BdeZlga
+         Z8ocBXqqit7c+eG0TnBThZhK8uK90zpcnPS30VOH0C6awMuaI+dXySdlv++z3YKcMk+E
+         wJPE8f0j672QI+/4ybCoOpuSZf31puRCSFlSJBtTCxs6CtwdvfaNwA3PTnYN7gM6yWI1
+         ELe56kbIA+zOOwV+kuESJj6oCE8Grz2lFU2e4SGpzRVf9TX0sWJC2zR42QctfZiZn6yU
+         NT2A==
+X-Forwarded-Encrypted: i=1; AJvYcCWddBK8fMmxGel/ADLUtbmHFd2REGGqi2cIyXexG46sfa1AfOer7EFgS/SeNeC3j3Cs2Dk31hFt55tsEvyQ6iZc81AC+6BYvp+W/F6s
+X-Gm-Message-State: AOJu0YyW9BudvNWggDW0C9qUjnDYZAOGEFHgIricYkoJx31FwbP9WoqG
+	NgAF4Acz9YHSPxssVOAXDlNftGKMIaHQV2kxpAbEm7LcZrf08NsGS8djC172xFckOY8cu/FnmuN
+	gYXs6/nI8+yoquFbJS1yobtehoI5lcSPVhG5e4Q==
+X-Google-Smtp-Source: AGHT+IGVN8mj6fsGuWs3zLqNPpTPCwZ1MIebWhJAEg3QqqK8w6bYcTZi6CuQt3e1msFgcsuQUeuxtwR9869SV0mzVgs=
+X-Received: by 2002:a05:6a21:189:b0:1a3:dc33:2e47 with SMTP id
+ le9-20020a056a21018900b001a3dc332e47mr3993857pzb.4.1711768627780; Fri, 29 Mar
+ 2024 20:17:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240311093526.1010158-1-dongmenglong.8@bytedance.com>
+ <20240311093526.1010158-2-dongmenglong.8@bytedance.com> <CAADnVQKQPS5NcvEouH4JqZ2fKgQAC+LtcwhX9iXYoiEkF_M94Q@mail.gmail.com>
+ <CALz3k9i5G5wWi+rtvHPwVLOUAXVMCiU_8QUZs87TEYgR_0wpPA@mail.gmail.com>
+ <CAADnVQJ_ZCzMmT1aBsNXEBFfYNSVBdBXmLocjR0PPEWtYQrQFw@mail.gmail.com>
+ <CALz3k9icPePb0c4FE67q=u1U0hrePorN9gDpQrKTR_sXbLMfDA@mail.gmail.com>
+ <CAADnVQLwgw8bQ7OHBbqLhcPJ2QpxiGw3fkMFur+2cjZpM_78oA@mail.gmail.com>
+ <CALz3k9g9k7fEwdTZVLhrmGoXp8CE47Q+83r-AZDXrzzuR+CjVA@mail.gmail.com>
+ <CAADnVQLHpi3J6cBJ0QBgCQ2aY6fWGnVvNGdfi3W-jmoa9d1eVQ@mail.gmail.com>
+ <CALz3k9g-U8ih=ycJPRbyU9x_9cp00fNkU3PGQ6jP0WJ+=uKmqQ@mail.gmail.com>
+ <CALz3k9jG5Jrqw=BGjt05yMkEF-1u909GbBYrV-02W0dQtm6KQQ@mail.gmail.com> <20240328111330.194dcbe5@gandalf.local.home>
+In-Reply-To: <20240328111330.194dcbe5@gandalf.local.home>
+From: =?UTF-8?B?5qKm6b6Z6JGj?= <dongmenglong.8@bytedance.com>
+Date: Sat, 30 Mar 2024 11:18:29 +0800
+Message-ID: <CALz3k9idLX10+Gh18xWepwtgvp4VZ3zQfY4aoNXn0gCh8Fs_fA@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH bpf-next v2 1/9] bpf: tracing: add support
+ to record and check the accessed args
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	X86 ML <x86@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Quentin Monnet <quentin@isovalent.com>, bpf <bpf@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, 
+	Network Development <netdev@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Wen Yang <wenyang.linux@foxmail.com>
+On Thu, Mar 28, 2024 at 11:11=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
+g> wrote:
+>
+> On Thu, 28 Mar 2024 22:43:46 +0800
+> =E6=A2=A6=E9=BE=99=E8=91=A3 <dongmenglong.8@bytedance.com> wrote:
+>
+> > I have done a simple benchmark on creating 1000
+> > trampolines. It is slow, quite slow, which consume up to
+> > 60s. We can't do it this way.
+> >
+> > Now, I have a bad idea. How about we introduce
+> > a "dynamic trampoline"? The basic logic of it can be:
+> >
+> > """
+> > save regs
+> > bpfs =3D trampoline_lookup_ip(ip)
+> > fentry =3D bpfs->fentries
+> > while fentry:
+> >   fentry(ctx)
+> >   fentry =3D fentry->next
+> >
+> > call origin
+> > save return value
+> >
+> > fexit =3D bpfs->fexits
+> > while fexit:
+> >   fexit(ctx)
+> >   fexit =3D fexit->next
+> >
+> > xxxxxx
+> > """
+> >
+> > And we lookup the "bpfs" by the function ip in a hash map
+> > in trampoline_lookup_ip. The type of "bpfs" is:
+> >
+> > struct bpf_array {
+> >   struct bpf_prog *fentries;
+> >  struct bpf_prog *fexits;
+> >   struct bpf_prog *modify_returns;
+> > }
+> >
+> > When we need to attach the bpf progA to function A/B/C,
+> > we only need to create the bpf_arrayA, bpf_arrayB, bpf_arrayC
+> > and add the progA to them, and insert them to the hash map
+> > "direct_call_bpfs", and attach the "dynamic trampoline" to
+> > A/B/C. If bpf_arrayA exist, just add progA to the tail of
+> > bpf_arrayA->fentries. When we need to attach progB to
+> > B/C, just add progB to bpf_arrayB->fentries and
+> > bpf_arrayB->fentries.
+> >
+> > Compared to the trampoline, extra overhead is introduced
+> > by the hash lookuping.
+> >
+> > I have not begun to code yet, and I am not sure the overhead is
+> > acceptable. Considering that we also need to do hash lookup
+> > by the function in kprobe_multi, maybe the overhead is
+> > acceptable?
+>
+> Sounds like you are just recreating the function management that ftrace
+> has. It also can add thousands of trampolines very quickly, because it do=
+es
+> it in batches. It takes special synchronization steps to attach to fentry=
+.
+> ftrace (and I believe multi-kprobes) updates all the attachments for each
+> step, so the synchronization needed is only done once.
+>
 
-In a safety critical system, when some processes exit abnormally,
-it is hoped that prompt information can be reported to the monitor
-as soon as possible.
+Yes, it is fast to register a trampoline for a kernel function
+in the managed ftrace in
+register_fentry->register_ftrace_direct->ftrace_add_rec_direct.
+And it will add the trampoline to the hash table "direct_functions".
 
-Commit 2d4bcf886e42 ("exit: Remove profile_task_exit & profile_munmap")
-simplified the code, but also removed profile_task_exit(), which may
-prevent third-party kernel modules from detecting process exits timely.
+And the trampoline will be called in the following
+step (I'm not sure if I understand it correctly):
 
-Compared to adding an extra tracking point, it is better to move the
-existing trace_sched_process_exit() earlier in do_exit(), since any tracer
-interested in knowing the point where a task is really reclaimed is
-trace_sched_process_free() called from delayed_put_task_struct().[1]
+ftrace_regs_caller
+|
+__ftrace_ops_list_func -> call_direct_funcs -> save trampoline to
+pt_regs->origin_ax
+|
+call pt_regs->origin_ax if not NULL
 
-Andrew raised a concern:
-If userspace is awaiting this notification to say "it's now OK to read
-the dump file" then it could break things?
-The nearby proc_exit_connector() can be used for this purpose. But we
-couldn't find any specific code that concerns the location of
-trace_sched_process_exit().
+The logic above means that we can only call a
+trampoline once, and a kernel function can only have
+one trampoline.
 
-Oleg initially proposed this suggestion, and Steven further provided some
-detailed suggestions, and Mathieu carefully checked the historical code
-and said:
-: I've checked with Matthew Khouzam (maintainer of Trace Compass)
-: which care about this tracepoint, and we have not identified any
-: significant impact of moving it on its model of the scheduler, other
-: than slightly changing its timing.
-: I've also checked quickly in lttng-analyses and have not found
-: any code that care about its specific placement.
-: So I would say go ahead and move it earlier in do_exit(), it's
-: fine by me. [2]
+The original idea of mine is to register all the shared
+trampoline to the managed ftrace. For example, if we have
+the shared trampoline1 for function A/B/C, and shared
+trampoline2 for function B/C/D, then I register trampoline1
+and trampoline2 for function B/C. However, it can't work,
+as we can't call 2 trampolines for a function.
 
-[1]: https://lore.kernel.org/all/c411eda5-5378-4511-bea3-d1566174c8c7@efficios.com/
-[2]: https://lore.kernel.org/all/c9427e40-10b1-49eb-9baa-dde1364e8fe5@efficios.com/
+Then, I thought that we could create a "dynamic trampoline".
+The logic for the non-ftrace-managed case is simple, we
+only need to replace the "nop" of all the target functions
+to "call dynamic_trampoline". And for the ftrace-managed
+case, the logic is the same too, except that the trampoline
+that we add to the "direct_functions" hash is the
+dynamic-trampoline:
 
-Suggested-by: Oleg Nesterov <oleg@redhat.com>
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org
----
- kernel/exit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ftrace_regs_caller
+|
+__ftrace_ops_list_func -> call_direct_funcs -> save dynamic-trampoline
+to pt_regs->origin_ax
+|
+call pt_regs->origin_ax(dynamic-trampoline) if not NULL
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 493647fd7c07..2cff6533cb39 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -826,6 +826,7 @@ void __noreturn do_exit(long code)
- 
- 	WARN_ON(tsk->plug);
- 
-+	trace_sched_process_exit(tsk);
- 	kcov_task_exit(tsk);
- 	kmsan_task_exit(tsk);
- 
-@@ -866,7 +867,6 @@ void __noreturn do_exit(long code)
- 
- 	if (group_dead)
- 		acct_process();
--	trace_sched_process_exit(tsk);
- 
- 	exit_sem(tsk);
- 	exit_shm(tsk);
--- 
-2.25.1
+And in the dynamic-trampoline, we can call prog1 for
+A, call prog1 and prog2 for B/C, call prog2 for D.
 
+And the register is fast enough.
+
+> If you really want to have thousands of functions, why not just register =
+it
+> with ftrace itself. It will give you the arguments via the ftrace_regs
+> structure. Can't you just register a program as the callback?
+>
+
+Ennn...I don't understand. The main purpose for
+me to use TRACING is:
+
+1. we can directly access the memory, which is more
+   efficient.
+2. we can obtain the function args in FEXIT, which
+    kretprobe can't do it. And this is the main reason.
+
+Thanks!
+Menglong Dong
+
+> It will probably make your accounting much easier, and just let ftrace
+> handle the fentry logic. That's what it was made to do.
+>
+> -- Steve
