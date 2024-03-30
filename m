@@ -1,98 +1,215 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D6079F0
-	for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2024 04:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F2279E0
+	for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2024 04:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711771467; cv=none; b=tAou6h3RnXpOc5PMN06aWjBBp+3m5NepbXIp3dgiXzz1FeMbKf0Ex5gj2dI0F6qglWYzjCq6TXR4spNg+FvzeXKRrJZRQBUOEYlLv5BH6ZrTnz2+QbhxSCF/36Xi12wQ2lH4NR6jWOEu3voubHpG33n27x1YIrZFXx9yHILlKek=
+	t=1711772137; cv=none; b=ciOXiTqtFkQRaE/29gM6pMcwlirTT4NJF7hqPW8S4aIHGnx1rWkpKPauI8+d6GK5ioDxPpdnEES9HSGIFbFD1TJ7ZslsK5k7ScE6z8p2WI4v3b/Z5nHz+g7RI4w94+Rtfsz6SFjRZM3sjMOlEIsC/rW755xP+tqmI945UbX3S0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711771467; c=relaxed/simple;
-	bh=5cOW6r9FoMB9QhzzO1fDqmEwJjI8wkjP7OBdnj0H/QE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ncJUtiLDZ00Plas2qumyRF51ZxRpicg+LivbmzWeSJyoNNOSUjo04RsO3DHbqoULyhAKpUeuQNbQq5/f+759E9WgPaCMiJvIlogU9FHuWie85LLAHJe81uWuv12BIADmUVI1XeAYzliqzGGaD2Bs+jB1vKOv5uv4GiBH2rfC2dE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QTBQ++0c; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711772137; c=relaxed/simple;
+	bh=qgobxYsoW4+2TT3KspAAgbFZjvWwlDQJ1EahoxZ6SUc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ekMHrMAR2x/oVMtGV/zTMtk+3rkihZNIOhVGKhsgpBc0CYCZ47tVMlG98ByD9aXVMQt2MNsAZlb/Dxk0Q4+cj5fY/XqdMt6vKp6/8U325i9V1aOTEgRbjUFyLYP5QaxLdy+pk/lpNM1ls7/3nwpGP0D4XeAE6xZLuo4pCcoo8H0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=lotuHB3Y; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QTBQ++0c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711771464;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=gHqHBmlZCFlWpIV0o442DO/wsxDS7T9buxAA+MkmTJI=;
-	b=QTBQ++0cKrpL0LOZL46okVDdAn2rQxZrPQuUNWwHqB3OgDwxm0bpU6atdClWkVmTKVj45k
-	/ZBFFH22lGu0xPr1sKHa2KIAI0U8e38HDEQjUNWeTam5prlyCROQhHm9ECoe+n9CkVtgHv
-	ZvgSZ7WziP3VtH7Ycrr5LiTRMyGQtxM=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-591-A7GX45R-N4W0xWuSmwRMFg-1; Sat, 30 Mar 2024 00:04:20 -0400
-X-MC-Unique: A7GX45R-N4W0xWuSmwRMFg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CBDD7185A781;
-	Sat, 30 Mar 2024 04:04:19 +0000 (UTC)
-Received: from kaapi.redhat.com (unknown [10.74.16.51])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id CB63CC01851;
-	Sat, 30 Mar 2024 04:04:15 +0000 (UTC)
-From: Prasad Pandit <ppandit@redhat.com>
-To: Greg KH <gregkh@linuxfoundation.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Cc: florian.fainelli@broadcom.com,
-	bcm-kernel-feedback-list@broadcom.com,
-	linux-arm-kernel@lists.infradead.org,
-	rjui@broadcom.com,
-	sbranden@broadcom.com,
-	linux-staging@lists.linux.dev,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Prasad Pandit <pjp@fedoraproject.org>
-Subject: [PATCH v4] staging: bcm2835-audio: add terminating new line to Kconfig
-Date: Sat, 30 Mar 2024 09:34:11 +0530
-Message-ID: <20240330040411.3273337-1-ppandit@redhat.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="lotuHB3Y"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e6b729669bso2153346b3a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Mar 2024 21:15:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1711772130; x=1712376930; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ofE4DiMnvHuiRZX1XlrIQJQuThx3U4684j2Vrwr4bOc=;
+        b=lotuHB3YqxI5vNiMNQShMPcZpMVUJ465SPLPfA2ZffKWYhtiIpcCAVyZSTq4l0PlVm
+         cPPfJ5K6RIbzdDn0T2br/TIueszyxszgWUTJ380vTjs5mQUui38KoyOVDnG1aNFg3ojX
+         qT7UlrcsXggaNQXe9AuPEuT0Sb7F0MLi7Nw6l+TH1U0d7yiQ+7KnPDVXHegP8jKCK6Em
+         Uow1+d0qBdtY/BbdJh5NtxxGHAY5F7ea4QmX/AcK49wR4lbjbtMz9p1a1106CIP7G/p2
+         F5jxnpW89ievSd3eMy5KK8/Cy/eyEh2UtRV9jEB1VoadAT58X+0FxQfYCzwBApOxWs6q
+         CZyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711772130; x=1712376930;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ofE4DiMnvHuiRZX1XlrIQJQuThx3U4684j2Vrwr4bOc=;
+        b=A/fbPEeU6JGKCOsgFyhGJttWX+wrLs+o5magw1LqBZlTiRHYZfyDHYL8R5BPPlIL1d
+         WQcS/TWStTnwpc5p/trzlBbHU9YVoUBvQQB3+7xszjm1m0fSwtsdM+zBkFzM1ptkv9G6
+         aGonNkdmWKznhUoQ2xAdBwV9/ZG1W/aLcsSLw6bErfZLlwPFMSEiWVSRD/pHSUP+DycW
+         lRVgotuJ18IIZ5DE7BnY+A5zUWgC7PBvDFpHX2R12jRo0RCmI0jYKrTNo1EUkQge1/0I
+         Y4F+dSUDXEWB9/mXv53CoCAOSC7hp5+ow77PeyM1OQ4cXmIxQR3lK8/1AJzaRNeBLklq
+         dCMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUTmJfYFIVkqXNGPQlK/ZgitbSGDHJpZF0eT7DXFDvBWZrDSp5CD8QuEoDKVuYvYYcBnMpLEA2uDX3KMyHzkVeVKW1Qs26HLheNgs+u
+X-Gm-Message-State: AOJu0YxwKogNii/RWZXdhhGEiextn8WfxzyTjTSNx7z9PQJKO+N5KyGd
+	xwIwi2WQFKtXWL6gVuG0u+WRDs261vSRUOKgRWgGgmPESWOIkD+Zw3FegoGEVnoFceROmffeebB
+	L2YCN7bSlWJYu+3/TDyUHDVWA9Bla4JiLuQMoqA==
+X-Google-Smtp-Source: AGHT+IGgndwZ3xqfDhf4CyJqUlqHUpBRYWacoRvVkoWzKCTwU3GtudllRjOr+s4vd+S8mdhVeoofK0l9Hh+AwBW0mGw=
+X-Received: by 2002:a05:6a20:17a2:b0:1a3:67fd:46b1 with SMTP id
+ bl34-20020a056a2017a200b001a367fd46b1mr3653617pzb.36.1711772130610; Fri, 29
+ Mar 2024 21:15:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+References: <20240311093526.1010158-1-dongmenglong.8@bytedance.com>
+ <20240311093526.1010158-2-dongmenglong.8@bytedance.com> <CAADnVQKQPS5NcvEouH4JqZ2fKgQAC+LtcwhX9iXYoiEkF_M94Q@mail.gmail.com>
+ <CALz3k9i5G5wWi+rtvHPwVLOUAXVMCiU_8QUZs87TEYgR_0wpPA@mail.gmail.com>
+ <CAADnVQJ_ZCzMmT1aBsNXEBFfYNSVBdBXmLocjR0PPEWtYQrQFw@mail.gmail.com>
+ <CALz3k9icPePb0c4FE67q=u1U0hrePorN9gDpQrKTR_sXbLMfDA@mail.gmail.com>
+ <CAADnVQLwgw8bQ7OHBbqLhcPJ2QpxiGw3fkMFur+2cjZpM_78oA@mail.gmail.com>
+ <CALz3k9g9k7fEwdTZVLhrmGoXp8CE47Q+83r-AZDXrzzuR+CjVA@mail.gmail.com>
+ <CAADnVQLHpi3J6cBJ0QBgCQ2aY6fWGnVvNGdfi3W-jmoa9d1eVQ@mail.gmail.com>
+ <CALz3k9g-U8ih=ycJPRbyU9x_9cp00fNkU3PGQ6jP0WJ+=uKmqQ@mail.gmail.com>
+ <CALz3k9jG5Jrqw=BGjt05yMkEF-1u909GbBYrV-02W0dQtm6KQQ@mail.gmail.com>
+ <20240328111330.194dcbe5@gandalf.local.home> <CAEf4BzYgzOti+Hfdn3SUCjuofGedXRSGApVDD+K2TdG6oNE-pw@mail.gmail.com>
+In-Reply-To: <CAEf4BzYgzOti+Hfdn3SUCjuofGedXRSGApVDD+K2TdG6oNE-pw@mail.gmail.com>
+From: =?UTF-8?B?5qKm6b6Z6JGj?= <dongmenglong.8@bytedance.com>
+Date: Sat, 30 Mar 2024 12:16:52 +0800
+Message-ID: <CALz3k9hm6U90K8+d7SprXiKvscRjFno83idqYneHEVwgs4pCiw@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH bpf-next v2 1/9] bpf: tracing: add support
+ to record and check the accessed args
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Alexei Starovoitov <alexei.starovoitov@gmail.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	X86 ML <x86@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Quentin Monnet <quentin@isovalent.com>, bpf <bpf@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, 
+	Network Development <netdev@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Prasad Pandit <pjp@fedoraproject.org>
+On Sat, Mar 30, 2024 at 7:28=E2=80=AFAM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Thu, Mar 28, 2024 at 8:10=E2=80=AFAM Steven Rostedt <rostedt@goodmis.o=
+rg> wrote:
+> >
+> > On Thu, 28 Mar 2024 22:43:46 +0800
+> > =E6=A2=A6=E9=BE=99=E8=91=A3 <dongmenglong.8@bytedance.com> wrote:
+> >
+> > > I have done a simple benchmark on creating 1000
+> > > trampolines. It is slow, quite slow, which consume up to
+> > > 60s. We can't do it this way.
+> > >
+> > > Now, I have a bad idea. How about we introduce
+> > > a "dynamic trampoline"? The basic logic of it can be:
+> > >
+> > > """
+> > > save regs
+> > > bpfs =3D trampoline_lookup_ip(ip)
+> > > fentry =3D bpfs->fentries
+> > > while fentry:
+> > >   fentry(ctx)
+> > >   fentry =3D fentry->next
+> > >
+> > > call origin
+> > > save return value
+> > >
+> > > fexit =3D bpfs->fexits
+> > > while fexit:
+> > >   fexit(ctx)
+> > >   fexit =3D fexit->next
+> > >
+> > > xxxxxx
+> > > """
+> > >
+> > > And we lookup the "bpfs" by the function ip in a hash map
+> > > in trampoline_lookup_ip. The type of "bpfs" is:
+> > >
+> > > struct bpf_array {
+> > >   struct bpf_prog *fentries;
+> > >  struct bpf_prog *fexits;
+> > >   struct bpf_prog *modify_returns;
+> > > }
+> > >
+> > > When we need to attach the bpf progA to function A/B/C,
+> > > we only need to create the bpf_arrayA, bpf_arrayB, bpf_arrayC
+> > > and add the progA to them, and insert them to the hash map
+> > > "direct_call_bpfs", and attach the "dynamic trampoline" to
+> > > A/B/C. If bpf_arrayA exist, just add progA to the tail of
+> > > bpf_arrayA->fentries. When we need to attach progB to
+> > > B/C, just add progB to bpf_arrayB->fentries and
+> > > bpf_arrayB->fentries.
+> > >
+> > > Compared to the trampoline, extra overhead is introduced
+> > > by the hash lookuping.
+> > >
+> > > I have not begun to code yet, and I am not sure the overhead is
+> > > acceptable. Considering that we also need to do hash lookup
+> > > by the function in kprobe_multi, maybe the overhead is
+> > > acceptable?
+> >
+> > Sounds like you are just recreating the function management that ftrace
+> > has. It also can add thousands of trampolines very quickly, because it =
+does
+> > it in batches. It takes special synchronization steps to attach to fent=
+ry.
+> > ftrace (and I believe multi-kprobes) updates all the attachments for ea=
+ch
+> > step, so the synchronization needed is only done once.
+> >
+> > If you really want to have thousands of functions, why not just registe=
+r it
+> > with ftrace itself. It will give you the arguments via the ftrace_regs
+> > structure. Can't you just register a program as the callback?
+> >
+> > It will probably make your accounting much easier, and just let ftrace
+> > handle the fentry logic. That's what it was made to do.
+> >
+>
+> I thought I'll just ask instead of digging through code, sorry for
+> being lazy :) Is there any way to pass pt_regs/ftrace_regs captured
+> before function execution to a return probe (fexit/kretprobe)? I.e.,
+> how hard is it to pass input function arguments to a kretprobe? That's
+> the biggest advantage of fexit over kretprobe, and if we can make
+> these original pt_regs/ftrace_regs available to kretprobe, then
+> multi-kretprobe will effectively be this multi-fexit.
 
-Add terminating new line to the Kconfig file. It helps while
-displaying file with cat(1) command.
+Yes, we can use multi-kretprobe instead of multi-fexit
+if we can obtain the function args in kretprobe.
 
-Signed-off-by: Prasad Pandit <pjp@fedoraproject.org>
----
- drivers/staging/vc04_services/bcm2835-audio/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I think it's hard. The reason that we can obtain the
+function args is that we have a trampoline, and it
+call the origin function for FEXIT. If we do the same
+for multi-kretprobe, we need to modify ftrace_regs_caller
+to:
 
-v4:
- - cat(1) command usage in commit message.
- - https://lore.kernel.org/all/CAE8KmOxG=3sWKpeB5fdWTK-SCipS=JyDE-_DNgY--DtoSQZ0Qw@mail.gmail.com/T/#t
-v3:
- - fix typo and note about parsing errors.
- - https://lore.kernel.org/lkml/CAE8KmOzcD+__7xdC7tegbHO9HEP48s7=reA4j-tvqVDwzHr+8Q@mail.gmail.com/T/#t
-v2:
- - remove Fixes tag and cc all maintainers.
- - https://lore.kernel.org/linux-arm-kernel/20240311100920.1271545-1-ppandit@redhat.com/T/#u
+ftrace_regs_caller
+|
+__ftrace_ops_list_func
+|
+call all multi-kprobe callbacks
+|
+call orgin
+|
+call all multi-kretprobe callbacks
+|
+call bpf trampoline(for TRACING)
 
-diff --git a/drivers/staging/vc04_services/bcm2835-audio/Kconfig b/drivers/staging/vc04_services/bcm2835-audio/Kconfig
-index 7f22f6c85067..7fbb29d3c34d 100644
---- a/drivers/staging/vc04_services/bcm2835-audio/Kconfig
-+++ b/drivers/staging/vc04_services/bcm2835-audio/Kconfig
-@@ -8,4 +8,4 @@ config SND_BCM2835
- 	  Say Y or M if you want to support BCM2835 built in audio.
- 	  This driver handles both 3.5mm and HDMI audio, by leveraging
- 	  the VCHIQ messaging interface between the kernel and the firmware
--	  running on VideoCore.
-\ No newline at end of file
-+	  running on VideoCore.
--- 
-2.44.0
+However, this logic conflicts with bpf trampoline,
+as it can also call the origin function. What's more,
+the FENTRY should be called before the "call origin"
+above.
 
+I'm sure if I understand correctly, as I have not
+figured out how multi-kretprobe works in fprobe.
+
+Thanks!
+Menglong Dong
+
+>
+> > -- Steve
