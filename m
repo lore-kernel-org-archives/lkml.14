@@ -1,239 +1,162 @@
-Received: from mx107.easyname.com (mx107.easyname.com [217.74.15.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD11724B21;
-	Sat, 30 Mar 2024 15:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.74.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6170C381B1;
+	Sat, 30 Mar 2024 15:18:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711811802; cv=none; b=JxgTTd0UXL6azjZz6+PlSjcE0Sxzfjst7Fb1CbkbnVsRNFz/6q4w9eE+TaLj7Y7YTwJ8mnbjW87Rrk9U7xJ8+onn9QCtCxhFeHX+rLzvLxAGcsWm3hP8LF+59KxQ6lkyqZ0Rk5VSokMrFQaJ3/dcOPyLzOpkEChDS0Z+36CvsEw=
+	t=1711811912; cv=none; b=TVgt+GPdBnHR0xK60bBg2Hc+FSkOIZ/xDdxNvMwbYhGAgBhzNCcmYSa0beepjdPdGoS3idmnNGeepBSYZTpjI6f06MdH3eC2xD4x+etq4+zfbsa7cjPfGf3ltC8gRwPziPMN18uCygJyWajIyfAiUQZS9hGgRF6kC7rIeVfzTso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711811802; c=relaxed/simple;
-	bh=VsjtTz5muZknaqVeycRxcKDvRJJw3olozx4SSH7VmsA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RoyQ+tEInDKNd+vQGqgx1Qqn8DiSqx/UBEPVUXf0CQ/9ETKdIcbjUELgwVbQIo5dYKB0KF/iDZl6Qa0nDaNRRqfUcVygR9VriA9xYB6/wqMlPCad0xq3Hx9W2FqmTU3OLrK0FjK7W0HNigeThHTEgWv2INrYR1ZbwpmTUbGe9PU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=paroga.com; spf=pass smtp.mailfrom=paroga.com; dkim=pass (2048-bit key) header.d=paroga.com header.i=@paroga.com header.b=o9yJcloz; dkim=pass (2048-bit key) header.d=paroga.com header.i=@paroga.com header.b=o9yJcloz; arc=none smtp.client-ip=217.74.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=paroga.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paroga.com
+	s=arc-20240116; t=1711811912; c=relaxed/simple;
+	bh=xeYmStBqD5EyQ428GGaiyigQwLaLHFrZUspwncdiUjo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sMCWW58fTI3/gflEeOA6tenujFn7b2ptGEDIPGc1Wt6PuRnrRFUgfvrXpu1glOelaMIQMeWE8Zsecy2jc/mViVi/rjxz+VIG5uiqQh56dgXYWO3PoziNnIcgkMginhDX6eaR/k/dahflPSDMiBwRz/yv164U81sVBYOOwRhbXCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jrmX2loK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paroga.com header.i=@paroga.com header.b="o9yJcloz";
-	dkim=pass (2048-bit key) header.d=paroga.com header.i=@paroga.com header.b="o9yJcloz"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=paroga.com;
-	 s=easyname; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=Go4W4x99X2HOhH17kh7UYaqnzZ+4KWNhtYJPVktH1yw=; b=o9yJclozwWh6cjQARtcXqQ0rne
-	0ubKi0aQlOu4NYWETl1CHkyeH0fRpE/be4q1ZMXBuSAvBN4yCAJT6biVGMYfsB4vWzpsCKJ2jxuCS
-	QVRLDP30HXncFJjpgCJWBIhzAwZOO3EevHP4VXjl58vdCsPQXA4WQ2HtiJ+vIfEDJMoTtsUkUx5lA
-	yJH94kXu6u62C+YGfCBcxs50BJVOdNtv9bYvshxCgwuFsO1WZCl0OyLyLozlXEV1mOl0YfMiJFU8v
-	m31J+Tlfotmsx2FphQirNQI6ydTOSqsYZT46BVx1QKpzL77joY8fEgo6HkpRvWv2qli+bf38m8l3l
-	Lb4r7Z7Q==;
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=paroga.com;
-	 s=easyname; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=Go4W4x99X2HOhH17kh7UYaqnzZ+4KWNhtYJPVktH1yw=; b=o9yJclozwWh6cjQARtcXqQ0rne
-	0ubKi0aQlOu4NYWETl1CHkyeH0fRpE/be4q1ZMXBuSAvBN4yCAJT6biVGMYfsB4vWzpsCKJ2jxuCS
-	QVRLDP30HXncFJjpgCJWBIhzAwZOO3EevHP4VXjl58vdCsPQXA4WQ2HtiJ+vIfEDJMoTtsUkUx5lA
-	yJH94kXu6u62C+YGfCBcxs50BJVOdNtv9bYvshxCgwuFsO1WZCl0OyLyLozlXEV1mOl0YfMiJFU8v
-	m31J+Tlfotmsx2FphQirNQI6ydTOSqsYZT46BVx1QKpzL77joY8fEgo6HkpRvWv2qli+bf38m8l3l
-	Lb4r7Z7Q==;
-Received: from 84-115-225-203.cable.dynamic.surfer.at ([84.115.225.203] helo=localhost.localdomain)
-	by mx.easyname.com with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <paroga@paroga.com>)
-	id 1rqaBq-0002RN-95; Sat, 30 Mar 2024 15:00:18 +0000
-From: Patrick Gansterer <paroga@paroga.com>
-To: dri-devel@lists.freedesktop.org,
-	linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-fbdev@vger.kernel.org
-Cc: Patrick Gansterer <paroga@paroga.com>,
-	Lee Jones <lee@kernel.org>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Pavel Machek <pavel@ucw.cz>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Helge Deller <deller@gmx.de>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v5 1/2] dt-bindings: backlight: Add Texas Instruments LM3509
-Date: Sat, 30 Mar 2024 15:59:24 +0100
-Message-ID: <20240330145931.729116-2-paroga@paroga.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240330145931.729116-1-paroga@paroga.com>
-References: <20240330145931.729116-1-paroga@paroga.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jrmX2loK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87709C433F1;
+	Sat, 30 Mar 2024 15:18:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711811911;
+	bh=xeYmStBqD5EyQ428GGaiyigQwLaLHFrZUspwncdiUjo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jrmX2loKIXLlb+YHC/rU0NWrqfAhBGvDvJqcY311c+9szJJfd9jFNGRQEz+x40OYL
+	 gAgO6zmeGBTHIjm1sxp0XIrmlBzmbpOSM1PFQVMtF5OC7et+d9UffSl0DqP+KMSKFe
+	 YJL8hwGAPgzW9uG5sW11yDt0OPKqHzLOfHmanhKyjTwkhx8d2s6fb9qN59JsUlAc+V
+	 oML9ZWsqRQJPIf5LXvv/RwJq/GDGiW+P8OysYXtzbSN0m/nJ+BA4DrqP2dNEOtqnZP
+	 Cmirp/FcaG5UNAblC79OdQzcLBpGEolp8oFjZPNSnprrDY88o93uV+hKj+wIgz00fW
+	 JOgfM97jkJcyg==
+Date: Sat, 30 Mar 2024 15:18:17 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, eraretuya@gmail.com
+Subject: Re: [PATCH v5 1/7] iio: accel: adxl345: Make data_range obsolete
+Message-ID: <20240330151817.25c11a5f@jic23-huawei>
+In-Reply-To: <CAFXKEHaPcbRMVJTWW0Atg37jqb97JBdPoSmm3gAZEO1Q=SZm9w@mail.gmail.com>
+References: <20240327220320.15509-1-l.rubusch@gmail.com>
+	<20240327220320.15509-2-l.rubusch@gmail.com>
+	<20240328133720.7dfd46b0@jic23-huawei>
+	<CAFXKEHaPcbRMVJTWW0Atg37jqb97JBdPoSmm3gAZEO1Q=SZm9w@mail.gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Easy-Autoreply: EN
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Add Device Tree bindings for Texas Instruments LM3509 - a
-High Efficiency Boost for White LED's and/or OLED Displays
+On Fri, 29 Mar 2024 01:03:29 +0100
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-Signed-off-by: Patrick Gansterer <paroga@paroga.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
----
- .../bindings/leds/backlight/ti,lm3509.yaml    | 139 ++++++++++++++++++
- 1 file changed, 139 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/ti,lm3509.yaml
+> On Thu, Mar 28, 2024 at 2:37=E2=80=AFPM Jonathan Cameron <jic23@kernel.or=
+g> wrote:
+> >
+> > On Wed, 27 Mar 2024 22:03:14 +0000
+> > Lothar Rubusch <l.rubusch@gmail.com> wrote:
+> > =20
+> > > Replace write() data_format by regmap_update_bits(), because bus spec=
+ific
+> > > pre-configuration may have happened before on the same register. For
+> > > further updates to the data_format register then bus pre-configuration
+> > > needs to be masked out.
+> > >
+> > > Remove the data_range field from the struct adxl345_data, because it =
+is
+> > > not used anymore.
+> > >
+> > > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> > > ---
+> > >  drivers/iio/accel/adxl345_core.c | 18 ++++++++++++------
+> > >  1 file changed, 12 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adx=
+l345_core.c
+> > > index 8bd30a23e..35df5e372 100644
+> > > --- a/drivers/iio/accel/adxl345_core.c
+> > > +++ b/drivers/iio/accel/adxl345_core.c
+> > > @@ -37,7 +37,15 @@
+> > >  #define ADXL345_POWER_CTL_MEASURE    BIT(3)
+> > >  #define ADXL345_POWER_CTL_STANDBY    0x00
+> > >
+> > > +#define ADXL345_DATA_FORMAT_RANGE    GENMASK(1, 0) /* Set the g rang=
+e */
+> > > +#define ADXL345_DATA_FORMAT_JUSTIFY  BIT(2) /* Left-justified (MSB) =
+mode */
+> > >  #define ADXL345_DATA_FORMAT_FULL_RES BIT(3) /* Up to 13-bits resolut=
+ion */
+> > > +#define ADXL345_DATA_FORMAT_SELF_TEST        BIT(7) /* Enable a self=
+ test */
+> > > +#define ADXL345_DATA_FORMAT_MSK              (ADXL345_DATA_FORMAT_RA=
+NGE | \
+> > > +                                      ADXL345_DATA_FORMAT_JUSTIFY | =
+ \
+> > > +                                      ADXL345_DATA_FORMAT_FULL_RES |=
+ \
+> > > +                                      ADXL345_DATA_FORMAT_SELF_TEST)=
+ =20
+> > This needs renaming.  It's not a mask of everything in the register, or
+> > even just of everything related to format.
+> >
+> > Actually I'd just not have this definition.  Use the build up value
+> > from all the submasks at the call site.  Then we are just making it cle=
+ar
+> > only a subset of fields are being cleared.
+> > =20
+> I understand this solution was not very useful. I'm not sure, I
+> understood you correctly. Please have a look into v6 if this matches
+> your comment.
+> Now, I remove the mask, instead I use a local variable in core's
+> probe() for the update mask. I added a comment. Nevertheless, I keep
+> the used flags for FORMAT_DATA. Does this go into the direction of
+> using the build up value from the submasks at the call site?
+>=20
+The new code looks good to me.  A local variable doesn't carry the
+same implication of global applicability as the define did.
+Thanks,
 
-diff --git a/Documentation/devicetree/bindings/leds/backlight/ti,lm3509.yaml b/Documentation/devicetree/bindings/leds/backlight/ti,lm3509.yaml
-new file mode 100644
-index 000000000000..b67f67648852
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/backlight/ti,lm3509.yaml
-@@ -0,0 +1,139 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/backlight/ti,lm3509.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: TI LM3509 High Efficiency Boost for White LED's and/or OLED Displays
-+
-+maintainers:
-+  - Patrick Gansterer <paroga@paroga.com>
-+
-+description:
-+  The LM3509 current mode boost converter offers two separate outputs.
-+  https://www.ti.com/product/LM3509
-+
-+properties:
-+  compatible:
-+    const: ti,lm3509
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+  reset-gpios:
-+    maxItems: 1
-+
-+  ti,brightness-rate-of-change-us:
-+    description: Brightness Rate of Change in microseconds.
-+    enum: [51, 13000, 26000, 52000]
-+
-+  ti,oled-mode:
-+    description: Enable OLED mode.
-+    type: boolean
-+
-+patternProperties:
-+  "^led@[01]$":
-+    type: object
-+    description: Properties for a string of connected LEDs.
-+
-+    allOf:
-+      - $ref: common.yaml#
-+
-+    properties:
-+      reg:
-+        description:
-+          The control register that is used to program the two current sinks.
-+          The LM3509 has two registers (BMAIN and BSUB) and are represented
-+          as 0 or 1 in this property. The two current sinks can be controlled
-+          independently with both registers, or register BMAIN can be
-+          configured to control both sinks with the led-sources property.
-+        minimum: 0
-+        maximum: 1
-+
-+      label: true
-+
-+      led-sources:
-+        allOf:
-+          - minItems: 1
-+            maxItems: 2
-+            items:
-+              minimum: 0
-+              maximum: 1
-+
-+      default-brightness:
-+        minimum: 0
-+        maximum: 31
-+        default: 18
-+
-+      max-brightness:
-+        minimum: 0
-+        maximum: 31
-+        default: 31
-+
-+    required:
-+      - reg
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        backlight@36 {
-+            compatible = "ti,lm3509";
-+            reg = <0x36>;
-+            reset-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>;
-+
-+            ti,oled-mode;
-+            ti,brightness-rate-of-change-us = <52000>;
-+
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            led@0 {
-+                reg = <0>;
-+                led-sources = <0 1>;
-+                label = "lcd-backlight";
-+                default-brightness = <12>;
-+                max-brightness = <31>;
-+            };
-+        };
-+    };
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        backlight@36 {
-+            compatible = "ti,lm3509";
-+            reg = <0x36>;
-+
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            led@0 {
-+                reg = <0>;
-+                default-brightness = <12>;
-+            };
-+
-+            led@1 {
-+                reg = <1>;
-+                default-brightness = <15>;
-+            };
-+        };
-+    };
--- 
-2.44.0
+J
+> > Jonathan
+> > =20
+> > > +
+> > >  #define ADXL345_DATA_FORMAT_2G               0
+> > >  #define ADXL345_DATA_FORMAT_4G               1
+> > >  #define ADXL345_DATA_FORMAT_8G               2
+> > > @@ -48,7 +56,6 @@
+> > >  struct adxl345_data {
+> > >       const struct adxl345_chip_info *info;
+> > >       struct regmap *regmap;
+> > > -     u8 data_range;
+> > >  };
+> > >
+> > >  #define ADXL345_CHANNEL(index, axis) {                              =
+         \
+> > > @@ -218,15 +225,14 @@ int adxl345_core_probe(struct device *dev, stru=
+ct regmap *regmap)
+> > >
+> > >       data =3D iio_priv(indio_dev);
+> > >       data->regmap =3D regmap;
+> > > -     /* Enable full-resolution mode */
+> > > -     data->data_range =3D ADXL345_DATA_FORMAT_FULL_RES;
+> > >       data->info =3D device_get_match_data(dev);
+> > >       if (!data->info)
+> > >               return -ENODEV;
+> > >
+> > > -     ret =3D regmap_write(data->regmap, ADXL345_REG_DATA_FORMAT,
+> > > -                        data->data_range);
+> > > -     if (ret < 0)
+> > > +     /* Enable full-resolution mode */
+> > > +     ret =3D regmap_update_bits(regmap, ADXL345_REG_DATA_FORMAT,
+> > > +                              ADXL345_DATA_FORMAT_MSK, ADXL345_DATA_=
+FORMAT_FULL_RES);
+> > > +     if (ret)
+> > >               return dev_err_probe(dev, ret, "Failed to set data rang=
+e\n");
+> > >
+> > >       indio_dev->name =3D data->info->name; =20
+> > =20
 
