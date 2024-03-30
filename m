@@ -1,204 +1,134 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A701C0DE5;
-	Sat, 30 Mar 2024 08:45:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE08A3C2C;
+	Sat, 30 Mar 2024 08:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711788328; cv=none; b=hy2EJtultiHA2uprxClpuyL5vkrt41hd3n58CjdMQLibHZXsvMRchd8JII5YE7RX5qMM7I5Cr0riNKCHP2sLnYzIt/9Z9J+ngG5d7HYy7VBYIeGGVN7C3oRam+OqMLbrAPLS+Prx/zKn8nQknTXKwgZydGVJBVlMJNd2jojHsdc=
+	t=1711788731; cv=none; b=OIsy2/5zncrPDDDv1SmbSfoJZbQrxMXwLvs279O35EZFVQCH7ye/9Swsc0vGkEk/zjSCRdZvVBFzJSnUMY0qckVwdUyjmvFKJCcJ6m2OOj0W00sjnQQ4bi/gTpL2mQZGSH9+Z/STTqtjRTwTxQHrVGCKnlizHx6SWebU/NkjkIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711788328; c=relaxed/simple;
-	bh=TSaZGxrHrCgTXiI9MawX9SQ+wZmZXIIq6Npzi1mEsok=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OTFIdGHjwd3USwM7c1M7mT4vPdw4l9NOKiRNEYLE0JXotMqljeMBWiDJmAdA6FLAnK8SscYadE3xks8mv3lwSpVRJDAjW5Qz++oDw8bB/iiSlidhkvtQyw1DKQCpfqm6szIYfCjGnIXCiSirpbotfnuo4dFJygsk0aYFcAbrAOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eXjGklLv; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711788731; c=relaxed/simple;
+	bh=JvItBV8S7Y31HMTBenjNqg15k1PnGv+HzKdN7fwkC+Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=TBa0ltExKXXF1Ou2+D77LPWx7mwpku8pLAIMt5e2dh4rsvorH1htnZfl1Uuag6OpFrRHYTBRXf24QnhNLXf+xpmsUd7jcDnI9khZ/NQwSaOU7E9EH28W1z8+F/QcHI6p7ivB+kCT8FNN6fVUFNIwg/qEOTTOwfdiTj6bsmUjOAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=iJIgd8nj; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eXjGklLv"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a469dffbdfeso99241066b.0;
-        Sat, 30 Mar 2024 01:45:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711788325; x=1712393125; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H3TYUZ32mQOVXpT3ypAywszB693VhtWtaKsJE+/46ZY=;
-        b=eXjGklLv+M9nfBcN/oivUx3CpC6f+nBZGMVLSnBD6gX0hbWDoKS5Sji/Zer3mAEeP5
-         a6Su5nDYf2nCiqzyQdfWY+Lg5beNxhKUEHPBqKVgLUMjNOq1L5kg4NnSl9iKDGQ1NMzT
-         qGx5PDLEWDfbOwelyybIUxRNVG7uHzc+CGe0Uw2ghKpSwDUdpzo3Be6usBxNMdcmJQ21
-         OjYxMGC1zjyBOCwEGpOwLC9i+AoR8yZTtnR2LqwLFqE648SDwuqsQwZwrrJK0dg4y9XL
-         FiYr3Dh/5XUqCjMXrsmh9s2H8qJjKqrM/33w/TLAhFrLvneyngWPGEm+8TEaMnGhRcN7
-         Mlxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711788325; x=1712393125;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H3TYUZ32mQOVXpT3ypAywszB693VhtWtaKsJE+/46ZY=;
-        b=uZLMC5svLg3mNI1NrgB4DATXctJPIhbhFHIThsZzAT9/wxOz73kK66g0aeN+s6P7R1
-         DngMfRpqo9Ah42sxHtCKHScdmaRLEVJ3IPRZpvLwMeScYC87VrNgi2jUrMJnew4qzdoJ
-         LngHtxXzsN8xXXIIU25kaAatvj3ueNlikJ/ft+MFzCU5Qub9F2u85lGhL6FHJQiJRlrD
-         cwen5bND8vCetAqyTtwft3Upcu8HY0RrnKhRLhBQ8qaemFXZnaYUZWUQ8vcBZOWTaPXF
-         xGw/KtbJcZ5VAu4TDNKNKja1vUtL3d7wbIjLtxveNiDWUd/RgpKxOS2uUo05AArSxclr
-         +7/A==
-X-Forwarded-Encrypted: i=1; AJvYcCUNn0eDXOZPAEFNoWQR13kFHZWnql5YsGmXPC5NzX81yUsAV0OqksOYxye+me7xKz8X56oe5hGuUasaNBZ8xqtz9VvYfL5P9tjHa9DQ2uaClVYtSO4ea7fai9c/67xi3NGJqJk3s56Bh08=
-X-Gm-Message-State: AOJu0Yw9Dv6VIrhpTqBMfgd8cUbNOfAtXPybizMLLziB6TNNSU2FSGre
-	+L6c2RUDgf3XsCO9zUyWqQyyH3lzDoRRhZUgy9j+zgoWpnHy41b764ZSJvl9a66KyaRuXUcOQYV
-	ABLMjyKyp7iaXvtbZg5qFxKiXAn65cDI1dWV3H6my
-X-Google-Smtp-Source: AGHT+IGS2iyq4eBMdSFiU0V1nXZG2AqD4DW6knNPt4IyLyi80S0q7E5TKlK3w1CaBJFL8Qhe9bORA+K6edTkN3/gmEY=
-X-Received: by 2002:a17:907:1b12:b0:a47:52fe:ef5 with SMTP id
- mp18-20020a1709071b1200b00a4752fe0ef5mr3222720ejc.0.1711788325231; Sat, 30
- Mar 2024 01:45:25 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iJIgd8nj"
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 40B5520E7039;
+	Sat, 30 Mar 2024 01:52:08 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 40B5520E7039
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1711788728;
+	bh=BtKE7O5OWVM7SyPdRoHlAAnjh2otvkVJidlO3O/WDfU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=iJIgd8njauEFfrqab1aHlcM8q6HjkukZ6SmfRUHRtttswzVuFTjGIJAFAlHb9vzeB
+	 pz9jaClMEtTXns1dXkYp3ODhFJufdDI47sAKnRvsSbiEX1W2EGW2dY0fYlNVTQ/4vz
+	 X/9mWe/yPSL2QgYHC7cSJkvTw+6UH74KqYsLVRiA=
+From: Saurabh Sengar <ssengar@linux.microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org
+Cc: longli@microsoft.com,
+	ssengar@microsoft.com
+Subject: [PATCH v3 1/7] Drivers: hv: vmbus: Add utility function for querying ring size
+Date: Sat, 30 Mar 2024 01:51:57 -0700
+Message-Id: <1711788723-8593-2-git-send-email-ssengar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1711788723-8593-1-git-send-email-ssengar@linux.microsoft.com>
+References: <1711788723-8593-1-git-send-email-ssengar@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240329091245.135216-1-richard120310@gmail.com>
- <848d1259-ff6e-4732-b840-a02a5e5fe2cb@acm.org> <be8e14ec-3d46-4d67-88b0-f3dbf7ff22b2@kernel.dk>
- <CAH5jb=btggiO7Op+k2pTS8LyjcZ0tYpvtWJRmQ8sApD-fHyHXg@mail.gmail.com>
-In-Reply-To: <CAH5jb=btggiO7Op+k2pTS8LyjcZ0tYpvtWJRmQ8sApD-fHyHXg@mail.gmail.com>
-From: I Hsin Cheng <richard120310@gmail.com>
-Date: Sat, 30 Mar 2024 16:45:13 +0800
-Message-ID: <CAH5jb=bptDp43mLJ7A3nZuBnDB=V_wjLa3XqCSfsG8sC0OoFyg@mail.gmail.com>
-Subject: Re: [PATCH] blk-wbt: Speed up integer square root in rwb_arm_timer
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Bart Van Assche <bvanassche@acm.org>, akpm@linux-foundation.org, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	"Ching-Chun (Jim) Huang" <jserv@ccns.ncku.edu.tw>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-The last email didn't follow the plain-text format, I'm sorry for that,
- that's why I resend it. Sorry for the bother.
+Add a function to query for the preferred ring buffer size of VMBus
+device. This will allow the drivers (eg. UIO) to allocate the most
+optimized ring buffer size for devices.
 
->> Additionally, why to add a second
->> implementation of int_sqrt() instead of replacing the int_sqrt()
->> implementation in lib/math/int_sqrt.c?
+Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+Reviewed-by: Long Li <longli@microsoft.com>
+---
+[V2]
+- Added more details in commit message.
+- Added comments for preferred ring sizes and there values.
+- Added reviewed-by from Long Li.
 
-I was thinking about adding an alternative option first rather than
-replace the whole int_sqrt() function which is used in many other
-parts in the Linux kernel.
+ drivers/hv/channel_mgmt.c | 15 ++++++++++++---
+ drivers/hv/hyperv_vmbus.h |  5 +++++
+ include/linux/hyperv.h    |  2 ++
+ 3 files changed, 19 insertions(+), 3 deletions(-)
 
->> Since int_sqrt() does not use divisions and since int_fastsqrt() uses
->> divisions, can all CPUs supported by the Linux kernel divide numbers as
->> quickly as the CPU mentioned above?
+diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+index 2f4d09ce027a..3c6011a48dab 100644
+--- a/drivers/hv/channel_mgmt.c
++++ b/drivers/hv/channel_mgmt.c
+@@ -120,7 +120,9 @@ const struct vmbus_device vmbus_devs[] = {
+ 	},
+ 
+ 	/* File copy */
+-	{ .dev_type = HV_FCOPY,
++	/* fcopy always uses 16KB ring buffer size and is working well for last many years */
++	{ .pref_ring_size = 0x4000,
++	  .dev_type = HV_FCOPY,
+ 	  HV_FCOPY_GUID,
+ 	  .perf_device = false,
+ 	  .allowed_in_isolated = false,
+@@ -140,12 +142,19 @@ const struct vmbus_device vmbus_devs[] = {
+ 	  .allowed_in_isolated = false,
+ 	},
+ 
+-	/* Unknown GUID */
+-	{ .dev_type = HV_UNKNOWN,
++	/*
++	 * Unknown GUID
++	 * 64 KB ring buffer + 4 KB header should be sufficient size for any Hyper-V device apart
++	 * from HV_NIC and HV_SCSI. This case avoid the fallback for unknown devices to allocate
++	 * much bigger (2 MB) of ring size.
++	 */
++	{ .pref_ring_size = 0x11000,
++	  .dev_type = HV_UNKNOWN,
+ 	  .perf_device = false,
+ 	  .allowed_in_isolated = false,
+ 	},
+ };
++EXPORT_SYMBOL_GPL(vmbus_devs);
+ 
+ static const struct {
+ 	guid_t guid;
+diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+index f6b1e710f805..76ac5185a01a 100644
+--- a/drivers/hv/hyperv_vmbus.h
++++ b/drivers/hv/hyperv_vmbus.h
+@@ -417,6 +417,11 @@ static inline bool hv_is_perf_channel(struct vmbus_channel *channel)
+ 	return vmbus_devs[channel->device_id].perf_device;
+ }
+ 
++static inline size_t hv_dev_ring_size(struct vmbus_channel *channel)
++{
++	return vmbus_devs[channel->device_id].pref_ring_size;
++}
++
+ static inline bool hv_is_allocated_cpu(unsigned int cpu)
+ {
+ 	struct vmbus_channel *channel, *sc;
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 6ef0557b4bff..7de9f90d3f95 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -820,6 +820,8 @@ struct vmbus_requestor {
+ #define VMBUS_RQST_RESET (U64_MAX - 3)
+ 
+ struct vmbus_device {
++	/* preferred ring buffer size in KB, 0 means no preferred size for this device */
++	size_t pref_ring_size;
+ 	u16  dev_type;
+ 	guid_t guid;
+ 	bool perf_device;
+-- 
+2.34.1
 
-You're right about that. Thanks for pointing out the problem, I'll try to
-replace the divisions maybe with another kind of approximation method.
-
-> The claim that it is floor(sqrt(val)) is not true.
-> Trivial example:
->
-> 1005117225
->         sqrt()          31703.58
->         int_sqrt()      30703
->         int_fastsqrt()  30821
-
-Thanks for pointing out the problem, I only compare my method with int_sqrt=
-()
-and plot the result using gnuplot, the result shown that they gave
-very very close
-answers, but I didn't count the error based on the integer part of
-sqrt(), which is
-indeed necessary. Sorry for this part. I'll check on the precision of my me=
-thod
-again.
-
-Thanks for your patience and time on reviewing my patch.
-
-
-Best Regards,
-
-I Hsin Cheng.
-
-
-On Sat, Mar 30, 2024 at 4:29=E2=80=AFPM =E9=84=AD=E4=BB=A5=E6=96=B0 <richar=
-d120310@gmail.com> wrote:
->
-> >> Additionally, why to add a second
-> >> implementation of int_sqrt() instead of replacing the int_sqrt()
-> >> implementation in lib/math/int_sqrt.c?
->
-> I was thinking about adding an alternative option first rather than
-> replace the whole int_sqrt() function which is used in many other
-> parts in the Linux kernel.
->
-> >> Since int_sqrt() does not use divisions and since int_fastsqrt() uses
-> >> divisions, can all CPUs supported by the Linux kernel divide numbers a=
-s
-> >> quickly as the CPU mentioned above?
->
-> You're right about that. Thanks for pointing out the problem, I'll try to
-> replace the divisions maybe with another kind of approximation method.
->
-> > The claim that it is floor(sqrt(val)) is not true.
-> > Trivial example:
-> >
-> > 1005117225
-> >         sqrt()          31703.58
-> >         int_sqrt()      30703
-> >         int_fastsqrt()  30821
->
-> Thanks for pointing out the problem, I only compare my method with int_sq=
-rt()
->  and plot the result using gnuplot, the result shown that they gave very =
-very close
-> answers, but I didn't count the error based on the integer part of sqrt()=
-, which is
-> indeed necessary. Sorry for this part. I'll check on the precision of my =
-method
-> again.
->
-> Thanks for your patience and time on reviewing my patch.
->
-> Best Regards,
->
-> I Hsin Cheng.
->
-> Jens Axboe <axboe@kernel.dk> =E6=96=BC 2024=E5=B9=B43=E6=9C=8830=E6=97=A5=
- =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=883:12=E5=AF=AB=E9=81=93=EF=BC=9A
->>
->> On 3/29/24 12:15 PM, Bart Van Assche wrote:
->> > On 3/29/24 2:12 AM, I Hsin Cheng wrote:
->> >> As the result shown, the origin version of integer square root, which=
- is
->> >> "int_sqrt" takes 35.37 msec task-clock, 1,2181,3348 cycles, 1,6095,36=
-65
->> >> instructions, 2551,2990 branches and causes 1,0616 branch-misses.
->> >>
->> >> At the same time, the variant version of integer square root, which i=
-s
->> >> "int_fastsqrt" takes 33.96 msec task-clock, 1,1645,7487 cyclces,
->> >> 5621,0086 instructions, 321,0409 branches and causes 2407 branch-miss=
-es.
->> >> We can clearly see that "int_fastsqrt" performs faster and better res=
-ult
->> >> so it's indeed a faster invariant of integer square root.
->> >
->> > I'm not sure that a 4% performance improvement is sufficient to
->> > replace the int_sqrt() implementation. Additionally, why to add a
->> > second implementation of int_sqrt() instead of replacing the
->> > int_sqrt() implementation in lib/math/int_sqrt.c?
->>
->> That's the real question imho - if provides the same numbers and is
->> faster, why have two?
->>
->> I ran a quick test because I was curious, and the precision is
->> definitely worse. The claim that it is floor(sqrt(val)) is not true.
->> Trivial example:
->>
->> 1005117225
->>         sqrt()          31703.58
->>         int_sqrt()      30703
->>         int_fastsqrt()  30821
->>
->> whether this matters, probably not, but then again it's hard to care
->> about a slow path sqrt calculation. I'd certainly err on the side of
->> precision for that.
->>
->> --
->> Jens Axboe
->>
