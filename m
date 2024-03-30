@@ -1,70 +1,64 @@
-Received: from mx208.easyname.com (mx208.easyname.com [212.232.28.126])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B5539AF9;
-	Sat, 30 Mar 2024 15:19:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.232.28.126
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5709DEBB;
+	Sat, 30 Mar 2024 15:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711811986; cv=none; b=RM99+04GqKVUWVHvbi3x2yxz50ABSy4AAtpSc6zWfwEHzm2ge0AVnSJkOknI8H3PGWxobptESAWVQ3UMmMsE5v1sO7+oo1aJYt1nGrCm6W4YZ3DvT6XH5Wvq6hi0dQGz5uRZOb9K381KkCgi0q1JKAVh5ywDOqkGFfaMW0CzzS0=
+	t=1711812030; cv=none; b=i7/J4wglv1y7fiC8rf7Q5FmalV7MaoozLMGOA1zuh4Y9pXArSUmNoUbeK4fK2I77YC8PLRBge99yQNt8VxRzESEUxMyhf7v26NdZmJmv7sdXpXzCi3w8SkFTycI0xMntFxftdVLD2s3Ib7bZhAmTyRIxuDUcuYjZD3jwJ6+dK3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711811986; c=relaxed/simple;
-	bh=oiKb/WgdTiDAoisYVc4IhzWJOKWvIzrcS4Hd8s2oeQA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kW6ZPJFQntc85KnyxP3CWc+F91FByxWnlzZE/r4huKldxIX7G8gaXqasdj2XJqBvtIUgARlxkmjx4WtAWS4nAEU/BXhRg7mnkSNgoqobPmMCTxvVzBB7pa2cW4j00t+vb4h4443ogUSonbJ9sJ3Bgdb9AMWn53dKcIsXSLbrxe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=paroga.com; spf=pass smtp.mailfrom=paroga.com; dkim=pass (2048-bit key) header.d=paroga.com header.i=@paroga.com header.b=nOC60pI5; dkim=pass (2048-bit key) header.d=paroga.com header.i=@paroga.com header.b=nOC60pI5; arc=none smtp.client-ip=212.232.28.126
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=paroga.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paroga.com
+	s=arc-20240116; t=1711812030; c=relaxed/simple;
+	bh=ZDhfm018vFSDBueWA5CDz9WphpZ9cc6YhQfGOzOtKsc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ubsPki+IOFW0QuJ89vr69afVUjlFSLMFtcJNZk8gH0Qn6FmX8x64PKmMMDK3qpHUaiyukq78/fwVvfBM2WlPbdlLFOmRqcD8+9nfnAhsWZ+Q6twGwXk1v3n9BBNo8HPMWE9SnG+I87hO1P6amMn+/RuFBVj1g/ETKIobZl/KEiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OntbtAkJ; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paroga.com header.i=@paroga.com header.b="nOC60pI5";
-	dkim=pass (2048-bit key) header.d=paroga.com header.i=@paroga.com header.b="nOC60pI5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=paroga.com;
-	 s=easyname; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject
-	:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=7WBh3tTpWzmwiZVjvRLHfAhzBGmiAs9iajNkG57wSgw=; b=nOC60pI5iAYu2Ji1JyfJOd+Vqa
-	Sjuuewo6IujElqVmhPfmZPx0acNyn0EHP3/0j6zujCcTshJJY81CfnNuP/Jy5EYX4VDkU/04+wNsw
-	yd/Mj5gceiPKQNGn3Se/29Kz7Mr873EMAO5cOlIhqJjo0LvepSQ3Csm7CJ0oRTg1WfIAxID7xuMMb
-	HhZ7wpgTHMsqruyc0fKB4iFccSlWCrTnq6pdmQ9vQe+YHNJCvcDz3iyKQnmK5loJvTHju6emAf4bu
-	yi0NTFAEadvEzPFZuH6GVdBnOLbSjNwoB9fSdf1sSFeJnLT8hBv+5GFT9ZAUImy0MVgPcUWGz9BPG
-	jp1SMjgw==;
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=paroga.com;
-	 s=easyname; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject
-	:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=7WBh3tTpWzmwiZVjvRLHfAhzBGmiAs9iajNkG57wSgw=; b=nOC60pI5iAYu2Ji1JyfJOd+Vqa
-	Sjuuewo6IujElqVmhPfmZPx0acNyn0EHP3/0j6zujCcTshJJY81CfnNuP/Jy5EYX4VDkU/04+wNsw
-	yd/Mj5gceiPKQNGn3Se/29Kz7Mr873EMAO5cOlIhqJjo0LvepSQ3Csm7CJ0oRTg1WfIAxID7xuMMb
-	HhZ7wpgTHMsqruyc0fKB4iFccSlWCrTnq6pdmQ9vQe+YHNJCvcDz3iyKQnmK5loJvTHju6emAf4bu
-	yi0NTFAEadvEzPFZuH6GVdBnOLbSjNwoB9fSdf1sSFeJnLT8hBv+5GFT9ZAUImy0MVgPcUWGz9BPG
-	jp1SMjgw==;
-Received: from 84-115-225-203.cable.dynamic.surfer.at ([84.115.225.203] helo=localhost.localdomain)
-	by mx.easyname.com with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <paroga@paroga.com>)
-	id 1rqaBl-0002RN-8H; Sat, 30 Mar 2024 15:00:13 +0000
-From: Patrick Gansterer <paroga@paroga.com>
-To: dri-devel@lists.freedesktop.org,
-	linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OntbtAkJ"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2d6a1ad08b8so27825871fa.1;
+        Sat, 30 Mar 2024 08:20:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711812026; x=1712416826; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TkI73TeGKWiCOeoizdJ5ne1BtmQ7mP66j97GuGKs6xU=;
+        b=OntbtAkJf5HA6zlRpo2NPS9h9MCd7jpqrdnvrFOJdEzVt8/EjVEpIz8mClWwpMRKMC
+         GdPdoRDE9R7jbn6ajuzu6ZnGcBybqSJgEvtjnAAj2Aygf+nCFgC/3aRi8rMTooZuqnTX
+         1A/hxKGAvQ7jvl14xiYNsZT9bGzHjKsIUBUi+NtUSfPH2lk9I1mcxMOM/4/ZcKfAVU+U
+         iE8ic1PUbP/LhR6AV5g/pAZNxQ1R8Yy4Wwov9KBThhhLb6DEEncv6knKHyAufoGGIisM
+         9KoQE5rj7OULlu9/p3gL7YrXT7LX2lLBNXk1cGQH3dqqmp2bLrcNBjTnnnQNmb/jyORq
+         U/lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711812026; x=1712416826;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TkI73TeGKWiCOeoizdJ5ne1BtmQ7mP66j97GuGKs6xU=;
+        b=YxYOoc24LdYaXSwQDbxlVnwrDXxCxvTk2NfsN07Wh+BN9Ng10TBe74aMYaM0q/otjZ
+         99A6mqUjuUzj6z5NvY4Ti8KHQbEdvSAmstiCBrxOAJtRDjXbX4rE8Znh1PrizvhRplCj
+         eBqBuNHj16r/mhXkivj620uGW2herDs0itFJcOfkUY1PoMeXxh6vpPm0+UYXCHAoRIZ5
+         twWqzXqhkclGYC6kEnlEAO3hde7ltSawoBMlGkZ+JW4SeUC4pSOrbzQYx4uO0UQyMebS
+         qf6qd5FTMrWNh63Hab2jNW5q5rCoBl3cBY/X7U11hahBZBP50IMtN22IAKEPDIndayLz
+         x6Uw==
+X-Forwarded-Encrypted: i=1; AJvYcCXk8U4hzgxLE9aU/6ySrvfFN9x7ypMqNJLV553z6LNYDc+QxlQICuuGyH3FABdgCW+SxKE+mw6cQ/0fhxgZPvof1/bGwbU/Up3IfPle
+X-Gm-Message-State: AOJu0Yzh0/w0ThLSQi/daACvttu4LG/g3ULGq1P89WiI5FwP/Nh/0VoE
+	xXEsnlPGNaSifBlcGQ1N2JEhjr0rpeoOEnE29PCtzLY3uayxO0rV
+X-Google-Smtp-Source: AGHT+IEe3ngo3E5WRUbfz7Pyww4/Y1Pd9MCNaQ9smTiCu2RaQ2jSLxde2Y20V+Xx0O1NHcV8LtkIRg==
+X-Received: by 2002:a05:651c:4d2:b0:2d6:aff5:1e65 with SMTP id e18-20020a05651c04d200b002d6aff51e65mr4613284lji.16.1711812025981;
+        Sat, 30 Mar 2024 08:20:25 -0700 (PDT)
+Received: from gentoo.. (213-65-159-17-no600.tbcn.telia.com. [213.65.159.17])
+        by smtp.gmail.com with ESMTPSA id h7-20020a0564020e0700b00568e3d3337bsm3290714edh.18.2024.03.30.08.20.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 30 Mar 2024 08:20:25 -0700 (PDT)
+From: Isak Ellmer <isak01@gmail.com>
+To: masahiroy@kernel.org
+Cc: linux-kbuild@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-fbdev@vger.kernel.org
-Cc: Patrick Gansterer <paroga@paroga.com>,
-	Lee Jones <lee@kernel.org>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Pavel Machek <pavel@ucw.cz>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Helge Deller <deller@gmx.de>,
-	Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH v5 0/2] backlight: Add new lm3509 backlight driver
-Date: Sat, 30 Mar 2024 15:59:23 +0100
-Message-ID: <20240330145931.729116-1-paroga@paroga.com>
-X-Mailer: git-send-email 2.44.0
+	Isak Ellmer <isak01@gmail.com>
+Subject: [PATCH] kconfig: Fix typo HEIGTH to HEIGHT
+Date: Sat, 30 Mar 2024 16:19:45 +0100
+Message-ID: <20240330151945.95875-1-isak01@gmail.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,51 +66,143 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Easy-Autoreply: EN
 
-This is a general driver for LM3509 backlight chip of TI.
-LM3509 is High Efficiency Boost for White LEDs and/or OLED Displays with
-Dual Current Sinks. This driver supports OLED/White LED select, brightness
-control and sub/main control.
-The datasheet can be found at http://www.ti.com/product/lm3509.
+Fixed a typo in some variables where height was misspelled as heigth.
+
+Signed-off-by: Isak Ellmer <isak01@gmail.com>
 ---
-Changes in v5:
-  Renamed lm3509_bl_led_pdata to lm3509_bl_led_data
-  Set backlight_properties.scale to BACKLIGHT_SCALE_NON_LINEAR
-  Add dev_err_probe() for first write to a register
-  Use dev_err_probe() instead of dev_err()
+ scripts/kconfig/lxdialog/checklist.c |  2 +-
+ scripts/kconfig/lxdialog/dialog.h    | 12 ++++++------
+ scripts/kconfig/lxdialog/inputbox.c  |  2 +-
+ scripts/kconfig/lxdialog/menubox.c   |  2 +-
+ scripts/kconfig/lxdialog/textbox.c   |  2 +-
+ scripts/kconfig/lxdialog/util.c      |  2 +-
+ scripts/kconfig/lxdialog/yesno.c     |  2 +-
+ scripts/kconfig/mconf.c              |  4 ++--
+ 8 files changed, 14 insertions(+), 14 deletions(-)
 
-v4: https://lore.kernel.org/all/20240310135344.3455294-1-paroga@paroga.com/
-
-Changes in v4:
-  Use backlight_*() to access backlight_device
-  Do not set backlight_properties.power
-
-v3: https://lore.kernel.org/all/20240309132521.1290173-1-paroga@paroga.com/
-
-Changes in v3:
-  Improved device tree bindings documentation
-
-v2: https://lore.kernel.org/all/20240308215617.1729664-1-paroga@paroga.com/
-
-Changes in v2:
-  Add device tree nodes for each output
-  Addressed multiple smaller review comments
-
-v1: https://lore.kernel.org/all/20240302212757.1871164-1-paroga@paroga.com/
-
-Patrick Gansterer (2):
-  dt-bindings: backlight: Add Texas Instruments LM3509
-  backlight: Add new lm3509 backlight driver
-
- .../bindings/leds/backlight/ti,lm3509.yaml    | 139 +++++++
- drivers/video/backlight/Kconfig               |   7 +
- drivers/video/backlight/Makefile              |   1 +
- drivers/video/backlight/lm3509_bl.c           | 340 ++++++++++++++++++
- 4 files changed, 487 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/ti,lm3509.yaml
- create mode 100644 drivers/video/backlight/lm3509_bl.c
-
+diff --git a/scripts/kconfig/lxdialog/checklist.c b/scripts/kconfig/lxdialog/checklist.c
+index 31d0a89fbeb7..75493302fb85 100644
+--- a/scripts/kconfig/lxdialog/checklist.c
++++ b/scripts/kconfig/lxdialog/checklist.c
+@@ -119,7 +119,7 @@ int dialog_checklist(const char *title, const char *prompt, int height,
+ 	}
+ 
+ do_resize:
+-	if (getmaxy(stdscr) < (height + CHECKLIST_HEIGTH_MIN))
++	if (getmaxy(stdscr) < (height + CHECKLIST_HEIGHT_MIN))
+ 		return -ERRDISPLAYTOOSMALL;
+ 	if (getmaxx(stdscr) < (width + CHECKLIST_WIDTH_MIN))
+ 		return -ERRDISPLAYTOOSMALL;
+diff --git a/scripts/kconfig/lxdialog/dialog.h b/scripts/kconfig/lxdialog/dialog.h
+index 2d15ba893fbf..f6c2ebe6d1f9 100644
+--- a/scripts/kconfig/lxdialog/dialog.h
++++ b/scripts/kconfig/lxdialog/dialog.h
+@@ -162,17 +162,17 @@ int on_key_esc(WINDOW *win);
+ int on_key_resize(void);
+ 
+ /* minimum (re)size values */
+-#define CHECKLIST_HEIGTH_MIN 6	/* For dialog_checklist() */
++#define CHECKLIST_HEIGHT_MIN 6	/* For dialog_checklist() */
+ #define CHECKLIST_WIDTH_MIN 6
+-#define INPUTBOX_HEIGTH_MIN 2	/* For dialog_inputbox() */
++#define INPUTBOX_HEIGHT_MIN 2	/* For dialog_inputbox() */
+ #define INPUTBOX_WIDTH_MIN 2
+-#define MENUBOX_HEIGTH_MIN 15	/* For dialog_menu() */
++#define MENUBOX_HEIGHT_MIN 15	/* For dialog_menu() */
+ #define MENUBOX_WIDTH_MIN 65
+-#define TEXTBOX_HEIGTH_MIN 8	/* For dialog_textbox() */
++#define TEXTBOX_HEIGHT_MIN 8	/* For dialog_textbox() */
+ #define TEXTBOX_WIDTH_MIN 8
+-#define YESNO_HEIGTH_MIN 4	/* For dialog_yesno() */
++#define YESNO_HEIGHT_MIN 4	/* For dialog_yesno() */
+ #define YESNO_WIDTH_MIN 4
+-#define WINDOW_HEIGTH_MIN 19	/* For init_dialog() */
++#define WINDOW_HEIGHT_MIN 19	/* For init_dialog() */
+ #define WINDOW_WIDTH_MIN 80
+ 
+ int init_dialog(const char *backtitle);
+diff --git a/scripts/kconfig/lxdialog/inputbox.c b/scripts/kconfig/lxdialog/inputbox.c
+index 1dcfb288ee63..3c6e24b20f5b 100644
+--- a/scripts/kconfig/lxdialog/inputbox.c
++++ b/scripts/kconfig/lxdialog/inputbox.c
+@@ -43,7 +43,7 @@ int dialog_inputbox(const char *title, const char *prompt, int height, int width
+ 		strcpy(instr, init);
+ 
+ do_resize:
+-	if (getmaxy(stdscr) <= (height - INPUTBOX_HEIGTH_MIN))
++	if (getmaxy(stdscr) <= (height - INPUTBOX_HEIGHT_MIN))
+ 		return -ERRDISPLAYTOOSMALL;
+ 	if (getmaxx(stdscr) <= (width - INPUTBOX_WIDTH_MIN))
+ 		return -ERRDISPLAYTOOSMALL;
+diff --git a/scripts/kconfig/lxdialog/menubox.c b/scripts/kconfig/lxdialog/menubox.c
+index 0e333284e947..6e6244df0c56 100644
+--- a/scripts/kconfig/lxdialog/menubox.c
++++ b/scripts/kconfig/lxdialog/menubox.c
+@@ -172,7 +172,7 @@ int dialog_menu(const char *title, const char *prompt,
+ do_resize:
+ 	height = getmaxy(stdscr);
+ 	width = getmaxx(stdscr);
+-	if (height < MENUBOX_HEIGTH_MIN || width < MENUBOX_WIDTH_MIN)
++	if (height < MENUBOX_HEIGHT_MIN || width < MENUBOX_WIDTH_MIN)
+ 		return -ERRDISPLAYTOOSMALL;
+ 
+ 	height -= 4;
+diff --git a/scripts/kconfig/lxdialog/textbox.c b/scripts/kconfig/lxdialog/textbox.c
+index 058ed0e5bbd5..0abaf635978f 100644
+--- a/scripts/kconfig/lxdialog/textbox.c
++++ b/scripts/kconfig/lxdialog/textbox.c
+@@ -175,7 +175,7 @@ int dialog_textbox(const char *title, const char *tbuf, int initial_height,
+ 
+ do_resize:
+ 	getmaxyx(stdscr, height, width);
+-	if (height < TEXTBOX_HEIGTH_MIN || width < TEXTBOX_WIDTH_MIN)
++	if (height < TEXTBOX_HEIGHT_MIN || width < TEXTBOX_WIDTH_MIN)
+ 		return -ERRDISPLAYTOOSMALL;
+ 	if (initial_height != 0)
+ 		height = initial_height;
+diff --git a/scripts/kconfig/lxdialog/util.c b/scripts/kconfig/lxdialog/util.c
+index 3fb7508b68a2..f18e2a89f613 100644
+--- a/scripts/kconfig/lxdialog/util.c
++++ b/scripts/kconfig/lxdialog/util.c
+@@ -291,7 +291,7 @@ int init_dialog(const char *backtitle)
+ 	getyx(stdscr, saved_y, saved_x);
+ 
+ 	getmaxyx(stdscr, height, width);
+-	if (height < WINDOW_HEIGTH_MIN || width < WINDOW_WIDTH_MIN) {
++	if (height < WINDOW_HEIGHT_MIN || width < WINDOW_WIDTH_MIN) {
+ 		endwin();
+ 		return -ERRDISPLAYTOOSMALL;
+ 	}
+diff --git a/scripts/kconfig/lxdialog/yesno.c b/scripts/kconfig/lxdialog/yesno.c
+index bcaac9b7bab2..b57d25e1549f 100644
+--- a/scripts/kconfig/lxdialog/yesno.c
++++ b/scripts/kconfig/lxdialog/yesno.c
+@@ -32,7 +32,7 @@ int dialog_yesno(const char *title, const char *prompt, int height, int width)
+ 	WINDOW *dialog;
+ 
+ do_resize:
+-	if (getmaxy(stdscr) < (height + YESNO_HEIGTH_MIN))
++	if (getmaxy(stdscr) < (height + YESNO_HEIGHT_MIN))
+ 		return -ERRDISPLAYTOOSMALL;
+ 	if (getmaxx(stdscr) < (width + YESNO_WIDTH_MIN))
+ 		return -ERRDISPLAYTOOSMALL;
+diff --git a/scripts/kconfig/mconf.c b/scripts/kconfig/mconf.c
+index f4bb391d50cf..c0969097447d 100644
+--- a/scripts/kconfig/mconf.c
++++ b/scripts/kconfig/mconf.c
+@@ -659,9 +659,9 @@ static void conf_choice(struct menu *menu)
+ 		dialog_clear();
+ 		res = dialog_checklist(prompt ? prompt : "Main Menu",
+ 					radiolist_instructions,
+-					MENUBOX_HEIGTH_MIN,
++					MENUBOX_HEIGHT_MIN,
+ 					MENUBOX_WIDTH_MIN,
+-					CHECKLIST_HEIGTH_MIN);
++					CHECKLIST_HEIGHT_MIN);
+ 		selected = item_activate_selected();
+ 		switch (res) {
+ 		case 0:
 -- 
-2.44.0
+2.43.2
 
