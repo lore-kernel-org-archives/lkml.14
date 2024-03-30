@@ -1,80 +1,152 @@
-Received: from mailscanner01.zoner.fi (mailscanner01.zoner.fi [84.34.166.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6750D282F7
-	for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2024 12:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.34.166.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B70B8BFC;
+	Sat, 30 Mar 2024 12:58:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711803495; cv=none; b=MtKCAhl7Wk1t7lNvBzZBAby1A7rlHBgqVlXEv6jQBmkHPxOxTC9tZkQ5wJG6mE2otZz5t1KSxLCok6qMXhQym/HyUpXarOFBpsnGyc6xsIEVLD1bW0gGidcT2wWjrjBbgYI8BoI82p6d9V44jeOPykHxeapux5wQ9r8IcosC1NA=
+	t=1711803541; cv=none; b=k4mr8rwyoWiwHqM5e7Iw+tj0V1FHDvYqekiKeIU7FStQ4Ami0y2t4MrFbva261fVC1dSLcFfpdvcDk3d1PFYGCQIdcHiOnigvhVShe/Sx/fI3rzSHqEQl4yY8y8Z8Kc6d+1dtf/Xv2k2kShX37IHu8wQ2vkSL2LcoH+LK5X42+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711803495; c=relaxed/simple;
-	bh=VZS0Yhea1VuqzBkvRh9+dF6lilkH2Gyb3e+oRQiXOVE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uMIT0vz8PNW+VOmW9JuyfR2dHH6O3Pu+lcXmNOTs911Zbi5wzwHYKT+gZoDR/JnTotqYlJz13fAjfY61iPQOnSCYkmX6Umn2SXdpyAVEeArzRucS+XivciUB2qNoyOsP+IPEBK7x+QvAmlHikesPyhz8pnbJpS+QLLLzobVR+Kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org; spf=pass smtp.mailfrom=tukaani.org; arc=none smtp.client-ip=84.34.166.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tukaani.org
-Received: from www25.zoner.fi (www25.zoner.fi [84.34.147.45])
-	by mailscanner01.zoner.fi (Postfix) with ESMTPS id 465C9424F7;
-	Sat, 30 Mar 2024 14:48:49 +0200 (EET)
-Received: from mail.zoner.fi ([84.34.147.244])
-	by www25.zoner.fi with esmtp (Exim 4.96.1-7-g79877b70e)
-	(envelope-from <lasse.collin@tukaani.org>)
-	id 1rqY8f-0008Bi-0O;
-	Sat, 30 Mar 2024 14:48:49 +0200
-Date: Sat, 30 Mar 2024 14:48:48 +0200
-From: Lasse Collin <lasse.collin@tukaani.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>, Jia
- Tan <jiat0218@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [tech-board] [PATCH 00/11] xz: Updates to license, filters, and
- compression options
-Message-ID: <20240330144848.102a1e8c@kaneli>
-In-Reply-To: <20240329195602.382cb1c99bb70e3d8c6093ae@linux-foundation.org>
-References: <20240320183846.19475-1-lasse.collin@tukaani.org>
-	<202403291221.124220E0F4@keescook>
-	<87h6go3go2.fsf@meer.lwn.net>
-	<20240329195602.382cb1c99bb70e3d8c6093ae@linux-foundation.org>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1711803541; c=relaxed/simple;
+	bh=Car9GN2tQNeTTS1TNLTIQj5FQX9M9R0UjeM03caoV6s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C8rrncozQZjsL12DBqK9PNYXAnIaZnF9E8gajFgCkFn4PbVNBv8EFQMX7zSSOmwEt2jiM6kXuEKT1gbsjZolsJ/+VK2zW5no4VNu2Uft8SBuwz+4oDIM3zN0ZjPxl4aonY4zyqAGxHgfAJsck7r/eilPRcfZQ89eirwGi4ukqUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XpB/f+C2; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XpB/f+C2"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4155bc085dfso1406505e9.1;
+        Sat, 30 Mar 2024 05:58:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711803537; x=1712408337; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9JaMGVJLZuF28CmdzYEI45s8CkO4naifu4l9FLwAvec=;
+        b=XpB/f+C2jg3uxvcaqp73OYSSjUjLeD3tHJMXnJ8zRglMKzXBnQVmmxQEIvrZJKowLn
+         525Mr7hn/mdc7daD+cZksp233jJNxw79rjiWUlHVCL07MwN8OgzCrgYBS0gDRvIs+2C8
+         YsPtzUlAiWmasbF3P49aMy79G1QkE7FSqa31piYRlwRduOqPuZCddkOfYMwzZu/a4m0r
+         Q3rsDXcNVQSn+cFGZNE9BS6pHie4jK3DppZliyFYqaGgT9deqoGbHBB//zysAO2C7nbc
+         GJcYxCDbivNkpeFIkCT3NEGcD4FiBoVAuwPUyLqDPOaSRRYLFfiOPmPXwBjUAmFgqEw6
+         uUkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711803537; x=1712408337;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9JaMGVJLZuF28CmdzYEI45s8CkO4naifu4l9FLwAvec=;
+        b=r6BdbLQ2fJbSGIcMF6seIW8nt093weiNc5wLxVpkYAKNAVZ3E3Fri5VCgdwZoe5c9l
+         pM/fn+n3zfCqB9D6JHeCCPnyBw4HSw6fWTEKaAQtTGCv1PE8RB0JbBz07fAyCYxfv0Dj
+         TeNlGv7Xj+a9lAKE4yBZpYi0osBDykZVT3OR4ntxF0XzDP7Gz9uiQmgD1+gPxnVGygmD
+         QRudv1bOeMN5Tr2qlf7VTnr+4ezsoncBrmTlL8ZUzJDfRO6ijF0299ZbfBhM/uhmrPY/
+         viR0tL4yEroceNZzhyH8Q2KCPHhHlehdXzB4VkDxJ0wQrS7uly6MLsaqtKekJLdSB3tN
+         i5aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVTToItFdW8nfLk4xVonvh0SU+yqT2CIBvNawxyzAcLcHjHY2rLzbs/Bw8Ub9lkM0fjwzoDsCZdDAo3VdFNvpcfAuZwT7/3w/uJl4FjP1OJa63ewk/5i7eOysvDpgzKAvwL3WlrHxo7gTTtG6VFP/aQeCMdDy7D/36RpnniAy0aXEqviAiUCtfCjQia0cu7
+X-Gm-Message-State: AOJu0Ywf+/5YcMvVRSJtjG4MVZUAjeY9d5MwHioCNQesODnfQFzn3sz4
+	9pK9o+IgpQLMseRjheO6E8AipJZ8vdDchONb0wK1wB3GLYgbnEq6
+X-Google-Smtp-Source: AGHT+IEa0WdkS11BCB1d7NoUqJwCtyKOfTMUYVoDqiClzq+5hTM/tfUqq9qFJHWlzyPAyvES/KxpuA==
+X-Received: by 2002:a05:600c:1913:b0:414:6172:8366 with SMTP id j19-20020a05600c191300b0041461728366mr4006133wmq.15.1711803537355;
+        Sat, 30 Mar 2024 05:58:57 -0700 (PDT)
+Received: from [172.18.121.29] (ip-185-104-138-51.ptr.icomera.net. [185.104.138.51])
+        by smtp.gmail.com with ESMTPSA id bi8-20020a05600c3d8800b00415461b9ab2sm7735216wmb.5.2024.03.30.05.58.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 30 Mar 2024 05:58:56 -0700 (PDT)
+Message-ID: <e8ccce25-86d5-492a-8fb4-3f39036fa91a@gmail.com>
+Date: Sat, 30 Mar 2024 13:58:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] hwmon: Add thermal sensor driver for Surface
+ Aggregator Module
+To: Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hdegoede@redhat.com>
+Cc: Ivor Wanders <ivor@iwanders.net>, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org
+References: <20240330112409.3402943-1-luzmaximilian@gmail.com>
+ <20240330112409.3402943-2-luzmaximilian@gmail.com>
+ <d49ea735-3113-4c1f-a8dc-c6d8e821c4f1@roeck-us.net>
+Content-Language: en-US
+From: Maximilian Luz <luzmaximilian@gmail.com>
+In-Reply-To: <d49ea735-3113-4c1f-a8dc-c6d8e821c4f1@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2024-03-29 Andrew Morton wrote:
-> On Fri, 29 Mar 2024 14:51:41 -0600 Jonathan Corbet <corbet@lwn.net>
-> wrote:
+On 3/30/24 12:58, Guenter Roeck wrote:
+> On 3/30/24 04:24, Maximilian Luz wrote:
+>> Some of the newer Microsoft Surface devices (such as the Surface Book
+>> 3 and Pro 9) have thermal sensors connected via the Surface Aggregator
+>> Module (the embedded controller on those devices). Add a basic driver
+>> to read out the temperature values of those sensors.
+>>
+>> Link: https://github.com/linux-surface/surface-aggregator-module/issues/59
+>> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 > 
-> > > Andrew (and anyone else), please do not take this code right now.
-> > >
-> > > Until the backdooring of upstream xz[1] is fully understood, we
-> > > should not accept any code from Jia Tan, Lasse Collin, or any
-> > > other folks associated with tukaani.org. It appears the domain,
-> > > or at least credentials associated with Jia Tan, have been used
-> > > to create an obfuscated ssh server backdoor via the xz upstream
-> > > releases since at least 5.6.0. Without extensive analysis, we
-> > > should not take any associated code. It may be worth doing some
-> > > retrospective analysis of past contributions as well...
-> > >
-> > > Lasse, are you able to comment about what is going on here?  
-> > 
-> > FWIW, it looks like this series has been in linux-next for a few
-> > days. Maybe it needs to come out, for now at least?  
+> I very much dislike the idea of having multiple drivers for hardware
+> monitoring on the same system. Please explain in detail why this and
+> the fan driver for the same system need separate drivers.
 > 
-> Yes, I have removed that series.
+> I'll also very much want to know if we will see submissions for separate
+> voltage, current, power, energy, humidity, and/or other hardware monitoring
+> entities for the same system later on.
 
-Thank you. None of these patches are urgent. I'm on a holiday and only
-happened to look at my emails and it seems to be a major mess.
+The Surface Aggregator EC is not really a single device, but rather a
+collection of subsystems. For example, there's one for the battery, one
+for thermal sensors, and a separate one for the fan. Not all subsystems
+are present on all devices with that EC, so we have modeled them as
+separate subdevices of the parent EC controller. This makes it quite a
+bit easier to maintain. Especially, since I haven't found any reliable
+way to auto-detect the active/supported subsystems.
 
-My proper investigation efforts likely start in the first days of
-April. That is, I currently know only a few facts which alone are bad
-enough.
+For example: The Surface Book 3 has thermal sensors that can be accessed
+via this driver as well as a fan. As far as I know, however, the fan
+subsystem has been introduced later and the Surface Book 3 doesn't
+support that yet. So there's (as far as I know) no fan-monitoring
+support. Trying to access that will fail with a timeout. For that reason
+(but not specifically for that device), we have introduced the split
+into subystem devices, which are maunally registered in
+surface_aggregator_registry.c based on what we know the device actually
+supports.
 
-Info will be updated here: https://tukaani.org/xz-backdoor/
+Further, the devices created for these subsystems also act as a binding
+mechanism to the subsystem, speficying the subsystem ID/category used
+for making requests to it. For example, this driver probes for
 
--- 
-Lasse Collin
+     SSAM_SDEV(TMP, SAM, 0x00, 0x02)
+
+meaning it looks for a device of the TMP subsystem on the SAM target ID
+(which can be seen as a bus number) with instance 0 and function 2. This
+(in particular subsystem ID and target ID) are directly used when making
+requests to the EC. So if we find out down the line that temperature
+sensors can be accessed on target ID KIP in addition to SAM, it's as easy
+as adding a new device match to the driver.
+
+I believe that this would be more difficult if the driver is merged
+together: Doing so would require us to figure out what's present and
+what we can or should access inside of the driver (instead of via the
+already established registry). So it would either require us to do a
+certain amount of hardcoding and if/else branches or we would have to
+introduce a bunch of device properties and a meta-device just to bundle
+all monitoring-related subsystems together, and again use a bunch of
+if/else branches... And in both cases, the direct subsystem binding
+originally intended in the device structure of the Surface Aggregator
+bus goes out of the window.
+
+So, in my opinion at least, having separate smaller but specific drivers
+and leaving that "logic" to the registry driver makes this much more
+maintainable.
+
+Regarding other monitoring entities: In short, I don't know. I am not
+aware of any other (current/power/...) monitoring capabilities of the EC
+right now, but I can't guarantee that MS won't introduce a new subsystem
+for those down the line (or that there already is one and we just don't
+know about it). At which point, it will quite likely only be supported
+on some (probably newer) devices again.
+
+Best regards,
+Max
