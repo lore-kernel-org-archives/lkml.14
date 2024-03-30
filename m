@@ -1,226 +1,141 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE52D10E9;
-	Sat, 30 Mar 2024 01:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63AED7E8;
+	Sat, 30 Mar 2024 01:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711760783; cv=none; b=eQMLIM3E3vC1fcfr7QPtAQIpBm5D/DQ5nbet5fJmSZleovRyoxau2snQi72aO1TzlzgS5k4khrdezEgHPJMG+BNkzJMSw6FopjQNhUwEYoZS1xoARA+0fUM/nlOo+C0LFouufIIblUWLdmlSMvYsj1pJgOtyDxrmVMl2G7A8JUY=
+	t=1711761512; cv=none; b=LKFD53QKYbmG0aAt16EOuvLyvNzmoBNJLuXhTp9N5pu4+OBJd78A2pSkjjxGsz+X27NhIC85zFrDIeB4IrpAJvsbhy8nrR14HFTdkdOTrkbXnlp5kHaCPta7V2kjSmYz7DGeOLh1dBaM4aE4980Wf6lnsEulkpFEVFlOvhLt89c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711760783; c=relaxed/simple;
-	bh=0Tab6a8G72hAdQQTifWJdxmg84+y/tA9VvkWPFI9VQA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X1L0GBShyUfqsn6VvqqPsGVcef0/0+Su3BiDDri8AYSw2Tm6sFPgcsO5B786NS8cdmDPjuer6wtR8AutcMTwPZp4Wd2K6VRRe7ZaUU3BnJP8YPQUtBHNQYSt/yCGns+w71mx60RSjYvdktBv/+0Lzos4yFLliQBn7gOIDp7LcOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VugHsG2Y; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VugHsG2Y"
-Message-ID: <08dd01e3-c45e-47d9-bcde-55f7d1edc480@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1711760777;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BFgFwDTUylEnErMgQV0Ufr9/Ufnl/0omKSnqywixpVg=;
-	b=VugHsG2Y5vYBP20CvcOMmGaEI/5A/PvLnTsQTtTA0ZebTuac4nORyH8iRZe/CwFs5RLRhJ
-	4Ih/prbwbd8/OSA0Wv9Z9Z9JdeLOJUf8/vLW1xeGCG/2qNeI4CXYcIw3EixotT7o6oviEg
-	ZM4gfY/Y4bUjm5TsY8pyZBWQLZ0Jv74=
-Date: Fri, 29 Mar 2024 18:06:09 -0700
+	s=arc-20240116; t=1711761512; c=relaxed/simple;
+	bh=ZxhyUR/BsO+88hhZ0WPOqi7RMpOM0Seq4GE1dJ6FiFg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=X+aCxp4xrGT1wv2hKv+hhgdvUp6uyOUL7B921fedksCbNx6PXoblF2MZcO30MiyN/HT8XUQ51SKSIs8wdGp4r/gP3F8fl56e8uYAh5t0xM8FlDWLOl7ZPF4xz1Zu9qf+hUoTu2EEwM1adiVNlNCRXAh/AhoFmq+HD04+G0R+nJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4V5zqG6GYhz1h4Hl;
+	Sat, 30 Mar 2024 09:15:38 +0800 (CST)
+Received: from dggpemd100002.china.huawei.com (unknown [7.185.36.164])
+	by mail.maildlp.com (Postfix) with ESMTPS id 89076140134;
+	Sat, 30 Mar 2024 09:18:20 +0800 (CST)
+Received: from huawei.com (10.67.174.33) by dggpemd100002.china.huawei.com
+ (7.185.36.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Sat, 30 Mar
+ 2024 09:18:20 +0800
+From: "GONG, Ruiqi" <gongruiqi1@huawei.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
+	<jirislaby@kernel.org>, Hugo Villeneuve <hvilleneuve@dimonoff.com>
+CC: <stable@vger.kernel.org>, Jon Ringle <jringle@gridpoint.com>,
+	<linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Wang Weiyang
+	<wangweiyang2@huawei.com>
+Subject: [PATCH stable 5.10 5.15 v2] serial: sc16is7xx: convert from _raw_ to _noinc_ regmap functions for FIFO
+Date: Sat, 30 Mar 2024 09:25:20 +0800
+Message-ID: <20240330012520.1904970-1-gongruiqi1@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 19/26] netfs: New writeback implementation
-Content-Language: en-US
-To: Naveen Mamindlapalli <naveenm@marvell.com>,
- David Howells <dhowells@redhat.com>, Christian Brauner
- <christian@brauner.io>, Jeff Layton <jlayton@kernel.org>,
- Gao Xiang <hsiangkao@linux.alibaba.com>,
- Dominique Martinet <asmadeus@codewreck.org>
-Cc: Matthew Wilcox <willy@infradead.org>, Steve French <smfrench@gmail.com>,
- Marc Dionne <marc.dionne@auristor.com>, Paulo Alcantara <pc@manguebit.com>,
- Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
- Eric Van Hensbergen <ericvh@kernel.org>, Ilya Dryomov <idryomov@gmail.com>,
- "netfs@lists.linux.dev" <netfs@lists.linux.dev>,
- "linux-cachefs@redhat.com" <linux-cachefs@redhat.com>,
- "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
- "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
- "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
- "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
- "v9fs@lists.linux.dev" <v9fs@lists.linux.dev>,
- "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Latchesar Ionkov <lucho@ionkov.net>,
- Christian Schoenebeck <linux_oss@crudebyte.com>
-References: <20240328163424.2781320-1-dhowells@redhat.com>
- <20240328163424.2781320-20-dhowells@redhat.com>
- <SJ2PR18MB5635A86C024316BC5E57B79EA23A2@SJ2PR18MB5635.namprd18.prod.outlook.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <SJ2PR18MB5635A86C024316BC5E57B79EA23A2@SJ2PR18MB5635.namprd18.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemd100002.china.huawei.com (7.185.36.164)
 
-On 29/03/2024 10:34, Naveen Mamindlapalli wrote:
->> -----Original Message-----
->> From: David Howells <dhowells@redhat.com>
->> Sent: Thursday, March 28, 2024 10:04 PM
->> To: Christian Brauner <christian@brauner.io>; Jeff Layton <jlayton@kernel.org>;
->> Gao Xiang <hsiangkao@linux.alibaba.com>; Dominique Martinet
->> <asmadeus@codewreck.org>
->> Cc: David Howells <dhowells@redhat.com>; Matthew Wilcox
->> <willy@infradead.org>; Steve French <smfrench@gmail.com>; Marc Dionne
->> <marc.dionne@auristor.com>; Paulo Alcantara <pc@manguebit.com>; Shyam
->> Prasad N <sprasad@microsoft.com>; Tom Talpey <tom@talpey.com>; Eric Van
->> Hensbergen <ericvh@kernel.org>; Ilya Dryomov <idryomov@gmail.com>;
->> netfs@lists.linux.dev; linux-cachefs@redhat.com; linux-afs@lists.infradead.org;
->> linux-cifs@vger.kernel.org; linux-nfs@vger.kernel.org; ceph-
->> devel@vger.kernel.org; v9fs@lists.linux.dev; linux-erofs@lists.ozlabs.org; linux-
->> fsdevel@vger.kernel.org; linux-mm@kvack.org; netdev@vger.kernel.org; linux-
->> kernel@vger.kernel.org; Latchesar Ionkov <lucho@ionkov.net>; Christian
->> Schoenebeck <linux_oss@crudebyte.com>
->> Subject: [PATCH 19/26] netfs: New writeback implementation
->>
->> The current netfslib writeback implementation creates writeback requests of
->> contiguous folio data and then separately tiles subrequests over the space
->> twice, once for the server and once for the cache.  This creates a few
->> issues:
->>
->>   (1) Every time there's a discontiguity or a change between writing to only
->>       one destination or writing to both, it must create a new request.
->>       This makes it harder to do vectored writes.
->>
->>   (2) The folios don't have the writeback mark removed until the end of the
->>       request - and a request could be hundreds of megabytes.
->>
->>   (3) In future, I want to support a larger cache granularity, which will
->>       require aggregation of some folios that contain unmodified data (which
->>       only need to go to the cache) and some which contain modifications
->>       (which need to be uploaded and stored to the cache) - but, currently,
->>       these are treated as discontiguous.
->>
->> There's also a move to get everyone to use writeback_iter() to extract
->> writable folios from the pagecache.  That said, currently writeback_iter()
->> has some issues that make it less than ideal:
->>
->>   (1) there's no way to cancel the iteration, even if you find a "temporary"
->>       error that means the current folio and all subsequent folios are going
->>       to fail;
->>
->>   (2) there's no way to filter the folios being written back - something
->>       that will impact Ceph with it's ordered snap system;
->>
->>   (3) and if you get a folio you can't immediately deal with (say you need
->>       to flush the preceding writes), you are left with a folio hanging in
->>       the locked state for the duration, when really we should unlock it and
->>       relock it later.
->>
->> In this new implementation, I use writeback_iter() to pump folios,
->> progressively creating two parallel, but separate streams and cleaning up
->> the finished folios as the subrequests complete.  Either or both streams
->> can contain gaps, and the subrequests in each stream can be of variable
->> size, don't need to align with each other and don't need to align with the
->> folios.
->>
->> Indeed, subrequests can cross folio boundaries, may cover several folios or
->> a folio may be spanned by multiple folios, e.g.:
->>
->>           +---+---+-----+-----+---+----------+
->> Folios:  |   |   |     |     |   |          |
->>           +---+---+-----+-----+---+----------+
->>
->>             +------+------+     +----+----+
->> Upload:    |      |      |.....|    |    |
->>             +------+------+     +----+----+
->>
->>           +------+------+------+------+------+
->> Cache:   |      |      |      |      |      |
->>           +------+------+------+------+------+
->>
->> The progressive subrequest construction permits the algorithm to be
->> preparing both the next upload to the server and the next write to the
->> cache whilst the previous ones are already in progress.  Throttling can be
->> applied to control the rate of production of subrequests - and, in any
->> case, we probably want to write them to the server in ascending order,
->> particularly if the file will be extended.
->>
->> Content crypto can also be prepared at the same time as the subrequests and
->> run asynchronously, with the prepped requests being stalled until the
->> crypto catches up with them.  This might also be useful for transport
->> crypto, but that happens at a lower layer, so probably would be harder to
->> pull off.
->>
->> The algorithm is split into three parts:
->>
->>   (1) The issuer.  This walks through the data, packaging it up, encrypting
->>       it and creating subrequests.  The part of this that generates
->>       subrequests only deals with file positions and spans and so is usable
->>       for DIO/unbuffered writes as well as buffered writes.
->>
->>   (2) The collector. This asynchronously collects completed subrequests,
->>       unlocks folios, frees crypto buffers and performs any retries.  This
->>       runs in a work queue so that the issuer can return to the caller for
->>       writeback (so that the VM can have its kswapd thread back) or async
->>       writes.
->>
->>   (3) The retryer.  This pauses the issuer, waits for all outstanding
->>       subrequests to complete and then goes through the failed subrequests
->>       to reissue them.  This may involve reprepping them (with cifs, the
->>       credits must be renegotiated, and a subrequest may need splitting),
->>       and doing RMW for content crypto if there's a conflicting change on
->>       the server.
->>
->> [!] Note that some of the functions are prefixed with "new_" to avoid
->> clashes with existing functions.  These will be renamed in a later patch
->> that cuts over to the new algorithm.
->>
->> Signed-off-by: David Howells <dhowells@redhat.com>
->> cc: Jeff Layton <jlayton@kernel.org>
->> cc: Eric Van Hensbergen <ericvh@kernel.org>
->> cc: Latchesar Ionkov <lucho@ionkov.net>
->> cc: Dominique Martinet <asmadeus@codewreck.org>
->> cc: Christian Schoenebeck <linux_oss@crudebyte.com>
->> cc: Marc Dionne <marc.dionne@auristor.com>
->> cc: v9fs@lists.linux.dev
->> cc: linux-afs@lists.infradead.org
->> cc: netfs@lists.linux.dev
->> cc: linux-fsdevel@vger.kernel.org
+From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 
-[..snip..]
+commit dbf4ab821804df071c8b566d9813083125e6d97b upstream.
 
->> +/*
->> + * Begin a write operation for writing through the pagecache.
->> + */
->> +struct netfs_io_request *new_netfs_begin_writethrough(struct kiocb *iocb, size_t
->> len)
->> +{
->> +	struct netfs_io_request *wreq = NULL;
->> +	struct netfs_inode *ictx = netfs_inode(file_inode(iocb->ki_filp));
->> +
->> +	mutex_lock(&ictx->wb_lock);
->> +
->> +	wreq = netfs_create_write_req(iocb->ki_filp->f_mapping, iocb->ki_filp,
->> +				      iocb->ki_pos, NETFS_WRITETHROUGH);
->> +	if (IS_ERR(wreq))
->> +		mutex_unlock(&ictx->wb_lock);
->> +
->> +	wreq->io_streams[0].avail = true;
->> +	trace_netfs_write(wreq, netfs_write_trace_writethrough);
-> 
-> Missing mutex_unlock() before return.
-> 
+The SC16IS7XX IC supports a burst mode to access the FIFOs where the
+initial register address is sent ($00), followed by all the FIFO data
+without having to resend the register address each time. In this mode, the
+IC doesn't increment the register address for each R/W byte.
 
-mutex_unlock() happens in new_netfs_end_writethrough()
+The regmap_raw_read() and regmap_raw_write() are functions which can
+perform IO over multiple registers. They are currently used to read/write
+from/to the FIFO, and although they operate correctly in this burst mode on
+the SPI bus, they would corrupt the regmap cache if it was not disabled
+manually. The reason is that when the R/W size is more than 1 byte, these
+functions assume that the register address is incremented and handle the
+cache accordingly.
 
-> Thanks,
-> Naveen
-> 
+Convert FIFO R/W functions to use the regmap _noinc_ versions in order to
+remove the manual cache control which was a workaround when using the
+_raw_ versions. FIFO registers are properly declared as volatile so
+cache will not be used/updated for FIFO accesses.
+
+Fixes: dfeae619d781 ("serial: sc16is7xx")
+Cc:  <stable@vger.kernel.org> # 5.10 5.15
+Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Link: https://lore.kernel.org/r/20231211171353.2901416-6-hugo@hugovil.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
+---
+
+v2: Backport to both 5.15 and 5.10
+
+The mainline commit dbf4ab821804 ("serial: sc16is7xx: convert from _raw_
+to _noinc_ regmap functions for FIFO") by Hugo has been assigned to be
+CVE-2023-52488, but for stable branches lower than 6.1 there's no
+official backport.
+
+I made up this backport patch for 5.10, and its correctness has been
+confirmed in previous communication with Hugo. Let's publicize it and
+merge it into upstream.
+
+ drivers/tty/serial/sc16is7xx.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
+index 8c09c97f9814..0066a0e23516 100644
+--- a/drivers/tty/serial/sc16is7xx.c
++++ b/drivers/tty/serial/sc16is7xx.c
+@@ -376,9 +376,7 @@ static void sc16is7xx_fifo_read(struct uart_port *port, unsigned int rxlen)
+ 	const u8 line = sc16is7xx_line(port);
+ 	u8 addr = (SC16IS7XX_RHR_REG << SC16IS7XX_REG_SHIFT) | line;
+ 
+-	regcache_cache_bypass(s->regmap, true);
+-	regmap_raw_read(s->regmap, addr, s->buf, rxlen);
+-	regcache_cache_bypass(s->regmap, false);
++	regmap_noinc_read(s->regmap, addr, s->buf, rxlen);
+ }
+ 
+ static void sc16is7xx_fifo_write(struct uart_port *port, u8 to_send)
+@@ -394,9 +392,7 @@ static void sc16is7xx_fifo_write(struct uart_port *port, u8 to_send)
+ 	if (unlikely(!to_send))
+ 		return;
+ 
+-	regcache_cache_bypass(s->regmap, true);
+-	regmap_raw_write(s->regmap, addr, s->buf, to_send);
+-	regcache_cache_bypass(s->regmap, false);
++	regmap_noinc_write(s->regmap, addr, s->buf, to_send);
+ }
+ 
+ static void sc16is7xx_port_update(struct uart_port *port, u8 reg,
+@@ -489,6 +485,11 @@ static bool sc16is7xx_regmap_precious(struct device *dev, unsigned int reg)
+ 	return false;
+ }
+ 
++static bool sc16is7xx_regmap_noinc(struct device *dev, unsigned int reg)
++{
++	return reg == SC16IS7XX_RHR_REG;
++}
++
+ static int sc16is7xx_set_baud(struct uart_port *port, int baud)
+ {
+ 	struct sc16is7xx_port *s = dev_get_drvdata(port->dev);
+@@ -1439,6 +1440,8 @@ static struct regmap_config regcfg = {
+ 	.cache_type = REGCACHE_RBTREE,
+ 	.volatile_reg = sc16is7xx_regmap_volatile,
+ 	.precious_reg = sc16is7xx_regmap_precious,
++	.writeable_noinc_reg = sc16is7xx_regmap_noinc,
++	.readable_noinc_reg = sc16is7xx_regmap_noinc,
+ };
+ 
+ #ifdef CONFIG_SERIAL_SC16IS7XX_SPI
+-- 
+2.25.1
 
