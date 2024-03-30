@@ -1,101 +1,59 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from forward501b.mail.yandex.net (forward501b.mail.yandex.net [178.154.239.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4465B847B;
-	Sat, 30 Mar 2024 11:29:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D48D2BB1E;
+	Sat, 30 Mar 2024 11:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711798163; cv=none; b=OWE5QMjiw2JtBzqb2FOg6gmCFN0tWaznEF/Uj08qKlai9VtlcJX3+t0Yu/u8YfpzBqLJ5zBpXiLtVH9gMfZeK8HeR3TYgPwijFRXZoiauJKHvh7vZBQvfHCCY1tXZ2INh3VC5yRWR6Rp2XohzdYhcakCvWTKNgUZ1jMHPY2ZU9M=
+	t=1711798324; cv=none; b=mgDi4mrZZvCxNPVu1Zo9ecpZQhKz1zW3CJ4A3+DqZWlvnCoVC6F1YRW2cU8DjzRBdsjVUyarjmx9/zV4BfvL5JnYGtCfMaIQjJG0QhEC2MX1S/KuVmSD26kP5Qr9jTgFNGjNa+sAkzh+n+kOjvL1/6tBgVuIhc3UEPkXNtN1Kl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711798163; c=relaxed/simple;
-	bh=+7B/yrGFp37Kx0nQkDUOYGW1RCsXvAn6Vinrds5Ck7U=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=k59iTB/zZ5+mXG8Zj8v2eenYO6go2oSpqqD8ODDMFic7gw8b+oAoliDIvtPOrntrUaJso9FnQcHOe4oSjsw4PBMCr4s6CxEzGqxVp5+loz+DYp/eofkQERw9BlK0Y04Ir9p0F50Sp20RpgrDIg6Rvwx0Irrqc7jcMCFP+6WnfFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FQERnMEI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711798324; c=relaxed/simple;
+	bh=k+xr2CdgZbDES1PB5EMb0dI+5hlK5uhxDTWonGxYilo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jzcSJ+uidbNUJgQur6saJoA41y4za8ZI/ru+CY6ImIrt76fQA2r8+ruN3UvWtLIvNis2Ia1gsQ7lLNNYWy0FpUpE/Fyw0ZwLiP/rE1R6BvGZbnI6XpRnkvOHpEOWNf5i8ihpcIjRHsvNXF4GP9RGmnR9XtcLJ+b7TiwRh8rdq6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=6tel.net; spf=pass smtp.mailfrom=6tel.net; dkim=pass (1024-bit key) header.d=6tel.net header.i=@6tel.net header.b=UPQkPCkM; arc=none smtp.client-ip=178.154.239.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=6tel.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=6tel.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FQERnMEI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 980FBC433C7;
-	Sat, 30 Mar 2024 11:29:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711798163;
-	bh=+7B/yrGFp37Kx0nQkDUOYGW1RCsXvAn6Vinrds5Ck7U=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=FQERnMEIux1+CObR1szJYJNmA/d8A5k7dAPxpJGXjm1bv5IwW/vLzdmMAu6FiyndL
-	 fIGdSA+TShvM1YEc92h441kk58jgGPRK5noalj6Y3flv+O93rllQg8FOEyhMijSP8k
-	 BE39KUbFfuLPo3cXpewkOxyaAIy3h1CpSKcKuddiyn93c+N58mZZUa5FGHpqtimSgy
-	 rFGq0klYspjuY/dDcdKTEXhB06v52ftojpZGlZqFRCpmrsyx8hSJvPjcVJXGiX9IpH
-	 +dym2EGC/In7T61OTdnZeNS4a0dvC2J5q5jFv2YrWBqDfNW3hj1Y22tY5JpjcHzR39
-	 +A+PuApC7vSEg==
+	dkim=pass (1024-bit key) header.d=6tel.net header.i=@6tel.net header.b="UPQkPCkM"
+Received: from mail-nwsmtp-smtp-production-main-38.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-38.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:4619:0:640:d09:0])
+	by forward501b.mail.yandex.net (Yandex) with ESMTPS id 461EA60BBA;
+	Sat, 30 Mar 2024 14:25:22 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-38.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 2PN5co9OdCg0-dHeX0PRv;
+	Sat, 30 Mar 2024 14:25:21 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=6tel.net; s=mail;
+	t=1711797921; bh=k+xr2CdgZbDES1PB5EMb0dI+5hlK5uhxDTWonGxYilo=;
+	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
+	b=UPQkPCkMo7OuVDyefhG9qHvu8iT8D4vBlUHzNcUCcbfW8KNh6Q1TMjk3rt0gKJhm6
+	 p62vKdOuLiyDOOOcRbzxeJEJtE0mCHMKSVrQW7fdkYU1cOvl/7QJ7c1LVDC0wg/Ldq
+	 BwHPerOWEJm40sQuzOO6KS+g6+33jceNMCvOAf10=
+Authentication-Results: mail-nwsmtp-smtp-production-main-38.myt.yp-c.yandex.net; dkim=pass header.i=@6tel.net
+From: efectn@6tel.net
+To: heiko@sntech.de
+Cc: conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	efectn@protonmail.com,
+	krzysztof.kozlowski+dt@linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	robh+dt@kernel.org,
+	sebastian.reichel@collabora.com
+Subject: [PATCH 1/9] arm64: dts: rockchip: Add cpu regulators and vcc5v0_sys to Khadas Edge 2
+Date: Sat, 30 Mar 2024 14:25:02 +0300
+Message-ID: <20240330112502.223828-1-efectn@6tel.net>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <5a7bd2cd8703e51382abfc11242de59d45286477.1708381247.git.efectn@protonmail.com>
+References: <5a7bd2cd8703e51382abfc11242de59d45286477.1708381247.git.efectn@protonmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 30 Mar 2024 13:29:16 +0200
-Message-Id: <D071SWVSOJLN.2C9H7NTS4PHGI@kernel.org>
-Cc: <zhiquan1.li@intel.com>, <kristen@linux.intel.com>, <seanjc@google.com>,
- <zhanb@microsoft.com>, <anakrish@microsoft.com>,
- <mikko.ylinen@linux.intel.com>, <yangjie@microsoft.com>,
- <chrisyan@microsoft.com>
-Subject: Re: [PATCH v10 14/14] selftests/sgx: Add scripts for EPC cgroup
- testing
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Haitao Huang" <haitao.huang@linux.intel.com>,
- <dave.hansen@linux.intel.com>, <kai.huang@intel.com>, <tj@kernel.org>,
- <mkoutny@suse.com>, <linux-kernel@vger.kernel.org>,
- <linux-sgx@vger.kernel.org>, <x86@kernel.org>, <cgroups@vger.kernel.org>,
- <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
- <sohil.mehta@intel.com>, <tim.c.chen@linux.intel.com>
-X-Mailer: aerc 0.17.0
-References: <20240328002229.30264-1-haitao.huang@linux.intel.com>
- <20240328002229.30264-15-haitao.huang@linux.intel.com>
-In-Reply-To: <20240328002229.30264-15-haitao.huang@linux.intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu Mar 28, 2024 at 2:22 AM EET, Haitao Huang wrote:
-> The scripts rely on cgroup-tools package from libcgroup [1].
->
-> To run selftests for epc cgroup:
->
-> sudo ./run_epc_cg_selftests.sh
->
-> To watch misc cgroup 'current' changes during testing, run this in a
-> separate terminal:
->
-> ./watch_misc_for_tests.sh current
->
-> With different cgroups, the script starts one or multiple concurrent SGX
-> selftests, each to run one unclobbered_vdso_oversubscribed test.  Each
-> of such test tries to load an enclave of EPC size equal to the EPC
-> capacity available on the platform. The script checks results against
-> the expectation set for each cgroup and reports success or failure.
->
-> The script creates 3 different cgroups at the beginning with following
-> expectations:
->
-> 1) SMALL - intentionally small enough to fail the test loading an
-> enclave of size equal to the capacity.
-> 2) LARGE - large enough to run up to 4 concurrent tests but fail some if
-> more than 4 concurrent tests are run. The script starts 4 expecting at
-> least one test to pass, and then starts 5 expecting at least one test
-> to fail.
-> 3) LARGER - limit is the same as the capacity, large enough to run lots o=
-f
-> concurrent tests. The script starts 8 of them and expects all pass.
-> Then it reruns the same test with one process randomly killed and
-> usage checked to be zero after all process exit.
->
-> The script also includes a test with low mem_cg limit and LARGE sgx_epc
-> limit to verify that the RAM used for per-cgroup reclamation is charged
-> to a proper mem_cg.
->
-> [1] https://github.com/libcgroup/libcgroup/blob/main/README
->
-> Signed-off-by: Haitao Huang <haitao.huang@linux.intel.com>
+Hi Heiko,
 
-My previous comments and you have two undocumented dependencies for your
-selftest (I searched for cgexec and cgroups-tools as keywords).
-
-BR, Jarkko
+Sorry if i bother you. Can you review the series? If there is a problem i will send the v2.
