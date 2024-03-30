@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5683020DCD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC98208A2;
 	Sat, 30 Mar 2024 09:57:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711792677; cv=none; b=S0ASKBQ6DPznGdOlq6yF6UWylOaksFo0G9k0ib2ScR/qL7mH+unN2UIeEfyHvxsy2byZCFZoqIyD4sT4JK7WuEbR2ReoP1A6Q0uyK3carlHuCZ1EBc+W7/54NI0c/ruJuHuXSHKc8BiZ0g5RE0VRxXhPqV+hWr9q8lTYhb02kVM=
+	t=1711792677; cv=none; b=Ii9BXZPClftik0kkF0whExwHiW0cistUOd2wJG/CCuxYn1beKAc6aHe8Oq15eQNNFwlp8PdMRdGwvEjOuWIYlPxk215MRvRIkQx8b1+rhz6TLdbOPJQFnUY570asBJJVB0wCQ7nL9cMj/Zayds0MXSO8VdjSqotK5Ckw7NEKNl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711792677; c=relaxed/simple;
-	bh=znSQZ+RM/9bvAWoDcrE1grU/bOJFvpoINbFAcHKmzU0=;
+	bh=RV9r2ML9o3E1SdglYl1CXcwBgIOMSUNtjyseYqlJ2XA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=QTNZBLcShEEPv4qa4Y9F1HW6W0CNR1vTT/hcgCMzC38LfVV3KQXi1lrHzkshGfsAPOiTsPY5qYrPgPjpGnRJ5/Ckf4R3MK6XJJmMzBmX8pdeM7RNvMFL0uGSbKbNTeHBIfzWWRUrYGnyCzPZSz4IK0iJFQvGyj2lIrcVvuyI0iU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z4rtyxn3; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Zz9IhkwPYKOemu+w4qCziNefRSdzz9p/tnMhsFme+D6h+14cry6XhltaKv8hjp+BAQz5BQAbL9zS/rceHk8RVqX8PsEwT6AEYGovv3klCs8UX5kAOkrRjjfrWKsKed3e3auh00oh+GLkCuxi7WVtU3q19QQ/E+EBy4DaGdBSouU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oO4lNsou; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z4rtyxn3"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0811DC43390;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oO4lNsou"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1EFEEC433A6;
 	Sat, 30 Mar 2024 09:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1711792677;
-	bh=znSQZ+RM/9bvAWoDcrE1grU/bOJFvpoINbFAcHKmzU0=;
+	bh=RV9r2ML9o3E1SdglYl1CXcwBgIOMSUNtjyseYqlJ2XA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Z4rtyxn3af+SZLBb07MVwPSdN4NPsJHwcKuBTvcxsBh0kkjCr1+RktJCsKdRnMZos
-	 lzGoiHnMrgd46S9aOPoWruUUJHEx1wrQLcnDSxfvxDUnmEFJEhdpM+gsMv9+SNynvj
-	 uBTZn5BMgvCAHfXPFsWxn8rIZJx9Dl0Xefl44mzEnQE2ZQaGBnCCvV/zYqnBTiJVz9
-	 +8xlet4HhNv7Ybtysq3+P6WoWtpvkkNT7TTNkeXvyLY8OaWUUh/xBit0t2VmUF5Ol/
-	 zfrTC0XT3KWPce0lZYo5+SFU0LI8OWJgH6V+CglwYEUI8Wc7JBDdHwEFSVBUK9lPLp
-	 Yz5FwDEa7lvmA==
+	b=oO4lNsouDlCi7x3tGy4jRlm5bfoPpeFNXFCXYmonSDQLapIcaGBbX0/CMX4ScUZvr
+	 2tpBJ4vEWQK2c7gFhTvDUxQvn154gwgjPrFWvg/bm8s0hGAq48ryGIo/7v+h+WsKrW
+	 khx8Q26y7F4p4bnD/o0qajzSbxHm+vWdyL8Gwl0HNbXPmwf0qy7+ByIeEnIhqYTFKx
+	 CPxgdB+tJegILuc64So3AmfzTDlo6QbUtCYCzf8xoR+Givx9Dw+44qQHNyelUa21Fk
+	 8pl0yaM7qllFkT6KGdl92SsbX2cSQXIFHqf0BGJeb/HprHvOOYmpgasE62E8zAGb0x
+	 bFQfiZeiyalhw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AFCCD128E;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16568CD128D;
 	Sat, 30 Mar 2024 09:57:57 +0000 (UTC)
 From: Sam Ravnborg via B4 Relay <devnull+sam.ravnborg.org@kernel.org>
-Date: Sat, 30 Mar 2024 10:57:40 +0100
-Subject: [PATCH 04/10] sparc64: Fix prototype warning for
- alloc_irqstack_bootmem
+Date: Sat, 30 Mar 2024 10:57:42 +0100
+Subject: [PATCH 06/10] sparc64: Fix prototype warning for dma_4v_iotsb_bind
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240330-sparc64-warnings-v1-4-37201023ee2f@ravnborg.org>
+Message-Id: <20240330-sparc64-warnings-v1-6-37201023ee2f@ravnborg.org>
 References: <20240330-sparc64-warnings-v1-0-37201023ee2f@ravnborg.org>
 In-Reply-To: <20240330-sparc64-warnings-v1-0-37201023ee2f@ravnborg.org>
 To: Andreas Larsson <andreas@gaisler.com>, 
@@ -49,11 +48,11 @@ To: Andreas Larsson <andreas@gaisler.com>,
 Cc: Nick Bowler <nbowler@draconx.ca>, linux-kernel@vger.kernel.org, 
  Arnd Bergmann <arnd@arndb.de>, Sam Ravnborg <sam@ravnborg.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711792675; l=877;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711792675; l=1078;
  i=sam@ravnborg.org; s=20230107; h=from:subject:message-id;
- bh=hR1E8vg8CGDYDik5XN2GQOk33c8EjJhA30OsWe34a5M=;
- b=5y52pp+9cWGwXXEVdYXKKaopN1VKfX8WuRlPMgDaXdoQ0CqhfOyr9569kP/JZSl9fR9ZcPdeOem5
- 5YiL5Ib2DKwFLPLfipiRNfAvXMwNmevHWCfz6YrVABfnmoBVIau8
+ bh=ZJnDEoYRR+6aaZk7EEvtgtfnCnQfrvRZPpKL04kGYG8=;
+ b=+P73wCmF6fdM+Yl/OL7n1h00X5/H9eGLRS8OkyaFLZ3lCyNQIMamva8JjdBzuzJz3RamkdNu+XXX
+ HCDuKRN7BKCvLiNrDhVb2cA849WRpYW22u+gqscHluUdZ1SPyBf2
 X-Developer-Key: i=sam@ravnborg.org; a=ed25519;
  pk=R0+pqV7BRYOAeOIGkyOrSNke7arx5y3LkEuNi37YEyU=
 X-Endpoint-Received: by B4 Relay for sam@ravnborg.org/20230107 with
@@ -64,31 +63,35 @@ Reply-To: sam@ravnborg.org
 From: Sam Ravnborg <sam@ravnborg.org>
 
 Fix the following warning:
-arch/sparc/kernel/setup_64.c:602:13: warning: no previous prototype for ‘alloc_irqstack_bootmem’
+sparc/kernel/pci_sun4v.c:259:15: warning: no previous prototype for ‘dma_4v_iotsb_bind’
 
-The function alloc_irqstack_bootmem had no users outside setup_64.c so
-declare it static.
+The function dma_4v_iotsb_bind is not used outside the file, so declare
+it static.
 
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
 Cc: Andreas Larsson <andreas@gaisler.com>
 Cc: "David S. Miller" <davem@davemloft.net>
 ---
- arch/sparc/kernel/setup_64.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/sparc/kernel/pci_sun4v.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/sparc/kernel/setup_64.c b/arch/sparc/kernel/setup_64.c
-index 6a4797dec34b..1d519f18d2b2 100644
---- a/arch/sparc/kernel/setup_64.c
-+++ b/arch/sparc/kernel/setup_64.c
-@@ -599,7 +599,7 @@ static void __init init_sparc64_elf_hwcap(void)
- 		pause_patch();
+diff --git a/arch/sparc/kernel/pci_sun4v.c b/arch/sparc/kernel/pci_sun4v.c
+index 083e5f05a7f0..b720b21ccfbd 100644
+--- a/arch/sparc/kernel/pci_sun4v.c
++++ b/arch/sparc/kernel/pci_sun4v.c
+@@ -256,9 +256,9 @@ static void *dma_4v_alloc_coherent(struct device *dev, size_t size,
+ 	return NULL;
  }
  
--void __init alloc_irqstack_bootmem(void)
-+static void __init alloc_irqstack_bootmem(void)
+-unsigned long dma_4v_iotsb_bind(unsigned long devhandle,
+-				unsigned long iotsb_num,
+-				struct pci_bus *bus_dev)
++static unsigned long dma_4v_iotsb_bind(unsigned long devhandle,
++				       unsigned long iotsb_num,
++				       struct pci_bus *bus_dev)
  {
- 	unsigned int i, node;
- 
+ 	struct pci_dev *pdev;
+ 	unsigned long err;
 
 -- 
 2.34.1
