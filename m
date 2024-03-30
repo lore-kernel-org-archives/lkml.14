@@ -1,152 +1,98 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-16.smtpout.orange.fr [80.12.242.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F544179
-	for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2024 08:31:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CED881F;
+	Sat, 30 Mar 2024 08:33:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711787514; cv=none; b=VCLkLZS2TDlNMZog2JNeOW0jD24Y327qkl9HA3fel8ueppj3tZdilMF16yDmiBn0NnZaWXAH+RZAKmaQ1q9bwqGxvlLrrhHpdUOUaEPqNKb0hR2DM/FbA7huuxQ11A9d6B6gIm5jct3HuUKsAojyIi/L0zTW70ws6tIxwMwyF9I=
+	t=1711787619; cv=none; b=uHKInowc5QXZTdrGWSIcO1HyNtkmN/yXJf6teQACgNnAOrVX0WD4ZHeqR1u24I5RS2YXjouYaPoh9lWdEa/mB8bHZv47RxEJNI6jJwR/S8eXJzxNXXZQn3TKAGGaR891zFa0B354Pf/FTpkY+VOleJ8f6zZ5kCjJl+iUo58nkuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711787514; c=relaxed/simple;
-	bh=NL+dsLVqbh4Q40NGTmOOcM/fOeLV7YkY7jwLXQtfS8s=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OtF5iCoUiSF1TvsnLNsar+qWOwckmM+c8zRbCzratPIty4sHiWzaXbfPCHZA8Sm9g65TS4LDd9tFF7In5QwezClSCo3Pl9ELKP8oWsVPgeZC32QHLTa83i4Q47HWf/wgKePj/QClwUzfqKoLli/l/ajESdC1gen910NjYAW38BI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4V69Tt0fSqz1GDdV;
-	Sat, 30 Mar 2024 16:31:14 +0800 (CST)
-Received: from dggpemm500006.china.huawei.com (unknown [7.185.36.236])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1F38E1A0188;
-	Sat, 30 Mar 2024 16:31:48 +0800 (CST)
-Received: from mdc.huawei.com (10.175.112.208) by
- dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Sat, 30 Mar 2024 16:31:47 +0800
-From: Chen Jun <chenjun102@huawei.com>
-To: <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <cl@linux.com>,
-	<penberg@kernel.org>, <rientjes@google.com>, <iamjoonsoo.kim@lge.com>,
-	<akpm@linux-foundation.org>, <vbabka@suse.cz>, <roman.gushchin@linux.dev>,
-	<42.hyeyoo@gmail.com>
-CC: <xuqiang36@huawei.com>, <chenjun102@huawei.com>,
-	<wangkefeng.wang@huawei.com>
-Subject: [PATCH v2] mm/slub: Reduce memory consumption in extreme scenarios
-Date: Sat, 30 Mar 2024 16:23:35 +0800
-Message-ID: <20240330082335.29710-1-chenjun102@huawei.com>
-X-Mailer: git-send-email 2.17.1
+	s=arc-20240116; t=1711787619; c=relaxed/simple;
+	bh=NnGqycWyMgrqtn4VdYQ5lLrY/jrFOUXth/lMty4JYP8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jc5Wq0X6t9/HKjHv7+OsBYJHgS5uC5wJbhTuMvLle6eMIUemfPDnMn2/KPObue5FVnZuUj0kzsJ+V6r6+kUkz4vB6y3xwKd5WWBs0DGyG3SFtd9lAsQVfgBqnTTQ0BigN0qAPz/AvU2GXTGFiQ4GeXgZqYjAPc71T3QTMLp/C4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=j1aCOlEw; arc=none smtp.client-ip=80.12.242.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="j1aCOlEw"
+Received: from fedora.home ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id qU8Rrc5yvp4zMqU8SrdPqN; Sat, 30 Mar 2024 09:32:21 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1711787541;
+	bh=W45diehFRu0ilTy3yuLbniJUjWNxtFJBsavO8BYE9DU=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=j1aCOlEwaqP6X3Kc2oB+BS0/FjHi9NYqu72fOLHMt60i9oCMlvfd28cTRXXjCmMna
+	 IrzUx3b0TbYkGaVXr10a4dzj4/aAVz0EqKP42YqmiSaQXDrEE9cgeqgVwM1tZuIL1/
+	 7zdmEKZylV928aOgF5ltoCVKQ4pg4SkMOrPBVIFesZ6Rj0KMHVeXSg+Lf/neZDty3/
+	 +gb4O+iQmJ/lxHcctOKlw0OKsglVHwJ6Oesq/qrmZAA+N4xSyKZKLJ7G6ZkalID+hD
+	 KkQ9af6ngzwIjF7L5BVZOa1ApDJXX8IFZ599QOycC5h/uy30lk4gMxPGX8j9ZjE2t0
+	 7JqztYzCMuEUQ==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 30 Mar 2024 09:32:21 +0100
+X-ME-IP: 86.243.17.157
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: rkannoth@marvell.com,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	netdev@vger.kernel.org
+Subject: [PATCH net-next v2] caif: Use UTILITY_NAME_LENGTH instead of hard-coding 16
+Date: Sat, 30 Mar 2024 09:32:12 +0100
+Message-ID: <8c1160501f69b64bb2d45ce9f26f746eec80ac77.1711787352.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500006.china.huawei.com (7.185.36.236)
+Content-Transfer-Encoding: 8bit
 
-When kmalloc_node() is called without __GFP_THISNODE and the target node
-lacks sufficient memory, SLUB allocates a folio from a different node
-other than the requested node, instead of taking a partial slab from it.
+UTILITY_NAME_LENGTH is 16. So better use the former when defining the
+'utility_name' array. This makes the intent clearer when it is used around
+line 260.
 
-However, since the allocated folio does not belong to the requested
-node, it is deactivated and added to the partial slab list of the node
-it belongs to.
+While at it, declare variable in reverse xmas tree style.
 
-This behavior can result in excessive memory usage when the requested
-node has insufficient memory, as SLUB will repeatedly allocate folios
-from other nodes without reusing the previously allocated ones.
-
-To prevent memory wastage,
-when (node != NUMA_NO_NODE) && !(gfpflags & __GFP_THISNODE) is,
-1) try to get a partial slab from target node with GFP_NOWAIT |
-   __GFP_THISNODE opportunistically.
-2) if 1) failed, try to allocate a new slab from target node with
-   GFP_NOWAIT | __GFP_THISNODE opportunistically too.
-3) if 2) failed, retry 1) and 2) with orignal gfpflags.
-
-when node != NUMA_NO_NODE || (gfpflags & __GFP_THISNODE), the behavior
-remains unchanged.
-
-On qemu with 4 numa nodes and each numa has 1G memory. Write a test ko
-to call kmalloc_node(196, GFP_KERNEL, 3) for (4 * 1024 + 4) * 1024 times.
-
-cat /proc/slabinfo shows:
-kmalloc-256       4200530 13519712    256   32    2 : tunables..
-
-after this patch,
-cat /proc/slabinfo shows:
-kmalloc-256       4200558 4200768    256   32    2 : tunables..
-
-Signed-off-by: Chen Jun <chenjun102@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
-v2: 
-- try to alloc partial slab or new slab with GFP_NOWAIT(it includes
-  __GFP_NOWARN) opportunistically, then fallback to orignal gfpflag,
-  suggested by Vlastimil Babka,
-- update changelog
+Changes in v2:
+  - Declare variable in reverse xmas tree style [Ratheesh Kannoth]
 
-v1: https://lore.kernel.org/linux-mm/20230314123403.100158-1-chenjun102@huawei.com/
+v1: https://lore.kernel.org/all/af10f5a3236d47fd183487c9dcba3b3b3c66b595.1710584144.git.christophe.jaillet@wanadoo.fr/
+---
+ net/caif/cfctrl.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
- mm/slub.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
-
-diff --git a/mm/slub.c b/mm/slub.c
-index 1bb2a93cf7b6..c1c51595a59f 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -2699,7 +2699,7 @@ static struct slab *get_partial(struct kmem_cache *s, int node,
- 		searchnode = numa_mem_id();
+diff --git a/net/caif/cfctrl.c b/net/caif/cfctrl.c
+index 8480684f2762..20139fa1be1f 100644
+--- a/net/caif/cfctrl.c
++++ b/net/caif/cfctrl.c
+@@ -201,14 +201,14 @@ int cfctrl_linkup_request(struct cflayer *layer,
+ 			  struct cflayer *user_layer)
+ {
+ 	struct cfctrl *cfctrl = container_obj(layer);
++	struct cflayer *dn = cfctrl->serv.layer.dn;
++	char utility_name[UTILITY_NAME_LENGTH];
++	struct cfctrl_request_info *req;
++	struct cfpkt *pkt;
+ 	u32 tmp32;
+ 	u16 tmp16;
+ 	u8 tmp8;
+-	struct cfctrl_request_info *req;
+ 	int ret;
+-	char utility_name[16];
+-	struct cfpkt *pkt;
+-	struct cflayer *dn = cfctrl->serv.layer.dn;
  
- 	slab = get_partial_node(s, get_node(s, searchnode), pc);
--	if (slab || node != NUMA_NO_NODE)
-+	if (slab || (node != NUMA_NO_NODE && (pc->flags & __GFP_THISNODE)))
- 		return slab;
- 
- 	return get_any_partial(s, pc);
-@@ -3375,6 +3375,7 @@ static void *___slab_alloc(struct kmem_cache *s, gfp_t gfpflags, int node,
- 	struct slab *slab;
- 	unsigned long flags;
- 	struct partial_context pc;
-+	bool try_thisnode = true;
- 
- 	stat(s, ALLOC_SLOWPATH);
- 
-@@ -3501,6 +3502,17 @@ static void *___slab_alloc(struct kmem_cache *s, gfp_t gfpflags, int node,
- new_objects:
- 
- 	pc.flags = gfpflags;
-+	/*
-+	 * when (node != NUMA_NO_NODE) && !(gfpflags & __GFP_THISNODE)
-+	 * 1) try to get a partial slab from target node with GPF_NOWAIT |
-+	 *    __GFP_THISNODE opportunistically.
-+	 * 2) if 1) failed, try to allocate a new slab from target node with
-+	 *    GPF_NOWAIT | __GFP_THISNODE opportunistically too.
-+	 * 3) if 2) failed, retry 1) and 2) with original gfpflags.
-+	 */
-+	if (node != NUMA_NO_NODE && !(gfpflags & __GFP_THISNODE) && try_thisnode)
-+		pc.flags = GFP_NOWAIT | __GFP_THISNODE;
-+
- 	pc.orig_size = orig_size;
- 	slab = get_partial(s, node, &pc);
- 	if (slab) {
-@@ -3522,10 +3534,15 @@ static void *___slab_alloc(struct kmem_cache *s, gfp_t gfpflags, int node,
- 	}
- 
- 	slub_put_cpu_ptr(s->cpu_slab);
--	slab = new_slab(s, gfpflags, node);
-+	slab = new_slab(s, pc.flags, node);
- 	c = slub_get_cpu_ptr(s->cpu_slab);
- 
- 	if (unlikely(!slab)) {
-+		if (node != NUMA_NO_NODE && !(gfpflags & __GFP_THISNODE) &&
-+		    try_thisnode) {
-+			try_thisnode = false;
-+			goto new_objects;
-+		}
- 		slab_out_of_memory(s, gfpflags, node);
- 		return NULL;
- 	}
+ 	if (!dn) {
+ 		pr_debug("not able to send linkup request\n");
 -- 
-2.27.0
+2.44.0
 
