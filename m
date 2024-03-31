@@ -1,56 +1,50 @@
-Received: from out203-205-221-191.mail.qq.com (out203-205-221-191.mail.qq.com [203.205.221.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053B763D5
-	for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2024 06:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2339A79CF
+	for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2024 06:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711867157; cv=none; b=Ch+geARt3RViVOawENw+WPGMGWnP0F6GC+Ypf6cgZbKuBeqLr8LeHsIoWGN3U8XElTCPnjSUgngmx6WD9koNJKxU8T5WBTdBUqeiBVMFItp2x3tQKw5dysrYd68RBBv0f60S2YgLuOlFQvxTz+BHM10LXo9RV/8oVjtfsoqEUF8=
+	t=1711867577; cv=none; b=botBRkid5ZZ+Cvn/ZfdR283S+2FFpqCE6OEKksJe7L7DYXJeB2coZSZ7EuGUEd1y5v7UEc6yjgmVKUDFXuhdKWfdPyJ/biZLMcnPsGi16GnjdNQXiwCmELb1OK22m11+Cgj/QhIy0048YfZYNt/LQT1m9xBLnJm24Kcyzxow2Nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711867157; c=relaxed/simple;
-	bh=Ey555EEMs+1h+vBqhpfc5i5h9p+fEvPpnhL0KIaD+UM=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=kasRnKQVb3eQD6lP0Z8DVwgQ5bGOiYPBk2O6EaLHZvU3GWRGsDtD5XpTli7iq9HY0BEyjeS/ahSefxy4P8am00vCvsKtVvYW24IAew13AcojjdcZbJ3gHzjpf66qK7l7DqLd8SuuAl6ZGCTCntMpANa+FVYzng/pRH1pHpNw+Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=dVcg7It3; arc=none smtp.client-ip=203.205.221.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1711867577; c=relaxed/simple;
+	bh=YBKGUG6xwLwd/efnk+1ZzvtR165fqMeCotqx2Uv9AM0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J5I2lJ8Kf07q+6+oj3uBtPtf5b0Thjls8tBg176d/alSNV3hmmrjr9pKZJyAFz7fK3DxzxN9jLR0Ur+nNOGfBLK8SSAFJqK4YQoEsKoC+1dC5+f2p9DKKwwP2VuL0QMGAkHENn8mQsIVWPdiuA82zycnVeMenaXXncud6VK4wjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=k0FTnHnY; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="dVcg7It3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1711867144; bh=i7zPn4R9WxtVHSlD3ywJZJfLTSCZtrFE4P8zGgaB7LU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=dVcg7It3OiwMmOnJiDDcGdKh11OiU2YCl93zJk2e/z+Cnxzr6xX+Mj0KySvUiP1jX
-	 TbJD31iUOMeKhQ3S3y06n7+oYGgkw+vsjPCufeKs0Mixtuf2hOQs4poVAQZWF6QImE
-	 q9/JVAd4tKKMgZA/YgTjDu33yVK5fzxjulYSRqOA=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrszc5-2.qq.com (NewEsmtp) with SMTP
-	id 9C31D2B9; Sun, 31 Mar 2024 14:39:03 +0800
-X-QQ-mid: xmsmtpt1711867143tegvgdelq
-Message-ID: <tencent_C2874B621B52254CBA78BB3A336C9E3C1B08@qq.com>
-X-QQ-XMAILINFO: MmpliBmRb3iCIsCnlOnwJTTT2cevX7vA2YTMRy2L75DpI5uKlVBQNTRvJi2fpg
-	 wTSkYn6W1Lq1T07TOy2xSGxrRAiqupgvzWQpSOudcYzuKgDaLcG6F5PRQulTACrxy2f6aT5JVlhy
-	 qCH5sgG5Npf8pXvn0bzU02YA+LFTbBbu0CjOhUw6LrAYirvUmnIn3uLuKpM6Kib+F0a7VUBWxv85
-	 DjHgv6DugnYpevEOX1jS2T9F+PhKdyaZgeYdFLpJnzmeRayC3TAGPzB6A39mufZUpQIdoFZyeILI
-	 9npwtbeWpLz2pBorS31NLR3t6/6PWy1c2ni0zzKXpoeb4FQwZqF/k7TitginePAhTZXCvRl+7b0k
-	 2/PMeESHwXlC2OOuWY0heO9Cq+OVM0VcBarzR12cPHR4ZD2ernw2kpsCBqWfxL077n/1XmLtPBM0
-	 /Lz5nBdEKtV7PropsDWZ4gVSLMPdM295SULq4rf+ooSSUb/ymnO3UIG1O7ygXrW7HF3EJRibGQP/
-	 WKCxQ+9vHlQVfO8/9zvjErgijEK3DfpHK8vViKL4jPWZOczBFLgDFmugk93sTV7ipMrKYCQorLxO
-	 KiEZOOoiuoPmSWaHm+c0mw5ZW7+RRhm2frCXF/vp75gKdd+SCPxTi9O7Vz50Id1c7afcXkIysm+S
-	 YLMRiThASoaA1dkvlnSDlcJDKSjqEZ8nXm39QCh9AWYzpPZq2CBF3DVlkUVoII0EB8xMXyZaSqBD
-	 drEiERLOZWxwzSGpR7ChLv8eghx4LywK/kchEN787d24C9y69df4GGjCzw5q4uf55jRGMdtETGDY
-	 Nav8vwQwkVR0BH3BEbzcxJm2g1VXPhHW/iCISTmAVT/YNm76CQkaVJDwxL3YXA0s1EOeTF/X4meq
-	 /XjoK00BIP1Qtlb2Vz5+sbAws/7oUpmPQ/1EHhkLeKV3xZJ1JX/CZUqjk9dPpiRkMkfsdZF32m
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+ff14db38f56329ef68df@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [v9fs?] KMSAN: uninit-value in p9_client_rpc (2)
-Date: Sun, 31 Mar 2024 14:39:03 +0800
-X-OQ-MSGID: <20240331063902.1017892-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000a77e580614ded85a@google.com>
-References: <000000000000a77e580614ded85a@google.com>
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="k0FTnHnY"
+Received: from tundra.lovozera (unknown [46.138.86.221])
+	by mail.ispras.ru (Postfix) with ESMTPSA id 5F9F140755D8;
+	Sun, 31 Mar 2024 06:46:03 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 5F9F140755D8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1711867563;
+	bh=Um1OeF+YjMXHeUez/kZLspj1wOkVZEI9a9MFeGLZNZo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=k0FTnHnYTdvZURFzBOOYPMVCPYR5A2omqFTQlaRaFzwnHARsJT5Fj5QwrdRktR9J4
+	 jfced4TYeae7QRKyV7KkJAxZ6BKdeu6N9q/CkaJifFd002w0QdMN212n6YwWnY9sMl
+	 MUPYvIcBMG5fcxw/67QvuSkNbhV2WhInMT96d9dI=
+From: Mikhail Kobuk <m.kobuk@ispras.ru>
+To: Karol Herbst <kherbst@redhat.com>
+Cc: Mikhail Kobuk <m.kobuk@ispras.ru>,
+	Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@redhat.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Ben Skeggs <bskeggs@redhat.com>,
+	Francisco Jerez <currojerez@riseup.net>,
+	dri-devel@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	Fedor Pchelkin <pchelkin@ispras.ru>,
+	Alexey Khoroshilov <khoroshilov@ispras.ru>
+Subject: [PATCH] drm: nv04: Add check to avoid out of bounds access
+Date: Sun, 31 Mar 2024 09:45:51 +0300
+Message-ID: <20240331064552.6112-1-m.kobuk@ispras.ru>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,21 +53,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-please test uv p9_client_rpc
+Output Resource (dcb->or) value is not guaranteed to be non-zero (i.e.
+in drivers/gpu/drm/nouveau/nouveau_bios.c, in 'fabricate_dcb_encoder_table()'
+'dcb->or' is assigned value '0' in call to 'fabricate_dcb_output()').
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+Add check to validate 'dcb->or' before it's used.
 
-diff --git a/net/9p/client.c b/net/9p/client.c
-index e265a0ca6bdd..cb5cbb150dcd 100644
---- a/net/9p/client.c
-+++ b/net/9p/client.c
-@@ -977,7 +977,7 @@ struct p9_client *p9_client_create(const char *dev_name, char *options)
- 	struct p9_client *clnt;
- 	char *client_id;
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Fixes: 2e5702aff395 ("drm/nouveau: fabricate DCB encoder table for iMac G4")
+Signed-off-by: Mikhail Kobuk <m.kobuk@ispras.ru>
+---
+ drivers/gpu/drm/nouveau/dispnv04/dac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/nouveau/dispnv04/dac.c b/drivers/gpu/drm/nouveau/dispnv04/dac.c
+index d6b8e0cce2ac..0c8d4fc95ff3 100644
+--- a/drivers/gpu/drm/nouveau/dispnv04/dac.c
++++ b/drivers/gpu/drm/nouveau/dispnv04/dac.c
+@@ -428,7 +428,7 @@ void nv04_dac_update_dacclk(struct drm_encoder *encoder, bool enable)
+ 	struct drm_device *dev = encoder->dev;
+ 	struct dcb_output *dcb = nouveau_encoder(encoder)->dcb;
  
--	clnt = kmalloc(sizeof(*clnt), GFP_KERNEL);
-+	clnt = kzalloc(sizeof(*clnt), GFP_KERNEL);
- 	if (!clnt)
- 		return ERR_PTR(-ENOMEM);
+-	if (nv_gf4_disp_arch(dev)) {
++	if (nv_gf4_disp_arch(dev) && ffs(dcb->or)) {
+ 		uint32_t *dac_users = &nv04_display(dev)->dac_users[ffs(dcb->or) - 1];
+ 		int dacclk_off = NV_PRAMDAC_DACCLK + nv04_dac_output_offset(encoder);
+ 		uint32_t dacclk = NVReadRAMDAC(dev, 0, dacclk_off);
+@@ -453,7 +453,7 @@ bool nv04_dac_in_use(struct drm_encoder *encoder)
+ 	struct drm_device *dev = encoder->dev;
+ 	struct dcb_output *dcb = nouveau_encoder(encoder)->dcb;
  
+-	return nv_gf4_disp_arch(encoder->dev) &&
++	return nv_gf4_disp_arch(encoder->dev) && ffs(dcb->or) &&
+ 		(nv04_display(dev)->dac_users[ffs(dcb->or) - 1] & ~(1 << dcb->index));
+ }
+ 
+-- 
+2.44.0
 
