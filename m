@@ -1,159 +1,94 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 607621487DF
-	for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2024 21:10:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C54826AEA
+	for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2024 21:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711919449; cv=none; b=XuORlNbZPo5P61i7EUYTP5hGommhVwxkQryZ1812+wgvfi+wh1CIRCutTpesldLUoeDZqcSE8+RlKL3xsaUg+Q3byrxVGkdxiQV+Y1IxvVe8HV832/zImOY441TTLgLNe7vVdXwjZ3J20EsKVAH8ni9Ae67czF9Hgcsevg7n32w=
+	t=1711920633; cv=none; b=QsDZu1v3vJw/gpZSeG+xRtU9tUclN7fhmAaPwBWkCru+VaybkLotquG/stKqAqECLVcEsW+ORkMMoF1Z6pmo7+ucNwCWNrsVXIVn2GTUYx/lXYZxGJC9uyfzcGeRNwD4BCs2WdhCvvnga7oKSTcpYmQ7t6QvCWVei01jz437aU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711919449; c=relaxed/simple;
-	bh=+monmzdqaDuGF+91NgZ2OzAyov6DJsof4fu61GAW+E4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OIESxdZLEioH4AmFSRf/Ue/uGbBvDRaFS86rn7GUuIgKjezRhxYe+q3CxCg3amqdULT4SRw3pV4Be6BdqdV9JleZmgkkafKhZZkv+rZSoSKHclIjo4iJrhUPezjDp3v1j3zo1xD7T1abqCen16UO5ZJ8DMwD+DNuFd0gJ9ay//M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SC+40ww/; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711920633; c=relaxed/simple;
+	bh=hjG8SPTf/rr2h+XjqAzsDGTKdabLcLfs23sxMbjwxxw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Rle24RgZ069T0hixHnRPgQjMXCWFgYVvPRKkBbkIxtfnxwLMNvHy7UGhjoXsngcvIFQF7UPeIJHyHPb+z2Haup3SJZX3otKVC/vko6gFNnBWGh5cqSdy5FXB4QlbcuRe2qEHR8ET0K/Nf2h0Uffd4u/+iEWP6d8HFSYTHZpC1C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=M9zBtTSc; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SC+40ww/"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-515a86daf09so4274044e87.3
-        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2024 14:10:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="M9zBtTSc"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5bdbe2de25fso2584556a12.3
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2024 14:30:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711919444; x=1712524244; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Wh00IZ4XaNzJ01D9sGevctvSevNDF/uBs0GVWtGKSA4=;
-        b=SC+40ww/QaITJUTw1R6HQl+2cNPNtBddGW4Eyl+PhIfhL5bCotPWD71mE40HoSq+FR
-         /D/VoU5UuBf/9/e8Nn4nfn+/JJpjngTm72wt8Zubxzex6VGPRphyqaH0pC4/k5NADX1s
-         UrCR6A4N+78C8Zhgc+PzvvlN1Q7eu1GOyJi090rW/zct3WJj/ec0lwIDYXUAEQfPIewn
-         S8ngo5YgRfvOs/ER4PBh6F0wN4knzztpg6b5qdTGEe2w+ktiA2NF7CS2e3k7Drt1oBAv
-         1P/A07TVFPBwRmr1+kxzllwzIkBNGWcMuSubjhr99bBsQ0nt2coofrYOIElrszmMYm/d
-         BHQg==
+        d=googlemail.com; s=20230601; t=1711920631; x=1712525431; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hjG8SPTf/rr2h+XjqAzsDGTKdabLcLfs23sxMbjwxxw=;
+        b=M9zBtTScBCRGFMrmGdazMz8lT3ziMGKkpH+OVLvnQ15L3WxwRBqXq+9Uc/elJuMC0/
+         lPywucGsgCU6Zt0kv3L9kJxRQwny5Z7WW6+l4vKWuaPDm6Vi9CyaY0V1TtyoGljDIPa+
+         T6JD5N6Nfhs21gablOU7U6Qy6k/Llonf79XffwzhyrvEG5bxR3ws83nriCmD44D2AI93
+         kiitS+5/0w+tDT7Hrt5jFtutv1dEwsUng129gIXK5VKLdx+lo+q0i8cSWglM6Wbgt2R7
+         M2EbtkfmSqYAlm0th4ZqJiH0h/OWdP40Ex9tdN0IMqJHoM+JN5s+yw8koBibC/yq1Etc
+         H1xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711919444; x=1712524244;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1711920631; x=1712525431;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Wh00IZ4XaNzJ01D9sGevctvSevNDF/uBs0GVWtGKSA4=;
-        b=uFtsopg9nz+hpFpp5T9mVrJU8wchkFwJuJjz7lTPGpFUoQQVOgca7Z9yUVchEqNJAX
-         2G4LRo9TRu1sx0Kbjp3FmwUaGBcpIx4swETbi64GAipeUuY96kwjmLkKmAgDZeDeNNkM
-         w2GOTtF1EUgOMueZzE/HY1las7gOc+BzcKpmorUHVVQky804FQ1oFHjbOy18/MOU/qbF
-         GCVQiE1Xk5gkaRfJqoEhTro/wF7jGCsSDhsdNSWvpWhkfWK2HFdKn5Y/+Pc6Z7lp8tUl
-         MvgUF64tXvN0Zk5bhu9dOpSYzHqr1Vr9i+a/x2ytm3gXVAxroxPzAab/78IaJeVhqqML
-         UwqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXuRRYMXUCvODa0b7PHtP0PZhi56Cm92RKMae1PrBM9GI0c3OcgmsxlcrJ7ZjXnJXzFkvLeoXyOTwzuuz2woE0MH7izaJSZBXSt+pO3
-X-Gm-Message-State: AOJu0YzfvnHY8ZR+pdYMN1R19BV2Sb4MbZnPnHRjr/aDsthkXL2TLqkx
-	KDBF8izrD/kXr3STkMb7xq0NnSFkPhL32KAiuBX40ZvbEkTMgtdOx1ghWWozC4k=
-X-Google-Smtp-Source: AGHT+IFt8FdYLoAb7m1w/IZp2TCwGPaIlGE+lQIq6cHWMX0LD+g6P261WhyUH/jTgtg6qTcxBkyOeg==
-X-Received: by 2002:a19:5e19:0:b0:515:d2f1:1cbc with SMTP id s25-20020a195e19000000b00515d2f11cbcmr5140423lfb.28.1711919444555;
-        Sun, 31 Mar 2024 14:10:44 -0700 (PDT)
-Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id i1-20020a0565123e0100b00515cd1d5c99sm1033553lfv.85.2024.03.31.14.10.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 Mar 2024 14:10:44 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Mon, 01 Apr 2024 00:10:43 +0300
-Subject: [PATCH 2/3] arm64: dts: qcom: msm8996: add glink-edge nodes
+        bh=hjG8SPTf/rr2h+XjqAzsDGTKdabLcLfs23sxMbjwxxw=;
+        b=KpPdwUpQtZwtbdk01Gj+0vE0oFdtG2iI3Gv1OFqrnl2Wdy+tLORCXudVl3ni9qUK4A
+         s1C8Tnp4/VSZg2TzS0y2Aho7d8UV6lXGPU44ZnFPTgmvRtRWCywtqI9S9VpDClZIAR8j
+         Pdypz3fE1bG/E3WLQyjYSw4anl3fcRhP6u3Bsu8u4NnAPzujzy7Lykk0F/MGoMROpcbj
+         xC+OztH6+otQSDaqQuSSQzvIaFxblV0nhByyIgynRF6x7h0vCd4j3yz1hgMbp6o31lDA
+         Hx9GG2CgCATA1ZXOOvpJCZ0cgvjBhE4i0Ok/jHTLlyzRgSvzNOLpauVeCSqiENT8lJdM
+         7QWA==
+X-Forwarded-Encrypted: i=1; AJvYcCU9QpH3INd62WxhNOhInoxitog9rQw70mJDTJyNzcAoPINNlvDgJ+RGcTz9MoP0Tx3WDpiVJUU1OEgsQtWgYG3Z9J1nzZCDx44AMtaC
+X-Gm-Message-State: AOJu0Yz1fvZw2zPViyybRi+U+il3XMamnRFrUFNALQLmjanLTgPkDKUo
+	Bctlk1sJvgKjW92NQwkUSE1xaTgsAgzvqapYzCBEezp9S7CCWzjm1NLTOya7QB49e2b70UH14CH
+	U8VIFrKeNSYdgE7UaeM6oVML7NZg=
+X-Google-Smtp-Source: AGHT+IFOl2eQUDEKSEnuYYa47BveettHtGVprWDJLdBW4K9i5zx/xcE0zrtkjZI3CKVRZqZEktcJne+RnreB2oNwZmc=
+X-Received: by 2002:a17:903:2986:b0:1e0:b8b5:5037 with SMTP id
+ lm6-20020a170903298600b001e0b8b55037mr10243634plb.69.1711920630781; Sun, 31
+ Mar 2024 14:30:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240401-msm8996-remoteproc-v1-2-f02ab47fc728@linaro.org>
-References: <20240401-msm8996-remoteproc-v1-0-f02ab47fc728@linaro.org>
-In-Reply-To: <20240401-msm8996-remoteproc-v1-0-f02ab47fc728@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Mathieu Poirier <mathieu.poirier@linaro.org>, 
- Sibi Sankar <quic_sibis@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1856;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=+monmzdqaDuGF+91NgZ2OzAyov6DJsof4fu61GAW+E4=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmCdFSD/mfhrrDqt+bZbH8YWUTQeVVLed4W/B23
- XdRoMkFiVyJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZgnRUgAKCRCLPIo+Aiko
- 1SSOB/42UABi2MQUOuV1HAREycJq3MYMD+dBv1P72Dr2HbR/A7e9jXDWIEyg4/LaNhuPPXEYHgE
- xslCSuhmi5+bYJVcO/uPhl0UYZJwyrHH7/2aFyV24Et6j6DgKItB3XwldMcbgBc27vIQPwsGFbQ
- UqV1+NBd5oI3ykd2ieXkwXh5fOM+9fSuqBZ8bqp8J1cigzOHZ7pOBA2etR4g7288CylEbwUhvLk
- MZBU03r3fr2mr1Q2RJrVTy/0bLBUXvAP/ddBSnmAh+RAArcRhMBTjKSX1GlLD8OX3kc+gfP5BaL
- g7m40BRPQaI8Pf1dgysWdFGiC+l1eLZIYxBbMWtrx97Q8UiY
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+References: <20240323231309.415425-1-martin.blumenstingl@googlemail.com>
+ <20240323231309.415425-2-martin.blumenstingl@googlemail.com> <117365b8-ece1-4bc0-93f1-3e8c2861758d@salutedevices.com>
+In-Reply-To: <117365b8-ece1-4bc0-93f1-3e8c2861758d@salutedevices.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date: Sun, 31 Mar 2024 23:30:19 +0200
+Message-ID: <CAFBinCD3Uuchp7ezuML2c5DSuq+OdxG=mk7mjJk2YhetPk63bg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] iio: adc: meson: fix voltage reference selection
+ field name typo
+To: George Stark <gnstark@salutedevices.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	neil.armstrong@linaro.org, lars@metafoo.de, jic23@kernel.org, 
+	linux-amlogic@lists.infradead.org, 
+	"kernel@salutedevices.com" <kernel@salutedevices.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-MSM8996 provides limited glink support, so add corresponding device tree
-nodes. For example the following interfaces are provided on db820c:
+Hi George,
 
-modem:
-2080000.remoteproc:glink-edge.LOOPBACK_CTL_MPSS.-1.-1
-2080000.remoteproc:glink-edge.glink_ssr.-1.-1
-2080000.remoteproc:glink-edge.rpmsg_chrdev.0.0
+On Tue, Mar 26, 2024 at 12:45=E2=80=AFAM George Stark <gnstark@salutedevice=
+s.com> wrote:
+>
+> Hello Martin
+>
+> Thanks for the patch
+you're welcome
 
-adsp:
-9300000.remoteproc:glink-edge.LOOPBACK_CTL_LPASS.-1.-1
-9300000.remoteproc:glink-edge.glink_ssr.-1.-1
-9300000.remoteproc:glink-edge.rpmsg_chrdev.0.0
+> Should the tag
+> Fixes: 90c6241860bf ("iio: adc: meson: init voltage control bits")
+> be added?
+My understanding is that "Fixes" is for actual bugfixes. There's no
+harm done by a type that's only visible in the driver source (it's not
+exposed to DT, userspace or elsewhere).
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 1601e46549e7..7ae499fa7d91 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -2453,6 +2453,13 @@ slpi_pil: remoteproc@1c00000 {
- 
- 			status = "disabled";
- 
-+			glink-edge {
-+				interrupts = <GIC_SPI 179 IRQ_TYPE_EDGE_RISING>;
-+				label = "dsps";
-+				qcom,remote-pid = <3>;
-+				mboxes = <&apcs_glb 27>;
-+			};
-+
- 			smd-edge {
- 				interrupts = <GIC_SPI 176 IRQ_TYPE_EDGE_RISING>;
- 
-@@ -2522,6 +2529,13 @@ metadata {
- 				memory-region = <&mdata_mem>;
- 			};
- 
-+			glink-edge {
-+				interrupts = <GIC_SPI 452 IRQ_TYPE_EDGE_RISING>;
-+				label = "modem";
-+				qcom,remote-pid = <1>;
-+				mboxes = <&apcs_glb 15>;
-+			};
-+
- 			smd-edge {
- 				interrupts = <GIC_SPI 449 IRQ_TYPE_EDGE_RISING>;
- 
-@@ -3467,6 +3481,14 @@ adsp_pil: remoteproc@9300000 {
- 
- 			status = "disabled";
- 
-+			glink-edge {
-+				interrupts = <GIC_SPI 157 IRQ_TYPE_EDGE_RISING>;
-+				label = "lpass";
-+				qcom,remote-pid = <2>;
-+				mboxes = <&apcs_glb 9>;
-+			};
-+
-+
- 			smd-edge {
- 				interrupts = <GIC_SPI 156 IRQ_TYPE_EDGE_RISING>;
- 
-
--- 
-2.39.2
-
+Best regards,
+Martin
