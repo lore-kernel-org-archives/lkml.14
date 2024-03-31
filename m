@@ -1,64 +1,61 @@
 Received: from a.mx.secunet.com (a.mx.secunet.com [62.96.220.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CD1159594
-	for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2024 16:41:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E7015A490
+	for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2024 16:41:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=62.96.220.36
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711903283; cv=fail; b=tYivs5OEqhMnfAQGInqj6wxwlYLHx3GZNwUgKlZpo6wU75dsXhzCZtev68dlDvi+RWEhpcavfMWODZFIHROXhYS9e3XmM7p20QQKa/s7xVztxV+7CwiCSPQHNLAeoIBwgiJDs7+mIHBoMw1RvQCVlaNByBR/V0un/+r40eH1hQg=
+	t=1711903293; cv=fail; b=sqaBDR+nxchmOROlufaOXp6kPJfTWRX7UYiYE9nQc655Gmav+B4f1+Jjy8zLLnrgn2yL+pXftnm2Sg0i/e111jwCf8Rgq5hwYORyx6b6jpK5pLnE2NfOBbLcIrq8SkGQauN2PEFnT96XBe9vaOjImcJ6hE5qSkOYu+xUg9p7xNE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711903283; c=relaxed/simple;
-	bh=+lboaqEnt+i1iWHU9cseZxk/XEiDibYCVmlCUuzzoDI=;
+	s=arc-20240116; t=1711903293; c=relaxed/simple;
+	bh=rGn4vL9+asmP70dMTI/LIUbfHclY24B3bM9CP8QSGHk=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rmX+lxKmylg/SUV0pZkeq+kEG6mIICD4Bt2CWALm1mF0vYhDKrSjONZAozU883nNGKaqbASNBLV2ovtor6LgsvZ2B0qLh+o0aDBpTFweV5W22VYPwaFJeLlJx5iA1iSRD+6OwdqAvkKRyL7suF4aWlo3hzubNr6fG8Xkg7lV/Z8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=fail smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.118; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=fail smtp.client-ip=62.96.220.36
+	 MIME-Version:Content-Type; b=UUgEdjqYugDBi71Pn84ZiATAQ2r+C8uksNSW1mnXLTq9htV83v00X0qdN8pBKfE8748T3MLFvMSBVn+4F9oP83dKfEWOMY5NN002Q3FAGlJHwxljJTPDc6iUb9Mn91o53mVcJhwTuchYakdYBr5pkw4a94qPuEX0A2/bfkCp+zM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=fail smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.114.241; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=fail smtp.client-ip=62.96.220.36
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=sina.com
 Received: from localhost (localhost [127.0.0.1])
-	by a.mx.secunet.com (Postfix) with ESMTP id E8DDC207D5;
-	Sun, 31 Mar 2024 18:41:12 +0200 (CEST)
+	by a.mx.secunet.com (Postfix) with ESMTP id C31B9207D1;
+	Sun, 31 Mar 2024 18:41:25 +0200 (CEST)
 X-Virus-Scanned: by secunet
 Received: from a.mx.secunet.com ([127.0.0.1])
 	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id KhF9S72sH3SK; Sun, 31 Mar 2024 18:41:09 +0200 (CEST)
-Received: from mailout2.secunet.com (mailout2.secunet.com [62.96.220.49])
+	with ESMTP id bcG-KYukr1Ph; Sun, 31 Mar 2024 18:41:24 +0200 (CEST)
+Received: from mailout1.secunet.com (mailout1.secunet.com [62.96.220.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by a.mx.secunet.com (Postfix) with ESMTPS id 21580207D1;
-	Sun, 31 Mar 2024 18:41:09 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 21580207D1
+	by a.mx.secunet.com (Postfix) with ESMTPS id 19F6B208AC;
+	Sun, 31 Mar 2024 18:41:20 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 19F6B208AC
 Received: from cas-essen-01.secunet.de (unknown [10.53.40.201])
-	by mailout2.secunet.com (Postfix) with ESMTP id 1585680005E;
-	Sun, 31 Mar 2024 18:41:09 +0200 (CEST)
+	by mailout1.secunet.com (Postfix) with ESMTP id 0CEEB80005E;
+	Sun, 31 Mar 2024 18:41:20 +0200 (CEST)
 Received: from mbx-essen-01.secunet.de (10.53.40.197) by
  cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Sun, 31 Mar 2024 18:41:08 +0200
+ 15.1.2507.35; Sun, 31 Mar 2024 18:41:19 +0200
 Received: from Pickup by mbx-essen-01.secunet.de with Microsoft SMTP Server id
- 15.1.2507.17; Sun, 31 Mar 2024 16:36:26 +0000
-X-sender: <linux-kernel+bounces-125912-steffen.klassert=secunet.com@vger.kernel.org>
-X-Receiver: <steffen.klassert@secunet.com>
- ORCPT=rfc822;steffen.klassert@secunet.com NOTIFY=NEVER;
- X-ExtendedProps=BQAVABYAAgAAAAUAFAARAPDFCS25BAlDktII2g02frgPADUAAABNaWNyb3NvZnQuRXhjaGFuZ2UuVHJhbnNwb3J0LkRpcmVjdG9yeURhdGEuSXNSZXNvdXJjZQIAAAUAagAJAAEAAAAAAAAABQAWAAIAAAUAQwACAAAFAEYABwADAAAABQBHAAIAAAUAEgAPAGIAAAAvbz1zZWN1bmV0L291PUV4Y2hhbmdlIEFkbWluaXN0cmF0aXZlIEdyb3VwIChGWURJQk9IRjIzU1BETFQpL2NuPVJlY2lwaWVudHMvY249U3RlZmZlbiBLbGFzc2VydDY4YwUACwAXAL4AAACheZxkHSGBRqAcAp3ukbifQ049REI2LENOPURhdGFiYXNlcyxDTj1FeGNoYW5nZSBBZG1pbmlzdHJhdGl2ZSBHcm91cCAoRllESUJPSEYyM1NQRExUKSxDTj1BZG1pbmlzdHJhdGl2ZSBHcm91cHMsQ049c2VjdW5ldCxDTj1NaWNyb3NvZnQgRXhjaGFuZ2UsQ049U2VydmljZXMsQ049Q29uZmlndXJhdGlvbixEQz1zZWN1bmV0LERDPWRlBQAOABEABiAS9uuMOkqzwmEZDvWNNQUAHQAPAAwAAABtYngtZXNzZW4tMDIFADwAAgAADwA2AAAATWljcm9zb2Z0LkV4Y2hhbmdlLlRyYW5zcG9ydC5NYWlsUmVjaXBpZW50LkRpc3BsYXlOYW1lDwARAAAAS2xhc3NlcnQsIFN0ZWZmZW4FAAwAAgAABQBsAAIAAAUAWAAXAEoAAADwxQktuQQJQ5LSCNoNNn64Q049S2xhc3NlcnQgU3RlZmZlbixPVT1Vc2VycyxPVT1NaWdyYXRpb24sREM9c2VjdW5ldCxEQz1kZQUAJgACAAEFACIADwAxAAAAQXV0b1Jlc3BvbnNlU3VwcHJlc3M6IDANClRyYW5zbWl0SGlzdG9ye
-	TogRmFsc2UNCg8ALwAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuRXhwYW5zaW9uR3JvdXBUeXBlDwAVAAAATWVtYmVyc0dyb3VwRXhwYW5zaW9uBQAjAAIAAQ==
+ 15.1.2507.17; Sun, 31 Mar 2024 16:37:12 +0000
+X-sender: <linux-kernel+bounces-125968-steffen.klassert=secunet.com@vger.kernel.org>
+X-Receiver: <steffen.klassert@secunet.com> ORCPT=rfc822;steffen.klassert@secunet.com
 X-CreatedBy: MSExchange15
-X-HeloDomain: a.mx.secunet.com
-X-ExtendedProps: BQBjAAoALmgFfe5Q3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5Pcmdhbml6YXRpb25TY29wZREAAAAAAAAAAAAAAAAAAAAAAAUASQACAAEFAAQAFCABAAAAHAAAAHN0ZWZmZW4ua2xhc3NlcnRAc2VjdW5ldC5jb20FAAYAAgABBQApAAIAAQ8ACQAAAENJQXVkaXRlZAIAAQUAAgAHAAEAAAAFAAMABwAAAAAABQAFAAIAAQUAYgAKADEAAADnigAABQBkAA8AAwAAAEh1Yg==
+X-HeloDomain: mbx-essen-01.secunet.de
+X-ExtendedProps: BQBjAAoA2XEFfe5Q3AgFADcAAgAADwA8AAAATWljcm9zb2Z0LkV4Y2hhbmdlLlRyYW5zcG9ydC5NYWlsUmVjaXBpZW50Lk9yZ2FuaXphdGlvblNjb3BlEQAAAAAAAAAAAAAAAAAAAAAADwA/AAAATWljcm9zb2Z0LkV4Y2hhbmdlLlRyYW5zcG9ydC5EaXJlY3RvcnlEYXRhLk1haWxEZWxpdmVyeVByaW9yaXR5DwADAAAATG93
 X-Source: SMTP:Default MBX-ESSEN-02
-X-SourceIPAddress: 62.96.220.36
-X-EndOfInjectedXHeaders: 25421
+X-SourceIPAddress: 10.53.40.197
+X-EndOfInjectedXHeaders: 8028
 X-Virus-Scanned: by secunet
-Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=139.178.88.99; helo=sv.mirrors.kernel.org; envelope-from=linux-kernel+bounces-125912-steffen.klassert=secunet.com@vger.kernel.org; receiver=steffen.klassert@secunet.com 
-DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 656C620820
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.118
+Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=147.75.80.249; helo=am.mirrors.kernel.org; envelope-from=linux-kernel+bounces-125968-steffen.klassert=secunet.com@vger.kernel.org; receiver=steffen.klassert@secunet.com 
+DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 6F3A3207FD
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.114.241
 ARC-Seal: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711843916; cv=none; b=EeK1lKhiqPe+Qob4jq5h9P1ordbzDtnFFGdl9eHTc12XyQROg9MsIVaYZ9vxQn7xJ6H7PCvCgpYMaAi/BDkZ5DACiC973JkiYAjO8hvtt7fDGsDAqBBBJExtc9cWwnybKMJnAPu1YKRMF/QyMU3cSgxcpxBumX5MY9R6l6hkw3w=
+	t=1711866372; cv=none; b=LaqTbeno/fnzT1OnBSfQjhnHN5rIUFN0SkZP3DJ0m+MOGApZ3XtpgYhDSprXAn2PUnwY+UtR8t2hlOZBDpqox+nOFKQH+SPy0O+26ofWbGxPMCSfUlBn244EVgPa3NNXKWKkHMZJ0enWoP5zYTF9bjf2UN968ILnoBoG+BAHjl0=
 ARC-Message-Signature: i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711843916; c=relaxed/simple;
-	bh=+lboaqEnt+i1iWHU9cseZxk/XEiDibYCVmlCUuzzoDI=;
+	s=arc-20240116; t=1711866372; c=relaxed/simple;
+	bh=rGn4vL9+asmP70dMTI/LIUbfHclY24B3bM9CP8QSGHk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=N8/oJIQog9yryP9p1L2UqVKeGZbI810JqMJisQEU8lHWC57fgtVO+emFXpOKQ4uYdufirj3pIX9se4kxh8kxWDhLfRnXUFqvRG4mkI/Cm8wtCYCGNa8NxBRR/DNbgQFB8V1mnaFulCMi5aNDH/wM/rxD03MuqhGXhY1o75j9kmI=
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.118
+	 MIME-Version; b=AWCR86RLbU9TQesl2oCZ3cVCRcv3o+Lci5z3/cXmZ8+fF9mEKmiAiwPsKvFslLfLWmR5AS+B7ZN9qa3xmDqKWPI3uJAmNlXEBj/XvPa8FKSEs6SGt+T/Y7/KFnG7mRug4UKVoY6Zx64+sfKoc45O68F0xOIJ4yRNdyDI0Ss5Aec=
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.114.241
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
 X-SMAIL-HELO: localhost.localdomain
@@ -68,16 +65,19 @@ Authentication-Results: sina.com;
 	 spf=none smtp.mailfrom=hdanton@sina.com;
 	 dkim=none header.i=none;
 	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 37315434210117
-X-SMAIL-UIID: D314BDEBA6694A70B0051E606AB997E6-20240331-080924-1
+X-SMAIL-MID: 29318145089346
+X-SMAIL-UIID: F8131F5289424113AB8638F7DD5264EF-20240331-142331-1
 From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+81f5ca46b043d4a1b789@syzkaller.appspotmail.com>
-CC: <linux-kernel@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>
-Subject: Re: [syzbot] [audit?] [bpf?] INFO: rcu detected stall in kauditd_thread (4)
-Date: Sun, 31 Mar 2024 08:09:12 +0800
-Message-ID: <20240331000912.3242-1-hdanton@sina.com>
-In-Reply-To: <000000000000d929dd0614a8ba8c@google.com>
-References:
+To: Uladzislau Rezki <urezki@gmail.com>
+CC: syzbot <syzbot+1fa663a2100308ab6eab@syzkaller.appspotmail.com>, "Alexei
+ Starovoitov" <alexei.starovoitov@gmail.com>, "Paul E. McKenney"
+	<paulmck@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<syzkaller-bugs@googlegroups.com>
+Subject: Re: [syzbot] [bpf?] possible deadlock in kvfree_call_rcu
+Date: Sun, 31 Mar 2024 14:23:14 +0800
+Message-ID: <20240331062314.3394-1-hdanton@sina.com>
+In-Reply-To: <ZghSHWexmBHXpyA-@pc638.lan>
+References: <000000000000f2f0c0061494e610@google.com>
 Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -88,311 +88,54 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
-Message-ID: <20240331000912.GUra8BmRAn0plhm2h_BQ1mb7LxX9WP-3vuy-dIvWLms@z>
+Message-ID: <20240331062314.sCbqrS3oKoR7rt1dGGV8_Cop1fvgU3GKDq_TlmV-khQ@z>
 
-On Wed, 27 Mar 2024 11:39:42 -0700
-> syzbot found the following issue on:
+On Sat, 30 Mar 2024 18:55:41 +0100 Uladzislau Rezki <urezki@gmail.com>
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index d9642dd06c25..8867aac3668c 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -3467,19 +3467,19 @@ void kvfree_call_rcu(struct rcu_head *head, void *ptr)
+>  	 */
+>  	kmemleak_ignore(ptr);
+>  
+> -	// Set timer to drain after KFREE_DRAIN_JIFFIES.
+> -	if (rcu_scheduler_active == RCU_SCHEDULER_RUNNING)
+> -		schedule_delayed_monitor_work(krcp);
+> -
+
+This is not enough at least WRT run_page_cache_worker() [1]
+
+[1] https://lore.kernel.org/lkml/0000000000007a44120614e27cb7@google.com/
+
+while the reason why syzbot failed to catch the zone->per_cpu_pageset in
+setup_zone_pageset() in mm/page_alloc.c is trylock [2]
+
+[2] https://lore.kernel.org/lkml/000000000000a5ee4e0614ee586e@google.com/
+
+>  unlock_return:
+>  	krc_this_cpu_unlock(krcp, flags);
+>  
+> -	/*
+> -	 * Inline kvfree() after synchronize_rcu(). We can do
+> -	 * it from might_sleep() context only, so the current
+> -	 * CPU can pass the QS state.
+> -	 */
+> -	if (!success) {
+> +	if (success) {
+> +		// Set timer to drain after KFREE_DRAIN_JIFFIES.
+> +		if (rcu_scheduler_active == RCU_SCHEDULER_RUNNING)
+> +			schedule_delayed_monitor_work(krcp);
+> +	} else {
+> +		/*
+> +		 * Inline kvfree() after synchronize_rcu(). We can do
+> +		 * it from might_sleep() context only, so the current
+> +		 * CPU can pass the QS state.
+> +		 */
+>  		debug_rcu_head_unqueue((struct rcu_head *) ptr);
+>  		synchronize_rcu();
+>  		kvfree(ptr);
 > 
-> HEAD commit:    fe46a7dd189e Merge tag 'sound-6.9-rc1' of git://git.kernel..
-> git tree:       upstream
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=112840ee180000
-
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  master
-
---- x/mm/page_owner.c
-+++ y/mm/page_owner.c
-@@ -196,7 +196,8 @@ static void add_stack_record_to_list(str
- 	spin_unlock_irqrestore(&stack_list_lock, flags);
- }
- 
--static void inc_stack_record_count(depot_stack_handle_t handle, gfp_t gfp_mask)
-+static void inc_stack_record_count(depot_stack_handle_t handle, gfp_t gfp_mask,
-+				   int nr_base_pages)
- {
- 	struct stack_record *stack_record = __stack_depot_get_stack_record(handle);
- 
-@@ -217,20 +218,74 @@ static void inc_stack_record_count(depot
- 			/* Add the new stack_record to our list */
- 			add_stack_record_to_list(stack_record, gfp_mask);
- 	}
--	refcount_inc(&stack_record->count);
-+	refcount_add(nr_base_pages, &stack_record->count);
- }
- 
--static void dec_stack_record_count(depot_stack_handle_t handle)
-+static void dec_stack_record_count(depot_stack_handle_t handle,
-+				   int nr_base_pages)
- {
- 	struct stack_record *stack_record = __stack_depot_get_stack_record(handle);
- 
--	if (stack_record)
--		refcount_dec(&stack_record->count);
-+	if (!stack_record)
-+		return;
-+
-+	if (refcount_sub_and_test(nr_base_pages, &stack_record->count))
-+		pr_warn("%s: refcount went to 0 for %u handle\n", __func__,
-+			handle);
- }
- 
--void __reset_page_owner(struct page *page, unsigned short order)
-+static inline void __update_page_owner_handle(struct page_ext *page_ext,
-+					      depot_stack_handle_t handle,
-+					      unsigned short order,
-+					      gfp_t gfp_mask,
-+					      short last_migrate_reason, u64 ts_nsec,
-+					      pid_t pid, pid_t tgid, char *comm)
- {
- 	int i;
-+	struct page_owner *page_owner;
-+
-+	for (i = 0; i < (1 << order); i++) {
-+		page_owner = get_page_owner(page_ext);
-+		page_owner->handle = handle;
-+		page_owner->order = order;
-+		page_owner->gfp_mask = gfp_mask;
-+		page_owner->last_migrate_reason = last_migrate_reason;
-+		page_owner->pid = pid;
-+		page_owner->tgid = tgid;
-+		page_owner->ts_nsec = ts_nsec;
-+		strscpy(page_owner->comm, comm,
-+			sizeof(page_owner->comm));
-+		__set_bit(PAGE_EXT_OWNER, &page_ext->flags);
-+		__set_bit(PAGE_EXT_OWNER_ALLOCATED, &page_ext->flags);
-+		page_ext = page_ext_next(page_ext);
-+	}
-+}
-+
-+static inline void __update_page_owner_free_handle(struct page_ext *page_ext,
-+						   depot_stack_handle_t handle,
-+						   unsigned short order,
-+						   pid_t pid, pid_t tgid,
-+						   u64 free_ts_nsec)
-+{
-+	int i;
-+	struct page_owner *page_owner;
-+
-+	for (i = 0; i < (1 << order); i++) {
-+		page_owner = get_page_owner(page_ext);
-+		/* Only __reset_page_owner() wants to clear the bit */
-+		if (handle) {
-+			__clear_bit(PAGE_EXT_OWNER_ALLOCATED, &page_ext->flags);
-+			page_owner->free_handle = handle;
-+		}
-+		page_owner->free_ts_nsec = free_ts_nsec;
-+		page_owner->free_pid = current->pid;
-+		page_owner->free_tgid = current->tgid;
-+		page_ext = page_ext_next(page_ext);
-+	}
-+}
-+
-+void __reset_page_owner(struct page *page, unsigned short order)
-+{
- 	struct page_ext *page_ext;
- 	depot_stack_handle_t handle;
- 	depot_stack_handle_t alloc_handle;
-@@ -245,16 +300,10 @@ void __reset_page_owner(struct page *pag
- 	alloc_handle = page_owner->handle;
- 
- 	handle = save_stack(GFP_NOWAIT | __GFP_NOWARN);
--	for (i = 0; i < (1 << order); i++) {
--		__clear_bit(PAGE_EXT_OWNER_ALLOCATED, &page_ext->flags);
--		page_owner->free_handle = handle;
--		page_owner->free_ts_nsec = free_ts_nsec;
--		page_owner->free_pid = current->pid;
--		page_owner->free_tgid = current->tgid;
--		page_ext = page_ext_next(page_ext);
--		page_owner = get_page_owner(page_ext);
--	}
-+	__update_page_owner_free_handle(page_ext, handle, order, current->pid,
-+					current->tgid, free_ts_nsec);
- 	page_ext_put(page_ext);
-+
- 	if (alloc_handle != early_handle)
- 		/*
- 		 * early_handle is being set as a handle for all those
-@@ -263,39 +312,14 @@ void __reset_page_owner(struct page *pag
- 		 * the machinery is not ready yet, we cannot decrement
- 		 * their refcount either.
- 		 */
--		dec_stack_record_count(alloc_handle);
--}
--
--static inline void __set_page_owner_handle(struct page_ext *page_ext,
--					depot_stack_handle_t handle,
--					unsigned short order, gfp_t gfp_mask)
--{
--	struct page_owner *page_owner;
--	int i;
--	u64 ts_nsec = local_clock();
--
--	for (i = 0; i < (1 << order); i++) {
--		page_owner = get_page_owner(page_ext);
--		page_owner->handle = handle;
--		page_owner->order = order;
--		page_owner->gfp_mask = gfp_mask;
--		page_owner->last_migrate_reason = -1;
--		page_owner->pid = current->pid;
--		page_owner->tgid = current->tgid;
--		page_owner->ts_nsec = ts_nsec;
--		strscpy(page_owner->comm, current->comm,
--			sizeof(page_owner->comm));
--		__set_bit(PAGE_EXT_OWNER, &page_ext->flags);
--		__set_bit(PAGE_EXT_OWNER_ALLOCATED, &page_ext->flags);
--
--		page_ext = page_ext_next(page_ext);
--	}
-+		dec_stack_record_count(alloc_handle, 1 << order);
- }
- 
- noinline void __set_page_owner(struct page *page, unsigned short order,
- 					gfp_t gfp_mask)
- {
- 	struct page_ext *page_ext;
-+	u64 ts_nsec = local_clock();
- 	depot_stack_handle_t handle;
- 
- 	handle = save_stack(gfp_mask);
-@@ -303,9 +327,11 @@ noinline void __set_page_owner(struct pa
- 	page_ext = page_ext_get(page);
- 	if (unlikely(!page_ext))
- 		return;
--	__set_page_owner_handle(page_ext, handle, order, gfp_mask);
-+	__update_page_owner_handle(page_ext, handle, order, gfp_mask, -1,
-+				   current->pid, current->tgid, ts_nsec,
-+				   current->comm);
- 	page_ext_put(page_ext);
--	inc_stack_record_count(handle, gfp_mask);
-+	inc_stack_record_count(handle, gfp_mask, 1 << order);
- }
- 
- void __set_page_owner_migrate_reason(struct page *page, int reason)
-@@ -342,7 +368,7 @@ void __folio_copy_owner(struct folio *ne
- {
- 	struct page_ext *old_ext;
- 	struct page_ext *new_ext;
--	struct page_owner *old_page_owner, *new_page_owner;
-+	struct page_owner *old_page_owner;
- 
- 	old_ext = page_ext_get(&old->page);
- 	if (unlikely(!old_ext))
-@@ -355,31 +381,21 @@ void __folio_copy_owner(struct folio *ne
- 	}
- 
- 	old_page_owner = get_page_owner(old_ext);
--	new_page_owner = get_page_owner(new_ext);
--	new_page_owner->order = old_page_owner->order;
--	new_page_owner->gfp_mask = old_page_owner->gfp_mask;
--	new_page_owner->last_migrate_reason =
--		old_page_owner->last_migrate_reason;
--	new_page_owner->handle = old_page_owner->handle;
--	new_page_owner->pid = old_page_owner->pid;
--	new_page_owner->tgid = old_page_owner->tgid;
--	new_page_owner->free_pid = old_page_owner->free_pid;
--	new_page_owner->free_tgid = old_page_owner->free_tgid;
--	new_page_owner->ts_nsec = old_page_owner->ts_nsec;
--	new_page_owner->free_ts_nsec = old_page_owner->ts_nsec;
--	strcpy(new_page_owner->comm, old_page_owner->comm);
--
-+	__update_page_owner_handle(new_ext, old_page_owner->handle,
-+				   old_page_owner->order, old_page_owner->gfp_mask,
-+				   old_page_owner->last_migrate_reason,
-+				   old_page_owner->ts_nsec, old_page_owner->pid,
-+				   old_page_owner->tgid, old_page_owner->comm);
- 	/*
--	 * We don't clear the bit on the old folio as it's going to be freed
--	 * after migration. Until then, the info can be useful in case of
--	 * a bug, and the overall stats will be off a bit only temporarily.
--	 * Also, migrate_misplaced_transhuge_page() can still fail the
--	 * migration and then we want the old folio to retain the info. But
--	 * in that case we also don't need to explicitly clear the info from
--	 * the new page, which will be freed.
-+	 * Do not proactively clear PAGE_EXT_OWNER{_ALLOCATED} bits as the folio
-+	 * will be freed after migration. Keep them until then as they may be
-+	 * useful.
- 	 */
--	__set_bit(PAGE_EXT_OWNER, &new_ext->flags);
--	__set_bit(PAGE_EXT_OWNER_ALLOCATED, &new_ext->flags);
-+	__update_page_owner_free_handle(new_ext, 0, old_page_owner->order,
-+					old_page_owner->free_pid,
-+					old_page_owner->free_tgid,
-+					old_page_owner->free_ts_nsec);
-+
- 	page_ext_put(new_ext);
- 	page_ext_put(old_ext);
- }
-@@ -787,8 +803,9 @@ static void init_pages_in_zone(pg_data_t
- 				goto ext_put_continue;
- 
- 			/* Found early allocated page */
--			__set_page_owner_handle(page_ext, early_handle,
--						0, 0);
-+			__update_page_owner_handle(page_ext, early_handle, 0, 0,
-+						   -1, local_clock(), current->pid,
-+						   current->tgid, current->comm);
- 			count++;
- ext_put_continue:
- 			page_ext_put(page_ext);
-@@ -861,11 +878,11 @@ static void *stack_next(struct seq_file
- 	return stack;
- }
- 
--static unsigned long page_owner_stack_threshold;
-+static unsigned long page_owner_pages_threshold;
- 
- static int stack_print(struct seq_file *m, void *v)
- {
--	int i, stack_count;
-+	int i, nr_base_pages;
- 	struct stack *stack = v;
- 	unsigned long *entries;
- 	unsigned long nr_entries;
-@@ -876,14 +893,14 @@ static int stack_print(struct seq_file *
- 
- 	nr_entries = stack_record->size;
- 	entries = stack_record->entries;
--	stack_count = refcount_read(&stack_record->count) - 1;
-+	nr_base_pages = refcount_read(&stack_record->count) - 1;
- 
--	if (stack_count < 1 || stack_count < page_owner_stack_threshold)
-+	if (nr_base_pages < 1 || nr_base_pages < page_owner_pages_threshold)
- 		return 0;
- 
- 	for (i = 0; i < nr_entries; i++)
- 		seq_printf(m, " %pS\n", (void *)entries[i]);
--	seq_printf(m, "stack_count: %d\n\n", stack_count);
-+	seq_printf(m, "nr_base_pages: %d\n\n", nr_base_pages);
- 
- 	return 0;
- }
-@@ -913,13 +930,13 @@ static const struct file_operations page
- 
- static int page_owner_threshold_get(void *data, u64 *val)
- {
--	*val = READ_ONCE(page_owner_stack_threshold);
-+	*val = READ_ONCE(page_owner_pages_threshold);
- 	return 0;
- }
- 
- static int page_owner_threshold_set(void *data, u64 val)
- {
--	WRITE_ONCE(page_owner_stack_threshold, val);
-+	WRITE_ONCE(page_owner_pages_threshold, val);
- 	return 0;
- }
- 
---- x/net/sched/sch_taprio.c
-+++ y/net/sched/sch_taprio.c
-@@ -980,7 +980,9 @@ first_run:
- 	rcu_assign_pointer(q->current_entry, next);
- 	spin_unlock(&q->current_entry_lock);
- 
--	hrtimer_set_expires(&q->advance_timer, end_time);
-+	hrtimer_set_expires(&q->advance_timer,
-+				ktime_add(timer->base->get_time(),
-+					  ns_to_ktime(NSEC_PER_USEC *200)));
- 
- 	rcu_read_lock();
- 	__netif_schedule(sch);
---
+> 
+> --
 
