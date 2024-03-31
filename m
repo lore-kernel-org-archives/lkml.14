@@ -1,139 +1,110 @@
-Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D024146D5C
-	for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2024 19:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 336FC146D65;
+	Sun, 31 Mar 2024 19:14:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711912239; cv=none; b=qseDj+iJ7LukWlsDdpzXiIj+bYDfqys6qMPzKG8rwNSFWGDyGsS49OVvkLYgKTpCxDPueQDJ2kWHgTC0TmYV1kbX9n5ummGIFDr1wfE1RhxWxExFOtEgTfM9tVhlq+VeGrzKvS4DTSuvuPczOTFARghoJZzmf6Jqpu6OsY5gxdE=
+	t=1711912498; cv=none; b=oh+O+MSTwZtz3rMb9RxAFvq0sd4dbREus/XhsuLVEwvCpQTa0MIRGF+UqVrNnoG30Se8RLjt/9svBVLIQwSTcs6ROPMAXbuJC66+3LztDAslqTJ1cUR2nFJYUhQR2BjAkgUW4+ulifnQrROPEpGN6KQR+M1bNjHp4Si+w5qw9Ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711912239; c=relaxed/simple;
-	bh=zquvECkhXFKGeqN+2HotacergWrCotq0h8xbNwu5S0E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W4G1ziO37es1NB/3L2edSjuVjnASfnueMJu5UZt59Gir/qN4Q2n6WCKjDQgXXsjbr/lCZhagnRGprjqUuAPKbZP8TM+RNGhx3by62h83ZoIWAqq3XEGYxdYvUQHX9zmEiCz/kHfO/eCMO7bxyBRutwft8eXVRM454Exyz4ulyZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=EWburBWB; arc=none smtp.client-ip=199.247.17.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="EWburBWB"
-Received: from spock.localnet (unknown [94.142.239.106])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by prime.voidband.net (Postfix) with ESMTPSA id A577C62FD5E0;
-	Sun, 31 Mar 2024 21:10:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-	s=dkim-20170712; t=1711912226;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/EtX0OVt3ih5dbQ01+pyMTmXRKnYiOfgjTF+4SBncoQ=;
-	b=EWburBWB7TKQXoda3pMGIi/jRURXx0cTJ+HY3XiIq22mxZTtnQZ+lrGDyD3k/0+PtJMW9R
-	51WB8jFLu3p+3YSqm7c1p8hMaJiW8M9I5c6SsMkyWw1sJ1C8AkiuFodk6EICKOlLRbKSEf
-	N1PJFoUblLPUF8RiE1hD38Ue8gBh3Wk=
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] drm/display: fix typo
-Date: Sun, 31 Mar 2024 21:10:13 +0200
-Message-ID: <2740172.mvXUDI8C0e@natalenko.name>
-In-Reply-To: <a7c8ec21-adf5-4dcc-af7d-33662f864596@infradead.org>
-References:
- <20240119102215.201474-1-oleksandr@natalenko.name>
- <a7c8ec21-adf5-4dcc-af7d-33662f864596@infradead.org>
+	s=arc-20240116; t=1711912498; c=relaxed/simple;
+	bh=aisnBOSe6twHW7ZdfD8orcM1pcSwRgzSY+oaCtUg+fQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oaddLqaYhj38gbrRb+5S3E5fETBJnjBr6Oe8of6qM/G6vVUMM4YKHovxK8jjaJ5u8XfTSP/sRu6lpDw+EPm4+VjfIZjT9vV5i8mEol4eG4BPW189xl1Goget4l0Sw2IT2c6Bhe7+Do/Gopoy8uSbiQcDrmAxvXRg7IVmEiAF0+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA63713D5;
+	Sun, 31 Mar 2024 12:15:20 -0700 (PDT)
+Received: from bogus (unknown [10.57.81.195])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E84A3F64C;
+	Sun, 31 Mar 2024 12:14:34 -0700 (PDT)
+Date: Sun, 31 Mar 2024 20:14:32 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	David Hildenbrand <david@redhat.com>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Olivia Mackall <olivia@selenic.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Amit Shah <amit@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Gonglei <arei.gonglei@huawei.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Viresh Kumar <vireshk@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	David Airlie <airlied@redhat.com>,
+	Gurchetan Singh <gurchetansingh@chromium.org>,
+	Chia-I Wu <olvaffe@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Alexander Graf <graf@amazon.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	Stefano Garzarella <sgarzare@redhat.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Vivek Goyal <vgoyal@redhat.com>, Miklos Szeredi <miklos@szeredi.hu>,
+	Anton Yakovlev <anton.yakovlev@opensynergy.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	virtualization@lists.linux.dev, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	iommu@lists.linux.dev, netdev@vger.kernel.org, v9fs@lists.linux.dev,
+	kvm@vger.kernel.org, linux-wireless@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-remoteproc@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	Sudeep Holla <sudeep.holla@arm.com>, alsa-devel@alsa-project.org,
+	linux-sound@vger.kernel.org
+Subject: Re: [PATCH v2 11/25] firmware: arm_scmi: virtio: drop owner
+ assignment
+Message-ID: <20240331191432.sfp5dq6nyvf4yf34@bogus>
+References: <20240331-module-owner-virtio-v2-0-98f04bfaf46a@linaro.org>
+ <20240331-module-owner-virtio-v2-11-98f04bfaf46a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart12423692.O9o76ZdvQC";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240331-module-owner-virtio-v2-11-98f04bfaf46a@linaro.org>
 
---nextPart12423692.O9o76ZdvQC
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH] drm/display: fix typo
-Date: Sun, 31 Mar 2024 21:10:13 +0200
-Message-ID: <2740172.mvXUDI8C0e@natalenko.name>
-In-Reply-To: <a7c8ec21-adf5-4dcc-af7d-33662f864596@infradead.org>
-MIME-Version: 1.0
+On Sun, Mar 31, 2024 at 10:43:58AM +0200, Krzysztof Kozlowski wrote:
+> virtio core already sets the .owner, so driver does not need to.
+>
 
-On sobota 20. ledna 2024 7:44:45, CEST Randy Dunlap wrote:
-> 
-> On 1/19/24 02:22, Oleksandr Natalenko wrote:
-> > While studying the code I've bumped into a small typo within the
-> > kernel-doc for two functions, apparently, due to copy-paste.
-> > 
-> > This commit fixes "sizo" word to be "size".
-> > 
-> > Signed-off-by: Oleksandr Natalenko <oleksandr@natalenko.name>
-> 
-> Acked-by: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Thanks.
-> 
-> > ---
-> >  drivers/gpu/drm/display/drm_dp_dual_mode_helper.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/display/drm_dp_dual_mode_helper.c b/drivers/gpu/drm/display/drm_dp_dual_mode_helper.c
-> > index bd61e20770a5b..14a2a8473682b 100644
-> > --- a/drivers/gpu/drm/display/drm_dp_dual_mode_helper.c
-> > +++ b/drivers/gpu/drm/display/drm_dp_dual_mode_helper.c
-> > @@ -52,7 +52,7 @@
-> >   * @adapter: I2C adapter for the DDC bus
-> >   * @offset: register offset
-> >   * @buffer: buffer for return data
-> > - * @size: sizo of the buffer
-> > + * @size: size of the buffer
-> >   *
-> >   * Reads @size bytes from the DP dual mode adaptor registers
-> >   * starting at @offset.
-> > @@ -116,7 +116,7 @@ EXPORT_SYMBOL(drm_dp_dual_mode_read);
-> >   * @adapter: I2C adapter for the DDC bus
-> >   * @offset: register offset
-> >   * @buffer: buffer for write data
-> > - * @size: sizo of the buffer
-> > + * @size: size of the buffer
-> >   *
-> >   * Writes @size bytes to the DP dual mode adaptor registers
-> >   * starting at @offset.
-> 
-> 
-
-Gentle ping. I don't see this change in linux-next, so probably it got lost.
+Acked-by: Sudeep Holla <sudeep.holla@arm.com>
 
 -- 
-Oleksandr Natalenko (post-factum)
---nextPart12423692.O9o76ZdvQC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmYJtRUACgkQil/iNcg8
-M0s4gRAA5iLebl3ys6Ahv0UbaSkAVM2x4sVViWzB8xhhyJ5uzt//1482rTXM/fuk
-griAEfUtxGcoeU+WHSpBNbd6vNfQPgPJU826ZoUkWp7lpebHYSYfGofZjU9226jW
-aAugwhPVnAU5yM/i3d2UnqJXs9iBRyfjFHoBxKOXYJxR+0bbSKvSemRRh0IZQrNd
-EnZ6Q0LSsiin98uFZ7asf+9P1RkXMT/ZSWjg03VNUmMDxC7NVLBCx6erTb6+KN95
-xGxqi7wmQizlYtO9zvVTzYyRt5HCWKzv6SpY6C4fYYFEzjZXncAa+G9DCGnhCR4u
-IIfJUEnp1uW2+AEyflXH4rdv0835yLq+vxeImpo7zjIpgoqUXu0/3HnASmVI3pay
-vMrQC/pWKF+5hz9L154wDsHzYUJvKPAeYIbdDak6QQEppRL6slOqy2dyeK8rsizT
-po4TPtqba2d5QZ3P0p0BOdEjMKCzjRD1nFxbMRi+UkA0EIE9XI3A90WUpcgI1G+A
-0UPCR04RKEgyafXnbLJ0z2Tdan0Inwa64URtkOpVhz11SeYa61JBcQz0wie4v/1k
-aGaHS77AP1s/3NkX4FyrL4SIb3p+pr6DzFGI/MeRRsTGCLzSmdu9X5gdQh5AYpuh
-+5bt2Kny7bvfnCjOOidCvLY4iQvgOysdxgSUTZVDn3Ztwg2FizY=
-=3A4y
------END PGP SIGNATURE-----
-
---nextPart12423692.O9o76ZdvQC--
-
-
-
+Regards,
+Sudeep
