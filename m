@@ -1,157 +1,97 @@
-Received: from wfhigh5-smtp.messagingengine.com (wfhigh5-smtp.messagingengine.com [64.147.123.156])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738D714535F
-	for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2024 13:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A78144D13;
+	Sun, 31 Mar 2024 13:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711893054; cv=none; b=VI5t6VUm7CCKn+BIwXv+l0qeRAk/rssB8GMRF26Sq0nwgdm80X8/s1oO8MHe9kHoSI4rPRClyGpAJBfJKkjyrFY+4ppYFqd+V14pMM7qdqZMvOiu9XrQb0DYnGjlyvOGTdBD6ccgd/yk/5770zQI65vm2tjetmoRO6YjdkOyO3w=
+	t=1711893227; cv=none; b=EaHlHb7iabf99+W+XF0s18Hw45UaQvTdc+QHf9XMrWq7Sy4QKDegK2i0FxZoe0PaTaKShk3aQ964HIrrxhZM0ekaV7v1nbpnjfafd5p8bMxyEoqp4237OCaYcTFQWEdUSl8XzPazjNGLI3cmjGkeNvjIbu7RN/dQf/1jhyVlikE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711893054; c=relaxed/simple;
-	bh=Bm799p878xi8cCkGjfKPw5pJvYx9lsp1ujzntTHoG4A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fsZ4ej7K8J0s3DzumCr2ILUCuhct5xQSYq2kUqOpyji/PYVzSrzmJ77b2A79UXpXgLzQ6XplHJxm2sxkoIDAK9eXmMHKrZoIfGTHEqyZz3tLhjtwpb/WQt4j+7o4aTama/ZNPTqyicXauEDfS74V5PbNq036SSvY6A6E4d/NjNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=ITPXHysp; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=P4Ervmmk; arc=none smtp.client-ip=64.147.123.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
+	s=arc-20240116; t=1711893227; c=relaxed/simple;
+	bh=HZcoANQm+m6eHWitU14xeSVvP4uJHQVXHY2wtEadUVc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jriDqskD3O5Iu2ZmyfKR7SoWMaJVsfkirQELfUW/b1lceQquXzf2j9kfWGPwM3KMZe7I7W2yN0r2YO070JBsB/xOqdOelWiBD7Dl7y3CRX2GZnjvlWQSxjHb8HszhjJf8upl9I7iTNbchvx5dwuBnwKPQ0N24W2DudhN1D/BdCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Aw5NpLdd; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="ITPXHysp";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="P4Ervmmk"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 8867518000EF;
-	Sun, 31 Mar 2024 09:50:51 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Sun, 31 Mar 2024 09:50:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
-	:from:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1711893051; x=
-	1711979451; bh=uOw+tg91pvfmeSLmBzCONKSxkv2GqAof7vSFCeSIuA4=; b=I
-	TPXHysp+bNhFDtP00nyfPo+nL4VIjghkX1158R/Ts6LggcU0NmYyfEAC7A3bVpRh
-	Abf81gWvU7MpzT+We7a/cfEuJwp5dYjV0uIb6z/I/ElZ+sIvc6bKRGa/lJQzanSf
-	5d+hYheRoLBNUnxhFbeFxyXR9W+gFxp82O8xuyyEO+U4drc84k6f5cUmKQ/qYNit
-	lTM+4ANd0Gw3IMv1SJ9hbFIhtYPN7vmg8GhkcXTItNMJEvlajUADw6nVKtP1NbcP
-	SZORAO5hwNx1wuW+n7y8SL+VrIqHNJFHq8uVpzNjQyxPGjA87B0Y/80Ch20bAInN
-	tDjdnAZzZPp804QKZzG/g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1711893051; x=
-	1711979451; bh=uOw+tg91pvfmeSLmBzCONKSxkv2GqAof7vSFCeSIuA4=; b=P
-	4Ervmmksa0SEV6ADejD5SPyKegJzR+dc3/jFAcF/F2y9fhyl9k7M07apaM2EvE7y
-	CcFqRmXWTPbCbpo5kQTCaG8c2kdR3Igv9IhDmxKtjLVqjamekmB3X+io57OG4HvM
-	ZmJq4xB2gzPeXRHPj3YuguBmEQAYLi1muLOSIlsbu0nJd37vh42Ann4mblmdtip9
-	azoG/YplDXB4y4Y02B9FTdOIwregSg7ah4Lyvhp08ZLGaa9BvIeulJQP2ngVNVZr
-	hhu3U7pylPvAP+T1SyUh/QUW+VvwBVhoUByor3y1QW/SThO6BMXMF/TiRNgjspr6
-	2D+w/cDwyTAEBvFEUyrvg==
-X-ME-Sender: <xms:OmoJZtCiC8tavsglToLlBl5IC0t87W10OfNRb5TU7PglaeXSKlfKkQ>
-    <xme:OmoJZrhO8ae0sHlvmm9jKSius_xYq3r5go6Mg32-e8AB-tz13r9_1QfkhNfV1arsJ
-    Xe1Vwivg5xTlLvibZk>
-X-ME-Received: <xmr:OmoJZokseGc0dr2Mw6TFdGOzvFAPJfV576dqO15AKZoKwH2EUq7Repv2rUP-lhsQGwm07s0lTm04MqCsEEp3pnBk3caVVY0SqqlvtJ6If2m0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddvkedggeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
-    ertdertddtnecuhfhrohhmpefvrghkrghshhhiucfurghkrghmohhtohcuoehoqdhtrghk
-    rghshhhisehsrghkrghmohgttghhihdrjhhpqeenucggtffrrghtthgvrhhnpedvjefgje
-    euvdfguddukeelveetgfdtvefhtdfffeeigfevueetffeivdffkedvtdenucevlhhushht
-    vghrufhiiigvpedvnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghshhhise
-    hsrghkrghmohgttghhihdrjhhp
-X-ME-Proxy: <xmx:OmoJZnx4XSf2LLXP8AjI51VgckOWugqH-iKuc_6GA9zO2uJoS-p9cA>
-    <xmx:OmoJZiR5n5NfjTD9trj2ydAegelQAoKARk9vrHOpxY85StsnPCQEOA>
-    <xmx:OmoJZqaI04fViV7-y0GdajseNtF8ftanUA1f7t8GZ6xoiGBf_Xx_iQ>
-    <xmx:OmoJZjTke0EKb-aWmC_bI4OkFTMHKcNcjoLvQA1dFG8v22e7kl-_WA>
-    <xmx:O2oJZgcdyqNMfaBbIJEXTGEUwhWqKviO5sKi0T2nrE4E8fPVsjhXoHBoze0>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 31 Mar 2024 09:50:49 -0400 (EDT)
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: linux1394-devel@lists.sourceforge.net
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] firewire: ohci: use pci_irq_vector() to retrieve allocated interrupt line
-Date: Sun, 31 Mar 2024 22:50:37 +0900
-Message-ID: <20240331135037.191479-5-o-takashi@sakamocchi.jp>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240331135037.191479-1-o-takashi@sakamocchi.jp>
-References: <20240331135037.191479-1-o-takashi@sakamocchi.jp>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Aw5NpLdd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711893225; x=1743429225;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HZcoANQm+m6eHWitU14xeSVvP4uJHQVXHY2wtEadUVc=;
+  b=Aw5NpLddqUOsWbLgnP9S67YVMubFkiAgftYxkUl0uoXI2RcEgz9jJEtC
+   cJUptNxm5sNy0+WQy2AdlNa3yMF1TcHWxjWa9KkAgdUf1F1heg5yqjr07
+   mcEL0J5I5Hqb0N0Kk4tEde9pgf+jFW6pWkkg6cJwOfvVuylDDaJb8y1+x
+   J/TZEWns8yqNj1lUC/oHiwcEeSnNYrOhZvSqXdOl7/MZ4WE0oBROglRnV
+   0f6oPDtaWzsZqR8VI+bepjqDh6XD1BOfSZlk+G3UB1FdRPdku9zj1DAUP
+   cgv0yGjYoeW8PPCofeb6wTwL0xZMYmTPMC3GO40rq/7PP0SVImSRPttd/
+   Q==;
+X-CSE-ConnectionGUID: 4z/g0kh8RlayBo8RQxEVnA==
+X-CSE-MsgGUID: sSxvBCWxSTeJFOhR7wLxEQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11030"; a="7240446"
+X-IronPort-AV: E=Sophos;i="6.07,170,1708416000"; 
+   d="scan'208";a="7240446"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2024 06:53:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,170,1708416000"; 
+   d="scan'208";a="21896299"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa005.fm.intel.com with ESMTP; 31 Mar 2024 06:53:41 -0700
+Date: Sun, 31 Mar 2024 21:48:52 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Marco Pagani <marpagan@redhat.com>
+Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alan Tull <atull@opensource.altera.com>,
+	Russ Weight <russ.weight@linux.dev>, linux-fpga@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] fpga: bridge: add owner module and take its refcount
+Message-ID: <ZglpxIFgiPkZ0sat@yilunxu-OptiPlex-7050>
+References: <20240322171839.233864-1-marpagan@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240322171839.233864-1-marpagan@redhat.com>
 
-The pci_irq_vector() is available to retrieve the allocated interrupt line
-instead of the direct access to the member of device structure.
+On Fri, Mar 22, 2024 at 06:18:37PM +0100, Marco Pagani wrote:
+> The current implementation of the fpga bridge assumes that the low-level
+> module registers a driver for the parent device and uses its owner pointer
+> to take the module's refcount. This approach is problematic since it can
+> lead to a null pointer dereference while attempting to get the bridge if
+> the parent device does not have a driver.
+> 
+> To address this problem, add a module owner pointer to the fpga_bridge
+> struct and use it to take the module's refcount. Modify the function for
+> registering a bridge to take an additional owner module parameter and
+> rename it to avoid conflicts. Use the old function name for a helper macro
+> that automatically sets the module that registers the bridge as the owner.
+> This ensures compatibility with existing low-level control modules and
+> reduces the chances of registering a bridge without setting the owner.
+> 
+> Also, update the documentation to keep it consistent with the new interface
+> for registering an fpga bridge.
+> 
+> Other changes: opportunistically move put_device() from __fpga_bridge_get()
+> to fpga_bridge_get() and of_fpga_bridge_get() to improve code clarity since
+> the bridge device is taken in these functions.
+> 
+> Fixes: 21aeda950c5f ("fpga: add fpga bridge framework")
+> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Suggested-by: Xu Yilun <yilun.xu@intel.com>
+> Reviewed-by: Russ Weight <russ.weight@linux.dev>
+> Signed-off-by: Marco Pagani <marpagan@redhat.com>
 
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
----
- drivers/firewire/ohci.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+Acked-by: Xu Yilun <yilun.xu@intel.com>
 
-diff --git a/drivers/firewire/ohci.c b/drivers/firewire/ohci.c
-index c14e6efaba36..f3b610f86aac 100644
---- a/drivers/firewire/ohci.c
-+++ b/drivers/firewire/ohci.c
-@@ -3623,7 +3623,7 @@ static int pci_probe(struct pci_dev *dev,
- 	struct fw_ohci *ohci;
- 	u32 bus_options, max_receive, link_speed, version;
- 	u64 guid;
--	int i, flags, err;
-+	int i, flags, irq, err;
- 	size_t size;
- 
- 	if (dev->vendor == PCI_VENDOR_ID_PINNACLE_SYSTEMS) {
-@@ -3754,12 +3754,17 @@ static int pci_probe(struct pci_dev *dev,
- 	err = pci_alloc_irq_vectors(dev, 1, 1, flags);
- 	if (err < 0)
- 		return err;
-+	irq = pci_irq_vector(dev, 0);
-+	if (irq < 0) {
-+		err = irq;
-+		goto fail_msi;
-+	}
- 
--	err = request_threaded_irq(dev->irq, irq_handler, NULL,
-+	err = request_threaded_irq(irq, irq_handler, NULL,
- 				   pci_dev_msi_enabled(dev) ? 0 : IRQF_SHARED, ohci_driver_name,
- 				   ohci);
- 	if (err < 0) {
--		ohci_err(ohci, "failed to allocate interrupt %d\n", dev->irq);
-+		ohci_err(ohci, "failed to allocate interrupt %d\n", irq);
- 		goto fail_msi;
- 	}
- 
-@@ -3779,7 +3784,7 @@ static int pci_probe(struct pci_dev *dev,
- 	return 0;
- 
-  fail_irq:
--	free_irq(dev->irq, ohci);
-+	free_irq(irq, ohci);
-  fail_msi:
- 	pci_free_irq_vectors(dev);
- 
-@@ -3789,6 +3794,7 @@ static int pci_probe(struct pci_dev *dev,
- static void pci_remove(struct pci_dev *dev)
- {
- 	struct fw_ohci *ohci = pci_get_drvdata(dev);
-+	int irq;
- 
- 	/*
- 	 * If the removal is happening from the suspend state, LPS won't be
-@@ -3808,7 +3814,9 @@ static void pci_remove(struct pci_dev *dev)
- 
- 	software_reset(ohci);
- 
--	free_irq(dev->irq, ohci);
-+	irq = pci_irq_vector(dev, 0);
-+	if (irq >= 0)
-+		free_irq(irq, ohci);
- 	pci_free_irq_vectors(dev);
- 
- 	dev_notice(&dev->dev, "removing fw-ohci device\n");
--- 
-2.43.0
-
+Applied to for-next.
