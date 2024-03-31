@@ -1,122 +1,62 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from mail.wantyapps.xyz (mail.wantyapps.xyz [66.135.5.160])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A00614430E
-	for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2024 18:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37A3145B33
+	for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2024 18:34:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.135.5.160
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711909501; cv=none; b=ULV/l1LMRM3P9KIektBFOHL+iwRYZfnCDPrd+fWNdLBdQAJ45mcCensIQXUBGb30yITxE48R5RU1InBnd5Tc5LAtFGnk0qAh0aWVAB6iuLGz8Gp2krs5gg44GkoW63l9gzn7YUYY9nFLIxK3D+QeWRehVYwrq0oT0BQEUETVDCQ=
+	t=1711910044; cv=none; b=X6udhcKZydJq0LJv41ftnRc3Jo+QfuZnKBdQfBGWKsNzBoFsWwARMjmGFGjWlMTQWyMo5c4J+w7LnGfovpFWCdKnnDH2lVd+OROt3B3u1tq4+QO/3WDL81fx+vgXT/py+SQhN8GNyiS0erqMULn2VUrbw1z70qPOB+moyeXLM+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711909501; c=relaxed/simple;
-	bh=ttD+I28/H5fZk3Z1KHLbwkIvnLCPHXXOtwwQ0WArJDA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sk9DzZkC4xJSZdEv9AaNqf98EeUXVMfn8cZ3ApYSg4XVBswRpTmg9eivDh3cHV/99RbcBXTAFEgyEmb3vdyG2IIpMAMqRra4lk2v3cDWZpYJ6mvyf7ToEN2ULw7loRpNVwUJQQJAx4picEyb93OD5sqbtXf7/2HT73vg2sxqFdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kl.wtf; spf=pass smtp.mailfrom=kl.wtf; dkim=pass (2048-bit key) header.d=kl.wtf header.i=@kl.wtf header.b=ZvPwJ0Wa; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kl.wtf
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kl.wtf
+	s=arc-20240116; t=1711910044; c=relaxed/simple;
+	bh=MEYr4sr56oeu6vXPIa0IsRM09gVoyTOnuitazPXXJnY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OqlSBJrZSzDPreZ8u8hUsyrRv1Sm9GDiJ80yZFtt4yRYbJvhAf6w/sKkAVRWjnAabOQLtE+hVf0jgO+/NPp6aYDRVII0skX/YKCwYSLd37uSXXpHevLMEQ/cM2nukSxmNCfAEhtVblC5UUzx2Sr3d8K1DmA+ND3/6PhTxtZE0bQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=wantyapps.xyz; spf=pass smtp.mailfrom=wantyapps.xyz; dkim=pass (2048-bit key) header.d=wantyapps.xyz header.i=@wantyapps.xyz header.b=kwUFGgTw; arc=none smtp.client-ip=66.135.5.160
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=wantyapps.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wantyapps.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kl.wtf header.i=@kl.wtf header.b="ZvPwJ0Wa"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kl.wtf; s=key1;
-	t=1711909496;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=EI27Gbi1RUhnwj3kJsMGW9RaQTEh1qbj9ww5Kfmqrh8=;
-	b=ZvPwJ0WaWX42UNXtliny1YR5St0hemxsRkxenJFzJ6D49aIuHmqLQCAPl/4ICK31tI8Qz9
-	TDYUZYYucIaGQi1sGZZj5Yy8nVcO0ETDyqLDnuF/wdHQBF7aP4OAjnucQVmdVTEWcCDTG8
-	YutqCanKWBijn5Z+GoANiAApHpnVlC4Vc9agMcnDq1z9mMPkHTUZ3ub6NaAZRRNHmeM1dv
-	d0X+H4K5C++dM9kUZb2H0TcwFKWElKzFyM/G1sqz/WWeloURvnZmkEvROZH4zD7smMsCO3
-	SCMeoHrWJeSjZ0IpBKrjJgfqG8jq9WlHI28XKJprgYChvWcs3i7bUxH21H5SUg==
-From: Kenny Levinsen <kl@kl.wtf>
-To: Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: Douglas Anderson <dianders@chromium.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kenny Levinsen <kl@kl.wtf>
-Subject: [PATCH v2] HID: i2c-hid: Revert to await reset ACK before reading report descriptor
-Date: Sun, 31 Mar 2024 20:24:40 +0200
-Message-ID: <20240331182440.14477-1-kl@kl.wtf>
+	dkim=pass (2048-bit key) header.d=wantyapps.xyz header.i=@wantyapps.xyz header.b="kwUFGgTw"
+Received: from multivac (unknown [147.235.194.23])
+	by mail.wantyapps.xyz (Postfix) with ESMTPSA id 690D4931F2;
+	Sun, 31 Mar 2024 18:33:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wantyapps.xyz;
+	s=mail; t=1711910041;
+	bh=MEYr4sr56oeu6vXPIa0IsRM09gVoyTOnuitazPXXJnY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kwUFGgTwn3Nh35SeB4uMImVxW9BscBXm/5qSMECuwD9Qslp/lF80VFwY1Vqsmv7W9
+	 6j7NEZ2e1tfe/J6KpuQJY0dGOrNrQo0sCq2jmCDtpRpnsIC+CXNQmIGu5RFsGAtW1x
+	 19OOswPqK3GYqLC9dfVThUbyV2RTOoj3FdlER6wIaIWX5A0LsjbS4kWbr12zWFevOQ
+	 Pdgn1oYJgs7A+Yt+tE5pJbHRsd7OcojlnAJy7B/9vna2hnYpVQmEetegMNyPk0zIyk
+	 b7FctbDIjkdYTImNdLvKDvkT6d6cobDvsByHrlg9HfOHI4bRZ7S4jk49OGkJKVQRmK
+	 x40PxQhXCR1lQ==
+Date: Sun, 31 Mar 2024 21:33:55 +0300
+From: Uri Arev <me@wantyapps.xyz>
+To: Shresth Prasad <shresthprasad7@gmail.com>
+Cc: christophe.jaillet@wanadoo.fr, frank.li@vivo.com, 
+	gregkh@linuxfoundation.org, hverkuil-cisco@xs4all.nl, 
+	linux-kernel-mentees@lists.linuxfoundation.org, linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev, 
+	luca.ceresoli@bootlin.com, prathubaronia2011@gmail.com, robh@kernel.org, 
+	skhan@linuxfoundation.org, u.kleine-koenig@pengutronix.de
+Subject: Re: [PATCH] staging: axis-fifo: align arguments to open parenthesis
+ in axis-fifo.c
+Message-ID: <qnljnwccqvqzilxuoat2s6md2zwcuhfruzbpepxebk65k34t3g@cyl67lk5lsoe>
+References: <z2ewk44rjutv24i6lqau3adrmlprj524ulqtqbncvfaj44dwcg@2dnnbm75abbp>
+ <72dc90fb-79ef-4dd4-b30e-97b1e7058156@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <72dc90fb-79ef-4dd4-b30e-97b1e7058156@gmail.com>
 
-In af93a167eda9, i2c_hid_parse was changed to continue with reading the
-report descriptor before waiting for reset to be acknowledged.
+> Oh, that's too bad. Thanks for the heads up!
+No worries, I wouldn't mind it if your patch got accepted and not mine
+:p
+I just don't think they accept patches to axis-fifo anymore, especially
+not basic syntax and checkpatch patches which are not as important as
+actual bug-fixes.
 
-This has lead to two regressions:
-
-1. We fail to handle reset acknowledgement if it happens while reading
-   the report descriptor. The transfer sets I2C_HID_READ_PENDING, which
-   causes the IRQ handler to return without doing anything.
-
-   This affects both a Wacom touchscreen and a Sensel touchpad.
-
-2. On a Sensel touchpad, reading the report descriptor this quickly
-   after reset results in all zeroes or partial zeroes.
-
-The issues were observed on the Lenovo Thinkpad Z16 Gen 2.
-
-The change in question was made based on a Microsoft article[0] stating
-that Windows 8 *may* read the report descriptor in parallel with
-awaiting reset acknowledgement, intended as a slight reset performance
-optimization. Perhaps they only do this if reset is not completing
-quickly enough for their tastes?
-
-As the code is not currently ready to read registers in parallel with a
-pending reset acknowledgement, and as reading quickly breaks the report
-descriptor on the Sensel touchpad, revert to waiting for reset
-acknowledgement before proceeding to read the report descriptor.
-
-[0]: https://learn.microsoft.com/en-us/windows-hardware/drivers/hid/plug-and-play-support-and-power-management
-
-Fixes: af93a167eda9 ("HID: i2c-hid: Move i2c_hid_finish_hwreset() to after reading the report-descriptor")
-Signed-off-by: Kenny Levinsen <kl@kl.wtf>
----
- drivers/hid/i2c-hid/i2c-hid-core.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-index 2df1ab3c31cc..72d2bccf5621 100644
---- a/drivers/hid/i2c-hid/i2c-hid-core.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-@@ -735,9 +735,12 @@ static int i2c_hid_parse(struct hid_device *hid)
- 	mutex_lock(&ihid->reset_lock);
- 	do {
- 		ret = i2c_hid_start_hwreset(ihid);
--		if (ret)
-+		if (ret == 0)
-+			ret = i2c_hid_finish_hwreset(ihid);
-+		else
- 			msleep(1000);
- 	} while (tries-- > 0 && ret);
-+	mutex_unlock(&ihid->reset_lock);
- 
- 	if (ret)
- 		goto abort_reset;
-@@ -767,16 +770,8 @@ static int i2c_hid_parse(struct hid_device *hid)
- 		}
- 	}
- 
--	/*
--	 * Windows directly reads the report-descriptor after sending reset
--	 * and then waits for resets completion afterwards. Some touchpads
--	 * actually wait for the report-descriptor to be read before signalling
--	 * reset completion.
--	 */
--	ret = i2c_hid_finish_hwreset(ihid);
- abort_reset:
- 	clear_bit(I2C_HID_RESET_PENDING, &ihid->flags);
--	mutex_unlock(&ihid->reset_lock);
- 	if (ret)
- 		goto out;
- 
--- 
-2.44.0
-
+                 Uri Arev
