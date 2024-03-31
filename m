@@ -1,82 +1,103 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67BA2EC3
-	for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2024 02:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BCADA5F;
+	Sun, 31 Mar 2024 02:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711851587; cv=none; b=RxgegcyAmQjcOHaznVu49I4orhHX9XOWyKxRO24WfC+w/Itd0IOAJ78EoGib/PV1sHtNnM63LY0MbhEjcy58ZKUZpTkRIHeOvqWiJhDsYZIaZqrKrYztTCqG2m4EbLPNTF6HIgnpu0If48EyXupJBUVTJHXFQl4UZ1VrG25gxuY=
+	t=1711851594; cv=none; b=F9A40dHtBdCI/T+rCbGZneRNh8c+mhnBnxdEUy6wzSoTuIKzF70DpZa25VFQoIlp5fSgeEUb7Mkbk7hPaTPCUhvWVsyCz3NPKMkfW8sqkXLkxIuEuLfYeqdyvAsQHLwQBHDmff1eOtN8J8CsKjFonEcPFYD71BiDk9amGHz2pMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711851587; c=relaxed/simple;
-	bh=kHilbW50FabGa+skKea/KFAapFv6c2SdbOWrBStcelU=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:Subject:MIME-Version:
-	 Content-Type; b=hr7h1Q13YqTanJEJzR9YhTXarieEPjOVo7bAOOwOXkviGVPy2m4oCRq3/T9JaW+Ja4ZejuywfNxuxqIpECh8Qy9b6yNtCyWRFG4WgF4cbrYu6odSayEszEgW//V2zJ4WBQOiPXxYXZp7S1MlWbgWlQv/4aO1FJjhghVaX1Im1UM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BtuED1wn; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711851594; c=relaxed/simple;
+	bh=yomuf4wkK7hH4Up2rIVQWisnRt7HZ+ENL8Z1fLklLBE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=q5VycOxnz09pfV00AuVgOD2blCQnwsHASOyo2UVraSYRNsMtG0ZGVxijIWdA+guAk+sbIa/hCMTUtC6llzAL5QmmHpwgkoqPH/IBmNRUCu/btCY8MQw9WFvUU0j3Q9kyn/MRML5xDGZ3QE4c4xwITR4Ezaq1YYwPzrvCg9CTQE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=rQmPuSUa; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BtuED1wn"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3c38eced701so1807416b6e.1
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Mar 2024 19:19:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711851585; x=1712456385; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:in-reply-to
-         :message-id:cc:to:from:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kHilbW50FabGa+skKea/KFAapFv6c2SdbOWrBStcelU=;
-        b=BtuED1wn38NxT3HDN/2zbZhFKuegYUP7pUwOhYJUD+pdNAkhOOqzMdf8eCIrsaGWGh
-         aGorPgSWaLndeG/af04FuVQtlZFdkdz3VEeIn5p/V4HUigmO9GPHVwkOxYxrD5EcjkdX
-         Te2r3Jn+SPdfcSZwu19D0D2Peoxb3fy/QrMM0ctORxd2s5bTB3SosahkXZtBm/YOzmpu
-         w6vkLBGSKXUohP1rsfVannp3ZLtd9CHQ7M+KUXMXVeS9blEN2CL8zM8mJikNhbmX/bSe
-         rM6V+fKavulLykFhuMBnFzlppPorA8zRC81taS1FD1H0SHN4msfYla+YI+2taVNEm8mI
-         Uklw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711851585; x=1712456385;
-        h=content-transfer-encoding:mime-version:subject:in-reply-to
-         :message-id:cc:to:from:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=kHilbW50FabGa+skKea/KFAapFv6c2SdbOWrBStcelU=;
-        b=expvjZ3mamdAYBqK6PEwZZcnILUV7HY3rD5CDDt9yNf7y1+K1eqJMouc48RxZF2H5U
-         YFHIstZnszO2ibYh+jHlIc4prEATiGonNH7K5xYjNLlORnh84M3yoL4zqiijxD3edG4J
-         CRZe9sVI0zLLjkcdiCt7RJMO7qox5D6cYx/WU8p0ZahY713Et4PXusLmUQg5UaS38nSW
-         aJi2FbJojFARjDfe62N7ubnkQSRBEVphskUj+YSUI9uW1f4/MK/uRRRel1UdxlEFktnP
-         dkOR5zGX/0t7SXSizzGV+lIM6FbAwtBuXwjbA8wSwF/YqD8Si2E6VeK2/LUatCDxukso
-         PaEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXdgzOwuzvq9NSkxI4+Jp/MZU2poM+X1dCMHglmX4HV+vZsIcU/yqAF2pnvuySPHKB+KjUdM+rw01bljchqQHwFDZT1G2JiB3KVzeZC
-X-Gm-Message-State: AOJu0YzxdbThJWut2I3UGPKYl/gw/qHlqn7H3kgJK4iItoJoGlS5l/vm
-	T3eNrqXlwb4/V4bt58e0UazLSaNtW3/MjR0WA+HArDG1YX4jMTcE
-X-Google-Smtp-Source: AGHT+IGUkdXyXnx9MegUXfS8lCbdfE6rmSalJRLyGDV8JdTsSDNviU15kroqV/DfSsf9+rpBDX1OEw==
-X-Received: by 2002:a05:6808:2289:b0:3c3:b99c:7b5 with SMTP id bo9-20020a056808228900b003c3b99c07b5mr7622651oib.50.1711851585482;
-        Sat, 30 Mar 2024 19:19:45 -0700 (PDT)
-Received: from [127.0.0.1] ([122.161.52.153])
-        by smtp.gmail.com with ESMTPSA id bn2-20020a056a00324200b006eacefd8fabsm5278898pfb.64.2024.03.30.19.19.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 30 Mar 2024 19:19:44 -0700 (PDT)
-Date: Sun, 31 Mar 2024 07:49:37 +0530 (GMT+05:30)
-From: Shresth Prasad <shresthprasad7@gmail.com>
-To: me@wantyapps.xyz
-Cc: christophe.jaillet@wanadoo.fr, frank.li@vivo.com,
-	gregkh@linuxfoundation.org, hverkuil-cisco@xs4all.nl,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
-	luca.ceresoli@bootlin.com, prathubaronia2011@gmail.com,
-	robh@kernel.org, shresthprasad7@gmail.com, skhan@linuxfoundation.org,
-	u.kleine-koenig@pengutronix.de
-Message-ID: <72dc90fb-79ef-4dd4-b30e-97b1e7058156@gmail.com>
-In-Reply-To: <z2ewk44rjutv24i6lqau3adrmlprj524ulqtqbncvfaj44dwcg@2dnnbm75abbp>
-Subject: Re: [PATCH] staging: axis-fifo: align arguments to open parenthesis
- in axis-fifo.c
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rQmPuSUa"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42V2Ikea068473;
+	Sat, 30 Mar 2024 21:18:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1711851526;
+	bh=E9jrArP2IKtmwsCk5q7YN2on1sNGXBccHWbEIEhgr2g=;
+	h=From:To:CC:Subject:Date;
+	b=rQmPuSUaHSu730vdzCd0OQH7rdUqCFEl8st9M7HPjPrfGbHBAGC/onI16xVRsXf6m
+	 YKyb8scrt9bbBX2/oPuIo7BkKgviX5fi7q7wp+kgGFU6mdtbY19Qhr0v3KDzUamsdL
+	 cxXOAqjDZZl0P5reaJ1K+k/t0+R649z+MqqqIchg=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42V2IkTx076791
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Sat, 30 Mar 2024 21:18:46 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 30
+ Mar 2024 21:18:45 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sat, 30 Mar 2024 21:18:45 -0500
+Received: from LT5CG31242FY.dhcp.ti.com ([10.250.160.249])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42V2Icm9106026;
+	Sat, 30 Mar 2024 21:18:39 -0500
+From: Shenghao Ding <shenghao-ding@ti.com>
+To: <linux-kernel@vger.kernel.org>
+CC: <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <perex@perex.cz>, <tiwai@suse.com>, <13916275206@139.com>,
+        <mohit.chawla@ti.com>, <soyer@irl.hu>, <jkhuang3@ti.com>,
+        <tiwai@suse.de>, <pdjuandi@ti.com>, <manisha.agrawal@ti.com>,
+        <s-hari@ti.com>, <aviel@ti.com>, <hnagalla@ti.com>, <praneeth@ti.com>,
+        <Baojun.Xu@fpt.com>, Shenghao Ding
+	<shenghao-ding@ti.com>
+Subject: [PATCH v7 0/4] mixer-test report
+Date: Sun, 31 Mar 2024 10:18:30 +0800
+Message-ID: <20240331021835.1470-1-shenghao-ding@ti.com>
+X-Mailer: git-send-email 2.33.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Correlation-ID: <72dc90fb-79ef-4dd4-b30e-97b1e7058156@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Oh, that's too bad. Thanks for the heads up!
+*** BLURB HERE ***
+mixer-test report:
+ root@am335x-evm:/bin# mixer-test
+ TAP version 13
+ # Card 0 - TI BeagleBone Black (TI BeagleBone Black)
+ 1..7
+ ok 1 get_value.0.0
+ # 0.0 pcmd3180-i2c-2 Profile id
+ ok 2 name.0.0
+ ok 3 write_default.0.0
+ ok 4 write_valid.0.0
+ ok 5 write_invalid.0.0
+ ok 6 event_missing.0.0
+ ok 7 event_spurious.0.0
+ # Totals: pass:7 fail:0 xfail:0 xpass:0 skip:0 error:0
+ root@am335x-evm:/bin#
 
-Regards,
-Shresth Prasad
+Shenghao Ding (4):
+  ASoc: PCM6240: Create PCM6240 Family driver code
+  ASoc: PCM6240: Create header file for PCM6240 Family driver code
+  ASoc: PCM6240: Add compile item for PCM6240 Family driver
+  ASoc: dt-bindings: PCM6240: Add initial DT binding
+
+ .../devicetree/bindings/sound/ti,pcm6240.yaml |  177 ++
+ sound/soc/codecs/Kconfig                      |   10 +
+ sound/soc/codecs/Makefile                     |    2 +
+ sound/soc/codecs/pcm6240.c                    | 2071 +++++++++++++++++
+ sound/soc/codecs/pcm6240.h                    |  236 ++
+ 5 files changed, 2496 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/ti,pcm6240.yaml
+ create mode 100644 sound/soc/codecs/pcm6240.c
+ create mode 100644 sound/soc/codecs/pcm6240.h
+
+-- 
+2.34.1
+
