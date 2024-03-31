@@ -1,280 +1,303 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2097.outbound.protection.outlook.com [40.107.6.97])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763541C0DF1;
-	Sun, 31 Mar 2024 12:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.97
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711889233; cv=fail; b=cP42rVIzFxA7tYV1DadZhXifhdBmOu2R/zqr3kdrrqgjvokMYMHTBetsTkpRxSaSz+2cJfBYNu4Fvj8oULv7JArGo9UljjO+9uoY5thWCO2y5MT6G/eVQAzbbbPrgmhNVspKcZ240S5uxfn86+4e0f5wCHj/G92/JxepYu7n3RI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711889233; c=relaxed/simple;
-	bh=51WNL5hovF5lNn12ghNulTG893hEDw1AOKrC58wHWQs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ABN5KyQmTh03/s7T9iroy2Bg3+PnxKav6hR5lQJ5v5ZUbKstT7c2ALl8NQETeHdYS7ZB3ywAVuBdp3g6HPkO/bS0HO2DxNn4kR4/I60ecyGVT+MTxh7oPiS+Q6FswX8QzXGt0CX9JbzocnQ6E7USX6xzYS2vxivsEwsg1T1hP3U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=seHIEUu0; arc=fail smtp.client-ip=40.107.6.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D551C0DD3;
+	Sun, 31 Mar 2024 12:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711889745; cv=none; b=puC2cPP+miNnFoBneQkZgBB99B6fWvzqJhf/n8RBGib+DETaO75ch04yh2NYaO4ooJTmhbFD5PeXfxviWunEZz7OA09kI6A2IQRDjGWSsesmXoHMyK7GEim+hanBRJC0Q1spOHOmF4LpkVgW8d3VrTBu3NM1hswjJkuQlAQe0Ik=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711889745; c=relaxed/simple;
+	bh=8nhBa9A6E7OCBceKD5lGdt//TuWHKMwSZP1rusZVNGw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C+5MjYykpr0L0nzy9bWpra6GJGptBcgO1YAk+IMS0GPaCTyDx22qI6SQRr1w6Szy9hhpZNHEhGCXhCs/N/J4q13hFKGOADEcTbisDeypByiNv7m7NXXsPH90bleBmQlL0nVTAVfW6pCGJHsqVxkD1O31Kff/oXv9UjWZNuFLfS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JIZqx5Ie; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="seHIEUu0"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lZCYLr64BJXTlrYf0RjClnT2qXvpiKcSbaaVbdgCZ/j6EKa+dsq3LZ4FRAAFwcloGsFzVNYe6SNJaMyrcc+EFfIVyH8nTtipHwsjXj4idFJVpQguvXF6KRcjgHvM2dt87Psx2r2MaZ5+o3Yuj5f+8nO/wqXyNqd5fV7upsT7/CkMYHNTVVfrvJf9NU8hsktTH3+hNM1D2Ka7h2auPOsq40VN9sob5vqUpSgSipORp6qaGUpEy7IAfLceoqYJ9WWdDuWouNIFiUPxKOcEQe40KyeE9MEIuTWLswr2vow5bk+HwTL51VYuuximh7lC2NLKbNwG3SoA0l50oG521wGsng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eMPPTj8+ku+xFg3h1OA9sKhlB+vQ3TzdCiuFXhVe76M=;
- b=I/wRO04erWTpyXWPPT71+zmMZANVfC0ilV5hv+RwxTyVifXo4tObnuBE14lDjU+VgkHPzsOmIbAYo9rjXkwdPbXHSehupYCno22hciY3xXNCD1lUEsC44HbUbPXVkiAWYcthxK19GBTW8u4HCSfVzzkVzfUIJmZCFvSTaD0cLhRC1OrzvS10NhpuThWLSO790VHHqps5QA+ANs9SiFf29HXhKKlb0kAGt/uoZ6YcteT8hZV0CQuRFgTeYbUgUq3DhOnETNCcHyrOn/innSaWbT5gVuJhKaHQCItmLUWgIjGYfmyl7ljcwty2miDo4dafb7DGO1Wptq5+S2XBoXZGhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eMPPTj8+ku+xFg3h1OA9sKhlB+vQ3TzdCiuFXhVe76M=;
- b=seHIEUu0P2Wumt5/r5jXrkK1YzN3mackmQKPf/umtMWAF5PZchj4owy7oLQLsF3dvW9lPa6FmQMXzkWr06FSw3HM9+lIAsFusrQ84HuNNRgQLLmA9wz6DPy6w3E6kzfuCP/yw9xphJX9qUDnQMksNUPfp6sXnEdosI61mnKcRLY=
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by VI1PR04MB7022.eurprd04.prod.outlook.com (2603:10a6:800:126::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.45; Sun, 31 Mar
- 2024 12:47:08 +0000
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::d30b:44e7:e78e:662d]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7386.037; Sun, 31 Mar 2024
- 12:47:07 +0000
-From: Peng Fan <peng.fan@nxp.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>, "Peng Fan (OSS)"
-	<peng.fan@oss.nxp.com>
-CC: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi
-	<cristian.marussi@arm.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>, Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-Subject: RE: [PATCH v6 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Thread-Topic: [PATCH v6 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Thread-Index: AQHafRqyofu9Mu9OLUiaociI+9q/i7FLbcGAgAZqduA=
-Date: Sun, 31 Mar 2024 12:47:07 +0000
-Message-ID:
- <DU0PR04MB94170E50A016CA5AAB971D4488382@DU0PR04MB9417.eurprd04.prod.outlook.com>
-References: <20240323-pinctrl-scmi-v6-0-a895243257c0@nxp.com>
- <20240323-pinctrl-scmi-v6-3-a895243257c0@nxp.com>
- <4879ad5d-165c-4118-81f7-8f6348a5a5d4@moroto.mountain>
-In-Reply-To: <4879ad5d-165c-4118-81f7-8f6348a5a5d4@moroto.mountain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|VI1PR04MB7022:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- Ub/i1u4m9bEAv0xP8yRFIHpd5IrGNR5SswEuQ7OuxzUqStBlcuPHkybi6pcT3+3B741CN3IAq0c6o1rNwzAfDQ7xPaceL2eOIfAVDhHuZ34hJ8ad0L6t1fjnFf8kLDYiSGAGwSFvZ1Na+VkcfpMfDLodbmxI9widCj0oNkWW/hmlt+piFbvNtFqDuS4PHTojJ1QJVhVHBnd3o0P+rG9WhR/eIqPjQKA7v7n5JpfmSSb+gJAd8KJzJT0yrfWQsvw3+nhDOZ3ijwqXxBWo/rAID62p8AlWhdFAXXvAQEhHfjPilxox0r8HfmzG+eGzIbHpNXHztA446R+cZX68432p5psA8FWJI3sHeEim/47Gt8S8XTRfSIWOg8wOHA9I/359daY/WvocEwPBV/KiusfaHOCTwUb2L6aL9PL94Qvn8aslh41dhJqjSoKnpKLRRrKw0p2Rddz4VwG2kOAJ0EzLR/aggWGwtalRP+XaMPDJOunCF+6cfo5vJGPWYu6P7McvXvA9GeV1GLlagBveV811CRzoOu36bQ/rspMipaE8XVOYuV5LGmbvtFk7uJAzAPJdUVaTynNxyQML5vacuanqR7Bauh6AcvYpr4P6mFw3jibRznoyxQRXHC9pDf6dZ+8keWJLoYk59zgIE6/3aJIYtkDIGoXicnhTjDrIunX7U08=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(7416005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?C3fK37y0jjJm8xFudvuad+swbeR2izsJFXYLp/bFKst+zdEdk5Ughco7YeYq?=
- =?us-ascii?Q?oZUXG1Mf5Bmy6Y+5BCdnOoAGU/fR6e/cr9H3BKv70X/eVakkBqzZVQO04At0?=
- =?us-ascii?Q?RmpJ3lvPxJ4OybPbx2bcrst76l6ecAdlnUzT+diKCVQMasZ8FPoVTBIHMNig?=
- =?us-ascii?Q?tRzx37DsVNVJ/wp/laYYBjRApR3TJ8BZx2VkbVBxzl3+n56q+Zt3myO1TN9r?=
- =?us-ascii?Q?uhAZL7jhkMLLp7q/fahXT9pzq8X30SMHPlko8rYkB8emZHFbKaTqexNXobxR?=
- =?us-ascii?Q?syXEmvqRwKxLnc8dRXPqZiLKKMLhH7mnQFVuL9anLHlEFcbFNyXLHSE2fMOj?=
- =?us-ascii?Q?b9A+74eyAGp5gEFg9XoIq2EDXxiIVPwpAfh8FAvrWTyJxygYfts/GoM9wQCV?=
- =?us-ascii?Q?NQIMbbQ+hfQkHxidYKO7bb1cLYK8ctM2gI2U6lWXsUZOK0/OvbCae2Q6rEes?=
- =?us-ascii?Q?hWdG0XqkOnrjOSzlWcZtFUs9gqMJT7oimA5pzCtzxKnQ/99SUkyHT/r7/E3a?=
- =?us-ascii?Q?K2wLaths2Phr9EWHwr/yarNrjWS04f/In2gJuhZZ+JGiQqqk+F8vEmKEMG4t?=
- =?us-ascii?Q?BANStxt2V+pXHt7DG/WaO1GMtZdWexkT66JBCF4z+3aiffQiAKhWEAzAO0pQ?=
- =?us-ascii?Q?F9a5kzGRQHkrhE71hI9Cb1p2mJumjB6lFYhs4rQDAJ+c6VAtAiXtRIzUSrYa?=
- =?us-ascii?Q?IPFzt3iHhBQwzUjGeENdpYIqa4VQ18Q/uh7Ow1o6ZmMA9cE6wIpPuAp96XZn?=
- =?us-ascii?Q?evNmoshkRy6zHBHeyUtClF0GvW53hcA7+jYdZ+xr6XVEh8YNd0GsC48sNWod?=
- =?us-ascii?Q?4L/HZ14epthdUDAc5lM1npDX1Bww8CuZ61MYKc8QPqaq6WqUBYNOscy8Z/6T?=
- =?us-ascii?Q?/Z2jOLLk95WwSUa8NWhoidE2g0nAoXBv1NYmHzLdfh78Vj375R1oMR6XStOi?=
- =?us-ascii?Q?XixQ9C6oCzIFooDFn5jpgy6AvQJiSJcgcXbpOLXalVdQco0l8WiGRx07D4HX?=
- =?us-ascii?Q?i5X51iYWysdsDPRJ9Eyn9usXvR+u3bBGisRThB7clJ6x9xS0ipb+wcTIRkIP?=
- =?us-ascii?Q?0OtIodKh3ywfoPp14/F3z83hUU35hEKZZZi/8+3FaCjZQN4dlvDYTCeZYFly?=
- =?us-ascii?Q?EzVsRI0aJig1wxqtketALOeXOGhMYyTZIZY9VUx0MRU5PTlEIeA7zq6wpu+s?=
- =?us-ascii?Q?hBIzclXiJr0N//kYrvk4W7TRh6bRNFazkGLFu1qy7niG6+ouKYVNSTmYH3af?=
- =?us-ascii?Q?pyqV+/gr7YFwQRztmkkD8QFmnrE5rqd2G31xgoEyM3ClYXnGO9J6h1MnNI0z?=
- =?us-ascii?Q?jMNGxydkS9T5ZJ4is+xk+rVFZObdU7aL5Uyq0CPLL3IReYB71Kckc7VpHzE6?=
- =?us-ascii?Q?Hk9/BCARue2st1ii9uZ7cGqIH7++J1VU8CeoEi8wQ4n5cXHnpyFDNZYHF4Kb?=
- =?us-ascii?Q?XuXYvx56FFQZ8zB6p5fVKn+j9lsfOANDSNRt8GbiNmwivQBHsI68IRCsc0BW?=
- =?us-ascii?Q?e+2SmBvnF9Blya35FwqBEkVpefZ0avxQJsu9GXJeqt+7G3QmkoLnMoPQku8Y?=
- =?us-ascii?Q?JfIZID1zw6YeWUmDmNY=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JIZqx5Ie"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D1DBC433F1;
+	Sun, 31 Mar 2024 12:55:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711889745;
+	bh=8nhBa9A6E7OCBceKD5lGdt//TuWHKMwSZP1rusZVNGw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JIZqx5IeHFq/LF+LOnbGEorwt2qCR42M543FksbPJaB68hgfYHdX3rqm+fRFQabiT
+	 y37CrAJ9idUub/lXCH8yZQ7CGRZ4z587xCuS3KxgEwSI27Z0TsFHSOjfzNmF8mqR+k
+	 nVc32Mi2AJFiLos2AoyMKJkq6NpmxXkcrG07KnNubkbfzRBUqmK/UFSf0b56YEBX8S
+	 wqO8GLu+hAdO/a+GS5MwGT+8MtrAncaCH+uO9anTgzeNS5DaPXLCinpwtLio9H9gfA
+	 UxyoPhUbTl/dFXpAjQjw+zLBAAduMO/U1FBVVCO3Vu1SuJwJTIMfW2eFjKmXbuyBn2
+	 SY+d7eMLpUwwg==
+Date: Sun, 31 Mar 2024 14:55:13 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: a.hindborg@samsung.com, alex.gaynor@gmail.com, arve@android.com, 
+	benno.lossin@proton.me, bjorn3_gh@protonmail.com, boqun.feng@gmail.com, 
+	cmllamas@google.com, dan.j.williams@intel.com, dxu@dxuuu.xyz, gary@garyguo.net, 
+	gregkh@linuxfoundation.org, joel@joelfernandes.org, keescook@chromium.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, maco@android.com, ojeda@kernel.org, 
+	peterz@infradead.org, rust-for-linux@vger.kernel.org, surenb@google.com, 
+	tglx@linutronix.de, tkjos@android.com, tmgross@umich.edu, viro@zeniv.linux.org.uk, 
+	wedsonaf@gmail.com, willy@infradead.org, yakoyoku@gmail.com
+Subject: Re: [PATCH v5 3/9] rust: file: add Rust abstraction for `struct file`
+Message-ID: <20240331-kellner-ausrufen-5b6c191fba35@brauner>
+References: <20240320-wegziehen-teilhaben-86e071fa163c@brauner>
+ <20240320180905.3858535-1-aliceryhl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5272c5d8-3a0f-47fe-e81a-08dc5180acf4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2024 12:47:07.8723
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: W8l9Sy9cb2boJAptqa39bWARx9ZdcpkQwxMfwuNlIv4SEZF//TVdmmx6QW4zY6SuLB2a9glc5P0X55K8ZC1mFw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7022
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240320180905.3858535-1-aliceryhl@google.com>
 
-Hi Dan,
+On Wed, Mar 20, 2024 at 06:09:05PM +0000, Alice Ryhl wrote:
+> Christian Brauner <brauner@kernel.org> wrote:
+> > On Fri, Feb 09, 2024 at 11:18:16AM +0000, Alice Ryhl wrote:
+> >> From: Wedson Almeida Filho <wedsonaf@gmail.com>
+> >> 
+> >> This abstraction makes it possible to manipulate the open files for a
+> >> process. The new `File` struct wraps the C `struct file`. When accessing
+> >> it using the smart pointer `ARef<File>`, the pointer will own a
+> >> reference count to the file. When accessing it as `&File`, then the
+> >> reference does not own a refcount, but the borrow checker will ensure
+> >> that the reference count does not hit zero while the `&File` is live.
+> >> 
+> >> Since this is intended to manipulate the open files of a process, we
+> >> introduce an `fget` constructor that corresponds to the C `fget`
+> >> method. In future patches, it will become possible to create a new fd in
+> >> a process and bind it to a `File`. Rust Binder will use these to send
+> >> fds from one process to another.
+> >> 
+> >> We also provide a method for accessing the file's flags. Rust Binder
+> >> will use this to access the flags of the Binder fd to check whether the
+> >> non-blocking flag is set, which affects what the Binder ioctl does.
+> >> 
+> >> This introduces a struct for the EBADF error type, rather than just
+> >> using the Error type directly. This has two advantages:
+> >> * `File::from_fd` returns a `Result<ARef<File>, BadFdError>`, which the
+> > 
+> > Sorry, where's that method?
+> 
+> Sorry, this is supposed to say `File::fget`.
+> 
+> >> +/// Wraps the kernel's `struct file`.
+> >> +///
+> >> +/// This represents an open file rather than a file on a filesystem. Processes generally reference
+> >> +/// open files using file descriptors. However, file descriptors are not the same as files. A file
+> >> +/// descriptor is just an integer that corresponds to a file, and a single file may be referenced
+> >> +/// by multiple file descriptors.
+> >> +///
+> >> +/// # Refcounting
+> >> +///
+> >> +/// Instances of this type are reference-counted. The reference count is incremented by the
+> >> +/// `fget`/`get_file` functions and decremented by `fput`. The Rust type `ARef<File>` represents a
+> >> +/// pointer that owns a reference count on the file.
+> >> +///
+> >> +/// Whenever a process opens a file descriptor (fd), it stores a pointer to the file in its `struct
+> >> +/// files_struct`. This pointer owns a reference count to the file, ensuring the file isn't
+> >> +/// prematurely deleted while the file descriptor is open. In Rust terminology, the pointers in
+> >> +/// `struct files_struct` are `ARef<File>` pointers.
+> >> +///
+> >> +/// ## Light refcounts
+> >> +///
+> >> +/// Whenever a process has an fd to a file, it may use something called a "light refcount" as a
+> >> +/// performance optimization. Light refcounts are acquired by calling `fdget` and released with
+> >> +/// `fdput`. The idea behind light refcounts is that if the fd is not closed between the calls to
+> >> +/// `fdget` and `fdput`, then the refcount cannot hit zero during that time, as the `struct
+> >> +/// files_struct` holds a reference until the fd is closed. This means that it's safe to access the
+> >> +/// file even if `fdget` does not increment the refcount.
+> >> +///
+> >> +/// The requirement that the fd is not closed during a light refcount applies globally across all
+> >> +/// threads - not just on the thread using the light refcount. For this reason, light refcounts are
+> >> +/// only used when the `struct files_struct` is not shared with other threads, since this ensures
+> >> +/// that other unrelated threads cannot suddenly start using the fd and close it. Therefore,
+> >> +/// calling `fdget` on a shared `struct files_struct` creates a normal refcount instead of a light
+> >> +/// refcount.
+> > 
+> > When the fdget() calling task doesn't have a shared file descriptor
+> > table fdget() will not increment the reference count, yes. This
+> > also implies that you cannot have task A use fdget() and then pass
+> > f.file to task B that holds on to it while A returns to userspace. It's
+> > irrelevant that task A won't drop the reference count or that task B
+> > won't drop the reference count. Because task A could return back to
+> > userspace and immediately close the fd via a regular close() system call
+> > at which point task B has a UAF. In other words a file that has been
+> > gotten via fdget() can't be Send to another task without the Send
+> > implying taking a reference to it.
+> 
+> That matches my understanding.
+> 
+> I suppose that technically you can still send it to another thread *if* you
+> ensure that the current thread waits until that other thread stops using the
+> file before returning to userspace.
 
-> Subject: Re: [PATCH v6 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
-> protocol basic support
->=20
-> Looks really nice.  Just a few small comments below.
->=20
-> On Sat, Mar 23, 2024 at 08:15:16PM +0800, Peng Fan (OSS) wrote:
-> > +
-> > +struct scmi_msg_func_set {
-> > +	__le32 identifier;
-> > +	__le32 function_id;
-> > +	__le32 flags;
-> > +};
->=20
-> This scmi_msg_func_set struct is unused.  Delete.
->=20
-> > +static void
-> > +iter_pinctrl_settings_get_prepare_message(void *message, u32 desc_inde=
-x,
-> > +					  const void *priv)
-> > +{
-> > +	struct scmi_msg_settings_get *msg =3D message;
-> > +	const struct scmi_settings_get_ipriv *p =3D priv;
-> > +	u32 attributes;
-> > +
-> > +	attributes =3D FIELD_PREP(CONFIG_FLAG_MASK, p->flag) |
-> > +		     FIELD_PREP(SELECTOR_MASK, p->type);
-> > +
-> > +	if (p->flag =3D=3D 1)
-> > +		attributes |=3D FIELD_PREP(SKIP_CONFIGS_MASK, desc_index);
-> > +	else if (!p->flag)
->=20
-> This is a nit-pick but could you change these !p->flag conditions to
-> p->flag =3D=3D 0?  It's a number zero, not a bool.
->=20
-> > +		attributes |=3D FIELD_PREP(CONFIG_TYPE_MASK, p-
-> >config_types[0]);
-> > +
-> > +	msg->attributes =3D cpu_to_le32(attributes);
-> > +	msg->identifier =3D cpu_to_le32(p->selector); }
-> > +
-> > +static int
-> > +iter_pinctrl_settings_get_update_state(struct scmi_iterator_state *st,
-> > +				       const void *response, void *priv) {
-> > +	const struct scmi_resp_settings_get *r =3D response;
-> > +	struct scmi_settings_get_ipriv *p =3D priv;
-> > +
-> > +	if (p->flag =3D=3D 1) {
-> > +		st->num_returned =3D le32_get_bits(r->num_configs,
-> GENMASK(7, 0));
-> > +		st->num_remaining =3D le32_get_bits(r->num_configs,
-> > +						  GENMASK(31, 24));
-> > +	} else {
-> > +		st->num_returned =3D 1;
-> > +		st->num_remaining =3D 0;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int
-> > +iter_pinctrl_settings_get_process_response(const struct
-> scmi_protocol_handle *ph,
-> > +				       const void *response,
-> > +				       struct scmi_iterator_state *st,
-> > +				       void *priv)
-> > +{
-> > +	const struct scmi_resp_settings_get *r =3D response;
-> > +	struct scmi_settings_get_ipriv *p =3D priv;
-> > +
-> > +	if (!p->flag) {
->=20
->=20
-> if (p->flag =3D=3D 0) {
->=20
-> > +		if (p->config_types[0] !=3D
-> > +		    le32_get_bits(r->configs[st->loop_idx * 2], GENMASK(7, 0)))
-> > +			return -EINVAL;
-> > +	} else if (p->flag =3D=3D 1) {
-> > +		p->config_types[st->desc_index + st->loop_idx] =3D
-> > +			le32_get_bits(r->configs[st->loop_idx * 2],
-> > +				      GENMASK(7, 0));
-> > +	} else if (p->flag =3D=3D 2) {
-> > +		return 0;
-> > +	}
-> > +
-> > +	p->config_values[st->desc_index + st->loop_idx] =3D
-> > +		le32_to_cpu(r->configs[st->loop_idx * 2 + 1]);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int
-> > +scmi_pinctrl_settings_get(const struct scmi_protocol_handle *ph, u32
-> selector,
-> > +			  enum scmi_pinctrl_selector_type type,
-> > +			  enum scmi_pinctrl_conf_type config_type,
-> > +			  u32 *config_value)
-> > +{
-> > +	int ret;
-> > +	void *iter;
-> > +	struct scmi_iterator_ops ops =3D {
-> > +		.prepare_message =3D
-> iter_pinctrl_settings_get_prepare_message,
-> > +		.update_state =3D iter_pinctrl_settings_get_update_state,
-> > +		.process_response =3D
-> iter_pinctrl_settings_get_process_response,
-> > +	};
-> > +	struct scmi_settings_get_ipriv ipriv =3D {
-> > +		.selector =3D selector,
-> > +		.type =3D type,
-> > +		.flag =3D 0,
->=20
-> ->flag should be 0-2.
->=20
-> > +		.config_types =3D &config_type,
-> > +		.config_values =3D config_value,
-> > +	};
-> > +
-> > +	if (!config_value || type =3D=3D FUNCTION_TYPE)
->              ^^^^^^^^^^^^
-> config_value should be optional for flag =3D=3D 2.
+_Technically_ yes, but it would be brittle as hell. The problem is that
+fdget() _relies_ on being single-threaded for the time that fd is used
+until fdput(). There's locking assumptions that build on that e.g., for
+concurrent read/write. So no, that shouldn't be allowed.
 
-As Cristian replied, I would keep it as is until we have a case in
-linux that need flag =3D=3D 2.
+Look at how this broke our back when we introduced pidfd_getfd() where
+we steal an fd from another task. I have a lengthy explanation how that
+can be used to violate our elided-locking which is based on assuming
+that we're always single-threaded and the file can't be suddenly shared
+with another task. So maybe doable but it would make the semantics even
+more intricate.
 
-Thanks,
-Peng
+> >> +///
+> >> +/// Light reference counts must be released with `fdput` before the system call returns to
+> >> +/// userspace. This means that if you wait until the current system call returns to userspace, then
+> >> +/// all light refcounts that existed at the time have gone away.
+> >> +///
+> >> +/// ## Rust references
+> >> +///
+> >> +/// The reference type `&File` is similar to light refcounts:
+> >> +///
+> >> +/// * `&File` references don't own a reference count. They can only exist as long as the reference
+> >> +///   count stays positive, and can only be created when there is some mechanism in place to ensure
+> >> +///   this.
+> >> +///
+> >> +/// * The Rust borrow-checker normally ensures this by enforcing that the `ARef<File>` from which
+> >> +///   a `&File` is created outlives the `&File`.
+> > 
+> > The section confuses me a little: Does the borrow-checker always ensure
+> > that a &File stays valid or are there circumstances where it doesn't or
+> > are you saying it doesn't enforce it?
+> 
+> The borrow-checker always ensures it.
 
->=20
-> regards,
-> dan carpenter
->=20
-> > +		return -EINVAL;
-> > +
-> > +	ret =3D scmi_pinctrl_validate_id(ph, selector, type);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	iter =3D ph->hops->iter_response_init(ph, &ops, 1,
-> PINCTRL_SETTINGS_GET,
-> > +					    sizeof(struct
-> scmi_msg_settings_get),
-> > +					    &ipriv);
-> > +
-> > +	if (IS_ERR(iter))
-> > +		return PTR_ERR(iter);
-> > +
-> > +	return ph->hops->iter_response_run(iter);
-> > +}
-> > +
+Ok, thanks.
 
+> 
+> A &File is actually short-hand for &'a File, where 'a is some
+> unspecified lifetime. We say that &'a File is annotated with 'a. The
+> borrow-checker rejects any code that tries to use a reference after the
+> end of the lifetime annotated on it.
+
+Thanks for the explanation.
+
+> 
+> So as long as you annotate the reference with a sufficiently short
+> lifetime, the borrow checker will prevent UAF. And outside of cases like
+
+Sorry, but can you explain "sufficiently short lifetime"?
+
+> from_ptr, the borrow-checker also takes care of ensuring that the
+> lifetimes are sufficiently short.
+> 
+> (Technically &'a File and &'b File are two completely different types,
+> so &File is technically a class of types and not a single type. Rust
+> will automatically convert &'long File to &'short File.)
+> 
+> >> +///
+> >> +/// * Using the unsafe [`File::from_ptr`] means that it is up to the caller to ensure that the
+> >> +///   `&File` only exists while the reference count is positive.
+> > 
+> > What is this used for in binder? If it's not used don't add it.
+> 
+> This is used on the boundary between the Rust part of Binder and the
+> binderfs component that is implemented in C. For example:
+
+I see, I'm being foiled by my own code...
+
+> 
+> 	unsafe extern "C" fn rust_binder_open(
+> 	    inode: *mut bindings::inode,
+> 	    file_ptr: *mut bindings::file,
+> 	) -> core::ffi::c_int {
+> 	    // SAFETY: The `rust_binderfs.c` file ensures that `i_private` is set to the return value of a
+> 	    // successful call to `rust_binder_new_device`.
+> 	    let ctx = unsafe { Arc::<Context>::borrow((*inode).i_private) };
+> 	
+> 	    // SAFETY: The caller provides a valid file pointer to a new `struct file`.
+> 	    let file = unsafe { File::from_ptr(file_ptr) };
+
+We need a better name for this helper than from_ptr() imho. I think
+from_ptr() and as_ptr() is odd for C. How weird would it be to call
+that from_raw_file() and as_raw_file()?
+
+But bigger picture I somewhat struggle with the semantics of this
+because this is not an interface that we have in C and this is really
+about a low-level contract between C and Rust. Specifically this states
+that this pointer is _somehow_ guaranteed valid. And really, this seems
+a bit of a hack.
+
+Naively, I think this should probably not be necessary if
+file_operations are properly wrapped. Or it should at least be demotable
+to a purely internal method that can't be called directly or something.
+
+So what I mean is. fdget() may or may not take a reference. The C
+interface internally knows whether a reference is owned or not by
+abusing the lower two bits in a pointer to keep track of that. Naively,
+I would expect the same information to be available to rust so that it's
+clear to Rust wheter it's dealing with an explicitly referenced file or
+an elided-reference file. Maybe that's not possible and I'm not
+well-versed enough to see that yet.
+
+> 	    let process = match Process::open(ctx, file) {
+> 	        Ok(process) => process,
+> 	        Err(err) => return err.to_errno(),
+> 	    };
+> 	    // SAFETY: This file is associated with Rust binder, so we own the `private_data` field.
+> 	    unsafe {
+> 	        (*file_ptr).private_data = process.into_foreign().cast_mut();
+> 	    }
+> 	    0
+> 	}
+> 
+> Here, rust_binder_open is the open function in a struct file_operations
+> vtable. In this case, file_ptr is guaranteed by the caller to be valid
+
+Where's the code that wraps struct file_operations?
+
+> for the duration of the call to rust_binder_open. Binder uses from_ptr
+> to get a &File from the raw pointer.
+> 
+> As far as I understand, the caller of rust_binder_open uses fdget to
+> ensure that file_ptr is valid for the duration of the call, but the Rust
+> code doesn't assume that it does this with fdget. As long as file_ptr is
+> valid for the duration of the rust_binder_open call, this use of
+> from_ptr is okay. It will continue to work even if the caller is changed
+> to use fget.
+
+Ok.
+
+> 
+> As for how this code ensures that `file` ends up annotated with a
+> sufficiently short lifetime, well, that has to do with the signature of
+> Process::open. Here it is:
+> 
+> 	impl Process {
+> 	    pub(crate) fn open(ctx: ArcBorrow<'_, Context>, file: &File) -> Result<Arc<Process>> {
+> 	        Self::new(ctx.into(), ARef::from(file.cred()))
+> 	    }
+> 	}
+> 
+> In this case, &File is used without specifying a lifetime. It's a
+> function argument, so this means that the lifetime annotated on the
+> `file` argument will be exactly the duration in which Process::open is
+> called. So any attempt to use `file` after the end of the call to
+> Process::open will be rejected by the borrow-checker. (E.g., if
+> Process::open tried to schedule something on the workqueue using `file`,
+> then that would not compile. Storing it in a global variable would not
+> compile either.)
+> 
+> This means that the borrow-checker will not catch mistakes in
+> rust_binder_open, but it *will* catch mistakes in Process::open, and
+> anything called by Process::open.
+> 
+> These examples come from patch 2 of the Binder RFC:
+> https://lore.kernel.org/rust-for-linux/20231101-rust-binder-v1-2-08ba9197f637@google.com/
+> 
+> >> +///
+> >> +/// * You can think of `fdget` as using an fd to look up an `ARef<File>` in the `struct
+> > 
+> > Could you explain why there isn't an explicit fdget() then and you have
+> > that from_ptr() method?
+> 
+> I don't provide an fdget implementation because Binder never calls it.
+> However, if you would like, I would be happy to add one to the patchset.
+> 
+> As for from_ptr, see above.
+> 
+> Alice
