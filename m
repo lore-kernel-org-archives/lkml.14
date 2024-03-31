@@ -1,21 +1,21 @@
 Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
 	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B917D4369A;
-	Sun, 31 Mar 2024 19:14:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601C61465A2;
+	Sun, 31 Mar 2024 19:22:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711912497; cv=none; b=AubCnFPCiZTL5Oo8HHYCPNqqPZhrEZQlzKcK/7NEaCfRzpQdxyi1LSMD498H5dfZ/gIaf5bWFP/AqiQh6zD4lD4BPR9vf1itbc7WgzbMYGYQDrICpKa1P41h9u4Il2RJTgwLegUBTcTnlvnRm25M05EcbMyY2V9UhpR7dz3WtyI=
+	t=1711912965; cv=none; b=nx2CU5B7dsF7bpx0B8JTibwDIyFajeKimdoUzlvGm1bLBxedHED3XOMK8AgaFrKFRWoElVB9A3i+ZBIu5J8z79RX6Ir6k5vesygMXXeb1LXmpIynXwxlnCT3hHf/iWPthLesF1QSJpIsf6s15JikNT5ZeUuUd1E/7G7t3vxrLgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711912497; c=relaxed/simple;
-	bh=4XfDyaQ9bya6jdRl1VsE2e280IWYoB8Rrf67+vm7OK0=;
+	s=arc-20240116; t=1711912965; c=relaxed/simple;
+	bh=WKVHeP66kFTRktX7k2f2mUWgSFyBKbvOLpB0tC3Wi2k=;
 	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=g1EXIoOgpI8VPQmVW+mu2Kt3kX8ZzCgSShRYxhar3wKb+uRgkaPDz9R3uqDBmEsVcw1iU3bWloeFPWLtYQRZ1Tzc5FiMq477ht4XZlF1JuC/vLtVxlwkXe5PbWDuf7epuu32tyVWVEYS8VSNAk9vIpWZVdfuks1+K/dGuFXxy2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=VgWn/Atb; arc=none smtp.client-ip=116.203.91.91
+	 Message-ID:Content-Type; b=F0/a6IhpHm2YJfZCRX/q/AGZPGT84A19pvXUn2P+DlaB2SyDqEQD6l0lpy3QOkOQJLO5/A9NIRDRIEFb5bcsTxC0uVH9+kOySNVm88drzwDH7PN6NPhkzwvPYqdcD5NQy6L2aZogPMTim22DiUBSPBFyfSvEWsgfvzMbCZNWCR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=sAQzvu77; arc=none smtp.client-ip=116.203.91.91
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="VgWn/Atb"
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="sAQzvu77"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -23,18 +23,18 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1711912492;
+	t=1711912469;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Qn2MVzEDKVFO1DX6f7CmDPOEzy2LVdncSew+2Dkz+C8=;
-	b=VgWn/AtbPVFaqgm6OePTFe0S598DRZW/QlL8nvS2/8Pg+jB8eDy1X7+X/2O//9KjfmCefq
-	UzE0VkBzQPcaqgz9U6/vSn1npKTAX4cgjIZiCJGF3TNedEryR6OJ4bp49elXc0EpXawoUa
-	6ObzNNMEJhdEs3H4gWETP5QZdSBa6ya/ADBgjWALKAc7jz44eEfP15nXIAsF9n/2AhGoTO
-	aDVM/5Q8m61jrGAzEAWXEEmyJcjJdncz1miyYt+Uyrii28Bo375isRd2P85Bp/ZHLKxwzY
-	ccCcgIsysqK+BHhjDpeHkmQzTnyEnEAQr5P/j4y+yJ/bs8xTe3j472Up/R4Riw==
-Date: Sun, 31 Mar 2024 21:14:52 +0200
+	bh=OlRjQH5mzHvnoGJJbl73nKh6pzQqm/NFoJCNeZ2UIfA=;
+	b=sAQzvu77PsDyTWExc6QexiCdxZnVrro+QcyOOCuSWQNw4PoJVMAEycsFHfL7FO/yYCHhJL
+	OcwActpQQa8w+OOsve30gyiLXhHt/9dtSrwRcoVW9gGpgqQsvZ5D2ViGEu0d7Dob9SOekS
+	wM1C/h1ZRuuHYJ20S7TqVPdLGo54WykRQQp4QVhWFYhq8c9IMR+OFcN8RyBgOmds+kUvPL
+	80FAwyC2y7ygRfyJEzoJ8BR4MVD23a6nluJJ8BmU+J3ExkHuX1TTCsnGkKkzu9MdBZZQL/
+	LUwrmF+xwx/2UXV/87CYZpkDhR4fDb2kZ6Ucu0vewkZRAqvdGB3Zf0rPcSBy1g==
+Date: Sun, 31 Mar 2024 21:14:26 +0200
 From: Dragan Simic <dsimic@manjaro.org>
 To: Folker Schwesinger <dev@folker-schwesinger.de>
 Cc: Vinod Koul <vkoul@kernel.org>, Yogesh Hegde <yogi.kernel@gmail.com>,
@@ -44,12 +44,12 @@ Cc: Vinod Koul <vkoul@kernel.org>, Yogesh Hegde <yogi.kernel@gmail.com>,
  Christopher Obbard <chris.obbard@collabora.com>,
  linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add enable-strobe-pulldown to
- emmc phy on ROCK 4C+
-In-Reply-To: <20240327192641.14220-3-dev@folker-schwesinger.de>
+Subject: Re: [PATCH 1/2] arm64: dts: rockchip: Add enable-strobe-pulldown to
+ emmc phy on ROCK Pi 4
+In-Reply-To: <20240327192641.14220-2-dev@folker-schwesinger.de>
 References: <20240327192641.14220-1-dev@folker-schwesinger.de>
- <20240327192641.14220-3-dev@folker-schwesinger.de>
-Message-ID: <5da4c8a299f9987e7a0f91549d6e0206@manjaro.org>
+ <20240327192641.14220-2-dev@folker-schwesinger.de>
+Message-ID: <2a07639d8d84ec4443c8aeb84b6260f4@manjaro.org>
 X-Sender: dsimic@manjaro.org
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
@@ -61,12 +61,14 @@ On 2024-03-27 20:26, Folker Schwesinger wrote:
 > Commit 8b5c2b45b8f0 disabled the internal pull-down for the strobe line
 > causing I/O errors in HS400 mode for various eMMC modules.
 > 
-> Enable the internal strobe pull-down for the ROCK 4C+ board. Also 
+> Enable the internal strobe pull-down for ROCK Pi 4 boards. Also 
 > re-enable
 > HS400 mode, that was replaced with HS200 mode as a workaround for the
 > stability issues in:
-> 2bd1d2dd808c ("arm64: dts: rockchip: Disable HS400 for eMMC on ROCK 
-> 4C+").
+> cee572756aa2 ("arm64: dts: rockchip: Disable HS400 for eMMC on ROCK Pi 
+> 4").
+> 
+> This was tested on ROCK 4SE and ROCK Pi 4B+.
 > 
 > Fixes: 8b5c2b45b8f0 ("phy: rockchip: set pulldown for strobe line in 
 > dts")
@@ -77,15 +79,15 @@ Looking good to me.
 Reviewed-by: Dragan Simic <dsimic@manjaro.org>
 
 > ---
->  arch/arm64/boot/dts/rockchip/rk3399-rock-4c-plus.dts | 4 +++-
+>  arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi | 4 +++-
 >  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-4c-plus.dts
-> b/arch/arm64/boot/dts/rockchip/rk3399-rock-4c-plus.dts
-> index 7baf9d1b22fd..972aea843afd 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-rock-4c-plus.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-4c-plus.dts
-> @@ -151,6 +151,7 @@ &cpu_b1 {
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
+> b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
+> index 281a12180703..b9d6284bb804 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
+> @@ -194,6 +194,7 @@ &cpu_b1 {
 >  };
 > 
 >  &emmc_phy {
@@ -93,7 +95,7 @@ Reviewed-by: Dragan Simic <dsimic@manjaro.org>
 >  	status = "okay";
 >  };
 > 
-> @@ -549,7 +550,8 @@ &saradc {
+> @@ -648,7 +649,8 @@ &saradc {
 >  &sdhci {
 >  	max-frequency = <150000000>;
 >  	bus-width = <8>;
