@@ -1,111 +1,98 @@
-Received: from a.mx.secunet.com (a.mx.secunet.com [62.96.220.36])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6616146A79;
-	Sun, 31 Mar 2024 16:03:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=62.96.220.36
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711901006; cv=fail; b=IisEmO/z/ShC21fvvkIFVAhS27wW4+Mjb92wrFmzwjq4/TTrPci2PeHfyH2MTTBXLHq3ZDzd3UyEG1kV0IpnQ7xaZ7Wv4p2hblxsNiNAVSf+ASBjZlkkQTHDtB2mq9cmHKoNrSLLFzhdDEuiAYRqo43j0VuM8/dYVz5QOjghNE0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711901006; c=relaxed/simple;
-	bh=FRIggP1YvWWV3rj+5WU1Cj2nMoZrQOSbDSPE/2jMC40=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=dAMhML4pQIVa5dHULjmFUZQOBSzJFd2Q18IHSecV3IARRiZ8FuPqvLSv6CJ5uEw5p/ee3TH01cNUZLepqymji5jnffYw6+P9ZxAts69umLyIqEJMSmQqB7xG8fDWdZwMDLbkjPu/3IH/9DXxtMqD9bdKrjLppqhDnrbhKrf/0wg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org; spf=fail smtp.mailfrom=acm.org; dkim=fail (2048-bit key) header.d=acm.org header.i=@acm.org header.b=NvrFdpa8 reason="signature verification failed"; arc=none smtp.client-ip=199.89.1.12; dmarc=pass (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; arc=fail smtp.client-ip=62.96.220.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=acm.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3099F145321
+	for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2024 16:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711901136; cv=none; b=e9yzHwWrU08HDzFKCJj9lH0Dt5YNl1HxCli2C9h7VynXh3nVcvF9DOp557MxJ0LSYKsvPRqU9RnMTNwrA8Ii38h54v0RBF80GxgMzyynXlwhSakT2yV+IuWFijzSmwZrxIvnNP2aSo1a8F8Vl45Fn6njGENr66MtLYZdl/lqIc4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711901136; c=relaxed/simple;
+	bh=0PgwmdbQN7ZnKNKCizoTyzmjQV/8g5GhP4FH1t2EX14=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ugg8uGevX/7wjDefVrShwrxgXqmSJbAnl0JyzLyIM8iGW+tiVpy4X6iudFvToHDkLSyvoYZbYFR23QyNFEPkIuQ9m4YFhmFQTz3vakxPHsFDBs7L+cILHFcKOHayoa7143j7Cmd43yos2ys1lpdu665hg0U/bFsyET5jpVt5vW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZTc76s1b; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=acm.org header.i=@acm.org header.b="NvrFdpa8"
-Received: from localhost (localhost [127.0.0.1])
-	by a.mx.secunet.com (Postfix) with ESMTP id 7CEE0208D1;
-	Sun, 31 Mar 2024 18:03:23 +0200 (CEST)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 0VvftS3fp1pd; Sun, 31 Mar 2024 18:03:23 +0200 (CEST)
-Received: from mailout1.secunet.com (mailout1.secunet.com [62.96.220.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by a.mx.secunet.com (Postfix) with ESMTPS id AE068207B2;
-	Sun, 31 Mar 2024 18:03:22 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com AE068207B2
-Received: from cas-essen-01.secunet.de (unknown [10.53.40.201])
-	by mailout1.secunet.com (Postfix) with ESMTP id A0605800055;
-	Sun, 31 Mar 2024 18:03:22 +0200 (CEST)
-Received: from mbx-essen-01.secunet.de (10.53.40.197) by
- cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Sun, 31 Mar 2024 18:03:22 +0200
-Received: from Pickup by mbx-essen-01.secunet.de with Microsoft SMTP Server id
- 15.1.2507.17; Sun, 31 Mar 2024 15:52:40 +0000
-X-sender: <linux-kernel+bounces-125453-steffen.klassert=secunet.com@vger.kernel.org>
-X-Receiver: <steffen.klassert@secunet.com>
- ORCPT=rfc822;steffen.klassert@secunet.com NOTIFY=NEVER;
- X-ExtendedProps=BQAVABYAAgAAAAUAFAARAPDFCS25BAlDktII2g02frgPADUAAABNaWNyb3NvZnQuRXhjaGFuZ2UuVHJhbnNwb3J0LkRpcmVjdG9yeURhdGEuSXNSZXNvdXJjZQIAAAUAagAJAAEAAAAAAAAABQAWAAIAAAUAQwACAAAFAEYABwADAAAABQBHAAIAAAUAEgAPAGIAAAAvbz1zZWN1bmV0L291PUV4Y2hhbmdlIEFkbWluaXN0cmF0aXZlIEdyb3VwIChGWURJQk9IRjIzU1BETFQpL2NuPVJlY2lwaWVudHMvY249U3RlZmZlbiBLbGFzc2VydDY4YwUACwAXAL4AAACheZxkHSGBRqAcAp3ukbifQ049REI2LENOPURhdGFiYXNlcyxDTj1FeGNoYW5nZSBBZG1pbmlzdHJhdGl2ZSBHcm91cCAoRllESUJPSEYyM1NQRExUKSxDTj1BZG1pbmlzdHJhdGl2ZSBHcm91cHMsQ049c2VjdW5ldCxDTj1NaWNyb3NvZnQgRXhjaGFuZ2UsQ049U2VydmljZXMsQ049Q29uZmlndXJhdGlvbixEQz1zZWN1bmV0LERDPWRlBQAOABEABiAS9uuMOkqzwmEZDvWNNQUAHQAPAAwAAABtYngtZXNzZW4tMDIFADwAAgAADwA2AAAATWljcm9zb2Z0LkV4Y2hhbmdlLlRyYW5zcG9ydC5NYWlsUmVjaXBpZW50LkRpc3BsYXlOYW1lDwARAAAAS2xhc3NlcnQsIFN0ZWZmZW4FAAwAAgAABQBsAAIAAAUAWAAXAEoAAADwxQktuQQJQ5LSCNoNNn64Q049S2xhc3NlcnQgU3RlZmZlbixPVT1Vc2VycyxPVT1NaWdyYXRpb24sREM9c2VjdW5ldCxEQz1kZQUAJgACAAEFACIADwAxAAAAQXV0b1Jlc3BvbnNlU3VwcHJlc3M6IDANClRyYW5zbWl0SGlzdG9ye
-	TogRmFsc2UNCg8ALwAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuRXhwYW5zaW9uR3JvdXBUeXBlDwAVAAAATWVtYmVyc0dyb3VwRXhwYW5zaW9uBQAjAAIAAQ==
-X-CreatedBy: MSExchange15
-X-HeloDomain: a.mx.secunet.com
-X-ExtendedProps: BQBjAAoAeAxrGbMv3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5Pcmdhbml6YXRpb25TY29wZREAAAAAAAAAAAAAAAAAAAAAAAUASQACAAEFAAQAFCABAAAAHAAAAHN0ZWZmZW4ua2xhc3NlcnRAc2VjdW5ldC5jb20FAAYAAgABBQApAAIAAQ8ACQAAAENJQXVkaXRlZAIAAQUAAgAHAAEAAAAFAAMABwAAAAAABQAFAAIAAQUAYgAKAJMAAADLigAABQBkAA8AAwAAAEh1Yg==
-X-Source: SMTP:Default MBX-ESSEN-01
-X-SourceIPAddress: 62.96.220.36
-X-EndOfInjectedXHeaders: 10959
-X-Virus-Scanned: by secunet
-Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=147.75.48.161; helo=sy.mirrors.kernel.org; envelope-from=linux-kernel+bounces-125453-steffen.klassert=secunet.com@vger.kernel.org; receiver=steffen.klassert@secunet.com 
-DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 2E8C020561
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
-ARC-Seal: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711748972; cv=none; b=imRoeGH5xl/m3DLOY7eCKUi7sprzA+ulAK+xbNkaFo1euIRtzYwvf3H4dlb7hLHe045/baQJ6cSZTbqo4R0pL5Iq5tUuITKZmKpTYKmEOpE+WR28JBkuvtdReqGO578erBnsayEER+gE0FpTbm2ORQ89kva6JAlO77OMhce+VuA=
-ARC-Message-Signature: i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711748972; c=relaxed/simple;
-	bh=FRIggP1YvWWV3rj+5WU1Cj2nMoZrQOSbDSPE/2jMC40=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aJ5QcVIvIx+WnKyttgMHvYUQSlytXOS/S8mBHQM9Hu5SDmV6w8EaoneOQybOr2ia90h2pcCFuJ1qFgW2XHSKtq+rRo65+VyKB6HL7YMvKRvWoAljPnBIY1gT3eXWaHgGvBhyjfxIlHgqm5rqfVcUscZbRMZfQIZ/pKdrt3mA6mw=
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=NvrFdpa8; arc=none smtp.client-ip=199.89.1.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1711748967; x=1714340968; bh=FRIggP1YvWWV3rj+5WU1Cj2n
-	MoZrQOSbDSPE/2jMC40=; b=NvrFdpa8pcA9cG+NIiJnuoeRqa/nPyhvnOtdKtLd
-	WqtQBmfv5Xxa/dgMQibjBYWpMQXU99b6524nnJyI8pR/Q1lbHWv1wXDr0wGHEsNl
-	MnIwbJxL0DpSjF8SNG2GSqM2pNOxYN5q/Qkk1lddJBYelx8ypgvgvClefq1Mhl24
-	H0gUpQPwbjzLn0glITC1tXYRk/I87LnqCSGaNh3fPf4IJnFVILDFulxZED+xaII6
-	iBr5thFOG0UqWCqaTUezS8lMnQIdJZ40OgJlZMfMAGoHuNfec/Jn1agU0vb5QT1L
-	9pHLevDlEg286EulZVVF/0rInaBlREIxgEGvUz37Avt+XA==
-X-Virus-Scanned: by MailRoute
-Message-ID: <ecd24b64-0f27-486b-a7aa-b4b51b7b16de@acm.org>
-Date: Fri, 29 Mar 2024 14:49:21 -0700
-Precedence: bulk
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZTc76s1b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711901133; x=1743437133;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=0PgwmdbQN7ZnKNKCizoTyzmjQV/8g5GhP4FH1t2EX14=;
+  b=ZTc76s1bnshfrdHA5PoepCSLNafxZtQwmZoy2LopJYoubvcskfLJxrE/
+   DFB3A4HleQB0Rc0UJhNuX4lUGjImHmSp2x6EtjMV9mtuvRp2sc1Qn2zqm
+   Jj511CEIL85HpvKdQu7kh6SJ8sf1Ap/czcSwan3+LSsSpGBxc6/tZ4ozx
+   cRRgEJkXL5y2d1MN2ct4zOwqFvfMvraO8Xpcbw7HBXgm1stJZMj6rMwfO
+   TaudnO/qA4Z2Jcm480a6BEB91lW2veaCA2ddoeTiuCK7s9C1ve1HLn5jt
+   54cVNKs5D2NcLaqSKHgnCzNyh6ip4lm/4PJ4DsiTcXDr6YWa6+XLobrfI
+   g==;
+X-CSE-ConnectionGUID: A92ZlS0cSbKQl/Gl/7vxow==
+X-CSE-MsgGUID: ULGlQsCjRhGqm1jHdEOwtQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11030"; a="17597732"
+X-IronPort-AV: E=Sophos;i="6.07,170,1708416000"; 
+   d="scan'208";a="17597732"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2024 09:05:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,170,1708416000"; 
+   d="scan'208";a="17870414"
+Received: from lkp-server01.sh.intel.com (HELO 3d808bfd2502) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 31 Mar 2024 09:05:31 -0700
+Received: from kbuild by 3d808bfd2502 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rqxgW-0001Ec-2N;
+	Sun, 31 Mar 2024 16:05:28 +0000
+Date: Mon, 1 Apr 2024 00:04:51 +0800
+From: kernel test robot <lkp@intel.com>
+To: Youling Tang <tangyouling@loongson.cn>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>, Xi Ruoyao <xry111@xry111.site>
+Subject: arch/loongarch/kernel/relocate.c:166:38: sparse: sparse: incorrect
+ type in initializer (different address spaces)
+Message-ID: <202403312345.Rmq1hxfh-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 11/11] scsi: ufs: core: Remove unnecessary wmb() prior
- to writing run/stop regs
-To: Andrew Halaney <ahalaney@redhat.com>, Andy Gross <agross@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio
-	<konrad.dybcio@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, "James
- E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen"
-	<martin.petersen@oracle.com>, Hannes Reinecke <hare@suse.de>, Janek Kotas
-	<jank@cadence.com>, Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman
-	<avri.altman@wdc.com>, Can Guo <quic_cang@quicinc.com>, Anjana Hari
-	<quic_ahari@quicinc.com>
-CC: Will Deacon <will@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-	<linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240329-ufs-reset-ensure-effect-before-delay-v5-0-181252004586@redhat.com>
- <20240329-ufs-reset-ensure-effect-before-delay-v5-11-181252004586@redhat.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20240329-ufs-reset-ensure-effect-before-delay-v5-11-181252004586@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
-Message-ID: <20240329214921.Q4Iv91OIO9-4SntoUGbLhW7yp7C-RnRirXxR9ORTm04@z>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   712e14250dd2907346617eba275c46f53db8fae7
+commit: e5f02b51fa0cb785e352e77271a65e96051b789b LoongArch: Add support for kernel address space layout randomization (KASLR)
+date:   1 year, 1 month ago
+config: loongarch-randconfig-r034-20230511 (https://download.01.org/0day-ci/archive/20240331/202403312345.Rmq1hxfh-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 12.3.0
+reproduce: (https://download.01.org/0day-ci/archive/20240331/202403312345.Rmq1hxfh-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403312345.Rmq1hxfh-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> arch/loongarch/kernel/relocate.c:166:38: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected char *cmdline @@     got void [noderef] __iomem * @@
+   arch/loongarch/kernel/relocate.c:166:38: sparse:     expected char *cmdline
+   arch/loongarch/kernel/relocate.c:166:38: sparse:     got void [noderef] __iomem *
+
+vim +166 arch/loongarch/kernel/relocate.c
+
+   159	
+   160	void * __init relocate_kernel(void)
+   161	{
+   162		unsigned long kernel_length;
+   163		unsigned long random_offset = 0;
+   164		void *location_new = _text; /* Default to original kernel start */
+   165		void *kernel_entry = start_kernel; /* Default to original kernel entry point */
+ > 166		char *cmdline = early_ioremap(fw_arg1, COMMAND_LINE_SIZE); /* Boot command line is passed in fw_arg1 */
+   167	
+   168		strscpy(boot_command_line, cmdline, COMMAND_LINE_SIZE);
+   169	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
