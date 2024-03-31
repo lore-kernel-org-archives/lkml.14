@@ -1,138 +1,113 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7EA3613C;
-	Sun, 31 Mar 2024 02:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA3D184E;
+	Sun, 31 Mar 2024 02:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711851617; cv=none; b=WuOjRNC6K9ocS4L/GvyAOo1T3kGjhCLjfjOK+KepOY+I9QpCSHrabUka7k0QI/1zMExjp8TlnTI6U7ShR9/3UIyl2UAEpNrKiwbmRRvhNEi4RAw2Ylwu/KnOEfJb2+vWzxjs7a2SG+Zy2Sn3zitb/CnNze825eP5XHLVLvlUVq4=
+	t=1711852445; cv=none; b=Pj9ztFoeNFC8W8Bmk7O2Z5NF1FqYCQSQXvXHwYXp92impW8yqIqXKztodGBRpXQU5wfGBPjF30T0jKjGp+dRMIVrE9+rHt+E/sK11cG0ccYiCxhujgs6p0ewfBT+tyH81Ba1BpjFwcgtUyVZk4Fx9c+IJDc8Pbb3UqAFDp4kjvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711851617; c=relaxed/simple;
-	bh=wszhonbR5gvN2VcFZa8s+jUlda0D/jBmFLjKLmgNe1A=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e+Gtn9mAMxcpJDeeMxoL8JoCCDF/X67RzyWIpyTPHolY++IGJtQ3QX0p26WdWWhv5oBpnTnUpMazMc5qy08OdtNaNISgBou2jQfulxmn59rGBDdhvqVsx66+d8NINgxQfkJc5fp7x4rOxi3KuMdgROD+r/et1INlCRoTU/P//Rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=WOSEjsZs; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1711852445; c=relaxed/simple;
+	bh=+9xtEveTESmqEmgqfqi/AHy+l/CY7o7HoCu99ORDDcA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PCxe4cBbfRJV3gpTvYKFbbR/6Oo8CmYNpvDoIAdyEoT+Fst6iaUXtghvq3ijq3w1+V6jl8iuUhxs26iFUlXrzTxzkigqaTs5dnoEnR/bLxwsiIwpFFcP1wwql0Rd0L+n+/bc3NcLBp7LSIEUyTq3KbDcKWe4NXrWGbBy3k5Tsu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PZ9D70uV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WOSEjsZs"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42V2J9dw065441;
-	Sat, 30 Mar 2024 21:19:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1711851549;
-	bh=LE6d0ZGSgs6B4tuelssU5HrfUCQjrn+kR854KY36ngU=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=WOSEjsZsifvr46poPf0V8j9sZTYonJOO73CQByNW4eGTl8J6b99wE801QQq6VfzA5
-	 OeP3lMNACmf3Pf9peyij9RkQ79hGc2LW0m4HC6+a1uoegA8/qdv/zg62nBB1CDydAW
-	 qUDGiTv65D8dQk5zq1g6UxdJjEmgAp26oHaOQ6jI=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42V2J9Vd128349
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sat, 30 Mar 2024 21:19:09 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 30
- Mar 2024 21:19:09 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sat, 30 Mar 2024 21:19:09 -0500
-Received: from LT5CG31242FY.dhcp.ti.com ([10.250.160.249])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42V2IcmC106026;
-	Sat, 30 Mar 2024 21:19:03 -0500
-From: Shenghao Ding <shenghao-ding@ti.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <perex@perex.cz>, <tiwai@suse.com>, <13916275206@139.com>,
-        <mohit.chawla@ti.com>, <soyer@irl.hu>, <jkhuang3@ti.com>,
-        <tiwai@suse.de>, <pdjuandi@ti.com>, <manisha.agrawal@ti.com>,
-        <s-hari@ti.com>, <aviel@ti.com>, <hnagalla@ti.com>, <praneeth@ti.com>,
-        <Baojun.Xu@fpt.com>, Shenghao Ding
-	<shenghao-ding@ti.com>
-Subject: [PATCH v7 3/4] ASoc: PCM6240: Add compile item for PCM6240 Family driver
-Date: Sun, 31 Mar 2024 10:18:33 +0800
-Message-ID: <20240331021835.1470-4-shenghao-ding@ti.com>
-X-Mailer: git-send-email 2.33.0.windows.2
-In-Reply-To: <20240331021835.1470-1-shenghao-ding@ti.com>
-References: <20240331021835.1470-1-shenghao-ding@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PZ9D70uV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A71FCC433B2;
+	Sun, 31 Mar 2024 02:34:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711852444;
+	bh=+9xtEveTESmqEmgqfqi/AHy+l/CY7o7HoCu99ORDDcA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=PZ9D70uVOm8Q1eV7TepfO1FkN+1k1kWNkT6Ku6f/2s6iTAOV7tZxn2zhkvPsVyaFX
+	 RPw7j/3dyOXbWPTqh7GDBBmESHoa0/CSjp3BgTh7gbx5KJ1tdiDym07g+AY4FzPgQS
+	 DKX7tgoR9K9mHdV/+tGZPsttPaEAScJJhqA81HNprVN9Fu9EJ0XTEzkGTvbaVJb6Hx
+	 Qzks5PLB5vorWVg53klblNq3phtjvnvFZqLRpBY/lb0TuCBuxS4GgeeCTYGb+VI6ok
+	 zfc1qtwfOHsXCTucSL4Xb61hPPubFgtHkxN2eCV1J182QybCpwgfTt0/4sSb25g/FL
+	 PUk6ZaAAFbN5g==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-513d23be0b6so3396180e87.0;
+        Sat, 30 Mar 2024 19:34:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVDkGXqULJb0iTE30zok3Z/DcAitzYB9HUyf5pQ/qSbH7TnoDghRS696d3Z3Bc7u3vJtKOCIyp0hkqFnVKFWXLHRnz0A8czvwM7M2KtNDkdHOpr2c074bO9nltfNZLNpXSwZIksKCLZNGtZiA0bHX646SeY+kLLS+WUzjnVm4MKEuoM
+X-Gm-Message-State: AOJu0YzWfQ4zDI0K2CTviHTVM/YUaXaFBBv4MmJVL07IxX6zt/sEhULv
+	8wYbpd4A6ohvhE1X1s1afNGS2g9DPx2m3V/0v8z3Oa7dpCwciQaRAnkxDrAd98WqSrH+OiQMNXB
+	qPMEzBdnsGuo/e1Si+icML8zVNFY=
+X-Google-Smtp-Source: AGHT+IGpEQPL0v7g3+p+5E8g7HGnWQKzlMop6CryhqCRVmhK61t313PDdp5vf1ukKDWFXpyLX2tmge1Ix/vKXAwQ4u4=
+X-Received: by 2002:a2e:9914:0:b0:2d4:6aba:f1a9 with SMTP id
+ v20-20020a2e9914000000b002d46abaf1a9mr4254960lji.40.1711852443253; Sat, 30
+ Mar 2024 19:34:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20240326144741.3094687-1-arnd@kernel.org> <20240326144741.3094687-2-arnd@kernel.org>
+ <87jzlohhbc.fsf@intel.com> <cb853762-06d4-401c-a1c8-07a0c031b499@app.fastmail.com>
+ <87edbwglle.fsf@intel.com> <07c604d1-6304-4ff8-844b-03c3d5c727ad@app.fastmail.com>
+In-Reply-To: <07c604d1-6304-4ff8-844b-03c3d5c727ad@app.fastmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sun, 31 Mar 2024 11:33:27 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARmABUDDTFtp_HCqKid7=8011wk0HMgHYGHWOLunhpxXA@mail.gmail.com>
+Message-ID: <CAK7LNARmABUDDTFtp_HCqKid7=8011wk0HMgHYGHWOLunhpxXA@mail.gmail.com>
+Subject: Re: [PATCH 01/12] kbuild: make -Woverride-init warnings more consistent
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>, Arnd Bergmann <arnd@kernel.org>, 
+	linux-kbuild@vger.kernel.org, Harry Wentland <harry.wentland@amd.com>, 
+	Alex Deucher <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Lucas De Marchi <lucas.demarchi@intel.com>, Oded Gabbay <ogabbay@kernel.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Andrew Jeffery <andrew@codeconstruct.com.au>, Linus Walleij <linus.walleij@linaro.org>, 
+	Joel Stanley <joel@jms.id.au>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrew Morton <akpm@linux-foundation.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, Netdev <netdev@vger.kernel.org>, linux-mm@kvack.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-PCM6240 driver implements a flexible and configurable setting for register
-and filter coefficients, to one, two or even multiple PCM6240 Family Audio
-chips.
+On Wed, Mar 27, 2024 at 6:23=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
+:
+>
+> On Wed, Mar 27, 2024, at 08:50, Jani Nikula wrote:
+> > On Tue, 26 Mar 2024, "Arnd Bergmann" <arnd@arndb.de> wrote:
+> >> On Tue, Mar 26, 2024, at 21:24, Jani Nikula wrote:
+> >>> On Tue, 26 Mar 2024, Arnd Bergmann <arnd@kernel.org> wrote:
+> >>
+> >> It works now.
+> >>
+> >> The original __diag_ignore_all() only did it for gcc-8 and above
+> >> because that was initially needed to suppress warnings that
+> >> got added in that version, but this was always a mistake.
+> >>
+> >> 689b097a06ba ("compiler-gcc: Suppress -Wmissing-prototypes
+> >> warning for all supported GCC") made it work correctly.
+> >
+> > Oh, nice! Then I think we'd like to go back to __diag_ignore_all() in
+> > i915 and xe.
+> >
+> > The diff is below. I'm fine with you squashing it to your patch, or if
+> > you want me to turn it into a proper patch for you to pick up in your
+> > series, that's fine too. Just let me know.
+>
+> I think I'd prefer to keep my patch simpler for the moment and
+> get that merged through the kbuild tree, it already touches
+> too many places at once.
+>
+> It may be better for me to just drop the drivers/gpu/ part of
+> my patch so you can just just take your patch through the
+> drm tree. I actually have a similar patch for the amdgpu driver
+> that I can send if you like this option better.
+>
+>     Arnd
+>
 
-Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
 
----
-Change in v7:
- - All these chips have only a portion of the codec's functionality, such
-   as ADC or DAC, and so on, but their audio performance is far superior
-   to the codec's, and cost is lower than codec, and much easier to
-   program than codec.
----
- sound/soc/codecs/Kconfig  | 10 ++++++++++
- sound/soc/codecs/Makefile |  2 ++
- 2 files changed, 12 insertions(+)
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index f78ea2f86fa6..0c35cdfd4a47 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -179,6 +179,7 @@ config SND_SOC_ALL_CODECS
- 	imply SND_SOC_PCM5102A
- 	imply SND_SOC_PCM512x_I2C
- 	imply SND_SOC_PCM512x_SPI
-+	imply SND_SOC_PCM6240
- 	imply SND_SOC_PEB2466
- 	imply SND_SOC_RK3328
- 	imply SND_SOC_RK817
-@@ -1422,6 +1423,15 @@ config SND_SOC_PCM512x_SPI
- 	select SND_SOC_PCM512x
- 	select REGMAP_SPI
- 
-+config SND_SOC_PCM6240
-+	tristate "Texas Instruments PCM6240 Family Audio chips based on I2C"
-+	depends on I2C
-+	help
-+	  Enable support for Texas Instruments PCM6240 Family Audio chips.
-+	  Note the PCM6240 driver implements a flexible and configurable
-+	  setting for register and filter coefficients, to one, two or
-+	  even multiple PCM6240 Family Audio chips.
-+
- config SND_SOC_PEB2466
- 	tristate "Infineon PEB2466 quad PCM codec"
- 	depends on SPI
-diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
-index 7c075539dc47..5553155b843b 100644
---- a/sound/soc/codecs/Makefile
-+++ b/sound/soc/codecs/Makefile
-@@ -204,6 +204,7 @@ snd-soc-pcm5102a-objs := pcm5102a.o
- snd-soc-pcm512x-objs := pcm512x.o
- snd-soc-pcm512x-i2c-objs := pcm512x-i2c.o
- snd-soc-pcm512x-spi-objs := pcm512x-spi.o
-+snd-soc-pcm6240-objs := pcm6240.o
- snd-soc-peb2466-objs := peb2466.o
- snd-soc-rk3328-objs := rk3328_codec.o
- snd-soc-rk817-objs := rk817_codec.o
-@@ -594,6 +595,7 @@ obj-$(CONFIG_SND_SOC_PCM5102A)	+= snd-soc-pcm5102a.o
- obj-$(CONFIG_SND_SOC_PCM512x)	+= snd-soc-pcm512x.o
- obj-$(CONFIG_SND_SOC_PCM512x_I2C)	+= snd-soc-pcm512x-i2c.o
- obj-$(CONFIG_SND_SOC_PCM512x_SPI)	+= snd-soc-pcm512x-spi.o
-+obj-$(CONFIG_SND_SOC_PCM6240)	+= snd-soc-pcm6240.o
- obj-$(CONFIG_SND_SOC_PEB2466)	+= snd-soc-peb2466.o
- obj-$(CONFIG_SND_SOC_RK3328)	+= snd-soc-rk3328.o
- obj-$(CONFIG_SND_SOC_RK817)	+= snd-soc-rk817.o
--- 
-2.34.1
+Applied to linux-kbuild/fixes.
+Thanks.
 
+--=20
+Best Regards
+Masahiro Yamada
