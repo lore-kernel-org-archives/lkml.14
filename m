@@ -1,83 +1,102 @@
 Received: from a.mx.secunet.com (a.mx.secunet.com [62.96.220.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF047152533;
-	Sun, 31 Mar 2024 16:28:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F151474DF;
+	Sun, 31 Mar 2024 16:28:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=62.96.220.36
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711902497; cv=fail; b=VFDm+0Ch6jO6ZCTtis2KjPcUxpb6UuXxmEscK0Ab/OEHisl/TrUWlITUn2ZJJDdNBnsKLrM9H8hLpjxmAsag/xq0zTROIt+2P94Wh30DoTGdTNApZuZnTlGllnMPPA3ePeJcAKaQcO3HPaZBEoJ5H/Tie1ja9gJAfXE5f6d+cSA=
+	t=1711902499; cv=fail; b=GhcF8/dm2gdsM0eOp5XzjchxMmifUgB6yXuiDz63EPRTPA96z7sfYVjeo2OICe3bmRAEGaVXP+i6vFj2adhGYFpPPVOEPoILRk4ZDLSafrW5I6IUqYKJYyPsgYmgrvFX5J10oVIPdBzSy1gyYuh5jGvFrlT7S4EiIXb+O/5Qt6Y=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711902497; c=relaxed/simple;
-	bh=LU3WtJaoL5yui7n84axaXpWXRItq1jQo2lcXYzG4m70=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=OUaiw/e+eKOKBWku3UiTNhsCxWb1TNjTxo4dVn9YhDhOwHC2BYsTWnMK9BlVh2pzBnvM6kHsqBgSXeQTD5CChz2zvT7DVTv2FgEg1Wcskzdf+VaFwtZdKwRfFGFOz4gsR7qQlqt+oKgrfIGBBKprDeEk7aKENfFtk175g1EykYc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=fail smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=fail smtp.client-ip=62.96.220.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1711902499; c=relaxed/simple;
+	bh=C2nYC2jdPPnbqH8CNUAQTz0BUQJ52CSAOCEJzrV5r3A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nbGJkLHeVTCwlIEcU8wAFtzdcKXhJdqXj3hHk9nD7H6E9PTVUc1Mu7ofwZ8S3fm8sSD4epz6yV9Xj0KJUrN8mQO4m1mq7NhKHZfkplT8zGQ0X2klhbo9xc3pSLHnA0fQU/OWXrtn93Pblx4Zlc+Bl50VmAfL4/0RphcmKSQpFMc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; dkim=fail (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XleIRPSp reason="signature verification failed"; arc=none smtp.client-ip=209.85.161.45; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; arc=fail smtp.client-ip=62.96.220.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XleIRPSp"
 Received: from localhost (localhost [127.0.0.1])
-	by a.mx.secunet.com (Postfix) with ESMTP id AC550208B8;
-	Sun, 31 Mar 2024 18:28:12 +0200 (CEST)
+	by a.mx.secunet.com (Postfix) with ESMTP id 14397208D7;
+	Sun, 31 Mar 2024 18:28:16 +0200 (CEST)
 X-Virus-Scanned: by secunet
 Received: from a.mx.secunet.com ([127.0.0.1])
 	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id OVZJ5l68sIjV; Sun, 31 Mar 2024 18:28:10 +0200 (CEST)
+	with ESMTP id Jr2x-6QYtVzx; Sun, 31 Mar 2024 18:28:15 +0200 (CEST)
 Received: from mailout1.secunet.com (mailout1.secunet.com [62.96.220.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by a.mx.secunet.com (Postfix) with ESMTPS id 0C9AD208D0;
-	Sun, 31 Mar 2024 18:28:10 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 0C9AD208D0
+	by a.mx.secunet.com (Postfix) with ESMTPS id E55F2208D0;
+	Sun, 31 Mar 2024 18:28:14 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com E55F2208D0
 Received: from cas-essen-01.secunet.de (unknown [10.53.40.201])
-	by mailout1.secunet.com (Postfix) with ESMTP id F3C84800057;
-	Sun, 31 Mar 2024 18:28:09 +0200 (CEST)
+	by mailout1.secunet.com (Postfix) with ESMTP id D84A4800057;
+	Sun, 31 Mar 2024 18:28:14 +0200 (CEST)
 Received: from mbx-essen-01.secunet.de (10.53.40.197) by
  cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Sun, 31 Mar 2024 18:28:09 +0200
+ 15.1.2507.35; Sun, 31 Mar 2024 18:28:14 +0200
 Received: from Pickup by mbx-essen-01.secunet.de with Microsoft SMTP Server id
- 15.1.2507.17; Sun, 31 Mar 2024 16:23:49 +0000
-X-sender: <netdev+bounces-83502-steffen.klassert=secunet.com@vger.kernel.org>
+ 15.1.2507.17; Sun, 31 Mar 2024 16:23:59 +0000
+X-sender: <linux-crypto+bounces-3140-steffen.klassert=secunet.com@vger.kernel.org>
 X-Receiver: <steffen.klassert@secunet.com>
  ORCPT=rfc822;steffen.klassert@secunet.com NOTIFY=NEVER;
  X-ExtendedProps=BQAVABYAAgAAAAUAFAARAPDFCS25BAlDktII2g02frgPADUAAABNaWNyb3NvZnQuRXhjaGFuZ2UuVHJhbnNwb3J0LkRpcmVjdG9yeURhdGEuSXNSZXNvdXJjZQIAAAUAagAJAAEAAAAAAAAABQAWAAIAAAUAQwACAAAFAEYABwADAAAABQBHAAIAAAUAEgAPAGIAAAAvbz1zZWN1bmV0L291PUV4Y2hhbmdlIEFkbWluaXN0cmF0aXZlIEdyb3VwIChGWURJQk9IRjIzU1BETFQpL2NuPVJlY2lwaWVudHMvY249U3RlZmZlbiBLbGFzc2VydDY4YwUACwAXAL4AAACheZxkHSGBRqAcAp3ukbifQ049REI2LENOPURhdGFiYXNlcyxDTj1FeGNoYW5nZSBBZG1pbmlzdHJhdGl2ZSBHcm91cCAoRllESUJPSEYyM1NQRExUKSxDTj1BZG1pbmlzdHJhdGl2ZSBHcm91cHMsQ049c2VjdW5ldCxDTj1NaWNyb3NvZnQgRXhjaGFuZ2UsQ049U2VydmljZXMsQ049Q29uZmlndXJhdGlvbixEQz1zZWN1bmV0LERDPWRlBQAOABEABiAS9uuMOkqzwmEZDvWNNQUAHQAPAAwAAABtYngtZXNzZW4tMDIFADwAAgAADwA2AAAATWljcm9zb2Z0LkV4Y2hhbmdlLlRyYW5zcG9ydC5NYWlsUmVjaXBpZW50LkRpc3BsYXlOYW1lDwARAAAAS2xhc3NlcnQsIFN0ZWZmZW4FAAwAAgAABQBsAAIAAAUAWAAXAEoAAADwxQktuQQJQ5LSCNoNNn64Q049S2xhc3NlcnQgU3RlZmZlbixPVT1Vc2VycyxPVT1NaWdyYXRpb24sREM9c2VjdW5ldCxEQz1kZQUAJgACAAEFACIADwAxAAAAQXV0b1Jlc3BvbnNlU3VwcHJlc3M6IDANClRyYW5zbWl0SGlzdG9ye
 	TogRmFsc2UNCg8ALwAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuRXhwYW5zaW9uR3JvdXBUeXBlDwAVAAAATWVtYmVyc0dyb3VwRXhwYW5zaW9uBQAjAAIAAQ==
 X-CreatedBy: MSExchange15
 X-HeloDomain: b.mx.secunet.com
-X-ExtendedProps: BQBjAAoAlNTp8x1Q3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5Pcmdhbml6YXRpb25TY29wZREAAAAAAAAAAAAAAAAAAAAAAAUASQACAAEFAGIACgAMAAAAmooAAAUABAAUIAEAAAAcAAAAc3RlZmZlbi5rbGFzc2VydEBzZWN1bmV0LmNvbQUABgACAAEFACkAAgABDwAJAAAAQ0lBdWRpdGVkAgABBQACAAcAAQAAAAUAAwAHAAAAAAAFAAUAAgABBQBkAA8AAwAAAEh1Yg==
+X-ExtendedProps: BQBjAAoAwapAQuxQ3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5Pcmdhbml6YXRpb25TY29wZREAAAAAAAAAAAAAAAAAAAAAAAUASQACAAEFAGIACgB1AAAAqIoAAAUABAAUIAEAAAAcAAAAc3RlZmZlbi5rbGFzc2VydEBzZWN1bmV0LmNvbQUABgACAAEFACkAAgABDwAJAAAAQ0lBdWRpdGVkAgABBQACAAcAAQAAAAUAAwAHAAAAAAAFAAUAAgABBQBkAA8AAwAAAEh1Yg==
 X-Source: SMTP:Default MBX-DRESDEN-01
 X-SourceIPAddress: 62.96.220.37
-X-EndOfInjectedXHeaders: 10737
+X-EndOfInjectedXHeaders: 12137
 X-Virus-Scanned: by secunet
-Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=147.75.80.249; helo=am.mirrors.kernel.org; envelope-from=netdev+bounces-83502-steffen.klassert=secunet.com@vger.kernel.org; receiver=steffen.klassert@secunet.com 
-DKIM-Filter: OpenDKIM Filter v2.11.0 b.mx.secunet.com 6AA3120322
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=139.178.88.99; helo=sv.mirrors.kernel.org; envelope-from=linux-crypto+bounces-3140-steffen.klassert=secunet.com@vger.kernel.org; receiver=steffen.klassert@secunet.com 
+DKIM-Filter: OpenDKIM Filter v2.11.0 b.mx.secunet.com 5A29B20199
+Authentication-Results: b.mx.secunet.com;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XleIRPSp"
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
 ARC-Seal: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711800081; cv=none; b=WJbbV270t/ooVwRu27l3kpbpO/LNp3fBVfRjqDSUiCBL1/yhmqeX05AdQ5vC9vo421dyQlYdRNrAG/3dLmqvHvHH3IOXbqbnkcRGS5ljWtW9WpuJVFyUYBq7iefT2u8Y2EsHJMJjqK0UHGQnJZOlWMwRiKLeHwXjs5A0t2k/zBc=
+	t=1711852689; cv=none; b=gXNEolHo55cI9s9E0fe7uOOSm88Jz7dwj3ls8ge3nw8RDM4vYnsK3QkV/TYCu8HKWXSxelrGFg26OaTa0ta2xAeaumLm+bNicuklMkDBxzgMakTmXxNf8xfV/uZLU1lr3i868qhdgUvfJgx0ptM9DjM8hr8IuQzNZ6hDb2tE66w=
 ARC-Message-Signature: i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711800081; c=relaxed/simple;
-	bh=fT3FnLwhlqo35Pj+pAK551GXQXi8alEtZAKvfSYeaHU=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Gysezl9oW2wx2m1NIwuS5aCuwl7HEGn2RtF3oLAyvdICdI9EdoKb99h/KeqXZzq3y49d/36QaSMvGlijVKast3vaki1kT/opXa8XfqWWufE7zSFpHwMOXGVeeMdlmccqp9Eb+dtVlMhV0NpG4fjzqbWHbE5Lf0g0516IE1P/Sc0=
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Subject: Re: [PATCH RFC 01/10] mm: Move the page fragment allocator from
- page_alloc into its own file
-To: Christophe Leroy <christophe.leroy@csgroup.eu>, "davem@davemloft.net"
-	<davem@davemloft.net>, "kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>
-CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Howells
-	<dhowells@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>
-References: <20240328133839.13620-1-linyunsheng@huawei.com>
- <20240328133839.13620-2-linyunsheng@huawei.com>
- <b5fe4c81-a7e6-4620-b0b6-a56ce7a2c304@csgroup.eu>
-From: Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <9e03b278-aaeb-d11c-d2e0-d45ca5e97346@huawei.com>
-Date: Sat, 30 Mar 2024 20:01:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+	s=arc-20240116; t=1711852689; c=relaxed/simple;
+	bh=SNeN2CYj+6bo6yYIrP8F5A4iIl0/Q9yGn+qoKYRUWH4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WX0BCLiJLkXYSF23cXoAUUoCaN3U++73B96a084d5eByR6abt19vx+RRgPeFHn/FNkK/J6TmDIJzyF4IYk3FZTEjQ9I/pyxKjnmYqJBhqHBxbDk+/e+NGJ90rlOfa4MF1hGhvlAequCF3PKJT9TuvWJc3UIpKmFlHj11ZC0GCMk=
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XleIRPSp; arc=none smtp.client-ip=209.85.161.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711852687; x=1712457487; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lUs6NaIvupBIrN3kNgIHykr6WEWtZD3EhPX18G9uddY=;
+        b=XleIRPSp55P9VHB7a2r/titnJwBaAjVmwFFWncW/trJnpln7+XtSjSvi9uqMgHENno
+         mXoHhat/Z/Iu/etVc504MD8mbcqjpCdo92CyUAjqoOvDmqxWOTlUEoKSZpMXMU1tjGDE
+         XbpXwWhrrBDGTCSBhMimQlOAAiFIgIn6MMASG45+bZdtNZH3XVRJ5bVJUjjXsZsqVSuD
+         EAr0yLfv7Xw4ek1Nrgh1EsDej1shKOAN+fHmpmCt2k67uc0kQqgZTsLvlgNdkJABYumM
+         NqMAc3CT/Ikjfg8Q4m9fVK1ahVo7HmKBBnIuDdfrFTz3L4Mf85eUXTvDWIq6NjILU5Zk
+         EE5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711852687; x=1712457487;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lUs6NaIvupBIrN3kNgIHykr6WEWtZD3EhPX18G9uddY=;
+        b=dR8iI2wu/bgmWoKgd3fQy1Qs3x8Gg8zaFnPHbg0FZVEZ0RXNeEaOyPNYJ1aIfjy24D
+         15h1F4+67W51lrSYAej/3JXzlWZZfwN+sEoBc+2m+UdBjvHf18AI150uR/j7E1kwLdbX
+         sGYqzl76u5sQvTr0S681UIXwuJI8SbyuckQSRFHBqVNDfJVH0TIeYJflzO0R6FpSMC8R
+         9zz21UCZ3xMyhIWChGyQmc7Wt48iBBORmO2pxhHMcl7c4qiPRydQGd654U39D+gB3weL
+         ELldBLvIApWZmFYYutf7AN/jmQk6rSAo74Gm8P8UkZUIxFx+1qy0xVLs34o8roNuo1WX
+         +QIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVwL3cU3nCsvXYDTwS66oYsIOZe9xNTNPxXhx+b5LI0hF4hupv8P5wIUYO2JPUDl0WepDijhDJPYBg1N560PbnJ5RAa4R88i26Vu9VypwbBZecB5aqbsTeOFXgu4wuUSU6yA7yyNW3bsx+drdJwvoi1WZf5gLyATZ+18fbURnSBI4TAocIuILlIqVomkqoToJcDzLA9S5fTrbiTCkqMZeE=
+X-Gm-Message-State: AOJu0YyW7TJsviPHgdYwWIVD+v3Bv1LiX1phxqUeZ9O5THjJ2TKywZ9M
+	IdQhsJIEEtX7xf5p5m/dh/a51J+VTrkHVZa0tY90NWObJeeGoGmG
+X-Google-Smtp-Source: AGHT+IG8y/mw6Sg+NJ68AiBnOVhIGZhncP4yQFjwCnn6QvLTTTIKr8wBQM2lppgPQLGZ1h9+K7oVJA==
+X-Received: by 2002:a05:6820:260e:b0:5a5:639a:2fb8 with SMTP id cy14-20020a056820260e00b005a5639a2fb8mr6074835oob.4.1711852687375;
+        Sat, 30 Mar 2024 19:38:07 -0700 (PDT)
+Message-ID: <aae9bc89-ca34-400f-9c5e-44be1df2befa@gmail.com>
+Date: Sat, 30 Mar 2024 21:38:05 -0500
 Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -85,284 +104,48 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <b5fe4c81-a7e6-4620-b0b6-a56ce7a2c304@csgroup.eu>
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] KEYS: Add ECDH support
 Content-Language: en-US
+To: Eric Biggers <ebiggers@kernel.org>,
+ James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Zhang Yiqun <zhangyiqun@phytium.com.cn>, dhowells@redhat.com,
+ jarkko@kernel.org, corbet@lwn.net, keyrings@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-crypto@vger.kernel.org
+References: <20240330065506.3146-1-zhangyiqun@phytium.com.cn>
+ <20240330070436.GA2116@sol.localdomain>
+ <087bbfcf95c9014ee8f87d482773244f0833b892.camel@HansenPartnership.com>
+ <20240331004844.GA104623@sol.localdomain>
+From: Denis Kenzior <denkenz@gmail.com>
+In-Reply-To: <20240331004844.GA104623@sol.localdomain>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500005.china.huawei.com (7.185.36.74)
 X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
-Message-ID: <20240330120114.sJD0pvcMBKCsc_J7CzlELQxRMkry46Vut9C-7MlwWZ4@z>
+Message-ID: <20240331023805.1AoPhJORJ23GGz3i7tJSgaiJc6X_9YlZ5LdSEWwpaD4@z>
 
-On 2024/3/30 1:19, Christophe Leroy wrote:
->=20
->=20
-> Le 28/03/2024 =C3=A0 14:38, Yunsheng Lin a =C3=A9crit :
->> Inspired by [1], but use free_unref_page() to replace free_the_page()
->> instead of __free_pages(), use VM_BUG_ON() to catch that we can use
->> free_unref_page() directly, also add its own header file.
->>
->> As the API is only used by the networking, it may make sense to
->> move it to the networking directory like the page_pool does in the
->> future if we can make the free_unref_page() callable outside of the
->> mm subsystem. And we can utilize that to decouple the 'struct page'
->> in the networking subsystem in the future.
->=20
-> I'm wondering if this page fragment allocator could replace the page=20
-> fragment allocator used in powerpc to allocate fragment of pages for=20
-> page tables.
-
-From a quick glance, it seems possible. If there are potential users
-other than the networking for this API, we can keep it in mm subsystem
-for now as this patch does and see how thing will evolve.
+Hi Eric,
 
 >=20
-> See arch/powerpc/mm/pgtable-frag.c
->=20
-> Christophe
->=20
-
-X-sender: <netdev+bounces-83502-peter.schumann=3Dsecunet.com@vger.kernel.or=
-g>
-X-Receiver: <peter.schumann@secunet.com> ORCPT=3Drfc822;peter.schumann@secu=
-net.com NOTIFY=3DNEVER; X-ExtendedProps=3DBQAVABYAAgAAAAUAFAARAJ05ab4WgQhHs=
-qdZ7WUjHykPADUAAABNaWNyb3NvZnQuRXhjaGFuZ2UuVHJhbnNwb3J0LkRpcmVjdG9yeURhdGEu=
-SXNSZXNvdXJjZQIAAAUAagAJAAEAAAAAAAAABQAWAAIAAAUAQwACAAAFAEYABwADAAAABQBHAAI=
-AAAUAEgAPAGAAAAAvbz1zZWN1bmV0L291PUV4Y2hhbmdlIEFkbWluaXN0cmF0aXZlIEdyb3VwIC=
-hGWURJQk9IRjIzU1BETFQpL2NuPVJlY2lwaWVudHMvY249UGV0ZXIgU2NodW1hbm41ZTcFAAsAF=
-wC+AAAAQ5IZ35DtBUiRVnd98bETxENOPURCNCxDTj1EYXRhYmFzZXMsQ049RXhjaGFuZ2UgQWRt=
-aW5pc3RyYXRpdmUgR3JvdXAgKEZZRElCT0hGMjNTUERMVCksQ049QWRtaW5pc3RyYXRpdmUgR3J=
-vdXBzLENOPXNlY3VuZXQsQ049TWljcm9zb2Z0IEV4Y2hhbmdlLENOPVNlcnZpY2VzLENOPUNvbm=
-ZpZ3VyYXRpb24sREM9c2VjdW5ldCxEQz1kZQUADgARAC7JU/le071Fhs0mWv1VtVsFAB0ADwAMA=
-AAAbWJ4LWVzc2VuLTAxBQA8AAIAAA8ANgAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQu=
-TWFpbFJlY2lwaWVudC5EaXNwbGF5TmFtZQ8ADwAAAFNjaHVtYW5uLCBQZXRlcgUADAACAAAFAGw=
-AAgAABQBYABcASAAAAJ05ab4WgQhHsqdZ7WUjHylDTj1TY2h1bWFubiBQZXRlcixPVT1Vc2Vycy=
-xPVT1NaWdyYXRpb24sREM9c2VjdW5ldCxEQz1kZQUAJgACAAEFACIADwAxAAAAQXV0b1Jlc3Bvb=
-nNlU3VwcHJlc3M6IDANClRyYW5zbWl0SGlzdG9yeTogRmFsc2UNCg8ALwAAAE1pY3Jvc29mdC5F=
-eGNoYW5nZS5UcmFuc3BvcnQuRXhwYW5zaW9uR3JvdXBUeXBlDwAVAAAATWVtYmVyc0dyb3VwRXh=
-wYW5zaW9uBQAjAAIAAQ=3D=3D
-X-CreatedBy: MSExchange15
-X-HeloDomain: b.mx.secunet.com
-X-ExtendedProps: BQBjAAoAlNTp8x1Q3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc2=
-9mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5Pcmdhbml6YXRpb25TY29wZREAA=
-AAAAAAAAAAAAAAAAAAAAAUASQACAAEFAGIACgANAAAAmooAAAUABAAUIAEAAAAaAAAAcGV0ZXIu=
-c2NodW1hbm5Ac2VjdW5ldC5jb20FAAYAAgABBQApAAIAAQ8ACQAAAENJQXVkaXRlZAIAAQUAAgA=
-HAAEAAAAFAAMABwAAAAAABQAFAAIAAQUAZAAPAAMAAABIdWI=3D
-X-Source: SMTP:Default MBX-DRESDEN-01
-X-SourceIPAddress: 62.96.220.37
-X-EndOfInjectedXHeaders: 10731
-Received: from cas-essen-01.secunet.de (10.53.40.201) by
- mbx-dresden-01.secunet.de (10.53.40.199) with Microsoft SMTP Server
- (version=3DTLS1_2, cipher=3DTLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.37; Sat, 30 Mar 2024 13:01:37 +0100
-Received: from b.mx.secunet.com (62.96.220.37) by cas-essen-01.secunet.de
- (10.53.40.201) with Microsoft SMTP Server (version=3DTLS1_2,
- cipher=3DTLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Fronte=
-nd
- Transport; Sat, 30 Mar 2024 13:01:37 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by b.mx.secunet.com (Postfix) with ESMTP id 0DF4420322
-	for <peter.schumann@secunet.com>; Sat, 30 Mar 2024 13:01:37 +0100 (CET)
-X-Virus-Scanned: by secunet
-X-Spam-Flag: NO
-X-Spam-Score: -6.184
-X-Spam-Level:
-X-Spam-Status: No, score=3D-6.184 tagged_above=3D-999 required=3D2.1
-	tests=3D[BAYES_00=3D-1.9, HEADER_FROM_DIFFERENT_DOMAINS=3D0.249,
-	MAILING_LIST_MULTI=3D-1, NICE_REPLY_A=3D-3.533,
-	RCVD_IN_DNSWL_NONE=3D-0.0001, SPF_HELO_NONE=3D0.001, SPF_PASS=3D-0.001]
-	autolearn=3Dunavailable autolearn_force=3Dno
-Received: from b.mx.secunet.com ([127.0.0.1])
-	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id fI8aGfZ6xju7 for <peter.schumann@secunet.com>;
-	Sat, 30 Mar 2024 13:01:26 +0100 (CET)
-Received-SPF: Pass (sender SPF authorized) identity=3Dmailfrom; client-ip=
-=3D147.75.80.249; helo=3Dam.mirrors.kernel.org; envelope-from=3Dnetdev+boun=
-ces-83502-peter.schumann=3Dsecunet.com@vger.kernel.org; receiver=3Dpeter.sc=
-humann@secunet.com=20
-DKIM-Filter: OpenDKIM Filter v2.11.0 b.mx.secunet.com 82AA72025D
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249]=
-)
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by b.mx.secunet.com (Postfix) with ESMTPS id 82AA72025D
-	for <peter.schumann@secunet.com>; Sat, 30 Mar 2024 13:01:26 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.2=
-5.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 16A801F220B8
-	for <peter.schumann@secunet.com>; Sat, 30 Mar 2024 12:01:26 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 940B536AE4;
-	Sat, 30 Mar 2024 12:01:21 +0000 (UTC)
-X-Original-To: netdev@vger.kernel.org
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190=
-])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29FB1E896;
-	Sat, 30 Mar 2024 12:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=3Dnone smtp.client-ip=
-=3D45.249.212.190
-ARC-Seal: i=3D1; a=3Drsa-sha256; d=3Dsubspace.kernel.org; s=3Darc-20240116;
-	t=3D1711800081; cv=3Dnone; b=3DWJbbV270t/ooVwRu27l3kpbpO/LNp3fBVfRjqDSUiCB=
-L1/yhmqeX05AdQ5vC9vo421dyQlYdRNrAG/3dLmqvHvHH3IOXbqbnkcRGS5ljWtW9WpuJVFyUYB=
-q7iefT2u8Y2EsHJMJjqK0UHGQnJZOlWMwRiKLeHwXjs5A0t2k/zBc=3D
-ARC-Message-Signature: i=3D1; a=3Drsa-sha256; d=3Dsubspace.kernel.org;
-	s=3Darc-20240116; t=3D1711800081; c=3Drelaxed/simple;
-	bh=3DfT3FnLwhlqo35Pj+pAK551GXQXi8alEtZAKvfSYeaHU=3D;
-	h=3DSubject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=3DGysezl9oW2wx2m1NIwuS5aCuwl7HEGn2RtF3oLAyvdI=
-CdI9EdoKb99h/KeqXZzq3y49d/36QaSMvGlijVKast3vaki1kT/opXa8XfqWWufE7zSFpHwMOXG=
-VeeMdlmccqp9Eb+dtVlMhV0NpG4fjzqbWHbE5Lf0g0516IE1P/Sc0=3D
-ARC-Authentication-Results: i=3D1; smtp.subspace.kernel.org; dmarc=3Dpass (=
-p=3Dquarantine dis=3Dnone) header.from=3Dhuawei.com; spf=3Dpass smtp.mailfr=
-om=3Dhuawei.com; arc=3Dnone smtp.client-ip=3D45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=3Dpass (p=3Dquarant=
-ine dis=3Dnone) header.from=3Dhuawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=3Dpass smtp.mailfrom=
-=3Dhuawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4V6G542s8Wz29lQT;
-	Sat, 30 Mar 2024 19:58:32 +0800 (CST)
-Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id A15F21A0172;
-	Sat, 30 Mar 2024 20:01:14 +0800 (CST)
-Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.=
-com
- (7.185.36.74) with Microsoft SMTP Server (version=3DTLS1_2,
- cipher=3DTLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Sat, 30 M=
-ar
- 2024 20:01:14 +0800
-Subject: Re: [PATCH RFC 01/10] mm: Move the page fragment allocator from
- page_alloc into its own file
-To: Christophe Leroy <christophe.leroy@csgroup.eu>, "davem@davemloft.net"
-	<davem@davemloft.net>, "kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>
-CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Howel=
-ls
-	<dhowells@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>
-References: <20240328133839.13620-1-linyunsheng@huawei.com>
- <20240328133839.13620-2-linyunsheng@huawei.com>
- <b5fe4c81-a7e6-4620-b0b6-a56ce7a2c304@csgroup.eu>
-From: Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <9e03b278-aaeb-d11c-d2e0-d45ca5e97346@huawei.com>
-Date: Sat, 30 Mar 2024 20:01:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
-Precedence: bulk
-X-Mailing-List: netdev@vger.kernel.org
-List-Id: <netdev.vger.kernel.org>
-List-Subscribe: <mailto:netdev+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:netdev+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <b5fe4c81-a7e6-4620-b0b6-a56ce7a2c304@csgroup.eu>
-Content-Type: text/plain; charset=3D"utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500005.china.huawei.com (7.185.36.74)
-Return-Path: netdev+bounces-83502-peter.schumann=3Dsecunet.com@vger.kernel.=
-org
-X-MS-Exchange-Organization-OriginalArrivalTime: 30 Mar 2024 12:01:37.0819
- (UTC)
-X-MS-Exchange-Organization-Network-Message-Id: 045d8a1b-9b12-4a39-109d-08dc=
-50b126d7
-X-MS-Exchange-Organization-OriginalClientIPAddress: 62.96.220.37
-X-MS-Exchange-Organization-OriginalServerIPAddress: 10.53.40.201
-X-MS-Exchange-Organization-Cross-Premises-Headers-Processed: cas-essen-01.s=
-ecunet.de
-X-MS-Exchange-Organization-OrderedPrecisionLatencyInProgress: LSRV=3Dmbx-dr=
-esden-01.secunet.de:TOTAL-HUB=3D0.403|SMR=3D0.348(SMRDE=3D0.034|SMRC=3D0.31=
-3(SMRCL=3D0.100|X-SMRCR=3D0.314))|CAT=3D0.053(CATOS=3D0.011
- (CATSM=3D0.011(CATSM-Malware
- Agent=3D0.010))|CATRESL=3D0.023(CATRESLP2R=3D0.001)|CATORES=3D0.016
- (CATRS=3D0.016(CATRS-Index Routing
- Agent=3D0.015))|CATORT=3D0.001(CATRT=3D0.001(CATRT-Journal Agent=3D0.001
- )));2024-03-30T12:01:37.516Z
-X-MS-Exchange-Forest-ArrivalHubServer: mbx-dresden-01.secunet.de
-X-MS-Exchange-Organization-AuthSource: cas-essen-01.secunet.de
-X-MS-Exchange-Organization-AuthAs: Anonymous
-X-MS-Exchange-Organization-FromEntityHeader: Internet
-X-MS-Exchange-Organization-OriginalSize: 7554
-X-MS-Exchange-Organization-HygienePolicy: Standard
-X-MS-Exchange-Organization-MessageLatency: SRV=3Dcas-essen-01.secunet.de:TO=
-TAL-FE=3D0.031|SMR=3D0.005(SMRPI=3D0.004(SMRPI-FrontendProxyAgent=3D0.003))=
-|SMS=3D0.025
-X-MS-Exchange-Organization-AVStamp-Enterprise: 1.0
-X-MS-Exchange-Organization-Recipient-Limit-Verified: True
-X-MS-Exchange-Organization-TotalRecipientCount: 1
-X-MS-Exchange-Organization-Rules-Execution-History: 0b0cf904-14ac-4724-8bdf=
--482ee6223cf2%%%fd34672d-751c-45ae-a963-ed177fcabe23%%%d8080257-b0c3-47b4-b=
-0db-23bc0c8ddb3c%%%95e591a2-5d7d-4afa-b1d0-7573d6c0a5d9%%%f7d0f6bc-4dcc-487=
-6-8c5d-b3d6ddbb3d55%%%16355082-c50b-4214-9c7d-d39575f9f79b
-X-MS-Exchange-Forest-RulesExecuted: mbx-dresden-01
-X-MS-Exchange-Organization-RulesExecuted: mbx-dresden-01
-X-MS-Exchange-Forest-IndexAgent-0: AQ0CZW4AAXADAAAPAAADH4sIAAAAAAAEAG1U227j=
-NhClZUlW5Hi7nz
- Bv2QVcO5d92M3DAmmBFgG23QJFCxRFYSgSbQmhSJWkYrhf09e+9hf2
- xzoztFR3U4AWSM7MmXPOMPk7+6jh+vL6zfpmfXMJV7dX75bwdW0b50
- 1XS/ggrTnA3hovbxf5+7DwFq7fri9v1lQJn/6Eqze3N2+X8EuvXS31
- Dj40Ggr49FdpGw9U+B7utesaKyt4OMCvV78t4aH30DsJWyvlptdWbj
- ddsZOvXoM3YGWnivIY9LU8hhip0c7LogKzhc2GEyjoXr1eMt7P322+
- +unbzcfvA1JZ+LIGXxce9hJPmpIY53njCgmWXh2WUChnoKgqaLwDs9
- dQY0dpYdsouaJqRrhzCCzh7od7aDBNqwOBs0S619LvjX1s9G6JONAW
- B/w9SnBSI09vGKM1T5KiSPW/NUc2xh5ANVhFUeK56YxRUBnp0Am6DW
- J631sE2g4quRPVPJdZFkoVD0qC6b1rKklODjhtC65/cAe0uF3Bna5G
- 13yjmj9kcBLJVrI0fadCjwvnbV965ndxHNLnckbYIRYor45v6v6ihb
- 3RaDIlN8QIPSVAVFDsWqk9TkUZnKexgL1VNb6SwRrC+Z9kngk27cxe
- 2q4k9sfgCTZ6wM8ItsYSDnf2ZJNDiov8G2tafNO/9035CDtV6FLyVJ
- 2ULfI0zjWYu4J79hJHUeCvw78b7ZtCEQfrFrmhGHn4zB5sGyTja1oO
- pj9K2VETJH86mEVO2drsoXCDT/TK+VEUODMkBTWGMYbQ+0YpkE9GPU
- mWwn7/KIliWa+Prqzbdt3tWPCXZMqqPCb++9+ALxa5EJGYxhNxhksk
- ExFFEzrGAleai3ki0kS8xJxoInJcuMF8zJxEiRCJmGXibCqwAo/nuI
- 8muBcIMOWFhy9EgiCxmGHhTGR4sxAJhcQcj9juXEQx5RBORDSmtBEJ
- 5nMhbRgtO0XLRB4zTlipmMXixZAZB5JjbS7Ow4YbpRElU2iIzs8GtJ
- h9OKnNUmY+ln8mCiWTCs7E75mYh+74JbEMwhYlzDA/7Rj2qXiB33AM
- fTEfj4iPCNw0CzcBLbTDG3KbLZqynFTMY54g3qScg5uMYTknZsxZsD
- RwGBQlo7qgdBQyOjlWhRWOqXgZqgKl2UScs+SJyPJ/ACIC+6mMBgAA
- AQ7PAVJldHJpZXZlck9wZXJhdG9yLDEwLDE7UmV0cmlldmVyT3Blcm
- F0b3IsMTEsMTtQb3N0RG9jUGFyc2VyT3BlcmF0b3IsMTAsMDtQb3N0
- RG9jUGFyc2VyT3BlcmF0b3IsMTEsMDtQb3N0V29yZEJyZWFrZXJEaW
- Fnbm9zdGljT3BlcmF0b3IsMTAsMDtQb3N0V29yZEJyZWFrZXJEaWFn
- bm9zdGljT3BlcmF0b3IsMTEsMDtUcmFuc3BvcnRXcml0ZXJQcm9kdW NlciwyMCwxMA=3D=3D
-X-MS-Exchange-Forest-IndexAgent: 1 1102
-X-MS-Exchange-Forest-EmailMessageHash: 1B46C7A0
-X-MS-Exchange-Forest-Language: en
-X-MS-Exchange-Organization-Processed-By-Journaling: Journal Agent
-
-On 2024/3/30 1:19, Christophe Leroy wrote:
->=20
->=20
-> Le 28/03/2024 =C3=A0 14:38, Yunsheng Lin a =C3=A9crit :
->> Inspired by [1], but use free_unref_page() to replace free_the_page()
->> instead of __free_pages(), use VM_BUG_ON() to catch that we can use
->> free_unref_page() directly, also add its own header file.
->>
->> As the API is only used by the networking, it may make sense to
->> move it to the networking directory like the page_pool does in the
->> future if we can make the free_unref_page() callable outside of the
->> mm subsystem. And we can utilize that to decouple the 'struct page'
->> in the networking subsystem in the future.
->=20
-> I'm wondering if this page fragment allocator could replace the page=20
-> fragment allocator used in powerpc to allocate fragment of pages for=20
-> page tables.
-
-From a quick glance, it seems possible. If there are potential users
-other than the networking for this API, we can keep it in mm subsystem
-for now as this patch does and see how thing will evolve.
-
->=20
-> See arch/powerpc/mm/pgtable-frag.c
->=20
-> Christophe
+> Amusingly, the existing KEYCTL_DH_* APIs, and the KEYCTL_ECDH_* APIs prop=
+osed by
+> this patch, only operate on user keys that the process has READ access to=
+.  This
+> means that the keys can be trivially extracted by a shell script running =
+in your
+> user session.  That's *less* secure than using an isolated process...
 >=20
 
-X-sender: <linux-kernel+bounces-125719-steffen.klassert=3Dsecunet.com@vger.=
+I can see this being true for user or session keys, but I don't think this =
+is=20
+true of process or thread specific keys.  At least I couldn't read any keys=
+ out=20
+of a test app when I tried.
+
+Regards,
+-Denis
+
+X-sender: <linux-kernel+bounces-125931-steffen.klassert=3Dsecunet.com@vger.=
 kernel.org>
 X-Receiver: <steffen.klassert@secunet.com> ORCPT=3Drfc822;steffen.klassert@=
 secunet.com NOTIFY=3DNEVER; X-ExtendedProps=3DBQAVABYAAgAAAAUAFAARAPDFCS25B=
@@ -382,154 +165,204 @@ XV0b1Jlc3BvbnNlU3VwcHJlc3M6IDANClRyYW5zbWl0SGlzdG9yeTogRmFsc2UNCg8ALwAAAE1p=
 Y3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuRXhwYW5zaW9uR3JvdXBUeXBlDwAVAAAATWVtYmV=
 yc0dyb3VwRXhwYW5zaW9uBQAjAAIAAQ=3D=3D
 X-CreatedBy: MSExchange15
-X-HeloDomain: a.mx.secunet.com
-X-ExtendedProps: BQBjAAoAlNTp8x1Q3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc2=
+X-HeloDomain: b.mx.secunet.com
+X-ExtendedProps: BQBjAAoAwapAQuxQ3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc2=
 9mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5Pcmdhbml6YXRpb25TY29wZREAA=
-AAAAAAAAAAAAAAAAAAAAAUASQACAAEFAGIACgAOAAAAmooAAAUABAAUIAEAAAAcAAAAc3RlZmZl=
+AAAAAAAAAAAAAAAAAAAAAUASQACAAEFAGIACgB2AAAAqIoAAAUABAAUIAEAAAAcAAAAc3RlZmZl=
 bi5rbGFzc2VydEBzZWN1bmV0LmNvbQUABgACAAEFACkAAgABDwAJAAAAQ0lBdWRpdGVkAgABBQA=
 CAAcAAQAAAAUAAwAHAAAAAAAFAAUAAgABBQBkAA8AAwAAAEh1Yg=3D=3D
 X-Source: SMTP:Default MBX-DRESDEN-01
-X-SourceIPAddress: 62.96.220.36
-X-EndOfInjectedXHeaders: 10678
-Received: from cas-essen-01.secunet.de (10.53.40.201) by
+X-SourceIPAddress: 62.96.220.37
+X-EndOfInjectedXHeaders: 12053
+Received: from cas-essen-02.secunet.de (10.53.40.202) by
  mbx-dresden-01.secunet.de (10.53.40.199) with Microsoft SMTP Server
  (version=3DTLS1_2, cipher=3DTLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.37; Sat, 30 Mar 2024 13:01:40 +0100
-Received: from a.mx.secunet.com (62.96.220.36) by cas-essen-01.secunet.de
- (10.53.40.201) with Microsoft SMTP Server (version=3DTLS1_2,
- cipher=3DTLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Fronte=
+ 15.1.2507.37; Sun, 31 Mar 2024 04:38:26 +0200
+Received: from b.mx.secunet.com (62.96.220.37) by cas-essen-02.secunet.de
+ (10.53.40.202) with Microsoft SMTP Server (version=3DTLS1_2,
+ cipher=3DTLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37 via Fronte=
 nd
- Transport; Sat, 30 Mar 2024 13:01:40 +0100
+ Transport; Sun, 31 Mar 2024 04:38:26 +0200
 Received: from localhost (localhost [127.0.0.1])
-	by a.mx.secunet.com (Postfix) with ESMTP id DED912053D
-	for <steffen.klassert@secunet.com>; Sat, 30 Mar 2024 13:01:40 +0100 (CET)
+	by b.mx.secunet.com (Postfix) with ESMTP id 2AB2D20322
+	for <steffen.klassert@secunet.com>; Sun, 31 Mar 2024 04:38:26 +0200 (CEST)
 X-Virus-Scanned: by secunet
 X-Spam-Flag: NO
-X-Spam-Score: -6.184
+X-Spam-Score: -2.749
 X-Spam-Level:
-X-Spam-Status: No, score=3D-6.184 tagged_above=3D-999 required=3D2.1
-	tests=3D[BAYES_00=3D-1.9, HEADER_FROM_DIFFERENT_DOMAINS=3D0.249,
-	MAILING_LIST_MULTI=3D-1, NICE_REPLY_A=3D-3.533,
-	RCVD_IN_DNSWL_NONE=3D-0.0001, SPF_HELO_NONE=3D0.001, SPF_PASS=3D-0.001]
-	autolearn=3Dham autolearn_force=3Dno
-Received: from a.mx.secunet.com ([127.0.0.1])
+X-Spam-Status: No, score=3D-2.749 tagged_above=3D-999 required=3D2.1
+	tests=3D[BAYES_00=3D-1.9, DKIM_SIGNED=3D0.1, DKIM_VALID=3D-0.1,
+	DKIM_VALID_AU=3D-0.1, FREEMAIL_FORGED_FROMDOMAIN=3D0.001,
+	FREEMAIL_FROM=3D0.001, HEADER_FROM_DIFFERENT_DOMAINS=3D0.249,
+	MAILING_LIST_MULTI=3D-1, RCVD_IN_DNSWL_NONE=3D-0.0001,
+	SPF_HELO_NONE=3D0.001, SPF_PASS=3D-0.001]
+	autolearn=3Dunavailable autolearn_force=3Dno
+Authentication-Results: a.mx.secunet.com (amavisd-new);
+	dkim=3Dpass (2048-bit key) header.d=3Dgmail.com
+Received: from b.mx.secunet.com ([127.0.0.1])
 	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id ccdTO5_3iJlc for <steffen.klassert@secunet.com>;
-	Sat, 30 Mar 2024 13:01:38 +0100 (CET)
+	with ESMTP id Y6JZ0jC6kB3o for <steffen.klassert@secunet.com>;
+	Sun, 31 Mar 2024 04:38:25 +0200 (CEST)
 Received-SPF: Pass (sender SPF authorized) identity=3Dmailfrom; client-ip=
 =3D147.75.80.249; helo=3Dam.mirrors.kernel.org; envelope-from=3Dlinux-kerne=
-l+bounces-125719-steffen.klassert=3Dsecunet.com@vger.kernel.org; receiver=
+l+bounces-125931-steffen.klassert=3Dsecunet.com@vger.kernel.org; receiver=
 =3Dsteffen.klassert@secunet.com=20
-DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 9BA4A20518
+DKIM-Filter: OpenDKIM Filter v2.11.0 b.mx.secunet.com A615920199
+Authentication-Results: b.mx.secunet.com;
+	dkim=3Dpass (2048-bit key) header.d=3Dgmail.com header.i=3D@gmail.com head=
+er.b=3D"XleIRPSp"
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249]=
 )
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by a.mx.secunet.com (Postfix) with ESMTPS id 9BA4A20518
-	for <steffen.klassert@secunet.com>; Sat, 30 Mar 2024 13:01:38 +0100 (CET)
+	by b.mx.secunet.com (Postfix) with ESMTPS id A615920199
+	for <steffen.klassert@secunet.com>; Sun, 31 Mar 2024 04:38:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.2=
 5.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4FAA01F22422
-	for <steffen.klassert@secunet.com>; Sat, 30 Mar 2024 12:01:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 584181F218D9
+	for <steffen.klassert@secunet.com>; Sun, 31 Mar 2024 02:38:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CD0F38FA5;
-	Sat, 30 Mar 2024 12:01:23 +0000 (UTC)
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190=
-])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB1C03D6D;
+	Sun, 31 Mar 2024 02:38:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=3Dpass (2048-bit key) header.d=3Dgmail.com header.i=3D@gmail.com head=
+er.b=3D"XleIRPSp"
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161=
+.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29FB1E896;
-	Sat, 30 Mar 2024 12:01:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A6C181;
+	Sun, 31 Mar 2024 02:38:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=3Dnone smtp.client-ip=
-=3D45.249.212.190
+=3D209.85.161.45
 ARC-Seal: i=3D1; a=3Drsa-sha256; d=3Dsubspace.kernel.org; s=3Darc-20240116;
-	t=3D1711800081; cv=3Dnone; b=3DWJbbV270t/ooVwRu27l3kpbpO/LNp3fBVfRjqDSUiCB=
-L1/yhmqeX05AdQ5vC9vo421dyQlYdRNrAG/3dLmqvHvHH3IOXbqbnkcRGS5ljWtW9WpuJVFyUYB=
-q7iefT2u8Y2EsHJMJjqK0UHGQnJZOlWMwRiKLeHwXjs5A0t2k/zBc=3D
+	t=3D1711852689; cv=3Dnone; b=3DgXNEolHo55cI9s9E0fe7uOOSm88Jz7dwj3ls8ge3nw8=
+RDM4vYnsK3QkV/TYCu8HKWXSxelrGFg26OaTa0ta2xAeaumLm+bNicuklMkDBxzgMakTmXxNf8x=
+fV/uZLU1lr3i868qhdgUvfJgx0ptM9DjM8hr8IuQzNZ6hDb2tE66w=3D
 ARC-Message-Signature: i=3D1; a=3Drsa-sha256; d=3Dsubspace.kernel.org;
-	s=3Darc-20240116; t=3D1711800081; c=3Drelaxed/simple;
-	bh=3DfT3FnLwhlqo35Pj+pAK551GXQXi8alEtZAKvfSYeaHU=3D;
-	h=3DSubject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=3DGysezl9oW2wx2m1NIwuS5aCuwl7HEGn2RtF3oLAyvdI=
-CdI9EdoKb99h/KeqXZzq3y49d/36QaSMvGlijVKast3vaki1kT/opXa8XfqWWufE7zSFpHwMOXG=
-VeeMdlmccqp9Eb+dtVlMhV0NpG4fjzqbWHbE5Lf0g0516IE1P/Sc0=3D
+	s=3Darc-20240116; t=3D1711852689; c=3Drelaxed/simple;
+	bh=3DSNeN2CYj+6bo6yYIrP8F5A4iIl0/Q9yGn+qoKYRUWH4=3D;
+	h=3DMessage-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=3DWX0BCLiJLkXYSF23cXoAUUoCaN3U++73B96a084d5eB=
+yR6abt19vx+RRgPeFHn/FNkK/J6TmDIJzyF4IYk3FZTEjQ9I/pyxKjnmYqJBhqHBxbDk+/e+NGJ=
+90rlOfa4MF1hGhvlAequCF3PKJT9TuvWJc3UIpKmFlHj11ZC0GCMk=3D
 ARC-Authentication-Results: i=3D1; smtp.subspace.kernel.org; dmarc=3Dpass (=
-p=3Dquarantine dis=3Dnone) header.from=3Dhuawei.com; spf=3Dpass smtp.mailfr=
-om=3Dhuawei.com; arc=3Dnone smtp.client-ip=3D45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=3Dpass (p=3Dquarant=
-ine dis=3Dnone) header.from=3Dhuawei.com
+p=3Dnone dis=3Dnone) header.from=3Dgmail.com; spf=3Dpass smtp.mailfrom=3Dgm=
+ail.com; dkim=3Dpass (2048-bit key) header.d=3Dgmail.com header.i=3D@gmail.=
+com header.b=3DXleIRPSp; arc=3Dnone smtp.client-ip=3D209.85.161.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=3Dpass (p=3Dnone di=
+s=3Dnone) header.from=3Dgmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=3Dpass smtp.mailfrom=
-=3Dhuawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4V6G542s8Wz29lQT;
-	Sat, 30 Mar 2024 19:58:32 +0800 (CST)
-Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id A15F21A0172;
-	Sat, 30 Mar 2024 20:01:14 +0800 (CST)
-Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.=
-com
- (7.185.36.74) with Microsoft SMTP Server (version=3DTLS1_2,
- cipher=3DTLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Sat, 30 M=
-ar
- 2024 20:01:14 +0800
-Subject: Re: [PATCH RFC 01/10] mm: Move the page fragment allocator from
- page_alloc into its own file
-To: Christophe Leroy <christophe.leroy@csgroup.eu>, "davem@davemloft.net"
-	<davem@davemloft.net>, "kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>
-CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Howel=
-ls
-	<dhowells@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>
-References: <20240328133839.13620-1-linyunsheng@huawei.com>
- <20240328133839.13620-2-linyunsheng@huawei.com>
- <b5fe4c81-a7e6-4620-b0b6-a56ce7a2c304@csgroup.eu>
-From: Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <9e03b278-aaeb-d11c-d2e0-d45ca5e97346@huawei.com>
-Date: Sat, 30 Mar 2024 20:01:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+=3Dgmail.com
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5a47cecb98b=
+so2073304eaf.0;
+        Sat, 30 Mar 2024 19:38:08 -0700 (PDT)
+DKIM-Signature: v=3D1; a=3Drsa-sha256; c=3Drelaxed/relaxed;
+        d=3Dgmail.com; s=3D20230601; t=3D1711852687; x=3D1712457487; darn=
+=3Dvger.kernel.org;
+        h=3Dcontent-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3DlUs6NaIvupBIrN3kNgIHykr6WEWtZD3EhPX18G9uddY=3D;
+        b=3DXleIRPSp55P9VHB7a2r/titnJwBaAjVmwFFWncW/trJnpln7+XtSjSvi9uqMgHE=
+Nno
+         mXoHhat/Z/Iu/etVc504MD8mbcqjpCdo92CyUAjqoOvDmqxWOTlUEoKSZpMXMU1tjG=
+DE
+         XbpXwWhrrBDGTCSBhMimQlOAAiFIgIn6MMASG45+bZdtNZH3XVRJ5bVJUjjXsZsqVS=
+uD
+         EAr0yLfv7Xw4ek1Nrgh1EsDej1shKOAN+fHmpmCt2k67uc0kQqgZTsLvlgNdkJABYu=
+mM
+         NqMAc3CT/Ikjfg8Q4m9fVK1ahVo7HmKBBnIuDdfrFTz3L4Mf85eUXTvDWIq6NjILU5=
+Zk
+         EE5A=3D=3D
+X-Google-DKIM-Signature: v=3D1; a=3Drsa-sha256; c=3Drelaxed/relaxed;
+        d=3D1e100.net; s=3D20230601; t=3D1711852687; x=3D1712457487;
+        h=3Dcontent-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3DlUs6NaIvupBIrN3kNgIHykr6WEWtZD3EhPX18G9uddY=3D;
+        b=3DdR8iI2wu/bgmWoKgd3fQy1Qs3x8Gg8zaFnPHbg0FZVEZ0RXNeEaOyPNYJ1aIfjy=
+24D
+         15h1F4+67W51lrSYAej/3JXzlWZZfwN+sEoBc+2m+UdBjvHf18AI150uR/j7E1kwLd=
+bX
+         sGYqzl76u5sQvTr0S681UIXwuJI8SbyuckQSRFHBqVNDfJVH0TIeYJflzO0R6FpSMC=
+8R
+         9zz21UCZ3xMyhIWChGyQmc7Wt48iBBORmO2pxhHMcl7c4qiPRydQGd654U39D+gB3w=
+eL
+         ELldBLvIApWZmFYYutf7AN/jmQk6rSAo74Gm8P8UkZUIxFx+1qy0xVLs34o8roNuo1=
+WX
+         +QIg=3D=3D
+X-Forwarded-Encrypted: i=3D1; AJvYcCVwL3cU3nCsvXYDTwS66oYsIOZe9xNTNPxXhx+b5=
+LI0hF4hupv8P5wIUYO2JPUDl0WepDijhDJPYBg1N560PbnJ5RAa4R88i26Vu9VypwbBZecB5aqb=
+sTeOFXgu4wuUSU6yA7yyNW3bsx+drdJwvoi1WZf5gLyATZ+18fbURnSBI4TAocIuILlIqVomkqo=
+ToJcDzLA9S5fTrbiTCkqMZeE=3D
+X-Gm-Message-State: AOJu0YyW7TJsviPHgdYwWIVD+v3Bv1LiX1phxqUeZ9O5THjJ2TKywZ9=
+M
+	IdQhsJIEEtX7xf5p5m/dh/a51J+VTrkHVZa0tY90NWObJeeGoGmG
+X-Google-Smtp-Source: AGHT+IG8y/mw6Sg+NJ68AiBnOVhIGZhncP4yQFjwCnn6QvLTTTIKr=
+8wBQM2lppgPQLGZ1h9+K7oVJA=3D=3D
+X-Received: by 2002:a05:6820:260e:b0:5a5:639a:2fb8 with SMTP id cy14-20020a=
+056820260e00b005a5639a2fb8mr6074835oob.4.1711852687375;
+        Sat, 30 Mar 2024 19:38:07 -0700 (PDT)
+Received: from [192.168.1.22] (070-114-247-242.res.spectrum.com. [70.114.24=
+7.242])
+        by smtp.googlemail.com with ESMTPSA id bf14-20020a056820174e00b005a=
+4bcb155basm1611035oob.23.2024.03.30.19.38.06
+        (version=3DTLS1_3 cipher=3DTLS_AES_128_GCM_SHA256 bits=3D128/128);
+        Sat, 30 Mar 2024 19:38:07 -0700 (PDT)
+Message-ID: <aae9bc89-ca34-400f-9c5e-44be1df2befa@gmail.com>
+Date: Sat, 30 Mar 2024 21:38:05 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <b5fe4c81-a7e6-4620-b0b6-a56ce7a2c304@csgroup.eu>
-Content-Type: text/plain; charset=3D"utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] KEYS: Add ECDH support
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500005.china.huawei.com (7.185.36.74)
-Return-Path: linux-kernel+bounces-125719-steffen.klassert=3Dsecunet.com@vge=
+To: Eric Biggers <ebiggers@kernel.org>,
+ James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Zhang Yiqun <zhangyiqun@phytium.com.cn>, dhowells@redhat.com,
+ jarkko@kernel.org, corbet@lwn.net, keyrings@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-crypto@vger.kernel.org
+References: <20240330065506.3146-1-zhangyiqun@phytium.com.cn>
+ <20240330070436.GA2116@sol.localdomain>
+ <087bbfcf95c9014ee8f87d482773244f0833b892.camel@HansenPartnership.com>
+ <20240331004844.GA104623@sol.localdomain>
+From: Denis Kenzior <denkenz@gmail.com>
+In-Reply-To: <20240331004844.GA104623@sol.localdomain>
+Content-Type: text/plain; charset=3D"UTF-8"; format=3Dflowed
+Content-Transfer-Encoding: 7bit
+Return-Path: linux-kernel+bounces-125931-steffen.klassert=3Dsecunet.com@vge=
 r.kernel.org
-X-MS-Exchange-Organization-OriginalArrivalTime: 30 Mar 2024 12:01:40.9382
+X-MS-Exchange-Organization-OriginalArrivalTime: 31 Mar 2024 02:38:26.2603
  (UTC)
-X-MS-Exchange-Organization-Network-Message-Id: 6ede3bfb-a1cd-47dd-a20c-08dc=
-50b12923
-X-MS-Exchange-Organization-OriginalClientIPAddress: 62.96.220.36
-X-MS-Exchange-Organization-OriginalServerIPAddress: 10.53.40.201
-X-MS-Exchange-Organization-Cross-Premises-Headers-Processed: cas-essen-01.s=
+X-MS-Exchange-Organization-Network-Message-Id: 25f48256-d726-4dcd-c568-08dc=
+512ba45a
+X-MS-Exchange-Organization-OriginalClientIPAddress: 62.96.220.37
+X-MS-Exchange-Organization-OriginalServerIPAddress: 10.53.40.202
+X-MS-Exchange-Organization-Cross-Premises-Headers-Processed: cas-essen-02.s=
 ecunet.de
 X-MS-Exchange-Organization-OrderedPrecisionLatencyInProgress: LSRV=3Dmbx-dr=
-esden-01.secunet.de:TOTAL-HUB=3D0.415|SMR=3D0.344(SMRDE=3D0.034|SMRC=3D0.30=
-9(SMRCL=3D0.102|X-SMRCR=3D0.310))|CAT=3D0.069(CATOS=3D0.011
+esden-01.secunet.de:TOTAL-HUB=3D0.407|SMR=3D0.357(SMRDE=3D0.050|SMRC=3D0.30=
+6(SMRCL=3D0.100|X-SMRCR=3D0.306))|CAT=3D0.049(CATOS=3D0.011
  (CATSM=3D0.011(CATSM-Malware
- Agent=3D0.010))|CATRESL=3D0.040(CATRESLP2R=3D0.020)|CATORES=3D0.016
- (CATRS=3D0.016(CATRS-Index Routing Agent=3D0.015)));2024-03-30T12:01:41.38=
-8Z
+ Agent=3D0.011))|CATRESL=3D0.023(CATRESLP2R=3D0.017)|CATORES=3D0.012
+ (CATRS=3D0.012(CATRS-Index Routing Agent=3D0.011)));2024-03-31T02:38:26.69=
+9Z
 X-MS-Exchange-Forest-ArrivalHubServer: mbx-dresden-01.secunet.de
-X-MS-Exchange-Organization-AuthSource: cas-essen-01.secunet.de
+X-MS-Exchange-Organization-AuthSource: cas-essen-02.secunet.de
 X-MS-Exchange-Organization-AuthAs: Anonymous
 X-MS-Exchange-Organization-FromEntityHeader: Internet
-X-MS-Exchange-Organization-OriginalSize: 7561
+X-MS-Exchange-Organization-OriginalSize: 9469
 X-MS-Exchange-Organization-HygienePolicy: Standard
-X-MS-Exchange-Organization-MessageLatency: SRV=3Dcas-essen-01.secunet.de:TO=
-TAL-FE=3D0.034|SMR=3D0.010(SMRPI=3D0.007(SMRPI-FrontendProxyAgent=3D0.007))=
-|SMS=3D0.025
+X-MS-Exchange-Organization-MessageLatency: SRV=3Dcas-essen-02.secunet.de:TO=
+TAL-FE=3D0.032|SMR=3D0.022(SMRPI=3D0.020(SMRPI-FrontendProxyAgent=3D0.019))=
+|SMS=3D0.009
 X-MS-Exchange-Organization-AVStamp-Enterprise: 1.0
 X-MS-Exchange-Organization-Recipient-Limit-Verified: True
 X-MS-Exchange-Organization-TotalRecipientCount: 1
@@ -539,64 +372,48 @@ X-MS-Exchange-Organization-Rules-Execution-History: 0b0cf904-14ac-4724-8bdf=
 6-8c5d-b3d6ddbb3d55%%%16355082-c50b-4214-9c7d-d39575f9f79b
 X-MS-Exchange-Forest-RulesExecuted: mbx-dresden-01
 X-MS-Exchange-Organization-RulesExecuted: mbx-dresden-01
-X-MS-Exchange-Forest-IndexAgent-0: AQ0CZW4AAXADAAAPAAADH4sIAAAAAAAEAG1U227j=
-NhClZUlW5Hi7nz
- Bv2QVcO5d92M3DAmmBFgG23QJFCxRFYSgSbQmhSJWkYrhf09e+9hf2
- xzoztFR3U4AWSM7MmXPOMPk7+6jh+vL6zfpmfXMJV7dX75bwdW0b50
- 1XS/ggrTnA3hovbxf5+7DwFq7fri9v1lQJn/6Eqze3N2+X8EuvXS31
- Dj40Ggr49FdpGw9U+B7utesaKyt4OMCvV78t4aH30DsJWyvlptdWbj
- ddsZOvXoM3YGWnivIY9LU8hhip0c7LogKzhc2GEyjoXr1eMt7P322+
- +unbzcfvA1JZ+LIGXxce9hJPmpIY53njCgmWXh2WUChnoKgqaLwDs9
- dQY0dpYdsouaJqRrhzCCzh7od7aDBNqwOBs0S619LvjX1s9G6JONAW
- B/w9SnBSI09vGKM1T5KiSPW/NUc2xh5ANVhFUeK56YxRUBnp0Am6DW
- J631sE2g4quRPVPJdZFkoVD0qC6b1rKklODjhtC65/cAe0uF3Bna5G
- 13yjmj9kcBLJVrI0fadCjwvnbV965ndxHNLnckbYIRYor45v6v6ihb
- 3RaDIlN8QIPSVAVFDsWqk9TkUZnKexgL1VNb6SwRrC+Z9kngk27cxe
- 2q4k9sfgCTZ6wM8ItsYSDnf2ZJNDiov8G2tafNO/9035CDtV6FLyVJ
- 2ULfI0zjWYu4J79hJHUeCvw78b7ZtCEQfrFrmhGHn4zB5sGyTja1oO
- pj9K2VETJH86mEVO2drsoXCDT/TK+VEUODMkBTWGMYbQ+0YpkE9GPU
- mWwn7/KIliWa+Prqzbdt3tWPCXZMqqPCb++9+ALxa5EJGYxhNxhksk
- ExFFEzrGAleai3ki0kS8xJxoInJcuMF8zJxEiRCJmGXibCqwAo/nuI
- 8muBcIMOWFhy9EgiCxmGHhTGR4sxAJhcQcj9juXEQx5RBORDSmtBEJ
- 5nMhbRgtO0XLRB4zTlipmMXixZAZB5JjbS7Ow4YbpRElU2iIzs8GtJ
- h9OKnNUmY+ln8mCiWTCs7E75mYh+74JbEMwhYlzDA/7Rj2qXiB33AM
- fTEfj4iPCNw0CzcBLbTDG3KbLZqynFTMY54g3qScg5uMYTknZsxZsD
- RwGBQlo7qgdBQyOjlWhRWOqXgZqgKl2UScs+SJyPJ/ACIC+6mMBgAA
- AQ7PAVJldHJpZXZlck9wZXJhdG9yLDEwLDE7UmV0cmlldmVyT3Blcm
- F0b3IsMTEsMDtQb3N0RG9jUGFyc2VyT3BlcmF0b3IsMTAsMDtQb3N0
- RG9jUGFyc2VyT3BlcmF0b3IsMTEsMDtQb3N0V29yZEJyZWFrZXJEaW
- Fnbm9zdGljT3BlcmF0b3IsMTAsMDtQb3N0V29yZEJyZWFrZXJEaWFn
- bm9zdGljT3BlcmF0b3IsMTEsMDtUcmFuc3BvcnRXcml0ZXJQcm9kdW NlciwyMCwxMA=3D=3D
-X-MS-Exchange-Forest-IndexAgent: 1 1102
-X-MS-Exchange-Forest-EmailMessageHash: 1B46C7A0
+X-MS-Exchange-Forest-IndexAgent-0: AQ0CZW4AAfgBAAAPAAADH4sIAAAAAAAEAE1SXWvb=
+MBRVE38k7jLYP7
+ hvheDlJwxCE2jYHkbpy56KYt/Uoq5kJHmr/9N+5I6kzBQuRvfcc849
+ Ev6bPSg6WtXUm2pTfUPR/m10Sr/0U02+Y+J35Tx6+n78df/04/nw8L
+ yl/c+Tq0nqNlKuk+P9PKPBmsE4buk8BU/fKWDSN11NRvcTmYGt9IyG
+ RseWXnlyYEkfDaFu2DnqpKPH4/5Asom9NzuiJ3gFzzeW+oMmOjRS05
+ nJW/VbyR57+N1b2fgYhCS5jvueXGPV4MmOWoeLKU2TGW3wjFkcVimj
+ 4yrp7xxteyBb4M1oOWwMoYMSB+VML4P/NfNut4vvuKlOMY1jTrc/c1
+ B4OzJdjE2bzLwsxq/pPHo6UWv0XbiU0q9JGy4cleYyvw20vrMsW3ID
+ N+qimuiB1HtPPUsXnBoz9m0wi0Spp/RMZvSbCl6SPIMnh4H+dKwhwM
+ txuwvxH/lF2tbhv/h6YB0SbCohFmKZic9rcbsU2UqsixtRiXIh8kwU
+ QFBAPokyC5WDsBAFDnlsS7GK8jwVyEDwxbm4mqzyyE8gvuCvRYXC4U
+ YsMAXzv88qelZFOAQ8Liowwt5SfAE/RUr4bAtCGSVok2eaLj5M8YUh
+ fLIQbAkCmLGds+Up0oxEq6oUt/k/l0NX+VQDAAABDs4BUmV0cmlldm
+ VyT3BlcmF0b3IsMTAsMTtSZXRyaWV2ZXJPcGVyYXRvciwxMSwwO1Bv
+ c3REb2NQYXJzZXJPcGVyYXRvciwxMCwwO1Bvc3REb2NQYXJzZXJPcG
+ VyYXRvciwxMSwwO1Bvc3RXb3JkQnJlYWtlckRpYWdub3N0aWNPcGVy
+ YXRvciwxMCwwO1Bvc3RXb3JkQnJlYWtlckRpYWdub3N0aWNPcGVyYX
+ RvciwxMSwwO1RyYW5zcG9ydFdyaXRlclByb2R1Y2VyLDIwLDY=3D
+X-MS-Exchange-Forest-IndexAgent: 1 725
+X-MS-Exchange-Forest-EmailMessageHash: 759BD60A
 X-MS-Exchange-Forest-Language: en
 X-MS-Exchange-Organization-Processed-By-Journaling: Journal Agent
 
-On 2024/3/30 1:19, Christophe Leroy wrote:
->=20
->=20
-> Le 28/03/2024 =C3=A0 14:38, Yunsheng Lin a =C3=A9crit :
->> Inspired by [1], but use free_unref_page() to replace free_the_page()
->> instead of __free_pages(), use VM_BUG_ON() to catch that we can use
->> free_unref_page() directly, also add its own header file.
->>
->> As the API is only used by the networking, it may make sense to
->> move it to the networking directory like the page_pool does in the
->> future if we can make the free_unref_page() callable outside of the
->> mm subsystem. And we can utilize that to decouple the 'struct page'
->> in the networking subsystem in the future.
->=20
-> I'm wondering if this page fragment allocator could replace the page=20
-> fragment allocator used in powerpc to allocate fragment of pages for=20
-> page tables.
-
-From a quick glance, it seems possible. If there are potential users
-other than the networking for this API, we can keep it in mm subsystem
-for now as this patch does and see how thing will evolve.
+Hi Eric,
 
 >=20
-> See arch/powerpc/mm/pgtable-frag.c
+> Amusingly, the existing KEYCTL_DH_* APIs, and the KEYCTL_ECDH_* APIs prop=
+osed by
+> this patch, only operate on user keys that the process has READ access to=
+.  This
+> means that the keys can be trivially extracted by a shell script running =
+in your
+> user session.  That's *less* secure than using an isolated process...
 >=20
-> Christophe
->=20
+
+I can see this being true for user or session keys, but I don't think this =
+is=20
+true of process or thread specific keys.  At least I couldn't read any keys=
+ out=20
+of a test app when I tried.
+
+Regards,
+-Denis
 
