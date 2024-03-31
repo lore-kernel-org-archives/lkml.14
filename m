@@ -1,33 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39E92AE66;
-	Sun, 31 Mar 2024 10:19:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B52EEC0;
+	Sun, 31 Mar 2024 10:26:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711880398; cv=none; b=KuLRx6GPMJ7yIXdELa+WF4qdNagHXkaHG5nB47gGzaF5SMwWL8Yxj3264z2RdYVTi5Li9XdymkuHIoLAvonOIYUbDdLl8c5m2JgkpcLyf2vH9GeDcF8x6Ll5InGiHrquBsZUwVrC4Sg2N1/T6yxAz0TeXMOn0di/Qyg4mXqXyYU=
+	t=1711880773; cv=none; b=HyrqipNXG4RmEjPFEIrZ0IJ9TnqnRVlJgvcC0sh+Ql54fsGKAsr0w2lyVLIKgRM7/rqd74g/FPvuaTYUzBM/HyQv5i5iqCptyGTG8L5NsuXWPpTRHeMuNIl0Tj+nMcjeErobfWnVbj3bCs6X4xchOSAnhWcRLirhy+enreku9jE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711880398; c=relaxed/simple;
-	bh=PwbEoi4UwK9F4HKq6a7upZnV6eqHtWN+7WjlzHonK94=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=QYIItfjrdnDCZjZV5Ckg/hLqB6sMOshCiQbznc3THsgR6IelR6liGTQ8zskpqPcVOUpFlJGAyjapVCqOyMXT6Q7aWiUX30L4nX2lLh813yI5RwxUKsSs5Wsrrbm1ughreJ9pABa4m/bycv94DoFEl6e1GPN9828etmxvAe/1ErU=
+	s=arc-20240116; t=1711880773; c=relaxed/simple;
+	bh=6AKqxBQuhOwbqisg4ObQCrFphRBbPTiioJp5iOpryvc=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Rvk6U9n7bsyVc/FmBM8HzpZWxTIlL+Pzh+GxaRKzecH7LIsuqjz8k3s9qT7eET/kTdKei3gx7fRXlDicxbeHVy405j0kjf2N5sA7rGR1Q2HZWfCXUWMjC7Vwx5M3Cr5P8Yz5xFnU08rBBRibyFr10M1AUQXIWqKFLaF/d/iUJ/k=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 032F7C433F1;
-	Sun, 31 Mar 2024 10:19:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17277C433F1;
+	Sun, 31 Mar 2024 10:26:08 +0000 (UTC)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>, 
- Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Jaewon Kim <jaewon02.kim@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240328091000.17660-1-jaewon02.kim@samsung.com>
-References: <CGME20240328091426epcas2p4f227abb6cd7e710f49f4e61aa022f74f@epcas2p4.samsung.com>
- <20240328091000.17660-1-jaewon02.kim@samsung.com>
-Subject: Re: [PATCH] clk: samsung: exynosautov9: fix wrong pll clock id
- value
-Message-Id: <171188039458.21481.12012544033214893386.b4-ty@linaro.org>
-Date: Sun, 31 Mar 2024 12:19:54 +0200
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+	Tony Lindgren <tony@atomide.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	linux-omap@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH 1/2] arm64: dts: ti: k3-am62p5-sk: minor whitespace cleanup
+Date: Sun, 31 Mar 2024 12:26:03 +0200
+Message-Id: <171188072142.23696.6709925029705971875.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240208105146.128645-1-krzysztof.kozlowski@linaro.org>
+References: <20240208105146.128645-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,22 +41,25 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
 
 
-On Thu, 28 Mar 2024 18:10:00 +0900, Jaewon Kim wrote:
-> All PLL id values of CMU_TOP were incorrectly set to FOUT_SHARED0_PLL.
-> It modified to the correct PLL clock id value.
+On Thu, 08 Feb 2024 11:51:45 +0100, Krzysztof Kozlowski wrote:
+> The DTS code coding style expects exactly one space before '{'
+> character.
 > 
 > 
+
+This is waiting on the lists for almost two months, so I just picked it up. Let
+me know if anyone prefers to take it instead.
 
 Applied, thanks!
 
-[1/1] clk: samsung: exynosautov9: fix wrong pll clock id value
-      https://git.kernel.org/krzk/linux/c/04ee3a0b44e3d18cf6b0c712d14b98624877fd26
+[1/2] arm64: dts: ti: k3-am62p5-sk: minor whitespace cleanup
+      https://git.kernel.org/krzk/linux-dt/c/9d0ee097b3e5873e4e98770b94f11481f485e7c9
+[2/2] ARM: dts: ti: omap: minor whitespace cleanup
+      https://git.kernel.org/krzk/linux-dt/c/021bc7094e8c8ac1380527d3f53561c9a234a190
 
 Best regards,
 -- 
 Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
