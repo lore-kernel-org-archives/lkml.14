@@ -1,86 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A0841A8F;
-	Mon,  1 Apr 2024 14:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094D91E524;
+	Mon,  1 Apr 2024 14:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711983005; cv=none; b=tL7RcWp2Qi5/IDH5QTyGr/v7LGl21W1Ajqjl0To5+xQ5RAzQXuDtxHcN3oRBRmaR7gpm/O74Th0fUDxfb+j8n1bJ86TktslMVXdKLRL/YkigLjeA70sCqRPVGkPFeSL+4aT1OWeYJ4Cpp+gCpNLDMhkD0agjqAvRZv+jHdPJ9F4=
+	t=1711983144; cv=none; b=gFuvmeYUCYjtm4PVbHc/7esrUZi4XPRlXg5leh7xJNHOwCRTbbAm2DtJ/TcN3FN/L01b0Uqo0F/GpFl5PLxPD4K2C2SqyzcxR9qX7zp/oX2rRXZy4lRcDL2H7+bfHaZTlddKhZwQugITtvrCGZfNv2yoRv5WPsdNswjdxrr+Zsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711983005; c=relaxed/simple;
-	bh=g1p0JxSTbPiaXdqzfHvytWBMEFzWaRM2oDNw0BLXbDM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=beXWKQ6hYDNItyeDK1Oleujs/yyaTPkX1Cx2EfUMWNBEO0zTktJoHOuZvrIVyuUcl96Ybe1KaqI0aCYn2Z6Bn6bm/mCfeUVRmIIWozZJ/6x+WNPenZUIE5Yj3Wa4iV73K3cjf5sigVp6+ad8qSrEFdY0PSpOG9ym2ikoNm0JmhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YXfpB+RM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711983144; c=relaxed/simple;
+	bh=438B1qFDGK4E7qNtrBv71zUhFqP1FhEaXtT+LCkE+Vc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ECryV8DyHWMNuQbXxpLQaH8/IYyOCdH/Md548CHzKVbtYeiVGakPQxzvwK275HxV9g+jhHBa7qWH2JEeXo3/oymjO2dQOLsELr9CahFzSYn0aRkRP/U7QXE0SPJ+5XrdrD4+2YEtNnh2TpQVfH76eHcQZTNh2SZM08X9RCFZLbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=5LTPRuyT; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YXfpB+RM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F511C433F1;
-	Mon,  1 Apr 2024 14:50:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711983004;
-	bh=g1p0JxSTbPiaXdqzfHvytWBMEFzWaRM2oDNw0BLXbDM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=YXfpB+RM11goqpxKtttYlK6UvF9aR8UcwfJ4cL5CtJWzh7EV9VkLbYkeXKv58ziQx
-	 H+MhTNW9PM2SEKhLM09Karx5kuEXeY00ZvvARbkyE+mlNJQx8dDymrm21yHBGFX9Up
-	 GK1bfM8GqdBdcFsaWeSZqHWEOP9mJUdSuiCQgiNBoQG6NILTSZMFLj5DTALdriUAGP
-	 sQsp3wtgC9kEQKoQuLi2U93MsH6AxDtLigxnWZLMIfIRv98bvveO02cOL3SXassvcX
-	 1JOFyGATYyHSifK9907WxBQZVyRRXl6VV4GuaOXcen3H6CcT7M4AtNnBWlklaSlrel
-	 GjbaFKno2ZtJw==
-Date: Mon, 1 Apr 2024 07:50:03 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: David Ahern <dsahern@kernel.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgg@nvidia.com>, Christoph
- Hellwig <hch@infradead.org>, Saeed Mahameed <saeed@kernel.org>, Arnd
- Bergmann <arnd@arndb.de>, Jiri Pirko <jiri@nvidia.com>, Leonid Bloch
- <lbloch@nvidia.com>, Itay Avraham <itayavr@nvidia.com>, Saeed Mahameed
- <saeedm@nvidia.com>, Aron Silverton <aron.silverton@oracle.com>,
- linux-kernel@vger.kernel.org, "netdev@vger.kernel.org"
- <netdev@vger.kernel.org>, Andy Gospodarek <andrew.gospodarek@broadcom.com>,
- Junxian Huang <huangjunxian6@hisilicon.com>
-Subject: Re: [PATCH V4 0/5] mlx5 ConnectX control misc driver
-Message-ID: <20240401075003.70f5cb4b@kernel.org>
-In-Reply-To: <20240401123003.GC73174@unreal>
-References: <20240214175735.GG1088888@nvidia.com>
-	<20240304160237.GA2909161@nvidia.com>
-	<9cc7127f-8674-43bc-b4d7-b1c4c2d96fed@kernel.org>
-	<2024032248-ardently-ribcage-a495@gregkh>
-	<510c1b6b-1738-4baa-bdba-54d478633598@kernel.org>
-	<Zf2n02q0GevGdS-Z@C02YVCJELVCG>
-	<20240322135826.1c4655e2@kernel.org>
-	<e5c61607-4d66-4cd8-bf45-0aac2b3af126@kernel.org>
-	<20240322154027.5555780a@kernel.org>
-	<1cd2a70c-17b8-4421-b70b-3c0199a84a6a@kernel.org>
-	<20240401123003.GC73174@unreal>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="5LTPRuyT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=l6cdcCffiyqQ85g8QytdmumKmJEO9REkErCkGkgH4E0=; b=5LTPRuyT/MJo0B1JMM38g43kiu
+	NunZagr+vK3P6DgBDgh2h7nY30UhosMnGBPIl73npzg5kTlqWGmkIQBFkaDofyfh1ze8IzlUWyiLf
+	HkKJeWyPlyd9JsqkTME4IytK10uLimA4LMoAwbl4SbNHg1J9aXCPvaVbhedR5g+0hvWg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rrJ1D-00Bray-BT; Mon, 01 Apr 2024 16:52:15 +0200
+Date: Mon, 1 Apr 2024 16:52:15 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Gregory Clement <gregory.clement@bootlin.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] arm64: dts: marvell: cn9130-db: drop wrong
+ unit-addresses
+Message-ID: <c3f15b59-7cc6-4721-a428-e032c2bba5c5@lunn.ch>
+References: <20240401141051.98233-1-krzk@kernel.org>
+ <20240401141051.98233-4-krzk@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240401141051.98233-4-krzk@kernel.org>
 
-On Mon, 1 Apr 2024 15:30:03 +0300 Leon Romanovsky wrote:
-> > The proposal is an attempt at a common interface and common tooling to a
-> > degree but independent of any specific subsystem of which many are
-> > supported by the device.
-> > 
-> > Your responses continue to align with the notion that because the device
-> > can spit out ethernet frames, all diagnostics, debugging, configuration,
-> > etc. MUST go through networking APIs.
-> > 
-> > You seem unwilling to acknowledge that devices can work for various use
-> > cases without a netdev driver, and thus aspects of managing that device
-> > should be done outside of a netdev driver.  
+On Mon, Apr 01, 2024 at 04:10:49PM +0200, Krzysztof Kozlowski wrote:
+> Top-level nodes, not being on MMIO bus, do not have "reg" properties and
+> should not have unit addresses.  Correct their name as well to match
+> "Generic node names" recommendation from Devicetree specification.
+> This also fixes dtc W=1 warnings:
 > 
-> HNS driver is a good example of such device. It has nothing to do with
-> netdev and needs common and reliable way to configure FW.
+>   cn9130-db.dtsi:28.11-31.4: Warning (unique_unit_address_if_enabled): /memory@0: duplicate unit-address (also used in node /ap0_sd_vccq@0)
+>   cn9130-db.dtsi:28.11-31.4: Warning (unique_unit_address_if_enabled): /memory@0: duplicate unit-address (also used in node /cp0_usb3_vbus@0)
+>   cn9130-db.dtsi:33.33-40.4: Warning (unique_unit_address_if_enabled): /ap0_sd_vccq@0: duplicate unit-address (also used in node /cp0_usb3_vbus@0)
+>   cn9130-db.dtsi:28.11-31.4: Warning (unique_unit_address_if_enabled): /memory@0: duplicate unit-address (also used in node /cp0_usb3_phy@0)
+>   cn9130-db.dtsi:33.33-40.4: Warning (unit_address_vs_reg): /ap0_sd_vccq@0: node has a unit name, but no reg or ranges property
+>   cn9130-db.dtsi:42.38-49.4: Warning (unit_address_vs_reg): /cp0_usb3_vbus@0: node has a unit name, but no reg or ranges property
+>   cn9130-db.dtsi:51.34-54.4: Warning (unit_address_vs_reg): /cp0_usb3_phy@0: node has a unit name, but no reg or ranges property
+>   cn9130-db.dtsi:56.38-63.4: Warning (unit_address_vs_reg): /cp0_usb3_vbus@1: node has a unit name, but no reg or ranges property
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Sorry, I have a completely different reading of that thread.
-Thanks for bringing it up, tho.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-As I said multiple times I agree that configuring custom parameters
-in RDMA is a necessity. Junxian's approach of putting such code in
-the RDMA driver / subsystem is more than reasonable. Even better,
-it looks like the API is fairly narrowly defined.
+    Andrew
