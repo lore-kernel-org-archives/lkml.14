@@ -1,125 +1,248 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C27C129;
-	Mon,  1 Apr 2024 16:27:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0074DDF6B
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 16:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711988875; cv=none; b=ITUftiZ2wZcdSRSq1GZDkSyrcAASp0QCuoSGmFt+/a+1mqJz+eivxS3Yx2ODQjrj0Pjq7J5UlL7Mto8fE+qRH9YIlV+FU/47fQmxCT7te+rt8KimRmqmCq55wHhm+g18EMCQzLfoOwZlw1hGvH4HvNKQ2/dJjptKRkz67HwfAtU=
+	t=1711989275; cv=none; b=dXnc1RZdI9RF9PoqAqo2magzqKc848YHOoX/+fkQLNHYgXWq/b0VH1w9Y0yq7zFSAEx9bvrs/iJHm+wdBLin00z7gPMRz/2VHnSCbCycY2rw6DEs5EmadqO1ZoxtlhTrQ+TQtmXP7Y7lReOPJxsTgow39sUTn6QbG78bQZsL8hA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711988875; c=relaxed/simple;
-	bh=Ya4h15FkpoXHhaMquYV0OAHhjoJCo638P01fWR22oqA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FmYHqUkdpyDv4he26yskw9pjjcU8fJW79u0/ffVbwtABHTDkGUl+wiQhP3jUlJc6UjnDoSVM4tiQ7N4Q2EKK5igwj6i0YTW8l33FFt2INaEcIi0FF+9fdliXXG5ctsiGeL4oBaE4a1nrDqvO8q3DVzDh0jECJ4QSBQM0DfWG6GE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ND1vihcI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711989275; c=relaxed/simple;
+	bh=eUPutGowJt1raeqUkz6idfgAosZAe5YLjWw+N/1N10g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S3jD7KkOdFVu6hLBtic2FMpBbY3DkLttIleHvUG37KO4YS0XcGYvPn1kSl/SLLQnvQkIvFWZ1v97T+C+nVK1vPbKGzDiiGTv7hatGw4Apjkr58yrc3gbTXXJ+ve8Q3VUz9iOzbdGeCeMWHCAieqB5IIgXBYm8TkY1mnpmfDUOEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bxqpg31C; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ND1vihcI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C30A2C433C7;
-	Mon,  1 Apr 2024 16:27:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1711988875;
-	bh=Ya4h15FkpoXHhaMquYV0OAHhjoJCo638P01fWR22oqA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ND1vihcIz81AMfxstjMQTE4GzR0SOgWZx3kAtH94vGVkdGDZWbdnYcBXaGVFsUUe6
-	 TzBYf5mS9poSePyAiKKw5SPxigbvubsMrPKB4aH6rUo5bSBXM01cn4F2gw9Do4kumE
-	 moYua1GoccKVEGmacInkbEeK69OLxNEZmezZ1Chg=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-efi@vger.kernel.org,
-	Tom Englund <tomenglund26@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Kazuma Kondo <kazuma-kondo@nec.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.7 314/432] efi/libstub: fix efi_random_alloc() to allocate memory at alloc_min or higher address
-Date: Mon,  1 Apr 2024 17:45:01 +0200
-Message-ID: <20240401152602.551725613@linuxfoundation.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240401152553.125349965@linuxfoundation.org>
-References: <20240401152553.125349965@linuxfoundation.org>
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bxqpg31C"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5c229dabbb6so2320517a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 09:34:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711989273; x=1712594073; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=i2QERqZP+UE+1W3A6WXtVWjA32ukQFrW4fDp6eX7jZw=;
+        b=bxqpg31C2OxKkPqaebkA0fvf8FjLCJp6ClblIGHP/VQ4BYAYfwHd52QlOdRNbDXdHd
+         QcqWR5L/C3gRu6+hMsJxenLzZfrYy+GK6VZGqrtIZkZ7T8B1wtpjy9G9x+Z0QzSGNE4A
+         /0Bz10lrQB4Ohs+wKiXNmyBEP39exGc1tFBvkO96tk9BEYx/7jViMgDuCrCON4KFpCmO
+         j2bvQWBEgV8fvw3EYb4w1uByYsBjCJFZixsfZNoVfF95r8JClCNL1koAYoQMyO+P/zm0
+         xCSuXgc5q4cN1dHUEyTVJtD/LHucOXYg0/IpErWFj0d1at9VXLVMQIvUVNr/Gokgmoft
+         mQmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711989273; x=1712594073;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=i2QERqZP+UE+1W3A6WXtVWjA32ukQFrW4fDp6eX7jZw=;
+        b=cgPeJ7de4xm7hJMci0Gg3r/d+iP/IwYNjd1kwEmKsgHcAVD0JKHy6JZai8c7LSCSEl
+         NubHYLv8DmxTTmGMRdEqcmR7lF3BGnXPcC2Lh2yFYw5aCjhQQ0MAugJR+3X8ApQh0pmn
+         EOUnGIUbjIHHJ3RjylUVwWnBvsOgW3l4Urna3/NDB4OXjHnCcbY/itIZ2hgLhLlinxwe
+         QxzYPh80zjhWoODouNnJQKeyEYN9eoTP5u+lqNzRVcVMZHUOImZ3Bg0gGRXAakKf2WZA
+         iBxqde10QYFjW50GqrjexNdTDWsVYgUoZjOTC+UWL0NA3cd4X294TnzUEnEHD56bxTzN
+         Eb0w==
+X-Forwarded-Encrypted: i=1; AJvYcCVzSrbx3GwM/TxCARxbAfFqSm6mfPdbGBTCKaTTHmvjNGH5D+NtG1tP0caNFwdUzakWBRZnltanLZ69dH68mPbQVxLAMe2x3xQefOQ8
+X-Gm-Message-State: AOJu0YwHjl/uPaanrY2vm2DmIocimaoarIc005xMyLw35Adi0t+cC/a8
+	VcUm3UXTsoIcIt6zo+R5z6Lb0rv3Migshz940R0ibF+vSLfqMcacIQ/+KklEyg==
+X-Google-Smtp-Source: AGHT+IGPBBm1aqeryFso3Y2gTgKOchg5T7HwYiw0HyVJxMXg8KVXD+JO1JrIl2N8hldsrCGX2zz+cQ==
+X-Received: by 2002:a05:6a21:9212:b0:1a3:e4fe:f6f1 with SMTP id tl18-20020a056a21921200b001a3e4fef6f1mr9223908pzb.58.1711989273083;
+        Mon, 01 Apr 2024 09:34:33 -0700 (PDT)
+Received: from thinkpad ([103.246.195.48])
+        by smtp.gmail.com with ESMTPSA id m7-20020a170902bb8700b001e0573bbbbdsm9068595pls.218.2024.04.01.09.34.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Apr 2024 09:34:32 -0700 (PDT)
+Date: Mon, 1 Apr 2024 22:04:27 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
+	linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 07/11] PCI: dwc: ep: Add a generic dw_pcie_ep_linkdown()
+ API to handle Link Down event
+Message-ID: <20240401163427.GA2547@thinkpad>
+References: <20240314-pci-epf-rework-v1-0-6134e6c1d491@linaro.org>
+ <20240314-pci-epf-rework-v1-7-6134e6c1d491@linaro.org>
+ <ZgRgJsOT_bzXM1wK@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZgRgJsOT_bzXM1wK@ryzen>
 
-6.7-stable review patch.  If anyone has any objections, please let me know.
+On Wed, Mar 27, 2024 at 07:06:30PM +0100, Niklas Cassel wrote:
+> Hello Mani,
+> 
+> On Thu, Mar 14, 2024 at 08:53:46PM +0530, Manivannan Sadhasivam wrote:
+> > As per the PCIe base spec r5.0, section 5.2, Link Down event can happen
+> > under any of the following circumstances:
+> > 
+> > 1. Fundamental/Hot reset
+> > 2. Link disable transmission by upstream component
+> > 3. Moving from L2/L3 to L0
+> > 
+> > In those cases, Link Down causes some non-sticky DWC registers to loose the
+> > state (like REBAR, etc...). So the drivers need to reinitialize them to
+> > function properly once the link comes back again.
+> > 
+> > This is not a problem for drivers supporting PERST# IRQ, since they can
+> > reinitialize the registers in the PERST# IRQ callback. But for the drivers
+> > not supporting PERST#, there is no way they can reinitialize the registers
+> > other than relying on Link Down IRQ received when the link goes down. So
+> > let's add a DWC generic API dw_pcie_ep_linkdown() that reinitializes the
+> > non-sticky registers and also notifies the EPF drivers about link going
+> > down.
+> > 
+> > This API can also be used by the drivers supporting PERST# to handle the
+> > scenario (2) mentioned above.
+> > 
+> > NOTE: For the sake of code organization, move the dw_pcie_ep_linkup()
+> > definition just above dw_pcie_ep_linkdown().
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-designware-ep.c | 93 ++++++++++++++++---------
+> >  drivers/pci/controller/dwc/pcie-designware.h    |  5 ++
+> >  2 files changed, 67 insertions(+), 31 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > index 3893a8c1a11c..5451057ca74b 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > @@ -14,18 +14,6 @@
+> >  #include <linux/pci-epc.h>
+> >  #include <linux/pci-epf.h>
+> >  
+> > -/**
+> > - * dw_pcie_ep_linkup - Notify EPF drivers about link up event
+> > - * @ep: DWC EP device
+> > - */
+> > -void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
+> > -{
+> > -	struct pci_epc *epc = ep->epc;
+> > -
+> > -	pci_epc_linkup(epc);
+> > -}
+> > -EXPORT_SYMBOL_GPL(dw_pcie_ep_linkup);
+> > -
+> >  /**
+> >   * dw_pcie_ep_init_notify - Notify EPF drivers about EPC initialization
+> >   *			    complete
+> > @@ -672,6 +660,29 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
+> >  	return 0;
+> >  }
+> >  
+> > +static void dw_pcie_ep_init_non_sticky_registers(struct dw_pcie *pci)
+> > +{
+> > +	unsigned int offset;
+> > +	unsigned int nbars;
+> > +	u32 reg, i;
+> > +
+> > +	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+> > +
+> > +	dw_pcie_dbi_ro_wr_en(pci);
+> > +
+> > +	if (offset) {
+> > +		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+> > +		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
+> > +			PCI_REBAR_CTRL_NBAR_SHIFT;
+> > +
+> > +		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
+> > +			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
+> > +	}
+> > +
+> > +	dw_pcie_setup(pci);
+> > +	dw_pcie_dbi_ro_wr_dis(pci);
+> > +}
+> > +
+> >  /**
+> >   * dw_pcie_ep_init_registers - Initialize DWC EP specific registers
+> >   * @ep: DWC EP device
+> > @@ -686,13 +697,11 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
+> >  	struct dw_pcie_ep_func *ep_func;
+> >  	struct device *dev = pci->dev;
+> >  	struct pci_epc *epc = ep->epc;
+> > -	unsigned int offset, ptm_cap_base;
+> > -	unsigned int nbars;
+> > +	u32 ptm_cap_base, reg;
+> >  	u8 hdr_type;
+> >  	u8 func_no;
+> > -	int i, ret;
+> >  	void *addr;
+> > -	u32 reg;
+> > +	int ret;
+> >  
+> >  	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE) &
+> >  		   PCI_HEADER_TYPE_MASK;
+> > @@ -755,20 +764,8 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
+> >  	if (ep->ops->init)
+> >  		ep->ops->init(ep);
+> >  
+> > -	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+> >  	ptm_cap_base = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_PTM);
+> >  
+> > -	dw_pcie_dbi_ro_wr_en(pci);
+> > -
+> > -	if (offset) {
+> > -		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+> > -		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
+> > -			PCI_REBAR_CTRL_NBAR_SHIFT;
+> > -
+> > -		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
+> > -			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
+> > -	}
+> > -
+> >  	/*
+> >  	 * PTM responder capability can be disabled only after disabling
+> >  	 * PTM root capability.
+> > @@ -785,9 +782,6 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
+> >  		dw_pcie_dbi_ro_wr_dis(pci);
+> >  	}
+> >  
+> > -	dw_pcie_setup(pci);
+> > -	dw_pcie_dbi_ro_wr_dis(pci);
+> > -
+> 
+> Your previous series had:
+> 
+> -       dw_pcie_setup(pci);
+> -       dw_pcie_dbi_ro_wr_dis(pci);
+> +       dw_pcie_ep_init_non_sticky_registers(pci);
+> 
+> Here.
+> I tested this series, but it did not work for me (the Resizable BARs did
+> not get resized) since you removed the call to
+> dw_pcie_ep_init_non_sticky_registers().
+> 
+> By readding the call to dw_pcie_ep_init_non_sticky_registers(),
+> the BARs get Resized again.
+> 
+> 
 
-------------------
+Ah, looks like rebase has gone bad. Will fix it in v2.
 
-From: KONDO KAZUMA(近藤　和真) <kazuma-kondo@nec.com>
+> BTW do you have a git branch with both your series somewhere?
+> (Possibly even rebased on
+> https://lore.kernel.org/linux-pci/20240320113157.322695-1-cassel@kernel.org/T/#t
+> like you suggested in your other mail.)
+> 
 
-[ Upstream commit 3cb4a4827596abc82e55b80364f509d0fefc3051 ]
+There it is: https://git.codelinaro.org/manivannan.sadhasivam/linux/-/tree/b4/pci-epf-rework
 
-Following warning is sometimes observed while booting my servers:
-  [    3.594838] DMA: preallocated 4096 KiB GFP_KERNEL pool for atomic allocations
-  [    3.602918] swapper/0: page allocation failure: order:10, mode:0xcc1(GFP_KERNEL|GFP_DMA), nodemask=(null),cpuset=/,mems_allowed=0-1
-  ...
-  [    3.851862] DMA: preallocated 1024 KiB GFP_KERNEL|GFP_DMA pool for atomic allocation
+- Mani
 
-If 'nokaslr' boot option is set, the warning always happens.
-
-On x86, ZONE_DMA is small zone at the first 16MB of physical address
-space. When this problem happens, most of that space seems to be used by
-decompressed kernel. Thereby, there is not enough space at DMA_ZONE to
-meet the request of DMA pool allocation.
-
-The commit 2f77465b05b1 ("x86/efistub: Avoid placing the kernel below
-LOAD_PHYSICAL_ADDR") tried to fix this problem by introducing lower
-bound of allocation.
-
-But the fix is not complete.
-
-efi_random_alloc() allocates pages by following steps.
-1. Count total available slots ('total_slots')
-2. Select a slot ('target_slot') to allocate randomly
-3. Calculate a starting address ('target') to be included target_slot
-4. Allocate pages, which starting address is 'target'
-
-In step 1, 'alloc_min' is used to offset the starting address of memory
-chunk. But in step 3 'alloc_min' is not considered at all.  As the
-result, 'target' can be miscalculated and become lower than 'alloc_min'.
-
-When KASLR is disabled, 'target_slot' is always 0 and the problem
-happens everytime if the EFI memory map of the system meets the
-condition.
-
-Fix this problem by calculating 'target' considering 'alloc_min'.
-
-Cc: linux-efi@vger.kernel.org
-Cc: Tom Englund <tomenglund26@gmail.com>
-Cc: linux-kernel@vger.kernel.org
-Fixes: 2f77465b05b1 ("x86/efistub: Avoid placing the kernel below LOAD_PHYSICAL_ADDR")
-Signed-off-by: Kazuma Kondo <kazuma-kondo@nec.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/firmware/efi/libstub/randomalloc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/firmware/efi/libstub/randomalloc.c b/drivers/firmware/efi/libstub/randomalloc.c
-index 4e96a855fdf47..7e18528595502 100644
---- a/drivers/firmware/efi/libstub/randomalloc.c
-+++ b/drivers/firmware/efi/libstub/randomalloc.c
-@@ -120,7 +120,7 @@ efi_status_t efi_random_alloc(unsigned long size,
- 			continue;
- 		}
- 
--		target = round_up(md->phys_addr, align) + target_slot * align;
-+		target = round_up(max(md->phys_addr, alloc_min), align) + target_slot * align;
- 		pages = size / EFI_PAGE_SIZE;
- 
- 		status = efi_bs_call(allocate_pages, EFI_ALLOCATE_ADDRESS,
 -- 
-2.43.0
-
-
-
+மணிவண்ணன் சதாசிவம்
