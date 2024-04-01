@@ -1,204 +1,173 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2057.outbound.protection.outlook.com [40.107.220.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9AB61EB37;
-	Mon,  1 Apr 2024 22:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712009930; cv=none; b=oc1RzA5e9ZkLrVcG8lnx+rckPM191TQxzPTxXIHenZmoRZUWX25oU8vNPUQLbDOuGmMZdIG29o3YGkH0stNp7/+RgJ5MeE3i+y2yzMazqP3N1roQOYjpwUxC5dAmwHEggSy5TxRoXX8SCrRhCJOgx6Vtdbt4gBKCgqXOnKxNs+o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712009930; c=relaxed/simple;
-	bh=KmlHz2prIP16z1uToxCe2yLY9hH9ICWS/ieaQAc0sdg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kXwTP/6zct6zwfYFwMTokYSG2ZXtyDgvLCVi31ghnUSRMVvuynAKwb0M3Glg+n1oFS/1uYj2xuFWRpPKAn/66PY7WJpa8drWtCH0Of0Uy8eerDLieMl8Srwd4qaRM71XJi55e7VKpXW6JNsufT5xgv/v5AMqvF73kd9t63kvMYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bG9IooGv; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7881EB37;
+	Mon,  1 Apr 2024 22:23:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712010185; cv=fail; b=mwRC2ZBgjCUmupRy4P95N7hYPkuli2zEc1EY0QIYNk9PRWMOYED2bxxlXPUe2Wdl44FUa8Zg7PUulXaIU5k2ZLIEdRZan+hoEXbqNZEOV/rTRcL81UlRaLDyNhVwOxYg+bhynfNHXb72qVN/mBYbG47CDlEDHiG7mBpc0P96Fj0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712010185; c=relaxed/simple;
+	bh=9awq9AKTdgSn7CRyOrgRlvrOr60UIj7X6QJxqX4g8TA=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rDc8xwK9NT837hDyC7lEKyCDf+UQLij5wxQu1y9OpR6Pq6JpQcpFsiJpALKduIWaFpAx5sPwA8np+tfqH6EqDUo4nRmFqpNmbiu73PfDGzQuKqYgUz4SW8hVXkqoPzcSEEDm5wzN2HTzTSqNvb2Tk+/8qwRIeCI930O88Neold4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yRW90wHy; arc=fail smtp.client-ip=40.107.220.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bG9IooGv"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-781753f52afso284041585a.2;
-        Mon, 01 Apr 2024 15:18:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712009927; x=1712614727; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OGY/M77vgSLDNWJUc3/1xFRf0B6CgOe+o4qlVpHhZ+Y=;
-        b=bG9IooGvbNZ+chtgKcFr5EZmPcuzbXwvCOFPvWC51bxf8S/z+Hx0vyBd6ObmSYp+zH
-         E7bdK86ad6wWfQg3XNLO5Zl87DJA+BxhBuGS0VssdTw9/9ohIwKQNEmUbwURSeZU3CrS
-         71X7OmIrHKguELFrscYM9VGokOnPygT0lFyDlSYnr2Ov50oMPq1l7vtwzac/u+sIExEF
-         vha3jEWkaZ439B2TtEorZ7jaNXFPRN4FRfEKKa3imJeGvajwHLDKDh8OtDOzmSPAa/g6
-         ePAQqghPMV3WlEWlvaenNsp7DQ19upxqb1KMQ/dIx3spNacYDmaDU0NMUd3+8+/5Uq8J
-         4Rzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712009927; x=1712614727;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OGY/M77vgSLDNWJUc3/1xFRf0B6CgOe+o4qlVpHhZ+Y=;
-        b=q5M+IpS3xSJND6pB1a9MRPuGLG1BUis2RrT/lkk5D7dJuUNiLviH94N2vrMtTvFmWo
-         a6JyhxT4/7DUZKy+2RgSZ+wNk0DZvmJYgFYdNEoBD+ahTS5DQJf6a2nyulW+sIrcPq1Y
-         ji3IDMh8kMl5efURsQH4cU7HGGG8CR/HwaHQkEKzboRKYbF8xCZdnzneDmQv6sNZIikK
-         PF+08rPhtxkgIGHweeucdevWpZWaWavHViRxp1HNlqkG0vYVPASm2k0SmtELWQKPfT5S
-         qbaq5Y+FEHxDt1bp3bgDQ67wT7rSzDZjNC5jUkq7+uTdSYTic7RukME2jX55LjL/WUhW
-         4yGg==
-X-Forwarded-Encrypted: i=1; AJvYcCU6zTIQyfUB3u9tNf0J/W1C3yrKE5zOPqUCKrmHSTiXkP8msChVlLCs/ZicDYQUBz+TGJSHtU8wACJTeZ5WHx5ibiC7BojYsmrjXJyyLQsAiZU21pob3meVV0zic7r5i3kX/r9xYyfZTu9JaZM3Uc0cpxxw42Vguu+DOTVQodwYfTlvpo4=
-X-Gm-Message-State: AOJu0Yyx2/FsoepI5ySkrtyDpovAqzoYhN372lcYjlFjchzUpqQ8soxr
-	4xMDyZfre0iipEsQwVeSEVk0t6dUwGnMVxK8/XZps42m5dvEEUZB
-X-Google-Smtp-Source: AGHT+IGAxsVcoOQfRdEJH36mLW7a9UPYtw5D0KQBQWGbQfziZJdXYGWHG0XjZRwsSHpX8vTMhrtFDw==
-X-Received: by 2002:ae9:e513:0:b0:78a:439d:7665 with SMTP id w19-20020ae9e513000000b0078a439d7665mr11875529qkf.36.1712009927451;
-        Mon, 01 Apr 2024 15:18:47 -0700 (PDT)
-Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id k8-20020a05620a0b8800b0078a0dda6d35sm3810718qkh.107.2024.04.01.15.18.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Apr 2024 15:18:47 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id 6E1411200032;
-	Mon,  1 Apr 2024 18:18:46 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Mon, 01 Apr 2024 18:18:46 -0400
-X-ME-Sender: <xms:xTILZi0dWe-Rh08__bf_NdPI7Z_K1pJ9-05JloFPZ7SJtAm9uhno1Q>
-    <xme:xTILZlH2mSzYJIPYidKJcn_3IEwv05uU3WD4fTW5jw3whhr9Kj8ziee6KOMU875-Y
-    pTbeWliBbGFA8Y_Kg>
-X-ME-Received: <xmr:xTILZq7-5phN7FqpdWXBZFnTQYb5QdsYVsyEaVYL_WrtZyHNSiL_8aoeXOk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudefuddgtdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtrodttddtvdenucfhrhhomhepuehoqhhu
-    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
-    htthgvrhhnpeeitdefvefhteeklefgtefhgeelkeefffelvdevhfehueektdevhfettddv
-    teevvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    gsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdei
-    gedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfih
-    igmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:xTILZj0wdpRzQKBuULAJJYAG45kzMRvfObgfJKIExo4Y2oRRbrtvyQ>
-    <xmx:xTILZlEcKQBKOXjtZd9G67VaZ512uZVmNyjxjnqtP_cu7BXmp7JSkA>
-    <xmx:xTILZs9whNoUHiYgz-BKah4vxt3dsNfexZ6r8Xiq31nD2TqpiViq1w>
-    <xmx:xTILZqmTL_tDmaAZ9UBXerK4ZO5WPahP_q_hECEOZXi-YwnyM97m2Q>
-    <xmx:xjILZslilXhCYe_-B0h9BelrCTvYU1qqz5XiYKKAjXEbxIn8OnEEYGG_K5k>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 1 Apr 2024 18:18:44 -0400 (EDT)
-Date: Mon, 1 Apr 2024 15:17:53 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Martin Rodriguez Reboredo <yakoyoku@gmail.com>,
-	Asahi Lina <lina@asahilina.net>,
-	Sumera Priyadarsini <sylphrenadin@gmail.com>,
-	Neal Gompa <neal@gompa.dev>,
-	Thomas Bertschinger <tahbertschinger@gmail.com>,
-	Andrea Righi <andrea.righi@canonical.com>,
-	Matthew Bakhtiari <dev@mtbk.me>,
-	Adam Bratschi-Kaye <ark.email@gmail.com>, stable@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Wedson Almeida Filho <wedsonaf@google.com>,
-	Finn Behrens <me@kloenk.dev>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] rust: macros: fix soundness issue in `module!` macro
-Message-ID: <ZgsykVwMBsULtxce@boqun-archlinux>
-References: <20240401185222.12015-1-benno.lossin@proton.me>
- <Zgsiumknfshjbi9J@boqun-archlinux>
- <20fcbbd0-4a7a-49b1-a383-f8b388153066@proton.me>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yRW90wHy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b/bJ2/a/4DxCEQdWkZl8F1yFad/MJgJt3jUi3NuxEBVmkGQo1h1xK6msc4/cEuOePjjyU0bt2dLK5/1M1bXgISR1Oa5uPlZ8e7kzcqiu7kQxBt3j8kKe2vdWV8ukoKMaYnkNKa2llDSY07gF7NUzqe9WmLmMNQvEcEacoh5w7Y67YS/G6x8clM3qYUg7SaG+mLP+DwV8qU1E3z73QgpoPDMmMrjy8yisWdEMT4/f0LwxjRkemQ6wCPH+oXlaQHH3olMXCwTQnGd8k09BUQk69ZQ1wMXyNXR7TKC/hdEWzXPrQjPjKWLH6vF1bEjxPSh217XcDJsJd4uu1IrsQt/I9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=k0N8Vaj10N0dSIsXzzDqTH4AangxrFBtBRt3deKak0U=;
+ b=eZMUtMzBPM553rjA+YA5Zc6zq1oy0h4RMf4t1PKXm0r3uWAxNbKOr6jWiMnNAzQbIh9UM9LGFXkgiuDY55ZSjJss3HfhmuqzRwYerI9FMPJdUKtGaH1tNGACeds3zuxTRZYGYRcOcC50TBhWNf/7CgPQNDLJKLLYz9lIi9dAgRYf7Mp2VlXQyPBb5vHKkp3aWY7Q1yIQ3amCmTiRl1lSd72qw7v0z46qDhtsP/Ka5SfZMnbE9Q8D2qcTAgY7mfl9QK3POmZ4GAGEXXlcDssn3nGRWYEXVeF5IR/24OCB7gtQWRgFIpUey6Dp80yuczKjfZj8CsOZBPGO0cv/SC1Tmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=k0N8Vaj10N0dSIsXzzDqTH4AangxrFBtBRt3deKak0U=;
+ b=yRW90wHygAtZCvp5N1ujSDHEK4mY7Zss8ymANofV/3JZvvobZrRRjeD/3gYzu6QtNJMhWFtF3Yk7ljTUEbJR35o9zHUPXTVnQ4sldNZ0+qg6vz3OKJ0uLELcVyeMp2urykH1Sby4ULM6gGmPSDnwiydk4X23lpVHClW7v4pTcB0=
+Received: from CH2PR16CA0008.namprd16.prod.outlook.com (2603:10b6:610:50::18)
+ by IA1PR12MB8222.namprd12.prod.outlook.com (2603:10b6:208:3f2::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Mon, 1 Apr
+ 2024 22:22:52 +0000
+Received: from CH1PEPF0000AD7D.namprd04.prod.outlook.com
+ (2603:10b6:610:50:cafe::38) by CH2PR16CA0008.outlook.office365.com
+ (2603:10b6:610:50::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46 via Frontend
+ Transport; Mon, 1 Apr 2024 22:22:52 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH1PEPF0000AD7D.mail.protection.outlook.com (10.167.244.86) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7452.22 via Frontend Transport; Mon, 1 Apr 2024 22:22:52 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 1 Apr
+ 2024 17:22:50 -0500
+Date: Mon, 1 Apr 2024 17:22:29 -0500
+From: Michael Roth <michael.roth@amd.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+CC: <kvm@vger.kernel.org>, <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
+	<linux-crypto@vger.kernel.org>, <x86@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<jroedel@suse.de>, <thomas.lendacky@amd.com>, <hpa@zytor.com>,
+	<ardb@kernel.org>, <seanjc@google.com>, <vkuznets@redhat.com>,
+	<jmattson@google.com>, <luto@kernel.org>, <dave.hansen@linux.intel.com>,
+	<slp@redhat.com>, <pgonda@google.com>, <peterz@infradead.org>,
+	<srinivas.pandruvada@linux.intel.com>, <rientjes@google.com>,
+	<dovmurik@linux.ibm.com>, <tobin@ibm.com>, <bp@alien8.de>, <vbabka@suse.cz>,
+	<kirill@shutemov.name>, <ak@linux.intel.com>, <tony.luck@intel.com>,
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, <alpergun@google.com>,
+	<jarkko@kernel.org>, <ashish.kalra@amd.com>, <nikunj.dadhania@amd.com>,
+	<pankaj.gupta@amd.com>, <liam.merwick@oracle.com>, Brijesh Singh
+	<brijesh.singh@amd.com>, Xu Yilun <yilun.xu@linux.intel.com>, Binbin Wu
+	<binbin.wu@linux.intel.com>, Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: Re: [PATCH v12 11/29] KVM: SEV: Add KVM_SEV_SNP_LAUNCH_UPDATE command
+Message-ID: <20240401222229.qpnpozdsr6b2sntk@amd.com>
+References: <20240329225835.400662-1-michael.roth@amd.com>
+ <20240329225835.400662-12-michael.roth@amd.com>
+ <8c3685a6-833c-4b3c-83f4-c0bd78bba36e@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20fcbbd0-4a7a-49b1-a383-f8b388153066@proton.me>
+In-Reply-To: <8c3685a6-833c-4b3c-83f4-c0bd78bba36e@redhat.com>
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD7D:EE_|IA1PR12MB8222:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3a43d095-3e4e-417d-b0d8-08dc529a455a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	4Ct9tPtFn37krlC2vECNzi4QxEfzsNZIqi7hseJJogkgpd9mMvY9UxfB/TTTot23lXHeNLaSbuKR9VPOmYvuMYj1/hltw3uO14lsxGfPlG+isUkQ/1NGt7htpusU1oZZOodgdEAR/RzS/1dPVPhP4Ah7hcxsUi1soQjf0UjFbXW6/coRoWpbPBPoktCTOlm5x4jCjabrtKpEa/vlJEM7xsNNhZqs8WXGWoXr7eI8bql8Uc7H1O+ADN8ZDejSE1rBSg/jFi21fzUYZuei4dbvk9FC1d9nk9Xr9b8I6Hmbl5X1TRasnlbwevcnMkm+pPyJEJ/67m+hRovPpQvYMNykxp1Mh+iW1FPhpXXSK0VbNmEL4mcvvbTaIlEbsW6Rv49A+FHO+DmA4AC8CmVfPxbU2OtnsCHPaLgyS4VTi5njk/YFkVqyhdHrwyBp8uH8SFP9nR6yT3K7YFAnzNc0LDjwGG2rzIVGhS7qVQ6vfVK2ul5KrffPZA9IjCUCC3V0IKrtMueIXyIubezFeuRQzfTziyHU291P+LmDtrY9EK+AygR0PkI4S4fyYPEf5xUFCX2a4gnYFPHS8XgcTpJH74dC8i82g91Gt+xN+Z6qFUrwExCFV++qjgXMeQYEawbh6X7xNt8QNlUlvG0jYZFWQvcjbKBd3Hu9NaC/rR8ubfmq1PnP0f80M/ryLTa/3/OCHFb8DN5AuHxcgi7C+Dj+OObEiw==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(36860700004)(82310400014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2024 22:22:52.0061
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a43d095-3e4e-417d-b0d8-08dc529a455a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000AD7D.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8222
 
-On Mon, Apr 01, 2024 at 10:01:34PM +0000, Benno Lossin wrote:
-> On 01.04.24 23:10, Boqun Feng wrote:
-> > On Mon, Apr 01, 2024 at 06:52:50PM +0000, Benno Lossin wrote:
-> > [...]
-> >> +            // Double nested modules, since then nobody can access the public items inside.
-> >> +            mod __module_init {{
-> >> +                mod __module_init {{
-> >> +                    use super::super::{type_};
-> >> +
-> >> +                    /// The \"Rust loadable module\" mark.
-> >> +                    //
-> >> +                    // This may be best done another way later on, e.g. as a new modinfo
-> >> +                    // key or a new section. For the moment, keep it simple.
-> >> +                    #[cfg(MODULE)]
-> >> +                    #[doc(hidden)]
-> >> +                    #[used]
-> >> +                    static __IS_RUST_MODULE: () = ();
-> >> +
-> >> +                    static mut __MOD: Option<{type_}> = None;
-> >> +
-> >> +                    // SAFETY: `__this_module` is constructed by the kernel at load time and will not be
-> >> +                    // freed until the module is unloaded.
-> >> +                    #[cfg(MODULE)]
-> >> +                    static THIS_MODULE: kernel::ThisModule = unsafe {{
-> >> +                        kernel::ThisModule::from_ptr(&kernel::bindings::__this_module as *const _ as *mut _)
-> > 
-> > While we're at it, probably we want the following as well? I.e. using
-> > `Opaque` and extern block, because __this_module is certainly something
-> > interior mutable and !Unpin.
-> > 
-> > diff --git a/rust/macros/module.rs b/rust/macros/module.rs
-> > index 293beca0a583..8aa4eed6578c 100644
-> > --- a/rust/macros/module.rs
-> > +++ b/rust/macros/module.rs
-> > @@ -219,7 +219,11 @@ mod __module_init {{
-> >                       // freed until the module is unloaded.
-> >                       #[cfg(MODULE)]
-> >                       static THIS_MODULE: kernel::ThisModule = unsafe {{
-> > -                        kernel::ThisModule::from_ptr(&kernel::bindings::__this_module as *const _ as *mut _)
-> > +                        extern \"C\" {{
-> > +                            static __this_module: kernel::types::Opaque<kernel::bindings::module>;
-> > +                        }}
+On Sat, Mar 30, 2024 at 09:31:40PM +0100, Paolo Bonzini wrote:
+> On 3/29/24 23:58, Michael Roth wrote:
+
+Cc'ing some more TDX folks.
+
+> > +	memslot = gfn_to_memslot(kvm, params.gfn_start);
+> > +	if (!kvm_slot_can_be_private(memslot)) {
+> > +		ret = -EINVAL;
+> > +		goto out;
+> > +	}
 > > +
-> > +                        kernel::ThisModule::from_ptr(__this_module.get())
-> >                       }};
-> >                       #[cfg(not(MODULE))]
-> >                       static THIS_MODULE: kernel::ThisModule = unsafe {{
-> > 
-> > Thoughts?
 > 
-> I am not sure we need it. Bindgen generates
-> 
->      extern "C" {
->          pub static mut __this_module: module;
->      }
-> 
-> And the `mut` should take care of the "it might be modified by other
-> threads".
+> This can be moved to kvm_gmem_populate.
 
-Hmm.. but there could a C thread modifies some field of __this_module
-while Rust code uses it, e.g. struct module has a list_head in it, which
-could be used by C code to put another module next to it.
+That does seem nicer, but I hadn't really seen that pattern for
+kvm_gmem_get_pfn()/etc. so wasn't sure if that was by design or not. I
+suppose in those cases the memslot is already available at the main
+KVM page-fault call-sites so maybe it was just unecessary to do the
+lookup internally there.
 
-> The only thing that sticks out to me is the borrow, it should probably
-> be using `addr_of_mut!` instead. Then we don't need to re-import it
-> again manually.
 > 
-> I think it should be a separate patch though.
+> > +	populate_args.src = u64_to_user_ptr(params.uaddr);
 > 
+> This is not used if !do_memcpy, and in fact src is redundant with do_memcpy.
+> Overall the arguments can be "kvm, gfn, src, npages, post_populate, opaque"
+> which are relatively few and do not need the struct.
 
-Yes, agreed.
+This was actually a consideration for TDX that was discussed during the
+"Finalizing internal guest_memfd APIs for SNP/TDX" PUCK call. In that
+case, they have a TDH_MEM_PAGE_ADD seamcall that takes @src and encrypts
+it, loads it into the destination page, and then maps it into SecureEPT
+through a single call. So in that particular case, @src would be
+initialized, but the memcpy() would be unecessary.
 
-Regards,
-Boqun
+It's not actually clear TDX plans to use this interface. In v19 they still
+used a KVM MMU hook (set_private_spte) that gets triggered through a call
+to KVM_MAP_MEMORY->kvm_mmu_map_tdp_page() prior to starting the guest. But
+more recent discussion[1] suggests that KVM_MAP_MEMORY->kvm_mmu_map_tdp_page()
+would now only be used to create upper levels of SecureEPT, and the
+actual mapping/encrypting of the leaf page would be handled by a
+separate TDX-specific interface.
 
-> -- 
-> Cheers,
-> Benno
+With that model, the potential for using kvm_gmem_populate() seemed
+plausible to I was trying to make it immediately usable for that
+purpose. But maybe the TDX folks can confirm whether this would be
+usable for them or not. (kvm_gmem_populate was introduced here[2] for
+reference/background)
+
+-Mike
+
+[1] https://lore.kernel.org/kvm/20240319155349.GE1645738@ls.amr.corp.intel.com/T/#m8580d8e39476be565534d6ff5f5afa295fe8d4f7
+[2] https://lore.kernel.org/kvm/20240329212444.395559-3-michael.roth@amd.com/T/#m3aeba660fcc991602820d3703b1265722b871025)
+
+
 > 
-> > 
-> > Note this requires `Opaque::get` to be `const`, which I will send out
-> > shortly, I think it's a good change regardless of the usage here.
-> > 
-> > Regards,
-> > Boqun
-> > 
+> I'll do that when posting the next version of the patches in kvm-coco-queue.
+> 
+> Paolo
 > 
