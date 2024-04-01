@@ -1,77 +1,41 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from m-r1.th.seeweb.it (m-r1.th.seeweb.it [5.144.164.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD341BDC8
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 10:36:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FE21CA80
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 10:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711967803; cv=none; b=lCPL5E9bgpmfebmlWCAc3uK6rOQoICTNDONDE1qxkKb34o19BlM96zmszweCgC4wtuqSdwmVNJ8fRbXc3vmVT2g6GaXE11HPFmW2k6DuZeFcWxBWVao7j0oLfs5kcsGF7Pp5CShtGGpAKuu3oZg3Wh1V8BBfjDbLOBdetaC8YCA=
+	t=1711967903; cv=none; b=EuLZNtOvZbynF8D4BSmZiIcy/kmuc4DsFnKpcHCO4/y0Uum2IrGAD293TBWEV+dw1/ewvSz+B+uhd3xEYwN8wejYimvYPZoiSWX4jvYb/N5qGZAa37oRPftClt7tXOqsYwk8XeOQmmFA6xY/X6/QjeJ4fRMNGqKVk68p38BiQBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711967803; c=relaxed/simple;
-	bh=afpxfrYCMNe6Vx+dzgzcDV9owz3AvEM25VaQsNBBB7I=;
+	s=arc-20240116; t=1711967903; c=relaxed/simple;
+	bh=H7BslMtmEAho3K6c0yYeroJVhCd4s5RKvNp5WXCydPI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EnfTDOtX5x/RT2Q/G0L4/k79xXM89c52eu1Ez3TEZN3h5urwgXBcFlMqwyDs+x6rqgnKXP7WNQnI1ZoFSsxpvU+X6r5Cyvft2JuWWjyLMWiH2s+QZA1Z8eStm5gKSlEhWfRx7Vh07H443KtBSr1D6Qwk6HkVYkHleimQoHPnniY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Gg+GPvYz; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Gg+GPvYz"
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 431AWxSQ023017;
-	Mon, 1 Apr 2024 10:36:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=VxWeLjasO9XYUjAJvIAQ3i3G+NVHlgWs48qMNHASJMM=;
- b=Gg+GPvYzNR4lZ0Gbb/pQG/IlUv/wjEQjGY+tdLdo31w1H+AM3mN0nNGoFsRwYuQD2LUy
- WeYwyjGHJVat1dk/bUJZ0AljFb/XrxGS/M3l0HO8ZlIZcB9CCMyQfLOHWZ6TBxlVKcnP
- Q+Klp8l5ZJ2xDACN9i12GqLAT46Rv+kx6r99b3jrLd34sTbqQ1DGsBtjOyaI8IW3rzNn
- SHbko485mTCCILNvOUgXqa8PoUwl5XYP/uQy9TCQr6PfSlA5ir9T5STSziPrDN8Z5Ade
- jft+KWN6gorp2fwo/cHv48kJ84mNvC5kqT72N5chesbM/coFbtlysqKE7GlcR33XPGtB YQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x7u8s804h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Apr 2024 10:36:26 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 431AaQwm028538;
-	Mon, 1 Apr 2024 10:36:26 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x7u8s8042-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Apr 2024 10:36:26 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 431AC6JU008431;
-	Mon, 1 Apr 2024 10:36:09 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x6w2tqwuf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Apr 2024 10:36:09 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 431Aa63311993388
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 1 Apr 2024 10:36:08 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 038F420040;
-	Mon,  1 Apr 2024 10:36:06 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 621BC20043;
-	Mon,  1 Apr 2024 10:36:03 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.204.201.194])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon,  1 Apr 2024 10:36:03 +0000 (GMT)
-Date: Mon, 1 Apr 2024 16:06:00 +0530
-From: Vishal Chourasia <vishalc@linux.ibm.com>
-To: Dawei Li <daweilics@gmail.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] sched/fair: fix initial util_avg calculation
-Message-ID: <ZgqOEJ5sCANkkk5N@linux.ibm.com>
-References: <20240315015916.21545-1-daweilics@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=GNHf2gwPBHY5yHkKbOV2ry55TvgluTD/50ERRd2TD4srSmV7/JPp4Nl4TnaEChWIUUBc+KtZoTUWG3ft26IncKqJsMQELLU03iPYOu9e4G/fcEltMMkzS9cYuoxx2OG+f6HLB8UQYIib2mSrVqUeJx+StJPcuRgVrN7OmR9RXsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
+Received: from SoMainline.org (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 57FC01F950;
+	Mon,  1 Apr 2024 12:38:18 +0200 (CEST)
+Date: Mon, 1 Apr 2024 12:38:17 +0200
+From: Marijn Suijten <marijn.suijten@somainline.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>, 
+	Caleb Connolly <caleb.connolly@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 2/3] drm/mipi-dsi: add mipi_dsi_compression_mode_raw()
+Message-ID: <cmevrewvs4ultfn5yeo2yqxt3eo7kpw2bt4sgeoirv7k5oske5@qv2niojixnuy>
+References: <20240330-lg-sw43408-panel-v1-0-f5580fc9f2da@linaro.org>
+ <20240330-lg-sw43408-panel-v1-2-f5580fc9f2da@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,80 +44,117 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240315015916.21545-1-daweilics@gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 9b4vFGhrgS7Juj57cXuQlNxk0tI6-AYZ
-X-Proofpoint-GUID: mV8RCCkrMEnxbFdSyuDCwvZY-SGf-xDt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-01_07,2024-03-28_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- mlxlogscore=999 clxscore=1015 mlxscore=0 priorityscore=1501 spamscore=0
- phishscore=0 adultscore=0 impostorscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2404010075
+In-Reply-To: <20240330-lg-sw43408-panel-v1-2-f5580fc9f2da@linaro.org>
 
-On Thu, Mar 14, 2024 at 06:59:16PM -0700, Dawei Li wrote:
-> Change se->load.weight to se_weight(se) in the calculation for the
-> initial util_avg to avoid unnecessarily inflating the util_avg by 1024
-> times.
-> 
-> The reason is that se->load.weight has the unit/scale as the scaled-up
-> load, while cfs_rg->avg.load_avg has the unit/scale as the true task
-> weight (as mapped directly from the task's nice/priority value). With
-> CONFIG_32BIT, the scaled-up load is equal to the true task weight. With
-> CONFIG_64BIT, the scaled-up load is 1024 times the true task weight.
-> Thus, the current code may inflate the util_avg by 1024 times. The
-> follow-up capping will not allow the util_avg value to go wild. But the
-> calculation should have the correct logic.
-> 
-> Signed-off-by: Dawei Li <daweilics@gmail.com>
+On 2024-03-30 05:59:29, Dmitry Baryshkov wrote:
+> The LG SW43408 panel requires sending non-standard data as a part of the
+> MIPI_DSI_COMPRESSION_MODE packet. Rather than hacking existing
+> mipi_dsi_compression_mode() add mipi_dsi_compression_mode_raw(), which
+> accepts raw data buffer and length.
+
+Even though I doubt the usefulness of this _raw() command before further
+understanding the panel and driver (according the the review-followup sent a few
+minutes ago), let me review this a little bit.
+
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > ---
-> Changes in v2:
-> - update the commit message
-> ---
->  kernel/sched/fair.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  drivers/gpu/drm/drm_mipi_dsi.c | 34 ++++++++++++++++++++++++++--------
+>  include/drm/drm_mipi_dsi.h     |  1 +
+>  2 files changed, 27 insertions(+), 8 deletions(-)
 > 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index a19ea290b790..5f98f639bdb9 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -1031,7 +1031,8 @@ void init_entity_runnable_average(struct sched_entity *se)
->   * With new tasks being created, their initial util_avgs are extrapolated
->   * based on the cfs_rq's current util_avg:
->   *
-> - *   util_avg = cfs_rq->util_avg / (cfs_rq->load_avg + 1) * se.load.weight
-> + *   util_avg = cfs_rq->avg.util_avg / (cfs_rq->avg.load_avg + 1)
-> + *		* se_weight(se)
->   *
->   * However, in many cases, the above util_avg does not give a desired
->   * value. Moreover, the sum of the util_avgs may be divergent, such
-> @@ -1078,7 +1079,7 @@ void post_init_entity_util_avg(struct task_struct *p)
+> diff --git a/drivers/gpu/drm/drm_mipi_dsi.c b/drivers/gpu/drm/drm_mipi_dsi.c
+> index ef6e416522f8..f340d1e0a9a5 100644
+> --- a/drivers/gpu/drm/drm_mipi_dsi.c
+> +++ b/drivers/gpu/drm/drm_mipi_dsi.c
+> @@ -645,29 +645,47 @@ int mipi_dsi_set_maximum_return_packet_size(struct mipi_dsi_device *dsi,
+>  EXPORT_SYMBOL(mipi_dsi_set_maximum_return_packet_size);
 >  
->  	if (cap > 0) {
->  		if (cfs_rq->avg.util_avg != 0) {
-> -			sa->util_avg  = cfs_rq->avg.util_avg * se->load.weight;
-> +			sa->util_avg  = cfs_rq->avg.util_avg * se_weight(se);
-Hi,
+>  /**
+> - * mipi_dsi_compression_mode() - enable/disable DSC on the peripheral
+> + * mipi_dsi_compression_mode_raw() - control DSC on the peripheral
+>   * @dsi: DSI peripheral device
+> - * @enable: Whether to enable or disable the DSC
+> + * @data: data to be sent to the device
+> + * @len: size of the data buffer
+>   *
+> - * Enable or disable Display Stream Compression on the peripheral using the
+> + * Control the Display Stream Compression on the peripheral using the
 
-The comment above the declaration of se_weight function says we should be
-using full load resolution and get rid of this helper.
++ mode?
 
-Should we be adding new user of the helper?
+>   * default Picture Parameter Set and VESA DSC 1.1 algorithm.
 
-/*
- * XXX we want to get rid of these helpers and use the full load resolution.
- */
-static inline long se_weight(struct sched_entity *se)
-{
-	return scale_load_down(se->load.weight);
-}
+This is no longer true.  Both the algoritm identifier and "default Picture
+Parameter Set" (which I assume means table *index*!) are described by the
+custom/raw bytes that one is allowed to pass.
 
+In fact, in the SW43408 driver that you reference in the commit message the
+custom data passed to the _raw() function is used to select the second PPS
+table (unless the panel interprets the input data in a non-standard way...), and
+further sets the PPS for the first table only :)
 
->  			sa->util_avg /= (cfs_rq->avg.load_avg + 1);
+>   *
+>   * Return: 0 on success or a negative error code on failure.
+>   */
+> -ssize_t mipi_dsi_compression_mode(struct mipi_dsi_device *dsi, bool enable)
+> +ssize_t mipi_dsi_compression_mode_raw(struct mipi_dsi_device *dsi, void *data, size_t len)
+>  {
+> -	/* Note: Needs updating for non-default PPS or algorithm */
+> -	u8 tx[2] = { enable << 0, 0 };
+>  	struct mipi_dsi_msg msg = {
+>  		.channel = dsi->channel,
+>  		.type = MIPI_DSI_COMPRESSION_MODE,
+> -		.tx_len = sizeof(tx),
+> -		.tx_buf = tx,
+> +		.tx_len = len,
+> +		.tx_buf = data,
+>  	};
+>  	int ret = mipi_dsi_device_transfer(dsi, &msg);
 >  
->  			if (sa->util_avg > cap)
+>  	return (ret < 0) ? ret : 0;
+>  }
+> +EXPORT_SYMBOL(mipi_dsi_compression_mode_raw);
+> +
+> +/**
+> + * mipi_dsi_compression_mode() - enable/disable DSC on the peripheral
+> + * @dsi: DSI peripheral device
+> + * @enable: Whether to enable or disable the DSC
+> + *
+> + * Enable or disable Display Stream Compression on the peripheral using the
+> + * default Picture Parameter Set and VESA DSC 1.1 algorithm.
+
+And while fixing this up, let's make it clear that this doesn't change the
+PPS, just the *index* of which PPS to use (the PPS is updated with a different
+command).
+
+- Marijn
+
+> + *
+> + * Return: 0 on success or a negative error code on failure.
+> + */
+> +ssize_t mipi_dsi_compression_mode(struct mipi_dsi_device *dsi, bool enable)
+> +{
+> +	/* Note: Needs updating for non-default PPS or algorithm */
+> +	u8 tx[2] = { enable << 0, 0 };
+> +
+> +	return mipi_dsi_compression_mode_raw(dsi, tx, sizeof(tx));
+> +}
+>  EXPORT_SYMBOL(mipi_dsi_compression_mode);
+>  
+>  /**
+> diff --git a/include/drm/drm_mipi_dsi.h b/include/drm/drm_mipi_dsi.h
+> index c0aec0d4d664..321d2b019687 100644
+> --- a/include/drm/drm_mipi_dsi.h
+> +++ b/include/drm/drm_mipi_dsi.h
+> @@ -242,6 +242,7 @@ int mipi_dsi_turn_on_peripheral(struct mipi_dsi_device *dsi);
+>  int mipi_dsi_set_maximum_return_packet_size(struct mipi_dsi_device *dsi,
+>  					    u16 value);
+>  ssize_t mipi_dsi_compression_mode(struct mipi_dsi_device *dsi, bool enable);
+> +ssize_t mipi_dsi_compression_mode_raw(struct mipi_dsi_device *dsi, void *data, size_t len);
+>  ssize_t mipi_dsi_picture_parameter_set(struct mipi_dsi_device *dsi,
+>  				       const struct drm_dsc_picture_parameter_set *pps);
+>  
+> 
 > -- 
-> 2.40.1
+> 2.39.2
 > 
