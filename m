@@ -1,119 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B30BE4B;
-	Mon,  1 Apr 2024 06:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6F18F58
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 06:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711952866; cv=none; b=Gyxvgs+AdptxaO3zM98Rbuh0tBInvlY/4R+RRZm+CpX2ejPtmKCoaLJwZyOPOKSH/f/jngeQX2XhYuMFf/DDpSEZpgtkBBHlh9/ZVyuQlpb1A1z6/0oae5OBS6WXF26mwz+brIAUwutOyPW53bIR3Rpb43xofBnyjpJdoHFy/iE=
+	t=1711952893; cv=none; b=BTAK1kw+iWlpd5Y65fFQRfqJaJbeRYky0s8GLXipCrwh3954TESDghO8lY4bqfykrX/Dlmr11oG4qR8zxPv3kjGWg/MN4pHQpTy1oRmAb+FlqQSDeZCbhKxPtob6ZbJ7LkrSwYa0ADVmUN2PvFyCgg+EazRLxEQpsRx/cHi7Ko8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711952866; c=relaxed/simple;
-	bh=FRDWwGwoWrT2hdGyeXRnP8I/oB4ub4bNpO9ycKIRPhk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UpcyuPPYnBIFTkrRXTMpV6gbcEq3Gvrg8TBpVUa/uX64bfnJDLH/WNkbLgnv/pXGmXWm1qdkYju5szaCw/fKzgC0nXzYiGTl78Zzt4xeIyYaoJa1nrIeK9lQccO78Fg5En8yDLq1g3xpcXoQ4QiPqK1Ovn1V9W3a3Cwqn5zZk14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PO+6ArL9; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711952893; c=relaxed/simple;
+	bh=PW9Ga3dVjqVka4C+ses3fsScJkII9AHQ7Dt9OdB+RoI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=uRw0Mgnqp5AmXcs7n4IByvBYZWxYE0mZpAWrQ5wNYt4L9ytSD1Y7E+7q+G1NPK6vgfM7+7cWjLQq7K3j+4FPvFGOcI0itb454nU9L+Dc9KpbZdG9AsxfJ+GXQFRWmcbhvYVOeeklmO9j6sDKepc/MPCIszvbXPK3RfR+guhQ298=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=L2XoCqrs; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PO+6ArL9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711952865; x=1743488865;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=FRDWwGwoWrT2hdGyeXRnP8I/oB4ub4bNpO9ycKIRPhk=;
-  b=PO+6ArL9RzVcZUfJBdIhXMhRltt3+HpvaB7ScXWJk+gsctqNjrYCmIPg
-   +fmn8saGt3a8ffoiMW9AyJSKTT2JMpGI1NslhRSyxwqpbxCYK04Ub/F/I
-   35FlnffGWJZPpzvAmy/S6RUNB6vZXSetxthc29Ar8AmiWjHLCckQmiAGD
-   oyZ10xM6qLGQRemkq5kOKzSRIfCB+Udmc/ivnpeLr7I+V19pYqc5WP0Pc
-   BL8A1KU7y0gYl9m7M1aODXg5zlRkmu8hzIeDEmOeVeBKClc+jjaR8HlxR
-   FrkOZjQAxES3vGnk7hn1KLN1T1+S4S6Fyf6FlQwapIQ0UPk3s5pZZCxMF
-   A==;
-X-CSE-ConnectionGUID: 9uG+lN7bRLODWahnWE8a0g==
-X-CSE-MsgGUID: inVB4OkiSiWQ+zEmYwuLcA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11030"; a="17691543"
-X-IronPort-AV: E=Sophos;i="6.07,171,1708416000"; 
-   d="scan'208";a="17691543"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2024 23:27:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,171,1708416000"; 
-   d="scan'208";a="17650268"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.224.7]) ([10.124.224.7])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2024 23:27:31 -0700
-Message-ID: <005c16a4-b88c-4389-8834-a4fc98a8ba02@intel.com>
-Date: Mon, 1 Apr 2024 14:27:28 +0800
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="L2XoCqrs"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6e6ee9e3cffso2443440b3a.1
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2024 23:28:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1711952891; x=1712557691; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bXoaKmE0CgaaZOerStXHwchE8/DtZMSE2DNCNaIY420=;
+        b=L2XoCqrstpPcDFwxEL3jwkEAdiHdbg43bP/hyNH8akWIghvtQJ79wci36XQtFLMfug
+         MqhvNe1lGUn86RRZCJdpitaJd4Q+WRyLib2joVzjD7hsbEQqFMyWrH/02GvN8zIJRLcY
+         uGkRac4n0y6OP1Z/pnWcQs2D7Uao7Q14jwYLAzCSkehAj5GJf1mNE3IP8JCHq5Bpkqss
+         tIdd/tzs57GTbKGgdRtsdBj1jxeHZOSw0iMuP0vPYHM1MMIJ/AaeorPvqUfypKn0QymO
+         IljhHdzt8wIgBLoy1jRVDOxPfMSKoKFuGcOOb0nCwqJ7MLh/3S3Oeuw8TiMKr86VUgo4
+         CW3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711952891; x=1712557691;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bXoaKmE0CgaaZOerStXHwchE8/DtZMSE2DNCNaIY420=;
+        b=JaQXsfl91AkuipS+iSC49dchRQQgDtJQsKfuD9XPyd+6E0Eia1E0jJUs2mw2ub2z+3
+         3LLRTPNYTyQeWl24TpzeJ7GILBPkoRx+l7w7b0IvKCEqcYSytfuM5ujz3OS02YYvTjEJ
+         s0LPwtc6b5Y7pLYB1dE/gFEBHsgt5+ZaF2zIsIxs65kDqdFJrRKupA8LbXZI/GH57Aqq
+         hnn/3tcrIXyLT2cgpEUS6T1YBbQLo4mNUDDSa6Cx5uUN+S+XpdFEMEDBMpktt0u1uWIa
+         pFiDl/AvxrpnUxRtd5sZB7of0CaG0C/mAeIaTiz84XteZ7UlwR3Bsp5hsXaq7xS9bsr0
+         /Hcg==
+X-Forwarded-Encrypted: i=1; AJvYcCX8T2nIZLvGq77zrDnLcwd3RjYZv2YK84ZEDh+wTKo9AsMy5Uf9FymMi10uqgPoqXj7F1Xq2E5o8zpmKFjuoKjBw1j4/iC6SHyeFwIB
+X-Gm-Message-State: AOJu0Yy1asAfKf1ps4O+Lha7C6dEKRIwDenbY/8NIc/N3lEp88olFeoY
+	y95kQ27KO+lPm1CiaSgR7/6I8jkLva2euzjBbfr2je5uo0dT8GAPLcecuzh7FcY=
+X-Google-Smtp-Source: AGHT+IGyJO6W7a9vGA42zEISDyPq8pZfWTwyac2IL1hq0cjIwwyYuw6FlByJVnomVlsCtwxbGFTVjg==
+X-Received: by 2002:a05:6a00:1484:b0:6e8:a703:d911 with SMTP id v4-20020a056a00148400b006e8a703d911mr18653599pfu.1.1711952891072;
+        Sun, 31 Mar 2024 23:28:11 -0700 (PDT)
+Received: from ubuntu20.04 ([203.208.189.8])
+        by smtp.gmail.com with ESMTPSA id y15-20020a056a00038f00b006e6b2ba1577sm7102001pfs.138.2024.03.31.23.28.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 31 Mar 2024 23:28:10 -0700 (PDT)
+From: Yang Jihong <yangjihong@bytedance.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	james.clark@arm.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: yangjihong@bytedance.com
+Subject: [PATCH v2 1/2] perf sched timehist: Fix -g/--call-graph option failure
+Date: Mon,  1 Apr 2024 14:27:23 +0800
+Message-Id: <20240401062724.1006010-2-yangjihong@bytedance.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240401062724.1006010-1-yangjihong@bytedance.com>
+References: <20240401062724.1006010-1-yangjihong@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 5/9] KVM: VMX: Track CPU's MSR_IA32_VMX_BASIC as a
- single 64-bit value
-To: Sean Christopherson <seanjc@google.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- Shan Kang <shan.kang@intel.com>, Kai Huang <kai.huang@intel.com>,
- Xin Li <xin3.li@intel.com>
-References: <20240309012725.1409949-1-seanjc@google.com>
- <20240309012725.1409949-6-seanjc@google.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20240309012725.1409949-6-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 3/9/2024 9:27 AM, Sean Christopherson wrote:
-> Track the "basic" capabilities VMX MSR as a single u64 in vmcs_config
-> instead of splitting it across three fields, that obviously don't combine
-> into a single 64-bit value, so that KVM can use the macros that define MSR
-> bits using their absolute position.  Replace all open coded shifts and
-> masks, many of which are relative to the "high" half, with the appropriate
-> macro.
-> 
-> Opportunistically use VMX_BASIC_32BIT_PHYS_ADDR_ONLY instead of an open
-> coded equivalent, and clean up the related comment to not reference a
-> specific SDM section (to the surprise of no one, the comment is stale).
-> 
-> No functional change intended (though obviously the code generation will
-> be quite different).
-> 
-> Cc: Shan Kang <shan.kang@intel.com>
-> Cc: Kai Huang <kai.huang@intel.com>
-> Signed-off-by: Xin Li <xin3.li@intel.com>
-> [sean: split to separate patch, write changelog]
+When perf-sched enables the call-graph recording, sample_type of dummy
+event does not have PERF_SAMPLE_CALLCHAIN, timehist_check_attr() checks
+that the evsel does not have a callchain, and set show_callchain to 0.
 
-The patch author doesn't match with the signed-off
+Currently perf sched timehist only saves callchain when processing
+sched:sched_switch event, timehist_check_attr() only needs to determine
+whether the event has PERF_SAMPLE_CALLCHAIN.
 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->   arch/x86/include/asm/vmx.h      |  5 +++++
->   arch/x86/kvm/vmx/capabilities.h |  6 ++----
->   arch/x86/kvm/vmx/vmx.c          | 28 ++++++++++++++--------------
->   3 files changed, 21 insertions(+), 18 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-> index c3a97dca4a33..ce6d166fc3c5 100644
-> --- a/arch/x86/include/asm/vmx.h
-> +++ b/arch/x86/include/asm/vmx.h
-> @@ -150,6 +150,11 @@ static inline u32 vmx_basic_vmcs_size(u64 vmx_basic)
->   	return (vmx_basic & GENMASK_ULL(44, 32)) >> 32;
->   }
->   
-> +static inline u32 vmx_basic_vmcs_mem_type(u64 vmx_basic)
-> +{
-> +	return (vmx_basic & GENMASK_ULL(53, 50)) >> 50;
+Before:
+  # perf sched record -g true
+  [ perf record: Woken up 0 times to write data ]
+  [ perf record: Captured and wrote 4.153 MB perf.data (7536 samples) ]
+  # perf sched timehist
+  Samples do not have callchains.
+             time    cpu  task name                       wait time  sch delay   run time
+                          [tid/pid]                          (msec)     (msec)     (msec)
+  --------------- ------  ------------------------------  ---------  ---------  ---------
+    147851.826019 [0000]  perf[285035]                        0.000      0.000      0.000
+    147851.826029 [0000]  migration/0[15]                     0.000      0.003      0.009
+    147851.826063 [0001]  perf[285035]                        0.000      0.000      0.000
+    147851.826069 [0001]  migration/1[21]                     0.000      0.003      0.006
+  <SNIP>
 
-#define VMX_BASIC_MEM_TYPE_SHIFT		50
+After:
+  # perf sched record -g true
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 2.572 MB perf.data (822 samples) ]
+  # perf sched timehist
+             time    cpu  task name                       wait time  sch delay   run time
+                          [tid/pid]                          (msec)     (msec)     (msec)
+  --------------- ------  ------------------------------  ---------  ---------  ---------
+    144193.035164 [0000]  perf[277062]                        0.000      0.000      0.000    __traceiter_sched_switch <- __traceiter_sched_switch <- __sched_text_start <- preempt_schedule_common <- __cond_resched <- __wait_for_common <- wait_for_completion
+    144193.035174 [0000]  migration/0[15]                     0.000      0.003      0.009    __traceiter_sched_switch <- __traceiter_sched_switch <- __sched_text_start <- smpboot_thread_fn <- kthread <- ret_from_fork
+    144193.035207 [0001]  perf[277062]                        0.000      0.000      0.000    __traceiter_sched_switch <- __traceiter_sched_switch <- __sched_text_start <- preempt_schedule_common <- __cond_resched <- __wait_for_common <- wait_for_completion
+    144193.035214 [0001]  migration/1[21]                     0.000      0.003      0.007    __traceiter_sched_switch <- __traceiter_sched_switch <- __sched_text_start <- smpboot_thread_fn <- kthread <- ret_from_fork
+  <SNIP>
 
-We have the shift defined in previous patch, we need to use it I think,
-Any maybe, we can define the MASK as well.
+Fixes: 9c95e4ef0657 ("perf evlist: Add evlist__findnew_tracking_event() helper")
+Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-sched.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Otherwise, this cleanup is good.
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index b248c433529a..1bfb22347371 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -2963,8 +2963,11 @@ static int timehist_check_attr(struct perf_sched *sched,
+ 			return -1;
+ 		}
+ 
+-		if (sched->show_callchain && !evsel__has_callchain(evsel)) {
+-			pr_info("Samples do not have callchains.\n");
++		/* only need to save callchain related to sched_switch event */
++		if (sched->show_callchain &&
++		    evsel__name_is(evsel, "sched:sched_switch") &&
++		    !evsel__has_callchain(evsel)) {
++			pr_info("Samples of sched_switch event do not have callchains.\n");
+ 			sched->show_callchain = 0;
+ 			symbol_conf.use_callchain = 0;
+ 		}
+-- 
+2.25.1
 
-Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
