@@ -1,78 +1,55 @@
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2753D8F6F
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 06:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FAD10F1;
+	Mon,  1 Apr 2024 06:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711952901; cv=none; b=OU8mHeAZHb8lhQ9DWf89XNnIlEI+6T1GfbqgHVpDQHEaUa1i1iO9JwYhe5c5dTSRBWmuUSyCe7oWxHYdKTHZDbelrFxVXtojvocxGf20EQIe93oZo9N1N5iFPvM4A5hxXYv6OZm7CHXKZf/Gcrtr4dOD0uOeAOccwGZntSbuKMw=
+	t=1711953164; cv=none; b=gLArV/w3cfsY06Ao3OckAPYJHKOHuygOetkTI1P5kwefPgelepQUlM9egJnu3IczDjXqLtc/TgmKZ5I7Vi8BDGprNZ5CTKTpoR3bxCyrlpUPZlY+67PvrIfSMK0iWUPDvhILjbJ/UVnGHYzueIl6ZuRXgKbZBT70xZRlNig00E4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711952901; c=relaxed/simple;
-	bh=DQXvKpO1rEy2B5qFpeFFi2Ewi9nm8JCW+OWHChzWmT8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LKAQy9cvYW4tDMzNttxUDCt92P4U8FhRNMkUPsVWxU3XmnQEERPuO5JQBjEM3cxzUMa/ZPRmjxdR8cgw+oiTd/bJ3itEeHN2I0mLX9K27IlAKpChsrrb8qeuy8NR5TZOZNqB4DwUHkg1Afa1unSh8OwhMzo/X57kODGDI0RPksU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=bioxSWDa; arc=none smtp.client-ip=209.85.167.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1711953164; c=relaxed/simple;
+	bh=Y0wlRiNfYEnQ/mORbguvM+3hsiBEfgRyx8ZvLJgVA2c=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kEJLlCGVQeb/HNlgVSWD0MdrNe8q+XsgCSQ6iWa3orD54uNG9qgmKc3089G22gghgzFVGG/2RKcRI1XD99aefBEFXRLZNZHikQ7464hWaRJc961qhUO68l4gDjoO9jG8AGYvQuzNlmoplG2CINkZKkedrDFqcDyiDKoZKuzRQ8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=aB+6vyJP; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="bioxSWDa"
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3c397193878so2375154b6e.3
-        for <linux-kernel@vger.kernel.org>; Sun, 31 Mar 2024 23:28:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1711952898; x=1712557698; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hSf2vAhcQ3pOxdj1mWuxA0G409t04uxcVataEyECxYU=;
-        b=bioxSWDay2QAdh8dFGYD9XUsqPRVmO7xO1CJt9yMviHxRgab2VqmTrH1bipOT4b8VH
-         P2fZdEpzcqGQbvm6BriWs/RflBtoMFFAa2leGSIxub2qkLoWowhaKYAiUI395lb8RT8N
-         WjZ4exVweErNnvpBFjsYyd/MXSdH8jF4gwlenSJltMoOgLry/y3GpYdWIbadARB1BalX
-         zcV38vt2vR2TchZ4EwwBlesVs9bNLycF9Xz4B3tbl4rmdJxbN8p5pe8VzfUDLgUOtdDU
-         6yeVO8S3hqnGcuswdLOeMwcxVliphNFmjC4gc9XjLlgIx71s0hiatx2cegVyiMP8FUVq
-         MdzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711952898; x=1712557698;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hSf2vAhcQ3pOxdj1mWuxA0G409t04uxcVataEyECxYU=;
-        b=GDnAOS2HQvi1bPn0rFCsBXGs+81RVjVNf53pj0UvLbCMj53smCubuAScEyD5Swwyxd
-         +7BZNd9h8TIoKGY+tXA7X/d7/Xf0gA+DBgOXc5vL0eBCi2Hrwpvn4wHrz5o8lqd2YpVo
-         sIIYGx+eVQKNlWtCRjAB7E9FqHOpWMiDAHciG6bLoqRTaW4gA9Ut2PQcrz2PdxeCayER
-         E3iM4HcyzDiVqQqWX7gIowvi0EHr+OHhpY/d26a3bHP87g1ookm6uB7HQ9MR+Kt6AvtF
-         eg0UnQKQEgo47dC2by30MhyDpwJsB0weikQUui5u2hbMVaUSY6JJ00HOW/YVl0LeKAdo
-         8L+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU2elG4ATF8IKPbdNLhC7QPr/mJTzh/VHwe8YTUarOi7zud2IuXBPH7/RaEhX6deKILLBMwL2MoIbAGcRwc79ahiPFvOEzLR2iQ5hel
-X-Gm-Message-State: AOJu0YyULGbcrMOUMnrxoo9K3cKmwxPDkAZFJq1F/UycOrPmQOx82Xtm
-	+cQX6uY27dssqlE3Q0CgiIidxVtSVQBqNA9BUf69vBkjCxl0InQSGu1bkAd17L4=
-X-Google-Smtp-Source: AGHT+IFE4zFY5oDG3RDXbEPGYCxij5ssu6TmeNR7lKTyF0VXFdu13aY+9lvDD8LviyQ8f/HKbT1wxg==
-X-Received: by 2002:a05:6808:3196:b0:3c3:df89:c220 with SMTP id cd22-20020a056808319600b003c3df89c220mr10728948oib.19.1711952898121;
-        Sun, 31 Mar 2024 23:28:18 -0700 (PDT)
-Received: from ubuntu20.04 ([203.208.189.8])
-        by smtp.gmail.com with ESMTPSA id y15-20020a056a00038f00b006e6b2ba1577sm7102001pfs.138.2024.03.31.23.28.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 Mar 2024 23:28:17 -0700 (PDT)
-From: Yang Jihong <yangjihong@bytedance.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	james.clark@arm.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: yangjihong@bytedance.com
-Subject: [PATCH v2 2/2] perf evsel: Use evsel__name_is() helper
-Date: Mon,  1 Apr 2024 14:27:24 +0800
-Message-Id: <20240401062724.1006010-3-yangjihong@bytedance.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240401062724.1006010-1-yangjihong@bytedance.com>
-References: <20240401062724.1006010-1-yangjihong@bytedance.com>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="aB+6vyJP"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4311nMTX017725;
+	Sun, 31 Mar 2024 23:32:39 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=pfpt0220; bh=9zgvpRcw
+	41YrdWjhBgNmQvxxiQ5A/Um3l5NhKwm12VA=; b=aB+6vyJPbXq3FRpKpSR4GFJM
+	/V0ZHIQTtS15yz+lgD/gekOjgfseAhidnKcrR87H1j4aWawAnV/9LMjJ+IyMVqDs
+	aaHtM0LgNzJUHpcUJtZ+ufY/v3GnCGVQPAn09LxKqmXLqgLl//FIuNY1RTcvhgEF
+	ffU4ZNW9BfJrobTyXUW6/Au8NZqH5+Y1lcvXkim3wgUaqMJyg7k9/YjG8VLvSGpl
+	gtlDiKkxVJ8eEdjMAgA84fQ/WCmrB3kHe0PtpkfHt8zs5v6jNUEdg4xikNr3pxGR
+	/w18JSPhSWKO5mYMz/Mut8WfkM+Rm3u1EQGA+Wd5nw35sYr3Gs/6nktq5UFMSQ==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3x7kkcgkdr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 31 Mar 2024 23:32:39 -0700 (PDT)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Sun, 31 Mar 2024 23:32:38 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Sun, 31 Mar 2024 23:32:38 -0700
+Received: from Dell2s-9.sclab.marvell.com (unknown [10.110.150.250])
+	by maili.marvell.com (Postfix) with ESMTP id 9C11D3F705D;
+	Sun, 31 Mar 2024 23:32:37 -0700 (PDT)
+From: Piyush Malgujar <pmalgujar@marvell.com>
+To: <andi.shyti@kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: <sgarapati@marvell.com>, <cchavva@marvell.com>, <jannadurai@marvell.com>,
+        Piyush Malgujar <pmalgujar@marvell.com>
+Subject: [PATCH v5 0/4] i2c: thunderx: Marvell thunderx i2c changes
+Date: Sun, 31 Mar 2024 23:32:14 -0700
+Message-ID: <20240401063229.2112782-1-pmalgujar@marvell.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,252 +57,55 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: 3-xqs7jLmGwIPU0WYoWK3TcgpqlobYAa
+X-Proofpoint-ORIG-GUID: 3-xqs7jLmGwIPU0WYoWK3TcgpqlobYAa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-01_03,2024-03-28_01,2023-05-22_02
 
-Code cleanup, replace strcmp(evsel__name(evsel, {NAME})) with
-evsel__name_is() helper.
+The changes are for Marvell OcteonTX2 SOC family:
 
-No functional change.
+- Handling clock divisor logic using subsytem ID
+- Support for high speed mode
+- Handle watchdog timeout
+- Added ioclk support
 
-Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-kmem.c               |  2 +-
- tools/perf/builtin-sched.c              |  4 +--
- tools/perf/builtin-script.c             |  2 +-
- tools/perf/builtin-trace.c              |  4 +--
- tools/perf/tests/evsel-roundtrip-name.c |  4 +--
- tools/perf/tests/parse-events.c         | 39 +++++++++----------------
- 6 files changed, 22 insertions(+), 33 deletions(-)
+Changes since V4:
+- Proper alignment
+- Used bitops helpers as required
+- Patch description made more clear to understand
+- Removed unrelated code
 
-diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-index 9714327fd0ea..6fd95be5032b 100644
---- a/tools/perf/builtin-kmem.c
-+++ b/tools/perf/builtin-kmem.c
-@@ -1408,7 +1408,7 @@ static int __cmd_kmem(struct perf_session *session)
- 	}
- 
- 	evlist__for_each_entry(session->evlist, evsel) {
--		if (!strcmp(evsel__name(evsel), "kmem:mm_page_alloc") &&
-+		if (evsel__name_is(evsel, "kmem:mm_page_alloc") &&
- 		    evsel__field(evsel, "pfn")) {
- 			use_pfn = true;
- 			break;
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 1bfb22347371..0fce7d8986c0 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -2148,7 +2148,7 @@ static bool is_idle_sample(struct perf_sample *sample,
- 			   struct evsel *evsel)
- {
- 	/* pid 0 == swapper == idle task */
--	if (strcmp(evsel__name(evsel), "sched:sched_switch") == 0)
-+	if (evsel__name_is(evsel, "sched:sched_switch"))
- 		return evsel__intval(evsel, sample, "prev_pid") == 0;
- 
- 	return sample->pid == 0;
-@@ -2375,7 +2375,7 @@ static bool timehist_skip_sample(struct perf_sched *sched,
- 	}
- 
- 	if (sched->idle_hist) {
--		if (strcmp(evsel__name(evsel), "sched:sched_switch"))
-+		if (!evsel__name_is(evsel, "sched:sched_switch"))
- 			rc = true;
- 		else if (evsel__intval(evsel, sample, "prev_pid") != 0 &&
- 			 evsel__intval(evsel, sample, "next_pid") != 0)
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 37088cc0ff1b..cc981531ec00 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3471,7 +3471,7 @@ static int check_ev_match(char *dir_name, char *scriptname,
- 
- 			match = 0;
- 			evlist__for_each_entry(session->evlist, pos) {
--				if (!strcmp(evsel__name(pos), evname)) {
-+				if (evsel__name_is(pos, evname)) {
- 					match = 1;
- 					break;
- 				}
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 90eaff8c0f6e..9b93807a1906 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -4902,7 +4902,7 @@ int cmd_trace(int argc, const char **argv)
- 		goto out;
- 	}
- 	trace.syscalls.events.bpf_output = evlist__last(trace.evlist);
--	assert(!strcmp(evsel__name(trace.syscalls.events.bpf_output), "__augmented_syscalls__"));
-+	assert(evsel__name_is(trace.syscalls.events.bpf_output), "__augmented_syscalls__");
- skip_augmentation:
- #endif
- 	err = -1;
-@@ -4959,7 +4959,7 @@ int cmd_trace(int argc, const char **argv)
- 	 */
- 	if (trace.syscalls.events.bpf_output) {
- 		evlist__for_each_entry(trace.evlist, evsel) {
--			bool raw_syscalls_sys_exit = strcmp(evsel__name(evsel), "raw_syscalls:sys_exit") == 0;
-+			bool raw_syscalls_sys_exit = evsel__name_is(evsel, "raw_syscalls:sys_exit");
- 
- 			if (raw_syscalls_sys_exit) {
- 				trace.raw_augmented_syscalls = true;
-diff --git a/tools/perf/tests/evsel-roundtrip-name.c b/tools/perf/tests/evsel-roundtrip-name.c
-index 15ff86f9da0b..1922cac13a24 100644
---- a/tools/perf/tests/evsel-roundtrip-name.c
-+++ b/tools/perf/tests/evsel-roundtrip-name.c
-@@ -37,7 +37,7 @@ static int perf_evsel__roundtrip_cache_name_test(void)
- 					continue;
- 				}
- 				evlist__for_each_entry(evlist, evsel) {
--					if (strcmp(evsel__name(evsel), name)) {
-+					if (!evsel__name_is(evsel, name)) {
- 						pr_debug("%s != %s\n", evsel__name(evsel), name);
- 						ret = TEST_FAIL;
- 					}
-@@ -71,7 +71,7 @@ static int perf_evsel__name_array_test(const char *const names[], int nr_names)
- 			continue;
- 		}
- 		evlist__for_each_entry(evlist, evsel) {
--			if (strcmp(evsel__name(evsel), names[i])) {
-+			if (!evsel__name_is(evsel, names[i])) {
- 				pr_debug("%s != %s\n", evsel__name(evsel), names[i]);
- 				ret = TEST_FAIL;
- 			}
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index feb5727584d1..0b70451451b3 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -470,8 +470,7 @@ static int test__checkevent_breakpoint_modifier(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "mem:0:u"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:u"));
- 
- 	return test__checkevent_breakpoint(evlist);
- }
-@@ -484,8 +483,7 @@ static int test__checkevent_breakpoint_x_modifier(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "mem:0:x:k"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:x:k"));
- 
- 	return test__checkevent_breakpoint_x(evlist);
- }
-@@ -498,8 +496,7 @@ static int test__checkevent_breakpoint_r_modifier(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "mem:0:r:hp"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:r:hp"));
- 
- 	return test__checkevent_breakpoint_r(evlist);
- }
-@@ -512,8 +509,7 @@ static int test__checkevent_breakpoint_w_modifier(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "mem:0:w:up"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:w:up"));
- 
- 	return test__checkevent_breakpoint_w(evlist);
- }
-@@ -526,8 +522,7 @@ static int test__checkevent_breakpoint_rw_modifier(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "mem:0:rw:kp"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "mem:0:rw:kp"));
- 
- 	return test__checkevent_breakpoint_rw(evlist);
- }
-@@ -540,8 +535,7 @@ static int test__checkevent_breakpoint_modifier_name(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "breakpoint"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint"));
- 
- 	return test__checkevent_breakpoint(evlist);
- }
-@@ -554,8 +548,7 @@ static int test__checkevent_breakpoint_x_modifier_name(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "breakpoint"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint"));
- 
- 	return test__checkevent_breakpoint_x(evlist);
- }
-@@ -568,8 +561,7 @@ static int test__checkevent_breakpoint_r_modifier_name(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "breakpoint"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint"));
- 
- 	return test__checkevent_breakpoint_r(evlist);
- }
-@@ -582,8 +574,7 @@ static int test__checkevent_breakpoint_w_modifier_name(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "breakpoint"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint"));
- 
- 	return test__checkevent_breakpoint_w(evlist);
- }
-@@ -596,8 +587,7 @@ static int test__checkevent_breakpoint_rw_modifier_name(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
- 	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
- 	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "breakpoint"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint"));
- 
- 	return test__checkevent_breakpoint_rw(evlist);
- }
-@@ -609,12 +599,12 @@ static int test__checkevent_breakpoint_2_events(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_BREAKPOINT == evsel->core.attr.type);
--	TEST_ASSERT_VAL("wrong name", !strcmp(evsel__name(evsel), "breakpoint1"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint1"));
- 
- 	evsel = evsel__next(evsel);
- 
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_BREAKPOINT == evsel->core.attr.type);
--	TEST_ASSERT_VAL("wrong name", !strcmp(evsel__name(evsel), "breakpoint2"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "breakpoint2"));
- 
- 	return TEST_OK;
- }
-@@ -691,15 +681,14 @@ static int test__checkevent_pmu_name(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
- 	TEST_ASSERT_VAL("wrong config", test_config(evsel, 1));
--	TEST_ASSERT_VAL("wrong name", !strcmp(evsel__name(evsel), "krava"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "krava"));
- 
- 	/* cpu/config=2/u" */
- 	evsel = evsel__next(evsel);
- 	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
- 	TEST_ASSERT_VAL("wrong config", test_config(evsel, 2));
--	TEST_ASSERT_VAL("wrong name",
--			!strcmp(evsel__name(evsel), "cpu/config=2/u"));
-+	TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "cpu/config=2/u"));
- 
- 	return TEST_OK;
- }
+Changes since V3:
+- Removed the MAINTAINER file change from this series
+- Modified the commit message to include more details
+- Minor changes such as adding macros, comments modified
+  to have more detail as required
+
+Changes since V2:
+- Respinning the series, no functional change
+- Added Marvell member in MAINTAINERS file
+- Added macro OTX2_REF_FREQ_DEFAULT for 100 MHz
+
+Changes since V1:
+- Addressed comments, added defines as required
+- Removed unnecessary code
+- Added a patch to support ioclk if sclk not present in ACPI table
+
+Piyush Malgujar (1):
+  i2c: thunderx: Adding ioclk support
+
+Suneel Garapati (3):
+  i2c: thunderx: Clock divisor logic changes
+  i2c: thunderx: Support for High speed mode
+  i2c: octeon: Handle watchdog timeout
+
+ drivers/i2c/busses/i2c-octeon-core.c     | 141 ++++++++++++++++-------
+ drivers/i2c/busses/i2c-octeon-core.h     |  52 +++++++--
+ drivers/i2c/busses/i2c-thunderx-pcidrv.c |  13 ++-
+ 3 files changed, 151 insertions(+), 55 deletions(-)
+
 -- 
-2.25.1
+2.43.0
 
