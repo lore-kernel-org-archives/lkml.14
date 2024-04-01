@@ -1,293 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902F446535;
-	Mon,  1 Apr 2024 20:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C4147A53
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 20:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712003125; cv=none; b=g67ftFdpgl4kLs3H+v9ynJ4j30yXNIS4sNziFg6UUbaqeUiv9f51TmlRplgCLTqYDOtueDIIOxecLVNxFEcglq2pXMQYktTdPdEtc/fapQAOscdyurTkFcPazEFGZxxoi28UaytdQYOqt2UiFG7t+SvVYvtISRR6X3UAQIVrapQ=
+	t=1712003218; cv=none; b=i2YzOHbxzi41QtewvIJFjWfIy/yFgdGnmkfpd7vMpJ8mOWPBu5a8e9BufAMBlrNSOStmVbzTeR0bXwTQ9Lj863sw+6qZW/WabU+njgliLm32RCbEtvDc5fN0bbUDr3n1DkhlLVueKWvsU/US6Xu1VYhQUbQhXiVSZhB33+FlT38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712003125; c=relaxed/simple;
-	bh=CvWR4wz2QN3K88UxICPNN1tDin69DPFPxypKgy4+mHM=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=f7qyiShtIsJFRxr3TW13LyLbhtjYcFycS2441YTizbouh9+Fb6E3X3FP2EeJSMTF1b1cWpK5zc3hlOv+8pmT+wGQd2cZcQvCPrGzQahMGGGnZPRCgm7LEsBEwhcNadosmTvVYue8p/idFgLv+4oJVbII9lh9j01ABX3lDOqs+8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F5zHUrJJ; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712003218; c=relaxed/simple;
+	bh=l+FOtxe9VxY0K0yOiwlzpYMjiw2iTas9i+u9zy9rYgY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IPJRBGKEU7H9YnwvWncOV2275DB1ZmMuQuqEsxscyAWLMxbbZp5F4nzHstFpEzf7gDxa2K4lvfiXvHXwyKAtURrHscqUcHSkjP95pGkhAqim+qSTSfSGObzxLY9rzLMmMg3CVIdCXpxqbLf9OXF8nS+bQOY8UsjB7VAMeXEDiw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hg/MLcK6; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F5zHUrJJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712003123; x=1743539123;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=CvWR4wz2QN3K88UxICPNN1tDin69DPFPxypKgy4+mHM=;
-  b=F5zHUrJJdPTgWXEHIoPxpRQUTqJqJY6S2U/8Yc3kBzzPvGAR/4vPbnPm
-   wdvE97Kv/P9XqnbhoXpsAUZG9AxHmS+5Pt3qrIjb3m/mhUu9pTOC17IGv
-   M6QxwHqH7m1epBZFMJWAHgCJUOE3k1cDWMw4pz1clZWfHj7+rK2TAv4Ti
-   4oi2K+dIbm2rcfcLsMtt+b0H0bulQgl7dhlj75pZdkgzOuwv0aDqAG6I1
-   ODtktwmItu6JX0+w8yzrNKlkhqiIWBY0ENAY42TgQpwqHGPQxB8J07kGh
-   QOKtjvFTvjRRAvaCAQd4tZfgWNqepzGesiGeBmKXorXAXntIGU1vB7Na7
-   g==;
-X-CSE-ConnectionGUID: s1auBxXjTmCVtkgNChi2lw==
-X-CSE-MsgGUID: CqW5D2GTSAWubJbPP5snOQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="7081836"
-X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
-   d="scan'208";a="7081836"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 13:25:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
-   d="scan'208";a="22516384"
-Received: from sj-4150-psse-sw-opae-dev2.sj.intel.com ([10.233.115.162])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 13:25:23 -0700
-Date: Mon, 1 Apr 2024 13:25:13 -0700 (PDT)
-From: matthew.gerlach@linux.intel.com
-X-X-Sender: mgerlach@sj-4150-psse-sw-opae-dev2
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-cc: joyce.ooi@intel.com, bhelgaas@google.com, lpieralisi@kernel.org, 
-    kw@linux.com, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-    conor+dt@kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pci: altera: covert to yaml
-In-Reply-To: <bfa6150b-e27e-41c3-a1a7-41e46f52f6ea@linaro.org>
-Message-ID: <alpine.DEB.2.22.394.2404011306560.362977@sj-4150-psse-sw-opae-dev2>
-References: <20240329170031.3379524-1-matthew.gerlach@linux.intel.com> <bfa6150b-e27e-41c3-a1a7-41e46f52f6ea@linaro.org>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hg/MLcK6"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-61453963883so33310837b3.1
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 13:26:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712003216; x=1712608016; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/3w1qxaNxZIdwI9NavJWkwaLl0QOhoYQrMhbubFtt9g=;
+        b=hg/MLcK6f/EMJuMOSMp002l33mhvCZWpUudP9DAd5ek/C4LDc5sJGHm1N/Zb2Polwq
+         q+HbtWmQUhCVcXvTYdsESsKTsrd1NTvgv/b0CRY+y1OvWGkAZ4RiJU2noKT8ejwdBzh5
+         NYO6l9JKYI9hvHY0gqG2QWYsg0o2o0Xx/zjqiTri+YZCrj5AbvB2Xij7jmtojMoPGJ72
+         84YFxzF/D+Lo9EB1lImp9ouGjKm5IHnIhMUDtgRGnkch6g1ko9AYBV6VhRl8onlGRyln
+         ttpRcYfqh/gtYk4jz1pNIs4O5JZ9DaFezpBlsn+kTcNrctLYpYnGoZo/730Q+YHs6Z4Q
+         ZobA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712003216; x=1712608016;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/3w1qxaNxZIdwI9NavJWkwaLl0QOhoYQrMhbubFtt9g=;
+        b=MMK2maxa2qe0488flcmk9SLf1gObyR2g+LGFMLwJQxWtWlq8tHr7NbFwgIKFQiEjvu
+         bfeoW5Rdny4PjhekOo8mTcZ0lEbLxVALKi8911fyZkRCFq2kMydgts6hUMkOKDaUyNew
+         jO4vSacpyNUPA83+6wz2nHSWwVyK6iCldIXlM6nz9DULjS0l+ZH3N0GXEtBbGMJcwZpW
+         ThqiSGBilOmPkpfNllQIlKgNTyw6K6UkSDQRV9ttNpTfuK/zMvuW4WHYmBfpmdLLqpY7
+         045KzubWPJw8Z2GnXTltnG5pcN4F4w0Ps8+E67xFkHPIIVK+L2pi+CJGGIfxC+rlNzNq
+         YCXQ==
+X-Gm-Message-State: AOJu0Yxq/rlSE2wXQmGDKkDZ1VKiY7pC5b/vflzm68EU0ilxYpKxPmUa
+	mVr4ZE16jmplTln0xOJHXhHTY+QQ+V7vaeONzckjP+AjhrXUeecV030lS1hM
+X-Google-Smtp-Source: AGHT+IEmb7k4YRsZQUzxuwntHaXrMyAJKhIBr6lf4K92Ji8HKVVSDGbbfF+JCZ/IxfgkYTVrqTqSdw==
+X-Received: by 2002:a81:4987:0:b0:615:16a1:4a04 with SMTP id w129-20020a814987000000b0061516a14a04mr789351ywa.31.1712003215911;
+        Mon, 01 Apr 2024 13:26:55 -0700 (PDT)
+Received: from fedora.attlocal.net ([2600:1700:2f7d:1800::23])
+        by smtp.googlemail.com with ESMTPSA id y72-20020a81a14b000000b006142210a31esm1171181ywg.23.2024.04.01.13.26.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Apr 2024 13:26:55 -0700 (PDT)
+From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+To: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	muchun.song@linux.dev,
+	willy@infradead.org,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Subject: [PATCH v2 0/3] Hugetlb fault path to use struct vm_fault
+Date: Mon,  1 Apr 2024 13:26:48 -0700
+Message-ID: <20240401202651.31440-1-vishal.moola@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
 
+This patchset converts the hugetlb fault path to use struct vm_fault.
+This helps make the code more readable, and alleviates the stack by
+allowing us to consolidate many fault-related variables into an
+individual pointer.
+----
+v2:
+  - renamed patchset from 'Define struct vm_fault in handle_mm_fault()'
+  - Dropped patches 4/5 - These allowed vmf->{address,pgoff} to be
+    modified, but that allows misuse of these fields. Converting hugetlb
+    to using the same address/pgoff as generic mm is not simple, so that
+    can be done later.
 
+Vishal Moola (Oracle) (3):
+  hugetlb: Convert hugetlb_fault() to use struct vm_fault
+  hugetlb: Convert hugetlb_no_page() to use struct vm_fault
+  hugetlb: Convert hugetlb_wp() to use struct vm_fault
 
-On Fri, 29 Mar 2024, Krzysztof Kozlowski wrote:
+ mm/hugetlb.c | 194 +++++++++++++++++++++++++--------------------------
+ 1 file changed, 95 insertions(+), 99 deletions(-)
 
-> On 29/03/2024 18:00, matthew.gerlach@linux.intel.com wrote:
->> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
->>
->> Covert the device tree bindings for the Altera Root
->> Port controller from text to yaml.
->>
->> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
->> ---
->
-> ...
->
->> diff --git a/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
->> new file mode 100644
->> index 000000000000..8f1ad1362ad1
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
->> @@ -0,0 +1,106 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +# Copyright (C) 2024, Intel Corporation
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/altr,pcie-root-port.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Altera PCIe Root Port
->> +
->> +maintainers:
->> +  - Matthew Gerlach <matthew.gerlach@linux.intel.com>
->> +
->> +allOf:
->> +  - $ref: /schemas/pci/pci-bus.yaml#
->> +
->> +properties:
->> +  compatible:
->> +    items:
->> +      - enum:
->> +          - altr,pcie-root-port-1.0
->> +          - altr,pcie-root-port-2.0
->> +
->> +  reg:
->> +    minItems: 2
->> +    maxItems: 3
->> +
->> +  reg-names:
->> +    description:
->> +      TX slave port region (Txs)
->> +      Control register access region (Cra)
->> +      Hard IP region if altr,pcie-root-port-2.0 (Hip)
->
-> All these go to reg as description of items.
->
-> Both - reg and reg-names - need constraints per variant in
-> allOf:if:then:. Move allOf: to bottom of file, just like example-schema
-> is showing.
+-- 
+2.43.0
 
-I understand. I added a constraint and moved allOf: to bottom of file, 
-just like the example-schema is showing.
-
->
->
->> +
->> +    items:
->> +      - const: Txs
->> +      - const: Cra
->> +      - const: Hip
->> +    minItems: 2
->> +
->> +  device_type:
->> +    const: pci
->
-> I don't think you need it.
-
-I removed it.
-
->
->> +
->> +  "#address-cells":
->> +    const: 3
->
-> Drop
-
-Dropped
-
->
->> +
->> +  "#size-cells":
->> +    const: 2
->
-> Drop
-
-Dropped
-
->
->> +
->> +  interrupts:
->> +    minItems: 1
->
-> This should be maxItems.
-
-I changed it to maxItems
-
->
->> +
->> +  interrupt-map-mask:
->> +    items:
->> +      - const: 0
->> +      - const: 0
->> +      - const: 0
->> +      - const: 7
->
-> I guess as well.
->
->> +
->> +  interrupt-map:
->> +    maxItems: 4
->> +
->> +  "#interrupt-cells":
->> +    const: 1
->
-> Drop
-
-If I remove "#interrupt-cells", then I get the following error:
-/home/mgerlach/git/linux-next/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml: 
-properties: '#interrupt-cells' is a dependency of 'interrupt-map'
- 	from schema $id: 
-http://devicetree.org/meta-schemas/interrupts.yaml#
-
->
->> +
->> +  msi-parent:
->> +    description: Link to the hardware entity that serves as the MSI controller.
->
-> Just true.
->
-> Please open existing, recent PCI bindings and look how it is done.
-
-I see a couple of examples of the following:
-
-   msi-parent: true
-
-
->
->> +
->> +  bus-range:
->> +    description: PCI bus numbers covered.
->
-> Drop
-
-Dropped.
-
->
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - reg-names
->> +  - device_type
->> +  - "#address-cells"
->> +  - "#size-cells"
->> +  - interrupts
->> +  - interrupt-map
->> +  - interrupt-map-mask
->> +  - "#interrupt-cells"
->
-> This also needs cleaning.
-
-I removed Dropped items.
-
->
->> +
->> +unevaluatedProperties: false
->> +
->> +examples:
->> +  - |
->> +    pcie_0: pcie@c00000000 {
->> +        compatible = "altr,pcie-root-port-1.0";
->> +        reg = <0xc0000000 0x20000000>,
->> +            <0xff220000 0x00004000>;
->
-> Misaligned.
-
-I fixed the alignments.
-
->
->> +        reg-names = "Txs", "Cra";
->> +        interrupt-parent = <&hps_0_arm_gic_0>;
->> +        interrupts = <0 40 4>;
->
-> Use defines for common constnats.
-
-I added constants from arm_gic.h and irq.h.
-
->
->> +        #interrupt-cells = <1>;
->> +        bus-range = <0x0 0xFF>;
->
-> Lowercase hex
-
-I changed to lower case.
-
->
->> +        device_type = "pci";
->> +        msi-parent = <&msi_to_gic_gen_0>;
->> +        #address-cells = <3>;
->> +        #size-cells = <2>;
->> +        interrupt-map-mask = <0 0 0 7>;
->> +        interrupt-map = <0 0 0 1 &pcie_intc 1>,
->> +                        <0 0 0 2 &pcie_intc 2>,
->> +                        <0 0 0 3 &pcie_intc 3>,
->> +                        <0 0 0 4 &pcie_intc 4>;
->> +        ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000
->> +              0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
->
-> Misaligned.
->
->
-> Best regards,
-> Krzysztof
->
->
-
-Thank you for the timely and thorough review. Version 2 of the patch will 
-be submitted soon.
-
-Matthew Gerlach
