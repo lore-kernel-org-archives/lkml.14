@@ -1,37 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DDB10A3E;
-	Mon,  1 Apr 2024 10:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3281119B;
+	Mon,  1 Apr 2024 10:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711965667; cv=none; b=b3LGAWim9uIbGT6dFDnHKGiZLJSfoE+eE3FSXTU1zBDtmbAlV4PvDS+btWJM24E0SwfopRR297bHjMLMZbFlBNsqYuakrrkhRvxDncX+gO5PSqIc0eAQkIBaaNyD7uFY9m58paaPrpHGKJBcU1Gx1zmh/2VjxhuPTna7D8Z3tHg=
+	t=1711965742; cv=none; b=SC2qnXmS7Nx7nwmEMgurWJ3FFhzQShZsO69B3hR9iCNkqHPoJb3ftzOYMxbSi/ZgfjkU1FAqN3YBYInFOX9laP3dsjfapdT7wFd0krUEcYvDNZCtjHUHapOulNkKABf5UN9pGCQkAu2e8wPRSe9+pYxc+IJVWDoikCmjI97nABY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711965667; c=relaxed/simple;
-	bh=7nXZN2LsejGXwaK9gE1a3Pn8vtiq9m6Dr+peuqIJnjc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LsICY3eyhlFlidMD6jg0YrtJkTLgG4Y6kJOG5ytTSKBkX2W20gBlB7dLfbS/icADczEK4V+ouTGldXJJKZlUPSycITiljy8cdpZik7lTXTAbd6m5/vctJfjFrkV/nCeEbrYP6Ixwb+cD34XZc5ww/2oSfAui5jv481bu3JoaFak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 150F2C433F1;
-	Mon,  1 Apr 2024 10:01:02 +0000 (UTC)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	linux-pci@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] dt-bindings: PCI: rockchip,rk3399-pcie: add missing maxItems to ep-gpios
-Date: Mon,  1 Apr 2024 12:00:58 +0200
-Message-Id: <20240401100058.15749-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1711965742; c=relaxed/simple;
+	bh=+iI5RpOodzmJXIcv8TNfNZngHxLuBoKhh3Wx6e3sdys=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f+xtDkG6MpEbzoMYGSGWXXMPrsT+f6zQio+Uf4Ud0PtGR+BiBxchdrbzJI4phWW6qlmsinQe5ZNuOUThL3trKVSVPJ2Xop5bDDbNZJcEq5ANrO+90ZAAOYZWzLi1gPE/rbc52MvC+d8Z9ZU3UZb5tviwJ+84Z9VuaLdyjNesqyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=mgLiezN4; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="mgLiezN4"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4315mEb2029960;
+	Mon, 1 Apr 2024 05:02:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	PODMain02222019; bh=sQ1IUPXI8DEMkqDZPY9mFbPrpEApJsB5PFIBxvjEGNc=; b=
+	mgLiezN4B9M97zdJa2B9mJJIlEvdtKAmQvQ25qj9x0iq+Sr2H3eXRhZ0ErK9EDUo
+	sxvU5EnRtLh16L9VCgJSLyEbnIC+cGnHWEdMnxwENAd4gniY3rzGhbP/aoOJPaTc
+	ZBznDgrJvUOHrWAPMAOKURns0GBqJv8W0rU/3jcxt1VaUMk83pctHMNTnBCFXi2M
+	UgHxMt1QVl3D7aB3cBDmf2NJiQIGf9wecNhpYg2gbORMXHL6mGtOTdll6PepU5Xw
+	l934i0pbwJbuq4NKDWOAJHIZxlXM08ZnpDkH5BFfRyW3DwWtOdTTB8Q+4RQgccmm
+	BOMv5wKrFDNSTj17GWAMxQ==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3x6g4xhtw6-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Apr 2024 05:02:13 -0500 (CDT)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 1 Apr 2024
+ 11:02:10 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.9 via Frontend Transport; Mon, 1 Apr 2024 11:02:10 +0100
+Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.18])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 3AFD482026C;
+	Mon,  1 Apr 2024 10:02:10 +0000 (UTC)
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+To: <broonie@kernel.org>, <tiwai@suse.com>
+CC: <linux-sound@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
+        "Richard
+ Fitzgerald" <rf@opensource.cirrus.com>
+Subject: [PATCH v2 1/3] ALSA: control: Introduce snd_ctl_find_id_mixer_locked()
+Date: Mon, 1 Apr 2024 10:02:08 +0000
+Message-ID: <20240401100210.61277-2-rf@opensource.cirrus.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240401100210.61277-1-rf@opensource.cirrus.com>
+References: <20240401100210.61277-1-rf@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,29 +62,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: jYmcIEZ1JebaiO2pZCLbge7bIdn-bFPC
+X-Proofpoint-GUID: jYmcIEZ1JebaiO2pZCLbge7bIdn-bFPC
+X-Proofpoint-Spam-Reason: safe
 
-Properties with GPIOs should define number of actual GPIOs, so add
-missing maxItems to ep-gpios.  Otherwise multiple GPIOs could be
-provided which is not a true hardware description.
+Adds wrapper function snd_ctl_find_id_mixer_locked(). This is
+identical to snd_ctl_find_id_mixer() except that it can be called
+from code that is already holding controls_rwsem.
 
-Fixes: aa222f9311e1 ("dt-bindings: PCI: Convert Rockchip RK3399 PCIe to DT schema")
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
 ---
- Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ include/sound/control.h | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie.yaml
-index 531008f0b6ac..002b728cbc71 100644
---- a/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie.yaml
-@@ -37,6 +37,7 @@ properties:
-     description: This property is needed if using 24MHz OSC for RC's PHY.
+diff --git a/include/sound/control.h b/include/sound/control.h
+index 9a4f4f7138da..c1659036c4a7 100644
+--- a/include/sound/control.h
++++ b/include/sound/control.h
+@@ -167,6 +167,29 @@ snd_ctl_find_id_mixer(struct snd_card *card, const char *name)
+ 	return snd_ctl_find_id(card, &id);
+ }
  
-   ep-gpios:
-+    maxItems: 1
-     description: pre-reset GPIO
++/**
++ * snd_ctl_find_id_mixer_locked - find the control instance with the given name string
++ * @card: the card instance
++ * @name: the name string
++ *
++ * Finds the control instance with the given name and
++ * @SNDRV_CTL_ELEM_IFACE_MIXER. Other fields are set to zero.
++ *
++ * This is merely a wrapper to snd_ctl_find_id_locked().
++ * The caller must down card->controls_rwsem before calling this function.
++ *
++ * Return: The pointer of the instance if found, or %NULL if not.
++ */
++static inline struct snd_kcontrol *
++snd_ctl_find_id_mixer_locked(struct snd_card *card, const char *name)
++{
++	struct snd_ctl_elem_id id = {};
++
++	id.iface = SNDRV_CTL_ELEM_IFACE_MIXER;
++	strscpy(id.name, name, sizeof(id.name));
++	return snd_ctl_find_id_locked(card, &id);
++}
++
+ int snd_ctl_create(struct snd_card *card);
  
-   vpcie12v-supply:
+ int snd_ctl_register_ioctl(snd_kctl_ioctl_func_t fcn);
 -- 
-2.34.1
+2.39.2
 
