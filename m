@@ -1,58 +1,37 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3387DDB6;
-	Mon,  1 Apr 2024 09:38:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93495101CE
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 09:39:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711964338; cv=none; b=LpqzrC1DX79P2eUAhyKq85/hmiUW4Hm9OzTvmjqjX6qIcAtyl13og8ssS04QCPBkm0sztF7jT7t+22whRyedySghZ7m4b5NZJUdb92DKFOBc9HFntSpm+xufXr01gVOS5P6ZLOTDlcD7Y3EReDMwBq+vbnrJSJ10FY6mbCTOsxs=
+	t=1711964359; cv=none; b=G2aHiiDzPYrJ8eKcmlIaqjbtmEPaSrynU0AT6cQkLr3Ye1mx2kFKV/5bO0poy0cT47AoXSephLaj8Nk2M5tm5/tWxG/GLkngPwQCDmiPzQjSOx8wHqdHS1xEVbTkIDT8uqlpJIhxM+XyHuxcp/quuh0ioKIUeyHiKEZfsYIZz1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711964338; c=relaxed/simple;
-	bh=kiZVMGBa1eAUPnAXQqslxytPb57aNml6Kj1vn0W2qBI=;
+	s=arc-20240116; t=1711964359; c=relaxed/simple;
+	bh=e9xEhCEi0Wtt1EeHOlTmbaOt5pzWnrErrDEVF5RY/ow=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W48ATV1en7xb0wr3KZi6Augs7jMHJTOUT7Cjxr7pptZRCYXw0aO1dEruHBt7+IA7BQj4aRJH4VfYYqgGa31vr69dUV8NpszBjQX1fmZzfc+/5s3LW30nNprU1Cghpboj6bEdF7BOxZLw6m/TVNhJtckZTPUxs69XPhbvEc1iVLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bOkBk/4p; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=WD6qWBAEtW6qv9QOmExFUZ8IP7P3iIUJw/JJc2MRw9DXh3IByuY9DkqU5hBqLxjKS64jcihcDzTwRA2/x/Q49aL7R4Bn3XmvgreZ4x0O70XejcE6MXdMXisJlTgF+mAM7x0xodrcxb8ZN4JTM3qUBffqyLG/orLnzUMPamwdAUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=V/2l8Ud+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bOkBk/4p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711964337; x=1743500337;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kiZVMGBa1eAUPnAXQqslxytPb57aNml6Kj1vn0W2qBI=;
-  b=bOkBk/4pJQnME2L3qzPh3C4freXAxkNMnpA9/BrNigN0fqjhQMZrXlcq
-   EQ38eaKzS+DfPE2UwU6Y1VslNYZb5Gp9tfhSA8jSN89HS0ozt/7Ij5j4i
-   /LHvZbor2qK6iKz5KtA0f0mhiIY2UcuaT4zfmzX/LEMEOOJ6/fXWbjzYl
-   LF4GzFGI1rXuGc5gh1+tNZ/2VCc76lA5hyBB9fL5itmKUZrMxOKdyWu2B
-   4SUSCqPPJGWcZM0zWEv+1NBl9jvZ/oCnxK1bXEBjUt5yGN3fyMh0qaiql
-   c9tU337B0Sz5EYmg/uAlX06/cTnlccmpZuswSEAJHZQZUJbyUArXcMUaj
-   Q==;
-X-CSE-ConnectionGUID: 6AdeUXfXTI6IBo8xfElSbA==
-X-CSE-MsgGUID: ZjLlUBF7QaChgdkx3QVRQw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11030"; a="10043267"
-X-IronPort-AV: E=Sophos;i="6.07,171,1708416000"; 
-   d="scan'208";a="10043267"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 02:38:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,171,1708416000"; 
-   d="scan'208";a="48858934"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa001.fm.intel.com with ESMTP; 01 Apr 2024 02:38:54 -0700
-Date: Mon, 1 Apr 2024 17:34:04 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Marco Pagani <marpagan@redhat.com>
-Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
-	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alan Tull <atull@opensource.altera.com>, linux-fpga@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] fpga: region: add owner module and take its refcount
-Message-ID: <Zgp/jNst2yuXEbpU@yilunxu-OptiPlex-7050>
-References: <20240327160022.202934-1-marpagan@redhat.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="V/2l8Ud+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4950C43394;
+	Mon,  1 Apr 2024 09:39:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1711964359;
+	bh=e9xEhCEi0Wtt1EeHOlTmbaOt5pzWnrErrDEVF5RY/ow=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V/2l8Ud++wgLSA7gVLLno4a7JkmzknoJCif03klo+JuKyAoOQ/4TogWoVxMOoYlvp
+	 s2OdWKOuz2ao5CPoV8Bb2jmYZpm0BcXI5Um46F4QkIRN9tf10LDqTDJCwpd8lrxthd
+	 o1srCw5Jz1sGqJhCyGnm07XikOJXmjEwlYmcXe8E=
+Date: Mon, 1 Apr 2024 11:39:15 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: "fengchunguo@126.com" <fengchunguo@126.com>
+Cc: ilpo.jarvinen@linux.intel.com, andriy.shevchenko@linux.intel.com,
+	jirislaby@kernel.org, linux-kernel@vger.kernel.org,
+	"chunguo.feng" <chunguo.feng@semidrive.com>
+Subject: Re: [PATCH] tty: serial: fixed uart irq maybe cause irq storm
+Message-ID: <2024040147-stinging-payback-04f5@gregkh>
+References: <1711963801-184362-1-git-send-email-fengchunguo@126.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,64 +40,74 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240327160022.202934-1-marpagan@redhat.com>
+In-Reply-To: <1711963801-184362-1-git-send-email-fengchunguo@126.com>
 
-On Wed, Mar 27, 2024 at 05:00:20PM +0100, Marco Pagani wrote:
-> The current implementation of the fpga region assumes that the low-level
-> module registers a driver for the parent device and uses its owner pointer
-> to take the module's refcount. This approach is problematic since it can
-> lead to a null pointer dereference while attempting to get the region
-> during programming if the parent device does not have a driver.
+On Mon, Apr 01, 2024 at 05:30:01PM +0800, fengchunguo@126.com wrote:
+> From: "chunguo.feng" <chunguo.feng@semidrive.com>
+
+Please use your name, which is not with a "." in it, right?
+
+> if not disable uart irq before disable clk,  uart irq maybe triggered after
+> disabled clk immediately, then maybe cause irq storm.
 > 
-> To address this problem, add a module owner pointer to the fpga_region
-> struct and use it to take the module's refcount. Modify the functions for
-> registering a region to take an additional owner module parameter and
-> rename them to avoid conflicts. Use the old function names for helper
-> macros that automatically set the module that registers the region as the
-> owner. This ensures compatibility with existing low-level control modules
-> and reduces the chances of registering a region without setting the owner.
+> Reproduced the below call trace, see i2c not be connected, but irq storm
+> was triggered.
 > 
-> Also, update the documentation to keep it consistent with the new interface
-> for registering an fpga region.
+> i2c_designware 30b70000.i2c: controller timed out
+> CPU: 2 PID: 2932 Comm: gnss@1.0-servic 
+> Tainted: G O 5.14.61-00094-geaa0149416cc-dirty #8
+> Hardware name: Semidrive kunlun x9 REF Board (DT)
+> Call trace:
+> [<ffff00000808a3cc>] dump_backtrace+0x0/0x3c0
+> [<ffff00000808a7a0>] show_stack+0x14/0x1c
+> [<ffff000008cef43c>] dump_stack+0xc4/0xfc
+> [<ffff00000814eb80>] __report_bad_irq+0x50/0xe0
+> [<ffff00000814eaec>] note_interrupt+0x248/0x28c
+> [<ffff00000814c0e8>] handle_irq_event+0x78/0xa4
+> [<ffff00000814fcb8>] handle_fasteoi_irq+0xe4/0x1b4
+> [<ffff00000814b060>] __handle_domain_irq+0x7c/0xbc
+> [<ffff00000808176c>] gic_handle_irq+0x4c/0xb8
+> [<ffff000008083230>] el1_irq+0xb0/0x124
+> [<ffff000008d09f5c>] _raw_spin_unlock_irqrestore+0x10/0x44
+> [<ffff00000865b784>] dw8250_set_termios+0x48/0xf4
+> [<ffff0000086545a4>] serial8250_set_termios+0x14/0x28
+> [<ffff00000864c4f4>] uart_change_speed+0x38/0x10c
+> [<ffff00000864e458>] uart_set_termios+0xd0/0x17c
+> [<ffff000008630ad4>] tty_set_termios+0x160/0x1e4
+> [<ffff00000863165c>] set_termios+0x32c/0x3bc
+> [<ffff000008631248>] tty_mode_ioctl+0x6f0/0x7d8
+> [<ffff000008631a6c>] n_tty_ioctl_helper+0x10c/0x1e8
+> [<ffff00000862d2c4>] n_tty_ioctl+0x120/0x194
+> [<ffff00000862a724>] tty_ioctl+0x658/0xa34
+> [<ffff0000082a8f40>] do_vfs_ioctl+0x554/0x810
+> [<ffff0000082a9368>] SyS_ioctl+0x88/0x94
+> Exception stack(0xffff00000ccf3ec0 to 0xffff00000ccf4000
 > 
-> Other changes: unlock the mutex before calling put_device() in
-> fpga_region_put() to avoid potential use after release issues.
-
-Please try not to mix different changes in one patch, especially for
-a "bug fix" as you said.
-
-And I do have concern about the fix, see below.
-
-[...]
-
-> @@ -53,7 +53,7 @@ static struct fpga_region *fpga_region_get(struct fpga_region *region)
->  	}
+> Signed-off-by: chunguo.feng <chunguo.feng@semidrive.com>
+> ---
+>  drivers/tty/serial/8250/8250_dw.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
+> index c1d43f0..133c24e 100644
+> --- a/drivers/tty/serial/8250/8250_dw.c
+> +++ b/drivers/tty/serial/8250/8250_dw.c
+> @@ -359,6 +359,12 @@ static void dw8250_set_termios(struct uart_port *p, struct ktermios *termios,
 >  
->  	get_device(dev);
-> -	if (!try_module_get(dev->parent->driver->owner)) {
-> +	if (!try_module_get(region->br_owner)) {
->  		put_device(dev);
->  		mutex_unlock(&region->mutex);
->  		return ERR_PTR(-ENODEV);
-> @@ -75,9 +75,9 @@ static void fpga_region_put(struct fpga_region *region)
->  
->  	dev_dbg(dev, "put\n");
->  
-> -	module_put(dev->parent->driver->owner);
-> -	put_device(dev);
-> +	module_put(region->br_owner);
->  	mutex_unlock(&region->mutex);
+>  	rate = clk_round_rate(d->clk, newrate);
+>  	if (rate > 0 && p->uartclk != rate) {
+> +		/*Need disable uart irq before disabled clk, because uart irq maybe triggered after
 
-If there is concern the region would be freed after put_device(), then
-why still keep the sequence in fpga_region_get()?
+Space needed after '*', right?
 
-And is it possible region is freed before get_device() in
-fpga_region_get()?
+> +		 * disabled clk immediately, then cause irq storm.
+> +		 */
+> +		if (p->irq)
+> +			disabled_irq(p->irq);
 
-Or we should clearly document how/when to use these functions?
+This feels wrong, the irq should not be turned off here, what happens if
+some data comes in while this function is running?  Will it be lost?
 
-Thanks,
-Yilun
+thanks,
 
-> +	put_device(dev);
->  }
+greg k-h
