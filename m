@@ -1,63 +1,66 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4C456B8E
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 23:29:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A9456B9F
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 23:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712014200; cv=none; b=EIUYaspl+gaC+tmrEZ4Qx7y5+u3y4pkjTdb5KiBg7xZiKm4njqhqJzUb4mnElmi1gCgHBQTGOi/f3BTCXxnLGS5ruOA/C+bzCKGsdATWUBOeE7eNjDnoyuOcrHoueLZ+NaV9rsO96T+3g80KvsQJPwCPGjX+VAne8RupTTAf7mw=
+	t=1712014201; cv=none; b=DphEMvlLS/mHuIQSnI1jJuGzz8DDih9ncofBe+7EWpaLPHLC+BRDZ7t0O+oh4XFjkUlZiafRnxnPGu4VdSz+eofC4TafsTQ+GKyoawR8iiELjG2zybJQTDi6+sEnyeZpz5sB1rHgfOQbyr+MjOVPlZsbVqpTa6Vee3Tl4lH0cV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712014200; c=relaxed/simple;
-	bh=LIU3srPkuAU2Il0Ayu4Wz3ZF0a3r6V03GyttaxoyE9Q=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=PtitfUFqfI1x40AxjbbnStVn/ZfjSVsDHs1mdAQ2VtOi+GymBFmbfvR8Y+lVa0cqEsxMTTfZXgs/PSEUZ7PB+g56tkymee5mGnZSpGDfNEK+Zu3UbHukUY9nCtlqE7aAx9RMUTjHhCjDFnRPDrnkYR91tgdhvLqUJK0Lki2fHeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rcUf3/3H; arc=none smtp.client-ip=209.85.128.202
+	s=arc-20240116; t=1712014201; c=relaxed/simple;
+	bh=0ndCTUSKNYjrC7chZIPInNHsk3SUFRlCdRJOI83//j4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ArxH0oDZZkmD82gqQq2isI/H/yiqDIzYba7e+GXPXdCZSQ/71Nhy8O1zPxy1iL9ADvaTeebAQ73ubqoNA2Etxs96pmu8EKirgsqlFRjQX59hm8WDNYJDPlogMlcNohO9DOPGc8DTSxlzIegesNzcANyqrShyRO040dgoHsOkOgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EkUTm+Bl; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rcUf3/3H"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60a61b31993so81552267b3.1
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 16:29:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EkUTm+Bl"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-614bc5c53a1so27295327b3.1
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 16:29:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712014196; x=1712618996; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3wg9CCGpIdLpfDRqh60QLQofCQe0biAtvSj1Gdo5bk8=;
-        b=rcUf3/3Hx79SQpAY7DJI+A7c4PJxcLpRh9bjArXZWq5RmH8UM59RZPPelNnD82Zs2v
-         UYJAGIA2LNKy5g0kCM+Tdp+TrzmMGXUIfhOkF4TC95s0ATZG3/vMyIwARciwcG/O/gmF
-         6+X9vHutCcV5cnN+YoSUptFqxNDv85n87KX4kICeyLKyMYwtkQRGJLxOClKGqzneIe0H
-         qUlvjbHRsiBu8lP4wG+NsScN5NednQGAv8Yk1N7Qe+Ml6hd7+M0z4KxtuvJlAZPied4s
-         GwOQQd1hW1LyUQqaybsLrbpsRpdhUUjWidmwDeflXEnhFB+OpHvNA55KUD966PLllaKH
-         g2UQ==
+        d=google.com; s=20230601; t=1712014198; x=1712618998; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lJfaFUFI3gJojofhvI2fMvWTfkDCiiHnhDdEzunFXno=;
+        b=EkUTm+BlIHv+2yFf9PmTsBJqBNyP5xBbhe1kcuVvTw03Jg0NYO8n0slTm0ul57EyED
+         LhWUM2QaOtiznKp+R/JqMTo6Dk54IzyK4f/LGqe1NvhnAR1JCHvyADpgX+55UVf+yZYS
+         idgRM9fRqgjpjZfwJqMBHO0RFxKCAYEY3TgFPsXEN+cv6Pdqvu1Ebi63s4nQzgLH/Pft
+         wmf92n6UtCnIBHneAXEAcKvKNCOXa9LqZxEgAzfD2pBivWpNGEIcsnYiTa/PqJEBhpKq
+         98ttLvPCxCjIdOhRyuzFBfII2Chir14fbDNEg5eaw99qBWpDmm05Aa17iqCRdt0Dyv/6
+         8n0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712014196; x=1712618996;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3wg9CCGpIdLpfDRqh60QLQofCQe0biAtvSj1Gdo5bk8=;
-        b=fY8QNbKo+1YO0/n+eUQFPv60v6ovi34ziv8k9q3H8RLcGnqlwrD09hN4Uwy18wmsYn
-         cgV9xe/KuY7TEMLBv53fz2vX42io8nBF9lU7Zj/LgUxJ7gOHf75vcOIEEMERVavAhC0c
-         lATm9dnPdjg4SnolVboAGzNM0i5MFtY45OyfKNHnJbRq+GqJDuD9RE8VAvYg0rREinu+
-         Gp9UuwZDKIcYqYzl3Z6QnQgXINUKPQn0L7uiAECL8LfGTzQxIezeI+2nB6PYEpTz1Dod
-         y6iISrMOx3NntS8d9CUzGZt5rwa4N8FSVLqADiWsI3c06592m6WtWIteRKV0fGFEnXYE
-         pYxA==
-X-Forwarded-Encrypted: i=1; AJvYcCXhN4iC7pFA+17J4pFVtZIG/6tEgVAFDcP2Efa63yWvErz3bBBkzhpin8Djv/byEEiDoQ5QD/dXNbGaRa9QdJR/RqHiSE9rUUMVZoW+
-X-Gm-Message-State: AOJu0YxXTViqz5aXUwo4IBQQpUKZaM9Qh2NlahOy/kx6mtBNwEZpTAUt
-	pcn9gzvoyq+t/PkgztbxADuScclsW5mH0NlLTU0w3sbyTPnrbaelS5jVIWVgm61JueOEv9by9QU
-	98sG1rcE1GDax99UOEw==
-X-Google-Smtp-Source: AGHT+IGQKV963bGOmZkg1qJdb4wkJ3JL7Okh/SQUhgB3vOnWcX/gauefdkact4kTuSTRZOisDp+cn6EF/9Mo2eKk
+        d=1e100.net; s=20230601; t=1712014198; x=1712618998;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lJfaFUFI3gJojofhvI2fMvWTfkDCiiHnhDdEzunFXno=;
+        b=PxTQSZ/+ujdF/s8LDNVhgQBo3KrrftNVfGTfNTXX7f0ZlJTH/YJXagwU42TEpZC7eO
+         5Pb7z5ZA4HWBmv2HQvlXbc8VOUMAwvsVGDhMfrMbVgV5UgP04Nvr74gTFdq7EpZsjgQM
+         yjPB7tzu/M6aXry6BtbhkQ3tyc3fgkFAFXTJ+G5y7/sSDFdGehyONjSkehzTRXi0Dr68
+         5o8OBnW/pJuyngdrgAnMbFXU/KyDt/m1ZmF/dqJI3Bf1Cfp6e9GN0PIzRoc8XAKO4htl
+         2I+Fm4Gnl2E/8JPSZvD14vWSA7ZSbYgRV+2dAYg8awknKkmi1hhaYZOmG+88LutwusnJ
+         /NFA==
+X-Forwarded-Encrypted: i=1; AJvYcCUXBIMbWu+8EXZ/wLMAe9BuVNhAnSxGDbdNxm7D6PMz8lj2dnjH4u9HSEB+Gv7nI/ju4eNenQhJkRenUAgARgjldeqXcOMxl+jar3Xo
+X-Gm-Message-State: AOJu0Yxw8jIT21vQIHrrYDievlmxkmNNbYwJwLYwQ8MBZplqQoI6mi7p
+	3VjzA+cZa5L8sW5leq3ZtFTLoL2iV19LC6LVaWqvYBjHo2ybV0Uv/rzaJv9/2KL/PbLiK/6Gdeb
+	Ob/EGfpvO6uR1irAWbA==
+X-Google-Smtp-Source: AGHT+IEzS+9pOebrRYAPHZcYp9+yLQ7vZUDEjcM1NuDRlvVAs7z0PGB+6rnD36HZsSFqff67vdpG7JIIt1VZPePZ
 X-Received: from jthoughton.c.googlers.com ([fda3:e722:ac3:cc00:14:4d90:c0a8:2a4f])
- (user=jthoughton job=sendgmr) by 2002:a05:690c:f83:b0:614:e20c:d423 with SMTP
- id df3-20020a05690c0f8300b00614e20cd423mr823185ywb.10.1712014196503; Mon, 01
- Apr 2024 16:29:56 -0700 (PDT)
-Date: Mon,  1 Apr 2024 23:29:39 +0000
+ (user=jthoughton job=sendgmr) by 2002:a05:6902:1006:b0:dcc:94b7:a7a3 with
+ SMTP id w6-20020a056902100600b00dcc94b7a7a3mr767796ybt.12.1712014198123; Mon,
+ 01 Apr 2024 16:29:58 -0700 (PDT)
+Date: Mon,  1 Apr 2024 23:29:41 +0000
+In-Reply-To: <20240401232946.1837665-1-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240401232946.1837665-1-jthoughton@google.com>
 X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Message-ID: <20240401232946.1837665-1-jthoughton@google.com>
-Subject: [PATCH v3 0/7] mm/kvm: Improve parallelism for access bit harvesting
+Message-ID: <20240401232946.1837665-3-jthoughton@google.com>
+Subject: [PATCH v3 2/7] KVM: Move MMU notifier function declarations
 From: James Houghton <jthoughton@google.com>
 To: Andrew Morton <akpm@linux-foundation.org>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: Yu Zhao <yuzhao@google.com>, David Matlack <dmatlack@google.com>, 
@@ -77,95 +80,99 @@ Cc: Yu Zhao <yuzhao@google.com>, David Matlack <dmatlack@google.com>,
 	linux-trace-kernel@vger.kernel.org, James Houghton <jthoughton@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-This patchset adds a fast path in KVM to test and clear access bits on
-sptes without taking the mmu_lock. It also adds support for using a
-bitmap to (1) test the access bits for many sptes in a single call to
-mmu_notifier_test_young, and to (2) clear the access bits for many ptes
-in a single call to mmu_notifier_clear_young.
+To allow new MMU-notifier-related functions to use gfn_to_hva_memslot(),
+move some declarations around.
 
-With Yu's permission, I'm now working on getting this series into a
-mergeable state.
+Also move mmu_notifier_to_kvm() for wider use later.
 
-I'm posting this as an RFC because I'm not sure if the arm64 bits are
-correct, and I haven't done complete performance testing. I want to do
-broader experimentation to see how much this improves VM performance in
-a cloud environment, but I want to be sure that the code is mergeable
-first.
+Signed-off-by: James Houghton <jthoughton@google.com>
+---
+ include/linux/kvm_host.h | 41 +++++++++++++++++++++-------------------
+ virt/kvm/kvm_main.c      |  5 -----
+ 2 files changed, 22 insertions(+), 24 deletions(-)
 
-Yu has posted other performance results[1], [2]. This v3 shouldn't
-significantly change the x86 results, but the arm64 results may have
-changed.
-
-The most important changes since v2[3]:
-
-- Split the test_clear_young MMU notifier back into test_young and
-  clear_young. I did this because the bitmap passed in has a distinct
-  meaning for each of them, and I felt that this was cleaner.
-
-- The return value of test_young / clear_young now indicates if the
-  bitmap was used.
-
-- Removed the custom spte walker to implement the lockless path. This
-  was important for arm64 to be functionally correct (thanks Oliver),
-  and it avoids a lot of problems brought up in review of v2 (for
-  example[4]).
-
-- Add kvm_arch_prepare_bitmap_age and kvm_arch_finish_bitmap_age to
-  allow for arm64 to implement its bitmap-based aging to grab the MMU
-  lock for reading while allowing x86 to be lockless.
-
-- The powerpc changes have been dropped.
-
-- The logic to inform architectures how to use the bitmap has been
-  cleaned up (kvm_should_clear_young has been split into
-  kvm_gfn_should_age and kvm_gfn_record_young) (thanks Nicolas).
-
-There were some smaller changes too:
-- Added test_clear_young_metadata (thanks Sean).
-- MMU_NOTIFIER_RANGE_LOCKLESS has been renamed to
-  MMU_NOTIFIER_YOUNG_FAST, to indicate to the caller that passing a
-  bitmap for MGLRU look-around is likely to be beneficial.
-- Cleaned up comments that describe the changes to
-  mmu_notifier_test_young / mmu_notifier_clear_young (thanks Nicolas).
-
-[1]: https://lore.kernel.org/all/20230609005943.43041-1-yuzhao@google.com/
-[2]: https://lore.kernel.org/all/20230609005935.42390-1-yuzhao@google.com/
-[3]: https://lore.kernel.org/kvmarm/20230526234435.662652-1-yuzhao@google.com/
-[4]: https://lore.kernel.org/all/ZItX64Bbx5vdjo9M@google.com/
-
-James Houghton (5):
-  mm: Add a bitmap into mmu_notifier_{clear,test}_young
-  KVM: Move MMU notifier function declarations
-  KVM: Add basic bitmap support into kvm_mmu_notifier_test/clear_young
-  KVM: x86: Participate in bitmap-based PTE aging
-  KVM: arm64: Participate in bitmap-based PTE aging
-
-Yu Zhao (2):
-  KVM: x86: Move tdp_mmu_enabled and shadow_accessed_mask
-  mm: multi-gen LRU: use mmu_notifier_test_clear_young()
-
- Documentation/admin-guide/mm/multigen_lru.rst |   6 +-
- arch/arm64/include/asm/kvm_host.h             |   5 +
- arch/arm64/include/asm/kvm_pgtable.h          |   4 +-
- arch/arm64/kvm/hyp/pgtable.c                  |  21 +-
- arch/arm64/kvm/mmu.c                          |  23 ++-
- arch/x86/include/asm/kvm_host.h               |  20 ++
- arch/x86/kvm/mmu.h                            |   6 -
- arch/x86/kvm/mmu/mmu.c                        |  16 +-
- arch/x86/kvm/mmu/spte.h                       |   1 -
- arch/x86/kvm/mmu/tdp_mmu.c                    |  10 +-
- include/linux/kvm_host.h                      | 101 ++++++++--
- include/linux/mmu_notifier.h                  |  93 ++++++++-
- include/linux/mmzone.h                        |   6 +-
- include/trace/events/kvm.h                    |  13 +-
- mm/mmu_notifier.c                             |  20 +-
- mm/rmap.c                                     |   9 +-
- mm/vmscan.c                                   | 183 ++++++++++++++----
- virt/kvm/kvm_main.c                           | 100 +++++++---
- 18 files changed, 509 insertions(+), 128 deletions(-)
-
-
-base-commit: 0cef2c0a2a356137b170c3cb46cb9c1dd2ca3e6b
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 48f31dcd318a..1800d03a06a9 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -257,25 +257,6 @@ bool kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+ int kvm_async_pf_wakeup_all(struct kvm_vcpu *vcpu);
+ #endif
+ 
+-#ifdef CONFIG_KVM_GENERIC_MMU_NOTIFIER
+-union kvm_mmu_notifier_arg {
+-	pte_t pte;
+-	unsigned long attributes;
+-};
+-
+-struct kvm_gfn_range {
+-	struct kvm_memory_slot *slot;
+-	gfn_t start;
+-	gfn_t end;
+-	union kvm_mmu_notifier_arg arg;
+-	bool may_block;
+-};
+-bool kvm_unmap_gfn_range(struct kvm *kvm, struct kvm_gfn_range *range);
+-bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range);
+-bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range);
+-bool kvm_set_spte_gfn(struct kvm *kvm, struct kvm_gfn_range *range);
+-#endif
+-
+ enum {
+ 	OUTSIDE_GUEST_MODE,
+ 	IN_GUEST_MODE,
+@@ -2012,6 +1993,11 @@ extern const struct kvm_stats_header kvm_vcpu_stats_header;
+ extern const struct _kvm_stats_desc kvm_vcpu_stats_desc[];
+ 
+ #ifdef CONFIG_KVM_GENERIC_MMU_NOTIFIER
++static inline struct kvm *mmu_notifier_to_kvm(struct mmu_notifier *mn)
++{
++	return container_of(mn, struct kvm, mmu_notifier);
++}
++
+ static inline int mmu_invalidate_retry(struct kvm *kvm, unsigned long mmu_seq)
+ {
+ 	if (unlikely(kvm->mmu_invalidate_in_progress))
+@@ -2089,6 +2075,23 @@ static inline bool mmu_invalidate_retry_gfn_unsafe(struct kvm *kvm,
+ 
+ 	return READ_ONCE(kvm->mmu_invalidate_seq) != mmu_seq;
+ }
++
++union kvm_mmu_notifier_arg {
++	pte_t pte;
++	unsigned long attributes;
++};
++
++struct kvm_gfn_range {
++	struct kvm_memory_slot *slot;
++	gfn_t start;
++	gfn_t end;
++	union kvm_mmu_notifier_arg arg;
++	bool may_block;
++};
++bool kvm_unmap_gfn_range(struct kvm *kvm, struct kvm_gfn_range *range);
++bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range);
++bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range);
++bool kvm_set_spte_gfn(struct kvm *kvm, struct kvm_gfn_range *range);
+ #endif
+ 
+ #ifdef CONFIG_HAVE_KVM_IRQ_ROUTING
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index ca4b1ef9dfc2..d0545d88c802 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -534,11 +534,6 @@ void kvm_destroy_vcpus(struct kvm *kvm)
+ EXPORT_SYMBOL_GPL(kvm_destroy_vcpus);
+ 
+ #ifdef CONFIG_KVM_GENERIC_MMU_NOTIFIER
+-static inline struct kvm *mmu_notifier_to_kvm(struct mmu_notifier *mn)
+-{
+-	return container_of(mn, struct kvm, mmu_notifier);
+-}
+-
+ typedef bool (*gfn_handler_t)(struct kvm *kvm, struct kvm_gfn_range *range);
+ 
+ typedef void (*on_lock_fn_t)(struct kvm *kvm);
 -- 
 2.44.0.478.gd926399ef9-goog
 
