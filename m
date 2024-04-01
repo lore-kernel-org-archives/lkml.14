@@ -1,201 +1,136 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F00353E07;
-	Mon,  1 Apr 2024 17:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423194C60C;
+	Mon,  1 Apr 2024 17:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711992147; cv=none; b=RnMa1RMd8v80/SirNrxuCTaAUjqg1/ULpedR3W9FHFfiWCniZNQyvwH7GoAeZ56dVJ68oWKpVIn8id/8EtqL9O1wJmHxpxq6RrudQE71OgTkH7IHIBDUoFhkPMtM7QDDDgDOevl/1SVX18gHcnFmhnM2LXvqaOleQ+CwKFW8uhg=
+	t=1711992170; cv=none; b=b01QH7F9vrCgOf4vmBEj7qmvE0mjiXubcD25m3cSo/33ymPaWVRi19/SBw/ZAM6K6iiwDTlGFu4faBdAxuwuxaiOcC3g2FIwiYePXmcfnGU6C0qEUWb+NLxVQBmGx7slc5r3gRXHs79WOfwUcGSJ5CxK//9u0tBQHyHsA6BP7cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711992147; c=relaxed/simple;
-	bh=xw2fSt3BPp5V8iNV7DJ3a94MeIEOICDQVGI97xUAnZc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LtlaT+0l8BxplxO6imRJNkUl+Vp55unD75H/y9eff0G7bL4I4X8Iev73cm8Ogj7ZkrPq+gZpMxz+Ph86EbY0ZWzzey/D1ruKBikAZbU+O+drBa3wzqeFt6LFzh85vnew1Y0cQOFSPN4gs5QzLTspYdkUQCPaU5MNxO13YUIAHkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KOI3GsCd; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711992170; c=relaxed/simple;
+	bh=zHbbCSOPyTCqPdUXRwDlup/1JNlur6S+ULZXs+kmzok=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dssyXM82KR3LS1wTE2MEwDFOzWLW+fQ682CwkgxXJwdkzKjO5qimzGiZka1YS5N1qlRa7KNlpETNtrYoHrkc0PcvuRQY7SPQPH5n0fSqU9EdlIkMU2npZOTp7JTcMwTE1VxZP+KJ3TDmahReLP+RTglxegMoQeHc5Cmk3okhKWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=ePLJZ08v; arc=none smtp.client-ip=45.89.224.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KOI3GsCd"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4156e5c1c7eso1470505e9.1;
-        Mon, 01 Apr 2024 10:22:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711992144; x=1712596944; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NgPeZhzTZ788WN0jjZdJYqbUvceJFXHDXpD1Py9NPLc=;
-        b=KOI3GsCdX241Lq2dVgjBUrj+ItAxkyfVEiGVv4HJL3qU8viW2lts/xvMfC8CRZE2g0
-         2iBB8t2AXx8i0CVn+fsR0onM1riocEe5zKO/xNP+YldvsgvQiMvxHtC7krF0Wl5KOfd2
-         dHwciyWuaFnV7fS/AX+i5HsCLL+EZ4yXr21RFB1LnhpguEXfGK5HTM7eigT0BNLADdr/
-         X6o4pxZsJrvoU+mJbgJD8ThCrPegL4Sxt2jtg00HEoCjh3q0DoSQYr4UCGH8Zb0h94Pz
-         bVqZE8eL5jbt6IvibqdUAIUa4TIwV1IOMkdbTXzloHpGsY7QMjtKfY8MZSeWRClWV65C
-         CMlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711992144; x=1712596944;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NgPeZhzTZ788WN0jjZdJYqbUvceJFXHDXpD1Py9NPLc=;
-        b=lbzM7vVW88/Obxqw3v2yRgrMQyAn7dUOAycJ+HstZXaAdP7LxVF1Qgm8ye6cdDXFnZ
-         cR+8oUs7fVNP9Gv9PsRSP2bxv/6coeLk2+J8UvCdIUPkJwKc6c98ncx0gOK+OHm5zFM8
-         CUk1BFmYd1T+7VLyDonccQ5GWJN4lV8lo4jjvGo6uTFRjGlALSiSJ86cmHad+J+bUZhO
-         jfURErIeHIywH8U3GyRT5HTwQDT5/xBxdRiVzTK19e7iA6LADdbuwcrG/RDeBkafxMMk
-         rxDl9boEuEhT8jvK4OBozFiTLmuspXrbeXraElXgaV8S5MJAGf66/2ZYSsegtxQDTtGZ
-         lPsA==
-X-Forwarded-Encrypted: i=1; AJvYcCVAvJahnkQGy0driBxtDlZRbhdE3sNMqYwqHA1n+fK4vzckyoGgiHR0FAxAB+lCI5Q9c5XN1cuoMxd1x/i2oawgHVszBNERnfS6ZHD4Em0M4b2h8BycvIGTvVNG16rabk2/dJykEdaPnRriu7lNSbQMvFvViJPZZh6i
-X-Gm-Message-State: AOJu0Yw2LOlamw8uH5WyEs4AFa88SWEmPkyCmkkfWTFotMM3zC9NF6p6
-	VZp2D9vswWPRt8+RN9WkR6/+8iTNkBQWY4Hf+G6eoQpa+HnGasfZ+CCRl2i6
-X-Google-Smtp-Source: AGHT+IGDm9V39i/631xCWYmvLNeaIhpUNQ+uXk5p1/MjgyRw6sTTRjQlm0NOw2oq4hejtcwExTJTvA==
-X-Received: by 2002:a05:600c:5123:b0:414:37f:2798 with SMTP id o35-20020a05600c512300b00414037f2798mr8851789wms.6.1711992143906;
-        Mon, 01 Apr 2024 10:22:23 -0700 (PDT)
-Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id t20-20020a05600c199400b0041401eb021asm15273108wmq.24.2024.04.01.10.22.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Apr 2024 10:22:22 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
-	bpf@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Joan=20Bruguera=20Mic=C3=B3?= <joanbrugueram@gmail.com>,
-	Uros Bizjak <ubizjak@gmail.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH bpf v2 2/2] x86/bpf: Fix IP for relocating call depth accounting
-Date: Mon,  1 Apr 2024 19:19:00 +0200
-Message-ID: <20240401172157.5717-3-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240401172157.5717-1-ubizjak@gmail.com>
-References: <20240401172157.5717-1-ubizjak@gmail.com>
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="ePLJZ08v"
+Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 4EBEC120003;
+	Mon,  1 Apr 2024 20:22:44 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 4EBEC120003
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1711992164;
+	bh=tl1k+GzwBoZHvPC5wGd0gk/FR6ibdQtoq6i6yG3MDtE=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:From;
+	b=ePLJZ08v9l/Hp7+tshkLyConpJh3/E7UlPychQ8v4envB4os0v896owqaCmUZBjPw
+	 CASP3Kvn8yjDiOVNug2zR0XVFAP5hfsR2f70JK4yUprzcIq+X0EfxdpSH+mXgwuB5P
+	 9//DgLEl4FR7a0j5vgchoors49NzStQuA6+XtIawT/vGj/MGbgaQehjcYjwt2LM20g
+	 rtq+7EgaEMsCG/LVOtZKVkUAMpAFl8cIcHkxzsdjEWYVb3CApexAknmGL033IXoPJZ
+	 oX41ydw3Fjehxdcd681iiS8shzVEnB4Du+a1Y2CiY1y11Ylv1lpuvDO32cgmzFb4JG
+	 psrARtLC41j3w==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Mon,  1 Apr 2024 20:22:44 +0300 (MSK)
+Received: from localhost (100.64.160.123) by p-i-exch-sc-m02.sberdevices.ru
+ (172.16.192.103) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 1 Apr
+ 2024 20:22:43 +0300
+Date: Mon, 1 Apr 2024 20:22:43 +0300
+From: Dmitry Rokosov <ddrokosov@salutedevices.com>
+To: Rob Herring <robh@kernel.org>
+CC: <neil.armstrong@linaro.org>, <jbrunet@baylibre.com>,
+	<mturquette@baylibre.com>, <sboyd@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <khilman@baylibre.com>,
+	<martin.blumenstingl@googlemail.com>, <kernel@salutedevices.com>,
+	<rockosov@gmail.com>, <linux-amlogic@lists.infradead.org>,
+	<linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v1 1/6] dt-bindings: clock: meson: a1: pll: introduce new
+ syspll bindings
+Message-ID: <20240401172243.zuvj6d6ptkrt6p33@CAB-WSD-L081021>
+References: <20240329205904.25002-1-ddrokosov@salutedevices.com>
+ <20240329205904.25002-2-ddrokosov@salutedevices.com>
+ <20240401142011.GA537763-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240401142011.GA537763-robh@kernel.org>
+User-Agent: NeoMutt/20220415
+X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184515 [Apr 01 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: ddrokosov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 14 0.3.14 5a0c43d8a1c3c0e5b0916cc02a90d4b950c01f96, {Tracking_uf_ne_domains}, {Track_E25351}, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;100.64.160.123:7.1.2;smtp.sberdevices.ru:5.0.1,7.1.1;lore.kernel.org:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/04/01 16:37:00
+X-KSMG-LinksScanning: Clean, bases: 2024/04/01 16:36:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/04/01 15:13:00 #24563578
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-From: Joan Bruguera Micó <joanbrugueram@gmail.com>
+Hello Rob,
 
-The recently introduced support for %rip-relative relocations in the
-call thunk template:
+On Mon, Apr 01, 2024 at 09:20:11AM -0500, Rob Herring wrote:
+> On Fri, Mar 29, 2024 at 11:58:41PM +0300, Dmitry Rokosov wrote:
+> > The 'syspll' PLL is a general-purpose PLL designed specifically for the
+> > CPU clock. It is capable of producing output frequencies within the
+> > range of 768MHz to 1536MHz.
+> > 
+> > Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
+> > ---
+> >  .../devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml     | 7 +++++--
+> >  include/dt-bindings/clock/amlogic,a1-pll-clkc.h            | 2 ++
+> >  2 files changed, 7 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+> > index a59b188a8bf5..fbba57031278 100644
+> > --- a/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+> > +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+> > @@ -26,11 +26,13 @@ properties:
+> >      items:
+> >        - description: input fixpll_in
+> >        - description: input hifipll_in
+> > +      - description: input syspll_in
+> >  
+> >    clock-names:
+> >      items:
+> >        - const: fixpll_in
+> >        - const: hifipll_in
+> > +      - const: syspll_in
+> 
+> A new required entry is an ABI break. Please state why that's ok or make 
+> it optional (minItems: 2).
 
-  17bce3b2ae2d ("x86/callthunks: Handle %rip-relative relocations in call thunk template")
+Unfortunatelly, it cannot be optional. I've explained here why:
 
-assumes that the code is being patched in-place, so the destination
-of the relocation matches the address of the code. This is not true
-for the call depth accounting emitted by the BPF JIT, so the calculated
-address is wrong and usually causes a page fault.
+https://lore.kernel.org/all/20240401171933.bqmjsuanqsjvjosn@CAB-WSD-L081021/
 
-Pass the destination IP when the BPF JIT emits call depth accounting.
+"""
+The clock source sys_pll_div16, being one of the GEN clock parents,
+plays a crucial role and cannot be tagged as "optional". Unfortunately,
+it was not implemented earlier due to the cpu clock ctrl driver's
+pending status on the TODO list.
+"""
 
-Fixes: 17bce3b2ae2d ("x86/callthunks: Handle %rip-relative relocations in call thunk template")
-Signed-off-by: Joan Bruguera Micó <joanbrugueram@gmail.com>
-Reviewed-by: Uros Bizjak <ubizjak@gmail.com>
-Acked-by: Ingo Molnar <mingo@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
----
- arch/x86/include/asm/alternative.h |  4 ++--
- arch/x86/kernel/callthunks.c       |  4 ++--
- arch/x86/net/bpf_jit_comp.c        | 19 ++++++++-----------
- 3 files changed, 12 insertions(+), 15 deletions(-)
+Could you please provide guidance on whether there is any alternative
+approach that could potentially make it possible?
 
-diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
-index fcd20c6dc7f9..67b68d0d17d1 100644
---- a/arch/x86/include/asm/alternative.h
-+++ b/arch/x86/include/asm/alternative.h
-@@ -117,7 +117,7 @@ extern void callthunks_patch_builtin_calls(void);
- extern void callthunks_patch_module_calls(struct callthunk_sites *sites,
- 					  struct module *mod);
- extern void *callthunks_translate_call_dest(void *dest);
--extern int x86_call_depth_emit_accounting(u8 **pprog, void *func);
-+extern int x86_call_depth_emit_accounting(u8 **pprog, void *func, void *ip);
- #else
- static __always_inline void callthunks_patch_builtin_calls(void) {}
- static __always_inline void
-@@ -128,7 +128,7 @@ static __always_inline void *callthunks_translate_call_dest(void *dest)
- 	return dest;
- }
- static __always_inline int x86_call_depth_emit_accounting(u8 **pprog,
--							  void *func)
-+							  void *func, void *ip)
- {
- 	return 0;
- }
-diff --git a/arch/x86/kernel/callthunks.c b/arch/x86/kernel/callthunks.c
-index 30335182b6b0..e92ff0c11db8 100644
---- a/arch/x86/kernel/callthunks.c
-+++ b/arch/x86/kernel/callthunks.c
-@@ -314,7 +314,7 @@ static bool is_callthunk(void *addr)
- 	return !bcmp(pad, insn_buff, tmpl_size);
- }
- 
--int x86_call_depth_emit_accounting(u8 **pprog, void *func)
-+int x86_call_depth_emit_accounting(u8 **pprog, void *func, void *ip)
- {
- 	unsigned int tmpl_size = SKL_TMPL_SIZE;
- 	u8 insn_buff[MAX_PATCH_LEN];
-@@ -327,7 +327,7 @@ int x86_call_depth_emit_accounting(u8 **pprog, void *func)
- 		return 0;
- 
- 	memcpy(insn_buff, skl_call_thunk_template, tmpl_size);
--	apply_relocation(insn_buff, tmpl_size, *pprog,
-+	apply_relocation(insn_buff, tmpl_size, ip,
- 			 skl_call_thunk_template, tmpl_size);
- 
- 	memcpy(*pprog, insn_buff, tmpl_size);
-diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-index e55745f512e1..df5fac428408 100644
---- a/arch/x86/net/bpf_jit_comp.c
-+++ b/arch/x86/net/bpf_jit_comp.c
-@@ -480,7 +480,7 @@ static int emit_call(u8 **pprog, void *func, void *ip)
- static int emit_rsb_call(u8 **pprog, void *func, void *ip)
- {
- 	OPTIMIZER_HIDE_VAR(func);
--	ip += x86_call_depth_emit_accounting(pprog, func);
-+	ip += x86_call_depth_emit_accounting(pprog, func, ip);
- 	return emit_patch(pprog, func, ip, 0xE8);
- }
- 
-@@ -1972,20 +1972,17 @@ st:			if (is_imm8(insn->off))
- 
- 			/* call */
- 		case BPF_JMP | BPF_CALL: {
--			int offs;
-+			u8 *ip = image + addrs[i - 1];
- 
- 			func = (u8 *) __bpf_call_base + imm32;
- 			if (tail_call_reachable) {
- 				RESTORE_TAIL_CALL_CNT(bpf_prog->aux->stack_depth);
--				if (!imm32)
--					return -EINVAL;
--				offs = 7 + x86_call_depth_emit_accounting(&prog, func);
--			} else {
--				if (!imm32)
--					return -EINVAL;
--				offs = x86_call_depth_emit_accounting(&prog, func);
-+				ip += 7;
- 			}
--			if (emit_call(&prog, func, image + addrs[i - 1] + offs))
-+			if (!imm32)
-+				return -EINVAL;
-+			ip += x86_call_depth_emit_accounting(&prog, func, ip);
-+			if (emit_call(&prog, func, ip))
- 				return -EINVAL;
- 			break;
- 		}
-@@ -2835,7 +2832,7 @@ static int __arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *rw_im
- 		 * Direct-call fentry stub, as such it needs accounting for the
- 		 * __fentry__ call.
- 		 */
--		x86_call_depth_emit_accounting(&prog, NULL);
-+		x86_call_depth_emit_accounting(&prog, NULL, image);
- 	}
- 	EMIT1(0x55);		 /* push rbp */
- 	EMIT3(0x48, 0x89, 0xE5); /* mov rbp, rsp */
 -- 
-2.42.0
-
+Thank you,
+Dmitry
