@@ -1,114 +1,165 @@
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E384D1EB31
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 20:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B90C2A1BF
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 20:33:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712003573; cv=none; b=Zl3nXgDPegjtLPGwAFi/3l2Yp8IBa+TieCjahHIRdiVaSnGxGpGu9mkV6ojL3ZHSPyMVmxG46kB342XspAB7iiZrkPz82tKr6J1UlEVel8q4K0snHOoYC9RB5qaZQLwoBMyptEFDKq7qBJJDIJHKxH4Qm+1aQ9RbwgdaCWHAJVM=
+	t=1712003627; cv=none; b=MSok6iJK4Iv3+vVKp/x+FU11oenLMQZUbBd7Eyj9RMzQKFDsN4mhabe82/Cl8Zv4kegHUb2KRR0/r+FIyoaFM8fLKivQuz/Q1x+np1MaG2mq6bwN76azS0Aey988FZghvtemepBDTS1gifUaHjUqXGrzcf90oibu0YbIBPqsKz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712003573; c=relaxed/simple;
-	bh=WlWF4sZthTybsqjHZ3Wo3dh3Wr4y3oJSrsc10FAPues=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NxO9bWG/2RRuF6yUU2/VmrTHtYmG9vUNhXv3pPZpDzd82s988KVZu6jQ39xdgfel/O53G+/Oia487HGOc/pBF3slFBub9/feqfhzZXJZ7Tca5D61Sz3YRwb2clZevwAH14JujRS7QQ1jkO1Bbuyep4PCSswc3sZYxkrnPw/gz9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AKmcHhhW; arc=none smtp.client-ip=209.85.222.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1712003627; c=relaxed/simple;
+	bh=Pl/YNaCowSJwtvM5CLxzriI2N0LVr+hVT798TnH3gks=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=tjSBC5ngUk/POav5LvSh59MAt+3WWkAbBQ7o345etF+L7RgiU3Z+rKJnACXYhpSe2x0RqqHZiUZ27Bdu9eU4Hq6M8I8LRpk1d+Yt9NOB5RktdIZsSbwNykNCZmBBHqPzT8XKoss9DTBjJ1+gRZC5bWXL9mpsgfyfYH8qpwj0qdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sVsJfVyb; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AKmcHhhW"
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-7e3257325b4so1052396241.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 13:32:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sVsJfVyb"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-515b3077d09so4811160e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 13:33:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1712003571; x=1712608371; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WlWF4sZthTybsqjHZ3Wo3dh3Wr4y3oJSrsc10FAPues=;
-        b=AKmcHhhWDMsQ+7vp/S1IgPhqwTgKRW1EL9voEr26+4ZuTfAv8IiQO+jz3oZLRMHbfB
-         LS4BYnE20RySCks+AlE3cQ3rZiOadp9w/mWxAGaKtXBT1mGE3G/jtFb9fswth3W2E86V
-         n3IK70UmPvnSKOhBFs7RN/KBYs0D2yWIITHBE=
+        d=linaro.org; s=google; t=1712003623; x=1712608423; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NGbtrKVvMS3wVGFki5Rf2NIaUlWzz6uY1OnrfScTkhE=;
+        b=sVsJfVybnPY8cFeZSQPDs3wD+GHl6mgFcIBOoOAeo4tK8/p++ZH1TO3osA28iJ97R+
+         +k1lYs8x0M4yK1v2x6BHNZL/eWwjfmor0z2vFW2vtdq7HdnCH0aefIUKVgiih8i7FI86
+         Pf2rmMfXBhKD6hUWjsuuWqCFEgDDVKR9Yq7YmHfSwtJFIQvtDqq638e20oULsaxIFMZQ
+         HbbnwnMVEHED/0AqvAaQ+ZmJFLvBNf3jSU+1lpDcXeuZBCuX3yxEsR4tt3AJZlGKeeWF
+         NGPbIQYFcYCbqzwLZj8Yt9shQgzxy+dbSfGgAotcqnW6x3cBUqvj/v9b0WqfnasDFnps
+         l1xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712003571; x=1712608371;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1712003623; x=1712608423;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WlWF4sZthTybsqjHZ3Wo3dh3Wr4y3oJSrsc10FAPues=;
-        b=AwbZEzfzhHQJKDwz84XuWT7rSavPEEl5FRrDtut+TpZLtb5a5lx3Y6SXgAKhws9W9Y
-         CzcgR9hYH7+oWxey/My1q5tq7usdBeR+ivvYB3Y4tzKb3BdusV03Z9TdOeePwDyC9cN2
-         TbpKz8JZ3v6Md+PrMkwRksoEL2onghtgI15hFkJlqPmVvMlp2uc/thMm5ZXruTr04g5p
-         m4NUYTjWS+e8w668Qf+BicfzXfL6+rOaSwS7pC2L9aPfKftkLa5ViF1VT3RbckuDPLGG
-         SMukpvls0AVLViqtpP00+dpp0Rf1An5wibhFAwksiCxVBti5cE4iHaytio8MuLd0OOs6
-         4tsw==
-X-Forwarded-Encrypted: i=1; AJvYcCWTo4rOcZCT9R0x25uftmTyO+VA6/h3tuvqDR2baiyWDDXgkIsAO4U3VuYCnyYuvOKd8D9OO8zEezyhPLP7liIZD8oPXz/+CguKEcxa
-X-Gm-Message-State: AOJu0Yy0FVuUNkCiL/eTndwpFr7HJygOiRXshshvJH6Sp5cOJl93FVgV
-	P/sVVx+xU/hBKfYK2a2kEGxlDoTXKndPCw039wFwjxUeYbIuQziKcjWmy0u6yJqiXBJk5fIqDBn
-	Rm2WB7xpqMIX7mb1cEP/3i1ePauSoXGL/ecrs
-X-Google-Smtp-Source: AGHT+IEBUFuHC1uovMRbuGkUNY7LgsBGowAQKo3d4i+4cDqZFxwCT/kL8PqtYC40kciKNJcNDSxwr9+UZ8+Pke79mBc=
-X-Received: by 2002:a05:6102:3bc4:b0:478:2f66:f641 with SMTP id
- a4-20020a0561023bc400b004782f66f641mr7884700vsv.34.1712003570896; Mon, 01 Apr
- 2024 13:32:50 -0700 (PDT)
+        bh=NGbtrKVvMS3wVGFki5Rf2NIaUlWzz6uY1OnrfScTkhE=;
+        b=kBo5IkSMujAMxrFY+Ga9Yw1Vs2ONzvgYS7JtMJck5GrWfpfjnGIm27gmCLbMCmxUUD
+         jQNViwusr8fZYCKINlDSLvVP8QKdgWhcuJa/RTvXGcJAl+0hYledaFjzCvovyfof003j
+         Y9gaA6fZtWjw86or4v6xr3JL94QyY2xmeSDRqNpMu00KtG92lAPTDpwAlGGd0gw/Hik/
+         GxNnENAb+KgMW2ENEcd2VVMH+FTrvfMUmcLjFSXMI6E9uP9sW96rRH/TlT78MESZ6jqm
+         iF/jQ8DZ2pb201hAIpYDJDaXozCjqsS3PB25cJcLka9tRlhglcvAFrvIO3kkwsfePNdu
+         L4lw==
+X-Forwarded-Encrypted: i=1; AJvYcCWeSFnjznGgBpXgVoDPCjBFhS2mPjTnCRfN1WDCXILz1eZPem9txVjLIg4Aj2YenkFZ/nKwH0quI5gQiZFVqrsM+qtssi+Y534ygluG
+X-Gm-Message-State: AOJu0YxJ77A9Ltnwk8qpdfg18tzuTH6cZCe3Dh6xXhB0FxxU6qVZaoUN
+	IlFEB7mY/kGo+9QsF2krBmr6oJfh8FpGqlCnlFNF4CvezrC2xwHNeSqJ5+9U+nI=
+X-Google-Smtp-Source: AGHT+IH2uNAjQtdLIV9R2AZUb19YWzpZ3xw4E10c1gpcShijDXsGOsTcbI0aDwYnvMhmg+49RAowJQ==
+X-Received: by 2002:a19:f70a:0:b0:515:c7c9:b14e with SMTP id z10-20020a19f70a000000b00515c7c9b14emr8046627lfe.57.1712003623433;
+        Mon, 01 Apr 2024 13:33:43 -0700 (PDT)
+Received: from umbar.lan ([192.130.178.91])
+        by smtp.gmail.com with ESMTPSA id j11-20020ac2550b000000b00515a6e4bdbdsm1478342lfk.250.2024.04.01.13.33.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Apr 2024 13:33:43 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 01 Apr 2024 23:33:40 +0300
+Subject: [PATCH v3 1/9] dt-bindings: clk: qcom,dispcc-sm8x50: describe
+ additional DP clocks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240325-public-ucsi-h-v2-0-a6d716968bb1@chromium.org>
- <20240325-public-ucsi-h-v2-3-a6d716968bb1@chromium.org> <1b040be3-acd7-40dc-bc9b-24ea6d4b8377@linaro.org>
- <CAB2FV=614YLrsj6yPxRd1uVsF4n3EabLoXwL1Mtrk9Eg+5Mo9g@mail.gmail.com> <CAA8EJprn_95+ZnwmAHEQpQjQqZ5-Na1pj32TCY5BFMt7Uv7eWA@mail.gmail.com>
-In-Reply-To: <CAA8EJprn_95+ZnwmAHEQpQjQqZ5-Na1pj32TCY5BFMt7Uv7eWA@mail.gmail.com>
-From: Pavan Holla <pholla@chromium.org>
-Date: Mon, 1 Apr 2024 13:32:14 -0700
-Message-ID: <CAB2FV=56z2dRYWNWf7Cbr+ubygO1TRgZzg-RqFzZeByx+tBehA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] platform/chrome: cros_ec_ucsi: Implement UCSI PDC driver
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Benson Leung <bleung@chromium.org>, 
-	Tzung-Bi Shih <tzungbi@kernel.org>, Guenter Roeck <groeck@chromium.org>, linux-kernel@vger.kernel.org, 
-	linux-usb@vger.kernel.org, 
-	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>, chrome-platform@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240401-typec-fix-sm8250-v3-1-604dce3ad103@linaro.org>
+References: <20240401-typec-fix-sm8250-v3-0-604dce3ad103@linaro.org>
+In-Reply-To: <20240401-typec-fix-sm8250-v3-0-604dce3ad103@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Luca Weiss <luca.weiss@fairphone.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2305;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=Pl/YNaCowSJwtvM5CLxzriI2N0LVr+hVT798TnH3gks=;
+ b=owGbwMvMwMXYbdNlx6SpcZXxtFoSQxq3lIqm7YesxMjpRxoP5kv2/Ug6lRzhmWB9y8BpTpPax
+ PZkb81ORmMWBkYuBlkxRRafgpapMZuSwz7smFoPM4iVCWQKAxenAExk+1kOhokG7wu+yt4UyJ59
+ 4E/w7Q8fEmbbFn6cHhv2ui3+1pnAz4HeHOalXCt2mao3Wz/8dGbfbWuL8CjldneFWb9U3+Q/FX6
+ g9/WNysfIlPUvowRy8jyuZb+w+mLrIrfaoWD7h9jeSzfV3Y/8WiJYOEXC457qfk4bxT3HY3jdmy
+ +K3hfnjJvz8UtppVz8n028KskRu/65L/xTbabI/dLI93IB75uH7y09JpRMVQpu0visnFuwVprrU
+ UFko68i9yoxozMPNi843iCa3yVtpZL2+oGRDMf7wG9X2Bj8/ENFMm5IRf7/6KlyP7/BedF+ltLe
+ W8UbX+6WFT9baTTz7fvGy+tNl+/6mscq9l2c+doZ1XnXAQ==
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-On Fri, Mar 29, 2024 at 8:13=E2=80=AFAM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
->
-> On Fri, 29 Mar 2024 at 17:09, Pavan Holla <pholla@chromium.org> wrote:
-> >
-> > Hi Dmitry,
-> >
-> > Thanks for the review.
-> >
-> > On Thu, Mar 28, 2024 at 8:32=E2=80=AFAM Dmitry Baryshkov
-> > <dmitry.baryshkov@linaro.org> wrote:
-> > > While it's fine to use platform/chrome for platform drivers, please
-> > > place drivers which have a subsystem into the subsystem dir. I think =
-we
-> > > don't want to hunt UCSI implementations all over the codebase. Please
-> > > use drivers/usb/typec/ucsi/ location for your driver. This also remov=
-es
-> > > a need for a global header.
-> >
-> > I agree with your assessment that drivers/usb/typec/ucsi/ is a good
-> > location for the driver currently. However, the driver is still in
-> > early stages of development. We may have to account for PDC/ EC quirks
-> > (we have multiple vendors), add FW update functionality outside the
-> > UCSI spec, or add PDC logging functionality. While I'd like to write
-> > separate drivers for those, some of this functionality will need to
-> > acquire a lock over communication to the PDC. Even if I were to write
-> > separate drivers for new functionality related to the PDC, maybe it's
-> > better for all ChromeOS PDC related drivers to reside in the same
-> > location. I am not sure what form this driver will take in the near
-> > future, thus I would prefer to keep it in platform/chrome. Maybe
-> > cros_ec_ucsi isn't the best name here, cros_ec_pdc probably conveys
-> > the intention better.
->
-> In such a case please consider using auxilliary device bus or MFD
-> cells to describe pdc / ucsi relationship. See how this is handled for
-> pmic-glink / ucsi_glink.
-> The drivers/platform should really be limited to simple drivers, which
-> don't have a better place. Otherwise it becomes a nightmare to handle
-> driver changes (this applies not only to the UCSI but also to other
-> drivers which have their own subsystem tree).
+On the affected Qualcomm platforms the display clock controller has
+additional DP input clocks, describe them in DT schema.
 
-Thanks for the pointers. I will move the driver to drivers/usb/typec/ucsi/
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+ .../bindings/clock/qcom,dispcc-sm8x50.yaml         | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/clock/qcom,dispcc-sm8x50.yaml b/Documentation/devicetree/bindings/clock/qcom,dispcc-sm8x50.yaml
+index 59cc88a52f6b..5831579b572e 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,dispcc-sm8x50.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,dispcc-sm8x50.yaml
+@@ -27,6 +27,7 @@ properties:
+       - qcom,sm8350-dispcc
+ 
+   clocks:
++    minItems: 7
+     items:
+       - description: Board XO source
+       - description: Byte clock from DSI PHY0
+@@ -35,8 +36,15 @@ properties:
+       - description: Pixel clock from DSI PHY1
+       - description: Link clock from DP PHY
+       - description: VCO DIV clock from DP PHY
++      - description: Link clock from eDP PHY
++      - description: VCO DIV clock from eDP PHY
++      - description: Link clock from DP1 PHY
++      - description: VCO DIV clock from DP1 PHY
++      - description: Link clock from DP2 PHY
++      - description: VCO DIV clock from DP2 PHY
+ 
+   clock-names:
++    minItems: 7
+     items:
+       - const: bi_tcxo
+       - const: dsi0_phy_pll_out_byteclk
+@@ -45,6 +53,12 @@ properties:
+       - const: dsi1_phy_pll_out_dsiclk
+       - const: dp_phy_pll_link_clk
+       - const: dp_phy_pll_vco_div_clk
++      - const: edp_phy_pll_link_clk
++      - const: edp_phy_pll_vco_div_clk
++      - const: dptx1_phy_pll_link_clk
++      - const: dptx1_phy_pll_vco_div_clk
++      - const: dptx2_phy_pll_link_clk
++      - const: dptx2_phy_pll_vco_div_clk
+ 
+   '#clock-cells':
+     const: 1
+@@ -68,6 +82,20 @@ properties:
+       A phandle to an OPP node describing required MMCX performance point.
+     maxItems: 1
+ 
++allOf:
++  - if:
++      not:
++        properties:
++          compatible:
++            contains:
++              const: qcom,sc8180x-dispcc
++    then:
++      properties:
++        clocks:
++          maxItems: 7
++        clock-names:
++          maxItems: 7
++
+ required:
+   - compatible
+   - reg
+
+-- 
+2.39.2
+
