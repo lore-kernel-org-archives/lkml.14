@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8896045BF9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77A3B45974;
 	Mon,  1 Apr 2024 15:10:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711984217; cv=none; b=dPKH/FdqjmVxvHC8QhrrM9pTOetdNnYKO1HtXi1VWWith022VC/4N1rV5HqwiMukGTHR/1s/22cQE3n7kO460WE3dYv6gVGpAJmXUkrWdVOiXSOsZVlk+4H1baDXmLm+5yFqjtOiDY+SGfaZK4tRXIoamz4qcsXQis3qn5XwLBQ=
+	t=1711984217; cv=none; b=MDfYs9GtPgzQNw4MIC2wHZnSghtwVpoF7LdQ72uJNE8Cub+kCUIlN7Nj3vrJh+XDTOyjxU4cU1hblMWmFTJ3e2fY82nRhaTE81r+h6UPYdgag3nZErTG9EMVEpjXnJSqwQRSr2mam/UcDQLJ2Be5VbnmdXDsH2pctyRPMkOfJIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711984217; c=relaxed/simple;
-	bh=sB4XW2Iy9WrEDv3ZxInXXORojt09vA9WlbAC80dGpys=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=juYhmVwnaTKYSzHbVlvhDl5nOhge6rCrjTxsTTRAOOq76hOKexfYN5P40pyFhpaaCmCF6lAQ4bK40LugCjzpBmtxTle4qLnUBQDTNs9OyeLVlmwb9DhuWmC8VkNzkeM31s6m6+zTgfJ9e1U6WG767fpXff/PEvqOorBX5GISCxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XqdzuZ0T; arc=none smtp.client-ip=10.30.226.201
+	bh=10B9kij4RJ8Moszjff2kF8cKqehkeXTDRYV4vE4emTg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CO5aZGxLUisU1B5Kw01ECibm+gGQ5zN2EfXf8unjzz5C8ICqUb+JiK1qy/NnVRNCFzIihyo99fSzVdfJrpM/odAS7TJXUktSzUdf89yQbIfcSZwX/5INCfNiO9zCVdG+7VeHJTxgPGgEpn45LciBW7AdPz1QM6oGkcCmDZbC4ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lmvnDyNX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XqdzuZ0T"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2CFDCC43399;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lmvnDyNX"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 046F8C433C7;
 	Mon,  1 Apr 2024 15:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1711984217;
-	bh=sB4XW2Iy9WrEDv3ZxInXXORojt09vA9WlbAC80dGpys=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=XqdzuZ0TlU9SV1IQWTipwyCFeQFQXqkWz6PyJIVtrt9+OmKll9rWL1QY8CkKZ3BfH
-	 /fOIjjOeszDCLUsXOth8Q6GvcoM2/1Zvm0i/rxTQ46fmCQcgvdPlAYPz1nPtVg8wu2
-	 IMHK2V8E4CUc0JkqQkjq+kaSZtpz52S+b62GeG4YXxbJaU4MLfn+lj81TjKWxw65hb
-	 m6du6HCFBiFbvE7QZ/66HFm03jp8VMDhcNBxGI9zz6yov+flZolcSbay89eVfvgHQ0
-	 I4fhJvFE3vRgek+y5qBYd0eek7dNK6FBgsU9cL/8PUjBfSEr1sYjf3GZpVT2MJqchI
-	 4BDSXiMrwkmkw==
+	bh=10B9kij4RJ8Moszjff2kF8cKqehkeXTDRYV4vE4emTg=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=lmvnDyNXrQmePxOdWlP/Mz9noqy2ujaQWVXS4amlmG+jzqOXv4Mc9hhTKl03VDbL8
+	 2/n+qgK7s1yLDNC0zr/xZHwXW0VwqKUsp9wppd/IiCLcLEW9Jz3m21tZNXHqswmyFH
+	 vsOCyolLPqAPYGA+uYgQ6EsLKMfmNivpAOUfxGm6+Ecy4A9nhQaxZrZEx5J88Xe9/i
+	 lbzRQt1vue5xiPXpBm51ZyED3oXPLlMO4sbS5Y0WCjtbsd7YiZ4lB7umJUtAVtJEUH
+	 r/tOs3R2XngD80ErdsUSZt3atkML36LtawbyFuPB7xJXSX1CyARm1wpKFznSunLVNI
+	 iwrfc9N1eCSPA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB90CD1292;
-	Mon,  1 Apr 2024 15:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E18AECD128D;
+	Mon,  1 Apr 2024 15:10:16 +0000 (UTC)
 From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
-Date: Mon, 01 Apr 2024 18:32:21 +0300
-Subject: [PATCH 3/6] iio: adc: ad7173: refactor channel configuration
- parsing
+Subject: [PATCH 0/6] Add support for AD411x
+Date: Mon, 01 Apr 2024 18:32:18 +0300
+Message-Id: <20240401-ad4111-v1-0-34618a9cc502@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +40,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240401-ad4111-v1-3-34618a9cc502@analog.com>
-References: <20240401-ad4111-v1-0-34618a9cc502@analog.com>
-In-Reply-To: <20240401-ad4111-v1-0-34618a9cc502@analog.com>
+X-B4-Tracking: v=1; b=H4sIAIPTCmYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDY0Mj3cQUE0NDQ13z1NQkY5PUJJNE0zQloOKCotS0zAqwQdGxtbUApX1
+ /H1gAAAA=
 To: Ceclan Dumitru <dumitru.ceclan@analog.com>
 Cc: Lars-Peter Clausen <lars@metafoo.de>, 
  Michael Hennerich <Michael.Hennerich@analog.com>, 
@@ -53,11 +52,11 @@ Cc: Lars-Peter Clausen <lars@metafoo.de>,
  linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Dumitru Ceclan <mitrutzceclan@gmail.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711985550; l=2160;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711985550; l=2067;
  i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
- bh=LP925hA7l/Zq+jxivGEGAOgI2hBOHLlP0ftz5riKxwA=;
- b=/RbMwmYnyhC5pKQaInX3g8tTV5ka0OyCWhWopLnpDFY3wgL+e2loPLkV1ldaDbSKtknDIKhsB
- /+X38d8OzhKC/vKCrDsGYSh0zjHicqefIm2+JfwdgrZGF5a+ELQ9yVs
+ bh=10B9kij4RJ8Moszjff2kF8cKqehkeXTDRYV4vE4emTg=;
+ b=XLN9Nt8v7bv1mWjyDAWDeyL+7eBHCtShfmeS9aiFjAAWhNLQnF8WvA3P84LoqGXId7oimiFXZ
+ njaVyz3tn1JC8NxVW9DB6cuu1ZuAS2yhvJA9QrY4mondxwUlXGQn1ip
 X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
  pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
 X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
@@ -65,72 +64,50 @@ X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
 X-Original-From: Dumitru Ceclan <dumitru.ceclan@analog.com>
 Reply-To: dumitru.ceclan@analog.com
 
-From: Dumitru Ceclan <dumitru.ceclan@analog.com>
+This patch series adds support for the Analog Devices AD4111, AD4112,
+ AD4114, AD4115, AD4116 within the existing AD7173 driver.
 
-Move configurations regarding number of channels from
-*_fw_parse_device_config to *_fw_parse_channel_config.
+  The AD411X family encompasses a series of low power, low noise, 24-bit,
+sigma-delta analog-to-digital converters that offer a versatile range of
+specifications. They integrate an analog front end suitable for processing
+fully differential/single-ended and bipolar voltage inputs.
 
-Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
+- All ADCs have inputs with a precision voltage divider with a division
+ratio of 10.
+- AD4116 has 5 low level inputs without a voltage divider.
+- AD4111 and AD4112 support current inputs (0 mA to 20 mA) using a 50ohm
+shunt resistor.
+
+Datasheets:
+https://www.analog.com/media/en/technical-documentation/data-sheets/AD4111.pdf
+https://www.analog.com/media/en/technical-documentation/data-sheets/AD4112.pdf
+https://www.analog.com/media/en/technical-documentation/data-sheets/AD4114.pdf
+https://www.analog.com/media/en/technical-documentation/data-sheets/AD4115.pdf
+https://www.analog.com/media/en/technical-documentation/data-sheets/AD4116.pdf
+
+This series depends on patch:
+(iio: adc: ad7173: Use device_for_each_child_node_scoped() to simplify error paths.)
+https://lore.kernel.org/all/20240330190849.1321065-6-jic23@kernel.org
+
+Signed-off-by: Dumitru Ceclan <mitrutzceclan@gmail.com>
 ---
- drivers/iio/adc/ad7173.c | 29 +++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
+Dumitru Ceclan (6):
+      dt-bindings: adc: ad7173: add support for ad411x
+      iio: adc: ad7173: fix buffers enablement for ad7176-2
+      iio: adc: ad7173: refactor channel configuration parsing
+      iio: adc: ad7173: refactor ain and vref selection
+      iio: adc: ad7173: Remove index from temp channel
+      iio: adc: ad7173: Add support for AD411x devices
 
-diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
-index 8a95b1391826..699bc6970790 100644
---- a/drivers/iio/adc/ad7173.c
-+++ b/drivers/iio/adc/ad7173.c
-@@ -917,7 +917,23 @@ static int ad7173_fw_parse_channel_config(struct iio_dev *indio_dev)
- 	struct device *dev = indio_dev->dev.parent;
- 	struct iio_chan_spec *chan_arr, *chan;
- 	unsigned int ain[2], chan_index = 0;
--	int ref_sel, ret;
-+	int ref_sel, ret, num_channels;
-+
-+	num_channels = device_get_child_node_count(dev);
-+
-+	if (st->info->has_temp)
-+		num_channels++;
-+
-+	if (num_channels == 0)
-+		return dev_err_probe(dev, -ENODATA, "No channels specified\n");
-+
-+	if (num_channels > st->info->num_channels)
-+		return dev_err_probe(dev, -EINVAL,
-+			"Too many channels specified. Maximum is %d, not including temperature channel if supported.\n",
-+			st->info->num_channels);
-+
-+	indio_dev->num_channels = num_channels;
-+	st->num_channels = num_channels;
- 
- 	chan_arr = devm_kcalloc(dev, sizeof(*indio_dev->channels),
- 				st->num_channels, GFP_KERNEL);
-@@ -1012,7 +1028,6 @@ static int ad7173_fw_parse_device_config(struct iio_dev *indio_dev)
- {
- 	struct ad7173_state *st = iio_priv(indio_dev);
- 	struct device *dev = indio_dev->dev.parent;
--	unsigned int num_channels;
- 	int ret;
- 
- 	st->regulators[0].supply = ad7173_ref_sel_str[AD7173_SETUP_REF_SEL_EXT_REF];
-@@ -1071,16 +1086,6 @@ static int ad7173_fw_parse_device_config(struct iio_dev *indio_dev)
- 
- 	ad7173_sigma_delta_info.irq_line = ret;
- 
--	num_channels = device_get_child_node_count(dev);
--
--	if (st->info->has_temp)
--		num_channels++;
--
--	if (num_channels == 0)
--		return dev_err_probe(dev, -ENODATA, "No channels specified\n");
--	indio_dev->num_channels = num_channels;
--	st->num_channels = num_channels;
--
- 	return ad7173_fw_parse_channel_config(indio_dev);
- }
- 
+ .../devicetree/bindings/iio/adc/adi,ad7173.yaml    |  59 +++-
+ drivers/iio/adc/ad7173.c                           | 318 ++++++++++++++++++---
+ 2 files changed, 331 insertions(+), 46 deletions(-)
+---
+base-commit: 5ab61121a34759eb2418977f0b3589b7edc57776
+change-id: 20240312-ad4111-7eeb34eb4a5f
 
+Best regards,
 -- 
-2.43.0
+Dumitru Ceclan <dumitru.ceclan@analog.com>
 
 
