@@ -1,162 +1,146 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D2F2940D;
-	Mon,  1 Apr 2024 12:55:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B8C1E888;
+	Mon,  1 Apr 2024 13:03:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711976119; cv=none; b=uCRXJZe4fgOin1c7V2/ApqyWEZ9NoaRhU3TGxdwFEEfT8PkFr5weuEWziH1SbfTcMyBTzZUE2ayg+7Ta37rW1Me88zbzjytPR4TLAXClrqp8olgkVezDbfjR6bFzS0HIhSvWUBCEw7cHU4JT/FvxZNFU1aYZgfAWIChEcjvI8kY=
+	t=1711976630; cv=none; b=efrPEvKDrnglGvmhYf0rmq1tKwf/SbKb7zMjDo5C68QfVKD3R0yBaWPfpA0EAzgeZZwzF62Hysmzmursy/a8YlN9VAGMCOVAUp7IOetpjEXXh4LgmmqegPFq5XSKetphAP70b8y0e6G2uvaC+lFEE+1s7/GHTWa3ZIVM/tTN+eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711976119; c=relaxed/simple;
-	bh=9+vzMVeUAI2Mzq8O0Xp2MRVfQENYZAVm0EKdXfmvQxc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cgdO1EBLc6o1cdK6/pkS95iXaQvHxuHJpLR08Z8XCU+GT1xJBOYUlikfYI97vM1NecFi0qgb7o73ugAha7CzO4tqeDbC+Ok2cUl6AAdN59L/rfjIQdg2hbluzU6jt9R+gG+Xbedp9vi2a8J/Q1skqRS/V/jh+dsZ8GI9F6BLzTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4V7WDW1N6Vzbf3g;
-	Mon,  1 Apr 2024 20:54:19 +0800 (CST)
-Received: from dggpeml500012.china.huawei.com (unknown [7.185.36.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id 52C541400D1;
-	Mon,  1 Apr 2024 20:55:13 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 1 Apr 2024 20:55:13 +0800
-From: Zheng Yejian <zhengyejian1@huawei.com>
-To: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <mark.rutland@arm.com>,
-	<mathieu.desnoyers@efficios.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<zhengyejian1@huawei.com>
-Subject: [PATCH] ftrace: Fix use-after-free issue in ftrace_location()
-Date: Mon, 1 Apr 2024 20:55:43 +0800
-Message-ID: <20240401125543.1282845-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1711976630; c=relaxed/simple;
+	bh=6IX8cDFUlSsk6IxtbhcF68yxgznuBZCAUSinqNSI60Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TL2whoBUq9rL4IQyYOEjNJ9s8cLnvFwJMvl0v+OSvQ2V3IpgOpGRGmxZFB6KjxMz0mVrex/cMx+hvt9OJ4jR6ygcfZLPJXzdFGk1r3htJ7L24qneeWTAv7KKH5t31glw6+t8c43KZFF2spw5x6qa/s/Nnt+tDI9Q2Q0cJzwHw4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t9tDxF+B; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t9tDxF+B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91F3AC43390;
+	Mon,  1 Apr 2024 13:03:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711976629;
+	bh=6IX8cDFUlSsk6IxtbhcF68yxgznuBZCAUSinqNSI60Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=t9tDxF+B/kICX01tgWTInIvIoSP9ORRRD9KOxwP84iHOUi0SKK/Ie42RUnp7t63FN
+	 HVqjkZ5KlC6r9xKWCl/PeAJMG/KIh5KXuih4+kiHghdkd8/st153SMr/ZNhz+ZL23p
+	 D6EuKGrsL+Ai1zBEWIcpOvcddijki3UnjLotM8odP4gXTf7VBLo8n3OihiTeVz6O/V
+	 93Vr1FFFPxCnRAvBkZ9v758Qjjkohp6VSPznDAbcnaGecnpbMEcO5WLl7vGxIXqsxs
+	 CUw4xRe+JpxokeW//OF/xQU0Z3nndTfOdl9EVWPpGm58X/UdaltgtXdup/n47CR6ru
+	 8Mu87fvXgThzg==
+Date: Mon, 1 Apr 2024 08:03:47 -0500
+From: Rob Herring <robh@kernel.org>
+To: Patrick Gansterer <paroga@paroga.com>
+Cc: dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fbdev@vger.kernel.org, Lee Jones <lee@kernel.org>,
+	Daniel Thompson <daniel.thompson@linaro.org>,
+	Jingoo Han <jingoohan1@gmail.com>, Pavel Machek <pavel@ucw.cz>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Helge Deller <deller@gmx.de>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: backlight: Add Texas Instruments
+ LM3509
+Message-ID: <20240401130347.GA274540-robh@kernel.org>
+References: <20240330145931.729116-1-paroga@paroga.com>
+ <20240330145931.729116-2-paroga@paroga.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500012.china.huawei.com (7.185.36.15)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240330145931.729116-2-paroga@paroga.com>
 
-KASAN reports a bug:
+On Sat, Mar 30, 2024 at 03:59:24PM +0100, Patrick Gansterer wrote:
+> Add Device Tree bindings for Texas Instruments LM3509 - a
+> High Efficiency Boost for White LED's and/or OLED Displays
+> 
+> Signed-off-by: Patrick Gansterer <paroga@paroga.com>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> ---
+>  .../bindings/leds/backlight/ti,lm3509.yaml    | 139 ++++++++++++++++++
+>  1 file changed, 139 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/ti,lm3509.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/ti,lm3509.yaml b/Documentation/devicetree/bindings/leds/backlight/ti,lm3509.yaml
+> new file mode 100644
+> index 000000000000..b67f67648852
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/backlight/ti,lm3509.yaml
+> @@ -0,0 +1,139 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/backlight/ti,lm3509.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI LM3509 High Efficiency Boost for White LED's and/or OLED Displays
+> +
+> +maintainers:
+> +  - Patrick Gansterer <paroga@paroga.com>
+> +
+> +description:
+> +  The LM3509 current mode boost converter offers two separate outputs.
+> +  https://www.ti.com/product/LM3509
+> +
+> +properties:
+> +  compatible:
+> +    const: ti,lm3509
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +
+> +  ti,brightness-rate-of-change-us:
+> +    description: Brightness Rate of Change in microseconds.
+> +    enum: [51, 13000, 26000, 52000]
+> +
+> +  ti,oled-mode:
+> +    description: Enable OLED mode.
+> +    type: boolean
+> +
+> +patternProperties:
+> +  "^led@[01]$":
+> +    type: object
+> +    description: Properties for a string of connected LEDs.
+> +
+> +    allOf:
 
-  BUG: KASAN: use-after-free in ftrace_location+0x90/0x120
-  Read of size 8 at addr ffff888141d40010 by task insmod/424
-  CPU: 8 PID: 424 Comm: insmod Tainted: G        W          6.9.0-rc2+ #213
-  [...]
-  Call Trace:
-   <TASK>
-   dump_stack_lvl+0x68/0xa0
-   print_report+0xcf/0x610
-   kasan_report+0xb5/0xe0
-   ftrace_location+0x90/0x120
-   register_kprobe+0x14b/0xa40
-   kprobe_init+0x2d/0xff0 [kprobe_example]
-   do_one_initcall+0x8f/0x2d0
-   do_init_module+0x13a/0x3c0
-   load_module+0x3082/0x33d0
-   init_module_from_file+0xd2/0x130
-   __x64_sys_finit_module+0x306/0x440
-   do_syscall_64+0x68/0x140
-   entry_SYSCALL_64_after_hwframe+0x71/0x79
+You don't need allOf here.
 
-The root cause is that when lookup_rec() is lookuping ftrace record of
-an address in some module, and at the same time in ftrace_release_mod(),
-the memory that saving ftrace records has been freed as that module is
-being deleted.
+> +      - $ref: common.yaml#
+> +
+> +    properties:
+> +      reg:
+> +        description:
+> +          The control register that is used to program the two current sinks.
+> +          The LM3509 has two registers (BMAIN and BSUB) and are represented
+> +          as 0 or 1 in this property. The two current sinks can be controlled
+> +          independently with both registers, or register BMAIN can be
+> +          configured to control both sinks with the led-sources property.
+> +        minimum: 0
+> +        maximum: 1
+> +
+> +      label: true
+> +
+> +      led-sources:
+> +        allOf:
 
-  register_kprobes() {
-    check_kprobe_address_safe() {
-      arch_check_ftrace_location() {
-        ftrace_location() {
-          lookup_rec()  // access memory that has been freed by
-                        // ftrace_release_mod() !!!
+Or here.
 
-It seems that the ftrace_lock is required when lookuping records in
-ftrace_location(), so is ftrace_location_range().
-
-Fixes: ae6aa16fdc16 ("kprobes: introduce ftrace based optimization")
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
----
- kernel/trace/ftrace.c | 28 ++++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index da1710499698..838d175709c1 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -1581,7 +1581,7 @@ static struct dyn_ftrace *lookup_rec(unsigned long start, unsigned long end)
- }
- 
- /**
-- * ftrace_location_range - return the first address of a traced location
-+ * ftrace_location_range_locked - return the first address of a traced location
-  *	if it touches the given ip range
-  * @start: start of range to search.
-  * @end: end of range to search (inclusive). @end points to the last byte
-@@ -1592,7 +1592,7 @@ static struct dyn_ftrace *lookup_rec(unsigned long start, unsigned long end)
-  * that is either a NOP or call to the function tracer. It checks the ftrace
-  * internal tables to determine if the address belongs or not.
-  */
--unsigned long ftrace_location_range(unsigned long start, unsigned long end)
-+static unsigned long ftrace_location_range_locked(unsigned long start, unsigned long end)
- {
- 	struct dyn_ftrace *rec;
- 
-@@ -1603,6 +1603,17 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
- 	return 0;
- }
- 
-+unsigned long ftrace_location_range(unsigned long start, unsigned long end)
-+{
-+	unsigned long loc;
-+
-+	mutex_lock(&ftrace_lock);
-+	loc = ftrace_location_range_locked(start, end);
-+	mutex_unlock(&ftrace_lock);
-+
-+	return loc;
-+}
-+
- /**
-  * ftrace_location - return the ftrace location
-  * @ip: the instruction pointer to check
-@@ -1614,25 +1625,22 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
-  */
- unsigned long ftrace_location(unsigned long ip)
- {
--	struct dyn_ftrace *rec;
-+	unsigned long loc;
- 	unsigned long offset;
- 	unsigned long size;
- 
--	rec = lookup_rec(ip, ip);
--	if (!rec) {
-+	loc = ftrace_location_range(ip, ip);
-+	if (!loc) {
- 		if (!kallsyms_lookup_size_offset(ip, &size, &offset))
- 			goto out;
- 
- 		/* map sym+0 to __fentry__ */
- 		if (!offset)
--			rec = lookup_rec(ip, ip + size - 1);
-+			loc = ftrace_location_range(ip, ip + size - 1);
- 	}
- 
--	if (rec)
--		return rec->ip;
--
- out:
--	return 0;
-+	return loc;
- }
- 
- /**
--- 
-2.25.1
-
+> +          - minItems: 1
+> +            maxItems: 2
+> +            items:
+> +              minimum: 0
+> +              maximum: 1
